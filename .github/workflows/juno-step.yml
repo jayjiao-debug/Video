@@ -88,8 +88,13 @@ jobs:
           You are the Juno producer, running ONE stage unattended in GitHub Actions. The owner reviews
           the result afterwards in another session, so never wait for input and never ask questions.
 
-          Read first: /home/claude/video/.claude/skills/production-crew/SKILL.md and
-          /home/claude/video/.claude/skills/video-reviewer/references/owner-notes.md.
+          BUDGET RULES (this run is billed per token):
+          - You are a thin dispatcher. Do not read owner-notes.md, facts.md, script.md or other episode files
+            yourself; the role agent reads what it needs. Only skim production-crew/SKILL.md if you must.
+          - Launch each role agent ONCE. No review loops: no director or cold-reader pass unless the stage is
+            gate1 or the owner notes ask for one. The owner reviews the result himself.
+          - Tell each role agent to read only the owner-notes rows tagged with its role, to work in as few
+            turns as possible, and to look at a rendered image at most once.
           Episode folder: /home/claude/diji/episodes/${EP}
           Stage: ${STAGE}
           Topic / working title: ${TOPIC}
@@ -107,11 +112,11 @@ jobs:
             (style frames as self-contained HTML in style/, rendered to 1920x1080 PNG with
             python3 /home/claude/video/.claude/skills/production-crew/scripts/render_html.py), plus one
             side-by-side contact sheet style/looks_sheet.png and style/looks.md (name, pitch, palette, per frame
-            what it shows). Then launch the director to rank them (gate 2a notes). Do not pick for the owner.
+            what it shows). No director pass; the owner picks.
           - storyboard: launch the art-director agent to write storyboard.md for the look named in the owner
             notes: every scene and transition with its beat time, one rendered key frame per scene in
             style/board/ (HTML -> PNG as above) and one contact sheet style/board_sheet.png in time order with
-            the time and line under each frame. Then launch the director on it (gate 2b notes).
+            the time and line under each frame. No director pass; the owner reviews it.
           - revise: send the owner notes above (and the latest gate notes) to the role that owns them
             (screenwriter for script/lines, art-director for looks/storyboard). Change only what the notes ask
             for; re-render any frame that changed.
@@ -125,7 +130,7 @@ jobs:
         run: |
           claude -p "$(cat "$RUNNER_TEMP/prompt.md")" \
             --model "${{ inputs.model }}" \
-            --max-turns 80 \
+            --max-turns 50 \
             --allowedTools "Agent,Task,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(python3:*),Bash(ls:*),Bash(mkdir:*),Bash(cat:*),Bash(date:*)" \
             --output-format json > "$RUNNER_TEMP/result.json" || true
           {
@@ -139,6 +144,12 @@ jobs:
         run: |
           git config user.name  "juno-api-bot"
           git config user.email "juno-api-bot@users.noreply.github.com"
+          jq -r --arg t "$(date -u +%F' '%H:%M)" '"| \($t) | ${{ inputs.stage }} | ${{ inputs.model }} | $" + ((.total_cost_usd // 0)*100|round/100|tostring) + " | \(.num_turns // 0) |"' "$RUNNER_TEMP/result.json" > "$RUNNER_TEMP/costrow" || true
+          f="episodes/${{ inputs.episode }}/api_costs.md"
+          if [ -d "episodes/${{ inputs.episode }}" ]; then
+            [ -f "$f" ] || printf '| UTC | Stage | Model | Cost | Turns |\n|---|---|---|---|---|\n' > "$f"
+            cat "$RUNNER_TEMP/costrow" >> "$f"
+          fi
           git add episodes/
           if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
           git commit -m "${{ inputs.episode }}: ${{ inputs.stage }} (API run, ${{ inputs.model }})"
