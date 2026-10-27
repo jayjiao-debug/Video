@@ -73,7 +73,8 @@ CFG = {
               arms={'armL': dict(y0=560, yjoin=738, seed=(300, 700), pivot=(352, 618), shoulder=(395, 645), rest=(23, .72)),
                     'armR': dict(y0=560, yjoin=738, seed=(724, 700), pivot=(672, 618), shoulder=(629, 645), rest=(23, .72))},
               legs={'legL': ([(368,835),(515,835),(515,1010),(368,1010)], (440, 870)),
-                    'legR': ([(515,835),(662,835),(662,1010),(515,1010)], (590, 870))}, hipY=878),
+                    'legR': ([(515,835),(662,835),(662,1010),(515,1010)], (590, 870))}, hipY=878,
+              ears=[[300, 198, 77, 420, 485], [724, 198, 78, 604, 539]]),   # ear bend: base x, base y, tip y, x where the bend is full, x where it fades to 0
 }[pose]
 # the armless picture's own head (cutcat's method), to know where its body is
 solid = nd.binary_opening(cA, iterations=9)
@@ -233,6 +234,7 @@ save('torso', decontam(Tr, T, bgT), Ta)
 y_arm = min(c['y0'] for c in CFG['arms'].values())
 info['head'] = {'scale': s, 'neckY': int(neckY), 'pivot': [float(mx), float(neckY - 20)],
                 'warp': [float(y_arm + 15), float(my - 40)], 'eyes': [[mx - 138.6 * s, my], [mx + 138.6 * s, my]]}
+if CFG.get('ears'): info['head']['ears'] = CFG['ears']
 info['deform']['tail'] = [26, 120]
 json.dump(info, open(f'{out}/{pose}.json', 'w'), indent=1)
 print(pose, 'neckY', neckY, info['boxes'])

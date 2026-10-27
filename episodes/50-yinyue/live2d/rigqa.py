@@ -14,13 +14,13 @@ RIG = Rig(R, pose)
 def compose(T): return RIG.compose(T)
 # stress set: each part alone at both extremes, then everything at once
 ext = {'head': [(9, 0, -12), (-9, 0, 8)], 'armL': [(45,), (-45,)], 'armR': [(-45,), (45,)],
-       'tail': [(16,), (-16,)], 'legL': [(22,), (8,)], 'legR': [(22,), (8,)], 'body': [(0, .06), (0, -.03)]}
+       'earL': [(14,), (-14,)], 'earR': [(14,), (-14,)], 'tail': [(16,), (-16,)], 'legL': [(22,), (8,)], 'legR': [(22,), (8,)], 'body': [(0, .06), (0, -.03)]}
 cases = [('rest', {})]
 for k, vs in ext.items():
-    if k in RIG.L or k in ('head', 'body'):
+    if k in RIG.L or k in ('head', 'body') or (k.startswith('ear') and info['head'].get('ears')):
         for i, v in enumerate(vs): cases.append((f'{k}{"+-"[i]}', {k: v}))
 cases.append(('all+', {k: vs[0] for k, vs in ext.items()})); cases.append(('all-', {k: vs[1] for k, vs in ext.items()}))
-joints = {'neck': (512, nk), **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
+joints = {'neck': (512, nk), **{f'ear{s}': (e[0] + d, 140) for s, d, e in zip('LR', (30, -30), info['head'].get('ears', []))}, **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
 rest = compose({})
 CORE = nd.binary_erosion(np.asarray(RIG.L['torso'])[..., 3] > 200, iterations=4)   # moving parts may uncover background; the body itself never may
 findings = []

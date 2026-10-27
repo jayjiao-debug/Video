@@ -48,6 +48,17 @@ class Rig:
         px, py = self.hpiv; t = -np.radians(ang) * w; c, s = np.cos(t), np.sin(t)
         X, Y = self.xx - dx * self.k * w - px, self.yy - dy * self.k * w - py
         return self.remap(img, px + c * X - s * Y, py + s * X + c * Y)
+    def earbend(self, img, ear, ang):
+        """bend one ear about its base: the tip moves most, the skull between the ears stays still"""
+        if not ang: return img
+        px, py, tipy = ear[:3]
+        along = smooth((py - self.yy) / (py - tipy))                       # 0 at the base, 1 at the tip
+        if len(ear) == 5:                                                 # [.., x_full, x_zero]: the whole ear turns as one piece,
+            side = smooth((ear[4] - self.xx) / (ear[4] - ear[3]))         # fading out only toward the skull centre
+        else: side = np.exp(-((self.xx - px) / ear[3]) ** 2)
+        t = -np.radians(ang) * along * side; c, s = np.cos(t), np.sin(t)
+        dx, dy = self.xx - px, self.yy - py
+        return self.remap(img, px + c * dx - s * dy, py + s * dx + c * dy)
     def shift(self, img, dy):
         if not dy: return img
         M = np.float32([[1, 0, 0], [0, 1, dy * self.k]])
@@ -73,7 +84,10 @@ class Rig:
                     a = e[..., 3:] / 255.; img = img.copy(); img[..., :3] = e[..., :3] * a + img[..., :3] * (1 - a)
                 img = self.twirl(img, self.piv[n], ang, *self.D['tail'])
             elif n in ('legL', 'legR'): img = self.lift(img, T.get(n, (0,))[0], *self.D['leg'])
-            elif n == 'torso': img = self.headwarp(img, *T.get('head', (0, 0, 0)))
+            elif n == 'torso':
+                for side, ear in zip(('earL', 'earR'), self.info['head'].get('ears', [])):
+                    img = self.earbend(img, ear, T.get(side, (0,))[0])   # ears bend first, then ride along with the head
+                img = self.headwarp(img, *T.get('head', (0, 0, 0)))
             if squash: img = self.remap(img, self.xx, self.feet + (self.yy - self.feet) / (1 - squash))
             img = self.shift(img, bdy)
             a = img[..., 3:] / 255.
