@@ -39,7 +39,9 @@ const D=window.D={ // after Swiss Round 3 (sim5_out.json, 200k runs, ep23 model 
  sub:[['首轮','1.9','0'],['第二轮','1.3','2'],['第三轮','1.9','3']],
  best:[{k:'第四轮 · BO3',t:'BLG<br>赢',p:'71%'},{k:'第四轮 · BO3',t:'TES<br>赢',p:'43%'},{k:'第四轮 · BO3',t:'IG<br>赢',p:'42%'}],bestEnd:'27.6%',
  worst:[{k:'第四轮 · BO3',t:'BLG<br>输',p:'29%',c:1},{k:'第四轮 · BO3',t:'TES<br>输',p:'57%',c:1},{k:'第四轮 · BO3',t:'IG<br>输',p:'58%',c:1}],worstEnd:'13.7%',
- civil:'67%'};
+ civil:'67%',
+ // all 12 legal Round-4 draws of the 2-1 pool (draw25_out.json, 200k runs each): [draw, LPL title %, all three in QF %]
+ draws:[["BLG-IG · TES-MKOI · T1-LYON", 22.3, 42], ["BLG-TES · IG-MKOI · T1-LYON", 22.0, 43], ["BLG-T1 · TES-IG · LYON-MKOI", 21.9, 36], ["BLG-T1 · TES-LYON · IG-MKOI", 21.9, 45], ["BLG-T1 · TES-MKOI · IG-LYON", 21.8, 45], ["BLG-IG · TES-T1 · LYON-MKOI", 21.7, 30], ["BLG-LYON · TES-MKOI · IG-T1", 21.7, 44], ["BLG-IG · TES-LYON · T1-MKOI", 21.7, 37], ["BLG-TES · IG-T1 · LYON-MKOI", 21.7, 30], ["BLG-LYON · TES-T1 · IG-MKOI", 21.7, 45], ["BLG-LYON · TES-IG · T1-MKOI", 21.5, 44], ["BLG-TES · IG-LYON · T1-MKOI", 21.3, 37]]};
 const LINES=[
  [B(2)+.25,B(4),'首轮四连败：20次里，才会出现<b>1次</b>'],[B(4),B(6),'三天后：BLG、TES、IG<b>全部2-1</b>'],[B(6),TITLE-.05,'这次，我们把模型<b>复盘</b>一遍——'],
  [B(10),B(12),'上期，我们模拟了<b>10万次</b>：五分之一'],[B(12),B(14),'之后每打完一轮，就<b>锁定比分</b>重算'],
@@ -49,12 +51,13 @@ const LINES=[
  [B(32),B(34),'所以数字一路是：21.1 → 14.8 → 16.5'],[B(34),B(36),'三轮打完：<b>21.8%</b>，比开赛前还高'],
  [B(36),B(38),'历史上三轮后2-1的队：18支里<b>14支</b>进八强'],[B(38),DROP-.05,'那LPL的希望，到底在谁身上？'],
  [DROP,B(42),'<b>九成</b>，在BLG身上'],[B(42),B(44),'进八强：BLG <b>90%</b>，TES 73%，IG 70%'],
- [B(44),B(46),'第四轮是BO3：赢一场，<b>直接</b>进八强'],[B(46),B(48),'最好的剧本：三支队<b>全赢</b>'],[B(48),B(50),'LPL夺冠：<b>27.6%</b>（前提：不撞内战）'],
- [B(50),B(52),'最坏的剧本：三队<b>全输</b>，都掉到2-2'],[B(52),B(54),'夺冠只剩<b>13.7%</b>，但第五轮还能再打'],
- [B(54),B(56),'当然，模型看不到：状态、心态、临场BP'],
- [B(56),B(58),'第四轮抽签：撞上<b>内战</b>的概率67%'],[B(58),B(60),'北京时间10月29日凌晨<b>4点</b>开打'],[B(60),END-.05,'你觉得几支能进八强？<b>评论区</b>见']];
+ [B(44),B(46),'第四轮最好的剧本：三支队<b>全赢</b>'],[B(46),B(48),'LPL夺冠：<b>27.6%</b>（前提：不撞内战）'],
+ [B(48),B(50),'最坏的剧本：三队<b>全输</b>，都掉到2-2'],[B(50),B(52),'夺冠只剩<b>13.7%</b>，但第五轮还能再打'],
+ [B(52),B(54),'第四轮的签一共<b>12种</b>，我们全跑了一遍'],[B(54),B(56),'夺冠概率只差<b>1个点</b>：关键还是BLG'],[B(56),B(58),'最怕内战加碰T1：三队全进八强只剩<b>30%</b>'],
+ [B(58),B(60),'当然，模型看不到：状态、心态、临场BP'],
+ [B(60),END-.05,'北京时间10月29日凌晨<b>4点</b>，评论区见']];
 // scene k starts (camera arrives) at bar SB[k]
-const SB=[0,10,14,22,26,32,36,40,44,50,54,56], GAP=2200;
+const SB=[0,10,14,22,26,32,36,40,44,48,52,58,60], GAP=2200;
 const EVENTS=window.EVENTS=[]; // for the SFX script: {t,kind}
 let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
 const torn=(n=14,j=.012)=>{const p=[];for(let i=0;i<=n;i++)p.push(`${(i/n*100).toFixed(1)}% ${(rnd()*j*100).toFixed(2)}%`);for(let i=0;i<=n;i++)p.push(`${(100-rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);for(let i=n;i>=0;i--)p.push(`${(i/n*100).toFixed(1)}% ${(100-rnd()*j*100).toFixed(2)}%`);for(let i=n;i>=0;i--)p.push(`${(rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);return `polygon(${p.join(',')})`};
@@ -176,22 +179,40 @@ function route(k,b0,nodes,end,col,label,eb){
   paper(k,B(b0)+.2+i*.6,x,y,330,280,(i%2?2.5:-2),`<div class="src">${n.k}</div><div class="serif" style="font-size:36px;margin-top:8px;line-height:1.15">${n.t}</div><div class="num" style="font-size:72px;margin-top:10px;color:${n.c?'#b3261e':'#17130f'}">${n.p}</div>`,{z:6,pad:'22px 26px'});});
  stroke(k,B(b0)+.5,penLine([170,340,190].map((y,i)=>[305+i*420,y+320]).concat([[1560,720]]),{c:col,dash:'2 18',w:9}),{dur:3.2,z:4});
  paper(k,B(eb)+.2,1450,560,420,260,-3,`<div style="text-align:center"><div class="serif" style="font-size:30px">${label}</div><div class="num" style="font-size:120px;line-height:1;color:${col}">${end}</div></div>`,{z:12,big:true});}
-route(8,44,D.best,D.bestEnd,'#c8231a','LPL 夺冠',48);
-pen(8,B(48)+1.1,'前提：不撞内战',1450,470,{fs:42,rot:-3,dur:.5});
-route(9,50,D.worst,D.worstEnd,'#17130f','LPL 夺冠',52);
-pen(9,B(52)+1.1,'2-2 → 第五轮再打',1440,470,{fs:42,rot:-3,dur:.5});
+route(8,44,D.best,D.bestEnd,'#c8231a','LPL 夺冠',46);
+pen(8,B(46)+1.1,'前提：不撞内战',1450,470,{fs:42,rot:-3,dur:.5});
+route(9,48,D.worst,D.worstEnd,'#17130f','LPL 夺冠',50);
+pen(9,B(50)+1.1,'2-2 → 第五轮再打',1440,470,{fs:42,rot:-3,dur:.5});
 
-// ================= SCENE 10: what the model can't see
-paper(10,B(54)+.2,560,220,800,520,-1.5,`<div class="src">模型看不到的</div><div style="margin-top:30px">${['状态','心态','临场 BP'].map(x=>`<div style="display:flex;align-items:center;gap:26px;margin-bottom:26px"><span style="display:inline-block;width:64px;height:64px;border:4px solid #17130f"></span><span class="serif" style="font-size:64px">${x}</span></div>`).join('')}</div>`,{clean:false});
-stroke(10,B(54)+1.0,[0,1,2].map(i=>penLine([[602,322+i*120],[654,374+i*120]],{w:9})+penLine([[654,322+i*120],[602,374+i*120]],{w:9})).join(''),{dur:.9});
+// ================= SCENE 10: all 12 Round-4 draws
+{const t=B(52)+.15;paper(10,t,190,50,1540,850,-.5,`<div style="display:flex;justify-content:space-between"><span class="src">第四轮 · 2-1 组 · 全部 12 种合规抽签 · 每种 20 万次</span><span class="src">ROUND 4 DRAW</span></div>`,{clean:true});
+ const cx=[250,820,1270],hy=120,ry=i=>178+i*54;
+ const hd=mk(10,`<span class="serif" style="position:absolute;left:0;font-size:26px;opacity:.55">第四轮对阵</span><span class="serif" style="position:absolute;left:${cx[1]-cx[0]}px;font-size:26px;opacity:.55">LPL 夺冠</span><span class="serif" style="position:absolute;left:${cx[2]-cx[0]}px;font-size:26px;opacity:.55">三队全进八强</span>`,{left:cx[0]+'px',top:hy+'px',width:'1400px',height:'40px',zIndex:14});
+ A.push({kind:'fade',el:hd,t:t+.25,dur:.2});
+ D.draws.forEach(([d,w,n],i)=>{const y=ry(i);
+  const row=mk(10,`<span class="num" style="font-size:31px;letter-spacing:-.5px">${d.replace(/·/g,'<span style="opacity:.35"> · </span>')}</span>`,{left:cx[0]+'px',top:y+'px',zIndex:14});
+  A.push({kind:'fade',el:row,t:t+.4+i*.08,dur:.15});
+  const b1=mk(10,`<div style="position:relative;width:300px;height:22px;margin-top:9px;background:#17130f18"><div class="bar" style="position:absolute;left:0;top:0;bottom:0;width:0;background:#17130f"></div></div><span class="num" style="position:absolute;left:316px;top:0;font-size:31px;letter-spacing:-1px">${w.toFixed(1)}%</span>`,{left:cx[1]+'px',top:y+'px',width:'440px',height:'44px',zIndex:14});
+  A.push({kind:'fade',el:b1,t:B(54)+.05,dur:.15});A.push({kind:'bar',el:b1,t:B(54)+.1+i*.04,p:w/30*100});
+  const b2=mk(10,`<div style="position:relative;width:300px;height:22px;margin-top:9px;background:#17130f18"><div class="bar" style="position:absolute;left:0;top:0;bottom:0;width:0;background:${n<32?'#b3261e':'#8a7f70'}"></div></div><span class="num" style="position:absolute;left:316px;top:0;font-size:31px;letter-spacing:-1px;color:${n<32?'#b3261e':'#17130f'}">${n}%</span>`,{left:cx[2]+'px',top:y+'px',width:'440px',height:'44px',zIndex:14});
+  A.push({kind:'fade',el:b2,t:B(56)+.05,dur:.15});A.push({kind:'bar',el:b2,t:B(56)+.1+i*.04,p:n/50*100});});
+ EVENTS.push({t:B(54)+.1,kind:'tick',dur:.8});EVENTS.push({t:B(56)+.1,kind:'tick',dur:.8});
+ pen(10,B(54)+1.2,'≈ 一样',1000,118,{fs:44,rot:-4,dur:.4});
+ stroke(10,B(54)+1.7,ellipse(460,ry(0)+20,230,32,-1),{dur:.5});
+ pen(10,B(54)+2.1,'最好的签，反而是内战 BLG-IG',250,838,{fs:40,rot:-1.5,dur:.7});
+ pen(10,B(56)+1.3,'↑ 内战 + 碰 T1',1300,838,{fs:40,rot:-2,dur:.5});}
 
-// ================= SCENE 11: Round 4
-const P11=paper(11,B(56)+.2,440,150,1040,540,-2,`<div style="display:flex;justify-content:space-between"><span class="src">SWISS · ROUND 4 · BO3</span><span class="src">北京时间 10.29 04:00</span></div>
+// ================= SCENE 11: what the model can't see
+paper(11,B(58)+.2,560,220,800,520,-1.5,`<div class="src">模型看不到的</div><div style="margin-top:30px">${['状态','心态','临场 BP'].map(x=>`<div style="display:flex;align-items:center;gap:26px;margin-bottom:26px"><span style="display:inline-block;width:64px;height:64px;border:4px solid #17130f"></span><span class="serif" style="font-size:64px">${x}</span></div>`).join('')}</div>`,{clean:false});
+stroke(11,B(58)+1.0,[0,1,2].map(i=>penLine([[602,322+i*120],[654,374+i*120]],{w:9})+penLine([[654,322+i*120],[602,374+i*120]],{w:9})).join(''),{dur:.9});
+
+// ================= SCENE 12: Round 4
+const P11=paper(12,B(60)+.2,440,150,1040,540,-2,`<div style="display:flex;justify-content:space-between"><span class="src">SWISS · ROUND 4 · BO3</span><span class="src">北京时间 10.29 04:00</span></div>
  <div style="display:flex;justify-content:space-around;margin-top:50px">${['BLG','TES','IG'].map(t=>`<div style="text-align:center"><div class="num" style="font-size:140px;line-height:1">${t}</div><div class="serif" style="font-size:40px;margin-top:10px;opacity:.7">2-1</div></div>`).join('')}</div>
  <div class="wl" style="border-top:4px dashed #17130f55;margin-top:40px;padding-top:18px;display:flex;justify-content:space-between;opacity:0"><span class="serif" style="font-size:34px">对手：抽签未公布</span><span class="serif" style="font-size:34px">撞上内战：<span style="color:#b3261e">${D.civil}</span></span></div>`,{clean:true,pad:'34px 50px'});
-A.push({kind:'show',sel:'.wl',t:B(56)+1.0,el:P11.el});
-tape(11,B(56)+.25,420,140,-25);tape(11,B(56)+.25,1350,140,25);
-pen(11,B(60)+.2,'?',1500,110,{fs:260,rot:8,dur:.4});
+A.push({kind:'show',sel:'.wl',t:B(60)+.7,el:P11.el});
+tape(12,B(60)+.25,420,140,-25);tape(12,B(60)+.25,1350,140,25);
+pen(12,B(60)+1.5,'?',1500,110,{fs:260,rot:8,dur:.4});
 
 // ================= subtitles + end card
 const subs=LINES.map(([a,b,h])=>{const d=document.createElement('div');d.className='sub';d.innerHTML=`<div class="bg" style="clip-path:${torn(18,.03)}"></div><span>${h}</span>`;document.body.appendChild(d);return {d,a,b}});

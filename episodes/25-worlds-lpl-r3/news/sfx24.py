@@ -50,7 +50,7 @@ for e in sorted(E, key=lambda e: e['t']):
     elif e['kind'] == 'pen': add(scratch(e.get('dur', .5)), t, pan=.15)
     elif e['kind'] == 'tick':
         for i in range(28): add(tick(), t + e['dur'] * (1 - (1 - i / 28) ** 2), pan=-.2)
-for bar in [10, 14, 22, 26, 32, 36, 40, 44, 50, 54, 56]: add(whoosh(.9), B(bar) - .75)   # camera glides
+for bar in [10, 14, 22, 26, 32, 36, 40, 44, 48, 52, 58, 60]: add(whoosh(.9), B(bar) - .75)   # camera glides
 add(thup(.6), 125.4)                                                             # end card
 o *= .8; lim = 10 ** (-0.3 / 20); m = mus + o; gg = np.ones(L)
 for c in range(2):
