@@ -14,9 +14,9 @@ HB = 60 / 72                                   # heartbeat period, 72 BPM
 heart = [round(1.0 + i * HB, 4) for i in range(11)]          # 1.00 … 9.33
 steps = heart[2:9]                             # the big cat's footfalls (it stops after the 7th)
 lanes = [
-    {'key': 'b60', 'bpm': 60, 'appear': 10.3, 'first': 12.0, 'fur': 'blue', 'mood': 'sleep', 'word': '咚', 'y': 440},
-    {'key': 'b120', 'bpm': 120, 'appear': 15.3, 'first': 17.0, 'fur': 'yellow', 'mood': 'happy', 'word': '嗒', 'y': 690},
-    {'key': 'b180', 'bpm': 180, 'appear': 20.3, 'first': 22.0, 'fur': 'pink', 'mood': 'sweat', 'word': '次', 'y': 940},
+    {'key': 'b60', 'bpm': 60, 'appear': 10.3, 'first': 12.0, 'fur': 'blue', 'cast': 'yanweifu', 'mood': 'sleep', 'word': '咚', 'y': 440},
+    {'key': 'b120', 'bpm': 120, 'appear': 15.3, 'first': 17.0, 'fur': 'yellow', 'cast': 'huihui', 'mood': 'happy', 'word': '嗒', 'y': 690},
+    {'key': 'b180', 'bpm': 180, 'appear': 20.3, 'first': 22.0, 'fur': 'pink', 'cast': 'sanhua', 'mood': 'sweat', 'word': '次', 'y': 940},
 ]
 END_HIT = 29.0
 for ln in lanes:

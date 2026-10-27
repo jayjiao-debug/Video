@@ -163,6 +163,7 @@ export function handDefs(style, frameSeed = 0) {
 	}
 	d += `<filter id="hblur"><feGaussianBlur stdDeviation="6"/></filter>`;
 	d += `<clipPath id="hbody" clipPathUnits="userSpaceOnUse"><path d="M-56 -8 C-62 -50 -40 -86 0 -86 C40 -86 62 -50 56 -8 C54 8 32 13 0 13 C-32 13 -54 8 -56 -8 Z"/></clipPath>`;
+	d += `<clipPath id="hhead" clipPathUnits="userSpaceOnUse"><path d="M-58 -98 C-62 -136 -30 -152 0 -152 C30 -152 62 -136 58 -98 C56 -66 30 -56 0 -56 C-30 -56 -56 -66 -58 -98Z"/></clipPath>`;
 	d += `<filter id="paper" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" seed="5" result="p"/><feColorMatrix type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.28  0 0 0 0.09 0"/></filter>`;
 	return d + '</defs>';
 }
@@ -172,3 +173,64 @@ export function paper(W, H) {
 export const setHandStyle = (k) => { ST = HSTYLES[k]; };
 export const handLine = () => ST.line;
 export { shapes, ell, face, bow, burst as handBurst };
+
+// ---- B · 大头小猫: the big-head standing kitten the owner picked (2026-10-27). origin = ground between the feet.
+// o: { coat, mark, bow, face, ph (walk phase, footfall on whole numbers), arms: swing|up|hold, alpha, seed, pop, word, wordCol, wag (0..1) }
+const earsAt = (lx, rx, y, fur, k = 1) => shapes([
+	{ d: `M${lx - 10 * k} ${y + 18 * k} C${lx - 14 * k} ${y - 8 * k} ${lx - 8 * k} ${y - 24 * k} ${lx} ${y - 26 * k} C${lx + 10 * k} ${y - 22 * k} ${lx + 20 * k} ${y - 8 * k} ${lx + 26 * k} ${y + 4 * k} Z`, fill: fur.l },
+	{ d: `M${rx + 10 * k} ${y + 18 * k} C${rx + 14 * k} ${y - 8 * k} ${rx + 8 * k} ${y - 24 * k} ${rx} ${y - 26 * k} C${rx - 10 * k} ${y - 22 * k} ${rx - 20 * k} ${y - 8 * k} ${rx - 26 * k} ${y + 4 * k} Z`, fill: fur.r }])
+	+ `<path d="M${lx - 4 * k} ${y + 8 * k} C${lx - 4 * k} ${y - 6 * k} ${lx} ${y - 14 * k} ${lx + 4 * k} ${y - 15 * k} C${lx + 10 * k} ${y - 10 * k} ${lx + 14 * k} ${y - 4 * k} ${lx + 16 * k} ${y + 2 * k}Z" fill="${PINK}" opacity=".7"/>`
+	+ `<path d="M${rx + 4 * k} ${y + 8 * k} C${rx + 4 * k} ${y - 6 * k} ${rx} ${y - 14 * k} ${rx - 4 * k} ${y - 15 * k} C${rx - 10 * k} ${y - 10 * k} ${rx - 14 * k} ${y - 4 * k} ${rx - 16 * k} ${y + 2 * k}Z" fill="${PINK}" opacity=".7"/>`;
+const limb = (d, fur, w) => `<path d="${d}" fill="none" stroke="${ST.line}" stroke-width="${w + 2 * ST.lw}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${fur}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const HEAD = 'M-58 -98 C-62 -136 -30 -152 0 -152 C30 -152 62 -136 58 -98 C56 -66 30 -56 0 -56 C-30 -56 -56 -66 -58 -98Z';
+const TORSO = 'M-30 -62 C-38 -34 -36 -4 -18 4 L18 4 C36 -4 38 -34 30 -62 Z';
+export function handChibi(x, y, s, o = {}) {
+	const c = COATS[o.coat || 'ginger'], dark = o.coat === 'tux';
+	const paw = dark ? c.light : c.fur;
+	let bob = 0, sq = 1, lift = [0, 0], swing = 0, tilt = 0;
+	if (o.ph !== undefined) {
+		const k = Math.floor(o.ph), u = o.ph - k, l = Math.sin(Math.PI * u);
+		bob = -9 * l; sq = 1 - 0.07 * Math.max(0, 1 - u * 6);
+		lift = k % 2 ? [l, 0] : [0, l];
+		swing = (k % 2 ? 1 : -1) * Math.sin(Math.PI * u);   // arms swing against the legs
+		tilt = (k % 2 ? 1 : -1) * 3 * l;
+	}
+	const hit = o.face === 'hit';
+	if (hit) sq -= 0.04;
+	const wag = Math.sin((o.wag ?? 0) * Math.PI * 2) * 8;
+	let g = `<g transform="translate(${x} ${y}) scale(${s})" opacity="${o.alpha ?? 1}"><g filter="url(#hd${(o.seed ?? 0) % 3})">`;
+	// tail
+	g += limb(`M18 -22 C50 -22 ${62 + wag} -50 ${50 + wag} -72 C${46 + wag} -80 ${38 + wag} -76 ${42 + wag} -68`, c.fur, 13);
+	if (o.mark === 'tabby' || o.mark === 'calico') g += `<path d="M44 -34 L54 -38 M${54 + wag * .6} -52 L${64 + wag * .6} -52" stroke="${c.dark}" stroke-width="4.5" stroke-linecap="round"/>`;
+	// feet
+	g += shapes([{ d: ell(-15 - 4 * lift[0], 6 - 12 * lift[0], 13, 9), fill: paw }, { d: ell(15 - 4 * lift[1], 6 - 12 * lift[1], 13, 9), fill: paw }]);
+	g += `<g transform="translate(0 ${bob.toFixed(2)}) scale(${(2 - sq).toFixed(3)} ${sq.toFixed(3)}) rotate(${tilt.toFixed(2)} 0 -60)">`;
+	// torso + belly
+	g += shapes([{ d: TORSO, fill: c.fur }]);
+	g += `<g transform="translate(${ST.mis[0]} ${ST.mis[1]})"><ellipse cx="0" cy="-24" rx="16" ry="19" fill="${c.light}" opacity="${dark ? 1 : .85}"/></g>`;
+	// arms
+	const arms = hit || o.arms === 'up' ? [[-46, -92], [46, -94]] : [[-38 + 10 * swing, -24 - 4 * Math.abs(swing)], [38 + 10 * swing, -24 - 4 * Math.abs(swing)]];
+	g += limb(`M-22 -52 Q${(arms[0][0] - 22) / 2 - 6} ${(arms[0][1] - 52) / 2} ${arms[0][0]} ${arms[0][1]}`, c.fur, 13) + limb(`M22 -52 Q${(arms[1][0] + 22) / 2 + 6} ${(arms[1][1] - 52) / 2} ${arms[1][0]} ${arms[1][1]}`, c.fur, 13);
+	g += shapes([{ d: ell(arms[0][0], arms[0][1], 8.5, 8), fill: paw, lw: .8 }, { d: ell(arms[1][0], arms[1][1], 8.5, 8), fill: paw, lw: .8 }]);
+	// bow tie at the neck
+	if (o.bow) g += `<g transform="translate(9 -46)">${bow(o.bow)}</g>`;
+	// head (with its own small lag on the bob) + ears
+	g += `<g transform="translate(0 ${(-bob * 0.25).toFixed(2)})">`;
+	const earR = o.mark === 'patch' ? c.dark : o.mark === 'calico' ? c.patch2 : c.fur;
+	g += earsAt(-36, 34, -144, { l: c.fur, r: earR }, 1.05);
+	g += `<g transform="translate(${ST.mis[0]} ${ST.mis[1]})"><path d="${HEAD}" fill="${c.fur}"/><g clip-path="url(#hhead)">`;
+	if (o.mark === 'tabby') g += `<path d="M-14 -150 L-12 -134 M0 -152 L0 -135 M14 -150 L12 -134" stroke="${c.dark}" stroke-width="5.5" stroke-linecap="round"/><path d="M-60 -104 L-48 -102 M-60 -92 L-49 -92 M60 -104 L48 -102 M60 -92 L49 -92" stroke="${c.dark}" stroke-width="5" stroke-linecap="round"/>`;
+	if (o.mark === 'patch') g += `<path d="M4 -156 C34 -156 62 -136 62 -108 C44 -104 26 -114 18 -126 C12 -136 6 -146 4 -156Z" fill="${c.dark}"/>`;
+	if (o.mark === 'calico') g += `<path d="M-62 -116 C-52 -150 -22 -158 -12 -142 C-18 -128 -38 -118 -62 -110Z" fill="${c.dark}"/><path d="M14 -156 C42 -154 62 -134 62 -114 C46 -116 30 -126 20 -140Z" fill="${c.patch2}"/>`;
+	if (dark) g += `<path d="M-30 -60 C-40 -76 -30 -96 -10 -94 C10 -96 22 -80 12 -60 Z" fill="${c.light}"/>`;
+	if (ST.gloss) g += `<path d="M-42 -120 C-38 -134 -26 -140 -14 -141" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".8"/>`;
+	g += `</g></g><path d="${HEAD}" fill="none" stroke="${ST.line}" stroke-width="${ST.lw}" stroke-linejoin="round"/>`;
+	if (ST.sketch) g += `<path d="${HEAD}" fill="none" stroke="${ST.line}" stroke-width="${ST.lw * .45}" opacity=".35" transform="translate(1.6 -1.2) rotate(.6)"/>`;
+	g += `<g transform="translate(9 -60)">${face(o.face || 'happy', c, dark)}</g>`;
+	g += `</g></g></g>`;
+	// effects
+	if (hit) { const p = o.pop ?? 1; g += `<g opacity="${Math.min(1, p * 1.5).toFixed(3)}" transform="translate(0 -84) scale(${((0.75 + 0.25 * p) * 0.8).toFixed(3)})">${burst(o.word, o.wordCol)}</g>`; }
+	if (o.face === 'sweat') g += `<path d="M56 -150 C52 -142 50 -136 56 -132 C62 -136 60 -142 56 -150Z" fill="#A8D4F2" stroke="${ST.line}" stroke-width="2"/><path d="M68 -134 C65 -128 64 -124 68 -121 C72 -124 71 -128 68 -134Z" fill="#A8D4F2" stroke="${ST.line}" stroke-width="2"/>`;
+	if (o.face === 'sleep') g += `<text x="44" y="-160" font-size="30" font-weight="900" fill="#8AA4D6" font-family="Noto Sans CJK SC, sans-serif">z</text><text x="64" y="-180" font-size="22" font-weight="900" fill="#8AA4D6" font-family="Noto Sans CJK SC, sans-serif">z</text>`;
+	return g + `</g>`;
+}

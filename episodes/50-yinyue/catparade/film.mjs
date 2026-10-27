@@ -3,19 +3,27 @@
 import { createRequire } from 'module'; const { chromium } = createRequire(import.meta.url)('playwright');
 import fs from 'fs';
 import { W, H, L, setLook, cat as flatCat, defs, background, T, subtitle, bpmBadge, ol } from '../look/parade.mjs';
-import { handCat, handDefs, paper } from '../look/handcat.mjs';
+import { handCat, handChibi, handDefs, paper } from '../look/handcat.mjs';
+import { stickerDefs, stickerCat } from '../look/stickercat.mjs';
 // HAND=crayon|watercolor|marker draws the hand-drawn cats (lines boil 8 times a second); unset = the flat pastel cats
 const HAND = process.env.HAND || null;
-const HANDCAST = { yellow: { coat: 'ginger', mark: 'tabby', bow: '#E8746C' }, blue: { coat: 'grey', mark: 'patch', bow: '#7FA8E8' }, pink: { coat: 'cream', mark: 'none', bow: '#F49AB8' } };
-let SEED = 0;
+const HANDCAST = { yellow: { coat: 'ginger', mark: 'tabby', bow: '#E8746C' }, blue: { coat: 'grey', mark: 'patch', bow: '#7FA8E8' }, pink: { coat: 'calico', mark: 'calico', bow: '#F49AB8' } };
+const KITTEN = process.env.KITTEN !== '0';                  // the big-head kitten (picked 2026-10-27); KITTEN=0 = the dumpling cat
+// the sticker cats (style 2 贴纸吉祥物, picked 2026-10-27) are the default; STICKER=0 = the old code-drawn cats
+const STICKER = !HAND && process.env.STICKER !== '0';
+const STICKCAST = { yellow: 'juzi', blue: 'yanweifu', pink: 'sanhua' };
+let SEED = 0, TNOW = 0;
 function cat(x, y, s, o) {
+	if (STICKER) return stickerCat(x, y, s, { ...o, cast: o.cast || STICKCAST[o.fur] });
 	if (!HAND) return flatCat(x, y, s, o);
 	const k = HANDCAST[o.fur] || HANDCAST.yellow;
-	return handCat(x, y, s * 0.92, { ...o, ...k, seed: SEED++ });
+	const seed = SEED++;
+	if (KITTEN) return handChibi(x, y, s * 0.95, { ...o, ...k, seed, wag: TNOW * 0.7 + seed * 0.37 });
+	return handCat(x, y, s * 0.92, { ...o, ...k, seed });
 }
 
 const WD = process.argv[2]; const SC = JSON.parse(fs.readFileSync(`${WD}/score.json`, 'utf8'));
-const FR = `${WD}/frames${process.env.HAND ? '_' + process.env.HAND : ''}`; fs.mkdirSync(FR, { recursive: true });
+const FR = `${WD}/frames${HAND ? '_' + HAND : STICKER ? '_sticker' : ''}`; fs.mkdirSync(FR, { recursive: true });
 setLook('A');
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const ramp = (t, a, d = 0.35) => clamp((t - a) / d);
@@ -25,7 +33,7 @@ const lastBefore = (arr, t) => { let r = -1e9; for (const x of arr) if (x <= t) 
 const G = (o, inner) => o <= 0.001 ? '' : `<g opacity="${o.toFixed(3)}">${inner}</g>`;
 
 // ------------------------------------------------------------------ part 1: one cat, one heartbeat
-const HB = 60 / 72, S0 = SC.steps[0], NST = SC.steps.length, X0 = 1960, STRIDE = 190, GY = 680, BIG = 1.9;
+const HB = 60 / 72, S0 = SC.steps[0], NST = SC.steps.length, X0 = 1960, STRIDE = 190, GY = 680, BIG = STICKER ? 2.2 : 1.9;
 function hook(t) {
 	let s = '';
 	const out = 1 - ramp(t, SC.jump, 0.45);                  // everything but the cat leaves with the jump
@@ -56,16 +64,16 @@ function hook(t) {
 	if (t >= SC.jump) {                                       // crouch, then fly up and away
 		const u = t - SC.jump;
 		if (u < 0.12) { o.ph = 1000.9; face = 'wow'; }
-		else { const v = clamp((u - 0.12) / 0.33); y = GY - 1100 * v * v; face = 'wow'; }
+		else { const v = clamp((u - 0.12) / 0.33); y = GY - 1100 * v * v; face = 'wow'; o.stretch = clamp(v * 3); }
 	}
-	if (x < 2150 && y > -200) s += cat(x, y, BIG, { fur: 'yellow', face, ...o });
+	if (x < 2150 && y > -200) s += cat(x, y, BIG, { fur: 'yellow', cast: 'juzi', face, ...o });
 	s += G(fadeIO(t, SC.subs[0].a, SC.subs[0].b), subtitle(SC.subs[0].text));
 	return s;
 }
 
 // ------------------------------------------------------------------ part 2: BPM lanes, one play line
 const PH = 760, V = 480, LX0 = 330;
-const SCALE = { 60: 0.9, 120: 0.9, 180: 0.8 };
+const SCALE = STICKER ? { 60: 1.05, 120: 1.05, 180: 0.95 } : { 60: 0.9, 120: 0.9, 180: 0.8 };
 function bpm(tReal) {
 	let s = '';
 	const t = Math.min(tReal, SC.end);                         // the parade freezes on the last unison hit
@@ -96,7 +104,7 @@ function bpm(tReal) {
 			const hit = d >= 0 && (d < Math.min(0.22, P * 0.7) || isEnd);
 			let alpha = la * clamp((x - 250) / 120);
 			if (d > 0 && !isEnd) alpha *= 1 - 0.5 * clamp(d / 0.3);
-			const o = { fur: ln.fur, ph: d / P + 1000, face: hit ? 'hit' : ln.mood, alpha };
+			const o = { fur: ln.fur, cast: ln.cast, mood: ln.mood, ph: d / P + 1000, face: hit ? 'hit' : ln.mood, alpha };
 			if (hit) { o.pop = isEnd ? clamp(1 - d / 1.2, 0.6) : clamp(1 - d / 0.3); o.word = h >= SC.end - 1e-3 ? '咚!' : ln.word; o.wordCol = L.red; hitsDrawn.push([x, y, SCALE[ln.bpm], o]); }
 			else s += cat(x, y, SCALE[ln.bpm], o);
 		}
@@ -107,23 +115,27 @@ function bpm(tReal) {
 }
 
 function frame(t) {
-	SEED = 0;
+	SEED = 0; TNOW = t;
 	let s = defs() + (HAND ? handDefs(HAND, Math.floor(t * 8) * 7) + paper(W, H) : background());
 	if (t < 10.4) s += hook(t);
 	if (t >= 9.9) s += bpm(t);
 	if (t > 29.6) s += `<rect width="${W}" height="${H}" fill="${L.bg}" opacity="${ramp(t, 29.6, 0.4).toFixed(3)}"/>`;
-	return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+	return s;
 }
 
 // ------------------------------------------------------------------ render: 4 workers, interleaved frames
 const NF = Math.round(SC.dur * SC.fps), WORKERS = 4;
 const only = process.argv[3] ? process.argv[3].split(',').map(Number) : null;   // optional: list of times in seconds (stills)
+const SDEFS = STICKER ? stickerDefs() : '';
 const browser = await chromium.launch();
 async function work(k) {
 	const page = await browser.newPage({ viewport: { width: W, height: H } });
+	await page.setContent(`<html><body style="margin:0;background:${L.bg}"><svg id="root" xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${SDEFS}<g id="scene"></g></svg></body></html>`);
+	await page.evaluate(() => Promise.all([...document.querySelectorAll('image')].map(im => new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = im.getAttribute('href'); }))));
+	await page.waitForTimeout(200);
 	const list = only ? only.filter((_, i) => i % WORKERS === k).map(t => Math.round(t * SC.fps)) : Array.from({ length: NF }, (_, i) => i).filter(i => i % WORKERS === k);
 	for (const i of list) {
-		await page.setContent(`<html><body style="margin:0;background:${L.bg}">${frame(i / SC.fps)}</body></html>`);
+		await page.evaluate((h) => { document.getElementById('scene').innerHTML = h; }, frame(i / SC.fps));
 		await page.screenshot({ path: `${FR}/f${String(i).padStart(4, '0')}.png` });
 	}
 }
