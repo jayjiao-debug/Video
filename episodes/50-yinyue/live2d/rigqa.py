@@ -20,8 +20,15 @@ for k, vs in ext.items():
     if k in RIG.L or k in ('head', 'body') or (k.startswith('ear') and info['head'].get('ears')):
         for i, v in enumerate(vs): cases.append((f'{k}{"+-"[i]}', {k: v}))
 cases.append(('all+', {k: vs[0] for k, vs in ext.items()})); cases.append(('all-', {k: vs[1] for k, vs in ext.items()}))
-joints = {'neck': (512, nk), **{f'ear{s}': (e['notch'][0] + d, 150) for s, d, e in zip('LR', (-60, 60), info['head'].get('ears', []))}, **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
+joints = {'neck': (512, nk), **{f'ear{s}': (e['tip'][0] + d, 150) for s, d, e in zip('LR', (45, -45), info['head'].get('ears', []))}, **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
 rest = compose({})
+def _skull():
+    # notches measured from the rest art (the lowest point of the head-top silhouette between the ear tips), not from the config
+    al = np.asarray(rest)[..., 3] > 128; top = np.array([np.argmax(c) if c.any() else 0 for c in al.T])
+    tl, tr = (min(e['tip'][0] for e in info['head']['ears']), max(e['tip'][0] for e in info['head']['ears']))
+    mid = (tl + tr) // 2; nl = tl + int(np.argmax(top[tl:mid])); nr = mid + int(np.argmax(top[mid:tr]))
+    return nl + 10, nr - 10
+SKULL = _skull() if info['head'].get('ears') else None
 CORE = nd.binary_erosion(np.asarray(RIG.L['torso'])[..., 3] > 200, iterations=4)   # moving parts may uncover background; the body itself never may
 findings = []
 def check(name, comp, T=None):
@@ -39,7 +46,7 @@ def check(name, comp, T=None):
         ys, xs = np.where(lab == i)
         if 2 <= len(ys) <= 80: findings.append({'case': name, 'type': 'matte-speck', 'px': int(len(ys)), 'at': [int(xs.mean()), int(ys.mean())]})
     if T and set(T) <= {'earL', 'earR'} and info['head'].get('ears'):       # an ear bend must leave the skull top between the notches alone
-        nl, nr = (e['notch'][0] for e in info['head']['ears']); lo, hi = sorted((nl, nr))
+        lo, hi = SKULL
         dif = np.abs(rgb - np.asarray(rest)[..., :3].astype(float)).max(2)[60:240, lo + 12:hi - 11] > 40
         if dif.sum() > 6: findings.append({'case': name, 'type': 'skull-moved', 'px': int(dif.sum()), 'at': [512, 150]})
     dark = (rgb.mean(2) < 120) & (a > .5)
@@ -55,7 +62,8 @@ for name, T in cases:
     comp = compose(T); check(name, comp, T)
     row = [on(comp, (255, 0, 255)).resize((340, 340))]
     for j, (jx, jy) in joints.items():
-        jx, jy = int(jx), int(jy); box = (max(0, jx - 110), max(0, jy - 110), min(1024, jx + 110), min(1024, jy + 110))
+        jx, jy = int(jx), int(jy); h = 150 if j.startswith('ear') else 110
+        box = (max(0, jx - h), max(0, jy - h), min(1024, jx + h), min(1024, jy + h))
         for col in ((255, 0, 255), (30, 34, 52)):
             row.append(on(comp, col).crop(box).resize((340, 340), Image.LANCZOS))
     sheets.append((name, row))
@@ -69,4 +77,4 @@ for si in range(0, len(sheets), 4):
     img.save(f'{OUT}/{pose}_qa_{si // 4}.png')
 json.dump({'pose': pose, 'cases': [c[0] for c in cases], 'joints': list(joints), 'findings': findings}, open(f'{OUT}/{pose}_qa.json', 'w'), indent=1)
 from collections import Counter
-print(pose, 'sheets', (len(sheets) + 3) // 4, 'findings', Counter(f['type'] for f in findings))
+print('skull band', SKULL); print(pose, 'sheets', (len(sheets) + 3) // 4, 'findings', Counter(f['type'] for f in findings))
