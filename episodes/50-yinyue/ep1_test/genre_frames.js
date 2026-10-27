@@ -62,21 +62,22 @@ const LINEUP = {
 			{ draw: (x, y, s, h) => gVox(x + 40, y, s * .82, 'rock', { sing: h }), c: BAND.vox, name: '主唱 · 大嗓门', parts: [[[1,0,1,0, 1,0,0,1, 0,0,1,0, 1,0,0,0], 2, 'bar']] },
 		] },
 };
-function genreFrame(genre) {
+function genreFrame(genre, st = {}) {
+	const NOWS = st.now ?? GNOW;
 	const L = LINEUP[genre], n = L.players.length, W = 1920 / n, top = 150, bot = 720, sl = 34;
-	let s = `<rect width="1920" height="1080" fill="#1E2230"/><g transform="translate(0 ${top})"><clipPath id="stageclip"><rect width="1920" height="${bot - top}"/></clipPath><g clip-path="url(#stageclip)" transform="scale(1 ${(bot - top) / 720})">${STAGE[genre]()}</g></g>`;
+	let s = `<rect width="1920" height="1080" fill="#1E2230"/><g transform="translate(0 ${top})"><clipPath id="stageclip${genre}"><rect width="1920" height="${bot - top}"/></clipPath><g clip-path="url(#stageclip${genre})" transform="scale(1 ${(bot - top) / 720})">${STAGE[genre]()}</g></g>`;
 	L.players.forEach((p, i) => {
 		const x0 = i * W, cx = x0 + W / 2;
-		const on = p.parts.some(([pat, len]) => [...Array(len).keys()].some((d) => pat[GNOW - d]));
-		s += `<clipPath id="pc${i}"><polygon points="${[[x0 + sl, top], [x0 + W + sl, top], [x0 + W - sl, bot], [x0 - sl, bot]].map((q) => q.join(',')).join(' ')}"/></clipPath>`;
-		s += `<g clip-path="url(#pc${i})"><g opacity="${on ? 1 : .8}">${p.draw(cx, bot - 24, n > 5 ? .62 : .7, on ? 1 : 0)}</g>
+		const on = p.parts.some(([pat, len]) => [...Array(len).keys()].some((d) => pat[NOWS - d]));
+		s += `<clipPath id="pc${genre}${i}"><polygon points="${[[x0 + sl, top], [x0 + W + sl, top], [x0 + W - sl, bot], [x0 - sl, bot]].map((q) => q.join(',')).join(' ')}"/></clipPath>`;
+		s += `<g clip-path="url(#pc${genre}${i})"><g opacity="${on ? 1 : .8}">${p.draw(cx, bot - 24 + (st.bobs ? st.bobs[i] : 0), n > 5 ? .62 : .7, st.act ? st.act[i] : (on ? 1 : 0))}</g>
 			<rect x="${x0 - 40}" y="${bot - 16}" width="${W + 80}" height="16" fill="${p.c.col}"/>${on ? '' : `<rect x="${x0 - 40}" y="${top}" width="${W + 80}" height="${bot - top}" fill="#000" opacity=".22"/>`}</g>`;
 		if (i > 0) s += poly([[x0 + sl - 6, top], [x0 + sl + 6, top], [x0 - sl + 6, bot], [x0 - sl - 6, bot]], '#1E2230');
 		const tag = p.band ? p.band.map((h) => `<tspan fill="${h.col}">■</tspan>`).join('') + ' ' : '';
 		s += `<text x="${cx}" y="${bot + 50}" text-anchor="middle" ${F} font-size="${n > 5 ? 26 : 30}" font-weight="900" fill="${p.c.col}">${tag}${p.name}</text>`;
 		const cw = n > 5 ? 50 : 56, gap = 7, gx = cx - (4 * cw + 3 * gap) / 2, gy = bot + 74;
 		for (let k = 0; k < 16; k++) {
-			const x = gx + (k % 4) * (cw + gap), y = gy + Math.floor(k / 4) * (cw + gap), cur = k === GNOW;
+			const x = gx + (k % 4) * (cw + gap), y = gy + Math.floor(k / 4) * (cw + gap), cur = k === NOWS;
 			s += `<rect x="${x}" y="${y}" width="${cw}" height="${cw}" rx="4" fill="${cur ? '#3A4058' : '#2A3042'}" stroke="${cur ? '#F4EEDF' : 'none'}" stroke-width="4"/>`;
 			for (const [pat, len, mark] of p.parts) {
 				const hit = pat[k], held = !hit && [...Array(len).keys()].slice(1).some((d) => pat[k - d]);
