@@ -2,10 +2,20 @@
 // node film.mjs <workdir>   (needs <workdir>/score.json from score.py) → <workdir>/frames/f0000.png …
 import { createRequire } from 'module'; const { chromium } = createRequire(import.meta.url)('playwright');
 import fs from 'fs';
-import { W, H, L, setLook, cat, defs, background, T, subtitle, bpmBadge, ol } from '../look/parade.mjs';
+import { W, H, L, setLook, cat as flatCat, defs, background, T, subtitle, bpmBadge, ol } from '../look/parade.mjs';
+import { handCat, handDefs, paper } from '../look/handcat.mjs';
+// HAND=crayon|watercolor|marker draws the hand-drawn cats (lines boil 8 times a second); unset = the flat pastel cats
+const HAND = process.env.HAND || null;
+const HANDCAST = { yellow: { coat: 'ginger', mark: 'tabby', bow: '#E8746C' }, blue: { coat: 'grey', mark: 'patch', bow: '#7FA8E8' }, pink: { coat: 'cream', mark: 'none', bow: '#F49AB8' } };
+let SEED = 0;
+function cat(x, y, s, o) {
+	if (!HAND) return flatCat(x, y, s, o);
+	const k = HANDCAST[o.fur] || HANDCAST.yellow;
+	return handCat(x, y, s * 0.92, { ...o, ...k, seed: SEED++ });
+}
 
 const WD = process.argv[2]; const SC = JSON.parse(fs.readFileSync(`${WD}/score.json`, 'utf8'));
-const FR = `${WD}/frames`; fs.mkdirSync(FR, { recursive: true });
+const FR = `${WD}/frames${process.env.HAND ? '_' + process.env.HAND : ''}`; fs.mkdirSync(FR, { recursive: true });
 setLook('A');
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const ramp = (t, a, d = 0.35) => clamp((t - a) / d);
@@ -97,7 +107,8 @@ function bpm(tReal) {
 }
 
 function frame(t) {
-	let s = defs() + background();
+	SEED = 0;
+	let s = defs() + (HAND ? handDefs(HAND, Math.floor(t * 8) * 7) + paper(W, H) : background());
 	if (t < 10.4) s += hook(t);
 	if (t >= 9.9) s += bpm(t);
 	if (t > 29.6) s += `<rect width="${W}" height="${H}" fill="${L.bg}" opacity="${ramp(t, 29.6, 0.4).toFixed(3)}"/>`;
