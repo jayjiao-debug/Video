@@ -3,9 +3,8 @@
 // Three looks of the same build-up frame (A mochi pastel, B sticker on grid paper, C neon stage) + key frames in look A.
 // node parade.mjs <outdir>
 import { createRequire } from 'module'; const { chromium } = createRequire(import.meta.url)('playwright');
-import fs from 'fs';
-const OUT = process.argv[2]; fs.mkdirSync(OUT, { recursive: true });
-const W = 1920, H = 1080, FONT = `font-family="Noto Sans CJK SC, sans-serif"`;
+import fs from 'fs'; import { pathToFileURL } from 'url';
+export const W = 1920, H = 1080, FONT = `font-family="Noto Sans CJK SC, sans-serif"`;
 
 // ------------------------------------------------------------------ looks
 const LOOKS = {
@@ -19,18 +18,27 @@ const LOOKS = {
 		fur: { pink: '#FF8FB8', yellow: '#FFE066', green: '#7CF2B0', blue: '#79C3FF', lilac: '#C9A2FF', orange: '#FFB36B', white: '#F4F1FF' },
 		blush: '#FF5C9A', gold: '#FFD34D', red: '#FF5C7A', play: '#4DF3FF' },
 };
-let L = LOOKS.A;
-const ol = (w = L.sw) => `stroke="${L.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+export let L = LOOKS.A;
+export const setLook = (k) => { L = LOOKS[k]; };
+
+export const ol = (w = L.sw) => `stroke="${L.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
 
 // ------------------------------------------------------------------ one cat
 // origin = ground between the feet; the cat faces slightly left (the way the parade walks).
 // o: { fur, inst, hat, step 0|1, face: happy|hit|sweat|sleep|wow|ouch, alpha, glow, flip }
-function cat(x, y, s, o = {}) {
+export function cat(x, y, s, o = {}) {
 	const f = L.fur[o.fur || 'yellow'], step = o.step || 0, hit = o.face === 'hit';
-	const bob = step ? -5 : 0, sq = hit ? 0.94 : 1;
+	let bob = step ? -5 : 0, sq = hit ? 0.94 : 1;
+	let fl = step ? [-24, 0] : [-20, 8], fr = step ? [16, 8] : [20, 2];
+	// animated walk: o.ph = steps walked so far (one footfall per beat, landing on whole numbers)
+	if (o.ph !== undefined) {
+		const k = Math.floor(o.ph), u = o.ph - k, lift = Math.sin(Math.PI * u);
+		bob = -8 * lift; sq = 1 - 0.08 * Math.max(0, 1 - u * 6) - (hit ? 0.03 : 0);
+		const up = [-6 * lift, -11 * lift];
+		fl = k % 2 ? [-20 + up[0], 8 + up[1]] : [-20, 8]; fr = k % 2 ? [20, 8] : [20 + up[0], 8 + up[1]];
+	}
 	let g = `<g transform="translate(${x} ${y}) scale(${o.flip ? -s : s} ${s})" opacity="${o.alpha ?? 1}" ${o.filter ? `filter="url(#${o.filter})"` : ''}>`;
 	// feet (behind the body: only the bottoms show)
-	const fl = step ? [-24, 0] : [-20, 8], fr = step ? [16, 8] : [20, 2];
 	g += `<ellipse cx="${fl[0]}" cy="${fl[1] + 4}" rx="13" ry="8" fill="${f}" ${ol()}/><ellipse cx="${fr[0]}" cy="${fr[1] + 4}" rx="13" ry="8" fill="${f}" ${ol()}/>`;
 	g += `<g transform="translate(0 ${bob}) scale(${2 - sq} ${sq})">`;
 	// tail
@@ -47,7 +55,7 @@ function cat(x, y, s, o = {}) {
 	g += inst(o.inst, f);
 	g += `</g>`;
 	// effects
-	if (hit) g += burst(o.word, o.wordCol, o.wordSide);
+	if (hit) { const p = o.pop ?? 1; g += `<g opacity="${Math.min(1, p * 1.5).toFixed(3)}" transform="scale(${(0.75 + 0.25 * p).toFixed(3)})">` + burst(o.word, o.wordCol, o.wordSide) + `</g>`; }
 	if (o.face === 'sweat') g += `<path d="M44 -96 C40 -88 38 -82 44 -78 C50 -82 48 -88 44 -96Z" fill="#9AD0F5" ${ol(2)}/><path d="M56 -78 C53 -72 52 -68 56 -65 C60 -68 59 -72 56 -78Z" fill="#9AD0F5" ${ol(2)}/>`;
 	if (o.face === 'sleep') g += `<text x="34" y="-104" font-size="30" font-weight="900" fill="${L.neon ? '#9DB8FF' : '#8AA4D6'}" ${FONT}>z</text><text x="54" y="-124" font-size="22" font-weight="900" fill="${L.neon ? '#9DB8FF' : '#8AA4D6'}" ${FONT}>z</text>`;
 	return g + `</g>`;
@@ -102,7 +110,7 @@ function hat(k, f) {
 		default: return '';
 	}
 }
-function burst(word, col, side) {
+export function burst(word, col, side) {
 	let g = '';
 	const c = col || L.play;
 	for (let i = 0; i < 8; i++) { const a = -Math.PI / 2 + (i - 3.5) * 0.36, r0 = 112, r1 = 136; g += `<path d="M${Math.cos(a) * r0} ${Math.sin(a) * r0 - 30} L${Math.cos(a) * r1} ${Math.sin(a) * r1 - 30}" stroke="${c}" stroke-width="6" stroke-linecap="round"/>`; }
@@ -111,7 +119,7 @@ function burst(word, col, side) {
 }
 
 // ------------------------------------------------------------------ shared defs (filters) and helpers
-function defs() {
+export function defs() {
 	return `<defs>
 	<filter id="sticker" x="-30%" y="-30%" width="160%" height="160%"><feMorphology in="SourceAlpha" operator="dilate" radius="7" result="d"/><feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
 		<feGaussianBlur in="d" stdDeviation="5" result="b"/><feOffset in="b" dx="4" dy="7" result="o"/><feFlood flood-color="#2a3640" flood-opacity=".22"/><feComposite in2="o" operator="in" result="sh"/>
@@ -123,20 +131,20 @@ function defs() {
 	</defs>`;
 }
 const catFilter = (hit) => L.sticker ? 'sticker' : L.neon ? (hit ? 'glow' : 'softglow') : null;
-function background() {
+export function background() {
 	if (L.sticker) return `<rect width="${W}" height="${H}" fill="${L.bg}"/><rect width="${W}" height="${H}" fill="url(#grid)"/>`;
 	if (L.neon) { let s = `<rect width="${W}" height="${H}" fill="url(#night)"/>`; for (let i = 0; i < 60; i++) { const x = (i * 337) % W, y = (i * 191) % 260; s += `<circle cx="${x}" cy="${y}" r="${1 + (i % 3)}" fill="#fff" opacity="${.15 + (i % 4) * .1}"/>`; } return s; }
 	return `<rect width="${W}" height="${H}" fill="${L.bg}"/>`;
 }
-const T = (x, y, size, txt, o = {}) => `<text x="${x}" y="${y}" font-size="${size}" font-weight="${o.w || 800}" fill="${o.fill || L.text}" text-anchor="${o.anchor || 'start'}" ${o.stroke ? `stroke="${o.stroke}" stroke-width="${o.sw || 8}" paint-order="stroke"` : ''} ${FONT}>${txt}</text>`;
-function bpmBadge(x, y, bpm) {
+export const T = (x, y, size, txt, o = {}) => `<text x="${x}" y="${y}" font-size="${size}" font-weight="${o.w || 800}" fill="${o.fill || L.text}" text-anchor="${o.anchor || 'start'}" ${o.stroke ? `stroke="${o.stroke}" stroke-width="${o.sw || 8}" paint-order="stroke"` : ''} ${FONT}>${txt}</text>`;
+export function bpmBadge(x, y, bpm) {
 	const fill = L.neon ? '#221D44' : '#FFFDF8';
 	return `<g transform="translate(${x} ${y})"><circle r="74" fill="${fill}" stroke="${L.neon ? L.play : L.ink}" stroke-width="5" ${L.neon ? 'filter="url(#glow)"' : ''}/>` + T(0, 14, 50, bpm, { anchor: 'middle', fill: L.neon ? '#fff' : L.red, w: 900 }) + T(0, 46, 22, 'BPM', { anchor: 'middle', fill: L.sub }) + `</g>`;
 }
-function subtitle(txt, y = 1036) {
+export function subtitle(txt, y = 1036) {
 	return T(W / 2, y, 50, txt, { anchor: 'middle', fill: L.neon ? '#fff' : L.ink, stroke: L.neon ? '#17152E' : L.bg, sw: 12, w: 800 });
 }
-function laneChip(x, y, col, name) {
+export function laneChip(x, y, col, name) {
 	const fill = L.neon ? '#221D44' : '#FFFDF8';
 	return `<g transform="translate(${x} ${y})"><rect x="0" y="-30" width="150" height="60" rx="30" fill="${fill}" stroke="${L.neon ? col : L.ink}" stroke-width="3.5"/><circle cx="30" cy="0" r="16" fill="${col}" ${L.neon ? '' : ol(3)}/>` + T(58, 12, 30, name, { fill: L.neon ? '#fff' : L.ink }) + `</g>`;
 }
@@ -312,6 +320,8 @@ const FRAMES = {
 	look_A_mochi: () => buildFrame('A'), look_B_sticker: () => buildFrame('B'), look_C_neon: () => buildFrame('C'),
 	kf1_hook: kfHook, kf2_bpm: kfBPM, kf3_swing: kfSwing, kf4_223: kf223, kf5_drop: kfDrop,
 };
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+const OUT = process.argv[2]; fs.mkdirSync(OUT, { recursive: true });
 const only = process.argv[3] ? process.argv[3].split(',') : Object.keys(FRAMES);
 const browser = await chromium.launch(); const page = await browser.newPage({ viewport: { width: W, height: H } });
 for (const name of only) {
@@ -320,3 +330,4 @@ for (const name of only) {
 	await page.waitForTimeout(100); await page.screenshot({ path: `${OUT}/${name}.png` }); console.log(name);
 }
 await browser.close();
+}
