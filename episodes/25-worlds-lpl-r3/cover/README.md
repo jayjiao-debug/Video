@@ -1,0 +1,1 @@
+Douyin covers (4:3 1440x1080, 3:4 1080x1440), same layout as ep23. Background: official WORLDS 26 logo image supplied by the owner (worlds26.webp, Riot Games; not committed). Not a VIBE知识大赏 episode (owner, 2026-10-27): no series pill. Put worlds26.webp next to cover.html, symlink node_modules, run: node shot.mjs
