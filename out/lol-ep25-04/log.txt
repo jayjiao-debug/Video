@@ -1,0 +1,76 @@
+token present: yes
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Main%20Event/
+  saved out/files/m_Worlds_2026_Main_Event.html 0.6 MB
+url https://gol.gg/game/stats/83662/page-game/
+  saved out/files/g83662_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83662/page-timeline/
+  saved out/files/g83662_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83663/page-game/
+  saved out/files/g83663_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83663/page-timeline/
+  saved out/files/g83663_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83664/page-game/
+  saved out/files/g83664_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83664/page-timeline/
+  saved out/files/g83664_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83665/page-game/
+  saved out/files/g83665_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83665/page-timeline/
+  saved out/files/g83665_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83666/page-game/
+  saved out/files/g83666_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83666/page-timeline/
+  saved out/files/g83666_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83667/page-game/
+  saved out/files/g83667_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83667/page-timeline/
+  saved out/files/g83667_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83668/page-game/
+  saved out/files/g83668_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83668/page-timeline/
+  saved out/files/g83668_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83669/page-game/
+  saved out/files/g83669_page-game.html 0.6 MB
+url https://gol.gg/game/stats/83669/page-timeline/
+  saved out/files/g83669_page-timeline.html 0.6 MB
+url https://gol.gg/game/stats/83670/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83670/page-game/
+url https://gol.gg/game/stats/83670/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83670/page-timeline/
+url https://gol.gg/game/stats/83671/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83671/page-game/
+url https://gol.gg/game/stats/83671/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83671/page-timeline/
+url https://gol.gg/game/stats/83672/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83672/page-game/
+url https://gol.gg/game/stats/83672/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83672/page-timeline/
+url https://gol.gg/game/stats/83673/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83673/page-game/
+url https://gol.gg/game/stats/83673/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83673/page-timeline/
+url https://gol.gg/game/stats/83674/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83674/page-game/
+url https://gol.gg/game/stats/83674/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83674/page-timeline/
+url https://gol.gg/game/stats/83675/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83675/page-game/
+url https://gol.gg/game/stats/83675/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83675/page-timeline/
+url https://gol.gg/game/stats/83676/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83676/page-game/
+url https://gol.gg/game/stats/83676/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83676/page-timeline/
+url https://gol.gg/game/stats/83677/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83677/page-game/
+url https://gol.gg/game/stats/83677/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83677/page-timeline/
+url https://gol.gg/game/stats/83678/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83678/page-game/
+url https://gol.gg/game/stats/83678/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83678/page-timeline/
+url https://gol.gg/game/stats/83679/page-game/
+  FAILED: 404 https://gol.gg/game/stats/83679/page-game/
+url https://gol.gg/game/stats/83679/page-timeline/
+  FAILED: 404 https://gol.gg/game/stats/83679/page-timeline/
+done
