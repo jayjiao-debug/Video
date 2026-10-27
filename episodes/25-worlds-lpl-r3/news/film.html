@@ -1,0 +1,253 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"Inter Display";src:url(InterDisplay-Black.otf)}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#0b0908}
+body{position:relative;font-family:"Noto Sans CJK SC",sans-serif}
+#desk{position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 45%,#3a3029 0%,#1b1714 55%,#0b0908 100%)}
+#grain{position:absolute;inset:0;opacity:.05;filter:url(#paper);background:#888}
+#cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 520px}
+.scene{position:absolute;top:0;width:1920px;height:1080px}
+.clip{position:absolute;box-sizing:border-box}
+.src{font-family:"Inter Display",sans-serif;font-size:17px;letter-spacing:1px;opacity:.65}
+.serif{font-family:'Noto Serif CJK SC';font-weight:700}
+.num{font-family:'Inter Display';font-weight:900;letter-spacing:-3px}
+.pen{font-family:'Noto Serif CJK SC';font-weight:700;color:#d02a1f;white-space:nowrap}
+.dust{position:absolute;border-radius:50%;background:#e9dcc0}
+.sub{position:absolute;left:50%;bottom:70px;z-index:50;font:700 64px 'Noto Serif CJK SC';color:#17130f;white-space:nowrap;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6));opacity:0}
+.sub .bg{position:absolute;inset:-14px -40px;background:#ECE3CF;filter:url(#paper)}
+.sub span{position:relative}.sub b{color:#b3261e;font-weight:700}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,transparent 42%,rgba(0,0,0,.6) 100%);z-index:45;pointer-events:none}
+.note{position:absolute;right:34px;top:26px;font:700 20px 'Noto Sans CJK SC';letter-spacing:2px;color:#ECE3CF;opacity:.45;z-index:46}
+#end{position:absolute;inset:0;z-index:60;opacity:0;display:flex;align-items:center;justify-content:center;background:#0b0908}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute">
+ <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .10 0"/><feComposite in2="SourceGraphic" operator="in"/><feBlend in="SourceGraphic" mode="multiply"/></filter>
+ <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
+</svg>
+<div id="desk"></div><div id="cam"></div><div id="vig"></div>
+
+<div id="end"></div>
+<script>
+// ================= timing: series track 118.5 bpm, bar n = 0.383 + 2.0248 n
+const B=n=>0.383+2.0248*n, BEAT=0.5062, TITLE=B(8), DROP=B(40), END=125.4, DUR=129.97;
+const D=window.D={ // after Swiss Round 3 (sim5_out.json, 200k runs, ep23 model 'BL'); pre-match % = model before the event
+ chain:[['赛前','21.1%',21.1],['首轮后','14.8%',14.8],['第二轮后','16.5%',16.5],['三轮后','21.8%',21.8]],
+ r1:[['IG','GEN',25],['TES','HLE',26],['BLG','MKOI',81],['AL','KC',54]],exp:'1.9',
+ r2:[['TES','AL','赢下内战',''],['IG','TSW','✓ 胜','55%'],['BLG','TL','✓ 胜','70%']],
+ r3:[['IG','HLE','✓ 爆冷','25%',1],['TES','G2','✓ 爆冷','39%',1],['BLG','KC','✓ 胜','69%',0],['AL','TL','✕ 0-2 出局','57%',2]],
+ // LPL vs other regions, 10 games: [round, team, opp, model %, won]
+ card:[[1,'IG','GEN',25,0],[1,'TES','HLE',26,0],[1,'BLG','MKOI',81,0],[1,'AL','KC',54,0],[2,'IG','TSW',55,1],[2,'BLG','TL',70,1],[3,'IG','HLE',25,1],[3,'TES','G2',39,1],[3,'BLG','KC',69,1],[3,'AL','TL',57,0]],
+ sub:[['首轮','1.9','0'],['第二轮','1.3','2'],['第三轮','1.9','3']],
+ best:[{k:'第四轮 · BO3',t:'BLG<br>赢',p:'71%'},{k:'第四轮 · BO3',t:'TES<br>赢',p:'43%'},{k:'第四轮 · BO3',t:'IG<br>赢',p:'42%'}],bestEnd:'27.6%',
+ worst:[{k:'第四轮 · BO3',t:'BLG<br>输',p:'29%',c:1},{k:'第四轮 · BO3',t:'TES<br>输',p:'57%',c:1},{k:'第四轮 · BO3',t:'IG<br>输',p:'58%',c:1}],worstEnd:'13.7%',
+ civil:'67%'};
+const LINES=[
+ [B(2)+.25,B(4),'首轮四连败：20次里，才会出现<b>1次</b>'],[B(4),B(6),'三天后：BLG、TES、IG<b>全部2-1</b>'],[B(6),TITLE-.05,'这次，我们把模型<b>复盘</b>一遍——'],
+ [B(10),B(12),'上期，我们模拟了<b>10万次</b>：五分之一'],[B(12),B(14),'之后每打完一轮，就<b>锁定比分</b>重算'],
+ [B(14),B(16),'先看首轮：IG撞<b>GEN</b>，TES撞<b>HLE</b>'],[B(16),B(18),'模型给的赛前胜率：<b>25%</b>和<b>26%</b>'],[B(18),B(20),'四场加起来，本来只预期赢<b>1.9场</b>'],[B(20),B(22),'真正的冷门只有一场：BLG（<b>81%</b>）'],
+ [B(22),B(24),'第二轮：IG、BLG都赢，TES赢下<b>内战</b>'],[B(24),B(26),'第三轮：IG（<b>25%</b>）、TES（<b>39%</b>）爆冷，AL出局'],
+ [B(26),B(28),'对外10场：单场猜胜负，模型只对了<b>一半</b>'],[B(28),B(30),'但首轮少赢的2场，后两轮<b>补回来了</b>'],[B(30),B(32),'合计：预期<b>5.0场</b>，实际正好<b>5场</b>'],
+ [B(32),B(34),'所以数字一路是：21.1 → 14.8 → 16.5'],[B(34),B(36),'三轮打完：<b>21.8%</b>，比开赛前还高'],
+ [B(36),B(38),'历史上三轮后2-1的队：18支里<b>14支</b>进八强'],[B(38),DROP-.05,'那LPL的希望，到底在谁身上？'],
+ [DROP,B(42),'<b>九成</b>，在BLG身上'],[B(42),B(44),'进八强：BLG <b>90%</b>，TES 73%，IG 70%'],
+ [B(44),B(46),'第四轮是BO3：赢一场，<b>直接</b>进八强'],[B(46),B(48),'最好的剧本：三支队<b>全赢</b>'],[B(48),B(50),'LPL夺冠：<b>27.6%</b>（前提：不撞内战）'],
+ [B(50),B(52),'最坏的剧本：三队<b>全输</b>，都掉到2-2'],[B(52),B(54),'夺冠只剩<b>13.7%</b>，但第五轮还能再打'],
+ [B(54),B(56),'当然，模型看不到：状态、心态、临场BP'],
+ [B(56),B(58),'第四轮抽签：撞上<b>内战</b>的概率67%'],[B(58),B(60),'北京时间10月29日凌晨<b>4点</b>开打'],[B(60),END-.05,'你觉得几支能进八强？<b>评论区</b>见']];
+// scene k starts (camera arrives) at bar SB[k]
+const SB=[0,10,14,22,26,32,36,40,44,50,54,56], GAP=2200;
+const EVENTS=window.EVENTS=[]; // for the SFX script: {t,kind}
+let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+const torn=(n=14,j=.012)=>{const p=[];for(let i=0;i<=n;i++)p.push(`${(i/n*100).toFixed(1)}% ${(rnd()*j*100).toFixed(2)}%`);for(let i=0;i<=n;i++)p.push(`${(100-rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);for(let i=n;i>=0;i--)p.push(`${(i/n*100).toFixed(1)}% ${(100-rnd()*j*100).toFixed(2)}%`);for(let i=n;i>=0;i--)p.push(`${(rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);return `polygon(${p.join(',')})`};
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), ease=x=>1-Math.pow(1-cl(x),3), easeIn=x=>cl(x)*cl(x), smooth=x=>{x=cl(x);return x*x*(3-2*x)};
+const cam=document.getElementById('cam');
+const scenes=SB.map((b,k)=>{const d=document.createElement('div');d.className='scene';d.style.left=(k*GAP)+'px';cam.appendChild(d);return d});
+const A=[]; // animated items: {el,t,kind,...}
+function mk(k,html,css){const d=document.createElement('div');d.className='clip';d.innerHTML=html;Object.assign(d.style,css);scenes[k].appendChild(d);return d}
+const PAPER=(inner,o={})=>`<div style="position:absolute;inset:0;background:${o.bg||'#ECE3CF'};filter:url(#paper);clip-path:${o.clean?'none':torn(o.n||14,o.j||.012)}"></div><div style="position:relative;padding:${o.pad||'26px 34px'};color:#17130f;height:100%;box-sizing:border-box">${inner}</div>`;
+// a paper that slams onto the desk at time t
+function paper(k,t,x,y,w,h,rot,inner,o={}){const el=mk(k,PAPER(inner,o),{left:x+'px',top:y+'px',width:w+'px',height:h+'px',zIndex:o.z||5});
+ const it={el,t,kind:o.from?'drop':'slam',x,y,w,h,rot,big:o.big,large:!o.big&&w*h>400000,sh:o.sh||18};A.push(it);EVENTS.push({t,kind:o.big?'big':o.soft?'soft':'slam'});
+ if(!o.nodust)dustFor(k,it);return it}
+function pen(k,t,html,x,y,o={}){const el=mk(k,`<div class="pen" style="font-size:${o.fs||52}px;transform:rotate(${o.rot||-4}deg)">${html}</div>`,{left:x+'px',top:y+'px',zIndex:o.z||16});
+ A.push({el,t,kind:'write',dur:o.dur||.5});EVENTS.push({t,kind:'pen',dur:o.dur||.5});return el}
+function stroke(k,t,svgInner,o={}){const el=mk(k,`<svg width="1920" height="1080" viewBox="0 0 1920 1080" style="overflow:visible">${svgInner}</svg>`,{left:0,top:0,zIndex:o.z||15});
+ el.querySelectorAll('[data-draw]').forEach(p=>{p.setAttribute('pathLength',1000);p.setAttribute('stroke-dasharray',p.dataset.dash||'1000');});
+ A.push({el,t,kind:'draw',dur:o.dur||.6});EVENTS.push({t,kind:'pen',dur:o.dur||.6});return el}
+const tape=(k,t,x,y,r)=>{const el=mk(k,'',{left:x+'px',top:y+'px',width:'140px',height:'40px',background:'rgba(230,220,170,.55)',transform:`rotate(${r}deg)`,zIndex:20,boxShadow:'0 2px 6px #0004'});A.push({el,t,kind:'fade',dur:.12});return el};
+const dust=[];
+function dustFor(k,c){const n=c.big?50:10;for(let i=0;i<n;i++){const d=document.createElement('div');d.className='dust';const sz=2+rnd()*(c.big?6:4);Object.assign(d.style,{width:sz+'px',height:sz+'px',zIndex:13});scenes[k].appendChild(d);
+ const a=rnd()*Math.PI*2;dust.push({d,c,a,sp:(c.big?240:110)*(.4+rnd()),ox:c.x+c.w/2+Math.cos(a)*c.w*.48,oy:c.y+c.h/2+Math.sin(a)*c.h*.48,life:.5+rnd()*.6})}}
+const head=(t,src,fs=66)=>`<div class="src" style="margin-bottom:10px">${src}</div><div class="serif" style="font-size:${fs}px;line-height:1.12;letter-spacing:2px">${t}</div><div style="margin-top:14px;height:60px;background:repeating-linear-gradient(#0002 0 2px,transparent 2px 13px)"></div>`;
+const strip=(a,b)=>`<div class="serif" style="font-size:44px;white-space:nowrap"><span class="num" style="letter-spacing:-1px">${a}</span> <span style="color:#b3261e">负</span> <span class="num" style="letter-spacing:-1px;opacity:.75">${b}</span></div>`;
+const penLine=(pts,o={})=>`<polyline data-draw="1" ${o.dash?`data-dash="${o.dash}"`:''} points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${o.c||'#c8231a'}" stroke-width="${o.w||8}" stroke-linecap="round" stroke-linejoin="round" filter="url(#rough)"/>`;
+const ellipse=(cx,cy,rx,ry,rot=-4)=>`<ellipse data-draw="1" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="#c8231a" stroke-width="8" filter="url(#rough)" transform="rotate(${rot} ${cx} ${cy})"/>`;
+
+// ================= SCENE 0: headlines slam in, then the 0–4
+const HITS=[0,2,4,5,6,6.5,7,7.5].map(b=>B(0)+b*BEAT), BIG=B(2);
+const C0=[[140,120,620,330,-7,head('瑞士轮开局<br>LPL一场未胜','GOSUGAMERS · 10.24'),2],[1120,90,600,330,5,head('LCK横扫首轮<br>LPL 0–4','ESPORTS.NET · 10.24'),3],[790,70,330,96,3,strip('IG','GEN'),6],[250,600,560,300,3,head('四支头号种子<br>0–2','HOTSPAWN · 10.25'),4],[80,470,350,96,-4,strip('TES','HLE'),6],[1500,470,380,96,5,strip('BLG','MKOI'),6],[1415,640,480,300,-4,head('LPL内战见血<br>TES击败AL','GOSUGAMERS · 10.25',56),5],[820,900,330,96,-2,strip('AL','KC'),6]];
+const bg0=C0.map(([x,y,w,h,rot,html,z],i)=>paper(0,HITS[i],x,y,w,h,rot,html,{z,pad:h<120?'18px 30px':'26px 34px'}));
+const S0=paper(0,BIG,520,300,880,470,-2.5,`<div class="src">SWISS · ROUND 1</div><div class="num" style="font-size:210px;line-height:1;letter-spacing:-6px;margin-top:6px;text-align:center">0<span style="color:#b3261e">–</span>4</div><div class="serif" style="font-size:30px;margin-top:26px;text-align:center">IG 负 GEN　TES 负 HLE　BLG 负 MKOI　AL 负 KC</div>`,{z:10,big:true});
+tape(0,BIG+.05,540,282,-28);tape(0,BIG+.05,1290,282,24);
+stroke(0,BIG+1.3,ellipse(960,468,250,112),{dur:.9});
+pen(0,BIG+2.4,'≈ 4.9%',1150,640,{fs:60,rot:-6,dur:.6});
+const title=mk(0,`<div style="position:relative;display:inline-block;transform:rotate(-2deg);filter:drop-shadow(0 26px 30px rgba(0,0,0,.65))"><div style="position:absolute;inset:-22px -70px;background:#ECE3CF;filter:url(#paper);clip-path:${torn(20,.04)}"></div><div class="serif" style="position:relative;font-size:210px;letter-spacing:30px;padding-left:30px;color:#17130f;line-height:1">0-4之后</div></div>`,{left:0,width:'1920px',top:'330px',textAlign:'center',zIndex:48});
+const tag=mk(0,`<div style="position:relative;display:inline-block;transform:rotate(1.5deg)"><div style="position:absolute;inset:-10px -30px;background:#17130f;clip-path:${torn(12,.05)}"></div><div style="position:relative;font:900 34px 'Noto Sans CJK SC';letter-spacing:6px;color:#ECE3CF">S16 · 瑞士轮三轮之后 · 模型复盘</div></div>`,{left:0,width:'1920px',top:'660px',textAlign:'center',zIndex:49});
+EVENTS.push({t:TITLE,kind:'title'});
+
+// ================= SCENE 1: last episode's printout
+{const t=B(10)+.15;const dots=[];for(let i=0;i<40*24;i++)dots.push(`<i data-i="${i}" style="display:block;width:12px;height:12px;border-radius:50%;background:#17130f2e"></i>`);
+ const P=paper(1,t,300,110,1320,700,-1.2,`<div style="display:flex;justify-content:space-between"><span class="src">上期 · S16 世界赛模拟</span><span class="src">N = 100,000</span></div>
+ <div style="display:flex;gap:56px;margin-top:22px;align-items:center"><div class="dots" style="display:grid;grid-template-columns:repeat(40,12px);gap:6px">${dots.join('')}</div>
+ <div><div class="serif" style="font-size:40px">LPL 夺冠</div><div class="num cnt" style="font-size:190px;line-height:1;color:#b3261e">21.1<span style="font-size:90px">%</span></div><div class="serif" style="font-size:40px;margin-top:6px">≈ 五分之一</div></div></div>`,{clean:true,pad:'34px 44px'});
+ A.push({kind:'dots',t:t+.3,el:P.el,n:203});EVENTS.push({t:t+.3,kind:'tick',dur:1.4});
+ tape(1,t+.05,330,90,-20);tape(1,t+.05,1480,90,18);
+ pen(1,B(12)+.25,'每打完一轮 → 锁定比分，重跑 20 万次',470,690,{fs:50,rot:-3,dur:.9});}
+
+// ================= SCENE 2: the draw
+D.r1.forEach(([a,b,p],i)=>{const x=150+i*420,y=170+(i%2)*40;
+ const c=paper(2,B(14)+.2+i*.22,x,y,380,470,(i%2?2:-2),`<div class="src">ROUND 1 · BO1</div><div class="num" style="font-size:74px;margin-top:16px">${a}</div><div class="serif" style="font-size:30px;opacity:.6">vs ${b}</div>
+  <div style="margin-top:40px;height:34px;background:#17130f18;position:relative"><div class="bar" style="position:absolute;left:0;top:0;bottom:0;width:0%;background:${p>50?'#17130f':'#8a7f70'}"></div></div>
+  <div style="display:flex;justify-content:space-between;margin-top:10px"><span class="serif" style="font-size:28px">赛前胜率</span><span class="num" style="font-size:56px">${p}%</span></div>
+  <div class="serif" style="margin-top:24px;font-size:34px;color:#b3261e">✕ 负</div>`,{z:5+i});
+ A.push({kind:'bar',t:B(16)+.1+i*.12,el:c.el,p});});
+pen(2,B(18)+.25,'预期 ≈ 1.9 胜 → 实际 0 胜',300,700,{fs:58,rot:-3,dur:.8});
+stroke(2,B(20)+.15,ellipse(1290,525,120,58,-6),{dur:.6});
+pen(2,B(20)+.6,'↑ 真正的冷门',1200,690,{fs:46,rot:4});
+
+// ================= SCENE 3: rounds 2 and 3, with the model's pre-match odds
+D.r2.forEach(([a,b,n,p],i)=>{const x=170+i*330,y=70+(i%2)*26;
+ paper(3,B(22)+.2+i*.25,x,y,300,290,(i%2?2.5:-2),`<div class="src">ROUND 2 · BO1</div><div class="num" style="font-size:74px;margin-top:12px">${a}</div><div class="serif" style="font-size:28px;opacity:.6">胜 ${b}</div><div class="serif" style="margin-top:22px;font-size:32px">${n}${p?`　<span style="opacity:.55;font-size:26px">赛前 ${p}</span>`:''}</div>`,{z:5+i});});
+pen(3,B(22)+1.3,'3 胜 1 负',1250,110,{fs:70,rot:-4});
+pen(3,B(22)+1.8,'（负的那场是内战）',1240,215,{fs:36,rot:-4,dur:.6});
+D.r3.forEach(([a,b,n,p,u],i)=>{const x=130+i*420,y=430+(i%2)*26;
+ paper(3,B(24)+.2+i*.28,x,y,380,320,(i%2?2:-2.5),`<div class="src">ROUND 3 · ${a==='AL'?'BO3':'BO1'}</div><div class="num" style="font-size:84px;margin-top:8px">${a}</div><div class="serif" style="font-size:28px;opacity:.6">${u===2?'负':'胜'} ${b}</div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:18px"><span class="serif" style="font-size:36px;color:${u?'#b3261e':'#17130f'}">${n}</span><span class="serif" style="font-size:28px;opacity:.65">赛前 ${p}</span></div>`,{z:8+i});});
+pen(3,B(24)+2.3,'→ BLG、TES、IG 都是 2-1',560,790,{fs:46,rot:-2,dur:.7});
+
+// ================= SCENE 4: the model's report card (10 games against other regions)
+{const t=B(26)+.15;paper(4,t,240,60,1440,850,-.4,`<div style="display:flex;justify-content:space-between"><span class="src">LPL 对外 10 场 · 模型赛前胜率 vs 实际结果</span><span class="src">MODEL REPORT CARD</span></div>`,{clean:true});
+ const col=[300,470,780,1100,1250,1420],hy=150,ry=(i,g)=>200+i*52+g*14;
+ const hd=mk(4,['轮次','对局','赛前胜率','结果','猜中','预期 → 实际'].map((h,j)=>`<span class="serif" style="position:absolute;left:${col[j]-240}px;font-size:26px;opacity:.55">${h}</span>`).join(''),{left:'240px',top:hy+'px',width:'1440px',height:'40px',zIndex:14});
+ A.push({kind:'fade',el:hd,t:t+.25,dur:.2});
+ D.card.forEach(([r,a,b,p,w],i)=>{const g=r-1,y=ry(i,g),first=i===0||D.card[i-1][0]!==r,hit=(p>50)===!!w;
+  const row=mk(4,`${first?`<span class="serif" style="position:absolute;left:${col[0]-col[0]}px;font-size:30px">${['首轮','第二轮','第三轮'][g]}</span>`:''}
+   <span class="num" style="position:absolute;left:${col[1]-col[0]}px;font-size:38px;letter-spacing:-1px">${a} <span style="opacity:.45;font-size:28px">vs</span> ${b}</span>
+   <span style="position:absolute;left:${col[2]-col[0]}px;top:12px;width:200px;height:18px;background:#17130f18"><span style="position:absolute;left:0;top:0;bottom:0;width:${p*2}px;background:${p>50?'#17130f':'#8a7f70'}"></span></span>
+   <span class="num" style="position:absolute;left:${col[2]-col[0]+214}px;font-size:34px;letter-spacing:-1px">${p}%</span>
+   <span class="serif" style="position:absolute;left:${col[3]-col[0]}px;font-size:32px;color:${w?'#17130f':'#b3261e'}">${w?'胜':'负'}</span>`,{left:col[0]+'px',top:y+'px',width:'1100px',height:'50px',zIndex:14});
+  A.push({kind:'fade',el:row,t:t+.4+i*.12,dur:.15});
+  const mark=mk(4,`<span class="pen" style="font-size:40px;${hit?'':'color:#8a7f70'}">${hit?'✓':'✕'}</span>`,{left:(col[4]+10)+'px',top:(y-4)+'px',zIndex:16});
+  A.push({kind:'fade',el:mark,t:B(26)+2.1+i*.1,dur:.1});
+  if(i===0||D.card[i-1][0]!==r)stroke(4,B(26)+.3+i*.12,`<line x1="290" x2="1640" y1="${y-10}" y2="${y-10}" stroke="#17130f33" stroke-width="2"/>`,{dur:.3});});
+ EVENTS.push({t:B(26)+2.1,kind:'pen',dur:1});
+ pen(4,B(26)+3.2,'5 / 10',1225,92,{fs:44,rot:-4,dur:.4});
+ D.sub.forEach(([n,e,a],g)=>{const ys=[ry(1,0)+28,ry(4,1)+28,ry(7,2)+28][g];pen(4,B(28)+.2+g*.45,`${e} → ${a}`,col[5]+10,ys-20,{fs:42,rot:-2,dur:.4})});
+ pen(4,B(30)+.25,'合计：预期 5.0 → 实际 5',640,772,{fs:58,rot:-1.5,dur:.8});
+ stroke(4,B(30)+1.2,ellipse(960,815,360,60,-1.5),{dur:.6});}
+
+// ================= SCENE 5: how our number moved
+{const t=B(32)+.15;const X=[480,780,1080,1380],Y=v=>760-(v-12)*34;
+ paper(5,t,300,110,1320,760,-1,`<div class="src">LPL 夺冠概率 · 每轮重算</div>`,{clean:true});
+ D.chain.forEach(([lab,txt,v],i)=>{const el=mk(5,`<div style="text-align:center"><div class="num" style="font-size:${i===3?120:84}px;color:${i===3?'#b3261e':'#17130f'};opacity:${i===3?1:.75}">${txt}</div><div class="serif" style="font-size:28px;opacity:.65">${lab}</div></div>`,{left:(X[i]-170)+'px',width:'340px',top:(Y(v)-(i===3?235:205))+'px',zIndex:14});
+  A.push({kind:'fade',el,t:i<3?B(32)+.2+i*.45:B(34)+.35,dur:.25});});
+ stroke(5,B(32)+.3,penLine(D.chain.slice(0,3).map(([l,x,v],i)=>[X[i],Y(v)]),{w:9,c:'#17130f'})+D.chain.slice(0,3).map(([l,x,v],i)=>`<circle cx="${X[i]}" cy="${Y(v)}" r="10" fill="#17130f"/>`).join(''),{dur:1.2});
+ stroke(5,B(34)+.15,penLine([[X[2],Y(16.5)],[X[3],Y(21.8)]],{w:11})+`<circle cx="${X[3]}" cy="${Y(21.8)}" r="13" fill="#c8231a"/>`,{dur:.4});
+ stroke(5,B(34)+.8,`<line x1="400" x2="1560" y1="${Y(21.1)}" y2="${Y(21.1)}" stroke="#17130f55" stroke-width="3" stroke-dasharray="10 12"/>`,{dur:.5});
+ pen(5,B(34)+1.2,'赛前 21.1%',1415,Y(21.1)+14,{fs:34,rot:-3});}
+
+// ================= SCENE 6: history — 2-1 after three rounds
+{const t=B(36)+.15;paper(6,t,170,100,940,700,-1.5,`<div class="src">2023–2025 · 瑞士轮三轮后 2-1 的队</div><div class="serif" style="font-size:52px;margin-top:10px">18 支 → <span style="color:#b3261e">14</span> 支进八强</div>`,{clean:false});
+ for(let i=0;i<18;i++){const c=i%6,r=Math.floor(i/6),x=240+c*135,y=290+r*135;
+  const o=mk(6,'',{left:x+'px',top:y+'px',width:'104px',height:'104px',border:'4px solid #17130f',zIndex:14});A.push({kind:'fade',el:o,t:t+.3,dur:.2});
+  if(i<14){const f=mk(6,i<2?`<div class="serif" style="font-size:52px;line-height:104px;text-align:center;color:#ECE3CF">冠</div>`:'',{left:x+'px',top:y+'px',width:'104px',height:'104px',background:i<2?'#b3261e':'#17130f',border:`4px solid ${i<2?'#b3261e':'#17130f'}`,zIndex:15});A.push({kind:'fade',el:f,t:B(36)+.9+i*.07,dur:.08});}}
+ EVENTS.push({t:B(36)+.9,kind:'tick',dur:1});
+ paper(6,B(37)+.2,1200,180,560,400,3,`<div class="src">WORLDS 2023 · 2024 · 冠军 T1</div><div class="serif" style="font-size:40px;margin-top:14px">打完三轮时：</div>${['WLW','LWW'].map((s,k)=>`<div style="display:flex;align-items:center;gap:10px;margin-top:18px"><span class="num" style="font-size:40px;width:110px">${2023+k}</span>${s.split('').map(r=>`<span style="display:inline-block;width:56px;height:56px;line-height:56px;text-align:center;border:3px solid #17130f;font:900 30px 'Noto Sans CJK SC';${r==='W'?'background:#17130f;color:#ECE3CF':''}">${r==='W'?'胜':'负'}</span>`).join('')}<span class="serif" style="font-size:40px;color:#b3261e;margin-left:12px">2-1</span></div>`).join('')}`,{z:9});
+ pen(6,B(37)+1.4,'≈ 78%',820,790,{fs:64,rot:-5,dur:.4});
+ pen(6,B(38)+.3,'?',1560,610,{fs:200,rot:8,dur:.4});}
+
+// ================= SCENE 7: nine chips of ten (drop)
+for(let i=0;i<10;i++){const blg=i<9,x=230+(i%5)*300,y=150+Math.floor(i/5)*300;
+ paper(7,DROP+i*BEAT/4,x,y,250,250,(rnd()-.5)*8,`<div style="height:100%;display:flex;align-items:center;justify-content:center"><span class="num" style="font-size:${blg?84:40}px;color:${blg?'#17130f':'#8a7f70'}">${blg?'BLG':'TES · IG'}</span></div>`,{z:5,pad:'10px',big:i===0});}
+stroke(7,B(42)+.15,ellipse(1555,575,160,150,0),{dur:.5});
+pen(7,B(42)+.6,'TES、IG 合计约一成',1150,790,{fs:46,rot:-3,dur:.7});
+
+// ================= SCENES 8/9: best and worst Round 4
+function route(k,b0,nodes,end,col,label,eb){
+ nodes.forEach((n,i)=>{const x=140+i*420,y=[170,340,190][i];
+  paper(k,B(b0)+.2+i*.6,x,y,330,280,(i%2?2.5:-2),`<div class="src">${n.k}</div><div class="serif" style="font-size:36px;margin-top:8px;line-height:1.15">${n.t}</div><div class="num" style="font-size:72px;margin-top:10px;color:${n.c?'#b3261e':'#17130f'}">${n.p}</div>`,{z:6,pad:'22px 26px'});});
+ stroke(k,B(b0)+.5,penLine([170,340,190].map((y,i)=>[305+i*420,y+320]).concat([[1560,720]]),{c:col,dash:'2 18',w:9}),{dur:3.2,z:4});
+ paper(k,B(eb)+.2,1450,560,420,260,-3,`<div style="text-align:center"><div class="serif" style="font-size:30px">${label}</div><div class="num" style="font-size:120px;line-height:1;color:${col}">${end}</div></div>`,{z:12,big:true});}
+route(8,44,D.best,D.bestEnd,'#c8231a','LPL 夺冠',48);
+pen(8,B(48)+1.1,'前提：不撞内战',1450,470,{fs:42,rot:-3,dur:.5});
+route(9,50,D.worst,D.worstEnd,'#17130f','LPL 夺冠',52);
+pen(9,B(52)+1.1,'2-2 → 第五轮再打',1440,470,{fs:42,rot:-3,dur:.5});
+
+// ================= SCENE 10: what the model can't see
+paper(10,B(54)+.2,560,220,800,520,-1.5,`<div class="src">模型看不到的</div><div style="margin-top:30px">${['状态','心态','临场 BP'].map(x=>`<div style="display:flex;align-items:center;gap:26px;margin-bottom:26px"><span style="display:inline-block;width:64px;height:64px;border:4px solid #17130f"></span><span class="serif" style="font-size:64px">${x}</span></div>`).join('')}</div>`,{clean:false});
+stroke(10,B(54)+1.0,[0,1,2].map(i=>penLine([[602,322+i*120],[654,374+i*120]],{w:9})+penLine([[654,322+i*120],[602,374+i*120]],{w:9})).join(''),{dur:.9});
+
+// ================= SCENE 11: Round 4
+const P11=paper(11,B(56)+.2,440,150,1040,540,-2,`<div style="display:flex;justify-content:space-between"><span class="src">SWISS · ROUND 4 · BO3</span><span class="src">北京时间 10.29 04:00</span></div>
+ <div style="display:flex;justify-content:space-around;margin-top:50px">${['BLG','TES','IG'].map(t=>`<div style="text-align:center"><div class="num" style="font-size:140px;line-height:1">${t}</div><div class="serif" style="font-size:40px;margin-top:10px;opacity:.7">2-1</div></div>`).join('')}</div>
+ <div class="wl" style="border-top:4px dashed #17130f55;margin-top:40px;padding-top:18px;display:flex;justify-content:space-between;opacity:0"><span class="serif" style="font-size:34px">对手：抽签未公布</span><span class="serif" style="font-size:34px">撞上内战：<span style="color:#b3261e">${D.civil}</span></span></div>`,{clean:true,pad:'34px 50px'});
+A.push({kind:'show',sel:'.wl',t:B(56)+1.0,el:P11.el});
+tape(11,B(56)+.25,420,140,-25);tape(11,B(56)+.25,1350,140,25);
+pen(11,B(60)+.2,'?',1500,110,{fs:260,rot:8,dur:.4});
+
+// ================= subtitles + end card
+const subs=LINES.map(([a,b,h])=>{const d=document.createElement('div');d.className='sub';d.innerHTML=`<div class="bg" style="clip-path:${torn(18,.03)}"></div><span>${h}</span>`;document.body.appendChild(d);return {d,a,b}});
+const end=document.getElementById('end');
+end.innerHTML=`<div style="position:relative;width:1300px;height:760px">${PAPER(`<div style="display:flex;flex-direction:column;align-items:center;padding-top:40px">
+ <div style="width:130px;height:130px;border:5px solid #b3261e;border-radius:50%;font:900 84px/122px 'Noto Sans CJK SC';text-align:center;color:#b3261e">J</div>
+ <div class="serif" style="font-size:96px;letter-spacing:16px;margin-top:20px">0-4之后</div>
+ <div class="serif" style="font-size:44px;margin-top:14px">你觉得几支能进八强？</div>
+ <div style="margin-top:30px;border:3px solid #17130f;border-radius:44px;padding:10px 40px;font:700 30px 'Noto Sans CJK SC'">关注 Juno · 一起看懂世界</div>
+ <div style="margin-top:40px;font:500 18px/1.7 'Noto Sans CJK SC';text-align:center;opacity:.75">数据：Games of Legends（gol.gg）2023–2026赛季比赛记录 · 拳头官方全球战力排名 · 新闻标题为原文翻译（GosuGamers、esports.net、Hotspawn）<br>夺冠概率与赛前胜率均为模型估算（二十万次模拟），不代表比赛结果 · 第四轮对手按瑞士轮规则模拟 · 模型看不到状态、心态与临场BP</div></div>`,{clean:false})}</div>`;
+
+// ================= render
+function place(c,t){
+ const FALL=c.large?.4:c.big?.22:.14, dt=t-c.t;
+ if(dt<-FALL){c.el.style.opacity=0;return}
+ let sc=1,op=1,rot=c.rot,sh=c.sh,bl=22,dy=0;
+ if(dt<0){const u=1+dt/FALL,e=easeIn(u);
+  if(c.large){const e2=ease(u);dy=-(1-e2)*1150;rot=c.rot-3*(1-e2);sh=60-42*e2;bl=44-22*e2}   // big sheets slide in from above: no sudden bright frame
+  else if(c.big){sc=1.12-.12*e;dy=-(1-e)*1000;rot=c.rot-6*(1-e);sh=70-52*e;bl=50-28*e}
+  else{sc=1.25-.25*e;op=cl(u*1.6);rot=c.rot+6*(1-e);sh=70-52*e;bl=50-28*e}}
+ else{const b=Math.exp(-dt*14)*Math.sin(dt*38)*.012;sc=1-b}
+ c.el.style.opacity=op;c.el.style.transform=`translateY(${dy}px) rotate(${rot}deg) scale(${sc})`;
+ c.el.style.filter=`drop-shadow(0 ${sh}px ${bl}px rgba(0,0,0,.55))${c.blur>.05?` blur(${c.blur.toFixed(2)}px)`:''}`;
+}
+function camX(t){ // one travel direction: glide right to each scene, arriving on its bar
+ let x=0;for(let k=1;k<SB.length;k++){const ta=B(SB[k]),u=smooth((t-(ta-.75))/.85);x+=GAP*u}return x}
+window.renderAt=function(t){
+ const x=camX(t);
+ let z=1;if(t<B(10))z=1+.025*cl(t/BIG)+.13*smooth((t-BIG)/(TITLE-BIG)); // intro push-in
+ const k=Math.round(x/GAP);const local=t-B(SB[Math.min(k,SB.length-1)]);if(t>=B(10))z=1+.012*cl(local/8);
+ cam.style.transform=`scale(${z}) translateX(${-x}px)`;
+ scenes.forEach((d,i)=>d.style.display=Math.abs(i*GAP-x)<2400?'block':'none');
+ // scene-0 depth of field and dim under the title
+ const dof=7*smooth((t-BIG-.2)/1.6);bg0.forEach(c=>{c.blur=dof});S0.blur=8*smooth((t-TITLE+.05)/.35);
+ for(const a of A){
+  if(a.kind==='slam'||a.kind==='drop'){place(a,t);continue}
+  const u=t-a.t;
+  if(a.kind==='fade')a.el.style.opacity=cl(u/a.dur);
+  if(a.kind==='write'){a.el.style.opacity=u<0?0:1;a.el.firstChild.style.clipPath=`inset(-20% ${100-100*ease(u/a.dur)}% -20% 0)`}
+  if(a.kind==='draw'){a.el.style.opacity=u<0?0:1;a.el.querySelectorAll('[data-draw]').forEach(p=>{if(p.dataset.dash){p.style.strokeDasharray=p.dataset.dash;p.closest('svg').style.clipPath=`inset(0 ${100-100*ease(u/a.dur)}% 0 0)`}else p.setAttribute('stroke-dashoffset',1000-1000*ease(u/a.dur))})}
+  if(a.kind==='bar')a.el.querySelector('.bar').style.width=(a.p*ease(u/.6))+'%';
+  if(a.kind==='dots'){const n=Math.round(a.n*ease(u/1.4));a.el.querySelectorAll('.dots i').forEach((d,i)=>d.style.background=i<n?'#b3261e':'#17130f2e')}
+  if(a.kind==='show')a.el.querySelector(a.sel).style.opacity=cl(u/.25);
+ }
+ dust.forEach(p=>{const dt=t-p.c.t;if(dt<0||dt>p.life){p.d.style.opacity=0;return}const u=dt/p.life;const r=p.sp*ease(u);
+  p.d.style.left=(p.ox+Math.cos(p.a)*r)+'px';p.d.style.top=(p.oy+Math.sin(p.a)*r*.7)+'px';p.d.style.opacity=(1-u)*.7});
+ subs.forEach(o=>{const on=t>=o.a&&t<o.b;const u=cl((t-o.a)/.18),v=cl((o.b-t)/.12);o.d.style.opacity=on?Math.min(u,v):0;o.d.style.transform=`translateX(-50%) translateY(${(1-ease(u))*24}px) rotate(-.8deg)`});
+ // title
+ const tu=t-TITLE;title.style.opacity=tu<-.11?0:1;
+ title.style.transform=`scale(${tu<0?1.5-.5*easeIn(1+tu/.11):1-Math.exp(-tu*14)*Math.sin(tu*38)*.015})`;
+ const gu=t-(TITLE+.3);tag.style.opacity=cl(gu/.15);tag.style.transform=`translateY(${(1-ease(gu/.25))*20}px)`;
+ const dim=smooth((t-TITLE+.05)/.35);[...bg0,S0].forEach(c=>{c.el.style.filter+=dim>0?` brightness(${1-.68*dim})`:''});
+ scenes[0].querySelectorAll('.clip').forEach(e=>{if(e!==title&&e!==tag&&!bg0.some(c=>c.el===e)&&e!==S0.el&&dim>0)e.style.opacity=Math.min(+e.style.opacity||0,1-dim)});
+ // end card
+ const eu=t-END;end.style.opacity=cl(eu/.4);end.firstChild.style.transform=`scale(${1+.03*(1-ease(eu/.6))})`;
+ 
+};
+window.READY=true;renderAt(+(new URLSearchParams(location.search).get('t')||0));
+</script></body></html>

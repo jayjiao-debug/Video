@@ -22,3 +22,11 @@
   Manim palette (LPL red #FC6255, LCK blue #58C4DD, yellow #F7D96F, green #83C167), no glow, no camera travel.
 - **Intro keeps the newspaper clippings** (`intro/intro.html`), a little darker, fading to black at bar 10.
 - The 3D version (`film/`) is shelved.
+
+## Update 2026-10-27 07:40 — back to the ep24 newspaper design, model only
+- Owner: go back to the original design (ep24 newspaper desk, look A, S2 paper-strip subtitles) and drop champ select,
+  dragons, economy etc. Content = simulation data + model + a review of what happened. Build: `news/film.html`.
+- Dropped: BP/champion icons, gold curves, objectives, the AI poll (not simulation/model; can come back).
+- New review scene: the model's report card on LPL's 10 games against other regions (pre-match odds from 'BL'
+  ratings before the event): single-game calls 5/10, expected wins 5.0 vs actual 5 (R1 1.9→0, R2 1.3→2, R3 1.9→3).
+- R4 opponents are not published; R4 numbers use simulated Swiss pairings (UNVERIFIED pairings).
