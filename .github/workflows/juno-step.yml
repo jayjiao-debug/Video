@@ -12,7 +12,7 @@ on:
       stage:
         description: "Stage to run"
         type: choice
-        options: [research, script, gate1, revise]
+        options: [research, script, gate1, looks, storyboard, revise]
         default: research
       topic:
         description: "Topic / working title (needed for research on a new episode)"
@@ -70,6 +70,13 @@ jobs:
           npm install -g @anthropic-ai/claude-code
           pip install -q -r requirements.txt
 
+      - name: Install the frame renderer (looks / storyboard only)
+        if: inputs.stage == 'looks' || inputs.stage == 'storyboard'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-color-emoji
+          pip install -q playwright
+          python -m playwright install --with-deps chromium
+
       - name: Write the stage prompt
         env:
           EP: ${{ inputs.episode }}
@@ -96,8 +103,18 @@ jobs:
           - script: launch the screenwriter agent to write script.md + lines.json from brief.md and facts.md.
           - gate1: launch the director and cold-reader agents in parallel on the script (gate 1).
             Do NOT revise the script yourself; leave their notes and cold-read files for the owner.
-          - revise: send the owner notes above (and the latest gate-1 notes) to the screenwriter agent to
-            revise script.md + lines.json. Change only what the notes ask for.
+          - looks: launch the art-director agent to propose 2–3 clearly different looks from script.md
+            (style frames as self-contained HTML in style/, rendered to 1920x1080 PNG with
+            python3 /home/claude/video/.claude/skills/production-crew/scripts/render_html.py), plus one
+            side-by-side contact sheet style/looks_sheet.png and style/looks.md (name, pitch, palette, per frame
+            what it shows). Then launch the director to rank them (gate 2a notes). Do not pick for the owner.
+          - storyboard: launch the art-director agent to write storyboard.md for the look named in the owner
+            notes: every scene and transition with its beat time, one rendered key frame per scene in
+            style/board/ (HTML -> PNG as above) and one contact sheet style/board_sheet.png in time order with
+            the time and line under each frame. Then launch the director on it (gate 2b notes).
+          - revise: send the owner notes above (and the latest gate notes) to the role that owns them
+            (screenwriter for script/lines, art-director for looks/storyboard). Change only what the notes ask
+            for; re-render any frame that changed.
           Finish by appending a row to crew_log.md (time, "${STAGE} (API run)", who, result, minutes) and
           end your reply with a 3–5 line summary for the owner, including anything that was blocked.
           EOF
