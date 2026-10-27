@@ -1,0 +1,128 @@
+# Juno step — runs ONE crew stage of an episode on demand, then stops for the owner's review.
+# Billed to the API credits of the linked Console org (secret ANTHROPIC_API_KEY), not the Claude plan.
+# Results are committed to the branch  api/<episode>.
+name: Juno step (API credits)
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: "Episode folder, e.g. 52-mashou"
+        required: true
+      stage:
+        description: "Stage to run"
+        type: choice
+        options: [research, script, gate1, revise]
+        default: research
+      topic:
+        description: "Topic / working title (needed for research on a new episode)"
+        required: false
+      notes:
+        description: "Owner notes for this run (angle, sources, revisions)"
+        required: false
+      model:
+        description: "sonnet = cheaper, opus = strongest"
+        type: choice
+        options: [sonnet, opus]
+        default: sonnet
+
+permissions:
+  contents: write
+
+concurrency:
+  group: juno-${{ inputs.episode }}
+  cancel-in-progress: false
+
+jobs:
+  step:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BRANCH: api/${{ inputs.episode }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Use the episode branch (create it if new)
+        run: |
+          if git fetch --depth 1 origin "$BRANCH" 2>/dev/null; then
+            git checkout -B "$BRANCH" FETCH_HEAD
+          else
+            git checkout -b "$BRANCH"
+          fi
+
+      - name: Mirror the paths the crew skills expect
+        run: |
+          sudo mkdir -p /home/claude/diji
+          sudo ln -sfn "$GITHUB_WORKSPACE" /home/claude/video
+          sudo ln -sfn "$GITHUB_WORKSPACE/episodes" /home/claude/diji/episodes
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install tools
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          pip install -q -r requirements.txt
+
+      - name: Write the stage prompt
+        env:
+          EP: ${{ inputs.episode }}
+          STAGE: ${{ inputs.stage }}
+          TOPIC: ${{ inputs.topic }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          cat > "$RUNNER_TEMP/prompt.md" <<EOF
+          You are the Juno producer, running ONE stage unattended in GitHub Actions. The owner reviews
+          the result afterwards in another session, so never wait for input and never ask questions.
+
+          Read first: /home/claude/video/.claude/skills/production-crew/SKILL.md and
+          /home/claude/video/.claude/skills/video-reviewer/references/owner-notes.md.
+          Episode folder: /home/claude/diji/episodes/${EP}
+          Stage: ${STAGE}
+          Topic / working title: ${TOPIC}
+          Owner notes for this run: ${NOTES}
+
+          Do ONLY this stage, then stop:
+          - research: if the folder doesn't exist, create it with
+            python3 /home/claude/video/.claude/skills/production-crew/scripts/new_episode.py ${EP} "<title>".
+            Fill brief.md from the topic and owner notes if it is still the template. Then launch the
+            researcher agent to write facts.md.
+          - script: launch the screenwriter agent to write script.md + lines.json from brief.md and facts.md.
+          - gate1: launch the director and cold-reader agents in parallel on the script (gate 1).
+            Do NOT revise the script yourself; leave their notes and cold-read files for the owner.
+          - revise: send the owner notes above (and the latest gate-1 notes) to the screenwriter agent to
+            revise script.md + lines.json. Change only what the notes ask for.
+          Finish by appending a row to crew_log.md (time, "${STAGE} (API run)", who, result, minutes) and
+          end your reply with a 3–5 line summary for the owner, including anything that was blocked.
+          EOF
+
+      - name: Run Claude (billed to API credits)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "$(cat "$RUNNER_TEMP/prompt.md")" \
+            --model "${{ inputs.model }}" \
+            --max-turns 80 \
+            --allowedTools "Agent,Task,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(python3:*),Bash(ls:*),Bash(mkdir:*),Bash(cat:*),Bash(date:*)" \
+            --output-format json > "$RUNNER_TEMP/result.json" || true
+          {
+            echo "## ${{ inputs.episode }} · ${{ inputs.stage }} · ${{ inputs.model }}"
+            jq -r '"**Cost:** $" + ((.total_cost_usd // 0)*100|round/100|tostring) + " · **turns:** " + ((.num_turns // 0)|tostring)' "$RUNNER_TEMP/result.json"
+            echo
+            jq -r '.result // "No result (see the log)."' "$RUNNER_TEMP/result.json"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit the results to api/<episode>
+        run: |
+          git config user.name  "juno-api-bot"
+          git config user.email "juno-api-bot@users.noreply.github.com"
+          git add episodes/
+          if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
+          git commit -m "${{ inputs.episode }}: ${{ inputs.stage }} (API run, ${{ inputs.model }})"
+          git push origin "HEAD:$BRANCH"
