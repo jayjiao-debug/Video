@@ -53,7 +53,7 @@ if __name__ == '__main__':
         drive += (.08 * vy - drive) * (1 - math.exp(-dt / .07))   # low-passed head velocity, so the ears never snap
         kick = drive
         for tw, sp, imp in ((.25, eR, -260), (T0 + BEATS * B + .7, eL, 260)):   # idle ear flicks before and after the dance
-            if i == round(tw * FPS): sp.v += imp
+            if 0 <= i - round(tw * FPS) < 3: sp.v += imp / 3     # spread over 3 frames so the flick doesn't pop
         aL = eL.step(-kick - .5 * va * .05, dt); aR = eR.step(kick - .5 * va * .05, dt)
         P['earL'] = (max(-14, min(14, aL)),); P['earR'] = (max(-14, min(14, aR)),)
         PS.append(P)

@@ -20,7 +20,7 @@ for k, vs in ext.items():
     if k in RIG.L or k in ('head', 'body') or (k.startswith('ear') and info['head'].get('ears')):
         for i, v in enumerate(vs): cases.append((f'{k}{"+-"[i]}', {k: v}))
 cases.append(('all+', {k: vs[0] for k, vs in ext.items()})); cases.append(('all-', {k: vs[1] for k, vs in ext.items()}))
-joints = {'neck': (512, nk), **{f'ear{s}': (e[0] + d, 140) for s, d, e in zip('LR', (30, -30), info['head'].get('ears', []))}, **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
+joints = {'neck': (512, nk), **{f'ear{s}': (e['notch'][0] + d, 150) for s, d, e in zip('LR', (-60, 60), info['head'].get('ears', []))}, **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
 rest = compose({})
 CORE = nd.binary_erosion(np.asarray(RIG.L['torso'])[..., 3] > 200, iterations=4)   # moving parts may uncover background; the body itself never may
 findings = []
@@ -38,6 +38,10 @@ def check(name, comp, T=None):
     for i in range(1, n + 1):
         ys, xs = np.where(lab == i)
         if 2 <= len(ys) <= 80: findings.append({'case': name, 'type': 'matte-speck', 'px': int(len(ys)), 'at': [int(xs.mean()), int(ys.mean())]})
+    if T and set(T) <= {'earL', 'earR'} and info['head'].get('ears'):       # an ear bend must leave the skull top between the notches alone
+        nl, nr = (e['notch'][0] for e in info['head']['ears']); lo, hi = sorted((nl, nr))
+        dif = np.abs(rgb - np.asarray(rest)[..., :3].astype(float)).max(2)[60:240, lo + 12:hi - 11] > 40
+        if dif.sum() > 6: findings.append({'case': name, 'type': 'skull-moved', 'px': int(dif.sum()), 'at': [512, 150]})
     dark = (rgb.mean(2) < 120) & (a > .5)
     lab, n = nd.label(dark); sizes = nd.sum(dark, lab, range(1, n + 1))
     for i, sz in enumerate(sizes, 1):

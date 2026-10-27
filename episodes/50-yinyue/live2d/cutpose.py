@@ -74,7 +74,8 @@ CFG = {
                     'armR': dict(y0=560, yjoin=738, seed=(724, 700), pivot=(672, 618), shoulder=(629, 645), rest=(23, .72))},
               legs={'legL': ([(368,835),(515,835),(515,1010),(368,1010)], (440, 870)),
                     'legR': ([(515,835),(662,835),(662,1010),(515,1010)], (590, 870))}, hipY=878,
-              ears=[[300, 198, 77, 420, 485], [724, 198, 78, 604, 539]]),   # ear bend: base x, base y, tip y, x where the bend is full, x where it fades to 0
+              ears=[{'base': [213, 198], 'notch': [423, 158], 'tip': [285, 77], 'f': 10},     # ear bend about its root line (outer base -> notch);
+                    {'base': [813, 198], 'notch': [599, 158], 'tip': [741, 78], 'f': 10}]),  # the skull past the notch never turns
 }[pose]
 # the armless picture's own head (cutcat's method), to know where its body is
 solid = nd.binary_opening(cA, iterations=9)

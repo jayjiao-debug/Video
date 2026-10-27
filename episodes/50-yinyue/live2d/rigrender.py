@@ -49,16 +49,19 @@ class Rig:
         X, Y = self.xx - dx * self.k * w - px, self.yy - dy * self.k * w - py
         return self.remap(img, px + c * X - s * Y, py + s * X + c * Y)
     def earbend(self, img, ear, ang):
-        """bend one ear about its base: the tip moves most, the skull between the ears stays still"""
+        """bend one ear about its root line (outer base -> notch): the root stays put, the tip moves most,
+        and nothing past the notch (the skull top) turns.  ear = {base, notch, tip, f (feather px)}"""
         if not ang: return img
-        px, py, tipy = ear[:3]
-        along = smooth((py - self.yy) / (py - tipy))                       # 0 at the base, 1 at the tip
-        if len(ear) == 5:                                                 # [.., x_full, x_zero]: the whole ear turns as one piece,
-            side = smooth((ear[4] - self.xx) / (ear[4] - ear[3]))         # fading out only toward the skull centre
-        else: side = np.exp(-((self.xx - px) / ear[3]) ** 2)
-        t = -np.radians(ang) * along * side; c, s = np.cos(t), np.sin(t)
-        dx, dy = self.xx - px, self.yy - py
-        return self.remap(img, px + c * dx - s * dy, py + s * dx + c * dy)
+        if isinstance(ear, list): raise ValueError('ears must be {base, notch, tip, f}')
+        b, nt, tp = (np.array(ear[k], float) for k in ('base', 'notch', 'tip')); f = ear.get('f', 10)
+        u = nt - b; L = np.hypot(*u); u /= L; n = np.array([u[1], -u[0]])
+        if (tp - b) @ n < 0: n = -n                                          # normal points from the root toward the tip
+        dx, dy = self.xx - b[0], self.yy - b[1]
+        along = smooth((dx * n[0] + dy * n[1]) / ((tp - b) @ n))          # 0 on the root line, 1 at the tip
+        side = smooth((L + f - (dx * u[0] + dy * u[1])) / (2 * f))       # 0 past the notch: the skull top never turns
+        piv = b + u * ((tp - b) @ u); t = -np.radians(ang) * along * side; c, s = np.cos(t), np.sin(t)
+        X, Y = self.xx - piv[0], self.yy - piv[1]
+        return self.remap(img, piv[0] + c * X - s * Y, piv[1] + s * X + c * Y)
     def shift(self, img, dy):
         if not dy: return img
         M = np.float32([[1, 0, 0], [0, 1, dy * self.k]])
