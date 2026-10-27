@@ -365,7 +365,8 @@ window.renderAt = (t) => {
 	if (plan.world === 'dark') { st.flash = Math.max(...[0, 4, 8, 12, 14].map((k) => (b >= k ? Math.exp(-(b - k) * 3) : 0))); }
 	st.solo = S.name === 'rock' && b >= 64 && b < 80 ? 1 : 0;
 	const Wd = WORLD[plan.world](t, st);
-	const [cx, cy, z] = camAt(plan, u);
+	const [cx0, cy0, z0] = camAt(plan, u), z = Math.max(1.03, z0), mx = (960 + 18) / z, my = 540 / z;   // never show past the set's edges
+	const cx = Math.min(W - mx, Math.max(mx, cx0)), cy = Math.min(H - my, Math.max(my, cy0));
 	// shake on the hardest hits
 	const shakeT = [tOf('cold', 12), tOf('rock', 92)].find((x) => t >= x && t < x + .5); const sh = shakeT ? 14 * Math.exp(-(t - shakeT) * 8) * Math.sin((t - shakeT) * 90) : 0;
 	const camT = `translate(${f1(960 + sh)} 540) scale(${f1(z)}) translate(${f1(-cx)} ${f1(-cy + (540 - 540))})`;
