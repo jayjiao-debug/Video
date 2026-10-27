@@ -138,6 +138,25 @@ def tempo_at_time(t):
     return TABLE[-1]['seg'].tend
 
 
+def beat_at_time(t):
+    """continuous quarter-note count since the first 哐 (beat 0 at OFFSET). Negative before it."""
+    if t < TABLE[0]['start']:
+        return (t - TABLE[0]['start']) * TABLE[0]['seg'].t0 / 60.0
+    b = 0.0
+    for r in TABLE:
+        s = r['seg']
+        if t < r['end']:
+            return b + s.beat_at(t - r['start'])
+        b += s.beats
+    return b + (t - END) * TABLE[-1]['seg'].tend / 60.0
+
+
+def train_x(t):
+    """distance the train has travelled (m) at film time t: one 12.5 m rail per beat, so a wheel set that
+    starts on a joint at the first 哐 crosses a joint exactly on every beat."""
+    return RAIL_M * beat_at_time(t)
+
+
 def countdown(t):
     """「距零点」 LED string at film time t (real time, counts down to 零点)."""
     left = max(0.0, ZERO - t)

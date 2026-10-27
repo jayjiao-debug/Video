@@ -46,6 +46,10 @@ def inst(name):
         'glock': f'{V}/Idiophones/Struck Idiophones/Glockenspiel.sfz',
         'shaker': f'{V}/Idiophones/Struck Idiophones/Shaker, Small.sfz',
         'tambourine': f'{V}/Idiophones/Struck Idiophones/Tambourine 1.sfz',
+        'handchime': f'{V}/Idiophones/Struck Idiophones/Hand Chimes.sfz',
+        'toywhistle': f'{V}/Aerophones/Edge-blown Aerophones/Train Whistle, Toy.sfz',
+        'sleigh': f'{V}/Idiophones/Struck Idiophones/Sleigh Bells.sfz',
+        'claves': f'{V}/Idiophones/Struck Idiophones/Claves.sfz',
     }.get(name)
     if p:
         return SM.Instrument.load(p)
@@ -87,6 +91,18 @@ def trim_lead(x, thr_db=-36):
     i = int(np.argmax(a > a.max() * 10 ** (thr_db / 20)))
     return x[max(0, i - 48):]
 
+def evfx(x, e):
+    """per-event colour: muffle = heard through a closed door; phone = a phone speaker on 公放."""
+    if e.get('muffle') == 'door':
+        x = SY.svf(x, 650, 0.6, 'low') * 0.7
+    if e.get('phone'):
+        m = x.mean(1)
+        m = SY.svf(SY.svf(m, 600, 0.9, 'high'), 3800, 0.9, 'low')
+        m = SY.sat(m * 2.5, 2.0) * 0.5
+        x = np.stack([m, m], 1).astype('float32')
+    return x
+
+
 def render_sampled(evs, w0, n, instrument, key_shift=0, split=None):
     """sampler track. split = (key, low_inst): keys below `key` play low_inst."""
     buf = np.zeros((n, 2), 'float32')
@@ -95,7 +111,7 @@ def render_sampled(evs, w0, n, instrument, key_shift=0, split=None):
     for e in evs:
         use = I2 if (split and e['key'] < split[0]) else I
         v = use.voice(e['key'] + key_shift, e.get('vel', 100), e.get('dur', 0.5), e.get('cents', 0.0), e.get('release'))
-        SY.place(buf, v * e.get('gain', 1.0), e['t'] - w0)
+        SY.place(buf, evfx(v, e) * e.get('gain', 1.0), e['t'] - w0)
     return buf
 
 
@@ -108,7 +124,7 @@ def render_oneshot(evs, w0, n, name, pick='cycle'):
             x = x[:int(e['dur'] * SR)].copy()
             f = min(len(x), 2400)
             x[-f:] *= np.linspace(1, 0, f)[:, None]
-        SY.place(buf, x * e.get('gain', 1.0) * (e.get('vel', 100) / 110) ** 1.5, e['t'] - w0)
+        SY.place(buf, evfx(x, e) * e.get('gain', 1.0) * (e.get('vel', 100) / 110) ** 1.5, e['t'] - w0)
     return buf
 
 
@@ -157,8 +173,34 @@ def render_synth(evs, w0, n, kind):
             x = np.concatenate([x, SY.downlifter(e['dur'] * 0.4, 1500, 120)])
         elif kind == 'impact':
             x = SY.impact(note=e.get('note', 26))
+        elif kind == 'squeal':     # brake squeal tuned to the key: a narrow resonant noise band + a wavering partial
+            nn = int(e['dur'] * SY.SR)
+            tt = np.arange(nn) / SY.SR
+            f = SY.mtof(e.get('key', 86)) * (1 + 0.004 * np.sin(2 * np.pi * 6.3 * tt))
+            nz = SY.svf(SY.rng.standard_normal(nn).astype('float32'), f, 40.0, 'band') * 6
+            y = (nz + 0.25 * SY.sine(f, nn)) * np.clip(tt / (0.6 * e['dur']), 0, 1) * np.clip((e['dur'] - tt) / 0.3, 0, 1)
+            x = SY.st(SY.sat(y.astype('float32'), 1.3), 0.3)
+        elif kind == 'steam':      # a steam puff: band-passed noise with a fast attack
+            nn = int(e.get('dur', 0.6) * SY.SR)
+            tt = np.arange(nn) / SY.SR
+            y = SY.svf(SY.rng.standard_normal(nn).astype('float32'), 2500, 0.8, 'band') * np.exp(-tt / (e.get('dur', 0.6) / 3)) * np.clip(tt / 0.01, 0, 1)
+            x = SY.st(y.astype('float32'))
+        elif kind == 'clap_e':
+            x = SY.clap_synth()
+        elif kind == 'hat_e':
+            x = SY.hat(open_=e.get('open', False))
+        elif kind == 'pluck':
+            x = SY.pluck(e['key'], dur=e.get('dur', 0.3), bright=e.get('bright', 5000), decay=e.get('decay', 0.15))
+        elif kind == 'cheap_lead':      # the 广场舞 DJ lead: a bright square, no detune, a touch of vibrato
+            nn = int((e['dur'] + 0.05) * SY.SR)
+            tt = np.arange(nn) / SY.SR
+            f = SY.mtof(e['key']) * (1 + 0.006 * np.sin(2 * np.pi * 5.5 * tt) * np.clip(tt / 0.15, 0, 1))
+            y = np.sign(SY.sine(f, nn)) * 0.5 + 0.3 * SY.polyblep_saw(f, nn)
+            y = y * SY.env_adsr(nn, 0.004, 0.08, 0.8, 0.05, gate=int(e['dur'] * SY.SR))
+            x = SY.st(y.astype('float32'))
         else:
             raise KeyError(kind)
+        x = evfx(x, e)
         SY.place(buf, x * g, t)
     return buf
 
@@ -307,6 +349,8 @@ TRACKS = {
     'brass_lead': ('brass_lead', 'music', 2.0),
     'sax': ('s:sax', 'music', -3.0),
     'zither': ('s:zither', 'music', -2.0),
+    'glock': ('s:glock', 'music', -8.0),
+    'vibes': ('s:vibes', 'music', -6.0),
     'timpani': ('s:timpani', 'fx', -2.0),
     'claps': ('s:claps', 'drums_x', -4.0),
     'drumline': ('s:marching', 'drums_x', -7.0),
@@ -323,6 +367,24 @@ TRACKS = {
     'sub': ('y:sub', 'low', -9.0),
     '808': ('y:808', 'low', -7.0),
     'kick_e': ('y:kick_e', 'drums_x', -4.0),
+    'clap_e': ('y:clap_e', 'drums_x', -8.0),
+    'door_slide': ('o:door', 'fx', -6.0),
+    'handchime': ('s:handchime', 'music', -4.0),
+    'toywhistle': ('s:toywhistle', 'fx', -10.0),
+    'sleigh': ('s:sleigh', 'drums_x', -12.0),
+    'claves': ('s:claves', 'drums_x', -8.0),
+    'marimba': ('s:Marimba', 'music', -2.0),
+    'organ': ('s:OrganQuiet', 'music', -8.0),
+    'squeal': ('y:squeal', 'fx', -14.0),
+    'steam': ('y:steam', 'fx', -12.0),
+    'hat_e': ('y:hat_e', 'drums_x', -12.0),
+    'pluck': ('y:pluck', 'music', -10.0),
+    'cheap_lead': ('y:cheap_lead', 'music', -14.0),
+    'harp': ('s:Harp', 'music', -4.0),
+    'pizz_bass': ('s:ContrabassPizz', 'low', 0.0),
+    'pizz_hi': ('s:ViolinEnsPizz|55|ViolaEnsPizz', 'music', -2.0),
+    'violin_solo': ('s:SViolinVib', 'music', -3.0),
+    'flute': ('s:FluteSusVib', 'music', -3.0),
     'supersaw': ('y:supersaw', 'music', -10.0),
     'pad': ('y:pad', 'music', -10.0),
     'lead_saw': ('y:lead_saw', 'music', -13.0),

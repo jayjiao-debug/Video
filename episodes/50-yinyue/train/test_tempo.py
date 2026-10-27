@@ -90,3 +90,15 @@ def test_waltz_bar_is_1_5s_and_seven_eight_bar_is_1_5s():
     assert near((w['end'] - w['start']) / 12, 1.5, 1e-9)
     s = T.seg('trolley.nobreath')
     assert near((s['end'] - s['start']) / 4, 1.5, 1e-9)
+
+
+def test_train_x_hits_joints_on_beats():
+    from tempo import train_x, beat_at_time, t_of, OFFSET, RAIL_M
+    assert abs(train_x(OFFSET)) < 1e-9
+    for name, bar in [('hook.accel', 1), ('title', 0), ('wopu.waltz', 5), ('trolley.nobreath', 2), ('zero.drop', 0)]:
+        x = train_x(t_of(name, bar))
+        assert abs(x / RAIL_M - round(x / RAIL_M)) < 1e-6, (name, x)
+    # 120 bpm → 25 m/s = 90 km/h
+    t = t_of('title', 0)
+    v = (train_x(t + 0.01) - train_x(t)) / 0.01
+    assert abs(v - 25.0) < 0.05
