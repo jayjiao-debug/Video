@@ -144,10 +144,14 @@ jobs:
         run: |
           git config user.name  "juno-api-bot"
           git config user.email "juno-api-bot@users.noreply.github.com"
-          jq -r --arg t "$(date -u +%F' '%H:%M)" '"| \($t) | ${{ inputs.stage }} | ${{ inputs.model }} | $" + ((.total_cost_usd // 0)*100|round/100|tostring) + " | \(.num_turns // 0) |"' "$RUNNER_TEMP/result.json" > "$RUNNER_TEMP/costrow" || true
+          jq -r --arg t "$(date -u +%F' '%H:%M)" --arg st "${{ inputs.stage }}" '
+            (.modelUsage // {}) as $m
+            | if ($m|length) > 0 then
+                $m | to_entries[] | "| \($t) | \($st) | \(.key) | \(.value.inputTokens // 0) | \(.value.outputTokens // 0) | \(.value.cacheReadInputTokens // 0) | \(.value.cacheCreationInputTokens // 0) | $\(((.value.costUSD // 0)*100|round)/100) |"
+              else "| \($t) | \($st) | ${{ inputs.model }} | ? | ? | ? | ? | $\(((.total_cost_usd // 0)*100|round)/100) |" end' "$RUNNER_TEMP/result.json" > "$RUNNER_TEMP/costrow" || true
           f="episodes/${{ inputs.episode }}/api_costs.md"
           if [ -d "episodes/${{ inputs.episode }}" ]; then
-            [ -f "$f" ] || printf '| UTC | Stage | Model | Cost | Turns |\n|---|---|---|---|---|\n' > "$f"
+            [ -f "$f" ] || printf '| UTC | Stage | Model | Input | Output | Cache read | Cache write | Cost |\n|---|---|---|---|---|---|---|---|\n' > "$f"
             cat "$RUNNER_TEMP/costrow" >> "$f"
           fi
           git add episodes/
