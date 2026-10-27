@@ -1,0 +1,62 @@
+[
+ {
+  "model": "Phi-4",
+  "top3": [
+   "HLE",
+   "GEN",
+   "BLG"
+  ],
+  "lpl": true,
+  "valid": 6
+ },
+ {
+  "model": "GLM-4",
+  "top3": [
+   "DK",
+   "GEN",
+   "BLG"
+  ],
+  "lpl": true,
+  "valid": 6
+ },
+ {
+  "model": "Qwen3",
+  "top3": [
+   "GEN",
+   "BLG",
+   "HLE"
+  ],
+  "lpl": true,
+  "valid": 6
+ },
+ {
+  "model": "DeepSeek",
+  "top3": [
+   "DK",
+   "GEN",
+   "BLG"
+  ],
+  "lpl": true,
+  "valid": 6
+ },
+ {
+  "model": "Mistral",
+  "top3": [
+   "DK",
+   "GEN",
+   "T1"
+  ],
+  "lpl": false,
+  "valid": 6
+ },
+ {
+  "model": "GPT-oss",
+  "top3": [
+   "DK",
+   "GEN",
+   "BLG"
+  ],
+  "lpl": true,
+  "valid": 2
+ }
+]

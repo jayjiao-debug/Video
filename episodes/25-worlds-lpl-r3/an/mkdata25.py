@@ -32,6 +32,7 @@ D = dict(
     ai=json.load(open('ai25.json')) if os.path.exists('ai25.json') else None,
     r4_opp=S.get('r4_opp'), qf_opp=S.get('qf_opp'), civil_r4=S.get('civil_r4'), civil_r5=S.get('civil_r5'), lpl_teams=S.get('lpl_teams'),
     r4_winp=S.get('r4_winp'), r4_combos=S.get('r4_combos', [])[:3] + S.get('r4_combos', [])[-3:])
+wins = [x for x in later1 if x['win']]; D['later_tally'] = tally(wins); D['later_label'] = f'之后{len(wins)}场胜利 · 资源'
 if 'sim5' in simf: D['chain'] = D['chain'] + [['第三轮后', D['lpl']]]
 else: D['chain'][-1][1] = D['lpl']
 json.dump(D, open('../film/data.json', 'w'), ensure_ascii=False)

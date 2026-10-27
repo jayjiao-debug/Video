@@ -80,7 +80,7 @@ const tally=(T,t0,t,lab)=>{rich([[lab,'white']],110,140,72,{p:P(T,t0,.8)});[['�
  txt(nm,150,y+30,64,'white',{p:P(T,t0+.3+i*.3,.4)});rect(x0,y-40,W,80,{stroke:'dim',lw:2,p:P(T,t0+.3+i*.3,.6)});c.fillStyle=COL.red;c.fillRect(x0,y-40,W*me/tot*u,80);c.fillStyle=COL.grey;c.globalAlpha*=.6;c.fillRect(x0+W*me/tot*u,y-40,W*op/tot*u,80);c.globalAlpha/= .6;
  txt('LPL '+Math.round(me*u),x0,y+110,52,'red',{p:u});txt('对手 '+Math.round(op*u),x0+W,y+110,52,'grey',{al:'right',p:u});});};
 SC.push([20,22,(T,a)=>{c.globalAlpha=a;tally(T,B(20),D.r1_tally,'首轮四场 · 资源');}]);
-SC.push([22,26,(T,a)=>{c.globalAlpha=a;tally(T,B(22),D.later_tally,'之后五场胜利 · 资源');const t=D.r1_tally;txt(`首轮：小龙 ${t.drag}:${t.odrag} · 大龙 ${t.baron}:${t.obaron}`,1810,1000-90,40,'grey',{al:'right',p:P(T,B(24)+.2,.6)});}]);
+SC.push([22,26,(T,a)=>{c.globalAlpha=a;tally(T,B(22),D.later_tally,D.later_label||'之后的胜利 · 资源');const t=D.r1_tally;txt(`首轮：小龙 ${t.drag}:${t.odrag} · 大龙 ${t.baron}:${t.obaron}`,1810,1000-90,40,'grey',{al:'right',p:P(T,B(24)+.2,.6)});}]);
 // S6 the draft: banned most (bars 26-32)
 SC.push([26,32,(T,a)=>{c.globalAlpha=a;const hiV=sm(B(28),B(28)+.3,T)*(1-sm(B(30)-.2,B(30)+.1,T)),hiN=sm(B(30),B(30)+.3,T);
  title([['这届最怕的英雄：','white'],[T<B(30)?'蔚':'梦魇',T<B(30)?'yellow':'red']],T,B(26));

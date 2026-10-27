@@ -23,7 +23,7 @@ body{position:relative;font-family:"Noto Sans CJK SC",sans-serif}
 const B=n=>0.383+2.0248*n, BEAT=0.5062;
 const HITS=[0,2,4,5,6,6.5,7,7.5].map(b=>B(0)+b*BEAT), BIG=B(2), TITLE=B(8);
 // ---- ep25 text (the scheduled run rewrites these three lines, the title and the tag from tonight's results)
-const CFG={l1:'首轮四连败：20次里，才会出现<b>1次</b>',l2:'三天后，LPL<b>站起来了</b>吗？',l3:'这次，我们拆开了<b>每一局</b>——',title:'还剩几成',tag:'S16 · 瑞士轮第三轮之后'};
+const CFG={l1:'首轮四连败：20次里，才会出现<b>1次</b>',l2:'三天后：BLG、TES、IG<b>全部2-1</b>',l3:'这次，我们拆开了<b>每一局</b>——',title:'0-4之后',tag:'S16 · 瑞士轮三轮之后'};
 const LINES=[[BIG+.25,B(4),CFG.l1],[B(4),B(6),CFG.l2],[B(6),TITLE-.05,CFG.l3]];
 let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
 const torn=(n=14,j=.012)=>{const p=[];for(let i=0;i<=n;i++)p.push(`${(i/n*100).toFixed(1)}% ${(rnd()*j*100).toFixed(2)}%`);for(let i=0;i<=n;i++)p.push(`${(100-rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);for(let i=n;i>=0;i--)p.push(`${(i/n*100).toFixed(1)}% ${(100-rnd()*j*100).toFixed(2)}%`);for(let i=n;i>=0;i--)p.push(`${(rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);return `polygon(${p.join(',')})`};
