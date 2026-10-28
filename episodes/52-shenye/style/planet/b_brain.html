@@ -1,0 +1,198 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#05060c; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  #c { position:absolute; inset:0; }
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+  .label { position:absolute; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; font-weight:800;
+      padding:8px 22px; border-radius:12px; font-size:40px; letter-spacing:1px; z-index:9; white-space:nowrap; }
+  .label-amy { left:255px; top:300px; background:rgba(60,15,20,.62); color:#FF8F6A; border:1px solid rgba(255,110,70,.5); }
+  .label-pfc { left:1330px; top:430px; background:rgba(15,35,55,.62); color:#8FD4FF; border:1px solid rgba(130,200,255,.5); }
+  .vignette { position:absolute; inset:0; pointer-events:none; z-index:5;
+      background: radial-gradient(ellipse 1300px 980px at 50% 42%, transparent 48%, rgba(2,2,6,.52) 100%); }
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="vignette"></div>
+<div class="corner-mark">J</div>
+<div class="label label-amy">杏仁核</div>
+<div class="label label-pfc">前额叶</div>
+<div class="subtitle-wrap"><div class="subtitle"><span class="gold">杏仁核</span>在报警，<span class="gold">前额叶</span>的刹车松了</div></div>
+<script>
+const W=1920, H=1080;
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true, preserveDrawingBuffer:true});
+renderer.setSize(W,H);
+renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060c);
+scene.fog = new THREE.FogExp2(0x05060c, 0.01);
+
+const camera = new THREE.PerspectiveCamera(40, W/H, 0.1, 200);
+camera.position.set(1.4, 6.3, 8.8);
+camera.lookAt(-0.1, 3.95, 0.2);
+
+// ---------- starfield ----------
+{
+  const n = 300;
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(n*3);
+  for (let i=0;i<n;i++){
+    const r = 22 + Math.random()*48;
+    const th = Math.random()*Math.PI*2;
+    const ph = Math.acos((Math.random()*2)-1);
+    pos[i*3]   = r*Math.sin(ph)*Math.cos(th);
+    pos[i*3+1] = Math.abs(r*Math.cos(ph))*0.75 + 2.5;
+    pos[i*3+2] = r*Math.sin(ph)*Math.sin(th) - 5;
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const m = new THREE.PointsMaterial({color:0xffffff, size:0.11, transparent:true, opacity:0.9});
+  scene.add(new THREE.Points(g,m));
+}
+
+function clayMat(hex, rough=0.55){ return new THREE.MeshStandardMaterial({color:hex, roughness:rough, metalness:0.04}); }
+
+// ---------- tiny planet ----------
+const planetR = 3.4;
+const planetGroup = new THREE.Group();
+scene.add(planetGroup);
+const planetMesh = new THREE.Mesh(new THREE.SphereGeometry(planetR, 64, 64), clayMat(0x2a3660,0.85));
+planetMesh.receiveShadow = true;
+planetGroup.add(planetMesh);
+const hill = new THREE.Mesh(
+  new THREE.SphereGeometry(1.3, 40, 40, 0, Math.PI*2, 0, Math.PI*0.5),
+  clayMat(0x323e68,0.95)
+);
+hill.position.set(0, planetR-0.15, 0.2);
+hill.rotation.x = Math.PI;
+hill.castShadow = true; hill.receiveShadow = true;
+planetGroup.add(hill);
+
+// ground-level group sitting on top of the hill
+const groundGroup = new THREE.Group();
+groundGroup.position.set(0, planetR+0.75, 0.2);
+planetGroup.add(groundGroup);
+
+// ---------- LEFT: storm cloud "杏仁核" throwing lightning ----------
+const stormGroup = new THREE.Group();
+stormGroup.position.set(-1.35, 0.9, -0.1);
+groundGroup.add(stormGroup);
+const stormMat = new THREE.MeshStandardMaterial({color:0x3a1420, roughness:0.85, emissive:0x3a0f10, emissiveIntensity:0.5});
+const sPuffs = [[0,0,0,0.42],[0.32,0.06,0.05,0.3],[-0.32,0.05,0.05,0.3],[0.1,-0.14,0.12,0.32],[-0.14,-0.12,0.1,0.3],[0.05,0.2,-0.05,0.26]];
+sPuffs.forEach(([x,y,z,r])=>{
+  const p = new THREE.Mesh(new THREE.SphereGeometry(r,18,18), stormMat);
+  p.position.set(x,y,z); p.castShadow = true;
+  stormGroup.add(p);
+});
+// alarm glow core inside the storm
+const stormGlow = new THREE.PointLight(0xff5a3c, 5.0, 3.2, 2.0);
+stormGlow.position.set(0,0,0.2);
+stormGroup.add(stormGlow);
+const stormCore = new THREE.Mesh(new THREE.SphereGeometry(0.16,16,16),
+  new THREE.MeshStandardMaterial({color:0xff8a5a, emissive:0xff5a2a, emissiveIntensity:2.6}));
+stormCore.position.set(0,0,0.25);
+stormGroup.add(stormCore);
+// jagged lightning bolts (thin cones) shooting down/out from the storm
+function bolt(x,y,z,rotZ,len,colorHex){
+  const g = new THREE.ConeGeometry(0.035, len, 4);
+  const m = new THREE.MeshStandardMaterial({color:colorHex, emissive:colorHex, emissiveIntensity:2.2, roughness:0.3});
+  const mesh = new THREE.Mesh(g,m);
+  mesh.position.set(x,y,z);
+  mesh.rotation.z = rotZ;
+  return mesh;
+}
+stormGroup.add(bolt(-0.1,-0.55,0.15, 2.9, 0.55, 0xffb23c));
+stormGroup.add(bolt(0.22,-0.6,0.1, 3.4, 0.5, 0xffb23c));
+stormGroup.add(bolt(0.0,-0.68,0.25, 3.14, 0.42, 0xff8a3c));
+
+// ---------- RIGHT: dam/levee "前额叶" holding back the rain, cracking & leaking ----------
+const damGroup = new THREE.Group();
+damGroup.position.set(1.3, 0.55, 0.05);
+groundGroup.add(damGroup);
+const damBody = new THREE.Mesh(new THREE.BoxGeometry(0.95,1.05,0.55,6,6,4), clayMat(0x6a7aa8,0.7));
+damBody.castShadow = true; damBody.receiveShadow = true;
+damGroup.add(damBody);
+// crack: a thin dark jagged line across the dam face (zigzag of thin boxes)
+const crackMat = new THREE.MeshStandardMaterial({color:0x0c1018, roughness:0.9});
+const crackSegs = [[-0.28,0.3,0.05,0.28],[-0.1,0.12,-0.2,0.32],[0.08,-0.08,0.15,0.3],[0.02,-0.3,-0.1,0.28]];
+let prevY = 0.42;
+crackSegs.forEach(([x,y,rot,len])=>{
+  const seg = new THREE.Mesh(new THREE.BoxGeometry(0.035,len,0.04), crackMat);
+  seg.position.set(x,y,0.285);
+  seg.rotation.z = rot;
+  damGroup.add(seg);
+});
+// leak: a bright cool droplet-stream spilling from a gap in the crack, pooling below
+const leakMat = new THREE.MeshStandardMaterial({color:0x8fd4ff, emissive:0x6fc0ff, emissiveIntensity:1.4, transparent:true, opacity:0.88});
+const leak = new THREE.Mesh(new THREE.CapsuleGeometry(0.03,0.42,4,8), leakMat);
+leak.position.set(-0.02,-0.1,0.33);
+damGroup.add(leak);
+const puddle = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.26,0.03,20), leakMat);
+puddle.position.set(-0.02,-0.56,0.3);
+damGroup.add(puddle);
+const leakLight = new THREE.PointLight(0x8fd4ff, 2.2, 1.6, 2.0);
+leakLight.position.set(-0.02,-0.3,0.4);
+damGroup.add(leakLight);
+
+// ---------- small chibi character looking up at the dam, standing between the two ----------
+const charGroup = new THREE.Group();
+charGroup.position.set(-0.05, 0.08, 0.45);
+groundGroup.add(charGroup);
+const bodyMat = clayMat(0xe7a85a,0.6);
+const hoodieMat = clayMat(0xd27f3c,0.62);
+const torso = new THREE.Mesh(new THREE.SphereGeometry(0.26,28,28), hoodieMat);
+torso.scale.set(1,0.95,0.95);
+torso.castShadow = true;
+charGroup.add(torso);
+const hood = new THREE.Mesh(new THREE.SphereGeometry(0.21,24,24,0,Math.PI*2,0,Math.PI*0.62), hoodieMat);
+hood.position.set(0,0.4,-0.04);
+charGroup.add(hood);
+const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,28,28), bodyMat);
+head.position.set(0,0.36,0.05);
+head.rotation.x = -0.35; // tilt face up toward the dam
+head.castShadow = true;
+charGroup.add(head);
+const eyeGeo = new THREE.SphereGeometry(0.017,10,10);
+const eyeMat = new THREE.MeshStandardMaterial({color:0x1b1324, roughness:0.4});
+const eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.05,0.4,0.19); charGroup.add(eyeL);
+const eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.05,0.4,0.19); charGroup.add(eyeR);
+const legMat = hoodieMat;
+const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.06,0.14,4,8), legMat); legL.position.set(-0.09,-0.24,0.02); charGroup.add(legL);
+const legR = new THREE.Mesh(new THREE.CapsuleGeometry(0.06,0.14,4,8), legMat); legR.position.set(0.09,-0.24,0.02); charGroup.add(legR);
+
+// ground platform strip under the two structures
+const platform = new THREE.Mesh(new THREE.BoxGeometry(3.6,0.1,1.3,8,2,4), clayMat(0x283256,0.9));
+platform.position.set(0,-0.3,0.1);
+platform.receiveShadow = true;
+groundGroup.add(platform);
+
+// ---------- lighting ----------
+const moonKey = new THREE.DirectionalLight(0xaab8f0, 1.0);
+moonKey.position.set(-3,6,3);
+scene.add(moonKey);
+const rimLight = new THREE.DirectionalLight(0x6a7ad0, 0.8);
+rimLight.position.set(3,2,-4);
+scene.add(rimLight);
+const fill = new THREE.AmbientLight(0x2a3360, 0.68);
+scene.add(fill);
+const bounce = new THREE.HemisphereLight(0x4a5690, 0x0a0812, 0.5);
+scene.add(bounce);
+
+renderer.render(scene, camera);
+window.__rendered = true;
+</script>
+</body></html>

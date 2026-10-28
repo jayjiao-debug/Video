@@ -1,0 +1,170 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#05060c; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  #c { position:absolute; inset:0; }
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+  .label { position:absolute; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; font-weight:800;
+      padding:7px 20px; border-radius:11px; font-size:40px; z-index:9; white-space:nowrap; }
+  .label-mood { left:1280px; top:300px; background:rgba(50,20,55,.6); color:#E7A8FF; border:1px solid rgba(220,160,255,.45); }
+  .vignette { position:absolute; inset:0; pointer-events:none; z-index:5;
+      background: radial-gradient(ellipse 1300px 980px at 50% 46%, transparent 50%, rgba(2,2,6,.5) 100%); }
+  .motion-arc { position:absolute; left:50%; top:46%; width:1500px; height:900px; transform:translate(-50%,-50%);
+      border:3px dashed rgba(200,210,255,.22); border-radius:50%; z-index:4; pointer-events:none; }
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="motion-arc"></div>
+<div class="vignette"></div>
+<div class="corner-mark">J</div>
+<div class="label label-mood">情绪 ↓</div>
+<div class="subtitle-wrap"><div class="subtitle">情绪也会被<span class="gold">生物钟</span>拖下去</div></div>
+<script>
+const W=1920, H=1080;
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true, preserveDrawingBuffer:true});
+renderer.setSize(W,H);
+renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.25;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060c);
+scene.fog = new THREE.FogExp2(0x05060c, 0.009);
+
+// pull back further: whole planet in frame
+const camera = new THREE.PerspectiveCamera(42, W/H, 0.1, 200);
+camera.position.set(3.6, 2.6, 10.2);
+camera.lookAt(0, 0.3, 0);
+
+function clayMat(hex, rough=0.55){ return new THREE.MeshStandardMaterial({color:hex, roughness:rough, metalness:0.04}); }
+
+// ---------- starfield ----------
+{
+  const n = 340;
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(n*3);
+  for (let i=0;i<n;i++){
+    const r = 22 + Math.random()*50;
+    const th = Math.random()*Math.PI*2;
+    const ph = Math.acos((Math.random()*2)-1);
+    pos[i*3]   = r*Math.sin(ph)*Math.cos(th);
+    pos[i*3+1] = r*Math.cos(ph)*0.8;
+    pos[i*3+2] = r*Math.sin(ph)*Math.sin(th) - 4;
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const m = new THREE.PointsMaterial({color:0xffffff, size:0.1, transparent:true, opacity:0.85});
+  scene.add(new THREE.Points(g,m));
+}
+
+// ---------- the whole tiny planet ----------
+const planetR = 2.5;
+const planetGroup = new THREE.Group();
+planetGroup.rotation.z = 0.25; // tilt the axis, like a storybook globe
+scene.add(planetGroup);
+
+const planetMesh = new THREE.Mesh(new THREE.SphereGeometry(planetR, 72, 72), clayMat(0x2a3660, 0.85));
+planetMesh.receiveShadow = true;
+planetGroup.add(planetMesh);
+
+// day half (warm) vs night half (cool/violet, with rain)
+const dayHalf = new THREE.Mesh(
+  new THREE.SphereGeometry(planetR*1.004, 72, 72, Math.PI*0.5, Math.PI),
+  new THREE.MeshStandardMaterial({color:0x5c4a3a, roughness:0.85, emissive:0x3a2c18, emissiveIntensity:0.25})
+);
+planetGroup.add(dayHalf);
+const nightHalf = new THREE.Mesh(
+  new THREE.SphereGeometry(planetR*1.004, 72, 72, -Math.PI*0.5, Math.PI),
+  new THREE.MeshStandardMaterial({color:0x201a3c, roughness:0.9})
+);
+planetGroup.add(nightHalf);
+
+// a small bed-dot + house-dot on the surface so it still reads as "a little world", tiny scale
+const hill = new THREE.Mesh(new THREE.SphereGeometry(0.42,24,24,0,Math.PI*2,0,Math.PI*0.5), clayMat(0x3a4670,0.9));
+hill.position.set(0.1, planetR-0.06, planetR*0.55);
+hill.rotation.x = Math.PI*0.35;
+planetGroup.add(hill);
+const tinyHouse = new THREE.Mesh(new THREE.ConeGeometry(0.12,0.16,6), clayMat(0xd98a46,0.6));
+tinyHouse.position.copy(hill.position).add(new THREE.Vector3(0,0.1,0));
+planetGroup.add(tinyHouse);
+
+// ---------- thin 24h ring around the planet ----------
+const ringGeo = new THREE.TorusGeometry(planetR*1.35, 0.025, 16, 100);
+const ringMat = new THREE.MeshStandardMaterial({color:0xcfd8ff, emissive:0x8fa0ff, emissiveIntensity:0.6, roughness:0.4});
+const ring = new THREE.Mesh(ringGeo, ringMat);
+ring.rotation.x = Math.PI/2.15;
+planetGroup.add(ring);
+// tick marks around the ring (24 ticks)
+for (let i=0;i<24;i++){
+  const a = (i/24)*Math.PI*2;
+  const tick = new THREE.Mesh(new THREE.BoxGeometry(0.02,0.09,0.02),
+    new THREE.MeshStandardMaterial({color:0xe8ecff, emissive:0xaab8ff, emissiveIntensity:0.5}));
+  const r = planetR*1.35;
+  tick.position.set(Math.cos(a)*r, 0, Math.sin(a)*r);
+  tick.rotation.x = Math.PI/2.15;
+  ring.add(tick);
+}
+// night-wedge highlight on the ring (brighter violet arc covering the night half)
+const wedgeGeo = new THREE.TorusGeometry(planetR*1.35, 0.045, 12, 60, Math.PI);
+const wedgeMat = new THREE.MeshStandardMaterial({color:0x8250ff, emissive:0x8250ff, emissiveIntensity:1.4, roughness:0.3});
+const wedge = new THREE.Mesh(wedgeGeo, wedgeMat);
+wedge.rotation.x = Math.PI/2.15;
+wedge.rotation.z = Math.PI*0.5;
+planetGroup.add(wedge);
+
+// ---------- rain falling only on the night side ----------
+const rainGroup = new THREE.Group();
+planetGroup.add(rainGroup);
+const rainMat = new THREE.MeshStandardMaterial({color:0x9fd4ff, emissive:0x6fc0ff, emissiveIntensity:1.2, transparent:true, opacity:0.75});
+for (let i=0;i<70;i++){
+  const a = Math.PI*0.5 + Math.random()*Math.PI; // only the night hemisphere's azimuth range
+  const h = 0.3 + Math.random()*1.6;
+  const rad = planetR + 0.15 + Math.random()*0.3;
+  const drop = new THREE.Mesh(new THREE.CapsuleGeometry(0.01,0.12,2,4), rainMat);
+  drop.position.set(Math.cos(a)*rad, h - 1.0, Math.sin(a)*rad);
+  drop.rotation.z = Math.PI/2 + (Math.random()-0.5)*0.2;
+  rainGroup.add(drop);
+}
+
+// ---------- mood meter near the surface, dipping as it crosses into night ----------
+const meterGroup = new THREE.Group();
+meterGroup.position.set(planetR*0.25, planetR*0.55, planetR*0.95);
+planetGroup.add(meterGroup);
+const meterBase = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.08,0.08), clayMat(0x403060,0.5));
+meterGroup.add(meterBase);
+const meterNeedle = new THREE.Mesh(new THREE.ConeGeometry(0.05,0.22,8),
+  new THREE.MeshStandardMaterial({color:0xe7a8ff, emissive:0xaa6aff, emissiveIntensity:1.2}));
+meterNeedle.position.set(0.14,0.14,0);
+meterNeedle.rotation.z = -0.9; // dipping down toward the night side
+meterGroup.add(meterNeedle);
+const meterLight = new THREE.PointLight(0xaa6aff, 1.4, 1.2);
+meterLight.position.set(0.14,0.16,0.1);
+meterGroup.add(meterLight);
+
+// ---------- lighting ----------
+const moonKey = new THREE.DirectionalLight(0xffe3b0, 1.1); // warm sun from the day side
+moonKey.position.set(5,3,2);
+scene.add(moonKey);
+const rimLight = new THREE.DirectionalLight(0x6a7ad0, 0.9);
+rimLight.position.set(-4,2,-4);
+scene.add(rimLight);
+const fill = new THREE.AmbientLight(0x2a3360, 0.6);
+scene.add(fill);
+const bounce = new THREE.HemisphereLight(0x4a5690, 0x0a0812, 0.45);
+scene.add(bounce);
+
+renderer.render(scene, camera);
+window.__rendered = true;
+</script>
+</body></html>

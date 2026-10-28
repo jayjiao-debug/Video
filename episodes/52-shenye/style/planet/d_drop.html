@@ -1,0 +1,164 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#05060c; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  #c { position:absolute; inset:0; }
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+  .counter { position:absolute; left:120px; top:120px; z-index:9; font-family:'DejaVu Sans Mono',monospace;
+      background: rgba(6,8,13,.65); border:1px solid rgba(212,175,106,.4); border-radius:14px; padding:14px 28px; }
+  .counter .num { font-size:58px; font-weight:800; color:#D4AF6A; letter-spacing:1px; }
+  .counter .cap { font-size:26px; color:#cfd6ea; margin-top:2px; }
+  .vignette { position:absolute; inset:0; pointer-events:none; z-index:5;
+      background: radial-gradient(ellipse 1300px 980px at 50% 46%, transparent 50%, rgba(2,2,6,.5) 100%); }
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="vignette"></div>
+<div class="corner-mark">J</div>
+<div class="counter"><div class="num">5.09亿条</div><div class="cap">真实推文 · day→night sentiment</div></div>
+<div class="subtitle-wrap"><div class="subtitle"><span class="gold">5亿条</span>真实推文也测到了</div></div>
+<script>
+const W=1920, H=1080;
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true, preserveDrawingBuffer:true});
+renderer.setSize(W,H);
+renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060c);
+scene.fog = new THREE.FogExp2(0x05060c, 0.008);
+
+const camera = new THREE.PerspectiveCamera(36, W/H, 0.1, 200);
+camera.position.set(1.2, 1.0, 7.4);
+camera.lookAt(0.1, 0.1, 0);
+
+function clayMat(hex, rough=0.55){ return new THREE.MeshStandardMaterial({color:hex, roughness:rough, metalness:0.04}); }
+
+// ---------- starfield ----------
+{
+  const n = 300;
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(n*3);
+  for (let i=0;i<n;i++){
+    const r = 18 + Math.random()*48;
+    const th = Math.random()*Math.PI*2;
+    const ph = Math.acos((Math.random()*2)-1);
+    pos[i*3]   = r*Math.sin(ph)*Math.cos(th);
+    pos[i*3+1] = r*Math.cos(ph)*0.8;
+    pos[i*3+2] = r*Math.sin(ph)*Math.sin(th) - 4;
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const m = new THREE.PointsMaterial({color:0xffffff, size:0.1, transparent:true, opacity:0.85});
+  scene.add(new THREE.Points(g,m));
+}
+
+// ---------- stylised clay Earth ----------
+const earthR = 2.9;
+const earthGroup = new THREE.Group();
+earthGroup.rotation.y = 0.5;
+scene.add(earthGroup);
+
+const oceanMat = new THREE.MeshStandardMaterial({color:0x16294a, roughness:0.75, metalness:0.05});
+const earth = new THREE.Mesh(new THREE.SphereGeometry(earthR, 96, 96), oceanMat);
+earthGroup.add(earth);
+
+// simple blobby clay continents, positioned to roughly read as recognisable: Americas (left), Europe/Africa (center), India/Asia (right)
+const landMat = clayMat(0x3f6b42, 0.85);
+function continent(lat, lon, w,h, segs=18){
+  // lat/lon in degrees -> position on sphere surface, build a flattened blob patch
+  const phi = (90-lat) * Math.PI/180;
+  const theta = (lon+180) * Math.PI/180;
+  const x = -earthR*Math.sin(phi)*Math.cos(theta);
+  const y = earthR*Math.cos(phi);
+  const z = earthR*Math.sin(phi)*Math.sin(theta);
+  const geo = new THREE.SphereGeometry(w, segs, segs, 0, Math.PI*2, 0, h);
+  const mesh = new THREE.Mesh(geo, landMat);
+  mesh.position.set(x*1.001,y*1.001,z*1.001);
+  mesh.lookAt(0,0,0);
+  mesh.rotateX(Math.PI);
+  return mesh;
+}
+// Americas (two blobs: N + S America)
+earthGroup.add(continent(35, -95, 0.62, 0.9));   // N America
+earthGroup.add(continent(-15, -62, 0.5, 0.85));  // S America
+// Europe (small) + Africa (larger, below it) -- roughly center-front
+earthGroup.add(continent(50, 12, 0.34, 0.7));    // Europe
+earthGroup.add(continent(2, 18, 0.58, 0.95));    // Africa
+// India + wider Asia, to the right
+earthGroup.add(continent(22, 78, 0.4, 0.8));     // India
+earthGroup.add(continent(48, 100, 0.68, 0.85));  // wider Asia
+
+// ---------- day/night terminator band sweeping across, with rain on the night side ----------
+const nightCap = new THREE.Mesh(
+  new THREE.SphereGeometry(earthR*1.004, 96, 96, Math.PI*0.95, Math.PI*1.3),
+  new THREE.MeshStandardMaterial({color:0x140f2a, roughness:0.9, transparent:true, opacity:0.55})
+);
+earthGroup.add(nightCap);
+// terminator glow ring
+const termGeo = new THREE.TorusGeometry(earthR*1.001, 0.03, 8, 100, Math.PI*0.02);
+for (let k=0;k<3;k++){
+  const term = new THREE.Mesh(termGeo, new THREE.MeshStandardMaterial({color:0xffd98a, emissive:0xffd98a, emissiveIntensity:1.6}));
+  term.rotation.x = Math.PI/2;
+  term.rotation.z = Math.PI*0.95 + k*0.015;
+  earthGroup.add(term);
+}
+// soft rain streaks over the night hemisphere (thin cool capsules)
+const rainMat = new THREE.MeshStandardMaterial({color:0x9fd4ff, emissive:0x6fc0ff, emissiveIntensity:1.0, transparent:true, opacity:0.6});
+for (let i=0;i<40;i++){
+  const phi = Math.acos((Math.random()*2)-1);
+  const theta = Math.PI*0.95 + Math.random()*Math.PI*1.1;
+  const r = earthR + 0.08 + Math.random()*0.25;
+  const x = r*Math.sin(phi)*Math.cos(theta);
+  const y = r*Math.cos(phi);
+  const z = r*Math.sin(phi)*Math.sin(theta);
+  const drop = new THREE.Mesh(new THREE.CapsuleGeometry(0.008,0.07,2,4), rainMat);
+  drop.position.set(x,y,z);
+  drop.lookAt(0,0,0);
+  earthGroup.add(drop);
+}
+
+// ---------- tiny glowing dots = tweets, warm (day) -> blue (night) ----------
+const dotGeo = new THREE.SphereGeometry(0.032,8,8);
+const warmDotMat = new THREE.MeshStandardMaterial({color:0xffd98a, emissive:0xffb24a, emissiveIntensity:2.0});
+const coolDotMat = new THREE.MeshStandardMaterial({color:0x8fd4ff, emissive:0x5ab0ff, emissiveIntensity:2.0});
+for (let i=0;i<160;i++){
+  const phi = Math.acos((Math.random()*2)-1);
+  const theta = Math.random()*Math.PI*2;
+  const r = earthR + 0.05;
+  const x = r*Math.sin(phi)*Math.cos(theta);
+  const y = r*Math.cos(phi);
+  const z = r*Math.sin(phi)*Math.sin(theta);
+  const isNight = (theta > Math.PI*0.95 && theta < Math.PI*2.05%(Math.PI*2)) || theta > Math.PI*0.95;
+  const nightSide = theta > Math.PI*0.95 && theta < Math.PI*1.95;
+  const dot = new THREE.Mesh(dotGeo, nightSide ? coolDotMat : warmDotMat);
+  dot.position.set(x,y,z);
+  earthGroup.add(dot);
+}
+
+// ---------- lighting ----------
+const sun = new THREE.DirectionalLight(0xffe9c2, 1.3);
+sun.position.set(6,2,3);
+scene.add(sun);
+const rim = new THREE.DirectionalLight(0x6a7ad0, 0.7);
+rim.position.set(-4,1,-4);
+scene.add(rim);
+const fill = new THREE.AmbientLight(0x202a52, 0.55);
+scene.add(fill);
+const bounce = new THREE.HemisphereLight(0x3a4a80, 0x0a0812, 0.4);
+scene.add(bounce);
+
+renderer.render(scene, camera);
+window.__rendered = true;
+</script>
+</body></html>

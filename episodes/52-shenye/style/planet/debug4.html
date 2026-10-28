@@ -1,0 +1,27 @@
+<!doctype html><html><head><script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script></head>
+<body><canvas id="c"></canvas>
+<script>
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'), preserveDrawingBuffer:true});
+renderer.setSize(800,600);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060c);
+const camera = new THREE.PerspectiveCamera(32, 800/600, 0.1, 200);
+camera.position.set(2.6, 2.3, 9.2);
+camera.lookAt(0,0.6,0);
+
+const planetR = 3.4;
+const planetMat = new THREE.MeshStandardMaterial({color:0x1b2440, roughness:0.85, metalness:0.05});
+const planetMesh = new THREE.Mesh(new THREE.SphereGeometry(planetR, 64, 64), planetMat);
+scene.add(planetMesh);
+
+const moonRim = new THREE.DirectionalLight(0x8fa0e0, 0.55);
+moonRim.position.set(-4,5,-3);
+scene.add(moonRim);
+const fill = new THREE.AmbientLight(0x1a1f3a, 0.55);
+scene.add(fill);
+const bounce = new THREE.HemisphereLight(0x33406a, 0x0a0812, 0.4);
+scene.add(bounce);
+
+renderer.render(scene,camera);
+window.__done = true;
+</script></body></html>

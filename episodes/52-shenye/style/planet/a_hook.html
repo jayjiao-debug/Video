@@ -1,0 +1,205 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#05060c; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  #c { position:absolute; inset:0; }
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+  .vignette { position:absolute; inset:0; pointer-events:none; z-index:5;
+      background: radial-gradient(ellipse 1300px 980px at 50% 40%, transparent 48%, rgba(2,2,6,.52) 100%); }
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="vignette"></div>
+<div class="corner-mark">J</div>
+<div class="subtitle-wrap"><div class="subtitle">凌晨<span class="gold">两点</span></div></div>
+<script>
+const W=1920, H=1080;
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true, preserveDrawingBuffer:true});
+renderer.setSize(W,H);
+renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060c);
+scene.fog = new THREE.FogExp2(0x05060c, 0.01);
+
+const camera = new THREE.PerspectiveCamera(40, W/H, 0.1, 200);
+camera.position.set(2.1, 6.6, 8.6);
+camera.lookAt(0, 3.95, 0.3);
+
+// ---------- starfield ----------
+{
+  const n = 340;
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(n*3);
+  for (let i=0;i<n;i++){
+    const r = 22 + Math.random()*48;
+    const th = Math.random()*Math.PI*2;
+    const ph = Math.acos((Math.random()*2)-1);
+    pos[i*3]   = r*Math.sin(ph)*Math.cos(th);
+    pos[i*3+1] = Math.abs(r*Math.cos(ph))*0.75 + 2.5;
+    pos[i*3+2] = r*Math.sin(ph)*Math.sin(th) - 5;
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const m = new THREE.PointsMaterial({color:0xffffff, size:0.11, transparent:true, opacity:0.9});
+  scene.add(new THREE.Points(g,m));
+}
+
+// ---------- tiny planet ----------
+const planetR = 3.4;
+const planetGroup = new THREE.Group();
+scene.add(planetGroup);
+
+const planetMat = new THREE.MeshStandardMaterial({color:0x2a3660, roughness:0.85, metalness:0.05});
+const planetMesh = new THREE.Mesh(new THREE.SphereGeometry(planetR, 64, 64), planetMat);
+planetMesh.receiveShadow = true;
+planetGroup.add(planetMesh);
+
+const dayCap = new THREE.Mesh(
+  new THREE.SphereGeometry(planetR*1.002, 64, 64, Math.PI*0.75, Math.PI*0.7),
+  new THREE.MeshStandardMaterial({color:0x4a3f66, roughness:0.9, transparent:true, opacity:0.5})
+);
+planetGroup.add(dayCap);
+
+const hill = new THREE.Mesh(
+  new THREE.SphereGeometry(1.1, 40, 40, 0, Math.PI*2, 0, Math.PI*0.5),
+  new THREE.MeshStandardMaterial({color:0x323e68, roughness:0.95})
+);
+hill.position.set(0, planetR-0.15, 0.35);
+hill.rotation.x = Math.PI;
+hill.castShadow = true; hill.receiveShadow = true;
+planetGroup.add(hill);
+
+// ---------- tiny bed ----------
+const bedGroup = new THREE.Group();
+bedGroup.position.set(0, planetR+0.62, 0.45);
+bedGroup.rotation.x = -0.1;
+planetGroup.add(bedGroup);
+
+function clayMat(hex, rough=0.55){ return new THREE.MeshStandardMaterial({color:hex, roughness:rough, metalness:0.04}); }
+
+const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(1.6,0.24,1.0, 4,4,4), clayMat(0x55447e));
+bedFrame.castShadow = true; bedFrame.receiveShadow = true;
+bedGroup.add(bedFrame);
+const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.5,0.18,0.9,4,4,4), clayMat(0x7868ac));
+mattress.position.y = 0.21;
+mattress.castShadow = true;
+bedGroup.add(mattress);
+const pillow = new THREE.Mesh(new THREE.CapsuleGeometry(0.24,0.34,6,12), clayMat(0xe9e4f0, 0.6));
+pillow.rotation.z = Math.PI/2;
+pillow.position.set(-0.55, 0.37, 0.05);
+pillow.castShadow = true;
+bedGroup.add(pillow);
+const blanket = new THREE.Mesh(new THREE.BoxGeometry(1.1,0.24,0.94,6,4,6), clayMat(0x463a80));
+blanket.position.set(0.22, 0.36, 0);
+blanket.castShadow = true;
+bedGroup.add(blanket);
+
+// ---------- original chibi character: round body, oversized hoodie, no hair/scarf/cape ----------
+const charGroup = new THREE.Group();
+charGroup.position.set(-0.3, 0.6, 0.18);
+bedGroup.add(charGroup);
+
+const bodyMat = clayMat(0xe7a85a, 0.6);
+const hoodieMat = clayMat(0xd27f3c, 0.62);
+
+const torso = new THREE.Mesh(new THREE.SphereGeometry(0.33, 32, 32), hoodieMat);
+torso.position.set(0,0.07,0);
+torso.scale.set(1,0.9,0.95);
+torso.castShadow = true;
+charGroup.add(torso);
+// clearer hood: a shell sitting further back/up from the head so it silhouettes as a hood, not hair
+const hood = new THREE.Mesh(new THREE.SphereGeometry(0.265, 28, 28, 0, Math.PI*2, 0, Math.PI*0.62), hoodieMat);
+hood.position.set(0, 0.52, -0.05);
+hood.castShadow = true;
+charGroup.add(hood);
+const head = new THREE.Mesh(new THREE.SphereGeometry(0.225,32,32), bodyMat);
+head.position.set(0,0.46,0.07);
+head.castShadow = true;
+charGroup.add(head);
+const eyeGeo = new THREE.SphereGeometry(0.021,12,12);
+const eyeMat = new THREE.MeshStandardMaterial({color:0x1b1324, roughness:0.4});
+const eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.064,0.455,0.265); charGroup.add(eyeL);
+const eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.064,0.455,0.265); charGroup.add(eyeR);
+// two short rounded hoodie drawstrings at the chest (reads as hoodie, not hair/scarf)
+const stringMat = clayMat(0xf0c98a,0.5);
+for (const sx of [-0.09,0.09]){
+  const str = new THREE.Mesh(new THREE.CapsuleGeometry(0.013,0.1,4,8), stringMat);
+  str.position.set(sx,0.22,0.27); str.rotation.x = 1.5;
+  charGroup.add(str);
+}
+const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.068,0.25,6,12), hoodieMat);
+arm.position.set(0.2,0.24,0.26); arm.rotation.z = -0.95; arm.rotation.x=0.35;
+arm.castShadow = true;
+charGroup.add(arm);
+
+// ---------- phone: the key light, glowing upward onto the face ----------
+const phoneGroup = new THREE.Group();
+phoneGroup.position.set(0.2, 0.17, 0.46);
+phoneGroup.rotation.set(-0.7, 0.15, -0.25);
+charGroup.add(phoneGroup);
+const phoneBody = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.3,0.02,2,2,1),
+  new THREE.MeshStandardMaterial({color:0x14101f, roughness:0.3, metalness:0.3}));
+phoneGroup.add(phoneBody);
+const phoneScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.138,0.27),
+  new THREE.MeshStandardMaterial({color:0xbfe8ff, emissive:0x8fd8ff, emissiveIntensity:2.4, roughness:0.3}));
+phoneScreen.position.z = 0.012;
+phoneGroup.add(phoneScreen);
+const phoneLight = new THREE.PointLight(0x9fd8ff, 6.5, 2.8, 2.0);
+phoneLight.position.set(0.2, 0.34, 0.52);
+charGroup.add(phoneLight);
+// a tight secondary light aimed right at the chin for an unmistakable under-chin highlight
+const chinLight = new THREE.PointLight(0xbfe8ff, 3.2, 1.0, 2.0);
+chinLight.position.set(0.02, 0.3, 0.3);
+charGroup.add(chinLight);
+
+// ---------- small dark mood-cloud forming above the character's head ----------
+const cloudGroup = new THREE.Group();
+cloudGroup.position.set(0.0, 1.15, -0.05);
+charGroup.add(cloudGroup);
+const cloudMat = new THREE.MeshStandardMaterial({color:0x241a3a, roughness:0.9, transparent:true, opacity:0.92});
+const puffs = [[0,0,0,0.19],[0.15,0.03,0.02,0.14],[-0.15,0.02,0.02,0.14],[0.05,-0.07,0.05,0.15],[-0.06,0.09,-0.02,0.12]];
+puffs.forEach(([x,y,z,r])=>{
+  const puff = new THREE.Mesh(new THREE.SphereGeometry(r,16,16), cloudMat);
+  puff.position.set(x,y,z);
+  cloudGroup.add(puff);
+});
+const cloudRim = new THREE.PointLight(0x9a8bf0, 1.3, 1.8);
+cloudRim.position.set(0.1,1.2,0.3);
+charGroup.add(cloudRim);
+
+// ---------- lighting ----------
+const moonKey = new THREE.DirectionalLight(0xaab8f0, 1.05);
+moonKey.position.set(-3,6,3);
+scene.add(moonKey);
+const rimLight = new THREE.DirectionalLight(0x6a7ad0, 0.85);
+rimLight.position.set(3,2,-4);
+scene.add(rimLight);
+const fill = new THREE.AmbientLight(0x2a3360, 0.7);
+scene.add(fill);
+const bounce = new THREE.HemisphereLight(0x4a5690, 0x0a0812, 0.5);
+scene.add(bounce);
+
+const ao = new THREE.Mesh(new THREE.CircleGeometry(0.48,32),
+  new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.32}));
+ao.rotation.x = -Math.PI/2.1;
+ao.position.set(-0.12, 0.001, 0.32);
+bedGroup.add(ao);
+
+renderer.render(scene, camera);
+window.__rendered = true;
+</script>
+</body></html>
