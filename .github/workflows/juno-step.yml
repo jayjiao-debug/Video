@@ -1,0 +1,160 @@
+# Juno step — runs ONE crew stage of an episode on demand, then stops for the owner's review.
+# Billed to the API credits of the linked Console org (secret ANTHROPIC_API_KEY), not the Claude plan.
+# Results are committed to the branch  api/<episode>.
+name: Juno step (API credits)
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: "Episode folder, e.g. 52-mashou"
+        required: true
+      stage:
+        description: "Stage to run"
+        type: choice
+        options: [research, script, gate1, looks, storyboard, revise]
+        default: research
+      topic:
+        description: "Topic / working title (needed for research on a new episode)"
+        required: false
+      notes:
+        description: "Owner notes for this run (angle, sources, revisions)"
+        required: false
+      model:
+        description: "sonnet = cheaper, opus = strongest"
+        type: choice
+        options: [sonnet, opus]
+        default: sonnet
+
+permissions:
+  contents: write
+
+concurrency:
+  group: juno-${{ inputs.episode }}
+  cancel-in-progress: false
+
+jobs:
+  step:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BRANCH: api/${{ inputs.episode }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Use the episode branch (create it if new)
+        run: |
+          if git fetch --depth 1 origin "$BRANCH" 2>/dev/null; then
+            git checkout -B "$BRANCH" FETCH_HEAD
+          else
+            git checkout -b "$BRANCH"
+          fi
+
+      - name: Mirror the paths the crew skills expect
+        run: |
+          sudo mkdir -p /home/claude/diji
+          sudo ln -sfn "$GITHUB_WORKSPACE" /home/claude/video
+          sudo ln -sfn "$GITHUB_WORKSPACE/episodes" /home/claude/diji/episodes
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install tools
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          pip install -q -r requirements.txt
+
+      - name: Install the frame renderer (looks / storyboard only)
+        if: inputs.stage == 'looks' || inputs.stage == 'storyboard'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-color-emoji
+          pip install -q playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Write the stage prompt
+        env:
+          EP: ${{ inputs.episode }}
+          STAGE: ${{ inputs.stage }}
+          TOPIC: ${{ inputs.topic }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          cat > "$RUNNER_TEMP/prompt.md" <<EOF
+          You are the Juno producer, running ONE stage unattended in GitHub Actions. The owner reviews
+          the result afterwards in another session, so never wait for input and never ask questions.
+
+          BUDGET RULES (this run is billed per token):
+          - You are a thin dispatcher. Do not read owner-notes.md, facts.md, script.md or other episode files
+            yourself; the role agent reads what it needs. Only skim production-crew/SKILL.md if you must.
+          - Launch each role agent ONCE. No review loops: no director or cold-reader pass unless the stage is
+            gate1 or the owner notes ask for one. The owner reviews the result himself.
+          - Tell each role agent to read only the owner-notes rows tagged with its role, to work in as few
+            turns as possible, and to look at a rendered image at most once.
+          Episode folder: /home/claude/diji/episodes/${EP}
+          Stage: ${STAGE}
+          Topic / working title: ${TOPIC}
+          Owner notes for this run: ${NOTES}
+
+          Do ONLY this stage, then stop:
+          - research: if the folder doesn't exist, create it with
+            python3 /home/claude/video/.claude/skills/production-crew/scripts/new_episode.py ${EP} "<title>".
+            Fill brief.md from the topic and owner notes if it is still the template. Then launch the
+            researcher agent to write facts.md.
+          - script: launch the screenwriter agent to write script.md + lines.json from brief.md and facts.md.
+          - gate1: launch the director and cold-reader agents in parallel on the script (gate 1).
+            Do NOT revise the script yourself; leave their notes and cold-read files for the owner.
+          - looks: launch the art-director agent to propose 2–3 clearly different looks from script.md
+            (style frames as self-contained HTML in style/, rendered to 1920x1080 PNG with
+            python3 /home/claude/video/.claude/skills/production-crew/scripts/render_html.py), plus one
+            side-by-side contact sheet style/looks_sheet.png and style/looks.md (name, pitch, palette, per frame
+            what it shows). No director pass; the owner picks.
+          - storyboard: launch the art-director agent to write storyboard.md for the look named in the owner
+            notes: every scene and transition with its beat time, one rendered key frame per scene in
+            style/board/ (HTML -> PNG as above) and one contact sheet style/board_sheet.png in time order with
+            the time and line under each frame. No director pass; the owner reviews it.
+          - revise: send the owner notes above (and the latest gate notes) to the role that owns them
+            (screenwriter for script/lines, art-director for looks/storyboard). Change only what the notes ask
+            for; re-render any frame that changed.
+          Finish by appending a row to crew_log.md (time, "${STAGE} (API run)", who, result, minutes) and
+          end your reply with a 3–5 line summary for the owner, including anything that was blocked.
+          EOF
+
+      - name: Run Claude (billed to API credits)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "$(cat "$RUNNER_TEMP/prompt.md")" \
+            --model "${{ inputs.model }}" \
+            --max-turns 50 \
+            --allowedTools "Agent,Task,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(python3:*),Bash(ls:*),Bash(mkdir:*),Bash(cat:*),Bash(date:*)" \
+            --output-format json > "$RUNNER_TEMP/result.json" || true
+          {
+            echo "## ${{ inputs.episode }} · ${{ inputs.stage }} · ${{ inputs.model }}"
+            jq -r '"**Cost:** $" + ((.total_cost_usd // 0)*100|round/100|tostring) + " · **turns:** " + ((.num_turns // 0)|tostring)' "$RUNNER_TEMP/result.json"
+            echo
+            jq -r '.result // "No result (see the log)."' "$RUNNER_TEMP/result.json"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit the results to api/<episode>
+        run: |
+          git config user.name  "juno-api-bot"
+          git config user.email "juno-api-bot@users.noreply.github.com"
+          jq -r --arg t "$(date -u +%F' '%H:%M)" --arg st "${{ inputs.stage }}" '
+            (.modelUsage // {}) as $m
+            | if ($m|length) > 0 then
+                $m | to_entries[] | "| \($t) | \($st) | \(.key) | \(.value.inputTokens // 0) | \(.value.outputTokens // 0) | \(.value.cacheReadInputTokens // 0) | \(.value.cacheCreationInputTokens // 0) | $\(((.value.costUSD // 0)*100|round)/100) |"
+              else "| \($t) | \($st) | ${{ inputs.model }} | ? | ? | ? | ? | $\(((.total_cost_usd // 0)*100|round)/100) |" end' "$RUNNER_TEMP/result.json" > "$RUNNER_TEMP/costrow" || true
+          f="episodes/${{ inputs.episode }}/api_costs.md"
+          if [ -d "episodes/${{ inputs.episode }}" ]; then
+            [ -f "$f" ] || printf '| UTC | Stage | Model | Input | Output | Cache read | Cache write | Cost |\n|---|---|---|---|---|---|---|---|\n' > "$f"
+            cat "$RUNNER_TEMP/costrow" >> "$f"
+          fi
+          git add episodes/
+          if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
+          git commit -m "${{ inputs.episode }}: ${{ inputs.stage }} (API run, ${{ inputs.model }})"
+          git push origin "HEAD:$BRANCH"
