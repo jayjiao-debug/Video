@@ -73,8 +73,8 @@ const SectionCut: React.FC<{m: MacroCam; op: number}> = ({m, op}) => { const P =
 /* ---------- the camera and the land, a pure function of t ---------- */
 const CAM11_: MacroCam = SP11.cam;
 const T_BAR = DA(28), T_Q = 66.105, T_CUT10 = 67.237, T_TIN = DA(30), T_M3 = 70.633;
-const laOf = (t: number) => (t < 70.9 ? LA10 : lerp(LA10, 15, sstep5(seg(t, 70.9, 74.1))));
-const B3 = (t: number) => sstep5(seg(t, 70.9, 74.1));   // 0 = KF10's land, 1 = KF11's
+const laOf = (t: number) => (t < 70.1 ? LA10 : lerp(LA10, 15, sstep(seg(t, 70.1, 74.3))));
+const B3 = (t: number) => sstep(seg(t, 70.1, 74.3));   /* producer r2: slower, cubic (was 70.9–74.1 quintic: the hush swooped) */   // 0 = KF10's land, 1 = KF11's
 /* M1: the camera starts straight above the blade's flat (the paper test's last view: blade across the frame, tip left), then tips
    down and turns to look along the blade (rot −90° → −2°, pitch 90° → 14°) while it comes down onto the surface (z 105 → 11) */
 export const camOf = (t: number): MacroCam => { const a = CAM10_0, b = CAM11_, u = B3(t), s = sstep5(seg(t, 61.577, 68.4)), sp2 = sstep5(seg(t, 61.9, 66.8)), push = sstep(seg(t, 66.0, 70.6)), cyS = sstep(seg(t, 61.577, 66.8));
@@ -84,7 +84,7 @@ export const camOf = (t: number): MacroCam => { const a = CAM10_0, b = CAM11_, u
 const specOf = (t: number): MacroSpec => { const u = B3(t), m = camOf(t), la = laOf(t);
 	return {cam: m, hw: (x: number) => lerp(bladeHW(Math.min(Math.max(x, 0), 380) / 10) * 10, 24 - 0.006 * x, u), ridge: lerp(RID10, 5, u), strip: lerp(4, 2.2, u), la, lw: la * (u > 0 ? lerp(LW10 / LA10, 6.2 / 15, u) : LW10 / LA10), fogD: lerp(300, 220, u), lightU: lerp(44, 40, u), uMax: lerp(900, 1300, u), nearU: lerp(21, 14, u), seed: 2}; };
 export const Leg12: React.FC<{t: number}> = ({t}) => { const sp = specOf(t), m = sp.cam, u = B3(t), s0 = seg(t, 61.577, 66.0);
-	const cutOp = sstep(seg(t, T_CUT10, T_CUT10 + 0.35)) * (1 - sstep(seg(t, 70.2, 70.85)));
+	const cutOp = sstep(seg(t, T_CUT10, T_CUT10 + 0.35)) * (1 - sstep(seg(t, 69.5, 70.1)));
 	const markO = 1 - sstep(seg(t, 62.0, 63.6));
 	/* tags */
 	const barIn = frameOf(t) >= frameOf(T_BAR) ? 1 : 0, barOut = sstep(seg(t, 65.35, 65.95)), barO = barIn * (1 - barOut);

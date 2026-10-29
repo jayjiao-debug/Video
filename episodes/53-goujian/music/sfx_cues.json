@@ -131,14 +131,14 @@
 "note": "the draw"
 },
 {
-"t": 48.0,
+"t": 52.52,
 "sfx": "paper_flutter",
 "db": -14,
 "role": "soft",
-"note": "the 1966 letters fly in"
+"note": "the 1966 letters fly in (scene53c from 52.520)"
 },
 {
-"t": 52.0,
+"t": 53.65,
 "sfx": "paper_flutter",
 "db": -15,
 "role": "soft",
@@ -160,11 +160,11 @@
 "note": "the blade cuts the stack"
 },
 {
-"t": 61.01,
+"t": 59.45,
 "sfx": "paper_flutter",
 "db": -14,
 "role": "soft",
-"note": "halves fall in the break"
+"note": "the cut halves lean out and sag (paper53c)"
 },
 {
 "t": 75.162,
