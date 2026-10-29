@@ -36,6 +36,12 @@ export const Subtitles53: React.FC<{t: number}> = ({t}) => {
 	return <Subs rows={vis} th={thB} />;
 };
 
+/** the guaranteed subtitle scrim: a feathered warm-dark wash behind the top-left rows, on only while a (non-centred) line is on screen */
+export const SubScrim53: React.FC<{t: number}> = ({t}) => { const i = lineAt(t); if (i < 0 || t >= CARD_T53 || LINES53[i].q) return null;
+	const L = LINES53[i], o = seg(t, L.a, L.a + 0.2) * (1 - seg(t, L.b - 0.2, L.b)); if (o < 0.004) return null;
+	const m = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 28%, #000 72%, rgba(0,0,0,0) 100%)';
+	return <div style={{position: 'absolute', left: 0, top: 40, width: 1100, height: 280, opacity: o, background: 'linear-gradient(90deg, rgba(18,9,6,0.45) 0%, rgba(18,9,6,0.4) 35%, rgba(18,9,6,0.16) 72%, rgba(18,9,6,0) 100%)', WebkitMaskImage: m, maskImage: m}} />; };
+
 /* ---------- stamp (top-right, two lines) ----------
    Line 1 = year · place, line 2 = a short note (script.md / lines53). It appears after the line has typed, HOLDS while
    unchanged, and only the changed part retypes. ep53 specials: H1 hands over from 你家厨房 to 春秋末年 · 越 / 越王勾践剑 at
@@ -58,6 +64,7 @@ export const stampAt = (t: number): StampState | null => {
 		const press = t >= STAMP_PRESS - 1e-6 ? Math.exp(-(t - STAMP_PRESS) / 0.12) * Math.cos((t - STAMP_PRESS) * 40) : 0;
 		return {y: String(yr), place: '湖北省博物馆', note: '回到出土那天', oHead: 1, nPlace: Math.ceil(6 * (1 - seg(t, 20.821, 21.05))), nNote: Math.ceil(6 * seg(t, showFrom(k), showFrom(k) + 0.4)), press};
 	}
+	if (id === 'H2' && t >= 9.2) return {y: '春秋末年', place: '越', note: '剑首 · 11道同心圆', oHead: 1, nPlace: 99, nNote: Math.ceil(10 * seg(t, 9.2, 9.45)), press: 0};
 	const st = LINES53[k].st; if (!st) return null;
 	const place = st.place ?? '';
 	/* the previous stamp on screen (joined lines only) */
@@ -76,7 +83,7 @@ const StampBox: React.FC<{s: StampState}> = ({s}) => { const note = cq(s.note); 
 		<div style={{lineHeight: 1.15, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: 10}}>
 			<span style={{fontFamily: num ? YEAR : KAI, fontWeight: num ? 600 : 700, fontSize: num ? 52 : 38, fontVariantNumeric: num ? 'lining-nums tabular-nums' : undefined, display: 'inline-block', transform: `scale(${1 + 0.06 * s.press})`, transformOrigin: '100% 70%'}}>{s.y}</span>
 			{pv && <><span style={{fontFamily: YEAR, fontWeight: 600, fontSize: 32, color: thB.rule}}>·</span><span style={{fontFamily: KAI, fontWeight: 700, fontSize: 36, letterSpacing: '0.05em'}}>{pv}</span></>}</div>
-		<div style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, lineHeight: 1.45, marginTop: 2, letterSpacing: '0.04em', opacity: 0.9}}>{nv}<span style={{opacity: 0}}>{note.slice(nv.length) || ' '}</span></div>
+		<div style={{fontFamily: KAI, fontWeight: 700, fontSize: 38, lineHeight: 1.4, marginTop: 2, letterSpacing: '0.03em', opacity: 0.94, textShadow: `0 2px 2px rgba(14,7,4,0.95), ${thB.halo}`}}>{nv}<span style={{opacity: 0}}>{note.slice(nv.length) || ' '}</span></div>
 	</div>; };
 export const StampLayer53: React.FC<{t: number}> = ({t}) => { const s = stampAt(t); return s && s.oHead > 0.004 ? <StampBox s={s} /> : null; };
 
@@ -123,6 +130,7 @@ export const DepthLayer: React.FC<{t: number}> = ({t}) => { if (t < DEPTH_T0 || 
 /* ---------- everything on top of the picture ---------- */
 export const Overlay53: React.FC<{t: number; quad: [number, number][] | null}> = ({t, quad}) => <>
 	<TitleOnGlass t={t} quad={quad} />
+	<SubScrim53 t={t} />
 	<Subtitles53 t={t} />
 	<StampLayer53 t={t} />
 	<DepthLayer t={t} />
