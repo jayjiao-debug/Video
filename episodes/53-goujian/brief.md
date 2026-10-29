@@ -7,7 +7,7 @@
 
 ## Format (the ep50/ep51 standard; read `episodes/51-bing/` and `episodes/50-qian/` first)
 - Subtitle-only, no voice-over. Lines ≤ 16 字, key-word tags on about one line in three, 你 = the viewer.
-- The owner's BGM (the same track as ep50/51 unless he says otherwise), cut to cues on bar lines. One family of about 15 sound effects under the music: metal ring, soil, water, a stamp.
+- The owner's BGM: **バケモノの唄 instrumental** (confirmed 2026-10-29 16:45; the same track as ep50/51; `music/bgm.mp3`, gitignored), cut to cues on bar lines, reusing the measured grid in `episodes/50-qian/music/build50.py`. One family of about 15 sound effects under the music: metal ring, soil, water, a stamp.
 - Style B「漆」 dark (night viewing): dark ground, receding background, the hero object brightest. The sword's bronze-gold and its blue inlay are the only saturated colours.
 - Layout-D captions, the two-line top-right stamp (year · place), phone-safe corners, red J seal, end card (J stamp + title + question + 「关注 Juno · 一起看懂世界」 + sources). Keep the end card short (analytics: we lose most viewers there).
 - About 1:50–2:10. Title ≤ 2 s or laid over the picture (analytics: title cards leak viewers).
