@@ -1,4 +1,5 @@
 // node scripts/film26.mjs stills <outDir> s1 s2 ...  (seconds)   |   node scripts/film26.mjs video <out.mp4> fromSec toSec
+// optional env for video: CRF (default 16), COLOR_SPACE (e.g. bt709; default: Remotion's default)
 import {bundle} from '@remotion/bundler';
 import {renderStill, renderMedia, selectComposition} from '@remotion/renderer';
 import path from 'node:path';
@@ -15,7 +16,7 @@ if (mode === 'stills') {
 	console.log('stills done');
 } else {
 	let last = 0;
-	await renderMedia({serveUrl, composition, codec: 'h264', crf: 16, pixelFormat: 'yuv420p', muted: true, outputLocation: out, scale: Number(process.env.VSCALE || 1), browserExecutable, concurrency: Number(process.env.CONC || 2), chromiumOptions: process.env.GL ? {gl: process.env.GL} : {},
+	await renderMedia({serveUrl, composition, codec: 'h264', crf: Number(process.env.CRF || 16), pixelFormat: 'yuv420p', ...(process.env.COLOR_SPACE ? {colorSpace: process.env.COLOR_SPACE} : {}), muted: true, outputLocation: out, scale: Number(process.env.VSCALE || 1), browserExecutable, concurrency: Number(process.env.CONC || 2), chromiumOptions: process.env.GL ? {gl: process.env.GL} : {},
 		frameRange: [Math.round(Number(a[0]) * 30), Math.round(Number(a[1]) * 30) - 1],
 		onProgress: ({progress}) => { if (progress - last > 0.2) { last = progress; console.log(`${Math.round(progress * 100)}%`); } }});
 	console.log('done', out);

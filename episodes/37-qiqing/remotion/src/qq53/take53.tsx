@@ -1,0 +1,301 @@
+import React from 'react';
+import {W, H, rnd, lerp, cl, seg} from '../qq50/kit50';
+import {Pool, Vignette} from '../qq50/styleB';
+import {Figure4, POSES, Look4} from '../qq44/figure44';
+import {Cam, V3, lookAt, proj, poly, toCam, mix, blobOn, Tag} from './parts53';
+import {Guard3D, SwordPose} from './sword3d';
+import {PommelFace, R_FACE} from './face53';
+import {BladeLand, bw, hwAt, LBM, Light} from './land53';
+import {Cleaver} from './kfA53';
+import {RingDisc} from './props53';
+import {spline, sstep, DEG} from './cam53';
+import {B} from '../qq50/styleB';
+/* ep53 · THE ONE TAKE, legs 1–6 (0 → 20.821 s): one camera, one world (the case frame, mm). The sword lies level on its
+   holders, pommel end face at x = −278 (PF), tip at x = +278, blue glass up (z+), axis at z = 1000; plinth top z = 940.
+   Your kitchen (kfA53, its own frame) is placed on the sword's own edge line beyond the tip (a 180° turn about z + a shift),
+   so frame 0 (KF01) and the glide onto the bronze (KF02) are one move; the kitchen then falls away into lacquer.
+   Camera: legs 1–2 in Cartesian keys (position + yaw/pitch); legs 3–6 in spherical keys round the pommel face (distance on a
+   log scale, so the pull-back and the axis push are constant-rate moves); the two are blended C1 over 5.538–6.138.
+   Lens (f, principal point, roll) are global channels. Everything is a pure function of t. */
+export const SP: SwordPose = {x0: -278, ya: 0, z0: 1000, dir: 1};
+export const PF: V3 = [-278, 0, 1000];
+const kit = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] - 1002.2];   // case → kitchen
+const toKitchen = (c: Cam): Cam => ({...c, p: kit(c.p), yaw: c.yaw + Math.PI});
+
+/* ---------- camera channels ---------- */
+const XA = spline([[0, 566], [0.8, 352], [1.575, 226, -78], [3.0, 112], [4.7, -92], [5.538, -138, -38]]);
+const YA = spline([[0, -169], [0.8, -46], [1.575, 4], [3.0, 2.5], [5.538, 0]]);
+const ZA = spline([[0, 1192.2], [0.8, 1084], [1.575, 1026.5], [2.4, 1025.5], [3.6, 1035], [4.7, 1060], [5.538, 1128, 95]]);
+const YAWA = spline([[0, 148.5], [0.8, 167], [1.575, 182.5], [3.0, 181.2], [5.538, 180, 0]]);
+const PITA = spline([[0, 27.6], [0.8, 21.5], [1.575, 15.5], [3.0, 15.5], [4.7, 27], [5.538, 54, 22]]);
+const AL = spline([[5.538, 180, 0], [6.6, 168], [7.8, 136], [9.0, 110], [9.5, 102.5], [10.4, 99], [11.3, 95.5], [11.764, 89], [14.2, 50], [16.293, 33], [18.6, 24.5], [19.75, 2.5], [20.0, 0, 0], [22, 0, 0]]);
+const LND = spline([[5.538, Math.log(188)], [6.6, Math.log(330)], [7.8, Math.log(700)], [9.0, Math.log(1270)], [9.5, Math.log(1505)], [10.4, Math.log(1555)], [11.3, Math.log(1635)], [11.764, Math.log(1880)],
+	[14.2, Math.log(2900)], [15.4, Math.log(3150), 0], [16.293, Math.log(2650)], [18.6, Math.log(335)], [20.821, Math.log(55), -0.62]]);
+const BE = spline([[5.538, 41.8], [6.6, 46], [7.8, 40], [9.0, 33], [9.5, 31.6], [11.3, 30], [11.764, 28], [14.2, 21], [16.293, 19], [18.6, 18], [19.75, 1.2], [20.0, 0, 0], [22, 0, 0]]);
+const TX = spline([[5.538, -320], [6.6, -250], [7.8, -90], [9.0, -6], [9.5, 0], [11.3, -14], [11.764, -34], [14.2, -90], [16.293, -70], [18.6, -28], [20.0, 0, 30], [20.821, 120]]);
+const TY = spline([[5.538, 0], [9.5, 0], [11.3, 0], [14.2, 10], [16.293, 16], [18.6, 30], [20.0, 0, 0], [20.821, 0, 0]]);
+const TZ = spline([[5.538, 888], [6.6, 970], [7.8, 968], [9.5, 960], [11.3, 960], [14.2, 975], [16.293, 982], [18.6, 988], [20.0, 1000, 0], [20.821, 1000, 0]]);
+const FF = spline([[0, 1000], [0.8, 905], [1.575, 820], [3.6, 820], [5.538, 830], [6.6, 1000], [7.8, 1450], [9.0, 1900], [9.5, 2100], [11.3, 2100], [11.764, 2140], [14.2, 2300], [16.293, 2220], [18.6, 1650], [20.821, 1650, 0]]);
+const CX = spline([[0, 900], [1.575, 960], [5.538, 960], [9.5, 960], [16.293, 980], [18.6, 1000], [20.0, 960, 0], [20.821, 960, 0]]);
+const CY = spline([[0, 560], [1.575, 640], [3.6, 640], [5.538, 600], [7.8, 700], [9.5, 790], [11.3, 790], [11.764, 772], [14.2, 700], [16.293, 640], [18.6, 600], [20.0, 540, 0], [20.821, 540, 0]]);
+const RO = spline([[0, 0], [0.8, 1.6], [1.575, 2.5], [3.0, 1.8], [5.538, 0, 0], [20.821, 0, 0]]);
+const BL0 = 5.538, BL1 = 6.238;
+const fwd = (yaw: number, pit: number): V3 => [Math.cos(pit) * Math.cos(yaw), Math.cos(pit) * Math.sin(yaw), -Math.sin(pit)];
+export const camAt = (t: number): Cam => {
+	const pA: V3 = [XA(t), YA(t), ZA(t)], FA = fwd(YAWA(t) * DEG, PITA(t) * DEG), tA: V3 = [pA[0] + FA[0] * 300, pA[1] + FA[1] * 300, pA[2] + FA[2] * 300];
+	const a = AL(t) * DEG, b = BE(t) * DEG, d = Math.exp(LND(t));
+	const pB: V3 = [PF[0] - d * Math.cos(b) * Math.cos(a), PF[1] - d * Math.cos(b) * Math.sin(a), PF[2] + d * Math.sin(b)], tB: V3 = [TX(t), TY(t), TZ(t)];
+	const w = t <= BL0 ? 0 : t >= BL1 ? 1 : sstep((t - BL0) / (BL1 - BL0));
+	const p: V3 = [lerp(pA[0], pB[0], w), lerp(pA[1], pB[1], w), lerp(pA[2], pB[2], w)], tg: V3 = [lerp(tA[0], tB[0], w), lerp(tA[1], tB[1], w), lerp(tA[2], tB[2], w)];
+	return lookAt(p, tg, FF(t), CX(t), CY(t), RO(t) * DEG); };
+/** distance from the camera to the pommel face (mm), for the ring match at 20.821 */
+export const faceD = (t: number) => Math.exp(LND(t));
+
+/* ---------- ground: the lacquer dark under everything ---------- */
+export const Ground53: React.FC<{id: string; k?: number; sheen?: number}> = ({id, k = 1, sheen = 0.3}) => <g>
+	<defs><radialGradient id={`gv${id}`} cx="0.5" cy="0.5" r="0.75"><stop offset="0" stopColor="#2A1610" /><stop offset="0.6" stopColor="#1C0F0A" /><stop offset="1" stopColor="#0F0806" /></radialGradient>
+		<linearGradient id={`gr${id}`} gradientUnits="userSpaceOnUse" x1={lerp(-600, 1400, sheen)} y1={0} x2={lerp(-600, 1400, sheen) + 900} y2={700}>
+			<stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset="0.5" stopColor="#FFEBD6" stopOpacity={0.05 * k} /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient></defs>
+	<rect width={W} height={H} fill={`url(#gv${id})`} />
+	{k > 0.01 && <rect width={W} height={H} filter="url(#lacN)" opacity={0.12 * k} />}
+	<rect width={W} height={H} fill={`url(#gr${id})`} />
+</g>;
+
+/* ---------- the kitchen (kitchen frame): the counter, the rack, the tiled splashback (world-anchored, soft) ---------- */
+const KitchenW: React.FC<{c: Cam; o: number}> = ({c, o}) => { if (o <= 0.01) return null;
+	const counter = poly(c, [[-700, -700, -14], [520, -700, -14], [520, 520, -14], [-700, 520, -14]]), g0 = proj(c, [480, -40, -14]), g1 = proj(c, [140, -40, -14]);
+	const wall = (x0: number, x1: number, z0: number, z1: number) => poly(c, [[x0, -700, z0], [x1, -700, z0], [x1, -700, z1], [x0, -700, z1]]);
+	const tiles = [...Array.from({length: 14}, (_, i) => poly(c, [[-600 + i * 100, -699, -14], [-600 + i * 100, -699, 640]], false)), ...[86, 186, 286, 386, 486].map((z) => poly(c, [[-600, -699, z], [800, -699, z]], false))].join(' ');
+	const pl = proj(c, [150, -560, 520]);
+	return <g opacity={o}>
+		<defs><filter id="kwB" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="8" /></filter>
+			<linearGradient id="kwC" gradientUnits="userSpaceOnUse" x1={g0[0]} y1={g0[1]} x2={g1[0]} y2={g1[1]}><stop offset="0" stopColor="#1E1511" stopOpacity="0" /><stop offset="0.55" stopColor="#1E1511" stopOpacity="0.85" /><stop offset="1" stopColor="#201813" stopOpacity="1" /></linearGradient></defs>
+		<g filter="url(#kwB)">
+			<path d={wall(-700, 820, -14, 680)} fill="#1C130F" />
+			<path d={tiles} stroke="#C8B89A" strokeOpacity={0.08} strokeWidth={3} fill="none" />
+			<path d={wall(-700, 820, 560, 580)} fill="#FFE6C0" opacity={0.2} />
+			{pl[2] > 0 && <Pool id="kwU" x={pl[0]} y={pl[1]} rx={720} ry={260} a={0.16} col="#FFE2B8" />}
+		</g>
+		<path d={counter} fill="url(#kwC)" />
+		{Array.from({length: 160}, (_, i) => { const q: V3 = [-500 + 640 * rnd(i, 1), -680 + 1150 * rnd(i, 2), -13.9], p = proj(c, q); if (p[2] < 8) return null;
+			return <circle key={i} cx={p[0]} cy={p[1]} r={Math.max(0.6, c.f * 1.1 / p[2])} fill="#E8DCC8" opacity={0.04 + 0.06 * rnd(i, 4)} />; })}
+		{[-118, 28].map((y, i) => <path key={`r${i}`} d={poly(c, [[-260, y, -9], [216, y, -9]], false)} stroke="#7E8282" strokeOpacity={0.35} strokeWidth={3} fill="none" />)}
+		{[-110, -55, 0, 55, 110, 165, 214].map((x) => { const a = poly(c, [[x, -150, -5], [x, 60, -5]], false); return <g key={x} opacity={x > 180 ? 0.4 : 0.75}>
+			<path d={a} stroke="#0A0807" strokeOpacity={0.5} strokeWidth={6} fill="none" transform="translate(3,5)" /><path d={a} stroke="#5E6262" strokeWidth={3.2} fill="none" />
+			<path d={poly(c, [[x, -150, -4.4], [x, 60, -4.4]], false)} stroke="#C8CCCC" strokeOpacity={0.25} strokeWidth={1.1} fill="none" /></g>; })}
+	</g>; };
+
+/** a four-point glint (screen) */
+export const Glint: React.FC<{x: number; y: number; r: number; o?: number}> = ({x, y, r, o = 1}) => <g opacity={o}>
+	<circle cx={x} cy={y} r={r * 0.9} fill="#FFE6B0" opacity={0.3} />
+	<path d={`M${x},${y - r * 1.6} L${x + r * 0.12},${y - r * 0.12} L${x + r * 1.6},${y} L${x + r * 0.12},${y + r * 0.12} L${x},${y + r * 1.6} L${x - r * 0.12},${y + r * 0.12} L${x - r * 1.6},${y} L${x - r * 0.12},${y - r * 0.12} Z`} fill="#FFF8E6" />
+	<circle cx={x} cy={y} r={r * 0.22} fill="#FFFFFF" /></g>;
+
+/** a soft pool of light lying on a horizontal plane, drawn in perspective (stacked ellipses, centre brightest) */
+export const WPool: React.FC<{c: Cam; x: number; y: number; z: number; rx: number; ry: number; col: string; a: number; n?: number}> = ({c, x, y, z, rx, ry, col, a, n = 22}) => <g>
+	{Array.from({length: n}, (_, k) => { const r = 1 - k / n, d = poly(c, Array.from({length: 28}, (_, i) => { const th = i / 28 * 2 * Math.PI; return [x + rx * r * Math.cos(th), y + ry * r * Math.sin(th), z] as V3; }));
+		return d ? <path key={k} d={d} fill={col} opacity={a / n} /> : null; })}</g>;
+
+/* ---------- the museum: hall, rope, visitors, the case (plinth, holders, ring mirror, glass hood), the spot ---------- */
+const HX = 800, HY = 800, HZ0 = 940, HZ1 = 1900;
+export const PANE_Y = -HY;
+const VIS: {a: number; r: number; look: Look4; h: number; tint: number}[] = [
+	{a: 14, r: 4500, look: {dress: 'coat', head: 'short'}, h: 1.74, tint: 0}, {a: 38, r: 4800, look: {dress: 'jacket', head: 'bob', legs: 'trousers'}, h: 1.62, tint: 1},
+	{a: 62, r: 4500, look: {dress: 'coat', head: 'cap'}, h: 1.78, tint: 2}, {a: 84, r: 4900, look: {dress: 'dress', head: 'long'}, h: 1.6, tint: 0},
+	{a: 104, r: 4600, look: {dress: 'jacket', head: 'short', legs: 'trousers'}, h: 1.72, tint: 1}, {a: 128, r: 4800, look: {dress: 'coat', head: 'glasses'}, h: 1.7, tint: 2},
+	{a: 96, r: 5200, look: {dress: 'shirt', head: 'child', legs: 'trousers'}, h: 1.12, tint: 0}];
+const Visitor: React.FC<{c: Cam; v: typeof VIS[0]; o: number}> = ({c, v, o}) => { const a = v.a * DEG, fx = v.r * Math.cos(a), fy = v.r * Math.sin(a);
+	const foot = proj(c, [fx, fy, 0]), head = proj(c, [fx, fy, v.h * 1000]); if (foot[2] < 300 || head[2] < 300) return null;
+	const hpx = Math.hypot(head[0] - foot[0], head[1] - foot[1]); if (hpx < 8) return null;
+	const cen = proj(c, [0, 0, 1000]), flip = cen[0] < foot[0];
+	const col = ['#22140D', '#26170F', '#1E110B'][v.tint];
+	const k = Math.max(1, hpx / 450);
+	return <g opacity={o} transform={`translate(${foot[0]},${foot[1]}) scale(${flip ? -1 : 1},1) translate(${-foot[0]},${-foot[1]})`}>
+		<g transform={`translate(${-2.6 * k},${-2 * k})`} opacity={0.45}><Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col="#E8A860" /></g>
+		<Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col={col} /></g>; };
+const faceVis = (c: Cam, q: V3, n: V3) => (c.p[0] - q[0]) * n[0] + (c.p[1] - q[1]) * n[1] + (c.p[2] - q[2]) * n[2] > 0;
+export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number}> = ({c, t, hall, hood, ppl}) => {
+	/* hall: floor pool, two far walls with faint wall-washers, the rope on posts */
+	const floor = poly(c, [[-6500, -5500, 0], [6500, -5500, 0], [6500, 5500, 0], [-6500, 5500, 0]]);
+	const pc = proj(c, [0, 0, 0]);
+	const walls: [V3[], V3][] = [[[[6500, -5500, 0], [6500, 5500, 0], [6500, 5500, 4500], [6500, -5500, 4500]], [-1, 0, 0]], [[[-6500, 5500, 0], [-6500, -5500, 0], [-6500, -5500, 4500], [-6500, 5500, 4500]], [1, 0, 0]],
+		[[[-6500, 5500, 0], [6500, 5500, 0], [6500, 5500, 4500], [-6500, 5500, 4500]], [0, -1, 0]], [[[6500, -5500, 0], [-6500, -5500, 0], [-6500, -5500, 4500], [6500, -5500, 4500]], [0, 1, 0]]];
+	const washers: V3[] = [[6490, -2600, 2400], [6490, 2600, 2400], [-2800, 5490, 2400], [2800, 5490, 2400], [-6490, -2600, 2400], [-6490, 2600, 2400]];
+	const posts = Array.from({length: 12}, (_, i) => { const a = (i / 12) * 2 * Math.PI + 0.31; return [3900 * Math.cos(a), 3900 * Math.sin(a)] as [number, number]; });
+	/* the case */
+	const top: V3[] = [[-HX, -HY, HZ0], [HX, -HY, HZ0], [HX, HY, HZ0], [-HX, HY, HZ0]];
+	const sides: [V3[], V3][] = [[[[-HX, -HY, HZ0], [HX, -HY, HZ0], [HX, -HY, 0], [-HX, -HY, 0]], [0, -1, 0]], [[[HX, -HY, HZ0], [HX, HY, HZ0], [HX, HY, 0], [HX, -HY, 0]], [1, 0, 0]],
+		[[[HX, HY, HZ0], [-HX, HY, HZ0], [-HX, HY, 0], [HX, HY, 0]], [0, 1, 0]], [[[-HX, HY, HZ0], [-HX, -HY, HZ0], [-HX, -HY, 0], [-HX, HY, 0]], [-1, 0, 0]]];
+		const holder = (x: number) => { const a = proj(c, [x, -4, HZ0]), b = proj(c, [x, -4, 1000 - 9]); if (a[2] < 20 || b[2] < 20) return null; const w = c.f * 7 / a[2];
+		return <g key={x}><path d={`M${a[0] - w},${a[1]} L${b[0] - w * 0.6},${b[1]} L${b[0] + w * 0.6},${b[1]} L${a[0] + w},${a[1]} Z`} fill="#E8F0F2" opacity={0.1} /><path d={`M${a[0] - w},${a[1]} L${b[0] - w * 0.6},${b[1]}`} stroke="#F4FAFC" strokeOpacity={0.35} strokeWidth={1.5} /></g>; };
+	const mir = proj(c, [-345, 250, 968]), mr = mir[2] > 50 ? c.f * 30 / mir[2] : 0;
+	const hoodEdges: [V3, V3][] = [[[-HX, -HY, HZ0], [-HX, -HY, HZ1]], [[HX, -HY, HZ0], [HX, -HY, HZ1]], [[HX, HY, HZ0], [HX, HY, HZ1]], [[-HX, HY, HZ0], [-HX, HY, HZ1]],
+		[[-HX, -HY, HZ1], [HX, -HY, HZ1]], [[HX, -HY, HZ1], [HX, HY, HZ1]], [[HX, HY, HZ1], [-HX, HY, HZ1]], [[-HX, HY, HZ1], [-HX, -HY, HZ1]]];
+	/* the spot: a soft cone from the ceiling onto the case (skipped while the camera is inside it) */
+	const apex: V3 = [0, 0, 4300], rb = 980, zc = c.p[2], rAt = rb * (4300 - zc) / (4300 - HZ0), inside = Math.hypot(c.p[0], c.p[1]) < rAt + 250;
+	const cone = (() => { if (inside) return null; const pts = [proj(c, apex), ...Array.from({length: 24}, (_, i) => { const a = i / 24 * 2 * Math.PI; return proj(c, [rb * Math.cos(a), rb * Math.sin(a), HZ0]); })];
+		if (pts.some((p) => p[2] < 50)) return null;
+		const hull = convexHull(pts.map((p) => [p[0], p[1]] as [number, number])); return 'M' + hull.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('L') + 'Z'; })();
+	const coneO = inside ? 0 : cl((Math.hypot(c.p[0], c.p[1]) - rAt - 250) / 500);
+	const visNear: React.ReactNode[] = [], visFar: React.ReactNode[] = [];
+	const dc = Math.hypot(c.p[0], c.p[1]);
+	VIS.forEach((v, i) => { const a = v.a * DEG, dv = Math.hypot(c.p[0] - v.r * Math.cos(a), c.p[1] - v.r * Math.sin(a)); (dv > dc ? visFar : visNear).push(<Visitor key={i} c={c} v={v} o={ppl} />); });
+	return <g>
+		<defs><linearGradient id="mCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFE2A8" stopOpacity="0.1" /><stop offset="0.7" stopColor="#FFD08A" stopOpacity="0.04" /><stop offset="1" stopColor="#FFC070" stopOpacity="0.02" /></linearGradient>
+			<filter id="mSh" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6" /></filter>
+			</defs>
+		{hall > 0.01 && <g opacity={hall}>
+			{floor && <path d={floor} fill="#0C0605" />}
+			<WPool c={c} x={0} y={0} z={1} rx={2600} ry={2600} col="#FFB868" a={0.11} />
+			{walls.map(([q, n], i) => faceVis(c, q[0], n) ? <path key={`w${i}`} d={poly(c, q)} fill="#120A07" /> : null)}
+			{washers.map((q, i) => { const p = proj(c, q); if (p[2] < 600) return null; const r = Math.min(1400, c.f * 900 / p[2]); if (p[0] < -r || p[0] > W + r || p[1] < -2 * r || p[1] > H + 2 * r) return null;
+				return <Pool key={i} id={`mw${i}`} x={p[0]} y={p[1]} rx={r * 0.55} ry={r * 1.1} a={0.09} col="#FFB060" />; })}
+			{visFar}
+			<g opacity={ppl}>{posts.map(([x, y], i) => { const a = proj(c, [x, y, 0]), b = proj(c, [x, y, 900]); if (a[2] < 200 || b[2] < 200) return null;
+				return <path key={`p${i}`} d={`M${a[0]},${a[1]} L${b[0]},${b[1]}`} stroke="#3A2618" strokeWidth={Math.max(1.5, c.f * 40 / a[2])} strokeLinecap="round" />; })}
+			{posts.map(([x, y], i) => { const [x2, y2] = posts[(i + 1) % posts.length], pts: V3[] = Array.from({length: 9}, (_, k) => { const u = k / 8; return [lerp(x, x2, u), lerp(y, y2, u), 880 - 160 * Math.sin(Math.PI * u)]; });
+				const d = poly(c, pts, false); return d ? <path key={`rp${i}`} d={d} fill="none" stroke="#6A2C1A" strokeOpacity={0.55} strokeWidth={Math.max(1, c.f * 16 / Math.max(300, proj(c, pts[4])[2]))} /> : null; })}</g>
+		</g>}
+		{cone && <path d={cone} fill="url(#mCone)" opacity={coneO * hall} />}
+		{sides.map(([q, n], i) => faceVis(c, q[0], n) ? <path key={`s${i}`} d={poly(c, q)} fill="#170C08" /> : null)}
+		<path d={poly(c, top)} fill="#21130D" />
+		<path d={poly(c, [[-HX, -HY, HZ0], [HX, -HY, HZ0]], false)} stroke={B.gold} strokeOpacity={0.4 * hood} strokeWidth={2} fill="none" />
+		<WPool c={c} x={0} y={0} z={HZ0 + 0.5} rx={620} ry={330} col="#FFC878" a={0.34} />
+		<path d={poly(c, [[-270, 32, HZ0 + 1], [282, 32, HZ0 + 1], [282, -14, HZ0 + 1], [-270, -14, HZ0 + 1]])} fill="#000" opacity={0.45} filter="url(#mSh)" />
+		{[-150, 160].map(holder)}
+		{mr > 2 && t < 17.9 && <g transform={`translate(${mir[0]},${mir[1]})`} opacity={hood * (1 - sstep(seg(t, 17.0, 17.8)))}>
+			<path d={`M-4,${mr * 1.5} L0,0 L4,${mr * 1.5} Z`} fill="#2A1A12" />
+			<ellipse cx={0} cy={0} rx={mr * 1.12} ry={mr} fill="#0E0806" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
+			<RingDisc x={0} y={0} r={mr * 0.78} ry={0.9} id="mMir" />
+			<path d={`M${-mr * 0.7},${-mr * 0.4} Q${-mr * 0.3},${-mr * 0.82} ${mr * 0.35},${-mr * 0.75}`} stroke="#FFFFFF" strokeOpacity={0.25} strokeWidth={3} fill="none" /></g>}
+		{hood > 0.01 && <g opacity={hood}>{hoodEdges.map(([a, b], i) => { const d = poly(c, [a, b], false); return d ? <path key={`h${i}`} d={d} stroke="#E9EEF0" strokeOpacity={0.16} strokeWidth={1.6} fill="none" /> : null; })}</g>}
+		{visNear}
+	</g>; };
+/** convex hull (monotone chain) of screen points */
+const convexHull = (P: [number, number][]) => { const p = P.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o: number[], a: number[], b: number[]) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+	const lo: [number, number][] = [], up: [number, number][] = [];
+	for (const q of p) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
+	for (const q of p.slice().reverse()) { while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+	return lo.slice(0, -1).concat(up.slice(0, -1)); };
+
+/* ---------- dust motes drifting in the case spot (their own slow clock; never on the beat) ---------- */
+const Motes: React.FC<{c: Cam; t: number; o: number}> = ({c, t, o}) => { if (o <= 0.01) return null;
+	return <g opacity={o}>{Array.from({length: 46}, (_, i) => { const a = rnd(i, 51) * 2 * Math.PI, r = 950 * Math.sqrt(rnd(i, 52)), z0 = 1000 + 1700 * rnd(i, 53);
+		const q: V3 = [r * Math.cos(a) + 60 * Math.sin(t * 0.21 + i), r * Math.sin(a) + 50 * Math.cos(t * 0.17 + i * 1.7), 1000 + ((z0 - 1000 - 22 * t) % 1700 + 1700) % 1700];
+		const p = proj(c, q); if (p[2] < 350 || p[0] < -10 || p[0] > W + 10 || p[1] < -10 || p[1] > H + 10) return null;
+		const tw = 0.5 + 0.5 * Math.sin(t * (0.6 + rnd(i, 54)) + i * 2.3);
+		return <circle key={i} cx={p[0]} cy={p[1]} r={Math.min(2.6, Math.max(0.8, c.f * 1.6 / p[2]))} fill="#FFE8C0" opacity={(0.18 + 0.3 * tw) * Math.min(1, (p[2] - 350) / 400)} />; })}</g>; };
+
+/* ---------- the glass: pane reflections where the camera passes a pane ---------- */
+const PaneStreaks: React.FC<{c: Cam; t: number}> = ({c, t}) => {
+	/* the front pane (y = −800) from 7.6 s on: two soft diagonal reflection bands, world-anchored on the pane */
+	const out: React.ReactNode[] = [];
+	const band = (x0: number, w: number, a: number, key: string) => { const d = poly(c, [[x0, PANE_Y, HZ1], [x0 + w, PANE_Y, HZ1], [x0 + w - 700, PANE_Y, HZ0], [x0 - 700, PANE_Y, HZ0]]); if (!d) return null;
+		return <path key={key} d={d} fill="#F4F8FA" opacity={a} />; };
+	if (c.p[1] < -500 && t < 13) { const o = cl((-c.p[1] - 600) / 150) * (1 - seg(t, 11.6, 12.6));
+		out.push(<g key="fp" opacity={o}>{band(-120, 260, 0.04, 'a')}{band(260, 46, 0.075, 'b')}</g>); }
+	/* the end pane (x = −800) during the axis push */
+	if (t > 16 && t < 20.9) { const o = cl((-c.p[0] - 700) / 200) * cl((-c.p[0] - 760) / 60 + 1);
+		const d1 = poly(c, [[-HX, -300, HZ1], [-HX, -40, HZ1], [-HX, 380, HZ0], [-HX, 120, HZ0]]), d2 = poly(c, [[-HX, 60, HZ1], [-HX, 100, HZ1], [-HX, 520, HZ0], [-HX, 480, HZ0]]);
+		out.push(<g key="ep" opacity={o}>{d1 && <path d={d1} fill="#F4F8FA" opacity={0.04} />}{d2 && <path d={d2} fill="#F4F8FA" opacity={0.07} />}</g>); }
+	return <>{out}</>; };
+
+/* ---------- the title plaque on the front pane (world rectangle; the master maps the HTML plaque onto its projection) ---------- */
+export const TITLE_W = 330, TITLE_H = 151;            // mm, the whole source sheet (1400 × 640 px; the plaque 1080 × 404 inside)
+export const TITLE_C: V3 = [0, PANE_Y, 1612];
+export const titleQuad = (t: number): [number, number][] | null => { if (t < 9.5 - 1e-6 || t >= 11.764) return null; const c = camAt(t);
+	const [x, y, z] = TITLE_C, hw = TITLE_W / 2, hh = TITLE_H / 2;
+	const q: V3[] = [[x + hw, y, z + hh], [x - hw, y, z + hh], [x - hw, y, z - hh], [x + hw, y, z - hh]];
+	const p = q.map((v) => proj(c, v)); if (p.some((v) => v[2] < 20)) return null;
+	return p.map((v) => [v[0], v[1]]); };
+
+/* ---------- the hilt: grip + bands + pommel flare (sword3d's Hilt3D geometry) and the ringed end face (face53) ---------- */
+const A_GRIP0 = 8, A_GRIP1 = 82, R_GRIP = 8.6, R_POM = R_FACE;
+const SW = (a: number, y: number, z: number): V3 => [SP.x0 + SP.dir * a, SP.ya + y, SP.z0 + z];
+export const facePt = (c: Cam) => (r: number, th: number): [number, number] => { const p = proj(c, SW(-0.2, r * Math.cos(th), r * Math.sin(th))); return [p[0], p[1]]; };
+const Hilt53: React.FC<{c: Cam; id: string; hi: number}> = ({c, id, hi}) => {
+	const mid = SW((A_GRIP0 + A_GRIP1) / 2, 0, 0), v = [mid[0] - c.p[0], mid[1] - c.p[1], mid[2] - c.p[2]], n = Math.hypot(v[1], v[2]) || 1, oy = -v[2] / n, oz = v[1] / n;
+	const silh = (a0: number, a1: number, r: number) => [SW(a0, oy * r, oz * r), SW(a1, oy * r, oz * r), SW(a1, -oy * r, -oz * r), SW(a0, -oy * r, -oz * r)];
+	const p0 = proj(c, SW(40, oy * R_GRIP, oz * R_GRIP)), p1 = proj(c, SW(40, -oy * R_GRIP, -oz * R_GRIP));
+	const faceVisible = c.p[0] < PF[0] - 0.5, fd = toCam(c, PF)[2];
+	return <g>
+		<defs><linearGradient id={`hg${id}`} gradientUnits="userSpaceOnUse" x1={p0[0]} y1={p0[1]} x2={p1[0]} y2={p1[1]}><stop offset="0" stopColor="#4A2E14" /><stop offset="0.3" stopColor="#F4D088" /><stop offset="0.5" stopColor="#BC8744" /><stop offset="1" stopColor="#4A2E14" /></linearGradient></defs>
+		{poly(c, silh(A_GRIP0, A_GRIP1, R_GRIP)) && <path d={poly(c, silh(A_GRIP0, A_GRIP1, R_GRIP))} fill={`url(#hg${id})`} />}
+		{[33, 60].map((a) => { const d = poly(c, silh(a - 2.6, a + 2.6, R_GRIP * 1.22)); return d ? <path key={a} d={d} fill={`url(#hg${id})`} stroke="#2A180A" strokeOpacity={0.5} strokeWidth={1} /> : null; })}
+		{(() => { const d = poly(c, [SW(A_GRIP0, oy * 9, oz * 9), SW(3.5, oy * R_POM * 0.82, oz * R_POM * 0.82), SW(3.5, -oy * R_POM * 0.82, -oz * R_POM * 0.82), SW(A_GRIP0, -oy * 9, -oz * 9)]); return d ? <path d={d} fill={`url(#hg${id})`} /> : null; })()}
+		{(() => { const d = poly(c, [SW(3.5, oy * R_POM * 0.82, oz * R_POM * 0.82), SW(2.6, oy * R_POM, oz * R_POM), SW(0, oy * R_POM, oz * R_POM), SW(0, -oy * R_POM, -oz * R_POM), SW(2.6, -oy * R_POM, -oz * R_POM), SW(3.5, -oy * R_POM * 0.82, -oz * R_POM * 0.82)]); return d ? <path d={d} fill="#BC8744" stroke="#2A180A" strokeOpacity={0.5} strokeWidth={1} /> : null; })()}
+		{faceVisible && fd > 1 && <PommelFace id={id} pt={facePt(c)} ppm={c.f / fd} hi={hi} />}
+	</g>; };
+
+/* ---------- the sword ---------- */
+const SwordW: React.FC<{c: Cam; t: number; o: Parameters<typeof BladeLand>[0]['o']; ringGlow?: number; id: string}> = ({c, t, o, ringGlow, id}) => {
+	const dBlade = toCam(c, bw(SP, 230, 0))[2], dHilt = toCam(c, [PF[0] + 40, 0, 1000])[2];
+	const blade = <BladeLand key="b" c={c} sp={SP} id={id} o={o} />, guard = <Guard3D key="g" c={c} sp={SP} id={id} />, hilt = <Hilt53 key="h" c={c} id={id} hi={0.4 + (ringGlow ?? 0)} />;
+	void t; return <g>{dBlade > dHilt ? [blade, guard, hilt] : [hilt, guard, blade]}</g>; };
+
+/* ---------- lights (directions toward the light) ---------- */
+const L_RAKE: V3 = [-0.92, -0.32, 0.22];      // the raking warm key, low and ahead-right of the glide
+const L_SPOT: V3 = [0.08, -0.28, 0.96];       // the case spot from above, a little to the front
+
+/* ---------- THE TAKE, legs 1–6 ---------- */
+export const TakeA: React.FC<{t: number}> = ({t}) => {
+	const c = camAt(t), ck = toKitchen(c);
+	/* hook: frame-0 glint (KF01), rust bloom on DA(0) = 0.443 (complete on f13), focus pull to the bronze, the kitchen falls away */
+	const rho = 0.68 + 0.22 * sstep(seg(t, 0.443 - 0.23, 0.443)) + 0.05 * seg(t, 0.45, 1.4);
+	const kitO = 1 - sstep(seg(t, 0.5, 1.35)), knifeO = 1 - sstep(seg(t, 1.15, 1.5));
+	const farBlur = 2.6 * (1 - sstep(seg(t, 0.12, 0.9))), knifeBlur = 4.5 * sstep(seg(t, 0.35, 1.05));
+	/* the light: the raking key in the glide, the case spot from above as the camera rises */
+	const kSpot = sstep(seg(t, 5.0, 8.0)), kRake = 1 - 0.75 * kSpot;
+	const lights: Light[] = [{dir: L_RAKE, k: 1.05 * kRake}, {dir: L_SPOT, k: 0.55 + 0.6 * kSpot}];
+	/* depth of field in the glide only */
+	const glide = t < 6.4;
+	const dof = glide ? {near: 34, far: 260 + 600 * seg(t, 4.6, 6.4), nb: '2 9', fb: 1.3 * (1 - seg(t, 4.8, 6.2))} : undefined;
+	const fog = t < 6.8 ? {d0: 60, D: 300 + 3000 * sstep(seg(t, 4.2, 6.8)), col: '#1E100B'} : undefined;
+	/* S3: the sheen on the lull hit 18.557 (f557), base → tip; the rings catch light as the push ends */
+	const sh = t >= 18.557 - 1e-6 ? {pos: lerp(-0.08, 1.12, seg(t, 18.557, 19.25)), k: 0.95 * (1 - seg(t, 19.0, 19.35))} : undefined;
+	const ringGlow = 0.5 * sstep(seg(t, 19.6, 20.6));
+	const hall = sstep(seg(t, 7.2, 9.2)) * (1 - sstep(seg(t, 19.9, 20.6))), ppl = sstep(seg(t, 11.3, 12.9)) * (1 - sstep(seg(t, 19.9, 20.6)));
+	const plinthO = 1 - sstep(seg(t, 20.1, 20.65));
+	const hood = sstep(seg(t, 6.6, 8.4));
+	const caseO = sstep(seg(t, 0.9, 2.2));
+	const lift = 0.3 * (1 - sstep(seg(t, 0.5, 1.5))) + 0.16 * sstep(seg(t, 6.0, 8.5));
+	/* hits */
+	const g0 = proj(c, [244, -18, 1004.2]), g0o = Math.exp(-t / 0.4) * (1 - seg(t, 0.6, 1.0));
+	const lt = 2.707, gl = t >= lt - 1e-6 ? Math.exp(-(t - lt) / 0.22) : 0, sc = XA(lt) + 278 - 97 - 80, gp = proj(c, [SP.x0 + 97 + sc, 7, 1000 + 2.4]);
+	/* KF01's bokeh along the far edge, gone as the focus pulls */
+	const bok = [[250, 22, 0.34], [330, 17, 0.28], [420, 13, 0.24], [520, 10, 0.2]].map(([x, r, a], i) => { const p = proj(c, kitInv([x, 0, 2])); return p[2] > 10 ? <circle key={i} cx={p[0]} cy={p[1]} r={r} fill="#FFD890" opacity={a * (1 - seg(t, 0.15, 0.7))} /> : null; });
+	return <svg width={W} height={H} style={{position: 'absolute'}}>
+		<defs>
+			<filter id="tFar" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={Math.max(0.01, farBlur)} /></filter>
+			<filter id="tKn" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={Math.max(0.01, knifeBlur)} /></filter>
+			<filter id="tBok" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" /></filter>
+		</defs>
+		<Ground53 id="tA" k={lerp(1, 0.35, sstep(seg(t, 4, 8)))} sheen={0.3 + 0.2 * Math.sin(c.yaw)} />
+		<KitchenW c={ck} o={kitO} />
+		<g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} /></g>
+		{t < 1.2 && <g opacity={1 - caseO}>
+			<Pool id="tk1d" x={proj(c, [0, 0, 1000])[0]} y={proj(c, [0, 0, 1000])[1]} rx={560} ry={330} a={0.75 * kitO} col="#080403" />
+			<Pool id="tk1s" x={proj(c, [0, 0, 1000])[0] - 20} y={proj(c, [0, 0, 1000])[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
+		<g filter={farBlur > 0.05 ? 'url(#tFar)' : undefined}>
+			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift}} />
+		</g>
+		{t < 0.75 && <g filter="url(#tBok)">{bok}</g>}
+		{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
+		{gl > 0.02 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={34} o={gl} />}
+		{knifeO > 0.01 && <g opacity={knifeO} filter={knifeBlur > 0.05 ? 'url(#tKn)' : undefined}><Cleaver c={ck} rho={rho} /></g>}
+		<Motes c={c} t={t} o={hall * plinthO} />
+		<PaneStreaks c={c} t={t} />
+		<Vignette id="tA" a={0.6} />
+		<DuoTag c={c} t={t} />
+	</svg>; };
+const kitInv = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] + 1002.2];   // kitchen → case (its own inverse in x, y)
+
+/* ---------- S3: 「镀铬？」 hangs beside the blade from the lull hit (18.557) — a question tag, never struck ---------- */
+const DuoTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 18.557 - 1e-6 || t > 20.32) return null;
+	const o = 1 - sstep(seg(t, 19.85, 20.3)); const to = proj(c, bw(SP, 233, 14));
+	const at = proj(camAt(18.6), bw(SP, 233, 14)), x = at[0] - 250, y = at[1] + 190;
+	/* the leader only while its blade point is in frame and not hidden behind the pommel's end face */
+	const fc = proj(c, PF), fr = fc[2] > 1 ? c.f * R_FACE / fc[2] : 0, hidden = c.p[0] < PF[0] && to[2] > fc[2] && Math.hypot(to[0] - fc[0], to[1] - fc[1]) < fr * 1.15;
+	const vis = !hidden && to[2] > 20 && to[0] > -40 && to[0] < W + 40 && to[1] > -40 && to[1] < H + 40;
+	return <Tag id="duo" x={x} y={y} s="镀铬？" fs={64} anchor="end" to={vis ? [to[0] - 12, to[1] + 10] : undefined} col={B.cream} o={o} />; };
+void hwAt; void LBM; void mix; void blobOn; void rnd;
