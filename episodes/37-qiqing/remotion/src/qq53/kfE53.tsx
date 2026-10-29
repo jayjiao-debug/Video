@@ -129,7 +129,7 @@ export const KF08: React.FC = () => { const px = GX - SW.guardA * K8;   // pomme
    through (their halves pushed apart at the top), the bottom 9 are whole; the tip pokes out past the end of the stack.
    The hilt and the hand holding it are off frame left. World units: cm. */
 const SHT = 0.11, NS = 32, NC = 23, SX0 = 10.5, SX1 = -10.5, SY = 7;   // SX1 = the end face we see (the camera convention mirrors x)
-const CAM9 = lookAt([-34, -29, 13], [-6, 0, 2.4], 1850, 980, 650);
+const CAM9 = lookAt([-26, -30, 12], [-2, 0, 2.4], 2300, 960, 600);
 export const KF09: React.FC = () => { const c = CAM9, zE = (NS - NC) * SHT, zT = NS * SHT;
 	/* the blade on edge in the plane y = 0: local s from the blade base, w across; the tip at x = 16.5 */
 	const tipX = -14.5, baseX = tipX + LBc, zA = (w: number) => zE + 2.0 + w;
@@ -170,10 +170,10 @@ export const KF09: React.FC = () => { const c = CAM9, zE = (NS - NC) * SHT, zT =
 		<path d={poly(c, Array.from({length: 10}, (_, i) => { const z = lerp(zT, zE, i / 9); return [SX1, -gap(z), z] as V3; }), false)} stroke="#6A6458" strokeWidth={1.5} fill="none" />
 		<Glint x={proj(c, [SX1 - 0.6, 0, zE + 0.1])[0]} y={proj(c, [SX1 - 0.6, 0, zE + 0.1])[1]} r={24} />
 		{/* the count on the end face: a bracket for the cut sheets, one for the whole sheets */}
-		{(() => { const a = proj(c, [SX1, -SY - 0.6, zT]), b = proj(c, [SX1, -SY - 0.6, zE]), d = proj(c, [SX1, -SY - 0.6, 0]);
-			return <g><path d={`M${a[0] + 8},${a[1]} h18 V${b[1] - 3} h-18`} fill="none" stroke={B.goldL} strokeWidth={4} /><path d={`M${b[0] + 8},${b[1] + 3} h18 V${d[1]} h-18`} fill="none" stroke={B.cream} strokeWidth={3} />
-				<Tag id="k9a" x={a[0] + 44} y={(a[1] + b[1]) / 2 + 20} s="划破20多张" fs={56} col={B.goldL} />
-				<Tag id="k9b" x={b[0] + 44} y={(b[1] + d[1]) / 2 + 16} s="共30多张" fs={44} col={B.cream} /></g>; })()}
+		{(() => { const a = proj(c, [SX1, -SY, zT]), b = proj(c, [SX1, -SY, zE]), d = proj(c, [SX1, -SY, 0]);
+			return <g><path d={`M${a[0] - 4},${a[1]} h-16 V${b[1] - 3} h16`} fill="none" stroke={B.goldL} strokeWidth={4} /><path d={`M${b[0] - 4},${b[1] + 3} h-16 V${d[1]} h16`} fill="none" stroke={B.cream} strokeWidth={3} />
+				<Tag id="k9a" x={a[0] - 14} y={(a[1] + b[1]) / 2 + 20} s="划破20多张" fs={56} col={B.goldL} anchor="end" />
+				<Tag id="k9b" x={b[0] - 14} y={(b[1] + d[1]) / 2 + 30} s="共30多张" fs={44} col={B.cream} anchor="end" /></g>; })()}
 		{/* the clapper slate for 《古剑》, set down on the table after the take */}
 		<g transform="translate(240,800) rotate(-7)"><rect x={0} y={0} width={230} height={160} rx={6} fill="#1E1C1A" stroke="#6A625A" strokeWidth={3} />
 			<path d="M0,-6 L230,-6 L230,-38 L0,-38 Z" fill="#1E1C1A" />{Array.from({length: 6}, (_, i) => <path key={i} d={`M${i * 38 + 6},-36 l24,28`} stroke="#E8E2D6" strokeWidth={11} />)}
