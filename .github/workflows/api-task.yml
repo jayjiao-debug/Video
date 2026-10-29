@@ -1,0 +1,188 @@
+# API task runner — runs ANY task with Claude Code in GitHub Actions, billed to the API credits of the
+# linked Console org (secret ANTHROPIC_API_KEY), not to the Claude plan.
+#
+# Results land on the branch  api-task/<name>  in the folder  tasks/<name>/ :
+#   brief.md   the task exactly as given          result.md  Claude's final answer
+#   cost.md    tokens and $ per model, one row per run (appended, so re-runs add up)
+#   out/       files the task produced (unless the brief says to write elsewhere)
+#
+# Give the task inline (`task`), or write a longer brief to tasks/<name>/brief.md on the branch
+# api-task/<name> first and pass task = "file".
+name: API task (API credits)
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Short task name (letters, digits, -). Branch api-task/<name>, folder tasks/<name>/"
+        required: true
+      task:
+        description: "The task in plain words, or 'file' to use tasks/<name>/brief.md from the branch"
+        required: true
+      model:
+        description: "Model (full API name)"
+        type: choice
+        options: [claude-sonnet-5-5, claude-opus-5-5, claude-haiku-5-5, claude-fable-5-1]
+        default: claude-sonnet-5-5
+      effort:
+        description: "Effort: low, medium, high, xhigh, max (more effort = more thinking = more output tokens)"
+        type: choice
+        options: [low, medium, high, xhigh, max]
+        default: medium
+      budget_usd:
+        description: "Hard spending cap for this run in USD (the run stops when reached)"
+        required: true
+        default: "5"
+      tools:
+        description: "readonly = read + web; research = files + web; files = files only; full = files + web + shell"
+        type: choice
+        options: [research, readonly, files, full]
+        default: research
+      setup:
+        description: "Extra software: none, python (pip + repo requirements), render (Chromium, CJK fonts, ffmpeg)"
+        type: choice
+        options: [none, python, render]
+        default: none
+      max_turns:
+        description: "Maximum agent turns"
+        required: true
+        default: "60"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: api-task-${{ inputs.name }}
+  cancel-in-progress: false
+
+jobs:
+  task:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      NAME: ${{ inputs.name }}
+      BRANCH: api-task/${{ inputs.name }}
+      DIR: tasks/${{ inputs.name }}
+    steps:
+      - name: Check the task name
+        run: |
+          [[ "$NAME" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$ ]] || { echo "Bad name: use letters, digits, . _ -"; exit 1; }
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Use the task branch (create it if new)
+        run: |
+          if git fetch --depth 1 origin "$BRANCH" 2>/dev/null; then
+            git checkout -B "$BRANCH" FETCH_HEAD
+          else
+            git checkout -b "$BRANCH"
+          fi
+          mkdir -p "$DIR/out"
+
+      - name: Mirror the paths the repo's skills expect
+        run: |
+          sudo mkdir -p /home/claude/diji
+          sudo ln -sfn "$GITHUB_WORKSPACE" /home/claude/video
+          sudo ln -sfn "$GITHUB_WORKSPACE/episodes" /home/claude/diji/episodes
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-python@v5
+        if: inputs.setup != 'none'
+        with:
+          python-version: "3.11"
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Extra software (python)
+        if: inputs.setup == 'python' || inputs.setup == 'render'
+        run: |
+          [ -f requirements.txt ] && pip install -q -r requirements.txt || true
+
+      - name: Extra software (render)
+        if: inputs.setup == 'render'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-color-emoji ffmpeg
+          pip install -q playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Write the brief
+        env:
+          TASK: ${{ inputs.task }}
+        run: |
+          if [ "$TASK" = "file" ]; then
+            [ -s "$DIR/brief.md" ] || { echo "task=file but $DIR/brief.md is missing or empty on $BRANCH"; exit 1; }
+          else
+            printf '%s\n' "$TASK" > "$DIR/brief.md"
+          fi
+          echo "----- brief -----"; cat "$DIR/brief.md"
+
+      - name: Run Claude (billed to API credits)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TOOLS: ${{ inputs.tools }}
+        run: |
+          case "$TOOLS" in
+            readonly) T="Read,Glob,Grep,WebSearch,WebFetch" ;;
+            files)    T="Agent,Task,Read,Write,Edit,Glob,Grep" ;;
+            full)     T="Agent,Task,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash" ;;
+            *)        T="Agent,Task,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch" ;;
+          esac
+          cat > "$RUNNER_TEMP/system.md" <<EOF
+          You are running ONE task unattended in GitHub Actions, in a checkout of the repository. Nobody can
+          answer questions: never ask, take the most reasonable reading and say which one you took.
+          The task brief is in $DIR/brief.md. Put files you make in $DIR/out/ unless the brief names
+          another place. Your final reply is saved as $DIR/result.md, so end with a complete, self-contained
+          answer for the person who asked: what you did, the result, file paths, and anything blocked.
+          Be economical: read only what the task needs and don't repeat work.
+          EOF
+          set +e
+          claude -p "Do the task in $DIR/brief.md." \
+            --append-system-prompt "$(cat "$RUNNER_TEMP/system.md")" \
+            --model "${{ inputs.model }}" \
+            --effort "${{ inputs.effort }}" \
+            --max-budget-usd "${{ inputs.budget_usd }}" \
+            --max-turns "${{ inputs.max_turns }}" \
+            --allowedTools "$T" \
+            --output-format json > "$RUNNER_TEMP/result.json"
+          echo "claude exit code: $?"
+          set -e
+          jq -r '.result // ("No final answer. Stop reason: " + ((.subtype // "unknown")|tostring) + ". See the run log.")' \
+            "$RUNNER_TEMP/result.json" > "$DIR/result.md" 2>/dev/null || echo "Run failed before producing a result; see the run log." > "$DIR/result.md"
+
+      - name: Record tokens and cost
+        if: always()
+        run: |
+          f="$DIR/cost.md"
+          [ -f "$f" ] || printf '| UTC | Model | Effort | Input | Output | Cache read | Cache write | Claude Code estimate | List price |\n|---|---|---|---|---|---|---|---|---|\n' > "$f"
+          total="?"; listtotal="?"
+          if [ -s "$RUNNER_TEMP/result.json" ]; then
+            jq -r --arg t "$(date -u +%F' '%H:%M)" --arg e "${{ inputs.effort }}" '
+            def P: {"claude-opus-5-5":[4,20,5,0.2],"claude-sonnet-5-5":[2,10,2.5,0.1],"claude-haiku-5-5":[0.1,0.5,0.125,0.01],"claude-fable-5-1":[10,50,12.5,0.25],"claude-sonnet-5":[2,10,2.5,0.2],"claude-opus-5":[5,25,6.25,0.5],"claude-haiku-4-5":[1,5,1.25,0.1]};
+            def list($k; $v): (P | to_entries | map(select(.key as $p | $k | startswith($p))) | sort_by(.key|length) | last | .value) as $p
+              | if $p == null then null else ((($v.inputTokens//0)*$p[0] + ($v.outputTokens//0)*$p[1] + ($v.cacheCreationInputTokens//0)*$p[2] + ($v.cacheReadInputTokens//0)*$p[3]) / 1000000) end;
+            def money: if . == null then "?" else "$" + (((. * 100) | round) / 100 | tostring) end;
+            (.modelUsage // {}) | to_entries[]
+            | "| \($t) | \(.key) | \($e) | \(.value.inputTokens // 0) | \(.value.outputTokens // 0) | \(.value.cacheReadInputTokens // 0) | \(.value.cacheCreationInputTokens // 0) | \(.value.costUSD | money) | \(list(.key; .value) | money) |"' \
+            "$RUNNER_TEMP/result.json" >> "$f" || true
+            total=$(jq -r 'def P: {"claude-opus-5-5":[4,20,5,0.2],"claude-sonnet-5-5":[2,10,2.5,0.1],"claude-haiku-5-5":[0.1,0.5,0.125,0.01],"claude-fable-5-1":[10,50,12.5,0.25],"claude-sonnet-5":[2,10,2.5,0.2],"claude-opus-5":[5,25,6.25,0.5],"claude-haiku-4-5":[1,5,1.25,0.1]}; def list($k; $v): (P | to_entries | map(select(.key as $p | $k | startswith($p))) | sort_by(.key|length) | last | .value) as $p   | if $p == null then null else ((($v.inputTokens//0)*$p[0] + ($v.outputTokens//0)*$p[1] + ($v.cacheCreationInputTokens//0)*$p[2] + ($v.cacheReadInputTokens//0)*$p[3]) / 1000000) end; def money: if . == null then "?" else "$" + (((. * 100) | round) / 100 | tostring) end; .total_cost_usd | money' "$RUNNER_TEMP/result.json" 2>/dev/null || echo "?")
+            listtotal=$(jq -r 'def P: {"claude-opus-5-5":[4,20,5,0.2],"claude-sonnet-5-5":[2,10,2.5,0.1],"claude-haiku-5-5":[0.1,0.5,0.125,0.01],"claude-fable-5-1":[10,50,12.5,0.25],"claude-sonnet-5":[2,10,2.5,0.2],"claude-opus-5":[5,25,6.25,0.5],"claude-haiku-4-5":[1,5,1.25,0.1]}; def list($k; $v): (P | to_entries | map(select(.key as $p | $k | startswith($p))) | sort_by(.key|length) | last | .value) as $p   | if $p == null then null else ((($v.inputTokens//0)*$p[0] + ($v.outputTokens//0)*$p[1] + ($v.cacheCreationInputTokens//0)*$p[2] + ($v.cacheReadInputTokens//0)*$p[3]) / 1000000) end; def money: if . == null then "?" else "$" + (((. * 100) | round) / 100 | tostring) end; [(.modelUsage // {}) | to_entries[] | list(.key; .value)] | if any(. == null) then null else add end | money' "$RUNNER_TEMP/result.json" 2>/dev/null || echo "?")
+          fi
+          echo "| | **run total** | | | | | | **$total** | **$listtotal** |" >> "$f"
+          { echo "## $NAME · ${{ inputs.model }} · ${{ inputs.effort }} · list price $listtotal (Claude Code estimate $total)"; echo; cat "$DIR/result.md"; } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit the results to api-task/<name>
+        if: always()
+        run: |
+          git config user.name  "api-task-bot"
+          git config user.email "api-task-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
+          git commit -q -m "api-task $NAME: ${{ inputs.model }} / ${{ inputs.effort }}"
+          git push origin "HEAD:$BRANCH"

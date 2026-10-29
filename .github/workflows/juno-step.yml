@@ -21,10 +21,19 @@ on:
         description: "Owner notes for this run (angle, sources, revisions)"
         required: false
       model:
-        description: "sonnet = cheaper, opus = strongest"
+        description: "Model (full API name)"
         type: choice
-        options: [sonnet, opus]
-        default: sonnet
+        options: [claude-sonnet-5-5, claude-opus-5-5, claude-haiku-5-5, claude-fable-5-1]
+        default: claude-sonnet-5-5
+      effort:
+        description: "Effort: low, medium, high, xhigh, max"
+        type: choice
+        options: [low, medium, high, xhigh, max]
+        default: medium
+      budget_usd:
+        description: "Hard spending cap for this run in USD"
+        required: true
+        default: "6"
 
 permissions:
   contents: write
@@ -130,6 +139,8 @@ jobs:
         run: |
           claude -p "$(cat "$RUNNER_TEMP/prompt.md")" \
             --model "${{ inputs.model }}" \
+            --effort "${{ inputs.effort }}" \
+            --max-budget-usd "${{ inputs.budget_usd }}" \
             --max-turns 50 \
             --allowedTools "Agent,Task,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(python3:*),Bash(ls:*),Bash(mkdir:*),Bash(cat:*),Bash(date:*)" \
             --output-format json > "$RUNNER_TEMP/result.json" || true
@@ -144,14 +155,17 @@ jobs:
         run: |
           git config user.name  "juno-api-bot"
           git config user.email "juno-api-bot@users.noreply.github.com"
-          jq -r --arg t "$(date -u +%F' '%H:%M)" --arg st "${{ inputs.stage }}" '
-            (.modelUsage // {}) as $m
-            | if ($m|length) > 0 then
-                $m | to_entries[] | "| \($t) | \($st) | \(.key) | \(.value.inputTokens // 0) | \(.value.outputTokens // 0) | \(.value.cacheReadInputTokens // 0) | \(.value.cacheCreationInputTokens // 0) | $\(((.value.costUSD // 0)*100|round)/100) |"
-              else "| \($t) | \($st) | ${{ inputs.model }} | ? | ? | ? | ? | $\(((.total_cost_usd // 0)*100|round)/100) |" end' "$RUNNER_TEMP/result.json" > "$RUNNER_TEMP/costrow" || true
+          jq -r --arg t "$(date -u +%F' '%H:%M)" --arg st "${{ inputs.stage }}" --arg e "${{ inputs.effort }}" '
+            def P: {"claude-opus-5-5":[4,20,5,0.2],"claude-sonnet-5-5":[2,10,2.5,0.1],"claude-haiku-5-5":[0.1,0.5,0.125,0.01],"claude-fable-5-1":[10,50,12.5,0.25],"claude-sonnet-5":[2,10,2.5,0.2],"claude-opus-5":[5,25,6.25,0.5],"claude-haiku-4-5":[1,5,1.25,0.1]};
+            def list($k; $v): (P | to_entries | map(select(.key as $p | $k | startswith($p))) | sort_by(.key|length) | last | .value) as $p
+              | if $p == null then null else ((($v.inputTokens//0)*$p[0] + ($v.outputTokens//0)*$p[1] + ($v.cacheCreationInputTokens//0)*$p[2] + ($v.cacheReadInputTokens//0)*$p[3]) / 1000000) end;
+            def money: if . == null then "?" else "$" + (((. * 100) | round) / 100 | tostring) end;
+            (.modelUsage // {}) | to_entries[]
+            | "| \($t) | \($st) | \(.key) / \($e) | \(.value.inputTokens // 0) | \(.value.outputTokens // 0) | \(.value.cacheReadInputTokens // 0) | \(.value.cacheCreationInputTokens // 0) | \(.value.costUSD | money) | \(list(.key; .value) | money) |"' \
+            "$RUNNER_TEMP/result.json" > "$RUNNER_TEMP/costrow" || true
           f="episodes/${{ inputs.episode }}/api_costs.md"
           if [ -d "episodes/${{ inputs.episode }}" ]; then
-            [ -f "$f" ] || printf '| UTC | Stage | Model | Input | Output | Cache read | Cache write | Cost |\n|---|---|---|---|---|---|---|---|\n' > "$f"
+            [ -f "$f" ] || printf '| UTC | Stage | Model / effort | Input | Output | Cache read | Cache write | Claude Code estimate | List price |\n|---|---|---|---|---|---|---|---|---|\n' > "$f"
             cat "$RUNNER_TEMP/costrow" >> "$f"
           fi
           git add episodes/
