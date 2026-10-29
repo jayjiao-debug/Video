@@ -9,7 +9,8 @@ import {useStampFonts, YEAR} from '../qq44/skin44';
 import {Walker51} from '../qq51/props51';
 import {SealHollow} from '../qq51/master51';
 import {PAL52, EXTRA52, EraId52, rim52, FLAME, CLOUD, WOOD} from './palette52';
-import {Defs52, blur52, Flame, RocketCloudSvg, ParticleRocketCloud, pcloudGeom, openStage, PCloudProps, FireArrow, arrowAt, ARROW_FUSE_U, Bow, bowNock, Capsule, Glint52, Spark, LOOKS52} from './props52';
+import {SmokeCanvas, smokeGeom, trailToScreen, openStage52, SmokeProps, Cam52, SmokeFrame} from './smoke52';
+import {Defs52, blur52, Flame, RocketCloudSvg, ParticleRocketCloud, FireArrow, arrowAt, ARROW_FUSE_U, Bow, bowNock, Capsule, Glint52, Spark, LOOKS52} from './props52';
 /* ep52 key frames, Builder A: KF01–KF07 in ep51's 「时代色」 look. The hero is the rocket's light (flame, exhaust, the glowing cloud):
    always the brightest thing, warm white-gold against the era's mid-value colour field. KF52A-ALL renders frame i = KF0(i+1).
    Subtitles are verbatim from 52-huojian/lines_read.json (v4 hook C); ASCII quote pairs become curly “ ”. */
@@ -111,20 +112,24 @@ const Crown: React.FC<{lobes: [number, number, number, number][]; seed: number; 
 	return <g fill={fill}>
 		{lobes.map(([cx, cy, rx, ry], i) => <ellipse key={`c${i}`} cx={cx} cy={cy} rx={rx * 0.74} ry={ry * 0.7} />)}
 		{leaves}</g>; };
-const ViralDusk: React.FC<{id: string; t: number}> = ({id, t}) => { const g = VHZ, sil = '#0C0B0D', far = '#151318';
+const ViralDusk: React.FC<{id: string; t: number; part?: 'sky' | 'ground' | 'all'}> = ({id, t, part = 'all'}) => { const g = VHZ, sil = '#0C0B0D', far = '#151318', isSky = part !== 'ground', isGnd = part !== 'sky';
 	const wx = 700, wh = 104, wp = stand({lean: -4, neck: -16, la: -4, le: 8, ra: 3, re: 10});
-	const blocks = [[1488, 58, 64], [1560, 72, 70], [1640, 60, 62], [1712, 76, 66], [1790, 64, 70]];
+	const blocks = [[1584, 72, 70], [1660, 60, 62], [1732, 76, 66], [1810, 64, 70]];
 	return <g>
 		<defs>
 			<linearGradient id={`vs${id}`} gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={g}><stop offset="0" stopColor="#24242E" /><stop offset="0.45" stopColor="#302E39" /><stop offset="0.78" stopColor="#3E3843" /><stop offset="1" stopColor="#56464F" /></linearGradient>
 			<radialGradient id={`vp${id}`}><stop offset="0" stopColor="#9A6A6C" stopOpacity="0.62" /><stop offset="0.5" stopColor="#7A5560" stopOpacity="0.3" /><stop offset="1" stopColor="#5A4458" stopOpacity="0" /></radialGradient>
 		</defs>
-		<rect width={W} height={H} fill={`url(#vs${id})`} />
+		{isSky && <>
+		<rect x={-W} y={-H} width={3 * W} height={3 * H} fill={`url(#vs${id})`} />
 		<ellipse cx={430} cy={g + 20} rx={1050} ry={330} fill={`url(#vp${id})`} />
 		<ellipse cx={1500} cy={g + 10} rx={700} ry={160} fill="#6A5464" opacity={0.18} filter={blur52(40)} />
 		<circle cx={318} cy={432} r={2.2} fill="#F2EEF6" opacity={0.85} /><circle cx={318} cy={432} r={7} fill="#F2EEF6" opacity={0.12} />
+		{Array.from({length: 26}, (_, i) => { const x = rnd(i, 81) * W, y = 30 + rnd(i, 82) * 560; return <circle key={i} cx={x} cy={y} r={0.7 + 0.9 * rnd(i, 83)} fill="#E8E4F0" opacity={(0.12 + 0.3 * rnd(i, 84)) * (1 - y / 760)} />; })}
+		</>}
+		{isGnd && <>
 		{/* the horizon: a low ridge, small trees, poles, a chimney */}
-		<path d={`M-40,${g} L260,${g - 6} Q420,${g - 40} 600,${g - 30} Q760,${g - 18} 900,${g - 4} L1960,${g - 2} V${H + 20} H-40 Z`} fill={far} />
+		<path d={`M-40,${g} L260,${g - 6} Q420,${g - 40} 600,${g - 30} Q760,${g - 18} 900,${g - 4} L1960,${g - 2} L${2 * W},${g - 2} V${2 * H} H-40 Z`} fill={far} />
 		{[[842, 22], [872, 30], [903, 18]].map(([x, hh], i) => <path key={i} d={`M${x},${g} V${g - hh} M${x},${g - hh * 0.6} l${-9},${-10} M${x},${g - hh * 0.75} l${8},${-12} M${x},${g - hh * 0.45} l${10},${-8}`} stroke={sil} strokeWidth={2} fill="none" />)}
 		<g fill={sil}>{leafy(1092, g - 22, 34, 3, 18)}{leafy(1048, g - 14, 22, 5, 12)}{leafy(780, g - 14, 20, 9, 10)}</g>
 		{[[1186, 52, 3], [1232, 38, 4], [1284, 30, 10], [1360, 20, 14]].map(([x, hh, w], i) => <rect key={i} x={x} y={g - hh} width={w} height={hh + 4} fill={sil} />)}
@@ -133,7 +138,7 @@ const ViralDusk: React.FC<{id: string; t: number}> = ({id, t}) => { const g = VH
 			<rect x={x} y={g - hh} width={w} height={hh + 4} fill="#2C2A33" />
 			{Array.from({length: Math.floor(hh / 11) * 5}, (_, j) => { const cx = x + 6 + (j % 5) * (w - 12) / 4.6, cy = g - hh + 7 + Math.floor(j / 5) * 11; return rnd(i * 50 + j, 61) > 0.45 ? <rect key={j} x={cx} y={cy} width={5} height={4} fill={rnd(i * 50 + j, 62) > 0.3 ? '#F2DCA8' : '#D8D2C6'} opacity={0.55 + 0.4 * rnd(j, 63 + i)} /> : null; })}</g>)}
 		{/* the ground: almost black, a faint field texture */}
-		<rect x={-40} y={g} width={W + 80} height={H} fill="#0E0D0E" />
+		<rect x={-W} y={g} width={3 * W} height={2 * H} fill="#0E0D0E" />
 		{Array.from({length: 70}, (_, i) => { const x = rnd(i, 71) * W, y = g + 30 + rnd(i, 72) * 150; return <path key={i} d={`M${x},${y} l${-3 + 6 * rnd(i, 73)},${-8 - 10 * rnd(i, 74)}`} stroke="#18161A" strokeWidth={2} />; })}
 		<circle cx={1236} cy={g + 52} r={2.5} fill="#E8E0C8" opacity={0.6} /><circle cx={392} cy={g + 8} r={2} fill="#E8E0C8" opacity={0.5} />
 		{/* the big leafy tree on the left: trunk and limbs first (they show through the gaps), then the crown */}
@@ -145,63 +150,151 @@ const ViralDusk: React.FC<{id: string; t: number}> = ({id, t}) => { const g = VH
 		<Crown seed={7} fill={sil} lobes={[[205, g - 330, 150, 128], [100, g - 240, 108, 112], [296, g - 200, 92, 104], [244, g - 452, 80, 66], [30, g - 128, 80, 96], [150, g - 420, 70, 60]]} />
 		{/* the walker, small on the ridge, looking up: our thread through the film, kept subtle here */}
 		<Walker51 x={wx} g={g - 19} h={wh} pose={wp} look={LOOKS52.today.look} col="#0B0A0C" rim="#E8B8A0" rimO={0.45} dx={2} dy={-1.5} T={t} />
+		</>}
 	</g>; };
-/** the opening cloud (KF01 / KF02 / the motion test): the neck stays put, the balloon inflates up-left through the viral video's stages
-    (openStage: frame 0 = a clear teardrop, spokes by ~6 s, the dark cavity opening by ~9 s) */
-const vcProps = (t: number, k = 1): PCloudProps => ({ax: 0, ay: 0, bw: 0, bh: 0, neck: [1230, 590], rv: 150, x0: 1452, y0: 846, sun: -1, stage: openStage(t), t, k, id: 'vc'});
-const ViralCloud: React.FC<{t: number; k?: number; id?: string}> = ({t, k = 1}) => <ParticleRocketCloud {...vcProps(t, k)} />;
+/* ============ the opening v2 (0–14 s): the 火箭云 as procedural smoke (smoke52), then the ◀◀ rewind into 宋 ============
+   0–9.4 s the cloud evolves as the viral video does (openStage52: a teardrop at frame 0, the star point + spokes by ~6 s, the dark
+   cavity opening by ~9 s). 9.4–10.25 s time runs backwards: the balloon deflates into the thin streak, the camera locks onto its bright
+   head and follows it down the trail toward the horizon while the sky warms to the Song ochre/teal; matched on that bright point, a
+   zoom-through hands the streak over to one burning fire-arrow that flies backwards into the Song walker's hand and freezes there at
+   10.25, its fuse sparking, as the title slams in. No cut, no flash. (The Song set is KF03's, mirrored so the arrow arrives along the
+   rocket's screen direction.) */
+const VCN: P2 = [1370, 640];
+const vsProps = (t: number, o: Partial<SmokeProps> = {}): SmokeProps => ({ax: 0, ay: 0, bw: 0, bh: 0, neck: VCN, rv: 124, x0: 1530, y0: 862, axis: 31, sun: -1, stage: openStage52(t), t, k: 1, id: 'vc', ...o});
+const cl01 = (x: number) => Math.max(0, Math.min(1, x));
+const eIn = (x: number, p = 2) => Math.pow(cl01(x), p);
+const eOut = (x: number, p = 2) => 1 - Math.pow(1 - cl01(x), p);
+const eIO = (x: number) => { const u = cl01(x); return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; };
+const sm01 = (x: number) => { const u = cl01(x); return u * u * (3 - 2 * u); };
+const RW = {a: 9.4, b: 9.8, h0: 9.66, h1: 10.05, x0: 9.95, x1: 10.05, f0: 9.95, end: 10.25};
+const stageRW = (t: number) => t <= RW.a ? openStage52(t) : openStage52(RW.a) * (1 - eIn((t - RW.a) / (RW.b - RW.a), 2));
+const headRW = (t: number) => 0.7 * eIn((t - RW.h0) / (RW.h1 - RW.h0), 1.6);
+const driftT = (t: number) => t <= RW.a ? t : Math.max(0, RW.a - (t - RW.a) * 4);
+const xfRW = (t: number) => sm01((t - RW.x0) / (RW.x1 - RW.x0));
+const flightU = (t: number) => t >= RW.end ? 0 : t <= RW.f0 ? 1 : 1 - eOut((t - RW.f0) / (RW.end - RW.f0), 2);
+const zD = (t: number) => 1 + 1.7 * eIn((t - 9.45) / (RW.x1 - 9.45), 2.2);
+const ZS = 2.5, zS = (t: number) => 1 + (ZS - 1) * flightU(t);
+const camT = (c: Cam52) => `translate(${c.Q[0]},${c.Q[1]}) scale(${c.z}) translate(${-c.P[0]},${-c.P[1]})`;
+const toScr = (c: Cam52, p: P2): P2 => [(p[0] - c.P[0]) * c.z + c.Q[0], (p[1] - c.P[1]) * c.z + c.Q[1]];
+/* the Song end state (KF03's layout, mirrored about x = 960): the walker holds the arrow up-left; S_FLY = how far it flew (world px) */
+const SG = {g: 1010, h: 500, wx: 600, rot: -36, L: 300}, S_FLY = 260;
+const songPose = () => { const hand: P2 = [SG.wx + 0.27 * SG.h, SG.g - 0.86 * SG.h]; let p = stand({lean: -2, neck: -14, la: -6, le: 10}); p = reach(p, 'R', hand[0], hand[1], SG.wx, SG.g, SG.h); return {p, hand}; };
+const songArrow = (u: number) => { const {hand} = songPose(), r = SG.rot * Math.PI / 180, tail0 = arrowAt(hand[0], hand[1], SG.L, SG.rot + 180, 0.24);
+	const tail: P2 = [tail0[0] + Math.cos(r) * S_FLY * u - Math.sin(r) * 40 * Math.sin(Math.PI * u) * 0, tail0[1] + Math.sin(r) * S_FLY * u - 26 * Math.sin(Math.PI * Math.min(1, u))];
+	const tr = Math.max(4.5, SG.L * 0.03), f = arrowAt(tail[0], tail[1], SG.L, SG.rot, ARROW_FUSE_U), spark: P2 = [f[0] - (-tr * 1.4) * Math.sin(r), f[1] + (-tr * 1.4) * Math.cos(r)];
+	return {tail, spark}; };
+const mir = (p: P2): P2 => [W - p[0], p[1]];
+const Q_END = mir(songArrow(0).spark);
+/** the dusk world's base camera (a slow push-in) and, from 9.4 s, the rewind camera locked on the rocket's head */
+const camBase = (t: number): Cam52 => { const O: P2 = [1000, 560]; return {P: O, Q: O, z: 1 + 0.004 * Math.min(t, RW.a)}; };
+const openRig = (t: number) => {
+	const sp = vsProps(driftT(t), {stage: stageRW(t), head: headRW(t), starI: t > RW.a ? Math.max(sm01((stageRW(t) - 6) / 1.5), sm01((t - RW.a) / 0.15)) * (1 - 0.85 * sm01((t - 10.1) / 0.15)) : undefined});
+	const g = smokeGeom(sp), B = camBase(t), Hw = g.S;
+	const lam = eIO((t - 9.55) / (RW.end - 9.55));
+	const qh = toScr(B, Hw), Q: P2 = [lerp(qh[0], Q_END[0], lam), lerp(qh[1], Q_END[1], lam)];
+	const camD: Cam52 = t <= RW.a ? B : {P: Hw, Q, z: B.z * zD(t)};
+	const u = flightU(t), camS: Cam52 = {P: mir(songArrow(u).spark), Q: t >= RW.end ? Q_END : Q, z: zS(t)};
+	return {sp, g, camD, camS, u, xf: xfRW(t)}; };
+/** the fire arrow's own short trail in screen space (from its spark back to where it was loosed), for the hand-over */
+const songTrail = (camS: Cam52, u: number) => { const head = camS.Q, end = toScr(camS, Q_END), N = 48, len = Math.hypot(end[0] - head[0], end[1] - head[1]) || 1, nx = -(end[1] - head[1]) / len, ny = (end[0] - head[0]) / len;
+	const pts: P2[] = [], w: number[] = [], cs: number[] = [], knot: number[] = [], a: number[] = [], arc: number[] = [];
+	for (let j = 0; j < N; j++) { const s = j / (N - 1), wob = 3 * camS.z * Math.sin(s * 9 + 1.3) * s;
+		pts.push([lerp(head[0], end[0], s) + nx * wob, lerp(head[1], end[1], s) + ny * wob]); w.push((3.4 - 2 * s) * camS.z); cs.push(0.6 + 0.32 * s); knot.push(0.2 * (1 - s)); a.push((1 - 0.8 * s) * sm01(u / 0.14)); arc.push(s * S_FLY * u); }
+	return {pts, w, cs, knot, a, arc}; };
+const lerpTrail = (A: ReturnType<typeof songTrail>, Bt: ReturnType<typeof songTrail>, x: number) => ({pts: A.pts.map((p, i): P2 => [lerp(p[0], Bt.pts[i][0], x), lerp(p[1], Bt.pts[i][1], x)]), w: A.w.map((v, i) => lerp(v, Bt.w[i], x)),
+	cs: A.cs.map((v, i) => lerp(v, Bt.cs[i], x)), knot: A.knot.map((v, i) => lerp(v, Bt.knot[i], x)), a: A.a.map((v, i) => lerp(v, Bt.a[i], x)), arc: A.arc.map((v, i) => lerp(v, Bt.arc[i], x))});
 /** the capsule glint of H3 (带回来): leaves the star point (the rocket) and comes back down toward the walker, 6.4–8.6 s */
-const CapsuleArc: React.FC<{t: number}> = ({t}) => { const u = seg(t, 6.4, 8.6), uu = 1 - Math.pow(1 - u, 2.2), fadeO = 1 - seg(t, 9.2, 9.8); if (u <= 0 || fadeO <= 0) return null;
-	const G = pcloudGeom(vcProps(t)), a: P2 = G.S, c: P2 = [a[0] - 300, a[1] + 40], e: P2 = [776, 744];
+const CapsuleArc: React.FC<{t: number}> = ({t}) => { const u = seg(t, 6.4, 8.6), uu = 1 - Math.pow(1 - u, 2.2), fadeO = 1 - seg(t, 9.0, 9.4); if (u <= 0 || fadeO <= 0) return null;
+	const a: P2 = smokeGeom(vsProps(t)).S, c: P2 = [a[0] - 300, a[1] + 40], e: P2 = [776, 744];
 	const qb = (v: number): P2 => [(1 - v) * (1 - v) * a[0] + 2 * v * (1 - v) * c[0] + v * v * e[0], (1 - v) * (1 - v) * a[1] + 2 * v * (1 - v) * c[1] + v * v * e[1]];
 	const end = qb(uu), pre = qb(Math.max(0, uu - 0.04)), ang = Math.atan2(end[1] - pre[1], end[0] - pre[0]) * 180 / Math.PI;
 	const streak = Array.from({length: 22}, (_, i) => qb(Math.max(0, uu - 0.4 + 0.4 * i / 21)));
 	return <g opacity={fadeO}>
-		<path d={`M${a[0]},${a[1]} Q${c[0]},${c[1]} ${e[0]},${e[1]}`} fill="none" stroke={CLOUD.gold} strokeOpacity={0.4} strokeWidth={3} strokeDasharray="3 13" strokeLinecap="round" />
-		{streak.slice(0, -1).map((p, i) => <path key={i} d={`M${p[0]},${p[1]} L${streak[i + 1][0]},${streak[i + 1][1]}`} stroke={i > 15 ? FLAME.hot : FLAME.amber} strokeWidth={1 + 7 * (i / 21) ** 1.6} strokeOpacity={0.15 + 0.75 * (i / 21)} strokeLinecap="round" filter={blur52(2)} />)}
+		<path d={`M${a[0]},${a[1]} Q${c[0]},${c[1]} ${e[0]},${e[1]}`} fill="none" stroke={CLOUD.gold} strokeOpacity={0.28} strokeWidth={2.5} strokeDasharray="3 13" strokeLinecap="round" />
+		{streak.slice(0, -1).map((p, i) => <path key={i} d={`M${p[0]},${p[1]} L${streak[i + 1][0]},${streak[i + 1][1]}`} stroke={i > 15 ? FLAME.hot : FLAME.amber} strokeWidth={1 + 6 * (i / 21) ** 1.6} strokeOpacity={0.12 + 0.7 * (i / 21)} strokeLinecap="round" filter={blur52(2)} />)}
 		<Capsule x={end[0]} y={end[1]} s={14 + 16 * uu} rot={ang - 90} heat={1} />
-		<Glint52 x={end[0] + 2} y={end[1] + 6} r={16 + 16 * uu} o={0.9} rot={12} />
+		<Glint52 x={end[0] + 2} y={end[1] + 6} r={14 + 14 * uu} o={0.85} rot={12} />
 	</g>; };
+/** the Song courtyard world (mirrored KF03): the walker, the arrow at flight position u, its fuse sparking */
+const SongWorld: React.FC<{t: number; u: number; cam: Cam52; o: number}> = ({t, u, cam, o}) => { const {p} = songPose(), {tail, spark} = songArrow(u), P = PAL52.song, f = Math.round(t * 30);
+	return <svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0, opacity: o}}><LacDefs /><Defs52 />
+		<defs><linearGradient id="skyOS" gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={SG.g - 230}><stop offset="0" stopColor={P.sky[0]} /><stop offset="0.6" stopColor={P.sky[1]} /><stop offset="1" stopColor={P.sky[2]} /></linearGradient></defs>
+		<g transform={camT(cam)}><g transform={`matrix(-1,0,0,1,${W},0)`}>
+			<rect x={-W} y={-H} width={3 * W} height={3 * H} fill="url(#skyOS)" />
+			<SongSet id="os" g={SG.g} />
+			<Pool id="osb" x={SG.wx + 60} y={SG.g - 0.55 * SG.h} rx={330} ry={400} a={PAL52.song.backdropA} col={PAL52.song.backdrop} />
+			<circle cx={spark[0]} cy={spark[1]} r={170} fill={FLAME.amber} opacity={0.16} filter={blur52(40)} />
+			<Walker51 x={SG.wx} g={SG.g} h={SG.h} pose={p} look={LOOKS52.song.look} {...rim52('song')} />
+			<FireArrow x={tail[0]} y={tail[1]} L={SG.L} rot={SG.rot - 4 * Math.sin(Math.PI * u)} lit={1} burn={sm01(u / 0.1)} />
+			{u < 0.06 && <Mitt p={J(p, 'RHand', SG.wx, SG.g, SG.h)} r={14} />}
+			{/* the fuse: a few live sparks, a new scatter each frame (deterministic) */}
+			{Array.from({length: 9}, (_, i) => { const k2 = f * 9 + i, a = (-170 + 160 * rnd(k2, 91)) * Math.PI / 180, d = 5 + 30 * Math.pow(rnd(k2, 92), 1.4), r = 1 + 1.6 * rnd(k2, 93);
+				return <circle key={i} cx={spark[0] + Math.cos(a) * d} cy={spark[1] + Math.sin(a) * d} r={r} fill={rnd(k2, 94) > 0.4 ? '#FFF4D8' : FLAME.amber} opacity={0.55 + 0.45 * rnd(k2, 95)} />; })}
+			<Glint52 x={spark[0]} y={spark[1]} r={20 + 6 * rnd(f, 96)} o={0.85} rot={10 + 30 * rnd(f, 97)} />
+		</g></g>
+	</svg>; };
+/** the opening's picture (no furniture): dusk world → Song world (cross-matched) → the smoke canvas → the capsule → vignette */
+const OpenPic: React.FC<{t: number}> = ({t}) => { const R = openRig(t), {camD, camS, xf, u} = R, tint = 0.85 * sm01((t - 9.55) / 0.42);
+	let fr: SmokeFrame | null = null;
+	if (t < RW.end) { fr = {g: R.g, cam: camD, bloom: 1};
+		if (xf > 0) { const dT = trailToScreen(R.g, camD), sT = songTrail(camS, u); fr = {...fr, trail: xf >= 1 ? sT : lerpTrail(dT, sT, xf)}; } }
+	const P = PAL52.song;
+	return <>
+		{xf < 1 && <svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0}}><LacDefs /><Defs52 />
+			<defs><linearGradient id="skyOT" gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={VHZ}><stop offset="0" stopColor={P.sky[0]} /><stop offset="0.6" stopColor={P.sky[1]} /><stop offset="1" stopColor={P.sky[2]} /></linearGradient></defs>
+			<g transform={camT(camD)}>
+				<Lacquer sheen={0.25} id="od" />
+				<ViralDusk id="od" t={t} part="sky" />
+				{tint > 0 && <rect x={-W} y={-H} width={3 * W} height={3 * H} fill="url(#skyOT)" opacity={tint} />}
+				<g opacity={1 - 0.35 * tint}><ViralDusk id="od" t={t} part="ground" /></g>
+			</g></svg>}
+		{xf > 0 && <SongWorld t={t} u={u} cam={camS} o={xf} />}
+		{fr && <SmokeCanvas fr={fr} />}
+		{t > 6.3 && t < RW.a && <svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0}}><Defs52 /><g transform={camT(camD)}><CapsuleArc t={t} /></g></svg>}
+		<svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0}}><LacDefs /><Vignette id="ov" a={0.5} /></svg>
+	</>; };
+/** the title plaque's slam (1.25 → 1.0 in 4 frames, then a 2-cycle damped jolt; no flash) */
+const TitleSlam: React.FC<{t: number}> = ({t}) => { const f = (t - RW.end) * 30; if (f < 0) return null;
+	const s = f < 4 ? lerp(1.25, 1, eIn(f / 4, 2)) : 1 + 0.03 * Math.sin(2 * Math.PI * (f - 4) / 5) * Math.exp(-(f - 4) / 3.5) * (f < 14 ? 1 : 0);
+	const o = Math.min(1, f / 1.5) * (1 - seg(t, 13.05, 13.25));
+	return <div style={{position: 'absolute', inset: 0, opacity: o, transform: `scale(${s})`, transformOrigin: '960px 206px'}}><TitlePlaque /></div>; };
+const typedN = (t: number, str: string, a0: number, d: number) => Math.ceil(str.replace(/[[\]]/g, '').length * seg(t, a0, a0 + d));
+/* the opening, 0–14 s: H1 (row 2 types 1.55–1.95), N 「只飞了约[8公里]高。」 at 3.75, H3 at 6.0 (row 2 at 6.45); stamps as the script
+   (1960 · 上海 from 2.4; 2024 · 嫦娥六号 from 7.25); the rewind 9.4–10.25 (subtitle and stamp fade with it); the title 10.25–13.25;
+   F1 at 13.25 with its stamp 北宋 · 970 / 《宋史》：冯继升等 */
+const OpenMotion: React.FC = () => { const t = useCurrentFrame() / 30;
+	const H1a = '66年前，中国的火箭，', H1b = '用[自行车打气筒]打气。', N2 = '只飞了约[8公里]高。', H3a = '现在，我们飞到约38万公里外，', H3b = '还能把东西[带回来]。';
+	const F1a = '1000多年前，北宋有人', F1b = cq('向朝廷献上"[火箭]法"。');
+	const sub = t < 3.75 ? [{s: H1a}, ...(t >= 1.55 ? [{s: H1b, n: typedN(t, H1b, 1.55, 0.4)}] : [])]
+		: t < 6 ? [{s: N2, n: typedN(t, N2, 3.75, 0.35)}]
+		: t < 10.25 ? [{s: H3a, n: typedN(t, H3a, 6.0, 0.35)}, ...(t >= 6.45 ? [{s: H3b, n: typedN(t, H3b, 6.45, 0.35)}] : [])]
+		: t >= 13.25 ? [{s: F1a, n: typedN(t, F1a, 13.25, 0.35)}, ...(t >= 13.6 ? [{s: F1b, n: typedN(t, F1b, 13.6, 0.35)}] : [])] : [];
+	const subO = t < 10.25 ? 1 - seg(t, 9.75, 10.05) : 1;
+	return <>
+		<OpenPic t={t} />
+		<Fonts s="从一支箭到火箭云1000多年前，北宋有人向朝廷献上“火箭”法。" />
+		{sub.length > 0 && <div style={{position: 'absolute', inset: 0, opacity: subO}}><Subs rows={sub} th={thB} /></div>}
+		{t < 6 ? <div style={{opacity: seg(t, 2.4, 2.75)}}><StampK y="1960" place="上海" note="国防科工局" /></div>
+			: t < 10.25 ? <div style={{opacity: seg(t, 7.25, 7.6) * (1 - seg(t, 9.6, 9.9))}}><StampK y="2024" place="嫦娥六号" note="新华社" /></div>
+			: <div style={{opacity: seg(t, 13.6, 13.95)}}><StampK y="北宋" place="970" note="《宋史》：冯继升等" /></div>}
+		<TitleSlam t={t} />
+		<SealHollow />
+	</>; };
 
-/* KF01 · 0.0 · H1 frame 0: today's glowing 火箭云 (particle glow after the viral photo) over the dark ground and the leafy tree; row 1 of H1 */
+/* KF01 · 0.0 · H1 frame 0: today's glowing 火箭云 (procedural smoke after the viral video) over the dark ground and the leafy tree; row 1 of H1 */
 const KF01: React.FC = () => <>
-	<Pic era="dusk" id="k1" hz={VHZ}>
-		<ViralDusk id="k1" t={0} />
-		<ViralCloud t={0} id="vc" />
-	</Pic>
+	<OpenPic t={0} />
 	<Over sub="66年前，中国的火箭，" st={{y: '1960', place: '上海', note: '国防科工局'}} />
 </>;
 /** KF01 without the furniture (for the side-by-side with the reference) */
-const KF01P: React.FC = () => <Pic era="dusk" id="k1p" hz={VHZ}><ViralDusk id="k1p" t={0} /><ViralCloud t={0} id="vc" /></Pic>;
+const KF01P: React.FC = () => <OpenPic t={0} />;
 
 /* KF02 · 8.0 · H3: the same sky 8 s on: the balloon has inflated, the star point (the rocket) and its spokes show; a small capsule glint
    comes back down from it toward the walker (带回来) */
 const KF02: React.FC = () => <>
-	<Pic era="dusk" id="k2" hz={VHZ}>
-		<ViralDusk id="k2" t={8} />
-		<ViralCloud t={8} />
-		<CapsuleArc t={8} />
-	</Pic>
+	<OpenPic t={8} />
 	<Over sub={'现在，我们飞到约38万公里外，\n还能把东西[带回来]。'} st={{y: '2024', place: '嫦娥六号', note: '新华社'}} />
 </>;
-
-/* the motion test (0–10.25 s, hook C under the evolving cloud): H1 (row 2 types 1.55–1.95), N 「只飞了约[8公里]高。」 at 3.75, H3 at 6.0
-   (row 2 at 6.45); stamps as the script (1960 · 上海 from 2.4; 2024 · 嫦娥六号 from 7.25); the capsule glint 6.4–9.8; a slow push-in */
-const OpenMotion: React.FC = () => { const t = useCurrentFrame() / 30, z = 1 + 0.004 * t;
-	const typedN = (str: string, a0: number, d: number) => Math.ceil(str.replace(/[[\]]/g, '').length * seg(t, a0, a0 + d));
-	const H1a = '66年前，中国的火箭，', H1b = '用[自行车打气筒]打气。', N2 = '只飞了约[8公里]高。', H3a = '现在，我们飞到约38万公里外，', H3b = '还能把东西[带回来]。';
-	const sub = t < 3.75 ? [{s: H1a}, ...(t >= 1.55 ? [{s: H1b, n: typedN(H1b, 1.55, 0.4)}] : [])]
-		: t < 6 ? [{s: N2, n: typedN(N2, 3.75, 0.35)}]
-		: [{s: H3a, n: typedN(H3a, 6.0, 0.35)}, ...(t >= 6.45 ? [{s: H3b, n: typedN(H3b, 6.45, 0.35)}] : [])];
-	return <>
-		<div style={{position: 'absolute', inset: 0, transform: `scale(${z})`, transformOrigin: '1000px 560px'}}>
-			<Pic era="dusk" id="om" hz={VHZ}><ViralDusk id="om" t={t} /><ViralCloud t={t} /><CapsuleArc t={t} /></Pic>
-		</div>
-		<Subs rows={sub} th={thB} />
-		{t < 6 ? <div style={{opacity: seg(t, 2.4, 2.75)}}><StampK y="1960" place="上海" note="国防科工局" /></div>
-			: <div style={{opacity: seg(t, 7.25, 7.6)}}><StampK y="2024" place="嫦娥六号" note="新华社" /></div>}
-		<SealHollow />
-	</>; };
 
 /* ---------- 宋 at dusk: a courtyard (whitewashed wall, timber posts, tiled eaves), far roofs in the haze, stone paving ---------- */
 /** a Song hall in silhouette: platform, columned body, a hip-and-gable roof with concave slopes and upturned eaves, ridge ends */
@@ -517,7 +610,7 @@ const All: React.FC = () => { const f = useCurrentFrame(), C = KFS[Math.min(KFS.
 const Root: React.FC = () => <>
 	<Composition id="KF52A-ALL" component={All} width={W} height={H} fps={30} durationInFrames={KFS.length} />
 	{KFS.map(([n, C]) => <Composition key={n} id={`KF52A-${n}`} component={one(C)} width={W} height={H} fps={30} durationInFrames={1} />)}
-	<Composition id="KF52A-OPEN" component={one(OpenMotion)} width={W} height={H} fps={30} durationInFrames={308} />
+	<Composition id="KF52A-OPEN" component={one(OpenMotion)} width={W} height={H} fps={30} durationInFrames={420} />
 </>;
 registerRoot(Root);
 void Glint52; void RocketCloudSvg; void DuskSet;
