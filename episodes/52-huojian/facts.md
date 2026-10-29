@@ -1,6 +1,8 @@
 # Facts table: 《从扔石头到火箭云》 (ep52, v1, working title)
 
-Researcher, 2026-10-28 (about 45 min, fast pass). Every on-screen claim must come from a ✓ row, or from a ⚠ row in exactly the wording given.
+Researcher, 2026-10-28 (about 45 min, fast pass).
+
+**Scope change (owner, 2026-10-29): ep52 is the history of China's rockets (火箭), from the first gunpowder rockets to today's 长征 and the 火箭云. Read section R first.** Frame 0 stays the 火箭云. Sections B, C, E, F and L (stones, bows, crossbows, guns, cannon, the viral comment) are now out of scope: keep them for the fact-check reply only. The "Story-worthy" and "Risks" at the end are from v1; R-e replaces Story-worthy for the new scope. Every on-screen claim must come from a ✓ row, or from a ⚠ row in exactly the wording given.
 
 Status key:
 - ✓ = verified in a source I opened.
@@ -19,7 +21,7 @@ Source tiers used: 新华社 (wire release via xinhuanet.com, 2026-10-23); 央�
 1. **The launch was on the evening of 10-23, not 10-24.** 新华社太原10月23日电 (李国利、李宸): 「10月23日18时15分，我国在太原卫星发射中心使用长征六号改运载火箭，成功将遥感五十号03星发射升空，卫星顺利进入预定轨道，发射任务取得圆满成功。」 10-24 is the date of the news stories about the cloud. On screen: **「10月23日傍晚」**.
 2. **The payload is confirmed:** 遥感五十号03星 (the brief's "?" can go). Its official use: 「主要用于国土普查、农作物估产和防灾减灾等领域」. Don't add any other purpose.
 3. **Where it was seen: 北京、山西、山东, not 陕西.** 澎湃: Beijing, western sky, around 18:20; also 山西, and 济南、青岛、泰安 in 山东. 央视 (极目新闻): 「北京、山西、山东等多地网友都拍到了」. None of the sources I opened says 陕西. On screen: **「北京、山西、山东都看见了」** or just 「多地」.
-4. **The rocket's name: use 新华社's 「长征六号改」.** Douyin searches for 「长征6号」, but 长征六号 is a different (older) rocket. Some press (川观 2026-10-12) calls the Taiyuan solid-and-liquid rocket 「长征六号甲」. I did not find an official statement that 长六改 = 长六甲. Don't write 「长征六号」 or 「长六甲」 on screen. Use 「长征六号改」 (or 「长六改」).
+4. **(Resolved 10-29, row R30: 长六改 = 长六甲.) The rocket's name: use 新华社's 「长征六号改」.** Douyin searches for 「长征6号」, but 长征六号 is a different (older) rocket. Some press (川观 2026-10-12) calls the Taiyuan solid-and-liquid rocket 「长征六号甲」. I did not find an official statement that 长六改 = 长六甲. Don't write 「长征六号」 or 「长六甲」 on screen. Use 「长征六号改」 (or 「长六改」).
 5. **The viral comment's numbers mostly have no source** (section L). Two of its dates fit real events: 982年前 = 1044 (《武经总要》) and 406年前 = 1620 (the Ming court looking for Western cannon; the cannon reached Beijing in 1621). But its distances (120m / 180m / 400m / 400m) are not in any source I found. **No distance from the comment may go on screen.**
 6. **Bows are far older than "6000年前".** 中国国家博物馆: 峙峪 and 下川 (旧石器时代晚期) both yielded 石镞, and the 峙峪 one is 「我国目前发现的第一件石镞」. 中国科学院 (2024, Nature Ecology & Evolution) re-dated 峙峪 to 「距今4.5万年」 (main layer 45,800–43,200 years ago), with "tanged and hafted projectile points with evidence of impact fractures". The CAS release does **not** say "bow". Safe wording in row B2.
 7. **突火枪's 「百五十余步」 is how far the bang was heard, not the range.** 《宋史·兵志》: 「…焰绝然后子窠发出，如炮声，远闻百五十余步。」 A 2017 科普中国 reprint turns this into 「射程可达到150步，约230米」. That is a misreading: **✗**.
@@ -164,6 +166,82 @@ Source tiers used: 新华社 (wire release via xinhuanet.com, 2026-10-23); 央�
 | 今天 | 约10亿千米航程（天问二号） | H5 |
 
 Distance gap: ancient rungs have text figures in 步 (600 / 1000), but nothing reliable in metres for bows, guns or cannon. The numbers that grow unreal are the modern ones: 2384 km → 38万 km → 3.2亿 km → 10亿 km.
+
+## R. China's rocket history (scope v2, 2026-10-29)
+
+Rows still in scope from above: A1–A8, A10 (the 10-23 launch, the 火箭云), D1–D4 (1044, 970), G1–G3 (东方红一号), H1–H5 (Moon, Mars, 天问二号), I1 (万户 = legend). Sections B, C, E, F and L are weapons history: out of scope, so keep them only for the fact-check reply. **Correction 4 is now resolved:** 长六改 and 长六甲 are the same rocket (R30).
+
+### R-a. What the Song 「火箭」 was, and when rockets flew on their own
+
+| # | Claim (on screen) | Status | Exact figure / wording in the source | Source | Note |
+|---|---|---|---|---|---|
+| R1 | 「宋代的"火箭"：箭头绑火药，用弓射出去」 | ✓ | 《武经总要》 (1044) as quoted by 中国航海博物馆: 「火箭，施火药于箭首，弓弩通用之，其傅药轻重，以弓力为准。」 Winter, Neufeld & Dougherty (Acta Astronautica 77, 2012, pp. 131–137): *huo chien* alone could mean "an ordinary arrow carrying, or tipped with, an incendiary"; only later did it come to mean a true rocket. | 中国航海博物馆 (澎湃号, 2020-08-13) https://www.thepaper.cn/newsDetail_forward_8694611 (科普中国 copy https://www.kepuchina.cn/article/articleinfo?business_type=100&classify=0&ar_id=50907 failed to load) ; https://repository.si.edu/server/api/core/bitstreams/2f5efb8d-8fd1-44a5-84ec-4a9dff529086/content | The key twist for the film: **the first 「火箭」 was pushed by a bow, not by fire.** The 《武经总要》 line is quoted from 中国航海博物馆 (澎湃号); the original was not opened. The paper is peer-reviewed; its DOI was not opened, so cite the Smithsonian repository copy. |
+| R2 | 「970年，冯继升献"火箭法"」 | ✓ | Existing row D2 (国家航天局; 《宋史》 开宝三年, 《玉海》 开宝二年). | D2 | Pair it with R1: 「它还要靠弓来射」. |
+| R3 | 「970年：世界第一枚火药火箭」 | Disputed → ✗ | 国家航天局 「火箭的历史」 (2010-10-01): 「北宋军官岳义方、冯继升造出了世界上第一个以火药为动力的飞行兵器--火箭。」 But 光明日报 (关晓武 2015, row D3) lists four competing dates; Winter et al. (2012) say the term does not prove a rocket; CNSA's other page (D4) is more careful. | https://www.cnsa.gov.cn/n6758968/n6758973/c6771771/content.html | One CNSA page says 「世界上第一个」; the scholars don't. Don't use 「世界第一」. |
+| R4 | 「800多年前，火箭开始自己飞」 | ✓ (in this wording) | 国家航天局 「中国——火箭的故乡」 (2008-08-28): 「据史书记载，中国产生喷气推进式火箭的年代应不迟于12世纪，距今已有800余年。」 | https://www.cnsa.gov.cn/n6758968/n6758973/c6771852/content.html | 「不迟于12世纪」 is a latest date. From 2026, 12世纪 = 826–926 years ago (估算), so 「800多年前」 holds. Also 光明日报 (D3): 潘吉星 argues 1161 (采石之战). |
+| R5 | 「1264年，宫里的"地老鼠"满地乱窜」 | ⚠ | Winter, Neufeld & Dougherty (2012) call it the firmer evidence: 1264, "a self-propelled, ground-crawling firework" (the 「地老鼠」), from 周密's 《齐东野语》 (Southern Song). | https://repository.si.edu/server/api/core/bitstreams/2f5efb8d-8fd1-44a5-84ec-4a9dff529086/content | The 《齐东野语》 original was not opened (who was frightened, the exact year). On screen only: 「南宋的"地老鼠"：自己会跑的烟火」. 2026 − 1264 = 762 (估算). |
+| R6 | 「"起火"：平时是烟花，战时是信号」 | ✓ | 国家航天局 (2008): 「"起火"，是用药筒将火药封闭，再捆在细杆上，和平时期用作喜庆活动的"烟花"，战时还可以用作联络信号。」 | https://www.cnsa.gov.cn/n6758968/n6758973/c6771852/content.html | A good prop: a tube of powder on a stick, the ancestor of the 窜天猴 the viewer knows. CNSA calls 起火 the motor of the Ming rockets (R8, R9). Don't name a brand of firework. 「流星」: no source opened. |
+
+### R-b. 明: 《武备志》 (1621) and the Ming rockets
+
+| # | Claim (on screen) | Status | Exact figure / wording in the source | Source | Note |
+|---|---|---|---|---|---|
+| R7 | 「一窝蜂：一桶32支火箭」 | ✓ | 国家航天局 (2008): 「名为"一窝蜂"的中国古代军用火箭，采用木制桶状发射器，并安放32支连在一起的箭。」 中国航海博物馆 quotes 《武备志》: 「每桶三十二支，用之南北水陆、靡所不宜」. | https://www.cnsa.gov.cn/n6758968/n6758973/c6771852/content.html ; https://www.thepaper.cn/newsDetail_forward_8765876 | Range: the museum's 「发射距离可达三百步」 is its own narration, not the 《武备志》 text, so it is ⚠ at most. Leave it off screen. |
+| R8 | 「神火飞鸦：一只"乌鸦"，绑着4支起火」 | ✓ | 国家航天局: 「…外型如乌鸦，用细竹或芦苇编成，内部填充火药，鸦身两侧各装两支"起火"…」; 「用"起火"的推力将飞鸦射至100丈开外，飞鸦落地时内部装的火药被点燃爆炸。」 | same as R7 | Range in the source's unit: **100丈**. 明 1丈 = 10尺 ≈ 3.1–3.2 m → ~300 m (估算; 明尺 length not sourced here). On screen: 「飞出100丈」. |
+| R9 | 「火龙出水："相当于两级火箭"」 | ✓ (CNSA wording) | 国家航天局: 「名为"火龙出水"的军用火箭，专用于水战。」 Mechanism: outer 起火 launch the body, which then lights the inner rockets: 「这已经相当于一种两级火箭了。」 | same as R7 | **Use CNSA's hedge 「相当于两级火箭」.** Stronger forms are ⚠: 中国航海博物馆 (澎湃号 2020): 「世界最早的二级火箭」 and 「世界上发明最早的多级火箭」, quoting 李约瑟 as calling it 「原始的阿波罗火箭」; 北京晚报 (2016): 「世界上最早的二级火箭」. Don't put 「世界最早」 on screen. |
+| R10 | 火龙出水 range 「三四里」 | ⚠ | 北京晚报 (via 中新网, 2016-10-25): 「该火箭飞行距离可达三四里。」 No 《武备志》 text quoted. | https://www.chinanews.com.cn/m/cul/2016/10-25/8043023.shtml | The primary text was not opened (ctext blocked). If used: 「据说能飞三四里」. Better left off screen. |
+| R11 | 《武备志》, 1621, 茅元仪 | ⚠ | Winter et al. (2012): Mao Yüan-i's *Wu Pei Chih*, "circa 1621". CNSA (2010) names 火龙出水, 神火飞鸦, 一窝蜂 as 中国古代火箭 models at the 中国科技馆, but not 《武备志》. 北京晚报: 「明朝书籍《武备志》绘有"火龙出水"图」. | https://repository.si.edu/server/api/core/bitstreams/2f5efb8d-8fd1-44a5-84ec-4a9dff529086/content ; https://www.cnsa.gov.cn/n6758968/n6758973/c6771771/content.html | On screen: 「明代兵书《武备志》」 (no year needed). 1621 → 405年前 (估算). |
+| R12 | 戚继光's rockets 「能远射300步」 | ⚠ | 国家航天局: 「箭长5尺以上，绑附火药筒，能远射300步，倭寇见之丧胆。」 | https://www.cnsa.gov.cn/n6758968/n6758973/c6771852/content.html | Optional. 「倭寇」: skip it (anti-Japanese framing, platform tone). |
+| R13 | 万户: no Chinese record; 「万户」 was a title | ⚠ (adds to I1) | 北京晚报 (2016): the story 「来源于外国的一些记载」, and 「在翻阅了大量古籍之后，相关的记载依旧空空如也」; 《明史·兵志》 only records 「万户」 as an official post (renamed 都指挥使). With I1 (CNSA: Zim, 1945, no source). CNSA's 2010 page still says 「万户被公认是尝试利用火箭飞行的世界第一人」. | https://www.chinanews.com.cn/m/cul/2016/10-25/8043023.shtml ; https://www.cnsa.gov.cn/n6758968/n6758973/c6772120/content.html | Safe line: **「万户飞天：1945年美国书里的故事」**, or 「传说」. Don't say 「世界第一人」. |
+
+### R-c. Modern China: 1956 to today
+
+All years 2026 − year (估算). 国防科工局 = 国家国防科技工业局 「中国航天事业创建60年60件大事」.
+
+| # | Claim (on screen) | Status | Exact figure / wording in the source | Source | Note |
+|---|---|---|---|---|---|
+| R14 | 「70年前，五院成立，钱学森任院长」 | ✓ | 国家航天局 「中国航天事业记事」: 「1956年10月8日，我国第一个火箭导弹研制机构——国防部第五研究院成立，钱学森任院长。」 国防科工局: 「1956年10月8日，国防部五院在北京举行成立大会，钱学森任院长。」 | https://www.cnsa.gov.cn/n6758968/n6758973/c6795593/content.html ; https://www.sastind.gov.cn/n152/n6706318/index.html | 1956 → 70年前: a round number. 新华网 (2026-04-24): 「中国航天事业扬帆起航」. |
+| R15 | 「1960年，第一枚探空火箭：飞了约8公里」 | ✓ | 国防科工局: 「1960年2月19日，我国自行设计制造的"T-7M"试验型液体探空火箭在上海市首次发射成功，飞行高度约8公里。」 | https://www.sastind.gov.cn/n152/n6706318/index.html | 66年前. Site: 国防科工局 says 「上海市」; 中国航天报 (via 澎湃号, 2020) says 「上海南汇老港镇东南的海滩」. Both hold with 「上海」. |
+| R16 | 「自行车打气筒，给火箭加压」 | ✓ | 中国航天科技集团 (王希季 obituary, 2026-08-13): 「小台钟被改成头体分离定时装置，自行车打气筒用来给贮箱加压。」 中国航天报 (王小月, via 澎湃号 2020-05-28): 「自行车打气筒，把燃料加压打进了火箭」; huts 「芦苇搭出窝棚」; 王希季 directed the launch from a 「麻袋堆成的指挥所」. | https://www.spacechina.com/n25/n2014789/n2414549/c4688501/content.html ; https://m.thepaper.cn/newsDetail_forward_7603693 | **The bicycle story that is true for China.** |
+| R17 | 「火箭零件放在自行车上运」 (the famous photo) | ✗ for China | That photo is **India's**: Thumba, 1963-11-21, the nose cone of a Nike-Apache rocket on a bicycle (Onmanorama 2023, photo credited to Henri Cartier-Bresson). China's sources: materials came by 「大卡车」 or boat to 老港, then 「人力搬送」 (中国航天报), with no bicycle transport mentioned. | https://www.onmanorama.com/news/kerala/2023/11/24/isro-to-celebrate-60th-anniversary-of-indias-first-rocket-launch-at-thumba.amp.html ; https://m.thepaper.cn/newsDetail_forward_7603693 | Don't draw a rocket on a bicycle for T-7M. Use the pump (R16) or 「人力搬送」 instead. (Onmanorama is Indian regional press; for China the point is only that no Chinese source has it.) |
+| R18 | 「8公里，那也了不起！」 (毛泽东) | ⚠ | 中国航天报 (via 澎湃号): after seeing the T-7M at an exhibition in 上海, 毛泽东 said 「8公里那也了不起呀！」. 国防科工局: he urged pushing on to 8, 20 and 200 km. | https://m.thepaper.cn/newsDetail_forward_7603693 ; https://www.sastind.gov.cn/n152/n6706318/index.html | Real-person quote (political figure). Paraphrase-only risk; if used, text only, no portrait. Optional. |
+| R19 | 王希季 (1921–2026) | ✓ | 中国航天科技集团: 「于2026年8月12日在北京逝世，享年105岁」; 「中国科学院院士，国家"两弹一星功勋奖章"获得者」; with 杨南生 he decided to build the T-7M scale model first; he 「提出"长征一号"总体方案」; 「我国第一颗返回式卫星总设计师」. 中新网 (2026-08-13) headline confirms the death at 105. | https://www.spacechina.com/n25/n2014789/n2414549/c4688501/content.html | **The human story**: the man at the sandbag command post in 1960 lived to see 嫦娥六号 and 天问二号. Silhouette only, no portrait. |
+| R20 | 1964: 「第一枚生物火箭，载着小白鼠」 | ✓ | 国家航天局: 「1964年7月19日，我国第一枚内载小白鼠的生物火箭在安徽广德发射成功，我国的空间科学探测迈出了第一步。」 | https://www.cnsa.gov.cn/n6758968/n6758973/c6795593/content.html | Optional and charming. Skip 东风 missiles (out of scope, weapons). |
+| R21 | 「1970年，长征一号」 | ✓ | Existing G1–G2. 国防科工局 adds: 酒泉's first satellite launch; 「我国第五个独立研制和发射卫星的国家」 (paraphrase). CNSA: 「我国成为世界上第五个发射卫星的国家」. | G1 | 56年前. |
+| R22 | 「1975年，卫星第一次回到地面」 | ✓ | 国家航天局: 「1975年11月26日，首颗返回式卫星发射成功，3天后顺利返回，我国成为世界上第三个掌握卫星返回技术的国家。」 国防科工局: 「尖兵一号」, launched on 长征二号 from 酒泉, the capsule recovered 11-29. | https://www.cnsa.gov.cn/n6758968/n6758973/c6795593/content.html ; https://www.sastind.gov.cn/n152/n6706318/index.html | 51年前. The chief designer was 王希季 (R19), a neat link. |
+| R23 | 「1999年，神舟一号」 | ✓ | 国防科工局: 「1999年11月20日，神舟一号飞船在酒泉卫星发射中心由长征二号F运载火箭发射入轨。」 The capsule landed in 内蒙古 on 11-21; the first flight test of the crewed programme. 新华网 (2026-04-24): 「中国第一艘试验飞船神舟一号」. | https://www.sastind.gov.cn/n152/n6706318/index.html ; https://www.news.cn/20260424/a12fbf381e034c3693a58fa6b4969edf/c.html | 27年前. |
+| R24 | 「2003年，杨利伟：中国进入太空第一人」 | ✓ | 国防科工局 entry title: 「航天员杨利伟成为中国进入太空第一人」; 「2003年10月15日，航天员杨利伟搭乘神舟五号飞船进入太空。」 About 21 hours in orbit, back on 10-16; third country with independent crewed flight (paraphrase). | https://www.sastind.gov.cn/n152/n6706318/index.html | 23年前. 「中国进入太空第一人」 is the official wording: OK. The rocket (长征二号F for 神舟五号) is not in the excerpt I saw: UNVERIFIED for this flight. Don't name it. Real person: silhouette only. |
+| R25 | 「2007年，嫦娥一号奔月」 | ✓ | 新华网 (2026-04-24): 「2007年10月24日」 「长征三号甲运载火箭 成功将中国首颗月球探测卫星 嫦娥一号 送入预定轨道」. | https://www.news.cn/20260424/a12fbf381e034c3693a58fa6b4969edf/c.html | 19年前. |
+| R26 | 「2016年，长征五号首飞」 | ✓ | 新华网 (2026-04-24): 「2016年11月3日」 「最大推力新一代运载火箭 长征五号成功首飞」. | same as R25 | 10年前. 「运载能力最大」 appears in a 科技部 headline (search only): use 新华网's 「最大推力」 instead. |
+| R27 | 2020 天问一号, 2020 嫦娥五号, 2024 嫦娥六号 | ✓ | 新华网 (2026-04-24): 「"天问一号"探测器 成功在中国文昌航天发射场升空」 (2020-07-23); 「嫦娥六号 携带1935.3克月球背面样品 返回地球」 (2024-06-25). Plus existing rows H2–H4. | same as R25 | |
+| R28 | 「这是长征火箭第672次飞行」 | ✓ (one source) | 新华社 (2026-10-23): 「这次任务是长征系列运载火箭的第672次飞行。」 | https://www.xinhuanet.com/20261023/5218f73077a64aa89a8da18d258c6bb6/c.html | Only 新华社's wire gives it; I found no second count to cross-check. It is the official wire figure: fine on screen. |
+
+### R-d. 长征六号 and 长征六号改
+
+| # | Claim (on screen) | Status | Exact figure / wording in the source | Source | Note |
+|---|---|---|---|---|---|
+| R29 | 「2015年，长征六号首飞：一箭20星」 | ✓ | 新华社北京9月20日电 (记者赵晓辉), 2015: launched 「20日7时1分」 from 太原卫星发射中心, 「成功将20颗微小卫星送入太空」; 「长征六号运载火箭作为中国新一代运载火箭中第一型投入发射应用的火箭」; 「首次采用了最新研制的高压、大推力、无毒、无污染的补燃循环液氧煤油发动机」. | https://lb.china-embassy.gov.cn/chn/whkj/201509/t20150921_1510530.htm | 11年前. The 新华社 text is reprinted on the 中国驻黎巴嫩使馆 site (gov.cn pages failed). 「一箭多星新纪录」: in gov.cn / 人民日报海外版 headlines (search only), so ⚠; on screen use 「一箭20星」. Safe 「第一」: 「新一代运载火箭中第一型投入发射应用」. |
+| R30 | 「长六改 = 长六甲」 | ✓ | 澎湃新闻 (俞凯, 2026-07-30): 「长征六号改运载火箭（又称长征六号甲运载火箭）」; 「由八院抓总研制的新一代固液捆绑中型运载火箭」. | https://www.thepaper.cn/newsDetail_forward_33684439 | 八院 = 上海航天技术研究院 (China Daily 2024, A10). The same institute grew from the 1960 T-7M team (that link is not sourced here, so don't claim it). On screen keep 「长征六号改」 (新华社). |
+| R31 | 「2022年，长六改首飞」 | ✓ | 新华网 via 中国日报网 (2022-03-30): 「3月29日，我国首型固体捆绑中型运载火箭长征六号改在太原卫星发射中心成功发射」. 中新网 (李骏, 2022-03-29): 「采用"固体助推+液体芯级"的新一代无毒无污染中型运载火箭」; 「是国内首款固液混合动力火箭」. | https://cn.chinadaily.com.cn/a/202203/30/WS62438024a3101c3ee7acdfc0.html ; https://www.chinanews.com.cn/gn/2022/03-29/9714347.shtml | 4年前. |
+| R32 | 「新在哪：四个固体助推器」 | ✓ | 新华网 (2022): 「助推器采用两段式120吨推力固体发动机，由中国航天科技集团四院研制」; 「首次实现了我国运载火箭领域固液发动机的"跨界合作"」; 「依托太原卫星发射中心新建发射工位，长征六号改运载火箭可实现14天快速发射」. 央视 (2026, A10): 液氧煤油 core stage plus 「四枚固体助推器」. | https://cn.chinadaily.com.cn/a/202203/30/WS62438024a3101c3ee7acdfc0.html | Safe 「第一」: 「我国首型固体捆绑中型运载火箭」 (新华网). |
+| R33 | 「为什么在太原发射？」 | ⚠ | 国家航天局 「中国的航天发射中心」: 太原 「担负太阳同步轨道气象、资源、通信等多种型号的中、低轨道卫星和运载火箭的发射任务」; 「位于山西省太原市西北的高原地区」; 「始建于1967年」. China Daily 2024 (A10): 长六改 「700公里太阳同步轨道运载能力大于4.5吨」. | https://www.cnsa.gov.cn/n6758968/n6758973/c6771836/content.html | No source says in so many words "长六 is in 太原 because…". Safe on screen: 「太原：专发太阳同步轨道卫星」 (CNSA's job description), not a causal claim. The CNSA page is old (it lists the centre's role, undated in my fetch). |
+
+### R-e. Story-worthy for the rocket-history cut (with safe 「第一 / 最早」 wording)
+
+1. **The first 「火箭」 needed a bow** (R1, R2). In 1044 a 「火箭」 was an arrow with gunpowder tied on, shot from a bow. Rockets flew on their own 「不迟于12世纪」 (R4). Safe wording: 「800多年前，火箭开始自己飞」, never 「970年世界第一枚火箭」.
+2. **The 1960 rocket was pressurised with a bicycle pump** (R15, R16). It launched from reed huts on a 上海 beach and reached 「约8公里」. 王希季, who ran the launch from a sandbag post, died on 2026-08-12 aged 105 (R19). He was also chief designer of the first recoverable satellite (R22). **The human story.** Safe: 「我国第一枚探空火箭」 (国防科工局 wording: 「第一枚探空火箭发射成功」). Not the rocket-on-a-bicycle photo, which is India's (R17).
+3. **火龙出水 「相当于一种两级火箭」** (R9, CNSA). A Ming dragon rocket that lit a second set of rockets in flight. Safe: CNSA's 「相当于两级火箭」, not 「世界最早二级火箭」.
+4. **From 8 km to 10亿 km in 66 years** (R15 → H5). 1960: 约8公里; 1970: 远地点2384公里; 38万公里 to the Moon; 天问二号 「约10亿千米航程」 (distance travelled). The ladder can end here and cut to the 火箭云.
+5. **The 火箭云 rocket is the newest branch of the family** (R30–R32, A1). 长六改 = 长六甲, China's 「首型固体捆绑中型运载火箭」 (2022), on the 672nd 长征 flight. Safe: 新华社's 「第672次飞行」.
+- Bonus: **万户 was a job title, not a man on record** (R13). Chinese books have no 万户 flight; the story comes from a 1945 American book.
+
+### R-f. Open items (rocket scope)
+
+- 《齐东野语》 (1264 地老鼠) and the 《武备志》 originals were not opened: ctext blocked, kepuchina 「火龙出水」 page server error.
+- 1丈 / 1步 lengths in the Ming: not sourced. Keep 100丈 / 300步 in the text's units.
+- 神舟五号's rocket (长征二号F) is not in the excerpt I opened.
+- A second independent count of 长征 launches: not found (only 新华社's 672).
+- The 毛泽东 quote (R18) comes via 中国航天报 on 澎湃号, so treat it as ⚠.
 
 ## Story-worthy
 
