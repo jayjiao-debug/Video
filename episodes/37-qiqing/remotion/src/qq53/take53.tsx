@@ -2,7 +2,7 @@ import React from 'react';
 import {W, H, rnd, lerp, cl, seg} from '../qq50/kit50';
 import {Pool, Vignette} from '../qq50/styleB';
 import {Figure4, POSES, Look4} from '../qq44/figure44';
-import {Cam, V3, lookAt, proj, poly, toCam, mix, blobOn, Tag} from './parts53';
+import {Cam, V3, lookAt, proj, poly, toCam, mix, blobOn, Tag, Scrim} from './parts53';
 import {Guard3D, SwordPose} from './sword3d';
 import {PommelFace, R_FACE} from './face53';
 import {BladeLand, bw, hwAt, LBM, Light} from './land53';
@@ -23,21 +23,21 @@ const kit = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] - 1002.2];   // case �
 const toKitchen = (c: Cam): Cam => ({...c, p: kit(c.p), yaw: c.yaw + Math.PI});
 
 /* ---------- camera channels ---------- */
-const XA = spline([[0, 566], [0.8, 352], [1.575, 226, -78], [3.0, 112], [4.7, -92], [5.538, -138, -38]]);
-const YA = spline([[0, -169], [0.8, -46], [1.575, 4], [3.0, 2.5], [5.538, 0]]);
-const ZA = spline([[0, 1192.2], [0.8, 1084], [1.575, 1026.5], [2.4, 1025.5], [3.6, 1035], [4.7, 1060], [5.538, 1128, 95]]);
-const YAWA = spline([[0, 148.5], [0.8, 167], [1.575, 182.5], [3.0, 181.2], [5.538, 180, 0]]);
-const PITA = spline([[0, 27.6], [0.8, 21.5], [1.575, 15.5], [3.0, 15.5], [4.7, 27], [5.538, 54, 22]]);
-const AL = spline([[5.538, 180, 0], [6.6, 168], [7.8, 136], [9.0, 110], [9.5, 102.5], [10.4, 99], [11.3, 95.5], [11.764, 89], [14.2, 50], [16.293, 33], [18.6, 24.5], [19.75, 2.5], [20.0, 0, 0], [22, 0, 0]]);
-const LND = spline([[5.538, Math.log(188)], [6.6, Math.log(330)], [7.8, Math.log(700)], [9.0, Math.log(1270)], [9.5, Math.log(1505)], [10.4, Math.log(1555)], [11.3, Math.log(1635)], [11.764, Math.log(1880)],
-	[14.2, Math.log(2900)], [15.4, Math.log(3150), 0], [16.293, Math.log(2650)], [18.6, Math.log(335)], [20.821, Math.log(55), -0.62]]);
-const BE = spline([[5.538, 41.8], [6.6, 46], [7.8, 40], [9.0, 33], [9.5, 31.6], [11.3, 30], [11.764, 28], [14.2, 21], [16.293, 19], [18.6, 18], [19.75, 1.2], [20.0, 0, 0], [22, 0, 0]]);
-const TX = spline([[5.538, -320], [6.6, -250], [7.8, -90], [9.0, -6], [9.5, 0], [11.3, -14], [11.764, -34], [14.2, -90], [16.293, -70], [18.6, -28], [20.0, 0, 30], [20.821, 120]]);
-const TY = spline([[5.538, 0], [9.5, 0], [11.3, 0], [14.2, 10], [16.293, 16], [18.6, 30], [20.0, 0, 0], [20.821, 0, 0]]);
-const TZ = spline([[5.538, 888], [6.6, 970], [7.8, 968], [9.5, 960], [11.3, 960], [14.2, 975], [16.293, 982], [18.6, 988], [20.0, 1000, 0], [20.821, 1000, 0]]);
-const FF = spline([[0, 1000], [0.8, 905], [1.575, 820], [3.6, 820], [5.538, 830], [6.6, 1000], [7.8, 1450], [9.0, 1900], [9.5, 2100], [11.3, 2100], [11.764, 2140], [14.2, 2300], [16.293, 2220], [18.6, 1650], [20.821, 1650, 0]]);
-const CX = spline([[0, 900], [1.575, 960], [5.538, 960], [9.5, 960], [16.293, 980], [18.6, 1000], [20.0, 960, 0], [20.821, 960, 0]]);
-const CY = spline([[0, 560], [1.575, 640], [3.6, 640], [5.538, 600], [7.8, 700], [9.5, 790], [11.3, 790], [11.764, 772], [14.2, 700], [16.293, 640], [18.6, 600], [20.0, 540, 0], [20.821, 540, 0]]);
+const XA = spline([[0, 566], [0.8, 352], [1.575, 226, -78], [3.0, 112], [4.7, -92, -72.28], [5.538, -145, -35]]);
+const YA = spline([[0, -169], [0.8, -46], [1.575, 4], [3.0, 2.5, -1.0209], [4.7, 0.8188, -0.9731], [5.538, -18, -30]]);
+const ZA = spline([[0, 1192.2], [0.8, 1084], [1.575, 1026.5], [2.4, 1025.5], [3.6, 1035], [4.7, 1060, 36.43], [5.538, 1100, 70]]);
+const YAWA = spline([[0, 148.5], [0.8, 167], [1.575, 182.5], [3.0, 181.2, -0.6419], [4.7, 180.1871, -0.4135], [5.538, 160, -14]]);
+const PITA = spline([[0, 27.6], [0.8, 21.5], [1.575, 15.5], [3.0, 15.5], [4.2, 21.5926, 9.4293], [4.7, 27, 12.0746], [5.1, 38.5], [5.538, 56, 16]]);
+const AL = spline([[5.538, 172.29, -14], [6.6, 152], [7.8, 136], [9.0, 110, -17.2957], [9.5, 102.5], [10.4, 99], [11.3, 95.5], [11.764, 89], [13.5, 78], [15.0, 64], [16.293, 50], [18.6, 24.5, -6.6838], [19.75, 2.5], [20.0, 0, 0], [22, 0, 0]]);
+const LND = spline([[5.538, Math.log(167.4)], [6.6, Math.log(330)], [7.8, Math.log(560)], [9.0, Math.log(1270), 0.3931], [9.5, Math.log(1505)], [10.4, Math.log(1555)], [11.3, Math.log(1635)], [11.764, Math.log(1800)],
+	[13.0, Math.log(2050)], [14.2, Math.log(2300)], [15.4, Math.log(2450), 0], [16.293, Math.log(2250)], [18.6, Math.log(335), -0.8527], [20.821, Math.log(55), -0.62]]);
+const BE = spline([[5.538, 36.69], [6.6, 44], [7.8, 40], [9.0, 33, -3.6097], [9.5, 31.6], [11.3, 30], [11.764, 28], [14.2, 19], [15.4, 18], [16.293, 17.5], [18.6, 18, -0.941], [19.75, 1.2], [20.0, 0, 0], [22, 0, 0]]);
+const TX = spline([[5.538, -302.6], [6.6, -230], [7.8, -100], [9.0, -6, 18.6751], [9.5, 0], [11.3, -14], [11.764, -34], [14.2, -90], [16.293, -70], [18.6, -28], [20.0, 0, 30], [20.821, 120]]);
+const TY = spline([[5.538, 39.4], [6.6, 0], [9.5, 0], [11.3, 0], [14.2, 10], [16.293, 16], [18.6, 30], [20.0, 0, 0], [20.821, 0, 0]]);
+const TZ = spline([[5.538, 851.3], [6.6, 950], [7.8, 968], [9.0, 961.4203, -5.0744], [9.5, 960], [11.3, 960], [14.2, 1150], [15.4, 1250], [16.293, 1100], [18.6, 988, 4.1726], [20.0, 1000, 0], [20.821, 1000, 0]]);
+const FF = spline([[0, 1000], [0.8, 905], [1.575, 820], [3.6, 820, 0], [4.4, 870], [5.0, 1060], [5.538, 1260], [6.0, 1420], [6.6, 1420], [7.8, 1650], [9.0, 1900], [9.5, 2100], [11.3, 2100], [11.764, 2140], [14.2, 2000], [15.4, 1950], [16.293, 1950], [18.6, 1650, -0.0015], [20.821, 1650, 0]]);
+const CX = spline([[0, 900], [1.575, 960], [4.2, 960], [5.1, 1110], [5.538, 1150], [6.4, 1050], [7.4, 960], [9.5, 960], [16.293, 980], [18.6, 1000], [20.0, 960, 0], [20.821, 960, 0]]);
+const CY = spline([[0, 560], [1.575, 640], [3.6, 640], [4.7, 615.969, -30.3939], [5.538, 560], [7.8, 700], [9.5, 790], [11.3, 790], [11.764, 772], [14.2, 700], [16.293, 640], [18.6, 600], [20.0, 540, 0], [20.821, 540, 0]]);
 const RO = spline([[0, 0], [0.8, 1.6], [1.575, 2.5], [3.0, 1.8], [5.538, 0, 0], [20.821, 0, 0]]);
 const BL0 = 5.538, BL1 = 6.238;
 const fwd = (yaw: number, pit: number): V3 => [Math.cos(pit) * Math.cos(yaw), Math.cos(pit) * Math.sin(yaw), -Math.sin(pit)];
@@ -104,17 +104,17 @@ const VIS: {a: number; r: number; look: Look4; h: number; tint: number}[] = [
 	{a: 62, r: 4500, look: {dress: 'coat', head: 'cap'}, h: 1.78, tint: 2}, {a: 84, r: 4900, look: {dress: 'dress', head: 'long'}, h: 1.6, tint: 0},
 	{a: 104, r: 4600, look: {dress: 'jacket', head: 'short', legs: 'trousers'}, h: 1.72, tint: 1}, {a: 128, r: 4800, look: {dress: 'coat', head: 'glasses'}, h: 1.7, tint: 2},
 	{a: 96, r: 5200, look: {dress: 'shirt', head: 'child', legs: 'trousers'}, h: 1.12, tint: 0}];
-const Visitor: React.FC<{c: Cam; v: typeof VIS[0]; o: number}> = ({c, v, o}) => { const a = v.a * DEG, fx = v.r * Math.cos(a), fy = v.r * Math.sin(a);
+const Visitor: React.FC<{c: Cam; v: typeof VIS[0]; o: number; lite: number}> = ({c, v, o, lite}) => { const a = v.a * DEG, fx = v.r * Math.cos(a), fy = v.r * Math.sin(a);
 	const foot = proj(c, [fx, fy, 0]), head = proj(c, [fx, fy, v.h * 1000]); if (foot[2] < 300 || head[2] < 300) return null;
 	const hpx = Math.hypot(head[0] - foot[0], head[1] - foot[1]); if (hpx < 8) return null;
 	const cen = proj(c, [0, 0, 1000]), flip = cen[0] < foot[0];
-	const col = ['#22140D', '#26170F', '#1E110B'][v.tint];
+	const col = mix(['#22140D', '#26170F', '#1E110B'][v.tint], '#4A3426', lite);
 	const k = Math.max(1, hpx / 450);
 	return <g opacity={o} transform={`translate(${foot[0]},${foot[1]}) scale(${flip ? -1 : 1},1) translate(${-foot[0]},${-foot[1]})`}>
-		<g transform={`translate(${-2.6 * k},${-2 * k})`} opacity={0.45}><Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col="#E8A860" /></g>
+		<g transform={`translate(${-2.6 * k},${-2 * k})`} opacity={0.45 - 0.27 * lite}><Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col="#E8A860" /></g>
 		<Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col={col} /></g>; };
 const faceVis = (c: Cam, q: V3, n: V3) => (c.p[0] - q[0]) * n[0] + (c.p[1] - q[1]) * n[1] + (c.p[2] - q[2]) * n[2] > 0;
-export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number}> = ({c, t, hall, hood, ppl}) => {
+export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number; lite?: number}> = ({c, t, hall, hood, ppl, lite = 0}) => {
 	/* hall: floor pool, two far walls with faint wall-washers, the rope on posts */
 	const floor = poly(c, [[-6500, -5500, 0], [6500, -5500, 0], [6500, 5500, 0], [-6500, 5500, 0]]);
 	const pc = proj(c, [0, 0, 0]);
@@ -139,17 +139,19 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 	const coneO = inside ? 0 : cl((Math.hypot(c.p[0], c.p[1]) - rAt - 250) / 500);
 	const visNear: React.ReactNode[] = [], visFar: React.ReactNode[] = [];
 	const dc = Math.hypot(c.p[0], c.p[1]);
-	VIS.forEach((v, i) => { const a = v.a * DEG, dv = Math.hypot(c.p[0] - v.r * Math.cos(a), c.p[1] - v.r * Math.sin(a)); (dv > dc ? visFar : visNear).push(<Visitor key={i} c={c} v={v} o={ppl} />); });
+	VIS.forEach((v, i) => { const a = v.a * DEG, dv = Math.hypot(c.p[0] - v.r * Math.cos(a), c.p[1] - v.r * Math.sin(a)); (dv > dc ? visFar : visNear).push(<Visitor key={i} c={c} v={v} o={ppl} lite={lite} />); });
 	return <g>
 		<defs><linearGradient id="mCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFE2A8" stopOpacity="0.1" /><stop offset="0.7" stopColor="#FFD08A" stopOpacity="0.04" /><stop offset="1" stopColor="#FFC070" stopOpacity="0.02" /></linearGradient>
 			<filter id="mSh" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6" /></filter>
 			</defs>
 		{hall > 0.01 && <g opacity={hall}>
-			{floor && <path d={floor} fill="#0C0605" />}
-			<WPool c={c} x={0} y={0} z={1} rx={2600} ry={2600} col="#FFB868" a={0.11} />
-			{walls.map(([q, n], i) => faceVis(c, q[0], n) ? <path key={`w${i}`} d={poly(c, q)} fill="#120A07" /> : null)}
+			{floor && <path d={floor} fill={mix('#0C0605', '#1A100B', lite)} />}
+			<WPool c={c} x={0} y={0} z={1} rx={2600} ry={2600} col="#FFB868" a={0.11 + 0.1 * lite} />
+				{lite > 0.01 && <WPool c={c} x={0} y={0} z={2} rx={1700} ry={1700} col="#FFD494" a={0.3 * lite} n={26} />}
+			{walls.map(([q, n], i) => faceVis(c, q[0], n) ? <path key={`w${i}`} d={poly(c, q)} fill={mix('#120A07', '#34221A', lite)} /> : null)}
+			{lite > 0.01 && <HallDetail c={c} lite={lite} />}
 			{washers.map((q, i) => { const p = proj(c, q); if (p[2] < 600) return null; const r = Math.min(1400, c.f * 900 / p[2]); if (p[0] < -r || p[0] > W + r || p[1] < -2 * r || p[1] > H + 2 * r) return null;
-				return <Pool key={i} id={`mw${i}`} x={p[0]} y={p[1]} rx={r * 0.55} ry={r * 1.1} a={0.09} col="#FFB060" />; })}
+				return <Pool key={i} id={`mw${i}`} x={p[0]} y={p[1]} rx={r * 0.55} ry={r * 1.1} a={0.09 + 0.08 * lite} col="#FFB060" />; })}
 			{visFar}
 			<g opacity={ppl}>{posts.map(([x, y], i) => { const a = proj(c, [x, y, 0]), b = proj(c, [x, y, 900]); if (a[2] < 200 || b[2] < 200) return null;
 				return <path key={`p${i}`} d={`M${a[0]},${a[1]} L${b[0]},${b[1]}`} stroke="#3A2618" strokeWidth={Math.max(1.5, c.f * 40 / a[2])} strokeLinecap="round" />; })}
@@ -157,11 +159,12 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 				const d = poly(c, pts, false); return d ? <path key={`rp${i}`} d={d} fill="none" stroke="#6A2C1A" strokeOpacity={0.55} strokeWidth={Math.max(1, c.f * 16 / Math.max(300, proj(c, pts[4])[2]))} /> : null; })}</g>
 		</g>}
 		{cone && <path d={cone} fill="url(#mCone)" opacity={coneO * hall} />}
-		{sides.map(([q, n], i) => faceVis(c, q[0], n) ? <path key={`s${i}`} d={poly(c, q)} fill="#170C08" /> : null)}
-		<path d={poly(c, top)} fill="#21130D" />
+		{sides.map(([q, n], i) => faceVis(c, q[0], n) ? <path key={`s${i}`} d={poly(c, q)} fill={mix('#170C08', '#2E1D13', lite)} /> : null)}
+		<path d={poly(c, top)} fill={mix('#21130D', '#3E271A', lite)} />
 		<path d={poly(c, [[-HX, -HY, HZ0], [HX, -HY, HZ0]], false)} stroke={B.gold} strokeOpacity={0.4 * hood} strokeWidth={2} fill="none" />
-		<WPool c={c} x={0} y={0} z={HZ0 + 0.5} rx={620} ry={330} col="#FFC878" a={0.34} />
-		<path d={poly(c, [[-270, 32, HZ0 + 1], [282, 32, HZ0 + 1], [282, -14, HZ0 + 1], [-270, -14, HZ0 + 1]])} fill="#000" opacity={0.45} filter="url(#mSh)" />
+		<WPool c={c} x={0} y={0} z={HZ0 + 0.5} rx={620 + 220 * lite} ry={330 + 170 * lite} col="#FFC878" a={0.34 + 0.1 * lite} />
+		{lite > 0.01 && <WPool c={c} x={0} y={0} z={HZ0 + 1} rx={560} ry={300} col="#FFEBC0" a={0.12 * lite} n={18} />}
+		<path d={poly(c, [[-270, 32, HZ0 + 1], [282, 32, HZ0 + 1], [282, -14, HZ0 + 1], [-270, -14, HZ0 + 1]])} fill={mix('#000000', '#1C0E06', lite)} opacity={0.45} filter="url(#mSh)" />
 		{[-150, 160].map(holder)}
 		{mr > 2 && t < 17.9 && <g transform={`translate(${mir[0]},${mir[1]})`} opacity={hood * (1 - sstep(seg(t, 17.0, 17.8)))}>
 			<path d={`M-4,${mr * 1.5} L0,0 L4,${mr * 1.5} Z`} fill="#2A1A12" />
@@ -177,6 +180,32 @@ const convexHull = (P: [number, number][]) => { const p = P.slice().sort((a, b) 
 	for (const q of p) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
 	for (const q of p.slice().reverse()) { while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
 	return lo.slice(0, -1).concat(up.slice(0, -1)); };
+
+
+/* ---------- gallery detail (fades in after the title, 9.9–11.2 s, and out again before the dive): tile joints, skirting, lit label
+   panels and a wall vitrine on each far wall, so the hall reads as a museum gallery ---------- */
+type WallDef = {q: (u0: number, u1: number, z0: number, z1: number) => V3[]; n: V3; panels: [number, number][]};
+const WALLS: WallDef[] = [
+	{q: (u0, u1, z0, z1) => [[6495, u0, z0], [6495, u1, z0], [6495, u1, z1], [6495, u0, z1]], n: [-1, 0, 0], panels: [[-3800, -1800], [1800, 3800]]},
+	{q: (u0, u1, z0, z1) => [[-6495, u0, z0], [-6495, u1, z0], [-6495, u1, z1], [-6495, u0, z1]], n: [1, 0, 0], panels: [[-3800, -1800], [1800, 3800]]},
+	{q: (u0, u1, z0, z1) => [[u0, 5495, z0], [u1, 5495, z0], [u1, 5495, z1], [u0, 5495, z1]], n: [0, -1, 0], panels: [[-5200, -3000], [-1000, 1000], [3000, 5200]]},
+	{q: (u0, u1, z0, z1) => [[u0, -5495, z0], [u1, -5495, z0], [u1, -5495, z1], [u0, -5495, z1]], n: [0, 1, 0], panels: [[-5200, -3000], [-1000, 1000], [3000, 5200]]}];
+const HallDetail: React.FC<{c: Cam; lite: number}> = ({c, lite}) => {
+	const tiles = [...Array.from({length: 13}, (_, i) => poly(c, [[-6000 + i * 1000, -5400, 0.5], [-6000 + i * 1000, 5400, 0.5]], false)), ...Array.from({length: 11}, (_, i) => poly(c, [[-6400, -5000 + i * 1000, 0.5], [6400, -5000 + i * 1000, 0.5]], false))].filter(Boolean).join(' ');
+	return <g>
+		<path d={tiles} stroke="#8A6444" strokeOpacity={0.07 * lite} strokeWidth={2} fill="none" />
+		{WALLS.map((w, wi) => { const wp = w.q(0, 0, 0, 0)[0]; if (!faceVis(c, wp, w.n)) return null;
+			return <g key={wi}>
+				{poly(c, w.q(-6400, 6400, 0, 260)) && <path d={poly(c, w.q(-6400, 6400, 0, 260))} fill="#5A3C28" opacity={0.5 * lite} />}
+				{poly(c, w.q(-6400, 6400, 258, 266)) && <path d={poly(c, w.q(-6400, 6400, 258, 266))} fill="#E8B878" opacity={0.35 * lite} />}
+				{w.panels.map(([u0, u1], pi) => <g key={pi}>
+					<path d={poly(c, w.q(u0, u1, 950, 2450))} fill="#4A3122" opacity={0.7 * lite} />
+					<path d={poly(c, w.q(u0 + 120, u1 - 120, 1070, 2330))} fill="#8A6444" opacity={0.3 * lite} />
+					{[0, 1, 2, 3, 4, 5].map((k) => { const z = 2160 - k * 170, d = poly(c, [[...w.q(u0 + 280, u0 + 280, z, z)[0]] as V3, [...w.q(u1 - 280 - (k === 5 ? 500 : 0), u1 - 280, z, z)[1]] as V3], false); return d ? <path key={k} d={d} stroke="#F2D9AE" strokeOpacity={0.3 * lite} strokeWidth={Math.max(2, 70 * c.f / 8000 / 3)} fill="none" /> : null; })}
+				</g>)}
+				{wi >= 2 && poly(c, w.q(-700, 700, 520, 1500)) && <g><path d={poly(c, w.q(-780, 780, 480, 1560))} fill="#2A1A10" opacity={0.8 * lite} /><path d={poly(c, w.q(-700, 700, 520, 1500))} fill="#C8905A" opacity={0.3 * lite} /></g>}
+			</g>; })}
+	</g>; };
 
 /* ---------- dust motes drifting in the case spot (their own slow clock; never on the beat) ---------- */
 const Motes: React.FC<{c: Cam; t: number; o: number}> = ({c, t, o}) => { if (o <= 0.01) return null;
@@ -233,6 +262,22 @@ const SwordW: React.FC<{c: Cam; t: number; o: Parameters<typeof BladeLand>[0]['o
 	const blade = <BladeLand key="b" c={c} sp={SP} id={id} o={o} />, guard = <Guard3D key="g" c={c} sp={SP} id={id} />, hilt = <Hilt53 key="h" c={c} id={id} hi={0.4 + (ringGlow ?? 0)} />;
 	void t; return <g>{dBlade > dHilt ? [blade, guard, hilt] : [hilt, guard, blade]}</g>; };
 
+
+/* ---------- the guard's blue glass (rise over the guard, 4.7–6.6 s): a soft specular band slides across each pane as the view angle
+   changes (continuous, view-driven, never on the beat), and one star glint lands on beat 10 (5.6605 s) ---------- */
+const GG_A0 = 84.5, GG_A1 = 99, GG_BEAT = 5.6605;
+const ggPt = (s: number, a: number, k: number): V3 => { const u = (a - GG_A0) / (GG_A1 - GG_A0), ye = lerp(22.8, 24.8, u);
+	return [SP.x0 + a, SP.ya + s * lerp(2.6, ye, k), SP.z0 + lerp(6.2, 3.8, u) + 0.45]; };
+const GuardGlints: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 4.6 || t > 6.8) return null;
+	const env = sstep(seg(t, 4.65, 5.1)) * (1 - sstep(seg(t, 6.0, 6.7)));
+	const band = (s: 1 | -1, lag: number, key: string) => { const u = sstep(seg(t - lag, 4.7, 6.3)), a = lerp(GG_A0 - 1, GG_A1 + 3, u), w = 3.2;
+		const q = (a0: number, a1: number, k0: number, k1: number, ww: number): V3[] => [ggPt(s, Math.max(GG_A0, a0 - ww), k0), ggPt(s, Math.min(GG_A1, a1 + ww), k0), ggPt(s, Math.min(GG_A1, a1 + ww), k1), ggPt(s, Math.max(GG_A0, a0 - ww), k1)];
+		if (a < GG_A0 - w || a > GG_A1 + w) return null;
+		const wide = poly(c, q(a, a, 0, 1, w * 1.8)), core = poly(c, q(a, a, 0, 1, w * 0.6));
+		return <g key={key}>{wide && <path d={wide} fill="#BFE0FF" opacity={0.26 * env} />}{core && <path d={core} fill="#F2FAFF" opacity={0.6 * env} />}</g>; };
+	const gp = proj(c, ggPt(1, 91, 0.7)), gl = t >= GG_BEAT - 1e-6 ? Math.exp(-(t - GG_BEAT) / 0.2) : 0, r = Math.max(22, Math.min(40, c.f * 0.3 / Math.max(10, gp[2] / 100)));
+	return <g>{band(1, 0, 'a')}{band(-1, 0.14, 'b')}{gl > 0.03 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={r} o={gl} />}</g>; };
+
 /* ---------- lights (directions toward the light) ---------- */
 const L_RAKE: V3 = [-0.92, -0.32, 0.22];      // the raking warm key, low and ahead-right of the glide
 const L_SPOT: V3 = [0.08, -0.28, 0.96];       // the case spot from above, a little to the front
@@ -257,8 +302,9 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 	const hall = sstep(seg(t, 7.2, 9.2)) * (1 - sstep(seg(t, 19.9, 20.6))), ppl = sstep(seg(t, 11.3, 12.9)) * (1 - sstep(seg(t, 19.9, 20.6)));
 	const plinthO = 1 - sstep(seg(t, 20.1, 20.65));
 	const hood = sstep(seg(t, 6.6, 8.4));
+	const lite = sstep(seg(t, 9.9, 11.3)) * (1 - sstep(seg(t, 17.0, 18.8)));
 	const caseO = sstep(seg(t, 0.9, 2.2));
-	const lift = 0.3 * (1 - sstep(seg(t, 0.5, 1.5))) + 0.16 * sstep(seg(t, 6.0, 8.5));
+	const lift = 0.3 * (1 - sstep(seg(t, 0.5, 1.5))) + 0.16 * sstep(seg(t, 6.0, 8.5)) + 0.22 * lite;
 	/* hits */
 	const g0 = proj(c, [244, -18, 1004.2]), g0o = Math.exp(-t / 0.4) * (1 - seg(t, 0.6, 1.0));
 	const lt = 2.707, gl = t >= lt - 1e-6 ? Math.exp(-(t - lt) / 0.22) : 0, sc = XA(lt) + 278 - 97 - 80, gp = proj(c, [SP.x0 + 97 + sc, 7, 1000 + 2.4]);
@@ -272,13 +318,15 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 		</defs>
 		<Ground53 id="tA" k={lerp(1, 0.35, sstep(seg(t, 4, 8)))} sheen={0.3 + 0.2 * Math.sin(c.yaw)} />
 		<KitchenW c={ck} o={kitO} />
-		<g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} /></g>
+		{lite > 0.01 && <g opacity={lite}><Scrim id="sbs" x={620} y={230} rx={860} ry={260} a={0.5} /></g>}
+		<g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} lite={lite} /></g>
 		{t < 1.2 && <g opacity={1 - caseO}>
 			<Pool id="tk1d" x={proj(c, [0, 0, 1000])[0]} y={proj(c, [0, 0, 1000])[1]} rx={560} ry={330} a={0.75 * kitO} col="#080403" />
 			<Pool id="tk1s" x={proj(c, [0, 0, 1000])[0] - 20} y={proj(c, [0, 0, 1000])[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
 		<g filter={farBlur > 0.05 ? 'url(#tFar)' : undefined}>
 			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift}} />
 		</g>
+		<GuardGlints c={c} t={t} />
 		{t < 0.75 && <g filter="url(#tBok)">{bok}</g>}
 		{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
 		{gl > 0.02 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={34} o={gl} />}
