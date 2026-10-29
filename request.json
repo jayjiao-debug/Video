@@ -1,19 +1,138 @@
 {
- "id": "ep51-sfx-02",
+ "id": "ep53-sfx-01",
  "items": [
   {
    "type": "sfx",
-   "name": "sfx_silver_ting2",
-   "text": "one bright high pure ting of a small silver bowl tapped with a silver spoon, loud and clear, shimmering ring that fades",
-   "duration": 1.5,
-   "influence": 0.7
+   "name": "sfx_water_drip",
+   "text": "one single water drop falling onto the steel edge of a kitchen knife on a counter, close, quiet, no reverb, no second drop",
+   "duration": 0.8,
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "sfx_fridge_hum",
-   "text": "steady low electric refrigerator compressor hum with a faint high whine, constant, close, no clicks",
+   "name": "sfx_bronze_shimmer",
+   "text": "a soft short metallic shimmer of a polished bronze blade catching light, gentle airy ring, no music, no melody",
+   "duration": 1.2,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_glass_shimmer",
+   "text": "a soft glassy shimmer swell like light sliding across a museum display case, airy, short, no music",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_hall_murmur",
+   "text": "quiet empty museum hall at night, very faint distant footsteps and air conditioning, low, calm",
+   "duration": 4.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_sheen_chime",
+   "text": "one single soft high metallic chime, short, clean, no repeats",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_wind_snow",
+   "text": "cold winter wind over an open muddy field with light snow, gentle, steady",
+   "duration": 5.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_spade_soil",
+   "text": "one single shovel stroke digging into wet heavy clay soil, close, one stroke only",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_earth_rumble",
+   "text": "deep low earth rumble, short, subtle, like soil shifting far below",
    "duration": 3.0,
-   "influence": 0.5
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_wood_lid_lift",
+   "text": "a heavy old wooden coffin lid lifted slowly by two people, deep wood creak and a short scrape, one movement",
+   "duration": 2.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_water_rinse",
+   "text": "washing a small wooden object in a shallow basin of water, a few gentle splashes and drips",
+   "duration": 2.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_sword_draw",
+   "text": "a bronze sword slowly drawn out of a lacquered wooden sheath: soft scrape, then one clear long metallic ring",
+   "duration": 2.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_flutter",
+   "text": "a few old paper letters fluttering and being turned over, soft, dry",
+   "duration": 2.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_clapper",
+   "text": "one single film clapperboard clap, close, dry, no second clap",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_slice",
+   "text": "a sharp blade slicing through a thick stack of paper in one quick stroke, crisp",
+   "duration": 0.8,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_tiny_crackle",
+   "text": "a tiny dry crackle of old metal, very short and quiet",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_rewind_whirr",
+   "text": "a short soft tape rewind whirr that rises in pitch, smooth",
+   "duration": 2.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_layer_thud",
+   "text": "one single dull soft thud of a heavy wooden lid closing, muffled, short, no reverb tail",
+   "duration": 0.7,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_kitchen_hum",
+   "text": "quiet kitchen at night, faint refrigerator hum, calm, steady",
+   "duration": 4.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_seal_stamp",
+   "text": "one single red seal stamp pressed onto thick paper, one soft low thump, no second hit",
+   "duration": 0.5,
+   "influence": 0.6
   }
  ]
 }
