@@ -127,7 +127,7 @@ const WK: Record<string, number> = {far: 1, left: 1.16, right: 0.74, near: 0.66}
 const wallQ = (w: string, z0: number, z1: number, u0 = 0, u1 = 1): V3[] => { const [x0, y0] = WALLP[w](u0), [x1, y1] = WALLP[w](u1); return [[x0, y0, z0], [x1, y1, z0], [x1, y1, z1], [x0, y0, z1]]; };
 const shadeW = (col: string, k: number, z: number) => { const glow = cl((z + 5.5) / -3.2); const base = k >= 1 ? mix(col, '#E8C090', (k - 1) * 0.5) : mix(col, '#0A0503', (1 - k) * 0.9); return mix(base, '#8A5A30', glow * 0.3); };
 const visW = (c: TC, w: string) => { const [x0, y0] = WALLP[w](0.5), n = w === 'far' ? [0, -1] : w === 'near' ? [0, 1] : w === 'left' ? [1, 0] : [-1, 0]; return (c.x - x0) * n[0] + (c.y - y0) * n[1] > 0; };
-const Shaft: React.FC<{c: TC; dW: number; t: number}> = ({c, dW, t}) => {
+const Shaft: React.FC<{c: TC; dW: number; t: number; calm: number}> = ({c, dW, t, calm}) => {
 	const walls = ['far', 'left', 'right', 'near'].filter((w) => visW(c, w));
 	const zb = Math.min(-0.9, c.z - 2.3);   // the near/far blur boundary moves down with the camera (depth of field)
 	const band = (z0: number, z1: number, col: string, key: string) => walls.map((w) => { const d = poly3(c, wallQ(w, z0, z1)); const cc = shadeW(col, WK[w], (z0 + z1) / 2); return d ? <path key={key + w} d={d} fill={cc} stroke={cc} strokeWidth={0.8} /> : null; });
@@ -135,8 +135,8 @@ const Shaft: React.FC<{c: TC; dW: number; t: number}> = ({c, dW, t}) => {
 	const mottle = (near: boolean) => walls.filter((w) => w !== 'near' || near).map((w) => <g key={`mo${w}`}>{Array.from({length: 120}, (_, i) => { const u = rnd(i, 20 + w.length), z = lerp(-1.0, -7.0, rnd(i, 21 + w.length)); if ((z > zb) !== near) return null;
 		const [x, y] = WALLP[w](u), q: V3 = [x, y, z], d = dOf(c, q); if (d < NEAR + 0.25) return null;
 		const [sx, sy] = pj(c, q), r = c.f * (0.05 + 0.09 * rnd(i, 22 + w.length)) / d; if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) return null;
-		return <path key={i} d={blob(sx, sy, r, i + w.length * 50, 8, 0.6)} fill={['#8A6E40', '#6E6A5C', '#7A4A30', '#9A8458', '#4A3A28'][i % 5]} opacity={0.35 * WK[w]} />; })}</g>);
-	const courses = Array.from({length: 26}, (_, i) => -1.05 - i * 0.235).map((z) => walls.map((w) => { const d = poly3(c, wallQ(w, z, z).slice(0, 2), false); return d ? <path key={w + z} d={d} stroke="#1E140C" strokeOpacity={0.45} strokeWidth={1.3} fill="none" /> : null; }));
+		return <path key={i} d={blob(sx, sy, r, i + w.length * 50, 8, 0.6)} fill={['#8A6E40', '#6E6A5C', '#7A4A30', '#9A8458', '#4A3A28'][i % 5]} opacity={0.35 * WK[w] * (i % 3 === 0 ? 1 - 0.5 * calm : 1 - calm)} />; })}</g>);
+	const courses = Array.from({length: 26}, (_, i) => -1.05 - i * 0.235).map((z, ci) => walls.map((w) => { const d = poly3(c, wallQ(w, z, z).slice(0, 2), false); return d ? <path key={w + z} d={d} stroke="#1E140C" strokeOpacity={0.45 * (ci % 2 ? 1 - calm : 1 - 0.5 * calm)} strokeWidth={1.3} fill="none" /> : null; }));
 	const F = SF, flo = poly3(c, rect3(0, 0, SA, SB, F));
 	const koR = (hx: number, hy: number) => poly3(c, rect3(0, 0.15, hx, hy, F + 0.01));
 	const PX = 1.05, PY = SB - 0.03;
@@ -157,8 +157,8 @@ const Shaft: React.FC<{c: TC; dW: number; t: number}> = ({c, dW, t}) => {
 			{koR(1.62, 1.17) && <path d={koR(1.62, 1.17)} fill="none" stroke="#FFB868" strokeOpacity={0.55} strokeWidth={2} />}
 		</g>
 		<g opacity={dW}>
-			{band(-8.2, -8.8, BANDS[2][2], 'b2')}
-			{band(-7.0, -8.2, BANDS[1][2], 'b1')}
+			{band(-8.2, -8.8, calm > 0 ? mix(BANDS[2][2], BANDS[0][2], 0.45 * calm) : BANDS[2][2], 'b2')}
+			{band(-7.0, -8.2, calm > 0 ? mix(BANDS[1][2], BANDS[0][2], 0.4 * calm) : BANDS[1][2], 'b1')}
 			{split(-0.9, -7.0, BANDS[0][2], 'b0f', false)}
 			<g filter="url(#tbM)">{mottle(false)}</g>
 			<g filter="url(#tbN)">{split(-0.9, -7.0, BANDS[0][2], 'b0n', true)}{mottle(true)}</g>
@@ -187,10 +187,10 @@ const Snow: React.FC<{c: TC; t: number; g: number}> = ({c, t, g}) => { if (g <= 
 
 /* ---------- the stepped mouth in 3-D (after the hand-over): treads and risers as depth-sorted faces; at T_M they tile exactly
    the same regions as the morph's nested shapes, with the same colours; the per-side light and the snow come in after ---------- */
-const Terraces3D: React.FC<{c: TC; dW: number}> = ({c, dW}) => {
+const Terraces3D: React.FC<{c: TC; dW: number; calm: number}> = ({c, dW, calm}) => {
 	type Q = {pts: V3[]; col: string; d: number};
 	const qs: Q[] = [], push = (pts: V3[], col: string) => { const cz = pts.reduce((a, q) => a + dOf(c, q), 0) / pts.length; qs.push({pts, col, d: cz}); };
-	const lit = (col: string, side: number) => mix(col, side > 0 ? '#8A8478' : '#0E0A07', dW * Math.abs(side) * 0.22);
+	const lit = (col0: string, side: number) => { const col = calm > 0 ? mix(col0, '#352A20', 0.55 * calm) : col0; return mix(col, side > 0 ? '#8A8478' : '#0E0A07', dW * Math.abs(side) * 0.22 * (1 - 0.5 * calm)); };
 	for (let i = 1; i <= 10; i++) { const A = SA + WT * i, Bb = SB + WT * i, zt = -DT * (10 - i), zb = zt - DT;
 		if (c.y < Bb) push([[-A, Bb, zt], [A, Bb, zt], [A, Bb, zb], [-A, Bb, zb]], lit(RISER, 0.6));
 		if (c.y > -Bb) push([[A, -Bb, zt], [-A, -Bb, zt], [-A, -Bb, zb], [A, -Bb, zb]], lit(RISER, -0.6));
@@ -226,6 +226,7 @@ export const TakeB: React.FC<{t: number}> = ({t}) => {
 	const hi = 1 - sstep(seg(t, 20.85, 21.3));                        // the ring highlights go first
 	const g = sstep(seg(t, 22.5, 23.7));                              // the dig, the snow (only once the rim reads)
 	const dW = sstep(seg(t, 22.6, 24.0));                             // the shaft's section detail
+	const calm = sstep(seg(t, 22.8, 24.0)) * (1 - sstep(seg(t, 29.8, 31.0)));   // softer bands, fewer courses; gone again by 31.0 (hand-off)
 	const ppm = k, facePt = (r: number, th: number): [number, number] => [960 + r * ppm * Math.cos(th), 540 - r * ppm * Math.sin(th)];
 	const morph = t < T_M;
 	/* the 3-D path of a level (after the morph): its rectangle through the camera (clipped); skipped once above the camera */
@@ -253,9 +254,9 @@ export const TakeB: React.FC<{t: number}> = ({t}) => {
 			<path d={levelPath(t, c, {r: R_FACE, A: 0, B: 0, z: 0, fillRing: '', fillTer: ''}, 0, k)} fill="none" stroke="#2A180A" strokeWidth={Math.max(1, ppm * 0.12)} opacity={1 - cOut} />
 		</g>}
 		{shapes}
-		{!morph && <Terraces3D c={c} dW={dW} />}
+		{!morph && <Terraces3D c={c} dW={dW} calm={calm} />}
 		{!morph && mouthClip && <path d={mouthClip} fill="#2A1E15" />}
-		{!morph && <g clipPath={mouthClip ? 'url(#tbMouth)' : undefined}><Shaft c={c} dW={dW} t={t} /><PitLamps c={c} t={t} o={1} /></g>}
+		{!morph && <g clipPath={mouthClip ? 'url(#tbMouth)' : undefined}><Shaft c={c} dW={dW} t={t} calm={calm} /><PitLamps c={c} t={t} o={1} /></g>}
 		{morph && <PitLamps c={c} t={t} o={sstep(seg(t, 21.7, 22.55))} />}
 		{morph && hi > 0.01 && RING_R.map((r, i) => <path key={`h${i}`} d={'M' + Array.from({length: 25}, (_, j) => facePt(r + GROOVE * 0.75, Math.PI * (0.08 + 0.47 * j / 24)).map((v) => v.toFixed(1)).join(',')).join('L')} fill="none" stroke={FACE_HI} strokeWidth={Math.max(0.6, ppm * 0.16)} strokeOpacity={0.55 * 0.9 * hi} strokeLinecap="round" />)}
 		<Workers c={c} g={g} t={t} />
