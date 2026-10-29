@@ -160,14 +160,22 @@ jobs:
         if: always()
         run: |
           f="$DIR/cost.md"
-          [ -f "$f" ] || printf '| UTC | Model | Effort | Input | Output | Cache read | Cache write | Cost |\n|---|---|---|---|---|---|---|---|\n' > "$f"
-          [ -s "$RUNNER_TEMP/result.json" ] && jq -r --arg t "$(date -u +%F' '%H:%M)" --arg e "${{ inputs.effort }}" '
+          [ -f "$f" ] || printf '| UTC | Model | Effort | Input | Output | Cache read | Cache write | Claude Code estimate | List price |\n|---|---|---|---|---|---|---|---|---|\n' > "$f"
+          total="?"; listtotal="?"
+          if [ -s "$RUNNER_TEMP/result.json" ]; then
+            jq -r --arg t "$(date -u +%F' '%H:%M)" --arg e "${{ inputs.effort }}" '
+            def P: {"claude-opus-5-5":[4,20,5,0.2],"claude-sonnet-5-5":[2,10,2.5,0.1],"claude-haiku-5-5":[0.1,0.5,0.125,0.01],"claude-fable-5-1":[10,50,12.5,0.25],"claude-sonnet-5":[2,10,2.5,0.2],"claude-opus-5":[5,25,6.25,0.5],"claude-haiku-4-5":[1,5,1.25,0.1]};
+            def list($k; $v): (P | to_entries | map(select(.key as $p | $k | startswith($p))) | sort_by(.key|length) | last | .value) as $p
+              | if $p == null then null else ((($v.inputTokens//0)*$p[0] + ($v.outputTokens//0)*$p[1] + ($v.cacheCreationInputTokens//0)*$p[2] + ($v.cacheReadInputTokens//0)*$p[3]) / 1000000) end;
+            def money: if . == null then "?" else "$" + (((. * 100) | round) / 100 | tostring) end;
             (.modelUsage // {}) | to_entries[]
-            | "| \($t) | \(.key) | \($e) | \(.value.inputTokens // 0) | \(.value.outputTokens // 0) | \(.value.cacheReadInputTokens // 0) | \(.value.cacheCreationInputTokens // 0) | $\(((.value.costUSD // 0)*100|round)/100) |"' \
+            | "| \($t) | \(.key) | \($e) | \(.value.inputTokens // 0) | \(.value.outputTokens // 0) | \(.value.cacheReadInputTokens // 0) | \(.value.cacheCreationInputTokens // 0) | \(.value.costUSD | money) | \(list(.key; .value) | money) |"' \
             "$RUNNER_TEMP/result.json" >> "$f" || true
-          total=$(jq -r '((.total_cost_usd // 0)*100|round)/100' "$RUNNER_TEMP/result.json" 2>/dev/null || echo "?")
-          echo "| | **run total** | | | | | | **\$$total** |" >> "$f"
-          { echo "## $NAME · ${{ inputs.model }} · ${{ inputs.effort }} · \$$total"; echo; cat "$DIR/result.md"; } | tee -a "$GITHUB_STEP_SUMMARY"
+            total=$(jq -r 'def P: {"claude-opus-5-5":[4,20,5,0.2],"claude-sonnet-5-5":[2,10,2.5,0.1],"claude-haiku-5-5":[0.1,0.5,0.125,0.01],"claude-fable-5-1":[10,50,12.5,0.25],"claude-sonnet-5":[2,10,2.5,0.2],"claude-opus-5":[5,25,6.25,0.5],"claude-haiku-4-5":[1,5,1.25,0.1]}; def list($k; $v): (P | to_entries | map(select(.key as $p | $k | startswith($p))) | sort_by(.key|length) | last | .value) as $p   | if $p == null then null else ((($v.inputTokens//0)*$p[0] + ($v.outputTokens//0)*$p[1] + ($v.cacheCreationInputTokens//0)*$p[2] + ($v.cacheReadInputTokens//0)*$p[3]) / 1000000) end; def money: if . == null then "?" else "$" + (((. * 100) | round) / 100 | tostring) end; .total_cost_usd | money' "$RUNNER_TEMP/result.json" 2>/dev/null || echo "?")
+            listtotal=$(jq -r 'def P: {"claude-opus-5-5":[4,20,5,0.2],"claude-sonnet-5-5":[2,10,2.5,0.1],"claude-haiku-5-5":[0.1,0.5,0.125,0.01],"claude-fable-5-1":[10,50,12.5,0.25],"claude-sonnet-5":[2,10,2.5,0.2],"claude-opus-5":[5,25,6.25,0.5],"claude-haiku-4-5":[1,5,1.25,0.1]}; def list($k; $v): (P | to_entries | map(select(.key as $p | $k | startswith($p))) | sort_by(.key|length) | last | .value) as $p   | if $p == null then null else ((($v.inputTokens//0)*$p[0] + ($v.outputTokens//0)*$p[1] + ($v.cacheCreationInputTokens//0)*$p[2] + ($v.cacheReadInputTokens//0)*$p[3]) / 1000000) end; def money: if . == null then "?" else "$" + (((. * 100) | round) / 100 | tostring) end; [(.modelUsage // {}) | to_entries[] | list(.key; .value)] | if any(. == null) then null else add end | money' "$RUNNER_TEMP/result.json" 2>/dev/null || echo "?")
+          fi
+          echo "| | **run total** | | | | | | **$total** | **$listtotal** |" >> "$f"
+          { echo "## $NAME · ${{ inputs.model }} · ${{ inputs.effort }} · list price $listtotal (Claude Code estimate $total)"; echo; cat "$DIR/result.md"; } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Commit the results to api-task/<name>
         if: always()
