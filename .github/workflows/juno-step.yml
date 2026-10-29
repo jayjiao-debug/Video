@@ -21,10 +21,19 @@ on:
         description: "Owner notes for this run (angle, sources, revisions)"
         required: false
       model:
-        description: "sonnet = cheaper, opus = strongest"
+        description: "Model (full API name)"
         type: choice
-        options: [sonnet, opus]
-        default: sonnet
+        options: [claude-sonnet-5-5, claude-opus-5-5, claude-haiku-5-5, claude-fable-5-1]
+        default: claude-sonnet-5-5
+      effort:
+        description: "Effort: low, medium, high, xhigh, max"
+        type: choice
+        options: [low, medium, high, xhigh, max]
+        default: medium
+      budget_usd:
+        description: "Hard spending cap for this run in USD"
+        required: true
+        default: "6"
 
 permissions:
   contents: write
@@ -130,6 +139,8 @@ jobs:
         run: |
           claude -p "$(cat "$RUNNER_TEMP/prompt.md")" \
             --model "${{ inputs.model }}" \
+            --effort "${{ inputs.effort }}" \
+            --max-budget-usd "${{ inputs.budget_usd }}" \
             --max-turns 50 \
             --allowedTools "Agent,Task,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(python3:*),Bash(ls:*),Bash(mkdir:*),Bash(cat:*),Bash(date:*)" \
             --output-format json > "$RUNNER_TEMP/result.json" || true
