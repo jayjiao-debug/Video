@@ -1,4 +1,4 @@
-import {spline, sstep5} from './cam53';
+import {spline, sstep, sstep5} from './cam53';
 /* ep53 · TakeC camera + the sword's motion for 33.274 → 56.482 (legs 8–10), pure functions of t.
    The camera is TakeB's camera at 33.274 (position, pitch, lens and velocity), then it sinks through the opened roof, tips
    over the coffin (top-down from 38.935), pushes in, rides the draw (KF07 at 43.5) and glides over the blade (KF08 at 54.8).
@@ -23,7 +23,9 @@ export const drawn = (t: number) => (t < T_DRAW0 ? 0 : Math.max(0, DRAWK(t)));
 type Plan = {t: number; K: number; a: number; w: number; sx: number; sy: number};
 const PLAN: Plan[] = [
 	{t: 38.935, K: 743, a: 46, w: -6.9, sx: 960, sy: 540},
-	{t: 41.199, K: 900, a: 28, w: 0, sx: 1000, sy: 560},
+	{t: 39.9, K: 1250, a: 34, w: -1.5, sx: 930, sy: 575},
+	{t: 40.5, K: 1600, a: 28, w: 0, sx: 900, sy: 600},
+	{t: 41.199, K: 1700, a: 28, w: 0, sx: 900, sy: 600},
 	{t: 43.463, K: 2700, a: 4.6, w: 0, sx: 1610, sy: 650},
 	{t: 47.4, K: 7600, a: 13.8, w: 0, sx: 960, sy: 640},
 	{t: 54.8, K: 7600, a: 19.7, w: 0, sx: 960, sy: 640},
@@ -39,7 +41,7 @@ const pT = spline([[T0C, 62, 0], [36.104, 55], [37.6, 70], [38.935, 90, 0]]);
 const fT = spline([[T0C, 860, 0], [36.104, 700], [38.935, F_TOP, 0]]);
 const cyT = spline([[T0C, 300, 0], [36.104, 400], [37.4, 470], [38.935, 540, 0]]);
 export const camC = (t: number): TC => {
-	if (t < 38.935) return {x: xT(t), y: yT(t), z: zT(t), p: pT(t) * D, f: fT(t), cx: 960, cy: cyT(t), roll: 0};
+	if (t < 38.935) { const u = Math.min(38.935, t + 0.267 * sstep((t - 37.2) / 1.468)); return {x: xT(u), y: yT(u), z: zT(u), p: pT(u) * D, f: fT(u), cx: 960, cy: cyT(u), roll: 0}; }
 	const K = Math.exp(lnK(t)), s = swordAt(t), xs = s.xp + aC(t) / 100, ys = s.y + wC(t) / 100;
 	return {x: -xs, y: ys, z: s.z - CH_Z + F_TOP / K, p: 90 * D, f: F_TOP, cx: 960, cy: 540, roll: 0};
 };

@@ -23,7 +23,7 @@ export const poly3 = (c: TC, pts: V3[], close = true) => { const out: V3[] = [];
 /* ---------- the stepped mouth: level k (outer → inner) = a rectangle (half sizes A, B) at height z ---------- */
 export const SA = 1.9, SB = 1.5, SF = -8.8, WT = 0.18, DT = 0.09;
 export const rect3 = (cx0: number, cy0: number, a: number, b: number, z: number): V3[] => [[cx0 - a, cy0 - b, z], [cx0 + a, cy0 - b, z], [cx0 + a, cy0 + b, z], [cx0 - a, cy0 + b, z]];
-const BANDS: [number, number, string][] = [[-0.9, -7.0, '#5A452E'], [-7.0, -8.2, '#46504F'], [-8.2, -8.8, '#A9A595']];
+const BANDS: [number, number, string][] = [[-0.9, -7.0, '#54402A'], [-7.0, -8.2, '#434C4B'], [-8.2, -8.8, '#9E9A8B']];
 const WALLP: Record<string, (u: number) => [number, number]> = {far: (u) => [lerp(-SA, SA, u), SB], right: (u) => [SA, lerp(SB, -SB, u)], near: (u) => [lerp(SA, -SA, u), -SB], left: (u) => [-SA, lerp(-SB, SB, u)]};
 const WK: Record<string, number> = {far: 1, left: 1.16, right: 0.74, near: 0.66};
 const wallQ = (w: string, z0: number, z1: number, u0 = 0, u1 = 1): V3[] => { const [x0, y0] = WALLP[w](u0), [x1, y1] = WALLP[w](u1); return [[x0, y0, z0], [x1, y1, z0], [x1, y1, z1], [x0, y0, z1]]; };
@@ -34,11 +34,11 @@ export const Shaft: React.FC<{c: TC; dW: number; t: number; roof?: boolean}> = (
 	const zb = Math.min(-0.9, c.z - 2.3);   // the near/far blur boundary moves down with the camera (depth of field)
 	const band = (z0: number, z1: number, col: string, key: string) => walls.map((w) => { const d = poly3(c, wallQ(w, z0, z1)); const cc = shadeW(col, WK[w], (z0 + z1) / 2); return d ? <path key={key + w} d={d} fill={cc} stroke={cc} strokeWidth={0.8} /> : null; });
 	const split = (z0: number, z1: number, col: string, key: string, near: boolean) => { const a = near ? Math.min(z0, -0.9) : Math.min(z0, zb), b = near ? Math.max(z1, zb) : z1; return a > b ? band(a, b, col, key) : null; };
-	const mottle = (near: boolean) => walls.filter((w) => w !== 'near' || near).map((w) => <g key={`mo${w}`}>{Array.from({length: 120}, (_, i) => { const u = rnd(i, 20 + w.length), z = lerp(-1.0, -7.0, rnd(i, 21 + w.length)); if ((z > zb) !== near) return null;
+	const mottle = (near: boolean) => walls.filter((w) => w !== 'near' || near).map((w) => <g key={`mo${w}`}>{Array.from({length: 220}, (_, i) => { const u = rnd(i, 20 + w.length), z = lerp(-1.0, -7.0, rnd(i, 21 + w.length)); if ((z > zb) !== near) return null;
 		const [x, y] = WALLP[w](u), q: V3 = [x, y, z], d = dOf(c, q); if (d < NEAR + 0.25) return null;
-		const [sx, sy] = pj(c, q), r = c.f * (0.05 + 0.09 * rnd(i, 22 + w.length)) / d; if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) return null;
-		return <path key={i} d={blob(sx, sy, r, i + w.length * 50, 8, 0.6)} fill={['#8A6E40', '#6E6A5C', '#7A4A30', '#9A8458', '#4A3A28'][i % 5]} opacity={0.35 * WK[w]} />; })}</g>);
-	const courses = Array.from({length: 26}, (_, i) => -1.05 - i * 0.235).map((z) => walls.map((w) => { const d = poly3(c, wallQ(w, z, z).slice(0, 2), false); return d ? <path key={w + z} d={d} stroke="#1E140C" strokeOpacity={0.45} strokeWidth={1.3} fill="none" /> : null; }));
+		const [sx, sy] = pj(c, q), r = c.f * (0.07 + 0.15 * rnd(i, 22 + w.length)) / d; if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) return null;
+		return <path key={i} d={blob(sx, sy, r, i + w.length * 50, 8, 0.6)} fill={['#43331F', '#43331F', '#43331F', '#6A5236', '#3C2D1B', '#5E4A30'][i % 6]} opacity={0.55 * WK[w]} />; })}</g>);
+	const courses = null;
 	const F = SF, flo = poly3(c, rect3(0, 0, SA, SB, F));
 	const koR = (hx: number, hy: number) => poly3(c, rect3(0, 0.15, hx, hy, F + 0.01));
 	const PX = 1.05, PY = SB - 0.03;
@@ -65,6 +65,7 @@ export const Shaft: React.FC<{c: TC; dW: number; t: number; roof?: boolean}> = (
 			<g filter="url(#tbM)">{mottle(false)}</g>
 			<g filter="url(#tbN)">{split(-0.9, -7.0, BANDS[0][2], 'b0n', true)}{mottle(true)}</g>
 			{courses}
+			{walls.map((w) => { const d = poly3(c, wallQ(w, -7.0, -7.0).slice(0, 2), false); return d ? <path key={`s${w}`} d={d} stroke="#8A9896" strokeOpacity={0.5} strokeWidth={2} fill="none" /> : null; })}
 			{walls.map((w) => { const d = poly3(c, wallQ(w, -8.2, -8.2).slice(0, 2), false); return d ? <path key={`e${w}`} d={d} stroke="#EDE3CC" strokeOpacity={0.45} strokeWidth={1.6} fill="none" /> : null; })}
 			{[[-SA, SB], [SA, SB]].map(([x, y], i) => { const d = poly3(c, [[x, y, -0.9], [x, y, F]], false); return d ? <path key={i} d={d} stroke={B.gold} strokeOpacity={0.12} strokeWidth={2} fill="none" /> : null; })}
 			{pole}{ticks}{labels}

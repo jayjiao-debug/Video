@@ -5,8 +5,8 @@ import {Figure4, POSES, Look4} from '../qq44/figure44';
 import {Cam, V3, lookAt, proj, poly, toCam, mix, blobOn, Tag, Scrim} from './parts53';
 import {Guard3D, SwordPose} from './sword3d';
 import {PommelFace, R_FACE} from './face53';
-import {BladeLand, bw, hwAt, LBM, Light} from './land53';
-import {Cleaver} from './kfA53';
+import {BladeLand, bw, hwAt, LBM, A_BL, Light} from './land53';
+import {CleaverD as Cleaver} from './end53d';
 import {RingDisc} from './props53';
 import {spline, sstep, DEG} from './cam53';
 import {B} from '../qq50/styleB';
@@ -30,11 +30,11 @@ const YAWA = spline([[0, 148.5], [0.8, 167], [1.575, 182.5], [3.0, 181.2, -0.641
 const PITA = spline([[0, 27.6], [0.8, 21.5], [1.575, 15.5], [3.0, 15.5], [4.2, 21.5926, 9.4293], [4.7, 27, 12.0746], [5.1, 38.5], [5.538, 56, 16]]);
 const AL = spline([[5.538, 172.29, -14], [6.6, 152], [7.8, 136], [9.0, 110, -17.2957], [9.5, 102.5], [10.4, 99], [11.3, 95.5], [11.764, 89], [13.5, 78], [15.0, 64], [16.293, 50], [18.6, 24.5, -6.6838], [19.75, 2.5], [20.0, 0, 0], [22, 0, 0]]);
 const LND = spline([[5.538, Math.log(167.4)], [6.6, Math.log(330)], [7.8, Math.log(560)], [9.0, Math.log(1270), 0.3931], [9.5, Math.log(1505)], [10.4, Math.log(1555)], [11.3, Math.log(1635)], [11.764, Math.log(1800)],
-	[13.0, Math.log(2050)], [14.2, Math.log(2300)], [15.4, Math.log(2450), 0], [16.293, Math.log(2250)], [18.6, Math.log(335), -0.8527], [20.821, Math.log(55), -0.62]]);
+	[13.0, Math.log(1220)], [14.2, Math.log(1100)], [15.4, Math.log(1030), 0], [16.293, Math.log(990)], [18.6, Math.log(335), -0.8527], [20.821, Math.log(55), -0.62]]);
 const BE = spline([[5.538, 36.69], [6.6, 44], [7.8, 40], [9.0, 33, -3.6097], [9.5, 31.6], [11.3, 30], [11.764, 28], [14.2, 19], [15.4, 18], [16.293, 17.5], [18.6, 18, -0.941], [19.75, 1.2], [20.0, 0, 0], [22, 0, 0]]);
-const TX = spline([[5.538, -302.6], [6.6, -230], [7.8, -100], [9.0, -6, 18.6751], [9.5, 0], [11.3, -14], [11.764, -34], [14.2, -90], [16.293, -70], [18.6, -28], [20.0, 0, 30], [20.821, 120]]);
+const TX = spline([[5.538, -302.6], [6.6, -230], [7.8, -100], [9.0, -6, 18.6751], [9.5, 0], [11.3, -14], [11.764, -34], [14.2, -46], [16.293, -40], [18.6, -28], [20.0, 0, 30], [20.821, 120]]);
 const TY = spline([[5.538, 39.4], [6.6, 0], [9.5, 0], [11.3, 0], [14.2, 10], [16.293, 16], [18.6, 30], [20.0, 0, 0], [20.821, 0, 0]]);
-const TZ = spline([[5.538, 851.3], [6.6, 950], [7.8, 968], [9.0, 961.4203, -5.0744], [9.5, 960], [11.3, 960], [14.2, 1150], [15.4, 1250], [16.293, 1100], [18.6, 988, 4.1726], [20.0, 1000, 0], [20.821, 1000, 0]]);
+const TZ = spline([[5.538, 851.3], [6.6, 950], [7.8, 968], [9.0, 961.4203, -5.0744], [9.5, 960], [11.3, 960], [13.0, 975], [14.2, 1000], [15.4, 1010], [16.293, 1000], [18.6, 988, 4.1726], [20.0, 1000, 0], [20.821, 1000, 0]]);
 const FF = spline([[0, 1000], [0.8, 905], [1.575, 820], [3.6, 820, 0], [4.4, 870], [5.0, 1060], [5.538, 1260], [6.0, 1420], [6.6, 1420], [7.8, 1650], [9.0, 1900], [9.5, 2100], [11.3, 2100], [11.764, 2140], [14.2, 2000], [15.4, 1950], [16.293, 1950], [18.6, 1650, -0.0015], [20.821, 1650, 0]]);
 const CX = spline([[0, 900], [1.575, 960], [4.2, 960], [5.1, 1110], [5.538, 1150], [6.4, 1050], [7.4, 960], [9.5, 960], [16.293, 980], [18.6, 1000], [20.0, 960, 0], [20.821, 960, 0]]);
 const CY = spline([[0, 560], [1.575, 640], [3.6, 640], [4.7, 615.969, -30.3939], [5.538, 560], [7.8, 700], [9.5, 790], [11.3, 790], [11.764, 772], [14.2, 700], [16.293, 640], [18.6, 600], [20.0, 540, 0], [20.821, 540, 0]]);
@@ -128,7 +128,7 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 		[[[HX, HY, HZ0], [-HX, HY, HZ0], [-HX, HY, 0], [HX, HY, 0]], [0, 1, 0]], [[[-HX, HY, HZ0], [-HX, -HY, HZ0], [-HX, -HY, 0], [-HX, HY, 0]], [-1, 0, 0]]];
 		const holder = (x: number) => { const a = proj(c, [x, -4, HZ0]), b = proj(c, [x, -4, 1000 - 9]); if (a[2] < 20 || b[2] < 20) return null; const w = c.f * 7 / a[2];
 		return <g key={x}><path d={`M${a[0] - w},${a[1]} L${b[0] - w * 0.6},${b[1]} L${b[0] + w * 0.6},${b[1]} L${a[0] + w},${a[1]} Z`} fill="#E8F0F2" opacity={0.1} /><path d={`M${a[0] - w},${a[1]} L${b[0] - w * 0.6},${b[1]}`} stroke="#F4FAFC" strokeOpacity={0.35} strokeWidth={1.5} /></g>; };
-	const mir = proj(c, [-345, 250, 968]), mr = mir[2] > 50 ? c.f * 30 / mir[2] : 0;
+	const mir = proj(c, [-345, 250, 1004]), mr = mir[2] > 50 ? c.f * 30 / mir[2] : 0, mFoot = proj(c, [-345, 250, 941]), mBase = proj(c, [-345, 250, 972]);
 	const hoodEdges: [V3, V3][] = [[[-HX, -HY, HZ0], [-HX, -HY, HZ1]], [[HX, -HY, HZ0], [HX, -HY, HZ1]], [[HX, HY, HZ0], [HX, HY, HZ1]], [[-HX, HY, HZ0], [-HX, HY, HZ1]],
 		[[-HX, -HY, HZ1], [HX, -HY, HZ1]], [[HX, -HY, HZ1], [HX, HY, HZ1]], [[HX, HY, HZ1], [-HX, HY, HZ1]], [[-HX, HY, HZ1], [-HX, -HY, HZ1]]];
 	/* the spot: a soft cone from the ceiling onto the case (skipped while the camera is inside it) */
@@ -167,10 +167,15 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 		<path d={poly(c, [[-270, 32, HZ0 + 1], [282, 32, HZ0 + 1], [282, -14, HZ0 + 1], [-270, -14, HZ0 + 1]])} fill={mix('#000000', '#1C0E06', lite)} opacity={0.45} filter="url(#mSh)" />
 		{[-150, 160].map(holder)}
 		{mr > 2 && t < 17.9 && <g transform={`translate(${mir[0]},${mir[1]})`} opacity={hood * (1 - sstep(seg(t, 17.0, 17.8)))}>
-			<path d={`M-4,${mr * 1.5} L0,0 L4,${mr * 1.5} Z`} fill="#2A1A12" />
+			<g transform={`translate(${-mir[0]},${-mir[1]})`}>
+				<ellipse cx={mFoot[0]} cy={mFoot[1]} rx={Math.max(14, c.f * 24 / mFoot[2])} ry={Math.max(4.5, c.f * 7 / mFoot[2])} fill="#0A0604" opacity={0.7} />
+				<path d={`M${mFoot[0]},${mFoot[1]} L${mBase[0]},${mBase[1]}`} stroke="#14090A" strokeWidth={9} strokeLinecap="round" />
+				<path d={`M${mFoot[0]},${mFoot[1]} L${mBase[0]},${mBase[1]}`} stroke="#9A7440" strokeWidth={6} strokeLinecap="round" />
+				<path d={`M${mFoot[0] - 1.6},${mFoot[1] - 1} L${mBase[0] - 1.6},${mBase[1]}`} stroke="#E8C484" strokeWidth={1.6} strokeOpacity={0.7} /></g>
 			<ellipse cx={0} cy={0} rx={mr * 1.12} ry={mr} fill="#0E0806" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
 			<RingDisc x={0} y={0} r={mr * 0.78} ry={0.9} id="mMir" />
 			<path d={`M${-mr * 0.7},${-mr * 0.4} Q${-mr * 0.3},${-mr * 0.82} ${mr * 0.35},${-mr * 0.75}`} stroke="#FFFFFF" strokeOpacity={0.25} strokeWidth={3} fill="none" /></g>}
+		{mr > 2 && t >= 11.9 && t < 16.4 && <Tag id="mirc" x={Math.min(W - 330, Math.max(330, mir[0]))} y={mir[1] - mr * 1.4 - 22} s="剑首 · 11道同心圆" fs={34} anchor="middle" scrim={0.45} o={hood * sstep(seg(t, 11.9, 12.4)) * (1 - sstep(seg(t, 15.8, 16.3)))} />}
 		{hood > 0.01 && <g opacity={hood}>{hoodEdges.map(([a, b], i) => { const d = poly(c, [a, b], false); return d ? <path key={`h${i}`} d={d} stroke="#E9EEF0" strokeOpacity={0.16} strokeWidth={1.6} fill="none" /> : null; })}</g>}
 		{visNear}
 	</g>; };
@@ -263,6 +268,19 @@ const SwordW: React.FC<{c: Cam; t: number; o: Parameters<typeof BladeLand>[0]['o
 	void t; return <g>{dBlade > dHilt ? [blade, guard, hilt] : [hilt, guard, blade]}</g>; };
 
 
+/* ---------- the hall orbit's bloom + rim (11.4 → 17.2): the blade is the brightest thing in the hall ---------- */
+const BladeBloom: React.FC<{c: Cam; t: number}> = ({c, t}) => { const e = sstep(seg(t, 11.4, 12.4)) * (1 - sstep(seg(t, 16.4, 17.2))); if (e < 0.01) return null;
+	const N = 16, R: V3[] = [], L: V3[] = [];
+	for (let i = 0; i <= N; i++) { const s = LBM * i / N, h = hwAt(s) * 0.92; R.push(bw(SP, s, h, 3.4)); L.push(bw(SP, s, -h, 3.4)); }
+	const body = poly(c, [...R, ...L.slice().reverse()]), hilt = poly(c, [SW(4, 0, 4), SW(A_BL - 4, 0, 4)], false), rimR = poly(c, R, false), rimL = poly(c, L, false);
+	const f = c.f / Math.max(300, toCam(c, bw(SP, LBM / 2, 0))[2]);
+	return <g opacity={e}>
+		<defs><filter id="bbF" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="15" /></filter></defs>
+		<g filter="url(#bbF)" style={{mixBlendMode: 'screen'}}>{body && <path d={body} fill="#FFC870" opacity={0.55} stroke="#FFC870" strokeWidth={Math.max(6, f * 7)} strokeOpacity={0.5} strokeLinejoin="round" />}
+			{hilt && <path d={hilt} stroke="#FFC870" strokeOpacity={0.5} strokeWidth={Math.max(8, f * 18)} strokeLinecap="round" fill="none" />}</g>
+		{rimR && <path d={rimR} stroke="#FFE2A8" strokeOpacity={0.8} strokeWidth={Math.max(1.4, f * 1.4)} fill="none" />}
+		{rimL && <path d={rimL} stroke="#FFD08A" strokeOpacity={0.55} strokeWidth={Math.max(1.2, f * 1.1)} fill="none" />}</g>; };
+
 /* ---------- the guard's blue glass (rise over the guard, 4.7–6.6 s): a soft specular band slides across each pane as the view angle
    changes (continuous, view-driven, never on the beat), and one star glint lands on beat 10 (5.6605 s) ---------- */
 const GG_A0 = 84.5, GG_A1 = 99, GG_BEAT = 5.6605;
@@ -326,6 +344,7 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 		<g filter={farBlur > 0.05 ? 'url(#tFar)' : undefined}>
 			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift}} />
 		</g>
+		<BladeBloom c={c} t={t} />
 		<GuardGlints c={c} t={t} />
 		{t < 0.75 && <g filter="url(#tBok)">{bok}</g>}
 		{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
@@ -339,8 +358,8 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 const kitInv = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] + 1002.2];   // kitchen → case (its own inverse in x, y)
 
 /* ---------- S3: 「镀铬？」 hangs beside the blade from the lull hit (18.557) — a question tag, never struck ---------- */
-const DuoTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 18.557 - 1e-6 || t > 20.32) return null;
-	const o = 1 - sstep(seg(t, 19.85, 20.3)); const to = proj(c, bw(SP, 233, 14));
+const DuoTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 18.557 - 1e-6 || t > 19.8) return null;
+	const o = 1 - sstep(seg(t, 19.2, 19.7)); const to = proj(c, bw(SP, 233, 14));
 	const at = proj(camAt(18.6), bw(SP, 233, 14)), x = at[0] - 250, y = at[1] + 190;
 	/* the leader only while its blade point is in frame and not hidden behind the pommel's end face */
 	const fc = proj(c, PF), fr = fc[2] > 1 ? c.f * R_FACE / fc[2] : 0, hidden = c.p[0] < PF[0] && to[2] > fc[2] && Math.hypot(to[0] - fc[0], to[1] - fc[1]) < fr * 1.15;

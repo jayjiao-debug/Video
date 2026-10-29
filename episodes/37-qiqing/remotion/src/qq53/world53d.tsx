@@ -59,7 +59,8 @@ const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; p
 		<defs><filter id="w53gl" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation={gl} /></filter></defs>
 		<Pool id="w53sw" x={mid[0]} y={mid[1]} rx={Math.max(120, span * 0.62)} ry={Math.max(50, span * 0.2)} a={0.55 * lit} col="#FFC870" />
 		<path d={poly(c, blade)} fill="#FFD68A" filter="url(#w53gl)" opacity={0.95 * lit} />
-		<path d={poly(c, blade)} fill="#F2C878" stroke="#FFF3CF" strokeWidth={1.2} />
+		<path d={poly(c, blade)} fill="none" stroke="#FFD890" strokeWidth={18} strokeOpacity={0.45 * lit} filter="url(#w53gl)" />
+			<path d={poly(c, blade)} fill="#F2C878" stroke="#FFF3CF" strokeWidth={2} />
 		<path d={poly(c, [swAt(SW.bladeA + 0.5, 0, 0.1, draw), swAt(SW.L - 1.2, 0, 0.1, draw)], false)} stroke="#FFF8E0" strokeWidth={1.4} fill="none" />
 		<path d={poly(c, grip)} fill={BZ.mid} /><path d={poly(c, pom)} fill={BZ.body} stroke={BZ.line} strokeWidth={1} />
 		<path d={poly(c, guard)} fill={GLS.body} stroke={BZ.lit} strokeWidth={1.2} />
@@ -70,16 +71,16 @@ const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; p
 	</g>; };
 /** one of the tomb's other swords, lying flat on the chamber floor (E1): lit = 0..1 */
 const OtherSword: React.FC<{c: Cam; x0: number; y: number; ang: number; lit: number; id: number}> = ({c, x0, y, ang, lit, id}) => {
-	const L = 0.7, z = -10.58, ca = Math.cos(ang), sa = Math.sin(ang), at = (a: number, w: number): V3 => [x0 + ca * a - sa * w, y + sa * a + ca * w, z];
-	const n = 12, blade = [...Array.from({length: n + 1}, (_, i) => at(0.05 + L * i / n, 0.045 * (1 - Math.pow(i / n, 3)))), ...Array.from({length: n + 1}, (_, i) => at(0.05 + L * (n - i) / n, -0.045 * (1 - Math.pow((n - i) / n, 3))))];
+	const L = 0.55, z = -10.58, ca = Math.cos(ang), sa = Math.sin(ang), at = (a: number, w: number): V3 => [x0 + ca * a - sa * w, y + sa * a + ca * w, z];
+	const n = 12, blade = [...Array.from({length: n + 1}, (_, i) => at(0.05 + L * i / n, 0.03 * (1 - Math.pow(i / n, 3)))), ...Array.from({length: n + 1}, (_, i) => at(0.05 + L * (n - i) / n, -0.03 * (1 - Math.pow((n - i) / n, 3))))];
 	const a0 = pp(c, at(0, 0)), a1 = pp(c, at(L, 0)), mid: P2 = [(a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2], span = Math.hypot(a1[0] - a0[0], a1[1] - a0[1]);
 	if (lit <= 0.001) return <path d={poly(c, blade)} fill="#2A1C12" opacity={0.7} />;
 	return <g>
-		<Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.75} ry={span * 0.4} a={0.6 * lit} col="#FFC870" />
-		<path d={poly(c, blade)} fill={mix('#2A1C12', '#E8BC66', 0.85 * lit)} stroke={mix('#2A1C12', '#FFF3CF', lit)} strokeWidth={1.1} />
+		<Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.75} ry={span * 0.4} a={0.4 * lit} col="#FFC870" />
+		<path d={poly(c, blade)} fill={mix('#2A1C12', '#E8BC66', 0.8 * lit)} stroke={mix('#2A1C12', '#F4D088', lit)} strokeWidth={2} />
 		<path d={poly(c, [at(0.05, 0), at(0.05 + L, 0)], false)} stroke="#FFF3CF" strokeOpacity={0.7 * lit} strokeWidth={1.2} fill="none" />
-		<path d={poly(c, [at(-0.02, -0.038), at(-0.02, 0.038), at(0.06, 0.038), at(0.06, -0.038)])} fill={mix('#2A1C12', '#4A8CD8', 0.7 * lit)} />
-		<path d={poly(c, [at(-0.12, -0.012), at(-0.12, 0.012), at(-0.02, 0.012), at(-0.02, -0.012)])} fill={mix('#2A1C12', BZ.mid, lit)} />
+		<path d={poly(c, [at(-0.02, -0.03), at(-0.02, 0.03), at(0.06, 0.03), at(0.06, -0.03)])} fill={mix('#2A1C12', '#4A8CD8', 0.7 * lit)} />
+		<path d={poly(c, [at(-0.1, -0.012), at(-0.1, 0.012), at(-0.02, 0.012), at(-0.02, -0.012)])} fill={mix('#2A1C12', BZ.mid, lit)} />
 	</g>; };
 export const OTHERS: {x0: number; y: number; ang: number; tb: number}[] = [{x0: 1.42, y: 0.18, ang: 0.0, tb: 86.483}, {x0: 1.45, y: 0.62, ang: 0.0, tb: 87.615}, {x0: -2.05, y: 0.35, ang: 0.0, tb: 88.747}];
 
