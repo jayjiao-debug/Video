@@ -1,0 +1,164 @@
+import React from 'react';
+import {W, H, rnd, lerp, cl, seg, SANS} from '../qq50/kit50';
+import {Pool, Vignette, B} from '../qq50/styleB';
+import {Cam, poly, proj, blobOn, V3, mix} from './parts53';
+import {sstep, sstep5} from './cam53';
+import {Shaft, PitLamps, Snow, pj, dOf, TC as ShaftTC} from './shaft53c';
+import {box, OpenCoffin, Digger, Glove, RED_LINE} from './parts53c';
+import {camC, TC, CH_Z, swordAt, drawn, planK, planPos, T_DRAW, T_LIFT} from './cam53c';
+import {Sword, SW, LB, bladeHW, BZ, GLS} from './props53';
+
+import {frameOf, DA} from './master53';
+import {Marks, Letters, BladeClip, Reading, Water} from './inscr53c';
+/* ep53 · TakeC legs 8–9 (33.274 → 43.463) and 10 (→ 56.482): the descent's tail, the opened chamber, the lids, the sword in its
+   sheath, the wash and the draw, the inscription. One camera (cam53c.camC), all in metres; chamber-local x' is mirrored (screen right = −x'). */
+export const T_ROOF = 36.104, T_LID1 = DA(16), T_LID2 = 37.803, T_TOP = 38.935;
+const toCam = (c: TC): Cam => ({p: [-c.x, c.y, c.z + CH_Z], yaw: Math.PI / 2, pitch: c.p, f: c.f, cx: c.cx, cy: c.cy, roll: c.roll});
+/* the room (the opened 椁): interior ±RX × ±RY, walls to the roof plane z = 2.0 */
+const RX = 1.6, RY = 1.15, WH = 2.0;
+const OUT = {x: 1.06, y: 0.42, z: 0.84, t: 0.06}, INN = {x: 0.9, y: 0.3, z: 0.7, t: 0.05};
+type Lean = {by: number; bh: number; ty: number; th: number};
+const LEAN1: Lean = {by: 0.9, bh: 0.03, ty: 1.1, th: 0.83}, LEAN2: Lean = {by: 0.74, bh: 0.03, ty: 0.9, th: 0.56};
+/** a lid (slab) as its two long edges: near edge N = (y, h), far edge F = (y, h); u 0 → 1 = lifted by the two diggers and leaned */
+const lidEdges = (u: number, rest: number, hy: number, L: Lean) => { const a = sstep(u / 0.4), b = sstep5((u - 0.38) / 0.62), hump = Math.sin(Math.PI * b);
+	return {Ny: lerp(-hy + 0.1 * a, L.by, b), Nh: lerp(rest + 0.62 * a, L.bh, b) + 0.5 * hump, Fy: lerp(hy, L.ty, b), Fh: lerp(rest + 0.05 * a, L.th, b) + 0.12 * hump}; };
+const lidAt = (t: number) => ({u1: seg(t, T_LID1, 37.55), u2: seg(t, T_LID2, 38.85)});
+const Lid: React.FC<{c: Cam; u: number; rest: number; hx: number; hy: number; L: Lean; id: string}> = ({c, u, rest, hx, hy, L, id}) => { const e = lidEdges(u, rest, hy, L), th = 0.07;
+	const P = (x: number, y: number, h: number, top: boolean): V3 => [x, y, h + (top ? th : 0)];
+	const top = [P(-hx, e.Ny, e.Nh, true), P(hx, e.Ny, e.Nh, true), P(hx, e.Fy, e.Fh, true), P(-hx, e.Fy, e.Fh, true)];
+	const front = [P(-hx, e.Ny, e.Nh, true), P(hx, e.Ny, e.Nh, true), P(hx, e.Ny, e.Nh, false), P(-hx, e.Ny, e.Nh, false)];
+	const endL = [P(-hx, e.Ny, e.Nh, true), P(-hx, e.Fy, e.Fh, true), P(-hx, e.Fy, e.Fh, false), P(-hx, e.Ny, e.Nh, false)];
+	const endR = [P(hx, e.Ny, e.Nh, true), P(hx, e.Fy, e.Fh, true), P(hx, e.Fy, e.Fh, false), P(hx, e.Ny, e.Nh, false)];
+	const inset = [P(-hx + 0.1, lerp(e.Ny, e.Fy, 0.12), lerp(e.Nh, e.Fh, 0.12), true), P(hx - 0.1, lerp(e.Ny, e.Fy, 0.12), lerp(e.Nh, e.Fh, 0.12), true), P(hx - 0.1, lerp(e.Ny, e.Fy, 0.88), lerp(e.Nh, e.Fh, 0.88), true), P(-hx + 0.1, lerp(e.Ny, e.Fy, 0.88), lerp(e.Nh, e.Fh, 0.88), true)];
+	return <g><path d={poly(c, endL)} fill="#1E1410" /><path d={poly(c, endR)} fill="#1A110D" /><path d={poly(c, front)} fill="#1E1410" />
+		<path d={poly(c, top)} fill="#150D0A" stroke="#D8A868" strokeOpacity={0.6} strokeWidth={2} /><path d={poly(c, inset)} fill="none" stroke={RED_LINE} strokeOpacity={0.6} strokeWidth={2} /><title>{id}</title></g>; };
+/** the sword's point, chamber-local: a, w, h in cm */
+const swP = (t: number, a: number, w: number, h = 0): V3 => { const s = swordAt(t); return [s.xp + a / 100, s.y + w / 100, s.z + h / 100]; };
+/** the sheath: rigid, its mouth at the guard when nothing is drawn; black lacquer, wet */
+const sheathHW = (a: number, dl: number) => (a - dl - SW.bladeA > LB ? 0.3 : bladeHW(Math.min(LB - 0.5, Math.max(0, a - dl - SW.bladeA))) + 0.55);
+const Sheath: React.FC<{c: Cam; t: number; dl: number; wash: number}> = ({c, t, dl, wash}) => { const am = SW.guardA + dl, at = SW.L + 2.2 + dl, n = 36, aa = (i: number) => lerp(am, at, i / n);
+	const edge = (sgn: number, k = 1, dz = 0.45) => Array.from({length: n + 1}, (_, i) => swP(t, aa(i), sgn * sheathHW(aa(i), dl) * k * (i === n ? 0.5 : 1), dz));
+	const outline = [...edge(1), ...[...edge(-1)].reverse()], sw = swordAt(t), wet = wash;
+	const dirt = Array.from({length: 9}, (_, i) => { const a = lerp(am + 3, at - 4, rnd(i, 3)), w = (rnd(i, 4) - 0.5) * 2.6, p = swP(t, a, w, 0.5); return {d: blobOn(c, p[0], p[1], 0.012 + 0.016 * rnd(i, 5), i + 11, p[2], 8, 0.7), i}; });
+	void sw;
+	return <g>
+		<path d={poly(c, outline)} fill="#0A0605" stroke="#060403" strokeWidth={2} />
+		<path d={poly(c, edge(1, 0.86, 0.5).slice(2, n - 2), false)} fill="none" stroke="#FFFFFF" strokeOpacity={0.28 * wet} strokeWidth={3} />
+		<path d={poly(c, edge(1, 0.55, 0.5).slice(1, n - 1), false)} fill="none" stroke="#7A2A1A" strokeOpacity={0.7} strokeWidth={2.2} />
+		<path d={poly(c, edge(-1, 0.55, 0.5).slice(1, n - 1), false)} fill="none" stroke="#7A2A1A" strokeOpacity={0.7} strokeWidth={2.2} />
+		{dirt.map((q) => q.d ? <path key={q.i} d={q.d} fill="#6A5236" opacity={0.85 * (1 - wet)} /> : null)}
+		<path d={poly(c, [swP(t, am - 0.8, -(sheathHW(am, dl) + 0.3), 0.55), swP(t, am - 0.8, sheathHW(am, dl) + 0.3, 0.55), swP(t, am + 0.4, sheathHW(am, dl) + 0.3, 0.55), swP(t, am + 0.4, -(sheathHW(am, dl) + 0.3), 0.55)])} fill="#1E1410" stroke="#5A3A28" strokeWidth={2} />
+	</g>; };
+/** hilt, guard and pommel as plain polygons, for the frames where the camera is not yet straight above */
+const HiltLite: React.FC<{c: Cam; t: number}> = ({c, t}) => { const q = (a: number, w: number, h: number) => swP(t, a, w, h);
+	return <g><path d={poly(c, [q(0, -1.86, 0.8), q(0, 1.86, 0.8), q(SW.pomA, 1.86, 0.8), q(SW.pomA, -1.86, 0.8)])} fill={BZ.body} stroke={BZ.line} strokeWidth={1} />
+		<path d={poly(c, [q(SW.pomA, -0.86, 0.5), q(SW.pomA, 0.86, 0.5), q(SW.gripA, 0.86, 0.5), q(SW.gripA, -0.86, 0.5)])} fill={BZ.mid} />
+		<path d={poly(c, [q(SW.gripA, -2.78, 0.6), q(SW.gripA, 2.78, 0.6), q(SW.guardA, 2.6, 0.6), q(SW.guardA, -2.6, 0.6)])} fill={GLS.body} stroke={BZ.lit} strokeWidth={1.2} /></g>; };
+/** the occupant: a faint outline only (head left), on the inner floor */
+const Occupant: React.FC<{c: Cam}> = ({c}) => { const z = 0.05, L = (pts: [number, number][]) => poly(c, pts.map(([x, y]) => [x, y, z] as V3), false);
+	const ell = (cx: number, cy: number, a: number, b: number) => poly(c, Array.from({length: 24}, (_, i) => [cx + a * Math.cos(i / 24 * 6.2832), cy + b * Math.sin(i / 24 * 6.2832), z] as V3));
+	const st = {fill: 'none', stroke: '#EADFC8', strokeOpacity: 0.2, strokeWidth: 2, strokeDasharray: '10 7', strokeLinecap: 'round' as const};
+	return <g><path d={ell(0.72, -0.04, 0.09, 0.075)} {...st} /><path d={L([[0.62, -0.04], [-0.15, -0.04]])} {...st} /><path d={ell(0.4, -0.04, 0.16, 0.17)} {...st} /><path d={ell(0.04, -0.04, 0.1, 0.16)} {...st} />
+		<path d={L([[0.55, -0.2], [0.2, -0.24], [-0.05, -0.2]])} {...st} /><path d={L([[0.5, 0.12], [0.2, 0.15], [-0.05, 0.1]])} {...st} /><path d={L([[-0.1, -0.1], [-0.8, -0.12]])} {...st} /><path d={L([[-0.1, 0.0], [-0.8, 0.02]])} {...st} /></g>; };
+const clampP = (p: [number, number, number]): [number, number, number] => [cl(p[0], 260, 1660), cl(p[1], 300, 860), p[2]];
+const TagC: React.FC<{p: [number, number, number]; n: string; o: number}> = ({p, n, o}) => o <= 0.01 ? null : <g opacity={o}><circle cx={p[0]} cy={p[1]} r={34} fill="#120A06" opacity={0.6} /><circle cx={p[0]} cy={p[1]} r={30} fill="none" stroke={B.goldL} strokeWidth={3} />
+	<text x={p[0]} y={p[1] + 18} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={50} fill={B.goldL}>{n}</text></g>;
+const Planks: React.FC<{c: Cam; tc: ShaftTC; t: number}> = ({c, tc, t}) => { const z0 = WH, lift0 = seg(t, T_ROOF, T_ROOF + 0.5), ps = Array.from({length: 8}, (_, i) => { const ti = T_ROOF + 0.05 * i, h = t > ti ? 6 * (t - ti) * (t - ti) : 0;
+	const x0 = -1.6 + 0.4 * i, x1 = x0 + 0.4, hn = h * 1.25, hf = h * 0.8, rot = h > 0 ? 0.03 * Math.sin(i * 2.3 + t * 3) * Math.min(1, h) : 0;
+	return {i, h, d: poly(c, [[x0, -1.0, z0 + hn], [x1 + rot, -1.0, z0 + hn], [x1 + rot, 1.3, z0 + hf], [x0, 1.3, z0 + hf]]), side: poly(c, [[x0, -1.0, z0 + hn], [x1, -1.0, z0 + hn], [x1, -1.0, z0 + hn - 0.1], [x0, -1.0, z0 + hn - 0.1]])}; });
+	const F = -8.8, fc = pj(tc, [0, 0.15, F]), dd = Math.max(2, dOf(tc, [0, 0.15, F])), rect = poly(c, [[-1.6, -1.0, z0], [1.6, -1.0, z0], [1.6, 1.3, z0], [-1.6, 1.3, z0]]), rect2 = poly(c, [[-1.62, -1.02, z0], [1.62, -1.02, z0], [1.62, 1.32, z0], [-1.62, 1.32, z0]]);
+	return <g>{ps.map((p) => <g key={p.i}><path d={p.d} fill="#2A1A10" stroke="#140C06" strokeOpacity={0.6} strokeWidth={1.5} />{p.h > 0 && <path d={p.side} fill="#4A3220" />}</g>)}
+		<g opacity={1 - lift0}><path d={rect} fill="#B8B4A6" opacity={0.12} /><path d={rect} fill="none" stroke="#8A6A44" strokeOpacity={0.6} strokeWidth={1.5} />
+			{fc && <ellipse cx={fc[0]} cy={fc[1]} rx={130 * 8.8 / dd} ry={80 * 8.8 / dd} fill="url(#tbGlow)" />}<path d={rect2} fill="none" stroke="#FFB868" strokeOpacity={0.55} strokeWidth={2} /></g></g>; };
+
+const defs = <defs>
+	<radialGradient id="tbGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFB060" stopOpacity="0.55" /><stop offset="0.5" stopColor="#FF9A48" stopOpacity="0.2" /><stop offset="1" stopColor="#FF9040" stopOpacity="0" /></radialGradient>
+	<radialGradient id="tbLampG" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFC878" stopOpacity="0.8" /><stop offset="0.4" stopColor="#FFA850" stopOpacity="0.25" /><stop offset="1" stopColor="#FF9040" stopOpacity="0" /></radialGradient>
+	<filter id="tbN" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4 9" /></filter>
+	<filter id="tbM" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.4 2.2" /></filter>
+	<filter id="tbS" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.2" /></filter>
+	<linearGradient id="cwk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#E8F4FF" stopOpacity="0" /><stop offset="0.5" stopColor="#FFFFFF" stopOpacity="0.9" /><stop offset="1" stopColor="#D8ECFF" stopOpacity="0" /></linearGradient>
+</defs>;
+
+export const Chamber53: React.FC<{t: number}> = ({t}) => {
+	const tc = camC(t), c = toCam(tc), cl2: Cam = c, roofOn = t < T_ROOF, top = t >= T_TOP, planar = tc.p > 89.9 * Math.PI / 180;
+	const {u1, u2} = lidAt(t), dl = drawn(t), wash = seg(t, 41.45, 43.0), hold = frameOf(t) >= frameOf(T_DRAW);
+	const far = box(-RX - 0.12, RX + 0.12, RY, RY + 0.12, 0, WH), left = box(-RX - 0.12, -RX, -RY - 0.12, RY + 0.12, 0, WH), right = box(RX, RX + 0.12, -RY - 0.12, RY + 0.12, 0, WH), near = box(-RX - 0.12, RX + 0.12, -RY - 0.12, -RY, 0, 0.42);
+	const planks = (y: number, n: number) => Array.from({length: n - 1}, (_, i) => { const z = lerp(0, WH, (i + 1) / n); return <path key={`${y}${i}`} d={poly(c, [[-RX, y, z], [RX, y, z]], false)} stroke="#120A06" strokeOpacity={0.55} strokeWidth={1.5} fill="none" />; });
+	const d0 = proj(c, [0, 0, 0.9]), dist = Math.max(0.6, d0[2]), pr = (r: number) => c.f * r / dist;
+	const lidDone = (u: number) => u > 0.85;
+	const grip1 = (e: ReturnType<typeof lidEdges>, hx: number): V3 => [hx, e.Ny, e.Nh + 0.04];
+	const e1 = lidEdges(u1, OUT.z, OUT.y, LEAN1), e2 = lidEdges(u2, INN.z, INN.y, LEAN2);
+	const act = lerp(0, 1, sstep(seg(t, 37.5, 37.8)));
+	const gx = (side: number): V3 => { const a = grip1(e1, 1.06 * side), b = grip1(e2, 0.9 * side); return [lerp(a[0], b[0], act), lerp(a[1], b[1], act), lerp(a[2], b[2], act)]; };
+	const dOp = (1 - seg(t, 38.2, 38.75)) * seg(t, T_ROOF + 0.4, T_ROOF + 0.8);
+	const digY = (side: number) => cl(gx(side)[1] - 0.12, -0.3, 0.62);
+	const lampP = proj(c, [0.25, -0.15, 2.35]);
+	const sw = swordAt(t), ringO = 0.62 * sstep(seg(t, 34.4, 36.0));
+	return <svg width={W} height={H} style={{position: 'absolute'}}>
+		{defs}
+		<clipPath id="cInner"><path d={poly(c, [[-INN.x + INN.t, -INN.y + INN.t, INN.z], [INN.x - INN.t, -INN.y + INN.t, INN.z], [INN.x - INN.t, INN.y - INN.t, INN.z], [-INN.x + INN.t, INN.y - INN.t, INN.z]])} /></clipPath>
+		<clipPath id="cOpen"><path d={poly(c, [[-RX, -1.0, WH], [RX, -1.0, WH], [RX, 1.3, WH], [-RX, 1.3, WH]])} /></clipPath>
+		<Shaft c={tc} dW={1} t={t} roof={roofOn} />
+		{roofOn && <PitLamps c={tc} t={t} o={1} />}
+		{ringO > 0.01 && <g>
+			<path d={poly(c, [[-1.9, -1.5, WH], [1.9, -1.5, WH], [1.9, 1.5, WH], [-1.9, 1.5, WH]]) + poly(c, [[-RX, -1.0, WH], [RX, -1.0, WH], [RX, 1.3, WH], [-RX, 1.3, WH]])} fill="#140A06" fillRule="evenodd" opacity={ringO} />
+			{Array.from({length: 46}, (_, i) => { const side = rnd(i, 5), x = side < 0.5 ? lerp(-1.85, 1.85, rnd(i, 6)) : (rnd(i, 7) < 0.5 ? lerp(-1.85, -1.65, rnd(i, 6)) : lerp(1.65, 1.85, rnd(i, 6))), y = side < 0.5 ? (rnd(i, 8) < 0.5 ? lerp(-1.47, -1.05, rnd(i, 9)) : lerp(1.33, 1.47, rnd(i, 9))) : lerp(-1.4, 1.4, rnd(i, 9)), d = blobOn(c, x, y, 0.05 + 0.1 * rnd(i, 10), i + 77, WH, 8, 0.7);
+				return d ? <path key={i} d={d} fill={i % 3 ? '#6E6A5C' : '#3A2E22'} opacity={ringO * 0.55} /> : null; })}
+		</g>}
+		{/* the opened chamber: seen through the roof opening while the camera is above the roof plane */}
+		{!roofOn && <g clipPath={c.p[2] > WH + 0.01 ? 'url(#cOpen)' : undefined}>
+			<path d={poly(c, [[-RX, -RY, 0], [RX, -RY, 0], [RX, RY, 0], [-RX, RY, 0]])} fill="#2E2218" />
+			<path d={poly(c, far.front)} fill="#4A3426" />{planks(RY - 0.001, 6)}
+			<path d={poly(c, left.right)} fill="#3A281C" /><path d={poly(c, right.left)} fill="#32221A" />
+			<Pool id="c1" x={d0[0]} y={d0[1]} rx={pr(2.1)} ry={pr(1.2)} a={roofOn ? 0.2 : 0.42} col="#FFB060" />
+			{!lidDone(u1) && null}
+			{lidDone(u1) && <Lid c={c} u={u1} rest={OUT.z} hx={1.06} hy={OUT.y} L={LEAN1} id="lid1" />}
+			{lidDone(u2) && <Lid c={c} u={u2} rest={INN.z} hx={0.9} hy={INN.y} L={LEAN2} id="lid2" />}
+			<OpenCoffin c={c} x={OUT.x} y={OUT.y} z={OUT.z} t={OUT.t} id="outer" inner="#1E0C08" />
+			<OpenCoffin c={c} x={INN.x} y={INN.y} z={INN.z} t={INN.t} id="inner" inner="#46201A" />
+			<g clipPath="url(#cInner)">
+				<Occupant c={c} />
+				{!top && <><Sheath c={c} t={t} dl={0} wash={0} /><HiltLite c={c} t={t} /></>}
+			</g>
+			{top && <PlanSword t={t} dl={dl} wash={wash} c={c} hold={hold} />}
+			{!lidDone(u2) && <Lid c={c} u={u2} rest={INN.z} hx={0.9} hy={INN.y} L={LEAN2} id="lid2" />}
+			{!lidDone(u1) && <Lid c={c} u={u1} rest={OUT.z} hx={1.06} hy={OUT.y} L={LEAN1} id="lid1" />}
+			<g opacity={dOp}>{t > T_ROOF + 0.3 && [-1, 1].map((s) => <Digger key={s} c={c} xw={s * 1.42} yw={digY(s)} dir={(s > 0 ? -1 : 1) as 1 | -1} grip={gx(s)} id={`dig${s}`} />)}</g>
+			<path d={poly(c, near.top)} fill="#4A3424" /><path d={poly(c, near.front)} fill="#2A1C14" />
+			<path d={poly(c, left.top)} fill="#4A3424" /><path d={poly(c, right.top)} fill="#4A3424" /><path d={poly(c, far.top)} fill="#4A3424" />
+		</g>}
+		{!roofOn && <Planks c={c} tc={tc} t={t} />}
+		{!roofOn && t < T_ROOF + 1.0 && <PitLamps c={tc} t={t} o={1} lift={[Math.max(0, 6 * (t - T_ROOF) ** 2), Math.max(0, 6 * (t - T_ROOF - 0.35) ** 2)]} />}
+		{lampP[2] > 0.4 && lampP[1] > -200 && t > T_ROOF && t < 38.9 && <g><Pool id="cl" x={lampP[0]} y={lampP[1]} rx={150} ry={130} a={0.5 * seg(t, T_ROOF, T_ROOF + 0.6)} col="#FFD490" /><ellipse cx={lampP[0]} cy={lampP[1]} rx={15} ry={22} fill="#FFE8B8" opacity={0.95 * seg(t, T_ROOF, T_ROOF + 0.6)} /></g>}
+		<TagC p={clampP(proj(c, [-0.35, e1.Fy, e1.Fh + 0.2]))} n="1" o={seg(t, T_LID1, T_LID1 + 0.01) * (1 - seg(t, 38.6, 38.9))} />
+		<TagC p={clampP(proj(c, [0.35, e2.Fy, e2.Fh + 0.2]))} n="2" o={seg(t, T_LID2, T_LID2 + 0.01) * (1 - seg(t, 38.9, 39.2))} />
+		{roofOn && <Snow c={tc} t={t} g={1} />}
+		<Vignette id="cC" a={0.6} />
+		{cl2 && sw && null}
+	</svg>; };
+
+/* ---------- plan regime (camera straight above): the sword in 2-D on its plane, the sheath, the hands, the water ---------- */
+const PlanSword: React.FC<{t: number; dl: number; wash: number; c: Cam; hold: boolean}> = ({t, dl, wash, c, hold}) => { const k = planK(t), [px, py] = planPos(t, 0, 0), s = k / 27;
+	const mouth = SW.guardA + dl, gl = planPos(t, mouth + 4, 0), gr = planPos(t, 4.6, 0);
+	const enter = sstep(seg(t, 40.7, 41.3)), slide = (1 - enter) * 520;
+	const flash = seg(t, T_DRAW, T_DRAW + 0.9);
+	const hw = sheathHW(mouth + 4, dl) * k;
+	const [hx, hy] = planPos(t, 28, 0), hp = seg(t, 38.2, 39.3) * (1 - seg(t, 44.0, 46.0));
+	return <g>
+		{hp > 0.01 && <Pool id="hero" x={hx} y={hy} rx={Math.min(1500, 62 * k)} ry={Math.min(700, 26 * k)} a={0.42 * hp} col="#FFB868" />}
+		<BladeClip t={t} />
+		<Sword x={px} y={py} k={k} rot={-90} id="sw" spec={0.5} marks={false} />
+		<Marks t={t} />
+		{hold && flash < 1 && <g><rect x={planPos(t, SW.L, 0)[0] - 0 } y={py - 4 * k} width={1} height={1} fill="none" />
+			<rect x={lerp(planPos(t, mouth, 0)[0], planPos(t, SW.L, 0)[0], flash) - 90} y={py - 2.2 * k} width={180} height={4.4 * k} fill="url(#cwk)" opacity={0.8 * (1 - flash)} /></g>}
+		<Sheath c={c} t={t} dl={dl} wash={wash} />
+		<Water t={t} dl={dl} />
+		{enter > 0.01 && <g>
+			<Glove x={gl[0]} y={gl[1] + slide} w={150 * s} bar={hw} sleeveTo={[gl[0] - 420 * s, H + 60]} id="gl" />
+			<Glove x={gr[0]} y={gr[1] + slide} w={138 * s} bar={0.95 * k} sleeveTo={[gr[0] + 180 * s, H + 60]} id="gr" />
+		</g>}
+		<Letters t={t} />
+		<Reading t={t} />
+	</g>; };
+void mix; void lerp;
