@@ -1,0 +1,215 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_water_drip", "type": "sfx", "text": "one single water drop falling onto the steel edge of a kitchen knife on a counter, close, quiet, no reverb, no second drop", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_water_drip.mp3", "bytes": 13835}
+{"name": "sfx_bronze_shimmer", "type": "sfx", "text": "a soft short metallic shimmer of a polished bronze blade catching light, gentle airy ring, no music, no melody", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_bronze_shimmer.mp3", "bytes": 20105}
+{"name": "sfx_glass_shimmer", "type": "sfx", "text": "a soft glassy shimmer swell like light sliding across a museum display case, airy, short, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_glass_shimmer.mp3", "bytes": 24702}
+{"name": "sfx_hall_murmur", "type": "sfx", "text": "quiet empty museum hall at night, very faint distant footsteps and air conditioning, low, calm", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_hall_murmur.mp3", "bytes": 65244}
+{"name": "sfx_sheen_chime", "type": "sfx", "text": "one single soft high metallic chime, short, clean, no repeats", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_sheen_chime.mp3", "bytes": 17179}
+{"name": "sfx_wind_snow", "type": "sfx", "text": "cold winter wind over an open muddy field with light snow, gentle, steady", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_wind_snow.mp3", "bytes": 81127}
+{"name": "sfx_spade_soil", "type": "sfx", "text": "one single shovel stroke digging into wet heavy clay soil, close, one stroke only", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_spade_soil.mp3", "bytes": 17179}
+{"name": "sfx_earth_rumble", "type": "sfx", "text": "deep low earth rumble, short, subtle, like soil shifting far below", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_earth_rumble.mp3", "bytes": 48944}
+{"name": "sfx_wood_lid_lift", "type": "sfx", "text": "a heavy old wooden coffin lid lifted slowly by two people, deep wood creak and a short scrape, one movement", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_wood_lid_lift.mp3", "bytes": 33061}
+{"name": "sfx_water_rinse", "type": "sfx", "text": "washing a small wooden object in a shallow basin of water, a few gentle splashes and drips", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_water_rinse.mp3", "bytes": 33061}
+{"name": "sfx_sword_draw", "type": "sfx", "text": "a bronze sword slowly drawn out of a lacquered wooden sheath: soft scrape, then one clear long metallic ring", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_sword_draw.mp3", "bytes": 40585}
+{"name": "sfx_paper_flutter", "type": "sfx", "text": "a few old paper letters fluttering and being turned over, soft, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_paper_flutter.mp3", "bytes": 33061}
+{"name": "sfx_clapper", "type": "sfx", "text": "one single film clapperboard clap, close, dry, no second clap", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_clapper.mp3", "bytes": 10492}
+{"name": "sfx_paper_slice", "type": "sfx", "text": "a sharp blade slicing through a thick stack of paper in one quick stroke, crisp", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_paper_slice.mp3", "bytes": 13835}
+{"name": "sfx_tiny_crackle", "type": "sfx", "text": "a tiny dry crackle of old metal, very short and quiet", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_tiny_crackle.mp3", "bytes": 10492}
+{"name": "sfx_rewind_whirr", "type": "sfx", "text": "a short soft tape rewind whirr that rises in pitch, smooth", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_rewind_whirr.mp3", "bytes": 33061}
+{"name": "sfx_layer_thud", "type": "sfx", "text": "one single dull soft thud of a heavy wooden lid closing, muffled, short, no reverb tail", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_layer_thud.mp3", "bytes": 12163}
+{"name": "sfx_kitchen_hum", "type": "sfx", "text": "quiet kitchen at night, faint refrigerator hum, calm, steady", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_kitchen_hum.mp3", "bytes": 65244}
+{"name": "sfx_seal_stamp", "type": "sfx", "text": "one single red seal stamp pressed onto thick paper, one soft low thump, no second hit", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_seal_stamp.mp3", "bytes": 8820}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "sfx_water_drip",
+  "type": "sfx",
+  "text": "one single water drop falling onto the steel edge of a kitchen knife on a counter, close, quiet, no reverb, no second drop",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_water_drip.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "sfx_bronze_shimmer",
+  "type": "sfx",
+  "text": "a soft short metallic shimmer of a polished bronze blade catching light, gentle airy ring, no music, no melody",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_bronze_shimmer.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "sfx_glass_shimmer",
+  "type": "sfx",
+  "text": "a soft glassy shimmer swell like light sliding across a museum display case, airy, short, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_glass_shimmer.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "sfx_hall_murmur",
+  "type": "sfx",
+  "text": "quiet empty museum hall at night, very faint distant footsteps and air conditioning, low, calm",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_hall_murmur.mp3",
+  "bytes": 65244
+ },
+ {
+  "name": "sfx_sheen_chime",
+  "type": "sfx",
+  "text": "one single soft high metallic chime, short, clean, no repeats",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_sheen_chime.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "sfx_wind_snow",
+  "type": "sfx",
+  "text": "cold winter wind over an open muddy field with light snow, gentle, steady",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_wind_snow.mp3",
+  "bytes": 81127
+ },
+ {
+  "name": "sfx_spade_soil",
+  "type": "sfx",
+  "text": "one single shovel stroke digging into wet heavy clay soil, close, one stroke only",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_spade_soil.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "sfx_earth_rumble",
+  "type": "sfx",
+  "text": "deep low earth rumble, short, subtle, like soil shifting far below",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_earth_rumble.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "sfx_wood_lid_lift",
+  "type": "sfx",
+  "text": "a heavy old wooden coffin lid lifted slowly by two people, deep wood creak and a short scrape, one movement",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_wood_lid_lift.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_water_rinse",
+  "type": "sfx",
+  "text": "washing a small wooden object in a shallow basin of water, a few gentle splashes and drips",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_water_rinse.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_sword_draw",
+  "type": "sfx",
+  "text": "a bronze sword slowly drawn out of a lacquered wooden sheath: soft scrape, then one clear long metallic ring",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_sword_draw.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "sfx_paper_flutter",
+  "type": "sfx",
+  "text": "a few old paper letters fluttering and being turned over, soft, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_paper_flutter.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_clapper",
+  "type": "sfx",
+  "text": "one single film clapperboard clap, close, dry, no second clap",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_clapper.mp3",
+  "bytes": 10492
+ },
+ {
+  "name": "sfx_paper_slice",
+  "type": "sfx",
+  "text": "a sharp blade slicing through a thick stack of paper in one quick stroke, crisp",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_paper_slice.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "sfx_tiny_crackle",
+  "type": "sfx",
+  "text": "a tiny dry crackle of old metal, very short and quiet",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_tiny_crackle.mp3",
+  "bytes": 10492
+ },
+ {
+  "name": "sfx_rewind_whirr",
+  "type": "sfx",
+  "text": "a short soft tape rewind whirr that rises in pitch, smooth",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_rewind_whirr.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_layer_thud",
+  "type": "sfx",
+  "text": "one single dull soft thud of a heavy wooden lid closing, muffled, short, no reverb tail",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_layer_thud.mp3",
+  "bytes": 12163
+ },
+ {
+  "name": "sfx_kitchen_hum",
+  "type": "sfx",
+  "text": "quiet kitchen at night, faint refrigerator hum, calm, steady",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_kitchen_hum.mp3",
+  "bytes": 65244
+ },
+ {
+  "name": "sfx_seal_stamp",
+  "type": "sfx",
+  "text": "one single red seal stamp pressed onto thick paper, one soft low thump, no second hit",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_seal_stamp.mp3",
+  "bytes": 8820
+ }
+]
