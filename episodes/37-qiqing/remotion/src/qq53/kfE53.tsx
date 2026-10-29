@@ -96,31 +96,40 @@ export const KF07: React.FC = () => {
 	</Frame53>; };
 
 /* ===================== KF08 · I1 the inscription and the letters ===================== */
-const K8 = 76, GX = 236, AY = 640;   // px per cm; the guard's blade-side face at x ≈ GX; the axis at y = AY
-export const KF08: React.FC = () => { const px = GX - SW.guardA * K8;   // pommel end (off frame left)
-	const mark = (side: number, n: number) => { const lx = side * 0.92 * K8, ly = -(SW.bladeA + 2.2 + n * 1.5) * K8; return {x: px - ly, y: AY + lx}; };   // rotate(90): (x, y) → (−y, x)
-	const glow = [mark(1, 1), mark(1, 0)];   // 鸠 (n = 1), 浅 (n = 0): the lower row, nearest the guard
+/* The draw (KF07) leaves the camera over the guard with the pommel to the RIGHT, so the glide guard → tip runs right → left.
+   Reading (C1): held hilt-up, the right column reads 越王鸠浅 and the left 自作用剑, each from the guard toward the tip. With the
+   blade level, tip to the left and the front face up, that puts 越王鸠浅 in the LOWER row, 越 nearest the guard, so 鸠浅 are the
+   3rd and 4th marks from the guard (n = 2, 3), and each mark's head points at the guard. (v2 lit the two marks nearest the guard
+   and drew the heads toward the tip: both wrong.) The marks are abstract ornaments, never traced glyphs. */
+const K8 = 76, GXR = W - 236, AY = 640;   // px per cm; the guard's blade-side face at x = GXR; the axis at y = AY
+export const KF08: React.FC = () => { const pxR = GXR + SW.guardA * K8;   // pommel end (off frame right)
+	/** a point on the front face: a cm from the pommel end, w cm across (w < 0 = the 越王鸠浅 column) → screen */
+	const at = (a: number, w: number) => ({x: pxR - a * K8, y: AY - w * K8});
+	const mark = (side: number, n: number) => at(SW.bladeA + 2.2 + n * 1.5, side * 0.92);
+	const glow = [mark(-1, 2), mark(-1, 3)];   // 鸠 (n = 2), 浅 (n = 3) in the 越王鸠浅 row
 	const env = (x: number, y: number, r: number, i: number) => <g key={i} transform={`translate(${x},${y}) rotate(${r})`}>
 		<rect x={-46} y={-92} width={92} height={184} rx={4} fill="#E8DCC0" /><rect x={-22} y={-66} width={44} height={130} fill="none" stroke="#B8402A" strokeWidth={4} />
 		<path d={`M-8,-52 v104 M8,-44 v80`} stroke="#3A2A20" strokeWidth={5} strokeLinecap="round" strokeDasharray="12 8" /><rect x={-38} y={-84} width={20} height={24} fill="none" stroke="#B8402A" strokeWidth={2.5} /></g>;
-	const bladeClip = (() => { const n = 60, s1 = 30; const pts = Array.from({length: n + 1}, (_, i) => { const s = s1 * i / n; return [px + (SW.bladeA + s) * K8, AY - bladeHW(s) * K8]; });
+	const bladeClip = (() => { const n = 60, s1 = 34; const pts = Array.from({length: n + 1}, (_, i) => { const s = s1 * i / n, p = at(SW.bladeA + s, bladeHW(s)); return [p.x, p.y]; });
 		const pb = [...pts].reverse().map(([x, y]) => [x, 2 * AY - y]); return 'M' + [...pts, ...pb].map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join('L') + 'Z'; })();
+	const gx = (glow[0].x + glow[1].x) / 2, bx0 = glow[1].x - 52, bx1 = glow[0].x + 52;
 	return <Frame53 id="k8" sheen={0.2} vig={0.55} over={<><Sub53 id="I1" /><Stamp53 id="I1" /><SealHollow /></>}>
 		<defs><filter id="k8g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" /></filter><clipPath id="k8c"><path d={bladeClip} /></clipPath>
 			<filter id="k8r" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.2" /></filter></defs>
-		<Pool id="k8p" x={900} y={AY} rx={1100} ry={330} a={0.28} col="#FFC070" />
-		<Sword x={px} y={AY} k={K8} rot={90} id="k8s" spec={0.22} marks={false} lw={0.55} />
-		{[1, -1].flatMap((side) => [0, 1, 2, 3].map((n) => { const m = mark(side, n), lit = side === 1 && n <= 1; return <Glyph key={`${side}${n}`} x={m.x} y={m.y} s={1.42 * K8} seed={n + (side > 0 ? 4 : 0) + 3} rot={90} col={lit ? '#FFF2C8' : '#2A160A'} w={0.085 * K8} o={lit ? 1 : 0.88} />; }))}
-		{/* the 1966 letters, settled, mirrored in the blade's polish (vertical envelopes with the red address frame) */}
-		<g clipPath="url(#k8c)" opacity={0.42} filter="url(#k8r)">{[[1180, 600, -14], [1290, 640, -4], [1400, 610, 8], [1510, 650, 16], [1610, 620, 24]].map(([x, y, r], i) => env(x, y, r, i))}</g>
-		{/* the two marks nearest the guard on the lower row glow: 鸠浅 */}
+		<Pool id="k8p" x={1020} y={AY} rx={1100} ry={330} a={0.28} col="#FFC070" />
+		<Sword x={pxR} y={AY} k={K8} rot={-90} id="k8s" spec={0.22} marks={false} lw={0.55} />
+		{[1, -1].flatMap((side) => [0, 1, 2, 3].map((n) => { const m = mark(side, n), lit = side === -1 && n >= 2; return <Glyph key={`${side}${n}`} x={m.x} y={m.y} s={1.42 * K8} seed={n + (side < 0 ? 4 : 0) + 3} rot={90} col={lit ? '#FFF2C8' : '#2A160A'} w={0.085 * K8} o={lit ? 1 : 0.88} />; }))}
+		{/* the 1966 letters, settled, mirrored in the blade's polish toward the tip (vertical envelopes with the red address frame) */}
+		<g clipPath="url(#k8c)" opacity={0.42} filter="url(#k8r)">{[[330, 640, -16], [450, 610, -6], [560, 650, 6], [670, 615, 14], [780, 645, 22]].map(([x, y, r], i) => env(x, y, r, i))}</g>
+		{/* the two marks of 鸠浅 glow */}
 		<g filter="url(#k8g)">{glow.map((m, i) => <ellipse key={i} cx={m.x} cy={m.y} rx={66} ry={52} fill="#FFC860" opacity={0.6} />)}</g>
-		{/* a gold bracket under the pair, and the reading in plain type */}
-		<path d={`M${glow[1].x - 52},${AY + 205} V${AY + 222} H${glow[0].x + 52} V${AY + 205}`} fill="none" stroke={B.goldL} strokeWidth={3} />
-		<path d={`M${(glow[0].x + glow[1].x) / 2},${AY + 222} V${AY + 250}`} stroke={B.goldL} strokeWidth={3} />
-		<Scrim id="k8t" x={(glow[0].x + glow[1].x) / 2 + 230} y={AY + 318} rx={520} ry={120} a={0.6} />
-		<text x={(glow[0].x + glow[1].x) / 2 - 104} y={AY + 352} fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL} stroke={B.lac} strokeWidth={10} strokeOpacity={0.85} style={{paintOrder: 'stroke'}}>鸠浅<tspan fill={B.cream} dx={22}>＝</tspan><tspan dx={22} fill="#FFF6E6">勾践</tspan></text>
-		<Tag id="k8n" x={1660} y={430} s="40多封信" fs={72} anchor="end" col={B.cream} />
+		{/* a gold bracket under the pair, and the reading in plain type below it */}
+		<path d={`M${bx0},${AY + 205} V${AY + 222} H${bx1} V${AY + 205}`} fill="none" stroke={B.goldL} strokeWidth={3} />
+		<path d={`M${gx},${AY + 222} V${AY + 250}`} stroke={B.goldL} strokeWidth={3} />
+		<Scrim id="k8t" x={gx} y={AY + 318} rx={520} ry={120} a={0.6} />
+		<text x={gx} y={AY + 352} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL} stroke={B.lac} strokeWidth={10} strokeOpacity={0.85} style={{paintOrder: 'stroke'}}>鸠浅<tspan fill={B.cream} dx={22}>＝</tspan><tspan dx={22} fill="#FFF6E6">勾践</tspan></text>
+		{/* the letter count sits under the letters it counts */}
+		<Tag id="k8n" x={560} y={AY + 330} s="40多封信" fs={72} anchor="middle" col={B.cream} />
 	</Frame53>; };
 
 /* ===================== KF09 · B1 the paper test, 1977 ===================== */
@@ -129,7 +138,7 @@ export const KF08: React.FC = () => { const px = GX - SW.guardA * K8;   // pomme
    through (their halves pushed apart at the top), the bottom 9 are whole; the tip pokes out past the end of the stack.
    The hilt and the hand holding it are off frame left. World units: cm. */
 const SHT = 0.11, NS = 32, NC = 23, SX0 = 10.5, SX1 = -10.5, SY = 7;   // SX1 = the end face we see (the camera convention mirrors x)
-const CAM9 = lookAt([-26, -30, 12], [-2, 0, 2.4], 2300, 960, 600);
+const CAM9 = lookAt([-26, -30, 12], [-2, 0, 2.4], 2300, 960, 610, 0.055);   // a 3° roll keeps the far blade clear of the subtitle (v2 touched row 2)
 export const KF09: React.FC = () => { const c = CAM9, zE = (NS - NC) * SHT, zT = NS * SHT;
 	/* the blade on edge in the plane y = 0: local s from the blade base, w across; the tip at x = 16.5 */
 	const tipX = -14.5, baseX = tipX + LBc, zA = (w: number) => zE + 2.0 + w;
@@ -146,10 +155,10 @@ export const KF09: React.FC = () => { const c = CAM9, zE = (NS - NC) * SHT, zT =
 		<defs><linearGradient id="k9beam" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF4DC" stopOpacity="0.24" /><stop offset="0.6" stopColor="#FFF0D0" stopOpacity="0.06" /><stop offset="1" stopColor="#FFF0D0" stopOpacity="0" /></linearGradient>
 			<clipPath id="k9c"><path d={poly(c, outline)} /></clipPath></defs>
 		{/* the film set: dark backdrop; the film light on its stand at the right throws a hard beam across the stack */}
-		<path d={`M1540,240 L1670,170 L1240,${H} L520,${H} Z`} fill="url(#k9beam)" />
-		<g transform="translate(1590,232) rotate(-26)"><rect x={-70} y={-60} width={150} height={120} rx={12} fill="#2A2420" stroke="#5A5048" strokeWidth={3} /><circle cx={-70} cy={0} r={48} fill="#FFF6E2" /><circle cx={-70} cy={0} r={34} fill="#FFFFFF" />
+		<path d={`M1530,290 L1660,220 L1240,${H} L520,${H} Z`} fill="url(#k9beam)" />
+		<g transform="translate(1580,282) rotate(-26)"><rect x={-70} y={-60} width={150} height={120} rx={12} fill="#2A2420" stroke="#5A5048" strokeWidth={3} /><circle cx={-70} cy={0} r={48} fill="#FFF6E2" /><circle cx={-70} cy={0} r={34} fill="#FFFFFF" />
 			<path d="M-70,-60 L-128,-92 M-70,60 L-128,92" stroke="#3A3430" strokeWidth={10} strokeLinecap="round" /></g>
-		<path d="M1640,290 L1660,1100" stroke="#2A2420" strokeWidth={10} />
+		<path d="M1630,340 L1650,1100" stroke="#2A2420" strokeWidth={10} />
 		{/* table top */}
 		<path d={poly(c, [[-40, -30, -0.05], [30, -30, -0.05], [30, 30, -0.05], [-40, 30, -0.05]])} fill="#33251B" />
 		<path d={poly(c, [[-40, -30, -0.05], [30, -30, -0.05]], false)} stroke={B.gold} strokeOpacity={0.3} strokeWidth={2} fill="none" />

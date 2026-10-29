@@ -23,8 +23,8 @@ const OpenCoffin: React.FC<{c: Cam; x: number; y: number; z: number; t: number; 
 	const xo = x, yo = y, b = box(-xo, xo, -yo, yo, 0, z), bi = box(-xo + t, xo - t, -yo + t, yo - t, 0.04, z);
 	return <g>
 		<path d={poly(c, b.back)} fill={LAC} />
-		<path d={poly(c, bi.back)} fill={inner} /><path d={poly(c, bi.left)} fill={mix(inner, '#000', 0.3)} /><path d={poly(c, bi.right)} fill={mix(inner, '#000', 0.2)} />
-		<path d={poly(c, [[-xo + t, -yo + t, 0.04], [xo - t, -yo + t, 0.04], [xo - t, yo - t, 0.04], [-xo + t, yo - t, 0.04]])} fill={mix(inner, '#000', 0.45)} />
+		<path d={poly(c, bi.back)} fill={inner} /><path d={poly(c, bi.left)} fill={mix(inner, '#000000', 0.3)} /><path d={poly(c, bi.right)} fill={mix(inner, '#000000', 0.2)} />
+		<path d={poly(c, [[-xo + t, -yo + t, 0.04], [xo - t, -yo + t, 0.04], [xo - t, yo - t, 0.04], [-xo + t, yo - t, 0.04]])} fill={mix(inner, '#000000', 0.45)} />
 		<path d={poly(c, b.left)} fill={mix(LAC, LAC_HI, 0.3)} /><path d={poly(c, b.right)} fill={LAC} />
 		<path d={poly(c, b.front)} fill={mix(LAC, LAC_HI, 0.15)} />
 		{/* the painted border on the lacquer (a thin red line), and the rim catching the lamp */}

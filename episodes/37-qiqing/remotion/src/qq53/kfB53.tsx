@@ -12,8 +12,8 @@ import {Glint} from './kfA53';
    blue glass up, pommel to the right (screen) in the front view; the plinth top at z = 940. */
 
 /* ---------- the case: plinth, holders, the ringed mirror at the pommel end, the spot from above ---------- */
-const SP_CASE: SwordPose = {x0: -278, ya: 0, z0: 1000, dir: 1};
-const CaseSet: React.FC<{c: Cam; id: string}> = ({c, id}) => { const top: V3[] = [[-430, -210, 940], [430, -210, 940], [430, 210, 940], [-430, 210, 940]];
+export const SP_CASE: SwordPose = {x0: -278, ya: 0, z0: 1000, dir: 1};
+export const CaseSet: React.FC<{c: Cam; id: string}> = ({c, id}) => { const top: V3[] = [[-430, -210, 940], [430, -210, 940], [430, 210, 940], [-430, 210, 940]];
 	const front: V3[] = [[-430, -210, 940], [430, -210, 940], [430, -210, 0], [-430, -210, 0]];
 	const sp = proj(c, [0, 0, 1000]), pl = proj(c, [0, 0, 940]);
 	const holder = (x: number) => { const a = proj(c, [x, -6, 940]), b = proj(c, [x, -6, 1000 - 9]), w = c.f * 7 / a[2];
@@ -42,7 +42,7 @@ const CaseSet: React.FC<{c: Cam; id: string}> = ({c, id}) => { const top: V3[] =
 	</g>; };
 
 /* ---------- KF03 · the title on the case's front glass ---------- */
-const CAM_T = lookAt([0, -1300, 1800], [0, 0, 960], 2100, 960, 790);
+export const CAM_T = lookAt([0, -1300, 1800], [0, 0, 960], 2100, 960, 790);
 /** the plaque border: a single row of small diamonds, the blade's own lattice, etched into the glass */
 const LatticeRule: React.FC<{x0: number; x1: number; y: number; s?: number}> = ({x0, x1, y, s = 13}) => { const n = Math.floor((x1 - x0) / (s * 1.7));
 	return <g>{Array.from({length: n}, (_, i) => { const cx = x0 + (i + 0.5) * (x1 - x0) / n; return <path key={i} d={`M${cx - s * 0.8},${y} L${cx},${y - s * 0.46} L${cx + s * 0.8},${y} L${cx},${y + s * 0.46} Z`} fill={i % 2 ? 'none' : '#F4F0E8'} fillOpacity={0.35} stroke="#F4F0E8" strokeOpacity={0.55} strokeWidth={1.4} />; })}</g>; };

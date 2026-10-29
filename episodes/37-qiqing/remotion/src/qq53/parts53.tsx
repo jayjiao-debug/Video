@@ -32,16 +32,19 @@ export const Sub53: React.FC<{id: string; rows?: number; n2?: number}> = ({id, r
 	const k = rows ?? rr.length;
 	return <Subs rows={rr.slice(0, k).map((s, i) => ({s, n: i === k - 1 && n2 !== undefined ? n2 : 1e9}))} th={thB} />; };
 
-/* ---------- stamp ---------- */
+/* ---------- stamp ----------
+   Sized to read like ep51's stamps (KF51A: era 38 px 文楷, place 36, note 30). ep53's line 1 is mostly a numeric year, and
+   Cormorant's default old-style figures sat ~40 % lower than the 文楷 words beside them (the v2 key frames' "small stamp"),
+   so numeric years use lining figures at 52 px (cap height ≈ the 文楷 ink at 38 px); the note is 30 px. */
 export const Stamp53: React.FC<{id?: string; y?: string; place?: string; note?: string}> = (p) => { const st = p.id ? lineById(p.id).st : null;
 	const y = p.y ?? st?.y ?? '', place = p.place ?? st?.place, note = cq(p.note ?? st?.note ?? '');
 	useStampFonts(`${y}${place ?? ''}${note}·−>→《》“”`);
 	const num = /^[0-9.–→ ]+$/.test(y);
 	return <div style={{position: 'absolute', top: SAFE_Y + 6, right: SAFE_X + 40, textAlign: 'right', paddingRight: 14, borderRight: `3px solid ${thB.rule}`, color: thB.ink, textShadow: thB.halo, whiteSpace: 'nowrap'}}>
 		<div style={{lineHeight: 1.15, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: 10}}>
-			<span style={{fontFamily: num ? YEAR : KAI, fontWeight: num ? 600 : 700, fontSize: num ? 48 : 38}}>{y}</span>
+			<span style={{fontFamily: num ? YEAR : KAI, fontWeight: num ? 600 : 700, fontSize: num ? 52 : 38, fontVariantNumeric: num ? 'lining-nums' : undefined}}>{y}</span>
 			{place && <><span style={{fontFamily: YEAR, fontWeight: 600, fontSize: 32, color: thB.rule}}>·</span><span style={{fontFamily: KAI, fontWeight: 700, fontSize: 36, letterSpacing: '0.05em'}}>{place}</span></>}</div>
-		<div style={{fontFamily: KAI, fontWeight: 700, fontSize: 28, lineHeight: 1.45, marginTop: 2, letterSpacing: '0.04em', opacity: 0.88}}>{note}</div>
+		<div style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, lineHeight: 1.45, marginTop: 2, letterSpacing: '0.04em', opacity: 0.9}}>{note}</div>
 	</div>; };
 
 /* ---------- picture tags ---------- */

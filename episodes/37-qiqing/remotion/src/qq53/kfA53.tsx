@@ -22,7 +22,7 @@ const RUST: [number, number, number, number][] = (() => { const out: [number, nu
 		out.push([x + d * Math.cos(a), y + d * Math.sin(a) * 0.9, (1.2 + 3.4 * rnd(c * 40 + i, 63)) * (1 - 0.45 * d / r), rnd(c * 40 + i, 64)]); } });
 	return out; })();
 const RUST_COL = ['#8A4620', '#A6582A', '#6A3518', '#B86A32', '#7A3E1C'];
-const Cleaver: React.FC<{c: Cam; rho: number}> = ({c, rho}) => {
+export const Cleaver: React.FC<{c: Cam; rho: number}> = ({c, rho}) => {
 	const top = poly(c, knifeTop()), p0 = proj(c, [0, -96, 0]), p1 = proj(c, [KF * 0.7, 0, 0]);
 	const bevel = poly(c, [[2, -8, 0.05], [KF - 14, -8, 0.05], [KF - 6, -3, 0.05], [KF - 12, 0, 0.05], [2, 0, 0.05]]);
 	const spine = poly(c, [[4, KS, 0.05], [KF - 6, KS, 0.05], [KF - 4, KS + 3, 0.05], [2, KS + 3, 0.05]]);
@@ -76,7 +76,7 @@ const Handle: React.FC<{c: Cam}> = ({c}) => { const y0 = -88, y1 = -64, zc = 7, 
 	</g>; };
 
 /* ---------- the kitchen: a wire drying rack on a dark stone counter, the tiled splashback behind (soft) ---------- */
-const Kitchen: React.FC<{c: Cam}> = ({c}) => {
+export const Kitchen: React.FC<{c: Cam}> = ({c}) => {
 	const counter = poly(c, [[-600, -900, -14], [KF + 520, -900, -14], [KF + 520, 500, -14], [-600, 500, -14]]), g0 = proj(c, [KF + 300, -40, -14]), g1 = proj(c, [KF - 60, -40, -14]);
 	const wires = [-110, -55, 0, 55, 110, 165, 214];
 	return <g>
@@ -105,8 +105,8 @@ export const Glint: React.FC<{x: number; y: number; r: number; o?: number}> = ({
 	<circle cx={x} cy={y} r={r * 0.22} fill="#FFFFFF" /></g>;
 
 /* ---------- H1 · frame 0: your cleaver on the rack (near), the bronze edge glinting on the same line (far, soft) ---------- */
-const SW_HOOK: SwordPose = {x0: 228 + 556, ya: -19, z0: -2.2, dir: -1};
-const CAM0 = lookAt([-60, 150, 190], [250, -40, 0], 1000, 900, 560);
+export const SW_HOOK: SwordPose = {x0: 228 + 556, ya: -19, z0: -2.2, dir: -1};
+export const CAM0 = lookAt([-60, 150, 190], [250, -40, 0], 1000, 900, 560);
 export const KF01: React.FC = () => { const c = CAM0, tip = proj(c, [228, -19, 0]), mid = proj(c, [480, -19, 0]);
 	return <Frame53 id="k1" sheen={0.1} vig={0.6} over={<><Sub53 id="H1" rows={1} /><Stamp53 y="2026" place="你家厨房" note="一把普通的菜刀" /><SealHollow /></>}>
 		<defs><filter id="k1Far" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.6" /></filter>
