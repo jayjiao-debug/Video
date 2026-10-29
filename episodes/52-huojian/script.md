@@ -355,3 +355,30 @@ The film is now **the history of China's rockets**: the weapons ladder is gone, 
 | A1 | 「…还得用弓射出去」 → 「…再用弓或弩射出去」 | R1's source says 「弓弩通用之」. |
 | S2 | 「我国第一枚探空火箭升空」 → 「我国自己造的探空火箭首次升空」 | R15 (国防科工局) says 「自行设计制造的"T-7M"…首次发射成功」; it doesn't say 第一枚. |
 | O5 | 「它还[回来了]」 → 「而且，它[回来了]」 | 「它还回来了」 can be misread as 还(huán)回来了. |
+
+## v3.1 hook: the owner's idea (2026-10-29 08:09)
+The owner asked: 「…这已经是我国第XX次发射，故事要从宋朝说起，这样的？」 It's built into `lines_read.json` / `lines.json`. The v3 hook is saved in the scratchpad as `ep52_lines_read_v3.json`.
+
+**Two corrections to the owner's wording:**
+- The launch was **10月23日**. The 火箭云 news ran on the 24th.
+- 新华社's count is 「长征系列运载火箭的**第672次飞行**」, not 「我国第672次发射」. China's total launches also include non-長征 rockets.
+
+| Time | Line | Picture |
+|---|---|---|
+| 0.00–3.75 | 这团火箭云，是长征火箭\n第[672]次飞行。 | Frame 0: the glowing 火箭云 over the dark town (as before). |
+| 3.75–6.50 | 故事，要从[宋朝]说起。 | ◀◀ the rewind starts: the cloud pulls back into a single fire-arrow. |
+| 6.50–9.50 | 宋朝的火箭，你猜靠什么飞？ | The walker in Song clothes; the fire-arrow is in his hand. |
+| 9.50–12.50 | (title, silent) | |
+| 16.50–19.00 | 先猜？ beat, no subtitle: 火药？ · 弓？ | The question was already asked in the hook; this is the re-raise before the answer. |
+
+**Other changes:**
+- The old Q line 「可宋朝的火箭，靠什么飞？」 is removed; the hook asks it now.
+- The old 672 line (84.50) is removed; the hook says it now.
+- The film is now **110.5 s (1:50.5)**, end card 104.5–110.5.
+- `pace.py`: no lines too fast; 3 % waiting.
+
+**Why this hook works:** it has the 兽首 pattern (owner data, 2026-10-29: 2-second bounce 25 %).
+- A big number on frame 0 (672).
+- An unexpected turn (宋朝).
+- A 你猜 question that is answered by 19 s and turns into a surprise (「靠弓」).
+- The glow question 「天都黑了，它为什么还在发光？」 stays as a second loop near the end, at 86 s, and the Douyin 标题 carries it for search.
