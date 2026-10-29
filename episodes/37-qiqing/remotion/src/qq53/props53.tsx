@@ -33,7 +33,7 @@ const edgeW = (s: number) => 0.34 * cl(bladeHW(s) / 1.4, 0.25, 1);
 const f1 = (v: number) => v.toFixed(1);
 
 /** an abstract bird-script mark (NOT a character): a curled head, a body stroke, a tail hook, a dot. Local units ≈ 1 = mark height. */
-const birdMark = (cx: number, cy: number, s: number, seed: number) => { const r = (k: number) => rnd(seed * 17 + k, 9);
+export const birdMark = (cx: number, cy: number, s: number, seed: number) => { const r = (k: number) => rnd(seed * 17 + k, 9);
 	const h = s, w = s * 0.5, m = r(1) > 0.5 ? 1 : -1, X = (u: number) => f1(cx + m * u * w), Y = (v: number) => f1(cy + v * h);
 	/* a bird head with a beak at the top, a long S-spine, two swept wings, a curled foot: ornament, never a character */
 	const head = `M${X(-0.05)},${Y(-0.36)} q${f1(m * w * 0.3)},${f1(-h * 0.16)} ${f1(m * w * 0.42)},${f1(-h * 0.02)} l${f1(m * w * 0.22)},${f1(h * 0.02)}`;
@@ -43,7 +43,7 @@ const birdMark = (cx: number, cy: number, s: number, seed: number) => { const r 
 	return {d: `${head} ${spine} ${wing} ${foot}`, dot: [cx + m * w * 0.2, cy - h * 0.34] as [number, number]}; };
 
 /** THE sword, front face (blue-glass side), pommel end at (x, y), pointing up (rot = degrees clockwise). k = px per cm. */
-export const Sword: React.FC<{x: number; y: number; k: number; rot?: number; id: string; spec?: number}> = ({x, y, k, rot = 0, id, spec = 0.3}) => {
+export const Sword: React.FC<{x: number; y: number; k: number; rot?: number; id: string; spec?: number; marks?: boolean; lw?: number}> = ({x, y, k, rot = 0, id, spec = 0.3, marks: showMarks = true, lw = 1}) => {
 	const P = (a: number, w: number) => `${f1(w * k)},${f1(-a * k)}`;
 	const N = 90, A0 = SW.bladeA;
 	const ss = Array.from({length: N + 1}, (_, i) => LB * i / N);
@@ -97,7 +97,7 @@ export const Sword: React.FC<{x: number; y: number; k: number; rot?: number; id:
 		<path d={stripL} fill={BZ.hi} opacity={0.62} /><path d={stripR} fill={BZ.lit} opacity={0.42} />
 		<path d={flankR} fill="#140902" opacity={0.3} />
 		<path d={flankL} fill={`url(#sp${id})`} />
-		{marks.map((m, i) => <g key={i}><path d={m.d} fill="none" stroke={LAT} strokeWidth={0.075 * k} strokeLinecap="round" opacity={0.85} /><circle cx={m.dot[0]} cy={m.dot[1]} r={0.07 * k} fill={LAT} opacity={0.85} /></g>)}
+		{showMarks && marks.map((m, i) => <g key={i}><path d={m.d} fill="none" stroke={LAT} strokeWidth={0.075 * k} strokeLinecap="round" opacity={0.85} /><circle cx={m.dot[0]} cy={m.dot[1]} r={0.07 * k} fill={LAT} opacity={0.85} /></g>)}
 		{/* the raised ridge: a lit line on the left, a shadow line on the right */}
 		<path d={`M${P(A0 + 0.2, -0.05)}L${P(SW.L - 1.2, -0.03)}`} stroke={BZ.hi} strokeWidth={0.1 * k} strokeLinecap="round" />
 		<path d={`M${P(A0 + 0.2, 0.08)}L${P(SW.L - 1.2, 0.05)}`} stroke={BZ.deep} strokeWidth={0.07 * k} strokeOpacity={0.7} strokeLinecap="round" />
