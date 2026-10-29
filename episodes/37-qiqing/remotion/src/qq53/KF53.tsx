@@ -1,7 +1,8 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
 import {W, H, Subs, rnd, cl, lerp, KAI, SAFE_X, SAFE_Y} from '../qq50/kit50';
-import {B, thB, LacDefs, Lacquer, Vignette, Pool, SealB} from '../qq50/styleB';
+import {B, thB, LacDefs, Lacquer, Vignette, Pool} from '../qq50/styleB';
+import {SealHollow} from '../qq51/master51';
 import {useStampFonts, YEAR} from '../qq44/skin44';
 import {Sword, RingDisc, Knife, blob, BZ, LAT, SW} from './props53';
 /* ep53 越王勾践剑 · three style frames for the one-take film (B「漆」 night, the ep50/51 engine layer).
@@ -30,7 +31,7 @@ const mix = (a: string, b: string, t: number) => { const A = hx(a), Bc = hx(b); 
    plinth shows the pommel's ringed end (the museum shows the rings that way). The case's lit glass edge is the seam between the
    two worlds; the camera will push right, through that glass. */
 const SX = 1245, SY = 912, SK = 14.6;   // sword: pommel end, px per cm (55.6 cm → 812 px, tip at y ≈ 100)
-const Hook: React.FC = () => <Frame id="h" sheen={0.18} over={<><Fonts s="你的菜刀放久了就会生锈。湖北省博物馆越王勾践剑" /><Subs rows={[{s: '你的菜刀，放久了就会生锈。'}]} th={thB} /><StampK y="2026" place="湖北省博物馆" note="越王勾践剑" /><SealB /></>}>
+const Hook: React.FC = () => <Frame id="h" sheen={0.18} over={<><Fonts s="你的菜刀放久了就会生锈。湖北省博物馆越王勾践剑" /><Subs rows={[{s: '你的菜刀，放久了就会生锈。'}]} th={thB} /><StampK y="2026" place="湖北省博物馆" note="越王勾践剑" /><SealHollow /></>}>
 	<defs>
 		<linearGradient id="hCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFE2A8" stopOpacity="0.2" /><stop offset="0.6" stopColor="#FFD08A" stopOpacity="0.08" /><stop offset="1" stopColor="#FFC070" stopOpacity="0.02" /></linearGradient>
 		<linearGradient id="hGlass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#E8F0F2" stopOpacity="0.07" /><stop offset="0.5" stopColor="#E8F0F2" stopOpacity="0.02" /><stop offset="1" stopColor="#E8F0F2" stopOpacity="0.05" /></linearGradient>
@@ -152,7 +153,7 @@ const Descent: React.FC = () => {
 	const fc = pj([0, 0.4, F]);
 	const lab = LABELS.map(([z, s]) => { const [x, y] = pj([-SH.a, SH.b, z + wob(z, 0.25)]), d = dOf([-SH.a, SH.b, z]), last = s === '1965';
 		return {x: x + 14, y: y - 10, s, fs: last ? 50 : Math.max(40, Math.min(56, 400 / d)), last}; });
-	return <Frame id="d" sheen={0.1} over={<><Fonts s="往下10.8米，是一座楚墓。江陵望山地下" /><Subs rows={[{s: '往下10.8米，是一座楚墓。'}]} th={thB} /><StampK y="1965" place="江陵望山" note="地下10.8米" /><SealB /></>}>
+	return <Frame id="d" sheen={0.1} over={<><Fonts s="往下10.8米，是一座楚墓。江陵望山地下" /><Subs rows={[{s: '往下10.8米，是一座楚墓。'}]} th={thB} /><StampK y="1965" place="江陵望山" note="地下10.8米" /><SealHollow /></>}>
 		<defs>
 			<filter id="dN" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9 14" /></filter>
 			<filter id="dM" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.2 3.2" /></filter>
@@ -252,7 +253,7 @@ const Macro: React.FC = () => { const cells = cellsMacro();
 	const glints = cells.filter((c) => c.pale && c.rim > 0.6 && c.u > 45 && c.u < 120 && c.v > 0 && c.v < hwAt(c.u) - STRIP - LW).filter((_, i) => i % 3 === 0).slice(0, 6).map((c, i) => {
 		const p = proj(c.u - LA * 0.22, c.v + LW * 0.12, zAt(c.u - LA * 0.22, c.v + LW * 0.12)), r = 7 + 9 * rnd(i, 77);
 		return <path key={i} d={`M${p[0]},${p[1] - r} L${p[0] + r * 0.16},${p[1] - r * 0.16} L${p[0] + r},${p[1]} L${p[0] + r * 0.16},${p[1] + r * 0.16} L${p[0]},${p[1] + r} L${p[0] - r * 0.16},${p[1] + r * 0.16} L${p[0] - r},${p[1]} L${p[0] - r * 0.16},${p[1] - r * 0.16} Z`} fill="#FFFBEE" opacity={0.85} />; });
-	return <Frame id="m" sheen={0.08} over={<><Fonts s="这些菱形纹，是热镀上去的锡。湖北省博物馆热镀锡" /><Subs rows={[{s: '这些菱形纹，是热镀上去的锡。'}]} th={thB} /><StampK y="2025" place="湖北省博物馆" note="热镀锡" /><SealB /></>}>
+	return <Frame id="m" sheen={0.08} over={<><Fonts s="这些菱形纹，是热镀上去的锡。湖北省博物馆热镀锡" /><Subs rows={[{s: '这些菱形纹，是热镀上去的锡。'}]} th={thB} /><StampK y="2025" place="湖北省博物馆" note="热镀锡" /><SealHollow /></>}>
 		<defs>
 			<filter id="mNear" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="2 9" /></filter>
 			<filter id="mFar" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="1.3" /></filter>

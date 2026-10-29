@@ -28,3 +28,9 @@
 - Popular myths: 镀铬 / 「铬盐氧化」 as settled fact, 「划破二十层纸」, the 「1977年被撞出裂痕」 story. All need primary sources or must be labelled or cut.
 - No photos of the real sword on screen. Draw it from reference.
 - The 楚墓 / 越剑 explanation is contested, so give it as 一种说法.
+
+## Owner decisions (2026-10-29 17:46)
+- **Lines v2 OK** (lines_read.json, 103.75 s, 26 lines). On-screen title 「越王勾践剑 / 真的没锈吗？」; the Douyin 标题 may use the search form 「…为什么不生锈」.
+- **Look OK:** style B「漆」 dark, as the three style frames (KF53 hook / descent / macro).
+- **Hollow J seal** (`SealHollow` from qq51/master51), as ep51/52.
+- Producer note for the storyboard: the descent shows **depth** marks (−2 m … −10.8 m), not years on the soil (years only in the stamp); soil is not laid down by calendar year.
