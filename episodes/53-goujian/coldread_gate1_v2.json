@@ -1,0 +1,20 @@
+{
+  "would_stay_after_2s": "yes. Opening line 0.0: '你家菜刀，沾水不擦就会锈。' is about my own kitchen knife, so it hooks me instantly. Then the contrast '这把剑埋了两千多年，还是亮的' makes me ask why. The sword's owner is only named at 5.25, but by then I'm already curious.",
+  "swipe_moments": [
+    "10.5-14.75 (museum has its own exhibit hall): flat, tourist-info line. This is the first place I might drift, but the next line (14.75) is the 'is it chromium-plated' myth, which pulls me back.",
+    "22.25-33.25 (1965 Jiangling, 10.8m deep, rammed earth, white clay, never robbed): a lot of dig-site detail in a row. This is the biggest swipe risk. It only holds because of the promise at 19.25 ('先回到它出土那天') and the 'never robbed' line at 30.75 that adds a little tension.",
+    "47.75-52.0 (a dozen scholars, 40+ letters): slightly dry, but short and the number is fun, so I'd survive.",
+    "56.75-65.5 (tin 18-20%, lead near zero, hot-dip tin): the most 'lecture-like' stretch. I'd lose people who don't care about alloy ratios. The 65.5 question '那它，到底为什么不锈？' rescues it."
+  ],
+  "confusing_lines": [
+    "19.25-22.25 / 14.75: '镀了铬' - I know chrome-plating from faucets, but I'm not sure why it would stop rust. Fine, it's explained as a myth, but I only half get what chromium does.",
+    "56.75: '含锡约18–20%，铅几乎为零' - I don't know why high tin / no lead means better. The line says 'good material' but not why. I'd just nod.",
+    "61.0: '菱形花纹，热镀锡' - what's the diamond pattern and why does it matter? The line moves on fast and I'd lose a step.",
+    "43.25 gloss: '鸠浅' vs 勾践 - the gloss explains the name, then 47.75 says scholars needed 40 letters to prove they're the same person. I get it but it's a quick jump.",
+    "69.25 vs 0.0: the opening says '还是亮的', then 69.25 says 'it rusted too' and 88.0 says it got less shiny. It's a reveal, but for a second I wondered which one is true."
+  ],
+  "best_line": "94.5: '它不是不会锈，是那座墓，替它挡了两千多年。' Close second: 0.0 '你家菜刀，沾水不擦就会锈。' The ending line reframes the opening, and I'd quote it.",
+  "what_you_remember": "Goujian's sword isn't rustproof or chrome-plated; it did rust a little, and the sealed tomb is what kept it looking new for 2,000+ years.",
+  "would_you_comment_or_share": "Comment yes, share maybe. I'd comment something like '原来不是黑科技，是墓太会保护了' or '镀铬那个说法我也听过😅'. I'd send it to my history-nerd roommate or a friend who loves 'debunk the myth' content. The last question (103.75, where did you first see it) invites a comment: I'd say I saw it on a school trip or in a textbook.",
+  "anything_that_felt_misleading": "The opening 'still 亮的' plus the strong 'it's a myth' setup made me expect a mind-blowing ancient tech secret. The 'no secret, it's the tomb' answer is a mild letdown but honest. Also 0.0 says it's bright, and 88.0 says it's less bright now, so the hook slightly oversells it. Nothing feels like a lie. One small issue: 56.75 lists 'material' as one reason but never says what the other reasons are, so '原因之一' hangs a bit."
+}

@@ -86,98 +86,86 @@ const Hook: React.FC = () => <Frame id="h" sheen={0.18} over={<><Fonts s="你的
 </Frame>;
 
 /* =============================== 2 · DESCENT ===============================
-   Below the museum floor the camera sinks. Section through the ground in the 漆 language (dark-on-dark, thin gold line):
-   horizontal strata with thin year labels on their edges counting back (1990 → 1980 → 1970 → 1965), the stepped funnel of the
-   Chu pit filled with rammed 五花土 in thin courses, then 青灰泥, then the pale 白膏泥 seal over the timber chamber (head box +
-   the double coffin), a faint warm glow from the inner coffin. Motion: texture is smeared into vertical streaks, near clods and
-   roots at the frame edges pass much faster (heavy smear = parallax), the far back wall of the pit moves slower, dust streaks.
-   The 1965 label is sharp: the camera is slowing as it reaches the seal. No bones. */
-const STRATA: [number, number, string][] = [[-40, 330, '#2A1C14'], [330, 470, '#34261B'], [470, 600, '#2C2118'], [600, 742, '#37322A'], [742, 1120, '#2B2119']];
-const YEARS: [number, string, number][] = [[330, '1990', 0.5], [470, '1980', 0.7], [600, '1970', 0.88]];
-const wallL: [number, number][] = [[352, -40], [372, 120], [452, 120], [472, 300], [552, 300], [572, 470], [652, 470], [662, 1120]];
-const wallR = wallL.map(([x, y]) => [W - x, y] as [number, number]);
-const wallAt = (y: number, side: -1 | 1) => { const ws = side < 0 ? wallL : wallR; for (let i = 0; i < ws.length - 1; i++) { const [x0, y0] = ws[i], [x1, y1] = ws[i + 1]; if (y >= y0 && y <= y1 && y1 > y0) return lerp(x0, x1, (y - y0) / (y1 - y0)); } return ws[ws.length - 1][0]; };
-const pitD = `M${wallL.map(([x, y]) => `${x},${y}`).join('L')}L${[...wallR].reverse().map(([x, y]) => `${x},${y}`).join('L')}Z`;
-const CH = {x0: 722, x1: 1198, y0: 812, y1: 1010};   // the timber chamber (椁)
-/** a field of vertical streaks (texture smeared by the move): n streaks in a box, colours cycling */
-const Streaks: React.FC<{x0: number; x1: number; y0: number; y1: number; n: number; seed: number; cols: string[]; o?: number; len?: number}> = ({x0, x1, y0, y1, n, seed, cols, o = 0.4, len = 40}) =>
-	<g>{Array.from({length: n}, (_, i) => { const x = x0 + (x1 - x0) * rnd(i, seed), y = y0 + (y1 - y0) * rnd(i, seed + 1), w = 2 + 7 * rnd(i, seed + 2), L = len * (0.5 + rnd(i, seed + 3));
-		return <rect key={i} x={x} y={Math.min(y, y1 - L * 0.5)} width={w} height={Math.min(L, y1 - y)} rx={w / 2} fill={cols[i % cols.length]} opacity={o * (0.5 + 0.5 * rnd(i, seed + 4))} />; })}</g>;
-const Descent: React.FC = () => <Frame id="d" sheen={0.1} over={<><Fonts s="往下10.8米，是一座楚墓。江陵望山地下" /><Subs rows={[{s: '往下10.8米，是一座楚墓。'}]} th={thB} /><StampK y="1965" place="江陵望山" note="地下10.8米" /><SealB /></>}>
-	<defs>
-		<filter id="mbS" x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation="0.4 3" /></filter>
-		<filter id="mbF" x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation="1.5 2.5" /></filter>
-		<filter id="mbN" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8 50" /></filter>
-		<filter id="mbL" x="-10%" y="-80%" width="120%" height="260%"><feGaussianBlur stdDeviation="0.2 1.6" /></filter>
-		<clipPath id="pitC"><path d={pitD} /></clipPath>
-		<linearGradient id="shaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFE0B0" stopOpacity="0.1" /><stop offset="0.75" stopColor="#FFE0B0" stopOpacity="0.025" /><stop offset="1" stopColor="#FFE0B0" stopOpacity="0" /></linearGradient>
-		<linearGradient id="speck" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8A6E50" stopOpacity="0.9" /><stop offset="1" stopColor="#8A6E50" stopOpacity="0" /></linearGradient>
-		<linearGradient id="claySide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9E937C" /><stop offset="1" stopColor="#5E5646" /></linearGradient>
-		<linearGradient id="clay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#B9AE96" /><stop offset="0.5" stopColor="#A49880" /><stop offset="1" stopColor="#8C8068" /></linearGradient>
-	</defs>
-	{/* the section face: strata outside the pit, texture smeared into streaks */}
-	<g filter="url(#mbS)">
-		{STRATA.map(([y0, y1, c], i) => <g key={i}><rect x={-40} y={y0} width={W + 80} height={y1 - y0} fill={c} />
-			<Streaks x0={-20} x1={W + 20} y0={y0} y1={y1} n={90} seed={i * 7 + 1} cols={['#4A3828', '#1A110B', '#3E3428']} o={0.45} len={i === 0 ? 70 : 40} /></g>)}
-		{/* the pit fill: rammed 五花土 in thin courses, mottled (smeared) */}
-		<g clipPath="url(#pitC)">
-			<rect x={300} y={-40} width={1320} height={1160} fill="#3A2A1C" />
-			<g opacity={0.5}>{Array.from({length: 26}, (_, k) => <rect key={k} x={300} y={-40 + k * 52} width={1320} height={26} fill="#2F2217" />)}</g>
-			<Streaks x0={350} x1={1570} y0={-40} y1={612} n={220} seed={31} cols={['#5A4630', '#2A1E14', '#48443A', '#4E3424']} o={0.5} len={34} />
-			{Array.from({length: 30}, (_, k) => <path key={`c${k}`} d={`M300,${-30 + k * 22} H1620`} stroke={B.gold} strokeOpacity={0.07} strokeWidth={1.5} />)}
-			{/* 青灰泥 */}
-			<rect x={300} y={612} width={1320} height={122} fill="#36362F" />
-			<Streaks x0={350} x1={1570} y0={612} y1={732} n={60} seed={41} cols={['#4A4A42', '#262622']} o={0.5} len={24} />
-			{/* 白膏泥: the pale seal over the chamber and down its sides */}
-			<rect x={300} y={734} width={1320} height={400} fill="url(#claySide)" />
-			<rect x={300} y={734} width={1320} height={CH.y0 - 8 - 734} fill="url(#clay)" />
-			<Streaks x0={640} x1={1280} y0={738} y1={800} n={70} seed={51} cols={['#8A806C', '#CFC6B0']} o={0.35} len={14} />
-		</g>
-		{/* the pit's stepped walls, in gold line */}
-		<path d={pitD} fill="none" stroke={B.gold} strokeOpacity={0.42} strokeWidth={2.2} strokeLinejoin="round" />
-		<path d="M300,734 H1620" stroke="#EDE3CC" strokeOpacity={0.35} strokeWidth={1.5} />
-		{STRATA.slice(1).map(([y0], i) => <path key={i} d={`M-40,${y0} H${wallAt(y0, -1)} M${wallAt(y0, 1)},${y0} H${W + 40}`} stroke={B.gold} strokeOpacity={0.22} strokeWidth={1.5} />)}
-	</g>
-	{/* the year labels on the band edges: thin, smeared a little (they are moving), fading as they rise away */}
-	<g filter="url(#mbL)">{YEARS.map(([y, s, o]) => <g key={s} opacity={o}><path d={`M150,${y} H${wallAt(y, -1) - 6}`} stroke={B.gold} strokeOpacity={0.55} strokeWidth={1.5} />
-		<text x={152} y={y - 12} fontFamily={YEAR} fontWeight={600} fontSize={46} fill="#F2E6CC" style={{paintOrder: 'stroke'}} stroke="#140B07" strokeWidth={5}>{s}</text></g>)}</g>
-	{/* light from the shaft above: the camera's own path */}
-	<path d="M840,-40 L1080,-40 L1130,734 L790,734 Z" fill="url(#shaft)" />
-	{/* the chamber (椁) of heavy timbers under the seal: lid planks laid across (their ends in section), thick walls, the head box,
-	    the double coffin (outer, inner, black lacquer with a dim red line), a faint warm glow round the inner lid */}
-	<g>
-		<rect x={CH.x0} y={CH.y0} width={CH.x1 - CH.x0} height={CH.y1 - CH.y0} fill="#1C110B" />
-		{Array.from({length: 12}, (_, k) => <rect key={`l${k}`} x={CH.x0 + k * ((CH.x1 - CH.x0) / 12)} y={CH.y0} width={(CH.x1 - CH.x0) / 12 - 3} height={30} fill="#2A190F" stroke={B.gold} strokeOpacity={0.16} strokeWidth={1.2} />)}
-		{Array.from({length: 12}, (_, k) => <circle key={`g${k}`} cx={CH.x0 + (k + 0.5) * ((CH.x1 - CH.x0) / 12)} cy={CH.y0 + 15} r={8} fill="none" stroke="#3E2A1A" strokeWidth={1.5} />)}
-		<rect x={CH.x0} y={CH.y0 + 30} width={30} height={CH.y1 - CH.y0 - 30} fill="#24160D" /><rect x={CH.x1 - 30} y={CH.y0 + 30} width={30} height={CH.y1 - CH.y0 - 30} fill="#24160D" />
-		{[0, 1, 2, 3].map((k) => <path key={`w${k}`} d={`M${CH.x0},${CH.y0 + 72 + k * 40} h30 M${CH.x1 - 30},${CH.y0 + 72 + k * 40} h30`} stroke={B.gold} strokeOpacity={0.14} strokeWidth={1.2} />)}
-		<rect x={CH.x0 + 30} y={CH.y0 + 30} width={CH.x1 - CH.x0 - 60} height={CH.y1 - CH.y0 - 30} fill="#0F0806" />
-		<rect x={CH.x0 + 30} y={CH.y0 + 30} width={110} height={CH.y1 - CH.y0 - 30} fill="#140B08" stroke={B.gold} strokeOpacity={0.16} strokeWidth={1.2} />
-		<Pool id="tg" x={1010} y={930} rx={230} ry={100} a={0.36} col="#FFAA58" />
-		<rect x={850} y={866} width={318} height={136} rx={6} fill="#130908" stroke={B.gold} strokeOpacity={0.38} strokeWidth={2} />
-		<rect x={872} y={886} width={274} height={104} rx={5} fill="#0E0605" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-		<path d="M884,900 h250 M884,978 h250" stroke="#7A3020" strokeOpacity={0.4} strokeWidth={2} />
-		<path d={Array.from({length: 6}, (_, i) => `M${900 + i * 42},939 l10,-8 l10,8 l-10,8 Z`).join(' ')} fill="none" stroke="#7A3020" strokeOpacity={0.32} strokeWidth={1.5} />
-		<path d="M878,888 H1140" stroke="#FFC27A" strokeOpacity={0.45} strokeWidth={2} />
-		<Pool id="tl" x={1008} y={888} rx={160} ry={16} a={0.5} col="#FFC888" />
-		<rect x={CH.x0} y={CH.y0} width={CH.x1 - CH.x0} height={CH.y1 - CH.y0} fill="none" stroke={B.gold} strokeOpacity={0.3} strokeWidth={2} />
-	</g>
-	{/* the 1965 label on the seal's edge: sharp */}
-	<g><path d={`M150,734 H${wallAt(734, -1) - 6}`} stroke={B.gold} strokeOpacity={0.8} strokeWidth={2} />
-		<text x={152} y={720} fontFamily={YEAR} fontWeight={600} fontSize={54} fill={B.goldL} style={{paintOrder: 'stroke'}} stroke="#140B07" strokeWidth={5}>1965</text></g>
-	{/* loose soil specks rushing up past the lens: a bright head on top, the smear trailing below */}
-	{Array.from({length: 34}, (_, i) => { const x = 60 + 1800 * rnd(i, 41), y = 280 + 700 * rnd(i, 42), L = 30 + 80 * rnd(i, 43), w = 2 + 3 * rnd(i, 44);
-		return <g key={i} opacity={0.25 + 0.35 * rnd(i, 45)}><rect x={x - w / 2} y={y} width={w} height={L} rx={w / 2} fill="url(#speck)" /><circle cx={x} cy={y + w / 2} r={w * 0.7} fill="#B89A74" /></g>; })}
-	{/* near: clods and roots passing close to the lens, much faster (heavily smeared) */}
-	<g filter="url(#mbN)">
-		<path d={blob(1900, 420, 260, 7, 10, 0.4)} fill="#080403" />
-		<path d={blob(-10, 1000, 240, 3, 10, 0.4)} fill="#080403" />
-		<path d={blob(1880, 1060, 150, 5, 9, 0.4)} fill="#0A0504" />
-		<path d="M1690,60 C1640,320 1720,520 1660,820" stroke="#1C110A" strokeWidth={14} fill="none" />
-		<path d="M1600,200 C1560,380 1620,560 1590,760" stroke="#140C07" strokeWidth={8} fill="none" />
-		<path d="M150,560 C120,700 190,820 140,980" stroke="#140C07" strokeWidth={9} fill="none" />
-	</g>
-</Frame>;
+   Below the museum floor the camera sinks down a shaft cut through the ground (a cut-away: we see its four walls), looking
+   down at an angle. Every stratum is a horizontal band running round the walls; a thin year label sits on each band edge on
+   the far wall, counting back as the bands go deeper (1990 → 1980 → 1970 → 1965) and shrinking with distance. The last bands
+   are the tomb's own fill: rammed 五花土 in thin courses, 青灰泥, then the pale 白膏泥 seal: the floor far below, with the
+   outline of the double coffin glowing faintly through it. Motion: the walls nearest the lens are smeared (fast), the far ones
+   sharp (parallax); speed lines run down the walls to the vanishing point. No bones. */
+type V3 = [number, number, number];
+const SH = {a: 3, b: 3, F: 25};   // shaft half-width, half-depth, floor depth below the camera (units)
+const DC = {x: 0, y: -2, z: 0, p: 58 * Math.PI / 180, f: 1000, cx: 960, cy: 420};
+const dOf = (q: V3) => (q[1] - DC.y) * Math.cos(DC.p) - (q[2] - DC.z) * Math.sin(DC.p);
+const pj = (q: V3): [number, number] => { const ry = q[1] - DC.y, rz = q[2] - DC.z, d = dOf(q), yc = ry * Math.sin(DC.p) + rz * Math.cos(DC.p);
+	return [DC.cx + DC.f * (q[0] - DC.x) / d, DC.cy - DC.f * yc / d]; };
+const NEAR = 0.25;
+/** clip a 3D polygon to d ≥ NEAR, project, return an SVG path ('' if nothing is left) */
+const poly3 = (pts: V3[], close = true) => { const out: V3[] = [];
+	for (let i = 0; i < pts.length; i++) { const A = pts[i], Bq = pts[(i + 1) % pts.length], da = dOf(A) - NEAR, db = dOf(Bq) - NEAR;
+		if (da >= 0) out.push(A);
+		if (!close && i === pts.length - 1) break;
+		if ((da >= 0) !== (db >= 0)) { const t = da / (da - db); out.push([lerp(A[0], Bq[0], t), lerp(A[1], Bq[1], t), lerp(A[2], Bq[2], t)]); } }
+	if (out.length < 2) return '';
+	return 'M' + out.map((q) => pj(q).map((v) => v.toFixed(1)).join(',')).join('L') + (close ? 'Z' : ''); };
+/* strata, top → bottom: [z top, z bottom, colour, name]; the last three are the tomb fill (A6) */
+const BANDS: [number, number, string][] = [[3, -2, '#2A1C14'], [-2, -6, '#33251A'], [-6, -10, '#2B2017'], [-10, -15, '#382A1E'], [-15, -19.5, '#4A3826'], [-19.5, -22.5, '#3A3A33'], [-22.5, -25, '#9A907A']];
+const LABELS: [number, string][] = [[-6, '1990'], [-10, '1980'], [-15, '1970'], [-22.5, '1965']];
+const WALLS: {id: string; q: (z0: number, z1: number) => V3[]; k: number}[] = [
+	{id: 'far', q: (z0, z1) => [[-SH.a, SH.b, z0], [SH.a, SH.b, z0], [SH.a, SH.b, z1], [-SH.a, SH.b, z1]], k: 1},
+	{id: 'left', q: (z0, z1) => [[-SH.a, -SH.b, z0], [-SH.a, SH.b, z0], [-SH.a, SH.b, z1], [-SH.a, -SH.b, z1]], k: 1.18},
+	{id: 'right', q: (z0, z1) => [[SH.a, -SH.b, z0], [SH.a, SH.b, z0], [SH.a, SH.b, z1], [SH.a, -SH.b, z1]], k: 0.78},
+	{id: 'near', q: (z0, z1) => [[-SH.a, -SH.b, z0], [SH.a, -SH.b, z0], [SH.a, -SH.b, z1], [-SH.a, -SH.b, z1]], k: 0.7}];
+const shade = (c: string, k: number, z: number) => { const glow = cl((z + 17) / -8);   // the tomb's warm light on the deepest bands
+	const base = k >= 1 ? mix(c, '#E8C090', (k - 1) * 0.5) : mix(c, '#0A0503', (1 - k) * 0.9);
+	return mix(base, '#7A4E2A', glow * 0.35); };
+/** random points on the walls (pebbles, crumbs), and short streaks running down the walls (speed lines) */
+const wallPt = (i: number, seed: number, z0: number, z1: number): V3 => { const w = Math.floor(rnd(i, seed) * 4), t = rnd(i, seed + 1) * 2 - 1, z = lerp(z0, z1, rnd(i, seed + 2));
+	return w === 0 ? [t * SH.a, SH.b, z] : w === 1 ? [-SH.a, t * SH.b, z] : w === 2 ? [SH.a, t * SH.b, z] : [t * SH.a, -SH.b, z]; };
+const Specks: React.FC<{z0: number; z1: number; n: number; seed: number}> = ({z0, z1, n, seed}) => <g>{Array.from({length: n}, (_, i) => { const q = wallPt(i, seed, z0, z1), d = dOf(q); if (d < NEAR + 0.2) return null;
+	const [x, y] = pj(q), r = DC.f * (0.03 + 0.05 * rnd(i, seed + 3)) / d; if (x < -40 || x > W + 40 || y < -40 || y > H + 40) return null;
+	return <ellipse key={i} cx={x} cy={y} rx={r * 1.4} ry={r} fill={rnd(i, seed + 4) > 0.5 ? '#5E4A34' : '#140C08'} opacity={0.55} />; })}</g>;
+const Descent: React.FC = () => {
+	const zs = (z0: number, z1: number) => <g>{BANDS.filter(([t, bt]) => t > z1 && bt < z0).map(([t, bt, c], bi) => { const top = Math.min(t, z0), bot = Math.max(bt, z1);
+		return <g key={bi}>{WALLS.map((w) => { const d = poly3(w.q(top, bot)); return d ? <path key={w.id} d={d} fill={shade(c, w.k, (top + bot) / 2)} stroke={shade(c, w.k, (top + bot) / 2)} strokeWidth={0.8} /> : null; })}
+			{/* rammed courses (夯层) in the tomb fill */}
+			{t <= -15 && t > -22.5 && Array.from({length: 6}, (_, k) => { const z = lerp(top, bot, (k + 1) / 7); return <path key={`c${k}`} d={poly3([[-SH.a, -SH.b, z], [-SH.a, SH.b, z], [SH.a, SH.b, z], [SH.a, -SH.b, z]], false)} fill="none" stroke="#1E140C" strokeOpacity={0.5} strokeWidth={1.2} />; })}
+		</g>; })}</g>;
+	const ring = (z: number, o: number, col: string = B.gold, sw = 1.6) => <path d={poly3([[-SH.a, -SH.b, z], [-SH.a, SH.b, z], [SH.a, SH.b, z], [SH.a, -SH.b, z]], false)} fill="none" stroke={col} strokeOpacity={o} strokeWidth={sw} />;
+	const corners = [[-SH.a, SH.b], [SH.a, SH.b], [-SH.a, -SH.b], [SH.a, -SH.b]].map(([x, y], i) => <path key={i} d={poly3([[x, y, 3], [x, y, -SH.F]], false)} stroke={B.gold} strokeOpacity={0.3} strokeWidth={2} fill="none" />);
+	const streaks = Array.from({length: 46}, (_, i) => { const q = wallPt(i, 91, 0, -9), L = 1.2 + 2.2 * rnd(i, 95); const d = poly3([q, [q[0], q[1], q[2] - L]], false);
+		return d ? <path key={i} d={d} stroke="#D8C4A0" strokeOpacity={0.05 + 0.1 * rnd(i, 96)} strokeWidth={1.5 + 2 * rnd(i, 97)} strokeLinecap="round" fill="none" /> : null; });
+	/* the floor: the top of the 白膏泥 seal; the double coffin under it shows as a faint warm outline */
+	const F = -SH.F, rect = (hx: number, hy: number, cy = 0.4) => poly3([[-hx, cy - hy, F], [hx, cy - hy, F], [hx, cy + hy, F], [-hx, cy + hy, F]]);
+	const fc = pj([0, 0.4, F]);
+	const lab = LABELS.map(([z, s]) => { const [x, y] = pj([-SH.a, SH.b, z]), d = dOf([-SH.a, SH.b, z]), last = s === '1965';
+		return {x: x + 14, y: y - 10, s, fs: last ? 50 : Math.max(40, Math.min(56, 400 / d)), last}; });
+	return <Frame id="d" sheen={0.1} over={<><Fonts s="往下10.8米，是一座楚墓。江陵望山地下" /><Subs rows={[{s: '往下10.8米，是一座楚墓。'}]} th={thB} /><StampK y="1965" place="江陵望山" note="地下10.8米" /><SealB /></>}>
+		<defs>
+			<filter id="dN" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9 14" /></filter>
+			<filter id="dM" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.2 3.2" /></filter>
+			<filter id="dL" x="-10%" y="-60%" width="120%" height="220%"><feGaussianBlur stdDeviation="0.4 1.4" /></filter>
+			<radialGradient id="dGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFB060" stopOpacity="0.55" /><stop offset="0.5" stopColor="#FF9A48" stopOpacity="0.2" /><stop offset="1" stopColor="#FF9040" stopOpacity="0" /></radialGradient>
+		</defs>
+		{/* far (sharp) → middle (slight smear) → near (heavy smear): painted back to front */}
+		{zs(-12, -25)}
+		<Specks z0={-12} z1={-22.5} n={160} seed={11} />
+		{[-15, -19.5].map((z) => <g key={z}>{ring(z, 0.28)}</g>)}
+		{ring(-22.5, 0.55, '#EDE3CC', 1.8)}
+		{/* the floor */}
+		<path d={poly3([[-SH.a, -SH.b, F], [SH.a, -SH.b, F], [SH.a, SH.b, F], [-SH.a, SH.b, F]])} fill="#B3A88E" />
+		<path d={rect(2.3, 1.6)} fill="none" stroke="#8A7E66" strokeOpacity={0.6} strokeWidth={1.5} />
+		<ellipse cx={fc[0]} cy={fc[1]} rx={150} ry={70} fill="url(#dGlow)" />
+		<path d={rect(1.55, 0.95)} fill="none" stroke="#FFB868" strokeOpacity={0.55} strokeWidth={2.2} />
+		<path d={rect(1.3, 0.72)} fill="none" stroke="#FFD49A" strokeOpacity={0.75} strokeWidth={1.8} />
+		{Array.from({length: 8}, (_, i) => { const x0 = (rnd(i, 61) - 0.5) * 5, y0 = (rnd(i, 62) - 0.5) * 5; return <path key={i} d={poly3([[x0, y0, F], [x0 + (rnd(i, 63) - 0.5) * 1.6, y0 + (rnd(i, 64) - 0.5) * 1.6, F]], false)} stroke="#7A705C" strokeOpacity={0.5} strokeWidth={1.2} fill="none" />; })}
+		<g filter="url(#dM)">{zs(-4.5, -12)}<Specks z0={-4.5} z1={-12} n={120} seed={21} />{ring(-6, 0.3)}{ring(-10, 0.3)}</g>
+		<g filter="url(#dN)">{zs(3, -4.5)}<Specks z0={3} z1={-4.5} n={60} seed={31} /></g>
+		{corners}
+		{streaks}
+		{/* year labels on the far wall's band edges, counting back, smaller as they go deeper; 1965 = the seal, sharp, gold */}
+		{lab.map((l) => <g key={l.s} filter={l.last ? undefined : 'url(#dL)'}>
+			<text x={l.x} y={l.y} fontFamily={YEAR} fontWeight={600} fontSize={l.fs} fill={l.last ? B.goldL : '#F2E6CC'} opacity={l.last ? 1 : 0.88} style={{paintOrder: 'stroke'}} stroke="#120A06" strokeWidth={5}>{l.s}</text></g>)}
+	</Frame>; };
 
 /* =============================== 3 · MACRO ===============================
    The camera skims a few millimetres above the blade. The diamond lattice is the land: a grid of diamonds (dark double lines,
@@ -185,7 +173,7 @@ const Descent: React.FC = () => <Frame id="d" sheen={0.1} over={<><Fonts s="往�
    which runs to the vanishing point like a mountain spine; the polished edges fall away to darkness on both sides. A raking
    warm light from the right catches the raised rims of the pale diamonds (the thin tin layer). Near cells are smeared by the
    forward glide, the far ones soften into haze. Drawn, not photographed; no scale bar, no numbers. */
-const MC = {v: -4.5, z: 13, pitch: 15 * Math.PI / 180, yaw: 2 * Math.PI / 180, f: 1500, cx: 960, cy: 760};
+const MC = {v: -5, z: 20, pitch: Math.atan(210 / 820), yaw: 2.5 * Math.PI / 180, f: 820, cx: 960, cy: 540};   // wide lens, horizon at y ≈ 330
 const HW0 = 24, RIDGE = 5, STRIP = 2.2;   // mm: half-width, ridge height, polished edge strip
 const hwAt = (u: number) => HW0 - 0.006 * u;
 const zAt = (u: number, v: number) => { const hw = hwAt(u), a = Math.min(1, Math.abs(v) / hw); return RIDGE * Math.pow(1 - a, 1.12) - (Math.abs(v) > hw - STRIP ? 0.9 * (Math.abs(v) - (hw - STRIP)) / STRIP : 0); };
@@ -214,7 +202,7 @@ const cellsMacro = (): Cell[] => { const out: Cell[] = [];
 		const jit = (rnd(i * 31 + j, 71) - 0.5) * 0.12, base = mix(pale ? '#D2B886' : '#B98443', pale ? '#8A6A3E' : '#6E4824', 0.2 + jit), lit = side > 0.5 ? 0 : 0.42;
 		const col = mix(mix(mix(base, '#3A2410', lit), '#FFF6DC', spec * (pale ? 0.85 : 0.3)), FOG, fog * 0.94);
 		const d = proj(ca, cw, zAt(ca, cw))[2];
-		out.push({u: ca, v: cw, d: quad(ca, cw, 1), dIn: quad(ca, cw, 0.8), dCore: quad(ca, cw, 0.36), pale, col, line: Math.max(0.4, MC.f * 0.42 / d), rim: spec, fog}); }
+		out.push({u: ca, v: cw, d: quad(ca, cw, 1), dIn: quad(ca, cw, 0.84), dCore: quad(ca, cw, 0.3), pale, col, line: Math.max(0.4, MC.f * 0.36 / d), rim: spec, fog}); }
 	return out.sort((a, b) => b.u - a.u); };
 const CellG: React.FC<{c: Cell}> = ({c}) => <g>
 	<path d={c.d} fill={c.col} stroke={mix(LAT, FOG, c.fog * 0.8)} strokeWidth={c.line} strokeLinejoin="round" />
@@ -237,7 +225,7 @@ const Macro: React.FC = () => { const cells = cellsMacro();
 	/* the ridge: one continuous lit line (a polyline per fog step, butt caps so it never beads) */
 	const ridge = Array.from({length: 30}, (_, k) => { const us = Array.from({length: 5}, (_, q) => 16 * Math.pow(1400 / 16, (k + q / 4) / 30)), fog = 1 - Math.exp(-Math.max(0, us[0] - 30) / 200);
 		const pts = us.map((u) => proj(u, 0, RIDGE)), d0 = pts[0][2];
-		return <polyline key={k} points={pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ')} fill="none" stroke="#FFF2D0" strokeOpacity={0.7 * (1 - fog)} strokeWidth={Math.max(0.8, MC.f * 0.16 / d0)} strokeLinecap="butt" />; });
+		return <polyline key={k} points={pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ')} fill="none" stroke="#FFF2D0" strokeOpacity={0.7 * (1 - fog)} strokeWidth={Math.max(0.8, MC.f * 0.12 / d0)} strokeLinecap="butt" />; });
 	const hz = MC.cy - MC.f * Math.tan(MC.pitch);
 	return <Frame id="m" sheen={0.08} over={<><Fonts s="这些菱形纹，是热镀上去的锡。湖北省博物馆热镀锡" /><Subs rows={[{s: '这些菱形纹，是热镀上去的锡。'}]} th={thB} /><StampK y="2025" place="湖北省博物馆" note="热镀锡" /><SealB /></>}>
 		<defs>
