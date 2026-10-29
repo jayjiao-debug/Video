@@ -74,3 +74,6 @@ The range covers:
 Self-check file: `tasks/ep53-take-d/out/selfcheck.md`.
 
 If you run short of time or budget, build the end card FIRST (109.125 → end), then the legs in order. Hold the last finished picture so the film always renders. Say where you stopped.
+
+## Time limit
+You have about 150 minutes of wall-clock time. When it runs out the run is stopped and your code is committed as it is. So: keep the film rendering at all times (never leave a file half-edited for long), write `selfcheck.md` early and update it after each leg, and check the time with `date` now and then (note the start time first).
