@@ -382,3 +382,27 @@ The owner asked: 「…这已经是我国第XX次发射，故事要从宋朝说�
 - An unexpected turn (宋朝).
 - A 你猜 question that is answered by 19 s and turns into a surprise (「靠弓」).
 - The glow question 「天都黑了，它为什么还在发光？」 stays as a second loop near the end, at 86 s, and the Douyin 标题 carries it for search.
+
+## v4 hook C: owner-approved (2026-10-29 09:30)
+The owner's analysis of 兽首 (36.5万 plays, 2-second bounce 25 %) found three ingredients:
+- a known reference (everyone knows there are 12);
+- a huge number (6910万);
+- a contradiction (却捐了).
+
+The owner added a fourth: emotion (the heads were stolen). Rockets carry a different emotion: **白手起家** (pride and gratitude), anchored in 王希季.
+
+**Built in `lines_read.json` / `lines.json`** (v3 base; the v3 file is in the scratchpad as `ep52_lines_read_v3.json`). The film is now **116.0 s**.
+
+| Time | Line | Picture | Fact |
+|---|---|---|---|
+| 0.00–3.75 | 66年前，中国的火箭，\n用[自行车打气筒]打气。 | **Frame 0: today's glowing 火箭云 over the dark town.** The contrast between picture and words is the hook. | R16 |
+| 3.75–6.00 | 只飞了约[8公里]高。 | A tiny 8 km mark at the bottom of the frame vs the cloud's height. | R15 |
+| 6.00–10.25 | 现在，我们飞到约38万公里外，\n还能把东西[带回来]。 | The cloud brightens; a capsule glint falls back. | O4, R27 |
+| 10.25–13.25 | (title, silent) | | |
+| 43.00–54.00 | 66年前，上海，\n那枚靠打气筒加压的火箭升空了。 / 工作人员，住在芦苇搭的窝棚里。 / 王希季在麻袋堆成的指挥所里\n指挥发射。 | **The callback to the hook**: beach, reed huts, sandbag post, the pump. The 8公里 line moved into the hook. | R15, R16, R19 |
+
+**The rest is v3 shifted by +0.75 s.** The 先猜？ 「可宋朝的火箭，靠什么飞？」 and the 672 line are back in the body (17.25 and 82.75).
+
+**The held thread** is 「从打气筒到月亮，中间发生了什么」 plus 王希季: planted at 50 s, paid at 75–83 s (「赶上了这一天」 / 「今年8月，他去世了，享年105岁」).
+
+**Checks:** `pace.py` shows no lines too fast; 3 % waiting. Every line traces to the facts rows used in v3. The new hook uses only R15, R16, O4 (约38万公里) and R27 (1935.3克 = 3.87斤, not used on screen here).
