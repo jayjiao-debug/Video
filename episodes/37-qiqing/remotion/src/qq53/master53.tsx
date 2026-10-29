@@ -46,7 +46,7 @@ const typedEnd = (k: number) => { const L = LINES53[k], {rows} = split(L.s); ret
 const showFrom = (k: number) => typedEnd(k) + 0.45;
 type StampState = {y: string; place: string; note: string; oHead: number; nPlace: number; nNote: number; press: number};
 export const stampAt = (t: number): StampState | null => {
-	if (t >= CARD_T53 || t >= BUILT_T53 || (t >= TITLE_T53[0] && t < TITLE_T53[1])) return null;
+	if (t >= CARD_T53 || (t >= TITLE_T53[0] && t < TITLE_T53[1])) return null;
 	const k = lastLine(t); if (k < 0) return null;
 	const id = LINES53[k].id;
 	if (id === 'H1') {
@@ -115,12 +115,13 @@ export const TitleOnGlass: React.FC<{t: number; quad: [number, number][] | null}
 
 /* ---------- depth (D2 → D5 0 → 10.8 m, on its own clock: the descent's 1.2 m/s from 28.746) ---------- */
 export const DEPTH_T0 = 28.746, DEPTH_V = 1.2;
-export const DepthLayer: React.FC<{t: number}> = ({t}) => { if (t < DEPTH_T0 || t >= BUILT_T53) return null;
-	const v = Math.min(10.8, DEPTH_V * (t - DEPTH_T0)), o = seg(t, DEPTH_T0, DEPTH_T0 + 0.25);
+export const DEPTH_T_END = 43.463;   // the tag holds 10.8 at the chamber floor and fades out on the draw (TakeC may move this)
+export const DepthLayer: React.FC<{t: number}> = ({t}) => { if (t < DEPTH_T0 || t >= DEPTH_T_END) return null;
+	const v = Math.min(10.8, DEPTH_V * (t - DEPTH_T0)), o = seg(t, DEPTH_T0, DEPTH_T0 + 0.25) * (1 - seg(t, DEPTH_T_END - 0.4, DEPTH_T_END));
 	return <div style={{opacity: o}}><DepthTag v={v} /></div>; };
 
 /* ---------- everything on top of the picture ---------- */
-export const Overlay53: React.FC<{t: number; quad: [number, number][] | null}> = ({t, quad}) => t >= BUILT_T53 ? null : <>
+export const Overlay53: React.FC<{t: number; quad: [number, number][] | null}> = ({t, quad}) => <>
 	<TitleOnGlass t={t} quad={quad} />
 	<Subtitles53 t={t} />
 	<StampLayer53 t={t} />

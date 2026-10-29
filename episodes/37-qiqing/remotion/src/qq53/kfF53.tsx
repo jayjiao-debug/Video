@@ -127,8 +127,11 @@ const Blooms: React.FC = () => { const m = CAM11;
 				<path d={ringM(m, z11, u, v, r * 3.1)} fill="none" stroke="#FFF2D8" strokeWidth={2.8} strokeOpacity={0.85} strokeDasharray="40 12" />
 			</g>; })}
 	</g>; };
+/** shared with the one take (handoff53.tsx): KF11's macro spec and its blooms */
+export const SP11: MacroSpec = {cam: CAM11, hw: hw11, ridge: RID11, strip: ST11, fogD: 220, lightU: 40, uMax: 1300, nearU: 14, seed: 2};
+export const Blooms11 = Blooms;
 export const KF11: React.FC = () => {
-	const sp: MacroSpec = {cam: CAM11, hw: hw11, ridge: RID11, strip: ST11, fogD: 220, lightU: 40, uMax: 1300, nearU: 14, seed: 2};
+	const sp: MacroSpec = SP11;
 	return <Frame53 id="k11" sheen={0.06} vig={0.66} over={<><Sub53 id="T1" /><Stamp53 id="T1" /><SealHollow /></>}>
 		<BladeMacro sp={sp} id="k11"><Blooms /></BladeMacro>
 		{/* a shade duller than the hook's surface: a thin warm-grey veil over the whole blade */}
