@@ -1,0 +1,1087 @@
+{
+ "hit_contrast": {
+  "TITLE 9.50": {
+   "after_0p4s": -13.8,
+   "before_1s": -15.5,
+   "contrast_db": 1.7,
+   "phone_band_contrast_db": 2.4,
+   "sub_share_after_db": -2.9
+  },
+  "DIVE 20.82": {
+   "after_0p4s": -13.1,
+   "before_1s": -13.3,
+   "contrast_db": 0.2,
+   "phone_band_contrast_db": 0.2,
+   "sub_share_after_db": -3.1
+  },
+  "DRAW 43.46": {
+   "after_0p4s": -12.2,
+   "before_1s": -14.4,
+   "contrast_db": 2.1,
+   "phone_band_contrast_db": 0.2,
+   "sub_share_after_db": -2.6
+  },
+  "M1 61.58": {
+   "after_0p4s": -13.9,
+   "before_1s": -15.5,
+   "contrast_db": 1.7,
+   "phone_band_contrast_db": 0.9,
+   "sub_share_after_db": -2.7
+  },
+  "T1 DROP 75.16": {
+   "after_0p4s": -12.5,
+   "before_1s": -30.4,
+   "contrast_db": 17.9,
+   "phone_band_contrast_db": 15.8,
+   "sub_share_after_db": -2.1
+  },
+  "ARRIVAL 84.22": {
+   "after_0p4s": -12.8,
+   "before_1s": -13.5,
+   "contrast_db": 0.8,
+   "phone_band_contrast_db": 0.6,
+   "sub_share_after_db": -2.1
+  },
+  "P1 102.33": {
+   "after_0p4s": -11.8,
+   "before_1s": -12.9,
+   "contrast_db": 1.1,
+   "phone_band_contrast_db": 2.1,
+   "sub_share_after_db": -2.8
+  },
+  "END fall 109.12": {
+   "after_0p4s": -16.7,
+   "before_1s": -12.3,
+   "contrast_db": -4.4,
+   "phone_band_contrast_db": -1.0,
+   "sub_share_after_db": -28.9
+  }
+ },
+ "grid_check": {
+  "max_abs_err_ms": 3.3,
+  "mean_abs_err_ms": 0.8,
+  "n": 50,
+  "beat_onsets": {
+   "beats_checked": 184,
+   "with_clear_onset": 162,
+   "median_offset_ms": -3.6,
+   "p90_abs_offset_ms": 26.2
+  }
+ },
+ "landmarks": [
+  {
+   "event": "first downbeat (rust bloom)",
+   "song_bar": 20,
+   "film_formula": 0.443,
+   "placement_err_ms": -0.0,
+   "xcorr": 1.0,
+   "onset_ms": 3.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": 3.5,
+   "within_10ms": true
+  },
+  {
+   "event": "TITLE: bar 24 re-entry",
+   "song_bar": 24,
+   "film_formula": 9.5,
+   "placement_err_ms": 0.0,
+   "xcorr": 1.0,
+   "onset_ms": 0.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": 0.5,
+   "within_10ms": true
+  },
+  {
+   "event": "lull: valley 64 hit",
+   "song_bar": 64,
+   "film_formula": 18.557,
+   "placement_err_ms": 1.8,
+   "xcorr": 1.0,
+   "onset_ms": 13.5,
+   "onset_band": "full band",
+   "source_onset_ms": 13.5,
+   "within_10ms": false
+  },
+  {
+   "event": "DIVE: B pre 72",
+   "song_bar": 72,
+   "film_formula": 20.821,
+   "placement_err_ms": 0.0,
+   "xcorr": 1.0,
+   "onset_ms": -2.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": -2.5,
+   "within_10ms": true
+  },
+  {
+   "event": "fill bar 15 (wind-up)",
+   "song_bar": 15,
+   "film_formula": 41.199,
+   "placement_err_ms": -3.3,
+   "xcorr": 1.0,
+   "onset_ms": -2.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": 0.5,
+   "within_10ms": true
+  },
+  {
+   "event": "DRAW: chorus 16",
+   "song_bar": 16,
+   "film_formula": 43.463,
+   "placement_err_ms": -3.3,
+   "xcorr": 0.994,
+   "onset_ms": -2.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": 0.5,
+   "within_10ms": true
+  },
+  {
+   "event": "M1: valley 64 after the deep break",
+   "song_bar": 64,
+   "film_formula": 61.577,
+   "placement_err_ms": 0.0,
+   "xcorr": 0.964,
+   "onset_ms": -6.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": 13.5,
+   "within_10ms": true
+  },
+  {
+   "event": "M2: valley 66 hit",
+   "song_bar": 66,
+   "film_formula": 66.105,
+   "placement_err_ms": 0.0,
+   "xcorr": 1.0,
+   "onset_ms": -2.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": -2.5,
+   "within_10ms": true
+  },
+  {
+   "event": "HUSH: intro bar 2",
+   "song_bar": 2,
+   "film_formula": 70.633,
+   "placement_err_ms": -0.0,
+   "xcorr": 0.892,
+   "onset_ms": 8.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": 8.5,
+   "within_10ms": true
+  },
+  {
+   "event": "T1: DROP 84",
+   "song_bar": 84,
+   "film_formula": 75.162,
+   "placement_err_ms": 0.0,
+   "xcorr": 0.978,
+   "onset_ms": -10.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": -3.5,
+   "within_10ms": false
+  },
+  {
+   "event": "ARRIVAL 88 (Bb minor)",
+   "song_bar": 88,
+   "film_formula": 84.219,
+   "placement_err_ms": 0.0,
+   "xcorr": 1.0,
+   "onset_ms": -3.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": -3.5,
+   "within_10ms": true
+  },
+  {
+   "event": "lift 94",
+   "song_bar": 94,
+   "film_formula": 97.804,
+   "placement_err_ms": 0.0,
+   "xcorr": 1.0,
+   "onset_ms": -3.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": -3.5,
+   "within_10ms": true
+  },
+  {
+   "event": "P1: bar 96",
+   "song_bar": 96,
+   "film_formula": 102.332,
+   "placement_err_ms": 0.0,
+   "xcorr": 0.997,
+   "onset_ms": -3.5,
+   "onset_band": "2-8 kHz",
+   "source_onset_ms": -3.5,
+   "within_10ms": true
+  },
+  {
+   "event": "END CARD: coda 105",
+   "song_bar": 105,
+   "film_formula": 109.125,
+   "placement_err_ms": -0.0,
+   "xcorr": 0.912,
+   "onset_ms": null,
+   "onset_band": null,
+   "source_onset_ms": 7.5,
+   "within_10ms": null
+  }
+ ],
+ "joins": {
+  "REF_title_23_24 (song-native re-entry)": {
+   "window": [
+    9.49,
+    9.51
+   ],
+   "spectral_jump_db": 15.6,
+   "max_5ms_step_in_join_db": 9.8
+  },
+  "REF_song_fall_103_104 (drums stop, not used)": {
+   "window": null,
+   "spectral_jump_db": 5.2
+  },
+  "J1": {
+   "window": [
+    17.4647,
+    17.9507
+   ],
+   "max_5ms_step_in_join_db": 8.0,
+   "p99_5ms_step_around_db": 6.9,
+   "hf_peak_in_join_vs_p95_around_db": 1.7,
+   "spectral_jump_db": 2.3,
+   "spectral_jump_typical_offbeat_db": 4.0,
+   "spectral_jump_source_same_moment_db": 2.4
+  },
+  "J2": {
+   "window": [
+    19.5939,
+    19.6759
+   ],
+   "max_5ms_step_in_join_db": 7.5,
+   "p99_5ms_step_around_db": 6.1,
+   "hf_peak_in_join_vs_p95_around_db": 0.1,
+   "spectral_jump_db": 6.0,
+   "spectral_jump_typical_offbeat_db": 4.0,
+   "spectral_jump_source_same_moment_db": 7.3
+  },
+  "J3": {
+   "window": [
+    35.5783,
+    36.0643
+   ],
+   "max_5ms_step_in_join_db": 6.8,
+   "p99_5ms_step_around_db": 6.6,
+   "hf_peak_in_join_vs_p95_around_db": 0.7,
+   "spectral_jump_db": 1.7,
+   "spectral_jump_typical_offbeat_db": 4.0,
+   "spectral_jump_source_same_moment_db": 2.2
+  },
+  "J4": {
+   "window": [
+    61.5671,
+    61.5721
+   ],
+   "max_5ms_step_in_join_db": 9.7,
+   "p99_5ms_step_around_db": 8.6,
+   "hf_peak_in_join_vs_p95_around_db": -1.2,
+   "spectral_jump_db": 19.1,
+   "spectral_jump_typical_offbeat_db": 4.0,
+   "spectral_jump_source_same_moment_db": 21.6
+  },
+  "J5": {
+   "window": [
+    70.5994,
+    70.6324
+   ],
+   "max_5ms_step_in_join_db": 5.6,
+   "p99_5ms_step_around_db": 6.7,
+   "hf_peak_in_join_vs_p95_around_db": -18.4,
+   "spectral_jump_db": 8.2,
+   "spectral_jump_typical_offbeat_db": 4.0,
+   "spectral_jump_source_same_moment_db": 9.6
+  },
+  "J6": {
+   "window": [
+    75.1473,
+    75.1573
+   ],
+   "max_5ms_step_in_join_db": 7.0,
+   "p99_5ms_step_around_db": 8.7,
+   "hf_peak_in_join_vs_p95_around_db": -0.5,
+   "spectral_jump_db": 14.3,
+   "spectral_jump_typical_offbeat_db": 4.0,
+   "spectral_jump_source_same_moment_db": 9.5
+  },
+  "J7": {
+   "window": [
+    108.9848,
+    109.1208
+   ],
+   "max_5ms_step_in_join_db": 5.7,
+   "p99_5ms_step_around_db": 7.6,
+   "hf_peak_in_join_vs_p95_around_db": -2.0,
+   "spectral_jump_db": 14.2,
+   "spectral_jump_typical_offbeat_db": 4.0,
+   "spectral_jump_source_same_moment_db": 5.2
+  }
+ },
+ "level_jumps_at_edit_points": [
+  {
+   "point": "reference: TITLE re-entry 23 break -> 24 (song-native)",
+   "film": 9.5,
+   "bed_rise_fall_50ms_db": [
+    23.7,
+    -5.9
+   ],
+   "source_same_moment_db": [
+    23.7,
+    -5.0
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "reference: song fall 103 -> 104 (not used)",
+   "film": null,
+   "bed_rise_fall_50ms_db": null,
+   "source_same_moment_db": [
+    1.5,
+    -4.4
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "J1 copy 27~63",
+   "film": 17.708,
+   "bed_rise_fall_50ms_db": [
+    3.2,
+    -4.0
+   ],
+   "source_same_moment_db": [
+    3.2,
+    -3.4
+   ],
+   "on_beat": false
+  },
+  {
+   "point": "J2 64b2 -> 71b3",
+   "film": 19.689,
+   "bed_rise_fall_50ms_db": [
+    4.6,
+    -1.6
+   ],
+   "source_same_moment_db": [
+    4.2,
+    -1.5
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "BUILD step (72)",
+   "film": 20.821,
+   "bed_rise_fall_50ms_db": [
+    9.8,
+    -4.2
+   ],
+   "source_same_moment_db": [
+    9.3,
+    -3.9
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "J3 copy 78~12",
+   "film": 35.821,
+   "bed_rise_fall_50ms_db": [
+    1.3,
+    -4.7
+   ],
+   "source_same_moment_db": [
+    0.4,
+    -4.9
+   ],
+   "on_beat": false
+  },
+  {
+   "point": "DRAW (swell -> 16)",
+   "film": 43.463,
+   "bed_rise_fall_50ms_db": [
+    6.5,
+    -3.2
+   ],
+   "source_same_moment_db": [
+    7.1,
+    -5.1
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "J4 23 break -> 64",
+   "film": 61.577,
+   "bed_rise_fall_50ms_db": [
+    22.3,
+    -1.6
+   ],
+   "source_same_moment_db": [
+    6.7,
+    -1.7
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "J5 67 -> intro 2",
+   "film": 70.633,
+   "bed_rise_fall_50ms_db": [
+    2.9,
+    -7.7
+   ],
+   "source_same_moment_db": [
+    4.3,
+    -6.3
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "hush fade end",
+   "film": 74.412,
+   "bed_rise_fall_50ms_db": [
+    3.3,
+    -5.5
+   ],
+   "source_same_moment_db": null,
+   "on_beat": false
+  },
+  {
+   "point": "J6 silence -> 84 (+DROP step)",
+   "film": 75.162,
+   "bed_rise_fall_50ms_db": [
+    17.9,
+    -3.0
+   ],
+   "source_same_moment_db": [
+    7.0,
+    -3.4
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "DROP step down (88)",
+   "film": 84.219,
+   "bed_rise_fall_50ms_db": [
+    5.1,
+    -4.6
+   ],
+   "source_same_moment_db": [
+    7.1,
+    -5.7
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "RISE step (96)",
+   "film": 102.332,
+   "bed_rise_fall_50ms_db": [
+    8.7,
+    -6.8
+   ],
+   "source_same_moment_db": [
+    5.7,
+    -8.7
+   ],
+   "on_beat": true
+  },
+  {
+   "point": "J7 98 -> 105 (fall)",
+   "film": 109.125,
+   "bed_rise_fall_50ms_db": [
+    3.8,
+    -9.6
+   ],
+   "source_same_moment_db": [
+    2.7,
+    -3.7
+   ],
+   "on_beat": true
+  }
+ ],
+ "hush": {
+  "below_minus35_lufsM_s": 0.25,
+  "first": 74.6,
+  "last": 74.8,
+  "lowest_M": -37.1,
+  "lowest_at": 74.7,
+  "M_at": {
+   "70.40": -13.7,
+   "70.80": -20.6,
+   "71.50": -19.7,
+   "72.50": -21.1,
+   "73.50": -21.3,
+   "74.00": -25.2,
+   "74.40": -32.0,
+   "74.60": -35.8,
+   "74.80": -36.4,
+   "75.00": -18.8,
+   "75.10": -14.3,
+   "75.40": -13.2,
+   "75.80": -13.4
+  }
+ },
+ "sag_3s_more_than_6dB_under_body": [],
+ "body_short_term_lufs": -14.0,
+ "sections": {
+  "hook 0-9.50": {
+   "momentary_lufs_mean": -13.6,
+   "phone_band_300_8k_lufs": -18.6,
+   "centroid_hz": 2281,
+   "sub_share_db": -5.7
+  },
+  "title verse 9.50-18.56": {
+   "momentary_lufs_mean": -13.8,
+   "phone_band_300_8k_lufs": -18.5,
+   "centroid_hz": 2434,
+   "sub_share_db": -5.5
+  },
+  "lull 18.56-20.82": {
+   "momentary_lufs_mean": -14.6,
+   "phone_band_300_8k_lufs": -18.9,
+   "centroid_hz": 1916,
+   "sub_share_db": -19.8
+  },
+  "B pre dive 20.82-43.46 (S4-D5)": {
+   "momentary_lufs_mean": -14.7,
+   "phone_band_300_8k_lufs": -19.2,
+   "centroid_hz": 2867,
+   "sub_share_db": -16.4
+  },
+  "chorus 43.46-61.58 (draw, glyphs, letters, 1977)": {
+   "momentary_lufs_mean": -13.4,
+   "phone_band_300_8k_lufs": -18.3,
+   "centroid_hz": 2335,
+   "sub_share_db": -5.6
+  },
+  "valley 61.58-70.63 (M1, M2 zoom)": {
+   "momentary_lufs_mean": -16.4,
+   "phone_band_300_8k_lufs": -19.3,
+   "centroid_hz": 1908,
+   "sub_share_db": -22.8
+  },
+  "hush 70.63-74.41 (M3)": {
+   "momentary_lufs_mean": -21.1,
+   "phone_band_300_8k_lufs": -22.5,
+   "centroid_hz": 1025,
+   "sub_share_db": -25.7
+  },
+  "near silence 74.41-75.16": {
+   "momentary_lufs_mean": -20.7,
+   "phone_band_300_8k_lufs": -28.5,
+   "centroid_hz": 1201,
+   "sub_share_db": -12.7
+  },
+  "DROP 75.16-84.22 (T1-T3)": {
+   "momentary_lufs_mean": -13.1,
+   "phone_band_300_8k_lufs": -17.8,
+   "centroid_hz": 1919,
+   "sub_share_db": -2.7
+  },
+  "body 84.22-97.80 (arrival, E1, L1, R2)": {
+   "momentary_lufs_mean": -13.5,
+   "phone_band_300_8k_lufs": -18.2,
+   "centroid_hz": 2391,
+   "sub_share_db": -5.3
+  },
+  "lift 97.80-102.33 (R3)": {
+   "momentary_lufs_mean": -12.9,
+   "phone_band_300_8k_lufs": -18.7,
+   "centroid_hz": 2210,
+   "sub_share_db": -3.7
+  },
+  "P1 + air 102.33-109.12": {
+   "momentary_lufs_mean": -12.0,
+   "phone_band_300_8k_lufs": -16.5,
+   "centroid_hz": 2404,
+   "sub_share_db": -4.8
+  },
+  "coda 109.12-111.39 (end card)": {
+   "momentary_lufs_mean": -17.3,
+   "phone_band_300_8k_lufs": -18.5,
+   "centroid_hz": 1116,
+   "sub_share_db": -34.4
+  },
+  "fade 111.39-113.63": {
+   "momentary_lufs_mean": -21.5,
+   "phone_band_300_8k_lufs": -22.5,
+   "centroid_hz": 1125,
+   "sub_share_db": -26.0
+  }
+ },
+ "ebur128": {
+  "I": "-14.0 LUFS",
+  "LRA": "3.9 LU",
+  "true_peak": "-2.2 dBFS"
+ },
+ "integrated_lufs": -14.0,
+ "true_peak_dbtp": -2.16,
+ "max_momentary_lufs": -10.9,
+ "max_momentary_at": 108.0,
+ "max_short_term_lufs": -11.8,
+ "max_short_term_at": 106.7,
+ "lr_correlation": 1.0,
+ "mono_fold_change_db": -0.0,
+ "band_share_db_body": {
+  "sub_20_60": -9.2,
+  "low_60_120": -4.0,
+  "mud_200_500": -8.1,
+  "harsh_2k_5k": -17.6,
+  "air_8k_16k": -23.9
+ },
+ "duration": 113.63333333333334,
+ "last_nonsilent": 113.54,
+ "grid": [
+  {
+   "n": 0,
+   "formula": 0.4432,
+   "song_bar": 20,
+   "measured": 0.4432,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 1,
+   "formula": 2.7074,
+   "song_bar": 21,
+   "measured": 2.7074,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 2,
+   "formula": 4.9716,
+   "song_bar": 22,
+   "measured": 4.9716,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 3,
+   "formula": 7.2358,
+   "song_bar": 23,
+   "measured": 7.2358,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 4,
+   "formula": 9.5,
+   "song_bar": 24,
+   "measured": 9.5,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 5,
+   "formula": 11.7642,
+   "song_bar": 25,
+   "measured": 11.7642,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 6,
+   "formula": 14.0284,
+   "song_bar": 26,
+   "measured": 14.0284,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 7,
+   "formula": 16.2926,
+   "song_bar": 27,
+   "measured": 16.2926,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": "bar 27 b1-b2, then bar 63 from beat 3 (J1)"
+  },
+  {
+   "n": 8,
+   "formula": 18.5568,
+   "song_bar": 64,
+   "measured": 18.5586,
+   "err_ms": 1.8,
+   "xcorr": 1.0,
+   "note": "valley 64 b1-b2, then valley 71 b3-b4 (J2)"
+  },
+  {
+   "n": 9,
+   "formula": 20.821,
+   "song_bar": 72,
+   "measured": 20.821,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 10,
+   "formula": 23.0852,
+   "song_bar": 73,
+   "measured": 23.0852,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 11,
+   "formula": 25.3494,
+   "song_bar": 74,
+   "measured": 25.3494,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 12,
+   "formula": 27.6136,
+   "song_bar": 75,
+   "measured": 27.6136,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 13,
+   "formula": 29.8778,
+   "song_bar": 76,
+   "measured": 29.8778,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 14,
+   "formula": 32.142,
+   "song_bar": 77,
+   "measured": 32.142,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 15,
+   "formula": 34.4062,
+   "song_bar": 78,
+   "measured": 34.4062,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": "bar 78 b1-b2, then bar 12 from beat 3 (J3)"
+  },
+  {
+   "n": 16,
+   "formula": 36.6704,
+   "song_bar": 13,
+   "measured": 36.6671,
+   "err_ms": -3.3,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 17,
+   "formula": 38.9346,
+   "song_bar": 14,
+   "measured": 38.9314,
+   "err_ms": -3.2,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 18,
+   "formula": 41.1988,
+   "song_bar": 15,
+   "measured": 41.1955,
+   "err_ms": -3.3,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 19,
+   "formula": 43.463,
+   "song_bar": 16,
+   "measured": 43.4597,
+   "err_ms": -3.3,
+   "xcorr": 0.994,
+   "note": ""
+  },
+  {
+   "n": 20,
+   "formula": 45.7272,
+   "song_bar": 17,
+   "measured": 45.724,
+   "err_ms": -3.2,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 21,
+   "formula": 47.9914,
+   "song_bar": 18,
+   "measured": 47.9881,
+   "err_ms": -3.3,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 22,
+   "formula": 50.2556,
+   "song_bar": 19,
+   "measured": 50.2524,
+   "err_ms": -3.2,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 23,
+   "formula": 52.5198,
+   "song_bar": 20,
+   "measured": 52.5165,
+   "err_ms": -3.3,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 24,
+   "formula": 54.784,
+   "song_bar": 21,
+   "measured": 54.7807,
+   "err_ms": -3.3,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 25,
+   "formula": 57.0482,
+   "song_bar": 22,
+   "measured": 57.045,
+   "err_ms": -3.2,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 26,
+   "formula": 59.3124,
+   "song_bar": 23,
+   "measured": 59.3091,
+   "err_ms": -3.3,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 27,
+   "formula": 61.5766,
+   "song_bar": 64,
+   "measured": 61.5766,
+   "err_ms": 0.0,
+   "xcorr": 0.964,
+   "note": "J4: 23 deep break -> valley 64"
+  },
+  {
+   "n": 28,
+   "formula": 63.8408,
+   "song_bar": 65,
+   "measured": 63.8408,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 29,
+   "formula": 66.105,
+   "song_bar": 66,
+   "measured": 66.105,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 30,
+   "formula": 68.3692,
+   "song_bar": 67,
+   "measured": 68.3692,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 31,
+   "formula": 70.6334,
+   "song_bar": "intro 2",
+   "measured": 70.6334,
+   "err_ms": -0.0,
+   "xcorr": 0.892,
+   "note": "J5: intro bar 2 (hush)"
+  },
+  {
+   "n": 32,
+   "formula": 72.8976,
+   "song_bar": "intro 3",
+   "measured": 72.8976,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": "intro bar 3, fading 73.46 -> 74.41"
+  },
+  {
+   "n": 33,
+   "formula": 75.1618,
+   "song_bar": 84,
+   "measured": 75.1618,
+   "err_ms": 0.0,
+   "xcorr": 0.978,
+   "note": "J6: DROP 84 out of near silence"
+  },
+  {
+   "n": 34,
+   "formula": 77.426,
+   "song_bar": 85,
+   "measured": 77.426,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 35,
+   "formula": 79.6902,
+   "song_bar": 86,
+   "measured": 79.6902,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 36,
+   "formula": 81.9544,
+   "song_bar": 87,
+   "measured": 81.9544,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 37,
+   "formula": 84.2186,
+   "song_bar": 88,
+   "measured": 84.2186,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 38,
+   "formula": 86.4828,
+   "song_bar": 89,
+   "measured": 86.4828,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 39,
+   "formula": 88.747,
+   "song_bar": 90,
+   "measured": 88.747,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 40,
+   "formula": 91.0112,
+   "song_bar": 91,
+   "measured": 91.0112,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 41,
+   "formula": 93.2754,
+   "song_bar": 92,
+   "measured": 93.2754,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 42,
+   "formula": 95.5396,
+   "song_bar": 93,
+   "measured": 95.5396,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 43,
+   "formula": 97.8038,
+   "song_bar": 94,
+   "measured": 97.8038,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 44,
+   "formula": 100.068,
+   "song_bar": 95,
+   "measured": 100.068,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 45,
+   "formula": 102.3322,
+   "song_bar": 96,
+   "measured": 102.3322,
+   "err_ms": 0.0,
+   "xcorr": 0.997,
+   "note": ""
+  },
+  {
+   "n": 46,
+   "formula": 104.5964,
+   "song_bar": 97,
+   "measured": 104.5964,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 47,
+   "formula": 106.8606,
+   "song_bar": 98,
+   "measured": 106.8606,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "n": 48,
+   "formula": 109.1248,
+   "song_bar": 105,
+   "measured": 109.1248,
+   "err_ms": -0.0,
+   "xcorr": 0.912,
+   "note": "J7: END CARD, coda 105"
+  },
+  {
+   "n": 49,
+   "formula": 111.389,
+   "song_bar": 106,
+   "measured": 111.389,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": "coda 106, fading"
+  }
+ ]
+}

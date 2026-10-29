@@ -1,0 +1,281 @@
+{
+ "OFF": {
+  "S1": 45.409600000000005,
+  "S2": 126.92080000000004,
+  "S3": 142.77020000000002,
+  "S4": -6.666999999999998,
+  "S5": 83.90100000000001,
+  "S6": -65.53620000000001,
+  "S7": 116.1658,
+  "S8": 129.75100000000003
+ },
+ "lags_ms": {
+  "S1": 0.0,
+  "S2": -1.771,
+  "S3": 0.0,
+  "S4": 3.25,
+  "S5": 0.0,
+  "S6": 0.0,
+  "S7": 0.0,
+  "S8": 0.0
+ },
+ "joins": {
+  "J1": {
+   "film": [
+    17.4647,
+    17.9507
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": -1.771,
+   "r": 0.952,
+   "cut": "bar 27 -> bar 63 inside beat 3 (27~63), so the valley follows bar 63 as in the song"
+  },
+  "J2": {
+   "film_out": [
+    19.5939,
+    19.6759
+   ],
+   "film_in": [
+    19.5939,
+    19.6759
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r_before_cut": 0.032,
+   "cut": "valley 64 beats 1-2 (F hit) -> valley 71 beats 3-4 (C, off-beat kicks into the 72 crash); chord change on beat 3, done before either beat-3 attack"
+  },
+  "J3": {
+   "film": [
+    35.5783,
+    36.0643
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": 3.25,
+   "r": 0.964,
+   "cut": "B pre-2 78 -> B pre-1 12 inside beat 3 (78~12), so 13-14-15 fill lead into the chorus"
+  },
+  "J4": {
+   "film_out": [
+    61.5671,
+    61.5721
+   ],
+   "film_in": [
+    61.5676,
+    61.5691
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r_before_cut": 0.026,
+   "cut": "bar 23 beat-4 deep break -> valley 64 hit at DA(27) (the F the song plays after 23)"
+  },
+  "J5": {
+   "film_out": [
+    70.5994,
+    70.6264
+   ],
+   "film_in": [
+    70.6124,
+    70.6324
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r_before_cut": 0.344,
+   "cut": "valley 67 (off-beat kicks) -> drumless intro bar 2 at DA(31): the expected hit never comes = the hush"
+  },
+  "J6": {
+   "film_out": null,
+   "film_in": [
+    75.1473,
+    75.1573
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r_before_cut": null,
+   "cut": "near silence -> DROP bar 84 from its transient at DA(33)"
+  },
+  "J7": {
+   "film_out": [
+    109.0898,
+    109.1148
+   ],
+   "film_in": [
+    108.9848,
+    109.1208
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r_before_cut": 0.338,
+   "cut": "bar 98 (Gb-F) -> coda bar 105 (Bbm): drums stop on the end-card downbeat, V -> i (98~90, ep51 J9)"
+  }
+ },
+ "spans": {
+  "S1": {
+   "film": [
+    0.0,
+    17.9507
+   ],
+   "song": [
+    45.4096,
+    63.3604
+   ],
+   "off": 45.4096,
+   "lag_ms": 0.0
+  },
+  "S2": {
+   "film": [
+    17.4647,
+    19.6759
+   ],
+   "song": [
+    144.3837,
+    146.5949
+   ],
+   "off": 126.9208,
+   "lag_ms": -1.771
+  },
+  "S3": {
+   "film": [
+    19.5939,
+    36.0643
+   ],
+   "song": [
+    162.3641,
+    178.8346
+   ],
+   "off": 142.7702,
+   "lag_ms": 0.0
+  },
+  "S4": {
+   "film": [
+    35.5783,
+    61.5721
+   ],
+   "song": [
+    28.9146,
+    54.9084
+   ],
+   "off": -6.667,
+   "lag_ms": 3.25
+  },
+  "S5": {
+   "film": [
+    61.5676,
+    70.6264
+   ],
+   "song": [
+    145.4686,
+    154.5274
+   ],
+   "off": 83.901,
+   "lag_ms": 0.0
+  },
+  "S6": {
+   "film": [
+    70.6124,
+    74.4138
+   ],
+   "song": [
+    5.0762,
+    8.8776
+   ],
+   "off": -65.5362,
+   "lag_ms": 0.0
+  },
+  "S7": {
+   "film": [
+    75.1473,
+    109.1148
+   ],
+   "song": [
+    191.3131,
+    225.2806
+   ],
+   "off": 116.1658,
+   "lag_ms": 0.0
+  },
+  "S8": {
+   "film": [
+    108.9848,
+    113.6333
+   ],
+   "song": [
+    238.7358,
+    243.3843
+   ],
+   "off": 129.751,
+   "lag_ms": 0.0
+  }
+ },
+ "fx": [
+  {
+   "film": [
+    42.462,
+    43.462
+   ],
+   "what": "reversed-reverb swell of the bar-16 downbeat into the draw",
+   "db": -15.0
+  },
+  {
+   "film": [
+    74.03,
+    75.162
+   ],
+   "what": "ring (reverb, tau 0.45 s) of the intro C chord into the near silence",
+   "db": -16.0
+  },
+  {
+   "film": [
+    74.457,
+    75.157
+   ],
+   "what": "reversed-reverb inhale of the bar-84 downbeat into T1",
+   "db": -14.0
+  }
+ ],
+ "attacks": {
+  "a24": 54.9056,
+  "a64": 145.4701,
+  "a68": 154.5304,
+  "a2": 5.1092,
+  "a84": 191.3231,
+  "a16": 36.7945,
+  "a72": 163.5867,
+  "a96": 218.492,
+  "a88": 200.3789,
+  "a71b3": 162.4596
+ },
+ "anchors": {
+  "FIRST_DOWNBEAT": 0.4432,
+  "TITLE": 9.5,
+  "LULL": 18.556800000000003,
+  "DIVE": 20.821,
+  "FILL": 41.1988,
+  "DRAW": 43.463,
+  "M1_VALLEY": 61.576600000000006,
+  "M2": 66.105,
+  "HUSH": 70.63340000000001,
+  "M3_END": 74.41180000000001,
+  "T1_DROP": 75.16180000000001,
+  "ARRIVAL_88": 84.21860000000001,
+  "LIFT_94": 97.80380000000001,
+  "P1": 102.33220000000001,
+  "AIR": 107.99270000000001,
+  "END_CARD": 109.12480000000001,
+  "FADE": [
+   111.38900000000001,
+   113.549
+  ],
+  "FILM_LEN": 113.63333333333334
+ },
+ "gains": {
+  "BUILD_DB": -1.5,
+  "HUSH_DB": -4.5,
+  "DROP_DB": 0.5,
+  "RISE_DB": 2.0
+ },
+ "lufs_in": -17.092245587843536,
+ "lufs_out": -14.000000000000012,
+ "true_peak_dbtp": -2.1580987329006835,
+ "limited": false,
+ "dur": 113.63333333333334
+}
