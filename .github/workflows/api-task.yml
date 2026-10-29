@@ -47,6 +47,10 @@ on:
         description: "Maximum agent turns"
         required: true
         default: "60"
+      minutes:
+        description: "Wall-clock limit for the agent in minutes (the results are still committed when it is hit; max 330)"
+        required: false
+        default: "80"
 
 permissions:
   contents: write
@@ -58,7 +62,7 @@ concurrency:
 jobs:
   task:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 350
     env:
       NAME: ${{ inputs.name }}
       BRANCH: api-task/${{ inputs.name }}
@@ -143,7 +147,7 @@ jobs:
           Be economical: read only what the task needs and don't repeat work.
           EOF
           set +e
-          claude -p "Do the task in $DIR/brief.md." \
+          timeout -k 60 "${{ inputs.minutes || 80 }}m" claude -p "Do the task in $DIR/brief.md." \
             --append-system-prompt "$(cat "$RUNNER_TEMP/system.md")" \
             --model "${{ inputs.model }}" \
             --effort "${{ inputs.effort }}" \
