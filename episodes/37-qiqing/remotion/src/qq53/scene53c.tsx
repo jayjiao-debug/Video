@@ -30,8 +30,8 @@ const Lid: React.FC<{c: Cam; u: number; rest: number; hx: number; hy: number; L:
 	const endL = [P(-hx, e.Ny, e.Nh, true), P(-hx, e.Fy, e.Fh, true), P(-hx, e.Fy, e.Fh, false), P(-hx, e.Ny, e.Nh, false)];
 	const endR = [P(hx, e.Ny, e.Nh, true), P(hx, e.Fy, e.Fh, true), P(hx, e.Fy, e.Fh, false), P(hx, e.Ny, e.Nh, false)];
 	const inset = [P(-hx + 0.1, lerp(e.Ny, e.Fy, 0.12), lerp(e.Nh, e.Fh, 0.12), true), P(hx - 0.1, lerp(e.Ny, e.Fy, 0.12), lerp(e.Nh, e.Fh, 0.12), true), P(hx - 0.1, lerp(e.Ny, e.Fy, 0.88), lerp(e.Nh, e.Fh, 0.88), true), P(-hx + 0.1, lerp(e.Ny, e.Fy, 0.88), lerp(e.Nh, e.Fh, 0.88), true)];
-	return <g><path d={poly(c, endL)} fill="#1E1410" /><path d={poly(c, endR)} fill="#1A110D" /><path d={poly(c, front)} fill="#1E1410" />
-		<path d={poly(c, top)} fill="#150D0A" stroke="#D8A868" strokeOpacity={0.6} strokeWidth={2} /><path d={poly(c, inset)} fill="none" stroke={RED_LINE} strokeOpacity={0.6} strokeWidth={2} /><title>{id}</title></g>; };
+	return <g><path d={poly(c, endL)} fill="#2A1C14" /><path d={poly(c, endR)} fill="#241811" /><path d={poly(c, front)} fill="#2A1C14" />
+		<path d={poly(c, top)} fill="#33211A" stroke="#F0C080" strokeOpacity={0.85} strokeWidth={3.5} /><path d={poly(c, front)} fill="none" stroke="#F0C080" strokeOpacity={0.6} strokeWidth={2.5} /><path d={poly(c, inset)} fill="none" stroke={RED_LINE} strokeOpacity={0.6} strokeWidth={2} /><title>{id}</title></g>; };
 /** the sword's point, chamber-local: a, w, h in cm */
 const swP = (t: number, a: number, w: number, h = 0): V3 => { const s = swordAt(t); return [s.xp + a / 100, s.y + w / 100, s.z + h / 100]; };
 /** the sheath: rigid, its mouth at the guard when nothing is drawn; black lacquer, wet */
@@ -63,8 +63,8 @@ const Occupant: React.FC<{c: Cam}> = ({c}) => { const z = 0.05, L = (pts: [numbe
 const clampP = (p: [number, number, number]): [number, number, number] => [cl(p[0], 260, 1660), cl(p[1], 300, 860), p[2]];
 const TagC: React.FC<{p: [number, number, number]; n: string; o: number}> = ({p, n, o}) => o <= 0.01 ? null : <g opacity={o}><circle cx={p[0]} cy={p[1]} r={34} fill="#120A06" opacity={0.6} /><circle cx={p[0]} cy={p[1]} r={30} fill="none" stroke={B.goldL} strokeWidth={3} />
 	<text x={p[0]} y={p[1] + 18} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={50} fill={B.goldL}>{n}</text></g>;
-const Planks: React.FC<{c: Cam; tc: ShaftTC; t: number}> = ({c, tc, t}) => { const z0 = WH, lift0 = seg(t, T_ROOF, T_ROOF + 0.5), ps = Array.from({length: 8}, (_, i) => { const ti = T_ROOF + 0.05 * i, h = t > ti ? 6 * (t - ti) * (t - ti) : 0;
-	const x0 = -1.6 + 0.4 * i, x1 = x0 + 0.4, hn = h * 1.25, hf = h * 0.8, rot = h > 0 ? 0.03 * Math.sin(i * 2.3 + t * 3) * Math.min(1, h) : 0;
+const Planks: React.FC<{c: Cam; tc: ShaftTC; t: number}> = ({c, tc, t}) => { const z0 = WH, lift0 = seg(t, T_ROOF, T_ROOF + 0.5), ps = Array.from({length: 8}, (_, i) => { const ti = T_ROOF + 0.07 * Math.abs(i - 3.5) - 0.035, e = sstep5(seg(t, ti, ti + 0.6)), h = 0.9 * e, sl = (i < 4 ? -1 : 1) * 4.5 * e;
+	const x0 = -1.6 + 0.4 * i + sl, x1 = x0 + 0.4, hn = h * 1.25, hf = h * 0.8, rot = h > 0 ? 0.03 * Math.sin(i * 2.3 + t * 3) * Math.min(1, h) : 0;
 	return {i, h, d: poly(c, [[x0, -1.0, z0 + hn], [x1 + rot, -1.0, z0 + hn], [x1 + rot, 1.3, z0 + hf], [x0, 1.3, z0 + hf]]), side: poly(c, [[x0, -1.0, z0 + hn], [x1, -1.0, z0 + hn], [x1, -1.0, z0 + hn - 0.1], [x0, -1.0, z0 + hn - 0.1]])}; });
 	const F = -8.8, fc = pj(tc, [0, 0.15, F]), dd = Math.max(2, dOf(tc, [0, 0.15, F])), rect = poly(c, [[-1.6, -1.0, z0], [1.6, -1.0, z0], [1.6, 1.3, z0], [-1.6, 1.3, z0]]), rect2 = poly(c, [[-1.62, -1.02, z0], [1.62, -1.02, z0], [1.62, 1.32, z0], [-1.62, 1.32, z0]]);
 	return <g>{ps.map((p) => <g key={p.i}><path d={p.d} fill="#2A1A10" stroke="#140C06" strokeOpacity={0.6} strokeWidth={1.5} />{p.h > 0 && <path d={p.side} fill="#4A3220" />}</g>)}
@@ -74,7 +74,7 @@ const Planks: React.FC<{c: Cam; tc: ShaftTC; t: number}> = ({c, tc, t}) => { con
 const defs = <defs>
 	<radialGradient id="tbGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFB060" stopOpacity="0.55" /><stop offset="0.5" stopColor="#FF9A48" stopOpacity="0.2" /><stop offset="1" stopColor="#FF9040" stopOpacity="0" /></radialGradient>
 	<radialGradient id="tbLampG" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFC878" stopOpacity="0.8" /><stop offset="0.4" stopColor="#FFA850" stopOpacity="0.25" /><stop offset="1" stopColor="#FF9040" stopOpacity="0" /></radialGradient>
-	<filter id="tbN" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4 9" /></filter>
+	<filter id="tbN" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.5 4" /></filter>
 	<filter id="tbM" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.4 2.2" /></filter>
 	<filter id="tbS" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.2" /></filter>
 	<linearGradient id="cwk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#E8F4FF" stopOpacity="0" /><stop offset="0.5" stopColor="#FFFFFF" stopOpacity="0.9" /><stop offset="1" stopColor="#D8ECFF" stopOpacity="0" /></linearGradient>
@@ -91,7 +91,7 @@ export const Chamber53: React.FC<{t: number}> = ({t}) => {
 	const e1 = lidEdges(u1, OUT.z, OUT.y, LEAN1), e2 = lidEdges(u2, INN.z, INN.y, LEAN2);
 	const act = lerp(0, 1, sstep(seg(t, 37.5, 37.8)));
 	const gx = (side: number): V3 => { const a = grip1(e1, 1.06 * side), b = grip1(e2, 0.9 * side); return [lerp(a[0], b[0], act), lerp(a[1], b[1], act), lerp(a[2], b[2], act)]; };
-	const dOp = (1 - seg(t, 38.2, 38.75)) * seg(t, T_ROOF + 0.4, T_ROOF + 0.8);
+	const dOp = (1 - seg(t, 38.2, 38.75)) * seg(t, 36.7, 37.1);
 	const digY = (side: number) => cl(gx(side)[1] - 0.12, -0.3, 0.62);
 	const lampP = proj(c, [0.25, -0.15, 2.35]);
 	const sw = swordAt(t), ringO = 0.62 * sstep(seg(t, 34.4, 36.0));
@@ -131,17 +131,17 @@ export const Chamber53: React.FC<{t: number}> = ({t}) => {
 		{!roofOn && <Planks c={c} tc={tc} t={t} />}
 		{!roofOn && t < T_ROOF + 1.0 && <PitLamps c={tc} t={t} o={1} lift={[Math.max(0, 6 * (t - T_ROOF) ** 2), Math.max(0, 6 * (t - T_ROOF - 0.35) ** 2)]} />}
 		{lampP[2] > 0.4 && lampP[1] > -200 && t > T_ROOF && t < 38.9 && <g><Pool id="cl" x={lampP[0]} y={lampP[1]} rx={150} ry={130} a={0.5 * seg(t, T_ROOF, T_ROOF + 0.6)} col="#FFD490" /><ellipse cx={lampP[0]} cy={lampP[1]} rx={15} ry={22} fill="#FFE8B8" opacity={0.95 * seg(t, T_ROOF, T_ROOF + 0.6)} /></g>}
-		<TagC p={clampP(proj(c, [-0.35, e1.Fy, e1.Fh + 0.2]))} n="1" o={seg(t, T_LID1, T_LID1 + 0.01) * (1 - seg(t, 38.6, 38.9))} />
-		<TagC p={clampP(proj(c, [0.35, e2.Fy, e2.Fh + 0.2]))} n="2" o={seg(t, T_LID2, T_LID2 + 0.01) * (1 - seg(t, 38.9, 39.2))} />
+		{[[-0.35, e1, 1, T_LID1, 38.6, 38.9], [0.35, e2, 2, T_LID2, 38.9, 39.2]].map(([x, e, n, t0, f0, f1]) => { const q = proj(c, [x as number, (e as ReturnType<typeof lidEdges>).Fy, (e as ReturnType<typeof lidEdges>).Fh + 0.2]), dist = Math.max(0, 300 - q[1], q[1] - 860, 260 - q[0], q[0] - 1660);
+			return <TagC key={n as number} p={clampP(q)} n={String(n)} o={seg(t, t0 as number, (t0 as number) + 0.01) * (1 - seg(t, f0 as number, f1 as number)) * (1 - cl(dist / 120))} />; })}
 		{roofOn && <Snow c={tc} t={t} g={1} />}
 		<Vignette id="cC" a={0.6} />
 		{cl2 && sw && null}
 	</svg>; };
 
 /* ---------- plan regime (camera straight above): the sword in 2-D on its plane, the sheath, the hands, the water ---------- */
-const PlanSword: React.FC<{t: number; dl: number; wash: number; c: Cam; hold: boolean}> = ({t, dl, wash, c, hold}) => { const k = planK(t), [px, py] = planPos(t, 0, 0), s = k / 27;
+const PlanSword: React.FC<{t: number; dl: number; wash: number; c: Cam; hold: boolean}> = ({t, dl, wash, c, hold}) => { const k = planK(t), [px, py] = planPos(t, 0, 0);
 	const mouth = SW.guardA + dl, gl = planPos(t, mouth + 4, 0), gr = planPos(t, 4.6, 0);
-	const enter = sstep(seg(t, 40.7, 41.3)), slide = (1 - enter) * 520;
+	const enter = sstep(seg(t, 40.7, 41.3)), slide = (1 - enter) * 520, exR = sstep5(seg(t, 43.8, 46.0)), exL = sstep5(seg(t, 44.1, 47.0));
 	const flash = seg(t, T_DRAW, T_DRAW + 0.9);
 	const hw = sheathHW(mouth + 4, dl) * k;
 	const [hx, hy] = planPos(t, 28, 0), hp = seg(t, 38.2, 39.3) * (1 - seg(t, 44.0, 46.0));
@@ -154,9 +154,9 @@ const PlanSword: React.FC<{t: number; dl: number; wash: number; c: Cam; hold: bo
 			<rect x={lerp(planPos(t, mouth, 0)[0], planPos(t, SW.L, 0)[0], flash) - 90} y={py - 2.2 * k} width={180} height={4.4 * k} fill="url(#cwk)" opacity={0.8 * (1 - flash)} /></g>}
 		<Sheath c={c} t={t} dl={dl} wash={wash} />
 		<Water t={t} dl={dl} />
-		{enter > 0.01 && <g>
-			<Glove x={gl[0]} y={gl[1] + slide} w={150 * s} bar={hw} sleeveTo={[gl[0] - 420 * s, H + 60]} id="gl" />
-			<Glove x={gr[0]} y={gr[1] + slide} w={138 * s} bar={0.95 * k} sleeveTo={[gr[0] + 180 * s, H + 60]} id="gr" />
+		{enter > 0.01 && t < 47.3 && <g>
+			<g transform={`translate(0 ${exL * 1000})`}><Glove x={gl[0]} y={gl[1] + slide} w={8 * k} bar={hw} sleeveTo={[gl[0] - 12 * k, H + 160]} id="gl" /></g>
+			<g transform={`translate(${exR * 320} ${exR * 1000})`}><Glove x={gr[0]} y={gr[1] + slide} w={7 * k} bar={1.9 * k} sleeveTo={[gr[0] + 5 * k, H + 160]} id="gr" /></g>
 		</g>}
 		<Letters t={t} />
 		<Reading t={t} />
