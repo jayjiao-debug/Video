@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect, useRef} from 'react';
 import {lerp, rnd} from '../qq50/kit50';
 import {Look4} from '../qq44/figure44';
 import {FLAME, CLOUD, METAL, WOOD} from './palette52';
@@ -9,8 +9,11 @@ import {FLAME, CLOUD, METAL, WOOD} from './palette52';
    - Flame {x, y, L, w, rot, k, seed}            a rocket flame / exhaust jet from a nozzle at (x, y); rot = direction it points (deg, 90 = down)
    - RocketBody {x, y, h, w, boosters, nose, fins, flame, rot, tone, id}   a generic rocket (no logos, no flags); (x, y) = centre of the core's base
      rocketNozzles(...) → the nozzle exits in screen space (same args), for hanging your own flames
-   - RocketCloud {ax, ay, x0, y0, bw, bh, k, sun, id, t}   the 火箭云: twisting trail from (x0, y0) on the horizon up to the rocket at (ax, ay),
-     where the plume opens into the glowing jellyfish bell (half-width bw, height bh below the apex). sun = -1 / 1: side the sunlight comes from.
+   - RocketCloud = ParticleRocketCloud {ax, ay, x0, y0, bw, bh, k, sun, id, t, …}   the 火箭云 after the viral 2026-10-23 video: a 2D particle
+     glow (canvas in a foreignObject) shaped as the bright-rimmed balloon with its twisted white → orange → red trail ending at (x0, y0).
+     Optional: stage (2 bulb · 5 balloon (default) · 8 spokes + star point · 9.5+ dark cavity · 12–14 huge faint dome), neck / rv / c / ru / axis,
+     bloom. pcloudGeom(props) gives its centre, radii, neck and star point; openStage(t) maps the opening's film time to a stage.
+     The old SVG jellyfish stays as RocketCloudSvg (same props).
    - Billow {x, y, w, h, lit, col, seed}         a launch-smoke billow, lit warm from below (lit 0..1)
    - FireArrow {x, y, L, rot, lit, burn, id}      the 宋 fire arrow: (x, y) = the nock (tail end), rot = tail→head direction (deg, -90 = up);
      a small paper-wrapped powder tube just behind the head, its fuse at the tube's rear. arrowAt(x, y, L, rot, u) = point at u (0 tail … 1 tip)
@@ -157,7 +160,7 @@ const bellPts = (ax: number, ay: number, bw: number, bh: number, sun: number): {
 /** the 火箭云: (ax, ay) = the rocket at the top of the plume; (x0, y0) = where the trail leaves the horizon; bw / bh = the bell's
     half-width / height below the apex; k = brightness (1 = frame 0, 1.25 = brighter); sun = the side the sunlight comes from (-1 left);
     t = time (slow drift of the wisps) */
-export const RocketCloud: React.FC<{ax: number; ay: number; x0: number; y0: number; bw: number; bh: number; k?: number; sun?: -1 | 1; id?: string; t?: number; amp?: number; rocket?: boolean}> =
+export const RocketCloudSvg: React.FC<{ax: number; ay: number; x0: number; y0: number; bw: number; bh: number; k?: number; sun?: -1 | 1; id?: string; t?: number; amp?: number; rocket?: boolean}> =
 	({ax, ay, x0, y0, bw, bh, k = 1, sun = -1, id = 'rc', t = 0, amp, rocket = true}) => {
 		const A = amp ?? bw * 0.2, yb = ay + bh;
 		const pts = trailPts(x0, y0, ax, ay, A, 56, 0.6);
@@ -212,6 +215,170 @@ export const RocketCloud: React.FC<{ax: number; ay: number; x0: number; y0: numb
 				<path d={`M${f1(ax)},${f1(ay - 4 - bw * 0.06)} L${f1(ax)},${f1(ay - 4 + bw * 0.06)} M${f1(ax - bw * 0.06)},${f1(ay - 4)} L${f1(ax + bw * 0.06)},${f1(ay - 4)}`} stroke="#FFFFFF" strokeWidth={2} strokeOpacity={0.8} />
 			</>}
 		</g>; };
+
+/* ---------- the 火箭云, particle version (after the viral 2026-10-23 photo: a glowing balloon / teardrop shell, a bright lit rim and a
+   hazy inside, a few faint filaments, and a twisting trail from the lower neck: white → cream → orange → red-orange at the tip) ----------
+   Deterministic: every random number comes from a PRNG seeded by id, so frame N always draws the same. Drawn on a <canvas> inside a
+   <foreignObject> (so it layers inside the caller's <svg> like any SVG element): soft radial sprites, additive ('lighter'), then a
+   two-step bloom from a quarter-size copy. ~10–25k particles. Motion: the shell expands ~3 %/s, spins slowly and shimmers; the trail's
+   billows drift. Same props as RocketCloudSvg (a drop-in), plus optional c / rv / ru to place the balloon exactly. */
+export type PCloudProps = {ax: number; ay: number; x0: number; y0: number; bw: number; bh: number; k?: number; sun?: -1 | 1; id?: string; t?: number; amp?: number; rocket?: boolean;
+	/** balloon centre, half-width (across the long axis), half-length (along it); default from ax/ay/bw/bh */
+	c?: P2; rv?: number; ru?: number; bloom?: number; trailK?: number;
+	/** the long axis angle (deg) at stage 5; default between the trail direction and the horizontal */
+	axis?: number;
+	/** how far the cloud has evolved, in seconds of the viral video: 2 = a small bulb, 5 = the classic balloon (default), 8 = big, with
+	    spokes from the star point (the rocket), 9.5+ = the dark cavity opens round the star, 12–14 = a huge faint dome */
+	stage?: number;
+	/** anchor the neck here and size the balloon from the stage (rv = its half-width at stage 5); the balloon inflates up and away from it */
+	neck?: P2};
+const hashStr = (str: string) => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+const mulberry = (seed: number) => { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) | 0; let q = Math.imul(a ^ (a >>> 15), 1 | a); q = (q + Math.imul(q ^ (q >>> 7), 61 | q)) ^ q; return ((q ^ (q >>> 14)) >>> 0) / 4294967296; }; };
+const gauss = (r: () => number) => Math.sqrt(-2 * Math.log(Math.max(1e-9, r()))) * Math.cos(2 * Math.PI * r());
+const spriteCache = new Map<string, HTMLCanvasElement>();
+const sprite = (c: [number, number, number]) => { const q = c.map((v) => Math.max(0, Math.min(255, Math.round(v / 6) * 6))), key = q.join(','); let cv = spriteCache.get(key); if (cv) return cv;
+	cv = document.createElement('canvas'); cv.width = cv.height = 64; const x = cv.getContext('2d')!, gr = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+	gr.addColorStop(0, `rgba(${key},1)`); gr.addColorStop(0.22, `rgba(${key},0.62)`); gr.addColorStop(0.55, `rgba(${key},0.16)`); gr.addColorStop(1, `rgba(${key},0)`);
+	x.fillStyle = gr; x.fillRect(0, 0, 64, 64); spriteCache.set(key, cv); return cv; };
+const mixC = (a: number[], b: number[], u: number): [number, number, number] => [lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u)];
+const TRAIL_RAMP: [number, number[]][] = [[0, [255, 236, 206]], [0.3, [255, 226, 188]], [0.62, [255, 212, 166]], [0.76, [255, 178, 108]], [0.88, [255, 122, 62]], [1, [236, 58, 40]]];
+const rampAt = (s: number): [number, number, number] => { const v = Math.max(0, Math.min(1, s)); for (let i = 1; i < TRAIL_RAMP.length; i++) if (v <= TRAIL_RAMP[i][0]) { const [s0, c0] = TRAIL_RAMP[i - 1], [s1, c1] = TRAIL_RAMP[i]; return mixC(c0, c1, (v - s0) / (s1 - s0)); } return TRAIL_RAMP[TRAIL_RAMP.length - 1][1] as [number, number, number]; };
+/** piecewise-linear lookup */
+const pl = (pts: [number, number][], x: number) => { if (x <= pts[0][0]) return pts[0][1]; for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) return lerp(pts[i - 1][1], pts[i][1], (x - pts[i - 1][0]) / (pts[i][0] - pts[i - 1][0])); return pts[pts.length - 1][1]; };
+const sm = (x: number) => { const u = Math.max(0, Math.min(1, x)); return u * u * (3 - 2 * u); };
+/** the opening's film time → the viral video's time (frame 0 is already a clear teardrop; spokes by ~6 s; the cavity opens by ~9 s) */
+export const openStage = (t: number) => pl([[0, 4], [3, 5.5], [6, 8], [9, 9.5], [10.25, 10.5], [14, 12]], t);
+/** the balloon's geometry in screen space (handy for placing labels / rays): centre C, half-width Rv, half-length Ru, long axis n (to the
+    neck), its normal q, the neck N, the trail's end F, the star point S (the rocket, inside the upper-left), the stage v */
+export const pcloudGeom = (p: PCloudProps) => { const t = p.t ?? 0, v = p.stage ?? 5, rho = pl([[2, 1.75], [5, 1.4], [8, 1.2], [10.5, 1.12], [14, 1.08]], v), F: P2 = [p.x0, p.y0];
+	const flat = pl([[2, 1.4], [5, 1], [8, 0.55], [10.5, 0.38], [14, 0.3]], v);
+	let C: P2, Rv: number, Ru: number, ang: number;
+	if (p.neck) { const Nk = p.neck; Rv = (p.rv ?? 140) * pl([[2, 0.42], [3.5, 0.75], [5, 1], [8, 1.45], [9.5, 1.62], [10.5, 1.72], [14, 2.1]], v); Ru = Rv * rho;
+		const dx = F[0] - Nk[0], dy = F[1] - Nk[1]; ang = (p.axis !== undefined ? p.axis * Math.PI / 180 : Math.atan2(dy, dx) * 0.45) * flat;
+		C = [Nk[0] - Math.cos(ang) * Ru * 0.97 - 1.2 * t, Nk[1] - Math.sin(ang) * Ru * 0.97 - 0.6 * t]; }
+	else { const e = 1 + 0.03 * t, Rv0 = p.rv ?? 0.42 * Math.min(p.bw, p.bh), C0: P2 = p.c ?? [p.ax, p.ay + Rv0 * 1.1]; Rv = Rv0 * e; Ru = (p.ru ?? Rv0 * rho) * e; C = [C0[0] - 1.6 * t, C0[1] - 0.9 * t];
+		const dx = F[0] - C[0], dy = F[1] - C[1]; ang = (p.axis !== undefined ? p.axis * Math.PI / 180 : Math.atan2(dy, dx) - 0.5 * Math.atan2(dy, Math.abs(dx)) * Math.sign(dx || 1) * 0.9) * (p.axis !== undefined ? flat : 1); }
+	const n: P2 = [Math.cos(ang), Math.sin(ang)], q: P2 = [-n[1], n[0]];
+	const N: P2 = p.neck ?? [C[0] + n[0] * Ru * 0.97, C[1] + n[1] * Ru * 0.97];
+	const S: P2 = [C[0] - n[0] * Ru * 0.6 - q[0] * Rv * 0.3, C[1] - n[1] * Ru * 0.6 - q[1] * Rv * 0.3];
+	return {C, Rv, Ru, n, q, N, F, S, v}; };
+type Pt = {x: number; y: number; s: number; a: number; c: [number, number, number]};   // c kept for compatibility (unused: colour comes from the tone map)
+type Seg = {x0: number; y0: number; x1: number; y1: number; w: number; a: number};
+/* Two intensity layers (balloon, trail) are accumulated as soft white light, then tone-mapped to colour: the balloon to warm cream-peach
+   (a cool, very transparent haze at low intensity; never white), the trail along its length (cream → orange → red only in the last
+   quarter). Everything sits flat in the picture plane. */
+const buildCloud = (p: PCloudProps): {b: Pt[]; t: Pt[]; h: Pt[]; spokes: Seg[]} => { const G = pcloudGeom(p), {C, Rv, Ru, n, q, N, F, S: Sp, v} = G, t = p.t ?? 0, sun = p.sun ?? -1, R = mulberry(hashStr(p.id ?? 'pc'));
+	const B: Pt[] = [], T: Pt[] = [], Hz: Pt[] = [], spokes: Seg[] = [], wc: [number, number, number] = [255, 255, 255];
+	const k = p.k ?? 1;
+	const Rb = p.neck ? (p.rv ?? 140) : Rv;   // the base size: rim width, sprite size and the trail stay at this scale while the balloon inflates
+	const gr = Math.max(1, Rv / Rb), Rt = p.neck ? Rb * Math.min(1.15, pl([[2, 0.6], [5, 1], [8, 1.12]], v)) : Rv;
+	const L: P2 = [sun * 0.8, 0.6];   // the lit side: left and lower-left (the sun set there)
+	const Sx = (a: number, b: number): P2 => [C[0] + n[0] * a + q[0] * b, C[1] + n[1] * a + q[1] * b];
+	const pinK = pl([[2, 0.72], [5, 0.62], [8, 0.52], [10.5, 0.45], [14, 0.4]], v);
+	const outl = (th: number): {u: number; v: number} => { const ca = Math.cos(th), pin = 1 - pinK * Math.pow(Math.max(0, ca), 2.4); return {u: Ru * ca, v: Rv * Math.sin(th) * pin}; };
+	const hw = (c: number) => Rv * Math.sqrt(Math.max(0, 1 - c * c)) * (1 - pinK * Math.pow(Math.max(0, c), 2.4));
+	const litAt = (th: number) => { const o = outl(th), o2 = outl(th + 0.01), tx = o2.u - o.u, ty = o2.v - o.v, nl = Math.hypot(tx, ty) || 1, na = ty / nl, nb = -tx / nl;
+		const sx = n[0] * na + q[0] * nb, sy = n[1] * na + q[1] * nb; return Math.max(0, sx * L[0] + sy * L[1]); };
+	const shim = (i: number) => 0.85 + 0.15 * Math.sin(t * 2.1 + i * 1.71);
+	/* 1 · the rim: fewer, larger, softer sprites in a band of constant on-screen width (it thins relative to the balloon as it inflates);
+	   count ∝ perimeter, so its brightness per length stays put */
+	const NS = Math.round(6500 * Math.min(1.4, Rb / 140) * gr);
+	for (let i = 0; i < NS; i++) { const th = 2 * Math.PI * R() + 0.015 * t * (i % 2 ? 1 : -1), o = outl(th), lit = litAt(th), ol = Math.hypot(o.u, o.v) || 1, bw = Rb * (0.065 + 0.15 * Math.pow(lit, 1.2));
+		const dr = -Math.abs(gauss(R)) * bw + gauss(R) * Rb * 0.008, [x, y] = Sx(o.u * (1 + dr / ol), o.v * (1 + dr / ol)), neck = 1 - 0.45 * Math.pow(Math.max(0, Math.cos(th)), 12);
+		B.push({x, y, s: Rb * (0.08 + 0.06 * lit) * (0.8 + 0.4 * R()), a: 0.0115 * k / Math.pow(gr, 0.3) * (0.3 + 0.8 * Math.pow(lit, 0.9)) * neck * shim(i), c: wc}); }
+	/* 2 · the soft fuzz just outside (the upper right blurs into the sky) */
+	const NF = Math.round(900 * Math.min(1.4, Rb / 140) * gr);
+	for (let i = 0; i < NF; i++) { const th = 2 * Math.PI * R(), o = outl(th), lit = litAt(th), ol = Math.hypot(o.u, o.v) || 1, dr = Rb * (0.02 + 0.1 * Math.abs(gauss(R))) * (1.3 - 0.5 * lit), [x, y] = Sx(o.u * (1 + dr / ol), o.v * (1 + dr / ol));
+		B.push({x, y, s: Rb * 0.11, a: 0.012 * k * (1.1 - 0.6 * lit) * (1 - 0.7 * Math.pow(Math.max(0, Math.cos(th)), 6)), c: wc}); }
+	/* 3 · the inside: a thin, very transparent haze (uniform by area, a touch denser toward the rim); thinner as it inflates */
+	const NH = Math.round(3600 * Math.min(1.4, Rb / 140) * gr);
+	for (let i = 0, tries = 0; i < NH && tries < NH * 4; tries++) { const c = 2 * R() - 1, bb = 2 * R() - 1, half = hw(c) * 0.94; if (Math.abs(bb) * Rv > half) continue; i++;
+		const edge = Math.abs(bb) * Rv / Math.max(1, half), [x, y] = Sx(Ru * c * 0.95, bb * Rv);
+		Hz.push({x, y, s: Rb * 0.24, a: 0.004 * k * (0.9 + 0.2 * edge) / Math.pow(gr, 1.0) * shim(i + 7), c: wc}); }
+	/* 4 · early: two thin filaments upper-left → lower-right; later: thin faint straight spokes from the star point */
+	const filA = 1 - sm((v - 6) / 2), spA = sm((v - 5.4) / 2.4) * (1 - 0.55 * sm((v - 10) / 3));
+	if (filA > 0) ([[-0.3, -0.15, 0.012], [-0.17, -0.05, 0.011]] as [number, number, number][]).forEach(([b0, b1, al]) => { const NFl = Math.round(380 * Math.min(1.4, Rb / 140));
+		for (let i = 0; i < NFl; i++) { const u = R(), a = lerp(-0.78, 0.62, u), b = lerp(b0, b1, u) - 0.05 * Math.sin(Math.PI * u), [x, y] = Sx(Ru * a, Rv * b + gauss(R) * Rb * 0.004);
+			B.push({x, y, s: Rb * 0.028, a: al * filA * k * Math.pow(Math.sin(Math.PI * u), 0.6), c: wc}); } });
+	if (spA > 0) { const ns = 15, sa = Math.atan2(n[1], n[0]), su = -0.6 * Ru, sv = -0.3 * Rv;
+		for (let j = 0; j < ns; j++) { const da = (-62 + 112 * (j + 0.3 * rnd(j, 5)) / (ns - 1)) * Math.PI / 180, dx = Math.cos(sa + da), dy = Math.sin(sa + da), du = Math.cos(da), dv = Math.sin(da);
+			let dex = 0; while (dex < Rv * 3) { const uu = su + dex * du, vv = sv + dex * dv; if (Math.abs(uu) > Ru || Math.abs(vv) > hw(uu / Ru)) break; dex += Rv * 0.02; }
+			const len = dex * (0.86 + 0.12 * rnd(j, 6));
+			spokes.push({x0: Sp[0] + dx * Rb * 0.04, y0: Sp[1] + dy * Rb * 0.04, x1: Sp[0] + dx * len, y1: Sp[1] + dy * len, w: Math.max(1.2, Rb * 0.009), a: 0.16 * spA * k * (0.5 + 0.6 * rnd(j, 7))}); } }
+	/* 5 · the trail: from the neck, 5 soft puffs, then a thin wavy line */
+	const amp = p.amp ?? Rt * 0.06, tk = p.trailK ?? 1, dl = Math.hypot(F[0] - N[0], F[1] - N[1]) || 1, tn: P2 = [(F[0] - N[0]) / dl, (F[1] - N[1]) / dl], tq: P2 = [-tn[1], tn[0]];
+	const ph0 = 6.283 * R(), ph1 = 6.283 * R();
+	const wd = (s2: number) => Rt * 0.13 * Math.pow(1 - Math.min(1, s2 / 0.55), 1.3) + Rt * 0.02 * (1 - 0.4 * s2) + 1.2;
+	const cen = (s2: number): P2 => { const off = -dl * 0.05 * Math.sin(Math.PI * s2) * sun + (amp * 0.6 * Math.sin(2 * Math.PI * 1.6 * s2 + ph0 + 0.15 * t) + (Rt * 0.022 * Math.sin(2 * Math.PI * 8.5 * s2 + ph1 + 0.4 * t) + Rt * 0.016 * Math.sin(2 * Math.PI * 13.7 * s2 + 2.1 * ph1) + Rt * 0.012 * Math.sin(2 * Math.PI * 21.3 * s2 + ph0)) * Math.min(1, s2 * 2.5)) * Math.min(1, s2 * 4);
+		return [N[0] + tn[0] * dl * s2 + tq[0] * off, N[1] + tn[1] * dl * s2 + tq[1] * off]; };
+	const puffs = [0.06, 0.13, 0.2, 0.27, 0.35], pk = sm((v - 2) / 2.6);
+	const puffy = (s2: number) => puffs.reduce((m, s0) => Math.max(m, Math.exp(-(((s2 - s0) / 0.03) ** 2))), 0);
+	const NT = Math.round(4200 * Math.max(0.4, Math.min(1.2, Rt / 140)) * tk);
+	for (let i = 0; i < NT; i++) { const s2 = Math.pow(R(), 1.05), [cx, cy] = cen(s2), w = wd(s2) * (s2 < 0.42 ? lerp(0.85, 0.55 + 0.5 * puffy(s2), pk) : 1), o = gauss(R) * w * 0.5, o2 = gauss(R) * w * 0.3;
+		T.push({x: cx + tq[0] * o + tn[0] * o2, y: cy + tq[1] * o + tn[1] * o2, s: Math.max(2, w * 0.8), a: (0.036 + 0.06 * Math.min(1, s2 * 2.2)) * k, c: wc}); }
+	puffs.forEach((s0, bI) => { const s2 = s0 + 0.012 * Math.sin(t * 0.5 + bI), [cx, cy] = cen(s2), w = wd(s2), side = (bI % 2 ? 1 : -1) * w * 0.45, r = w * (1.0 - 0.1 * bI);
+		for (let i = 0; i < Math.round(160 * Math.max(0.4, Math.min(1.2, Rt / 140))); i++) { const ph = 6.283 * R(), rr = r * Math.pow(R(), 0.6), lobe = 1 + 0.25 * Math.sin(ph * 3 + bI);
+			T.push({x: cx + tq[0] * side + Math.cos(ph) * rr * lobe, y: cy + tq[1] * side + Math.sin(ph) * rr * lobe, s: w * 0.6, a: 0.03 * k * pk, c: wc}); } });
+	for (let i = 0; i < 160; i++) { const ph = 6.283 * R(), rr = Rt * 0.06 * Math.pow(R(), 0.7) * (1 + 0.45 * Math.sin(ph * 3 + 1.3)), cx = N[0] - n[0] * Rt * 0.06, cy = N[1] - n[1] * Rt * 0.06;
+		T.push({x: cx + Math.cos(ph) * rr, y: cy + Math.sin(ph) * rr, s: Rt * 0.06, a: 0.022 * k, c: wc}); }
+	return {b: B, t: T, h: Hz, spokes}; };
+/* the tone maps (input: accumulated light 0..1; output: colour + alpha). No pure white anywhere but the star point. */
+const BAL: [number, number[]][] = [[0, [186, 180, 198]], [0.26, [206, 190, 190]], [0.48, [233, 185, 140]], [0.8, [247, 221, 182]], [1, [250, 228, 194]]];
+const TRL: [number, number[]][] = [[0, [248, 222, 186]], [0.45, [245, 208, 166]], [0.72, [242, 186, 128]], [0.84, [238, 138, 74]], [1, [224, 72, 44]]];
+const rampOf = (tb: [number, number[]][], x: number): number[] => { const u = Math.max(0, Math.min(1, x)); for (let i = 1; i < tb.length; i++) if (u <= tb[i][0]) return mixC(tb[i - 1][1], tb[i][1], (u - tb[i - 1][0]) / (tb[i][0] - tb[i - 1][0])); return tb[tb.length - 1][1]; };
+const LUT_B = Array.from({length: 256}, (_, i) => { const I = i / 255, vv = 1 - Math.exp(-2.6 * I), c = rampOf(BAL, vv), a = Math.min(0.95, Math.pow(vv, 1.45) * 1.6); return [c[0], c[1], c[2], a]; });
+const LUT_T = Array.from({length: 33}, (_, j) => rampOf(TRL, j / 32));
+let whiteSprite: HTMLCanvasElement | null = null;
+const wSprite = () => { if (whiteSprite) return whiteSprite; const cv = document.createElement('canvas'); cv.width = cv.height = 64; const x = cv.getContext('2d')!, g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+	g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.35, 'rgba(255,255,255,0.55)'); g.addColorStop(0.7, 'rgba(255,255,255,0.14)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); whiteSprite = cv; return cv; };
+/** the particle 火箭云 (a drop-in for RocketCloudSvg; place it inside an <svg>) */
+export const ParticleRocketCloud: React.FC<PCloudProps> = (p) => {
+	const ref = useRef<HTMLCanvasElement>(null);
+	const G = pcloudGeom(p), {C, Rv, Ru, N, F, S: Sp, v} = G, m = Math.max(Rv, Ru) * 1.35 + 80;
+	const x0 = Math.floor(Math.min(C[0] - m, N[0] - m, F[0] - 120)), y0 = Math.floor(Math.min(C[1] - m, N[1] - m, F[1] - 120));
+	const x1 = Math.ceil(Math.max(C[0] + m, N[0] + m, F[0] + 120)), y1 = Math.ceil(Math.max(C[1] + m, N[1] + m, F[1] + 120));
+	const w = x1 - x0, h = y1 - y0, bloom = p.bloom ?? 1, k = p.k ?? 1;
+	const key = JSON.stringify(p);
+	useLayoutEffect(() => { const cv = ref.current; if (!cv) return; const ctx = cv.getContext('2d')!; ctx.clearRect(0, 0, w, h);
+		const {b: BP, t: TP, h: HP, spokes} = buildCloud(p), spr = wSprite();
+		const layer = (pts: Pt[], segs: Seg[] = []) => { const c2 = document.createElement('canvas'); c2.width = w; c2.height = h; const x2 = c2.getContext('2d', {willReadFrequently: true})!; x2.globalCompositeOperation = 'lighter';
+			for (const q of pts) { if (q.a <= 0.0004) continue; x2.globalAlpha = Math.min(1, q.a); x2.drawImage(spr, q.x - x0 - q.s, q.y - y0 - q.s, 2 * q.s, 2 * q.s); }
+			x2.lineCap = 'round'; for (const sg of segs) { const gl = x2.createLinearGradient(sg.x0 - x0, sg.y0 - y0, sg.x1 - x0, sg.y1 - y0); gl.addColorStop(0, `rgba(255,255,255,${sg.a})`); gl.addColorStop(1, 'rgba(255,255,255,0)');
+				x2.globalAlpha = 1; x2.strokeStyle = gl; x2.lineWidth = sg.w; x2.beginPath(); x2.moveTo(sg.x0 - x0, sg.y0 - y0); x2.lineTo(sg.x1 - x0, sg.y1 - y0); x2.stroke(); }
+			/* a light blur smooths the speckle before tone mapping */
+			const c3 = document.createElement('canvas'); c3.width = w; c3.height = h; const x3 = c3.getContext('2d', {willReadFrequently: true})!; x3.filter = 'blur(1.6px)'; x3.drawImage(c2, 0, 0); return x3.getImageData(0, 0, w, h).data; };
+		const LB = layer(BP, spokes), LT = layer(TP), LH = layer(HP);
+		const out = ctx.createImageData(w, h), od = out.data;
+		const dl = Math.hypot(F[0] - N[0], F[1] - N[1]) || 1, tnx = (F[0] - N[0]) / dl, tny = (F[1] - N[1]) / dl;
+		for (let yy = 0, i = 0; yy < h; yy++) for (let xx = 0; xx < w; xx++, i += 4) { const ib = LB[i + 3], it = LT[i + 3]; if (ib === 0 && it === 0 && LH[i + 3] === 0) continue;   // white light accumulates in alpha (the RGB of un-premultiplied white is always 255)
+			const ih = LH[i + 3] / 255, ah = Math.min(0.26, 0.95 * ih);   // the inside: an even, warm-grey, see-through haze (≤ ~25 % of the rim)
+			const lb = LUT_B[ib], ab = lb[3];
+			let r = lb[0] * ab + 212 * ah * (1 - ab), g = lb[1] * ab + 190 * ah * (1 - ab), bl = lb[2] * ab + 176 * ah * (1 - ab), a = ab + ah * (1 - ab);
+			if (it > 0) { const vt = 1 - Math.exp(-2.8 * it / 255), at = Math.min(0.95, vt * 1.45), sPos = ((xx + x0 - N[0]) * tnx + (yy + y0 - N[1]) * tny) / dl, ct = LUT_T[Math.max(0, Math.min(32, Math.round(sPos * 32)))];
+				r = ct[0] * at + r * (1 - at); g = ct[1] * at + g * (1 - at); bl = ct[2] * at + bl * (1 - at); a = at + a * (1 - at); }
+			if (a <= 0) continue; od[i] = r / a; od[i + 1] = g / a; od[i + 2] = bl / a; od[i + 3] = a * 255; }
+		const sharp = document.createElement('canvas'); sharp.width = w; sharp.height = h; const sx = sharp.getContext('2d')!; sx.putImageData(out, 0, 0);
+		/* the dark cavity that opens round the star point (stage ≥ 9): cut away with a soft edge */
+		const cav = Rv * 0.55 * sm((v - 9) / 2.2);
+		if (cav > 1) { sx.save(); sx.globalCompositeOperation = 'destination-out'; const cx = Sp[0] + G.n[0] * cav * 0.25 - x0, cy = Sp[1] - y0, g2 = sx.createRadialGradient(cx, cy, 0, cx, cy, cav);
+			g2.addColorStop(0, 'rgba(0,0,0,0.95)'); g2.addColorStop(0.6, 'rgba(0,0,0,0.85)'); g2.addColorStop(1, 'rgba(0,0,0,0)'); sx.fillStyle = g2; sx.fillRect(0, 0, w, h); sx.restore(); }
+		/* bloom: the coloured image, quarter size, blurred, laid UNDER the sharp one (a warm halo; it never pushes the core to white) */
+		const sw = Math.max(1, Math.round(w / 4)), sh = Math.max(1, Math.round(h / 4)), smc = document.createElement('canvas'); smc.width = sw; smc.height = sh; smc.getContext('2d')!.drawImage(sharp, 0, 0, sw, sh);
+		const bl = (px: number) => { const c2 = document.createElement('canvas'); c2.width = sw; c2.height = sh; const x2 = c2.getContext('2d')!; x2.filter = `blur(${px}px)`; x2.drawImage(smc, 0, 0); return c2; };
+		ctx.globalCompositeOperation = 'source-over';
+		ctx.globalAlpha = 0.55 * bloom; ctx.drawImage(bl(12), 0, 0, w, h);
+		ctx.globalAlpha = 0.5 * bloom; ctx.drawImage(bl(3), 0, 0, w, h);
+		ctx.globalAlpha = 1; ctx.drawImage(sharp, 0, 0);
+		/* the star point (the rocket) once the spokes show: the only pure white */
+		const st = sm((v - 5.8) / 1.5) * Math.min(1, k);
+		if (st > 0) { const px = Sp[0] - x0, py = Sp[1] - y0, r0 = Math.max(9, Rv * 0.06), g3 = ctx.createRadialGradient(px, py, 0, px, py, r0);
+			g3.addColorStop(0, `rgba(255,255,255,${0.95 * st})`); g3.addColorStop(0.25, `rgba(255,240,215,${0.45 * st})`); g3.addColorStop(1, 'rgba(255,225,190,0)'); ctx.fillStyle = g3; ctx.fillRect(px - r0, py - r0, 2 * r0, 2 * r0);
+			ctx.globalAlpha = 0.7 * st; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(px - r0 * 1.4, py); ctx.lineTo(px + r0 * 1.4, py); ctx.moveTo(px, py - r0 * 1.4); ctx.lineTo(px, py + r0 * 1.4); ctx.stroke(); ctx.globalAlpha = 1; }
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [key, w, h, x0, y0]);
+	return <foreignObject x={x0} y={y0} width={w} height={h}><canvas ref={ref} width={w} height={h} style={{display: 'block', width: w, height: h}} /></foreignObject>; };
+/** RocketCloud is now the particle version (B's KF13 / KF14 pick it up); the SVG jellyfish stays as RocketCloudSvg */
+export const RocketCloud = ParticleRocketCloud;
 
 /* ---------- 宋 fire arrow ---------- */
 /** a point along a FireArrow drawn with the same (x, y, L, rot): u = 0 tail (nock) … 1 tip */
