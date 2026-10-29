@@ -6,6 +6,7 @@ import {SP11} from './kfF53';
 import {HandoffMacro} from './handoff53';
 import {frameOf} from './master53';
 import {sstep} from './cam53';
+import {Scrim} from './parts53';
 /* ep53 · TakeD leg 13 (T1, T2: 75.162 → 81.954): the hand-off macro with the three blooms switching on (75.162, 75.728, 76.860;
    KF11's blooms, one find-ring each), the camera holding KF11's pose for the first 2 s and then easing back; the blooms shrink to
    specks next to a thin scale bar drawn ON the blade; then Match 4: the first bloom's find-ring widens into the round mouth of the
@@ -23,27 +24,30 @@ const blobM = (m: MacroCam, u: number, v: number, r: number, seed: number, rough
 		d += (i === 0 ? `M${m0[0].toFixed(1)},${m0[1].toFixed(1)}` : '') + `Q${p1[0].toFixed(1)},${p1[1].toFixed(1)} ${m1[0].toFixed(1)},${m1[1].toFixed(1)}`; }
 	return d + 'Z'; };
 const ringM = (m: MacroCam, u: number, v: number, r: number) => 'M' + Array.from({length: 48}, (_, i) => { const a = (i / 48) * 2 * Math.PI, uu = u + r * Math.cos(a), vv = v + r * Math.sin(a); const p = macroProj(m, uu, vv, zf(uu, vv) + 0.05); return `${p[0].toFixed(1)},${p[1].toFixed(1)}`; }).join('L') + 'Z';
-const BLOOMS: [number, number, number][] = [[22, 7.2, 1.1], [37, -6.6, 0.85], [52, 1.4, 0.95]];
+const BLOOMS: [number, number, number][] = [[22, 7.2, 2.75], [37, -6.6, 2.6], [52, 1.4, 3.3]];
 /** the blooms on the blade: bloom i is there from the frame of BLOOM_T[i]; shrink 0..1 turns them into specks; ping = the faint ring that leaves each find-ring once */
 export const BloomsD: React.FC<{m: MacroCam; t: number; shrink?: number; ringK?: number}> = ({m, t, shrink = 0, ringK = 1}) => { const f = frameOf(t);
 	const dull = [[22, 6, 4.2], [37, -5.5, 3.6], [52, 1, 4], [30, 12, 3]];
 	return <g>
 		<defs><filter id="d13d" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" /></filter>
-			<filter id="d13s" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="0.7" /></filter></defs>
+			<filter id="d13s" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="0.7" /></filter>
+			<filter id="d13h" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="22" /></filter></defs>
 		<g filter="url(#d13d)">{dull.map(([u, v, r], i) => <path key={i} d={blobM(m, u, v, r, 40 + i, 0.6)} fill="#5A5242" opacity={0.26} />)}</g>
 		{BLOOMS.map(([u, v, r0], i) => { if (f < frameOf(BLOOM_T[i])) return null;
-			const r = r0 * lerp(1, 0.42, shrink), h = 0.32 * r, rr = r0 * 3.1 * lerp(1, 0.72, shrink * ringK), age = t - BLOOM_T[i], ping = age < 0.6 && age > 0.01 ? age / 0.6 : -1;
+			const r = r0 * lerp(1, 0.6, shrink), h = 0.32 * r, rr = r0 * 3.1 * lerp(1, 0.72, shrink * ringK), age = t - BLOOM_T[i], ping = age < 0.6 && age > 0.01 ? age / 0.6 : -1, pulse = age >= 0 && age < 1.2 ? 1 + 0.12 * Math.sin(Math.PI * age / 1.2) : 1;
 			return <g key={i}>
+				<g filter="url(#d13h)"><path d={blobM(m, u, v, r * 2.7, 60 + i, 0.5)} fill="#6E7E46" opacity={0.4} /></g>
 				<g filter="url(#d13s)">
-					<path d={blobM(m, u, v, r * 1.6, 10 + i, 0.7)} fill="#7A5434" opacity={0.3} />
-					<path d={blobM(m, u, v, r, 20 + i, 0.55)} fill="#4E5E38" opacity={0.95} />
+					<path d={blobM(m, u, v, r * 1.6 * pulse, 10 + i, 0.7)} fill="#7A5434" opacity={0.3} />
+					<path d={blobM(m, u, v, r * 1.12 * pulse, 20 + i, 0.5)} fill="#7A5434" />
+					<path d={blobM(m, u, v, r * pulse, 20 + i, 0.55)} fill="#4E5E38" stroke="#7A5434" strokeWidth={4} />
 					<path d={blobM(m, u + r * 0.1, v - r * 0.05, r * 0.72, 30 + i, 0.5, 11, h)} fill="#6E7E46" />
 					<path d={blobM(m, u + r * 0.2, v - r * 0.15, r * 0.3, 50 + i, 0.4, 9, h * 1.1)} fill="#9AA668" opacity={0.85} />
-					{Array.from({length: 6}, (_, k) => { const a = rnd(i * 9 + k, 3) * 6.28, d = r * (1.45 + 0.9 * rnd(i * 9 + k, 4)), uu = u + d * Math.cos(a), vv = v + d * Math.sin(a), p = macroProj(m, uu, vv, zf(uu, vv)); return <circle key={k} cx={p[0]} cy={p[1]} r={(1.8 + 1.6 * rnd(i * 9 + k, 5)) * lerp(1, 0.6, shrink)} fill="#55663E" opacity={0.75} />; })}
+					{Array.from({length: 8}, (_, k) => { const a = rnd(i * 9 + k, 3) * 6.28, d = r * (1.45 + 0.9 * rnd(i * 9 + k, 4)), uu = u + d * Math.cos(a), vv = v + d * Math.sin(a), p = macroProj(m, uu, vv, zf(uu, vv)); return <circle key={k} cx={p[0]} cy={p[1]} r={(3 + 3 * rnd(i * 9 + k, 5)) * lerp(1, 0.6, shrink)} fill="#55663E" opacity={0.75} />; })}
 				</g>
-				<path d={ringM(m, u, v, rr)} fill="none" stroke="#120804" strokeWidth={5} strokeOpacity={0.35} strokeDasharray="40 12" />
-				<path d={ringM(m, u, v, rr)} fill="none" stroke="#FFF2D8" strokeWidth={2.8} strokeOpacity={0.85} strokeDasharray="40 12" />
-				{ping > 0 && <path d={ringM(m, u, v, rr * (1 + 0.5 * ping))} fill="none" stroke="#FFF2D8" strokeWidth={2} strokeOpacity={0.5 * (1 - ping)} />}
+				<path d={ringM(m, u, v, rr)} fill="none" stroke="#120804" strokeWidth={8} strokeOpacity={0.4} strokeDasharray="40 12" />
+				<path d={ringM(m, u, v, rr)} fill="none" stroke="#FFF2D8" strokeWidth={4.2} strokeOpacity={0.92} strokeDasharray="40 12" />
+				{ping > 0 && <path d={ringM(m, u, v, rr * (1 + 0.5 * ping))} fill="none" stroke="#FFF2D8" strokeWidth={3} strokeOpacity={0.5 * (1 - ping)} />}
 			</g>; })}
 	</g>; };
 /** a thin scale bar lying on the blade next to the third bloom (no number: it only says how small these are) */
@@ -65,9 +69,9 @@ export const MacroLeg: React.FC<{t: number; world?: (shift: [number, number]) =>
 	const f0 = frameOf(75.162);
 	if (frameOf(t) <= f0) return <HandoffMacro blooms={<BloomsD m={CAM11} t={t} />} veil={1} />;
 	const sbo = sstep(seg(t, 78.3, 79.0)) * (1 - sstep(seg(t, 80.6, 81.2)));
-	const u = seg(t, PORTAL_T[0], PORTAL_T[1]), e = sstep(u), re = ringEllipse(m, shrink), R0 = Math.max(re.rx, re.ry), R = R0 * Math.exp(Math.log(2200 / R0) * e * e);
-	const rx = u > 0 ? Math.max(re.rx, lerp(re.rx, R, 1)) : re.rx, ry = u > 0 ? lerp(re.ry, R, sstep(seg(t, PORTAL_T[0], PORTAL_T[0] + 0.8 * (PORTAL_T[1] - PORTAL_T[0])))) : re.ry;
-	const sx = (re.cx - 960) * (1 - e), sy = (re.cy - 540) * (1 - e);
+	const u = seg(t, PORTAL_T[0], PORTAL_T[1]), re = ringEllipse(m, shrink), R0 = Math.max(re.rx, re.ry);
+	const ge = sstep(seg(t, 80.5, 81.8)), G = Math.exp(Math.log(2600 / R0) * Math.pow(ge, 1.5)), wa = sstep(seg(t, 80.3, 80.9)), mv = sstep(u), zin = Math.exp(Math.log(3.2) * (1 - mv));
+	const rx = re.rx * G, ry = re.ry * G, sx = (re.cx - 960) * (1 - mv), sy = (re.cy - 540) * (1 - mv);
 	const sp = {...SP11, cam: m};
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<LacDefs /><Lacquer sheen={0.06} id="d13" />
@@ -75,10 +79,12 @@ export const MacroLeg: React.FC<{t: number; world?: (shift: [number, number]) =>
 		<rect x={0} y={340} width={W} height={H - 340} fill="#4A4234" opacity={0.07} />
 		<Vignette id="d13" a={0.66} />
 		{u > 0 && world && <>
-			<defs><clipPath id="d13p"><ellipse cx={re.cx} cy={re.cy} rx={rx} ry={ry} /></clipPath></defs>
-			<g clipPath="url(#d13p)"><rect x={0} y={0} width={W} height={H} fill="#060303" /><g transform={`translate(${sx},${sy})`}>{world([sx, sy])}</g></g>
-			<ellipse cx={re.cx} cy={re.cy} rx={rx} ry={ry} fill="none" stroke="#120804" strokeWidth={6} strokeOpacity={0.4} />
-			<ellipse cx={re.cx} cy={re.cy} rx={rx} ry={ry} fill="none" stroke="#FFF2D8" strokeWidth={3} strokeOpacity={0.85 * (1 - sstep(seg(u, 0.55, 0.95)))} />
+			<defs><filter id="d13f" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation={lerp(34, 70, ge)} /></filter>
+				<mask id="d13p" maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}><rect width={W} height={H} fill="#000" /><ellipse cx={re.cx} cy={re.cy} rx={rx * 0.86} ry={ry * 0.86} fill="#fff" opacity={wa} filter="url(#d13f)" /></mask></defs>
+			<g mask="url(#d13p)"><Lacquer sheen={0.08} id="d14" /><g transform={`translate(${960 + sx},${540 + sy}) scale(${zin}) translate(-960,-540)`}>{world([sx, sy])}</g></g>
+			<g opacity={wa * ge}><Scrim id="d-sub" x={640} y={212} rx={760} ry={170} a={0.5} /></g>
+			<Vignette id="d13w" a={0.6 * wa * mv} />
+			{ge < 0.6 && <ellipse cx={re.cx} cy={re.cy} rx={rx} ry={ry} fill="none" stroke="#FFF2D8" strokeWidth={4} strokeOpacity={0.85 * (1 - ge / 0.6)} />}
 		</>}
 	</svg>; };
 void cl;
