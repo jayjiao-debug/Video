@@ -67,3 +67,6 @@ The range covers: the rest of the descent (D2 tail, D3), the diggers lifting the
 Self-check file: `tasks/ep53-take-c/out/selfcheck.md`.
 
 If you run short of time or budget, finish your legs in order. Then hold on the last finished picture, cross-moving into `<HandoffMacro />` by 74.412, so the film always renders and the hand-off still works. Say where you stopped.
+
+## Time limit
+You have about 150 minutes of wall-clock time. When it runs out the run is stopped and your code is committed as it is. So: keep the film rendering at all times (never leave a file half-edited for long), write `selfcheck.md` early and update it after each leg, and check the time with `date` now and then (note the start time first).
