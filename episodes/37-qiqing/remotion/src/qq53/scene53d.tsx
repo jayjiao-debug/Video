@@ -17,20 +17,20 @@ export const POSES: Pose[] = [
 	[80.3, -0.14, -0.12, -10.20, -0.42, 0.15, -10.47, 1380, 960, 540],
 	[81.954, -0.16, -0.13, -10.18, -0.42, 0.15, -10.47, 1380, 960, 540],
 	[83.0, -0.50, -0.20, -9.30, -0.55, 0.16, -10.46, 1380, 960, 560],
-	[84.219, -0.55, -0.10, -8.20, -0.55, 0.20, -10.46, 1380, 960, 580],
-	[86.483, -0.2, -1.2, -7.4, -0.2, 0.4, -10.3, 1000, 960, 620],
-	[88.5, -0.4, -1.6, -7.6, -0.35, 0.4, -10.3, 1000, 960, 620],
+	[84.219, -0.55, -0.10, -8.20, -0.55, 0.20, -10.46, 2000, 960, 580],
+	[86.483, 1.0, -0.8, -8.0, 1.0, 0.4, -10.3, 1150, 960, 620],
+	[88.5, 0.95, -0.85, -8.0, 0.95, 0.4, -10.3, 1150, 960, 620],
 	[90.445, -0.9, -3.4, -8.2, -1.05, 0.5, -9.8, 1500, 960, 600],
 	[93.5, -1.0, -6.0, -6.9, -1.25, 0.6, -9.45, 1380, 960, 622],
-	[94.2, -1.0, -6.9, -4.6, -1.1, 0.0, -7.6, 1200, 960, 580],
-	[94.8, -0.85, -6.2, -2.7, -0.6, 0.0, 0.0, 1100, 960, 560],
-	[95.4, -0.66, -4.0, 0.0, -0.55, 0.0, 0.92, 1200, 960, 540],
-	[95.75, -0.6, -3.0, 0.8, -0.55, 0.0, 1.0, 1700, 960, 540],
-	[96.1, -0.58, -2.2, 1.35, -0.55, 0.0, 0.99, 2300, 960, 540],
-	[96.5, -0.57, -2.05, 1.65, -0.55, 0.0, 0.98, 2400, 960, 540],
-	[97.4, -0.6, -1.9, 1.7, -0.55, 0.0, 0.99, 2400, 960, 540],
-	[98.6, -0.62, -1.85, 1.7, -0.5, 0.0, 0.99, 2450, 960, 540],
-	[99.8, -0.62, -1.6, 1.55, -0.45, 0.0, 0.99, 2400, 960, 540],
+	[93.95, -1.0, -6.9, -4.6, -1.1, 0.0, -7.6, 1200, 960, 580],
+	[94.55, -0.85, -6.2, -2.7, -0.6, 0.0, 0.0, 1100, 960, 560],
+	[94.95, -0.66, -4.0, 0.0, -0.55, 0.0, 0.92, 1200, 960, 540],
+	[95.2, -0.6, -3.0, 0.8, -0.55, 0.0, 1.0, 1700, 960, 540],
+	[95.5, -0.58, -2.2, 1.35, -0.55, 0.0, 0.99, 2700, 960, 540],
+	[95.8, -0.57, -2.05, 1.65, -0.55, 0.0, 0.98, 2850, 960, 540],
+	[97.4, -0.6, -1.9, 1.7, -0.55, 0.0, 0.99, 2850, 960, 540],
+	[98.6, -0.62, -1.85, 1.7, -0.5, 0.0, 0.99, 2900, 960, 540],
+	[99.8, -0.62, -1.6, 1.55, -0.45, 0.0, 0.99, 2850, 960, 540],
 	[100.3, -0.6, -1.0, 1.18, -0.5, 0.0, 1.0, 1700, 960, 540],
 	[100.9, -0.62, -0.62, 1.08, -0.65, 0.0, 1.0, 1300, 960, 540],
 	[101.6, -0.62, -0.30, 1.08, -0.72, 0.0, 1.0, 1350, 960, 540],
@@ -46,18 +46,16 @@ export const worldCam = (t: number): Cam => { const v = CH.map((f) => f(Math.max
 export const toMM = (c: Cam): Cam => ({...c, p: [c.p[0] * 1000, c.p[1] * 1000, c.p[2] * 1000]});
 const pp = (c: Cam, q: V3): P2 => { const p = proj(c, q); return [p[0], p[1]]; };
 
-export const FLOOR_T: [number, number] = [95.4, 96.8];
+export const FLOOR_T: [number, number] = [94.9, 96.3];
 
 /* ---------- the case (mm world, shifted to stand above the tomb) ---------- */
 export const SP_CASE53: SwordPose = {x0: -278 + CASE_X * 1000, ya: 0, z0: 1000, dir: 1};
-export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; gauge: number; id: string; rim?: number}> = ({c, t, dull, bloom, gauge, id, rim = 1}) => { const cm = toMM(c), X = CASE_X * 1000;
+export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; gauge?: number; id: string; rim?: number}> = ({c, t, dull, bloom, id, rim = 1}) => { const cm = toMM(c), X = CASE_X * 1000;
 	const q = (x: number, y: number, z: number): V3 => [x + X, y, z];
 	const sp = proj(cm, q(0, 0, 1000));
 	const mir = proj(cm, q(-345, 250, 968)), mr = c.f * 30 / mir[2];
 	const sw = SP_CASE53, bo = bladeOutline(sw.x0 + 97, 1, 0, 1002.4);
 	const bl = (s: number, w: number, r: number, seed: number) => blobOn(cm, sw.x0 + 97 + s, w, r, seed, 1002.6, 10, 0.5);
-	const gp = (u: number): V3 => q(170 + 220 * u, -150, 941);
-	const panel = poly(cm, [q(160, -800.6, 700), q(340, -800.6, 700), q(340, -800.6, 540), q(160, -800.6, 540)]);
 	const blade = poly(cm, bo);
 	return <g>
 		<defs><filter id={`cb${id}`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.2" /></filter>
@@ -67,10 +65,6 @@ export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; ga
 			<ellipse cx={0} cy={0} rx={mr * 1.12} ry={mr} fill="#0E0806" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
 			<RingDisc x={0} y={0} r={mr * 0.78} ry={0.9} id={`m${id}`} />
 		</g>}
-		{panel && <g opacity={0.25}><path d={panel} fill="#E6F4F8" stroke="#E6F4F8" strokeWidth={14} strokeLinejoin="round" /></g>}
-		<path d={poly(cm, [gp(0), gp(1)], false)} stroke="#F2E6CC" strokeOpacity={0.55} strokeWidth={2} fill="none" />
-		{[0, 0.25, 0.5, 0.75, 1].map((u) => <path key={u} d={poly(cm, [gp(u), [gp(u)[0], gp(u)[1] + 14, 941]], false)} stroke="#F2E6CC" strokeOpacity={0.5} strokeWidth={1.4} fill="none" />)}
-		<circle cx={pp(cm, gp(gauge))[0]} cy={pp(cm, gp(gauge))[1] - 4} r={Math.max(2.5, c.f * 6 / Math.max(300, proj(cm, gp(gauge))[2]))} fill="#FFE6A8" />
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFD890" strokeWidth={16} strokeOpacity={0.55 * rim} filter={`url(#cr${id})`} />}
 		<Sword3D c={cm} sp={SP_CASE53} id={`${id}s`} />
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFF3CF" strokeWidth={2} strokeOpacity={0.9 * rim} />}

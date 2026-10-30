@@ -37,11 +37,12 @@ const swordFit = (c: ReturnType<typeof worldCam>, u: number, t: number) => { con
 	const k = Math.pow(sc, u), a = k * Math.cos(th * u), b = k * Math.sin(th * u), cx = lerp(p0[0], q0[0], u), cy = lerp(p0[1], q0[1], u);
 	return `matrix(${a},${b},${-b},${a},${cx - (a * p0[0] - b * p0[1])},${cy - (b * p0[0] + a * p0[1])})`; };
 const LITE = 0.9;
-export const WorldD: React.FC<{t: number}> = ({t}) => { const c = worldCam(t), cm = toMM(c), under = c.p[2] < 0.03, hall = t > 93.9 ? 1 : 0, k = sstep(seg(t, 95.4, 96.8));
+const DEPTH91 = Math.max(0.1, -worldCam(LAY.sheath).p[2]);
+export const WorldD: React.FC<{t: number}> = ({t}) => { const c = worldCam(t), cm = toMM(c), under = c.p[2] < 0.03, hall = t > 93.9 ? 1 : 0, k = sstep(seg(t, 94.9, 96.3));
 	const museum = t > 93.9 && <>
 		<HallBack cm={cm} hall={hall} lite={LITE} />
 		<CaseHall cm={cm} t={t} hood={1} lite={LITE} />
-		<CaseW c={c} t={t} id="d" dull={sstep(seg(t, 95.8, 99.0)) * 0.9} bloom={sstep(seg(t, 98.9, 99.6))} gauge={lerp(0.78, 0.6, sstep(seg(t, 95.54, 98.9)))} rim={1 - sstep(seg(t, 100.4, 101.4))} />
+		<CaseW c={c} t={t} id="d" dull={sstep(seg(t, 95.8, 99.0)) * 0.9} bloom={sstep(seg(t, 98.9, 99.6))} rim={1 - sstep(seg(t, 100.4, 101.4))} />
 	</>;
 	return <g>
 		{!under && <FloorD c={c} cm={cm} k={k} lite={LITE} />}
@@ -68,7 +69,7 @@ export const TakeD: React.FC<{t: number}> = ({t}) => {
 			{t < 100 && <Scrim id="d-sub" x={640} y={212} rx={760} ry={170} a={0.5} />}
 			<Vignette id="d14" a={0.6} />
 		</svg>
-		{t >= LAY.sheath - 0.5 && t < 95.45 && <div style={{opacity: seg(t, LAY.sheath - 0.5, LAY.sheath - 0.2) * (1 - seg(t, 94.9, 95.35))}}><DepthTag v={depth} /></div>}
+		{t >= 83.0 && t < 94.9 && <div style={{opacity: seg(t, 83.0, 83.3) * (1 - seg(t, 94.4, 94.85))}}><DepthTag v={t < LAY.sheath ? 10.8 : 10.8 * depth / DEPTH91} /></div>}
 		{t >= CARD_T53 - 0.2 && <EndCardAnim t={t} />}
 		{t >= FADE_OUT_T - 0.4 && <div style={{position: 'absolute', inset: 0, background: '#000', opacity: seg(t, 113.1, 113.6)}} />}
 	</>; };

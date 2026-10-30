@@ -5,6 +5,7 @@ import {Tag, P2} from './parts53';
 import {MacroSpec, MacroCam, macroProj} from './macro53';
 import {BladeMacroC} from './macrob53c';
 import {MarkSet} from './blade53c';
+import {BladeEnd53} from './paper53c';
 import {litOf, hexMix, LATC} from './inscr53c';
 import {SW, bladeHW} from './props53';
 import {SP11} from './kfF53';
@@ -86,8 +87,10 @@ const specOf = (t: number): MacroSpec => { const u = B3(t), m = camOf(t), la = l
 export const Leg12: React.FC<{t: number}> = ({t}) => { const sp = specOf(t), m = sp.cam, u = B3(t), s0 = seg(t, 61.577, 66.0);
 	const cutOp = sstep(seg(t, T_CUT10, T_CUT10 + 0.35)) * (1 - sstep(seg(t, 69.5, 70.1)));
 	const markO = 1 - sstep(seg(t, 62.0, 63.6));
+	/* the first 1.5 s keep the paper test's own blade (same BladeFlat / MarkSet), riding the macro camera's zoom, then it cross-fades into the macro land */
+	const flatO = 1 - sstep(seg(t, 62.0, 62.8)), c0 = camOf(61.577), flatK = c0.z / m.z, flatRot = (m.rot ?? 0) - (c0.rot ?? 0);
 	/* tags */
-	const barIn = frameOf(t) >= frameOf(T_BAR) ? 1 : 0, barOut = sstep(seg(t, 65.35, 65.95)), barO = barIn * (1 - barOut);
+	const barIn = sstep(seg(t, 63.6, 63.9)), barOut = sstep(seg(t, 65.35, 65.95)), barO = barIn * (1 - barOut);
 	const qOn = frameOf(t) >= frameOf(T_Q) ? 1 : 0, qLeave = sstep(seg(t, 68.7, 71.0)), qO = qOn * (1 - seg(t, 70.4, 71.2));
 	const tinOn = frameOf(t) >= frameOf(T_TIN) ? 1 : 0, tinO = tinOn * (1 - seg(t, 70.3, 70.95));
 	const best = segsAt(UC, V0, V1).filter((s) => s.pale).sort((a, b) => (b.b - b.a) - (a.b - a.a))[0], vm = best ? (best.a + best.b) / 2 : 16;
@@ -96,6 +99,7 @@ export const Leg12: React.FC<{t: number}> = ({t}) => { const sp = specOf(t), m =
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<LacDefs /><Lacquer sheen={lerp(0.1, 0.06, u)} id="ho" />
 		<BladeMacroC sp={sp} id="ho" pal={u} shift={-SH10 * (1 - u)}>{markO > 0.004 && <MarkSet id="ml" S={(a, w) => { const q = macroProj(m, (a - SW.bladeA) * 10, w * 10, 2.2); return [q[0], q[1]]; }} o={markO} col={(side, n) => hexMix(LATC, '#FFF2C8', Math.min(1, litOf(side, n, t)))} lit={(side, n) => Math.min(1, litOf(side, n, t))} />}{cutOp > 0.004 && <SectionCut m={m} op={cutOp} />}</BladeMacroC>
+		{flatO > 0.004 && <g opacity={flatO} transform={`translate(960 540) rotate(${flatRot}) scale(${flatK}) translate(-960 -540)`}><BladeEnd53 t={t} /></g>}
 		{barO > 0.004 && <g opacity={barO} transform={`translate(${130 * barOut},${-40 * barOut})`}>
 			<defs><filter id="m1blur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="20" /></filter></defs>
 			<rect x={500} y={540} width={860} height={230} rx={40} fill="rgb(18,9,6)" opacity={0.55} filter="url(#m1blur)" />

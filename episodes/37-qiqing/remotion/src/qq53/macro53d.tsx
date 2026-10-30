@@ -70,7 +70,7 @@ export const MacroLeg: React.FC<{t: number; world?: (shift: [number, number]) =>
 	if (frameOf(t) <= f0) return <HandoffMacro blooms={<BloomsD m={CAM11} t={t} />} veil={1} />;
 	const sbo = sstep(seg(t, 78.3, 79.0)) * (1 - sstep(seg(t, 80.6, 81.2)));
 	const u = seg(t, PORTAL_T[0], PORTAL_T[1]), re = ringEllipse(m, shrink), R0 = Math.max(re.rx, re.ry);
-	const ge = sstep(seg(t, 80.5, 81.8)), G = Math.exp(Math.log(2600 / R0) * Math.pow(ge, 1.5)), wa = sstep(seg(t, 80.3, 80.9)), mv = sstep(u), zin = Math.exp(Math.log(3.2) * (1 - mv));
+	const ge = Math.pow(sstep(seg(t, 80.55, MACRO_END)), 1.2), G0 = 0.62, G = G0 * Math.exp(Math.log(2600 / (G0 * R0)) * ge), wa = sstep(seg(t, 80.5, 81.0)), mv = sstep(u), zin = Math.exp(Math.log(3.2) * (1 - mv));
 	const rx = re.rx * G, ry = re.ry * G, sx = (re.cx - 960) * (1 - mv), sy = (re.cy - 540) * (1 - mv);
 	const sp = {...SP11, cam: m};
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
@@ -84,7 +84,7 @@ export const MacroLeg: React.FC<{t: number; world?: (shift: [number, number]) =>
 			<g mask="url(#d13p)"><Lacquer sheen={0.08} id="d14" /><g transform={`translate(${960 + sx},${540 + sy}) scale(${zin}) translate(-960,-540)`}>{world([sx, sy])}</g></g>
 			<g opacity={wa * ge}><Scrim id="d-sub" x={640} y={212} rx={760} ry={170} a={0.5} /></g>
 			<Vignette id="d13w" a={0.6 * wa * mv} />
-			{ge < 0.6 && <ellipse cx={re.cx} cy={re.cy} rx={rx} ry={ry} fill="none" stroke="#FFF2D8" strokeWidth={4} strokeOpacity={0.85 * (1 - ge / 0.6)} />}
+			<ellipse cx={re.cx} cy={re.cy} rx={rx * 0.86} ry={ry * 0.86} fill="none" stroke="#F4D088" strokeWidth={3} strokeOpacity={0.9 * wa} />
 		</>}
 	</svg>; };
 void cl;
