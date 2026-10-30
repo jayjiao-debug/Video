@@ -14,12 +14,13 @@ import {spline, sstep} from './cam53';
 export const CASE_X = -0.55;
 type Pose = [number, number, number, number, number, number, number, number, number, number];   // t, P(3), T(3), f, cx, cy
 export const POSES: Pose[] = [
-	[80.3, -0.14, -0.12, -10.20, -0.42, 0.15, -10.47, 1380, 960, 540],
-	[81.954, -0.16, -0.13, -10.18, -0.42, 0.15, -10.47, 1380, 960, 540],
-	[83.0, -0.50, -0.20, -9.30, -0.55, 0.16, -10.46, 1380, 960, 560],
-	[84.219, -0.55, -0.10, -8.20, -0.55, 0.20, -10.46, 2000, 960, 580],
-	[86.483, 1.0, -0.8, -8.0, 1.0, 0.4, -10.3, 1150, 960, 620],
-	[88.5, 0.95, -0.85, -8.0, 0.95, 0.4, -10.3, 1150, 960, 620],
+	[80.3, -0.295, 0.23, -10.313, -0.015, 0.5, -10.583, 1380, 960, 540],
+	[81.954, -0.275, 0.22, -10.293, -0.015, 0.5, -10.583, 1380, 960, 540],
+	[83, 0.065, 0.15, -9.413, 0.115, 0.51, -10.573, 1380, 960, 560],
+	[84.219, 0.115, 0.25, -8.313, 0.115, 0.55, -10.573, 2000, 960, 580],
+	[86.483, 0.46, 0.3, -7.8, 0.42, 1.2, -10.62, 1700, 960, 560],
+	[88.5, 0.4, 0.26, -7.75, 0.37, 1.2, -10.62, 1700, 960, 560],
+	[89.0, 0.36, 0.22, -7.8, 0.32, 1.16, -10.6, 1660, 960, 560],
 	[90.445, -0.9, -3.4, -8.2, -1.05, 0.5, -9.8, 1500, 960, 600],
 	[93.5, -1.0, -6.0, -6.9, -1.25, 0.6, -9.45, 1380, 960, 622],
 	[93.95, -1.0, -6.9, -4.6, -1.1, 0.0, -7.6, 1200, 960, 580],
@@ -50,7 +51,7 @@ export const FLOOR_T: [number, number] = [94.9, 96.3];
 
 /* ---------- the case (mm world, shifted to stand above the tomb) ---------- */
 export const SP_CASE53: SwordPose = {x0: -278 + CASE_X * 1000, ya: 0, z0: 1000, dir: 1};
-export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; gauge?: number; id: string; rim?: number}> = ({c, t, dull, bloom, id, rim = 1}) => { const cm = toMM(c), X = CASE_X * 1000;
+export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; gauge?: number; id: string; rim?: number; front?: number; ring?: number}> = ({c, t, dull, bloom, id, rim = 1, front = 1, ring = 1}) => { const cm = toMM(c), X = CASE_X * 1000;
 	const q = (x: number, y: number, z: number): V3 => [x + X, y, z];
 	const sp = proj(cm, q(0, 0, 1000));
 	const cc: Cam = {...cm, p: [cm.p[0] - X, cm.p[1], cm.p[2]]};   // the display's own (case) frame
@@ -64,12 +65,12 @@ export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; ga
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFD890" strokeWidth={16} strokeOpacity={0.55 * rim} filter={`url(#cr${id})`} />}
 		<Sword3D c={cm} sp={SP_CASE53} id={`${id}s`} />
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFF3CF" strokeWidth={2} strokeOpacity={0.9 * rim} />}
-		{dull > 0 && <path d={blade} fill="#4A4234" opacity={0.22 * dull} />}
+		{dull > 0 && <path d={blade} fill="#5A4630" opacity={0.22 * dull} />}
 		{bloom > 0 && <g>
 			<g filter={`url(#cb${id})`}><path d={bl(250, 5, 17 * bloom, 5)} fill="#6E7E46" opacity={0.4 * bloom} /><path d={bl(250, 5, 12 * bloom, 5)} fill="#7A5434" opacity={0.7 * bloom} /><path d={bl(250, 5, 9 * bloom, 6)} fill="#4E5E38" opacity={0.95} /><path d={bl(250.4, 5.3, 4.5 * bloom, 7)} fill="#9AA668" opacity={0.85} /></g>
-			<path d={poly(cm, Array.from({length: 40}, (_, i) => { const a = i / 40 * 2 * Math.PI; return [sw.x0 + 97 + 250 + 24 * bloom * Math.cos(a), 7 + 24 * bloom * Math.sin(a), 1002.8] as V3; }))} fill="none" stroke="#FFF2D8" strokeWidth={3} strokeOpacity={0.9 * bloom} strokeDasharray="14 7" />
+			<path d={poly(cm, Array.from({length: 40}, (_, i) => { const a = i / 40 * 2 * Math.PI; return [sw.x0 + 97 + 250 + 24 * bloom * Math.cos(a), 7 + 24 * bloom * Math.sin(a), 1002.8] as V3; }))} fill="none" stroke="#FFF2D8" strokeWidth={3} strokeOpacity={0.9 * bloom * ring} strokeDasharray="14 7" />
 		</g>}
-		<DisplayFront c={cc} hood={1} />
+		{front > 0.01 && <g opacity={front}><DisplayFront c={cc} hood={1} /></g>}
 		<Glint x={proj(cm, q(-170, 22, 1002))[0]} y={proj(cm, q(-170, 22, 1002))[1]} r={Math.max(6, 12 * 2100 / Math.max(900, sp[2]))} o={0.7} />
 	</g>; };
 

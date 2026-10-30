@@ -47,7 +47,7 @@ export const MacroLeg: React.FC<{t: number; world?: (shift: [number, number]) =>
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<LacDefs /><Lacquer sheen={0.06} id="d13" />
 		<BladeMacro sp={sp} id="d13"><BloomsD m={m} t={t} shrink={shrink} /><ScaleBar m={m} o={sbo} /></BladeMacro>
-		<rect x={0} y={340} width={W} height={H - 340} fill="#4A4234" opacity={0.07 * sstep(seg(t, 75.162, 75.7))} />
+		<rect x={0} y={340} width={W} height={H - 340} fill="#5A4630" opacity={0.07 * sstep(seg(t, 75.162, 75.7))} />
 		<Vignette id="d13" a={0.66} />
 		{u > 0 && world && <>
 			<defs><filter id="d13f" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation={lerp(34, 70, ge)} /></filter>
