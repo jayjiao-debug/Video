@@ -91,7 +91,7 @@ const KitchenW: React.FC<{c: Cam; o: number}> = ({c, o}) => { if (o <= 0.01) ret
 const World3: React.FC<{t: number; t2: number; c: Cam; mus?: number; dull?: number; spot?: number; dim?: number; refl?: React.ReactNode}> = ({t, t2, c, mus = 1, dull = 0, spot = 0, dim = 0, refl}) => {
 	/* v3.1: the plinth and the hood go WITH the hall (no pop); the hall's walls and floor a little ahead of the case */
 	/* the case's own light (display53k's deck pool: its rings break up as the eye passes over the deck) eases off first, 134.3–135.3 */
-	const caseL = 1 - sstep(seg(t, 134.0, 135.0));   // gone (pool included) by 135.0: the rings drop out of view at 135.03
+	const caseL = 1 - sstep(seg(t, 134.0, 135.0));   // the deck pool fades with it as one group opacity (display53k `pool`: no 8-bit alpha steps)
 	const caseO = mus, hallO = mus * (1 - sstep(seg(t, 134.5, 137.0)));
 	const cm = toMM(c), under = c.p[2] < 0.03, k = sstep(seg(t2, 94.9, 96.3)), museum = t2 > 93.9;
 	return <g>

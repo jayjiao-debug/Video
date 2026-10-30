@@ -66,7 +66,7 @@ export const HallBack: React.FC<{cm: Cam; hall: number; lite: number}> = ({cm, h
 	</g>; };
 
 /** the case itself, exactly take53's `Museum` case (lit), without its hall */
-export const CaseHall: React.FC<{cm: Cam; t: number; hood: number; lite: number; pool?: number}> = ({cm, t, hood, lite, pool = 1}) =>
+export const CaseHall: React.FC<{cm: Cam; t: number; hood: number; lite: number; pool?: number}> = ({cm, t, hood, lite, pool}) =>
 	<Museum c={{...cm, p: [cm.p[0] - SHIFT, cm.p[1], cm.p[2]]}} t={t} hall={0} hood={hood} ppl={0} lite={lite} pool={pool} />;
 
 /** the floor (world metres): the 夯土 top while the camera rises through it, the museum floor once it is above; no grid, no wire */

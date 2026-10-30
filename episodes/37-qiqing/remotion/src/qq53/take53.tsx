@@ -140,7 +140,7 @@ const Visitor: React.FC<{c: Cam; v: typeof VIS[0]; o: number; lite: number}> = (
 		<g transform={`translate(${-2.6 * k},${-2 * k})`} opacity={0.45 - 0.27 * lite}><Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col="#E8A860" /></g>
 		<Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col={col} /></g>; };
 const faceVis = (c: Cam, q: V3, n: V3) => (c.p[0] - q[0]) * n[0] + (c.p[1] - q[1]) * n[1] + (c.p[2] - q[2]) * n[2] > 0;
-export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number; lite?: number; leaf?: number; pool?: number}> = ({c, t, hall, hood, ppl, lite = 0, leaf = 0, pool = 1}) => {
+export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number; lite?: number; leaf?: number; pool?: number}> = ({c, t, hall, hood, ppl, lite = 0, leaf = 0, pool}) => {
 	/* hall: floor pool, two far walls with faint wall-washers, the rope on posts */
 	const floor = poly(c, [[-6500, -5500, 0], [6500, -5500, 0], [6500, 5500, 0], [-6500, 5500, 0]]);
 	const pc = proj(c, [0, 0, 0]);
