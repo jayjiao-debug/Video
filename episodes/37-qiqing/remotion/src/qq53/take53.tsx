@@ -3,9 +3,9 @@ import {W, H, rnd, lerp, cl, seg} from '../qq50/kit50';
 import {Pool, Vignette} from '../qq50/styleB';
 import {Figure4, POSES, Look4} from '../qq44/figure44';
 import {Cam, V3, lookAt, proj, poly, toCam, mix, blobOn, Tag, Scrim} from './parts53';
-import {Guard3D, SwordPose} from './sword3d';
-import {PommelFace, R_FACE} from './face53';
-import {BladeLand, bw, hwAt, LBM, A_BL, Light} from './land53';
+import {Sword3D, SwordPose} from './sword3d';
+import {R_FACE} from './face53';
+import {BladeLand, bw, hwAt, hAt, LBM, A_BL, Light} from './land53';
 import {CleaverD as Cleaver} from './end53d';
 import {RingDisc} from './props53';
 import {spline, sstep, DEG} from './cam53';
@@ -243,29 +243,12 @@ export const titleQuad = (t: number): [number, number][] | null => { if (t < 9.5
 	const p = q.map((v) => proj(c, v)); if (p.some((v) => v[2] < 20)) return null;
 	return p.map((v) => [v[0], v[1]]); };
 
-/* ---------- the hilt: grip + bands + pommel flare (sword3d's Hilt3D geometry) and the ringed end face (face53) ---------- */
-const A_GRIP0 = 8, A_GRIP1 = 82, R_GRIP = 8.6, R_POM = R_FACE;
+/* ---------- the sword: sword3d.Sword3D (the one 3-D sword: BladeLand blade clipped at the guard, Guard3D, Hilt3D with the ringed
+   end face of face53, painted in the order the camera's place along the axis gives) ---------- */
 const SW = (a: number, y: number, z: number): V3 => [SP.x0 + SP.dir * a, SP.ya + y, SP.z0 + z];
-export const facePt = (c: Cam) => (r: number, th: number): [number, number] => { const p = proj(c, SW(-0.2, r * Math.cos(th), r * Math.sin(th))); return [p[0], p[1]]; };
-const Hilt53: React.FC<{c: Cam; id: string; hi: number}> = ({c, id, hi}) => {
-	const mid = SW((A_GRIP0 + A_GRIP1) / 2, 0, 0), v = [mid[0] - c.p[0], mid[1] - c.p[1], mid[2] - c.p[2]], n = Math.hypot(v[1], v[2]) || 1, oy = -v[2] / n, oz = v[1] / n;
-	const silh = (a0: number, a1: number, r: number) => [SW(a0, oy * r, oz * r), SW(a1, oy * r, oz * r), SW(a1, -oy * r, -oz * r), SW(a0, -oy * r, -oz * r)];
-	const p0 = proj(c, SW(40, oy * R_GRIP, oz * R_GRIP)), p1 = proj(c, SW(40, -oy * R_GRIP, -oz * R_GRIP));
-	const faceVisible = c.p[0] < PF[0] - 0.5, fd = toCam(c, PF)[2];
-	return <g>
-		<defs><linearGradient id={`hg${id}`} gradientUnits="userSpaceOnUse" x1={p0[0]} y1={p0[1]} x2={p1[0]} y2={p1[1]}><stop offset="0" stopColor="#4A2E14" /><stop offset="0.3" stopColor="#F4D088" /><stop offset="0.5" stopColor="#BC8744" /><stop offset="1" stopColor="#4A2E14" /></linearGradient></defs>
-		{poly(c, silh(A_GRIP0, A_GRIP1, R_GRIP)) && <path d={poly(c, silh(A_GRIP0, A_GRIP1, R_GRIP))} fill={`url(#hg${id})`} />}
-		{[33, 60].map((a) => { const d = poly(c, silh(a - 2.6, a + 2.6, R_GRIP * 1.22)); return d ? <path key={a} d={d} fill={`url(#hg${id})`} stroke="#2A180A" strokeOpacity={0.5} strokeWidth={1} /> : null; })}
-		{(() => { const d = poly(c, [SW(A_GRIP0, oy * 9, oz * 9), SW(3.5, oy * R_POM * 0.82, oz * R_POM * 0.82), SW(3.5, -oy * R_POM * 0.82, -oz * R_POM * 0.82), SW(A_GRIP0, -oy * 9, -oz * 9)]); return d ? <path d={d} fill={`url(#hg${id})`} /> : null; })()}
-		{(() => { const d = poly(c, [SW(3.5, oy * R_POM * 0.82, oz * R_POM * 0.82), SW(2.6, oy * R_POM, oz * R_POM), SW(0, oy * R_POM, oz * R_POM), SW(0, -oy * R_POM, -oz * R_POM), SW(2.6, -oy * R_POM, -oz * R_POM), SW(3.5, -oy * R_POM * 0.82, -oz * R_POM * 0.82)]); return d ? <path d={d} fill="#BC8744" stroke="#2A180A" strokeOpacity={0.5} strokeWidth={1} /> : null; })()}
-		{faceVisible && fd > 1 && <PommelFace id={id} pt={facePt(c)} ppm={c.f / fd} hi={hi} />}
-	</g>; };
-
-/* ---------- the sword ---------- */
-const SwordW: React.FC<{c: Cam; t: number; o: Parameters<typeof BladeLand>[0]['o']; ringGlow?: number; id: string}> = ({c, t, o, ringGlow, id}) => {
-	const dBlade = toCam(c, bw(SP, 230, 0))[2], dHilt = toCam(c, [PF[0] + 40, 0, 1000])[2];
-	const blade = <BladeLand key="b" c={c} sp={SP} id={id} o={o} />, guard = <Guard3D key="g" c={c} sp={SP} id={id} />, hilt = <Hilt53 key="h" c={c} id={id} hi={0.4 + (ringGlow ?? 0)} />;
-	void t; return <g>{dBlade > dHilt ? [blade, guard, hilt] : [hilt, guard, blade]}</g>; };
+export const facePt = (c: Cam) => (r: number, th: number): [number, number] => { const p = proj(c, [SP.x0 + SP.dir * -0.2, SP.ya + r * Math.cos(th), SP.z0 + r * Math.sin(th)]); return [p[0], p[1]]; };
+const SwordW: React.FC<{c: Cam; t: number; o: Parameters<typeof BladeLand>[0]['o']; ringGlow?: number; id: string; lite?: number}> = ({c, t, o, ringGlow, id, lite}) => {
+	void t; return <Sword3D c={c} sp={SP} id={id} ringGlow={ringGlow} land={{...o, guardCut: true}} lite={lite} />; };
 
 
 /* ---------- the hall orbit's bloom + rim (11.4 → 17.2): the blade is the brightest thing in the hall ---------- */
@@ -298,6 +281,9 @@ const GuardGlints: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 4.6 || 
 
 /* ---------- lights (directions toward the light) ---------- */
 const L_RAKE: V3 = [-0.92, -0.32, 0.22];      // the raking warm key, low and ahead-right of the glide
+/* in the glide the rake is a lamp low and ahead (toward the guard): its highlight runs ON the ridge and the pale cells' rims a
+   little ahead of the lens, brightest near the lamp, falling off with distance */
+const L_LAMP: V3 = [-470, -30, 1150];
 const L_SPOT: V3 = [0.08, -0.28, 0.96];       // the case spot from above, a little to the front
 
 /* ---------- THE TAKE, legs 1–6 ---------- */
@@ -309,7 +295,7 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 	const farBlur = 2.6 * (1 - sstep(seg(t, 0.12, 0.9))), knifeBlur = 4.5 * sstep(seg(t, 0.35, 1.05));
 	/* the light: the raking key in the glide, the case spot from above as the camera rises */
 	const kSpot = sstep(seg(t, 5.0, 8.0)), kRake = 1 - 0.75 * kSpot;
-	const lights: Light[] = [{dir: L_RAKE, k: 1.05 * kRake}, {dir: L_SPOT, k: 0.55 + 0.6 * kSpot}];
+	const lights: Light[] = [{dir: L_RAKE, k: 1.7 * kRake, pos: L_LAMP, d0: 600}, {dir: L_SPOT, k: 0.55 + 0.6 * kSpot}];
 	/* depth of field in the glide only */
 	const glide = t < 6.4;
 	const dof = glide ? {near: 34, far: 260 + 600 * seg(t, 4.6, 6.4), nb: '2 9', fb: 1.3 * (1 - seg(t, 4.8, 6.2))} : undefined;
@@ -325,7 +311,9 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 	const lift = 0.3 * (1 - sstep(seg(t, 0.5, 1.5))) + 0.16 * sstep(seg(t, 6.0, 8.5)) + 0.22 * lite;
 	/* hits */
 	const g0 = proj(c, [244, -18, 1004.2]), g0o = Math.exp(-t / 0.4) * (1 - seg(t, 0.6, 1.0));
-	const lt = 2.707, gl = t >= lt - 1e-6 ? Math.exp(-(t - lt) / 0.22) : 0, sc = XA(lt) + 278 - 97 - 80, gp = proj(c, [SP.x0 + 97 + sc, 7, 1000 + 2.4]);
+	/* [亮] on 2.707: the lamp catches the bronze a little ahead of the lens — the ridge line, the rims and the glints flare there
+	   and die away (0.22 s); a small crisp star sits ON the ridge at that spot */
+	const lt = 2.707, gl = t >= lt - 1e-6 ? Math.exp(-(t - lt) / 0.22) : 0, sc = XA(lt) + 278 - 97 - 80, gp = proj(c, bw(SP, sc, 0, hAt(sc, 0) + 0.1));
 	/* KF01's bokeh along the far edge, gone as the focus pulls */
 	const bok = [[250, 22, 0.34], [330, 17, 0.28], [420, 13, 0.24], [520, 10, 0.2]].map(([x, r, a], i) => { const p = proj(c, kitInv([x, 0, 2])); return p[2] > 10 ? <circle key={i} cx={p[0]} cy={p[1]} r={r} fill="#FFD890" opacity={a * (1 - seg(t, 0.15, 0.7))} /> : null; });
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
@@ -342,13 +330,13 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 			<Pool id="tk1d" x={proj(c, [0, 0, 1000])[0]} y={proj(c, [0, 0, 1000])[1]} rx={560} ry={330} a={0.75 * kitO} col="#080403" />
 			<Pool id="tk1s" x={proj(c, [0, 0, 1000])[0] - 20} y={proj(c, [0, 0, 1000])[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
 		<g filter={farBlur > 0.05 ? 'url(#tFar)' : undefined}>
-			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift}} />
+			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} lite={lite} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift, flash: gl > 0.02 ? {s: sc, k: 1.1 * gl} : undefined}} />
 		</g>
 		<BladeBloom c={c} t={t} />
 		<GuardGlints c={c} t={t} />
 		{t < 0.75 && <g filter="url(#tBok)">{bok}</g>}
 		{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
-		{gl > 0.02 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={34} o={gl} />}
+		{gl > 0.02 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={Math.min(18, Math.max(8, c.f * 0.9 / gp[2]))} o={gl} />}
 		{knifeO > 0.01 && <g opacity={knifeO} filter={knifeBlur > 0.05 ? 'url(#tKn)' : undefined}><Cleaver c={ck} rho={rho} /></g>}
 		<Motes c={c} t={t} o={hall * plinthO} />
 		<PaneStreaks c={c} t={t} />
