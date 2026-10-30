@@ -4,7 +4,7 @@ import {B, Pool} from '../qq50/styleB';
 import {Cam, V3, P2, proj, poly, mix, lookAt, blobOn} from './parts53';
 import {bladeOutline} from './parts53';
 import {Sword3D, SwordPose} from './sword3d';
-import {RingDisc} from './props53';
+import {PommelMirror, DisplayFront, hoodDist, mirrorAt} from './display53k';
 import {Glint} from './kfA53';
 import {spline, sstep} from './cam53';
 /* ep53 · TakeD, the camera of legs 14–17 and the museum: the same metric world as world53d (metres; the cut plane y = 0; z = 0 is
@@ -53,18 +53,14 @@ export const SP_CASE53: SwordPose = {x0: -278 + CASE_X * 1000, ya: 0, z0: 1000, 
 export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; gauge?: number; id: string; rim?: number}> = ({c, t, dull, bloom, id, rim = 1}) => { const cm = toMM(c), X = CASE_X * 1000;
 	const q = (x: number, y: number, z: number): V3 => [x + X, y, z];
 	const sp = proj(cm, q(0, 0, 1000));
-	const mir = proj(cm, q(-345, 250, 968)), mr = c.f * 30 / mir[2];
+	const cc: Cam = {...cm, p: [cm.p[0] - X, cm.p[1], cm.p[2]]};   // the display's own (case) frame
 	const sw = SP_CASE53, bo = bladeOutline(sw.x0 + 97, 1, 0, 1002.4);
 	const bl = (s: number, w: number, r: number, seed: number) => blobOn(cm, sw.x0 + 97 + s, w, r, seed, 1002.6, 10, 0.5);
 	const blade = poly(cm, bo);
 	return <g>
 		<defs><filter id={`cb${id}`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.2" /></filter>
 			<filter id={`cr${id}`} x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="14" /></filter></defs>
-		{mir[2] > 50 && <g transform={`translate(${mir[0]},${mir[1]})`}>
-			<path d={`M-4,${mr * 1.6} L0,0 L4,${mr * 1.6} Z`} fill="#2A1A12" />
-			<ellipse cx={0} cy={0} rx={mr * 1.12} ry={mr} fill="#0E0806" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-			<RingDisc x={0} y={0} r={mr * 0.78} ry={0.9} id={`m${id}`} />
-		</g>}
+		<PommelMirror c={cc} id={`m${id}`} o={cl((56 - mirrorAt(cc).r) / 16)} />
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFD890" strokeWidth={16} strokeOpacity={0.55 * rim} filter={`url(#cr${id})`} />}
 		<Sword3D c={cm} sp={SP_CASE53} id={`${id}s`} />
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFF3CF" strokeWidth={2} strokeOpacity={0.9 * rim} />}
@@ -73,15 +69,15 @@ export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; ga
 			<g filter={`url(#cb${id})`}><path d={bl(250, 5, 17 * bloom, 5)} fill="#6E7E46" opacity={0.4 * bloom} /><path d={bl(250, 5, 12 * bloom, 5)} fill="#7A5434" opacity={0.7 * bloom} /><path d={bl(250, 5, 9 * bloom, 6)} fill="#4E5E38" opacity={0.95} /><path d={bl(250.4, 5.3, 4.5 * bloom, 7)} fill="#9AA668" opacity={0.85} /></g>
 			<path d={poly(cm, Array.from({length: 40}, (_, i) => { const a = i / 40 * 2 * Math.PI; return [sw.x0 + 97 + 250 + 24 * bloom * Math.cos(a), 7 + 24 * bloom * Math.sin(a), 1002.8] as V3; }))} fill="none" stroke="#FFF2D8" strokeWidth={3} strokeOpacity={0.9 * bloom} strokeDasharray="14 7" />
 		</g>}
+		<DisplayFront c={cc} hood={1} />
 		<Glint x={proj(cm, q(-170, 22, 1002))[0]} y={proj(cm, q(-170, 22, 1002))[1]} r={Math.max(6, 12 * 2100 / Math.max(900, sp[2]))} o={0.7} />
 	</g>; };
 
-/* ---------- crossing the front glass (KF03 / KF13): dark blurred posts at both edges and a reflection streak, strongest as the lens passes the pane ---------- */
-export const GlassPass: React.FC<{c: Cam; id: string}> = ({c, id}) => { const s = cl(1 - Math.abs(c.p[1] + 0.8) / 0.22); if (s <= 0.01 || c.p[2] < 0.7) return null;
+/* ---------- close to the hood's glass (the lectern vitrine, display53k): a soft reflection streak while the lens is within ~25 cm of it.
+   (The v2 1.6 m box's front pane at y = −0.8 m is gone; the camera never cuts through the new hood.) ---------- */
+export const GlassPass: React.FC<{c: Cam; id: string}> = ({c, id}) => { const cm = toMM(c), d = hoodDist({...cm, p: [cm.p[0] - CASE_X * 1000, cm.p[1], cm.p[2]]});
+	const s = cl(1 - d / 250) * cl((d - 20) / 60); if (s <= 0.01) return null; void id;
 	return <g opacity={s}>
-		<defs><filter id={`gp${id}`} x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="14" /></filter></defs>
-		<g filter={`url(#gp${id})`}><rect x={-60} y={-40} width={130} height={H + 80} fill="#050302" opacity={0.9} /><rect x={W - 70} y={-40} width={130} height={H + 80} fill="#050302" opacity={0.9} />
-			<rect x={70} y={-40} width={10} height={H + 80} fill="#E9EEF0" opacity={0.25} /><rect x={W - 80} y={-40} width={8} height={H + 80} fill="#E9EEF0" opacity={0.18} /></g>
 		<path d="M1240,-40 L1420,-40 L860,1120 L680,1120 Z" fill="#F4F8FA" opacity={0.05} />
 		<path d="M1430,-40 L1460,-40 L900,1120 L870,1120 Z" fill="#F4F8FA" opacity={0.09} />
 	</g>; };

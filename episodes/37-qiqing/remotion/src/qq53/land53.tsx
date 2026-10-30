@@ -1,23 +1,24 @@
 import React from 'react';
 import {rnd, cl} from '../qq50/kit50';
 import {Cam, V3, toCam, poly, proj, mix} from './parts53';
-import {bladeHW, LB} from './props53';
-import {SwordPose} from './sword3d';
+import {LBLADE, hwS, edgeS, faceZ, RIDGE_H, LAT, latCells, cellQuad, A, SwordPose, guardEdgeA, markAt, markSeed, birdScript, MARK_K, MARK_H} from './swordspec53s';
 /* ep53 · BladeLand: the approved MACRO look (macro53 / KF02) rebuilt in world units so ONE renderer serves every distance
-   of the one take: the camera skimming 2 cm above the lattice (KF02), the whole sword in its case (KF03) and the axis push
-   (KF04). Units mm; the blade lies on the sword pose (sword3d): base at a = 97 from the pommel, s = distance from the base
-   toward the tip, w = across (+y). The face is a shallow roof: the raised ridge on the axis, polished edge strips at the sides.
-   Lighting is physical (Blinn–Phong on the face normal, per cell), so highlights slide when the camera moves. */
-export const A_BL = 97, LBM = LB * 10, LA = 15, LW = 6.2, RIDGE = 3.4, E0 = 0.6, STRIP = 2.4;
-export const hwAt = (s: number) => (s < 0 ? bladeHW(0) * 10 : bladeHW(s / 10) * 10);
+   of the one take: the camera skimming 2 cm above the lattice (KF02), the whole sword in its case (KF03), the axis push (KF04)
+   and (through sword3d.Blade3D) every other 3-D view of the sword. Units mm; the blade lies on the sword pose: base at
+   a = 97 from the pommel, s = distance from the base toward the tip, w = across (+y). Outline, face (a shallow roof: the raised
+   ridge on the axis, polished edge strips) and lattice all come from swordspec53s.
+   Lighting is physical (Blinn–Phong on the face normal); a light may be a point (pos) that falls off with distance. The metal
+   highlight is drawn where metal shows it: a narrow crisp line ON the ridge (both flanks of the crease), crisp lines on the
+   raised rims of the pale (tin-rich) cells on their lit side, and small glints on the brightest pale cells — no broad wash. */
+export const A_BL = A.blade0, LBM = LBLADE, RIDGE = RIDGE_H;
+export const hwAt = (s: number) => hwS(Math.max(0, s));
 /** height of the face above the sword's axis plane at (s, w) */
-export const hAt = (s: number, w: number) => { const hw = Math.max(0.01, hwAt(s)), a = Math.min(1, Math.abs(w) / hw);
-	const bev = Math.abs(w) > hw - STRIP ? 0.8 * (Math.abs(w) - (hw - STRIP)) / STRIP : 0;
-	return E0 + RIDGE * Math.pow(1 - a, 1.12) - bev; };
+export const hAt = (s: number, w: number) => faceZ(Math.max(0, s), w);
 export const bw = (sp: SwordPose, s: number, w: number, h = hAt(s, w)): V3 => [sp.x0 + sp.dir * (A_BL + s), sp.ya + w, sp.z0 + h];
 const nrm = (v: V3): V3 => { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; };
 const dot = (a: V3, b: V3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-export type Light = {dir: V3; k: number};
+/** a light: dir = toward the light (directional), or pos = a point light (world) with falloff distance d0 */
+export type Light = {dir: V3; k: number; pos?: V3; d0?: number};
 export type LandOpts = {
 	lights: Light[];
 	shin?: number;
@@ -28,67 +29,106 @@ export type LandOpts = {
 	exposure?: number;                  // 0..1, the whole blade's brightness (1 = as lit)
 	lift?: number;                      // 0..1, a warm lift toward bright gold (far views read as THE bright sword)
 	sMin?: number;                      // draw only s ≥ sMin (cells behind the camera in the glide)
+	flash?: {s: number; k: number};     // a light catching the bronze at s (the [亮] accent): ridge + rims + glints there
+	glints?: number;                    // 0..1, the pale-cell glints (default 1)
+	guardCut?: boolean;                 // start the face at the guard's inverted V (the blade never pokes into the guard)
+	marks?: boolean;                    // the 8 bird-script marks in front of the guard (default true)
 };
-type CellD = {d: string; dIn: string; core: string; col: string; line: string; lw: number; rim: number; pale: boolean; z: number; px: number};
-const corner = (p: number, q: number): [number, number] => [(p + q) / 2 * LA + (rnd(p * 131 + q, 5) - 0.5) * LA * 0.09, (p - q) / 2 * LW + (rnd(p * 131 + q, 6) - 0.5) * LW * 0.12];
+type CellD = {ins: boolean; d: string; dIn: string; core: string; col: string; line: string; lw: number; rim: number; rimD: string; pale: boolean; z: number; px: number; s: number; w: number};
 export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts}> = ({c, sp, id, o}) => {
-	const lights = o.lights.map((l) => ({dir: nrm(l.dir), k: l.k})), shin = o.shin ?? 70, ex = o.exposure ?? 1;
+	const lights = o.lights.map((l) => ({...l, dir: nrm(l.dir)})), shin = o.shin ?? 70, ex = o.exposure ?? 1;
 	const fogOf = (z: number) => (o.fog ? 1 - Math.exp(-Math.max(0, z - o.fog.d0) / o.fog.D) : 0), FOG = o.fog?.col ?? '#1E100B';
 	const sMin = o.sMin ?? -20;
-	const shade = (s: number, w: number, P: V3) => { const hw = Math.max(0.01, hwAt(s)), a = Math.min(0.999, Math.abs(w) / hw);
-		const dh = -RIDGE * 1.12 * Math.pow(1 - a, 0.12) / hw * Math.sign(w || 1e-6), n = nrm([0, -dh, 1]);
-		const V = nrm([c.p[0] - P[0], c.p[1] - P[1], c.p[2] - P[2]]);
-		let sp = 0, df = 0; for (const L of lights) { const Hh = nrm([V[0] + L.dir[0], V[1] + L.dir[1], V[2] + L.dir[2]]); sp += L.k * Math.pow(Math.max(0, dot(n, Hh)), shin); df += L.k * Math.max(0, dot(n, L.dir)); }
-		return {sp: Math.min(1.2, sp), df: Math.min(1, df)}; };
+	const cut = (w: number) => (o.guardCut ? guardEdgeA(w) - A_BL + 0.3 : 0);
+	const flashAt = (s: number) => (o.flash && o.flash.k > 0 ? o.flash.k * Math.exp(-Math.pow((s - o.flash.s) / 26, 2)) : 0);
+	/** Blinn–Phong at P for normal n; returns specular (sharp), diffuse */
+	const light = (n: V3, P: V3, sh: number) => { const V = nrm([c.p[0] - P[0], c.p[1] - P[1], c.p[2] - P[2]]);
+		let s = 0, d = 0; for (const L of lights) { let Ld = L.dir, att = 1;
+			if (L.pos) { const v: V3 = [L.pos[0] - P[0], L.pos[1] - P[1], L.pos[2] - P[2]], dist = Math.hypot(v[0], v[1], v[2]); Ld = nrm(v); att = 1 / (1 + Math.pow(dist / (L.d0 ?? 300), 2)); }
+			const Hh = nrm([V[0] + Ld[0], V[1] + Ld[1], V[2] + Ld[2]]); s += L.k * att * Math.pow(Math.max(0, dot(n, Hh)), sh); d += L.k * att * Math.max(0, dot(n, Ld)); }
+		return {sp: s, df: Math.min(1, d)}; };
+	/** the face normal at (s, w): the roof slope across the blade */
+	const faceN = (s: number, w: number): V3 => { const e = 0.4, dh = (hAt(s, w + e) - hAt(s, w - e)) / (2 * e); return nrm([0, -dh, 1]); };
 	/* ---- cells ---- */
 	const cells: CellD[] = [];
-	const sub = (z: number, px: number) => (px > 60 ? 6 : px > 18 ? 3 : 1);
-	for (let p = -3; p <= Math.ceil(2 * (LBM + LA) / LA); p++) for (let q = -10; q <= 10; q++) { if ((p + q) % 2 !== 0) continue;
-		const i = (p + q) / 2, j = (p - q) / 2, ca = (p + 1) / 2 * LA, cw = q / 2 * LW, hw = hwAt(ca);
-		if (ca < sMin - LA || ca > LBM + LA / 2 || hw - STRIP < 1 || Math.abs(cw) > hw - STRIP + LW / 2) continue;
-		const Pc = bw(sp, ca, cw), kc = toCam(c, Pc); if (kc[2] < 2) continue;
-		const pxSize = c.f * LA / kc[2]; if (pxSize < 0.6) continue;
+	const sub = (px: number) => (px > 60 ? 6 : px > 18 ? 3 : 1);
+	const clampW = (s: number, w: number) => { const lim = Math.max(0, hwAt(Math.max(s, 0)) - edgeS(Math.max(s, 0))); return Math.max(-lim, Math.min(lim, w)); };
+	for (const cc of latCells(Math.max(sMin, -LAT.A), LBM)) { const ca = cc.s, cw = cc.w, hw = hwAt(ca);
+		if (ca < sMin - LAT.A || hw - edgeS(Math.max(0, ca)) < 1 || Math.abs(cw) > hw - edgeS(Math.max(0, ca)) + LAT.W / 2) continue;
+		const Pc = bw(sp, ca, clampW(ca, cw)), kc = toCam(c, Pc); if (kc[2] < 2) continue;
+		const pxSize = c.f * LAT.A / kc[2]; if (pxSize < 0.6) continue;
 		const sx = c.cx + c.f * kc[0] / kc[2], sy = c.cy - c.f * kc[1] / kc[2]; if (sx < -pxSize * 2 - 200 || sx > 2120 + pxSize * 2 || sy < -pxSize * 2 - 200 || sy > 1280 + pxSize * 2) continue;
-		const n = sub(kc[2], pxSize);
-		const quad = (sc: number) => { const cs = ([[i, j], [i + 1, j], [i + 1, j + 1], [i, j + 1]] as [number, number][]).map(([a, b]) => { const [u, v] = corner(a, b); return [ca + (u - ca) * sc, cw + (v - cw) * sc] as [number, number]; });
-			const pts: V3[] = [];
+		const n = sub(pxSize);
+		const quad = (sc: number) => { const cs = cellQuad(cc, sc), pts: V3[] = [];
 			for (let e = 0; e < 4; e++) { const [a0, b0] = cs[e], [a1, b1] = cs[(e + 1) % 4];
-				for (let k = 0; k < n; k++) { const tt = k / n, uu = a0 + (a1 - a0) * tt, lim = Math.max(0, hwAt(Math.max(uu, 0)) - STRIP), vv = Math.max(-lim, Math.min(lim, b0 + (b1 - b0) * tt)); pts.push(bw(sp, Math.max(uu, 0), vv)); } }
+				for (let k = 0; k < n; k++) { const tt = k / n, vv = b0 + (b1 - b0) * tt, uu = Math.max(a0 + (a1 - a0) * tt, cut(vv)); pts.push(bw(sp, uu, clampW(uu, vv))); } }
 			return poly(c, pts); };
 		const d = quad(1); if (!d) continue;
-		const pale = ((i + j) % 2 + 2) % 2 === 0, {sp: spec, df} = shade(ca, cw, Pc), fog = fogOf(kc[2]);
-		const jit = (rnd(i * 31 + j, 71) - 0.5) * 0.12;
-		const base = mix(pale ? '#D2B886' : '#B98443', pale ? '#8A6A3E' : '#6E4824', 0.2 + jit);
-		let col = mix(base, '#3A2410', cl(0.36 - 0.5 * df));
-		if (o.lift) col = mix(col, pale ? '#FFF0CC' : '#E2AE5C', o.lift);
-		col = mix(col, '#FFF8E4', cl(spec * (pale ? 0.86 : 0.3)));
+		const pale = cc.pale, nf = faceN(ca, clampW(ca, cw)), L0 = light(nf, Pc, shin), Lr = light(nf, Pc, shin * 2.2), fog = fogOf(kc[2]), fl = flashAt(ca);
+		const jit = (rnd(cc.i * 31 + cc.j, 71) - 0.5) * 0.12;
+		const base = mix(pale ? LAT.pale : LAT.gold, pale ? LAT.paleDk : LAT.goldDk, 0.2 + jit);
+		let col = mix(base, '#3A2410', cl(0.36 - 0.5 * L0.df));
+		if (o.lift) col = mix(col, pale ? LAT.paleHi : '#E2AE5C', o.lift);
+		/* the cell's own sheen stays low (it is a dull, finely ground face); the bright metal is in the rims, the ridge and the glints */
+		col = mix(col, '#FFF4DC', cl(L0.sp * (pale ? 0.32 : 0.12) + fl * (pale ? 0.25 : 0.1)));
 		if (o.sheen && o.sheen.k > 0) col = mix(col, '#F2F6F8', o.sheen.k * Math.exp(-Math.pow((ca / LBM - o.sheen.pos) / 0.07, 2)) * (pale ? 0.85 : 0.6));
 		col = mix(col, '#120804', 1 - ex);
 		col = mix(col, FOG, fog * 0.94);
-		cells.push({d, dIn: pxSize > 7 ? quad(0.84) : '', core: !pale && pxSize > 3 ? quad(0.3) : '', col, line: mix(mix('#22140A', FOG, fog * 0.8), '#120804', 0), lw: Math.max(0.35, c.f * 0.36 / kc[2]), rim: cl(spec) * (1 - fog), pale, z: kc[2], px: pxSize}); }
+		/* the lit rim: the two inner edges of a pale cell that face the light (toward the light's side along s) */
+		const rim = cl(Lr.sp * 1.4 + fl) * (1 - fog);
+		let rimD = '';
+		if (pale && pxSize > 7 && rim > 0.04) { const q = cellQuad(cc, LAT.inSc), Lp = lights[0]?.pos, toL = Lp ? Math.sign((Lp[0] - Pc[0]) * sp.dir) : Math.sign(lights[0]?.dir[0] * sp.dir || 1);
+			/* corners: 0 = toward the base, 1 = +w, 2 = toward the tip, 3 = −w; the lit pair meets at the corner nearest the light */
+			const k0 = toL < 0 ? 0 : 2, ids = [(k0 + 3) % 4, k0, (k0 + 1) % 4], pts: V3[] = [];
+			for (let e = 0; e < 2; e++) { const [a0, b0] = q[ids[e]], [a1, b1] = q[ids[e + 1]]; for (let k = 0; k <= 4; k++) { const tt = k / 4, uu = Math.max(0, a0 + (a1 - a0) * tt); pts.push(bw(sp, uu, clampW(uu, b0 + (b1 - b0) * tt), hAt(uu, clampW(uu, b0 + (b1 - b0) * tt)) + 0.05)); } }
+			rimD = poly(c, pts, false); }
+		cells.push({ins: ca > 12 && ca < 76, d, dIn: pxSize > 7 ? quad(LAT.inSc) : '', core: !pale && pxSize > 3 ? quad(LAT.coreSc) : '', col, line: mix('#22140A', FOG, fog * 0.8), lw: Math.max(0.35, c.f * LAT.line * 0.6 / kc[2]), rim, rimD, pale, z: kc[2], px: pxSize, s: ca, w: cw}); }
 	cells.sort((a, b) => b.z - a.z);
 	const CellG = (k: CellD, i: number) => <g key={i}>
-		<path d={k.d} fill={k.col} stroke={k.line} strokeWidth={k.lw} strokeLinejoin="round" />
-		{k.dIn && <path d={k.dIn} fill="none" stroke={k.line} strokeWidth={k.lw * 0.38} strokeOpacity={0.8} />}
-		{k.core && <path d={k.core} fill={k.line} opacity={0.72} />}
-		{k.pale && k.dIn && k.rim > 0.05 && <path d={k.dIn} fill="none" stroke="#FFFBEE" strokeWidth={k.lw * (0.3 + 0.4 * k.rim)} strokeOpacity={cl(0.15 + 0.85 * k.rim)} />}
+		<path d={k.d} fill={k.col} stroke={k.line} strokeWidth={k.lw} strokeOpacity={k.ins ? 0.5 : 1} strokeLinejoin="round" />
+		{k.dIn && <path d={k.dIn} fill="none" stroke={k.line} strokeWidth={k.lw * 0.38} strokeOpacity={k.ins ? 0.35 : 0.8} />}
+		{k.core && !k.ins && <path d={k.core} fill={k.line} opacity={0.72} />}
+		{k.rimD && <path d={k.rimD} fill="none" stroke="#FFFBEE" strokeWidth={Math.max(0.6, Math.min(2.4, k.lw * 0.55))} strokeOpacity={cl(k.rim)} strokeLinecap="round" strokeLinejoin="round" />}
 	</g>;
 	const nearG = o.dof ? cells.filter((k) => k.z < o.dof!.near) : [], farG = o.dof ? cells.filter((k) => k.z > o.dof!.far) : [], midG = o.dof ? cells.filter((k) => k.z >= o.dof!.near && k.z <= o.dof!.far) : cells;
 	/* ---- edge strips, ridge, outline ---- */
-	const NS = 72, ss = Array.from({length: NS + 1}, (_, k) => Math.max(sMin, -2) + (LBM - Math.max(sMin, -2)) * k / NS);
-	const strips = [1, -1].flatMap((side) => ss.slice(0, -1).map((s0, k) => { const s1 = ss[k + 1], a0 = hwAt(s0), a1 = hwAt(s1), P = bw(sp, s0, side * (a0 - STRIP / 2));
-		const d = poly(c, [bw(sp, s0, side * (a0 - STRIP)), bw(sp, s0, side * a0), bw(sp, s1, side * a1), bw(sp, s1, side * Math.max(0, a1 - STRIP))]); if (!d) return null;
+	const NS = 96, ss = Array.from({length: NS + 1}, (_, k) => Math.max(sMin, -2) + (LBM - Math.max(sMin, -2)) * k / NS).map((s) => Math.max(0, s));
+	const sCutE = cut(hwAt(6)), strips = [1, -1].flatMap((side) => ss.slice(0, -1).map((s0q, k) => { const s0 = Math.max(s0q, sCutE), s1 = Math.max(ss[k + 1], sCutE); if (s1 - s0 < 0.01) return null; const a0 = hwAt(s0), a1 = hwAt(s1), P = bw(sp, s0, side * (a0 - edgeS(s0) / 2));
+		const d = poly(c, [bw(sp, s0, side * Math.max(0, a0 - edgeS(s0))), bw(sp, s0, side * a0), bw(sp, s1, side * a1), bw(sp, s1, side * Math.max(0, a1 - edgeS(s1)))]); if (!d) return null;
 		const z = toCam(c, P)[2]; if (z < 2) return null;
-		const V = nrm([c.p[0] - P[0], c.p[1] - P[1], c.p[2] - P[2]]), n = nrm([0, side * 0.45, 1]);
-		let spc = 0; for (const L of lights) { const Hh = nrm([V[0] + L.dir[0], V[1] + L.dir[1], V[2] + L.dir[2]]); spc += L.k * Math.pow(Math.max(0, dot(n, Hh)), shin * 0.7); }
-		let col = mix(side > 0 ? '#E8C886' : '#B88A48', '#FFFBEA', cl(spc * 0.9));
+		const Ls = light(nrm([0, side * 0.45, 1]), P, shin * 0.7);
+		let col = mix(side > 0 ? '#E8C886' : '#B88A48', '#FFFBEA', cl(Ls.sp * 0.9 + flashAt(s0) * 0.5));
 		if (o.sheen && o.sheen.k > 0) col = mix(col, '#F6FAFC', o.sheen.k * Math.exp(-Math.pow((s0 / LBM - o.sheen.pos) / 0.07, 2)));
 		col = mix(mix(col, '#120804', 1 - ex), FOG, fogOf(z) * 0.92);
 		return <path key={`st${side}_${k}`} d={d} fill={col} stroke={col} strokeWidth={0.6} />; }));
-	const ridgePts = ss.filter((s) => s < LBM - 8).map((s) => bw(sp, s, 0, hAt(s, 0) + 0.05));
-	const rz = toCam(c, bw(sp, LBM * 0.5, 0))[2];
-	const ridge = poly(c, ridgePts, false);
-	const outline = poly(c, [...ss.map((s) => bw(sp, s, hwAt(s), E0 - 0.8)), ...ss.slice().reverse().map((s) => bw(sp, s, -hwAt(s), E0 - 0.8))]);
+	/* the ridge: per segment, a crisp specular line whose brightness follows the light on the crease (either flank) and whose
+	   width is its true width at its own depth (≈ 0.5 mm of polished crest, never wider than 2.6 px) */
+	const r0 = Math.max(sMin, 1, cut(0) + 0.5), RN = 140, rs = Array.from({length: RN + 1}, (_, k) => r0 + (LBM - 9 - r0) * k / RN);
+	const ridge = rs.slice(0, -1).map((s0, k) => { const s1 = rs[k + 1], sm = (s0 + s1) / 2, P = bw(sp, sm, 0, hAt(sm, 0) + 0.05), z = toCam(c, P)[2]; if (z < 3) return null;
+		const sl = RIDGE_H * 1.12 / Math.max(1, hwAt(sm)), nA = nrm([0, sl, 1]), nB = nrm([0, -sl, 1]);
+		const I = cl(Math.max(light(nA, P, shin * 1.2).sp, light(nB, P, shin * 1.2).sp) * 1.6 + flashAt(sm)) * (1 - fogOf(z)) * ex;
+		const wpx = Math.min(2.6, Math.max(0.7, c.f * 0.5 / z)), d = poly(c, [bw(sp, s0, 0, hAt(s0, 0) + 0.05), bw(sp, s1, 0, hAt(s1, 0) + 0.05)], false); if (!d) return null;
+		const base = 0.28 * (1 - fogOf(z)) * ex;
+		return <g key={`r${k}`}>
+			<path d={d} fill="none" stroke="#FFF2D0" strokeOpacity={base} strokeWidth={wpx} />
+			{I > 0.03 && <path d={d} fill="none" stroke="#FFFDF4" strokeOpacity={I} strokeWidth={wpx} strokeLinecap="round" />}
+			{I > 0.2 && <path d={d} fill="none" stroke="#FFF0C8" strokeOpacity={0.25 * I} strokeWidth={wpx * 3} strokeLinecap="round" />}
+		</g>; });
+	/* glints: the few brightest pale cells, a small four-point star at the lit corner of the rim */
+	const gk = o.glints ?? 1;
+	const glints = gk <= 0 ? [] : cells.filter((k) => k.pale && k.rim > 0.55 && k.px > 9 && !(o.dof && (k.z < o.dof.near || k.z > o.dof.far))).sort((a, b) => b.rim - a.rim).slice(0, 7).map((k, i) => {
+		const q = cellQuad({p: 0, q: 0, s: k.s, w: k.w, pale: true, i: 0, j: 0}, 0.5), Lp = lights[0]?.pos, toL = Lp ? Math.sign((Lp[0] - bw(sp, k.s, k.w)[0]) * sp.dir) : 1;
+		const [gs, gw] = toL < 0 ? [k.s - LAT.A * 0.36, k.w] : [k.s + LAT.A * 0.36, k.w], P = proj(c, bw(sp, gs, clampW(gs, gw), hAt(gs, clampW(gs, gw)) + 0.1)); void q;
+		if (P[2] < 3) return null; const r = Math.min(16, Math.max(3, c.f * 1.6 / P[2])) * (0.6 + 0.4 * k.rim), a = cl((k.rim - 0.55) / 0.35) * gk;
+		return <g key={`gl${i}`} opacity={a}><circle cx={P[0]} cy={P[1]} r={r * 0.5} fill="#FFE8B8" opacity={0.35} />
+			<path d={`M${P[0]},${P[1] - r} L${P[0] + r * 0.12},${P[1] - r * 0.12} L${P[0] + r},${P[1]} L${P[0] + r * 0.12},${P[1] + r * 0.12} L${P[0]},${P[1] + r} L${P[0] - r * 0.12},${P[1] + r * 0.12} L${P[0] - r},${P[1]} L${P[0] - r * 0.12},${P[1] - r * 0.12} Z`} fill="#FFFDF4" /></g>; });
+	/* the inscription (C1): two columns of four marks either side of the ridge, heads toward the guard, ON the face */
+	const marks = o.marks === false ? [] : [1, -1].flatMap((side) => [0, 1, 2, 3].map((n) => { const [a, w] = markAt(side, n), s = a - A_BL;
+		const on = (ds: number, dw: number) => proj(c, bw(sp, s + ds, w + dw, hAt(s + ds, w + dw) + 0.06)), P0 = on(0, 0); if (P0[2] < 3) return null;
+		const Ps = on(1, 0), Pw = on(0, 1), px = Math.hypot(Ps[0] - P0[0], Ps[1] - P0[1]) * MARK_H; if (px < 5) return null;
+		const g = birdScript(markSeed(side, n)), col = mix(LAT.ink, FOG, fogOf(P0[2]) * 0.85), m = `matrix(${((Pw[0] - P0[0]) * MARK_K).toFixed(3)} ${((Pw[1] - P0[1]) * MARK_K).toFixed(3)} ${((Ps[0] - P0[0]) * MARK_K).toFixed(3)} ${((Ps[1] - P0[1]) * MARK_K).toFixed(3)} ${P0[0].toFixed(1)} ${P0[1].toFixed(1)})`;
+		return <g key={`m${side}${n}`} transform={m} opacity={0.85 * ex * cl((px - 5) / 8)}>{g.d.map((p, i) => <path key={i} d={p} fill="none" stroke={col} strokeWidth={0.085} strokeLinecap="round" strokeLinejoin="round" />)}<circle cx={g.eye[0]} cy={g.eye[1]} r={0.06} fill={col} /></g>; }));
+	const sq = (s: number) => Math.max(s, sCutE), outline = poly(c, [bw(sp, cut(0), 0, 0), ...ss.map((s) => bw(sp, sq(s), hwAt(sq(s)), 0)), ...ss.slice().reverse().map((s) => bw(sp, sq(s), -hwAt(sq(s)), 0))]);
 	return <g>
 		<defs>{o.dof && <filter id={`ln${id}`} x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation={o.dof.nb} /></filter>}
 			{o.dof && o.dof.fb > 0 && <filter id={`lf${id}`} x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation={o.dof.fb} /></filter>}</defs>
@@ -97,7 +137,9 @@ export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts
 		{midG.map(CellG)}
 		{nearG.length > 0 && <g filter={`url(#ln${id})`}>{nearG.map(CellG)}</g>}
 		{strips}
-		{ridge && <path d={ridge} fill="none" stroke="#FFF2D0" strokeOpacity={0.75 * ex} strokeWidth={Math.max(0.8, c.f * 0.32 / Math.max(5, rz))} />}
+		{marks}
+		{ridge}
+		{glints}
 	</g>;
 };
 /** screen point of a blade location (for tags, glints) */

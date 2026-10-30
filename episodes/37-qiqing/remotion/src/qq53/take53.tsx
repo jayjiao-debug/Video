@@ -3,13 +3,14 @@ import {W, H, rnd, lerp, cl, seg} from '../qq50/kit50';
 import {Pool, Vignette} from '../qq50/styleB';
 import {Figure4, POSES, Look4} from '../qq44/figure44';
 import {Cam, V3, lookAt, proj, poly, toCam, mix, blobOn, Tag, Scrim} from './parts53';
-import {Guard3D, SwordPose} from './sword3d';
-import {PommelFace, R_FACE} from './face53';
-import {BladeLand, bw, hwAt, LBM, A_BL, Light} from './land53';
+import {Sword3D, SwordPose} from './sword3d';
+import {R_FACE} from './face53';
+import {BladeLand, bw, hwAt, hAt, LBM, A_BL, Light} from './land53';
 import {CleaverD as Cleaver} from './end53d';
 import {RingDisc} from './props53';
 import {spline, sstep, DEG} from './cam53';
 import {B} from '../qq50/styleB';
+import {DisplayBack, DisplayFront, mirrorAt, titleQuadOn, DZ0, HY0, DTITLE_W, DTITLE_H, DTITLE_Y, deckZ, HH as HOOD_H} from './display53k';
 /* ep53 · THE ONE TAKE, legs 1–6 (0 → 20.821 s): one camera, one world (the case frame, mm). The sword lies level on its
    holders, pommel end face at x = −278 (PF), tip at x = +278, blue glass up (z+), axis at z = 1000; plinth top z = 940.
    Your kitchen (kfA53, its own frame) is placed on the sword's own edge line beyond the tip (a 180° turn about z + a shift),
@@ -97,8 +98,9 @@ export const WPool: React.FC<{c: Cam; x: number; y: number; z: number; rx: numbe
 		return d ? <path key={k} d={d} fill={col} opacity={a / n} /> : null; })}</g>;
 
 /* ---------- the museum: hall, rope, visitors, the case (plinth, holders, ring mirror, glass hood), the spot ---------- */
-const HX = 800, HY = 800, HZ0 = 940, HZ1 = 1900;
-export const PANE_Y = -HY;
+const HZ0 = DZ0;
+/** the hood's front glass (y); the old 1.6 m box's pane is gone */
+export const PANE_Y = HY0;
 const VIS: {a: number; r: number; look: Look4; h: number; tint: number}[] = [
 	{a: 14, r: 4500, look: {dress: 'coat', head: 'short'}, h: 1.74, tint: 0}, {a: 38, r: 4800, look: {dress: 'jacket', head: 'bob', legs: 'trousers'}, h: 1.62, tint: 1},
 	{a: 62, r: 4500, look: {dress: 'coat', head: 'cap'}, h: 1.78, tint: 2}, {a: 84, r: 4900, look: {dress: 'dress', head: 'long'}, h: 1.6, tint: 0},
@@ -122,17 +124,10 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 		[[[-6500, 5500, 0], [6500, 5500, 0], [6500, 5500, 4500], [-6500, 5500, 4500]], [0, -1, 0]], [[[6500, -5500, 0], [-6500, -5500, 0], [-6500, -5500, 4500], [6500, -5500, 4500]], [0, 1, 0]]];
 	const washers: V3[] = [[6490, -2600, 2400], [6490, 2600, 2400], [-2800, 5490, 2400], [2800, 5490, 2400], [-6490, -2600, 2400], [-6490, 2600, 2400]];
 	const posts = Array.from({length: 12}, (_, i) => { const a = (i / 12) * 2 * Math.PI + 0.31; return [3900 * Math.cos(a), 3900 * Math.sin(a)] as [number, number]; });
-	/* the case */
-	const top: V3[] = [[-HX, -HY, HZ0], [HX, -HY, HZ0], [HX, HY, HZ0], [-HX, HY, HZ0]];
-	const sides: [V3[], V3][] = [[[[-HX, -HY, HZ0], [HX, -HY, HZ0], [HX, -HY, 0], [-HX, -HY, 0]], [0, -1, 0]], [[[HX, -HY, HZ0], [HX, HY, HZ0], [HX, HY, 0], [HX, -HY, 0]], [1, 0, 0]],
-		[[[HX, HY, HZ0], [-HX, HY, HZ0], [-HX, HY, 0], [HX, HY, 0]], [0, 1, 0]], [[[-HX, HY, HZ0], [-HX, -HY, HZ0], [-HX, -HY, 0], [-HX, HY, 0]], [-1, 0, 0]]];
-		const holder = (x: number) => { const a = proj(c, [x, -4, HZ0]), b = proj(c, [x, -4, 1000 - 9]); if (a[2] < 20 || b[2] < 20) return null; const w = c.f * 7 / a[2];
-		return <g key={x}><path d={`M${a[0] - w},${a[1]} L${b[0] - w * 0.6},${b[1]} L${b[0] + w * 0.6},${b[1]} L${a[0] + w},${a[1]} Z`} fill="#E8F0F2" opacity={0.1} /><path d={`M${a[0] - w},${a[1]} L${b[0] - w * 0.6},${b[1]}`} stroke="#F4FAFC" strokeOpacity={0.35} strokeWidth={1.5} /></g>; };
-	const mir = proj(c, [-345, 250, 1004]), mr = mir[2] > 50 ? c.f * 30 / mir[2] : 0, mFoot = proj(c, [-345, 250, 941]), mBase = proj(c, [-345, 250, 972]);
-	const hoodEdges: [V3, V3][] = [[[-HX, -HY, HZ0], [-HX, -HY, HZ1]], [[HX, -HY, HZ0], [HX, -HY, HZ1]], [[HX, HY, HZ0], [HX, HY, HZ1]], [[-HX, HY, HZ0], [-HX, HY, HZ1]],
-		[[-HX, -HY, HZ1], [HX, -HY, HZ1]], [[HX, -HY, HZ1], [HX, HY, HZ1]], [[HX, HY, HZ1], [-HX, HY, HZ1]], [[-HX, HY, HZ1], [-HX, -HY, HZ1]]];
+	/* the case: the lectern vitrine (display53k), shared with the end hall */
+	const mo = t < 17.9 ? hood * (1 - sstep(seg(t, 17.0, 17.8))) : 0, mm = mirrorAt(c), mir = [mm.x, mm.y], mr = mm.r;
 	/* the spot: a soft cone from the ceiling onto the case (skipped while the camera is inside it) */
-	const apex: V3 = [0, 0, 4300], rb = 980, zc = c.p[2], rAt = rb * (4300 - zc) / (4300 - HZ0), inside = Math.hypot(c.p[0], c.p[1]) < rAt + 250;
+	const apex: V3 = [0, 0, 4300], rb = 640, zc = c.p[2], rAt = rb * (4300 - zc) / (4300 - HZ0), inside = Math.hypot(c.p[0], c.p[1]) < rAt + 250;
 	const cone = (() => { if (inside) return null; const pts = [proj(c, apex), ...Array.from({length: 24}, (_, i) => { const a = i / 24 * 2 * Math.PI; return proj(c, [rb * Math.cos(a), rb * Math.sin(a), HZ0]); })];
 		if (pts.some((p) => p[2] < 50)) return null;
 		const hull = convexHull(pts.map((p) => [p[0], p[1]] as [number, number])); return 'M' + hull.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('L') + 'Z'; })();
@@ -159,24 +154,8 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 				const d = poly(c, pts, false); return d ? <path key={`rp${i}`} d={d} fill="none" stroke="#6A2C1A" strokeOpacity={0.55} strokeWidth={Math.max(1, c.f * 16 / Math.max(300, proj(c, pts[4])[2]))} /> : null; })}</g>
 		</g>}
 		{cone && <path d={cone} fill="url(#mCone)" opacity={coneO * hall} />}
-		{sides.map(([q, n], i) => faceVis(c, q[0], n) ? <path key={`s${i}`} d={poly(c, q)} fill={mix('#170C08', '#2E1D13', lite)} /> : null)}
-		<path d={poly(c, top)} fill={mix('#21130D', '#3E271A', lite)} />
-		<path d={poly(c, [[-HX, -HY, HZ0], [HX, -HY, HZ0]], false)} stroke={B.gold} strokeOpacity={0.4 * hood} strokeWidth={2} fill="none" />
-		<WPool c={c} x={0} y={0} z={HZ0 + 0.5} rx={620 + 220 * lite} ry={330 + 170 * lite} col="#FFC878" a={0.34 + 0.1 * lite} />
-		{lite > 0.01 && <WPool c={c} x={0} y={0} z={HZ0 + 1} rx={560} ry={300} col="#FFEBC0" a={0.12 * lite} n={18} />}
-		<path d={poly(c, [[-270, 32, HZ0 + 1], [282, 32, HZ0 + 1], [282, -14, HZ0 + 1], [-270, -14, HZ0 + 1]])} fill={mix('#000000', '#1C0E06', lite)} opacity={0.45} filter="url(#mSh)" />
-		{[-150, 160].map(holder)}
-		{mr > 2 && t < 17.9 && <g transform={`translate(${mir[0]},${mir[1]})`} opacity={hood * (1 - sstep(seg(t, 17.0, 17.8)))}>
-			<g transform={`translate(${-mir[0]},${-mir[1]})`}>
-				<ellipse cx={mFoot[0]} cy={mFoot[1]} rx={Math.max(14, c.f * 24 / mFoot[2])} ry={Math.max(4.5, c.f * 7 / mFoot[2])} fill="#0A0604" opacity={0.7} />
-				<path d={`M${mFoot[0]},${mFoot[1]} L${mBase[0]},${mBase[1]}`} stroke="#14090A" strokeWidth={9} strokeLinecap="round" />
-				<path d={`M${mFoot[0]},${mFoot[1]} L${mBase[0]},${mBase[1]}`} stroke="#9A7440" strokeWidth={6} strokeLinecap="round" />
-				<path d={`M${mFoot[0] - 1.6},${mFoot[1] - 1} L${mBase[0] - 1.6},${mBase[1]}`} stroke="#E8C484" strokeWidth={1.6} strokeOpacity={0.7} /></g>
-			<ellipse cx={0} cy={0} rx={mr * 1.12} ry={mr} fill="#0E0806" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-			<RingDisc x={0} y={0} r={mr * 0.78} ry={0.9} id="mMir" />
-			<path d={`M${-mr * 0.7},${-mr * 0.4} Q${-mr * 0.3},${-mr * 0.82} ${mr * 0.35},${-mr * 0.75}`} stroke="#FFFFFF" strokeOpacity={0.25} strokeWidth={3} fill="none" /></g>}
-		{mr > 2 && t >= 11.9 && t < 16.4 && <Tag id="mirc" x={Math.min(W - 330, Math.max(330, mir[0]))} y={mir[1] - mr * 1.4 - 22} s="剑首 · 11道同心圆" fs={34} anchor="middle" scrim={0.45} o={hood * sstep(seg(t, 11.9, 12.4)) * (1 - sstep(seg(t, 15.8, 16.3)))} />}
-		{hood > 0.01 && <g opacity={hood}>{hoodEdges.map(([a, b], i) => { const d = poly(c, [a, b], false); return d ? <path key={`h${i}`} d={d} stroke="#E9EEF0" strokeOpacity={0.16} strokeWidth={1.6} fill="none" /> : null; })}</g>}
+		<DisplayBack c={c} lite={lite} hood={hood} mirror={mo} id="m" />
+		{mr > 2 && t >= 11.9 && t < 16.4 && <Tag id="mirc" x={mir[0] - mr * 1.6} y={mir[1] + 12} s="剑首 · 11道同心圆" fs={34} anchor="end" scrim={0.45} o={hood * sstep(seg(t, 11.9, 12.4)) * (1 - sstep(seg(t, 15.8, 16.3)))} />}
 		{visNear}
 	</g>; };
 /** convex hull (monotone chain) of screen points */
@@ -220,52 +199,21 @@ const Motes: React.FC<{c: Cam; t: number; o: number}> = ({c, t, o}) => { if (o <
 		const tw = 0.5 + 0.5 * Math.sin(t * (0.6 + rnd(i, 54)) + i * 2.3);
 		return <circle key={i} cx={p[0]} cy={p[1]} r={Math.min(2.6, Math.max(0.8, c.f * 1.6 / p[2]))} fill="#FFE8C0" opacity={(0.18 + 0.3 * tw) * Math.min(1, (p[2] - 350) / 400)} />; })}</g>; };
 
-/* ---------- the glass: pane reflections where the camera passes a pane ---------- */
-const PaneStreaks: React.FC<{c: Cam; t: number}> = ({c, t}) => {
-	/* the front pane (y = −800) from 7.6 s on: two soft diagonal reflection bands, world-anchored on the pane */
-	const out: React.ReactNode[] = [];
-	const band = (x0: number, w: number, a: number, key: string) => { const d = poly(c, [[x0, PANE_Y, HZ1], [x0 + w, PANE_Y, HZ1], [x0 + w - 700, PANE_Y, HZ0], [x0 - 700, PANE_Y, HZ0]]); if (!d) return null;
-		return <path key={key} d={d} fill="#F4F8FA" opacity={a} />; };
-	if (c.p[1] < -500 && t < 13) { const o = cl((-c.p[1] - 600) / 150) * (1 - seg(t, 11.6, 12.6));
-		out.push(<g key="fp" opacity={o}>{band(-120, 260, 0.04, 'a')}{band(260, 46, 0.075, 'b')}</g>); }
-	/* the end pane (x = −800) during the axis push */
-	if (t > 16 && t < 20.9) { const o = cl((-c.p[0] - 700) / 200) * cl((-c.p[0] - 760) / 60 + 1);
-		const d1 = poly(c, [[-HX, -300, HZ1], [-HX, -40, HZ1], [-HX, 380, HZ0], [-HX, 120, HZ0]]), d2 = poly(c, [[-HX, 60, HZ1], [-HX, 100, HZ1], [-HX, 520, HZ0], [-HX, 480, HZ0]]);
-		out.push(<g key="ep" opacity={o}>{d1 && <path d={d1} fill="#F4F8FA" opacity={0.04} />}{d2 && <path d={d2} fill="#F4F8FA" opacity={0.07} />}</g>); }
-	return <>{out}</>; };
+/* ---------- the glass: the hood's near faces, edges and streak, drawn OVER the sword (display53k); same envelope as the case ---------- */
+const PaneStreaks: React.FC<{c: Cam; t: number}> = ({c, t}) => { const o = sstep(seg(t, 0.9, 2.2)) * (1 - sstep(seg(t, 20.1, 20.65)));
+	return o > 0.01 ? <g opacity={o}><DisplayFront c={c} hood={sstep(seg(t, 6.6, 8.4))} /></g> : null; };
 
-/* ---------- the title plaque on the front pane (world rectangle; the master maps the HTML plaque onto its projection) ---------- */
-export const TITLE_W = 330, TITLE_H = 151;            // mm, the whole source sheet (1400 × 640 px; the plaque 1080 × 404 inside)
-export const TITLE_C: V3 = [0, PANE_Y, 1612];
-export const titleQuad = (t: number): [number, number][] | null => { if (t < 9.5 - 1e-6 || t >= 11.764) return null; const c = camAt(t);
-	const [x, y, z] = TITLE_C, hw = TITLE_W / 2, hh = TITLE_H / 2;
-	const q: V3[] = [[x + hw, y, z + hh], [x - hw, y, z + hh], [x - hw, y, z - hh], [x + hw, y, z - hh]];
-	const p = q.map((v) => proj(c, v)); if (p.some((v) => v[2] < 20)) return null;
-	return p.map((v) => [v[0], v[1]]); };
+/* ---------- the title etched on the hood's top glass, behind the sword (world rectangle; the master maps the HTML plaque onto its projection) ---------- */
+export const TITLE_W = DTITLE_W, TITLE_H = DTITLE_H;            // mm, the whole source sheet (1400 × 640 px; the plaque 1080 × 404 inside)
+export const TITLE_C: V3 = [0, DTITLE_Y, deckZ(DTITLE_Y) + HOOD_H];
+export const titleQuad = (t: number): [number, number][] | null => { if (t < 9.5 - 1e-6 || t >= 11.764) return null; return titleQuadOn(camAt(t)); };
 
-/* ---------- the hilt: grip + bands + pommel flare (sword3d's Hilt3D geometry) and the ringed end face (face53) ---------- */
-const A_GRIP0 = 8, A_GRIP1 = 82, R_GRIP = 8.6, R_POM = R_FACE;
+/* ---------- the sword: sword3d.Sword3D (the one 3-D sword: BladeLand blade clipped at the guard, Guard3D, Hilt3D with the ringed
+   end face of face53, painted in the order the camera's place along the axis gives) ---------- */
 const SW = (a: number, y: number, z: number): V3 => [SP.x0 + SP.dir * a, SP.ya + y, SP.z0 + z];
-export const facePt = (c: Cam) => (r: number, th: number): [number, number] => { const p = proj(c, SW(-0.2, r * Math.cos(th), r * Math.sin(th))); return [p[0], p[1]]; };
-const Hilt53: React.FC<{c: Cam; id: string; hi: number}> = ({c, id, hi}) => {
-	const mid = SW((A_GRIP0 + A_GRIP1) / 2, 0, 0), v = [mid[0] - c.p[0], mid[1] - c.p[1], mid[2] - c.p[2]], n = Math.hypot(v[1], v[2]) || 1, oy = -v[2] / n, oz = v[1] / n;
-	const silh = (a0: number, a1: number, r: number) => [SW(a0, oy * r, oz * r), SW(a1, oy * r, oz * r), SW(a1, -oy * r, -oz * r), SW(a0, -oy * r, -oz * r)];
-	const p0 = proj(c, SW(40, oy * R_GRIP, oz * R_GRIP)), p1 = proj(c, SW(40, -oy * R_GRIP, -oz * R_GRIP));
-	const faceVisible = c.p[0] < PF[0] - 0.5, fd = toCam(c, PF)[2];
-	return <g>
-		<defs><linearGradient id={`hg${id}`} gradientUnits="userSpaceOnUse" x1={p0[0]} y1={p0[1]} x2={p1[0]} y2={p1[1]}><stop offset="0" stopColor="#4A2E14" /><stop offset="0.3" stopColor="#F4D088" /><stop offset="0.5" stopColor="#BC8744" /><stop offset="1" stopColor="#4A2E14" /></linearGradient></defs>
-		{poly(c, silh(A_GRIP0, A_GRIP1, R_GRIP)) && <path d={poly(c, silh(A_GRIP0, A_GRIP1, R_GRIP))} fill={`url(#hg${id})`} />}
-		{[33, 60].map((a) => { const d = poly(c, silh(a - 2.6, a + 2.6, R_GRIP * 1.22)); return d ? <path key={a} d={d} fill={`url(#hg${id})`} stroke="#2A180A" strokeOpacity={0.5} strokeWidth={1} /> : null; })}
-		{(() => { const d = poly(c, [SW(A_GRIP0, oy * 9, oz * 9), SW(3.5, oy * R_POM * 0.82, oz * R_POM * 0.82), SW(3.5, -oy * R_POM * 0.82, -oz * R_POM * 0.82), SW(A_GRIP0, -oy * 9, -oz * 9)]); return d ? <path d={d} fill={`url(#hg${id})`} /> : null; })()}
-		{(() => { const d = poly(c, [SW(3.5, oy * R_POM * 0.82, oz * R_POM * 0.82), SW(2.6, oy * R_POM, oz * R_POM), SW(0, oy * R_POM, oz * R_POM), SW(0, -oy * R_POM, -oz * R_POM), SW(2.6, -oy * R_POM, -oz * R_POM), SW(3.5, -oy * R_POM * 0.82, -oz * R_POM * 0.82)]); return d ? <path d={d} fill="#BC8744" stroke="#2A180A" strokeOpacity={0.5} strokeWidth={1} /> : null; })()}
-		{faceVisible && fd > 1 && <PommelFace id={id} pt={facePt(c)} ppm={c.f / fd} hi={hi} />}
-	</g>; };
-
-/* ---------- the sword ---------- */
-const SwordW: React.FC<{c: Cam; t: number; o: Parameters<typeof BladeLand>[0]['o']; ringGlow?: number; id: string}> = ({c, t, o, ringGlow, id}) => {
-	const dBlade = toCam(c, bw(SP, 230, 0))[2], dHilt = toCam(c, [PF[0] + 40, 0, 1000])[2];
-	const blade = <BladeLand key="b" c={c} sp={SP} id={id} o={o} />, guard = <Guard3D key="g" c={c} sp={SP} id={id} />, hilt = <Hilt53 key="h" c={c} id={id} hi={0.4 + (ringGlow ?? 0)} />;
-	void t; return <g>{dBlade > dHilt ? [blade, guard, hilt] : [hilt, guard, blade]}</g>; };
+export const facePt = (c: Cam) => (r: number, th: number): [number, number] => { const p = proj(c, [SP.x0 + SP.dir * -0.2, SP.ya + r * Math.cos(th), SP.z0 + r * Math.sin(th)]); return [p[0], p[1]]; };
+const SwordW: React.FC<{c: Cam; t: number; o: Parameters<typeof BladeLand>[0]['o']; ringGlow?: number; id: string; lite?: number}> = ({c, t, o, ringGlow, id, lite}) => {
+	void t; return <Sword3D c={c} sp={SP} id={id} ringGlow={ringGlow} land={{...o, guardCut: true}} lite={lite} />; };
 
 
 /* ---------- the hall orbit's bloom + rim (11.4 → 17.2): the blade is the brightest thing in the hall ---------- */
@@ -298,6 +246,9 @@ const GuardGlints: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 4.6 || 
 
 /* ---------- lights (directions toward the light) ---------- */
 const L_RAKE: V3 = [-0.92, -0.32, 0.22];      // the raking warm key, low and ahead-right of the glide
+/* in the glide the rake is a lamp low and ahead (toward the guard): its highlight runs ON the ridge and the pale cells' rims a
+   little ahead of the lens, brightest near the lamp, falling off with distance */
+const L_LAMP: V3 = [-470, -30, 1150];
 const L_SPOT: V3 = [0.08, -0.28, 0.96];       // the case spot from above, a little to the front
 
 /* ---------- THE TAKE, legs 1–6 ---------- */
@@ -309,7 +260,7 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 	const farBlur = 2.6 * (1 - sstep(seg(t, 0.12, 0.9))), knifeBlur = 4.5 * sstep(seg(t, 0.35, 1.05));
 	/* the light: the raking key in the glide, the case spot from above as the camera rises */
 	const kSpot = sstep(seg(t, 5.0, 8.0)), kRake = 1 - 0.75 * kSpot;
-	const lights: Light[] = [{dir: L_RAKE, k: 1.05 * kRake}, {dir: L_SPOT, k: 0.55 + 0.6 * kSpot}];
+	const lights: Light[] = [{dir: L_RAKE, k: 1.7 * kRake, pos: L_LAMP, d0: 600}, {dir: L_SPOT, k: 0.55 + 0.6 * kSpot}];
 	/* depth of field in the glide only */
 	const glide = t < 6.4;
 	const dof = glide ? {near: 34, far: 260 + 600 * seg(t, 4.6, 6.4), nb: '2 9', fb: 1.3 * (1 - seg(t, 4.8, 6.2))} : undefined;
@@ -325,7 +276,9 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 	const lift = 0.3 * (1 - sstep(seg(t, 0.5, 1.5))) + 0.16 * sstep(seg(t, 6.0, 8.5)) + 0.22 * lite;
 	/* hits */
 	const g0 = proj(c, [244, -18, 1004.2]), g0o = Math.exp(-t / 0.4) * (1 - seg(t, 0.6, 1.0));
-	const lt = 2.707, gl = t >= lt - 1e-6 ? Math.exp(-(t - lt) / 0.22) : 0, sc = XA(lt) + 278 - 97 - 80, gp = proj(c, [SP.x0 + 97 + sc, 7, 1000 + 2.4]);
+	/* [亮] on 2.707: the lamp catches the bronze a little ahead of the lens — the ridge line, the rims and the glints flare there
+	   and die away (0.22 s); a small crisp star sits ON the ridge at that spot */
+	const lt = 2.707, gl = t >= lt - 1e-6 ? Math.exp(-(t - lt) / 0.22) : 0, sc = XA(lt) + 278 - 97 - 80, gp = proj(c, bw(SP, sc, 0, hAt(sc, 0) + 0.1));
 	/* KF01's bokeh along the far edge, gone as the focus pulls */
 	const bok = [[250, 22, 0.34], [330, 17, 0.28], [420, 13, 0.24], [520, 10, 0.2]].map(([x, r, a], i) => { const p = proj(c, kitInv([x, 0, 2])); return p[2] > 10 ? <circle key={i} cx={p[0]} cy={p[1]} r={r} fill="#FFD890" opacity={a * (1 - seg(t, 0.15, 0.7))} /> : null; });
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
@@ -342,13 +295,13 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 			<Pool id="tk1d" x={proj(c, [0, 0, 1000])[0]} y={proj(c, [0, 0, 1000])[1]} rx={560} ry={330} a={0.75 * kitO} col="#080403" />
 			<Pool id="tk1s" x={proj(c, [0, 0, 1000])[0] - 20} y={proj(c, [0, 0, 1000])[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
 		<g filter={farBlur > 0.05 ? 'url(#tFar)' : undefined}>
-			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift}} />
+			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} lite={lite} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift, flash: gl > 0.02 ? {s: sc, k: 1.1 * gl} : undefined}} />
 		</g>
 		<BladeBloom c={c} t={t} />
 		<GuardGlints c={c} t={t} />
 		{t < 0.75 && <g filter="url(#tBok)">{bok}</g>}
 		{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
-		{gl > 0.02 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={34} o={gl} />}
+		{gl > 0.02 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={Math.min(18, Math.max(8, c.f * 0.9 / gp[2]))} o={gl} />}
 		{knifeO > 0.01 && <g opacity={knifeO} filter={knifeBlur > 0.05 ? 'url(#tKn)' : undefined}><Cleaver c={ck} rho={rho} /></g>}
 		<Motes c={c} t={t} o={hall * plinthO} />
 		<PaneStreaks c={c} t={t} />

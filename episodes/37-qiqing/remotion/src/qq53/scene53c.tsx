@@ -54,12 +54,57 @@ const HiltLite: React.FC<{c: Cam; t: number}> = ({c, t}) => { const q = (a: numb
 	return <g><path d={poly(c, [q(0, -1.86, 0.8), q(0, 1.86, 0.8), q(SW.pomA, 1.86, 0.8), q(SW.pomA, -1.86, 0.8)])} fill={BZ.body} stroke={BZ.line} strokeWidth={1} />
 		<path d={poly(c, [q(SW.pomA, -0.86, 0.5), q(SW.pomA, 0.86, 0.5), q(SW.gripA, 0.86, 0.5), q(SW.gripA, -0.86, 0.5)])} fill={BZ.mid} />
 		<path d={poly(c, [q(SW.gripA, -2.78, 0.6), q(SW.gripA, 2.78, 0.6), q(SW.guardA, 2.6, 0.6), q(SW.guardA, -2.6, 0.6)])} fill={GLS.body} stroke={BZ.lit} strokeWidth={1.2} /></g>; };
-/** the occupant: a faint outline only (head left), on the inner floor */
-const Occupant: React.FC<{c: Cam}> = ({c}) => { const z = 0.05, L = (pts: [number, number][]) => poly(c, pts.map(([x, y]) => [-x, y, z] as V3), false);
-	const ell = (cx: number, cy: number, a: number, b: number) => poly(c, Array.from({length: 24}, (_, i) => [-(cx + a * Math.cos(i / 24 * 6.2832)), cy + b * Math.sin(i / 24 * 6.2832), z] as V3));
-	const st = {fill: 'none', stroke: '#E8C9A0', strokeOpacity: 0.55, strokeWidth: 3, strokeDasharray: '16 6', strokeLinecap: 'round' as const};
-	return <g><path d={ell(0.72, -0.04, 0.09, 0.075)} {...st} /><path d={L([[0.62, -0.04], [-0.15, -0.04]])} {...st} /><path d={ell(0.4, -0.04, 0.16, 0.17)} {...st} /><path d={ell(0.04, -0.04, 0.1, 0.16)} {...st} />
-		<path d={L([[0.55, -0.2], [0.2, -0.24], [-0.05, -0.2]])} {...st} /><path d={L([[0.5, 0.12], [0.2, 0.15], [-0.05, 0.1]])} {...st} /><path d={L([[-0.1, -0.1], [-0.8, -0.12]])} {...st} /><path d={L([[-0.1, 0.0], [-0.8, 0.02]])} {...st} /></g>; };
+/** the occupant (facts A9: the sword lay on the skeleton's left): a respectful, simplified skeleton lying supine on the inner floor,
+   pale bone-cream line art at low contrast (skull and jaw only as outlines, spine, a few curved ribs, pelvis, the long bones of arms and
+   legs), ochre-brown soil stains under it and decayed textile as soft dark shapes over the pelvis and legs. Chamber metres: head at
+   x = −0.72, feet toward +x, body axis y = OY; supine with the head toward −x, the occupant's LEFT is +y, where the sword rests (y 0.15). */
+const OY = -0.07, OZ = 0.05;
+const Occupant: React.FC<{c: Cam}> = ({c}) => {
+	const P = (x: number, s: number, dz = 0): V3 => [x, OY + s, OZ + dz], m = proj(c, P(0, 0)); if (m[2] < 0.2) return null;
+	const ppm = c.f / m[2], S = (x: number, s: number) => { const p = proj(c, P(x, s)); return `${p[0].toFixed(1)},${p[1].toFixed(1)}`; };
+	const BONE = '#E4D4B0', HOL = '#3A1C14';
+	/** a long bone: a capsule with knobbed ends, drawn as an outline (cream stroke, hollowed with the floor colour) */
+	const bone = (k: string, a: [number, number], b: [number, number], w: number, knob = 1.35) => { const pa = proj(c, P(a[0], a[1])), pb = proj(c, P(b[0], b[1])), W0 = w * ppm;
+		return <g key={k}>
+			<path d={`M${pa[0]},${pa[1]} L${pb[0]},${pb[1]}`} stroke={BONE} strokeOpacity={0.5} strokeWidth={W0} strokeLinecap="round" />
+			{[pa, pb].map((q, i) => <circle key={i} cx={q[0]} cy={q[1]} r={W0 * knob / 2} fill={BONE} opacity={0.5} />)}
+			<path d={`M${pa[0]},${pa[1]} L${pb[0]},${pb[1]}`} stroke={HOL} strokeOpacity={0.72} strokeWidth={Math.max(0.8, W0 * 0.42)} strokeLinecap="round" /></g>; };
+	const line = (k: string, d: string, w = 0.008, o = 0.5) => <path key={k} d={d} fill="none" stroke={BONE} strokeOpacity={o} strokeWidth={Math.max(1.2, w * ppm)} strokeLinecap="round" strokeLinejoin="round" />;
+	const ell = (x: number, sC: number, a: number, b: number, n = 28) => 'M' + Array.from({length: n}, (_, i) => { const th = i / n * 2 * Math.PI; return S(x + a * Math.cos(th), sC + b * Math.sin(th)); }).join('L') + 'Z';
+	const sides = [1, -1];
+	/* soil stains (ochre-brown) and the decayed textile (soft dark) */
+	const stains = Array.from({length: 16}, (_, i) => { const x = lerp(-0.8, 0.8, rnd(i, 81)), y = OY + (rnd(i, 82) - 0.5) * 0.36, d = blobOn(c, x, y, 0.05 + 0.1 * rnd(i, 83), i + 301, OZ - 0.002, 9, 0.7);
+		return d ? <path key={i} d={d} fill={['#7A4E2A', '#6A4224', '#8A5A30'][i % 3]} opacity={0.22 + 0.2 * rnd(i, 84)} /> : null; });
+	const cloth: [number, number, number][] = [[0.06, 0.0, 0.17], [0.24, 0.05, 0.15], [0.3, -0.07, 0.13], [0.55, 0.02, 0.12], [-0.33, -0.1, 0.08], [0.72, -0.05, 0.08]];
+	return <g>
+		<defs><filter id="ocT" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={Math.max(2, 0.02 * ppm)} /></filter>
+			<filter id="ocS" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={Math.max(1.5, 0.012 * ppm)} /></filter></defs>
+		<g filter="url(#ocS)">{stains}</g>
+		{/* skull (outline only) and jaw */}
+		<path d={ell(-0.72, 0, 0.092, 0.076)} fill={BONE} fillOpacity={0.14} stroke={BONE} strokeOpacity={0.55} strokeWidth={Math.max(1.4, 0.008 * ppm)} />
+		{line('jaw', `M${S(-0.655, -0.052)} Q${S(-0.6, -0.03)} ${S(-0.6, 0)} Q${S(-0.6, 0.03)} ${S(-0.655, 0.052)}`, 0.009)}
+		{/* spine: vertebrae as short rounded dashes, neck to sacrum */}
+		{Array.from({length: 19}, (_, i) => { const x = lerp(-0.6, -0.04, i / 18), w = i < 5 ? 0.02 : 0.028; const a = proj(c, P(x - 0.009, 0)), b = proj(c, P(x + 0.009, 0));
+			return <path key={`v${i}`} d={`M${a[0]},${a[1]} L${b[0]},${b[1]}`} stroke={BONE} strokeOpacity={0.42} strokeWidth={w * ppm} strokeLinecap="round" />; })}
+		{/* clavicles and ribs (a few curved strokes each side) */}
+		{sides.map((s) => line(`cl${s}`, `M${S(-0.565, s * 0.015)} Q${S(-0.58, s * 0.1)} ${S(-0.55, s * 0.16)}`, 0.011))}
+		{sides.flatMap((s) => Array.from({length: 6}, (_, i) => { const x0 = -0.535 + i * 0.042, r = 0.115 + 0.02 * Math.sin(Math.PI * (i + 0.5) / 6);
+			return line(`r${s}${i}`, `M${S(x0, s * 0.016)} Q${S(x0 - 0.02, s * r * 1.12)} ${S(x0 + 0.075, s * r * 0.95)}`, 0.007, 0.4 - 0.03 * i); }))}
+		{/* pelvis: two wings and the sacrum */}
+		{sides.map((s) => <path key={`p${s}`} d={`M${S(-0.03, s * 0.02)} C${S(-0.07, s * 0.1)} ${S(-0.02, s * 0.16)} ${S(0.05, s * 0.14)} C${S(0.1, s * 0.12)} ${S(0.11, s * 0.06)} ${S(0.07, s * 0.025)}`} fill={BONE} fillOpacity={0.1} stroke={BONE} strokeOpacity={0.48} strokeWidth={Math.max(1.3, 0.009 * ppm)} />)}
+		{line('sac', `M${S(-0.035, -0.02)} L${S(0.06, 0)} L${S(-0.035, 0.02)}`, 0.008, 0.42)}
+		{/* arms: humerus, the two forearm bones, a few hand bones */}
+		{sides.flatMap((s) => [bone(`h${s}`, [-0.54, s * 0.165], [-0.27, s * 0.175], 0.024),
+			bone(`ra${s}`, [-0.255, s * 0.168], [-0.03, s * 0.142], 0.012, 1.2), bone(`ul${s}`, [-0.25, s * 0.185], [-0.025, s * 0.162], 0.011, 1.2),
+			...[0.132, 0.144, 0.156, 0.167].map((y, i) => line(`f${s}${i}`, `M${S(-0.01, s * y)} L${S(0.055 + 0.01 * Math.sin(i), s * (y - 0.006))}`, 0.006, 0.38))])}
+		{/* legs: femur, kneecap, tibia and fibula, a few foot bones */}
+		{sides.flatMap((s) => [bone(`fe${s}`, [0.04, s * 0.095], [0.42, s * 0.085], 0.03),
+			<circle key={`k${s}`} cx={proj(c, P(0.44, s * 0.085))[0]} cy={proj(c, P(0.44, s * 0.085))[1]} r={0.022 * ppm} fill="none" stroke={BONE} strokeOpacity={0.45} strokeWidth={Math.max(1.2, 0.007 * ppm)} />,
+			bone(`ti${s}`, [0.46, s * 0.08], [0.77, s * 0.072], 0.024), bone(`fi${s}`, [0.47, s * 0.108], [0.765, s * 0.098], 0.01, 1.2),
+			...[0.055, 0.07, 0.085, 0.1].map((y, i) => line(`t${s}${i}`, `M${S(0.785, s * (0.07 + (y - 0.075) * 0.4))} L${S(0.85, s * y)}`, 0.006, 0.36))])}
+		{/* the decayed textile, soft and dark, over the pelvis, thighs and chest */}
+		<g filter="url(#ocT)">{cloth.map(([x, y, r], i) => { const d = blobOn(c, x, OY + y, r, i + 401, OZ + 0.01, 10, 0.6); return d ? <path key={i} d={d} fill="#1E0E09" opacity={0.5} /> : null; })}</g>
+	</g>; };
 const clampP = (p: [number, number, number]): [number, number, number] => [cl(p[0], 260, 1660), cl(p[1], 300, 860), p[2]];
 const TagC: React.FC<{p: [number, number, number]; n: string; o: number}> = ({p, n, o}) => o <= 0.01 ? null : <g opacity={o}><circle cx={p[0]} cy={p[1]} r={34} fill="#120A06" opacity={0.6} /><circle cx={p[0]} cy={p[1]} r={30} fill="none" stroke={B.goldL} strokeWidth={3} />
 	<text x={p[0]} y={p[1] + 18} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={50} fill={B.goldL}>{n}</text></g>;
@@ -95,11 +140,14 @@ export const Chamber53: React.FC<{t: number}> = ({t}) => {
 	const dOp = (1 - seg(t, 38.2, 38.75)) * seg(t, 36.7, 37.1);
 	const rightS = proj(c, gx(1))[0] > proj(c, gx(-1))[0] ? 1 : -1, stampDodge = sstep(seg(t, 37.15, 37.4)) * (1 - sstep(seg(t, 38.0, 38.4)));
 	const digY = (side: number) => cl(gx(side)[1] - 0.12, -0.3, 0.62);
-	const lampP = proj(c, [0.25, -0.15, 2.35]), skull = proj(c, [-0.72, -0.04, 0.05]), capO = sstep(seg(t, 38.6, 38.95)) * (1 - sstep(seg(t, 40.8, 41.15)));
+	const lampP = proj(c, [0.25, -0.15, 2.35]), skull = proj(c, [-0.72, OY, 0.05]), capO = sstep(seg(t, 38.6, 38.95)) * (1 - sstep(seg(t, 40.8, 41.15)));
+	const liftU = sstep(seg(t, T_LIFT[0], T_LIFT[1]));   // the sword rises off the floor: the occupant falls out of focus and dims
 	const sw = swordAt(t), ringO = 0.62 * sstep(seg(t, 34.4, 36.0));
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		{defs}
 		<clipPath id="cInner"><path d={poly(c, [[-INN.x + INN.t, -INN.y + INN.t, INN.z], [INN.x - INN.t, -INN.y + INN.t, INN.z], [INN.x - INN.t, INN.y - INN.t, INN.z], [-INN.x + INN.t, INN.y - INN.t, INN.z]])} /></clipPath>
+		<filter id="ocDof" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation={0.01 + 4 * liftU} /></filter>
+		<clipPath id="cFloor"><path d={poly(c, [[-INN.x + INN.t, -INN.y + INN.t, OZ], [INN.x - INN.t, -INN.y + INN.t, OZ], [INN.x - INN.t, INN.y - INN.t, OZ], [-INN.x + INN.t, INN.y - INN.t, OZ]])} /></clipPath>
 		<clipPath id="cOpen"><path d={poly(c, [[-RX, -1.0, WH], [RX, -1.0, WH], [RX, 1.3, WH], [-RX, 1.3, WH]])} /></clipPath>
 		<Shaft c={tc} dW={1} t={t} roof={roofOn} />
 		{roofOn && <PitLamps c={tc} t={t} o={1} />}
@@ -119,8 +167,9 @@ export const Chamber53: React.FC<{t: number}> = ({t}) => {
 			{lidDone(u2) && <Lid c={c} u={u2} rest={INN.z} hx={0.9} hy={INN.y} L={LEAN2} id="lid2" o={o2} lift={0.34} hmp={0.22} />}
 			<OpenCoffin c={c} x={OUT.x} y={OUT.y} z={OUT.z} t={OUT.t} id="outer" inner="#1E0C08" />
 			<OpenCoffin c={c} x={INN.x} y={INN.y} z={INN.z} t={INN.t} id="inner" inner="#46201A" />
+			{/* the occupant on the inner floor: clipped to the floor (and to the coffin's rim while the lens is above it) */}
+			<g clipPath={c.p[2] > INN.z + 0.02 ? 'url(#cInner)' : undefined}><g clipPath="url(#cFloor)" opacity={0.62 * (1 - 0.4 * liftU)} filter={liftU > 0.02 ? 'url(#ocDof)' : undefined}><Occupant c={c} /></g></g>
 			<g clipPath="url(#cInner)">
-				<Occupant c={c} />
 				{!top && <><Sheath c={c} t={t} dl={0} wash={0} /><HiltLite c={c} t={t} /></>}
 			</g>
 			{top && <PlanSword t={t} dl={dl} wash={wash} c={c} hold={hold} />}

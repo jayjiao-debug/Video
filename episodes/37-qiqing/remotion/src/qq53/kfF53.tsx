@@ -7,6 +7,8 @@ import {SEAL_SRC} from '../qq44/skin44';
 import {Frame53, Sub53, Stamp53, Tag, DepthTag, Cam, lookAt, proj, poly, V3, mix, P2} from './parts53';
 import {BladeMacro, MacroSpec, MacroCam, macroProj} from './macro53';
 import {Knife, BZ, GLS, bladeHW, LB, SW} from './props53';
+import {hwS, RIDGE_H, MACRO_S0} from './swordspec53s';
+import {BloomsS} from './blooms53s';
 import {Sword3D} from './sword3d';
 import {Cleaver, Kitchen, Glint, CAM0, SW_HOOK} from './kfA53';
 import {CaseSet, SP_CASE, CAM_T} from './kfB53';
@@ -92,43 +94,13 @@ export const KF10: React.FC = () => {
    KF11 · T1 — 「其实，它也[锈]了。」 on the hardest drop (75.162); 76.9 = after the 3rd bloom (76.860)
    ====================================================================================================================== */
 const CAM11: MacroCam = {v: -2, z: 14, pitch: 28 * Math.PI / 180, yaw: 2.5 * Math.PI / 180, f: 820, cx: 960, cy: 790, rot: -3};   // optical centre low: a steeper look at the blooms, the horizon still at ~350 for the subtitle
-const RID11 = 5, ST11 = 2.2;
-const hw11 = (u: number) => 24 - 0.006 * u;
-const z11 = (u: number, v: number) => { const hw = hw11(u), a = Math.min(1, Math.abs(v) / hw); return RID11 * Math.pow(1 - a, 1.12) - (Math.abs(v) > hw - ST11 ? 0.9 * (Math.abs(v) - (hw - ST11)) / ST11 : 0); };
-/** a soft blob lying on the blade surface (macro coordinates), projected; dz lifts it (a crust's cap) */
-const blobM = (m: MacroCam, zf: (u: number, v: number) => number, u: number, v: number, r: number, seed: number, rough = 0.5, n = 11, dz = 0) => {
-	const pts = Array.from({length: n}, (_, i) => { const a = (i / n) * 2 * Math.PI, rr = r * (1 - rough / 2 + rough * rnd(seed * 31 + i, 5)), uu = u + rr * Math.cos(a), vv = v + rr * Math.sin(a) * 0.8; return macroProj(m, uu, vv, zf(uu, vv) + 0.02 + dz); });
-	let d = ''; for (let i = 0; i < n; i++) { const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], m0 = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2], m1 = [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
-		d += (i === 0 ? `M${m0[0].toFixed(1)},${m0[1].toFixed(1)}` : '') + `Q${p1[0].toFixed(1)},${p1[1].toFixed(1)} ${m1[0].toFixed(1)},${m1[1].toFixed(1)}`; }
-	return d + 'Z'; };
-/** a circle lying on the surface (the find-ring), projected */
-const ringM = (m: MacroCam, zf: (u: number, v: number) => number, u: number, v: number, r: number) => 'M' + Array.from({length: 48}, (_, i) => { const a = (i / 48) * 2 * Math.PI, uu = u + r * Math.cos(a), vv = v + r * Math.sin(a); const p = macroProj(m, uu, vv, zf(uu, vv) + 0.05); return `${p[0].toFixed(1)},${p[1].toFixed(1)}`; }).join('L') + 'Z';
-/* the three blooms in switch-on order (75.162, 75.728, 76.860): the first in the lower-right corner of the frame */
-const BLOOMS: [number, number, number][] = [[22, 7.2, 1.1], [37, -6.6, 0.85], [52, 1.4, 0.95]];   // u, v, radius (macro units)
-const Blooms: React.FC = () => { const m = CAM11;
-	return <g>
-		<defs><filter id="k11d" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" /></filter>
-			<filter id="k11s" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="0.7" /></filter></defs>
-		{/* the faint dulling: soft, slightly grey patches where the bronze has lost a little of its shine */}
-		<g filter="url(#k11d)">{[[22, 6, 4.2], [37, -5.5, 3.6], [52, 1, 4], [30, 12, 3]].map(([u, v, r], i) => <path key={i} d={blobM(m, z11, u, v, r, 40 + i, 0.6)} fill="#5A5242" opacity={0.26} />)}</g>
-		{BLOOMS.map(([u, v, r], i) => { const h = 0.32 * r;
-			return <g key={i}>
-				<g filter="url(#k11s)">
-					{/* the stain round its foot: a weak rust-brown (the knife's colour, much weaker) */}
-					<path d={blobM(m, z11, u, v, r * 1.6, 10 + i, 0.7)} fill="#7A5434" opacity={0.3} />
-					{/* the crust: an olive-green foot and a lighter raised cap */}
-					<path d={blobM(m, z11, u, v, r, 20 + i, 0.55)} fill="#4E5E38" opacity={0.95} />
-					<path d={blobM(m, z11, u + r * 0.1, v - r * 0.05, r * 0.72, 30 + i, 0.5, 11, h)} fill="#6E7E46" />
-					<path d={blobM(m, z11, u + r * 0.2, v - r * 0.15, r * 0.3, 50 + i, 0.4, 9, h * 1.1)} fill="#9AA668" opacity={0.85} />
-					{Array.from({length: 6}, (_, k) => { const a = rnd(i * 9 + k, 3) * 6.28, d = r * (1.45 + 0.9 * rnd(i * 9 + k, 4)), uu = u + d * Math.cos(a), vv = v + d * Math.sin(a), p = macroProj(m, uu, vv, z11(uu, vv)); return <circle key={k} cx={p[0]} cy={p[1]} r={1.8 + 1.6 * rnd(i * 9 + k, 5)} fill="#55663E" opacity={0.75} />; })}
-				</g>
-				{/* the find-ring: thin, cream, broken, so it reads as a marking, not an object */}
-				<path d={ringM(m, z11, u, v, r * 3.1)} fill="none" stroke="#120804" strokeWidth={5} strokeOpacity={0.35} strokeDasharray="40 12" />
-				<path d={ringM(m, z11, u, v, r * 3.1)} fill="none" stroke="#FFF2D8" strokeWidth={2.8} strokeOpacity={0.85} strokeDasharray="40 12" />
-			</g>; })}
-	</g>; };
+/* the blade's own outline, ridge and edge strips (swordspec53s): the macro land, the blooms and the hand-off are the same sword */
+const RID11 = RIDGE_H, ST11 = 3.4;
+const hw11 = (u: number) => hwS(Math.max(0, u + MACRO_S0));
+/** KF11's blooms = the film's (blooms53s), at 76.9 s */
+const Blooms: React.FC = () => <BloomsS m={CAM11} sp={SP11} t={76.9} />;
 /** shared with the one take (handoff53.tsx): KF11's macro spec and its blooms */
-export const SP11: MacroSpec = {cam: CAM11, hw: hw11, ridge: RID11, strip: ST11, fogD: 220, lightU: 40, uMax: 1300, nearU: 14, seed: 2};
+export const SP11: MacroSpec = {cam: CAM11, hw: hw11, ridge: RID11, strip: ST11, fogD: 220, lightU: 40, uMax: 1300, nearU: 14, seed: 2, s0: MACRO_S0};
 export const Blooms11 = Blooms;
 export const KF11: React.FC = () => {
 	const sp: MacroSpec = SP11;
