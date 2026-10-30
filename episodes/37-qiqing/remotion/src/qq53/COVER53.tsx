@@ -82,9 +82,45 @@ const V3: React.FC<{w: number; h: number}> = ({w, h}) => { const tall = h > w;
 		</div>
 		<div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%)'}} />
 	</>; };
+/* 4–7 (owner: "title在中间，sword 换大小，4 种有张力的排版"): the channel style (VIBE line, serif hook, 《片名》), the title centred,
+   the sword at four sizes and angles. swordAt: the guard's centre g, the angle (deg, screen), k px per cm. */
+const GC = SA.guardC / 10;
+const swordAt = (g: [number, number], ang: number, k: number): {p0: [number, number]; p1: [number, number]} => { const d = [Math.cos(ang * Math.PI / 180), Math.sin(ang * Math.PI / 180)];
+	const p0: [number, number] = [g[0] - d[0] * GC * k, g[1] - d[1] * GC * k]; return {p0, p1: [p0[0] + d[0] * SWL * k, p0[1] + d[1] * SWL * k]}; };
+const Glint: React.FC<{x: number; y: number; r: number}> = ({x, y, r}) => <g>
+	<circle cx={x} cy={y} r={r * 0.9} fill="#FFE6A8" opacity={0.35} filter="url(#glb)" />
+	<path d={`M${x},${y - r} L${x + r * 0.12},${y - r * 0.12} L${x + r},${y} L${x + r * 0.12},${y + r * 0.12} L${x},${y + r} L${x - r * 0.12},${y + r * 0.12} L${x - r},${y} L${x - r * 0.12},${y - r * 0.12} Z`} fill="#FFFBEE" /></g>;
+const Title: React.FC<{tall: boolean; cy: number; gap?: number; scrim?: boolean}> = ({tall, cy, gap = 0, scrim = false}) => { const fs = tall ? 120 : 112;
+	const line = (c: React.CSSProperties): React.CSSProperties => ({fontFamily: SERIF, fontWeight: 900, fontSize: fs, lineHeight: 1.16, whiteSpace: 'nowrap', ...c});
+	return <div style={{position: 'absolute', left: 0, right: 0, top: cy, transform: 'translateY(-50%)', textAlign: 'center'}}>
+		{scrim && <div style={{position: 'absolute', left: '50%', top: '50%', width: fs * 9, height: fs * 4.6, transform: 'translate(-50%,-50%)', background: 'radial-gradient(ellipse at center, rgba(8,4,2,0.82) 0%, rgba(8,4,2,0.55) 45%, rgba(8,4,2,0) 72%)'}} />}
+		<div style={{position: 'relative'}}>
+			<div style={{fontFamily: SANS, fontWeight: 700, fontSize: 34, color: 'rgba(242,230,204,0.66)', letterSpacing: '0.3em', marginBottom: 22, whiteSpace: 'nowrap', textShadow: HALO}}>VIBE知识大赏</div>
+			<div style={line({color: '#F6EEDC', textShadow: '0 6px 30px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.8)'})}>{L1}</div>
+			<div style={line({marginTop: gap, backgroundImage: 'linear-gradient(180deg, #ffe39b 0%, #f5c76b 45%, #c9913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 2px 3px rgba(0,0,0,0.8))'})}>{L2}<span style={{marginRight: '-0.5em'}}>{Q}</span></div>
+			<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: 38, color: '#E8BC66', letterSpacing: '0.2em', marginTop: 26, whiteSpace: 'nowrap', textShadow: HALO}}>《{NAME}》</div>
+		</div></div>; };
+const VIG = <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)'}} />;
+const Lay: React.FC<{w: number; h: number; n: number}> = ({w, h, n}) => { const tall = h > w, cy = tall ? h * 0.46 : h * 0.5;
+	/* 4 巨剑斜贯: a giant sword (≈2.3 frames long) slants behind the title, guard low-left, the tip far off the top right */
+	/* 5 剑尖指题: the sword hangs point-down from above, its tip a hand's breadth over the title, a glint on the point */
+	/* 6 横剑压题: a big sword lies flat right under the title, guard left, the blade running out of the frame */
+	/* 7 一剑劈题: the whole sword slices between the two lines of the title (a shallow slant) */
+	const S = n === 4 ? (tall ? swordAt([190, 930], -35, 58) : swordAt([300, 860], -22, 50))
+		: n === 5 ? (tall ? swordAt([w / 2, -250], 90, 15) : swordAt([w / 2, -250], 90, 13))
+		: n === 6 ? (tall ? swordAt([150, cy + 330], -3, 30) : swordAt([230, cy + 335], -3, 32))
+		: (tall ? swordAt([150, cy + 46], -4, 21) : swordAt([180, cy + 40], -3, 24));
+	const tip = S.p1;
+	return <>
+		<svg width={w} height={h} style={{position: 'absolute'}}><defs><filter id="glb" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="10" /></filter></defs>
+			<Ground w={w} h={h} px={w / 2} py={cy} rx={w * 0.62} ry={h * 0.45} id={`l${n}`} /><Sword p0={S.p0} p1={S.p1} id={`l${n}`} />
+			{n === 5 && <Glint x={tip[0]} y={tip[1] - 6} r={tall ? 46 : 40} />}</svg>
+		<Title tall={tall} cy={n === 5 ? cy + (tall ? 70 : 60) : cy} scrim={n === 4} gap={n === 7 ? (tall ? 150 : 140) : 0} />
+		{VIG}
+	</>; };
 const Cover: React.FC<{w: number; h: number}> = ({w, h}) => { useStampFonts(`${NAME}${SUB}${L1}${L2}${Q}`); const f = useCurrentFrame();
-	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : f === 2 ? <V2 w={w} h={h} /> : <V3 w={w} h={h} />}</AbsoluteFill>; };
+	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : f === 2 ? <V2 w={w} h={h} /> : f === 3 ? <V3 w={w} h={h} /> : <Lay w={w} h={h} n={f} />}</AbsoluteFill>; };
 registerRoot(() => <>
-	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={4} />
-	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={4} />
+	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={8} />
+	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={8} />
 </>);
