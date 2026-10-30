@@ -4,7 +4,9 @@ import {SANS, KAI} from '../qq50/kit50';
 import {useStampFonts} from '../qq44/skin44';
 import {SwordFlat} from './flat53s';
 import {A as SA} from './swordspec53s';
-import {LacDefs} from '../qq50/styleB';
+import {LacDefs, Lacquer} from '../qq50/styleB';
+import {latCorner} from './swordspec53s';
+import {rnd} from '../qq50/kit50';
 import {TakeA} from './take53';
 import {TakeC} from './take53c';
 import {V3 as V3T, SHIFT_DRAW} from './v3map53';
@@ -146,9 +148,45 @@ const Lay2: React.FC<{w: number; h: number; n: number}> = ({w, h, n}) => { const
 	return <>
 		<svg width={w} height={h} style={{position: 'absolute'}}><Ground w={w} h={h} px={w / 2} py={cy} rx={w * 0.62} ry={h * 0.45} id={`m${n}`} /><Sword p0={S.p0} p1={S.p1} id={`m${n}`} /></svg>
 		<Title tall={tall} cy={n === 13 ? cy + (tall ? 60 : 50) : cy} scrim />{VIG}</>; };
-const Cover: React.FC<{w: number; h: number}> = ({w, h}) => { useStampFonts(`${NAME}${SUB}${L1}${L2}${Q}`); const f = useCurrentFrame();
-	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : f === 2 ? <V2 w={w} h={h} /> : f === 3 ? <V3 w={w} h={h} /> : f <= 7 ? <Lay w={w} h={h} n={f} /> : <Lay2 w={w} h={h} n={f} />}</AbsoluteFill>; };
+/* 14 (owner's pick: 10 竖剑压题, then: the title lower, at about 2/3; no VIBE知识大赏 line, the first cover's wording; the sword
+   bigger; the background fuller): the sword stands centred, the guard and the 鸟篆 high in the frame, the grip running off the top;
+   the background is the film's lacquer, a warm glow behind the guard, out-of-focus warm lights and a ghost of the diamond lattice */
+const KICK = '越王勾践剑 · 1965年出土于湖北江陵', SUBL = '有人说它镀了铬。博物馆研究了7年多';
+const Final: React.FC<{w: number; h: number}> = ({w, h}) => { const tall = h > w, k = tall ? 62 : 50, g: [number, number] = [w / 2, tall ? h * 0.17 : h * 0.15];
+	const S = swordAt(g, 90, k), cy = tall ? h * 0.655 : h * 0.66, fs = tall ? 124 : 112, sc = Math.max(w / 1920, h / 1080);
+	const line = (c: React.CSSProperties): React.CSSProperties => ({fontFamily: SERIF, fontWeight: 900, fontSize: fs, lineHeight: 1.14, whiteSpace: 'nowrap', ...c});
+	/* the ghost lattice: the blade's own diamond grid, ten times larger, very faint, blurred */
+	const ghost = (() => { const out: React.ReactNode[] = [], K = tall ? 9 : 8;
+		for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) { const c = [latCorner(i, j), latCorner(i + 1, j), latCorner(i + 1, j + 1), latCorner(i, j + 1)].map(([a, b]) => [w / 2 + b * K, h * 0.42 + (a - 60) * K]);
+			out.push(<path key={`${i}_${j}`} d={'M' + c.map((p) => `${p[0].toFixed(0)},${p[1].toFixed(0)}`).join('L') + 'Z'} fill="none" stroke="#E8BC66" strokeWidth={6} />); }
+		return out; })();
+	const bokeh = Array.from({length: 26}, (_, i) => { const x = w * rnd(i, 3), y = h * (0.05 + 0.9 * rnd(i, 4)), r = (tall ? 26 : 24) + 60 * rnd(i, 5), dx = Math.abs(x - w / 2);
+		if (dx < (tall ? 190 : 150)) return null; return <circle key={i} cx={x} cy={y} r={r} fill="#FFC27A" opacity={0.05 + 0.1 * rnd(i, 6)} />; });
+	return <>
+		<svg width={w} height={h} style={{position: 'absolute'}}>
+			<defs><filter id="fbk" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14" /></filter><filter id="fgh" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5" /></filter>
+				<radialGradient id="fglow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFC870" stopOpacity="0.5" /><stop offset="0.45" stopColor="#E08A38" stopOpacity="0.18" /><stop offset="1" stopColor="#E08A38" stopOpacity="0" /></radialGradient>
+				<radialGradient id="fglow2" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#FFB060" stopOpacity="0.22" /><stop offset="1" stopColor="#FFB060" stopOpacity="0" /></radialGradient></defs>
+			<LacDefs /><g transform={`scale(${sc})`}><Lacquer sheen={0.35} id="cvf" /></g>
+			<g opacity={0.07} filter="url(#fgh)">{ghost}</g>
+			<g filter="url(#fbk)">{bokeh}</g>
+			<ellipse cx={w / 2} cy={h * 0.5} rx={w * 0.75} ry={h * 0.6} fill="url(#fglow2)" />
+			<ellipse cx={g[0]} cy={g[1] + h * 0.12} rx={w * 0.55} ry={h * 0.32} fill="url(#fglow)" />
+			<Sword p0={S.p0} p1={S.p1} id="cvf" />
+		</svg>
+		<div style={{position: 'absolute', left: 0, right: 0, top: cy, transform: 'translateY(-50%)', textAlign: 'center'}}>
+			<div style={{position: 'absolute', left: '50%', top: '50%', width: fs * 9.5, height: fs * 5.2, transform: 'translate(-50%,-50%)', background: 'radial-gradient(ellipse at center, rgba(8,4,2,0.85) 0%, rgba(8,4,2,0.6) 45%, rgba(8,4,2,0) 72%)'}} />
+			<div style={{position: 'relative'}}>
+				<div style={{fontFamily: SERIF, fontWeight: 500, fontSize: tall ? 34 : 32, color: 'rgba(232,218,198,0.82)', letterSpacing: '0.06em', marginBottom: 18, whiteSpace: 'nowrap', textShadow: HALO}}>{KICK}</div>
+				<div style={line({color: '#F6EEDC', textShadow: '0 6px 30px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.8)'})}>{L1}</div>
+				<div style={line({fontSize: fs * 1.08, backgroundImage: 'linear-gradient(180deg, #ffe39b 0%, #f5c76b 45%, #c9913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 2px 3px rgba(0,0,0,0.8))'})}>{L2}<span style={{marginRight: '-0.5em'}}>{Q}</span></div>
+				<div style={{fontFamily: SERIF, fontWeight: 500, fontSize: tall ? 38 : 36, color: 'rgba(236,224,206,0.9)', letterSpacing: '0.04em', marginTop: 20, whiteSpace: 'nowrap', textShadow: HALO}}>{SUBL}</div>
+			</div></div>
+		<div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%)'}} />
+	</>; };
+const Cover: React.FC<{w: number; h: number}> = ({w, h}) => { useStampFonts(`${NAME}${SUB}${L1}${L2}${Q}${KICK}${SUBL}`); const f = useCurrentFrame();
+	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : f === 2 ? <V2 w={w} h={h} /> : f === 3 ? <V3 w={w} h={h} /> : f <= 7 ? <Lay w={w} h={h} n={f} /> : f <= 13 ? <Lay2 w={w} h={h} n={f} /> : <Final w={w} h={h} />}</AbsoluteFill>; };
 registerRoot(() => <>
-	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={14} />
-	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={14} />
+	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={15} />
+	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={15} />
 </>);
