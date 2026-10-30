@@ -5,6 +5,7 @@ import {SealHollow} from '../qq51/master51';
 import {Frame53, Sub53, Stamp53, Cam, lookAt, proj, poly, blobOn, mix, V3} from './parts53';
 import {Sword3D, Blade3D, SwordPose} from './sword3d';
 import {BladeMacro} from './macro53';
+import {CleaverK} from './cleaver53k';
 /* ep53 key frames, part A: the hook (frame 0 and 1.5 s). One continuous macro glide along an edge line:
    your wet cleaver (near, steel, rust blooming) → the same edge line continues as the bronze edge of the 越王勾践剑 (far,
    out of focus at frame 0; filling the frame by 1.5 s). World units: mm. The cleaver lies flat on the counter, its edge on
@@ -22,7 +23,9 @@ const RUST: [number, number, number, number][] = (() => { const out: [number, nu
 		out.push([x + d * Math.cos(a), y + d * Math.sin(a) * 0.9, (1.2 + 3.4 * rnd(c * 40 + i, 63)) * (1 - 0.45 * d / r), rnd(c * 40 + i, 64)]); } });
 	return out; })();
 const RUST_COL = ['#8A4620', '#A6582A', '#6A3518', '#B86A32', '#7A3E1C'];
-export const Cleaver: React.FC<{c: Cam; rho: number}> = ({c, rho}) => {
+/** the cleaver is the v3 Chinese cleaver (cleaver53k), the same drawing the film uses */
+export const Cleaver: React.FC<{c: Cam; rho: number}> = CleaverK;
+const CleaverV2: React.FC<{c: Cam; rho: number}> = ({c, rho}) => {
 	const top = poly(c, knifeTop()), p0 = proj(c, [0, -96, 0]), p1 = proj(c, [KF * 0.7, 0, 0]);
 	const bevel = poly(c, [[2, -8, 0.05], [KF - 14, -8, 0.05], [KF - 6, -3, 0.05], [KF - 12, 0, 0.05], [2, 0, 0.05]]);
 	const spine = poly(c, [[4, KS, 0.05], [KF - 6, KS, 0.05], [KF - 4, KS + 3, 0.05], [2, KS + 3, 0.05]]);
@@ -98,6 +101,7 @@ export const Kitchen: React.FC<{c: Cam}> = ({c}) => {
 			<path d={a} stroke="#5E6262" strokeWidth={3.2} fill="none" /><path d={poly(c, [[x, -150, -4.4], [x, 60, -4.4]], false)} stroke="#C8CCCC" strokeOpacity={0.25} strokeWidth={1.1} fill="none" /></g>; })}
 	</g>; };
 
+void CleaverV2;
 /** a four-point glint */
 export const Glint: React.FC<{x: number; y: number; r: number; o?: number}> = ({x, y, r, o = 1}) => <g opacity={o}>
 	<circle cx={x} cy={y} r={r * 0.9} fill="#FFE6B0" opacity={0.3} />
