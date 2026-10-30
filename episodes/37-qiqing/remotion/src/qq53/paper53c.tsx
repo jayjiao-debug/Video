@@ -9,6 +9,7 @@ import {aCenter} from './cam53c';
 import {frameOf, DA} from './master53';
 import {BladeFlat, MarkSet, mapOf} from './blade53c';
 import {litOf, hexMix, LATC} from './inscr53c';
+import {EdgeGlint53} from './edge53e4';
 /* ep53 · TakeC leg 11 (56.482 → 61.577): 1977, the paper test for the film 《古剑》 (KF09). The camera, face-on to the blade as in KF08,
    swings out to the 3/4 view while the film light clicks on at DA(25) = 57.048 and lights the stack of 30 sheets; the clapper snaps on
    58.180. The blade (edge down, the same BladeFlat as the chamber's, same lattice, same marks) is lowered edge-first through the stack
@@ -39,69 +40,30 @@ export const camAt = (t: number): Cam => { if (t <= 56.482) return faceCam(t);
 	if (t < 59.2) return mixCam(C9, C9b, sstep(seg(t, 59.0, 59.2)));
 	if (t < 60.0) return C9b;
 	return mixCam(C9b, END_CAM, trap(seg(t, 60.1, P1))); };
-const sheetTone = (i: number) => mix('#B89C6E', '#9C8258', rnd(i, 61) * 0.8);
+/* v3.4 (owner): the paper test now opens the film; here (v3 92.709 → 97.804, B1 「两千多年了，还这么锋利。/ 靠的是什么？」) the same blade
+   and the same camera hold on the EDGE: no paper, no slate, no tags, no film light. The blade settles (the old drop into the stack, now
+   a calm 2.2 s ease) before the hit; on DA(26) = 59.312 (v3 DA(42) 95.540) a thin glint runs along the cutting edge (the lower one,
+   edge down), guard → tip in ~0.5 s, over a soft resting sheen that is there before and after and goes as the camera rises to leg 12. */
+const settle = (t: number) => sstep5(seg(t, 57.0, 59.2));
+const RUN = 0.5;
 export const Paper53: React.FC<{t: number}> = ({t}) => {
-	const c = camAt(t), zc = axisZ(t), tilt = 0.12 * sstep(seg(t, 58.7, 59.1)) * (1 - down(t)), light = frameOf(t) >= frameOf(T_LIGHT) ? 1 : 0;
-	const world = (a: number, w: number): V3 => { const s = a - A0; return [BASE + s, 0, zc + w + (s - S_MID) * tilt]; };
+	const c = camAt(t), zc = ZAX0 + DZ0 * (1 - settle(t)) + lift(t);
+	const world = (a: number, w: number): V3 => [BASE + (a - A0), 0, zc + w];
 	const S = mapOf(c, world);
-	const cut = frameOf(t) >= frameOf(T_CUT), flashN = frameOf(t) - frameOf(T_CUT);
-	const riseU = sstep(seg(t, 56.75, 57.35)), setOn = riseU * (1 - sstep(seg(t, 60.55, 61.4))), rise = 60 * (1 - riseU);
-	/* a half of sheet i (sgn +1 = behind the blade, −1 = in front): its three visible faces as projected paths */
-	const half = (i: number, sgn: 1 | -1) => { const split = i >= NS - NC, ii = i - (NS - NC), fi = split ? (ii + 1) / NC : 0;
-		const tt = seg(t, T_CUT + 0.01 * ii, T_CUT + 0.34 + 0.01 * ii), e = cut && split ? 1 - Math.pow(1 - tt, 3) : 0, bob = cut && split ? 0.05 * Math.sin(Math.PI * seg(t, T_CUT + 0.34, T_CUT + 0.7)) : 0;
-		const jx = split && cut ? (rnd(i, 62) - 0.5) * 0.12 : 0, jy = split && cut ? (rnd(i, 63) - 0.5) * 0.08 : 0;
-		const g = split && cut ? GAP : 0, yIn = sgn * (g + (cut && split ? 5.0 * e * fi + jy : 0)), yOut = sgn * (SY + (cut && split ? 0.9 * e * fi + jy : 0));
-		const z0 = i * SHT - (cut && split ? (3.5 * e * fi - bob * fi) : 0), z1 = z0 + SHT, x0 = SX0 + jx, x1 = SX1 + jx;
-		const top = poly(c, [[x0, yIn, z1], [x1, yIn, z1], [x1, yOut, z1], [x0, yOut, z1]]);
-		const end = poly(c, [[x1, yIn, z1], [x1, yOut, z1], [x1, yOut, z0], [x1, yIn, z0]]);
-		const face = sgn < 0 ? poly(c, [[x0, yOut, z1], [x1, yOut, z1], [x1, yOut, z0], [x0, yOut, z0]]) : poly(c, [[x0, yIn, z1], [x1, yIn, z1], [x1, yIn, z0], [x0, yIn, z0]]);
-		const tone = sheetTone(i), fresh = sgn > 0 && split && cut;
-		return <g key={`${i}${sgn}`}><path d={face} fill={fresh ? '#C3A874' : mix(tone, '#000000', 0.16)} stroke="#6A5535" strokeWidth={1} strokeOpacity={fresh ? 1 : 0.55} />
-			<path d={end} fill={mix(tone, '#000000', 0.26)} stroke="#6A5535" strokeWidth={1} strokeOpacity={0.55} /><path d={top} fill={tone} stroke="#7A6440" strokeWidth={1} strokeOpacity={0.5} /></g>; };
-	const halves = (sgn: 1 | -1) => Array.from({length: NS}, (_, i) => half(i, sgn));
-	/* the bracket labels stand beside the stack (to its screen-left), not on its face */
-	const bx = SX1 + 1.7, ta = proj(c, [bx, -SY, ZT]), tb = proj(c, [bx, -SY, ZE0]), td = proj(c, [bx, -SY, 0]);
-	const tagO = (cut ? 1 : 0) * sstep(seg(t, T_CUT + 0.2, T_CUT + 0.35)) * (1 - seg(t, 60.45, 60.8));
-	const lx = (p: number, n: number, fs: number) => Math.max(p - 22, 150 + n * fs * 1.02);
-	const ly = (y: number) => cl(y, 330, H - 120);
-	/* producer r3: the two tags never collide (the lower one is clamped at the safe edge while the camera rises): keep ≥ 66 px apart, shift both up if needed */
-	const tagY = (() => { const a0 = ly(ta[1] - 36), b0 = Math.max(ly(td[1] + 70), a0 + 86), sh = Math.max(0, b0 - (H - 120)); return [a0 - sh, b0 - sh]; })();
-	const clap = sstep(seg(t, 57.55, 57.9)) * (1 - sstep(seg(t, 59.2, 59.5))), open = frameOf(t) >= frameOf(T_CLAP) ? 0 : 1, jolt = frameOf(t) >= frameOf(T_CLAP) ? Math.exp(-(t - T_CLAP) / 0.08) * Math.cos((t - T_CLAP) * 50) : 0;
-	/* v3.1 (owner): no lamp fixture or stand (it was cut by the frame edge); the light itself stays: on DA(25) a warm wash from beyond
-	   the top-right corner and the same beam, its narrow end feathered to nothing (p9beam starts at 0) so no source is drawn */
-	const beam = (() => { const lt = seg(t, T_LIGHT, T_LIGHT + 0.25) * (light ? 1 : 0); return lt > 0 && <g opacity={lt * (1 - sstep(seg(t, 60.2, 60.9)))}>
-		<Pool id="p9w" x={1760} y={120} rx={900} ry={560} a={0.2} col="#FFD49A" />
-		<path d={`M1530,290 L1660,220 L1240,${H} L520,${H} Z`} fill="url(#p9beam)" /></g>; })();
+	const hitN = frameOf(t) - frameOf(T_CUT), tr = hitN >= 0 ? hitN / 30 : -1;   // frame-exact: the glint's first frame is the hit's
+	const rest = 0.75 * sstep(seg(t, 57.2, 58.4)) * (1 - sstep(seg(t, 60.55, 61.3)));
+	const runU = tr >= 0 ? 0.05 + 1.0 * sstep(cl(tr / RUN)) : -1, runK = tr >= 0 ? (tr < RUN * 0.7 ? 1 : 1 - sstep(seg(tr, RUN * 0.7, RUN + 0.12))) : 0;
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<defs>
-			<linearGradient id="p9beam" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF4DC" stopOpacity="0" /><stop offset="0.28" stopColor="#FFF4DC" stopOpacity="0" /><stop offset="0.48" stopColor="#FFF4DC" stopOpacity="0.17" /><stop offset="0.7" stopColor="#FFF0D0" stopOpacity="0.06" /><stop offset="1" stopColor="#FFF0D0" stopOpacity="0" /></linearGradient>
 			<linearGradient id="p9dim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#140806" stopOpacity="0.8" /><stop offset="0.6" stopColor="#140806" stopOpacity="0.55" /><stop offset="1" stopColor="#140806" stopOpacity="0" /></linearGradient>
 		</defs>
 		<rect x={-40} y={-40} width={W + 80} height={H + 80} fill="#24100C" />
 		<LacDefs /><g opacity={sstep(seg(t, 60.0, 61.4))}><Lacquer sheen={0.1} id="ho" /></g>
-		{beam}
-		<g opacity={setOn} transform={`translate(0 ${rise})`}>
-			<path d={poly(c, [[-60, -30, -0.05], [60, -30, -0.05], [60, 400, -0.05], [-60, 400, -0.05]])} fill="#33251B" />
-			<path d={poly(c, [[SX0 + 0.6, -SY + 0.8, 0], [SX1 + 0.8, -SY + 0.8, 0], [SX1 + 0.8, SY + 0.8, 0], [SX0 + 0.6, SY + 0.8, 0]])} fill="#000" opacity={0.4} />
-			{halves(1)}
-		</g>
 		<BladeFlat S={S} id="pp" />
 		<MarkSet id="pp" S={S} o={1} col={(side, n) => hexMix(LATC, '#FFF2C8', Math.min(1, litOf(side, n, t)))} lit={(side, n) => Math.min(1, litOf(side, n, t))} />
-		<g opacity={setOn} transform={`translate(0 ${rise})`}>{halves(-1)}</g>
-		{/* fix4-a (#12): the cut's flash is ONE thin bright line where the edge meets the paper — the slit along the top of the stack
-		   (the top sheet only starts to move 0.19 s after the cut) — 3 frames, fading; the blade stays drawn, no star */}
-		{flashN >= 0 && flashN < 3 && (() => { const d = poly(c, Array.from({length: 13}, (_, i) => [SX0 + 0.3 + (SX1 - SX0 - 0.6) * i / 12, -GAP, ZT + 0.02] as V3), false);
-			return d ? <g opacity={[1, 0.6, 0.28][flashN]} transform={`translate(0 ${rise})`}><path d={d} fill="none" stroke="#FFE7B0" strokeOpacity={0.35} strokeWidth={6} strokeLinecap="round" /><path d={d} fill="none" stroke="#FFFBEE" strokeWidth={2.2} strokeLinecap="round" /></g> : null; })()}
-		{tagO > 0.01 && <g opacity={tagO}>
-			<path d={`M${ta[0] - 4},${ta[1]} h-14 V${tb[1] - 3} h14`} fill="none" stroke={B.goldL} strokeWidth={4} /><path d={`M${tb[0] - 4},${tb[1] + 3} h-14 V${td[1]} h14`} fill="none" stroke={B.cream} strokeWidth={3} />
-			<Tag id="p9a" x={lx(ta[0] - 14, 5, 56)} y={tagY[0]} s="划破20多张" fs={56} col={B.goldL} anchor="end" />
-			<Tag id="p9b" x={lx(tb[0] - 14, 4, 48)} y={tagY[1]} s="共30多张" fs={48} col={B.cream} anchor="end" /></g>}
-		{clap > 0.01 && <g transform={`translate(240,${800 + (1 - clap) * 420 + jolt * 6}) rotate(-7)`} opacity={clap}>
-			<rect x={0} y={0} width={230} height={160} rx={6} fill="#1E1C1A" stroke="#6A625A" strokeWidth={3} />
-			<g transform={`rotate(${-open * 24} 0 -6)`}><path d="M0,-6 L230,-6 L230,-38 L0,-38 Z" fill="#1E1C1A" />{Array.from({length: 6}, (_, i) => <path key={i} d={`M${i * 38 + 6},-36 l24,28`} stroke="#E8E2D6" strokeWidth={11} />)}</g>
-			<text x={115} y={82} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={54} fill="#E8E2D6">古剑</text><text x={115} y={138} textAnchor="middle" fontFamily={SANS} fontWeight={700} fontSize={32} fill="#B8B0A4">1977</text></g>}
+		<EdgeGlint53 S={S} id="p9e" sg={-1} rest={rest} k={runK} u={runU} />
 		<Pool id="p9p" x={960} y={640} rx={1100} ry={380} a={0.22 * (1 - seg(t, 60.0, 61.4))} col="#FFC070" />
 		<rect x={0} y={0} width={1500} height={320} fill="url(#p9dim)" opacity={seg(t, 57.6, 58.2) * (1 - seg(t, 59.4, 60.2))} />
 		<Vignette id="p9" a={0.55 + 0.05 * seg(t, 60.0, 61.5)} />
 	</svg>; };
-void B; void Glint;
+void B; void Glint; void rnd; void KAI; void SANS; void Tag; void proj; void poly; void mix; void T_LIGHT; void T_CLAP; void down; void axisZ; void T_IN0; void T_IN1; void SX0; void SX1; void SY; void ZT; void NC; void GAP; void S_MID; void lerp; void H;

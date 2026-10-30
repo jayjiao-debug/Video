@@ -6,29 +6,21 @@ import {Cam, V3, lookAt, proj, poly, toCam, mix, blobOn, Tag, Scrim} from './par
 import {Sword3D, SwordPose} from './sword3d';
 import {R_FACE} from './face53';
 import {BladeLand, bw, hwAt, hAt, LBM, A_BL, Light} from './land53';
-import {CleaverD as Cleaver} from './end53d';
 import {RingDisc} from './props53';
 import {spline, sstep, DEG} from './cam53';
 import {B} from '../qq50/styleB';
 import {DisplayBack, DisplayFront, titleQuadOn, DZ0, HY0, DTITLE_W, DTITLE_H, DTITLE_Y, DTITLE_Z} from './display53k';
+import {J_O, openCam, OpenSet, OpenSword} from './open53o4';
 /* ep53 · THE ONE TAKE, legs 1–6 (0 → 20.821 s): one camera, one world (the case frame, mm). The sword lies level on its
    holders, pommel end face at x = −278 (PF), tip at x = +278, blue glass up (z+), axis at z = 1000; plinth top z = 940.
-   Your kitchen (kfA53, its own frame) is placed on the sword's own edge line beyond the tip (a 180° turn about z + a shift),
-   so frame 0 (KF01) and the glide onto the bronze (KF02) are one move; the kitchen then falls away into lacquer.
-   Camera: legs 1–2 in Cartesian keys (position + yaw/pitch); legs 3–6 in spherical keys round the pommel face (distance on a
-   log scale, so the pull-back and the axis push are constant-rate moves); the two are blended C1 over 4.2–5.2 (v3-e hook).
-   Lens (f, principal point, roll) are global channels. Everything is a pure function of t. */
+   v3.4 (owner): the kitchen and the cleaver are gone. 0 → J_O (7.0 s) is the new opening (open53o4: the 1977 paper test, then the
+   sword goes home to its case in one move); from J_O on everything is as before.
+   Camera from J_O: spherical keys round the pommel face (distance on a log scale, so the pull-back and the axis push are
+   constant-rate moves). Lens (f, principal point, roll) are global channels. Everything is a pure function of t. */
 export const SP: SwordPose = {x0: -278, ya: 0, z0: 1000, dir: 1};
 export const PF: V3 = [-278, 0, 1000];
-const kit = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] - 1002.2];   // case → kitchen
-const toKitchen = (c: Cam): Cam => ({...c, p: kit(c.p), yaw: c.yaw + Math.PI});
 
 /* ---------- camera channels ---------- */
-const XA = spline([[0, 566], [0.8, 352], [1.575, 226, -78], [3.0, 112], [4.7, -92, -72.28], [5.538, -145, -35]]);
-const YA = spline([[0, -169], [0.8, -46], [1.575, 4], [3.0, 2.5, -1.0209], [4.7, 0.8188, -0.9731], [5.538, -18, -30]]);
-const ZA = spline([[0, 1192.2], [0.8, 1084], [1.575, 1026.5], [2.4, 1025.5], [3.6, 1035], [4.7, 1060, 36.43], [5.538, 1100, 70]]);
-const YAWA = spline([[0, 148.5], [0.8, 167], [1.575, 182.5], [3.0, 181.2, -0.6419], [4.7, 180.1871, -0.4135], [5.538, 160, -14]]);
-const PITA = spline([[0, 27.6], [0.8, 21.5], [1.575, 15.5], [3.0, 15.5], [4.2, 21.5926, 9.4293], [4.7, 27, 12.0746], [5.1, 38.5], [5.538, 56, 16]]);
 /* the hook (4.2 → 9.5, v3): from the glide the camera rises over the blade and swings out to the front, looking DOWN at the guard
    and the grip from a calm three-quarter angle (about 40° up, 35–50° off the axis: nothing points at the lens), then pulls back
    and up onto the whole sword for the title (9.5). Blended in from the glide over 4.2–5.2; knots on 9.5 keep their old slopes, so
@@ -64,15 +56,13 @@ const FF3 = s3(FF, k3([1760, 1650, 1650, 1650, 1650]));
 /* the principal point carries the sword up and left, so the hilt stays clear of the overlay's Cr tile (x ≥ 1345, y ≥ 683, 18.557 →) */
 const CX3 = s3(CX, k3([880, 720, 780, 900, 960]));
 const CY3 = s3(CY, k3([560, 470, 480, 520, 540]));
-const BL0 = 4.2, BL1 = 5.1;
-const fwd = (yaw: number, pit: number): V3 => [Math.cos(pit) * Math.cos(yaw), Math.cos(pit) * Math.sin(yaw), -Math.sin(pit)];
-export const camAt = (t: number): Cam => {
-	const pA: V3 = [XA(t), YA(t), ZA(t)], FA = fwd(YAWA(t) * DEG, PITA(t) * DEG), tA: V3 = [pA[0] + FA[0] * 300, pA[1] + FA[1] * 300, pA[2] + FA[2] * 300];
+/** today's camera (used from J_O on; the spherical channels only — the old kitchen glide's Cartesian keys are gone) */
+const camOld = (t: number): Cam => {
 	const a = AL3(t) * DEG, b = BE3(t) * DEG, d = Math.exp(LND3(t));
-	const pB: V3 = [PF[0] - d * Math.cos(b) * Math.cos(a), PF[1] - d * Math.cos(b) * Math.sin(a), PF[2] + d * Math.sin(b)], tB: V3 = [TX3(t), TY3(t), TZ3(t)];
-	const w = t <= BL0 ? 0 : t >= BL1 ? 1 : sstep((t - BL0) / (BL1 - BL0));
-	const p: V3 = [lerp(pA[0], pB[0], w), lerp(pA[1], pB[1], w), lerp(pA[2], pB[2], w)], tg: V3 = [lerp(tA[0], tB[0], w), lerp(tA[1], tB[1], w), lerp(tA[2], tB[2], w)];
+	const p: V3 = [PF[0] - d * Math.cos(b) * Math.cos(a), PF[1] - d * Math.cos(b) * Math.sin(a), PF[2] + d * Math.sin(b)], tg: V3 = [TX3(t), TY3(t), TZ3(t)];
 	return lookAt(p, tg, FF3(t), CX3(t), CY3(t), RO(t) * DEG); };
+/** v3.4: before J_O the opening's camera (open53o4, joined C1 to camOld at J_O) */
+export const camAt = (t: number): Cam => (t < J_O ? openCam(t, camOld) : camOld(t));
 /** distance from the camera to the pommel face (mm), for the ring match at 20.821 */
 export const faceD = (t: number) => Math.exp(LND3(t));
 
@@ -85,30 +75,6 @@ export const Ground53: React.FC<{id: string; k?: number; sheen?: number}> = ({id
 	{k > 0.01 && <rect width={W} height={H} filter="url(#lacN)" opacity={0.12 * k} />}
 	<rect width={W} height={H} fill={`url(#gr${id})`} />
 </g>;
-
-/* ---------- the kitchen (kitchen frame): the counter, the rack, the tiled splashback (world-anchored, soft) ---------- */
-const KitchenW: React.FC<{c: Cam; o: number}> = ({c, o}) => { if (o <= 0.01) return null;
-	const counter = poly(c, [[-700, -700, -14], [520, -700, -14], [520, 520, -14], [-700, 520, -14]]), g0 = proj(c, [480, -40, -14]), g1 = proj(c, [140, -40, -14]);
-	const wall = (x0: number, x1: number, z0: number, z1: number) => poly(c, [[x0, -700, z0], [x1, -700, z0], [x1, -700, z1], [x0, -700, z1]]);
-	const tiles = [...Array.from({length: 14}, (_, i) => poly(c, [[-600 + i * 100, -699, -14], [-600 + i * 100, -699, 640]], false)), ...[86, 186, 286, 386, 486].map((z) => poly(c, [[-600, -699, z], [800, -699, z]], false))].join(' ');
-	const pl = proj(c, [150, -560, 520]);
-	return <g opacity={o}>
-		<defs><filter id="kwB" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="8" /></filter>
-			<linearGradient id="kwC" gradientUnits="userSpaceOnUse" x1={g0[0]} y1={g0[1]} x2={g1[0]} y2={g1[1]}><stop offset="0" stopColor="#1E1511" stopOpacity="0" /><stop offset="0.55" stopColor="#1E1511" stopOpacity="0.85" /><stop offset="1" stopColor="#201813" stopOpacity="1" /></linearGradient></defs>
-		<g filter="url(#kwB)">
-			<path d={wall(-700, 820, -14, 680)} fill="#1C130F" />
-			<path d={tiles} stroke="#C8B89A" strokeOpacity={0.08} strokeWidth={3} fill="none" />
-			<path d={wall(-700, 820, 560, 580)} fill="#FFE6C0" opacity={0.2} />
-			{pl[2] > 0 && <Pool id="kwU" x={pl[0]} y={pl[1]} rx={720} ry={260} a={0.16} col="#FFE2B8" />}
-		</g>
-		<path d={counter} fill="url(#kwC)" />
-		{Array.from({length: 160}, (_, i) => { const q: V3 = [-500 + 640 * rnd(i, 1), -680 + 1150 * rnd(i, 2), -13.9], p = proj(c, q); if (p[2] < 8) return null;
-			return <circle key={i} cx={p[0]} cy={p[1]} r={Math.max(0.6, c.f * 1.1 / p[2])} fill="#E8DCC8" opacity={0.04 + 0.06 * rnd(i, 4)} />; })}
-		{[-118, 28].map((y, i) => <path key={`r${i}`} d={poly(c, [[-260, y, -9], [216, y, -9]], false)} stroke="#7E8282" strokeOpacity={0.35} strokeWidth={3} fill="none" />)}
-		{[-110, -55, 0, 55, 110, 165, 214].map((x) => { const a = poly(c, [[x, -150, -5], [x, 60, -5]], false); return <g key={x} opacity={x > 180 ? 0.4 : 0.75}>
-			<path d={a} stroke="#0A0807" strokeOpacity={0.5} strokeWidth={6} fill="none" transform="translate(3,5)" /><path d={a} stroke="#5E6262" strokeWidth={3.2} fill="none" />
-			<path d={poly(c, [[x, -150, -4.4], [x, 60, -4.4]], false)} stroke="#C8CCCC" strokeOpacity={0.25} strokeWidth={1.1} fill="none" /></g>; })}
-	</g>; };
 
 /** a four-point glint (screen) */
 export const Glint: React.FC<{x: number; y: number; r: number; o?: number}> = ({x, y, r, o = 1}) => <g opacity={o}>
@@ -224,7 +190,7 @@ const Motes: React.FC<{c: Cam; t: number; o: number}> = ({c, t, o}) => { if (o <
 		return <circle key={i} cx={p[0]} cy={p[1]} r={Math.min(2.6, Math.max(0.8, c.f * 1.6 / p[2]))} fill="#FFE8C0" opacity={(0.18 + 0.3 * tw) * Math.min(1, (p[2] - 350) / 400)} />; })}</g>; };
 
 /* ---------- the glass: the hood's near faces, edges and streak, drawn OVER the sword (display53k); same envelope as the case ---------- */
-const PaneStreaks: React.FC<{c: Cam; t: number}> = ({c, t}) => { const o = sstep(seg(t, 0.9, 2.2)) * (1 - sstep(seg(t, 20.1, 20.65)));
+const PaneStreaks: React.FC<{c: Cam; t: number}> = ({c, t}) => { const o = sstep(seg(t, 4.7, 6.3)) * (1 - sstep(seg(t, 20.1, 20.65)));
 	return o > 0.01 ? <g opacity={o}><DisplayFront c={c} hood={sstep(seg(t, 6.6, 8.4))} leaf={leafAt(t)} /></g> : null; };
 /** the title glass (display53k.TitleLeaf): in with the hood, gone once the title has slid off (the orbit carries it away) */
 const leafAt = (t: number) => sstep(seg(t, 6.6, 8.4)) * (1 - sstep(seg(t, 11.7, 12.5)));
@@ -256,21 +222,6 @@ const BladeBloom: React.FC<{c: Cam; t: number}> = ({c, t}) => { const e = sstep(
 		{rimR && <path d={rimR} stroke="#FFE2A8" strokeOpacity={0.8} strokeWidth={Math.max(1.4, f * 1.4)} fill="none" />}
 		{rimL && <path d={rimL} stroke="#FFD08A" strokeOpacity={0.55} strokeWidth={Math.max(1.2, f * 1.1)} fill="none" />}</g>; };
 
-/* ---------- the guard's blue glass (rise over the guard, 4.7–6.6 s): a soft specular band slides across each pane as the view angle
-   changes (continuous, view-driven, never on the beat), and one star glint lands on beat 10 (5.6605 s) ---------- */
-const GG_A0 = 84.5, GG_A1 = 99, GG_BEAT = 5.6605;
-const ggPt = (s: number, a: number, k: number): V3 => { const u = (a - GG_A0) / (GG_A1 - GG_A0), ye = lerp(22.8, 24.8, u);
-	return [SP.x0 + a, SP.ya + s * lerp(2.6, ye, k), SP.z0 + lerp(6.2, 3.8, u) + 0.45]; };
-const GuardGlints: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 4.6 || t > 6.8) return null;
-	const env = sstep(seg(t, 4.65, 5.1)) * (1 - sstep(seg(t, 6.0, 6.7)));
-	const band = (s: 1 | -1, lag: number, key: string) => { const u = sstep(seg(t - lag, 4.7, 6.3)), a = lerp(GG_A0 - 1, GG_A1 + 3, u), w = 3.2;
-		const q = (a0: number, a1: number, k0: number, k1: number, ww: number): V3[] => [ggPt(s, Math.max(GG_A0, a0 - ww), k0), ggPt(s, Math.min(GG_A1, a1 + ww), k0), ggPt(s, Math.min(GG_A1, a1 + ww), k1), ggPt(s, Math.max(GG_A0, a0 - ww), k1)];
-		if (a < GG_A0 - w || a > GG_A1 + w) return null;
-		const wide = poly(c, q(a, a, 0, 1, w * 1.8)), core = poly(c, q(a, a, 0, 1, w * 0.6));
-		return <g key={key}>{wide && <path d={wide} fill="#BFE0FF" opacity={0.26 * env} />}{core && <path d={core} fill="#F2FAFF" opacity={0.6 * env} />}</g>; };
-	const gp = proj(c, ggPt(1, 91, 0.7)), gl = t >= GG_BEAT - 1e-6 ? Math.exp(-(t - GG_BEAT) / 0.2) : 0, r = Math.max(22, Math.min(40, c.f * 0.3 / Math.max(10, gp[2] / 100)));
-	return <g>{band(1, 0, 'a')}{band(-1, 0.14, 'b')}{gl > 0.03 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={r} o={gl} />}</g>; };
-
 /* ---------- lights (directions toward the light) ---------- */
 const L_RAKE: V3 = [-0.92, -0.32, 0.22];      // the raking warm key, low and ahead-right of the glide
 /* in the glide the rake is a lamp low and ahead (toward the guard): its highlight runs ON the ridge and the pale cells' rims a
@@ -280,18 +231,10 @@ const L_SPOT: V3 = [0.08, -0.28, 0.96];       // the case spot from above, a lit
 
 /* ---------- THE TAKE, legs 1–6 ---------- */
 export const TakeA: React.FC<{t: number}> = ({t}) => {
-	const c = camAt(t), ck = toKitchen(c);
-	/* hook: frame-0 glint (KF01), rust bloom on DA(0) = 0.443 (complete on f13), focus pull to the bronze, the kitchen falls away */
-	const rho = 0.68 + 0.22 * sstep(seg(t, 0.443 - 0.23, 0.443)) + 0.05 * seg(t, 0.45, 1.4);
-	const kitO = 1 - sstep(seg(t, 0.5, 1.35)), knifeO = 1 - sstep(seg(t, 1.15, 1.5));
-	const farBlur = 2.6 * (1 - sstep(seg(t, 0.12, 0.9))), knifeBlur = 4.5 * sstep(seg(t, 0.35, 1.05));
-	/* the light: the raking key in the glide, the case spot from above as the camera rises */
+	const c = camAt(t), open = t < J_O;
+	/* the light: the raking key, the case spot from above as the camera rises (before J_O open53o4 hands its own cut light over to these) */
 	const kSpot = sstep(seg(t, 5.0, 8.0)), kRake = 1 - 0.75 * kSpot;
 	const lights: Light[] = [{dir: L_RAKE, k: 1.7 * kRake, pos: L_LAMP, d0: 600}, {dir: L_SPOT, k: 0.55 + 0.6 * kSpot}];
-	/* depth of field in the glide only */
-	const glide = t < 6.4;
-	const dof = glide ? {near: 34, far: 260 + 600 * seg(t, 4.6, 6.4), nb: '2 9', fb: 1.3 * (1 - seg(t, 4.8, 6.2))} : undefined;
-	const fog = t < 6.8 ? {d0: 60, D: 300 + 3000 * sstep(seg(t, 4.2, 6.8)), col: '#1E100B'} : undefined;
 	/* S3: the sheen on the lull hit 18.557 (f557), base → tip; the rings catch light as the push ends */
 	const sh = t >= 18.557 - 1e-6 ? {pos: lerp(-0.08, 1.12, seg(t, 18.557, 19.25)), k: 0.95 * (1 - seg(t, 19.0, 19.35))} : undefined;
 	const ringGlow = 0.5 * sstep(seg(t, 19.6, 20.6));
@@ -299,46 +242,25 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 	const plinthO = 1 - sstep(seg(t, 20.1, 20.65));
 	const hood = sstep(seg(t, 6.6, 8.4));
 	const lite = sstep(seg(t, 9.9, 11.3)) * (1 - sstep(seg(t, 17.0, 18.8)));
-	const caseO = sstep(seg(t, 0.9, 2.2));
-	const lift = 0.3 * (1 - sstep(seg(t, 0.5, 1.5))) + 0.16 * sstep(seg(t, 6.0, 8.5)) + 0.22 * lite;
-	/* hits */
-	const g0 = proj(c, [244, -18, 1004.2]), g0o = Math.exp(-t / 0.4) * (1 - seg(t, 0.6, 1.0));
-	/* [亮] on 2.707 (f81) — fix4-a, the owner's 0:03 note: the lamp's light lies on the polished bronze as a broad soft specular LOBE
-	   (land53 `lobe`, ≈ 460 × 170 px) on the pale diamonds 2–3 cells ahead of the lens, the dark lattice breaking it; in over 0.25 s,
-	   peak ON f81, out over 0.8 s, on a faint resting sheen through the glide. No white ridge stripe, no star sparkles. */
-	const ltF = Math.round(2.707 * 30) / 30, lobeK = t < ltF ? 0.28 + 0.72 * sstep(seg(t, ltF - 0.25, ltF)) : 0.28 + 0.72 * (1 - sstep(seg(t, ltF, ltF + 0.8)));
-	const lobeE = sstep(seg(t, 1.2, 1.9)) * (1 - sstep(seg(t, 4.9, 5.7))) * lobeK;
-	const glintK = sstep(seg(t, 6.2, 7.4));   // the pale-cell glints only once the camera has risen out of the glide
-	/* KF01's bokeh along the far edge, gone as the focus pulls */
-	const bok = [[250, 22, 0.34], [330, 17, 0.28], [420, 13, 0.24], [520, 10, 0.2]].map(([x, r, a], i) => { const p = proj(c, kitInv([x, 0, 2])); return p[2] > 10 ? <circle key={i} cx={p[0]} cy={p[1]} r={r} fill="#FFD890" opacity={a * (1 - seg(t, 0.15, 0.7))} /> : null; });
+	/* v3.4: the case and the plinth come out of the dark around the settling sword */
+	const caseO = sstep(seg(t, 4.7, 6.3));
+	const lift = 0.12 * (1 - sstep(seg(t, 4.5, 6.5))) + 0.16 * sstep(seg(t, 6.0, 8.5)) + 0.22 * lite;
+	const glintK = sstep(seg(t, 6.2, 7.4));   // the pale-cell glints only once the sword is home
+	const land = {lights, sheen: sh, shin: 90, sMin: -20, lift, glints: glintK};
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
-		<defs>
-			<filter id="tFar" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={Math.max(0.01, farBlur)} /></filter>
-			<filter id="tKn" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={Math.max(0.01, knifeBlur)} /></filter>
-			<filter id="tBok" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" /></filter>
-		</defs>
 		<Ground53 id="tA" k={lerp(1, 0.35, sstep(seg(t, 4, 8)))} sheen={0.3 + 0.2 * Math.sin(c.yaw)} />
-		<KitchenW c={ck} o={kitO} />
+		{open && <OpenSet c={c} t={t} />}
 		{lite > 0.01 && <g opacity={lite}><Scrim id="sbs" x={620} y={230} rx={860} ry={260} a={0.5} /></g>}
-		<g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} lite={lite} leaf={leafAt(t)} /></g>
-		{t < 1.2 && <g opacity={1 - caseO}>
-			<Pool id="tk1d" x={proj(c, [0, 0, 1000])[0]} y={proj(c, [0, 0, 1000])[1]} rx={560} ry={330} a={0.75 * kitO} col="#080403" />
-			<Pool id="tk1s" x={proj(c, [0, 0, 1000])[0] - 20} y={proj(c, [0, 0, 1000])[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
-		<g filter={farBlur > 0.05 ? 'url(#tFar)' : undefined}>
-			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} lite={lite} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift, lobe: lobeE > 0.004 ? {y: 640, k: lobeE, rx: 230, ry: 85} : undefined, glints: glintK}} />
-		</g>
+		{caseO * plinthO > 0.004 && <g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} lite={lite} leaf={leafAt(t)} /></g>}
+		{open ? <OpenSword c={c} t={t} id="tw" land={land} lights={lights} ringGlow={ringGlow} lite={lite} />
+			: <SwordW c={c} t={t} id="tw" ringGlow={ringGlow} lite={lite} o={land} />}
 		<BladeBloom c={c} t={t} />
-		<GuardGlints c={c} t={t} />
-		{t < 0.75 && <g filter="url(#tBok)">{bok}</g>}
-		{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
-		{knifeO > 0.01 && <g opacity={knifeO} filter={knifeBlur > 0.05 ? 'url(#tKn)' : undefined}><Cleaver c={ck} rho={rho} /></g>}
 		<Motes c={c} t={t} o={hall * plinthO} />
 		<PaneStreaks c={c} t={t} />
 		<Vignette id="tA" a={0.6} />
 		<DuoTag c={c} t={t} />
 		<RingTag c={c} t={t} />
 	</svg>; };
-const kitInv = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] + 1002.2];   // kitchen → case (its own inverse in x, y)
 
 /* ---------- S3: 「镀铬？」 hangs beside the blade from the lull hit (18.557) — a question tag, never struck ---------- */
 const DuoTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 18.557 - 1e-6 || t > 19.8) return null;
