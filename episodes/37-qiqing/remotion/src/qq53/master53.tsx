@@ -57,18 +57,18 @@ export const stampAt = (t: number): StampState | null => {
 	const id = LINES53[k].id;
 	if (id === 'H1') {
 		if (t < 1.42) return {y: '2026', place: '你家厨房', note: '一把普通的菜刀', oHead: 1 - seg(t, 1.28, 1.42), nPlace: 99, nNote: 99, press: 0};
-		return {y: '春秋末年', place: '越', note: '越王勾践剑', oHead: seg(t, 1.575, 1.8), nPlace: 99, nNote: Math.ceil(5 * seg(t, 1.75, 2.05)), press: 0};
+		return {y: '春秋末年', place: '越国', note: '越王勾践剑', oHead: seg(t, 1.575, 1.8), nPlace: 99, nNote: Math.ceil(5 * seg(t, 1.75, 2.05)), press: 0};
 	}
 	if (id === 'S4') {   // the place clears, the year rolls down to 1965 (eased), the note types
 		const u = seg(t, 21.25, STAMP_PRESS), e = u < 1 ? 1 - Math.pow(1 - u, 2.2) : 1, yr = u >= 1 ? 1965 : Math.min(2026, Math.max(1966, Math.round(2026 - 61 * e)));
 		const press = t >= STAMP_PRESS - 1e-6 ? Math.exp(-(t - STAMP_PRESS) / 0.12) * Math.cos((t - STAMP_PRESS) * 40) : 0;
 		return {y: String(yr), place: '湖北省博物馆', note: '回到出土那天', oHead: 1, nPlace: Math.ceil(6 * (1 - seg(t, 20.821, 21.05))), nNote: Math.ceil(6 * seg(t, showFrom(k), showFrom(k) + 0.4)), press};
 	}
-	if (id === 'H2' && t >= 9.2) return {y: '春秋末年', place: '越', note: '剑首 · 11道同心圆', oHead: 1, nPlace: 99, nNote: Math.ceil(10 * seg(t, 9.2, 9.45)), press: 0};
+	if (id === 'H2' && t >= 9.2) return {y: '春秋末年', place: '越国', note: '剑首 · 11道同心圆', oHead: 1, nPlace: 99, nNote: Math.ceil(10 * seg(t, 9.2, 9.45)), press: 0};
 	const st = LINES53[k].st; if (!st) return null;
 	const place = st.place ?? '';
 	/* the previous stamp on screen (joined lines only) */
-	const pk = k > 0 && LINES53[k].a - LINES53[k - 1].b < 0.3 ? k - 1 : -1, prev = pk >= 0 ? (LINES53[pk].id === 'S4' ? {y: '1965', place: '', note: '回到出土那天'} : LINES53[pk].id === 'H1' ? {y: '春秋末年', place: '越', note: '越王勾践剑'} : LINES53[pk].st) : null;
+	const pk = k > 0 && LINES53[k].a - LINES53[k - 1].b < 0.3 ? k - 1 : -1, prev = pk >= 0 ? (LINES53[pk].id === 'S4' ? {y: '1965', place: '', note: '回到出土那天'} : LINES53[pk].id === 'H1' ? {y: '春秋末年', place: '越国', note: '越王勾践剑'} : LINES53[pk].st) : null;
 	const t0 = showFrom(k);
 	if (!prev || prev.y !== st.y) {   // a new head: the whole stamp fades in after the line has typed
 		/* the head held since an earlier joined line? (S1 → S3 keep 2026 · 湖北省博物馆) */

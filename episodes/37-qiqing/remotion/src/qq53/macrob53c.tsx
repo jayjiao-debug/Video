@@ -26,7 +26,7 @@ export const BladeMacroC: React.FC<{sp: MacroSpec; id: string; pal: number; shif
 	const HWM = Math.max(hwAt(10), hwAt(UMAX));
 	for (let i = -14; i <= 220; i++) for (let j = -14; j <= 220; j++) {
 		const ca = (i + j + 1) / 2 * LA + shift, cw = (i - j) / 2 * LW;
-		if (ca + LA * 0.55 < 8 || ca > UMAX || Math.abs(cw) > Math.min(HWM, hwAt(ca) + LW) + LW / 2) continue;
+		if (ca + LA * 0.55 * (1 - pal) < 8 || ca > UMAX || Math.abs(cw) > Math.min(HWM, hwAt(ca) + LW) + LW / 2) continue;
 		const pale = ((i + j) % 2 + 2) % 2 === 0, side = cw > 0.5 ? 1 : cw < -0.5 ? -0.25 : 0.4;
 		const spec = Math.exp(-Math.pow((ca - LU) / 40, 2)) * (0.45 + 0.55 * side), fog = fogOf(ca);
 		const jit = (rnd(i * 31 + j, 71 + S) - 0.5) * 0.12, base = mix(pale ? '#D2B886' : '#B98443', pale ? '#8A6A3E' : '#6E4824', 0.2 + jit), lit = side > 0.5 ? 0 : 0.42;
@@ -45,7 +45,8 @@ export const BladeMacroC: React.FC<{sp: MacroSpec; id: string; pal: number; shif
 		{c.pale && c.fog < 0.75 && <path d={c.dIn} fill="none" stroke="#FFFBEE" strokeWidth={c.line * (0.3 + 0.4 * c.rim)} strokeOpacity={cl(0.2 + 0.8 * c.rim) * (1 - c.fog)} transform={`translate(${c.line * 0.2},${-c.line * 0.25})`} />}
 	</g>;
 	/* producer r2: near (blurred) and mid (sharp) overlap in a band and cross over by distance, so no cell pops sharp/blurred as it crosses NU */
-	const nW = (u: number) => (1 - cl((u - NU * 0.7) / (NU * 0.6))) * cl((u + LA * 0.55 - 8) / (LA * 0.6)), near = cells.filter((c) => nW(c.u) > 0.004), mid = cells.filter((c) => c.u >= NU * 0.7 && c.u < 220), far = cells.filter((c) => c.u >= 220);
+	/* …and both soften to BladeMacro's hard split as pal → 1, so the hush lands exactly on HandoffMacro (no focus snap at 74.412) */
+	const kk = 1 - pal, nW = (u: number) => (1 - cl((u - NU * (1 - 0.3 * kk)) / (NU * 0.6 * kk + 1e-6))) * cl((u + LA * 0.55 * kk - 8) / (LA * 0.6 * kk + 1e-6) + (kk < 1e-3 ? 1 : 0)), near = cells.filter((c) => nW(c.u) > 0.004), mid = cells.filter((c) => c.u >= NU * (1 - 0.3 * kk) && c.u < 220), far = cells.filter((c) => c.u >= 220);
 	const pits = Array.from({length: 220}, (_, i) => { const u = 20 + 260 * Math.pow(rnd(i, 81 + S), 1.6), v = (rnd(i, 82 + S) - 0.5) * 2 * (hwAt(u) - STRIP), p = macroProj(m, u, v, zAt(u, v)), r = m.f * (0.08 + 0.16 * rnd(i, 83 + S)) / p[2];
 		return p[2] > 1 ? <ellipse key={i} cx={p[0]} cy={p[1]} rx={r} ry={r * 0.45} fill="#2A180C" opacity={0.3 + 0.25 * rnd(i, 84 + S)} /> : null; });
 	const strip = (s: 1 | -1) => Array.from({length: 60}, (_, k) => { const u0 = 10 * Math.pow(UMAX / 10, k / 60), u1 = 10 * Math.pow(UMAX / 10, (k + 1) / 60), fog = fogOf(u0);
@@ -69,8 +70,8 @@ export const BladeMacroC: React.FC<{sp: MacroSpec; id: string; pal: number; shif
 			<path d={`M${l[0] + 6},${l[1] + 1} L${(l[0] + r[0]) / 2 - 3},${l[1] + 1}`} stroke="#5A9CE8" strokeWidth={3} /><path d={`M${(l[0] + r[0]) / 2 + 3},${r[1] + 1} L${r[0] - 6},${r[1] + 1}`} stroke="#5A9CE8" strokeWidth={3} /></g>; })() : null;
 	return <g>
 		<defs>
-			<filter id={`mNear${id}`} filterUnits="userSpaceOnUse" x={-300} y={-300} width={2520} height={1680}><feGaussianBlur stdDeviation="2 9" /></filter>
-			<filter id={`mFar${id}`} filterUnits="userSpaceOnUse" x={-300} y={-300} width={2520} height={1680}><feGaussianBlur stdDeviation="1.3" /></filter>
+			<filter id={`mNear${id}`} x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="2 9" /></filter>
+			<filter id={`mFar${id}`} x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="1.3" /></filter>
 		</defs>
 		<Pool id={`mh${id}`} x={1000} y={hz + 8} rx={720} ry={70} a={0.22} col="#FFC478" />
 		<g transform={`rotate(${m.rot ?? -3.5} 960 540)`}>
