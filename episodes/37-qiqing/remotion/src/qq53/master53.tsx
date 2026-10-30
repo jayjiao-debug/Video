@@ -104,6 +104,9 @@ export const TitleOnGlass: React.FC<{t: number; quad: [number, number][] | null}
 	const sc = f < 18 ? 1 + 0.028 * Math.exp(-f / 6) * Math.sin(2 * Math.PI * f / 7) : 1;
 	const o = 1 - seg(t, TITLE_T53[1] - 0.24, TITLE_T53[1] - 0.02);
 	const {w, h, pw, ph} = TSRC, PX = w / 2, PY = h / 2, [r1, r2] = TITLE53, fs = 124, ls = 0.06;
+	/* v3.1: the second row is the long question (为什么两千多年不生锈？): it gets its own size so it fits inside the plaque
+	   (≤ pw − 100), and the two rows are centred between the lattice rules */
+	const ls2 = 0.04, fs2 = Math.min(fs, Math.floor((pw - 100) / ((r2.length - 0.5) * (1 + ls2)))), gap = 14, top = PY - (fs * 1.08 + gap + fs2 * 1.12) / 2;
 	return <div style={{position: 'absolute', left: 0, top: 0, width: w, height: h, transformOrigin: '0 0', transform: homog(quad, w, h), opacity: o}}>
 		<div style={{position: 'absolute', inset: 0, transform: `scale(${sc})`, transformOrigin: `${PX}px ${PY}px`}}>
 			<div style={{position: 'absolute', left: PX - pw / 2 - 160, top: PY - ph / 2 - 100, width: pw + 320, height: ph + 200, background: 'radial-gradient(closest-side, rgba(10,5,3,0.62), rgba(10,5,3,0.5) 60%, rgba(10,5,3,0))'}} />
@@ -113,10 +116,10 @@ export const TitleOnGlass: React.FC<{t: number; quad: [number, number][] | null}
 				<LatticeRule x0={PX - pw / 2 + 30} x1={PX + pw / 2 - 30} y={PY - ph / 2 + 34} />
 				<LatticeRule x0={PX - pw / 2 + 30} x1={PX + pw / 2 - 30} y={PY + ph / 2 - 34} />
 			</svg>
-			<div style={{position: 'absolute', left: 0, right: 0, top: PY - ph / 2 + 56, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.08, letterSpacing: `${ls}em`, whiteSpace: 'nowrap',
+			<div style={{position: 'absolute', left: 0, right: 0, top, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.08, letterSpacing: `${ls}em`, whiteSpace: 'nowrap',
 				textShadow: '0 -1px 0 rgba(255,255,255,0.55), 0 0 2px rgba(16,7,4,0.9), 0 2px 10px rgba(16,7,4,0.75), 0 0 30px rgba(16,7,4,0.5)'}}>
 				<div style={{color: 'rgba(246,242,234,0.96)'}}><span style={{position: 'relative', left: `${ls / 2}em`}}>{r1}</span></div>
-				<div style={{color: B.gold}}><span style={{position: 'relative', left: `${(0.5 + ls) / 2}em`}}>{r2.slice(0, -1)}<span style={{marginRight: '-0.5em'}}>{r2.slice(-1)}</span></span></div>
+				<div style={{color: B.gold, fontSize: fs2, lineHeight: 1.12, letterSpacing: `${ls2}em`, marginTop: gap}}><span style={{position: 'relative', left: `${(0.5 + ls2) / 2}em`}}>{r2.slice(0, -1)}<span style={{marginRight: '-0.5em'}}>{r2.slice(-1)}</span></span></div>
 			</div>
 		</div></div>; };
 

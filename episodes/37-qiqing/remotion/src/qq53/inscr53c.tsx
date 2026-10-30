@@ -6,19 +6,22 @@ import {sstep, sstep5} from './cam53';
 import {planPos, planK, T_DRAW0} from './cam53c';
 import {SW, LB, bladeHW} from './props53';
 import {Glove} from './parts53c';
-import {MarkSet} from './blade53c';
+import {MarkSet, markAt} from './blade53c';
+import {LOOK} from './swordspec53s';
 import {frameOf, DA, beatAt} from './master53';
 /* ep53 · TakeC leg 10 overlays on the sword plane (plan regime): the wash, the eight marks of the inscription lit per half-bar,
    the 1966 letters flying in the blade's polish with the count per beat, and 「鸠浅 ＝ 勾践」 on DA(24). All of them are attached to the
    sword (planPos), so they ride the camera's glide. The marks are abstract bird-script ornaments (never traced glyphs). */
-export const LATC = '#2A160A';
+export const LATC = LOOK.mark.dim;   // v3.1 design C: the characters are pale (unlit); lit → #FFF2C8 + glow
 export const hexMix = (a: string, b: string, t: number) => { const f = (c: string) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)); const A = f(a), Bc = f(b); return '#' + A.map((v, i) => Math.round(lerp(v, Bc[i], cl(t))).toString(16).padStart(2, '0')).join(''); };
-/** lit amount of mark (side −1 = the 越王鸠浅 row, +1 = the 自作用剑 row; n 0–3) */
+/** lit amount of mark (side −1 = the 越王鸠浅 column, +1 = the 自作用剑 column; n 0–3 from the guard). v3.1: the characters are the
+    real ones in the real order (each column reads from the tip end toward the guard), so the pairs light in reading order —
+    越王 (n 3, 2), 鸠浅 (n 1, 0), 自作 (n 3, 2), 用剑 (n 1, 0) — and the pair that stays lit is 鸠浅 (n 0–1 of column −1) */
 const HB = 1.1321;   // a half bar
-const PAIRS: [number, number, number][] = [[-1, 0, DA(21)], [-1, 2, DA(21) + HB], [1, 0, DA(21) + 2 * HB], [1, 2, DA(21) + 3 * HB]];
+const PAIRS: [number, number, number][] = [[-1, 2, DA(21)], [-1, 0, DA(21) + HB], [1, 2, DA(21) + 2 * HB], [1, 0, DA(21) + 3 * HB]];
 export const litOf = (side: number, n: number, t: number) => { const p = PAIRS.find((q) => q[0] === side && (q[1] === n || q[1] + 1 === n)); if (!p) return 0; const t0 = p[2];
 	const on = seg(t, t0, t0 + 0.12);
-	if (side === -1 && n >= 2) return Math.max(on * (1 - 0.55 * seg(t, t0 + 1.0, t0 + 2.0)), seg(t, 51.954, 52.2));
+	if (side === -1 && n <= 1) return Math.max(on * (1 - 0.55 * seg(t, t0 + 1.0, t0 + 2.0)), seg(t, 51.954, 52.2));
 	return on * (1 - seg(t, t0 + 0.9, t0 + 1.7)); };
 export const Marks: React.FC<{t: number}> = ({t}) => { const k = planK(t); if (k < 5) return null;
 	return <MarkSet id="pl" S={(a, w) => planPos(t, a, w)} o={seg(t, 43.0, 43.9)} col={(side, n) => hexMix(LATC, '#FFF2C8', Math.min(1, litOf(side, n, t)))} lit={(side, n) => Math.min(1, litOf(side, n, t))} />; };
@@ -42,10 +45,10 @@ export const Letters: React.FC<{t: number}> = ({t}) => { const k = planK(t); if 
 /** the blade's outline in screen space (clip for the letters) */
 export const BladeClip: React.FC<{t: number}> = ({t}) => { const pts = Array.from({length: 61}, (_, i) => { const s = LB * i / 60; return planPos(t, SW.bladeA + s, bladeHW(s)); }), pb = Array.from({length: 61}, (_, i) => { const s = LB * (60 - i) / 60; return planPos(t, SW.bladeA + s, -bladeHW(s)); });
 	return <clipPath id="ltBlade"><path d={'M' + [...pts, ...pb].map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join('L') + 'Z'} /></clipPath>; };
-/* ---------- 鸠浅 ＝ 勾践, on DA(24) under the 3rd and 4th marks of the lower row ---------- */
+/* ---------- 鸠浅 ＝ 勾践, on DA(24) under the 3rd and 4th characters of the 越王鸠浅 column (鸠 n 1, 浅 n 0: nearest the guard) ---------- */
 export const Reading: React.FC<{t: number}> = ({t}) => { const T = DA(24); if (frameOf(t) < frameOf(T)) return null; const k = planK(t);
-	const m0 = planPos(t, SW.bladeA + 2.2 + 2 * 1.5, -0.92), m1 = planPos(t, SW.bladeA + 2.2 + 3 * 1.5, -0.92), gx = (m0[0] + m1[0]) / 2, y0 = m0[1];
-	const bx0 = m1[0] - 52, bx1 = m0[0] + 52, o = Math.min(1, 1 - seg(t, 56.1, 56.48));
+	const p0 = markAt(-1, 0), p1 = markAt(-1, 1), m0 = planPos(t, p0[0], p0[1]), m1 = planPos(t, p1[0], p1[1]), gx = (m0[0] + m1[0]) / 2, y0 = Math.max(m0[1], m1[1]);
+	const bx0 = Math.min(m0[0], m1[0]) - 52, bx1 = Math.max(m0[0], m1[0]) + 52, o = Math.min(1, 1 - seg(t, 56.1, 56.48));
 	return <g opacity={o}>
 		<path d={`M${bx0},${y0 + 135} V${y0 + 152} H${bx1} V${y0 + 135}`} fill="none" stroke={B.goldL} strokeWidth={3} /><path d={`M${gx},${y0 + 152} V${y0 + 180}`} stroke={B.goldL} strokeWidth={3} />
 		<Scrim id="k8t" x={gx} y={y0 + 248} rx={520} ry={120} a={0.6} />

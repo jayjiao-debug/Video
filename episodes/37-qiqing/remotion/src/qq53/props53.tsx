@@ -1,6 +1,6 @@
 import React from 'react';
 import {rnd} from '../qq50/kit50';
-import {hwS} from './swordspec53s';
+import {hwS, LOOK} from './swordspec53s';
 import {SwordFlat} from './flat53s';
 import {PommelFace, R_FACE} from './face53';
 /* ep53 越王勾践剑 · style frames (B「漆」 night). Shared props: the sword (drawn from the verified specs in
@@ -10,10 +10,14 @@ import {PommelFace, R_FACE} from './face53';
    The sword's geometry, lattice, guard, hoops, pommel and inscription are swordspec53s (the ONE spec every renderer reads);
    Sword below draws it face-on through flat53s.SwordFlat. SW / LB / bladeHW keep the cm interface the scenes use. */
 
-export const BZ = {hi: '#FFF3CF', lit: '#F4D088', body: '#DCAA5E', mid: '#BC8744', dark: '#80552A', deep: '#4A2E14', line: '#2A180A'};
+/** v3.1 design C: the HILT bronze (near-black greenish: LOOK.hilt) — the scenes' stand-in hilts (chamber53b3 / scene53c HiltLite,
+    the other swords of world53d) take it, so no gold hilt is left; lit stays the gold of a highlight line */
+export const BZ = {hi: LOOK.hilt.spec, lit: '#E8C474', body: LOOK.hilt.body, mid: '#2C302A', dark: '#141713', deep: LOOK.hilt.deep, line: '#050605'};
 export const LAT = '#22140A';                      // the dark of the lattice
 export const PALE = '#FFF0CC';                     // the tin-rich (whitish) diamonds
-export const GLS = {hi: '#D8ECFF', lit: '#6AA8F0', body: '#2F6CC8', deep: '#163C84'};   // blue glass
+/** blue glass (design C: small cells on a dark guard). body is the guard block's fill in the stand-in hilts (HiltLite), so it is the
+    dark guard bronze now — the glass is never one big blue panel */
+export const GLS = {hi: LOOK.glass.hi, lit: '#6AA8F0', body: '#262A24', deep: LOOK.glass.deep};
 export const TQS = {lit: '#86D8C8', body: '#3FA89A', deep: '#1E6A62'};                  // turquoise (back face)
 
 export const SW = {L: 55.6, pomA: 0.8, gripA: 8.2, guardA: 10.2, bladeA: 9.7};   // cm (swordspec53s.A in mm)

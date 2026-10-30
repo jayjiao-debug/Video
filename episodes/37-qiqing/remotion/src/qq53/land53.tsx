@@ -1,7 +1,7 @@
 import React from 'react';
 import {rnd, cl} from '../qq50/kit50';
 import {Cam, V3, toCam, poly, proj, mix} from './parts53';
-import {LBLADE, hwS, edgeS, faceZ, RIDGE_H, LAT, latCells, cellQuad, A, SwordPose, guardEdgeA, markAt, markSeed, birdScript, MARK_K, MARK_H, METAL} from './swordspec53s';
+import {LBLADE, hwS, edgeS, faceZ, RIDGE_H, LAT, latCells, cellQuad, cellDiamond, latStar, A, SwordPose, guardEdgeA, markAt, glyphD, glyphMatrix, MARK_H, METAL, LOOK} from './swordspec53s';
 /* ep53 · BladeLand: the approved MACRO look (macro53 / KF02) rebuilt in world units so ONE renderer serves every distance
    of the one take: the camera skimming 2 cm above the lattice (KF02), the whole sword in its case (KF03), the axis push (KF04)
    and (through sword3d.Blade3D) every other 3-D view of the sword. Units mm; the blade lies on the sword pose: base at
@@ -11,7 +11,9 @@ import {LBLADE, hwS, edgeS, faceZ, RIDGE_H, LAT, latCells, cellQuad, A, SwordPos
    highlight is drawn where metal shows it: the ridge is ONE thin gold crease (METAL.lit, ≤ 1.5 px; it goes to METAL.hi only inside
    a lobe), crisp lines on the raised rims of the pale (tin-rich) cells on their lit side, and small glints on the brightest pale
    cells. fix4-a: the [亮] accent is a broad soft specular LOBE (opt `lobe`) on the pale cells only — the dark lattice breaks it —
-   with a thin bright line on the edge strips at its level; no white ridge stripe. */
+   with a thin bright line on the edge strips at its level; no white ridge stripe.
+   v3.1 design C: the lattice is square diamonds — the dark ground between, each pale diamond in a thin pale frame, a dark 8-point
+   star on every crossing (drawn after all cells); the 8 characters are pale glyphs ON the pattern (no calm zone); plain edge bands. */
 export const A_BL = A.blade0, LBM = LBLADE, RIDGE = RIDGE_H;
 export const hwAt = (s: number) => hwS(Math.max(0, s));
 /** height of the face above the sword's axis plane at (s, w) */
@@ -39,7 +41,7 @@ export type LandOpts = {
 	   clipped to the pale cells; k = 0..1 strength. The ridge inside it goes METAL.lit → METAL.hi, the edge strips get a thin line */
 	lobe?: {y: number; k: number; rx?: number; ry?: number; dx?: number};
 };
-type CellD = {ins: boolean; d: string; dIn: string; core: string; col: string; line: string; lw: number; rim: number; rimD: string; pale: boolean; z: number; px: number; s: number; w: number};
+type CellD = {d: string; fr: string; dIn: string; star: string; col: string; line: string; lw: number; rim: number; rimD: string; pale: boolean; z: number; px: number; s: number; w: number};
 export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts}> = ({c, sp, id, o}) => {
 	const lights = o.lights.map((l) => ({...l, dir: nrm(l.dir)})), shin = o.shin ?? 70, ex = o.exposure ?? 1;
 	const fogOf = (z: number) => (o.fog ? 1 - Math.exp(-Math.max(0, z - o.fog.d0) / o.fog.D) : 0), FOG = o.fog?.col ?? '#1E100B';
@@ -64,16 +66,17 @@ export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts
 		const pxSize = c.f * LAT.A / kc[2]; if (pxSize < 0.6) continue;
 		const sx = c.cx + c.f * kc[0] / kc[2], sy = c.cy - c.f * kc[1] / kc[2]; if (sx < -pxSize * 2 - 200 || sx > 2120 + pxSize * 2 || sy < -pxSize * 2 - 200 || sy > 1280 + pxSize * 2) continue;
 		const n = sub(pxSize);
-		const quad = (sc: number) => { const cs = cellQuad(cc, sc), pts: V3[] = [];
-			for (let e = 0; e < 4; e++) { const [a0, b0] = cs[e], [a1, b1] = cs[(e + 1) % 4];
+		const quadOf = (cs: [number, number][]) => { const pts: V3[] = [], ne = cs.length;
+			for (let e = 0; e < ne; e++) { const [a0, b0] = cs[e], [a1, b1] = cs[(e + 1) % ne];
 				for (let k = 0; k < n; k++) { const tt = k / n, vv = b0 + (b1 - b0) * tt, uu = Math.max(a0 + (a1 - a0) * tt, cut(vv)); pts.push(bw(sp, uu, clampW(uu, vv))); } }
 			return poly(c, pts); };
-		const d = quad(1); if (!d) continue;
+		const quad = (sc: number) => quadOf(cellQuad(cc, sc));
+		const d = quadOf(cellDiamond(cc)); if (!d) continue;
 		const pale = cc.pale, nf = faceN(ca, clampW(ca, cw)), L0 = light(nf, Pc, shin), Lr = light(nf, Pc, shin * 2.2), fog = fogOf(kc[2]), fl = flashAt(ca);
 		const jit = (rnd(cc.i * 31 + cc.j, 71) - 0.5) * 0.12;
-		const base = mix(pale ? LAT.pale : LAT.gold, pale ? LAT.paleDk : LAT.goldDk, 0.2 + jit);
+		const base = mix(mix(LAT.pale, LAT.paleDk, 0.2 + jit), '#3E3020', LOOK.wear * 0.5 * cl(1 - ca / 140));   // a little darker in the worn zone near the guard
 		let col = mix(base, '#3A2410', cl(0.36 - 0.5 * L0.df));
-		if (o.lift) col = mix(col, pale ? LAT.paleHi : '#E2AE5C', o.lift);
+		if (o.lift) col = mix(col, LAT.paleHi, o.lift);
 		/* the cell's own sheen stays low (it is a dull, finely ground face); the bright metal is in the rims, the ridge and the glints */
 		col = mix(col, '#FFF4DC', cl(L0.sp * (pale ? 0.32 : 0.12) + fl * (pale ? 0.25 : 0.1)));
 		if (o.sheen && o.sheen.k > 0) col = mix(col, '#F2F6F8', o.sheen.k * Math.exp(-Math.pow((ca / LBM - o.sheen.pos) / 0.07, 2)) * (pale ? 0.85 : 0.6));
@@ -87,14 +90,16 @@ export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts
 			const k0 = toL < 0 ? 0 : 2, ids = [(k0 + 3) % 4, k0, (k0 + 1) % 4], pts: V3[] = [];
 			for (let e = 0; e < 2; e++) { const [a0, b0] = q[ids[e]], [a1, b1] = q[ids[e + 1]]; for (let k = 0; k <= 4; k++) { const tt = k / 4, uu = Math.max(0, a0 + (a1 - a0) * tt); pts.push(bw(sp, uu, clampW(uu, b0 + (b1 - b0) * tt), hAt(uu, clampW(uu, b0 + (b1 - b0) * tt)) + 0.05)); } }
 			rimD = poly(c, pts, false); }
-		cells.push({ins: ca > 12 && ca < 76, d, dIn: pxSize > 7 ? quad(LAT.inSc) : '', core: !pale && pxSize > 3 ? quad(LAT.coreSc) : '', col, line: mix('#22140A', FOG, fog * 0.8), lw: Math.max(0.35, c.f * LAT.line * 0.6 / kc[2]), rim, rimD, pale, z: kc[2], px: pxSize, s: ca, w: cw}); }
+		/* the star on this cell's node 0 (each crossing belongs to exactly one cell), cut at the guard's ∧ like the cells */
+		const st = pxSize > 4 ? (() => { const pts = latStar(cc).map(([u, v]) => bw(sp, Math.max(u, cut(v)), clampW(Math.max(u, cut(v)), v))); return poly(c, pts); })() : '';
+		cells.push({d, fr: pxSize > 9 ? quad(LAT.frSc) : '', dIn: '', star: st, col, line: mix(LAT.ink, FOG, fog * 0.8), lw: Math.max(0.35, c.f * LAT.frame / kc[2]), rim, rimD, pale, z: kc[2], px: pxSize, s: ca, w: cw}); }
 	cells.sort((a, b) => b.z - a.z);
 	const CellG = (k: CellD, i: number) => <g key={i}>
-		<path d={k.d} fill={k.col} stroke={k.line} strokeWidth={k.lw} strokeOpacity={k.ins ? 0.5 : 1} strokeLinejoin="round" />
-		{k.dIn && <path d={k.dIn} fill="none" stroke={k.line} strokeWidth={k.lw * 0.38} strokeOpacity={k.ins ? 0.35 : 0.8} />}
-		{k.core && !k.ins && <path d={k.core} fill={k.line} opacity={0.72} />}
+		{k.fr && <path d={k.fr} fill="none" stroke={k.col} strokeWidth={Math.min(3, k.lw)} strokeOpacity={0.8 * LAT.paleOp} strokeLinejoin="round" />}
+		<path d={k.d} fill={k.col} opacity={LAT.paleOp} />
 		{k.rimD && <path d={k.rimD} fill="none" stroke="#FFFBEE" strokeWidth={Math.max(0.6, Math.min(2.4, k.lw * 0.55))} strokeOpacity={cl(k.rim)} strokeLinecap="round" strokeLinejoin="round" />}
 	</g>;
+	const StarG = (k: CellD, i: number) => k.star ? <path key={`s${i}`} d={k.star} fill={k.line} opacity={LAT.inkOp} /> : null;
 	const nearG = o.dof ? cells.filter((k) => k.z < o.dof!.near) : [], farG = o.dof ? cells.filter((k) => k.z > o.dof!.far) : [], midG = o.dof ? cells.filter((k) => k.z >= o.dof!.near && k.z <= o.dof!.far) : cells;
 	/* ---- edge strips, ridge, outline ---- */
 	const NS = 96, ss = Array.from({length: NS + 1}, (_, k) => Math.max(sMin, -2) + (LBM - Math.max(sMin, -2)) * k / NS).map((s) => Math.max(0, s));
@@ -102,7 +107,7 @@ export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts
 		const d = poly(c, [bw(sp, s0, side * Math.max(0, a0 - edgeS(s0))), bw(sp, s0, side * a0), bw(sp, s1, side * a1), bw(sp, s1, side * Math.max(0, a1 - edgeS(s1)))]); if (!d) return null;
 		const z = toCam(c, P)[2]; if (z < 2) return null;
 		const Ls = light(nrm([0, side * 0.45, 1]), P, shin * 0.7);
-		let col = mix(side > 0 ? '#E8C886' : '#B88A48', '#FFFBEA', cl(Ls.sp * 0.9 + flashAt(s0) * 0.5));
+		let col = mix(side > 0 ? LOOK.edge.lit : mix(LOOK.edge.dark, LOOK.blade.dark, 0.45), '#FFFBEA', cl(Ls.sp * 0.9 + flashAt(s0) * 0.5));
 		if (o.sheen && o.sheen.k > 0) col = mix(col, '#F6FAFC', o.sheen.k * Math.exp(-Math.pow((s0 / LBM - o.sheen.pos) / 0.07, 2)));
 		col = mix(mix(col, '#120804', 1 - ex), FOG, fogOf(z) * 0.92);
 		return <path key={`st${side}_${k}`} d={d} fill={col} stroke={col} strokeWidth={0.6} />; }));
@@ -135,8 +140,9 @@ export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts
 	const marks = o.marks === false ? [] : [1, -1].flatMap((side) => [0, 1, 2, 3].map((n) => { const [a, w] = markAt(side, n), s = a - A_BL;
 		const on = (ds: number, dw: number) => proj(c, bw(sp, s + ds, w + dw, hAt(s + ds, w + dw) + 0.06)), P0 = on(0, 0); if (P0[2] < 3) return null;
 		const Ps = on(1, 0), Pw = on(0, 1), px = Math.hypot(Ps[0] - P0[0], Ps[1] - P0[1]) * MARK_H; if (px < 5) return null;
-		const g = birdScript(markSeed(side, n)), col = mix(LAT.ink, FOG, fogOf(P0[2]) * 0.85), m = `matrix(${((Pw[0] - P0[0]) * MARK_K).toFixed(3)} ${((Pw[1] - P0[1]) * MARK_K).toFixed(3)} ${((Ps[0] - P0[0]) * MARK_K).toFixed(3)} ${((Ps[1] - P0[1]) * MARK_K).toFixed(3)} ${P0[0].toFixed(1)} ${P0[1].toFixed(1)})`;
-		return <g key={`m${side}${n}`} transform={m} opacity={0.85 * ex * cl((px - 5) / 8)}>{g.d.map((p, i) => <path key={i} d={p} fill="none" stroke={col} strokeWidth={0.085} strokeLinecap="round" strokeLinejoin="round" />)}<circle cx={g.eye[0]} cy={g.eye[1]} r={0.06} fill={col} /></g>; }));
+		const d = glyphD(side, n), col = mix(LOOK.mark.col, FOG, fogOf(P0[2]) * 0.85), m = glyphMatrix([P0[0], P0[1]], [Ps[0], Ps[1]], [Pw[0], Pw[1]]);
+		return <g key={`m${side}${n}`} transform={m} opacity={0.9 * ex * cl((px - 5) / 8)}><path d={d} fill="none" stroke={LAT.ink} strokeOpacity={LOOK.mark.glow} strokeWidth={LOOK.mark.w * 2.6} strokeLinecap="round" strokeLinejoin="round" />
+			<path d={d} fill="none" stroke={col} strokeWidth={LOOK.mark.w} strokeLinecap="round" strokeLinejoin="round" /></g>; }));
 	/* fix4-a: the lobe itself — a soft ellipse of light on the pale cells only (their union is the clip; the dark lattice breaks it),
 	   and a thin bright line on both edge strips at the lobe's level */
 	const paleClip = lobe ? cells.filter((k) => k.pale && k.px > 4 && !(o.dof && (k.z < o.dof.near || k.z > o.dof.far))).map((k) => k.d).join(' ') : '';
@@ -153,10 +159,10 @@ export const BladeLand: React.FC<{c: Cam; sp: SwordPose; id: string; o: LandOpts
 	return <g>
 		<defs>{o.dof && <filter id={`ln${id}`} x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation={o.dof.nb} /></filter>}
 			{o.dof && o.dof.fb > 0 && <filter id={`lf${id}`} x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation={o.dof.fb} /></filter>}</defs>
-		{outline && <path d={outline} fill="#2A180A" opacity={0.85 * ex} />}
-		{farG.length > 0 && <g filter={o.dof!.fb > 0 ? `url(#lf${id})` : undefined}>{farG.map(CellG)}</g>}
-		{midG.map(CellG)}
-		{nearG.length > 0 && <g filter={`url(#ln${id})`}>{nearG.map(CellG)}</g>}
+		{outline && <path d={outline} fill={mix(LAT.ink, FOG, fogOf(toCam(c, bw(sp, LBM / 2, 0))[2]) * 0.6)} opacity={0.92 * ex} />}
+		{farG.length > 0 && <g filter={o.dof!.fb > 0 ? `url(#lf${id})` : undefined}>{farG.map(CellG)}{farG.map(StarG)}</g>}
+		{midG.map(CellG)}{midG.map(StarG)}
+		{nearG.length > 0 && <g filter={`url(#ln${id})`}>{nearG.map(CellG)}{nearG.map(StarG)}</g>}
 		{lobeG}
 		{strips}
 		{edgeLines}

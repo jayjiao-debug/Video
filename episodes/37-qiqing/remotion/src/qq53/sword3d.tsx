@@ -1,16 +1,19 @@
 import React from 'react';
 import {lerp} from '../qq50/kit50';
 import {Cam, V3, proj, poly, toCam, mix} from './parts53';
-import {GLS, TQS, bladeHW, LB} from './props53';
-import {A, R_POM, R_GRIP, R_HOOP, HOOPS, HOOP_HL, POM_PROF, GUARD_OUT, guardT, inlayPanel, inlayCells, METAL as BZ, SwordPose} from './swordspec53s';
+import {bladeHW, LB} from './props53';
+import {A, R_POM, R_GRIP, R_HOOP, HOOPS, HOOP_HL, POM_PROF, GUARD_OUT, guardT, guardRelief, EYE, commaCell, smoothPath, LOOK, SwordPose} from './swordspec53s';
+/** the hilt and guard are near-black greenish bronze (design C), NOT gold: the old gold roles mapped onto LOOK.hilt */
+const H = {...LOOK.hilt, mid: LOOK.hilt.body, hi: LOOK.hilt.spec, dark: '#141713', line: '#050605', relief: LOOK.relief.fill, reliefLit: LOOK.relief.lit, recess: LOOK.relief.recess, glass: LOOK.glass, turq: LOOK.turq};
+const BZ = H;
 import {BladeLand, LandOpts, Light} from './land53';
 import {PommelFace} from './face53';
 /* ep53 · the sword as a 3-D model drawn in SVG through the look-at camera (parts53). Units: mm; every dimension from
    swordspec53s (B1–B6): the local axis a runs from the pommel's end face (a = 0) to the tip (a = 556), lying level, the front
    face (blue glass) up. World placement: pommel end at (x0, ya, z0), axis along dir·x.
    - Blade3D = land53.BladeLand (the same lit lattice as the one take), clipped at the guard's inverted V;
-   - Guard3D = the guard outline extruded to its thickness, faces back-culled and painted far → near; glass on the front face,
-     turquoise on the back face;
+   - Guard3D = the guard outline extruded to its thickness, faces back-culled and painted far → near; the beast mask with the eye
+     and comma cells, glass on the front face, turquoise on the back face (v3.1: design C, near-black bronze);
    - Hilt3D = the grip, its two hoops and the pommel as surfaces of revolution (silhouettes taken per station, so they stay right
      when the camera looks along the axis), the end face with its 11 rings drawn by face53.PommelFace (the dive's ring match);
    - Sword3D paints the three in the order the camera's place along the axis gives (no part ever pokes through another). */
@@ -29,10 +32,11 @@ export const LIGHTS3D: Light[] = [{dir: [0.08, -0.28, 0.96], k: 0.95}, {dir: [-0
 export const Blade3D: React.FC<{c: Cam; sp: SwordPose; id: string; lit?: number; sheen?: number; sheenCol?: string; fog?: (d: number) => number; fogCol?: string; rust?: number; land?: Partial<LandOpts>}> = ({c, sp, id, lit = 1, sheen = -1, land}) =>
 	<BladeLand c={c} sp={sp} id={id} o={{lights: LIGHTS3D, shin: 90, lift: 0.18 * lit, sheen: sheen >= 0 ? {pos: sheen, k: 0.62} : undefined, guardCut: true, ...land}} />;
 
-/** guard: the shared outline extruded to ±guardT(a); the front face (z+) carries the blue glass, the back face turquoise */
+/** guard: the shared outline extruded to ±guardT(a), near-black greenish bronze (design C); each broad face carries the beast
+    mask (rounded raised scrolls) and the round eye + comma cells: blue glass on the front face (z+), turquoise on the back (B5) */
 export const Guard3D: React.FC<{c: Cam; sp: SwordPose; id: string; lite?: number}> = ({c, sp, id, lite = 0}) => {
 	const O = GUARD_OUT, n = O.length, F = (k: number, s: 1 | -1) => W(sp, O[k][0], O[k][1], s * guardT(O[k][0]));
-	type Face = {d: string; z: number; kind: 'front' | 'back' | 'side'; shade: number; end?: boolean};
+	type Face = {d: string; z: number; kind: 'front' | 'back' | 'side'; shade: number};
 	const faces: Face[] = [];
 	const depth = (pts: V3[]) => pts.reduce((m, q) => m + toCam(c, q)[2], 0) / pts.length;
 	const front = O.map((_, k) => F(k, 1)), back = O.map((_, k) => F(k, -1));
@@ -43,31 +47,36 @@ export const Guard3D: React.FC<{c: Cam; sp: SwordPose; id: string; lite?: number
 		const nw: V3 = [sp.dir * -dw, da, 0], q = [F(k, 1), F(k1, 1), F(k1, -1), F(k, -1)], m = q.reduce((s, p) => [s[0] + p[0] / 4, s[1] + p[1] / 4, s[2] + p[2] / 4] as V3, [0, 0, 0] as V3);
 		if (dot(nw, [c.p[0] - m[0], c.p[1] - m[1], c.p[2] - m[2]]) <= 0) continue;
 		const ln = Math.hypot(nw[0], nw[1]) || 1, shade = 0.5 + 0.5 * (-nw[1] / ln);       // faces toward −y (the front of the case) are lit
-		faces.push({d: poly(c, q), z: depth(q), kind: 'side', shade, end: da === 0 && O[k][0] === A.guard0}); }
+		faces.push({d: poly(c, q), z: depth(q), kind: 'side', shade}); }
 	faces.sort((a, b) => b.z - a.z);
-	const P = (pts: [number, number][], s: 1 | -1, lift = 0.25) => pts.map(([a, w]) => W(sp, a, w, s * (guardT(a) + lift)));
-	/* fix4-a (#14): the guard's face toward the pommel (the end face at a = guard0) carries the same turquoise inlay and bronze
-	   cloisons as the faces, the panel pattern laid across its height (a 84.2 → 99.3 maps to z top → bottom) */
-	const TE = guardT(A.guard0) - 1.6, PE = (pts: [number, number][], lift = 0.25) => pts.map(([a, w]) => W(sp, A.guard0 - lift, w * 0.86, lerp(TE, -TE, (a - 84.2) / (99.3 - 84.2))));
-	const endInlay = (f: {end?: boolean}) => !f.end ? null : ([1, -1] as const).map((s) => <g key={`e${s}`}><path d={poly(c, PE(inlayPanel(s)))} fill={`url(#gt${id})`} />
-		{inlayCells(s).map((ln, k) => <path key={k} d={poly(c, PE(ln, 0.35), false)} stroke={BZ.lit} strokeWidth={Math.max(0.8, c.f * 1.1 / Math.max(1, toCam(c, W(sp, 92, 0, 0))[2]))} fill="none" strokeOpacity={0.9} />)}</g>);
+	const ppm = c.f / Math.max(1, toCam(c, W(sp, 92, 0, 0))[2]), px = (mm: number, min = 0.5) => Math.max(min, mm * ppm);
+	/* a face point lifted off the broad face s (±1) by lift mm, projected */
+	const S2 = (a: number, w: number, s: 1 | -1, lift: number): [number, number] => { const p = proj(c, W(sp, a, w, s * (guardT(a) + lift))); return [p[0], p[1]]; };
+	const ok = (pts: [number, number][]) => pts.every((q) => Number.isFinite(q[0]) && Number.isFinite(q[1]));
+	const mask = (sd: 1 | -1, back: boolean) => { const inl = back ? H.turq : H.glass;
+		return ([1, -1] as const).map((sg) => { const rel = guardRelief(sg).map((r, i) => { const q = r.map(([a, w]) => S2(a, w, sd, 0.3)); if (!ok(q)) return null;
+				const d = i === 3 ? 'M' + q.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('L') + 'Z' : smoothPath(q);
+				return <g key={i}><path d={d} fill="none" stroke={H.recess} strokeWidth={px(1.1, 0.7)} strokeLinejoin="round" />
+					<path d={d} fill={mix(H.relief, H.reliefLit, 0.25 * lite)} stroke={H.reliefLit} strokeWidth={px(0.3, 0.35)} strokeOpacity={0.8} strokeLinejoin="round" /></g>; });
+			const e = S2(EYE.a, sg * EYE.w, sd, 0.45), cm = commaCell(sg).map(([a, w]) => S2(a, w, sd, 0.45)), hl = S2(EYE.a + 1.2, sg * EYE.w + 1.1, sd, 0.5);
+			return <g key={sg}>{rel}
+				{ok([e]) && <circle cx={e[0]} cy={e[1]} r={px(EYE.r + 0.9)} fill={H.recess} />}
+				{ok([e]) && <circle cx={e[0]} cy={e[1]} r={px(EYE.r)} fill={`url(#${back ? 'gt' : 'gg'}${id})`} />}
+				{ok([hl]) && <circle cx={hl[0]} cy={hl[1]} r={px(0.6, 0.4)} fill={inl.hi} opacity={0.7} />}
+				{ok(cm) && <path d={smoothPath(cm)} fill={`url(#${back ? 'gt' : 'gg'}${id})`} stroke={H.recess} strokeWidth={px(0.7, 0.5)} />}</g>; }); };
 	return <g>
-		<defs><linearGradient id={`gg${id}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={GLS.lit} /><stop offset="0.55" stopColor={GLS.body} /><stop offset="1" stopColor={GLS.deep} /></linearGradient>
-			<linearGradient id={`gt${id}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={TQS.lit} /><stop offset="0.55" stopColor={TQS.body} /><stop offset="1" stopColor={TQS.deep} /></linearGradient></defs>
+		<defs><radialGradient id={`gg${id}`} cx="0.4" cy="0.36" r="0.8"><stop offset="0" stopColor={mix(H.glass.hi, H.glass.body, 0.2)} /><stop offset="0.35" stopColor={H.glass.body} /><stop offset="1" stopColor={H.glass.deep} /></radialGradient>
+			<radialGradient id={`gt${id}`} cx="0.4" cy="0.36" r="0.8"><stop offset="0" stopColor={mix(H.turq.hi, H.turq.body, 0.2)} /><stop offset="0.35" stopColor={H.turq.body} /><stop offset="1" stopColor={H.turq.deep} /></radialGradient></defs>
 		{faces.map((f, i) => f.d ? <g key={i}>
-			{(() => { const fc = f.kind === 'side' ? mix(mix(BZ.deep, BZ.mid, f.shade), '#E8B878', 0.25 * lite) : mix(BZ.mid, BZ.lit, 0.15 + 0.2 * lite);
-				return <path d={f.d} fill={fc} stroke={f.kind === 'side' ? fc : BZ.line} strokeOpacity={f.kind === 'side' ? 1 : 0.55} strokeWidth={f.kind === 'side' ? 0.8 : 1} strokeLinejoin="round" />; })()}
-			{/* producer: the guard's end faces stay plain bronze (the glass and turquoise are on the two broad faces only, facts B5) */ false && endInlay(f)}
-			{f.kind !== 'side' && ([1, -1] as const).map((s) => { const sd = f.kind === 'front' ? 1 : -1;
-				return <g key={s}><path d={poly(c, P(inlayPanel(s), sd))} fill={f.kind === 'front' ? `url(#gg${id})` : `url(#gt${id})`} />
-					{inlayCells(s).map((ln, k) => <path key={k} d={poly(c, P(ln, sd, 0.35), false)} stroke={BZ.lit} strokeWidth={Math.max(0.8, c.f * 1.1 / Math.max(1, toCam(c, W(sp, 92, 0, 0))[2]))} fill="none" strokeOpacity={0.9} />)}</g>; })}
-			{f.kind === 'front' && <path d={poly(c, [W(sp, 82.4, -22.6, guardT(82) + 0.3), W(sp, 82.4, 22.6, guardT(82) + 0.3)], false)} stroke={BZ.hi} strokeWidth={Math.max(0.8, c.f * 0.7 / Math.max(1, toCam(c, W(sp, 92, 0, 0))[2]))} fill="none" opacity={0.75} />}
+			{(() => { const fc = f.kind === 'side' ? mix(mix(H.deep, H.lit, 0.15 + 0.55 * f.shade), '#B89868', 0.18 * lite) : mix(H.body, H.lit, 0.12 + 0.25 * lite);
+				return <path d={f.d} fill={fc} stroke={f.kind === 'side' ? fc : H.line} strokeOpacity={f.kind === 'side' ? 1 : 0.8} strokeWidth={f.kind === 'side' ? 0.8 : 1} strokeLinejoin="round" />; })()}
+			{f.kind !== 'side' && mask(f.kind === 'front' ? 1 : -1, f.kind === 'back')}
 		</g> : null)}
 	</g>; };
 
 /** the hilt's light (world, toward the light): the case spot from above-front */
 const L_HILT: V3 = [0.08, -0.28, 0.96];
-/** grip (a bound cylinder carrying two raised hoops) and the pommel disc; its end face with the 11 rings is face53.PommelFace.
+/** grip (a smooth near-black cylinder carrying two low thin hoops; v3.1 design C: no cord) and the pommel disc; its end face with the 11 rings is face53.PommelFace.
     v3: the grip is cut into three sections between the hoops, and sections and hoops are painted far → near along the axis, each
     as the convex hull of its two end circles, so a nearer section hides the back half of a hoop's end ring (the hoops sit ON the
     grip instead of floating round it). Each hoop is a short solid band (R_HOOP over R_GRIP): its side shaded by the light round
@@ -104,7 +113,7 @@ export const Hilt3D: React.FC<{c: Cam; sp: SwordPose; id: string; ringGlow?: num
 	const half = (a: number, r: number) => Array.from({length: 13}, (_, i) => { const ph = -Math.PI / 2 + i / 12 * Math.PI; return W(sp, a, r * (Math.cos(ph) * n0[0] + Math.sin(ph) * oy), r * (Math.cos(ph) * n0[1] + Math.sin(ph) * oz)); });
 	const foot = (a0: number, a1: number, key: string) => { const d = poly(c, [...half(a0, R_GRIP + 0.04), ...half(a1, R_GRIP + 0.04).reverse()]); return d ? <path key={key} d={d} fill={BZ.line} opacity={0.38} /> : null; };
 	const H0 = HOOPS[0], H1 = HOOPS[1], SEGS: [number, number][] = [[A.grip0 - 0.5, H0 - HOOP_HL], [H0 + HOOP_HL, H1 - HOOP_HL], [H1 + HOOP_HL, A.grip1]];
-	const segPiece = ([a0, a1]: [number, number], i: number) => solid(a0, a1, R_GRIP, `url(#hs${id})`, `s${i}`, <>{cord(a0, a1)}
+	const segPiece = ([a0, a1]: [number, number], i: number) => solid(a0, a1, R_GRIP, `url(#hs${id})`, `s${i}`, <>{void cord}
 		{HOOPS.map((h) => Math.abs(a1 - (h - HOOP_HL)) < 0.01 ? <g key={h}>{foot(a1 - 1.4, a1, `fa${h}`)}</g> : Math.abs(a0 - (h + HOOP_HL)) < 0.01 ? <g key={h}>{foot(a0, a0 + 1.4, `fb${h}`)}</g> : null)}</>);
 	/* a hoop: the band, its end ring toward the camera (lit rim on the light's side, dark where it meets the grip) */
 	const hoop = (a: number) => { const capA = ac < a ? a - HOOP_HL : a + HOOP_HL, sw = Math.max(0.7, ppm * 0.38);
@@ -125,7 +134,7 @@ export const Hilt3D: React.FC<{c: Cam; sp: SwordPose; id: string; ringGlow?: num
 	const pommel = <path key="pom" d={rev(POM_PROF)} fill={`url(#hg${id})`} stroke={BZ.line} strokeOpacity={0.5} strokeWidth={1} />;
 	/* seen from the blade side, the disc's rolled rim shows as a lit ring round the flare */
 	/* seen from the blade side, the disc's back: the rolled rim, then the flare narrowing into the grip (solid surfaces) */
-	const rimBack = ac > 8 ? (() => { const d = poly(c, circleYZ(sp, 1.6, R_POM, 56)), d2 = poly(c, circleYZ(sp, 2.4, POM_PROF[2][1], 56)), d3 = poly(c, circleYZ(sp, 4.6, POM_PROF[4][1], 48)); if (!d) return null;
+	const rimBack = ac > 9 ? (() => { const d = poly(c, circleYZ(sp, 2.2, R_POM, 56)), d2 = poly(c, circleYZ(sp, 3.0, POM_PROF[3][1], 56)), d3 = poly(c, circleYZ(sp, 4.0, POM_PROF[4][1], 48)); if (!d) return null;
 		return <g key="rim"><path d={d} fill={BZ.dark} stroke={BZ.line} strokeOpacity={0.5} strokeWidth={1} /><path d={d2} fill={`url(#hg${id})`} /><path d={d3} fill={BZ.mid} opacity={0.55} /></g>; })() : null;
 	const face = ac < -0.5 && fd > 1 ? <PommelFace key="face" id={id} pt={facePt} ppm={c.f / fd} hi={hi ?? 0.4 + ringGlow} /> : null;
 	const parts = ac < 0 ? [grip, ...hoops, pommel, face] : [pommel, rimBack, grip, ...hoops];
@@ -142,5 +151,5 @@ export const Hilt3D: React.FC<{c: Cam; sp: SwordPose; id: string; ringGlow?: num
 export const Sword3D: React.FC<{c: Cam; sp: SwordPose; id: string; sheen?: number; fog?: (d: number) => number; fogCol?: string; ringGlow?: number; hi?: number; land?: Partial<LandOpts>; lite?: number}> = ({c, sp, id, sheen, ringGlow, hi, land, lite}) => {
 	const ac = axialOf(c, sp);
 	const blade = <Blade3D key="b" c={c} sp={sp} id={id} sheen={sheen} land={land} />, guard = <Guard3D key="g" c={c} sp={sp} id={id} lite={lite} />, hilt = <Hilt3D key="h" c={c} sp={sp} id={id} ringGlow={ringGlow} hi={hi} />;
-	return <g>{ac > A.guard1 ? [hilt, guard, blade] : ac < A.guard0 ? [blade, guard, hilt] : [hilt, blade, guard]}</g>; };
+	return <g>{ac > A.apex ? [hilt, guard, blade] : ac < A.guard0 ? [blade, guard, hilt] : [hilt, blade, guard]}</g>; };
 export {A_BLADE, LEN, R_POM, bladeHW, LB, lerp, pathOf};

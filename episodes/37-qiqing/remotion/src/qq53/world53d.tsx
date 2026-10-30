@@ -61,7 +61,7 @@ const Slab: React.FC<{c: Cam; x: number; yb: number; z0: number; z1: number; dz:
 const sheathHW = (a: number) => (a - SW.bladeA > LB ? 0.3 : bladeHW(Math.min(LB - 0.5, Math.max(0, a - SW.bladeA))) + 0.55);
 /** the hero: Sword3D lying on the inner floor, hilt toward −x (screen-right, as in the draw); `draw` cm out of the sheath;
     the sheath (fixed) on top of it, at `sho` opacity until its beat (then a top shell drops onto it: the sheath closes) */
-const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; plankDz: number; sho: number}> = ({c, draw, lit, plank, plankDz, sho}) => { const n = 36, cm = toMM(c);
+const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; plankDz: number; sho: number; e1?: number}> = ({c, draw, lit, plank, plankDz, sho, e1 = 0}) => { const n = 36, cm = toMM(c);
 	const sp: SwordPose = {x0: (SX0 - draw / 100) * 1000, ya: SYA * 1000, z0: SZ * 1000, dir: 1};
 	const am = SW.guardA, at = SW.L + 2.2, aa = (i: number) => lerp(am, at, i / n);
 	const edge = (sgn: number, k = 1, dz = 0.45) => Array.from({length: n + 1}, (_, i) => swAt(aa(i), sgn * sheathHW(aa(i)) * k * (i === n ? 0.5 : 1), dz));
@@ -77,14 +77,17 @@ const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; p
 	return <g>
 		<Pool id="w53sw" x={mid[0]} y={mid[1]} rx={Math.max(90, span * 0.62)} ry={Math.max(36, span * 0.2)} a={0.42 * lit} col="#FFC870" />
 		{/* fix4-d #7: when the sword is small in frame (L1), a broader warm glow keeps it the brightest point over the layers */}
+		{/* v3.1 E1: the hero's glow is larger and warmer than the other swords' (it stays the brightest) */}
+		{e1 > 0.004 && <><Pool id="w53sw3" x={mid[0]} y={mid[1]} rx={span * 1.05} ry={span * 0.36} a={0.42 * e1} col="#FFC870" /><Pool id="w53sw4" x={mid[0]} y={mid[1]} rx={span * 0.62} ry={span * 0.16} a={0.4 * e1} col="#FFE2A8" /></>}
 		{span < 300 && <Pool id="w53sw2" x={mid[0]} y={mid[1]} rx={Math.max(150, span * 1.1)} ry={Math.max(64, span * 0.42)} a={0.32 * cl((300 - span) / 120)} col="#FFC870" />}
 		<Sword3D c={cm} sp={sp} id="w53h" />
 		{shell(plank > 0 && plankDz < 0.0005 ? 1 : sho, 0)}
 		{plank > 0 && plankDz >= 0.0005 && shell(1, plankDz)}
 	</g>; };
 /** one of the tomb's other swords (E1): real size (58 cm), lying flat on the 椁's floor boards in the side compartment behind the coffins;
-    dull bronze, the guard bronze too (blue glass is the hero's alone); lit = 0..1. fix4-d #3: no halo: a contact shadow and a small
-    Pool (a 0.18) on the boards, the metal at most ~0.6 of the hero's light */
+    the guard bronze too (blue glass is the hero's alone); lit = 0..1. v3.1 (owner: "a better colouring and glow so the viewer knows
+    what we are referring to"): lit, a warm bronze-gold well above the boards, a clear outline (dark keyline + gold edge), the ridge
+    caught, a soft warm glow on the boards under each; still below the hero (whose E1 glow is larger: SwordSheath `e1`) */
 const OtherSword: React.FC<{c: Cam; x0: number; y: number; ang: number; lit: number; id: number}> = ({c, x0, y, ang, lit, id}) => {
 	const L = 0.5, z = ZG + 0.012, ca = Math.cos(ang), sa = Math.sin(ang), at = (a: number, w: number, zz = z): V3 => [x0 + ca * a - sa * w, y + sa * a + ca * w, zz];
 	const n = 12, bladeQ = (zz: number, k = 1, dw = 0) => [...Array.from({length: n + 1}, (_, i) => at(0.08 + L * i / n, (0.022 * k + dw) * (1 - Math.pow(i / n, 3)), zz)), ...Array.from({length: n + 1}, (_, i) => at(0.08 + L * (n - i) / n, -(0.022 * k + dw) * (1 - Math.pow((n - i) / n, 3)), zz))];
@@ -92,15 +95,23 @@ const OtherSword: React.FC<{c: Cam; x0: number; y: number; ang: number; lit: num
 	const a0 = pp(c, at(0, 0)), a1 = pp(c, at(L, 0)), mid: P2 = [(a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2], span = Math.hypot(a1[0] - a0[0], a1[1] - a0[1]), ppm = c.f / m0[2];
 	const guard = poly(c, [at(0.065, -0.026), at(0.065, 0.026), at(0.085, 0.026), at(0.085, -0.026)]), grip = poly(c, [at(0.005, -0.009), at(0.005, 0.009), at(0.065, 0.009), at(0.065, -0.009)]), pom = poly(c, [at(-0.004, -0.018), at(-0.004, 0.018), at(0.008, 0.018), at(0.008, -0.018)]);
 	const sh = (q: V3): V3 => [q[0], q[1] + 0.012, ZG + 0.001], shadow = poly(c, bladeQ(ZG + 0.001, 1.3, 0.01).map(sh)) + poly(c, [at(-0.01, -0.03), at(-0.01, 0.03), at(0.09, 0.03), at(0.09, -0.03)].map(sh));
-	const base = '#2A1C12', k = 0.45 * lit;
+	const base = '#2A1C12', k = lit, hilt = poly(c, [at(-0.004, -0.026), at(-0.004, 0.026), at(0.085, 0.026), at(0.085, -0.026)]);
+	const g0 = pp(c, at(0.08, 0)), g1 = pp(c, at(0.08 + L, 0));
 	return <g>
-		<defs><filter id={`w53os${id}`} x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation={Math.max(1.2, 0.008 * ppm)} /></filter></defs>
-		{lit > 0.001 && <Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.62} ry={span * 0.2} a={0.18 * lit} col="#FFC870" />}
-		<path d={shadow} fill="#070403" opacity={0.75} filter={`url(#w53os${id})`} />
-		<path d={poly(c, blade)} fill={mix(base, '#C49A58', k)} stroke="#E8BC78" strokeOpacity={0.08 + 0.3 * lit} strokeWidth={1.2} />
-		<path d={poly(c, [at(0.08, 0), at(0.08 + L, 0)], false)} stroke={BZ.lit} strokeOpacity={0.35 * lit} strokeWidth={1} fill="none" />
-		<path d={grip} fill={mix(base, BZ.mid, 0.3 + 0.3 * lit)} /><path d={guard} fill={mix(base, BZ.dark, 0.5 + 0.4 * lit)} stroke={mix(base, BZ.mid, 0.7 * lit)} strokeWidth={1} /><path d={pom} fill={mix(base, BZ.mid, 0.3 + 0.3 * lit)} />
+		<defs><filter id={`w53os${id}`} x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation={Math.max(1.2, 0.008 * ppm)} /></filter>
+			<filter id={`w53og${id}`} x="-30%" y="-150%" width="160%" height="400%"><feGaussianBlur stdDeviation={Math.max(4, 0.03 * ppm)} /></filter>
+			<linearGradient id={`w53ob${id}`} gradientUnits="userSpaceOnUse" x1={g0[0]} y1={g0[1]} x2={g1[0]} y2={g1[1]}><stop offset="0" stopColor={mix(base, '#E2B66C', k)} /><stop offset="0.55" stopColor={mix(base, '#D2A35A', k)} /><stop offset="1" stopColor={mix(base, '#B88848', k)} /></linearGradient></defs>
+		{lit > 0.001 && <Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.66} ry={Math.max(26, span * 0.2)} a={0.34 * lit} col="#FFC870" />}
+		<path d={shadow} fill="#070403" opacity={0.75 * (1 - 0.4 * lit)} filter={`url(#w53os${id})`} />
+		{lit > 0.001 && <path d={poly(c, bladeQ(z, 1.6, 0.012)) + hilt} fill="#FFC060" opacity={0.42 * lit} filter={`url(#w53og${id})`} />}
+		<path d={poly(c, blade)} fill="none" stroke="#120904" strokeOpacity={0.85} strokeWidth={4} strokeLinejoin="round" />
+		<path d={hilt} fill="none" stroke="#120904" strokeOpacity={0.85} strokeWidth={4} strokeLinejoin="round" />
+		<path d={poly(c, blade)} fill={`url(#w53ob${id})`} stroke="#F4CE88" strokeOpacity={0.12 + 0.68 * lit} strokeWidth={1.5} strokeLinejoin="round" />
+		<path d={poly(c, [at(0.08, 0), at(0.08 + L * 0.96, 0)], false)} stroke="#FFE6B0" strokeOpacity={0.75 * lit} strokeWidth={1.2} fill="none" />
+		<path d={grip} fill={mix(base, BZ.mid, 0.3 + 0.5 * lit)} /><path d={guard} fill={mix(base, BZ.mid, 0.4 + 0.5 * lit)} stroke={mix(base, '#F4CE88', 0.8 * lit)} strokeWidth={1.2} /><path d={pom} fill={mix(base, BZ.mid, 0.3 + 0.5 * lit)} stroke={mix(base, '#F4CE88', 0.6 * lit)} strokeWidth={1} />
 	</g>; };
+/** E1: where the other swords' tag leader lands (screen point of sword i's blade middle) */
+export const otherAt = (c: Cam, i: number): [number, number, number] => { const o = OTHERS[i]; return proj(c, [o.x0 + Math.cos(o.ang) * 0.17, o.y + Math.sin(o.ang) * 0.17, ZG + 0.012]); };
 /** E1: the three other swords lie side by side on the 椁's floor boards in the side compartment behind the coffins (between the
     outer coffin's far wall, y ≈ YC + 0.42, and the 椁's far wall, YC + 1.15), hilts toward −x like the hero; they light one per half-bar */
 export const OTHERS: {x0: number; y: number; ang: number; tb: number}[] = [{x0: -0.74, y: YC + 0.76, ang: 0.03, tb: 86.483}, {x0: -0.62, y: YC + 0.88, ang: -0.025, tb: 87.615}, {x0: -0.8, y: YC + 1.0, ang: 0.02, tb: 88.747}];
@@ -207,7 +218,7 @@ export const Chamber: React.FC<{c: Cam; t: number; draw: number; lit: number}> =
 		<Box c={c} x={0.9} z0={ZG + 0.06} z1={ZG + 0.76} yb={YC + 0.25} t={0.05} ring={LACQ} inside="#3A2418" floor={mix('#46201A', '#000000', 0.45)} edge={EDGE} line={RED_LINE} />
 		<g opacity={0.62 * (0.12 + 0.88 * cl((Math.hypot(c.p[0] - OX, c.p[1] - YC, c.p[2] - ZI) - 0.45) / 0.7))}><Occupant c={c} /></g>
 		<Knife c={c} />
-		<SwordSheath c={c} draw={draw} lit={lit} plank={plank} plankDz={dSh} sho={lerp(1, 0.72, sstep(seg(t, 84.219, 85.0)))} />
+		<SwordSheath c={c} draw={draw} lit={lit} plank={plank} plankDz={dSh} sho={lerp(1, 0.72, sstep(seg(t, 84.219, 85.0)))} e1={sstep(seg(t, 85.9, 86.483)) * (1 - sstep(seg(t, 89.2, 90.6)))} />
 		{lidIn && <Slab c={c} x={0.9} yb={YC + 0.3} z0={ZG + 0.76} z1={ZG + 0.83} dz={dIn} col={LID} line={RED_LINE} />}
 		{lidOut && <Slab c={c} x={1.06} yb={YC + 0.42} z0={ZG + 0.84} z1={ZG + 0.91} dz={dOut} col={LID} line={RED_LINE} />}
 		{roof && <Slab c={c} x={1.72} yb={YC + 1.27} z0={ZG + 2.0} z1={ZG + 2.18} dz={dGuo} col="#4A3426" />}

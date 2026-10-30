@@ -11,7 +11,9 @@ import {LINES53V3, CARD_T3} from './lines53v3';
 import {DepthTag} from './parts53';
 import {ElementTile53} from './elements53k';
 import type {ElementKey, TileState} from './elements53k';
-import {DA3} from './v3map53';
+import {DA3, frame3} from './v3map53';
+import {camB3, camDepthB3} from './cam53b3';
+import {camD3} from './take53d3';
 /* ep53 v3 overlay (on top of Film53v3's picture). The v2 furniture of master53 (layout D subtitles + scrim, two-line stamp,
    hollow J seal, the title on the glass, the depth tag), copied here with a `lines` parameter so v2 keeps master53 as is:
    - Subtitles53v3 / SubScrim53v3: lines_v3.json (LINES53V3), rows typed, Q line centred; none on the title, none from the card;
@@ -98,13 +100,32 @@ export const SealHollow53v3: React.FC<{o?: number}> = ({o = 0.65}) => <>
 	</svg></>;
 
 /* ---------- depth: every reading of v3 (v2's DepthTag, bottom-left) ----------
-   descent: 0.0 from the shaft opening (24.9), counting at 2.4 m/s from 29.9 to 10.8 at 34.4 (TakeB3 builds to this), holding
-   10.8 to the draw and fading out over 38.5–38.935; second chamber: 10.8 from 118.2, counting up to the surface 126.1 → 130.069
-   (0.0 on the surface → museum floor), fading out by 130.6. */
-export const DEPTH3 = {in: 24.9, t0: 29.9, v: 2.4, out0: 38.5, out1: DA3(17), in2: 118.2, up0: 126.1, up1: 130.069, out2: 130.6};
+   v3.1 (owner: "the metres must match the depth the picture shows now, not jump up suddenly at the bottom"): every reading is a
+   function of the CAMERA (its depth below ground and its view), never of a clock of its own.
+   - descent (TakeB3, cam53b3.camB3): 0.0 while the camera is above the ground (it breaks the ground at 29.45). The camera looks ≈ 62°
+     down, so the survey pole's marks in view are always below it: the reading is the depth of the pole at the TOP edge of the frame
+     (the shallowest depth in view; −2/−4/−6/−8 m each leave the top edge exactly as the tag passes 2/4/6/8), blended in from the
+     camera's own depth over its first 3.2 m (29.45 → ≈30.8) so it leaves 0.0 smoothly (≤ 4.5 m/s). Past the 椁 roof the same
+     top-edge depth runs on down the open chamber and reaches 10.8, the 椁 floor, at ≈35.6 as the view tilts top-down (36.670);
+     it holds 10.8 to the draw, fading out over 38.5–38.935;
+   - second chamber: 10.8 from 118.2 while the tomb is shown; from the camera's deepest point in L1 (DEPTH3.low, ≈125.8, found from
+     take53d3.camD3) the reading is 10.8 · D / D_low (D = the camera's depth), so it counts down with the camera's own rise and is
+     0.0 from f3902 (130.069), the frame the camera breaks the surface (camD3 z = −0.009 m there); fading out by 130.6. */
+const POLE_Y = 1.47;   // the survey pole's wall plane in the shaft world (tomb53b3: PY = SB − 0.03)
+/** the depth (m) of the pole line at the frame's top edge for the descent camera at t */
+export const topDepthB3 = (t: number) => { const c = camB3(t), k = c.cy / c.f, ry = POLE_Y - c.y;
+	return -(c.z + ry * (k * Math.cos(c.p) - Math.sin(c.p)) / (Math.cos(c.p) + k * Math.sin(c.p))); };
+export const depthReadB3 = (t: number) => { const d = camDepthB3(t); if (d <= 0) return 0;
+	const u = Math.min(1, d / 3.2), w = u * u * (3 - 2 * u);
+	return Math.min(10.8, d + w * Math.max(0, topDepthB3(t) - d)); };
+const camDepthD3 = (t: number) => Math.max(0, -camD3(t).p[2]);
+/** the camera's deepest frame in L1 (it swings round to the front of the cut-away, then rises) */
+const LOW3 = (() => { let fm = frame3(125.5), dm = 0; for (let f = frame3(125.0); f <= frame3(127.0); f++) { const d = camDepthD3(f / 30); if (d > dm) { dm = d; fm = f; } } return {t: fm / 30, d: dm}; })();
+export const DEPTH3 = {in: 24.9, out0: 38.5, out1: DA3(17), in2: 118.2, low: LOW3.t, up1: 130.069, out2: 130.6};
 export const depth53v3 = (t: number): {v: number; o: number} | null => { const D = DEPTH3;
-	if (t >= D.in && t < D.out1) return {v: Math.min(10.8, Math.max(0, D.v * (t - D.t0))), o: seg(t, D.in, D.in + 0.25) * (1 - seg(t, D.out0, D.out1))};
-	if (t >= D.in2 && t < D.out2) return {v: 10.8 * (1 - seg(t, D.up0, D.up1)), o: seg(t, D.in2, D.in2 + 0.3) * (1 - seg(t, D.out2 - 0.3, D.out2))};
+	if (t >= D.in && t < D.out1) return {v: depthReadB3(t), o: seg(t, D.in, D.in + 0.25) * (1 - seg(t, D.out0, D.out1))};
+	if (t >= D.in2 && t < D.out2) { const v = t < D.low ? 10.8 : frame3(t) >= frame3(D.up1) ? 0 : Math.min(10.8, 10.8 * camDepthD3(t) / LOW3.d);
+		return {v, o: seg(t, D.in2, D.in2 + 0.3) * (1 - seg(t, D.out2 - 0.3, D.out2))}; }
 	return null; };
 export const DepthLayer53v3: React.FC<{t: number}> = ({t}) => { const d = depth53v3(t); if (!d || d.o < 0.004) return null;
 	return <div style={{opacity: d.o}}><DepthTag v={d.v} /></div>; };

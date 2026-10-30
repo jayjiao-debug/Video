@@ -31,6 +31,6 @@ export const LINES53: Line53[] = [
 	{id: 'END', a: 109.125, b: 113.125, s: '你第一次见到它，是在哪？', st: null},
 ];
 export const lineById = (id: string) => { const L = LINES53.find((l) => l.id === id); if (!L) throw new Error(`no line ${id}`); return L; };
-export const TITLE53: [string, string] = ['越王勾践剑', '真的没锈吗？'];
+export const TITLE53: [string, string] = ['越王勾践剑', '为什么两千多年不生锈？'];   // v3.1 (owner-approved new title)
 export const TITLE_T53: [number, number] = [9.5, 11.764];
 export const SOURCES53 = '资料：湖北省博物馆（2025研究成果）· 光明日报（陈振裕 2016；江旭东 2025）· 北京日报（后德俊 2016）';
