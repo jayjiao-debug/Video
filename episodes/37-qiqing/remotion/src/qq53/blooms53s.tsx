@@ -12,7 +12,7 @@ import {frameOf} from './master53';
 export const BLOOM_T = [75.162, 75.728, 76.860];
 /** anchors: lattice cell (p, q), offset inside it (fractions of the half-pitch), crust radius (mm) */
 export const BLOOM_CELLS: {p: number; q: number; du: number; dw: number; r: number}[] = [
-	{p: 11, q: 1, du: 0.1, dw: 0.15, r: 1.7}, {p: 13, q: -1, du: -0.25, dw: -0.1, r: 1.45}, {p: 14, q: 0, du: 0.07, dw: 0.24, r: 1.6}];   // past the inscription (s ≥ MACRO_S0)
+	{p: 10, q: 2, du: 0.1, dw: 0.15, r: 1.7}, {p: 14, q: -2, du: -0.25, dw: -0.1, r: 1.45}, {p: 16, q: 0, du: 0.07, dw: 0.24, r: 1.6}];   // v3.1: on the design-C cells, s 68–106 (u 19–56 past MACRO_S0), clear of the characters' columns
 /** bloom i in macro coordinates (u = s − s0) */
 export const bloomUV = (i: number, s0 = MACRO_S0): [number, number, number] => { const b = BLOOM_CELLS[i]; return [(b.p + 1) / 2 * LAT.A + b.du * LAT.A / 2 - s0, b.q / 2 * LAT.W + b.dw * LAT.W / 2, b.r]; };
 /** the find-ring's radius on the surface (mm) */
