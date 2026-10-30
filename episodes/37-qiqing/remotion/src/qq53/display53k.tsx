@@ -100,16 +100,13 @@ export const DisplayBack: React.FC<{c: Cam; lite: number; hood: number; mirror?:
 		<defs><filter id={`dsh${id}`} x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="7" /></filter></defs>
 		{body.map(([q, n], i) => facing(c, q[0], n) ? <g key={i}><path d={poly(c, q)} fill={shade[i]} /><path d={poly(c, toe(q))} fill="#050302" opacity={0.55} /></g> : null)}
 		{deck && <path d={deck} fill={mix('#1E110B', '#3A2418', lite)} />}
-		{/* pool (the end hall only, v3.1): the deck light fades out with the case light. Each ring is a ~1/255-alpha layer and the browser
-		   rounds opacity to 8 bits, so fading the rings' own alpha steps all 14–18 of them at once (4–7 level pops at 134–135 s); there the
-		   rings keep a fixed alpha and the fade is one group opacity. Elsewhere the original layers, unchanged. */}
-		{pool === undefined ? <>
-			<DeckPool c={c} x={0} y={30} rx={520} ry={300} col="#FFC878" a={0.3 + 0.1 * lite} />
-			{lite > 0.01 && <DeckPool c={c} x={0} y={20} rx={430} ry={220} col="#FFEBC0" a={0.1 * lite} n={14} />}
-		</> : <>
-			{pool > 0.004 && <g opacity={pool * (0.75 + 0.25 * lite)}><DeckPool c={c} x={0} y={30} rx={520} ry={300} col="#FFC878" a={0.4} /></g>}
-			{pool * lite > 0.004 && <g opacity={pool * lite}><DeckPool c={c} x={0} y={20} rx={430} ry={220} col="#FFEBC0" a={0.1} n={14} /></g>}
-		</>}
+		{/* v3.1: each ring is a ~1/255-alpha layer and the browser rounds opacity to 8 bits, so fading the rings' own alpha (a = 0.3 + 0.1·lite)
+		   stepped all 14–18 rings at once (4–7 level pops at 17.4, 18.3 and 134–135 s). The rings now keep the alphas they had at lite 0 and
+		   lite 1 (both end looks unchanged) and lite crossfades the two sets as group opacities; `pool` (the end hall) fades the whole light. */}
+		{(pool ?? 1) > 0.004 && <g opacity={pool ?? 1}>
+			{lite < 0.996 && <g opacity={1 - lite}><DeckPool c={c} x={0} y={30} rx={520} ry={300} col="#FFC878" a={0.3} /></g>}
+			{lite > 0.004 && <g opacity={lite}><DeckPool c={c} x={0} y={30} rx={520} ry={300} col="#FFC878" a={0.4} /><DeckPool c={c} x={0} y={20} rx={430} ry={220} col="#FFEBC0" a={0.1} n={14} /></g>}
+		</g>}
 		{inner && <path d={inner} fill="none" stroke="#0A0504" strokeOpacity={0.6} strokeWidth={2} />}
 		{/* the brass lip along the deck's front edge */}
 		<path d={poly(c, [dk(DX0, DY0, 0.5), dk(DX1, DY0, 0.5)], false)} stroke={B.gold} strokeOpacity={0.45} strokeWidth={2} fill="none" />
