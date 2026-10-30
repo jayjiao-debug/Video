@@ -67,12 +67,14 @@ export const Paper53: React.FC<{t: number}> = ({t}) => {
 	/* producer r3: the two tags never collide (the lower one is clamped at the safe edge while the camera rises): keep ≥ 66 px apart, shift both up if needed */
 	const tagY = (() => { const a0 = ly(ta[1] - 36), b0 = Math.max(ly(td[1] + 70), a0 + 86), sh = Math.max(0, b0 - (H - 120)); return [a0 - sh, b0 - sh]; })();
 	const clap = sstep(seg(t, 57.55, 57.9)) * (1 - sstep(seg(t, 59.2, 59.5))), open = frameOf(t) >= frameOf(T_CLAP) ? 0 : 1, jolt = frameOf(t) >= frameOf(T_CLAP) ? Math.exp(-(t - T_CLAP) / 0.08) * Math.cos((t - T_CLAP) * 50) : 0;
-	const beam = (() => { const lt = seg(t, T_LIGHT, T_LIGHT + 0.25) * (light ? 1 : 0); return lt > 0 && <g opacity={lt * (1 - sstep(seg(t, 60.2, 60.9)))}><path d={`M1530,290 L1660,220 L1240,${H} L520,${H} Z`} fill="url(#p9beam)" />
-		<g transform="translate(1580,282) rotate(-26)"><rect x={-70} y={-60} width={150} height={120} rx={12} fill="#2A2420" stroke="#5A5048" strokeWidth={3} /><circle cx={-70} cy={0} r={48} fill="#FFF6E2" /><circle cx={-70} cy={0} r={34} fill="#FFFFFF" /><path d="M-70,-60 L-128,-92 M-70,60 L-128,92" stroke="#3A3430" strokeWidth={10} strokeLinecap="round" /></g>
-		<path d="M1630,340 L1650,1100" stroke="#2A2420" strokeWidth={10} /></g>; })();
+	/* v3.1 (owner): no lamp fixture or stand (it was cut by the frame edge); the light itself stays: on DA(25) a warm wash from beyond
+	   the top-right corner and the same beam, its narrow end feathered to nothing (p9beam starts at 0) so no source is drawn */
+	const beam = (() => { const lt = seg(t, T_LIGHT, T_LIGHT + 0.25) * (light ? 1 : 0); return lt > 0 && <g opacity={lt * (1 - sstep(seg(t, 60.2, 60.9)))}>
+		<Pool id="p9w" x={1760} y={120} rx={900} ry={560} a={0.2} col="#FFD49A" />
+		<path d={`M1530,290 L1660,220 L1240,${H} L520,${H} Z`} fill="url(#p9beam)" /></g>; })();
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<defs>
-			<linearGradient id="p9beam" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF4DC" stopOpacity="0.24" /><stop offset="0.6" stopColor="#FFF0D0" stopOpacity="0.06" /><stop offset="1" stopColor="#FFF0D0" stopOpacity="0" /></linearGradient>
+			<linearGradient id="p9beam" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF4DC" stopOpacity="0" /><stop offset="0.28" stopColor="#FFF4DC" stopOpacity="0" /><stop offset="0.48" stopColor="#FFF4DC" stopOpacity="0.17" /><stop offset="0.7" stopColor="#FFF0D0" stopOpacity="0.06" /><stop offset="1" stopColor="#FFF0D0" stopOpacity="0" /></linearGradient>
 			<linearGradient id="p9dim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#140806" stopOpacity="0.8" /><stop offset="0.6" stopColor="#140806" stopOpacity="0.55" /><stop offset="1" stopColor="#140806" stopOpacity="0" /></linearGradient>
 		</defs>
 		<rect x={-40} y={-40} width={W + 80} height={H + 80} fill="#24100C" />

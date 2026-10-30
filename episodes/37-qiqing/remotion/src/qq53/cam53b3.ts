@@ -81,3 +81,5 @@ export const camB3 = (t: number): TC => t < T_RF ? {x: CXW(t), y: CYW(t), z: CZ(
 /** the depth the picture shows (m, for the overlay's tag): 0 until 29.9, then 2.4 m/s, 8.8 (the 椁 roof) at 33.57, 10.8 (the floor) at 34.4 */
 export const DEPTH_B3 = {T0: 29.9, V: 2.4};
 export const depthB3 = (t: number) => Math.min(10.8, Math.max(0, DEPTH_B3.V * (t - DEPTH_B3.T0)));
+/** v3.1: the CAMERA's depth below ground (m, ≥ 0) at film time t — what the overlay's depth tag now reads from (0 above ground) */
+export const camDepthB3 = (t: number) => Math.max(0, -camB3(t).z);

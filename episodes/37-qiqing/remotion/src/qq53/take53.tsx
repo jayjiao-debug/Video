@@ -44,17 +44,37 @@ const FF = spline([[0, 1000], [0.8, 905], [1.575, 820], [3.6, 820, 0], [4.4, 870
 const CX = spline([[0, 900], [1.575, 960], [4.2, 960], [9.5, 960], [16.293, 980], [18.6, 1000], [20.0, 960, 0], [20.821, 960, 0]]);
 const CY = spline([[0, 560], [1.575, 640], [3.6, 640], [4.7, 615.969, -30.3939], [5.66, 590], [7.8, 700], [9.5, 790, 0], [11.3, 790], [11.764, 772], [14.2, 700], [16.293, 640], [18.6, 600], [20.0, 540, 0], [20.821, 540, 0]]);
 const RO = spline([[0, 0], [0.8, 1.6], [1.575, 2.5], [3.0, 1.8], [5.538, 0, 0], [20.821, 0, 0]]);
+/* v3.1 S3 (16.293 → 20.5, owner: "this angle doesn't show the pattern well"): instead of pushing in along the axis from the pommel
+   side (the blade end-on), the camera glides in LOW beside the blade at a three-quarter angle — the whole blade, guard to tip, lies
+   across the frame (≈46° off the axis, 25° up) with its diamond lattice open to the lens through 「它表面镀了铬」 and the sheen on
+   18.557 — then (19.0 → 20.5) swings round the guard onto the axis behind the pommel; every sword point ≤ 25 px per frame. The keys replace the channels only on (S3_0, S3_1): at both ends value and slope are the
+   old spline's, so 9.5 → 16.293 and 20.5 → 20.821 (the rings filling the frame, the dive) are exactly as before. */
+const S3_0 = 16.293, S3_1 = 20.5;
+const s3 = (old: (t: number) => number, mid: [number, number][]) => { const e = 1e-4, sl = (u: number) => (old(u + e) - old(u - e)) / (2 * e);
+	const S = spline([[S3_0, old(S3_0), sl(S3_0)], ...mid, [S3_1, old(S3_1), sl(S3_1)]]); return (t: number) => (t > S3_0 && t < S3_1 ? S(t) : old(t)); };
+const K3 = [17.4, 18.557, 19.1, 19.6, 20.1];
+const k3 = (v: number[]): [number, number][] => K3.map((t, i) => [t, v[i]]);
+const AL3 = s3(AL, k3([64, 72, 50, 26, 7]));
+const BE3 = s3(BE, k3([23, 25, 19, 10, 2.5]));
+const LND3 = s3(LND, k3([730, 520, 400, 260, 130].map(Math.log)));
+const TX3 = s3(TX, k3([-30, -60, -120, -220, -250]));
+const TY3 = s3(TY, k3([8, 0, 0, 0, 0]));
+const TZ3 = s3(TZ, k3([995, 990, 995, 1000, 1000]));
+const FF3 = s3(FF, k3([1760, 1650, 1650, 1650, 1650]));
+/* the principal point carries the sword up and left, so the hilt stays clear of the overlay's Cr tile (x ≥ 1345, y ≥ 683, 18.557 →) */
+const CX3 = s3(CX, k3([880, 720, 780, 900, 960]));
+const CY3 = s3(CY, k3([560, 470, 480, 520, 540]));
 const BL0 = 4.2, BL1 = 5.1;
 const fwd = (yaw: number, pit: number): V3 => [Math.cos(pit) * Math.cos(yaw), Math.cos(pit) * Math.sin(yaw), -Math.sin(pit)];
 export const camAt = (t: number): Cam => {
 	const pA: V3 = [XA(t), YA(t), ZA(t)], FA = fwd(YAWA(t) * DEG, PITA(t) * DEG), tA: V3 = [pA[0] + FA[0] * 300, pA[1] + FA[1] * 300, pA[2] + FA[2] * 300];
-	const a = AL(t) * DEG, b = BE(t) * DEG, d = Math.exp(LND(t));
-	const pB: V3 = [PF[0] - d * Math.cos(b) * Math.cos(a), PF[1] - d * Math.cos(b) * Math.sin(a), PF[2] + d * Math.sin(b)], tB: V3 = [TX(t), TY(t), TZ(t)];
+	const a = AL3(t) * DEG, b = BE3(t) * DEG, d = Math.exp(LND3(t));
+	const pB: V3 = [PF[0] - d * Math.cos(b) * Math.cos(a), PF[1] - d * Math.cos(b) * Math.sin(a), PF[2] + d * Math.sin(b)], tB: V3 = [TX3(t), TY3(t), TZ3(t)];
 	const w = t <= BL0 ? 0 : t >= BL1 ? 1 : sstep((t - BL0) / (BL1 - BL0));
 	const p: V3 = [lerp(pA[0], pB[0], w), lerp(pA[1], pB[1], w), lerp(pA[2], pB[2], w)], tg: V3 = [lerp(tA[0], tB[0], w), lerp(tA[1], tB[1], w), lerp(tA[2], tB[2], w)];
-	return lookAt(p, tg, FF(t), CX(t), CY(t), RO(t) * DEG); };
+	return lookAt(p, tg, FF3(t), CX3(t), CY3(t), RO(t) * DEG); };
 /** distance from the camera to the pommel face (mm), for the ring match at 20.821 */
-export const faceD = (t: number) => Math.exp(LND(t));
+export const faceD = (t: number) => Math.exp(LND3(t));
 
 /* ---------- ground: the lacquer dark under everything ---------- */
 export const Ground53: React.FC<{id: string; k?: number; sheen?: number}> = ({id, k = 1, sheen = 0.3}) => <g>
@@ -323,11 +343,12 @@ const kitInv = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] + 1002.2];   // kitc
 /* ---------- S3: 「镀铬？」 hangs beside the blade from the lull hit (18.557) — a question tag, never struck ---------- */
 const DuoTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 18.557 - 1e-6 || t > 19.8) return null;
 	const o = 1 - sstep(seg(t, 19.2, 19.7)); const to = proj(c, bw(SP, 233, 14));
-	const at = proj(camAt(18.6), bw(SP, 233, 14)), x = at[0] - 250, y = at[1] + 190;
+	/* v3.1: placed for the new S3 camera — below-left of its blade point, its left end kept inside the safe area (x ≥ 120) */
+	const at = proj(camAt(18.6), bw(SP, 233, 14)), x = Math.max(at[0] - 150, 300), y = at[1] + 200;
 	/* the leader only while its blade point is in frame and not hidden behind the pommel's end face */
 	const fc = proj(c, PF), fr = fc[2] > 1 ? c.f * R_FACE / fc[2] : 0, hidden = c.p[0] < PF[0] && to[2] > fc[2] && Math.hypot(to[0] - fc[0], to[1] - fc[1]) < fr * 1.15;
 	const vis = !hidden && to[2] > 20 && to[0] > -40 && to[0] < W + 40 && to[1] > -40 && to[1] < H + 40;
-	return <Tag id="duo" x={x} y={y} s="镀铬？" fs={64} anchor="end" to={vis ? [to[0] - 12, to[1] + 10] : undefined} col={B.cream} o={o} />; };
+	return <Tag id="duo" x={x} y={y} s="镀铬？" fs={56} anchor="end" to={vis ? [to[0] - 12, to[1] + 10] : undefined} col={B.cream} o={o} />; };
 /* ---------- fix4-a (#13): 「剑首 · 11道同心圆」 labels the ring close-up itself (19.3 → 20.7), at the 44 px label size, bottom-left —
    clear of the Cr tile (x 1345–1790, y 683–897), the subtitles and 「镀铬？」 (gone by 19.7); fixed place, a leader to the rings ---------- */
 const RingTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 19.3 || t > 20.75) return null;
