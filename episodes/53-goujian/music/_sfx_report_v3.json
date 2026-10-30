@@ -1,39 +1,39 @@
 [
 {
-"t": 0.1,
-"sfx": "water_drip",
-"role": "soft",
-"db": -13,
-"eff_M": -30.2,
-"bed_M": -13.6,
-"dLUFS": -16.6,
-"band_snr": -6.9,
-"band_hz": 1269,
-"dPeak": -8.3
+"t": 0.443,
+"sfx": "paper_slice",
+"role": "accent",
+"db": -5,
+"eff_M": -23.8,
+"bed_M": -13.7,
+"dLUFS": -10.1,
+"band_snr": 10.4,
+"band_hz": 12800,
+"dPeak": -10.0
 },
 {
-"t": 0.443,
-"sfx": "tiny_crackle",
+"t": 0.62,
+"sfx": "paper_flutter",
 "role": "soft",
-"db": -11,
-"eff_M": -30.9,
-"bed_M": -13.8,
-"dLUFS": -17.2,
-"band_snr": 12.1,
-"band_hz": 10159,
-"dPeak": -4.3
+"db": -13,
+"eff_M": -29.7,
+"bed_M": -13.2,
+"dLUFS": -16.5,
+"band_snr": 6.3,
+"band_hz": 2015,
+"dPeak": -4.5
 },
 {
 "t": 1.575,
 "sfx": "bronze_shimmer",
 "role": "normal",
-"db": -8,
-"eff_M": -25.8,
+"db": -10,
+"eff_M": -27.8,
 "bed_M": -13.5,
-"dLUFS": -12.3,
-"band_snr": 5.7,
+"dLUFS": -14.3,
+"band_snr": 3.7,
 "band_hz": 10159,
-"dPeak": -15.5
+"dPeak": -17.5
 },
 {
 "t": 9.5,
@@ -252,40 +252,16 @@
 "dPeak": -17.0
 },
 {
-"t": 94.407,
-"sfx": "clapper",
-"role": "accent",
-"db": -7,
-"eff_M": -24.2,
-"bed_M": -13.8,
-"dLUFS": -10.4,
-"band_snr": 1.4,
-"band_hz": 1269,
-"dPeak": -3.0
-},
-{
 "t": 95.54,
-"sfx": "paper_slice",
-"role": "accent",
-"db": -6,
-"eff_M": -24.8,
+"sfx": "sheen_chime",
+"role": "normal",
+"db": -9,
+"eff_M": -25.0,
 "bed_M": -13.3,
-"dLUFS": -11.5,
-"band_snr": 15.6,
-"band_hz": 10159,
-"dPeak": -11.1
-},
-{
-"t": 95.677,
-"sfx": "paper_flutter",
-"role": "soft",
-"db": -14,
-"eff_M": -30.7,
-"bed_M": -12.8,
-"dLUFS": -17.9,
-"band_snr": 1.9,
-"band_hz": 2015,
-"dPeak": -5.6
+"dLUFS": -11.7,
+"band_snr": 11.2,
+"band_hz": 6400,
+"dPeak": -16.0
 },
 {
 "t": 111.389,
@@ -430,18 +406,6 @@
 "band_snr": 6.5,
 "band_hz": 6400,
 "dPeak": -13.7
-},
-{
-"t": 137.2,
-"sfx": "kitchen_hum",
-"role": "soft",
-"db": -13,
-"eff_M": -32.7,
-"bed_M": -12.4,
-"dLUFS": -20.3,
-"band_snr": 4.6,
-"band_hz": 200,
-"dPeak": -21.5
 },
 {
 "t": 140.824,
