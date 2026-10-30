@@ -59,7 +59,6 @@ export const Paper53: React.FC<{t: number}> = ({t}) => {
 		return <g key={`${i}${sgn}`}><path d={face} fill={fresh ? '#C3A874' : mix(tone, '#000000', 0.16)} stroke="#6A5535" strokeWidth={1} strokeOpacity={fresh ? 1 : 0.55} />
 			<path d={end} fill={mix(tone, '#000000', 0.26)} stroke="#6A5535" strokeWidth={1} strokeOpacity={0.55} /><path d={top} fill={tone} stroke="#7A6440" strokeWidth={1} strokeOpacity={0.5} /></g>; };
 	const halves = (sgn: 1 | -1) => Array.from({length: NS}, (_, i) => half(i, sgn));
-	const hit = proj(c, [SX1 + 0.6, 0, ZE0 + 0.1]);
 	/* the bracket labels stand beside the stack (to its screen-left), not on its face */
 	const bx = SX1 + 1.7, ta = proj(c, [bx, -SY, ZT]), tb = proj(c, [bx, -SY, ZE0]), td = proj(c, [bx, -SY, 0]);
 	const tagO = (cut ? 1 : 0) * sstep(seg(t, T_CUT + 0.2, T_CUT + 0.35)) * (1 - seg(t, 60.45, 60.8));
@@ -86,9 +85,11 @@ export const Paper53: React.FC<{t: number}> = ({t}) => {
 		</g>
 		<BladeFlat S={S} id="pp" />
 		<MarkSet id="pp" S={S} o={1} col={(side, n) => hexMix(LATC, '#FFF2C8', Math.min(1, litOf(side, n, t)))} lit={(side, n) => Math.min(1, litOf(side, n, t))} />
-		{flashN >= 0 && flashN < 3 && <path d={'M' + Array.from({length: 21}, (_, i) => S(A0 + LB * i / 20, bladeHW(LB * i / 20)).map((v) => v.toFixed(1)).join(',')).join('L') + 'L' + Array.from({length: 21}, (_, i) => S(A0 + LB * (20 - i) / 20, -bladeHW(LB * (20 - i) / 20)).map((v) => v.toFixed(1)).join(',')).join('L') + 'Z'} fill="#F2F6F8" opacity={0.75} />}
 		<g opacity={setOn} transform={`translate(0 ${rise})`}>{halves(-1)}</g>
-		{cut && t < 61.2 && <Glint x={hit[0]} y={hit[1]} r={70} o={(1 - sstep(seg(t, T_CUT, T_CUT + 0.25))) * 0.95 + 0.05 * Math.exp(-(t - T_CUT) / 0.45)} />}
+		{/* fix4-a (#12): the cut's flash is ONE thin bright line where the edge meets the paper — the slit along the top of the stack
+		   (the top sheet only starts to move 0.19 s after the cut) — 3 frames, fading; the blade stays drawn, no star */}
+		{flashN >= 0 && flashN < 3 && (() => { const d = poly(c, Array.from({length: 13}, (_, i) => [SX0 + 0.3 + (SX1 - SX0 - 0.6) * i / 12, -GAP, ZT + 0.02] as V3), false);
+			return d ? <g opacity={[1, 0.6, 0.28][flashN]} transform={`translate(0 ${rise})`}><path d={d} fill="none" stroke="#FFE7B0" strokeOpacity={0.35} strokeWidth={6} strokeLinecap="round" /><path d={d} fill="none" stroke="#FFFBEE" strokeWidth={2.2} strokeLinecap="round" /></g> : null; })()}
 		{tagO > 0.01 && <g opacity={tagO}>
 			<path d={`M${ta[0] - 4},${ta[1]} h-14 V${tb[1] - 3} h14`} fill="none" stroke={B.goldL} strokeWidth={4} /><path d={`M${tb[0] - 4},${tb[1] + 3} h-14 V${td[1]} h14`} fill="none" stroke={B.cream} strokeWidth={3} />
 			<Tag id="p9a" x={lx(ta[0] - 14, 5, 56)} y={tagY[0]} s="划破20多张" fs={56} col={B.goldL} anchor="end" />
@@ -101,4 +102,4 @@ export const Paper53: React.FC<{t: number}> = ({t}) => {
 		<rect x={0} y={0} width={1500} height={320} fill="url(#p9dim)" opacity={seg(t, 57.6, 58.2) * (1 - seg(t, 59.4, 60.2))} />
 		<Vignette id="p9" a={0.55 + 0.05 * seg(t, 60.0, 61.5)} />
 	</svg>; };
-void B;
+void B; void Glint;
