@@ -8,7 +8,7 @@ import {BladeFlat, MarkSet} from './blade53c';
 import {litOf, hexMix, LATC} from './inscr53c';
 import {homog} from './kfG53';
 import {T0F, T1F, A_C0, glideAt, mapG, vigK} from './cam53g';
-import {Reflection53g, px, PK, PW} from './shadow53g';
+import {Reflection53g, px, PK, PW, lobeK} from './shadow53g';
 /* ep53 v3 TakeG, 51.954 → 92.709: the 勾践 thread, ONE camera move (cam53g). Frame 1559 and frame 2781 ARE v2 TakeC at 56.482
    (the inscription view after 鸠浅＝勾践, which the paper test starts from). In between, the paper test's picture (the same
    blade53c.BladeFlat / MarkSet from the one sword spec, the same lit marks, the same ground, pool and vignette) seen through
@@ -25,7 +25,7 @@ export const TakeG: React.FC<{t: number}> = ({t}) => {
 	/* the Chamber53 share of the v2 blend: continues its own glide (0.83 cm/s) at the start; at the end it is the 56.482 picture
        shifted with the blade (the camera is face-on again by then) */
 	const g0 = 0.5 * (1 - sstep(seg(t, T0F, T0F + 0.4))), g1 = 0.5 * sstep(seg(t, T1F - 0.4, T1F));
-	const ref = [0, 1, 2, 3, 4, 6].some((i) => vigK(i, t) > 0.004) || (t > 88.2 && t < 92.0);
+	const ref = [0, 1, 2, 3, 4, 6].some((i) => vigK(i, t) > 0.004) || lobeK(t) > 0.004;
 	const a0 = g.a - 9, a1 = g.a + 15, ww = (a1 - a0) * PK, hh = 2 * PW * PK, q = [S(a1, PW), S(a0, PW), S(a0, -PW), S(a1, -PW)];
 	return <>
 		<svg width={W} height={H} style={{position: 'absolute'}}>
