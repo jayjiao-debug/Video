@@ -7,7 +7,7 @@ import {TITLE53} from './lines53';
 import {END_Q53} from './kfF53';
 import {SOURCES53V3, CARD_T3, END_SUB53, LINES53V3} from './lines53v3';
 import {frame3, LEN3} from './v3map53';
-/* ep53 v3 · the end card (TakeD3, 140.824 → 145.333) on the held kitchen: v2's EndCardAnim re-timed. The J stamp is complete on
+/* ep53 v3 · the end card (TakeD3, 140.824 → 145.333) on the held museum picture (v3.4: TakeA at the title shot, take53d3/museum53e4): v2's EndCardAnim re-timed. The J stamp is complete on
    f4225 (= frame3(140.824)), absent on f4224; title +0.35, question +0.7, pill +1.2, sources +1.3 (SOURCES53V3, two rows, 24 px);
    the card holds 4.0 s, then a 0.5 s fade to black that is complete on the film's last frame (4359). */
 export const CARD_F3 = frame3(CARD_T3);
