@@ -4,6 +4,10 @@ import {SANS, KAI} from '../qq50/kit50';
 import {useStampFonts} from '../qq44/skin44';
 import {SwordFlat} from './flat53s';
 import {A as SA} from './swordspec53s';
+import {LacDefs} from '../qq50/styleB';
+import {TakeA} from './take53';
+import {TakeC} from './take53c';
+import {V3 as V3T, SHIFT_DRAW} from './v3map53';
 /* ep53 covers, three layouts of our own (owner: "not so copy-like" — the template's kicker / two left lines / sub line is gone).
    The sword is the film's own flat renderer (flat53s.SwordFlat, design C), the type is the film's title type (Noto Sans CJK 900) and
    its stamp type (LXGW WenKai), on the film's lacquer dark with one warm pool. Frame = layout: 0 竖剑竖排, 1 大字居中, 2 剑贯标题, 3 VIBE (the channel's own cover style). */
@@ -118,9 +122,33 @@ const Lay: React.FC<{w: number; h: number; n: number}> = ({w, h, n}) => { const 
 		<Title tall={tall} cy={n === 5 ? cy + (tall ? 70 : 60) : cy} scrim={n === 4} gap={n === 7 ? (tall ? 150 : 140) : 0} />
 		{VIG}
 	</>; };
+/* 8–13 (owner: more like 巨剑斜贯 and the first cover: a big close-up sword, the title in the middle).
+   8 反向斜贯 (guard low right) · 9 陡斜巨剑 · 10 剑格特写 · 13 竖剑压题: the flat sword at giant scale;
+   11 片中横剑 (the film's own frame at 45.0 s, like the first cover) · 12 片中剑脊 (the film's frame at 2.9 s, looking down the blade) */
+const FilmPic: React.FC<{t: number; x: number; y: number; s: number}> = ({t, x, y, s}) => <div style={{position: 'absolute', left: x, top: y, width: 1920, height: 1080, transform: `scale(${s})`, transformOrigin: '0 0', overflow: 'hidden'}}>
+	<svg width={0} height={0} style={{position: 'absolute'}}><LacDefs /></svg>{t < V3T.DIVE ? <TakeA t={t} /> : <TakeC t={t + SHIFT_DRAW} />}</div>;
+const Lay2: React.FC<{w: number; h: number; n: number}> = ({w, h, n}) => { const tall = h > w;
+	if (n === 11 || n === 12) {   /* the film's own picture, faded into the dark above (11) or round the frame (12) */
+		const t = n === 11 ? 45.0 : 2.9;
+		const pic = n === 11 ? (tall ? {s: 1.06, x: 860 - 1325 * 1.06, y: 800 - 420 * 1.06} : {s: 1.0, x: 1100 - 1325, y: 300}) : (tall ? {s: 1.34, x: 540 - 960 * 1.34, y: 1440 * 0.98 - 1080 * 1.34} : {s: 1.0, x: -240, y: 0});
+		const fadeTop = n === 11 ? pic.y + (tall ? 300 : 260) : 0;
+		const cy = n === 11 ? (tall ? h * 0.36 : h * 0.36) : (tall ? h * 0.30 : h * 0.30);
+		return <>
+			<FilmPic t={t} {...pic} />
+			{n === 11 && <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: fadeTop + 120, background: `linear-gradient(180deg, #0A0504 0%, #0A0504 ${Math.round(100 * (fadeTop - 220) / (fadeTop + 120))}%, rgba(10,5,4,0) 100%)`}} />}
+			{n === 12 && <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(10,5,4,0.92) 0%, rgba(10,5,4,0.55) 38%, rgba(10,5,4,0) 62%)'}} />}
+			<Title tall={tall} cy={cy} scrim={n === 12} />{VIG}</>; }
+	const cy = tall ? h * 0.46 : h * 0.5;
+	const S = n === 8 ? (tall ? swordAt([w - 190, 930], -145, 58) : swordAt([w - 300, 860], -158, 50))
+		: n === 9 ? (tall ? swordAt([290, 1030], -62, 72) : swordAt([360, 1010], -40, 64))
+		: n === 10 ? (tall ? swordAt([330, 880], -24, 120) : swordAt([420, 860], -16, 110))
+		: (tall ? swordAt([w / 2, 120], 90, 44) : swordAt([w / 2, 70], 90, 40));
+	return <>
+		<svg width={w} height={h} style={{position: 'absolute'}}><Ground w={w} h={h} px={w / 2} py={cy} rx={w * 0.62} ry={h * 0.45} id={`m${n}`} /><Sword p0={S.p0} p1={S.p1} id={`m${n}`} /></svg>
+		<Title tall={tall} cy={n === 13 ? cy + (tall ? 60 : 50) : cy} scrim />{VIG}</>; };
 const Cover: React.FC<{w: number; h: number}> = ({w, h}) => { useStampFonts(`${NAME}${SUB}${L1}${L2}${Q}`); const f = useCurrentFrame();
-	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : f === 2 ? <V2 w={w} h={h} /> : f === 3 ? <V3 w={w} h={h} /> : <Lay w={w} h={h} n={f} />}</AbsoluteFill>; };
+	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : f === 2 ? <V2 w={w} h={h} /> : f === 3 ? <V3 w={w} h={h} /> : f <= 7 ? <Lay w={w} h={h} n={f} /> : <Lay2 w={w} h={h} n={f} />}</AbsoluteFill>; };
 registerRoot(() => <>
-	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={8} />
-	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={8} />
+	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={14} />
+	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={14} />
 </>);
