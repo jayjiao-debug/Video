@@ -4,6 +4,7 @@ import {sstep, sstep5} from './cam53';
 import {Sil, Stand, Soldier, KingSeat, Palace, Mountain, SpearRing} from './kfG53';
 import {A, LBLADE, hwS, edgeS, LAT, latCells, cellQuad, METAL} from './swordspec53s';
 import {GS, GA, vigK} from './cam53g';
+import {KingDraw53g5} from './king53g5';
 /* ep53 v3 · TakeG: the 勾践 story as a shadow play in the polished face (皮影 read in our flat style: one-tone near-black
    silhouettes, a thin warm firelight rim, a firelight glow behind). Starts from kfG53's kit (Sil, Stand, Soldier, KingSeat,
    Palace, Mountain, SpearRing), with the fact-check fixes: G2 the envoy kneels ALONE before 夫差; G4 勾践 walks AHEAD of the
@@ -133,6 +134,8 @@ const SwordDown: React.FC = () => <g>
 	<path d="M-0.10,-0.05 L-0.76,-0.04 L-0.86,-0.018 L-0.76,0.004 L-0.10,0.014 Z" />
 	<path d="M-0.11,-0.10 L-0.06,-0.10 L-0.06,0.06 L-0.11,0.06 Z" /><path d="M-0.06,-0.032 L0.10,-0.030 L0.10,-0.006 L-0.06,-0.004 Z" />
 	<circle cx={0.125} cy={-0.018} r={0.034} /></g>;
+/** v3.1 (owner note 1:22): 勾践 leads, LEFT of his ranks, 1.2 × a front-rank soldier, drawing the sword (king53g5) */
+const KX = -2.3;
 const G7: React.FC<{t: number}> = ({t}) => { const under = Math.round(t * 30) >= Math.round(UNDER * 30), lift = under ? 1.36 : lerp(0.25, 1.36, sstep(seg(t, 82.6, UNDER)));
 	const np = pacesAt(t), adv = 0.05 * np, step = Math.cos(Math.PI * np) * (1 - 0.6 * sstep(cl(np - (PACE1 - PACE0), 0, 1)));
 	return <g>{sinkClip('g53g7w', GY - lift)}
@@ -141,12 +144,17 @@ const G7: React.FC<{t: number}> = ({t}) => { const under = Math.round(t * 30) >=
 		<ellipse cx={0.1} cy={GY - 0.16} rx={0.72} ry={0.42} fill="url(#g53gPatch)" />
 		<Sil><g transform={`translate(${f3(adv)},0)`}>{[-1.69, -1.41, -1.13].map((x, i) => <g key={`b${i}`} transform={T(x + 0.14, GY - 0.05, 0.8)}><Soldier step={-step} /></g>)}
 			{[-1.62, -1.34, -1.06].map((x, i) => <g key={i} transform={T(x, GY + 0.02, 0.9)}><Soldier step={step} /></g>)}</g></Sil>
+		<g transform={T(KX, GY + 0.03, 1.07)}><KingDraw53g5 t={t} /></g>
 		<Sil><g transform={`translate(0.4,${GY}) scale(1.05)`}><MianG /></g><g transform={`translate(-0.3,${GY - 0.07}) rotate(8) scale(-0.78,0.85)`}><SwordDown /></g></Sil>
 		<Sil><Ground x0={-2.6} x1={0.6} /><Ground x0={1.9} x1={2.6} /></Sil></g>; };
 const SCENES: (React.FC<{t: number}> | null)[] = [G1, G2, G3, G4, G5, null, G7];
 
 /* ---------- the reflection on the blade (panel space) ---------- */
 const HALF = 2.9;   // a scene's half-length along the blade, cm
+/** v3.1: how far scene i's window and glow reach further toward the tip (screen left), cm; G7 makes room for 勾践 left of the
+    ranks (the guard-side edge stays where it was) */
+const EXT = [0, 0, 0, 0, 0, 0, 2.0];
+const END_F = 0.17 * 2 * HALF;   // the window's soft ends, cm (as in v3)
 /** the blade face inside its polished edge strips, as a panel path, for a in [a0, a1] */
 const innerPath = (a0: number, a1: number) => { const n = 60, s0 = cl(a0 * 10 - A.blade0, 0, LBLADE), s1 = cl(a1 * 10 - A.blade0, 0, LBLADE);
 	const pts = Array.from({length: n + 1}, (_, i) => { const s = lerp(s0, s1, i / n); return [(A.blade0 + s) / 10, Math.max(0, hwS(s) - edgeS(s)) / 10]; });
@@ -184,18 +192,19 @@ export const Reflection53g: React.FC<{t: number; a0: number; a1: number}> = ({t,
 			<radialGradient id="g53gPatch"><stop offset="0" stopColor="#FFE2A6" stopOpacity={0.95} /><stop offset="0.5" stopColor="#FFC870" stopOpacity={0.7} /><stop offset="1" stopColor="#FFB04C" stopOpacity="0" /></radialGradient>
 			<linearGradient id="g53gEnd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset="0.17" stopColor="#fff" stopOpacity="1" /><stop offset="0.83" stopColor="#fff" stopOpacity="1" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient></defs>
 		<g clipPath="url(#g53gIn)">
-			{SCENES.map((C, i) => { if (!C) return null; const k = vigK(i, t); if (k < 0.004) return null; const ac = GA[i], x0 = px(ac + HALF), x1 = px(ac - HALF), dim = i === 4 ? dimTaste : 1;
-				const {wg, sc} = fitG(i), gw = (-wg + 0.32) / 2, grx = 3.0, gry = (wg + 0.32) / 2 + 0.3;
-				const glow = (fill: string) => <ellipse cx={px(ac)} cy={py(gw)} rx={grx * PK} ry={gry * PK} fill={fill} />;
+			{SCENES.map((C, i) => { if (!C) return null; const k = vigK(i, t); if (k < 0.004) return null; const ac = GA[i], ex = EXT[i], x0 = px(ac + HALF + ex), x1 = px(ac - HALF), dim = i === 4 ? dimTaste : 1, ef = END_F / (2 * HALF + ex);
+				const {wg, sc} = fitG(i), gw = (-wg + 0.32) / 2, grx = 3.0 + ex / 2, gry = (wg + 0.32) / 2 + 0.3;
+				const glow = (fill: string) => <ellipse cx={px(ac + ex / 2)} cy={py(gw)} rx={grx * PK} ry={gry * PK} fill={fill} />;
 				return <g key={i} opacity={k}>
-					<defs><mask id={`g53gM${i}`} maskUnits="userSpaceOnUse" x={x0} y={0} width={x1 - x0} height={py(-PW)}><rect x={x0} y={0} width={x1 - x0} height={py(-PW)} fill="url(#g53gEnd)" /></mask>
+					<defs><mask id={`g53gM${i}`} maskUnits="userSpaceOnUse" x={x0} y={0} width={x1 - x0} height={py(-PW)}><rect x={x0} y={0} width={x1 - x0} height={py(-PW)} fill={`url(#g53gEnd${i})`} /></mask>
+						<linearGradient id={`g53gEnd${i}`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset={f3(ef)} stopColor="#fff" stopOpacity="1" /><stop offset={f3(1 - ef)} stopColor="#fff" stopOpacity="1" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>
 						<mask id={`g53gL${i}`} maskUnits="userSpaceOnUse" x={x0} y={0} width={x1 - x0} height={py(-PW)}>{glow('url(#g53gMk)')}</mask></defs>
 					<g mask={`url(#g53gM${i})`}>
 						{glow('url(#g53gBack)')}
-						<ellipse cx={px(ac)} cy={py(gw - 0.1)} rx={2.6 * PK} ry={(gry + 0.1) * PK} fill="url(#g53gFire)" opacity={flick * dim} />
+						<ellipse cx={px(ac + ex / 2)} cy={py(gw - 0.1)} rx={(2.6 + ex / 2) * PK} ry={(gry + 0.1) * PK} fill="url(#g53gFire)" opacity={flick * dim} />
 						<g transform={`translate(${px(ac)},${py(0)}) scale(${PK}) translate(0,${f3(wg)}) scale(${f3(sc)}) translate(${FX[i]},${-GY})`} fill={INK}><C t={t} /></g>
-						<g mask={`url(#g53gL${i})`}><LatticeOverG a0={ac - HALF} a1={ac + HALF} o={0.24} /></g>
-						<path d={`M${px(ac + HALF)},${py(0)} L${px(ac - HALF)},${py(0)}`} stroke={METAL.lit} strokeWidth={0.045 * PK} strokeOpacity={0.32} />
+						<g mask={`url(#g53gL${i})`}><LatticeOverG a0={ac - HALF} a1={ac + HALF + ex} o={0.24} /></g>
+						<path d={`M${px(ac + HALF + ex)},${py(0)} L${px(ac - HALF)},${py(0)}`} stroke={METAL.lit} strokeWidth={0.045 * PK} strokeOpacity={0.32} />
 					</g></g>; })}
 			{lk > 0.004 && <LobeG a={a0 + 9 - 0.8} w={0.25} ra={4.2} rw={1.7} k={lk} />}
 		</g></g>; };
