@@ -1,5 +1,6 @@
 import React from 'react';
 import {cl} from '../qq50/kit50';
+import {GripFlat53E} from './hiltflat53e';
 import {A, LBLADE, hwS, edgeS, LAT, latCells, cellQuad, GUARD_OUT, inlayPanel, inlayCells, POM_PROF, R_GRIP, R_HOOP, HOOPS, HOOP_HL, markAt, markSeed, birdScript, MARK_K, METAL} from './swordspec53s';
 /* ep53 · the sword's FRONT face drawn through any (a, w) → screen map (cm, as the callers use): props53.Sword (a plain rotation
    and scale) and blade53c.BladeFlat (the chamber, the paper test, any camera) both draw this, so the flat views are one sword.
@@ -56,8 +57,7 @@ export const SwordFlat: React.FC<{S: Map2; id: string; spec?: number; hilt?: boo
 		<path d={`M${P(a0 + 2, 0.8)}L${P(A.L - 12, 0.5)}`} stroke={METAL.deep} strokeWidth={sw(0.6)} strokeOpacity={0.7} strokeLinecap="round" />
 		<path d={outline} fill="none" stroke={edge ?? METAL.line} strokeWidth={Math.max(1, 0.05 * km)} strokeOpacity={edge ? 0.9 : 0.6} />
 		{hilt && <g>
-			<path d={grip} fill={`url(#fcy${id})`} />
-			{HOOPS.map((a) => <path key={a} d={hoop(a)} fill={`url(#fcy${id})`} stroke={METAL.line} strokeOpacity={0.5} strokeWidth={sw(0.4)} />)}
+			<GripFlat53E M={M} kmm={kmm} id={id} />{/* layered hoops + cord (fix-e); was the flat grip + outline hoops */}
 			<path d={pom} fill={`url(#fcy${id})`} stroke={METAL.line} strokeOpacity={0.5} strokeWidth={sw(0.4)} />
 			<path d={`M${P(0.5, -18.2)}L${P(0.5, 18.2)}`} stroke={METAL.hi} strokeWidth={sw(0.7)} strokeOpacity={0.7} />
 			<path d={poly(GUARD_OUT)} fill={`url(#fcy${id})`} stroke={METAL.line} strokeOpacity={0.6} strokeWidth={sw(0.5)} />
@@ -76,3 +76,4 @@ const MarksFlat: React.FC<{M: Map2; col: string; kmm: number}> = ({M, col, kmm})
 		const m = `matrix(${((Wp[0] - c[0]) * MARK_K).toFixed(3)} ${((Wp[1] - c[1]) * MARK_K).toFixed(3)} ${((Ap[0] - c[0]) * MARK_K).toFixed(3)} ${((Ap[1] - c[1]) * MARK_K).toFixed(3)} ${f1(c[0])} ${f1(c[1])})`;
 		return <g key={`${side}${n}`} transform={m} opacity={cl(0.4 + kmm, 0, 0.85)}>{g.d.map((p, i) => <path key={i} d={p} fill="none" stroke={col} strokeWidth={0.085} strokeLinecap="round" strokeLinejoin="round" />)}
 			<circle cx={g.eye[0]} cy={g.eye[1]} r={0.06} fill={col} /></g>; }))}</g>;
+

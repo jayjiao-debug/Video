@@ -4,7 +4,7 @@ import {B, Pool} from '../qq50/styleB';
 import {Cam, V3, P2, proj, poly, mix, lookAt, blobOn} from './parts53';
 import {bladeOutline} from './parts53';
 import {Sword3D, SwordPose} from './sword3d';
-import {PommelMirror, DisplayFront, hoodDist, mirrorAt} from './display53k';
+import {DisplayFront, hoodDist} from './display53k';
 import {Glint} from './kfA53';
 import {spline, sstep} from './cam53';
 /* ep53 · TakeD, the camera of legs 14–17 and the museum: the same metric world as world53d (metres; the cut plane y = 0; z = 0 is
@@ -60,7 +60,7 @@ export const CaseW: React.FC<{c: Cam; t: number; dull: number; bloom: number; ga
 	return <g>
 		<defs><filter id={`cb${id}`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.2" /></filter>
 			<filter id={`cr${id}`} x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="14" /></filter></defs>
-		<PommelMirror c={cc} id={`m${id}`} o={cl((56 - mirrorAt(cc).r) / 16)} />
+		{/* v3-e: the pommel mirror is gone (it read as a stray object) */}
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFD890" strokeWidth={16} strokeOpacity={0.55 * rim} filter={`url(#cr${id})`} />}
 		<Sword3D c={cm} sp={SP_CASE53} id={`${id}s`} />
 		{rim > 0.01 && blade && <path d={blade} fill="none" stroke="#FFF3CF" strokeWidth={2} strokeOpacity={0.9 * rim} />}

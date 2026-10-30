@@ -10,7 +10,9 @@ import {RingDisc} from './props53';
    The plinth is 760 × 520 mm (narrow on purpose: a v3 camera can hold the sword at 60 % of the frame width with the hood still inside it), so in the wide hall views the whole hood stays inside the frame.
    Layers: DisplayBack (plinth, deck, light, shadow, rests, mirror, the hood's far edges) goes UNDER the sword;
    DisplayFront (the hood's near faces, edges and the streak) goes OVER it. The etched title is the master's plaque mapped onto
-   `titleQuadOn` (the hood's top glass, behind the sword). */
+   `titleQuadOn`. v3-e: the title is back on the FRONT glass, facing the camera as in v2: the hood's front pane carries a tall clear
+   leaf (the title glass, `TitleLeaf`, up to 1475 mm) on which the title is etched, large, in front of the sword. The pommel mirror
+   is gone (it read as a stray object); `PommelMirror` / `mirrorAt` stay exported but nothing draws them. */
 export const DTILT = 22 * Math.PI / 180;
 const TN = Math.tan(DTILT);
 /** deck (plinth top) extents and the deck height under the sword axis */
@@ -81,7 +83,7 @@ const Rest: React.FC<{c: Cam; x: number}> = ({c, x}) => { const w = 7, y0 = -13,
 	return <g>{fr && <path d={fr} fill="#E8F0F2" opacity={0.1} />}{tp && <path d={tp} fill="#F4FAFC" opacity={0.16} />}{ed && <path d={ed} stroke="#F4FAFC" strokeOpacity={0.4} strokeWidth={1.3} fill="none" />}</g>; };
 
 /** UNDER the sword: plinth body, deck, spot pool, the sword's shadow, the rests, the mirror, the hood's far edges */
-export const DisplayBack: React.FC<{c: Cam; lite: number; hood: number; mirror?: number; id: string}> = ({c, lite, hood, mirror = 0, id}) => {
+export const DisplayBack: React.FC<{c: Cam; lite: number; hood: number; mirror?: number; id: string; leaf?: number}> = ({c, lite, hood, mirror = 0, id, leaf = 0}) => { void mirror;
 	const body: [V3[], V3][] = [
 		[[[DX1, DY0, deckZ(DY0)], [DX0, DY0, deckZ(DY0)], [DX0, DY0, 0], [DX1, DY0, 0]], [0, -1, 0]],
 		[[[DX0, DY1, deckZ(DY1)], [DX1, DY1, deckZ(DY1)], [DX1, DY1, 0], [DX0, DY1, 0]], [0, 1, 0]],
@@ -105,27 +107,42 @@ export const DisplayBack: React.FC<{c: Cam; lite: number; hood: number; mirror?:
 		<path d={poly(c, [dk(DX0, DY0, 0.5), dk(DX1, DY0, 0.5)], false)} stroke={B.gold} strokeOpacity={0.45} strokeWidth={2} fill="none" />
 		{sh && <path d={sh} fill={mix('#000000', '#140904', lite)} opacity={0.55} filter={`url(#dsh${id})`} />}
 		{[-150, 160].map((x) => <Rest key={x} c={c} x={x} />)}
-		<PommelMirror c={c} o={mirror} id={id} />
 		{hv > 0.01 && <HoodEdges c={c} front={false} o={hv} />}
+		{c.p[1] >= LEAF_Y && <TitleLeaf c={c} o={leaf} />}
 	</g>; };
 
 /** OVER the sword: the hood's near faces (a breath of glass), its near edges and one clean reflection streak on the top glass */
-export const DisplayFront: React.FC<{c: Cam; hood: number}> = ({c, hood}) => { const o = hood * hoodVis(c); if (o < 0.01) return null;
+export const DisplayFront: React.FC<{c: Cam; hood: number; leaf?: number}> = ({c, hood, leaf = 0}) => { const lv = c.p[1] < LEAF_Y && leaf > 0.01 ? <TitleLeaf c={c} o={leaf} /> : null;
+	const o = hood * hoodVis(c); if (o < 0.01) return lv;
 	const onTop = (x: number, y: number): V3 => [x, y, deckZ(y) + HH + 0.3];
 	const streak = poly(c, [onTop(150, HY0), onTop(232, HY0), onTop(-30, HY1), onTop(-112, HY1)]);
 	const thin = poly(c, [onTop(262, HY0), onTop(276, HY0), onTop(14, HY1), onTop(0, HY1)]);
-	return <g opacity={o}>
+	return <><g opacity={o}>
 		{FACES.map((f, i) => facing(c, f.q[0], f.n) ? <path key={i} d={poly(c, f.q)} fill="#E9F2F4" opacity={i === 4 ? 0.035 : 0.025} /> : null)}
 		{facing(c, FACES[4].q[0], N_TOP) && <>{streak && <path d={streak} fill="#F4F8FA" opacity={0.07} />}{thin && <path d={thin} fill="#F4F8FA" opacity={0.1} />}</>}
 		<HoodEdges c={c} front o={1} />
+		</g>{lv}</>; };
+
+/* ---------- the title glass: a tall clear leaf standing on the hood's front pane (y = HY0), the full width of the hood ----------
+   Clear glass: a breath of fill, a bright top edge, fainter sides (no streak of its own: the hood's streak shows through). Drawn over the sword when the camera
+   is in front of it (DisplayFront), under it from behind (DisplayBack); it dissolves as the lens comes near, like the hood. */
+export const LEAF_Y = HY0, LEAF_TOP = 1475;
+const lf = (x: number, z: number): V3 => [x, LEAF_Y, z];
+export const TitleLeaf: React.FC<{c: Cam; o: number}> = ({c, o}) => { const near = cl((Math.abs(c.p[1] - LEAF_Y) - 30) / 280), k = o * near; if (k < 0.01) return null;
+	const zb = deckZ(LEAF_Y) + HH, face = poly(c, [lf(HX0, zb), lf(HX1, zb), lf(HX1, LEAF_TOP), lf(HX0, LEAF_TOP)]);
+	const edge = (a: V3, b: V3, op: number, key: string) => { const d = poly(c, [a, b], false); if (!d) return null; const m = proj(c, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]);
+		return <path key={key} d={d} stroke="#F2F7F8" strokeOpacity={op} strokeWidth={Math.max(1.1, Math.min(2.6, c.f * 1.6 / Math.max(1, m[2])))} strokeLinecap="round" fill="none" />; };
+	return <g opacity={k}>
+		{face && <path d={face} fill="#E9F2F4" opacity={0.03} />}
+		{edge(lf(HX0, LEAF_TOP), lf(HX1, LEAF_TOP), 0.5, 't')}{edge(lf(HX0, zb), lf(HX0, LEAF_TOP), 0.3, 'l')}{edge(lf(HX1, zb), lf(HX1, LEAF_TOP), 0.3, 'r')}
 	</g>; };
 
-/* ---------- the etched title on the hood's top glass, behind the sword (world quad; the master maps its plaque onto it) ---------- */
-/** the whole source sheet (1400 × 640 px; the plaque 1080 × 404 inside): plaque 680 mm wide on the glass (its foot 5 cm behind the blade) */
-export const DTITLE_W = 881, DTITLE_H = 403, DTITLE_Y = 168;
-export const titleQuadOn = (c: Cam): [number, number][] | null => { const hw = DTITLE_W / 2, hh = DTITLE_H / 2, u: V3 = [0, Math.cos(DTILT), Math.sin(DTILT)];
-	const C: V3 = [0, DTITLE_Y, deckZ(DTITLE_Y) + HH + 0.5];
-	const at = (sx: number, su: number): V3 => [C[0] + sx * hw, C[1] + su * hh * u[1], C[2] + su * hh * u[2]];
+/* ---------- the etched title on the title glass (the leaf on the hood's front pane), facing the camera, in front of the sword
+   (world quad; the master maps its plaque onto it). At 9.5 s the plaque is ~1220 px wide in the upper middle, the sword below it. ---------- */
+/** the whole source sheet (1400 × 640 px; the plaque 1080 × 404 inside): plaque 640 mm wide on the leaf, its centre 1300 mm up */
+export const DTITLE_W = 829.6, DTITLE_H = 379.3, DTITLE_Y = HY0 - 0.5, DTITLE_Z = 1300;
+export const titleQuadOn = (c: Cam): [number, number][] | null => { const hw = DTITLE_W / 2, hh = DTITLE_H / 2;
+	const at = (sx: number, su: number): V3 => [sx * hw, DTITLE_Y, DTITLE_Z + su * hh];
 	const p = [at(1, 1), at(-1, 1), at(-1, -1), at(1, -1)].map((q) => proj(c, q)); if (p.some((v) => v[2] < 20)) return null;
 	return p.map((v) => [v[0], v[1]]); };
 void toCam;
