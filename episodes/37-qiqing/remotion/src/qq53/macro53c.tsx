@@ -2,7 +2,7 @@ import React from 'react';
 import {W, H, rnd, lerp, cl, seg} from '../qq50/kit50';
 import {B, LacDefs, Lacquer, Vignette} from '../qq50/styleB';
 import {Tag, P2} from './parts53';
-import {MacroSpec, MacroCam, macroProj, macroZ} from './macro53';
+import {MacroSpec, MacroCam, macroProj, macroZ, STRIP_M} from './macro53';
 import {BladeMacroC} from './macrob53c';
 import {MarkSet, markAt} from './blade53c';
 import {BladeEnd53} from './paper53c';
@@ -49,66 +49,65 @@ const SUBJ = {p: 12, q: 2}, SU = (SUBJ.p + 1) / 2 * LA10 - MACRO_S0, SV = SUBJ.q
 /* v3.2 (owner: "this scene has to be a cross section"): the v3 section cut is back, a vertical wall through the subject's centre
    (its widest point), facing the lens, a short trench (5 mm towards the lens) seen through its own opening, so the near lip hides the wall's foot (a hole, not a box): tin skin over the bronze under the pale diamonds, bare bronze under the dark ground. The
    camera keeps the v3.1 crane, but to a three-quarter view (pitch 36°) so the diamonds read from above AND the wall faces the lens. */
-/* v3.2 r2 (owner: "a big segmentation"): the section runs from the subject down past the frame's bottom edge (the trench's near lip
-   and floor are out of frame), so the cut face itself fills the lower middle of the frame: tin skin on top, the bronze body below */
-const UC = SU, UN = UC - 18, V0 = SV - 7.4, V1 = SV + 7.4, ZF = -18, SKIN = 0.85;
-/** where the wall (u = UC) runs under a pale diamond: the v-intervals of the line through each cell's pale core (cellQuad at
-    LAT.inSc, the same quad every view draws), clipped to the cut [V0, V1] */
+/* v3.3 (owner: "a cutout of the sword", not a deep trench): the blade is sliced straight across at UC (through the subject's centre)
+   and the near piece is gone (Leg12 clips the land to the far side of the cut and dissolves the near side out), so the cut face is the
+   sword's own thin section: top face z10, the other face its mirror about the mid-plane Z0 (≈ 8 mm thick at the ridge, a sharp edge),
+   the tin skin on both faces under the pale diamonds, plain bronze in the 4.5 mm edge bands and inside. */
+const UC = SU, Z0 = -0.6, SKIN = 0.7, HWC = SPEC10.hw(UC), FV0 = -(HWC - STRIP_M), FV1 = HWC - STRIP_M;
+const zTop = (v: number) => z10(UC, v), zBot = (v: number) => 2 * Z0 - z10(UC, v);
+/** where the cut (u = UC) runs under a pale diamond: the v-intervals of the line through each cell's pale core (cellQuad at
+    LAT.inSc, the same quad every view draws), clipped to the patterned field */
 const paleOnCut = (): [number, number][] => { const Us = UC + MACRO_S0, out: [number, number][] = [];
-	for (let p = 0; p <= 30; p++) for (let q = -8; q <= 8; q++) { if (((p + q) % 2 + 2) % 2) continue;
+	for (let p = 0; p <= 30; p++) for (let q = -10; q <= 10; q++) { if (((p + q) % 2 + 2) % 2) continue;
 		const s = (p + 1) / 2 * LA10; if (Math.abs(s - Us) > LA10) continue;
 		const Q = cellQuad({p, q, s, w: q / 2 * LW10, pale: true, i: (p + q) / 2, j: (p - q) / 2}, LAT.inSc), vs: number[] = [];
 		for (let k = 0; k < 4; k++) { const [u0, v0] = Q[k], [u1, v1] = Q[(k + 1) % 4]; if ((u0 - Us) * (u1 - Us) <= 0 && u0 !== u1) vs.push(lerp(v0, v1, (Us - u0) / (u1 - u0))); }
-		if (vs.length < 2) continue; const a = Math.max(V0, Math.min(...vs)), b = Math.min(V1, Math.max(...vs)); if (b - a > 0.2) out.push([a, b]); }
+		if (vs.length < 2) continue; const a = Math.max(FV0, Math.min(...vs)), b = Math.min(FV1, Math.max(...vs)); if (b - a > 0.2) out.push([a, b]); }
 	return out.sort((x, y) => x[0] - y[0]); };
+/** the cut line on screen (the top face along u = UC, rotated like the land), extended flat to both sides: the land is drawn above it,
+    the near piece below it */
+const cutClip = (m: MacroCam, side: 'far' | 'near') => { const R = m.rot ?? 0, n = 48;
+	const pts = Array.from({length: n + 1}, (_, i) => { const v = lerp(-HWC - 0.5, HWC + 0.5, i / n), q = macroProj(m, UC, v, zTop(v)); return rotPt(q[0], q[1], R); });
+	const l = pts[0], r = pts[n], Y = side === 'far' ? -400 : H + 400;
+	return 'M' + [[-400, l[1]], ...pts, [W + 400, r[1]], [W + 400, Y], [-400, Y]].map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('L') + 'Z'; };
 const SectionCut: React.FC<{m: MacroCam; op: number}> = ({m, op}) => { const P = (u: number, v: number, z: number) => macroProj(m, u, v, z);
 	const pt = (q: [number, number, number]) => `${q[0].toFixed(1)},${q[1].toFixed(1)}`;
-	const vs = Array.from({length: 27}, (_, i) => lerp(V0, V1, i / 26));
-	const farTop = vs.map((v) => P(UC, v, z10(UC, v))), farBot = vs.map((v) => P(UC, v, ZF));
-	const opening = 'M' + [...vs.map((v) => P(UN, v, z10(UN, v))), ...[...farTop].reverse()].map(pt).join('L') + 'Z';
-	const floor = 'M' + [P(UN, V0, ZF), P(UN, V1, ZF), P(UC, V1, ZF), P(UC, V0, ZF)].map(pt).join('L') + 'Z';
-	const side = (v: number) => 'M' + [...Array.from({length: 12}, (_, i) => { const u = lerp(UN, UC, i / 11); return P(u, v, z10(u, v)); }), P(UC, v, ZF), P(UN, v, ZF)].map(pt).join('L') + 'Z';
-	const far = 'M' + [...farTop, ...[...farBot].reverse()].map(pt).join('L') + 'Z';
-	const f0 = P(UC, (V0 + V1) / 2, z10(UC, 13)), f1 = P(UC, (V0 + V1) / 2, ZF);
-	/* the tin skin (design C): under each cell's pale diamond (cellQuad at LAT.inSc) where the wall cuts it; between them the dark
-	   ground and stars: bare bronze with a thin dark top (no skin) */
-	const skins = paleOnCut().map(([a, b], k) => { const n = 12;
-		const top = Array.from({length: n + 1}, (_, i) => { const v = lerp(a, b, i / n); return P(UC, v, z10(UC, v)); }), bot = Array.from({length: n + 1}, (_, i) => { const v = lerp(a, b, i / n); return P(UC, v, z10(UC, v) - SKIN); });
-		return <g key={k}><path d={'M' + [...top, ...[...bot].reverse()].map(pt).join('L') + 'Z'} fill="#FFFFFF" opacity={0.55} filter="url(#k10glow)" />
-			<path d={'M' + [...top, ...[...bot].reverse()].map(pt).join('L') + 'Z'} fill="url(#k10skin)" />
-			<path d={'M' + top.map(pt).join('L')} stroke="#FFFFFF" strokeWidth={2.4} strokeOpacity={0.9} fill="none" />
-			<path d={'M' + bot.map(pt).join('L')} stroke="#6E6A60" strokeWidth={1.2} strokeOpacity={0.6} fill="none" /></g>; });
-	const gaps = (() => { const p = paleOnCut(), out: [number, number][] = []; let x = V0; for (const [a, b] of p) { if (a > x + 0.05) out.push([x, a]); x = b; } if (V1 > x + 0.05) out.push([x, V1]); return out; })();
-	const notches = gaps.map(([a, b], k) => { const n = 8, top = Array.from({length: n + 1}, (_, i) => { const v = lerp(a, b, i / n); return P(UC, v, z10(UC, v)); }), bot = [...top].reverse().map((q, i) => { const v = lerp(b, a, i / n); return P(UC, v, z10(UC, v) - 0.4); });
-		return <path key={k} d={'M' + [...top, ...bot].map(pt).join('L') + 'Z'} fill="#2A180A" opacity={0.8} />; });
+	const vs = Array.from({length: 73}, (_, i) => lerp(-HWC, HWC, i / 72));
+	const top = vs.map((v) => P(UC, v, zTop(v))), bot = vs.map((v) => P(UC, v, zBot(v)));
+	const face = 'M' + [...top, ...[...bot].reverse()].map(pt).join('L') + 'Z';
+	const f0 = P(UC, 0, zTop(0)), f1 = P(UC, 0, zBot(0));
+	/* the tin skin (design C): on both faces, under each cell's pale diamond where the cut crosses it; between them (the dark ground
+	   and stars) bare bronze with a thin dark rim; the edge bands plain */
+	const band = (a: number, b: number, z0: (v: number) => number, z1: (v: number) => number, n = 12) => 'M' + [...Array.from({length: n + 1}, (_, i) => P(UC, lerp(a, b, i / n), z0(lerp(a, b, i / n)))),
+		...Array.from({length: n + 1}, (_, i) => P(UC, lerp(b, a, i / n), z1(lerp(b, a, i / n))))].map(pt).join('L') + 'Z';
+	const pale = paleOnCut();
+	const skins = pale.map(([a, b], k) => <g key={k}>
+		<path d={band(a, b, zTop, (v) => zTop(v) - SKIN)} fill="#FFFFFF" opacity={0.45} filter="url(#k10glow)" />
+		<path d={band(a, b, zTop, (v) => zTop(v) - SKIN)} fill="url(#k10skin)" />
+		<path d={band(a, b, (v) => zBot(v) + SKIN, zBot)} fill="url(#k10skin)" opacity={0.85} />
+		<path d={'M' + Array.from({length: 13}, (_, i) => P(UC, lerp(a, b, i / 12), zTop(lerp(a, b, i / 12)))).map(pt).join('L')} stroke="#FFFFFF" strokeWidth={2.4} strokeOpacity={0.9} fill="none" /></g>);
+	const gaps = (() => { const out: [number, number][] = []; let x = FV0; for (const [a, b] of pale) { if (a > x + 0.05) out.push([x, a]); x = b; } if (FV1 > x + 0.05) out.push([x, FV1]); return out; })();
+	const notches = gaps.map(([a, b], k) => <g key={k}><path d={band(a, b, zTop, (v) => zTop(v) - 0.3, 8)} fill="#2A180A" opacity={0.8} /><path d={band(a, b, (v) => zBot(v) + 0.3, zBot, 8)} fill="#2A180A" opacity={0.6} /></g>);
 	/* the cast bronze body in section: fine crystalline grain */
-	const grain = Array.from({length: 420}, (_, i) => { const v = lerp(V0 + 0.6, V1 - 0.6, rnd(i, 31)), z = lerp(-16, z10(UC, v) - SKIN - 0.3, rnd(i, 32)), q = P(UC - 0.01, v, z), r = 0.7 + 1.6 * rnd(i, 33);
+	const grain = Array.from({length: 260}, (_, i) => { const v = lerp(-HWC + 2, HWC - 2, rnd(i, 31)), z = lerp(zBot(v) + SKIN + 0.2, zTop(v) - SKIN - 0.2, rnd(i, 32)); if (zTop(v) - zBot(v) < 2 * SKIN + 0.6) return null;
+		const q = P(UC - 0.01, v, z), r = 0.7 + 1.5 * rnd(i, 33);
 		return <circle key={i} cx={q[0]} cy={q[1]} r={r} fill={rnd(i, 34) > 0.5 ? '#FFE4A8' : '#6A4218'} opacity={0.14 + 0.18 * rnd(i, 35)} />; });
+	const lab = P(UC - 0.02, -HWC * 0.45, Z0);
 	return <g opacity={op}>
 		<defs>
-			<linearGradient id="k10far" gradientUnits="userSpaceOnUse" x1={f0[0]} y1={f0[1]} x2={f1[0]} y2={f1[1]}><stop offset="0" stopColor="#F0C878" /><stop offset="0.35" stopColor="#D69E50" /><stop offset="1" stopColor="#7A4E22" /></linearGradient>
+			<linearGradient id="k10far" gradientUnits="userSpaceOnUse" x1={f0[0]} y1={f0[1]} x2={f1[0]} y2={f1[1]}><stop offset="0" stopColor="#F0C878" /><stop offset="0.5" stopColor="#D69E50" /><stop offset="1" stopColor="#9A6630" /></linearGradient>
 			<linearGradient id="k10skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFFFF" /><stop offset="0.55" stopColor="#EEF0EC" /><stop offset="1" stopColor="#C4C8C2" /></linearGradient>
-			<filter id="k10fl" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5" /></filter>
-			<filter id="k10glow" x="-20%" y="-200%" width="140%" height="500%"><feGaussianBlur stdDeviation="6" /></filter>
+			<filter id="k10glow" x="-20%" y="-200%" width="140%" height="500%"><feGaussianBlur stdDeviation="5" /></filter>
+			<filter id="k10sh" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="10" /></filter>
 		</defs>
-		{/* everything inside the cut is seen only through its opening in the surface: the near lip overlaps the wall's foot */}
-		<clipPath id="k10hole"><path d={opening} /></clipPath>
-		<path d={opening} fill="#1A0E07" />
-		<g clipPath="url(#k10hole)">
-			<path d={floor} fill="#120904" filter="url(#k10fl)" />
-			<path d={side(V0)} fill="#2E1C0E" />
-			<path d={side(V1)} fill="#1C1008" />
-			<path d={far} fill="url(#k10far)" />
-			{grain}{notches}{skins}
-			<path d={'M' + farTop.map(pt).join('L')} stroke="#2A180A" strokeWidth={1.2} strokeOpacity={0.5} fill="none" />
-		</g>
-		{/* the body of the section: plain bronze (the tin is only the thin skin on top) */}
-		{(() => { const q = P(UC - 0.02, SV, -6.5); return <Tag id="k10c" x={q[0]} y={q[1] + 16} s="青铜" fs={46} anchor="middle" col={B.cream} scrim={0.3} />; })()}
-		{/* the trench's near lip: the cut edge on the surface catches a thin line of light, a soft shadow just inside it */}
-		<path d={'M' + vs.map((v) => P(UN, v, z10(UN, v))).map(pt).join('L')} stroke="#0A0502" strokeWidth={7} strokeOpacity={0.45} fill="none" transform="translate(0,4)" clipPath="url(#k10hole)" />
-		<path d={'M' + vs.map((v) => P(UN, v, z10(UN, v))).map(pt).join('L')} stroke="#F0D49C" strokeWidth={1.8} strokeOpacity={0.6} fill="none" />
+		{/* a soft shadow under the cut face, so the slice sits on the dark ground */}
+		<path d={face} fill="#000" opacity={0.5} filter="url(#k10sh)" transform="translate(0,14)" />
+		<path d={face} fill="url(#k10far)" />
+		{grain}{notches}{skins}
+		<path d={face} fill="none" stroke="#2A180A" strokeWidth={1.4} strokeOpacity={0.6} />
+		{/* the body of the section: plain bronze (the tin is only the thin skin on the faces) */}
+		<Tag id="k10c" x={lab[0]} y={lab[1] + 108} s="青铜" fs={46} anchor="middle" col={B.cream} scrim={0.35} to={[lab[0], lab[1]]} />
 	</g>; };
-
 /** the subject's raised rim catching the light: a crisp line round its inner edge, brightest on the lit (far, right) side, and one
     small glint at its lit corner — on the surface, through the macro camera */
 const SubjectRim: React.FC<{m: MacroCam; q: [number, number][]; k: number}> = ({m, q, k}) => { const P = (uu: number, vv: number) => macroProj(m, uu, vv, z10(uu, vv) + 0.06);
@@ -170,7 +169,16 @@ export const Leg12: React.FC<{t: number}> = ({t}) => { const sp = specOf(t), m =
 	const TY = SUBJ_XY[1] - 170;
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<LacDefs /><Lacquer sheen={lerp(0.1, 0.06, u)} id="ho" />
-		<BladeMacroC sp={sp} id="ho" pal={u} shift={-cu} focus={fk > 0.004 ? {u: SU, v: SV, k: fk} : undefined}>{markO > 0.004 && <MarkSet id="ml" S={(a, w) => { const uu = (a - SW.bladeA) * 10 - cu, vv = w * 10, q = macroProj(m, uu, vv, zt(uu, vv) + 0.05); return [q[0], q[1]]; }} vis={markVis} o={markO} col={(side, n) => hexMix(LATC, '#FFF2C8', Math.min(1, litOf(side, n, t)))} lit={(side, n) => Math.min(1, litOf(side, n, t))} />}{fk > 0.004 && <SubjectRim m={m} q={subjQ} k={fk} />}{cutOp > 0.004 && <SectionCut m={m} op={cutOp} />}</BladeMacroC>
+		{/* v3.3: while the cut is open the land is drawn twice, clipped at the cut line: the far side as it is, the near piece dissolving
+		   out (gone while the cut is held), and the sword's own section face on top, in the land's rotation */}
+		{(() => { const land = () => <BladeMacroC sp={sp} id="ho" pal={u} shift={-cu} focus={fk > 0.004 ? {u: SU, v: SV, k: fk} : undefined}>{markO > 0.004 && <MarkSet id="ml" S={(a, w) => { const uu = (a - SW.bladeA) * 10 - cu, vv = w * 10, q = macroProj(m, uu, vv, zt(uu, vv) + 0.05); return [q[0], q[1]]; }} vis={markVis} o={markO} col={(side, n) => hexMix(LATC, '#FFF2C8', Math.min(1, litOf(side, n, t)))} lit={(side, n) => Math.min(1, litOf(side, n, t))} />}{fk > 0.004 && <SubjectRim m={m} q={subjQ} k={fk} />}</BladeMacroC>;
+			if (cutOp <= 0.004) return land();
+			return <>
+				<defs><clipPath id="k10cf"><path d={cutClip(m, 'far')} /></clipPath><clipPath id="k10cn"><path d={cutClip(m, 'near')} /></clipPath></defs>
+				<g clipPath="url(#k10cf)">{land()}</g>
+				{cutOp < 0.996 && <g clipPath="url(#k10cn)" opacity={1 - cutOp}>{land()}</g>}
+				<g transform={`rotate(${m.rot ?? -3.5} 960 540)`}><SectionCut m={m} op={cutOp} /></g>
+			</>; })()}
 		{flatO > 0.004 && <g opacity={flatO} transform={`translate(960 540) rotate(${flatRot}) scale(${flatK}) translate(-960 -540)`}><BladeEnd53 t={t} /></g>}
 		{barO > 0.004 && <g opacity={barO} transform={`translate(${130 * barOut},${-40 * barOut})`}>
 			<defs><filter id="m1blur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="20" /></filter></defs>
