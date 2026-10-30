@@ -53,10 +53,7 @@ export const stampAt53v3 = (t: number, lines: Line53[] = LINES53V3): StampState 
 	const typedEnd = (j: number) => { const L = lines[j], {rows} = split(L.s); return L.q ? L.a : L.a + (rows.length > 1 ? 0.8 : 0.35); };
 	const showFrom = (j: number) => typedEnd(j) + 0.45;
 	const id = lines[k].id;
-	if (id === 'H1') {
-		if (t < 1.42) return {y: '2026', place: '你家厨房', note: '一把普通的菜刀', oHead: 1 - seg(t, 1.28, 1.42), nPlace: 99, nNote: 99, press: 0};
-		return {y: '春秋末年', place: '越国', note: '越王勾践剑', oHead: seg(t, 1.575, 1.8), nPlace: 99, nNote: Math.ceil(5 * seg(t, 1.75, 2.05)), press: 0};
-	}
+	/* v3.4: H1 is the 1977 paper test (its own stamp from lines53v3, the generic path); the kitchen hand-over is gone */
 	if (id === 'S4') {   // the place clears, the year rolls down to 1965 (eased), the note types; pressed on beat 41
 		const u = seg(t, 21.25, STAMP_PRESS), e = u < 1 ? 1 - Math.pow(1 - u, 2.2) : 1, yr = u >= 1 ? 1965 : Math.min(2026, Math.max(1966, Math.round(2026 - 61 * e)));
 		const press = t >= STAMP_PRESS - 1e-6 ? Math.exp(-(t - STAMP_PRESS) / 0.12) * Math.cos((t - STAMP_PRESS) * 40) : 0;
@@ -65,7 +62,7 @@ export const stampAt53v3 = (t: number, lines: Line53[] = LINES53V3): StampState 
 	if (id === 'H2' && t >= 9.2) return {y: '春秋末年', place: '越国', note: '剑首 · 11道同心圆', oHead: 1, nPlace: 99, nNote: Math.ceil(10 * seg(t, 9.2, 9.45)), press: 0};
 	const st = lines[k].st; if (!st) return null;
 	const place = st.place ?? '';
-	const pk = k > 0 && lines[k].a - lines[k - 1].b < 0.3 ? k - 1 : -1, prev = pk >= 0 ? (lines[pk].id === 'S4' ? {y: '1965', place: '', note: '回到出土那天'} : lines[pk].id === 'H1' ? {y: '春秋末年', place: '越国', note: '越王勾践剑'} : lines[pk].st) : null;
+	const pk = k > 0 && lines[k].a - lines[k - 1].b < 0.3 ? k - 1 : -1, prev = pk >= 0 ? (lines[pk].id === 'S4' ? {y: '1965', place: '', note: '回到出土那天'} : lines[pk].st) : null;
 	const t0 = showFrom(k);
 	/* fix4-a (#15): a year that only extends the previous one (前473年 → 前473年后) is the same stamp going on, not a new one */
 	const sameStamp = !!prev && (prev.y === st.y || st.y.startsWith(prev.y));
