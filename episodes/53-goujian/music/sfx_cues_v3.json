@@ -1,0 +1,303 @@
+[
+{
+"t": 0.1,
+"sfx": "water_drip",
+"db": -13,
+"role": "soft",
+"note": "H1 a drop falls off the wet cleaver"
+},
+{
+"t": 0.443,
+"sfx": "tiny_crackle",
+"db": -11,
+"lead": 0.25,
+"role": "soft",
+"note": "rust blooms on the cleaver, beat 1"
+},
+{
+"t": 1.575,
+"sfx": "bronze_shimmer",
+"db": -8,
+"lead": 0.11,
+"role": "normal",
+"note": "Match 1: the bronze lattice fills the frame"
+},
+{
+"t": 9.5,
+"sfx": "glass_shimmer",
+"db": -5,
+"lead": 0.27,
+"role": "accent",
+"note": "title slams onto the case glass"
+},
+{
+"t": 11.9,
+"sfx": "hall_murmur",
+"db": -12,
+"fade_in": 0.8,
+"fade_out": 1.0,
+"role": "soft",
+"note": "S1 the hall, visitors at the rope"
+},
+{
+"t": 18.557,
+"sfx": "sheen_chime",
+"db": -7,
+"role": "normal",
+"note": "silvery sheen washes along the blade on 镀了铬"
+},
+{
+"t": 21.2,
+"sfx": "wind_snow",
+"db": -10,
+"fade_in": 1.2,
+"fade_out": 1.2,
+"role": "soft",
+"note": "1965 dig in the snow"
+},
+{
+"t": 24.87,
+"sfx": "spade_soil",
+"db": -12,
+"lead": 0.2,
+"role": "soft",
+"note": "worker 2 spade (tomb53 dig clock)"
+},
+{
+"t": 25.52,
+"sfx": "spade_soil",
+"db": -11,
+"lead": 0.2,
+"role": "soft",
+"note": "worker 1 spade"
+},
+{
+"t": 27.28,
+"sfx": "spade_soil",
+"db": -14,
+"lead": 0.2,
+"role": "soft",
+"note": "worker 2 spade"
+},
+{
+"t": 29.45,
+"sfx": "earth_rumble",
+"db": -11,
+"fade_in": 0.4,
+"fade_out": 1.0,
+"role": "soft",
+"note": "descent into the shaft (v3, faster)",
+"len": 4.6
+},
+{
+"t": 33.833,
+"sfx": "wood_lid_lift",
+"db": -8,
+"lead": 0.3,
+"len": 1.6,
+"role": "normal",
+"note": "椁 roof lifted"
+},
+{
+"t": 34.406,
+"sfx": "wood_lid_lift",
+"db": -9,
+"lead": 0.3,
+"len": 1.4,
+"role": "normal",
+"note": "outer coffin lid ①"
+},
+{
+"t": 35.538,
+"sfx": "wood_lid_lift",
+"db": -9,
+"lead": 0.3,
+"len": 1.4,
+"role": "normal",
+"note": "inner coffin lid ②"
+},
+{
+"t": 36.67,
+"sfx": "water_rinse",
+"db": -11,
+"role": "soft",
+"note": "the sheath is rinsed"
+},
+{
+"t": 38.935,
+"sfx": "sword_draw",
+"db": -4,
+"lead": 0.8,
+"role": "accent",
+"note": "the draw"
+},
+{
+"t": 47.992,
+"sfx": "paper_flutter",
+"db": -14,
+"role": "soft",
+"note": "the 1966 letters fly in (scene53c from 52.520)"
+},
+{
+"t": 49.122,
+"sfx": "paper_flutter",
+"db": -15,
+"role": "soft",
+"note": "more letters"
+},
+{
+"t": 61.9,
+"sfx": "water_rinse",
+"db": -17,
+"len": 1.6,
+"fade_in": 0.3,
+"role": "soft",
+"note": "G3 the palace reflection sinks into water"
+},
+{
+"t": 87.6,
+"sfx": "bronze_shimmer",
+"db": -10,
+"lead": 0.11,
+"role": "normal",
+"note": "G8 the reflection clears to bright bronze"
+},
+{
+"t": 94.407,
+"sfx": "clapper",
+"db": -7,
+"role": "accent",
+"note": "clapper 古剑 1977"
+},
+{
+"t": 95.54,
+"sfx": "paper_slice",
+"db": -6,
+"lead": 0.24,
+"role": "accent",
+"note": "the blade cuts the stack"
+},
+{
+"t": 95.677,
+"sfx": "paper_flutter",
+"db": -14,
+"role": "soft",
+"note": "the cut halves lean out and sag (paper53c)"
+},
+{
+"t": 111.389,
+"sfx": "tiny_crackle",
+"db": -11,
+"lead": 0.25,
+"role": "accent",
+"note": "T1 first rust bloom (on the drop)"
+},
+{
+"t": 111.955,
+"sfx": "tiny_crackle",
+"db": -14,
+"lead": 0.25,
+"role": "soft",
+"note": "2nd bloom"
+},
+{
+"t": 113.087,
+"sfx": "tiny_crackle",
+"db": -15,
+"lead": 0.25,
+"role": "soft",
+"note": "3rd bloom"
+},
+{
+"t": 117.616,
+"sfx": "rewind_whirr",
+"db": -9,
+"len": 2.83,
+"fade_out": 0.25,
+"role": "normal",
+"note": "rewind into the sheath until 84.2"
+},
+{
+"t": 126.108,
+"sfx": "layer_thud",
+"db": -10,
+"lead": 0.03,
+"role": "normal",
+"note": "剑鞘 closes"
+},
+{
+"t": 126.674,
+"sfx": "layer_thud",
+"db": -10,
+"lead": 0.03,
+"role": "normal",
+"note": "内棺"
+},
+{
+"t": 127.24,
+"sfx": "layer_thud",
+"db": -10,
+"lead": 0.03,
+"role": "normal",
+"note": "外棺"
+},
+{
+"t": 127.806,
+"sfx": "layer_thud",
+"db": -9,
+"lead": 0.03,
+"role": "normal",
+"note": "木椁"
+},
+{
+"t": 128.372,
+"sfx": "layer_thud",
+"db": -9,
+"lead": 0.03,
+"role": "normal",
+"note": "白膏泥"
+},
+{
+"t": 128.938,
+"sfx": "layer_thud",
+"db": -8,
+"lead": 0.03,
+"role": "normal",
+"note": "夯土"
+},
+{
+"t": 130.3,
+"sfx": "hall_murmur",
+"db": -14,
+"fade_in": 1.0,
+"fade_out": 1.2,
+"role": "soft",
+"note": "back in the museum (R2)"
+},
+{
+"t": 134.031,
+"sfx": "glass_shimmer",
+"db": -6,
+"lead": 0.27,
+"role": "accent",
+"note": "P1 backing out through the glass"
+},
+{
+"t": 137.2,
+"sfx": "kitchen_hum",
+"db": -13,
+"fade_in": 1.0,
+"len": 3.3,
+"fade_out": 0.6,
+"role": "soft",
+"note": "kitchen in the reflection; ends before the dead stop 109.1"
+},
+{
+"t": 140.824,
+"sfx": "seal_stamp",
+"db": -4,
+"lead": 0.05,
+"role": "accent",
+"note": "J seal on f3274"
+}
+]
