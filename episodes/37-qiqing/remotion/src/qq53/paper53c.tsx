@@ -65,6 +65,8 @@ export const Paper53: React.FC<{t: number}> = ({t}) => {
 	const tagO = (cut ? 1 : 0) * sstep(seg(t, T_CUT + 0.2, T_CUT + 0.35)) * (1 - seg(t, 60.45, 60.8));
 	const lx = (p: number, n: number, fs: number) => Math.max(p - 22, 150 + n * fs * 1.02);
 	const ly = (y: number) => cl(y, 330, H - 120);
+	/* producer r3: the two tags never collide (the lower one is clamped at the safe edge while the camera rises): keep ≥ 66 px apart, shift both up if needed */
+	const tagY = (() => { const a0 = ly(ta[1] - 36), b0 = Math.max(ly(td[1] + 70), a0 + 86), sh = Math.max(0, b0 - (H - 120)); return [a0 - sh, b0 - sh]; })();
 	const clap = sstep(seg(t, 57.55, 57.9)) * (1 - sstep(seg(t, 59.2, 59.5))), open = frameOf(t) >= frameOf(T_CLAP) ? 0 : 1, jolt = frameOf(t) >= frameOf(T_CLAP) ? Math.exp(-(t - T_CLAP) / 0.08) * Math.cos((t - T_CLAP) * 50) : 0;
 	const beam = (() => { const lt = seg(t, T_LIGHT, T_LIGHT + 0.25) * (light ? 1 : 0); return lt > 0 && <g opacity={lt * (1 - sstep(seg(t, 60.2, 60.9)))}><path d={`M1530,290 L1660,220 L1240,${H} L520,${H} Z`} fill="url(#p9beam)" />
 		<g transform="translate(1580,282) rotate(-26)"><rect x={-70} y={-60} width={150} height={120} rx={12} fill="#2A2420" stroke="#5A5048" strokeWidth={3} /><circle cx={-70} cy={0} r={48} fill="#FFF6E2" /><circle cx={-70} cy={0} r={34} fill="#FFFFFF" /><path d="M-70,-60 L-128,-92 M-70,60 L-128,92" stroke="#3A3430" strokeWidth={10} strokeLinecap="round" /></g>
@@ -89,8 +91,8 @@ export const Paper53: React.FC<{t: number}> = ({t}) => {
 		{cut && t < 61.2 && <Glint x={hit[0]} y={hit[1]} r={70} o={(1 - sstep(seg(t, T_CUT, T_CUT + 0.25))) * 0.95 + 0.05 * Math.exp(-(t - T_CUT) / 0.45)} />}
 		{tagO > 0.01 && <g opacity={tagO}>
 			<path d={`M${ta[0] - 4},${ta[1]} h-14 V${tb[1] - 3} h14`} fill="none" stroke={B.goldL} strokeWidth={4} /><path d={`M${tb[0] - 4},${tb[1] + 3} h-14 V${td[1]} h14`} fill="none" stroke={B.cream} strokeWidth={3} />
-			<Tag id="p9a" x={lx(ta[0] - 14, 5, 56)} y={ly(ta[1] - 36)} s="划破20多张" fs={56} col={B.goldL} anchor="end" />
-			<Tag id="p9b" x={lx(tb[0] - 14, 4, 48)} y={ly(td[1] + 70)} s="共30多张" fs={48} col={B.cream} anchor="end" /></g>}
+			<Tag id="p9a" x={lx(ta[0] - 14, 5, 56)} y={tagY[0]} s="划破20多张" fs={56} col={B.goldL} anchor="end" />
+			<Tag id="p9b" x={lx(tb[0] - 14, 4, 48)} y={tagY[1]} s="共30多张" fs={48} col={B.cream} anchor="end" /></g>}
 		{clap > 0.01 && <g transform={`translate(240,${800 + (1 - clap) * 420 + jolt * 6}) rotate(-7)`} opacity={clap}>
 			<rect x={0} y={0} width={230} height={160} rx={6} fill="#1E1C1A" stroke="#6A625A" strokeWidth={3} />
 			<g transform={`rotate(${-open * 24} 0 -6)`}><path d="M0,-6 L230,-6 L230,-38 L0,-38 Z" fill="#1E1C1A" />{Array.from({length: 6}, (_, i) => <path key={i} d={`M${i * 38 + 6},-36 l24,28`} stroke="#E8E2D6" strokeWidth={11} />)}</g>
