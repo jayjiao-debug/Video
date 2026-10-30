@@ -1,24 +1,33 @@
 import React from 'react';
 import {W, H, rnd, lerp, cl, seg, SANS} from '../qq50/kit50';
 import {B, Pool} from '../qq50/styleB';
-import {Cam, V3, P2, proj, poly, mix, Tag, lookAt} from './parts53';
-import {LB, SW, bladeHW, BZ, GLS} from './props53';
+import {Cam, V3, P2, proj, poly, mix, Tag, lookAt, blobOn} from './parts53';
+import {LB, SW, bladeHW, BZ} from './props53';
+import {Sword3D, SwordPose} from './sword3d';
+import {BronzeKnife53} from './knife53x';
+import {RED_LINE} from './parts53c';
 import {frameOf} from './master53';
 import {sstep} from './cam53';
-/* ep53 · TakeD, the world of legs 14–16 (81.954 → ~102 s): ONE metric world (metres), cut by the section plane y = 0
-   (everything with y < 0 is cut away, the camera lives on that open side). z = 0 is the ground at the top of the pit fill AND
-   the museum floor; the sword's tomb is at z = −10.4, the museum case stands directly above it (case53d).
-   KF12's geometry: 椁 5.0 × 1.9 m, outer coffin 2.64 × 1.04, inner coffin 2.24 × 0.86, the sword (55.6 cm) in its black lacquer
-   sheath on the inner floor. Everything here is a pure function of (camera, t). */
-export const SX0 = -0.27, SYA = 0.15, SZ = -10.445;
+/* ep53 · TakeD (v2) / TakeD3 (v3), the world of the second chamber (v3 117.6 → 130.1): ONE metric world (metres), cut by the section
+   plane y = 0 (everything with y < 0 is cut away, the camera lives on that open side). z = 0 is the ground at the top of the pit fill
+   AND the museum floor; the museum case stands directly above the tomb (scene53d).
+   v3 continuity (tasks/ep53-v3-d): the SAME tomb as the first chamber (scene53c): 椁 interior 3.2 × 2.3 m (walls 0.12, 2.0 high),
+   outer coffin 2.12 × 0.84 (0.84 high), inner coffin 1.80 × 0.60 (0.70 high), dark lacquer with gold edges and a red inset line,
+   interiors #2A1D14 / #46201A; scene53c's skeleton (head toward −x), the hero drawn by Sword3D with its hilt toward −x (screen-right,
+   as in the draw), in scene53c's black lacquer sheath on the occupant's left (+y), the bronze knife beside it.
+   Everything here is a pure function of (camera, t). */
+/** the coffins' centre line (y), the 椁 floor, the inner coffin's floor (z) */
+export const YC = 0.3, ZG = -10.68, ZI = -10.57;
+export const SX0 = -0.165, SYA = YC + 0.2, SZ = ZI + 0.012;
 /** the layers close one per beat from DA(40) (MUSIC_NOTES): the times of the hits */
 export const LAY = {sheath: 91.0112, inner: 91.5773, outer: 92.1433, guo: 92.7094, bai: 93.2754, hang: 93.8415};
 const hitT = (tb: number) => frameOf(tb) / 30;
 /** a drop that is COMPLETE on the frame of its beat: 0 → 1, gravity-like */
 export const drop = (t: number, tb: number, dur = 0.34) => { const tf = hitT(tb), u = seg(t, tf - dur, tf); return u; };
 const R = (x0: number, x1: number, z0: number, z1: number, y = 0): V3[] => [[x0, y, z1], [x1, y, z1], [x1, y, z0], [x0, y, z0]];
-export const swAt = (a: number, w: number, dz = 0, draw = 0): V3 => [SX0 - a / 100 + draw / 100, SYA + w / 100, SZ + dz / 100];
+export const swAt = (a: number, w: number, dz = 0, draw = 0): V3 => [SX0 + a / 100 - draw / 100, SYA + w / 100, SZ + dz / 100];
 const pp = (c: Cam, q: V3): P2 => { const p = proj(c, q); return [p[0], p[1]]; };
+const toMM = (c: Cam): Cam => ({...c, p: [c.p[0] * 1000, c.p[1] * 1000, c.p[2] * 1000]});
 
 /* ---------- the open box (cut by y = 0) ---------- */
 type BoxP = {x: number; z0: number; z1: number; yb: number; t: number; ring: string; inside: string; floor: string; edge?: string; line?: string};
@@ -44,46 +53,91 @@ const Slab: React.FC<{c: Cam; x: number; yb: number; z0: number; z1: number; dz:
 		{line && <path d={poly(c, [[-x + 0.08, yb * 0.55, b], [x - 0.08, yb * 0.55, b]], false)} stroke={line} strokeWidth={1.6} strokeOpacity={0.8} fill="none" />}
 	</g>; };
 
-/* ---------- the sword in its sheath (the sheath drawn as an x-ray shell) ---------- */
-const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; plankDz: number}> = ({c, draw, lit, plank, plankDz}) => { const n = 40;
-	const blade = [...Array.from({length: n + 1}, (_, i) => { const s = LB * i / n; return swAt(SW.bladeA + s, bladeHW(s), 0, draw); }), ...Array.from({length: n + 1}, (_, i) => { const s = LB * (n - i) / n; return swAt(SW.bladeA + s, -bladeHW(s), 0, draw); })];
-	const shAt = (a: number, w: number, dz = 0.4) => swAt(a, w, dz);
-	const sheath = [...Array.from({length: n + 1}, (_, i) => { const a = lerp(SW.bladeA + 0.6, SW.L + 1.6, i / n), s = Math.min(LB - 0.4, a - SW.bladeA); return shAt(a, i === n ? 0.5 : bladeHW(s) + 0.7); }),
-		...Array.from({length: n + 1}, (_, i) => { const a = lerp(SW.L + 1.6, SW.bladeA + 0.6, i / n), s = Math.min(LB - 0.4, a - SW.bladeA); return shAt(a, i === 0 ? -0.5 : -(bladeHW(s) + 0.7)); })];
-	const guard = [swAt(SW.gripA, -2.78, 0.6, draw), swAt(SW.gripA, 2.78, 0.6, draw), swAt(SW.guardA, 2.6, 0.6, draw), swAt(SW.guardA, -2.6, 0.6, draw)];
-	const grip = [swAt(SW.pomA, -0.86, 0.5, draw), swAt(SW.pomA, 0.86, 0.5, draw), swAt(SW.gripA, 0.86, 0.5, draw), swAt(SW.gripA, -0.86, 0.5, draw)];
-	const pom = [swAt(0, -1.86, 0.8, draw), swAt(0, 1.86, 0.8, draw), swAt(SW.pomA, 1.86, 0.8, draw), swAt(SW.pomA, -1.86, 0.8, draw)];
-	const a0 = pp(c, swAt(0, 0, 0, draw)), a1 = pp(c, swAt(SW.L, 0, 0, draw)), mid: P2 = [(a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2];
-	const span = Math.hypot(a1[0] - a0[0], a1[1] - a0[1]);
-	const gl = Math.max(4, Math.min(14, span * 0.03));
+/* ---------- the sword in its sheath: the shared 3-D sword (sword3d), the sheath as scene53c's black lacquer sheath (washed) ---------- */
+/** the sheath's half-width (cm) at a cm from the pommel: scene53c's sheathHW with nothing drawn */
+const sheathHW = (a: number) => (a - SW.bladeA > LB ? 0.3 : bladeHW(Math.min(LB - 0.5, Math.max(0, a - SW.bladeA))) + 0.55);
+/** the hero: Sword3D lying on the inner floor, hilt toward −x (screen-right, as in the draw); `draw` cm out of the sheath;
+    the sheath (fixed) on top of it, at `sho` opacity until its beat (then a top shell drops onto it: the sheath closes) */
+const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; plankDz: number; sho: number}> = ({c, draw, lit, plank, plankDz, sho}) => { const n = 36, cm = toMM(c);
+	const sp: SwordPose = {x0: (SX0 - draw / 100) * 1000, ya: SYA * 1000, z0: SZ * 1000, dir: 1};
+	const am = SW.guardA, at = SW.L + 2.2, aa = (i: number) => lerp(am, at, i / n);
+	const edge = (sgn: number, k = 1, dz = 0.45) => Array.from({length: n + 1}, (_, i) => swAt(aa(i), sgn * sheathHW(aa(i)) * k * (i === n ? 0.5 : 1), dz));
+	const outline = [...edge(1), ...[...edge(-1)].reverse()];
+	const a0 = pp(c, swAt(0, 0, 0, draw)), a1 = pp(c, swAt(SW.L, 0, 0, draw)), mid: P2 = [(a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2], span = Math.hypot(a1[0] - a0[0], a1[1] - a0[1]);
+	const mouth = [swAt(am - 0.8, -(sheathHW(am) + 0.3), 0.55), swAt(am - 0.8, sheathHW(am) + 0.3, 0.55), swAt(am + 0.4, sheathHW(am) + 0.3, 0.55), swAt(am + 0.4, -(sheathHW(am) + 0.3), 0.55)];
+	const shell = (o: number, dz: number) => <g opacity={o}>
+		<path d={poly(c, outline.map((q) => [q[0], q[1], q[2] + dz] as V3))} fill="#0A0605" stroke="#060403" strokeWidth={2} />
+		<path d={poly(c, edge(1, 0.86, 0.5).slice(2, n - 2).map((q) => [q[0], q[1], q[2] + dz] as V3), false)} fill="none" stroke="#FFFFFF" strokeOpacity={0.12} strokeWidth={2.5} />
+		{[1, -1].map((s) => <path key={s} d={poly(c, edge(s, 0.55, 0.5).slice(1, n - 1).map((q) => [q[0], q[1], q[2] + dz] as V3), false)} fill="none" stroke="#7A2A1A" strokeOpacity={0.7} strokeWidth={2.2} />)}
+		<path d={poly(c, mouth.map((q) => [q[0], q[1], q[2] + dz] as V3))} fill="#1E1410" stroke="#5A3A28" strokeWidth={2} />
+	</g>;
 	return <g>
-		<defs><filter id="w53gl" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation={gl} /></filter></defs>
-		<Pool id="w53sw" x={mid[0]} y={mid[1]} rx={Math.max(120, span * 0.62)} ry={Math.max(50, span * 0.2)} a={0.55 * lit} col="#FFC870" />
-		<path d={poly(c, sheath)} fill="none" stroke="#FFD890" strokeWidth={30} strokeOpacity={0.5 * lit} filter="url(#w53gl)" />
-		<path d={poly(c, blade)} fill="#FFD68A" filter="url(#w53gl)" opacity={0.95 * lit} />
-		<path d={poly(c, blade)} fill="none" stroke="#FFD890" strokeWidth={18} strokeOpacity={0.45 * lit} filter="url(#w53gl)" />
-		<path d={poly(c, blade)} fill="#F2C878" stroke="#FFF3CF" strokeWidth={2} />
-		<path d={poly(c, sheath)} fill="#1A0C08" opacity={0.97} />
-		<path d={poly(c, sheath)} fill="none" stroke="#FFF3CF" strokeWidth={2} strokeOpacity={0.95} />
-		<path d={poly(c, sheath.slice(4, n - 3), false)} fill="none" stroke="#E8B878" strokeWidth={1.4} strokeOpacity={0.55} transform="translate(0,-2)" />
-		<path d={poly(c, grip)} fill={BZ.mid} /><path d={poly(c, pom)} fill={BZ.body} stroke={BZ.line} strokeWidth={1} />
-		<path d={poly(c, guard)} fill={GLS.body} stroke="#FFF3CF" strokeWidth={2} />
-		{plank > 0 && plankDz > 0.001 && <path d={poly(c, sheath.map((q) => [q[0], q[1], q[2] + plankDz] as V3))} fill="#0A0505" stroke="#B8432A" strokeWidth={1.2} strokeOpacity={0.7} />}
+		<Pool id="w53sw" x={mid[0]} y={mid[1]} rx={Math.max(90, span * 0.62)} ry={Math.max(36, span * 0.2)} a={0.42 * lit} col="#FFC870" />
+		<Sword3D c={cm} sp={sp} id="w53h" />
+		{shell(plank > 0 && plankDz < 0.0005 ? 1 : sho, 0)}
+		{plank > 0 && plankDz >= 0.0005 && shell(1, plankDz)}
 	</g>; };
-/** one of the tomb's other swords, lying flat on the chamber floor (E1): lit = 0..1 */
+/** one of the tomb's other swords (E1): real size (58 cm), lying on the 椁 floor behind the coffins; dull bronze, the guard
+    bronze too (blue glass is the hero's alone); lit = 0..1, always a shade dimmer than the hero */
 const OtherSword: React.FC<{c: Cam; x0: number; y: number; ang: number; lit: number; id: number}> = ({c, x0, y, ang, lit, id}) => {
-	const L = 0.58, z = -10.58, ca = Math.cos(ang), sa = Math.sin(ang), at = (a: number, w: number): V3 => [x0 + ca * a - sa * w, y + sa * a + ca * w, z];
-	const n = 12, blade = [...Array.from({length: n + 1}, (_, i) => at(0.05 + L * i / n, 0.03 * (1 - Math.pow(i / n, 3)))), ...Array.from({length: n + 1}, (_, i) => at(0.05 + L * (n - i) / n, -0.03 * (1 - Math.pow((n - i) / n, 3))))];
+	const L = 0.5, z = ZG + 0.012, ca = Math.cos(ang), sa = Math.sin(ang), at = (a: number, w: number): V3 => [x0 + ca * a - sa * w, y + sa * a + ca * w, z];
+	const n = 12, blade = [...Array.from({length: n + 1}, (_, i) => at(0.08 + L * i / n, 0.022 * (1 - Math.pow(i / n, 3)))), ...Array.from({length: n + 1}, (_, i) => at(0.08 + L * (n - i) / n, -0.022 * (1 - Math.pow((n - i) / n, 3))))];
 	const a0 = pp(c, at(0, 0)), a1 = pp(c, at(L, 0)), mid: P2 = [(a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2], span = Math.hypot(a1[0] - a0[0], a1[1] - a0[1]);
-	if (lit <= 0.001) return <path d={poly(c, blade)} fill="#2A1C12" opacity={0.7} />;
+	const guard = poly(c, [at(0.065, -0.026), at(0.065, 0.026), at(0.085, 0.026), at(0.085, -0.026)]), grip = poly(c, [at(0.005, -0.009), at(0.005, 0.009), at(0.065, 0.009), at(0.065, -0.009)]), pom = poly(c, [at(-0.004, -0.018), at(-0.004, 0.018), at(0.008, 0.018), at(0.008, -0.018)]);
+	const base = '#2A1C12';
 	return <g>
-		<Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.75} ry={span * 0.4} a={0.28 * lit} col="#FFC870" />
-		<path d={poly(c, blade)} fill={mix('#2A1C12', '#E0B460', 0.6 * lit)} stroke="#F4D088" strokeOpacity={0.35 + 0.65 * lit} strokeWidth={2} />
-		<path d={poly(c, [at(0.05, 0), at(0.05 + L, 0)], false)} stroke="#FFF3CF" strokeOpacity={0.7 * lit} strokeWidth={1.2} fill="none" />
-		<path d={poly(c, [at(-0.02, -0.03), at(-0.02, 0.03), at(0.06, 0.03), at(0.06, -0.03)])} fill={mix('#2A1C12', '#4A8CD8', 0.7 * lit)} />
-		<path d={poly(c, [at(-0.1, -0.012), at(-0.1, 0.012), at(-0.02, 0.012), at(-0.02, -0.012)])} fill={mix('#2A1C12', BZ.mid, lit)} />
+		{lit > 0.001 && <Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.7} ry={span * 0.36} a={0.32 * lit} col="#FFC870" />}
+		<path d={poly(c, blade)} fill={mix(base, '#D8AC64', 0.72 * lit)} stroke="#F0C880" strokeOpacity={0.15 + 0.6 * lit} strokeWidth={1.4} />
+		<path d={poly(c, [at(0.08, 0), at(0.08 + L, 0)], false)} stroke={BZ.lit} strokeOpacity={0.55 * lit} strokeWidth={1} fill="none" />
+		<path d={grip} fill={mix(base, BZ.mid, 0.4 + 0.4 * lit)} /><path d={guard} fill={mix(base, BZ.dark, 0.5 + 0.5 * lit)} stroke={mix(base, BZ.mid, lit)} strokeWidth={1} /><path d={pom} fill={mix(base, BZ.mid, 0.4 + 0.4 * lit)} />
 	</g>; };
-export const OTHERS: {x0: number; y: number; ang: number; tb: number}[] = [{x0: 1.5, y: 0.25, ang: 0.04, tb: 86.483}, {x0: 1.58, y: 0.55, ang: -0.04, tb: 87.615}, {x0: 1.46, y: 0.85, ang: 0.05, tb: 88.747}];
+/** E1: the three other swords lie side by side on the 椁 floor behind the coffins (between the outer coffin and the 椁's far wall),
+    hilts toward −x like the hero; they light one per half-bar */
+export const OTHERS: {x0: number; y: number; ang: number; tb: number}[] = [{x0: 0.12, y: YC + 0.72, ang: 0.03, tb: 86.483}, {x0: 0.26, y: YC + 0.9, ang: -0.025, tb: 87.615}, {x0: 0.06, y: YC + 1.08, ang: 0.02, tb: 88.747}];
+
+/* ---------- the occupant: scene53c's skeleton (the same drawing, ported: scene53c does not export it), on the inner floor; head toward
+   −x, so the occupant's LEFT is +y, where the sword lies, its guard level with the pelvis ---------- */
+const OX = -0.065, OY = YC;
+const Occupant: React.FC<{c: Cam}> = ({c}) => {
+	const P = (x: number, s: number, dz = 0): V3 => [OX + x, OY + s, ZI + 0.003 + dz], m = proj(c, P(0, 0)); if (m[2] < 0.2) return null;
+	const ppm = c.f / m[2], S = (x: number, s: number) => { const p = proj(c, P(x, s)); return `${p[0].toFixed(1)},${p[1].toFixed(1)}`; };
+	const BONE = '#E4D4B0', HOL = '#3A1C14';
+	const bone = (k: string, a: [number, number], b: [number, number], w: number, knob = 1.35) => { const pa = proj(c, P(a[0], a[1])), pb = proj(c, P(b[0], b[1])), W0 = w * ppm;
+		return <g key={k}>
+			<path d={`M${pa[0]},${pa[1]} L${pb[0]},${pb[1]}`} stroke={BONE} strokeOpacity={0.5} strokeWidth={W0} strokeLinecap="round" />
+			{[pa, pb].map((q, i) => <circle key={i} cx={q[0]} cy={q[1]} r={W0 * knob / 2} fill={BONE} opacity={0.5} />)}
+			<path d={`M${pa[0]},${pa[1]} L${pb[0]},${pb[1]}`} stroke={HOL} strokeOpacity={0.72} strokeWidth={Math.max(0.8, W0 * 0.42)} strokeLinecap="round" /></g>; };
+	const line = (k: string, d: string, w = 0.008, o = 0.5) => <path key={k} d={d} fill="none" stroke={BONE} strokeOpacity={o} strokeWidth={Math.max(1.2, w * ppm)} strokeLinecap="round" strokeLinejoin="round" />;
+	const ell = (x: number, sC: number, a: number, b: number, n = 28) => 'M' + Array.from({length: n}, (_, i) => { const th = i / n * 2 * Math.PI; return S(x + a * Math.cos(th), sC + b * Math.sin(th)); }).join('L') + 'Z';
+	const sides = [1, -1];
+	const stains = Array.from({length: 16}, (_, i) => { const x = lerp(-0.8, 0.8, rnd(i, 81)), y = OY + (rnd(i, 82) - 0.5) * 0.36, d = blobOn(c, OX + x, y, 0.05 + 0.1 * rnd(i, 83), i + 301, ZI + 0.001, 9, 0.7);
+		return d ? <path key={i} d={d} fill={['#7A4E2A', '#6A4224', '#8A5A30'][i % 3]} opacity={0.22 + 0.2 * rnd(i, 84)} /> : null; });
+	const cloth: [number, number, number][] = [[0.06, 0.0, 0.17], [0.24, 0.05, 0.15], [0.3, -0.07, 0.13], [0.55, 0.02, 0.12], [-0.33, -0.1, 0.08], [0.72, -0.05, 0.08]];
+	return <g>
+		<defs><filter id="w53oT" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={Math.max(2, 0.02 * ppm)} /></filter>
+			<filter id="w53oS" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={Math.max(1.5, 0.012 * ppm)} /></filter></defs>
+		<g filter="url(#w53oS)">{stains}</g>
+		<path d={ell(-0.72, 0, 0.092, 0.076)} fill={BONE} fillOpacity={0.14} stroke={BONE} strokeOpacity={0.55} strokeWidth={Math.max(1.4, 0.008 * ppm)} />
+		{line('jaw', `M${S(-0.655, -0.052)} Q${S(-0.6, -0.03)} ${S(-0.6, 0)} Q${S(-0.6, 0.03)} ${S(-0.655, 0.052)}`, 0.009)}
+		{Array.from({length: 19}, (_, i) => { const x = lerp(-0.6, -0.04, i / 18), w = i < 5 ? 0.02 : 0.028; const a = proj(c, P(x - 0.009, 0)), b = proj(c, P(x + 0.009, 0));
+			return <path key={`v${i}`} d={`M${a[0]},${a[1]} L${b[0]},${b[1]}`} stroke={BONE} strokeOpacity={0.42} strokeWidth={w * ppm} strokeLinecap="round" />; })}
+		{sides.map((s) => line(`cl${s}`, `M${S(-0.565, s * 0.015)} Q${S(-0.58, s * 0.1)} ${S(-0.55, s * 0.16)}`, 0.011))}
+		{sides.flatMap((s) => Array.from({length: 6}, (_, i) => { const x0 = -0.535 + i * 0.042, r = 0.115 + 0.02 * Math.sin(Math.PI * (i + 0.5) / 6);
+			return line(`r${s}${i}`, `M${S(x0, s * 0.016)} Q${S(x0 - 0.02, s * r * 1.12)} ${S(x0 + 0.075, s * r * 0.95)}`, 0.007, 0.4 - 0.03 * i); }))}
+		{sides.map((s) => <path key={`p${s}`} d={`M${S(-0.03, s * 0.02)} C${S(-0.07, s * 0.1)} ${S(-0.02, s * 0.16)} ${S(0.05, s * 0.14)} C${S(0.1, s * 0.12)} ${S(0.11, s * 0.06)} ${S(0.07, s * 0.025)}`} fill={BONE} fillOpacity={0.1} stroke={BONE} strokeOpacity={0.48} strokeWidth={Math.max(1.3, 0.009 * ppm)} />)}
+		{line('sac', `M${S(-0.035, -0.02)} L${S(0.06, 0)} L${S(-0.035, 0.02)}`, 0.008, 0.42)}
+		{sides.flatMap((s) => [bone(`h${s}`, [-0.54, s * 0.165], [-0.27, s * 0.175], 0.024),
+			bone(`ra${s}`, [-0.255, s * 0.168], [-0.03, s * 0.142], 0.012, 1.2), bone(`ul${s}`, [-0.25, s * 0.185], [-0.025, s * 0.162], 0.011, 1.2),
+			...[0.132, 0.144, 0.156, 0.167].map((y, i) => line(`f${s}${i}`, `M${S(-0.01, s * y)} L${S(0.055 + 0.01 * Math.sin(i), s * (y - 0.006))}`, 0.006, 0.38))])}
+		{sides.flatMap((s) => [bone(`fe${s}`, [0.04, s * 0.095], [0.42, s * 0.085], 0.03),
+			<circle key={`k${s}`} cx={proj(c, P(0.44, s * 0.085))[0]} cy={proj(c, P(0.44, s * 0.085))[1]} r={0.022 * ppm} fill="none" stroke={BONE} strokeOpacity={0.45} strokeWidth={Math.max(1.2, 0.007 * ppm)} />,
+			bone(`ti${s}`, [0.46, s * 0.08], [0.77, s * 0.072], 0.024), bone(`fi${s}`, [0.47, s * 0.108], [0.765, s * 0.098], 0.01, 1.2),
+			...[0.055, 0.07, 0.085, 0.1].map((y, i) => line(`t${s}${i}`, `M${S(0.785, s * (0.07 + (y - 0.075) * 0.4))} L${S(0.85, s * y)}`, 0.006, 0.36))])}
+		<g filter="url(#w53oT)">{cloth.map(([x, y, r], i) => { const d = blobOn(c, OX + x, OY + y, r, i + 401, ZI + 0.01, 10, 0.6); return d ? <path key={i} d={d} fill="#1E0E09" opacity={0.5} /> : null; })}</g>
+	</g>; };
+/** the bronze knife (铜削, facts A9) beside the sheath, on the arm side, the shared BronzeKnife53 (local mm → the inner floor) */
+const Knife: React.FC<{c: Cam}> = ({c}) => { const x0 = SX0 + 0.27, y0 = SYA - 0.05, M = (x: number, y: number): [number, number] => { const p = proj(c, [x0 + x / 1000, y0 + y / 1000, ZI + 0.006]); return [p[0], p[1]]; };
+	return proj(c, [x0, y0, ZI])[2] > 0.05 ? <BronzeKnife53 M={M} id="w53k" /> : null; };
 
 /* ---------- the pit, the chamber, the closing layers ---------- */
 const FILL_X = 3.5, ZF0 = -11.3, ZCLAY = -8.2, ZY = -7.0;
@@ -113,22 +167,25 @@ export const Pit: React.FC<{c: Cam; t: number}> = ({c, t}) => { const hc = t < L
 export const Chamber: React.FC<{c: Cam; t: number; draw: number; lit: number}> = ({c, t, draw, lit}) => {
 	const dIn = 0.9 * (1 - Math.pow(drop(t, LAY.inner), 2)), dOut = 0.9 * (1 - Math.pow(drop(t, LAY.outer), 2)), dGuo = 1.1 * (1 - Math.pow(drop(t, LAY.guo), 2)), dSh = 0.18 * (1 - Math.pow(drop(t, LAY.sheath, 0.3), 2));
 	const lidIn = t >= LAY.inner - 0.34, lidOut = t >= LAY.outer - 0.34, roof = t >= LAY.guo - 0.34, plank = t >= LAY.sheath - 0.3 ? 1 : 0;
+	const LID = '#33211A', LACQ = '#1A110D', EDGE = '#F0C080';
 	return <g>
-		<Box c={c} x={2.5} z0={-10.8} z1={-8.9} yb={1.3} t={0.18} ring="#56402E" inside="#2A1D14" floor="#3A2A1E" />
+		<Box c={c} x={1.72} z0={ZG - 0.12} z1={ZG + 2.0} yb={YC + 1.15} t={0.12} ring="#4A3424" inside="#3A281C" floor="#2E2218" />
 		{OTHERS.map((o, i) => <OtherSword key={i} c={c} x0={o.x0} y={o.y} ang={o.ang} lit={frameOf(t) >= frameOf(o.tb) ? 1 - 0.25 * seg(t, o.tb, o.tb + 3) : 0} id={i} />)}
-		<Box c={c} x={1.32} z0={-10.62} z1={-9.58} yb={0.44} t={0.08} ring="#120A08" inside="#1A0E0B" floor="#24150F" line="#7A2A1C" />
-		<Box c={c} x={1.12} z0={-10.54} z1={-9.68} yb={0.31} t={0.07} ring="#160C0A" inside="#3A140D" floor="#2E100B" line="#8A3020" />
-		<SwordSheath c={c} draw={draw} lit={lit} plank={plank} plankDz={dSh} />
-		{lidIn && <Slab c={c} x={1.12} yb={0.38} z0={-9.68} z1={-9.6} dz={dIn} col="#1A0E0B" line="#8A3020" />}
-		{lidOut && <Slab c={c} x={1.32} yb={0.52} z0={-9.58} z1={-9.48} dz={dOut} col="#140A08" line="#7A2A1C" />}
-		{roof && <Slab c={c} x={2.5} yb={1.48} z0={-8.9} z1={-8.72} dz={dGuo} col="#56402E" />}
+		<Box c={c} x={1.06} z0={ZG} z1={ZG + 0.84} yb={YC + 0.36} t={0.06} ring={LACQ} inside="#2A1D14" floor="#24170F" edge={EDGE} line={RED_LINE} />
+		<Box c={c} x={0.9} z0={ZG + 0.06} z1={ZG + 0.76} yb={YC + 0.25} t={0.05} ring={LACQ} inside="#46201A" floor="#3A1C14" edge={EDGE} line={RED_LINE} />
+		<g opacity={0.62 * (0.12 + 0.88 * cl((Math.hypot(c.p[0] - OX, c.p[1] - YC, c.p[2] - ZI) - 0.45) / 0.7))}><Occupant c={c} /></g>
+		<Knife c={c} />
+		<SwordSheath c={c} draw={draw} lit={lit} plank={plank} plankDz={dSh} sho={lerp(1, 0.72, sstep(seg(t, 84.219, 85.0)))} />
+		{lidIn && <Slab c={c} x={0.9} yb={YC + 0.3} z0={ZG + 0.76} z1={ZG + 0.83} dz={dIn} col={LID} line={RED_LINE} />}
+		{lidOut && <Slab c={c} x={1.06} yb={YC + 0.42} z0={ZG + 0.84} z1={ZG + 0.91} dz={dOut} col={LID} line={RED_LINE} />}
+		{roof && <Slab c={c} x={1.72} yb={YC + 1.27} z0={ZG + 2.0} z1={ZG + 2.18} dz={dGuo} col="#4A3426" />}
 	</g>; };
 
 /* ---------- air: dots that fall through the fill and bounce off the white clay; two get through to the blade ---------- */
 export const AIR_T0 = 93.7;
 const LEAKS: {path: V3[]; t0: number}[] = [
-	{path: [[-0.75, 0, -4.2], [-0.72, 0, -8.0], [-0.68, 0, -8.6], [-0.58, 0, -9.2], [-0.62, 0.05, -9.85], [-0.55, SYA, -10.43]], t0: 94.0},
-	{path: [[-0.2, 0, -3.4], [-0.15, 0, -8.0], [-0.1, 0, -8.55], [-0.2, 0, -9.3], [-0.32, 0.06, -9.95], [-0.4, SYA, -10.43]], t0: 94.45}];
+	{path: [[0.0, 0, -4.2], [0.03, 0, -8.0], [0.07, 0, -8.6], [0.17, 0, -9.2], [0.13, 0.05, -9.85], [0.2, SYA, SZ + 0.006]], t0: 94.0},
+	{path: [[0.55, 0, -3.4], [0.6, 0, -8.0], [0.65, 0, -8.55], [0.55, 0, -9.3], [0.43, 0.06, -9.95], [0.33, SYA, SZ + 0.006]], t0: 94.45}];
 const pathAt = (path: V3[], u: number): V3 => { const segs = path.slice(1).map((q, i) => Math.hypot(q[0] - path[i][0], q[2] - path[i][2])), tot = segs.reduce((a, b) => a + b, 0); let d = u * tot;
 	for (let i = 0; i < segs.length; i++) { if (d <= segs[i] || i === segs.length - 1) { const k = cl(d / segs[i]); return [lerp(path[i][0], path[i + 1][0], k), lerp(path[i][1], path[i + 1][1], k), lerp(path[i][2], path[i + 1][2], k)]; } d -= segs[i]; }
 	return path[path.length - 1]; };
@@ -158,13 +215,13 @@ export const Air: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < AIR_T0) 
 const lbl = (t: number, tb: number) => (frameOf(t) >= frameOf(tb) ? 1 : 0);
 export const Labels: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < LAY.sheath || t > 94.8) return null;
 	const fo = 1 - seg(t, 94.3, 94.8), lx = 1500, dy = 52, L = (q: V3) => pp(c, q);
-	const o1 = L([-1.32 + 0.04, 0, -9.85]), o2 = L([-1.12 + 0.035, 0, -10.05]);
+	const o1 = L([-1.06 + 0.03, 0, ZG + 0.45]), o2 = L([-0.9 + 0.025, 0, ZG + 0.35]);
 	return <g opacity={fo}>
-		{lbl(t, LAY.bai) > 0 && <Tag id="w53a" x={lx} y={424 + dy} s="白膏泥" fs={52} col={B.cream} to={L([-3.05, 0, -8.55])} />}
-		{lbl(t, LAY.guo) > 0 && <Tag id="w53b" x={lx} y={560 + dy} s="木椁" fs={52} col={B.cream} to={L([-2.41, 0, -9.5])} />}
-		{lbl(t, LAY.inner) > 0 && <Tag id="w53c" x={lx} y={696 + dy} s="两层棺" fs={52} col={B.cream} to={o1} />}
-		{lbl(t, LAY.outer) > 0 && <><path d={`M${o2[0]},${o2[1]} L${lx - 52 * 0.35},${696 + dy - 52 * 0.36}`} fill="none" stroke={B.lac} strokeWidth={5} strokeOpacity={0.6} /><path d={`M${o2[0]},${o2[1]} L${lx - 52 * 0.35},${696 + dy - 52 * 0.36}`} fill="none" stroke={B.goldL} strokeWidth={2.2} /><circle cx={o2[0]} cy={o2[1]} r={5} fill={B.goldL} stroke={B.lac} strokeWidth={1.5} /></>}
-		{lbl(t, LAY.sheath) > 0 && <Tag id="w53d" x={lx} y={832 + dy} s="剑鞘" fs={52} col={B.goldL} to={L(swAt(SW.L - 4, -bladeHW(LB - 4) - 1.2, 0.6))} />}
-		{lbl(t, LAY.hang) > 0 && <Tag id="w53e" x={lx} y={288 + dy} s="夯土" fs={52} col={B.cream} to={L([-3.0, 0, -5.0])} />}
+		{lbl(t, LAY.bai) > 0 && <Tag id="w53a" x={lx} y={424 + dy} s="白膏泥" fs={56} col={B.cream} to={L([-3.05, 0, -8.55])} />}
+		{lbl(t, LAY.guo) > 0 && <Tag id="w53b" x={lx} y={560 + dy} s="木椁" fs={56} col={B.cream} to={L([-1.66, 0, ZG + 1.2])} />}
+		{lbl(t, LAY.inner) > 0 && <Tag id="w53c" x={lx} y={696 + dy} s="两层棺" fs={56} col={B.cream} to={o1} />}
+		{lbl(t, LAY.outer) > 0 && <><path d={`M${o2[0]},${o2[1]} L${lx - 56 * 0.35},${696 + dy - 56 * 0.36}`} fill="none" stroke={B.lac} strokeWidth={5} strokeOpacity={0.6} /><path d={`M${o2[0]},${o2[1]} L${lx - 56 * 0.35},${696 + dy - 56 * 0.36}`} fill="none" stroke={B.goldL} strokeWidth={2.2} /><circle cx={o2[0]} cy={o2[1]} r={5} fill={B.goldL} stroke={B.lac} strokeWidth={1.5} /></>}
+		{lbl(t, LAY.sheath) > 0 && <Tag id="w53d" x={lx} y={832 + dy} s="剑鞘" fs={56} col={B.goldL} to={L(swAt(SW.guardA + 6, -sheathHW(SW.guardA + 6) - 0.4, 0.6))} />}
+		{lbl(t, LAY.hang) > 0 && <Tag id="w53e" x={lx} y={288 + dy} s="夯土" fs={56} col={B.cream} to={L([-3.0, 0, -5.0])} />}
 	</g>; };
 export {lookAt, R, W, H, SANS};

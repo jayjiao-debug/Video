@@ -20,7 +20,7 @@ const Visitor: React.FC<{c: Cam; v: typeof VIS[0]; o: number; lite: number}> = (
 	const foot = proj(c, [fx, fy, 0]), head = proj(c, [fx, fy, v.h * 1000]); if (foot[2] < 300 || head[2] < 300) return null;
 	const hpx = Math.hypot(head[0] - foot[0], head[1] - foot[1]); if (hpx < 8) return null;
 	const cen = proj(c, [0, 0, 1000]), flip = cen[0] < foot[0];
-	const col = mix(['#22140D', '#26170F', '#1E110B'][v.tint], '#4A3426', lite);
+	const col = mix(['#1C100A', '#1F120C', '#190E09'][v.tint], '#26180F', lite);   // opaque, a tone darker than the wall
 	const k = Math.max(1, hpx / 450);
 	return <g opacity={o} transform={`translate(${foot[0]},${foot[1]}) scale(${flip ? -1 : 1},1) translate(${-foot[0]},${-foot[1]})`}>
 		<g transform={`translate(${-2.6 * k},${-2 * k})`} opacity={0.45 - 0.27 * lite}><Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col="#E8A860" /></g>
