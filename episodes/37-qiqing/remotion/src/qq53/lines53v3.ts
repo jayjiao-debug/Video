@@ -34,12 +34,12 @@ export const LINES53V3: Line53[] = [
 	{id: 'L1', a: 125.54, b: 130.069, s: "剑鞘、两层棺、木椁、白膏泥，\n一层层，把空气隔绝在外。", st: {y: "战国中期", place: "望山1号墓", note: "层层隔绝空气"}},
 	{id: 'R2', a: 130.069, b: 134.031, s: "出了墓，再好的保管，\n也挡不住它慢慢[变暗]。", st: {y: "1965 → 今", place: "湖北省博物馆", note: "据后德俊 · 渐失光泽"}},
 	{id: 'P1', a: 134.031, b: 139.692, s: "它不是不会锈，\n是那座墓，替它挡了[两千多年]。", st: {y: "2026", place: "今天", note: "本片归纳"}},
-	{id: 'END', a: 140.824, b: 144.824, s: "当年，该不该把它挖出来？", st: null},   // v3.4 (owner, 马首-style debate); lead-in END_LEAD53 above it
+	{id: 'END', a: 140.824, b: 144.824, s: "“天下第一剑”，你第一次见到它，是在哪？", st: null},   // v3.4 (owner); the small row END_SUB53 under it
 ];
 export const SOURCES53V3: [string, string] = [
 	'资料：湖北省博物馆（2025研究成果）· 光明日报（陈振裕 2016；江旭东 2025）· 北京日报（后德俊 2016）',
 	'《左传》哀公元年、二十二年 · 《国语》越语上、下 · 《史记》越王句践世家、吴太伯世家',
 ];
-/** v3.4 end card: the lead-in row over the debate question (the film's conclusion, R2) */
-export const END_LEAD53 = '出了墓，它就在慢慢变暗。';
+/** v3.4 end card: the small row under the question (owner: 课本里？博物馆里？还是今天？) */
+export const END_SUB53 = '课本里？博物馆里？还是今天？';
 export const CARD_T3 = 140.824;
