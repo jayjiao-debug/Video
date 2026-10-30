@@ -13,6 +13,7 @@ import {Rimmed, Pose} from '../qq44/figure44';
 import {grounded} from '../qq47/pose47';
 import {ikArm, toBody} from '../qq51/partsB51';
 import {BronzeKnife53} from './knife53x';
+import {Lifter53} from './lifter53b4';
 
 import {frameOf, DA} from './master53';
 import {Marks, Letters, BladeClip, Reading, Water} from './inscr53c';
@@ -149,9 +150,13 @@ export const Digger53: React.FC<{c: Cam; xw: number; yw?: number; grip: V3; id: 
 export const KNIFE3 = {x0: 0.40, y: -0.228, z: OZ + 0.012, dir: 1};
 export const Knife53: React.FC<{c: Cam; o?: number}> = ({c, o = 1}) => <BronzeKnife53 id="b3" o={o}
 	M={(x, y) => { const p = proj(c, [KNIFE3.x0 + KNIFE3.dir * x / 1000, KNIFE3.y + y / 1000, KNIFE3.z]); return [p[0], p[1]]; }} />;
-/** a 56 px tag kept inside the safe area and out of the subtitle box (x < 1150, y < 280) */
+/** fix4 #4: a tag box (left x0, right x1, 56 px baseline y) kept out of the J seal + halo (x ≥ 1663, y ≥ 887: baseline ≤ 860 once the
+   box reaches x 1600) and the depth tag (x ≤ 520, y ≥ 940: baseline ≤ 920 once the box reaches x 580); the caps ease in over 100 px of
+   x, so a moving tag never jumps */
+const capY = (x0: number, x1: number, y: number) => Math.min(y, lerp(H - 58, 860, cl((x1 - 1500) / 100)), lerp(H - 58, 920, cl((680 - x0) / 100)));
+/** a 56 px tag kept inside the safe area, out of the subtitle box (x < 1150, y < 280) and out of the seal and depth-tag zones */
 const SafeTag: React.FC<{id: string; s: string; x: number; y: number; o: number; col?: string}> = ({id, s, x, y, o, col}) => { if (o <= 0.01) return null;
-	const fs = 56, tw = fs * s.length * 0.98, hx = tw / 2 + 10, X = cl(x, 120 + hx, W - 120 - hx), Y0 = cl(y, 58 + fs, H - 58), Y = X - hx < 1150 ? Math.max(Y0, 280 + fs) : Y0;
+	const fs = 56, tw = fs * s.length * 0.98, hx = tw / 2 + 10, X = cl(x, 120 + hx, W - 120 - hx), Y0 = capY(X - hx, X + hx, cl(y, 58 + fs, H - 58)), Y = X - hx < 1150 ? Math.max(Y0, 280 + fs) : Y0;
 	return <Tag id={id} x={X} y={Y} s={s} fs={fs} anchor="middle" col={col} o={o} />; };
 const clampP = (p: [number, number, number]): [number, number, number] => [cl(p[0], 260, 1660), cl(p[1], 300, 860), p[2]];
 const TagC: React.FC<{p: [number, number, number]; n: string; o: number}> = ({p, n, o}) => o <= 0.01 ? null : <g opacity={o}><circle cx={p[0]} cy={p[1]} r={34} fill="#120A06" opacity={0.6} /><circle cx={p[0]} cy={p[1]} r={30} fill="none" stroke={B.goldL} strokeWidth={3} />
@@ -188,6 +193,11 @@ export const Chamber53B3: React.FC<{t: number}> = ({t: tv}) => {
 	const dOp = (1 - seg(t, 38.2, 38.75)) * seg(t, 36.7, 37.1);
 	const rightS = proj(c, gx(1))[0] > proj(c, gx(-1))[0] ? 1 : -1, stampDodge = sstep(seg(t, 37.15, 37.4)) * (1 - sstep(seg(t, 38.0, 38.4)));
 	const digY = (side: number) => cl(gx(side)[1] - 0.12, -0.3, 0.62);
+	/** the two gloves on a lid's corner at its `side` end: one on the near long edge just inside the corner, one on the end face */
+	const corner = (e: ReturnType<typeof lidEdges>, hx: number, side: number): [V3, V3] => [[side * (hx - 0.1), e.Ny - 0.02, e.Nh + 0.05], [side * (hx + 0.02), lerp(e.Ny, e.Fy, 0.3), lerp(e.Nh, e.Fh, 0.3) + 0.05]];
+	const hands = (side: number): [V3, V3] => { const a = corner(e1, 1.06, side), b = corner(e2, 0.9, side);
+		return [0, 1].map((i) => [0, 1, 2].map((k) => lerp(a[i][k], b[i][k], act))) as [V3, V3]; };
+	void rightS; void stampDodge; void Digger53;
 	const lampP = proj(c, [0.25, -0.15, 2.35]), skull = proj(c, [-0.72, OY, 0.05]), capO = sstep(seg(t, 38.6, 38.95)) * (1 - sstep(seg(t, 40.8, 41.15)));
 	const liftU = sstep(seg(t, T_LIFT[0], T_LIFT[1]));   // the sword rises off the floor: the occupant falls out of focus and dims
 	const sw = swordAt(t), ringO = 0.62 * sstep(seg(t, 34.4, 36.0));
@@ -214,7 +224,8 @@ export const Chamber53B3: React.FC<{t: number}> = ({t: tv}) => {
 			{lidDone(u1) && <Lid53 c={c} u={u1} rest={OUT.z} hx={1.06} hy={OUT.y} L={LEAN1} id="lid1" />}
 			{lidDone(u2) && <Lid53 c={c} u={u2} rest={INN.z} hx={0.9} hy={INN.y} L={LEAN2} id="lid2" o={o2} lift={0.34} hmp={0.22} />}
 			<Coffin53 c={c} x={OUT.x} y={OUT.y} z={OUT.z} t={OUT.t} id="outer" inner="#2A1D14" />
-			<Coffin53 c={c} x={INN.x} y={INN.y} z={INN.z} t={INN.t} id="inner" inner="#46201A" wall="#3A2418" />
+			{/* fix4 #9: the inner walls ease to v2 Chamber53's #46201A over film 38.3–38.93, so the switch to TakeC at 38.935 does not pop */}
+			<Coffin53 c={c} x={INN.x} y={INN.y} z={INN.z} t={INN.t} id="inner" inner="#46201A" wall={mix('#3A2418', '#46201A', sstep(seg(tv, 38.3, 38.93)))} />
 			{/* the occupant on the inner floor: clipped to the floor (and to the coffin's rim while the lens is above it) */}
 			<g clipPath={c.p[2] > INN.z + 0.02 ? 'url(#cInner)' : undefined}><g clipPath="url(#cFloor)" opacity={0.62 * (1 - 0.4 * liftU)} filter={liftU > 0.02 ? 'url(#ocDof)' : undefined}><Occupant53 c={c} /></g><g clipPath="url(#cFloor)" opacity={1 - 0.4 * liftU} filter={liftU > 0.02 ? 'url(#ocDof)' : undefined}><Knife53 c={c} /></g></g>
 			<g clipPath="url(#cInner)">
@@ -223,7 +234,8 @@ export const Chamber53B3: React.FC<{t: number}> = ({t: tv}) => {
 			{top && <PlanSword t={t} dl={dl} wash={wash} c={c} hold={hold} />}
 			{!lidDone(u2) && <Lid53 c={c} u={u2} rest={INN.z} hx={0.9} hy={INN.y} L={LEAN2} id="lid2" o={o2} lift={0.34} hmp={0.22} />}
 			{!lidDone(u1) && <Lid53 c={c} u={u1} rest={OUT.z} hx={1.06} hy={OUT.y} L={LEAN1} id="lid1" />}
-			<g opacity={dOp}>{t > T_ROOF + 0.3 && [-1, 1].map((s) => <g key={s} transform={`translate(${s === rightS ? -120 * stampDodge : 0} 0)`}><Digger53 c={c} xw={s * 1.42} yw={digY(s)} grip={gx(s)} id={`dig${s}`} /></g>)}</g>
+			{/* fix4 #5: the lifters in the chamber's 3-D space (heads, shoulders, arms from above), both gloves on their lid's corner */}
+			{t > T_ROOF + 0.3 && [-1, 1].map((s) => <Lifter53 key={s} c={c} x={s * 1.42} y={digY(s)} hands={hands(s)} id={`dig${s}`} o={dOp} />)}
 			<path d={poly(c, near.top)} fill="#4A3424" /><path d={poly(c, near.front)} fill="#2A1C14" />
 			<path d={poly(c, left.top)} fill="#4A3424" /><path d={poly(c, right.top)} fill="#4A3424" /><path d={poly(c, far.top)} fill="#4A3424" />
 		</g>}
@@ -238,7 +250,7 @@ export const Chamber53B3: React.FC<{t: number}> = ({t: tv}) => {
 			const o1 = sstep(seg(t, T_LID1 + 0.04, T_LID1 + 0.2)) * (1 - sstep(seg(t, 37.5, 37.72))) * out(q1r), o2 = sstep(seg(t, 37.86, 38.0)) * (1 - sstep(seg(t, 38.6, 38.78))) * out(q2r);
 			return <><SafeTag id="lid1" s="①外棺" x={q1[0]} y={q1[1]} o={o1} col={B.goldL} /><SafeTag id="lid2" s="②内棺" x={q2[0]} y={q2[1]} o={o2} col={B.goldL} /></>; })()}
 		{!roofOn && (() => { const o = sstep(seg(t, 38.75, 38.95)) * (1 - sstep(seg(t, 40.6, 40.85))); if (o <= 0.01) return null; const p = proj(c, swP(t, 38, -3.4, 0.5));
-			const X = cl(p[0] + 70, 120 + 30, W - 120 - 420), Y = cl(p[1] + 175, 280 + 56, H - 58);
+			const X = cl(p[0] + 70, 120 + 30, W - 120 - 420), Y = capY(X - 10, X + 56 * 7 * 0.98 + 10, cl(p[1] + 175, 280 + 56, H - 58));
 			return <Tag id="left" x={X} y={Y} s="剑在墓主人左侧" fs={56} anchor="start" col={B.cream} o={o} to={[p[0], p[1]]} />; })()}
 		{roofOn && <Snow c={tc} t={tv} g={1} />}   {/* snow and lamp flicker on the film clock, as in tomb53b3 (no jump at the renderer switch) */}
 		<Vignette id="cC" a={0.6} />
