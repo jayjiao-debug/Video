@@ -97,9 +97,14 @@ export const BladeMacroC: React.FC<{sp: MacroSpec; id: string; pal: number; shif
 		<g transform={`rotate(${m.rot ?? -3.5} 960 540)`}>
 			<g filter={`url(#mFar${id})`}>{far.map((c, i) => <CellG key={i} c={c} />)}{far.map((c, i) => <StarG key={`s${i}`} c={c} />)}</g>
 			{guard}
-			{softF.length > 0 && <g filter={`url(#mSoftF${id})`}>{softF.map((c, i) => <CellG key={i} c={c} />)}{softF.map((c, i) => <StarG key={`s${i}`} c={c} />)}</g>}
-			{mid.map((c, i) => <CellG key={i} c={c} />)}{mid.map((c, i) => <StarG key={`s${i}`} c={c} />)}
-			{softN.length > 0 && <g filter={`url(#mSoftN${id})`}>{softN.map((c, i) => <CellG key={i} c={c} />)}{softN.map((c, i) => <StarG key={`s${i}`} c={c} />)}</g>}
+			{/* v3.2 (owner: "bugged" at 1:46): all three focus groups' cells first, then all their stars, so no star on a group border is
+			   half covered by the next group's cells (with no focus softF/softN are empty and this is the old order) */}
+			{softF.length > 0 && <g filter={`url(#mSoftF${id})`}>{softF.map((c, i) => <CellG key={i} c={c} />)}</g>}
+			{mid.map((c, i) => <CellG key={i} c={c} />)}
+			{softN.length > 0 && <g filter={`url(#mSoftN${id})`}>{softN.map((c, i) => <CellG key={i} c={c} />)}</g>}
+			{softF.length > 0 && <g filter={`url(#mSoftF${id})`}>{softF.map((c, i) => <StarG key={`s${i}`} c={c} />)}</g>}
+			{mid.map((c, i) => <StarG key={`s${i}`} c={c} />)}
+			{softN.length > 0 && <g filter={`url(#mSoftN${id})`}>{softN.map((c, i) => <StarG key={`s${i}`} c={c} />)}</g>}
 			{pits}
 			{rustU && rustU.map(([u, v, r], i) => { const p = macroProj(m, u, v, zAt(u, v)), R = m.f * r / p[2]; return <ellipse key={`ru${i}`} cx={p[0]} cy={p[1]} rx={R} ry={R * 0.45} fill="#4A6E58" opacity={0.6} />; })}
 			<g filter={`url(#mNear${id})`}>{near.map((c, i) => <CellG key={i} c={c} o={nW(c.u)} />)}{near.map((c, i) => <StarG key={`s${i}`} c={c} o={nW(c.u)} />)}</g>

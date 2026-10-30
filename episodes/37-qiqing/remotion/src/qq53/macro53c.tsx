@@ -49,7 +49,9 @@ const SUBJ = {p: 12, q: 2}, SU = (SUBJ.p + 1) / 2 * LA10 - MACRO_S0, SV = SUBJ.q
 /* v3.2 (owner: "this scene has to be a cross section"): the v3 section cut is back, a vertical wall through the subject's centre
    (its widest point), facing the lens, a short trench (5 mm towards the lens) seen through its own opening, so the near lip hides the wall's foot (a hole, not a box): tin skin over the bronze under the pale diamonds, bare bronze under the dark ground. The
    camera keeps the v3.1 crane, but to a three-quarter view (pitch 36°) so the diamonds read from above AND the wall faces the lens. */
-const UC = SU, UN = UC - 5, V0 = SV - 7.4, V1 = SV + 7.4, ZF = -4.4, SKIN = 0.85;
+/* v3.2 r2 (owner: "a big segmentation"): the section runs from the subject down past the frame's bottom edge (the trench's near lip
+   and floor are out of frame), so the cut face itself fills the lower middle of the frame: tin skin on top, the bronze body below */
+const UC = SU, UN = UC - 18, V0 = SV - 7.4, V1 = SV + 7.4, ZF = -18, SKIN = 0.85;
 /** where the wall (u = UC) runs under a pale diamond: the v-intervals of the line through each cell's pale core (cellQuad at
     LAT.inSc, the same quad every view draws), clipped to the cut [V0, V1] */
 const paleOnCut = (): [number, number][] => { const Us = UC + MACRO_S0, out: [number, number][] = [];
@@ -80,7 +82,7 @@ const SectionCut: React.FC<{m: MacroCam; op: number}> = ({m, op}) => { const P =
 	const notches = gaps.map(([a, b], k) => { const n = 8, top = Array.from({length: n + 1}, (_, i) => { const v = lerp(a, b, i / n); return P(UC, v, z10(UC, v)); }), bot = [...top].reverse().map((q, i) => { const v = lerp(b, a, i / n); return P(UC, v, z10(UC, v) - 0.4); });
 		return <path key={k} d={'M' + [...top, ...bot].map(pt).join('L') + 'Z'} fill="#2A180A" opacity={0.8} />; });
 	/* the cast bronze body in section: fine crystalline grain */
-	const grain = Array.from({length: 160}, (_, i) => { const v = lerp(V0 + 0.6, V1 - 0.6, rnd(i, 31)), z = lerp(ZF + 0.3, z10(UC, v) - SKIN - 0.3, rnd(i, 32)), q = P(UC - 0.01, v, z), r = 0.7 + 1.6 * rnd(i, 33);
+	const grain = Array.from({length: 420}, (_, i) => { const v = lerp(V0 + 0.6, V1 - 0.6, rnd(i, 31)), z = lerp(-16, z10(UC, v) - SKIN - 0.3, rnd(i, 32)), q = P(UC - 0.01, v, z), r = 0.7 + 1.6 * rnd(i, 33);
 		return <circle key={i} cx={q[0]} cy={q[1]} r={r} fill={rnd(i, 34) > 0.5 ? '#FFE4A8' : '#6A4218'} opacity={0.14 + 0.18 * rnd(i, 35)} />; });
 	return <g opacity={op}>
 		<defs>
@@ -100,6 +102,8 @@ const SectionCut: React.FC<{m: MacroCam; op: number}> = ({m, op}) => { const P =
 			{grain}{notches}{skins}
 			<path d={'M' + farTop.map(pt).join('L')} stroke="#2A180A" strokeWidth={1.2} strokeOpacity={0.5} fill="none" />
 		</g>
+		{/* the body of the section: plain bronze (the tin is only the thin skin on top) */}
+		{(() => { const q = P(UC - 0.02, SV, -6.5); return <Tag id="k10c" x={q[0]} y={q[1] + 16} s="青铜" fs={46} anchor="middle" col={B.cream} scrim={0.3} />; })()}
 		{/* the trench's near lip: the cut edge on the surface catches a thin line of light, a soft shadow just inside it */}
 		<path d={'M' + vs.map((v) => P(UN, v, z10(UN, v))).map(pt).join('L')} stroke="#0A0502" strokeWidth={7} strokeOpacity={0.45} fill="none" transform="translate(0,4)" clipPath="url(#k10hole)" />
 		<path d={'M' + vs.map((v) => P(UN, v, z10(UN, v))).map(pt).join('L')} stroke="#F0D49C" strokeWidth={1.8} strokeOpacity={0.6} fill="none" />
