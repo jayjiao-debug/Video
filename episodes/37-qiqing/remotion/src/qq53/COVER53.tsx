@@ -6,7 +6,7 @@ import {SwordFlat} from './flat53s';
 import {A as SA} from './swordspec53s';
 /* ep53 covers, three layouts of our own (owner: "not so copy-like" — the template's kicker / two left lines / sub line is gone).
    The sword is the film's own flat renderer (flat53s.SwordFlat, design C), the type is the film's title type (Noto Sans CJK 900) and
-   its stamp type (LXGW WenKai), on the film's lacquer dark with one warm pool. Frame = layout: 0 竖剑竖排, 1 大字居中, 2 剑贯标题. */
+   its stamp type (LXGW WenKai), on the film's lacquer dark with one warm pool. Frame = layout: 0 竖剑竖排, 1 大字居中, 2 剑贯标题, 3 VIBE (the channel's own cover style). */
 const L1 = '埋了两千多年', L2 = '为什么还亮着', Q = '？', NAME = '越王勾践剑', SUB = '1965年出土 · 湖北省博物馆';
 const GOLD = 'linear-gradient(180deg, #FFF0C4 0%, #F2C766 48%, #C98A2E 100%)';
 const HALO = '0 2px 3px rgba(10,5,3,0.9), 0 0 26px rgba(10,5,3,0.75)';
@@ -66,9 +66,25 @@ const V2: React.FC<{w: number; h: number}> = ({w, h}) => { const tall = h > w, p
 		</div>
 	</>; };
 
+/* 3 VIBE (owner: "和我的风格类似的", like the channel's own covers, e.g. ep31 Cover31): the hero up top (tall) or on the right (wide),
+   a small spaced VIBE知识大赏 line, the hook in Noto Serif 900 (cream line + gold-gradient line), 《片名》 under it, a soft vignette */
+const SERIF = '"Noto Serif CJK SC", serif';
+const V3: React.FC<{w: number; h: number}> = ({w, h}) => { const tall = h > w;
+	const p0: [number, number] = tall ? [w * 0.08, h * 0.42] : [w * 0.70, h * 0.05], p1: [number, number] = tall ? [w * 0.93, h * 0.07] : [w * 0.70, h * 0.95];
+	const fs = tall ? 112 : 108, line = (c: React.CSSProperties): React.CSSProperties => ({fontFamily: SERIF, fontWeight: 900, fontSize: fs, lineHeight: 1.16, whiteSpace: 'nowrap', ...c});
+	return <>
+		<svg width={w} height={h} style={{position: 'absolute'}}><Ground w={w} h={h} px={(p0[0] + p1[0]) / 2} py={(p0[1] + p1[1]) / 2} rx={tall ? w * 0.6 : w * 0.3} ry={tall ? h * 0.26 : h * 0.6} id="v3" /><Sword p0={p0} p1={p1} id="v3" /></svg>
+		<div style={{position: 'absolute', left: tall ? 0 : 96, right: tall ? 0 : 'auto', top: tall ? h * 0.475 : h * 0.29, textAlign: tall ? 'center' : 'left'}}>
+			<div style={{fontFamily: SANS, fontWeight: 700, fontSize: 34, color: 'rgba(242,230,204,0.62)', letterSpacing: '0.3em', marginBottom: 26, whiteSpace: 'nowrap'}}>VIBE知识大赏</div>
+			<div style={line({color: '#F6EEDC', textShadow: '0 6px 30px rgba(0,0,0,0.6)'})}>{L1}</div>
+			<div style={line({backgroundImage: 'linear-gradient(180deg, #ffe39b 0%, #f5c76b 45%, #c9913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.6))'})}>{L2}{tall ? <span style={{marginRight: '-0.5em'}}>{Q}</span> : Q}</div>
+			<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: 38, color: '#E8BC66', letterSpacing: '0.2em', marginTop: 30, whiteSpace: 'nowrap'}}>《{NAME}》</div>
+		</div>
+		<div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%)'}} />
+	</>; };
 const Cover: React.FC<{w: number; h: number}> = ({w, h}) => { useStampFonts(`${NAME}${SUB}${L1}${L2}${Q}`); const f = useCurrentFrame();
-	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : <V2 w={w} h={h} />}</AbsoluteFill>; };
+	return <AbsoluteFill style={{background: '#0A0504', overflow: 'hidden'}}>{f === 0 ? <V0 w={w} h={h} /> : f === 1 ? <V1 w={w} h={h} /> : f === 2 ? <V2 w={w} h={h} /> : <V3 w={w} h={h} />}</AbsoluteFill>; };
 registerRoot(() => <>
-	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={3} />
-	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={3} />
+	<Composition id="COVER53T" component={() => <Cover w={1080} h={1440} />} width={1080} height={1440} fps={1} durationInFrames={4} />
+	<Composition id="COVER53W" component={() => <Cover w={1440} h={1080} />} width={1440} height={1080} fps={1} durationInFrames={4} />
 </>);
