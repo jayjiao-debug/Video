@@ -15,7 +15,7 @@ DA(−1…8) as v2 (hook, title on bar 24, lull) · DA(9) DIVE = B pre 72 … 76
 ## Lines and hits (film s; land each hit on its frame)
 | # | Line | Start | End | Hits / notes |
 |---|---|---|---|---|
-| 0 | H1 你家菜刀… | 0.000 | 5.538 | rust 0.443; knife→bronze match 1.575; [亮] 2.707 |
+| 0 | H1 埋了两千多年的剑，一下划破[20多张]纸（v3.4） | 0.000 | 5.538 | the paper cut ON 0.443 (f13); the sword holds 1.575; specular lobe 2.707; the sword goes home to its case 2.6–7.0 |
 | 1 | H2 它的主人… | 5.538 | 9.500 | |
 | — | TITLE | 9.500 | 11.764 | slam f285 |
 | 2 | S1 如今它在湖北省博物馆… | 11.764 | 16.293 | |
@@ -35,7 +35,7 @@ DA(−1…8) as v2 (hook, title on bar 24, lull) · DA(9) DIVE = B pre 72 … 76
 | 16 | G6 他问自己…会稽之耻 | 77.426 | 81.388 | |
 | 17 | G7 前473年…[应验了] | 81.388 | 87.049 | the palace under water on a downbeat (DA(37) 84.220 or DA(38) 86.484) |
 | 18 | G8 吴国没了…还亮着 | 87.049 | 92.709 | back to the bright real blade |
-| 19 | B1 1977年拍科教片… | 92.709 | 97.804 | light click DA(41) 93.275 · clapper 94.407 · slice DA(42) 95.540 · halves fall in the deep break 97.238–97.804 |
+| 19 | B1 两千多年了，还这么锋利。靠的是什么？（v3.4） | 92.709 | 97.804 | the edge glint ON DA(42) 95.540 (no paper) |
 | 20 | M1 博物馆的解释，先说[料好] | 97.804 | 102.332 | macro begins 97.804 · 料好 bar + Cu, Pb tiles on DA(44) 100.068 |
 | 21 | M2 镀铬？…热镀[锡] | 102.332 | 106.861 | 「镀铬？」 + Cr tile 102.332 · cut opens 103.464 · 热镀锡 + Sn tile DA(46) 104.597 |
 | 22 | M3 那它，到底为什么不锈？ | 106.861 | 110.639 | HUSH; picture still (HandoffMacro) from 110.639 |
@@ -45,8 +45,8 @@ DA(−1…8) as v2 (hook, title on bar 24, lull) · DA(9) DIVE = B pre 72 … 76
 | 26 | E1 证据：同一座墓里的其他剑… | 122.144 | 125.540 | other swords light one per half-bar from DA(54) 122.711 |
 | 27 | L1 剑鞘、两层棺、木椁、白膏泥… | 125.540 | 130.069 | six layers close one per beat from DA(55)+2P 126.108: 126.108 / 126.674 / 127.240 / 127.806 / 128.372 / 128.938; lift bars from DA(57) 129.505 |
 | 28 | R2 出了墓，再好的保管…[变暗] | 130.069 | 134.031 | surface → museum floor on 130.069; up into the case |
-| 29 | P1 它不是不会锈…[两千多年] | 134.031 | 139.692 | P1 peak: pull-back starts 134.031; the kitchen (frame 0's framing) holds from ≈138.5 |
-| — | air | 139.692 | 140.824 | the kitchen holds |
-| 30 | END 你第一次见到它，是在哪？ | 140.824 | 144.824 | END CARD + J seal on f4225 (140.824); 0.5 s fade to black, film ends at frame 4360 |
+| 29 | P1 它不是不会锈…[两千多年] | 134.031 | 139.692 | pull-back from the case; settles on the title shot (camAt(10.4)) at 138.7 (v3.4: no kitchen) |
+| — | air | 139.692 | 140.824 | the hall dims; one last glint along the edge ≈140.3 |
+| 30 | END “天下第一剑”，你第一次见到它，是在哪？ / 课本里？博物馆里？还是今天？ | 140.824 | 144.824 | END CARD + J seal on f4225 (140.824); 0.5 s fade to black, film ends at frame 4360 |
 
 On their own clock (never on the beat): the camera's travel, snow, the depth tag, letters, the stamp's year rolls, water, air dots, the shadow-play's slow drift. Never pulse the whole frame on a beat.
