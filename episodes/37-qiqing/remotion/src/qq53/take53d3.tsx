@@ -91,14 +91,14 @@ const KitchenW: React.FC<{c: Cam; o: number}> = ({c, o}) => { if (o <= 0.01) ret
 const World3: React.FC<{t: number; t2: number; c: Cam; mus?: number; dull?: number; spot?: number; dim?: number; refl?: React.ReactNode}> = ({t, t2, c, mus = 1, dull = 0, spot = 0, dim = 0, refl}) => {
 	/* v3.1: the plinth and the hood go WITH the hall (no pop); the hall's walls and floor a little ahead of the case */
 	/* the case's own light (display53k's deck pool: its rings break up as the eye passes over the deck) eases off first, 134.3–135.3 */
-	const caseL = 1 - sstep(seg(t, 134.3, 135.3));
+	const caseL = 1 - sstep(seg(t, 134.0, 135.0));   // gone (pool included) by 135.0: the rings drop out of view at 135.03
 	const caseO = mus, hallO = mus * (1 - sstep(seg(t, 134.5, 137.0)));
 	const cm = toMM(c), under = c.p[2] < 0.03, k = sstep(seg(t2, 94.9, 96.3)), museum = t2 > 93.9;
 	return <g>
 		{!under && hallO > 0.01 && <g opacity={hallO}><FloorD c={c} cm={cm} k={k} lite={LITE} /></g>}
 		{museum && <>
 			{hallO > 0.01 && <g opacity={hallO}><HallBack cm={cm} hall={1} lite={LITE} /></g>}
-			{caseO > 0.01 && <g opacity={caseO}><CaseHall cm={cm} t={t2} hood={1} lite={LITE * caseL} /></g>}
+			{caseO > 0.01 && <g opacity={caseO}><CaseHall cm={cm} t={t2} hood={1} lite={LITE * caseL} pool={caseL} /></g>}
 			{/* v3.1 P1: the kitchen first seen in the hood's glass streak (its reflection), over the hall, under the sword */}
 			{refl}
 			{/* fix4-d #8: no star on the display sword (130.069 → the kitchen): the line is 「变暗」; only frame 0's glint returns, at home */}
@@ -126,6 +126,7 @@ export const TakeD3: React.FC<{t: number}> = ({t}) => {
 	const dull = 0.9 * sstep(seg(t, 130.6, 132.4)), spot = sstep(seg(t, 132.0, 132.6)), dim = sstep(seg(t, 131.4, 133.0)) * (1 - sstep(seg(t, 137.0, 138.3)));   // eases off as frame 0's kitchen returns (no pop at home)
 	/* v3.1: the hall dissolves to the kitchen as the eye passes the hood's tip-end corner: the hood's glass streak sweeps across the
 	   frame (right → left, with the turn) and the kitchen shows first inside it, as its reflection, then everywhere */
+	/* producer v3.1: the masked reflection layer exists from the surface (130.069) on, so its first visible frame (135.0) is not a re-raster pop */
 	const mus = 1 - sstep(seg(t, 134.8, 137.8)), kitO = sstep(seg(t, 135.0, 138.0)), sw = seg(t, 135.0, 137.6), swO = Math.sin(Math.PI * sw), swX = lerp(560, -540, sstep(sw));   // ≤ 21 px per frame
 	const streak = `M${1180 + swX},-80 L${1560 + swX},-80 L${980 + swX},1160 L${600 + swX},1160 Z`;
 	const cMus: Cam = {...toMM(c), p: [c.p[0] * 1000 - X, c.p[1] * 1000, c.p[2] * 1000]}, ck = toKitchen(cMus);
@@ -137,14 +138,14 @@ export const TakeD3: React.FC<{t: number}> = ({t}) => {
 		<svg width={W} height={H} style={{position: 'absolute'}}>
 			<Lacquer sheen={0.08} id="d3" />
 			{kitO > 0.01 && <KitchenW c={ck} o={kitO} />}
-			{swO > 0.01 && <defs><filter id="d3swB" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="46" /></filter>
+			{t >= T3.R2 && <defs><filter id="d3swB" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="46" /></filter>
 				<mask id="d3km" maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}><path d={streak} fill="#FFF" filter="url(#d3swB)" /></mask></defs>}
 			{kitO > 0.01 && <g opacity={kitO}><Pool id="d3k1" x={q0[0]} y={q0[1]} rx={560} ry={330} a={0.75} col="#080403" /><Pool id="d3k2" x={q0[0] - 20} y={q0[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
 			{blur > 0.05 && <defs><filter id="d3far" filterUnits="userSpaceOnUse" x={-200} y={-200} width={W + 400} height={H + 400}><feGaussianBlur stdDeviation={blur} /></filter></defs>}
-			<g filter={blur > 0.05 ? 'url(#d3far)' : undefined}><World3 t={t} t2={t2} c={c} mus={mus} dull={dull} spot={spot} dim={dim} refl={swO > 0.01 && mus > 0.01 ? <g mask="url(#d3km)" opacity={0.85 * swO * mus}><KitchenW c={ck} o={1} /></g> : null} /></g>
+			<g filter={blur > 0.05 ? 'url(#d3far)' : undefined}><World3 t={t} t2={t2} c={c} mus={mus} dull={dull} spot={spot} dim={dim} refl={t >= T3.R2 && mus > 0.01 ? <g mask="url(#d3km)" opacity={Math.max(0.002, 0.85 * swO * mus)}><KitchenW c={ck} o={1} /></g> : null} /></g>
 			{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
 			{kitO > 0.01 && <g opacity={kitO}><CleaverK c={ck} rho={0.68} /></g>}
-			{swO > 0.01 && <g opacity={swO}><path d={streak} fill="#F4F8FA" opacity={0.06} filter="url(#d3swB)" />
+			{t >= T3.R2 && <g opacity={Math.max(0.002, swO)}><path d={streak} fill="#F4F8FA" opacity={0.06} filter="url(#d3swB)" />
 				<path d={`M${1500 + swX},-80 L${1530 + swX},-80 L${950 + swX},1160 L${920 + swX},1160 Z`} fill="#F4F8FA" opacity={0.08} /></g>}
 			{subA > 0.01 && <Scrim id="d3-sub" x={640} y={212} rx={760} ry={170} a={subA} />}
 			{/* fix4-d #7: in L1 the frame edges darken further, so the warm sword glow stays the brightest point over the clay */}

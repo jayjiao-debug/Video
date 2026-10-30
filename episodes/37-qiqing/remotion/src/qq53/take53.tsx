@@ -140,7 +140,7 @@ const Visitor: React.FC<{c: Cam; v: typeof VIS[0]; o: number; lite: number}> = (
 		<g transform={`translate(${-2.6 * k},${-2 * k})`} opacity={0.45 - 0.27 * lite}><Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col="#E8A860" /></g>
 		<Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col={col} /></g>; };
 const faceVis = (c: Cam, q: V3, n: V3) => (c.p[0] - q[0]) * n[0] + (c.p[1] - q[1]) * n[1] + (c.p[2] - q[2]) * n[2] > 0;
-export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number; lite?: number; leaf?: number}> = ({c, t, hall, hood, ppl, lite = 0, leaf = 0}) => {
+export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number; lite?: number; leaf?: number; pool?: number}> = ({c, t, hall, hood, ppl, lite = 0, leaf = 0, pool = 1}) => {
 	/* hall: floor pool, two far walls with faint wall-washers, the rope on posts */
 	const floor = poly(c, [[-6500, -5500, 0], [6500, -5500, 0], [6500, 5500, 0], [-6500, 5500, 0]]);
 	const pc = proj(c, [0, 0, 0]);
@@ -179,7 +179,7 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 				const d = poly(c, pts, false); return d ? <path key={`rp${i}`} d={d} fill="none" stroke="#6A2C1A" strokeOpacity={0.55} strokeWidth={Math.max(1, c.f * 16 / Math.max(300, proj(c, pts[4])[2]))} /> : null; })}</g>
 		</g>}
 		{cone && <path d={cone} fill="url(#mCone)" opacity={coneO * hall} />}
-		<DisplayBack c={c} lite={lite} hood={hood} id="m" leaf={leaf} />
+		<DisplayBack c={c} lite={lite} hood={hood} id="m" leaf={leaf} pool={pool} />
 		{visNear}
 	</g>; };
 /** convex hull (monotone chain) of screen points */

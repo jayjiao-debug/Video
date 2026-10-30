@@ -83,7 +83,7 @@ const Rest: React.FC<{c: Cam; x: number}> = ({c, x}) => { const w = 7, y0 = -13,
 	return <g>{fr && <path d={fr} fill="#E8F0F2" opacity={0.1} />}{tp && <path d={tp} fill="#F4FAFC" opacity={0.16} />}{ed && <path d={ed} stroke="#F4FAFC" strokeOpacity={0.4} strokeWidth={1.3} fill="none" />}</g>; };
 
 /** UNDER the sword: plinth body, deck, spot pool, the sword's shadow, the rests, the mirror, the hood's far edges */
-export const DisplayBack: React.FC<{c: Cam; lite: number; hood: number; mirror?: number; id: string; leaf?: number}> = ({c, lite, hood, mirror = 0, id, leaf = 0}) => { void mirror;
+export const DisplayBack: React.FC<{c: Cam; lite: number; hood: number; mirror?: number; id: string; leaf?: number; pool?: number}> = ({c, lite, hood, mirror = 0, id, leaf = 0, pool = 1}) => { void mirror;
 	const body: [V3[], V3][] = [
 		[[[DX1, DY0, deckZ(DY0)], [DX0, DY0, deckZ(DY0)], [DX0, DY0, 0], [DX1, DY0, 0]], [0, -1, 0]],
 		[[[DX0, DY1, deckZ(DY1)], [DX1, DY1, deckZ(DY1)], [DX1, DY1, 0], [DX0, DY1, 0]], [0, 1, 0]],
@@ -100,7 +100,8 @@ export const DisplayBack: React.FC<{c: Cam; lite: number; hood: number; mirror?:
 		<defs><filter id={`dsh${id}`} x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="7" /></filter></defs>
 		{body.map(([q, n], i) => facing(c, q[0], n) ? <g key={i}><path d={poly(c, q)} fill={shade[i]} /><path d={poly(c, toe(q))} fill="#050302" opacity={0.55} /></g> : null)}
 		{deck && <path d={deck} fill={mix('#1E110B', '#3A2418', lite)} />}
-		<DeckPool c={c} x={0} y={30} rx={520} ry={300} col="#FFC878" a={0.3 + 0.1 * lite} />
+		{/* pool: the end hall fades the deck light out before the eye passes over the deck, where its rings drop out of view (v3.1 pop at 135.03) */}
+		{pool > 0.004 && <DeckPool c={c} x={0} y={30} rx={520} ry={300} col="#FFC878" a={(0.3 + 0.1 * lite) * pool} />}
 		{lite > 0.01 && <DeckPool c={c} x={0} y={20} rx={430} ry={220} col="#FFEBC0" a={0.1 * lite} n={14} />}
 		{inner && <path d={inner} fill="none" stroke="#0A0504" strokeOpacity={0.6} strokeWidth={2} />}
 		{/* the brass lip along the deck's front edge */}
