@@ -1,0 +1,29 @@
+# Task: fix round for the 勾践 thread (TakeG), ep53 v3
+
+## Context
+You are an animation engineer for a Chinese Douyin channel of subtitle-only history shorts (16:9, 1920×1080, 30 fps), built in Remotion as code (SVG; no AI video, no photos). Episode 53 「越王勾践剑 / 真的没锈吗？」 has been rebuilt as **v3: 145.333 s = 4360 frames, ONE continuous camera move (一镜到底)**. The owner approved the direction, the 33 key frames (`KF53V3.tsx`, composition `KFV3`) and asked for: correct facts, and **consistency of every element between scenes**. Style B「漆」: dark warm ground; the sword is always the brightest thing; bronze-gold and the blue glass on the guard are the only saturated colours.
+
+- **Master:** `episodes/37-qiqing/remotion/src/qq53/EP53V3.tsx` (composition `EP53V3`) routes film time: 0–20.821 `TakeA` (`take53.tsx`, done) · 20.821–38.935 `TakeB3` (`take53b3.tsx`) · 38.935–51.954 v2 `TakeC` at t+4.528 (done) · 51.954–92.709 `TakeG` (`take53g.tsx`, the 勾践 thread) · 92.709–110.639 v2 `TakeC` at t−36.227 (done) · 110.639–111.389 `<HandoffMacro />` held still · 111.389–end `TakeD3` (`take53d3.tsx`). The overlay (`master53v3.tsx`: subtitles, stamp, hollow J seal, title, **all depth tags**, element tiles) is drawn on top by another engineer; you draw only the picture. Constants and time maps: `v3map53.ts`. All parts are built; a final independent review (`review.md` next to this brief) found the problems below. **This is a fix round: fix only your items, keep everything else as it is.**
+- **The timing contract:** `episodes/53-goujian/MUSIC_NOTES_v3.md` (every line's start/end and every hit; land each hit ON its frame, `frameOf(t) = Math.round(t·30)`) and `episodes/53-goujian/lines_v3.json`. Story and legs: `episodes/53-goujian/storyboard_v3.md`, `script_v3.md`. Facts: `episodes/53-goujian/facts.md` (only ✓ on screen).
+- **The review you must answer:** `review.md` next to this brief (your rows are copied below).
+- **The sword** comes from the shared spec (`swordspec53s.tsx`: outline, lattice `LAT`/`latCells`/`cellQuad`, guard, grip with two layered hoops, pommel with 11 rings, marks `birdScript`) and its renderers (`sword3d.tsx` `Sword3D`, `flat53s.tsx`, `macro53.tsx`/`macrob53c.tsx`, `land53.tsx`). Never draw your own sword, lattice or marks: use these. The ridge is one thin gold crease everywhere.
+- **Tags:** three sizes only (44, 56, 72 px), the existing `Tag` component (`parts53.tsx`), cream or gold, inside the safe area (≥ 120 px from left/right, ≥ 58 px from top/bottom), never over the top-left subtitle area (x < 1150, y < 280).
+
+## How to work
+1. In `episodes/37-qiqing/remotion`, `npm ci`. Remotion needs Chromium's new headless shell: `find ~/.cache/ms-playwright -type f \( -name 'chrome-headless-shell' -o -name 'headless_shell' \)` → `REMOTION_BROWSER` (if none: `npx @puppeteer/browsers install chrome-headless-shell@stable` in /tmp).
+2. Stills of v3: `ENTRY=qq53/EP53V3 CID=EP53V3 BUNDLE_DIR=$(mktemp -d) REMOTION_BROWSER=<path> node scripts/frame_ms.mjs stills /tmp/r/<folder> <sec> …` (film seconds; files `f_<sec 1 decimal>.png`; `JPG=1 SCALE=0.5` for sheets). Consecutive frames: `SFPS=1` and frame numbers. A quick low-res video of your range: `VSCALE=0.25 CRF=20 … node scripts/frame_ms.mjs video /tmp/r/x.mp4 <from s> <to s>`, then compare consecutive frames with PIL/numpy (mean grey difference; ≤ 3 per frame except planned hits).
+3. Look at every still yourself; check your hand-off frames (first and last frame of your range against the neighbours' frames: mean difference ≈ a normal frame's).
+4. **Edit only the files named as yours** (plus new files with your suffix). Don't rename or remove exports that other files import. If something outside your files must change, write it in your self-check.
+5. **Never put rendered images or video inside the repository** (public). Render only under /tmp. Commit nothing; the workflow commits your code. Write your self-check (path below) early and update it after each item: per item done / partly / not done, what you checked (times, numbers).
+6. You have about 95 minutes of wall-clock time; when it ends your code is committed as it is. Note the start with `date`, keep the film rendering at all times, do the items in order.
+
+## Your files
+`take53g.tsx`, `shadow53g.tsx`, `cam53g.ts` and new `*53g4.tsx`. Everything else is someone else's this round. Self-check: `tasks/ep53-fix4-g/out/selfcheck.md`.
+
+## Your items (from `review.md`)
+| # | Sev | Time | Owner | What is wrong | Fix |
+|---|---|---|---|---|---|
+| 6 | MAJOR | 51.954–92.709 (the 勾践 thread), worst 82–87 | `shadow53g.tsx` (vignettes), `take53g.tsx` (lattice over reflection), `cam53g.ts` | The story only reads through the subtitles. Figures are about 90–130 px tall on a 1080 frame. The lattice runs at near full contrast across the reflection (storyboard: about 20 %), and the ridge highlight cuts through the heads (75.2). In G7 (82–87) the advancing ranks ghost into a blur, and the "fallen cap and dropped sword" reads as an anvil. | Inside each vignette's glow, fade the lattice over the reflection to 20–25 % opacity, and keep it full outside. Scale the vignettes ×1.3 (or lower the glide 15 %) so the figures are about 150 px. Keep the heads below the ridge line. G7: no motion blur or double exposure on the ranks; step them on the beat. Make the cap a clear 冕 board shape with the sword lying next to it, both at least 60 px, on a lit patch. |
+| 10 | MINOR | 88.2–92.7 (G8) | `cam53g.ts` / `take53g.tsx` | 「还亮着」 lands on a thin blade sliver (about 13 % of frame height) with ~60 % of the frame empty dark. The promised specular lobe never returns. | Keep the blade at ≥ 30 % of frame height until 91.5 and bring back a soft lobe on 「还亮着」 (~89.8). Then rise into the hand-off view. |
+
+Keep both hand-offs exact (51.954 and 92.709 equal v2 `TakeC` at 56.482) and every fact-check picture fix (envoy alone; 勾践 ahead of the horses; the gall on a stand; no rope or blade for 夫差).
