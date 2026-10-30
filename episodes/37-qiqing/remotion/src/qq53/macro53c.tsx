@@ -140,7 +140,8 @@ export const Leg12: React.FC<{t: number}> = ({t}) => { const sp = specOf(t), m =
 			<defs><filter id="m1blur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="20" /></filter></defs>
 			<rect x={500} y={540} width={860} height={230} rx={40} fill="rgb(18,9,6)" opacity={0.55} filter="url(#m1blur)" />
 			<Tag id="m1a" x={560} y={620} s="原因之一：料好" fs={72} anchor="start" col={B.goldL} />
-			<Tag id="m1b" x={560} y={720} s="铜 · 锡 约18–20% · 铅 ≈ 0" fs={56} anchor="start" col={B.cream} scrim={0.4} />
+			{/* fix4-a (#11): the Cu / Pb ≈ 0 facts are the overlay tiles' (master53v3); the tag keeps only the tin share */}
+			<Tag id="m1b" x={560} y={720} s="锡 约18–20%" fs={56} anchor="start" col={B.cream} scrim={0.4} />
 		</g>}
 		{qO > 0.004 && <g opacity={qO}><Tag id="k10a" x={SUBJ_XY[0] - 250 + dx} y={TY} s="镀铬？" fs={62} anchor="end" col={B.cream} o={0.88} to={[leftV[0], leftV[1]]} /></g>}
 		{tinO > 0.004 && <g opacity={tinO}><Tag id="k10b" x={SUBJ_XY[0] + 230} y={TY} s="热镀锡 · 2025研究" fs={62} anchor="start" col={B.goldL} to={cutOp > 0.3 ? [skin[0], skin[1] - 4] : [topV[0], topV[1]]} /></g>}

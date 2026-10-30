@@ -160,7 +160,6 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 		</g>}
 		{cone && <path d={cone} fill="url(#mCone)" opacity={coneO * hall} />}
 		<DisplayBack c={c} lite={lite} hood={hood} id="m" leaf={leaf} />
-		{pIn && pr > 6 && t >= 11.9 && t < 16.4 && <Tag id="mirc" x={pm[0] + 70} y={pm[1] + 150} s="剑首 · 11道同心圆" fs={34} anchor="start" scrim={0.45} to={[pm[0] + 2, pm[1] + pr * 0.35]} o={hood * sstep(seg(t, 11.9, 12.4)) * (1 - sstep(seg(t, 15.8, 16.3)))} />}
 		{visNear}
 	</g>; };
 /** convex hull (monotone chain) of screen points */
@@ -284,9 +283,12 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 	const lift = 0.3 * (1 - sstep(seg(t, 0.5, 1.5))) + 0.16 * sstep(seg(t, 6.0, 8.5)) + 0.22 * lite;
 	/* hits */
 	const g0 = proj(c, [244, -18, 1004.2]), g0o = Math.exp(-t / 0.4) * (1 - seg(t, 0.6, 1.0));
-	/* [亮] on 2.707: the lamp catches the bronze a little ahead of the lens — the ridge line, the rims and the glints flare there
-	   and die away (0.22 s); a small crisp star sits ON the ridge at that spot */
-	const lt = 2.707, gl = t >= lt - 1e-6 ? Math.exp(-(t - lt) / 0.22) : 0, sc = XA(lt) + 278 - 97 - 80, gp = proj(c, bw(SP, sc, 0, hAt(sc, 0) + 0.1));
+	/* [亮] on 2.707 (f81) — fix4-a, the owner's 0:03 note: the lamp's light lies on the polished bronze as a broad soft specular LOBE
+	   (land53 `lobe`, ≈ 460 × 170 px) on the pale diamonds 2–3 cells ahead of the lens, the dark lattice breaking it; in over 0.25 s,
+	   peak ON f81, out over 0.8 s, on a faint resting sheen through the glide. No white ridge stripe, no star sparkles. */
+	const ltF = Math.round(2.707 * 30) / 30, lobeK = t < ltF ? 0.28 + 0.72 * sstep(seg(t, ltF - 0.25, ltF)) : 0.28 + 0.72 * (1 - sstep(seg(t, ltF, ltF + 0.8)));
+	const lobeE = sstep(seg(t, 1.2, 1.9)) * (1 - sstep(seg(t, 4.9, 5.7))) * lobeK;
+	const glintK = sstep(seg(t, 6.2, 7.4));   // the pale-cell glints only once the camera has risen out of the glide
 	/* KF01's bokeh along the far edge, gone as the focus pulls */
 	const bok = [[250, 22, 0.34], [330, 17, 0.28], [420, 13, 0.24], [520, 10, 0.2]].map(([x, r, a], i) => { const p = proj(c, kitInv([x, 0, 2])); return p[2] > 10 ? <circle key={i} cx={p[0]} cy={p[1]} r={r} fill="#FFD890" opacity={a * (1 - seg(t, 0.15, 0.7))} /> : null; });
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
@@ -303,18 +305,18 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 			<Pool id="tk1d" x={proj(c, [0, 0, 1000])[0]} y={proj(c, [0, 0, 1000])[1]} rx={560} ry={330} a={0.75 * kitO} col="#080403" />
 			<Pool id="tk1s" x={proj(c, [0, 0, 1000])[0] - 20} y={proj(c, [0, 0, 1000])[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
 		<g filter={farBlur > 0.05 ? 'url(#tFar)' : undefined}>
-			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} lite={lite} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift, flash: gl > 0.02 ? {s: sc, k: 1.1 * gl} : undefined}} />
+			<SwordW c={c} t={t} id="tw" ringGlow={ringGlow} lite={lite} o={{lights, dof, fog, sheen: sh, shin: glide ? 60 : 90, sMin: -20, lift, lobe: lobeE > 0.004 ? {y: 640, k: lobeE, rx: 230, ry: 85} : undefined, glints: glintK}} />
 		</g>
 		<BladeBloom c={c} t={t} />
 		<GuardGlints c={c} t={t} />
 		{t < 0.75 && <g filter="url(#tBok)">{bok}</g>}
 		{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
-		{gl > 0.02 && gp[2] > 5 && <Glint x={gp[0]} y={gp[1]} r={Math.min(18, Math.max(8, c.f * 0.9 / gp[2]))} o={gl} />}
 		{knifeO > 0.01 && <g opacity={knifeO} filter={knifeBlur > 0.05 ? 'url(#tKn)' : undefined}><Cleaver c={ck} rho={rho} /></g>}
 		<Motes c={c} t={t} o={hall * plinthO} />
 		<PaneStreaks c={c} t={t} />
 		<Vignette id="tA" a={0.6} />
 		<DuoTag c={c} t={t} />
+		<RingTag c={c} t={t} />
 	</svg>; };
 const kitInv = (q: V3): V3 => [506 - q[0], -q[1] - 19, q[2] + 1002.2];   // kitchen → case (its own inverse in x, y)
 
@@ -326,4 +328,11 @@ const DuoTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 18.557 - 1e-
 	const fc = proj(c, PF), fr = fc[2] > 1 ? c.f * R_FACE / fc[2] : 0, hidden = c.p[0] < PF[0] && to[2] > fc[2] && Math.hypot(to[0] - fc[0], to[1] - fc[1]) < fr * 1.15;
 	const vis = !hidden && to[2] > 20 && to[0] > -40 && to[0] < W + 40 && to[1] > -40 && to[1] < H + 40;
 	return <Tag id="duo" x={x} y={y} s="镀铬？" fs={64} anchor="end" to={vis ? [to[0] - 12, to[1] + 10] : undefined} col={B.cream} o={o} />; };
+/* ---------- fix4-a (#13): 「剑首 · 11道同心圆」 labels the ring close-up itself (19.3 → 20.7), at the 44 px label size, bottom-left —
+   clear of the Cr tile (x 1345–1790, y 683–897), the subtitles and 「镀铬？」 (gone by 19.7); fixed place, a leader to the rings ---------- */
+const RingTag: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < 19.3 || t > 20.75) return null;
+	const o = sstep(seg(t, 19.45, 19.8)) * (1 - sstep(seg(t, 20.35, 20.7))); if (o < 0.004) return null;
+	const pm = proj(c, PF), pr = pm[2] > 30 ? c.f * 18.6 / pm[2] : 0, to: [number, number] = [pm[0] - 0.62 * pr, pm[1] + 0.62 * pr];
+	const vis = pr > 20 && to[0] > 140 && to[0] < W - 140 && to[1] > 80 && to[1] < H - 80 && to[1] < 900;
+	return <Tag id="ring" x={620} y={962} s="剑首 · 11道同心圆" fs={44} anchor="end" col={B.cream} scrim={0.5} to={vis ? to : undefined} o={o} />; };
 void hwAt; void LBM; void mix; void blobOn; void rnd;

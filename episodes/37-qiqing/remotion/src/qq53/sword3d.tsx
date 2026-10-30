@@ -32,7 +32,7 @@ export const Blade3D: React.FC<{c: Cam; sp: SwordPose; id: string; lit?: number;
 /** guard: the shared outline extruded to ±guardT(a); the front face (z+) carries the blue glass, the back face turquoise */
 export const Guard3D: React.FC<{c: Cam; sp: SwordPose; id: string; lite?: number}> = ({c, sp, id, lite = 0}) => {
 	const O = GUARD_OUT, n = O.length, F = (k: number, s: 1 | -1) => W(sp, O[k][0], O[k][1], s * guardT(O[k][0]));
-	type Face = {d: string; z: number; kind: 'front' | 'back' | 'side'; shade: number};
+	type Face = {d: string; z: number; kind: 'front' | 'back' | 'side'; shade: number; end?: boolean};
 	const faces: Face[] = [];
 	const depth = (pts: V3[]) => pts.reduce((m, q) => m + toCam(c, q)[2], 0) / pts.length;
 	const front = O.map((_, k) => F(k, 1)), back = O.map((_, k) => F(k, -1));
@@ -43,15 +43,21 @@ export const Guard3D: React.FC<{c: Cam; sp: SwordPose; id: string; lite?: number
 		const nw: V3 = [sp.dir * -dw, da, 0], q = [F(k, 1), F(k1, 1), F(k1, -1), F(k, -1)], m = q.reduce((s, p) => [s[0] + p[0] / 4, s[1] + p[1] / 4, s[2] + p[2] / 4] as V3, [0, 0, 0] as V3);
 		if (dot(nw, [c.p[0] - m[0], c.p[1] - m[1], c.p[2] - m[2]]) <= 0) continue;
 		const ln = Math.hypot(nw[0], nw[1]) || 1, shade = 0.5 + 0.5 * (-nw[1] / ln);       // faces toward −y (the front of the case) are lit
-		faces.push({d: poly(c, q), z: depth(q), kind: 'side', shade}); }
+		faces.push({d: poly(c, q), z: depth(q), kind: 'side', shade, end: da === 0 && O[k][0] === A.guard0}); }
 	faces.sort((a, b) => b.z - a.z);
 	const P = (pts: [number, number][], s: 1 | -1, lift = 0.25) => pts.map(([a, w]) => W(sp, a, w, s * (guardT(a) + lift)));
+	/* fix4-a (#14): the guard's face toward the pommel (the end face at a = guard0) carries the same turquoise inlay and bronze
+	   cloisons as the faces, the panel pattern laid across its height (a 84.2 → 99.3 maps to z top → bottom) */
+	const TE = guardT(A.guard0) - 1.6, PE = (pts: [number, number][], lift = 0.25) => pts.map(([a, w]) => W(sp, A.guard0 - lift, w * 0.86, lerp(TE, -TE, (a - 84.2) / (99.3 - 84.2))));
+	const endInlay = (f: {end?: boolean}) => !f.end ? null : ([1, -1] as const).map((s) => <g key={`e${s}`}><path d={poly(c, PE(inlayPanel(s)))} fill={`url(#gt${id})`} />
+		{inlayCells(s).map((ln, k) => <path key={k} d={poly(c, PE(ln, 0.35), false)} stroke={BZ.lit} strokeWidth={Math.max(0.8, c.f * 1.1 / Math.max(1, toCam(c, W(sp, 92, 0, 0))[2]))} fill="none" strokeOpacity={0.9} />)}</g>);
 	return <g>
 		<defs><linearGradient id={`gg${id}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={GLS.lit} /><stop offset="0.55" stopColor={GLS.body} /><stop offset="1" stopColor={GLS.deep} /></linearGradient>
 			<linearGradient id={`gt${id}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={TQS.lit} /><stop offset="0.55" stopColor={TQS.body} /><stop offset="1" stopColor={TQS.deep} /></linearGradient></defs>
 		{faces.map((f, i) => f.d ? <g key={i}>
 			{(() => { const fc = f.kind === 'side' ? mix(mix(BZ.deep, BZ.mid, f.shade), '#E8B878', 0.25 * lite) : mix(BZ.mid, BZ.lit, 0.15 + 0.2 * lite);
 				return <path d={f.d} fill={fc} stroke={f.kind === 'side' ? fc : BZ.line} strokeOpacity={f.kind === 'side' ? 1 : 0.55} strokeWidth={f.kind === 'side' ? 0.8 : 1} strokeLinejoin="round" />; })()}
+			{/* producer: the guard's end faces stay plain bronze (the glass and turquoise are on the two broad faces only, facts B5) */ false && endInlay(f)}
 			{f.kind !== 'side' && ([1, -1] as const).map((s) => { const sd = f.kind === 'front' ? 1 : -1;
 				return <g key={s}><path d={poly(c, P(inlayPanel(s), sd))} fill={f.kind === 'front' ? `url(#gg${id})` : `url(#gt${id})`} />
 					{inlayCells(s).map((ln, k) => <path key={k} d={poly(c, P(ln, sd, 0.35), false)} stroke={BZ.lit} strokeWidth={Math.max(0.8, c.f * 1.1 / Math.max(1, toCam(c, W(sp, 92, 0, 0))[2]))} fill="none" strokeOpacity={0.9} />)}</g>; })}

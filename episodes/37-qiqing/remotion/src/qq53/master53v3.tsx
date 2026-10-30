@@ -65,7 +65,11 @@ export const stampAt53v3 = (t: number, lines: Line53[] = LINES53V3): StampState 
 	const place = st.place ?? '';
 	const pk = k > 0 && lines[k].a - lines[k - 1].b < 0.3 ? k - 1 : -1, prev = pk >= 0 ? (lines[pk].id === 'S4' ? {y: '1965', place: '', note: '回到出土那天'} : lines[pk].id === 'H1' ? {y: '春秋末年', place: '越国', note: '越王勾践剑'} : lines[pk].st) : null;
 	const t0 = showFrom(k);
-	if (!prev || prev.y !== st.y) return {y: st.y, place, note: st.note, oHead: seg(t, t0, t0 + 0.35), nPlace: 99, nNote: 99, press: 0};
+	/* fix4-a (#15): a year that only extends the previous one (前473年 → 前473年后) is the same stamp going on, not a new one */
+	const sameStamp = !!prev && (prev.y === st.y || st.y.startsWith(prev.y));
+	if (!prev || !sameStamp) return {y: st.y, place, note: st.note, oHead: seg(t, t0, t0 + 0.35), nPlace: 99, nNote: 99, press: 0};
+	/* hold the previous year, place and note until the new ones type (no clearing at the line start) */
+	if (t < t0) return {y: prev.y, place: prev.place ?? '', note: prev.note, oHead: 1, nPlace: 99, nNote: 99, press: 0};
 	const samePlace = (prev.place ?? '') === place, sameNote = prev.note === st.note;
 	return {y: st.y, place, note: st.note, oHead: 1, nPlace: samePlace ? 99 : Math.ceil(place.length * seg(t, t0, t0 + 0.35)), nNote: sameNote ? 99 : Math.ceil(st.note.length * seg(t, t0, t0 + 0.4)), press: 0};
 };

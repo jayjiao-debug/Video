@@ -78,7 +78,7 @@ const KitchenW: React.FC<{c: Cam; o: number}> = ({c, o}) => { if (o <= 0.01) ret
 	</g>; };
 
 /* ---------- the world at v3 time t: the tomb (under the floor) and the museum (above), seen by camera c ---------- */
-const World3: React.FC<{t: number; t2: number; c: Cam; mus?: number; dull?: number; spot?: number}> = ({t, t2, c, mus = 1, dull = 0, spot = 0}) => {
+const World3: React.FC<{t: number; t2: number; c: Cam; mus?: number; dull?: number; spot?: number; dim?: number}> = ({t, t2, c, mus = 1, dull = 0, spot = 0, dim = 0}) => {
 	/* the plinth and deck go first, on the P1 peak (display53k's deck pool breaks up once the lens swings low past it) */
 	const caseO = mus * (1 - sstep(seg(t, T3.P1, T3.P1 + 0.4)));
 	const cm = toMM(c), under = c.p[2] < 0.03, k = sstep(seg(t2, 94.9, 96.3)), museum = t2 > 93.9;
@@ -87,7 +87,8 @@ const World3: React.FC<{t: number; t2: number; c: Cam; mus?: number; dull?: numb
 		{museum && <>
 			{mus > 0.01 && <g opacity={mus}><HallBack cm={cm} hall={1} lite={LITE} /></g>}
 			{caseO > 0.01 && <g opacity={caseO}><CaseHall cm={cm} t={t2} hood={1} lite={LITE} /></g>}
-			<CaseW c={c} t={t2} id="d3" dull={dull} bloom={spot} rim={0} ring={0} front={mus} />
+			{/* fix4-d #8: no star on the display sword (130.069 → the kitchen): the line is 「变暗」; only frame 0's glint returns, at home */}
+			<CaseW c={c} t={t2} id="d3" dull={dull} bloom={spot} rim={0} ring={0} front={mus} glint={0} dim={dim} />
 		</>}
 		{under && <>
 			<Pit c={c} t={t2} />
@@ -108,22 +109,24 @@ export const TakeD3: React.FC<{t: number}> = ({t}) => {
 	if (home >= 1) return <>{<TakeA t={0} />}{f >= CARD_F3 - 6 && <EndCard3 t={t} />}</>;
 	const t2 = t < T3.P1 ? v2Of(t) : 102.332, c = camD3(t);
 	/* R2: a shade duller from the floor on (warm veil), one faint rust spot; P1: the hall and the hood go, the kitchen comes back */
-	const dull = 0.9 * sstep(seg(t, 130.6, 132.4)), spot = sstep(seg(t, 132.0, 132.6));
+	const dull = 0.9 * sstep(seg(t, 130.6, 132.4)), spot = sstep(seg(t, 132.0, 132.6)), dim = sstep(seg(t, 131.4, 133.0)) * (1 - sstep(seg(t, 137.0, 138.3)));   // eases off as frame 0's kitchen returns (no pop at home)
 	const mus = 1 - sstep(seg(t, T3.P1 + 0.5, T3.P1 + 2.6)), kitO = sstep(seg(t, 135.6, 138.1));
 	const cMus: Cam = {...toMM(c), p: [c.p[0] * 1000 - X, c.p[1] * 1000, c.p[2] * 1000]}, ck = toKitchen(cMus);
 	/* frame 0's look arrives with the kitchen: the dark and warm pools round the case centre, the far blur, the glint at the tip (take53) */
 	const q0 = proj(cMus, [0, 0, 1000]), g0 = proj(cMus, [244, -18, 1004.2]), blur = 2.6 * sstep(seg(t, 136.8, 138.3)), g0o = sstep(seg(t, 137.4, 138.4));
-	const subA = 0.5 * (1 - sstep(seg(t, T3.P1 + 1.0, T3.P1 + 2.5)));
+	const subA = 0.5 * (1 - sstep(seg(t, T3.P1 + 1.0, T3.P1 + 2.5))), edgeV = sstep(seg(t, 125.3, 126.0)) * (1 - sstep(seg(t, 129.6, 130.3)));
 	return <>
 		<svg width={W} height={H} style={{position: 'absolute'}}>
 			<Lacquer sheen={0.08} id="d3" />
 			{kitO > 0.01 && <KitchenW c={ck} o={kitO} />}
 			{kitO > 0.01 && <g opacity={kitO}><Pool id="d3k1" x={q0[0]} y={q0[1]} rx={560} ry={330} a={0.75} col="#080403" /><Pool id="d3k2" x={q0[0] - 20} y={q0[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
 			{blur > 0.05 && <defs><filter id="d3far" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={blur} /></filter></defs>}
-			<g filter={blur > 0.05 ? 'url(#d3far)' : undefined}><World3 t={t} t2={t2} c={c} mus={mus} dull={dull} spot={spot} /></g>
+			<g filter={blur > 0.05 ? 'url(#d3far)' : undefined}><World3 t={t} t2={t2} c={c} mus={mus} dull={dull} spot={spot} dim={dim} /></g>
 			{g0o > 0.01 && g0[2] > 10 && <Glint x={g0[0]} y={g0[1]} r={26} o={g0o} />}
 			{kitO > 0.01 && <g opacity={kitO}><CleaverK c={ck} rho={0.68} /></g>}
 			{subA > 0.01 && <Scrim id="d3-sub" x={640} y={212} rx={760} ry={170} a={subA} />}
+			{/* fix4-d #7: in L1 the frame edges darken further, so the warm sword glow stays the brightest point over the clay */}
+			{edgeV > 0.01 && <><defs><radialGradient id="d3ev" cx="0.5" cy="0.55" r="0.75"><stop offset="0.45" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity={0.62 * edgeV} /></radialGradient></defs><rect width={W} height={H} fill="url(#d3ev)" /></>}
 			<Vignette id="d3" a={0.6} />
 		</svg>
 		{home > 0 && <div style={{position: 'absolute', inset: 0, opacity: home}}><TakeA t={0} /></div>}
