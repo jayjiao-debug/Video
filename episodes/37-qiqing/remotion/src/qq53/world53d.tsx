@@ -4,6 +4,7 @@ import {B, Pool} from '../qq50/styleB';
 import {Cam, V3, P2, proj, poly, mix, Tag, lookAt} from './parts53';
 import {LB, SW, bladeHW, BZ, GLS} from './props53';
 import {frameOf} from './master53';
+import {sstep} from './cam53';
 /* ep53 · TakeD, the world of legs 14–16 (81.954 → ~102 s): ONE metric world (metres), cut by the section plane y = 0
    (everything with y < 0 is cut away, the camera lives on that open side). z = 0 is the ground at the top of the pit fill AND
    the museum floor; the sword's tomb is at z = −10.4, the museum case stands directly above it (case53d).
@@ -58,39 +59,39 @@ const SwordSheath: React.FC<{c: Cam; draw: number; lit: number; plank: number; p
 	return <g>
 		<defs><filter id="w53gl" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation={gl} /></filter></defs>
 		<Pool id="w53sw" x={mid[0]} y={mid[1]} rx={Math.max(120, span * 0.62)} ry={Math.max(50, span * 0.2)} a={0.55 * lit} col="#FFC870" />
+		<path d={poly(c, sheath)} fill="none" stroke="#FFD890" strokeWidth={30} strokeOpacity={0.5 * lit} filter="url(#w53gl)" />
 		<path d={poly(c, blade)} fill="#FFD68A" filter="url(#w53gl)" opacity={0.95 * lit} />
 		<path d={poly(c, blade)} fill="none" stroke="#FFD890" strokeWidth={18} strokeOpacity={0.45 * lit} filter="url(#w53gl)" />
-			<path d={poly(c, blade)} fill="#F2C878" stroke="#FFF3CF" strokeWidth={2} />
-		<path d={poly(c, [swAt(SW.bladeA + 0.5, 0, 0.1, draw), swAt(SW.L - 1.2, 0, 0.1, draw)], false)} stroke="#FFF8E0" strokeWidth={1.4} fill="none" />
+		<path d={poly(c, blade)} fill="#F2C878" stroke="#FFF3CF" strokeWidth={2} />
+		<path d={poly(c, sheath)} fill="#1A0C08" opacity={0.97} />
+		<path d={poly(c, sheath)} fill="none" stroke="#FFF3CF" strokeWidth={2} strokeOpacity={0.95} />
+		<path d={poly(c, sheath.slice(4, n - 3), false)} fill="none" stroke="#E8B878" strokeWidth={1.4} strokeOpacity={0.55} transform="translate(0,-2)" />
 		<path d={poly(c, grip)} fill={BZ.mid} /><path d={poly(c, pom)} fill={BZ.body} stroke={BZ.line} strokeWidth={1} />
-		<path d={poly(c, guard)} fill={GLS.body} stroke={BZ.lit} strokeWidth={1.2} />
-		<path d={poly(c, sheath)} fill="#080404" opacity={0.5 + 0.35 * plank} />
-		<path d={poly(c, sheath)} fill="none" stroke="#8A6650" strokeWidth={1.6} strokeOpacity={0.85} />
-		<path d={poly(c, sheath.slice(4, n - 3), false)} fill="none" stroke="#B8432A" strokeWidth={1.2} strokeOpacity={0.6} transform="translate(0,-2)" />
+		<path d={poly(c, guard)} fill={GLS.body} stroke="#FFF3CF" strokeWidth={2} />
 		{plank > 0 && plankDz > 0.001 && <path d={poly(c, sheath.map((q) => [q[0], q[1], q[2] + plankDz] as V3))} fill="#0A0505" stroke="#B8432A" strokeWidth={1.2} strokeOpacity={0.7} />}
 	</g>; };
 /** one of the tomb's other swords, lying flat on the chamber floor (E1): lit = 0..1 */
 const OtherSword: React.FC<{c: Cam; x0: number; y: number; ang: number; lit: number; id: number}> = ({c, x0, y, ang, lit, id}) => {
-	const L = 0.55, z = -10.58, ca = Math.cos(ang), sa = Math.sin(ang), at = (a: number, w: number): V3 => [x0 + ca * a - sa * w, y + sa * a + ca * w, z];
+	const L = 0.58, z = -10.58, ca = Math.cos(ang), sa = Math.sin(ang), at = (a: number, w: number): V3 => [x0 + ca * a - sa * w, y + sa * a + ca * w, z];
 	const n = 12, blade = [...Array.from({length: n + 1}, (_, i) => at(0.05 + L * i / n, 0.03 * (1 - Math.pow(i / n, 3)))), ...Array.from({length: n + 1}, (_, i) => at(0.05 + L * (n - i) / n, -0.03 * (1 - Math.pow((n - i) / n, 3))))];
 	const a0 = pp(c, at(0, 0)), a1 = pp(c, at(L, 0)), mid: P2 = [(a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2], span = Math.hypot(a1[0] - a0[0], a1[1] - a0[1]);
 	if (lit <= 0.001) return <path d={poly(c, blade)} fill="#2A1C12" opacity={0.7} />;
 	return <g>
-		<Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.75} ry={span * 0.4} a={0.4 * lit} col="#FFC870" />
-		<path d={poly(c, blade)} fill={mix('#2A1C12', '#E8BC66', 0.8 * lit)} stroke={mix('#2A1C12', '#F4D088', lit)} strokeWidth={2} />
+		<Pool id={`w53o${id}`} x={mid[0]} y={mid[1]} rx={span * 0.75} ry={span * 0.4} a={0.28 * lit} col="#FFC870" />
+		<path d={poly(c, blade)} fill={mix('#2A1C12', '#E0B460', 0.6 * lit)} stroke="#F4D088" strokeOpacity={0.35 + 0.65 * lit} strokeWidth={2} />
 		<path d={poly(c, [at(0.05, 0), at(0.05 + L, 0)], false)} stroke="#FFF3CF" strokeOpacity={0.7 * lit} strokeWidth={1.2} fill="none" />
 		<path d={poly(c, [at(-0.02, -0.03), at(-0.02, 0.03), at(0.06, 0.03), at(0.06, -0.03)])} fill={mix('#2A1C12', '#4A8CD8', 0.7 * lit)} />
 		<path d={poly(c, [at(-0.1, -0.012), at(-0.1, 0.012), at(-0.02, 0.012), at(-0.02, -0.012)])} fill={mix('#2A1C12', BZ.mid, lit)} />
 	</g>; };
-export const OTHERS: {x0: number; y: number; ang: number; tb: number}[] = [{x0: 1.42, y: 0.18, ang: 0.0, tb: 86.483}, {x0: 1.45, y: 0.62, ang: 0.0, tb: 87.615}, {x0: -2.05, y: 0.35, ang: 0.0, tb: 88.747}];
+export const OTHERS: {x0: number; y: number; ang: number; tb: number}[] = [{x0: 1.5, y: 0.25, ang: 0.04, tb: 86.483}, {x0: 1.58, y: 0.55, ang: -0.04, tb: 87.615}, {x0: 1.46, y: 0.85, ang: 0.05, tb: 88.747}];
 
 /* ---------- the pit, the chamber, the closing layers ---------- */
 const FILL_X = 3.5, ZF0 = -11.3, ZCLAY = -8.2, ZY = -7.0;
 const mot = ['#8A6E40', '#6E6A5C', '#7A4A30', '#9A8458', '#4A3A28'];
 /** fill heights: the 白膏泥 level rises to −8.2 and the 夯土 level to 0, each ending ON its beat */
-export const hClay = (t: number) => { const u = drop(t, LAY.bai, 0.46); return lerp(ZF0, ZCLAY, 1 - Math.pow(1 - u, 2.2)) * (t >= 0 ? 1 : 1); };
-export const hRam = (t: number) => { const u = drop(t, LAY.hang, 0.5); return lerp(ZCLAY, 0, 1 - Math.pow(1 - u, 2.2)); };
-export const Pit: React.FC<{c: Cam; t: number}> = ({c, t}) => { const hc = t < LAY.bai - 0.5 ? ZF0 : hClay(t), hr = t < LAY.hang - 0.55 ? ZCLAY : hRam(t), clayOn = hc > ZF0 + 0.001, ramOn = hr > ZCLAY + 0.001;
+export const hClay = (t: number) => { const u = drop(t, LAY.bai, 0.76); return lerp(ZF0, ZCLAY, 1 - Math.pow(1 - u, 2.2)) * (t >= 0 ? 1 : 1); };
+export const hRam = (t: number) => { const u = drop(t, LAY.hang, 0.8); return lerp(ZCLAY, 0, 1 - Math.pow(1 - u, 2.2)); };
+export const Pit: React.FC<{c: Cam; t: number}> = ({c, t}) => { const hc = t < LAY.bai - 0.8 ? ZF0 : hClay(t), hr = t < LAY.hang - 0.85 ? ZCLAY : hRam(t), oc = sstep(seg(t, hitT(LAY.bai) - 0.76, hitT(LAY.bai) - 0.46)), orr = sstep(seg(t, hitT(LAY.hang) - 0.8, hitT(LAY.hang) - 0.5)), clayOn = hc > ZF0 + 0.001, ramOn = hr > ZCLAY + 0.001;
 	const pt = (x: number, z: number) => pp(c, [x, 0, z]);
 	return <g>
 		<defs><linearGradient id="w53wc" gradientUnits="userSpaceOnUse" x1={0} y1={pt(0, ZCLAY)[1]} x2={0} y2={pt(0, ZF0)[1]}><stop offset="0" stopColor="#9E9A8B" /><stop offset="1" stopColor="#77736A" /></linearGradient></defs>
@@ -98,15 +99,15 @@ export const Pit: React.FC<{c: Cam; t: number}> = ({c, t}) => { const hc = t < L
 		<path d={poly(c, R(-60, 60, -60, 0))} fill="#241A13" />
 		{[-2.6, -4.3, -5.9, -7.6, -9.2, -10.8, -12.6, -14.8].map((z, i) => <g key={i}>{[[-30, -3.5], [3.5, 30]].map(([a, b], k) => <path key={k} d={poly(c, Array.from({length: 9}, (_, j) => [lerp(a, b, j / 8), 0, z + 0.08 * Math.sin(j * 1.7 + i)] as V3), false)} stroke="#3A2A1E" strokeWidth={2} fill="none" />)}</g>)}
 		<path d={poly(c, R(-FILL_X, FILL_X, ZF0, 0))} fill="#0A0605" />
-		{clayOn && <path d={poly(c, R(-FILL_X, FILL_X, ZF0, hc))} fill="url(#w53wc)" />}
-		{clayOn && Array.from({length: 90}, (_, i) => { const z = lerp(-11.25, -8.25, rnd(i, 82)); if (z > hc) return null; const [sx, sy] = pt(lerp(-3.45, 3.45, rnd(i, 81)), z); return <circle key={i} cx={sx} cy={sy} r={1.5 + 2.5 * rnd(i, 83)} fill={rnd(i, 84) > 0.5 ? '#B4B0A0' : '#68645A'} opacity={0.3} />; })}
-		{ramOn && <>
+		<g opacity={oc}>{clayOn && <path d={poly(c, R(-FILL_X, FILL_X, ZF0, hc))} fill="url(#w53wc)" />}
+		{clayOn && Array.from({length: 90}, (_, i) => { const z = lerp(-11.25, -8.25, rnd(i, 82)); if (z > hc) return null; const [sx, sy] = pt(lerp(-3.45, 3.45, rnd(i, 81)), z); return <circle key={i} cx={sx} cy={sy} r={1.5 + 2.5 * rnd(i, 83)} fill={rnd(i, 84) > 0.5 ? '#B4B0A0' : '#68645A'} opacity={0.3} />; })}</g>
+		<g opacity={orr}>{ramOn && <>
 			<path d={poly(c, R(-FILL_X, FILL_X, ZCLAY, Math.min(hr, ZY)))} fill="#434C4B" />
 			{hr > ZY && <path d={poly(c, R(-FILL_X, FILL_X, ZY, hr))} fill="#54402A" />}
 			{Array.from({length: 150}, (_, i) => { const z = lerp(ZY, 0, rnd(i, 12)); if (z > hr) return null; const [sx, sy] = pt(lerp(-3.45, 3.45, rnd(i, 11)), z), r = 4 + 9 * rnd(i, 13); return <ellipse key={i} cx={sx} cy={sy} rx={r} ry={r * 0.6} fill={mot[i % 5]} opacity={0.4} />; })}
 			{Array.from({length: 28}, (_, i) => -ZY - i * 0.25 - 0.25).map((zz) => { const z = -zz + 0; return z > hr || z < ZY ? null : <path key={zz} d={poly(c, [[-FILL_X, 0, z], [FILL_X, 0, z]], false)} stroke="#1E140C" strokeOpacity={0.4} strokeWidth={1.2} fill="none" />; })}
-		</>}
-		{clayOn && <path d={poly(c, [[-FILL_X, 0, Math.min(hc, ZCLAY)], [FILL_X, 0, Math.min(hc, ZCLAY)]], false)} stroke="#EDE6D2" strokeOpacity={0.7 * seg(hc, ZCLAY - 0.4, ZCLAY)} strokeWidth={2.4} fill="none" />}
+		</>}</g>
+		{clayOn && <path d={poly(c, [[-FILL_X, 0, Math.min(hc, ZCLAY)], [FILL_X, 0, Math.min(hc, ZCLAY)]], false)} stroke="#EDE6D2" strokeOpacity={0.7 * oc * seg(hc, ZCLAY - 0.4, ZCLAY)} strokeWidth={2.4} fill="none" />}
 		{[-FILL_X, FILL_X].map((x) => <path key={x} d={poly(c, [[x, 0, 0], [x, 0, ZF0]], false)} stroke="#140C08" strokeWidth={3} strokeOpacity={0.8} fill="none" />)}
 	</g>; };
 export const Chamber: React.FC<{c: Cam; t: number; draw: number; lit: number}> = ({c, t, draw, lit}) => {
@@ -155,8 +156,8 @@ export const Air: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < AIR_T0) 
 
 /* ---------- labels: each layer is named as it closes ---------- */
 const lbl = (t: number, tb: number) => (frameOf(t) >= frameOf(tb) ? 1 : 0);
-export const Labels: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < LAY.sheath || t > 95.0) return null;
-	const fo = 1 - seg(t, 94.5, 95.0), lx = 1500, dy = 52, L = (q: V3) => pp(c, q);
+export const Labels: React.FC<{c: Cam; t: number}> = ({c, t}) => { if (t < LAY.sheath || t > 94.8) return null;
+	const fo = 1 - seg(t, 94.3, 94.8), lx = 1500, dy = 52, L = (q: V3) => pp(c, q);
 	const o1 = L([-1.32 + 0.04, 0, -9.85]), o2 = L([-1.12 + 0.035, 0, -10.05]);
 	return <g opacity={fo}>
 		{lbl(t, LAY.bai) > 0 && <Tag id="w53a" x={lx} y={424 + dy} s="白膏泥" fs={52} col={B.cream} to={L([-3.05, 0, -8.55])} />}
