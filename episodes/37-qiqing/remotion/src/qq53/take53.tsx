@@ -10,13 +10,13 @@ import {CleaverD as Cleaver} from './end53d';
 import {RingDisc} from './props53';
 import {spline, sstep, DEG} from './cam53';
 import {B} from '../qq50/styleB';
-import {DisplayBack, DisplayFront, mirrorAt, titleQuadOn, DZ0, HY0, DTITLE_W, DTITLE_H, DTITLE_Y, deckZ, HH as HOOD_H} from './display53k';
+import {DisplayBack, DisplayFront, titleQuadOn, DZ0, HY0, DTITLE_W, DTITLE_H, DTITLE_Y, DTITLE_Z} from './display53k';
 /* ep53 · THE ONE TAKE, legs 1–6 (0 → 20.821 s): one camera, one world (the case frame, mm). The sword lies level on its
    holders, pommel end face at x = −278 (PF), tip at x = +278, blue glass up (z+), axis at z = 1000; plinth top z = 940.
    Your kitchen (kfA53, its own frame) is placed on the sword's own edge line beyond the tip (a 180° turn about z + a shift),
    so frame 0 (KF01) and the glide onto the bronze (KF02) are one move; the kitchen then falls away into lacquer.
    Camera: legs 1–2 in Cartesian keys (position + yaw/pitch); legs 3–6 in spherical keys round the pommel face (distance on a
-   log scale, so the pull-back and the axis push are constant-rate moves); the two are blended C1 over 5.538–6.138.
+   log scale, so the pull-back and the axis push are constant-rate moves); the two are blended C1 over 4.2–5.2 (v3-e hook).
    Lens (f, principal point, roll) are global channels. Everything is a pure function of t. */
 export const SP: SwordPose = {x0: -278, ya: 0, z0: 1000, dir: 1};
 export const PF: V3 = [-278, 0, 1000];
@@ -29,18 +29,22 @@ const YA = spline([[0, -169], [0.8, -46], [1.575, 4], [3.0, 2.5, -1.0209], [4.7,
 const ZA = spline([[0, 1192.2], [0.8, 1084], [1.575, 1026.5], [2.4, 1025.5], [3.6, 1035], [4.7, 1060, 36.43], [5.538, 1100, 70]]);
 const YAWA = spline([[0, 148.5], [0.8, 167], [1.575, 182.5], [3.0, 181.2, -0.6419], [4.7, 180.1871, -0.4135], [5.538, 160, -14]]);
 const PITA = spline([[0, 27.6], [0.8, 21.5], [1.575, 15.5], [3.0, 15.5], [4.2, 21.5926, 9.4293], [4.7, 27, 12.0746], [5.1, 38.5], [5.538, 56, 16]]);
-const AL = spline([[5.538, 172.29, -14], [6.6, 152], [7.8, 136], [9.0, 110, -17.2957], [9.5, 102.5], [10.4, 99], [11.3, 95.5], [11.764, 89], [13.5, 78], [15.0, 64], [16.293, 50], [18.6, 24.5, -6.6838], [19.75, 2.5], [20.0, 0, 0], [22, 0, 0]]);
-const LND = spline([[5.538, Math.log(167.4)], [6.6, Math.log(330)], [7.8, Math.log(560)], [9.0, Math.log(1270), 0.3931], [9.5, Math.log(1505)], [10.4, Math.log(1555)], [11.3, Math.log(1635)], [11.764, Math.log(1800)],
+/* the hook (4.2 → 9.5, v3): from the glide the camera rises over the blade and swings out to the front, looking DOWN at the guard
+   and the grip from a calm three-quarter angle (about 40° up, 35–50° off the axis: nothing points at the lens), then pulls back
+   and up onto the whole sword for the title (9.5). Blended in from the glide over 4.2–5.2; knots on 9.5 keep their old slopes, so
+   every move after the title is unchanged. */
+const AL = spline([[4.2, 180.24, -20], [4.8, 160], [5.66, 145], [6.7, 128], [7.8, 114.5], [8.7, 106.5], [9.5, 102.5, -6.543], [10.4, 99], [11.3, 95.5], [11.764, 89], [13.5, 78], [15.0, 64], [16.293, 50], [18.6, 24.5, -6.6838], [19.75, 2.5], [20.0, 0, 0], [22, 0, 0]]);
+const LND = spline([[4.2, Math.log(241)], [4.8, Math.log(270)], [5.66, Math.log(375)], [6.7, Math.log(560)], [7.8, Math.log(880)], [8.7, Math.log(1260)], [9.5, Math.log(1505), 0.07107], [10.4, Math.log(1555)], [11.3, Math.log(1635)], [11.764, Math.log(1800)],
 	[13.0, Math.log(1220)], [14.2, Math.log(1100)], [15.4, Math.log(1030), 0], [16.293, Math.log(990)], [18.6, Math.log(335), -0.8527], [20.821, Math.log(55), -0.62]]);
-const BE = spline([[5.538, 36.69], [6.6, 44], [7.8, 40], [9.0, 33, -3.6097], [9.5, 31.6], [11.3, 30], [11.764, 28], [14.2, 19], [15.4, 18], [16.293, 17.5], [18.6, 18, -0.941], [19.75, 1.2], [20.0, 0, 0], [22, 0, 0]]);
-const TX = spline([[5.538, -302.6], [6.6, -230], [7.8, -100], [9.0, -6, 18.6751], [9.5, 0], [11.3, -14], [11.764, -34], [14.2, -46], [16.293, -40], [18.6, -28], [20.0, 0, 30], [20.821, 120]]);
-const TY = spline([[5.538, 39.4], [6.6, 0], [9.5, 0], [11.3, 0], [14.2, 10], [16.293, 16], [18.6, 30], [20.0, 0, 0], [20.821, 0, 0]]);
-const TZ = spline([[5.538, 851.3], [6.6, 950], [7.8, 968], [9.0, 961.4203, -5.0744], [9.5, 960], [11.3, 960], [13.0, 975], [14.2, 1000], [15.4, 1010], [16.293, 1000], [18.6, 988, 4.1726], [20.0, 1000, 0], [20.821, 1000, 0]]);
-const FF = spline([[0, 1000], [0.8, 905], [1.575, 820], [3.6, 820, 0], [4.4, 870], [5.0, 1060], [5.538, 1260], [6.0, 1420], [6.6, 1420], [7.8, 1650], [9.0, 1900], [9.5, 2100], [11.3, 2100], [11.764, 2140], [14.2, 2000], [15.4, 1950], [16.293, 1950], [18.6, 1650, -0.0015], [20.821, 1650, 0]]);
-const CX = spline([[0, 900], [1.575, 960], [4.2, 960], [5.1, 1110], [5.538, 1150], [6.4, 1050], [7.4, 960], [9.5, 960], [16.293, 980], [18.6, 1000], [20.0, 960, 0], [20.821, 960, 0]]);
-const CY = spline([[0, 560], [1.575, 640], [3.6, 640], [4.7, 615.969, -30.3939], [5.538, 560], [7.8, 700], [9.5, 790], [11.3, 790], [11.764, 772], [14.2, 700], [16.293, 640], [18.6, 600], [20.0, 540, 0], [20.821, 540, 0]]);
+const BE = spline([[4.2, 10.8, 18], [4.8, 26], [5.66, 37], [6.7, 40], [7.8, 37], [8.7, 33.5], [9.5, 31.6, -1.4954], [11.3, 30], [11.764, 28], [14.2, 19], [15.4, 18], [16.293, 17.5], [18.6, 18, -0.941], [19.75, 1.2], [20.0, 0, 0], [22, 0, 0]]);
+const TX = spline([[4.2, -320], [4.8, -215], [5.66, -186], [6.7, -145], [7.8, -70], [8.7, -12], [9.5, 0, 0], [11.3, -14], [11.764, -34], [14.2, -46], [16.293, -40], [18.6, -28], [20.0, 0, 30], [20.821, 120]]);
+const TY = spline([[4.2, 0], [9.5, 0], [11.3, 0], [14.2, 10], [16.293, 16], [18.6, 30], [20.0, 0, 0], [20.821, 0, 0]]);
+const TZ = spline([[4.2, 935], [4.8, 985], [5.66, 998], [6.7, 990], [7.8, 975], [8.7, 963], [9.5, 960, 0], [11.3, 960], [13.0, 975], [14.2, 1000], [15.4, 1010], [16.293, 1000], [18.6, 988, 4.1726], [20.0, 1000, 0], [20.821, 1000, 0]]);
+const FF = spline([[0, 1000], [0.8, 905], [1.575, 820], [3.6, 820, 0], [4.4, 870, 107.84], [5.0, 1000], [5.66, 1560], [6.7, 1700], [7.8, 1820], [8.7, 1960], [9.5, 2100, 0], [11.3, 2100], [11.764, 2140], [14.2, 2000], [15.4, 1950], [16.293, 1950], [18.6, 1650, -0.0015], [20.821, 1650, 0]]);
+const CX = spline([[0, 900], [1.575, 960], [4.2, 960], [9.5, 960], [16.293, 980], [18.6, 1000], [20.0, 960, 0], [20.821, 960, 0]]);
+const CY = spline([[0, 560], [1.575, 640], [3.6, 640], [4.7, 615.969, -30.3939], [5.66, 590], [7.8, 700], [9.5, 790, 0], [11.3, 790], [11.764, 772], [14.2, 700], [16.293, 640], [18.6, 600], [20.0, 540, 0], [20.821, 540, 0]]);
 const RO = spline([[0, 0], [0.8, 1.6], [1.575, 2.5], [3.0, 1.8], [5.538, 0, 0], [20.821, 0, 0]]);
-const BL0 = 5.538, BL1 = 6.238;
+const BL0 = 4.2, BL1 = 5.1;
 const fwd = (yaw: number, pit: number): V3 => [Math.cos(pit) * Math.cos(yaw), Math.cos(pit) * Math.sin(yaw), -Math.sin(pit)];
 export const camAt = (t: number): Cam => {
 	const pA: V3 = [XA(t), YA(t), ZA(t)], FA = fwd(YAWA(t) * DEG, PITA(t) * DEG), tA: V3 = [pA[0] + FA[0] * 300, pA[1] + FA[1] * 300, pA[2] + FA[2] * 300];
@@ -97,7 +101,7 @@ export const WPool: React.FC<{c: Cam; x: number; y: number; z: number; rx: numbe
 	{Array.from({length: n}, (_, k) => { const r = 1 - k / n, d = poly(c, Array.from({length: 28}, (_, i) => { const th = i / 28 * 2 * Math.PI; return [x + rx * r * Math.cos(th), y + ry * r * Math.sin(th), z] as V3; }));
 		return d ? <path key={k} d={d} fill={col} opacity={a / n} /> : null; })}</g>;
 
-/* ---------- the museum: hall, rope, visitors, the case (plinth, holders, ring mirror, glass hood), the spot ---------- */
+/* ---------- the museum: hall, rope, visitors, the case (plinth, rests, glass hood, title glass), the spot ---------- */
 const HZ0 = DZ0;
 /** the hood's front glass (y); the old 1.6 m box's pane is gone */
 export const PANE_Y = HY0;
@@ -116,7 +120,7 @@ const Visitor: React.FC<{c: Cam; v: typeof VIS[0]; o: number; lite: number}> = (
 		<g transform={`translate(${-2.6 * k},${-2 * k})`} opacity={0.45 - 0.27 * lite}><Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col="#E8A860" /></g>
 		<Figure4 x={foot[0]} ground={foot[1]} h={hpx} pose={POSES.stand} look={v.look} col={col} /></g>; };
 const faceVis = (c: Cam, q: V3, n: V3) => (c.p[0] - q[0]) * n[0] + (c.p[1] - q[1]) * n[1] + (c.p[2] - q[2]) * n[2] > 0;
-export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number; lite?: number}> = ({c, t, hall, hood, ppl, lite = 0}) => {
+export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; ppl: number; lite?: number; leaf?: number}> = ({c, t, hall, hood, ppl, lite = 0, leaf = 0}) => {
 	/* hall: floor pool, two far walls with faint wall-washers, the rope on posts */
 	const floor = poly(c, [[-6500, -5500, 0], [6500, -5500, 0], [6500, 5500, 0], [-6500, 5500, 0]]);
 	const pc = proj(c, [0, 0, 0]);
@@ -125,7 +129,8 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 	const washers: V3[] = [[6490, -2600, 2400], [6490, 2600, 2400], [-2800, 5490, 2400], [2800, 5490, 2400], [-6490, -2600, 2400], [-6490, 2600, 2400]];
 	const posts = Array.from({length: 12}, (_, i) => { const a = (i / 12) * 2 * Math.PI + 0.31; return [3900 * Math.cos(a), 3900 * Math.sin(a)] as [number, number]; });
 	/* the case: the lectern vitrine (display53k), shared with the end hall */
-	const mo = t < 17.9 ? hood * (1 - sstep(seg(t, 17.0, 17.8))) : 0, mm = mirrorAt(c), mir = [mm.x, mm.y], mr = mm.r;
+	/* the pommel caption (v3-e: the mirror is gone): on the real pommel, a thin leader from below-right, only while it is in view */
+	const pm = proj(c, PF), pr = pm[2] > 30 ? c.f * 18.6 / pm[2] : 0, pIn = pm[2] > 30 && pm[0] > 40 && pm[0] < W - 40 && pm[1] > 40 && pm[1] < H - 40;
 	/* the spot: a soft cone from the ceiling onto the case (skipped while the camera is inside it) */
 	const apex: V3 = [0, 0, 4300], rb = 640, zc = c.p[2], rAt = rb * (4300 - zc) / (4300 - HZ0), inside = Math.hypot(c.p[0], c.p[1]) < rAt + 250;
 	const cone = (() => { if (inside) return null; const pts = [proj(c, apex), ...Array.from({length: 24}, (_, i) => { const a = i / 24 * 2 * Math.PI; return proj(c, [rb * Math.cos(a), rb * Math.sin(a), HZ0]); })];
@@ -154,8 +159,8 @@ export const Museum: React.FC<{c: Cam; t: number; hall: number; hood: number; pp
 				const d = poly(c, pts, false); return d ? <path key={`rp${i}`} d={d} fill="none" stroke="#6A2C1A" strokeOpacity={0.55} strokeWidth={Math.max(1, c.f * 16 / Math.max(300, proj(c, pts[4])[2]))} /> : null; })}</g>
 		</g>}
 		{cone && <path d={cone} fill="url(#mCone)" opacity={coneO * hall} />}
-		<DisplayBack c={c} lite={lite} hood={hood} mirror={mo} id="m" />
-		{mr > 2 && t >= 11.9 && t < 16.4 && <Tag id="mirc" x={mir[0] - mr * 1.6} y={mir[1] + 12} s="剑首 · 11道同心圆" fs={34} anchor="end" scrim={0.45} o={hood * sstep(seg(t, 11.9, 12.4)) * (1 - sstep(seg(t, 15.8, 16.3)))} />}
+		<DisplayBack c={c} lite={lite} hood={hood} id="m" leaf={leaf} />
+		{pIn && pr > 6 && t >= 11.9 && t < 16.4 && <Tag id="mirc" x={pm[0] + 70} y={pm[1] + 150} s="剑首 · 11道同心圆" fs={34} anchor="start" scrim={0.45} to={[pm[0] + 2, pm[1] + pr * 0.35]} o={hood * sstep(seg(t, 11.9, 12.4)) * (1 - sstep(seg(t, 15.8, 16.3)))} />}
 		{visNear}
 	</g>; };
 /** convex hull (monotone chain) of screen points */
@@ -201,11 +206,14 @@ const Motes: React.FC<{c: Cam; t: number; o: number}> = ({c, t, o}) => { if (o <
 
 /* ---------- the glass: the hood's near faces, edges and streak, drawn OVER the sword (display53k); same envelope as the case ---------- */
 const PaneStreaks: React.FC<{c: Cam; t: number}> = ({c, t}) => { const o = sstep(seg(t, 0.9, 2.2)) * (1 - sstep(seg(t, 20.1, 20.65)));
-	return o > 0.01 ? <g opacity={o}><DisplayFront c={c} hood={sstep(seg(t, 6.6, 8.4))} /></g> : null; };
+	return o > 0.01 ? <g opacity={o}><DisplayFront c={c} hood={sstep(seg(t, 6.6, 8.4))} leaf={leafAt(t)} /></g> : null; };
+/** the title glass (display53k.TitleLeaf): in with the hood, gone once the title has slid off (the orbit carries it away) */
+const leafAt = (t: number) => sstep(seg(t, 6.6, 8.4)) * (1 - sstep(seg(t, 11.7, 12.5)));
 
-/* ---------- the title etched on the hood's top glass, behind the sword (world rectangle; the master maps the HTML plaque onto its projection) ---------- */
+/* ---------- the title etched on the FRONT glass (the title leaf on the hood's front pane), facing the camera, in front of the sword
+   (world rectangle; the master maps the HTML plaque onto its projection) ---------- */
 export const TITLE_W = DTITLE_W, TITLE_H = DTITLE_H;            // mm, the whole source sheet (1400 × 640 px; the plaque 1080 × 404 inside)
-export const TITLE_C: V3 = [0, DTITLE_Y, deckZ(DTITLE_Y) + HOOD_H];
+export const TITLE_C: V3 = [0, DTITLE_Y, DTITLE_Z];
 export const titleQuad = (t: number): [number, number][] | null => { if (t < 9.5 - 1e-6 || t >= 11.764) return null; return titleQuadOn(camAt(t)); };
 
 /* ---------- the sword: sword3d.Sword3D (the one 3-D sword: BladeLand blade clipped at the guard, Guard3D, Hilt3D with the ringed
@@ -290,7 +298,7 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 		<Ground53 id="tA" k={lerp(1, 0.35, sstep(seg(t, 4, 8)))} sheen={0.3 + 0.2 * Math.sin(c.yaw)} />
 		<KitchenW c={ck} o={kitO} />
 		{lite > 0.01 && <g opacity={lite}><Scrim id="sbs" x={620} y={230} rx={860} ry={260} a={0.5} /></g>}
-		<g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} lite={lite} /></g>
+		<g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} lite={lite} leaf={leafAt(t)} /></g>
 		{t < 1.2 && <g opacity={1 - caseO}>
 			<Pool id="tk1d" x={proj(c, [0, 0, 1000])[0]} y={proj(c, [0, 0, 1000])[1]} rx={560} ry={330} a={0.75 * kitO} col="#080403" />
 			<Pool id="tk1s" x={proj(c, [0, 0, 1000])[0] - 20} y={proj(c, [0, 0, 1000])[1] + 10} rx={360} ry={200} a={0.34} col="#FFB868" /></g>}
