@@ -229,14 +229,16 @@ const GranaryP: React.FC = () => { const cx = 130;
 		<path d={`M${cx - 10},12 L${cx + 10},12 L${cx + 6},2 L${cx - 6},2 Z`} fill="#3A2C18" />
 	</g>; };
 const TowerP: React.FC = () => <g>
-	<path d="M10,180 C40,140 80,128 130,126 C180,128 220,140 252,180 Z" fill="#3A2C22" /><path d="M40,150 C80,132 180,132 222,150" stroke="#8A6A4E" strokeWidth={1.4} opacity={0.6} fill="none" />
-	<path d="M82,134 L98,58 M178,134 L162,58" stroke="#1E1510" strokeWidth={7} /><path d="M82,134 L98,58" stroke="#C08A5C" strokeWidth={1.2} opacity={0.6} />
-	<path d="M90,96 L170,96 M86,116 L174,116 M94,76 L166,76 M88,114 L168,78 M92,78 L172,114" stroke="#1E1510" strokeWidth={3.2} />
-	<path d="M120,134 L126,60 M134,134 L136,60 M121,124 L134,124 M122,112 L134,112 M123,100 L135,100 M124,88 L135,88 M125,76 L136,76" stroke="#2A1C14" strokeWidth={1.8} />
-	<rect x={80} y={50} width={100} height={10} fill="#2A1C14" />
-	{Array.from({length: 6}, (_, i) => <rect key={i} x={82 + i * 16.4} y={26} width={13} height={25} rx={2} fill="#2E2018" stroke="#7A5A3A" strokeWidth={0.8} />)}
+	<defs><linearGradient id="duskT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1C2B31" /><stop offset="1" stopColor="#4A5752" /></linearGradient></defs>
+	<rect x={1} y={-11} width={260} height={192} fill="url(#duskT)" opacity={0.75} />
+	<path d="M10,180 C40,140 80,128 130,126 C180,128 220,140 252,180 Z" fill="#5A4432" /><path d="M40,150 C80,132 180,132 222,150" stroke="#8A6A4E" strokeWidth={1.4} opacity={0.6} fill="none" />
+	<path d="M82,134 L98,58 M178,134 L162,58" stroke="#5A3E2A" strokeWidth={7} /><path d="M82,134 L98,58" stroke="#C08A5C" strokeWidth={1.2} opacity={0.6} />
+	<path d="M90,96 L170,96 M86,116 L174,116 M94,76 L166,76 M88,114 L168,78 M92,78 L172,114" stroke="#5A3E2A" strokeWidth={3.2} />
+	<path d="M120,134 L126,60 M134,134 L136,60 M121,124 L134,124 M122,112 L134,112 M123,100 L135,100 M124,88 L135,88 M125,76 L136,76" stroke="#6A4A32" strokeWidth={1.8} />
+	<rect x={80} y={50} width={100} height={10} fill="#6A4A32" />
+	{Array.from({length: 6}, (_, i) => <rect key={i} x={82 + i * 16.4} y={26} width={13} height={25} rx={2} fill="#4A3424" stroke="#A07450" strokeWidth={0.8} />)}
 	{[96, 126, 158].map((x) => <g key={x}><ellipse cx={x + 6} cy={22} rx={4.6} ry={5.4} fill={PAL.sil} /><path d={`M${x + 2},20 L${x + 26},12`} stroke={PAL.sil} strokeWidth={1.4} /></g>)}
-	<path d="M180,50 L180,0" stroke="#2A1C14" strokeWidth={2.4} /><path d="M181,2 L214,2 L214,40 L181,36 Z" fill="#2C3440" />
+	<path d="M180,50 L180,0" stroke="#6A4A32" strokeWidth={2.4} /><path d="M181,2 L214,2 L214,40 L181,36 Z" fill="#2C3440" />
 	<text x={197} y={30} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={24} fill="#D8CCB0">袁</text>
 	<path d="M80,50 L180,50" stroke="#C08A5C" strokeWidth={1} opacity={0.6} />
 </g>;
@@ -278,7 +280,7 @@ export const Look1: React.FC = () => {
 						{acc && <text x={x + 80} y={y + 16} textAnchor="end" fontFamily={SANS} fontSize={15} fontWeight={700} fill="#F2E6CC">★</text>}</g>; })}
 			</Panel>
 		</svg>
-		<div style={{...CAP, left: SX + 4, top: SY + SH + 10}}>场景样张 · 洛阳城门之夜：门楼 + 子母双阙，一门三道（平顶门道），夯土城墙；主光 = 门道火光，近景 = 角色，远景 = 剪影</div>
+		<div style={{...CAP, left: SX + 4, top: SY + SH + 10}}>场景 · 洛阳城门夜：门楼、子母双阙、一门三道；主光 = 门道火光；近景角色，远景剪影</div>
 		<div style={{...CAP, left: 1310, top: SY + SH + 10}}>曹操 · 20岁（北部尉）　|　46岁（官渡）</div>
 		<div style={{...CAP, fontSize: 20, left: 1300, width: 280, textAlign: 'center', top: SY + 618, opacity: 0.85}}>帻 + 武冠 · 皂袍 · 五色棒</div>
 		<div style={{...CAP, fontSize: 20, left: 1586, width: 280, textAlign: 'center', top: SY + 618, opacity: 0.85}}>札甲 · 短须 · 环首刀</div>

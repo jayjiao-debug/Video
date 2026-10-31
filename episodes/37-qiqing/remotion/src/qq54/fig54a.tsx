@@ -136,7 +136,7 @@ export const Fig = (P: FigP): FigOut => {
 		{P.detail !== 'none' && <g fill="none" stroke={det} strokeWidth={0.55} strokeLinecap="round">
 			<path d={`M${f(B([3, -33])[0])},${f(B([3, -33])[1])} L${f(B([-3, -20])[0])},${f(B([-3, -20])[1])}`} />
 			<path d={`M${f(B([-8, -4.5])[0])},${f(B([-8, -4.5])[1])} L${f(B([8.5 + belly * 0.6, -4.5])[0])},${f(B([8.5 + belly * 0.6, -4.5])[1])}`} strokeWidth={1.3} />
-			{P.lamel && [-28, -24, -20, -16, -12, -8].map((y, i) => <path key={i} d={`M${f(B([-8, y])[0])},${f(B([-8, y])[1])} L${f(B([9.5, y])[0])},${f(B([9.5, y])[1])}`} strokeDasharray="1.6 0.6" />)}
+			{P.lamel && [-29, -26, -23, -20, -17, -14, -11, -8].map((y, i) => <path key={i} d={`M${f(B([-8.6, y])[0])},${f(B([-8.6, y])[1])} L${f(B([10, y])[0])},${f(B([10, y])[1])}`} strokeDasharray="1.5 0.45" strokeDashoffset={i % 2 ? 0.95 : 0} strokeWidth={0.5} />)}
 			{P.lamel && [2, 5.5, 9].map((y, i) => { const kF = lp([0, 0], LF.K, 0.3 + i * 0.16); return <path key={`k${i}`} d={`M${f(kF[0] - 7)},${f(kF[1])} L${f(kF[0] + 7)},${f(kF[1])}`} strokeDasharray="1.6 0.6" />; })}</g>}
 		{limb(AF, S, dress === 'armour')}
 		{P.fp && <PropEl p={P.fp} at={AF.Hd} />}

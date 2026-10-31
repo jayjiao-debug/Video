@@ -109,7 +109,7 @@ const SetLuoyang: React.FC<{id: string}> = ({id}) => {
 			<linearGradient id={`${id}qb`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#2A2624" /><stop offset="0.7" stopColor="#3E342C" /><stop offset="1" stopColor="#6A5240" /></linearGradient>
 			<linearGradient id={`${id}qcb`} x1="1" y1="0" x2="0" y2="0"><stop offset="0" stopColor="#2A2624" /><stop offset="0.7" stopColor="#3E342C" /><stop offset="1" stopColor="#6A5240" /></linearGradient>
 			<linearGradient id={`${id}gr`} x1="0" y1="0" x2="0" y2="1" gradientUnits="userSpaceOnUse" gradientTransform={`translate(0,${G}) scale(1,${1080 - G})`}><stop offset="0" stopColor="#4A3C32" /><stop offset="0.4" stopColor="#2C2420" /><stop offset="1" stopColor="#15100D" /></linearGradient>
-			<radialGradient id={`${id}pool`} cx={960} cy={830} r={520} gradientUnits="userSpaceOnUse" gradientTransform="translate(960,830) scale(1,0.42) translate(-960,-830)"><stop offset="0" stopColor="#F3D3A0" stopOpacity="0.55" /><stop offset="0.5" stopColor="#C89466" stopOpacity="0.22" /><stop offset="1" stopColor="#C89466" stopOpacity="0" /></radialGradient>
+			<radialGradient id={`${id}pool`} cx={960} cy={830} r={520} gradientUnits="userSpaceOnUse" gradientTransform="translate(960,830) scale(1,0.42) translate(-960,-830)"><stop offset="0" stopColor="#F6D6A2" stopOpacity="0.7" /><stop offset="0.5" stopColor="#C89466" stopOpacity="0.28" /><stop offset="1" stopColor="#C89466" stopOpacity="0" /></radialGradient>
 			<linearGradient id={`${id}haze`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5E6A64" stopOpacity="0" /><stop offset="0.6" stopColor="#5E6A64" stopOpacity="0.42" /><stop offset="1" stopColor="#5E6A64" stopOpacity="0" /></linearGradient>
 			<linearGradient id={`${id}fog`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#7A7266" stopOpacity="0" /><stop offset="0.65" stopColor="#7A7266" stopOpacity="0.3" /><stop offset="1" stopColor="#7A7266" stopOpacity="0.05" /></linearGradient>
 			<linearGradient id={`${id}top`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#121416" stopOpacity="0.55" /><stop offset="1" stopColor="#121416" stopOpacity="0" /></linearGradient>
@@ -165,10 +165,10 @@ const SetLuoyang: React.FC<{id: string}> = ({id}) => {
 		<Passage x={1220} w={150} y0={622} y1={G} id={id} />
 		<Lantern x={846} y={548} id={`${id}lan`} /><Lantern x={1074} y={548} id={`${id}lan`} />
 		<rect x={0} y={wallTop - 30} width={1920} height={200} fill={`url(#${id}top)`} />
-		<ellipse cx={980} cy={690} rx={330} ry={210} fill={`url(#${id}lan)`} opacity={0.9} />
+		<ellipse cx={980} cy={680} rx={400} ry={250} fill={`url(#${id}lan)`} opacity={1} />
 		<ellipse cx={1034} cy={700} rx={70} ry={150} fill={`url(#${id}lan)`} opacity={0.8} />
 		{/* drifting haze between the wall and the 阙 (two soft bands) */}
-		<g filter={`url(#${id}b14)`} opacity={0.32}><path d="M-40,690 C300,660 620,700 960,684 C1300,668 1600,700 1960,676 L1960,724 C1600,744 1300,712 960,730 C620,746 300,708 -40,736 Z" fill="#7C8078" />
+		<g filter={`url(#${id}b14)`} opacity={0.24}><path d="M-40,690 C300,660 620,700 960,684 C1300,668 1600,700 1960,676 L1960,724 C1600,744 1300,712 960,730 C620,746 300,708 -40,736 Z" fill="#7C8078" />
 			<path d="M-40,560 C400,546 760,572 1100,556 C1460,540 1700,560 1960,548 L1960,572 C1700,584 1460,566 1100,580 C760,596 400,570 -40,584 Z" fill="#6C7470" opacity={0.6} /></g>
 		{/* the guards at the gate: tiny against it */}
 		<g filter={`url(#${id}rimQ)`}>{guards.map((g, i) => <React.Fragment key={i}>{g.el}</React.Fragment>)}</g>
