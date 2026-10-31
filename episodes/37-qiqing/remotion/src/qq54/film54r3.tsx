@@ -160,8 +160,8 @@ const CaoBackLow: React.FC<{id: string; pal: Pal; grey: string; slack?: number; 
    ====================================================================================================================== */
 const SUNX = 1400;
 export const Jieshi: React.FC<{t: number}> = ({t}) => {
-	const u = t - T54, v = cl01(u / 3.5), m = 1 - (1 - v) ** 3;
-	const dx = 470 * (1 - m) - 18 * u, dy = -190 * (1 - m), z = 1 + 0.07 * (1 - m);
+	const u = t - T54, v = cl01(u / 3.7), m = 1 - (1 - v) ** 3;
+	const dx = 440 * (1 - m) - 18 * u, dy = -180 * (1 - m), z = 1 + 0.06 * (1 - m);
 	const L = (p: number) => lay(dx, dy, z, p, 960, 640);
 	const sunY = 588 - 11 * u, S = 0.5, CX = 1010, CY = 842, HX = 515, HY = 848, HK = 2.3;
 	const cape = 0.62 + 0.2 * Math.sin(t * 2.3) + 0.08 * Math.sin(t * 5.1 + 1), lift = sstep(T54 + 1.6, T54 + 2.8, t), tilt = 4 - 7 * lift + 0.6 * Math.sin(t * 1.3);
@@ -235,7 +235,12 @@ export const Jieshi: React.FC<{t: number}> = ({t}) => {
 				return <g key={i} filter="url(#j1b4)"><ellipse cx={f1(x)} cy={f1(y - h * 0.5)} rx={f1(26 + 40 * ph)} ry={f1(8 + h * 0.6)} fill="#E8E0CE" opacity={f1(o)} />
 					<ellipse cx={f1(x + 30)} cy={f1(y + 6)} rx={f1(60 + 30 * ph)} ry={6} fill="#D8D2C2" opacity={f1(o * 0.7)} /></g>; })}
 			<ellipse cx={HX + 20} cy={HY + 2} rx={270} ry={9} fill="#060403" opacity={0.5} />
-			<g fill="#140E0B" color="#140E0B" filter="url(#j1rim)"><g transform={at(HX, HY, HK)}><Horse pose={1} tail="knot" /></g></g>
+			<g fill="#140E0B" color="#140E0B" filter="url(#j1rim)"><g transform={at(HX, HY, HK)}><Horse pose={1} tail="knot" />
+				{/* the mane lifting in the sea wind (blown back, to the left) */}
+				{(() => { const n = 7, C = Array.from({length: n}, (_, j) => lp([52, -156], [95, -192], j / (n - 1)));
+					const E = C.map((c, j) => [c[0] - 9 - 3 * Math.sin(t * 6.2 + j * 1.1), c[1] - 5 + 2.5 * Math.sin(t * 4.7 + j * 1.7) + (j % 2) * 3] as P);
+					return <path d={`M${C.map((c) => f1(c[0] + 2) + ',' + f1(c[1] + 6)).join(' L')} L${E.slice().reverse().map((e) => f1(e[0]) + ',' + f1(e[1])).join(' L')} Z`} />; })()}
+			</g></g>
 			<ellipse cx={CX - 20} cy={CY + 3} rx={90} ry={8} fill="#060403" opacity={0.55} />
 			<g filter="url(#j1hero)"><g transform={atC(CX, CY, S)}>
 				<g clipPath="url(#j1body)"><Cao pal={P53} id="j1c" old armour arm={{sh: [10, 84], el: [22, 200], hd: [54, 266]}} cape={cape} /></g>
@@ -514,7 +519,7 @@ const Room: React.FC<{t: number; lamp: number; out: number}> = ({t, lamp, out}) 
 	const Lp = (p: number) => { const s = 1 + cam.z * (0.3 + 0.7 * p); return `translate(${f1(cam.fx + cam.px * (0.3 + 0.7 * p))},${cam.fy}) scale(${s.toFixed(5)}) translate(${-cam.fx},${-cam.fy})`; };
 	const F = flick(t, 3), g = lamp, ph = phase(t), wr = rate(t) / 3, rest = sstep(123.1, 123.7, t);
 	/* the brush: short strokes down a slip, lifting between them; the column drifts along the slips; at rest it lowers onto the slip */
-	const hand: P = [0.6 * ph * 0.22 + 0.25 * Math.sin(Math.PI * 2 * ph) * wr, -0.9 * Math.abs(Math.sin(Math.PI * ph)) * wr + 0.7 * rest];
+	const hand: P = [0.6 * ph * 0.25 + 0.4 * Math.sin(Math.PI * 2 * ph) * wr, -1.5 * Math.abs(Math.sin(Math.PI * ph)) * wr + 0.9 * rest];
 	const tilt = 14 + 3.5 * sstep(122.6, 123.9, t) + 0.4 * Math.sin(t * 1.1);
 	const marks = Math.min(14, 9 + Math.floor(ph / 2.6));
 	const shk = 1 + 0.025 * (F.s - 1) * 4 * g, shx = (F.w * 3) * g;
@@ -613,7 +618,7 @@ const Room: React.FC<{t: number; lamp: number; out: number}> = ({t, lamp, out}) 
 	</Svg>; };
 /** the lamp: lit, flickering harder from 122.4, guttering low in the last half second; out at END_T (the first frame of End) */
 const lampAt = (t: number) => { const F = flick(t * 1.7, 11), gut = sstep(122.4, 123.6, t), low = sstep(123.45, 124.0, t);
-	return Math.max(0.15, 1 - gut * 0.22 * (1 + (F.s - 1) * 6) * (0.6 + 0.4 * Math.sin(t * 9.1)) - 0.45 * low + 0.12 * low * Math.sin(t * 31)); };
+	return Math.max(0.15, 1 - gut * 0.18 * (1 + (F.s - 1) * 3.5) * (0.6 + 0.4 * Math.sin(t * 7.1)) - 0.42 * low + 0.05 * low * Math.sin(t * 17)); };
 export const Death: React.FC<{t: number}> = ({t}) => <Room t={t} lamp={cl01(lampAt(t))} out={0} />;
 
 /* ---------- the end card (house style, after end53d3's EndCard3): seal, title, question, pill, sources; fade to black ---------- */

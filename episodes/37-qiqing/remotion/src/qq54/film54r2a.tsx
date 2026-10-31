@@ -288,7 +288,7 @@ const ROW3 = [{x: -40, bow: 26, hb: 14, i: 0}, {x: 560, bow: 22, hb: 18, i: 1}, 
 export const Xie: React.FC<{t: number}> = ({t}) => {
 	const tA = BAR(28), u = t - tA, U = cl01(u / 3.98);
 	const S = 0.68, CX = 1226, CY = 962;
-	const cam: Cam = {x: -30 * U, y: -10 * U, z: 1 + 0.11 * (0.25 * U + 0.75 * ss(0, 1, U)), fx: 1190, fy: 520};
+	const cam: Cam = {x: -36 * U, y: -12 * U, z: 1 + 0.15 * (0.25 * U + 0.75 * ss(0, 1, U)), fx: 1190, fy: 520};
 	const T = (p: number) => camT(cam, p);
 	/* the edict comes up into the light on the downbeat of bar 29, unrolls toward the court; his chin lifts */
 	const B29 = BAR(29), rz = ss(B29 - 0.32, B29 + 0.12, t), ur = ss(B29 - 0.05, B29 + 0.5, t), sway = Math.sin((t - B29) * 3.1) * Math.exp(-Math.max(0, t - B29) * 1.4) * ur;
@@ -452,7 +452,7 @@ const Censer: React.FC<{x: number; y: number; k: number; t: number}> = ({x, y, k
 </g>;
 export const Yuan: React.FC<{t: number}> = ({t}) => {
 	const tA = BAR(30), u = t - tA, U = cl01(u / 3.98), B31 = BAR(31);
-	const cam: Cam = {x: 46 * U, y: 0, z: 1 + 0.06 * ss(0, 1, U), fx: 980, fy: 620};
+	const cam: Cam = {x: 70 * U, y: 0, z: 1 + 0.09 * (0.3 * U + 0.7 * ss(0, 1, U)), fx: 1000, fy: 620};
 	const T = (p: number) => camT(cam, p);
 	/* the acting: 沮授 bows and offers (u 0–0.8); 袁绍 looks down at it (0.9–1.3), lifts his hand and flicks it away twice (1.3–1.9), turns his
 	   back on the downbeat of bar 31 with his chin up; 沮授 is left holding the bow, then the memorial sinks (2.6–3.4) */
@@ -505,7 +505,7 @@ export const Yuan: React.FC<{t: number}> = ({t}) => {
 		<g transform={T(1)}>
 			<ellipse cx={660} cy={968} rx={110} ry={9} fill="#050505" opacity={0.55} /><ellipse cx={YX - 30} cy={YY + 2} rx={170} ry={11} fill="#050505" opacity={0.55} />
 			<g fill="#130D0B" color="#130D0B" filter="url(#yurimL)"><g transform={at(650, 966, 2.95)}><JuShou bow={bow + 0.6 * Math.sin(t * 2.3)} off={off} droop={droop} head={jh} /></g></g>
-			<g fill="#120C0A" color="#120C0A" filter="url(#yurimR)"><g transform={`translate(${YX},${YY}) scale(${f1(Math.sign(sx || 1) * Math.max(0.07, Math.abs(sx)) * YK)},${YK})`}>
+			<g fill="#120C0A" color="#120C0A" filter="url(#yurimR)"><g transform={`translate(${YX},${YY}) scale(${f1(Math.sign(sx || 1) * Math.max(0.22, Math.abs(sx)) * YK)},${YK})`}>
 				<YuanFig arm={arm} wag={wag} back={back} head={yhead} br={br} t={t} /></g></g>
 			<Censer x={1640} y={1000} k={2.2} t={t} />
 		</g>
