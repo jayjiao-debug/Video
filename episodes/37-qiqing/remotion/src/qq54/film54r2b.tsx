@@ -453,7 +453,7 @@ const TowerFrame: React.FC<{hb: number}> = ({hb}) => <g>
 	<rect x={-62} y={f1(-30 - hb * 180)} width={124} height={8} />
 </g>;
 export const Duizhi: React.FC<{t: number}> = ({t}) => {
-	const u = (t - B40) / (B42 - B40), e = ease(u), cam: Cam = {z: 0.085 * e, fx: 960, fy: 730, px: -12 * e};
+	const u = (t - B40) / (B42 - B40), e = 0.5 * u + 0.5 * ease(u), cam: Cam = {z: 0.12 * e, fx: 900, fy: 760, px: -10 * e};
 	const hb = ss(B40 - 0.4, B42 + 0.4, t), grip = ss(81.5, 82.4, t);
 	const CY = 862, S = kD(CY) / 4.98, arm = {sh: ARM_HILT.sh, el: lp([12, 206], ARM_HILT.el, grip), hd: lp([20, 300], ARM_HILT.hd, grip)};
 	const wv = (i: number) => Math.sin(t * 1.9 + i * 1.7) * 5;
