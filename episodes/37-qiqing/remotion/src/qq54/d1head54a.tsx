@@ -70,21 +70,27 @@ const EYEN = cr([...ENU, ...ENL], true, 0.14);
 const EFU: P[] = [[1398.6, 246.4], [1401.6, 241.8], [1406.6, 238.8], [1412.6, 237.6], [1418, 238.2], [1422.6, 240.2]];
 const EFL: P[] = [[1422.6, 240.2], [1418.6, 244.6], [1412.6, 248.6], [1406, 250.4], [1401, 249.6]];
 const EYEF = cr([...EFU, ...EFL], true, 0.14);
-/* the beard and the moustache */
-const BD = cr([[1350, 343], [1364, 340.5], [1380, 339.5], [1394, 337], [1400, 326], [1404, 312], [1412, 311], [1424, 313.5], [1436, 312], [1448, 306], [1460, 300], [1476, 301], [1488, 305],
+/* the beard and the moustache. The mouth is drawn in its own frame, square to the face: origin = the mouth centre under the nose tip,
+   x along the eye line (−33°, the head's tilt), y down the face (perpendicular, along the brow knot → nose line) */
+const MO: P = [1425.5, 300.3], MA = (-33 * Math.PI) / 180, MU: P = [Math.cos(MA), Math.sin(MA)], MV: P = [-Math.sin(MA), Math.cos(MA)];
+const ML = (q: P[]): P[] => q.map(([x, y]) => [MO[0] + x * MU[0] + y * MV[0], MO[1] + x * MU[1] + y * MV[1]] as P);
+const BD = cr([[1350, 343], [1364, 340.5], [1380, 339.5], [1394, 337], [1400, 326], ...ML([[-30, 9], [-17, 6.6], [-6, 6], [4, 6], [12, 6.8], [19, 9.5], [25, 14], [31, 18.4], [38, 20.4], [46, 23]]), [1488, 305],
 	[1496, 318], [1499.5, 334], [1497, 350], [1487, 362], [1468, 370.5], [1446, 375.5], [1424, 377.5], [1402, 374.5], [1384, 367], [1368, 357], [1356, 350]]);
-const MOU = cr([[1398.6, 296.4], [1401.4, 291.4], [1407, 290.8], [1414, 291.6], [1421, 290], [1428, 285], [1437, 281.6], [1450, 280.6], [1464, 283.4], [1476, 289.4], [1486, 297.6], [1492, 308], [1489, 316],
-	[1481, 306], [1468, 297.6], [1454, 293.6], [1440, 294.4], [1428, 297.4], [1418, 301.4], [1412, 307.4], [1409.6, 318], [1408.4, 330], [1407.4, 342], [1399.6, 344], [1396.4, 330], [1396.2, 316], [1397, 305]]);
-/* the moustache's hair: short strokes flowing out from under the nose, down over the corners */
+/* the moustache: thick over the upper lip, drooping evenly past both corners into the beard (the far half foreshortened) */
+const MOU = cr(ML([[-36, 22], [-35, 13], [-31, 4], [-24.5, -4], [-15, -10], [-5, -12.4], [5, -12.2], [14, -9.8], [22, -4.4], [28, 3], [31.6, 11.6], [33, 21],
+	[28.6, 21], [26.4, 12.6], [22, 5], [14, 0.6], [5, -0.9], [-2, -1.2], [-10, -0.6], [-17.4, 1.6], [-24, 6.4], [-29.4, 13], [-31.4, 21.6]]));
+/* the moustache's hair: short strokes flowing out from under the nose and down over both corners */
 const MH: {a: P; b: P; c: string; w: number; o: number}[] = [];
-for (let i = 0; i < 26; i++) { const u = (i + rnd(i, 81) * 0.6) / 26, a = pl([[1404, 292.5], [1420, 291], [1440, 287.6], [1462, 289], [1484, 302]], u), lit = u < 0.35 && i % 2 === 0;
-	const dx = u < 0.18 ? -0.35 : 0.55 + u * 0.4, dy = u < 0.18 ? 1 : 0.55, l = 5 + rnd(i, 82) * 4, n = Math.hypot(dx, dy);
-	MH.push({a: [a[0] + (rnd(i, 83) - 0.5) * 3, a[1] - 2 + rnd(i, 84) * 4], b: [a[0] + (dx / n) * l, a[1] + (dy / n) * l], c: lit ? '#8A7A6C' : '#584C44', w: lit ? 0.9 : 1.2, o: lit ? 0.55 : 0.6}); }
-for (let i = 0; i < 7; i++) { const y = 300 + i * 6 + rnd(i, 85) * 3; MH.push({a: [1400.4 + rnd(i, 86), y], b: [1401.4 + rnd(i, 87), y + 7], c: '#584C44', w: 1.1, o: 0.6}); }
+for (let i = 0; i < 28; i++) { const q = -1 + (2 * (i + 0.2 + rnd(i, 81) * 0.6)) / 28, x = q < 0 ? q * 29 : q * 25, y = -9.6 + 9 * q * q + (rnd(i, 84) - 0.5) * 2.5, lit = q < -0.3 && i % 2 === 0;
+	const dx = q * 0.9, n = Math.hypot(dx, 1), l = 5 + rnd(i, 82) * 3; const [a, b] = ML([[x, y], [x + (dx / n) * l, y + l / n]]);
+	MH.push({a, b, c: lit ? '#8A7A6C' : '#584C44', w: lit ? 0.9 : 1.2, o: lit ? 0.55 : 0.6}); }
+for (let i = 0; i < 4; i++) for (const sd of [-1, 1]) { const x = sd < 0 ? -33 + rnd(i, 86) * 1.5 : 29.4 + rnd(i, 87) * 1.5, y = 5 + i * 4; const [a, b] = ML([[x, y], [x + sd * 0.8, y + 6]]);
+	MH.push({a, b, c: '#584C44', w: 1.1, o: 0.6}); }
 /* the beard's strands: flowing out and down from the chin */
 const BH = Array.from({length: 52}, (_, i) => { const x = 1352 + rnd(i, 71) * 146, y = 314 + rnd(i, 72) * 56, dx = (x - 1430) * 0.01, n = Math.hypot(dx, 1), l = 10 + rnd(i, 73) * 8, b = (rnd(i, 74) - 0.5) * 5;
 	return {d: `M${f1(x)},${f1(y)} q${f1((dx / n) * l * 0.5 + b)},${f1(l * 0.5)} ${f1((dx / n) * l)},${f1(l / n)}`, grey: i % 5 === 0}; });
-const LIP = cr([[1413, 305.4], [1421, 301.8], [1432, 299.2], [1442, 298.2], [1447, 299.4], [1444.5, 303.8], [1437, 307.4], [1427, 309.2], [1418, 309]]);
+/* the lower lip: a calm, slightly flattened lens centred under the nose tip, shorter on the far side; both corners under the moustache */
+const LIP = cr(ML([[-16, -0.4], [-8, -1.6], [0, -1.9], [7, -1.6], [13, -0.4], [8, 3.2], [0, 4.4], [-8, 3.9]]));
 
 export const HeadT: React.FC<{t: number}> = ({t}) => {
 	const p1 = Math.sin(t * 2 * Math.PI * 1.6) * 5, p2 = Math.sin(t * 2 * Math.PI * 2.1 + 1) * 4;
@@ -125,7 +131,7 @@ export const HeadT: React.FC<{t: number}> = ({t}) => {
 					<ellipse cx={1373} cy={290.5} rx={11} ry={3.6} fill={SK.hi} opacity={0.75} transform="rotate(-22,1373,290.5)" />
 					{/* the frown: a soft crease above the knotted near brow, a short vertical crease between the brows */}
 					<path d="M1367,242 C1372.4,241 1377.6,241.6 1382.4,243.6" fill="none" stroke={SK.deep} strokeWidth={1.7} opacity={0.8} strokeLinecap="round" />
-					<path d="M1390.4,249.6 C1389.4,246.8 1388,244.2 1386.4,241.8" fill="none" stroke={SK.deep} strokeWidth={1.7} opacity={0.9} strokeLinecap="round" />
+					<path d="M1387.6,247 C1386.8,244.6 1385.6,242.4 1384.2,240.4" fill="none" stroke={SK.deep} strokeWidth={1.7} opacity={0.9} strokeLinecap="round" />
 				</g>
 				{/* the nose, a prominent straight Han nose seen 3/4: the near side plane in half-tone, the far side plane in shadow with a clean
 				   edge at the ridge, the lit bridge plane from between the brows down to a rounded tip; its cast shadow falls onto the far cheek and the moustache */}
@@ -168,9 +174,9 @@ export const HeadT: React.FC<{t: number}> = ({t}) => {
 			<path d={rib([[1396.6, 248.6], [1399.4, 244.6], [1403, 240.6], [1408.6, 237.4], [1414.6, 236.4], [1420, 237.2], [1424.6, 239.6], [1426.6, 241.6]], 0.6, 1.6, 0.45)} fill={LINE} />
 			<path d={cr([[1403, 251.2], [1410, 251], [1417, 247.8]], false)} fill="none" stroke={SK.deep} strokeWidth={1} opacity={0.65} strokeLinecap="round" />
 			{/* the brows: the near one thick and low, knotted down toward the nose; the far one arched high */}
-			<path d={cr([[1331, 268], [1340, 261.4], [1351, 256], [1362, 252], [1372, 249.4], [1381, 248.2], [1387.4, 250], [1391.2, 254.4], [1391.2, 259.8], [1387.2, 259.8], [1381.6, 257.2], [1372, 257.6], [1361, 259.8], [1350, 263], [1340, 267.4], [1333, 270.6]], true, 0.15)} fill="#3C281C" />
-			<path d={cr([[1356, 258.6], [1368, 254.4], [1380, 252], [1387.6, 253.6], [1390.6, 258.6], [1386.6, 258.6], [1380, 256.4], [1368, 257.4]], true, 0.15)} fill="#1A0E08" opacity={0.85} />
-			{Array.from({length: 16}, (_, i) => { const u = (i + rnd(i, 61) * 0.5) / 16, x = 1333 + u * 52, y = 268.5 - u * 18.5 + rnd(i, 62) * 2.5, l = 4 + rnd(i, 63) * 3;
+			<path d={cr([[1331, 268], [1340, 261.4], [1351, 256], [1361, 252.2], [1370, 250], [1376.6, 250], [1380.4, 252.6], [1381.6, 256.4], [1380.6, 259.8], [1377.6, 259.4], [1374.6, 257.4], [1368, 258.2], [1360, 260], [1350, 263], [1340, 267.4], [1333, 270.6]], true, 0.15)} fill="#3C281C" />
+			<path d={cr([[1352, 260.5], [1362, 256.4], [1372, 253.4], [1378.4, 254], [1380.6, 258.4], [1377.6, 258.6], [1372, 256.6], [1362, 258.6]], true, 0.15)} fill="#1A0E08" opacity={0.85} />
+			{Array.from({length: 16}, (_, i) => { const u = (i + rnd(i, 61) * 0.5) / 16, x = 1333 + u * 43, y = 268.5 - u * 16 + rnd(i, 62) * 2.5, l = 4 + rnd(i, 63) * 3;
 				return <path key={i} d={`M${f1(x)},${f1(y)} l${f1(l * 0.86)},${f1(-l * 0.5 - 1.2)}`} fill="none" stroke={i % 3 === 0 ? '#6A5444' : '#140A06'} strokeWidth={1} opacity={i % 3 === 0 ? 0.5 : 0.75} strokeLinecap="round" />; })}
 			<path d={rib([[1392.4, 248.4], [1395, 242.4], [1400, 235.6], [1406.6, 230], [1414, 226], [1422, 224.2], [1430, 225], [1435, 227.4]], 0.9, 3.1, 0.3)} fill="#2E1E14" />
 			{Array.from({length: 8}, (_, i) => { const u = (i + 0.5) / 8, a = pl([[1393, 247], [1400, 235.6], [1414, 226], [1430, 225]], u); return <path key={i} d={`M${f1(a[0] - 1)},${f1(a[1] + 1.6)} l${f1(4 + u * 2)},${f1(-2.4 + u * 2)}`} fill="none" stroke={i % 3 === 0 ? '#6A5444' : '#120A06'} strokeWidth={0.9} opacity={0.6} strokeLinecap="round" />; })}
@@ -188,12 +194,12 @@ export const HeadT: React.FC<{t: number}> = ({t}) => {
 			{[[1360, 352], [1372, 360], [1385, 367], [1398, 372], [1412, 376], [1426, 378], [1440, 376.5], [1454, 373.5], [1468, 369.5], [1480, 364], [1490, 356]].map(([x, y], i) =>
 				<path key={i} d={`M${x - 5.5},${y - 3} Q${x + 1},${y + 6 + (i % 3)} ${x + 5},${y - 2}`} fill={BEARD} />)}
 			<path d="M1362,353 C1380,366 1404,375 1428,378" fill="none" stroke="#C08050" strokeWidth={1.4} opacity={0.35} />
-			{/* the lower lip: a small lit shape under the moustache; the pressed mouth line, its near corner turned down */}
-			<path d={cr([[1414, 309], [1428, 312.4], [1442, 307.6], [1448, 302]], false)} fill="none" stroke="#1A1512" strokeWidth={2.4} opacity={0.6} strokeLinecap="round" />
+			{/* the lower lip: a small lit lens under the moustache; the pressed mouth line square to the face */}
+			<path d={cr(ML([[-13, 4.6], [-4, 5.4], [5, 5.2], [11, 3.6]]), false)} fill="none" stroke="#1A1512" strokeWidth={2.2} opacity={0.6} strokeLinecap="round" />
 			<path d={LIP} fill="#B47A5A" />
-			<path d={cr([[1416, 308.6], [1428, 308.6], [1440, 305.4], [1445, 302.8]], false)} fill="none" stroke={SK.deep} strokeWidth={1.6} opacity={0.8} strokeLinecap="round" />
-			<path d={rib([[1420, 304.8], [1428, 303.2], [1437, 302.2]], 0.3, 1.1)} fill={SK.hi} opacity={0.6} />
-			<path d={cr([[1409.5, 308.6], [1413, 304.6], [1422, 301.2], [1434, 298.8], [1446, 298]], false)} fill="none" stroke="#2A1410" strokeWidth={1.7} strokeLinecap="round" />
+			<path d={cr(ML([[-12, 3.4], [-4, 4.4], [4, 4.2], [10, 2.6]]), false)} fill="none" stroke={SK.deep} strokeWidth={1.2} opacity={0.6} strokeLinecap="round" />
+			<path d={rib(ML([[-7, 2], [0, 1.8], [6, 2]]), 0.3, 1)} fill={SK.hi} opacity={0.55} />
+			<path d={cr(ML([[-15.5, 1.4], [-8, 0.4], [0, 0.2], [7, 0.4], [12.5, 1.4]]), false)} fill="none" stroke="#2A1410" strokeWidth={1.4} strokeLinecap="round" />
 			<path d={MOU} fill="#2A211B" />
 			{MH.map((h, i) => <path key={i} d={`M${f1(h.a[0])},${f1(h.a[1])} L${f1(h.b[0])},${f1(h.b[1])}`} fill="none" stroke={h.c} strokeWidth={h.w} opacity={h.o} strokeLinecap="round" />)}
 			{/* the near aventail: overlapping scales (upper rows over lower), lit upper edges, shaded lower parts; the cyan rim on its back edge */}
