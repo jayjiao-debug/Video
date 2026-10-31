@@ -156,7 +156,7 @@ export const K5: React.FC<{t?: number; cam?: Cam}> = ({t: T, cam}) => { const HZ
 		const u = (T - TS) / SW;
 		pull = ease(cl((T - TS + 0.55) / 0.55)) * (1 - ease(cl((T - TS - 1.0) / 0.9)));
 		if (u > 0) { sling = 'none';
-			if (u <= 1) a = -112 + 130 * u * u; else { const v = T - TS - SW; a = 10 + 8 * Math.exp(-v * 3) * Math.cos(v * 7); }
+			if (u <= 1) a = -112 + 130 * u * u; else { const v = T - TS - SW; a = 10 + 8 * Math.exp(-v * 3) * Math.cos(v * 7) - 118 * ease((v - 0.5) / 2.4); }
 			const ur = 0.95, tr = TS + ur * SW;
 			if (u < ur) { const r = a * Math.PI / 180, tp = tipS(a), ox = Math.sin(r), oy = -Math.cos(r), vx = Math.cos(r), vy = Math.sin(r), dx = ox * 0.8 - vx * 0.6, dy = oy * 0.8 - vy * 0.6, d = Math.hypot(dx, dy);
 				stone = [tp[0] + dx / d * 93, tp[1] + dy / d * 93, 9]; }

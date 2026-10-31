@@ -29,6 +29,7 @@ const Tent: React.FC<{t: number}> = ({t}) => { const u = (t - B44) / (B46 - B44)
 	return <Svg tf={push(0.075 * ease(u * 0.9 + 0.05), CX + 60, 520)}>
 		<defs>
 			<radialGradient id="dtLamp" cx={flame[0]} cy={flame[1]} r="1300" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity={0.6 * fl} /><stop offset="0.16" stopColor="#E9CB98" stopOpacity={0.34 * fl} /><stop offset="0.5" stopColor="#B08A64" stopOpacity="0.1" /><stop offset="1" stopColor="#B08A64" stopOpacity="0" /></radialGradient>
+			<radialGradient id="dtPool"><stop offset="0" stopColor="#F3DDB4" stopOpacity="0.16" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<radialGradient id="dtLg"><stop offset="0" stopColor="#FFF0D0" stopOpacity="0.55" /><stop offset="0.3" stopColor="#F3DDB4" stopOpacity="0.16" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<linearGradient id="dtCanvas" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2A231D" /><stop offset="1" stopColor="#40352A" /></linearGradient>
 			<linearGradient id="dtRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#120E0B" /><stop offset="1" stopColor="#2A221B" /></linearGradient>
@@ -52,22 +53,27 @@ const Tent: React.FC<{t: number}> = ({t}) => { const u = (t - B44) / (B46 - B44)
 		<path d="M150,330 C200,480 230,640 210,820 L120,820 L120,330 Z" fill="#3A2E24" /><path d="M380,300 C340,470 330,650 360,820 L420,820 L420,300 Z" fill="#33291F" />
 		<path d="M150,330 C200,480 230,640 210,820" fill="none" stroke="#E9CB98" strokeOpacity={0.12} strokeWidth={3} />
 		{[560, 1700].map((x) => <g key={x}><rect x={x - 11} y={-200} width={22} height={1020} fill="#1E1610" /><rect x={x + (x < 900 ? 7 : -11)} y={-200} width={4} height={1020} fill="#E9CB98" opacity={x < 900 ? 0.14 : 0.22} /></g>)}
-		{/* his 札甲 on a stand, his sword on a rack: a quiet still life at the back right */}
+		{/* his 札甲 and helmet (兜鍪) on a stand, a 戟 leaning by it: a quiet still life at the back right */}
 		<g transform="translate(1500,820)">
-			<rect x={-4} y={-300} width={8} height={300} fill="#1C140F" /><rect x={-60} y={-280} width={120} height={8} fill="#1C140F" />
-			<path d="M-56,-272 C-60,-220 -58,-170 -52,-120 L52,-120 C58,-170 60,-220 56,-272 C30,-284 -30,-284 -56,-272 Z" fill="#2A2826" />
-			{Array.from({length: 7}, (_, i) => <rect key={i} x={-56} y={-262 + i * 20} width={112} height={2.4} fill="#6E2C22" opacity={0.6} />)}
-			<path d="M20,-272 C30,-220 32,-170 30,-120 L52,-120 C58,-170 60,-220 56,-272 Z" fill="#9A968C" opacity={0.18} />
-			<path d="M-36,-120 L36,-120 L42,-60 L-42,-60 Z" fill="#26201C" />
-			<rect x={-50} y={-6} width={100} height={6} fill="#1C140F" />
+			<rect x={-4} y={-330} width={8} height={330} fill="#1C140F" /><rect x={-40} y={-6} width={80} height={6} fill="#1C140F" /><rect x={-58} y={-290} width={116} height={7} fill="#1C140F" />
+			<path d="M-24,-330 C-26,-352 -14,-366 0,-366 C14,-366 26,-352 24,-330 L28,-322 L-28,-322 Z" fill="#2A2826" /><path d="M8,-364 C18,-358 24,-346 24,-330 L18,-330 C18,-344 14,-354 6,-360 Z" fill="#9A968C" opacity={0.3} />
+			<path d="M-2,-366 L0,-380 L2,-366 Z" fill="#6E2C22" />
+			{/* the cuirass: shoulders and armholes, narrowing to the waist, the lamellar skirt flaring */}
+			<path d="M-62,-282 C-70,-270 -64,-248 -52,-240 C-50,-210 -46,-190 -40,-170 L40,-170 C46,-190 50,-210 52,-240 C64,-248 70,-270 62,-282 C30,-292 -30,-292 -62,-282 Z" fill="#2E2C2A" />
+			<path d="M-40,-170 L40,-170 L52,-104 L-52,-104 Z" fill="#26231F" />
+			{Array.from({length: 9}, (_, i) => <path key={i} d={`M${-58 + i * 2},${-276 + i * 19} L${58 - i * 2},${-276 + i * 19}`} stroke="#6E2C22" strokeWidth={2} opacity={0.55} />)}
+			{Array.from({length: 12}, (_, i) => <path key={'v' + i} d={`M${-48 + i * 8.6},-280 L${-48 + i * 8.6 + (i - 5.5) * 0.6},-106`} stroke="#141210" strokeWidth={1.2} opacity={0.6} />)}
+			<path d="M24,-284 C40,-270 50,-240 46,-200 L40,-170 L52,-104 L40,-104 L30,-170 C36,-200 36,-250 18,-284 Z" fill="#9A968C" opacity={0.2} />
+			<rect x={-44} y={-176} width={88} height={7} fill="#1A120E" />
 		</g>
+		<g transform="translate(1610,820) rotate(-8)" fill="#1C140F"><rect x={-2} y={-420} width={4} height={420} /><path d="M0,-450 C2,-440 2.6,-430 2,-420 L-2,-420 C-2.6,-430 -2,-440 0,-450 Z" /><path d="M2,-410 L22,-406 L22,-400 L2,-402 Z" /></g>
 		<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="url(#dtLamp)" />
 		{/* his lamp shadow on the canvas */}
 		<g transform={`translate(${CX - 250},836) scale(${k * 1.3},${k * 1.12})`} fill="#140C08" color="#140C08" opacity={0.55} filter="url(#dtb2)"><CaoSeatedShadow /></g>
 		{/* P1 the floor: matting, the lamp's pool */}
 		<rect x={-200} y={820} width={W + 400} height={460} fill="url(#dtFloor)" />
 		{Array.from({length: 6}, (_, i) => <path key={i} d={`M-200,${840 + i * i * 7 + i * 16} L2120,${840 + i * i * 7 + i * 16}`} stroke="#000" strokeOpacity={0.18} strokeWidth={1.5} />)}
-		<ellipse cx={LX - 200} cy={960} rx={620} ry={110} fill="#F3DDB4" opacity={0.1 * fl} />
+		<ellipse cx={LX - 200} cy={960} rx={700} ry={150} fill="url(#dtPool)" opacity={fl} />
 		<path d={`M520,${FY - 22} L1300,${FY - 22} L1330,${FY} L490,${FY} Z`} fill="#4A3C2E" /><rect x={490} y={FY} width={840} height={8} fill="#2A2018" />
 		{/* the desk, the slips, the inkstone, the little lamp on it */}
 		<g>
@@ -97,19 +103,20 @@ const MARKS = Array.from({length: 26}, (_, c) => Array.from({length: 9}, (_, r) 
 	const q = rnd(c * 97 + r * 13 + s, 7), x0 = (rnd(c * 31 + r * 7 + s, 9) - 0.5) * 18, y0 = (rnd(c * 17 + r * 3 + s, 11) - 0.5) * 22;
 	return q < 0.4 ? `M${f1(x0 - 9)},${f1(y0)} L${f1(x0 + 9)},${f1(y0 - 1.5)}` : q < 0.7 ? `M${f1(x0)},${f1(y0 - 11)} L${f1(x0 + 1)},${f1(y0 + 10)}` : q < 0.85 ? `M${f1(x0 - 6)},${f1(y0 - 6)} L${f1(x0 + 7)},${f1(y0 + 8)}` : `M${f1(x0 - 1)},${f1(y0 - 2)} l2.4,3`;
 }).join(' ')));
-const Letter: React.FC<{t: number}> = ({t}) => { const u = (t - B46) / (B48 - B46), SWD = 46, X0 = 1700, N = 26;
-	const open = 140 + ease(cl((t - B46 - 0.2) / 2.6)) * 1060;          // unrolled width (px), the roll travels left
+const Letter: React.FC<{t: number}> = ({t}) => { const u = (t - B46) / (B48 - B46), SWD = 44, X0 = 1690, N = 26, Y0 = 368, SH = 556;
+	const open = 130 + ease(cl((t - B46 - 0.2) / 2.6)) * 1000;          // unrolled width (px), the roll travels left
 	const rollX = X0 - open;
 	const fl = 1 + Math.sin(t * 12.7) * 0.03 + Math.sin(t * 6.9 + 2) * 0.04;
 	/* the hand slides in from the lower right and closes on the slips */
 	const hu = ease(cl((t - B46 - 2.85) / 0.7)), cu = ease(cl((t - B46 - 3.35) / 0.45));
-	const hx = 1980 - hu * 470, hy = 1180 - hu * 330;
-	const fing = (i: number): P[] => { const bx = -30 + i * 20, by = -40 + Math.abs(i - 1.5) * 6, L1 = 40 - Math.abs(i - 1.5) * 5;
-		return [[bx, by], [bx - 8 - cu * 2, by - L1 + cu * 18], [bx - 14 - cu * 10, by - L1 * 1.7 + cu * 52]]; };
-	return <Svg tf={push(0.06 * ease(u), 1100, 520, -u * 30, 0)}>
+	const hx = 2080 - hu * 600, hy = 760 - hu * 50;
+	/* seen from above, palm down, fingers pointing left onto the slips; closing = the fingers draw in and curl (shorter, knuckles up) */
+	const fing = (i: number): P[] => { const y = -36 + i * 22, L = [80, 92, 88, 70][i] * (1 - 0.16 * cu);
+		return [[-10, y * 0.95], [-10 - L * 0.55, y + cu * 2], [-10 - L, y + 2 + cu * 4]]; };
+	return <Svg tf={push(0.06 * ease(u), 1300, 690, -u * 24, 0)}>
 		<defs>
 			<linearGradient id="dlWood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#1E140E" /><stop offset="0.6" stopColor="#3E2A1C" /><stop offset="1" stopColor="#5A3E28" /></linearGradient>
-			<radialGradient id="dlLamp" cx="1760" cy="60" r="1500" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity={0.55 * fl} /><stop offset="0.3" stopColor="#E9CB98" stopOpacity={0.22 * fl} /><stop offset="1" stopColor="#E9CB98" stopOpacity="0" /></radialGradient>
+			<radialGradient id="dlLamp" cx="1930" cy="300" r="1500" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity={0.55 * fl} /><stop offset="0.3" stopColor="#E9CB98" stopOpacity={0.22 * fl} /><stop offset="1" stopColor="#E9CB98" stopOpacity="0" /></radialGradient>
 			<linearGradient id="dlSlip" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#A8925E" /><stop offset="0.25" stopColor="#D4C08E" /><stop offset="0.8" stopColor="#C8B07C" /><stop offset="1" stopColor="#8E7A4E" /></linearGradient>
 			<linearGradient id="dlRoll" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#6A5634" /><stop offset="0.35" stopColor="#C8B07C" /><stop offset="0.6" stopColor="#E0CC9A" /><stop offset="1" stopColor="#7A6640" /></linearGradient>
 			<radialGradient id="dlVig" cx="0.55" cy="0.48" r="0.72"><stop offset="0.45" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.65" /></radialGradient>
@@ -121,36 +128,43 @@ const Letter: React.FC<{t: number}> = ({t}) => { const u = (t - B46) / (B48 - B4
 		{Array.from({length: 26}, (_, i) => <path key={i} d={`M-200,${-120 + i * 54 + rnd(i, 3) * 20} C400,${-140 + i * 54} 1200,${-90 + i * 54} 2120,${-130 + i * 54 + rnd(i, 4) * 30}`} fill="none" stroke="#120A06" strokeOpacity={0.3} strokeWidth={1.4 + rnd(i, 5) * 2} />)}
 		<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="url(#dlLamp)" />
 		{/* the slips: shadow, then the opened part (clipped at the roll), each slip a column of marks */}
-		<rect x={rollX + 10} y={196} width={open} height={720} fill="#000" opacity={0.35} filter="url(#dlb3)" />
+		<rect x={rollX + 10} y={Y0 + 16} width={open} height={SH} fill="#000" opacity={0.35} filter="url(#dlb3)" />
 		<g clipPath="url(#dlOpen)">
 			{Array.from({length: N}, (_, i) => { const x = X0 - (i + 1) * SWD; return <g key={i}>
-				<rect x={x + 1} y={180} width={SWD - 3} height={720} rx={3} fill="url(#dlSlip)" />
-				<rect x={x + 1} y={180} width={SWD - 3} height={720} rx={3} fill="#3A2A14" opacity={rnd(i, 21) * 0.12} />
-				<g transform={`translate(${x + SWD / 2},${250})`} stroke="#1A120C" strokeWidth={3.6} strokeLinecap="round" fill="none" opacity={0.85}>
-					{(i % 9 === 8 ? [] : MARKS[i]).map((d, r) => r < 9 - (i % 4 === 3 ? 4 : 0) ? <path key={r} d={d} transform={`translate(0,${r * 68})`} /> : null)}
+				<rect x={x + 1} y={Y0} width={SWD - 3} height={SH} rx={3} fill="url(#dlSlip)" />
+				<rect x={x + 1} y={Y0} width={SWD - 3} height={SH} rx={3} fill="#3A2A14" opacity={rnd(i, 21) * 0.12} />
+				<g transform={`translate(${x + SWD / 2},${Y0 + 56}) scale(0.9)`} stroke="#1A120C" strokeWidth={3.8} strokeLinecap="round" fill="none" opacity={0.85}>
+					{(i % 9 === 8 ? [] : MARKS[i]).map((d, r) => r < 9 - (i % 4 === 3 ? 4 : 0) ? <path key={r} d={d} transform={`translate(0,${r * 64})`} /> : null)}
 				</g></g>; })}
-			{[300, 780].map((y) => <path key={y} d={`M${X0 + 20},${y} ${Array.from({length: N}, (_, i) => `L${X0 - i * SWD - SWD / 2},${y + (i % 2 ? 4 : -4)}`).join(' ')}`} fill="none" stroke="#3A2414" strokeWidth={5} />)}
+			{[Y0 + 92, Y0 + SH - 86].map((y) => <path key={y} d={`M${X0 + 20},${y} ${Array.from({length: N}, (_, i) => `L${X0 - i * SWD - SWD / 2},${y + (i % 2 ? 4 : -4)}`).join(' ')}`} fill="none" stroke="#3A2414" strokeWidth={5} />)}
 		</g>
-		<path d={`M${X0},${180} L${X0 + 14},${200} L${X0 + 14},${880} L${X0},${900} Z`} fill="#6A5634" />
+		<path d={`M${X0},${Y0} L${X0 + 14},${Y0 + 20} L${X0 + 14},${Y0 + SH - 20} L${X0},${Y0 + SH} Z`} fill="#6A5634" />
 		{/* the roll (end-on spirals top and bottom) */}
 		<g>
-			<rect x={rollX - 46} y={164} width={70} height={752} rx={30} fill="url(#dlRoll)" />
-			{[0, 1, 2, 3].map((j) => <path key={j} d={`M${rollX - 40 + j * 15},166 L${rollX - 40 + j * 15},914`} stroke="#4A381E" strokeOpacity={0.35} strokeWidth={1.2} />)}
-			<ellipse cx={rollX - 11} cy={170} rx={35} ry={10} fill="#BCA676" /><ellipse cx={rollX - 11} cy={170} rx={22} ry={6} fill="none" stroke="#6E5638" strokeWidth={2} /><ellipse cx={rollX - 11} cy={170} rx={10} ry={3} fill="none" stroke="#6E5638" strokeWidth={2} />
-			{[300, 780].map((y) => <rect key={y} x={rollX - 46} y={y - 3} width={70} height={6} fill="#3A2414" />)}
+			<rect x={rollX - 46} y={Y0 - 14} width={70} height={SH + 28} rx={30} fill="url(#dlRoll)" />
+			{[0, 1, 2, 3].map((j) => <path key={j} d={`M${rollX - 40 + j * 15},${Y0 - 12} L${rollX - 40 + j * 15},${Y0 + SH + 12}`} stroke="#4A381E" strokeOpacity={0.35} strokeWidth={1.2} />)}
+			<ellipse cx={rollX - 11} cy={Y0 - 8} rx={35} ry={10} fill="#BCA676" /><ellipse cx={rollX - 11} cy={Y0 - 8} rx={22} ry={6} fill="none" stroke="#6E5638" strokeWidth={2} /><ellipse cx={rollX - 11} cy={Y0 - 8} rx={10} ry={3} fill="none" stroke="#6E5638" strokeWidth={2} />
+			{[Y0 + 92, Y0 + SH - 86].map((y) => <rect key={y} x={rollX - 46} y={y - 3} width={70} height={6} fill="#3A2414" />)}
 		</g>
 		{/* the lamp, out of focus at the top right */}
-		<g filter="url(#dlb14)"><circle cx={1760} cy={50} r={70} fill="#FFF0D0" opacity={0.7 * fl} /><circle cx={1760} cy={60} r={160} fill="#F3DDB4" opacity={0.18} /></g>
-		{/* his hand: the dark sleeve with its red trim from the lower right, the hand closing over the slips */}
-		{hu > 0.001 && <g filter="url(#dlHand)" transform={`translate(${f1(hx)},${f1(hy)}) rotate(-28)`}>
-			<path d="M-70,30 C-60,-10 -10,-30 40,-24 L260,40 L260,260 L-40,260 Z" fill="#262A31" />
-			<path d="M-70,30 C-60,-10 -10,-30 40,-24 L50,-4 C0,-12 -40,4 -54,40 Z" fill="#5C2E24" />
-			<path d="M-56,36 C-50,-2 -6,-20 40,-14 L240,48 L240,90 L-40,80 Z" fill="#575B62" opacity={0.35} />
-			<path d="M-56,20 C-66,-6 -60,-40 -40,-56 C-20,-70 26,-66 44,-50 C56,-38 54,-10 40,10 C10,20 -30,30 -56,20 Z" fill="#C38D64" />
-			<path d="M-50,-4 C-54,-28 -40,-52 -16,-58 C10,-62 30,-56 40,-46 C20,-50 -10,-44 -28,-28 C-38,-18 -44,-8 -50,-4 Z" fill="#E8BC8E" />
-			{[0, 1, 2, 3].map((i) => { const j = fing(i); return <g key={i}><path d={limb(j, [8.6 - i * 0.6, 7.8 - i * 0.6, 6.4 - i * 0.5])} fill="#C38D64" /><path d={limb(j.map((p) => [p[0] + 3, p[1]] as P), [2.6, 2.4, 2])} fill="#E8BC8E" opacity={0.8} /></g>; })}
-			<path d={limb([[44, -20], [62, -44], [70, -66 + cu * 14]], [9, 8, 6.6])} fill="#B07E58" />
-			<path d="M-20,-30 C-10,-36 6,-36 16,-30" fill="none" stroke="#9C6848" strokeWidth={1.4} opacity={0.6} />
+		<g filter="url(#dlb14)"><circle cx={1930} cy={300} r={66} fill="#FFF0D0" opacity={0.6 * fl} /><circle cx={1930} cy={300} r={170} fill="#F3DDB4" opacity={0.16} /></g>
+		{/* his hand from the right, seen from above: the 皂 sleeve with its red cuff, the back of the hand, the fingers closing over the slips */}
+		{hu > 0.001 && <g filter="url(#dlHand)" transform={`translate(${f1(hx)},${f1(hy)}) rotate(-6) scale(1.05)`}>
+			<ellipse cx={30} cy={34} rx={150} ry={40} fill="#000" opacity={0.3} filter="url(#dlb3)" />
+			<path d="M118,-74 L720,-96 L720,96 L118,78 C108,40 108,-40 118,-74 Z" fill="#262A31" />
+			<path d="M118,-74 L720,-96 L720,-60 L130,-46 Z" fill="#575B62" opacity={0.5} />
+			<path d="M118,-74 C108,-40 108,40 118,78 L146,76 C138,40 138,-40 146,-72 Z" fill="#5C2E24" />
+			{/* the back of the hand */}
+			<path d="M120,-50 C90,-60 40,-62 0,-58 C-18,-56 -24,-30 -22,0 C-20,34 -14,56 4,62 C40,66 90,58 120,48 Z" fill="#C38D64" />
+			<path d="M120,-50 C90,-60 40,-62 0,-58 C-14,-56 -20,-40 -22,-24 C10,-34 60,-40 116,-30 Z" fill="#E8BC8E" />
+			<path d="M120,48 C90,58 40,66 4,62 C-10,58 -16,48 -18,36 C20,44 70,42 118,30 Z" fill="#9C6848" />
+			{/* the thumb along the lower side */}
+			<path d={limb([[70, 54], [26, 74], [-8, 80]], [15, 12, 10])} fill="#B07E58" />
+			{[3, 0, 2, 1].map((i) => { const j = fing(i), w = [12.6, 13.4, 13, 11][i]; return <g key={i}>
+				<path d={limb(j, [w, w * 0.94, w * 0.8])} fill={i === 3 ? '#B07E58' : '#C38D64'} />
+				<path d={limb(j.map((q) => [q[0], q[1] - w * 0.42] as P), [w * 0.3, w * 0.28, w * 0.22])} fill="#E8BC8E" opacity={0.85} />
+				<ellipse cx={j[2][0] + 4} cy={j[2][1] - 1} rx={5} ry={w * 0.5} fill="#E8C4A0" opacity={0.7} />
+				<path d={`M${j[1][0] + 2},${j[1][1] - w * 0.5} C${j[1][0] - 1},${j[1][1] - w * 0.1} ${j[1][0] - 1},${j[1][1] + w * 0.2} ${j[1][0] + 2},${j[1][1] + w * 0.5}`} fill="none" stroke="#9C6848" strokeWidth={1.2} opacity={0.45} /></g>; })}
 		</g>}
 		<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="url(#dlVig)" />
 	</Svg>; };
