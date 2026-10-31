@@ -75,17 +75,17 @@ export const HeadF: React.FC<{id: string; look?: number}> = ({id, look = 0}) => 
 		<path d="M-20,-13 C-12,-19 12,-19 20,-13 C12,-16 -12,-16 -20,-13 Z" fill="#2A120C" />
 		<path d="M-12,-9 C-6,-11 6,-11 12,-9 C8,-4 -8,-4 -12,-9 Z" fill={c.skinS} /><path d="M2,-9 C6,-10 10,-9 12,-8 C9,-6 5,-5 2,-6 Z" fill={c.skinH} opacity={0.7} />
 		{/* the beard: dense and short, greying; lit warm on his left, the cool accent on his right */}
-		<path d={BEARD} fill="#1C1816" />
+		<path d={BEARD} fill="#2E2824" />
 		<g clipPath={`url(#${id}b)`}>
 			<path d="M-90,-80 L-6,-80 C-8,-40 -10,0 -8,40 L-90,40 Z" fill="#000" opacity={0.35} />
 			<path d="M50,-60 C70,-60 84,-70 86,-80 L90,40 L30,40 C52,20 62,0 66,-20 C62,-36 56,-50 50,-60 Z" fill="#6A4A34" opacity={0.55} />
-			<path d={BSTR} fill="none" stroke={c.grey} strokeWidth={1.6} strokeLinecap="round" opacity={0.75} />
+			<path d={BSTR} fill="none" stroke={c.grey} strokeWidth={2} strokeLinecap="round" opacity={0.9} />
 			<path d="M-30,14 C-20,22 -10,26 0,27 M-16,24 l3,7 M-4,26 l1,8 M8,26 l-1,8 M20,22 l-2,7 M30,16 l-3,7" fill="none" stroke={c.grey} strokeWidth={1.6} strokeLinecap="round" opacity={0.7} />
 		</g>
 		<path d="M83,-76 C82,-52 76,-30 64,-10 C50,12 28,32 0,36" fill="none" stroke={c.metalH} strokeWidth={2.4} opacity={0.75} />
 		<path d="M-83,-76 C-82,-52 -76,-30 -64,-10 C-50,12 -28,32 0,36" fill="none" stroke="#8FD0DC" strokeWidth={1.6} opacity={0.45} />
 		{/* the moustache joining the beard at the corners of the mouth */}
-		<path d="M-2,-31 C-14,-34 -28,-29 -34,-10 C-30,-14 -20,-21 -3,-22 Z M2,-31 C14,-34 28,-29 34,-10 C30,-14 20,-21 3,-22 Z" fill="#1C1816" />
+		<path d="M-2,-31 C-14,-34 -28,-29 -34,-10 C-30,-14 -20,-21 -3,-22 Z M2,-31 C14,-34 28,-29 34,-10 C30,-14 20,-21 3,-22 Z" fill="#2E2824" />
 		<path d="M-28,-24 C-22,-27 -14,-28 -8,-27 M28,-24 C22,-27 14,-28 8,-27" fill="none" stroke={c.grey} strokeWidth={1.2} opacity={0.6} />
 		{/* the 帻 band, the lacquered gauze 武冠 over the topknot */}
 		<path d="M-60,-176 C-62,-196 -50,-206 0,-208 C50,-206 62,-196 60,-176 Z" fill={c.hair} />
@@ -162,6 +162,7 @@ export const CaoFront: React.FC<{id: string; arm: ArmF; t: number; capeK?: numbe
 			<LamP id={`${id}lm`} s={1.55} />
 			<clipPath id={`${id}t`}><path d={TORSO} /></clipPath>
 			<clipPath id={`${id}cr`}><path d={CAPER} /></clipPath>
+			<clipPath id={`${id}nk`}><path d="M-84,20 L84,20 L64,44 C48,70 24,92 0,96 C-24,92 -48,70 -64,44 L-84,20 Z" /></clipPath>
 		</defs>
 		<path d={CAPEL} fill={c.cape} />
 		<path d={`M-150,170 C-220,300 -240,480 -250,640 L-300,630 C-280,460 -250,300 -170,160 Z`} fill={c.capeS} />
@@ -174,18 +175,21 @@ export const CaoFront: React.FC<{id: string; arm: ArmF; t: number; capeK?: numbe
 		{/* full figure: heroic legs (8 heads): his right leg forward (screen left, lower = nearer), the left leg back; the robe below the
 		    lamellar skirt, trousers, boots; soles at about +1620 */}
 		{legs && <g>
-			<path d={limb([[86, 800], [124, 1180], [152, 1520]], [74, 54, 40])} fill={c.under} />
-			<path d={limb([[120, 820], [154, 1180], [176, 1500]], [20, 14, 10])} fill={c.underH} opacity={0.5} />
-			<path d={limb([[-84, 800], [-140, 1190], [-182, 1560]], [76, 56, 42])} fill={c.underS} />
-			<path d="M120,1400 L192,1400 C196,1470 200,1530 206,1574 C190,1592 130,1594 104,1584 C104,1530 110,1460 120,1400 Z" fill="#1A120E" />
-			<path d="M176,1400 L192,1400 C196,1470 200,1530 206,1574 L190,1580 Z" fill={c.metalH} opacity={0.4} />
-			<path d="M-216,1420 L-140,1420 C-136,1490 -132,1560 -126,1610 C-146,1636 -224,1638 -252,1622 C-238,1560 -226,1490 -216,1420 Z" fill="#120C0A" />
-			<path d="M-216,1420 L-140,1420 L-141,1436 L-216,1436 Z M120,1400 L192,1400 L193,1414 L120,1414 Z" fill="#2E2218" />
+			<path d={limb([[90, 800], [150, 1170], [196, 1500]], [74, 54, 40])} fill={c.under} />
+			<path d={limb([[130, 820], [186, 1170], [226, 1480]], [18, 13, 9])} fill={c.underH} opacity={0.65} />
+			<path d={limb([[-88, 800], [-160, 1180], [-228, 1540]], [76, 56, 42])} fill={c.under} />
+			<path d={limb([[-120, 820], [-196, 1180], [-262, 1530]], [16, 12, 8])} fill="#6FA8B4" opacity={0.25} />
+			<path d={limb([[-60, 820], [-128, 1180], [-196, 1540]], [26, 18, 12])} fill="#000" opacity={0.3} />
+			<path d="M154,1380 L236,1380 C240,1450 246,1520 254,1570 C236,1594 166,1596 136,1584 C138,1520 146,1450 154,1380 Z" fill="#1A120E" />
+			<path d="M218,1380 L236,1380 C240,1450 246,1520 254,1570 L236,1578 Z" fill={c.metalH} opacity={0.5} />
+			<path d="M-268,1400 L-186,1400 C-182,1474 -176,1550 -168,1608 C-190,1636 -274,1638 -306,1620 C-290,1556 -276,1478 -268,1400 Z" fill="#120C0A" />
+			<path d="M-196,1400 L-186,1400 C-182,1474 -176,1550 -168,1608 L-180,1614 Z" fill={c.metalH} opacity={0.35} />
+			<path d="M-268,1400 L-186,1400 L-187,1416 L-268,1416 Z M154,1380 L236,1380 L237,1394 L154,1394 Z" fill="#2E2218" />
 			{/* the robe under the armour, to below the knee, parted between the legs */}
-			<path d="M-196,800 L196,800 C214,920 228,1040 236,1150 L60,1150 L10,980 L-40,1150 L-250,1160 C-236,1040 -216,920 -196,800 Z" fill={c.under} />
-			<path d="M-196,800 L-40,800 L-40,1150 L-250,1160 C-236,1040 -216,920 -196,800 Z" fill="#000" opacity={0.35} />
-			<path d="M140,800 L196,800 C214,920 228,1040 236,1150 L180,1150 Z" fill={c.underH} opacity={0.45} />
-			<path d="M-250,1160 L-40,1150 L10,980 L60,1150 L236,1150 L236,1134 L60,1134 L10,960 L-40,1134 L-250,1144 Z" fill={c.underS} />
+			<path d="M-196,800 L196,800 C214,890 226,980 234,1070 L60,1070 L4,930 L-50,1080 L-252,1090 C-236,990 -216,890 -196,800 Z" fill={c.under} />
+			<path d="M-196,800 L-50,800 L-50,1080 L-252,1090 C-236,990 -216,890 -196,800 Z" fill="#000" opacity={0.35} />
+			<path d="M140,800 L196,800 C214,890 226,980 234,1070 L180,1070 Z" fill={c.underH} opacity={0.45} />
+			<path d="M-252,1090 L-50,1080 L4,930 L60,1070 L234,1070 L234,1054 L60,1054 L4,910 L-50,1064 L-252,1074 Z" fill={c.underS} />
 			<path fill={`url(#${id}lm)`} d={SKIRT} />
 			<path d="M0,468 L0,822" stroke={c.metalS} strokeWidth={5} />
 			<path d="M-204,822 L204,822 L202,804 L-202,804 Z" fill={c.lace} />
@@ -199,16 +203,6 @@ export const CaoFront: React.FC<{id: string; arm: ArmF; t: number; capeK?: numbe
 		<path d="M186,592 C200,584 236,586 248,602 C256,624 248,650 224,656 C200,660 184,642 184,620 Z" fill={c.skinS} />
 		<path d="M226,592 C242,594 252,608 250,628 C248,642 240,650 230,654 C238,636 240,612 226,592 Z" fill={c.skinH} />
 		<path d="M190,620 C204,616 222,618 236,624 M192,636 C206,632 222,634 234,640" fill="none" stroke={c.skinD} strokeWidth={2} opacity={0.6} />
-		{/* the robe at the neck (under the cuirass): base, his right panel's collar (white inner collar, dark border), then his left panel
-		    crossing over it from his left shoulder down to his right side */}
-		<path d="M-96,30 C-40,18 40,18 96,30 L100,140 L-100,140 Z" fill={c.under} />
-		<path d="M-60,20 C-46,48 -22,80 6,110" fill="none" stroke="#24120E" strokeWidth={16} />
-		<path d="M-50,16 C-36,44 -14,76 12,104" fill="none" stroke={c.white} strokeWidth={8} opacity={0.85} />
-		<path d="M48,14 C30,48 4,84 -30,124 L120,124 L120,14 Z" fill={c.under} />
-		<path d="M64,14 C46,50 18,88 -18,128 L120,128 L120,14 Z" fill={c.underH} opacity={0.35} />
-		<path d="M56,18 C38,52 12,88 -22,126" fill="none" stroke="#24120E" strokeWidth={16} />
-		<path d="M44,14 C26,48 0,84 -34,122" fill="none" stroke={c.white} strokeWidth={8} />
-		<path d="M66,22 C48,56 22,92 -12,130" fill="none" stroke={c.underH} strokeWidth={2} opacity={0.6} />
 		{/* the cuirass: lamellar, shaded away from the fire, lit toward it, laced rows */}
 		<path d={TORSO} fill={`url(#${id}lm)`} />
 		<g clipPath={`url(#${id}t)`}>
@@ -229,6 +223,18 @@ export const CaoFront: React.FC<{id: string; arm: ArmF; t: number; capeK?: numbe
 		<path d="M200,70 C226,80 238,100 240,130 C246,170 246,200 242,230 L222,236 C226,190 222,130 196,82 Z" fill={c.metalH} opacity={0.5} />
 		<path d="M242,230 C214,246 176,252 144,240" fill="none" stroke={c.lace} strokeWidth={8} />
 		<g transform="translate(0,-18) scale(1.14)"><HeadF id={`${id}h`} /></g>
+		{/* the robe in the neck opening, over the base of the neck: 交领 右衽 — his right panel's collar (a white inner collar, a dark
+		    border) from his right, then his left panel crossing over it from his left shoulder down to his right side: a "y" at the throat */}
+		<g clipPath={`url(#${id}nk)`}>
+			<path d="M-80,30 C-40,22 40,22 80,30 L80,110 L-80,110 Z" fill={c.under} />
+			<path d="M-66,40 C-46,50 -26,56 -6,64" fill="none" stroke="#24120E" strokeWidth={14} />
+			<path d="M-62,32 C-42,42 -22,48 -2,56" fill="none" stroke={c.white} strokeWidth={8} opacity={0.85} />
+			<path d="M62,30 C40,40 18,50 -2,58 C-24,68 -48,86 -70,108 L80,108 L80,30 Z" fill={c.under} />
+			<path d="M80,30 C60,44 44,60 30,76 L80,76 Z" fill={c.underH} opacity={0.4} />
+			<path d="M66,38 C44,48 22,58 2,66 C-20,76 -42,92 -62,112" fill="none" stroke="#24120E" strokeWidth={14} />
+			<path d="M58,26 C36,36 14,46 -6,54 C-28,64 -52,82 -74,104" fill="none" stroke={c.white} strokeWidth={8} />
+		</g>
+		<path d="M-160,96 C-130,66 -92,50 -64,44 C-48,70 -24,92 0,96 C24,92 48,70 64,44 C92,50 130,66 160,96" fill="none" stroke={c.lace} strokeWidth={7} />
 		{/* the right arm toward the camera: sleeve, the 披膊 over its root, the bracer and its cuff */}
 		<path d={sleeve} fill={c.under} />
 		<path d={limb([add(S, n, -34), add(BR0, n, -34 * fs)], [9, 10 * fs])} fill="#6FA8B4" opacity={0.3} />
@@ -251,10 +257,11 @@ export const CaoFront: React.FC<{id: string; arm: ArmF; t: number; capeK?: numbe
 			<path d={`M-40,${fy(-44)} C-14,${fy(-54)} 22,${fy(-54)} 42,${fy(-42)} C54,${fy(-30)} 54,${fy(26)} 44,${fy(38)} C22,${fy(48)} -18,${fy(48)} -38,${fy(38)} C-50,${fy(24)} -52,${fy(-30)} -40,${fy(-44)} Z`} fill={c.skin} />
 			{/* the curled fingers: four segments across the grip, creases between them */}
 			{[-30, -10, 10, 30].map((x, i) => <g key={x}>
-				<path d={`M${x - 10},${fy(-40)} C${x - 11},${fy(-14)} ${x - 10},${fy(10)} ${x - 8},${fy(28)} L${x + 8},${fy(28)} C${x + 10},${fy(10)} ${x + 11},${fy(-14)} ${x + 10},${fy(-40)} Z`} fill={i % 2 ? c.skin : '#B57650'} />
-				<path d={`M${x + 10},${fy(-40)} C${x + 11},${fy(-14)} ${x + 10},${fy(10)} ${x + 8},${fy(28)}`} fill="none" stroke={c.skinD} strokeWidth={2.2} opacity={0.7} />
-				<ellipse cx={x} cy={fy(-44)} rx={10} ry={7} fill={c.skinH} />
+				<path d={`M${x - 10},${fy(-38)} C${x - 11},${fy(-14)} ${x - 10},${fy(8)} ${x - 8},${fy(22)} L${x + 8},${fy(22)} C${x + 10},${fy(8)} ${x + 11},${fy(-14)} ${x + 10},${fy(-38)} Z`} fill={i % 2 ? c.skin : '#B57650'} />
+				{i < 3 && <path d={`M${x + 10},${fy(-36)} C${x + 11},${fy(-14)} ${x + 10},${fy(6)} ${x + 8},${fy(20)}`} fill="none" stroke={c.skinD} strokeWidth={1.6} opacity={0.5} />}
 			</g>)}
+			{/* the knuckle ridge, lit: one band with gentle bumps */}
+			<path d={`M-42,${fy(-42)} C-36,${fy(-50)} -26,${fy(-50)} -20,${fy(-46)} C-14,${fy(-51)} -6,${fy(-51)} 0,${fy(-46)} C6,${fy(-51)} 14,${fy(-51)} 20,${fy(-46)} C26,${fy(-50)} 36,${fy(-50)} 44,${fy(-40)} L42,${fy(-32)} C20,${fy(-38)} -14,${fy(-38)} -40,${fy(-32)} Z`} fill={c.skinH} />
 			{/* the line of the middle joints */}
 			<path d={`M-40,${fy(-6)} C-14,${fy(-10)} 14,${fy(-10)} 40,${fy(-6)}`} fill="none" stroke={c.skinD} strokeWidth={1.8} opacity={0.5} />
 			{/* the back of the hand toward the wrist, lit */}

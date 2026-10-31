@@ -165,6 +165,16 @@ export const K5: React.FC<{t?: number; cam?: Cam}> = ({t: T, cam}) => { const HZ
 	const pickets: [number, number, number][] = [[40, 712, 0.3], [180, 706, 0.26], [330, 716, 0.32], [520, 708, 0.27], [700, 718, 0.33], [880, 707, 0.26], [1150, 720, 0.34], [1330, 709, 0.28], [1500, 718, 0.32], [1690, 706, 0.26], [1850, 716, 0.31]];
 	const volleys: [P, P, P][] = [[[1420, 268], [1060, 210], [720, 800]], [[1530, 268], [1180, 190], [900, 860]], [[1850, 318], [1500, 250], [1220, 930]]];
 	const qp = (a: P, c: P, b: P, u: number): P => { const m = 1 - u; return [m * m * a[0] + 2 * m * u * c[0] + u * u * b[0], m * m * a[1] + 2 * m * u * c[1] + u * u * b[1]]; };
+	/* the animated volley as a loose cloud (owner note: 「箭可以更分散」): each arrow has its own launch time, launch point along the tower
+	   tops, landing spot in the camp, arc height, speed, size and a little angle jitter. Each arc is lowered until it clears the
+	   subtitle zone (x 150–1150, y < 300) and the stamp zone (x 1200–1800, y < 200). */
+	const cloud = Array.from({length: 30}, (_, i) => { const r = (s: number) => rnd(i, 200 + s);
+		const a: P = [1380 + r(1) * 480, 248 + r(2) * 96], b: P = [540 + r(3) * 840, 812 + r(4) * 170];
+		const c: P = [(a[0] + b[0]) / 2 + (r(5) - 0.5) * 300, Math.min(a[1], b[1]) - 20 - r(6) * 230];
+		for (let n = 0; n < 60; n++) { let bad = false;
+			for (let s = 0; s <= 20 && !bad; s++) { const q = qp(a, c, b, s / 20); bad = (q[0] > 140 && q[0] < 1160 && q[1] < 314) || (q[0] > 1190 && q[0] < 1810 && q[1] < 214) || q[1] < 40; }
+			if (!bad) break; c[1] += 8; }
+		return {a, b, c, t0: 85.95 + r(7) * 0.95 + (i % 3) * 0.06, dur: 0.95 + r(8) * 0.6, sc: 0.72 + r(9) * 0.5, jit: (r(10) - 0.5) * 12, col: r(11) < 0.35 ? '#2A221C' : '#1A1410'}; });
 	return <Svg>
 		<defs>
 			<linearGradient id="k5sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#16222B" /><stop offset="0.3" stopColor="#2A3A40" /><stop offset="0.48" stopColor="#56605A" /><stop offset="0.56" stopColor="#9C9884" /><stop offset="0.6" stopColor="#D2C5A2" /></linearGradient>
@@ -223,7 +233,11 @@ export const K5: React.FC<{t?: number; cam?: Cam}> = ({t: T, cam}) => { const HZ
 		{/* the open ground between, a trench line, the arrows coming in */}
 		<rect y={698} width={W} height={124} fill="url(#k5fld)" />
 		<path d="M-20,752 C400,748 900,754 1940,750 L1940,758 C900,762 400,756 -20,760 Z" fill="#0E0B09" opacity={0.6} />
-		{volleys.map(([a0, c, b], i) => <g key={i}>{[0.42, 0.52, 0.6, 0.7, 0.78].map((u0, j) => { const u = T === undefined ? u0 : (T - 86.45 - i * 0.16 - j * 0.07) / 1.25;
+		{T !== undefined && cloud.map((ar, i) => { const u = (T - ar.t0) / ar.dur;
+			if (u < 0 || u > 0.985) return null;
+			const p0 = qp(ar.a, ar.c, ar.b, u), p1 = qp(ar.a, ar.c, ar.b, Math.min(1, u + 0.02)), ang = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]) * 180 / Math.PI + ar.jit * (1 - 0.6 * u);
+			return <g key={'c' + i} transform={`translate(${f1(p0[0])},${f1(p0[1])}) rotate(${f1(ang)}) scale(${ar.sc.toFixed(3)})`}><line x1={-26} y1={0} x2={0} y2={0} stroke={ar.col} strokeWidth={1.6} /><path d="M0,-2.4 L6,0 L0,2.4 Z" fill={ar.col} /><path d="M-26,0 L-31,-3 M-26,0 L-31,3" stroke={ar.col} strokeWidth={1.2} /></g>; })}
+		{T === undefined && volleys.map(([a0, c, b], i) => <g key={i}>{[0.42, 0.52, 0.6, 0.7, 0.78].map((u0, j) => { const u = u0;
 			if (u < 0 || u > 0.985) return null;
 			const p0 = qp(a0, c, b, u + (j % 2) * 0.012), p1 = qp(a0, c, b, u + 0.03 + (j % 2) * 0.012), ang = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]) * 180 / Math.PI, off = (j - 2) * 9;
 			return <g key={j} transform={`translate(${f1(p0[0] + off)},${f1(p0[1] - off * 0.4)}) rotate(${f1(ang)})`}><line x1={-26} y1={0} x2={0} y2={0} stroke="#1A1410" strokeWidth={1.6} /><path d="M0,-2.4 L6,0 L0,2.4 Z" fill="#1A1410" /><path d="M-26,0 L-31,-3 M-26,0 L-31,3" stroke="#1A1410" strokeWidth={1.2} /></g>; })}</g>)}

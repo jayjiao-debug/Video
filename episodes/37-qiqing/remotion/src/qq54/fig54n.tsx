@@ -89,10 +89,35 @@ export const CaoKneel: React.FC<{id: string; look: number; bow?: number; pal?: P
 	</g>; };
 
 /* ---------- 董卓: a massive, heavyset armoured man seen 3/4, facing −x (toward the hall); cm, soles 0; pt = pointing 0..1 ---------- */
-export const Dong: React.FC<{pt: number; cape?: number}> = ({pt, cape = 0}) => {
-	const th1 = (100 + 92 * pt) * Math.PI / 180, th2 = (96 + 102 * pt) * Math.PI / 180, sh: P = [-52, -142];
-	const el: P = [sh[0] + 31 * Math.cos(th1), sh[1] + 31 * Math.sin(th1)], hd: P = [el[0] + 29 * Math.cos(th2), el[1] + 29 * Math.sin(th2)];
-	const fx = Math.cos(th2), fy = Math.sin(th2);
+/* the pointing arm in an armoured sleeve: 披膊 over the shoulder, the upper arm, the elbow, a forearm with its bracer, the robe
+   sleeve drooping under it, and a hand that closes to a fist with the index finger out. Angles in degrees (0 = +x, 90 = down);
+   jab = a small push at the end of the gesture, br = breath sway */
+const ArmPoint: React.FC<{pt: number; jab: number; br: number}> = ({pt, jab, br}) => {
+	const sh: P = [-50, -146], U = 30, F = 26;
+	const a1 = 94 + 54 * pt + 4 * jab + 1.2 * br, a2 = 84 + 88 * pt - 2 * jab + 0.8 * br;
+	const r1 = a1 * Math.PI / 180, r2 = a2 * Math.PI / 180, d1: P = [Math.cos(r1), Math.sin(r1)], d2: P = [Math.cos(r2), Math.sin(r2)];
+	const el: P = [sh[0] + U * d1[0], sh[1] + U * d1[1]], wr: P = [el[0] + F * d2[0], el[1] + F * d2[1]];
+	const dn = (r: number): P => [Math.sin(r), -Math.cos(r)];
+	const n1 = dn(r1), n2 = dn(r2), sag = 11 * Math.abs(Math.cos(r2)) + 1.2 * br;
+	const p0: P = [sh[0] + d1[0] * 16 + n1[0] * 8, sh[1] + d1[1] * 16 + n1[1] * 8], p2: P = [wr[0] - d2[0] * 3 + n2[0] * 5, wr[1] - d2[1] * 3 + n2[1] * 5];
+	const ext = sstep(0.45, 0.95, pt), fl = 1.5 + 9 * ext;
+	const T = (p: P, a: number) => `translate(${f1(p[0])},${f1(p[1])}) rotate(${f1(a)})`;
+	return <g>
+		{/* the robe sleeve under the armour, hanging below the arm */}
+		<path d={`M${f1(p0[0])},${f1(p0[1])} C${f1(p0[0] + d2[0] * 4)},${f1(p0[1] + sag * 1.3)} ${f1(p2[0] - d2[0] * 10)},${f1(p2[1] + sag * 1.2)} ${f1(p2[0])},${f1(p2[1])} L${f1(el[0])},${f1(el[1])} Z`} />
+		{/* upper arm, tapering to the elbow */}
+		<g transform={T(sh, a1)}><path d={`M-2,-9.6 C9,-10.4 20,-8.8 ${U},-7.4 L${U},7.4 C20,8.6 9,10 -2,9.6 Z`} /></g>
+		<circle cx={f1(el[0])} cy={f1(el[1])} r={7.4} />
+		{/* forearm, the bracer's lip at the wrist, the hand: a fist whose index finger opens out as he points */}
+		<g transform={T(el, a2)}>
+			<path d={`M0,-7.4 C8,-7 15,-6 20,-5.2 L21,-6.6 L${F},-6.2 L${F},6 L21,6.4 L20,5 C15,5.6 8,6.8 0,7.4 Z`} />
+			<path d={`M${F - 1},-5.2 L${F + 7},-5.4 C${F + 9.6},-5 ${F + 11.2},-3.2 ${F + 11},-0.8 L${F + 10.4},1.2 L${F + 10 + fl},1.5 C${F + 11.4 + fl},1.7 ${F + 11.4 + fl},3.7 ${F + 10 + fl},3.9 L${F + 8},4.4 C${F + 6},5.6 ${F + 3},5.6 ${F + 1},5 L${F - 1},5 Z`} />
+			<circle cx={F + 9.4} cy={-3.4} r={2.2} /><circle cx={F + 7} cy={-4.6} r={1.8} />
+		</g>
+		{/* 披膊: the lamellar shoulder guard lifts with the upper arm, its lower edge scalloped */}
+		<g transform={T(sh, a1 * 0.7 + 94 * 0.3)}><path d="M-12,-11 C-2,-15.6 10,-15 17,-12.4 L19.4,-8.4 L17.2,-4.4 L19.4,-0.4 L17.2,3.6 L19.4,7.6 L16.6,11.8 C8,14.6 -4,15.4 -12,11.4 C-17,5 -17,-5 -12,-11 Z" /></g>
+	</g>; };
+export const Dong: React.FC<{pt: number; cape?: number; jab?: number; br?: number}> = ({pt, cape = 0, jab = 0, br = 0}) => {
 	return <g>
 		{/* the cape behind, flaring to the right */}
 		<path d={`M-34,-158 C6,-164 46,-152 62,-120 C${f1(74 + cape * 4)},-88 ${f1(82 + cape * 8)},-40 ${f1(90 + cape * 10)},0 L-6,0 C2,-40 4,-100 -34,-158 Z`} />
@@ -103,7 +128,7 @@ export const Dong: React.FC<{pt: number; cape?: number}> = ({pt, cape = 0}) => {
 		<path d="M-54,-110 C-20,-116 22,-116 50,-110 L58,-52 C22,-45 -22,-45 -62,-52 Z" />
 		{/* the trunk: a huge belly pushed forward under the cuirass, broad shoulders with 披膊 */}
 		<path d="M-46,-152 C-62,-142 -70,-122 -66,-106 C-62,-96 -42,-92 -10,-92 C22,-92 42,-98 48,-108 C52,-126 50,-144 42,-154 C22,-162 -24,-162 -46,-152 Z" />
-		<path d="M-48,-158 C-66,-154 -72,-138 -70,-124 L-46,-130 Z M40,-160 C58,-156 64,-140 62,-126 L40,-132 Z" />
+		<path d="M40,-160 C58,-156 64,-140 62,-126 L40,-132 Z" />
 		{/* a 环首刀 at the right hip, his right hand on the hilt */}
 		<path d="M30,-108 L64,-30 L60,-28 L26,-106 Z" /><circle cx={28} cy={-114} r={4.4} fill="none" stroke="currentColor" strokeWidth={1.8} />
 		<Limb j={[[46, -146], [60, -122], [36, -110]]} w={[9, 7.4, 6]} /><circle cx={34} cy={-110} r={6.4} />
@@ -114,9 +139,7 @@ export const Dong: React.FC<{pt: number; cape?: number}> = ({pt, cape = 0}) => {
 		<path d="M-22,-194 C-21,-211 2,-217 15,-205 C19,-200 20,-194 18,-188 L13,-186 C6,-195 -8,-198 -22,-194 Z" />
 		<path d="M0,-214 C4,-226 14,-232 24,-231 C18,-225 13,-219 10,-211 Z" />
 		{/* the left arm: hangs, then lifts to point (the order) */}
-		<Limb j={[sh, el, hd]} w={[10, 8, 6.4]} />
-		<circle cx={hd[0]} cy={hd[1]} r={6.2} />
-		<path d={`M${f1(hd[0])},${f1(hd[1] - 1.6)} L${f1(hd[0] + fx * 11)},${f1(hd[1] + fy * 11 - 1.2)} L${f1(hd[0] + fx * 11)},${f1(hd[1] + fy * 11 + 1.2)} L${f1(hd[0])},${f1(hd[1] + 1.6)} Z`} opacity={sstep(0.5, 0.9, pt)} />
+		<ArmPoint pt={pt} jab={jab} br={br} />
 	</g>; };
 
 /* ---------- 曹操 standing (35, plain robe and 帻, the travel bundle), Cao units, facing +x; a drawn 环首刀 lowered in the near hand ---------- */
@@ -188,3 +211,24 @@ export const Smoke: React.FC<{x: number; y: number; h: number; w: number; t: num
 		const k = Math.floor(a0) * N + i, wob = Math.sin(seed * 1.3 + k * 1.7) * w * 0.22 * a + Math.sin(t * 0.7 + k) * w * 0.05;
 		const px = x - drift * a * a + wob, py = y - h * a, r = w * (0.2 + 1.25 * a) * (0.85 + 0.3 * rnd(k, seed));
 		return <ellipse key={i} cx={f1(px)} cy={f1(py)} rx={f1(r * 1.15)} ry={f1(r)} fill={mix(c0, c1, Math.min(1, a * 1.3))} opacity={op} />; })}</g>; };
+
+/* ---------- the boy emperor led away: a slim child in a long wide-sleeved 袍 to the ankles, hands hidden in the joined sleeves,
+   head bowed under the 冕, upturned 舄 toes showing under the hem; no weapon. cm, soles 0, facing +x, walks on npcWalk ---------- */
+export const BoyWalk: React.FC<{t: number; L: number; f: number; t0?: number; lean?: number; bow?: number}> = ({t: t1, L, f, t0 = 0, lean = 5, bow = 9}) => {
+	const t = t1 + t0, Wk = npcWalk(t, L, f), Wl = npcWalk(t - 0.1, L, f), hx = Wk.hipX, dy = Wk.hipY + 89, X = (v: number) => hx + v, Y = (v: number) => v + dy;
+	const nl = lean + 1.2 * Math.sin(Math.PI * ((t * f) % 1)) ** 2, ph = Math.sin(Math.PI * t * f);
+	const lx = Wl.feet.map((q) => q.x + (hx - Wl.hipX)), fF = Math.max(...lx), fB = Math.min(...lx);
+	const lift = Math.min(Wk.feet[0].y, Wk.feet[1].y), hemF = -4 + 0.5 * Math.min(0, lift), hemB = -3;
+	const skirt = `M${f1(X(-9.6))},${f1(Y(-100))} C${f1(X(-12))},${f1(Y(-70))} ${f1(fB - 8)},${f1(Y(-34))} ${f1(fB - 13)},${f1(hemB)} C${f1((fB + fF) / 2 - 6)},${f1(hemB + 1.2)} ${f1(fF + 2)},${f1(hemF + 1)} ${f1(fF + 9)},${f1(hemF)} C${f1(fF + 6)},${f1(Y(-40))} ${f1(X(12))},${f1(Y(-70))} ${f1(X(10))},${f1(Y(-100))} Z`;
+	const shoe = (q: {x: number; y: number; a: number}, i: number) => <path key={i} transform={`translate(${f1(q.x)},${f1(q.y - 7)}) rotate(${f1(q.a)})`} d="M-5,-1 L6,-2 C11,-1.6 15,0.4 17,3 C18.6,1.4 20.4,0.6 21.6,1.4 C21,4 19.4,6.4 17,7 L-5,7 Z" />;
+	const bx = 3 * ph;
+	return <g>
+		{Wk.feet.map(shoe)}
+		<path d={skirt} />
+		<g transform={`rotate(${f1(nl)} ${f1(X(0))} ${f1(Y(-92))}) translate(${f1(X(0))},${f1(dy)})`}>
+			<path d="M-3,-141 C-9,-140 -11,-135 -11,-127 C-11,-115 -10.4,-106 -10,-99 L10.6,-99 C11.4,-107 12.4,-116 11.8,-126 C11.4,-134 8,-140 4,-141 Z" />
+			<g transform={`rotate(${f1(bow)} 1 -140) translate(1,-141) scale(1.08) translate(-1,141)`}><path d={NECK} /><path d={HEAD} /><path d={ZE} /><Mian /></g>
+			{/* the near arm: the upper arm hangs, the forearm comes forward to the joined hands, the wide sleeve hangs in a deep bag */}
+			<path d={`M1,-137 C9,-134 13,-124 14,-114 L21,-111 C23.6,-107 23.6,-100 21.4,-96 C${f1(19 + bx * 0.4)},-84 ${f1(13 + bx)},-70 ${f1(4 + bx)},-64 C${f1(-4 + bx)},-60 ${f1(-10 + bx * 0.6)},-65 -10,-75 C-10,-92 -9,-120 -5,-134 Z`} />
+		</g>
+	</g>; };

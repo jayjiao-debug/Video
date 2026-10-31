@@ -94,7 +94,7 @@ const CaoRide: React.FC<RideP> = ({id, pal = NPAL, lean, arm, cape, headFlip, ti
 		<defs><clipPath id={`${id}rc`}><path d={RIDECLIP} /></clipPath></defs>
 		<g transform={`rotate(${f1(lean)} 0 360)`}>
 			<g clipPath={`url(#${id}rc)`}><Cao pal={pal} id={id} old={false} armour arm={arm} cape={cape} dao={false} /></g>
-			<g transform={`translate(0,49) rotate(${f1(tilt)} 0 -8) scale(${headFlip ? -0.88 : 0.88},0.88) translate(0,-40)`}><Head old={false} mid pal={pal} id={`${id}h`} cap="wu" /></g>
+			<g transform={`translate(${headFlip ? -30 : -8},49) rotate(${f1(tilt)} 0 -8) scale(${headFlip ? -0.88 : 0.88},0.88) translate(0,-40)`}><Head old={false} mid pal={pal} id={`${id}h`} cap="wu" /></g>
 			{arrow && <ShoulderArrow />}
 		</g>
 		<Dao a={[46, 306]} b={[-150, 420]} pal={pal} />
@@ -173,7 +173,7 @@ const XyA: React.FC<{t: number}> = ({t}) => {
 	/* the horse shies as the volley lands (38.2): nose up, a hind step, then settles, still restless */
 	const sh = sst(38.05, 38.45, t) - 0.75 * sst(38.6, 39.5, t);
 	const hs: HorseS = {th: -6.5 * sh + 0.4 * Math.sin(t * 2.3), nk: -9 * sh + 3 * Math.sin(t * 1.7 + 0.4), tail: 4 * Math.sin(t * 2.1), bF: 0, liftH: 0};
-	const lean = -5 * sh + 1.2 * Math.sin(t * 1.9), cape = 0.42 + 0.16 * Math.sin(t * 1.8) + 0.08 * Math.sin(t * 4.1 + 1);
+	const lean = -1.5 - 4 * sh + 1 * Math.sin(t * 1.9), cape = 0.42 + 0.16 * Math.sin(t * 1.8) + 0.08 * Math.sin(t * 4.1 + 1);
 	const pull = sh;
 	const arm = {sh: [10, 84] as P, el: [30 - 10 * pull, 196] as P, hd: [96 - 30 * pull, 236 - 12 * pull] as P};
 	const hand = rideToHorse(arm.hd), mouth = neckPt(hs, MOUTH);
@@ -268,7 +268,7 @@ const XyB: React.FC<{t: number}> = ({t}) => {
 	const limp = (1 - sst(41.7, 41.9, t)) * Math.max(0, Math.sin(t * 4.4));
 	const hs: HorseS = {th: 13 * bk + 1.2 * limp + tr * 0.5, nk: 20 * bk + 4 * Math.sin(t * 1.6) + 3 * limp, dy: 4 * bk, bF: 0.95 * bk + 0.25 * limp, bF2: 0.3 * bk, tail: -3 + 3 * Math.sin(t * 1.4), liftH: 0};
 	const jolt = sst(41.88, 42.3, t) - 0.55 * sst(42.4, 43.1, t);
-	const lean = 6 + 14 * jolt + 0.8 * Math.sin(t * 2.2), cape = 0.3 + 0.1 * Math.sin(t * 1.5);
+	const lean = 2.5 + 11 * jolt + 0.8 * Math.sin(t * 2.2), cape = 0.3 + 0.1 * Math.sin(t * 1.5);
 	const arm = {sh: [10, 84] as P, el: [36, 196] as P, hd: [104 + 10 * jolt, 248 + 14 * jolt] as P};
 	const hand = rideToHorse(arm.hd), mouth = neckPt(hs, MOUTH), handB = bodyPt(hs, rotP(hand, [2, -139], lean));
 	const glow = 0.25 + 0.75 * sst(40.3, 43.5, t);
@@ -311,7 +311,7 @@ const XyB: React.FC<{t: number}> = ({t}) => {
 			<ellipse cx={HXc - 20} cy={HYc + 4} rx={280} ry={12} fill="#050403" opacity={0.55} />
 			<g transform={at(HXc, HYc, HK, true)} fill="#110C09" color="#110C09" filter="url(#xbRim)"><HorseR s={hs} arrow /></g>
 			<g filter="url(#xbHero)"><g transform={at(HXc, HYc, HK, true)}><g transform={bodyT(hs)}><g transform={RIDE_T}>
-				<CaoRide id="xbc" lean={lean} arm={arm} cape={cape} headFlip tilt={-lean - 4 + 4 * jolt + 1.5 * Math.sin(t * 1.3)} arrow /></g></g></g></g>
+				<CaoRide id="xbc" lean={lean} arm={arm} cape={cape} headFlip tilt={-0.8 * lean - 3 + 2 * jolt + 1.2 * Math.sin(t * 1.3)} arrow /></g></g></g></g>
 			<g transform={at(HXc, HYc, HK, true)}><path d={`M${f1(handB[0])},${f1(handB[1])} Q${f1((handB[0] + mouth[0]) / 2)},${f1((handB[1] + mouth[1]) / 2 + 8)} ${f1(mouth[0])},${f1(mouth[1])}`} fill="none" stroke="#0E0A08" strokeWidth={1.2} /></g>
 		</g>
 		{/* near: a broken spear and grass, out of focus */}
@@ -411,12 +411,14 @@ const Hong_: React.FC<{t: number}> = ({t}) => {
 export const Hong: React.FC<{t: number}> = ({t}) => <Hong_ t={t} />;
 
 /* ============================ card 13 · 蒿里行 · grey dawn (48.46–52.45) ============================ */
-/** a crow in flight (px), flap phase ph */
-const Crow: React.FC<{x: number; y: number; s: number; ph: number; dir?: number}> = ({x, y, s, ph, dir = 1}) => { const w = Math.sin(ph), up = -9 * w * s, d = dir;
-	return <g transform={`translate(${f1(x)},${f1(y)}) scale(${d},1)`}>
-		<path d={`M${f1(-7 * s)},0 C${f1(-3 * s)},${f1(-2 * s)} ${f1(4 * s)},${f1(-2 * s)} ${f1(8 * s)},${f1(-0.6 * s)} L${f1(10.5 * s)},0 L${f1(8 * s)},${f1(1 * s)} C${f1(4 * s)},${f1(2.4 * s)} ${f1(-3 * s)},${f1(2 * s)} ${f1(-7 * s)},${f1(1 * s)} L${f1(-11 * s)},${f1(2.4 * s)} L${f1(-10 * s)},0 Z`} />
-		<path d={`M${f1(-2 * s)},${f1(-0.5 * s)} Q${f1(-6 * s)},${f1(up * 0.6 - 4 * s)} ${f1(-12 * s)},${f1(up - 2 * s)} Q${f1(-4 * s)},${f1(up * 0.4)} ${f1(3 * s)},${f1(-0.5 * s)} Z`} />
-		<path d={`M${f1(0)},${f1(-0.5 * s)} Q${f1(-2 * s)},${f1(up * 0.6 - 3 * s)} ${f1(-6 * s)},${f1(up * 0.9 - 1 * s)} Q${f1(0)},${f1(up * 0.3)} ${f1(4 * s)},${f1(-0.5 * s)} Z`} opacity={0.8} />
+/** a flying bird as the classic 人 silhouette (px): two tapered wings from a small body, each with a soft bend at the wrist; W = half
+    span; ph = flap phase. Rest = a soft 人 (tips low); the slow beat lifts the tips to a shallow V and back, with a glide between beats */
+const Bird: React.FC<{x: number; y: number; W: number; ph: number}> = ({x, y, W, ph}) => {
+	const c = Math.cos(ph), beat = c > 0 ? c : c * 0.55, tipY = W * (0.3 - 0.52 * (0.5 + 0.5 * beat)), wrY = tipY * 0.38 - W * 0.12;
+	const wing = (sg: number) => strand(qpts([0, 0], [sg * W * 0.42, wrY], [sg * W, tipY], 10), (u) => W * (0.075 - 0.06 * u));
+	return <g transform={`translate(${f1(x)},${f1(y)})`}>
+		<path d={wing(-1)} /><path d={wing(1)} />
+		<ellipse cx={0} cy={W * 0.03} rx={W * 0.07} ry={W * 0.13} /><circle cx={0} cy={-W * 0.1} r={W * 0.055} />
 	</g>; };
 /** a perched crow (px): body, tail, beak; peck = head dip */
 const Perch: React.FC<{x: number; y: number; s: number; d?: number; peck?: number}> = ({x, y, s, d = 1, peck = 0}) => <g transform={`translate(${f1(x)},${f1(y)}) scale(${d * s},${s})`}>
@@ -441,10 +443,10 @@ const Shell: React.FC<{x: number; y: number; w: number; h: number; d: number; se
 		<rect x={f1(x + w * 0.62)} y={f1(y - h * 0.5)} width={f1(w * 0.12)} height={f1(h * 0.14)} fill={dark} />
 		<path d={`M${f1(x + w * 0.05)},${y} L${f1(x + w * 0.1)},${f1(y - h * 0.08)} L${f1(x + w * 0.16)},${y} Z M${f1(x + w * 0.5)},${y} L${f1(x + w * 0.56)},${f1(y - h * 0.1)} L${f1(x + w * 0.64)},${f1(y - h * 0.04)} L${f1(x + w * 0.68)},${y} Z`} fill={body} />
 	</g>; };
-const CROWS = Array.from({length: 6}, (_, i) => ({x0: 1180 + rnd(i, 51) * 600, y0: 360 + rnd(i, 52) * 150, v: 14 + rnd(i, 53) * 12, s: 1.3 + rnd(i, 54) * 0.7, f: 5.5 + rnd(i, 55) * 2.5, i}));
+const CROWS = [{x0: 1330, y0: 400, s: 1.0}, {x0: 1470, y0: 352, s: 0.82}, {x0: 1610, y0: 430, s: 0.92}, {x0: 1760, y0: 372, s: 0.74}, {x0: 1240, y0: 470, s: 0.68}].map((c, i) => ({...c, v: 16 + rnd(i, 53) * 10, f: 1.05 + rnd(i, 55) * 0.3, i}));
 const Haoli_: React.FC<{t: number}> = ({t}) => {
 	const u = t - B24, push = sst(-0.3, 3.7, u), C = camOf(0.075 * push, 1060, 700, 26 * push, 0);
-	const S = 0.215, CX = 560, CY = 846, cape = 0.3 + 0.12 * Math.sin(t * 1.3) * (1 - 0.6 * sst(51.3, 52.4, t));
+	const S = 0.3, CX = 560, CY = 846, cape = 0.3 + 0.12 * Math.sin(t * 1.3) * (1 - 0.6 * sst(51.3, 52.4, t));
 	const dawn = sst(-0.5, 4, u);
 	const LIT = '#A09684', BODY = '#68635A', DARK = '#36332E';
 	return <Svg>
@@ -509,14 +511,14 @@ const Haoli_: React.FC<{t: number}> = ({t}) => {
 			</g>
 		</g>
 		{/* crows wheeling slowly over the village */}
-		<g transform={C(0.5)} fill="#1C1916">{CROWS.map((c) => <Crow key={c.i} x={c.x0 - c.v * u - (c.i % 2) * 8 * u} y={c.y0 + 10 * Math.sin(t * 0.7 + c.i)} s={c.s} ph={t * c.f + c.i * 1.9} dir={-1} />)}</g>
+		<g transform={C(0.5)} fill="#1C1916">{CROWS.map((c) => <Bird key={c.i} x={c.x0 - c.v * u} y={c.y0 + 8 * Math.sin(t * 0.6 + c.i * 1.3)} W={46 * c.s} ph={t * c.f * Math.PI * 2 + c.i * 2.1} />)}</g>
 		<rect y={700} width={W} height={60} fill="url(#hlHaze)" opacity={0.6} />
 		{/* P4 the rise and 曹操 alone on it, small, looking over the village */}
 		<g transform={C(0.9)}>
 			<path d="M-200,836 C100,826 360,818 560,826 C720,832 860,852 980,890 C1080,922 1160,980 1240,1080 L-200,1080 Z" fill="url(#hlRise)" />
 			<path d="M-200,836 C100,826 360,818 560,826 C720,832 860,852 980,890 C1080,922 1160,980 1240,1080" fill="none" stroke="#B8AE96" strokeOpacity={0.28} strokeWidth={2} />
 			{Array.from({length: 24}, (_, i) => { const x = -100 + i * 50 + rnd(i, 71) * 30, y = 834 + rnd(i, 72) * 8 + (x > 600 ? (x - 600) * 0.12 : 0); return <path key={i} d={`M${f1(x)},${f1(y)} l${f1(-3 + rnd(i, 73) * 6)},${f1(-8 - rnd(i, 74) * 10)} M${f1(x + 4)},${f1(y)} l${f1(2 + rnd(i, 75) * 5)},${f1(-6 - rnd(i, 76) * 7)}`} stroke="#25221D" strokeWidth={1.6} />; })}
-			<ellipse cx={CX + 14} cy={CY + 2} rx={44} ry={4} fill="#14120F" opacity={0.6} />
+			<ellipse cx={CX + 20} cy={CY + 3} rx={62} ry={5.5} fill="#14120F" opacity={0.6} />
 			<g filter="url(#hlHero)"><g transform={`translate(${CX},${f1(CY - 750 * S)}) scale(${S})`}>
 				<g clipPath="url(#hlBody)"><Cao pal={NPAL} id="hlc" old={false} armour arm={{sh: [10, 84], el: [22, 200], hd: [54, 266]}} cape={cape} /></g>
 				<g transform={`translate(0,49) rotate(${f1(7 + 2 * sst(49.0, 50.5, t))} 0 -8) scale(0.88) translate(0,-40)`}><Head old={false} mid pal={NPAL} id="hlh" cap="wu" /></g>

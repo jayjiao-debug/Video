@@ -6,7 +6,7 @@ import {SEAL_SRC} from '../qq44/skin44';
 import {Cao, Head, RimF, Lamel, Pal, P, f1, rnd} from './cao54b';
 import {Npc} from './npc54b';
 import {Flame, flick} from './rig54b';
-import {ACC, PAL, Horse, limb} from './set54bs';
+import {ACC, PAL, limb, Limb} from './set54bs';
 import {CaoSeated, CaoSeatedShadow} from './set54bs2';
 import {Kneeler, JX, Smoke, sstep, cl01} from './fig54n';
 import {BAR, END_T, FILM_LEN} from './demo54core';
@@ -92,9 +92,9 @@ const CaoBackLow: React.FC<{id: string; pal: Pal; grey: string; slack?: number; 
 			</pattern>
 		</defs>
 		{/* legs: baggy crimson trousers into short boots; weight on the left leg, the right foot a step ahead (further, so higher) */}
-		<path d={limb([[-10, -46], [-11, -31], [-11, -20]], [7.6, 7.4, 6.2])} fill={p.underS} />
-		<path d={limb([[10, -48], [11.6, -34], [12, -25]], [7.6, 7.2, 6])} fill={p.under} />
-		<path d={limb([[14, -46], [16.4, -34], [16.6, -26]], [1.6, 1.6, 1.4])} fill="#8A4A3A" opacity={0.7} />
+		<path d={limb([[-9.4, -66], [-10, -46], [-11, -31], [-11, -20]], [7.9, 7.6, 7.4, 6.2])} fill={p.underS} />
+		<path d={limb([[9.4, -66], [10, -48], [11.6, -34], [12, -25]], [7.9, 7.6, 7.2, 6])} fill={p.under} />
+		<path d={limb([[13.4, -64], [14, -46], [16.4, -34], [16.6, -26]], [1.6, 1.6, 1.6, 1.4])} fill="#8A4A3A" opacity={0.7} />
 		<path d="M-14,-34 C-12,-31 -9,-31 -7,-34 M8,-38 C10,-35 13,-35 15,-38" fill="none" stroke="#1A0C0A" strokeWidth={0.8} opacity={0.6} />
 		<path d="M-16.6,-22 L-5.4,-22 C-5,-14 -4.6,-7 -4,-3 C-4,-0.6 -6.4,0.4 -10.4,0.4 C-15,0.4 -17.6,-0.6 -17.4,-3 C-17,-8 -16.8,-14 -16.6,-22 Z" fill="#16100C" />
 		<path d="M6.8,-27 L17.4,-27 C17.6,-19 18,-13 18.4,-9 C18.4,-6.6 16.2,-5.6 12.4,-5.6 C8.6,-5.6 6.6,-6.6 6.6,-9 C6.6,-14 6.7,-20 6.8,-27 Z" fill="#1C140F" />
@@ -155,6 +155,35 @@ const CaoBackLow: React.FC<{id: string; pal: Pal; grey: string; slack?: number; 
 	</g>; };
 
 
+/* ---------- the old war horse standing square (after set54bs's Horse, whose two poses are walking steps): all four hooves planted;
+   the hind leg drawn with its real anatomy — the stifle forward under the flank, the point of the hock behind, the cannon upright,
+   the pastern sloping to the hoof. cm, facing +x, hooves at 0. The mane lifts in the wind (w = time). ---------- */
+const HBODY_S = 'M38,-142 C22,-135 2,-131 -18,-132 C-36,-133 -52,-140 -66,-135 C-74,-132 -80,-124 -81,-112 C-82,-100 -76,-90 -66,-86 L-48,-82 C-30,-80 -10,-79 10,-80 C26,-80 40,-79 52,-82 C62,-86 70,-95 72,-106 C74,-116 79,-130 88,-145 C94,-154 99,-159 103,-162 C109,-158 117,-149 123,-139 C126,-135 130,-131 134,-132 C138,-134 139,-139 136,-145 C129,-158 119,-172 109,-184 C105,-188 101,-191 96,-191 C84,-185 66,-167 52,-153 C46,-148 42,-145 38,-142 Z';
+type HLeg = {j: P[]; w: number[]};
+const foreS = (dx: number): HLeg => ({j: [[52 + dx, -96], [55 + dx, -66], [57 + dx, -44], [57.5 + dx, -15], [61 + dx, -5]], w: [11, 7.5, 5.6, 4.6, 3.8]});
+const hindS = (dx: number): HLeg => ({j: [[-42 + dx, -106], [-33 + dx, -80], [-55 + dx, -50], [-53.5 + dx, -14], [-49.5 + dx, -5]], w: [15, 10.5, 5.4, 4.4, 3.8]});
+const LegS: React.FC<{l: HLeg; fill?: string; hind?: boolean}> = ({l, fill, hind}) => { const h = l.j[4];
+	return <g fill={fill}><Limb j={l.j} w={l.w} />
+		<path transform={`translate(${f1(h[0])},${f1(h[1])})`} d="M-4.6,-2.6 L4.4,-2.6 L7.4,5.2 L-5.2,5.2 Z" />
+		{/* the point of the hock (hind) / the back of the knee (fore) */}
+		<circle cx={l.j[2][0] - (hind ? 3.2 : 0)} cy={l.j[2][1] + (hind ? 1 : 0)} r={l.w[2] + (hind ? 1.2 : 0.6)} />
+		{/* the thigh and gaskin: from the point of the buttock down the hamstring line to the hock, the stifle in front */}
+		{hind && (() => { const [a, b, c] = [l.j[0], l.j[1], l.j[2]];
+			return <path d={`M${f1(a[0] - 24)},${f1(a[1] + 14)} C${f1(a[0] - 23)},${f1(a[1] + 32)} ${f1(c[0] - 6)},${f1(c[1] - 18)} ${f1(c[0] - 3)},${f1(c[1] - 5)} L${f1(c[0] + 4)},${f1(c[1] - 3)} C${f1(c[0] + 10)},${f1(c[1] - 14)} ${f1(b[0])},${f1(b[1] + 6)} ${f1(b[0] + 5)},${f1(b[1] - 2)} L${f1(a[0] + 10)},${f1(a[1] + 10)} Z`} />; })()}
+		<circle cx={l.j[3][0]} cy={l.j[3][1]} r={l.w[3] + 0.9} /></g>; };
+const HorseStand: React.FC<{t: number; farFill?: string}> = ({t, farFill = '#2A1E18'}) => <g>
+	<LegS l={foreS(-9)} fill={farFill} /><LegS l={hindS(9)} fill={farFill} hind />
+	<path d={HBODY_S} />
+	<path d="M93,-188 L90,-203 L98,-191 Z M98,-189 L99,-201 L103,-190 Z" />
+	<path d="M100,-190 C106,-188 110,-184 111,-179 C106,-182 102,-184 98,-185 Z" />
+	<path d="M96,-191 C84,-186 66,-169 50,-155 L46,-160 L48,-165 L44,-163 C58,-176 78,-192 96,-196 Z" />
+	<path d="M-68,-133 C-78,-138 -88,-134 -91,-124 C-94,-112 -91,-100 -88,-90 L-84,-91 C-86,-102 -88,-112 -86,-121 C-84,-127 -78,-130 -71,-128 Z" /><ellipse cx={-89} cy={-120} rx={5} ry={4.2} />
+	<LegS l={hindS(0)} hind /><LegS l={foreS(0)} />
+	{(() => { const n = 7, C = Array.from({length: n}, (_, j) => lp([52, -156], [95, -192], j / (n - 1)));
+		const E = C.map((c, j) => [c[0] - 9 - 3 * Math.sin(t * 6.2 + j * 1.1), c[1] - 5 + 2.5 * Math.sin(t * 4.7 + j * 1.7) + (j % 2) * 3] as P);
+		return <path d={`M${C.map((c) => f1(c[0] + 2) + ',' + f1(c[1] + 6)).join(' L')} L${E.slice().reverse().map((e) => f1(e[0]) + ',' + f1(e[1])).join(' L')} Z`} />; })()}
+</g>;
+
 /* ======================================================================================================================
    card 28 · 碣石 · 207 · dawn
    ====================================================================================================================== */
@@ -163,7 +192,7 @@ export const Jieshi: React.FC<{t: number}> = ({t}) => {
 	const u = t - T54, v = cl01(u / 3.7), m = 1 - (1 - v) ** 3;
 	const dx = 440 * (1 - m) - 18 * u, dy = -180 * (1 - m), z = 1 + 0.06 * (1 - m);
 	const L = (p: number) => lay(dx, dy, z, p, 960, 640);
-	const sunY = 588 - 11 * u, S = 0.5, CX = 1010, CY = 842, HX = 515, HY = 848, HK = 2.3;
+	const sunY = 588 - 11 * u, S = 0.5, CX = 1060, CY = 849, HX = 700, HY = 850, HK = 2.2;
 	const cape = 0.62 + 0.2 * Math.sin(t * 2.3) + 0.08 * Math.sin(t * 5.1 + 1), lift = sstep(T54 + 1.6, T54 + 2.8, t), tilt = 4 - 7 * lift + 0.6 * Math.sin(t * 1.3);
 	const P53: Pal = {...PAL, skinH: '#EEC496'};
 	return <Svg>
@@ -222,25 +251,20 @@ export const Jieshi: React.FC<{t: number}> = ({t}) => {
 		</g>
 		{/* P3 the 碣石 headland: stepped ledges of layered stone; the old war horse and 曹操 on its top, facing the sunrise; surf at its foot */}
 		<g transform={L(1)}>
-			<path d="M240,1500 L300,1040 L338,1000 L352,950 L400,912 L430,872 L470,856 L520,850 L700,846 L860,842 L1000,846 L1100,844 L1150,852 L1190,872 L1214,900 L1236,912 L1262,950 L1300,980 L1322,1030 L1360,1060 L1390,1120 L1430,1180 L1470,1500 Z" fill="url(#j1rock)" />
-			{['M1150,852 L1190,872 L1214,900 L1172,934 L1138,884 Z', 'M1236,912 L1262,950 L1300,980 L1252,1012 L1220,962 Z', 'M1322,1030 L1360,1060 L1390,1120 L1342,1146 L1310,1082 Z', 'M1100,844 L1150,852 L1138,884 L1090,872 Z'].map((d, i) => <path key={i} d={d} fill="#5A4636" opacity={0.55} />)}
-			{['M430,872 L470,856 L520,850 L540,880 L470,900 Z', 'M352,950 L400,912 L430,936 L380,972 Z'].map((d, i) => <path key={i} d={d} fill="#2E241E" opacity={0.7} />)}
+			<path d="M240,1500 L300,1040 L338,1000 L352,940 L384,900 L410,866 L440,853 L500,850 L700,850 L860,849 L1000,850 L1110,850 L1156,856 L1190,872 L1214,900 L1236,912 L1262,950 L1300,980 L1322,1030 L1360,1060 L1390,1120 L1430,1180 L1470,1500 Z" fill="url(#j1rock)" />
+			{['M1150,852 L1190,872 L1214,900 L1172,934 L1138,884 Z', 'M1236,912 L1262,950 L1300,980 L1252,1012 L1220,962 Z', 'M1322,1030 L1360,1060 L1390,1120 L1342,1146 L1310,1082 Z', 'M1110,850 L1156,856 L1138,884 L1090,872 Z'].map((d, i) => <path key={i} d={d} fill="#5A4636" opacity={0.55} />)}
+			{['M410,866 L440,853 L500,850 L520,880 L450,900 Z', 'M352,940 L384,900 L414,926 L372,962 Z'].map((d, i) => <path key={i} d={d} fill="#2E241E" opacity={0.7} />)}
 			{[[360, 980, 1250, 960], [330, 1060, 1320, 1040], [420, 900, 1180, 890], [300, 1140, 1380, 1120], [280, 1240, 1420, 1220]].map(([a, y, b, y2], i) => <path key={i} d={`M${a},${y} L${(a + b) / 2},${y - 8} L${b},${y2}`} fill="none" stroke="#000" strokeOpacity={0.4} strokeWidth={2.2} />)}
 			{[[760, 846, 740, 960], [1020, 848, 1050, 1000], [560, 852, 530, 1010], [1180, 880, 1150, 1100], [900, 860, 880, 1200]].map(([a, b, c, d], i) => <path key={i} d={`M${a},${b} L${(a + c) / 2 + 12},${(b + d) / 2} L${c},${d}`} fill="none" stroke="#000" strokeOpacity={0.45} strokeWidth={2.4} />)}
-			<path d="M470,856 L520,850 L700,846 L860,842 L1000,846 L1100,844 L1150,852 L1190,872 L1214,900 L1236,912 L1262,950 L1300,980 L1322,1030 L1360,1060 L1390,1120 L1430,1180" fill="none" stroke="#F2D6A6" strokeOpacity={0.5} strokeWidth={2.6} />
-			{Array.from({length: 18}, (_, i) => { const x = 520 + i * 36 + rnd(i, 21) * 20, y = 848, b = Math.sin(t * 3 + i) * 3;
+			<path d="M410,866 L440,853 L500,850 L700,850 L860,849 L1000,850 L1110,850 L1156,856 L1190,872 L1214,900 L1236,912 L1262,950 L1300,980 L1322,1030 L1360,1060 L1390,1120 L1430,1180" fill="none" stroke="#F2D6A6" strokeOpacity={0.5} strokeWidth={2.6} />
+			{Array.from({length: 20}, (_, i) => { const x = 460 + i * 34 + rnd(i, 21) * 20, y = 851, b = Math.sin(t * 3 + i) * 3;
 				return <path key={i} d={`M${f1(x)},${f1(y)} q${f1(-4 + b)},-12 ${f1(-6 + b * 1.6)},-22 M${f1(x + 5)},${f1(y)} q${f1(-2 + b)},-9 ${f1(-3 + b * 1.4)},-16`} fill="none" stroke="#1A1410" strokeWidth={2.2} />; })}
 			{/* surf at the rock's foot: swells break and spray rises on their own clocks */}
 			{Array.from({length: 5}, (_, i) => { const ph = (t * 0.42 + i * 0.37 + rnd(i, 8)) % 1, x = 1340 + i * 40 + rnd(i, 9) * 30, y = 1060 + i * 30, h = 80 * Math.sin(Math.PI * Math.min(1, ph * 1.6)), o = 0.5 * (1 - ph);
 				return <g key={i} filter="url(#j1b4)"><ellipse cx={f1(x)} cy={f1(y - h * 0.5)} rx={f1(26 + 40 * ph)} ry={f1(8 + h * 0.6)} fill="#E8E0CE" opacity={f1(o)} />
 					<ellipse cx={f1(x + 30)} cy={f1(y + 6)} rx={f1(60 + 30 * ph)} ry={6} fill="#D8D2C2" opacity={f1(o * 0.7)} /></g>; })}
-			<ellipse cx={HX + 20} cy={HY + 2} rx={270} ry={9} fill="#060403" opacity={0.5} />
-			<g fill="#140E0B" color="#140E0B" filter="url(#j1rim)"><g transform={at(HX, HY, HK)}><Horse pose={1} tail="knot" />
-				{/* the mane lifting in the sea wind (blown back, to the left) */}
-				{(() => { const n = 7, C = Array.from({length: n}, (_, j) => lp([52, -156], [95, -192], j / (n - 1)));
-					const E = C.map((c, j) => [c[0] - 9 - 3 * Math.sin(t * 6.2 + j * 1.1), c[1] - 5 + 2.5 * Math.sin(t * 4.7 + j * 1.7) + (j % 2) * 3] as P);
-					return <path d={`M${C.map((c) => f1(c[0] + 2) + ',' + f1(c[1] + 6)).join(' L')} L${E.slice().reverse().map((e) => f1(e[0]) + ',' + f1(e[1])).join(' L')} Z`} />; })()}
-			</g></g>
+			<ellipse cx={HX + 10} cy={HY + 1} rx={230} ry={8} fill="#060403" opacity={0.5} />
+			<g fill="#140E0B" color="#140E0B" filter="url(#j1rim)"><g transform={at(HX, HY, HK)}><HorseStand t={t} /></g></g>
 			<ellipse cx={CX - 20} cy={CY + 3} rx={90} ry={8} fill="#060403" opacity={0.55} />
 			<g filter="url(#j1hero)"><g transform={atC(CX, CY, S)}>
 				<g clipPath="url(#j1body)"><Cao pal={P53} id="j1c" old armour arm={{sh: [10, 84], el: [22, 200], hd: [54, 266]}} cape={cape} /></g>

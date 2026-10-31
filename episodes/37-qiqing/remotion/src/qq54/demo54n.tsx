@@ -4,7 +4,7 @@ import {Cao, Head, RimF, Lamel, Pal, P, f1, rnd} from './cao54b';
 import {LampStand} from './npc54b';
 import {NpcWalk, Flame, flick, npcWalk} from './rig54b';
 import {SIL, ACC, PAL, Horse, Rider, Banner} from './set54bs';
-import {npcTorsoT, Mian, Helmet, band, Kneeler, CaoKneel, Dong, CaoStand, Smoke, sstep, cl01} from './fig54n';
+import {npcTorsoT, Helmet, band, Kneeler, CaoKneel, Dong, CaoStand, Smoke, BoyWalk, sstep, cl01} from './fig54n';
 /* ep54 demo · new scenes in look B (铜灯影 · 主角刻画): t = FILM time (s).
    Huangjin = card 5 (16.59–20.57, 184 颍川, dusk): 曹操 30, 骑都尉 in 札甲 + 武冠, on a rise before his horsemen; the plain full of
      黄巾 (muted ochre headbands), smoke columns rising over the villages one after another; slow lateral drift.
@@ -139,9 +139,9 @@ export const Dongzhuo: React.FC<{t: number}> = ({t}) => {
 	const Z = (p: number) => { const z = 1 + 0.017 * u * p; return `translate(${FX},${FY}) scale(${z.toFixed(5)}) translate(${-FX},${-FY})`; };
 	const pt = sstep(20.95, 21.8, t), lift = sstep(21.35, 22.25, t);
 	/* the procession: guards (k 0.95) and the boy (k 0.76) walk left at the same pace, 85.5 px/s */
-	const GK = 1.1, GL = 58, GF = 1.45, BK = 0.88, BL = 52, BF = GL * GF * GK / (BL * BK), WY = 716;
+	const GK = 1.1, GL = 54, GF = 1.3, BK = 0.84, BL = 44, BF = GL * GF * GK / (BL * BK), WY = 716;
 	const walker = (x0: number, k: number, L: number, f: number, t0: number, lean: number) => { const hx0 = npcWalk(t0, L, f).hipX; return {T: at(x0 + k * hx0, WY, k, true), torso: npcTorsoT(u, L, f, t0, lean)}; };
-	const g1 = walker(985, GK, GL, GF, 0.21, 3), boy = walker(1070, BK, BL, BF, 0.05, 8), g2 = walker(1150, GK, GL, GF, 0.47, 3);
+	const g1 = walker(1000, GK, GL, GF, 0.21, 3), boy = walker(1074, BK, BL, BF, 0.05, 5), g2 = walker(1150, GK, GL, GF, 0.47, 3);
 	const flA = flick(t, 13), DK = 1.75, DX = 1420, DY = 738;
 	return <Svg>
 		<defs>
@@ -184,7 +184,7 @@ export const Dongzhuo: React.FC<{t: number}> = ({t}) => {
 		{/* the procession at the back: the boy emperor in his 冕, led away by two armoured guards (walking left) */}
 		<g transform={Z(0.68)} fill={SIL} filter="url(#n2rimW)">
 			<g transform={g1.T}><NpcWalk t={u} kind="ji" L={GL} f={GF} t0={0.21} lean={3} /><g transform={g1.torso}><path d={Helmet} /></g></g>
-			<g transform={boy.T}><NpcWalk t={u} kind="plain" L={BL} f={BF} t0={0.05} lean={8} swing={0.5} /><g transform={boy.torso}><Mian /></g></g>
+			<g transform={boy.T}><BoyWalk t={u} L={BL} f={BF} t0={0.05} lean={5} bow={9} /></g>
 			<g transform={g2.T}><NpcWalk t={u} kind="ji" L={GL} f={GF} t0={0.47} lean={3} swing={0.8} /><g transform={g2.torso}><path d={Helmet} /></g></g>
 		</g>
 		{/* the window light falling through the hall, dust in it */}
@@ -211,7 +211,7 @@ export const Dongzhuo: React.FC<{t: number}> = ({t}) => {
 			<Flame x={1235} y={748 - 117 * 1.45} s={1.45} t={t} seed={13} ivory glow={1.0} />
 			{/* the shadow of the man on the dais falls across the floor toward the kneeling rows */}
 			<path d="M1330,850 L1520,850 L1240,1080 L900,1080 Z" fill="#050606" opacity={0.32} filter="url(#n2b16)" />
-			<g fill="#0E0B0A" color="#0E0B0A" filter="url(#n2rimD)"><g transform={at(DX, DY, DK)}><Dong pt={pt} cape={Math.sin(t * 1.3)} /></g></g>
+			<g fill="#0E0B0A" color="#0E0B0A" filter="url(#n2rimD)"><g transform={at(DX, DY, DK)}><Dong pt={pt} cape={Math.sin(t * 1.3)} jab={Math.sin(Math.PI * cl01((t - 21.62) / 0.42))} br={Math.sin(t * 1.7)} /></g></g>
 		</g>
 		<g transform={Z(0.7)}>{Array.from({length: 36}, (_, i) => { const a = (t * (0.03 + rnd(i, 61) * 0.03) + rnd(i, 62)) % 1, sx0 = 900 + rnd(i, 63) * 700, y = 340 + a * 420, x = sx0 - (y - 340) * 0.7 + Math.sin(t * 0.8 + i) * 6;
 			return <circle key={i} cx={f1(x)} cy={f1(y)} r={1 + rnd(i, 64) * 1.2} fill="#E6F0EC" opacity={(0.25 + rnd(i, 65) * 0.35) * Math.sin(Math.PI * a)} />; })}</g>

@@ -143,24 +143,23 @@ const Letterbox: React.FC<{t: number}> = ({t}) => { const d = t - T1, u = eout((
 	</svg>; };
 
 /* ================= D2 · wider: the charge streams past him on both sides; 曹 banners whip past ================= */
-const MEN2 = charge(23, 110, 1.15, 1.25, [-1.45, -2.3, -3.2, 1.45, 2.3, 3.2], 0.3);
+const MEN2 = charge(23, 110, 1.15, 3.3, [-1.5, -2.3, -3.2, 1.5, 2.3, 3.2], 0.3);
 const SM2 = smokeBlobs(30, 9, -200, 2100, -160, 520, 90, 220);
-const D2: React.FC<{t: number}> = ({t}) => { const d = t - T2, HZ = 734, c: Cam3 = {f: 1000, vx: 960, hz: HZ, ch: 0.8};
+const D2: React.FC<{t: number}> = ({t}) => { const d = t - T2, HZ = 840, c: Cam3 = {f: 1000, vx: 960, hz: HZ, ch: 0.55};
 	const z = 0.05 * ease(d / 2.0), FX = 960, FY = 600, S = 0.405, ZH = 2.36;
 	return <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
 		<defs><HorizonDefs id="d2" hz={HZ} /><ChargeDefs id="d2" kn={3.4} /><Blur id="d2sb" s={24} />
 			<RimF id="d2hero" lx={1} ly={-0.35} k={3.4} c={FIRE.mid} o={0.95} lx2={-1} ly2={-0.25} k2={3} c2={ACC} o2={0.9} blur={0.9} />
 			<radialGradient id="d2vig" cx="0.5" cy="0.5" r="0.78"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.6" /></radialGradient>
-			<radialGradient id="d2back" cx="960" cy="560" r="460" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FF9A40" stopOpacity="0.3" /><stop offset="1" stopColor="#FF9A40" stopOpacity="0" /></radialGradient>
+			<radialGradient id="d2back" cx="960" cy="520" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FF9A40" stopOpacity="0.3" /><stop offset="1" stopColor="#FF9A40" stopOpacity="0" /></radialGradient>
 		</defs>
 		<g transform={pl(z, 0, FX, FY)}><Sky id="d2sky" hz={HZ} /><Smoke b={SM2} t={d + 2} id="d2sb" blur={24} hz={HZ} /></g>
 		<g transform={pl(z, 0.12, FX, FY)}><Horizon hz={HZ} t={t} id="d2" qx={[240, 420, 1480, 1660, 1830]} qs={0.36} /></g>
 		<g transform={pl(z, 0.5, FX, FY)}>
-			<Charge men={MEN2.filter((m) => m.Z > ZH)} t={d} v={1.15} c={c} id="d2" zMin={ZH - 2.4} split={6} flags />
-			<circle cx={960} cy={560} r={460} fill="url(#d2back)" />
+			<Charge men={MEN2} t={d} v={1.15} c={c} id="d2" zMin={0.6} split={6} flags />
+			<circle cx={960} cy={520} r={520} fill="url(#d2back)" />
 			<ellipse cx={960} cy={1070} rx={180} ry={16} fill="#000" opacity={0.6} />
 			<g filter="url(#d2hero)"><g transform={`translate(960,${f1(1073 - 1620 * S)}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-222, 40], fs: 1.25, T: [-500, -600], bw: 30, tipK: 1.3}} /></g></g>
-			<Charge men={MEN2.filter((m) => m.Z <= ZH)} t={d} v={1.15} c={c} id="d2" zMin={1.0} split={6} flags />
 		</g>
 		<rect width={W} height={H} fill="url(#d2vig)" />
 	</svg>; };
