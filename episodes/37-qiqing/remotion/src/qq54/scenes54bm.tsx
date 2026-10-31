@@ -1,6 +1,6 @@
 import React from 'react';
 import {W, H} from '../qq50/kit50';
-import {Cao, Pal, RimF, Rod5, strand, qpts, rnd, f1, P} from './cao54b';
+import {Cao, Pal, RimF, Rod5, Dao, Head, strand, qpts, rnd, f1, P} from './cao54b';
 import {Npc, LampStand} from './npc54b';
 import {CaoWalk, caoHipX, NpcWalk, npcTorchAt, Flame, flick} from './rig54b';
 /* ep54 look B · key scenes owned by the rig/motion builder: K1 the hook (174, the 北部尉 gate), K7 the flight (189, also the
@@ -138,7 +138,6 @@ export const K7: React.FC<{t?: number}> = ({t = 2.2}) => {
 const npcHipXs = (t: number, t0: number, L = 64, f = 1.8) => { const s = (t + t0) * f; return L * s - L / 2; };
 
 /* ---------- K1: the hook, 174. The 北部尉 office gate at night, 五色棒 racks both sides; the rod raised over 蹇硕's uncle. ---------- */
-const S1 = 0.75;
 const Rack: React.FC<{x: number; y: number; w: number; h: number; dim?: number}> = ({x, y, w, h, dim = 1}) => { const n = 10;
 	return <g opacity={dim}>
 		<rect x={x} y={y - h} width={12} height={h} fill="#3A2A1E" /><rect x={x + w - 12} y={y - h} width={12} height={h} fill="#3A2A1E" />
@@ -172,85 +171,126 @@ const Gripper: React.FC<{rx: number; ry: number}> = ({rx, ry}) => <g>
 	<path d={strand(qpts([4, -132], [rx * 0.5, (ry - 132) / 2 + 8], [rx, ry], 8), (u) => 5.2 - u * 1.4)} /><circle cx={rx} cy={ry} r={4.2} />
 	<path d={strand(qpts([0, -130], [rx * 0.45, (ry - 130) / 2 + 14], [rx - 6, ry + 8], 8), (u) => 5 - u * 1.4)} />
 </g>;
+/** 曹操 (20) in a strike-ready stance (Cao units, facing +x, soles y = 750): weight on the planted back foot, the front foot
+    forward, the torso leaning back a little; the far (right) hand raises the 五色棒 high behind his head, the near hand points down
+    at the man; head level and lowered toward him. Drawn with the hero's parts (Head, Rod5) and the same cel tones. */
+const CaoStrike: React.FC<{id: string}> = ({id}) => {
+	const R = PAL.robe, RS = PAL.robeS, RH = PAL.robeH, TR = PAL.trim;
+	const skirt = 'M-62,292 C-78,380 -128,560 -206,708 C-120,736 60,740 184,700 C160,640 136,580 118,530 C96,460 66,380 52,286 Z';
+	const torso = 'M-38,44 C-58,58 -70,100 -68,160 C-66,220 -62,262 -62,298 L52,290 C58,220 62,160 54,112 C48,82 36,60 14,46 Z';
+	const shoe = (x: number, a: number, c: string) => <g transform={`translate(${x},728) rotate(${a})`}><path d="M-26,4 C-28,-8 -16,-14 0,-14 L52,-8 C76,-4 98,2 100,14 C100,20 94,22 86,22 L-22,22 C-28,20 -28,12 -26,4 Z" fill={c} /></g>;
+	/* the raised far arm: the wide sleeve has slid down to the shoulder; the forearm and fist show */
+	const sh: P = [-14, 80], el: P = [-86, -6], hd: P = [-56, -124];
+	return <g>
+		<defs><clipPath id={`${id}sk`}><path d={skirt} /></clipPath><clipPath id={`${id}to`}><path d={torso} /></clipPath></defs>
+		{/* the rod (behind the head), then the raised arm holding it */}
+		<Rod5 a={[-30, -96]} b={[-410, -300]} r={11} ph={1} lit={1} />
+		<path d={strand(qpts(sh, [sh[0] - 50, sh[1] - 30], el, 8), (u) => 34 - u * 4)} fill={RS} />
+		<path d={`M${sh[0] + 10},${sh[1]} C${sh[0] - 30},${sh[1] - 10} ${el[0] - 34},${el[1] + 40} ${el[0] - 30},${el[1] + 70} C${el[0] - 10},${el[1] + 120} ${sh[0] - 50},${sh[1] + 60} ${sh[0] - 20},${sh[1] + 40} Z`} fill={RS} />
+		<path d={strand(qpts(el, [el[0] - 6, el[1] - 60], hd, 8), (u) => 20 - u * 6)} fill={PAL.skinS} />
+		<path d={`M${el[0] + 12},${el[1] - 20} L${el[0] - 18},${el[1] + 4}`} stroke={TR} strokeWidth={10} />
+		<g transform={`translate(${hd[0]},${hd[1]}) rotate(-30)`}><path d="M-13,-12 C0,-17 15,-11 16,0 C17,11 7,16 -5,14 C-14,12 -17,-4 -13,-12 Z" fill={PAL.skin} /><path d="M-5,14 C7,16 17,11 16,0 L10,0 C10,8 4,12 -4,11 Z" fill={PAL.skinS} /></g>
+		{/* legs: back foot planted behind, front foot forward (only the shoes show under the robe) */}
+		{shoe(-150, 0, '#0C0A08')}{shoe(150, -4, '#141110')}
+		{/* the robe: skirt spread over the stance, torso leaning back a little */}
+		<g transform="rotate(-4 0 330)">
+			<path d={skirt} fill={R} />
+			<g clipPath={`url(#${id}sk)`}>
+				<path d="M-20,280 C-30,420 -80,580 -110,740 L-260,740 L-260,280 Z" fill={RS} />
+				<path d="M40,300 C70,420 110,560 150,720 L220,720 L220,280 Z" fill={RH} opacity={0.6} />
+				<path d="M-8,300 C-20,450 -60,600 -90,720 M20,300 C40,440 70,580 96,712 M-40,320 C-70,460 -120,600 -160,712" fill="none" stroke={RS} strokeWidth={4} opacity={0.75} />
+				<rect x={-260} y={690} width={460} height={60} fill={TR} transform="rotate(-6 0 700)" />
+			</g>
+			<path d={torso} fill={R} />
+			<g clipPath={`url(#${id}to)`}>
+				<path d="M-14,48 C-16,140 -18,220 -20,298 L-80,300 L-80,40 Z" fill={RS} />
+				<path d="M44,92 C56,150 54,230 50,290 L64,290 L64,80 Z" fill={RH} opacity={0.6} />
+			</g>
+			<path d="M14,46 C25,56 33,72 37,92 L29,96 C25,77 19,61 8,51 Z" fill="#D8CDB8" />
+			<path d="M24,52 C8,104 -18,152 -48,196 L-58,186 C-28,146 -2,100 14,48 Z" fill={TR} />
+			<path d="M-64,284 L55,272 L57,292 L-64,304 Z" fill="#1A120E" /><ellipse cx={50} cy={282} rx={7} ry={5} fill={PAL.gold} />
+			<path d="M-30,300 L-18,298 L-24,520 L-36,522 Z" fill="#A08240" />
+			<Dao a={[64, 266]} b={[-90, 548]} pal={PAL} />
+			{/* head level, lowered toward the man at his feet */}
+			<g transform="rotate(12 0 40) translate(0,49) scale(0.88) translate(0,-40)"><Head old={false} pal={PAL} id={id} /></g>
+		</g>
+		{/* the near arm points down at him: wide sleeve hanging under the forearm */}
+		{(() => { const s0: P = [16, 86], e0: P = [86, 184], h0: P = [160, 232];
+			return <g>
+				<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 50},${h0[1] + 100} ${e0[0] - 20},${e0[1] + 96} ${e0[0] - 30},${e0[1] + 40} C${e0[0] - 40},${e0[1]} ${s0[0] - 30},${s0[1] + 60} ${s0[0] - 26},${s0[1] + 10} Z`} fill={R} />
+				<path d={`M${e0[0] - 30},${e0[1] + 40} C${e0[0] - 20},${e0[1] + 96} ${h0[0] - 50},${h0[1] + 100} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 34},${h0[1] + 76} ${e0[0] - 4},${e0[1] + 70} ${e0[0] - 18},${e0[1] + 22} Z`} fill={RS} />
+				<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} L${h0[0] - 10},${h0[1] - 10} L${e0[0] + 16},${e0[1] + 8} C${e0[0] + 10},${e0[1] - 26} ${s0[0] + 24},${s0[1] + 40} ${s0[0] + 10},${s0[1] - 2} Z`} fill={RH} opacity={0.75} />
+				<path d={`M${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70}`} fill="none" stroke={TR} strokeWidth={9} />
+				<g transform={`translate(${h0[0] + 2},${h0[1] + 12}) rotate(32)`}>
+					<path d="M-10,-11 C2,-14 13,-9 14,0 C15,9 6,13 -4,12 C-12,10 -14,-4 -10,-11 Z" fill={PAL.skin} />
+					<path d="M10,-6 C22,-6 34,-4 40,-2 C40,1 38,2 34,2 C26,2 18,1 10,2 Z" fill={PAL.skin} />
+					<path d="M-4,12 C4,12 12,8 14,1 C10,6 2,9 -6,9 Z" fill={PAL.skinS} />
+				</g>
+			</g>; })()}
+	</g>; };
 export const K1: React.FC = () => {
-	const GX = 1200, PY = 900, SY = 952;          // gate centre, platform top, street
-	const lampX = 860, lampK = 2.6, flY = SY - 117 * lampK;
-	/* 曹操: feet on the platform at x 1205, facing left (flip); rod raised high above and behind his head */
-	const cx = 1215, cy = PY - 750 * S1;
-	const raised = <g>
-		{/* the raised near arm: the wide sleeve has fallen back toward the shoulder and hangs from the upper arm */}
-		<path d="M24,66 C20,20 4,-26 -12,-62 C-10,-86 -4,-104 2,-112 L22,-104 C16,-90 12,-72 10,-58 C20,-20 34,30 40,80 Z" fill={PAL.robe} />
-		<path d="M-12,-62 C-30,-40 -52,0 -60,44 C-54,70 -40,86 -24,92 C-30,60 -24,20 -6,-20 Z" fill={PAL.robe} />
-		<path d="M-12,-62 C-30,-40 -52,0 -60,44 C-54,70 -40,86 -24,92 C-36,60 -34,24 -18,-14 Z" fill={PAL.robeS} />
-		<path d="M24,66 C20,20 4,-26 -12,-62 L-4,-66 C10,-30 26,16 32,62 Z" fill={PAL.robeH} opacity={0.7} />
-		<path d="M2,-112 L22,-104" stroke={PAL.trim} strokeWidth={9} />
-		<path d="M4,-112 C6,-124 8,-134 12,-142 L26,-136 C22,-128 20,-118 20,-106 Z" fill={PAL.skin} />
-		<path d="M20,-106 C20,-118 22,-128 26,-136 L22,-138 C17,-128 15,-118 15,-108 Z" fill={PAL.skinS} />
-		<path d="M4,-150 C14,-158 30,-154 32,-142 C32,-132 22,-128 12,-130 C4,-132 0,-142 4,-150 Z" fill={PAL.skin} />
-		<path d="M4,-150 C12,-156 24,-155 30,-148 C22,-148 12,-146 6,-142 Z" fill={PAL.skinH} />
-	</g>;
+	/* two planes: the gate (k 1.1 px/cm, ground y 800) behind; the group (k 3.1, ground y 1030) in front, under the lamp */
+	const GX = 1175, GG = 800, FG = 1030, S = 3.1 / 4.98;
+	const lampX = 560, lampK = 2.7, lampG = 988, flY = lampG - 117 * lampK;
+	const cx = 1300, cy = FG - 750 * S;
+	const rackW = 196, rackH = 168;
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<defs>
 			<SkyDefs p="k1" />
-			<radialGradient id="k1key" cx={lampX} cy={flY} r="900" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${lampX} ${flY}) scale(1 0.7) translate(${-lampX} ${-flY})`}><stop offset="0" stopColor={KEY} stopOpacity="0.62" /><stop offset="0.3" stopColor="#D9A877" stopOpacity="0.3" /><stop offset="1" stopColor="#D9A877" stopOpacity="0" /></radialGradient>
+			<radialGradient id="k1key" cx={lampX} cy={flY} r="980" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${lampX} ${flY}) scale(1 0.66) translate(${-lampX} ${-flY})`}><stop offset="0" stopColor={KEY} stopOpacity="0.6" /><stop offset="0.32" stopColor="#D9A877" stopOpacity="0.3" /><stop offset="1" stopColor="#D9A877" stopOpacity="0" /></radialGradient>
 			<RimF id="k1cao" lx={1} ly={-0.3} k={5} c="#FFE0B0" o={0.95} lx2={-1} ly2={-0.2} k2={4} c2={ACC} o2={0.95} blur={1} />
-			<RimF id="k1rimR" lx={1} ly={-0.35} k={3.4} c={RIMW} o={0.95} />
-			<RimF id="k1rimTop" lx={0} ly={-1} k={2} c="#9FB8B6" o={0.5} />
+			<RimF id="k1rimL" lx={-1} ly={-0.35} k={3.2} c={RIMW} o={0.95} />
+			<RimF id="k1rimTop" lx={0} ly={-1} k={1.6} c="#9FB8B6" o={0.5} />
 		</defs>
 		<rect width={W} height={H} fill="url(#k1sky)" />
 		{Array.from({length: 50}, (_, i) => <circle key={i} cx={rnd(i, 7) * W} cy={rnd(i, 8) * 300} r={0.8 + rnd(i, 9) * 1.2} fill="#E8EEE6" opacity={0.2 + rnd(i, 4) * 0.4} />)}
-		{/* far: the roofs of 洛阳's north district and a 阙 pair, hazed */}
+		{/* far: 洛阳's north-district roofs and a 阙 pair, hazed */}
 		<g filter="url(#k1bl3)">
-			<path d="M-20,470 L120,470 L140,446 L330,446 L350,470 L560,470 L572,452 L700,452 L712,470 L1500,470 L1516,440 L1720,440 L1736,470 L1940,470 L1940,560 L-20,560 Z" fill="#2B3534" />
-			<g fill="#28312F"><g transform="translate(1640,480) scale(0.75)">{QueD}</g><g transform="translate(1860,480) scale(0.75) scale(-1,1)">{QueD}</g></g>
+			<path d="M-20,452 L120,452 L140,430 L330,430 L350,452 L560,452 L572,436 L700,436 L712,452 L1500,452 L1516,426 L1720,426 L1736,452 L1940,452 L1940,520 L-20,520 Z" fill="#2B3534" />
+			<g fill="#28312F"><g transform="translate(1660,470) scale(0.6)">{QueD}</g><g transform="translate(1850,470) scale(0.6) scale(-1,1)">{QueD}</g></g>
 		</g>
-		<rect y={420} width={W} height={160} fill="url(#k1haze)" />
-		{/* the office compound wall (rammed earth, tiled coping) */}
-		<rect x={-20} y={560} width={1960} height={SY - 560} fill="#3A3029" />
-		<rect x={-20} y={540} width={1960} height={360} fill="url(#k1key)" />
-		{Array.from({length: 26}, (_, i) => <path key={i} d={`M-20,${572 + i * 13} L1940,${572 + i * 13}`} stroke="#000" strokeOpacity={0.13} strokeWidth={1.3} />)}
-		<g filter="url(#k1rimTop)"><path d="M-20,566 L1940,566 L1940,546 C1700,540 200,540 -20,546 Z" fill="#1E1B19" /></g>
-		{Array.from({length: 70}, (_, i) => <circle key={i} cx={-10 + i * 28.4} cy={566} r={4} fill="#2C2826" />)}
-		{/* the gatehouse (门屋): platform, steps, pillars, closed lacquered doors with 铺首, 斗拱, a straight-ridged roof */}
+		<rect y={400} width={W} height={140} fill="url(#k1haze)" />
+		{/* the office compound wall (rammed earth, tiled coping), the gate plane */}
+		<rect x={-20} y={476} width={1960} height={GG - 476} fill="#3A3029" />
+		<rect x={-20} y={460} width={1960} height={360} fill="url(#k1key)" />
+		{Array.from({length: 24}, (_, i) => <path key={i} d={`M-20,${486 + i * 13} L1940,${486 + i * 13}`} stroke="#000" strokeOpacity={0.13} strokeWidth={1.2} />)}
+		<g filter="url(#k1rimTop)"><path d="M-20,482 L1940,482 L1940,466 C1700,462 200,462 -20,466 Z" fill="#1E1B19" /></g>
+		{Array.from({length: 80}, (_, i) => <circle key={i} cx={-10 + i * 25} cy={482} r={3.2} fill="#2C2826" />)}
+		{/* the gatehouse (门屋) of the 北部尉 office: pillars, closed lacquered doors with 铺首, 斗拱, a straight-ridged roof */}
 		<g>
-			<rect x={GX - 330} y={PY} width={660} height={SY - PY} fill="#2A231E" />
-			{[0, 1, 2].map((i) => <rect key={i} x={GX - 150 - i * 0} y={PY + 2 + i * 22} width={300} height={4} fill="#E0B47A" opacity={0.18} />)}
-			<rect x={GX - 330} y={PY} width={660} height={5} fill="#E0B47A" opacity={0.25} />
-			<rect x={GX - 170} y={420} width={340} height={PY - 420} fill="#3B2622" />
-			<rect x={GX - 170} y={420} width={340} height={PY - 420} fill="url(#k1key)" opacity={0.6} />
-			<rect x={GX - 2} y={420} width={4} height={PY - 420} fill="#120C0A" />
-			{Array.from({length: 5}, (_, r) => Array.from({length: 4}, (_, c) => <circle key={`${r}${c}`} cx={GX - 150 + c * 30 + (c > 1 ? 180 : 0) - (c > 1 ? 60 : 0)} cy={470 + r * 80} r={4} fill="#8C6A44" opacity={0.7} />))}
-			<circle cx={GX - 26} cy={650} r={13} fill="none" stroke="#B08A54" strokeWidth={4} /><circle cx={GX + 26} cy={650} r={13} fill="none" stroke="#7A5E3C" strokeWidth={4} />
-			{[GX - 205, GX + 175].map((x) => <rect key={x} x={x} y={392} width={30} height={PY - 392} fill="#1E1714" />)}
-			<rect x={GX - 215} y={402} width={430} height={20} fill="#1E1714" />
-			{Array.from({length: 9}, (_, i) => <g key={i} fill="#1C1612"><rect x={GX - 228 + i * 54} y={378} width={26} height={16} /><rect x={GX - 236 + i * 54} y={372} width={42} height={7} /></g>)}
-			<path d={`M${GX - 330},372 C${GX - 200},364 ${GX + 200},364 ${GX + 330},372 L${GX + 334},362 C${GX + 300},354 ${GX + 250},330 ${GX + 200},300 L${GX - 200},300 C${GX - 250},330 ${GX - 300},354 ${GX - 334},362 Z`} fill="url(#k1roof)" />
-			<path d={`M${GX - 212},302 L${GX + 212},302 L${GX + 222},288 L${GX + 212},292 L${GX - 212},292 L${GX - 222},288 Z`} fill="#141414" />
-			{Array.from({length: 28}, (_, i) => <path key={i} d={`M${GX - 196 + i * 14.5},304 L${GX - 320 + i * 23.7},368`} stroke="#5A6466" strokeOpacity={0.3} strokeWidth={1.4} />)}
-			{Array.from({length: 30}, (_, i) => <circle key={i} cx={GX - 326 + i * 22.5} cy={369} r={3.4} fill="#4A5254" opacity={0.7} />)}
+			<rect x={GX - 250} y={GG - 14} width={500} height={14} fill="#2A231E" /><rect x={GX - 250} y={GG - 14} width={500} height={3} fill="#E0B47A" opacity={0.25} />
+			<rect x={GX - 132} y={GG - 410} width={264} height={396} fill="#3B2622" />
+			<rect x={GX - 132} y={GG - 410} width={264} height={396} fill="url(#k1key)" opacity={0.55} />
+			<rect x={GX - 1.5} y={GG - 410} width={3} height={396} fill="#120C0A" />
+			{Array.from({length: 5}, (_, r) => [-100, -70, 70, 100].map((dx) => <circle key={`${r}${dx}`} cx={GX + dx} cy={GG - 370 + r * 70} r={3} fill="#8C6A44" opacity={0.7} />))}
+			<circle cx={GX - 20} cy={GG - 200} r={9} fill="none" stroke="#B08A54" strokeWidth={3} /><circle cx={GX + 20} cy={GG - 200} r={9} fill="none" stroke="#7A5E3C" strokeWidth={3} />
+			{[GX - 162, GX + 138].map((x) => <rect key={x} x={x} y={GG - 432} width={24} height={418} fill="#1E1714" />)}
+			<rect x={GX - 170} y={GG - 440} width={340} height={16} fill="#1E1714" />
+			{Array.from({length: 8}, (_, i) => <g key={i} fill="#1C1612"><rect x={GX - 182 + i * 50} y={GG - 456} width={20} height={13} /><rect x={GX - 188 + i * 50} y={GG - 461} width={32} height={6} /></g>)}
+			<path d={`M${GX - 290},${GG - 460} C${GX - 170},${GG - 466} ${GX + 170},${GG - 466} ${GX + 290},${GG - 460} L${GX + 294},${GG - 469} C${GX + 262},${GG - 476} ${GX + 220},${GG - 498} ${GX + 176},${GG - 524} L${GX - 176},${GG - 524} C${GX - 220},${GG - 498} ${GX - 262},${GG - 476} ${GX - 294},${GG - 469} Z`} fill="url(#k1roof)" />
+			<path d={`M${GX - 186},${GG - 522} L${GX + 186},${GG - 522} L${GX + 195},${GG - 534} L${GX + 186},${GG - 530} L${GX - 186},${GG - 530} L${GX - 195},${GG - 534} Z`} fill="#141414" />
+			{Array.from({length: 26}, (_, i) => <path key={i} d={`M${GX - 172 + i * 13.8},${GG - 520} L${GX - 282 + i * 22.6},${GG - 464}`} stroke="#5A6466" strokeOpacity={0.3} strokeWidth={1.2} />)}
+			{Array.from({length: 27}, (_, i) => <circle key={i} cx={GX - 286 + i * 22} cy={GG - 463} r={2.8} fill="#4A5254" opacity={0.7} />)}
 		</g>
-		{/* the 五色棒 racks on both sides of the gate (县门左右各十余枚) */}
-		<Rack x={GX - 470} y={SY - 4} w={230} h={330} />
-		<Rack x={GX + 240} y={SY - 4} w={230} h={330} dim={0.82} />
-		<rect y={SY} width={W} height={H - SY} fill="url(#k1gnd)" />
-		<ellipse cx={lampX + 40} cy={SY + 30} rx={520} ry={70} fill="url(#k1pool)" />
-		{/* the key: a Han lamp on a tall stand */}
-		<LampStand x={lampX} y={SY + 4} k={lampK} />
-		<Flame x={lampX} y={flY} s={lampK} t={0.4} seed={5} ivory glow={1.5} />
-		{/* the held man and his two guards (NPC silhouettes, real proportions, k 3.0 px/cm) */}
-		<g fill={SIL} filter="url(#k1rimR)">
-			<g transform={`translate(392,${SY + 14}) scale(2.5)`}><Gripper rx={48} ry={-76} /></g>
-			<g transform={`translate(660,${SY + 18}) scale(2.5)`}>{Uncle}</g>
-			<g transform={`translate(548,${SY + 22}) scale(2.52)`}><Gripper rx={42} ry={-98} /></g>
-			{/* his 进贤冠, knocked off, on the ground before him */}
-			<g transform={`translate(800,${SY + 22}) scale(2.5) rotate(-70)`}><path d="M-8,-1 C-8.8,-7 -7,-11.6 -1.6,-13.2 L8.4,-13.4 C11,-12 12,-9 12,-6 C8,-7 3,-7 -1,-5 Z M-6.8,-10.6 L10.4,-11.4 L11.2,-29 L-5.4,-19.6 Z" /></g>
+		{/* the 五色棒 racks on both sides of the gate (县门左右各十余枚), on the gate plane */}
+		<Rack x={GX - 200 - rackW - 30} y={GG} w={rackW} h={rackH} />
+		<Rack x={GX + 230} y={GG} w={rackW} h={rackH} dim={0.86} />
+		{/* the ground between the planes and the lamp pool */}
+		<rect y={GG} width={W} height={H - GG} fill="url(#k1gnd)" />
+		<ellipse cx={900} cy={FG - 20} rx={720} ry={110} fill="url(#k1pool)" />
+		{/* the key: a Han lamp on a tall stand, upstage left of the group */}
+		<LampStand x={lampX} y={lampG} k={lampK} />
+		<Flame x={lampX} y={flY} s={lampK} t={0.4} seed={5} ivory glow={1.6} />
+		{/* the group: a guard upstage behind the man, the man forced to his knees, a guard downstage holding his arm */}
+		<g fill={SIL} filter="url(#k1rimL)">
+			<g transform={`translate(900,1000) scale(2.9)`}><Gripper rx={36} ry={-96} /></g>
+			<g transform={`translate(1010,${FG + 2}) scale(3.1)`}>{Uncle}</g>
+			<g transform={`translate(700,${FG + 6}) scale(3.1)`}><Gripper rx={40} ry={-81} /></g>
+			<g transform={`translate(1125,${FG + 6}) scale(3.1) rotate(-70)`}><path d="M-8,-1 C-8.8,-7 -7,-11.6 -1.6,-13.2 L8.4,-13.4 C11,-12 12,-9 12,-6 C8,-7 3,-7 -1,-5 Z M-6.8,-10.6 L10.4,-11.4 L11.2,-29 L-5.4,-19.6 Z" /></g>
 		</g>
-		{/* 曹操 (20) on the platform, facing left, the 五色棒 raised high */}
-		<ellipse cx={cx} cy={PY + 4} rx={110} ry={10} fill="#0A0605" opacity={0.55} />
-		<g transform={`translate(${cx},${cy}) scale(${-S1},${S1})`} filter="url(#k1cao)">
-			<Cao pal={PAL} id="k1c" old={false} armour={false} arm={{sh: [8, 84], el: [20, 206], hd: [100, 240]}} noArm
-				prop="rod" propA={[34, -128]} propB={[-440, -170]} extra={raised} />
-		</g>
+		{/* 曹操 (20) over him, facing left, the 五色棒 raised high behind his head */}
+		<ellipse cx={cx} cy={FG + 4} rx={170} ry={12} fill="#0A0605" opacity={0.55} />
+		<g transform={`translate(${cx},${cy}) scale(${-S},${S})`} filter="url(#k1cao)"><CaoStrike id="k1s" /></g>
 		<rect width={W} height={H} fill="url(#k1vig)" />
 	</svg>; };
 export type _P54bm = P;

@@ -215,13 +215,13 @@ export const K5: React.FC = () => { const HZ = 640;
 	</Svg>; };
 
 /* ================= K6 · 1:40.2 · the handover frame: night, 曹操 leads the 5,000 out with torches toward 乌巢 ================= */
-const COL: P[] = [[935, 905], [830, 884], [720, 856], [632, 822], [606, 792], [650, 764], [702, 742], [668, 718], [566, 700], [458, 684], [380, 668], [330, 652], [292, 639], [262, 628], [242, 620]];
+const COL: P[] = [[1040, 992], [930, 966], [826, 932], [740, 893], [676, 856], [650, 820], [676, 790], [730, 765], [748, 742], [700, 722], [610, 706], [510, 692], [430, 679], [370, 666], [326, 654], [292, 643], [266, 633], [248, 624]];
 const colAt = (u: number): P => { const n = COL.length - 1, s = Math.min(n - 1e-6, Math.max(0, u * n)), i = Math.floor(s), t = s - i, a = COL[i], b = COL[i + 1];
 	return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
-export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0058 * (y - HZ + 4);
-	const men = Array.from({length: 150}, (_, i) => { const u = Math.pow(i / 149, 0.8), [x, y] = colAt(u), kk = kOf(y), side = (i % 2 ? 1 : -1) * 16 * kk;
+export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0025 * (y - HZ + 6);
+	const men = Array.from({length: 260}, (_, i) => { const u = Math.pow(i / 259, 0.72), [x, y] = colAt(u), kk = kOf(y), side = (i % 2 ? 1 : -1) * 22 * kk;
 		return {x: x + side, y: y + (i % 2 ? 1.5 : -1.5) * kk, k: kk, torch: i % 3 !== 1, i}; });
-	const near = men.filter((m) => m.k > 0.42).reverse(), far = men.filter((m) => m.k <= 0.42).reverse();
+	const near = men.filter((m) => m.k > 0.2).sort((a, b) => a.y - b.y), far = men.filter((m) => m.k <= 0.2).reverse();
 	const S = 3.5, CX = 1236, CY = 1022;
 	return <Svg>
 		<defs>
@@ -241,20 +241,19 @@ export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0058 
 		<rect width={W} height={H} fill="url(#k6sky)" />
 		{Array.from({length: 40}, (_, i) => <circle key={i} cx={rnd(i, 61) * W} cy={30 + rnd(i, 62) * 420} r={0.6 + rnd(i, 63)} fill="#E8EEE6" opacity={0.2 + rnd(i, 64) * 0.4} />)}
 		<circle cx={760} cy={420} r={170} fill="url(#k6moon)" />
-		<circle cx={760} cy={420} r={18} fill="#DCE2D8" /><circle cx={766} cy={416} r={17} fill="#1C2A32" opacity={0.85} />
+		<path d="M760,402 A18,18 0 1 0 760,438 A14,18 0 1 1 760,402 Z" fill="#DCE2D8" transform="rotate(-25 760 420)" />
 		<g filter="url(#k6b6)" opacity={0.6}><ellipse cx={700} cy={430} rx={300} ry={7} fill="#3C4C50" /><ellipse cx={1300} cy={480} rx={420} ry={8} fill="#36464A" /><ellipse cx={420} cy={520} rx={360} ry={6} fill="#40504E" /></g>
 		{/* P1 the horizon: our camp far left (where the column comes from), 乌巢 far right: 囷 granaries, raised stores, a palisade, unlit */}
 		<g filter="url(#k6b2)">
 			<path d="M-20,616 C300,606 700,610 1000,614 C1300,612 1600,606 1940,612 L1940,640 L-20,640 Z" fill="#2A3433" />
 			<g fill="#222B2B"><rect x={150} y={600} width={210} height={12} />{Array.from({length: 22}, (_, i) => <path key={i} d={`M${150 + i * 10},612 L${153 + i * 10},596 L${156 + i * 10},612 Z`} />)}</g>
 			{[176, 236, 300, 338].map((x, i) => <circle key={x} cx={x} cy={602 - i % 2 * 3} r={2} fill="#F3DDB4" opacity={0.5} />)}
-			<g transform="translate(0,614)">
-				<g fill="#33403E">{Array.from({length: 38}, (_, i) => <path key={i} d={`M${1470 + i * 10},0 L${1473 + i * 10},-15 L${1476 + i * 10},0 Z`} />)}<rect x={1468} y={-10} width={380} height={3} /></g>
-				{[[1520, 0.24], [1590, 0.28], [1700, 0.26], [1770, 0.22]].map(([x, s]) => <g key={x} transform={`translate(${x},-6) scale(${s})`}><Qun drum="#3A4644" thatch="#313C3A" edge="#5E6A66" /></g>)}
-				<g transform="translate(1646,-4) scale(0.24)"><Store body="#36423F" roof="#2C3634" /></g>
-				<g transform="translate(1816,-4) scale(0.2)"><Store body="#36423F" roof="#2C3634" /></g>
-				<g fill="#2C3634"><rect x={1488} y={-56} width={3} height={52} /><rect x={1500} y={-56} width={3} height={52} /><rect x={1482} y={-62} width={28} height={8} /><path d="M1478,-62 L1514,-62 L1504,-72 L1488,-72 Z" /></g>
-				<circle cx={1495} cy={-58} r={1.8} fill="#F3DDB4" opacity={0.45} /><circle cx={1728} cy={-12} r={1.6} fill="#F3DDB4" opacity={0.35} />
+			<g transform="translate(0,616)">
+				<g fill="#2E3A39">{Array.from({length: 44}, (_, i) => <path key={i} d={`M${1452 + i * 9},0 L${1455 + i * 9},-22 L${1458 + i * 9},0 Z`} />)}<rect x={1450} y={-15} width={400} height={3} /></g>
+				{[[1508, 0.34], [1580, 0.4], [1720, 0.36], [1790, 0.3]].map(([x, s]) => <g key={x} transform={`translate(${x},-4) scale(${s})`}><Qun drum="#3A4644" thatch="#313C3A" edge="#6A7672" /></g>)}
+				<g transform="translate(1650,-2) scale(0.3)"><Store body="#36423F" roof="#2C3634" /></g>
+				<g fill="#2C3634"><rect x={1470} y={-78} width={3.4} height={76} /><rect x={1486} y={-78} width={3.4} height={76} /><rect x={1464} y={-86} width={32} height={9} /><path d="M1458,-86 L1502,-86 L1490,-98 L1470,-98 Z" /></g>
+				<circle cx={1480} cy={-82} r={2.2} fill="#F3DDB4" opacity={0.5} /><circle cx={1652} cy={-16} r={1.8} fill="#F3DDB4" opacity={0.4} />
 			</g>
 		</g>
 		<rect y={570} width={W} height={90} fill="url(#k6haze)" />
@@ -263,8 +262,8 @@ export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0058 
 		<rect y={640} width={W} height={120} fill="url(#k6haze)" opacity={0.45} />
 		{/* the column of 5,000: far — only torch points on the snaking road, then small figures with torches */}
 		<g>{far.map((m) => <g key={m.i}>
-			<rect x={m.x - 4 * m.k * 10} y={m.y - 170 * m.k} width={Math.max(1.2, 8 * m.k * 10 / 10)} height={170 * m.k} fill="#0E1112" opacity={0.85} />
-			{m.torch && <><circle cx={m.x + 20 * m.k} cy={m.y - 160 * m.k} r={Math.max(4, 70 * m.k)} fill="url(#k6fg)" /><circle cx={m.x + 20 * m.k} cy={m.y - 160 * m.k} r={Math.max(0.9, 6 * m.k)} fill="#FFF2D8" /></>}
+			<rect x={m.x - 12 * m.k} y={m.y - 160 * m.k} width={Math.max(1, 24 * m.k)} height={160 * m.k} fill="#0E1112" opacity={0.85} />
+			{m.torch && <><circle cx={m.x + 20 * m.k} cy={m.y - 165 * m.k} r={Math.max(5, 90 * m.k)} fill="url(#k6fg)" /><ellipse cx={m.x + 20 * m.k} cy={m.y - 168 * m.k} rx={Math.max(0.8, 6 * m.k)} ry={Math.max(1.2, 10 * m.k)} fill="#FFF2D8" /></>}
 		</g>)}</g>
 		<g fill="#120E0C" color="#120E0C" filter="url(#k6rimN)">
 			{near.map((m) => <Npc key={m.i} x={m.x} y={m.y} k={m.k} kind={m.torch ? 'torch' : 'ji'} stride={m.i % 2 ? 0.5 : -0.5} />)}
@@ -294,6 +293,7 @@ export const K8: React.FC = () => { const FY = 900, k = 4.1, CX = 820, LX = 1330
 			<linearGradient id="k8beam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#9FB8B6" stopOpacity="0.2" /><stop offset="1" stopColor="#9FB8B6" stopOpacity="0" /></linearGradient>
 			<radialGradient id="k8pool" cx={LX - 120} cy="930" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity="0.3" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<radialGradient id="k8vig" cx="0.56" cy="0.52" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.55" /></radialGradient>
+			<radialGradient id="k8lg"><stop offset="0" stopColor="#FFF0D0" stopOpacity="0.5" /><stop offset="0.3" stopColor="#F3DDB4" stopOpacity="0.16" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<Blur id="k8b2" s={2.4} /><Blur id="k8b10" s={14} />
 			<RimF id="k8rim" lx={1} ly={-0.3} k={2.4} c="#FFE0B0" o={0.85} />
 			<RimF id="k8hero" lx={1} ly={-0.4} k={4} c="#FFE6C0" o={0.95} lx2={-1} ly2={-0.2} k2={3.4} c2={ACC} o2={0.9} blur={0.9} />
@@ -314,14 +314,14 @@ export const K8: React.FC = () => { const FY = 900, k = 4.1, CX = 820, LX = 1330
 		<path d="M144,56 C160,220 150,420 168,600 L156,780 L144,780 Z" fill="#24110E" />
 		<path d="M1780,56 C1740,240 1752,420 1720,600 C1712,680 1722,740 1730,780 L1780,780 Z" fill="#4A2219" />
 		<path d="M1752,140 C1740,300 1744,460 1724,620" fill="none" stroke="#2A120E" strokeWidth={6} opacity={0.7} />
-		{/* P1 the folding screen (屏风) behind him: black lacquer, red border, faint cloud scrolls; his lamp shadow on it */}
+		{/* P1 his lamp shadow on the plastered wall behind him (the look's 灯影), and a folding screen (屏风) at the right: black lacquer, red border */}
+		<g transform={`translate(${CX - 330},${FY - 150}) scale(${k * 1.9},${k * 1.62})`} fill="#0A0605" color="#0A0605" opacity={0.42} filter="url(#k8b10)"><CaoSeatedShadow /></g>
 		<g>
-			<rect x={520} y={420} width={560} height={360} fill="#17110E" />
-			{[0, 1, 2, 3].map((i) => <g key={i}><rect x={520 + i * 140} y={420} width={140} height={360} fill="none" stroke="#5A2420" strokeWidth={6} />
-				<path d={`M${548 + i * 140},${520} c14,-18 34,-18 44,0 c8,14 -10,24 -18,12 M${560 + i * 140},${640} c14,-18 34,-18 44,0 c8,14 -10,24 -18,12`} fill="none" stroke="#7A3A2C" strokeOpacity={0.4} strokeWidth={3} /></g>)}
-			<rect x={520} y={420} width={560} height={360} fill="url(#k8lamp)" opacity={0.6} />
-			<g transform={`translate(${CX - 150},${FY - 70}) scale(${k * 1.7},${k * 1.55})`} fill="#050302" color="#050302" opacity={0.55} filter="url(#k8b10)"><CaoSeatedShadow /></g>
-			{[540, 1060].map((x) => <rect key={x} x={x - 8} y={780} width={16} height={18} fill="#100B08" />)}
+			<rect x={1440} y={452} width={300} height={330} fill="#17110E" />
+			{[0, 1].map((i) => <g key={i}><rect x={1440 + i * 150} y={452} width={150} height={330} fill="none" stroke="#5A2420" strokeWidth={6} />
+				<path d={`M${1466 + i * 150},${540} c14,-18 34,-18 44,0 c8,14 -10,24 -18,12 M${1480 + i * 150},${660} c14,-18 34,-18 44,0 c8,14 -10,24 -18,12`} fill="none" stroke="#8A4430" strokeOpacity={0.45} strokeWidth={3} /></g>)}
+			<rect x={1440} y={452} width={300} height={330} fill="url(#k8lamp)" opacity={0.5} />
+			{[1456, 1724].map((x) => <rect key={x} x={x - 8} y={780} width={16} height={16} fill="#100B08" />)}
 		</g>
 		{/* P2 the floor, the mat (席), the lamp's pool */}
 		<rect y={780} width={W} height={H - 780} fill="url(#k8floor)" />
@@ -337,18 +337,21 @@ export const K8: React.FC = () => { const FY = 900, k = 4.1, CX = 820, LX = 1330
 			<path d={`M${CX + 22 * k},${FY - 33 * k} L${CX + 106 * k},${FY - 33 * k} L${CX + 100 * k},${FY - 39 * k} L${CX + 28 * k},${FY - 39 * k} Z`} fill="#6E4A30" />
 			<rect x={CX + 20 * k} y={FY - 30 * k} width={90 * k} height={3.4 * k} fill="#2A1A10" />
 			<rect x={CX + 20 * k} y={FY - 30 * k} width={90 * k} height={0.8 * k} fill="#F3DDB4" opacity={0.25} />
-			{[[24, 0], [100, 1]].map(([x, f]) => <path key={x} d={`M${CX + x * k},${FY - 27 * k} C${CX + (x + (f ? 2 : -2)) * k},${FY - 14 * k} ${CX + (x + (f ? 6 : -6)) * k},${FY - 6 * k} ${CX + (x + (f ? 5 : -5)) * k},${FY}`} stroke="#1E130C" strokeWidth={3 * k} fill="none" />)}
+			{[[25, -1], [104, 1]].map(([x, f]) => <path key={x} d={`M${CX + (x - 2.2) * k},${FY - 27 * k} L${CX + (x + 2.2) * k},${FY - 27 * k} C${CX + (x + 2) * k},${FY - 14 * k} ${CX + (x + 1.6 + f) * k},${FY - 6 * k} ${CX + (x + 2.6 + f * 2) * k},${FY - 1.4 * k} L${CX + (x + 2.6 + f * 2) * k},${FY} L${CX + (x - 2.4 + f * 1.4) * k},${FY} L${CX + (x - 1.4 + f) * k},${FY - 2 * k} C${CX + (x - 1.6) * k},${FY - 8 * k} ${CX + (x - 2) * k},${FY - 16 * k} ${CX + (x - 2.2) * k},${FY - 27 * k} Z`} fill="#24170F" />)}
 			{/* the open slips laid across the top: pale bamboo strips bound by two cords */}
 			{Array.from({length: 24}, (_, i) => { const x0 = CX + (34 + i * 2.1) * k; return <path key={i} d={`M${x0},${FY - 33.4 * k} L${x0 + 2.5 * k},${FY - 38.6 * k} L${x0 + 4.3 * k},${FY - 38.6 * k} L${x0 + 1.8 * k},${FY - 33.4 * k} Z`} fill={i % 2 ? '#CDB88A' : '#BCA676'} />; })}
 			<path d={`M${CX + 34 * k},${FY - 35 * k} L${CX + 85 * k},${FY - 35 * k} M${CX + 35 * k},${FY - 37.2 * k} L${CX + 86 * k},${FY - 37.2 * k}`} stroke="#5A3A26" strokeWidth={0.5 * k} />
 			{Array.from({length: 14}, (_, i) => { const x0 = CX + (36 + i * 2.1) * k; return <path key={i} d={`M${x0 + 1.4 * k},${FY - 34.4 * k} L${x0 + 2.4 * k},${FY - 36.4 * k} M${x0 + 2.6 * k},${FY - 36.8 * k} L${x0 + 3.2 * k},${FY - 38 * k}`} stroke="#2A1A10" strokeWidth={0.45 * k} opacity={i < 9 ? 0.75 : 0} />; })}
-			<ellipse cx={CX + 92 * k} cy={FY - 39 * k} rx={7 * k} ry={5 * k} fill="#A88E64" /><ellipse cx={CX + 92 * k} cy={FY - 39 * k} rx={7 * k} ry={5 * k} fill="none" stroke="#5A3A26" strokeWidth={0.6 * k} />
-			<path d={`M${CX + 85 * k},${FY - 39 * k} L${CX + 85 * k},${FY - 42 * k} C${CX + 85 * k},${FY - 44.6 * k} ${CX + 99 * k},${FY - 44.6 * k} ${CX + 99 * k},${FY - 42 * k} L${CX + 99 * k},${FY - 39 * k}`} fill="#BCA676" />
-			<rect x={CX + 100 * k} y={FY - 36 * k} width={6 * k} height={2.4 * k} fill="#141414" />
+			{/* the rest of the bundle, still rolled (seen end-on), and a flat inkstone with its grinder */}
+			<circle cx={CX + 93 * k} cy={FY - 40.6 * k} r={6.4 * k} fill="#B49E70" />
+			<path d={`M${CX + 93 * k},${FY - 40.6 * k} m${-1 * k},0 a${1 * k},${1 * k} 0 1 1 ${2 * k},0 a${2.2 * k},${2.2 * k} 0 1 1 ${-4.4 * k},0 a${3.4 * k},${3.4 * k} 0 1 1 ${6.8 * k},0 a${4.6 * k},${4.6 * k} 0 1 1 ${-9.2 * k},0 a${5.8 * k},${5.8 * k} 0 1 1 ${11.6 * k},0`} fill="none" stroke="#6E5638" strokeWidth={0.5 * k} />
+			<path d={`M${CX + 99.4 * k},${FY - 40.6 * k} A${6.4 * k},${6.4 * k} 0 0 1 ${CX + 93 * k},${FY - 34.2 * k}`} fill="none" stroke="#F3DDB4" strokeOpacity={0.5} strokeWidth={0.6 * k} />
+			<rect x={CX + 20.5 * k} y={FY - 35.6 * k} width={10 * k} height={2.4 * k} fill="#141416" /><rect x={CX + 20.5 * k} y={FY - 35.6 * k} width={10 * k} height={0.5 * k} fill="#8A8A86" opacity={0.6} />
+			<rect x={CX + 23 * k} y={FY - 37.6 * k} width={2.6 * k} height={2 * k} fill="#2A2A2C" />
 		</g>
 		{/* the lamp on its stand (the one key) */}
 		<g fill="#140D0A" filter="url(#k8rim)"><LampStand x={LX} y={LY} k={LK} /></g>
-		<circle cx={flame[0]} cy={flame[1]} r={150} fill="url(#k8lamp)" opacity={0.8} />
+		<circle cx={flame[0]} cy={flame[1]} r={170} fill="url(#k8lg)" />
 		{/* P3 曹操 at 66, kneeling, writing */}
 		<g filter="url(#k8hero)"><g transform={at(CX, FY - 22 * 0.2, k)}><CaoSeated id="k8c" /></g></g>
 		{/* P4 the near edge: a dark post out of focus at the right */}
