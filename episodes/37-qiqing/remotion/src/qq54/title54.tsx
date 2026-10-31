@@ -13,7 +13,7 @@ export const TITLE_A = 0.654 + 1.99203 * 6, TITLE_B = 0.654 + 1.99203 * 8;
 const Q: [string, string][] = [['到底是', 'c'], ['英雄', 'g'], ['，还是', 'c'], ['奸雄', 'r'], ['？', 'c']];
 const QCOL: Record<string, string> = {c: '#F4E6C8', g: '#EDC266', r: '#D23A2C'};
 const NX = 960, NY = 282, FS = 246;                  // the name's glyph centre and size
-const SX = 1338, SY = 386, SS = 124;                 // the seal: centre and side
+const SX = 1356, SY = 368, SS = 124;                 // the seal: centre and side
 const QY = 492, QFS = 60;                            // the question's baseline and size
 const eo = (u: number) => 1 - Math.pow(1 - cl(u), 3);
 const f1 = (v: number) => v.toFixed(1);

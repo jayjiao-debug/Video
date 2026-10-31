@@ -319,7 +319,7 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(0,${f1(dyP(0.55))})`}>
 				<g filter="url(#ocdof)"><GateWall t={t} p="oc" x0={-80} x1={1200} /></g>
 				{/* owner r1: the city's name on a plaque above the central passage */}
-				<GatePlaque cx={560} top={303} w={124} h={54} fl={fl} p="oc" />
+				<GatePlaque cx={560} top={300} w={134} h={58} fl={fl} p="oc" />
 				<g fill={SIL} filter="url(#ocBk)"><Npc x={503} y={GY} k={0.37} kind="ji" /><Npc x={617} y={GY} k={0.37} kind="ji" flip /></g>
 				<LampStand x={480} y={GY} k={0.37} /><Flame x={480} y={GY - 117 * 0.37} s={0.37} t={t} seed={11} ivory />
 				<LampStand x={640} y={GY} k={0.37} /><Flame x={640} y={GY - 117 * 0.37} s={0.37} t={t} seed={23} ivory />
