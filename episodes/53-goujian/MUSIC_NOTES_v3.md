@@ -33,9 +33,9 @@ DA(−1…8) as v2 (hook, title on bar 24, lull) · DA(9) DIVE = B pre 72 … 76
 | 14 | G4 他去吴国服侍夫差三年… | 67.237 | 71.766 | |
 | 15 | G5 回国后…苦胆…[尝] | 71.766 | 77.426 | |
 | 16 | G6 他问自己…会稽之耻 | 77.426 | 81.388 | |
-| 17 | G7 前473年…[应验了] | 81.388 | 87.049 | v3.5: no flood (the palace stays dry; the drowning is only foretold in G3) |
+| 17 | G7 前473年…[应验了] | 81.388 | 87.049 | v3.6: no flood (the palace stays dry; the drowning is only foretold in G3) |
 | 18 | G8 吴国没了…还亮着 | 87.049 | 92.709 | back to the bright real blade |
-| 19 | B1 两千多年了，还这么锋利。靠的是什么？（v3.4） | 92.709 | 97.804 | the edge glint ON DA(42) 95.540 (no paper); v3.5: one smooth move that ends on M1's macro framing |
+| 19 | B1 两千多年了，还这么锋利。靠的是什么？（v3.4） | 92.709 | 97.804 | the edge glint ON DA(42) 95.540 (no paper) |
 | 20 | M1 博物馆的解释，先说[料好] | 97.804 | 102.332 | macro begins 97.804 · 料好 bar + Cu, Pb tiles on DA(44) 100.068 |
 | 21 | M2 镀铬？…热镀[锡] | 102.332 | 106.861 | 「镀铬？」 + Cr tile 102.332 · cut opens 103.464 · 热镀锡 + Sn tile DA(46) 104.597 |
 | 22 | M3 那它，到底为什么不锈？ | 106.861 | 110.639 | HUSH; picture still (HandoffMacro) from 110.639 |
@@ -44,12 +44,12 @@ DA(−1…8) as v2 (hook, title on bar 24, lull) · DA(9) DIVE = B pre 72 … 76
 | 25 | T3 保住它的…主要是那座[墓] | 117.616 | 122.144 | rewind from 117.616; the sword settles in the coffin on the arrival DA(53) 120.446 |
 | 26 | E1 证据：同一座墓里的其他剑… | 122.144 | 125.540 | other swords light one per half-bar from DA(54) 122.711 |
 | 27 | L1 剑鞘、两层棺、木椁、白膏泥… | 125.540 | 130.069 | six layers close one per beat from DA(55)+2P 126.108: 126.108 / 126.674 / 127.240 / 127.806 / 128.372 / 128.938; lift bars from DA(57) 129.505 |
-| 28 | R2 出了墓，再好的保管…[变暗] | 130.069 | 134.031 | surface → museum floor on 130.069; v3.5: one crane up and forward onto the title shot, easing out (no dive into the case) |
-| 29 | P1 它不是不会锈…[两千多年] | 134.031 | 139.692 | the crane's slow settle, at rest on the title shot (camAt(10.4), no title glass) at 138.7; the last glint ≈140.3 gets the glass_shimmer (v3.5) |
+| 28 | R2 出了墓，再好的保管…[变暗] | 130.069 | 134.031 | surface → museum floor on 130.069; v3.6: one crane up and forward onto the title shot, easing out (no dive into the case) |
+| 29 | P1 它不是不会锈…[两千多年] | 134.031 | 139.692 | the crane's slow settle, at rest on the title shot (camAt(10.4), no title glass) at 138.7 (v3.6) |
 | — | air | 139.692 | 140.824 | the hall dims; one last glint along the edge ≈140.3 |
 | 30 | END “天下第一剑”，你第一次见到它，是在哪？ / 课本里？博物馆里？还是今天？ | 140.824 | 144.824 | END CARD + J seal on f4225 (140.824); 0.5 s fade to black, film ends at frame 4360 |
 
 On their own clock (never on the beat): the camera's travel, snow, the depth tag, letters, the stamp's year rolls, water, air dots, the shadow-play's slow drift. Never pulse the whole frame on a beat.
 
-## v3.5 mix
-- Owner: "make the music a bit softer and enhance the sound effects". `mix53v3.py`: the whole bed −3 dB and the whole effect layer +5 dB before the −14 LUFS normalisation (a plain level change, no ducking): the effects sit ~8 dB higher against the music than in v3.4. The P1 glass_shimmer (backing out through the glass, gone) moves to the last glint at 140.3.
+## v3.6
+- Owner (after v3.5): keep v3.4 and change only the ending camera (one crane onto the title shot, no title glass), the light screen behind the shadow-play figures and no flood. Music, mix and every other camera move are v3.4's.

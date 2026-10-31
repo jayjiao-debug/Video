@@ -19,9 +19,6 @@ from scipy.signal import butter, sosfilt, lfilter, resample_poly
 SR = 48000; A = os.path.dirname(os.path.abspath(__file__))
 SFX = '/home/claude/video/episodes/53-goujian/sfx'
 TP_CEIL = -1.5
-# v3.5 (owner: "make the music a bit softer and enhance the sound effects, currently you can barely hear them"):
-# a plain level change of the whole bed (no ducking, no processing) and of the whole effect layer, before the -14 LUFS normalisation
-BED_DB, FX_DB = -3.0, 5.0
 
 
 def load(path, semitones=0.0):
@@ -49,7 +46,7 @@ def render(c):
     fi, fo = int(c.get('fade_in', 0.0) * SR), int(c.get('fade_out', 0.15) * SR)
     if fi: a[:fi] *= np.linspace(0, 1, fi)[:, None]
     if fo: a[-fo:] *= np.linspace(1, 0, fo)[:, None]
-    a *= 10 ** ((c.get('db', -6) + FX_DB) / 20)
+    a *= 10 ** (c.get('db', -6) / 20)
     return int(round((c['t'] - c.get('lead', 0.0)) * SR)), a
 
 
@@ -75,7 +72,7 @@ def bands(x):
 
 
 def main(report=False):
-    bed = load(f'{A}/ep53v3_bed.wav') * np.float32(10 ** (BED_DB / 20)); n = len(bed)
+    bed = load(f'{A}/ep53v3_bed.wav'); n = len(bed)
     cues = sorted(json.load(open(f'{A}/sfx_cues_v3.json')), key=lambda c: c['t'])
     fx = np.zeros_like(bed); rows = []
     for c in cues:
@@ -121,8 +118,7 @@ def main(report=False):
     if tp > TP_CEIL:                                   # only the effect layer is turned down, never the bed
         raise SystemExit(f'true peak {tp:.2f} dBTP > {TP_CEIL}: lower the loudest cue (see --report dPeak)')
     sf.write(f'{A}/ep53v3_mix.wav', mix.astype(np.float32), SR, subtype='PCM_24')
-    gb = 10 ** ((-14 - meter.integrated_loudness((bed + fx).astype(np.float64))) / 20)
-    out = dict(bed_lufs=round(meter.integrated_loudness((bed * gb).astype(np.float64)), 2), lufs=round(meter.integrated_loudness(mix.astype(np.float64)), 2), true_peak_dbtp=round(float(tp), 2),
+    out = dict(lufs=round(meter.integrated_loudness(mix.astype(np.float64)), 2), true_peak_dbtp=round(float(tp), 2),
                cues_mixed=sum(1 for c in cues if not c.get('off')), cues_off=sum(1 for c in cues if c.get('off')))
     print(json.dumps(out))
     return mix

@@ -64,7 +64,7 @@ const SL_A = spline([[T_CUT, -18, 0], [3.4, -18, 0], [6.2, 0, 0]]);
 const slAt = (t: number) => (t < T_IN0 ? 18 : t < T_CUT ? lerp(18, -18, sstep(seg(t, T_IN0, T_CUT))) : SL_A(t));
 /* at the cut the sword (and the stack under it) is turned PSI0 about the vertical, tip away from the lens, so the stack's near end
    (where the cut shows: 20 sheets parted, 10 whole) faces the camera; the turn unwinds on the way home */
-const PSI0 = 6 * DEG;   // v3.5 (owner: "inconsistency between the first and second frame"): was 28°, which showed the guard edge-on as a dark block; now the blade and the guard face the lens as everywhere else
+const PSI0 = 28 * DEG;
 const PSI_A = spline([[2.95, PSI0, 0], [6.4, 0, 0]]);
 const TY_A = spline([[3.45, TY0, 0], [6.25, 0, 0]]);
 const PHI_A = spline([[3.45, 90 * DEG, 0], [5.95, 0, 0]]);
@@ -214,10 +214,7 @@ export const OpenSword: React.FC<OpenProps> = ({c, t, land, lights, id, ringGlow
 		{swordLayer}
 		<g opacity={so}>{front}{strips(-1)}
 			{slit && <g opacity={[1, 0.6, 0.28][flashN]}><path d={slit} fill="none" stroke="#FFE7B0" strokeOpacity={0.35} strokeWidth={6} strokeLinecap="round" /><path d={slit} fill="none" stroke="#FFFBEE" strokeWidth={2} strokeLinecap="round" /></g>}</g>
-		{/* v3.5 (owner: "the handle is not one body with the sword, it overlaps"): the guard and the hilt in Sword3D's own order for
-		   where the camera is along the sword (seen from the blade side, the guard covers the grip's root) */}
-		{(cs.p[0] - sp.x0) * sp.dir > A.apex
-			? <><Hilt3D c={cs} sp={sp} id={id} ringGlow={ringGlow} /><Guard3D c={cs} sp={sp} id={id} lite={lite} /></>
-			: <><Guard3D c={cs} sp={sp} id={id} lite={lite} /><Hilt3D c={cs} sp={sp} id={id} ringGlow={ringGlow} /></>}
+		<Guard3D c={cs} sp={sp} id={id} lite={lite} />
+		<Hilt3D c={cs} sp={sp} id={id} ringGlow={ringGlow} />
 	</g>; };
 void A; void sstep5;
