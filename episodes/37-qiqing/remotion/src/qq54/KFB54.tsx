@@ -26,7 +26,10 @@ const Still: React.FC = () => { const f = useCurrentFrame(), k = KS[Math.min(KS.
 	return <AbsoluteFill style={{background: '#000', overflow: 'hidden'}}><k.C /><Over k={k} /><Label s={`look B · ${k.id} · ${k.time} · ${k.d}`} /></AbsoluteFill>; };
 const Mot: React.FC = () => { const f = useCurrentFrame();
 	return <AbsoluteFill style={{background: '#000', overflow: 'hidden'}}><K7 t={f / 30} /><Over k={KS[1]} /></AbsoluteFill>; };
+/** BARE54: the same scenes with no overlay (e.g. K6 = frame 4, the first frame handed to the owner's video AI) */
+const Bare: React.FC = () => { const f = useCurrentFrame(), k = KS[Math.min(KS.length - 1, f)]; return <AbsoluteFill style={{background: '#000', overflow: 'hidden'}}><k.C /></AbsoluteFill>; };
 const Root: React.FC = () => <>
+	<Composition id="BARE54" component={Bare} width={W} height={H} fps={30} durationInFrames={KS.length} />
 	<Composition id="KFB54" component={Still} width={W} height={H} fps={30} durationInFrames={KS.length} />
 	<Composition id="MOT54" component={Mot} width={W} height={H} fps={30} durationInFrames={180} />
 </>;

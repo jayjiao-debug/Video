@@ -213,6 +213,10 @@ export const K5: React.FC = () => { const HZ = 640;
 		</g>
 		{/* a stone from the other engine already in flight toward the towers */}
 		<g><circle cx={1000} cy={350} r={8} fill="#1A1410" /><path d="M992,354 L930,380" stroke="#EADCC0" strokeOpacity={0.3} strokeWidth={3} strokeLinecap="round" /></g>
+		{/* the rampart (土垒) he stands on: a rammed-earth bank inside the palisade, its top lit by the sky */}
+		<path d="M860,1014 C1000,1010 1500,1010 1760,1016 L1800,1080 L820,1080 Z" fill="#2A221B" />
+		{[1030, 1046, 1062].map((y) => <path key={y} d={`M${850 - (y - 1014) * 0.4},${y} L${1772 + (y - 1014) * 0.4},${y}`} stroke="#000" strokeOpacity={0.22} strokeWidth={1.4} />)}
+		<path d="M860,1014 C1000,1010 1500,1010 1760,1016" fill="none" stroke="#E8D8B4" strokeOpacity={0.3} strokeWidth={2} />
 		{/* arrows stuck in the camp ground */}
 		{[[1240, 1048, 24], [1300, 1062, 30], [1560, 1040, 18], [760, 975, 26], [980, 1000, 22], [1640, 1062, 28], [1190, 1000, 34]].map(([x, y, a], i) => <g key={i} transform={`translate(${x},${y}) rotate(${a})`}><rect x={-1.2} y={-46} width={2.4} height={46} fill="#1A120E" /><path d="M-1.2,-46 L-6,-54 M1.2,-46 L6,-54" stroke="#CBB898" strokeOpacity={0.5} strokeWidth={1.4} /></g>)}
 		{/* the sacks: slack, the empty cloth folded over the little grain left; an empty one lying flat; the 斛 tipped, empty */}
@@ -312,14 +316,17 @@ export const K8: React.FC = () => { const FY = 900, k = 4.1, CX = 820, LX = 1330
 			<radialGradient id="k8pool" cx={LX - 120} cy="930" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity="0.3" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<radialGradient id="k8vig" cx="0.56" cy="0.52" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.55" /></radialGradient>
 			<radialGradient id="k8lg"><stop offset="0" stopColor="#FFF0D0" stopOpacity="0.5" /><stop offset="0.3" stopColor="#F3DDB4" stopOpacity="0.16" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
-			<Blur id="k8b2" s={2.4} /><Blur id="k8b10" s={14} /><Blur id="k8b8" s={8} /><Blur id="k8b5" s={5} />
+			<Blur id="k8b2" s={2.4} /><Blur id="k8b10" s={14} /><Blur id="k8b8" s={8} /><Blur id="k8b5" s={5} /><Blur id="k8b4" s={4} /><Blur id="k8b25" s={2.5} />
+			<radialGradient id="k8wash" cx="1000" cy="460" r="760" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#E9CB98" stopOpacity="0.2" /><stop offset="0.6" stopColor="#E9CB98" stopOpacity="0.1" /><stop offset="1" stopColor="#E9CB98" stopOpacity="0" /></radialGradient>
 			<RimF id="k8rim" lx={1} ly={-0.3} k={2.4} c="#FFE0B0" o={0.85} />
 			<RimF id="k8hero" lx={1} ly={-0.4} k={4} c="#FFE6C0" o={0.95} lx2={-1} ly2={-0.2} k2={3.4} c2={ACC} o2={0.9} blur={0.9} />
 		</defs>
 		{/* P0 the back wall (plastered), lit by the lamp's falloff; the timber frame */}
 		<rect width={W} height={780} fill="url(#k8wall)" />
 		<rect width={W} height={H} fill="url(#k8lamp)" />
-		<rect x={0} y={0} width={W} height={56} fill="#18110D" /><rect x={0} y={56} width={W} height={22} fill="#221812" /><rect x={0} y={76} width={W} height={3} fill="#E9CB98" opacity={0.12} />
+		<rect x={0} y={0} width={W} height={56} fill="#18110D" /><rect x={0} y={56} width={W} height={22} fill="#221812" />
+		<rect x={0} y={22} width={W} height={26} fill="#3A1A15" opacity={0.85} />
+		{Array.from({length: 24}, (_, i) => <path key={i} d={`M${20 + i * 82},40 c10,-14 26,-14 32,0 c5,10 -8,16 -13,8 M${58 + i * 82},30 c6,-6 14,-6 18,0`} fill="none" stroke="#9A6A40" strokeOpacity={0.35} strokeWidth={2} />)}<rect x={0} y={76} width={W} height={3} fill="#E9CB98" opacity={0.12} />
 		{[80, 1780].map((x) => <g key={x}><rect x={x} y={56} width={64} height={724} fill="#1C140F" /><rect x={x + (x < 900 ? 52 : 0)} y={56} width={12} height={724} fill="#E9CB98" opacity={x < 900 ? 0.06 : 0.16} /></g>)}
 		{/* the latticed window (直棂窗) with the cold night outside, its light across the floor */}
 		<rect x={222} y={316} width={340} height={318} fill="#1A1410" />
@@ -333,7 +340,8 @@ export const K8: React.FC = () => { const FY = 900, k = 4.1, CX = 820, LX = 1330
 		<path d="M1780,56 C1740,240 1752,420 1720,600 C1712,680 1722,740 1730,780 L1780,780 Z" fill="#4A2219" />
 		<path d="M1752,140 C1740,300 1744,460 1724,620" fill="none" stroke="#2A120E" strokeWidth={6} opacity={0.7} />
 		{/* P1 his lamp shadow on the plastered wall behind him (the look's 灯影), and a folding screen (屏风) at the right: black lacquer, red border */}
-		<g transform={`translate(${CX - 330},782) scale(${k * 1.36},${k * 1.2})`} fill="#0A0605" color="#0A0605" opacity={0.5} filter="url(#k8b5)"><CaoSeatedShadow /></g>
+		<rect x={560} y={80} width={1300} height={700} fill="url(#k8wash)" />
+		<g transform={`translate(${CX - 210},782) scale(${k * 1.25},${k * 1.08})`} fill="#140C08" color="#140C08" opacity={0.6} filter="url(#k8b25)"><CaoSeatedShadow /></g>
 		<g>
 			<rect x={1440} y={452} width={300} height={330} fill="#17110E" />
 			{[0, 1].map((i) => <g key={i}><rect x={1440 + i * 150} y={452} width={150} height={330} fill="none" stroke="#5A2420" strokeWidth={6} />
