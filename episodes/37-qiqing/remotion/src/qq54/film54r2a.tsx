@@ -383,34 +383,38 @@ export const Xie: React.FC<{t: number}> = ({t}) => {
     cm, facing +x, soles 0. arm: the near arm pose (0 at rest at the belly, 1 raised to wave); wag: forearm flick (deg); back: hands
     behind the back (after the turn); head: tilt (deg, + down) */
 const YuanFig: React.FC<{arm: number; wag: number; back: boolean; head: number; br: number; t: number}> = ({arm, wag, back, head, br, t}) => {
-	const sh: P = [4, -138 - br];
-	const el: P = back ? [-14, -112] : lp([10, -110], [24, -132], arm), hd0: P = back ? [-24, -98] : lp([20, -94], [34, -154], arm);
+	const sh: P = [3, -137 - br];
+	/* rest: hands folded at the belly; raised: the forearm up before his face, the hand flapping (wag) about the elbow;
+	   back: the elbow jutting behind, the hand on the small of his back */
+	const el: P = back ? [-34, -114] : lp([12, -108], [34, -124], arm), hd0: P = back ? [-14, -98] : lp([24, -96], [44, -160], arm);
 	const fa = Math.atan2(hd0[1] - el[1], hd0[0] - el[0]) + wag * Math.PI / 180, fl = Math.hypot(hd0[0] - el[0], hd0[1] - el[1]), hd: P = [el[0] + fl * Math.cos(fa), el[1] + fl * Math.sin(fa)];
-	const bagY = Math.max(el[1], hd[1]) + 30 - arm * 10, sw = Math.sin(t * 1.7) * 2;
-	const sleeve = (e: P, h: P) => `M${f1(e[0] - 6)},${f1(e[1] - 4)} L${f1(h[0] + 3)},${f1(h[1] - 4)} L${f1(h[0] + 5)},${f1(h[1] + 6)} C${f1(h[0] + 2)},${f1(bagY)} ${f1((e[0] + h[0]) / 2 - 14)},${f1(bagY + 10)} ${f1(e[0] - 12)},${f1(e[1] + 18)} Z`;
+	const sw = Math.sin(t * 1.7) * 2;
+	/* the wide sleeve: hangs from the forearm at rest; slides to the elbow and droops from it when the arm is up or back */
+	const bag = back || arm > 0.5 ? `M${f1(el[0] - 7)},${f1(el[1] - 6)} L${f1(el[0] + 8)},${f1(el[1] - 4)} C${f1(el[0] + 10)},${f1(el[1] + 14)} ${f1(el[0] + 2)},${f1(el[1] + 30)} ${f1(el[0] - 8)},${f1(el[1] + 34)} C${f1(el[0] - 14)},${f1(el[1] + 20)} ${f1(el[0] - 12)},${f1(el[1] + 6)} ${f1(el[0] - 7)},${f1(el[1] - 6)} Z`
+		: `M${f1(el[0] - 6)},${f1(el[1] - 5)} L${f1(hd[0] + 3)},${f1(hd[1] - 5)} L${f1(hd[0] + 5)},${f1(hd[1] + 6)} C${f1(hd[0] + 1)},${f1(hd[1] + 30)} ${f1((el[0] + hd[0]) / 2 - 10)},${f1(hd[1] + 40)} ${f1(el[0] - 10)},${f1(el[1] + 22)} Z`;
 	return <g>
 		{/* the far sleeve, hanging behind */}
-		<path d={back ? 'M-20,-128 C-30,-118 -34,-104 -32,-92 C-26,-86 -16,-90 -14,-100 Z' : 'M-8,-132 C-16,-118 -20,-96 -14,-74 C-6,-68 6,-72 8,-84 C4,-100 2,-118 -2,-130 Z'} />
-		{/* the robe: shoulders, a big belly, the skirt flaring to the ground with a train behind; shoes with raised toes */}
-		<path d={`M-8,${-148 - br} C-24,-147 -30,-138 -31,-124 C-33,-104 -30,-88 -31,-76 C-34,-52 -44,-28 -58,-6 C-70,-2 ${f1(-86 + sw)},0 ${f1(-100 + sw)},3 L${f1(-100 + sw)},6 L40,5 C38,-18 34,-40 33,-58 C${f1(41 + br * 0.4)},-72 ${f1(45 + br * 0.5)},-90 41,-108 C37,-126 26,-142 12,${-148 - br} Z`} />
-		<path d="M30,0 L44,0 C49,-2 51,-7 49,-10 L45,-7 L30,-4 Z" />
-		{/* belt, the long 绶 and a string of jade 佩 swinging a little */}
-		<path d="M-30,-90 L42,-94 L42,-88 L-30,-84 Z" />
-		<path d={`M8,-88 L12,-88 L${f1(16 + sw)},-30 L${f1(10 + sw)},-30 Z`} />
-		<g transform={`rotate(${f1(sw * 1.5)} 24 -88)`}><rect x={23.4} y={-88} width={1.2} height={40} />{[-78, -66, -54].map((y) => <ellipse key={y} cx={24} cy={y} rx={4} ry={2.6} />)}<path d="M19,-48 L29,-48 L24,-42 Z" /></g>
-		{/* head: neck, face, a full beard, the 进贤冠 with its hairpin */}
+		<path d={back ? 'M-24,-126 C-32,-116 -34,-102 -30,-90 C-24,-86 -18,-92 -18,-102 Z' : 'M-8,-132 C-15,-118 -18,-98 -13,-80 C-6,-75 4,-78 6,-88 C3,-102 1,-118 -2,-130 Z'} />
+		{/* the robe: a broad back, a big belly under the belt, the skirt to the ground with a train; raised-toe shoes */}
+		<path d={`M-7,${f1(-149 - br)} C-19,-148 -24,-140 -25,-126 C-26,-112 -23,-100 -22,-90 C-24,-64 -30,-34 -40,-6 C-52,-2 ${f1(-66 + sw)},0 ${f1(-82 + sw)},3 L${f1(-82 + sw)},6 L37,5 C35,-20 32,-42 30,-60 C${f1(35 + br * 0.4)},-70 ${f1(38 + br * 0.5)},-84 35,-100 C32,-118 24,-138 11,${f1(-149 - br)} Z`} />
+		<path d="M29,0 L43,0 C48,-2 50,-7 48,-10 L44,-7 L29,-4 Z" />
+		{/* the belt, the long 绶, a string of jade 佩 swinging a little */}
+		<path d="M-23,-92 L37,-96 L38,-90 L-23,-86 Z" />
+		<path d={`M6,-90 L10,-90 L${f1(14 + sw)},-30 L${f1(8 + sw)},-30 Z`} />
+		<g transform={`rotate(${f1(sw * 1.5)} 22 -90)`}><rect x={21.4} y={-90} width={1.2} height={40} />{[-80, -68, -56].map((y) => <ellipse key={y} cx={22} cy={y} rx={4} ry={2.6} />)}<path d="M17,-50 L27,-50 L22,-44 Z" /></g>
+		{/* head: neck, face, a full beard, the 进贤冠 with its long hairpin */}
 		<g transform={`translate(0,${f1(-br)}) rotate(${f1(head)} 2 -150)`}>
 			<path d={NECK} /><path d={HEAD} /><path d={ZE} />
 			<path d="M3,-150 C8,-149 12,-146 13,-140 C14,-132 10,-124 4,-120 C-1,-124 -3,-132 -2,-140 C-1,-145 0,-148 3,-150 Z" />
 			<path d="M8,-152.5 C11,-152 13,-150.5 13.6,-149 L9,-149.6 Z" />
-			<g transform="translate(0,-168) scale(1.18) translate(0,168)"><path d={JX} /></g>
-			<path d="M-14,-174 L18,-181 L18.4,-179.6 L-13.6,-172.6 Z" />
+			<g transform="translate(0,-168) scale(1.22) translate(0,168)"><path d={JX} /></g>
+			<path d="M-15,-174 L19,-181.6 L19.4,-180 L-14.6,-172.4 Z" />
 		</g>
-		{/* the near arm in its wide sleeve */}
-		<path d={limb([sh, el], [7.6, 6.6])} /><path d={limb([el, hd], [6.6, 4.8])} /><circle cx={el[0]} cy={el[1]} r={6.6} />
-		<path d={sleeve(el, hd)} />
-		<circle cx={hd[0]} cy={hd[1]} r={4.4} />
-		{back && <path d="M-36,-104 C-40,-96 -40,-86 -34,-80 C-28,-80 -22,-86 -22,-96 Z" />}
+		{/* the near arm and its sleeve */}
+		<path d={bag} />
+		<path d={limb([sh, el], [7.4, 6.4])} /><path d={limb([el, hd], [6.4, 4.4])} /><circle cx={el[0]} cy={el[1]} r={6.4} />
+		{!back && <g transform={`translate(${f1(hd[0])},${f1(hd[1])}) rotate(${f1(fa * 180 / Math.PI)})`}><path d="M-2,-5 C4,-7 10,-6 13,-3 C14,0 12,3 8,4 L-2,5 Z" /></g>}
+		{back && <circle cx={hd[0]} cy={hd[1]} r={4.6} />}
 	</g>; };
 /** 沮授: a lean official in court robe and 进贤冠, bowing at the waist (bow deg) with a bamboo-slip memorial in both hands (off 0..1 =
     held at the chest .. offered out; droop 0..1 = arms sinking after the refusal); head: tilt against the torso (deg, − = looks up) */
@@ -460,7 +464,7 @@ export const Yuan: React.FC<{t: number}> = ({t}) => {
 	const wag = arm * 38 * Math.sin(Math.PI * 2 * cl01((t - tA - 1.45) / 0.44) * 2) * (t > tA + 1.45 && t < tA + 1.89 ? 1 : 0);
 	const tu = ss(B31 - 0.1, B31 + 0.2, t), sx = -Math.cos(Math.PI * tu), back = tu > 0.5;
 	const yhead = look - 8 * ss(tA + 1.3, tA + 1.6, t) * (back ? 0 : 1) + (back ? -9 + 0.8 * Math.sin(t * 1.3) : 0);
-	const br = Math.sin(t * 1.9) * 0.8, YX = 1290, YY = 986, YK = 3.25;
+	const br = Math.sin(t * 1.9) * 0.8, YX = 1290, YY = 986, YK = 3.15;
 	return <Svg>
 		<defs>
 			<linearGradient id="yuwall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#12181B" /><stop offset="0.65" stopColor="#1C2426" /><stop offset="1" stopColor="#252B2A" /></linearGradient>
@@ -561,7 +565,7 @@ export const Tun: React.FC<{t: number}> = ({t}) => {
 	const PILE: [number, number, number][] = [[-0.9, 0, 0], [-0.3, 0, 0], [0.3, 0, 0], [0.9, 0, 0], [-0.6, 0.42, 0], [0, 0.42, 0], [0.6, 0.42, 0], [-0.3, 0.84, 0], [0.3, 0.84, 1], [1.5, 0, 1], [-1.5, 0, 1], [0, 1.26, 1]];
 	const drops = [8, 9, 10, 11];
 	const carriers = [{z: 6.4, x0: -2.4, t0: 0.1}, {z: 7.6, x0: -3.6, t0: 0.55}, {z: 11.0, x0: -4.6, t0: 0.3}];
-	const sowers = [{x: -10, z: 31}, {x: 6, z: 40}, {x: 16, z: 52}];
+	const sowers = [{x: 2, z: 30}, {x: -4, z: 47}, {x: 14, z: 54}];
 	const pour = 0.5 + 0.5 * Math.sin(t * 1.4);
 	return <Svg>
 		<defs>

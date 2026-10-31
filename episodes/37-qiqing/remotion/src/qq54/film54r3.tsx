@@ -73,7 +73,7 @@ const AgedHead: React.FC<{pal: Pal; id: string; grey: string; cap: 'wu' | 'mian'
 
 /* ---------- 曹操 from behind (after set54bs2's CaoBack, 46 y with the torch): here 54, grey, no torch, the arm lowered — the
    reverse of the drop's D1 (there he faces us with the fire behind him; at 赤壁 we stand behind him and the fire is ahead) ---------- */
-const CaoBackLow: React.FC<{id: string; pal: Pal; grey: string; slack?: number; sink?: number; flap?: number}> = ({id, pal, grey, slack = 0, sink = 0, flap = 0}) => { const p = pal;
+const CaoBackLow: React.FC<{id: string; pal: Pal; grey: string; slack?: number; sink?: number}> = ({id, pal, grey, slack = 0, sink = 0}) => { const p = pal;
 	const EL = lp([25, -117], [23, -113], slack), HD = lp([28.5, -97.5], [25, -91], slack), FR = 96 - 8 * slack;
 	const BR = lp(EL, HD, 0.3);
 	const CUIR = 'M-23,-141 C-25,-128 -23,-112 -19,-98 L23,-98 C26,-112 27,-128 23,-142 C10,-147 -10,-147 -23,-141 Z';
@@ -129,14 +129,13 @@ const CaoBackLow: React.FC<{id: string; pal: Pal; grey: string; slack?: number; 
 			<path d="M-60,-41 C-40,-46 -20,-42 0,-44 C8,-44 14,-46 20,-46 L20,-30 L-60,-30 Z" fill="#160A08" />
 			<path d="M-18,-146 C-8,-150 4,-150 13,-147 L13,-143 C4,-146 -8,-146 -18,-142 Z" fill="#552820" />
 		</g>
-		<path d={`M-49,-37 C-54,${f1(-41 - flap)} ${f1(-60 - flap * 2)},${f1(-45 - flap)} ${f1(-66 - flap * 3)},${f1(-43 - flap * 0.5)} C-60,-38 -54,-35 -46,-35 Z`} fill="#2C1512" />
 		{/* the left shoulder under the cape */}
 		<path d="M-22,-146 C-26,-144 -28,-140 -29,-134 L-24,-136 Z" fill="#1E0E0C" />
 		<g transform={`translate(0,${f1(1.3 * sink)})`}>
 		{/* the head from behind, turned a little to his right: nape, the back of the head, the right ear, a sliver of lit cheek and the greying
 		    beard (lost profile), the 帻 band with its trim, the lacquered gauze 武冠 cage and its chin tie */}
 		<path d="M-3.4,-151 L6,-151 L6.3,-148.6 L-3.4,-148.6 Z" fill={p.skinS} />
-		<path d="M-8,-149 C-10,-155 -10,-163 -6,-168 C-2,-171 5,-171 9,-167 C11,-162 11,-155 9,-150 C5,-147.4 -4,-147.4 -8,-149 Z" fill={grey} /><path d="M-6,-150 C-7,-156 -6,-162 -3,-166 M0,-149.6 C0,-155 1,-161 3,-166 M5,-149.8 C6,-155 7,-160 8,-163" fill="none" stroke="#D2CCC0" strokeOpacity={0.5} strokeWidth={0.45} />
+		<path d="M-8,-149 C-10,-155 -10,-163 -6,-168 C-2,-171 5,-171 9,-167 C11,-162 11,-155 9,-150 C5,-147.4 -4,-147.4 -8,-149 Z" fill={grey} /><path d="M-7.6,-150 C-8,-152.5 -8.2,-155 -8,-157.4 M-4,-149 C-4.2,-151.6 -4.2,-154.4 -4,-157.6 M0.4,-148.8 C0.4,-151.6 0.6,-154.6 0.8,-158 M4.6,-149 C4.8,-151.8 5.2,-154.6 5.6,-157.8 M8.2,-150 C8.6,-152.6 9,-155 9.2,-157.4" fill="none" stroke="#C8C2B8" strokeOpacity={0.8} strokeWidth={0.7} />
 		<path d="M-5,-149 C-2,-150.4 2,-150.4 5,-149.4" fill="none" stroke="#3A2A20" strokeWidth={0.6} />
 		<path d="M8,-158 C10.8,-157 12.6,-153 12.4,-149 C12.2,-146 10,-144.6 8,-145 L7,-150 Z" fill={p.skinH} />
 		<path d="M11.6,-151 C13,-148 12.6,-144.6 10.6,-143 C8.6,-142.4 7,-143.2 6.6,-144.6 C8.4,-145 10.2,-147.4 11.6,-151 Z" fill={grey} />
@@ -240,7 +239,7 @@ export const Jieshi: React.FC<{t: number}> = ({t}) => {
 			<ellipse cx={CX - 20} cy={CY + 3} rx={90} ry={8} fill="#060403" opacity={0.55} />
 			<g filter="url(#j1hero)"><g transform={atC(CX, CY, S)}>
 				<g clipPath="url(#j1body)"><Cao pal={P53} id="j1c" old armour arm={{sh: [10, 84], el: [22, 200], hd: [54, 266]}} cape={cape} /></g>
-				<g transform={`translate(0,49) rotate(${f1(tilt)} 0 -8) scale(0.88) translate(0,-40)`}><AgedHead pal={P53} id="j1h" grey="#7E7870" cap="wu" /></g>
+				<g transform={`translate(0,49) rotate(${f1(tilt)} 0 -8) scale(0.88) translate(0,-40)`}><AgedHead pal={P53} id="j1h" grey="#6A655F" cap="wu" /></g>
 			</g></g>
 		</g>
 		{/* P4 the near rocks, out of focus, wet tops catching the sun; spray drifting through */}
@@ -318,7 +317,7 @@ export const Chibi: React.FC<{t: number}> = ({t}) => {
 	const fall = 74 * sstep(T57 - 0.1, T57 + 0.85, t) ** 1.6, sink = sstep(T57 + 0.5, T57 + 1.6, t);
 	const cIgn = sstep(T56 + 1.0, T56 + 2.2, t);
 	const BS = 3.55, CX = 720, CY = 1062;
-	const arm = sstep(T57 + 0.3, T57 + 1.2, t), sinkH = sstep(T57 + 0.4, T57 + 1.6, t) + 0.1 * Math.sin(t * 1.7), flap = 2.5 + 2 * Math.sin(t * 3.1) + Math.sin(t * 7.3);
+	const arm = sstep(T57 + 0.3, T57 + 1.2, t), sinkH = sstep(T57 + 0.4, T57 + 1.6, t) + 0.1 * Math.sin(t * 1.7);
 	const P54: Pal = {...PAL, skin: '#C08A60', skinH: '#F2B47E', skinS: '#8E5E40', metalH: '#C8A07A'};
 	const cape = 0.42 + 0.14 * Math.sin(t * 1.8) + 0.06 * Math.sin(t * 4.4 + 1);
 	const glowA = 0.9 + 0.1 * Math.sin(t * 5.3) + 0.05 * Math.sin(t * 11.7);
@@ -398,7 +397,7 @@ export const Chibi: React.FC<{t: number}> = ({t}) => {
 				<g transform={at(318, 972, 1.78)}><Npc x={0} y={0} k={1} kind="ji" /></g>
 			</g>
 			<ellipse cx={CX - 20} cy={CY + 6} rx={150} ry={12} fill="#050303" opacity={0.6} />
-			<g filter="url(#c1hero)"><g transform={at(CX, CY, BS)}><CaoBackLow id="c1c" pal={P54} grey="#8E8880" slack={arm} sink={sinkH} flap={flap} /></g></g>
+			<g filter="url(#c1hero)"><g transform={at(CX, CY, BS)}><CaoBackLow id="c1c" pal={P54} grey="#3E3A36" slack={arm} sink={sinkH} /></g></g>
 		</g>
 		{/* P4 near reeds, out of focus, swaying, rimmed by the fire; a few big embers close to the lens */}
 		<g transform={L(1.35)}>
@@ -620,7 +619,9 @@ export const Death: React.FC<{t: number}> = ({t}) => <Room t={t} lamp={cl01(lamp
 /* ---------- the end card (house style, after end53d3's EndCard3): seal, title, question, pill, sources; fade to black ---------- */
 const TITLE: [string, string] = ['曹操', '到底是英雄，还是奸雄？'];
 const QUESTION = '看完他的一生，你说，他是英雄，还是奸雄？';
-const SOURCES = '《三国志》武帝纪、荀彧传、曹洪传、袁绍传 · 裴松之注引《曹瞒传》《魏书》《杂记》《献帝传》《魏氏春秋》 · 曹操《蒿里行》《龟虽寿》';
+const SOURCES = '《三国志》武帝纪、荀彧传、曹洪传、袁绍传、吕布传、毛玠传、周瑜传 · 裴松之注引《曹瞒传》《魏书》《世语》《杂记》《献帝传》《魏氏春秋》 · 曹操《蒿里行》《龟虽寿》';
+/** two rows: the line breaks at the first separator */
+const SRC_ROWS = (() => { const [a, b, c] = SOURCES.split(' · '); return [a, b + ' · ' + c]; })();
 const LAST = (Math.round(FILM_LEN * 30) - 1) / 30;
 const fade = (t: number, a: number, d = 0.4) => seg(t, a, a + d);
 export const End: React.FC<{t: number}> = ({t}) => {
@@ -637,7 +638,7 @@ export const End: React.FC<{t: number}> = ({t}) => {
 		<div style={{position: 'absolute', left: 960 - tw / 2 - 260, top: 560 - 150, width: tw + 520, height: fs * 1.5 + 300, opacity: qq, background: 'radial-gradient(closest-side, rgba(16,7,4,0.42), rgba(16,7,4,0.36) 45%, rgba(16,7,4,0.15) 80%, rgba(16,7,4,0))'}} />
 		<div style={{position: 'absolute', left: 0, right: 0, top: 560 + 10 * (1 - qq), opacity: qq, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.5, letterSpacing: '0.03em', color: thB.ink, textShadow: thB.halo, whiteSpace: 'nowrap'}}>{QUESTION.slice(0, -1)}<span style={{marginRight: '-0.53em'}}>{QUESTION.slice(-1)}</span></div>
 		{pill > 0 && <div style={{position: 'absolute', left: 760, top: 742, width: 400, height: 58, borderRadius: 29, border: `2px solid ${B.gold}`, background: 'rgba(255,217,138,0.08)', textAlign: 'center', lineHeight: '58px', fontFamily: SERIF, fontWeight: 700, fontSize: 28, letterSpacing: '0.1em', color: B.gold, opacity: cl01(pill * 2), transform: `scale(${lerp(0.9, 1, pill)})`}}>关注 Juno · 一起看懂世界</div>}
-		<div style={{position: 'absolute', left: SAFE_X, right: SAFE_X, top: 868, textAlign: 'center', fontFamily: SANS, fontSize: 24, lineHeight: 1.6, color: '#D8CCB6', opacity: 0.88 * src, whiteSpace: 'nowrap', textShadow: '0 1px 3px rgba(0,0,0,0.8)'}}>{SOURCES}</div>
+		<div style={{position: 'absolute', left: SAFE_X, right: SAFE_X, top: 868, textAlign: 'center', fontFamily: SANS, fontSize: 24, lineHeight: 1.6, color: '#D8CCB6', opacity: 0.88 * src, whiteSpace: 'nowrap', textShadow: '0 1px 3px rgba(0,0,0,0.8)'}}>{SRC_ROWS[0]}<br />{SRC_ROWS[1]}</div>
 		<div style={{position: 'absolute', inset: 0, background: '#000', opacity: seg(t, LAST - 0.5, LAST - 0.001)}} />
 	</div>; };
 void T56;

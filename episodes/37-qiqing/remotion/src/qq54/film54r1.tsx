@@ -274,12 +274,12 @@ const XyB: React.FC<{t: number}> = ({t}) => {
 	const glow = 0.25 + 0.75 * sst(40.3, 43.5, t);
 	return <Svg>
 		<defs>
-			<linearGradient id="xbSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#111B22" /><stop offset="0.45" stopColor="#1F2C33" /><stop offset="0.62" stopColor="#33403F" /><stop offset="0.7" stopColor="#3E4842" /></linearGradient>
+			<linearGradient id="xbSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#16222B" /><stop offset="0.4" stopColor="#273942" /><stop offset="0.6" stopColor="#455654" /><stop offset="0.7" stopColor="#5E6762" /></linearGradient>
 			<radialGradient id="xbTor" cx="1650" cy="590" r="760" gradientUnits="userSpaceOnUse" gradientTransform="translate(1650 590) scale(1 0.5) translate(-1650 -590)"><stop offset="0" stopColor="#F3DDB4" stopOpacity="0.45" /><stop offset="0.3" stopColor="#E8CFA0" stopOpacity="0.16" /><stop offset="1" stopColor="#E8CFA0" stopOpacity="0" /></radialGradient>
-			<linearGradient id="xbHill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#262420" /><stop offset="1" stopColor="#141210" /></linearGradient>
-			<linearGradient id="xbGnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1C1A17" /><stop offset="0.5" stopColor="#14120F" /><stop offset="1" stopColor="#0A0807" /></linearGradient>
-			<radialGradient id="xbPool" cx="1200" cy="760" r="900" gradientUnits="userSpaceOnUse" gradientTransform="translate(1200 760) scale(1 0.3) translate(-1200 -760)"><stop offset="0" stopColor="#A89474" stopOpacity="0.2" /><stop offset="1" stopColor="#A89474" stopOpacity="0" /></radialGradient>
-			<radialGradient id="xbVig" cx="0.52" cy="0.52" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.6" /></radialGradient>
+			<linearGradient id="xbHill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#36322C" /><stop offset="1" stopColor="#1E1B17" /></linearGradient>
+			<linearGradient id="xbGnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#332F29" /><stop offset="0.5" stopColor="#24211C" /><stop offset="1" stopColor="#14110E" /></linearGradient>
+			<radialGradient id="xbPool" cx="1200" cy="760" r="900" gradientUnits="userSpaceOnUse" gradientTransform="translate(1200 760) scale(1 0.3) translate(-1200 -760)"><stop offset="0" stopColor="#B8A27E" stopOpacity="0.28" /><stop offset="1" stopColor="#A89474" stopOpacity="0" /></radialGradient>
+			<radialGradient id="xbVig" cx="0.52" cy="0.52" r="0.75"><stop offset="0.6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.45" /></radialGradient>
 			<Blur id="xbb2" s={2} /><Blur id="xbb5" s={5} /><Blur id="xbb12" s={12} />
 			<RimF id="xbFar" lx={0} ly={-1} k={1.3} c="#F3DDB4" o={0.8} lx2={-1} ly2={0} k2={1} c2="#E8CFA0" o2={0.5} />
 			<RimF id="xbCrest" lx={0} ly={-1} k={2} c="#E8CFA0" o={0.7} />
@@ -290,7 +290,7 @@ const XyB: React.FC<{t: number}> = ({t}) => {
 		<g transform={C(0.02)}><rect x={-200} y={-100} width={2400} height={900} fill="url(#xbSky)" />
 			{Array.from({length: 40}, (_, i) => <circle key={i} cx={f1(rnd(i, 11) * 2000)} cy={f1(320 + rnd(i, 12) * 260)} r={0.8 + rnd(i, 13) * 0.9} fill="#D8DCD4" opacity={0.25 + 0.2 * Math.sin(t * 2 + i)} />)}
 			<g filter="url(#xbb12)">{[[300, 420, 500, 10], [1000, 380, 600, 9], [1600, 460, 420, 8]].map(([x, y, rx, ry], i) => <ellipse key={i} cx={f1(x - u * 5)} cy={y} rx={rx} ry={ry} fill="#2A3436" opacity={0.7} />)}</g></g>
-		<g transform={C(0.18)} filter="url(#xbb2)"><path d="M-200,690 C200,676 500,672 800,684 C1100,690 1400,680 2300,690 L2300,760 L-200,760 Z" fill="#262A28" /></g>
+		<g transform={C(0.18)} filter="url(#xbb2)"><path d="M-200,690 C200,676 500,672 800,684 C1100,690 1400,680 2300,690 L2300,760 L-200,760 Z" fill="#3A403C" /></g>
 		{/* P2 the rise behind: the pursuers come up over its crest, torches first */}
 		<g transform={C(0.4)}>
 			<rect x={-200} y={300} width={2400} height={500} fill="url(#xbTor)" opacity={glow} />
@@ -338,6 +338,7 @@ const HongFig: React.FC<{reach: number; b: number; cape: number}> = ({reach, b, 
 		<path d="M-10,-140 C-2,-146 12,-144 16,-134 C18,-126 16,-118 12,-112 L-6,-114 C-12,-122 -14,-132 -10,-140 Z" />
 		<path d={strand([sh, el], (u) => 5.4 - u * 0.6)} /><path d={strand([el, hd], (u) => 4.8 - u * 1)} /><circle cx={hd[0]} cy={hd[1]} r={4.2} />
 	</g>; };
+const hgCrest = (x: number) => x < 1000 ? 700 - (x + 200) * 0.0133 : 684 - (x - 1000) * 0.049;
 const HONG_HAND = (reach: number): P => [lerp(10, 48, reach), lerp(-84, -124, reach)];
 const Hong_: React.FC<{t: number}> = ({t}) => {
 	const u = t - B22, C = camOf(0.06 * sst(0, 4.4, u), 760, 600, 6 * u);
@@ -357,11 +358,11 @@ const Hong_: React.FC<{t: number}> = ({t}) => {
 	const near = sst(44.5, 48.5, t);
 	return <Svg>
 		<defs>
-			<linearGradient id="hgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#101A21" /><stop offset="0.5" stopColor="#1C2930" /><stop offset="0.66" stopColor="#2E3836" /></linearGradient>
+			<linearGradient id="hgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#16222B" /><stop offset="0.42" stopColor="#253740" /><stop offset="0.6" stopColor="#3E4C4A" /><stop offset="0.68" stopColor="#56605A" /></linearGradient>
 			<radialGradient id="hgTor" cx="1500" cy="640" r="760" gradientUnits="userSpaceOnUse" gradientTransform="translate(1500 640) scale(1 0.55) translate(-1500 -640)"><stop offset="0" stopColor="#F3DDB4" stopOpacity="0.5" /><stop offset="0.3" stopColor="#E8CFA0" stopOpacity="0.2" /><stop offset="1" stopColor="#E8CFA0" stopOpacity="0" /></radialGradient>
-			<linearGradient id="hgGnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#24211C" /><stop offset="0.4" stopColor="#171410" /><stop offset="1" stopColor="#0A0807" /></linearGradient>
-			<radialGradient id="hgPool" cx="1100" cy="900" r="900" gradientUnits="userSpaceOnUse" gradientTransform="translate(1100 900) scale(1 0.28) translate(-1100 -900)"><stop offset="0" stopColor="#B49E7A" stopOpacity="0.22" /><stop offset="1" stopColor="#B49E7A" stopOpacity="0" /></radialGradient>
-			<radialGradient id="hgVig" cx="0.5" cy="0.52" r="0.74"><stop offset="0.5" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.62" /></radialGradient>
+			<linearGradient id="hgGnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#36322B" /><stop offset="0.4" stopColor="#26221D" /><stop offset="1" stopColor="#14110E" /></linearGradient>
+			<radialGradient id="hgPool" cx="1100" cy="900" r="900" gradientUnits="userSpaceOnUse" gradientTransform="translate(1100 900) scale(1 0.28) translate(-1100 -900)"><stop offset="0" stopColor="#C2AA82" stopOpacity="0.3" /><stop offset="1" stopColor="#B49E7A" stopOpacity="0" /></radialGradient>
+			<radialGradient id="hgVig" cx="0.5" cy="0.52" r="0.74"><stop offset="0.58" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.45" /></radialGradient>
 			<Blur id="hgb2" s={2} /><Blur id="hgb3" s={3} /><Blur id="hgb12" s={12} />
 			<RimF id="hgFar" lx={0} ly={-1} k={1.4} c="#F3DDB4" o={0.8} lx2={-1} ly2={0} k2={1} c2="#E8CFA0" o2={0.5} />
 			<RimF id="hgCrest" lx={0} ly={-1} k={2.2} c="#EAD2A6" o={0.75} />
@@ -376,10 +377,10 @@ const Hong_: React.FC<{t: number}> = ({t}) => {
 		{/* P1 the ridge close behind, the torches now near: a line of them coming down */}
 		<g transform={C(0.35)}>
 			<rect x={-200} y={300} width={2400} height={600} fill="url(#hgTor)" opacity={0.75 + 0.25 * near} />
-			{Array.from({length: 11}, (_, i) => { const x = 1060 + i * 82 + rnd(i, 31) * 40 - 14 * u * (0.6 + rnd(i, 32) * 0.5), k = 0.42 + rnd(i, 33) * 0.1, y = 676 - (x - 1000) * 0.07 + 30 * k + 3 * Math.sin(t * 6.5 + i) * k, fl = rnd(i, 34) < 0.75;
+			{Array.from({length: 12}, (_, i) => { const x = 1040 + i * 80 + rnd(i, 31) * 40 - 16 * u * (0.6 + rnd(i, 32) * 0.5), k = (0.56 + rnd(i, 33) * 0.14) * (1 + 0.018 * u), y = hgCrest(x) + 58 * k + 3 * Math.sin(t * 6.5 + i) * k, fl = rnd(i, 34) < 0.75;
 				return <g key={i}><g transform={at(x, y, k, true)} fill="#130D0A" color="#130D0A" filter="url(#hgFar)"><Stand kind={fl ? 'torch' : 'ji'} helm={i % 3 === 0} /></g>
 					{fl && <Flame x={x - TORCH_TIP[0] * k} y={y + TORCH_TIP[1] * k} s={k * 0.95} t={t} seed={i * 5 + 1} ivory glow={1.25} />}</g>; })}
-			<g filter="url(#hgCrest)"><path d="M-200,820 L-200,700 C200,694 600,690 1000,684 C1300,676 1600,650 1900,640 L2400,630 L2400,820 Z" fill="#1A1714" /></g>
+			<g filter="url(#hgCrest)"><path d="M-200,820 L-200,700 C200,694 600,690 1000,684 C1300,676 1600,650 1900,640 L2400,630 L2400,820 Z" fill="#2A2621" /></g>
 		</g>
 		<g transform={C(0.75)}><path d="M-200,820 C400,808 1000,804 1600,812 L2300,820 L2300,1200 L-200,1200 Z" fill="url(#hgGnd)" /><rect x={-200} y={780} width={2400} height={260} fill="url(#hgPool)" /></g>
 		{/* P4 the pair: 曹洪's horse, 曹洪 holding out the reins, 曹操 */}
