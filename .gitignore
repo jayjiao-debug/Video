@@ -78,3 +78,6 @@ episodes/50-qian/tools/pic/
 episodes/53-goujian/tools/pic/
 episodes/*/music/*.mp3
 episodes/*/sfx/
+
+# ep54 look tests: the AI drop test image stays local (public repo)
+episodes/37-qiqing/remotion/public/ep54_tmp/
