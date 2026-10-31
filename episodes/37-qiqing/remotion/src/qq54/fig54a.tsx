@@ -43,7 +43,7 @@ const HATS: Record<Hat, string> = {
 	/* 进贤冠: the 介帻 cap, the 展筩 plate rising from the brow and slanting back, a hairpin out the back */
 	jinxian: 'M22,-84 C20,-98 8,-108 -6,-108 C-18,-106 -25,-96 -25,-82 L-20,-79 C-10,-86 6,-88 22,-84 Z M19,-95 L1,-147 C-2,-151 -9,-151 -11,-146 L-19,-102 Z M-34,-99 L14,-104 L14,-101 L-34,-96 Z',
 	/* 武冠 (武弁大冠): a rounded cage-cap over a 帻, higher at the back, with a short ridge; strap to the chin */
-	wuguan: 'M23,-82 C24,-100 14,-117 -2,-121 C-17,-124 -29,-113 -29,-92 L-27,-74 C-14,-84 6,-87 23,-82 Z M-12,-122 L-9,-133 L5,-129 L3,-119 Z',
+	wuguan: 'M24,-80 C24,-90 20,-98 14,-102 L-24,-104 C-30,-98 -31,-88 -29,-74 C-14,-84 6,-87 24,-80 Z M-6,-103 C-10,-116 2,-122 8,-114 L6,-103 Z',
 	/* 平上帻: a cap with a flat raised back */
 	ze: 'M22,-84 C20,-98 8,-106 -4,-106 L-6,-117 L-24,-115 C-28,-103 -27,-90 -24,-80 C-12,-86 6,-88 22,-84 Z',
 	/* 兜鍪: a rounded helmet with a flared neck guard, a finial and a tassel */
@@ -52,7 +52,9 @@ const HATS: Record<Hat, string> = {
 	/* a rich man's tall 帻 with a long pin and a tassel */
 	richze: 'M22,-84 C20,-100 8,-110 -6,-110 L-8,-124 L-26,-121 C-30,-106 -28,-92 -25,-80 C-12,-86 6,-88 22,-84 Z M-38,-112 L10,-118 L10,-115 L-38,-109 Z M-38,-110 C-44,-104 -44,-96 -40,-90 L-38,-91 C-41,-96 -41,-103 -36,-109 Z',
 };
-const BEARD = {short: 'M21.5,-41 C22.5,-33 19,-23 12,-19 C8,-18 6,-21 7,-25 L10,-31 Z', long: 'M21,-40 C23,-26 19,-8 11,-1 C7,-6 5,-15 6,-24 L10,-31 Z'};
+/** the 武冠's lacquered-gauze 弁 over the 帻: a box a little wider at the top, see-through (the topknot shows inside) */
+const GAUZE = 'M21,-87 L20,-119 C19,-125 14,-127 8,-127 L-21,-129 C-27,-129 -30,-125 -30,-119 L-29,-82 C-21,-89 4,-92 21,-87 Z';
+const BEARD = {short: 'M22,-41 C24.5,-31 22,-17 15,-10 C11,-8 7,-12 7,-17 L9,-30 Z M22.5,-46.5 L30,-43.5 L22,-43 Z', long: 'M21,-40 C23,-26 19,-8 11,-1 C7,-6 5,-15 6,-24 L10,-31 Z'};
 
 /* ---------- the figure ---------- */
 export type Arm = [number, number];           /* [upper-arm angle, forearm angle] (absolute) */
@@ -82,6 +84,12 @@ export const PropEl: React.FC<{p: Prop; at: V}> = ({p, at}) => { const a = p.ang
 		return <g fill={p.col ?? SIL}><path d={cap(sh, top, 0.55, 0.45)} />
 			<path d={`M${f(T(L + 6)[0])},${f(T(L + 6)[1])} L${f(T(L - 1, 1.1)[0])},${f(T(L - 1, 1.1)[1])} L${f(T(L - 1, -1.1)[0])},${f(T(L - 1, -1.1)[1])} Z`} />
 			<path d={`M${f(T(L - 4.5, 0)[0])},${f(T(L - 4.5, 0)[1])} L${f(side[0])},${f(side[1])} L${f(side2[0])},${f(side2[1])} L${f(T(L - 7, 0)[0])},${f(T(L - 7, 0)[1])} Z`} /></g>; }
+	if (p.kind === 'dao') { /* 环首刀 drawn, held point-down: the ring pommel above the fist, a short grip, the straight blade */
+		const ring = T(-6.2), g0 = T(-3.6), g1 = T(2.6), b0 = T(3), b1 = T(L - 3), tip = T(L);
+		return <g><circle cx={ring[0]} cy={ring[1]} r={2.5} fill="none" stroke={p.col ?? SIL} strokeWidth={1.25} />
+			<path d={cap(g0, g1, 1.05, 1.05)} fill={p.col ?? SIL} /><path d={cap(T(2.4, -1.9), T(2.4, 1.9), 0.7, 0.7)} fill={p.col ?? SIL} />
+			<path d={`M${f(ad(b0, n, 1.25)[0])},${f(ad(b0, n, 1.25)[1])} L${f(ad(b1, n, 1.05)[0])},${f(ad(b1, n, 1.05)[1])} L${f(tip[0])},${f(tip[1])} L${f(ad(b1, n, -1.0)[0])},${f(ad(b1, n, -1.0)[1])} L${f(ad(b0, n, -1.1)[0])},${f(ad(b0, n, -1.1)[1])} Z`} fill="#8E949A" />
+			<path d={`M${f(ad(b0, n, 0.45)[0])},${f(ad(b0, n, 0.45)[1])} L${f(ad(b1, n, 0.4)[0])},${f(ad(b1, n, 0.4)[1])}`} stroke="#E8ECEC" strokeWidth={0.45} /></g>; }
 	if (p.kind === 'torch') { const tip = T(L * 0.6), sh = T(-L * 0.25);
 		return <g><path d={cap(sh, tip, 0.7, 1.2)} fill={SIL} /></g>; }
 	return null; };
@@ -89,7 +97,7 @@ export const PropEl: React.FC<{p: Prop; at: V}> = ({p, at}) => { const a = p.ang
 export const Fig = (P: FigP): FigOut => {
 	const dir = P.dir ?? 1, s = P.s, lean = P.lean ?? 0, belly = P.belly ?? 0, dress = P.dress ?? 'robe';
 	const B = (p: V): V => rot(p, lean);
-	const S = B([0, -30]), N = B([1.2, -33.2]), Sb = ad(S, [-1.2, 0.6]);
+	const S = B([0, -30]), N = B([1.4, -32.4]), Sb = ad(S, [-1.2, 0.6]);
 	const fl = P.fl ?? [6, 2], bl = P.bl ?? [-5, -2];
 	const leg = (a: Arm) => { const K = ad([0, 0], dv(a[0]), 24), A = ad(K, dv(a[1]), 23.5); return {K, A}; };
 	const LF = leg(fl), LB = leg(bl);
@@ -97,22 +105,22 @@ export const Fig = (P: FigP): FigOut => {
 	const AF = arm(S, P.fa), AB = arm(Sb, P.ba);
 	const foot = (A: V, k = 1) => `M${f(A[0] - 2.6)},${f(A[1] - 1.5)} L${f(A[0] + 2)},${f(A[1] - 2.2)} C${f(A[0] + 6)},${f(A[1] - 1.2)} ${f(A[0] + 8.4 * k)},${f(A[1] - 0.6)} ${f(A[0] + 9 * k)},${f(A[1] - 2.2)} L${f(A[0] + 9.2 * k)},${f(A[1] + 0.6)} L${f(A[0] - 2.8)},${f(A[1] + 0.6)} Z`;
 	const torso: V[] = (dress === 'armour' ? [[2.5, -34], [9, -31], [11.5, -22], [10.5 + belly, -12], [8.5 + belly * 0.6, -1], [-8.5, -1], [-9.5, -14], [-9.5, -27], [-6, -33], [-1, -35.5]]
-		: [[2.4, -34], [8, -30.5], [10, -22], [9 + belly, -12], [7.4 + belly * 0.6, -1.5], [-7.4, -1.5], [-8.2, -14], [-8.2, -26], [-5, -32.5], [-1, -35.5]]).map((p) => B(p as V));
+		: [[3.4, -34], [9, -31], [11, -22], [10 + belly, -12], [8 + belly * 0.6, -1.5], [-8, -1.5], [-9, -14], [-9.4, -26], [-7, -32.5], [-2, -35]]).map((p) => B(p as V));
 	/* the skirt: robe → hull over waist, knees and ankles (to the hem); tunic / armour → to just above the knee */
 	const wF = B([7 + belly * 0.6, -3]), wB = B([-7.5, -3]);
 	let skirt: V[];
-	if (dress === 'robe') skirt = hull([wF, wB, ad(LF.K, [6, 0]), ad(LF.K, [-6, 0]), ad(LB.K, [6, 0]), ad(LB.K, [-6, 0]), ad(LF.A, [6, -2.2]), ad(LF.A, [-6.5, -2.2]), ad(LB.A, [6, -2.2]), ad(LB.A, [-6.5, -2.2])]);
+	if (dress === 'robe') skirt = hull([wF, wB, ad(LF.K, [6, 0]), ad(LF.K, [-6, 0]), ad(LB.K, [6, 0]), ad(LB.K, [-6, 0]), ad(LF.A, [8, -2]), ad(LF.A, [-8, -2]), ad(LB.A, [8, -2]), ad(LB.A, [-9, -2]), ad(LB.A, [-12, -0.6])]);
 	else { const kF = lp([0, 0], LF.K, 0.78), kB = lp([0, 0], LB.K, 0.78), fl2 = dress === 'armour' ? 8 : 6.5; skirt = hull([wF, wB, ad(kF, [fl2, 0]), ad(kF, [-fl2, 0]), ad(kB, [fl2, 0]), ad(kB, [-fl2, 0])]); }
 	const sleeve = (a: {E: V; Wr: V}, drop: number) => { const P1 = lp(a.E, a.Wr, 0.86), M = lp(a.E, a.Wr, 0.5);
 		return smooth(hull([ad(P1, [0, -1.6]), ad(P1, [0, drop * 0.85]), ad(M, [0, drop]), ad(a.E, [0, 3.5]), ad(a.E, [-2.4, 0]), ad(a.E, [2.4, -0.5])]), 0.35); };
 	const drop = P.sleeve ?? (dress === 'robe' ? 7.5 : 0);
-	const headT = `translate(${f(N[0])},${f(N[1])}) rotate(${f(lean * 0.6 + (P.tilt ?? 0))}) scale(0.165)`;
-	const fill = P.fill ?? SIL, det = P.detail ?? '#2C1E16';
+	const headT = `translate(${f(N[0])},${f(N[1])}) rotate(${f(lean * 0.6 + (P.tilt ?? 0))}) scale(0.195)`;
+	const fill = P.fill ?? SIL, det = P.detail ?? '#3A281C';
 	const limb = (a: {E: V; Wr: V; Hd: V}, sh: V, armour: boolean) => <>
 		<path d={cap(sh, a.E, 3.5, 2.8)} /><path d={cap(a.E, a.Wr, 2.8, 2.1)} /><ellipse cx={a.Hd[0]} cy={a.Hd[1]} rx={2.5} ry={2.5} />
 		{drop > 0 && <path d={sleeve(a, drop)} />}
 		{armour && <path d={smooth(hull([ad(sh, [-5.5, -2.5]), ad(sh, [5.5, -2.5]), ad(lp(sh, a.E, 0.62), [5, 0]), ad(lp(sh, a.E, 0.62), [-5, 0])]), 0.4)} />}</>;
-	const legEl = (L: {K: V; A: V}) => <><path d={cap([0, 0], L.K, 4.6, 3.6)} /><path d={cap(L.K, L.A, 3.5, 2.3)} /><path d={foot(L.A)} /></>;
+	const legEl = (L: {K: V; A: V}) => <><path d={cap([0, 0], L.K, 5.4, 4.4)} /><path d={cap(L.K, L.A, 4.4, 3)} /><path d={cap(lp(L.K, L.A, 0.62), ad(L.A, [0.6, -1]), 3.6, 3.2)} /><path d={foot(L.A)} /></>;
 	const el = <g transform={`translate(${f(P.x)},${f(P.y)}) scale(${f(dir * s)},${f(s)})`} fill={fill}>
 		{P.cloak && <path d={smooth([B([-4, -33]), B([-14, -20]), [-22, 18], [-26, 40], [-12, 44], [-8, 10], B([-8, -10]), B([-6, -28])], 0.45)} />}
 		{P.bp && <PropEl p={P.bp} at={AB.Hd} />}
@@ -122,7 +130,8 @@ export const Fig = (P: FigP): FigOut => {
 		{P.bundle && <g><path d={smooth([B([-7, -33]), B([-17, -36]), B([-21, -10]), B([-12, -4]), B([-7, -10])], 0.4)} />
 			{[-34, -27, -20, -13].map((y, i) => <path key={i} d={cap(B([-6, y]), B([-26 + i, y - 4]), 0.5, 0.4)} />)}</g>}
 		{P.dao && <g><path d={cap(B([-7, -6]), B([-30, 9]), 1.1, 0.9)} /><circle cx={B([6, -8])[0]} cy={B([6, -8])[1]} r={1.7} fill="none" stroke={fill} strokeWidth={0.8} /><path d={cap(B([-6, -5.5]), B([4.6, -7.8]), 0.8, 0.8)} /></g>}
-		<g transform={headT}><path d={HEAD} />{P.hat && <path d={HATS[P.hat]} />}{P.beard && <path d={BEARD[P.beard]} />}</g>
+		<g transform={headT}><path d={HEAD} />{P.hat && <path d={HATS[P.hat]} />}{P.hat === 'wuguan' && <><path d={GAUZE} /><path d="M-6,-103 C-10,-116 2,-122 8,-114 L6,-103 M-29,-96 C-20,-104 8,-104 20,-96" fill="none" stroke={P.detail ?? '#3A281C'} strokeWidth={3.2} /></>}{P.beard && <path d={BEARD[P.beard]} />}</g>
+		{dress === 'robe' && <path d={smooth([B([6.5, -5.5]), B([9.5, -5]), [9.6 + 0.3 * lean, 16], [7.4 + 0.3 * lean, 17]], 0.3)} />}
 		{/* low-contrast costume detail: collar crossing (右衽), belt, lamellar rows on armour */}
 		{P.detail !== 'none' && <g fill="none" stroke={det} strokeWidth={0.55} strokeLinecap="round">
 			<path d={`M${f(B([3, -33])[0])},${f(B([3, -33])[1])} L${f(B([-3, -20])[0])},${f(B([-3, -20])[1])}`} />
