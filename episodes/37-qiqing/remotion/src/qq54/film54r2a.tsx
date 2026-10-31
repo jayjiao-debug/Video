@@ -141,7 +141,7 @@ export const Xu: React.FC<{t: number}> = ({t}) => {
 	const wrot = ((v * u) / k / 68) * 180 / Math.PI, jig = 0.8 * Math.sin(wrot * Math.PI / 180 * 5.5);
 	const br = 1 + 0.04 * Math.sin(t * 2.3) + 0.02 * Math.sin(t * 5.1);
 	/* 曹操's bow: upright and waiting, then down as the horses come level, held deep while the carriage passes */
-	const bow = 3 + 19 * ss(53.45, 54.65, t) + 1.2 * Math.sin((t - 54.6) * 1.6) * ss(54.6, 55.4, t);
+	const bow = 3 + 27 * ss(53.4, 54.6, t) + 1.4 * Math.sin((t - 54.6) * 1.6) * ss(54.6, 55.4, t);
 	const crenel = Array.from({length: 62}, (_, i) => 962 + i * 26), courses = Array.from({length: 17}, (_, i) => 578 + i * 13.5);
 	const pass = (cx: number, w: number, h: number) => <g key={cx}>
 		<rect x={cx - w / 2 - 8} y={800 - h - 10} width={w + 16} height={h + 10} fill="#1C1511" />
@@ -230,7 +230,7 @@ export const Xu: React.FC<{t: number}> = ({t}) => {
 			<g fill={SIL} color={SIL} filter="url(#xurim)">
 				{walkers.map((w, i) => { const x0 = w.x - k * (NL * NF * w.t0 - NL / 2);
 					return <g key={i} transform={at(x0, GY, k)}><NpcWalk t={u} kind={w.kind} L={NL} f={NF} t0={w.t0} swing={w.ban ? 0.25 : 1} />
-						{w.ban && <g transform={npcTorsoT(u, NL, NF, w.t0)}><g transform="translate(13,-30)"><Banner h={440} ch="汉" wave={6 * Math.sin(t * 2.1 + i * 1.7)} cloth="#4A1E1A" clothS="#2A110E" ink="#E8D2A6" /></g></g>}</g>; })}
+						{w.ban && <g transform={npcTorsoT(u, NL, NF, w.t0)}><g transform="translate(13,-30)"><Banner h={400} ch="汉" wave={6 * Math.sin(t * 2.1 + i * 1.7)} cloth="#4A1E1A" clothS="#2A110E" ink="#E8D2A6" /></g></g>}</g>; })}
 				<g transform={at(400 + v * u, GY - 4, k)}><HorseW s={cyc(0.3)}><g transform="translate(18,2)"><Rider kind="ji" /></g></HorseW></g>
 				<g transform={at(AX + 170 * k, GY - 8 * k, k)}><HorseW s={cyc(0.13)} harness farFill="#2A1E18" /></g>
 				<g transform={at(AX, GY, k)}><CarriageR yx={210} rot={wrot} jig={jig} /></g>
@@ -287,7 +287,7 @@ const ROW2 = Array.from({length: 7}, (_, i) => ({x: 40 + i * 132 + (rnd(i, 54) -
 const ROW3 = [{x: -40, bow: 26, hb: 14, i: 0}, {x: 560, bow: 22, hb: 18, i: 1}, {x: 800, bow: 25, hb: 15, i: 2}];
 export const Xie: React.FC<{t: number}> = ({t}) => {
 	const tA = BAR(28), u = t - tA, U = cl01(u / 3.98);
-	const S = 0.62, CX = 1232, CY = 952;
+	const S = 0.68, CX = 1226, CY = 962;
 	const cam: Cam = {x: -30 * U, y: -10 * U, z: 1 + 0.11 * (0.25 * U + 0.75 * ss(0, 1, U)), fx: 1190, fy: 520};
 	const T = (p: number) => camT(cam, p);
 	/* the edict comes up into the light on the downbeat of bar 29, unrolls toward the court; his chin lifts */
@@ -298,9 +298,9 @@ export const Xie: React.FC<{t: number}> = ({t}) => {
 	const wave = (x: number) => 9 * ss(B29 + 0.1 + (1000 - x) * 0.0007, B29 + 0.65 + (1000 - x) * 0.0007, t);
 	const LX = 968, LB = 896, LK = 2.3, flame: P = [LX, LB - 117 * LK];
 	const fl = 1 + 0.05 * Math.sin(t * 7.3) + 0.03 * Math.sin(t * 13.7);
-	const SM = 1.95;
+	const SM = 2.25;
 	const hero = (id: string) => <g transform={`translate(${CX},${f1(CY - 750 * S)}) scale(${-S},${S})`}>
-		<g clipPath="url(#xibody)"><Cao pal={PAL} id={id} old armour={false} arm={arm} dao={false} /></g>
+		<g clipPath="url(#xibody)"><Cao pal={PAL} id={id} old armour={false} arm={arm} dao={false} /><path d="M-30,300 L-18,298 L-12,520 L-24,524 Z" fill="#5A4266" /><path d="M-30,300 L-26,300 L-21,522 L-24,524 Z" fill="#33243C" /></g>
 		<g transform={`translate(0,49) rotate(${f1(tilt)} 0 -8) scale(0.88) translate(0,-40)`}><Head old pal={PAL} id={id + 'h'} /></g>
 		<Edict h={arm.hd} r={ur} sway={sway} />
 	</g>;
@@ -314,7 +314,7 @@ export const Xie: React.FC<{t: number}> = ({t}) => {
 			<linearGradient id="xiwin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3A4C50" /><stop offset="1" stopColor="#56686A" /></linearGradient>
 			<radialGradient id="xivig" cx="0.55" cy="0.5" r="0.76"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.55" /></radialGradient>
 			<Blur id="xib2" s={2} /><Blur id="xib8" s={8} /><Blur id="xib16" s={16} /><Blur id="xib1" s={1} />
-			<ShadowF id="xishd" c="#060707" b={5} />
+			<ShadowF id="xishd" c="#050606" b={3.5} />
 			<RimF id="xirimK" lx={1} ly={-0.6} k={1.8} c="#F0D2A2" o={0.75} lx2={-0.4} ly2={-1} k2={1.2} c2="#8FA8A6" o2={0.3} />
 			<RimF id="xirimE" lx={-1} ly={-0.4} k={1.6} c="#F0D2A2" o={0.8} lx2={0.4} ly2={-1} k2={1.4} c2="#B8CCC8" o2={0.4} />
 			<RimF id="xihero" lx={-1} ly={-0.45} k={5} c="#FFE6C0" o={0.95} lx2={1} ly2={-0.1} k2={4} c2={ACC} o2={0.95} blur={1} />
@@ -337,7 +337,7 @@ export const Xie: React.FC<{t: number}> = ({t}) => {
 			<rect x={1436} y={322} width={488} height={10} fill="#1C1210" /><rect x={1436} y={322} width={488} height={3} fill="#F3DDB4" opacity={0.18} />
 			<rect x={-200} y={-200} width={2400} height={1000} fill="url(#xilit)" opacity={fl} />
 			{/* his shadow, thrown by the lamp onto the wall and the screen: it stands taller than the throne */}
-			<g clipPath="url(#xiwallC)" opacity={0.62}>
+			<g clipPath="url(#xiwallC)" opacity={0.8}>
 				<g transform={`translate(${flame[0]},${flame[1]}) scale(${SM}) translate(${-flame[0]},${-flame[1]})`} filter="url(#xishd)">{hero('xis')}</g>
 			</g>
 		</g>
@@ -352,7 +352,7 @@ export const Xie: React.FC<{t: number}> = ({t}) => {
 			<g fill="#1C1612"><rect x={1530} y={640} width={250} height={20} /><rect x={1536} y={660} width={12} height={20} /><rect x={1762} y={660} width={12} height={20} /></g>
 			<path d="M1530,640 L1780,640" stroke="#F3DDB4" strokeOpacity={0.3} strokeWidth={2} />
 			<g fill="#120C0A" color="#120C0A" filter="url(#xirimE)">
-				<g transform={at(1660, 642, 1.95, true)}><Emperor br={Math.sin(t * 1.9)} sw={0.6 * Math.sin(t * 1.4)} /></g>
+				<g transform={at(1652, 642, 1.38, true)}><Emperor br={Math.sin(t * 1.9)} sw={0.6 * Math.sin(t * 1.4)} /></g>
 			</g>
 		</g>
 		{/* the lamp on its tall stand at the foot of the dais: the one key light of the hall */}
@@ -560,25 +560,24 @@ export const Tun: React.FC<{t: number}> = ({t}) => {
 	const sackDrop = (i: number) => ss(64.6 + i * 0.55, 64.85 + i * 0.55, t);
 	const PILE: [number, number, number][] = [[-0.9, 0, 0], [-0.3, 0, 0], [0.3, 0, 0], [0.9, 0, 0], [-0.6, 0.42, 0], [0, 0.42, 0], [0.6, 0.42, 0], [-0.3, 0.84, 0], [0.3, 0.84, 1], [1.5, 0, 1], [-1.5, 0, 1], [0, 1.26, 1]];
 	const drops = [8, 9, 10, 11];
-	const carriers = [{z: 6.2, x0: -6.4, t0: 0.1}, {z: 7.0, x0: -9.8, t0: 0.55}, {z: 9.6, x0: -12.5, t0: 0.3}];
+	const carriers = [{z: 6.4, x0: -2.4, t0: 0.1}, {z: 7.6, x0: -3.6, t0: 0.55}, {z: 11.0, x0: -4.6, t0: 0.3}];
 	const sowers = [{x: -10, z: 31}, {x: 6, z: 40}, {x: 16, z: 52}];
 	const pour = 0.5 + 0.5 * Math.sin(t * 1.4);
 	return <Svg>
 		<defs>
-			<linearGradient id="tusky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9C9C94" /><stop offset="0.5" stopColor="#BDB7A8" /><stop offset="1" stopColor="#D6CEBA" /></linearGradient>
-			<radialGradient id="tusun" cx="330" cy="120" r="700" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FFF6E2" stopOpacity="0.7" /><stop offset="0.15" stopColor="#F2E6CC" stopOpacity="0.3" /><stop offset="1" stopColor="#F2E6CC" stopOpacity="0" /></radialGradient>
+			<linearGradient id="tusky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6E6C64" /><stop offset="0.22" stopColor="#8C887C" /><stop offset="0.5" stopColor="#B4AE9E" /><stop offset="1" stopColor="#D6CEBA" /></linearGradient>
+			<radialGradient id="tusun" cx="1760" cy="-60" r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FFF6E2" stopOpacity="0.7" /><stop offset="0.15" stopColor="#F2E6CC" stopOpacity="0.3" /><stop offset="1" stopColor="#F2E6CC" stopOpacity="0" /></radialGradient>
 			<linearGradient id="tuhz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={HAZE} stopOpacity="0" /><stop offset="0.5" stopColor={HAZE} stopOpacity="0.75" /><stop offset="1" stopColor={HAZE} stopOpacity="0" /></linearGradient>
 			<radialGradient id="tuvig" cx="0.5" cy="0.5" r="0.78"><stop offset="0.62" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#1A140E" stopOpacity="0.35" /></radialGradient>
 			<pattern id="tufur" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(84)"><rect width="14" height="14" fill="#64593F" /><rect width="5" height="14" fill="#4E4532" /></pattern>
 			<Blur id="tub2" s={2} /><Blur id="tub4" s={4} />
-			<RimF id="turim" lx={-0.7} ly={-1} k={2.2} c="#FFF3DC" o={0.7} />
-			<RimF id="turimS" lx={-0.7} ly={-1} k={1.2} c="#F6EAD2" o={0.5} />
+			<RimF id="turim" lx={0.7} ly={-1} k={2.2} c="#FFF3DC" o={0.7} />
+			<RimF id="turimS" lx={0.7} ly={-1} k={1.2} c="#F6EAD2" o={0.5} />
 		</defs>
 		{/* the sky, a veiled sun high on the left (the key), soft cloud bars */}
 		<rect width={W} height={H} fill="url(#tusky)" />
 		<rect width={W} height={H} fill="url(#tusun)" />
-		<circle cx={330} cy={120} r={34} fill="#FFF8EA" opacity={0.8} filter="url(#tub2)" />
-		<g filter="url(#tub4)" opacity={0.5}>{[[600, 200, 380], [1300, 150, 420], [1700, 260, 300], [200, 300, 260]].map(([x, y, w], i) => <ellipse key={i} cx={x - u * (5 + i)} cy={y + (HY - 362) * 0.2} rx={w} ry={7} fill="#E6DECA" />)}</g>
+				<g filter="url(#tub4)" opacity={0.5}>{[[600, 200, 380], [1300, 150, 420], [1700, 260, 300], [200, 300, 260]].map(([x, y, w], i) => <ellipse key={i} cx={x - u * (5 + i)} cy={y + (HY - 362) * 0.2} rx={w} ry={7} fill="#E6DECA" />)}</g>
 		{/* far hills on the horizon, then the ground plane with its patchwork of fields */}
 		<path d={`M-20,${f1(HY + 2)} C200,${f1(HY - 26)} 420,${f1(HY - 30)} 640,${f1(HY - 10)} C820,${f1(HY - 34)} 1040,${f1(HY - 40)} 1260,${f1(HY - 14)} C1460,${f1(HY - 28)} 1700,${f1(HY - 24)} 1940,${f1(HY - 4)} L1940,${f1(HY + 4)} L-20,${f1(HY + 4)} Z`} fill="#A8A494" filter="url(#tub2)" />
 		<rect x={-20} y={HY} width={1960} height={H} fill={fc(400)('#8E8468')} />
@@ -596,8 +595,15 @@ export const Tun: React.FC<{t: number}> = ({t}) => {
 		{[[-120, 260], [60, 330], [190, 220], [-40, 520], [-260, 420], [300, 600], [140, 900]].map(([X, Z], i) => <g key={i}>
 			{[0, 1, 2].map((j) => <g key={j} transform={bb(X + j * 7 - 7, Z + j * 3, sc(Z + j * 3) / 100 * 0.9 * 0.01 * 100)}><QunD c={fc(Z)} /></g>)}
 			<g transform={bb(X + 22, Z, sc(Z) / 100)} fill={fc(Z)('#6E6656')}><rect x={-400} y={-260} width={800} height={260} /><path d="M-460,-250 L460,-250 L380,-380 L-380,-380 Z" /></g></g>)}
-		{[[160, -300, 300], [420, -200, 400], [700, -500, 600]].map(([Z, x0, x1], i) => <g key={'tr' + i} fill={fc(Z)('#5E6050')}>{Array.from({length: 18}, (_, j) => { const X = x0 + (x1 - x0) * j / 17 + rnd(j, i) * 6, [x, y] = pj(X, Z), s = sc(Z);
-			return <ellipse key={j} cx={f1(x)} cy={f1(y - s * 4)} rx={f1(s * (2.2 + rnd(j, i + 3)))} ry={f1(s * (4 + rnd(j, i + 4) * 2))} />; })}</g>)}
+		{[[160, -300, 300], [420, -260, 400], [700, -500, 600]].map(([Z, x0, x1], i) => <g key={'tr' + i} fill={fc(Z)('#62645A')}>{Array.from({length: 26}, (_, j) => { const X = x0 + (x1 - x0) * j / 25 + rnd(j, i) * 8, [x, y] = pj(X, Z), s = sc(Z), r = s * (1.4 + rnd(j, i + 3) * 0.8);
+			return <g key={j}><rect x={f1(x - s * 0.15)} y={f1(y - s * 2)} width={f1(Math.max(0.6, s * 0.3))} height={f1(s * 2)} /><ellipse cx={f1(x)} cy={f1(y - s * 2.6)} rx={f1(r)} ry={f1(r * 0.8)} /><ellipse cx={f1(x + r * 0.6)} cy={f1(y - s * 2.2)} rx={f1(r * 0.7)} ry={f1(r * 0.6)} /></g>; })}</g>)}
+		{/* the threshing yard before the granaries: packed earth, straw, cart ruts, contact shadows */}
+		<path d={quad(-60, 60, 2.2, 19)} fill="#A69878" />
+		<path d={quad(-60, 60, 2.2, 6)} fill="#8E8064" opacity={0.6} />
+		{[[-1.6, -1.1], [1.9, 2.4]].map(([a0, a1], i) => <path key={i} d={quad(a0 - 0.1, a1 + 0.1, 2.2, 19)} fill="#8C7E62" opacity={0.35} />)}
+		{Array.from({length: 70}, (_, i) => { const X = -14 + rnd(i, 91) * 26, Z = 3 + rnd(i, 92) * 15, [x, y] = pj(X, Z), s = sc(Z), a = (rnd(i, 93) - 0.5) * 1.4;
+			return <line key={'st' + i} x1={f1(x)} y1={f1(y)} x2={f1(x + Math.cos(a) * s * 0.35)} y2={f1(y - Math.sin(a) * s * 0.08)} stroke={rnd(i, 94) < 0.5 ? '#C8B488' : '#7E6E50'} strokeWidth={Math.max(0.8, s * 0.012)} opacity={0.7} />; })}
+		{[[12.5, 25, 1.8], [6.6, 20, 1.8], [3.6, 15, 1.8], [-0.6, 9.2, 1.7]].map(([X, Z, r], i) => <path key={'sh' + i} d={quad(X - r - 1.6, X + r - 0.6, Z, Z + 1.4)} fill="#5E5440" opacity={0.35} filter="url(#tub2)" />)}
 		{/* the ox teams (二牛抬杠), the ploughman leaning on the handle */}
 		<g filter="url(#turimS)">{TEAMS.slice().sort((a, b) => b.z - a.z).map((m, i) => { const X = teamX(m), k = sc(m.z) / 100, [x, y] = pj(X, m.z), s = (m.v * 100 * u) / 96 + m.ph, c = fc(m.z)(DSIL);
 			const wL = 50, wF = m.v * 100 / wL;
@@ -626,7 +632,7 @@ export const Tun: React.FC<{t: number}> = ({t}) => {
 				<g transform={`translate(-30,-222) rotate(${f1(-40 - 12 * pour)})`}><path d="M0,-12 C-22,-16 -40,-8 -44,6 C-40,20 -22,24 0,16 Z" fill={fc(15)('#8A7454')} /><path d="M-20,-14 C-34,-10 -42,-2 -44,6 C-40,0 -32,-4 -20,-6 Z" fill={fc(15)('#5E4C34')} /></g>
 				{Array.from({length: 12}, (_, j) => { const a0 = t * 2.6 + j / 12, q = a0 - Math.floor(a0); return <circle key={j} cx={f1(-68 + Math.sin(j * 2.1) * 2.5)} cy={f1(-214 + 26 * q)} r={1.8} fill="#D8C48E" opacity={0.9 * (1 - q)} />; })}
 			</g>
-			<g transform={bb(-5.4, 12.5)} fill={fc(12.5)(DSIL)}>
+			<g transform={bb(-1.0, 16.5)} fill={fc(16.5)(DSIL)}>
 				<rect x={-60} y={-130} width={120} height={8} /><rect x={-58} y={-130} width={6} height={130} /><rect x={52} y={-130} width={6} height={130} />
 				{[-40, -18, 6, 30].map((x, i) => <g key={x} transform={`rotate(${-6 + i * 3} ${x} 0)`}><rect x={x - 1.3} y={-250} width={2.6} height={250} /><path d={`M${x},-270 C${x + 1.5},-264 ${x + 2},-258 ${x + 1.3},-250 L${x - 1.3},-250 C${x - 2},-258 ${x - 1.5},-264 ${x},-270 Z`} /><path d={`M${x + 1},-246 L${x + 15},-243 L${x + 15},-238 L${x + 1},-241 Z`} /></g>)}
 			</g>
