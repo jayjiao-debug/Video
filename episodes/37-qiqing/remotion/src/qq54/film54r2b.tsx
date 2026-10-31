@@ -11,7 +11,7 @@ import {Helmet, npcTorsoT} from './fig54n';
             below the 白门楼; he heaves against the rope, the guard hauls him back on the downbeat; 曹操 (44) lifts his hand: the verdict.
    Rival  = card 19 (BAR 36–38, 199 邺): 袁绍 enthroned in his hall between two lamp trees, 袁 banners and armoured guards; slow push.
    Army   = card 20 (BAR 38–40, 199): 袁绍's army marching south at dusk: columns over the plain and through a ford, cavalry on the
-            flanks, dust; the camera trucks against the march.
+            flanks, dust; the camera tracks left alongside the march, the ground and far columns sweeping past.
    Duizhi = card 21 (BAR 40–42, 200 官渡): the establishing wide at dusk, earlier and higher than K5 (which follows at 84.32):
             曹操's small camp on the left, 袁绍's vast camp on the right, the 土山 rising and a 高橹 being built; 曹操 small on his rampart.
    Overlay zones kept calm: subtitles x 150–1150 / y 90–300, stamp x 1200–1800 / y 30–200, counter x 150–460 / y 900–1010, seal. */
@@ -30,7 +30,7 @@ const ARM_HILT = {sh: [10, 84] as P, el: [22, 200] as P, hd: [54, 266] as P};
 /* =============================== card 18 · 198 下邳 · 白门楼 · grey morning =============================== */
 const LV_TH = (s: number) => -3 + s * 10;   // upper-body lean (deg; + = forward)
 /** a point of 吕布's upper body (NPC cm) → his kneeling frame */
-const lvPt = (p: P, s: number): P => { const a = LV_TH(s) * Math.PI / 180, x = 1.1 * p[0], y = 1.1 * (p[1] + 92); return [x * Math.cos(a) - y * Math.sin(a), -50 + x * Math.sin(a) + y * Math.cos(a)]; };
+const lvPt = (p: P, s: number): P => { const a = LV_TH(s) * Math.PI / 180, x = 1.15 * p[0], y = 1.15 * (p[1] + 92); return [x * Math.cos(a) - y * Math.sin(a), -50 + x * Math.sin(a) + y * Math.cos(a)]; };
 const ROPE = '#7C6A4E';
 /** 吕布: a big man in 札甲, bare-headed, kneeling with his arms bound behind him; cm, facing +x, knees on y = 0 (above the hips the
     NPC frame at 1.1×); s = strain 0..1 (leans into the rope), hl = head lift (deg) */
@@ -38,14 +38,15 @@ const LvBu: React.FC<{s: number; hl: number}> = ({s, hl}) => <g>
 	<path d={limb([[-40, -5], [-12, -7], [12, -9]], [4.6, 6.4, 7.6])} />
 	<path d="M-53,0 L-41,-10 L-33,-6 L-36,0 Z" />
 	<Limb j={[[12, -9], [6, -30], [1, -52]]} w={[8.6, 10.6, 12.6]} />
-	<g transform={`rotate(${f1(LV_TH(s))} 0 -50) translate(0,-50) scale(1.1) translate(0,92)`}>
+	<g transform={`rotate(${f1(LV_TH(s))} 0 -50) translate(0,-50) scale(1.15) translate(0,92)`}>
 		<path d="M-15,-103 C-18,-90 -20,-76 -21.4,-60 L20.4,-60 C19,-76 17,-90 15,-103 Z" />
 		<path d="M-4,-142 C-12,-141 -15.4,-135 -15.4,-126 C-15.4,-114 -14.4,-106 -14,-100 L15,-100 C16,-108 17.6,-119 16.8,-128 C16,-136 11,-141.4 5,-142 Z" />
 		<g transform="translate(0.4,0) scale(1.14,1)"><path d={NECK} /></g>
 		{/* the near arm wrenched back: the elbow out behind, the wrists tied at the small of the back */}
 		<Limb j={[[-1, -134], [-17.5, -114], [-11, -101.5]]} w={[6.6, 5.6, 4.6]} />
 		<circle cx={-10} cy={-100.5} r={4.4} />
-		<path d="M-9,-142.5 C-1,-146.5 7,-142 8,-135 C6.6,-128 -1,-122.4 -9,-121 C-14.4,-123.4 -15.4,-131 -13.4,-137 Z" />
+		<path d="M-11,-143.5 C-2,-148.5 9,-144 10.4,-135.6 C9,-127 0,-120.4 -10.4,-118.6 C-17.4,-121.4 -18.4,-131 -15.8,-138 Z" />
+		{[-138, -131, -124].map((y) => <path key={y} d={`M${-15 + (y + 138) * 0.1},${y} C-6,${y - 2} 4,${y - 1.4} ${9.4 - (y + 138) * 0.2},${y + 1}`} fill="none" stroke="#3A3028" strokeWidth={0.8} opacity={0.75} />)}
 		{/* the lamellar rows on the skirt, catching a little light */}
 		{[-92, -82, -72].map((y) => <path key={y} d={`M${-17 - (y + 92) * 0.12},${y} L${17 + (y + 92) * 0.1},${y + 0.6}`} stroke="#3A3028" strokeWidth={0.9} opacity={0.7} />)}
 		<g transform={`rotate(${f1(-hl)} 1 -146)`}>
@@ -186,8 +187,8 @@ const YuanShao: React.FC<{up: number; br: number}> = ({up, br}) => { const ty = 
 			<path d="M-50,-30 C-24,-37 24,-37 50,-30 L50,-26 C24,-32 -24,-32 -50,-26 Z" />
 			<path d="M-50,-30 C-24,-37 24,-37 50,-30" fill="none" stroke="#A88A4C" strokeWidth={0.9} opacity={0.7} />
 			<ellipse cx={-26} cy={-35} rx={7} ry={4.4} /><ellipse cx={26} cy={-35} rx={7} ry={4.4} />
-			<path d="M-7,-101 L7,-101 L6.4,-111 L-6.4,-111 Z" />
-			<g transform={`translate(0,${f1(-up * 1.4)}) translate(0,-104) scale(1.18) translate(0,104)`}>
+			<path d="M-8,-100 L8,-100 L7.4,-110 L-7.4,-110 Z" />
+			<g transform={`translate(0,${f1(-up * 1.4)}) translate(0,-102) scale(1.32) translate(0,102)`}>
 				<path d="M-10.6,-114 C-12.4,-124 -11,-134 0,-136 C11,-134 12.4,-124 10.6,-114 C9,-107 5,-104 0,-104 C-5,-104 -9,-107 -10.6,-114 Z" />
 				<ellipse cx={-11.4} cy={-121} rx={2.2} ry={3.8} /><ellipse cx={11.4} cy={-121} rx={2.2} ry={3.8} />
 				<path d="M-8,-112 C-8.6,-104 -5,-97 0,-95 C5,-97 8.6,-104 8,-112 C4,-108.6 -4,-108.6 -8,-112 Z" />
@@ -283,7 +284,7 @@ export const Rival: React.FC<{t: number}> = ({t}) => {
 
 /* =============================== card 20 · 199 · 袁绍's army marches south at dusk =============================== */
 const kA = (y: number) => 0.00184 * (y - 418);   // px per cm on the ground at screen y (horizon 418–430)
-const VA = 150;                                   // the camera trucks right: px/s at the cavalry plane (k 0.85 = p 1)
+const VA = 90;                                   // the camera tracks left with the march: px/s at the cavalry plane (k 0.85 = p 1)
 const pA = (k: number) => k / 0.85;
 /** a horse at the walk (cm, facing +x, hooves at 0): lateral-sequence gait, stance feet planted while the body moves at v cm/s */
 const HB = 'M38,-142 C22,-135 2,-131 -18,-132 C-36,-133 -52,-140 -66,-135 C-74,-132 -80,-124 -81,-112 C-82,-100 -76,-90 -66,-86 L-48,-82 C-30,-80 -10,-79 10,-80 C26,-80 40,-79 52,-82 C62,-86 70,-95 72,-106 C74,-116 79,-130 88,-145 C94,-154 99,-159 103,-162 C109,-158 117,-149 123,-139 C126,-135 130,-131 134,-132 C138,-134 139,-139 136,-145 C129,-158 119,-172 109,-184 C105,-188 101,-191 96,-191 C84,-185 66,-167 52,-153 C46,-148 42,-145 38,-142 Z';
@@ -323,7 +324,7 @@ const along = (c: P[], q: number): P => { const n = c.length - 1, s = Math.max(0
 const farFig = (x: number, y: number, k: number, sp: boolean) => `M${f1(x - 8 * k)},${f1(y)} L${f1(x - 7 * k)},${f1(y - 128 * k)} L${f1(x - 3 * k)},${f1(y - 152 * k)} L${f1(x + 4 * k)},${f1(y - 152 * k)} L${f1(x + 8 * k)},${f1(y - 128 * k)} L${f1(x + 8 * k)},${f1(y)} Z` + (sp ? ` M${f1(x + 2 * k)},${f1(y - 120 * k)} l1.1,0 l0,${f1(-170 * k)} l-1.1,0 Z` : '');
 const rivTop = (x: number) => 590 - (x + 300) * 0.0074 + Math.sin(x * 0.002) * 3, rivBot = (x: number) => 630 - (x + 300) * 0.0089 + Math.sin(x * 0.002 + 1) * 3;
 export const Army: React.FC<{t: number}> = ({t}) => {
-	const u = t - B38, sh = (p: number) => -VA * u * p;
+	const u = t - B38, sh = (p: number) => VA * u * p;
 	const flag = (x: number, y: number, k: number, i: number) => { const w = 60 * k, h = 150 * k, wv = Math.sin(t * 3.1 + i) * 4 * k;
 		return <g key={'f' + i}><path d={`M${f1(x)},${f1(y)} L${f1(x + w)},${f1(y + 2 * k)} C${f1(x + w + wv)},${f1(y + h * 0.4)} ${f1(x + w - wv)},${f1(y + h * 0.7)} ${f1(x + w + wv * 0.5)},${f1(y + h)} L${f1(x + 1)},${f1(y + h - 2 * k)} Z`} fill="#5A2820" />
 			<rect x={x - 1} y={y - 2} width={w + 4} height={Math.max(1.5, 2.5 * k)} fill={SIL} />
@@ -412,8 +413,8 @@ export const Army: React.FC<{t: number}> = ({t}) => {
 		<g transform={`translate(${f1(sh(1))},0)`} filter="url(#arB4)" opacity={0.75}>{Array.from({length: 11}, (_, i) => { const x = -100 + i * 330 - u * 128 + 180; return <ellipse key={i} cx={x} cy={910} rx={150} ry={20} fill="#A89878" opacity={0.25} />; })}</g>
 		{/* P5 the near ground, out of focus */}
 		<g transform={`translate(${f1(sh(1.35))},0)`} filter="url(#arB4)">
-			<path d="M-200,1040 C200,1030 600,1036 1000,1028 C1400,1022 1800,1034 2400,1026 L2400,1180 L-200,1180 Z" fill="#14100D" />
-			{Array.from({length: 40}, (_, i) => { const x = -160 + i * 70 + rnd(i, 41) * 40, y = 1040 - rnd(i, 42) * 8; return <path key={i} d={`M${f1(x)},${f1(y + 8)} l-6,-34 l10,30 l6,-44 l4,44 l10,-30 l-4,34 Z`} fill="#14100D" />; })}
+			<path d="M-800,1040 C-400,1034 200,1030 600,1036 C1000,1028 1400,1022 1800,1034 C2000,1030 2200,1028 2400,1026 L2400,1180 L-800,1180 Z" fill="#14100D" />
+			{Array.from({length: 48}, (_, i) => { const x = -700 + i * 70 + rnd(i, 41) * 40, y = 1040 - rnd(i, 42) * 8; return <path key={i} d={`M${f1(x)},${f1(y + 8)} l-6,-34 l10,30 l6,-44 l4,44 l10,-30 l-4,34 Z`} fill="#14100D" />; })}
 		</g>
 		<rect width={W} height={H} fill="url(#arVig)" />
 	</Svg>; };

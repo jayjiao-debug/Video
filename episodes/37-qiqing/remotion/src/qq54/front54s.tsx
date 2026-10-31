@@ -226,7 +226,7 @@ export const RunnerF: React.FC<{ph: number; kind: RunKind}> = ({ph, kind}) => { 
 	const leg = (sg: number) => { const lift = Math.max(0, sg * s);
 		return <path key={sg} d={limb([[sg * 8, -62 + b], [sg * 11, -32 - 24 * lift + b], [sg * 11, -3 - 38 * lift + b]], [8.4, 6.4, 4.6])} />; };
 	const shoe = (sg: number) => { const lift = Math.max(0, sg * s); return <ellipse key={'s' + sg} cx={sg * 11} cy={-2 - 38 * lift + b} rx={6.4} ry={4.4 + lift * 3} />; };
-	const swing = (sg: number, a: number) => <path key={'a' + sg} d={limb([[sg * 19, -138 + b], [sg * 28, -116 + 8 * a + b], [sg * 22, -96 + 14 * a + b]], [5.4, 4.6, 4])} />;
+	const swing = (sg: number, a: number) => <path key={'a' + sg} d={limb([[sg * 19, -138 + b], [sg * 23, -114 + 6 * a + b], [sg * 14, -94 + 12 * a + b]], [5.4, 4.6, 4])} />;
 	return <g>
 		{leg(-1)}{leg(1)}{shoe(-1)}{shoe(1)}
 		<path d={`M-20,${-142 + b} C-12,${-148 + b} 12,${-148 + b} 20,${-142 + b} L18,${-104 + b} L24,${-58 + b} L-24,${-58 + b} L-18,${-104 + b} Z`} />

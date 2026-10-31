@@ -141,7 +141,7 @@ const D2: React.FC<{t: number}> = ({t}) => { const d = t - T2, HZ = 640, c: Cam3
 			<Charge men={MEN2.filter((m) => m.Z > 2.7)} t={d} v={1.15} c={c} id="d2" zMin={2.7} split={6} flags />
 			<circle cx={960} cy={560} r={420} fill="url(#d2back)" />
 			<ellipse cx={960} cy={1012} rx={170} ry={16} fill="#000" opacity={0.6} />
-			<g filter="url(#d2hero)"><g transform={`translate(960,${1012 - 1352 * S}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-210, 150], fs: 1.15, T: [-500, -250], bw: 28, tipK: 1.4}} /></g></g>
+			<g filter="url(#d2hero)"><g transform={`translate(960,${1012 - 1352 * S}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-205, 165], fs: 1.2, T: [-440, -160], bw: 26, tipK: 1.8}} /></g></g>
 			<Charge men={MEN2.filter((m) => m.Z <= 2.7)} t={d} v={1.15} c={c} id="d2" zMin={1.0} split={6} flags />
 		</g>
 		<rect width={W} height={H} fill="url(#d2vig)" />
