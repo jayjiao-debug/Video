@@ -11,6 +11,8 @@ import {TitleArt} from './title54';
    Bars: downbeat of bar n = 0.654 + 1.99203·n s. */
 export const BAR = (n: number) => 0.654 + 1.99203 * n;
 export const DROP = BAR(50);                       // 100.256
+/** the sword in the dark: bar 49 beat 3 (99.259) to the drop — black, only the blade; no overlay (owner: build suspense, fully open on the drop) */
+export const DARK = BAR(49) + 2 * 1.99203 / 4;
 export const P1_END = BAR(18), P2_A = BAR(42), P2_B = BAR(54), SLATE = 1.0;
 export const DEMO_LEN = P1_END + SLATE + (P2_B - P2_A);   // ≈ 61.4 s
 /** demo time → film time (null on the slate) */
@@ -63,7 +65,7 @@ const Counter: React.FC<{age: number}> = ({age}) => <div style={{position: 'abso
 /** the overlay at film time t: subtitle (typing, rows stack), stamp (after the subtitle has typed), counter, seal, the title */
 export const Overlay: React.FC<{t: number}> = ({t}) => { const c = CARDS.find((k) => t >= k.a && t < k.b), title = t >= TITLE_A && t < TITLE_B;
 	if (t >= END_T) return null;
-	if (t >= DROP && t < DROP + 0.15) return null;   /* the drop opens on black + the blade flash, then the bars snap open: no furniture over it */
+	if (t >= DARK && t < DROP + 0.15) return null;   /* the sword in the dark, the bars open fully on the drop, the hit: no furniture over it */
 	if (title) return <><TitleArt t={t} /><SealHollow /></>;
 	if (!c) return <SealHollow />;
 	const r0 = plain(c.rows[0]).length, typed = c.a === 0 ? 1e9 : (t - c.a) * CPS,   /* card 1 is on screen whole from frame 0 (the 5-second rule) */ n = [Math.min(r0, typed), Math.max(0, typed - r0)];

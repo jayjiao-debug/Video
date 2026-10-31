@@ -6,6 +6,7 @@ import {LampStand} from './npc54b';
 import {SIL, ACC, limb} from './set54bs';
 import {CaoSeated, CaoSeatedShadow} from './set54bs2';
 import {K5, K6, cl, ease} from './scenes54bs';
+import {DARK} from './demo54core';
 /* ep54 demo · part 2 scenes by the set builder. t = FILM time (s).
    Guandu = cards 22–24 (84.32–96.27): K5 animated → cut to the tent (曹操 writes to 荀彧) → close-up of 荀彧's slip letter unrolling.
    Handover = card 25 (96.27–100.26): K6 animated, ending exactly on the handover frame at 100.22.
@@ -176,9 +177,9 @@ export const Guandu: React.FC<{t: number}> = ({t}) => {
 };
 
 /* ---------- card 25 · the handover: K6 animated, landing exactly on the key frame at 100.22 ---------- */
-export const Handover: React.FC<{t: number}> = ({t}) => { const END = 100.22, u = cl((t - B48) / (END - B48));
+export const Handover: React.FC<{t: number}> = ({t}) => { const END = DARK, u = cl((t - B48) / (END - B48));   /* owner: run it faster, so the sword in the dark gets bar 49 beats 3–4 */
 	const z = -0.065 * Math.pow(1 - u, 1.6);
-	const raise = ease((t - 97.25) / 2.1);
+	const raise = ease((t - 96.75) / 1.65);
 	return <K6 t={t} raise={raise} cam={{z, fx: 1240, fy: 640}} />;
 };
 
