@@ -4,6 +4,7 @@ import {W, H, Subs, SANS, SERIF, seg, cl} from '../qq50/kit50';
 import {thB} from '../qq50/styleB';
 import {SealHollow} from '../qq51/master51';
 import {Stamp53} from '../qq53/parts53';
+import {TitleArt} from './title54';
 /* ep54 · the look-B DEMO on the owner's BGM slowed to 0.9127× (A minor): part 1 = the film's opening 0–36.51 s (section A, the hard
    beat, cards 1–9 and the title); a 1 s slate; part 2 = 1:24.32–1:48.22 (the break, the drop on 1:40.26, cards 22–27).
    Every scene is a React.FC<{t: number}> where t is FILM time in seconds (the script's clock, episodes/54-caocao/script.md).
@@ -45,7 +46,7 @@ export const CARDS: Card[] = [
 	{a: BAR(50), b: BAR(52), rows: ['他亲率五千人，', '[夜袭乌巢]！'], y: '200', place: '乌巢', note: '步骑五千人夜往', age: 46},
 	{a: BAR(52), b: BAR(54), rows: ['一把火，烧光袁军的粮。', '袁军，全线崩溃。'], y: '200', place: '乌巢', note: '尽燔其粮谷', age: 46},
 	{a: BAR(54), b: BAR(56), rows: ['53岁，北方已定。', '“[老骥伏枥]，志在千里。”'], y: '207', place: '碣石', note: '曹操《龟虽寿》', age: 53},
-	{a: BAR(56), b: BAR(58), rows: ['54岁，赤壁一把火，', '烧回了他自己。'], y: '208', place: '赤壁', note: '孙刘联军火攻', age: 54},
+	{a: BAR(56), b: BAR(58), rows: ['54岁，赤壁一把火，', '这一回，烧的是他的船。'], y: '208', place: '赤壁', note: '孙刘联军火攻', age: 54},
 	{a: BAR(58), b: BAR(60), rows: ['劝他称帝，他只说：', '“吾为[周文王]矣。”'], y: '219', note: '意即：帝位留给儿子', age: 65},
 	{a: BAR(60), b: BAR(62), rows: ['66岁，他死在洛阳。', '遗令：[无藏金玉珍宝]。'], y: '220', place: '洛阳', note: '敛以时服', age: 66},
 ];
@@ -59,20 +60,10 @@ const Scrim: React.FC = () => { const m = 'linear-gradient(180deg, rgba(0,0,0,0)
 	return <div style={{position: 'absolute', left: 0, top: 40, width: 1150, height: 290, background: 'linear-gradient(90deg, rgba(18,9,6,0.5) 0%, rgba(18,9,6,0.42) 35%, rgba(18,9,6,0.16) 72%, rgba(18,9,6,0) 100%)', WebkitMaskImage: m, maskImage: m}} />; };
 const Counter: React.FC<{age: number}> = ({age}) => <div style={{position: 'absolute', left: 150, bottom: 70, color: '#FFF6E6', fontFamily: SANS, textShadow: thB.halo, display: 'flex', alignItems: 'baseline', gap: 10}}>
 	<span style={{fontSize: 34, fontWeight: 700}}>曹操</span><span style={{fontSize: 78, fontWeight: 800, fontVariantNumeric: 'tabular-nums'}}>{age}</span><span style={{fontSize: 34, fontWeight: 700}}>岁</span></div>;
-/** the title on bar 6: slams in (scale 1.18 → 1 over 5 frames, a soft flash), holds, lifts off before bar 8 */
-const Title: React.FC<{t: number}> = ({t}) => { const u = cl((t - TITLE_A) * 30 / 5), k = 1.18 - 0.18 * (1 - Math.pow(1 - u, 3)), out = 1 - seg(t, TITLE_B - 0.35, TITLE_B);
-	const flash = Math.max(0, 1 - (t - TITLE_A) * 30 / 6) * 0.35;
-	return <>
-		<div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 46%, rgba(8,5,4,0.62) 0%, rgba(8,5,4,0.35) 45%, rgba(8,5,4,0) 75%)', opacity: out}} />
-		{flash > 0.004 && <div style={{position: 'absolute', inset: 0, background: '#F3DDB4', opacity: flash}} />}
-		<div style={{position: 'absolute', left: 0, top: 300, width: W, textAlign: 'center', transform: `scale(${k})`, opacity: out, color: '#FFF3DC', fontFamily: SERIF, textShadow: thB.halo}}>
-			<div style={{fontSize: 168, fontWeight: 900, letterSpacing: '0.18em', lineHeight: 1.1}}>曹操</div>
-			<div style={{fontSize: 74, fontWeight: 800, marginTop: 26, color: '#8FD0DC', letterSpacing: '0.06em'}}>到底是英雄，还是奸雄？</div>
-		</div></>; };
 /** the overlay at film time t: subtitle (typing, rows stack), stamp (after the subtitle has typed), counter, seal, the title */
 export const Overlay: React.FC<{t: number}> = ({t}) => { const c = CARDS.find((k) => t >= k.a && t < k.b), title = t >= TITLE_A && t < TITLE_B;
 	if (t >= END_T) return null;
-	if (title) return <><Title t={t} /><SealHollow /></>;
+	if (title) return <><TitleArt t={t} /><SealHollow /></>;
 	if (!c) return <SealHollow />;
 	const r0 = plain(c.rows[0]).length, typed = c.a === 0 ? 1e9 : (t - c.a) * CPS,   /* card 1 is on screen whole from frame 0 (the 5-second rule) */ n = [Math.min(r0, typed), Math.max(0, typed - r0)];
 	const stampOn = typed > plain(c.rows.join('')).length + 6;

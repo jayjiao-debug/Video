@@ -56,7 +56,7 @@ export const CaoBack: React.FC<{id: string; raise?: number}> = ({id, raise = 1})
 		<path d={CUIR} fill={`url(#${id}lm)`} />
 		<g clipPath={`url(#${id}u)`}><rect x={-30} y={-150} width={40} height={56} fill={p.metalS} opacity={0.5} /><path d="M17,-146 C21,-128 22,-112 20,-98 L30,-98 L30,-146 Z" fill={p.metalH} opacity={0.3} />
 			{[-128, -114].map((y) => <rect key={y} x={-30} y={y} width={60} height={0.9} fill={p.lace} opacity={0.8} />)}</g>
-		<path d="M-20,-101 L23,-101 L23,-97 L-20,-97 Z" fill="#1A120E" /><ellipse cx={22} cy={-99} rx={1.6} ry={1.2} fill={p.gold} />
+		<path d="M-20,-101 L23,-101 L23,-97 L-20,-97 Z" fill="#2A1A10" /><path d="M18.6,-100 C20.6,-100.6 22.6,-100.2 23,-99 C22.6,-97.8 20.6,-97.6 18.6,-98.2 Z" fill="#7A5A30" /><path d="M18.6,-100 C20.6,-100.6 22.6,-100.2 23,-99 L19,-99.2 Z" fill="#C8984E" />
 		{/* the right arm raised forward with the torch: crimson sleeve, a lamellar 披膊 on the upper arm, a metal bracer */}
 		<path d={limb([[18, -139], EL, HD], [6.4, 5, 4.2])} fill={p.under} />
 		<path d={limb([[19, -142], [EL[0], EL[1] - 3], [HD[0] - 1, HD[1] - 3]], [2, 1.8, 1.4])} fill="#8A4A3A" opacity={0.7} />

@@ -96,53 +96,71 @@ const HorizonDefs: React.FC<{id: string; hz: number}> = ({id, hz}) => <>
 	<linearGradient id={`${id}gd`} x1="0" y1={hz} x2="0" y2={H + 200} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#3A1A10" /><stop offset="0.12" stopColor="#1E0E0A" /><stop offset="1" stopColor="#0A0605" /></linearGradient>
 </>;
 
-/* ================= D1 · the hit: he turns to face us, the blade at the lens ================= */
+/* ================= D1 · the hit: he turns to face us, the 宝剑 at the lens ================= */
 const MEN1 = charge(11, 160, 1.3, 6.2, [-2.4, -3.3, 2.4, 3.3, -1.6, 1.7]);
 const SM1 = smokeBlobs(30, 3, -200, 2100, -200, 560, 100, 240);
-const D1: React.FC<{t: number}> = ({t}) => { const d = t - T1, HZ = 800, c: Cam3 = {f: 1000, vx: 1180, hz: HZ, ch: 0.7, bend: 0.003};
-	const z = 0.075 * eout(d / 2.1), FX = 1150, FY = 520;
+/** D1's camera and the arm pose at t (shared by the scene layer and the sword layer above the letterbox) */
+const d1Pose = (t: number) => { const d = t - T1, z = 0.075 * eout(d / 2.1);
 	/* the thrust on the hit: the arm snaps toward the lens over 5 frames, then holds with a small tremble */
 	const sn = eout(d / 0.17), tr = Math.sin(t * 23) * 1.2 * cl(d / 0.3);
-	const arm = {F: [-236 - 12 * sn, 228 + 14 * sn + tr] as P, fs: 1.6 + 0.4 * sn, T: [-470 - 140 * sn, 330 + 130 * sn + tr] as P, bw: 22, tipK: 2.9};
-	const glint = d < 0 ? 0 : cl((d - 0.1) / 0.12) * (0.55 + 0.45 * Math.exp(-(d - 0.1) / 0.4)) * (0.85 + 0.15 * Math.sin(t * 9));
-	const tip: P = [1180 + arm.T[0], 470 + arm.T[1]];
+	const arm = {F: [-236 - 12 * sn, 222 + 14 * sn + tr] as P, fs: 1.6 + 0.4 * sn, T: [-520 - 140 * sn, 380 + 165 * sn + tr] as P, bw: 24, tipK: 2.5};
+	return {d, z, arm, tf: `${pl(z, 1, 1150, 520)} translate(1180,470)`};
+};
+export const D1: React.FC<{t: number; layer?: 'scene' | 'sword'}> = ({t, layer = 'scene'}) => { const {d, z, arm, tf} = d1Pose(t), HZ = 800, c: Cam3 = {f: 1000, vx: 1180, hz: HZ, ch: 0.7, bend: 0.003};
+	const FX = 1150, FY = 520;
+	if (layer === 'sword') {
+		/* the sword over the letterbox, and its glint: big on the black first frames, then a short star */
+		const ga = d < 0.05 ? 1.6 : 0.55 + 0.45 * Math.exp(-(d - 0.05) / 0.35), gl = (d < 0 ? 0 : 1) * (0.85 + 0.15 * Math.sin(t * 9)), L = 70 * ga, V = 46 * ga;
+		const T = arm.T;
+		return <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
+			<defs><radialGradient id="d1tg"><stop offset="0" stopColor="#FFF6E0" stopOpacity="1" /><stop offset="0.2" stopColor="#FFD08A" stopOpacity="0.55" /><stop offset="1" stopColor="#FF8A3A" stopOpacity="0" /></radialGradient></defs>
+			<g transform={tf}>
+				<CaoFront id="d1s" t={t} arm={arm} part="sword" />
+				{gl > 0.01 && <g opacity={gl}><circle cx={T[0]} cy={T[1]} r={70 * ga} fill="url(#d1tg)" />
+					<path d={`M${T[0] - L},${T[1]} L${T[0]},${T[1] - 3} L${T[0] + L},${T[1]} L${T[0]},${T[1] + 3} Z M${T[0]},${T[1] - V} L${T[0] + 2.6},${T[1]} L${T[0]},${T[1] + V} L${T[0] - 2.6},${T[1]} Z`} fill="#FFF6E0" /></g>}
+			</g>
+		</svg>; }
 	return <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
 		<defs><HorizonDefs id="d1" hz={HZ} /><ChargeDefs id="d1" kn={2.6} /><Blur id="d1sb" s={22} />
 			<RimF id="d1hero" lx={1} ly={-0.35} k={5} c={FIRE.mid} o={0.95} lx2={-1} ly2={-0.25} k2={4} c2={ACC} o2={0.9} blur={1} />
 			<radialGradient id="d1vig" cx="0.58" cy="0.48" r="0.78"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.62" /></radialGradient>
 			<radialGradient id="d1back" cx="1190" cy="330" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FFB04E" stopOpacity="0.42" /><stop offset="0.45" stopColor="#EA6028" stopOpacity="0.16" /><stop offset="1" stopColor="#EA6028" stopOpacity="0" /></radialGradient>
-			<radialGradient id="d1tg"><stop offset="0" stopColor="#FFF6E0" stopOpacity="1" /><stop offset="0.18" stopColor="#FFD08A" stopOpacity="0.55" /><stop offset="1" stopColor="#FF8A3A" stopOpacity="0" /></radialGradient>
 		</defs>
-		<g transform={pl(z, 0, FX, FY)}><Sky id="d1sky" hz={HZ} /><Smoke b={SM1} t={d} id="d1sb" blur={16} hz={HZ} /></g>
+		<g transform={pl(z, 0, FX, FY)}><Sky id="d1sky" hz={HZ} /><Smoke b={SM1} t={d} id="d1sb" blur={22} hz={HZ} /></g>
 		<g transform={pl(z, 0.12, FX, FY)}><Horizon hz={HZ} t={t} id="d1" qx={[150, 300, 1660, 1820]} qs={0.62} /></g>
 		<g transform={pl(z, 0.4, FX, FY)}><Charge men={MEN1} t={d} v={1.3} c={c} id="d1" zMin={2.2} split={8} /></g>
-		<g transform={pl(z, 1, FX, FY)}>
-			<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="url(#d1back)" />
-			<g filter="url(#d1hero)"><g transform="translate(1180,470)"><CaoFront id="d1c" t={t} arm={arm} /></g></g>
-			{glint > 0.01 && <g opacity={glint}><circle cx={tip[0]} cy={tip[1]} r={190} fill="url(#d1tg)" /><path d={`M${tip[0] - 130},${tip[1]} L${tip[0]},${tip[1] - 3.5} L${tip[0] + 170},${tip[1]} L${tip[0]},${tip[1] + 3.5} Z M${tip[0]},${tip[1] - 150} L${tip[0] + 3},${tip[1]} L${tip[0]},${tip[1] + 150} L${tip[0] - 3},${tip[1]} Z`} fill="#FFF6E0" /></g>}
-		</g>
+		<g transform={pl(z, 1, FX, FY)}><rect x={-200} y={-200} width={W + 400} height={H + 400} fill="url(#d1back)" /></g>
+		<g filter="url(#d1hero)"><g transform={tf}><CaoFront id="d1c" t={t} arm={arm} part="body" /></g></g>
 		<rect width={W} height={H} fill="url(#d1vig)" />
+	</svg>; };
+/** the letterbox on the hit: black, then the bars snap open in about 4 frames; the bottom bar stays (the sword crosses over it) */
+export const BAR_REST = 930;
+const Letterbox: React.FC<{t: number}> = ({t}) => { const d = t - T1, u = eout((d - 0.03) / 0.12);
+	const top = 540 * (1 - u), bot = 540 + (BAR_REST - 540) * u;
+	return <svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+		{top > 0.5 && <rect x={0} y={0} width={W} height={top} fill="#000" />}
+		<rect x={0} y={bot} width={W} height={H - bot} fill="#000" />
 	</svg>; };
 
 /* ================= D2 · wider: the charge streams past him on both sides; 曹 banners whip past ================= */
 const MEN2 = charge(23, 110, 1.15, 1.25, [-1.45, -2.3, -3.2, 1.45, 2.3, 3.2], 0.3);
 const SM2 = smokeBlobs(30, 9, -200, 2100, -160, 520, 90, 220);
-const D2: React.FC<{t: number}> = ({t}) => { const d = t - T2, HZ = 640, c: Cam3 = {f: 1000, vx: 960, hz: HZ, ch: 1.0};
-	const z = 0.05 * ease(d / 2.0), FX = 960, FY = 560, S = 0.45;
+const D2: React.FC<{t: number}> = ({t}) => { const d = t - T2, HZ = 734, c: Cam3 = {f: 1000, vx: 960, hz: HZ, ch: 0.8};
+	const z = 0.05 * ease(d / 2.0), FX = 960, FY = 600, S = 0.405, ZH = 2.36;
 	return <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
 		<defs><HorizonDefs id="d2" hz={HZ} /><ChargeDefs id="d2" kn={3.4} /><Blur id="d2sb" s={24} />
 			<RimF id="d2hero" lx={1} ly={-0.35} k={3.4} c={FIRE.mid} o={0.95} lx2={-1} ly2={-0.25} k2={3} c2={ACC} o2={0.9} blur={0.9} />
 			<radialGradient id="d2vig" cx="0.5" cy="0.5" r="0.78"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.6" /></radialGradient>
-			<radialGradient id="d2back" cx="960" cy="560" r="420" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FF9A40" stopOpacity="0.28" /><stop offset="1" stopColor="#FF9A40" stopOpacity="0" /></radialGradient>
+			<radialGradient id="d2back" cx="960" cy="560" r="460" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FF9A40" stopOpacity="0.3" /><stop offset="1" stopColor="#FF9A40" stopOpacity="0" /></radialGradient>
 		</defs>
 		<g transform={pl(z, 0, FX, FY)}><Sky id="d2sky" hz={HZ} /><Smoke b={SM2} t={d + 2} id="d2sb" blur={24} hz={HZ} /></g>
 		<g transform={pl(z, 0.12, FX, FY)}><Horizon hz={HZ} t={t} id="d2" qx={[240, 420, 1480, 1660, 1830]} qs={0.36} /></g>
 		<g transform={pl(z, 0.5, FX, FY)}>
-			<Charge men={MEN2.filter((m) => m.Z > 2.7)} t={d} v={1.15} c={c} id="d2" zMin={2.7} split={6} flags />
-			<circle cx={960} cy={560} r={420} fill="url(#d2back)" />
-			<ellipse cx={960} cy={1012} rx={170} ry={16} fill="#000" opacity={0.6} />
-			<g filter="url(#d2hero)"><g transform={`translate(960,${1012 - 1352 * S}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-205, 165], fs: 1.2, T: [-440, -160], bw: 26, tipK: 1.8}} /></g></g>
-			<Charge men={MEN2.filter((m) => m.Z <= 2.7)} t={d} v={1.15} c={c} id="d2" zMin={1.0} split={6} flags />
+			<Charge men={MEN2.filter((m) => m.Z > ZH)} t={d} v={1.15} c={c} id="d2" zMin={ZH - 2.4} split={6} flags />
+			<circle cx={960} cy={560} r={460} fill="url(#d2back)" />
+			<ellipse cx={960} cy={1070} rx={180} ry={16} fill="#000" opacity={0.6} />
+			<g filter="url(#d2hero)"><g transform={`translate(960,${f1(1073 - 1620 * S)}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-222, 40], fs: 1.25, T: [-500, -600], bw: 30, tipK: 1.3}} /></g></g>
+			<Charge men={MEN2.filter((m) => m.Z <= ZH)} t={d} v={1.15} c={c} id="d2" zMin={1.0} split={6} flags />
 		</g>
 		<rect width={W} height={H} fill="url(#d2vig)" />
 	</svg>; };
@@ -245,15 +263,16 @@ const Embers: React.FC<{t: number; n: number}> = ({t, n}) => <svg width={W} heig
 		return e.spark ? <line key={i} x1={xx} y1={yy} x2={xx - Math.cos(t * e.fq + e.ph * 6) * e.sw * e.fq * 0.12} y2={yy + 10 + e.sp * 0.06} stroke={e.hot > 0.5 ? FIRE.core : FIRE.mid} strokeWidth={e.r * 0.6} strokeLinecap="round" opacity={o} />
 			: <circle key={i} cx={xx} cy={yy} r={e.r * 3} fill="url(#drEm)" opacity={o} />; })}
 </svg>;
-export const Drop: React.FC<{t: number}> = ({t}) => { const d = Math.max(0, t - T1), fr = Math.floor(d * 30 + 1e-6);
-	const flash = [0.5, 0.32, 0.16, 0.05][fr] ?? 0;
+export const Drop: React.FC<{t: number}> = ({t}) => { const d = Math.max(0, t - T1);
 	const A = 13 * Math.exp(-d / 0.13) * cl((0.55 - d) / 0.1);
 	const shx = A * Math.sin(d * 97 + 0.7) * Math.cos(d * 31), shy = A * 0.7 * Math.sin(d * 83 + 2.1);
-	const S = t < T2 ? D1 : t < T3 ? D2 : t < T4 ? D3 : D4;
-	const sc = 1.024;
+	const S = t < T2 ? D1 : t < T3 ? D2 : t < T4 ? D3 : D4, d1 = t < T2;
+	const shake = {position: 'absolute' as const, inset: 0, transform: `translate(${f1(shx)}px,${f1(shy)}px) scale(1.024)`, transformOrigin: '50% 50%'};
+	const open = d1 ? eout((d - 0.03) / 0.12) : 1;
 	return <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#0A0605'}}>
-		<div style={{position: 'absolute', inset: 0, transform: `translate(${f1(shx)}px,${f1(shy)}px) scale(${sc})`, transformOrigin: '50% 50%'}}><S t={t} /></div>
-		<Embers t={t} n={t < T3 ? 90 : 120} />
-		{flash > 0 && <div style={{position: 'absolute', inset: 0, background: '#FF9A50', opacity: flash, mixBlendMode: 'screen'}} />}
+		<div style={shake}><S t={t} /></div>
+		{open > 0.001 && <div style={{opacity: open}}><Embers t={t} n={t < T3 ? 90 : 120} /></div>}
+		{d1 && <Letterbox t={t} />}
+		{d1 && <div style={shake}><D1 t={t} layer="sword" /></div>}
 	</div>; };
 void (null as unknown as P);
