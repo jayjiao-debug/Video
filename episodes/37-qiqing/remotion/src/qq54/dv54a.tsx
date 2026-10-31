@@ -3,7 +3,8 @@ import {W, H} from '../qq50/kit50';
 import {RimF, P, rnd, f1} from './cao54b';
 import {Qun} from './set54bs';
 import {RunnerF, runTop, Flame3, FIRE, RunKind} from './front54s';
-import {HDefs, CapeA, CapeFarA, MantleA, TorsoA, CollarA, HeadA, PaulA, SleeveA, VambA, FistA} from './d1hero54a';
+import {HDefs, CapeA, CapeFarA, MantleA, TorsoA, CollarA, PaulA, SleeveA, VambA, FistA} from './d1hero54a';
+import {HeadT, HeadDefs} from './d1head54a';
 /* ep54 · D1 variant A 「突刺」, rebuilt to the owner's target picture (his repaint of our 101.60 frame; drawn in code, look B).
    D1V = the whole D1 shot for film 100.256–102.248 (t = film time).
    The camera sits in front of the 宝剑 looking back along it: the broad blade in extreme perspective (built and projected in 3D,
@@ -35,7 +36,7 @@ const FS = 1500;
 const prj = (p: V3): P => [CX + (FS * p[0]) / p[2], CY + (FS * p[1]) / p[2]];
 
 /* the sword at rest (fitted to the target): the guard 90 cm out, the point 11 cm from the lens; a broad blade (8 cm), the point 7 cm */
-const G0: V3 = [10.385, 3.776, 90.525], T0: V3 = [-4.692, 2.422, 11.351], HW = 4.014, PHI = 0.1496, PT = 7.122;
+const G0: V3 = [9.884, 3.962, 85.795], T0: V3 = [-4.730, 2.459, 11.351], HW = 4.033, PHI = 0.161, PT = 6.996;
 const AX = vn(vs(T0, G0)), LB = Math.hypot(...vs(T0, G0));
 /** the thrust: 0 → 1 over 100.40 → 100.72 (the arm and the sword start 42 cm back along the axis) */
 const thr = (t: number) => eout((t - TA) / (TB - TA));
@@ -90,8 +91,9 @@ const Sword: React.FC<{t: number}> = ({t}) => { const s = swordGeo(t), {c, w, n}
 		<path d={face(eC)} fill="url(#dvaSC)" />
 		<path d={face(eW)} fill="url(#dvaSW)" />
 		{/* the bevels' inner planes: a soft light streak along the ridge on the light face, a darker band on the steel face */}
-		<path d={strip(LB * 0.08, LB - PT * 0.4, 0.3, 0.55)} fill="#FFF6E6" opacity={0.45} />
-		<path d={strip(LB * 0.3, LB - PT * 0.2, 0.08, 0.2)} fill="#FFFFFF" opacity={0.35 + 0.05 * Math.sin(t * 4)} />
+		{/* the two parallel highlight streaks on the upper bevel, bending round the shoulder toward the point */}
+		<path d={strip(LB * 0.1, LB - PT * 0.42, 0.7, 0.8)} fill="#FFF0DC" opacity={0.6 + 0.05 * Math.sin(t * 4)} />
+		<path d={strip(LB * 0.14, LB - PT * 0.62, 0.36, 0.47)} fill="#FFF0DC" opacity={0.5} />
 		<path d={strip(LB * 0.1, LB - PT * 0.4, 0.35, 0.6, -1)} fill="#2E4458" opacity={0.45} />
 		<path d={strip(LB * 0.4, LB - PT * 0.3, 0.75, 0.88, -1)} fill="#9CB8C8" opacity={0.3} />
 		{/* the ridge, the edges */}
@@ -177,6 +179,15 @@ const Letterbox: React.FC<{t: number}> = ({t}) => { const d = t - T1, u = eout((
 		<rect x={0} y={bot} width={W} height={H - bot} fill="#000" />
 	</svg>; };
 
+/** a fixed paper/brush grain multiplied into a layer (applied once per layer): fractal noise mapped to 0.86–1.06 */
+const Grain: React.FC<{id: string}> = ({id}) => <filter id={id} x="0" y="0" width="1920" height="1080" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+	<feTurbulence type="fractalNoise" baseFrequency="0.8 0.55" numOctaves={2} seed={11} result="n" />
+	<feColorMatrix in="n" type="saturate" values="0" result="g" />
+	<feComponentTransfer in="g" result="gm"><feFuncR type="linear" slope={0.4} intercept={0.76} /><feFuncG type="linear" slope={0.4} intercept={0.75} /><feFuncB type="linear" slope={0.4} intercept={0.74} /><feFuncA type="linear" slope={0} intercept={1} /></feComponentTransfer>
+	<feBlend in="SourceGraphic" in2="gm" mode="multiply" result="m" />
+	<feComposite in="m" in2="SourceAlpha" operator="in" />
+</filter>;
+
 /* ---------- the shot ---------- */
 /** the world's camera: the dutch roll, a push-in (parallax p: 0 = the sky … 1 = near) */
 const camT = (t: number, p: number) => { const d = Math.max(0, t - T1), z = 0.11 * ease(d / 2.0) + 0.025 * eout(d / 0.4), s = 1 + z * (0.3 + 0.7 * p);
@@ -203,7 +214,7 @@ const handT = (t: number) => { const {G} = pose(t), g = prj(G), k = G0[2] / G[2]
 	return {g, k, str: `translate(${f1(g[0] + tr[0])},${f1(g[1] + tr[1])}) scale(${k.toFixed(4)}) translate(${f1(-G0S[0])},${f1(-G0S[1])})`,
 		map: (p: P): P => [g[0] + tr[0] + (p[0] - G0S[0]) * k, g[1] + tr[1] + (p[1] - G0S[1]) * k]}; };
 const Hero: React.FC<{t: number}> = ({t}) => { const L = leanT(t), hT = handT(t), cu = capeU(t);
-	const sh = leanP(t, [1418, 470]), vb = hT.map([1296, 528]);
+	const sq: P[] = [leanP(t, [1424, 404]), leanP(t, [1428, 592]), hT.map([1300, 598]), hT.map([1298, 418])];
 	return <g filter="url(#dvaHero)">
 		<g transform={L.str}>
 			<CapeA t={t} cu={cu} />
@@ -211,9 +222,9 @@ const Hero: React.FC<{t: number}> = ({t}) => { const L = leanT(t), hT = handT(t)
 			<TorsoA t={t} />
 			<MantleA t={t} cu={cu} />
 			<CollarA />
-			<HeadA t={t} />
+			<HeadT t={t} />
 		</g>
-		<SleeveA sh={sh} vb={vb} />
+		<SleeveA q={sq} />
 		<g transform={L.str}><PaulA /></g>
 		<g transform={hT.str}><VambA /><FistA /></g>
 	</g>; };
@@ -229,7 +240,7 @@ export const D1V: React.FC<{t: number}> = ({t}) => { const d = Math.max(0, t - T
 	return <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#0A0605'}}>
 		<div style={shake}>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
-				<defs><WorldDefs /><HDefs />
+				<defs><WorldDefs /><HDefs /><HeadDefs /><Grain id="d1Gr" />
 					<RimF id="dvaHero" lx={1} ly={-0.5} k={4} c={FIRE.mid} o={0.8} lx2={-1} ly2={0.2} k2={3} c2={ACC} o2={0.75} blur={1} />
 					<radialGradient id="dvaPf"><stop offset="0" stopColor="#7A3A24" stopOpacity="0.5" /><stop offset="0.6" stopColor="#4A2420" stopOpacity="0.22" /><stop offset="1" stopColor="#3A2224" stopOpacity="0" /></radialGradient>
 					<radialGradient id="dvaEm"><stop offset="0" stopColor="#FFE9B0" stopOpacity="1" /><stop offset="0.35" stopColor="#FFB04E" stopOpacity="0.55" /><stop offset="1" stopColor="#EA6028" stopOpacity="0" /></radialGradient>
@@ -238,16 +249,16 @@ export const D1V: React.FC<{t: number}> = ({t}) => { const d = Math.max(0, t - T
 				<g transform={camT(t, 0.15)}><World d={d} t={t} /></g>
 				{/* embers and smoke streaming toward the lens: all behind him and his sword */}
 				{open > 0.001 && <g opacity={open} transform={camT(t, 0.6)}><Embers t={t} /></g>}
-				<g transform={heroT(t)}><Hero t={t} /></g>
+				<g transform={heroT(t)}><g filter="url(#d1Gr)"><Hero t={t} /></g></g>
 				<rect width={W} height={H} fill="url(#dvaVig)" />
 			</svg>
 		</div>
 		<Letterbox t={t} />
 		<div style={shake}>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
-				<defs><radialGradient id="dvaTip"><stop offset="0" stopColor="#FFF6E0" stopOpacity="1" /><stop offset="0.2" stopColor="#FFD08A" stopOpacity="0.55" /><stop offset="1" stopColor="#FF8A3A" stopOpacity="0" /></radialGradient></defs>
+				<defs><Grain id="d1Gr2" /><radialGradient id="dvaTip"><stop offset="0" stopColor="#FFF6E0" stopOpacity="1" /><stop offset="0.2" stopColor="#FFD08A" stopOpacity="0.55" /><stop offset="1" stopColor="#FF8A3A" stopOpacity="0" /></radialGradient></defs>
 				<g transform={heroT(t)}>
-					<g transform={`translate(${f1(tr[0])},${f1(tr[1])})`}><Sword t={t} /></g>
+					<g transform={`translate(${f1(tr[0])},${f1(tr[1])})`} filter="url(#d1Gr2)"><Sword t={t} /></g>
 					<g opacity={gl}><circle cx={tip[0]} cy={tip[1]} r={80 * ga} fill="url(#dvaTip)" />
 						<path d={`M${tip[0] - Lg},${tip[1]} L${tip[0]},${tip[1] - 3.4} L${tip[0] + Lg},${tip[1]} L${tip[0]},${tip[1] + 3.4} Z M${tip[0]},${tip[1] - V} L${tip[0] + 3},${tip[1]} L${tip[0]},${tip[1] + V} L${tip[0] - 3},${tip[1]} Z`} fill="#FFF6E0" transform={`rotate(-8,${f1(tip[0])},${f1(tip[1])})`} /></g>
 				</g>

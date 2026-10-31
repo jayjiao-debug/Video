@@ -17,30 +17,31 @@ const cub = (a: P, b: P, c: P, d: P, u: number): P => { const m = 1 - u; return 
 const pb = (k: P[], u: number): P => { const n = (k.length - 1) / 3, x = Math.min(n - 1e-6, Math.max(0, u * n)), i = Math.floor(x); return cub(k[i * 3], k[i * 3 + 1], k[i * 3 + 2], k[i * 3 + 3], x - i); };
 
 export const HDefs: React.FC = () => <>
+	<filter id="d1Fe" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={3.2} /></filter>
+	<linearGradient id="d1Br" x1={1250} y1={420} x2={1290} y2={600} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#2A2422" /><stop offset="0.3" stopColor="#5A4E46" /><stop offset="0.55" stopColor="#3A322E" /><stop offset="1" stopColor="#161210" /></linearGradient>
 	{/* lamellae: small plates in rows, laced; the rows follow the lean */}
-	<pattern id="d1Lm" width={13} height={15} patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
-		<rect width={13} height={15} fill="#141110" />
-		<path d="M0.9,0.9 L12.1,0.9 L12.1,11.6 C9.4,13.4 3.6,13.4 0.9,11.6 Z" fill="#26201C" />
-		<rect x={0.9} y={0.9} width={11.2} height={1.6} fill="#9A8270" opacity={0.16} />
-		<rect x={0} y={13.4} width={13} height={1.6} fill="#3A1612" opacity={0.8} /></pattern>
-	<pattern id="d1LmL" width={13} height={15} patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
-		<rect width={13} height={15} fill="#191411" />
-		<path d="M0.9,0.9 L12.1,0.9 L12.1,11.6 C9.4,13.4 3.6,13.4 0.9,11.6 Z" fill="#332A24" />
-		<rect x={0.9} y={0.9} width={11.2} height={1.6} fill="#D8A070" opacity={0.2} />
-		<rect x={0} y={13.4} width={13} height={1.6} fill="#4A1C16" opacity={0.8} /></pattern>
+	<pattern id="d1Lm" width={11} height={16} patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
+		<rect width={11} height={16} fill="#151110" />
+		<rect x={0.8} y={0.8} width={9.4} height={12.6} rx={1.2} fill="#2C2420" /><rect x={0.8} y={0.8} width={9.4} height={5} rx={1.2} fill="#3A302A" opacity={0.7} />
+		<rect x={0} y={14} width={11} height={1.2} fill="#5A2018" opacity={0.75} /><rect x={5} y={13.4} width={1.2} height={2.6} fill="#7A3024" opacity={0.6} /></pattern>
+	<pattern id="d1LmL" width={11} height={16} patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
+		<rect width={11} height={16} fill="#181311" />
+		<rect x={0.8} y={0.8} width={9.4} height={12.6} rx={1.2} fill="#352B25" /><rect x={0.8} y={0.8} width={9.4} height={5} rx={1.2} fill="#4A3C32" opacity={0.7} />
+		<rect x={0} y={14} width={11} height={1.2} fill="#6A2418" opacity={0.75} /><rect x={5} y={13.4} width={1.2} height={2.6} fill="#8A3626" opacity={0.6} /></pattern>
 	{/* mail / scale aventail */}
 	<pattern id="d1Ml" width={7} height={6} patternUnits="userSpaceOnUse" patternTransform="rotate(-28)">
 		<rect width={7} height={6} fill="#262628" /><path d="M0.5,0.5 L6.5,0.5 L6.5,3.8 C5,5.5 2,5.5 0.5,3.8 Z" fill="#46464A" />
 		<rect x={0.5} y={0.5} width={6} height={1.1} fill="#A8A8B0" opacity={0.22} /></pattern>
+	<linearGradient id="d1Cl" x1={1250} y1={210} x2={700} y2={262} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#7A3226" /><stop offset="0.45" stopColor="#B0663A" /><stop offset="1" stopColor="#8E4430" /></linearGradient>
 	<linearGradient id="d1Cp" x1={1250} y1={300} x2={540} y2={460} gradientUnits="userSpaceOnUse">
-		<stop offset="0" stopColor="#2A0E10" /><stop offset="0.55" stopColor="#3A1416" /><stop offset="1" stopColor="#4A1A1C" /></linearGradient>
+		<stop offset="0" stopColor="#3A1416" /><stop offset="0.55" stopColor="#451D20" /><stop offset="1" stopColor="#4D282D" /></linearGradient>
 	<radialGradient id="d1Fh" cx={1190} cy={520} r={150} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FFB070" stopOpacity="0.35" /><stop offset="1" stopColor="#FFB070" stopOpacity="0" /></radialGradient>
 </>;
 
 /* ---------- the cape: a wedge from the shoulders (u = 0) to the tip up-left (u = 1); v = 0 its top edge … 1 its bottom edge.
    cu = how far it is unfurled (0 furled at the shoulders → 1, with overshoot); a travelling wave runs along it ---------- */
-const CTOP: P[] = [[1452, 326], [1404, 246], [1330, 212], [1196, 210], [1060, 216], [900, 226], [780, 240], [650, 262], [570, 360], [540, 462]];
-const CBOT: P[] = [[1500, 760], [1494, 900], [1262, 884], [1170, 752], [1120, 640], [1020, 532], [820, 496], [700, 480], [600, 466], [540, 462]];
+const CTOP: P[] = [[1452, 326], [1404, 246], [1330, 206], [1196, 204], [1040, 212], [900, 228], [780, 246], [660, 268], [574, 336], [546, 462]];
+const CBOT: P[] = [[1470, 690], [1460, 790], [1280, 812], [1172, 748], [1120, 640], [1020, 532], [820, 496], [700, 480], [600, 466], [540, 462]];
 const capePt = (u: number, v: number, t: number, cu: number): P => {
 	const a = pb(CTOP, u), b = pb(CBOT, u), m = lerp(a, b, v);
 	/* the travelling wave: the folds ripple at ~1.2 Hz, the wave runs from the shoulder to the tip; amplitude grows to the tip */
@@ -57,13 +58,17 @@ const band = (v0: number, v1: number, t: number, cu: number, u0 = 0, u1 = 1) => 
 	return `M${pp(A)} L${pp(B.reverse())} Z`; };
 export const CapeA: React.FC<{t: number; cu: number}> = ({t, cu}) => {
 	/* fold bands (v ranges) and their tones: lit crest at the top edge, a dark trough, a lit warm fold, the dark underside */
-	const B: [number, number, string, number][] = [[0, 1, 'url(#d1Cp)', 1], [0, 0.06, '#7A2C26', 0.95], [0.06, 0.16, '#5A2022', 0.85], [0.2, 0.3, '#160608', 0.6],
-		[0.33, 0.43, '#5E2426', 0.75], [0.42, 0.46, '#8A3A2E', 0.45], [0.5, 0.62, '#160608', 0.5], [0.66, 0.74, '#4A1C1E', 0.55], [0.8, 1, '#120506', 0.5]];
+	/* soft folds: a few broad shade and light layers, feathered (filter d1Fe), no hard bands */
+	const B: [number, number, string, number][] = [[0.14, 0.24, '#1E0A0C', 0.6], [0.3, 0.44, '#5E2A2C', 0.7], [0.5, 0.6, '#1A080A', 0.55], [0.66, 0.78, '#4E2224', 0.55], [0.84, 1, '#140607', 0.5]];
 	const fl = 0.5 + 0.5 * Math.sin(t * 7.3) * Math.sin(t * 3.1 + 1);
 	return <g>
-		{B.map(([v0, v1, c, o], i) => <path key={i} d={band(v0, v1, t, cu)} fill={c} opacity={o} />)}
-		{/* the lit top edge (the fire behind catches it) and the cool rim on the underside near the tip */}
-		<path d={band(0, 0.02, t, cu, 0.05, 1)} fill="#D8744A" opacity={0.55 + 0.15 * fl} />
+		<path d={band(0, 1, t, cu)} fill="url(#d1Cp)" />
+		<g filter="url(#d1Fe)">{B.map(([v0, v1, c, o], i) => <path key={i} d={band(v0, v1, t, cu)} fill={c} opacity={o} />)}</g>
+		{/* the far edge folded over: its lit underside, a broad orange-red roll along the top */}
+		<path d={band(0, 0.1, t, cu, 0.08, 0.86)} fill="url(#d1Cl)" opacity={0.95} />
+		<path d={band(0.085, 0.11, t, cu, 0.08, 0.86)} fill="#3A1214" opacity={0.6} />
+		<path d={band(0, 0.018, t, cu, 0.08, 0.9)} fill="#F0A060" opacity={0.6 + 0.15 * fl} />
+		<path d={band(0, 0.03, t, cu, 0.86, 1)} fill={ACC} opacity={0.5} />
 		<path d={band(0.975, 1, t, cu, 0.55, 1)} fill={ACC} opacity={0.35} />
 		{/* the folds of the same cloth hanging under the sword arm, by its root */}
 		<path d={band(0.62, 0.72, t, cu, 0, 0.34)} fill="#6A2A28" opacity={0.7} />
@@ -99,10 +104,10 @@ export const TorsoA: React.FC<{t: number}> = ({t}) => { const br = Math.sin(t * 
 		<path d="M1500,384 C1562,384 1622,402 1662,442 C1690,470 1706,500 1714,532 L1640,546 C1620,500 1580,450 1500,420 Z" fill="#FF9A50" opacity={0.16} />
 		<path d="M1360,582 C1372,604 1392,634 1408,662 C1424,688 1452,700 1488,706 L1488,1010 L1560,1010 L1560,700 C1500,660 1440,600 1400,520 Z" fill="#000" opacity={0.28} />
 		{/* the cuirass's laced neck edge and the chest panel borders */}
-		<path d="M1420,402 C1470,388 1540,386 1600,400" fill="none" stroke="#6E2219" strokeWidth={10} />
+		<path d="M1420,402 C1470,388 1540,386 1600,400" fill="none" stroke="#4A1A14" strokeWidth={7} />
 		<path d="M1420,402 C1470,388 1540,386 1600,400" fill="none" stroke="#B0503A" strokeWidth={2.4} opacity={0.7} transform="translate(0,-4)" />
-		<path d="M1600,400 C1640,440 1660,490 1668,546" fill="none" stroke="#6E2219" strokeWidth={8} />
-		<path d="M1440,470 C1520,456 1590,450 1650,470" fill="none" stroke="#5E1E16" strokeWidth={6} opacity={0.7} />
+		<path d="M1600,400 C1640,440 1660,490 1668,546" fill="none" stroke="#4A1A14" strokeWidth={5} opacity={0.8} />
+		<path d="M1440,470 C1520,456 1590,450 1650,470" fill="none" stroke="#4A1A14" strokeWidth={4} opacity={0.5} />
 		{/* the skirt panels below the belt, red bordered */}
 		<path d={PANA} fill="url(#d1Lm)" /><path d={PANA} fill="#000" opacity={0.2} />
 		<path d={PANB} fill="url(#d1LmL)" />
@@ -243,60 +248,59 @@ export const HeadA: React.FC<{t: number}> = ({t}) => {
 /* ---------- the near 披膊 over the sword shoulder: three laced tiers ---------- */
 export const PaulA: React.FC = () => {
 	/* the rows' lower edges, from the neck (top) to the hem; each row hangs over the one below it, so only the laced lower edges show */
-	const A: P[][] = [[[1238, 430], [1282, 386], [1372, 360], [1458, 378]], [[1230, 452], [1278, 414], [1372, 390], [1468, 408]],
-		[[1226, 476], [1276, 440], [1372, 418], [1470, 438]], [[1228, 500], [1280, 468], [1372, 450], [1462, 466]], [[1238, 516], [1292, 500], [1364, 490], [1432, 492]]];
+	const A: P[][] = [[[1204, 438], [1246, 402], [1340, 368], [1434, 376]], [[1206, 448], [1250, 416], [1344, 386], [1440, 394]],
+		[[1208, 457], [1254, 428], [1346, 402], [1440, 410]], [[1212, 465], [1260, 440], [1348, 418], [1436, 426]], [[1220, 472], [1270, 454], [1350, 436], [1428, 442]]];
 	const arc = (q: P[]) => `C${pp([q[1], q[2], q[3]])}`, rev = (q: P[]) => [q[3], q[2], q[1], q[0]] as P[];
 	const bandD = (i: number) => `M${pp([A[i][0]])} ${arc(A[i])} L${pp([A[i + 1][3]])} ${arc(rev(A[i + 1]))} Z`;
 	return <g>
-		{[3, 2, 1, 0].map((i) => <g key={i}><path d={bandD(i)} fill="url(#d1Lm)" /><path d={bandD(i)} fill="#4A261E" opacity={0.4} />
+		{[3, 2, 1, 0].map((i) => <g key={i}><path d={bandD(i)} fill="url(#d1Lm)" /><path d={bandD(i)} fill="#2E1E1A" opacity={0.35} />
 			<path d={bandD(i)} fill="#000" opacity={0.07 * i} />
 			{/* the laced hem of this row */}
-			<path d={`M${pp([A[i + 1][0]])} ${arc(A[i + 1])}`} fill="none" stroke="#4A1810" strokeWidth={7} strokeLinecap="round" />
+			<path d={`M${pp([A[i + 1][0]])} ${arc(A[i + 1])}`} fill="none" stroke="#5A2018" strokeWidth={5} strokeLinecap="round" />
 			<path d={`M${pp([A[i + 1][0]])} ${arc(A[i + 1])}`} fill="none" stroke="#A04A32" strokeWidth={1.6} opacity={0.4} strokeDasharray="6 5" transform="translate(0,-2)" /></g>)}
 		{/* the top row's upper edge catching the fire; the near end of the rows in the warm key */}
 		<path d={`M${pp([A[0][0]])} ${arc(A[0])}`} fill="none" stroke="#FFB070" strokeWidth={2.6} opacity={0.5} />
-		<path d="M1238,430 C1230,440 1226,460 1226,476 C1226,490 1230,504 1238,516" fill="none" stroke="#FFB070" strokeWidth={3} opacity={0.6} />
+		<path d={`M${pp([A[0][0]])} C${pp([[1230, 418], [1262, 394], [1300, 384]])}`} fill="none" stroke={ACC} strokeWidth={3} opacity={0.8} />
 	</g>; };
 
-/** the sleeve from the shoulder to the vambrace (sh = shoulder, vb = vambrace centre, both in film space) */
-export const SleeveA: React.FC<{sh: P; vb: P}> = ({sh, vb}) => { const dx = vb[0] - sh[0], dy = vb[1] - sh[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
-	const w0 = 64, w1 = 58, a: P = [sh[0] + nx * w0, sh[1] + ny * w0], b: P = [sh[0] - nx * w0, sh[1] - ny * w0], c: P = [vb[0] - nx * w1, vb[1] - ny * w1], d: P = [vb[0] + nx * w1, vb[1] + ny * w1];
-	return <g><path d={`M${pp([a, b, c, d])} Z`} fill="#4A2018" />
-		<path d={`M${pp([a, lerp(a, b, 0.32), lerp(d, c, 0.32), d])} Z`} fill="#7A3226" opacity={0.75} />
-		<path d={`M${pp([lerp(a, b, 0.7), b, c, lerp(d, c, 0.7)])} Z`} fill="#2A0E0A" opacity={0.6} /></g>; };
+/** the red sleeve from under the shoulder guard to the bracer's far end: q = [shoulder top, shoulder bottom, bracer bottom, bracer top] (film) */
+export const SleeveA: React.FC<{q: P[]}> = ({q}) => { const [a, b, c, d] = q;
+	return <g><path d={`M${pp([a])} C${pp([lerp(a, d, 0.35), lerp(a, d, 0.7)])} ${pp([d])} L${pp([c])} C${pp([lerp(c, b, 0.3), lerp(c, b, 0.7)])} ${pp([b])} Z`} fill="#5A2A22" />
+		<path d={`M${pp([a])} L${pp([d, lerp(d, c, 0.3), lerp(a, b, 0.32)])} Z`} fill="#8A4030" opacity={0.75} />
+		<g filter="url(#d1Fe)"><path d={`M${pp([lerp(a, b, 0.5), lerp(d, c, 0.48), lerp(d, c, 0.66), lerp(a, b, 0.7)])} Z`} fill="#2E100C" opacity={0.6} />
+			<path d={`M${pp([lerp(a, b, 0.12), lerp(d, c, 0.1), lerp(d, c, 0.22), lerp(a, b, 0.26)])} Z`} fill="#B0583C" opacity={0.5} /></g>
+		<path d={`M${pp([lerp(a, b, 0.78), lerp(d, c, 0.82)])}`} fill="none" stroke="#2A0E0A" strokeWidth={3} opacity={0.5} strokeLinecap="round" /></g>; };
 
-/* ---------- the vambrace end-on behind the fist, and the fist on the grip (film space, hold pose) ---------- */
+/* ---------- the bracer and the fist (film space, hold pose), traced from the target ---------- */
 export const VambA: React.FC = () => <g>
-	<path d="M1196,458 C1226,436 1290,428 1332,452 C1360,480 1362,548 1344,592 C1326,630 1290,644 1262,630 C1236,600 1214,530 1196,458 Z" fill="#1C1A1A" />
-	<path d="M1206,452 C1240,434 1292,430 1326,450 L1318,466 C1286,450 1244,452 1214,468 Z" fill="#5E6A72" opacity={0.6} />
-	<path d="M1340,470 C1356,500 1358,550 1344,590" fill="none" stroke={ACC} strokeWidth={3} opacity={0.7} />
-	<path d="M1262,452 C1290,470 1310,530 1304,610 M1300,444 C1326,470 1340,530 1330,600" fill="none" stroke="#0E0E10" strokeWidth={3} opacity={0.8} />
-	<path d="M1192,460 C1210,500 1226,560 1250,620" fill="none" stroke="#8A2C20" strokeWidth={14} strokeLinecap="round" />
-	<path d="M1190,456 C1206,492 1220,540 1238,590" fill="none" stroke="#C8503A" strokeWidth={3} opacity={0.7} />
+	<path d="M1196,452 C1220,432 1260,420 1300,418 C1318,420 1326,440 1328,470 L1330,560 C1328,586 1316,598 1296,598 C1276,596 1260,586 1252,572 C1236,540 1214,494 1196,452 Z" fill="url(#d1Br)" />
+	<path d="M1204,448 C1230,432 1266,424 1300,422 L1302,433 C1268,435 1236,443 1212,459 Z" fill="#8A7A6E" opacity={0.55} />
+	<path d="M1236,438 C1246,486 1258,540 1272,590 M1270,426 C1280,480 1288,540 1298,596" fill="none" stroke="#161210" strokeWidth={3.2} opacity={0.75} />
+	<path d="M1326,452 C1330,500 1330,550 1324,588" fill="none" stroke={ACC} strokeWidth={2.4} opacity={0.6} />
+	<path d="M1190,448 C1208,490 1230,540 1252,582" fill="none" stroke="#8A2C22" strokeWidth={13} strokeLinecap="round" />
+	<path d="M1187,445 C1204,486 1225,534 1246,576" fill="none" stroke="#C8503A" strokeWidth={2.6} opacity={0.6} />
 </g>;
-export const FistA: React.FC = () => { const sk = '#B87A52', skS = '#875438', skD = '#5A3424', skH = '#D4925E', skHH = '#ECB282';
-	const F: number[][] = [[1148, 586, 1194, 578, 1200, 706, 1158, 702], [1194, 578, 1236, 584, 1242, 712, 1200, 706], [1236, 584, 1274, 596, 1278, 702, 1242, 712], [1274, 596, 1304, 614, 1304, 668, 1278, 702]];
+export const FistA: React.FC = () => { const sk = '#B88058', skS = '#8A5E44', skD = '#5A3A28', skH = '#D49464', skHH = '#ECB27E';
+	const F: number[][] = [[1200, 578, 1240, 580, 1238, 722, 1205, 726], [1240, 580, 1268, 584, 1270, 716, 1238, 722], [1268, 584, 1292, 592, 1296, 705, 1270, 716], [1292, 592, 1308, 612, 1310, 680, 1296, 705]];
 	return <g>
-		{/* the whole fist mass */}
-		<path d="M1086,508 C1092,478 1118,456 1150,450 C1185,446 1222,454 1244,476 C1262,494 1268,520 1266,540 C1290,560 1308,590 1312,630 C1314,668 1300,700 1276,716 C1240,728 1180,724 1140,708 C1112,690 1100,650 1098,610 C1090,580 1084,540 1086,508 Z" fill={sk} />
-		{/* the heel of the hand and the grip side in shade */}
-		<path d="M1092,556 C1096,610 1112,670 1140,708 C1150,712 1158,712 1164,712 L1150,590 C1128,582 1108,572 1092,556 Z" fill={skS} />
-		{/* the four folded fingers: rounded blocks, in shade under the knuckles, lit only along their tops */}
-		{F.map((q, i) => { const bx = (q[4] + q[6]) / 2, by = (q[5] + q[7]) / 2 + 8;
+		<path d="M1078,506 C1086,484 1104,464 1126,454 C1150,446 1180,446 1200,456 C1214,466 1226,486 1236,506 C1246,526 1258,548 1274,566 C1292,582 1306,604 1310,632 C1314,664 1304,700 1280,722 C1252,738 1206,740 1168,734 C1140,728 1120,716 1110,700 C1100,670 1094,620 1088,580 C1082,556 1076,530 1078,506 Z" fill={sk} />
+		{/* the heel of the hand toward the grip, in shade (feathered) */}
+		<path d="M1092,540 C1100,600 1112,670 1140,724 C1160,734 1186,736 1204,734 L1200,580 C1170,560 1130,548 1092,540 Z" fill={skS} filter="url(#d1Fe)" />
+		{/* the back of the hand, lit from above-left, and the knuckle crease */}
+		<path d="M1082,508 C1090,484 1108,464 1130,455 C1154,448 1182,449 1200,458 C1212,468 1222,486 1232,506 C1200,514 1160,522 1120,528 C1102,528 1088,522 1082,508 Z" fill={skH} />
+		<path d="M1112,470 C1132,458 1162,454 1188,460" fill="none" stroke={skHH} strokeWidth={6} strokeLinecap="round" opacity={0.7} filter="url(#d1Fe)" />
+		<path d="M1098,524 C1130,520 1180,512 1232,506" fill="none" stroke={skD} strokeWidth={2} opacity={0.6} />
+		{/* the four fingers curled under, in shade, lit only on their tops; the creases between them */}
+		{F.map((q, i) => { const bx = (q[4] + q[6]) / 2, by = (q[5] + q[7]) / 2 + 6;
 			const d = `M${q[0]},${q[1]} L${q[2]},${q[3]} L${q[4]},${q[5] - 10} Q${q[4] - 2},${q[5] + 4} ${bx},${by} Q${q[6] + 2},${q[7] + 4} ${q[6]},${q[7] - 10} Z`;
-			return <g key={i}><path d={d} fill={i % 2 ? '#9A6244' : '#A86C4A'} />
-				<path d={`M${q[0]},${q[1]} L${q[2]},${q[3]} L${q[2] + (q[4] - q[2]) * 0.2},${q[3] + (q[5] - q[3]) * 0.2} L${q[0] + (q[6] - q[0]) * 0.2},${q[1] + (q[7] - q[1]) * 0.2} Z`} fill={skH} opacity={0.8} />
-				<path d={`M${q[2]},${q[3] + 6} L${q[4]},${q[5] - 12}`} stroke={skD} strokeWidth={2.6} opacity={0.8} strokeLinecap="round" /></g>; })}
-		{/* the back of the hand: the lit plane and the knuckle row along the top */}
-		<path d="M1090,506 C1098,478 1122,458 1152,454 C1186,450 1220,458 1242,478 C1250,488 1254,498 1254,506 C1220,500 1186,500 1150,508 C1124,514 1104,522 1092,532 Z" fill={skH} />
-		<path d="M1102,486 C1112,474 1124,468 1136,468 M1146,462 C1158,458 1172,458 1182,462 M1194,462 C1206,464 1218,470 1226,478" fill="none" stroke={skHH} strokeWidth={4} strokeLinecap="round" opacity={0.8} />
-		<path d="M1092,532 C1104,522 1124,514 1150,508 C1186,500 1220,500 1254,506" fill="none" stroke={skD} strokeWidth={2.2} opacity={0.5} />
-		{/* the thumb lying across the index finger */}
-		<path d="M1176,536 C1196,520 1240,520 1262,534 C1274,548 1268,572 1250,580 C1224,590 1194,586 1178,574 C1168,562 1168,546 1176,536 Z" fill={skH} />
-		<path d="M1178,574 C1194,586 1224,590 1250,580 C1260,576 1266,568 1268,560 C1250,572 1210,574 1178,566 Z" fill={skS} opacity={0.85} />
-		<path d="M1190,532 C1210,525 1236,525 1254,534" fill="none" stroke={skHH} strokeWidth={3} strokeLinecap="round" opacity={0.85} />
-		<path d="M1236,530 C1248,528 1258,534 1260,546 C1252,548 1242,546 1236,540 Z" fill="#E8C0A0" opacity={0.5} />
-		{/* the cool rim along the bottom of the fist, the warm one on its top */}
-		<path d="M1160,712 C1200,724 1244,724 1276,716 C1300,700 1314,668 1312,630" fill="none" stroke={ACC} strokeWidth={3} opacity={0.7} />
-		<path d="M1086,508 C1092,478 1118,456 1150,450" fill="none" stroke="#FFD8A8" strokeWidth={2.4} opacity={0.5} />
+			return <g key={i}><path d={d} fill={i % 2 ? '#A06A4A' : '#AE7652'} />
+				<path d={`M${q[0]},${q[1]} L${q[2]},${q[3]} L${q[2] + (q[4] - q[2]) * 0.18},${q[3] + (q[5] - q[3]) * 0.18} L${q[0] + (q[6] - q[0]) * 0.18},${q[1] + (q[7] - q[1]) * 0.18} Z`} fill={skH} opacity={0.75} />
+				<path d={`M${q[2]},${q[3] + 6} L${q[4]},${q[5] - 12}`} stroke={skD} strokeWidth={2.4} opacity={0.75} strokeLinecap="round" /></g>; })}
+		{/* the thumb wrapped on top */}
+		<path d="M1190,530 C1208,520 1236,520 1251,532 C1261,546 1259,566 1247,576 C1226,585 1204,583 1194,571 C1185,557 1184,539 1190,530 Z" fill="#DE9E6C" />
+		<path d="M1194,571 C1204,583 1226,585 1247,576 C1255,572 1259,566 1260,558 C1244,568 1214,570 1192,562 Z" fill={skS} opacity={0.85} />
+		<path d="M1200,528 C1216,523 1236,524 1249,533" fill="none" stroke={skHH} strokeWidth={3} strokeLinecap="round" opacity={0.85} />
+		{/* outline strokes (darker, thin, varying) and the cool rim along the bottom */}
+		<path d="M1078,506 C1086,484 1104,464 1126,454 C1150,446 1180,446 1200,456" fill="none" stroke="#3A2216" strokeWidth={1.6} opacity={0.6} />
+		<path d="M1168,734 C1206,740 1252,738 1280,722 C1304,700 1314,664 1310,632" fill="none" stroke={ACC} strokeWidth={3} opacity={0.7} />
 	</g>; };
