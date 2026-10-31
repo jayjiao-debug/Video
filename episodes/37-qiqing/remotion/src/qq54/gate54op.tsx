@@ -40,7 +40,7 @@ export const GatePlaque: React.FC<{cx: number; top: number; w: number; h: number
 
 /** three 戟 guards walking left (−x) on the road, feet on y = gy; m = the shot clock (s) */
 export type Guard = {x0: number; t0: number; L: number; f: number; sw: number; ln: number};
-export const GUARDS: Guard[] = [{x0: 770, t0: 0.15, L: 62, f: 1.7, sw: 0.9, ln: 3.5}, {x0: 832, t0: 0.62, L: 64, f: 1.66, sw: 1.05, ln: 3}, {x0: 896, t0: 0.38, L: 61, f: 1.72, sw: 0.8, ln: 4}];
+export const GUARDS: Guard[] = [{x0: 768, t0: 0.15, L: 62, f: 1.7, sw: 0.9, ln: 3.5}, {x0: 842, t0: 0.62, L: 63, f: 1.68, sw: 1.05, ln: 3}, {x0: 918, t0: 0.38, L: 61, f: 1.73, sw: 0.8, ln: 4}];
 export const GateGuards: React.FC<{m: number; gy: number; k: number; lightX: number; rim: string; blur: string}> = ({m, gy, k, lightX, rim, blur}) => <g>
 	{/* shadows toward the camera, leaning away from the passage light */}
 	<g fill="#000" opacity={0.34} filter={`url(#${blur})`}>

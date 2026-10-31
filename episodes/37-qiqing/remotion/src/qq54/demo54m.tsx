@@ -301,6 +301,7 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 			<RimF id="ocQR" lx={-1} ly={0} k={3} c={RIMW} o={0.9} lx2={0.3} ly2={-1} k2={2} c2="#9FB8B6" o2={0.55} />
 			<RimF id="ocBk" lx={-1} ly={-0.2} k={1.6} c="#FFE2B4" lx2={1} ly2={-0.2} k2={1.6} c2="#FFE2B4" />
 			<RimF id="ocPt" lx={-0.7} ly={-0.7} k={1.8} c={RIMW} o={0.85} />
+			<RimF id="ocGd" lx={0.15} ly={-1} k={1.1} c="#FFD7A0" o={0.8} lx2={1} ly2={0} k2={0.7} c2={RIMW} o2={0.45} blur={0.5} />
 			<linearGradient id="ocspill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={KEY} stopOpacity="0.62" /><stop offset="1" stopColor={KEY} stopOpacity="0.06" /></linearGradient>
 			<linearGradient id="ochaze1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6E7670" stopOpacity="0" /><stop offset="0.7" stopColor="#6E7670" stopOpacity="0.5" /><stop offset="1" stopColor="#6E7670" stopOpacity="0.1" /></linearGradient>
 		</defs>
@@ -327,7 +328,7 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 				<path d={`M398,${GY} L462,${GY} L330,700 L200,700 Z M658,${GY} L722,${GY} L920,700 L790,700 Z`} fill="url(#ocspill)" opacity={0.42 * fl} />
 			</g>
 			<rect x={-60 + (m * 6) % 300 - 300} y={440} width={1600} height={130} fill="url(#ochaze)" />
-			<g transform={`translate(0,${f1(dyP(0.66))})`}><GateGuards m={m} gy={552} k={0.41} lightX={560} rim="ocBk" blur="ocbl3" /></g>
+			<g transform={`translate(0,${f1(dyP(0.66))})`}><GateGuards m={m} gy={552} k={0.41} lightX={560} rim="ocGd" blur="ocbl3" /></g>
 			<g transform={`translate(0,${f1(dyP(0.75))})`}>
 				<g fill={SIL} filter="url(#ocQL)"><g transform="translate(196,556) scale(1.02,1.02) scale(-1,1)">{QueD}</g></g>
 				<g fill={SIL} filter="url(#ocQR)"><g transform="translate(924,556) scale(1.02)">{QueD}</g></g>

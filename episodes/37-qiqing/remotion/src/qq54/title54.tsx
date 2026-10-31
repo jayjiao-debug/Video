@@ -12,8 +12,8 @@ import {RimF} from './cao54b';
 export const TITLE_A = 0.654 + 1.99203 * 6, TITLE_B = 0.654 + 1.99203 * 8;
 const Q: [string, string][] = [['到底是', 'c'], ['英雄', 'g'], ['，还是', 'c'], ['奸雄', 'r'], ['？', 'c']];
 const QCOL: Record<string, string> = {c: '#F4E6C8', g: '#EDC266', r: '#D23A2C'};
-const NX = 960, NY = 282, FS = 232;                  // the name's glyph centre and size
-const SX = 1318, SY = 368, SS = 124;                 // the seal: centre and side
+const NX = 960, NY = 282, FS = 246;                  // the name's glyph centre and size
+const SX = 1338, SY = 386, SS = 124;                 // the seal: centre and side
 const QY = 492, QFS = 60;                            // the question's baseline and size
 const eo = (u: number) => 1 - Math.pow(1 - cl(u), 3);
 const f1 = (v: number) => v.toFixed(1);
@@ -56,6 +56,12 @@ const HAIRS = Array.from({length: 14}, (_, i) => { const v = (i + 0.5) / 14 - 0.
 /* two heavy splats where the brush hit and where it lifted */
 const SPLATS: [number, number, number][] = [[XA - 26, NY + 70, 18], [XA - 30, NY - 60, 11], [1500, NY - 96, 13], [1478, NY + 96, 9]];
 
+/* 曹操 as two characters set like a written title: 曹 a little high, 操 a little larger and lower (the gradient follows each) */
+const CHARS: [string, number, number, number][] = [['曹', NX - FS * 0.58, NY - 10, FS], ['操', NX + FS * 0.6, NY + 12, FS * 1.07]];
+const Name: React.FC<{fill: string; stroke?: string; sw?: number; dx?: number; dy?: number; opacity?: number; filter?: string}> = ({fill, stroke, sw = 0, dx = 0, dy = 0, opacity, filter}) =>
+	<g opacity={opacity} filter={filter}>{CHARS.map(([c, x, y, fs]) => <text key={c} x={f1(x + dx)} y={f1(y + fs * 0.38 + dy)} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={f1(fs)}
+		fill={fill} stroke={stroke} strokeWidth={sw || undefined} strokeLinejoin="round">{c}</text>)}</g>;
+
 const Seal: React.FC<{k: number; o: number}> = ({k, o}) => <g transform={`translate(${SX},${SY}) rotate(-5) scale(${k.toFixed(4)})`} opacity={o}>
 	<g filter="url(#ttseal)">
 		<rect x={-SS / 2} y={-SS / 2} width={SS} height={SS} rx={6} fill="#B3271D" />
@@ -67,7 +73,7 @@ const Seal: React.FC<{k: number; o: number}> = ({k, o}) => <g transform={`transl
 
 /** the title on bar 6 */
 export const TitleArt: React.FC<{t: number}> = ({t}) => {
-	useStampFonts('到底是英雄，还是奸雄？');
+	useStampFonts('曹操到底是英雄，还是奸雄？');
 	const fr = (t - TITLE_A) * 30;                                              // frames since the slam
 	const out = eo(seg(t, TITLE_B - 0.46, TITLE_B - 0.08)), on = 1 - out;
 	const slam = eo(fr / 5), k = (1.3 - 0.3 * slam) * (1 + 0.022 * seg(t, TITLE_A + 0.3, TITLE_B - 0.46)) * (1 + 0.04 * out);
@@ -82,7 +88,7 @@ export const TitleArt: React.FC<{t: number}> = ({t}) => {
 			<radialGradient id="ttdim" cx={NX} cy={NY + 70} r="900" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${NX} ${NY + 70}) scale(1 0.5) translate(${-NX} ${-NY - 70})`}>
 				<stop offset="0" stopColor="#050405" stopOpacity="0.72" /><stop offset="0.5" stopColor="#050405" stopOpacity="0.46" /><stop offset="1" stopColor="#050405" stopOpacity="0.12" /></radialGradient>
 			<radialGradient id="ttfl" cx={NX} cy={NY} r="760" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity="1" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
-			<linearGradient id="ttgold" x1="0" y1={NY - FS * 0.46} x2="0" y2={NY + FS * 0.46} gradientUnits="userSpaceOnUse">
+			<linearGradient id="ttgold" x1="0" y1="0.06" x2="0" y2="0.98">
 				<stop offset="0" stopColor="#FFF0C4" /><stop offset="0.28" stopColor="#ECC77C" /><stop offset="0.56" stopColor="#C99449" /><stop offset="0.8" stopColor="#9A6A2E" /><stop offset="1" stopColor="#6A461C" /></linearGradient>
 			<filter id="ttrough" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.011 0.07" numOctaves={2} seed={4} result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale={16} xChannelSelector="R" yChannelSelector="G" /></filter>
 			<filter id="ttroughS" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves={2} seed={9} result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale={4.5} xChannelSelector="R" yChannelSelector="G" /></filter>
@@ -90,7 +96,7 @@ export const TitleArt: React.FC<{t: number}> = ({t}) => {
 				<feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves={2} seed={13} result="n" />
 				<feDisplacementMap in="SourceGraphic" in2="n" scale={2.4} xChannelSelector="R" yChannelSelector="G" result="d" />
 				<feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves={2} seed={21} result="sp" />
-				<feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -22 15.2" result="holes" />
+				<feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -30 22.4" result="holes" />
 				<feComposite in="d" in2="holes" operator="in" />
 			</filter>
 			<filter id="ttsh" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="3" /></filter>
@@ -127,10 +133,10 @@ export const TitleArt: React.FC<{t: number}> = ({t}) => {
 			</g>
 			{/* 曹操: an ink shadow, a dark outline, the bronze-gold body with its lit top edge */}
 			<g transform={`translate(${NX},${NY}) scale(${k.toFixed(4)}) translate(${-NX},${-NY})`} opacity={nameO}>
-				<text x={NX + 9 + FS * 0.06} y={NY + FS * 0.38 + 11} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={FS} letterSpacing={FS * 0.12} fill="#030202" opacity={0.9} filter="url(#ttsh)">曹操</text>
+				<Name fill="#030202" dx={9} dy={11} opacity={0.9} filter="url(#ttsh)" />
 				<g filter="url(#ttroughS)">
-					<text x={NX + FS * 0.06} y={NY + FS * 0.38} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={FS} letterSpacing={FS * 0.12} fill="#0B0705" stroke="#0B0705" strokeWidth={14} strokeLinejoin="round">曹操</text>
-					<g filter="url(#ttrimG)"><text x={NX + FS * 0.06} y={NY + FS * 0.38} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={FS} letterSpacing={FS * 0.12} fill="url(#ttgold)">曹操</text></g>
+					<Name fill="#0B0705" stroke="#0B0705" sw={14} />
+					<g filter="url(#ttrimG)"><Name fill="url(#ttgold)" /></g>
 				</g>
 			</g>
 			{/* the seal, pressed at +8 frames */}
