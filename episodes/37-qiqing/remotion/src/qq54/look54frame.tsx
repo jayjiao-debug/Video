@@ -19,7 +19,10 @@ const Counter: React.FC<{age: number}> = ({age}) => <div style={{position: 'abso
 	<span style={{fontSize: 34, fontWeight: 700}}>曹操</span><span style={{fontSize: 78, fontWeight: 800, fontVariantNumeric: 'tabular-nums'}}>{age}</span><span style={{fontSize: 34, fontWeight: 700}}>岁</span></div>;
 const Label: React.FC<{s: string}> = ({s}) => <div style={{position: 'absolute', left: 0, top: 0, width: W, height: 44, background: 'rgba(0,0,0,0.78)', color: '#F2E6CC', fontFamily: SANS, fontWeight: 700, fontSize: 24, lineHeight: '44px', paddingLeft: 18}}>{s}</div>;
 export type FrameSpec = {name: string; k: number; C: React.FC};
+/** the owner's call (2026-10-31): style first, no story frames yet — frame k = 1 is a bare style sheet (no overlay) */
+export const STYLE_SHEET = true;
 export const LookFrame: React.FC<{f: FrameSpec}> = ({f}) => { const b = BEATS[f.k - 1];
+	if (STYLE_SHEET && f.k === 1) return <AbsoluteFill style={{background: '#000', overflow: 'hidden'}}><f.C /><Label s={`look ${f.name} · style sheet`} /></AbsoluteFill>;
 	return <AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
 		<f.C />
 		<Scrim /><Subs rows={b.rows.map((s) => ({s, n: 1e9}))} th={thB} />
