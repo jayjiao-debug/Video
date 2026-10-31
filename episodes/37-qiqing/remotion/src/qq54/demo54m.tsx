@@ -292,8 +292,7 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 	const fl = 1 + 0.035 * Math.sin(t * 5.3) + 0.02 * Math.sin(t * 11.9 + 1);
 	const stars = Array.from({length: 46}, (_, i) => [rnd(i, 1) * 1120, rnd(i, 2) * 230, 0.6 + rnd(i, 3) * 1.1, 0.25 + rnd(i, 4) * 0.5]);
 	const dark = 0.36 * seg(t, BAR(6) - 0.25, BAR(6) + 0.3);
-	/* the patrol: two 戟 guards walking right along the road in front of the gate (sheet coords, k 0.46 px/cm, ground y 584) */
-	const pk = 0.46, patrol = [{x0: 150, t0: 0.2, L: 66, f: 1.82, sw: 1.1, ln: 3}, {x0: 92, t0: 0.65, L: 63, f: 1.76, sw: 0.85, ln: 4}];
+	/* owner r1: the guards walk LEFT across the lit road in front of the gate (gate54op: three 戟 guards, k 0.41 px/cm, feet y 552) */
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<defs>
 			<SkyDefs p="oc" />

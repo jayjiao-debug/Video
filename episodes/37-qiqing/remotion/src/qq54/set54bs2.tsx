@@ -40,10 +40,11 @@ export const CaoBack: React.FC<{id: string; raise?: number}> = ({id, raise = 1})
 			</pattern>
 		</defs>
 		{/* legs: baggy crimson trousers into short boots; weight on the left leg, the right foot a step ahead (further, so higher) */}
-		<path d={limb([[-10, -46], [-11, -31], [-11, -20]], [7.6, 7.4, 6.2])} fill={p.underS} />
-		<path d={limb([[10, -48], [11.6, -34], [12, -25]], [7.6, 7.2, 6])} fill={p.under} />
-		<path d={limb([[14, -46], [16.4, -34], [16.6, -26]], [1.6, 1.6, 1.4])} fill="#8A4A3A" opacity={0.7} />
-		<path d="M-14,-34 C-12,-31 -9,-31 -7,-34 M8,-38 C10,-35 13,-35 15,-38" fill="none" stroke="#1A0C0A" strokeWidth={0.8} opacity={0.6} />
+		{/* each trouser leg one continuous shape from under the skirt hem (full width there) to the boot */}
+		<path d="M-23,-62 L0,-62 C-1.4,-50 -3.4,-40 -4.2,-31 L-4.8,-19 L-17.2,-19 L-17.8,-31 C-19.4,-42 -21.4,-52 -23,-62 Z" fill={p.underS} />
+		<path d="M0,-62 L26.6,-62 C25,-50 21,-40 18.8,-32 L18.4,-24 L5.8,-24 L4.6,-34 C3.2,-44 1.4,-53 0,-62 Z" fill={p.under} />
+		<path d="M22.6,-61 C20.6,-50 18.2,-40 17.2,-31 L17.4,-25 L15.6,-25 L15.6,-31 C16.6,-40 18.8,-50 20.6,-61 Z" fill="#8A4A3A" opacity={0.7} />
+		<path d="M-14,-34 C-12,-32.6 -9,-32.6 -7,-34 M8,-37 C10,-35.8 13,-35.8 15,-37" fill="none" stroke="#1A0C0A" strokeWidth={0.6} opacity={0.35} />
 		<path d="M-16.6,-22 L-5.4,-22 C-5,-14 -4.6,-7 -4,-3 C-4,-0.6 -6.4,0.4 -10.4,0.4 C-15,0.4 -17.6,-0.6 -17.4,-3 C-17,-8 -16.8,-14 -16.6,-22 Z" fill="#16100C" />
 		<path d="M6.8,-27 L17.4,-27 C17.6,-19 18,-13 18.4,-9 C18.4,-6.6 16.2,-5.6 12.4,-5.6 C8.6,-5.6 6.6,-6.6 6.6,-9 C6.6,-14 6.7,-20 6.8,-27 Z" fill="#1C140F" />
 		<path d="M15.4,-26.6 L17.4,-27 C17.6,-19 18,-13 18.4,-9 L16.8,-7.4 C16.4,-13 16,-19 15.4,-26.6 Z" fill="#6A5A4C" opacity={0.6} />

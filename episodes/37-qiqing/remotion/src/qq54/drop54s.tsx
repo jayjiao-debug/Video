@@ -158,8 +158,8 @@ const D2: React.FC<{t: number}> = ({t}) => { const d = t - T2, HZ = 840, c: Cam3
 		<g transform={pl(z, 0.5, FX, FY)}>
 			<Charge men={MEN2} t={d} v={1.15} c={c} id="d2" zMin={0.6} split={6} flags />
 			<circle cx={960} cy={520} r={520} fill="url(#d2back)" />
-			<ellipse cx={960} cy={1070} rx={180} ry={16} fill="#000" opacity={0.6} />
-			<g filter="url(#d2hero)"><g transform={`translate(960,${f1(1073 - 1620 * S)}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-222, 40], fs: 1.25, T: [-500, -600], bw: 30, tipK: 1.3}} /></g></g>
+			<ellipse cx={960} cy={1038} rx={180} ry={16} fill="#000" opacity={0.6} />
+			<g filter="url(#d2hero)"><g transform={`translate(960,${f1(1040 - 1620 * S)}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-222, 40], fs: 1.25, T: [-500, -600], bw: 30, tipK: 1.3}} /></g></g>
 		</g>
 		<rect width={W} height={H} fill="url(#d2vig)" />
 	</svg>; };
