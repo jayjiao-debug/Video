@@ -190,8 +190,8 @@ const Motes: React.FC<{c: Cam; t: number; o: number}> = ({c, t, o}) => { if (o <
 		return <circle key={i} cx={p[0]} cy={p[1]} r={Math.min(2.6, Math.max(0.8, c.f * 1.6 / p[2]))} fill="#FFE8C0" opacity={(0.18 + 0.3 * tw) * Math.min(1, (p[2] - 350) / 400)} />; })}</g>; };
 
 /* ---------- the glass: the hood's near faces, edges and streak, drawn OVER the sword (display53k); same envelope as the case ---------- */
-const PaneStreaks: React.FC<{c: Cam; t: number}> = ({c, t}) => { const o = sstep(seg(t, 4.7, 6.3)) * (1 - sstep(seg(t, 20.1, 20.65)));
-	return o > 0.01 ? <g opacity={o}><DisplayFront c={c} hood={sstep(seg(t, 6.6, 8.4))} leaf={leafAt(t)} /></g> : null; };
+const PaneStreaks: React.FC<{c: Cam; t: number; leaf: number}> = ({c, t, leaf}) => { const o = sstep(seg(t, 4.7, 6.3)) * (1 - sstep(seg(t, 20.1, 20.65)));
+	return o > 0.01 ? <g opacity={o}><DisplayFront c={c} hood={sstep(seg(t, 6.6, 8.4))} leaf={leaf} /></g> : null; };
 /** the title glass (display53k.TitleLeaf): in with the hood, gone once the title has slid off (the orbit carries it away) */
 const leafAt = (t: number) => sstep(seg(t, 6.6, 8.4)) * (1 - sstep(seg(t, 11.7, 12.5)));
 
@@ -230,8 +230,9 @@ const L_LAMP: V3 = [-470, -30, 1150];
 const L_SPOT: V3 = [0.08, -0.28, 0.96];       // the case spot from above, a little to the front
 
 /* ---------- THE TAKE, legs 1–6 ---------- */
-export const TakeA: React.FC<{t: number}> = ({t}) => {
-	const c = camAt(t), open = t < J_O;
+/** noLeaf (v3.5): the ending's held title shot without the title glass (it was only there for the title to rest on) */
+export const TakeA: React.FC<{t: number; noLeaf?: boolean}> = ({t, noLeaf = false}) => {
+	const c = camAt(t), open = t < J_O, leaf = noLeaf ? 0 : leafAt(t);
 	/* the light: the raking key, the case spot from above as the camera rises (before J_O open53o4 hands its own cut light over to these) */
 	const kSpot = sstep(seg(t, 5.0, 8.0)), kRake = 1 - 0.75 * kSpot;
 	const lights: Light[] = [{dir: L_RAKE, k: 1.7 * kRake, pos: L_LAMP, d0: 600}, {dir: L_SPOT, k: 0.55 + 0.6 * kSpot}];
@@ -251,12 +252,12 @@ export const TakeA: React.FC<{t: number}> = ({t}) => {
 		<Ground53 id="tA" k={lerp(1, 0.35, sstep(seg(t, 4, 8)))} sheen={0.3 + 0.2 * Math.sin(c.yaw)} />
 		{open && <OpenSet c={c} t={t} />}
 		{lite > 0.01 && <g opacity={lite}><Scrim id="sbs" x={620} y={230} rx={860} ry={260} a={0.5} /></g>}
-		{caseO * plinthO > 0.004 && <g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} lite={lite} leaf={leafAt(t)} /></g>}
+		{caseO * plinthO > 0.004 && <g opacity={caseO * plinthO}><Museum c={c} t={t} hall={hall} hood={hood} ppl={ppl} lite={lite} leaf={leaf} /></g>}
 		{open ? <OpenSword c={c} t={t} id="tw" land={land} lights={lights} ringGlow={ringGlow} lite={lite} />
 			: <SwordW c={c} t={t} id="tw" ringGlow={ringGlow} lite={lite} o={land} />}
 		<BladeBloom c={c} t={t} />
 		<Motes c={c} t={t} o={hall * plinthO} />
-		<PaneStreaks c={c} t={t} />
+		<PaneStreaks c={c} t={t} leaf={leaf} />
 		<Vignette id="tA" a={0.6} />
 		<DuoTag c={c} t={t} />
 		<RingTag c={c} t={t} />

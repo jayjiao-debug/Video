@@ -25,9 +25,9 @@ const GROUND_K = 1 + (0.35 - 1) * sst(T_TITLE, 4, 8);
 export const MuseumA53: React.FC<{c: Cam}> = ({c}) => <svg width={W} height={H} style={{position: 'absolute'}}>
 	<Ground53 id="e4A" k={GROUND_K} sheen={0.3 + 0.2 * Math.sin(c.yaw)} />
 	{LT > 0.01 && <g opacity={LT}><Scrim id="e4sbs" x={620} y={230} rx={860} ry={260} a={0.5} /></g>}
-	<Museum c={c} t={T_TITLE} hall={1} hood={1} ppl={0} lite={LT} leaf={1} />
+	<Museum c={c} t={T_TITLE} hall={1} hood={1} ppl={0} lite={LT} leaf={0} />
 	<Sword3D c={c} sp={SP} id="e4w" ringGlow={0} lite={LT} land={{lights: LIGHTS, shin: 90, sMin: -20, lift: LIFT, glints: 1, guardCut: true}} />
-	<DisplayFront c={c} hood={1} leaf={1} />
+	<DisplayFront c={c} hood={1} leaf={0} />
 	<Vignette id="e4A" a={0.6} />
 </svg>;
 

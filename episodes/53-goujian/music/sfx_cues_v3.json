@@ -269,12 +269,12 @@
 "note": "back in the museum (R2)"
 },
 {
-"t": 134.031,
+"t": 140.3,
 "sfx": "glass_shimmer",
-"db": -6,
+"db": -9,
 "lead": 0.27,
-"role": "accent",
-"note": "P1 backing out through the glass"
+"role": "normal",
+"note": "v3.5: the last glint along the edge (EndAir53, peak 140.3); was P1 backing out through the glass"
 },
 {
 "t": 140.824,

@@ -47,6 +47,8 @@ const ch = (i: number) => spline(POSES.map((p) => [p[0], p[i]] as [number, numbe
 const CH = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(ch);
 export const worldCam = (t: number): Cam => { const v = CH.map((f) => f(Math.max(POSES[0][0], Math.min(POSES[POSES.length - 1][0], t))));
 	return lookAt([v[0], v[1], v[2]], [v[3], v[4], v[5]], v[6], v[7], v[8]); };
+/** v3.5: the raw look-at channels [eye xyz, target xyz, f, cx, cy] of worldCam (for the ending's crane, take53d3) */
+export const worldCh = (t: number): number[] => CH.map((f) => f(Math.max(POSES[0][0], Math.min(POSES[POSES.length - 1][0], t))));
 export const toMM = (c: Cam): Cam => ({...c, p: [c.p[0] * 1000, c.p[1] * 1000, c.p[2] * 1000]});
 const pp = (c: Cam, q: V3): P2 => { const p = proj(c, q); return [p[0], p[1]]; };
 

@@ -4,7 +4,7 @@ import {B, Lacquer, Vignette, Pool} from '../qq50/styleB';
 import {Cam, V3, Scrim, Tag, proj, poly, lookAt} from './parts53';
 import {sstep, spline, HK} from './cam53';
 import {Pit, Chamber, Air, Labels, LAY, otherAt} from './world53d';
-import {worldCam, CaseW, GlassPass, toMM, CASE_X} from './scene53d';
+import {worldCam, worldCh, CaseW, GlassPass, toMM, CASE_X} from './scene53d';
 import {HallBack, CaseHall, FloorD} from './hall53d';
 import {MacroLeg, MACRO_END} from './macro53d';
 import {TakeA, camAt} from './take53';
@@ -16,9 +16,10 @@ import {frame3} from './v3map53';
    T3    117.616  the rewind: the sword slides back into its sheath (hilt screen-right, the draw run backwards), settles on 120.446;
    E1    122.144  the tomb's other swords light one per half-bar (122.711 / 123.843 / 124.975);
    L1    125.540  round to the front of the cut-away, the six layers close one per beat from 126.108, the air; up to the surface;
-   R2    130.069  the floor is the top of the fill: up to the display; the bronze a shade duller, one faint rust spot;
-   P1    134.031  v3.4: the calm pull-back out of the case onto the title shot (TakeA at T_TITLE = 10.4), at rest on ARR 138.7;
-                  TakeA's look crossfades in on the way (museum53e4.MuseumA53, same camera), <TakeA t={T_TITLE} /> takes over 138.7–139.2;
+   R2    130.069  the floor is the top of the fill; v3.5: ONE crane from the floor up and forward onto the title shot (TakeA at
+                  T_TITLE = 10.4, without the title glass), the bronze a shade duller, one faint rust spot; the crane eases out into a slow
+   P1    134.031  settle, at rest on HOME 138.7; TakeA's look crossfades in (museum53e4.MuseumA53, same camera), <TakeA t={T_TITLE} noLeaf />
+                  takes over 138.7–139.2;
    air   139.692  the hall dims round the case, one last glint along the edge (peak ≈140.3) (museum53e4.EndAir53);
    END   140.824  the card (J on f4225) over the held museum, 4.0 s, 0.5 s fade to black. (No kitchen anywhere: v3.4.)
    T1 … R2 reuse the v2 TakeD world (world53d, scene53d, hall53d, macro53d) through a monotone C1 time map v3 → v2 whose knots are
@@ -41,24 +42,25 @@ const E1TAG: [number, number] = [1330, 400], E1HIT = [122.711, 123.843, 124.975]
 /* ---------- the title shot's camera in this world (metres; the museum frame is shifted by CASE_X) and the pull-back to it ---------- */
 const X = CASE_X * 1000;
 const CT = camAt(T_TITLE), CTW: Cam = {...CT, p: [(CT.p[0] + X) / 1000, CT.p[1] / 1000, CT.p[2] / 1000]};
-/** v3.4 R2 → P1 (owner: "the bookend is good but the transition camera move is weird"; the kitchen is gone): ONE calm move, look-at
-    channels (eye P, target T, log f, principal point), C1 monotone Hermite. The v2 rise into the museum runs to the case hold (R2A);
-    from there the eye comes in to the close view of the dulling blade (R2C = the P1 start, 134.031), eases to rest on it (TURN, a beat into P1), then pulls straight back and up
-    out of the case and settles, at rest (zero slope), on the title shot's camera (TakeA at T_TITLE) at HOME = 138.7. From TURN every
-    channel is a single monotone Hermite segment (no arc, no swing). */
-const R2A = 131.9, R2C = T3.P1, TURN = R2C + 0.35;
+/** v3.5 R2 → P1 (owner: "the camera path after it rises out of the grave into the museum and then onto the sword looks very weird"):
+    no more telephoto punch, no dive into the case and back out. From the frame after the surface break (R2A) ONE crane: up out of the
+    floor and forward to the title shot's camera (TakeA at T_TITLE), arriving at rest at HOME. Look-at channels (eye, a target on the
+    sword's centre, log f, principal point); each channel leaves R2A with the rise's own slope and eases out to rest at HOME,
+    monotone (a cubic Hermite, or where the rise is faster than a cubic can absorb, a power ease-out b + (a − b)(1 − u)^k). */
+const R2A = 130.1;
 const BLADE_Z = 1.002;
-/** the eye and a target on the view ray (where it meets the sword's plane z = BLADE_Z) of a Cam */
-const eyeTgt = (c: Cam): number[] => { const F = [Math.cos(c.pitch) * Math.cos(c.yaw), Math.cos(c.pitch) * Math.sin(c.yaw), -Math.sin(c.pitch)], s = (c.p[2] - BLADE_Z) / Math.max(0.05, -F[2]);
-	return [c.p[0], c.p[1], c.p[2], c.p[0] + s * F[0], c.p[1] + s * F[1], BLADE_Z, Math.log(c.f), c.cx, c.cy]; };
-const PCH = (() => { const a = eyeTgt(worldCam(v2Of(R2A))), a0 = eyeTgt(worldCam(v2Of(R2A - 1 / 30))), b = eyeTgt(CTW);
-	/* the close view of the dulling blade: the whole sword across the frame, the eye ~0.55 m off it, in front and above */
-	const m = [-0.461, -0.493, 1.224, -0.51, 0.0, BLADE_Z, Math.log(1350), lerp(960, 900, 0.3), lerp(540, 560, 0.3)];
-	/* the R2A knot keeps the v2 rise's own slope (R2 as before up to the close view) */
-	/* the turn: R2's approach comes to rest on the close view a beat into P1 (TURN; stopping exactly on 134.031 would make R2's tail
-	   faster than 25 px per frame), then the pull-back; a channel that keeps its direction through the turn keeps a slope */
-	const sl = a.map((_, i) => { const d1 = (m[i] - a[i]) / (TURN - R2A), d2 = (b[i] - m[i]) / (T3.HOME - TURN); return d1 * d2 <= 0 ? 0 : 2 / (1 / d1 + 1 / d2); });
-	return a.map((_, i) => spline([[R2A, a[i], (a[i] - a0[i]) * 30], [TURN, m[i], sl[i]], [T3.HOME, b[i], 0]])); })();
+/** the title camera as look-at channels: the target is the point of its view ray nearest the sword's centre */
+const ctwCh = (): number[] => { const c = CTW, F = [Math.cos(c.pitch) * Math.cos(c.yaw), Math.cos(c.pitch) * Math.sin(c.yaw), -Math.sin(c.pitch)],
+	v = [CASE_X - c.p[0], 0 - c.p[1], BLADE_Z - c.p[2]], d = v[0] * F[0] + v[1] * F[1] + v[2] * F[2];
+	return [c.p[0], c.p[1], c.p[2], c.p[0] + d * F[0], c.p[1] + d * F[1], c.p[2] + d * F[2], Math.log(c.f), c.cx, c.cy]; };
+const v2Ch = (t: number) => { const v = worldCh(v2Of(t)); return [v[0], v[1], v[2], v[3], v[4], v[5], Math.log(v[6]), v[7], v[8]]; };
+/** from value a with slope s0 at t0 to value b at rest at t1, monotone when s0 points towards b */
+const easeTo = (a: number, s0: number, b: number, t0: number, t1: number) => { const T = t1 - t0, D = b - a, k = Math.abs(D) > 1e-9 ? s0 * T / D : 0;
+	if (k > 3) return (t: number) => { const u = Math.min(1, Math.max(0, (t - t0) / T)); return b - D * Math.pow(1 - u, k); };
+	return (t: number) => { const u = Math.min(1, Math.max(0, (t - t0) / T)), u2 = u * u, u3 = u2 * u;
+		return (2 * u3 - 3 * u2 + 1) * a + (u3 - 2 * u2 + u) * s0 * T + (-2 * u3 + 3 * u2) * b; }; };
+const PCH = (() => { const a = v2Ch(R2A), h = 1 / 240, ap = v2Ch(R2A + h), am = v2Ch(R2A - h), b = ctwCh();
+	return a.map((_, i) => easeTo(a[i], (ap[i] - am[i]) / (2 * h), b[i], R2A, T3.HOME)); })();
 const p1Cam = (t: number): Cam => { if (t >= T3.HOME) return CTW; const v = PCH.map((f) => f(t));
 	return lookAt([v[0], v[1], v[2]], [v[3], v[4], v[5]], Math.exp(v[6]), v[7], v[8], CT.roll ?? 0); };
 /** the camera of the take (world metres) for t ≥ the rewind */
@@ -92,8 +94,8 @@ const World3: React.FC<{t: number; t2: number; c: Cam; mus?: number; dull?: numb
 		<GlassPass c={c} id="d3" />
 	</g>; };
 
-/* v3.4 P1 timing: TakeA's look (MuseumA53, same camera) crossfades in while the camera pulls back; at rest on HOME the picture is
-   TakeA's own, and <TakeA t={T_TITLE} /> takes over 138.7 → 139.2 (the motes and the last residues dissolve in, nothing moves) */
+/* P1 timing: TakeA's look (MuseumA53, same camera) crossfades in while the crane settles; at rest on HOME the picture is
+   TakeA's own, and <TakeA t={T_TITLE} noLeaf /> takes over 138.7 → 139.2 (the motes and the last residues dissolve in, nothing moves) */
 const LOOK0 = 134.6, LOOK1 = 137.4, SWAP0 = T3.HOME, SWAP1 = T3.HOME + 0.5;
 export const TakeD3: React.FC<{t: number}> = ({t}) => {
 	const f = frame3(t);
@@ -101,7 +103,7 @@ export const TakeD3: React.FC<{t: number}> = ({t}) => {
 	if (t < T3.REW) { const t2 = v2Of(t); return <MacroLeg t={t2} world={() => <World3 t={T3.REW} t2={MACRO_END} c={worldCam(MACRO_END)} />} />; }
 	/* the held title shot = TakeA at T_TITLE itself, the air (dim + the last glint) and the end card over it */
 	const card = f >= CARD_F3 - 6 && <EndCard3 t={t} />;
-	if (t >= SWAP1) return <><TakeA t={T_TITLE} /><EndAir53 t={t} />{card}</>;
+	if (t >= SWAP1) return <><TakeA t={T_TITLE} noLeaf /><EndAir53 t={t} />{card}</>;
 	const t2 = t < T3.P1 ? v2Of(t) : 102.332, c = camD3(t);
 	/* R2: a shade duller from the floor on (warm veil), one faint rust spot; they go with the R2 look as TakeA's look comes in */
 	const dull = 0.9 * sstep(seg(t, 130.6, 132.4)), spot = sstep(seg(t, 132.0, 132.6)), dim = sstep(seg(t, 131.4, 133.0));
@@ -122,6 +124,6 @@ export const TakeD3: React.FC<{t: number}> = ({t}) => {
 				<Tag id="d3e1" x={E1TAG[0]} y={E1TAG[1]} s="其他剑" fs={44} anchor="start" col={B.cream} scrim={0.45} to={[e1P[0], e1P[1]]} /></g>}
 		</svg>}
 		{look > 0.004 && <div style={{position: 'absolute', inset: 0, opacity: look}}><MuseumA53 c={toCase(c)} /></div>}
-		{swap > 0 && <div style={{position: 'absolute', inset: 0, opacity: swap}}><TakeA t={T_TITLE} /></div>}
+		{swap > 0 && <div style={{position: 'absolute', inset: 0, opacity: swap}}><TakeA t={T_TITLE} noLeaf /></div>}
 	</>; };
 void rnd; void proj; void poly; void lookAt; void Pool; void LITE; void sstep; void seg;

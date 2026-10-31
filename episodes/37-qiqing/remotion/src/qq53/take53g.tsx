@@ -9,6 +9,8 @@ import {litOf, hexMix, LATC} from './inscr53c';
 import {homog} from './kfG53';
 import {T0F, T1F, A_C0, glideAt, mapG, vigK} from './cam53g';
 import {Reflection53g, px, PK, PW, lobeK} from './shadow53g';
+import {G_LIGHT} from './light53g6';
+import {A as SA6, hwS as hwS6, LBLADE as LB6, LAT as LAT6} from './swordspec53s';
 /* ep53 v3 TakeG, 51.954 → 92.709: the 勾践 thread, ONE camera move (cam53g). Frame 1559 and frame 2781 ARE v2 TakeC at 56.482
    (the inscription view after 鸠浅＝勾践, which the paper test starts from). In between, the paper test's picture (the same
    blade53c.BladeFlat / MarkSet from the one sword spec, the same lit marks, the same ground, pool and vignette) seen through
@@ -31,6 +33,8 @@ export const TakeG: React.FC<{t: number}> = ({t}) => {
 		<svg width={W} height={H} style={{position: 'absolute'}}>
 			<rect x={-40} y={-40} width={W + 80} height={H + 80} fill="#24100C" />
 			<BladeFlat S={S} id="g53g" />
+			{/* v3.5: the pale wash over the blade (G_LIGHT), so the lattice recedes behind the shadow-play figures */}
+			{G_LIGHT > 0.001 && <path d={'M' + [...Array.from({length: 61}, (_, i) => { const s = LB6 * i / 60; return S((SA6.blade0 + s) / 10, hwS6(s) / 10); }), ...Array.from({length: 61}, (_, i) => { const s = LB6 * (60 - i) / 60; return S((SA6.blade0 + s) / 10, -hwS6(s) / 10); })].map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('L') + 'Z'} fill={LAT6.pale} opacity={0.85 * G_LIGHT} />}
 		</svg>
 		{ref && <div style={{position: 'absolute', left: 0, top: 0, width: ww, height: hh, transformOrigin: '0 0', transform: homog(q, ww, hh)}}>
 			<svg width={ww} height={hh} viewBox={`${px(a1)} 0 ${ww} ${hh}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}><Reflection53g t={t} a0={a0} a1={a1} /></svg></div>}

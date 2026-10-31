@@ -1,4 +1,5 @@
 import React from 'react';
+import {G_SCREEN} from './light53g6';
 import {lerp, cl, seg} from '../qq50/kit50';
 import {sstep, sstep5} from './cam53';
 import {Sil, Stand, Soldier, KingSeat, Palace, Mountain, SpearRing} from './kfG53';
@@ -138,15 +139,14 @@ const SwordDown: React.FC = () => <g>
 const KX = -2.3;
 const G7: React.FC<{t: number}> = ({t}) => { const under = Math.round(t * 30) >= Math.round(UNDER * 30), lift = under ? 1.36 : lerp(0.25, 1.36, sstep(seg(t, 82.6, UNDER)));
 	const np = pacesAt(t), adv = 0.05 * np, step = Math.cos(Math.PI * np) * (1 - 0.6 * sstep(cl(np - (PACE1 - PACE0), 0, 1)));
-	return <g>{sinkClip('g53g7w', GY - lift)}
-		<g clipPath="url(#g53g7w)"><Sil><g transform={T(1.22, GY, 0.64)}><Palace /></g></Sil></g>
-		<WaterG id="g53g7" x0={0.6} x1={1.9} y={GY - lift} depth={lift + 0.02} ph={t * 1.3} />
+	void lift;   /* v3.5 (owner): the palace going under (the flood) is gone from G7; it stays in G3, where 伍子胥 foretells it */
+	return <g>
 		<ellipse cx={0.1} cy={GY - 0.16} rx={0.72} ry={0.42} fill="url(#g53gPatch)" />
 		<Sil><g transform={`translate(${f3(adv)},0)`}>{[-1.69, -1.41, -1.13].map((x, i) => <g key={`b${i}`} transform={T(x + 0.14, GY - 0.05, 0.8)}><Soldier step={-step} /></g>)}
 			{[-1.62, -1.34, -1.06].map((x, i) => <g key={i} transform={T(x, GY + 0.02, 0.9)}><Soldier step={step} /></g>)}</g></Sil>
 		<g transform={T(KX, GY + 0.03, 1.07)}><KingDraw53g5 t={t} /></g>
 		<Sil><g transform={`translate(0.4,${GY}) scale(1.05)`}><MianG /></g><g transform={`translate(-0.3,${GY - 0.07}) rotate(8) scale(-0.78,0.85)`}><SwordDown /></g></Sil>
-		<Sil><Ground x0={-2.6} x1={0.6} /><Ground x0={1.9} x1={2.6} /></Sil></g>; };
+		<Sil><Ground x0={-2.6} x1={2.6} /></Sil></g>; };
 const SCENES: (React.FC<{t: number}> | null)[] = [G1, G2, G3, G4, G5, null, G7];
 
 /* ---------- the reflection on the blade (panel space) ---------- */
@@ -188,6 +188,7 @@ export const Reflection53g: React.FC<{t: number; a0: number; a1: number}> = ({t,
 		<defs><clipPath id="g53gIn"><path d={inner} /></clipPath>
 			<radialGradient id="g53gFire" cx="0.5" cy="0.62" r="0.62"><stop offset="0" stopColor="#FFC56A" stopOpacity={0.95} /><stop offset="0.45" stopColor="#E08A38" stopOpacity={0.8} /><stop offset="0.75" stopColor="#A85C26" stopOpacity={0.5} /><stop offset="1" stopColor="#2A1408" stopOpacity="0" /></radialGradient>
 			{/* v3.2 (owner, 1:24): the stage behind the figures a tad lighter (back #2A160A → #4A2A14, the fire's outer ring up) */}<radialGradient id="g53gBack"><stop offset="0" stopColor="#4A2A14" stopOpacity={0.97} /><stop offset="0.6" stopColor="#4A2A14" stopOpacity={0.93} /><stop offset="0.85" stopColor="#4A2A14" stopOpacity={0.5} /><stop offset="1" stopColor="#4A2A14" stopOpacity="0" /></radialGradient>
+			<radialGradient id="g53gScreen"><stop offset="0" stopColor="#F8E6BC" /><stop offset="0.55" stopColor="#F2D9A2" stopOpacity={0.92} /><stop offset="0.82" stopColor="#E8C487" stopOpacity={0.45} /><stop offset="1" stopColor="#E8C487" stopOpacity="0" /></radialGradient>
 			<radialGradient id="g53gMk"><stop offset="0" stopColor="#fff" /><stop offset="0.6" stopColor="#fff" /><stop offset="0.85" stopColor="#808080" /><stop offset="1" stopColor="#000" /></radialGradient>
 			<radialGradient id="g53gPatch"><stop offset="0" stopColor="#FFE2A6" stopOpacity={0.95} /><stop offset="0.5" stopColor="#FFC870" stopOpacity={0.7} /><stop offset="1" stopColor="#FFB04C" stopOpacity="0" /></radialGradient>
 			<linearGradient id="g53gEnd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset="0.17" stopColor="#fff" stopOpacity="1" /><stop offset="0.83" stopColor="#fff" stopOpacity="1" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient></defs>
@@ -202,8 +203,10 @@ export const Reflection53g: React.FC<{t: number; a0: number; a1: number}> = ({t,
 					<g mask={`url(#g53gM${i})`}>
 						{glow('url(#g53gBack)')}
 						<ellipse cx={px(ac + ex / 2)} cy={py(gw - 0.1)} rx={(2.6 + ex / 2) * PK} ry={(gry + 0.1) * PK} fill="url(#g53gFire)" opacity={flick * dim} />
+						{/* v3.5: the light screen behind the figures (G_SCREEN), inside this scene's soft vignette only */}
+						{G_SCREEN > 0.001 && <g opacity={G_SCREEN * dim}>{glow('url(#g53gScreen)')}</g>}
 						<g transform={`translate(${px(ac)},${py(0)}) scale(${PK}) translate(0,${f3(wg)}) scale(${f3(sc)}) translate(${FX[i]},${-GY})`} fill={INK}><C t={t} /></g>
-						<g mask={`url(#g53gL${i})`}><LatticeOverG a0={ac - HALF} a1={ac + HALF + ex} o={0.24} /></g>
+						<g mask={`url(#g53gL${i})`}><LatticeOverG a0={ac - HALF} a1={ac + HALF + ex} o={0.24 * (1 - G_SCREEN)} /></g>
 						<path d={`M${px(ac + HALF + ex)},${py(0)} L${px(ac - HALF)},${py(0)}`} stroke={METAL.lit} strokeWidth={0.045 * PK} strokeOpacity={0.32} />
 					</g></g>; })}
 			{lk > 0.004 && <LobeG a={a0 + 9 - 0.8} w={0.25} ra={4.2} rw={1.7} k={lk} />}

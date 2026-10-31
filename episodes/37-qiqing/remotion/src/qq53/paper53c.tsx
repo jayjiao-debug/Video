@@ -34,20 +34,22 @@ export const BladeEnd53: React.FC<{t: number}> = ({t}) => { const S = mapOf(END_
 	return <g><BladeFlat S={S} id="pe" /><MarkSet id="pe" S={S} o={1} col={(side, n) => hexMix(LATC, '#FFF2C8', Math.min(1, litOf(side, n, t)))} lit={(side, n) => Math.min(1, litOf(side, n, t))} /></g>; };
 const trap = (u: number) => { const x = cl(u, 0, 1), r = 0.2, v = 1 / (1 - r); return x < r ? v * x * x / (2 * r) : x > 1 - r ? 1 - v * (1 - x) * (1 - x) / (2 * r) : v * (x - r / 2); };
 const mixCam = (a: Cam, b: Cam, u: number): Cam => ({p: [lerp(a.p[0], b.p[0], u), lerp(a.p[1], b.p[1], u), lerp(a.p[2], b.p[2], u)], yaw: lerp(a.yaw, b.yaw, u), pitch: lerp(a.pitch, b.pitch, u), f: lerp(a.f, b.f, u), cx: 960, cy: lerp(a.cy, b.cy, u), roll: lerp(a.roll ?? 0, b.roll ?? 0, u)});
+/* v3.5 (owner: "this scene can be done with a smoother, seamless camera"): no swing out to a 3/4 view and back (that was for the
+   paper). The blade holds still at its 56.482 height and the camera makes ONE eased move, face-on all the way, from G8's last view to
+   leg 12's first picture (END_CAM, re-expressed for the unlifted blade), so B1's last frame is BladeEnd53 exactly. */
+const END_B: Cam = {...END_CAM, p: [END_CAM.p[0], END_CAM.p[1], END_CAM.p[2] - LIFT + DZ0]};
 export const camAt = (t: number): Cam => { if (t <= 56.482) return faceCam(t);
-	const f0 = faceCam(56.482, 56.482), C9b: Cam = {...C9, p: [C9.p[0] - 0.8, C9.p[1] + 0.8, C9.p[2] - 0.4], yaw: C9.yaw - 0.012};
-	if (t < 59.0) return mixCam(f0, C9, trap(seg(t, 56.482, 59.0)));
-	if (t < 59.2) return mixCam(C9, C9b, sstep(seg(t, 59.0, 59.2)));
-	if (t < 60.0) return C9b;
-	return mixCam(C9b, END_CAM, trap(seg(t, 60.1, P1))); };
+	return mixCam(faceCam(56.482, 56.482), END_B, sstep(seg(t, 56.482, P1))); };
+void C9; void trap;
 /* v3.4 (owner): the paper test now opens the film; here (v3 92.709 → 97.804, B1 「两千多年了，还这么锋利。/ 靠的是什么？」) the same blade
    and the same camera hold on the EDGE: no paper, no slate, no tags, no film light. The blade settles (the old drop into the stack, now
    a calm 2.2 s ease) before the hit; on DA(26) = 59.312 (v3 DA(42) 95.540) a thin glint runs along the cutting edge (the lower one,
    edge down), guard → tip in ~0.5 s, over a soft resting sheen that is there before and after and goes as the camera rises to leg 12. */
 const settle = (t: number) => sstep5(seg(t, 57.0, 59.2));
+void settle; void lift;
 const RUN = 0.5;
 export const Paper53: React.FC<{t: number}> = ({t}) => {
-	const c = camAt(t), zc = ZAX0 + DZ0 * (1 - settle(t)) + lift(t);
+	const c = camAt(t), zc = ZAX0 + DZ0;   /* v3.5: the blade holds still (no settle, no lift) */
 	const world = (a: number, w: number): V3 => [BASE + (a - A0), 0, zc + w];
 	const S = mapOf(c, world);
 	const hitN = frameOf(t) - frameOf(T_CUT), tr = hitN >= 0 ? hitN / 30 : -1;   // frame-exact: the glint's first frame is the hit's
