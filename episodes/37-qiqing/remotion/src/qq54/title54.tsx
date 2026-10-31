@@ -13,7 +13,7 @@ export const TITLE_A = 0.654 + 1.99203 * 6, TITLE_B = 0.654 + 1.99203 * 8;
 const Q: [string, string][] = [['到底是', 'c'], ['英雄', 'g'], ['，还是', 'c'], ['奸雄', 'r'], ['？', 'c']];
 const QCOL: Record<string, string> = {c: '#F4E6C8', g: '#EDC266', r: '#D23A2C'};
 const NX = 960, NY = 282, FS = 232;                  // the name's glyph centre and size
-const SX = 1312, SY = 366, SS = 112;                 // the seal: centre and side
+const SX = 1318, SY = 368, SS = 124;                 // the seal: centre and side
 const QY = 492, QFS = 60;                            // the question's baseline and size
 const eo = (u: number) => 1 - Math.pow(1 - cl(u), 3);
 const f1 = (v: number) => v.toFixed(1);
@@ -37,22 +37,31 @@ const BRISTLES = Array.from({length: 30}, (_, i) => { const v = (i + rnd(i, 7) *
 /* the dry gaps inside the body near the tail (cut out by a mask) */
 const GAPS = Array.from({length: 16}, (_, i) => { const v = (i + rnd(i, 21)) / 16 - 0.5, xs = 930 + rnd(i, 22) * 220, xe = XB + 60, w = 1.4 + rnd(i, 23) * 3.4;
 	return `M${f1(xs)},${f1(cy(xs) + v * hh(xs) * 0.9)} L${f1(xe)},${f1(cy(xe) + v * hh(XB) * 0.9 - w / 2)} L${f1(xe)},${f1(cy(xe) + v * hh(XB) * 0.9 + w / 2)} Z`; });
-/* the splash: drops thrown off the stroke on the slam (radius, final place, the frame it lands, streak or round) */
+/* the splash: drops thrown off the stroke on the slam, from its head, its tail and its edges (start, end, radius, angle, stretch,
+   the frame it lands); none lands on the body (overlapping rimmed shapes leave seams) or on the question */
 type Drop = {x0: number; y0: number; x: number; y: number; r: number; a: number; s: number; f0: number};
-const DROPS: Drop[] = Array.from({length: 54}, (_, i) => {
-	const side = i % 3, th = side === 0 ? Math.PI + (rnd(i, 1) - 0.5) * 1.9 : side === 1 ? (rnd(i, 1) - 0.5) * 1.6 : (rnd(i, 1) < 0.5 ? -1 : 1) * (Math.PI / 2 + (rnd(i, 2) - 0.5) * 2.2);
-	const ex = NX + Math.cos(th) * 470, ey = NY + Math.sin(th) * 96, d = 14 + Math.pow(rnd(i, 3), 1.4) * (side === 2 ? 120 : 210);
-	const r = 2.2 + Math.pow(rnd(i, 4), 2.4) * 15, s = rnd(i, 5) < 0.4 ? 2.2 + rnd(i, 6) * 1.6 : 1;
-	return {x0: ex, y0: ey, x: ex + Math.cos(th) * d, y: Math.min(560, ey + Math.sin(th) * d * 0.75), r, a: th * 180 / Math.PI, s, f0: d / 120}; });
+const inBody = (x: number, y: number, r: number) => x > XA - r && x < XB + 30 + r && Math.abs(y - cy(Math.min(XB, Math.max(XA, x)))) < hh(Math.min(XB, Math.max(XA + R0, x))) / 2 + r + 4;
+const DROPS: Drop[] = Array.from({length: 64}, (_, i) => {
+	const side = i % 4, a = rnd(i, 1), b = rnd(i, 2);
+	let x0 = 0, y0 = 0, th = 0, dm = 0;
+	if (side === 0) { th = Math.PI + (a - 0.5) * 1.7; x0 = XA + 20; y0 = cy(x0) + (b - 0.5) * hh(XA + R0) * 0.8; dm = 200; }
+	else if (side === 1) { th = (a - 0.5) * 1.1; x0 = XB + 100 + b * 150; y0 = cy(x0) + (rnd(i, 3) - 0.5) * hh(XB) * 0.9; dm = 190; }
+	else { const x = XA + 70 + b * (XB - XA + 60), up = side === 2; th = (up ? -1 : 1) * (Math.PI / 2 + (a - 0.5) * 1.5); x0 = x; y0 = cy(x) + (up ? -0.5 : 0.5) * hh(Math.max(XA + R0, x)); dm = up ? 120 : x > 540 && x < 1380 ? 30 : 110; }
+	const d = 16 + Math.pow(rnd(i, 4), 1.3) * dm, r = 2 + Math.pow(rnd(i, 5), 2.6) * 13, s = rnd(i, 6) < 0.45 ? 2 + rnd(i, 7) * 2.2 : 1;
+	return {x0, y0, x: x0 + Math.cos(th) * d, y: Math.max(80, Math.min(548, y0 + Math.sin(th) * d * 0.8)), r, a: th * 180 / Math.PI, s, f0: d / 110}; })
+	.filter((d) => !inBody(d.x, d.y, d.r * d.s));
+/* ink density inside the body: long faint streaks along the stroke (the hairs of the brush) */
+const HAIRS = Array.from({length: 14}, (_, i) => { const v = (i + 0.5) / 14 - 0.5, xs = XA + 60 + rnd(i, 51) * 200, xe = XB - 40 - rnd(i, 52) * 260;
+	return {d: `M${f1(xs)},${f1(cy(xs) + v * hh(xs) * 0.85)} C${f1(xs + 200)},${f1(cy(xs + 200) + v * hh(xs + 200) * 0.85 + 3)} ${f1(xe - 200)},${f1(cy(xe - 200) + v * hh(xe - 200) * 0.85 - 3)} ${f1(xe)},${f1(cy(xe) + v * hh(xe) * 0.85)}`, w: 1.2 + rnd(i, 53) * 3.2, o: 0.25 + rnd(i, 54) * 0.35}; });
 /* two heavy splats where the brush hit and where it lifted */
-const SPLATS: [number, number, number][] = [[XA + 22, NY + 96, 26], [XA - 18, NY - 54, 14], [1458, NY - 92, 16], [1412, NY + 104, 11]];
+const SPLATS: [number, number, number][] = [[XA - 26, NY + 70, 18], [XA - 30, NY - 60, 11], [1500, NY - 96, 13], [1478, NY + 96, 9]];
 
 const Seal: React.FC<{k: number; o: number}> = ({k, o}) => <g transform={`translate(${SX},${SY}) rotate(-5) scale(${k.toFixed(4)})`} opacity={o}>
 	<g filter="url(#ttseal)">
-		<rect x={-SS / 2} y={-SS / 2} width={SS} height={SS} rx={5} fill="#B0261C" />
-		<rect x={-SS / 2 + 5} y={-SS / 2 + 5} width={SS - 10} height={SS - 10} rx={3} fill="none" stroke="#F6E7CF" strokeWidth={2.4} opacity={0.9} />
+		<rect x={-SS / 2} y={-SS / 2} width={SS} height={SS} rx={6} fill="#B3271D" />
+		<rect x={-SS / 2 + 5.5} y={-SS / 2 + 5.5} width={SS - 11} height={SS - 11} rx={3} fill="none" stroke="#F6E7CF" strokeWidth={2.6} />
 		{/* 白文: 孟 in the right column, 德 in the left (a seal reads from the right) */}
-		{[['孟', 23], ['德', -23]].map(([c, x]) => <text key={c} transform={`translate(${x},${SS * 0.33}) scale(0.5,1)`} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={SS * 0.86} fill="#F6E7CF">{c}</text>)}
+		{([['孟', SS * 0.22], ['德', -SS * 0.22]] as [string, number][]).map(([c, x]) => <text key={c} transform={`translate(${f1(x)},${f1(SS * 0.315)}) scale(0.56,1)`} textAnchor="middle" fontFamily={SERIF} fontWeight={700} fontSize={SS * 0.8} fill="#F6E7CF">{c}</text>)}
 	</g>
 </g>;
 
@@ -78,16 +87,17 @@ export const TitleArt: React.FC<{t: number}> = ({t}) => {
 			<filter id="ttrough" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.011 0.07" numOctaves={2} seed={4} result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale={16} xChannelSelector="R" yChannelSelector="G" /></filter>
 			<filter id="ttroughS" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves={2} seed={9} result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale={4.5} xChannelSelector="R" yChannelSelector="G" /></filter>
 			<filter id="ttseal" x="-10%" y="-10%" width="120%" height="120%">
-				<feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves={2} seed={13} result="n" />
-				<feDisplacementMap in="SourceGraphic" in2="n" scale={3.5} xChannelSelector="R" yChannelSelector="G" result="d" />
-				<feTurbulence type="fractalNoise" baseFrequency="0.16" numOctaves={1} seed={21} result="sp" />
-				<feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -9 5.6" result="holes" />
+				<feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves={2} seed={13} result="n" />
+				<feDisplacementMap in="SourceGraphic" in2="n" scale={2.4} xChannelSelector="R" yChannelSelector="G" result="d" />
+				<feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves={2} seed={21} result="sp" />
+				<feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -22 15.2" result="holes" />
 				<feComposite in="d" in2="holes" operator="in" />
 			</filter>
 			<filter id="ttsh" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="3" /></filter>
 			<filter id="ttqh" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="7" /><feComponentTransfer><feFuncA type="linear" slope="0.85" /></feComponentTransfer><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
 			<filter id="ttbl" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation={blur.toFixed(2)} /></filter>
 			<RimF id="ttrimI" lx={0.25} ly={-1} k={3.2} c="#C8964E" o={0.85} lx2={-0.4} ly2={1} k2={2} c2="#7E5A2E" o2={0.6} blur={0.9} />
+			<RimF id="ttrimD" lx={0.25} ly={-1} k={1.6} c="#C8964E" o={0.8} blur={0.6} />
 			<RimF id="ttrimG" lx={0} ly={-1} k={2.6} c="#FFF7DE" o={0.85} blur={0.8} />
 			<mask id="ttgap" maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}><rect width={W} height={H} fill="#fff" />{GAPS.map((d, i) => <path key={i} d={d} fill="#000" />)}</mask>
 			<clipPath id="ttsweep"><rect x={XA - 80} y={0} width={f1((XB + 400 - XA) * sweep + 80)} height={H} /></clipPath>
@@ -102,11 +112,13 @@ export const TitleArt: React.FC<{t: number}> = ({t}) => {
 			<g filter="url(#ttrimI)">
 				<g transform={`translate(${NX},${NY}) scale(${k.toFixed(4)}) translate(${-NX},${-NY})`}>
 					<g clipPath="url(#ttsweep)" filter="url(#ttrough)" fill="#0A0706">
-						<g mask="url(#ttgap)"><path d={SMEAR} /></g>
+						<g mask="url(#ttgap)"><path d={SMEAR} />{HAIRS.map((h, i) => <path key={i} d={h.d} fill="none" stroke="#2C2219" strokeWidth={h.w} opacity={h.o} />)}</g>
 						{BRISTLES.map((d, i) => <path key={i} d={d} />)}
 						{SPLATS.map(([x, y, r], i) => <g key={i} opacity={cl(fr / 2)}><circle cx={x} cy={y} r={r} />{Array.from({length: 5}, (_, j) => <circle key={j} cx={x + Math.cos(j * 1.3 + i) * r * (1.3 + rnd(i * 5 + j, 31))} cy={y + Math.sin(j * 1.3 + i) * r * (1.3 + rnd(i * 5 + j, 32))} r={r * (0.18 + 0.2 * rnd(i * 5 + j, 33))} />)}</g>)}
 					</g>
 				</g>
+			</g>
+			<g filter="url(#ttrimD)">
 				<g fill="#0A0706" filter="url(#ttroughS)">
 					{DROPS.map((d, i) => { const u = eo((fr - d.f0) / 4); if (fr < d.f0) return null;
 						const x = d.x0 + (d.x - d.x0) * u, y = d.y0 + (d.y - d.y0) * u, r = d.r * (0.4 + 0.6 * u), st = d.s + (1 - u) * 1.5;

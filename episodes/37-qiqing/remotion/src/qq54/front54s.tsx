@@ -117,32 +117,36 @@ const LamP: React.FC<{id: string; s: number}> = ({id, s}) => <pattern id={id} wi
 const swordGeo = (arm: ArmF) => {
 	const S: P = [-176, 118], F = arm.F, fs = arm.fs, d0 = [F[0] - S[0], F[1] - S[1]], L0 = Math.hypot(d0[0], d0[1]), u: P = [d0[0] / L0, d0[1] / L0], n: P = [-u[1], u[0]];
 	const dT = [arm.T[0] - F[0], arm.T[1] - F[1]], LT = Math.hypot(dT[0], dT[1]), ub: P = [dT[0] / LT, dT[1] / LT], nb: P = [-ub[1], ub[0]];
-	const G: P = add(F, ub, 50 * fs), bw = (arm.bw ?? 26) * fs, wT = bw * (arm.tipK ?? 2.4), T = arm.T, C1: P = add(T, ub, -wT * 1.25);
+	const G: P = add(F, ub, 50 * fs), bw = (arm.bw ?? 26) * fs, wT = bw * (arm.tipK ?? 1.2), T = arm.T, C1: P = add(T, ub, -wT * 1.9);
 	return {S, F, fs, u, n, L0, ub, nb, G, bw, wT, T, C1, au: Math.atan2(u[1], u[0]) * 180 / Math.PI, ag: Math.atan2(ub[1], ub[0]) * 180 / Math.PI};
 };
 /** the 宝剑 from its guard to the point: straight, double-edged, a central ridge, wider toward the lens; a plain dark bronze guard with
     one thin gold inlay line; drawn in the figure's local frame (the caller places it), over the fist */
 export const SwordF: React.FC<{id: string; arm: ArmF}> = ({id, arm}) => { const g = swordGeo(arm), {G, ub, nb, bw, wT, T, C1, fs} = g;
 	const lA = add(G, nb, bw / 2), rA = add(G, nb, -bw / 2), lB = add(C1, nb, wT / 2), rB = add(C1, nb, -wT / 2);
+	/* a proper sword point: the edges curve in (slightly convex) to a sharp point on the ridge line */
+	const tl = Math.hypot(T[0] - C1[0], T[1] - C1[1]), cL = add(add(C1, ub, tl * 0.55), nb, wT * 0.46), cR = add(add(C1, ub, tl * 0.55), nb, -wT * 0.46);
+	const q = (a: P) => `${f1(a[0])},${f1(a[1])}`;
 	const gd = (k: number, w: number): P[] => [add(add(G, ub, k), nb, w), add(add(G, ub, k), nb, -w)];
-	const [q1, q2] = gd(-7 * fs, 34 * fs), [q3, q4] = gd(7 * fs, 30 * fs), [q5, q6] = gd(-13 * fs, 18 * fs);
+	const [q1, q2] = gd(-7 * fs, 26 * fs), [q3, q4] = gd(6 * fs, 23 * fs), [q5, q6] = gd(-12 * fs, 14 * fs);
 	return <g>
 		<defs>
 			<linearGradient id={`${id}sl`} x1={f1(G[0])} y1={f1(G[1])} x2={f1(T[0])} y2={f1(T[1])} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#8A7060" /><stop offset="0.5" stopColor="#E0A46C" /><stop offset="1" stopColor="#FFE2B4" /></linearGradient>
 			<linearGradient id={`${id}sd`} x1={f1(G[0])} y1={f1(G[1])} x2={f1(T[0])} y2={f1(T[1])} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#22262C" /><stop offset="0.65" stopColor="#3C4A54" /><stop offset="1" stopColor="#6E8E98" /></linearGradient>
 		</defs>
-		{/* the two faces of the blade, meeting at the ridge (lit toward the fire, cool on the other side) */}
-		<polygon points={pp([G, lA, lB, T])} fill={`url(#${id}sd)`} />
-		<polygon points={pp([G, rA, rB, T])} fill={`url(#${id}sl)`} />
-		<polyline points={pp([G, T])} fill="none" stroke="#FFF0D4" strokeWidth={2.2 * fs} opacity={0.9} />
-		<polyline points={pp([lA, lB, T])} fill="none" stroke="#8FD0DC" strokeWidth={1.8 * fs} strokeLinejoin="round" opacity={0.75} />
-		<polyline points={pp([rA, rB, T])} fill="none" stroke="#FFF2D8" strokeWidth={2.4 * fs} strokeLinejoin="round" opacity={0.95} />
+		{/* the two faces of the blade meeting at the ridge: lit toward the fire, cool on the other side */}
+		<path d={`M${q(G)} L${q(lA)} L${q(lB)} Q${q(cL)} ${q(T)} Z`} fill={`url(#${id}sd)`} />
+		<path d={`M${q(G)} L${q(rA)} L${q(rB)} Q${q(cR)} ${q(T)} Z`} fill={`url(#${id}sl)`} />
+		<path d={`M${q(G)} L${q(T)}`} fill="none" stroke="#FFF0D4" strokeWidth={1.8 * fs} opacity={0.9} />
+		<path d={`M${q(lA)} L${q(lB)} Q${q(cL)} ${q(T)}`} fill="none" stroke="#8FD0DC" strokeWidth={1.5 * fs} opacity={0.75} />
+		<path d={`M${q(rA)} L${q(rB)} Q${q(cR)} ${q(T)}`} fill="none" stroke="#FFF2D8" strokeWidth={2 * fs} opacity={0.95} />
 		{/* one thin gold inlay line along the ridge just past the guard */}
-		<polyline points={pp([add(G, ub, 12 * fs), add(G, ub, 70 * fs)])} fill="none" stroke="#E0B060" strokeWidth={2.6 * fs} opacity={0.95} />
+		<path d={`M${q(add(G, ub, 12 * fs))} L${q(add(G, ub, 88 * fs))}`} fill="none" stroke="#E0B060" strokeWidth={2.4 * fs} opacity={0.95} />
 		{/* the guard (剑格): a plain dark bronze bar, a lit edge */}
 		<polygon points={pp([q1, q5, q2, q4, q3])} fill="#2E261E" />
 		<polygon points={pp([q1, q5, q2, add(q2, ub, 4 * fs), add(q1, ub, 4 * fs)])} fill="#7A6040" opacity={0.85} />
 		<polyline points={pp([q3, q4])} fill="none" stroke="#B08A50" strokeWidth={2 * fs} opacity={0.7} />
+		{void q6}
 	</g>; };
 export const CaoFront: React.FC<{id: string; arm: ArmF; t: number; capeK?: number; legs?: boolean; part?: 'all' | 'body' | 'sword'}> = ({id, arm, t, capeK = 1, legs, part = 'all'}) => { const c = FP;
 	if (part === 'sword') return <SwordF id={id} arm={arm} />;

@@ -103,7 +103,7 @@ const SM1 = smokeBlobs(30, 3, -200, 2100, -200, 560, 100, 240);
 const d1Pose = (t: number) => { const d = t - T1, z = 0.075 * eout(d / 2.1);
 	/* the thrust on the hit: the arm snaps toward the lens over 5 frames, then holds with a small tremble */
 	const sn = eout(d / 0.17), tr = Math.sin(t * 23) * 1.2 * cl(d / 0.3);
-	const arm = {F: [-236 - 12 * sn, 222 + 14 * sn + tr] as P, fs: 1.6 + 0.4 * sn, T: [-520 - 140 * sn, 380 + 165 * sn + tr] as P, bw: 24, tipK: 2.5};
+	const arm = {F: [-236 - 12 * sn, 222 + 14 * sn + tr] as P, fs: 1.32 + 0.28 * sn, T: [-600 - 140 * sn, 420 + 107 * sn + tr] as P, bw: 31, tipK: 1.22};
 	return {d, z, arm, tf: `${pl(z, 1, 1150, 520)} translate(1180,470)`};
 };
 export const D1: React.FC<{t: number; layer?: 'scene' | 'sword'}> = ({t, layer = 'scene'}) => { const {d, z, arm, tf} = d1Pose(t), HZ = 800, c: Cam3 = {f: 1000, vx: 1180, hz: HZ, ch: 0.7, bend: 0.003};
@@ -159,7 +159,7 @@ const D2: React.FC<{t: number}> = ({t}) => { const d = t - T2, HZ = 840, c: Cam3
 			<Charge men={MEN2} t={d} v={1.15} c={c} id="d2" zMin={0.6} split={6} flags />
 			<circle cx={960} cy={520} r={520} fill="url(#d2back)" />
 			<ellipse cx={960} cy={1038} rx={180} ry={16} fill="#000" opacity={0.6} />
-			<g filter="url(#d2hero)"><g transform={`translate(960,${f1(1040 - 1620 * S)}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-222, 40], fs: 1.25, T: [-500, -600], bw: 30, tipK: 1.3}} /></g></g>
+			<g filter="url(#d2hero)"><g transform={`translate(960,${f1(1040 - 1620 * S)}) scale(${S})`}><CaoFront id="d2c" t={t} legs capeK={1.1} arm={{F: [-222, 40], fs: 1.25, T: [-680, -600], bw: 30, tipK: 1.0}} /></g></g>
 		</g>
 		<rect width={W} height={H} fill="url(#d2vig)" />
 	</svg>; };
