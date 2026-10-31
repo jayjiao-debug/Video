@@ -45,18 +45,18 @@ const QC = 758;                                      // the question's centre li
 
 /* ---------- the ink 横 (owner r2: only as long as the name): a sharp, angled 起笔 at the left — the tip pressed in from the
    top-left, the lower-left corner rounded by the press — the body rising a little, a short crisp 飞白 tail (~140 px) past 操 ---------- */
-const XA = 522, XB = 1404, SL = 96;                  // the entry's top point (≈ 85 px before 曹), the body's end (just past 操), the entry's slant
+const XA = 520, XB = 1404, SL = 150;                 // the entry's top point (≈ 85 px before 曹), the body's end (just past 操), the entry's slant
 const cy = (x: number) => NY + 14 - (x - 960) * 0.034;
-const body = (x: number) => 286 - 56 * cl((x - XA) / (XB - XA)) + 14 * Math.sin(cl((x - XA) / (XB - XA)) * Math.PI);
+const body = (x: number) => 300 - 84 * cl((x - XA) / (XB - XA)) + 12 * Math.sin(cl((x - XA) / (XB - XA)) * Math.PI);
 const SMEAR = (() => { const top: string[] = [], bot: string[] = [];
 	for (let x = XA; x <= XB; x += 6) { const h = body(x) / 2, tip = 9 * Math.pow(cl(1 - (x - XA) / 34), 1.5);   /* the tip flicks up a little */
-		top.push(`${f1(x)},${f1(cy(x) - h - tip + 5 * Math.sin(x * 0.011 + 1) + 2.4 * Math.sin(x * 0.043))}`); }
+		top.push(`${f1(x)},${f1(cy(x) - h - tip + 8 * Math.sin(x * 0.0072 + 1.4) + 2.6 * Math.sin(x * 0.043))}`); }
 	for (let x = XA + SL; x <= XB; x += 6) { const h = body(x) / 2;
-		bot.push(`${f1(x)},${f1(cy(x) + h + 4 * Math.sin(x * 0.009 + 2) + 2.6 * Math.sin(x * 0.037 + 0.5))}`); }
+		bot.push(`${f1(x)},${f1(cy(x) + h + 7 * Math.sin(x * 0.0064 + 2.6) + 2.8 * Math.sin(x * 0.037 + 0.5))}`); }
 	const end = Array.from({length: 11}, (_, i) => { const v = (i + 0.5) / 11 - 0.5, x = XB + 6 + 30 * rnd(i, 41) * (1 - Math.abs(v) * 1.3); return `${f1(x)},${f1(cy(x) + v * body(XB))}`; });
-	const b0 = XA + SL, yb = cy(b0) + body(b0) / 2 + 4 * Math.sin(b0 * 0.009 + 2), yt = cy(XA) - body(XA) / 2 - 9;
-	/* the press: from the bottom of the entry, a full curve down-left and up to the sharp top point */
-	const press = `Q${f1(XA + SL * 0.12)},${f1(yb + 6)} ${f1(XA + SL * 0.02)},${f1(cy(XA) + body(XA) * 0.12)} Q${f1(XA - 8)},${f1(cy(XA) - body(XA) * 0.3)} ${f1(XA)},${f1(yt)}`;
+	const b0 = XA + SL, yb = cy(b0) + body(b0) / 2 + 7 * Math.sin(b0 * 0.0064 + 2.6), yt = cy(XA) - body(XA) / 2 - 9 + 8 * Math.sin(XA * 0.0072 + 1.4);
+	/* the 起笔: from the bottom of the entry a slanted cut up-left to the sharp top point, its lower part bellied out by the press */
+	const press = `Q${f1(XA + SL * 0.62)},${f1(yb + 10)} ${f1(XA + SL * 0.36)},${f1(cy(XA) + body(XA) * 0.24)} Q${f1(XA + SL * 0.1)},${f1(cy(XA) - body(XA) * 0.06)} ${f1(XA)},${f1(yt)}`;
 	return `M${top.join(' L')} L${end.join(' L')} L${bot.reverse().join(' L')} ${press} Z`; })();
 const BRISTLES = Array.from({length: 30}, (_, i) => { const v = (i + rnd(i, 7) * 0.8) / 30 - 0.5, edge = Math.abs(v) * 2;
 	const xs = XB - 240 + rnd(i, 8) * 160, xe = XB + 18 + (1 - edge * 0.7) * (60 + rnd(i, 9) * 80), w = 2.4 + rnd(i, 10) * 7 * (1 - edge * 0.5);
