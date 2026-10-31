@@ -4,7 +4,6 @@ import {W, H, Subs, SANS, SERIF, seg, cl} from '../qq50/kit50';
 import {thB} from '../qq50/styleB';
 import {SealHollow} from '../qq51/master51';
 import {Stamp53} from '../qq53/parts53';
-import {TitleArt} from './title54';
 /* ep54 · the look-B DEMO on the owner's BGM slowed to 0.9127× (A minor): part 1 = the film's opening 0–36.51 s (section A, the hard
    beat, cards 1–9 and the title); a 1 s slate; part 2 = 1:24.32–1:48.22 (the break, the drop on 1:40.26, cards 22–27).
    Every scene is a React.FC<{t: number}> where t is FILM time in seconds (the script's clock, episodes/54-caocao/script.md).
@@ -66,7 +65,7 @@ const Counter: React.FC<{age: number}> = ({age}) => <div style={{position: 'abso
 export const Overlay: React.FC<{t: number}> = ({t}) => { const c = CARDS.find((k) => t >= k.a && t < k.b), title = t >= TITLE_A && t < TITLE_B;
 	if (t >= END_T) return null;
 	if (t >= DARK && t < DROP + 0.15) return null;   /* the sword in the dark, the bars open fully on the drop, the hit: no furniture over it */
-	if (title) return <><TitleArt t={t} /><SealHollow /></>;
+	if (title) return <SealHollow />;   /* the title itself is a scene now (ttl54a.TitleOpt, the owner's pick A), drawn over a dimmed Open */
 	if (!c) return <SealHollow />;
 	const r0 = plain(c.rows[0]).length, typed = c.a === 0 ? 1e9 : (t - c.a) * CPS,   /* card 1 is on screen whole from frame 0 (the 5-second rule) */ n = [Math.min(r0, typed), Math.max(0, typed - r0)];
 	const stampOn = typed > plain(c.rows.join('')).length + 6;

@@ -10,10 +10,12 @@ import * as R2B from './film54r2b';
 import * as S from './demo54s';
 import * as D from './drop54s';
 import * as DV from './dv54a';
+import * as TA from './ttl54a';
 import * as R3 from './film54r3';
 /* ep54 full film entry (FILM54): frame / 30 = film time t; the scene that owns t, the overlay (subtitles, stamps, counter, seal, title) on top */
 type Sc = {a: number; b: number; C: React.FC<{t: number}>};
 const SCENES: Sc[] = [
+	{a: TA.TITLE_A, b: TA.TITLE_B, C: TA.TitleOpt},   /* the title (owner's pick A): listed first so it wins over Open in its window */
 	{a: 0, b: BAR(8), C: M.Open}, {a: BAR(12), b: BAR(14), C: M.Flight}, {a: BAR(16), b: BAR(18), C: M.Line},
 	{a: BAR(8), b: BAR(10), C: N.Huangjin}, {a: BAR(10), b: BAR(12), C: N.Dongzhuo}, {a: BAR(14), b: BAR(16), C: N.Lv},
 	{a: BAR(18), b: BAR(22), C: R1.Xingyang}, {a: BAR(22), b: BAR(24), C: R1.Hong}, {a: BAR(24), b: BAR(26), C: R1.Haoli},
