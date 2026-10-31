@@ -46,8 +46,8 @@ export const Kneeler: React.FC<{bow?: number; hb?: number}> = ({bow = 24, hb = 1
 /* ---------- 曹操 kneeling (35, court robe, 进贤冠), cel-shaded; cm, facing +x; look = head angle (deg, negative = up) ---------- */
 /** 进贤冠 in Head units (over cap 'ze') */
 export const JinXian: React.FC<{c?: string; e?: string}> = ({c = '#141210', e = '#8A8A86'}) => <g>
-	<path d="M33,-103 L27,-174 L18,-177 L-52,-140 L-56,-117 C-28,-124 6,-117 33,-103 Z" fill={c} />
-	<path d="M27,-174 L18,-177 L-52,-140" fill="none" stroke={e} strokeOpacity={0.4} strokeWidth={2.4} />
+	<path d="M33,-103 L29,-160 L20,-164 L-54,-136 L-56,-117 C-28,-124 6,-117 33,-103 Z" fill={c} />
+	<path d="M29,-160 L20,-164 L-54,-136" fill="none" stroke={e} strokeOpacity={0.4} strokeWidth={2.4} />
 	<path d="M30,-112 C2,-126 -30,-128 -54,-122" fill="none" stroke={e} strokeOpacity={0.22} strokeWidth={1.6} />
 	<path d="M-24,-96 C-24,-60 -20,-24 -6,6 C2,14 12,16 20,13" fill="none" stroke={c} strokeWidth={2} opacity={0.85} />
 </g>;
@@ -72,7 +72,7 @@ export const CaoKneel: React.FC<{id: string; look: number; bow?: number; pal?: P
 			<path d="M6,-90 C2,-76 -4,-62 -12,-50 L-14,-52 C-6,-64 0,-78 3,-91 Z" fill={p.trim} />
 			<path d="M-22,-44 L16,-46 L17,-41 L-22,-39 Z" fill="#1A120E" />
 			{/* the head on its neck; look < 0 lifts the face toward the dais */}
-			<g transform={`translate(4,-89) rotate(${f1(look)}) scale(0.185) translate(0,-44)`}>
+			<g transform={`translate(4,-87.5) rotate(${f1(look)}) scale(0.205) translate(0,-44)`}>
 				<Head old={false} mid pal={p} id={id} cap="ze" /><JinXian />
 			</g>
 			{/* the near arm in its wide sleeve, both hands joined at the chest holding the 笏 */}
@@ -133,7 +133,7 @@ export const CaoStand: React.FC<StandProps> = ({id, pal, head, blade, breath, gl
 	const g0 = 70 + (L - 120) * cl01(glint), gop = glint < 0 || glint > 1 ? 0 : Math.sin(Math.PI * glint);
 	return <g>
 		<defs><clipPath id={`${id}rb`}><path d={ROBE} /></clipPath>
-			<linearGradient id={`${id}hf`} x1="0" y1="-104" x2="0" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor={half ?? '#07090A'} stopOpacity="0.82" /><stop offset="0.42" stopColor={half ?? '#07090A'} stopOpacity="0.68" /><stop offset="0.66" stopColor={half ?? '#07090A'} stopOpacity="0.18" /><stop offset="1" stopColor={half ?? '#07090A'} stopOpacity="0" /></linearGradient></defs>
+			<linearGradient id={`${id}hf`} x1="0" y1="-104" x2="0" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor={half ?? '#07090A'} stopOpacity="0.9" /><stop offset="0.45" stopColor={half ?? '#07090A'} stopOpacity="0.8" /><stop offset="0.62" stopColor={half ?? '#07090A'} stopOpacity="0.45" /><stop offset="0.8" stopColor={half ?? '#07090A'} stopOpacity="0.08" /><stop offset="1" stopColor={half ?? '#07090A'} stopOpacity="0" /></linearGradient></defs>
 		{/* the bundle on his back (from K7) and its strap */}
 		<path d="M-112,110 C-134,150 -130,214 -104,240 C-84,256 -54,252 -42,232 C-34,196 -40,150 -56,116 C-70,98 -96,96 -112,110 Z" fill="#3E352C" />
 		<path d="M-112,110 C-134,150 -130,214 -104,240 C-96,246 -88,249 -80,249 C-104,222 -110,166 -98,112 Z" fill="#221E19" />
@@ -156,8 +156,7 @@ export const CaoStand: React.FC<StandProps> = ({id, pal, head, blade, breath, gl
 		{/* a cloth sash, the bundle strap across the chest, the empty scabbard at the hip */}
 		<path d="M-64,282 L54,272 L56,294 L-64,304 Z" fill="#26221D" />
 		<path d="M40,64 C20,120 -20,190 -70,236 L-80,226 C-34,184 6,116 26,58 Z" fill="#4A3F33" />
-		<path d="M-40,296 L-150,560 L-138,566 L-28,302 Z" fill="#1E140F" /><path d="M-150,560 L-160,584 L-146,590 L-138,566 Z" fill={p.gold} opacity={0.8} />
-		{/* the head on its neck: head = tilt (deg, + down) */}
+				{/* the head on its neck: head = tilt (deg, + down) */}
 		<g transform={`translate(0,${f1(49 + by * 0.6)}) rotate(${f1(head)} 0 -8) scale(0.88) translate(0,-40)`}>
 			<Head old={false} mid pal={p} id={id} cap="ze" capC="#24211D" />
 			<path d={FACE} fill={`url(#${id}hf)`} />
@@ -187,5 +186,5 @@ export const Smoke: React.FC<{x: number; y: number; h: number; w: number; t: num
 		const vis = cl01((te - start) * 2.5); if (vis <= 0) return null;
 		const op = sstep(0, 0.1, a) * (1 - sstep(0.5, 1, a)) * o * vis;
 		const k = Math.floor(a0) * N + i, wob = Math.sin(seed * 1.3 + k * 1.7) * w * 0.22 * a + Math.sin(t * 0.7 + k) * w * 0.05;
-		const px = x - drift * a * a + wob, py = y - h * a, r = w * (0.32 + 1.15 * a) * (0.85 + 0.3 * rnd(k, seed));
+		const px = x - drift * a * a + wob, py = y - h * a, r = w * (0.2 + 1.25 * a) * (0.85 + 0.3 * rnd(k, seed));
 		return <ellipse key={i} cx={f1(px)} cy={f1(py)} rx={f1(r * 1.15)} ry={f1(r)} fill={mix(c0, c1, Math.min(1, a * 1.3))} opacity={op} />; })}</g>; };

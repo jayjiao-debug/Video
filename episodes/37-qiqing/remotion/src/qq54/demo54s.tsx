@@ -186,16 +186,16 @@ export const Handover: React.FC<{t: number}> = ({t}) => { const END = 100.22, u 
 const EMB = Array.from({length: 110}, (_, i) => ({x: rnd(i, 41) * W, sp: 70 + rnd(i, 42) * 190, ph: rnd(i, 43), sw: 10 + rnd(i, 44) * 50, fq: 0.6 + rnd(i, 45) * 1.6, r: 1.2 + rnd(i, 46) * 2.8, spark: rnd(i, 47) < 0.3, hot: rnd(i, 48)}));
 export const Drop: React.FC<{t: number}> = ({t}) => { const d = Math.max(0, t - B50), fr = Math.floor(d * 30 + 1e-6);
 	const flash = [0.5, 0.34, 0.18, 0.06][fr] ?? 0;
-	const A = 26 * Math.exp(-d / 0.16) * (d < 0.55 ? 1 : 0);
+	const A = 13 * Math.exp(-d / 0.13) * cl((0.55 - d) / 0.1);
 	const shx = A * Math.sin(d * 97 + 0.7) * Math.cos(d * 31), shy = A * 0.7 * Math.sin(d * 83 + 2.1);
-	const s = 1.06 + 0.17 * (1 - Math.pow(1 - cl(d / 1.8), 3)) + 0.012 * d;
+	const s = 1.06 + 0.16 * (1 - Math.pow(1 - cl(d / 2.4), 2.4)) + 0.01 * d;
 	const pu = ease((t - B52) / (BAR(54) - B52 - 0.1));
-	const panX = -175 * pu, panY = -18 * pu, s2 = s + 0.05 * pu;
-	const hb = (0.024 + 0.004 * Math.sin(t * 2.3)).toFixed(4), hb2 = (0.006 + 0.0012 * Math.sin(t * 1.7 + 1)).toFixed(4);
-	return <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#140C08'}}>
+	const panX = 125 * pu, panY = 12 * pu, s2 = s + 0.035 * pu;
+		return <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#140C08'}}>
 		<svg width={0} height={0} style={{position: 'absolute'}}><defs>
-			<filter id="dsHeat" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency={`${hb2} ${hb}`} numOctaves={2} seed={7} result="n" />
-				<feDisplacementMap in="SourceGraphic" in2="n" scale={9} xChannelSelector="R" yChannelSelector="G" /></filter>
+			<filter id="dsHeat" x="0" y="-5%" width="100%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.026" numOctaves={2} seed={7} result="n" />
+				<feOffset in="n" dx={f1((t - 100) * 5)} dy={f1(-(t - 100) * 46)} result="m" />
+				<feDisplacementMap in="SourceGraphic" in2="m" scale={7} xChannelSelector="R" yChannelSelector="G" /></filter>
 		</defs></svg>
 		<div style={{position: 'absolute', inset: 0, transform: `translate(${f1(shx + panX)}px,${f1(shy + panY)}px) scale(${s2.toFixed(4)})`, transformOrigin: '52% 42%'}}>
 			<div style={{position: 'absolute', inset: 0, filter: 'url(#dsHeat)'}}>
