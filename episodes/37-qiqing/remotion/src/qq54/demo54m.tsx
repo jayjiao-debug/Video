@@ -3,6 +3,7 @@ import {W, H, cl, seg, ease, eout, eio} from '../qq50/kit50';
 import {Pal, RimF, Rod5, Dao, Head, strand, qpts, rnd, f1, P} from './cao54b';
 import {Npc, LampStand} from './npc54b';
 import {CaoWalk, caoHipX, NpcWalk, npcTorchAt, Flame, flick} from './rig54b';
+import {GatePlaque, GateGuards} from './gate54op';
 /* ep54 demo · scenes by the rig builder. t = FILM time (s).
    Open (0–16.59): card 1 = K1 animated (push-in, the rod rising and hovering, the man straining, lamp flicker); bar 2 (4.638) cut to
    a close glide along a 五色棒 rack (a hand draws one rod out of frame: use implied, nothing shown); bar 4 (8.622) the wide 洛阳 gate
@@ -316,6 +317,8 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 			<rect x={-60 - (m * 4) % 200} y={210} width={1440} height={110} fill="url(#ochaze1)" />
 			<g transform={`translate(0,${f1(dyP(0.55))})`}>
 				<g filter="url(#ocdof)"><GateWall t={t} p="oc" x0={-80} x1={1200} /></g>
+					{/* owner r1: the city's name on a plaque above the central passage */}
+					<GatePlaque cx={560} top={303} w={124} h={54} fl={fl} p="oc" />
 				<g fill={SIL} filter="url(#ocBk)"><Npc x={503} y={GY} k={0.37} kind="ji" /><Npc x={617} y={GY} k={0.37} kind="ji" flip /></g>
 				<LampStand x={480} y={GY} k={0.37} /><Flame x={480} y={GY - 117 * 0.37} s={0.37} t={t} seed={11} ivory />
 				<LampStand x={640} y={GY} k={0.37} /><Flame x={640} y={GY - 117 * 0.37} s={0.37} t={t} seed={23} ivory />
@@ -324,11 +327,10 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 				<path d={`M398,${GY} L462,${GY} L330,700 L200,700 Z M658,${GY} L722,${GY} L920,700 L790,700 Z`} fill="url(#ocspill)" opacity={0.42 * fl} />
 			</g>
 			<rect x={-60 + (m * 6) % 300 - 300} y={440} width={1600} height={130} fill="url(#ochaze)" />
+				<g transform={`translate(0,${f1(dyP(0.66))})`}><GateGuards m={m} gy={552} k={0.41} lightX={560} rim="ocBk" blur="ocbl3" /></g>
 			<g transform={`translate(0,${f1(dyP(0.75))})`}>
 				<g fill={SIL} filter="url(#ocQL)"><g transform="translate(196,556) scale(1.02,1.02) scale(-1,1)">{QueD}</g></g>
 				<g fill={SIL} filter="url(#ocQR)"><g transform="translate(924,556) scale(1.02)">{QueD}</g></g>
-				{/* the patrol on the road (their own walk clocks; not on the beat) */}
-				{patrol.map((g, i) => <g key={i} fill={SIL} filter="url(#ocPt)" transform={`translate(${g.x0},590) scale(${pk})`}><NpcWalk t={m} kind="ji" t0={g.t0} L={g.L} f={g.f} swing={g.sw} lean={g.ln} /></g>)}
 			</g>
 			<g transform={`translate(${f1(-10 * u)},${f1(dyP(1.4))})`} filter="url(#ocbl8)" fill="#0B0706">
 				<path d="M-60,-60 L760,-60 L760,6 C540,18 270,34 -60,62 Z" />
