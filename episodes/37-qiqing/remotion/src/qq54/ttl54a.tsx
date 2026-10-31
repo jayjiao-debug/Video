@@ -6,7 +6,7 @@ import {RimF} from './cao54b';
 import {Open} from './demo54m';
 /* ep54 · title option A · 改良版 (the improved current title), film 12.606 (bar 6, the SLAM) → 16.59 (bar 8).
    The current concept lifted: bronze-gold 曹操 in real brush calligraphy (马善政 楷书, OFL, public/fonts/brush/) over a swept ink 横
-   painted on by a fast wipe on the slam, splatter thrown off its head and tail, gold embers rising off the ink, a light sweep across
+   (owner r2: only as long as the name, a sharp angled 起笔, a short 飞白 tail) painted on by a fast wipe on the slam, splatter thrown off its head and tail, gold embers rising off the ink, a light sweep across
    the gold, the 「孟德」 seal thumped in with a camera kick, and the question with 英雄 (gold) / 奸雄 (red) set big in the same brush.
    The 洛阳 gate (demo54m.Open) stays behind it, darkened, softly blurred and slowly pushing in, so the title is the hero.
    TitleOpt draws the WHOLE frame (the gate included) for film time t in [TITLE_A, TITLE_B).
@@ -43,27 +43,29 @@ const C1X = 738, C2X = 1186;                         // 曹, 操 centres
 const SX = 1462, SY = 612, SW = 100, SH = 150;        // the seal (tall: 孟 over 德)
 const QC = 758;                                      // the question's centre line
 
-/* ---------- the ink 横: a loaded brush pressed in at the left (the head angled, pressed from the top-left), the body rising a
-   little, running dry into bristles (飞白) at the right ---------- */
-const XA = 296, XB = 1496;
+/* ---------- the ink 横 (owner r2: only as long as the name): a sharp, angled 起笔 at the left — the tip pressed in from the
+   top-left, the lower-left corner rounded by the press — the body rising a little, a short crisp 飞白 tail (~140 px) past 操 ---------- */
+const XA = 522, XB = 1404, SL = 96;                  // the entry's top point (≈ 85 px before 曹), the body's end (just past 操), the entry's slant
 const cy = (x: number) => NY + 14 - (x - 960) * 0.034;
-const body = (x: number) => 300 - 70 * cl((x - XA) / (XB - XA)) + 18 * Math.sin(cl((x - XA) / (XB - XA)) * Math.PI) ;
-const capT = (x: number) => { const R = 74; return x < XA + R ? Math.sqrt(Math.max(0, 1 - ((XA + R - x) / R) ** 2)) : 1; };
-const capB = (x: number) => { const R = 150; return x < XA + R ? Math.pow(Math.max(0, 1 - ((XA + R - x) / R) ** 2), 0.62) : 1; };
+const body = (x: number) => 286 - 56 * cl((x - XA) / (XB - XA)) + 14 * Math.sin(cl((x - XA) / (XB - XA)) * Math.PI);
 const SMEAR = (() => { const top: string[] = [], bot: string[] = [];
-	for (let x = XA; x <= XB; x += 6) { const h = body(x) / 2;
-		top.push(`${f1(x)},${f1(cy(x) - h * capT(x) + 6 * Math.sin(x * 0.011 + 1) + 2.6 * Math.sin(x * 0.043))}`);
-		bot.push(`${f1(x)},${f1(cy(x) + h * capB(x) + 5 * Math.sin(x * 0.009 + 2) + 3 * Math.sin(x * 0.037 + 0.5))}`); }
-	const end = Array.from({length: 11}, (_, i) => { const v = (i + 0.5) / 11 - 0.5, x = XB + 8 + 44 * rnd(i, 41) * (1 - Math.abs(v) * 1.3); return `${f1(x)},${f1(cy(x) + v * body(XB))}`; });
-	return `M${top.join(' L')} L${end.join(' L')} L${bot.reverse().join(' L')} Z`; })();
-const BRISTLES = Array.from({length: 38}, (_, i) => { const v = (i + rnd(i, 7) * 0.8) / 38 - 0.5, edge = Math.abs(v) * 2;
-	const xs = 1150 + rnd(i, 8) * 200, xe = XB + 30 + (1 - edge * 0.75) * (70 + rnd(i, 9) * 180), w = 2.5 + rnd(i, 10) * 8 * (1 - edge * 0.5);
-	const y0 = cy(xs) + v * body(xs) * 0.98, y1 = cy(xe) + v * body(XB) * (1.02 + 0.22 * rnd(i, 11)) + (rnd(i, 12) - 0.5) * 8;
+	for (let x = XA; x <= XB; x += 6) { const h = body(x) / 2, tip = 9 * Math.pow(cl(1 - (x - XA) / 34), 1.5);   /* the tip flicks up a little */
+		top.push(`${f1(x)},${f1(cy(x) - h - tip + 5 * Math.sin(x * 0.011 + 1) + 2.4 * Math.sin(x * 0.043))}`); }
+	for (let x = XA + SL; x <= XB; x += 6) { const h = body(x) / 2;
+		bot.push(`${f1(x)},${f1(cy(x) + h + 4 * Math.sin(x * 0.009 + 2) + 2.6 * Math.sin(x * 0.037 + 0.5))}`); }
+	const end = Array.from({length: 11}, (_, i) => { const v = (i + 0.5) / 11 - 0.5, x = XB + 6 + 30 * rnd(i, 41) * (1 - Math.abs(v) * 1.3); return `${f1(x)},${f1(cy(x) + v * body(XB))}`; });
+	const b0 = XA + SL, yb = cy(b0) + body(b0) / 2 + 4 * Math.sin(b0 * 0.009 + 2), yt = cy(XA) - body(XA) / 2 - 9;
+	/* the press: from the bottom of the entry, a full curve down-left and up to the sharp top point */
+	const press = `Q${f1(XA + SL * 0.12)},${f1(yb + 6)} ${f1(XA + SL * 0.02)},${f1(cy(XA) + body(XA) * 0.12)} Q${f1(XA - 8)},${f1(cy(XA) - body(XA) * 0.3)} ${f1(XA)},${f1(yt)}`;
+	return `M${top.join(' L')} L${end.join(' L')} L${bot.reverse().join(' L')} ${press} Z`; })();
+const BRISTLES = Array.from({length: 30}, (_, i) => { const v = (i + rnd(i, 7) * 0.8) / 30 - 0.5, edge = Math.abs(v) * 2;
+	const xs = XB - 240 + rnd(i, 8) * 160, xe = XB + 18 + (1 - edge * 0.7) * (60 + rnd(i, 9) * 80), w = 2.4 + rnd(i, 10) * 7 * (1 - edge * 0.5);
+	const y0 = cy(xs) + v * body(xs) * 0.98, y1 = cy(xe) + v * body(XB) * (1.02 + 0.16 * rnd(i, 11)) + (rnd(i, 12) - 0.5) * 6;
 	return `M${f1(xs)},${f1(y0 - w / 2)} Q${f1((xs + xe) / 2)},${f1((y0 + y1) / 2 - w / 2 + (rnd(i, 13) - 0.5) * 4)} ${f1(xe)},${f1(y1)} Q${f1((xs + xe) / 2)},${f1((y0 + y1) / 2 + w / 2)} ${f1(xs)},${f1(y0 + w / 2)} Z`; });
-const GAPS = Array.from({length: 22}, (_, i) => { const v = (i + rnd(i, 21)) / 22 - 0.5, xs = 900 + rnd(i, 22) * 300, xe = XB + 60, w = 1.2 + rnd(i, 23) * 3.6;
+const GAPS = Array.from({length: 18}, (_, i) => { const v = (i + rnd(i, 21)) / 18 - 0.5, xs = XB - 300 + rnd(i, 22) * 200, xe = XB + 60, w = 1.2 + rnd(i, 23) * 3.4;
 	return `M${f1(xs)},${f1(cy(xs) + v * body(xs) * 0.9)} L${f1(xe)},${f1(cy(xe) + v * body(XB) * 0.9 - w / 2)} L${f1(xe)},${f1(cy(xe) + v * body(XB) * 0.9 + w / 2)} Z`; });
-const HAIRS = Array.from({length: 18}, (_, i) => { const v = (i + 0.5) / 18 - 0.5, xs = XA + 50 + rnd(i, 51) * 220, xe = XB - 30 - rnd(i, 52) * 280;
-	return {d: `M${f1(xs)},${f1(cy(xs) + v * body(xs) * 0.86)} C${f1(xs + 220)},${f1(cy(xs + 220) + v * body(xs + 220) * 0.86 + 3)} ${f1(xe - 220)},${f1(cy(xe - 220) + v * body(xe - 220) * 0.86 - 3)} ${f1(xe)},${f1(cy(xe) + v * body(xe) * 0.86)}`, w: 1.2 + rnd(i, 53) * 3.4, o: 0.22 + rnd(i, 54) * 0.36}; });
+const HAIRS = Array.from({length: 16}, (_, i) => { const v = (i + 0.5) / 16 - 0.5, xs = XA + SL * 0.6 + rnd(i, 51) * 160, xe = XB - 30 - rnd(i, 52) * 220;
+	return {d: `M${f1(xs)},${f1(cy(xs) + v * body(xs) * 0.86)} C${f1(xs + 180)},${f1(cy(xs + 180) + v * body(xs + 180) * 0.86 + 3)} ${f1(xe - 180)},${f1(cy(xe - 180) + v * body(xe - 180) * 0.86 - 3)} ${f1(xe)},${f1(cy(xe) + v * body(xe) * 0.86)}`, w: 1.2 + rnd(i, 53) * 3.4, o: 0.22 + rnd(i, 54) * 0.36}; });
 /* the splash: drops thrown off the head (impact), the tail (the flick) and the edges; none on the question */
 type Drop = {x0: number; y0: number; x: number; y: number; r: number; a: number; s: number; f0: number};
 const inBody = (x: number, y: number, r: number) => x > XA - r && x < XB + 30 + r && Math.abs(y - cy(Math.min(XB, Math.max(XA, x)))) < body(Math.min(XB, Math.max(XA, x))) / 2 + r + 4;
@@ -71,16 +73,16 @@ const inQ = (x: number, y: number) => x > 470 && x < 1450 && y > QC - 80 && y < 
 const DROPS: Drop[] = Array.from({length: 90}, (_, i) => {
 	const side = i % 5, a = rnd(i, 1), b = rnd(i, 2);
 	let x0 = 0, y0 = 0, th = 0, dm = 0, f0 = 0;
-	if (side === 0) { th = Math.PI + (a - 0.5) * 2.0; x0 = XA + 30; y0 = cy(x0) + (b - 0.5) * body(XA) * 0.7; dm = 150; f0 = 0.5; }
-	else if (side <= 2) { th = (a - 0.5) * 0.9 - 0.05; x0 = XB + 60 + b * 120; y0 = cy(x0) + (rnd(i, 3) - 0.5) * body(XB) * 0.9; dm = 230; f0 = 3; }
+	if (side === 0) { th = Math.PI + (a - 0.5) * 2.0; x0 = XA + 30; y0 = cy(x0) + (b - 0.5) * body(XA) * 0.7; dm = 130; f0 = 0.5; }
+	else if (side <= 2) { th = (a - 0.5) * 0.9 - 0.05; x0 = XB + 40 + b * 90; y0 = cy(x0) + (rnd(i, 3) - 0.5) * body(XB) * 0.9; dm = 160; f0 = 3; }
 	else { const x = XA + 80 + b * (XB - XA), up = side === 3; th = (up ? -1 : 1) * (Math.PI / 2 + (a - 0.5) * 1.3) + 0.25; x0 = x; y0 = cy(x) + (up ? -0.5 : 0.5) * body(x); dm = up ? 110 : 60; f0 = 4 * (x - XA) / (XB - XA); }
 	const d = 14 + Math.pow(rnd(i, 4), 1.3) * dm, r = 1.6 + Math.pow(rnd(i, 5), 2.8) * 10.5, s = rnd(i, 6) < 0.62 ? 1.8 + rnd(i, 7) * 2.6 : 1;
 	const x = Math.max(150, Math.min(1780, x0 + Math.cos(th) * d)), y = Math.max(90, Math.min(990, y0 + Math.sin(th) * d * 0.8));
 	return {x0, y0, x, y, r, a: th * 180 / Math.PI, s, f0: f0 + d / 120}; })
 	.filter((d) => !inBody(d.x, d.y, d.r * d.s) && !inQ(d.x, d.y));
-const SPLATS: [number, number, number][] = [[XA - 22, NY + 96, 17], [XA - 34, NY - 70, 10], [1640, NY - 120, 12], [1700, NY + 40, 9], [1590, NY + 130, 7]];
+const SPLATS: [number, number, number][] = [[XA - 34, NY + 74, 9], [XA - 20, NY - 104, 6], [XB + 168, NY - 104, 10], [XB + 214, NY + 26, 7], [XB + 130, NY + 124, 6]];
 /* embers: gold motes lifting off the ink during the hold (each on its own loop) */
-const EMB = Array.from({length: 46}, (_, i) => ({x: XA + 60 + rnd(i, 61) * (XB - XA + 100), ph: rnd(i, 62), sp: 0.22 + rnd(i, 63) * 0.3, r: 1.3 + Math.pow(rnd(i, 64), 2) * 3.2, dr: (rnd(i, 65) - 0.4) * 90, fq: 3 + rnd(i, 66) * 6}));
+const EMB = Array.from({length: 40}, (_, i) => ({x: XA + 40 + rnd(i, 61) * (XB - XA + 80), ph: rnd(i, 62), sp: 0.22 + rnd(i, 63) * 0.3, r: 1.3 + Math.pow(rnd(i, 64), 2) * 3.2, dr: (rnd(i, 65) - 0.4) * 90, fq: 3 + rnd(i, 66) * 6}));
 
 /* ---------- type ---------- */
 const NAME: [string, number, number, number][] = [['曹', C1X, -6, FS], ['操', C2X, 10, FS * 1.04]];
@@ -116,13 +118,13 @@ export const TitleOpt: React.FC<{t: number}> = ({t}) => {
 	/* the gate: down to 45 %, blurred, pushing */
 	const dim = eo(fr / 4), bgK = 1 + 0.05 * hold + 0.012 * shk(1, 0, 6) + kick * 0.6;
 	/* the ink and the name */
-	const wipe = eo(fr / 4.2), wipeX = XA - 120 + (XB + 420 - XA) * wipe;
+	const wipe = eo(fr / 4.2), wipeX = XA - 120 + (XB + 300 - XA) * wipe;
 	const slam = eo((fr - 0.4) / 4.2), sU = cl((fr - 0.4) / 7), nk = 1.4 - 0.4 * slam - 0.035 * Math.sin(Math.PI * cl((fr - 3.4) / 4.5)) * (fr > 3.4 ? 1 : 0) + 0 * sU, nameO = cl((fr - 0.2) / 1.6), nbl = 7 * (1 - slam);
 	const flash = Math.max(0, 1 - fr / 7) * 0.3;
 	const sealK = fr < 15 ? 0 : fr < 17.5 ? 1.9 - 0.96 * eo((fr - 15) / 2.5) ** 2 : 0.94 + 0.06 * eo((fr - 17.5) / 3);
 	const qWipe = 470 + 1000 * eo((fr - 5) / 8);
 	const sw1 = seg(t, TITLE_A + 0.9, TITLE_A + 1.68), sw2 = seg(t, 14.95, 15.55);
-	const swX = sw1 > 0 && sw1 < 1 ? 380 + 1250 * eio(sw1) : sw2 > 0 && sw2 < 1 ? 380 + 1250 * eio(sw2) : -999, swO = sw1 > 0 && sw1 < 1 ? 1 : 0.55;
+	const swX = sw1 > 0 && sw1 < 1 ? 470 + 1060 * eio(sw1) : sw2 > 0 && sw2 < 1 ? 470 + 1060 * eio(sw2) : -999, swO = sw1 > 0 && sw1 < 1 ? 1 : 0.55;
 	const blurOut = 9 * out;
 	const zoom = (k: number, fx = 960, fy = 500) => `translate(${fx},${fy}) scale(${k.toFixed(5)}) translate(${-fx},${-fy})`;
 	return <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#000'}}>
@@ -133,8 +135,8 @@ export const TitleOpt: React.FC<{t: number}> = ({t}) => {
 			<defs>
 				<radialGradient id="adim" cx={960} cy={NY + 90} r="980" gradientUnits="userSpaceOnUse" gradientTransform={`translate(960 ${NY + 90}) scale(1 0.56) translate(-960 ${-NY - 90})`}>
 					<stop offset="0" stopColor="#040304" stopOpacity="0.4" /><stop offset="0.55" stopColor="#040304" stopOpacity="0.34" /><stop offset="1" stopColor="#040304" stopOpacity="0.6" /></radialGradient>
-				<radialGradient id="aglow" cx={1000} cy={NY - 10} r="860" gradientUnits="userSpaceOnUse" gradientTransform={`translate(1000 ${NY - 10}) scale(1 0.34) translate(-1000 ${-NY + 10})`}>
-					<stop offset="0" stopColor="#F0CF98" stopOpacity="0.62" /><stop offset="0.45" stopColor="#D9A86A" stopOpacity="0.30" /><stop offset="1" stopColor="#C99A62" stopOpacity="0" /></radialGradient>
+				<radialGradient id="aglow" cx={970} cy={NY - 10} r="760" gradientUnits="userSpaceOnUse" gradientTransform={`translate(970 ${NY - 10}) scale(1 0.46) translate(-970 ${-NY + 10})`}>
+					<stop offset="0" stopColor="#F0CF98" stopOpacity="0.46" /><stop offset="0.45" stopColor="#D9A86A" stopOpacity="0.2" /><stop offset="1" stopColor="#C99A62" stopOpacity="0" /></radialGradient>
 				<radialGradient id="afl" cx={760} cy={NY} r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F6E2B8" stopOpacity="1" /><stop offset="1" stopColor="#F6E2B8" stopOpacity="0" /></radialGradient>
 				<linearGradient id="agold" x1="0" y1="0.04" x2="0" y2="1">
 					<stop offset="0" stopColor="#FFF3CC" /><stop offset="0.22" stopColor="#F2CF86" /><stop offset="0.5" stopColor="#D5A253" /><stop offset="0.76" stopColor="#A87436" /><stop offset="1" stopColor="#6E481D" /></linearGradient>
@@ -147,7 +149,7 @@ export const TitleOpt: React.FC<{t: number}> = ({t}) => {
 				<filter id="astreak" x={XA - 60} y={NY - 220} width={XB - XA + 500} height={440} filterUnits="userSpaceOnUse">
 					<feTurbulence type="fractalNoise" baseFrequency="0.0016 0.085" numOctaves={3} seed={5} result="n" />
 					<feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  18 0 0 0 -7.6" /></filter>
-				<linearGradient id="adryG" x1={1180} x2={1480} y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#000" /></linearGradient>
+				<linearGradient id="adryG" x1={XB - 170} x2={XB + 40} y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#000" /></linearGradient>
 				<mask id="adry" maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
 					<rect width={W} height={H} fill="url(#adryG)" />
 					<rect x={XA - 60} y={NY - 220} width={XB - XA + 500} height={440} fill="#fff" filter="url(#astreak)" />
@@ -160,7 +162,7 @@ export const TitleOpt: React.FC<{t: number}> = ({t}) => {
 					<feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -30 22.2" result="holes" />
 					<feComposite in="d" in2="holes" operator="in" /></filter>
 				<filter id="ash" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="5" /></filter>
-				<filter id="ahalo" x="-30%" y="-120%" width="160%" height="340%"><feGaussianBlur stdDeviation="46" /></filter>
+				<filter id="ahalo" x="-30%" y="-120%" width="160%" height="340%"><feGaussianBlur stdDeviation="64" /></filter>
 				<filter id="ahalo2" x="-40%" y="-200%" width="180%" height="500%"><feGaussianBlur stdDeviation="90" /></filter>
 				<filter id="aqh" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="8" /><feComponentTransfer><feFuncA type="linear" slope="0.9" /></feComponentTransfer><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
 				<filter id="anbl" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation={`${f1(nbl)} ${f1(nbl * 0.45)}`} /></filter>
@@ -180,8 +182,8 @@ export const TitleOpt: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(${f1(shx)},${f1(shy)}) ${zoom(cam)}`} opacity={on} filter={blurOut > 0.05 ? 'url(#aout)' : undefined}>
 				{/* the backlight hugging the stroke (warm haze from the gate's lamps), so the black ink reads as a silhouette */}
 				<g clipPath="url(#awipe)" opacity={0.9 + 0.1 * Math.sin(t * 2.3)}>
-					<path d={SMEAR} fill="#C98F52" filter="url(#ahalo2)" opacity={0.6} />
-					<path d={SMEAR} fill="#F2C88A" filter="url(#ahalo)" opacity={0.42} />
+					<path d={SMEAR} fill="#C98F52" filter="url(#ahalo2)" opacity={0.5} />
+					<path d={SMEAR} fill="#F2C88A" filter="url(#ahalo)" opacity={0.2} />
 				</g>
 				{/* the ink 横: body, hairs, bristles, splats — one bronze-rimmed ink layer, painted on by the wipe */}
 				<g filter="url(#arimI)">
