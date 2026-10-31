@@ -13,11 +13,11 @@ export const BEATS: Beat[] = [
 	{rows: ['他的兵，[不满一万]。', '粮，快吃完了。'], y: '200', place: '官渡', note: '《三国志》原文', age: 46},
 	{rows: ['他亲率五千人，', '[夜袭乌巢]！'], y: '200', place: '乌巢', note: '夜袭', age: 46},
 ];
-const Scrim: React.FC = () => { const m = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 28%, #000 72%, rgba(0,0,0,0) 100%)';
+export const Scrim: React.FC = () => { const m = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 28%, #000 72%, rgba(0,0,0,0) 100%)';
 	return <div style={{position: 'absolute', left: 0, top: 40, width: 1150, height: 290, background: 'linear-gradient(90deg, rgba(18,9,6,0.5) 0%, rgba(18,9,6,0.42) 35%, rgba(18,9,6,0.16) 72%, rgba(18,9,6,0) 100%)', WebkitMaskImage: m, maskImage: m}} />; };
-const Counter: React.FC<{age: number}> = ({age}) => <div style={{position: 'absolute', left: 150, bottom: 70, color: '#FFF6E6', fontFamily: SANS, textShadow: thB.halo, display: 'flex', alignItems: 'baseline', gap: 10}}>
+export const Counter: React.FC<{age: number}> = ({age}) => <div style={{position: 'absolute', left: 150, bottom: 70, color: '#FFF6E6', fontFamily: SANS, textShadow: thB.halo, display: 'flex', alignItems: 'baseline', gap: 10}}>
 	<span style={{fontSize: 34, fontWeight: 700}}>曹操</span><span style={{fontSize: 78, fontWeight: 800, fontVariantNumeric: 'tabular-nums'}}>{age}</span><span style={{fontSize: 34, fontWeight: 700}}>岁</span></div>;
-const Label: React.FC<{s: string}> = ({s}) => <div style={{position: 'absolute', left: 0, top: 0, width: W, height: 44, background: 'rgba(0,0,0,0.78)', color: '#F2E6CC', fontFamily: SANS, fontWeight: 700, fontSize: 24, lineHeight: '44px', paddingLeft: 18}}>{s}</div>;
+export const Label: React.FC<{s: string}> = ({s}) => <div style={{position: 'absolute', left: 0, top: 0, width: W, height: 44, background: 'rgba(0,0,0,0.78)', color: '#F2E6CC', fontFamily: SANS, fontWeight: 700, fontSize: 24, lineHeight: '44px', paddingLeft: 18}}>{s}</div>;
 export type FrameSpec = {name: string; k: number; C: React.FC};
 /** the owner's call (2026-10-31): style first, no story frames yet — frame k = 1 is a bare style sheet (no overlay) */
 export const STYLE_SHEET = true;
