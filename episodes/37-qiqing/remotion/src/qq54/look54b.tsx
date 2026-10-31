@@ -1,6 +1,7 @@
 import React from 'react';
 import {W, H} from '../qq50/kit50';
 import {Cao, Pal, RimF, Lamel, Rod5, Dao, Sack, P, f1, rnd, strand, qpts, ROD5} from './cao54b';
+import {Npc, NpcFlame, LampStand} from './npc54b';
 /* ep54 look B 「主角刻画」 (the 马首 铜灯影 family): 2.5D cut-out depth planes with haze between them, one key light per set,
    warm-black silhouettes rimmed by that key; 曹操 alone is a drawn character (flat-vector, three-tone cel shading, costume and
    armour detail) lit by the set key plus his own cool 石青 accent rim. The owner's call (2026-10-31): style first, so Look1 is
@@ -10,15 +11,6 @@ const CREAM = '#F2E6CC', BOARD = '#15100D';
 const SIL = '#140D0A', RIMW = '#FFB070', KEY = '#F3DDB4', ACC = '#8FD0DC', COOL = '#9FB8B6';
 
 /* ---------- small silhouettes ---------- */
-/** a standing man in profile facing +x (帻, robe/tunic, legs), feet at (0,0), height 100 → scaled by h/100 */
-const manD = 'M2,-100 C9,-100 13,-95 13,-89 C13,-86 15,-84 16,-82 L13,-81 C13,-77 10,-74 6,-74 L6,-71 C14,-69 18,-63 18,-54 L19,-36 C19,-32 17,-31 15,-33 L14,-52 L13,-30 C14,-24 15,-20 15,-16 L10,-16 L10,-1 L15,0 L4,0 L4,-15 L-2,-15 L-3,-1 L1,0 L-10,0 L-9,-16 L-14,-16 C-14,-30 -14,-50 -12,-62 C-10,-69 -4,-71 -2,-72 L-2,-75 C-7,-77 -9,-82 -9,-88 C-9,-96 -5,-100 2,-100 Z M-6,-98 C-3,-104 6,-104 8,-99 Z';
-const Man: React.FC<{x: number; y: number; h: number; flip?: boolean; ji?: boolean; lantern?: boolean}> = ({x, y, h, flip, ji, lantern}) => { const s = h / 100;
-	return <g transform={`translate(${x},${y}) scale(${flip ? -s : s},${s})`}>
-		<path d={manD} />
-		{ji && <><path d="M17,-34 L22,-150" stroke={SIL} strokeWidth={2.2} /><path d="M22,-150 L20.5,-166 L24.5,-150 Z M21.6,-144 L32,-140 L30,-137 L21.4,-140 Z" /></>}
-		{lantern && <><path d="M17,-36 L34,-58" stroke={SIL} strokeWidth={1.6} /><path d="M34,-58 L34,-52" stroke={SIL} strokeWidth={0.8} /></>}
-	</g>; };
-
 /** a Han 阙 (母阙 + 子阙 on the outer side); base centre (x, y), dir = +1 sub-tower to the right */
 const Que: React.FC<{x: number; y: number; s: number; dir: 1 | -1}> = ({x, y, s, dir}) => <g transform={`translate(${x},${y}) scale(${dir * s},${s})`}>
 	<path d="M28,-16 L72,-16 L68,-140 L30,-140 Z M22,-140 L96,-136 C90,-142 84,-150 80,-162 L28,-164 Z M32,-164 L76,-164 L74,-170 L34,-170 Z" />
@@ -114,7 +106,8 @@ const SetGate: React.FC = () => {
 		</g>
 		</g>
 		{/* guards at the passage, backlit */}
-		<g fill={SIL} filter="url(#rimBk)"><Man x={505} y={GY} h={64} ji /><Man x={615} y={GY} h={64} ji flip /></g>
+		<g fill={SIL} filter="url(#rimBk)"><Npc x={503} y={GY} k={0.37} kind="ji" /><Npc x={617} y={GY} k={0.37} kind="ji" flip /></g>
+		<LampStand x={480} y={GY} k={0.37} /><LampStand x={640} y={GY} k={0.37} />
 		{/* ground: the road, the light spilling out of the gate */}
 		<rect y={GY} width={SW} height={SH - GY} fill="url(#gnd)" />
 		<path d={`M514,${GY} L606,${GY} L800,${SH} L320,${SH} Z`} fill="url(#spill)" />
@@ -125,10 +118,9 @@ const SetGate: React.FC = () => {
 		<g fill={SIL} filter="url(#rimQL)"><Que x={196} y={556} s={1.02} dir={-1} /></g>
 		<g fill={SIL} filter="url(#rimQR)"><Que x={924} y={556} s={1.02} dir={1} /></g>
 		<path d={`M120,556 L276,556 L300,566 L96,566 Z M848,556 L1004,556 L1024,566 L824,566 Z`} fill="#0E0A08" opacity={0.6} />
-		{/* P4 near: a night-watch walker with a lantern on the road; a bare tree framing the left edge */}
-		<g fill={SIL} filter="url(#rimFg)"><Man x={780} y={600} h={92} flip lantern /></g>
-		<circle cx={750} cy={548} r={26} fill={KEY} opacity={0.18} filter="url(#bl6)" />
-		<rect x={745} y={542} width={10} height={13} rx={3} fill="#FCEBC8" />
+		{/* P4 near: a night watchman with a torch walking up the road to the gate */}
+		<g fill={SIL} filter="url(#rimFg)"><Npc x={790} y={604} k={0.54} kind="torch" flip stride={0.5} /></g>
+		<NpcFlame x={790} y={604} k={0.54} flip t={0.6} />
 		{/* P5 foreground, out of focus: the eave of a building on our side of the street and its post frame the view */}
 		<g filter="url(#bl25)" fill="#0B0706">
 			<path d="M-20,-10 L700,-10 L700,6 C520,18 260,34 -20,60 Z" />
@@ -143,7 +135,7 @@ const SetGate: React.FC = () => {
 /* ---------- 2. 曹操 at 20 and at 46 ---------- */
 const PAL: Pal = {skin: '#C38D64', skinS: '#9C6848', skinH: '#E8BC8E', hair: '#15100E', robe: '#262A31', robeS: '#16181C', robeH: '#575B62', trim: '#5C2E24',
 	metal: '#3C3B3A', metalS: '#1B1A1A', metalH: '#9A968C', lace: '#6E2C22', under: '#55302A', underS: '#2E1915', cape: '#2C1716', capeS: '#170B0B', gold: '#C09A52', line: '#2A1810'};
-const HeroPanel: React.FC = () => { const S = 0.52;
+const HeroPanel: React.FC = () => { const S = 0.52, G = 590, K = S * 4.98;
 	return <svg x={1190} y={70} width={690} height={630} viewBox="0 0 690 630">
 		<defs>
 			<linearGradient id="hbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#18232B" /><stop offset="0.7" stopColor="#2C383A" /><stop offset="0.92" stopColor="#3A3630" /></linearGradient>
@@ -153,6 +145,7 @@ const HeroPanel: React.FC = () => { const S = 0.52;
 			<Lamel pal={PAL} />
 			<RimF id="heroRimS" lx={1} ly={-0.35} k={2.5} c="#FFE0B0" o={0.9} lx2={-1} ly2={-0.15} k2={2} c2={ACC} o2={0.95} blur={0.6} />
 			<filter id="hbl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7" /></filter>
+			<RimF id="npcRim" lx={1} ly={-0.3} k={3} c={RIMW} o={0.9} />
 		</defs>
 		<rect width={690} height={630} fill="url(#hbg)" />
 		{/* the same world behind them, out of focus: the wall and 门楼 as dark planes; the lit passage between them is their key */}
@@ -166,35 +159,39 @@ const HeroPanel: React.FC = () => { const S = 0.52;
 			{[0, 1, 2, 3].map((i) => <rect key={i} x={258 + i * 46} y={284} width={30} height={24} fill="#E9CB98" opacity={0.35} />)}
 			<rect x={306} y={430} width={78} height={150} fill={KEY} opacity={0.75} />
 		</g>
-		<path d="M300,580 L390,580 L520,630 L170,630 Z" fill={KEY} opacity={0.12} />
+		<path d="M300,590 L390,590 L500,630 L190,630 Z" fill={KEY} opacity={0.12} />
 		
-		<rect y={572} width={690} height={58} fill="url(#hfl)" />
-		<ellipse cx={180} cy={576} rx={110} ry={10} fill="#0A0706" opacity={0.6} />
-		<ellipse cx={510} cy={576} rx={120} ry={10} fill="#0A0706" opacity={0.6} />
+		<rect y={G} width={690} height={630 - G} fill="url(#hfl)" />
+		<ellipse cx={95} cy={G + 4} rx={60} ry={8} fill="#0A0706" opacity={0.6} />
+		<ellipse cx={240} cy={G + 4} rx={90} ry={9} fill="#0A0706" opacity={0.6} />
+		<ellipse cx={515} cy={G + 4} rx={100} ry={9} fill="#0A0706" opacity={0.6} />
+		{/* a 北部尉 runner with a 戟, the same scale as 曹操 (both ≈ 1.70 m) */}
+		<g fill="#1A120E" filter="url(#npcRim)"><Npc x={98} y={G} k={K} kind="ji" /></g>
 		{/* face close-ups (the same drawing at 3.4×) */}
-		<FaceInset x={22} y={22} old={false} />
-		<FaceInset x={548} y={22} old flip />
+		<FaceInset x={294} y={14} old={false} />
+		<FaceInset x={408} y={14} old flip />
 		{/* 20: 北部尉, slim, no beard, 武冠 over a dark 帻, 皂 robe with 黄绶, holding a 五色棒 upright */}
-		<g transform={`translate(190,${572 - 750 * S}) scale(${S})`} filter="url(#heroRim)">
+		<g transform={`translate(240,${G - 750 * S}) scale(${S})`} filter="url(#heroRim)">
 			<Cao pal={PAL} id="c20" old={false} armour={false} arm={{sh: [8, 84], el: [20, 206], hd: [108, 240]}} far={{sh: [-20, 80], el: [-34, 200], hd: [-18, 300]}}
 				prop="rod" propA={[120, 744]} propB={[104, 120]} />
 		</g>
 		{/* 46: 札甲 lamellar, short beard, cape, hand on the 环首刀 */}
-		<g transform={`translate(500,${572 - 750 * S}) scale(${-S},${S})`} filter="url(#heroRim)">
+		<g transform={`translate(520,${G - 750 * S}) scale(${-S},${S})`} filter="url(#heroRim)">
 			<Cao pal={PAL} id="c46" old armour arm={{sh: [10, 84], el: [22, 200], hd: [54, 266]}} far={{sh: [-20, 80], el: [-44, 196], hd: [-34, 296]}} cape={0.3} />
 		</g>
 	</svg>; };
 
 const FaceInset: React.FC<{x: number; y: number; old: boolean; flip?: boolean}> = ({x, y, old, flip}) => <g>
-	<svg x={x} y={y} width={120} height={140} viewBox={flip ? '-74 -122 150 175' : '-76 -122 150 175'}>
+	<svg x={x} y={y} width={110} height={130} viewBox={flip ? '-70 -118 140 165' : '-70 -118 140 165'}>
 		<rect x={-200} y={-300} width={400} height={500} fill="#1A242A" />
 		<rect x={-200} y={-300} width={400} height={500} fill="url(#hkey)" opacity={0.6} />
 		<g transform={flip ? 'scale(-1,1)' : undefined} filter="url(#heroRimS)">
 			<Cao pal={PAL} id={old ? 'i46' : 'i20'} old={old} armour={old} arm={{sh: [10, 84], el: [22, 200], hd: [54, 266]}} dao={false} />
 		</g>
 	</svg>
-	<rect x={x} y={y} width={120} height={140} fill="none" stroke="#5A4C40" strokeWidth={1.2} />
-	<text x={x} y={y + 162} fontFamily={SANS} fontSize={17} fill={CREAM} opacity={0.8}>{old ? '46岁 · 短须' : '20岁 · 无须'}</text>
+	<rect x={x} y={y + 106} width={110} height={24} fill="#0E0A08" opacity={0.72} />
+	<rect x={x} y={y} width={110} height={130} fill="none" stroke="#5A4C40" strokeWidth={1.2} />
+	<text x={x + 8} y={y + 124} fontFamily={SANS} fontSize={16} fill={CREAM} opacity={0.9}>{old ? '46岁 · 短须' : '20岁 · 无须'}</text>
 </g>;
 
 /* ---------- 3. props ---------- */
@@ -269,7 +266,7 @@ const PropRow: React.FC = () => { const xs = [40, 334, 628, 922, 1216];
 				<path d="M100,58 L180,58 L182,40 L98,40 Z" />
 				{Array.from({length: 8}, (_, i) => <path key={i} d={`M${100 + i * 10},40 L${104 + i * 10},30 L${108 + i * 10},40 Z`} />)}
 				<path d="M92,28 L188,28 L170,12 L110,12 Z" /><path d="M140,12 L140,28" stroke={SIL} />
-				<Man x={124} y={40} h={34} /><Man x={154} y={40} h={34} flip />
+				<Npc x={124} y={40} k={0.2} kind="hold" /><Npc x={156} y={40} k={0.2} kind="hold" flip />
 				<path d="M134,22 C140,14 140,34 134,26" fill="none" stroke={SIL} strokeWidth={1.5} />
 			</g>
 			{[0, 1, 2].map((i) => <path key={i} d={`M${96 - i * 6},${50 + i * 8} Q${50 - i * 6},${20 + i * 10} ${10 - i * 4},${70 + i * 14}`} fill="none" stroke="#E8D8BC" strokeOpacity={0.4} strokeWidth={1} strokeDasharray="10 7" />)}
@@ -298,8 +295,8 @@ export const Look1: React.FC = () => <svg width={W} height={H} style={{position:
 	<rect x={40} y={70} width={SW} height={SH} fill="none" stroke="#3A302A" strokeWidth={1.5} />
 	<HeroPanel />
 	<rect x={1190} y={70} width={690} height={630} fill="none" stroke="#3A302A" strokeWidth={1.5} />
-	<Cap x={40} y={734} s="布景 · 东汉洛阳城门 · 夜" sub="门楼 · 双阙 · 一门三道（平梁门洞）· 夯土城墙 · 一盏主光：门洞灯火" />
-	<Cap x={1190} y={734} s="曹操 20岁 · 46岁" sub="唯一画出面孔的人物 · 主光 + 石青强调边光" />
+	<Cap x={40} y={734} s="布景 · 东汉洛阳城门 · 夜" sub="门楼 · 双阙 · 一门三道（平梁门洞）· 夯土城墙 · 主光：门洞灯火 · 灯檠 · 火把" />
+	<Cap x={1190} y={734} s="曹操 20岁 · 46岁" sub="唯一画出面孔的人物 · 左：随从剪影，同一比例" />
 	<PropRow />
 	{['五色棒架 · 青赤黄白黑', '环首刀 · 刀与鞘', '大旗 · 曹', '囷 · 汉代圆仓', '高橹 · 袁军箭楼'].map((s, i) => <Cap key={s} x={40 + i * 294} y={1014} s={s} />)}
 	<Palette />

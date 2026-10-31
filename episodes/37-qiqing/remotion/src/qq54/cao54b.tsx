@@ -38,7 +38,7 @@ export type Pal = {skin: string; skinS: string; skinH: string; hair: string; rob
 	metal: string; metalS: string; metalH: string; lace: string; under: string; underS: string; cape: string; capeS: string; gold: string; line: string};
 
 /* ---------- head ---------- */
-const FACE = 'M30,-98 C38,-90 42,-78 43,-66 C44,-60 41,-57 40,-55 C44,-49 50,-42 55,-36 C58,-33 59,-30 57,-28 C54,-25 50,-24 47,-24 C48,-21 50,-18 49,-16 C46,-13 43,-12 42,-11 C45,-9 47,-7 46,-5 C44,-3 41,-2 41,0 C43,3 44,7 40,11 C33,15 20,15 8,13 C10,22 12,34 14,50 L-38,50 C-40,30 -42,8 -44,-12 C-38,-30 -30,-46 -26,-60 C-22,-72 -6,-86 12,-92 Z';
+const FACE = 'M30,-98 C35,-90 38,-80 39,-70 C39.6,-64 39.4,-60 38.6,-56.5 C41,-50 45,-43 49,-37 C51.5,-34 52.5,-31 51.5,-28.8 C49.6,-26.6 47.4,-25.6 45.4,-25 C46.2,-22.4 47,-19.4 46.6,-16.4 C44.8,-13.6 43,-12.4 42,-11.6 C44.4,-9.6 45.6,-7.4 44.8,-5.2 C43.2,-3.4 41.4,-2.4 41.2,-0.6 C42.6,2.6 42.6,7 39.6,10.6 C33,14.6 20,15 8,13 C10,22 12,34 14,50 L-38,50 C-40,30 -42,8 -44,-12 C-38,-30 -30,-46 -26,-60 C-22,-72 -6,-86 12,-92 Z';
 const HAIR = 'M33,-97 C30,-112 12,-122 -10,-122 C-36,-122 -56,-106 -59,-80 C-61,-56 -55,-32 -45,-12 L-38,-13 C-33,-34 -27,-52 -19,-66 C-9,-80 10,-90 33,-97 Z';
 const EAR = 'M-15,-64 C-6,-66 -1,-57 -2,-46 C-3,-37 -8,-31 -15,-31 C-20,-35 -22,-48 -20,-59 Z';
 export const Head: React.FC<{old: boolean; pal: Pal; id: string}> = ({old, pal, id}) => <g>
@@ -54,31 +54,30 @@ export const Head: React.FC<{old: boolean; pal: Pal; id: string}> = ({old, pal, 
 		<path d="M-50,9 C-20,15 10,17 41,10 L44,70 L-50,70 Z" fill={pal.skinS} />
 		<path d="M-60,30 L20,22 L30,70 L-60,70 Z" fill={pal.skinS} opacity={0.6} />
 		{/* lit planes facing the key */}
-		<path d="M32,-95 C39,-87 42,-77 42,-66 L36,-66 C35,-76 32,-86 26,-93 Z" fill={pal.skinH} />
-		<path d="M41,-53 C46,-46 51,-40 55,-35 L51,-33 C47,-38 43,-44 38,-50 Z" fill={pal.skinH} />
-		<path d="M22,-45 C28,-47 33,-46 36,-42 C31,-40 26,-40 22,-42 Z" fill={pal.skinH} opacity={0.4} />
-		<path d="M41,1 C43,5 42,9 38,11 L35,8 C37,6 38,3 37,1 Z" fill={pal.skinH} />
-		<path d="M44,-19 C47,-18 48,-16 47,-15 L43,-15 Z" fill={pal.skinH} opacity={0.7} />
+		<path d="M31,-95 C36,-87 38,-78 38.6,-68 L33.6,-68 C33,-78 31,-86 26,-93 Z" fill={pal.skinH} />
+		<path d="M38.8,-55 C42,-48 45.5,-42 49,-37 L45.6,-35.4 C42.4,-40.4 39.6,-46 37,-52 Z" fill={pal.skinH} />
+		<path d="M21,-47 C29,-48.6 35.4,-45.6 37.6,-38.6 C38.4,-33.4 36,-28.4 30,-27.4 C25.6,-31.4 22.4,-38.4 21,-47 Z" fill={pal.skinH} opacity={0.32} />
+		<path d="M41,0 C42,4 41.4,8 38.6,10.4 L35.6,8 C37.4,6 38,3 37.6,0.4 Z" fill={pal.skinH} />
+		<path d="M43.6,-20 C45.6,-19 46.4,-17 46,-16 L42.4,-15.6 Z" fill={pal.skinH} opacity={0.7} />
 	</g>
 	{/* ear */}
 	<path d={EAR} fill={pal.skin} /><path d={EAR} fill={pal.skinS} opacity={0.55} />
 	<path d="M-12,-58 C-7,-57 -6,-50 -7,-44 C-8,-40 -11,-37 -13,-37" fill="none" stroke={pal.line} strokeWidth={1.6} opacity={0.55} />
 	{/* brow, eye, nostril, mouth */}
-	<path d="M13,-65 C22,-69 33,-69 42,-64 L41,-61 C32,-65 22,-65 14,-62 Z" fill={pal.hair} />
-	<path d="M19,-56 C24,-59 29,-58 33,-55 C30,-52 25,-51 21,-52 Z" fill="#EDE2D0" opacity={0.9} />
-	<path d="M26,-57.5 C29,-57 31.5,-56 33,-55 C31,-52.6 28.5,-52 26,-52.4 Z" fill="#1A120E" />
-	<path d="M17,-57 C23,-61 29,-59.5 34,-55" fill="none" stroke={pal.line} strokeWidth={2.2} strokeLinecap="round" />
-	<path d="M20,-51.5 C24,-50.5 28,-51 31,-52.5" fill="none" stroke={pal.line} strokeWidth={0.9} opacity={0.5} />
-	<path d="M18,-61 C24,-63 29,-62 33,-59" fill="none" stroke={pal.line} strokeWidth={0.9} opacity={0.45} />
-	<path d="M45,-30 C48,-28 50,-27.5 52,-29" fill="none" stroke={pal.line} strokeWidth={1.4} opacity={0.7} />
-	<path d="M41,-11.5 C43.5,-11.5 46,-12.5 48,-14" fill="none" stroke={pal.line} strokeWidth={1.6} strokeLinecap="round" />
+	<path d="M12,-62.4 C21,-65.4 31,-65.8 39.4,-63 L39,-61 C30.6,-63.6 21,-63.4 12.8,-60.4 Z" fill={pal.hair} />
+	<path d="M19.4,-55 C23.8,-57.2 28.6,-56.9 32.4,-54.8 C29.4,-52.6 24.8,-52 20.8,-52.9 Z" fill="#EDE2D0" opacity={0.85} />
+	<path d="M26.4,-56.6 C28.8,-56.3 30.8,-55.5 32.4,-54.8 C30.8,-53.2 28.6,-52.6 26.4,-52.9 Z" fill="#1A120E" />
+	<path d="M17.6,-55.2 C22.6,-58.4 28.6,-58 33.6,-54.8" fill="none" stroke={pal.line} strokeWidth={2.5} strokeLinecap="round" />
+	<path d="M20.6,-52.4 C24.4,-51.6 28.4,-52 31.4,-53.4" fill="none" stroke={pal.line} strokeWidth={0.8} opacity={0.45} />
+		<path d="M43.4,-29.8 C45.8,-27.8 48,-27.4 49.8,-28.6" fill="none" stroke={pal.line} strokeWidth={1.4} opacity={0.65} />
+	<path d="M41.2,-12 C43,-11.8 44.8,-12.6 46.2,-13.8" fill="none" stroke={pal.line} strokeWidth={1.6} strokeLinecap="round" />
 	{old && <>
-		<path d="M37,-36 C33,-28 33,-20 37,-14" fill="none" stroke={pal.line} strokeWidth={1.1} opacity={0.45} />
+		<path d="M36,-34 C33,-27 33,-20 36.4,-14.4" fill="none" stroke={pal.line} strokeWidth={1.1} opacity={0.42} />
 		<path d="M21,-50 C24,-47 28,-47 31,-49" fill="none" stroke={pal.line} strokeWidth={0.9} opacity={0.4} />
 		<path d="M24,-78 C30,-80 36,-80 40,-78 M22,-84 C29,-86 35,-86 39,-84" fill="none" stroke={pal.line} strokeWidth={0.8} opacity={0.3} />
 		{/* short beard: moustache, chin beard, a trimmed line along the jaw */}
-		<path d="M45,-22 C49,-21 51,-18 49,-15 C46,-13.5 42,-15 37,-13 C38,-17 41,-21 45,-22 Z" fill={pal.hair} />
-		<path d="M45,-8 C48,0 46,10 40,19 C33,27 20,28 8,23 C-2,19 -10,11 -14,0 C-10,2 -2,7 8,10 C20,13 31,11 37,4 C40,0 42,-4 45,-8 Z" fill={pal.hair} />
+		<path d="M44.4,-21.8 C47.4,-21 48.4,-18.4 46.8,-15.6 C44.2,-14.4 40.8,-15.6 36.8,-13.4 C37.8,-17 40.8,-21 44.4,-21.8 Z" fill={pal.hair} />
+		<path d="M44,-7.6 C46.4,0 45,10 39.4,18 C33,26 20,27 8,22.6 C-2,19 -10,11 -14,0 C-10,2 -2,7 8,10 C20,12.6 31,11 36.6,4 C39.6,0 41.6,-4 44,-7.6 Z" fill={pal.hair} />
 		<path d="M-14,0 C-18,-12 -22,-26 -24,-40 L-20,-40 C-17,-26 -12,-12 -8,-2 Z" fill={pal.hair} opacity={0.85} />
 		<path d="M30,18 C26,22 20,24 14,23 M40,8 C38,14 34,18 30,21 M20,16 C14,18 6,17 0,14 M44,-20 C41,-18 39,-17 37,-15" fill="none" stroke="#9A9088" strokeOpacity={0.55} strokeWidth={1.1} />
 	</>}
