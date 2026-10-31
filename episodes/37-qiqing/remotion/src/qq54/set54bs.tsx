@@ -132,7 +132,7 @@ export const GateTower: React.FC<{win?: number; wall?: string; dark?: string; ro
 
 /** a traction trebuchet (霹雳车) in cm: a braced trestle with the pivot at (0, −420); beam angle a (deg, 0 = long arm pointing up,
     −90 = pointing left); the long arm ends in a sling (hanging with its stone, or flying); ropes from the short end come down to `ropes` */
-export const Trebuchet: React.FC<{a: number; ropes: P[]; sling?: 'hang' | 'fly'; far?: string}> = ({a, ropes, sling = 'hang', far = '#2A1E18'}) => { const r = (a * Math.PI) / 180, px = 0, py = -420, LA = 520, SA = 150;
+export const Trebuchet: React.FC<{a: number; ropes: P[]; sling?: 'hang' | 'fly' | 'none'; far?: string}> = ({a, ropes, sling = 'hang', far = '#2A1E18'}) => { const r = (a * Math.PI) / 180, px = 0, py = -420, LA = 520, SA = 150;
 	const tip: P = [px + Math.sin(r) * LA, py - Math.cos(r) * LA], sh: P = [px - Math.sin(r) * SA, py + Math.cos(r) * SA];
 	const trestle = (dx: number, fill?: string) => <g fill={fill} transform={`translate(${dx},${dx ? -8 : 0})`}>
 		<path d={limb([[-150, -10], [px - 8, py + 6]], [11, 8])} /><path d={limb([[150, -10], [px + 8, py + 6]], [11, 8])} />
@@ -149,7 +149,7 @@ export const Trebuchet: React.FC<{a: number; ropes: P[]; sling?: 'hang' | 'fly';
 		{sling === 'hang' ? <g><path d={`M${tip[0]},${tip[1]} C${tip[0] - 14},${tip[1] + 50} ${tip[0] - 4},${tip[1] + 100} ${tip[0] + 6},${tip[1] + 134}`} fill="none" stroke="currentColor" strokeWidth={3} />
 			<path d={`M${tip[0]},${tip[1]} C${tip[0] + 18},${tip[1] + 50} ${tip[0] + 22},${tip[1] + 100} ${tip[0] + 14},${tip[1] + 134}`} fill="none" stroke="currentColor" strokeWidth={3} />
 			<circle cx={tip[0] + 10} cy={tip[1] + 150} r={20} /></g>
-			: <path d={`M${tip[0]},${tip[1]} C${tip[0] + 60},${tip[1] - 30} ${tip[0] + 110},${tip[1] + 10} ${tip[0] + 120},${tip[1] + 60}`} fill="none" stroke="currentColor" strokeWidth={3} />}
+			: sling === 'fly' ? <path d={`M${tip[0]},${tip[1]} C${tip[0] + 60},${tip[1] - 30} ${tip[0] + 110},${tip[1] + 10} ${tip[0] + 120},${tip[1] + 60}`} fill="none" stroke="currentColor" strokeWidth={3} /> : null}
 		{ropes.map((q, i) => <line key={i} x1={sh[0] + (i - ropes.length / 2) * 3} y1={sh[1]} x2={q[0]} y2={q[1]} stroke="currentColor" strokeWidth={2.4} />)}
 	</g>; };
 
@@ -175,16 +175,33 @@ export const Palisade: React.FC<{x0: number; x1: number; y: number; h: number; g
 		<rect x={x0 - 6} y={y - h * 0.3} width={x1 - x0 + 12} height={Math.max(3, h * 0.045)} />
 	</g>; };
 
-/** 高橹: a timber archery tower, px at s = 1 (base width 120, height 260); archers on the shielded platform */
+/** 高橹 (楼橹): a timber archery tower as Han reliefs draw it: a straight post frame tied by beams with a brace in each bay, a projecting
+    floor carrying a boarded parapet (arrow slits), archers behind it, and a straight-ridged hip roof on four short corner posts.
+    px at s = 1 (frame ≈ 96 wide, parapet 124, top ≈ −324) */
 export const Tower: React.FC<{archers?: number}> = ({archers = 4}) => <g>
-	<path d="M-60,0 L-34,-220 L-27,-220 L-50,0 Z M60,0 L34,-220 L27,-220 L50,0 Z" />
-	<path d="M-52,-20 L40,-150 L44,-146 L-48,-14 Z M52,-20 L-40,-150 L-44,-146 L48,-14 Z M-45,-100 L45,-100 L45,-94 L-45,-94 Z M-38,-176 L38,-176 L38,-170 L-38,-170 Z" />
-	<path d="M-52,-220 L52,-220 L54,-246 L-54,-246 Z" />
-	{Array.from({length: 9}, (_, i) => <path key={i} d={`M${-52 + i * 13},-246 L${-48 + i * 13},-254 L${-44 + i * 13},-246 Z`} />)}
-	{Array.from({length: archers}, (_, i) => { const x = -40 + (i * 80) / Math.max(1, archers - 1);
-		return <g key={i}><path d={`M${x - 5},-246 L${x - 5},-270 C${x - 5},-276 ${x + 5},-276 ${x + 5},-270 L${x + 5},-246 Z`} /><circle cx={x} cy={-282} r={6} />
-			<path d={`M${x + 4},-268 L${x + 16},-276`} stroke="currentColor" strokeWidth={2.4} />
-			<path d={`M${x + 12},-292 C${x + 22},-282 ${x + 22},-266 ${x + 12},-256`} fill="none" stroke="currentColor" strokeWidth={1.8} /></g>; })}
+	<g opacity={0.72}><rect x={-27} y={-214} width={5} height={214} /><rect x={22} y={-214} width={5} height={214} /></g>
+	<rect x={-46} y={-216} width={10} height={216} /><rect x={36} y={-216} width={10} height={216} />
+	<rect x={-52} y={-6} width={22} height={6} /><rect x={30} y={-6} width={22} height={6} />
+	{[-34, -104, -170].map((y) => <rect key={y} x={-50} y={y} width={100} height={6} />)}
+	<path d="M-38,-34 L38,-98 L40,-92 L-36,-28 Z" /><path d="M38,-104 L-38,-164 L-40,-158 L36,-98 Z" />
+	{/* ladder on the far side */}
+	<g opacity={0.72}><rect x={-12} y={-214} width={2.4} height={214} /><rect x={-2} y={-214} width={2.4} height={214} />{Array.from({length: 13}, (_, i) => <rect key={i} x={-12} y={-16 - i * 15} width={12} height={2} />)}</g>
+	{/* the floor on projecting joists */}
+	<rect x={-66} y={-222} width={132} height={8} />
+	{[-66, -40, -14, 12, 38, 60].map((x) => <rect key={x} x={x} y={-214} width={6} height={5} />)}
+	{/* the boarded parapet with arrow slits (cut through) */}
+	<path fillRule="evenodd" d="M-64,-222 L64,-222 L66,-256 L-66,-256 Z M-44,-246 L-40,-246 L-40,-232 L-44,-232 Z M-12,-246 L-8,-246 L-8,-232 L-12,-232 Z M20,-246 L24,-246 L24,-232 L20,-232 Z M50,-246 L54,-246 L54,-232 L50,-232 Z" />
+	{[-50, -30, -2, 30, 40].map((x) => <rect key={x} x={x} y={-254} width={1.2} height={30} fill="#3A3028" opacity={0.6} />)}
+	<rect x={-68} y={-260} width={136} height={5} />
+	{/* archers between the parapet and the eaves */}
+	{Array.from({length: archers}, (_, i) => { const x = -44 + (i * 88) / Math.max(1, archers - 1);
+		return <g key={i}><path d={`M${x - 6},-258 L${x - 6},-272 C${x - 6},-278 ${x + 6},-278 ${x + 6},-272 L${x + 6},-258 Z`} /><circle cx={x} cy={-283} r={5.6} />
+			<path d={`M${x + 4},-272 L${x + 15},-279`} stroke="currentColor" strokeWidth={2.4} />
+			<path d={`M${x + 12},-292 C${x + 21},-283 ${x + 21},-270 ${x + 12},-262`} fill="none" stroke="currentColor" strokeWidth={1.8} /></g>; })}
+	{/* the roof on four short posts: straight ridge, ends barely raised */}
+	<rect x={-62} y={-300} width={4} height={42} /><rect x={58} y={-300} width={4} height={42} />
+	<path d="M-80,-298 L80,-298 L82,-304 L56,-322 L-56,-322 L-82,-304 Z" />
+	<path d="M-58,-322 L58,-322 L60,-328 L-60,-328 Z" />
 </g>;
 
 /** 囷: the Han round granary (thatched cone on a plastered drum), px at s = 1 (≈ 150 wide) */

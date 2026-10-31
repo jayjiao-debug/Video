@@ -3,12 +3,19 @@ import {W, H} from '../qq50/kit50';
 import {Cao, RimF, Lamel, Sack, P, rnd, f1} from './cao54b';
 import {Npc, LampStand} from './npc54b';
 import {SIL, KEY, ACC, COOL, PAL, Horse, Rider, Carriage, Banner, GateTower, Trebuchet, Puller, Palisade, Tower, Qun, Store, limb} from './set54bs';
-import {CaoBack, CaoSeated, CaoSeatedShadow, IvoryFlame} from './set54bs2';
+import {CaoBack, CaoSeated, CaoSeatedShadow, IvoryFlame, torchTop} from './set54bs2';
 /* ep54 look B · key scenes owned by the set builder: K4 许都 (196), K5 官渡 (200), K6 the handover frame to the AI drop, K8 洛阳 (220).
    The 马首 铜灯影 grammar: 3–6 cut-out depth planes with haze between them, one key light on its object, warm-black silhouettes rimmed
    by that key; 曹操 alone drawn (cao54b rig, or the set54bs2 variants), with his cool 石青 accent rim #8FD0DC on the back edge.
    Overlay-safe zones kept calm: subtitles x 150–1150 / y 90–300, stamp x 1200–1800 / y 30–200, counter x 150–460 / y 900–1010,
    seal ≈ x 1720–1800 / y 930–1010. */
+/** a 2.5D camera: push z (0 = the key frame) toward the focus (fx, fy), pan px / py; plane depth p (0 = sky … 1 = the hero plane) */
+export type Cam = {z: number; fx: number; fy: number; px?: number; py?: number};
+const camT = (c: Cam | undefined, p: number) => { if (!c) return undefined; const s = 1 + c.z * (0.3 + 0.7 * p);
+	return `translate(${f1(c.fx + (c.px ?? 0) * (0.3 + 0.7 * p))},${f1(c.fy + (c.py ?? 0) * (0.3 + 0.7 * p))}) scale(${s.toFixed(5)}) translate(${-c.fx},${-c.fy})`; };
+export const Pl: React.FC<{c?: Cam; p: number; children: React.ReactNode}> = ({c, p, children}) => <g transform={camT(c, p)}>{children}</g>;
+export const cl = (v: number) => Math.min(1, Math.max(0, v));
+export const ease = (u: number) => { const v = cl(u); return v * v * (3 - 2 * v); };
 const Svg: React.FC<{children: React.ReactNode}> = ({children}) => <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>{children}</svg>;
 const Blur: React.FC<{id: string; s: number}> = ({id, s}) => <filter id={id} x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation={s} /></filter>;
 const at = (x: number, y: number, k: number, flip?: boolean) => `translate(${f1(x)},${f1(y)}) scale(${flip ? -k : k},${k})`;
@@ -139,9 +146,24 @@ const EmptySack: React.FC<{x: number; y: number; h: number; flip?: boolean}> = (
 		</g>
 		<path d={`M${X(0.08)},${Y(0.78)} C${X(0.12)},${Y(0.76)} ${X(0.18)},${Y(0.76)} ${X(0.22)},${Y(0.79)}`} fill="none" stroke="#2A1C10" strokeWidth={h * 0.035} strokeLinecap="round" />
 	</g>; };
-export const K5: React.FC = () => { const HZ = 640;
+export const K5: React.FC<{t?: number; cam?: Cam}> = ({t: T, cam}) => { const HZ = 640;
+	const bw = (i: number, base: number) => T === undefined ? base : base + Math.sin(T * 1.7 + i * 1.9) * 5;
+	/* the 霹雳车 swings once: the crew hauls (lean, a step back), the beam whips over, the stone leaves the sling at u = 0.95 */
+	const TS = 85.55, SW = 0.62, k = 0.62, OX = 520, OY = 905;
+	let a = -112, sling: 'hang' | 'none' = 'hang', pull = 0, stone: [number, number, number] | null = null;
+	const tipS = (aa: number): P => { const r = aa * Math.PI / 180; return [OX + Math.sin(r) * 520 * k, OY + (-420 - Math.cos(r) * 520) * k]; };
+	if (T !== undefined) {
+		const u = (T - TS) / SW;
+		pull = ease(cl((T - TS + 0.55) / 0.55)) * (1 - ease(cl((T - TS - 1.0) / 0.9)));
+		if (u > 0) { sling = 'none';
+			if (u <= 1) a = -112 + 130 * u * u; else { const v = T - TS - SW; a = 10 + 8 * Math.exp(-v * 3) * Math.cos(v * 7); }
+			const ur = 0.95, tr = TS + ur * SW;
+			if (u < ur) { const r = a * Math.PI / 180, tp = tipS(a), ox = Math.sin(r), oy = -Math.cos(r), vx = Math.cos(r), vy = Math.sin(r), dx = ox * 0.8 - vx * 0.6, dy = oy * 0.8 - vy * 0.6, d = Math.hypot(dx, dy);
+				stone = [tp[0] + dx / d * 93, tp[1] + dy / d * 93, 9]; }
+			else { const v = T - tr, p0 = tipS(-112 + 130 * ur * ur); if (v < 1.5) stone = [p0[0] + 621 * v, p0[1] - 109 * v + 80 * v * v, 9 - v * 3]; } } }
+	const crewX = [628, 662, 694, 730, 762, 796].map((x) => x + pull * 9);
 	const pickets: [number, number, number][] = [[40, 712, 0.3], [180, 706, 0.26], [330, 716, 0.32], [520, 708, 0.27], [700, 718, 0.33], [880, 707, 0.26], [1150, 720, 0.34], [1330, 709, 0.28], [1500, 718, 0.32], [1690, 706, 0.26], [1850, 716, 0.31]];
-	const volleys: [P, P, P][] = [[[1420, 290], [1060, 230], [720, 800]], [[1530, 290], [1180, 210], [900, 860]], [[1850, 330], [1500, 260], [1220, 930]]];
+	const volleys: [P, P, P][] = [[[1420, 268], [1060, 210], [720, 800]], [[1530, 268], [1180, 190], [900, 860]], [[1850, 318], [1500, 250], [1220, 930]]];
 	const qp = (a: P, c: P, b: P, u: number): P => { const m = 1 - u; return [m * m * a[0] + 2 * m * u * c[0] + u * u * b[0], m * m * a[1] + 2 * m * u * c[1] + u * u * b[1]]; };
 	return <Svg>
 		<defs>
@@ -159,15 +181,18 @@ export const K5: React.FC = () => { const HZ = 640;
 			<RimF id="k5hero" lx={1} ly={-0.35} k={5} c="#FFE6C0" o={0.95} lx2={-1} ly2={-0.15} k2={4} c2={ACC} o2={0.95} blur={1} />
 			<Lamel pal={PAL} />
 		</defs>
+		<Pl c={cam} p={0}>
 		{/* P0 dusk: the light has gone down behind 袁绍's lines */}
 		<rect width={W} height={H} fill="url(#k5sky)" />
 		<rect width={W} height={H} fill="url(#k5glow)" />
 		<g filter="url(#k5b6)" opacity={0.55}><ellipse cx={1250} cy={430} rx={520} ry={8} fill="#7A7A6C" /><ellipse cx={600} cy={380} rx={420} ry={7} fill="#4E5A5A" /><ellipse cx={1500} cy={560} rx={380} ry={6} fill="#EADCB8" /></g>
+		</Pl><Pl c={cam} p={0.12}>
 		{/* P1 the far camp of 袁绍 to both edges: tents, hazed */}
 		<g fill="#3A3630" filter="url(#k5b2)" opacity={0.8}>
 			{Array.from({length: 70}, (_, i) => { const x = -20 + i * 28.6 + rnd(i, 21) * 10, h = 10 + rnd(i, 22) * 8; return <path key={i} d={`M${x - h},${HZ - 20} L${x},${HZ - 20 - h} L${x + h},${HZ - 20} Z`} />; })}
 			<rect x={-20} y={HZ - 22} width={1960} height={30} />
 		</g>
+		</Pl><Pl c={cam} p={0.2}>
 		{/* P2 the 土山 (piled earth, terraced, with ramps) and their 高橹 full of archers */}
 		<g fill="url(#k5mound)" color="#1E1916" filter="url(#k5rimFar)">
 			<path d="M110,652 L170,620 L200,618 L240,592 L420,590 L470,618 L500,620 L570,652 Z" />
@@ -181,38 +206,47 @@ export const K5: React.FC = () => { const HZ = 640;
 			<g transform="translate(1540,482) scale(0.64)"><Tower archers={4} /></g>
 			<g transform="translate(1860,514) scale(0.56)"><Tower archers={3} /></g>
 		</g>
+		</Pl><Pl c={cam} p={0.28}>
 		{/* the sea of 袁 spears and banners, rank behind rank, off both edges */}
 		<g fill="#2A2420" color="#2A2420" filter="url(#k5b1)"><Crowd y={650} k={0.085} seed={31} ban={0.12} /></g>
 		<g fill="#221D19" color="#221D19" filter="url(#k5b1)"><Crowd y={662} k={0.11} seed={41} ban={0.1} /></g>
 		<g fill="#1A1512" color="#1A1512"><Crowd y={676} k={0.145} seed={51} ban={0.09} /></g>
 		<g fill="#16110E" color="#16110E" filter="url(#k5rimFar)"><Crowd y={694} k={0.19} seed={61} ban={0.07} spear={0.5} /></g>
 		<rect y={620} width={W} height={60} fill="url(#k5haze)" opacity={0.35} />
+		</Pl><Pl c={cam} p={0.36}>
 		{/* the forward pickets: 袁 banners at the near edge of their lines */}
 		<g fill="#140F0C" color="#140F0C" filter="url(#k5rimFar)">
-			{pickets.map(([x, y, kk], i) => <g key={x}><g transform={at(x, y, kk)}><Banner h={470 + (i % 3) * 30} w={84} ch="袁" cloth="#4A2A1A" clothS="#2E180F" ink="#DCC49A" wave={i % 2 ? 6 : -5} /></g>
+			{pickets.map(([x, y, kk], i) => <g key={x}><g transform={at(x, y, kk)}><Banner h={470 + (i % 3) * 30} w={84} ch="袁" cloth="#4A2A1A" clothS="#2E180F" ink="#DCC49A" wave={bw(i, i % 2 ? 6 : -5)} /></g>
 				<Npc x={x - 24 * kk * 3} y={y} k={kk} kind="ji" flip={i % 3 === 0} /><Npc x={x + 30 * kk * 3} y={y + 2} k={kk * 0.96} kind="ji" /></g>)}
 		</g>
+		</Pl><Pl c={cam} p={0.45}>
 		{/* the open ground between, a trench line, the arrows coming in */}
 		<rect y={698} width={W} height={124} fill="url(#k5fld)" />
 		<path d="M-20,752 C400,748 900,754 1940,750 L1940,758 C900,762 400,756 -20,760 Z" fill="#0E0B09" opacity={0.6} />
-		{volleys.map(([a, c, b], i) => <g key={i}>{[0.42, 0.52, 0.6, 0.7, 0.78].map((u, j) => { const p0 = qp(a, c, b, u + (j % 2) * 0.012), p1 = qp(a, c, b, u + 0.03 + (j % 2) * 0.012), ang = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]) * 180 / Math.PI, off = (j - 2) * 9;
+		{volleys.map(([a0, c, b], i) => <g key={i}>{[0.42, 0.52, 0.6, 0.7, 0.78].map((u0, j) => { const u = T === undefined ? u0 : (T - 86.45 - i * 0.16 - j * 0.07) / 1.25;
+			if (u < 0 || u > 0.985) return null;
+			const p0 = qp(a0, c, b, u + (j % 2) * 0.012), p1 = qp(a0, c, b, u + 0.03 + (j % 2) * 0.012), ang = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]) * 180 / Math.PI, off = (j - 2) * 9;
 			return <g key={j} transform={`translate(${f1(p0[0] + off)},${f1(p0[1] - off * 0.4)}) rotate(${f1(ang)})`}><line x1={-26} y1={0} x2={0} y2={0} stroke="#1A1410" strokeWidth={1.6} /><path d="M0,-2.4 L6,0 L0,2.4 Z" fill="#1A1410" /><path d="M-26,0 L-31,-3 M-26,0 L-31,3" stroke="#1A1410" strokeWidth={1.2} /></g>; })}</g>)}
+		</Pl><Pl c={cam} p={0.6}>
 		{/* P3 曹操's palisade (营栅): logs side by side, sharpened */}
 		<rect y={684} width={W} height={70} fill="url(#k5haze)" opacity={0.75} />
 		<g fill="#120D0A" filter="url(#k5rim)"><Palisade x0={-30} x1={1950} y={818} h={98} gap={13} w={14} seed={5} /></g>
+		</Pl><Pl c={cam} p={0.75}>
 		{/* P4 the camp: a 霹雳车 being hauled, its stone in the sling; one 曹 banner; nearly empty grain sacks */}
 		<rect y={814} width={W} height={H - 814} fill="url(#k5camp)" />
 		<rect width={W} height={H} fill="url(#k5pool)" />
 		<Shadow x={520} y={905} w={240} len={-140} dir={-1} o={0.4} />
 		<g fill={SIL} color={SIL} filter="url(#k5rim)">
-			<g transform={at(520, 905, 0.62)}><Trebuchet a={-112} ropes={[[180, -162], [234, -158], [286, -162], [344, -158], [396, -162], [450, -158]]} /></g>
-			{[628, 662, 694, 730, 762, 796].map((x, i) => <g key={x} transform={at(x + 18, 905 + (i % 2) * 4, 0.62, true)}><Puller lean={0.6 + (i % 3) * 0.25} /></g>)}
-			<g transform={at(822, 892, 0.52)}><Banner h={440} w={70} ch="曹" cloth="#4E1E18" clothS="#2C100C" ink="#EAD4A8" wave={-6} /></g>
+			<g transform={at(OX, OY, k)}><Trebuchet a={a} sling={sling} ropes={crewX.map((x, i) => [(x + 3 - OX) / k, -162 + (i % 2) * 4 + pull * 14] as P)} /></g>
+			{crewX.map((x, i) => <g key={i} transform={at(x + 18, 905 + (i % 2) * 4, 0.62, true)}><Puller lean={0.6 + (i % 3) * 0.25 + pull * 0.5} /></g>)}
+			<g transform={at(822, 892, 0.52)}><Banner h={440} w={70} ch="曹" cloth="#4E1E18" clothS="#2C100C" ink="#EAD4A8" wave={bw(20, -6)} /></g>
 			<Npc x={808} y={892} k={0.52} kind="hold" />
 			{[884, 936].map((x) => <g key={x}><Npc x={x} y={884} k={0.5} kind="hold" /><path d={`M${x + 15},${884 - 98} l16,-5 l3,52 l-16,5 Z`} /></g>)}
 		</g>
-		{/* a stone from the other engine already in flight toward the towers */}
-		<g><circle cx={1000} cy={350} r={8} fill="#1A1410" /><path d="M992,354 L930,380" stroke="#EADCC0" strokeOpacity={0.3} strokeWidth={3} strokeLinecap="round" /></g>
+		{/* the stone: (still) one from the other engine in flight; (moving) ours, in the sling and then away toward the towers */}
+		{T === undefined ? <g><circle cx={1000} cy={350} r={8} fill="#1A1410" /><path d="M992,354 L930,380" stroke="#EADCC0" strokeOpacity={0.3} strokeWidth={3} strokeLinecap="round" /></g>
+			: stone && <g>{sling === 'none' && T < TS + 0.95 * SW && (() => { const tp = tipS(a); return <line x1={tp[0]} y1={tp[1]} x2={stone[0]} y2={stone[1]} stroke={SIL} strokeWidth={2} />; })()}<circle cx={stone[0]} cy={stone[1]} r={stone[2]} fill="#1A1410" /></g>}
+		</Pl><Pl c={cam} p={1}>
 		{/* the rampart (土垒) he stands on: a rammed-earth bank inside the palisade, its top lit by the sky */}
 		<path d="M860,1014 C1000,1010 1500,1010 1760,1016 L1800,1080 L820,1080 Z" fill="#2A221B" />
 		{[1030, 1046, 1062].map((y) => <path key={y} d={`M${850 - (y - 1014) * 0.4},${y} L${1772 + (y - 1014) * 0.4},${y}`} stroke="#000" strokeOpacity={0.22} strokeWidth={1.4} />)}
@@ -233,6 +267,7 @@ export const K5: React.FC = () => { const HZ = 640;
 				<Cao pal={PAL} id="k5c" old armour arm={{sh: [10, 84], el: [22, 200], hd: [54, 266]}} cape={0.4} />
 			</g>
 		</g>
+		</Pl>
 		<rect width={W} height={H} fill="url(#k5vig)" />
 	</Svg>; };
 
@@ -240,9 +275,11 @@ export const K5: React.FC = () => { const HZ = 640;
 const COL: P[] = [[985, 986], [900, 962], [826, 932], [740, 893], [676, 856], [650, 820], [676, 790], [730, 765], [748, 742], [700, 722], [610, 706], [510, 692], [430, 679], [370, 666], [326, 654], [292, 643], [266, 633], [248, 624]];
 const colAt = (u: number): P => { const n = COL.length - 1, s = Math.min(n - 1e-6, Math.max(0, u * n)), i = Math.floor(s), t = s - i, a = COL[i], b = COL[i + 1];
 	return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
-export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0025 * (y - HZ + 6);
+export const K6: React.FC<{t?: number; cam?: Cam; raise?: number}> = ({t: T, cam, raise = 1}) => { const HZ = 612, kOf = (y: number) => 0.0025 * (y - HZ + 6);
+	/* the torches catch one after another, from him back toward the camp */
+	const litOf = (u: number) => T === undefined ? 1 : ease(cl((T - 96.5 - u * 2.75) / 0.35));
 	const men = Array.from({length: 190}, (_, i) => { const u = Math.pow(i / 189, 0.62), [x, y] = colAt(u), kk = kOf(y), side = (i % 2 ? 1 : -1) * 22 * kk;
-		return {x: x + side, y: y + (i % 2 ? 1.5 : -1.5) * kk, k: kk, torch: i % 3 !== 1, i}; });
+		return {x: x + side, y: y + (i % 2 ? 1.5 : -1.5) * kk, k: kk, torch: i % 3 !== 1, i, lit: litOf(u)}; });
 	const near = men.filter((m) => m.k > 0.2).sort((a, b) => a.y - b.y), far = men.filter((m) => m.k <= 0.2).reverse();
 	const S = 3.5, CX = 1236, CY = 1022;
 	return <Svg>
@@ -259,15 +296,17 @@ export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0025 
 			<RimF id="k6rimN" lx={0.6} ly={-0.8} k={2} c="#FFE2B4" o={0.85} lx2={-1} ly2={-0.3} k2={1.4} c2={COOL} o2={0.35} />
 			<RimF id="k6hero" lx={0.75} ly={-0.65} k={5} c="#FFE6C0" o={0.95} lx2={-1} ly2={-0.25} k2={4.5} c2={ACC} o2={0.95} blur={1} />
 		</defs>
+		<Pl c={cam} p={0}>
 		{/* P0 night sky, a low moon behind cloud, a few stars */}
-		<rect width={W} height={H} fill="url(#k6sky)" />
+		<rect x={-240} y={-240} width={W + 480} height={H + 480} fill="url(#k6sky)" />
 		{Array.from({length: 40}, (_, i) => <circle key={i} cx={rnd(i, 61) * W} cy={30 + rnd(i, 62) * 420} r={0.6 + rnd(i, 63)} fill="#E8EEE6" opacity={0.2 + rnd(i, 64) * 0.4} />)}
 		<circle cx={760} cy={420} r={170} fill="url(#k6moon)" />
 		<path d="M760,402 A18,18 0 1 0 760,438 A14,18 0 1 1 760,402 Z" fill="#DCE2D8" transform="rotate(-25 760 420)" />
 		<g filter="url(#k6b6)" opacity={0.6}><ellipse cx={700} cy={430} rx={300} ry={7} fill="#3C4C50" /><ellipse cx={1300} cy={480} rx={420} ry={8} fill="#36464A" /><ellipse cx={420} cy={520} rx={360} ry={6} fill="#40504E" /></g>
+		</Pl><Pl c={cam} p={0.15}>
 		{/* P1 the horizon: our camp far left (where the column comes from), 乌巢 far right: 囷 granaries, raised stores, a palisade, unlit */}
 		<g filter="url(#k6b2)">
-			<path d="M-20,616 C300,606 700,610 1000,614 C1300,612 1600,606 1940,612 L1940,640 L-20,640 Z" fill="#2A3433" />
+			<path d="M-240,616 C300,606 700,610 1000,614 C1300,612 1600,606 2160,612 L2160,640 L-240,640 Z" fill="#2A3433" />
 			<g fill="#222B2B"><rect x={150} y={600} width={210} height={12} />{Array.from({length: 22}, (_, i) => <path key={i} d={`M${150 + i * 10},612 L${153 + i * 10},596 L${156 + i * 10},612 Z`} />)}</g>
 			{[176, 236, 300, 338].map((x, i) => <circle key={x} cx={x} cy={602 - i % 2 * 3} r={2} fill="#F3DDB4" opacity={0.5} />)}
 			<g transform="translate(0,616)">
@@ -278,28 +317,33 @@ export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0025 
 				<circle cx={1480} cy={-82} r={2.2} fill="#F3DDB4" opacity={0.5} /><circle cx={1652} cy={-16} r={1.8} fill="#F3DDB4" opacity={0.4} />
 			</g>
 		</g>
-		<rect y={570} width={W} height={90} fill="url(#k6haze)" />
+		<rect x={-240} y={570} width={W + 480} height={90} fill="url(#k6haze)" />
+		</Pl><Pl c={cam} p={0.3}>
 		{/* P2 the plain */}
-		<path d="M-20,622 C400,618 900,622 1940,620 L1940,1080 L-20,1080 Z" fill="url(#k6pl)" />
-		<rect y={640} width={W} height={120} fill="url(#k6haze)" opacity={0.45} />
+		<path d="M-240,622 C400,618 900,622 2160,620 L2160,1300 L-240,1300 Z" fill="url(#k6pl)" />
+		<rect x={-240} y={640} width={W + 480} height={120} fill="url(#k6haze)" opacity={0.45} />
+		</Pl><Pl c={cam} p={0.45}>
 		{/* the column of 5,000: far — only torch points on the snaking road, then small figures with torches */}
 		<g>{far.map((m) => <g key={m.i}>
 			<rect x={m.x - 12 * m.k} y={m.y - 160 * m.k} width={Math.max(1, 24 * m.k)} height={160 * m.k} fill="#0E1112" opacity={0.6} />
-			{m.torch && <><circle cx={m.x + 20 * m.k} cy={m.y - 165 * m.k} r={Math.max(5, 90 * m.k)} fill="url(#k6fg)" /><ellipse cx={m.x + 20 * m.k} cy={m.y - 168 * m.k} rx={Math.max(0.8, 6 * m.k)} ry={Math.max(1.2, 10 * m.k)} fill="#FFF2D8" /></>}
+			{m.torch && m.lit > 0.01 && <><circle cx={m.x + 20 * m.k} cy={m.y - 165 * m.k} r={Math.max(5, 90 * m.k) * m.lit} fill="url(#k6fg)" /><ellipse cx={m.x + 20 * m.k} cy={m.y - 168 * m.k} rx={Math.max(0.8, 6 * m.k) * m.lit} ry={Math.max(1.2, 10 * m.k) * m.lit} fill="#FFF2D8" /></>}
 		</g>)}</g>
 		<g fill="#120E0C" color="#120E0C" filter="url(#k6rimN)">
 			{near.map((m) => <Npc key={m.i} x={m.x} y={m.y} k={m.k} kind={m.torch ? 'torch' : 'ji'} stride={m.i % 2 ? 0.5 : -0.5} />)}
 		</g>
-		{near.filter((m) => m.torch).map((m) => <IvoryFlame key={m.i} id={`k6f${m.i}`} x={m.x + 31 * m.k} y={m.y - 151 * m.k} s={15 * m.k} glow={0.5} t={m.i} />)}
+		{near.filter((m) => m.torch && m.lit > 0.01).map((m) => <IvoryFlame key={m.i} id={`k6f${m.i}`} x={m.x + 31 * m.k} y={m.y - 151 * m.k} s={15 * m.k * m.lit} glow={0.5 * m.lit} t={T === undefined ? m.i : T * 9 + m.i} />)}
+		</Pl><Pl c={cam} p={0.85}>
 		{/* P3 the low rise he has climbed */}
-		<path d="M-20,1080 L-20,1010 C200,1000 520,968 760,958 C900,950 1060,980 1200,1008 C1380,1020 1600,1016 1940,1030 L1940,1080 Z" fill="url(#k6rise)" />
+		<path d="M-240,1300 L-240,1012 C200,1000 520,968 760,958 C900,950 1060,980 1200,1008 C1380,1020 1600,1016 2160,1034 L2160,1300 Z" fill="url(#k6rise)" />
 		<path d="M760,958 C900,950 1060,980 1200,1008 C1380,1020 1600,1016 1940,1030" fill="none" stroke="#8FA4A2" strokeOpacity={0.18} strokeWidth={2} />
 		{Array.from({length: 30}, (_, i) => { const x = 680 + i * 42 + rnd(i, 71) * 20, y = 1000 + (x > 1200 ? (x - 1200) * 0.01 : (1200 - x) * -0.0) + 8 + rnd(i, 72) * 30; return <path key={i} d={`M${x},${y} l${-3 + rnd(i, 73) * 6},${-10 - rnd(i, 74) * 10}`} stroke="#252B2B" strokeWidth={2} />; })}
-		<rect width={W} height={H} fill="url(#k6key)" />
+		<rect x={-240} y={-240} width={W + 480} height={H + 480} fill="url(#k6key)" />
+		</Pl><Pl c={cam} p={1}>
 		{/* P4 曹操 from behind, the torch raised toward 乌巢 */}
 		<ellipse cx={CX + 10} cy={CY + 4} rx={90} ry={10} fill="#050606" opacity={0.6} />
-		<g filter="url(#k6hero)"><g transform={at(CX, CY, S)}><CaoBack id="k6c" /></g></g>
-		<IvoryFlame id="k6hf" x={CX + 54.6 * S} y={CY - 195 * S} s={34} glow={1.1} />
+		<g filter="url(#k6hero)"><g transform={at(CX, CY, S)}><CaoBack id="k6c" raise={raise} /></g></g>
+		{(() => { const tt = torchTop(raise); return <IvoryFlame id="k6hf" x={CX + tt[0] * S} y={CY + tt[1] * S} s={34} glow={1.1} t={T === undefined ? 0 : T * 8} />; })()}
+		</Pl>
 		<rect width={W} height={H} fill="url(#k6vig)" />
 	</Svg>; };
 
