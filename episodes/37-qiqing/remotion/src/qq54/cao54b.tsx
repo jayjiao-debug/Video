@@ -41,7 +41,8 @@ export type Pal = {skin: string; skinS: string; skinH: string; hair: string; rob
 const FACE = 'M30,-98 C35,-90 38,-80 39,-70 C39.6,-64 39.4,-60 38.6,-56.5 C41,-50 45,-43 49,-37 C51.5,-34 52.5,-31 51.5,-28.8 C49.6,-26.6 47.4,-25.6 45.4,-25 C46.2,-22.4 47,-19.4 46.6,-16.4 C44.8,-13.6 43,-12.4 42,-11.6 C44.4,-9.6 45.6,-7.4 44.8,-5.2 C43.2,-3.4 41.4,-2.4 41.2,-0.6 C42.6,2.6 42.6,7 39.6,10.6 C33,14.6 20,15 8,13 C10,22 12,34 14,50 L-38,50 C-40,30 -42,8 -44,-12 C-38,-30 -30,-46 -26,-60 C-22,-72 -6,-86 12,-92 Z';
 const HAIR = 'M33,-97 C30,-112 12,-122 -10,-122 C-36,-122 -56,-106 -59,-80 C-61,-56 -55,-32 -45,-12 L-38,-13 C-33,-34 -27,-52 -19,-66 C-9,-80 10,-90 33,-97 Z';
 const EAR = 'M-15,-64 C-6,-66 -1,-57 -2,-46 C-3,-37 -8,-31 -15,-31 C-20,-35 -22,-48 -20,-59 Z';
-export const Head: React.FC<{old: boolean; pal: Pal; id: string}> = ({old, pal, id}) => <g>
+/** cap: 'wu' (default) = 武冠 over the 帻; 'ze' = only a plain cloth 帻 head wrap (disguise). mid: a 35-year-old (light moustache, no beard) */
+export const Head: React.FC<{old: boolean; pal: Pal; id: string; cap?: 'wu' | 'ze'; mid?: boolean; capC?: string}> = ({old, pal, id, cap = 'wu', mid = false, capC}) => <g>
 	<defs><clipPath id={`${id}fc`}><path d={FACE} /></clipPath></defs>
 	{/* topknot under the cap */}
 	<path d="M-34,-120 C-32,-142 -6,-146 2,-128 C4,-118 -12,-114 -34,-120 Z" fill={pal.hair} />
@@ -81,14 +82,25 @@ export const Head: React.FC<{old: boolean; pal: Pal; id: string}> = ({old, pal, 
 		<path d="M-14,0 C-18,-12 -22,-26 -24,-40 L-20,-40 C-17,-26 -12,-12 -8,-2 Z" fill={pal.hair} opacity={0.85} />
 		<path d="M30,18 C26,22 20,24 14,23 M40,8 C38,14 34,18 30,21 M20,16 C14,18 6,17 0,14 M44,-20 C41,-18 39,-17 37,-15" fill="none" stroke="#9A9088" strokeOpacity={0.55} strokeWidth={1.1} />
 	</>}
-	{!old && <path d="M44,-21 C47,-20 48,-18 47,-16 C44,-15.5 41,-16 38,-15" fill="none" stroke={pal.hair} strokeWidth={1.4} opacity={0.35} />}
+	{!old && !mid && <path d="M44,-21 C47,-20 48,-18 47,-16 C44,-15.5 41,-16 38,-15" fill="none" stroke={pal.hair} strokeWidth={1.4} opacity={0.35} />}
+	{mid && <>
+		<path d="M44,-21.4 C47,-20.6 47.8,-18.4 46.4,-16 C44,-15 40.8,-16 37.4,-14.2 C38.6,-17.6 41,-20.8 44,-21.4 Z" fill={pal.hair} opacity={0.85} />
+		<path d="M36,-34 C33.4,-27 33.4,-20 36.4,-14.6" fill="none" stroke={pal.line} strokeWidth={0.9} opacity={0.3} />
+		<path d="M41.6,3 C40.6,6 39,8.6 36.6,10.4" fill="none" stroke={pal.hair} strokeWidth={1.2} opacity={0.35} /></>}
 	{/* 帻 band and the 武冠 (lacquered gauze cage over the topknot), chin strap */}
+	{cap === 'ze' ? <>
+		{/* a plain cloth 帻 wrapping the hair, with its raised back (no official cap) */}
+		<path d="M35,-95 C32,-113 12,-127 -10,-128 C-38,-128 -58,-110 -61,-88 L-57,-84 C-40,-93 0,-96 37,-87 Z" fill={capC ?? '#2B2723'} />
+		<path d="M-46,-119 L-51,-136 L-33,-136 L-24,-124 Z" fill={capC ?? '#2B2723'} />
+		<path d="M30,-108 C10,-122 -30,-124 -54,-106" fill="none" stroke="#000" strokeOpacity={0.25} strokeWidth={1.4} />
+		<path d="M35,-95 C32,-113 12,-127 -10,-128" fill="none" stroke={pal.skinH} strokeOpacity={0.3} strokeWidth={1.6} /></> : <>
 	<path d="M34,-97 C20,-106 -20,-110 -57,-97 L-59,-84 C-40,-93 0,-96 36,-87 Z" fill={pal.hair} />
 	<path d="M-24,-92 C-24,-60 -20,-24 -6,6 C2,14 12,16 20,13" fill="none" stroke={pal.hair} strokeWidth={2} opacity={0.8} />
 	<path d="M31,-99 C33,-107 32,-115 28,-120 C10,-128 -20,-136 -44,-140 C-56,-134 -60,-114 -57,-97 Z" fill={pal.hair} />
 	<path d="M24,-104 C27,-116 25,-126 18,-132 M6,-102 C8,-118 6,-130 0,-138 M-12,-102 C-12,-118 -14,-132 -20,-141 M-30,-100 C-32,-116 -36,-130 -40,-139 M30,-112 C0,-120 -40,-122 -64,-112 M28,-124 C0,-132 -36,-134 -58,-126" fill="none" stroke={pal.metalH} strokeOpacity={0.1} strokeWidth={1} />
 	<path d="M31,-99 C33,-107 32,-115 28,-120 C10,-128 -20,-136 -44,-140" fill="none" stroke={pal.skinH} strokeOpacity={0.35} strokeWidth={1.6} />
 	<path d="M-57,-97 C-40,-104 0,-106 34,-97" fill="none" stroke={pal.trim} strokeWidth={2.4} opacity={0.8} />
+	</>}
 </g>;
 
 /* ---------- props ---------- */
@@ -196,7 +208,7 @@ const ArmV: React.FC<{a: Arm; pal: Pal; armour: boolean}> = ({a, pal, armour}) =
 		{fist(a.hd, pal, ang)}
 	</g>; };
 
-export type CaoProps = {pal: Pal; id: string; old: boolean; armour: boolean; arm: Arm; far?: Arm; stride?: number; cape?: number; prop?: 'rod' | 'torch' | 'none'; propA?: P; propB?: P; dao?: boolean; t?: number};
+export type CaoProps = {pal: Pal; id: string; old: boolean; armour: boolean; arm: Arm; far?: Arm; stride?: number; cape?: number; prop?: 'rod' | 'torch' | 'none'; propA?: P; propB?: P; dao?: boolean; t?: number; noArm?: boolean; extra?: React.ReactNode};
 export const Cao: React.FC<CaoProps> = (p) => { const {pal, id} = p, st = p.stride ?? 0;
 	return <g>
 		<defs>
@@ -259,7 +271,8 @@ export const Cao: React.FC<CaoProps> = (p) => { const {pal, id} = p, st = p.stri
 		<g transform="translate(0,49) scale(0.88) translate(0,-40)"><Head old={p.old} pal={pal} id={id} /></g>
 		{/* prop in the near hand, then the near arm over it */}
 		{p.prop === 'rod' && p.propA && p.propB && <Rod5 a={p.propA} b={p.propB} r={11} ph={1} lit={-1} />}
-		<ArmV a={p.arm} pal={pal} armour={p.armour} />
+		{!p.noArm && <ArmV a={p.arm} pal={pal} armour={p.armour} />}
+		{p.extra}
 		{p.prop === 'torch' && p.propA && p.propB && <Torch a={p.propA} b={p.propB} s={1.25} t={p.t ?? 0} />}
 	</g>; };
 /** the lamellar pattern (札甲): small plates in rows, laced */
