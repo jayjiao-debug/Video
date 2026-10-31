@@ -317,8 +317,8 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 			<rect x={-60 - (m * 4) % 200} y={210} width={1440} height={110} fill="url(#ochaze1)" />
 			<g transform={`translate(0,${f1(dyP(0.55))})`}>
 				<g filter="url(#ocdof)"><GateWall t={t} p="oc" x0={-80} x1={1200} /></g>
-					{/* owner r1: the city's name on a plaque above the central passage */}
-					<GatePlaque cx={560} top={303} w={124} h={54} fl={fl} p="oc" />
+				{/* owner r1: the city's name on a plaque above the central passage */}
+				<GatePlaque cx={560} top={303} w={124} h={54} fl={fl} p="oc" />
 				<g fill={SIL} filter="url(#ocBk)"><Npc x={503} y={GY} k={0.37} kind="ji" /><Npc x={617} y={GY} k={0.37} kind="ji" flip /></g>
 				<LampStand x={480} y={GY} k={0.37} /><Flame x={480} y={GY - 117 * 0.37} s={0.37} t={t} seed={11} ivory />
 				<LampStand x={640} y={GY} k={0.37} /><Flame x={640} y={GY - 117 * 0.37} s={0.37} t={t} seed={23} ivory />
@@ -327,7 +327,7 @@ const ShotC: React.FC<{t: number}> = ({t}) => {
 				<path d={`M398,${GY} L462,${GY} L330,700 L200,700 Z M658,${GY} L722,${GY} L920,700 L790,700 Z`} fill="url(#ocspill)" opacity={0.42 * fl} />
 			</g>
 			<rect x={-60 + (m * 6) % 300 - 300} y={440} width={1600} height={130} fill="url(#ochaze)" />
-				<g transform={`translate(0,${f1(dyP(0.66))})`}><GateGuards m={m} gy={552} k={0.41} lightX={560} rim="ocBk" blur="ocbl3" /></g>
+			<g transform={`translate(0,${f1(dyP(0.66))})`}><GateGuards m={m} gy={552} k={0.41} lightX={560} rim="ocBk" blur="ocbl3" /></g>
 			<g transform={`translate(0,${f1(dyP(0.75))})`}>
 				<g fill={SIL} filter="url(#ocQL)"><g transform="translate(196,556) scale(1.02,1.02) scale(-1,1)">{QueD}</g></g>
 				<g fill={SIL} filter="url(#ocQR)"><g transform="translate(924,556) scale(1.02)">{QueD}</g></g>

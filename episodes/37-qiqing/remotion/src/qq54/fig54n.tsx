@@ -93,26 +93,28 @@ export const CaoKneel: React.FC<{id: string; look: number; bow?: number; pal?: P
    sleeve drooping under it, and a hand that closes to a fist with the index finger out. Angles in degrees (0 = +x, 90 = down);
    jab = a small push at the end of the gesture, br = breath sway */
 const ArmPoint: React.FC<{pt: number; jab: number; br: number}> = ({pt, jab, br}) => {
-	const sh: P = [-50, -146], U = 30, F = 26;
-	const a1 = 94 + 54 * pt + 4 * jab + 1.2 * br, a2 = 84 + 88 * pt - 2 * jab + 0.8 * br;
+	const sh: P = [-50, -146], U = 33, F = 27;
+	const a1 = 94 + 44 * pt + 4 * jab + 1.2 * br, a2 = 84 + 88 * pt - 2 * jab + 0.8 * br;
 	const r1 = a1 * Math.PI / 180, r2 = a2 * Math.PI / 180, d1: P = [Math.cos(r1), Math.sin(r1)], d2: P = [Math.cos(r2), Math.sin(r2)];
 	const el: P = [sh[0] + U * d1[0], sh[1] + U * d1[1]], wr: P = [el[0] + F * d2[0], el[1] + F * d2[1]];
 	const dn = (r: number): P => [Math.sin(r), -Math.cos(r)];
-	const n1 = dn(r1), n2 = dn(r2), sag = 11 * Math.abs(Math.cos(r2)) + 1.2 * br;
-	const p0: P = [sh[0] + d1[0] * 16 + n1[0] * 8, sh[1] + d1[1] * 16 + n1[1] * 8], p2: P = [wr[0] - d2[0] * 3 + n2[0] * 5, wr[1] - d2[1] * 3 + n2[1] * 5];
-	const ext = sstep(0.45, 0.95, pt), fl = 1.5 + 9 * ext;
+	const n1 = dn(r1), n2 = dn(r2), sag = 15 * Math.abs(Math.cos(r2)) + 1.4 * br;
+	const p0: P = [sh[0] + d1[0] * 14 + n1[0] * 10, sh[1] + d1[1] * 14 + n1[1] * 10], p2: P = [wr[0] - d2[0] * 3 + n2[0] * 7, wr[1] - d2[1] * 3 + n2[1] * 7];
+	const ext = sstep(0.45, 0.95, pt), fl = 1 + 6 * ext;
 	const T = (p: P, a: number) => `translate(${f1(p[0])},${f1(p[1])}) rotate(${f1(a)})`;
 	return <g>
 		{/* the robe sleeve under the armour, hanging below the arm */}
 		<path d={`M${f1(p0[0])},${f1(p0[1])} C${f1(p0[0] + d2[0] * 4)},${f1(p0[1] + sag * 1.3)} ${f1(p2[0] - d2[0] * 10)},${f1(p2[1] + sag * 1.2)} ${f1(p2[0])},${f1(p2[1])} L${f1(el[0])},${f1(el[1])} Z`} />
 		{/* upper arm, tapering to the elbow */}
-		<g transform={T(sh, a1)}><path d={`M-2,-9.6 C9,-10.4 20,-8.8 ${U},-7.4 L${U},7.4 C20,8.6 9,10 -2,9.6 Z`} /></g>
-		<circle cx={f1(el[0])} cy={f1(el[1])} r={7.4} />
+		<g transform={T(sh, a1)}><path d={`M-2,-12.6 C10,-13.6 22,-11.6 ${U},-9.4 L${U},9.4 C22,11.4 10,13 -2,12.6 Z`} /></g>
+		<circle cx={f1(el[0])} cy={f1(el[1])} r={9.6} />
 		{/* forearm, the bracer's lip at the wrist, the hand: a fist whose index finger opens out as he points */}
 		<g transform={T(el, a2)}>
-			<path d={`M0,-7.4 C8,-7 15,-6 20,-5.2 L21,-6.6 L${F},-6.2 L${F},6 L21,6.4 L20,5 C15,5.6 8,6.8 0,7.4 Z`} />
-			<path d={`M${F - 1},-5.2 L${F + 7},-5.4 C${F + 9.6},-5 ${F + 11.2},-3.2 ${F + 11},-0.8 L${F + 10.4},1.2 L${F + 10 + fl},1.5 C${F + 11.4 + fl},1.7 ${F + 11.4 + fl},3.7 ${F + 10 + fl},3.9 L${F + 8},4.4 C${F + 6},5.6 ${F + 3},5.6 ${F + 1},5 L${F - 1},5 Z`} />
-			<circle cx={F + 9.4} cy={-3.4} r={2.2} /><circle cx={F + 7} cy={-4.6} r={1.8} />
+			<path d={`M0,-9.6 C8,-9.4 15,-8.2 20,-7.4 L21,-9 L${F},-8.6 L${F},8.4 L21,8.8 L20,7.2 C15,7.8 8,9 0,9.6 Z`} />
+			<g transform={`translate(${F - 1},0) scale(1.45)`}>
+				<path d={`M-1,-5.4 L7,-5.6 C9.8,-5.2 11.4,-3.4 11.2,-0.8 L10.6,0.6 L${10 + fl},0.6 C${12 + fl},0.8 ${12 + fl},4 ${10 + fl},4.2 L8,4.6 C6,5.8 3,5.8 1,5.2 L-1,5.2 Z`} />
+				<circle cx={9.4} cy={-3.4} r={2.4} /><circle cx={6.8} cy={-4.6} r={2} /><path d="M2,4.4 C4,6.6 7,7 8.6,5.4 L8,3.8 Z" />
+			</g>
 		</g>
 		{/* 披膊: the lamellar shoulder guard lifts with the upper arm, its lower edge scalloped */}
 		<g transform={T(sh, a1 * 0.7 + 94 * 0.3)}><path d="M-12,-11 C-2,-15.6 10,-15 17,-12.4 L19.4,-8.4 L17.2,-4.4 L19.4,-0.4 L17.2,3.6 L19.4,7.6 L16.6,11.8 C8,14.6 -4,15.4 -12,11.4 C-17,5 -17,-5 -12,-11 Z" /></g>
@@ -218,8 +220,8 @@ export const BoyWalk: React.FC<{t: number; L: number; f: number; t0?: number; le
 	const t = t1 + t0, Wk = npcWalk(t, L, f), Wl = npcWalk(t - 0.1, L, f), hx = Wk.hipX, dy = Wk.hipY + 89, X = (v: number) => hx + v, Y = (v: number) => v + dy;
 	const nl = lean + 1.2 * Math.sin(Math.PI * ((t * f) % 1)) ** 2, ph = Math.sin(Math.PI * t * f);
 	const lx = Wl.feet.map((q) => q.x + (hx - Wl.hipX)), fF = Math.max(...lx), fB = Math.min(...lx);
-	const lift = Math.min(Wk.feet[0].y, Wk.feet[1].y), hemF = -4 + 0.5 * Math.min(0, lift), hemB = -3;
-	const skirt = `M${f1(X(-9.6))},${f1(Y(-100))} C${f1(X(-12))},${f1(Y(-70))} ${f1(fB - 8)},${f1(Y(-34))} ${f1(fB - 13)},${f1(hemB)} C${f1((fB + fF) / 2 - 6)},${f1(hemB + 1.2)} ${f1(fF + 2)},${f1(hemF + 1)} ${f1(fF + 9)},${f1(hemF)} C${f1(fF + 6)},${f1(Y(-40))} ${f1(X(12))},${f1(Y(-70))} ${f1(X(10))},${f1(Y(-100))} Z`;
+	const lift = Math.min(Wk.feet[0].y, Wk.feet[1].y), hemF = -4 + 0.5 * Math.min(0, lift), hemB = -0.5;
+	const skirt = `M${f1(X(-9.6))},${f1(Y(-100))} C${f1(X(-12))},${f1(Y(-70))} ${f1(fB - 12)},${f1(Y(-30))} ${f1(fB - 20)},${f1(hemB)} C${f1((fB + fF) / 2 - 6)},${f1(hemB + 0.6)} ${f1(fF + 4)},${f1(hemF + 1)} ${f1(fF + 12)},${f1(hemF)} C${f1(fF + 8)},${f1(Y(-40))} ${f1(X(12))},${f1(Y(-70))} ${f1(X(10))},${f1(Y(-100))} Z`;
 	const shoe = (q: {x: number; y: number; a: number}, i: number) => <path key={i} transform={`translate(${f1(q.x)},${f1(q.y - 7)}) rotate(${f1(q.a)})`} d="M-5,-1 L6,-2 C11,-1.6 15,0.4 17,3 C18.6,1.4 20.4,0.6 21.6,1.4 C21,4 19.4,6.4 17,7 L-5,7 Z" />;
 	const bx = 3 * ph;
 	return <g>
@@ -229,6 +231,8 @@ export const BoyWalk: React.FC<{t: number; L: number; f: number; t0?: number; le
 			<path d="M-3,-141 C-9,-140 -11,-135 -11,-127 C-11,-115 -10.4,-106 -10,-99 L10.6,-99 C11.4,-107 12.4,-116 11.8,-126 C11.4,-134 8,-140 4,-141 Z" />
 			<g transform={`rotate(${f1(bow)} 1 -140) translate(1,-141) scale(1.08) translate(-1,141)`}><path d={NECK} /><path d={HEAD} /><path d={ZE} /><Mian /></g>
 			{/* the near arm: the upper arm hangs, the forearm comes forward to the joined hands, the wide sleeve hangs in a deep bag */}
-			<path d={`M1,-137 C9,-134 13,-124 14,-114 L21,-111 C23.6,-107 23.6,-100 21.4,-96 C${f1(19 + bx * 0.4)},-84 ${f1(13 + bx)},-70 ${f1(4 + bx)},-64 C${f1(-4 + bx)},-60 ${f1(-10 + bx * 0.6)},-65 -10,-75 C-10,-92 -9,-120 -5,-134 Z`} />
+			<path d={`M1,-137 C10,-134 15,-128 17,-120 L28,-118 C32,-114 32,-106 29,-102 C${f1(30 + bx * 0.4)},-88 ${f1(25 + bx)},-64 ${f1(10 + bx)},-55 C${f1(-1 + bx)},-48 ${f1(-12 + bx * 0.6)},-54 -12,-68 C-12,-90 -9,-120 -5,-134 Z`} />
+			<path d={`M29,-102 C${f1(30 + bx * 0.4)},-88 ${f1(25 + bx)},-64 ${f1(10 + bx)},-55 C${f1(-1 + bx)},-48 ${f1(-12 + bx * 0.6)},-54 -12,-68`} fill="none" stroke="#B8CCC8" strokeOpacity={0.32} strokeWidth={1.1} />
+			<path d="M28,-118 C32,-114 32,-106 29,-102" fill="none" stroke="#B8CCC8" strokeOpacity={0.4} strokeWidth={1.1} />
 		</g>
 	</g>; };

@@ -63,6 +63,7 @@ const Counter: React.FC<{age: number}> = ({age}) => <div style={{position: 'abso
 /** the overlay at film time t: subtitle (typing, rows stack), stamp (after the subtitle has typed), counter, seal, the title */
 export const Overlay: React.FC<{t: number}> = ({t}) => { const c = CARDS.find((k) => t >= k.a && t < k.b), title = t >= TITLE_A && t < TITLE_B;
 	if (t >= END_T) return null;
+	if (t >= DROP && t < DROP + 0.15) return null;   /* the drop opens on black + the blade flash, then the bars snap open: no furniture over it */
 	if (title) return <><TitleArt t={t} /><SealHollow /></>;
 	if (!c) return <SealHollow />;
 	const r0 = plain(c.rows[0]).length, typed = c.a === 0 ? 1e9 : (t - c.a) * CPS,   /* card 1 is on screen whole from frame 0 (the 5-second rule) */ n = [Math.min(r0, typed), Math.max(0, typed - r0)];
