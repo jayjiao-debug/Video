@@ -43,7 +43,7 @@ const AX = vn(vs(T0, G0)), LB = Math.hypot(...vs(T0, G0));
 /** the pose at t: k = how far the whole arm + sword is still back along the axis (cm), the tremble, the body lunge */
 const pose = (t: number) => { const d = Math.max(0, t - T1);
 	const k = 30 * (1 - eout(d / 0.19)) - 1.8 * ease((d - 0.2) / 1.8);
-	const tr: V3 = [Math.sin(t * 23) * 0.22 * cl(d / 0.3), Math.sin(t * 19 + 1) * 0.18 * cl(d / 0.3), 0];
+	const tr: V3 = [Math.sin(t * 11) * 0.05 * cl(d / 0.3), Math.sin(t * 9 + 1) * 0.04 * cl(d / 0.3), 0];
 	const G = va(va(G0, AX, -k), tr);
 	return {d, k, G, T: va(G, AX, LB)}; };
 /** blade half-width (cm) at s from the guard; the point's edges curve in (slightly convex) to the tip */
@@ -100,7 +100,7 @@ const Sword: React.FC<{t: number}> = ({t}) => { const s = swordGeo(t), {c, w, n,
 		<path d={face(eW)} fill="url(#dvaSW)" />
 		{/* the fire's reflection: one long gleam along the warm face toward the point, one thin streak */}
 		<path d={strip(LB * 0.3, LB - PT * 0.5, 0.22, 0.5)} fill="#FFF2D6" opacity={0.42} />
-		<path d={strip(LB * 0.55, LB - PT * 0.3, 0.62, 0.74)} fill="#FFF6E2" opacity={0.5 + 0.12 * Math.sin(t * 9)} />
+		<path d={strip(LB * 0.55, LB - PT * 0.3, 0.62, 0.74)} fill="#FFF6E2" opacity={0.5 + 0.05 * Math.sin(t * 4)} />
 		<path d={strip(LB * 0.2, LB * 0.7, 0.3, 0.55, -1)} fill="#7FA6B2" opacity={0.3} />
 		{/* the ridge, the edges */}
 		<polyline points={pp(s.rg)} fill="none" stroke="#FFF2DA" strokeWidth={2.2} opacity={0.95} />
@@ -245,7 +245,7 @@ const HeadA: React.FC<{t: number}> = ({t}) => { const c = FP;
 /* ---------- the body behind the arm (local units ≈ 8.9 per cm at scale 1, chin at 0,0): hunched, the sword shoulder forward ---------- */
 const TORSO = 'M-250,40 C-220,0 -160,-6 -96,14 C-70,48 -30,70 8,72 C48,68 84,44 104,14 C160,-14 220,-6 244,40 C256,130 230,230 176,318 L-110,318 C-180,240 -246,140 -250,40 Z';
 const SKIRT = 'M-112,312 L178,312 C206,380 222,440 236,520 L-150,520 C-138,440 -126,380 -112,312 Z';
-const Body: React.FC<{t: number}> = ({t}) => { const c = FP, w1 = Math.sin(t * 5.1) * 26, w2 = Math.sin(t * 6.3 + 1.2) * 34, w3 = Math.sin(t * 4.2 + 2.1) * 22;
+const Body: React.FC<{t: number}> = ({t}) => { const c = FP, w1 = Math.sin(t * 3.4) * 22, w2 = Math.sin(t * 4.1 + 1.2) * 28, w3 = Math.sin(t * 2.9 + 2.1) * 18;
 	/* the cape: thrown back from the shoulders by the wind of the charge, a great wing out to screen right with a scalloped trailing edge */
 	const E = (x: number, y: number, k: number) => `${f1(x + k * w1 * 0.5)},${f1(y + k * w2 * 0.4)}`;
 	const CAPER = `M140,30 C260,-30 420,-70 ${E(600, -90, 0.6)} C${E(720, -100, 0.8)} ${E(820, -80, 1)} ${E(900, -40, 1)} C${E(860, 0, 1)} ${E(880, 40, 1)} ${E(940, 90, 1.2)}`
@@ -321,14 +321,14 @@ type Man = {X: number; Z: number; ph: number; kind: RunKind; i: number};
 const MEN: Man[] = Array.from({length: 190}, (_, i) => { const side = rnd(i, 3) < 0.58 ? -1 : 1, Z = 3 + Math.pow(rnd(i, 5), 1.3) * 66, q = rnd(i, 6);
 	return {X: side * (1.5 + rnd(i, 4) * (2.5 + Z * 0.08)), Z, ph: rnd(i, 7) * 6.28, kind: q < 0.6 ? 'torch' : q < 0.88 ? 'ji' : 'plain', i}; });
 const placeM = (X: number, z: number): {x: number; y: number; k: number} => ({x: CX + (FB * X) / z, y: HZ + (FB * HC) / z, k: FB / (100 * z)});
-const Charge: React.FC<{d: number; t: number}> = ({d, t}) => { const v = 5.2;
-	const live = MEN.map((m) => ({m, z: m.Z - v * d})).filter((o) => o.z > 3.4).sort((a, b) => b.z - a.z);
+const Charge: React.FC<{d: number; t: number}> = ({d, t}) => { const v = 4.4;
+	const live = MEN.map((m) => ({m, z: m.Z - v * d})).filter((o) => o.z > 4.2).sort((a, b) => b.z - a.z);
 	const far = live.filter((o) => o.z > 26), near = live.filter((o) => o.z <= 26);
 	const fl = (o: {m: Man; z: number}) => { if (o.m.kind !== 'torch') return null; const p = placeM(o.m.X, o.z), ph = o.m.ph + t * 7.6, tp = runTop(ph, 'torch');
 		const sg = o.m.X < 0 ? -1 : 1, x = p.x + sg * tp[0] * p.k, y = p.y + tp[1] * p.k, s = p.k * 100;
-		return <g key={'f' + o.m.i}><circle cx={x} cy={y - 0.12 * s} r={0.6 * s} fill="url(#dvaTg)" /><Flame3 x={x} y={y} w={0.17 * s} h={0.46 * s} t={t + o.m.i * 0.37} seed={o.m.i} /></g>; };
+		return <g key={'f' + o.m.i}><circle cx={x} cy={y - 0.12 * s} r={0.6 * s} fill="url(#dvaTg)" /><Flame3 x={x} y={y} w={0.17 * s} h={0.46 * s} t={(t + o.m.i * 0.37) * 0.5} seed={o.m.i} /></g>; };
 	return <g>
-		{far.map((o) => { const p = placeM(o.m.X, o.z), fk = 0.75 + 0.25 * Math.sin(t * 11 + o.m.i * 1.7);
+		{far.map((o) => { const p = placeM(o.m.X, o.z), fk = 0.82 + 0.18 * Math.sin(t * 5 + o.m.i * 1.7);
 			return <g key={o.m.i}><rect x={p.x - 0.13 * p.k * 100} y={p.y - 1.7 * p.k * 100} width={Math.max(1, 0.26 * p.k * 100)} height={1.7 * p.k * 100} fill="#160A08" opacity={0.9} />
 				{o.m.kind === 'torch' && <><circle cx={p.x} cy={p.y - 2.15 * p.k * 100} r={p.k * 60 + 4} fill="url(#dvaTg)" opacity={fk} /><circle cx={p.x} cy={p.y - 2.15 * p.k * 100} r={Math.max(1.5, p.k * 9)} fill={FIRE.core} /></>}</g>; })}
 		<g fill="#140A08" filter="url(#dvaRn)">{near.map((o) => { const p = placeM(o.m.X, o.z), ph = o.m.ph + t * 7.6;
@@ -345,12 +345,12 @@ const World: React.FC<{d: number; t: number}> = ({d, t}) => <g>
 	{/* the horizon: a band of fire, 乌巢's granaries burning */}
 	<ellipse cx={CX + 200} cy={HZ} rx={1700} ry={110} fill="url(#dvaHg)" />
 	<path d={`M-700,${HZ} L${W + 700},${HZ} L${W + 700},${H + 700} L-700,${H + 700} Z`} fill="url(#dvaGd)" />
-	{Array.from({length: 96}, (_, i) => { const x = -560 + i * 32 + rnd(i, 81) * 20, h = 10 + rnd(i, 82) * 26; return <Flame3 key={i} x={x} y={HZ + 2} w={h * 0.7} h={h} t={t} seed={i * 1.3} />; })}
+	{Array.from({length: 96}, (_, i) => { const x = -560 + i * 32 + rnd(i, 81) * 20, h = 10 + rnd(i, 82) * 26; return <Flame3 key={i} x={x} y={HZ + 2} w={h * 0.7} h={h} t={t * 0.5} seed={i * 1.3} />; })}
 	{[[-260, 0.9], [-60, 0.75], [140, 1.0], [520, 0.8], [760, 0.95], [1620, 0.85], [1860, 1.0], [2120, 0.8]].map(([x, s], i) => <g key={x}>
 		<g transform={`translate(${x},${HZ + 4}) scale(${s})`}><Qun drum="#1C0E0A" thatch="#160A08" edge="#E0702A" /></g>
-		<Flame3 x={x + 6 * s} y={HZ - 150 * s} w={120 * s} h={210 * s} t={t} seed={i * 7 + 1} />
-		<Flame3 x={x - 44 * s} y={HZ - 86 * s} w={74 * s} h={120 * s} t={t + 0.3} seed={i * 7 + 3} />
-		<Flame3 x={x + 50 * s} y={HZ - 70 * s} w={60 * s} h={96 * s} t={t + 0.6} seed={i * 7 + 5} />
+		<Flame3 x={x + 6 * s} y={HZ - 150 * s} w={120 * s} h={210 * s} t={t * 0.45} seed={i * 7 + 1} />
+		<Flame3 x={x - 44 * s} y={HZ - 86 * s} w={74 * s} h={120 * s} t={t * 0.45 + 0.3} seed={i * 7 + 3} />
+		<Flame3 x={x + 50 * s} y={HZ - 70 * s} w={60 * s} h={96 * s} t={t * 0.45 + 0.6} seed={i * 7 + 5} />
 	</g>)}
 	<Charge d={d} t={t} />
 </g>;
@@ -375,7 +375,7 @@ const Embers: React.FC<{t: number}> = ({t}) => { const d = t - 99;
 		const X = e.X + Math.sin(t * e.fq + i) * 0.15, Y = e.Y + 1.1 + Math.cos(t * e.fq * 0.7 + i) * 0.12;
 		const a: P = [CX + (FB * X) / z, HZ + (FB * Y) / z], b: P = [CX + (FB * X) / z2, HZ + (FB * Y) / z2];
 		if (a[0] < -200 || a[0] > W + 200 || a[1] < -200 || a[1] > H + 200) return null;
-		const r = Math.min(9, (FB * e.r) / z), o = cl((26 - z) / 6) * (0.6 + 0.4 * Math.sin(t * 13 + i)) * cl(z / 1.2);
+		const r = Math.min(9, (FB * e.r) / z), o = cl((26 - z) / 6) * (0.7 + 0.3 * Math.sin(t * 6 + i)) * cl(z / 1.2);
 		return <g key={i} opacity={o}><line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={e.hot > 0.5 ? FIRE.core : FIRE.mid} strokeWidth={r} strokeLinecap="round" />
 			<circle cx={a[0]} cy={a[1]} r={r * 2.4} fill="url(#dvaEm)" /></g>; })}</g>; };
 
