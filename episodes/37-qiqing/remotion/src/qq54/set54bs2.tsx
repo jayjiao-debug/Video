@@ -21,7 +21,7 @@ export const IvoryFlame: React.FC<{x: number; y: number; s: number; glow?: numbe
 export const CaoBack: React.FC<{id: string}> = ({id}) => { const p = PAL;
 	const CUIR = 'M-23,-141 C-25,-128 -23,-112 -19,-98 L23,-98 C26,-112 27,-128 23,-142 C10,-147 -10,-147 -23,-141 Z';
 	const SKIRT = 'M-21,-101 L23,-101 L27,-58 L-25,-58 Z';
-	const CAPE = 'M-22,-146 C-8,-151 6,-151 15,-147 C18,-124 17,-96 14,-70 C13,-58 12,-50 11,-41 C4,-38 -4,-41 -12,-38 C-20,-35 -30,-40 -38,-36 C-42,-35 -46,-37 -49,-36 C-46,-56 -41,-90 -33,-118 C-30,-132 -28,-142 -22,-146 Z';
+	const CAPE = 'M-22,-146 C-12,-149 -7,-149.8 -4,-149.2 C0,-148.4 4,-148.4 7,-149.6 C10,-149.4 13,-148.4 15,-147 C18,-124 17,-96 14,-70 C13,-58 12,-50 11,-41 C4,-38 -4,-41 -12,-38 C-20,-35 -30,-40 -38,-36 C-42,-35 -46,-37 -49,-36 C-46,-56 -41,-90 -33,-118 C-30,-132 -28,-142 -22,-146 Z';
 	return <g>
 		<defs>
 			<clipPath id={`${id}c`}><path d={CAPE} /></clipPath>
@@ -34,14 +34,17 @@ export const CaoBack: React.FC<{id: string}> = ({id}) => { const p = PAL;
 				<rect x={0} y={4.95} width={3.2} height={0.65} fill={p.lace} />
 			</pattern>
 		</defs>
-		{/* legs: baggy crimson trousers into boots, weight on the left leg, the right heel lifting as he moves off */}
-		<path d={limb([[-10, -62], [-11, -48], [-11, -38]], [7.6, 7, 6])} fill={p.underS} /><path d={limb([[10, -62], [11.5, -48], [12, -40]], [7.6, 7, 6])} fill={p.under} />
-		<path d="M-17,-40 L-5,-40 C-4.6,-26 -4.4,-12 -3.8,-4 C-3.8,-1 -6.4,0 -10.4,0 C-15,0 -18.2,-1 -18,-4 C-17.6,-14 -17.4,-28 -17,-40 Z" fill="#16100C" />
-		<path d="M6,-42 L18,-42 C18.4,-30 18.6,-18 19,-9 C19,-6 16.6,-4.6 12.6,-4.6 C8.6,-4.6 6.2,-6 6.2,-9 C6.2,-18 6,-30 6,-42 Z" fill="#1C140F" />
-		<path d="M15.6,-41 L18,-42 C18.4,-30 18.6,-18 19,-9 L17,-7 C16.6,-18 16.2,-30 15.6,-41 Z" fill="#6A5A4C" opacity={0.6} />
-		<path d="M-17,-40 L-5,-40 L-5,-37.6 L-17,-37.6 Z M6,-42 L18,-42 L18,-39.6 L6,-39.6 Z" fill="#2E2218" />
+		{/* legs: baggy crimson trousers into short boots; weight on the left leg, the right foot a step ahead (further, so higher) */}
+		<path d={limb([[-10, -46], [-11, -31], [-11, -20]], [7.6, 7.4, 6.2])} fill={p.underS} />
+		<path d={limb([[10, -48], [11.6, -34], [12, -25]], [7.6, 7.2, 6])} fill={p.under} />
+		<path d={limb([[14, -46], [16.4, -34], [16.6, -26]], [1.6, 1.6, 1.4])} fill="#8A4A3A" opacity={0.7} />
+		<path d="M-14,-34 C-12,-31 -9,-31 -7,-34 M8,-38 C10,-35 13,-35 15,-38" fill="none" stroke="#1A0C0A" strokeWidth={0.8} opacity={0.6} />
+		<path d="M-16.6,-22 L-5.4,-22 C-5,-14 -4.6,-7 -4,-3 C-4,-0.6 -6.4,0.4 -10.4,0.4 C-15,0.4 -17.6,-0.6 -17.4,-3 C-17,-8 -16.8,-14 -16.6,-22 Z" fill="#16100C" />
+		<path d="M6.8,-27 L17.4,-27 C17.6,-19 18,-13 18.4,-9 C18.4,-6.6 16.2,-5.6 12.4,-5.6 C8.6,-5.6 6.6,-6.6 6.6,-9 C6.6,-14 6.7,-20 6.8,-27 Z" fill="#1C140F" />
+		<path d="M15.4,-26.6 L17.4,-27 C17.6,-19 18,-13 18.4,-9 L16.8,-7.4 C16.4,-13 16,-19 15.4,-26.6 Z" fill="#6A5A4C" opacity={0.6} />
+		<path d="M-16.8,-22 L-5.2,-22 L-5.2,-19.8 L-16.8,-19.8 Z M6.8,-27 L17.4,-27 L17.4,-24.8 L6.8,-24.8 Z" fill="#2E2218" />
 		{/* the scabbard of the 环首刀 under the cape, its chape showing below the hem */}
-		<path d={limb([[-18, -96], [-31, -31]], [2.4, 2.1])} fill="#24160F" /><path d={limb([[-30, -37], [-31.4, -30]], [2.7, 2.6])} fill={p.gold} />
+		
 		{/* the lamellar skirt and the cuirass (the right side shows past the cape) */}
 		<path d={SKIRT} fill={`url(#${id}lm)`} />
 		<g clipPath={`url(#${id}k)`}><rect x={-30} y={-110} width={36} height={60} fill={p.metalS} opacity={0.55} /><rect x={18} y={-110} width={12} height={60} fill={p.metalH} opacity={0.28} /><rect x={-30} y={-62} width={60} height={4} fill={p.lace} /></g>
@@ -60,31 +63,39 @@ export const CaoBack: React.FC<{id: string}> = ({id}) => { const p = PAL;
 		<path d={limb([[42.6, -150], [54, -194]], [1.4, 1.6])} fill="#2A1A10" />
 		<ellipse cx={54.2} cy={-194} rx={2.6} ry={3.2} fill="#3A2216" transform="rotate(14 54.2 -194)" />
 		<g transform="translate(44.5,-161) rotate(-62)"><path d="M-3.4,-3 C0,-4.4 3.6,-3 4,0 C4.2,3 1.6,4.4 -1.4,4 C-3.8,3.4 -4.6,-1 -3.4,-3 Z" fill={p.skin} /><path d="M-3.4,-3 C-1,-3.8 1.4,-3.6 3,-2.4 C1,-1 -1.6,-0.4 -4,-0.6 Z" fill={p.skinH} /></g>
-		{/* the cape over the back: base, the shade away from the torch, a lit fold on the right, fold lines */}
-		<path d={CAPE} fill={p.cape} />
+		{/* the cape over the back: base, the shade away from the torch, lit folds toward it, a dark hem */}
+		<path d={CAPE} fill="#3A1C18" />
 		<g clipPath={`url(#${id}c)`}>
-			<path d="M-50,-150 L-12,-150 C-14,-120 -16,-80 -20,-40 L-50,-40 Z" fill={p.capeS} />
-			<path d="M8,-148 C11,-124 11,-96 8,-60 L6,-44 L20,-44 L20,-150 Z" fill="#6A3428" opacity={0.75} />
-			<path d="M2,-140 C3,-112 2,-80 -1,-46 M-8,-134 C-10,-106 -12,-78 -14,-46 M-20,-128 C-24,-100 -28,-74 -32,-46" fill="none" stroke={p.capeS} strokeWidth={1.4} opacity={0.8} />
-			<path d="M-14,-144 C-6,-148 4,-148 12,-146" fill="none" stroke="#7A3A2E" strokeWidth={1.4} opacity={0.7} />
+			<path d="M-52,-150 L-10,-150 C-12,-120 -15,-80 -19,-36 L-52,-36 Z" fill="#1E0E0C" />
+			<path d="M-30,-140 C-33,-110 -37,-80 -42,-36 L-37,-36 C-33,-80 -29,-110 -26,-140 Z" fill="#2C1512" />
+			<path d="M-3,-146 C-2,-118 -4,-84 -7,-38 L-1,-38 C2,-84 3,-118 2,-146 Z" fill="#552820" />
+			<path d="M7,-148 C10,-124 10,-96 8,-60 L6,-38 L20,-38 L20,-150 Z" fill="#7A3A2C" opacity={0.85} />
+			<path d="M10,-148 C13,-124 13,-96 11,-60 L9,-38 L20,-38 L20,-150 Z" fill="#A0503A" opacity={0.45} />
+			<path d="M-10,-146 C-11,-116 -13,-80 -16,-38 M-22,-138 C-25,-108 -29,-76 -33,-38 M4,-146 C5,-118 4,-84 2,-38" fill="none" stroke="#140808" strokeWidth={1.1} opacity={0.75} />
+			<path d="M-60,-41 C-40,-46 -20,-42 0,-44 C8,-44 14,-46 20,-46 L20,-30 L-60,-30 Z" fill="#160A08" />
+			<path d="M-18,-146 C-8,-150 4,-150 13,-147 L13,-143 C4,-146 -8,-146 -18,-142 Z" fill="#552820" />
 		</g>
-		{/* the left shoulder under the cape: a soft bump */}
-		<path d="M-22,-146 C-26,-144 -28,-140 -29,-134 L-24,-136 Z" fill={p.capeS} />
-		<g transform="translate(2,-146) scale(0.84) translate(-2,146)">{/* neck and head: the back of the head, the right ear and a sliver of cheek and beard (lost profile), the 帻 band and the 武冠 */}
-		<path d="M-6,-152 L8,-152 L9,-144 L-6,-144 Z" fill={p.skinS} />
-		<path d="M-10,-150 C-12,-158 -11,-167 -5,-171 C1,-174 9,-173 13,-167 C15,-161 15,-153 12,-148 C7,-145 -4,-145 -10,-150 Z" fill={p.hair} />
-		<path d="M11.6,-156 C14,-153 15.6,-148.6 14.8,-145.4 C13.6,-143.4 11.4,-143.2 10,-145 C10.4,-149 10.8,-152.4 11.6,-156 Z" fill={p.skinH} />
-		<path d="M13.4,-150 C15.6,-147.6 15.4,-143.4 13,-141.2 C11.2,-140.8 9.8,-141.8 9.8,-143.4 C11.4,-144 12.6,-146.6 13.4,-150 Z" fill="#2A2420" />
-		<path d="M13.6,-148.4 C14.6,-146.6 14.4,-144.4 13.2,-142.8" fill="none" stroke="#9A9088" strokeWidth={0.4} opacity={0.7} />
-		<path d="M11.2,-162 C14,-163 16,-160 15.6,-156.4 C15.2,-153.6 13.4,-152.4 11.6,-153.2 C11,-156 10.8,-159 11.2,-162 Z" fill={p.skin} />
-		<path d="M12.4,-160.4 C14.2,-160 14.8,-157.6 14,-155.4" fill="none" stroke={p.skinS} strokeWidth={0.6} />
-		<path d="M-11,-161 C-4,-163.4 6,-164 14.6,-162.4 L14.4,-159.6 C6,-161 -4,-160.6 -10.6,-158.2 Z" fill={p.hair} />
-		<path d="M-9.6,-162.4 C-10.4,-171 -7,-178.6 1.4,-180 C9,-181 13.6,-175 13.6,-163.6 Z" fill={p.hair} />
-		<path d="M-8,-164 C-8,-172 -4,-177.6 2,-178.6 M-3,-163.6 C-3,-171 0,-177 4,-179 M3,-163.4 C3.4,-170 5,-176 8,-178.4 M8.6,-163.4 C9,-169 10.4,-173.6 12,-175.4 M-9.4,-168.6 C-2,-171 7,-171 13.4,-168.6 M-8,-174 C-2,-176 6,-176.4 11.4,-174.6" fill="none" stroke={p.metalH} strokeOpacity={0.14} strokeWidth={0.4} />
-		<path d="M1.4,-180 C8,-181 13.6,-175 13.6,-164" fill="none" stroke={p.skinH} strokeOpacity={0.4} strokeWidth={0.7} />
-		<path d="M13.6,-162 C13.8,-156 13.4,-150 12.4,-146" fill="none" stroke={p.hair} strokeWidth={0.7} />
-		<path d="M-10.6,-158.2 C-4,-160.6 6,-161 14.4,-159.6" fill="none" stroke={p.trim} strokeWidth={0.9} opacity={0.85} />
-	</g>
+		{/* the left shoulder under the cape */}
+		<path d="M-22,-146 C-26,-144 -28,-140 -29,-134 L-24,-136 Z" fill="#1E0E0C" />
+		{/* the head from behind, turned a little to his right: nape, the back of the head, the right ear, a sliver of lit cheek and the greying
+		    beard (lost profile), the 帻 band with its trim, the lacquered gauze 武冠 cage and its chin tie */}
+		<path d="M-3.4,-151 L6,-151 L6.3,-148.6 L-3.4,-148.6 Z" fill={p.skinS} />
+		<path d="M-8,-149 C-10,-155 -10,-163 -6,-168 C-2,-171 5,-171 9,-167 C11,-162 11,-155 9,-150 C5,-147.4 -4,-147.4 -8,-149 Z" fill={p.hair} />
+		<path d="M-5,-149 C-2,-150.4 2,-150.4 5,-149.4" fill="none" stroke="#3A2A20" strokeWidth={0.6} />
+		<path d="M8,-158 C10.8,-157 12.6,-153 12.4,-149 C12.2,-146 10,-144.6 8,-145 L7,-150 Z" fill={p.skinH} />
+		<path d="M11.6,-151 C13,-148 12.6,-144.6 10.6,-143 C8.6,-142.4 7,-143.2 6.6,-144.6 C8.4,-145 10.2,-147.4 11.6,-151 Z" fill="#2A2420" />
+		<path d="M11.4,-149.4 C12.2,-147.6 11.8,-145.4 10.6,-144" fill="none" stroke="#A09890" strokeWidth={0.4} opacity={0.8} />
+		<path d="M8.4,-162 C11.8,-163.6 14,-160.2 13.4,-156 C13,-152.8 10.8,-151.4 8.8,-152.4 Z" fill={p.skin} />
+		<path d="M10.8,-163 C12.8,-162.4 14,-160 13.4,-156 L12.4,-156.4 C12.8,-159.4 12,-161.4 10.4,-162 Z" fill={p.skinH} />
+		<path d="M9.8,-160.4 C11.6,-160 12,-157.6 11.2,-155.2" fill="none" stroke={p.skinS} strokeWidth={0.7} />
+		<path d="M-8,-160.4 C-10.6,-161 -11.8,-158 -11.2,-154.8 C-10.6,-152.6 -9,-152 -7.8,-152.8 Z" fill={p.skinS} />
+		<path d="M-9,-159 C-3,-161.4 5,-161.8 10.6,-160.4 L10.4,-157.8 C5,-159 -3,-158.6 -8.8,-156.6 Z" fill={p.hair} />
+		<path d="M-8.8,-156.6 C-3,-158.6 5,-159 10.4,-157.8" fill="none" stroke={p.trim} strokeWidth={0.8} />
+		<path d="M-5,-166 C-5,-172 -1,-175 3,-174.6 C7,-174 8,-170 7.4,-165 Z" fill="#0A0807" />
+		<path d="M-8.4,-159.6 C-9.4,-167 -7.4,-174.4 -1,-176.4 C5,-177.6 10,-173.6 10.6,-160.6 Z" fill="#3E3A38" opacity={0.62} />
+		<path d="M-7,-161 C-7.4,-168 -5,-173.4 -1,-175 M-2.4,-160.4 C-2.6,-167 -1,-173 1.6,-176 M2.6,-160.6 C2.8,-166.6 4,-172 6,-175.4 M7.4,-160.8 C7.6,-166 8.4,-170 9.4,-172 M-8.6,-165 C-2,-167 5,-167.4 10.4,-165.4 M-7.4,-170.6 C-2,-172.4 4,-172.6 9,-171" fill="none" stroke={p.metalH} strokeOpacity={0.22} strokeWidth={0.35} />
+		<path d="M3,-177.2 C8,-176.6 10.4,-172 10.6,-161" fill="none" stroke={p.skinH} strokeOpacity={0.45} strokeWidth={0.7} />
+		<path d="M10.4,-158 C10.8,-153 11.4,-148 11.6,-144" fill="none" stroke={p.hair} strokeWidth={0.6} />
 	</g>; };
 
 /* ---------- 曹操 at 66, kneeling at his desk ---------- */

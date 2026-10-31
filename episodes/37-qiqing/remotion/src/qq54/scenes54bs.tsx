@@ -81,12 +81,12 @@ export const K4: React.FC = () => { const GY = 845, k = 1.15, AX = 760;
 		<g fill={SIL} color={SIL} filter="url(#k4rim)">
 			{[1600, 1662, 1724].map((x, i) => <Npc key={x} x={x} y={832} k={1.0} kind="ji" stride={i % 2 ? -0.5 : 0.5} />)}
 			{[300, 400].map((x, i) => <g key={x}><Npc x={x} y={GY} k={k} kind="hold" stride={i ? -0.4 : 0.4} /><g transform={at(x + 30 * k, GY - 10, k)}><Banner h={430} ch="汉" wave={i ? 6 : -4} cloth="#4A1E1A" clothS="#2A110E" ink="#E8D2A6" /></g></g>)}
-			<g transform={at(520, GY - 4, k)}><Horse pose={1} tail="free" /><Rider kind="ji" /></g>
+			<g transform={at(520, GY - 4, k)}><Horse pose={1} tail="free" /><g transform="translate(18,2)"><Rider kind="ji" /></g></g>
 			{[628, 676].map((x, i) => <Npc key={x} x={x} y={GY} k={k} kind="ji" stride={i ? 0.5 : -0.5} />)}
 			<g transform={at(AX + 170 * k, GY - 8 * k, k)}><Horse pose={1} harness farFill="#2A1E18" /></g>
 			<g transform={at(AX, GY, k)}><Carriage yx={210} /></g>
 			<g transform={at(AX + 160 * k, GY, k)}><Horse pose={0} harness /></g>
-			<Npc x={1128} y={GY} k={k} kind="ji" stride={0.5} />
+			<Npc x={1176} y={GY - 4} k={k * 0.98} kind="ji" stride={0.5} />
 		</g>
 		{/* P4 foreground: 曹操 (42, court robe, 武冠) bows toward the carriage; an officer behind him does the same */}
 		<Shadow x={1500} y={968} w={80} len={180} o={0.5} />
@@ -97,7 +97,7 @@ export const K4: React.FC = () => { const GY = 845, k = 1.15, AX = 760;
 		<Shadow x={1340} y={1012} w={120} len={240} o={0.55} />
 		<g filter="url(#k4hero)">
 			<g transform={`translate(1340,${1012 - 750 * 0.6}) scale(-0.6,0.6)`}>
-				<g clipPath="url(#k4lo)"><Cao pal={PAL} id="k4a" old armour={false} arm={caoArm} dao={false} /></g>
+				<g clipPath="url(#k4lo)"><Cao pal={PAL} id="k4a" old armour={false} arm={caoArm} dao={false} /><path d="M-30,300 L-18,298 L-12,520 L-24,524 Z" fill="#5A4266" /><path d="M-30,300 L-26,300 L-21,522 L-24,524 Z" fill="#33243C" /></g>
 				<g transform="rotate(19 0 300)"><g clipPath="url(#k4up)"><Cao pal={PAL} id="k4b" old armour={false} arm={caoArm} dao={false} /></g></g>
 			</g>
 		</g>
@@ -122,9 +122,26 @@ const Crowd: React.FC<{y: number; k: number; seed: number; ban: number; spear?: 
 				{rnd(i, seed + 6) < ban / spear && <path d={`M${f1(sx + ln + 1)},${f1(top + 6 * k)} L${f1(sx + ln + 62 * k)},${f1(top + 8 * k)} L${f1(sx + ln + 64 * k)},${f1(top + 140 * k)} L${f1(sx + ln + 1)},${f1(top + 138 * k)} Z`} fill="#3E2016" />}</g>); } }
 	d += `L1960,${f1(y + 6)} Z`;
 	return <g><path d={d} />{tops}</g>; };
+/** a hemp grain sack, nearly empty: grain only in the bottom, the slack cloth above creased and sagging, the tied neck flopped over;
+    base centre (x, y), height h */
+const EmptySack: React.FC<{x: number; y: number; h: number; flip?: boolean}> = ({x, y, h, flip}) => { const w = h * 0.9, id = `es${Math.round(x)}`;
+	const X = (u: number) => f1(u * w), Y = (v: number) => f1(-v * h);
+	const body = `M${X(-0.48)},0 C${X(-0.58)},${Y(0.2)} ${X(-0.5)},${Y(0.4)} ${X(-0.32)},${Y(0.47)} C${X(-0.24)},${Y(0.52)} ${X(-0.28)},${Y(0.6)} ${X(-0.16)},${Y(0.67)} C${X(-0.08)},${Y(0.72)} ${X(-0.02)},${Y(0.7)} ${X(0.04)},${Y(0.75)} L${X(0.1)},${Y(0.82)} L${X(0.18)},${Y(0.83)} C${X(0.3)},${Y(0.82)} ${X(0.4)},${Y(0.76)} ${X(0.4)},${Y(0.66)} L${X(0.33)},${Y(0.64)} C${X(0.3)},${Y(0.7)} ${X(0.24)},${Y(0.72)} ${X(0.18)},${Y(0.72)} C${X(0.26)},${Y(0.62)} ${X(0.36)},${Y(0.54)} ${X(0.42)},${Y(0.44)} C${X(0.56)},${Y(0.28)} ${X(0.57)},${Y(0.1)} ${X(0.5)},0 Z`;
+	return <g transform={`translate(${x},${y}) scale(${flip ? -1 : 1},1)`}>
+		<defs><clipPath id={id}><path d={body} /></clipPath></defs>
+		<path d={body} fill="#7A6247" />
+		<g clipPath={`url(#${id})`}>
+			<path d={`M${X(-0.7)},${Y(1)} L${X(-0.12)},${Y(1)} C${X(-0.22)},${Y(0.5)} ${X(-0.18)},${Y(0.2)} ${X(-0.24)},4 L${X(-0.7)},4 Z`} fill="#4A3826" />
+			<path d={`M${X(0.2)},${Y(0.46)} C${X(0.42)},${Y(0.36)} ${X(0.5)},${Y(0.2)} ${X(0.44)},0 L${X(0.6)},0 L${X(0.6)},${Y(0.5)} Z`} fill="#B8996C" />
+			<path d={`M${X(0.12)},${Y(0.82)} C${X(0.26)},${Y(0.8)} ${X(0.36)},${Y(0.74)} ${X(0.4)},${Y(0.66)} L${X(0.5)},${Y(0.7)} L${X(0.4)},${Y(0.9)} Z`} fill="#B8996C" />
+			{[0.5, 0.56, 0.62, 0.68].map((v, i) => <path key={v} d={`M${X(-0.4)},${Y(v + (i % 2) * 0.02)} C${X(-0.14)},${Y(v + 0.05)} ${X(0.1)},${Y(v - 0.03)} ${X(0.4)},${Y(v + 0.02)}`} fill="none" stroke="#3A2A1A" strokeOpacity={0.55} strokeWidth={1.5} />)}
+			<path d={`M${X(-0.44)},${Y(0.2)} C${X(-0.1)},${Y(0.26)} ${X(0.2)},${Y(0.24)} ${X(0.5)},${Y(0.18)}`} fill="none" stroke="#3A2A1A" strokeOpacity={0.25} strokeWidth={1.2} />
+		</g>
+		<path d={`M${X(0.08)},${Y(0.78)} C${X(0.12)},${Y(0.76)} ${X(0.18)},${Y(0.76)} ${X(0.22)},${Y(0.79)}`} fill="none" stroke="#2A1C10" strokeWidth={h * 0.035} strokeLinecap="round" />
+	</g>; };
 export const K5: React.FC = () => { const HZ = 640;
 	const pickets: [number, number, number][] = [[40, 712, 0.3], [180, 706, 0.26], [330, 716, 0.32], [520, 708, 0.27], [700, 718, 0.33], [880, 707, 0.26], [1150, 720, 0.34], [1330, 709, 0.28], [1500, 718, 0.32], [1690, 706, 0.26], [1850, 716, 0.31]];
-	const volleys: [P, P, P][] = [[[1420, 290], [1060, 230], [720, 800]], [[1530, 290], [1180, 210], [900, 860]], [[1850, 330], [1500, 260], [1220, 930]], [[1470, 290], [1240, 220], [1060, 820]]];
+	const volleys: [P, P, P][] = [[[1420, 290], [1060, 230], [720, 800]], [[1530, 290], [1180, 210], [900, 860]], [[1850, 330], [1500, 260], [1220, 930]]];
 	const qp = (a: P, c: P, b: P, u: number): P => { const m = 1 - u; return [m * m * a[0] + 2 * m * u * c[0] + u * u * b[0], m * m * a[1] + 2 * m * u * c[1] + u * u * b[1]]; };
 	return <Svg>
 		<defs>
@@ -157,7 +174,6 @@ export const K5: React.FC = () => { const HZ = 640;
 			<path d="M1150,664 L1230,610 L1262,606 L1330,520 L1366,516 L1392,480 L1568,480 L1600,520 L1640,524 L1700,606 L1730,610 L1800,664 Z" />
 			<path d="M1610,668 L1690,604 L1716,600 L1790,516 L1960,512 L1960,668 Z" />
 		</g>
-		<g stroke="#000" strokeOpacity={0.25} strokeWidth={1.4} fill="none">{[540, 570, 600, 630].map((y) => <path key={y} d={`M${1230 + (640 - y) * 0.2},${y} L${1720 - (640 - y) * 0.2},${y}`} />)}</g>
 		<path d="M1270,606 L1350,520 L1362,520 L1284,606 Z" fill="#000" opacity={0.25} />
 		<g fill="#1E1916" color="#1E1916" filter="url(#k5rimFar)">
 			<g transform="translate(330,592) scale(0.36)"><Tower archers={3} /></g>
@@ -177,33 +193,35 @@ export const K5: React.FC = () => { const HZ = 640;
 				<Npc x={x - 24 * kk * 3} y={y} k={kk} kind="ji" flip={i % 3 === 0} /><Npc x={x + 30 * kk * 3} y={y + 2} k={kk * 0.96} kind="ji" /></g>)}
 		</g>
 		{/* the open ground between, a trench line, the arrows coming in */}
-		<rect y={712} width={W} height={110} fill="url(#k5fld)" />
+		<rect y={698} width={W} height={124} fill="url(#k5fld)" />
 		<path d="M-20,752 C400,748 900,754 1940,750 L1940,758 C900,762 400,756 -20,760 Z" fill="#0E0B09" opacity={0.6} />
 		{volleys.map(([a, c, b], i) => <g key={i}>{[0.42, 0.52, 0.6, 0.7, 0.78].map((u, j) => { const p0 = qp(a, c, b, u + (j % 2) * 0.012), p1 = qp(a, c, b, u + 0.03 + (j % 2) * 0.012), ang = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]) * 180 / Math.PI, off = (j - 2) * 9;
 			return <g key={j} transform={`translate(${f1(p0[0] + off)},${f1(p0[1] - off * 0.4)}) rotate(${f1(ang)})`}><line x1={-26} y1={0} x2={0} y2={0} stroke="#1A1410" strokeWidth={1.6} /><path d="M0,-2.4 L6,0 L0,2.4 Z" fill="#1A1410" /><path d="M-26,0 L-31,-3 M-26,0 L-31,3" stroke="#1A1410" strokeWidth={1.2} /></g>; })}</g>)}
 		{/* P3 曹操's palisade (营栅): logs side by side, sharpened */}
-		<g fill="#120D0A" filter="url(#k5rim)"><Palisade x0={-30} x1={1950} y={818} h={118} gap={13} w={14} seed={5} /></g>
+		<rect y={684} width={W} height={70} fill="url(#k5haze)" opacity={0.75} />
+		<g fill="#120D0A" filter="url(#k5rim)"><Palisade x0={-30} x1={1950} y={818} h={98} gap={13} w={14} seed={5} /></g>
 		{/* P4 the camp: a 霹雳车 being hauled, its stone in the sling; one 曹 banner; nearly empty grain sacks */}
 		<rect y={814} width={W} height={H - 814} fill="url(#k5camp)" />
 		<rect width={W} height={H} fill="url(#k5pool)" />
 		<Shadow x={520} y={905} w={240} len={-140} dir={-1} o={0.4} />
 		<g fill={SIL} color={SIL} filter="url(#k5rim)">
-			<g transform={at(520, 905, 0.62)}><Trebuchet a={-112} ropes={[[118, -150], [158, -148], [198, -146], [238, -150], [278, -148], [318, -146]]} /></g>
-			{[600, 625, 650, 675, 700, 725].map((x, i) => <g key={x} transform={at(x + 18, 905, 0.62, true)}><Puller lean={0.7 + (i % 3) * 0.2} /></g>)}
-			<g transform={at(300, 905, 0.55)}><Banner h={440} w={70} ch="曹" cloth="#4E1E18" clothS="#2C100C" ink="#EAD4A8" wave={-6} /></g>
-			<Npc x={286} y={905} k={0.55} kind="ji" />
-			{[860, 912].map((x) => <g key={x}><Npc x={x} y={884} k={0.5} kind="hold" /><path d={`M${x + 15},${884 - 98} l16,-5 l3,52 l-16,5 Z`} /></g>)}
+			<g transform={at(520, 905, 0.62)}><Trebuchet a={-112} ropes={[[180, -162], [234, -158], [286, -162], [344, -158], [396, -162], [450, -158]]} /></g>
+			{[628, 662, 694, 730, 762, 796].map((x, i) => <g key={x} transform={at(x + 18, 905 + (i % 2) * 4, 0.62, true)}><Puller lean={0.6 + (i % 3) * 0.25} /></g>)}
+			<g transform={at(822, 892, 0.52)}><Banner h={440} w={70} ch="曹" cloth="#4E1E18" clothS="#2C100C" ink="#EAD4A8" wave={-6} /></g>
+			<Npc x={808} y={892} k={0.52} kind="hold" />
+			{[884, 936].map((x) => <g key={x}><Npc x={x} y={884} k={0.5} kind="hold" /><path d={`M${x + 15},${884 - 98} l16,-5 l3,52 l-16,5 Z`} /></g>)}
 		</g>
 		{/* a stone from the other engine already in flight toward the towers */}
 		<g><circle cx={1000} cy={350} r={8} fill="#1A1410" /><path d="M992,354 L930,380" stroke="#EADCC0" strokeOpacity={0.3} strokeWidth={3} strokeLinecap="round" /></g>
 		{/* arrows stuck in the camp ground */}
 		{[[1240, 1048, 24], [1300, 1062, 30], [1560, 1040, 18], [760, 975, 26], [980, 1000, 22], [1640, 1062, 28], [1190, 1000, 34]].map(([x, y, a], i) => <g key={i} transform={`translate(${x},${y}) rotate(${a})`}><rect x={-1.2} y={-46} width={2.4} height={46} fill="#1A120E" /><path d="M-1.2,-46 L-6,-54 M1.2,-46 L6,-54" stroke="#CBB898" strokeOpacity={0.5} strokeWidth={1.4} /></g>)}
-		{/* the sacks: slack, half-folded, one tipped over and empty */}
-		<Sack x={1310} y={1050} h={110} slump={0.55} />
-		<Sack x={1420} y={1044} h={118} slump={0.45} />
-		<Sack x={1530} y={1056} h={100} slump={0.66} />
-		<path d="M1580,1066 C1600,1046 1640,1040 1676,1048 C1690,1052 1690,1062 1676,1066 Z" fill="#6A5640" /><path d="M1580,1066 C1610,1058 1650,1058 1676,1066" fill="none" stroke="#3A2A1A" strokeWidth={2} opacity={0.6} />
-		{Array.from({length: 14}, (_, i) => <ellipse key={i} cx={1600 + rnd(i, 81) * 90} cy={1066 + rnd(i, 82) * 8} rx={2} ry={1.2} fill="#C8B080" opacity={0.7} />)}
+		{/* the sacks: slack, the empty cloth folded over the little grain left; an empty one lying flat; the 斛 tipped, empty */}
+		<EmptySack x={1330} y={1050} h={100} />
+		<EmptySack x={1430} y={1044} h={112} flip />
+		<EmptySack x={1530} y={1056} h={92} />
+		<path d="M1600,1068 C1612,1052 1644,1046 1680,1052 C1696,1056 1694,1066 1680,1070 Z" fill="#6A5640" /><path d="M1604,1066 C1630,1058 1656,1058 1680,1064" fill="none" stroke="#3A2A1A" strokeWidth={2} opacity={0.6} />
+		{Array.from({length: 12}, (_, i) => <ellipse key={i} cx={1590 + rnd(i, 81) * 100} cy={1068 + rnd(i, 82) * 8} rx={2} ry={1.2} fill="#C8B080" opacity={0.7} />)}
+		<g transform="translate(1238,1062) rotate(-78)"><path d="M-26,0 L26,0 L22,-40 L-22,-40 Z" fill="#5A4430" /><path d="M-26,0 L-12,0 L-10,-40 L-22,-40 Z" fill="#3A2A1C" /><path d="M14,0 L26,0 L22,-40 L12,-40 Z" fill="#8A6E4E" /><path d="M-22,-40 L22,-40 L23,-44 L-23,-44 Z" fill="#2A1C12" /></g>
 		{/* 曹操 (46, 札甲, greying short beard) on the rampart, looking across */}
 		<Shadow x={1070} y={1016} w={130} len={-200} dir={-1} o={0.5} />
 		<g filter="url(#k5hero)">
@@ -215,11 +233,11 @@ export const K5: React.FC = () => { const HZ = 640;
 	</Svg>; };
 
 /* ================= K6 · 1:40.2 · the handover frame: night, 曹操 leads the 5,000 out with torches toward 乌巢 ================= */
-const COL: P[] = [[1040, 992], [930, 966], [826, 932], [740, 893], [676, 856], [650, 820], [676, 790], [730, 765], [748, 742], [700, 722], [610, 706], [510, 692], [430, 679], [370, 666], [326, 654], [292, 643], [266, 633], [248, 624]];
+const COL: P[] = [[985, 986], [900, 962], [826, 932], [740, 893], [676, 856], [650, 820], [676, 790], [730, 765], [748, 742], [700, 722], [610, 706], [510, 692], [430, 679], [370, 666], [326, 654], [292, 643], [266, 633], [248, 624]];
 const colAt = (u: number): P => { const n = COL.length - 1, s = Math.min(n - 1e-6, Math.max(0, u * n)), i = Math.floor(s), t = s - i, a = COL[i], b = COL[i + 1];
 	return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
 export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0025 * (y - HZ + 6);
-	const men = Array.from({length: 260}, (_, i) => { const u = Math.pow(i / 259, 0.72), [x, y] = colAt(u), kk = kOf(y), side = (i % 2 ? 1 : -1) * 22 * kk;
+	const men = Array.from({length: 190}, (_, i) => { const u = Math.pow(i / 189, 0.62), [x, y] = colAt(u), kk = kOf(y), side = (i % 2 ? 1 : -1) * 22 * kk;
 		return {x: x + side, y: y + (i % 2 ? 1.5 : -1.5) * kk, k: kk, torch: i % 3 !== 1, i}; });
 	const near = men.filter((m) => m.k > 0.2).sort((a, b) => a.y - b.y), far = men.filter((m) => m.k <= 0.2).reverse();
 	const S = 3.5, CX = 1236, CY = 1022;
@@ -230,7 +248,7 @@ export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0025 
 			<linearGradient id="k6pl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3E4A48" /><stop offset="0.3" stopColor="#2C3534" /><stop offset="1" stopColor="#1A2020" /></linearGradient>
 			<linearGradient id="k6rise" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1C2020" /><stop offset="1" stopColor="#0C0E0E" /></linearGradient>
 			<linearGradient id="k6haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6E7670" stopOpacity="0" /><stop offset="0.6" stopColor="#6E7670" stopOpacity="0.42" /><stop offset="1" stopColor="#6E7670" stopOpacity="0" /></linearGradient>
-			<radialGradient id="k6fg"><stop offset="0" stopColor="#FFF0D0" stopOpacity="0.55" /><stop offset="0.3" stopColor="#F3DDB4" stopOpacity="0.2" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
+			<radialGradient id="k6fg"><stop offset="0" stopColor="#FFF0D0" stopOpacity="0.4" /><stop offset="0.3" stopColor="#F3DDB4" stopOpacity="0.2" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<radialGradient id="k6key" cx="1426" cy="350" r="760" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity="0.3" /><stop offset="0.4" stopColor="#F3DDB4" stopOpacity="0.1" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<radialGradient id="k6vig" cx="0.55" cy="0.5" r="0.78"><stop offset="0.58" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.5" /></radialGradient>
 			<Blur id="k6b2" s={2.2} /><Blur id="k6b1" s={1} /><Blur id="k6b6" s={7} />
@@ -262,13 +280,13 @@ export const K6: React.FC = () => { const HZ = 612, kOf = (y: number) => 0.0025 
 		<rect y={640} width={W} height={120} fill="url(#k6haze)" opacity={0.45} />
 		{/* the column of 5,000: far — only torch points on the snaking road, then small figures with torches */}
 		<g>{far.map((m) => <g key={m.i}>
-			<rect x={m.x - 12 * m.k} y={m.y - 160 * m.k} width={Math.max(1, 24 * m.k)} height={160 * m.k} fill="#0E1112" opacity={0.85} />
+			<rect x={m.x - 12 * m.k} y={m.y - 160 * m.k} width={Math.max(1, 24 * m.k)} height={160 * m.k} fill="#0E1112" opacity={0.6} />
 			{m.torch && <><circle cx={m.x + 20 * m.k} cy={m.y - 165 * m.k} r={Math.max(5, 90 * m.k)} fill="url(#k6fg)" /><ellipse cx={m.x + 20 * m.k} cy={m.y - 168 * m.k} rx={Math.max(0.8, 6 * m.k)} ry={Math.max(1.2, 10 * m.k)} fill="#FFF2D8" /></>}
 		</g>)}</g>
 		<g fill="#120E0C" color="#120E0C" filter="url(#k6rimN)">
 			{near.map((m) => <Npc key={m.i} x={m.x} y={m.y} k={m.k} kind={m.torch ? 'torch' : 'ji'} stride={m.i % 2 ? 0.5 : -0.5} />)}
 		</g>
-		{near.filter((m) => m.torch).map((m) => <IvoryFlame key={m.i} id={`k6f${m.i}`} x={m.x + 31 * m.k} y={m.y - 151 * m.k} s={16 * m.k} glow={0.8} t={m.i} />)}
+		{near.filter((m) => m.torch).map((m) => <IvoryFlame key={m.i} id={`k6f${m.i}`} x={m.x + 31 * m.k} y={m.y - 151 * m.k} s={15 * m.k} glow={0.5} t={m.i} />)}
 		{/* P3 the low rise he has climbed */}
 		<path d="M-20,1080 L-20,1010 C200,1000 520,968 760,958 C900,950 1060,980 1200,1008 C1380,1020 1600,1016 1940,1030 L1940,1080 Z" fill="url(#k6rise)" />
 		<path d="M760,958 C900,950 1060,980 1200,1008 C1380,1020 1600,1016 1940,1030" fill="none" stroke="#8FA4A2" strokeOpacity={0.18} strokeWidth={2} />
@@ -294,7 +312,7 @@ export const K8: React.FC = () => { const FY = 900, k = 4.1, CX = 820, LX = 1330
 			<radialGradient id="k8pool" cx={LX - 120} cy="930" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#F3DDB4" stopOpacity="0.3" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
 			<radialGradient id="k8vig" cx="0.56" cy="0.52" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.55" /></radialGradient>
 			<radialGradient id="k8lg"><stop offset="0" stopColor="#FFF0D0" stopOpacity="0.5" /><stop offset="0.3" stopColor="#F3DDB4" stopOpacity="0.16" /><stop offset="1" stopColor="#F3DDB4" stopOpacity="0" /></radialGradient>
-			<Blur id="k8b2" s={2.4} /><Blur id="k8b10" s={14} />
+			<Blur id="k8b2" s={2.4} /><Blur id="k8b10" s={14} /><Blur id="k8b8" s={8} /><Blur id="k8b5" s={5} />
 			<RimF id="k8rim" lx={1} ly={-0.3} k={2.4} c="#FFE0B0" o={0.85} />
 			<RimF id="k8hero" lx={1} ly={-0.4} k={4} c="#FFE6C0" o={0.95} lx2={-1} ly2={-0.2} k2={3.4} c2={ACC} o2={0.9} blur={0.9} />
 		</defs>
@@ -308,14 +326,14 @@ export const K8: React.FC = () => { const FY = 900, k = 4.1, CX = 820, LX = 1330
 		<rect x={236} y={330} width={312} height={290} fill="url(#k8win)" />
 		{Array.from({length: 13}, (_, i) => <rect key={i} x={236 + i * 24} y={330} width={7} height={290} fill="#1A1410" />)}
 		<rect x={236} y={468} width={312} height={7} fill="#1A1410" />
-		<path d="M236,620 L548,620 L760,1080 L360,1080 Z" fill="url(#k8beam)" />
+		<path d="M236,640 L548,640 L760,1080 L360,1080 Z" fill="url(#k8beam)" filter="url(#k8b5)" />
 		{/* the curtain (帷) gathered at the left post */}
 		<path d="M144,56 C176,200 168,380 196,560 C200,620 186,700 176,780 L144,780 Z" fill="#3A1C17" />
 		<path d="M144,56 C160,220 150,420 168,600 L156,780 L144,780 Z" fill="#24110E" />
 		<path d="M1780,56 C1740,240 1752,420 1720,600 C1712,680 1722,740 1730,780 L1780,780 Z" fill="#4A2219" />
 		<path d="M1752,140 C1740,300 1744,460 1724,620" fill="none" stroke="#2A120E" strokeWidth={6} opacity={0.7} />
 		{/* P1 his lamp shadow on the plastered wall behind him (the look's 灯影), and a folding screen (屏风) at the right: black lacquer, red border */}
-		<g transform={`translate(${CX - 330},${FY - 150}) scale(${k * 1.9},${k * 1.62})`} fill="#0A0605" color="#0A0605" opacity={0.42} filter="url(#k8b10)"><CaoSeatedShadow /></g>
+		<g transform={`translate(${CX - 330},782) scale(${k * 1.36},${k * 1.2})`} fill="#0A0605" color="#0A0605" opacity={0.5} filter="url(#k8b5)"><CaoSeatedShadow /></g>
 		<g>
 			<rect x={1440} y={452} width={300} height={330} fill="#17110E" />
 			{[0, 1].map((i) => <g key={i}><rect x={1440 + i * 150} y={452} width={150} height={330} fill="none" stroke="#5A2420" strokeWidth={6} />

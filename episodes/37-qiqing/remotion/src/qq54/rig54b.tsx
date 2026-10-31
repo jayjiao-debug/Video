@@ -52,11 +52,11 @@ export const Flame: React.FC<{x: number; y: number; s: number; t: number; seed: 
 const CT = 200, CS = 196, CAH = 22, CL = 300;
 /* contact: legs just straight at half a stride; passing: the hip rises ~5 cm, the stance knee nearly straight */
 const caoWalk = (t: number) => walkAt(t, {L: CL, H0: 363, bob: 24, lift: 34, toe: 96, ah: CAH});
-export type CaoWalkProps = {t: number; pal: Pal; id: string; bow?: number; bundle?: boolean; mid?: boolean; old?: boolean; cap?: 'wu' | 'ze'; robe?: string; robeS?: string; robeH?: string; trim?: string; t0?: number};
+export type CaoWalkProps = {t: number; pal: Pal; id: string; bow?: number; bundle?: boolean; mid?: boolean; old?: boolean; cap?: 'wu' | 'ze'; robe?: string; robeS?: string; robeH?: string; trim?: string; t0?: number; glance?: number; leanAdd?: number};
 /** 曹操 in a walk, drawn at world x = hipX(t) (Cao units from the walk origin); origin = soles line y = 750 in Cao local terms */
 export const CaoWalk: React.FC<CaoWalkProps> = (p) => {
 	const {pal, id} = p, t = p.t + (p.t0 ?? 0), R = p.robe ?? pal.robe, RS = p.robeS ?? pal.robeS, RH = p.robeH ?? pal.robeH, TR = p.trim ?? pal.trim;
-	const W = caoWalk(t), Wl = caoWalk(t - 0.07), Wa = caoWalk(t - 0.05), Ws = caoWalk(t - 0.13);
+	const W = caoWalk(t), Wl = caoWalk(t - 0.07), Ws = caoWalk(t - 0.13);
 	const base = 750, hx = W.hipX, hy = base + W.hipY, dy = hy - 340, X = (v: number) => hx + v, Y = (v: number) => v + dy;
 	const leg = (S: WalkS, i: 0 | 1, hxx: number, hyy: number) => { const ft = S.feet[i], ax = ft.x, ay = base + ft.y - CAH;
 		const kn = ik(hxx + (i ? -6 : 6), hyy, ax, ay, CT, CS); return {kn, an: [ax, ay] as P, a: ft.a}; };
@@ -69,12 +69,28 @@ export const CaoWalk: React.FC<CaoWalkProps> = (p) => {
 		<path d="M-26,4 C-28,-8 -16,-14 0,-14 L52,-8 C76,-4 98,2 100,14 C100,20 94,22 86,22 L-22,22 C-28,20 -28,12 -26,4 Z" fill={c} />
 		<path d="M-22,18 L94,18" stroke="#000" strokeOpacity={0.4} strokeWidth={3} /></g>;
 	const legD = (l: {kn: P; an: P}, w0: number) => strand(qpts([l.kn[0], l.kn[1]], [(l.kn[0] + l.an[0]) / 2 + 3, (l.kn[1] + l.an[1]) / 2], [l.an[0], l.an[1] - 6], 8), (u) => w0 - u * 8);
-	/* arms: swing against the same-side leg (lagged), elbow bends more on the forward swing; sleeve bag lags further */
-	const arm = (i: 0 | 1, S: WalkS) => { const ph = -0.5 * S.fw[i] * 0.62, b = 0.3 + 0.5 * Math.max(0, ph);
-		const sh: P = [X(i ? -18 : 10), Y(88)], el: P = [sh[0] + 150 * Math.sin(ph), sh[1] + 150 * Math.cos(ph)], hd: P = [el[0] + 136 * Math.sin(ph + b), el[1] + 136 * Math.cos(ph + b)];
+	/* ---- the loosened upper body (owner r1: "a bit stiff") ----
+	   lean: ~5° forward, a little more through passing; sway: the chest drifts toward the stance side once per cycle (in profile:
+	   a small rotation + shift); shoulder rotation against the hips: the near shoulder comes forward as the near leg goes back,
+	   the far one the other way, and the chest reads a little wider at the extremes. */
+	const sNow = t * 2, uNow = sNow - Math.floor(sNow);
+	const rot = clamp((W.fw[1] - W.fw[0]) / 2.4, -1, 1);
+	const lean = 5 + 1.6 * Math.sin(Math.PI * uNow) ** 2 + (p.leanAdd ?? 0), sway = Math.sin(Math.PI * sNow);
+	const PIV: P = [X(0), Y(290)], LR = (lean + 1.1 * sway) * Math.PI / 180;
+	const rp = (q: P): P => { const dx = q[0] - PIV[0], dyy = q[1] - PIV[1]; return [PIV[0] + dx * Math.cos(LR) - dyy * Math.sin(LR) + 3 * sway, PIV[1] + dx * Math.sin(LR) + dyy * Math.cos(LR)]; };
+	const torsoT = `translate(${f1(3 * sway)},0) rotate(${f1(lean + 1.1 * sway)} ${f1(PIV[0])} ${f1(PIV[1])}) translate(${f1(X(0))},${f1(dy)})`;
+	/* arms: a bigger swing eased at the ends (a sine of the leg phase, not of time), the forearm trailing the upper arm */
+	const upA = (S: WalkS, i: 0 | 1) => -0.56 * Math.sin((Math.PI / 2) * clamp(S.fw[i] / 1.05, -1, 1));
+	const arm = (i: 0 | 1, tt: number) => { const S = caoWalk(tt), Sl = caoWalk(tt - 0.1), ph = upA(S, i), phl = upA(Sl, i);
+		const b = 0.24 + 0.42 * Math.max(0, phl) + 0.55 * (phl - ph) * (phl > ph ? 0.4 : 1) + 0.12;
+		const sh0: P = [X((i ? -18 : 10) + (i ? -9 : 9) * rot), Y(88)], sh = rp(sh0), el: P = [sh[0] + 150 * Math.sin(ph), sh[1] + 150 * Math.cos(ph)], hd: P = [el[0] + 136 * Math.sin(ph + Math.max(0.05, b)), el[1] + 136 * Math.cos(ph + Math.max(0.05, b))];
 		return {sh, el, hd, ph}; };
-	const aN = arm(0, Wa), aF = arm(1, Wa), sN = arm(0, Ws), sF = arm(1, Ws);
-	const sleeve = (a: {sh: P; el: P; hd: P}, s: {el: P; hd: P}, c: string, cs: string) => { const bag: P = [(s.el[0] + s.hd[0]) / 2 - 18, Math.max(s.el[1], s.hd[1]) + 30];
+	const aN = arm(0, t - 0.03), aF = arm(1, t - 0.03);
+	/* sleeves: a softer lag with a little overshoot (the late state pushed past by its own velocity) */
+	const sOv = (i: 0 | 1) => { const s1 = arm(i, t - 0.14), s2 = arm(i, t - 0.24), k = 0.45;
+		return {el: [s1.el[0] + (s1.el[0] - s2.el[0]) * k, s1.el[1] + (s1.el[1] - s2.el[1]) * k] as P, hd: [s1.hd[0] + (s1.hd[0] - s2.hd[0]) * k, s1.hd[1] + (s1.hd[1] - s2.hd[1]) * k] as P}; };
+	const sN = sOv(0), sF = sOv(1);
+	const sleeve = (a: {sh: P; el: P; hd: P}, s: {el: P; hd: P}, c: string, cs: string) => { const bag: P = [(s.el[0] + s.hd[0]) / 2 - 18, Math.max(s.el[1], s.hd[1]) + 34];
 		return <g>
 			<path d={strand(qpts(a.sh, a.el, a.hd, 10), (u) => 30 - u * 6)} fill={c} />
 			<path d={`M${f1(a.el[0] - 18)},${f1(a.el[1] - 6)} Q${f1(bag[0])},${f1(bag[1] + 20)} ${f1(a.hd[0] - 6)},${f1(a.hd[1] + 18)} L${f1(a.hd[0] + 8)},${f1(a.hd[1] - 10)} Z`} fill={c} />
@@ -83,9 +99,17 @@ export const CaoWalk: React.FC<CaoWalkProps> = (p) => {
 		</g>; };
 	const fist = (a: {el: P; hd: P}, c: string) => { const ang = Math.atan2(a.hd[1] - a.el[1], a.hd[0] - a.el[0]) * 180 / Math.PI - 90;
 		return <g transform={`translate(${f1(a.hd[0])},${f1(a.hd[1])}) rotate(${f1(ang)})`}><path d="M-11,0 C-12,10 -6,20 2,20 C10,20 13,10 11,0 Z" fill={c} /><path d="M2,20 C10,20 13,10 11,0 L6,0 C7,9 5,15 2,17 Z" fill={pal.skinS} /></g>; };
-	const bow = p.bow ?? 0, bob = (base + Ws.hipY) - (base + W.hipY);
+	/* head: a counter-nod (a few degrees, 1/8 cycle behind the bob) and, if asked, one glance back over the shoulder:
+	   a cut-out head turn (the head's width passes through a narrow profile in 0.15 s, holds facing back, returns) */
+	const nod = -2.6 * (Math.sin(Math.PI * ((sNow - 0.25) - Math.floor(sNow - 0.25))) ** 2 - 0.5);
+	const gl = p.glance, ss = (v: number, a0: number, a1: number) => { const u = clamp((v - a0) / (a1 - a0), 0, 1); return u * u * (3 - 2 * u); };
+	const gx = gl === undefined ? 1 : 1 - 2 * ss(p.t, gl, gl + 0.15) + 2 * ss(p.t, gl + 0.6, gl + 0.75);
+	const bow = (p.bow ?? 0) * (gx < 0 ? 0.3 : 1) + nod, bob = (base + Ws.hipY) - (base + W.hipY);
+	/* robe hem: the front flares a little on each step (the lagged swing pushes the front edge out, then it settles) */
+	const flare = 26 * Math.sin(Math.PI * clamp((Wl.feet[0].x > Wl.feet[1].x ? 1 : 1) * ((t - 0.07) * 2 - Math.floor((t - 0.07) * 2)), 0, 1)) ** 2;
+	const skirtF = skirt.replace(`${f1(fxh)},${f1(hemY)} C${f1(Math.max(fxh, kF + 34))}`, `${f1(fxh + flare)},${f1(hemY - flare * 0.35)} C${f1(Math.max(fxh + flare * 0.6, kF + 34))}`);
 	return <g>
-		<defs><clipPath id={`${id}cw`}><path d={skirt} /></clipPath></defs>
+		<defs><clipPath id={`${id}cw`}><path d={skirtF} /></clipPath></defs>
 		{/* far arm + far leg (behind) */}
 		{sleeve(aF, sF, RS, '#0A0A0C')}{fist(aF, pal.skinS)}
 		{/* the legs show only below the hem (the robe covers the knees whatever the lag does) */}
@@ -96,27 +120,29 @@ export const CaoWalk: React.FC<CaoWalkProps> = (p) => {
 			<path d={strand(qpts([Lg[0].kn[0] + 8, Lg[0].kn[1] + 40], [(Lg[0].kn[0] + Lg[0].an[0]) / 2 + 8, (Lg[0].kn[1] + Lg[0].an[1]) / 2], [Lg[0].an[0] + 6, Lg[0].an[1] - 14], 6), () => 4)} fill="#5A5248" opacity={0.6} />
 		</g>
 		{shoe(Lg[1], '#0C0A08')}{shoe(Lg[0], '#141110')}
-		{/* bundle on the back (follows through) */}
-		<g transform={`translate(${f1(X(0))},${f1(Y(0) + bob * 0.8)})`}>
+		{/* bundle on the back (follows through, rides the torso lean) */}
+		<g transform={`${torsoT} translate(0,${f1(bob * 0.8)})`}>
 			<path d="M-112,110 C-134,150 -130,214 -104,240 C-84,256 -54,252 -42,232 C-34,196 -40,150 -56,116 C-70,98 -96,96 -112,110 Z" fill="#4E4338" />
 			<path d="M-112,110 C-134,150 -130,214 -104,240 C-96,246 -88,249 -80,249 C-104,222 -110,166 -98,112 Z" fill="#2E2822" />
 			<path d="M-100,130 C-90,170 -80,200 -60,224 M-84,112 C-74,150 -64,180 -48,200" fill="none" stroke="#2E2822" strokeWidth={3} opacity={0.6} />
 			<path d="M-92,104 C-86,90 -70,88 -62,100 C-70,108 -84,110 -92,104 Z M-80,98 L-70,78 L-62,84 Z" fill="#3E352C" />
 		</g>
 		{/* the robe: plain dark 袍, skirt over the legs */}
-		<path d={skirt} fill={R} />
+		<path d={skirtF} fill={R} />
 		<g clipPath={`url(#${id}cw)`}>
 			<path d={`M${f1(X(-14))},${f1(Y(280))} C${f1(X(-18))},${f1(Y(450))} ${f1(bxh + 30)},${f1(hemY - 60)} ${f1(bxh + 24)},${f1(hemY + 20)} L${f1(X(-200))},${f1(hemY + 20)} L${f1(X(-200))},${f1(Y(280))} Z`} fill={RS} />
-			<path d={`M${f1(fxh - 14)},${f1(hemY)} C${f1(kF + 20)},${f1(Y(520))} ${f1(X(46))},${f1(Y(380))} ${f1(X(40))},${f1(Y(290))} L${f1(X(200))},${f1(Y(290))} L${f1(X(200))},${f1(hemY + 20)} Z`} fill={RH} opacity={0.5} />
+			<path d={`M${f1(fxh - 14 + flare)},${f1(hemY)} C${f1(kF + 20)},${f1(Y(520))} ${f1(X(46))},${f1(Y(380))} ${f1(X(40))},${f1(Y(290))} L${f1(X(260))},${f1(Y(290))} L${f1(X(260))},${f1(hemY + 20)} Z`} fill={RH} opacity={0.5} />
 			<path d={`M${f1(X(-10))},${f1(Y(300))} Q${f1(kF - 10)},${f1(Y(470))} ${f1((fxh + bxh) / 2 + 10)},${f1(hemY)}`} fill="none" stroke={RS} strokeWidth={4} opacity={0.8} />
-			<rect x={X(-300)} y={hemY - 14} width={600} height={30} fill={TR} opacity={0.75} />
+			<rect x={X(-300)} y={hemY - 14 - flare * 0.35} width={700} height={34 + flare * 0.35} fill={TR} opacity={0.75} />
 		</g>
-		<g transform={`translate(${f1(X(0))},${f1(dy)})`}>
+		<g transform={torsoT}>
 			<defs><clipPath id={`${id}tor`}><path d="M-38,44 C-58,58 -70,100 -68,160 C-66,220 -62,262 -62,298 L52,290 C58,220 62,160 54,112 C48,82 36,60 14,46 Z" /></clipPath></defs>
-			<path d="M-38,44 C-58,58 -70,100 -68,160 C-66,220 -62,262 -62,298 L52,290 C58,220 62,160 54,112 C48,82 36,60 14,46 Z" fill={R} />
-			<g clipPath={`url(#${id}tor)`}>
-				<path d="M-14,48 C-16,140 -18,220 -20,298 L-80,300 L-80,40 Z" fill={RS} />
-				<path d="M44,92 C56,150 54,230 50,290 L64,290 L64,80 Z" fill={RH} opacity={0.55} />
+			<g transform={`scale(${f1(1 + 0.035 * Math.abs(rot))},1)`}>
+				<path d="M-38,44 C-58,58 -70,100 -68,160 C-66,220 -62,262 -62,298 L52,290 C58,220 62,160 54,112 C48,82 36,60 14,46 Z" fill={R} />
+				<g clipPath={`url(#${id}tor)`}>
+					<path d={`M${f1(-14 - 8 * rot)},48 C${f1(-16 - 6 * rot)},140 -18,220 -20,298 L-80,300 L-80,40 Z`} fill={RS} />
+					<path d="M44,92 C56,150 54,230 50,290 L64,290 L64,80 Z" fill={RH} opacity={0.55} />
+				</g>
 			</g>
 			<path d="M14,46 C25,56 33,72 37,92 L29,96 C25,77 19,61 8,51 Z" fill="#B8AE9C" />
 			<path d="M24,52 C8,104 -18,152 -48,196 L-58,186 C-28,146 -2,100 14,48 Z" fill={TR} />
@@ -125,7 +151,7 @@ export const CaoWalk: React.FC<CaoWalkProps> = (p) => {
 			<path d="M40,64 C20,120 -20,190 -70,236 L-80,226 C-34,184 6,116 26,58 Z" fill="#5A4C3C" />
 		</g>
 		{sleeve(aN, sN, R, RS)}{fist(aN, pal.skin)}
-		<g transform={`translate(${f1(X(0))},${f1(dy)}) rotate(${f1(bow)} 0 40) translate(0,49) scale(0.88) translate(0,-40)`}>
+		<g transform={`${torsoT} rotate(${f1((bow - lean * 0.6) * gx)} 0 40) translate(-5,0) scale(${f1(Math.abs(gx) < 0.12 ? 0.12 * Math.sign(gx || 1) : gx)},1) translate(5,0) translate(0,49) scale(0.88) translate(0,-40)`}>
 			<Head old={p.old ?? false} mid={p.mid ?? true} cap={p.cap ?? 'ze'} pal={pal} id={id} />
 		</g>
 	</g>; };
@@ -135,8 +161,9 @@ export const caoHipX = (t: number) => caoWalk(t).hipX;
 /* ---------- NPC walking (cm, soles at 0; one tone; facing +x, flip for −x) ---------- */
 const NT = 43, NS = 42, NAH = 7;
 export type NpcWalkKind = 'ji' | 'torch' | 'plain';
-export const npcWalk = (t: number, L = 64, f = 1.8) => { const H0 = 0.99 * Math.sqrt((NT + NS) ** 2 - (L / 2) ** 2); return walkAt(t, {L, f, H0, bob: Math.min(7.5, 0.985 * (NT + NS) - H0), lift: 7, toe: 18, ah: NAH}); };
-export const NpcWalk: React.FC<{t: number; kind?: NpcWalkKind; L?: number; f?: number; t0?: number}> = ({t: t1, kind = 'plain', L = 64, f = 1.8, t0 = 0}) => {
+/* contact: legs just straight at half a stride; passing: the hip rises until the support leg is almost straight (no crouch) */
+export const npcWalk = (t: number, L = 64, f = 1.8) => { const H0 = 0.995 * Math.sqrt((NT + NS) ** 2 - (L / 2) ** 2); return walkAt(t, {L, f, H0, bob: Math.min(9, 0.997 * (NT + NS) - H0), lift: 6, toe: 18, ah: NAH}); };
+export const NpcWalk: React.FC<{t: number; kind?: NpcWalkKind; L?: number; f?: number; t0?: number; swing?: number; lean?: number}> = ({t: t1, kind = 'plain', L = 64, f = 1.8, t0 = 0, swing = 1, lean = 3}) => {
 	const t = t1 + t0, W = npcWalk(t, L, f), Wl = npcWalk(t - 0.07, L, f), Wa = npcWalk(t - 0.05, L, f);
 	const hx = W.hipX, hy = W.hipY, dy = hy - (-NAH - 82), X = (v: number) => hx + v, Y = (v: number) => v + dy;
 	const leg = (S: WalkS, i: 0 | 1, hxx: number, hyy: number) => { const ft = S.feet[i], ax = ft.x, ay = ft.y - NAH, kn = ik(hxx, hyy, ax, ay, NT, NS); return {kn, an: [ax, ay] as P, a: ft.a}; };
@@ -148,18 +175,19 @@ export const NpcWalk: React.FC<{t: number; kind?: NpcWalkKind; L?: number; f?: n
 	const kx = [Ll[0].kn[0], Ll[1].kn[0]].map((v) => v + (hx - Wl.hipX)), hemY = Y(-50);
 	const fx = Math.max(...kx) + 10, bx = Math.min(...kx) - 11;
 	const skirt = `M${f1(X(-12.4))},${f1(Y(-100))} C${f1(X(-14.6))},${f1(Y(-84))} ${f1(bx + 1)},${f1(Y(-64))} ${f1(bx)},${f1(hemY)} C${f1((bx + fx) / 2)},${f1(hemY + 1.6)} ${f1(fx - 4)},${f1(hemY + 1.4)} ${f1(fx)},${f1(hemY)} C${f1(fx - 1)},${f1(Y(-66))} ${f1(X(13.8))},${f1(Y(-84))} ${f1(X(13))},${f1(Y(-100))} Z`;
-	const sw = -0.42 * Wa.fw[0], swF = -0.42 * Wa.fw[1];
+	const sw = -0.5 * swing * Math.sin((Math.PI / 2) * clamp(Wa.fw[0] / 1.05, -1, 1)), swF = -0.5 * swing * Math.sin((Math.PI / 2) * clamp(Wa.fw[1] / 1.05, -1, 1));
+	const nl = lean + 1.2 * Math.sin(Math.PI * ((t * f) % 1)) ** 2;
 	const armD = (sx: number, ph: number, w: number) => { const sh: P = [X(sx), Y(-134)], el: P = [sh[0] + 27 * Math.sin(ph), sh[1] + 27 * Math.cos(ph)], b = 0.25 + 0.5 * Math.max(0, ph), hd: P = [el[0] + 25 * Math.sin(ph + b), el[1] + 25 * Math.cos(ph + b)];
 		return {d: strand([sh, el, hd], (u) => w - u * 1.4), hd}; };
 	const far = armD(-2, swF, 4.8);
 	const near = kind === 'plain' ? armD(2, sw, 5.2) : null;
 	const tilt = Math.sin((W.hipX / L) * Math.PI) * 1.2;
 	return <g>
-		<path d={far.d} /><circle cx={far.hd[0]} cy={far.hd[1]} r={3.6} />
+		<g transform={`rotate(${f1(nl)} ${f1(X(0))} ${f1(Y(-92))})`}><path d={far.d} /><circle cx={far.hd[0]} cy={far.hd[1]} r={3.6} /></g>
 		<path d={thigh(Lg[1])} /><path d={legD(Lg[1])} />{shoe(Lg[1])}
 		<path d={thigh(Lg[0])} /><path d={legD(Lg[0])} />{shoe(Lg[0])}
 		<path d={skirt} />
-		<g transform={`translate(${f1(X(0))},${f1(dy)})`}>
+		<g transform={`rotate(${f1(nl)} ${f1(X(0))} ${f1(Y(-92))}) translate(${f1(X(0))},${f1(dy)})`}>
 			<path d="M-4,-141 C-11,-140 -13.4,-135 -13.4,-126 C-13.4,-114 -12.2,-106 -11.6,-101 L-12.6,-98 L13,-98 L12.4,-101 C13.4,-107 15,-116 14.4,-126 C13.8,-134 9.6,-140 5,-141 Z" />
 			<path d={NECK} /><path d={HEAD} /><path d={ZE} />
 			{kind !== 'torch' && <path d="M10,-100 L-26,-62 L-24.4,-60.4 L11.6,-98.4 Z" />}
@@ -171,7 +199,7 @@ export const NpcWalk: React.FC<{t: number; kind?: NpcWalkKind; L?: number; f?: n
 			{kind === 'torch' && <g><path d="M2,-134 L12,-114 L24,-126 L27,-122 L13,-106 L-3,-128 Z" /><circle cx={25} cy={-125} r={4} />
 				<path d="M21,-118 L33,-156 L36.4,-155 L24.6,-117 Z" /></g>}
 		</g>
-		{near && <><path d={near.d} /><circle cx={near.hd[0]} cy={near.hd[1]} r={4} /></>}
+		{near && <g transform={`rotate(${f1(nl)} ${f1(X(0))} ${f1(Y(-92))})`}><path d={near.d} /><circle cx={near.hd[0]} cy={near.hd[1]} r={4} /></g>}
 	</g>; };
 /** where an NpcWalk's torch head is (local cm, add the walker's transform) */
 export const npcTorchAt = (t: number, L = 64, f = 1.8, t0 = 0): P => { const W = npcWalk(t + t0, L, f); return [W.hipX + 34.7, W.hipY - (-NAH - 82) - 157]; };

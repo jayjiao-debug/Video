@@ -75,7 +75,8 @@ export const K7: React.FC<{t?: number}> = ({t = 2.2}) => {
 	/* 曹操: hip world x in Cao units; screen x = CAO0 + (hip − hip0)·S − cam */
 	const cx = CAO0 + (caoHipX(t) - caoHipX(0)) * S7 - cam, cy = ROADY - 750 * S7;
 	/* guards on the wall plane, walking left (k 0.74 px/cm at ground 800) */
-	const gk = 0.74, guards = [{x0: 1560, t0: 0.3}, {x0: 1700, t0: 0.85}];
+	/* the two guards are not stamped out: their own stride, cadence, arm swing and lean */
+	const gk = 0.74, guards = [{x0: 1560, t0: 0.3, L: 67, f: 1.88, sw: 1.25, ln: 2}, {x0: 1720, t0: 0.85, L: 62, f: 1.74, sw: 0.8, ln: 4.5}];
 	/* torch-bearer in the mid-ground, walking left (k 1.7, ground 900) */
 	const tk = 1.7, tx = 2050 + sx(PX.mid) - npcHipXs(t, 0.2, 70, 1.9) * tk, ty = 905;
 	const tch = npcTorchAt(t, 70, 1.9, 0.2), tfx = tx - (tch[0] - npcHipXs(t, 0.2, 70, 1.9)) * tk, tfy = ty + tch[1] * tk;
@@ -109,14 +110,14 @@ export const K7: React.FC<{t?: number}> = ({t = 2.2}) => {
 			{[[700 - 150, 11], [700 + 150, 23]].map(([x, sd]) => <g key={sd}><LampStand x={x} y={800} k={0.74} />
 				<Flame x={x} y={800 - 117 * 0.74} s={0.74} t={t} seed={sd} ivory /></g>)}
 			{/* guards on their beat, walking left past the gate */}
-			{guards.map((g, i) => <g key={i} fill={SIL} filter="url(#k7rimW)" transform={`translate(${g.x0},800) scale(${-gk},${gk})`}><NpcWalk t={t} kind="ji" t0={g.t0} /></g>)}
+			{guards.map((g, i) => <g key={i} fill={SIL} filter="url(#k7rimW)" transform={`translate(${g.x0},800) scale(${-gk},${gk})`}><NpcWalk t={t} kind="ji" t0={g.t0} L={g.L} f={g.f} swing={g.sw} lean={g.ln} /></g>)}
 		</g>
 		<rect x={-50 - hz} y={700} width={2420} height={170} fill="url(#k7haze)" />
 		{/* P3 the right 阙, nearer than the wall */}
 		<g transform={`translate(${sx(PX.que)},0)`} fill={SIL} filter="url(#k7rimQ)"><g transform="translate(1960,858) scale(1.55)">{QueD}</g></g>
 		{/* mid-ground ground plane and the torch-bearer */}
 		<rect y={860} width={W} height={220} fill="url(#k7gnd)" />
-		<g fill={SIL} filter="url(#k7rimT)" transform={`translate(${f1(tx + npcHipXs(t, 0.2, 70, 1.9) * tk)},${ty}) scale(${-tk},${tk})`}><NpcWalk t={t} kind="torch" L={70} f={1.9} t0={0.2} /></g>
+		<g fill={SIL} filter="url(#k7rimT)" transform={`translate(${f1(tx + npcHipXs(t, 0.2, 70, 1.9) * tk)},${ty}) scale(${-tk},${tk})`}><NpcWalk t={t} kind="torch" L={70} f={1.9} t0={0.2} lean={3.5} /></g>
 		<ellipse cx={tfx} cy={ty + 6} rx={200} ry={26} fill="url(#k7pool)" opacity={0.7 * flick(t, 3).s} />
 		<Flame x={tfx} y={tfy} s={1.7} t={t} seed={3} glow={1.3} />
 		{/* the road-edge lamp he walks past */}
@@ -126,7 +127,7 @@ export const K7: React.FC<{t?: number}> = ({t = 2.2}) => {
 		{/* P4 曹操 on the road */}
 		<ellipse cx={cx} cy={ROADY + 2} rx={120} ry={10} fill="#0A0605" opacity={0.55} />
 		<g filter="url(#k7cao)"><g transform={`translate(${f1(cx - caoHipX(t) * S7)},${f1(cy)}) scale(${S7})`}>
-			<CaoWalk t={t} pal={{...PAL, skin: '#BE8A62'}} id="k7c" bow={11} robe="#2F2B27" robeS="#1B1815" robeH="#5E564C" trim="#3A3029" />
+			<CaoWalk t={t} pal={{...PAL, skin: '#BE8A62'}} id="k7c" bow={11} glance={3.9} robe="#2F2B27" robeS="#1B1815" robeH="#5E564C" trim="#3A3029" />
 		</g></g>
 		{/* P5 foreground hitching posts, out of focus, fast parallax */}
 		<g transform={`translate(${sx(PX.fg)},0)`} filter="url(#k7bl8)" fill="#0A0605">
@@ -212,16 +213,16 @@ const CaoStrike: React.FC<{id: string}> = ({id}) => {
 			<path d="M-30,300 L-18,298 L-24,520 L-36,522 Z" fill="#A08240" />
 			<Dao a={[64, 266]} b={[-90, 548]} pal={PAL} />
 			{/* head level, lowered toward the man at his feet */}
-			<g transform="rotate(12 0 40) translate(0,49) scale(0.88) translate(0,-40)"><Head old={false} pal={PAL} id={id} /></g>
+			<g transform="rotate(22 0 40) translate(0,49) scale(0.88) translate(0,-40)"><Head old={false} pal={PAL} id={id} /></g>
 		</g>
 		{/* the near arm points down at him: wide sleeve hanging under the forearm */}
-		{(() => { const s0: P = [16, 86], e0: P = [86, 184], h0: P = [160, 232];
+		{(() => { const s0: P = [16, 86], e0: P = [74, 196], h0: P = [140, 286];
 			return <g>
 				<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 50},${h0[1] + 100} ${e0[0] - 20},${e0[1] + 96} ${e0[0] - 30},${e0[1] + 40} C${e0[0] - 40},${e0[1]} ${s0[0] - 30},${s0[1] + 60} ${s0[0] - 26},${s0[1] + 10} Z`} fill={R} />
 				<path d={`M${e0[0] - 30},${e0[1] + 40} C${e0[0] - 20},${e0[1] + 96} ${h0[0] - 50},${h0[1] + 100} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 34},${h0[1] + 76} ${e0[0] - 4},${e0[1] + 70} ${e0[0] - 18},${e0[1] + 22} Z`} fill={RS} />
 				<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} L${h0[0] - 10},${h0[1] - 10} L${e0[0] + 16},${e0[1] + 8} C${e0[0] + 10},${e0[1] - 26} ${s0[0] + 24},${s0[1] + 40} ${s0[0] + 10},${s0[1] - 2} Z`} fill={RH} opacity={0.75} />
 				<path d={`M${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70}`} fill="none" stroke={TR} strokeWidth={9} />
-				<g transform={`translate(${h0[0] + 2},${h0[1] + 12}) rotate(32)`}>
+				<g transform={`translate(${h0[0] + 2},${h0[1] + 12}) rotate(52)`}>
 					<path d="M-10,-11 C2,-14 13,-9 14,0 C15,9 6,13 -4,12 C-12,10 -14,-4 -10,-11 Z" fill={PAL.skin} />
 					<path d="M10,-6 C22,-6 34,-4 40,-2 C40,1 38,2 34,2 C26,2 18,1 10,2 Z" fill={PAL.skin} />
 					<path d="M-4,12 C4,12 12,8 14,1 C10,6 2,9 -6,9 Z" fill={PAL.skinS} />
@@ -282,11 +283,12 @@ export const K1: React.FC = () => {
 		<LampStand x={lampX} y={lampG} k={lampK} />
 		<Flame x={lampX} y={flY} s={lampK} t={0.4} seed={5} ivory glow={1.6} />
 		{/* the group: a guard upstage behind the man, the man forced to his knees, a guard downstage holding his arm */}
+		{/* the upstage guard, a step behind the man in depth: one value lighter (haze), so the man reads in front of him */}
+		<g fill="#3A2C23" filter="url(#k1rimL)"><g transform={`translate(1000,994) scale(2.86) rotate(4)`}><Gripper rx={30} ry={-92} /></g></g>
 		<g fill={SIL} filter="url(#k1rimL)">
-			<g transform={`translate(900,1000) scale(2.9)`}><Gripper rx={36} ry={-96} /></g>
-			<g transform={`translate(1010,${FG + 2}) scale(3.1)`}>{Uncle}</g>
-			<g transform={`translate(700,${FG + 6}) scale(3.1)`}><Gripper rx={40} ry={-81} /></g>
-			<g transform={`translate(1125,${FG + 6}) scale(3.1) rotate(-70)`}><path d="M-8,-1 C-8.8,-7 -7,-11.6 -1.6,-13.2 L8.4,-13.4 C11,-12 12,-9 12,-6 C8,-7 3,-7 -1,-5 Z M-6.8,-10.6 L10.4,-11.4 L11.2,-29 L-5.4,-19.6 Z" /></g>
+			<g transform={`translate(1040,${FG + 2}) scale(3.1)`}>{Uncle}</g>
+			<g transform={`translate(730,${FG + 6}) scale(3.1) rotate(-3)`}><Gripper rx={40} ry={-79} /></g>
+			<g transform={`translate(1150,${FG + 8}) scale(3.1) rotate(-70)`}><path d="M-8,-1 C-8.8,-7 -7,-11.6 -1.6,-13.2 L8.4,-13.4 C11,-12 12,-9 12,-6 C8,-7 3,-7 -1,-5 Z M-6.8,-10.6 L10.4,-11.4 L11.2,-29 L-5.4,-19.6 Z" /></g>
 		</g>
 		{/* 曹操 (20) over him, facing left, the 五色棒 raised high behind his head */}
 		<ellipse cx={cx} cy={FG + 4} rx={170} ry={12} fill="#0A0605" opacity={0.55} />
