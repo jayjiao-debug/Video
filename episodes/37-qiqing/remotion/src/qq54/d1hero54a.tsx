@@ -39,18 +39,18 @@ export const HDefs: React.FC = () => <>
 
 /* ---------- the cape: a wedge from the shoulders (u = 0) to the tip up-left (u = 1); v = 0 its top edge … 1 its bottom edge.
    cu = how far it is unfurled (0 furled at the shoulders → 1, with overshoot); a travelling wave runs along it ---------- */
-const CTOP: P[] = [[1262, 214], [1180, 212], [1060, 226], [930, 230], [820, 234], [700, 250], [630, 308], [585, 350], [556, 410], [540, 462]];
-const CBOT: P[] = [[1205, 800], [1170, 720], [1150, 640], [1110, 580], [1000, 520], [860, 498], [760, 486], [660, 474], [590, 466], [540, 462]];
-const ANCH: P = [1330, 420];
+const CTOP: P[] = [[1452, 326], [1404, 246], [1330, 212], [1196, 210], [1060, 216], [900, 226], [780, 240], [650, 262], [570, 360], [540, 462]];
+const CBOT: P[] = [[1500, 760], [1494, 900], [1262, 884], [1170, 752], [1120, 640], [1020, 532], [820, 496], [700, 480], [600, 466], [540, 462]];
 const capePt = (u: number, v: number, t: number, cu: number): P => {
 	const a = pb(CTOP, u), b = pb(CBOT, u), m = lerp(a, b, v);
 	/* the travelling wave: the folds ripple at ~1.2 Hz, the wave runs from the shoulder to the tip; amplitude grows to the tip */
 	const ph = 2 * Math.PI * (1.2 * t - 1.1 * u) + v * 2.2, amp = (6 + 22 * u * u) * (0.6 + 0.4 * Math.sin(v * 3 + 1));
 	const w: P = [Math.sin(ph) * amp * 0.35, Math.cos(ph) * amp];
 	const p: P = [m[0] + w[0] * cl(u * 3), m[1] + w[1] * cl(u * 3)];
-	/* the unfurl: from the anchor, scaled and swung down (furled) to the full spread (with overshoot) */
-	const s = 0.18 + 0.82 * cu, rot = (1 - cu) * 0.9, dx = p[0] - ANCH[0], dy = p[1] - ANCH[1];
-	return [ANCH[0] + s * (dx * Math.cos(rot) - dy * Math.sin(rot)), ANCH[1] + s * (dx * Math.sin(rot) + dy * Math.cos(rot))];
+	/* the unfurl: furled = gathered close to its root and hanging down behind his back; it swings out and up-left (with overshoot).
+	   Every point turns about its own root point, so the root (behind the neck and the torso) never moves */
+	const r = lerp(CTOP[0], CBOT[0], v), s = 0.18 + 0.82 * cu, rot = (1 - cu) * -1.2, dx = p[0] - r[0], dy = p[1] - r[1];
+	return [r[0] + s * (dx * Math.cos(rot) - dy * Math.sin(rot)), r[1] + s * (dx * Math.sin(rot) + dy * Math.cos(rot))];
 };
 const band = (v0: number, v1: number, t: number, cu: number, u0 = 0, u1 = 1) => { const N = 26, A: P[] = [], B: P[] = [];
 	for (let i = 0; i <= N; i++) { const u = u0 + ((u1 - u0) * i) / N; A.push(capePt(u, v0, t, cu)); B.push(capePt(u, v1, t, cu)); }
@@ -60,20 +60,24 @@ export const CapeA: React.FC<{t: number; cu: number}> = ({t, cu}) => {
 	const B: [number, number, string, number][] = [[0, 1, 'url(#d1Cp)', 1], [0, 0.06, '#7A2C26', 0.95], [0.06, 0.16, '#5A2022', 0.85], [0.2, 0.3, '#160608', 0.6],
 		[0.33, 0.43, '#5E2426', 0.75], [0.42, 0.46, '#8A3A2E', 0.45], [0.5, 0.62, '#160608', 0.5], [0.66, 0.74, '#4A1C1E', 0.55], [0.8, 1, '#120506', 0.5]];
 	const fl = 0.5 + 0.5 * Math.sin(t * 7.3) * Math.sin(t * 3.1 + 1);
-	const hw = Math.sin(t * 2 * Math.PI * 1.1 - 0.6) * 5;
 	return <g>
 		{B.map(([v0, v1, c, o], i) => <path key={i} d={band(v0, v1, t, cu)} fill={c} opacity={o} />)}
 		{/* the lit top edge (the fire behind catches it) and the cool rim on the underside near the tip */}
 		<path d={band(0, 0.02, t, cu, 0.05, 1)} fill="#D8744A" opacity={0.55 + 0.15 * fl} />
 		<path d={band(0.975, 1, t, cu, 0.55, 1)} fill={ACC} opacity={0.35} />
-		{/* the cape hanging behind his body under the sword arm (between the fist and the torso's edge), swaying */}
-		<g opacity={cl(cu * 1.5)}>
-			<path d={`M1272,520 C1340,560 1420,636 1492,688 L1492,940 C1424,${930 + hw} 1340,${902 + hw} ${1266 + hw},${862 + hw} C1226,832 1198,800 1186,770 Z`} fill="#3A1416" />
-			<path d={`M1300,596 C1344,660 ${1380 + hw},760 ${1398 + hw},900`} fill="none" stroke="#6A2A28" strokeWidth={26} opacity={0.75} />
-			<path d={`M1246,690 C1286,752 ${1316 + hw},826 ${1330 + hw},896`} fill="none" stroke="#5A2224" strokeWidth={18} opacity={0.7} />
-			<path d={`M1316,604 C1358,668 ${1392 + hw},766 ${1408 + hw},892`} fill="none" stroke="#B0503A" strokeWidth={3} opacity={0.45} />
-			<path d={`M1186,770 C1198,800 1226,832 ${1266 + hw},${862 + hw}`} fill="none" stroke={ACC} strokeWidth={2.6} opacity={0.45} />
-		</g>
+		{/* the folds of the same cloth hanging under the sword arm, by its root */}
+		<path d={band(0.62, 0.72, t, cu, 0, 0.34)} fill="#6A2A28" opacity={0.7} />
+		<path d={band(0.8, 0.88, t, cu, 0, 0.3)} fill="#5A2224" opacity={0.65} />
+		<path d={band(0.72, 0.745, t, cu, 0.02, 0.32)} fill="#B0503A" opacity={0.4} />
+		<path d={band(0.975, 1, t, cu, 0.02, 0.3)} fill={ACC} opacity={0.35} />
+	</g>; };
+/** the cape's cloth over the top of the shoulders: from behind the neck over the near shoulder, flowing back into the cape (soft folds) */
+export const MantleA: React.FC<{t: number; cu: number}> = ({t, cu}) => { const w = Math.sin(t * 2 * Math.PI * 1.2 - 0.4) * 3 * cl(cu);
+	return <g>
+		<path d={`M1470,372 C1430,${346 + w * 0.3} 1360,${338 + w * 0.5} 1290,${356 + w} C1250,${368 + w} 1222,${386 + w} 1206,${410 + w} C1214,430 1230,446 1250,456 C1300,430 1380,404 1470,402 Z`} fill="#4A1A1A" />
+		<path d={`M1470,372 C1430,${346 + w * 0.3} 1360,${338 + w * 0.5} 1290,${356 + w} C1250,${368 + w} 1222,${386 + w} 1206,${410 + w} C1222,${400 + w} 1252,${386 + w} 1290,${376 + w} C1350,362 1420,364 1470,384 Z`} fill="#7A2E28" />
+		<path d={`M1460,372 C1420,${350 + w * 0.3} 1360,${343 + w * 0.5} 1292,${360 + w} C1254,${371 + w} 1228,${388 + w} 1212,${408 + w}`} fill="none" stroke="#E0784A" strokeWidth={2.6} opacity={0.6} />
+		<path d={`M1420,390 C1370,384 1310,396 1262,${420 + w}`} fill="none" stroke="#2A0C0C" strokeWidth={5} opacity={0.6} strokeLinecap="round" />
 	</g>; };
 /** the cape's far side, flaring up behind the head on screen right */
 export const CapeFarA: React.FC<{t: number}> = ({t}) => { const w = Math.sin(t * 2 * Math.PI * 1.1) * 6, w2 = Math.sin(t * 2 * Math.PI * 1.1 - 1.2) * 5;
@@ -129,14 +133,20 @@ export const TorsoA: React.FC<{t: number}> = ({t}) => { const br = Math.sin(t * 
 
 /** the neck under the beard and the 交领 at the throat: the red scarf, the white under-robe edge */
 export const CollarA: React.FC = () => <g>
-	<path d="M1388,330 C1420,350 1460,358 1500,350 L1520,404 C1490,414 1450,412 1418,402 Z" fill="#5A3424" />
-	<path d="M1474,354 C1488,355 1497,352 1504,348 L1520,404 C1510,408 1498,410 1488,410 Z" fill="#A86E4E" opacity={0.85} />
-	<path d="M1440,356 C1452,366 1466,372 1480,374 M1446,378 C1456,384 1466,388 1476,390" fill="none" stroke="#3A2016" strokeWidth={2.2} opacity={0.7} />
-	<path d="M1504,348 L1520,404" fill="none" stroke="#FFB070" strokeWidth={2.4} opacity={0.6} />
-	<path d="M1404,388 C1440,402 1490,410 1540,398 L1548,418 C1500,432 1440,428 1396,410 Z" fill="#9C2E22" />
-	<path d="M1406,390 C1440,402 1486,408 1530,400 L1534,406 C1490,414 1440,410 1404,398 Z" fill="#D0563A" opacity={0.8} />
-	<path d="M1452,396 C1470,404 1488,412 1500,420 L1478,424 C1468,414 1458,406 1446,400 Z" fill="#E4D6C0" />
-	<path d="M1500,396 C1486,404 1474,414 1468,424 L1484,426 C1488,416 1496,408 1510,400 Z" fill="#CFC0A8" />
+	{/* the neck in the shadow of the jaw, lit only on its far edge; the throat creases */}
+	<path d="M1392,330 C1424,352 1462,360 1502,352 L1516,398 C1490,408 1450,406 1420,398 Z" fill="#4E2C1E" />
+	<path d="M1490,354 C1498,352 1503,350 1506,347 L1518,398 C1512,400 1506,401 1500,401 Z" fill="#A86E4E" opacity={0.75} />
+	<path d="M1446,360 C1458,370 1472,376 1486,378 M1450,380 C1460,386 1472,390 1484,391" fill="none" stroke="#2E180F" strokeWidth={2.2} opacity={0.7} />
+	{/* the 交领 under the scarf: the robe dark in the V, the light collar bands crossing left over right (右衽) into the armour's opening */}
+	<path d="M1446,404 L1556,400 C1534,420 1504,440 1476,456 C1464,438 1454,420 1446,404 Z" fill="#3A1812" />
+	<path d="M1448,402 L1462,398 C1474,410 1488,424 1500,436 L1488,446 C1476,432 1460,416 1448,402 Z" fill="#B8A88E" />
+	<path d="M1550,398 L1560,410 C1536,426 1506,444 1480,458 L1468,448 C1494,432 1524,414 1550,398 Z" fill="#DCCCB0" />
+	<path d="M1560,410 C1536,426 1506,444 1480,458" fill="none" stroke="#7A6A54" strokeWidth={2.4} />
+	{/* the red scarf: a broad soft fold wrapped round the throat, lit by the fire on its upper roll */}
+	<path d="M1398,378 C1438,392 1494,398 1548,384 C1556,392 1558,404 1554,414 C1502,428 1440,426 1392,408 C1388,398 1390,386 1398,378 Z" fill="#8E2A20" />
+	<path d="M1400,380 C1438,393 1494,399 1546,386 C1550,391 1551,396 1550,400 C1500,412 1440,410 1396,394 C1396,389 1397,384 1400,380 Z" fill="#C24E38" opacity={0.85} />
+	<path d="M1420,404 C1456,414 1504,414 1540,404" fill="none" stroke="#5A1610" strokeWidth={2.6} opacity={0.6} />
+	<path d="M1474,398 C1482,406 1486,414 1486,422" fill="none" stroke="#5A1610" strokeWidth={2} opacity={0.5} />
 </g>;
 
 /* ---------- the head, 3/4 to screen right, tilted (crown to the left); local units = film px, origin between the eyes ---------- */
@@ -146,7 +156,7 @@ export const HeadA: React.FC<{t: number}> = ({t}) => {
 	const p1 = Math.sin(t * 2 * Math.PI * 1.7) * 7, p2 = Math.sin(t * 2 * Math.PI * 2.3 + 1) * 5, p3 = Math.sin(t * 2 * Math.PI * 1.3 + 2) * 4;
 	const FACE = 'M-84,-46 C-40,-58 20,-56 56,-44 C62,-18 64,12 62,42 C60,80 44,112 14,128 C-18,132 -50,112 -68,82 C-82,52 -88,2 -84,-46 Z';
 	const BEARD = 'M-90,-20 C-90,30 -80,74 -54,106 C-46,114 -42,118 -36,120 C-30,128 -20,132 -10,134 C-2,140 8,140 16,138 C26,138 34,132 40,126 C52,114 60,96 64,62 L64,30 C56,46 50,62 48,76 C44,90 32,98 20,98 C6,98 -2,92 -6,82 C-10,70 -18,58 -32,48 C-50,36 -64,20 -76,-6 C-80,-12 -82,-16 -84,-18 Z';
-	const almN = 'M-46,4 C-38,-6 -22,-9 -11,-4 C-19,5 -34,9 -46,4 Z', almF = 'M11,-2 C18,-8 30,-9 37,-5 C31,1 20,4 11,-2 Z';
+	const almN = 'M-46,4 C-38,-6 -22,-9 -11,-4 C-19,5 -34,9 -46,4 Z', almF = 'M11,-2 C17,-9 30,-10 37,-5 C31,2 19,5 11,-2 Z';
 	const flecks = Array.from({length: 70}, (_, i) => { const a = rnd(i, 91), b = rnd(i, 92); const u = -84 + a * 140, v = -6 + b * 136;
 		return [u, v] as P; }).filter(([u, v]) => { const inner = v > 18 + Math.max(0, (u + 60) * 0.6) && !(u > -12 && u < 50 && v < 100); return inner || u < -60; });
 	return <g transform={`translate(${HEAD.x},${HEAD.y}) rotate(${HEAD.rot})`}>
@@ -183,8 +193,8 @@ export const HeadA: React.FC<{t: number}> = ({t}) => {
 		<path d="M-42,7 C-32,9 -20,6 -12,1" fill="none" stroke={line} strokeWidth={1.2} opacity={0.5} />
 		<path d="M10,-6 C20,-11 30,-11 38,-8 L38,-2 C30,-5 20,-4 10,0 Z" fill={skD} opacity={0.5} />
 		<path d={almF} fill="#C8B49C" />
-		<g clipPath="url(#d1Ef)"><circle cx={15.5} cy={-2.2} r={6} fill="#3A2216" /><circle cx={15} cy={-2.2} r={3.2} fill="#070403" /><rect x={8} y={-12} width={34} height={5.6} fill="#000" opacity={0.5} /></g>
-		<circle cx={17} cy={-4} r={1.2} fill="#FFE8C8" />
+		<g clipPath="url(#d1Ef)"><circle cx={18.5} cy={-2} r={5.8} fill="#3A2216" /><circle cx={18} cy={-2} r={3.2} fill="#070403" /><rect x={8} y={-13} width={34} height={5.4} fill="#000" opacity={0.5} /></g>
+		<circle cx={20} cy={-3.6} r={1.2} fill="#FFE8C8" />
 		<path d="M10,-2 C18,-9 30,-10 38,-6" fill="none" stroke={line} strokeWidth={3.8} strokeLinecap="round" />
 		{/* the brows: a hard V, the inner ends driven down and in */}
 		<path d="M-56,-20 C-40,-28 -22,-26 -6,-12 L-8,-6 C-24,-16 -40,-17 -54,-12 Z" fill={hair} />
@@ -192,7 +202,7 @@ export const HeadA: React.FC<{t: number}> = ({t}) => {
 		<path d="M6,-11 C16,-20 30,-22 44,-19 L44,-13 C30,-15 18,-12 8,-6 Z" fill={hair} />
 		{/* the nose: a strong straight bridge, lit on the near side, the far side and the wing in shade */}
 		<path d="M-2,-8 C4,6 10,22 14,34 L6,40 C2,28 -2,12 -6,-4 Z" fill={skH} opacity={0.75} />
-		<path d="M2,-10 C10,6 18,22 24,36 C28,42 26,48 18,48 L34,46 C36,30 28,6 16,-14 Z" fill={skS} />
+		<path d="M7,6 C12,16 18,26 24,36 C28,42 26,48 18,48 L34,46 C36,32 31,18 24,8 Z" fill={skS} />
 		<path d="M2,-10 C10,6 18,22 24,36" fill="none" stroke={skHH} strokeWidth={2.2} opacity={0.7} />
 		<path d="M24,36 C28,42 26,48 18,48 C12,48 6,46 2,42" fill="none" stroke={skD} strokeWidth={2.6} />
 		<ellipse cx={14} cy={45} rx={5} ry={2.4} fill="#2A140C" transform="rotate(8,14,45)" />

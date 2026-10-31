@@ -3,7 +3,7 @@ import {W, H} from '../qq50/kit50';
 import {RimF, P, rnd, f1} from './cao54b';
 import {Qun} from './set54bs';
 import {RunnerF, runTop, Flame3, FIRE, RunKind} from './front54s';
-import {HDefs, CapeA, CapeFarA, TorsoA, CollarA, HeadA, PaulA, SleeveA, VambA, FistA} from './d1hero54a';
+import {HDefs, CapeA, CapeFarA, MantleA, TorsoA, CollarA, HeadA, PaulA, SleeveA, VambA, FistA} from './d1hero54a';
 /* ep54 · D1 variant A 「突刺」, rebuilt to the owner's target picture (his repaint of our 101.60 frame; drawn in code, look B).
    D1V = the whole D1 shot for film 100.256–102.248 (t = film time).
    The camera sits in front of the 宝剑 looking back along it: the broad blade in extreme perspective (built and projected in 3D,
@@ -209,6 +209,7 @@ const Hero: React.FC<{t: number}> = ({t}) => { const L = leanT(t), hT = handT(t)
 			<CapeA t={t} cu={cu} />
 			<CapeFarA t={t} />
 			<TorsoA t={t} />
+			<MantleA t={t} cu={cu} />
 			<CollarA />
 			<HeadA t={t} />
 		</g>
