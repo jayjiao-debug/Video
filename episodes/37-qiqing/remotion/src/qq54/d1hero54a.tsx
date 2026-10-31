@@ -21,12 +21,12 @@ export const HDefs: React.FC = () => <>
 	<linearGradient id="d1Br" x1={1250} y1={420} x2={1290} y2={600} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#2A2422" /><stop offset="0.3" stopColor="#5A4E46" /><stop offset="0.55" stopColor="#3A322E" /><stop offset="1" stopColor="#161210" /></linearGradient>
 	{/* lamellae: small plates in rows, laced; the rows follow the lean */}
 	<pattern id="d1Lm" width={11} height={16} patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
-		<rect width={11} height={16} fill="#151110" />
-		<rect x={0.8} y={0.8} width={9.4} height={12.6} rx={1.2} fill="#2C2420" /><rect x={0.8} y={0.8} width={9.4} height={5} rx={1.2} fill="#3A302A" opacity={0.7} />
+		<rect width={11} height={16} fill="#181311" />
+		<rect x={0.8} y={0.8} width={9.4} height={12.6} rx={1.2} fill="#332A25" /><rect x={0.8} y={0.8} width={9.4} height={5} rx={1.2} fill="#443830" opacity={0.7} />
 		<rect x={0} y={14} width={11} height={1.2} fill="#5A2018" opacity={0.75} /><rect x={5} y={13.4} width={1.2} height={2.6} fill="#7A3024" opacity={0.6} /></pattern>
 	<pattern id="d1LmL" width={11} height={16} patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
-		<rect width={11} height={16} fill="#181311" />
-		<rect x={0.8} y={0.8} width={9.4} height={12.6} rx={1.2} fill="#352B25" /><rect x={0.8} y={0.8} width={9.4} height={5} rx={1.2} fill="#4A3C32" opacity={0.7} />
+		<rect width={11} height={16} fill="#1B1513" />
+		<rect x={0.8} y={0.8} width={9.4} height={12.6} rx={1.2} fill="#3C3129" /><rect x={0.8} y={0.8} width={9.4} height={5} rx={1.2} fill="#524236" opacity={0.7} />
 		<rect x={0} y={14} width={11} height={1.2} fill="#6A2418" opacity={0.75} /><rect x={5} y={13.4} width={1.2} height={2.6} fill="#8A3626" opacity={0.6} /></pattern>
 	{/* mail / scale aventail */}
 	<pattern id="d1Ml" width={7} height={6} patternUnits="userSpaceOnUse" patternTransform="rotate(-28)">
@@ -126,9 +126,9 @@ export const TorsoA: React.FC<{t: number}> = ({t}) => { const br = Math.sin(t * 
 		<path d="M1660,462 C1700,470 1740,490 1772,512 L1790,548 C1760,560 1720,566 1690,560 C1680,530 1672,496 1660,462 Z" fill="url(#d1LmL)" />
 		<path d="M1660,462 C1700,470 1740,490 1772,512" fill="none" stroke="#6E2219" strokeWidth={7} />
 		<path d="M1752,512 L1800,528 L1808,570 L1764,574 Z" fill="#2A2A2E" /><path d="M1754,514 L1800,529 L1801,537 L1756,524 Z" fill="#7A8E9A" opacity={0.7} />
-		<path d="M1796,532 C1812,522 1840,520 1858,528 C1872,536 1876,556 1872,576 C1868,594 1852,604 1832,604 C1816,604 1802,596 1798,584 C1792,566 1790,546 1796,532 Z" fill="#C88A5E" />
-		<path d="M1806,530 C1822,522 1846,522 1860,530 C1866,538 1868,546 1866,552 C1846,546 1824,546 1806,550 Z" fill="#F0BC88" />
-		<path d="M1830,550 L1832,600 M1850,548 L1852,598 M1814,552 L1816,596" fill="none" stroke="#7A4A30" strokeWidth={2} opacity={0.7} />
+		<path d="M1796,532 C1812,522 1840,520 1858,528 C1872,536 1876,556 1872,576 C1868,594 1852,604 1832,604 C1816,604 1802,596 1798,584 C1792,566 1790,546 1796,532 Z" fill="#C48D66" />
+		<path d="M1806,530 C1822,522 1846,522 1860,530 C1866,538 1868,546 1866,552 C1846,546 1824,546 1806,550 Z" fill="#E2AE86" />
+		<path d="M1830,550 L1832,600 M1850,548 L1852,598 M1814,552 L1816,596" fill="none" stroke="#6A4434" strokeWidth={2} opacity={0.7} />
 		<path d="M1858,528 C1872,536 1876,556 1872,576 C1868,594 1852,604 1832,604" fill="none" stroke={ACC} strokeWidth={3} opacity={0.7} />
 		{/* the rims: cyan down his back edges, warm on the top of the far shoulder */}
 		<path d="M1360,582 C1372,604 1392,634 1408,662 C1424,688 1452,700 1488,706 L1488,940" fill="none" stroke={ACC} strokeWidth={3.4} opacity={0.85} />
@@ -139,9 +139,10 @@ export const TorsoA: React.FC<{t: number}> = ({t}) => { const br = Math.sin(t * 
 /** the neck under the beard and the 交领 at the throat: the red scarf, the white under-robe edge */
 export const CollarA: React.FC = () => <g>
 	{/* the neck in the shadow of the jaw, lit only on its far edge; the throat creases */}
-	<path d="M1392,330 C1424,352 1462,360 1502,352 L1516,398 C1490,408 1450,406 1420,398 Z" fill="#4E2C1E" />
-	<path d="M1490,354 C1498,352 1503,350 1506,347 L1518,398 C1512,400 1506,401 1500,401 Z" fill="#A86E4E" opacity={0.75} />
-	<path d="M1446,360 C1458,370 1472,376 1486,378 M1450,380 C1460,386 1472,390 1484,391" fill="none" stroke="#2E180F" strokeWidth={2.2} opacity={0.7} />
+	<path d="M1392,330 C1424,352 1462,360 1502,352 L1516,398 C1490,408 1450,406 1420,398 Z" fill="#94624A" />
+		<path d="M1392,330 C1424,352 1462,360 1502,352 L1504,372 C1464,380 1424,374 1398,356 Z" fill="#6A4434" opacity={0.9} filter="url(#d1Fe)" />
+	<path d="M1496,356 C1501,354 1504,351 1506,348 L1518,398 C1514,400 1510,401 1506,401 Z" fill="#C48D66" opacity={0.8} />
+	<path d="M1446,360 C1458,370 1472,376 1486,378 M1450,380 C1460,386 1472,390 1484,391" fill="none" stroke="#6A4434" strokeWidth={2} opacity={0.7} />
 	{/* the 交领 under the scarf: the robe dark in the V, the light collar bands crossing left over right (右衽) into the armour's opening */}
 	<path d="M1446,404 L1556,400 C1534,420 1504,440 1476,456 C1464,438 1454,420 1446,404 Z" fill="#3A1812" />
 	<path d="M1448,402 L1462,398 C1474,410 1488,424 1500,436 L1488,446 C1476,432 1460,416 1448,402 Z" fill="#B8A88E" />
@@ -280,7 +281,7 @@ export const VambA: React.FC = () => <g>
 	<path d="M1190,448 C1208,490 1230,540 1252,582" fill="none" stroke="#8A2C22" strokeWidth={13} strokeLinecap="round" />
 	<path d="M1187,445 C1204,486 1225,534 1246,576" fill="none" stroke="#C8503A" strokeWidth={2.6} opacity={0.6} />
 </g>;
-export const FistA: React.FC = () => { const sk = '#B88058', skS = '#8A5E44', skD = '#5A3A28', skH = '#D49464', skHH = '#ECB27E';
+export const FistA: React.FC = () => { const sk = '#C48D66', skS = '#94624A', skD = '#6A4434', skH = '#E2AE86', skHH = '#F2C9A2';
 	const F: number[][] = [[1200, 578, 1240, 580, 1238, 722, 1205, 726], [1240, 580, 1268, 584, 1270, 716, 1238, 722], [1268, 584, 1292, 592, 1296, 705, 1270, 716], [1292, 592, 1308, 612, 1310, 680, 1296, 705]];
 	return <g>
 		<path d="M1078,506 C1086,484 1104,464 1126,454 C1150,446 1180,446 1200,456 C1214,466 1226,486 1236,506 C1246,526 1258,548 1274,566 C1292,582 1306,604 1310,632 C1314,664 1304,700 1280,722 C1252,738 1206,740 1168,734 C1140,728 1120,716 1110,700 C1100,670 1094,620 1088,580 C1082,556 1076,530 1078,506 Z" fill={sk} />
@@ -293,14 +294,14 @@ export const FistA: React.FC = () => { const sk = '#B88058', skS = '#8A5E44', sk
 		{/* the four fingers curled under, in shade, lit only on their tops; the creases between them */}
 		{F.map((q, i) => { const bx = (q[4] + q[6]) / 2, by = (q[5] + q[7]) / 2 + 6;
 			const d = `M${q[0]},${q[1]} L${q[2]},${q[3]} L${q[4]},${q[5] - 10} Q${q[4] - 2},${q[5] + 4} ${bx},${by} Q${q[6] + 2},${q[7] + 4} ${q[6]},${q[7] - 10} Z`;
-			return <g key={i}><path d={d} fill={i % 2 ? '#A06A4A' : '#AE7652'} />
+			return <g key={i}><path d={d} fill={i % 2 ? '#AA7454' : '#B88060'} />
 				<path d={`M${q[0]},${q[1]} L${q[2]},${q[3]} L${q[2] + (q[4] - q[2]) * 0.18},${q[3] + (q[5] - q[3]) * 0.18} L${q[0] + (q[6] - q[0]) * 0.18},${q[1] + (q[7] - q[1]) * 0.18} Z`} fill={skH} opacity={0.75} />
 				<path d={`M${q[2]},${q[3] + 6} L${q[4]},${q[5] - 12}`} stroke={skD} strokeWidth={2.4} opacity={0.75} strokeLinecap="round" /></g>; })}
 		{/* the thumb wrapped on top */}
-		<path d="M1190,530 C1208,520 1236,520 1251,532 C1261,546 1259,566 1247,576 C1226,585 1204,583 1194,571 C1185,557 1184,539 1190,530 Z" fill="#DE9E6C" />
+		<path d="M1190,530 C1208,520 1236,520 1251,532 C1261,546 1259,566 1247,576 C1226,585 1204,583 1194,571 C1185,557 1184,539 1190,530 Z" fill="#E2AE86" />
 		<path d="M1194,571 C1204,583 1226,585 1247,576 C1255,572 1259,566 1260,558 C1244,568 1214,570 1192,562 Z" fill={skS} opacity={0.85} />
 		<path d="M1200,528 C1216,523 1236,524 1249,533" fill="none" stroke={skHH} strokeWidth={3} strokeLinecap="round" opacity={0.85} />
 		{/* outline strokes (darker, thin, varying) and the cool rim along the bottom */}
-		<path d="M1078,506 C1086,484 1104,464 1126,454 C1150,446 1180,446 1200,456" fill="none" stroke="#3A2216" strokeWidth={1.6} opacity={0.6} />
+		<path d="M1078,506 C1086,484 1104,464 1126,454 C1150,446 1180,446 1200,456" fill="none" stroke="#6A4434" strokeWidth={1.6} opacity={0.6} />
 		<path d="M1168,734 C1206,740 1252,738 1280,722 C1304,700 1314,664 1310,632" fill="none" stroke={ACC} strokeWidth={3} opacity={0.7} />
 	</g>; };

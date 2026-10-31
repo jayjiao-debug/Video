@@ -1,118 +1,242 @@
 import React from 'react';
 import {P, f1, rnd, strand, qpts} from './cao54b';
-/* ep54 · D1 variant A, round 3: 曹操's head TRACED from the owner's second target (owner_target2.png mapped to film space at 101.60:
-   film = (target − (−18.5, 14)) / 0.818). Drawn directly in film px. The head tilts with its crown to screen-left and turns 3/4;
-   he glances sideways at the lens (both irises in the inner/left corners), the near brow low and knotted toward the nose, the far
-   brow arched, the lids narrowed: cool and dangerous (奸雄). Painterly: soft feathered shade layers (filter d1Fe), strand strokes. */
+/* ep54 · D1 variant A, round 4: 曹操's head redrawn from the owner's notes on the second target (owner_target2.png mapped to film space:
+   film = (target − (−18.5, 14)) / 0.818). Everything inside SCR is drawn in SCREEN px of the 101.60 frame (the target's own
+   coordinates): SCR undoes the shot's 1.02 shake-scale and the body bob at 101.60, so the shapes land exactly on the onion.
+   The head tilts with its crown to screen-left and turns 3/4 to screen right; he glances sideways at the lens (both irises in their
+   left corners), the near brow low, thick and knotted toward the nose, the far brow arched high, the mouth pressed under a thick
+   drooping moustache (奸雄). Light, warm Han skin lit by the fires on the left (lit #E2AE86, mid #C48D66, shadow #94624A,
+   deep #6A4434, highlight #F2C9A2). Flat cel planes with soft feathered shade layers (filters d1Fe / d1Fs). */
 const ACC = '#8FD0DC';
-const R1 = [[1281, 264], [1292, 248], [1304, 234], [1318, 221], [1334, 210], [1351, 201], [1369, 195], [1388, 192], [1406, 194]];
-const R2 = [[1270, 248], [1279, 230], [1291, 215], [1305, 203], [1322, 193], [1341, 186], [1361, 182], [1381, 181], [1400, 184]];
-const R3 = [[1268, 226], [1278, 209], [1292, 196], [1309, 187], [1329, 181], [1350, 178], [1371, 178]];
-/* the aventail's scale rows (centres), tilted with the head */
-const SCALES: P[] = []; for (let j = 0; j < 12; j++) for (let i = 0; i < 7; i++) { const u = i * 13 + (j % 2) * 6.5 - 6, v = j * 10.5;
-	SCALES.push([1272 + u * 0.9 + v * 0.42, 276 + v * 0.92 - u * 0.36]); }
+const SK = {lit: '#E2AE86', mid: '#C48D66', sh: '#94624A', deep: '#6A4434', hi: '#F2C9A2'};
+const HAIR = '#2A1A12', BEARD = '#2C2622', LINE = '#160C08';
+/** screen px (101.60) → the hero layer's drawing space: undo the shake div's scale(1.02) about the centre and the lean bob (1.15 px) */
+const SCR = 'translate(960,538.85) scale(0.980392) translate(-960,-540)';
+
+/* ---------- curve helpers (Catmull-Rom) ---------- */
+const cr = (p: P[], closed = true, k = 1 / 6) => { const n = p.length, g = (i: number) => p[closed ? (i + n) % n : Math.max(0, Math.min(n - 1, i))];
+	let d = `M${f1(p[0][0])},${f1(p[0][1])}`;
+	for (let i = 0; i < (closed ? n : n - 1); i++) { const a = g(i - 1), b = g(i), c = g(i + 1), e = g(i + 2);
+		d += ` C${f1(b[0] + (c[0] - a[0]) * k)},${f1(b[1] + (c[1] - a[1]) * k)} ${f1(c[0] - (e[0] - b[0]) * k)},${f1(c[1] - (e[1] - b[1]) * k)} ${f1(c[0])},${f1(c[1])}`; }
+	return closed ? d + ' Z' : d; };
+/** the Catmull-Rom curve through p, sampled (n points per span) */
+const crs = (p: P[], n = 6): P[] => { const out: P[] = [p[0]], g = (i: number) => p[Math.max(0, Math.min(p.length - 1, i))];
+	for (let i = 0; i < p.length - 1; i++) { const a = g(i - 1), b = g(i), c = g(i + 1), d = g(i + 2);
+		for (let k = 1; k <= n; k++) { const t = k / n, t2 = t * t, t3 = t2 * t;
+			out.push([0, 1].map((j) => 0.5 * (2 * b[j] + (-a[j] + c[j]) * t + (2 * a[j] - 5 * b[j] + 4 * c[j] - d[j]) * t2 + (-a[j] + 3 * b[j] - 3 * c[j] + d[j]) * t3)) as P); } }
+	return out; };
+/** a point at fraction v along a polyline (by vertex index) */
+const pl = (p: P[], v: number): P => { const x = Math.min(p.length - 1 - 1e-6, Math.max(0, v * (p.length - 1))), i = Math.floor(x), u = x - i;
+	return [p[i][0] + (p[i + 1][0] - p[i][0]) * u, p[i][1] + (p[i + 1][1] - p[i][1]) * u]; };
+/** a tapered ribbon along a Catmull-Rom centreline: half-width a at the ends, b at the belly */
+const rib = (p: P[], a: number, b: number, skew = 0.5) => strand(crs(p, 5), (u) => a + (b - a) * Math.pow(Math.sin(Math.PI * Math.pow(u, Math.log(0.5) / Math.log(skew))), 0.8));
+
+/* ---------- geometry (screen px at 101.60) ---------- */
+/* the face: generous, so the rim, the aventail, the far band and the beard all overlap its edges (no gaps for the rim filter) */
+const FACE = cr([[1294, 302], [1298, 270], [1314, 244], [1334, 222], [1360, 204], [1388, 193], [1414, 192], [1432, 204], [1448, 224], [1464, 248], [1480, 272], [1494, 298], [1498, 330], [1490, 352], [1466, 368], [1434, 376], [1398, 372], [1370, 361], [1350, 350], [1334, 332], [1316, 314]]);
+/* the helmet rim band: its lower edge sits on the brow line, its upper edge on the dome */
+const RL: P[] = [[1286, 308], [1296, 286], [1307, 271], [1318, 259], [1331, 248], [1350, 231], [1370, 218.5], [1390, 208.5], [1408, 206.5], [1422, 210]];
+const RU: P[] = [[1270, 300], [1279, 274], [1290, 257], [1302, 244], [1316, 233], [1332, 223], [1350, 212.5], [1370, 202.5], [1390, 195.5], [1407, 193], [1422, 197]];
+const RIM = cr([...RL, ...RU.slice().reverse()]);
+const DOME = cr([[1272, 300], [1261, 268], [1263, 240], [1273, 216], [1289, 198], [1311, 185], [1337, 178], [1363, 176.5], [1387, 181], [1405, 189], [1422, 199], [1400, 206], [1360, 214], [1320, 236], [1292, 266]]);
+/* rivets: three irregular rows of dark slots parallel to the rim */
+const RIV: {x: number; y: number; a: number}[] = [];
+[[13, 7], [27, 6], [41, 5]].forEach(([off, n], r) => { for (let i = 0; i < n; i++) { const v = 0.06 + (i + 0.5 * (r % 2)) / (n + 0.2) * 0.9 + (rnd(i + r * 9, 41) - 0.5) * 0.04;
+	const a = pl(RU, v), b = pl(RU, Math.min(1, v + 0.02)), dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, nx = dy / l, ny = -dx / l;
+	const o = off * (1 - 0.25 * v) + (rnd(i + r * 9, 42) - 0.5) * 3, x = a[0] + nx * o, y = a[1] + ny * o;
+	if (x > 1262 && y > 182 && (r < 2 || v < 0.75)) RIV.push({x, y, a: (Math.atan2(dy, dx) * 180) / Math.PI}); } });
+/* the near aventail: front edge (against the cheek) and back edge (the cyan rim), from the rim (v = 0) to the shoulder (v = 1) */
+const AF: P[] = [[1300, 256], [1309, 280], [1321, 300], [1335, 318], [1349, 334], [1360, 350], [1368, 366], [1374, 384]];
+const AB: P[] = [[1262, 266], [1264, 290], [1270, 308], [1280, 322], [1291, 334], [1300, 348], [1308, 362], [1316, 376], [1322, 388]];
+const AVT = cr([...AF, ...AB.slice().reverse()]);
+/* its scales: larger, slightly irregular, overlapping (upper rows over lower), following the cheek and neck */
+const SCL: {x: number; y: number; w: number; h: number; a: number; k: number}[] = [];
+{ const NR = 8, NC = 4;
+	for (let j = NR - 1; j >= 0; j--) for (let i = -1; i <= NC; i++) { const s = j * 13 + i + 20, v = (j + 0.25 + (rnd(s, 51) - 0.5) * 0.2) / (NR - 0.6);
+		const u = (i + 0.5 * (j % 2) + 0.5 + (rnd(s, 52) - 0.5) * 0.22) / NC; if (u < -0.12 || u > 1.12) continue;
+		const f = pl(AF, v), b = pl(AB, v), f2 = pl(AF, v + 0.04), b2 = pl(AB, v + 0.04);
+		const x = f[0] + (b[0] - f[0]) * u, y = f[1] + (b[1] - f[1]) * u, dx = (f2[0] - f[0]) * (1 - u) + (b2[0] - b[0]) * u, dy = (f2[1] - f[1]) * (1 - u) + (b2[1] - b[1]) * u;
+		const wd = Math.hypot(b[0] - f[0], b[1] - f[1]) / NC, w = wd * (1.2 + (rnd(s, 53) - 0.5) * 0.3);
+		SCL.push({x, y, w, h: w * (1.2 + rnd(s, 54) * 0.2), a: (Math.atan2(dy, dx) * 180) / Math.PI - 90 + (rnd(s, 55) - 0.5) * 10, k: rnd(s, 56)}); } }
+const scaleD = (w: number, h: number) => `M${f1(-w / 2)},${f1(-h / 2)} L${f1(w / 2)},${f1(-h / 2)} L${f1(w / 2)},${f1(h * 0.02)} C${f1(w / 2)},${f1(h * 0.42)} ${f1(w * 0.32)},${f1(h / 2)} 0,${f1(h / 2)} C${f1(-w * 0.32)},${f1(h / 2)} ${f1(-w / 2)},${f1(h * 0.42)} ${f1(-w / 2)},${f1(h * 0.02)} Z`;
+const scaleB = (w: number, h: number) => `M${f1(w / 2)},${f1(h * 0.02)} C${f1(w / 2)},${f1(h * 0.42)} ${f1(w * 0.32)},${f1(h / 2)} 0,${f1(h / 2)} C${f1(-w * 0.32)},${f1(h / 2)} ${f1(-w / 2)},${f1(h * 0.42)} ${f1(-w / 2)},${f1(h * 0.02)}`;
+/* the far band: the rim running round the far side of the head and down the far jaw, its outer edge lit */
+const FB: P[] = [[1404, 201], [1420, 208], [1434, 222], [1448, 241], [1462, 260], [1477, 279], [1491, 294], [1505, 306], [1514, 314]];
+const FBL: P[] = [[1410, 194.5], [1426, 201.5], [1441, 216], [1455, 235], [1469, 254], [1484, 273], [1498, 288], [1511, 299], [1519, 306]];
+/* the eyes */
+const ENU: P[] = [[1347.5, 282.6], [1351, 276], [1357, 271.2], [1364, 268.2], [1371, 267], [1377, 267.8]];
+const ENL: P[] = [[1377, 267.8], [1372.5, 272.4], [1366, 277], [1359, 280.8], [1352, 283]];
+const EYEN = cr([...ENU, ...ENL], true, 0.14);
+const EFU: P[] = [[1398.6, 246.4], [1401.6, 241.8], [1406.6, 238.8], [1412.6, 237.6], [1418, 238.2], [1422.6, 240.2]];
+const EFL: P[] = [[1422.6, 240.2], [1418.6, 244.6], [1412.6, 248.6], [1406, 250.4], [1401, 249.6]];
+const EYEF = cr([...EFU, ...EFL], true, 0.14);
+/* the beard and the moustache */
+const BD = cr([[1350, 343], [1364, 340.5], [1380, 339.5], [1394, 337], [1400, 326], [1404, 312], [1412, 311], [1424, 313.5], [1436, 312], [1448, 306], [1460, 300], [1476, 301], [1488, 305],
+	[1496, 318], [1499.5, 334], [1497, 350], [1487, 362], [1468, 370.5], [1446, 375.5], [1424, 377.5], [1402, 374.5], [1384, 367], [1368, 357], [1356, 350]]);
+const MOU = cr([[1398.6, 296.4], [1401.4, 291.4], [1407, 290.8], [1414, 291.6], [1421, 290], [1428, 285], [1437, 281.6], [1450, 280.6], [1464, 283.4], [1476, 289.4], [1486, 297.6], [1492, 308], [1489, 316],
+	[1481, 306], [1468, 297.6], [1454, 293.6], [1440, 294.4], [1428, 297.4], [1418, 301.4], [1412, 307.4], [1409.6, 318], [1408.4, 330], [1407.4, 342], [1399.6, 344], [1396.4, 330], [1396.2, 316], [1397, 305]]);
+/* the moustache's hair: short strokes flowing out from under the nose, down over the corners */
+const MH: {a: P; b: P; c: string; w: number; o: number}[] = [];
+for (let i = 0; i < 26; i++) { const u = (i + rnd(i, 81) * 0.6) / 26, a = pl([[1404, 292.5], [1420, 291], [1440, 287.6], [1462, 289], [1484, 302]], u), lit = u < 0.35 && i % 2 === 0;
+	const dx = u < 0.18 ? -0.35 : 0.55 + u * 0.4, dy = u < 0.18 ? 1 : 0.55, l = 5 + rnd(i, 82) * 4, n = Math.hypot(dx, dy);
+	MH.push({a: [a[0] + (rnd(i, 83) - 0.5) * 3, a[1] - 2 + rnd(i, 84) * 4], b: [a[0] + (dx / n) * l, a[1] + (dy / n) * l], c: lit ? '#8A7A6C' : '#584C44', w: lit ? 0.9 : 1.2, o: lit ? 0.55 : 0.6}); }
+for (let i = 0; i < 7; i++) { const y = 300 + i * 6 + rnd(i, 85) * 3; MH.push({a: [1400.4 + rnd(i, 86), y], b: [1401.4 + rnd(i, 87), y + 7], c: '#584C44', w: 1.1, o: 0.6}); }
+/* the beard's strands: flowing out and down from the chin */
+const BH = Array.from({length: 52}, (_, i) => { const x = 1352 + rnd(i, 71) * 146, y = 314 + rnd(i, 72) * 56, dx = (x - 1430) * 0.01, n = Math.hypot(dx, 1), l = 10 + rnd(i, 73) * 8, b = (rnd(i, 74) - 0.5) * 5;
+	return {d: `M${f1(x)},${f1(y)} q${f1((dx / n) * l * 0.5 + b)},${f1(l * 0.5)} ${f1((dx / n) * l)},${f1(l / n)}`, grey: i % 5 === 0}; });
+const LIP = cr([[1413, 305.4], [1421, 301.8], [1432, 299.2], [1442, 298.2], [1447, 299.4], [1444.5, 303.8], [1437, 307.4], [1427, 309.2], [1418, 309]]);
+
 export const HeadT: React.FC<{t: number}> = ({t}) => {
 	const p1 = Math.sin(t * 2 * Math.PI * 1.6) * 5, p2 = Math.sin(t * 2 * Math.PI * 2.1 + 1) * 4;
-	const AVT = 'M1278,294 C1288,286 1300,282 1310,280 C1318,294 1326,310 1338,330 C1348,346 1360,356 1372,364 C1360,374 1336,378 1312,374 C1298,360 1288,338 1283,316 C1280,306 1278,300 1278,294 Z';
-	const FACE = 'M1296,292 C1316,262 1344,234 1378,216 C1400,210 1420,212 1434,222 C1454,244 1474,278 1488,318 C1488,350 1462,372 1430,375 C1394,373 1362,358 1344,334 C1332,318 1318,298 1296,292 Z';
-	const BEARD = 'M1342,334 C1360,338 1382,336 1398,326 C1404,316 1405,304 1409,298 L1411,318 C1413,330 1424,335 1437,331 C1447,323 1453,311 1458,303 C1470,300 1482,300 1492,305 C1497,316 1501,330 1501,342 C1496,356 1476,368 1452,374 C1442,378 1432,381 1424,379 C1404,375 1380,368 1360,358 C1349,351 1342,343 1342,334 Z';
 	const plume = (a: P, c: P, b: P, w: number) => strand(qpts(a, c, b, 12), (u) => w * (1 - u * 0.85) + 0.6);
 	return <g>
-		{/* the plume: a red-orange tassel at the back of the crown, curling back to the left, fluttering */}
+		{/* the plume (drawing space): a red-orange tassel at the back of the crown, curling back to the left, fluttering */}
 		<path d={plume([1284, 188], [1258, 168 + p2], [1236 + p1, 206 + p2], 6)} fill="#9A3A26" />
 		<path d={plume([1283, 190], [1248 + p1 * 0.5, 186], [1232 + p1, 246 + p2 * 0.6], 4.5)} fill="#B44A2C" />
 		<path d={plume([1285, 189], [1262, 196 + p2 * 0.5], [1250 + p1 * 0.8, 272 + p2 * 0.4], 3.2)} fill="#C8603A" />
 		{[0, 1, 2, 3].map((i) => <path key={i} d={`M1284,${188 + i} Q${1252 + i * 4 + p1 * 0.4},${180 + i * 6 + p2 * 0.5} ${1236 + i * 6 + p1},${220 + i * 14 + p2 * 0.6}`} fill="none" stroke={i % 2 ? '#F0A060' : '#E07A44'} strokeWidth={1.3} opacity={0.75} />)}
-		{/* the far rim / hood edge running down the far side of the face */}
-		<path d="M1434,214 C1456,234 1478,264 1490,300 C1494,316 1494,330 1490,344" fill="none" stroke="#3E241A" strokeWidth={18} strokeLinecap="round" />
-		<path d="M1428,224 C1450,242 1470,270 1482,302" fill="none" stroke="#24140E" strokeWidth={3} opacity={0.6} />
-		<path d="M1442,206 C1466,226 1488,256 1500,294 C1504,310 1504,326 1500,342" fill="none" stroke="#B58A69" strokeWidth={2.6} opacity={0.75} />
-		{/* the neck in the jaw's shadow */}
-		<path d="M1395,360 C1420,374 1462,376 1500,348 L1514,398 C1482,406 1440,406 1404,398 Z" fill="#5E4237" />
-		<path d="M1480,362 C1490,358 1498,352 1504,346 L1514,398 C1506,400 1498,401 1490,401 Z" fill="#8A5E46" opacity={0.8} />
-		{/* the face: base, then feathered planes */}
-		<path d={FACE} fill="#7E5642" />
-		<g clipPath="url(#d1HfC)">
-			<g filter="url(#d1Fe)">
-				<path d="M1372,222 C1394,214 1420,214 1440,226 C1430,238 1412,244 1392,246 C1380,242 1372,234 1372,222 Z" fill="#946A50" opacity={0.7} />
-				<path d="M1426,234 C1444,244 1462,264 1474,292 C1462,300 1448,300 1436,292 C1428,276 1424,256 1426,234 Z" fill="#A47458" opacity={0.85} />
-				<path d="M1340,284 C1356,278 1376,280 1396,288 C1398,302 1394,312 1388,318 C1370,320 1354,316 1344,306 Z" fill="#9A6A4E" opacity={0.85} />
-				<path d="M1340,314 C1360,322 1380,324 1400,318 L1402,338 C1380,344 1356,342 1342,334 Z" fill="#553A2E" opacity={0.9} />
-				<ellipse cx={1360} cy={270} rx={27} ry={15} fill="#4E3226" opacity={0.75} transform="rotate(-25,1360,270)" />
-				<path d="M1306,288 C1320,296 1334,312 1344,332 L1360,336 C1352,316 1344,300 1336,286 C1326,280 1314,282 1306,288 Z" fill="#4A3026" opacity={0.85} />
-				<ellipse cx={1412} cy={243} rx={16} ry={9} fill="#5E3E30" opacity={0.55} transform="rotate(-22,1412,243)" />
-				<path d="M1402,256 C1412,265 1421,274 1430,284 L1444,278 C1432,262 1420,250 1408,246 Z" fill="#4E3228" opacity={0.95} />
-				<path d="M1306,286 C1318,300 1332,318 1346,336 L1334,340 C1320,322 1306,304 1296,292 Z" fill="#4A3028" opacity={0.7} />
+		<g transform={SCR}>
+			{/* the far aventail behind the jaw, its scale edges lit orange by the fires behind him */}
+			<path d={cr([[1462, 268], [1484, 282], [1504, 298], [1514, 320], [1510, 346], [1498, 364], [1486, 354], [1488, 330], [1484, 306], [1472, 290]])} fill="#3A2E28" />
+			{[[1487, 296, 1497, 330], [1494, 298, 1505, 324], [1500, 304, 1508, 330]].map(([a, b, c, d], i) => <path key={i} d={`M${a},${b} Q${a + 6},${(b + d) / 2} ${c},${d}`} fill="none" stroke={i === 1 ? '#F09050' : '#D0703A'} strokeWidth={2.2} opacity={0.7} strokeLinecap="round" />)}
+			{/* the face: the mid tone, then soft planes (lit, shadow side, deep shadow) */}
+			<path d={FACE} fill={SK.mid} />
+			<g clipPath="url(#d1HfC)">
+				<g filter="url(#d1Fe)">
+					{/* lit: the forehead under the rim, the near cheek */}
+					<path d={cr([[1340, 240], [1360, 225], [1388, 214], [1414, 211], [1424, 222], [1406, 233], [1386, 240], [1364, 248], [1346, 254]])} fill={SK.lit} />
+					<path d={cr([[1350, 289], [1364, 285], [1382, 281], [1398, 281], [1402, 296], [1398, 310], [1384, 316], [1366, 316], [1350, 310], [1343, 300]])} fill={SK.lit} />
+					<path d={cr([[1416, 249], [1432, 247], [1446, 258], [1448, 270], [1434, 272], [1420, 264]])} fill={SK.lit} opacity={0.55} />
+					{/* shadow side: the temple and cheek against the aventail, the lower jaw plane, the far side beyond the nose */}
+					<path d={cr([[1294, 302], [1304, 276], [1320, 256], [1338, 244], [1344, 254], [1334, 270], [1330, 290], [1336, 310], [1348, 328], [1358, 346], [1336, 338], [1316, 318]])} fill={SK.sh} />
+					<path d={cr([[1296, 300], [1306, 276], [1320, 260], [1330, 256], [1326, 276], [1324, 296], [1332, 318], [1346, 338], [1326, 330], [1310, 316]])} fill={SK.deep} opacity={0.7} />
+					<path d={cr([[1426, 214], [1442, 228], [1458, 250], [1472, 272], [1486, 294], [1490, 316], [1472, 302], [1458, 284], [1450, 266], [1440, 246], [1430, 230]])} fill={SK.sh} />
+					{/* deep: along the rim's underside, the eye sockets under the brows, under the cheekbone */}
+					<path d={rib(RL, 1.5, 3.5)} fill={SK.deep} opacity={0.6} transform="translate(0,3)" />
+					<path d={cr([[1336, 268], [1350, 263], [1366, 259], [1382, 259], [1390, 263], [1384, 268], [1372, 267], [1360, 269.5], [1348, 275], [1340, 281]])} fill={SK.deep} opacity={0.75} />
+					<path d={cr([[1396, 243], [1404, 236], [1414, 232.6], [1426, 232.6], [1430, 238], [1420, 238.4], [1408, 239.6], [1400, 246]])} fill={SK.deep} opacity={0.6} />
+					<path d={cr([[1346, 314], [1366, 318], [1388, 322], [1398, 318], [1396, 326], [1376, 327], [1354, 322]])} fill={SK.deep} opacity={0.45} />
+				</g>
+				<g filter="url(#d1Fs)">
+					{/* the lower jaw plane under the cheekbone: a cel plane with a clean edge */}
+					<path d={cr([[1338, 318], [1356, 316], [1376, 320], [1392, 322], [1401, 318], [1404, 344], [1380, 348], [1352, 346]], true, 0.12)} fill={SK.sh} />
+					<path d={cr([[1350, 317], [1372, 320.5], [1392, 323], [1400, 320], [1396, 326], [1372, 325.5], [1352, 321]], true, 0.12)} fill={SK.deep} opacity={0.55} />
+					{/* the cheekbone's warm highlight */}
+					<ellipse cx={1373} cy={290.5} rx={11} ry={3.6} fill={SK.hi} opacity={0.75} transform="rotate(-22,1373,290.5)" />
+					{/* the frown: a soft crease above the knotted near brow, a short vertical crease between the brows */}
+					<path d="M1367,242 C1372.4,241 1377.6,241.6 1382.4,243.6" fill="none" stroke={SK.deep} strokeWidth={1.7} opacity={0.8} strokeLinecap="round" />
+					<path d="M1390.4,249.6 C1389.4,246.8 1388,244.2 1386.4,241.8" fill="none" stroke={SK.deep} strokeWidth={1.7} opacity={0.9} strokeLinecap="round" />
+				</g>
+				{/* the nose, a prominent straight Han nose seen 3/4: the near side plane in half-tone, the far side plane in shadow with a clean
+				   edge at the ridge, the lit bridge plane from between the brows down to a rounded tip; its cast shadow falls onto the far cheek and the moustache */}
+				<path d={cr([[1375, 257], [1384.5, 251.5], [1393, 263], [1401, 273], [1406, 283], [1400, 292], [1392, 283], [1384, 270], [1376, 262]])} fill="#B37C5A" filter="url(#d1Fs)" />
+				<path d={cr([[1381, 254.5], [1386, 252.5], [1393.6, 262.6], [1401.4, 272.4], [1404.6, 280], [1399.6, 283], [1393, 274], [1386, 264]], true, 0.12)} fill="#A86F50" opacity={0.85} />
+				<path d={cr([[1398, 248], [1410, 254], [1424, 266], [1434, 280], [1440, 292], [1428, 297], [1418, 294], [1414, 284], [1404, 262]])} fill={SK.deep} opacity={0.5} filter="url(#d1Fe)" />
+				<path d={cr([[1406, 253], [1416, 260], [1426, 271], [1432, 282], [1436, 292], [1426, 293], [1421, 287], [1413, 272]], true, 0.12)} fill={SK.deep} opacity={0.6} filter="url(#d1Fs)" />
+				<path d={cr([[1390.5, 247], [1399, 245.5], [1409, 252.5], [1419, 263], [1426, 274], [1424, 283], [1416, 277], [1406, 266], [1397, 256]], true, 0.12)} fill={SK.sh} />
+				<path d={cr([[1407, 261], [1416, 268], [1423.5, 277], [1423, 283], [1416, 277.5], [1409, 268]], true, 0.12)} fill={SK.deep} opacity={0.75} />
+				<path d={cr([[1383, 250], [1390.5, 247], [1398, 255.5], [1406, 265], [1414, 275], [1409, 279], [1401, 272.6], [1393, 263.6], [1386, 256]], true, 0.12)} fill={SK.lit} />
+				<path d={rib([[1388.4, 250], [1395.4, 257.6], [1403, 266.2], [1410, 274.6]], 0.6, 2)} fill={SK.hi} />
+				{/* the tip: defined, slightly rounded, lit on top; the nostril wing and the dark nostril */}
+				<path d={cr([[1404, 277], [1410.5, 272.8], [1418, 274.4], [1422.6, 280], [1420.4, 286.2], [1413.6, 289], [1406, 287], [1402.6, 282]])} fill="#D9A47C" />
+				<path d="M1422.6,280 C1422.4,284.4 1418.6,288.8 1413.6,289 C1409,289 1405.6,287.6 1403.6,285 C1408.6,286.4 1414.6,285.6 1419,282 Z" fill={SK.sh} opacity={0.9} />
+				<ellipse cx={1409.5} cy={277} rx={2.8} ry={1.7} fill={SK.hi} opacity={0.95} transform="rotate(-25,1409.5,277)" />
+				<path d={cr([[1396.5, 286], [1401, 281.4], [1407, 283.6], [1408.6, 289.4], [1403, 292.4], [1397.4, 291]])} fill={SK.mid} />
+				<path d={cr([[1395.6, 291], [1395.4, 286], [1398.4, 282.2], [1403, 281.6], [1400, 284.6], [1398.6, 289]])} fill={SK.sh} filter="url(#d1Fs)" />
+				<path d="M1396.4,290.2 C1396,285 1399.6,281.4 1405,281.8" fill="none" stroke={SK.deep} strokeWidth={1.2} opacity={0.85} strokeLinecap="round" />
+				<ellipse cx={1413.2} cy={288.2} rx={3.4} ry={1.5} fill="#2E1810" transform="rotate(-16,1413.2,288.2)" />
 			</g>
-			{/* the forehead creases of the frown */}
-			<path d="M1380,238 C1388,236 1396,232 1402,226 M1372,246 C1380,243 1388,240 1394,236" fill="none" stroke="#5A3A2C" strokeWidth={1.6} opacity={0.6} />
+			{/* the near eye: narrow and hard; the iris pushed into the left corner and cut by the lid; a strong upper-lid line */}
+			<path d={EYEN} fill="#DCC4A8" />
+			<g clipPath="url(#d1EnC)">
+				<path d="M1366,276 L1380,268 L1380,285 L1366,285 Z" fill="#F0E0CA" opacity={0.55} />
+				<circle cx={1355.8} cy={277} r={5.7} fill="#3A2418" /><circle cx={1355.5} cy={277.2} r={2.9} fill="#0A0605" />
+				<path d={rib(ENU, 1.4, 2.4)} fill="#000" opacity={0.3} transform="translate(0.6,1.2)" />
+			</g>
+			<circle cx={1357.8} cy={275.2} r={1.15} fill="#FFF0DC" />
+			<path d={rib([[1344.5, 285], [1347.6, 281.6], [1351, 275.4], [1357.2, 270.3], [1364, 267.3], [1371, 266.1], [1377.4, 266.9], [1381, 268.6]], 0.6, 1.8, 0.42)} fill={LINE} />
+			<path d={cr([[1352.5, 284.4], [1359.5, 282.4], [1366.5, 279]], false)} fill="none" stroke="#5A3426" strokeWidth={1.1} opacity={0.85} strokeLinecap="round" />
+			<path d={cr([[1355, 268.2], [1362, 265.4], [1370, 264.3], [1376, 264.8]], false)} fill="none" stroke={SK.deep} strokeWidth={1} opacity={0.6} strokeLinecap="round" />
+			{/* the far eye: a clear almond under a high arched brow; the iris at the lens (touching the left corner), white on its right */}
+			<path d={EYEF} fill="#D6BEA2" />
+			<g clipPath="url(#d1EfC)">
+				<path d="M1411,244 L1426,237 L1426,250 L1411,250 Z" fill="#F0E0CA" opacity={0.5} />
+				<circle cx={1405.2} cy={245} r={5} fill="#3A2418" /><circle cx={1405} cy={245.2} r={2.5} fill="#0A0605" />
+				<path d={rib(EFU, 1.2, 2.2)} fill="#000" opacity={0.3} transform="translate(0.4,1.1)" />
+			</g>
+			<circle cx={1407} cy={243.2} r={1} fill="#FFF0DC" />
+			<path d={rib([[1396.6, 248.6], [1399.4, 244.6], [1403, 240.6], [1408.6, 237.4], [1414.6, 236.4], [1420, 237.2], [1424.6, 239.6], [1426.6, 241.6]], 0.6, 1.6, 0.45)} fill={LINE} />
+			<path d={cr([[1403, 251.2], [1410, 251], [1417, 247.8]], false)} fill="none" stroke={SK.deep} strokeWidth={1} opacity={0.65} strokeLinecap="round" />
+			{/* the brows: the near one thick and low, knotted down toward the nose; the far one arched high */}
+			<path d={cr([[1331, 268], [1340, 261.4], [1351, 256], [1362, 252], [1372, 249.4], [1381, 248.2], [1387.4, 250], [1391.2, 254.4], [1391.2, 259.8], [1387.2, 259.8], [1381.6, 257.2], [1372, 257.6], [1361, 259.8], [1350, 263], [1340, 267.4], [1333, 270.6]], true, 0.15)} fill="#3C281C" />
+			<path d={cr([[1356, 258.6], [1368, 254.4], [1380, 252], [1387.6, 253.6], [1390.6, 258.6], [1386.6, 258.6], [1380, 256.4], [1368, 257.4]], true, 0.15)} fill="#1A0E08" opacity={0.85} />
+			{Array.from({length: 16}, (_, i) => { const u = (i + rnd(i, 61) * 0.5) / 16, x = 1333 + u * 52, y = 268.5 - u * 18.5 + rnd(i, 62) * 2.5, l = 4 + rnd(i, 63) * 3;
+				return <path key={i} d={`M${f1(x)},${f1(y)} l${f1(l * 0.86)},${f1(-l * 0.5 - 1.2)}`} fill="none" stroke={i % 3 === 0 ? '#6A5444' : '#140A06'} strokeWidth={1} opacity={i % 3 === 0 ? 0.5 : 0.75} strokeLinecap="round" />; })}
+			<path d={rib([[1392.4, 248.4], [1395, 242.4], [1400, 235.6], [1406.6, 230], [1414, 226], [1422, 224.2], [1430, 225], [1435, 227.4]], 0.9, 3.1, 0.3)} fill="#2E1E14" />
+			{Array.from({length: 8}, (_, i) => { const u = (i + 0.5) / 8, a = pl([[1393, 247], [1400, 235.6], [1414, 226], [1430, 225]], u); return <path key={i} d={`M${f1(a[0] - 1)},${f1(a[1] + 1.6)} l${f1(4 + u * 2)},${f1(-2.4 + u * 2)}`} fill="none" stroke={i % 3 === 0 ? '#6A5444' : '#120A06'} strokeWidth={0.9} opacity={0.6} strokeLinecap="round" />; })}
+			{/* the beard: solid over the chin and along the jaw, strand texture, greying flecks; the moustache thick and drooping */}
+			<path d={BD} fill={BEARD} />
+			<g clipPath="url(#d1BdC)">
+				<g filter="url(#d1Fe)">
+					<path d={cr([[1346, 338], [1376, 336], [1400, 330], [1404, 356], [1388, 372], [1360, 356]])} fill="#4A3E36" opacity={0.75} />
+					<path d={cr([[1414, 372], [1446, 366], [1478, 358], [1494, 362], [1470, 384], [1424, 386]])} fill="#1E1A17" opacity={0.5} />
+					<path d={cr([[1476, 304], [1494, 312], [1502, 336], [1490, 344], [1482, 324]])} fill="#5A4A3E" opacity={0.55} />
+				</g>
+				{BH.map((h, i) => <path key={i} d={h.d} fill="none" stroke={h.grey ? '#8E867C' : i % 2 ? '#463E38' : '#3A332E'} strokeWidth={h.grey ? 0.9 : 2.2} opacity={h.grey ? 0.42 : 0.7} strokeLinecap="round" />)}
+				{[0, 1, 2, 3, 4, 5].map((i) => <path key={'l' + i} d={`M${1352 + i * 7},${343 + i * 4.4} q${2 + i * 0.4},7 ${4 + i * 0.6},14`} fill="none" stroke="#6E5E52" strokeWidth={1.2} opacity={0.5} strokeLinecap="round" />)}
+			</g>
+			{[[1360, 352], [1372, 360], [1385, 367], [1398, 372], [1412, 376], [1426, 378], [1440, 376.5], [1454, 373.5], [1468, 369.5], [1480, 364], [1490, 356]].map(([x, y], i) =>
+				<path key={i} d={`M${x - 5.5},${y - 3} Q${x + 1},${y + 6 + (i % 3)} ${x + 5},${y - 2}`} fill={BEARD} />)}
+			<path d="M1362,353 C1380,366 1404,375 1428,378" fill="none" stroke="#C08050" strokeWidth={1.4} opacity={0.35} />
+			{/* the lower lip: a small lit shape under the moustache; the pressed mouth line, its near corner turned down */}
+			<path d={cr([[1414, 309], [1428, 312.4], [1442, 307.6], [1448, 302]], false)} fill="none" stroke="#1A1512" strokeWidth={2.4} opacity={0.6} strokeLinecap="round" />
+			<path d={LIP} fill="#B47A5A" />
+			<path d={cr([[1416, 308.6], [1428, 308.6], [1440, 305.4], [1445, 302.8]], false)} fill="none" stroke={SK.deep} strokeWidth={1.6} opacity={0.8} strokeLinecap="round" />
+			<path d={rib([[1420, 304.8], [1428, 303.2], [1437, 302.2]], 0.3, 1.1)} fill={SK.hi} opacity={0.6} />
+			<path d={cr([[1409.5, 308.6], [1413, 304.6], [1422, 301.2], [1434, 298.8], [1446, 298]], false)} fill="none" stroke="#2A1410" strokeWidth={1.7} strokeLinecap="round" />
+			<path d={MOU} fill="#2A211B" />
+			{MH.map((h, i) => <path key={i} d={`M${f1(h.a[0])},${f1(h.a[1])} L${f1(h.b[0])},${f1(h.b[1])}`} fill="none" stroke={h.c} strokeWidth={h.w} opacity={h.o} strokeLinecap="round" />)}
+			{/* the near aventail: overlapping scales (upper rows over lower), lit upper edges, shaded lower parts; the cyan rim on its back edge */}
+			<path d={AVT} fill="#3A2E28" />
+			<g clipPath="url(#d1AvC)">
+				{SCL.map((s, i) => <g key={i} transform={`translate(${f1(s.x)},${f1(s.y)}) rotate(${f1(s.a)})`}>
+					<path d={scaleD(s.w, s.h)} fill={s.k < 0.33 ? 'url(#d1Sc2)' : 'url(#d1Sc)'} />
+					<path d={scaleB(s.w, s.h)} fill="none" stroke="#1C1512" strokeWidth={1.1} opacity={0.85} /></g>)}
+				<g filter="url(#d1Fe)">
+					<path d={cr([[1300, 252], [1318, 290], [1340, 322], [1362, 348], [1376, 384], [1356, 384], [1330, 340], [1306, 300], [1290, 262]])} fill="#000" opacity={0.25} />
+					<path d={rib(RL.slice(0, 4), 3, 6)} fill="#000" opacity={0.35} transform="translate(-2,5)" />
+				</g>
+			</g>
+			<path d={cr(AF.slice(3), false)} fill="none" stroke="#A88A6A" strokeWidth={1.8} opacity={0.7} />
+			<path d={cr(AF.slice(0, 4), false)} fill="none" stroke="#1E1612" strokeWidth={1.4} opacity={0.6} />
+			<path d={cr(AB.slice(1), false)} fill="none" stroke={ACC} strokeWidth={3} opacity={0.75} />
+			{/* the far band: the rim going round the far side of the head and down the far jaw; its outer edge lit */}
+			<path d={rib(FB, 5.2, 6.8)} fill="#3E2E26" />
+			<path d={rib(FBL, 1, 1.8)} fill="#C49A72" opacity={0.9} />
+			<path d={cr(FB.map(([x, y]) => [x - 4.2, y + 4.6] as P), false)} fill="none" stroke="#1A120E" strokeWidth={1.5} opacity={0.7} />
+			{/* the helmet: a rounded iron dome (warm dark grey) with rows of rivets, lit on the crown by the fires behind; the thick rim band */}
+			<path d={DOME} fill="url(#d1Dm)" />
+			<path d={cr([[1300, 192], [1330, 180], [1362, 177.5], [1388, 182], [1408, 192], [1394, 192], [1366, 186], [1334, 188], [1310, 196]])} fill="#A88262" opacity={0.55} filter="url(#d1Fs)" />
+			{RIV.map((r, i) => <g key={i} transform={`translate(${f1(r.x)},${f1(r.y)}) rotate(${f1(r.a + (rnd(i, 44) - 0.5) * 30)})`}>
+				<ellipse cx={0} cy={0} rx={2.8} ry={1.3} fill="#1E1614" /><ellipse cx={0.6} cy={1.3} rx={1.8} ry={0.6} fill="#9A7C66" opacity={0.45} /></g>)}
+			<path d={cr([[1272, 300], [1261, 268], [1263, 240], [1273, 216], [1289, 198], [1311, 185], [1337, 178]], false)} fill="none" stroke={ACC} strokeWidth={2.2} opacity={0.5} />
+			<path d={cr([[1337, 178], [1363, 176.5], [1387, 181], [1405, 189], [1422, 199]], false)} fill="none" stroke="#D89A60" strokeWidth={2.4} opacity={0.7} />
+			<path d={RIM} fill="#4C3B32" />
+			<path d={rib(RU.map(([x, y]) => [x + 1.6, y + 5.5] as P), 1.2, 2.6)} fill="#2E221C" opacity={0.6} />
+			<path d={cr(RU.map(([x, y]) => [x + 1, y + 3.4] as P), false)} fill="none" stroke="#7A6050" strokeWidth={1.2} opacity={0.6} />
+			<path d={cr(RU, false)} fill="none" stroke="#9A7A5E" strokeWidth={1.8} opacity={0.75} />
+			<path d={cr(RL, false)} fill="none" stroke="#22160F" strokeWidth={1.6} opacity={0.8} />
 		</g>
-		{/* the knot between the brows */}
-		<path d="M1388,252 C1391,248 1393,244 1394,238 M1393,255 C1397,251 1400,247 1401,242" fill="none" stroke="#3A2218" strokeWidth={2} opacity={0.75} strokeLinecap="round" />
-		{/* the near eye: narrowed; the iris in the inner/left corner, white on its right */}
-		<path d="M1349,283 C1353,275 1362,269 1374,268 C1372,277 1363,284 1351,287 Z" fill="#DDBE9E" />
-		<g clipPath="url(#d1EnC)"><circle cx={1358} cy={277.5} r={5} fill="#3E2A20" /><circle cx={1357.6} cy={278} r={2.7} fill="#0A0605" />
-			<path d="M1340,266 L1380,262 L1380,273 C1366,271 1352,275 1340,281 Z" fill="#000" opacity={0.4} /></g>
-		<circle cx={1359.8} cy={276} r={1.2} fill="#F4E0C8" />
-		<path d="M1346,285 C1352,275 1361,268 1375,267 L1378,266" fill="none" stroke="#1E120C" strokeWidth={3.6} strokeLinecap="round" />
-		<path d="M1352,287 C1360,285 1368,280 1373,272" fill="none" stroke="#3A2218" strokeWidth={1.2} opacity={0.6} />
-		{/* the far eye */}
-		<path d="M1404,250 C1408,244 1415,241 1424,242 C1420,248 1412,252 1405,252 Z" fill="#CFAA8C" />
-		<g clipPath="url(#d1EfC)"><circle cx={1411} cy={247.5} r={4.2} fill="#3E2A20" /><circle cx={1410.6} cy={248} r={2.3} fill="#0A0605" />
-			<path d="M1400,238 L1428,236 L1428,245 C1416,243 1406,247 1400,251 Z" fill="#000" opacity={0.4} /></g>
-		<circle cx={1412.4} cy={246.2} r={1} fill="#F4E0C8" />
-		<path d="M1402,252 C1407,244 1415,240 1426,241" fill="none" stroke="#1E120C" strokeWidth={3} strokeLinecap="round" />
-		{/* the brows: the near one low and knotted down toward the nose, the far one arched higher */}
-		<path d="M1333,272 C1346,264 1364,257 1382,253 C1389,252 1394,256 1396,263 L1391,266 C1388,261 1383,259 1377,260 C1362,263 1348,269 1337,278 Z" fill="#22140E" />
-		<path d="M1338,270 C1352,263 1366,258 1380,256" fill="none" stroke="#6A5A4E" strokeWidth={1} opacity={0.5} />
-		<path d="M1400,241 C1404,233 1411,227 1420,224 C1424,223 1427,224 1429,227 L1427,231 C1422,229 1416,231 1411,235 C1406,238 1403,242 1402,246 Z" fill="#22140E" />
-		{/* the nose: a prominent straight bridge, lit; the shadowed far side and the base */}
-		<path d="M1378,256 C1388,266 1398,276 1405,286 L1418,280 C1410,268 1400,256 1392,248 Z" fill="#906448" filter="url(#d1Fe)" />
-		<path d="M1390,254 C1398,264 1405,273 1411,281" fill="none" stroke="#C8946C" strokeWidth={1.8} opacity={0.7} />
-		<path d="M1404,284 C1408,274 1418,268 1428,272 C1432,280 1428,289 1418,292 C1410,292 1405,289 1404,284 Z" fill="#4A2C22" />
-		<ellipse cx={1414} cy={287} rx={4} ry={2} fill="#1E100A" transform="rotate(10,1414,287)" />
-		{/* the pressed lips: the lower lip lit, the mouth line with its corner slightly down */}
-		<path d="M1407,296 C1420,293 1436,294 1446,298 C1446,306 1442,314 1436,318 C1424,320 1412,318 1406,312 Z" fill="#9A6A50" />
-		<path d="M1414,306 C1422,303 1434,303 1442,306" fill="none" stroke="#C08A68" strokeWidth={1.6} opacity={0.6} />
-		<path d="M1418,293 C1430,292 1444,294 1456,298 L1460,303" fill="none" stroke="#1A0E0A" strokeWidth={2.6} strokeLinecap="round" />
-		{/* the beard: full and trimmed, following the jaw from the aventail to a slightly pointed chin; textured edges, strands */}
-		<path d={BEARD} fill="#2C2622" />
-		<g clipPath="url(#d1BdC)">
-			<g filter="url(#d1Fe)"><path d="M1342,330 C1360,336 1380,338 1400,330 L1400,370 L1340,370 Z" fill="#4A3E36" opacity={0.7} />
-				<path d="M1470,300 C1488,304 1500,320 1502,340 L1480,350 C1478,330 1474,314 1470,300 Z" fill="#5A4A3E" opacity={0.6} /></g>
-			{Array.from({length: 60}, (_, i) => { const a = rnd(i, 71), b = rnd(i, 72), x = 1346 + a * 152, y = 314 + b * 60, l = 9 + rnd(i, 73) * 10, bend = (a - 0.5) * 8;
-				return <path key={i} d={`M${f1(x)},${f1(y)} q${f1(bend)},${f1(l * 0.55)} ${f1(3 + a * 4)},${f1(l)}`} fill="none" stroke={i % 3 === 0 ? '#8A8278' : '#5A524C'} strokeWidth={i % 3 === 0 ? 1.1 : 1.6} opacity={i % 3 === 0 ? 0.55 : 0.6} strokeLinecap="round" />; })}
-		</g>
-		{[[1350, 346], [1362, 354], [1376, 361], [1390, 366], [1404, 371], [1418, 376], [1430, 380], [1442, 376], [1456, 371], [1470, 365], [1484, 357], [1495, 347]].map(([x, y], i) =>
-			<path key={i} d={`M${x - 5},${y - 3} Q${x},${y + 7 + (i % 2) * 2} ${x + 5},${y - 2}`} fill="#29231F" />)}
-		<path d="M1460,370 C1476,364 1490,354 1498,342" fill="none" stroke="#C08050" strokeWidth={1.8} opacity={0.5} />
-		{/* the moustache: full, merging at the corners into the beard */}
-		<path d="M1404,288 C1414,280 1430,277 1446,278 C1462,280 1474,286 1482,296 C1474,298 1464,296 1454,293 C1440,289 1426,290 1416,293 C1410,298 1408,306 1406,318 C1400,312 1399,300 1400,293 Z" fill="#2E241E" />
-		<path d="M1410,286 C1424,281 1440,280 1456,283 M1414,292 C1426,287 1442,286 1460,290 M1404,300 C1404,310 1404,318 1406,326" fill="none" stroke="#8A8076" strokeWidth={1.1} opacity={0.65} />
-		{/* the aventail: large rounded overlapping scales over the cheek, ear and neck */}
-		<path d={AVT} fill="#3A2E2A" />
-		<g clipPath="url(#d1AvC)">
-			{SCALES.map(([x, y], i) => <g key={i} transform={`rotate(-24,${f1(x)},${f1(y)})`}>
-				<path d={`M${f1(x - 6.5)},${f1(y)} C${f1(x - 6.5)},${f1(y + 9)} ${f1(x + 6.5)},${f1(y + 9)} ${f1(x + 6.5)},${f1(y)} Z`} fill={i % 3 ? '#4E403A' : '#564640'} stroke="#231A16" strokeWidth={1.2} />
-				<path d={`M${f1(x - 4.5)},${f1(y + 2)} C${f1(x - 3)},${f1(y + 5)} ${f1(x + 2)},${f1(y + 6)} ${f1(x + 4)},${f1(y + 4)}`} fill="none" stroke="#7A6A60" strokeWidth={1} opacity={0.55} /></g>)}
-			<path d="M1318,257 C1328,274 1334,296 1342,318 C1348,334 1356,346 1354,358 L1380,358 L1380,250 Z" fill="#000" opacity={0.2} />
-		</g>
-		<path d="M1280,300 C1284,326 1294,352 1312,374" fill="none" stroke={ACC} strokeWidth={3} opacity={0.75} />
-		{/* the helmet: a rounded iron dome with rows of rivets, lit from the fire on the right; the thick rim band with its lighter edge */}
-		<path d="M1263,290 C1254,258 1258,224 1276,200 C1296,182 1328,174 1360,175 C1392,177 1418,190 1436,214 C1420,206 1398,199 1376,200 C1350,206 1328,222 1312,242 C1298,260 1288,276 1282,296 Z" fill="url(#d1Dm)" />
-		{[R1, R2, R3].map((row, j) => row.map(([x, y], i) => <g key={j * 20 + i}><ellipse cx={x} cy={y - 3} rx={2.3} ry={1.7} fill="#1E1614" /><circle cx={x + 0.8} cy={y - 3.8} r={0.7} fill="#B08A6A" opacity={0.6} /></g>))}
-		<path d="M1263,290 C1254,258 1258,224 1276,200 C1296,182 1328,174 1360,175" fill="none" stroke={ACC} strokeWidth={2.2} opacity={0.5} />
-		<path d="M1362,175 C1394,177 1420,191 1437,213" fill="none" stroke="#D89A60" strokeWidth={2.6} opacity={0.7} />
-		<path d="M1287,296 C1296,276 1308,256 1322,240 C1340,222 1360,210 1382,206 C1400,204 1420,207 1436,216" fill="none" stroke="#45332A" strokeWidth={16} strokeLinecap="round" />
-		<path d="M1287,296 C1296,276 1308,256 1322,240 C1340,222 1360,210 1382,206 C1400,204 1420,207 1436,216" fill="none" stroke="#2A1C16" strokeWidth={16} strokeLinecap="round" strokeDasharray="2 5" opacity={0.35} />
-		<path d="M1279,292 C1288,270 1300,250 1315,234 C1334,215 1356,203 1380,198 C1400,196 1420,199 1438,208" fill="none" stroke="#7A5C46" strokeWidth={2.2} opacity={0.7} />
-		<path d="M1295,300 C1304,282 1316,262 1330,247 C1347,230 1364,219 1384,214 C1402,212 1420,215 1434,223" fill="none" stroke="#1E1410" strokeWidth={1.6} opacity={0.7} />
 	</g>; };
 export const HeadDefs: React.FC = () => <>
-	<clipPath id="d1HfC"><path d="M1296,292 C1316,262 1344,234 1378,216 C1400,210 1420,212 1434,222 C1454,244 1474,278 1488,318 C1488,350 1462,372 1430,375 C1394,373 1362,358 1344,334 C1332,318 1318,298 1296,292 Z" /></clipPath>
-	<clipPath id="d1EnC"><path d="M1349,283 C1353,275 1362,269 1374,268 C1372,277 1363,284 1351,287 Z" /></clipPath>
-	<clipPath id="d1EfC"><path d="M1404,250 C1408,244 1415,241 1424,242 C1420,248 1412,252 1405,252 Z" /></clipPath>
-	<clipPath id="d1BdC"><path d="M1342,334 C1360,338 1382,336 1398,326 C1404,316 1405,304 1409,298 L1411,318 C1413,330 1424,335 1437,331 C1447,323 1453,311 1458,303 C1470,300 1482,300 1492,305 C1497,316 1501,330 1501,342 C1496,356 1476,368 1452,374 C1442,378 1432,381 1424,379 C1404,375 1380,368 1360,358 C1349,351 1342,343 1342,334 Z" /></clipPath>
-	<clipPath id="d1AvC"><path d="M1278,294 C1288,286 1300,282 1310,280 C1318,294 1326,310 1338,330 C1348,346 1360,356 1372,364 C1360,374 1336,378 1312,374 C1298,360 1288,338 1283,316 C1280,306 1278,300 1278,294 Z" /></clipPath>
-	<linearGradient id="d1Dm" x1={1270} y1={270} x2={1420} y2={180} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#2E2826" /><stop offset="0.5" stopColor="#4E4440" /><stop offset="1" stopColor="#7A6050" /></linearGradient>
+	<clipPath id="d1HfC"><path d={FACE} /></clipPath>
+	<clipPath id="d1EnC"><path d={EYEN} /></clipPath>
+	<clipPath id="d1EfC"><path d={EYEF} /></clipPath>
+	<clipPath id="d1BdC"><path d={BD} /></clipPath>
+	<clipPath id="d1AvC"><path d={AVT} /></clipPath>
+	<filter id="d1Fs" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={1.3} /></filter>
+	<linearGradient id="d1Dm" x1={1268} y1={280} x2={1410} y2={180} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#3A322E" /><stop offset="0.5" stopColor="#5C4E46" /><stop offset="1" stopColor="#806452" /></linearGradient>
+	{/* one scale (objectBoundingBox, top → bottom): the part under the row above, a soft lit upper edge, the shaded lower part */}
+	<linearGradient id="d1Sc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#42362F" /><stop offset="0.4" stopColor="#64534A" /><stop offset="0.6" stopColor="#4A3D35" /><stop offset="1" stopColor="#28201B" /></linearGradient>
+	<linearGradient id="d1Sc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#42362F" /><stop offset="0.42" stopColor="#635245" /><stop offset="0.62" stopColor="#4A3D34" /><stop offset="1" stopColor="#261E1A" /></linearGradient>
 </>;
