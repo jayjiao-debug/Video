@@ -26,13 +26,31 @@ export const CARDS: Card[] = [
 	{a: BAR(12), b: BAR(14), rows: ['董卓要拉拢他。', '他改名换姓，连夜出逃。'], y: '189', place: '洛阳', note: '变易姓名，间行东归', age: 35},
 	{a: BAR(14), b: BAR(16), rows: ['逃亡路上，', '他在吕伯奢家，杀了人。'], y: '189', place: '成皋', note: '各书说法不一', age: 35},
 	{a: BAR(16), b: BAR(18), rows: ['留下一句：', '“[宁我负人，毋人负我]。”'], y: '189', place: '成皋', note: '孙盛《杂记》', age: 35},
+	{a: BAR(18), b: BAR(20), rows: ['36岁，他起兵讨董卓。', '第一仗，惨败。'], y: '190', place: '荥阳', note: '汴水遇徐荣', age: 36},
+	{a: BAR(20), b: BAR(22), rows: ['中了箭，马也伤了，', '追兵就在身后。'], y: '190', place: '荥阳', note: '为流矢所中', age: 36},
+	{a: BAR(22), b: BAR(24), rows: ['堂弟曹洪让出马：', '“天下可无洪，不可无君。”'], y: '190', place: '荥阳', note: '《三国志·曹洪传》', age: 36},
+	{a: BAR(24), b: BAR(26), rows: ['那些年，他写下：', '“[白骨露于野]，千里无鸡鸣。”'], y: '190s', place: '关东', note: '曹操《蒿里行》', age: 36},
+	{a: BAR(26), b: BAR(28), rows: ['42岁，', '他把天子接到了许都。'], y: '196', place: '许', note: '迎天子都许', age: 42},
+	{a: BAR(28), b: BAR(30), rows: ['从此——', '[挟天子以令诸侯]。'], y: '196', place: '许', note: '奉天子以令不臣', age: 42},
+	{a: BAR(30), b: BAR(32), rows: ['这招，袁绍的谋士早提过。', '袁绍没听。'], y: '196', place: '邺', note: '沮授 ·《献帝传》', age: 42},
+	{a: BAR(32), b: BAR(34), rows: ['他招流民屯田，', '一年收粮百万斛。'], y: '196', place: '许', note: '募民屯田许下', age: 42},
+	{a: BAR(34), b: BAR(36), rows: ['44岁，下邳城破，', '吕布被擒。'], y: '198', place: '下邳', note: '白门楼', age: 44},
+	{a: BAR(36), b: BAR(38), rows: ['北方，只剩一个对手——', '袁绍。'], y: '199', place: '邺', note: '袁绍并公孙瓒', age: 45},
+	{a: BAR(38), b: BAR(40), rows: ['四州之地，', '兵[十余万]。'], y: '199', place: '河北', note: '冀青幽并四州', age: 45},
+	{a: BAR(40), b: BAR(42), rows: ['46岁，', '两军对峙官渡。'], y: '200', place: '官渡', note: '建安五年', age: 46},
 	{a: BAR(42), b: BAR(44), rows: ['他的兵，[不满一万]。', '粮，快吃完了。'], y: '200', place: '官渡', note: '《三国志》原文', age: 46},
 	{a: BAR(44), b: BAR(46), rows: ['他写信给荀彧：', '想退了。'], y: '200', place: '官渡', note: '议欲还许', age: 46},
 	{a: BAR(46), b: BAR(48), rows: ['荀彧回信：', '“此用奇之时，不可失也。”'], y: '200', place: '官渡', note: '《三国志·荀彧传》', age: 46},
 	{a: BAR(48), b: BAR(50), rows: ['深夜，袁绍谋士许攸来投：', '粮，在乌巢。'], y: '200', place: '官渡', note: '许攸来奔', age: 46},
 	{a: BAR(50), b: BAR(52), rows: ['他亲率五千人，', '[夜袭乌巢]！'], y: '200', place: '乌巢', note: '步骑五千人夜往', age: 46},
 	{a: BAR(52), b: BAR(54), rows: ['一把火，烧光袁军的粮。', '袁军，全线崩溃。'], y: '200', place: '乌巢', note: '尽燔其粮谷', age: 46},
+	{a: BAR(54), b: BAR(56), rows: ['53岁，北方再无敌手。', '“[老骥伏枥]，志在千里。”'], y: '207', place: '碣石', note: '曹操《龟虽寿》', age: 53},
+	{a: BAR(56), b: BAR(58), rows: ['54岁，赤壁一把火，', '烧回了他自己。'], y: '208', place: '赤壁', note: '孙刘联军火攻', age: 54},
+	{a: BAR(58), b: BAR(60), rows: ['劝他称帝，他只说：', '“吾为[周文王]矣。”'], y: '219', place: '洛阳', note: '意即：帝位留给儿子', age: 65},
+	{a: BAR(60), b: BAR(62), rows: ['66岁，他死在洛阳。', '遗令：[无藏金玉珍宝]。'], y: '220', place: '洛阳', note: '敛以时服', age: 66},
 ];
+/** the dead stop of the music = the end card (EndCard draws its own furniture; no overlay from here) */
+export const END_T = 124.088, FILM_LEN = END_T + 6.0;   // the dead stop of the slowed track (113.255 s / 0.9127)
 export const TITLE_A = BAR(6), TITLE_B = BAR(8);
 const CPS = 16;                                    // typing speed, characters per second
 const plain = (s: string) => s.replace(/[[\]]/g, '');
@@ -53,6 +71,7 @@ const Title: React.FC<{t: number}> = ({t}) => { const u = cl((t - TITLE_A) * 30 
 		</div></>; };
 /** the overlay at film time t: subtitle (typing, rows stack), stamp (after the subtitle has typed), counter, seal, the title */
 export const Overlay: React.FC<{t: number}> = ({t}) => { const c = CARDS.find((k) => t >= k.a && t < k.b), title = t >= TITLE_A && t < TITLE_B;
+	if (t >= END_T) return null;
 	if (title) return <><Title t={t} /><SealHollow /></>;
 	if (!c) return <SealHollow />;
 	const r0 = plain(c.rows[0]).length, typed = c.a === 0 ? 1e9 : (t - c.a) * CPS,   /* card 1 is on screen whole from frame 0 (the 5-second rule) */ n = [Math.min(r0, typed), Math.max(0, typed - r0)];
