@@ -225,11 +225,11 @@ const HeadB: React.FC<{t: number; part: 'back' | 'front'}> = ({t, part}) => { co
 		{(() => { const sw = Math.sin(t * 2.6) * 4, sw2 = Math.sin(t * 2.2 + 1.3) * 3.5;
 			const lock = (a: P, cc: P, b: P) => qpts(a, cc, b, 12);
 			const L: [P[], number, boolean][] = [
-				[lock([-50, 10], [-56, 70], [-46 + sw2, 122]), 11, false],
-				[lock([50, 10], [56, 70], [48 + sw2, 120]), 11, true],
-				[lock([0, 22], [3 + sw * 0.3, 92], [4 + sw, 160]), 16, true]];
+				[lock([-48, 8], [-60, 70], [-50 + sw2, 128]), 16, false],
+				[lock([48, 8], [60, 70], [52 + sw2, 126]), 16, true],
+				[lock([0, 22], [4 + sw * 0.3, 96], [6 + sw, 168]), 24, true]];
 			return L.map(([pts, w0, lit], i) => <g key={i}>
-				<path d={strand(pts, (u) => w0 * Math.pow(1 - u, 0.75) + 1.2)} fill="#2A2421" />
+				<path d={strand(pts, (u) => w0 * Math.pow(1 - u, 0.6) * (1 - 0.15 * Math.sin(u * 9)) + 2.6)} fill="#2A2421" />
 				<path d={strand(pts.map((q) => [q[0] - w0 * 0.25, q[1]] as P), (u) => w0 * 0.3 * (1 - u) + 0.4)} fill="#000" opacity={0.3} />
 				{[-0.45, -0.1, 0.25, 0.55].map((o, j) => <path key={j} d={'M' + pts.slice(0, 11).map((q, k) => `${f1(q[0] + o * w0 * Math.pow(1 - k / 12, 0.75))},${f1(q[1])}`).join(' L')} fill="none" stroke={j === 2 ? '#D2C8BA' : '#8E847A'} strokeWidth={j === 2 ? 1.6 : 1.2} opacity={0.75} />)}
 				{lit && <path d={'M' + pts.slice(0, 10).map((q, k) => `${f1(q[0] + w0 * 0.95 * Math.pow(1 - k / 12, 0.75))},${f1(q[1])}`).join(' L')} fill="none" stroke="#FFB070" strokeWidth={1.8} opacity={0.55} />}
@@ -327,7 +327,7 @@ const PaulNear: React.FC = () => { const c = FP;
 		<path d="M-120,10 C-170,-34 -270,-32 -318,30 C-346,80 -346,150 -326,206 C-280,228 -210,226 -160,206 C-140,140 -128,70 -120,10 Z" fill="url(#dvaLm)" />
 		<path d="M-120,10 C-170,-34 -270,-32 -318,30 C-346,80 -346,150 -326,206 C-280,228 -210,226 -160,206 C-140,140 -128,70 -120,10 Z" fill="#000" opacity={0.38} />
 		<path d="M-318,30 C-346,80 -346,150 -326,206" fill="none" stroke={c.acc} strokeWidth={4} opacity={0.6} />
-		<path d="M-150,-6 C-136,40 -132,110 -150,190 L-164,200 C-146,130 -146,60 -164,6 Z" fill={c.metalH} opacity={0.35} />
+		<path d="M-124,14 C-132,60 -136,120 -158,200" fill="none" stroke={c.metalH} strokeWidth={4} opacity={0.5} />
 		<path d="M-326,206 C-280,228 -210,226 -160,206" fill="none" stroke={c.lace} strokeWidth={9} />
 		<path d="M-120,10 C-170,-34 -270,-32 -318,30" fill="none" stroke="#7A2C20" strokeWidth={7} />
 	</g>; };
@@ -392,7 +392,9 @@ const Embers: React.FC<{t: number}> = ({t}) => { const d = t - 99;
 		const X = e.X + Math.sin(t * e.fq + i) * 0.15, Y = e.Y + 1.1 + Math.cos(t * e.fq * 0.7 + i) * 0.12;
 		const a: P = [CX + (FB * X) / z, HZ + (FB * Y) / z], b: P = [CX + (FB * X) / z2, HZ + (FB * Y) / z2];
 		if (a[0] < -200 || a[0] > W + 200 || a[1] < -200 || a[1] > H + 200) return null;
-		const r = Math.min(9, (FB * e.r) / z), o = cl((26 - z) / 6) * (0.7 + 0.3 * Math.sin(t * 6 + i)) * cl(z / 1.2);
+		const r = Math.min(4.5, (FB * e.r) / z), o = cl((26 - z) / 6) * (0.7 + 0.3 * Math.sin(t * 6 + i)) * cl((z - 1.2) / 1.5);
+		const sl = Math.hypot(b[0] - a[0], b[1] - a[1]); if (sl > 70) { b[0] = a[0] + ((b[0] - a[0]) * 70) / sl; b[1] = a[1] + ((b[1] - a[1]) * 70) / sl; }
+		if (o <= 0.02) return null;
 		return <g key={i} opacity={o}><line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={e.hot > 0.5 ? FIRE.core : FIRE.mid} strokeWidth={r} strokeLinecap="round" />
 			<circle cx={a[0]} cy={a[1]} r={r * 2.4} fill="url(#dvaEm)" /></g>; })}</g>; };
 
@@ -408,7 +410,7 @@ const armPts = (t: number) => { const {G} = pose(t), a = vn(vs(pose(t).T, G)), b
 const SB = 0.96;   /* body px per local unit (pre-push) */
 const Hero: React.FC<{t: number}> = ({t}) => { const {d} = pose(t), A = armPts(t), F = prj(A.fist), Wr = prj(A.wrist), E = prj(A.elbow), S = prj(A.sh);
 	const lunge = 1 + 0.06 * (1 - eout(d / 0.25)) * -1, bob = Math.sin(t * 3.1) * 2;
-	const O: P = [S[0] + 206 * SB, S[1] + 70 * SB + bob], fk = pxk(A.fist) * 0.88, Gs = prj(pose(t).G), Sh: P = [S[0] - 4, S[1] + 96];
+	const O: P = [S[0] + 206 * SB, S[1] + 70 * SB + bob], fk = pxk(A.fist) * 0.8, Gs = prj(pose(t).G), Sh: P = [S[0] + 34, S[1] + 52];
 	const ang = Math.atan2(prj(pose(t).T)[1] - prj(pose(t).G)[1], prj(pose(t).T)[0] - prj(pose(t).G)[0]) * 180 / Math.PI;
 	return <g>
 		<g filter="url(#dvaHero)">
@@ -418,24 +420,28 @@ const Hero: React.FC<{t: number}> = ({t}) => { const {d} = pose(t), A = armPts(t
 				<Collar />
 				<g transform="translate(-4,-90) rotate(-5)"><HeadB t={t} part="front" /></g>
 			</g>
+			<g transform={`translate(${f1(O[0])},${f1(O[1])}) scale(${(SB * lunge).toFixed(4)}) translate(-214,-46) rotate(-8) translate(214,46)`}>
+				<g transform="translate(10,-40)"><PaulNear /></g>
+			</g>
 			{/* the thrust arm as one limb: the lamellar sleeve out of the shoulder, the iron bracer narrowing to the wrist, the fist */}
 			{(() => { const L = Math.hypot(Sh[0] - Gs[0], Sh[1] - Gs[1]), ux = (Sh[0] - Gs[0]) / L, uy = (Sh[1] - Gs[1]) / L, at = (dd: number, vv = 0): P => [Gs[0] + ux * dd - uy * vv, Gs[1] + uy * dd + ux * vv];
-				const d0 = 5.6 * fk, d1 = d0 + (L + 30 - d0) * 0.5, d2 = L + 40, w0 = 3.5 * fk, w1 = 4.7 * fk, w2 = 6.6 * fk, up = -ux < 0 ? 1 : -1;
+				const d0 = 5.6 * fk, d1 = d0 + (L - d0) * 0.55, d2 = L + 10, w0 = 3.6 * fk, w1 = 4.9 * fk, w2 = 7.2 * fk, up = ux > 0 ? -1 : 1;
 				const band = (dd: number, ww: number, k: number) => `M${q(at(dd, -ww))} Q${q(at(dd - ww * k, 0))} ${q(at(dd, ww))}`;
 				return <g>
+					{/* a dark edge under the limb, so it stands off the body (opaque: no wash from the rim filter) */}
+					<path d={limb([at(d0 + 6, -up * 5), at(d2, -up * 7)], [w0 + 3, w2 + 3])} fill="#0E0A09" />
 					<path d={limb([at(d1 - 6), at(d2)], [w1 + 2, w2])} fill="url(#dvaLm)" />
-					<path d={limb([at(d1 - 6), at(d2)], [w1 + 2, w2])} fill="#000" opacity={0.25} />
-					<path d={limb([at(d1, up * w1 * 0.7), at(d2, up * w2 * 0.7)], [w1 * 0.18, w2 * 0.18])} fill="#FFB070" opacity={0.3} />
-					<path d={limb([at(d0), at(d1)], [w0, w1])} fill="#2E2A28" />
-					<path d={limb([at(d0, up * w0 * 0.62), at(d1, up * w1 * 0.62)], [w0 * 0.16, w1 * 0.16])} fill="#D88A4C" opacity={0.75} />
+					<path d={limb([at(d1 - 6), at(d2)], [w1 + 2, w2])} fill="#6A2E22" opacity={0.42} />
+					<path d={limb([at(d1, up * w1 * 0.78), at(d2, up * w2 * 0.8)], [w1 * 0.16, w2 * 0.16])} fill="#FFB070" opacity={0.55} />
+					<path d={limb([at(d1, -up * w1 * 0.86), at(d2, -up * w2 * 0.86)], [w1 * 0.1, w2 * 0.1])} fill={FP.acc} opacity={0.4} />
+					<path d={limb([at(d0), at(d1)], [w0, w1])} fill="#47403D" />
+					<path d={limb([at(d0, -up * w0 * 0.3), at(d1, -up * w1 * 0.3)], [w0 * 0.7, w1 * 0.7])} fill="#1E1A19" opacity={0.6} />
+					<path d={limb([at(d0, up * w0 * 0.62), at(d1, up * w1 * 0.62)], [w0 * 0.2, w1 * 0.2])} fill="#E8A066" opacity={0.85} />
 					<path d={limb([at(d0, -up * w0 * 0.7), at(d1, -up * w1 * 0.7)], [w0 * 0.1, w1 * 0.1])} fill={FP.acc} opacity={0.45} />
 					{[0.35, 0.72].map((k) => { const dd = d0 + (d1 - d0) * k, ww = w0 + (w1 - w0) * k; return <path key={k} d={band(dd, ww, 0.35)} fill="none" stroke="#141010" strokeWidth={2.4} opacity={0.75} />; })}
 					<path d={band(d1, w1 + 2, 0.35)} fill="none" stroke="#5A2018" strokeWidth={5} />
 					<path d={band(d0 + 2, w0, 0.35)} fill="none" stroke="#6E2A1E" strokeWidth={4} />
 				</g>; })()}
-			<g transform={`translate(${f1(O[0])},${f1(O[1])}) scale(${(SB * lunge).toFixed(4)}) translate(-214,-46) rotate(-8) translate(214,46)`}>
-				<g transform="translate(10,-40)"><PaulNear /></g>
-			</g>
 			{/* the sword arm toward the lens: the sleeve under the 披膊, the bracer, the cuff */}
 
 			<path d={limb([[E[0] + 2.4 * pxk(A.elbow), E[1] - 3.6 * pxk(A.elbow)], [Wr[0] + 2 * pxk(A.wrist), Wr[1] - 3 * pxk(A.wrist)]], [1 * pxk(A.elbow), 0.9 * pxk(A.wrist)])} fill={FP.metalH} opacity={0.6} />
