@@ -12,7 +12,7 @@
 | pickup | 85.22 |
 | **hardest drop** | **87.17** |
 | outro | 132.77 |
-| end | 148.05 |
+| **film end** (music faded 137.3 → 140.0; owner: short end card) | **140.0** |
 
 **Frame:** second person. 「你」 is 何尊, and it is in every shot near the centre of the frame (the owner's retention rule). The counter 「你 N 岁」 shows 0 at the casting, rolls during the burial, and reads 约3000 from 1963 on.
 
@@ -50,8 +50,7 @@ v1.1 (2026-11-01 20:25): facts checked by the producer against 新华网 2023-07
 | 26 | 52 · 119.19 | 今天，你在宝鸡青铜器博物院， / 每天被很多人看见。 ✓ | 约3000 · 今 · 宝鸡 / 宝鸡青铜器博物院 | KF4: the spotlight, visitors' reflections in the glass. |
 | 27 | 54 · 123.72 | 差一点， / 你就被当成废铜，销毁了。 | 约3000 | A flash of the furnace (a memory) over the shining 尊. |
 | 28 | 56 · 128.25 | 如果那天，他没有走进那个废品站—— | 约3000 | The scrap yard gate at dusk, empty. |
-| Q | 58 · 132.77 *(outro)* | 你家里，有没有一件 / 被当成破烂的老东西？ *(centred question)* | — | The 尊 alone in the spotlight. |
-| END | 60 · 137.30 → 148.05 | The end card: J seal · 片名 · the question · pill 「关注 Juno · 一起看懂世界」 · sources | — | The last shot dimmed to about 30 %, then a fade to black. |
+| END | 58 · 132.77 *(outro)* → **140.0** | The end card, about 7 s (owner: 片尾卡不需要太长): the dimmed 尊 in the spotlight, the J seal, 片名, the question 「你家里，有没有一件被当成破烂的老东西？」, pill, sources | — | The music fades over 137.3 → 140.0 and the picture fades to black at 140. |
 
 **Waiting on facts.md (◻):**
 - 1963: 陈堆, 贾村, the cliff collapse after rain, the grain;
