@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
 import {W, H} from '../qq50/kit50';
 import {Overlay, BAR} from './demo54core';
-import {OpenNew as Open} from './op54open';
+import {Open} from './demo54m';
 /* ep54 · preview entry for the rebuilt opening (OPN54): FILM54's frames 0 → BAR(8) with only Open under the overlay
    (subtitles, stamp, counter, seal). From BAR(6) the title (ttl54a, redesigned separately) is left out: Open runs on under the seal. */
 const All: React.FC = () => { const t = useCurrentFrame() / 30;

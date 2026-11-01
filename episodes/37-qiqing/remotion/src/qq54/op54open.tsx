@@ -4,22 +4,25 @@ import {Pal, RimF, Rod5, Dao, Head, strand, qpts, rnd, f1, P} from './cao54b';
 import {Npc} from './npc54b';
 import {Flame, flick} from './rig54b';
 import {GatePlaque, GateGuards} from './gate54op';
-/* ep54 · the OPENING rebuilt for retention (film 0 → BAR(8)): six shots cut on the bar downbeats (cut frame = round(BAR(n)·30):
-   79, 139, 199, 259, 318), each with a camera move and an acting beat; the sets and rigs are the demo's (demo54m ShotA/B/C).
-     1  0 → BAR(1)      the moment, wide: the 北部尉 gate at night, the uncle straining in the guards' grip, 曹操 raising the rod; push-in 15 %
+/* ep54 · the OPENING rebuilt for retention (film 0 → BAR(8)): six shots cut on the bar downbeats (first frames
+   80, 140, 199, 259, 319), each with a camera move and an acting beat; the sets and rigs are the demo's (the old demo54m ShotA/B/C,
+   moved here; demo54m.Open now delegates to OpenNew).
+     1  0 → BAR(1)      the moment, wide: the 北部尉 gate at night, the uncle straining in the guards' grip, 曹操 raising the rod; push-in 27 %;
+                        the lamp throws their big shadows on the wall, swaying with the flame
      2  BAR(1) → BAR(2) close, low angle on 曹操 (20): hard eyes on the man below, the rod high against the sky; the rod starts down in the
-                        last half beat (a streak) and we cut on BAR(2) before any impact
+                        last half beat (a wrist snap, a streak) and we cut on BAR(2) before any impact
      3  BAR(2) → BAR(3) the racks of 五色棒 (card 2): a fast lateral dolly, a foreground post, a lamp passing, its light sliding over the rods
      4  BAR(3) → BAR(4) the order: the gate head-on, racks both sides; the camera arcs onto the axis; the two 戟 guards snap to attention
                         (beat 2) and ground their 戟 (beat 3)
      5  BAR(4) → BAR(5) 洛阳 (card 3): crane down from the moon onto the wide gate with its plaque; the guards march LEFT in step
      6  BAR(5) → BAR(8) 京师敛迹: closer on the gate; two late walkers hurry in; the doors shut on the beats, the lamps and the 门楼
                         windows go out in rhythm; nearly dark by BAR(6); a slow push runs on under the title (BAR(6) → BAR(8)).
+   Cuts are time comparisons, t >= BAR(n) (frames 80, 140, 199, 259, 319), so they land with the subtitle card changes.
    No violence shown: the rod is raised and starts its swing; we cut before any impact. Every flame is warm ivory (orange is the drop's). */
 const SIL = '#140D0A', RIMW = '#FFB070', KEY = '#F3DDB4', ACC = '#8FD0DC';
 const BAR = (n: number) => 0.654 + 1.99203 * n;
-/** the first frame of shots 2–6 */
-export const OP_CUTS = [1, 2, 3, 4, 5].map((n) => Math.round(BAR(n) * 30));
+/** the first frame of shots 2–6: the first frame at or after each downbeat (t >= BAR(n), as FILM54's scene list and the overlay) */
+export const OP_CUTS = [1, 2, 3, 4, 5].map((n) => Math.ceil(BAR(n) * 30 - 1e-9));   // 80 140 199 259 319
 const PAL: Pal = {skin: '#C38D64', skinS: '#9C6848', skinH: '#E8BC8E', hair: '#15100E', robe: '#262A31', robeS: '#16181C', robeH: '#575B62', trim: '#5C2E24',
 	metal: '#3C3B3A', metalS: '#1B1A1A', metalH: '#9A968C', lace: '#6E2C22', under: '#55302A', underS: '#2E1915', cape: '#2C1716', capeS: '#170B0B', gold: '#C09A52', line: '#2A1810'};
 const zoom = (fx: number, fy: number, s: number) => `translate(${f1(fx)},${f1(fy)}) scale(${s.toFixed(5)}) translate(${f1(-fx)},${f1(-fy)})`;
@@ -109,7 +112,7 @@ const Lamp: React.FC<{x: number; y: number; k: number; t: number; seed: number; 
 	</g>; };
 
 /* =====================================================================================================================
-   the 北部尉 gate set (demo54m ShotA): racks, the kneeling uncle, the gripping guard, 曹操 strike-ready
+   the 北部尉 gate set (from the demo's ShotA): racks, the kneeling uncle, the gripping guard, 曹操 strike-ready
    ===================================================================================================================== */
 const Rack: React.FC<{x: number; y: number; w: number; h: number; dim?: number; n?: number; r?: number; rattle?: number; t?: number}> = ({x, y, w, h, dim = 1, n = 10, r = 7, rattle = 0, t = 0}) =>
 	<g opacity={dim}>
@@ -164,7 +167,7 @@ const Gripper: React.FC<{rx: number; ry: number; lean?: number}> = ({rx, ry, lea
 </g>;
 /** 曹操 (20) strike-ready (Cao units, facing +x); rise = the raised arm + rod rotation about the shoulder (deg, + swings the rod over and
     forward); lid = the upper lids lowered (hard eyes) with the brows knit; streak = the rod's swing since the last frame (deg): a motion streak */
-const CaoStrikeA: React.FC<{id: string; rise: number; coil: number; look: number; lid?: number; streak?: number}> = ({id, rise, coil, look, lid = 0, streak = 0}) => {
+const CaoStrikeA: React.FC<{id: string; rise: number; coil: number; look: number; lid?: number; streak?: number; wrist?: number}> = ({id, rise, coil, look, lid = 0, streak = 0, wrist = 0}) => {
 	const R = PAL.robe, RS = PAL.robeS, RH = PAL.robeH, TR = PAL.trim;
 	const skirt = 'M-62,292 C-78,380 -128,560 -206,708 C-120,736 60,740 184,700 C160,640 136,580 118,530 C96,460 66,380 52,286 Z';
 	const torso = 'M-38,44 C-58,58 -70,100 -68,160 C-66,220 -62,262 -62,298 L52,290 C58,220 62,160 54,112 C48,82 36,60 14,46 Z';
@@ -172,20 +175,20 @@ const CaoStrikeA: React.FC<{id: string; rise: number; coil: number; look: number
 	const sh: P = [-14, 80], el: P = [-86, -6], hd: P = [-56, -124], ra: P = [-30, -96], rb: P = [-410, -300];
 	/* the streak: a fan swept by the rod since the last frame, and fading ghost rods */
 	const sweep = (() => { if (Math.abs(streak) < 1.5) return null; const N = 10, pts: P[] = [], back: P[] = [];
-		for (let i = 0; i <= N; i++) { const a = -streak * i / N; pts.push(rotAbout(rb, a, sh)); back.push(rotAbout([(ra[0] + rb[0] * 2) / 3, (ra[1] + rb[1] * 2) / 3], a, sh)); }
+		for (let i = 0; i <= N; i++) { const a = -streak * i / N; pts.push(rotAbout(rb, a, hd)); back.push(rotAbout([(ra[0] + rb[0] * 2) / 3, (ra[1] + rb[1] * 2) / 3], a, hd)); }
 		return <g>
 			<path d={'M' + pts.concat(back.reverse()).map((q) => f1(q[0]) + ',' + f1(q[1])).join(' L') + ' Z'} fill="#F4E6C8" opacity={0.2} />
-			{[0.2, 0.42, 0.66].map((k, i) => { const a = -streak * k; return <g key={i} transform={`rotate(${f1(a)} ${sh[0]} ${sh[1]})`} opacity={0.34 - i * 0.09}><path d={`M${ra[0]},${ra[1]} L${rb[0]},${rb[1]}`} stroke="#E9D8B4" strokeWidth={20} strokeLinecap="round" /></g>; })}
+			{[0.2, 0.42, 0.66].map((k, i) => { const a = -streak * k; return <g key={i} transform={`rotate(${f1(a)} ${hd[0]} ${hd[1]})`} opacity={0.34 - i * 0.09}><path d={`M${ra[0]},${ra[1]} L${rb[0]},${rb[1]}`} stroke="#E9D8B4" strokeWidth={20} strokeLinecap="round" /></g>; })}
 		</g>; })();
 	return <g>
 		<defs><clipPath id={`${id}sk`}><path d={skirt} /></clipPath><clipPath id={`${id}to`}><path d={torso} /></clipPath></defs>
 		<g transform={`rotate(${f1(-4 - coil)} 0 330)`}>
 			<g transform={`rotate(${f1(rise)} ${sh[0]} ${sh[1]})`}>
-				{sweep}
-				<Rod5 a={ra} b={rb} r={11} ph={1} lit={1} />
+				<g transform={`rotate(${f1(wrist)} ${hd[0]} ${hd[1]})`}>{sweep}<Rod5 a={ra} b={rb} r={11} ph={1} lit={1} /></g>
 				<path d={strand(qpts(sh, [sh[0] - 50, sh[1] - 30], el, 8), (u) => 34 - u * 4)} fill={RS} />
 				<path d={`M${sh[0] + 10},${sh[1]} C${sh[0] - 30},${sh[1] - 10} ${el[0] - 34},${el[1] + 40} ${el[0] - 30},${el[1] + 70} C${el[0] - 10},${el[1] + 120} ${sh[0] - 50},${sh[1] + 60} ${sh[0] - 20},${sh[1] + 40} Z`} fill={RS} />
-				<path d={strand(qpts(el, [el[0] - 6, el[1] - 60], hd, 8), (u) => 20 - u * 6)} fill={PAL.skinS} />
+				<path d={strand(qpts(el, [el[0] - 6, el[1] - 60], hd, 8), (u) => 17 - u * 5)} fill={PAL.skinS} />
+				<path d={strand(qpts([el[0] + 4, el[1] - 4], [el[0] - 1, el[1] - 62], [hd[0] + 5, hd[1] + 2], 8), (u) => 7 - u * 2.4)} fill={PAL.skin} />
 				<path d={`M${el[0] + 12},${el[1] - 20} L${el[0] - 18},${el[1] + 4}`} stroke={TR} strokeWidth={10} />
 				<g transform={`translate(${hd[0]},${hd[1]}) rotate(-30)`}><path d="M-13,-12 C0,-17 15,-11 16,0 C17,11 7,16 -5,14 C-14,12 -17,-4 -13,-12 Z" fill={PAL.skin} /><path d="M-5,14 C7,16 17,11 16,0 L10,0 C10,8 4,12 -4,11 Z" fill={PAL.skinS} /></g>
 			</g>
@@ -234,34 +237,34 @@ const CaoStrikeA: React.FC<{id: string; rise: number; coil: number; look: number
 			</g>; })()}
 	</g>; };
 /** the night air the flame leans in: its light sways (px), shared by shots 1–2 */
-const swayAt = (t: number) => 16 * Math.sin(t * 2.3 + 0.5) + 7 * Math.sin(t * 5.7);
+const swayAt = (t: number) => 20 * Math.sin(t * 2.3 + 0.5) + 9 * Math.sin(t * 5.7);
 
 /* =====================================================================================================================
    SHOT 1 (0 → BAR(1)): the moment, wide. Frame 0 is the hook: the rod already up, the man pulling back in the guards' grip.
-   Camera: a 15 % push-in (front plane; the gate 7 %: parallax) with a small truck right, moving from frame 0 and easing.
+   Camera: a 27 % push-in (front plane; the gate 10 %: parallax) with an arc to the right (front 170 px, the gate 90 px) and a tilt up, moving from frame 0 and easing.
    Acting: the rod rises to full height (1.25 s) and hovers with a tremble; 曹操 coils; the uncle pulls back twice against the grip
    and at 1.1–1.6 s lifts his head to look up at the rod. The lamp flame leans in the air: its light and the long cast shadows sway.
    ===================================================================================================================== */
 const Shot1: React.FC<{t: number}> = ({t}) => {
 	const GX = 1175, GG = 800, FG = 1030, S = 3.1 / 4.98, lampX = 560, lampK = 2.7, lampG = 988, flY = lampG - 117 * lampK, cx = 1300, cy = FG - 750 * S;
-	const v = cl(t / BAR(1)), u = 0.4 * v + 0.6 * eout(v);
-	const zf = `translate(${f1(-50 * u)},${f1(-14 * u)}) ${zoom(1080, 700, 1 + 0.15 * u)}`, zb = `translate(${f1(-20 * u)},${f1(-6 * u)}) ${zoom(1080, 700, 1 + 0.07 * u)}`;
+	const v = cl(t / BAR(1)), u = 0.7 * v + 0.3 * eout(v);
+	const zf = `translate(${f1(-170 * u)},${f1(34 * u)}) ${zoom(1080, 700, 1 + 0.27 * u)}`, zb = `translate(${f1(-90 * u)},${f1(14 * u)}) ${zoom(1080, 700, 1 + 0.1 * u)}`;
 	const F = flick(t, 5), sw = swayAt(t);
 	const rise = -24 * (1 - eout(cl(t / 1.25))) + 1.3 * Math.sin(t * 2.6) * seg(t, 1.0, 1.6) + 0.7 * Math.sin(t * 8.3 + 1) * seg(t, 1.2, 1.8);
-	const coil = 0.6 + 2.6 * eio(cl(t / 2.4));
+	const coil = 0.6 + 5 * eio(cl(t / 2.5));   /* he winds up: the body turns back over the bar */
 	/* the uncle: two hard pulls back (negative = away from 曹操) and a shudder; at 1.1–1.6 s he looks up */
-	const st = -3 + 5.5 * Math.sin(t * 3.4 + 0.9) + 1.4 * Math.sin(t * 11.3 + 2);
+	const st = -3.5 + 7.5 * Math.sin(t * 4.1 + 0.9) + 1.8 * Math.sin(t * 12.3 + 2);
 	const hu = 2 + 15 * eio(seg(t, 1.05, 1.6)) + 2.2 * Math.sin(t * 4.3);
 	const wr = rotAbout(UNC_W, st, [0, -10]), so = rotAbout(UNC_S, st, [0, -10]);
 	const gA = {x: 730, y: FG + 6}, gB = {x: 1000, y: 994};
 	const uX = 1040, uY = FG + 2;
 	const rA: P = [(uX + 3.1 * wr[0] - gA.x) / 3.1, (uY + 3.1 * wr[1] - gA.y) / 3.1], rB: P = [(uX + 3.1 * so[0] - gB.x) / 2.86, (uY + 3.1 * so[1] - gB.y) / 2.86];
-	const lx = lampX + sw * 0.7;
+	const lx = lampX + sw * 0.7, shS = 1.36 + 0.03 * Math.sin(t * 2.3 + 0.5) + 0.012 * Math.sin(t * 5.7);
 	const figs = (id: string, rim: boolean) => <g>
 		<g fill="#3A2C23" filter={rim ? 'url(#oarimL)' : undefined}><g transform={`translate(${gB.x},${gB.y}) scale(2.86) rotate(4)`}><Gripper rx={rB[0]} ry={rB[1]} lean={-0.4 * st} /></g></g>
 		<g fill={SIL} filter={rim ? 'url(#oarimL)' : undefined}>
 			<g transform={`translate(${uX},${uY}) scale(3.1)`}><UncleA st={st} hu={hu} /></g>
-			<g transform={`translate(${gA.x},${gA.y}) scale(3.1) rotate(-3)`}><Gripper rx={rA[0]} ry={rA[1]} lean={-1.2 - 0.5 * st} /></g>
+			<g transform={`translate(${gA.x},${gA.y}) scale(3.1) rotate(-3)`}><Gripper rx={rA[0]} ry={rA[1]} lean={-1.2 - 0.6 * st} /></g>
 			<g transform={`translate(1150,${FG + 8}) scale(3.1) rotate(-70)`}><path d="M-8,-1 C-8.8,-7 -7,-11.6 -1.6,-13.2 L8.4,-13.4 C11,-12 12,-9 12,-6 C8,-7 3,-7 -1,-5 Z M-6.8,-10.6 L10.4,-11.4 L11.2,-29 L-5.4,-19.6 Z" /></g>
 		</g>
 		<g transform={`translate(${cx},${cy}) scale(${-S},${S})`} filter={rim ? 'url(#oacao)' : undefined}><CaoStrikeA id={id} rise={rise} coil={coil} look={-1.5 * Math.sin(t * 1.1)} /></g>
@@ -273,7 +276,8 @@ const Shot1: React.FC<{t: number}> = ({t}) => {
 			<RimF id="oacao" lx={1} ly={-0.3} k={5} c="#FFE0B0" o={0.95} lx2={-1} ly2={-0.2} k2={4} c2={ACC} o2={0.95} blur={1} />
 			<RimF id="oarimL" lx={-1} ly={-0.35} k={3.2} c={RIMW} o={0.95} />
 			<RimF id="oarimTop" lx={0} ly={-1} k={1.6} c="#9FB8B6" o={0.5} />
-			<filter id="oashd" x="-30%" y="-30%" width="160%" height="160%"><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0" /><feGaussianBlur stdDeviation="7" /></filter>
+			<filter id="oashd" x="-30%" y="-30%" width="160%" height="160%"><feColorMatrix type="matrix" values="0.08 0 0 0 0.03  0 0.06 0 0 0.02  0 0 0.05 0 0.02  0 0 0 0.74 0" /><feGaussianBlur stdDeviation="3.6" /></filter>
+			<clipPath id="oawall"><rect x={-300} y={466} width={2600} height={GG - 466} /><rect x={GX - 170} y={GG - 440} width={340} height={440} /></clipPath>
 		</defs>
 		<g transform={zb}>
 			<rect x={-100} y={-100} width={W + 200} height={H + 200} fill="url(#oasky)" />
@@ -291,12 +295,12 @@ const Shot1: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(${GX},${GG})`}><BeiGate p="oa" light="oakey" /></g>
 			<Rack x={GX - 200 - 196 - 30} y={GG} w={196} h={168} />
 			<Rack x={GX + 230} y={GG} w={196} h={168} dim={0.86} />
+			{/* their shadows thrown big on the wall and the gate by the lamp (centre of projection = the flame), swaying with it */}
+			<g clipPath="url(#oawall)"><g filter="url(#oashd)" transform={`translate(${f1(-sw * 1.5)},0) translate(${f1(lx)},${f1(flY)}) scale(${shS.toFixed(4)}) translate(${f1(-lx)},${f1(-flY)})`}>{figs('oash', false)}</g></g>
 			<rect x={-120} y={GG} width={2160} height={H - GG + 120} fill="url(#oagnd)" />
 		</g>
 		<g transform={zf}>
 			<ellipse cx={900 + sw * 1.4} cy={FG - 20} rx={720} ry={110} fill="url(#oapool)" opacity={0.9 + 0.1 * F.s} />
-			{/* the long cast shadows on the ground, away from the lamp; they swing as the flame leans */}
-			<g filter="url(#oashd)" transform={`translate(0,${FG}) skewX(${f1(58 - sw * 0.35)}) scale(1,-0.2) translate(0,${-FG})`}>{figs('oash', false)}</g>
 			<Lamp x={lampX} y={lampG} k={lampK} t={t} seed={5} glow={1.6} />
 			{figs('oas', true)}
 			<ellipse cx={cx} cy={FG + 4} rx={170} ry={12} fill="#0A0605" opacity={0.55} />
@@ -310,16 +314,20 @@ const Shot1: React.FC<{t: number}> = ({t}) => {
    at the top, winds back on beat 3½, and in the last half beat swings over (a streak); we cut on BAR(2) before any impact.
    ===================================================================================================================== */
 const S2 = 2.2;
-const rise2 = (m: number) => {
-	const hold = 24 + 1.1 * Math.sin(m * 9.5) * 0.6 + 0.8 * Math.sin(m * 3.1);
-	const wind = -9 * eio(seg(m, 1.0, 1.45));                              /* the wind-up: the rod goes back a little (anticipation) */
-	const go = seg(m, 1.47, 2.0), strike = 64 * go * go * (0.6 + 0.4 * go);  /* accelerating up and over (still above his head at the cut) */
-	return hold + wind + strike; };
+/** shot 2's arm (about the shoulder) and wrist (the rod about the fist), deg: the hold with a tremble, the wind-up on beat 3 (rod and
+    wrist cocked back), then from beat 4 the arm drives up over the head while the wrist snaps the rod over; at the cut the rod points
+    up and forward (≈ 40° above level), still high above the man */
+const pose2 = (m: number) => {
+	const go = seg(m, 1.47, 2.0), wind = eio(seg(m, 1.0, 1.45)) * (1 - ease(seg(m, 1.47, 1.66)));
+	const arm = 24 + 0.66 * Math.sin(m * 9.5) + 0.8 * Math.sin(m * 3.1) - 9 * wind + 7 * go ** 1.5;
+	const wrist = -12 * wind + 80 * go ** 2.3;
+	return {arm, wrist, tot: arm + wrist}; };
 const Shot2: React.FC<{t: number}> = ({t}) => {
 	const a = BAR(1), m = t - a, D = BAR(2) - a, v = cl(m / D);
-	const fx = 980, fy = 470, push = 1 + 0.075 * (0.5 * v + 0.5 * ease(v)), zf = `translate(0,${f1(-26 * v)}) ${zoom(fx, fy, push)}`, zb = `translate(0,${f1(-10 * v)}) ${zoom(fx, fy, 1 + 0.03 * v)}`;
+	const pu = 0.55 * eout(v) + 0.45 * v;   /* the push starts at once (the cut lands in motion) and keeps going */
+	const fx = 980, fy = 470, push = 1 + 0.13 * pu, zf = `translate(${f1(46 * pu)},${f1(-50 * pu)}) ${zoom(fx, fy, push)}`, zb = `translate(${f1(16 * pu)},${f1(-18 * pu)}) ${zoom(fx, fy, 1 + 0.05 * pu)}`;
 	const F = flick(t, 5), sw = swayAt(t);
-	const rise = rise2(m), streak = rise - rise2(m - 1 / 30);
+	const P2 = pose2(m), streak = P2.tot - pose2(m - 1 / 30).tot;
 	const coil = 3 + 0.8 * Math.sin(m * 2.2) + 3.5 * eio(seg(m, 1.0, 1.45)) - 6 * seg(m, 1.47, 2.0) ** 2;
 	const cx = 1040, cy = 640;
 	const lampX = 330 + sw * 0.25, lampY = 1300, lk = 5.6, flY = lampY - 117 * lk;
@@ -340,7 +348,7 @@ const Shot2: React.FC<{t: number}> = ({t}) => {
 			{Array.from({length: 70}, (_, i) => <circle key={i} cx={rnd(i, 11) * W} cy={rnd(i, 12) * 820} r={0.8 + rnd(i, 13) * 1.5} fill="#E8EEE6" opacity={(0.2 + rnd(i, 14) * 0.45) * (0.75 + 0.25 * Math.sin(t * (1 + rnd(i, 15) * 2.5) + i))} />)}
 			{/* thin night clouds drifting */}
 			<g filter="url(#obbl)" opacity={0.55}>
-				{[0, 1, 2].map((i) => <ellipse key={i} cx={((300 + i * 760 - t * 46 * (1 + i * 0.3)) % 2400 + 2400) % 2400 - 200} cy={170 + i * 150} rx={360 - i * 60} ry={26 + i * 6} fill="#40525A" />)}
+				{[0, 1, 2].map((i) => <ellipse key={i} cx={((300 + i * 760 - t * 70 * (1 + i * 0.3)) % 2400 + 2400) % 2400 - 200} cy={170 + i * 150} rx={360 - i * 60} ry={26 + i * 6} fill="#40525A" />)}
 			</g>
 			{/* the gate's eave seen from below, behind him (right) */}
 			<g transform="translate(1520,1010) scale(1.6)">
@@ -355,7 +363,7 @@ const Shot2: React.FC<{t: number}> = ({t}) => {
 		</g>
 		<g transform={zf}>
 			<circle cx={cx - 120 + sw * 0.4} cy={cy - 120} r={420} fill="url(#obface)" opacity={0.85 + 0.15 * F.s} />
-			<g filter="url(#obcao)"><g transform={`translate(${cx},${cy}) scale(${-S2},${S2})`}><CaoStrikeA id="obs" rise={rise} coil={coil} look={8 + 0.6 * Math.sin(m * 1.7)} lid={0.38} streak={streak} /></g></g>
+			<g filter="url(#obcao)"><g transform={`translate(${cx},${cy}) scale(${-S2},${S2})`}><CaoStrikeA id="obs" rise={P2.arm} wrist={P2.wrist} coil={coil} look={8 + 0.6 * Math.sin(m * 1.7)} lid={0.38} streak={streak} /></g></g>
 		</g>
 		{/* the near foreground: the man's head and shoulders, out of focus, low at the left; the lamp beside him */}
 		<g filter="url(#obbl)" fill="#0B0706" transform={`translate(${f1(-30 * v)},0)`}>
@@ -366,13 +374,13 @@ const Shot2: React.FC<{t: number}> = ({t}) => {
 	</svg>; };
 
 /* =====================================================================================================================
-   SHOT 3 (BAR(2) → BAR(3)): the racks of 五色棒 (card 2). A fast lateral dolly (cut in at 14 px/frame, easing to 6), a horizontal
+   SHOT 3 (BAR(2) → BAR(3)): the racks of 五色棒 (card 2). A fast lateral dolly (cut in at 5.8 px/frame, easing to 3.7), a horizontal
    motion smear that follows the speed, a dark post in the near foreground, and a lamp on its stand passing between us and the rack:
    its light slides over the rods. The wall behind at parallax 0.55.
    ===================================================================================================================== */
 const Shot3: React.FC<{t: number}> = ({t}) => {
 	const a = BAR(2), m = t - a, D = BAR(3) - a;
-	const V0 = 420, V1 = 180, PAN = (mm: number) => V0 * mm - 0.5 * (V0 - V1) / D * mm * mm, pan = PAN(m), vel = (V0 - (V0 - V1) * m / D) / 30;
+	const V0 = 175, V1 = 110, PAN = (mm: number) => V0 * mm - 0.5 * (V0 - V1) / D * mm * mm, pan = PAN(m), vel = (V0 - (V0 - V1) * m / D) / 30;
 	const push = 1 + 0.04 * ease(cl(m / D));
 	const RX0 = 120, SP = 74, N = 34, TOP = 372, BOT = 960, r = 21;
 	const rods = Array.from({length: N}, (_, i) => ({x: RX0 + i * SP + (rnd(i, 3) - 0.5) * 6, tilt: (rnd(i, 4) - 0.5) * 2.2, ph: (i * 2 + Math.floor(rnd(i, 5) * 2)) % 5, top: TOP + (i % 2) * 14 + rnd(i, 6) * 8}));
@@ -423,11 +431,11 @@ const Shot3: React.FC<{t: number}> = ({t}) => {
    ===================================================================================================================== */
 const Shot4: React.FC<{t: number}> = ({t}) => {
 	const a = BAR(3), m = t - a, D = BAR(4) - a, bt = D / 4;
-	const arc = 1 - eout(cl(m / (2 * bt))), dx = 150 * arc;                          /* the arc lands on beat 3 */
-	const snap = eout(seg(m, bt - 0.1, bt + 0.02)), lift = Math.sin(Math.PI * seg(m, 2 * bt - 0.2, 2 * bt)) * 6, hit = seg(m, 2 * bt, 2 * bt + 0.5);
+	const arc = (1 - cl(m / (2 * bt))) ** 2, dx = 100 * arc;                        /* the arc lands on beat 3 (starts at 6.7 px/frame) */
+	const snap = eout(seg(m, bt - 0.1, bt + 0.02)), lift = Math.sin(Math.PI * 0.5 * seg(m, 2 * bt - 0.22, 2 * bt - 0.06)) * 9 * (m < 2 * bt ? 1 : 0), hit = seg(m, 2 * bt, 2 * bt + 0.5);
 	const thud = m >= 2 * bt ? Math.exp(-(m - 2 * bt) * 14) : 0, jolt = 4 * thud * Math.cos((m - 2 * bt) * 60);
 	const push = 1 + 0.03 * cl(m / D) + 0.025 * eout(hit);
-	const X = 1100, Y = 900, K = 1.3, F1 = flick(t, 13), F2 = flick(t, 29);
+	const X = 1060, Y = 1000, K = 1.85, F1 = flick(t, 13), F2 = flick(t, 29);
 	const gk = 1.38, lean = -5 * (1 - snap), stride = 0.32 * (1 - snap);
 	const guard = (sx: number, flip: boolean) => <g transform={`translate(${sx},0) rotate(${f1(flip ? -lean : lean)} 0 0) translate(0,${f1(-lift + 2 * thud)})`}>
 		<Npc x={0} y={0} k={gk} kind="ji" flip={flip} stride={stride} /></g>;
@@ -440,7 +448,7 @@ const Shot4: React.FC<{t: number}> = ({t}) => {
 			<RimF id="odrimTop" lx={0} ly={-1} k={1.6} c="#9FB8B6" o={0.5} />
 			<filter id="odfg" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="11" /></filter>
 		</defs>
-		<g transform={`translate(0,${f1(jolt)}) ${zoom(X, 620, push)}`}>
+		<g transform={`translate(0,${f1(jolt)}) ${zoom(X, 700, push)}`}>
 			<g transform={`translate(${f1(dx * 0.15)},0)`}>
 				<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="url(#odsky)" />
 				{Array.from({length: 60}, (_, i) => <circle key={i} cx={rnd(i, 21) * (W + 200) - 100} cy={rnd(i, 22) * 330} r={0.8 + rnd(i, 23) * 1.2} fill="#E8EEE6" opacity={(0.2 + rnd(i, 24) * 0.4) * (0.8 + 0.2 * Math.sin(t * (1 + rnd(i, 25) * 2) + i))} />)}
@@ -461,7 +469,7 @@ const Shot4: React.FC<{t: number}> = ({t}) => {
 				<Rack x={230} y={0} w={196} h={168} rattle={thud} t={t} />
 				<rect x={-1400} y={0} width={2800} height={260} fill="url(#odgnd)" />
 				<ellipse cx={0} cy={18} rx={620} ry={60} fill="url(#odpool)" />
-				<Lamp x={-540} y={6} k={1.5} t={t} seed={13} glow={1.3} /><Lamp x={540} y={6} k={1.5} t={t} seed={29} glow={1.3} />
+				<Lamp x={-470} y={6} k={1.5} t={t} seed={13} glow={1.3} /><Lamp x={470} y={6} k={1.5} t={t} seed={29} glow={1.3} />
 				<g fill={SIL} filter="url(#odrim)">{guard(-196, true)}{guard(196, false)}</g>
 				{dust(-196 - 22)}{dust(196 + 22)}
 			</g>
@@ -567,7 +575,7 @@ const Shot6: React.FC<{t: number}> = ({t}) => {
 	const open = 1 - (dL * 0.25 + dC * 0.5 + dR * 0.25);
 	const dark = 0.34 * ease(seg(m, 1.2, 2.0));
 	/* camera: closer on the gate, a slow push and a slight crane down that runs on (eased) to BAR(8) */
-	const u = cl(m / 6), cam = 0.55 * eout(u) + 0.45 * u, Z = 1.32 + 0.16 * cam, cxs = 545, cys = 392 + 20 * cam;
+	const cam = 0.7 * eout(cl(m / 2.6)) + 0.3 * cl(m / 6), Z = 1.3 + 0.22 * cam, cxs = 545, cys = 392 + 24 * cam;   /* 13 % in the shot, then a 3 % drift under the title */
 	/* two late walkers hurry from the near right into the central passage (feet y 610 → 520 at the threshold, then into the tunnel) */
 	const walker = (t0: number, x0: number, y0: number, bundle: boolean, seed: number) => {
 		const q = cl((m - t0) / 1.05), x = x0 + (556 - x0) * ease(q), y = y0 + (GY - 1 - y0) * q, k = 0.52 + (0.36 - 0.52) * q;
@@ -616,5 +624,5 @@ const Shot6: React.FC<{t: number}> = ({t}) => {
 	</svg>; };
 
 /** the opening: the shot that owns this frame (cut frames = round(BAR(n)·30)) */
-export const OpenNew: React.FC<{t: number}> = ({t}) => { const f = Math.round(t * 30), k = OP_CUTS.filter((c) => f >= c).length;
+export const OpenNew: React.FC<{t: number}> = ({t}) => { const k = [1, 2, 3, 4, 5].filter((n) => t >= BAR(n)).length;
 	return k === 0 ? <Shot1 t={t} /> : k === 1 ? <Shot2 t={t} /> : k === 2 ? <Shot3 t={t} /> : k === 3 ? <Shot4 t={t} /> : k === 4 ? <Shot5 t={t} /> : <Shot6 t={t} />; };
