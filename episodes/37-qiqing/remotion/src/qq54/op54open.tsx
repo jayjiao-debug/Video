@@ -165,76 +165,112 @@ const Gripper: React.FC<{rx: number; ry: number; lean?: number}> = ({rx, ry, lea
 	<path d={strand(qpts([4, -132], [rx * 0.5, (ry - 132) / 2 + 8], [rx, ry], 8), (u) => 5.2 - u * 1.4)} /><circle cx={rx} cy={ry} r={4.2} />
 	<path d={strand(qpts([0, -130], [rx * 0.45, (ry - 130) / 2 + 14], [rx - 6, ry + 8], 8), (u) => 5 - u * 1.4)} />
 </g>;
-/** 曹操 (20) strike-ready (Cao units, facing +x); rise = the raised arm + rod rotation about the shoulder (deg, + swings the rod over and
-    forward); lid = the upper lids lowered (hard eyes) with the brows knit; streak = the rod's swing since the last frame (deg): a motion streak */
-const CaoStrikeA: React.FC<{id: string; rise: number; coil: number; look: number; lid?: number; streak?: number; wrist?: number}> = ({id, rise, coil, look, lid = 0, streak = 0, wrist = 0}) => {
+/** 曹操 (20), the jointed strike rig (Cao units, facing +x; soles y = 750). One body:
+    - the upper body (torso, collar, head, belt, 刀, both arms) leans about the waist (0, 290) by −coil (+ = back); the skirt and shoes
+      stay planted; the belt covers the waist seam at any lean;
+    - the raised (far, right) arm is forward kinematics: shoulder S on the torso, upper arm a1, elbow bend a2, wrist a3 (deg, SVG sense);
+      ONE sleeve from the shoulder seam over the elbow to the cuff on the forearm, a shoulder mass that fills the shoulder–neck corner at
+      every angle, the bare forearm, a plain fist round the rod; lift raises the shoulder, twist slides it back/forward (torso twist);
+    - the collar is one 交领: the head is clipped along the neckline, the white inner collar runs along it into the V at the throat, and
+      the outer lapel crosses down and forward over the chest (右衽 as seen from his left side once the figure is mirrored);
+    - the near (left) arm hangs from the torso and moves with it. */
+export type ArmPose = {a1: number; a2: number; a3: number; lift?: number; twist?: number};
+const AL1 = 112, AL2 = 122;
+const dirv = (deg: number): P => [Math.cos(deg * Math.PI / 180), Math.sin(deg * Math.PI / 180)];
+const armFK = (p: ArmPose) => { const S: P = [-14 + (p.twist ?? 0), 74 - (p.lift ?? 0)], d1 = dirv(p.a1), E: P = [S[0] + AL1 * d1[0], S[1] + AL1 * d1[1]];
+	const d2 = dirv(p.a1 + p.a2), Wr: P = [E[0] + AL2 * d2[0], E[1] + AL2 * d2[1]]; return {S, E, Wr, d1, d2, rd: p.a1 + p.a2 + p.a3}; };
+const ptsD = (q: P[]) => 'M' + q.map((v) => f1(v[0]) + ',' + f1(v[1])).join(' L');
+/* the neckline (torso frame): nape → side of the neck → throat */
+const NECK_N: P[] = [[-62, 27], [-46, 31], [-24, 40], [-4, 48], [12, 54]];
+const CaoStrike2: React.FC<{id: string; arm: ArmPose; coil: number; look: number; lid?: number; streak?: number}> = ({id, arm, coil, look, lid = 0, streak = 0}) => {
 	const R = PAL.robe, RS = PAL.robeS, RH = PAL.robeH, TR = PAL.trim;
-	const skirt = 'M-62,292 C-78,380 -128,560 -206,708 C-120,736 60,740 184,700 C160,640 136,580 118,530 C96,460 66,380 52,286 Z';
-	const torso = 'M-38,44 C-58,58 -70,100 -68,160 C-66,220 -62,262 -62,298 L52,290 C58,220 62,160 54,112 C48,82 36,60 14,46 Z';
+	const skirt = 'M-64,250 L54,246 C60,270 64,280 52,286 C66,380 96,460 118,530 C136,580 160,640 184,700 C60,740 -120,736 -206,708 C-128,560 -78,380 -62,292 C-70,280 -70,262 -64,250 Z';
+	const torso = 'M-40,29 C-54,30 -62,44 -66,70 C-70,100 -68,130 -68,160 C-66,220 -62,262 -62,298 L52,290 C58,220 62,160 54,112 C48,84 34,62 12,54 C6,52 0,50 -4,48 L-24,40 Z';
 	const shoe = (x: number, a: number, c: string) => <g transform={`translate(${x},728) rotate(${a})`}><path d="M-26,4 C-28,-8 -16,-14 0,-14 L52,-8 C76,-4 98,2 100,14 C100,20 94,22 86,22 L-22,22 C-28,20 -28,12 -26,4 Z" fill={c} /></g>;
-	const sh: P = [-14, 80], el: P = [-86, -6], hd: P = [-56, -124], ra: P = [-30, -96], rb: P = [-410, -300];
-	/* the streak: a fan swept by the rod since the last frame, and fading ghost rods */
-	const sweep = (() => { if (Math.abs(streak) < 1.5) return null; const N = 10, pts: P[] = [], back: P[] = [];
-		for (let i = 0; i <= N; i++) { const a = -streak * i / N; pts.push(rotAbout(rb, a, hd)); back.push(rotAbout([(ra[0] + rb[0] * 2) / 3, (ra[1] + rb[1] * 2) / 3], a, hd)); }
+	const K = armFK(arm), u = dirv(K.rd), rA: P = [K.Wr[0] - 36 * u[0], K.Wr[1] - 36 * u[1]], rB: P = [K.Wr[0] + 395 * u[0], K.Wr[1] + 395 * u[1]];
+	const C: P = [K.E[0] + 30 * K.d2[0], K.E[1] + 30 * K.d2[1]];                         /* the cuff, on the forearm */
+	const sleeve = strand(qpts(K.S, K.E, C, 12), (v) => 31 - 12 * v);
+	const nrm2: P = [-K.d2[1], K.d2[0]];
+	/* the streak: the fan swept by the rod since the last frame (about the fist) and fading ghost rods */
+	const sweep = (() => { if (Math.abs(streak) < 1.5) return null; const N = 10, pts: P[] = [], back: P[] = [], mid: P = [(rA[0] + rB[0] * 2) / 3, (rA[1] + rB[1] * 2) / 3];
+		for (let i = 0; i <= N; i++) { const a = -streak * i / N; pts.push(rotAbout(rB, a, K.Wr)); back.push(rotAbout(mid, a, K.Wr)); }
 		return <g>
-			<path d={'M' + pts.concat(back.reverse()).map((q) => f1(q[0]) + ',' + f1(q[1])).join(' L') + ' Z'} fill="#F4E6C8" opacity={0.2} />
-			{[0.2, 0.42, 0.66].map((k, i) => { const a = -streak * k; return <g key={i} transform={`rotate(${f1(a)} ${hd[0]} ${hd[1]})`} opacity={0.34 - i * 0.09}><path d={`M${ra[0]},${ra[1]} L${rb[0]},${rb[1]}`} stroke="#E9D8B4" strokeWidth={20} strokeLinecap="round" /></g>; })}
+			<path d={ptsD(pts.concat(back.reverse())) + ' Z'} fill="#F4E6C8" opacity={0.2} />
+			{[0.2, 0.42, 0.66].map((k, i) => <g key={i} transform={`rotate(${f1(-streak * k)} ${f1(K.Wr[0])} ${f1(K.Wr[1])})`} opacity={0.34 - i * 0.09}><path d={`M${f1(rA[0])},${f1(rA[1])} L${f1(rB[0])},${f1(rB[1])}`} stroke="#E9D8B4" strokeWidth={20} strokeLinecap="round" /></g>)}
 		</g>; })();
+	const s0: P = [16, 86], e0: P = [74, 196], h0: P = [140, 286];
+	const headA = 22 + look + 0.5 * coil;                                              /* the neck takes up half the body's lean */
 	return <g>
-		<defs><clipPath id={`${id}sk`}><path d={skirt} /></clipPath><clipPath id={`${id}to`}><path d={torso} /></clipPath></defs>
-		<g transform={`rotate(${f1(-4 - coil)} 0 330)`}>
-			<g transform={`rotate(${f1(rise)} ${sh[0]} ${sh[1]})`}>
-				<g transform={`rotate(${f1(wrist)} ${hd[0]} ${hd[1]})`}>{sweep}<Rod5 a={ra} b={rb} r={11} ph={1} lit={1} /></g>
-				<path d={strand(qpts(sh, [sh[0] - 50, sh[1] - 30], el, 8), (u) => 34 - u * 4)} fill={RS} />
-				<path d={`M${sh[0] + 10},${sh[1]} C${sh[0] - 30},${sh[1] - 10} ${el[0] - 34},${el[1] + 40} ${el[0] - 30},${el[1] + 70} C${el[0] - 10},${el[1] + 120} ${sh[0] - 50},${sh[1] + 60} ${sh[0] - 20},${sh[1] + 40} Z`} fill={RS} />
-				<path d={strand(qpts(el, [el[0] - 6, el[1] - 60], hd, 8), (u) => 17 - u * 5)} fill={PAL.skinS} />
-				<path d={strand(qpts([el[0] + 4, el[1] - 4], [el[0] - 1, el[1] - 62], [hd[0] + 5, hd[1] + 2], 8), (u) => 7 - u * 2.4)} fill={PAL.skin} />
-				<path d={`M${el[0] + 12},${el[1] - 20} L${el[0] - 18},${el[1] + 4}`} stroke={TR} strokeWidth={10} />
-				<g transform={`translate(${hd[0]},${hd[1]}) rotate(-30)`}><path d="M-13,-12 C0,-17 15,-11 16,0 C17,11 7,16 -5,14 C-14,12 -17,-4 -13,-12 Z" fill={PAL.skin} /><path d="M-5,14 C7,16 17,11 16,0 L10,0 C10,8 4,12 -4,11 Z" fill={PAL.skinS} /></g>
-			</g>
-		</g>
+		<defs>
+			<clipPath id={`${id}sk`}><path d={skirt} /></clipPath><clipPath id={`${id}to`}><path d={torso} /></clipPath>
+			{/* the head and its neck end at the neckline */}
+			<clipPath id={`${id}nk`}><path d={`M-400,-700 L400,-700 L400,54 ${NECK_N.slice().reverse().map((q) => `L${q[0]},${q[1]}`).join(' ')} L-400,27 Z`} /></clipPath>
+		</defs>
 		{shoe(-150, 0, '#0C0A08')}{shoe(150, -4, '#141110')}
-		<g transform={`rotate(${f1(-4 - coil)} 0 330)`}>
+		<g transform="rotate(-4 0 330)">
+			{/* the skirt stays planted */}
 			<path d={skirt} fill={R} />
 			<g clipPath={`url(#${id}sk)`}>
-				<path d="M-20,280 C-30,420 -80,580 -110,740 L-260,740 L-260,280 Z" fill={RS} />
-				<path d="M40,300 C70,420 110,560 150,720 L220,720 L220,280 Z" fill={RH} opacity={0.6} />
+				<path d="M-20,280 C-30,420 -80,580 -110,740 L-260,740 L-260,240 Z" fill={RS} />
+				<path d="M40,300 C70,420 110,560 150,720 L220,720 L220,240 Z" fill={RH} opacity={0.6} />
 				<path d="M-8,300 C-20,450 -60,600 -90,720 M20,300 C40,440 70,580 96,712 M-40,320 C-70,460 -120,600 -160,712" fill="none" stroke={RS} strokeWidth={4} opacity={0.75} />
 				<rect x={-260} y={690} width={460} height={60} fill={TR} transform="rotate(-6 0 700)" />
 			</g>
-			<path d={torso} fill={R} />
-			<g clipPath={`url(#${id}to)`}>
-				<path d="M-14,48 C-16,140 -18,220 -20,298 L-80,300 L-80,40 Z" fill={RS} />
-				<path d="M44,92 C56,150 54,230 50,290 L64,290 L64,80 Z" fill={RH} opacity={0.6} />
-			</g>
-			<path d="M14,46 C25,56 33,72 37,92 L29,96 C25,77 19,61 8,51 Z" fill="#D8CDB8" />
-			<path d="M24,52 C8,104 -18,152 -48,196 L-58,186 C-28,146 -2,100 14,48 Z" fill={TR} />
-			<path d="M-64,284 L55,272 L57,292 L-64,304 Z" fill="#1A120E" /><ellipse cx={50} cy={282} rx={7} ry={5} fill={PAL.gold} />
-			<path d="M-30,300 L-18,298 L-24,520 L-36,522 Z" fill="#A08240" />
-			<Dao a={[64, 266]} b={[-90, 548]} pal={PAL} />
-			<g transform={`rotate(${f1(22 + look + coil)} 0 40) translate(0,49) scale(0.88) translate(0,-40)`}><Head old={false} pal={PAL} id={id} />
-				{lid > 0 && <g>
-					{/* hard eyes: the brow knit down toward the nose, the upper lid lowered over the iris */}
-					<path d="M10.6,-67 C21,-69 31,-69 40.4,-65.6 L40.6,-60.4 L10.6,-59.6 Z" fill={PAL.skin} />
-					<path d={`M17,-56.4 C22.6,${f1(-59.4 + 6.4 * lid)} 28.6,${f1(-59 + 6.2 * lid)} 34.2,${f1(-55.4 + 1.6 * lid)} L34.4,-60 L16,-60 Z`} fill={PAL.skin} />
-					<path d={`M17.4,${f1(-55.6 + 2.6 * lid)} C22.6,${f1(-58.8 + 6.4 * lid)} 28.6,${f1(-58.4 + 6.2 * lid)} 33.8,${f1(-54.8 + 1.6 * lid)}`} fill="none" stroke={PAL.line} strokeWidth={2.6} strokeLinecap="round" />
-					<path d="M11.4,-64.6 C20,-66.4 29.4,-65 39.8,-59.6 L38.8,-57.2 C29.2,-61.6 20.4,-62.6 12.2,-61.4 Z" fill={PAL.hair} />
-					<path d="M33,-60.2 C35,-62.8 37.6,-63.6 39.6,-63" fill="none" stroke={PAL.line} strokeWidth={0.9} opacity={0.5} />
-				</g>}
+			{/* the upper body leans about the waist */}
+			<g transform={`rotate(${f1(-coil)} 0 290)`}>
+				{/* the raised far arm, behind the body: rod, shoulder mass, forearm, sleeve, cuff, fist */}
+				<g>{sweep}<Rod5 a={rA} b={rB} r={11} ph={1} lit={1} /></g>
+				<circle cx={-26 + (arm.twist ?? 0) * 0.5} cy={36 - (arm.lift ?? 0) * 0.6} r={22} fill={RS} />
+				<circle cx={K.S[0]} cy={K.S[1]} r={31} fill={RS} />
+				<path d={strand(qpts(K.E, [(K.E[0] + K.Wr[0]) / 2 + nrm2[0] * 3, (K.E[1] + K.Wr[1]) / 2 + nrm2[1] * 3], K.Wr, 8), (v) => 15 - 4 * v)} fill={PAL.skinS} />
+				<path d={strand(qpts([K.E[0] + nrm2[0] * 5, K.E[1] + nrm2[1] * 5], [(K.E[0] + K.Wr[0]) / 2 + nrm2[0] * 7, (K.E[1] + K.Wr[1]) / 2 + nrm2[1] * 7], [K.Wr[0] + nrm2[0] * 4, K.Wr[1] + nrm2[1] * 4], 8), (v) => 6 - 2 * v)} fill={PAL.skin} />
+				<path d={sleeve} fill={RS} />
+				<path d={strand(qpts([K.S[0] + nrm2[0] * 0, K.S[1]], K.E, C, 12), (v) => 4 - 2 * v)} fill={RH} opacity={0.35} />
+				<path d={`M${f1(C[0] + nrm2[0] * 21)},${f1(C[1] + nrm2[1] * 21)} L${f1(C[0] - nrm2[0] * 21)},${f1(C[1] - nrm2[1] * 21)}`} stroke={TR} strokeWidth={9} strokeLinecap="round" />
+				<g transform={`translate(${f1(K.Wr[0])},${f1(K.Wr[1])}) rotate(${f1(K.rd)})`}>
+					<path d="M-14,-12 C-4,-17 10,-16 15,-8 C18,-2 18,6 14,11 C8,16 -6,16 -13,11 C-18,6 -18,-6 -14,-12 Z" fill={PAL.skin} />
+					<path d="M-13,11 C-6,16 8,16 14,11 C12,6 6,4 -2,5 C-8,6 -12,8 -13,11 Z" fill={PAL.skinS} />
+				</g>
+				{/* the torso */}
+				<path d={torso} fill={R} />
+				<g clipPath={`url(#${id}to)`}>
+					<path d="M-14,40 C-16,140 -18,220 -20,298 L-80,300 L-80,20 Z" fill={RS} />
+					<path d="M44,92 C56,150 54,230 50,290 L64,290 L64,80 Z" fill={RH} opacity={0.6} />
+				</g>
+				{/* the head, its neck ending at the neckline */}
+				<g clipPath={`url(#${id}nk)`}><g transform={`rotate(${f1(headA)} 0 40) translate(0,49) scale(0.88) translate(0,-40)`}><Head old={false} pal={PAL} id={id} />
+					{lid > 0 && <g>
+						{/* hard eyes: the brow knit down toward the nose, the upper lid lowered over the iris */}
+						<path d="M10.6,-67 C21,-69 31,-69 40.4,-65.6 L40.6,-60.4 L10.6,-59.6 Z" fill={PAL.skin} />
+						<path d={`M17,-56.4 C22.6,${f1(-59.4 + 6.4 * lid)} 28.6,${f1(-59 + 6.2 * lid)} 34.2,${f1(-55.4 + 1.6 * lid)} L34.4,-60 L16,-60 Z`} fill={PAL.skin} />
+						<path d={`M17.4,${f1(-55.6 + 2.6 * lid)} C22.6,${f1(-58.8 + 6.4 * lid)} 28.6,${f1(-58.4 + 6.2 * lid)} 33.8,${f1(-54.8 + 1.6 * lid)}`} fill="none" stroke={PAL.line} strokeWidth={2.6} strokeLinecap="round" />
+						<path d="M11.4,-64.6 C20,-66.4 29.4,-65 39.8,-59.6 L38.8,-57.2 C29.2,-61.6 20.4,-62.6 12.2,-61.4 Z" fill={PAL.hair} />
+						<path d="M33,-60.2 C35,-62.8 37.6,-63.6 39.6,-63" fill="none" stroke={PAL.line} strokeWidth={0.9} opacity={0.5} />
+					</g>}
+				</g></g>
+				{/* the 交领: the white inner collar along the neckline into the V at the throat; the outer lapel just outside it, crossing
+				    down and forward over the chest to the front edge */}
+				{/* both bands start inside the robe at the nape (tapered in), so no end ever stands off the back */}
+				<path d={strand([[-46, 33], [-36, 35], [-24, 42], [-4, 50], [10, 56], [17, 64], [21, 74]], (v) => (4.4 - 1.2 * v) * Math.min(1, 0.25 + v * 5))} fill="#E6DCC8" />
+				<path d={strand([[-52, 40], [-40, 43], [-24, 50], [-6, 58], [8, 66], [20, 80], [32, 97], [44, 114], [56, 130]], (v) => (6.2 - 0.6 * v) * Math.min(1, 0.3 + v * 5))} fill={TR} />
+				<path d={strand([[-40, 37], [-24, 46], [-6, 54], [7, 61]], () => 0.8)} fill="#000" opacity={0.25} />
+				<path d="M-64,284 L55,272 L57,292 L-64,304 Z" fill="#1A120E" /><ellipse cx={50} cy={282} rx={7} ry={5} fill={PAL.gold} />
+				<path d="M-30,300 L-18,298 L-24,520 L-36,522 Z" fill="#A08240" />
+				<Dao a={[64, 266]} b={[-90, 548]} pal={PAL} />
+				{/* the near (left) arm hangs from the torso and rides with it */}
+				<g transform={`rotate(${f1(0.6 * coil)} ${s0[0]} ${s0[1]})`}>
+					<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 50},${h0[1] + 100} ${e0[0] - 20},${e0[1] + 96} ${e0[0] - 30},${e0[1] + 40} C${e0[0] - 40},${e0[1]} ${s0[0] - 30},${s0[1] + 60} ${s0[0] - 26},${s0[1] + 10} Z`} fill={R} />
+					<path d={`M${e0[0] - 30},${e0[1] + 40} C${e0[0] - 20},${e0[1] + 96} ${h0[0] - 50},${h0[1] + 100} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 34},${h0[1] + 76} ${e0[0] - 4},${e0[1] + 70} ${e0[0] - 18},${e0[1] + 22} Z`} fill={RS} />
+					<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} L${h0[0] - 10},${h0[1] - 10} L${e0[0] + 16},${e0[1] + 8} C${e0[0] + 10},${e0[1] - 26} ${s0[0] + 24},${s0[1] + 40} ${s0[0] + 10},${s0[1] - 2} Z`} fill={RH} opacity={0.75} />
+					<path d={`M${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70}`} fill="none" stroke={TR} strokeWidth={9} />
+					<g transform={`translate(${h0[0] + 2},${h0[1] + 12}) rotate(52)`}>
+						<path d="M-10,-11 C2,-14 13,-9 14,0 C15,9 6,13 -4,12 C-12,10 -14,-4 -10,-11 Z" fill={PAL.skin} />
+						<path d="M10,-6 C22,-6 34,-4 40,-2 C40,1 38,2 34,2 C26,2 18,1 10,2 Z" fill={PAL.skin} />
+						<path d="M-4,12 C4,12 12,8 14,1 C10,6 2,9 -6,9 Z" fill={PAL.skinS} />
+					</g>
+				</g>
 			</g>
 		</g>
-		{(() => { const s0: P = [16, 86], e0: P = [74, 196], h0: P = [140, 286];
-			return <g>
-				<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 50},${h0[1] + 100} ${e0[0] - 20},${e0[1] + 96} ${e0[0] - 30},${e0[1] + 40} C${e0[0] - 40},${e0[1]} ${s0[0] - 30},${s0[1] + 60} ${s0[0] - 26},${s0[1] + 10} Z`} fill={R} />
-				<path d={`M${e0[0] - 30},${e0[1] + 40} C${e0[0] - 20},${e0[1] + 96} ${h0[0] - 50},${h0[1] + 100} ${h0[0] - 20},${h0[1] + 70} C${h0[0] - 34},${h0[1] + 76} ${e0[0] - 4},${e0[1] + 70} ${e0[0] - 18},${e0[1] + 22} Z`} fill={RS} />
-				<path d={`M${s0[0] + 20},${s0[1] - 10} C${s0[0] + 50},${s0[1] + 30} ${e0[0] + 20},${e0[1] - 30} ${e0[0] + 28},${e0[1] - 4} L${h0[0] - 6},${h0[1] - 22} L${h0[0] - 10},${h0[1] - 10} L${e0[0] + 16},${e0[1] + 8} C${e0[0] + 10},${e0[1] - 26} ${s0[0] + 24},${s0[1] + 40} ${s0[0] + 10},${s0[1] - 2} Z`} fill={RH} opacity={0.75} />
-				<path d={`M${h0[0] - 6},${h0[1] - 22} C${h0[0] + 2},${h0[1] + 8} ${h0[0] - 4},${h0[1] + 40} ${h0[0] - 20},${h0[1] + 70}`} fill="none" stroke={TR} strokeWidth={9} />
-				<g transform={`translate(${h0[0] + 2},${h0[1] + 12}) rotate(52)`}>
-					<path d="M-10,-11 C2,-14 13,-9 14,0 C15,9 6,13 -4,12 C-12,10 -14,-4 -10,-11 Z" fill={PAL.skin} />
-					<path d="M10,-6 C22,-6 34,-4 40,-2 C40,1 38,2 34,2 C26,2 18,1 10,2 Z" fill={PAL.skin} />
-					<path d="M-4,12 C4,12 12,8 14,1 C10,6 2,9 -6,9 Z" fill={PAL.skinS} />
-				</g>
-			</g>; })()}
 	</g>; };
 /** the night air the flame leans in: its light sways (px), shared by shots 1–2 */
 const swayAt = (t: number) => 20 * Math.sin(t * 2.3 + 0.5) + 9 * Math.sin(t * 5.7);
@@ -245,13 +281,18 @@ const swayAt = (t: number) => 20 * Math.sin(t * 2.3 + 0.5) + 9 * Math.sin(t * 5.
    Acting: the rod rises to full height (1.25 s) and hovers with a tremble; 曹操 coils; the uncle pulls back twice against the grip
    and at 1.1–1.6 s lifts his head to look up at the rod. The lamp flame leans in the air: its light and the long cast shadows sway.
    ===================================================================================================================== */
+/** shot 1's raise (deg): from the rod held back level to full height (the shoulder leads, the elbow and the wrist follow 0.1 s apart),
+    a tremble at the top, and late in the bar the wind-up begins (the elbow folds, the wrist cocks, the shoulder lifts and draws back) */
+const raise1 = (t: number): ArmPose => { const k1 = eout(cl(t / 1.1)), k2 = eout(cl((t - 0.1) / 1.1)), k3 = eout(cl((t - 0.2) / 1.1));
+	const tr = 1.2 * Math.sin(t * 2.6) * seg(t, 1.0, 1.6) + 0.8 * Math.sin(t * 8.3 + 1) * seg(t, 1.2, 1.8), wu = eio(seg(t, 1.6, 2.65));
+	return {a1: -150 + 22 * k1 - 5 * wu + 0.5 * tr, a2: 66 - 14 * k2 + 7 * wu, a3: -88 + 12 * k3 - 5 * wu + tr, lift: 4 * k1 + 3 * wu, twist: -4 * wu}; };
 const Shot1: React.FC<{t: number}> = ({t}) => {
 	const GX = 1175, GG = 800, FG = 1030, S = 3.1 / 4.98, lampX = 560, lampK = 2.7, lampG = 988, flY = lampG - 117 * lampK, cx = 1300, cy = FG - 750 * S;
 	const v = cl(t / BAR(1)), u = 0.7 * v + 0.3 * eout(v);
 	const zf = `translate(${f1(-170 * u)},${f1(34 * u)}) ${zoom(1080, 700, 1 + 0.27 * u)}`, zb = `translate(${f1(-90 * u)},${f1(14 * u)}) ${zoom(1080, 700, 1 + 0.1 * u)}`;
 	const F = flick(t, 5), sw = swayAt(t);
-	const rise = -24 * (1 - eout(cl(t / 1.25))) + 1.3 * Math.sin(t * 2.6) * seg(t, 1.0, 1.6) + 0.7 * Math.sin(t * 8.3 + 1) * seg(t, 1.2, 1.8);
-	const coil = 0.6 + 5 * eio(cl(t / 2.5));   /* he winds up: the body turns back over the bar */
+	const arm1 = raise1(t);
+	const coil = 0.6 + 5 * eio(cl(t / 2.5));   /* he winds up: the upper body leans back over the bar */
 	/* the uncle: two hard pulls back (negative = away from 曹操) and a shudder; at 1.1–1.6 s he looks up */
 	const st = -3.5 + 7.5 * Math.sin(t * 4.1 + 0.9) + 1.8 * Math.sin(t * 12.3 + 2);
 	const hu = 2 + 15 * eio(seg(t, 1.05, 1.6)) + 2.2 * Math.sin(t * 4.3);
@@ -267,7 +308,7 @@ const Shot1: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(${gA.x},${gA.y}) scale(3.1) rotate(-3)`}><Gripper rx={rA[0]} ry={rA[1]} lean={-1.2 - 0.6 * st} /></g>
 			<g transform={`translate(1150,${FG + 8}) scale(3.1) rotate(-70)`}><path d="M-8,-1 C-8.8,-7 -7,-11.6 -1.6,-13.2 L8.4,-13.4 C11,-12 12,-9 12,-6 C8,-7 3,-7 -1,-5 Z M-6.8,-10.6 L10.4,-11.4 L11.2,-29 L-5.4,-19.6 Z" /></g>
 		</g>
-		<g transform={`translate(${cx},${cy}) scale(${-S},${S})`} filter={rim ? 'url(#oacao)' : undefined}><CaoStrikeA id={id} rise={rise} coil={coil} look={-1.5 * Math.sin(t * 1.1)} /></g>
+		<g transform={`translate(${cx},${cy}) scale(${-S},${S})`} filter={rim ? 'url(#oacao)' : undefined}><CaoStrike2 id={id} arm={arm1} coil={coil} look={-1.5 * Math.sin(t * 1.1)} /></g>
 	</g>;
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<defs>
@@ -314,21 +355,23 @@ const Shot1: React.FC<{t: number}> = ({t}) => {
    at the top, winds back on beat 3½, and in the last half beat swings over (a streak); we cut on BAR(2) before any impact.
    ===================================================================================================================== */
 const S2 = 2.2;
-/** shot 2's arm (about the shoulder) and wrist (the rod about the fist), deg: the hold with a tremble, the wind-up on beat 3 (rod and
-    wrist cocked back), then from beat 4 the arm drives up over the head while the wrist snaps the rod over; at the cut the rod points
-    up and forward (≈ 40° above level), still high above the man */
+/** shot 2's body and arm (deg): the hold with a tremble; the wind-up on beat 3 (the upper body leans back and the shoulder lifts and
+    draws back, the elbow folds, the wrist cocks the rod further back); from beat 4 the swing, in sequence: the body leans in and the
+    shoulder drives forward, then the elbow opens, then the wrist snaps the rod over. At the cut the rod points up and forward (≈ 50°
+    above level), still high above the man. */
 const pose2 = (m: number) => {
-	const go = seg(m, 1.47, 2.0), wind = eio(seg(m, 1.0, 1.45)) * (1 - ease(seg(m, 1.47, 1.66)));
-	const arm = 24 + 0.66 * Math.sin(m * 9.5) + 0.8 * Math.sin(m * 3.1) - 9 * wind + 7 * go ** 1.5;
-	const wrist = -12 * wind + 80 * go ** 2.3;
-	return {arm, wrist, tot: arm + wrist}; };
+	const tr = 0.7 * Math.sin(m * 9.5) + 0.5 * Math.sin(m * 3.1);
+	const wind = eio(seg(m, 1.0, 1.45)) * (1 - ease(seg(m, 1.47, 1.7)));
+	const g1 = seg(m, 1.47, 2.0) ** 1.6, g2 = seg(m, 1.52, 2.0) ** 1.8, g3 = seg(m, 1.58, 2.0) ** 2.2;
+	const a1 = -108 - 14 * wind + 22 * g1, a2 = 54 + 18 * wind - 36 * g2, a3 = -74 - 12 * wind + tr + 96 * g3;
+	const coil = 3 + 0.8 * Math.sin(m * 2.2) + 3.5 * wind - 7 * g1;
+	return {arm: {a1, a2, a3, lift: 7 * wind + 3 * g1, twist: -8 * wind + 10 * g1} as ArmPose, rod: a1 + a2 + a3, coil}; };
 const Shot2: React.FC<{t: number}> = ({t}) => {
 	const a = BAR(1), m = t - a, D = BAR(2) - a, v = cl(m / D);
 	const pu = 0.55 * eout(v) + 0.45 * v;   /* the push starts at once (the cut lands in motion) and keeps going */
 	const fx = 980, fy = 470, push = 1 + 0.13 * pu, zf = `translate(${f1(46 * pu)},${f1(-50 * pu)}) ${zoom(fx, fy, push)}`, zb = `translate(${f1(16 * pu)},${f1(-18 * pu)}) ${zoom(fx, fy, 1 + 0.05 * pu)}`;
 	const F = flick(t, 5), sw = swayAt(t);
-	const P2 = pose2(m), streak = P2.tot - pose2(m - 1 / 30).tot;
-	const coil = 3 + 0.8 * Math.sin(m * 2.2) + 3.5 * eio(seg(m, 1.0, 1.45)) - 6 * seg(m, 1.47, 2.0) ** 2;
+	const P2 = pose2(m), streak = P2.rod - pose2(m - 1 / 30).rod, coil = P2.coil;
 	const cx = 1040, cy = 640;
 	const lampX = 330 + sw * 0.25, lampY = 1300, lk = 5.6, flY = lampY - 117 * lk;
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
@@ -363,7 +406,7 @@ const Shot2: React.FC<{t: number}> = ({t}) => {
 		</g>
 		<g transform={zf}>
 			<circle cx={cx - 120 + sw * 0.4} cy={cy - 120} r={420} fill="url(#obface)" opacity={0.85 + 0.15 * F.s} />
-			<g filter="url(#obcao)"><g transform={`translate(${cx},${cy}) scale(${-S2},${S2})`}><CaoStrikeA id="obs" rise={P2.arm} wrist={P2.wrist} coil={coil} look={8 + 0.6 * Math.sin(m * 1.7)} lid={0.38} streak={streak} /></g></g>
+			<g filter="url(#obcao)"><g transform={`translate(${cx},${cy}) scale(${-S2},${S2})`}><CaoStrike2 id="obs" arm={P2.arm} coil={coil} look={3 + 0.6 * Math.sin(m * 1.7)} lid={0.38} streak={streak} /></g></g>
 		</g>
 		{/* the near foreground: the man's head and shoulders, out of focus, low at the left; the lamp beside him */}
 		<g filter="url(#obbl)" fill="#0B0706" transform={`translate(${f1(-30 * v)},0)`}>
