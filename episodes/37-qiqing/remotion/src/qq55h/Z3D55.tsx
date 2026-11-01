@@ -52,11 +52,12 @@ const Looks: React.FC = () => { const f = useCurrentFrame(), L = LOOKS[Math.min(
 const rnd = (i: number, s = 0) => { const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453; return x - Math.floor(x); };
 /** the camera looks down into the mouth from 77 cm above the floor, offset 7 cm toward az 45° (a flat face) so the text reads upright;
     the lamp comes from screen top-right, high, so the lip throws a shadow across one side of the floor */
+const KF3_SHIFT: [number, number] = [110, 120];
 const KF3Scene: React.FC = () => { const a = INSCR_AZ, off = 7, up = 76.8;
 	const Rt = [Math.cos(a), 0, -Math.sin(a)], U = [-Math.sin(a), 0, -Math.cos(a)];
 	const L = [0.55 * Rt[0] + 0.32 * U[0], 0.78, 0.55 * Rt[2] + 0.32 * U[2]], D = 120;
 	return <>
-		<CamRig az={45} el={Math.atan2(up, off) * 180 / Math.PI} D={Math.hypot(up, off)} target={[0, FLOOR_Z, 0]} fov={2 * Math.atan(540 / 4300) * 180 / Math.PI} />
+		<CamRig az={45} el={Math.atan2(up, off) * 180 / Math.PI} D={Math.hypot(up, off)} target={[0, FLOOR_Z, 0]} fov={2 * Math.atan(540 / 3900) * 180 / Math.PI} shift={KF3_SHIFT} />
 		<Env intensity={0.22} rotY={a} />
 		<directionalLight position={[L[0] * D, FLOOR_Z + L[1] * D, L[2] * D]} intensity={4.2} color="#FFD49A" castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0008} shadow-normalBias={0.1}
 			shadow-camera-left={-24} shadow-camera-right={24} shadow-camera-top={24} shadow-camera-bottom={-24} shadow-camera-near={40} shadow-camera-far={240} />
@@ -66,9 +67,9 @@ const KF3Scene: React.FC = () => { const a = INSCR_AZ, off = 7, up = 76.8;
 /** screen position of an inscription glyph (for the CSS glow over 中 / 或) */
 const kf3Screen = (key: string) => { const g = INSCR.find((q) => q.key === key)!, a = INSCR_AZ, off = 7, up = 76.8, el = Math.atan2(up, off), D = Math.hypot(up, off);
 	const P = new THREE.Vector3(g.u * Math.cos(a) + g.v * Math.sin(a), FLOOR_Z, -g.u * Math.sin(a) + g.v * Math.cos(a));
-	const cam = new THREE.PerspectiveCamera(2 * Math.atan(540 / 4300) * 180 / Math.PI, W / H, 1, 2000);
+	const cam = new THREE.PerspectiveCamera(2 * Math.atan(540 / 3900) * 180 / Math.PI, W / H, 1, 2000);
 	cam.position.set(D * Math.sin(a) * Math.cos(el), FLOOR_Z + D * Math.sin(el), D * Math.cos(a) * Math.cos(el)); cam.lookAt(0, FLOOR_Z, 0); cam.updateMatrixWorld(); cam.updateProjectionMatrix();
-	const q = P.project(cam); return [(q.x + 1) / 2 * W, (1 - q.y) / 2 * H]; };
+	const q = P.project(cam); return [(q.x + 1) / 2 * W + KF3_SHIFT[0], (1 - q.y) / 2 * H + KF3_SHIFT[1]]; };
 const KF3: React.FC = () => { const gl = ['zhong', 'huo'].map(kf3Screen);
 	return <AbsoluteFill style={{background: 'linear-gradient(135deg, #2A1C14 0%, #120C09 100%)'}}>
 	<Canvas3 exposure={1.05}><KF3Scene /></Canvas3>

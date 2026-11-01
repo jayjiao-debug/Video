@@ -68,7 +68,7 @@ const floorGeo = (y: number, R: number, n: number): Geo => { const NR = 40, NT =
 
 /** a swept horn along HORN_SPINE on one half-face */
 const hornGeo = (face: number, side: number): Geo => {
-	const S = HORN_SPINE, M = 90, K = 28, pos: number[] = [], uv: number[] = [], idx: number[] = [];
+	const S = HORN_SPINE, M = 90, K = 28, pos: number[] = [], uv: number[] = [], idx: number[] = [], col: number[] = [];
 	const at = (t: number) => { const k = t * (S.length - 1), i = Math.min(S.length - 2, Math.floor(k)), u = k - i, g = (j: number) => S[Math.max(0, Math.min(S.length - 1, j))];
 		return [0, 1, 2, 3, 4].map((c) => { const a = g(i - 1)[c], b = g(i)[c], cc = g(i + 1)[c], d = g(i + 2)[c]; return 0.5 * (2 * b + (-a + cc) * u + (2 * a - 5 * b + 4 * cc - d) * u * u + (-a + 3 * b - 3 * cc + d) * u * u * u); }); };
 	const C: V3[] = [], Ns: V3[] = [], W: number[] = [], T: number[] = [];
@@ -83,11 +83,15 @@ const hornGeo = (face: number, side: number): Geo => {
 			const groove = 1 - 0.09 * (Math.exp(-(((ph - 1.12) / 0.13) ** 2)) + Math.exp(-(((ph - 2.02) / 0.13) ** 2)));
 			const perim = 1.57 * (W[m] + T[m]) * taper;
 			const p = C[m].clone().addScaledVector(sd, (W[m] / 2) * cs * groove * taper).addScaledVector(up, (T[m] / 2) * ss * groove * taper);
-			pos.push(p.x, p.y, p.z); uv.push(len / 2.5, (k / K) * perim / 2.5); } }
+			pos.push(p.x, p.y, p.z); uv.push(len / 2.5, (k / K) * perim / 2.5);
+			/* patina: the underside (toward the body) dark and green, worn light along the top, blotches along the length */
+			const top = 0.5 + 0.5 * s, n1 = fbm(len * 0.6 + face, k * 0.3 + side, 91), g = cl(0.75 - top * 1.1 + (n1 - 0.5) * 0.9);
+			const br = (0.5 + 0.62 * top) * (0.85 + 0.3 * n1);
+			col.push(br * lerp(1, 0.62, g), br * lerp(1, 0.86, g), br * lerp(1, 0.74, g)); } }
 	for (let m = 0; m < M; m++) for (let k = 0; k < K; k++) { const a = m * (K + 1) + k, b = a + 1, c = a + K + 1, d = c + 1; idx.push(a, b, d, a, d, c); }
 	/* a cap at the root */
-	const c0 = pos.length / 3; pos.push(C[0].x, C[0].y, C[0].z); uv.push(0, 0.5); for (let k = 0; k < K; k++) idx.push(c0, k + 1, k);
-	const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+	const c0 = pos.length / 3; pos.push(C[0].x, C[0].y, C[0].z); uv.push(0, 0.5); col.push(0.4, 0.42, 0.38); for (let k = 0; k < K; k++) idx.push(c0, k + 1, k);
+	const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
 	g.setIndex(idx); g.computeVertexNormals(); return g; };
 
 /** a ball eye with a small pupil dimple (lathe, axis +y) */
@@ -143,7 +147,10 @@ export const zunMats = (look: Look): Mats => { if (MATS[look]) return MATS[look]
 	const horn = bronze(tm, look, {side: THREE.DoubleSide, normalScale: new THREE.Vector2(0.35, 0.35)});
 	/* the ball eyes and the horn tops are handled smooth: lighter, polished metal */
 	const eye = bronze(tm, look, {side: THREE.DoubleSide, normalScale: new THREE.Vector2(0.2, 0.2), color: new THREE.Color(look === 'clean' ? '#d8d6c8' : '#b8b4a2'), roughness: 0.75});
-	horn.color = new THREE.Color(look === 'clean' ? '#f2eedc' : '#c0bba6'); horn.shadowSide = THREE.FrontSide; eye.shadowSide = THREE.FrontSide;
+	/* the horns: smooth cast bronze like the photos (the tile noise streaks along a long thin sweep) */
+	Object.assign(horn, {map: null, normalMap: null, aoMap: null, roughnessMap: null, metalnessMap: null, roughness: look === 'clean' ? 0.5 : 0.66, metalness: look === 'clean' ? 0.84 : 0.55, vertexColors: true});
+	horn.color = new THREE.Color(look === 'clean' ? '#5e5c4e' : look === 'molten' ? '#4a3a2a' : '#4f5a4a');
+	if (look === 'molten') { horn.emissiveMap = null; horn.emissive = new THREE.Color('#ff7a26'); } horn.shadowSide = THREE.FrontSide; eye.shadowSide = THREE.FrontSide;
 	const inner = bronze(im, look === 'molten' ? 'molten' : 'dirty', {envMapIntensity: 0.5, color: new THREE.Color('#7c7d72')});
 	const floor = new THREE.MeshStandardMaterial({map: fl.albedo, normalMap: fl.normal, aoMap: fl.orm, roughnessMap: fl.orm, metalnessMap: fl.orm, roughness: 1, metalness: 1, envMapIntensity: 0.6,
 		emissive: new THREE.Color('#ffb648'), emissiveMap: fl.glow, emissiveIntensity: 0});
@@ -181,10 +188,13 @@ export const Env: React.FC<{intensity?: number; rotY?: number}> = ({intensity = 
 	return null; };
 
 /** camera on a sphere round a target: az (deg, 0 = the front flange, 90 = +x), el (deg) */
-export const CamRig: React.FC<{az: number; el: number; D: number; target: [number, number, number]; fov: number}> = ({az, el, D, target, fov}) => {
+/** shift: move the picture by (dx, dy) px on a 1920 × 1080 frame (a view offset, so the perspective stays centred on the target) */
+export const CamRig: React.FC<{az: number; el: number; D: number; target: [number, number, number]; fov: number; shift?: [number, number]}> = ({az, el, D, target, fov, shift}) => {
 	const {camera} = useThree(); const a = az * D2R, e = el * D2R;
 	camera.position.set(target[0] + D * Math.sin(a) * Math.cos(e), target[1] + D * Math.sin(e), target[2] + D * Math.cos(a) * Math.cos(e));
-	(camera as THREE.PerspectiveCamera).fov = fov; camera.near = 1; camera.far = 2000; camera.lookAt(target[0], target[1], target[2]); camera.updateProjectionMatrix();
+	(camera as THREE.PerspectiveCamera).fov = fov; camera.near = 1; camera.far = 2000; camera.lookAt(target[0], target[1], target[2]);
+	if (shift) (camera as THREE.PerspectiveCamera).setViewOffset(1920, 1080, -shift[0], -shift[1], 1920, 1080); else (camera as THREE.PerspectiveCamera).clearViewOffset();
+	camera.updateProjectionMatrix();
 	return null; };
 
 const BLOB = (() => { let t: THREE.Texture | null = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d')!;

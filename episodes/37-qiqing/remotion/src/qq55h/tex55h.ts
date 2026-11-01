@@ -50,14 +50,15 @@ const column = (z0: number, z1: number, ro: (z: number) => number, teeth: number
 	const out: P2[] = [], H: P2[][] = [], I: P2[][] = [];
 	out.push([Rz(z1)[0] - 0.45, z1], [ro(z1), z1]);
 	const order = teeth.map((t, i) => ({t, L: L[i]})).sort((a, b) => b.t - a.t);
-	for (const {t, L: Lk} of order) { const r = ro(t);
-		out.push([ro(t + 0.001), t + 0.05], [r + Lk - 0.15, t + 0.12], [r + Lk + 0.18, t - 0.08], [r + Lk + 0.32, t - 0.55], [r + Lk + 0.26, t - 1.05], [r + Lk + 0.02, t - 1.4],
-			[r + Lk - 0.32, t - 1.22], [r + Lk - 0.36, t - 0.86], [r + 0.15, t - 0.78],
-			[r - 0.55, t - 0.82], [r - 0.92, t - 1.12], [r - 1.0, t - 1.55], [r - 0.82, t - 1.95], [r - 0.4, t - 2.12], [ro(t - 2.15), t - 2.15]);
-		I.push([[r - 0.25, t - 0.38], [r + Lk - 0.2, t - 0.36], [r + Lk - 0.02, t - 0.62], [r + Lk - 0.02, t - 1.0]]);
-		{ const cz = t - 2.75, cr = (Rz(cz)[0] + ro(cz)) / 2, rr = Math.min(0.42, (ro(cz) - Rz(cz)[0]) * 0.22);
+	const q = 1.2;   /* the photo's hooks are chunkier than the SVG trace: 20 % taller bars and notches */
+	for (const {t, L: Lk0} of order) { const r = ro(t), Lk = Lk0 * 1.2;
+		out.push([ro(t + 0.001), t + 0.05], [r + Lk - 0.15, t + 0.12], [r + Lk + 0.18, t - 0.08 * q], [r + Lk + 0.34, t - 0.55 * q], [r + Lk + 0.28, t - 1.05 * q], [r + Lk + 0.02, t - 1.4 * q],
+			[r + Lk - 0.36, t - 1.22 * q], [r + Lk - 0.4, t - 0.86 * q], [r + 0.15, t - 0.78 * q],
+			[r - 0.55, t - 0.82 * q], [r - 0.92, t - 1.12 * q], [r - 1.0, t - 1.55 * q], [r - 0.82, t - 1.95 * q], [r - 0.4, t - 2.12 * q], [ro(t - 2.15 * q), t - 2.15 * q]);
+		I.push([[r - 0.25, t - 0.42 * q], [r + Lk - 0.2, t - 0.4 * q], [r + Lk - 0.02, t - 0.68 * q], [r + Lk - 0.02, t - 1.1 * q]]);
+		{ const cz = t - 2.15 * q - 0.6, cr = (Rz(cz)[0] + ro(cz)) / 2, rr = Math.min(0.42, (ro(cz) - Rz(cz)[0]) * 0.22);
 			if (cz > z0 + 0.5 && rr > 0.18) I.push(Array.from({length: 12}, (_, i) => { const aa = (0.15 + 1.55 * i / 11) * Math.PI; return [cr + rr * Math.cos(aa) * (1 - 0.35 * i / 11), cz + rr * Math.sin(aa) * (1 - 0.35 * i / 11)] as P2; })); }
-		if (holes) { const zt = t - 2.55, zb = t - 3.55, a = Rz(zt)[0] + 0.4, b = Math.min(ro(zt) - 0.6, a + 1.15);
+		if (holes) { const zt = t - 2.15 * q - 0.4, zb = zt - 0.8, a = Rz(zt)[0] + 0.4, b = Math.min(ro(zt) - 0.6, a + 1.15);
 			if (b - a > 0.45 && zb > z0 + 0.25) H.push([[a + 0.2, zb], [b - 0.15, zb], [b, zb + 0.25], [b, zt - 0.3], [b - 0.3, zt], [a, zt], [a, zb + 0.2]]); } }
 	out.push([ro(z0), z0]);
 	for (let k = 0; k <= 12; k++) { const zz = lerp(z0, z1, k / 12); out.push([Rz(zz)[0] - 0.45, zz]); }
@@ -68,11 +69,11 @@ export const PLATES: Plate[] = (() => {
 		[13.35, 34.9], [13.8, 36.0], [14.05, 37.0], [14.2, 38.0], [14.3, 38.6], [15.2, 38.62], [15.6, 38.98], [16.05, 38.64], [17.5, 38.35], [18.45, 37.75], [18.85, 36.6],
 		[18.8, 35.3], [18.55, 34.3], [18.2, 33.75], [17.75, 33.95], [17.75, 35.1], [17.45, 35.95], [16.7, 36.3], [15.8, 36.05], [14.9, 35.6], [14.0, 35.0], [13.4, 34.55]].map(([r, z]) => [r, z] as P2)});
 	const roN = (z: number) => Math.max(Rz(z)[0] + 0.9, lerp(11.0, 12.3, cl((z - 23.4) / (33.5 - 23.4))));
-	P.push({key: 'neck', th: 1.05, ...column(23.3, 34.4, roN, [32.8, 29.1, 25.4], [0.85, 0.9, 0.9], true)});
+	P.push({key: 'neck', th: 1.2, ...column(23.3, 34.4, roN, [32.8, 29.1, 25.4], [0.85, 0.9, 0.9], true)});
 	const roB = (z: number) => Rz(z)[0] + 1.75;
-	P.push({key: 'belly', th: 1.05, ...column(11.1, 22.85, roB, [22.8, 19.6, 15.8, 12.7], [1.25, 1.2, 1.2, 0.7], true)});
+	P.push({key: 'belly', th: 1.2, ...column(11.1, 22.85, roB, [22.8, 19.6, 15.8, 12.7], [1.25, 1.2, 1.2, 0.7], true)});
 	const roF = (z: number) => Rz(z)[0] + 1.2;
-	P.push({key: 'foot', th: 1.0, ...column(3.85, 10.95, roF, [10.9, 6.9], [0.7, 2.0], false)});
+	P.push({key: 'foot', th: 1.15, ...column(3.85, 10.95, roF, [10.9, 6.9], [0.7, 2.0], false)});
 	return P; })();
 
 /* ============================== the high-relief parts that are real geometry ============================== */
@@ -186,12 +187,12 @@ const finish = (H: Float32Array, w: number, h: number, dxcm: (y: number) => numb
 			const soil = dirty ? cl(cav * 1.8 + (nm - 0.4) * 1.1 + (nb - 0.5) * 0.5 - ridge * 1.0) : cl(cav * 0.5 + (nm - 0.6) * 0.8 - 0.25);
 			const wear = cl(ridge * 1.5 + edge * 0.6 + (nm - 0.5) * 0.4) * (dirty ? 0.35 : 1);
 			let c = mix3(PAL.metalDk, PAL.metal, cl(0.42 + (nb - 0.5) * 0.45 + (nf - 0.5) * 0.22));
-			c = mix3(c, mix3(PAL.worn, PAL.silver, cl(nm * 1.4 - 0.2)), wear * 0.75);
+			c = mix3(c, mix3(PAL.worn, PAL.silver, cl(nm * 1.4 - 0.2)), wear * 0.58);
 			const vcol = mix3(mix3(PAL.verd, PAL.verdBl, cl((nm - 0.4) * 2)), PAL.verdLt, cl((nf - 0.55) * 2 + cav * 0.3) * (dirty ? 0.35 : 1));
 			c = mix3(c, vcol, pat * (dirty ? 0.85 : 0.62));
 			c = mix3(c, mix3(PAL.soil, PAL.soilLt, nf), soil * (dirty ? 0.9 : 0.55));
 			const dark = 1 - cav * 0.35; alb[i * 4] = cl(c[0] * dark, 0, 255); alb[i * 4 + 1] = cl(c[1] * dark, 0, 255); alb[i * 4 + 2] = cl(c[2] * dark, 0, 255); alb[i * 4 + 3] = 255;
-			const metal = cl(0.88 - pat * 0.75 - soil * 0.85 + wear * 0.08), rough = cl(0.46 + (nf - 0.5) * 0.14 + pat * 0.38 + soil * 0.45 - wear * 0.1 + (dirty ? 0.1 : 0), 0.28, 0.95);
+			const metal = cl(0.88 - pat * 0.75 - soil * 0.85 + wear * 0.08), rough = cl(0.46 + (nf - 0.5) * 0.14 + pat * 0.38 + soil * 0.45 + wear * 0.04 + (dirty ? 0.1 : 0), 0.34, 0.95);
 			orm[i * 4] = ao * 255; orm[i * 4 + 1] = rough * 255; orm[i * 4 + 2] = metal * 255; orm[i * 4 + 3] = 255;
 			const ht = cl(0.62 + (nb - 0.5) * 0.18 + cav * 0.45 - ridge * 0.3 - edge * 0.15); heat[i * 4] = 255 * cl(0.55 + 0.5 * ht); heat[i * 4 + 1] = 255 * ht * (0.18 + 0.5 * ht); heat[i * 4 + 2] = 255 * ht * ht * 0.16; heat[i * 4 + 3] = 255; } }
 	return {albedo: dataTex(alb, w, h, true), orm: dataTex(orm, w, h, false), normal: dataTex(nrm, w, h, false), heat: dataTex(heat, w, h, true)}; };
