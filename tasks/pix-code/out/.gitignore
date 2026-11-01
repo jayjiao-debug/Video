@@ -1,0 +1,7 @@
+node_modules/
+frames/
+font/
+*.mp4
+*.png
+*.jpg
+*.tgz
