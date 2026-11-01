@@ -1,0 +1,29 @@
+# Brief: 何尊 · 「中国」两个字 (ep55; replaces the 家书 idea in ../55-jiashu)
+
+- **Owner pick (2026-11-01 16:52):** 「中国」这两个字. The topic starts from a question people already ask: 「“中国”两个字，最早出现在哪？」. The answer is 何尊 (西周), whose inscription has 「宅兹中国」.
+- **Owner's retention rule:** one visual object that the viewer follows through the whole episode (the sword in ep53, the horse head in ep45). Here that object is **the 何尊 itself**, in every shot.
+- **Hook (frame 0):** 「最早写着“中国”两个字的国宝，差点被当废铜卖了30块钱。」 (verify the 30元 and the 废品站 story).
+- **Story spine (to verify):**
+  - cast in early 西周 (成王 era) by 何, recording the king's words about building 洛邑 (宅兹中国);
+  - buried;
+  - 1963: a cliff by a farmhouse in 宝鸡 贾村 collapses after rain, and a farmer finds it and keeps it at home;
+  - 1965: sold to a 废品收购站 as scrap copper (30元?);
+  - a 宝鸡市博物馆 worker spots it and buys it back;
+  - 1975: cleaning for an exhibition reveals the inscription inside the bottom (about 122 characters), including 「宅兹中国」;
+  - the first 禁止出境 list (2002);
+  - today in 宝鸡青铜器博物院.
+- **Frame:** second person, 「你」 = 何尊. Counter 「你 N 岁」 (about 3,000; 估算) and/or a price/weight stamp (30元, 14.6 kg). Ending question to the viewer, to be written.
+- **Music:** the ep45 马首 BGM (2:30 cut, 106 BPM). The owner must re-send the file.
+  - **stop:** the scrap yard, about to be melted;
+  - **hardest drop:** the inscription revealed in 1975, with 「中国」 lit.
+- **Visuals:**
+  - the 尊 as a code-3D parametric model: round mouth, square-ish body (口圆体方), four 扉棱 flanges, 饕餮纹 relief, bronze with green patina;
+  - it stays near the centre of frame all film, and the world changes around it through match cuts;
+  - flat-vector 2.5D sets in the ep54 / 马首 family, one warm key, rim-lit silhouettes for people;
+  - the 尊 is the only glowing thing.
+  - No AI images, no bordered maps.
+- **Must avoid:**
+  - patriotic chest-beating;
+  - modern politics;
+  - stating dates and legends as certain (the 西周 date is approximate; the inscription's year is debated);
+  - Wikipedia, 百度百科 and 知乎 as sources.
