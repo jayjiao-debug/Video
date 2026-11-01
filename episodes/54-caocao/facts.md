@@ -90,3 +90,37 @@ Age rule: 武帝紀「庚子，王崩于洛陽，年六十六」 (220), so born 
 - Violence: 棒杀, the killings at 吕伯奢's, 白骨. Use no gore; follow the respectful-deaths rule (dim figures, no bodies).
 - Maps and places: use 东汉 place names only (许, 邺, 成皋, 荥阳, 官渡, 乌巢), with no modern borders. Keep any map to rough relative positions.
 - All people are historical; there are no living people and no portrait-rights issue.
+
+## Verification of the [未开 UNVERIFIED] rows (2026-11-01, before publishing)
+
+ctext.org is unreachable from this workspace, so the rows were checked against the full text of the 四庫全書 (文淵閣) editions in the Kanripo repository (github.com/kanripo). These are not Wikimedia sources.
+- 《三國志·魏書》 with 裴松之注: KR2a0012, 卷1 武帝紀, 卷6 袁紹傳, 卷7 呂布傳, 卷9 曹洪傳, 卷10 荀彧傳 (and 賈詡傳), 卷12 毛玠傳
+- 《宋書·樂志》: KR2a0016, 卷19–22
+- 《資治通鑑》: KR2b0007, 卷65, for 赤壁. The Kanripo 三國志 holds only the 魏書, so 周瑜傳 and 先主傳 could not be opened. 通鑑 follows 周瑜傳 for this passage.
+
+Every quotation and fact on screen matches. Differences are character variants only (黄/黃, 歛/斂, 寳/寶, 徃/往, 歩/步).
+
+| Card | Checked text (as found) | Result |
+|---|---|---|
+| 1 | 武帝紀「年二十，舉孝廉為郎，除洛陽北部尉」; 注引《曹瞞傳》「後數月，靈帝愛幸小黃門蹇碩叔父夜行，卽殺之」 | ✓ |
+| 2–3 | 《曹瞞傳》「造五色棒，縣門左右各十餘枚，有犯禁者，不避豪彊，皆棒殺之…京師歛迹，莫敢犯者」 | ✓ |
+| 5 | 武帝紀「光和末，黃巾起。拜騎都尉，討潁川賊」 | ✓ |
+| 6–7 | 「卓到，廢帝為弘農王而立獻帝」「卓表太祖為驍騎校尉…太祖乃變易姓名，間行東歸」 | ✓ |
+| 8–9 | 注引《魏書》《世語》《雜記》 differ, as stated. 《雜記》「既而悽愴曰：寧我負人，無人負我」 | ✓ |
+| 10–11 | 「到滎陽汴水，遇卓將徐榮，與戰不利，士卒死傷甚多。太祖為流矢所中，所乘馬被創，從弟洪以馬與太祖」 | ✓ |
+| 12 | 曹洪傳「太祖失馬，賊追甚急，洪下，以馬授太祖…天下可無洪，不可無君」 | ✓ |
+| 13 | 宋書·樂志 蒿里行 武帝詞「淮南弟稱號，刻璽於北方…白骨露於野，千里無雞鳴」; 武帝紀「袁術欲稱帝於淮南」 (建安二年 = 197) | ✓ (197年后) |
+| 14 | 「洛陽殘破，董昭等勸太祖都許」 | ✓ |
+| 15 | 毛玠傳「宜奉天子以令不臣，修耕植，畜軍資」 | ✓ |
+| 16 | 袁紹傳「圖還說紹迎天子都鄴，紹不從」; 注引《獻帝傳》 沮授「挾天子而令諸侯」…「紹弗能用」 | ✓ |
+| 17 | 注引《魏書》「是歲乃募民屯田許下，得穀百萬斛」 | ✓ |
+| 18 | 武帝紀「遂決泗、沂水以灌城。月餘，布將宋憲、魏續等執陳宮，舉城降，生禽布、宮」; 呂布傳 白門樓 | ✓ |
+| 19–20 | 「袁紹既并公孫瓚，兼四州之地，衆十餘萬，將進軍攻許」 | ✓ |
+| 22 | 「時公兵不滿萬，傷者十二三」, plus 裴松之's doubt 「以理而言，竊謂不然」 | ✓ (contested, stamped 《三国志》原文) |
+| 23–24 | 荀彧傳「太祖軍糧方盡，書與彧議欲還許…此用奇之時，不可失也」 | ✓ |
+| 25–26 | 武帝紀「紹謀臣許攸貪財…來奔，因說公擊瓊等…自將步騎五千人夜往，會明至」; 袁紹傳「候夜潛往攻瓊」 | ✓ |
+| 27 | 注引《曹瞞傳》「既至，圍屯，大放火，營中驚亂。大破之，盡燔其糧穀寶貨」; 武帝紀「紹衆大潰」 | ✓ |
+| 28 | 宋書·樂志 步出夏門行 武帝詞「老驥伏櫪，志在千里」 (the other version reads 驥老伏歷) | ✓ |
+| 29 | 通鑑 卷65 黃蓋「操軍方連船艦，首尾相接，可燒而走也」…「同時發火，火烈風猛，船往如箭，燒盡北船，延及岸上營落」 | ✓ (周瑜傳 via 通鑑) |
+| 30 | 注引《魏氏春秋》「若天命在吾，吾為周文王矣」 | ✓ |
+| 31 | 「庚子，王崩於洛陽，年六十六」; 遺令「斂以時服，無藏金玉珍寶」 | ✓ |
