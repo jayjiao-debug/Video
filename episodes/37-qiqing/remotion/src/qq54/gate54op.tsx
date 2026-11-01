@@ -41,14 +41,17 @@ export const GatePlaque: React.FC<{cx: number; top: number; w: number; h: number
 /** three 戟 guards walking left (−x) on the road, feet on y = gy; m = the shot clock (s) */
 export type Guard = {x0: number; t0: number; L: number; f: number; sw: number; ln: number};
 export const GUARDS: Guard[] = [{x0: 768, t0: 0.15, L: 62, f: 1.7, sw: 0.9, ln: 3.5}, {x0: 842, t0: 0.62, L: 63, f: 1.68, sw: 1.05, ln: 3}, {x0: 918, t0: 0.38, L: 61, f: 1.73, sw: 0.8, ln: 4}];
-export const GateGuards: React.FC<{m: number; gy: number; k: number; lightX: number; rim: string; blur: string}> = ({m, gy, k, lightX, rim, blur}) => <g>
+/** the same three marching in step (one cadence, one phase: the opening's shot 5) */
+export const GUARDS_STEP: Guard[] = [{x0: 768, t0: 0.3, L: 62, f: 1.75, sw: 0.95, ln: 3.5}, {x0: 842, t0: 0.3, L: 62, f: 1.75, sw: 0.95, ln: 3.5}, {x0: 916, t0: 0.3, L: 62, f: 1.75, sw: 0.95, ln: 3.5}];
+export const GateGuards: React.FC<{m: number; gy: number; k: number; lightX: number; rim: string; blur: string; inStep?: boolean}> = ({m, gy, k, lightX, rim, blur, inStep}) => { const GS = inStep ? GUARDS_STEP : GUARDS;
+	return <g>
 	{/* shadows toward the camera, leaning away from the passage light */}
 	<g fill="#000" opacity={0.34} filter={`url(#${blur})`}>
-		{GUARDS.map((g, i) => { const gx = g.x0 - npcHipX(m, g.L, g.f, g.t0) * k, sk = Math.max(-55, Math.min(55, (gx - lightX) * 0.32));
+		{GS.map((g, i) => { const gx = g.x0 - npcHipX(m, g.L, g.f, g.t0) * k, sk = Math.max(-55, Math.min(55, (gx - lightX) * 0.32));
 			return <g key={i} transform={`translate(${f1(g.x0)},${f1(gy + 0.6)}) translate(${f1(gx - g.x0)},0) skewX(${f1(sk)}) translate(${f1(g.x0 - gx)},0) scale(${-k},${(-k * 0.34).toFixed(4)})`}>
 				<NpcWalk t={m} kind="ji" t0={g.t0} L={g.L} f={g.f} swing={g.sw} lean={g.ln} /></g>; })}
 	</g>
 	<g fill={SIL} filter={`url(#${rim})`}>
-		{GUARDS.map((g, i) => <g key={i} transform={`translate(${g.x0},${gy}) scale(${-k},${k})`}><NpcWalk t={m} kind="ji" t0={g.t0} L={g.L} f={g.f} swing={g.sw} lean={g.ln} /></g>)}
+		{GS.map((g, i) => <g key={i} transform={`translate(${g.x0},${gy}) scale(${-k},${k})`}><NpcWalk t={m} kind="ji" t0={g.t0} L={g.L} f={g.f} swing={g.sw} lean={g.ln} /></g>)}
 	</g>
-</g>;
+</g>; };
