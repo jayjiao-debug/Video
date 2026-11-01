@@ -112,6 +112,7 @@ export type ZunProps = {
 	molten?: number;     // 0..1 the fresh casting's orange-gold heat glow
 	reveal?: number;     // 0..1 the inscription uncovered from rust and soil
 	glow?: number;       // 0..1 中 / 或 lit gold
+	fresh?: number;      // 0..1 newly cast golden bronze (西周), before any patina (default 0 = unchanged)
 	inscription?: boolean;
 	shadow?: boolean;    // a contact shadow on the ground plane z = 0
 };
@@ -287,7 +288,7 @@ const TOP_A = Math.PI / 4;
 /* ============================== the component ============================== */
 type Item = {z: number; el: React.ReactNode};
 export const Zun: React.FC<ZunProps> = (p) => {
-	const {cam, light: Lt, id} = p, pose = p.pose ?? {}, patina = p.patina ?? 0.2, molten = p.molten ?? 0, reveal = p.reveal ?? 1, glow = p.glow ?? 0;
+	const {cam, light: Lt, id} = p, pose = p.pose ?? {}, patina = p.patina ?? 0.2, molten = p.molten ?? 0, reveal = p.reveal ?? 1, glow = p.glow ?? 0, fresh = p.fresh ?? 0;
 	const ps = pose.s ?? 1, yaw = pose.yaw ?? 0, cy = Math.cos(yaw), sy = Math.sin(yaw), P0: V3 = [pose.x ?? 0, pose.y ?? 0, pose.z ?? 0];
 	const W = (m: V3): V3 => [P0[0] + ps * (m[0] * cy - m[1] * sy), P0[1] + ps * (m[0] * sy + m[1] * cy), P0[2] + ps * m[2]];
 	const WN = (n: V3): V3 => [n[0] * cy - n[1] * sy, n[0] * sy + n[1] * cy, n[2]];
@@ -298,7 +299,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 	/* bronze: cleaned museum surface (dark olive-brown metal), verdigris, soil */
 	const BR: RGB = [54, 55, 46], BR_HI: RGB = [140, 128, 100], VERD: RGB = [62, 92, 76], VERD2: RGB = [100, 136, 110], SOIL: RGB = [100, 82, 58];
 	const shade = (n: V3, q: V3, alb: RGB, specK = 1, ao = 1, rimOn = true): RGB => {
-		const l = Math.max(0, dot(n, L)), v = nrm(sub(cam.p, q)), hh = nrm(addv(L, v)), sp = Math.pow(Math.max(0, dot(n, hh)), shin) * Lt.spec * specK * (1 - 0.75 * patina);
+		const l = Math.max(0, dot(n, L)), v = nrm(sub(cam.p, q)), hh = nrm(addv(L, v)), sp = Math.pow(Math.max(0, dot(n, hh)), shin) * Lt.spec * specK * (1 - 0.75 * patina) * (1 + 0.8 * fresh);
 		const c: RGB = [0, 1, 2].map((i) => alb[i] / 255 * (ambC[i] * Lt.amb + keyC[i] * Lt.k * l) * ao + keyC[i] * sp * ao * 0.9) as RGB;
 		if (rimL && rimOn) { const rr = Math.max(0, dot(n, rimL.d)) * Math.pow(1 - Math.abs(dot(n, v)), 1.6) * rimL.k; for (let i = 0; i < 3; i++) c[i] += rimL.c[i] * rr; }
 		if (molten > 0) { const lum = (c[0] + c[1] + c[2]) / 3 / 255, g = 0.5 + 0.5 * Math.max(0, dot(n, v)), k = cl(0.15 + 1.6 * lum) * (0.65 + 0.35 * g);
@@ -309,6 +310,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 		const s = th * 9.4, g = fbm(s * 0.2 + 3, z * 0.2, 11), g2 = fbm(s * 0.35 + 7, z * 0.35, 23), d = fbm(s * 0.18 - 4, z * 0.22, 37);
 		let a = mixc(BR, BR_HI, raised ? 0.55 : 0.12 * zone);
 		if (!raised && zone > 0) a = mixc(a, [52, 46, 36], 0.35);   // the sunk 雷纹 ground is darker
+		if (fresh > 0) { a = mixc(a, raised ? [226, 182, 104] : zone > 0 ? [128, 92, 48] : [178, 132, 70], fresh); return a; }
 		const verd = cl((g - 0.3 + 0.22 * patina) * 1.05) * (raised ? 0.25 : 0.5) * (0.5 + 0.5 * patina);
 		a = mixc(a, mixc(VERD, VERD2, sstep(0.5, 0.8, g2)), verd);
 		const soil = sstep(0.42, 0.8, d) * patina * patina * 0.85; a = mixc(a, SOIL, soil);
