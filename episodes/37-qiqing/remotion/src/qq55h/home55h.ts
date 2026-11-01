@@ -20,11 +20,13 @@ const camAt = (az: number, el: number, f: number, cx: number, cy: number) => { c
 export const zunBox = (c: Cam) => { const p = SAMPLES.map((s) => proj(c, s)); const xs = p.map((q) => q[0]), ys = p.map((q) => q[1]);
 	return {x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys)}; };
 const cache = new Map<string, Cam>();
-/** the HOME camera at azimuth az: focal length solved so the box is HOME_H tall, then shifted so the base centre is at HOME */
+/** the HOME camera at azimuth az: focal length solved so the box is HOME_H tall, then shifted so the box is centred on HOME_X
+    and the base centre sits at HOME_Y. Any az works (the film orbits); ±30 / ±60 give the identical box. */
 export const homeCam = (az = 30, el = HOME_EL): Cam => { const key = `${az}_${el}`, hit = cache.get(key); if (hit) return hit;
 	let f = (HOME_H * HOME_D) / 38.8;
 	for (let i = 0; i < 4; i++) { const b = zunBox(camAt(az, el, f, 0, 0)); f *= HOME_H / (b.y1 - b.y0); }
-	const b0 = proj(camAt(az, el, f, 0, 0), [0, 0, 0]), c = camAt(az, el, f, HOME_X - b0[0], HOME_Y - b0[1]);
+	/* centre the silhouette box on HOME_X (a 3/4 view is a few px off its base centre; mirrored views would differ by ~14 px) */
+	const c0 = camAt(az, el, f, 0, 0), b0 = proj(c0, [0, 0, 0]), bx = zunBox(c0), c = camAt(az, el, f, HOME_X - (bx.x0 + bx.x1) / 2, HOME_Y - b0[1]);
 	cache.set(key, c); return c; };
 /** the HOME box (the same for az = ±30 / ±60) */
 export const HOME_BOX = zunBox(homeCam(30));

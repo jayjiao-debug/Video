@@ -2,7 +2,7 @@
 
 **Owner's rule:** the sound effects come from an organic library: real recordings, not AI-generated and not synthesised.
 
-**Sourcing.** None of the libraries can be downloaded from this workspace (freesound, archive.org, Hugging Face and Zenodo are all blocked; only GitHub is reachable, and it has no clean CC0 recorded library). So the owner downloads the clips and attaches them. Good sources:
+**Sourcing.** Only GitHub is reachable from this workspace (freesound, archive.org, Hugging Face and Zenodo are blocked). On GitHub, the Versilian Community Sample Library (CC0, real recorded instruments) covers the metal cues: the gong and tubular bell for #2 / #16 / #20, anvil clinks for #1, a rubbed glass rim for #5, and an ocean drum swell under the molten fill (see `sfx_sources.md`). The other cues (fire, pour, cloth, rain, soil, grain, cart, steelyard, footsteps, scraping, room tone, gate) still need clips the owner downloads and attaches. Good sources:
 - **freesound.org**, filtered to licence 「Creative Commons 0」. These are real recordings by people. Skip anything tagged synth, generated or AI.
 - **Sonniss GDC game-audio bundles**: royalty-free professional field recordings, commercial use allowed. Never redistribute the files.
 
