@@ -125,7 +125,6 @@ const ellipseP = (cx: number, cz: number, rx: number, rz: number, n = 20): [numb
 const BELLY_RN = 9.4;
 const BELLY_MOTS: Mot[] = [
 	{kind: 'line', zone: 'belly', w: 0.55, h: 0.48, pts: [[1.6, 14.55], [2.8, 15.5], [4.4, 16.05], [6.2, 15.95], [7.5, 15.2], [7.6, 14.2], [6.6, 13.35], [5.0, 13.1], [3.4, 13.45], [2.3, 14.0], [1.0, 14.15]]},   // 臣字目 socket
-	{kind: 'line', zone: 'belly', w: 0.95, h: 0.68, pts: [[0.9, 16.4], [2.8, 16.75], [4.9, 17.15], [6.9, 17.6], [8.4, 18.15]]},        // brow ridge
 	{kind: 'line', zone: 'belly', w: 0.62, h: 0.5, pts: spiral(2.0, 12.4, 0.9, 1.15, 1, Math.PI * 0.9)},                              // nostril curl
 	{kind: 'line', zone: 'belly', w: 0.6, h: 0.5, pts: [[0.8, 13.1], [2.6, 13.25], [3.9, 12.7], [4.1, 11.95]]},                        // upper lip / fang
 	{kind: 'line', zone: 'belly', w: 0.85, h: 0.62, pts: [[6.4, 12.9], [8.2, 13.45], [9.7, 13.0], [10.25, 12.15], [9.75, 11.7], [9.0, 12.0], [9.1, 12.55]]},   // claw (利爪)
@@ -134,13 +133,16 @@ const BELLY_MOTS: Mot[] = [
 	{kind: 'line', zone: 'belly', w: 0.42, h: 0.38, pts: spiral(3.6, 19.0, 0.7, 0.8, 1, Math.PI)},
 	{kind: 'line', zone: 'belly', w: 0.34, h: 0.3, pts: [[0.6, 11.75], [6, 11.7], [13.5, 11.7]]},                                       // lower border fillet
 ];
-/** the horn's end: a raised volute (spiral boss) that stands off the surface */
-const VOLUTE = {s: 8.2, z: 18.0, r: 1.25, lift: 2.2};
-/** the horn: a curled 3-D tube (s, z, lift h), width, thickness — the end stands off the surface */
+/** the horn: a ram's-horn coil. The root leaves the nose top, sweeps out along the top of the belly, then coils down the outer
+    side and back in under itself (about one turn), tightening, the band narrowing and the coil lifting off the surface (卷角翘出器面).
+    Photo-matched: coil ≈ s 4.6–11.2 cm, z 16.8–21.8 cm, centre ≈ (7.9, 19.3). */
+const COIL = {s: 7.1, z: 19.05, rs: 3.4, rz: 2.85};
 const HORN: {s: number; z: number; h: number; w: number}[] = [
-	{s: 0.9, z: 20.0, h: 0.3, w: 2.2}, {s: 2.3, z: 21.05, h: 0.55, w: 2.75}, {s: 4.2, z: 21.55, h: 0.75, w: 3.0}, {s: 6.3, z: 21.5, h: 0.9, w: 3.0},
-	{s: 8.2, z: 20.85, h: 1.05, w: 2.9}, {s: 9.65, z: 19.7, h: 1.2, w: 2.7}, {s: 10.4, z: 18.3, h: 1.35, w: 2.45}, {s: 10.1, z: 16.95, h: 1.6, w: 2.15},
-	{s: 9.15, z: 16.35, h: 1.9, w: 1.85}, {s: 8.05, z: 16.7, h: 2.2, w: 1.55}, {s: 7.55, z: 17.65, h: 2.5, w: 1.25}, {s: 7.9, z: 18.5, h: 2.75, w: 0.9}, {s: 8.65, z: 18.5, h: 2.9, w: 0.45}];
+	{s: 0.8, z: 19.9, h: 0.3, w: 1.6}, {s: 2.0, z: 20.95, h: 0.5, w: 1.9},
+	...Array.from({length: 22}, (_, i) => { const u = i / 21, a = (112 - 350 * u) * Math.PI / 180, f = 1 - 0.68 * u;
+		return {s: COIL.s + COIL.rs * f * Math.cos(a), z: COIL.z + COIL.rz * f * Math.sin(a), h: 0.75 + 1.9 * Math.pow(u, 1.1), w: 2.2 - 1.45 * u}; })];
+/** the coil's eye: a small boss at the centre of the curl */
+const VOLUTE = {s: COIL.s - 0.2, z: COIL.z + 0.15, r: 0.62, lift: 2.0};
 const EYE = {s: 5.25, z: 14.7, r: 1.18, lift: 0.5};
 /** neck: 蕉叶 blade + the small 兽面 inside, in (deg from the flange, z) */
 const BLADE_MOTS: Mot[] = [
@@ -177,27 +179,31 @@ const FOOT_MOTS: Mot[] = [
 const LEI: [number, number][] = [[-0.34, -0.34], [0.34, -0.34], [0.34, 0.34], [-0.2, 0.34], [-0.2, -0.2], [0.2, -0.2], [0.2, 0.2], [-0.06, 0.2], [-0.06, -0.06]];
 
 /* ============================== flanges (扉棱) ============================== */
-type Plate = {out: P2[]; holes: P2[][]; th: number; key: string};
+type Plate = {out: P2[]; holes: P2[][]; th: number; key: string; inc?: P2[][]};
 /** an openwork column from z0 up to z1: bold F-hooks (a bar out, its end turned down) with a round C-notch under each, and
     through-holes near the root; ro(z) = outer edge radius (r, z in cm), teeth = the z of each hook's top, L = hook length */
-const column = (z0: number, z1: number, ro: (z: number) => number, teeth: number[], L: number[], holes: boolean): {out: P2[]; holes: P2[][]} => {
-	const out: P2[] = [], H: P2[][] = [];
+const column = (z0: number, z1: number, ro: (z: number) => number, teeth: number[], L: number[], holes: boolean): {out: P2[]; holes: P2[][]; inc: P2[][]} => {
+	const out: P2[] = [], H: P2[][] = [], I: P2[][] = [];
 	out.push([Rz(z1)[0] - 0.35, z1], [ro(z1), z1]);
 	const order = teeth.map((t, i) => ({t, L: L[i]})).sort((a, b) => b.t - a.t);
 	for (const {t, L: Lk} of order) { const r = ro(t);
 		out.push([ro(t + 0.001), t + 0.05], [r + Lk - 0.15, t + 0.12], [r + Lk + 0.18, t - 0.08], [r + Lk + 0.32, t - 0.55], [r + Lk + 0.26, t - 1.05], [r + Lk + 0.02, t - 1.4],
 			[r + Lk - 0.32, t - 1.22], [r + Lk - 0.36, t - 0.86], [r + 0.15, t - 0.78],
 			[r - 0.55, t - 0.82], [r - 0.92, t - 1.12], [r - 1.0, t - 1.55], [r - 0.82, t - 1.95], [r - 0.4, t - 2.12], [ro(t - 2.15), t - 2.15]);
+		/* incised: a line along the bar and down its hook, and a C-scroll in the column under the notch */
+		I.push([[r - 0.25, t - 0.38], [r + Lk - 0.2, t - 0.36], [r + Lk - 0.02, t - 0.62], [r + Lk - 0.02, t - 1.0]]);
+		{ const cz = t - 2.75, cr = (Rz(cz)[0] + ro(cz)) / 2, rr = Math.min(0.42, (ro(cz) - Rz(cz)[0]) * 0.22);
+			if (cz > z0 + 0.5 && rr > 0.18) I.push(Array.from({length: 12}, (_, i) => { const aa = (0.15 + 1.55 * i / 11) * Math.PI; return [cr + rr * Math.cos(aa) * (1 - 0.35 * i / 11), cz + rr * Math.sin(aa) * (1 - 0.35 * i / 11)] as P2; })); }
 		if (holes) { const zt = t - 2.55, zb = t - 3.55, a = Rz(zt)[0] + 0.4, b = Math.min(ro(zt) - 0.6, a + 1.15);
 			if (b - a > 0.45 && zb > z0 + 0.25) H.push([[a + 0.2, zb], [b - 0.15, zb], [b, zb + 0.25], [b, zt - 0.3], [b - 0.3, zt], [a, zt], [a, zb + 0.2]]); } }
 	out.push([ro(z0), z0]);
 	for (let k = 0; k <= 12; k++) { const zz = lerp(z0, z1, k / 12); out.push([Rz(zz)[0] - 0.35, zz]); }
-	return {out, holes: H}; };
+	return {out, holes: H, inc: I}; };
 const PLATES: Plate[] = (() => {
 	const P: Plate[] = [];
 	/* the beak at the lip: a heavy bird-head hook, top flush with the lip, reaching ~4.4 cm past it, the tip hanging to ~5 cm under the lip
 	   (photo-matched: tip at r ≈ 18.6, z ≈ 33.8) */
-	P.push({key: 'beak', th: 1.3, holes: [[[15.5, 37.25], [16.25, 37.35], [16.3, 37.9], [15.55, 37.9]]], out: [
+	P.push({key: 'beak', th: 1.3, inc: [[[14.6, 38.15], [16.0, 38.2], [17.4, 37.95], [18.25, 37.35], [18.4, 36.3], [18.2, 35.0]], [[14.4, 36.4], [15.3, 36.45], [15.9, 36.85]]], holes: [[[15.5, 37.25], [16.25, 37.35], [16.3, 37.9], [15.55, 37.9]]], out: [
 		[13.35, 34.9], [13.8, 36.0], [14.05, 37.0], [14.2, 38.0], [14.3, 38.6], [15.2, 38.62], [15.6, 38.98], [16.05, 38.64], [17.5, 38.35], [18.45, 37.75], [18.85, 36.6],
 		[18.8, 35.3], [18.55, 34.3], [18.2, 33.75], [17.75, 33.95], [17.75, 35.1], [17.45, 35.95], [16.7, 36.3], [15.8, 36.05], [14.9, 35.6], [14.0, 35.0], [13.4, 34.55]]});
 	/* neck: column edge 11.0 → 12.3 cm, three hooks (tips ≈ 12.6–13.0 cm, as the photo) */
@@ -417,16 +423,16 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			let d = ''; const ns = Math.max(1, Math.floor(((a1 - a0) * rn) / cell)), nz = Math.max(1, Math.floor((z1 - z0) / cell));
 			for (let i = 0; i < ns; i++) for (let j = 0; j < nz; j++) { const th = a0 + ((i + 0.5) / ns) * (a1 - a0), z = z0 + (j + 0.5) * ((z1 - z0) / nz), fl = (i + j) % 2 ? 1 : -1;
 				d += 'M' + LEI.map(([x, y]) => { const q = P(W(surfM(th + (fl * x * 0.62) / rn, z + y * 0.62, 0.02))); return `${f1(q[0])},${f1(q[1])}`; }).join('L'); }
-			const pxw = Math.max(0.45, 0.085 * cam.f * ps / Math.max(1, depth(wM)));
-			items.push({z: depth(wM) - 0.15, el: <path key={`${key}${sct}`} d={d} fill="none" stroke="#0E0B08" strokeOpacity={0.14 * (1 - 0.4 * molten)} strokeWidth={pxw} strokeLinejoin="round" />}); } };
+			const pxw = Math.max(0.55, 0.11 * cam.f * ps / Math.max(1, depth(wM)));
+			items.push({z: depth(wM) - 0.15, el: <path key={`${key}${sct}`} d={d} fill="none" stroke="#0E0B08" strokeOpacity={0.38 * (1 - 0.3 * molten)} strokeWidth={pxw} strokeLinejoin="round" />}); } };
 	leiZone(11.9, 22.2, 9.4, 'lb'); leiZone(26.3, 35.3, 10.8, 'ln'); leiZone(4.3, 10.0, 9.0, 'lf');
 
 	/* ---------- the horns: curled tubes whose ends stand off the surface ---------- */
 	faces.forEach((fc, fi) => [1, -1].forEach((sg) => {
-		const rings: V3[][] = [], NS = 14;
+		const rings: V3[][] = [], NS = 12;
 		const cs = HORN.map((h) => { const th = fc + (sg * h.s) / BELLY_RN; return {c: W(surfM(th, h.z, h.h)), n: WN(surfNM(th, h.z)), w: h.w, th, z: h.z}; });
 		cs.forEach((k, i) => { const nx = cs[Math.min(i + 1, cs.length - 1)].c, pv = cs[Math.max(i - 1, 0)].c, T = nrm(sub(nx, pv)), N2 = nrm(cross(T, k.n)), N1 = nrm(cross(N2, T));
-			const a = (k.w / 2) * ps, b = Math.max(0.35, Math.min(1.1, k.w * 0.4)) * ps;
+			const a = (k.w / 2) * ps, b = Math.max(0.34, Math.min(1.1, k.w * 0.5)) * ps;
 			rings.push(Array.from({length: NS + 1}, (_, j) => { const ph = (j / NS) * 2 * Math.PI; return addv(addv(k.c, N2, a * Math.cos(ph)), N1, b * Math.sin(ph)); })); });
 		for (let i = 0; i < rings.length - 1; i++) for (let j = 0; j < NS; j++) {
 			const a = rings[i][j], b = rings[i][j + 1], c = rings[i + 1][j + 1], d = rings[i + 1][j];
@@ -487,6 +493,9 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			items.push({z: depth(to3([cr, cz], tN)) + (farSide ? 4 : -0.3), el: <g key={`fl${k}${pl.key}`}>
 				{edges.map((e) => e.el)}
 				{faceOn > 0.03 && <path d={face} fill={rgbS(faceC)} fillRule="evenodd" />}
+				{faceOn > 0.15 && pl.inc && (() => { const dI = pl.inc.map((pg) => 'M' + pg.map((q) => { const pp = P(to3(q, tN)); return `${f1(pp[0])},${f1(pp[1])}`; }).join('L')).join(''), wI = Math.max(0.7, 0.16 * cam.f * ps / Math.max(1, depth(cen)));
+					return <g opacity={Math.min(1, faceOn * 1.6)}><path d={dI} fill="none" stroke={rgbS(mixc(faceC, [255, 236, 200], 0.28))} strokeWidth={wI * 0.8} strokeLinecap="round" strokeLinejoin="round" transform="translate(0.7,-0.7)" />
+						<path d={dI} fill="none" stroke="#0C0907" strokeOpacity={0.8} strokeWidth={wI} strokeLinecap="round" strokeLinejoin="round" /></g>; })()}
 				</g>}); }); });
 
 	/* ---------- a contact shadow ---------- */

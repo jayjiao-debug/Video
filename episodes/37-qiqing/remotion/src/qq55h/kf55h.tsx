@@ -27,20 +27,31 @@ type Kind = 'worker' | 'zhou' | 'visitor';
 type Fig = {kind: Kind; lean?: number; stride?: number; hN: P; hF: P; head?: number; flip?: boolean};
 const tube = (a: P, b: P, wa: number, wb: number) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
 	return sm([[a[0] + nx * wa, a[1] + ny * wa], [b[0] + nx * wb, b[1] + ny * wb], [b[0] + dx / L * wb * 0.9, b[1] + dy / L * wb * 0.9], [b[0] - nx * wb, b[1] - ny * wb], [a[0] - nx * wa, a[1] - ny * wa], [a[0] - dx / L * wa * 0.8, a[1] - dy / L * wa * 0.8]]); };
-const ik = (a: P, b: P, l1: number, l2: number, down = 1): P => { const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.max(1e-3, Math.min(l1 + l2 - 0.01, Math.hypot(dx, dy))), th = Math.atan2(dy, dx);
-	const al = Math.acos(Math.max(-1, Math.min(1, (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)))) * down; return [a[0] + l1 * Math.cos(th + al), a[1] + l1 * Math.sin(th + al)]; };
+/** two-bone IK; the elbow takes the solution BELOW the shoulder→hand line (y down), as a relaxed arm does */
+const ik = (a: P, b: P, l1: number, l2: number): P => { const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.max(1e-3, Math.min(l1 + l2 - 0.01, Math.hypot(dx, dy))), th = Math.atan2(dy, dx);
+	const al = Math.acos(Math.max(-1, Math.min(1, (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)))), e1: P = [a[0] + l1 * Math.cos(th + al), a[1] + l1 * Math.sin(th + al)], e2: P = [a[0] + l1 * Math.cos(th - al), a[1] + l1 * Math.sin(th - al)];
+	return e1[1] - 0.3 * e1[0] > e2[1] - 0.3 * e2[0] ? e1 : e2; };
+/** one continuous sleeve from the shoulder through the elbow to the cuff (a ribbon bent at the joint), and a plain mitten hand */
+const sleeve = (s: P, e: P, h: P, ws: number, we: number, ww: number) => { const u1 = [e[0] - s[0], e[1] - s[1]], l1 = Math.hypot(u1[0], u1[1]) || 1, u2 = [h[0] - e[0], h[1] - e[1]], l2 = Math.hypot(u2[0], u2[1]) || 1;
+	const n1: P = [-u1[1] / l1, u1[0] / l1], n2: P = [-u2[1] / l2, u2[0] / l2], nm: P = [(n1[0] + n2[0]) / 2, (n1[1] + n2[1]) / 2], nl = Math.hypot(nm[0], nm[1]) || 1, ne: P = [nm[0] / nl, nm[1] / nl];
+	const cuff: P = [h[0] - (u2[0] / l2) * 4, h[1] - (u2[1] / l2) * 4];
+	return sm([[s[0] + n1[0] * ws, s[1] + n1[1] * ws], [e[0] + ne[0] * we, e[1] + ne[1] * we], [cuff[0] + n2[0] * ww, cuff[1] + n2[1] * ww], [cuff[0] + (u2[0] / l2) * 1.2, cuff[1] + (u2[1] / l2) * 1.2],
+		[cuff[0] - n2[0] * ww, cuff[1] - n2[1] * ww], [e[0] - ne[0] * we * 0.9, e[1] - ne[1] * we * 0.9], [s[0] - n1[0] * ws, s[1] - n1[1] * ws], [s[0] - (u1[0] / l1) * ws * 0.7, s[1] - (u1[1] / l1) * ws * 0.7]]); };
+const mitten = (e: P, h: P) => { const u = [h[0] - e[0], h[1] - e[1]], l = Math.hypot(u[0], u[1]) || 1, ux = u[0] / l, uy = u[1] / l, nx = -uy, ny = ux, c: P = [h[0] + ux * 2.5, h[1] + uy * 2.5];
+	return sm([[c[0] - ux * 4 + nx * 3.6, c[1] - uy * 4 + ny * 3.6], [c[0] + ux * 4 + nx * 3.2, c[1] + uy * 4 + ny * 3.2], [c[0] + ux * 5.6, c[1] + uy * 5.6], [c[0] + ux * 4 - nx * 3.4, c[1] + uy * 4 - ny * 3.4], [c[0] - ux * 4 - nx * 3.8, c[1] - uy * 4 - ny * 3.8]]); };
 /** a standing adult, units cm, feet at y = 0, facing +x, about 170 cm (7.4 heads) */
 const FigPaths: React.FC<{f: Fig}> = ({f}) => { const lean = (f.lean ?? 0) * Math.PI / 180, st = f.stride ?? 0.15;
 	const hip: P = [0, -92], rot = (p: P): P => { const x = p[0] - hip[0], y = p[1] - hip[1]; return [hip[0] + x * Math.cos(lean) - y * Math.sin(lean), hip[1] + x * Math.sin(lean) + y * Math.cos(lean)]; };
 	const sh = rot([2, -142]), nk = rot([3, -148]), hd = rot([4, -160]);
 	const kneeN: P = [10 * st + 2, -48], footN: P = [22 * st + 6, -4], kneeF: P = [-8 * st, -48], footF: P = [-20 * st, -4];
-	const eN = ik(sh, f.hN, 30, 28, -1), eF = ik(rot([0, -141]), f.hF, 30, 28, -1);
+	const eN = ik(sh, f.hN, 30, 28), eF = ik(rot([0, -141]), f.hF, 30, 28);
 	const wide = f.kind === 'worker' ? 1.12 : 1;
 	const torso = sm([rot([-12 * wide, -140]), rot([-13 * wide, -118]), rot([-12, -96]), rot([-11, -86]), rot([12, -86]), rot([13, -98]), rot([14 * wide, -122]), rot([12 * wide, -140]), rot([4, -146])]);
 	const legs = <>{[[kneeF, footF], [kneeN, footN]].map(([k, ft], i) => <g key={i}><path d={tube(hip, k as P, 8.5, 6.5)} /><path d={tube(k as P, ft as P, 6.4, 4.8)} />
 		<path d={sm([[ft[0] - 6, ft[1] - 4], [ft[0] + 14, ft[1] - 3], [ft[0] + 16, ft[1] + 3], [ft[0] - 7, ft[1] + 4]])} /></g>)}</>;
 	const head = <path d={sm([[hd[0] - 10, hd[1] - 2], [hd[0] - 7, hd[1] - 12], [hd[0] + 3, hd[1] - 14], [hd[0] + 10, hd[1] - 7], [hd[0] + 12, hd[1] + 1], [hd[0] + 9, hd[1] + 9], [hd[0] + 2, hd[1] + 12], [hd[0] - 7, hd[1] + 8]])} />;
-	const arm = (s: P, e: P, h: P, k: number) => <g key={k}><path d={tube(s, e, 6, 5)} /><path d={tube(e, h, 5, 4.2)} /><circle cx={h[0]} cy={h[1]} r={4.6} /></g>;
+	const sw = f.kind === 'worker' ? 1.12 : 1;
+	const arm = (s: P, e: P, h: P, k: number) => <g key={k}><path d={sleeve(s, e, h, 6.4 * sw, 5.4 * sw, 4.6 * sw)} /><path d={mitten(e, h)} /></g>;
 	let dress: React.ReactNode = null, hat: React.ReactNode = null;
 	if (f.kind === 'worker') {   /* 1960s: a cloth cap with a short brim, a work jacket over the hips */
 		hat = <path d={sm([[hd[0] - 11, hd[1] - 4], [hd[0] - 9, hd[1] - 14], [hd[0] + 3, hd[1] - 17], [hd[0] + 12, hd[1] - 11], [hd[0] + 21, hd[1] - 7], [hd[0] + 20, hd[1] - 5], [hd[0] + 9, hd[1] - 5]])} />;
@@ -111,7 +122,7 @@ export const KF1: React.FC = () => { const cam = heroCam(0, 7);
 		return <g><path d={top} fill={dark} /><path d={sm(pts, false)} fill="none" stroke={rimC} strokeWidth={2} strokeOpacity={0.5} />{bits}</g>; };
 	/* the platform scale (磅秤): a low steel deck, a column at the back, the beam and poise on top */
 	const deck = {x: 960, y: 893, w: 400, d: 46, h: 40};
-	const beamY = 520, colX = 1205;
+	const beamY = 538, colX = 1205;
 	const sc = cam;
 	const beak = proj(sc, [0, -18.6, 34.3]);   // the left beak tip (screen), where the tag hangs
 	void beak;
@@ -151,12 +162,12 @@ export const KF1: React.FC = () => { const cam = heroCam(0, 7);
 			<path d={`M${deck.x - deck.w / 2},${deck.y} L${deck.x + deck.w / 2},${deck.y}`} stroke="#C99A6A" strokeWidth={2} strokeOpacity={0.6} />
 			{[deck.x - deck.w / 2 + 18, deck.x + deck.w / 2 - 22].map((x, i) => <rect key={i} x={x} y={deck.y + deck.h * 0.55} width={14} height={14} fill="#121010" />)}
 			<rect x={colX} y={beamY} width={20} height={deck.y - beamY - 8} fill="#2A2422" /><path d={`M${colX + 20},${beamY} L${colX + 20},${deck.y - 8}`} stroke="#E8A868" strokeWidth={2} strokeOpacity={0.6} />
-			<rect x={colX - 210} y={beamY - 12} width={250} height={14} fill="#2E2826" /><path d={`M${colX - 210},${beamY - 12} L${colX + 40},${beamY - 12}`} stroke="#F0B070" strokeWidth={1.6} strokeOpacity={0.7} />
-			{Array.from({length: 13}, (_, i) => <path key={i} d={`M${colX - 200 + i * 18},${beamY - 12} L${colX - 200 + i * 18},${beamY - 5}`} stroke="#C9A27A" strokeWidth={1.2} opacity={0.6} />)}
-			<rect x={colX - 120} y={beamY - 22} width={22} height={30} rx={3} fill="#3A3230" stroke="#E8A868" strokeWidth={1.4} strokeOpacity={0.5} />
-			<path d={`M${colX - 210},${beamY - 5} L${colX - 222},${beamY + 40}`} stroke="#2A2422" strokeWidth={4} /><circle cx={colX - 223} cy={beamY + 48} r={9} fill="#2A2422" />
+			<rect x={colX - 170} y={beamY - 12} width={210} height={14} fill="#2E2826" /><path d={`M${colX - 170},${beamY - 12} L${colX + 40},${beamY - 12}`} stroke="#F0B070" strokeWidth={1.6} strokeOpacity={0.7} />
+			{Array.from({length: 10}, (_, i) => <path key={i} d={`M${colX - 160 + i * 18},${beamY - 12} L${colX - 160 + i * 18},${beamY - 5}`} stroke="#C9A27A" strokeWidth={1.2} opacity={0.6} />)}
+			<rect x={colX - 52} y={beamY - 22} width={22} height={30} rx={3} fill="#3A3230" stroke="#E8A868" strokeWidth={1.4} strokeOpacity={0.5} />
+			<path d={`M${colX - 170},${beamY - 5} L${colX - 176},${beamY + 34}`} stroke="#2A2422" strokeWidth={4} /><circle cx={colX - 177} cy={beamY + 42} r={9} fill="#2A2422" />
 			{/* the worker, at the beam, reading the weight */}
-			<Person id="k1w" f={{kind: 'worker', lean: 4, stride: 0.12, hN: [44, -128], hF: [6, -84], flip: true}} x={1330} y={900} k={2.85} rim="#FFB874" lx={-1} ly={0.2} />
+			<Person id="k1w" f={{kind: 'worker', lean: 5, stride: 0.12, hN: [43, -129.5], hF: [7, -85], flip: true}} x={1290} y={900} k={2.85} rim="#FFB874" lx={-1} ly={0.2} />
 			{/* the 尊 */}
 			<Zun cam={cam} light={L1} id="z1" patina={0.95} shadow />
 		</svg>
