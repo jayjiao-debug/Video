@@ -108,7 +108,7 @@ const Seal: React.FC<{k: number; o: number}> = ({k, o}) => <g transform={`transl
 export const TitleOpt: React.FC<{t: number}> = ({t}) => {
 	useBrush(); useStampFonts('到底是，还是？');
 	const fr = (t - TITLE_A) * 30 + 0.25;                                       // frames since the slam (the first title frame ≈ 1)
-	const out = eio(seg(t, TITLE_B - 0.45, TITLE_B - 0.07)), on = 1 - out;
+	const out = 0 * eio(seg(t, TITLE_B - 0.45, TITLE_B - 0.07)), on = 1 - out;   /* owner: no fade-out; the title holds whole to bar 8 and hard-cuts to card 5 on the beat */
 	const hold = eio(seg(t, TITLE_A + 0.2, TITLE_B));
 	/* camera: the slam shake, the seal kick */
 	const shk = (a: number, f0: number, n: number) => fr < f0 || fr > f0 + n ? 0 : a * Math.pow(1 - (fr - f0) / n, 1.5);
