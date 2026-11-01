@@ -317,7 +317,7 @@ const Shot1: React.FC<{t: number}> = ({t}) => {
 			<RimF id="oacao" lx={1} ly={-0.3} k={5} c="#FFE0B0" o={0.95} lx2={-1} ly2={-0.2} k2={4} c2={ACC} o2={0.95} blur={1} />
 			<RimF id="oarimL" lx={-1} ly={-0.35} k={3.2} c={RIMW} o={0.95} />
 			<RimF id="oarimTop" lx={0} ly={-1} k={1.6} c="#9FB8B6" o={0.5} />
-			<filter id="oashd" x="-30%" y="-30%" width="160%" height="160%"><feColorMatrix type="matrix" values="0.08 0 0 0 0.03  0 0.06 0 0 0.02  0 0 0.05 0 0.02  0 0 0 0.74 0" /><feGaussianBlur stdDeviation="3.6" /></filter>
+			<filter id="oashd" x="-30%" y="-30%" width="160%" height="160%" colorInterpolationFilters="sRGB"><feFlood floodColor="#0D0907" floodOpacity="0.6" /><feComposite in2="SourceAlpha" operator="in" /><feGaussianBlur stdDeviation="4" /></filter>
 			<clipPath id="oawall"><rect x={-300} y={466} width={2600} height={GG - 466} /><rect x={GX - 170} y={GG - 440} width={340} height={440} /></clipPath>
 		</defs>
 		<g transform={zb}>
@@ -420,6 +420,8 @@ const Shot2: React.FC<{t: number}> = ({t}) => {
    SHOT 3 (BAR(2) → BAR(3)): the racks of 五色棒 (card 2). A fast lateral dolly (cut in at 5.8 px/frame, easing to 3.7), a horizontal
    motion smear that follows the speed, a dark post in the near foreground, and a lamp on its stand passing between us and the rack:
    its light slides over the rods. The wall behind at parallax 0.55.
+   The acting beat: a 衙役's arm (silhouette, warm rim) reaches down from above and arrives on beat 2, grips one rod, and on beat 3
+   pulls it straight up out of the rack and out of frame (a vertical streak); the neighbouring rods rattle at the grip and at the pull.
    ===================================================================================================================== */
 const Shot3: React.FC<{t: number}> = ({t}) => {
 	const a = BAR(2), m = t - a, D = BAR(3) - a;
@@ -429,6 +431,20 @@ const Shot3: React.FC<{t: number}> = ({t}) => {
 	const rods = Array.from({length: N}, (_, i) => ({x: RX0 + i * SP + (rnd(i, 3) - 0.5) * 6, tilt: (rnd(i, 4) - 0.5) * 2.2, ph: (i * 2 + Math.floor(rnd(i, 5) * 2)) % 5, top: TOP + (i % 2) * 14 + rnd(i, 6) * 8}));
 	/* the lamp in front of the rack (parallax 1.3) crosses the frame centre at m ≈ 0.9 */
 	const lampSX = 960 + 1.3 * (PAN(0.9) - pan), F = flick(t, 7);
+	/* the rod taken (index KR, right of the lamp's path): reach (arrives on beat 2), grip, a small tug, the pull on beat 3 */
+	const bt = D / 4, KR = 16, reach = eout(seg(m, 0.1, bt)), grip = ease(seg(m, bt - 0.05, bt + 0.07));
+	const liftAt = (mm: number) => 12 * ease(seg(mm, bt + 0.06, bt + 0.24)) + 700 * ease(seg(mm, 2 * bt, 2 * bt + 0.75));
+	const lift = liftAt(m), vl = lift - liftAt(m - 1 / 30);
+	const ring = (x: number) => x > 0 ? Math.exp(-x * 5) * Math.sin(x * 48) : 0, rat = 0.45 * ring(m - bt) + ring(m - 2 * bt);
+	const dK = rods[KR], gy0 = 468, gy = gy0 - lift, xg = dK.x + dK.tilt * 10 * ((BOT - 6 - gy0) / (BOT - 6 - dK.top));
+	const Wv: P = [xg + 20, gy - 30], Rt: P = [xg + 92, gy - 640], ax: P = [Rt[0] - Wv[0], Rt[1] - Wv[1]], off = (1 - reach) * 1.15;
+	const arm = <g transform={`translate(${f1(ax[0] * off)},${f1(ax[1] * off)})`}>
+		<path d={strand(qpts(Rt, [(Rt[0] + Wv[0]) / 2 + 8, (Rt[1] + Wv[1]) / 2], Wv, 10), (v) => (v < 0.6 ? 40 - 14 * v : 19 - 8 * (v - 0.6)))} />
+		<g transform={`translate(${f1(xg + 5 + 12 * (1 - grip))},${f1(gy)}) rotate(${f1(-6 + 8 * (1 - grip))}) scale(1.3)`}>
+			<path d="M-17,-20 C-8,-26 12,-26 20,-18 C26,-10 26,10 20,18 C12,24 -8,24 -17,18 C-22,12 -22,-14 -17,-20 Z" />
+			<path d="M-19,-6 C-25,-4 -26,6 -20,9 L-16,8 Z" />
+		</g>
+	</g>;
 	return <svg width={W} height={H} style={{position: 'absolute'}}>
 		<defs>
 			<radialGradient id="ockey" cx={lampSX} cy={560} r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor={KEY} stopOpacity="0.62" /><stop offset="0.4" stopColor="#D9A877" stopOpacity="0.22" /><stop offset="1" stopColor="#D9A877" stopOpacity="0" /></radialGradient>
@@ -436,6 +452,7 @@ const Shot3: React.FC<{t: number}> = ({t}) => {
 			<linearGradient id="octop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#000" stopOpacity="0.62" /><stop offset="1" stopColor="#000" stopOpacity="0" /></linearGradient>
 			<radialGradient id="ocvig" cx="0.5" cy="0.5" r="0.75"><stop offset="0.5" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.55" /></radialGradient>
 			<filter id="ocbl" x="-20%" y="-5%" width="140%" height="110%"><feGaussianBlur stdDeviation="12" /></filter>
+			<RimF id="ocrim" lx={-1} ly={-0.1} k={4.5} c={RIMW} o={1} lx2={1} ly2={0.1} k2={2} c2="#FFE0B0" o2={0.55} blur={1} />
 			<filter id="ocsm" x="-3%" y="0%" width="106%" height="100%"><feGaussianBlur stdDeviation={`${(vel * 0.32).toFixed(2)} 0`} /></filter>
 			<filter id="ocdof" x="-2%" y="-2%" width="104%" height="104%"><feGaussianBlur stdDeviation={`${(1.5 + vel * 0.2).toFixed(2)} 1.5`} /></filter>
 		</defs>
@@ -449,9 +466,15 @@ const Shot3: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(${f1(-pan)},0)`} filter="url(#ocsm)">
 				{Array.from({length: 8}, (_, i) => <rect key={i} x={RX0 - 50 + i * 420} y={TOP - 40} width={26} height={BOT - TOP + 60} fill="#2E2218" />)}
 				<rect x={RX0 - 70} y={TOP + 30} width={N * SP + 120} height={22} fill="#4A3626" /><rect x={RX0 - 70} y={TOP + 30} width={N * SP + 120} height={5} fill="#E0B47A" opacity={0.55} />
-				{rods.map((d, i) => <Rod5 key={i} a={[d.x, BOT - 6]} b={[d.x + d.tilt * 10, d.top]} r={r} ph={d.ph} lit={-1} />)}
+				{rods.map((d, i) => { const k = Math.abs(i - KR), j = k > 0 && k < 3 ? rat * 9 / k * (i % 2 ? 1 : -1) : 0;
+					if (i === KR) return <g key={i}>
+						{vl > 5 && [1, 2, 3].map((g) => <g key={g} transform={`translate(0,${f1(-lift + vl * g * 0.33)})`} opacity={0.22 - g * 0.05}><Rod5 a={[d.x, BOT - 6]} b={[d.x + d.tilt * 10, d.top]} r={r} ph={d.ph} lit={-1} /></g>)}
+						<g transform={`translate(0,${f1(-lift)})`}><Rod5 a={[d.x, BOT - 6]} b={[d.x + d.tilt * 10, d.top]} r={r} ph={d.ph} lit={-1} /></g></g>;
+					return <Rod5 key={i} a={[d.x, BOT - 6]} b={[d.x + d.tilt * 10 + j, d.top - Math.abs(j) * 0.3]} r={r} ph={d.ph} lit={-1} />; })}
 				<rect x={RX0 - 70} y={TOP + 330} width={N * SP + 120} height={18} fill="#3A2A1E" opacity={0.95} /><rect x={RX0 - 70} y={TOP + 330} width={N * SP + 120} height={4} fill="#E0B47A" opacity={0.42} />
 				<rect x={RX0 - 80} y={BOT - 20} width={N * SP + 140} height={40} fill="#2E2218" /><rect x={RX0 - 80} y={BOT - 20} width={N * SP + 140} height={5} fill="#E0B47A" opacity={0.4} />
+				{/* the empty slot once the rod is out */}
+				<rect x={dK.x - 18} y={BOT - 30} width={36} height={10} fill="#000" opacity={0.4 * cl((lift - 300) / 200)} />
 			</g>
 			{/* the lamp's light catching the rods as it passes (screen) */}
 			<rect x={-100} y={-100} width={W + 200} height={H + 200} fill="url(#ocglint)" style={{mixBlendMode: 'screen'}} opacity={0.85 + 0.15 * F.s} />
@@ -460,9 +483,11 @@ const Shot3: React.FC<{t: number}> = ({t}) => {
 			<Lamp x={lampSX} y={1240} k={5.2} t={t} seed={7} glow={1.3} />
 			{/* near-foreground posts, out of focus (parallax 1.7) */}
 			<g transform={`translate(${f1(-pan * 1.7)},0)`} filter="url(#ocbl)" fill="#0B0706">
-				<rect x={1500} y={-40} width={110} height={1160} /><rect x={2700} y={-40} width={110} height={1160} />
+				<rect x={1760} y={-40} width={110} height={1160} /><rect x={2900} y={-40} width={110} height={1160} />
 			</g>
 			<rect x={-100} y={-100} width={W + 200} height={480} fill="url(#octop)" />
+			{/* the 衙役's arm, in front of the rack and lit by the passing lamp (drawn above the top grade so it never sinks into it) */}
+			{reach > 0.001 && <g transform={`translate(${f1(-pan)},0)`}><g fill="#22170F" filter="url(#ocrim)">{arm}</g></g>}
 			<rect x={-100} y={-100} width={W + 200} height={H + 200} fill="url(#ocvig)" />
 		</g>
 	</svg>; };
@@ -528,7 +553,7 @@ const Shot4: React.FC<{t: number}> = ({t}) => {
 
 /* =====================================================================================================================
    SHOT 5 (BAR(4) → BAR(5)): 洛阳 (card 3). The camera starts high on the moon and the night sky over the gate tower and cranes
-   down onto the wide gate with its 「洛阳」 plaque (landing at 1.45 s), pulling back as it lands; the 戟 guards march LEFT in step.
+   down onto the wide gate with its 「洛阳」 plaque (landing at 1.45 s), pulling back as it lands; the 戟 guards march LEFT in step. (No near-eave foreground: it read as a band.)
    ===================================================================================================================== */
 const LuoSky: React.FC<{t: number; m: number; p: string}> = ({t, m, p}) => {
 	const stars = Array.from({length: 90}, (_, i) => [rnd(i, 1) * 1240 - 60, rnd(i, 2) * 760 - 520, 0.6 + rnd(i, 3) * 1.1, 0.25 + rnd(i, 4) * 0.5]);
@@ -576,11 +601,6 @@ const Shot5: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(0,${f1(dyP(1.1))})`}>
 				<g fill={SIL} filter="url(#oeQL)"><g transform="translate(196,556) scale(1.02,1.02) scale(-1,1)">{QueD}</g></g>
 				<g fill={SIL} filter="url(#oeQR)"><g transform="translate(924,556) scale(1.02)">{QueD}</g></g>
-			</g>
-			<g transform={`translate(${f1(-10 * (1 - c))},${f1(-Y * 1.3)})`} filter="url(#oebl8)" fill="#0B0706">
-				<path d="M-60,-60 L760,-60 L760,6 C540,18 270,34 -60,62 Z" />
-				{Array.from({length: 34}, (_, i) => <circle key={i} cx={-40 + i * 23.5} cy={56 - i * 1.9} r={7.5} />)}
-				<rect x={-60} y={-60} width={92} height={800} />
 			</g>
 			<rect x={-100} y={-100} width={1320} height={830} fill="url(#oevig)" />
 		</g>
