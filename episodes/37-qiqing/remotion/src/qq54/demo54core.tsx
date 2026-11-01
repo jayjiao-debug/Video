@@ -67,12 +67,13 @@ export const Overlay: React.FC<{t: number}> = ({t}) => { const c = CARDS.find((k
 	if (t >= DARK && t < DROP + 0.15) return null;   /* the sword in the dark, the bars open fully on the drop, the hit: no furniture over it */
 	if (title) return <SealHollow />;   /* the title itself is a scene now (ttl54a.TitleOpt, the owner's pick A), drawn over a dimmed Open */
 	if (!c) return <SealHollow />;
+	const hero = t >= DARK && t < BAR(52);   /* the drop hero shot (99.259 → bar 52): no counter, no seal (owner) */
 	const r0 = plain(c.rows[0]).length, typed = c.a === 0 ? 1e9 : (t - c.a) * CPS,   /* card 1 is on screen whole from frame 0 (the 5-second rule) */ n = [Math.min(r0, typed), Math.max(0, typed - r0)];
 	const stampOn = typed > plain(c.rows.join('')).length + 6;
 	return <>
 		<Scrim /><Subs rows={c.rows.map((s, i) => ({s, n: n[i] ?? 0}))} th={thB} />
 		{stampOn && c.y && <Stamp53 y={c.y} place={c.place} note={c.note} />}
-		{c.age && <Counter age={c.age} />}<SealHollow />
+		{!hero && c.age && <Counter age={c.age} />}{!hero && <SealHollow />}
 	</>; };
 /** one demo frame: the scene that owns film time t, the overlay; the slate between the two parts */
 export type Scene = {a: number; b: number; C: React.FC<{t: number}>};
