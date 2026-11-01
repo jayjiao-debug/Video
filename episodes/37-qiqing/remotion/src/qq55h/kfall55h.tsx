@@ -105,18 +105,18 @@ const SilZun: React.FC<{cam: Cam; id: string; rim: string; halo: string; haloO: 
 		<g filter={`url(#${id}h)`}><Zun cam={cam} light={L} id={`${id}a`} patina={0.3} shadow={false} inscription={false} /></g>
 		<g filter={`url(#${id}s)`}><Zun cam={cam} light={L} id={`${id}b`} patina={0.3} shadow={false} inscription={false} /></g>
 	</g>; };
-const Frame: React.FC<{bg: string; c: CardD; children: React.ReactNode; vig?: number; after?: React.ReactNode}> = ({bg, c, children, vig = 0.6, after}) => <AbsoluteFill style={{background: bg}}>
+const Frame: React.FC<{bg: string; c: CardD; children: React.ReactNode; vig?: number; after?: React.ReactNode; top?: React.ReactNode}> = ({bg, c, children, vig = 0.6, after, top}) => <AbsoluteFill style={{background: bg}}>
 	<svg width={W} height={H} style={{position: 'absolute'}}>{children}</svg>
 	{after}
 	<svg width={W} height={H} style={{position: 'absolute'}}><Vig id={`v${c.id}`} a={vig} /></svg>
-	<Ov c={c} />
+	<Ov c={c} />{top}
 </AbsoluteFill>;
 const C = (id: string) => CARDS_ALL.find((k) => k.id === id)!;
 
 /* ============================== 2 · close on the 饕餮 eyes, dust ============================== */
-const L2c: ZunLight = {dir: [0.5, 0.78, 0.22], col: '#FFB874', k: 1.5, amb: 0.2, ambCol: '#4A4E5E', spec: 0.55, shin: 14, rim: {dir: [-0.4, -0.7, 0.45], col: '#8A96B8', k: 0.45}};
+const L2c: ZunLight = {dir: [0.72, 0.55, 0.3], col: '#FFB874', k: 1.45, amb: 0.2, ambCol: '#4A4E5E', spec: 0.55, shin: 14, rim: {dir: [-0.4, -0.7, 0.45], col: '#8A96B8', k: 0.45}};
 const F2: React.FC = () => { const c = C('2'), T: V3 = [0, 0, 16.2], D = 132, e = 4 * Math.PI / 180;
-	const cam = lookAt([D * Math.cos(e), 0, T[2] + D * Math.sin(e)], T, 5200, 960, 640);
+	const cam = lookAt([D * Math.cos(e), 0, T[2] + D * Math.sin(e)], T, 3900, 960, 650);
 	return <Frame bg="#0E0A08" c={c} vig={0.7}>
 		<defs><radialGradient id="c2bg" cx="70%" cy="60%" r="80%"><stop offset="0" stopColor="#5A3A26" /><stop offset="0.5" stopColor="#24180F" /><stop offset="1" stopColor="#0C0907" /></radialGradient>
 			<filter id="c2bk" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation={14} /></filter>
@@ -132,7 +132,7 @@ const F2: React.FC = () => { const c = C('2'), T: V3 = [0, 0, 16.2], D = 132, e 
 	</Frame>; };
 
 /* ============================== T · the title over the 尊's black silhouette ============================== */
-const FT: React.FC = () => { const c = C('T'), cam = heroCam(0, 7);
+const FT: React.FC = () => { const c = C('T'), cam = camH(0, 6, 660, 960, 590);
 	const rows = ['“中国”两个字，', '最早出现在哪？'];
 	return <Frame bg="#070403" c={c} vig={0.75}>
 		<defs><radialGradient id="tbg" cx="50%" cy="56%" r="58%"><stop offset="0" stopColor="#6A3A16" /><stop offset="0.45" stopColor="#2A160A" /><stop offset="1" stopColor="#070403" /></radialGradient>
@@ -142,14 +142,13 @@ const FT: React.FC = () => { const c = C('T'), cam = heroCam(0, 7);
 				<feMerge><feMergeNode in="sh" /><feMergeNode in="gg" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
 		<rect width={W} height={H} fill="url(#tbg)" />
 		<Glow x={960} y={940} r={560} c="#FF9A40" o={0.25} id="tfl" sy={0.16} />
-		<SilZun cam={cam} id="tsil" rim="#F0B866" halo="#E08A36" haloO={0.75} />
+		<Glow x={960} y={560} r={560} c="#E8903A" o={0.85} id="tback" sy={0.9} />
+		<SilZun cam={cam} id="tsil" rim="#FFD088" halo="#FFB050" haloO={0.9} />
 		<Motes n={46} x0={200} x1={1720} y0={120} y1={1000} c="#FFB060" seed={77} o={0.5} r={2.4} />
 		<g filter="url(#tglow)">
-			{rows.map((r, i) => <text key={i} x={960} y={530 + i * 196} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={164} letterSpacing={8}
+			{rows.map((r, i) => <text key={i} x={960} y={520 + i * 200} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={164} letterSpacing={8}
 				fill="url(#tgold)" stroke="#1A0D05" strokeWidth={9} strokeLinejoin="round" paintOrder="stroke">{r}</text>)}
 		</g>
-		<path d="M640,800 L1280,800" stroke="#E8B868" strokeWidth={2.4} strokeOpacity={0.7} />
-		<circle cx={960} cy={800} r={5} fill="#F2C66E" />
 	</Frame>; };
 
 /* ============================== 4 · cooling; 何 kneels before it ============================== */
@@ -221,14 +220,14 @@ const F6: React.FC = () => { const c = C('6'), T: V3 = [0, 0, 18], D = 92, a = 2
 	</Frame>; };
 
 /* ============================== 7 · close on the column: 宅兹中或, lit softly ============================== */
-const L7: ZunLight = {dir: [0.45, 0.25, 0.86], col: '#FFD6A0', k: 1.2, amb: 0.3, ambCol: '#5A4A3A', spec: 0.9, shin: 18, inside: 0.85};
+const L7: ZunLight = {dir: [0.45, 0.25, 0.86], col: '#FFC890', k: 0.85, amb: 0.22, ambCol: '#4A3A2E', spec: 0.6, shin: 18, inside: 0.45};
 const keyColCentre = (): V3 => { const u = (5.5 - 6) * 1.12, v = 0.0, a = Math.PI / 4, du = [Math.cos(a - Math.PI / 2), Math.sin(a - Math.PI / 2)], dv = [-Math.cos(a), -Math.sin(a)];
 	return [du[0] * u + dv[0] * v, du[1] * u + dv[1] * v, ZUN.FLOOR]; };
 const F7: React.FC = () => { const c = C('7'), T = keyColCentre(), a = Math.PI / 4, off = 7;
-	const cam = lookAt([T[0] - off * Math.cos(a), T[1] - off * Math.sin(a), 88.8], T, 8200, 1180, 610);
+	const cam = lookAt([T[0] - off * Math.cos(a), T[1] - off * Math.sin(a), 88.8], T, 5600, 1230, 600);
 	return <Frame bg="#0A0705" c={c} vig={0.72}>
 		<rect width={W} height={H} fill="#1A120A" />
-		<Zun cam={cam} light={L7} id="z7" patina={0} fresh={0.55} reveal={1} glow={0.38} shadow={false} />
+		<Zun cam={cam} light={L7} id="z7" patina={0} fresh={0.4} reveal={1} glow={0.75} shadow={false} />
 		<Glow x={1500} y={160} r={700} c="#FFD8A0" o={0.12} id="c7l" />
 	</Frame>; };
 
@@ -259,7 +258,7 @@ const Luoyi: React.FC<{id: string; o?: number}> = ({id, o = 1}) => <g opacity={o
 	<path d={sm([[-40, 900], [420, 880], [960, 872], [1500, 878], [1960, 896], [1960, 1100], [-40, 1100]])} fill="#1E140F" />
 	<path d="M-40,900 C420,880 960,870 1500,878 S1960,896 1960,896" stroke="#FFB070" strokeWidth={2} strokeOpacity={0.5} fill="none" />
 </g>;
-const LDawn: ZunLight = {dir: [0.15, 0.85, 0.42], col: '#FFC890', k: 1.45, amb: 0.3, ambCol: '#6A6080', spec: 1.1, shin: 16, rim: {dir: [-0.5, 0.75, 0.25], col: '#FFD8A0', k: 0.6}};
+const LDawn: ZunLight = {dir: [0.5, 0.7, 0.45], col: '#FFC890', k: 1.65, amb: 0.3, ambCol: '#6A6080', spec: 1.1, shin: 16, rim: {dir: [-0.5, 0.75, 0.25], col: '#FFD8A0', k: 0.6}};
 const F8: React.FC = () => { const c = C('8'), cam = heroCam(0, 7), zs = zunScreen(cam), by = zs.base[1];
 	return <Frame bg="#141A2E" c={c} vig={0.55}>
 		<Luoyi id="c8" />
@@ -271,11 +270,11 @@ const F8: React.FC = () => { const c = C('8'), cam = heroCam(0, 7), zs = zunScre
 	</Frame>; };
 
 /* ============================== 9 · buried: the strata build over it, the counter rolls ============================== */
-const L9: ZunLight = {dir: [0.45, -0.45, 0.78], col: '#FFC890', k: 1.3, amb: 0.28, ambCol: '#5A5048', spec: 0.5, shin: 14, rim: {dir: [-0.5, 0.7, 0.3], col: '#C8A070', k: 0.4}};
+const L9: ZunLight = {dir: [0.55, -0.4, 0.7], col: '#FFC890', k: 1.6, amb: 0.28, ambCol: '#5A5048', spec: 0.5, shin: 14, rim: {dir: [-0.5, 0.7, 0.3], col: '#C8A070', k: 0.4}};
 const F9: React.FC = () => { const c = C('9'), cam = camH(0, 7, 380, 960, 772), zs = zunScreen(cam);
 	const cols = ['#6A5236', '#5A4430', '#7A5E3C', '#4E3A28', '#68503A', '#46342A', '#5E4632', '#3E2E22', '#4A3828', '#36281E'];
 	const tops = Array.from({length: 11}, (_, i) => 336 + i * 34 + (i > 4 ? (i - 4) * 26 : 0));
-	const band = (i: number) => { const y0 = tops[i], y1 = tops[i + 1] ?? 1100, wv = (y: number, s: number) => Array.from({length: 13}, (_, j) => [-40 + j * 168, y + Math.sin(j * 1.3 + s) * 5 + (rnd(j, s) - 0.5) * 6] as P);
+	const band = (i: number) => { const y0 = tops[i], y1 = i === cols.length - 1 ? 1100 : tops[i + 1], wv = (y: number, s: number) => Array.from({length: 13}, (_, j) => [-40 + j * 168, y + Math.sin(j * 1.3 + s) * 5 + (rnd(j, s) - 0.5) * 6] as P);
 		return <path key={i} d={sm([...wv(y0, i), [1980, y0], [1980, y1 + 10], ...wv(y1 + 10, i + 1).reverse(), [-60, y1 + 10]], true)} fill={cols[i % cols.length]} />; };
 	return <Frame bg="#0A0B12" c={c} vig={0.6}>
 		<defs><linearGradient id="c9sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0A0C16" /><stop offset="1" stopColor="#2A2A36" /></linearGradient>
@@ -294,8 +293,8 @@ const F9: React.FC = () => { const c = C('9'), cam = camH(0, 7, 380, 960, 772), 
 			return rnd(i, 54) > 0.7 ? <path key={i} d={pth([[x - s * 1.6, y], [x - s, y - s * 0.8], [x + s * 1.4, y - s * 0.5], [x + s * 1.6, y + s * 0.3]])} fill="#8A5A3A" opacity={0.6} /> : <ellipse key={i} cx={x} cy={y} rx={s} ry={s * 0.7} fill="#2A2018" opacity={0.7} />; })}
 		<path d="M1730,334 C1740,390 1700,430 1712,500 S1690,580 1660,620" stroke="#2A1E14" strokeWidth={4} fill="none" /><path d="M1712,420 C1760,450 1790,470 1800,520" stroke="#2A1E14" strokeWidth={2.5} fill="none" />
 		{/* the pocket of earth round the vessel, warmer, and its halo */}
-		<ellipse cx={960} cy={(zs.lip[1] + zs.base[1]) / 2} rx={330} ry={290} fill="#2A1C12" opacity={0.55} />
-		<Glow x={960} y={(zs.lip[1] + zs.base[1]) / 2} r={360} c="#FFB060" o={0.3} id="c9h" />
+		<Glow x={960} y={(zs.lip[1] + zs.base[1]) / 2} r={380} c="#140C08" o={0.7} id="c9pk" sy={0.85} />
+		<Glow x={960} y={(zs.lip[1] + zs.base[1]) / 2} r={360} c="#FFB060" o={0.42} id="c9h" />
 		<Zun cam={cam} light={L9} id="z9" patina={0.72} shadow={false} />
 		{/* the newest layer still falling over it */}
 		<Motes n={50} x0={640} x1={1280} y0={360} y1={560} c="#C8A070" seed={91} o={0.45} r={2.4} />
@@ -355,7 +354,7 @@ const Farm: React.FC<{winter?: boolean}> = ({winter = false}) => { const c = C(w
 		<path d="M960,0 L960,770" stroke="#000" strokeOpacity={0.35} strokeWidth={3} />
 		<path d={pth([[0, 930], [960, 770], [1920, 930], [1920, 1080], [0, 1080]])} fill="url(#c11fl)" />
 		{/* the window on the right wall: a wooden lattice (窗棂) with paper panes */}
-		<path d={pth([[1360, 370], [1640, 352], [1640, 600], [1360, 596]])} fill={wv ? '#C8D8E8' : '#F2D8A8'} opacity={wv ? 0.75 : 0.85} />
+		<path d={pth([[1360, 370], [1640, 352], [1640, 600], [1360, 596]])} fill={wv ? '#C8D8E8' : '#F2D8A8'} opacity={wv ? 0.6 : 0.55} />
 		{[0.25, 0.5, 0.75].map((u, i) => <path key={i} d={`M${1360 + 280 * u},${370 - 18 * u} L${1360 + 280 * u},${596 + 4 * u}`} stroke="#2A1C12" strokeWidth={6} />)}
 		{[0.33, 0.66].map((u, i) => <path key={`h${i}`} d={`M1360,${370 + 226 * u} L1640,${352 + 248 * u}`} stroke="#2A1C12" strokeWidth={6} />)}
 		<path d={pth([[1348, 360], [1652, 340], [1652, 612], [1348, 608]])} fill="none" stroke="#2A1C12" strokeWidth={12} />
@@ -380,42 +379,49 @@ const Farm: React.FC<{winter?: boolean}> = ({winter = false}) => { const c = C(w
 	</Frame>; };
 
 /* ============================== 13 · on a handcart into the scrap yard ============================== */
-const F13: React.FC = () => { const c = C('13'), cam = heroCam(-14, 9), zs = zunScreen(cam), by = zs.base[1];
+/* seen from behind and to the left: the 尊 rides at the back of the 架子车's bed, the bed runs away into the yard, the man in
+   the shafts leans into the pull toward the shed (further off, so smaller: no scale cheat needed) */
+const F13: React.FC = () => { const c = C('13'), cam = heroCam(0, 7), zs = zunScreen(cam), by = zs.base[1] + 8;
+	const RL: P = [600, by + 4], RR: P = [1300, by + 14], FR: P = [1520, 772], FL: P = [1250, 760], up = 30;
 	return <Frame bg="#0E0B0A" c={c} vig={0.55}>
 		<YardBG />
-		{/* the 架子车 seen from behind: the bed, its side rails, the tyres, the shafts running to the man pulling it into the yard */}
-		<path d={pth([[1380, 860], [1560, 812], [1592, 818], [1420, 870]])} fill="#2A1E16" />
-		<path d={pth([[1230, 850], [1470, 800], [1490, 806], [1262, 858]])} fill="#2A1E16" />
-		<Person id="c13p" f={{kind: 'worker', lean: 22, stride: 0.5, hN: [6, -86], hF: [2, -88]}} x={1540} y={846} k={2.3} rim="#FFB874" lx={1} ly={0.1} />
-		<path d={pth([[600, by - 6], [1300, by - 30], [1420, by + 22], [560, by + 60]])} fill="#3A2C22" />
-		{Array.from({length: 6}, (_, i) => <path key={i} d={`M${600 + i * 4},${by - 6 + i * 11} L${1300 + i * 20},${by - 30 + i * 9}`} stroke="#1E1610" strokeWidth={2} />)}
-		<path d={`M600,${by - 6} L1300,${by - 30}`} stroke="#FFC080" strokeWidth={2} strokeOpacity={0.5} />
-		<path d={pth([[560, by + 60], [1420, by + 22], [1420, by + 50], [560, by + 92]])} fill="#1C140E" />
-		<path d={sm([[480, by + 40], [530, by - 50], [580, by + 30], [560, 1100], [490, 1100]])} fill="#141110" /><path d={sm([[530, by - 50], [580, by + 30], [560, 1100]], false)} stroke="#FFB070" strokeWidth={2} strokeOpacity={0.4} fill="none" />
-		<path d={sm([[1400, by + 20], [1440, by - 60], [1488, by + 10], [1476, 1100], [1410, 1100]])} fill="#141110" /><path d={sm([[1440, by - 60], [1488, by + 10], [1476, 1100]], false)} stroke="#FFB070" strokeWidth={2} strokeOpacity={0.5} fill="none" />
+		{/* the far rail and the shafts to the man */}
+		<path d={pth([FL, [FL[0], FL[1] - up * 0.5], [1640, 640], [1644, 648]])} fill="#241A14" />
+		<Person id="c13p" f={{kind: 'worker', lean: 26, stride: 0.6, hN: [-2, -86], hF: [-6, -88]}} x={1650} y={828} k={2.35} rim="#FFB874" lx={1} ly={0.1} />
+		<path d={pth([FR, [FR[0], FR[1] - up * 0.5], [1700, 654], [1704, 662]])} fill="#2A1E16" />
+		{/* the bed: planks, the deck's edge, side rails */}
+		<path d={pth([RL, RR, FR, FL])} fill="#4A3A2E" />
+		{Array.from({length: 7}, (_, i) => { const u = (i + 1) / 8; return <path key={i} d={`M${f1(RL[0] + (RR[0] - RL[0]) * u)},${f1(RL[1] + (RR[1] - RL[1]) * u)} L${f1(FL[0] + (FR[0] - FL[0]) * u)},${f1(FL[1] + (FR[1] - FL[1]) * u)}`} stroke="#2A2018" strokeWidth={2.5} />; })}
+		<path d={pth([RL, RR, [RR[0], RR[1] + 34], [RL[0], RL[1] + 30]])} fill="#1E1610" /><path d={`M${RL[0]},${RL[1]} L${RR[0]},${RR[1]}`} stroke="#FFC080" strokeWidth={2.5} strokeOpacity={0.55} />
+		<path d={pth([RR, FR, [FR[0], FR[1] - up], [RR[0], RR[1] - up]])} fill="#3A2C22" /><path d={`M${RR[0]},${RR[1] - up} L${FR[0]},${FR[1] - up}`} stroke="#FFB070" strokeWidth={2} strokeOpacity={0.6} />
+		{/* the near tyre under the right rail */}
+		<ellipse cx={1405} cy={872} rx={46} ry={128} fill="#121010" /><ellipse cx={1405} cy={872} rx={46} ry={128} fill="none" stroke="#FFB070" strokeOpacity={0.4} strokeWidth={2} />
+		<ellipse cx={1405} cy={872} rx={14} ry={36} fill="#3A3230" />
+		<path d={pth([RR, FR, [FR[0], FR[1] - up], [RR[0], RR[1] - up]])} fill="#3A2C22" opacity={0.0} />
 		<Zun cam={cam} light={L1} id="z13" patina={0.95} shadow />
-		{/* a rope lashing it to the rail */}
-		<path d={`M${zs.base[0] - 230},${by + 10} Q${zs.base[0] - 120},${by - 160} ${zs.base[0] - 40},${by - 190}`} stroke="#C8B08A" strokeWidth={3} fill="none" opacity={0.75} />
+		{/* a rope lashing it to the near rail */}
+		<path d={`M${zs.base[0] + 150},${by - 8} Q${zs.base[0] + 210},${by - 160} ${zs.base[0] + 160},${by - 300}`} stroke="#C8B08A" strokeWidth={3.5} fill="none" opacity={0.8} />
+		<path d={`M${zs.base[0] + 160},${by - 300} Q${zs.base[0]},${by - 330} ${zs.base[0] - 160},${by - 300}`} stroke="#C8B08A" strokeWidth={3.5} fill="none" opacity={0.65} />
 	</Frame>; };
 
 /* ============================== 14 · weighed by the jin: the poise slides, the tag says 30元 ============================== */
-const F14: React.FC = () => { const c = C('14'), cam = camH(0, 7, 540, 900, 660), zs = zunScreen(cam), by = zs.base[1];
-	const bx0 = 1200, bx1 = 1860, bY = 470;
+const F14: React.FC = () => { const c = C('14'), cam = camH(0, 7, 520, 860, 650), zs = zunScreen(cam), by = zs.base[1];
+	const bx0 = 1120, bx1 = 1700, bY = 600, px = 1478;
 	return <Frame bg="#0E0B0A" c={c} vig={0.55}>
 		<YardBG />
-		<path d={pth([[620, by], [1180, by], [1206, by - 14], [646, by - 14]])} fill="#3A3330" /><rect x={620} y={by} width={560} height={26} fill="#1E1A18" />
-		<path d={`M620,${by} L1180,${by}`} stroke="#C99A6A" strokeWidth={2} strokeOpacity={0.6} />
+		<path d={pth([[600, by], [1120, by], [1146, by - 14], [626, by - 14]])} fill="#3A3330" /><rect x={600} y={by} width={520} height={26} fill="#1E1A18" />
+		<path d={`M600,${by} L1120,${by}`} stroke="#C99A6A" strokeWidth={2} strokeOpacity={0.6} />
+		{/* the beam: column, notches, the poise mid-slide with its trail, the hanger */}
+		<rect x={bx1 - 10} y={bY - 20} width={24} height={by - bY + 20} fill="#2A2422" /><path d={`M${bx1 + 14},${bY} L${bx1 + 14},${by}`} stroke="#E8A868" strokeWidth={2} strokeOpacity={0.6} />
+		<rect x={bx0} y={bY - 20} width={bx1 - bx0 + 30} height={20} fill="#2E2826" /><path d={`M${bx0},${bY - 20} L${bx1 + 30},${bY - 20}`} stroke="#F0B070" strokeWidth={2.2} strokeOpacity={0.75} />
+		{Array.from({length: 19}, (_, i) => <path key={i} d={`M${bx0 + 20 + i * 30},${bY - 20} L${bx0 + 20 + i * 30},${bY - (i % 5 ? 11 : 3)}`} stroke="#C9A27A" strokeWidth={1.8} opacity={0.7} />)}
+		{[0, 1, 2].map((i) => <rect key={i} x={px - 96 + i * 26} y={bY - 38} width={30} height={46} rx={4} fill="#5A4A40" opacity={0.1 + i * 0.07} />)}
+		<rect x={px - 16} y={bY - 40} width={32} height={50} rx={4} fill="#3A3230" stroke="#E8A868" strokeWidth={2} strokeOpacity={0.6} />
+		<path d={`M${bx0},${bY} L${bx0 - 6},${bY + 40}`} stroke="#2A2422" strokeWidth={4} /><circle cx={bx0 - 7} cy={bY + 50} r={11} fill="#2A2422" />
 		<Zun cam={cam} light={L1} id="z14" patina={0.95} shadow />
 		<Tag30 cam={cam} />
-		{/* the beam, close: notches, the poise mid-slide with its trail, the counterweight hanger */}
-		<rect x={bx0} y={bY - 20} width={bx1 - bx0} height={24} fill="#2E2826" /><path d={`M${bx0},${bY - 20} L${bx1},${bY - 20}`} stroke="#F0B070" strokeWidth={2.4} strokeOpacity={0.75} />
-		{Array.from({length: 22}, (_, i) => <path key={i} d={`M${bx0 + 20 + i * 30},${bY - 20} L${bx0 + 20 + i * 30},${bY - (i % 5 ? 10 : 2)}`} stroke="#C9A27A" strokeWidth={1.8} opacity={0.7} />)}
-		{[0, 1, 2, 3].map((i) => <rect key={i} x={1500 + i * 22} y={bY - 40} width={36} height={52} rx={5} fill="#3A3230" opacity={0.12 + i * 0.06} />)}
-		<rect x={1590} y={bY - 42} width={40} height={56} rx={5} fill="#3A3230" stroke="#E8A868" strokeWidth={2} strokeOpacity={0.6} />
-		<rect x={1840} y={bY - 40} width={22} height={600} fill="#2A2422" />
-		{/* the worker's hand pushing the poise (his arm from out of frame, right) */}
-		<Sil id="c14a" x={0} y={0} k={1} rim="#FFB874" lx={-1} ly={-0.3}>
-			<path d={sleeve([1990, 760], [1800, 640], [1660, 470], 34, 30, 26)} /><path d={mitten([1800, 640], [1652, 462])} transform="translate(1652,462) scale(5.2) translate(-1652,-462)" /></Sil>
+		{/* the worker at the beam, his hand pushing the poise along */}
+		<Person id="c14w" f={{kind: 'worker', lean: 6, stride: 0.16, hN: [45, -118], hF: [10, -86], flip: true}} x={1640} y={1012} k={3.4} rim="#FFB874" lx={-1} ly={0.2} />
 	</Frame>; };
 
 /* ============================== 15 · the furnace, nearer ============================== */
@@ -434,7 +440,7 @@ const F15: React.FC = () => { const c = C('15'), cam = heroCam(0, 7), zs = zunSc
 	return <Frame bg="#080506" c={c} vig={0.6}>
 		<YardBG mood="night" piles={false} />
 		<Glow x={1560} y={760} r={700} c="#FF6A20" o={0.5} id="c15g" />
-		<Furnace x={1580} y={1010} s={0.82} id="c15f" />
+		<Furnace x={1580} y={1010} s={0.82} id="c15f" heat={0.78} />
 		{pile(960, by + 150, 900, 230, 13, '#1A100C', '#FF8A40', 1.4)}
 		{pile(300, 1000, 560, 200, 17, '#120B08', '#C85A28', 1.2)}
 		<Zun cam={cam} light={L15} id="z15" patina={0.95} shadow={false} />
@@ -444,7 +450,7 @@ const F15: React.FC = () => { const c = C('15'), cam = heroCam(0, 7), zs = zunSc
 /* ============================== 16 · extreme close: the 饕餮 eye in the firelight ============================== */
 const L16: ZunLight = {dir: [0.35, 0.88, 0.3], col: '#FF5A20', k: 1.8, amb: 0.12, ambCol: '#3A1008', spec: 0.9, shin: 12, rim: {dir: [-0.3, 0.9, 0.35], col: '#FFA040', k: 0.9}};
 const F16: React.FC = () => { const c = C('16'), th = 5.25 / 9.4, z = 14.7, Pq = surfPt(th, z, 0.6), a = (th * 180 / Math.PI - 4) * Math.PI / 180, D = 62;
-	const cam = lookAt([Pq[0] + D * Math.cos(a), Pq[1] + D * Math.sin(a), Pq[2] + 4], Pq, 6600, 960, 690);
+	const cam = lookAt([Pq[0] + D * Math.cos(a), Pq[1] + D * Math.sin(a), Pq[2] + 4], Pq, 4300, 960, 680);
 	return <Frame bg="#0A0303" c={c} vig={0.8}>
 		<defs><radialGradient id="c16bg" cx="80%" cy="70%" r="80%"><stop offset="0" stopColor="#5A1A08" /><stop offset="1" stopColor="#0A0303" /></radialGradient></defs>
 		<rect width={W} height={H} fill="url(#c16bg)" />
@@ -476,21 +482,44 @@ const F17: React.FC = () => { const c = C('17'), cam = heroCam(0, 7), zs = zunSc
 	</Frame>; };
 
 /* ============================== 18 · lifted off the pile and carried away in his arms ============================== */
-const L18: ZunLight = {dir: [0.35, -0.8, 0.5], col: '#FFE0B8', k: 1.5, amb: 0.34, ambCol: '#7A8494', spec: 0.55, shin: 14, rim: {dir: [-0.4, 0.8, 0.35], col: '#B8C8DC', k: 0.45}};
-const F18: React.FC = () => { const c = C('18'), cam = camH(0, 5, 400, 900, 640), zs = zunScreen(cam), k = zs.pxPerCm * 0.96, X = 1300, Y = zs.base[1] + 98 * k;
-	const s = stand(-6, 0.35, toLocal([zs.base[0] - 30, zs.base[1] + 14], X, Y, k, true), toLocal([zs.base[0] - 12.2 * k, zs.mid[1] + 20], X, Y, k, true), 14);
-	const hF = s.hF, hN = s.hN;
+/* front view, at the 尊's own scale: his chest and shoulders behind it, his forearms wrapped round its belly; his face just
+   above the mouth, cut by the light from the left. Drawn directly in px. */
+const L18: ZunLight = {dir: [0.45, -0.75, 0.5], col: '#FFE0B8', k: 1.55, amb: 0.34, ambCol: '#7A8494', spec: 0.55, shin: 14, rim: {dir: [-0.4, 0.8, 0.35], col: '#B8C8DC', k: 0.45}};
+const F18: React.FC = () => { const c = C('18'), cam = camH(0, 5, 430, 960, 720), zs = zunScreen(cam), k = zs.pxPerCm;
+	const hx = 1040, hy = zs.lip[1] - 16 * k;   // head centre
+	const shY = zs.lip[1] + 2 * k, shL: P = [hx - 23 * k, shY + 2 * k], shR: P = [hx + 22 * k, shY];
+	const eL: P = [hx - 29 * k, zs.base[1] - 6 * k], eR: P = [hx + 27 * k, zs.base[1] - 8 * k];
+	const hL: P = [zs.base[0] - 6 * k, zs.base[1] - 7 * k], hR: P = [zs.base[0] + 7 * k, zs.base[1] - 5 * k];
+	const torso = sm([[shL[0] - 2 * k, shL[1] + 3 * k], [hx - 8 * k, shY - 4 * k], [hx + 8 * k, shY - 4.5 * k], [shR[0] + 2 * k, shR[1] + 3 * k], [hx + 20 * k, 1120], [hx - 21 * k, 1120]]);
+	const head = sm([[hx - 9 * k, hy + 2 * k], [hx - 9.5 * k, hy - 6 * k], [hx - 5 * k, hy - 12 * k], [hx + 5 * k, hy - 12 * k], [hx + 9.5 * k, hy - 6 * k], [hx + 9 * k, hy + 2 * k], [hx + 6 * k, hy + 9 * k], [hx, hy + 11.5 * k], [hx - 6 * k, hy + 9 * k]]);
+	const cap = sm([[hx - 10 * k, hy - 5 * k], [hx - 9 * k, hy - 13 * k], [hx, hy - 16 * k], [hx + 9 * k, hy - 13 * k], [hx + 10 * k, hy - 5 * k], [hx + 12 * k, hy - 4 * k], [hx - 12 * k, hy - 4 * k]]);
+	const neck = pth([[hx - 5 * k, hy + 7 * k], [hx + 5 * k, hy + 7 * k], [hx + 6 * k, shY - 3 * k], [hx - 6 * k, shY - 3 * k]]);
+	const collar = pth([[hx - 7 * k, shY - 4.5 * k], [hx + 7 * k, shY - 4.5 * k], [hx + 7.5 * k, shY - 1 * k], [hx, shY + 1.5 * k], [hx - 7.5 * k, shY - 1 * k]]);
+	const fist = (h: P, dir: number) => sm([[h[0] - 4.5 * k, h[1] - 3 * k], [h[0] + 4.5 * k, h[1] - 3.5 * k], [h[0] + dir * 6 * k, h[1]], [h[0] + 4 * k, h[1] + 3.6 * k], [h[0] - 4 * k, h[1] + 3.6 * k], [h[0] - dir * 6 * k, h[1] + 0.5 * k]]);
 	return <Frame bg="#3A4A5E" c={c} vig={0.55}>
 		<YardBG mood="morning" />
-		<Sil id="c18b" x={X} y={Y} k={k} flip rim="#FFE6C0" lx={-1} ly={0.2}><Body s={s} dress="zsz" hat="cadre" part="back" /></Sil>
+		<Sil id="c18b" x={0} y={0} k={1} rim="#FFE6C0" lx={-1} ly={0.25}>
+			<path d={torso} /><path d={sleeve(shL, eL, [eL[0] + 1, eL[1] + 1], 6 * k, 5.4 * k, 5 * k)} /><path d={sleeve(shR, eR, [eR[0] - 1, eR[1] + 1], 6 * k, 5.4 * k, 5 * k)} />
+			<path d={neck} /><path d={head} /><path d={cap} /><path d={collar} fill="#1A120E" /></Sil>
 		<Zun cam={cam} light={L18} id="z18" patina={0.92} shadow={false} />
-		<Sil id="c18f" x={X} y={Y} k={k} flip rim="#FFE6C0" lx={-1} ly={0.2}><Body s={s} dress="zsz" hat="cadre" part="front" /><path d={mitten([hF[0] - 12, hF[1] + 4], hF)} /></Sil>
-		{void hN}
+		<Sil id="c18f" x={0} y={0} k={1} rim="#FFE6C0" lx={-1} ly={0.25}>
+			<path d={tube(eL, hL, 5.2 * k, 4.2 * k)} /><path d={tube(eR, hR, 5.2 * k, 4.2 * k)} />
+			<path d={fist(hL, 1)} /><path d={fist(hR, -1)} /></Sil>
 	</Frame>; };
 
 /* ============================== 19 / 22 · 1975, the 故宫 restoration room ============================== */
-const LRoom = (clean: boolean): ZunLight => ({dir: [-0.15, -0.55, 0.82], col: '#FFE0B0', k: clean ? 1.9 : 1.45, amb: 0.3, ambCol: '#5A6268', spec: clean ? 1.8 : 0.6, shin: clean ? 16 : 14,
-	rim: {dir: [-0.5, 0.8, 0.3], col: '#B8C8D8', k: clean ? 0.8 : 0.45}, inside: 0.5});
+/** a forearm in a white-coat sleeve and a hand in a pinch grip holding a tool; cm, the hand pointing +x from the wrist at (0, 0) */
+const HandTool: React.FC<{tool: 'scalpel' | 'brush'}> = ({tool}) => <>
+	<path d={tube([-44, 0.5], [-2, 0], 5.6, 4.4)} />
+	<path d={sm([[-10, -6], [-4, -5.6], [-4, 5.8], [-10, 6.4]])} />
+	<path d={sm([[-2.5, -3.6], [3.5, -4.4], [8.5, -3.6], [10.5, -1.2], [10, 2.4], [6, 4.2], [-1, 3.8]])} />
+	<path d={tube([6.5, -1.4], [14.5, -2.6], 1.25, 0.95)} />
+	<path d={tube([2.5, -4.2], [11.5, -4.3], 1.35, 1.0)} />
+	{tool === 'scalpel' ? <g fill="#D8D8D4"><path d={pth([[3, -3.1], [18, -3.5], [18, -2.7], [3, -2.5]])} /><path d={pth([[18, -3.7], [23, -3.3], [18, -2.5]])} fill="#F2F2EE" /></g>
+		: <g><path d={pth([[1, -3.3], [13, -3.6], [13, -2.4], [1, -2.2]])} fill="#5A3A22" /><path d={pth([[13, -3.8], [15, -3.8], [15, -2.2], [13, -2.2]])} fill="#B8B0A0" /><path d={sm([[15, -3.9], [19.5, -4.4], [21, -3.0], [19.5, -1.6], [15, -2.1]])} fill="#D8B888" /></g>}
+</>;
+const LRoom = (clean: boolean): ZunLight => clean ? {dir: [0.35, -0.45, 0.82], col: '#FFE6C4', k: 2.2, amb: 0.4, ambCol: '#6A6E74', spec: 2.0, shin: 14, rim: {dir: [-0.6, 0.7, 0.4], col: '#FFE0B8', k: 1.0}, inside: 0.6}
+	: {dir: [-0.15, -0.55, 0.82], col: '#FFE0B0', k: 1.45, amb: 0.3, ambCol: '#5A6268', spec: 0.6, shin: 14, rim: {dir: [-0.5, 0.8, 0.3], col: '#B8C8D8', k: 0.45}, inside: 0.5};
 const Room: React.FC<{clean?: boolean}> = ({clean = false}) => { const c = C(clean ? '22' : '19'), cam = heroCam(0, 7), zs = zunScreen(cam), by = zs.base[1];
 	return <Frame bg="#0C0B0A" c={c} vig={0.62}>
 		<defs><linearGradient id="r19w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1C1A18" /><stop offset="1" stopColor="#2C2622" /></linearGradient></defs>
@@ -514,15 +543,13 @@ const Room: React.FC<{clean?: boolean}> = ({clean = false}) => { const c = C(cle
 		<path d={`M240,${by - 4} L300,${by - 4} L280,${by - 20} L262,${by - 20} Z`} fill="#141210" /><path d={`M272,${by - 20} L330,420 L560,360`} stroke="#141210" strokeWidth={10} fill="none" strokeLinejoin="round" />
 		<path d={pth([[520, 330], [640, 360], [700, 470], [520, 450]])} fill="#2A3A34" /><ellipse cx={612} cy={462} rx={90} ry={22} transform="rotate(8 612 462)" fill="#FFF0D0" />
 		<Beam pts={[[540, 456], [700, 474], [1200, by], [700, by]]} c="#FFE8C0" o={0.22} id="r19b" />
-		{clean && <Beam pts={[[880, 400], [1040, 400], [1100, 0], [820, 0]]} c="#FFD890" o={0.18} id="r22up" dir={[0, 1, 0, 0]} />}
+		{clean && <Beam pts={[[800, 420], [1120, 420], [1240, 0], [680, 0]]} c="#FFD890" o={0.3} id="r22up" dir={[0, 1, 0, 0]} />}
 		<Glow x={960} y={zs.mid[1]} r={420} c="#FFE0B0" o={clean ? 0.3 : 0.16} id="r19h" />
 		<Zun cam={cam} light={LRoom(clean)} id="z19" patina={clean ? 0.06 : 0.82} shadow />
 		{/* the restorer's hands: a scalpel at the lip (his arm from out of frame, top right), a brush at the belly */}
-		{!clean && <Sil id="r19a" x={0} y={0} k={1} rim="#FFE6C0" lx={-1} ly={-0.6}>
-			<path d={sleeve([2000, 180], [1560, 300], [1236, 404], 70, 52, 40)} /><path d={mitten([1560, 300], [1236, 404])} transform="translate(1236,404) scale(6) translate(-1236,-404)" />
-			<path d={sleeve([2000, 1000], [1700, 870], [1290, 740], 66, 50, 40)} /><path d={mitten([1700, 870], [1290, 740])} transform="translate(1290,740) scale(6) translate(-1290,-740)" /></Sil>}
-		{!clean && <><path d="M1210,396 L1150,382" stroke="#E8E8E8" strokeWidth={4} strokeLinecap="round" /><path d="M1262,738 L1196,716" stroke="#3A2C20" strokeWidth={9} strokeLinecap="round" /><path d={sm([[1200, 718], [1166, 698], [1150, 706], [1180, 726]])} fill="#C8A878" />
-			<Motes n={24} x0={1080} x1={1200} y0={380} y1={470} c="#8A6A48" seed={191} o={0.9} r={2.2} /></>}
+		{!clean && <><Sil id="r19a" x={1392} y={362} k={zs.pxPerCm} flip rim="#FFE6C0" lx={-1} ly={-0.6}><g transform="rotate(12)"><HandTool tool="scalpel" /></g></Sil>
+			<Sil id="r19c" x={1330} y={770} k={zs.pxPerCm} flip rim="#FFE6C0" lx={-1} ly={-0.6}><g transform="rotate(-15)"><HandTool tool="brush" /></g></Sil>
+			<Motes n={24} x0={1080} x1={1180} y0={390} y1={470} c="#8A6A48" seed={191} o={0.9} r={2.2} /></>}
 	</Frame>; };
 
 /* ============================== 20 / 21 · KF3, the inscription comes out; 中国 ignites ============================== */
@@ -579,7 +606,7 @@ const F28: React.FC = () => { const c = C('28'), cam = heroCam(0, 7);
    the pill, the sources line; the shot under it dimmed to about 30 %; fade to black at 140.0. Sources: PROVISIONAL (the two
    pages the producer checked v1.1 against) until facts.md gives the line. */
 const END_TITLE = ['“中国”两个字，', '最早出现在哪？'], END_Q = '你家里，有没有一件被当成破烂的老东西？';
-const END_SRC = '新华网《“何以中国”：一件何尊，见证“中国”》（2023-07-09）· 中国社会科学网（2022-07-28）· 宝鸡青铜器博物院';
+const END_SRC = '资料：新华网（2023-07-09）· 中国社会科学网（2022-07-28）';
 const EndCard: React.FC = () => { const fs = 76, tw = fs * END_Q.length * 1.03, gold = '#F2C66E';
 	return <>
 		<div style={{position: 'absolute', inset: 0, background: 'rgba(8,4,3,0.66)'}} />
@@ -591,7 +618,7 @@ const EndCard: React.FC = () => { const fs = 76, tw = fs * END_Q.length * 1.03, 
 		<div style={{position: 'absolute', left: SAFE_X, right: SAFE_X, top: 868, textAlign: 'center', fontFamily: SANS, fontSize: 24, lineHeight: 1.6, color: '#D8CCB6', opacity: 0.88, whiteSpace: 'nowrap', textShadow: '0 1px 3px rgba(0,0,0,0.8)'}}>{END_SRC}</div>
 	</>; };
 const FQ: React.FC = () => { const c = C('END'), cam = camH(6, 7, 440, 960, 640);
-	return <Frame bg="#050505" c={c} vig={0.75} after={<EndCard />}>
+	return <Frame bg="#050505" c={c} vig={0.75} top={<EndCard />}>
 		<defs><linearGradient id="cqc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFE8C8" stopOpacity={0.12} /><stop offset="1" stopColor="#FFE8C8" stopOpacity={0.03} /></linearGradient></defs>
 		<rect width={W} height={H} fill="#060606" />
 		<path d="M900,-20 L1020,-20 L1290,930 L630,930 Z" fill="url(#cqc)" />

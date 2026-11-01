@@ -320,8 +320,8 @@ export const KF4: React.FC<{ov?: React.ReactNode; visitors?: number; az?: number
 			<defs><clipPath id="k4glass"><rect x={640} y={250} width={260} height={665} /></clipPath></defs>
 			<g clipPath="url(#k4glass)"><Person id="k4vis" f={{kind: 'visitor', lean: 2, stride: 0.05, hN: [8, -84], hF: [2, -84]}} x={705} y={1060} k={3.9} rim="#B8CCE0" lx={1} ly={0.3} fill="#8EA2B4" o={0.08} /></g>
 			{visitors > 1 && <><defs><clipPath id="k4glass2"><rect x={1020} y={250} width={260} height={665} /></clipPath></defs>
-				<g clipPath="url(#k4glass2)">{Array.from({length: visitors - 1}, (_, i) => <Person key={i} id={`k4v${i}`} f={{kind: 'visitor', lean: -2 + i * 2, stride: 0.06, hN: [10, -96 + i * 8], hF: [4, -84], flip: true}} x={1200 + i * 70} y={1040 + i * 30} k={3.4 - i * 0.35} rim="#B8CCE0" lx={-1} ly={0.3} fill="#8EA2B4" o={0.07} />)}</g>
-				<g clipPath="url(#k4glass)">{Array.from({length: visitors - 1}, (_, i) => <Person key={i} id={`k4w${i}`} f={{kind: 'visitor', lean: 3, stride: 0.05, hN: [12, -110], hF: [3, -84]}} x={800 + i * 60} y={1010 + i * 20} k={3.0 - i * 0.3} rim="#B8CCE0" lx={1} ly={0.3} fill="#8EA2B4" o={0.06} />)}</g></>}
+				<g clipPath="url(#k4glass2)">{Array.from({length: visitors - 1}, (_, i) => <Person key={i} id={`k4v${i}`} f={{kind: 'visitor', lean: -2 + i * 2, stride: 0.06, hN: [10, -96 + i * 8], hF: [4, -84], flip: true}} x={1200 + i * 70} y={1040 + i * 30} k={3.4 - i * 0.35} rim="#B8CCE0" lx={-1} ly={0.3} fill="#8EA2B4" o={0.13} />)}</g>
+				<g clipPath="url(#k4glass)">{Array.from({length: visitors - 1}, (_, i) => <Person key={i} id={`k4w${i}`} f={{kind: 'visitor', lean: 3, stride: 0.05, hN: [12, -110], hF: [3, -84]}} x={800 + i * 60} y={1010 + i * 20} k={3.0 - i * 0.3} rim="#B8CCE0" lx={1} ly={0.3} fill="#8EA2B4" o={0.11} />)}</g></>}
 			{/* the label */}
 			<rect x={1300} y={930} width={150} height={52} fill="#1C1A18" stroke="#3A3632" />
 			<text x={1375} y={963} textAnchor="middle" fontFamily={KAI} fontSize={22} fill="#B8A88A">何尊 · 西周</text>

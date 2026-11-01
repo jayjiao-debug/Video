@@ -48,10 +48,18 @@ export const Body: React.FC<{s: Sk; dress: Dress; hat: Hat; part?: 'all' | 'back
 	/* the dress */
 	let dressEl: React.ReactNode = null;
 	if (robe) {   /* 上衣下裳: a hull from the shoulders over the hips, knees and to a flared hem at the feet */
-		const pts: P[] = [add(s.sh, n, -11 * W), add(s.sh, n, 11 * W), add(s.sh, sp, 4), add(s.hip, n, -13 * W), add(s.hip, n, 13 * W)];
-		for (const k of [s.kN, s.kF]) pts.push(add(k, [-9, 0]), add(k, [9, 0]), add(k, [0, -6]));
-		for (const f of [s.fN, s.fF]) { const kneel = f[1] > -14 && Math.abs(f[1] - s.kN[1]) < 12; pts.push(add(f, [-11, kneel ? 4 : 6]), add(f, [11, kneel ? 4 : 6]), add(f, [0, -8])); }
-		dressEl = <path d={sm(hull(pts))} />;
+		const kneeling = (s.toeN ?? 1) < 0 && (s.toeF ?? 1) < 0;
+		if (kneeling) {   /* two hulls, so the back stays concave: the trunk over the thighs, and the skirt over the shins on the floor */
+			const up: P[] = [add(s.sh, n, -11 * W), add(s.sh, n, 11 * W), add(s.sh, sp, 4), add(s.hip, n, -13 * W), add(s.hip, n, 13 * W), add(add(s.hip, n, -12 * W), sp, -10)];
+			for (const k of [s.kN, s.kF]) up.push(add(k, [10, 6]), add(k, [8, -8]));
+			const lo: P[] = [add(s.kN, [11, 6]), add(s.kN, [4, -12]), add(add(s.hip, n, -12 * W), sp, -12)];
+			for (const f of [s.fN, s.fF]) lo.push(add(f, [-12, 6]), add(f, [-9, -9]));
+			dressEl = <><path d={sm(hull(up))} /><path d={sm(hull(lo))} /></>;
+		} else {
+			const pts: P[] = [add(s.sh, n, -11 * W), add(s.sh, n, 11 * W), add(s.sh, sp, 4), add(s.hip, n, -13 * W), add(s.hip, n, 13 * W)];
+			for (const k of [s.kN, s.kF]) pts.push(add(k, [-9, 0]), add(k, [9, 0]), add(k, [0, -6]));
+			for (const f of [s.fN, s.fF]) pts.push(add(f, [-11, 6]), add(f, [11, 6]), add(f, [0, -8]));
+			dressEl = <path d={sm(hull(pts))} />; }
 		/* the 蔽膝 (knee cover) hanging from the belt in front, and the belt line as a notch of light (rim catches it) */
 	} else if (dress === 'jacket' || dress === 'zsz' || dress === 'labcoat') {
 		const drop = dress === 'labcoat' ? 40 : dress === 'zsz' ? 14 : 12;
@@ -62,7 +70,7 @@ export const Body: React.FC<{s: Sk; dress: Dress; hat: Hat; part?: 'all' | 'back
 	const tilt = s.tilt ?? 0, R = rotAt(s.hd, tilt);
 	const head = <path d={sm(headPts(s.hd, tilt))} />;
 	let hatEl: React.ReactNode = null;
-	if (hat === 'guan') hatEl = <><path d={sm([R(-6, -11), R(-5, -21), R(2, -23), R(5, -15)])} /><path d={sm([R(-14, -17), R(10, -19), R(10, -16.5), R(-14, -14.5)])} /></>;   // a small cap over the topknot, a hairpin across it
+	if (hat === 'guan') hatEl = <><path d={sm([R(-7, -10), R(-6, -22), R(1, -25), R(5, -21), R(4, -13)])} /><path d={sm([R(-11, -19.5), R(8, -21), R(8, -19), R(-11, -17.5)])} /></>;   // a small cap over the topknot, a hairpin across it
 	else if (hat === 'mian') hatEl = <>   {/* 冕: the cap body, the board (綖) tilted forward, the bead strings (旒) front and back */}
 		<path d={sm([R(-9, -9), R(-8, -19), R(4, -21), R(9, -12)])} />
 		<path d={sm([R(-20, -22), R(22, -27), R(22, -24), R(-20, -19)], true)} />
