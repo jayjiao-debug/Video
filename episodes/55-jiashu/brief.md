@@ -1,0 +1,23 @@
+# Brief: 中国最早的家书 (ep55)
+
+- **Owner ask (2026-11-01 13:26):** 「中国最早的家书，竟然是在跟妈妈要钱？」. Give script and visuals. The BGM is the same as ep45 马首 (the owner's bgm_owner.mp3, 106 BPM; map in ../45-mashou/music_v5.md and ../43-qingming/music.md). The file is not in this workspace yet, so ask the owner to attach it.
+- **Topic score (topic-picker):** search demand 1–2 · prior knowledge needed 0 · twist 2 · forward 2 · about the viewer 2 · conflict 0 = **7–8**. Forwarded to: mum, the family group chat, roommates.
+- **The story:** 睡虎地 4号秦墓 (湖北 云梦, excavated 1975–76) held two wooden letters (木牍). In them two Qin soldier brothers, 黑夫 and 惊, write from the front of the 秦灭楚 war (about 223 BC) to their elder brother 衷 and their mother. They ask for money and cloth for clothes, ask after 惊's new wife, and ask whether the family has received the rank (爵) earned by their service. The letters were found in 衷's tomb, so they reached home. Whether the brothers ever came back is unknown.
+- **Frame:** second person, 「假如说你是一封家书」. 「你」 is the letter, which outlives the people who wrote it (house format, like 马首 and 爱因斯坦的大脑). Counter: 「你 N 岁」, the letter's age, from 0 at writing to about 2,197 at the excavation; or a year stamp. The Douyin title is the searched question: 中国最早的家书，竟然是在跟妈妈要钱？
+- **Emotional arc on the music:**
+  - cold open: the hook;
+  - title on drop 1;
+  - the brothers and the home;
+  - the letters' asks: money, cloth, the wife;
+  - the build: the war, the urgency (a 「急急急」-type line if the 释文 really has it);
+  - **the stop:** silence, the fate unknown;
+  - **the hardest drop:** the tomb is opened and 「你，到家了」;
+  - outro question to the viewer: 「你上一次给家里打电话，是什么时候？」 (ask, don't preach).
+- **Takeaway:** 2,200 years later, the letter home still says the same things: send money, I'm cold, how is everyone, don't worry.
+- **Length:** about 2:30 on the 马首 2:30 cut (v6: title 9.05, stop 76.17, drop 87.17, outro 132.77, end 148.05), or the 3:00 cut if the story needs it.
+- **Format:** 1920×1080, subtitle-only, music only, history-video-style house rules (counter, stamp, end card, phone-safe layout).
+- **Visuals:** one code-drawn look for the whole film (Remotion SVG). Flat-vector 2.5D sets, one warm key light, readable silhouettes. The letter (the wooden tablet with its ink columns) is the one glowing object. No AI images, no gore, no bordered maps. Qin-accurate: wooden 牍, brush and ink, 秦 armour of the 兵马俑 type for the soldiers, a farmhouse in 安陆.
+- **Must avoid:**
+  - inventing letter text: every quoted line must come from the 释文 in facts.md, and translations must be faithful;
+  - presenting guesses (the brothers' fate, ages, names beyond the text) as fact;
+  - Wikipedia, 百度百科 and 知乎 as sources.
