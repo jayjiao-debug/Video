@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0} #f{position:relative;width:1280px;height:720px;overflow:hidden;background:radial-gradient(ellipse at 55% 58%,#4a3826 0%,#22180f 48%,#0d0a07 85%)}
+#c{position:absolute;left:0;top:0} .sub{position:absolute;left:100px;top:64px;font:700 44px 'Noto Sans CJK SC';color:#FFF6E6;line-height:1.35;text-shadow:0 2px 14px rgba(0,0,0,.6);transition:none}
+.u{border-bottom:4px solid #7FB79C}</style>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script></head><body>
+<div id="f"><canvas id="c" width="1280" height="720"></canvas><div class="sub" id="sub"></div></div>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const r = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true, alpha: true, preserveDrawingBuffer: true});
+r.setPixelRatio(1); r.setSize(1280, 720, false); r.outputColorSpace = THREE.SRGBColorSpace; r.setClearColor(0, 0);
+const scene = new THREE.Scene(); let cam, box, c, R0, hemi, sun, rim;
+const lerp = (a, b, t) => a + (b - a) * t, ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
+window.init = async (url, scaleY) => {
+  const g = await new GLTFLoader().loadAsync(url); const m = g.scene;
+  const grad = new THREE.DataTexture(new Uint8Array([30, 80, 135, 200, 255].flatMap(v => [v, v, v, 255])), 5, 1); grad.needsUpdate = true; grad.minFilter = grad.magFilter = THREE.NearestFilter;
+  const mat = new THREE.MeshToonMaterial({color: new THREE.Color('#5E9A80'), gradientMap: grad});
+  m.traverse(o => { if (o.isMesh) { o.geometry.deleteAttribute('normal'); o.geometry.computeVertexNormals(); o.material = mat; } });
+  m.scale.set(1, scaleY, 1); scene.add(m);
+  box = new THREE.Box3().setFromObject(m); c = box.getCenter(new THREE.Vector3()); R0 = box.getBoundingSphere(new THREE.Sphere()).radius;
+  hemi = new THREE.HemisphereLight(0xCFE6D8, 0x2A1E16, 0); scene.add(hemi);
+  sun = new THREE.DirectionalLight(0xFFE2B0, 0); sun.position.set(-2, 3, 2); scene.add(sun);
+  rim = new THREE.DirectionalLight(0xFFD9A0, 0); rim.position.set(2, 1.5, -2.5); scene.add(rim);
+  cam = new THREE.PerspectiveCamera(30, 1280 / 720, .01, 100);
+  return true;
+};
+window.frame = (t) => {
+  const L = ease((t - 1.2) / .7);                       // the light swings on at 1.2 s
+  hemi.intensity = 1.1 * L; sun.intensity = 2.6 * L; rim.intensity = 2.2 * L;
+  const k = ease((t - 2.0) / 4.0);                      // orbit + push from 2.0 s
+  const az = lerp(90, 32, k) * Math.PI / 180, el = lerp(4, 14, k) * Math.PI / 180, dist = R0 * lerp(4.4, 2.5, k) + R0 * .15 * (1 - ease(t / 2));
+  const ty = lerp(c.y, box.min.y + (box.max.y - box.min.y) * .32, k);
+  cam.position.set(c.x + dist * Math.sin(az) * Math.cos(el), ty + dist * Math.sin(el), c.z + dist * Math.cos(az) * Math.cos(el));
+  cam.lookAt(c.x, ty, c.z);
+  r.render(scene, cam);
+  document.getElementById('sub').innerHTML = t < 3.4 ? '这匹马，<br>你肯定<span class="u">见过</span>。' : '可它脚下那只鸟——<br>可能根本不是<span class="u">燕子</span>。';
+  return true;
+};
+window.ready = true;
+</script></body></html>

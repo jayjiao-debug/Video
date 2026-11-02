@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:transparent}</style>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script></head><body>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+let model = null, info = null;
+window.load = async (url) => {
+  const g = await new GLTFLoader().loadAsync(url); model = g.scene;
+  let tris = 0, meshes = 0; model.traverse(o => { if (o.isMesh) { meshes++; tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+  const box = new THREE.Box3().setFromObject(model); const s = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+  info = {meshes, tris, size: [s.x, s.y, s.z].map(v => +v.toFixed(3)), center: [c.x, c.y, c.z].map(v => +v.toFixed(3))};
+  return info;
+};
+window.render = (cfg) => {
+  const W = cfg.w || 900, H = cfg.h || 700;
+  const r = new THREE.WebGLRenderer({antialias: true, alpha: true, preserveDrawingBuffer: true});
+  r.setSize(W, H); r.setPixelRatio(1); r.outputColorSpace = THREE.SRGBColorSpace; r.setClearColor(cfg.bg ?? 0x2a2420, 1);
+  document.body.innerHTML = ''; document.body.appendChild(r.domElement);
+  const scene = new THREE.Scene(); const m = model.clone(true);
+  if (cfg.mat === 'patina') {
+    const grad = new THREE.DataTexture(new Uint8Array([40, 90, 140, 200, 255].flatMap(v => [v, v, v, 255])), 5, 1); grad.needsUpdate = true; grad.minFilter = grad.magFilter = THREE.NearestFilter;
+    const mat = new THREE.MeshToonMaterial({color: new THREE.Color('#5E9A80'), gradientMap: grad});
+    m.traverse(o => { if (o.isMesh) o.material = mat; });
+  } else if (cfg.mat === 'flat') {
+    m.traverse(o => { if (o.isMesh) o.material = new THREE.MeshBasicMaterial({color: 0x15110e}); });
+  }
+  m.traverse(o => { if (o.isMesh) { o.geometry = o.geometry.clone(); o.geometry.deleteAttribute('normal'); o.geometry.computeVertexNormals(); } });
+  if (cfg.scaleY) m.scale.set(1, cfg.scaleY, 1);
+  if (cfg.rot) m.rotation.set(...cfg.rot);
+  scene.add(m);
+  const box = new THREE.Box3().setFromObject(m); const c = box.getCenter(new THREE.Vector3()); const sz = box.getBoundingSphere(new THREE.Sphere()).radius * 2;
+  scene.add(new THREE.HemisphereLight(0xFFF1D6, 0x3A2A20, 1.2)); const d = new THREE.DirectionalLight(0xFFE8C0, 2.6); d.position.set(...(cfg.sun || [-2, 3, 2])); scene.add(d);
+  const cam = new THREE.PerspectiveCamera(cfg.fov || 30, W / H, .01, 100);
+  const az = (cfg.az || 0) * Math.PI / 180, el = (cfg.el || 0) * Math.PI / 180, dist = sz * (cfg.dist || 1.6);
+  cam.position.set(c.x + dist * Math.sin(az) * Math.cos(el), c.y + dist * Math.sin(el), c.z + dist * Math.cos(az) * Math.cos(el));
+  cam.lookAt(c.x, c.y + (cfg.lookY || 0) * sz, c.z);
+  r.render(scene, cam); return r.domElement.toDataURL('image/png');
+};
+window.ready = true;
+</script></body></html>
