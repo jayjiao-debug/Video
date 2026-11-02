@@ -39,7 +39,7 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 | 25 | 1:37 | 后来，骑士们拆了它的石头，<br>修了一座[城堡]。 | The tomb comes apart block by block; the blocks fly and stack into castle walls. Its light goes out. | 3 |
 | 26 | 1:42 | 今天，它的石头，<br>还砌在那座城堡里。 | **PHOTO: Bodrum castle.** | **2** |
 | 27 | 1:45 | 第六站，<br>[亚历山大灯塔]。 | Globe hop → night sea; a lighthouse with a fire at the top sweeping the water. | 2 |
-| 28 | 1:48 | 它亮了[1600多年]，<br>是这七个里活得第二久的。 | Time-lapse: ships' sails change shape over the centuries; the beam keeps turning. | 2 |
+| 28 | 1:48 | 它亮了[1600多年]，<br>照着无数船回家。 | Time-lapse: ships' sails change shape over the centuries; the beam keeps turning. | 2 |
 | 29 | 1:54 | 最后，还是被地震，<br>彻底推倒了。 | The tower cracks and sinks into the sea; the beam goes out. | 2 |
 | 30 | 1:58 | 今天，原址只剩大海和城堡。 | **PHOTO: the site today.** (Wording depends on #F7.) | **1** |
 | 31 | 2:01 | 只剩一个了。 | Globe hop, slower. The music thins out. | 1 |
@@ -71,7 +71,7 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 | F5 | 17–19 | No trace of the Hanging Garden in Babylon's ruins or its cuneiform texts; Dalley's Nineveh theory | *Archaeology* magazine, Nov/Dec 2025 | ✓ |
 | F6 | 24 | 「mausoleum」 comes from Mausolus | ✗ (dictionary or Britannica) | ✗ |
 | F7 | 25–26, 30 | The Knights of St John used the Mausoleum's stones (c. 1494); what stands on the Alexandria lighthouse site today (the Qaitbay citadel, 15th century) | WHE timeline (Mausoleum ✓); the Qaitbay wording ✗ | ½ |
-| F8 | 28–29 | Lighthouse built c. 300–280 BCE; partly collapsed 956 CE; finally collapsed c. 1330 CE, probably an earthquake (about 1,600 years). "Second-longest-lived of the seven" needs checking against the Temple (destroyed 401 CE, but rebuilt) and the Zeus statue (c. 430 BCE–475 CE, about 900 years): the lighthouse at about 1,600 years is second after the pyramid ✓ | WHE timeline | ✓ |
+| F8 | 28–29 | Lighthouse built c. 300–280 BCE; partly collapsed 956 CE; finally collapsed c. 1330 CE, probably an earthquake (about 1,600 years). No 「second-longest」 claim: the Mausoleum (c. 350 BCE until it was dismantled c. 1494) may have stood longer | WHE timeline | ✓ |
 | F9 | 21 | Zeus statue moved to Constantinople 395 CE; destroyed by fire 475 CE (according to Zonaras) | WHE timeline. Say 「据记载」 if space allows | ✓ |
 | F10 | 34–35 | Great Pyramid c. 2560 BCE; Philo's list c. 225 BCE → about 2,300+ years; the oldest of the wonders and the only one substantially standing | WHE timeline; Britannica | ✓ |
 | F11 | 36–37 | 2007, Lisbon, nearly 100 million votes, a private Swiss foundation; 长城 among the seven | China Daily 2007-07-09 | ✓ |
