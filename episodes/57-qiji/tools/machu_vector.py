@@ -1,6 +1,6 @@
 """ep57 马丘比丘 (machu2.jpg, 2576x1717): the scene drawn in code (our lines, our palette), laid over the
 photo's layout so the shutter cut drawing → photo lines up. Repeated details are generated (cloud puffs,
-ridge ribs, terrace bands, roofless houses with gables on a grid per ruin block, tree clumps, grass strokes).
+ridge faces, jungle crowns, terrace bands, rows of roofless houses clipped to each ruin block, tree clumps, grass strokes).
 usage: machu_vector.py out.svg"""
 import sys, math, random
 W, H = 2576, 1717
@@ -74,7 +74,7 @@ g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}"
 # --- back ranges (drawn before the clouds, which sit on their tops) ---
 g.append(poly([(1280, 380), (W, 380), (W, H), (1280, H)], P['far'], '#162636', 2))
 for rib in ([(1800, 470), (1840, 540), (1910, 590), (1990, 650), (2040, 700)], [(2000, 456), (2060, 540), (2150, 610), (2240, 680), (2300, 760)],
-            [(2440, 458), (2425, 560), (2400, 680), (2370, 820)], [(W, 600), (2520, 690), (2460, 760), (2420, 830)], [(1560, 490), (1600, 560), (1640, 640)]):   # far ridges
+            [(2440, 458), (2425, 560), (2400, 680), (2370, 820)], [(W, 600), (2520, 690), (2460, 760), (2420, 830)]):   # far ridges
     g.append(poly(rib + [(x - 8 - 22 * k, y + 8 * k) for k, (x, y) in list(enumerate(rib))[::-1]], P['far_rib'], '#1A2C3D', 1.5, 'opacity=".85"'))   # lit side of each far ridge
 left_ridge = [(0, 576), (50, 564), (100, 546), (150, 543), (250, 543), (300, 546), (350, 555), (400, 573), (450, 587), (500, 579), (550, 567), (600, 552), (650, 543), (700, 528), (750, 510), (800, 489), (850, 480), (900, 470), (1000, 462), (1100, 470)]
 g.append(poly(left_ridge + [(1100, 1250), (0, 1250)], P['left'], '#141F29', 2.5))
@@ -158,10 +158,10 @@ g.append(poly(site, P['site'], INK, 3))
 # lit scrub slope below the east terraces, falling to the right
 scrub = [(1700, 1300), (1712, 1313), (1810, 1362), (1889, 1381), (1967, 1401), (2026, 1420), (2085, 1450), (2144, 1489), (2203, 1538), (2262, 1587), (2321, 1637), (2380, 1695), (2400, H), (1700, H), (1840, 1600), (1860, 1530), (1845, 1485), (1775, 1400)]
 g.append(poly(scrub, P['scrub'], INK, 3))
-for _ in range(40):   # shrub clumps on the scrub (generated)
+for _ in range(22):   # shrub clumps on the scrub (generated)
     x, y = R.uniform(1760, 2380), R.uniform(1330, 1717)
     if not inside((x, y), scrub) or not inside((x, y - 30), scrub): continue
-    g += clump(x, y, R.uniform(16, 26), 3, R.choice([P['scrub'], '#43461F']), P['scrub_hi'], 1.5)
+    g += clump(x, y, R.uniform(28, 42), 3, R.choice([P['scrub'], '#43461F']), P['scrub_hi'], 1.5)
 
 # --- lawns: the main plaza (sun on its lower half), small upper lawns, the lower plaza ---
 plaza = [(640, 1092), (700, 1074), (770, 1064), (850, 1070), (905, 1105), (945, 1150), (980, 1196), (1060, 1196), (1100, 1254), (1160, 1290), (1170, 1338), (960, 1340), (950, 1306), (880, 1288),
@@ -213,7 +213,7 @@ def house_row(a, b, dv, h, w, lit):
         E = lerp(a, b, k / n); F = (E[0] + dv[0], E[1] + dv[1])
         if 0 < k < n: o.append(poly([E, F, (F[0] + u[0] * 7, F[1] + u[1] * 7), (E[0] + u[0] * 7, E[1] + u[1] * 7)], P['stone_lit'], INK, 1.5))   # cross wall
         if R.random() < (.6 if k in (0, n) else .35):   # gable on this wall, with a trapezoid niche
-            M = lerp(E, F, .5); o.append(poly([(E[0], E[1] + h), E, (M[0], M[1] - h * 2.1), F, (F[0], F[1] + h * .7)], P['gable'] if k < n else P['stone_sh'], INK, 2.5))
+            M = lerp(E, F, .5); o.append(poly([(E[0], E[1] + h), E, (M[0], M[1] - h * 1.6), F, (F[0], F[1] + h * .7)], P['gable'] if k < n else P['stone_sh'], INK, 2.5))
             o.append(poly([(M[0] - 3, M[1] + 2), (M[0] + 4, M[1] + 2), (M[0] + 3, M[1] - 9), (M[0] - 2, M[1] - 9)], P['floor'], 'none', 0))
     return o
 def big_gable(apex, bl, br, dv, lit=True):
@@ -266,7 +266,7 @@ g.append(line([(1240, 1325), (1238, 1380), (1245, 1440)], INK, 6))
 fg = [(0, 1405), (40, 1430), (60, 1455), (122, 1455), (203, 1451), (268, 1455), (341, 1451), (406, 1451), (455, 1455), (504, 1463), (552, 1475), (601, 1491), (650, 1507), (699, 1524), (731, 1545),
       (750, 1572), (790, 1592), (851, 1605), (903, 1612), (947, 1615), (995, 1620), (1034, 1633), (1065, 1646), (1100, 1666), (1131, 1688), (1152, H), (0, H)]
 g.append(poly(fg, 'url(#grass)', INK, 3))
-for _ in range(230):
+for _ in range(200):
     x, y = R.uniform(0, 1150), R.uniform(1440, H)
     if not inside((x, y), fg) or not inside((x, y - 30), fg): continue
     a = R.uniform(-2.0, -1.15); L = R.uniform(18, 50)
