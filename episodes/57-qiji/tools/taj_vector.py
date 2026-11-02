@@ -64,14 +64,11 @@ def dome(cx, base, top, hwb, hwm, ym, fill, lit, shade, sw=2.5):
     out.append(path(curve(sl, False) + ' ' + curve([(2 * cx - x, y) for x, y in dome_side(cx, base, top, hwb, hwm, ym, .62)][::-1], False).replace('M', 'L', 1) + ' Z', shade, 'none', 0))
     out.append(path(outline, 'none', INK, sw))
     return out
-def arch(x0, x1, spring, apex, bottom):
-    """pointed (Mughal) arch outline: up the left jamb, two curves to the apex, down the right jamb"""
-    c = (x0 + x1) / 2; w = (x1 - x0) / 2
-    return [(x0, bottom), (x0, spring), (x0 + w * .08, spring - (spring - apex) * .45), (x0 + w * .35, apex + (spring - apex) * .14), (c, apex),
-            (x1 - w * .35, apex + (spring - apex) * .14), (x1 - w * .08, spring - (spring - apex) * .45), (x1, spring), (x1, bottom)]
 def arch_d(x0, x1, spring, apex, bottom):
-    a = arch(x0, x1, spring, apex, bottom)
-    return f'M{x0:.0f},{bottom:.0f} L{x0:.0f},{spring:.0f} ' + curve(a[1:-1], False).split(' ', 1)[1] + f' L{x1:.0f},{bottom:.0f} Z'
+    """pointed (Mughal) arch: up the left jamb, two convex curves that meet at a point at the apex, down the right jamb"""
+    c = (x0 + x1) / 2; w = (x1 - x0) / 2; h = spring - apex
+    return (f'M{x0:.0f},{bottom:.0f} L{x0:.0f},{spring:.0f} C{x0:.0f},{spring - .62 * h:.0f} {c - .45 * w:.1f},{apex + .135 * w:.1f} {c:.1f},{apex:.0f} '
+            f'C{c + .45 * w:.1f},{apex + .135 * w:.1f} {x1:.0f},{spring - .62 * h:.0f} {x1:.0f},{spring:.0f} L{x1:.0f},{bottom:.0f} Z')
 
 g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}">',
      f'<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{P["sky0"]}"/><stop offset=".55" stop-color="{P["sky1"]}"/><stop offset="1" stop-color="{P["sky2"]}"/></linearGradient>'
@@ -113,7 +110,7 @@ def minaret(m, far=False):
     out.append(poly([(px0, p0), (px1, p0), (px1, p1), (px0, p1)], md, INK, sw))
     out.append(poly([(pc + pr * .2, p0), (px1, p0), (px1, p1), (pc + pr * .2, p1)], lt, 'none', 0))
     for a in (-52, 0, 52):
-        oc = pc + pr * .78 * math.sin(math.radians(a)); ow = pr * .32 * math.cos(math.radians(a)) + 2
+        oc = pc + pr * .74 * math.sin(math.radians(a)); ow = pr * .25 * math.cos(math.radians(a)) + 1.5
         out.append(path(arch_d(oc - ow, oc + ow, p0 + (p1 - p0) * .38, p0 + (p1 - p0) * .14, p1 - 2), P['open'], INK, 1.5))
     out.append(poly([(px0, p0), (px1, p0), (px1, p1), (px0, p1)], 'none', INK, sw))
     # eave (chhajja), dome, finial
@@ -250,6 +247,12 @@ g.append(path(pan, 'none', '#7F6C6C', 1.8, 'opacity=".8"'))
 # calligraphy frame and inner frame
 g.append(poly([(1148, 806), (mx(1148), 806), (mx(1148), 1210), (1148, 1210)], 'none', P['frame'], 3))
 g.append(poly([(1170, 826), (mx(1170), 826), (mx(1170), 1210), (1170, 1210)], 'none', P['frame'], 2))
+# calligraphy band between the two frames: generated glyph strokes running up, across and down
+cal = []; band = [(1159, 1205), (1159, 816), (mx(1159), 816), (mx(1159), 1205)]
+for k, ((x, y), (tx, ty)) in enumerate(along(band, 64)):
+    nx, ny = -ty, tx; L = 5 + 4 * ((k * 7) % 3)
+    cal.append(((x - nx * L - tx * 3, y - ny * L - ty * 3), (x + nx * L + tx * 3, y + ny * L + ty * 3)))
+g.append(marks(cal, '#6E5D60', 2, 'opacity=".75"'))
 # spandrels with generated floral scrolls
 g.append(poly([(1180, 840), (mx(1180), 840), (mx(1180), 935), (1180, 935)], '#A48C86', P['frame'], 2))
 sp = []
