@@ -212,8 +212,8 @@ def stalk(base, top, branches):
         q = (p[0] + s * L, p[1] - L * .55); out.append(line([p, q], P['stalk'], 3))
         for _ in range(2): out.append(f'<circle cx="{q[0] + R.uniform(-9, 9):.0f}" cy="{q[1] + R.uniform(-7, 4):.0f}" r="{R.uniform(5, 8):.0f}" fill="#8E8F62" stroke="{INK}" stroke-width="1"/>')
     return out
-g += stalk((112, 1625), (98, 1248), 8)
-g += stalk((404, 1625), (418, 1262), 7)
+g += stalk((133, 1625), (148, 1255), 8)
+g += stalk((440, 1625), (448, 1262), 7)
 g.append(line([(1251, 1640), (1252, 1470)], P['stalk'], 4))
 
 # ---------------- foreground: snake-plant blades (hand-read tip / base / width, shape generated) ----------------
