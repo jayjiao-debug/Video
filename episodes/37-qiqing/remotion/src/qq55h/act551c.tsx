@@ -317,7 +317,7 @@ const clipSeg = (cam: Cam, a0: V3, b0: V3): [P, P] | null => { let a = toCam(cam
 	return [scr(cam, a) as P, scr(cam, b) as P]; };
 const CH0 = 28.62;
 const chY = (t: number) => 2 + 4.2 * (t - CH0);   /* the chariot's axle, metres along the road (x = 0) */
-const wallH = (t: number) => 1.6 + [BT(40), BT(41), BT(42), BT(43), BT(44)].reduce((s, tb) => s + 1.3 * ease(seg(t, tb, tb + 0.22)), 0);
+const wallH = (t: number) => 3.6 + [BT(40), BT(41), BT(42), BT(43), BT(44)].reduce((s, tb) => s + 1.0 * ease(seg(t, tb, tb + 0.22)), 0);
 /* ---------- a small depth-sorted 3D renderer for the city (house rules: no clip masks for depth, far → near, layer checks) ----------
    Every solid is one object (a wall segment, a house, the palace, a gate tower, the gatehouse); every billboard is one object
    (a worker, a townsman, a tree, a plume, the chariot). Objects are sorted by their distance from the camera and drawn far → near;
@@ -333,14 +333,25 @@ const SUNC: V3 = vnorm([0.55, -0.62, 0.56]);
 const rgbOf = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const shadeC = (base: string, n: V3, amb = 0.56) => { const [r, g, b] = rgbOf(base), k = amb + 0.62 * Math.max(0, vdot(n, SUNC)); return `rgb(${Math.min(255, r * k) | 0},${Math.min(255, g * k) | 0},${Math.min(255, b * k) | 0})`; };
 const hslHex = (hue: number, l = 0.5) => { const a = 0.75 * Math.min(l, 1 - l), f = (n: number) => { const k = (n + hue / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0'); }; return `#${f(0)}${f(8)}${f(4)}`; };
-type Face = {p: V3[]; col: string; c?: V3};   /* c: the centre of the convex part the face belongs to (for its outward normal) */
+type Face = {p: V3[]; col: string; c?: V3; tex?: 'earth' | 'timber'};   /* c: the centre of the convex part the face belongs to (for its outward normal) */
 type Obj = {ref: V3; key: string; solid?: {faces: Face[]; c: V3; extra?: (cam: Cam) => React.ReactNode}; bb?: (cam: Cam, dbg: string | null) => React.ReactNode};
-const boxFaces = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, col: string, o: {top?: boolean; ends?: boolean; colTop?: string} = {}): Face[] => {
+const boxFaces = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, col: string, o: {top?: boolean; ends?: boolean; colTop?: string; bottom?: boolean; tex?: 'earth' | 'timber'} = {}): Face[] => {
 	const c: V3 = [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2];
-	const F: Face[] = [{p: [[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]], col, c}, {p: [[x1, y1, z0], [x0, y1, z0], [x0, y1, z1], [x1, y1, z1]], col, c}];
-	if (o.ends !== false) F.push({p: [[x0, y1, z0], [x0, y0, z0], [x0, y0, z1], [x0, y1, z1]], col, c}, {p: [[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], col, c});
+	const tex = o.tex;
+	const F: Face[] = [{p: [[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]], col, c, tex}, {p: [[x1, y1, z0], [x0, y1, z0], [x0, y1, z1], [x1, y1, z1]], col, c, tex}];
+	if (o.ends !== false) F.push({p: [[x0, y1, z0], [x0, y0, z0], [x0, y0, z1], [x0, y1, z1]], col, c, tex}, {p: [[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], col, c, tex});
 	if (o.top !== false) F.push({p: [[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], col: o.colTop ?? col, c});
+	if (o.bottom) F.push({p: [[x0, y0, z0], [x0, y1, z0], [x1, y1, z0], [x1, y0, z0]], col, c});
 	return F; };
+/** surface detail on a visible vertical face: rammed-earth layers (slightly uneven horizontal lines) or timber posts */
+const faceTex = (cm: Cam, f: Face, key: string, stroke: string): React.ReactNode => { if (!f.tex) return null; const zs = f.p.map((q) => q[2]), z0 = Math.min(...zs), z1 = Math.max(...zs); if (z1 - z0 < 0.4) return null;
+	const base = f.p.filter((q) => q[2] === z0); if (base.length < 2) return null; const A = base[0], B = base[1], len = Math.hypot(B[0] - A[0], B[1] - A[1]); const out: React.ReactNode[] = [];
+	const line = (a: V3, b: V3, k2: string, w: number, o: number) => { const sg = clipSeg(cm, a, b); if (sg) out.push(<path key={k2} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke={stroke} strokeWidth={w} opacity={o} />); };
+	if (f.tex === 'earth') { const n = Math.floor((z1 - z0) / 0.45); for (let l = 1; l <= n; l++) { const z = z0 + l * 0.45, j1 = (rnd(l, key.length) - 0.5) * 0.14, j2 = (rnd(l + 7, key.length) - 0.5) * 0.14; if (z > z1 - 0.05) break;
+			line([A[0], A[1], z + j1], [B[0], B[1], z + j2], `${key}l${l}`, 1.1, 0.42); } }
+	else { const m = Math.max(1, Math.round(len / 2.6)); for (let i = 0; i <= m; i++) { const u = i / m; line([lerp(A[0], B[0], u), lerp(A[1], B[1], u), z0], [lerp(A[0], B[0], u), lerp(A[1], B[1], u), z1], `${key}p${i}`, 2.2, 0.75); }
+		line([A[0], A[1], z1 - 0.25], [B[0], B[1], z1 - 0.25], `${key}bt`, 2.6, 0.8); line([A[0], A[1], z0 + 0.25], [B[0], B[1], z0 + 0.25], `${key}bb`, 2.6, 0.8); }
+	return <g key={`${key}tx`}>{out}</g>; };
 /** a pitched roof over [x0,x1]×[y0,y1] at eave height zE: gable (hr = 0) or hip (hr > 0), ridge along x, eaves e, rise rh */
 const roofFaces = (x0: number, x1: number, y0: number, y1: number, zE: number, rh: number, e: number, hr: number, col: string): Face[] => {
 	const X0 = x0 - e, X1 = x1 + e, Y0 = y0 - e, Y1 = y1 + e, ym = (y0 + y1) / 2, zR = zE + rh, r0 = X0 + hr, r1 = X1 - hr, c: V3 = [(x0 + x1) / 2, ym, zE + rh / 3];
@@ -349,8 +360,8 @@ const roofFaces = (x0: number, x1: number, y0: number, y1: number, zE: number, r
 		{p: [[X0, Y0, zE], [X0, Y1, zE], [X1, Y1, zE], [X1, Y0, zE]], col: '#2A1C12', c}]; };
 const SC: React.FC<{t: number}> = ({t}) => { const dbg = React.useContext(DepthDebug), a = 24.09, cy = chY(t), hh = wallH(t), dr = t - a;
 	const K: [number, {p: V3; g: V3; f: number}][] = [
-		[a, {p: [-54 + 4 * dr, -7, hh + 2.4], g: [-46 + 4 * dr, 6, hh + 1.1], f: 1250}],
-		[24.95, {p: [-54 + 4 * 0.86, -7, hh + 2.4], g: [-46 + 4 * 0.86, 6, hh + 1.1], f: 1250}],
+		[a, {p: [-86 + 4 * dr, -8, hh + 1.3], g: [-52 + 4 * dr, 5, hh - 0.9], f: 1250}],
+		[24.95, {p: [-86 + 4 * 0.86, -8, hh + 1.3], g: [-52 + 4 * 0.86, 5, hh - 0.9], f: 1250}],
 		[26.6, {p: [-62, -96, 40], g: [0, 46, 2], f: 1650}],
 		[CH0, {p: [1.2, cy - 30, 5], g: [0, cy + 30, 6], f: 1500}]];
 	const mixK = (x: {p: V3; g: V3; f: number}, y: {p: V3; g: V3; f: number}, v: number) => ({p: [lerp(x.p[0], y.p[0], v), lerp(x.p[1], y.p[1], v), lerp(x.p[2], y.p[2], v)] as V3, g: [lerp(x.g[0], y.g[0], v), lerp(x.g[1], y.g[1], v), lerp(x.g[2], y.g[2], v)] as V3, f: lerp(x.f, y.f, v)});
@@ -385,31 +396,42 @@ const SC: React.FC<{t: number}> = ({t}) => { const dbg = React.useContext(DepthD
 	const EARTH = '#C29A62';
 	const wallRun = (x0: number, x1: number, y0: number, y1: number, n: number, key: string, crew: number) => { for (let i = 0; i < n; i++) {
 		const along = Math.abs(x1 - x0) > Math.abs(y1 - y0), sx0 = along ? lerp(x0, x1, i / n) : x0, sx1 = along ? lerp(x0, x1, (i + 1) / n) : x1, sy0 = along ? y0 : lerp(y0, y1, i / n), sy1 = along ? y1 : lerp(y0, y1, (i + 1) / n);
-		const faces = along ? boxFaces(sx0, sx1, sy0, sy1, 0, h, EARTH, {ends: false}) : boxFaces(sx0, sx1, sy0, sy1, 0, h, EARTH);
-		if (along && i === 0) faces.push({p: [[sx0, sy1, 0], [sx0, sy0, 0], [sx0, sy0, h], [sx0, sy1, h]], col: EARTH});
-		if (along && i === n - 1) faces.push({p: [[sx1, sy0, 0], [sx1, sy1, 0], [sx1, sy1, h], [sx1, sy0, h]], col: EARTH});
+		const faces = along ? boxFaces(sx0, sx1, sy0, sy1, 0, h, EARTH, {ends: false, tex: 'earth'}) : boxFaces(sx0, sx1, sy0, sy1, 0, h, EARTH, {tex: 'earth'});
+		if (along && i === 0) faces.push({p: [[sx0, sy1, 0], [sx0, sy0, 0], [sx0, sy0, h], [sx0, sy1, h]], col: EARTH, c: [(sx0 + sx1) / 2, (sy0 + sy1) / 2, h / 2], tex: 'earth'});
+		if (along && i === n - 1) faces.push({p: [[sx1, sy0, 0], [sx1, sy1, 0], [sx1, sy1, h], [sx1, sy0, h]], col: EARTH, c: [(sx0 + sx1) / 2, (sy0 + sy1) / 2, h / 2], tex: 'earth'});
+		/* the timber form boards (版) along both edges of the top: the rammers work between them */
+		if (along) faces.push(...boxFaces(sx0, sx1, sy0, sy0 + 0.35, h, h + 0.55, '#6A4A2C', {tex: 'timber'}), ...boxFaces(sx0, sx1, sy1 - 0.35, sy1, h, h + 0.55, '#6A4A2C', {tex: 'timber'}));
 		const wk: V3[] = Array.from({length: crew}, (_, m) => [lerp(sx0, sx1, (m + 0.5) / crew), lerp(sy0, sy1, (m + 0.5) / crew), h]);
 		solid(`${key}${i}`, faces, [(sx0 + sx1) / 2, (sy0 + sy1) / 2, h / 2], (cm) => <>
-			{/* rammed layers on the outer face */}
-			{along && cm.p[1] < sy0 && Array.from({length: Math.floor(h / 0.5)}, (_, l) => { const sg = clipSeg(cm, [sx0, sy0 - 0.02, (l + 1) * 0.5], [sx1, sy0 - 0.02, (l + 1) * 0.5]); return sg ? <path key={l} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#5A3E24" strokeWidth={1} opacity={0.45} /> : null; })}
 			{wk.map((wp, m) => <g key={m}>{worker(wp, i * 7 + m, `${key}${i}`)(cm, dbg ? '#FF00FF' : null)}</g>)}</>); } };
-	wallRun(-90, -15, 0, 12, 7, 'wfl', 2); wallRun(15, 90, 0, 12, 7, 'wfr', 2);
+	wallRun(-90, -17, 0, 12, 7, 'wfl', 2); wallRun(17, 90, 0, 12, 7, 'wfr', 2);
 	wallRun(-90, -78, 12, 150, 10, 'wsl', 1); wallRun(78, 90, 12, 150, 10, 'wsr', 1); wallRun(-90, 90, 138, 150, 14, 'wbk', 1);
-	/* the gate: two rammed-earth towers, a timber gatehouse on them (built on beat 45), its tiled hip roof (beat 46) */
-	const TW = '#B88E58', gh = pop(BT(45)), gr = pop(BT(46)), zt = h + 1.2;
-	solid('gtl', boxFaces(-16, -6, -5, 15, 0, zt, TW)); solid('gtr', boxFaces(6, 16, -5, 15, 0, zt, TW));
-	if (gh > 0.01) solid('gh', [...boxFaces(-16, 16, -4, 14, zt, zt + 3.6 * gh, '#5A3C24', {top: gr < 0.01})], [0, 5, zt + 1.8], (cm) => {
-		/* posts on the gatehouse front */ return cm.p[1] < -4 ? Array.from({length: 7}, (_, i) => { const sg = clipSeg(cm, [-15 + i * 5, -4.02, zt], [-15 + i * 5, -4.02, zt + 3.6 * gh]); return sg ? <path key={i} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#2A180C" strokeWidth={Math.max(1.5, cm.f / Math.max(5, Math.hypot(cm.p[0], cm.p[1] + 4)) * 0.4)} /> : null; }) : null; });
-	if (gr > 0.01) solid('ghr', roofFaces(-16, 16, -4, 14, zt + 3.6, 4.2 * gr, 2.2, 5, '#77706A'), [0, 5, zt + 3.6 + 1.6]);
+	/* the gate: ONE solid, built in order so it is closed from every camera in the move: two rammed-earth towers (closed boxes
+	   with tops), a timber deck spanning the opening (its underside is the passage ceiling), the gatehouse standing on them
+	   (beat 45), its tiled hip roof (beat 46), two banners on the tower tops. Its faces are drawn in that order. */
+	const TW = '#B88E58', gh = pop(BT(45)), gr = pop(BT(46)), zt = h + 1.2, dk0 = zt - 1.6, ghT = zt + 3.8 * gh;
+	{ const gf: Face[] = [...boxFaces(-17, -6, -5, 15, 0, zt, TW, {tex: 'earth'}), ...boxFaces(6, 17, -5, 15, 0, zt, TW, {tex: 'earth'}),
+		...boxFaces(-6, 6, -5, 15, dk0, zt, '#4A3020', {bottom: true, ends: false, tex: 'timber'})];
+	if (gh > 0.01) gf.push(...boxFaces(-15.5, 15.5, -3.5, 13.5, zt, ghT, '#5E4028', {top: gr < 0.01, tex: 'timber'}));
+	if (gr > 0.01) gf.push(...roofFaces(-15.5, 15.5, -3.5, 13.5, ghT, 4.4 * gr, 2.4, 5.5, '#77706A'));
+	solid('gate', gf, [0, 5, zt * 0.6], (cm) => { if (dbg) return null; const ban = (x: number, i: number) => { const b0 = proj(cm, [x, -4.6, zt]) as Q, b1 = proj(cm, [x, -4.6, zt + 8]) as Q; if (b0[2] < 1 || b1[2] < 1) return null; const k = cm.f / b1[2];
+			const pts: P[] = Array.from({length: 8}, (_, m) => { const u = m / 7, wv = Math.sin(u * 4 - t * 4 + i * 2) * 0.35 * u * k; return [b1[0] + 0.15 * k + wv, b1[1] + u * 4.2 * k] as P; });
+			const pts2 = pts.map(([px, py], m) => [px + (1.3 - 0.3 * m / 7) * k, py] as P);
+			return <g key={i}><path d={`M${f1(b0[0])},${f1(b0[1])} L${f1(b1[0])},${f1(b1[1])}`} stroke="#24160C" strokeWidth={Math.max(1.5, 0.16 * k)} />
+				<path d={sm([...pts, ...pts2.reverse()])} fill="#8E2418" /><path d={sm(pts2.reverse(), false)} fill="none" stroke="#FFC890" strokeWidth={1.2} opacity={0.45} /></g>; };
+		return <>{ban(-15, 0)}{ban(15, 1)}</>; }); }
 	/* the palace: a rammed-earth platform (台基), steps, a timber hall with a big thatched hip roof */
 	const pp = pop(BT(41)), ph2 = pop(BT(43)), proof = pop(BT(44));
-	if (pp > 0.01) { solid('pal', boxFaces(-30, 30, 70, 108, 0, 3.4 * pp, '#C8A06A')); solid('palst', boxFaces(-7, 7, 63, 70, 0, 1.7 * pp, '#B89060')); }
+	if (pp > 0.01) { solid('pal', boxFaces(-30, 30, 70, 108, 0, 3.4 * pp, '#C8A06A', {tex: 'earth'})); solid('palst', boxFaces(-7, 7, 63, 70, 0, 1.7 * pp, '#B89060')); }
 	if (ph2 > 0.01) solid('palh', boxFaces(-20, 20, 78, 100, 3.4, 3.4 + 5.6 * ph2, '#4E3420', {top: proof < 0.01}), undefined, (cm) => cm.p[1] < 78 ? Array.from({length: 9}, (_, i) => { const sg = clipSeg(cm, [-20 + i * 5, 77.98, 3.4], [-20 + i * 5, 77.98, 3.4 + 5.6 * ph2]); return sg ? <path key={i} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#C89A60" strokeWidth={1.4} opacity={0.6} /> : null; }) : null);
 	if (proof > 0.01) solid('palr', roofFaces(-20, 20, 78, 100, 9, 6.5 * proof, 2.8, 7, '#A88A58'), [0, 89, 11]);
 	/* houses in rows along the streets (each row rises on a beat), thatch or early tile */
 	const ROOFS = ['#C2A672', '#B0966A', '#8E8A84', '#BA9C66'];
-	const house = (cx: number, cy2: number, r: number, i: number) => { const g = pop(BT(41) + 0.28 * r); if (g < 0.01) return; const x0 = cx - 4, x1 = cx + 4, y0 = cy2 - 3, y1 = cy2 + 3, wz = 2.6 * g;
-		solid(`hs${r}_${i}`, [...boxFaces(x0, x1, y0, y1, 0, wz, '#B89466', {top: false}), ...roofFaces(x0, x1, y0, y1, wz, 2.3 * g, 0.7, 0, ROOFS[(i + r) % 4])], [cx, cy2, 2]); };
+	const house = (cx: number, cy2: number, r: number, i: number) => { const u0 = seg(t, BT(41) + 0.28 * r + 0.03 * (i % 4), BT(41) + 0.28 * r + 0.03 * (i % 4) + 0.3); if (u0 <= 0.01) return;
+		const g = 1 + 2.2 * Math.pow(u0 - 1, 3) + 1.2 * Math.pow(u0 - 1, 2);   /* ease-out with a small overshoot: a finished house scaled up from the ground */
+		const S = (f: Face): Face => ({...f, p: f.p.map(([x, y, z]) => [cx + (x - cx) * g, cy2 + (y - cy2) * g, z * g] as V3), c: f.c ? [cx + (f.c[0] - cx) * g, cy2 + (f.c[1] - cy2) * g, f.c[2] * g] : undefined});
+		const x0 = cx - 4, x1 = cx + 4, y0 = cy2 - 3, y1 = cy2 + 3;
+		solid(`hs${r}_${i}`, [...boxFaces(x0, x1, y0, y1, 0, 2.6, '#B89466', {top: false}), ...roofFaces(x0, x1, y0, y1, 2.6, 2.3, 0.7, 0, ROOFS[(i + r) % 4])].map(S), [cx, cy2, 2 * g]); };
 	const xs = [-72, -60, -48, -36, -24, -12, 12, 24, 36, 48, 60, 72];
 	[20, 33, 46].forEach((yy, r) => xs.forEach((x, i) => house(x, yy, r, i)));
 	[[-72, 80], [-60, 80], [-48, 80], [48, 80], [60, 80], [72, 80], [-72, 95], [-60, 95], [-48, 95], [48, 95], [60, 95], [72, 95]].forEach(([x, yy], i) => house(x, yy, 3, i));
@@ -445,7 +467,7 @@ const SC: React.FC<{t: number}> = ({t}) => { const dbg = React.useContext(DepthD
 		if (o.bb) return <g key={o.key}>{o.bb(cam, dc)}</g>;
 		const sd = o.solid!; return <g key={o.key}>{sd.faces.map((f, fi) => { const n0 = vnorm(vcross(vsub(f.p[1], f.p[0]), vsub(f.p[2], f.p[0]))), fc = vavg(f.p), n = vdot(n0, vsub(fc, f.c ?? sd.c)) < 0 ? [-n0[0], -n0[1], -n0[2]] as V3 : n0;
 			if (vdot(n, vsub(cam.p, fc)) <= 0) return null; const qs = clipProj(cam, f.p); if (!qs) return null; const fill = shadeC(dc ?? f.col, n, dc ? 0.75 : 0.5);
-			return <path key={fi} d={pth(qs)} fill={fill} stroke={fill} strokeWidth={0.8} strokeLinejoin="round" />; })}{sd.extra?.(cam)}</g>; });
+			return <g key={fi}><path d={pth(qs)} fill={fill} stroke={fill} strokeWidth={0.8} strokeLinejoin="round" />{!dc && Math.abs(n[2]) < 0.2 && faceTex(cam, f, `${o.key}f${fi}`, f.tex === 'earth' ? '#5A3E24' : '#22140A')}</g>; })}{sd.extra?.(cam)}</g>; });
 	const horizon = pr([0, 4000, 0]);
 	return <Shell t={t} id="C" bg="#3A4A62" vig={0.45}>
 		<defs><linearGradient id="aCsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#24406A" /><stop offset="0.55" stopColor="#7A8EA8" /><stop offset="0.82" stopColor="#F0C890" /><stop offset="1" stopColor="#FFD8A0" /></linearGradient>

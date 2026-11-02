@@ -33,7 +33,7 @@ export const ZUN = {
     and the horns, strongest away from the key; 'rimplus' = 1B+: the rim, and the 尊 made the brightest value in frame (a pool
     of key light on it, a lifted specular, a soft darkening ellipse just behind it). The rim and 1B+ are off in the fresh /
     molten casting and while 中 / 或 glow gold. */
-export const ZUN_LOOK: 'v21' | 'verdigris' | 'rim' | 'rimplus' = 'rimplus';
+export const ZUN_LOOK: 'v21' | 'verdigris' | 'rim' | 'rimplus' = 'rim';
 const D2R = Math.PI / 180;
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
