@@ -68,13 +68,21 @@ const stepFeet = (t: number, n0: number, f0: number, steps: Step[]) => { let xN 
 	return {fN: [xN, -8 - lN] as P, fF: [xF, -8 - lF] as P, mid: (xN + xF) / 2, bob: act}; };
 
 /* ---------- shared bits ---------- */
-const Shell: React.FC<{t: number; id: string; bg: string; vig?: number; measure?: MBox | null; children: React.ReactNode; top?: React.ReactNode}> = ({t, id, bg, vig = 0.6, measure, children, top}) =>
-	<AbsoluteFill style={{background: bg}}>
+/** layer check (house rule 3): with LayerCheck on, every <Lyr> is drawn as a flat silhouette tinted by its depth d (0 = far, blue →
+    green → 1 = the action plane, red; > 1 = foreground, magenta), in draw order, so any layer covering a nearer one shows */
+export const LayerCheck = React.createContext(false);
+const depthCol = (d: number) => d > 1.05 ? '#FF30C0' : `hsl(${Math.round(230 * (1 - cl(d)))}, 85%, ${Math.round(45 + 10 * cl(d))}%)`;
+const Lyr: React.FC<{d: number; id: string; children: React.ReactNode}> = ({d, id, children}) => { const on = React.useContext(LayerCheck);
+	if (!on) return <>{children}</>;
+	return <g><defs><filter id={`lc_${id}`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB"><feFlood floodColor={depthCol(d)} floodOpacity={0.9} /><feComposite in2="SourceAlpha" operator="in" /></filter></defs>
+		<g filter={`url(#lc_${id})`}>{children}</g></g>; };
+const Shell: React.FC<{t: number; id: string; bg: string; vig?: number; measure?: MBox | null; children: React.ReactNode; top?: React.ReactNode}> = ({t, id, bg, vig = 0.6, measure, children, top}) => { const chk = React.useContext(LayerCheck);
+	return <AbsoluteFill style={{background: chk ? '#000' : bg}}>
 		<svg width={W} height={H} style={{position: 'absolute'}}>{children}</svg>
-		{top}
-		<svg width={W} height={H} style={{position: 'absolute'}}><Vig id={`v3${id}`} a={vig} /></svg>
-		<FilmOv2 t={t} c={card2(id)} measure={measure} />
-	</AbsoluteFill>;
+		{!chk && top}
+		{!chk && <svg width={W} height={H} style={{position: 'absolute'}}><Vig id={`v3${id}`} a={vig} /></svg>}
+		{!chk && <FilmOv2 t={t} c={card2(id)} measure={measure} />}
+	</AbsoluteFill>; };
 /** rain streaks falling through a box, wrapping */
 const Rain: React.FC<{t: number; n: number; seed: number; L: number; v: number; sl: number; w: number; c: string; o: number; x0?: number; x1?: number; y0?: number; y1?: number}> = ({t, n, seed, L, v, sl, w, c, o, x0 = -160, x1 = W + 160, y0 = -80, y1 = H + 40}) => {
 	const h = y1 - y0; let d = '';
@@ -206,33 +214,33 @@ const SN: React.FC<{t: number}> = ({t}) => { const u = t - 73.9, {cam, el, tl, G
 		return <ellipse key={`${i}_${j}`} cx={f1(p[0])} cy={f1(p[1])} rx={f1(r * 1.3)} ry={f1(r * 0.6)} fill={j % 3 ? '#3A2C1E' : '#B89A70'} opacity={0.55} />; }));
 	const root = (s0: number, k: number) => { const pts: P[] = Array.from({length: 9}, (_, i) => P2(wpN(s0 + 6 * Math.sin(i * 1.3 + k) + i * 2, 0, G - 2 - i * 9 * seg(u, 2.2 + k * 0.3, 4.4))));
 		return <path key={k} d={sm(pts, false)} stroke="#20160E" strokeWidth={3.2 - k * 0.6} fill="none" strokeLinecap="round" opacity={eraOn} />; };
+	const ground = <g>{above && <path d={pth([P2(wpN(-1500, 0, G)), P2(wpN(1500, 0, G)), P2(wpN(1500, 6000, G)), P2(wpN(-1500, 6000, G))])} fill="#4E3C28" />}
+		{front > 0 && above && <path d={pth([P2(wpN(-1500, -150, G)), P2(wpN(1500, -150, G)), P2(wpN(1500, 2, G)), P2(wpN(-1500, 2, G))])} fill="#4E3C28" opacity={front} />}
+		{above && specks}</g>;
 	const era = ERAS.map((E, i) => { const a = ERA_T[i], b = ERA_T[i + 1] ?? 99, o = (i === 0 ? seg(t, a - 0.32, a - 0.02) : seg(t, a - 0.07, a + 0.03)) * (1 - 0.8 * seg(t, b - 0.07, b + 0.05)) * (i === 0 ? 1 : 1);
 		return o > 0.01 ? <g key={i} fill="#0E0C0E" opacity={o * eraOn * (i === ERAS.length - 1 ? 1 : 0.92)}>{i === 4 ? <EraQing g={eraY} t={t} /> : <E g={eraY} t={t} />}</g> : null; });
 	const dust = ERA_T.map((a, i) => { const v = (t - a) / 0.5; if (v < 0 || v > 1) return null; return <g key={i} opacity={(1 - v) * 0.6 * eraOn}>{Array.from({length: 14}, (_, j) => <circle key={j} cx={300 + rnd(i * 20 + j, 41) * 1400} cy={gy - 6 - v * 30 * rnd(i * 20 + j, 42)} r={4 + 10 * v} fill="#C8A878" opacity={0.4} />)}</g>; });
 	return <Shell t={t} id="N" bg="#1A120C" vig={0.55}>
 		<defs><linearGradient id="nsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={skyT} /><stop offset="1" stopColor={skyB} /></linearGradient>
 			<radialGradient id="ncov"><stop offset="0" stopColor="#5E4832" /><stop offset="0.75" stopColor="#4A3826" /><stop offset="1" stopColor="#4A3826" stopOpacity={0} /></radialGradient>
-			<clipPath id="ncut"><path d={pth(cutPoly)} /></clipPath><clipPath id="nlip"><path d={pth(lip)} /></clipPath>
+			
 			<filter id="nbl" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation={3} /></filter></defs>
 		<rect width={W} height={H} fill="#24180F" />
 		{skyOn > 0 && <g opacity={skyOn}><rect width={W} height={H} fill="url(#nsky)" />
 			<g stroke="#DDE6FF" strokeOpacity={0.4 * (1 - dn)} strokeWidth={1.6} fill="none">{Array.from({length: 26}, (_, i) => { const r = 120 + rnd(i, 3) * 700, a0 = 200 + rnd(i, 4) * 40 + (t - 75) * 30; return <path key={i} d={`M${f1(300 + r * Math.cos(deg(a0)))},${f1(-60 - r * Math.sin(deg(a0)))} A${f1(r)},${f1(r)} 0 0 0 ${f1(300 + r * Math.cos(deg(a0 + 14)))},${f1(-60 - r * Math.sin(deg(a0 + 14)))}`} />; })}</g>
 			<g filter="url(#nbl)" fill="none" stroke="#FFE6A8" opacity={0.3 + 0.7 * dn}>{[0, 1, 2, 3].map((i) => <path key={i} d={`M${1000 + i * 30},${f1(gy)} Q${1450 + i * 20},${-80 + i * 34} 1940,${f1(gy - 40 + i * 10)}`} strokeWidth={5 - i} strokeOpacity={0.4 - i * 0.07} />)}</g></g>}
-		{above && <path d={pth([P2(wpN(-1500, 0, G)), P2(wpN(1500, 0, G)), P2(wpN(1500, 6000, G)), P2(wpN(-1500, 6000, G))])} fill="#4E3C28" />}
-		{front > 0 && above && <path d={pth([P2(wpN(-1500, -150, G)), P2(wpN(1500, -150, G)), P2(wpN(1500, 2, G)), P2(wpN(-1500, 2, G))])} fill="#4E3C28" opacity={front} />}
-		{above && specks}
+		{!clipOn && ground}
 		<g opacity={1 - front}>{bands}{stones}{depBits}{falling}<Glow x={P2([0, 0, 19.4])[0]} y={P2([0, 0, 19.4])[1]} r={260} c="#140C06" o={0.55 * (1 - front)} id="npk" sy={1.1} /></g>
-		<g opacity={1 - front}><path d={pth(cutPoly.slice(0, 2))} stroke="#C8A878" strokeWidth={2.4} strokeOpacity={0.5} /></g>
 		{[-260, 150, 420].map((s, k) => root(s, k))}
+			<Zun cam={cam} light={L} id="nz" patina={patina} fresh={fresh} shadow={false} inscription={zf < 13.5} />
+			{zf > 12.5 && <g><path d={pth(fillD)} fill="#3E2C1C" /><path d={pth(fillD)} fill="none" stroke="#8A6A48" strokeWidth={2} strokeOpacity={0.4} />
+				{Array.from({length: 40}, (_, i) => { const a = rnd(i, 61) * 2 * PI, r = rnd(i, 62) * 12, p = P2([r * Math.cos(a), r * Math.sin(a), Math.min(38.6, zf) + 0.2]); return <circle key={i} cx={f1(p[0])} cy={f1(p[1])} r={2 + 3 * rnd(i, 63)} fill={i % 2 ? '#22160E' : '#6A5038'} opacity={0.7} />; })}</g>}
+		{clipOn && ground}
+		<g opacity={1 - front}><path d={pth(cutPoly.slice(0, 2))} stroke="#C8A878" strokeWidth={2.4} strokeOpacity={0.5} /></g>
 		{era}
 		{/* grass on the cut edge (the seasons smear along it) */}
 		{eraOn > 0 && <g opacity={eraOn}>{Array.from({length: 80}, (_, i) => { const x = 40 + i * 24 + rnd(i, 5) * 10, y = lerp(gL[1], gR[1], (x - gL[0]) / (gR[0] - gL[0] || 1)); return <path key={i} d={`M${f1(x)},${f1(y)} l${f1(-2 + rnd(i, 6) * 4)},${f1(-6 - rnd(i, 7) * 12 * (0.6 + 0.4 * dn))}`} stroke={mixC('#5A6A3A', '#B89A5A', 0.5 + 0.5 * Math.sin(t * 5 + i))} strokeWidth={2.2} />; })}</g>}
 		{dust}
-		<g clipPath={clipOn ? 'url(#ncut)' : undefined}>
-			<Zun cam={cam} light={L} id="nz" patina={patina} fresh={fresh} shadow={false} inscription={zf < 13.5} />
-			{zf > 12.5 && <g clipPath="url(#nlip)"><path d={pth(fillD)} fill="#3E2C1C" /><path d={pth(fillD)} fill="none" stroke="#8A6A48" strokeWidth={2} strokeOpacity={0.4} />
-				{Array.from({length: 40}, (_, i) => { const a = rnd(i, 61) * 2 * PI, r = rnd(i, 62) * 12, p = P2([r * Math.cos(a), r * Math.sin(a), Math.min(38.6, zf) + 0.2]); return <circle key={i} cx={f1(p[0])} cy={f1(p[1])} r={2 + 3 * rnd(i, 63)} fill={i % 2 ? '#22160E' : '#6A5038'} opacity={0.7} />; })}</g>}
-		</g>
 		{kc > 0 && G > 36 && <g opacity={kc * seg(G, 36, 44)}><path d={sm(cover)} fill="url(#ncov)" />{Array.from({length: 50}, (_, i) => { const a = rnd(i, 71) * 2 * PI, r = rnd(i, 72) * 22, p = P2([r * Math.cos(a), r * Math.sin(a), G + 1]); return <circle key={i} cx={f1(p[0])} cy={f1(p[1])} r={3 + 6 * rnd(i, 73)} fill={i % 2 ? '#24180F' : '#6A5038'} opacity={0.7} />; })}</g>}
 		{clumps}
 	</Shell>; };
@@ -272,7 +280,7 @@ const Cliff: React.FC<{fl: number; slab: number; t: number; lamp?: number}> = ({
 			<path d={sm(SLAB.map(([x, y]) => [x + (x - 1280) * -0.05, y + 10] as P))} fill="url(#oscar)" />
 			{Array.from({length: 12}, (_, i) => <path key={i} d={`M${1126 + i * 28},${380 + rnd(i, 31) * 50} L${1122 + i * 28 + rnd(i, 32) * 8},${640 + rnd(i, 33) * 190}`} stroke={c('#2A2018', '#9A7650')} strokeWidth={1.6 + 1.6 * rnd(i, 34)} opacity={0.55} />)}</g>}
 		{/* the crack; then the slab tilts out from its foot, breaks in three and drops (clipped at the ground) */}
-		{slab > 0 && <g clipPath="url(#oGround)">
+		{slab > 0 && <g>
 			<defs><clipPath id="oslabS"><path d={sm(SLAB)} /></clipPath>{[0, 1, 2].map((j) => <clipPath key={j} id={`oslab${j}`}><rect x={1000} y={[300, 520, 680][j]} width={560} height={[220, 160, 200][j]} /></clipPath>)}</defs>
 			{[0, 1, 2].map((j) => { const th = deg(32) * Math.pow(seg(t, T_SLUMP, T_SLUMP + 0.34), 1.6) + deg(20) * seg(t, T_SLUMP + 0.34, T_SLUMP + 0.75), ct = Math.cos(th);
 				const fall = seg(t, T_SLUMP + 0.3 + 0.05 * (2 - j), T_SLUMP + 0.78 + 0.03 * j), dy = 520 * fall * fall * (0.8 + 0.2 * j), rr = [14, -9, 6][j] * fall, cy = [410, 600, 760][j];
@@ -321,7 +329,6 @@ const SO: React.FC<{t: number}> = ({t}) => { const fl = flashAt(t), open = es(se
 	const spray = Array.from({length: 34}, (_, i) => { const v = (t - T_SLUMP - 0.6 - rnd(i, 51) * 0.12) / 0.75; if (v < 0 || v > 1) return null; const a = PI * (0.1 + 0.8 * rnd(i, 52)), sp = 240 + 260 * rnd(i, 53);
 		const x = 1280 + (rnd(i, 54) - 0.5) * 320 + Math.cos(a) * sp * v * (rnd(i, 55) > 0.5 ? 1 : -1), y = 846 - Math.sin(a) * sp * v + 900 * v * v; return <path key={i} d={blob(x, y, 5 + 9 * rnd(i, 56), i)} fill={mixC('#2A2018', '#8A6A48', fl)} />; });
 	return <Shell t={t} id="O" bg="#07080C" vig={0.62}>
-		<defs><clipPath id="oGround"><rect x={-200} y={-200} width={2400} height={1050} /></clipPath></defs>
 		<g transform={layerT(cam, 0.3)}><rect x={-300} y={-300} width={2600} height={1000} fill={sky} />
 			{Array.from({length: 9}, (_, i) => <ellipse key={i} cx={-100 + i * 260 + rnd(i, 3) * 80} cy={40 + rnd(i, 4) * 70} rx={220} ry={60} fill={mixC('#06080E', '#5A6484', fl)} opacity={0.7} />)}
 			{fl > 0.5 && t < 79 && <path d="M1330,-20 L1310,30 L1352,58 L1322,110 L1366,96 L1342,170" stroke="#F4F6FF" strokeWidth={4} fill="none" opacity={fl} />}</g>
@@ -362,12 +369,12 @@ const zunP = (t: number, sc: (q: P) => P, hugMid: P): {m: P; roll: number} => { 
 	if (a <= 0) return {m: P_IN, roll: 14}; const H = sc(hugMid), arc: P = [lerp(P_IN[0], H[0], e), lerp(P_IN[1], H[1], e) - 40 * Math.sin(PI * e)];
 	return {m: arc, roll: lerp(14, 6, e)}; };
 const chenP = (t: number) => {
-	const crouchFK: FK = {hip: [-4, -46], lean: 30, neck: 2, tilt: -12, fN: [34, -8], fF: [-32, -6], toeF: -1, hN: [30, -40], hF: [22, -46]};
-	const inFK: FK = {...crouchFK, lean: 44, tilt: -4, hN: [44, -58], hF: [40, -66]};
+	const crouchFK: FK = {hip: [-4, -46], lean: 30, neck: 4, tilt: 44, fN: [34, -8], fF: [-32, -6], toeF: -1, hN: [30, -40], hF: [22, -46]};
+	const inFK: FK = {...crouchFK, lean: 44, tilt: 56, hN: [44, -58], hF: [40, -66]};
 	const standFK: FK = {hip: [16, -90], lean: -9, neck: 10, tilt: 14, fN: [34, -8], fF: [10, -8], toeF: 1, hN: [46, -98], hF: [44, -84]};
 	const standLamp: FK = {hip: [-6, -92], lean: 4, neck: 4, tilt: -6, fN: [8, -8], fF: [-18, -8], hN: [22, -128], hF: [-8, -84]};
 	const swingLamp: FK = {...standLamp, lean: 10, tilt: -2, hN: [44, -122], hF: [-4, -86]};
-	const lampDown: FK = {...crouchFK, lean: 40, hN: [30, -12], hF: [24, -50]};
+	const lampDown: FK = {...crouchFK, lean: 40, tilt: 54, hN: [30, -12], hF: [24, -50]};
 	let fk = track([[82.96, standLamp], [83.42, swingLamp], [83.62, swingLamp], [84.02, lampDown], [84.2, inFK]], t, mixFK, es);
 	if (t > 83.6 && t < 84.05) { const k = seg(t, 83.62, 84.02); fk = {...fk, fN: [lerp(8, 34, es(k)), -8 - 9 * Math.sin(PI * k)], fF: [lerp(-18, -32, es(k)), -8 + 2 * es(k)], toeF: k > 0.5 ? -1 : 1}; }
 	/* three scrapes: one hand reaches into the face and drags the mud down and back; they alternate */
@@ -412,7 +419,7 @@ const SP: React.FC<{t: number}> = ({t}) => { const sc = toS(P_X, P_Y, P_K), s = 
 		<g transform={layerT(cam, 1)}>
 			<PFace />
 			{/* the hole: dark inside; the 尊 in it; the face over it except the hole */}
-			<path d={hole} fill="url(#pcav)" /><path d={hole} fill="none" stroke="#1E140C" strokeWidth={5} />
+			<path d={hole} fill="url(#pcav)" opacity={1 - 0.55 * es(seg(t, T_FREE, T_UP))} /><path d={hole} fill="none" stroke="#1E140C" strokeWidth={5} opacity={1 - 0.5 * es(seg(t, T_FREE, T_UP))} />
 			{!out && <Zun cam={zcam} light={rotL(LP, 34)} id="pz" patina={1} shadow={false} inscription={false} />}
 			<g mask="url(#phole)"><PFace /></g>
 			<path d={hole} fill="none" stroke="#E8C898" strokeWidth={2} strokeOpacity={0.35} transform="translate(-2 -3)" />
@@ -448,13 +455,13 @@ const T_POUR = beat(154), T_TL = BAR(39);   /* 88.62, 89.75 */
 const chenQ = (t: number) => {
 	const sackOn: FK = {hip: [0, -90], lean: 4, neck: 6, tilt: 10, fN: [14, -8], fF: [-16, -8], hN: [-14, -104], hF: [-22, -100]};
 	const K: [number, FK][] = [
-		[87.49, {hip: [2, -66], lean: 58, neck: 0, tilt: 8, fN: [14, -8], fF: [-16, -8], hN: [49, -37], hF: [71, -42]}],
-		[87.95, {hip: [2, -58], lean: 66, neck: 0, tilt: 8, fN: [14, -8], fF: [-16, -8], hN: [49, -22], hF: [71, -26]}],
-		[88.1, {hip: [0, -62], lean: 60, neck: 2, tilt: 6, fN: [14, -8], fF: [-16, -8], hN: [44, -34], hF: [56, -40]}],
+		[87.49, {hip: [2, -66], lean: 58, neck: 4, tilt: 70, fN: [14, -8], fF: [-16, -8], hN: [49, -37], hF: [71, -42]}],
+		[87.95, {hip: [2, -58], lean: 66, neck: 4, tilt: 78, fN: [14, -8], fF: [-16, -8], hN: [49, -22], hF: [71, -26]}],
+		[88.1, {hip: [0, -62], lean: 60, neck: 4, tilt: 70, fN: [14, -8], fF: [-16, -8], hN: [44, -34], hF: [56, -40]}],
 		[88.34, sackOn],
 		[88.6, {hip: [4, -88], lean: 22, neck: 4, tilt: 18, fN: [14, -8], fF: [-16, -8], hN: [48, -78], hF: [20, -100]}],
 		[89.42, {hip: [4, -87], lean: 26, neck: 4, tilt: 22, fN: [14, -8], fF: [-16, -8], hN: [50, -70], hF: [16, -110]}],
-		[89.78, {hip: [2, -78], lean: 40, neck: 2, tilt: 14, fN: [14, -8], fF: [-16, -8], hN: [34, -40], hF: [26, -60]}],
+		[89.78, {hip: [2, -78], lean: 40, neck: 4, tilt: 50, fN: [14, -8], fF: [-16, -8], hN: [34, -40], hF: [26, -60]}],
 		[90.1, {hip: [0, -90], lean: 6, neck: 6, tilt: 6, fN: [14, -8], fF: [-16, -8], hN: [10, -66], hF: [4, -68]}]];
 	return pose(track(K, t, mixFK, es)); };
 /** the sack: bottom B and mouth M (body-local); on the bench, lifted, pouring, set down against the 尊 */
@@ -533,21 +540,45 @@ const gaitR = (t: number) => { const Tc = 2 * BTd, ft = (ph: number): P => { con
 	const ph = (t - 92.02) / Tc; return {fN: ft(ph), fF: ft(ph + 0.5), bob: Math.cos(4 * PI * ph)}; };
 const SR: React.FC<{t: number}> = ({t}) => { const X = R_V * (t - 92.02), j = rJolt(t), k = R_K;
 	const cx = (xc: number) => R_BX + xc * k, cy = (yc: number, jj = j) => R_GY + (yc - jj) * k, wx = (xw: number, p: number) => R_BX + p * k * (xw - X);
-	const g = gaitR(t), s = pose({hip: [0, -91 + 1.2 * g.bob], lean: 17, neck: 2, tilt: -4, fN: g.fN, fF: g.fF, hN: [27, -79 - j], hF: [25, -82 - j]});
+	const g = gaitR(t), s = pose({hip: [0, -91 + 1.2 * g.bob], lean: 17, neck: 2, tilt: 4, fN: g.fN, fF: g.fF, hN: [27, -79 - j], hF: [25, -82 - j]});
 	const jz = 1.35 * R_AMP.reduce((sum, a, i) => sum + a * bmp(t - beat(160 + i) - 0.03), 0), roll = rRatt(t);
 	const zm: P = [cx(2), cy(-79 - 19.4, j + jz)], zcam = zc(zm[0] + 19.4 * k * Math.sin(deg(roll)) * 0, zm[1], k, 40, 6, roll);
-	const wh = (X / 34) * 180 / PI, gx = wx(R_GATE, 0.85);
+	const wh = (X / 34) * 180 / PI;
 	const sky = <g><defs><linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1A1E2A" /><stop offset="0.45" stopColor="#3A3236" /><stop offset="0.75" stopColor="#8A5A3A" /><stop offset="1" stopColor="#3A2618" /></linearGradient></defs>
-		<rect width={W} height={H} fill="url(#rsky)" /><Glow x={1700} y={600} r={620} c="#FFB060" o={0.55} id="rsun" sy={0.55} /><circle cx={1700} cy={612} r={46} fill="#FFD08A" opacity={0.85} /></g>;
+		<rect width={W} height={H} fill="url(#rsky)" /><Glow x={1660} y={340} r={640} c="#FFB060" o={0.55} id="rsun" sy={0.6} /><circle cx={1660} cy={346} r={40} fill="#FFD08A" opacity={0.85} /></g>;
 	const ridge = <g transform={`translate(${f1(-X * k * 0.06)} 0)`}><path d={sm([[-200, 700], [160, 610], [380, 640], [560, 585], [760, 625], [980, 570], [1200, 615], [1420, 580], [1660, 620], [2300, 590], [2300, 800], [-200, 800]])} fill="#4A3A38" opacity={0.85} /></g>;
-	/* the yard, far: the shed, the chimney and the furnace glow (where this is going) */
-	const yardFar = <g>{[-300, 420, 1180].map((xw, i) => { const x = wx(xw, 0.32); return <g key={i}><path d={pth([[x - 260, 560], [x + 260, 540], [x + 280, 580], [x + 280, 760], [x - 260, 760]])} fill="#241A16" /><path d={pth([[x - 280, 566], [x, 520], [x + 300, 548], [x + 300, 562], [x, 534], [x - 280, 580]])} fill="#1A1310" /></g>; })}
-		{(() => { const x = wx(900, 0.32); return <g><rect x={x - 17} y={380} width={34} height={380} fill="#1E1612" /><Plume x={x} y={372} h={320} w={130} c="#7A6A62" o={0.32} id="rsmk" seed={t * 0.6} />
-			<path d={sm([[x - 90, 770], [x - 84, 680], [x - 50, 656], [x + 30, 656], [x + 62, 680], [x + 68, 770]])} fill="#2A1C16" /><rect x={x - 40} y={706} width={58} height={34} fill="#FF8A34" opacity={0.85} /><Glow x={x - 11} y={724} r={150} c="#FF8A34" o={0.5} id="rfur" sy={0.7} /></g>; })()}
-		<rect x={-20} y={740} width={W + 40} height={60} fill="#2A1E19" /></g>;
-	const outside = <g>{Array.from({length: 7}, (_, i) => { const x = wx(-900 + i * 90, 0.32); return <g key={i}><rect x={x - 5} y={430} width={10} height={360} fill="#1E1610" /><path d={sm([[x, 300 + rnd(i, 3) * 30], [x + 34, 420], [x + 20, 600], [x - 20, 600], [x - 34, 420]])} fill="#2A2018" /></g>; })}
-		<path d={pth([[-40, 760], [W + 40, 760], [W + 40, 800], [-40, 800]])} fill="#3A2C20" /></g>;
-	const piles = <g>{[-420, -60, 260, 560, 860].map((xw, i) => <g key={i}>{pile(wx(xw, 0.62), 880, 420 + 120 * rnd(i, 3), 170 + 60 * rnd(i, 4), 7 + i * 3, '#1C1512', '#FFB070', 1.2)}</g>)}</g>;
+	/* far → near, no clips (house rule): the yard behind its wall (shed, scrap, the furnace and its chimney, the smoke rising free
+	   above the wall); the brick yard wall with real height and the gate opening (the yard shows only through it); outside the wall a
+	   poplar and a scrap heap; then the road, the cart, the man, the near weeds. The gate passes behind the 尊 on the bar (94.28). */
+	const WALL_P = 0.45, kw = WALL_P * k, wallY = 800, wallTop = wallY - 220 * kw, pilTop = wallY - 285 * kw, GL = 237 - 180, GR = 237 + 180, PW = 52;
+	const yardFar = <g>{[[-120, 0], [520, 1]].map(([xw, i]) => { const x = wx(xw, 0.3); return <g key={i}><path d={pth([[x - 230, 610], [x + 230, 596], [x + 248, 626], [x + 248, 770], [x - 230, 770]])} fill="#241A16" />
+			<path d={pth([[x - 250, 614], [x, 574], [x + 268, 596], [x + 268, 608], [x, 586], [x - 250, 626]])} fill="#1A1310" /></g>; })}
+		{(() => { const x = wx(330, 0.3), f = wx(295, 0.3), fl = 0.85 + 0.15 * Math.sin(t * 7.3) * Math.sin(t * 3.1 + 1); return <g>
+			<rect x={x - 16} y={210} width={32} height={560} fill="#1E1612" /><rect x={x - 20} y={204} width={40} height={10} fill="#16100C" />
+			<Plume x={x} y={200} h={320} w={120} c="#8A7A70" o={0.34} id="rsmk" seed={t * 0.6} /><Plume x={x + 40 + 20 * Math.sin(t * 0.5)} y={60} h={240} w={150} c="#6A5A52" o={0.22} id="rsmk2" seed={2 + t * 0.5} />
+			<path d={sm([[f - 92, 772], [f - 86, 684], [f - 50, 660], [f + 30, 660], [f + 62, 684], [f + 68, 772]])} fill="#2A1C16" />
+			<rect x={f - 42} y={706} width={60} height={36} fill="#FF8A34" opacity={0.75 + 0.25 * fl} /><Glow x={f - 12} y={724} r={170} c="#FF8A34" o={0.55 * fl} id="rfur" sy={0.7} /></g>; })()}
+		{[60, 420, 700].map((xw, i) => <g key={`p${i}`}>{pile(wx(xw, 0.33), 790, 300 + 80 * rnd(i, 3), 110 + 40 * rnd(i, 4), 31 + i * 3, '#1C1512', '#E89A5A', 0.9)}</g>)}
+		<rect x={-20} y={770} width={W + 40} height={40} fill="#2A1E19" /></g>;
+	/* the wall: two runs either side of the gate, brick courses, a coping lit by the low sun; the pillars with caps; a blank plaque */
+	const run = (a: number, b: number, key: string) => { const x0 = wx(a, WALL_P), x1 = wx(b, WALL_P); if (x1 < -50 || x0 > W + 50) return null;
+		return <g key={key}><rect x={x0} y={wallTop} width={x1 - x0} height={wallY - wallTop} fill="#33251C" />
+			{Array.from({length: 14}, (_, r) => <path key={r} d={`M${f1(x0)},${f1(wallTop + 12 + r * 24)} L${f1(x1)},${f1(wallTop + 12 + r * 24)}`} stroke="#22180F" strokeWidth={2} />)}
+			<rect x={x0 - 6} y={wallTop - 14} width={x1 - x0 + 12} height={16} fill="#20160F" /><path d={`M${f1(x0 - 6)},${f1(wallTop - 14)} L${f1(x1 + 6)},${f1(wallTop - 14)}`} stroke="#FFB070" strokeWidth={2.4} strokeOpacity={0.55} /></g>; };
+	const pillar = (xw: number, key: string, plaque: boolean) => { const x = wx(xw, WALL_P), w = PW * kw; if (x + w < -50 || x > W + 50) return null;
+		return <g key={key}><rect x={x} y={pilTop} width={w} height={wallY - pilTop} fill="#3A2A20" />
+			{Array.from({length: 26}, (_, r) => <path key={r} d={`M${f1(x)},${f1(pilTop + 10 + r * 22)} L${f1(x + w)},${f1(pilTop + 10 + r * 22)}`} stroke="#22180F" strokeWidth={2} />)}
+			<rect x={x - 10} y={pilTop - 22} width={w + 20} height={24} fill="#20160F" /><path d={pth([[x - 4, pilTop - 22], [x + w / 2, pilTop - 44], [x + w + 4, pilTop - 22]])} fill="#1A120C" />
+			<path d={`M${f1(x + w)},${f1(pilTop)} L${f1(x + w)},${f1(wallY)}`} stroke="#FFB070" strokeWidth={2.4} strokeOpacity={0.5} />
+			{plaque && <><rect x={x + 10} y={pilTop + 60} width={w - 20} height={230} fill="#7A6A54" opacity={0.8} /><rect x={x + 10} y={pilTop + 60} width={w - 20} height={230} fill="none" stroke="#1A120E" strokeWidth={4} /></>}</g>; };
+	const wall = <g>{run(-1600, GL, 'wl')}{run(GR, 2400, 'wr')}{pillar(GL - PW, 'pl', false)}{pillar(GR, 'pr', true)}
+		<rect x={-20} y={wallY} width={W + 40} height={30} fill="#2C2018" /></g>;
+	const outside = <g><defs><linearGradient id="rfg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2E2219" /><stop offset="1" stopColor="#241A13" /></linearGradient></defs>
+		<rect x={-20} y={wallY + 18} width={W + 40} height={R_GY - wallY - 12} fill="url(#rfg)" />
+		{Array.from({length: 30}, (_, i) => { const x = wx(-600 + i * 60 + rnd(i, 41) * 30, 0.62); return x < -30 || x > W + 30 ? null : <path key={`w${i}`} d={`M${f1(x)},${f1(wallY + 30)} l${f1(-3 + rnd(i, 42) * 6)},${f1(-10 - rnd(i, 43) * 16)}`} stroke="#3A3020" strokeWidth={2.4} />; })}
+		{[-260, 640].map((xw, i) => { const x = wx(xw, 0.62); if (x < -120 || x > W + 120) return null; return <g key={i}><rect x={x - 7} y={360} width={14} height={520} fill="#1A120C" />
+			<path d={sm([[x, 150 + 30 * i], [x + 46, 300], [x + 30, 560], [x - 30, 560], [x - 46, 300]])} fill="#20170F" /></g>; })}
+		{[-520, 120, 900].map((xw, i) => <g key={i}>{pile(wx(xw, 0.62), 890, 380 + 100 * rnd(i, 3), 150 + 50 * rnd(i, 4), 7 + i * 3, '#1C1512', '#FFB070', 1.2)}</g>)}</g>;
 	const ground = <g><rect x={0} y={R_GY - 6} width={W} height={H - R_GY + 6} fill="#241A13" />
 		{Array.from({length: 40}, (_, i) => { const xw = -400 + i * 32 + rnd(i, 3) * 20, x = wx(xw, 1); if (x < -40 || x > W + 40) return null; return <ellipse key={i} cx={x} cy={R_GY + 8 + rnd(i, 4) * 50} rx={5 + 10 * rnd(i, 5)} ry={3 + 4 * rnd(i, 6)} fill={i % 3 ? '#14100C' : '#5A4632'} />; })}
 		<path d={`M0,${R_GY + 2} L${W},${R_GY + 2}`} stroke="#FFB070" strokeWidth={2} strokeOpacity={0.25} /></g>;
@@ -560,18 +591,14 @@ const SR: React.FC<{t: number}> = ({t}) => { const X = R_V * (t - 92.02), j = rJ
 		<g transform={`rotate(${f1(wh)})`}>{Array.from({length: 10}, (_, i) => <path key={i} d={`M0,0 L${f1(r * Math.cos(i * PI / 5))},${f1(r * Math.sin(i * PI / 5))}`} stroke={far ? '#0E0B09' : '#1E1612'} strokeWidth={r * 0.05} />)}</g>
 		<circle r={r * 0.16} fill={far ? '#0E0B09' : '#2A2220'} /></g>;
 	return <Shell t={t} id="R" bg="#0E0B0A" vig={0.55}>
-		{sky}{ridge}
-		<defs><clipPath id="rout"><rect x={-100} y={0} width={Math.max(0, gx + 100)} height={H} /></clipPath><clipPath id="rin"><rect x={gx} y={0} width={W + 200} height={H} /></clipPath></defs>
-		<g clipPath="url(#rin)">{yardFar}{piles}</g>
-		<g clipPath="url(#rout)">{outside}</g>
-		{/* the far gate pillar, the yard wall running back from it, a plaque of illegible painted marks */}
-		{gx > -300 && gx < W + 300 && <g><path d={pth([[gx - 120, 640], [gx, 560], [gx, 1000], [gx - 120, 960]])} fill="#1E1612" />
-			<rect x={gx} y={300} width={46 * 0.85 * k} height={700} fill="#2E221C" /><path d={`M${f1(gx + 46 * 0.85 * k)},300 L${f1(gx + 46 * 0.85 * k)},1000`} stroke="#FFB070" strokeWidth={3} strokeOpacity={0.5} />
-			{Array.from({length: 18}, (_, i) => <path key={i} d={`M${f1(gx)},${300 + i * 38} L${f1(gx + 46 * 0.85 * k)},${300 + i * 38}`} stroke="#1A120E" strokeWidth={2} />)}
-			<rect x={gx + 34} y={440} width={104} height={270} fill="#8A7A62" opacity={0.75} /><rect x={gx + 34} y={440} width={104} height={270} fill="none" stroke="#1A120E" strokeWidth={5} />{[0, 1, 2, 3, 4].map((i) => <path key={i} d={blob(gx + 86, 476 + i * 50, 13, i + 3)} fill="#3A2A20" opacity={0.35} />)}</g>}
-		{ground}
-		<Rising t={t} n={40} x0={0} x1={W} y0={500} y1={1000} c="#FFE2B8" seed={71} v={40} o={0.45} r={2.6} />
+		<Lyr d={0} id="rsky">{sky}</Lyr><Lyr d={0.08} id="rrid">{ridge}</Lyr>
+		<Lyr d={0.3} id="ryard">{yardFar}</Lyr>
+		<Lyr d={0.45} id="rwall">{wall}</Lyr>
+		<Lyr d={0.62} id="rout">{outside}</Lyr>
+		<Lyr d={1} id="rgnd">{ground}</Lyr>
+		<Lyr d={0.9} id="rmote"><Rising t={t} n={40} x0={0} x1={W} y0={500} y1={1000} c="#FFE2B8" seed={71} v={40} o={0.45} r={2.6} /></Lyr>
 		{/* the cart: far wheel, bed, basket and what's in it, near wheel; the shafts; the man pulling */}
+		<Lyr d={1} id="rcart">
 		{wheel(cx(30) + 10, cy(-34) - 8, 34 * k * 0.97, true)}
 		<Worker1965 s={s} x={cx(188)} y={R_GY} k={k} id="rpb" part="back" rim="#FFB874" lx={1} ly={0.1} />
 		<path d={`M${f1(cx(100))},${f1(cy(-74))} L${f1(cx(214))},${f1(cy(-80))}`} stroke="#120D0A" strokeWidth={9} strokeLinecap="round" />
@@ -590,8 +617,8 @@ const SR: React.FC<{t: number}> = ({t}) => { const X = R_V * (t - 92.02), j = rJ
 		<path d={`M${f1(cx(-38))},${f1(cy(-94, j + jz * 0.3))} L${f1(cx(38))},${f1(cy(-94, j + jz * 0.3))}`} stroke="#E8C080" strokeWidth={2.4} strokeOpacity={0.6} />
 		{wheel(cx(30), cy(-34), 34 * k, false)}
 		<path d={`M${f1(cx(104))},${f1(cy(-72))} L${f1(cx(212))},${f1(cy(-77))}`} stroke="#1A120E" strokeWidth={10} strokeLinecap="round" /><path d={`M${f1(cx(104))},${f1(cy(-75))} L${f1(cx(212))},${f1(cy(-80))}`} stroke="#FFB070" strokeWidth={2} strokeOpacity={0.45} />
-		<Worker1965 s={s} x={cx(188)} y={R_GY} k={k} id="rpf" part="front" rim="#FFB874" lx={1} ly={0.1} />
-		{near}
+		<Worker1965 s={s} x={cx(188)} y={R_GY} k={k} id="rpf" part="front" rim="#FFB874" lx={1} ly={0.1} /></Lyr>
+		<Lyr d={1.55} id="rnear">{near}</Lyr>
 	</Shell>; };
 
 /* ============================== S · 96.54 the reverse angle of card 1: on the scale, 30元 ============================== */

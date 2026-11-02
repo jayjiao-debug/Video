@@ -4,16 +4,18 @@ import {Zun, lookAt, ZunLight, V3, Cam, proj, toCam, scr} from './zun55h';
 import {sm, pth, f1, rnd, P, Glow, Haze, Vig, Plume, tube, Person} from './kf55h';
 import {Body, Sil, Sk, kneel} from './rig55h';
 import {TitleText, SilZun, LY, LYlow, TBack} from './kfall55h';
+import {Seal} from '../qq50/kit50';
 import {homeCam, rotL} from './home55h';
 import {FilmOv2} from './ov55v2';
 import {card2} from './cards55v2';
-import {cl, seg, ease, eio, lerp, lerpP, BEAT, BT, zunCam, beaks, armFK, poseFK, trackN, track, Glyphs55, Cowrie, CowrieString, YCam, layerT,
+import {cl, seg, ease, eio, lerp, lerpP, BEAT, BT, zunCam, beaks, armFK, poseFK, trackN, track, crSample, Glyphs55, Cowrie, CowrieString, YCam, layerT,
 	Yard1965, PlatformScale1965, Worker1965, Tag30w, ZREST, DECK1965, worker1965, beam1965, tagSwing1965, ik2} from './act551k';
 /* ep55 何尊 v2 · act 1 (builder 1): the cards 1, 2, T, A, B, C, D, E, F — film 0 → 42.2 s. Act1({t}) renders the full frame. */
 const W = 1920, H = 1080;
 const land = (u: number) => (u <= 0 ? 0 : u >= 1 ? 1 : 1 - Math.exp(-6 * u) * Math.cos(9 * u));
 const flick = (t: number, s: number) => 0.85 + 0.1 * Math.sin(t * 7.3 + s) + 0.05 * Math.sin(t * 17.1 + s * 2);
 const dimL = (L: ZunLight, k: number): ZunLight => ({...L, k: L.k * k, amb: L.amb * (0.35 + 0.65 * k), spec: L.spec * k, rim: L.rim ? {...L.rim, k: L.rim.k * (0.6 + 0.4 * k)} : undefined});
+const SUN: P = [1000, 560];
 
 /* ============================== common bits ============================== */
 const Shell: React.FC<{t: number; id: string; bg: string; vig?: number; children: React.ReactNode; top?: React.ReactNode; hideCounter?: boolean}> = ({t, id, bg, vig = 0.6, children, top, hideCounter}) =>
@@ -107,10 +109,21 @@ const junkEl = (j: Junk, q: [number, number, number], k: number, i: number, rimC
 		case 'plate': return <g key={i}><path d={pth([[x - s, y], [x - s * 0.7, y - s * 1.1], [x + s * 0.9, y - s * 0.8], [x + s, y]])} fill="#1A130F" /><path d={`M${f1(x - s * 0.7)},${f1(y - s * 1.1)} L${f1(x + s * 0.9)},${f1(y - s * 0.8)}`} stroke={rimC} strokeWidth={2} strokeOpacity={0.5} /></g>;
 		default: return <g key={i}><circle cx={x} cy={y - s} r={s} fill="#15100C" />{Array.from({length: 10}, (_, m) => { const a = (m / 10) * 2 * Math.PI; return <rect key={m} x={x + Math.cos(a) * s - s * 0.12} y={y - s + Math.sin(a) * s - s * 0.12} width={s * 0.24} height={s * 0.24} fill="#15100C" />; })}<circle cx={x} cy={y - s} r={s * 0.3} fill="#0A0705" /></g>;
 	} };
-const S2: React.FC<{t: number}> = ({t}) => { const a = 5.98, b = 9.03, u = ease(seg(t, a, b - 0.1)), uE = eio(seg(t, a + 0.2, b - 0.1));
-	const az = lerp(66, 14, u), el = lerp(4, 1.5, u), D = Math.exp(lerp(Math.log(250), Math.log(70), uE)), T: V3 = [lerp(0, 9.6, uE), lerp(0, 4.6, uE), lerp(19, 14.8, uE)];
-	const f = lerp(1750, 2500, uE), cam = camAt(az, el, D, T, f, 960, 600);
-	const dim = ease(seg(t, b - 1.13, b - 0.05)), Lz = dimL(rotL(LYlow, 30), 1 - 0.88 * dim);
+/* the one shot from 5.98 to 15.03 (cards 2 + T): the low dolly to the eye, a macro push, then the pull-back of the rewind.
+   u2 eases in at 5.98 and keeps its speed at 9.03, where shotCam's T branch continues with the same velocities. */
+const EYE: V3 = [9.6, 4.6, 14.8];
+const shotZun = (t: number): {az: number; el: number; D: number; k: number; Tg: V3; G: P} => {
+	if (t < 9.03) { const x = seg(t, 5.98, 9.03), u = x * x * (2 - x), D = Math.exp(lerp(Math.log(250), Math.log(70), u)), f = lerp(1750, 2500, u);
+		return {az: lerp(66, 14, u), el: lerp(4, 1.5, u), D, k: f / D, Tg: [lerp(0, EYE[0], u), lerp(0, EYE[1], u), lerp(19, EYE[2], u)], G: [960, 600]}; }
+	const tau = t - 9.03, sA = camA(t).s, w1 = ease(seg(t, 10.8, 12.8)), w2 = ease(seg(t, 11.4, 12.8));
+	const lnk = lerp(Math.log(2500 / 70) + 0.534 * tau - 0.18 * tau * tau, Math.log(3.1 * sA), w2);
+	const D = Math.min(700, 70 * Math.exp(-0.417 * tau + 0.25 * tau * tau)), GA: P = [A_O[0], A_O[1] + 30 * sA];
+	return {az: 14 - 17 * tau + 1.4 * tau * tau, el: 1.5 - 0.8 * tau + 0.35 * tau * tau, D, k: Math.exp(lnk), Tg: [lerp(EYE[0], 0, w1), lerp(EYE[1], 0, w1), lerp(EYE[2], 0, w1)], G: [lerp(960, GA[0], w1), lerp(600, GA[1], w1)]}; };
+/** the camera for the 尊 from shotZun: a look-at at (az, el, D) around the target, f = k·D, shifted so the target lands on G */
+const zunShotCam = (z: ReturnType<typeof shotZun>): Cam => { const c0 = camAt(z.az, z.el, z.D, z.Tg, z.k * z.D, 0, 0), q = proj(c0, z.Tg); return {...c0, cx: z.G[0] - q[0], cy: z.G[1] - q[1]}; };
+const S2: React.FC<{t: number}> = ({t}) => { const a = 5.98, b = 9.03, x2 = seg(t, a, b), uE = x2 * x2 * (2 - x2), u = uE;
+	const zs = shotZun(t), cam = zunShotCam(zs), f = zs.k * zs.D;
+	const dim = 0.3 * ease(seg(t, b - 1.13, b)), Lz = dimL(rotL(LYlow, 30), 1 - 0.6 * dim);
 	/* the far yard parallax from a world point far behind the 尊 */
 	const cam0 = camAt(66, 4, 250, [0, 0, 19], 1750, 960, 600), F: V3 = [-3000, -1200, 200], bx = (proj(cam, F)[0] - proj(cam0, F)[0]) * 0.25;
 	const bgS = 1 + 0.25 * uE, bgBlur = 2 + 10 * uE;
@@ -132,32 +145,48 @@ const S2: React.FC<{t: number}> = ({t}) => { const a = 5.98, b = 9.03, u = ease(
 		<path d={pth(dkF.map((q) => [q[0], q[1]] as P))} fill="#1E1A18" /><path d={pth(dkS.map((q) => [q[0], q[1]] as P))} fill="#262120" />
 		<path d={`M${f1(dk[1][0])},${f1(dk[1][1])} L${f1(dk[2][0])},${f1(dk[2][1])}`} stroke="#C99A6A" strokeWidth={2} strokeOpacity={0.55 * (1 - dim)} />
 		<Zun cam={cam} light={Lz} id="a2z" patina={0.95} shadow inscription={false} />
-		{dim > 0.02 && <g opacity={dim * dim}><SilZun cam={cam} id="a2s" rim="#FFB060" halo="#8A2A10" haloO={0.5} rimO={0.9} /></g>}
 		{junk.filter((o) => o.q[2] <= zd).map(jEl)}
 		<Drift t={t} n={90} x0={300} x1={1900} y0={200} y1={1040} c="#FFE2B8" seed={31} o={0.6 * (1 - dim)} r={2.8} vx={-30} />
 	</Shell>; };
 
-/* ============================== T · 9.03 the title on drop 1; a slow push; the halo swells into the rising sun ============================== */
-const SUN: P = [1000, 560];
-const ST: React.FC<{t: number}> = ({t}) => { const a = 9.03, b = 15.03, cam = homeCam(30);
-	const push = 1 + 0.13 * ease(seg(t, a, b)), sunU = ease(seg(t, b - 0.7, b)), s = 1 + 0.18 * (1 - land(seg(t, a, a + 0.5))), flash = Math.exp(-(t - a) * 7);
-	const beat = 0.5 + 0.5 * Math.cos(((t - 1.4498) / BEAT) * 2 * Math.PI), tOut = 1 - ease(seg(t, b - 0.5, b - 0.12));
-	return <Shell t={t} id="T" bg="#070403" vig={0.75 - 0.5 * sunU}
-		top={<div style={{position: 'absolute', inset: 0, opacity: tOut, transform: `scale(${(s * (1 + 0.03 * ease(seg(t, a + 0.5, b)))).toFixed(4)})`, transformOrigin: '50% 60%', filter: `brightness(${(1 + 0.8 * flash + 0.1 * beat).toFixed(3)})`}}><TitleText /></div>}>
-		<TBack heat={0.35} />
-		<Glow x={960} y={600} r={760} c="#FF9A40" o={0.1 + 0.32 * beat} id="tbt" sy={0.8} />
-		<Glow x={960} y={600} r={620} c="#FFD088" o={0.55 * flash} id="tfl" />
-		{/* the sun being born behind the silhouette */}
-		<Glow x={lerp(960, SUN[0], sunU)} y={lerp(620, SUN[1], sunU)} r={lerp(300, 1100, sunU)} c="#FFC878" o={0.9 * sunU} id="tsn" sy={0.8} />
-		<circle cx={SUN[0]} cy={SUN[1]} r={lerp(20, 95, sunU)} fill="#FFF0C8" opacity={sunU} />
-		<g transform={`translate(960 620) scale(${push.toFixed(4)}) translate(-960 -620)`} opacity={1 - 0.45 * Math.pow(sunU, 3)}>
-			<SilZun cam={cam} id="tsz" rim="#FFD088" halo={'#FF9A40'} haloO={0.9} rimO={1 - 0.6 * sunU} />
-		</g>
-		<Glow x={SUN[0]} y={SUN[1]} r={lerp(200, 760, sunU)} c="#FFE6B0" o={0.7 * sunU * sunU} id="tsb" />
-		<circle cx={SUN[0]} cy={SUN[1]} r={88} fill="#FFF2D0" opacity={0.85 * Math.pow(sunU, 3)} />
-		<Rising t={t} n={140} x0={100} x1={1820} y0={80} y1={1060} c="#FFB060" seed={77} v={110} o={0.7} r={3.6} />
-		{/* big out-of-focus embers drifting past the lens */}
-		<Blur id="tbk" s={6}><Rising t={t} n={26} x0={0} x1={1920} y0={-100} y1={1180} c="#FF9A40" seed={79} v={190} o={0.55} r={20} sway={70} /></Blur>
+/* ============================== T · 9.03 the time rewind: one continuous shot from the eye in 1965 to 武王's altar ==============================
+   The title slams over the live shot on drop 1 and holds to 12.6. Behind it time runs backwards: the rust flakes off, the
+   bronze turns gold, then molten; the dusk yard melts into the 西周 dawn; the camera pulls back until the molten 尊 sits in
+   武王's altar fire and sinks into it. A's set and camera are the same objects, so 15.0 equals A's first frame. */
+const ST: React.FC<{t: number}> = ({t}) => { const a = 9.03, b = 15.03, zs = shotZun(t), cam = zunShotCam(zs), camAA = camA(t);
+	const s = 1 + 0.18 * (1 - land(seg(t, a, a + 0.5))), flash = Math.exp(-(t - a) * 7), lift = ease(seg(t, 12.6, 13.35));
+	const patina = 0.95 * (1 - ease(seg(t, 9.35, 10.9))), fresh = 0.65 * ease(seg(t, 10.3, 11.5)), molten = 0.92 * ease(seg(t, 11.3, 12.5));
+	const melt = ease(seg(t, 13.7, 14.8)), yardO = 1 - ease(seg(t, 10.9, 12.5)), farO = ease(seg(t, 10.9, 12.4)), nearO = ease(seg(t, 12.25, 12.75)), focus = ease(seg(t, 12.4, 13.9)), nb = 22 * (1 - focus);
+	const beatPh = ((t - 1.4498) / BEAT + 1000) % 1, rew = seg(t, 9.6, 11.6) * (1 - seg(t, 11.6, 12.2));
+	/* the yard, as card 2 left it, parallaxing with the camera; it melts (sags, blurs, fades) */
+	const cam0 = camAt(66, 4, 250, [0, 0, 19], 1750, 960, 600), F: V3 = [-3000, -1200, 200], bx = (proj(cam, F)[0] - proj(cam0, F)[0]) * 0.25;
+	const L: ZunLight = {...dimL(rotL(LYlow, 30), 0.82), k: 1.45 * (1 - 0.3 * molten), spec: 0.55 + 0.9 * fresh};
+	const zb = proj(cam, [0, 0, 0]), zh = 38.8 * zs.k;
+	/* rust flakes spinning off the surface (9.35 → 11.1), sparks off the molten bronze (11.6 →) */
+	const flakes = Array.from({length: 140}, (_, i) => { const t0 = 9.35 + rnd(i, 81) * 1.6, v = (t - t0) / 1.3; if (v <= 0 || v >= 1) return null;
+		const x0 = 200 + rnd(i, 82) * 1520, y0 = 160 + rnd(i, 83) * 800, dx = (x0 - 960) * 0.5 + (rnd(i, 84) - 0.5) * 300, x = x0 + dx * v, y = y0 - 160 * v + 420 * v * v, r = 5 + 12 * rnd(i, 85), rot = rnd(i, 86) * 360 + v * 500;
+		return <path key={i} d={pth([[-r, -r * 0.4], [-r * 0.2, -r * 0.7], [r, -r * 0.2], [r * 0.5, r * 0.6], [-r * 0.6, r * 0.5]])} transform={`translate(${f1(x)},${f1(y)}) rotate(${f1(rot)})`} fill={i % 3 ? '#5E7A5A' : '#6E5638'} opacity={0.85 * (1 - v)} />; });
+	return <Shell t={t} id="T" bg="#0E0A08" vig={lerp(0.62, 0.5, nearO)}
+		top={<>
+			<div style={{position: 'absolute', inset: 0, opacity: 0.55 * (1 - lift) * seg(t, a, a + 0.15), background: 'radial-gradient(ellipse 48% 30% at 50% 60%, rgba(10,6,4,0.75) 0%, rgba(10,6,4,0.4) 55%, rgba(10,6,4,0) 100%)'}} />
+			<div style={{position: 'absolute', inset: 0, opacity: 1 - lift, transform: `translateY(${(-130 * lift).toFixed(1)}px) scale(${(s * (1 + 0.025 * ease(seg(t, a + 0.5, 12.6)))).toFixed(4)})`, transformOrigin: '50% 60%', filter: `brightness(${(1 + 0.8 * flash).toFixed(3)})`}}><TitleText /></div>
+			<div style={{position: 'absolute', inset: 0, opacity: seg(t, 14.2, 14.8)}}><Seal /></div></>}>
+		<g opacity={farO}><ASet t={t} cam={camAA} part="far" /></g>
+		{yardO > 0.01 && <g opacity={yardO}><Blur id="aTyb" s={12 + 14 * (1 - yardO)}><g transform={`translate(960 600) scale(1.25 ${(1.25 * (1 + 0.35 * (1 - yardO))).toFixed(3)}) translate(-960 -600) translate(0 ${(90 * (1 - yardO)).toFixed(1)})`}>
+			<Yard1965 cam={{x: -bx, y: 40, s: 1}} t={t} dim={0.3} id="aTy" /></g></Blur>
+			{/* time running backwards: the light flickers on the beat, day and night rushing past */}
+			<rect width={W} height={H} fill="#0A0814" opacity={0.28 * rew * (beatPh < 0.5 ? 1 : 0.15)} /></g>}
+		<g opacity={nearO}><Blur id="aTnb" s={nb}><ASet t={t} cam={camAA} part="back" /></Blur></g>
+		{melt < 0.999 && <g opacity={1 - melt} transform={`translate(${f1(zb[0])} ${f1(zb[1])}) scale(1 ${(1 - 0.55 * melt).toFixed(3)}) translate(${f1(-zb[0])} ${f1(-zb[1])})`}>
+			{molten > 0.02 && <Glow x={zb[0]} y={zb[1] - zh * 0.5} r={zh * 0.95} c="#FF9A40" o={0.55 * molten} id="aTmg" />}
+			<Zun cam={cam} light={L} id="aTz" patina={patina} fresh={fresh} molten={molten} shadow={false} inscription={false} /></g>}
+		<g opacity={nearO}><Blur id="aTnf" s={nb}><ASet t={t} cam={camAA} part="front" /></Blur></g>
+		{melt > 0 && melt < 1 && <Glow x={zb[0]} y={zb[1] - 30} r={260} c="#FFC060" o={0.6 * Math.sin(Math.PI * melt)} id="aTfl" />}
+		<g opacity={nearO}><ASet t={t} cam={camAA} part="fg" /></g>
+		{flakes}
+		{molten > 0.05 && <Rising t={t} n={70} x0={zb[0] - zh * 0.6} x1={zb[0] + zh * 0.6} y0={zb[1] - zh * 1.6} y1={zb[1]} c="#FFC060" seed={91} v={zh * 0.9} o={0.8 * molten * (1 - melt)} r={2.6} sway={20} />}
+		<Drift t={t} n={80} x0={200} x1={1900} y0={150} y1={1040} c="#FFE2B8" seed={31} o={0.5 * yardO} r={2.6} vx={50} />
+		<Blur id="tbk" s={6}><Rising t={t} n={18} x0={0} x1={1920} y0={-100} y1={1180} c="#FF9A40" seed={79} v={190} o={0.45 * (1 - nearO)} r={18} sway={70} /></Blur>
 	</Shell>; };
 
 /* ============================== people of the 西周 cards ============================== */
@@ -192,47 +221,58 @@ const Fire: React.FC<{x: number; y: number; s: number; t: number; id: string; o?
 const SkyDawn: React.FC<{id: string; warm?: number}> = ({id, warm = 0}) => <><defs><linearGradient id={`${id}sk`} x1="0" y1="0" x2="0" y2="1">
 	<stop offset="0" stopColor="#1A1A30" /><stop offset="0.3" stopColor={warm ? '#3A3050' : '#2E2A48'} /><stop offset="0.5" stopColor="#7A4A52" /><stop offset="0.62" stopColor="#D8845A" /><stop offset="0.7" stopColor="#FFC07A" /><stop offset="1" stopColor="#5A2E1E" /></linearGradient></defs>
 	<rect x={-400} y={-1400} width={W + 800} height={H + 2000} fill={`url(#${id}sk)`} /></>;
-const SA: React.FC<{t: number}> = ({t}) => { const a = 15.03, cu = seg(t, 15.06, 19.56), cr = cu * (0.35 + 0.65 * cu * (1.5 - 0.5 * cu)) / 1.0, cam: YCam = {x: 60 * cu, y: -900 * cr, s: 1 + 0.06 * cu};
+/** A's camera, valid from the rewind (T, ~12 s) through A: a pull-back that eases out (s → 1 at 15.03 and slightly below after),
+    then A's crane up to the sun. Zoom origin = the altar fire, so the rewind lands exactly on A's first frame. */
+const A_O: P = [900, 760];
+const camA = (t: number): YCam => { const tp = t - 15.03, cu = seg(t, 15.03, 19.56), cr = cu * cu * (1.5 - 0.5 * cu);
+	return {x: 60 * cu, y: -900 * cr, s: Math.exp(-0.012 * tp + (tp < 0 ? 0.147 * tp * tp : 0))}; };
+const lA = (cam: YCam, p: number) => layerT(cam, p, A_O[0], A_O[1]);
+/** A's set in parts, so the rewind (T) can slot the molten 尊 between them: far (sky, sun, hills), back (army, ridge, altar,
+    smoke), front (fire, 武王, embers), fg (out-of-focus foreground) */
+const ASet: React.FC<{t: number; cam: YCam; part: 'far' | 'back' | 'front' | 'fg'}> = ({t, cam, part}) => {
 	const raise = eio(seg(t, 15.08, BT(26) + 0.1)), sway = Math.sin((t - 16.7) * 2.2) * 2 * seg(t, 16.7, 17.5);
 	const upN = lerp(62, 158, raise) + sway, upF = lerp(58, 150, raise) + sway * 0.8, bendN = lerp(78, 14, raise), bendF = lerp(82, 18, raise);
 	const tilt = lerp(6, -26, ease(seg(t, BT(24.5), BT(26.5)))), flare = Math.exp(-Math.max(0, t - BT(26)) * 3) * seg(t, BT(26) - 0.1, BT(26));
-	const sunY = SUN[1] - 40 * seg(t, a, 19.56);
-	return <Shell t={t} id="A" bg="#14141E" vig={0.5}>
-		<g transform={layerT(cam, 0.06)}><SkyDawn id="aA" />
+	const sunY = SUN[1] - 40 * seg(t, 15.03, 19.56);
+	if (part === 'far') return <>
+		<g transform={lA(cam, 0.06)}><SkyDawn id="aA" />
 			<Glow x={SUN[0]} y={sunY} r={1000} c="#FFC878" o={0.75} id="aAsg" sy={0.75} />
 			<Glow x={SUN[0]} y={sunY} r={380} c="#FFD890" o={0.95} id="aAsb" /><circle cx={SUN[0]} cy={sunY} r={88} fill="#FFEFC0" /><Glow x={SUN[0]} y={sunY} r={150} c="#FFFBEA" o={0.9} id="aAsc" /></g>
-		<g transform={layerT(cam, 0.22)}>
+		<g transform={lA(cam, 0.22)}>
 			{Array.from({length: 6}, (_, i) => <path key={i} d={sm([[-300 + i * 420, 330 + rnd(i, 3) * 120], [-120 + i * 420, 300 + rnd(i, 4) * 100], [120 + i * 420, 336 + rnd(i, 5) * 110], [-60 + i * 420, 360 + rnd(i, 6) * 100]])} fill="#C87A5A" opacity={0.14} />)}
-			<path d={sm([[-400, 720], [100, 660], [380, 690], [700, 640], [1000, 676], [1320, 630], [1640, 668], [2300, 640], [2300, 1600], [-400, 1600]])} fill="#5A3A40" opacity={0.85} />
+			<path d={sm([[-700, 720], [100, 660], [380, 690], [700, 640], [1000, 676], [1320, 630], [1640, 668], [2600, 640], [2600, 1900], [-700, 1900]])} fill="#5A3A40" opacity={0.85} />
 			<Haze y={690} h={120} c="#FFB080" o={0.4} id="aAh1" /></g>
-		<g transform={layerT(cam, 0.45)}>
-			<path d={sm([[-400, 790], [200, 742], [520, 770], [900, 730], [1240, 760], [1600, 726], [2300, 760], [2300, 1700], [-400, 1700]])} fill="#2E1E22" /></g>
-		<g transform={layerT(cam, 1)}>
-			{/* the army behind him on the ridge: banners and a rank of 戈 */}
-			{[150, 300, 450].map((x, i) => <Banner key={i} x={x} y={930} h={560 - i * 40} L={210} w={30} t={t} seed={i * 1.7} />)}
-			<Sil id="aAarmy" x={110} y={930} k={1.6} rim="#FFC890" lx={1} ly={0.1}>{Array.from({length: 8}, (_, i) => <g key={i} transform={`translate(${i * 36},${(i % 2) * 6})`}>
-				<Body s={{hip: [0, -92], sh: [2, -142], hd: [4, -160], kN: [3, -48], fN: [6, -8], kF: [-2, -48], fF: [-6, -8], hN: [14, -108], hF: [10, -100], tilt: 0}} dress="robe" hat="guan" />
-				<path d={`M16,-10 L22,-232`} stroke="#120C09" strokeWidth={2.6} /><path d="M22,-222 L38,-218 L22,-214 Z" fill="#120C09" /></g>)}</Sil>
-			{/* the ridge */}
-			<path d={sm([[-400, 960], [300, 932], [800, 940], [1300, 930], [2300, 950], [2300, 1800], [-400, 1800]])} fill="#120C0A" />
-			{Array.from({length: 40}, (_, i) => { const x = -100 + i * 55 + rnd(i, 2) * 30, y = 936 + Math.abs(x - 900) * 0.02; return <path key={i} d={`M${f1(x)},${f1(y)} l${f1(-4 + rnd(i, 3) * 8)},${f1(-10 - rnd(i, 4) * 16)}`} stroke="#120C0A" strokeWidth={3} />; })}
-			{/* the altar: a rammed-earth platform, the pyre on it, the fire, the smoke */}
-			<path d={pth([[740, 945], [760, 790], [1040, 790], [1060, 945]])} fill="#2A1A12" />
-			{[830, 860, 890, 920].map((y, i) => <path key={i} d={`M${752 + i * 2},${y} L${1048 - i * 2},${y}`} stroke="#1A100B" strokeWidth={3} />)}
-			<path d="M760,790 L1040,790" stroke="#FFC890" strokeWidth={2.5} strokeOpacity={0.6} />
-			{[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M${820 + i * 40},792 L${850 + i * 30},${758 - (i % 2) * 8}`} stroke="#140C08" strokeWidth={9} strokeLinecap="round" />)}
-			<Plume x={900} y={660} h={560} w={180} c="#6A4A44" o={0.4} id="aAsm" seed={t * 0.5} />
-			<Plume x={940} y={420} h={560} w={260} c="#7A5A54" o={0.26} id="aAsm2" seed={2 + t * 0.4} />
-			{[0, 1, 2].map((i) => <Plume key={i} x={960 + i * 70 + 30 * Math.sin(t * 0.6 + i)} y={160 - i * 300} h={420} w={260 + i * 60} c="#6A4A44" o={0.3 - i * 0.05} id={`aAsu${i}`} seed={i * 2 + t * 0.5} />)}
-			<Rising t={t} n={60} x0={800} x1={1200} y0={-700} y1={300} c="#FFC060" seed={25} v={170} o={0.7} r={2.8} sway={50} />
-			<Fire x={900} y={772} s={1.15 + 0.6 * flare} t={t} id="aAf" />
-			<King55 x={590} y={945} k={3.1} id="aAk" upN={upN} bendN={bendN} upF={upF} bendF={bendF} tilt={tilt} rim="#FFE0B0" lx={1} ly={-0.05} stride={0.25} />
-			<Rising t={t} n={50} x0={780} x1={1060} y0={300} y1={760} c="#FFC060" seed={21} v={140} o={0.8} r={2.6} sway={30} />
-		</g>
-		<g transform={layerT(cam, 1.5)}><Blur id="aAfg" s={6}>
-			<path d={sm([[-200, 1100], [100, 1010], [380, 1040], [520, 1100]])} fill="#0A0706" />
-			<path d={sm([[1500, 1100], [1700, 1020], [2000, 1000], [2100, 1100]])} fill="#0A0706" />
-			<path d="M1620,1100 L1700,560" stroke="#0A0706" strokeWidth={10} /><path d="M1690,600 L1730,592 L1700,580 Z" fill="#0A0706" /></Blur></g>
+		<g transform={lA(cam, 0.45)}>
+			<path d={sm([[-900, 790], [200, 742], [520, 770], [900, 730], [1240, 760], [1600, 726], [2800, 760], [2800, 2000], [-900, 2000]])} fill="#2E1E22" /></g></>;
+	if (part === 'back') return <g transform={lA(cam, 1)}>
+		{/* the army behind him on the ridge: banners and a rank of 戈 */}
+		{[150, 300, 450].map((x, i) => <Banner key={i} x={x} y={930} h={560 - i * 40} L={210} w={30} t={t} seed={i * 1.7} />)}
+		<Sil id="aAarmy" x={110} y={930} k={1.6} rim="#FFC890" lx={1} ly={0.1}>{Array.from({length: 8}, (_, i) => <g key={i} transform={`translate(${i * 36},${(i % 2) * 6})`}>
+			<Body s={{hip: [0, -92], sh: [2, -142], hd: [4, -160], kN: [3, -48], fN: [6, -8], kF: [-2, -48], fF: [-6, -8], hN: [14, -108], hF: [10, -100], tilt: 0}} dress="robe" hat="guan" />
+			<path d={`M16,-10 L22,-232`} stroke="#120C09" strokeWidth={2.6} /><path d="M22,-222 L38,-218 L22,-214 Z" fill="#120C09" /></g>)}</Sil>
+		{/* the ridge */}
+		<path d={sm([[-900, 960], [300, 932], [800, 940], [1300, 930], [2800, 950], [2800, 2000], [-900, 2000]])} fill="#120C0A" />
+		{Array.from({length: 40}, (_, i) => { const x = -100 + i * 55 + rnd(i, 2) * 30, y = 936 + Math.abs(x - 900) * 0.02; return <path key={i} d={`M${f1(x)},${f1(y)} l${f1(-4 + rnd(i, 3) * 8)},${f1(-10 - rnd(i, 4) * 16)}`} stroke="#120C0A" strokeWidth={3} />; })}
+		{/* the altar: a rammed-earth platform, the pyre on it, the smoke */}
+		<path d={pth([[740, 945], [760, 790], [1040, 790], [1060, 945]])} fill="#2A1A12" />
+		{[830, 860, 890, 920].map((y, i) => <path key={i} d={`M${752 + i * 2},${y} L${1048 - i * 2},${y}`} stroke="#1A100B" strokeWidth={3} />)}
+		<path d="M760,790 L1040,790" stroke="#FFC890" strokeWidth={2.5} strokeOpacity={0.6} />
+		{[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M${820 + i * 40},792 L${850 + i * 30},${758 - (i % 2) * 8}`} stroke="#140C08" strokeWidth={9} strokeLinecap="round" />)}
+		<Plume x={900} y={660} h={560} w={180} c="#6A4A44" o={0.4} id="aAsm" seed={t * 0.5} />
+		<Plume x={940} y={420} h={560} w={260} c="#7A5A54" o={0.26} id="aAsm2" seed={2 + t * 0.4} />
+		{[0, 1, 2].map((i) => <Plume key={i} x={960 + i * 70 + 30 * Math.sin(t * 0.6 + i)} y={160 - i * 300} h={420} w={260 + i * 60} c="#6A4A44" o={0.3 - i * 0.05} id={`aAsu${i}`} seed={i * 2 + t * 0.5} />)}
+		<Rising t={t} n={60} x0={800} x1={1200} y0={-700} y1={300} c="#FFC060" seed={25} v={170} o={0.7} r={2.8} sway={50} /></g>;
+	if (part === 'front') return <g transform={lA(cam, 1)}>
+		<Fire x={900} y={772} s={1.15 + 0.6 * flare} t={t} id="aAf" />
+		<King55 x={590} y={945} k={3.1} id="aAk" upN={upN} bendN={bendN} upF={upF} bendF={bendF} tilt={tilt} rim="#FFE0B0" lx={1} ly={-0.05} stride={0.25} />
+		<Rising t={t} n={50} x0={780} x1={1060} y0={300} y1={760} c="#FFC060" seed={21} v={140} o={0.8} r={2.6} sway={30} /></g>;
+	return <g transform={lA(cam, 1.5)}><Blur id="aAfg" s={6}>
+		<path d={sm([[-500, 1300], [100, 1010], [380, 1040], [620, 1300]])} fill="#0A0706" />
+		<path d={sm([[1400, 1300], [1700, 1020], [2000, 1000], [2400, 1300]])} fill="#0A0706" />
+		<path d="M1620,1300 L1700,560" stroke="#0A0706" strokeWidth={10} /><path d="M1690,600 L1730,592 L1700,580 Z" fill="#0A0706" /></Blur></g>; };
+const SA: React.FC<{t: number}> = ({t}) => { const cam = camA(t);
+	return <Shell t={t} id="A" bg="#14141E" vig={0.5}>
+		<ASet t={t} cam={cam} part="far" /><ASet t={t} cam={cam} part="back" /><ASet t={t} cam={cam} part="front" /><ASet t={t} cam={cam} part="fg" />
 	</Shell>; };
 
 /* ============================== B · 19.56 the smoke carries 宅 兹 中 或, one per beat; the camera follows them up ============================== */
@@ -278,96 +318,159 @@ const clipSeg = (cam: Cam, a0: V3, b0: V3): [P, P] | null => { let a = toCam(cam
 const CH0 = 28.62;
 const chY = (t: number) => 2 + 4.2 * (t - CH0);   /* the chariot's axle, metres along the road (x = 0) */
 const wallH = (t: number) => 1.6 + [BT(40), BT(41), BT(42), BT(43), BT(44)].reduce((s, tb) => s + 1.3 * ease(seg(t, tb, tb + 0.22)), 0);
-const SC: React.FC<{t: number}> = ({t}) => { const a = 24.09, u = eio(seg(t, a, CH0 - 0.15)), cy = chY(t);
-	const hh = wallH(t), dr = t - a;
+/* ---------- a small depth-sorted 3D renderer for the city (house rules: no clip masks for depth, far → near, layer checks) ----------
+   Every solid is one object (a wall segment, a house, the palace, a gate tower, the gatehouse); every billboard is one object
+   (a worker, a townsman, a tree, a plume, the chariot). Objects are sorted by their distance from the camera and drawn far → near;
+   inside a solid only the faces turned to the camera are drawn (back-face culling), so a solid never needs a mask. Long walls are
+   split into short segments so the sort stays right next to small houses. DepthDebug tints every object by its sort rank. */
+export const DepthDebug = React.createContext(false);
+const vsub = (a: V3, b: V3): V3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const vcross = (a: V3, b: V3): V3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const vdot = (a: V3, b: V3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const vnorm = (a: V3): V3 => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+const vavg = (f: V3[]): V3 => { const n = f.length; return [f.reduce((s, q) => s + q[0], 0) / n, f.reduce((s, q) => s + q[1], 0) / n, f.reduce((s, q) => s + q[2], 0) / n]; };
+const SUNC: V3 = vnorm([0.55, -0.62, 0.56]);
+const rgbOf = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const shadeC = (base: string, n: V3, amb = 0.56) => { const [r, g, b] = rgbOf(base), k = amb + 0.62 * Math.max(0, vdot(n, SUNC)); return `rgb(${Math.min(255, r * k) | 0},${Math.min(255, g * k) | 0},${Math.min(255, b * k) | 0})`; };
+const hslHex = (hue: number, l = 0.5) => { const a = 0.75 * Math.min(l, 1 - l), f = (n: number) => { const k = (n + hue / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0'); }; return `#${f(0)}${f(8)}${f(4)}`; };
+type Face = {p: V3[]; col: string; c?: V3};   /* c: the centre of the convex part the face belongs to (for its outward normal) */
+type Obj = {ref: V3; key: string; solid?: {faces: Face[]; c: V3; extra?: (cam: Cam) => React.ReactNode}; bb?: (cam: Cam, dbg: string | null) => React.ReactNode};
+const boxFaces = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, col: string, o: {top?: boolean; ends?: boolean; colTop?: string} = {}): Face[] => {
+	const c: V3 = [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2];
+	const F: Face[] = [{p: [[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]], col, c}, {p: [[x1, y1, z0], [x0, y1, z0], [x0, y1, z1], [x1, y1, z1]], col, c}];
+	if (o.ends !== false) F.push({p: [[x0, y1, z0], [x0, y0, z0], [x0, y0, z1], [x0, y1, z1]], col, c}, {p: [[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], col, c});
+	if (o.top !== false) F.push({p: [[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], col: o.colTop ?? col, c});
+	return F; };
+/** a pitched roof over [x0,x1]×[y0,y1] at eave height zE: gable (hr = 0) or hip (hr > 0), ridge along x, eaves e, rise rh */
+const roofFaces = (x0: number, x1: number, y0: number, y1: number, zE: number, rh: number, e: number, hr: number, col: string): Face[] => {
+	const X0 = x0 - e, X1 = x1 + e, Y0 = y0 - e, Y1 = y1 + e, ym = (y0 + y1) / 2, zR = zE + rh, r0 = X0 + hr, r1 = X1 - hr, c: V3 = [(x0 + x1) / 2, ym, zE + rh / 3];
+	return [{p: [[X0, Y0, zE], [X1, Y0, zE], [r1, ym, zR], [r0, ym, zR]], col, c}, {p: [[X1, Y1, zE], [X0, Y1, zE], [r0, ym, zR], [r1, ym, zR]], col, c},
+		{p: [[X0, Y1, zE], [X0, Y0, zE], [r0, ym, zR]], col, c}, {p: [[X1, Y0, zE], [X1, Y1, zE], [r1, ym, zR]], col, c},
+		{p: [[X0, Y0, zE], [X0, Y1, zE], [X1, Y1, zE], [X1, Y0, zE]], col: '#2A1C12', c}]; };
+const SC: React.FC<{t: number}> = ({t}) => { const dbg = React.useContext(DepthDebug), a = 24.09, cy = chY(t), hh = wallH(t), dr = t - a;
 	const K: [number, {p: V3; g: V3; f: number}][] = [
 		[a, {p: [-54 + 4 * dr, -7, hh + 2.4], g: [-46 + 4 * dr, 6, hh + 1.1], f: 1250}],
 		[24.95, {p: [-54 + 4 * 0.86, -7, hh + 2.4], g: [-46 + 4 * 0.86, 6, hh + 1.1], f: 1250}],
-		[26.6, {p: [-58, -86, 34], g: [-4, 30, 2], f: 1700}],
+		[26.6, {p: [-62, -96, 40], g: [0, 46, 2], f: 1650}],
 		[CH0, {p: [1.2, cy - 30, 5], g: [0, cy + 30, 6], f: 1500}]];
 	const mixK = (x: {p: V3; g: V3; f: number}, y: {p: V3; g: V3; f: number}, v: number) => ({p: [lerp(x.p[0], y.p[0], v), lerp(x.p[1], y.p[1], v), lerp(x.p[2], y.p[2], v)] as V3, g: [lerp(x.g[0], y.g[0], v), lerp(x.g[1], y.g[1], v), lerp(x.g[2], y.g[2], v)] as V3, f: lerp(x.f, y.f, v)});
 	const ck = track(K, t, mixK, eio), cam = lookAt(ck.p, ck.g, ck.f, 960, 600);
-	void u;
-	const pr = (q: V3): Q => proj(cam, q) as Q, ok = (qs: Q[]) => qs.every((q) => q[2] > 0.5);
-	const poly = (pts: V3[], fill: string, key: string | number, o = 1, stroke?: string) => { const qs = clipProj(cam, pts); if (!qs) return null;
-		return <path key={key} d={pth(qs)} fill={fill} opacity={o} stroke={stroke} strokeWidth={stroke ? 1.5 : undefined} strokeOpacity={0.5} />; };
-	void ok;
-	const h = wallH(t);
-	/* a box: visible faces only (camera is in front, above, at x = cam.p[0]) */
-	const box = (x0: number, x1: number, y0: number, y1: number, z1: number, key: string, cols = {top: '#D8B074', front: '#6E4E30', left: '#4E3620', right: '#B88A52'}) => { const cp = cam.p, out: React.ReactNode[] = [];
-		if (cp[0] < x0) out.push(poly([[x0, y0, 0], [x0, y1, 0], [x0, y1, z1], [x0, y0, z1]], cols.left, `${key}l`));
-		if (cp[0] > x1) out.push(poly([[x1, y0, 0], [x1, y1, 0], [x1, y1, z1], [x1, y0, z1]], cols.right, `${key}r`));
-		if (cp[1] < y0) { out.push(poly([[x0, y0, 0], [x1, y0, 0], [x1, y0, z1], [x0, y0, z1]], cols.front, `${key}f`));
-			/* rammed layers on the front face */
-			const nL = Math.floor(z1 / 0.5); for (let i = 1; i < nL; i++) { const sg = clipSeg(cam, [x0, y0 - 0.01, i * 0.5], [x1, y0 - 0.01, i * 0.5]); if (sg) out.push(<path key={`${key}ly${i}`} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#3E2A18" strokeWidth={1.2} opacity={0.55} />); } }
-		if (cp[2] > z1) out.push(poly([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], cols.top, `${key}t`));
-		return <g key={key}>{out}</g>; };
-	/* workers on a wall top: a row from a to b (world), ramming on the beat */
-	const workers = (a0: V3, b0: V3, n: number, key: string) => Array.from({length: n}, (_, i) => { const uu = (i + 0.5) / n, wp: V3 = [lerp(a0[0], b0[0], uu), lerp(a0[1], b0[1], uu), h];
-		const q = pr(wp); if (q[2] < 1) return null; const k = cam.f / q[2], hp = Math.max(2.1 * k, 24 * Math.min(1, k / 6)); if (hp < 2.5) return <circle key={`${key}${i}`} cx={q[0]} cy={q[1] - hp * 0.5} r={Math.max(0.8, hp * 0.25)} fill="#2A1A10" />;
-		/* the rammer cycle: lifted between beats, slammed down on each beat */
-		const ph = ((t - 1.4498) / BEAT + 1000) % 1, lift = ph < 0.08 ? 0 : ph < 0.7 ? ease((ph - 0.08) / 0.62) : 1 - Math.pow((ph - 0.7) / 0.3, 2.2), off = rnd(i, 7) * 0.12;
-		if (hp > 44) { /* near: a jointed 西周 labourer (knee-length 短衣, topknot band); the arms lift the rammer by IK, the body dips on the hit */
-			const kc = (k * 1.05) / 100, fl = i % 2 === 1, dip = 1 - lift, sx = fl ? -1 : 1, X = (bx: number) => q[0] + sx * kc * bx, Y = (by: number) => q[1] + kc * by;
+	const pr = (q: V3): Q => proj(cam, q) as Q, h = hh;
+	const ground = (pts: V3[], fill: string, key: string, o = 1) => { const qs = clipProj(cam, pts); return qs ? <path key={key} d={pth(qs)} fill={dbg ? '#3A3A3A' : fill} opacity={o} /> : null; };
+	/* ---------- the objects ---------- */
+	const objs: Obj[] = [];
+	const pop = (tb: number) => ease(seg(t, tb, tb + 0.24));
+	const solid = (key: string, faces: Face[], ref?: V3, extra?: (cam: Cam) => React.ReactNode) => { const c = vavg(faces.flatMap((f) => f.p)); objs.push({key, ref: ref ?? c, solid: {faces, c, extra}}); };
+	/* the rammer cycle (lift between beats, hit on the beat) and one worker */
+	const ph = ((t - 1.4498) / BEAT + 1000) % 1, lift = ph < 0.08 ? 0 : ph < 0.7 ? ease((ph - 0.08) / 0.62) : 1 - Math.pow((ph - 0.7) / 0.3, 2.2);
+	const worker = (wp: V3, i: number, key: string) => (cm: Cam, dbgc: string | null) => { const q = proj(cm, wp) as Q; if (q[2] < 1) return null; const k = cm.f / q[2], hp = Math.max(2.1 * k, 24 * Math.min(1, k / 6));
+		if (dbgc) return <rect x={q[0] - hp * 0.25} y={q[1] - hp} width={hp * 0.5} height={hp} fill={dbgc} />;
+		if (hp < 2.5) return <circle cx={q[0]} cy={q[1] - hp * 0.5} r={Math.max(0.8, hp * 0.25)} fill="#2A1A10" />;
+		if (hp > 44) { const kc = (k * 1.05) / 100, fl = i % 2 === 1, dip = 1 - lift, sx = fl ? -1 : 1, X = (bx: number) => q[0] + sx * kc * bx, Y = (by: number) => q[1] + kc * by;
 			const hN: P = [30, -96 - 56 * lift + 6 * dip], hF: P = [31, -84 - 56 * lift + 6 * dip], pb = -44 * lift, pt = pb - 150, strike = ph < 0.2 ? 1 - ph / 0.2 : 0;
-			return <g key={`${key}${i}`}>
-				<Person id={`aCw${key}${i}`} f={{kind: 'zhou', lean: 10 + 10 * dip - 4 * lift, stride: 0.35, hN, hF, flip: fl}} x={q[0]} y={q[1]} k={kc} rim="#FFE0A8" lx={1} ly={0.2} />
+			return <g><Person id={`aCw${key}${i}`} f={{kind: 'zhou', lean: 10 + 10 * dip - 4 * lift, stride: 0.35, hN, hF, flip: fl}} x={q[0]} y={q[1]} k={kc} rim="#FFE0A8" lx={1} ly={0.2} />
 				<path d={`M${f1(X(31))},${f1(Y(pt))} L${f1(X(31))},${f1(Y(pb - 18))}`} stroke="#2A180C" strokeWidth={Math.max(2, kc * 5)} strokeLinecap="round" />
 				<path d={`M${f1(X(31))},${f1(Y(pb - 22))} L${f1(X(31))},${f1(Y(pb))}`} stroke="#2A180C" strokeWidth={Math.max(4, kc * 14)} />
 				{strike > 0 && <ellipse cx={X(31)} cy={Y(-4)} rx={kc * (20 + 70 * (1 - strike))} ry={kc * (8 + 22 * (1 - strike))} fill="#F2DCB0" opacity={0.7 * strike} />}</g>; }
-		const L = (x: number, y: number): P => [q[0] + x * hp * (i % 2 ? 1 : -1), q[1] + y * hp];
-		const dip = 0.03 * (1 - lift), hipP = L(0, -0.5 + dip), sh = L(0.02, -0.8 + dip), hd = L(0.03, -0.92 + dip), poleX = 0.2, top = -0.95 - 0.35 * lift + off * 0, bot = -0.02 - 0.32 * lift;
-		const hand = L(poleX, -0.72 - 0.3 * lift + dip), el = ik2(sh, hand, 0.17 * hp, 0.17 * hp, i % 2 ? 1 : -1);
-		const strike = ph < 0.18 ? 1 - ph / 0.18 : 0;
-		return <g key={`${key}${i}`} stroke="#1E120A" strokeLinecap="round" fill="#1E120A">
+		const L = (x: number, y: number): P => [q[0] + x * hp * (i % 2 ? 1 : -1), q[1] + y * hp], dip = 0.03 * (1 - lift), hipP = L(0, -0.5 + dip), sh = L(0.02, -0.8 + dip), hd = L(0.03, -0.92 + dip);
+		const hand = L(0.2, -0.72 - 0.3 * lift + dip), el = ik2(sh, hand, 0.17 * hp, 0.17 * hp, i % 2 ? 1 : -1), top = -0.95 - 0.35 * lift, bot = -0.02 - 0.32 * lift, strike = ph < 0.18 ? 1 - ph / 0.18 : 0;
+		return <g stroke="#1E120A" strokeLinecap="round" fill="#1E120A">
 			<path d={`M${f1(L(-0.06, 0)[0])},${f1(L(-0.06, 0)[1])} L${f1(hipP[0])},${f1(hipP[1])} L${f1(L(0.07, 0)[0])},${f1(L(0.07, 0)[1])}`} strokeWidth={hp * 0.07} fill="none" />
-			<path d={`M${f1(hipP[0])},${f1(hipP[1])} L${f1(sh[0])},${f1(sh[1])}`} strokeWidth={hp * 0.13} />
-			<circle cx={hd[0]} cy={hd[1]} r={hp * 0.062} stroke="none" />
+			<path d={`M${f1(hipP[0])},${f1(hipP[1])} L${f1(sh[0])},${f1(sh[1])}`} strokeWidth={hp * 0.13} /><circle cx={hd[0]} cy={hd[1]} r={hp * 0.062} stroke="none" />
 			<path d={`M${f1(sh[0])},${f1(sh[1])} L${f1(el[0])},${f1(el[1])} L${f1(hand[0])},${f1(hand[1])}`} strokeWidth={hp * 0.05} fill="none" />
-			<path d={`M${f1(L(poleX, top)[0])},${f1(L(poleX, top)[1])} L${f1(L(poleX, bot)[0])},${f1(L(poleX, bot)[1])}`} strokeWidth={hp * 0.035} />
-			<path d={`M${f1(L(poleX, bot)[0])},${f1(L(poleX, bot)[1])} L${f1(L(poleX, bot - 0.12)[0])},${f1(L(poleX, bot - 0.12)[1])}`} strokeWidth={hp * 0.1} />
-			{strike > 0 && <ellipse cx={L(poleX, 0)[0]} cy={L(poleX, -0.05)[1]} rx={hp * (0.2 + 0.5 * (1 - strike))} ry={hp * (0.1 + 0.18 * (1 - strike))} fill="#F2DCB0" stroke="none" opacity={0.75 * strike} />}</g>; });
-	/* the board frame (版) on a wall top */
-	const boards = (x0: number, x1: number, y: number, key: string) => [y, y + 10].map((yy, i) => { const sg = clipSeg(cam, [x0, yy, h + 0.45], [x1, yy, h + 0.45]); if (!sg) return null; const mid = pr([(x0 + x1) / 2, yy, h + 0.45]);
-		return <path key={`${key}${i}`} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#3A2414" strokeWidth={Math.max(1, Math.min(6, (cam.f / Math.max(5, mid[2])) * 0.3))} />; });
-	const gateRoof = ease(seg(t, BT(45), BT(45) + 0.25)), roofZ = h + 2.8 + 6 * (1 - gateRoof);
+			<path d={`M${f1(L(0.2, top)[0])},${f1(L(0.2, top)[1])} L${f1(L(0.2, bot)[0])},${f1(L(0.2, bot)[1])}`} strokeWidth={hp * 0.035} />
+			<path d={`M${f1(L(0.2, bot)[0])},${f1(L(0.2, bot)[1])} L${f1(L(0.2, bot - 0.12)[0])},${f1(L(0.2, bot - 0.12)[1])}`} strokeWidth={hp * 0.1} />
+			{strike > 0 && <ellipse cx={L(0.2, 0)[0]} cy={L(0.2, -0.05)[1]} rx={hp * (0.2 + 0.5 * (1 - strike))} ry={hp * (0.1 + 0.18 * (1 - strike))} fill="#F2DCB0" stroke="none" opacity={0.75 * strike} />}</g>; };
+	/* walls: rammed earth, split into segments; the workers on a segment stand on it, so they are drawn with it */
+	const EARTH = '#C29A62';
+	const wallRun = (x0: number, x1: number, y0: number, y1: number, n: number, key: string, crew: number) => { for (let i = 0; i < n; i++) {
+		const along = Math.abs(x1 - x0) > Math.abs(y1 - y0), sx0 = along ? lerp(x0, x1, i / n) : x0, sx1 = along ? lerp(x0, x1, (i + 1) / n) : x1, sy0 = along ? y0 : lerp(y0, y1, i / n), sy1 = along ? y1 : lerp(y0, y1, (i + 1) / n);
+		const faces = along ? boxFaces(sx0, sx1, sy0, sy1, 0, h, EARTH, {ends: false}) : boxFaces(sx0, sx1, sy0, sy1, 0, h, EARTH);
+		if (along && i === 0) faces.push({p: [[sx0, sy1, 0], [sx0, sy0, 0], [sx0, sy0, h], [sx0, sy1, h]], col: EARTH});
+		if (along && i === n - 1) faces.push({p: [[sx1, sy0, 0], [sx1, sy1, 0], [sx1, sy1, h], [sx1, sy0, h]], col: EARTH});
+		const wk: V3[] = Array.from({length: crew}, (_, m) => [lerp(sx0, sx1, (m + 0.5) / crew), lerp(sy0, sy1, (m + 0.5) / crew), h]);
+		solid(`${key}${i}`, faces, [(sx0 + sx1) / 2, (sy0 + sy1) / 2, h / 2], (cm) => <>
+			{/* rammed layers on the outer face */}
+			{along && cm.p[1] < sy0 && Array.from({length: Math.floor(h / 0.5)}, (_, l) => { const sg = clipSeg(cm, [sx0, sy0 - 0.02, (l + 1) * 0.5], [sx1, sy0 - 0.02, (l + 1) * 0.5]); return sg ? <path key={l} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#5A3E24" strokeWidth={1} opacity={0.45} /> : null; })}
+			{wk.map((wp, m) => <g key={m}>{worker(wp, i * 7 + m, `${key}${i}`)(cm, dbg ? '#FF00FF' : null)}</g>)}</>); } };
+	wallRun(-90, -15, 0, 12, 7, 'wfl', 2); wallRun(15, 90, 0, 12, 7, 'wfr', 2);
+	wallRun(-90, -78, 12, 150, 10, 'wsl', 1); wallRun(78, 90, 12, 150, 10, 'wsr', 1); wallRun(-90, 90, 138, 150, 14, 'wbk', 1);
+	/* the gate: two rammed-earth towers, a timber gatehouse on them (built on beat 45), its tiled hip roof (beat 46) */
+	const TW = '#B88E58', gh = pop(BT(45)), gr = pop(BT(46)), zt = h + 1.2;
+	solid('gtl', boxFaces(-16, -6, -5, 15, 0, zt, TW)); solid('gtr', boxFaces(6, 16, -5, 15, 0, zt, TW));
+	if (gh > 0.01) solid('gh', [...boxFaces(-16, 16, -4, 14, zt, zt + 3.6 * gh, '#5A3C24', {top: gr < 0.01})], [0, 5, zt + 1.8], (cm) => {
+		/* posts on the gatehouse front */ return cm.p[1] < -4 ? Array.from({length: 7}, (_, i) => { const sg = clipSeg(cm, [-15 + i * 5, -4.02, zt], [-15 + i * 5, -4.02, zt + 3.6 * gh]); return sg ? <path key={i} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#2A180C" strokeWidth={Math.max(1.5, cm.f / Math.max(5, Math.hypot(cm.p[0], cm.p[1] + 4)) * 0.4)} /> : null; }) : null; });
+	if (gr > 0.01) solid('ghr', roofFaces(-16, 16, -4, 14, zt + 3.6, 4.2 * gr, 2.2, 5, '#77706A'), [0, 5, zt + 3.6 + 1.6]);
+	/* the palace: a rammed-earth platform (台基), steps, a timber hall with a big thatched hip roof */
+	const pp = pop(BT(41)), ph2 = pop(BT(43)), proof = pop(BT(44));
+	if (pp > 0.01) { solid('pal', boxFaces(-30, 30, 70, 108, 0, 3.4 * pp, '#C8A06A')); solid('palst', boxFaces(-7, 7, 63, 70, 0, 1.7 * pp, '#B89060')); }
+	if (ph2 > 0.01) solid('palh', boxFaces(-20, 20, 78, 100, 3.4, 3.4 + 5.6 * ph2, '#4E3420', {top: proof < 0.01}), undefined, (cm) => cm.p[1] < 78 ? Array.from({length: 9}, (_, i) => { const sg = clipSeg(cm, [-20 + i * 5, 77.98, 3.4], [-20 + i * 5, 77.98, 3.4 + 5.6 * ph2]); return sg ? <path key={i} d={`M${f1(sg[0][0])},${f1(sg[0][1])} L${f1(sg[1][0])},${f1(sg[1][1])}`} stroke="#C89A60" strokeWidth={1.4} opacity={0.6} /> : null; }) : null);
+	if (proof > 0.01) solid('palr', roofFaces(-20, 20, 78, 100, 9, 6.5 * proof, 2.8, 7, '#A88A58'), [0, 89, 11]);
+	/* houses in rows along the streets (each row rises on a beat), thatch or early tile */
+	const ROOFS = ['#C2A672', '#B0966A', '#8E8A84', '#BA9C66'];
+	const house = (cx: number, cy2: number, r: number, i: number) => { const g = pop(BT(41) + 0.28 * r); if (g < 0.01) return; const x0 = cx - 4, x1 = cx + 4, y0 = cy2 - 3, y1 = cy2 + 3, wz = 2.6 * g;
+		solid(`hs${r}_${i}`, [...boxFaces(x0, x1, y0, y1, 0, wz, '#B89466', {top: false}), ...roofFaces(x0, x1, y0, y1, wz, 2.3 * g, 0.7, 0, ROOFS[(i + r) % 4])], [cx, cy2, 2]); };
+	const xs = [-72, -60, -48, -36, -24, -12, 12, 24, 36, 48, 60, 72];
+	[20, 33, 46].forEach((yy, r) => xs.forEach((x, i) => house(x, yy, r, i)));
+	[[-72, 80], [-60, 80], [-48, 80], [48, 80], [60, 80], [72, 80], [-72, 95], [-60, 95], [-48, 95], [48, 95], [60, 95], [72, 95]].forEach(([x, yy], i) => house(x, yy, 3, i));
+	[118, 130].forEach((yy, r) => [...xs.slice(0, 6), 0, ...xs.slice(6)].forEach((x, i) => house(x, yy, 4 + r, i)));
+	/* trees (billboards), townsfolk walking the streets, cooking smoke */
+	const tree = (x: number, y: number, sz: number, key: string) => objs.push({key, ref: [x, y, 0], bb: (cm, dc) => { const q = proj(cm, [x, y, 0]) as Q; if (q[2] < 1) return null; const k = cm.f / q[2], th = sz * k;
+		if (dc) return <rect x={q[0] - th * 0.3} y={q[1] - th} width={th * 0.6} height={th} fill={dc} />;
+		return <g><path d={`M${f1(q[0])},${f1(q[1])} L${f1(q[0])},${f1(q[1] - th * 0.55)}`} stroke="#2E2014" strokeWidth={Math.max(1, th * 0.06)} />
+			<ellipse cx={q[0]} cy={q[1] - th * 0.68} rx={th * 0.3} ry={th * 0.3} fill="#3E4A26" /><ellipse cx={q[0] - th * 0.06} cy={q[1] - th * 0.74} rx={th * 0.2} ry={th * 0.18} fill="#5E6A34" /></g>; }});
+	[[-30, 26], [30, 40], [-8, 58], [8, 58], [-40, 60], [40, 62], [-66, 108], [66, 108], [-34, 112], [34, 112], [-84, -30], [-60, -40], [-30, -36], [30, -34], [60, -42], [86, -30], [-120, -20], [120, -16]].forEach(([x, y], i) => tree(x, y, 7 + 3 * rnd(i, 4), `tr${i}`));
+	const folkO = seg(t, BT(44), BT(45));
+	if (folkO > 0) Array.from({length: 22}, (_, i) => { const dir = i % 2 ? 1 : -1, onMain = i < 14, sp = 1.2 + 0.5 * rnd(i, 5);
+		const x = onMain ? (i % 4 < 2 ? -2.6 : 2.6) + rnd(i, 6) : -70 + ((rnd(i, 7) * 140 + dir * t * sp * 3) % 140 + 140) % 140, y = onMain ? 14 + ((rnd(i, 8) * 48 + dir * t * sp * 3) % 48 + 48) % 48 : 63;
+		objs.push({key: `fk${i}`, ref: [x, y, 0], bb: (cm, dc) => { const q = proj(cm, [x, y, 0]) as Q; if (q[2] < 1) return null; const k = cm.f / q[2], hp = 1.65 * k; if (hp < 1.5) return null;
+			if (dc) return <rect x={q[0] - hp * 0.2} y={q[1] - hp} width={hp * 0.4} height={hp} fill={dc} />;
+			const sw = Math.sin(t * 7 + i) * 0.12; return <g opacity={folkO} stroke="#24170E" strokeLinecap="round" fill="#24170E">
+				<path d={`M${f1(q[0] - hp * sw)},${f1(q[1])} L${f1(q[0])},${f1(q[1] - hp * 0.48)} L${f1(q[0] + hp * sw)},${f1(q[1])}`} strokeWidth={hp * 0.09} fill="none" />
+				<path d={sm([[q[0] - hp * 0.13, q[1] - hp * 0.45], [q[0] - hp * 0.11, q[1] - hp * 0.84], [q[0] + hp * 0.11, q[1] - hp * 0.84], [q[0] + hp * 0.14, q[1] - hp * 0.45]])} stroke="none" />
+				<circle cx={q[0]} cy={q[1] - hp * 0.92} r={hp * 0.075} stroke="none" /></g>; }}); });
+	[[-48, 20], [24, 33], [-12, 46], [60, 46], [-36, 118], [48, 130], [72, 95]].forEach(([x, y], i) => { const g = seg(t, BT(42) + 0.4 + 0.15 * i, BT(42) + 1.2 + 0.15 * i); if (g <= 0) return;
+		objs.push({key: `sm${i}`, ref: [x, y, 5], bb: (cm, dc) => { const q = proj(cm, [x, y, 4.9]) as Q; if (q[2] < 1 || dc) return null; const k = cm.f / q[2];
+			return <Plume x={q[0]} y={q[1]} h={Math.min(380, k * 26)} w={Math.min(150, k * 7)} c="#E8E0D4" o={0.28 * g} id={`aCs${i}`} seed={i + t * 0.6} />; }}); });
+	/* the procession on the road: two banner bearers, the horses, the chariot (rear view, the camera follows it) */
+	const procItem = (key: string, x: number, y: number, el: (q: Q, k: number) => React.ReactNode, w: number, hgt: number) => objs.push({key, ref: [x, y, 0.5], bb: (cm, dc) => { const q = proj(cm, [x, y, 0]) as Q; if (q[2] < 1) return null; const k = cm.f / q[2];
+		return dc ? <rect x={q[0] - (w * k) / 2} y={q[1] - hgt * k} width={w * k} height={hgt * k} fill={dc} /> : el(q, k); }});
+	procItem('pb1', -1.9, cy + 9, (q, k) => <BannerBearer t={t} x={q[0]} y={q[1]} k={k} seed={0} />, 1.2, 4.2); procItem('pb2', 1.9, cy + 9.3, (q, k) => <BannerBearer t={t} x={q[0]} y={q[1]} k={k} seed={1.6} />, 1.2, 4.2);
+	procItem('ph', 0, cy + 3.2, (q, k) => <Horses t={t} x={q[0]} y={q[1]} k={k} />, 2, 3);
+	procItem('pc', 0, cy, (q, k) => <Chariot55 t={t} x={q[0]} y={q[1]} k={k} />, 2.6, 3.3);
+	/* ---------- sort far → near and draw ---------- */
+	const dist = (q: V3) => Math.hypot(q[0] - cam.p[0], q[1] - cam.p[1], q[2] - cam.p[2]);
+	const order = objs.map((o) => ({o, d: dist(o.ref)})).sort((x, y) => y.d - x.d);
+	const drawn = order.map(({o}, rank) => { const dc = dbg ? hslHex(240 - (240 * rank) / Math.max(1, order.length - 1), 0.5) : null;
+		if (o.bb) return <g key={o.key}>{o.bb(cam, dc)}</g>;
+		const sd = o.solid!; return <g key={o.key}>{sd.faces.map((f, fi) => { const n0 = vnorm(vcross(vsub(f.p[1], f.p[0]), vsub(f.p[2], f.p[0]))), fc = vavg(f.p), n = vdot(n0, vsub(fc, f.c ?? sd.c)) < 0 ? [-n0[0], -n0[1], -n0[2]] as V3 : n0;
+			if (vdot(n, vsub(cam.p, fc)) <= 0) return null; const qs = clipProj(cam, f.p); if (!qs) return null; const fill = shadeC(dc ?? f.col, n, dc ? 0.75 : 0.5);
+			return <path key={fi} d={pth(qs)} fill={fill} stroke={fill} strokeWidth={0.8} strokeLinejoin="round" />; })}{sd.extra?.(cam)}</g>; });
 	const horizon = pr([0, 4000, 0]);
-	const proc = <Procession t={t} cam={cam} cy={cy} />;
-	const passing = cy + 6 > -4;   /* the lead of the procession is in the gate */
 	return <Shell t={t} id="C" bg="#3A4A62" vig={0.45}>
 		<defs><linearGradient id="aCsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#24406A" /><stop offset="0.55" stopColor="#7A8EA8" /><stop offset="0.82" stopColor="#F0C890" /><stop offset="1" stopColor="#FFD8A0" /></linearGradient>
 			<linearGradient id="aCgr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8A7650" /><stop offset="0.4" stopColor="#5E4C30" /><stop offset="1" stopColor="#3A2C1A" /></linearGradient></defs>
-		<rect x={0} y={horizon[1] - 1400} width={W} height={1400} fill="url(#aCsk)" />
-		<Glow x={1320} y={horizon[1] - 70} r={700} c="#FFE0A8" o={0.75} id="aCsun" sy={0.6} /><circle cx={1320} cy={horizon[1] - 60} r={34} fill="#FFF6DC" />
-		{/* the hills far beyond, the plain */}
-		{poly(Array.from({length: 13}, (_, i) => [-4000 + i * 666, 3800, 120 + 140 * rnd(i, 9)] as V3).concat([[4000, 3800, 0], [-4000, 3800, 0]]), '#6A6A7E', 'hills', 0.85)}
-		<rect x={0} y={horizon[1]} width={W} height={H} fill="url(#aCgr)" />
-		{poly([[-3000, -600, 0], [3000, -600, 0], [3000, 3800, 0], [-3000, 3800, 0]], 'url(#aCgr)', 'ground')}
-		{/* fields */}
-		{Array.from({length: 14}, (_, i) => poly([[-700 + i * 100, 220, 0], [-650 + i * 100, 220, 0], [-650 + i * 100, 900, 0], [-700 + i * 100, 900, 0]], i % 2 ? '#7A6A40' : '#5E6E3E', `fd${i}`, 0.5))}
-		{Array.from({length: 8}, (_, i) => poly([[-400 + i * 50, -400, 0], [-370 + i * 50, -400, 0], [-370 + i * 50, -180, 0], [-400 + i * 50, -180, 0]], i % 2 ? '#6A5A34' : '#566236', `fn${i}`, 0.45))}
-		{/* the 洛 river: in front of the city, the camera crosses it */}
-		{poly(Array.from({length: 21}, (_, i) => [-1500 + i * 150, -78 + 30 * Math.sin(i * 0.6), 0] as V3).concat(Array.from({length: 21}, (_, i) => [1500 - i * 150, -50 + 30 * Math.sin((20 - i) * 0.6), 0] as V3)), '#A8C0D0', 'river', 0.95)}
-		{Array.from({length: 18}, (_, i) => { const x = -900 + i * 100 + ((t * 40) % 100), q = pr([x, -64 + 30 * Math.sin((x + 1500) / 150 * 0.6), 0.05]); if (q[2] < 1) return null; const k = cam.f / q[2];
-			return <path key={`gl${i}`} d={`M${f1(q[0] - 4 * k)},${f1(q[1])} L${f1(q[0] + 4 * k)},${f1(q[1])}`} stroke="#FFFFFF" strokeWidth={Math.max(1, 0.4 * k)} opacity={0.6} />; })}
-		{/* the road, a plank bridge where it crosses */}
-		{poly([[-4, -600, 0], [4, -600, 0], [4, 300, 0], [-4, 300, 0]], '#B89A70', 'road')}
-		{poly([[-5, -92, 0.3], [5, -92, 0.3], [5, -36, 0.3], [-5, -36, 0.3]], '#4A321E', 'bridge')}
-		{/* the city: back + side walls, an inner platform, then the front wall around the gate */}
-		{box(-90, 90, 138, 150, h, 'wb')}{workers([-80, 144, 0], [80, 144, 0], 16, 'kb')}
-		{box(-90, -78, 0, 150, h, 'wl')}{workers([-84, 16, 0], [-84, 134, 0], 11, 'kl')}
-		{box(78, 90, 0, 150, h, 'wr')}{workers([84, 16, 0], [84, 134, 0], 11, 'kr')}
-		{box(-30, 30, 70, 110, 3, 'plat', {top: '#C49A68', front: '#8A643E', left: '#6A4A2E', right: '#A88054'})}
-		{[[-50, 60], [45, 70], [-30, 125], [60, 120]].map(([x, y], i) => <Plume key={`sm${i}`} x={pr([x, y, 0])[0]} y={pr([x, y, 0])[1]} h={Math.min(400, cam.f / pr([x, y, 0])[2] * 30)} w={Math.min(140, cam.f / pr([x, y, 0])[2] * 9)} c="#E8E0D0" o={0.25} id={`aCs${i}`} seed={i + t * 0.6} />)}
-		{box(-90, -14, 0, 12, h, 'wfl')}{boards(-86, -16, 1, 'bfl')}{workers([-86, 6, 0], [-17, 6, 0], 13, 'kfl')}
-		{box(-14, -6, -4, 15, h + 2.5, 'tl', {top: '#B89262', front: '#80603E', left: '#5E442A', right: '#9E784A'})}
-		{passing && proc}
-		{box(6, 14, -4, 15, h + 2.5, 'tr', {top: '#B89262', front: '#80603E', left: '#5E442A', right: '#9E784A'})}
-		{box(14, 90, 0, 12, h, 'wfr')}{boards(16, 86, 1, 'bfr')}{workers([17, 6, 0], [86, 6, 0], 13, 'kfr')}
-		{/* the gatehouse roof drops into place on a beat */}
-		{poly([[-16, -6, roofZ], [16, -6, roofZ], [14, 6, roofZ + 2.6], [-14, 6, roofZ + 2.6]], '#3A2618', 'roof', 0.3 + 0.7 * gateRoof)}
-		{poly([[-14, -4, roofZ - 0.1], [14, -4, roofZ - 0.1], [14, -4, roofZ - 2.4], [-14, -4, roofZ - 2.4]], '#2A1A10', 'roofF', 0.3 + 0.7 * gateRoof)}
-		{!passing && proc}
+		<rect x={0} y={horizon[1] - 1400} width={W} height={1400} fill={dbg ? '#202030' : 'url(#aCsk)'} />
+		{!dbg && <><Glow x={1320} y={horizon[1] - 70} r={700} c="#FFE0A8" o={0.75} id="aCsun" sy={0.6} /><circle cx={1320} cy={horizon[1] - 60} r={34} fill="#FFF6DC" /></>}
+		{/* ground plane, drawn first (everything stands on it): far hills, the plain, fields, the 洛水, roads, the city floor */}
+		{ground(Array.from({length: 13}, (_, i) => [-4000 + i * 666, 3800, 120 + 140 * rnd(i, 9)] as V3).concat([[4000, 3800, 0], [-4000, 3800, 0]]), '#6A6A7E', 'hills', 0.85)}
+		<rect x={0} y={horizon[1]} width={W} height={H} fill={dbg ? '#3A3A3A' : 'url(#aCgr)'} />
+		{ground([[-3000, -600, 0], [3000, -600, 0], [3000, 3800, 0], [-3000, 3800, 0]], 'url(#aCgr)', 'gnd')}
+		{Array.from({length: 16}, (_, i) => ground([[-760 + i * 50, -420, 0], [-722 + i * 50, -420, 0], [-722 + i * 50, -110, 0], [-760 + i * 50, -110, 0]], i % 2 ? '#7A6A40' : '#5E6E3E', `fs${i}`, 0.6))}
+		{Array.from({length: 16}, (_, i) => ground([[40 + i * 50, -420, 0], [78 + i * 50, -420, 0], [78 + i * 50, -110, 0], [40 + i * 50, -110, 0]], i % 2 ? '#6A7A42' : '#7E7044', `fe${i}`, 0.6))}
+		{Array.from({length: 10}, (_, i) => ground([[110 + i * 40, -20, 0], [140 + i * 40, -20, 0], [140 + i * 40, 300, 0], [110 + i * 40, 300, 0]], i % 2 ? '#6A7A42' : '#5E6E3E', `fx${i}`, 0.55))}
+		{Array.from({length: 10}, (_, i) => ground([[-140 - i * 40, -20, 0], [-110 - i * 40, -20, 0], [-110 - i * 40, 300, 0], [-140 - i * 40, 300, 0]], i % 2 ? '#7A6A40' : '#5E6E3E', `fw${i}`, 0.55))}
+		{(() => { const cl0 = crSample([[1100, 900], [520, 440], [250, 220], [140, 100], [112, 10], [70, -58], [-120, -68], [-500, -60], [-1500, -72]], 60);
+			const side = (sg: number) => cl0.map((q, i) => { const a2 = cl0[Math.max(0, i - 1)], b2 = cl0[Math.min(cl0.length - 1, i + 1)], dx = b2[0] - a2[0], dy = b2[1] - a2[1], l = Math.hypot(dx, dy) || 1; return [q[0] - (dy / l) * 13 * sg, q[1] + (dx / l) * 13 * sg, 0] as V3; });
+			return <>{ground([...side(1), ...side(-1).reverse()], '#9EBACB', 'river', 0.95)}
+				{!dbg && cl0.filter((_, i) => i % 3 === 0).map((q, i) => { const pp2 = pr([q[0] + 6 * Math.sin(t * 0.8 + i), q[1], 0.05]); if (pp2[2] < 1) return null; const k = cam.f / pp2[2];
+					return <path key={`gl${i}`} d={`M${f1(pp2[0] - 5 * k)},${f1(pp2[1])} L${f1(pp2[0] + 5 * k)},${f1(pp2[1])}`} stroke="#FFFFFF" strokeWidth={Math.max(1, 0.4 * k)} opacity={0.55} />; })}</>; })()}
+		{ground([[-4, -600, 0], [4, -600, 0], [4, 0, 0], [-4, 0, 0]], '#B89A70', 'road')}
+		{ground([[-5, -86, 0.3], [5, -86, 0.3], [5, -46, 0.3], [-5, -46, 0.3]], '#4A321E', 'bridge')}
+		{ground([[-78, 12, 0.02], [78, 12, 0.02], [78, 138, 0.02], [-78, 138, 0.02]], '#A88A62', 'floor')}
+		{ground([[-5, -5, 0.04], [5, -5, 0.04], [5, 64, 0.04], [-5, 64, 0.04]], '#C8AC80', 'main')}
+		{ground([[-78, 60, 0.04], [78, 60, 0.04], [78, 66, 0.04], [-78, 66, 0.04]], '#C8AC80', 'cross')}
+		{drawn}
 	</Shell>; };
 
 /** the procession seen from behind as the camera follows it: banner bearers, two horses, the chariot with 成王 under the canopy */
@@ -598,3 +701,4 @@ export const Act1: React.FC<{t: number}> = ({t}) => { const s = [...SCENES].reve
 	if (t >= 42.2 - 1e-6) return <AbsoluteFill style={{background: '#000'}} />;
 	return <s.C t={t} />; };
 void tube; void lerpP; void trackN; void Cowrie; void poseFK;
+void Procession;

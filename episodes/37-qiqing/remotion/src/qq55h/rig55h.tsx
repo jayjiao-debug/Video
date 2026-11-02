@@ -6,7 +6,7 @@ import {sm, tube, ik, sleeve, mitten, P} from './kf55h';
    by the same filter as kf55h's Person. Adult proportions: about 170 cm standing, head 23 cm (7.4 heads). */
 export type Sk = {hip: P; sh: P; hd: P; kN: P; fN: P; kF: P; fF: P; hN: P; hF: P; eN?: P; eF?: P;
 	toeN?: number; toeF?: number;   // foot direction along the ground: +1 forward (standing), -1 back (kneeling, instep down)
-	tilt?: number;                  // head tilt, degrees (+ = nod down / forward)
+	tilt?: number;                  // head tilt, degrees (+ = nod down / forward); Body keeps it within −20…+35° of the neck's lean
 	elbowUpN?: boolean; elbowUpF?: boolean};
 export type Dress = 'robe' | 'kingrobe' | 'jacket' | 'zsz' | 'labcoat';
 export type Hat = 'guan' | 'mian' | 'towel' | 'cadre' | 'none';
@@ -67,7 +67,13 @@ export const Body: React.FC<{s: Sk; dress: Dress; hat: Hat; part?: 'all' | 'back
 		dressEl = <path d={sm([add(s.sh, n, -12 * W), add(s.hip, n, -13.5 * W), hemB, add(hemB, n, 4), add(hemF, n, -4), hemF, add(s.hip, n, 13.5 * W), add(s.sh, n, 11.5 * W), add(s.sh, sp, 4)])} />;
 	}
 	/* head + hat */
-	const tilt = s.tilt ?? 0, R = rotAt(s.hd, tilt);
+	/* the head follows the neck (owner note, ep55 v2.1): its angle is the neck's own lean (sh → hd; 0 = upright, + = forward) plus a
+	   nod kept within natural limits: up to 35° forward; backward up to 35° while the trunk is upright (a man looking up at the sky),
+	   but only 10° once the trunk bends 40° or more (a man bent over his work looks down along his spine, never with an upright head
+	   sitting on his back like a separate ball). s.tilt is the asked-for head angle. */
+	const nk = sub(s.hd, s.sh), phi = (Math.atan2(nk[0], -nk[1]) * 180) / Math.PI, trunk = (Math.atan2(sp[0], -sp[1]) * 180) / Math.PI;
+	const extMax = -35 + 25 * Math.max(0, Math.min(1, (trunk - 10) / 30));   /* how far the head may tip back from the neck */
+	const tilt = phi + Math.max(extMax, Math.min(35, (s.tilt ?? 0) - phi)), R = rotAt(s.hd, tilt);
 	const head = <path d={sm(headPts(s.hd, tilt))} />;
 	let hatEl: React.ReactNode = null;
 	if (hat === 'guan') hatEl = <><path d={sm([R(-7, -10), R(-6, -22), R(1, -25), R(5, -21), R(4, -13)])} /><path d={sm([R(-11, -19.5), R(8, -21), R(8, -19), R(-11, -17.5)])} /></>;   // a small cap over the topknot, a hairpin across it
@@ -78,7 +84,7 @@ export const Body: React.FC<{s: Sk; dress: Dress; hat: Hat; part?: 'all' | 'back
 		{[-15, -17.5, -20].map((x, i) => <path key={`b${i}`} d={tube(R(x, -20), R(x - 0.3, -2), 0.55, 0.55)} />)}</>;
 	else if (hat === 'towel') hatEl = <><path d={sm([R(-11, -3), R(-10, -13), R(0, -16), R(9, -13), R(12, -6), R(5, -7), R(-4, -6)])} /><path d={sm([R(6, -13), R(12, -20), R(15, -16), R(11, -10)])} /><path d={sm([R(3, -14), R(4, -22), R(8, -20), R(8, -13)])} /></>;   // 羊肚手巾, knotted over the brow
 	else if (hat === 'cadre') hatEl = <path d={sm([R(-11, -3), R(-10, -14), R(1, -18), R(10, -13), R(19, -8), R(18, -6), R(8, -6)])} />;
-	const neck = <path d={tube(add(add(s.sh, sp, 1), n, 2), add(s.hd, [-(sp[0]) * 0, 7]), 5.4, 5)} />;
+	const neck = <path d={tube(add(add(s.sh, sp, 1), n, 2), R(-2, 8), 5.4, 5)} />;   /* into the underside of the (turned) head */
 	const back = <>{arm(shF, eF, s.hF, 'aF')}{leg(s.kF, s.fF, s.toeF ?? 1, 'lF')}{robe && dressEl}<path d={torso} />{leg(s.kN, s.fN, s.toeN ?? 1, 'lN')}{!robe && dressEl}{neck}{head}{hatEl}</>;
 	const front = arm(s.sh, eN, s.hN, 'aN', dress === 'jacket' ? 1.1 : 1);
 	return <g>{part !== 'front' && back}{part !== 'back' && front}</g>; };
