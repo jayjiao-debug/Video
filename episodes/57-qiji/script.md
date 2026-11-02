@@ -75,17 +75,29 @@ Shortest of the 720 orders; the worst is 89,694 km. (v5's 八达岭 → 八达�
 | 37 | 2:34 | **End card** (≥ 5.5 s) | 《新世界七大奇迹，你去过几个？》 · the closing question · pill 「关注 Juno · 一起看懂世界」 · 「距离按大圆直线计算：从北京首都机场出发，经6处，回到长城八达岭；720种顺序中最短」 · 「新七大奇迹为瑞士私人基金会2007年发起的投票」 · sources · photo credits. Dim, red J stamp. | fade |
 | | ~2:40 | end | | |
 
-## Arrival voice lines (ElevenLabs; native voices from the shared library; test before locking)
-| Stop | Language | Line | On-screen Chinese |
+## Arrival voice lines: 「XXX欢迎你」 (owner 23:36; ElevenLabs, native voices from the shared library; test before locking)
+| Stop | Language | Line | On screen |
 |---|---|---|---|
-| 墨西哥 | es-MX | Ha llegado a México. | 您已到达：墨西哥 |
-| 秘鲁 | es-PE | Ha llegado al Perú. | 您已到达：秘鲁 |
-| 巴西 | pt-BR | Você chegou ao Brasil. | 您已到达：巴西 |
-| 意大利 | it | Sei arrivato in Italia. | 您已到达：意大利 |
-| 约旦 | ar (Jordanian) | لقد وصلتَ إلى الأردن | 您已到达：约旦 |
-| 印度 | hi | आप भारत पहुँच गए हैं। | 您已到达：印度 |
-| 中国 | zh (standard Mandarin) | 欢迎回家。 | 欢迎回家 |
-Each line about 1.5 s, placed on a bar just before the stop's first subtitle. Bilingual native check: the report's Whisper transcript plus the owner's ear.
+| 墨西哥 | es-MX | ¡Bienvenido a México! | 墨西哥欢迎你 |
+| 秘鲁 | es-PE | ¡Bienvenido al Perú! | 秘鲁欢迎你 |
+| 巴西 | pt-BR | Bem-vindo ao Brasil! | 巴西欢迎你 |
+| 意大利 | it | Benvenuto in Italia! | 意大利欢迎你 |
+| 约旦 | ar (Jordanian) | أهلاً وسهلاً بك في الأردن! | 约旦欢迎你 |
+| 印度 | hi | भारत में आपका स्वागत है! | 印度欢迎你 |
+| 中国 (home, 长城) | zh (standard Mandarin) | 北京欢迎你！(alt: 欢迎回家) | 北京欢迎你 |
+Each line about 1.5 s, on a bar just before the stop's first subtitle; the on-screen 「XXX欢迎你」 sits on the arrival board with the original line under it. Native check: the report's Whisper transcript plus the owner's ear.
+
+## v7 plan: 科普 about each monument itself (owner 23:32 「我也想做科普」, 23:36 「about the monument itself」)
+Each stop answers one 为什么 / 怎么做到的 about the monument (who built it, why, how it works); the vector drawing turns into a diagram for the answer; the real photo is the proof. Trivia moves onto the 拍立得 (caption, date stamp, sticker) so the subtitles carry the 科普 (about 15 s a stop). No flight / map 科普. **All rows below are unverified** (the fact check was stopped at 23:36 before writing anything).
+| Stop | Monument story | 科普 question → answer (diagram) | On the 拍立得 |
+|---|---|---|---|
+| 奇琴伊察 | Maya temple to Kukulcán, the feathered serpent | 蛇影为什么只在春分秋分？→ the sun sets due west; the stepped corner cuts the light into a row of triangles: the serpent god coming down | 365级 = 一年 |
+| 马丘比丘 | Inca royal estate (Pachacuti, mid-1400s) | 地震这么多，没水泥的墙为什么不倒？→ stones cut to fit, walls lean inward; in a quake they shift and settle back | 没用水泥！ |
+| 基督像 | 1922–1931; reinforced concrete covered in small soapstone tiles | 它是什么做的？为什么老被雷劈？→ concrete + soapstone mosaic; the highest point on the mountain → lightning rods | date stamp 1931 |
+| 斗兽场 | built AD 70–80 | 它为什么少了一半？→ the 1349 earthquake, then centuries as a quarry; the holes = iron clamps pried out | 5万人 |
+| 佩特拉 | Al-Khazneh = a Nabataean royal tomb | 没有脚手架，怎么凿？→ carved from the top down | bullet-hole sticker: 「宝藏？没有」 |
+| 泰姬陵 | a tomb Shah Jahan built for Mumtaz Mahal | 四座塔为什么往外歪？→ to fall away from the tomb in an earthquake (may be lore) | ♥ |
+| 长城 | Ming walls | 砖靠什么粘了几百年？→ 「糯米」: lime mortar with sticky-rice soup | 糯米！ |
 
 ## The album (拍立得) kit
 - Polaroid: thick white bottom border, slight curl and shadow; it **slides out blank and develops** (blank → drawing-tone → the real photo).
