@@ -629,6 +629,9 @@ const Belly: React.FC<{cam: Cam; Lt: BLight; id: string; th0: number; th1: numbe
 	/* screen direction toward the light (for lips and highlights) */
 	const c0 = surfQ((th0 + th1) / 2, (z0 + z1) / 2), pc = P3(c0), pl = P3(add(c0, L, 2)), lsv = nzP([pl[0] - pc[0], pl[1] - pc[1]]);
 	const out: React.ReactNode[] = [];
+	/* the side flanges (θ = ±90°) stand in the plane through the axis, behind everything on the front half: they go in `back`, drawn
+	   first, so the ground, the motifs and the horns cover them and only their outer teeth show at the sides (owner 11-02) */
+	const back: React.ReactNode[] = [];
 	/* 1 · the ground: a fine mesh shaded per facet */
 	const nt = Math.max(2, Math.ceil(((th1 - th0) * BRN) / dq)), nz = Math.max(2, Math.ceil((z1 - z0) / dq));
 	const grid: [number, number, number][][] = [];
@@ -722,7 +725,7 @@ const Belly: React.FC<{cam: Cam; Lt: BLight; id: string; th0: number; th1: numbe
 			const face = [pl.out, ...pl.holes].map((pg) => 'M' + pg.map((q) => { const p = P3(to3(q, tN)); return `${f1(p[0])},${f1(p[1])}`; }).join('L') + 'Z').join('');
 			const fn: V3 = facing > 0 ? tan : [-tan[0], -tan[1], 0], faceC = shade(fn, cen, GOLD_P, 0.8);
 			const dI = pl.inc.map((pg) => 'M' + pg.map((q) => { const p = P3(to3(q, tN)); return `${f1(p[0])},${f1(p[1])}`; }).join('L')).join('');
-			out.push(<g key={`fl${tf.toFixed(2)}_${pi}`}>{edges.map((e) => e.el)}<path d={face} fill={rgb(faceC)} fillRule="evenodd" />
+			(tf === 0 ? out : back).push(<g key={`fl${tf.toFixed(2)}_${pi}`}>{edges.map((e) => e.el)}<path d={face} fill={rgb(faceC)} fillRule="evenodd" />
 				<path d={dI} fill="none" stroke="#1E1006" strokeOpacity={0.7} strokeWidth={Math.max(0.8, 0.14 * ppc(cen))} strokeLinecap="round" strokeLinejoin="round" /></g>); }); });
 	/* 8 · gold traces (L) */
 	if (traces.length) { const tr = traces.map((tc, i) => { if (tc.p <= 0) return null; const d = 'M' + tc.pts.map((q) => { const p = P3(q); return `${f1(p[0])},${f1(p[1])}`; }).join('L');
@@ -732,7 +735,7 @@ const Belly: React.FC<{cam: Cam; Lt: BLight; id: string; th0: number; th1: numbe
 			<g filter={`url(#${id}tb)`} opacity={0.9}>{tr.map((x) => <path key={x.i} d={x.d} fill="none" stroke="#FFB840" strokeWidth={x.w * 3} strokeLinecap="round" strokeLinejoin="round" {...dash(x.p)} />)}</g>
 			{tr.map((x) => <path key={`c${x.i}`} d={x.d} fill="none" stroke="#FFD87A" strokeWidth={x.w} strokeLinecap="round" strokeLinejoin="round" {...dash(x.p)} />)}
 			{tr.map((x) => <path key={`h${x.i}`} d={x.d} fill="none" stroke="#FFF6DA" strokeWidth={x.w * 0.35} strokeLinecap="round" strokeLinejoin="round" {...dash(x.p)} />)}</g>); }
-	return <g><defs><filter id={`${id}hsb`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={9} /></filter></defs>{out}</g>; };
+	return <g><defs><filter id={`${id}hsb`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={9} /></filter></defs>{back}{out}</g>; };
 const dot2 = (a: P, b: P) => a[0] * b[0] + a[1] * b[1];
 const idx2 = (a: number, b: number) => Array.from({length: Math.max(0, b - a + 1)}, (_, j) => a + j);
 

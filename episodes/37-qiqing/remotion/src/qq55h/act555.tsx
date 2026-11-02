@@ -376,7 +376,7 @@ const Guard: React.FC<{t: number; d: number; x: number; walk?: number; turn?: bo
 	const dip = walk >= 0 ? 0 : 5 * Math.exp(-sb * 9) * Math.sin(Math.min(Math.PI, sb * 14));
 	const k = 1.5, gy = GG + 52;
 	let s: Sk;
-	if (walk >= 0) { const fk = walkFK(walk, 36, 5, 6, 12); s = poseFK({...fk, hN: [16, -96], hF: fk.hF}); }
+	if (walk >= 0) { const fk = walkFK(walk, 50, 6, 8, 14); s = poseFK({...fk, hN: [16, -96], hF: fk.hF}); }
 	else s = poseFK({hip: [0, -90 + dip], lean: 1 + dip * 0.4, neck: 4 + dip, tilt: dip * 1.2, fN: [9, -8], fF: [-11, -8], hN: [22, -100 - lift], hF: [-4, -60]});
 	const H = headF(s), hp = (pts: [number, number][]) => sm(pts.map(([a, b]) => H(a, b)));
 	const spearX = s.hN[0] + 2, butt = -lift + (walk >= 0 ? -60 : 0), len = [252, 270, 256, 262, 262, 250][d];
@@ -519,30 +519,10 @@ const pageCam = (t: number) => mixC(P0, P1, ease(seg(t, T('X10') - 0.25, 165.6))
 /** where each 中國 sits: under the screen centre on its beat */
 const ZG: {x: number; y: number; t: number}[] = (() => { const out: {x: number; y: number; t: number}[] = []; const n0 = beatN(T('X10') + 0.01);
 	for (let i = 0; i < 8; i++) { const tb = beatT(n0 + i) + (i === 0 ? 0.3 : 0), c = pageCam(tb), col = [3, 6, 1, 8, 4, 2, 7, 5][i];
-		const y = c.fy + (40 + 30 * Math.sin(i * 2.3)) / c.s, x = PAGE.x1 - 150 - col * 46; out.push({x, y: Math.round((y - PAGE.y0 - 30) / 40) * 40 + PAGE.y0 + 30, t: tb}); }
+		const y = c.fy + (40 + 30 * Math.sin(i * 2.3)) / c.s, x = PAGE.x1 - 150 - col * 46; const r = Math.min(31, Math.max(1, Math.round((y - PAGE.y0 - 30) / 40))); out.push({x, y: r * 40 + PAGE.y0 + 30, t: tb}); }
 	return out; })();
-/** an illegible printed character: a dense square block of strokes (horizontals, verticals, 撇 / 捺 diagonals, dots) in a
-    left-right or top-bottom split, so it reads as print at a glance and never as a real character (or as another script) */
-const pseudoHan = (cx: number, cy: number, c: number, seed: number) => { const R = (k: number) => rnd(seed * 17 + k, 93), h = c / 2; let d = '';
-	const comp = (x0: number, y0: number, w: number, hh: number, k0: number) => { const n = 3 + Math.floor(R(k0) * 3);
-		for (let k = 0; k < n; k++) { const a = R(k0 + k * 5 + 1), b = R(k0 + k * 5 + 2), ty = R(k0 + k * 5 + 3);
-			if (ty < 0.36) d += `M${f1(x0 + w * 0.08)},${f1(y0 + hh * (0.12 + 0.76 * b))}h${f1(w * (0.6 + 0.3 * a))}`;
-			else if (ty < 0.62) d += `M${f1(x0 + w * (0.15 + 0.7 * a))},${f1(y0 + hh * 0.06)}v${f1(hh * (0.55 + 0.4 * b))}`;
-			else if (ty < 0.78) d += `M${f1(x0 + w * (0.55 + 0.3 * a))},${f1(y0 + hh * 0.2)}q${f1(-w * 0.1)},${f1(hh * 0.4)} ${f1(-w * 0.45)},${f1(hh * 0.62)}`;
-			else if (ty < 0.9) d += `M${f1(x0 + w * (0.25 + 0.3 * a))},${f1(y0 + hh * 0.35)}q${f1(w * 0.2)},${f1(hh * 0.35)} ${f1(w * 0.55)},${f1(hh * 0.55)}`;
-			else d += `M${f1(x0 + w * (0.3 + 0.4 * a))},${f1(y0 + hh * 0.15)}l${f1(w * 0.08)},${f1(hh * 0.1)}`; } };
-	const lay = R(0);
-	if (lay < 0.45) { const sp = 0.38 + 0.2 * R(1); comp(cx - h, cy - h, c * sp, c, 10); comp(cx - h + c * sp, cy - h, c * (1 - sp), c, 40); }
-	else if (lay < 0.8) { const sp = 0.4 + 0.2 * R(1); comp(cx - h, cy - h, c, c * sp, 10); comp(cx - h, cy - h + c * sp, c, c * (1 - sp), 40); }
-	else comp(cx - h, cy - h, c, c, 10);
-	return d; };
-const PAGE_MARKS = (() => { const cols: string[] = [];
-	for (let c = 0; c < 11; c++) { const x = PAGE.x1 - 150 - c * 46; let d = '';
-		for (let r = 0; r < 34; r++) { const y = PAGE.y0 + 30 + r * 40; if (rnd(c * 50 + r, 91) < 0.05 + (r % 13 === 12 ? 0.6 : 0)) continue;
-			if (ZG.some((z) => Math.abs(z.x - x) < 2 && (Math.abs(z.y - y) < 2 || Math.abs(z.y + 40 - y) < 2))) continue;
-			d += pseudoHan(x, y, 30, c * 50 + r); }
-		cols.push(d); }
-	return cols; })();
+/* owner 11-02: no fake characters on the page any more, only the title and the real 中國 (each lights on its beat); the words keep
+   one row clear of the inner border at the top and bottom */
 const Page: React.FC<{t: number; o?: number}> = ({t, o = 1}) => { const {x0, x1, y0, y1} = PAGE;
 	const title = '大清國籍條例'.split(''), tx = x1 - 62;
 	return <g opacity={o}>
@@ -556,7 +536,6 @@ const Page: React.FC<{t: number; o?: number}> = ({t, o = 1}) => { const {x0, x1,
 			{/* the title strip */}
 			<rect x={tx - 34} y={y0 + 44} width={68} height={title.length * 66 + 30} fill="none" stroke="#3A2414" strokeWidth={2.4} />
 			{title.map((ch, i) => <text key={i} x={tx} y={y0 + 92 + i * 66} fontFamily={KAI} fontWeight={700} fontSize={56} textAnchor="middle" dominantBaseline="central" fill="#2A1A0E">{ch}</text>)}
-			{PAGE_MARKS.map((d, i) => <path key={i} d={d} stroke="#3A2616" strokeWidth={2.6} strokeLinecap="round" fill="none" />)}
 			{ZG.map((z, i) => { const lit = ease(seg(t, z.t - 0.06, z.t + 0.12)), hot = Math.exp(-Math.max(0, t - z.t) / 0.35);
 				return <LitWord key={i} x={z.x} y={z.y} s={34} gap={40} lit={lit} hot={hot} id={`a5zg${i}`} />; })}
 		</g></g>; };
@@ -639,7 +618,7 @@ const BeamScene: React.FC<{t: number; id: string}> = ({t, id}) => {
 const GateAct: React.FC<{t: number; id: string}> = ({t, id}) => { const a8 = T('X8');
 	const d = id === 'X7' ? dynAt(t) : 5, flashD = id === 'X7' && t > T('X7') + 0.3 ? bpulse(t, 0.1) : 0;
 	const sink = id === 'X8' ? ease(seg(t, a8 + 0.35, a8 + 1.6)) : 0, fall = id === 'X8' ? seg(t, a8 + 0.02, a8 + 1.1) : 0;
-	const walk = id === 'X8' && t > a8 + 0.15 ? (t - a8 - 0.15) * 150 : -1;
+	const walk = id === 'X8' && t > a8 + 0.15 ? (t - a8 - 0.15) * 300 : -1;      /* owner 11-02: was 150, he left too slowly */
 	const gx = 1046 - (walk > 0 ? walk * 1.5 : 0);
 	return <g>
 		<g opacity={0.62 * (1 - sink)} transform={`translate(0 ${f1(520 * sink * sink)})`} ><GateSet d={d} t={t} /></g>
@@ -647,7 +626,7 @@ const GateAct: React.FC<{t: number; id: string}> = ({t, id}) => { const a8 = T('
 		{Array.from({length: 20}, (_, i) => { const x = 420 + i * 72 + 24 * rnd(i, 71), y = GG + 52, h = 14 + 12 * rnd(i, 72), sw = 3 * Math.sin(t * 2 + i); return <path key={i} d={`M${f1(x)},${y} q${f1(2 + sw)},${f1(-h * 0.6)} ${f1(5 + sw)},${f1(-h)}`} fill="none" stroke={SC} strokeWidth={2.6} opacity={0.85} />; })}
 		{flashD > 0.02 && <Glow x={GX} y={470} r={420} c="#FFF2C8" o={0.45 * flashD} id="a5gf" sy={0.6} />}
 		<g transform={`translate(0 ${f1(560 * ease(seg(t, a8 + 0.7, a8 + 1.9)))})`}><Banner x={850} d={d} t={t} side={-1} fall={fall} /><Banner x={1552} d={d} t={t} side={1} fall={cl(fall - 0.08) * 1.1} /></g>
-		{(walk < 0 || gx > 300) && <Guard t={t} d={d} x={gx} walk={walk} turn={walk >= 0} />}
+		{(walk < 0 || gx > -160) && <Guard t={t} d={d} x={gx} walk={walk} turn={walk >= 0} />}
 	</g>; };
 /** X8: 中或 come down the beam where the gate was, then turn into 中國 */
 const X8Word: React.FC<{t: number}> = ({t}) => { const a = T('X8'), u = eio(seg(t, a + 0.35, a + 1.7));
