@@ -15,7 +15,10 @@ Only ✓ rows go on screen. No Wikipedia / 百度百科 / 知乎.
 | 9 | 定陵's problems led to the national rule 「不主动发掘帝王陵寝」 | same: 「这些问题也促成了此后中国文物考古“不主动发掘帝王陵寝”的基本方针。」 | ✓ |
 | 10 | The tomb is in 西安 (临潼), at the foot of 骊山; the 地宫 has never been opened | **to source** (秦始皇帝陵博物院 / 新华社 wording) | ✗ |
 | 11 | 「封存 N 年」 counter base year: 秦始皇 died 前210 (buried 前210); the tomb works ran until about 前208 | **to source**; pick one base year and say 「约」 if needed | ✗ |
-| 12 | Remote sensing (2000s): the 地宫's size and depth, no major flooding/collapse | **to source** (the 2003 「863」 survey reports; 中国地质调查局 2004 PDF found) | ✗ |
+| 12 | 2003: about a year of surface surveys (gravity, magnetics, high-density resistivity, ground radar, audio magnetotellurics, mercury, oxygen, temperature, seismic) mapped the 地宫: dug area about 170 m E–W × 145 m N–S; the chamber in its centre about 15 m high, about 80 m × 50 m, stone-built; **not collapsed, not flooded**; a mercury anomaly over the mound | 光明网（文摘报）2003-12-07 https://www.gmw.cn/01wzb/2003-12/07/06-A7DF3254BE0F6C4E48256DF4004EF407.htm: 「重力、磁法、高密度电法、地质雷达法、音频大地电磁法、测汞、测氧、测温和弹性波法」「开挖范围主体约东西长170米，南北宽145米」「高15米左右，东西长约80米，南北宽约50米」「尚未坍塌进水」. Its mercury direction sentence contradicts itself, so don't use directions | ✓ |
+| 13 | Muons from cosmic rays pass through stone; in 2017 muon imaging found a void at least 30 m long above the Grand Gallery of the Great Pyramid (the first major internal structure found since the 19th century), confirmed by three detector types | Morishima et al., *Nature* 552 (2017), doi 10.1038/nature24647; preprint arXiv:1711.01576 | ✓ |
+| 14 | 2023: a 兰州大学 team used muon imaging for the first time in China on a large monument, the 西安 city wall (马面 no. 58, six measuring points), and found density anomalies inside; published in *Journal of Applied Physics* | 中国科学院 2023-01-09 https://www.cas.cn/kj/202301/t20230109_4860841.shtml: 「在马面墙内部分区域明显的密度异常体」「宇宙射线缪子存在于自然界，具有极强的穿透能力」 | ✓ |
+| 15 | Muon imaging has **not** been used on 秦陵 | (absence; say 「还没有用在秦陵上」 only as 「目前公开报道里没有」, or don't say it at all) | — |
 
 ## Not used (kept off screen)
 - 「机关至今还能发射」 or 「机关早就朽了」: no source either way.

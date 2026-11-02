@@ -20,8 +20,13 @@
   3. Guess 2, 机关: 《史记》 says crossbows that shoot anyone who digs in. That's the legend, but it isn't why either.
   4. **Second question (30–60 s):** 「那上一次打开皇帝陵，发生了什么？」 1956, 定陵. More than 3,000 objects came out, and the silk could not be protected. The lesson became the national rule 「不主动发掘帝王陵寝」.
   5. **The proof, in our own time:** the 兵马俑 were painted. After 2,000 years underground, the paint starts changing 15 s after it meets air and has dried, curled and flaked within 4 minutes. This is the colour-draining shot, the film's one big visual moment.
-  6. **The answer:** opening it would destroy what's inside. The museum's honorary director: 「能不挖就不挖」. If technology can see inside without opening it, it's better left closed.
-  7. **End question to the viewer:** 「如果是你，挖不挖？」 (conflict mark: comments).
+  6. **Third question (owner 11-02 15:40): 「不挖，那怎么知道里面有什么？」** This is the question every viewer has at this point. The film answers it, and the answer is the payoff: we are already looking inside without digging.
+     - **2003, from the surface only:** a year of gravity, magnetic, resistivity, ground radar and mercury surveys mapped the hidden chamber, about 80 m × 50 m and about 15 m high, stone-built, and **not collapsed and not flooded**. The 70× mercury was itself measured from above, without digging. (光明网/文摘报 2003-12-07.)
+     - **Cosmic rays as an X-ray from the sky (缪子成像):** muons from space pass through stone. In 2017 they revealed a void at least 30 m long inside the Great Pyramid, the first big find there since the 1800s (Nature). In 2023 a 兰州大学 team used them for the first time in China on a large monument, **西安's own city wall**, and found density anomalies inside it.
+     - Say clearly that muons have **not** been used on 秦陵. The film only shows that the tool exists and works on stone this size.
+  7. **The answer:** they don't dig because opening it would destroy what's inside, and because we're learning to see in without opening it. The museum's honorary director: 「能不挖就不挖」; if technology can show what's inside without opening, it's better left closed.
+  8. **End question to the viewer:** 「如果是你，挖不挖？」 (conflict mark: comments), or 「你觉得，我们这代人能“看”到里面吗？」. The screenwriter picks one.
+- **Time budget:** 8 beats in ≤2:59. Keep 机关 to one line and give the time to the paint and the "how to look" payoff.
 - **Frame:** third person, with the searched question as the title. Counter: 「封存 N 年」 (from 前210 / 前208 to 2026; settle the exact base year in facts).
 - **Series:** 「文物谜题」 合集 with 圆明园 and 勾践剑. A possible part 2 is 「8000个兵马俑，真的没有两张一样的脸吗？」.
 
