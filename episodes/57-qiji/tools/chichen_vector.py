@@ -99,7 +99,7 @@ g.append(poly([(TC, 962), (TR, 1000), (TR, 1033), (TC, 1000)], P['t_frieze_r'], 
 g.append(poly([(TL - 4, 1028), (TC, 998), (TC, 1011), (TL - 4, 1044)], P['t_corn'], INK, 2))           # middle moulding
 g.append(poly([(TC, 998), (TR + 4, 1033), (TR + 4, 1046), (TC, 1011)], P['t_corn'], INK, 2))
 g.append(poly([(TL - 3, 985), (963, 933), (TR + 3, 983), (TR + 3, 1000), (970, 962), (TL - 3, 1001)], P['t_corn'], INK, 3))   # roof slab
-g.append(line([(TL, 986), (963, 934), (TR, 984)], P['t_corn_top'], 4))
+g.append(line([(TL + 2, 991), (963, 940), (TR - 2, 989)], P['t_corn_top'], 4))
 for i in range(1, 7):   # frieze blocks (generated along the faces)
     x = TL + (TC - TL) * i / 7; g.append(line([(x, seg_y((TL, 1001), (TC, 962), x) + 3), (x, seg_y((TL, 1028), (TC, 998), x) - 2)], '#7E7B72', 1.5))
     x = TC + (TR - TC) * i / 7; g.append(line([(x, seg_y((TC, 962), (TR, 1000), x) + 3), (x, seg_y((TC, 998), (TR, 1033), x) - 2)], '#6E695E', 1.5))
@@ -126,7 +126,6 @@ for k in range(1, 10):
         top = lerp(a, f, t); bot = lerp(b0, f0, t); return lerp(top, bot, d)
     g.append(poly([lp(0, 0), lp(1, 0), lp(1, .16), lp(0, .16)], P['ledge'], 'none', 0, 'opacity=".55"'))
     g.append(line([lp(0, .42), lp(1, .42)], P['panel'], 2, 'opacity=".8"'))
-    g.append(line([lp(0, .62), lp(1, .62)], P['panel'], 1.5, 'opacity=".5"'))
     for j in range(1, 7):   # panel joints, crowding toward the far (left) corner
         t = (j / 7) ** 1.15; g.append(line([lp(t, .16), lp(t, .42)], P['panel'], 2, 'opacity=".55"'))
     g.append(line([b0, f0], INK, 2.5))   # foot of the terrace
@@ -235,10 +234,10 @@ def blade(tip, base, w, col, bend=0.0, bands=True, lit=True, rib=True):
             t = 1 - (taper * .8) - (i + R.uniform(.2, .7)) * 120 / L
             if t < .05: break
             c = ax(t); h = hw(t) * .78
-            out.append(line([(c[0] + nx * h, c[1] + ny * h), (c[0] + nx * h * .3 + ux * 10, c[1] + ny * h * .3 + uy * 10), (c[0] - nx * h * .3, c[1] - ny * h * .3), (c[0] - nx * h + ux * 9, c[1] - ny * h + uy * 9)], P['lf_band'], 5, 'opacity=".5"'))
+            out.append(line([(c[0] + nx * h, c[1] + ny * h), (c[0] + nx * h * .3 + ux * 10, c[1] + ny * h * .3 + uy * 10), (c[0] - nx * h * .3, c[1] - ny * h * .3), (c[0] - nx * h + ux * 9, c[1] - ny * h + uy * 9)], P['lf_band'], 6, 'opacity=".62"'))
     if rib: out.append(line([ax(t) for t in [i / 12 for i in range(12)] if ax(t)[1] < H + 20], P['lf_rib'], 2, 'opacity=".8"'))   # mid-rib
     return out
-g.append(poly([(0, 2080), (300, 2040), (700, 2060), (1000, 2050), (1300, 2090), (1932, 2070), (1932, H), (0, H)], P['lf_back'], 'none', 0))
+g.append(poly([(0, 2140), (300, 2110), (700, 2130), (1000, 2110), (1300, 2150), (1932, 2130), (1932, H), (0, H)], P['lf_back'], 'none', 0))
 for i in range(22):   # back row of dark blades filling the base of the clump (generated)
     x = -40 + (W + 80) * (i + R.uniform(.1, .9)) / 22; tipy = R.uniform(1930, 2120)
     g += blade((x + R.uniform(-50, 50), tipy), (x + R.uniform(-30, 30), H), R.uniform(80, 130), R.choice([P['lf_back'], P['lf_dark']]), R.uniform(-20, 20), bands=False, lit=False, rib=False)
@@ -275,23 +274,30 @@ def inside(p, q):
     for (x1, y1), (x2, y2) in zip(q, q[1:] + q[:1]):
         if (y1 > y) != (y2 > y) and x < x1 + (x2 - x1) * (y - y1) / (y2 - y1): c = not c
     return c
+def spray(x, y, ang, L, col, n=5, sw=1.5):
+    """one polygon carrying a fan of n pointed leaves (generated lobes) growing from (x, y) toward ang"""
+    q = [(x, y)]
+    for i in range(n):
+        a = ang + (i - (n - 1) / 2) * .42 + R.uniform(-.12, .12); l = L * R.uniform(.75, 1.05); w = .17
+        for rr, da in [(.32, -w * .5), (.62, -w), (1, 0), (.62, w), (.32, w * .5)]:
+            q.append((x + math.cos(a + da) * l * rr, y + math.sin(a + da) * l * rr))
+    return poly(q, col, INK, sw)
 def canopy(outline, holes, n_in, lit, base=P['can_d']):
-    """a tree mass from a hand-traced outline: dark fill, sky holes, leaves generated along every edge (pointing out
-    of the mass) and sunlit leaves scattered inside"""
+    """a tree mass from a hand-traced outline: fill, sky holes, leaf sprays generated along every edge (fanning out
+    of the mass) and sunlit sprays scattered inside"""
     out = [poly(outline, base, INK, 2.5)]
     for h in holes: out.append(poly(h, 'url(#sky)', INK, 2))
-    for path, sgn, step in [(outline + outline[:1], 1, 36)] + [(h + h[:1], -1, 34) for h in holes]:
-        L = sum(math.dist(a, b) for a, b in zip(path, path[1:]))
-        for (x, y), (tx, ty) in along(path, int(L / step)):
-            nx, ny = ty * sgn, -tx * sgn   # outward normal for a clockwise outline
-            if (x <= 2 or x >= W - 2 or y <= 2) and sgn > 0: continue
-            a = math.atan2(ny, nx) + R.uniform(-.7, .7)
-            out.append(leaf(x - nx * 10, y - ny * 10, a, R.uniform(36, 52), R.choice([P['can_l'], P['can_y']]) if lit(x, y) else R.choice([P['can_m'], P['can_d'], P['can_l']])))
     xs = [p[0] for p in outline]; ys = [p[1] for p in outline]; k = 0
     while k < n_in:
         x, y = R.uniform(min(xs), max(xs)), R.uniform(min(ys), max(ys))
         if not inside((x, y), outline) or any(inside((x, y), h) for h in holes): continue
-        out.append(leaf(x, y, R.uniform(0, 2 * math.pi), R.uniform(34, 50), R.choice([P['can_l'], P['can_y'], P['can_l']]) if lit(x, y) else R.choice([P['can_m'], P['can_l']]), 1.3)); k += 1
+        out.append(spray(x, y, R.uniform(0, 2 * math.pi), R.uniform(44, 62), R.choice([P['can_l'], P['can_y']]) if lit(x, y) else R.choice([P['can_m'], P['can_d']]), R.randint(3, 5), 1.3)); k += 1
+    for path, sgn, step in [(outline + outline[:1], 1, 58)] + [(h + h[:1], -1, 50) for h in holes]:
+        L = sum(math.dist(a, b) for a, b in zip(path, path[1:]))
+        for (x, y), (tx, ty) in along(path, max(3, int(L / step))):
+            nx, ny = ty * sgn, -tx * sgn   # outward normal for a clockwise outline
+            if (x <= 2 or x >= W - 2 or y <= 2) and sgn > 0: continue
+            out.append(spray(x - nx * 16, y - ny * 16, math.atan2(ny, nx) + R.uniform(-.3, .3), R.uniform(50, 66), R.choice([P['can_l'], P['can_y']]) if lit(x, y) else R.choice([P['can_m'], P['can_d'], P['can_l']])))
     return out
 for p, w in [([(0, 70), (60, 95), (130, 140), (200, 200), (260, 250)], 8), ([(300, 0), (330, 40), (380, 70), (440, 100), (520, 60)], 3), ([(330, 40), (420, 20), (480, 0)], 2),
              ([(1932, 120), (1800, 140), (1650, 170), (1500, 200), (1350, 230), (1250, 260)], 9), ([(1000, 110), (1100, 80), (1200, 110), (1300, 160), (1380, 220)], 7),
@@ -300,15 +306,15 @@ for p, w in [([(0, 70), (60, 95), (130, 140), (200, 200), (260, 250)], 8), ([(30
 TLo = [(0, 0), (289, 0), (282, 40), (278, 78), (301, 125), (372, 136), (407, 148), (431, 207), (419, 266), (395, 301), (348, 336), (313, 372),
        (266, 407), (195, 419), (136, 407), (78, 325), (42, 278), (19, 231), (0, 184)]
 g += canopy(TLo, [[(22, 98), (78, 95), (85, 140), (30, 150)], [(228, 300), (285, 296), (290, 350), (240, 362)], [(150, 200), (195, 190), (200, 240), (160, 250)]],
-            34, lambda x, y: (x * 7 + y * 3) % 10 < 4, P['can_m'])
+            16, lambda x, y: (x * 7 + y * 3) % 10 < 4, P['can_m'])
 LEo = [(0, 390), (40, 398), (46, 470), (40, 540), (0, 556), (0, 590), (60, 596), (125, 619), (184, 601), (172, 654), (125, 713), (148, 748), (101, 795),
        (113, 842), (101, 913), (54, 960), (19, 1007), (0, 1010)]
-g += canopy(LEo, [], 14, lambda x, y: False, '#3F5A3A')
+g += canopy(LEo, [], 6, lambda x, y: False, '#3F5A3A')
 TRo = [(955, 0), (957, 18), (951, 140), (996, 162), (1018, 207), (1051, 262), (1073, 284), (1090, 351), (1090, 440), (1129, 473), (1184, 496), (1251, 496),
        (1296, 440), (1373, 407), (1451, 362), (1473, 296), (1518, 318), (1573, 373), (1584, 440), (1618, 473), (1651, 440), (1673, 373), (1718, 318), (1762, 284),
        (1807, 262), (1851, 251), (1896, 251), (1932, 229), (1932, 0)]
 g += canopy(TRo, [[(1105, 155), (1190, 150), (1200, 235), (1120, 245)], [(1222, 222), (1290, 215), (1300, 280), (1235, 288)], [(1340, 290), (1420, 280), (1410, 350), (1350, 360)],
                   [(1010, 40), (1070, 30), (1085, 90), (1020, 100)]],
-            80, lambda x, y: x > 1430 and y < 330 or (x + y) % 3 == 0, P['can_m'])
+            40, lambda x, y: x > 1430 and y < 330 or (x + y) % 3 == 0, P['can_m'])
 g.append('</svg>')
 open(sys.argv[1], 'w').write('\n'.join(g)); print('ok', len(g), 'elements')
