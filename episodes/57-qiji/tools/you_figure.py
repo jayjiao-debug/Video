@@ -17,7 +17,7 @@ def limb(a, e, b, w0, w1, fill):
     poly = L + R[::-1]
     return (f'<path d="M' + ' L'.join(f'{x:.1f},{y:.1f}' for x, y in poly) + f'Z" fill="{fill}"/>'
             f'<circle cx="{a[0]:.1f}" cy="{a[1]:.1f}" r="{w0 / 2:.1f}" fill="{fill}"/>')
-def figure(J, u, face=False, tilt=6, fill='url(#yb)', tag=True, uid='y'):
+def figure(J, u, face=False, tilt=6, fill='url(#yb)', tag=True, uid='y', chest=None):
     """J: joints dict (head, neck, l/r_shoulder, l/r_elbow, l/r_wrist, l/r_hip, l/r_knee, l/r_ankle); u: unit = shoulder width"""
     nk, hc = J['neck'], _mid(J['l_hip'], J['r_hip']); tl = math.dist(nk, hc)
     side = 1 if J['r_shoulder'][0] > J['l_shoulder'][0] else -1
@@ -37,6 +37,13 @@ def figure(J, u, face=False, tilt=6, fill='url(#yb)', tag=True, uid='y'):
             f'C{nk[0] + ww * 1.05:.1f},{nk[1] + tl * .5:.1f} {hc[0] + wh * 1.15:.1f},{hc[1] + tl * .02:.1f} {hc[0] + wh * .6:.1f},{hc[1] + tl * .13:.1f} '
             f'Q{hc[0]:.1f},{hc[1] + tl * .2:.1f} {hc[0] - wh * .6:.1f},{hc[1] + tl * .13:.1f} C{hc[0] - wh * 1.15:.1f},{hc[1] + tl * .02:.1f} {nk[0] - ww * 1.05:.1f},{nk[1] + tl * .5:.1f} {nk[0] - wc:.1f},{nk[1] + tl * .08:.1f} Z')
     g.append(f'<path d="{body}" fill="{fill}"/>')
+    chest_svg = ''
+    if chest:
+        cx, cy = _mid(nk, hc, .46); fs = u * chest.get('size', .34)
+        if chest.get('badge'):
+            chest_svg += f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{fs * .78:.1f}" fill="{chest["badge"]}"/>'
+        chest_svg += (f'<text x="{cx:.1f}" y="{cy + fs * .04:.1f}" font-family="Noto Sans CJK SC" font-weight="900" font-size="{fs:.1f}" '
+                      f'text-anchor="middle" dominant-baseline="central" fill="{chest.get("color", "#2B2724")}">你</text>')
     hx, hy = J['head']; hr = u * .28
     g.append(f'<g transform="rotate({tilt} {hx:.1f} {hy:.1f})"><ellipse cx="{hx:.1f}" cy="{hy:.1f}" rx="{hr:.1f}" ry="{hr * 1.08:.1f}" fill="{fill}"/>')
     if face:
@@ -45,7 +52,7 @@ def figure(J, u, face=False, tilt=6, fill='url(#yb)', tag=True, uid='y'):
                  f'<path d="M{hx - hr * .16:.1f},{hy + hr * .3:.1f} Q{hx:.1f},{hy + hr * .45:.1f} {hx + hr * .16:.1f},{hy + hr * .3:.1f}" fill="none" stroke="#2B2724" stroke-width="{hr * .055:.1f}" stroke-linecap="round"/>'
                  f'<circle cx="{hx - hr * .56:.1f}" cy="{hy + hr * .3:.1f}" r="{hr * .14:.1f}" fill="#F4A9A0" opacity=".45"/><circle cx="{hx + hr * .56:.1f}" cy="{hy + hr * .3:.1f}" r="{hr * .14:.1f}" fill="#F4A9A0" opacity=".45"/>')
     g.append('</g>')
-    out = f'<g filter="url(#yds)">{"".join(g)}</g>'
+    out = f'<g filter="url(#yds)">{"".join(g)}</g>{chest_svg}'
     if tag:
         ts = u * .2; ty = hy - hr * 1.08 - ts * .45
         out += (f'<g filter="url(#yds)"><rect x="{hx - ts * .85:.1f}" y="{ty - ts * 1.25:.1f}" width="{ts * 1.7:.1f}" height="{ts * 1.25:.1f}" rx="{ts * .32:.1f}" fill="#FFF"/>'
