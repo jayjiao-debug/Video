@@ -248,19 +248,25 @@ const ZI: Stroke[] = [-0.2, 0.2].flatMap((x) => [
 	{w: 0.07, pts: Array.from({length: 13}, (_, i) => [x + 0.13 * Math.sin((i / 12) * 2 * Math.PI), 0.1 - 0.14 * Math.cos((i / 12) * 2 * Math.PI)] as [number, number])},
 	{w: 0.07, pts: [[x, 0.24], [x - 0.04, 0.46]]}]);
 /** a plausible bronze-script glyph that is not a readable character: 3–5 curved, thick strokes on a seeded layout, sometimes a 肥笔 blob */
-const pseudoGlyph = (seed: number): Stroke[] => {
+export const pseudoGlyph = (seed: number): Stroke[] => {
 	const r = (i: number) => rnd(seed * 13 + i, 5), S: Stroke[] = [], ww = () => 0.085 + r(S.length * 7 + 3) * 0.03;
 	const curve = (a: [number, number], b: [number, number], bend: number): [number, number][] => { const mx = (a[0] + b[0]) / 2 - (b[1] - a[1]) * bend, my = (a[1] + b[1]) / 2 + (b[0] - a[0]) * bend;
 		return Array.from({length: 7}, (_, i) => { const u = i / 6, m = 1 - u; return [m * m * a[0] + 2 * m * u * mx + u * u * b[0], m * m * a[1] + 2 * m * u * my + u * u * b[1]] as [number, number]; }); };
-	const comp = (x0: number, y0: number, w: number, h: number, k: number) => { const t = Math.floor(r(k) * 8), cx = x0 + w / 2, cy = y0 + h / 2, b = (r(k + 2) - 0.5) * 0.5;
-		if (t === 0) S.push({w: ww(), pts: [[x0 + w * 0.18, cy - h * 0.28], [cx, cy - h * 0.36], [x0 + w * 0.84, cy - h * 0.26], [x0 + w * 0.8, cy + h * 0.28], [cx, cy + h * 0.34], [x0 + w * 0.2, cy + h * 0.26], [x0 + w * 0.18, cy - h * 0.28]]});   // a round 口
-		else if (t === 1) S.push({w: ww(), pts: curve([cx + w * 0.05, y0 + h * 0.04], [cx - w * 0.08, y0 + h * 0.96], b)}, {w: ww(), pts: curve([x0 + w * 0.08, cy - h * 0.12], [x0 + w * 0.92, cy - h * 0.2], -b * 0.5)});
-		else if (t === 2) S.push({w: ww(), pts: curve([cx, y0 + h * 0.1], [x0 + w * 0.12, y0 + h * 0.92], 0.18)}, {w: ww(), pts: curve([cx, y0 + h * 0.1], [x0 + w * 0.88, y0 + h * 0.92], -0.18)}, {w: ww(), pts: curve([x0 + w * 0.2, cy], [x0 + w * 0.8, cy - h * 0.05], 0.1)});   // a figure / 大
-		else if (t === 3) S.push({w: ww(), pts: [[x0 + w * 0.82, y0 + h * 0.1], [x0 + w * 0.3, y0 + h * 0.22], [x0 + w * 0.22, cy], [x0 + w * 0.36, y0 + h * 0.8], [x0 + w * 0.86, y0 + h * 0.88]]}, {w: ww(), pts: curve([x0 + w * 0.3, cy], [x0 + w * 0.76, cy - h * 0.08], 0.15)});
-		else if (t === 4) S.push({w: ww(), pts: curve([x0 + w * 0.15, y0 + h * 0.15], [cx, y0 + h * 0.58], 0.2)}, {w: ww(), pts: curve([x0 + w * 0.85, y0 + h * 0.12], [cx, y0 + h * 0.58], -0.2)}, {w: ww(), pts: curve([cx, y0 + h * 0.58], [cx + w * 0.04, y0 + h * 0.96], 0.1)});   // 又 / 止 fork
-		else if (t === 5) S.push({w: 0.12, fill: true, pts: [[cx - w * 0.16, cy - h * 0.22], [cx + w * 0.08, cy - h * 0.26], [cx + w * 0.18, cy], [cx + w * 0.02, cy + h * 0.24], [cx - w * 0.14, cy + h * 0.08]]}, {w: ww(), pts: curve([x0 + w * 0.1, y0 + h * 0.9], [x0 + w * 0.9, y0 + h * 0.86], 0.12)});   // 肥笔
-		else if (t === 6) S.push({w: ww(), pts: Array.from({length: 11}, (_, i) => [cx + w * 0.34 * Math.cos(Math.PI * (0.3 + 1.45 * i / 10)), cy + h * 0.38 * Math.sin(Math.PI * (0.3 + 1.45 * i / 10))] as [number, number])}, {w: ww(), pts: curve([cx - w * 0.1, cy - h * 0.05], [cx + w * 0.22, cy + h * 0.02], 0.1)});
-		else S.push({w: ww(), pts: [[x0 + w * 0.3, y0 + h * 0.05], [x0 + w * 0.7, y0 + h * 0.3], [x0 + w * 0.28, y0 + h * 0.55], [x0 + w * 0.72, y0 + h * 0.8], [x0 + w * 0.4, y0 + h * 0.98]]});   // a cord
+	/* v2.1: component vocabulary taken from 金文 radicals (口 十 宀 貝 糸 人 木 目 戈 + 肥笔), never Latin-letter shapes
+	   (the v2 review read E / A / Y / ε in the old set) */
+	const comp = (x0: number, y0: number, w: number, h: number, k: number) => { const t = Math.floor(r(k) * 10), cx = x0 + w / 2, cy = y0 + h / 2, b = (r(k + 2) - 0.5) * 0.4;
+		const P = (fx: number, fy: number): [number, number] => [x0 + w * fx, y0 + h * fy];
+		if (t === 0) S.push({w: ww(), pts: [P(0.2, 0.22), P(0.5, 0.16), P(0.8, 0.22), P(0.82, 0.78), P(0.5, 0.84), P(0.18, 0.78), P(0.2, 0.22)]});   // 口
+		else if (t === 1) S.push({w: ww(), pts: curve(P(0.52, 0.04), P(0.46, 0.96), b)}, {w: ww(), pts: curve(P(0.14, 0.42), P(0.86, 0.38), -b * 0.4)}, {w: 0.13, fill: true, pts: [P(0.42, 0.36), P(0.56, 0.34), P(0.58, 0.46), P(0.44, 0.48)]});   // 十 with a 肥笔 knot
+		else if (t === 2) S.push({w: ww(), pts: [P(0.1, 0.52), P(0.1, 0.24), P(0.5, 0.06), P(0.9, 0.24), P(0.9, 0.52)]}, {w: ww(), pts: [P(0.5, 0.06), P(0.5, -0.02)]}, {w: ww(), pts: curve(P(0.3, 0.6), P(0.72, 0.92), 0.2)});   // 宀 over a stroke
+		else if (t === 3) S.push({w: ww(), pts: [P(0.3, 0.1), P(0.7, 0.1), P(0.76, 0.5), P(0.7, 0.76), P(0.3, 0.76), P(0.24, 0.5), P(0.3, 0.1)]}, {w: ww(), pts: [P(0.3, 0.42), P(0.7, 0.42)]}, {w: ww(), pts: curve(P(0.36, 0.78), P(0.18, 0.98), 0.1)}, {w: ww(), pts: curve(P(0.64, 0.78), P(0.82, 0.98), -0.1)});   // 貝
+		else if (t === 4) { for (const yy of [0.3, 0.64]) S.push({w: ww(), pts: Array.from({length: 13}, (_, i) => [cx + w * 0.17 * Math.sin((i / 12) * 2 * Math.PI) * (1 + 0.15 * Math.cos(i)), y0 + h * (yy - 0.15 * Math.cos((i / 12) * 2 * Math.PI))] as [number, number])});
+			S.push({w: ww(), pts: [P(0.5, 0.8), P(0.47, 0.98)]}, {w: ww(), pts: curve(P(0.22, 0.98), P(0.78, 0.98), 0.12)}); }   // 糸
+		else if (t === 5) S.push({w: 0.13, fill: true, pts: [P(0.34, 0.28), P(0.58, 0.24), P(0.68, 0.5), P(0.52, 0.74), P(0.36, 0.58)]}, {w: ww(), pts: curve(P(0.1, 0.9), P(0.9, 0.86), 0.12)}, {w: ww(), pts: curve(P(0.62, 0.08), P(0.9, 0.3), -0.2)});   // 肥笔 dot over a ground
+		else if (t === 6) S.push({w: ww(), pts: curve(P(0.62, 0.04), P(0.22, 0.96), 0.22)}, {w: ww(), pts: curve(P(0.48, 0.42), P(0.86, 0.9), -0.16)}, {w: ww(), pts: curve(P(0.4, 0.3), P(0.74, 0.22), 0.3)});   // 人 bending, with an arm
+		else if (t === 7) S.push({w: ww(), pts: curve(P(0.5, 0.02), P(0.5, 0.98), b * 0.3)}, {w: ww(), pts: curve(P(0.5, 0.36), P(0.14, 0.12), 0.25)}, {w: ww(), pts: curve(P(0.5, 0.36), P(0.86, 0.12), -0.25)}, {w: ww(), pts: curve(P(0.5, 0.7), P(0.16, 0.92), -0.2)}, {w: ww(), pts: curve(P(0.5, 0.7), P(0.84, 0.92), 0.2)});   // 木
+		else if (t === 8) S.push({w: ww(), pts: [P(0.08, 0.5), P(0.3, 0.3), P(0.62, 0.28), P(0.92, 0.5), P(0.62, 0.72), P(0.3, 0.7), P(0.08, 0.5)]}, {w: 0.14, fill: true, pts: Array.from({length: 9}, (_, i) => [cx + w * 0.11 * Math.cos(i / 8 * 2 * Math.PI), cy + h * 0.13 * Math.sin(i / 8 * 2 * Math.PI)] as [number, number])});   // 目
+		else S.push({w: ww(), pts: curve(P(0.2, 0.06), P(0.74, 0.96), 0.08)}, {w: ww(), pts: [P(0.08, 0.34), P(0.52, 0.3), P(0.9, 0.18)]}, {w: ww(), pts: curve(P(0.74, 0.96), P(0.92, 0.82), 0.3)}, {w: 0.12, fill: true, pts: [P(0.08, 0.28), P(0.2, 0.26), P(0.2, 0.4), P(0.08, 0.4)]});   // 戈
 	};
 	const lay = Math.floor(r(0) * 4);
 	if (lay === 0) { comp(-0.46, -0.48, 0.92, 0.96, 10); comp(-0.3, -0.22, 0.6, 0.52, 20); }

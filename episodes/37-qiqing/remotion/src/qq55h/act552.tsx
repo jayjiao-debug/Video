@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Zun, lookAt, Cam, V3, ZunLight, proj, toCam, Rz, rho, rnd as zrnd} from './zun55h';
+import {Zun, lookAt, Cam, V3, ZunLight, proj, toCam, Rz, rho, rnd as zrnd, pseudoGlyph as zPseudoGlyph} from './zun55h';
 import {FilmOv2} from './ov55v2';
 import {card2} from './cards55v2';
 import {Glow, Plume, Vig, sm, tube, ik, sleeve, mitten, rnd, P, f1, shard} from './kf55h';
@@ -291,25 +291,8 @@ const CG: React.FC<{t: number}> = ({t}) => {
 /* ============================== H · 46.73 the inscription cut into the clay ============================== */
 type Stroke = {pts: P[]; w: number; fill?: boolean};
 /** zun55h's inscription layout (12 columns, 122 characters) and its seeded pseudo-glyphs, so the clay shows the same text */
-const pseudoGlyph = (seed: number): Stroke[] => {
-	const r = (i: number) => zrnd(seed * 13 + i, 5), S: Stroke[] = [], ww = () => 0.085 + r(S.length * 7 + 3) * 0.03;
-	const curve = (a: P, b: P, bend: number): P[] => { const mx = (a[0] + b[0]) / 2 - (b[1] - a[1]) * bend, my = (a[1] + b[1]) / 2 + (b[0] - a[0]) * bend;
-		return Array.from({length: 7}, (_, i) => { const u = i / 6, m = 1 - u; return [m * m * a[0] + 2 * m * u * mx + u * u * b[0], m * m * a[1] + 2 * m * u * my + u * u * b[1]] as P; }); };
-	const comp = (x0: number, y0: number, w: number, h: number, k: number) => { const tp = Math.floor(r(k) * 8), cx = x0 + w / 2, cy = y0 + h / 2, b = (r(k + 2) - 0.5) * 0.5;
-		if (tp === 0) S.push({w: ww(), pts: [[x0 + w * 0.18, cy - h * 0.28], [cx, cy - h * 0.36], [x0 + w * 0.84, cy - h * 0.26], [x0 + w * 0.8, cy + h * 0.28], [cx, cy + h * 0.34], [x0 + w * 0.2, cy + h * 0.26], [x0 + w * 0.18, cy - h * 0.28]]});
-		else if (tp === 1) S.push({w: ww(), pts: curve([cx + w * 0.05, y0 + h * 0.04], [cx - w * 0.08, y0 + h * 0.96], b)}, {w: ww(), pts: curve([x0 + w * 0.08, cy - h * 0.12], [x0 + w * 0.92, cy - h * 0.2], -b * 0.5)});
-		else if (tp === 2) S.push({w: ww(), pts: curve([cx, y0 + h * 0.1], [x0 + w * 0.12, y0 + h * 0.92], 0.18)}, {w: ww(), pts: curve([cx, y0 + h * 0.1], [x0 + w * 0.88, y0 + h * 0.92], -0.18)}, {w: ww(), pts: curve([x0 + w * 0.2, cy], [x0 + w * 0.8, cy - h * 0.05], 0.1)});
-		else if (tp === 3) S.push({w: ww(), pts: [[x0 + w * 0.82, y0 + h * 0.1], [x0 + w * 0.3, y0 + h * 0.22], [x0 + w * 0.22, cy], [x0 + w * 0.36, y0 + h * 0.8], [x0 + w * 0.86, y0 + h * 0.88]]}, {w: ww(), pts: curve([x0 + w * 0.3, cy], [x0 + w * 0.76, cy - h * 0.08], 0.15)});
-		else if (tp === 4) S.push({w: ww(), pts: curve([x0 + w * 0.15, y0 + h * 0.15], [cx, y0 + h * 0.58], 0.2)}, {w: ww(), pts: curve([x0 + w * 0.85, y0 + h * 0.12], [cx, y0 + h * 0.58], -0.2)}, {w: ww(), pts: curve([cx, y0 + h * 0.58], [cx + w * 0.04, y0 + h * 0.96], 0.1)});
-		else if (tp === 5) S.push({w: 0.12, fill: true, pts: [[cx - w * 0.16, cy - h * 0.22], [cx + w * 0.08, cy - h * 0.26], [cx + w * 0.18, cy], [cx + w * 0.02, cy + h * 0.24], [cx - w * 0.14, cy + h * 0.08]]}, {w: ww(), pts: curve([x0 + w * 0.1, y0 + h * 0.9], [x0 + w * 0.9, y0 + h * 0.86], 0.12)});
-		else if (tp === 6) S.push({w: ww(), pts: Array.from({length: 11}, (_, i) => [cx + w * 0.34 * Math.cos(Math.PI * (0.3 + 1.45 * i / 10)), cy + h * 0.38 * Math.sin(Math.PI * (0.3 + 1.45 * i / 10))] as P)}, {w: ww(), pts: curve([cx - w * 0.1, cy - h * 0.05], [cx + w * 0.22, cy + h * 0.02], 0.1)});
-		else S.push({w: ww(), pts: [[x0 + w * 0.3, y0 + h * 0.05], [x0 + w * 0.7, y0 + h * 0.3], [x0 + w * 0.28, y0 + h * 0.55], [x0 + w * 0.72, y0 + h * 0.8], [x0 + w * 0.4, y0 + h * 0.98]]}); };
-	const lay0 = Math.floor(r(0) * 4);
-	if (lay0 === 0) { comp(-0.46, -0.48, 0.92, 0.96, 10); comp(-0.3, -0.22, 0.6, 0.52, 20); }
-	else if (lay0 === 1) { comp(-0.5, -0.48, 0.48, 0.96, 10); comp(0.02, -0.48, 0.48, 0.5, 20); comp(0.02, 0.0, 0.48, 0.48, 40); }
-	else if (lay0 === 2) { comp(-0.44, -0.5, 0.88, 0.48, 10); comp(-0.44, 0.0, 0.88, 0.5, 20); }
-	else { comp(-0.5, -0.48, 0.48, 0.48, 10); comp(0.02, -0.48, 0.48, 0.48, 20); comp(-0.42, 0.02, 0.84, 0.48, 30); }
-	return S; };
+/* v2.1: the same glyph vocabulary as zun55h (the 金文-radical set), imported so the clay and the bronze always match */
+const pseudoGlyph = (seed: number): Stroke[] => zPseudoGlyph(seed) as Stroke[];
 const COL_LEN = [11, 11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10], KEY_COL = 6, KEY_ROW = 3;
 const KEY_CH = ['宅', '兹', '中', '或'];
 type Gl = {c: number; k: number; u: number; v: number; s: number; strokes: Stroke[]; key: string};

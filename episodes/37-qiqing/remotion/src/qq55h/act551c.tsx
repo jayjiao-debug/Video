@@ -45,7 +45,7 @@ const mixCam = (a: YCam, b: YCam, u: number): YCam => ({x: lerp(a.x, b.x, u), y:
 const S1: React.FC<{t: number}> = ({t}) => {
 	const cr = ease(seg(t, 0, 1.75)), push = ease(seg(t, 2.0, 5.97)), drift = ease(seg(t, 1.6, 2.6));
 	const sh = t > 1.45 ? 5 * Math.exp(-(t - 1.45) * 9) * Math.sin((t - 1.45) * 55) : 0;
-	const restS = S1b(ZREST), c0: YCam = {x: 18 * drift, y: lerp(-680, 0, cr) + 20 * drift, s: 1 + 0.03 * drift}, c1 = camFocus([restS[0] + 10, restS[1] - 95], [990, 690], 1.72);
+	const restS = S1b(ZREST), c0: YCam = {x: 18 * drift, y: lerp(-260, 0, cr) + 20 * drift, s: 1 + 0.03 * drift}, c1 = camFocus([restS[0] + 10, restS[1] - 95], [990, 690], 1.72);
 	const cm = mixCam(c0, c1, push), cam: YCam = {...cm, y: cm.y + sh};
 	const w = worker1965(t), rest = S1b(ZREST), zc = zunCam(rest[0], rest[1], K1, 30, 6);
 	const zo: P = [-K1 * w.zun[0], K1 * w.zun[1]], up = -w.zun[1];

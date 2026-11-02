@@ -16,7 +16,23 @@ Every effect is a real recording (the owner's rule: organic, not AI and not synt
 | Membranophones/Other Membranophones/Ocean Drum/OceanDrum_Sus_1_Mid.wav | a soft rushing swell as the silhouette fills with molten bronze (0:15) | low-pass 1.1 kHz, 2.2 s with fades |
 | Idiophones/Friction Idiophones/Wine Glasses/Sustains/Slow/glass1_D#4_Slow_1_Main.wav | #5 the rim resonance as the camera goes into the mouth (0:28) | pitch +0.75 semitones (D# → E), low-pass 5 kHz, a short echo |
 
-## Still needed (not on any site this workspace can reach)
+
+### Added for v2 (the full film, 117 cues; list and levels in the producer's cues_v2.py)
+| VCSL clip | Used for |
+|---|---|
+| Idiophones/Struck Idiophones/Gong 1/gong_p.wav | the end-card gong tail (pitched to C) |
+| Idiophones/Struck Idiophones/Gong 1/gong_scrape_mf.wav | thunder rolls / the earth groaning (low-passed) |
+| Idiophones/Struck Idiophones/Glockenspiel/glock_soft_C6_01.wav, glock_soft_G5_01.wav | soft tings: glyphs forming, the glint, flange lights, 中國 lighting |
+| Idiophones/Struck Idiophones/Mark Trees/Legacy/windchimes_slowDesc1.wav | the golden reveal, the light wave over the plain |
+| Idiophones/Struck Idiophones/Shaker, Large/LShaker_Shake1D_rr2_Mid.wav, Shaker, Small/Mid_Shaker_Roll_Fast_rr1.wav | cowrie shells, grain pouring |
+| Idiophones/Struck Idiophones/Cabasa/Cabasa1_Rub_v2_rr1_Mid.wav | sizzle, sparks, a palm wiping the crust |
+| Idiophones/Struck Idiophones/Guiro/Guiro_Slow_rr2_Mid.wav | the stylus, the shovel, the scalpel |
+| Idiophones/Struck Idiophones/Claves/Claves1_Hit_v1_rr1_Mid.wav | the lamp switch |
+| Idiophones/Struck Idiophones/Woodblock/wood_click_pp_rr1.wav | cart bumps, shadow-play set changes, the seal |
+| Idiophones/Struck Idiophones/Slapstick/slapstick_quiet_rr1.wav | the mould cracking, the tag string snapping |
+| Membranophones/Struck Membranophones/Bass Drum 1/BDrumNew_hit_v3_rr1_Sum.wav, Frame Drum/HDrumL_HitMuted_v2_rr1_Sum.wav | thuds: rammers, soil layers, the slab, the 尊 set down, the J seal |
+
+## Still needed (for an even richer mix; not used in v2) (not on any site this workspace can reach)
 
 These need real recordings from freesound.org (filter: licence Creative Commons 0) or the Sonniss GDC bundles; the owner downloads and attaches them:
 
