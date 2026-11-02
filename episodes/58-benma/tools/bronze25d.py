@@ -13,10 +13,13 @@ m = cv2.GaussianBlur(cv2.resize(fg, (W, H), interpolation=cv2.INTER_CUBIC), (0, 
 n, lab, st, _ = cv2.connectedComponentsWithStats(m.astype(np.uint8)); m = lab == (1 + np.argmax(st[1:, cv2.CC_STAT_AREA]))
 Lr = cv2.resize(Lum, (W, H), interpolation=cv2.INTER_CUBIC)
 d = cv2.distanceTransform(m.astype(np.uint8), cv2.DIST_L2, 5)
-h = cv2.GaussianBlur(np.sqrt(d) * 13, (0, 0), 6)                                   # rounded body
+h0 = np.sqrt(d) * 13
+mf = m.astype(np.float32); h1 = cv2.GaussianBlur(h0 * mf, (0, 0), 16) / (cv2.GaussianBlur(mf, (0, 0), 16) + 1e-4)
+h = h1 * (1 - np.exp(-d / 7)) * mf          # smooth dome, no ridge along the middle; rounded rim                                   # rounded body
 hp = Lr - cv2.GaussianBlur(Lr, (0, 0), 9); hp = cv2.GaussianBlur(hp, (0, 0), 3.2)   # fine relief (mane, muscles, eye)
 mid = Lr - cv2.GaussianBlur(Lr, (0, 0), 30)
-h = h + 14 * hp * m + 32 * cv2.GaussianBlur(mid, (0, 0), 4) * m
+RELIEF = float(__import__('os').environ.get('RELIEF', '1'))
+h = h + RELIEF * 12 * cv2.GaussianBlur(mid, (0, 0), 10) * m
 gy, gx = np.gradient(h); N = np.dstack([-gx, -gy, np.ones_like(h)]); N /= np.linalg.norm(N, axis=2, keepdims=True)
 def nl(v): v = np.array(v, np.float32); return v / np.linalg.norm(v)
 Lk, Lrim, Lf, V = nl(key), nl([.75, -.35, -.25]), nl([.2, .9, .4]), nl([0, 0, 1])
@@ -28,9 +31,14 @@ cav = np.clip((cv2.GaussianBlur(h, (0, 0), 9) - h) / 3, 0, 1)
 rng = np.random.default_rng(3); nz = cv2.GaussianBlur(rng.random((H // 8 + 1, W // 8 + 1)).astype(np.float32), (0, 0), 1.2)
 nz = cv2.resize(nz, (W, H), interpolation=cv2.INTER_CUBIC)
 PB = float(__import__('os').environ.get('PATINA', '.35'))
-pat = np.clip(PB + 1.6 * cav + .9 * (nz - .5), 0, 1)
+mott = cv2.GaussianBlur(Lr, (0, 0), 2.5) - cv2.GaussianBlur(Lr, (0, 0), 16)
+pat = np.clip(PB + 1.4 * cav + .5 * (nz - .5) - 3.0 * mott, 0, 1)
 bronze = np.array([.42, .30, .17]); patina = np.array([.28, .47, .38])
 alb = bronze * (1 - pat[..., None]) + patina * pat[..., None]
+fine = cv2.GaussianBlur(Lr, (0, 0), 1.2) - cv2.GaussianBlur(Lr, (0, 0), 6)
+dark = np.clip(-fine / .06, 0, 1)[..., None] * m[..., None]; light = np.clip(fine / .07, 0, 1)[..., None] * m[..., None]
+alb = alb * (1 - .55 * dark) + np.array([.12, .17, .13]) * .55 * dark
+alb = alb * (1 - .35 * light) + np.array([.55, .70, .58]) * .35 * light
 keyc, rimc, fillc = np.array([1.0, .86, .64]), np.array([1.0, .78, .5]), np.array([.35, .42, .5])
 col = alb * (.08 + 1.15 * dk[..., None] * keyc + .25 * df[..., None] * fillc + .5 * dr[..., None] * rimc)
 gloss = (1 - .65 * pat)[..., None]
