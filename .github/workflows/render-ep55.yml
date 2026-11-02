@@ -1,4 +1,5 @@
 name: render-ep55
+# r2: + fonts-noto-cjk-extra (the Black weight the subtitles use; r1 fell back to Bold)
 # Throwaway render farm for ep55 v2.2 (owner approved 2026-11-02 10:41): each job renders one chunk of the film and pushes it
 # back ENCRYPTED (AES key wrapped with the producer's RSA public key render55/pub.pem), so no playable video lands on the repo.
 on:
@@ -40,7 +41,7 @@ jobs:
           cache: npm
           cache-dependency-path: episodes/37-qiqing/remotion/package-lock.json
       - name: CJK fonts
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk >/dev/null && fc-list | grep -c "Noto Sans CJK"
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra >/dev/null && fc-match "Noto Sans CJK SC:weight=210" && fc-list | grep -c "Noto Sans CJK"
       - name: npm ci
         working-directory: episodes/37-qiqing/remotion
         run: npm ci --no-audit --no-fund --loglevel=error
