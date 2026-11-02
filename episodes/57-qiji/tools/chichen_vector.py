@@ -8,7 +8,7 @@ W, H = 1932, 2576
 R = random.Random(57)
 INK = '#2A211B'
 P = dict(sky0='#74B6D8', sky1='#8CC7E3', sky2='#D3F1F2', cloud='#EEF8FB', cloud_e='#A9D2E6',
-         face_lit='#9A9F99', face_mid='#748A8C', face_sh='#577075', rface='#5A7479', rface_far='#6A858A', corner_sh='#3C5459',
+         face_lit='#929A97', face_mid='#6D8488', face_sh='#516A6F', rface='#5A7479', rface_far='#6A858A', corner_sh='#3C5459',
          ledge='#B9BDB4', panel='#5F7276', stairs='#B0A698', stairs_sh='#8F877C', tread='#7A7268', bal='#CFC6B6', bal_sh='#9C978C',
          rstairs='#7F9AA0', rstair_ln='#5A757B', rbal='#34494D',
          t_wall='#B3A796', t_wall_r='#9C927F', t_frieze='#9A968C', t_frieze_r='#857F72', t_corn='#6C7573', t_corn_top='#8C9490', door='#2A2622',
@@ -39,11 +39,11 @@ def seg_y(a, b, x): return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0] or 1
 
 g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}">',
      '<defs>'
-     f'<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{P["sky0"]}"/><stop offset=".42" stop-color="{P["sky1"]}"/><stop offset=".58" stop-color="#A3D6EC"/><stop offset=".64" stop-color="{P["sky2"]}"/></linearGradient>'
+     f'<linearGradient id="sky" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="2576"><stop offset="0" stop-color="{P["sky0"]}"/><stop offset=".42" stop-color="{P["sky1"]}"/><stop offset=".58" stop-color="#A3D6EC"/><stop offset=".64" stop-color="{P["sky2"]}"/></linearGradient>'
      f'<linearGradient id="lface" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{P["face_lit"]}"/><stop offset=".55" stop-color="{P["face_mid"]}"/><stop offset="1" stop-color="{P["face_sh"]}"/></linearGradient>'
      f'<linearGradient id="rface" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{P["rface"]}"/><stop offset="1" stop-color="{P["rface_far"]}"/></linearGradient>'
      f'<linearGradient id="field" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{P["field0"]}"/><stop offset=".3" stop-color="{P["field1"]}"/><stop offset="1" stop-color="{P["field2"]}"/></linearGradient>'
-     '<linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A1F14" stop-opacity="0"/><stop offset="1" stop-color="#0A1F14" stop-opacity=".72"/></linearGradient>'
+     '<linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A1F14" stop-opacity="0"/><stop offset=".45" stop-color="#0A1F14" stop-opacity=".45"/><stop offset="1" stop-color="#0A1F14" stop-opacity=".82"/></linearGradient>'
      '</defs>',
      f'<rect width="{W}" height="{H}" fill="url(#sky)"/>']
 
@@ -174,7 +174,7 @@ g.append(poly(rs, 'none', INK, 3))
 
 # ---------------- mid-ground: rock border, agave rosettes, feathery shrubs, flower stalks ----------------
 g.append(poly([(0, 1700), (1932, 1690), (1932, 1790), (0, 1800)], '#9A6E4E', 'none', 0, 'opacity=".35"'))   # shade of the planting on the soil
-for _ in range(46):   # sun-baked pebbles in the field
+for _ in range(32):   # sun-baked pebbles in the field
     x, y = R.uniform(0, W), R.uniform(1775, 2060)
     g.append(f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="{R.uniform(4, 11):.0f}" ry="{R.uniform(3, 6):.0f}" fill="{R.choice([P["pebble"], P["pebble_l"], "#A07A5C"])}" opacity=".85"/>')
 x = 0
@@ -214,7 +214,7 @@ g += stalk((404, 1625), (418, 1262), 7)
 g.append(line([(1251, 1640), (1252, 1470)], P['stalk'], 4))
 
 # ---------------- foreground: snake-plant blades (hand-read tip / base / width, shape generated) ----------------
-def blade(tip, base, w, col, bend=0.0, bands=True, lit=True):
+def blade(tip, base, w, col, bend=0.0, bands=True, lit=True, rib=True):
     """a long pointed snake-plant blade from a hand-read tip, aimed through a hand-read lower point; it always runs
     on past the bottom of the frame, so no blade ends in a cut"""
     ux, uy = base[0] - tip[0], base[1] - tip[1]; s = (H + 40 - tip[1]) / uy if uy > 0 else 1
@@ -236,12 +236,12 @@ def blade(tip, base, w, col, bend=0.0, bands=True, lit=True):
             if t < .05: break
             c = ax(t); h = hw(t) * .78
             out.append(line([(c[0] + nx * h, c[1] + ny * h), (c[0] + nx * h * .3 + ux * 10, c[1] + ny * h * .3 + uy * 10), (c[0] - nx * h * .3, c[1] - ny * h * .3), (c[0] - nx * h + ux * 9, c[1] - ny * h + uy * 9)], P['lf_band'], 5, 'opacity=".5"'))
-    out.append(line([ax(t) for t in [i / 12 for i in range(12)] if ax(t)[1] < H + 20], P['lf_rib'], 2, 'opacity=".8"'))   # mid-rib
+    if rib: out.append(line([ax(t) for t in [i / 12 for i in range(12)] if ax(t)[1] < H + 20], P['lf_rib'], 2, 'opacity=".8"'))   # mid-rib
     return out
 g.append(poly([(0, 2080), (300, 2040), (700, 2060), (1000, 2050), (1300, 2090), (1932, 2070), (1932, H), (0, H)], P['lf_back'], 'none', 0))
 for i in range(22):   # back row of dark blades filling the base of the clump (generated)
     x = -40 + (W + 80) * (i + R.uniform(.1, .9)) / 22; tipy = R.uniform(1930, 2120)
-    g += blade((x + R.uniform(-50, 50), tipy), (x + R.uniform(-30, 30), H), R.uniform(80, 130), R.choice([P['lf_back'], P['lf_dark']]), R.uniform(-20, 20), bands=False, lit=False)
+    g += blade((x + R.uniform(-50, 50), tipy), (x + R.uniform(-30, 30), H), R.uniform(80, 130), R.choice([P['lf_back'], P['lf_dark']]), R.uniform(-20, 20), bands=False, lit=False, rib=False)
 # (tip, base, width, colour, bend) — back to front
 B = [((701, 1504), (590, 1930), 30, 'lf_dark', -10), ((824, 1533), (720, 2150), 34, 'lf_dark', -15), ((1180, 1775), (1165, 2100), 26, 'lf_pale', 0),
      ((1316, 1622), (1320, 2150), 62, 'lf_dark', 0), ((395, 1710), (380, 2080), 42, 'lf_mid', 0), ((354, 1816), (330, 2120), 40, 'lf_dark', 0),
@@ -257,7 +257,7 @@ B = [((701, 1504), (590, 1930), 30, 'lf_dark', -10), ((824, 1533), (720, 2150), 
      ((1510, 2222), (1440, 2700), 250, 'lf_mid', 0), ((466, 2445), (240, 2530), 26, 'lf_pale', 0)]
 for tip, base, w, col, bend in B:
     g += blade(tip, base, w, P[col], bend)
-g.append(f'<rect x="0" y="1980" width="{W}" height="{H - 1980}" fill="url(#shade)"/>')   # the clump darkens toward its base
+g.append(f'<rect x="0" y="1900" width="{W}" height="{H - 1900}" fill="url(#shade)"/>')   # the clump darkens toward its base
 
 # ---------------- canopy: leaf clusters in the top corners (generated) ----------------
 def twig(path, w): return line(path, P['branch'], w)
@@ -268,31 +268,47 @@ for p, w in [([(0, 40), (80, 90), (170, 160), (260, 230), (330, 260)], 9), ([(80
              ([(1932, 260), (1840, 250), (1760, 300)], 5), ([(1400, 0), (1380, 100), (1350, 230)], 6)]:
     g.append(twig(p, w))
 def leaf(x, y, ang, L, col, sw=1.5):
-    ca, sa = math.cos(ang), math.sin(ang); wd = L * .38
+    ca, sa = math.cos(ang), math.sin(ang); wd = L * .4
     return poly([(x, y), (x + ca * L * .5 - sa * wd / 2, y + sa * L * .5 + ca * wd / 2), (x + ca * L, y + sa * L), (x + ca * L * .5 + sa * wd / 2, y + sa * L * .5 - ca * wd / 2)], col, INK, sw)
-def canopy(puffs, lit_if):
-    """one tree mass: round puffs merged into a single inked silhouette (ink pass, then fill pass), then leaves
-    pointing outward along its free edge and a few sunlit leaves on top"""
-    out = [f'<circle cx="{x}" cy="{y}" r="{r}" fill="{P["can_d"]}" stroke="{INK}" stroke-width="5"/>' for x, y, r in puffs]
-    out += [f'<circle cx="{x}" cy="{y}" r="{r}" fill="{P["can_m"] if lit_if(x, y) else P["can_d"]}"/>' for x, y, r in puffs]
-    for x, y, r in puffs:
-        for _ in range(4):   # edge leaves where the rim is not inside another puff
-            a = R.uniform(0, 2 * math.pi); ex, ey = x + math.cos(a) * r * .92, y + math.sin(a) * r * .92
-            if any(math.dist((ex, ey), (px, py)) < pr * .9 for px, py, pr in puffs if (px, py) != (x, y)): continue
-            out.append(leaf(ex, ey, a + R.uniform(-.5, .5), R.uniform(24, 36), P['can_l'] if lit_if(x, y) else R.choice([P['can_m'], P['can_d']])))
-        for _ in range(2 if lit_if(x, y) else 1):   # sunlit leaves on the face of the mass
-            a = R.uniform(-2.6, -.4); d = R.uniform(.2, .75)
-            out.append(leaf(x + math.cos(a) * r * d, y + math.sin(a) * r * d, R.uniform(0, 2 * math.pi), R.uniform(22, 32), R.choice([P['can_l'], P['can_y']]) if lit_if(x, y) else P['can_m'], 1.2))
+def inside(p, q):
+    x, y = p; c = False
+    for (x1, y1), (x2, y2) in zip(q, q[1:] + q[:1]):
+        if (y1 > y) != (y2 > y) and x < x1 + (x2 - x1) * (y - y1) / (y2 - y1): c = not c
+    return c
+def canopy(outline, holes, n_in, lit, base=P['can_d']):
+    """a tree mass from a hand-traced outline: dark fill, sky holes, leaves generated along every edge (pointing out
+    of the mass) and sunlit leaves scattered inside"""
+    out = [poly(outline, base, INK, 2.5)]
+    for h in holes: out.append(poly(h, 'url(#sky)', INK, 2))
+    for path, sgn, step in [(outline + outline[:1], 1, 36)] + [(h + h[:1], -1, 34) for h in holes]:
+        L = sum(math.dist(a, b) for a, b in zip(path, path[1:]))
+        for (x, y), (tx, ty) in along(path, int(L / step)):
+            nx, ny = ty * sgn, -tx * sgn   # outward normal for a clockwise outline
+            if (x <= 2 or x >= W - 2 or y <= 2) and sgn > 0: continue
+            a = math.atan2(ny, nx) + R.uniform(-.7, .7)
+            out.append(leaf(x - nx * 10, y - ny * 10, a, R.uniform(36, 52), R.choice([P['can_l'], P['can_y']]) if lit(x, y) else R.choice([P['can_m'], P['can_d'], P['can_l']])))
+    xs = [p[0] for p in outline]; ys = [p[1] for p in outline]; k = 0
+    while k < n_in:
+        x, y = R.uniform(min(xs), max(xs)), R.uniform(min(ys), max(ys))
+        if not inside((x, y), outline) or any(inside((x, y), h) for h in holes): continue
+        out.append(leaf(x, y, R.uniform(0, 2 * math.pi), R.uniform(34, 50), R.choice([P['can_l'], P['can_y'], P['can_l']]) if lit(x, y) else R.choice([P['can_m'], P['can_l']]), 1.3)); k += 1
     return out
-TLp = [(40, 40, 55), (120, 80, 50), (190, 120, 48), (90, 170, 52), (170, 205, 48), (250, 170, 52), (320, 215, 42), (230, 270, 48), (150, 300, 44),
-       (290, 320, 38), (200, 362, 38), (60, 270, 44), (385, 190, 28), (30, 130, 40)]
-LEp = [(10, 450, 28), (40, 620, 42), (100, 660, 38), (135, 715, 30), (40, 730, 44), (60, 830, 38), (20, 900, 34), (55, 955, 24)]
-TRp = [(980, 40, 40), (1050, 100, 38), (1110, 200, 42), (1160, 300, 48), (1200, 390, 44), (1250, 460, 38), (1300, 410, 44), (1280, 300, 48), (1240, 180, 52),
-       (1200, 70, 50), (1300, 60, 55), (1360, 150, 58), (1380, 300, 48), (1440, 250, 52), (1470, 120, 58), (1540, 40, 55), (1530, 220, 52), (1560, 330, 48),
-       (1600, 420, 38), (1620, 140, 58), (1700, 60, 60), (1690, 240, 52), (1760, 180, 52), (1720, 330, 38), (1820, 80, 55), (1850, 240, 44), (1900, 150, 50),
-       (1920, 280, 30), (1100, 20, 40)]
-g += canopy(TLp, lambda x, y: (x + y) % 3 == 0)
-g += canopy(LEp, lambda x, y: False)
-g += canopy(TRp, lambda x, y: x > 1420 and y < 260)
+for p, w in [([(0, 70), (60, 95), (130, 140), (200, 200), (260, 250)], 8), ([(300, 0), (330, 40), (380, 70), (440, 100), (520, 60)], 3), ([(330, 40), (420, 20), (480, 0)], 2),
+             ([(1932, 120), (1800, 140), (1650, 170), (1500, 200), (1350, 230), (1250, 260)], 9), ([(1000, 110), (1100, 80), (1200, 110), (1300, 160), (1380, 220)], 7),
+             ([(1480, 310), (1530, 360), (1560, 420), (1570, 520)], 3), ([(1530, 360), (1470, 420), (1440, 500)], 2), ([(1560, 420), (1600, 480), (1620, 530)], 2)]:
+    g.append(line(p, P['branch'], w))   # bare branches reaching out of the masses
+TLo = [(0, 0), (289, 0), (282, 40), (278, 78), (301, 125), (372, 136), (407, 148), (431, 207), (419, 266), (395, 301), (348, 336), (313, 372),
+       (266, 407), (195, 419), (136, 407), (78, 325), (42, 278), (19, 231), (0, 184)]
+g += canopy(TLo, [[(22, 98), (78, 95), (85, 140), (30, 150)], [(228, 300), (285, 296), (290, 350), (240, 362)], [(150, 200), (195, 190), (200, 240), (160, 250)]],
+            34, lambda x, y: (x * 7 + y * 3) % 10 < 4, P['can_m'])
+LEo = [(0, 390), (40, 398), (46, 470), (40, 540), (0, 556), (0, 590), (60, 596), (125, 619), (184, 601), (172, 654), (125, 713), (148, 748), (101, 795),
+       (113, 842), (101, 913), (54, 960), (19, 1007), (0, 1010)]
+g += canopy(LEo, [], 14, lambda x, y: False, '#3F5A3A')
+TRo = [(955, 0), (957, 18), (951, 140), (996, 162), (1018, 207), (1051, 262), (1073, 284), (1090, 351), (1090, 440), (1129, 473), (1184, 496), (1251, 496),
+       (1296, 440), (1373, 407), (1451, 362), (1473, 296), (1518, 318), (1573, 373), (1584, 440), (1618, 473), (1651, 440), (1673, 373), (1718, 318), (1762, 284),
+       (1807, 262), (1851, 251), (1896, 251), (1932, 229), (1932, 0)]
+g += canopy(TRo, [[(1105, 155), (1190, 150), (1200, 235), (1120, 245)], [(1222, 222), (1290, 215), (1300, 280), (1235, 288)], [(1340, 290), (1420, 280), (1410, 350), (1350, 360)],
+                  [(1010, 40), (1070, 30), (1085, 90), (1020, 100)]],
+            80, lambda x, y: x > 1430 and y < 330 or (x + y) % 3 == 0, P['can_m'])
 g.append('</svg>')
 open(sys.argv[1], 'w').write('\n'.join(g)); print('ok', len(g), 'elements')
