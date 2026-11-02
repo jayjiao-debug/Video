@@ -33,8 +33,20 @@
 - **Sets:** the Han 河西走廊 in wind; the 1969 field and the air-raid-shelter dig; the tomb's bronze procession; the museum case; abstract signage for 1983 (a road-sign shape with our own drawing of the horse, no copy of the logo).
 - **Safety:** no bordered maps, no remains, no real photos, no AI images, real people (if named) as dignified silhouettes.
 
-## Music
-- The owner's BGM (not committed); **the owner sends the track.** Land the title, the 「一只脚」 reveal, and a lift when the ground falls away. Dead stop before the end card.
+## Music (owner's track, 2026-11-02 19:10; see music_map.md)
+- **Uncut and unsplit**, played from the start. **The film is exactly 179.5 s**, with the last second faded (owner's choice) just before the track's own hard stop. Raised to −14 LUFS; no other processing.
+- 107.7 BPM (bar 2.229 s). The main section starts at **36.0 s**: put the second question there. The quiet break **144.7–163.0** carries 「至今没有定论」. The final build from **163.0** carries the payoff and the end card.
+- The film runs ~2:59, so it is longer than the usual 2:40 target. The script needs enough beats to fill it with no stretched lines (pacing skill).
+
+## What facts.md changed (2026-11-02)
+- **Don't say 郭沫若 named it.** That is disputed (row 22); say the name 「马踏飞燕」 spread after his 1971 visit (rows 20–21).
+- **The museum's own name, 铜奔马, is a placeholder** given 「在无法确知其名的情况下」 (row 23). This is the strongest line for the name beat.
+- **The answer to 「一只脚，怎么站得住？」** is the centre of gravity over the bird (row 12), the bird used as the base with its spread wings (row 13), and iron 「铁骨头」 inside the legs found by X-ray (row 14). **The pacing gait (顺拐) is true (row 17) but no source says it explains the balance (row 18 ✗):** use it as a separate wonder.
+- **Discovery:** 1969 only (the month is split), 230多件 objects, a 99-piece bronze procession (rows 1–5). The villagers had just lost two plough horses, and some proposed selling the finds to buy horses (row 3: 「有村民提议」).
+- **Size and weight:** 34.5 cm × 45 cm, 「7公斤多」 (rows 9–10).
+- **The bird:** four readings (swallow, hunting hawk, crow / sun crow, 龙雀 = the wind god → 「神马快过风神」). The tail isn't forked; the head turns 180° (rows 25–30). The museum: 「尚无定论」 (row 31).
+- **Payoff:** the bird is both the stand and the proof of speed (rows 13, 32, 33).
+- **Hook options viewers know:** the 1983 tourism silhouette (row 34), the 2022 green plush 「绿马」 (row 41), the 2026 「吉祥马」 mascot (row 42). Draw our own versions; never paste the logo or product photos.
 
 ## Must avoid
 - Presenting one bird reading as the answer. The film says it is still argued over.
