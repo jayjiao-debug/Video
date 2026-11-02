@@ -21,26 +21,30 @@ FONTS = (f'<link rel="stylesheet" href="{WENKAI}"><style>'
          f"@font-face{{font-family:'NotoDev';src:url('file://{FD}/x_fontsource-noto-sans-devanagari-5.2.7/package/files/noto-sans-devanagari-devanagari-700-normal.woff2')}}</style>")
 HEAD = B.HEAD.replace('<style>', FONTS + '<style>')
 DEFS = B.DEFS
-subs, subs_c, counter, SEALD = B.subs, B.subs_c, B.counter, B.SEALD
+def subs(rows, top=132): return f'<div class="sub">{B.subs(rows, top)}</div>'
+def subs_c(rows, top=120): return f'<div class="sub">{B.subs_c(rows, top)}</div>'
+def counter(n, hot=False): return f'<div class="hud">{B.counter(n, hot)}</div>'
+SEALD = f'<div class="hud">{B.SEALD}</div>'
 def page(inner): return HEAD + inner + '</div></body></html>'
 def svgw(inner): return f'<svg width="1920" height="1080" style="position:absolute;left:0;top:0">{DEFS}{inner}</svg>'
 def img(path, extra=''): return f'<img src="file://{path}" style="position:absolute;left:0;top:0;width:1920px;height:1080px;{extra}">'
 
 def odo2(km, ghost=False):
     p = min(1, km / 40075)
-    return (f'<div style="position:absolute;left:150px;bottom:62px;color:{CREAM};font-family:Noto Sans CJK SC;text-shadow:0 0 14px rgba(14,8,5,.85)">'
+    return (f'<div class="hud"><div style="position:absolute;left:150px;bottom:62px;color:{CREAM};font-family:Noto Sans CJK SC;text-shadow:0 0 14px rgba(14,8,5,.85)">'
             f'<div style="display:flex;align-items:baseline;gap:12px"><span style="font-size:32px;font-weight:700">已飞</span>'
             f'<span style="font-size:70px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1">{km:,}</span>'
             f'<span style="font-size:32px;font-weight:700;opacity:.8">/ 40,075 公里</span></div>'
-            f'<div style="margin-top:10px;width:520px;height:8px;border-radius:4px;background:rgba(255,246,230,.25)"><div style="width:{520 * p:.0f}px;height:8px;border-radius:4px;background:{GOLD}"></div></div></div>')
+            f'<div style="margin-top:10px;width:520px;height:8px;border-radius:4px;background:rgba(255,246,230,.25)"><div style="width:{520 * p:.0f}px;height:8px;border-radius:4px;background:{GOLD}"></div></div></div></div>')
 
 # ---------- the coded scenes (1920x1080 crops, with 你) ----------
 SCN = {'greatwall2': 'greatwall2', 'chichen': 'chichen', 'machu2': 'machu2', 'christ': 'christ', 'colosseum': 'colosseum', 'petra2': 'petra2', 'taj': 'taj'}
-def drawn(k, box=None):
-    out = f'{OUT}/scene_{k}.jpg'
+def drawn(k, box=None, fig=True):
+    out = f'{OUT}/scene_{k}{"" if fig else "_nofig"}.jpg'
     if not os.path.exists(out):
-        v = Image.open(f'{SB}/vec/{k}_code.png').convert('RGBA'); f = Image.open(f'{SB}/fig_{k}.png').convert('RGBA').resize(v.size, Image.LANCZOS)
-        v.alpha_composite(f); v.convert('RGB').crop(box or B.CROPS[k]).resize((1920, 1080), Image.LANCZOS).save(out, quality=92)
+        v = Image.open(f'{SB}/vec/{k}_code.png').convert('RGBA')
+        if fig: v.alpha_composite(Image.open(f'{SB}/fig_{k}.png').convert('RGBA').resize(v.size, Image.LANCZOS))
+        v.convert('RGB').crop(box or B.CROPS[k]).resize((1920, 1080), Image.LANCZOS).save(out, quality=92)
     return out
 def real(k):
     out = f'{OUT}/real_{k}.jpg'
@@ -69,6 +73,42 @@ def arc(view, i=0, w=5):
     d = G7[view]['legs'][i]['front']
     return f'<path d="{d}" stroke="{GOLD}" stroke-width="16" fill="none" opacity=".35" filter="url(#blur8)"/><path d="{d}" stroke="{GOLD}" stroke-width="{w}" fill="none" stroke-linecap="round"/>'
 def plane(x, y, ang, s=1.2): return B.plane(x, y, ang, s)
+def flag(c, w):
+    """simplified national flags, w wide (2:3; Jordan 1:2), top-left at 0,0"""
+    h = w * (.5 if c == 'jo' else 2 / 3); t = w / 3; o = []
+    if c in ('mx', 'pe', 'it'):
+        cols = {'mx': ('#006847', '#FFFFFF', '#CE1126'), 'pe': ('#D91023', '#FFFFFF', '#D91023'), 'it': ('#009246', '#FFFFFF', '#CE2B37')}[c]
+        o += [f'<rect x="{i * t:.1f}" y="0" width="{t + .5:.1f}" height="{h:.1f}" fill="{col}"/>' for i, col in enumerate(cols)]
+        if c == 'mx': o.append(f'<circle cx="{w / 2:.1f}" cy="{h / 2:.1f}" r="{h * .16:.1f}" fill="#8C5A2B"/><path d="M{w / 2 - h * .2:.1f},{h / 2 + h * .2:.1f} Q{w / 2:.1f},{h / 2 + h * .32:.1f} {w / 2 + h * .2:.1f},{h / 2 + h * .2:.1f}" stroke="#2E7D4F" stroke-width="{h * .05:.1f}" fill="none"/>')
+    elif c == 'br':
+        o += [f'<rect width="{w}" height="{h:.1f}" fill="#009C3B"/>', f'<path d="M{w * .08:.1f},{h / 2:.1f} L{w / 2:.1f},{h * .08:.1f} L{w * .92:.1f},{h / 2:.1f} L{w / 2:.1f},{h * .92:.1f} Z" fill="#FFDF00"/>',
+              f'<circle cx="{w / 2:.1f}" cy="{h / 2:.1f}" r="{h * .25:.1f}" fill="#002776"/>', f'<path d="M{w / 2 - h * .25:.1f},{h / 2 - h * .02:.1f} Q{w / 2:.1f},{h / 2 - h * .12:.1f} {w / 2 + h * .25:.1f},{h / 2 + h * .06:.1f}" stroke="#FFFFFF" stroke-width="{h * .05:.1f}" fill="none"/>']
+    elif c == 'jo':
+        o += [f'<rect y="{i * h / 3:.1f}" width="{w}" height="{h / 3 + .5:.1f}" fill="{col}"/>' for i, col in enumerate(('#000000', '#FFFFFF', '#007A3D'))]
+        o.append(f'<path d="M0,0 L{w * .5:.1f},{h / 2:.1f} L0,{h:.1f} Z" fill="#CE1126"/>')
+        cx, cy, r1, r2 = w * .17, h / 2, h * .1, h * .045
+        o.append('<path d="' + ' '.join(f'{"M" if i == 0 else "L"}{cx + (r1 if i % 2 == 0 else r2) * math.sin(math.pi * i / 7):.1f},{cy - (r1 if i % 2 == 0 else r2) * math.cos(math.pi * i / 7):.1f}' for i in range(14)) + ' Z" fill="#FFFFFF"/>')
+    elif c == 'in':
+        o += [f'<rect y="{i * h / 3:.1f}" width="{w}" height="{h / 3 + .5:.1f}" fill="{col}"/>' for i, col in enumerate(('#FF9933', '#FFFFFF', '#138808'))]
+        r = h * .14; o.append(f'<circle cx="{w / 2:.1f}" cy="{h / 2:.1f}" r="{r:.1f}" fill="none" stroke="#000080" stroke-width="{max(1, h * .02):.1f}"/>')
+        o.append('<path d="' + ' '.join(f'M{w / 2:.1f},{h / 2:.1f} L{w / 2 + r * math.cos(math.pi * i / 12):.1f},{h / 2 + r * math.sin(math.pi * i / 12):.1f}' for i in range(24)) + f'" stroke="#000080" stroke-width="{max(.6, h * .008):.1f}"/>')
+    return f'<g>{"".join(o)}<rect width="{w}" height="{h:.1f}" fill="none" stroke="{INK}" stroke-width="2"/></g>', h
+def pin(x, y, c, w=78):
+    """a flag planted on the globe point (no country outlines: map rule)"""
+    if c == 'home':
+        return (f'<g transform="translate({x:.1f},{y:.1f})"><line x1="0" y1="0" x2="0" y2="-96" stroke="{INK}" stroke-width="5"/><g transform="translate(-2,-150) scale(1.1)">'
+                f'<path d="M0,40 C-52,8 -40,-34 -12,-26 C-4,-23 0,-16 0,-12 C0,-16 4,-23 12,-26 C40,-34 52,8 0,40 Z" fill="#E5483B" stroke="{INK}" stroke-width="3"/>'
+                f'<text x="0" y="12" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="26" fill="#FFF">家</text></g></g>')
+    f, h = flag(c, w)
+    return (f'<g transform="translate({x:.1f},{y:.1f})"><circle r="9" fill="{GOLD}"/><line x1="0" y1="0" x2="0" y2="{-h - 50:.0f}" stroke="{INK}" stroke-width="5" stroke-linecap="round"/>'
+            f'<g transform="translate(2,{-h - 50:.0f})" filter="url(#ds)">{f}</g></g>')
+CC = {'ci': 'mx', 'mp': 'pe', 'cr': 'br', 'co': 'it', 'pe': 'jo', 'tj': 'in', 'gw': 'home'}
+def pins(view, keys):
+    o = ''
+    for k in keys:
+        p = G7[view]['pts'][k]
+        if p['vis']: o += pin(p['xy'][0], p['xy'][1], CC[k])
+    return o
 
 # ---------- stickers, polaroids, album ----------
 def sticker(kind, x, y, s=1.0, rot=0):
@@ -180,8 +220,45 @@ hand_pass = ('<g transform="translate(560,860) rotate(-8)"><rect x="-300" y="-14
 speed = ''.join(f'<line x1="{x}" y1="{y}" x2="{x + 160}" y2="{y}" stroke="#FFFFFF" stroke-width="4" opacity=".35" stroke-linecap="round"/>' for x, y in [(40, 720), (120, 790), (60, 860), (1500, 760), (1580, 840)])
 add('0:00', '手绘 · 第0帧 · 机场', ['世界这么大！', '新七大奇迹，你是不是只去过[长城]？'], '第一视角在航站楼里跑向登机口，手里攥着登机牌（乘客：你，北京 → 新七大奇迹 → 北京）。右边出发大屏一行行翻出 7 个目的地，第一班「登机」在闪。',
     H(svgw(terminal() + speed + hand_pass), subs(['世界这么大！', '新七大奇迹，你是不是只去过[长城]？']), counter(0), SEAL))
-add('0:06', '手绘 · 片名', [], '出发大屏整块翻成金色片名《新世界七大奇迹，你去过几个？》，窗外飞机拉起。停 ≥ 2.5 秒。',
-    H(svgw(terminal(board_title=True) + '<g fill="#0D111C" transform="translate(-60,-90) rotate(-8 500 470)"><path d="M120,470 L900,452 C960,452 980,470 960,490 L160,508Z"/></g>'), subs(['今天，我们一起去看看！']), counter(0), SEAL))
+def airstairs():
+    s = ['<defs><linearGradient id="dk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E4C80"/><stop offset=".6" stop-color="#E7965A"/><stop offset="1" stop-color="#F7C886"/></linearGradient>'
+         '<linearGradient id="door" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9B8"/><stop offset="1" stop-color="#F4B266"/></linearGradient>'
+         '<linearGradient id="fus" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3EFE6"/><stop offset="1" stop-color="#CFC8BC"/></linearGradient></defs>',
+         '<rect width="1920" height="1080" fill="url(#dk2)"/>', '<rect y="760" width="1920" height="320" fill="#2C2F3A"/>']
+    s += [f'<circle cx="{x}" cy="770" r="5" fill="#FFD27A"/>' for x in range(20, 1920, 90)]
+    s.append(f'<path d="M-200,-80 L2120,-80 L2120,420 C1500,560 420,560 -200,420 Z" fill="url(#fus)" stroke="{INK}" stroke-width="4"/>')
+    s.append(f'<path d="M-200,330 C420,460 1500,460 2120,330" stroke="#1F5FA8" stroke-width="22" fill="none"/>')
+    s += [f'<rect x="{x}" y="200" width="56" height="70" rx="22" fill="#2C3A52" stroke="{INK}" stroke-width="3"/>' for x in list(range(40, 700, 120)) + list(range(1220, 1900, 120))]
+    s.append(f'<rect x="790" y="100" width="340" height="420" rx="40" fill="url(#door)" stroke="{INK}" stroke-width="6"/>')
+    s.append(f'<rect x="770" y="90" width="380" height="440" rx="48" fill="none" stroke="#9DA3AD" stroke-width="10"/>')
+    L, Rr = [(250, 1080), (820, 520)], [(1670, 1080), (1100, 520)]
+    s.append(f'<path d="M140,1080 L790,520 L820,520 L250,1080 Z" fill="#E9ECF1" stroke="{INK}" stroke-width="3"/><path d="M1780,1080 L1130,520 L1100,520 L1670,1080 Z" fill="#E9ECF1" stroke="{INK}" stroke-width="3"/>')
+    s.append(f'<path d="M150,1000 L795,470 M1770,1000 L1125,470" stroke="#1F5FA8" stroke-width="10"/>')
+    s.append(f'<path d="M250,1080 L820,520 L1100,520 L1670,1080 Z" fill="#B9BEC7" stroke="{INK}" stroke-width="3"/>')
+    y, step, n = 1080, 92, 0
+    while y > 530 and n < 30:
+        t = (1080 - y) / 560; xl, xr = 250 + 570 * t, 1670 - 570 * t; y2 = y - step; t2 = (1080 - y2) / 560; xl2, xr2 = 250 + 570 * t2, 1670 - 570 * t2
+        s.append(f'<path d="M{xl:.0f},{y:.0f} L{xr:.0f},{y:.0f} L{xr2:.0f},{y2 + step * .35:.0f} L{xl2:.0f},{y2 + step * .35:.0f} Z" fill="#8C919A"/>')
+        s.append(f'<line x1="{xl2:.0f}" y1="{y2 + step * .35:.0f}" x2="{xr2:.0f}" y2="{y2 + step * .35:.0f}" stroke="{INK}" stroke-width="3"/>')
+        y, step, n = y2, step * .86, n + 1
+    for (x0, y0), (x1, y1) in ((L[0], L[1]), (Rr[0], Rr[1])):
+        s.append(f'<line x1="{x0 - (40 if x0 < 960 else -40)}" y1="{y0 - 210}" x2="{x1 - (16 if x1 < 960 else -16)}" y2="{y1 - 90}" stroke="{INK}" stroke-width="22" stroke-linecap="round"/>')
+        s.append(f'<line x1="{x0 - (40 if x0 < 960 else -40)}" y1="{y0 - 210}" x2="{x1 - (16 if x1 < 960 else -16)}" y2="{y1 - 90}" stroke="#D9DDE3" stroke-width="14" stroke-linecap="round"/>')
+    s.append('<g transform="translate(1440,930) rotate(10) scale(.75)"><rect x="-300" y="-140" width="600" height="280" rx="18" fill="#FBF3E2"/><rect x="-300" y="-140" width="600" height="60" rx="18" fill="#C0392B"/><rect x="-300" y="-100" width="600" height="20" fill="#C0392B"/>'
+             '<text x="-270" y="-98" font-family="Noto Sans CJK SC" font-weight="800" font-size="28" fill="#FFF6E6">登机牌 BOARDING PASS</text><text x="-270" y="20" font-family="Noto Sans CJK SC" font-weight="900" font-size="48" fill="#C0392B">你</text>'
+             '<text x="-120" y="20" font-family="Noto Sans CJK SC" font-weight="900" font-size="34" fill="#2A2420">座位 7A</text></g>')
+    return ''.join(s)
+add('0:04', '手绘 · 第一视角登机', ['今天，我们一起去看看！'], '第一视角踩着舷梯一级级往上走：台阶往上收窄，两边扶手，顶上是机身和亮着暖光的舱门；右下角手里还捏着登机牌。（开场没有「你」的形象，只有第一视角。）',
+    H(svgw(airstairs()), subs(['今天，我们一起去看看！']), counter(0), SEAL))
+def takeoff():
+    s = ['<defs><linearGradient id="dk3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26304F"/><stop offset=".7" stop-color="#E08E57"/><stop offset="1" stop-color="#F6C27F"/></linearGradient></defs>',
+         '<rect width="1920" height="1080" fill="url(#dk3)"/><rect y="860" width="1920" height="220" fill="#232733"/>']
+    s += [f'<line x1="{960 + (x - 960) * .2}" y1="870" x2="{x}" y2="1080" stroke="#FFD27A" stroke-width="3" stroke-dasharray="6 26" opacity=".7"/>' for x in range(-400, 2400, 400)]
+    s.append('<g transform="translate(1320,640) rotate(-14) scale(1.4)" fill="#0D111C"><path d="M-300,0 L260,-18 C320,-18 340,0 320,18 L-260,36Z"/><path d="M-20,8 L-140,-110 L-80,-110 L120,6Z"/><path d="M-20,26 L-200,140 L-140,140 L120,26Z"/><path d="M-260,10 L-320,-80 L-280,-80 L-200,6Z"/></g>')
+    s.append(f'<text x="960" y="430" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="110" fill="{GOLD}">新世界七大奇迹，</text>')
+    s.append(f'<text x="960" y="580" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="110" fill="{GOLD}">你去过几个？</text>')
+    return ''.join(s)
+add('0:06', '手绘 · 片名（落在主歌起拍）', [], '舱门一关，飞机在夕阳里拉起，金色片名《新世界七大奇迹，你去过几个？》落下，停 ≥ 2.5 秒。', H(svgw(takeoff()), counter(0), SEAL))
 # ===== K03 window + globe, the bet =====
 win = ('<defs><clipPath id="win"><rect x="470" y="80" width="980" height="920" rx="380"/></clipPath></defs><rect width="1920" height="1080" fill="#D9D4CC"/>'
        '<rect width="1920" height="1080" fill="#2E2A27" opacity=".9"/>')
@@ -191,14 +268,14 @@ def window(inner):
 fr, bk = B.route_paths('reveal', B.BEST)
 ring = (f'<path d="{bk}" stroke="{GOLD}" stroke-opacity=".3" stroke-width="3" stroke-dasharray="6 9" fill="none"/><path d="{fr}" stroke="{GOLD}" stroke-width="4" stroke-dasharray="10 10" fill="none"/>'
         f'<path d="{G7["reveal"]["eqAll"]}" stroke="#FFF" stroke-opacity=".3" stroke-width="3" stroke-dasharray="4 10" fill="none"/>')
-add('0:09', '手绘 · 舷窗 · 主问题', ['7个地方连成一圈飞回来，', '够不够[绕地球一圈]？'], '舷窗外是无国界地球仪，7 个点，一条虚线把它们连成一圈，下面是赤道虚线。整片押注的问题，答案留到最后。',
-    H(svgw(window(globe('reveal', set(B.P)) + ring)), subs_c(['7个地方连成一圈飞回来，', '够不够[绕地球一圈]？'], top=40), counter(0), SEAL))
+add('0:09', '手绘 · 舷窗 · 主问题', ['7个地方连成一圈飞回来，', '够不够[绕地球一圈]？'], '舷窗外是无国界地球仪，7 个点各插一面小旗（家是一颗红心「家」），一条虚线把它们连成一圈，下面是赤道虚线。整片押注的问题，答案留到最后。',
+    H(svgw(window(globe('reveal', set(B.P)) + ring + pins('reveal', ['ci', 'mp', 'cr', 'co', 'pe', 'tj', 'gw']))), subs_c(['7个地方连成一圈飞回来，', '够不够[绕地球一圈]？'], top=40), counter(0), SEAL))
 sv, ht = album(0, slot8='none', stamps=False)
 add('0:13', '手绘 · 小桌板 · 空相册', ['地球一圈，40075公里。', '出发！'], '小桌板上摊开一本空相册（7 个虚线格，数字 1–7），左下出现里程表：已飞 0 / 40,075 公里，下面一根进度条。',
     H(sv, ht, subs(['地球一圈，40075公里。', '出发！']), counter(0), odo2(0), SEAL))
 o = G7['pacific']; ci = o['pts']['ci']['xy']
 add('0:16', '地球 · 跳转', [], '横跨太平洋：金色航线 + 小飞机，里程表狂转 → 12,772 / 40,075。配音进来：「¡Bienvenido a México!」',
-    H(svgw(globe('pacific', {'gw', 'ci'}, arc('pacific')) + plane(ci[0] - 26, ci[1] - 6, 12)), counter(0), odo2(12772), SEAL))
+    H(svgw(globe('pacific', {'gw', 'ci'}, arc('pacific')) + plane(ci[0] - 26, ci[1] - 6, 12) + pins('pacific', ['ci'])), counter(0), odo2(12772), SEAL))
 
 # ===== arrival boards 「XXX欢迎你」 over the coded scene (the camera dives through the clouds) =====
 def clouds():
@@ -207,12 +284,20 @@ def clouds():
         for k in range(5):
             c += f'<circle cx="{cx + (k - 2) * r * .45:.0f}" cy="{cy + (k % 2) * r * .2:.0f}" r="{r * (.6 + .1 * k):.0f}" fill="#FFFFFF" opacity=".72"/>'
     return f'<g filter="url(#blur8)">{c}</g>'
+FLAG = {'chichen': 'mx', 'machu2': 'pe', 'christ': 'br', 'colosseum': 'it', 'petra2': 'jo', 'taj': 'in'}
 def arrival(k, zh, local, font='Noto Sans CJK SC', stamp_a=('', ''), col='#C0392B'):
+    bg, pop, pop2 = arrival_parts(k, zh, local, font, stamp_a, col)
+    return bg + pop + pop2
+def arrival_parts(k, zh, local, font='Noto Sans CJK SC', stamp_a=('', ''), col='#C0392B'):
+    """(scene + clouds, arrivals board + flag, passport stamp) so the demo can pop the board and land the stamp on a beat"""
     board = (f'<div style="position:absolute;left:520px;top:560px;width:880px;padding:26px 40px 30px;border-radius:18px;background:rgba(18,30,52,.9);box-shadow:0 20px 50px rgba(0,0,0,.45);border-top:8px solid {GOLD};text-align:center">'
              f'<div style="font-family:Noto Sans CJK SC;font-weight:700;font-size:24px;letter-spacing:4px;color:{GOLD}">✈ 到达 ARRIVALS</div>'
              f'<div style="font-family:Noto Sans CJK SC;font-weight:900;font-size:92px;line-height:1.15;color:#FFFFFF">{zh}</div>'
              f'<div style="font-family:{font},Noto Sans CJK SC;font-weight:700;font-size:46px;color:{CREAM};opacity:.9;direction:{"rtl" if font == "NotoAr" else "ltr"}">{local}</div></div>')
-    return img(drawn(k), 'filter:brightness(1.04)') + svgw(clouds() + stamp(stamp_a[0], stamp_a[1], 1540, 520, rot=-14, col=col, s=1.0)) + board
+    fl, fh = flag(FLAG[k], 110)
+    return (img(drawn(k, fig=False), 'filter:brightness(1.04)') + svgw(clouds()),
+            '<div class="pop">' + board + svgw(f'<g transform="translate(560,600)" filter="url(#ds)">{fl}</g>') + '</div>',
+            '<div class="pop2">' + svgw(stamp(stamp_a[0], stamp_a[1], 1540, 520, rot=-14, col=col, s=1.0)) + '</div>')
 ARR = [('chichen', '墨西哥欢迎你', '¡Bienvenido a México!', 'Noto Sans CJK SC', ('墨西哥', 'MÉXICO · 入境'), '#C0392B'),
        ('machu2', '秘鲁欢迎你', '¡Bienvenido al Perú!', 'Noto Sans CJK SC', ('秘鲁', 'PERÚ · 入境'), '#1F5FA8'),
        ('christ', '巴西欢迎你', 'Bem-vindo ao Brasil!', 'Noto Sans CJK SC', ('巴西', 'BRASIL · 入境'), '#2E7D4F'),
@@ -224,7 +309,7 @@ SUB_ARR = [['第一站，墨西哥，', '奇琴伊察。'], ['第二站，秘鲁
 T_ARR = ['0:18', '0:42', '0:57', '1:10', '1:38', '1:50']
 def arr_frame(i):
     k, zh, local, font, st, col = ARR[i]
-    add(T_ARR[i], f'手绘 · 到达 · 配音', SUB_ARR[i] + [f'（配音：{local}）'], f'穿过云层俯冲进代码画的{["奇琴伊察", "马丘比丘", "基督像", "斗兽场", "佩特拉", "泰姬陵"][i]}；到达牌「{zh}」，下面一行是当地语言；护照入境章「咚」一声盖上。',
+    add(T_ARR[i], f'手绘 · 到达 · 配音', SUB_ARR[i] + [f'（配音：{local}）'], f'穿过云层俯冲进代码画的（还没有「你」）{["奇琴伊察", "马丘比丘", "基督像", "斗兽场", "佩特拉", "泰姬陵"][i]}；到达牌「{zh}」，下面一行是当地语言；护照入境章「咚」一声盖上。',
         H(arrival(k, zh, local, font, st, col), subs(SUB_ARR[i]), counter(i), odo2(KM[i]), SEAL))
 
 # history frame composite (drawn by hist_a/b/c.py)
@@ -277,7 +362,7 @@ arr_frame(2)
 hist('christ_1922', '1:00', ['1922年，里约的天主教徒觉得', '这座城越来越不信神了，', '于是大家捐钱，在山顶立起了它。'], '前景是 1920 年代里约街头的剪影人群往教堂捐款箱里投硬币；远处科尔科瓦多山顶，雕像裹着脚手架正在建，「1922 → 1931」。', 2, 20202,
      rows=['1922年，里约的天主教徒觉得', '这座城越来越[不信神]了，'])
 add('1:08', '地球 · 横跨大西洋', [], '「你」学着雕像张开双臂，咔嚓。然后最长的一段：横跨大西洋，里程表 20,202 → 29,405。配音：「Benvenuto in Italia!」',
-    H(svgw(globe('atlantic', {'cr', 'co', 'gw', 'ci', 'mp'}, arc('atlantic'))), subs(['下一段，横跨[大西洋]。']), counter(3), odo2(29405), SEAL))
+    H(svgw(globe('atlantic', {'cr', 'co', 'gw', 'ci', 'mp'}, arc('atlantic')) + pins('atlantic', ['co'])), subs(['下一段，横跨[大西洋]。']), counter(3), odo2(29405), SEAL))
 # ===== stop 4: 斗兽场 =====
 arr_frame(3)
 hist('colosseum_nero_lake', '1:13', ['这块地，原来是暴君尼禄的私人湖。'], '同一个角度回到古罗马：金色宫殿和柱廊围着一片人工湖，尼禄的剪影站在露台上俯看自己的私人湖。', 3, 29405,
@@ -285,8 +370,7 @@ hist('colosseum_nero_lake', '1:13', ['这块地，原来是暴君尼禄的私人
 hist('colosseum_return', '1:17', ['新皇帝把湖填了，建起斗兽场，', '说：还给罗马人民。'], '湖被填平，崭新完整的斗兽场立在原地，成群的罗马人从拱门涌进去，顶上挂着遮阳篷；地上隐约还有旧湖的轮廓。', 3, 29405,
      rows=['新皇帝把湖填了，建起斗兽场，', '说：还给[罗马人民]。'])
 # ===== Egypt / the pyramid =====
-eg = B.KFR[5][1]
-eg = eg.replace(B.counter(5), counter(4)).replace(B.odo(29399, ghost=True), odo2(31000))
+eg = H(svgw(B.ns['eg']), subs(['往东飞，下面就是[埃及]。', '还记得第8格吗？']), counter(4), odo2(31000), SEAL)
 add('1:21', '手绘 · 舷窗 · 埃及', ['往东飞，下面就是[埃及]。', '还记得第8格吗？'], '舷窗往下看：沙漠、尼罗河、三座小金字塔；画面角落相册的第 8 格在闪。', eg)
 ancient = [('空中花园', 'garden'), ('阿尔忒弥斯神庙', 'temple'), ('宙斯神像', 'zeus'), ('摩索拉斯陵墓', 'mauso'), ('罗德岛巨像', 'colossus'), ('亚历山大灯塔', 'light')]
 def anc_icon(kind, x, y):
@@ -335,7 +419,7 @@ add('2:03', '手绘 · 里程表特写', ['已经飞了35967公里，', '离一�
     H(svgw(bar), subs(['已经飞了35967公里，', '离一圈只差[4108公里]。']), counter(6, hot=True), SEAL))
 o = G7['asia']; tj = o['pts']['tj']['xy']
 add('2:08', '地球 · 最后一段', ['回家这一段，', '够不够？'], '最后一跳：泰姬陵 → 长城，金色航线往家的方向画；问题居中。里程表滚动、越来越慢（音乐蓄力）。',
-    H(svgw(globe('asia', set(B.P), arc('asia')) + plane(tj[0] + 40, tj[1] - 40, -40)), subs_c(['回家这一段，', '够不够？'], top=40), counter(6, hot=True), odo2(38800), SEAL))
+    H(svgw(globe('asia', set(B.P), arc('asia')) + plane(tj[0] + 40, tj[1] - 40, -40) + pins('asia', ['gw'])), subs_c(['回家这一段，', '够不够？'], top=40), counter(6, hot=True), odo2(38800), SEAL))
 o = G7['reveal']; fr, bk = B.route_paths('reveal', B.BEST)
 ex = (f'<path d="{o["eqAll"]}" stroke="#FFF" stroke-opacity=".3" stroke-width="3" stroke-dasharray="10 10" fill="none"/>'
       f'<path d="{bk}" stroke="{GOLD}" stroke-opacity=".35" stroke-width="3" stroke-dasharray="6 9" fill="none"/>'
@@ -345,8 +429,8 @@ big = ('<div style="position:absolute;left:0;right:0;top:60px;text-align:center;
 add('2:14', '地球 · 答案（落在副歌重拍）', ['[39735公里]。', '差340公里，没绕满一圈。'], '里程表停在 39,735，音乐落拍。金色航线环和赤道虚线几乎重合，差一小截。',
     H(svgw(globe('reveal', set(B.P), ex)), big, counter(6, hot=True), odo2(39735), SEAL))
 # ===== home: 长城, 欢迎回家 =====
-home = img(drawn('greatwall2')) + svgw(clouds() + stamp('中国', '欢迎回家', 1540, 470, rot=-10, col='#C0392B'))
-add('2:20', '手绘 · 回到长城 · 配音「欢迎回家」', ['差的那340公里？', '在[万里长城]上走走就补上了。'], '俯冲回到代码画的长城：金色夕阳，「你」在台阶顶上自拍（全片唯一一张自拍）；入境章「中国 · 欢迎回家」。配音（普通话）：「欢迎回家。」',
+home = img(drawn('greatwall2', fig=False)) + svgw(clouds() + stamp('中国', '欢迎回家', 1540, 470, rot=-10, col='#C0392B'))
+add('2:20', '手绘 · 回到长城 · 配音「欢迎回家」', ['差的那340公里？', '在[万里长城]上走走就补上了。'], '俯冲回到代码画的长城：金色夕阳（此时还没有「你」，自拍在下一拍咔嚓时出现）；入境章「中国 · 欢迎回家」。配音（普通话）：「欢迎回家。」',
     H(home, '<div style="position:absolute;left:150px;top:420px;width:620px;padding:22px 30px 26px;border-radius:18px;background:rgba(18,30,52,.9);border-top:8px solid #F2C66E;text-align:center">'
             '<div style="font-family:Noto Sans CJK SC;font-weight:700;font-size:24px;letter-spacing:4px;color:#F2C66E">✈ 到达 ARRIVALS</div><div style="font-family:Noto Sans CJK SC;font-weight:900;font-size:92px;color:#FFF">欢迎回家</div></div>',
       subs(['差的那340公里？', '在[万里长城]上走走就补上了。']), counter(6, hot=True), odo2(39735), SEAL))
@@ -377,6 +461,12 @@ if __name__ == '__main__':
             fn = f'{OUT}/{name}.html'; open(fn, 'w').write(fr['html'])
             pg.goto('file://' + fn); pg.wait_for_timeout(300); pg.evaluate('document.fonts.ready')
             pg.locator('#f').screenshot(path=f'{OUT}/{name}.jpg', type='jpeg', quality=88)
+            if os.environ.get('LAYERS'):
+                pg.add_style_tag(content='.sub,.hud{display:none!important}'); pg.wait_for_timeout(80)
+                pg.locator('#f').screenshot(path=f'{OUT}/{name}_bg.jpg', type='jpeg', quality=92)
+                pg.goto('file://' + fn); pg.wait_for_timeout(250); pg.evaluate('document.fonts.ready')
+                pg.add_style_tag(content='html,body,#f{background:transparent!important} #f>*:not(.hud){visibility:hidden!important}'); pg.wait_for_timeout(80)
+                pg.locator('#f').screenshot(path=f'{OUT}/{name}_hud.png', omit_background=True)
         br.close()
     json.dump([{k: v for k, v in fr.items() if k != 'html'} for fr in FR], open(f'{OUT}/kf7.json', 'w'), ensure_ascii=False, indent=1)
     print('frames', len(FR))
