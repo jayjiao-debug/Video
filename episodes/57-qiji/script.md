@@ -1,4 +1,6 @@
-# ep57 《新世界七大奇迹，从长城出发最少要飞多少公里？》 · script v3 (2026-11-02; v3: owner 16:05 「这个根据出发地点还有顺序啊？」 → fixed start + the shortest of all 5,040 orders)
+# ep57 《新世界七大奇迹，你去过几个？》 · script v4 (2026-11-02)
+
+**Owner 16:09: 「我们核心是让观众自己晒图片」.** The film exists to make viewers post **their own photos** in the comments. Everything points there: the title asks 「你去过几个」, a tally of 7 boxes runs under the odometer, every stop ends with 你 taking a photo, and the ending opens your album with an empty slot 「+ 你的照片」. The distance puzzle stays as the completion spine (answer at the end). (v3: owner 16:05 「这个根据出发地点还有顺序啊？」 → fixed start + the shortest of all 5,040 orders.)
 
 The ancient-list version (「还剩几个」) is kept in script_ancient_v1.md for a later episode.
 
@@ -12,6 +14,7 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 **Devices**
 - **你:** a backpacker silhouette seen from behind, with a small cream tag 「你」. Every stop is your POV.
 - **The phone:** at each stop 你 raises a phone. Inside the frame, **a real photo of the place today** (licensed: owner picks Unsplash/Pexels or his stock; credits on the end card). Photos appear only inside the phone. The world stays flat-vector.
+- **The tally (the viewer's own count):** under the odometer, 7 empty boxes 「你去过：□□□□□□□」. At each stop, after the photo, that stop's box pulses 「去过？」 for a beat: the viewer counts for themselves. We never tick it for them.
 - **The odometer:** bottom-left, 「已飞 N 公里」. It rolls up during each flight hop: 0 → 12,766 → 16,917 → 20,195 → 29,399 → 31,817 → 35,960 → **39,729**.
 - **The accent colour:** each wonder lights up gold when you arrive; the lights stay on, so seven gold points build up on the globe.
 - **Travel:** 1–1.2 s hops on a **borderless** globe (continents only) with a gold flight arc. Never a map.
@@ -19,12 +22,12 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 | # | Time | Subtitle | Picture | Odometer |
 |---|---|---|---|---|
 | 1 | 0:00 | 世界这么大，<br>今天带你去看[新世界七大奇迹]！ | **POV at the boarding gate:** your hand holds a boarding pass, 「目的地：新世界七大奇迹 ×7」, seat 7A; a plane at dusk through the glass. Subtitle on screen at frame 0. | 0 |
-| 2 | 0:02 | 从长城出发，再飞回来，<br>[最少]要飞多少公里？ | The odometer appears and blinks 「0 公里」. | 0 |
+| 2 | 0:02 | 一路数一数：<br>[你去过几个]？ | The tally appears: 「你去过：□□□□□□□」. The odometer appears beside it at 「0 公里」. | 0 |
 | 3 | 0:06 | 这7个，是2007年近1亿人投票选的。<br>咦，怎么没有[金字塔]？ | The boarding pass's back: 7 icons; a faint 8th outline (a pyramid) greyed out with a question mark. **Second question, planted.** | 0 |
 | 4 | 0:11 | 第一站，就在家门口：[长城]。 | The wall at sunrise along the ridges; 你 on a tower. Its point on the globe turns gold. | 0 |
 | 5 | 0:14 | 历代长城加起来，<br>有21196公里。 | The wall draws itself across the mountains. **PHOTO in the phone: 长城 today.** | 0 |
 | 6 | 0:19 | 下一站，直接横跨[太平洋]。 | Window POV over the Pacific at night; the odometer spins hard: 12,766. | 12,766 |
-| 7 | 0:23 | 7个地方，有5040种走法，<br>这是我们算出来[最短]的一种。 | The globe: 5,040 faint tangled routes flicker, then collapse into one clean gold loop. (This answers 「顺序」 in the film itself.) | 12,766 |
+| 7 | 0:23 | 7个地方有5040种走法，这是最短的一种。<br>从长城出发再飞回来，[最少]要飞多少公里？ | The globe: 5,040 faint tangled routes flicker, then collapse into one clean gold loop. **The distance question, held to the end** (and it answers 「顺序」 in the film itself). | 12,766 |
 | 8 | 0:29 | 第二站，墨西哥，[奇琴伊察]。 | A stepped pyramid in the jungle; 你 at its foot. | 12,766 |
 | 9 | 0:33 | 四面台阶加上顶上的平台，<br>一共[365]级。 | The steps count up; a small 365 appears over the top, 「一年365天」. | 12,766 |
 | 10 | 0:38 | 每年春分秋分，<br>影子会变成一条[蛇]， | Afternoon light: triangles of shadow form along the balustrade. | 12,766 |
@@ -50,9 +53,10 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 | 30 | 2:05 | 地球一圈是40075公里。<br>你只差了[346公里]—— | A ghost ring of the equator appears under the flight ring; they nearly overlap. | 39,729 |
 | 31 | 2:10 | 差不多，刚好[绕地球一圈]。 | The two rings lock together. | 39,729 |
 | 32 | 2:13 | 要是顺序乱走呢？<br>最远要飞[89636公里]。 | The tangled worst route flashes for a moment: more than twice round. | 89,636 (flash) |
-| 33 | 2:18 | 这7个，<br>你最想先去哪一个？ | Back to the clean loop; the seven gold points pulse one by one. | 39,729 |
-| 34 | 2:21 | **End card** (≥ 5.5 s): 《新世界七大奇迹，从长城出发最少要飞多少公里？》<br>**这7个，你最想先去哪一个？**<br>pill 「关注 Juno · 一起看懂世界」 · 「距离按大圆直线计算：从八达岭出发、访问7处、返回八达岭；5040种顺序中的最短」 · 「新七大奇迹为瑞士私人基金会2007年发起的投票」 · sources · photo credits | Dim to about 30%; red J stamp. | — |
-| | 2:28 | end | | |
+| 33 | 2:18 | 这一圈，[你去过几个]？ | **The phone's album opens:** the 7 photos from the trip in a grid, and an 8th tile 「+ 你的照片」 pulsing. The tally's 7 boxes sit above it, still empty. | 39,729 |
+| 33b | 2:21 | 去过的，把你拍的照片<br>[晒]在评论区。 | The 「+ 你的照片」 tile grows to fill the phone screen, a camera shutter sound, a blank frame waiting. | 39,729 |
+| 34 | 2:25 | **End card** (≥ 5.5 s): 《新世界七大奇迹，你去过几个？》<br>**去过的晒图，没去过的说说最想去哪个👇**<br>pill 「关注 Juno · 一起看懂世界」 · 「距离按大圆直线计算：从八达岭出发、访问7处、返回八达岭；5040种顺序中的最短」 · 「新七大奇迹为瑞士私人基金会2007年发起的投票」 · sources · photo credits | Dim to about 30%; red J stamp. | — |
+| | 2:32 | end | | |
 
 ## Odometer (great-circle, Earth radius 6,371 km; all 5,040 orders checked, 2026-11-02)
 | Leg | km | Total |
@@ -83,3 +87,8 @@ Shortest 39,729 km = 0.991 × the equator (40,075 km), 346 km short. Worst order
 | F9 | 13 | Machu Picchu became known to the wider world in 1911 (Hiram Bingham); the Spanish never found it | ✗ | ✗ |
 | F10 | 15–16 | Christ the Redeemer inaugurated 1931; 38 m including the base; lightning damaged its right middle finger, its head and its right thumb (storms, Dec 2013–Jan 2014) | Fox News 2014-01-21 | ✓ |
 | F11 | 2, 7, 28–32 | The route distances, the shortest order (5,040 checked) and the worst | Our own great-circle computation (table above) | ✓ |
+
+## Douyin package notes (for later; owner confirms at publish)
+- 标题: 「新世界七大奇迹，你去过几个？」 (self-reference; the search term first).
+- 置顶评论 (the owner's own account seeds it, ideally with **his own photo** of one of the seven): 「去过的晒图！没去过的说说最想先去哪一个👇」
+- Cover: 7 small photo tiles with empty check boxes, 「你去过几个？」 (teaser; no distance number on the cover).

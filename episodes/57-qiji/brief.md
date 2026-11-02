@@ -1,4 +1,6 @@
-# Brief: 新世界七大奇迹，从长城出发最少要飞多少公里？ (ep57)
+# Brief: 新世界七大奇迹，你去过几个？ (ep57)
+
+- **Core goal (owner 16:09): 「让观众自己晒图片」.** The film exists to get viewers posting their own photos in the comments. Title, tally, phone-photo device, album ending and pinned comment all point there.
 
 - **Owner pick (2026-11-02 15:59):** the NEW Seven Wonders (2007 vote), told as a first-person trip: boarding-gate POV, quick plane-and-globe hops, the 「你」 silhouette at each stop, and a real photo of each place inside your phone. The ancient-list version is kept in brief_ancient_v1.md / script_ancient_v1.md.
 - **Why a distance question:** all seven still stand, so the old 「还剩几个」 count no longer works. A tour on its own is narrative, and narrative history doesn't hold viewers on this account. So an odometer drives the film, and its answer comes at the end. **The distance depends on the start and the order (owner 16:05), so the start is fixed at 长城 (八达岭) and the route is the shortest of all 5,040 orders: 39,729 km, 346 km short of once round the Earth (40,075 km).** The worst order is 89,636 km.
