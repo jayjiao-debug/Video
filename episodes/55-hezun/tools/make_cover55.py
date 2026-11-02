@@ -3,11 +3,14 @@ the dark, a short text block top-left. Teaser only (owner note on ep54: 封面�
 where the two characters are.
 The picture is card 1 at t = 5.2 s (the 尊 on the scrap-yard scale with its 30元 tag), bronzeA look, no overlay, 1.5×:
   ENTRY=qq55h/COVER55 CID=COVER55 SFPS=1 SCALE=1.5 node scripts/frame_ms.mjs stills <dir> 0
-Usage: python3 make_cover55.py <picture.png> <out_dir>"""
+Usage: python3 make_cover55.py <picture.png> <out_dir> [yard|pour|gold]
+  pour / gold (owner 11-02 「do the furnace」): COVER55F frames 46 (54.6 s, the bronze pouring into the glowing mould) and
+  100 (60.0 s, the golden 尊 out of the broken mould), same text as the chosen B with a kicker that fits the foundry."""
 import sys, os, numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from fontTools.ttLib import TTFont
 SRC, OUT = sys.argv[1], sys.argv[2]
+SET = sys.argv[3] if len(sys.argv) > 3 else 'yard'
 HERE = os.path.dirname(os.path.abspath(__file__))
 BRUSH = os.path.join(HERE, '../../37-qiqing/remotion/public/fonts/brush/MaShanZheng-Regular.woff')   # OFL, subset
 SERIF = '/usr/share/fonts/opentype/noto/NotoSerifCJK-Black.ttc'
@@ -70,13 +73,17 @@ def series(img, x, y, k=1.0):
     d = ImageDraw.Draw(img); f = ImageFont.truetype(SERIF_R, int(34 * k))
     d.text((x, y), 'VIBE知识大赏 ·《“中国”两个字，最早出现在哪？》', font=f, fill=FILL['muted'])
 
+F_LINES = [('三千年前 · 西周 · 铸造', SERIF_R, 40, 'muted', 0.5), ('差点被销毁的', SERIF, 104, 'cream', 0.16), ('国宝', SERIF, 190, 'gold', 0)]
+# per set: the variants and the picture crop (tall cx, wide cx)
+SETS = {'yard': (VARIANTS, 0.55, 0.56), 'pour': ({'F1': F_LINES}, 0.52, 0.52), 'gold': ({'F2': F_LINES}, 0.49, 0.45)}
 os.makedirs(OUT, exist_ok=True)
-for name, lines in VARIANTS.items():
-    t = picture(1080, 1440, 1300, 150, 0.55, fade_top=420, fade_bot=200); yb = text_block(t, 76, 80, lines); series(t, 80, yb + 30)
+VS, TCX, WCX = SETS[SET]
+for name, lines in VS.items():
+    t = picture(1080, 1440, 1300, 150, TCX, fade_top=420, fade_bot=200); text_block(t, 76, 80, lines)   # owner 11-02: no series line on the cover
     t.save(f'{OUT}/何尊_竖封面_3比4_{name}.png')
-    w = picture(1440, 1080, 1280, -90, 0.56, fade_top=200, fade_bot=150)
+    w = picture(1440, 1080, 1280, -90, WCX, fade_top=200, fade_bot=150)
     a = np.array(w).astype(np.float32); yy, xx = np.mgrid[0:1080, 0:1440]
     m = np.clip(1 - 0.62 * np.exp(-(((xx - 300) / 760) ** 2 + ((yy - 220) / 380) ** 2)), 0, 1)
-    w = Image.fromarray((a * m[..., None]).clip(0, 255).astype(np.uint8)); yb = text_block(w, 86, 64, lines, k=0.86); series(w, 90, yb + 26, k=0.86)
+    w = Image.fromarray((a * m[..., None]).clip(0, 255).astype(np.uint8)); text_block(w, 86, 64, lines, k=0.86)
     w.save(f'{OUT}/何尊_横封面_4比3_{name}.png')
 print('ok')
