@@ -487,11 +487,11 @@ const SC: React.FC<{t: number}> = ({t}) => { const dbg = React.useContext(DepthD
 			return <>{ground([...side(1), ...side(-1).reverse()], '#9EBACB', 'river', 0.95)}
 				{!dbg && cl0.filter((_, i) => i % 3 === 0).map((q, i) => { const pp2 = pr([q[0] + 6 * Math.sin(t * 0.8 + i), q[1], 0.05]); if (pp2[2] < 1) return null; const k = cam.f / pp2[2];
 					return <path key={`gl${i}`} d={`M${f1(pp2[0] - 5 * k)},${f1(pp2[1])} L${f1(pp2[0] + 5 * k)},${f1(pp2[1])}`} stroke="#FFFFFF" strokeWidth={Math.max(1, 0.4 * k)} opacity={0.55} />; })}</>; })()}
-		{ground([[-4, -600, 0], [4, -600, 0], [4, 0, 0], [-4, 0, 0]], '#B89A70', 'road')}
-		{ground([[-5, -86, 0.3], [5, -86, 0.3], [5, -46, 0.3], [-5, -46, 0.3]], '#4A321E', 'bridge')}
+		{/* the road: ONE strip of constant width from beyond the river, through the gate passage and up the main street (near-plane clipped like every ground polygon) */}
 		{ground([[-78, 12, 0.02], [78, 12, 0.02], [78, 138, 0.02], [-78, 138, 0.02]], '#A88A62', 'floor')}
-		{ground([[-5, -5, 0.04], [5, -5, 0.04], [5, 64, 0.04], [-5, 64, 0.04]], '#C8AC80', 'main')}
+		{ground([[-4.5, -600, 0.04], [4.5, -600, 0.04], [4.5, 64, 0.04], [-4.5, 64, 0.04]], '#C4A87C', 'road')}
 		{ground([[-78, 60, 0.04], [78, 60, 0.04], [78, 66, 0.04], [-78, 66, 0.04]], '#C8AC80', 'cross')}
+		{ground([[-5, -86, 0.3], [5, -86, 0.3], [5, -46, 0.3], [-5, -46, 0.3]], '#4A321E', 'bridge')}
 		{drawn}
 	</Shell>; };
 
