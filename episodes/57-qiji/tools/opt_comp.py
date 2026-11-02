@@ -59,7 +59,7 @@ OPTS = [
     # selfie vibes (owner 23:08: likes 长城 C)
     ('s1', 'greatwall2', '自拍 1 · 右下，另一只手比耶', 'selfie', (2060, 2300), 4.0, 10, True, 'gwf', [], 'selfie_gw'),
     ('s2', 'greatwall2', '自拍 2 · 左下，指着身后的城楼', 'selfie_pt', (560, 2260), 3.7, 8, True, 'gwf', [], 'selfie_gw'),
-    ('s3', 'greatwall2', '自拍 3 · 大头特写，手举在脸边', 'selfie_cheek', (1990, 2700), 5.4, 14, True, 'gwf', [], 'selfie_gw'),
+    ('s3', 'greatwall2', '自拍 3 · 大头特写，手举在脸边', 'selfie_cheek', (1830, 2700), 5.4, 14, True, 'gwf', [], 'selfie_gw'),
     ('s4', 'petra2', '自拍 · 佩特拉，灯海在身后', 'selfie', (1330, 3150), 4.0, 8, True, 'pf', [], 'selfie_more'),
     ('s5', 'machu2', '自拍 · 马丘比丘，指着身后的山', 'selfie_peak', (2180, 2350), 3.7, -8, True, 'mf', [], 'selfie_more'),
 ]
