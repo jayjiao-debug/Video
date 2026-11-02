@@ -1,0 +1,68 @@
+name: render-ep55
+# Throwaway render farm for ep55 v2.2 (owner approved 2026-11-02 10:41): each job renders one chunk of the film and pushes it
+# back ENCRYPTED (AES key wrapped with the producer's RSA public key render55/pub.pem), so no playable video lands on the repo.
+on:
+  push:
+    branches: [render-ep55]
+permissions:
+  contents: write
+jobs:
+  r:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        c:
+          - {n: a1a, e: E551, id: ACT1, f0: 0, f1: 317}
+          - {n: a1b, e: E551, id: ACT1, f0: 317, f1: 634}
+          - {n: a1c, e: E551, id: ACT1, f0: 634, f1: 950}
+          - {n: a1d, e: E551, id: ACT1, f0: 950, f1: 1266}
+          - {n: a3a, e: E553, id: ACT3, f0: 2217, f1: 2489}
+          - {n: a3b, e: E553, id: ACT3, f0: 2489, f1: 2761}
+          - {n: a3c, e: E553, id: ACT3, f0: 2761, f1: 3033}
+          - {n: a4a, e: E554, id: ACT4, f0: 3033, f1: 3305}
+          - {n: a4b, e: E554, id: ACT4, f0: 3305, f1: 3577}
+          - {n: a4c, e: E554, id: ACT4, f0: 3577, f1: 3848}
+          - {n: a4d, e: E554, id: ACT4, f0: 3848, f1: 4119}
+          - {n: a5a, e: E555, id: ACT5, f0: 4119, f1: 4385}
+          - {n: a5b, e: E555, id: ACT5, f0: 4385, f1: 4651}
+          - {n: a5c, e: E555, id: ACT5, f0: 4651, f1: 4917}
+          - {n: a5d, e: E555, id: ACT5, f0: 4917, f1: 5183}
+          - {n: a5e, e: E555, id: ACT5, f0: 5183, f1: 5450}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: episodes/37-qiqing/remotion/package-lock.json
+      - name: CJK fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk >/dev/null && fc-list | grep -c "Noto Sans CJK"
+      - name: npm ci
+        working-directory: episodes/37-qiqing/remotion
+        run: npm ci --no-audit --no-fund --loglevel=error
+      - name: render
+        working-directory: episodes/37-qiqing/remotion
+        env:
+          ENTRY: qq55h/${{ matrix.c.e }}
+          CID: ${{ matrix.c.id }}
+          CONC: 4
+          CRF: 16
+        run: |
+          nproc; date +%T
+          A=$(python3 -c "print(${{ matrix.c.f0 }}/30)"); B=$(python3 -c "print(${{ matrix.c.f1 }}/30)")
+          node scripts/frame_ms.mjs video $RUNNER_TEMP/c.mp4 $A $B
+          date +%T; ls -la $RUNNER_TEMP/c.mp4
+      - name: encrypt and push
+        run: |
+          cd $RUNNER_TEMP
+          openssl rand -hex 32 > k.txt
+          openssl enc -aes-256-cbc -pbkdf2 -pass file:k.txt -in c.mp4 -out c.enc
+          openssl pkeyutl -encrypt -pubin -inkey $GITHUB_WORKSPACE/render55/pub.pem -pkeyopt rsa_padding_mode:oaep -in k.txt -out k.enc
+          rm -f k.txt c.mp4
+          mkdir o && mv c.enc k.enc o/ && cd o && echo "${{ matrix.c.n }} ${{ matrix.c.f0 }} ${{ matrix.c.f1 }}" > info.txt
+          git init -q -b r && git add . && git -c user.name=render -c user.email=noreply@anthropic.com commit -qm "ep55 chunk ${{ matrix.c.n }} (encrypted)"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:render-ep55-out-${{ matrix.c.n }}
