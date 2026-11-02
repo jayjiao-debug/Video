@@ -23,6 +23,7 @@ Only ✓ rows go on screen. No Wikipedia / 百度百科 / 知乎.
 | 17 | 「中国」 was the common name of the successive dynasties | 黄兴涛《光明日报》2018-01-22 第14版: 「各朝代通称的传统国名之“中国”」 | ✓ |
 | 18 | From 康熙, 「中国」 as a state name entered international treaties, e.g. 《尼布楚条约》 | 黄兴涛（同上）: 「从康熙时代开始，“中国”作为与“大清”同义……的延续性国名开始进入近代国际条约（如《尼布楚条约》）」; signed 1689 (EBSCO Research Starters, Treaty of Nerchinsk) | ✓ |
 | 19 | 1909 《大清国籍条例》: no 「大清」 in the body, only 「中国」「中国人」 | 黄兴涛（同上）: 「该法除了标题之外，整个正文中都没有一个“大清”，而全被“中国”和“中国人”所取代」 | ✓ |
+| 19b | On the 1909 page (picture only): 第一章「固有籍」第一條 and its three items, in the print's traditional characters | 黄兴涛（同上）quotes it: 「第一条凡左列人等不论是否生于中国地方均属中国国籍：一、生而父为中国人者；二、生于父死以后，而父死时为中国人者；三、母为中国人，而父无可考或无国籍者。」 Only this article is set on the page; the rest stays blank (no invented text). | ✓ |
 | 20 | Today in 宝鸡青铜器博物院; 首批禁止出国（境）展览文物 | v1.1 facts (新华社 2023; 国家文物局 2002 first list) | ✓ |
 
 Not used (kept off screen): 「1912年中国成为正式国名简称」 — 黄兴涛 rejects it; 扉棱 hides mould seams — no source found yet; the value of 30 朋 in 西周 money.
