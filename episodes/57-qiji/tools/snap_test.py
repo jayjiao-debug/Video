@@ -13,7 +13,7 @@ from you_figure import figure, DEFS
 
 S = '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/sb57'
 OUTD = f'{S}/snap'; os.makedirs(f'{OUTD}/f', exist_ok=True)
-FPS, DUR = 30, 7.6
+FPS, DUR = 30, 6.69   # 4 bars of the BGM (143.6 BPM): camera up on bar 2, 咔嚓 on the bar-3 downbeat
 PW, PH = 2576, 1717; PX, PY = 520, 158; EW, EH = PW + 2 * PX, PH + 2 * PY   # extended canvas around the photo
 
 # 1) extended drawing: the coded scene, padded by reflection; the padding only shows dimmed and blurred
@@ -30,7 +30,7 @@ def span(t, a, b): return ease((t - a) / (b - a))
 
 def fig_svg(t):
     """selfie 3 in extended-canvas coordinates; the raised hand waves until the camera comes up"""
-    w = math.sin(t * 2 * math.pi * 1.4) * (1 - span(t, 2.2, 2.7))
+    w = math.sin(t * 2 * math.pi * 1.4) * (1 - span(t, 1.7, 2.3))
     P = arms(stand, r=(-20 + 14 * w, -100 + 18 * w), l=(125, 115))
     bx, by, s = 1830 + PX, 2700 + PY, 5.4
     J = {k: (bx + x * s, by + y * s) for k, (x, y) in P.items() if 'knee' not in k and 'ankle' not in k}
@@ -39,8 +39,8 @@ def fig_svg(t):
 def view(t):
     """camera view over the extended canvas: (centre x, centre y, width)"""
     cx, cy = PX + PW / 2, PY + PH / 2
-    if t < 2.0: return cx, cy, 2576 - 120 * span(t, 0, 2.0)
-    vw = 2456 + (3616 - 2456) * span(t, 2.0, 2.7) - 110 * span(t, 2.7, 3.0)
+    if t < 1.67: return cx, cy, 2576 - 100 * span(t, 0, 1.67)
+    vw = 2476 + (3616 - 2476) * span(t, 1.67, 2.4) - 110 * span(t, 2.4, 3.3)
     return cx, cy, vw
 
 with open(f'{OUTD}/ext.jpg', 'rb') as f: ext_b64 = base64.b64encode(f.read()).decode()
@@ -75,27 +75,27 @@ open(f'{OUTD}/page.html', 'w').write(HTML)
 def frame_js(t):
     cx, cy, vw = view(t); sc = 1920 / vw; vx, vy = cx - vw / 2, cy - vw * 9 / 32
     fx0, fy0, fx1, fy1 = (PX - vx) * sc, (PY - vy) * sc, (PX + PW - vx) * sc, (PY + PH - vy) * sc
-    vf = span(t, 2.15, 2.6) * (1 - span(t, 4.4, 5.0))          # viewfinder on
+    vf = span(t, 1.8, 2.3) * (1 - span(t, 3.9, 4.4))          # viewfinder on
     dim = vf + .0 * span(t, 4.4, 5.0)
     hud = ''
     if vf > 0:
         L = 80
         for (x, y, dx, dy) in ((fx0, fy0, 1, 1), (fx1, fy0, -1, 1), (fx0, fy1, 1, -1), (fx1, fy1, -1, -1)):
             hud += f'<path d="M{x + 14 * dx:.0f},{y + (14 + L) * dy:.0f} L{x + 14 * dx:.0f},{y + 14 * dy:.0f} L{x + (14 + L) * dx:.0f},{y + 14 * dy:.0f}" opacity="{vf:.2f}"/>'
-        hx, hy = (2350 - vx) * sc, (1249 - vy) * sc; b = 130 * sc * (1 + .25 * (1 - span(t, 2.6, 2.9)))
+        hx, hy = (2350 - vx) * sc, (1249 - vy) * sc; b = 130 * sc * (1 + .25 * (1 - span(t, 2.4, 3.0)))
         hud += f'<rect x="{hx - b:.0f}" y="{hy - b:.0f}" width="{2 * b:.0f}" height="{2 * b:.0f}" stroke="#F2C66E" stroke-width="4" opacity="{vf:.2f}"/>'
         hud += f'<circle cx="{fx0 + 60:.0f}" cy="{fy0 + 60:.0f}" r="10" fill="#E5483B" stroke="none" opacity="{vf * (.5 + .5 * math.sin(t * 12)):.2f}"/>'
-    band_a = .5 * dim + .35 * span(t, 4.4, 5.2)
-    cam_y = 1080 - 78 * span(t, 2.0, 2.6) + 120 * span(t, 4.5, 5.1)          # camera top edge on screen
+    band_a = .5 * dim + .35 * span(t, 3.9, 4.6)
+    cam_y = 1080 - 78 * span(t, 1.67, 2.3) + 120 * span(t, 4.0, 4.5)          # camera top edge on screen
     # the card: hidden behind the camera, pushed out of the slot, then lifted to centre
     slot = cam_y + 34
-    out = span(t, 3.15, 4.35)
+    out = span(t, 3.40, 3.88)
     card_top = slot - 607 * out + 6 * math.sin(t * 40) * (out > 0) * (out < 1)
-    lift = span(t, 4.4, 5.3)
+    lift = span(t, 3.92, 4.6)
     ctop = card_top + (236 - card_top) * lift; sc_card = 1 + .32 * lift; rot = -3 * lift
-    raw = 1 - span(t, 4.1, 5.0); dr = span(t, 4.3, 5.1) * (1 - span(t, 5.5, 6.5)); re = span(t, 5.2, 6.8)
-    cap = span(t, 6.5, 7.3)
-    flash = (1 - span(t, 3.07, 3.45)) * (t >= 3.07); blink = 1.0 if 3.0 <= t < 3.07 else 0
+    raw = 1 - span(t, 3.85, 4.5); dr = span(t, 3.95, 4.45) * (1 - span(t, 4.7, 5.35)); re = span(t, 4.6, 5.4)
+    cap = span(t, 5.35, 5.95)
+    flash = (1 - span(t, 3.41, 3.75)) * (t >= 3.41); blink = 1.0 if 3.34 <= t < 3.41 else 0
     return f'''(() => {{
 const W=document.getElementById('world'); W.style.transform='scale({sc:.5f}) translate({-vx:.2f}px,{-vy:.2f}px)';
 document.getElementById('fig').innerHTML={fig_svg(t)!r};
@@ -120,15 +120,24 @@ with sync_playwright() as pw:
         pg.locator('#st').screenshot(path=f'{OUTD}/f/{i:04d}.jpg', type='jpeg', quality=92)
     br.close()
 
-# sound: two shutter clicks at 3.0 s, an eject motor 3.15–4.35 s
-sr = 48000; a = np.zeros(int(DUR * sr), np.float32); rng = np.random.default_rng(3)
-for t0, amp in ((3.0, .9), (3.07, .6)):
-    n = int(.03 * sr); i0 = int(t0 * sr); a[i0:i0 + n] += amp * rng.normal(0, 1, n) * np.exp(-np.linspace(0, 9, n))
-i0, n = int(3.15 * sr), int(1.2 * sr); tt = np.arange(n) / sr
-motor = (.18 * np.sign(np.sin(2 * np.pi * 150 * tt)) + .1 * rng.normal(0, 1, n)) * np.minimum(1, tt / .05) * np.minimum(1, (1.2 - tt) / .1)
-a[i0:i0 + n] += cv2.GaussianBlur(motor.reshape(1, -1).astype(np.float32), (0, 0), 2).ravel() * .6
-a = np.clip(a, -1, 1); pcm = (a * 32000).astype(np.int16)
-with wave.open(f'{OUTD}/sfx.wav', 'wb') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr); w.writeframes(pcm.tobytes())
+# sound: 4 bars of the extended BGM (bar-aligned), the AOSP camera_click (Apache-2.0) layered with a low thunk on the bar-3 downbeat,
+# and a short instant-camera eject motor
+import soundfile as sf
+M = f'/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/ep57music'
+bed, sr = sf.read(f'{M}/bed_v1.wav'); D0 = float(os.environ.get('BGM_AT', '132.03'))   # a downbeat in the final chorus (bar 48 lands at 135.37)
+mus = bed[int(D0 * sr): int((D0 + DUR) * sr)].mean(1) * .55
+n = len(mus); mus[:int(.25 * sr)] *= np.linspace(0, 1, int(.25 * sr)); mus[-int(.4 * sr):] *= np.linspace(1, 0, int(.4 * sr))
+a = mus.copy(); rng = np.random.default_rng(3)
+ck, csr = sf.read('/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/sfx_dl/click.wav')
+ck = np.interp(np.arange(int(len(ck) * sr / csr)) * csr / sr, np.arange(len(ck)), ck)
+i0 = int(3.34 * sr) - int(.012 * sr); a[i0:i0 + len(ck)] += ck * .95
+tt = np.arange(int(.09 * sr)) / sr; a[i0:i0 + len(tt)] += .55 * np.sin(2 * np.pi * 95 * tt) * np.exp(-tt * 45)       # body thunk
+tr = int(.004 * sr); a[i0 + int(.012 * sr): i0 + int(.012 * sr) + tr] += rng.normal(0, .5, tr) * np.linspace(1, 0, tr)   # crisp edge
+i0, nm = int(3.40 * sr), int(.48 * sr); tt = np.arange(nm) / sr
+motor = (.16 * np.sign(np.sin(2 * np.pi * (170 + 40 * tt / .48) * tt)) + .07 * rng.normal(0, 1, nm)) * np.minimum(1, tt / .03) * np.minimum(1, (.48 - tt) / .06)
+a[i0:i0 + nm] += motor * .7
+a = np.clip(a, -1, 1)
+sf.write(f'{OUTD}/sfx.wav', np.stack([a, a], 1), sr)
 subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', str(FPS), '-i', f'{OUTD}/f/%04d.jpg', '-i', f'{OUTD}/sfx.wav',
                 '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-shortest', sys.argv[1]], check=True)
-print('ok', sys.argv[1], N, 'frames')
+print('ok', sys.argv[1], N, 'frames, music from', D0)
