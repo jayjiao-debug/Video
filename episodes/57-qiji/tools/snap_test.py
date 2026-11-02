@@ -120,22 +120,15 @@ with sync_playwright() as pw:
         pg.locator('#st').screenshot(path=f'{OUTD}/f/{i:04d}.jpg', type='jpeg', quality=92)
     br.close()
 
-# sound: 4 bars of the extended BGM (bar-aligned), the AOSP camera_click (Apache-2.0) layered with a low thunk on the bar-3 downbeat,
-# and a short instant-camera eject motor
+# sound: 4 bars of the extended BGM (bar-aligned) and the crisp shutter click on the bar-3 downbeat; no eject sound (owner 00:46)
 import soundfile as sf
 M = f'/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/ep57music'
 bed, sr = sf.read(f'{M}/bed_v1.wav'); D0 = float(os.environ.get('BGM_AT', '132.03'))   # a downbeat in the final chorus (bar 48 lands at 135.37)
 mus = bed[int(D0 * sr): int((D0 + DUR) * sr)].mean(1) * .55
 n = len(mus); mus[:int(.25 * sr)] *= np.linspace(0, 1, int(.25 * sr)); mus[-int(.4 * sr):] *= np.linspace(1, 0, int(.4 * sr))
 a = mus.copy(); rng = np.random.default_rng(3)
-ck, csr = sf.read('/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/sfx_dl/click.wav')
-ck = np.interp(np.arange(int(len(ck) * sr / csr)) * csr / sr, np.arange(len(ck)), ck)
-i0 = int(3.34 * sr) - int(.012 * sr); a[i0:i0 + len(ck)] += ck * .95
-tt = np.arange(int(.09 * sr)) / sr; a[i0:i0 + len(tt)] += .55 * np.sin(2 * np.pi * 95 * tt) * np.exp(-tt * 45)       # body thunk
-tr = int(.004 * sr); a[i0 + int(.012 * sr): i0 + int(.012 * sr) + tr] += rng.normal(0, .5, tr) * np.linspace(1, 0, tr)   # crisp edge
-i0, nm = int(3.40 * sr), int(.48 * sr); tt = np.arange(nm) / sr
-motor = (.16 * np.sign(np.sin(2 * np.pi * (170 + 40 * tt / .48) * tt)) + .07 * rng.normal(0, 1, nm)) * np.minimum(1, tt / .03) * np.minimum(1, (.48 - tt) / .06)
-a[i0:i0 + nm] += motor * .7
+sh, _ = sf.read('/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/sfx/shutter_iphone_style.wav')   # sfx.py; owner 00:46: only the click, no eject sound
+i0 = int(3.34 * sr) - int(.003 * sr); a[i0:i0 + len(sh)] += sh * .9
 a = np.clip(a, -1, 1)
 sf.write(f'{OUTD}/sfx.wav', np.stack([a, a], 1), sr)
 subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', str(FPS), '-i', f'{OUTD}/f/%04d.jpg', '-i', f'{OUTD}/sfx.wav',
