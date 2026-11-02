@@ -1,4 +1,5 @@
 name: render-ep55
+# r4: the 1909 page with its real text (a5c, a5d)
 # r3: owner notes 11:09 (flanges in L, the X8 guard, the 1909 page): act 2 and three act-5 chunks only
 # r2: + fonts-noto-cjk-extra (the Black weight the subtitles use; r1 fell back to Bold)
 # Throwaway render farm for ep55 v2.2 (owner approved 2026-11-02 10:41): each job renders one chunk of the film and pushes it
@@ -16,11 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         c:
-          - {n: a2a, e: E552, id: ACT2, f0: 1266, f1: 1503}
-          - {n: a2b, e: E552, id: ACT2, f0: 1503, f1: 1740}
-          - {n: a2c, e: E552, id: ACT2, f0: 1740, f1: 1977}
-          - {n: a2d, e: E552, id: ACT2, f0: 1977, f1: 2217}
-          - {n: a5b, e: E555, id: ACT5, f0: 4385, f1: 4651}
           - {n: a5c, e: E555, id: ACT5, f0: 4651, f1: 4917}
           - {n: a5d, e: E555, id: ACT5, f0: 4917, f1: 5183}
     steps:
