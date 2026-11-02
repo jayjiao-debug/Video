@@ -47,8 +47,12 @@ export const CounterV2: React.FC<{age: string; roll?: boolean}> = ({age, roll}) 
 /** the rolling counter for the burial card: 0 → 约3000 across the card */
 const rollAge = (t: number, c: Card2) => { const u = seg(t, c.t + 0.4, nextT2(c.id) - 0.3), e = u * u * (3 - 2 * u); return String(Math.round(e * 2990)); };
 
+/** picture-only renders (the Douyin cover picture): wrap a scene in <NoOverlay.Provider value> and FilmOv2 draws nothing */
+export const NoOverlay = React.createContext(false);
+
 /** subtitles type at CPS from the card start (card 1 too, from 0.2 s: owner v2.1 note); the stamp fades in after typing; counter + seal */
 export const FilmOv2: React.FC<{t: number; c: Card2; measure?: MBox | null; measureO?: number; hideCounter?: boolean}> = ({t, c, measure, measureO = 0.6, hideCounter}) => {
+	if (React.useContext(NoOverlay)) return null;
 	const rows = c.rows ?? [], typed = (t - c.t - (c.t === 0 ? 0.2 : 0)) * CPS, r0 = rows[0] ? plain(rows[0]).length : 0;
 	const n = [Math.min(r0, typed), Math.max(0, typed - r0)];
 	const total = plain(rows.join('')).length, stampU = seg(typed, total + 6, total + 6 + 0.35 * CPS);
