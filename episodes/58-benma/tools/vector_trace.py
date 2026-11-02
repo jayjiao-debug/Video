@@ -17,7 +17,7 @@ m = cv2.GaussianBlur(cv2.resize(fg, (img.shape[1], img.shape[0]), interpolation=
 n, lab, st, _ = cv2.connectedComponentsWithStats(m.astype(np.uint8)); m = lab == (1 + np.argmax(st[1:, cv2.CC_STAT_AREA]))
 sm = img.copy()
 for _ in range(4): sm = cv2.bilateralFilter(sm, 9, 28, 9)
-sm = cv2.edgePreservingFilter(sm, flags=1, sigma_s=40, sigma_r=.25)
+sm = cv2.edgePreservingFilter(sm, flags=1, sigma_s=float(args.get('ss', 40)), sigma_r=float(args.get('sr', .25)))
 labc = cv2.cvtColor(sm, cv2.COLOR_BGR2LAB).astype(np.float32)
 X = labc[m]
 crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 40, .5)
@@ -26,7 +26,7 @@ order = np.argsort(cen[:, 0]); rank = np.empty(K, int); rank[order] = np.arange(
 L = np.full(m.shape, -1, np.int32); L[m] = rank[lbl.ravel()]
 # clean: smooth one-hot maps, argmax
 H, W = m.shape; prob = np.zeros((K, H, W), np.float32)
-for k in range(K): prob[k] = cv2.GaussianBlur((L == k).astype(np.float32), (0, 0), 2.2 * S / 3)
+for k in range(K): prob[k] = cv2.GaussianBlur((L == k).astype(np.float32), (0, 0), float(args.get('ps', 2.2)) * S / 3)
 L2 = prob.argmax(0); L2[~m] = -1
 cols = []
 for k in range(K):
@@ -44,6 +44,6 @@ def trace(bm, turd):
 svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}">',
        f'<path d="{trace(m, 10)}" fill="{cols[0]}" fill-rule="evenodd"/>']
 for k in range(1, K):   # stacked: each layer = all regions at least this light
-    svg.append(f'<path d="{trace(L2 >= k, int(8 * S))}" fill="{cols[k]}" fill-rule="evenodd"/>')
+    svg.append(f'<path d="{trace(L2 >= k, int(float(args.get("turd", 8)) * S))}" fill="{cols[k]}" fill-rule="evenodd"/>')
 svg.append('</svg>')
 open(sys.argv[2], 'w').write('\n'.join(svg)); print('ok', W, H, cols)
