@@ -37,7 +37,19 @@ export const ZUN = {
     #8A3E22, never black), a soft inner glow, lighter relief; the scene's light still models it but the body colour holds, so it
     is the most saturated and among the brightest things in every frame. Dirt only as a hint in the deepest recesses at high
     patina; cleanest and shiniest in the museum. The fresh gold casting and the gold 中 / 或 are unchanged. */
-export const ZUN_LOOK: 'v21' | 'verdigris' | 'rim' | 'rimplus' | 'bright' = 'bright';
+/* 'bronzeA' | 'bronzeB' | 'bronzeC' = 1D (owner: 1C "looks like gold, make it more bronze toned"): the same pop (brightest, most
+    saturated object, no outline), moved from gold/orange to brown bronze, with metal reflections (a sky/floor band, a broad
+    key sheen, a sharp peach-white spark, polish varying over the surface) instead of a flat lit tone. A warm polished bronze,
+    B dark bronze rubbed bright on the high points, C red-copper bronze. No yellow highlights: gold stays for the casting and 中 / 或. */
+export const ZUN_LOOK: 'v21' | 'verdigris' | 'rim' | 'rimplus' | 'bright' | 'bronzeA' | 'bronzeB' | 'bronzeC' = 'bronzeA';
+/* the 1D bronze palettes: mid body, raised/rubbed tone, shadow, sunk ground, deep-recess dirt, spark tint, interior, 雷纹 ink;
+   edge = how far raised relief goes toward hi, con = light→tone contrast exponent, pol = polish (spark and sheen strength) */
+type BzPal = {mid: RGB; hi: RGB; shd: RGB; ground: RGB; dirt: RGB; spark: RGB; inner: RGB; lo: RGB; lei: string; edge: number; con: number; pol: number};
+const BZPAL: Record<string, BzPal> = {
+	bronzeA: {mid: [168, 101, 62], hi: [216, 154, 110], shd: [78, 42, 24], ground: [118, 66, 38], dirt: [66, 48, 30], spark: [255, 226, 206], inner: [92, 50, 28], lo: [40, 20, 10], lei: '#2E170B', edge: 0.6, con: 1.45, pol: 1},
+	bronzeB: {mid: [138, 84, 52], hi: [224, 162, 116], shd: [58, 36, 24], ground: [62, 46, 28], dirt: [52, 46, 28], spark: [255, 228, 208], inner: [70, 42, 26], lo: [30, 20, 12], lei: '#22160C', edge: 1, con: 1.3, pol: 1.1},
+	bronzeC: {mid: [180, 88, 58], hi: [232, 148, 106], shd: [90, 36, 22], ground: [128, 56, 34], dirt: [72, 40, 26], spark: [255, 222, 204], inner: [100, 42, 24], lo: [48, 16, 8], lei: '#34120A', edge: 0.6, con: 1.4, pol: 1},
+};
 const D2R = Math.PI / 180;
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -315,15 +327,15 @@ export const Zun: React.FC<ZunProps> = (p) => {
 	const P = (q: V3) => proj(cam, q);
 	const depth = (q: V3) => toCam(cam, q)[2];
 	/* bronze: cleaned museum surface (dark olive-brown metal), verdigris, soil */
-	const LOOK: string = ZUN_LOOK, VG = LOOK === 'verdigris', BRT = LOOK === 'bright';
+	const LOOK: string = ZUN_LOOK, VG = LOOK === 'verdigris', BZ = LOOK.startsWith('bronze'), BRT = LOOK === 'bright' || BZ, PL: BzPal = BZPAL[LOOK] ?? BZPAL.bronzeA;
 	const bAmt = BRT ? (1 - fresh) * (1 - cl(molten * 2)) : 0;
 	const RIM = LOOK === 'rim' || LOOK === 'rimplus', PLUS = LOOK === 'rimplus';
 	const rimAmt = RIM ? (1 - cl(fresh * 3)) * (1 - cl(molten * 3)) * (1 - sstep(0.6, 1, glow)) : 0, plus = PLUS ? rimAmt : 0;
-	const scrC = P(W([0, 0, 19.4])), pxs = cam.f * ps / Math.max(1, depth(W([0, 0, 19.4])));
+	const CB = basis(cam), scrC = P(W([0, 0, 19.4])), pxs = cam.f * ps / Math.max(1, depth(W([0, 0, 19.4])));
 	const Ls = (() => { const b = basis(cam), x = dot(nrm(Lt.dir), b.R), y = dot(nrm(Lt.dir), b.U), l = Math.hypot(x, y) || 1; return {x: x / l, y: y / l, k: Math.min(1, l / 0.45)}; })();
 	const poolC: [number, number] = [scrC[0] + Ls.x * 8 * pxs, scrC[1] - Ls.y * 8 * pxs - 5 * pxs], poolR = 17 * pxs;
 	const sig: React.ReactNode[] = [];
-	const BR: RGB = BRT ? [150, 70, 38] : VG ? [26, 42, 36] : [54, 55, 46], BR_HI: RGB = BRT ? [242, 166, 106] : VG ? [94, 112, 92] : [140, 128, 100], VERD: RGB = [62, 92, 76], VERD2: RGB = [100, 136, 110], SOIL: RGB = [100, 82, 58];
+	const BR: RGB = BZ ? mixc(PL.mid, PL.shd, 0.5) : BRT ? [150, 70, 38] : VG ? [26, 42, 36] : [54, 55, 46], BR_HI: RGB = BZ ? PL.hi : BRT ? [242, 166, 106] : VG ? [94, 112, 92] : [140, 128, 100], VERD: RGB = [62, 92, 76], VERD2: RGB = [100, 136, 110], SOIL: RGB = [100, 82, 58];
 	/* verdigris look: the patina keeps its own colour under a tinted key (a partial white balance on the diffuse light only;
 	   the highlights and the rim stay the scene's colour), fading out toward the gold casting and the molten state */
 	const wb = VG ? 0.62 * (1 - fresh) * (1 - molten) : 0;
@@ -332,7 +344,27 @@ export const Zun: React.FC<ZunProps> = (p) => {
 	const shade = (n: V3, q: V3, alb: RGB, specK = 1, ao = 1, rimOn = true): RGB => {
 		const l = Math.max(0, dot(n, L)), v = nrm(sub(cam.p, q)), hh = nrm(addv(L, v)), sp = Math.pow(Math.max(0, dot(n, hh)), shin) * Lt.spec * specK * (1 - 0.75 * patina) * (1 + 0.8 * fresh);
 		const c: RGB = [0, 1, 2].map((i) => alb[i] / 255 * (ambD[i] * Lt.amb + keyD[i] * Lt.k * l) * ao + keyC[i] * sp * ao * 0.9) as RGB;
-		if (bAmt > 0) {   /* copper: from its own saturated shadow to its lit tone by how lit the facet is, a soft inner glow, a warm sheen */
+		if (bAmt > 0 && BZ) {   /* bronze: lit tone from its own shadow, then metal reflections (model-space polish so nothing swims) */
+			const I = cl((Lt.amb * 0.55 + Lt.k * l) / (Lt.amb * 0.55 + Lt.k * 0.85)), t = cl(0.12 + 0.88 * Math.pow(I, PL.con)) * (0.5 + 0.5 * ao);
+			const s2 = P(q), dd = Math.hypot(s2[0] - poolC[0], s2[1] - poolC[1]) / (poolR * 1.15), glowK = 1 + 0.16 * Math.exp(-dd * dd * 1.1);
+			const shd = mixc([alb[0] * 0.42, alb[1] * 0.34, alb[2] * 0.32], PL.shd, 0.45);
+			const cb = mixc(shd, alb, t);
+			const dq = sub(q, P0), mx = (dq[0] * cy + dq[1] * sy) / ps, my = (-dq[0] * sy + dq[1] * cy) / ps, mz = dq[2] / ps, ang = Math.atan2(my, mx);
+			const pol = PL.pol * (0.45 + 1.1 * fbm(ang * 3.2 + 2, mz * 0.32, 83)) * (1 - 0.4 * patina);
+			const nv = dot(n, v), r: V3 = [2 * nv * n[0] - v[0], 2 * nv * n[1] - v[1], 2 * nv * n[2] - v[2]];
+			const env = sstep(-0.15, 0.85, r[2]) * (0.6 + 0.4 * sstep(0.2, 0.9, nv));   // sky above, a dark floor band below
+			const shBr = Math.pow(Math.max(0, dot(n, hh)), 7), shSh = Math.pow(Math.max(0, dot(n, hh)), 46);
+			const keyN = neut(keyC, 0.75), kl = (keyN[0] * 0.3 + keyN[1] * 0.59 + keyN[2] * 0.11) / 255, kk = Math.min(1.25, Lt.k / (Lt.amb * 0.55 + Lt.k * 0.85));
+			const sheen = mixc(alb, PL.hi, 0.6), spk = mixc(PL.hi, PL.spark, 0.55);
+			const envK = 0.74 + 0.5 * env * (0.6 + 0.4 * pol);
+			/* a soft window reflection: two vertical bands at fixed view angles (toward the key side, and a fainter one opposite),
+			   well inside the silhouette, so the body reads as metal in every scene; none on the inside */
+			const nx = dot(n, CB.R), wx = Ls.x >= 0 ? 0.42 : -0.42, sk = cl((specK - 0.5) * 2) * Math.pow(cl(nv), 0.5);
+			const win = (Math.exp(-Math.pow((nx - wx) / 0.13, 2)) + 0.45 * Math.exp(-Math.pow((nx + wx * 1.25) / 0.1, 2))) * sk * (0.55 + 0.45 * env) * pol;
+			const wc = mixc(sheen, spk, 0.45), kS = specK * kk * kl * ao;
+			for (let i = 0; i < 3; i++) cb[i] = cb[i] * glowK * envK + sheen[i] * shBr * 0.42 * pol * kS + spk[i] * shSh * 0.95 * pol * kS + wc[i] * win * 0.3 * (0.6 + 0.4 * kk);
+			for (let i = 0; i < 3; i++) c[i] = lerp(c[i], cb[i], bAmt); }
+		else if (bAmt > 0) {   /* copper: from its own saturated shadow to its lit tone by how lit the facet is, a soft inner glow, a warm sheen */
 			const I = cl((Lt.amb * 0.55 + Lt.k * l) / (Lt.amb * 0.55 + Lt.k * 0.85)), t = cl(0.16 + 0.84 * Math.pow(I, 0.75)) * (0.55 + 0.45 * ao);
 			const s2 = P(q), dd = Math.hypot(s2[0] - poolC[0], s2[1] - poolC[1]) / (poolR * 1.15), glowK = 1 + 0.2 * Math.exp(-dd * dd * 1.1);
 			const shd: RGB = [alb[0] * 0.62, alb[1] * 0.5, alb[2] * 0.48];
@@ -351,6 +383,13 @@ export const Zun: React.FC<ZunProps> = (p) => {
 		let a = mixc(BR, BR_HI, raised ? 0.55 : 0.12 * zone);
 		if (!raised && zone > 0) a = mixc(a, [52, 46, 36], 0.35);   // the sunk 雷纹 ground is darker
 		if (fresh > 0) { a = mixc(a, raised ? [226, 182, 104] : zone > 0 ? [128, 92, 48] : [178, 132, 70], fresh); if (fresh >= 1 || !(VG || BRT)) return a; }
+		if (BZ) {   /* bronze: raised relief toward the rubbed tone, a darker sunk ground, a slow tone drift and darker unpolished
+			   mottling; earth only in the deepest recesses at high patina */
+			let b: RGB = raised ? mixc(PL.mid, PL.hi, PL.edge) : zone > 0 ? PL.ground : PL.mid;
+			b = mixc(b, raised ? PL.hi : mixc(PL.mid, PL.hi, 0.3), cl((g2 - 0.35) * 0.9) * 0.4);
+			if (!raised) b = mixc(b, mixc(PL.mid, PL.shd, 0.55), sstep(0.55, 0.8, 1 - g) * 0.35);
+			if (!raised && zone > 0) b = mixc(b, PL.dirt, 0.4 * patina * sstep(0.45, 0.8, d));
+			return fresh > 0 ? mixc(a, b, 1 - fresh) : b; }
 		if (BRT) {   /* bright copper: lighter relief, deeper sunk ground, a gentle tone drift; a dirt hint in the deepest recesses only */
 			let b: RGB = raised ? [240, 152, 94] : zone > 0 ? [190, 94, 52] : [216, 116, 63];
 			b = mixc(b, raised ? [250, 176, 118] : [226, 130, 76], cl((g2 - 0.35) * 0.9) * 0.6);
@@ -391,7 +430,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			const th = ((j + 0.5) / NT) * 2 * Math.PI;
 			let alb = albedo(th, zMid, inner ? 0 : zoneOf(zMid));
 			let ao = 1;
-			if (inner) { const dz = cl((zMid - ZUN.FLOOR) / (38.8 - ZUN.FLOOR)); ao = lerp(0.3 + 0.55 * (Lt.inside ?? 0), 1, Math.pow(dz, 0.6)); alb = mixc(alb, BRT ? [124, 56, 30] : VG ? [30, 48, 42] : [66, 64, 52], BRT ? 0.5 : VG ? 0.45 : 0.6); }
+			if (inner) { const dz = cl((zMid - ZUN.FLOOR) / (38.8 - ZUN.FLOOR)); ao = lerp(0.3 + 0.55 * (Lt.inside ?? 0), 1, Math.pow(dz, 0.6)); alb = mixc(alb, BZ ? PL.inner : BRT ? [124, 56, 30] : VG ? [30, 48, 42] : [66, 64, 52], BRT ? 0.5 : VG ? 0.45 : 0.6); }
 			if (floor) continue;   // the floor is drawn as one item with the inscription
 			const col = rgbS(shade(n, m, alb, inner ? 0.6 : 1, ao, !inner));
 			items.push({z: m ? depth(m) : 0, el: <path key={`q${i}_${j}`} d={`M${f1(pa[0])},${f1(pa[1])}L${f1(pb[0])},${f1(pb[1])}L${f1(pc[0])},${f1(pc[1])}L${f1(pd[0])},${f1(pd[1])}Z`} fill={col} stroke={col} strokeWidth={0.7} strokeLinejoin="round" />}); } }
@@ -455,7 +494,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			let lt = sub(L, [n[0] * dot(L, n), n[1] * dot(L, n), n[2] * dot(L, n)]); const ll = Math.hypot(...lt); lt = ll > 1e-3 ? [lt[0] / ll, lt[1] / ll, lt[2] / ll] : [0, 0, 1];
 			const path = (off: number, hk = 1) => 'M' + run.map((q) => { const w = addv(W(surfM(q[0], q[1], m.h * hk)), lt, off * ps); const pp = P(w); return `${f1(pp[0])},${f1(pp[1])}`; }).join('L') + (m.kind === 'fill' ? 'Z' : '');
 			const alb = albedo(mid[0], mid[1], 1, true), base = shade(n, q0, alb, 1.15);
-			const hi = mixc(base, mixc(keyC, [255, 240, 210], 0.5), 0.42 * (1 - 0.5 * patina) + 0.1), lo = mixc(base, BRT ? [80, 32, 14] : [10, 8, 6], BRT ? 0.55 : 0.72);
+			const hi = BZ ? mixc(base, mixc(PL.hi, PL.spark, 0.35), (0.4 + 0.25 * PL.edge) * (1 - 0.35 * patina) * (1 - molten)) : mixc(base, mixc(keyC, [255, 240, 210], 0.5), 0.42 * (1 - 0.5 * patina) + 0.1), lo = mixc(base, BZ ? PL.lo : BRT ? [80, 32, 14] : [10, 8, 6], BZ ? 0.62 : BRT ? 0.55 : 0.72);
 			const pxw = Math.max(0.7, m.w * cam.f * ps / Math.max(1, depth(q0)));
 			const D0 = path(0), Dh = path(m.h * 0.42), Dl = path(-m.h * 0.75, 0.2);
 			const fillish = m.kind === 'fill';
@@ -483,7 +522,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			for (let i = 0; i < ns; i++) for (let j = 0; j < nz; j++) { const th = a0 + ((i + 0.5) / ns) * (a1 - a0), z = z0 + (j + 0.5) * ((z1 - z0) / nz), fl = (i + j) % 2 ? 1 : -1;
 				d += 'M' + LEI.map(([x, y]) => { const q = P(W(surfM(th + (fl * x * 0.62) / rn, z + y * 0.62, 0.02))); return `${f1(q[0])},${f1(q[1])}`; }).join('L'); }
 			const pxw = Math.max(0.55, 0.11 * cam.f * ps / Math.max(1, depth(wM)));
-			items.push({z: depth(wM) - 0.15, el: <path key={`${key}${sct}`} d={d} fill="none" stroke={BRT ? '#5A220E' : '#0E0B08'} strokeOpacity={(BRT ? 0.3 : 0.38) * (1 - 0.3 * molten)} strokeWidth={pxw} strokeLinejoin="round" />}); } };
+			items.push({z: depth(wM) - 0.15, el: <path key={`${key}${sct}`} d={d} fill="none" stroke={BZ ? PL.lei : BRT ? '#5A220E' : '#0E0B08'} strokeOpacity={(BZ ? 0.42 : BRT ? 0.3 : 0.38) * (1 - 0.3 * molten)} strokeWidth={pxw} strokeLinejoin="round" />}); } };
 	leiZone(11.9, 22.2, 9.4, 'lb'); leiZone(26.3, 35.3, 10.8, 'ln'); leiZone(4.3, 10.0, 9.0, 'lf');
 
 	/* ---------- the horns: curled tubes whose ends stand off the surface ---------- */
