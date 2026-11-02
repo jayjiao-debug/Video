@@ -159,7 +159,8 @@ for x0, x1, y0, y1 in [(978, 1011, 810, 870), (1224, 1267, 797, 859), (1483, 152
     g.append(poly([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], P['sky2'], INK, 3))      # square windows, sky behind
     j = (x1 - x0) * min(.5, max(.12, (x0 - 1300) / 1400))
     g.append(poly([(x1 - j, y0 + 4), (x1, y0), (x1, y1), (x1 - j, y1)], '#4A3A30', 'none', 0))   # the wall's depth on the far jamb
-for _ in range(95):   # putlog holes scattered in rows
+g.append(segs([((2163, 838), (2165, 985)), ((2184, 842), (2186, 985))] + [((2163, y), (2185, y + 1)) for y in range(850, 985, 19)], '#3A2C22', 4))   # scaffold ladder on the attic's end
+for _ in range(75):   # putlog holes scattered in rows
     x = R.uniform(790, 2180); row = R.randint(0, 3); yt, yb = cy(TOP, x), cy(AB, x)
     y = yt + (yb - yt) * (.18 + row * .2) + R.uniform(-6, 6); s = R.uniform(4, 8) * (1 if x < 1800 else .8)
     g.append(poly([(x, y), (x + s, y), (x + s, y + s), (x, y + s)], P['att_hole'], 'none', 0))
@@ -242,6 +243,10 @@ g.append(poly([(500, 898), (567, 892), (569, 864), (583, 853), (633, 853), (661,
 g.append(poly([(583, 853), (633, 853), (633, 862), (583, 862)], '#3C5A9C', INK, 2))   # the blue railing on the roof
 for k in range(1, 3):
     g.append(line([(505, 898 + k * 7), (900, 898 + k * 7)], '#82603F', 1.5))
+for k in range(1, 5):   # brick courses on the sloping roof stub, following its slope
+    t = k / 5; g.append(line([lerp((342, 827), (342, 870), t), lerp((389, 842), (420, 885), t), lerp((461, 881), (470, 905), t), lerp((500, 898), (500, 920), t)], '#82603F', 1.5))
+for k in range(1, 4):   # and on the rubble crest further right
+    y0 = 860 + k * 12; g.append(line([(600, max(y0, 856)), (661, max(y0 - 6, 846)), (700, max(y0 - 8, 841)), (767, max(y0, 860)), (900, max(y0 + 10, 893))], '#82603F', 1.5, 'opacity=".8"'))
 g.append(poly([(342, 925), (905, 925), (905, 940), (342, 942)], P['lb_l'], INK, 2))   # cornice at roof level
 g.append(poly([(470, 1000), (905, 985), (905, 1000), (470, 1014)], P['lb_l'], INK, 2))   # cornice of the upper storey
 for x0, x1, cr, bt in [(403, 500, 928, 1152), (503, 555, 1042, 1152), (606, 689, 1009, 1150), (767, 819, 950, 990), (769, 811, 1025, 1153), (833, 897, 1031, 1153)]:
@@ -322,12 +327,12 @@ g.append(poly(BT, P['tree_d'], INK, 2.5))
 CR = [(160, 1300), (175, 1240), (205, 1212), (233, 1203), (270, 1210), (310, 1232), (350, 1270), (385, 1320), (400, 1380), (404, 1460), (420, 1500),
       (430, 1545), (300, 1580), (180, 1580), (155, 1450)]
 g.append(poly(CR, P['tree0'], INK, 3))
-for _ in range(200):   # leaf clusters, generated inside the crowns
+for _ in range(170):   # leaf clusters, generated inside the crowns (lighter toward the sunny top right)
     x, y = R.uniform(0, 430), R.uniform(1120, 1580)
-    if inside(CR, x, y): col = R.choice([P['tree1'], P['tree1'], P['tree2'], P['tree0']])
+    if inside(CR, x, y): col = R.choice([P['tree1'], P['tree2']] if (x - 160) / 270 - (y - 1200) / 380 > -.2 else [P['tree0'], P['tree1'], '#35502B'])
     elif inside(BT, x, y): col = R.choice([P['tree0'], '#35502B'])
     else: continue
-    g.append(poly(blob(x, y, R.uniform(10, 20), 7, .3), col, '#24361D', 1.2, 'opacity=".9"'))
+    g.append(poly(blob(x, y, R.uniform(12, 22), 11, .18), col, '#24361D', 1.2, 'opacity=".92"'))
 g.append(poly([(0, 1075), (48, 1078), (48, 1135), (0, 1132)], P['bldg1'], INK, 2))   # a house far behind
 xs = list(range(6, 236, 21))   # the tall railing: spear-topped bars
 g.append(segs([((x, 1062 + x * .14), (x - 2, 1610)) for x in xs], P['fence'], 6))
@@ -365,7 +370,7 @@ for x0, y0, x1, y1 in [(1159, 1561, 1288, 1578), (1352, 1566, 1417, 1584), (2156
     g.append(poly([(x0 + 10, y0), (x1, y0 + 2), (x1 - 8, y1), (x0, y1 - 1)], P['patch'], '#7E7860', 2))
 g.append(ell(2193, 1663, 88, 13, P['patch'], '#7E7860', 2)); g.append(ell(2193, 1660, 70, 8, '#CEC6AA'))
 CT = [(170, 1652), (209, 1656), (505, 1664), (722, 1678), (939, 1711), (1083, 1725), (1300, 1735), (1618, 1758), (1987, 1789), (2355, 1818), (2576, 1840)]
-for _ in range(260):   # grass strokes
+for _ in range(190):   # grass strokes
     x = R.uniform(400, 2576); y0 = cy(LAWNT, x); y = R.uniform(y0 + 8, cy(CT, x) - 4); s = .5 + (y - 1550) / 300
     a = R.uniform(-1.9, -1.25); L = R.uniform(8, 16) * s
     g.append(line([(x, y), (x + math.cos(a) * L, y + math.sin(a) * L)], R.choice([P['grass_d'], P['grass_d'], P['grass_l']]), 2.2 * s))
@@ -421,42 +426,46 @@ g.append(poly([(955, 1690), (1022, 1690), (1018, 1800), (990, 1835), (964, 1800)
 g.append(poly([(953, 1666), (1026, 1666), (1024, 1690), (955, 1690)], '#3B3F42', INK, 2.5))
 g.append(line([(975, 1700), (972, 1790)], '#B7BBBE', 3)); g.append(line([(1005, 1700), (1003, 1790)], '#B7BBBE', 3))
 
-def person(cx, yt, yb, top, bot, hair, w=1.0, stride=.0, dress=False, back=True, bag=None, cap=None, hat_c=None, stripes=False, arm=0.0):
-    """a simple walking figure, no face: head (hair seen from behind or side), torso, two legs, two arms"""
+def person(cx, yt, yb, top, bot, hair, w=1.0, stride=.0, dress=False, hem=.08, back=True, bag=None, cap=None, stripes=False, arm=0.0, shorts=False, lead=1):
+    """a simple walking figure, no face: head (hair seen from behind or side), torso, two tapered legs, swinging arms"""
     h = yb - yt; hr = h * .068; sh = yt + hr * 2 + h * .025; hp = yt + h * .5; ws = h * .12 * w; wh = h * .1 * w
     shadow(cx, yb, h * .45, h * .07)
-    lx, rx = cx - stride * h * .16, cx + stride * h * .16
     if dress:
-        g.append(poly([(cx - wh, hp - 10), (cx + wh, hp - 10), (cx + wh * 1.5, yb - h * .08), (cx - wh * 1.5, yb - h * .08)], top, INK, 2.5))
-        for fx in (cx - wh * .6, cx + wh * .6): g.append(line([(fx, yb - h * .08), (fx, yb - 6)], P['skin'], h * .045))
-        for fx in (cx - wh * .6, cx + wh * .6): g.append(poly([(fx - 9, yb - 8), (fx + 9, yb - 8), (fx + 10, yb), (fx - 9, yb)], '#3A2C24', INK, 1.5))
+        for fx in (cx - wh * .6 - stride * h * .12, cx + wh * .6 + stride * h * .12):
+            kx = cx + (fx - cx) * .5
+            g.append(line([(kx, yb - h * (hem + .02)), (fx, yb - 7)], INK, h * .045 + 4)); g.append(line([(kx, yb - h * (hem + .02)), (fx, yb - 7)], P['skin'], h * .045))
+            g.append(poly([(fx - 9, yb - 8), (fx + 9, yb - 8), (fx + 10, yb), (fx - 9, yb)], '#3A2C24', INK, 1.5))
+        g.append(poly([(cx - wh, hp - 10), (cx + wh, hp - 10), (cx + wh * 1.5, yb - h * hem), (cx - wh * 1.5, yb - h * hem)], top, INK, 2.5))
     else:
-        for fx, sgn in ((lx, -1), (rx, 1)):   # legs: shorts/trousers + shins + shoes
-            kx = (cx + fx) / 2 + sgn * h * .02
-            g.append(poly([(cx + sgn * 2, hp), (cx + sgn * wh, hp), (fx + sgn * h * .045, yb - 8), (fx - sgn * h * .03, yb - 8)][::sgn], bot, INK, 2.5))
-            if bot in (P['skin'],): continue
+        for sgn in (-lead, lead):   # legs: hip → ankle, tapered; shorts leave the calves bare
+            fx = cx + sgn * stride * h * .17; hx0, hx1 = cx + sgn * 2, cx + sgn * wh
+            leg = [(hx0, hp), (hx1, hp), (fx + sgn * h * .028, yb - 8), (fx - sgn * h * .028, yb - 8)]
+            if shorts:
+                g.append(poly(leg, P['skin'], INK, 2.5))
+                g.append(poly([leg[0], leg[1], lerp(leg[1], leg[2], .42), lerp(leg[0], leg[3], .42)], bot, INK, 2.5))
+            else: g.append(poly(leg, bot, INK, 2.5))
             g.append(poly([(fx - h * .04, yb - 10), (fx + h * .04, yb - 10), (fx + h * .05, yb), (fx - h * .045, yb)], '#30261F', INK, 1.5))
-    g.append(poly([(cx - ws, sh), (cx + ws, sh), (cx + wh * 1.05, hp + 4), (cx - wh * 1.05, hp + 4)], top, INK, 2.5))
+    g.append(poly([(cx - ws * .8, sh - 3), (cx + ws * .8, sh - 3), (cx + ws, sh + 10), (cx + wh * 1.05, hp + 4), (cx - wh * 1.05, hp + 4), (cx - ws, sh + 10)], top, INK, 2.5))
     if stripes:
         g.append(segs([((cx - ws + (ws - wh) * k / 8 + 3, sh + (hp - sh) * k / 8), (cx + ws - (ws - wh) * k / 8 - 3, sh + (hp - sh) * k / 8)) for k in range(1, 8)], '#E8E6E0', 3))
-    for sgn in (-1, 1):   # arms
-        s0 = (cx + sgn * ws * .92, sh + 8); hand = (cx + sgn * (ws + h * .03) + arm * sgn * h * .05, hp + h * .02)
+    for sgn in (-1, 1):   # arms, hanging a little away from the body
+        s0 = (cx + sgn * ws * .9, sh + 9); hand = (cx + sgn * (ws + h * .025 + arm * h * .05), hp + h * .03)
         g.append(line([s0, hand], INK, h * .05 + 4)); g.append(line([s0, hand], P['skin'], h * .05))
-        g.append(line([s0, lerp(s0, hand, .35)], top, h * .055))
+        g.append(line([s0, lerp(s0, hand, .38)], top, h * .056))
     if bag: g.append(poly([(cx - ws - 6, sh + 6), (cx - ws + 22, sh + 2), (cx - ws + 20, hp - 18), (cx - ws - 8, hp - 22)], bag, INK, 2.5))
     g.append(line([(cx, sh - h * .02), (cx, sh + 2)], P['skin'], h * .05))   # neck
     g.append(ell(cx, yt + hr, hr * .86, hr, hair if back else P['skin'], INK, 2.5))
     if not back: g.append(poly([(cx - hr * .86, yt + hr * .9), (cx - hr * .7, yt + hr * .1), (cx, yt - 1), (cx + hr * .7, yt + hr * .1), (cx + hr * .86, yt + hr * .9), (cx + hr * .2, yt + hr * .45)], hair, INK, 2))
     if cap: g.append(poly([(cx - hr * .95, yt + hr * .8), (cx - hr * .8, yt + hr * .05), (cx + hr * .8, yt + hr * .05), (cx + hr * 1.5, yt + hr * .8)], cap, INK, 2))
 # measured spots: (centre x, top of head, feet)
-person(357, 1501, 1747, '#F1EFEA', '#2B3346', '#C9C2B5', stride=.7, back=True)
-person(432, 1516, 1739, '#F3F1EC', P['skin'], '#E3C27A', stride=.2, dress=True)
-person(520, 1487, 1804, '#6E9A3E', '#F0EEE8', '#A8643E', w=1.15, stride=.35, back=True, arm=.4)
-person(633, 1469, 1794, '#2B3550', '#646A70', '#4C4740', w=1.15, stride=.55, back=True, stripes=True, cap='#5C6B5B')
-person(1508, 1510, 1768, '#9FBBD9', '#4F6F98', '#2F2620', stride=.15, back=True)
-person(1606, 1544, 1776, '#D93B32', P['skin'], '#2B1E18', stride=.1, dress=True, back=True)
-person(1806, 1533, 1835, '#2E3A55', '#3E5D8A', '#4A3527', w=1.05, stride=.75, back=False, bag='#24272C', arm=.6)
-person(1928, 1547, 1838, '#2C3B5E', '#8FB0D2', '#3B2A20', stride=.85, back=False, bag=None, arm=.5)
-g.append(poly([(1902, 1625), (1952, 1612), (1955, 1630), (1905, 1642)], '#C8382F', INK, 2))   # her red belt bag
+person(357, 1501, 1747, '#F1EFEA', '#2B3346', '#C9C2B5', stride=.7, back=True, lead=-1)
+person(434, 1515, 1736, '#F3F1EC', P['skin'], '#E3C27A', stride=.4, dress=True, hem=.29)
+person(520, 1489, 1800, '#6E9A3E', '#F0EEE8', '#A8643E', w=1.15, stride=.3, back=True, arm=.4, shorts=True)
+person(632, 1472, 1790, '#2B3550', '#646A70', '#4C4740', w=1.15, stride=.55, back=True, stripes=True, cap='#5C6B5B', shorts=True)
+person(1508, 1510, 1764, '#9FBBD9', '#4F6F98', '#2F2620', stride=.15, back=True, shorts=True)
+person(1606, 1544, 1774, '#D93B32', P['skin'], '#2B1E18', stride=.1, dress=True, back=True)
+person(1803, 1533, 1835, '#2E3A55', '#3E5D8A', '#4A3527', w=1.05, stride=.75, back=False, bag='#24272C', arm=.6)
+person(1905, 1547, 1840, '#2C3B5E', '#8FB0D2', '#3B2A20', stride=.85, back=False, arm=.5)
+g.append(poly([(1895, 1628), (1938, 1616), (1941, 1634), (1898, 1646)], '#C8382F', INK, 2))   # her red belt bag
 g.append('</svg>')
 open(sys.argv[1], 'w').write('\n'.join(g)); print('ok', len(g), 'elements')
