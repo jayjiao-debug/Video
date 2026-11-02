@@ -34,7 +34,7 @@
 - **Safety:** no bordered maps, no remains, no real photos, no AI images, real people (if named) as dignified silhouettes.
 
 ## Music (owner's track, 2026-11-02 19:10; see music_map.md)
-- **Uncut and unsplit**, played from the start. **The film is exactly 179.5 s**, with the last second faded (owner's choice) just before the track's own hard stop. Raised to −14 LUFS; no other processing.
+- **Uncut and unsplit**, played from the start. **The film is exactly 179.5 s**, with the last second faded (owner's choice) just before the track's own hard stop. No gain was needed: as a stereo bed it is already −14.1 LUFS (peak −2.9 dBFS). No other processing.
 - 107.7 BPM (bar 2.229 s). The main section starts at **36.0 s**: put the second question there. The quiet break **144.7–163.0** carries 「至今没有定论」. The final build from **163.0** carries the payoff and the end card.
 - The film runs ~2:59, so it is longer than the usual 2:40 target. The script needs enough beats to fill it with no stretched lines (pacing skill).
 

@@ -3,7 +3,8 @@
 **Owner decisions (2026-11-02):**
 - **Don't cut or split the track.** It plays from the start, continuously.
 - **Fade the last second** so the film ends at **2:59.5** (179.5 s), just before the track's own hard stop.
-- **Raise the volume to −14 LUFS.** No other processing.
+- **Raise the volume to −14 LUFS.** No other processing. **Not needed after all:** the −17.2 LUFS was measured on the mono file. As the stereo bed (the same mono signal on both channels), the first 180 s measure **−14.1 LUFS, true peak −2.9 dBFS**, so no gain is applied.
+- The bed is built with: `atrim=start=0.5:end=180.0, afade=t=out:st=178.5:d=1.0, aresample=48000, pan=stereo|c0=c0|c1=c0`, length 179.5 s (scratchpad `ep58music/bed_v1.wav`).
 
 ## The track
 - 254.1 s, mono, 44.1 kHz, about 71 kbps; −17.2 LUFS integrated, peak −2.9 dBFS.
