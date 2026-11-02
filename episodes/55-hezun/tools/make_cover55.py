@@ -75,14 +75,15 @@ def series(img, x, y, k=1.0):
 
 F_LINES = [('三千年前 · 西周 · 铸造', SERIF_R, 40, 'muted', 0.5), ('差点被销毁的', SERIF, 104, 'cream', 0.16), ('国宝', SERIF, 190, 'gold', 0)]
 # per set: the variants and the picture crop (tall cx, wide cx)
-SETS = {'yard': (VARIANTS, 0.55, 0.56, 1300, 150), 'pour': ({'F1': F_LINES}, 0.52, 0.52, 1300, 150), 'gold': ({'F2': F_LINES}, 0.49, 0.45, 1180, 270)}   # + tall picture height, top
+SETS = {'yard': (VARIANTS, 0.55, 0.56, 1300, 150, 1280, -90), 'pour': ({'F1': F_LINES}, 0.52, 0.52, 1300, 150, 1280, -90),
+        'gold': ({'F2': F_LINES}, 0.49, 0.47, 1520, 40, 1480, -190)}   # + tall picture height, top; wide picture height, top (gold: owner 11:29 「make the vase bigger」)
 os.makedirs(OUT, exist_ok=True)
-VS, TCX, WCX, TH, TT = SETS[SET]
+VS, TCX, WCX, TH, TT, WH, WT = SETS[SET]
 for name, lines in VS.items():
     t = picture(1080, 1440, TH, TT, TCX, fade_top=420, fade_bot=200); yb = text_block(t, 76, 80, lines)
     if SET != 'yard': series(t, 70, yb + 34)      # owner 11-02: the gold cover (F2) carries the title line under 国宝
     t.save(f'{OUT}/何尊_竖封面_3比4_{name}.png')
-    w = picture(1440, 1080, 1280, -90, WCX, fade_top=200, fade_bot=150)
+    w = picture(1440, 1080, WH, WT, WCX, fade_top=200, fade_bot=150)
     a = np.array(w).astype(np.float32); yy, xx = np.mgrid[0:1080, 0:1440]
     m = np.clip(1 - 0.62 * np.exp(-(((xx - 300) / 760) ** 2 + ((yy - 220) / 380) ** 2)), 0, 1)
     w = Image.fromarray((a * m[..., None]).clip(0, 255).astype(np.uint8)); yb = text_block(w, 86, 64, lines, k=0.86)
