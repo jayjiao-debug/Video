@@ -33,7 +33,7 @@ def photo_page(bg, overlay, svg=''):
             f'{overlay}</div></body></html>')
 
 # ---------- photo crops: real and 'drawn' (posterised clean plate + the same character layer) ----------
-CROPS = {'greatwall': (0, 286, 2576, 1735), 'gw_push': (700, 520, 2576, 1575), 'chichen': (0, 500, 1932, 1587), 'machu': (0, 0, 2576, 1449),
+CROPS = {'greatwall2': (0, 60, 2576, 1509), 'gw2_push': (900, 500, 2576, 1443), 'machu2': (0, 268, 2576, 1717), 'petra2': (0, 1250, 1717, 2216), 'greatwall': (0, 286, 2576, 1735), 'gw_push': (700, 520, 2576, 1575), 'chichen': (0, 500, 1932, 1587), 'machu': (0, 0, 2576, 1449),
          'christ': (0, 950, 1718, 1916), 'colosseum': (0, 482, 2576, 1931), 'petra': (0, 1300, 2070, 2464), 'taj': (0, 150, 2576, 1599)}
 def posterize(rgb, k=10):
     sm = cv2.bilateralFilter(cv2.bilateralFilter(rgb, 9, 50, 9), 9, 50, 9)
@@ -118,15 +118,15 @@ FRAMES = []   # (time, tag, rows, picture, html)
 def add(time, tag, lines, pic, html): FRAMES.append(dict(time=time, tag=tag, lines=lines, pic=pic, html=html))
 
 # 1 · frame 0: the first 打卡照, 长城 (real)
-bg, bb = crop('greatwall')
+bg, bb = crop('greatwall2')
 add('0:00', '实拍 · 第0帧', ['新世界七大奇迹，你是不是[只去过长城]？'],
-    '第0帧就是第一张「打卡照」：长城实拍，「你」在城墙上朝镜头挥手。右上「打卡 1/7」。',
+    '第0帧就是第一张「打卡照」：长城台阶顶上的大头自拍，金色夕阳，身后城墙一路蜿蜒。右上「打卡 1/7」。',
     photo_page(bg, subs(['新世界七大奇迹，', '你是不是[只去过长城]？']) + counter(1) + SEALD))
 # 2 · boarding gate (drawn, from make_kf)
 add('0:03', '手绘 · 登机口', ['今天，带你把[剩下6个]，一次看完。'], '登机口 POV：手里一张登机牌「长城 → 新世界七大奇迹 ×6」，座位 7A，乘客「你」。左下里程表出现：已飞 0 公里。', KFR[1][1])
 # 3 · boarding pass back: 7 wonders + a greyed pyramid
-POS = {'greatwall': '45% 35%', 'chichen': '38% 45%', 'machu': '78% 40%', 'christ': '50% 44%', 'colosseum': '40% 60%', 'petra': '50% 35%', 'taj': '50% 32%'}
-NAMES = [('greatwall', '长城'), ('chichen', '奇琴伊察'), ('machu', '马丘比丘'), ('christ', '基督像'), ('colosseum', '斗兽场'), ('petra', '佩特拉'), ('taj', '泰姬陵')]
+POS = {'greatwall2': '40% 30%', 'machu2': '45% 45%', 'petra2': '50% 45%', 'greatwall': '45% 35%', 'chichen': '38% 45%', 'machu': '78% 40%', 'christ': '50% 44%', 'colosseum': '40% 60%', 'petra': '50% 35%', 'taj': '50% 32%'}
+NAMES = [('greatwall2', '长城'), ('chichen', '奇琴伊察'), ('machu2', '马丘比丘'), ('christ', '基督像'), ('colosseum', '斗兽场'), ('petra2', '佩特拉'), ('taj', '泰姬陵')]
 cells = ''
 for i, (k, nm) in enumerate(NAMES + [('pyr', '金字塔？')]):
     x = 480 + (i % 4) * 300; y = 470 + (i // 4) * 270
@@ -145,9 +145,9 @@ add('0:06', '手绘 · 登机牌背面', ['这7个，是2007年近1亿人投票�
     '登机牌翻到背面：7 个圆形小照片，第 8 个是灰色虚线的金字塔 + 红色问号。第二个问题埋下。',
     HEAD + '<div style="position:absolute;inset:0;background:#121826"></div>' + card + subs_c(['咦，怎么没有[金字塔]？'], top=100) + counter(1) + odo(0) + SEALD + '</div></body></html>')
 # 4 · back to 长城, push in (real)
-bg, bb = crop('greatwall', 'gw_push')
+bg, bb = crop('greatwall2', 'gw2_push')
 add('0:11', '实拍 · 推近', ['起点，就在家门口：[长城]。', '历代长城加起来，有21196公里。'],
-    '回到长城实拍，镜头慢慢推近；「你」挥手告别。地球上长城的点变金色。',
+    '回到长城自拍，镜头慢慢推近；「你」挥手告别。地球上长城的点变金色。',
     photo_page(bg, subs(['历代长城加起来，', '有[21196公里]。']) + counter(1) + odo(0) + SEALD))
 # 5 · Pacific hop (from make_kf)
 add('0:19', '地球 · 跳转', ['下一站，直接横跨[太平洋]。'], '无国界地球仪，金色航线横跨太平洋，小飞机；里程表狂转 → 12,766。', KFR[2][1])
@@ -176,13 +176,13 @@ add('0:42', '实拍 · 打卡照 2/7', ['从台阶上爬下来。'],
     '取景框出现 → 咔嚓 + 白光 → 画面变成真实照片（和手绘完全对齐），定格成一张相纸：「你的打卡照 · 奇琴伊察 · 2/7」。右上计数变金色。',
     print_page('chichen', 2, '奇琴伊察', subs(['从台阶上爬下来。']) + counter(2, hot=True) + odo(12766) + SEALD, rot=2))
 # 10 · 马丘比丘 drawn + viewfinder
-bg, bb = crop('machu', drawn=True)
+bg, bb = crop('machu2', drawn=True)
 add('0:47', '手绘 + 取景框', ['第三站，秘鲁，[马丘比丘]。'],
-    '跳转后落地：手绘版马丘比丘，「你」叉腰站在梯田上。取景框四角 + 对焦框框住「你」：马上要拍了。',
+    '跳转后落地：手绘版马丘比丘，「你」在草坡上跳起来（游客必拍）。取景框四角 + 对焦框框住「你」：马上要拍了。',
     photo_page(bg, subs(['第三站，秘鲁，', '[马丘比丘]。']) + counter(2) + odo(16917) + SEALD, viewfinder(bb)))
 # 11 · 打卡照 3/7
 add('0:51', '实拍 · 打卡照 3/7', ['它建在两千多米高的山上，', '[一百年前]才被外面的世界知道。'], '咔嚓 → 真实照片 → 相纸「马丘比丘 · 3/7」。（F8/F9 两个数字待核实）',
-    print_page('machu', 3, '马丘比丘', subs(['它建在两千多米高的山上，', '[一百年前]才被外面的世界知道。']) + counter(3, hot=True) + odo(16917) + SEALD, rot=-2))
+    print_page('machu2', 3, '马丘比丘', subs(['它建在两千多米高的山上，', '[一百年前]才被外面的世界知道。']) + counter(3, hot=True) + odo(16917) + SEALD, rot=-2))
 # 12 · 基督像 drawn + lightning
 bg, bb = crop('christ', drawn=True)
 bolt = ('<path d="M560,0 L470,120 L540,130 L430,250 L500,262 L425,268" stroke="#FFF7C2" stroke-width="22" fill="none" opacity=".45" filter="url(#blur8)"/>'
@@ -228,13 +228,13 @@ add('1:24', '地球 · 揭晓', ['金字塔，本来也在候选名单里。埃�
     '地球上 21 个候选点（灰），7 个入选点（金）；金字塔的点单独亮起，一圈小月桂叶围上来：「荣誉候选」。',
     page(globe_svg('egypt', set(), honor), subs(['最后，它成了', '“[荣誉]候选”。']) + counter(5) + odo(29399, ghost=True) + SEALD))
 # 18 · 佩特拉 drawn
-bg, bb = crop('petra', drawn=True)
+bg, bb = crop('petra2', drawn=True)
 add('1:37', '手绘 + 取景框', ['第六站，约旦，[佩特拉]。', '整座城，是从红色岩石里[凿]出来的。'],
-    '手绘版：神殿立面从崖壁上自上而下「凿」出来，碎石掉落；「你」背对镜头坐在一地蜡灯中间，抬头看。',
+    '手绘版：神殿立面从崖壁上自上而下「凿」出来，碎石掉落；「你」抱着一盏纸灯，盘腿坐在灯海里。',
     photo_page(bg, subs(['整座城，', '是从红色岩石里[凿]出来的。']) + counter(5) + odo(31817) + SEALD, viewfinder(bb)))
 # 19 · 打卡照 6/7
 add('1:41', '实拍 · 打卡照 6/7', ['整座城，是从红色岩石里[凿]出来的。'], '咔嚓 → 相纸「佩特拉 · 6/7」（竖图，夜景蜡灯）。',
-    print_page('petra', 6, '佩特拉', counter(6, hot=True) + odo(31817) + SEALD, rot=-2))
+    print_page('petra2', 6, '佩特拉', counter(6, hot=True) + odo(31817) + SEALD, rot=-2))
 # 20 · 泰姬陵 drawn
 bg, bb = crop('taj', drawn=True)
 add('1:47', '手绘 + 取景框', ['第七站，印度，[泰姬陵]。'],
@@ -255,7 +255,7 @@ ex = (f'<path d="{fb}" stroke="{GOLD}" stroke-opacity=".3" stroke-width="4" fill
 add('2:13', '地球 · 反例', ['要是顺序乱走呢？', '最远要飞[89636公里]。'], '最差的顺序闪一下：线在地球上来回乱窜，超过两圈。里程表闪成 89,636 再弹回 39,729。',
     page(globe_svg('reveal', set(P), ex), subs(['要是顺序乱走呢？', '最远要飞[89636公里]。']) + counter(7) + odo(89636, ghost=True) + SEALD))
 # 24 · the 7 打卡照 (real prints)
-ORDER = [('greatwall', '长城'), ('chichen', '奇琴伊察'), ('machu', '马丘比丘'), ('christ', '基督像'), ('colosseum', '斗兽场'), ('petra', '佩特拉'), ('taj', '泰姬陵')]
+ORDER = [('greatwall2', '长城'), ('chichen', '奇琴伊察'), ('machu2', '马丘比丘'), ('christ', '基督像'), ('colosseum', '斗兽场'), ('petra2', '佩特拉'), ('taj', '泰姬陵')]
 def grid_html(dim=1.0):
     ih = 285; rows = [ORDER[:4], ORDER[4:]]; out = ''; rots = [-3, 2, -2, 3, 2, -3, 2]; i = 0
     for r, row in enumerate(rows):

@@ -54,7 +54,7 @@ OPTS = [
     ('pB', 'petra2', 'B 背影张开双臂，面对宝库', 'wideback', (870, 1900), 1.22, 0, False, 'pf', ['ground'], 'petra2'),
     ('pC', 'petra2', 'C 小小一个站在门口挥手', 'wave', (1050, 1702), .4, 6, True, 'pf', ['ground'], 'petra2'),
     ('mA', 'machu2', 'A 坐在草坡边，背影看风景', 'sitback', (430, 1625), 1.65, -5, False, 'mf', ['ground'], 'machu2'),
-    ('mB', 'machu2', 'B 跳起来（游客必拍）', 'jump', (380, 1665), 1.95, 6, True, 'mf', ['jump'], 'machu2'),
+    ('mB', 'machu2', 'B 跳起来（游客必拍）', 'jump', (400, 1690), 1.95, 6, True, 'mf', ['jump'], 'machu2'),
     ('mC', 'machu2', 'C 背影张开双臂', 'wideback', (400, 1700), 1.95, 3, False, 'mf', ['ground'], 'machu2'),
     # selfie vibes (owner 23:08: likes 长城 C)
     ('s1', 'greatwall2', '自拍 1 · 右下，另一只手比耶', 'selfie', (2060, 2300), 4.0, 10, True, 'gwf', [], 'selfie_gw'),
@@ -84,25 +84,26 @@ def svg_for(o):
               f'<ellipse cx="{lx:.1f}" cy="{ly - h * .35:.1f}" rx="{w * .22:.1f}" ry="{h * .2:.1f}" fill="#FFFFFF" opacity=".8" filter="url(#sb)"/>')
     return g
 
-with sync_playwright() as pw:
-    br = pw.chromium.launch(); pg = br.new_page()
-    for o in OPTS:
-        key, photo = o[0], o[1]; path = f'{PH}/{photo}.jpg'; W, H = Image.open(path).size
-        b64 = base64.b64encode(open(path, 'rb').read()).decode()
-        pg.set_viewport_size({'width': W, 'height': H})
-        pg.set_content(f'<html><body style="margin:0"><div id="f" style="position:relative;width:{W}px;height:{H}px;overflow:hidden"><img src="data:image/jpeg;base64,{b64}" style="position:absolute;width:{W}px;height:{H}px">'
-                       f'<svg style="position:absolute;left:0;top:0" width="{W}" height="{H}">{DEFS}{FILLS}{svg_for(o)}</svg></div></body></html>')
-        pg.wait_for_timeout(250); pg.locator('#f').screenshot(path=f'{OUT}/opt_{key}.jpg', type='jpeg', quality=90)
-        print('done', key, flush=True)
-    br.close()
+if __name__ == '__main__':
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(); pg = br.new_page()
+        for o in OPTS:
+            key, photo = o[0], o[1]; path = f'{PH}/{photo}.jpg'; W, H = Image.open(path).size
+            b64 = base64.b64encode(open(path, 'rb').read()).decode()
+            pg.set_viewport_size({'width': W, 'height': H})
+            pg.set_content(f'<html><body style="margin:0"><div id="f" style="position:relative;width:{W}px;height:{H}px;overflow:hidden"><img src="data:image/jpeg;base64,{b64}" style="position:absolute;width:{W}px;height:{H}px">'
+                           f'<svg style="position:absolute;left:0;top:0" width="{W}" height="{H}">{DEFS}{FILLS}{svg_for(o)}</svg></div></body></html>')
+            pg.wait_for_timeout(250); pg.locator('#f').screenshot(path=f'{OUT}/opt_{key}.jpg', type='jpeg', quality=90)
+            print('done', key, flush=True)
+        br.close()
 
-# one sheet per group: options side by side at a common height, labelled
-ft = ImageFont.truetype('/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc', 34)
-for grp in dict.fromkeys(o[-1] for o in OPTS):
-    opts = [o for o in OPTS if o[-1] == grp]; ims = [Image.open(f'{OUT}/opt_{o[0]}.jpg') for o in opts]
-    th = 900 if all(i.width < i.height for i in ims) else (760 if any(i.width < i.height for i in ims) else 560)
-    ims = [i.resize((int(i.width * th / i.height), th), Image.LANCZOS) for i in ims]
-    sheet = Image.new('RGB', (sum(i.width for i in ims) + 40 * (len(ims) + 1), th + 120), '#1B1612'); d = ImageDraw.Draw(sheet); x = 40
-    for o, im in zip(opts, ims):
-        d.text((x, 24), o[2], font=ft, fill='#F6EBDD'); sheet.paste(im, (x, 90)); x += im.width + 40
-    sheet.save(f'{OUT}/opt_sheet_{grp}.jpg', quality=88); print('sheet', grp, sheet.size)
+    # one sheet per group: options side by side at a common height, labelled
+    ft = ImageFont.truetype('/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc', 34)
+    for grp in dict.fromkeys(o[-1] for o in OPTS):
+        opts = [o for o in OPTS if o[-1] == grp]; ims = [Image.open(f'{OUT}/opt_{o[0]}.jpg') for o in opts]
+        th = 900 if all(i.width < i.height for i in ims) else (760 if any(i.width < i.height for i in ims) else 560)
+        ims = [i.resize((int(i.width * th / i.height), th), Image.LANCZOS) for i in ims]
+        sheet = Image.new('RGB', (sum(i.width for i in ims) + 40 * (len(ims) + 1), th + 120), '#1B1612'); d = ImageDraw.Draw(sheet); x = 40
+        for o, im in zip(opts, ims):
+            d.text((x, 24), o[2], font=ft, fill='#F6EBDD'); sheet.paste(im, (x, 90)); x += im.width + 40
+        sheet.save(f'{OUT}/opt_sheet_{grp}.jpg', quality=88); print('sheet', grp, sheet.size)

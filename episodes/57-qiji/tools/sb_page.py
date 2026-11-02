@@ -70,9 +70,9 @@ h1 {{ font-family: var(--display); font-weight: 900; font-size: clamp(30px, 5vw,
 </style>
 <div class="wrap">
   <div class="top">
-    <span class="kicker">ep57 · 粗分镜 v1 · 25 格 · 约 2:32 · 2026-11-02</span>
+    <span class="kicker">ep57 · 粗分镜 v2 · 25 格 · 约 2:32 · 2026-11-02</span>
     <h1>《新世界七大奇迹，你去过几个？》</h1>
-    <p class="lede">按脚本 v5 一拍一格。实拍格 = Pexels 照片 + 「你」（D+ 可爱，身上不印字）；手绘格是把同一张照片色块化的占位，最终按 Juno 画风重画；字幕、打卡计数、里程表都是片中样式。抠掉原来游客的地方只是粗修。</p>
+    <p class="lede">按脚本 v5 一拍一格。实拍格 = Pexels 照片 + 「你」（D+ 可爱，身上不印字）；手绘格是把同一张照片色块化的占位，最终按 Juno 画风重画；字幕、打卡计数、里程表都是片中样式。抠掉原来游客的地方只是粗修。v2：长城、马丘比丘、佩特拉换成新照片；七站七种姿势（自拍、手搭凉棚、跳起来、学雕像张开双臂、叉腰、抱灯坐着、人群里回头挥手），手臂长度已改正。</p>
   </div>
   {assess}
   {acts}
