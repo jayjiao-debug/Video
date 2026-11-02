@@ -1,0 +1,987 @@
+{
+  "id": "ep57-arrive-01",
+  "clips": [
+    {
+      "name": "01_mx",
+      "lang": "es",
+      "text": "¡Bienvenido a México!",
+      "voice": "shared:Regina - Contact Center (mexican, es)",
+      "voice_id": "9Godp7dNohUvXk6qp0gS",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "01_mx.mp3",
+      "bytes": 25538,
+      "heard": "¡Bienvenido a México!",
+      "heard_lang": "es",
+      "heard_lang_p": 0.859,
+      "seconds": 1.52
+    },
+    {
+      "name": "02_pe",
+      "lang": "es",
+      "text": "¡Bienvenido al Perú!",
+      "voice": "shared:Gaby - Friendly, Expressive and Vibrant (peruvian, es)",
+      "voice_id": "5vkxOzoz40FrElmLP4P7",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "02_pe.mp3",
+      "bytes": 23030,
+      "heard": "¡Bienvenido al Perú!",
+      "heard_lang": "es",
+      "heard_lang_p": 0.859,
+      "seconds": 1.36
+    },
+    {
+      "name": "03_br",
+      "lang": "pt",
+      "text": "Bem-vindo ao Brasil!",
+      "voice": "shared:Keren - Sweet, Vibrant and Rhythmic (brazilian, pt)",
+      "voice_id": "33B4UnXyTNbgLmdEDh5P",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "03_br.mp3",
+      "bytes": 28046,
+      "heard": "Bem-vindo ao Brasil!",
+      "heard_lang": "pt",
+      "heard_lang_p": 0.957,
+      "seconds": 1.68
+    },
+    {
+      "name": "04_it",
+      "lang": "it",
+      "text": "Benvenuto in Italia!",
+      "voice": "shared:Violetta - Ringing, Bright and Joyful (standard, it)",
+      "voice_id": "gfKKsLN1k0oYYN9n2dXX",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "04_it.mp3",
+      "bytes": 24284,
+      "heard": "Benvenuto in Italia!",
+      "heard_lang": "it",
+      "heard_lang_p": 0.966,
+      "seconds": 1.44
+    },
+    {
+      "name": "05_jo",
+      "lang": "ar",
+      "text": "أهلاً وسهلاً بك في الأردن!",
+      "voice": "shared:Sara - Soft, Expressive, and Warm (modern standard, ar)",
+      "voice_id": "XTa3iQyMA6f1qrI4F6kZ",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "05_jo.mp3",
+      "bytes": 35569,
+      "heard": "أهلا وسهلا بك في الأردن",
+      "heard_lang": "ar",
+      "heard_lang_p": 0.996,
+      "seconds": 2.16
+    },
+    {
+      "name": "06_in",
+      "lang": "hi",
+      "text": "भारत में आपका स्वागत है!",
+      "voice": "shared:Zara - Soft, Professional and Gentle (standard, hi)",
+      "voice_id": "OtEfb2LVzIE45wdYe54M",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "06_in.mp3",
+      "bytes": 34315,
+      "heard": "भारत ले आपका स्वागत है",
+      "heard_lang": "hi",
+      "heard_lang_p": 0.991,
+      "seconds": 2.08
+    },
+    {
+      "name": "07_cn",
+      "lang": "zh",
+      "text": "欢迎回家。",
+      "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+      "voice_id": "9lHjugDhwqoxA5MhX0az",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "07_cn.mp3",
+      "bytes": 20105,
+      "heard": "歡迎回家",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 1.2
+    }
+  ],
+  "plan": {
+    "tier": null,
+    "character_count": null,
+    "character_limit": null,
+    "status": null
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "social_media",
+        "gender": "female",
+        "descriptive": "upbeat"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "middle-aged",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "male",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "deep"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "language": "el",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "language": "el",
+        "accent": "standard",
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "language": "el",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "language": "de",
+        "accent": "standard",
+        "age": "old",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "young",
+        "use_case": "social_media",
+        "gender": "male",
+        "descriptive": "pleasant"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "descriptive": "formal"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "neutral"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "pleasant"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "female",
+        "descriptive": "crisp"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "language": "en",
+        "accent": "scottish",
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "crisp"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "language": "en",
+        "accent": "scottish",
+        "use_case": "advertisement",
+        "gender": "male",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "language": "en",
+        "accent": "chinese",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "gentle"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "language": "it",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "intense"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "language": "en",
+        "accent": "scottish",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "language": "zh",
+        "accent": "beijing mandarin",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "gentle"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "language": "zh",
+        "accent": "singapore mandarin",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "deep"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "language": "en",
+        "accent": "chinese",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "gender": "male",
+        "descriptive": "chill"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "social_media",
+        "gender": "male",
+        "descriptive": "chill"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "language": "en",
+        "accent": "italian",
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "language": "en",
+        "accent": "scottish",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "gentle"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "language": "en",
+        "accent": "british",
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "mature"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "language": "fr",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "language": "fr",
+        "accent": "parisian",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "language": "de",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "female",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "language": "de",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "language": "ru",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "language": "ru",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "gender": "male",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "language": "zh",
+        "accent": "taiwan mandarin",
+        "age": "young",
+        "use_case": "social_media",
+        "gender": "female",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "serious"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "language": "hi",
+        "accent": "standard",
+        "age": "young",
+        "use_case": "social_media",
+        "gender": "female",
+        "descriptive": "upbeat"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "accent": "american",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "professional"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "accent": "american",
+        "use_case": "conversational",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "classy"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "accent": "american",
+        "use_case": "entertainment_tv",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "descriptive": "professional"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "accent": "american",
+        "use_case": "social_media",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "descriptive": "sassy"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "hyped",
+        "language": "en",
+        "accent": "australian"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "descriptive": "mature",
+        "accent": "british",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "accent": "american",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "accent": "american",
+        "use_case": "conversational",
+        "gender": "neutral",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "calm"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "accent": "american",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "descriptive": "rough"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "accent": "american",
+        "use_case": "social_media",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "descriptive": "confident"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "accent": "british",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "professional"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "accent": "american",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "upbeat"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "accent": "american",
+        "use_case": "conversational",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "descriptive": "chill"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "use_case": "conversational",
+        "descriptive": "cute",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "descriptive": "classy",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "accent": "american",
+        "gender": "male",
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "language": "en",
+        "descriptive": "classy"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "accent": "british",
+        "use_case": "informative_educational",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "formal"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "accent": "british",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "confident"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "gender": "male",
+        "accent": "american",
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "accent": "american",
+        "use_case": "advertisement",
+        "gender": "male",
+        "age": "old",
+        "language": "en",
+        "descriptive": "crisp"
+      },
+      "category": "premade"
+    }
+  ]
+}

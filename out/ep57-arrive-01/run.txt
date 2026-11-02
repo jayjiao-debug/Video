@@ -1,0 +1,118 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01_mx", "lang": "es", "text": "¡Bienvenido a México!", "voice": "shared:Regina - Contact Center (mexican, es)", "voice_id": "9Godp7dNohUvXk6qp0gS", "model": "eleven_v4", "status": 200, "file": "01_mx.mp3", "bytes": 25538}
+{"name": "02_pe", "lang": "es", "text": "¡Bienvenido al Perú!", "voice": "shared:Gaby - Friendly, Expressive and Vibrant (peruvian, es)", "voice_id": "5vkxOzoz40FrElmLP4P7", "model": "eleven_v4", "status": 200, "file": "02_pe.mp3", "bytes": 23030}
+{"name": "03_br", "lang": "pt", "text": "Bem-vindo ao Brasil!", "voice": "shared:Keren - Sweet, Vibrant and Rhythmic (brazilian, pt)", "voice_id": "33B4UnXyTNbgLmdEDh5P", "model": "eleven_v4", "status": 200, "file": "03_br.mp3", "bytes": 28046}
+{"name": "04_it", "lang": "it", "text": "Benvenuto in Italia!", "voice": "shared:Violetta - Ringing, Bright and Joyful (standard, it)", "voice_id": "gfKKsLN1k0oYYN9n2dXX", "model": "eleven_v4", "status": 200, "file": "04_it.mp3", "bytes": 24284}
+{"name": "05_jo", "lang": "ar", "text": "أهلاً وسهلاً بك في الأردن!", "voice": "shared:Sara - Soft, Expressive, and Warm (modern standard, ar)", "voice_id": "XTa3iQyMA6f1qrI4F6kZ", "model": "eleven_v4", "status": 200, "file": "05_jo.mp3", "bytes": 35569}
+{"name": "06_in", "lang": "hi", "text": "भारत में आपका स्वागत है!", "voice": "shared:Zara - Soft, Professional and Gentle (standard, hi)", "voice_id": "OtEfb2LVzIE45wdYe54M", "model": "eleven_v4", "status": 200, "file": "06_in.mp3", "bytes": 34315}
+{"name": "07_cn", "lang": "zh", "text": "欢迎回家。", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "voice_id": "9lHjugDhwqoxA5MhX0az", "model": "eleven_v4", "status": 200, "file": "07_cn.mp3", "bytes": 20105}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01_mx",
+  "lang": "es",
+  "text": "¡Bienvenido a México!",
+  "voice": "shared:Regina - Contact Center (mexican, es)",
+  "voice_id": "9Godp7dNohUvXk6qp0gS",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_mx.mp3",
+  "bytes": 25538,
+  "heard": "¡Bienvenido a México!",
+  "heard_lang": "es",
+  "heard_lang_p": 0.859,
+  "seconds": 1.52
+ },
+ {
+  "name": "02_pe",
+  "lang": "es",
+  "text": "¡Bienvenido al Perú!",
+  "voice": "shared:Gaby - Friendly, Expressive and Vibrant (peruvian, es)",
+  "voice_id": "5vkxOzoz40FrElmLP4P7",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02_pe.mp3",
+  "bytes": 23030,
+  "heard": "¡Bienvenido al Perú!",
+  "heard_lang": "es",
+  "heard_lang_p": 0.859,
+  "seconds": 1.36
+ },
+ {
+  "name": "03_br",
+  "lang": "pt",
+  "text": "Bem-vindo ao Brasil!",
+  "voice": "shared:Keren - Sweet, Vibrant and Rhythmic (brazilian, pt)",
+  "voice_id": "33B4UnXyTNbgLmdEDh5P",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "03_br.mp3",
+  "bytes": 28046,
+  "heard": "Bem-vindo ao Brasil!",
+  "heard_lang": "pt",
+  "heard_lang_p": 0.957,
+  "seconds": 1.68
+ },
+ {
+  "name": "04_it",
+  "lang": "it",
+  "text": "Benvenuto in Italia!",
+  "voice": "shared:Violetta - Ringing, Bright and Joyful (standard, it)",
+  "voice_id": "gfKKsLN1k0oYYN9n2dXX",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04_it.mp3",
+  "bytes": 24284,
+  "heard": "Benvenuto in Italia!",
+  "heard_lang": "it",
+  "heard_lang_p": 0.966,
+  "seconds": 1.44
+ },
+ {
+  "name": "05_jo",
+  "lang": "ar",
+  "text": "أهلاً وسهلاً بك في الأردن!",
+  "voice": "shared:Sara - Soft, Expressive, and Warm (modern standard, ar)",
+  "voice_id": "XTa3iQyMA6f1qrI4F6kZ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05_jo.mp3",
+  "bytes": 35569,
+  "heard": "أهلا وسهلا بك في الأردن",
+  "heard_lang": "ar",
+  "heard_lang_p": 0.996,
+  "seconds": 2.16
+ },
+ {
+  "name": "06_in",
+  "lang": "hi",
+  "text": "भारत में आपका स्वागत है!",
+  "voice": "shared:Zara - Soft, Professional and Gentle (standard, hi)",
+  "voice_id": "OtEfb2LVzIE45wdYe54M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "06_in.mp3",
+  "bytes": 34315,
+  "heard": "भारत ले आपका स्वागत है",
+  "heard_lang": "hi",
+  "heard_lang_p": 0.991,
+  "seconds": 2.08
+ },
+ {
+  "name": "07_cn",
+  "lang": "zh",
+  "text": "欢迎回家。",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "voice_id": "9lHjugDhwqoxA5MhX0az",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07_cn.mp3",
+  "bytes": 20105,
+  "heard": "歡迎回家",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 1.2
+ }
+]
