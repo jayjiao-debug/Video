@@ -51,9 +51,10 @@ def rgrad(id, stops, cx=.5, cy=.5, r=.5):
 defs = [grad('sky', [(0, P['sky0']), (1, P['sky1'])]),
         grad('rock', [(0, '#120909'), (.3, '#1E0E0C'), (.55, '#33150E'), (.8, '#4E1F12'), (1, '#6A2A16')], 0, 0, 0, 1800, True),
         grad('rwall', [(0, '#160B0B'), (.22, '#26110E'), (.42, '#4A1F13'), (.62, '#7E361D'), (.82, '#B4532F'), (1, '#D06C40')], 0, 0, 0, 1760, True),
-        grad('slab', [(0, '#2E140F'), (.55, '#4E2114'), (1, '#6E2E19')], 1300, 80, 520, 800, True),
-        grad('fac', [(0, '#3E180F'), (.45, '#5E2615'), (.75, '#843A20'), (1, '#A04A29')], 0, 450, 0, 1700, True),
-        grad('lit', [(0, '#5C2716'), (.45, '#7E381F'), (.75, '#AA502E'), (1, '#C9683D')], 0, 450, 0, 1700, True),
+        rgrad('rockglow', [(0, '#8A3C22', .75), (.55, '#6A2C18', .4), (1, '#4A1E12', 0)]),
+        '<linearGradient id="warmL" x1="0" y1="1050" x2="0" y2="1800" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#6A2A15" stop-opacity="0"/><stop offset="1" stop-color="#8E3C1D" stop-opacity=".75"/></linearGradient>',
+        grad('fac', [(0, '#38160E'), (.45, '#5E2615'), (.75, '#843A20'), (1, '#A04A29')], 0, 450, 0, 1700, True),
+        grad('lit', [(0, '#4E2013'), (.45, '#76341D'), (.75, '#AA502E'), (1, '#C9683D')], 0, 450, 0, 1700, True),
         grad('shd', [(0, '#220D08'), (.5, '#34140B'), (1, '#4E1F11')], 0, 450, 0, 1700, True),
         grad('sand', [(0, '#F4B474'), (.06, '#E8995A'), (.16, '#C46A38'), (.3, '#8A3A1C'), (.5, '#5A230F'), (.75, '#3E170A'), (1, '#4E1D0D')], 0, 1740, 0, H, True),
         grad('flute', [(0, '#000000'), (1, '#000000')]),
@@ -75,37 +76,35 @@ g.append(poly(ridge + [(0, 700)], P['ridge'], '#2C1A20', 2))
 
 # ---------------- the canyon walls: one dark mass, lit from below ----------------
 g.append(poly(sky_line + [(W, 0), (W, 1800), (0, 1800)], 'url(#rock)', INK, 3))
-# left wall: tall eroded flutes (generated slivers, alternately lit and shaded), darker toward the sky
-x = 0
-while x < 470:
-    w = R.uniform(30, 70); top = edge_y(sky_line, x + w / 2) + R.uniform(10, 80); lit = R.random() < .5
-    q = [(x, top + 30), (x + w * .5, top), (x + w, top + 40), (x + w + R.uniform(-10, 10), 1795), (x + R.uniform(-8, 8), 1798)]
-    g.append(poly(q, '#5E2614' if lit else '#1A0B08', 'none', 0, f'opacity="{R.uniform(.25, .45):.2f}"'))
-    x += w * R.uniform(.8, 1.2)
-for i in range(18):   # sloping bedding lines (sandstone strata)
-    y0 = 620 + i * 66; L = [(0, y0)]
-    for k in range(1, 7): L.append((k * 80, y0 - k * 20 + R.uniform(-8, 8)))
-    g.append(line([(x, y) for x, y in L if y > edge_y(sky_line, x) + 25], '#120806', 2, 'opacity=".5"'))
-g.append(poly([(0, 1260), (60, 1230), (120, 1300), (150, 1460), (140, 1640), (175, 1800), (0, 1800)], '#7A3218', 'none', 0, 'opacity=".45"'))   # lit buttress, far left
-g.append(poly([(180, 1330), (300, 1290), (420, 1300), (480, 1340), (500, 1795), (200, 1800), (220, 1600)], '#6A2A15', 'none', 0, 'opacity=".4"'))
-# the cliff above the facade catches the candle light in a diagonal band (soft edges, outlined only along its lower lip)
-slab = [(400, 900), (470, 760), (560, 620), (660, 500), (770, 395), (880, 310), (990, 240), (1100, 180), (1200, 130), (1290, 95),
-        (1335, 180), (1365, 300), (1330, 395), (1040, 440), (1000, 452), (900, 478), (820, 525), (760, 600), (700, 640), (600, 735), (560, 790), (500, 880)]
-g.append(poly(slab, 'url(#slab)', 'none', 0, 'opacity=".9"'))
-g.append(line(slab[13:], '#140806', 3))
-for i in range(8):   # strata across the slab (generated, following its slope)
-    L = [(470 + s * 820 + R.uniform(-6, 6), 800 - s * 640 + (i - 4) * 36 * (1 - s * .4) + R.uniform(-5, 5)) for s in [k / 8 for k in range(9)]]
-    g.append(line(L, '#1E0C08', 2, 'opacity=".45"'))
+# left wall: a few long vertical joints and broken bedding lines (generated), its foot warmed by the lanterns
+for x0 in (70, 185, 320, 445):
+    y = edge_y(sky_line, x0) + R.uniform(60, 200); L = []
+    while y < 1790: L.append((x0 + R.uniform(-10, 10), y)); y += R.uniform(80, 150)
+    g.append(line(L, '#0C0504', R.choice([2.5, 3.5]), 'opacity=".5"'))
+for i in range(22):   # broken, sloping bedding (strata) segments
+    y0 = R.uniform(640, 1760); x0 = R.uniform(-40, 420); n = R.randint(2, 4)
+    L = [(x0 + k * 70, y0 - k * 17 + R.uniform(-6, 6)) for k in range(n + 1)]
+    L = [(x, y) for x, y in L if x < 500 and y > edge_y(sky_line, x) + 25]
+    if len(L) > 1: g.append(line(L, '#120806', 2, 'opacity=".5"'))
+g.append(poly([(0, 1050), (505, 1000), (505, 1800), (0, 1800)], 'url(#warmL)', 'none', 0))
+# the cliff above the facade catches the candle light: a soft rotated glow, the dark lip of the overhang, strata
+g.append(ell(880, 560, 640, 250, 'url(#rockglow)', 'transform="rotate(-38 880 560)"'))
+g.append(line([(1330, 395), (1040, 440), (1000, 452), (900, 478), (820, 525), (760, 600), (700, 640), (600, 735), (560, 790)], '#140806', 3))
+for i in range(7):   # strata across the lit cliff (generated, following its slope)
+    L = [(500 + s_ * 800 + R.uniform(-6, 6), 800 - s_ * 620 + (i - 5) * 34 * (1 - s_ * .4) + R.uniform(-5, 5)) for s_ in [k / 8 for k in range(9)]]
+    g.append(line(L, '#1E0C08', 2, 'opacity=".4"'))
 # right wall: a tall face, dark above and bright at its foot where the lanterns are
 rwall_edge = [(1290, 0), (1330, 150), (1365, 300), (1385, 430), (1398, 620), (1405, 820), (1412, 1020), (1420, 1220), (1430, 1420), (1440, 1600), (1452, 1745)]
 g.append(poly(rwall_edge + [(W, 1765), (W, 0)], 'url(#rwall)', INK, 3))
-for i in range(26):   # honeycombed strata (generated wavy lines, darker high up, warm low down)
-    y0 = 250 + i * 58; x0 = edge_x(rwall_edge, y0) + 6; L = [(x0, y0)]
-    for k in range(1, 7): L.append((x0 + k * (W - x0) / 6, y0 + k * 7 + math.sin(i * 1.7 + k * 1.3) * 16))
-    g.append(line(L, '#160807' if y0 < 1000 else '#6E2C16', 2.5 if y0 < 1000 else 3, 'opacity=".55"'))
-for _ in range(30):   # erosion pockets
-    y = R.uniform(420, 1650); x = R.uniform(edge_x(rwall_edge, y) + 40, W - 20); r = R.uniform(14, 36)
-    g.append(ell(x, y, r, r * .5, '#1E0C0A' if y < 1000 else '#7E3419', 'opacity=".6"'))
+for i in range(40):   # honeycombed strata: broken wavy segments (generated), dark high up, warm low down
+    y0 = R.uniform(260, 1720); x0 = edge_x(rwall_edge, y0) + R.uniform(0, 160); n = R.randint(2, 4); ph = R.uniform(0, 6)
+    L = [(x0 + k * 55, y0 + k * 6 + math.sin(ph + k * 1.4) * 12) for k in range(n + 1)]
+    g.append(line([(x, y) for x, y in L if x < W], '#160807' if y0 < 1000 else '#6E2C16', 2.5 if y0 < 1000 else 3, 'opacity=".55"'))
+for i in range(9):   # honeycomb weathering: rows of shallow hollows (generated)
+    y0 = 520 + i * 125
+    for k in range(5):
+        x = edge_x(rwall_edge, y0) + 50 + k * 60 + (i % 2) * 30 + R.uniform(-10, 10); y = y0 + (x - 1400) * .1 + R.uniform(-12, 12)
+        if x < W - 15 and R.random() < .7: g.append(ell(x, y, R.uniform(16, 28), R.uniform(6, 11), '#1A0B09' if y < 1000 else '#6A2A15', 'opacity=".4"'))
 g.append(poly([(1385, 430), (1398, 620), (1405, 820), (1412, 1020), (1420, 1220), (1430, 1420), (1440, 1600), (1452, 1745), (1422, 1745), (1410, 1560), (1398, 1300), (1388, 1000), (1378, 700)], P['deep'], INK, 2))
 
 # ---------------- the facade: dark recess behind the upper storey, jambs of the rock-cut ----------------

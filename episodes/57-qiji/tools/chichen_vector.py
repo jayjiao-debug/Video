@@ -49,13 +49,17 @@ g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}"
 
 # ---------------- sky: a few soft clouds (generated bumps along a baseline) ----------------
 def cloud(x0, x1, y, h):
-    n = max(3, int((x1 - x0) / 55)); top = []
-    for i in range(n + 1):
-        x = x0 + (x1 - x0) * i / n; bump = h * (0.55 + 0.45 * math.sin(math.pi * i / n)) * R.uniform(.8, 1.1)
-        top.append((x, y - bump))
-    return poly([(x0, y)] + top + [(x1, y)], P['cloud'], P['cloud_e'], 2, 'opacity=".85"')
-for c in [(110, 470, 1172, 60), (150, 300, 1132, 26), (0, 120, 560, 40), (95, 250, 862, 34), (165, 275, 935, 26), (0, 110, 1000, 30),
-          (1580, 1720, 1150, 16), (1730, 1880, 1128, 18), (380, 520, 1238, 18)]:
+    """a soft cloud: a row of round puffs (tallest in the middle) merged into one scalloped top over a flat base"""
+    cs = []; x = x0 + h * .4
+    while x < x1 - h * .4:
+        r = h * (.45 + .55 * math.sin(math.pi * (x - x0) / (x1 - x0))) * R.uniform(.8, 1.1); cs.append((x, y - r * .55, r)); x += r * R.uniform(.7, 1.1)
+    top = []
+    for xi in range(int(x0), int(x1) + 1, 5):
+        ys = [cy - math.sqrt(r * r - (xi - cx) ** 2) for cx, cy, r in cs if abs(xi - cx) < r]
+        top.append((xi, min(min(ys), y) if ys else y))
+    return poly(top + [(x1, y), (x0, y)], P['cloud'], P['cloud_e'], 2, 'opacity=".9"')
+for c in [(110, 470, 1175, 52), (0, 130, 575, 40), (95, 250, 868, 30), (165, 280, 940, 24), (0, 115, 1005, 26),
+          (1580, 1720, 1150, 14), (1730, 1880, 1130, 16), (380, 520, 1240, 16)]:
     g.append(cloud(*c))
 
 # ---------------- horizon: background trees (generated scalloped crowns) ----------------
@@ -237,7 +241,10 @@ def blade(tip, base, w, col, bend=0.0, bands=True, lit=True, rib=True):
             out.append(line([(c[0] + nx * h, c[1] + ny * h), (c[0] + nx * h * .3 + ux * 10, c[1] + ny * h * .3 + uy * 10), (c[0] - nx * h * .3, c[1] - ny * h * .3), (c[0] - nx * h + ux * 9, c[1] - ny * h + uy * 9)], P['lf_band'], 6, 'opacity=".62"'))
     if rib: out.append(line([ax(t) for t in [i / 12 for i in range(12)] if ax(t)[1] < H + 20], P['lf_rib'], 2, 'opacity=".8"'))   # mid-rib
     return out
-g.append(poly([(0, 2140), (300, 2110), (700, 2130), (1000, 2110), (1300, 2150), (1932, 2130), (1932, H), (0, H)], P['lf_back'], 'none', 0))
+saw = []; x = -20
+while x < W + 40:   # the dark heart of the clump: its top edge is a row of blade tips (generated sawtooth)
+    w = R.uniform(40, 75); saw += [(x, 2190 + R.uniform(-15, 15)), (x + w / 2, 2080 + R.uniform(-40, 30))]; x += w
+g.append(poly([(-20, H + 10)] + saw + [(x, 2190), (x, H + 10)], P['lf_back'], INK, 2))
 for i in range(22):   # back row of dark blades filling the base of the clump (generated)
     x = -40 + (W + 80) * (i + R.uniform(.1, .9)) / 22; tipy = R.uniform(1930, 2120)
     g += blade((x + R.uniform(-50, 50), tipy), (x + R.uniform(-30, 30), H), R.uniform(80, 130), R.choice([P['lf_back'], P['lf_dark']]), R.uniform(-20, 20), bands=False, lit=False, rib=False)
@@ -256,7 +263,7 @@ B = [((701, 1504), (590, 1930), 30, 'lf_dark', -10), ((824, 1533), (720, 2150), 
      ((1510, 2222), (1440, 2700), 250, 'lf_mid', 0), ((466, 2445), (240, 2530), 26, 'lf_pale', 0)]
 for tip, base, w, col, bend in B:
     g += blade(tip, base, w, P[col], bend)
-g.append(f'<rect x="0" y="1900" width="{W}" height="{H - 1900}" fill="url(#shade)"/>')   # the clump darkens toward its base
+g.append(f'<rect x="0" y="2010" width="{W}" height="{H - 2010}" fill="url(#shade)"/>')   # the clump darkens toward its base
 
 # ---------------- canopy: leaf clusters in the top corners (generated) ----------------
 def twig(path, w): return line(path, P['branch'], w)
@@ -282,16 +289,16 @@ def spray(x, y, ang, L, col, n=5, sw=1.5):
         for rr, da in [(.32, -w * .5), (.62, -w), (1, 0), (.62, w), (.32, w * .5)]:
             q.append((x + math.cos(a + da) * l * rr, y + math.sin(a + da) * l * rr))
     return poly(q, col, INK, sw)
-def canopy(outline, holes, n_in, lit, base=P['can_d']):
+def canopy(outline, holes, n_in, lit, base=P['can_d'], sun=()):
     """a tree mass from a hand-traced outline: fill, sky holes, leaf sprays generated along every edge (fanning out
     of the mass) and sunlit sprays scattered inside"""
-    out = [poly(outline, base, INK, 2.5)]
+    out = [poly(outline, base, INK, 2.5)] + [poly(q, P['can_l'], 'none', 0, 'opacity=".7"') for q in sun]   # sunlit patches
     for h in holes: out.append(poly(h, 'url(#sky)', INK, 2))
     xs = [p[0] for p in outline]; ys = [p[1] for p in outline]; k = 0
     while k < n_in:
         x, y = R.uniform(min(xs), max(xs)), R.uniform(min(ys), max(ys))
         if not inside((x, y), outline) or any(inside((x, y), h) for h in holes): continue
-        out.append(spray(x, y, R.uniform(0, 2 * math.pi), R.uniform(44, 62), R.choice([P['can_l'], P['can_y']]) if lit(x, y) else R.choice([P['can_m'], P['can_d']]), R.randint(3, 5), 1.3)); k += 1
+        out.append(spray(x, y, R.uniform(0, 2 * math.pi), R.uniform(52, 76), R.choice([P['can_l'], P['can_y']]) if lit(x, y) else R.choice([P['can_m'], P['can_d']]), R.randint(3, 5), 1.3)); k += 1
     for path, sgn, step in [(outline + outline[:1], 1, 58)] + [(h + h[:1], -1, 50) for h in holes]:
         L = sum(math.dist(a, b) for a, b in zip(path, path[1:]))
         for (x, y), (tx, ty) in along(path, max(3, int(L / step))):
@@ -305,8 +312,8 @@ for p, w in [([(0, 70), (60, 95), (130, 140), (200, 200), (260, 250)], 8), ([(30
     g.append(line(p, P['branch'], w))   # bare branches reaching out of the masses
 TLo = [(0, 0), (289, 0), (282, 40), (278, 78), (301, 125), (372, 136), (407, 148), (431, 207), (419, 266), (395, 301), (348, 336), (313, 372),
        (266, 407), (195, 419), (136, 407), (78, 325), (42, 278), (19, 231), (0, 184)]
-g += canopy(TLo, [[(22, 98), (78, 95), (85, 140), (30, 150)], [(228, 300), (285, 296), (290, 350), (240, 362)], [(150, 200), (195, 190), (200, 240), (160, 250)]],
-            16, lambda x, y: (x * 7 + y * 3) % 10 < 4, P['can_m'])
+g += canopy(TLo, [[(70, 88), (120, 78), (160, 100), (178, 140), (168, 200), (128, 236), (82, 218), (60, 160)], [(228, 300), (285, 296), (292, 345), (262, 365), (232, 352)]],
+            26, lambda x, y: (x * 7 + y * 3) % 10 < 4, P['can_m'], [[(150, 120), (260, 140), (330, 190), (380, 240), (330, 300), (250, 330), (180, 300), (150, 220)]])
 LEo = [(0, 390), (40, 398), (46, 470), (40, 540), (0, 556), (0, 590), (60, 596), (125, 619), (184, 601), (172, 654), (125, 713), (148, 748), (101, 795),
        (113, 842), (101, 913), (54, 960), (19, 1007), (0, 1010)]
 g += canopy(LEo, [], 6, lambda x, y: False, '#3F5A3A')
@@ -315,6 +322,9 @@ TRo = [(955, 0), (957, 18), (951, 140), (996, 162), (1018, 207), (1051, 262), (1
        (1807, 262), (1851, 251), (1896, 251), (1932, 229), (1932, 0)]
 g += canopy(TRo, [[(1105, 155), (1190, 150), (1200, 235), (1120, 245)], [(1222, 222), (1290, 215), (1300, 280), (1235, 288)], [(1340, 290), (1420, 280), (1410, 350), (1350, 360)],
                   [(1010, 40), (1070, 30), (1085, 90), (1020, 100)]],
-            40, lambda x, y: x > 1430 and y < 330 or (x + y) % 3 == 0, P['can_m'])
+            68, lambda x, y: x > 1430 and y < 330 or (x + y) % 3 == 0, P['can_m'],
+            [[(1560, 60), (1700, 40), (1850, 70), (1920, 150), (1890, 240), (1800, 250), (1700, 300), (1620, 330), (1560, 280), (1520, 180)],
+             [(1000, 60), (1100, 40), (1220, 80), (1260, 160), (1200, 220), (1100, 200), (1030, 150)],
+             [(1110, 300), (1200, 280), (1290, 330), (1280, 420), (1200, 470), (1130, 440)], [(1580, 330), (1650, 320), (1670, 400), (1620, 450), (1585, 410)]])
 g.append('</svg>')
 open(sys.argv[1], 'w').write('\n'.join(g)); print('ok', len(g), 'elements')
