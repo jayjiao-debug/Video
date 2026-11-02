@@ -516,11 +516,19 @@ const Tent: React.FC<{t: number}> = ({t}) => { const a = T('X9'), sT = SEAL_T, g
 const PAGE = {x0: 1112, x1: 1752, y0: -600, y1: 800};
 /** the glide down the page: from just before X10 to 1.1 s into Y, smoothstep (it never stalls at the cut) */
 const pageCam = (t: number) => mixC(P0, P1, ease(seg(t, T('X10') - 0.25, 165.6)));
-/** where each 中國 sits: under the screen centre on its beat */
-const ZG: {x: number; y: number; t: number}[] = (() => { const out: {x: number; y: number; t: number}[] = []; const n0 = beatN(T('X10') + 0.01);
-	for (let i = 0; i < 8; i++) { const tb = beatT(n0 + i) + (i === 0 ? 0.3 : 0), c = pageCam(tb), col = [3, 6, 1, 8, 4, 2, 7, 5][i];
-		const y = c.fy + (40 + 30 * Math.sin(i * 2.3)) / c.s, x = PAGE.x1 - 150 - col * 46; const r = Math.min(31, Math.max(1, Math.round((y - PAGE.y0 - 30) / 40))); out.push({x, y: r * 40 + PAGE.y0 + 30, t: tb}); }
-	return out; })();
+/* the page carries the real text of the law's first article, as the 1909 print set it (traditional characters, no modern
+   punctuation): 第一章「固有籍」第一條 and its three items, one per column, right to left (wording: 黄兴涛, 光明日报 2018-01-22, which
+   quotes it). Owner 11-02: real characters only; the rest of the page stays blank. */
+const PAGE_COLS = ['第一章　固有籍', '第一條　凡左列人等不論是否生於中國地方均屬中國國籍', '　一　生而父為中國人者', '　二　生於父死以後而父死時為中國人者', '　三　母為中國人而父無可考或無國籍者'];
+const colX = (c: number) => PAGE.x1 - 150 - c * 46, rowY = (r: number) => PAGE.y0 + 30 + r * 40;
+/** each 中國 in that text lights on the beat nearest the moment the glide brings it to the screen centre (one per beat) */
+const ZG: {x: number; y: number; t: number}[] = (() => { const w: {x: number; y: number}[] = [];
+	PAGE_COLS.forEach((tx, c) => { for (let i = 0; i + 1 < tx.length; i++) if (tx[i] === '中' && tx[i + 1] === '國') w.push({x: colX(c), y: rowY(i + 1)}); });
+	w.sort((a, b) => a.y - b.y);
+	const n0 = beatN(T('X10') + 0.01), nMax = beatN(T('Y') - 0.1); let prev = n0 - 1;
+	return w.map((z) => { let tt = T('X10'); for (let k = 0; k < 700; k++) { tt = T('X10') + k * 0.01; if (pageCam(tt).fy >= z.y + 20) break; }
+		let n = beatN(tt); if (beatT(n + 1) - tt < tt - beatT(n)) n++; n = Math.min(nMax, Math.max(prev + 1, n0, n)); prev = n;
+		return {...z, t: beatT(n) + (n === n0 ? 0.3 : 0)}; }); })();
 /* owner 11-02: no fake characters on the page any more, only the title and the real 中國 (each lights on its beat); the words keep
    one row clear of the inner border at the top and bottom */
 const Page: React.FC<{t: number; o?: number}> = ({t, o = 1}) => { const {x0, x1, y0, y1} = PAGE;
@@ -536,6 +544,9 @@ const Page: React.FC<{t: number; o?: number}> = ({t, o = 1}) => { const {x0, x1,
 			{/* the title strip */}
 			<rect x={tx - 34} y={y0 + 44} width={68} height={title.length * 66 + 30} fill="none" stroke="#3A2414" strokeWidth={2.4} />
 			{title.map((ch, i) => <text key={i} x={tx} y={y0 + 92 + i * 66} fontFamily={KAI} fontWeight={700} fontSize={56} textAnchor="middle" dominantBaseline="central" fill="#2A1A0E">{ch}</text>)}
+			{PAGE_COLS.map((tx, c) => tx.split('').map((ch, i) => { const y = rowY(i + 1), x = colX(c);
+				if (ch === '　' || ZG.some((z) => z.x === x && (z.y === y || z.y + 40 === y))) return null;
+				return <text key={`${c}_${i}`} x={x} y={y} fontFamily={KAI} fontWeight={700} fontSize={34} textAnchor="middle" dominantBaseline="central" fill="#2A1A0E">{ch}</text>; }))}
 			{ZG.map((z, i) => { const lit = ease(seg(t, z.t - 0.06, z.t + 0.12)), hot = Math.exp(-Math.max(0, t - z.t) / 0.35);
 				return <LitWord key={i} x={z.x} y={z.y} s={34} gap={40} lit={lit} hot={hot} id={`a5zg${i}`} />; })}
 		</g></g>; };
