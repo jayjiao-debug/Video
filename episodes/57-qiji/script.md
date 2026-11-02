@@ -1,81 +1,86 @@
-# ep57 《世界七大奇迹，现在还能去看几个？》 · script v1 (2026-11-02)
+# ep57 《新世界七大奇迹，一口气飞完要多少公里？》 · script v2 (2026-11-02, the NEW seven; owner 15:59)
 
-Subtitle-only, 16:9, target **2:40** (hard cap 2:59). Timings are a draft; they snap to the BGM's bars once the owner sends it.
-Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the underline (about 1 line in 3).
+The ancient-list version (「还剩几个」) is kept in script_ancient_v1.md for a later episode.
 
-**Devices that run through the whole film**
-- **你:** a backpacker silhouette seen from behind or over the shoulder, with a small cream tag 「你」 above the head. Every stop is your POV.
-- **The phone:** at each stop 你 raises a phone. Inside the phone frame is **a real photo of the place today** (licensed; see the photo list). It is the only place real photos appear. The world around it stays flat-vector.
-- **The counter:** bottom-left, 「还剩 N 个」. It drops at the photo, never before.
-- **One accent colour:** the warm gold light of a standing wonder. When a wonder falls, its light goes out. At the end only the pyramid is lit.
-- **Travel:** 1–1.2 s hops on a **borderless** globe (continents only, no country lines) with a gold flight arc. Never a map.
+Subtitle-only, 16:9, target **2:45** (hard cap 2:59). Timings are a draft; they snap to the BGM's bars.
+Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the underline.
 
-| # | Time | Subtitle | Picture | Counter |
+**The question held to the end:** how far do you fly to see all seven and come home? **Answer: 44,385 km**, more than once round the Earth (40,075 km), and almost exactly **two Great Walls** (21,196 km). 长城 is the first stop, so the ending loops back to it.
+**The second question (about 1:00):** flying over Egypt: 「金字塔为什么不在名单上？」 Answered just before the total.
+
+**Devices**
+- **你:** a backpacker silhouette seen from behind, with a small cream tag 「你」. Every stop is your POV.
+- **The phone:** at each stop 你 raises a phone. Inside the frame, **a real photo of the place today** (licensed: owner picks Unsplash/Pexels or his stock; credits on the end card). Photos appear only inside the phone. The world stays flat-vector.
+- **The odometer:** bottom-left, 「已飞 N 公里」. It rolls up during each flight hop: 0 → 3,769 → 7,912 → 10,330 → 19,685 → 23,836 → 27,115 → **44,385**.
+- **The accent colour:** each wonder lights up gold when you arrive; the lights stay on, so seven gold points build up on the globe.
+- **Travel:** 1–1.2 s hops on a **borderless** globe (continents only) with a gold flight arc. Never a map.
+
+| # | Time | Subtitle | Picture | Odometer |
 |---|---|---|---|---|
-| 1 | 0:00 | 世界这么大，<br>今天带你去看[世界七大奇迹]！ | **POV at the boarding gate:** your hand holds a boarding pass, 「目的地：世界七大奇迹」, seat 7A. Through the glass, a plane at dusk. Subtitle on screen at frame 0. | 7 |
-| 2 | 0:02 | 不过——<br>它们现在，还剩几个？ | The boarding pass **flips over**: the back has 7 small icons, all with a question mark. A hard little sound on the flip. | ? |
-| 3 | 0:05 | 这份名单，是两千多年前<br>古希腊人列的——里面没有[长城]。 | **POV window seat, takeoff:** clouds rush past. Match cut from the round window to the globe. **The question every Chinese viewer has (owner 11-02: 「长城不是其中一个吗？」). Planted here, answered in the coda.** | 7 |
-| 4 | 0:10 | 第一站，希腊，[罗德岛]。 | Globe hop → the harbour at dawn. Over 你's shoulder: **a bronze giant (Helios)** at the harbour mouth, sun on its crown, ships passing below. | 7 |
-| 5 | 0:14 | 港口边，站着一个[青铜巨人]，<br>可它只站了50多年。 | Slow push up the giant. The ground shakes; dust falls from it. | 7 |
-| 6 | 0:19 | 一场地震，把它推倒了。<br>然后，它在地上躺了[800多年]。 | It falls in silhouette into the water and its light goes out. A time-lapse sky over the broken pieces (sun, moon, sun, moon). | 7 |
-| 7 | 0:25 | 今天，你只能看到一个空港口。 | **你 raises the phone → PHOTO: the harbour today (Mandraki).** | **6** |
-| 8 | 0:28 | 第二站，以弗所，<br>[阿尔忒弥斯神庙]。 | Globe hop → a temple of 100+ columns in warm light, 你 small at the steps. | 6 |
-| 9 | 0:32 | 公元前356年，一个男人<br>放火烧了它，只为了[出名]。 | Night. One silhouette with a torch climbs the steps. Flames climb the columns. | 6 |
-| 10 | 0:37 | 城里下令：<br>谁说出他的名字，就处死。 | A stone tablet; a name chiselled away. | 6 |
-| 11 | 0:41 | 可两千多年后，<br>我们还在讲他的故事。 | Beat. The chiselled name glows faintly. **(Irony beat: the ban failed.)** | 6 |
-| 12 | 0:45 | 神庙后来重建过，<br>最后还是被毁掉了。 | The rebuilt temple fades column by column, and its light goes out. | 6 |
-| 13 | 0:49 | 今天，这里只剩一根柱子。 | **PHOTO: the single column in the marsh at the site.** | **5** |
-| 14 | 0:52 | 第三站，<br>[巴比伦空中花园]。 | Globe hop → desert at noon. 你 looks around: nothing there. | 5 |
-| 15 | 0:55 | 你打开导航——<br>找不到这个地方。 | **The phone shows a map app's spinner, then 「找不到该地点」.** (No photo. This is the gag.) | 5 |
-| 16 | 0:59 | 问题是，[没人知道]它在哪。 | The **second question** of the film. Camera pulls back over the empty desert. | 5 |
-| 17 | 1:02 | 巴比伦的废墟和泥板里，<br>都找不到它的记录。 | Ruins and clay tablets in silhouette, searched by a sweeping light. | 5 |
-| 18 | 1:07 | 有学者说，它根本不在巴比伦，<br>而在另一座城：[尼尼微]。 | The garden appears, **terraces dripping with green**, but in a different landscape (hills, river). A dotted line hops across. | 5 |
-| 19 | 1:13 | 它到底在不在，<br>到现在还没有定论。 | The garden blurs and its light flickers out. | **4** |
-| 20 | 1:16 | 第四站，奥林匹亚，<br>[宙斯神像]。 | Globe hop → inside a temple: a seated giant in gold and ivory; 你 tiny at its feet. | 4 |
-| 21 | 1:20 | 它后来被搬去了君士坦丁堡，<br>公元475年，毁于一场大火。 | The statue rides a ship, then city rooftops at night; a fire glow, and its light goes out. | 4 |
-| 22 | 1:26 | 今天的奥林匹亚，<br>只有倒在地上的石柱。 | **PHOTO: the Temple of Zeus ruins at Olympia.** | **3** |
-| 23 | 1:29 | 第五站，<br>[摩索拉斯陵墓]。 | Globe hop → a stepped tomb crowned by a chariot statue. | 3 |
-| 24 | 1:32 | 英语里的“陵墓”，<br>mausoleum，就来自他的名字。 | The word 「MAUSOLEUM」 assembles letter by letter from the tomb's stones. (Fact to verify, #F6.) | 3 |
-| 25 | 1:37 | 后来，骑士们拆了它的石头，<br>修了一座[城堡]。 | The tomb comes apart block by block; the blocks fly and stack into castle walls. Its light goes out. | 3 |
-| 26 | 1:42 | 今天，它的石头，<br>还砌在那座城堡里。 | **PHOTO: Bodrum castle.** | **2** |
-| 27 | 1:45 | 第六站，<br>[亚历山大灯塔]。 | Globe hop → night sea; a lighthouse with a fire at the top sweeping the water. | 2 |
-| 28 | 1:48 | 它亮了[1600多年]，<br>照着无数船回家。 | Time-lapse: ships' sails change shape over the centuries; the beam keeps turning. | 2 |
-| 29 | 1:54 | 最后，还是被地震，<br>彻底推倒了。 | The tower cracks and sinks into the sea; the beam goes out. | 2 |
-| 30 | 1:58 | 今天，原址只剩大海和城堡。 | **PHOTO: the site today.** (Wording depends on #F7.) | **1** |
-| 31 | 2:01 | 只剩一个了。 | Globe hop, slower. The music thins out. | 1 |
-| 32 | 2:04 | 最后一站，埃及，<br>[胡夫金字塔]。 | Desert at sunset, 你 at its foot, **the only gold light left in the film.** | 1 |
-| 33 | 2:08 | 它，还在。 | **PHOTO: the Great Pyramid today, complete.** Hold. The drop. | **1** |
-| 34 | 2:11 | 古希腊人列这份名单时，<br>它已经[2300多岁]了。 | Over 你's shoulder: the pyramid. Ghost silhouettes of the other six fade in around it, then out. | 1 |
-| 35 | 2:17 | 七个奇迹里，最老的那个，<br>活到了最后。 | Slow pull back; the pyramid's gold light holds. | 1 |
-| 36 | 2:23 | 为什么没有长城？<br>古希腊人只列了他们知道的世界： | The globe turns back; a soft warm circle over the Mediterranean and the Middle East only; the rest of the globe is dark. | — |
-| 37 | 2:27 | 地中海和中东。 | Hold on the lit circle; 你's plane silhouette crosses it. | — |
-| 37b | 2:30 | 2007年，近1亿人投票，<br>重新选了“新七大奇迹”—— | The globe at night, lights coming on everywhere (votes). Say on the end card that it was a private Swiss foundation's poll. | — |
-| 37c | 2:35 | 这一次，[长城]在里面。 | Seven new lights rise; one of them is over China (no borders drawn). The music's last swell. | — |
-| 38 | 2:38 | **End card** (≥ 5.5 s): 《世界七大奇迹，现在还能去看几个？》<br>**如果让你选，你会选哪7个？**<br>pill 「关注 Juno · 一起看懂世界」 · sources · photo credits | Dim the last shot to about 30%; red J stamp. | — |
-| | 2:44 | end | | |
+| 1 | 0:00 | 世界这么大，<br>今天带你去看[新世界七大奇迹]！ | **POV at the boarding gate:** your hand holds a boarding pass, 「目的地：新世界七大奇迹 ×7」, seat 7A; a plane at dusk through the glass. Subtitle on screen at frame 0. | 0 |
+| 2 | 0:02 | 一口气飞完，<br>你猜要飞[多少公里]？ | The odometer appears and blinks 「0 公里」. | 0 |
+| 3 | 0:05 | 这7个，是2007年<br>近1亿人投票选出来的。 | POV window seat, takeoff, clouds; match cut from the round window to the globe; seven grey points wait on it. | 0 |
+| 4 | 0:09 | 第一站，不用出国：[长城]。 | The wall at sunrise along the ridges; 你 on a tower. Its point on the globe turns gold. | 0 |
+| 5 | 0:12 | 历代长城加起来，<br>有21196公里。 | The wall draws itself across the mountains. | 0 |
+| 6 | 0:16 | 记住这个数，<br>最后要用。 | **PHOTO in the phone: 长城 today.** (A plant for the ending.) | 0 |
+| 7 | 0:19 | 第二站，印度，[泰姬陵]。 | Hop (odometer rolls to 3,769). White dome at dawn, the long pool; 你 at the gate. | 3,769 |
+| 8 | 0:23 | 这么美的地方，<br>其实是一座[坟]。 | Slow push in to the dome. | 3,769 |
+| 9 | 0:27 | 一位皇帝，<br>为去世的妻子修的。 | Silhouette of a man alone in the garden at dusk. **PHOTO: 泰姬陵 today.** | 3,769 |
+| 10 | 0:32 | 第三站，约旦，[佩特拉]。 | Hop (→ 7,912). A narrow red canyon; at its end, a temple facade. | 7,912 |
+| 11 | 0:36 | 整座城，<br>是从红色岩石里[凿]出来的。 | The facade is "carved" out of the cliff top-down, chips falling. **PHOTO: the Treasury today.** | 7,912 |
+| 12 | 0:42 | 下一站，罗马。<br>飞机正好飞过埃及—— | Window POV: desert below, three pyramids small in the light. | 7,912 |
+| 13 | 0:46 | 等等，[金字塔]，<br>为什么不在名单上？ | **The second question.** The pyramids' point on the globe stays grey and blinks. Hold it unanswered. | 7,912 |
+| 14 | 0:50 | 第四站，罗马，[斗兽场]。 | Hop (→ 10,330). The arena's arches at golden hour; 你 in the stands. | 10,330 |
+| 15 | 0:54 | 两千年前，<br>它能坐下[5万人]。 | The stands fill with silhouettes row by row. **PHOTO: the Colosseum today.** | 10,330 |
+| 16 | 0:59 | 第五站，跨过大西洋，<br>墨西哥，[奇琴伊察]。 | The longest hop (→ 19,685): the odometer spins fast across the ocean. A stepped pyramid in the jungle. | 19,685 |
+| 17 | 1:05 | 四面台阶加上顶上的平台，<br>一共[365]级。 | The steps count up; a small 365 appears over the top, 「一年365天」. | 19,685 |
+| 18 | 1:10 | 每年春分秋分，<br>影子会变成一条[蛇]， | Afternoon light: the triangles of shadow form along the balustrade. | 19,685 |
+| 19 | 1:15 | 从台阶上爬下来。 | The shadow-serpent slides down to the carved stone head at the base. **PHOTO: the pyramid today.** (The film's big visual moment.) | 19,685 |
+| 20 | 1:20 | 第六站，秘鲁，<br>[马丘比丘]。 | Hop (→ 23,836). Terraces on a ridge above the clouds. | 23,836 |
+| 21 | 1:24 | 它建在两千多米高的山上，<br>石头之间，连一张纸都插不进。 | Close on dry-stone joints; a sheet of paper fails to go in. (Facts #F8: verify both claims.) | 23,836 |
+| 22 | 1:30 | 一百年前，<br>它才被外面的世界知道。 | Clouds part over the ridge. **PHOTO: Machu Picchu today.** (#F9: verify the wording.) | 23,836 |
+| 23 | 1:35 | 第七站，巴西，<br>[基督像]。 | Hop (→ 27,115). A statue with open arms on a peak over the bay. | 27,115 |
+| 24 | 1:39 | 它是七个里最年轻的：<br>1931年才落成。 | Ages over the seven points on the globe; this one is the smallest number, 「95岁」. | 27,115 |
+| 25 | 1:44 | 它还常被雷劈，<br>手指和头都被劈坏过。 | A storm; lightning strikes the hand; sparks. **PHOTO: Christ the Redeemer today.** | 27,115 |
+| 26 | 1:50 | 七个都看完了。<br>还记得那个问题吗？ | The globe with seven gold points; the pyramids' grey point blinks. | 27,115 |
+| 27 | 1:54 | 金字塔，本来也在候选名单里。 | The pyramids among 21 candidate points. | 27,115 |
+| 28 | 1:57 | 埃及人不干了：它是古代七大奇迹里<br>[唯一还在的]，根本不需要投票。 | The pyramids at sunset; the grey point turns gold, alone and a different shade from the seven. | 27,115 |
+| 29 | 2:04 | 最后，它成了<br>“[荣誉]候选”。 | A small laurel ring forms around the pyramids' point. | 27,115 |
+| 30 | 2:08 | 好了，回家。 | Boarding again; the longest flight home over the Pacific. | 27,115 → |
+| 31 | 2:11 | 你一共飞了…… | **The odometer rolls the last 17,270 km.** The music builds. | → 44,385 |
+| 32 | 2:13 | [44385公里]。 | Hold. The drop. The flight arc closes into a ring around the globe. | **44,385** |
+| 33 | 2:16 | 比绕地球一圈，<br>还多出4000多公里。 | A ghost ring of the equator (40,075 km) under the flight ring. | 44,385 |
+| 34 | 2:21 | 也差不多是——<br>[两条长城]那么长。 | Back to the first stop: **two Great Walls** laid side by side under the number. | 44,385 |
+| 35 | 2:27 | 这7个，<br>你最想先去哪一个？ | The seven gold points pulse one by one. | 44,385 |
+| 36 | 2:30 | **End card** (≥ 5.5 s): 《新世界七大奇迹，一口气飞完要多少公里？》<br>**这7个，你最想先去哪一个？**<br>pill 「关注 Juno · 一起看懂世界」 · 「距离按大圆直线计算，从八达岭出发并返回」 · 「新七大奇迹为瑞士私人基金会2007年发起的投票」 · sources · photo credits | Dim to about 30%; red J stamp. | — |
+| | 2:37 | end | | |
 
-## The photo list (owner decides the licence: Unsplash / Pexels free stock, or his own paid stock; credit in the end card)
-1. Rhodes, Mandraki harbour entrance today (#7)
-2. Ephesus, the single column at the Artemision (#13)
-3. *(no photo: the map-app gag, #15)*
-4. Olympia, Temple of Zeus ruins (#22)
-5. Bodrum castle (#26)
-6. Alexandria, the lighthouse site today (#30)
-7. Giza, the Great Pyramid (#33)
+## Odometer (great-circle, Earth radius 6,371 km; computed 2026-11-02)
+| Leg | km | Total |
+|---|---|---|
+| 长城 (八达岭 40.360 N, 116.020 E) → 泰姬陵 (27.175 N, 78.042 E) | 3,769 | 3,769 |
+| → 佩特拉 (30.329 N, 35.444 E) | 4,143 | 7,912 |
+| → 斗兽场 (41.890 N, 12.492 E) | 2,418 | 10,330 |
+| → 奇琴伊察 (20.684 N, 88.568 W) | 9,355 | 19,685 |
+| → 马丘比丘 (13.163 S, 72.545 W) | 4,151 | 23,836 |
+| → 基督像 (22.952 S, 43.211 W) | 3,279 | 27,115 |
+| → home to 八达岭 | 17,270 | **44,385** |
+44,385 / 40,075 (equator) = 1.11; 44,385 / 21,196 (长城) = 2.09.
+
+## Photo list (7, all exist today)
+长城 (#6) · 泰姬陵 (#9) · 佩特拉 Treasury (#11) · 斗兽场 (#15) · 奇琴伊察 El Castillo (#19) · 马丘比丘 (#22) · 基督像 (#25)
 
 ## Facts (✓ sourced · ✗ verify before the lines lock)
-| # | Line(s) | Fact | Source | ✓ |
+| # | Lines | Fact | Source | ✓ |
 |---|---|---|---|---|
-| F1 | 3 | The list goes back to Greek writers of the 2nd century BCE (Antipater of Sidon; a writer calling himself Philo of Byzantium) | Britannica, 「Seven Wonders of the World」 | ✓ |
-| F2 | 5–6 | Colossus built c. 292–280 BCE, toppled by an earthquake 228–226 BCE (about 50 years standing); its pieces carried off for melting c. 654 CE (about 880 years later) | World History Encyclopedia timeline 「The Seven Wonders」 (654 CE per Theophanes) | ✓ |
-| F3 | 9–11 | 356 BCE Herostratus burned the Temple of Artemis to make his name; Ephesus forbade mentioning his name on pain of death | Biblical Archaeology Society, Mark Wilson, 2013-07-24 | ✓ |
-| F4 | 12 | The temple was rebuilt c. 355–330 BCE, plundered by the Goths c. 267 CE, destroyed 401 CE | WHE timeline | ✓ |
-| F5 | 17–19 | No trace of the Hanging Garden in Babylon's ruins or its cuneiform texts; Dalley's Nineveh theory | *Archaeology* magazine, Nov/Dec 2025 | ✓ |
-| F6 | 24 | 「mausoleum」 comes from Mausolus | ✗ (dictionary or Britannica) | ✗ |
-| F7 | 25–26, 30 | The Knights of St John used the Mausoleum's stones (c. 1494); what stands on the Alexandria lighthouse site today (the Qaitbay citadel, 15th century) | WHE timeline (Mausoleum ✓); the Qaitbay wording ✗ | ½ |
-| F8 | 28–29 | Lighthouse built c. 300–280 BCE; partly collapsed 956 CE; finally collapsed c. 1330 CE, probably an earthquake (about 1,600 years). No 「second-longest」 claim: the Mausoleum (c. 350 BCE until it was dismantled c. 1494) may have stood longer | WHE timeline | ✓ |
-| F9 | 21 | Zeus statue moved to Constantinople 395 CE; destroyed by fire 475 CE (according to Zonaras) | WHE timeline. Say 「据记载」 if space allows | ✓ |
-| F10 | 34–35 | Great Pyramid c. 2560 BCE; Philo's list c. 225 BCE → about 2,300+ years; the oldest of the wonders and the only one substantially standing | WHE timeline; Britannica | ✓ |
-| F11 | 37b–37c | 2007, Lisbon, nearly 100 million votes, a private Swiss foundation; 长城 among the seven | China Daily 2007-07-09 | ✓ |
-| F13 | 3, 36–37 | The ancient list covers the Mediterranean and the Middle East, so 长城 is not on it; it is on the 2007 New7Wonders list | Britannica (「the ancient Mediterranean and Middle East」); China Daily 2007-07-09. Don't claim the Greeks had never heard of China | ✓ |
-| F12 | 13 | Today a single column stands at the Artemision | ✗ | ✗ |
+| F1 | 3, end card | 2007, Lisbon; nearly 100 million votes; a private Swiss foundation; the seven: 长城, Petra, Christ the Redeemer, Machu Picchu, Chichen Itza, Colosseum, Taj Mahal | China Daily 2007-07-09 | ✓ |
+| F2 | 5, 34 | All historical Great Walls total 21,196.18 km (国家文物局 2012 survey) | 新华网 2023-12-02 | ✓ |
+| F3 | 8–9 | The Taj Mahal is a mausoleum the Mughal emperor Shah Jahan built for his late wife (Mumtaz Mahal), 1631–1648 | ✗ UNESCO WHC | ✗ |
+| F4 | 11 | Petra's monuments are carved out of the rose-red sandstone | ✗ UNESCO WHC | ✗ |
+| F5 | 15 | The Colosseum held about 50,000 spectators | ✗ Britannica | ✗ |
+| F6 | 17–19 | El Castillo: 364 steps + the platform = 365, the Maya civil year; on the equinox, afternoon light forms a serpent on the north balustrade that "descends" to the carved head | Mexico News Daily 2026-09-24 (citing INAH) | ✓ |
+| F7 | 13, 27–29 | The pyramids were among the finalists, then removed from voting and made an 「Honorary New7Wonders Candidate」 after Egypt's objections; Zahi Hawass: the only ancient wonder still standing, 「they don't need to be put to a vote」 | Daily News Egypt, 2007-04-20 | ✓ |
+| F8 | 21 | Machu Picchu altitude (about 2,430 m); the "paper can't fit between the stones" claim | ✗ UNESCO for altitude; the paper claim needs a reliable source or it's cut | ✗ |
+| F9 | 22 | Machu Picchu became known to the wider world in 1911 (Hiram Bingham); the Spanish never found it | ✗ | ✗ |
+| F10 | 24–25 | Christ the Redeemer inaugurated 1931; 38 m including the base; lightning damaged its right middle finger, its head and its right thumb (storms, Dec 2013–Jan 2014) | Fox News 2014-01-21 | ✓ |
+| F11 | 32–34 | The route distances | Our own great-circle computation (table above) | ✓ |
