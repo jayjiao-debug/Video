@@ -14,7 +14,7 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 |---|---|---|---|---|
 | 1 | 0:00 | 世界这么大，<br>今天带你去看[世界七大奇迹]！ | **POV at the boarding gate:** your hand holds a boarding pass, 「目的地：世界七大奇迹」, seat 7A. Through the glass, a plane at dusk. Subtitle on screen at frame 0. | 7 |
 | 2 | 0:02 | 不过——<br>它们现在，还剩几个？ | The boarding pass **flips over**: the back has 7 small icons, all with a question mark. A hard little sound on the flip. | ? |
-| 3 | 0:05 | 这份名单，两千多年前就有了，<br>写下它的，是古希腊人。 | **POV window seat, takeoff:** clouds rush past. Match cut from the round window to the globe. | 7 |
+| 3 | 0:05 | 这份名单，是两千多年前<br>古希腊人列的——里面没有[长城]。 | **POV window seat, takeoff:** clouds rush past. Match cut from the round window to the globe. **The question every Chinese viewer has (owner 11-02: 「长城不是其中一个吗？」). Planted here, answered in the coda.** | 7 |
 | 4 | 0:10 | 第一站，希腊，[罗德岛]。 | Globe hop → the harbour at dawn. Over 你's shoulder: **a bronze giant (Helios)** at the harbour mouth, sun on its crown, ships passing below. | 7 |
 | 5 | 0:14 | 港口边，站着一个[青铜巨人]，<br>可它只站了50多年。 | Slow push up the giant. The ground shakes; dust falls from it. | 7 |
 | 6 | 0:19 | 一场地震，把它推倒了。<br>然后，它在地上躺了[800多年]。 | It falls in silhouette into the water and its light goes out. A time-lapse sky over the broken pieces (sun, moon, sun, moon). | 7 |
@@ -47,10 +47,12 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 | 33 | 2:08 | 它，还在。 | **PHOTO: the Great Pyramid today, complete.** Hold. The drop. | **1** |
 | 34 | 2:11 | 古希腊人列这份名单时，<br>它已经[2300多岁]了。 | Over 你's shoulder: the pyramid. Ghost silhouettes of the other six fade in around it, then out. | 1 |
 | 35 | 2:17 | 七个奇迹里，最老的那个，<br>活到了最后。 | Slow pull back; the pyramid's gold light holds. | 1 |
-| 36 | 2:23 | 2007年，一家瑞士基金会<br>办了全球投票，近1亿人参加。 | The globe at night, lights coming on everywhere (votes). | — |
-| 37 | 2:29 | 选出“新七大奇迹”，<br>里面有中国的[长城]。 | Seven new lights rise on the globe; one of them is over China (no borders drawn). | — |
-| 38 | 2:34 | **End card** (≥ 5.5 s): 《世界七大奇迹，现在还能去看几个？》<br>**如果让你选，你会选哪7个？**<br>pill 「关注 Juno · 一起看懂世界」 · sources · photo credits | Dim the last shot to about 30%; red J stamp. | — |
-| | 2:40 | end | | |
+| 36 | 2:23 | 为什么没有长城？<br>古希腊人只列了他们知道的世界： | The globe turns back; a soft warm circle over the Mediterranean and the Middle East only; the rest of the globe is dark. | — |
+| 37 | 2:27 | 地中海和中东。 | Hold on the lit circle; 你's plane silhouette crosses it. | — |
+| 37b | 2:30 | 2007年，近1亿人投票，<br>重新选了“新七大奇迹”—— | The globe at night, lights coming on everywhere (votes). Say on the end card that it was a private Swiss foundation's poll. | — |
+| 37c | 2:35 | 这一次，[长城]在里面。 | Seven new lights rise; one of them is over China (no borders drawn). The music's last swell. | — |
+| 38 | 2:38 | **End card** (≥ 5.5 s): 《世界七大奇迹，现在还能去看几个？》<br>**如果让你选，你会选哪7个？**<br>pill 「关注 Juno · 一起看懂世界」 · sources · photo credits | Dim the last shot to about 30%; red J stamp. | — |
+| | 2:44 | end | | |
 
 ## The photo list (owner decides the licence: Unsplash / Pexels free stock, or his own paid stock; credit in the end card)
 1. Rhodes, Mandraki harbour entrance today (#7)
@@ -74,5 +76,6 @@ Reading budget about 4 字/s, rows ≤ 16 字. **[x]** = key word with the under
 | F8 | 28–29 | Lighthouse built c. 300–280 BCE; partly collapsed 956 CE; finally collapsed c. 1330 CE, probably an earthquake (about 1,600 years). No 「second-longest」 claim: the Mausoleum (c. 350 BCE until it was dismantled c. 1494) may have stood longer | WHE timeline | ✓ |
 | F9 | 21 | Zeus statue moved to Constantinople 395 CE; destroyed by fire 475 CE (according to Zonaras) | WHE timeline. Say 「据记载」 if space allows | ✓ |
 | F10 | 34–35 | Great Pyramid c. 2560 BCE; Philo's list c. 225 BCE → about 2,300+ years; the oldest of the wonders and the only one substantially standing | WHE timeline; Britannica | ✓ |
-| F11 | 36–37 | 2007, Lisbon, nearly 100 million votes, a private Swiss foundation; 长城 among the seven | China Daily 2007-07-09 | ✓ |
+| F11 | 37b–37c | 2007, Lisbon, nearly 100 million votes, a private Swiss foundation; 长城 among the seven | China Daily 2007-07-09 | ✓ |
+| F13 | 3, 36–37 | The ancient list covers the Mediterranean and the Middle East, so 长城 is not on it; it is on the 2007 New7Wonders list | Britannica (「the ancient Mediterranean and Middle East」); China Daily 2007-07-09. Don't claim the Greeks had never heard of China | ✓ |
 | F12 | 13 | Today a single column stands at the Artemision | ✗ | ✗ |
