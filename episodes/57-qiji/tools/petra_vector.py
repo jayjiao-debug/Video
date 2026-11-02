@@ -51,7 +51,7 @@ def rgrad(id, stops, cx=.5, cy=.5, r=.5):
 defs = [grad('sky', [(0, P['sky0']), (1, P['sky1'])]),
         grad('rock', [(0, '#120909'), (.3, '#1E0E0C'), (.55, '#33150E'), (.8, '#4E1F12'), (1, '#6A2A16')], 0, 0, 0, 1800, True),
         grad('rwall', [(0, '#160B0B'), (.22, '#26110E'), (.42, '#4A1F13'), (.62, '#7E361D'), (.82, '#B4532F'), (1, '#D06C40')], 0, 0, 0, 1760, True),
-        rgrad('rockglow', [(0, '#8A3C22', .75), (.55, '#6A2C18', .4), (1, '#4A1E12', 0)]),
+        '<radialGradient id="rockglow" cx="900" cy="780" r="760" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9A4528"/><stop offset=".4" stop-color="#7A3420"/><stop offset=".75" stop-color="#532215"/><stop offset="1" stop-color="#3A180F"/></radialGradient>',
         '<linearGradient id="warmL" x1="0" y1="1050" x2="0" y2="1800" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#6A2A15" stop-opacity="0"/><stop offset="1" stop-color="#8E3C1D" stop-opacity=".75"/></linearGradient>',
         grad('fac', [(0, '#38160E'), (.45, '#5E2615'), (.75, '#843A20'), (1, '#A04A29')], 0, 450, 0, 1700, True),
         grad('lit', [(0, '#4E2013'), (.45, '#76341D'), (.75, '#AA502E'), (1, '#C9683D')], 0, 450, 0, 1700, True),
@@ -66,13 +66,11 @@ g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}"
      f'<rect width="{W}" height="{H}" fill="url(#sky)"/>']
 
 # ---------------- sky: stars (generated) and the far ridge ----------------
-sky_line = [(0, 540), (60, 490), (100, 430), (150, 400), (220, 388), (300, 345), (360, 300), (420, 255), (480, 205), (530, 160), (575, 112), (610, 65), (640, 25), (655, 0)]
-ridge = [(0, 455), (50, 405), (100, 368), (160, 352), (230, 343), (300, 318), (380, 268), (460, 212), (530, 158), (580, 108), (615, 55), (640, 0)]
+sky_line = [(0, 565), (48, 512), (80, 450), (104, 416), (160, 384), (208, 376), (240, 360), (272, 352), (304, 358), (344, 352), (376, 320), (400, 288), (440, 240), (480, 200), (520, 176), (560, 152), (600, 112), (640, 80), (680, 48), (710, 15), (722, 0)]
 for _ in range(70):
     x, y = R.uniform(10, 600), R.uniform(10, 480)
-    if y > edge_y(ridge, x) - 18: continue
+    if y > edge_y(sky_line, x) - 30: continue
     r = R.choice([1.5, 2, 2, 2.6, 3.4]); g.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r}" fill="{P["star"]}" opacity="{R.uniform(.4, .95):.2f}"/>')
-g.append(poly(ridge + [(0, 700)], P['ridge'], '#2C1A20', 2))
 
 # ---------------- the canyon walls: one dark mass, lit from below ----------------
 g.append(poly(sky_line + [(W, 0), (W, 1800), (0, 1800)], 'url(#rock)', INK, 3))
@@ -88,7 +86,9 @@ for i in range(22):   # broken, sloping bedding (strata) segments
     if len(L) > 1: g.append(line(L, '#120806', 2, 'opacity=".5"'))
 g.append(poly([(0, 1050), (505, 1000), (505, 1800), (0, 1800)], 'url(#warmL)', 'none', 0))
 # the cliff above the facade catches the candle light: a soft rotated glow, the dark lip of the overhang, strata
-g.append(ell(880, 560, 640, 250, 'url(#rockglow)', 'transform="rotate(-38 880 560)"'))
+litcliff = [(420, 1000), (470, 820), (552, 620), (620, 520), (690, 440), (760, 384), (850, 300), (950, 205), (1050, 125), (1150, 55), (1210, 0), (1290, 0),
+            (1330, 150), (1365, 300), (1385, 430), (1340, 420), (1040, 450), (900, 478), (820, 525), (760, 600), (700, 640), (600, 735), (560, 790), (505, 860), (470, 1000)]
+g.append(poly(litcliff, 'url(#rockglow)', '#1E0C08', 2))
 g.append(line([(1330, 395), (1040, 440), (1000, 452), (900, 478), (820, 525), (760, 600), (700, 640), (600, 735), (560, 790)], '#140806', 3))
 for i in range(7):   # strata across the lit cliff (generated, following its slope)
     L = [(500 + s_ * 800 + R.uniform(-6, 6), 800 - s_ * 620 + (i - 5) * 34 * (1 - s_ * .4) + R.uniform(-5, 5)) for s_ in [k / 8 for k in range(9)]]
