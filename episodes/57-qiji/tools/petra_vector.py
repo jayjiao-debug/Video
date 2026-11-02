@@ -1,6 +1,6 @@
 """ep57 佩特拉 (petra2.jpg, 1717x2576, night): the Treasury (Al-Khazneh) by candlelight drawn in code (our lines,
 our palette), laid over the photo's layout so the shutter cut drawing → photo lines up. Every shape is a coordinate
-read off a labelled grid of the brightened photo; repeated details are generated (stars, rock flutes and strata,
+read off a labelled grid of the brightened photo; repeated details are generated (stars, rock joints, strata and hollows,
 column capitals, frieze rosettes, dentils, the tholos crown, rope sags, the lantern row on the platform, footprints,
 and every lantern from one bag() recipe sized by its distance).
 usage: petra_vector.py out.svg"""
@@ -8,7 +8,7 @@ import sys, math, random
 W, H = 1717, 2576
 R = random.Random(57)
 INK = '#2A211B'
-P = dict(sky0='#0E080F', sky1='#24131F', star='#F6E7CC', ridge='#1A0E12',
+P = dict(sky0='#0E080F', sky1='#24131F', star='#F6E7CC',
          fac_hi='#E08A58', door='#120705', deep='#260E09', recess='#160908', mould='#4A1D10',
          rope='#F2C189', post='#3A1A10', plat='#E8A064', plat_d='#B8683C', plat_top='#FBD49E',
          bag_edge='#E8B070', bag_far='#FFEBC8', foot='#2E1008', foot_hi='#C26A38')
@@ -57,15 +57,15 @@ defs = [grad('sky', [(0, P['sky0']), (1, P['sky1'])]),
         grad('lit', [(0, '#4E2013'), (.45, '#76341D'), (.75, '#AA502E'), (1, '#C9683D')], 0, 450, 0, 1700, True),
         grad('shd', [(0, '#220D08'), (.5, '#34140B'), (1, '#4E1F11')], 0, 450, 0, 1700, True),
         grad('sand', [(0, '#F4B474'), (.06, '#E8995A'), (.16, '#C46A38'), (.3, '#8A3A1C'), (.5, '#5A230F'), (.75, '#3E170A'), (1, '#4E1D0D')], 0, 1740, 0, H, True),
-        grad('flute', [(0, '#000000'), (1, '#000000')]),
         rgrad('glow', [(0, '#FFD392', .9), (.4, '#F7A158', .45), (1, '#E07038', 0)]),
         rgrad('halo', [(0, '#FFF1D0', .55), (.5, '#FFC27A', .2), (1, '#F59A52', 0)]),
+        rgrad('core', [(0, '#FFFFFF', 1), (.5, '#FFFDF2', .7), (1, '#FFF2D8', 0)]),
         rgrad('bag', [(0, '#FFFFF8', 1), (.55, '#FFF2D8', 1), (1, '#F4C88A', 1)], .5, .7, .75),
         rgrad('amb', [(0, '#FFB46A', .42), (.55, '#E9783E', .14), (1, '#C85A2A', 0)])]
 g = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}">', '<defs>' + ''.join(defs) + '</defs>',
      f'<rect width="{W}" height="{H}" fill="url(#sky)"/>']
 
-# ---------------- sky: stars (generated) and the far ridge ----------------
+# ---------------- sky: stars (generated) above the canyon's rim ----------------
 sky_line = [(0, 565), (48, 512), (80, 450), (104, 416), (160, 384), (208, 376), (240, 360), (272, 352), (304, 358), (344, 352), (376, 320), (400, 288), (440, 240), (480, 200), (520, 176), (560, 152), (600, 112), (640, 80), (680, 48), (710, 15), (722, 0)]
 for _ in range(70):
     x, y = R.uniform(10, 600), R.uniform(10, 480)
@@ -96,6 +96,11 @@ for i in range(7):   # strata across the lit cliff (generated, following its slo
 # right wall: a tall face, dark above and bright at its foot where the lanterns are
 rwall_edge = [(1290, 0), (1330, 150), (1365, 300), (1385, 430), (1398, 620), (1405, 820), (1412, 1020), (1420, 1220), (1430, 1420), (1440, 1600), (1452, 1745)]
 g.append(poly(rwall_edge + [(W, 1765), (W, 0)], 'url(#rwall)', INK, 3))
+for q, c, o in [([(1410, 560), (1470, 520), (1540, 540), (1560, 640), (1530, 760), (1480, 880), (1425, 900), (1410, 760)], '#9A4A2C', .45),   # lit bulges and a dark hollow
+                ([(1560, 420), (1640, 390), (1717, 400), (1717, 600), (1650, 610), (1580, 560)], '#7E3A22', .45),
+                ([(1470, 1180), (1560, 1150), (1640, 1200), (1660, 1350), (1600, 1450), (1500, 1440), (1460, 1320)], '#D27444', .35),
+                ([(1600, 1040), (1680, 1030), (1717, 1060), (1717, 1160), (1650, 1172), (1600, 1120)], '#2A100A', .55)]:
+    g.append(poly(q, c, 'none', 0, f'opacity="{o}"'))
 for i in range(40):   # honeycombed strata: broken wavy segments (generated), dark high up, warm low down
     y0 = R.uniform(260, 1720); x0 = edge_x(rwall_edge, y0) + R.uniform(0, 160); n = R.randint(2, 4); ph = R.uniform(0, 6)
     L = [(x0 + k * 55, y0 + k * 6 + math.sin(ph + k * 1.4) * 12) for k in range(n + 1)]
@@ -201,7 +206,8 @@ g.append(poly([(940, 1210), (987, 1196), (987, 1692), (940, 1694)], 'url(#shd)',
 for x in (875, 905):   # pilasters on the vestibule's back wall
     g.append(line([(x, 1222 - (x - 860) * .25), (x, 1696)], P['mould'], 2))
 g.append(poly([(1040, 1342), (1126, 1334), (1126, 1366), (1040, 1372)], 'url(#lit)', INK, 2.5))
-g.append(poly([(1046, 1372), (1124, 1366), (1124, 1684), (1046, 1688)], P['door'], INK, 3))
+g.append(poly([(1046, 1372), (1124, 1366), (1124, 1642), (1046, 1646)], P['door'], INK, 3))
+g.append(poly([(1036, 1646), (1134, 1642), (1134, 1662), (1036, 1666)], 'url(#lit)', INK, 2.5))   # threshold
 g.append(poly([(1198, 1392), (1326, 1380), (1328, 1548), (1200, 1556)], 'url(#fac)', INK, 2.5))
 g.append(poly([(1196, 1548), (1330, 1540), (1332, 1574), (1198, 1582)], 'url(#lit)', INK, 2.5))
 g.append(poly([(1222, 1420), (1250, 1404), (1270, 1440), (1262, 1520), (1232, 1536), (1218, 1480)], 'url(#lit)', '#3A160C', 2, 'opacity=".8"'))
@@ -240,22 +246,26 @@ g.append(ell(860, 1760, 980, 420, 'url(#amb)'))   # candle light washing up the 
 plat_top = [(205, 1790), (262, 1746), (400, 1737), (600, 1725), (800, 1716), (1000, 1709), (1160, 1704), (1380, 1696), (1460, 1694)]
 plat_bot = [(200, 1802), (262, 1772), (400, 1766), (600, 1757), (800, 1749), (1000, 1744), (1160, 1740), (1380, 1735), (1460, 1734)]
 g.append(poly([(505, 1712), (1400, 1672), (1452, 1690), (1460, 1694)] + plat_top[::-1][:-1] + [(205, 1790), (180, 1800)], P['plat_d'], INK, 2))
-posts = [815 + k * 98 for k in range(8)]
-for x in posts: g.append(line([(x, 1700 - (x - 815) * .03), (x, 1655 - (x - 815) * .03)], P['post'], 4))
-for a, b in zip(posts, posts[1:]):   # the rope sags between posts (two strands)
-    ya, yb = 1660 - (a - 815) * .03, 1660 - (b - 815) * .03
-    g.append(line([(a + (b - a) * t / 8, ya + (yb - ya) * t / 8 + 9 * math.sin(math.pi * t / 8)) for t in range(9)], P['rope'], 3))
-    g.append(line([(a + (b - a) * t / 8, ya + 22 + (yb - ya) * t / 8 + 7 * math.sin(math.pi * t / 8)) for t in range(9)], P['rope'], 2.5, 'opacity=".8"'))
+posts = [(806, 1677), (929, 1671), (1075, 1663), (1229, 1660), (1329, 1656), (1398, 1660), (1498, 1647)]   # (x, top) read off the photo
+for x, y in posts: g.append(line([(x, y - 4), (x, y + 26)], P['post'], 4))
+for (xa, ya), (xb, yb) in zip(posts, posts[1:]):   # the rope sags between posts (two strands)
+    sag = (xb - xa) * .05
+    for dy, sw in ((0, 3), (20, 2.5)):
+        g.append(line([(xa + (xb - xa) * t / 8, ya + dy + (yb - ya) * t / 8 + sag * math.sin(math.pi * t / 8)) for t in range(9)], P['rope'], sw))
 g.append(poly(plat_top + plat_bot[::-1], P['plat'], INK, 2.5))
 g.append(line(plat_top[1:], P['plat_top'], 4))
 for (x, y), _ in along(plat_top[1:], 22)[1:-1]:   # block joints on the platform's face
     g.append(line([(x, y + 4), (x + 2, y + 26)], P['plat_d'], 2))
 sand_top = [(0, 1792), (180, 1800)] + plat_bot + [(1560, 1740), (W, 1765)]
 g.append(poly(sand_top + [(W, H), (0, H)], 'url(#sand)', INK, 3))
-for _ in range(120):   # footprints in the sand (generated): a dark dent with a lit far rim, larger toward the camera
-    y = R.uniform(1990, H - 10); s = (y - 1720) / 850; x = R.uniform(-20, W + 20); rx = R.uniform(16, 42) * s; ry = rx * R.uniform(.28, .42)
-    g.append(ell(x, y, rx, ry, P['foot'], 'opacity=".5"'))
-    g.append(line([(x - rx * .9, y - ry * .2), (x - rx * .4, y - ry * .95), (x + rx * .4, y - ry * .95), (x + rx * .9, y - ry * .2)], P['foot_hi'], max(1.5, 3 * s), 'opacity=".55"'))
+for _ in range(130):   # footprints in the sand (generated): a flat dark dent with a lit far rim, larger toward the camera
+    y = R.uniform(1990, H - 10); sc = (y - 1720) / 850; x = R.uniform(-20, W + 20); rx = R.uniform(20, 46) * sc; ry = rx * R.uniform(.22, .32)
+    g.append(ell(x, y, rx, ry, P['foot'], 'opacity=".45"'))
+    g.append(line([(x - rx * math.cos(t * math.pi / 6), y - ry * 1.15 * math.sin(t * math.pi / 6)) for t in range(7)], P['foot_hi'], max(1.5, 3 * sc), 'opacity=".5"'))
+for i in range(14):   # long trodden furrows across the foreground (generated wavy lines)
+    y0 = 2060 + i * 36 + R.uniform(-10, 10); sc = (y0 - 1720) / 850; x0 = R.uniform(-100, 900); n = R.randint(4, 8)
+    L = [(x0 + k * 110 * sc * 2, y0 + math.sin(k * 1.1 + i) * 8 * sc + k * 3) for k in range(n)]
+    g.append(line(L, P['foot'], max(2, 4 * sc), 'opacity=".35"'))
 
 # ---------------- lanterns ----------------
 def bag(cx, b, w, h, shape=None):
@@ -268,7 +278,7 @@ def bag(cx, b, w, h, shape=None):
     if h > 24:
         out.append(poly(shape, 'url(#bag)', INK, 3 if h > 140 else 2.5 if h > 60 else 2))
         out.append(line([(cx + w * .16, b - h * .9), (cx + w * .21, b - h * .45), (cx + w * .14, b - 4)], P['bag_edge'], 3 if h > 100 else 2, 'opacity=".75"'))
-        if h > 60: out.append(ell(cx, b - h * .28, w * .27, h * .17, '#FFFFFF', 'opacity=".75"'))
+        if h > 60: out.append(ell(cx, b - h * .3, w * .38, h * .26, 'url(#core)'))
     else:
         out.append(poly(shape, P['bag_far'], '#C77A40', 1.2))
     return out
