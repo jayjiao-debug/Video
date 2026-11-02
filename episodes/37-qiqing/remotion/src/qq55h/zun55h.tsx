@@ -32,8 +32,12 @@ export const ZUN = {
     'rim' = option 1B: the v2.1 colour exactly, plus a signature ice-cyan rim (#A8E6FF) traced inside the silhouette, the flanges
     and the horns, strongest away from the key; 'rimplus' = 1B+: the rim, and the 尊 made the brightest value in frame (a pool
     of key light on it, a lifted specular, a soft darkening ellipse just behind it). The rim and 1B+ are off in the fresh /
-    molten casting and while 中 / 或 glow gold. */
-export const ZUN_LOOK: 'v21' | 'verdigris' | 'rim' | 'rimplus' = 'rim';
+    molten casting and while 中 / 或 glow gold.
+    'bright' = 1C (owner, after the 马首 of ep45): a saturated bright copper bronze (mid #D8743F, highlights #F2A66A, shadows
+    #8A3E22, never black), a soft inner glow, lighter relief; the scene's light still models it but the body colour holds, so it
+    is the most saturated and among the brightest things in every frame. Dirt only as a hint in the deepest recesses at high
+    patina; cleanest and shiniest in the museum. The fresh gold casting and the gold 中 / 或 are unchanged. */
+export const ZUN_LOOK: 'v21' | 'verdigris' | 'rim' | 'rimplus' | 'bright' = 'bright';
 const D2R = Math.PI / 180;
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -311,14 +315,15 @@ export const Zun: React.FC<ZunProps> = (p) => {
 	const P = (q: V3) => proj(cam, q);
 	const depth = (q: V3) => toCam(cam, q)[2];
 	/* bronze: cleaned museum surface (dark olive-brown metal), verdigris, soil */
-	const LOOK: string = ZUN_LOOK, VG = LOOK === 'verdigris';
+	const LOOK: string = ZUN_LOOK, VG = LOOK === 'verdigris', BRT = LOOK === 'bright';
+	const bAmt = BRT ? (1 - fresh) * (1 - cl(molten * 2)) : 0;
 	const RIM = LOOK === 'rim' || LOOK === 'rimplus', PLUS = LOOK === 'rimplus';
 	const rimAmt = RIM ? (1 - cl(fresh * 3)) * (1 - cl(molten * 3)) * (1 - sstep(0.6, 1, glow)) : 0, plus = PLUS ? rimAmt : 0;
 	const scrC = P(W([0, 0, 19.4])), pxs = cam.f * ps / Math.max(1, depth(W([0, 0, 19.4])));
 	const Ls = (() => { const b = basis(cam), x = dot(nrm(Lt.dir), b.R), y = dot(nrm(Lt.dir), b.U), l = Math.hypot(x, y) || 1; return {x: x / l, y: y / l, k: Math.min(1, l / 0.45)}; })();
 	const poolC: [number, number] = [scrC[0] + Ls.x * 8 * pxs, scrC[1] - Ls.y * 8 * pxs - 5 * pxs], poolR = 17 * pxs;
 	const sig: React.ReactNode[] = [];
-	const BR: RGB = VG ? [26, 42, 36] : [54, 55, 46], BR_HI: RGB = VG ? [94, 112, 92] : [140, 128, 100], VERD: RGB = [62, 92, 76], VERD2: RGB = [100, 136, 110], SOIL: RGB = [100, 82, 58];
+	const BR: RGB = BRT ? [150, 70, 38] : VG ? [26, 42, 36] : [54, 55, 46], BR_HI: RGB = BRT ? [242, 166, 106] : VG ? [94, 112, 92] : [140, 128, 100], VERD: RGB = [62, 92, 76], VERD2: RGB = [100, 136, 110], SOIL: RGB = [100, 82, 58];
 	/* verdigris look: the patina keeps its own colour under a tinted key (a partial white balance on the diffuse light only;
 	   the highlights and the rim stay the scene's colour), fading out toward the gold casting and the molten state */
 	const wb = VG ? 0.62 * (1 - fresh) * (1 - molten) : 0;
@@ -327,6 +332,13 @@ export const Zun: React.FC<ZunProps> = (p) => {
 	const shade = (n: V3, q: V3, alb: RGB, specK = 1, ao = 1, rimOn = true): RGB => {
 		const l = Math.max(0, dot(n, L)), v = nrm(sub(cam.p, q)), hh = nrm(addv(L, v)), sp = Math.pow(Math.max(0, dot(n, hh)), shin) * Lt.spec * specK * (1 - 0.75 * patina) * (1 + 0.8 * fresh);
 		const c: RGB = [0, 1, 2].map((i) => alb[i] / 255 * (ambD[i] * Lt.amb + keyD[i] * Lt.k * l) * ao + keyC[i] * sp * ao * 0.9) as RGB;
+		if (bAmt > 0) {   /* copper: from its own saturated shadow to its lit tone by how lit the facet is, a soft inner glow, a warm sheen */
+			const I = cl((Lt.amb * 0.55 + Lt.k * l) / (Lt.amb * 0.55 + Lt.k * 0.85)), t = cl(0.16 + 0.84 * Math.pow(I, 0.75)) * (0.55 + 0.45 * ao);
+			const s2 = P(q), dd = Math.hypot(s2[0] - poolC[0], s2[1] - poolC[1]) / (poolR * 1.15), glowK = 1 + 0.2 * Math.exp(-dd * dd * 1.1);
+			const shd: RGB = [alb[0] * 0.62, alb[1] * 0.5, alb[2] * 0.48];
+			const cb = mixc(shd, alb, t), spC = mixc(keyC, [242, 166, 106], 0.45);
+			for (let i = 0; i < 3; i++) cb[i] = cb[i] * glowK + keyC[i] * Lt.k * l * 0.05 + spC[i] * sp * ao * 0.75;
+			for (let i = 0; i < 3; i++) c[i] = lerp(c[i], cb[i], bAmt); }
 		if (plus > 0) { const s2 = P(q), dd = Math.hypot(s2[0] - poolC[0], s2[1] - poolC[1]) / poolR, pool = Math.exp(-dd * dd * 1.2), g2 = 1 + plus * (0.22 + 0.5 * pool);
 			for (let i = 0; i < 3; i++) c[i] = c[i] * g2 + keyC[i] * sp * ao * 0.55 * plus; }
 		if (rimL && rimOn) { const rr = Math.max(0, dot(n, rimL.d)) * Math.pow(1 - Math.abs(dot(n, v)), 1.6) * rimL.k; for (let i = 0; i < 3; i++) c[i] += rimL.c[i] * rr; }
@@ -338,7 +350,13 @@ export const Zun: React.FC<ZunProps> = (p) => {
 		const s = th * 9.4, g = fbm(s * 0.2 + 3, z * 0.2, 11), g2 = fbm(s * 0.35 + 7, z * 0.35, 23), d = fbm(s * 0.18 - 4, z * 0.22, 37);
 		let a = mixc(BR, BR_HI, raised ? 0.55 : 0.12 * zone);
 		if (!raised && zone > 0) a = mixc(a, [52, 46, 36], 0.35);   // the sunk 雷纹 ground is darker
-		if (fresh > 0) { a = mixc(a, raised ? [226, 182, 104] : zone > 0 ? [128, 92, 48] : [178, 132, 70], fresh); if (fresh >= 1 || !VG) return a; }
+		if (fresh > 0) { a = mixc(a, raised ? [226, 182, 104] : zone > 0 ? [128, 92, 48] : [178, 132, 70], fresh); if (fresh >= 1 || !(VG || BRT)) return a; }
+		if (BRT) {   /* bright copper: lighter relief, deeper sunk ground, a gentle tone drift; a dirt hint in the deepest recesses only */
+			let b: RGB = raised ? [240, 152, 94] : zone > 0 ? [190, 94, 52] : [216, 116, 63];
+			b = mixc(b, raised ? [250, 176, 118] : [226, 130, 76], cl((g2 - 0.35) * 0.9) * 0.6);
+			if (!raised && zone > 0) b = mixc(b, [104, 56, 34], 0.3 * patina * sstep(0.45, 0.8, d));
+			if (!raised) b = mixc(b, [222, 122, 66], 0.25 * (1 - patina));
+			return fresh > 0 ? mixc(a, b, 1 - fresh) : b; }
 		if (VG) {   /* green-black metal; verdigris deep teal → teal, jade blooms; the sunk ground nearly all green; broad patches over
 			   everything, more with age; tan earth and a few cuprite-red flecks by patina, heavier toward the foot */
 			const sp = vn(s * 1.7 + 5, z * 1.7, 51), rec = !raised && zone > 0 ? 1 : 0, f0 = 1 - fresh;
@@ -373,7 +391,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			const th = ((j + 0.5) / NT) * 2 * Math.PI;
 			let alb = albedo(th, zMid, inner ? 0 : zoneOf(zMid));
 			let ao = 1;
-			if (inner) { const dz = cl((zMid - ZUN.FLOOR) / (38.8 - ZUN.FLOOR)); ao = lerp(0.3 + 0.55 * (Lt.inside ?? 0), 1, Math.pow(dz, 0.6)); alb = mixc(alb, VG ? [30, 48, 42] : [66, 64, 52], VG ? 0.45 : 0.6); }
+			if (inner) { const dz = cl((zMid - ZUN.FLOOR) / (38.8 - ZUN.FLOOR)); ao = lerp(0.3 + 0.55 * (Lt.inside ?? 0), 1, Math.pow(dz, 0.6)); alb = mixc(alb, BRT ? [124, 56, 30] : VG ? [30, 48, 42] : [66, 64, 52], BRT ? 0.5 : VG ? 0.45 : 0.6); }
 			if (floor) continue;   // the floor is drawn as one item with the inscription
 			const col = rgbS(shade(n, m, alb, inner ? 0.6 : 1, ao, !inner));
 			items.push({z: m ? depth(m) : 0, el: <path key={`q${i}_${j}`} d={`M${f1(pa[0])},${f1(pa[1])}L${f1(pb[0])},${f1(pb[1])}L${f1(pc[0])},${f1(pc[1])}L${f1(pd[0])},${f1(pd[1])}Z`} fill={col} stroke={col} strokeWidth={0.7} strokeLinejoin="round" />}); } }
@@ -437,7 +455,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			let lt = sub(L, [n[0] * dot(L, n), n[1] * dot(L, n), n[2] * dot(L, n)]); const ll = Math.hypot(...lt); lt = ll > 1e-3 ? [lt[0] / ll, lt[1] / ll, lt[2] / ll] : [0, 0, 1];
 			const path = (off: number, hk = 1) => 'M' + run.map((q) => { const w = addv(W(surfM(q[0], q[1], m.h * hk)), lt, off * ps); const pp = P(w); return `${f1(pp[0])},${f1(pp[1])}`; }).join('L') + (m.kind === 'fill' ? 'Z' : '');
 			const alb = albedo(mid[0], mid[1], 1, true), base = shade(n, q0, alb, 1.15);
-			const hi = mixc(base, mixc(keyC, [255, 240, 210], 0.5), 0.42 * (1 - 0.5 * patina) + 0.1), lo = mixc(base, [10, 8, 6], 0.72);
+			const hi = mixc(base, mixc(keyC, [255, 240, 210], 0.5), 0.42 * (1 - 0.5 * patina) + 0.1), lo = mixc(base, BRT ? [80, 32, 14] : [10, 8, 6], BRT ? 0.55 : 0.72);
 			const pxw = Math.max(0.7, m.w * cam.f * ps / Math.max(1, depth(q0)));
 			const D0 = path(0), Dh = path(m.h * 0.42), Dl = path(-m.h * 0.75, 0.2);
 			const fillish = m.kind === 'fill';
@@ -465,7 +483,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 			for (let i = 0; i < ns; i++) for (let j = 0; j < nz; j++) { const th = a0 + ((i + 0.5) / ns) * (a1 - a0), z = z0 + (j + 0.5) * ((z1 - z0) / nz), fl = (i + j) % 2 ? 1 : -1;
 				d += 'M' + LEI.map(([x, y]) => { const q = P(W(surfM(th + (fl * x * 0.62) / rn, z + y * 0.62, 0.02))); return `${f1(q[0])},${f1(q[1])}`; }).join('L'); }
 			const pxw = Math.max(0.55, 0.11 * cam.f * ps / Math.max(1, depth(wM)));
-			items.push({z: depth(wM) - 0.15, el: <path key={`${key}${sct}`} d={d} fill="none" stroke="#0E0B08" strokeOpacity={0.38 * (1 - 0.3 * molten)} strokeWidth={pxw} strokeLinejoin="round" />}); } };
+			items.push({z: depth(wM) - 0.15, el: <path key={`${key}${sct}`} d={d} fill="none" stroke={BRT ? '#5A220E' : '#0E0B08'} strokeOpacity={(BRT ? 0.3 : 0.38) * (1 - 0.3 * molten)} strokeWidth={pxw} strokeLinejoin="round" />}); } };
 	leiZone(11.9, 22.2, 9.4, 'lb'); leiZone(26.3, 35.3, 10.8, 'ln'); leiZone(4.3, 10.0, 9.0, 'lf');
 
 	/* ---------- the horns: curled tubes whose ends stand off the surface ---------- */
@@ -529,7 +547,7 @@ export const Zun: React.FC<ZunProps> = (p) => {
 					edges.push({z: depth(m), el: <path key={`${pi}_${i}`} d={`M${f1(pa[0])},${f1(pa[1])}L${f1(pb[0])},${f1(pb[1])}L${f1(pc[0])},${f1(pc[1])}L${f1(pd[0])},${f1(pd[1])}Z`} fill={col} stroke={col} strokeWidth={0.6} strokeLinejoin="round" />}); }); });
 			edges.sort((a, b) => b.z - a.z);
 			const face = [pl.out, ...pl.holes].map((pg) => 'M' + pg.map((q) => { const pp = P(to3(q, tN)); return `${f1(pp[0])},${f1(pp[1])}`; }).join('L') + 'Z').join('');
-			const faceC = shade(facing > 0 ? sideN : [-sideN[0], -sideN[1], 0], cen, VG ? mixc(albedo(tf + 0.37, cz, 1, false), BR, 0.3) : mixc(mixc(alb, BR, 0.6), [40, 40, 34], 0.3), 0.55);
+			const faceC = shade(facing > 0 ? sideN : [-sideN[0], -sideN[1], 0], cen, BRT ? mixc(alb, BR, 0.3) : VG ? mixc(albedo(tf + 0.37, cz, 1, false), BR, 0.3) : mixc(mixc(alb, BR, 0.6), [40, 40, 34], 0.3), 0.55);
 			const faceOn = Math.abs(dot(sideN, nrm(camD(cen))));
 			const farSide = dot(WN(rad), nrm(camD(cen))) < -0.05;
 			if (rimAmt > 0 && !farSide && faceOn > 0.03) sig.push(<path key={`sf${k}${pl.key}`} d={face} fill="#fff" fillRule="evenodd" />);
