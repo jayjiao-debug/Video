@@ -1,14 +1,14 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Zun, lookAt, ZunLight, V3, Cam, proj, toCam, scr} from './zun55h';
+import {Zun, lookAt, ZunLight, V3, Cam, proj, toCam, scr, Rz, rho} from './zun55h';
 import {sm, pth, f1, rnd, P, Glow, Haze, Vig, Plume, tube, Person} from './kf55h';
 import {Body, Sil, Sk, kneel} from './rig55h';
 import {TitleText, SilZun, LY, LYlow, TBack} from './kfall55h';
-import {Seal} from '../qq50/kit50';
+import {Seal, SERIF} from '../qq50/kit50';
 import {homeCam, rotL} from './home55h';
 import {FilmOv2} from './ov55v2';
-import {card2} from './cards55v2';
-import {cl, seg, ease, eio, lerp, lerpP, BEAT, BT, zunCam, beaks, armFK, poseFK, trackN, track, crSample, Glyphs55, Cowrie, CowrieString, YCam, layerT,
+import {card2, Card2} from './cards55v2';
+import {cl, seg, ease, eio, lerp, lerpP, BEAT, BT, zunCam, beaks, armFK, poseFK, trackN, track, crSample, GLYPH_STROKES, Glyphs55, Cowrie, CowrieString, YCam, layerT,
 	Yard1965, PlatformScale1965, Worker1965, Tag30w, ZREST, DECK1965, worker1965, beam1965, tagSwing1965, ik2} from './act551k';
 /* ep55 何尊 v2 · act 1 (builder 1): the cards 1, 2, T, A, B, C, D, E, F — film 0 → 42.2 s. Act1({t}) renders the full frame. */
 const W = 1920, H = 1080;
@@ -16,14 +16,28 @@ const land = (u: number) => (u <= 0 ? 0 : u >= 1 ? 1 : 1 - Math.exp(-6 * u) * Ma
 const flick = (t: number, s: number) => 0.85 + 0.1 * Math.sin(t * 7.3 + s) + 0.05 * Math.sin(t * 17.1 + s * 2);
 const dimL = (L: ZunLight, k: number): ZunLight => ({...L, k: L.k * k, amb: L.amb * (0.35 + 0.65 * k), spec: L.spec * k, rim: L.rim ? {...L.rim, k: L.rim.k * (0.6 + 0.4 * k)} : undefined});
 const SUN: P = [1000, 560];
+/* ---------- the two switches (owner review, 3A): the transition into A, and the title design ----------
+   TRANS55: 'v6' = the 6 s time rewind (A at 15.03) · 'cut128' = a 3.7 s rewind, a push into the glowing eye, match cut to the
+   altar fire on the bar 12.77 (A starts at 12.77, its own clock shifted by 2.26 s) · 'cut105' = the title slams on the eye macro,
+   hard cut on the bar 10.51 to A (A shifted by 4.52 s), the title stays over A's first bar.
+   TITLE55: 'cur' (the gold title) · 'T1' bronze relief, 中或 → 中国 · 'T2' molten bronze cooling in moulds · 'T3' an ink rubbing.
+   Look55 (a context) lets a composition pin a variant without editing this file. */
+export type Trans55 = 'v6' | 'cut105' | 'cut128';
+export type Title55 = 'cur' | 'T1' | 'T2' | 'T3';
+export const TRANS55: Trans55 = 'v6';
+export const TITLE55: Title55 = 'cur';
+export const Look55 = React.createContext<{trans: Trans55; title: Title55}>({trans: TRANS55, title: TITLE55});
+const aStart = (tr: Trans55) => (tr === 'cut105' ? 10.51 : tr === 'cut128' ? 12.77 : 15.03);
+/** when the title lifts off (start, end) under each transition */
+const titleLift = (tr: Trans55): [number, number] => (tr === 'cut105' ? [12.0, 12.6] : tr === 'cut128' ? [12.77, 13.37] : [12.6, 13.35]);
 
 /* ============================== common bits ============================== */
-const Shell: React.FC<{t: number; id: string; bg: string; vig?: number; children: React.ReactNode; top?: React.ReactNode; hideCounter?: boolean}> = ({t, id, bg, vig = 0.6, children, top, hideCounter}) =>
+const Shell: React.FC<{t: number; id: string; bg: string; vig?: number; children: React.ReactNode; top?: React.ReactNode; hideCounter?: boolean; cOv?: Card2}> = ({t, id, bg, vig = 0.6, children, top, hideCounter, cOv}) =>
 	<AbsoluteFill style={{background: bg}}>
 		<svg width={W} height={H} style={{position: 'absolute'}}>{children}</svg>
 		<svg width={W} height={H} style={{position: 'absolute'}}><Vig id={`v1${id}`} a={vig} /></svg>
 		{top}
-		<FilmOv2 t={t} c={card2(id)} hideCounter={hideCounter} />
+		<FilmOv2 t={t} c={cOv ?? card2(id)} hideCounter={hideCounter} />
 	</AbsoluteFill>;
 /** particles rising (embers, sparks, dust) — each drifts on its own clock */
 const Rising: React.FC<{t: number; n: number; x0: number; x1: number; y0: number; y1: number; c: string; seed: number; v: number; o?: number; r?: number; sway?: number}> = ({t, n, x0, x1, y0, y1, c, seed, v, o = 0.6, r = 2.4, sway = 12}) => <g>
@@ -112,11 +126,14 @@ const junkEl = (j: Junk, q: [number, number, number], k: number, i: number, rimC
 /* the one shot from 5.98 to 15.03 (cards 2 + T): the low dolly to the eye, a macro push, then the pull-back of the rewind.
    u2 eases in at 5.98 and keeps its speed at 9.03, where shotCam's T branch continues with the same velocities. */
 const EYE: V3 = [9.6, 4.6, 14.8];
+/** the 饕餮's eyeball (球状凸目) on the camera's side: arc 5.25 cm from the front flange, z 14.7 (zun55h's EYE) */
+const EYEB: V3 = (() => { const th = 5.25 / 9.4, [r, n] = Rz(14.7), k = r * rho(th, n) + 0.9; return [k * Math.cos(th), k * Math.sin(th), 14.7]; })();
+const toEyeB = (t: number): V3 => { const u = ease(seg(t, 9.03, 9.7)); return [lerp(EYE[0], EYEB[0], u), lerp(EYE[1], EYEB[1], u), lerp(EYE[2], EYEB[2], u)]; };
 const shotZun = (t: number): {az: number; el: number; D: number; k: number; Tg: V3; G: P} => {
 	if (t < 9.03) { const x = seg(t, 5.98, 9.03), u = x * x * (2 - x), D = Math.exp(lerp(Math.log(250), Math.log(70), u)), f = lerp(1750, 2500, u);
 		return {az: lerp(66, 14, u), el: lerp(4, 1.5, u), D, k: f / D, Tg: [lerp(0, EYE[0], u), lerp(0, EYE[1], u), lerp(19, EYE[2], u)], G: [960, 600]}; }
 	const tau = t - 9.03, sA = camA(t).s, w1 = ease(seg(t, 10.8, 12.8)), w2 = ease(seg(t, 11.4, 12.8));
-	const lnk = lerp(Math.log(2500 / 70) + 0.534 * tau - 0.18 * tau * tau, Math.log(3.1 * sA), w2);
+	const lnk = lerp(Math.log(2500 / 70) + 0.534 * tau - 0.2 * tau * tau, Math.log(3.1 * sA), w2);
 	const D = Math.min(700, 70 * Math.exp(-0.417 * tau + 0.25 * tau * tau)), GA: P = [A_O[0], A_O[1] + 30 * sA];
 	return {az: 14 - 17 * tau + 1.4 * tau * tau, el: 1.5 - 0.8 * tau + 0.35 * tau * tau, D, k: Math.exp(lnk), Tg: [lerp(EYE[0], 0, w1), lerp(EYE[1], 0, w1), lerp(EYE[2], 0, w1)], G: [lerp(960, GA[0], w1), lerp(600, GA[1], w1)]}; };
 /** the camera for the 尊 from shotZun: a look-at at (az, el, D) around the target, f = k·D, shifted so the target lands on G */
@@ -153,8 +170,118 @@ const S2: React.FC<{t: number}> = ({t}) => { const a = 5.98, b = 9.03, x2 = seg(
    The title slams over the live shot on drop 1 and holds to 12.6. Behind it time runs backwards: the rust flakes off, the
    bronze turns gold, then molten; the dusk yard melts into the 西周 dawn; the camera pulls back until the molten 尊 sits in
    武王's altar fire and sinks into it. A's set and camera are the same objects, so 15.0 equals A's first frame. */
-const ST: React.FC<{t: number}> = ({t}) => { const a = 9.03, b = 15.03, zs = shotZun(t), cam = zunShotCam(zs), camAA = camA(t);
-	const s = 1 + 0.18 * (1 - land(seg(t, a, a + 0.5))), flash = Math.exp(-(t - a) * 7), lift = ease(seg(t, 12.6, 13.35));
+/** the title layer (slams on drop 1 at 9.03; lift 0..1 lifts it off) in the chosen design */
+const TitleTop: React.FC<{t: number; lift: number; look: Title55; pool?: number}> = ({t, lift, look, pool: poolK = 1}) => { const a = 9.03, s = 1 + 0.18 * (1 - land(seg(t, a, a + 0.5))), flash = t >= a ? Math.exp(-(t - a) * 7) : 0;
+	const pool = <div style={{position: 'absolute', inset: 0, opacity: 0.55 * poolK * (1 - lift) * seg(t, a, a + 0.15), background: 'radial-gradient(ellipse 48% 30% at 50% 60%, rgba(10,6,4,0.75) 0%, rgba(10,6,4,0.4) 55%, rgba(10,6,4,0) 100%)'}} />;
+	if (look !== 'cur') return <>{pool}<div style={{position: 'absolute', inset: 0, opacity: 1 - lift, transform: `translateY(${(-130 * lift).toFixed(1)}px) scale(${(s * (1 + 0.025 * ease(seg(t, a + 0.5, 12.6)))).toFixed(4)})`, transformOrigin: '50% 58%'}}><TitleArt t={t} look={look} /></div></>;
+	return <>{pool}<div style={{position: 'absolute', inset: 0, opacity: 1 - lift, transform: `translateY(${(-130 * lift).toFixed(1)}px) scale(${(s * (1 + 0.025 * ease(seg(t, a + 0.5, 12.6)))).toFixed(4)})`, transformOrigin: '50% 60%', filter: `brightness(${(1 + 0.8 * flash).toFixed(3)})`}}><TitleText /></div></>; };
+/** 'cut128': the camera stays close on the eye while time runs back (rust off → gold → molten), then a fast push into the
+    glowing eye, whose glow lands on A's altar fire (900, 726) for the match cut on 12.77 */
+const shot128 = (t: number) => { const tau = t - 9.03, pu = seg(t, 12.2, 12.77), gU = ease(seg(t, 11.6, 12.77));
+	return {az: 14 - 9 * tau, el: 1.5 + 0.3 * tau, D: 70 * Math.exp(-0.2 * tau + 0.06 * tau * tau), k: Math.exp(Math.log(2500 / 70) + 0.534 * tau - 0.13 * tau * tau + 1.1 * pu * pu), Tg: toEyeB(t), G: [lerp(960, 900, gU), lerp(600, 726, gU)] as P}; };
+const flakesAt = (t: number, t0: number, span: number) => Array.from({length: 140}, (_, i) => { const ts = t0 + rnd(i, 81) * span, v = (t - ts) / 1.3; if (v <= 0 || v >= 1) return null;
+	const x0 = 200 + rnd(i, 82) * 1520, y0 = 160 + rnd(i, 83) * 800, dx = (x0 - 960) * 0.5 + (rnd(i, 84) - 0.5) * 300, x = x0 + dx * v, y = y0 - 160 * v + 420 * v * v, r = 5 + 12 * rnd(i, 85), rot = rnd(i, 86) * 360 + v * 500;
+	return <path key={i} d={pth([[-r, -r * 0.4], [-r * 0.2, -r * 0.7], [r, -r * 0.2], [r * 0.5, r * 0.6], [-r * 0.6, r * 0.5]])} transform={`translate(${f1(x)},${f1(y)}) rotate(${f1(rot)})`} fill={i % 3 ? '#5E7A5A' : '#6E5638'} opacity={0.85 * (1 - v)} />; });
+const yardBehind = (t: number, cam: Cam, dim: number, blur: number) => { const cam0 = camAt(66, 4, 250, [0, 0, 19], 1750, 960, 600), F: V3 = [-3000, -1200, 200], bx = (proj(cam, F)[0] - proj(cam0, F)[0]) * 0.25;
+	return <Blur id="aTyb" s={blur}><g transform="translate(960 600) scale(1.25) translate(-960 -600)"><Yard1965 cam={{x: -bx, y: 40, s: 1}} t={t} dim={dim} id="aTy" /></g></Blur>; };
+const STc128: React.FC<{t: number}> = ({t}) => { const lk = React.useContext(Look55), zs = shot128(t), cam = zunShotCam(zs), pu = seg(t, 12.2, 12.77);
+	const patina = 0.95 * (1 - ease(seg(t, 9.25, 10.4))), fresh = 0.65 * ease(seg(t, 10.0, 11.0)), molten = 0.9 * ease(seg(t, 11.2, 12.3));
+	const L: ZunLight = {...dimL(rotL(LYlow, 30), 0.82), k: 1.45 * (1 - 0.3 * molten), spec: 0.55 + 0.9 * fresh}, eyeO = 0.25 * fresh + 0.75 * molten, gr = 90 + 260 * molten + 700 * pu * pu;
+	return <Shell t={t} id="T" bg="#0E0A08" vig={0.62} top={<TitleTop t={t} lift={0} look={lk.title} />}>
+		<g opacity={1 - 0.6 * molten}>{yardBehind(t, cam, 0.3 + 0.5 * molten, 12 + 10 * pu)}</g>
+		<Zun cam={cam} light={L} id="aTz" patina={patina} fresh={fresh} molten={molten} shadow={false} inscription={false} />
+		<Glow x={zs.G[0]} y={zs.G[1]} r={gr} c="#FFB050" o={0.9 * eyeO} id="aTeg" />
+		<Glow x={zs.G[0]} y={zs.G[1]} r={gr * 0.35} c="#FFF2C8" o={eyeO * (0.5 + 0.5 * pu)} id="aTec" />
+		{pu > 0 && <rect width={W} height={H} fill="#FF9A40" opacity={0.35 * pu * pu} />}
+		{flakesAt(t, 9.25, 1.4)}
+		{molten > 0.05 && <Rising t={t} n={60} x0={300} x1={1600} y0={150} y1={1000} c="#FFC060" seed={91} v={160} o={0.7 * molten} r={2.6} sway={30} />}
+		<Drift t={t} n={80} x0={200} x1={1900} y0={150} y1={1040} c="#FFE2B8" seed={31} o={0.5 * (1 - molten)} r={2.6} vx={50} />
+	</Shell>; };
+/** 'cut105': the title slams on the eye macro; the eye warms to a glow that sits where A's altar fire will be; hard cut on 10.51 */
+const STc105: React.FC<{t: number}> = ({t}) => { const lk = React.useContext(Look55), zs0 = shotZun(t), gU = ease(seg(t, 9.4, 10.51)), zs = {...zs0, Tg: toEyeB(t), G: [lerp(zs0.G[0], 900, gU), lerp(zs0.G[1], 726, gU)] as P}, cam = zunShotCam(zs);
+	const patina = 0.95 - 0.35 * ease(seg(t, 9.3, 10.5)), glowU = ease(seg(t, 9.7, 10.51)), L: ZunLight = dimL(rotL(LYlow, 30), 0.82);
+	return <Shell t={t} id="T" bg="#0E0A08" vig={0.62} top={<TitleTop t={t} lift={0} look={lk.title} />}>
+		{yardBehind(t, cam, 0.3, 12)}
+		<Zun cam={cam} light={L} id="aTz" patina={patina} shadow={false} inscription={false} />
+		<Glow x={zs.G[0]} y={zs.G[1]} r={80 + 240 * glowU} c="#FFB050" o={0.85 * glowU} id="aTeg" />
+		<Glow x={zs.G[0]} y={zs.G[1]} r={30 + 70 * glowU} c="#FFF2C8" o={0.8 * glowU} id="aTec" />
+		{flakesAt(t, 9.3, 1.1)}
+		<Drift t={t} n={80} x0={200} x1={1900} y0={150} y1={1040} c="#FFE2B8" seed={31} o={0.5} r={2.6} vx={50} />
+	</Shell>; };
+/** T1–T3 title art (built below); 'cur' is the old gold TitleText */
+/* ---------- the three title designs (same words, slam on 9.03; the trailing 「，」「？」 hang so each line stays centred) ---------- */
+const TROWS = [['“', '中', '国', '”', '两', '个', '字', '，'], ['最', '早', '出', '现', '在', '哪', '？']];
+const TFS = 148, TADV = 154;
+const tLayout = () => TROWS.flatMap((row, r) => { const n = row.length - 1, x0 = 960 - ((n - 1) * TADV) / 2; return row.map((ch, i) => ({ch, x: x0 + i * TADV, y: 556 + r * 196, r, i, k: r * 10 + i})); });
+const isZG = (ch: string) => ch === '中' || ch === '国';
+const mixHex = (a: string, b: string, u: number) => { const A = rgbOf(a), B = rgbOf(b); return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], cl(u)))).join(',')})`; };
+const TDefs: React.FC = () => <defs>
+	<linearGradient id="tbz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E9B88E" /><stop offset="0.35" stopColor="#C27C4C" /><stop offset="0.62" stopColor="#8E502E" /><stop offset="0.82" stopColor="#A9663F" /><stop offset="1" stopColor="#D49A6C" /></linearGradient>
+	<linearGradient id="tgd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF2C8" /><stop offset="0.4" stopColor="#F2C66E" /><stop offset="0.62" stopColor="#B8823A" /><stop offset="1" stopColor="#F6D488" /></linearGradient>
+	{/* raised relief: the letter's own alpha, blurred, lit by one key from the upper left (diffuse multiplies the metal, specular adds a soft sheen), a drop shadow under it */}
+	<filter id="trel" x="-15%" y="-25%" width="130%" height="150%" colorInterpolationFilters="sRGB">
+		<feGaussianBlur in="SourceAlpha" stdDeviation="2.8" result="b" />
+		<feDiffuseLighting in="b" surfaceScale="4.5" diffuseConstant="1.18" lightingColor="#FFFFFF" result="df"><feDistantLight azimuth="235" elevation="46" /></feDiffuseLighting>
+		<feComposite in="SourceGraphic" in2="df" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="lit" />
+		<feComposite in="lit" in2="SourceAlpha" operator="in" result="liti" />
+		<feSpecularLighting in="b" surfaceScale="4.5" specularConstant="0.95" specularExponent="20" lightingColor="#FFE8CC" result="sp"><feDistantLight azimuth="235" elevation="38" /></feSpecularLighting>
+		<feComposite in="sp" in2="SourceAlpha" operator="in" result="spi" />
+		<feGaussianBlur in="SourceAlpha" stdDeviation="8" result="s0" /><feOffset in="s0" dx="5" dy="9" result="s1" /><feFlood floodColor="#0A0503" floodOpacity="0.9" /><feComposite in2="s1" operator="in" result="sh" />
+		<feMerge><feMergeNode in="sh" /><feMergeNode in="liti" /><feMergeNode in="spi" /></feMerge></filter>
+	<filter id="tglw" x="-30%" y="-40%" width="160%" height="180%"><feGaussianBlur stdDeviation="14" /></filter>
+	{/* the rubbing: uneven ink (displaced edges, speckle) */}
+	<filter id="tink" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G" result="d" />
+		<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3" result="sp" /><feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 1.55" result="spa" />
+		<feComposite in="d" in2="spa" operator="in" /></filter>
+	<filter id="tpaper" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.6 0.05" numOctaves="3" seed="11" result="n" /><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.11  0 0 0 0 0.105  0 0 0 0 0.11  0 0 0 0.55 0" result="f" /><feComposite in="f" in2="SourceAlpha" operator="in" result="fi" /><feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="fi" /></feMerge></filter>
+</defs>;
+const tText = (c: {ch: string; x: number; y: number}, fill: string, extra: React.SVGProps<SVGTextElement> = {}) => <text x={c.x} y={c.y} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={TFS} fill={fill} {...extra}>{c.ch}</text>;
+/** a bronze-script glyph (Glyphs55's strokes) in the 中/国 slot */
+const scriptGlyph = (ch: string, cx: number, cy: number, size: number, stroke: string, key: string) => <g key={key} transform={`translate(${f1(cx)},${f1(cy)}) scale(${size})`}>
+	{(GLYPH_STROKES[ch] ?? []).map((st, j) => <path key={j} d={st.pts.length > 2 ? sm(st.pts, false) : `M${st.pts[0][0]},${st.pts[0][1]} L${st.pts[1][0]},${st.pts[1][1]}`} fill="none" stroke={stroke} strokeWidth={st.w * 1.45} strokeLinecap="round" strokeLinejoin="round" />)}</g>;
+/** T1 · bronze relief letters (the 尊's metal and light); 中国 appears first as the bronze-script 中或 and becomes 中国, then glows gold */
+const T1Art: React.FC<{t: number}> = ({t}) => { const L = tLayout(), mz = ease(seg(t, 9.36, 9.72)), gold = ease(seg(t, 9.6, 10.1)), sweep = seg(t, 9.1, 10.4);
+	return <svg width={W} height={H} style={{position: 'absolute'}}><TDefs />
+		<defs><linearGradient id="tsw" x1="0" y1="0" x2="1" y2="0"><stop offset={Math.max(0, sweep - 0.12).toFixed(3)} stopColor="#FFF" stopOpacity={0} /><stop offset={sweep.toFixed(3)} stopColor="#FFF4E0" stopOpacity={0.55} /><stop offset={Math.min(1, sweep + 0.12).toFixed(3)} stopColor="#FFF" stopOpacity={0} /></linearGradient></defs>
+		<g filter="url(#trel)">{L.filter((c) => !isZG(c.ch)).map((c) => <g key={c.k}>{tText(c, 'url(#tbz)')}</g>)}
+			{L.filter((c) => isZG(c.ch)).map((c) => <g key={`z${c.k}`}>
+				{mz < 1 && <g opacity={1 - mz}>{scriptGlyph(c.ch === '中' ? '中' : '或', c.x, c.y - TFS * 0.36, TFS * (1.02 + 0.1 * mz), 'url(#tbz)', `s${c.k}`)}</g>}
+				{mz > 0 && <g opacity={mz} transform={`translate(${f1(c.x)},${f1(c.y - TFS * 0.36)}) scale(${(0.9 + 0.1 * mz).toFixed(3)}) translate(${f1(-c.x)},${f1(-(c.y - TFS * 0.36))})`}>{tText(c, gold > 0 ? mixHex('#C27C4C', '#F2C66E', gold) : 'url(#tbz)')}</g>}</g>)}</g>
+		{gold > 0 && <g opacity={0.75 * gold} filter="url(#tglw)">{L.filter((c) => isZG(c.ch)).map((c) => <g key={c.k}>{tText(c, '#FFC860')}</g>)}</g>}
+		{gold > 0 && <g opacity={gold}>{L.filter((c) => isZG(c.ch)).map((c) => <g key={c.k}>{tText(c, 'url(#tgd)')}</g>)}</g>}
+		{sweep > 0 && sweep < 1 && <g opacity={0.9}>{L.map((c) => <g key={c.k}>{tText(c, 'url(#tsw)')}</g>)}</g>}
+	</svg>; };
+/** T2 · molten bronze pours into character-shaped moulds on the drop and cools from glowing orange to bronze */
+const T2Art: React.FC<{t: number}> = ({t}) => { const L = tLayout(), order = (c: {r: number; i: number}) => c.r * 8 + c.i;
+	return <svg width={W} height={H} style={{position: 'absolute'}}><TDefs />
+		<defs>{L.map((c) => { const d = order(c) * 0.025, lv = ease(seg(t, 9.03 + d, 9.03 + d + 0.26)), top = c.y + TFS * 0.14 - TFS * 1.12 * lv;
+			return <clipPath key={c.k} id={`tmc${c.k}`}><rect x={c.x - TFS * 0.6} y={top} width={TFS * 1.2} height={TFS * 1.3} /></clipPath>; })}</defs>
+		{/* the moulds: dark clay cavities in the shape of the letters, a lighter clay lip */}
+		<g>{L.map((c) => <g key={c.k}>{tText(c, '#2A160C', {stroke: '#7A5236', strokeWidth: 9, strokeLinejoin: 'round', paintOrder: 'stroke'})}</g>)}</g>
+		{L.map((c) => { const d = order(c) * 0.025, heat = 1 - ease(seg(t, 9.32 + d, 10.15 + d)), hot = heat > 0.5 ? mixHex('#FF8A2A', '#FFF2B8', (heat - 0.5) * 2) : mixHex('#B2683C', '#FF8A2A', heat * 2), gz = isZG(c.ch) ? ease(seg(t, 10.0, 10.5)) : 0;
+			return <g key={c.k} clipPath={`url(#tmc${c.k})`}>
+				{heat > 0.02 && <g opacity={0.85 * heat} filter="url(#tglw)">{tText(c, '#FF9A30')}</g>}
+				<g filter={heat < 0.98 ? 'url(#trel)' : undefined}>{tText(c, gz > 0 ? mixHex(hot.startsWith('rgb') ? '#B2683C' : hot, '#F2C66E', gz) : hot)}</g>
+				{gz > 0 && <g opacity={gz}>{tText(c, 'url(#tgd)')}</g>}</g>; })}
+		{/* steam off the cooling metal */}
+		{L.map((c, i) => { const d = order(c) * 0.025, st = seg(t, 9.4 + d, 10.6 + d); if (st <= 0 || st >= 1 || i % 2) return null;
+			return <Plume key={`st${c.k}`} x={c.x} y={c.y - TFS * 0.7 - 60 * st} h={120} w={60} c="#F2E6DA" o={0.35 * Math.sin(Math.PI * st)} id={`tst${c.k}`} seed={i + t} />; })}
+	</svg>; };
+/** T3 · an ink rubbing (拓片): a black rubbed field on paper, the characters left pale and uneven; 中国 in gold */
+const T3Art: React.FC<{t: number}> = ({t}) => { const L = tLayout(), ink = ease(seg(t, 9.03, 9.42)), gold = ease(seg(t, 9.55, 10.05));
+	const edge = Array.from({length: 40}, (_, i) => { const u = i / 40, side = Math.floor(u * 4), v = (u * 4) % 1, j = (rnd(i, 41) - 0.5) * 22;
+		const x0 = 300, x1 = 1620, y0 = 330, y1 = 830; return (side === 0 ? [lerp(x0, x1, v), y0 + j] : side === 1 ? [x1 + j, lerp(y0, y1, v)] : side === 2 ? [lerp(x1, x0, v), y1 + j] : [x0 + j, lerp(y1, y0, v)]) as P; });
+	return <svg width={W} height={H} style={{position: 'absolute'}}><TDefs />
+		<g opacity={0.35 + 0.65 * ink}><path d={pth(edge)} fill="#E4DCCB" opacity={0.25} transform="translate(-10 -8) scale(1.006)" />
+			<path d={pth(edge)} fill="#17161A" filter="url(#tpaper)" />
+			{Array.from({length: 26}, (_, i) => <ellipse key={i} cx={330 + rnd(i, 51) * 1260} cy={360 + rnd(i, 52) * 440} rx={60 + 90 * rnd(i, 53)} ry={30 + 50 * rnd(i, 54)} fill={i % 3 ? '#0C0B0E' : '#2C2A2E'} opacity={0.35 * ink} />)}</g>
+		<g filter="url(#tink)" opacity={ink}>{L.map((c) => <g key={c.k}>{tText(c, isZG(c.ch) ? mixHex('#E9E2D2', '#F2C66E', gold) : '#E9E2D2')}</g>)}</g>
+		{gold > 0 && <g opacity={0.6 * gold} filter="url(#tglw)">{L.filter((c) => isZG(c.ch)).map((c) => <g key={c.k}>{tText(c, '#FFC860')}</g>)}</g>}
+	</svg>; };
+const TitleArt: React.FC<{t: number; look: Title55}> = ({t, look}) => look === 'T1' ? <T1Art t={t} /> : look === 'T2' ? <T2Art t={t} /> : look === 'T3' ? <T3Art t={t} /> : <TitleText />;
+const ST: React.FC<{t: number}> = ({t}) => { const lk = React.useContext(Look55); if (lk.trans === 'cut128') return <STc128 t={t} />; if (lk.trans === 'cut105') return <STc105 t={t} />; return <STv6 t={t} />; };
+const STv6: React.FC<{t: number}> = ({t}) => { const lk = React.useContext(Look55), a = 9.03, b = 15.03, zs = shotZun(t), cam = zunShotCam(zs), camAA = camA(t);
+	const lift = ease(seg(t, 12.6, 13.35));
 	const patina = 0.95 * (1 - ease(seg(t, 9.35, 10.9))), fresh = 0.65 * ease(seg(t, 10.3, 11.5)), molten = 0.92 * ease(seg(t, 11.3, 12.5));
 	const melt = ease(seg(t, 13.7, 14.8)), yardO = 1 - ease(seg(t, 10.9, 12.5)), farO = ease(seg(t, 10.9, 12.4)), nearO = ease(seg(t, 12.25, 12.75)), focus = ease(seg(t, 12.4, 13.9)), nb = 22 * (1 - focus);
 	const beatPh = ((t - 1.4498) / BEAT + 1000) % 1, rew = seg(t, 9.6, 11.6) * (1 - seg(t, 11.6, 12.2));
@@ -168,8 +295,7 @@ const ST: React.FC<{t: number}> = ({t}) => { const a = 9.03, b = 15.03, zs = sho
 		return <path key={i} d={pth([[-r, -r * 0.4], [-r * 0.2, -r * 0.7], [r, -r * 0.2], [r * 0.5, r * 0.6], [-r * 0.6, r * 0.5]])} transform={`translate(${f1(x)},${f1(y)}) rotate(${f1(rot)})`} fill={i % 3 ? '#5E7A5A' : '#6E5638'} opacity={0.85 * (1 - v)} />; });
 	return <Shell t={t} id="T" bg="#0E0A08" vig={lerp(0.62, 0.5, nearO)}
 		top={<>
-			<div style={{position: 'absolute', inset: 0, opacity: 0.55 * (1 - lift) * seg(t, a, a + 0.15), background: 'radial-gradient(ellipse 48% 30% at 50% 60%, rgba(10,6,4,0.75) 0%, rgba(10,6,4,0.4) 55%, rgba(10,6,4,0) 100%)'}} />
-			<div style={{position: 'absolute', inset: 0, opacity: 1 - lift, transform: `translateY(${(-130 * lift).toFixed(1)}px) scale(${(s * (1 + 0.025 * ease(seg(t, a + 0.5, 12.6)))).toFixed(4)})`, transformOrigin: '50% 60%', filter: `brightness(${(1 + 0.8 * flash).toFixed(3)})`}}><TitleText /></div>
+			<TitleTop t={t} lift={lift} look={lk.title} />
 			<div style={{position: 'absolute', inset: 0, opacity: seg(t, 14.2, 14.8)}}><Seal /></div></>}>
 		<g opacity={farO}><ASet t={t} cam={camAA} part="far" /></g>
 		{yardO > 0.01 && <g opacity={yardO}><Blur id="aTyb" s={12 + 14 * (1 - yardO)}><g transform={`translate(960 600) scale(1.25 ${(1.25 * (1 + 0.35 * (1 - yardO))).toFixed(3)}) translate(-960 -600) translate(0 ${(90 * (1 - yardO)).toFixed(1)})`}>
@@ -224,16 +350,17 @@ const SkyDawn: React.FC<{id: string; warm?: number}> = ({id, warm = 0}) => <><de
 /** A's camera, valid from the rewind (T, ~12 s) through A: a pull-back that eases out (s → 1 at 15.03 and slightly below after),
     then A's crane up to the sun. Zoom origin = the altar fire, so the rewind lands exactly on A's first frame. */
 const A_O: P = [900, 760];
-const camA = (t: number): YCam => { const tp = t - 15.03, cu = seg(t, 15.03, 19.56), cr = cu * cu * (1.5 - 0.5 * cu);
-	return {x: 60 * cu, y: -900 * cr, s: Math.exp(-0.012 * tp + (tp < 0 ? 0.147 * tp * tp : 0))}; };
+const A_PB = 14.45, A_CR = 13.7;
+const camA = (t: number): YCam => { const tp = t - 15.03, cu = seg(t, A_CR, 19.56), cr = cu * cu * (1.5 - 0.5 * cu), pb = Math.max(0, A_PB - t);
+	return {x: 60 * cu, y: -900 * cr, s: Math.exp(-0.012 * tp + 0.2248 * pb * pb)}; };
 const lA = (cam: YCam, p: number) => layerT(cam, p, A_O[0], A_O[1]);
 /** A's set in parts, so the rewind (T) can slot the molten 尊 between them: far (sky, sun, hills), back (army, ridge, altar,
     smoke), front (fire, 武王, embers), fg (out-of-focus foreground) */
 const ASet: React.FC<{t: number; cam: YCam; part: 'far' | 'back' | 'front' | 'fg'}> = ({t, cam, part}) => {
-	const raise = eio(seg(t, 15.08, BT(26) + 0.1)), sway = Math.sin((t - 16.7) * 2.2) * 2 * seg(t, 16.7, 17.5);
+	const raise = eio(seg(t, 13.85, BT(26) + 0.1)), sway = Math.sin((t - 16.7) * 2.2) * 2 * seg(t, 16.7, 17.5);
 	const upN = lerp(62, 158, raise) + sway, upF = lerp(58, 150, raise) + sway * 0.8, bendN = lerp(78, 14, raise), bendF = lerp(82, 18, raise);
-	const tilt = lerp(6, -26, ease(seg(t, BT(24.5), BT(26.5)))), flare = Math.exp(-Math.max(0, t - BT(26)) * 3) * seg(t, BT(26) - 0.1, BT(26));
-	const sunY = SUN[1] - 40 * seg(t, 15.03, 19.56);
+	const tilt = lerp(6, -26, eio(seg(t, BT(23), BT(26.5)))), flare = Math.exp(-Math.max(0, t - BT(26)) * 3) * seg(t, BT(26) - 0.1, BT(26)) + 0.7 * Math.exp(-Math.max(0, t - 15.03) * 3.5) * seg(t, 14.6, 15.03);
+	const sunY = SUN[1] - 40 * seg(t, A_CR, 19.56);
 	if (part === 'far') return <>
 		<g transform={lA(cam, 0.06)}><SkyDawn id="aA" />
 			<Glow x={SUN[0]} y={sunY} r={1000} c="#FFC878" o={0.75} id="aAsg" sy={0.75} />
@@ -270,8 +397,9 @@ const ASet: React.FC<{t: number; cam: YCam; part: 'far' | 'back' | 'front' | 'fg
 		<path d={sm([[-500, 1300], [100, 1010], [380, 1040], [620, 1300]])} fill="#0A0706" />
 		<path d={sm([[1400, 1300], [1700, 1020], [2000, 1000], [2400, 1300]])} fill="#0A0706" />
 		<path d="M1620,1300 L1700,560" stroke="#0A0706" strokeWidth={10} /><path d="M1690,600 L1730,592 L1700,580 Z" fill="#0A0706" /></Blur></g>; };
-const SA: React.FC<{t: number}> = ({t}) => { const cam = camA(t);
-	return <Shell t={t} id="A" bg="#14141E" vig={0.5}>
+const SA: React.FC<{t: number}> = ({t: tf}) => { const lk = React.useContext(Look55), as = aStart(lk.trans), t = tf + (15.03 - as), cam = camA(t), [l0, l1] = titleLift(lk.trans);
+	const hold = Math.max(0, l1 - as), lift = ease(seg(tf, l0, l1));
+	return <Shell t={t} id="A" bg="#14141E" vig={0.5} cOv={{...card2('A'), t: 15.03 + hold}} top={lift < 1 && tf < l1 ? <TitleTop t={tf} lift={lift} look={lk.title} pool={0.45} /> : undefined}>
 		<ASet t={t} cam={cam} part="far" /><ASet t={t} cam={cam} part="back" /><ASet t={t} cam={cam} part="front" /><ASet t={t} cam={cam} part="fg" />
 	</Shell>; };
 
@@ -719,7 +847,8 @@ const SF: React.FC<{t: number}> = ({t}) => { const a = 37.68, rotA = lerp(-9, 9,
 const SCENES: {id: string; t: number; C: React.FC<{t: number}>}[] = [
 	{id: '1', t: 0, C: S1}, {id: '2', t: 5.98, C: S2}, {id: 'T', t: 9.03, C: ST}, {id: 'A', t: 15.03, C: SA}, {id: 'B', t: 19.56, C: SB},
 	{id: 'C', t: 24.09, C: SC}, {id: 'D', t: 28.62, C: SD}, {id: 'E', t: 33.15, C: SE}, {id: 'F', t: 37.68, C: SF}];
-export const Act1: React.FC<{t: number}> = ({t}) => { const s = [...SCENES].reverse().find((k) => t >= k.t - 1e-6) ?? SCENES[0];
+export const Act1: React.FC<{t: number}> = ({t}) => { const lk = React.useContext(Look55), as = aStart(lk.trans);
+	const sc = SCENES.map((k) => (k.id === 'A' ? {...k, t: as} : k)), s = [...sc].reverse().find((k) => t >= k.t - 1e-6) ?? sc[0];
 	if (t >= 42.2 - 1e-6) return <AbsoluteFill style={{background: '#000'}} />;
 	return <s.C t={t} />; };
 void tube; void lerpP; void trackN; void Cowrie; void poseFK;
