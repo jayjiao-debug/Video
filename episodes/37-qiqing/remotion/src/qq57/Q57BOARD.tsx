@@ -100,11 +100,8 @@ const fus = (x: number): [number, number] => {                                  
 	if (x < XT0) { const s = cl((XT0 - x) / (XT0 - XEND)); return [R0 * (1 - .8 * Math.pow(s, 1.25)), ZC + 1.05 * Math.pow(s, 1.6)]; }
 	return [R0, ZC]; };
 const SP = (x: number, th: number, out = 0): V3 => { const [r, zc] = fus(x); return [x, (r + out) * Math.cos(th), zc + (r + out) * Math.sin(th)]; };
-const fusN = (x: number, th: number): V3 => { const e = .01, [r1, z1] = fus(x + e), [r0, z0] = fus(x - e), dr = (r1 - r0) / (2 * e), dz = (z1 - z0) / (2 * e);
-	return norm([-Math.sin(th) * dz - dr, Math.cos(th), Math.sin(th)]); };
 const onSkin = (x: number, z: number, out = 0): V3 => { const [r, zc] = fus(x), rr = r + out, dz = z - zc; return [x, Math.sqrt(Math.max(0, rr * rr - dz * dz)), z]; };
 const STA: number[] = [...Array.from({length: 17}, (_, i) => -LN * Math.pow(i / 16, 1.7)), XT0, ...Array.from({length: 10}, (_, i) => XT0 + (XEND - XT0) * (i + 1) / 10)];
-const NA = 72, THS = Array.from({length: NA + 1}, (_, j) => -Math.PI / 2 + 2 * Math.PI * j / NA);
 const P_WHITE: Pal = ['#F7E2C4', '#C9CBDC', '#B0B3C8'], P_BELLY: Pal = ['#E0CAB0', '#A9ACC0', '#9195AC'], P_TEAL: Pal = ['#86AFAA', '#3F6E7E', '#335D6C'];
 /* rounded rectangle in (x, z) on the skin */
 const rrect = (x0: number, x1: number, z0: number, z1: number, r: number, n = 5): [number, number][] => { const o: [number, number][] = [];
@@ -112,18 +109,42 @@ const rrect = (x0: number, x1: number, z0: number, z1: number, r: number, n = 5)
 	for (const [cx, cz, a0] of c) for (let i = 0; i <= n; i++) { const a = a0 + Math.PI / 2 * i / n; o.push([cx + r * Math.cos(a), cz + r * Math.sin(a)]); }
 	return o; };
 const DOOR = rrect(XD - DW / 2, XD + DW / 2, SILL, DTOP, DR);
-const FusMesh: React.FC<{cam: Cam}> = ({cam}) => {
-	const fills: React.ReactNode[] = [], sil: React.ReactNode[] = [];
-	for (let i = 0; i < STA.length - 1; i++) { const xa = STA[i], xb = STA[i + 1], xm = (xa + xb) / 2;
-		const vis: boolean[] = [], col: string[] = [];
-		for (let j = 0; j < NA; j++) { const th = (THS[j] + THS[j + 1]) / 2, n = fusN(xm, th), P = SP(xm, th);
-			vis.push(cam.sees(P, n)); col.push(tone(n, th < rad(-50) || th > rad(230) ? P_BELLY : P_WHITE)); }
-		let s0 = 0; while (vis[(s0 + NA - 1) % NA] && s0 < NA) s0++;
-		let j = 0; while (j < NA) { const a = (s0 + j) % NA; if (!vis[a]) { j++; continue; } let e = j; while (e + 1 < NA && vis[(s0 + e + 1) % NA] && col[(s0 + e + 1) % NA] === col[a]) e++;
-			const P: V3[] = []; for (let k = j; k <= e + 1; k++) P.push(SP(xa, THS[(s0 + k) % NA])); for (let k = e + 1; k >= j; k--) P.push(SP(xb, THS[(s0 + k) % NA]));
-			fills.push(<Poly key={`${i}_${j}`} cam={cam} P={P} fill={col[a]} stroke={col[a]} sw={1.2} />); j = e + 1; }
-		for (let k = 0; k < NA; k++) if (vis[k] !== vis[(k + NA - 1) % NA]) sil.push(<Line key={`s${i}_${k}`} cam={cam} P={[SP(xa, THS[k]), SP(xb, THS[k])]} sw={2.8} />); }
-	return <g>{fills}<g>{sil}</g></g>; };
+/* a surface of revolution about an axis parallel to x, drawn as flat toon bands with exact (sub-sample) boundaries per station:
+   for each ring, the visible arc (between the two silhouette angles) and the angles where the tone changes; bands are joined
+   station to station, so the band edges and the outline are smooth curves, not facets. prof(x) = [radius, axis y, axis z]. */
+type Prof = (x: number) => [number, number, number];
+const revP = (pf: Prof, x: number, th: number): V3 => { const [r, cy, cz] = pf(x); return [x, cy + r * Math.cos(th), cz + r * Math.sin(th)]; };
+const revN = (pf: Prof, x: number, th: number): V3 => { const e = .01, a = pf(x + e), b = pf(x - e), dr = (a[0] - b[0]) / (2 * e), dy = (a[1] - b[1]) / (2 * e), dz = (a[2] - b[2]) / (2 * e);
+	return norm([-Math.sin(th) * dz - Math.cos(th) * dy - dr, Math.cos(th), Math.sin(th)]); };
+const Rev: React.FC<{cam: Cam; pf: Prof; st: number[]; band: (n: V3, th: number) => number; cols: string[]; sw?: number; endArc?: boolean}> = ({cam, pf, st, band, cols, sw = 2.8, endArc = true}) => {
+	const nb = cols.length, B: number[][] = [];
+	const g = (x: number, th: number) => dot(revN(pf, x, th), sub(cam.C, revP(pf, x, th)));
+	const bis = (lo: number, hi: number, inLo: (th: number) => boolean) => { for (let i = 0; i < 12; i++) { const m = (lo + hi) / 2; if (inLo(m)) lo = m; else hi = m; } return (lo + hi) / 2; };
+	for (const x of st) { const [r, cy, cz] = pf(x), thc = Math.atan2(cam.C[2] - cz, cam.C[1] - cy);
+		if (r < 1e-3) { B.push(Array(nb + 1).fill(thc)); continue; }
+		let top = thc + Math.PI, bot = thc - Math.PI;
+		for (let d = rad(3); d <= Math.PI; d += rad(3)) if (g(x, thc + d) <= 0) { top = bis(thc + d - rad(3), thc + d, (th) => g(x, th) > 0); break; }
+		for (let d = rad(3); d <= Math.PI; d += rad(3)) if (g(x, thc - d) <= 0) { bot = bis(thc - d, thc - d + rad(3), (th) => g(x, th) <= 0); break; }
+		const idx = (th: number) => band(revN(pf, x, th), th), row = [bot];
+		for (let i = 1; i < nb; i++) { const S = 48; let v = top;
+			for (let j = 0; j <= S; j++) { const th = lerp(bot, top, j / S); if (idx(th) >= i) { v = j === 0 ? bot : bis(lerp(bot, top, (j - 1) / S), th, (q) => idx(q) < i); break; } }
+			row.push(Math.max(v, row[row.length - 1])); }
+		row.push(top); B.push(row); }
+	const arc = (x: number, a: number, b: number, n = 10) => Array.from({length: n + 1}, (_, i) => revP(pf, x, lerp(a, b, i / n)));
+	const N = st.length, o: React.ReactNode[] = [];
+	for (let i = 0; i < nb; i++) { if (B.every((row) => row[i + 1] - row[i] < 1e-4)) continue;
+		const P: V3[] = [...st.map((x, s) => revP(pf, x, B[s][i])), ...arc(st[N - 1], B[N - 1][i], B[N - 1][i + 1]), ...st.slice().reverse().map((x, s) => revP(pf, x, B[N - 1 - s][i + 1])), ...arc(st[0], B[0][i + 1], B[0][i])];
+		o.push(<Poly key={`b${i}`} cam={cam} P={P} fill={cols[i]} stroke={cols[i]} sw={1} />); }
+	o.push(<Line key="top" cam={cam} P={st.map((x, s) => revP(pf, x, B[s][nb]))} sw={sw} />, <Line key="bot" cam={cam} P={st.map((x, s) => revP(pf, x, B[s][0]))} sw={sw} />);
+	if (endArc) o.push(<Line key="end" cam={cam} P={arc(st[N - 1], B[N - 1][0], B[N - 1][nb], 24)} sw={sw * .8} />);
+	return <g>{o}</g>; };
+const FUS_PF: Prof = (x) => { const [r, zc] = fus(x); return [r, 0, zc]; };
+const FUS_ST = [...Array.from({length: 21}, (_, i) => -LN * Math.pow(i / 20, 1.8)), ...Array.from({length: 21}, (_, i) => lerp(-LN, XT0, (i + 1) / 21)), ...Array.from({length: 12}, (_, i) => XT0 + (XEND - XT0) * (i + 1) / 12)];
+const fusBand = (n: V3, th: number) => { const a = Math.atan2(Math.sin(th), Math.cos(th)), belly = a < rad(-50) && a > rad(-130);
+	return dot(n, SUN) > .03 ? 3 : n[2] < -.42 ? (belly ? 0 : 1) : 2; };
+const FAIR_ST = Array.from({length: 16}, (_, i) => lerp(-10.2, -21.8, i / 15));
+const Fairing: React.FC<{cam: Cam}> = ({cam}) => <Rev cam={cam} pf={(x) => [1.15 * Math.pow(Math.max(0, Math.sin(Math.PI * cl((-10.2 - x) / 11.6))), .45), 0, 2.62]} st={FAIR_ST} band={fusBand} cols={[P_BELLY[2], P_WHITE[2], P_WHITE[1], P_WHITE[0]]} sw={2.4} endArc={false} />;
+const FusMesh: React.FC<{cam: Cam}> = ({cam}) => <Rev cam={cam} pf={FUS_PF} st={FUS_ST} band={fusBand} cols={[P_BELLY[2], P_WHITE[2], P_WHITE[1], P_WHITE[0]]} />;
 /* a patch on the skin given by (x, θ) corners, bilinear, sampled so it follows the curve */
 const skinQuad = (c: [number, number][], out = .005, n = 6): V3[] => { const o: V3[] = [];
 	for (let e = 0; e < 4; e++) { const [xa, ta] = c[e], [xb, tb] = c[(e + 1) % 4]; for (let i = 0; i < n; i++) { const u = i / n; o.push(SP(lerp(xa, xb, u), lerp(ta, tb, u), out)); } }
@@ -173,10 +194,10 @@ const Doorway: React.FC<{cam: Cam; children?: React.ReactNode}> = ({cam, childre
 	return <g>{o}{children}</g>; };
 /* the plug door: on the curved skin; when open it hangs forward of the opening, parallel to the fuselage, on its arm.
    s = 0 open … 1 shut: it swings out and back along an arc (staying parallel), then plugs into the frame. */
-const doorOff = (s: number): [number, number] => { const ph = Math.PI * cl(s), D = DW + .1; return [D * (1 + Math.cos(ph)) / 2, .22 * (1 + Math.cos(ph)) / 2 + .42 * Math.sin(ph)]; };
+const doorOff = (s: number): [number, number, number] => { const ph = Math.PI * cl(s), D = DW + .1; return [D * (1 + Math.cos(ph)) / 2, .22 * (1 + Math.cos(ph)) / 2 + .42 * Math.sin(ph), .06 * Math.sin(Math.min(Math.PI, ph * 1.3))]; };
 const DoorPanel: React.FC<{cam: Cam; s: number}> = ({cam, s}) => {
-	const [dx, dy] = doorOff(s), sh = rrect(XD - DW / 2 + .012, XD + DW / 2 - .012, SILL + .012, DTOP - .012, DR - .01);
-	const at = (x: number, z: number, out = 0): V3 => { const q = onSkin(x, z, out); return [q[0] + dx, q[1] + dy, q[2]]; };
+	const [dx, dy, dz] = doorOff(s), sh = rrect(XD - DW / 2 + .012, XD + DW / 2 - .012, SILL + .012, DTOP - .012, DR - .01);
+	const at = (x: number, z: number, out = 0): V3 => { const q = onSkin(x, z, out); return [q[0] + dx, q[1] + dy, q[2] + dz]; };
 	const face = sh.map(([x, z]) => at(x, z, .004)), o: React.ReactNode[] = [];
 	// the arm from the forward jamb to the door
 	const hz = 4.25, hinge = onSkin(XD + DW / 2 - .04, hz, -.08), att = at(XD + DW / 2 - .18, hz, -.1);
@@ -200,26 +221,25 @@ const Wing: React.FC<{cam: Cam; sgn: number}> = ({cam, sgn}) => {
 	const top = cam.C[2] > wz(5) + .1;
 	o.push(<Poly key="s" cam={cam} P={top ? T : B} fill={top ? '#E8D3B6' : '#A2A6BC'} sw={2.4} />);
 	o.push(<Poly key="le" cam={cam} P={[T[0], T[1], B[1], B[0]]} fill="#B7BACB" sw={2.2} />);
-	if (top) for (let i = 1; i < 4; i++) { const u = i / 4, a = lerp3(T[4], T[3], 1), y = lerp(1.75, 16.9, u * .95);
-		const xl = lerp(-11.6, -19.0, (y - 1.75) / 15.15), xt = y < 6.4 ? lerp(-17.7, -17.85, (y - 1.75) / 4.65) : lerp(-17.85, -20.4, (y - 6.4) / 10.5); void a;
-		o.push(<Line key={`f${i}`} cam={cam} P={[[lerp(xl, xt, .72), sgn * y, wz(y) + wt(y) * .3], [lerp(xl, xt, .72), sgn * (y + 3.2), wz(y + 3.2) + wt(y + 3.2) * .3]]} stroke="#BDA98E" sw={1.6} />); }
+	if (top) { const xl = (y: number) => lerp(-11.6, -19.0, (y - 1.75) / 15.15), xt = (y: number) => y < 6.4 ? lerp(-17.7, -17.85, (y - 1.75) / 4.65) : lerp(-17.85, -20.4, (y - 6.4) / 10.5);
+		const at = (y: number, c: number): V3 => [lerp(xl(y), xt(y), c), sgn * y, wz(y) + wt(y) * .5 + .005], YS = [1.75, 6.4, 16.9];
+		const band = (c0: number, c1: number): V3[] => [...YS.map((y) => at(y, c0)), ...YS.slice().reverse().map((y) => at(y, c1))];
+		o.push(<Poly key="slat" cam={cam} P={band(0, .13)} fill="#F4E4CC" sw={1.4} />, <Poly key="flap" cam={cam} P={band(.74, 1)} fill="#D6BD9D" sw={1.4} />);
+		[.35, .62].forEach((y0, i) => { const y = lerp(6.4, 16.9, y0); o.push(<Line key={`fp${i}`} cam={cam} P={[at(y, .74), at(y, 1)]} sw={1.4} />); });
+		o.push(<Poly key="fence" cam={cam} P={[at(6.4, .74), at(6.4, 1.0), at(9.5, 1.0), at(9.5, .74)]} fill="#CDB394" sw={1.4} />); }
 	const zt = wz(16.9);
 	o.push(<Poly key="sk" cam={cam} P={[[-19.0, sgn * 16.9, zt], [-20.4, sgn * 16.9, zt], [-21.5, sgn * 17.2, zt + 2.3], [-20.9, sgn * 17.2, zt + 2.45]]} fill={P_TEAL[1]} sw={2.2} />);
 	return <g>{o}</g>; };
 /* engine nacelle on its pylon: a surface of revolution about its own axis, the inlet lip, fan and spinner swirl */
 const EX0 = -9.3, EZ = 1.72;
 const NAC: [number, number][] = [[-9.3, .96], [-9.55, 1.05], [-10.4, 1.08], [-11.8, 1.02], [-12.9, .86], [-13.5, .7]];
+const rE = (x: number) => { const u = cl((EX0 - x) / (EX0 + 13.5)); return u < .3 ? 1.08 - .11 * Math.pow(1 - u / .3, 2) : 1.08 - .38 * Math.pow((u - .3) / .7, 1.8); };
 const Engine: React.FC<{cam: Cam; sgn: number}> = ({cam, sgn}) => {
 	const EY = 5.75 * sgn, n = 40, ring = (x: number, r: number) => Array.from({length: n + 1}, (_, j) => { const a = -Math.PI / 2 + 2 * Math.PI * j / n; return [x, EY + r * Math.cos(a), EZ + r * Math.sin(a)] as V3; });
-	const o: React.ReactNode[] = [], sil: React.ReactNode[] = [];
+	const o: React.ReactNode[] = [];
 	const zw = wz(5.75) - wt(5.75) * .3;
 	o.push(<Poly key="py" cam={cam} P={[[-10.2, EY + .16 * sgn, EZ + 1.0], [-13.9, EY + .16 * sgn, EZ + .82], [-15.9, EY + .16 * sgn, zw], [-13.3, EY + .16 * sgn, zw]]} fill="#B4B7C8" sw={2.2} />);
-	for (let i = 0; i < NAC.length - 1; i++) { const [xa, ra] = NAC[i], [xb, rb] = NAC[i + 1], A = ring(xa, ra), B = ring(xb, rb), vis: boolean[] = [], col: string[] = [];
-		for (let j = 0; j < n; j++) { const a = -Math.PI / 2 + 2 * Math.PI * (j + .5) / n, nn = norm([(ra - rb) / (xa - xb) * -1, Math.cos(a), Math.sin(a)]), P = [(xa + xb) / 2, EY + (ra + rb) / 2 * Math.cos(a), EZ + (ra + rb) / 2 * Math.sin(a)] as V3;
-			vis.push(cam.sees(P, nn)); col.push(tone(nn, P_WHITE)); }
-		for (let j = 0; j < n; j++) if (vis[j]) o.push(<Poly key={`n${i}_${j}`} cam={cam} P={[A[j], A[j + 1], B[j + 1], B[j]]} fill={col[j]} stroke={col[j]} sw={1} />);
-		for (let j = 0; j < n; j++) if (vis[j] !== vis[(j + n - 1) % n]) sil.push(<Line key={`l${i}_${j}`} cam={cam} P={[A[j], B[j]]} sw={2.4} />); }
-	o.push(...sil);
+	o.push(<Rev key="nac" cam={cam} pf={(x) => [rE(x), EY, EZ]} st={Array.from({length: 18}, (_, i) => lerp(EX0, -13.5, i / 17))} band={(nn) => dot(nn, SUN) > .03 ? 2 : nn[2] < -.42 ? 0 : 1} cols={[P_WHITE[2], P_WHITE[1], P_WHITE[0]]} sw={2.4} />);
 	if (cam.sees([EX0, EY, EZ], [1, 0, 0])) { const face = (r: number, dx = 0) => ring(EX0 - dx, r).slice(0, n);
 		o.push(<Poly key="lip" cam={cam} P={face(.96)} fill="#D3D5E0" sw={2.4} />);
 		o.push(<Poly key="fan" cam={cam} P={face(.8, .25)} fill="#2C2E3B" sw={2} />);
@@ -262,6 +282,7 @@ const StairsTruck: React.FC<{cam: Cam; rider?: React.ReactNode}> = ({cam, rider}
 	const wheels = (s: number) => [2.95, 6.15].map((y) => <Wheel key={`wh${s}${y}`} cam={cam} c={[XS + s * .86, y, .42]} ax={[1, 0, 0]} r={.42} w={.26} />);
 	o.push(<g key="fw">{wheels(-nearX)}</g>);
 	o.push(<Box key="ch" cam={cam} a={[XS - .95, 2.3, .42]} b={[XS + .95, 6.95, DECK]} pal={P_DARK} />);
+	for (const sx of [-1, 1]) o.push(<Rod key={`sh${sx}`} cam={cam} P={[[XS + sx * .56, 6.97, .44], [XS + sx * .56, 7.12, .3]]} c="#55586A" w={4} />);
 	o.push(<Box key="st" cam={cam} a={[XS - .62, 6.95, .27]} b={[XS + .62, 7.22, .34]} pal={P_DARK} sw={1.8} />);
 	o.push(<Box key="cab" cam={cam} a={[XS - .95, 2.25, DECK]} b={[XS + .95, 3.85, 2.35]} pal={P_BODY} />);
 	const cx = XS + nearX * .952;
@@ -320,6 +341,24 @@ const Crew: React.FC<{cam: Cam; P: V3; pose?: 'stand' | 'up' | 'lift' | 'wand'; 
 		<ellipse cx={X(-.12)} cy={Y(1.58)} rx={.04 * k} ry={.06 * k} fill="#E0463A" stroke={INK} strokeWidth={sw * .7} />
 		<ellipse cx={X(.12)} cy={Y(1.58)} rx={.04 * k} ry={.06 * k} fill="#E0463A" stroke={INK} strokeWidth={sw * .7} />
 	</g>; };
+/* a baggage train (tug + two carts with canopies) driving forward under the wing; rigid, gliding */
+const Cart: React.FC<{cam: Cam; x: number; y: number; bags: string[]}> = ({cam, x, y, bags}) => { const o: React.ReactNode[] = [];
+	o.push(<Box key="b" cam={cam} a={[x - 2.3, y - .68, .3]} b={[x, y + .68, .46]} pal={P_DARK} sw={1.8} />);
+	bags.forEach((c, i) => o.push(<Box key={`g${i}`} cam={cam} a={[x - 2.15 + i * .72, y - .5, .46]} b={[x - 1.6 + i * .72, y + .45, .46 + [.62, .5, .7][i % 3]]} pal={[c, c, c]} sw={1.6} />));
+	for (const [px, py] of [[x - 2.25, y - .64], [x - .05, y - .64], [x - 2.25, y + .64], [x - .05, y + .64]]) o.push(<Rod key={`p${px}${py}`} cam={cam} P={[[px, py, .46], [px, py, 1.72]]} c="#9EA1B2" w={2.6} />);
+	o.push(<Box key="r" cam={cam} a={[x - 2.35, y - .72, 1.72]} b={[x + .05, y + .72, 1.8]} pal={['#3E6E7E', '#2F5866', '#264A56']} sw={1.6} />);
+	o.push(<Rod key="tb" cam={cam} P={[[x, y, .36], [x + .55, y, .36]]} c="#55586A" w={3} />);
+	[x - 1.9, x - .4].forEach((wx, i) => o.push(<Wheel key={`w${i}`} cam={cam} c={[wx, y + .62, .2]} ax={[0, 1, 0]} r={.2} w={.14} />));
+	return <g>{o}</g>; };
+const trainX = (t: number) => -20.5 + 2.6 * t;
+const BagTrain: React.FC<{cam: Cam; t: number}> = ({cam, t}) => { const x = trainX(t), y = 9.0, d = cam.p([x - 1.25, y, 1.25]), k = cam.k([x - 1.25, y, 1.25]);
+	return <g><Cart cam={cam} x={x - 5.9} y={y} bags={['#7A5B9A', '#C2493F', '#4E78A8']} /><Cart cam={cam} x={x - 2.9} y={y} bags={['#E0A33A', '#5D8A5E', '#C2493F']} />
+		<Box cam={cam} a={[x - 2.3, y - .62, .26]} b={[x, y + .62, .92]} pal={P_TUG} />
+		<g><rect x={d[0] - .2 * k} y={d[1] - .05 * k} width={.4 * k} height={.42 * k} rx={.06 * k} fill="#F2902E" stroke={INK} strokeWidth={1.4} />
+			<circle cx={d[0]} cy={d[1] - .2 * k} r={.13 * k} fill="#C9977A" stroke={INK} strokeWidth={1.4} /></g>
+		{[[x - 2.25, y - .6], [x - .65, y - .6], [x - 2.25, y + .6], [x - .65, y + .6]].map(([px, py], i) => <Rod key={i} cam={cam} P={[[px, py, .92], [px, py, 1.85]]} c="#9EA1B2" w={2.6} />)}
+		<Box cam={cam} a={[x - 2.35, y - .68, 1.85]} b={[x - .55, y + .68, 1.93]} pal={P_TUG} sw={1.6} />
+		{[x - 1.8, x - .45].map((wx, i) => <Wheel key={`tw${i}`} cam={cam} c={[wx, y + .6, .28]} ax={[0, 1, 0]} r={.28} w={.2} />)}</g>; };
 /* the flight attendant inside the door (faceless): bows on the arrival beat, then shows the way aft */
 const Attendant: React.FC<{cam: Cam; P: V3; bow: number; show: number}> = ({cam, P, bow, show}) => {
 	const [bx, by] = cam.p(P), k = cam.k(P), sw = 2, rot = -bow * 13;
@@ -361,7 +400,7 @@ const YouFig: React.FC<{cam: Cam; s: YouState; fill?: string}> = ({cam, s, fill 
 	const armJ = (side: number, a: Arm): [V2, V2, V2] => { const S = add(add(nk3, sc3(r, side * .3 * UM)), sc3(up, -.14 * tl));
 		let d1: V3, d2: V3;
 		if ('raise' in a) { const e = rad(lerp(-70, 38, a.raise)); d1 = norm(add(add(sc3(up, Math.sin(e)), sc3(r, side * Math.cos(e))), sc3(f, .25)));
-			const w = rad(a.wv), e2 = rad(lerp(-80, 90, a.raise)); d2 = norm(add(add(sc3(up, Math.sin(e2) * Math.cos(w)), sc3(r, side * (Math.cos(e2) + Math.sin(w) * .9))), sc3(f, .2))); }
+			const w = rad(a.wv), e2 = rad(lerp(-80, 90, sm(a.raise * 1.4)));   /* the forearm comes up ahead of the upper arm */ d2 = norm(add(add(sc3(up, Math.sin(e2) * Math.cos(w)), sc3(r, side * (Math.cos(e2) + Math.sin(w) * .9))), sc3(f, .2))); }
 		else { const sw = rad(a.sw), ab = rad(a.ab), el = rad(a.el), ab2 = rad(a.ab2);
 			d1 = norm(add(add(sc3(up, -Math.cos(ab) * Math.cos(sw)), sc3(f, Math.cos(ab) * Math.sin(sw))), sc3(r, side * Math.sin(ab))));
 			d2 = norm(add(add(sc3(up, -Math.cos(ab2) * Math.cos(sw + el)), sc3(f, Math.cos(ab2) * Math.sin(sw + el))), sc3(r, side * Math.sin(ab2)))); }
@@ -388,17 +427,18 @@ const YouFig: React.FC<{cam: Cam; s: YouState; fill?: string}> = ({cam, s, fill 
 		+ `Q${f2(hc[0])},${f2(hc[1] + tl2 * .2)} ${f2(hc[0] - wh * .6)},${f2(hc[1] + tl2 * .13)} C${f2(hc[0] - wh * 1.15)},${f2(hc[1] + tl2 * .02)} ${f2(nk[0] - ww * 1.05)},${f2(nk[1] + tl2 * .5)} ${f2(nk[0] - wc)},${f2(nk[1] + tl2 * .08)} Z`;
 	o.push(<path key="body" d={body} fill={fill} />);
 	if (!packFront) o.push(pack);
-	// head (+ the face, placed on the head's front in 3D so it turns with the head; hidden from behind)
+	// head (+ the face, placed on the head's front in 3D so it turns with the head; hidden from behind). feat(a, b): you_figure.py's
+	// face offsets in units of hr, a = across (screen-left when facing us), b = DOWN from the head centre (eyes .05, mouth .3–.45)
 	const hr = u * .28, hrm = UM * .28, feat = (a: number, b: number) => { const q = add(add(add(hd3, sc3(r, -a * hrm)), sc3(up, -b * hrm)), sc3(f, Math.sqrt(Math.max(0, 1 - a * a - b * b)) * hrm));
 		const n = norm(sub(q, hd3)); return {p: P(q), v: cl(dot(n, norm(sub(cam.C, q))) * 3.5)}; };
-	const eL = feat(-.34, -.05), eR = feat(.34, -.05), m0 = feat(-.16, -.3), m1 = feat(0, -.45), m2 = feat(.16, -.3), bL = feat(-.56, -.3), bR = feat(.56, -.3);
-	o.push(<g key="head" transform={`rotate(${s.tilt} ${f2(hd[0])} ${f2(hd[1])})`}><ellipse cx={hd[0]} cy={hd[1]} rx={hr} ry={hr * 1.08} fill={fill} /></g>);
-	const fv = Math.min(eL.v, eR.v);
-	if (fv > 0) o.push(<g key="face" opacity={fv} clipPath="url(#yhead)">
+	const eL = feat(-.34, .05), eR = feat(.34, .05), m0 = feat(-.16, .3), m1 = feat(0, .45), m2 = feat(.16, .3), bL = feat(-.56, .3), bR = feat(.56, .3);
+	const facing = dot(f, norm(sub(cam.C, hd3))), fv = Math.min(eL.v, eR.v, cl((facing - .2) / .3));   // no face unless the head is turned to us
+	o.push(<g key="head" transform={`rotate(${s.tilt} ${f2(hd[0])} ${f2(hd[1])})`}><ellipse cx={hd[0]} cy={hd[1]} rx={hr} ry={hr * 1.08} fill={fill} />
+		{fv > 0 && <g opacity={fv} clipPath="url(#yhead)">
 		<ellipse cx={eL.p[0]} cy={eL.p[1]} rx={hr * .075} ry={hr * .1} fill="#2B2724" /><ellipse cx={eR.p[0]} cy={eR.p[1]} rx={hr * .075} ry={hr * .1} fill="#2B2724" />
-		<path d={`M${f2(m0.p[0])},${f2(m0.p[1])} Q${f2(2 * m1.p[0] - (m0.p[0] + m2.p[0]) / 2)},${f2(2 * m1.p[1] - (m0.p[1] + m2.p[1]) / 2)} ${f2(m2.p[0])},${f2(m2.p[1])}`} fill="none" stroke="#2B2724" strokeWidth={hr * .055} strokeLinecap="round" />
-		<circle cx={bL.p[0]} cy={bL.p[1]} r={hr * .14} fill="#F4A9A0" opacity={.45 * bL.v} /><circle cx={bR.p[0]} cy={bR.p[1]} r={hr * .14} fill="#F4A9A0" opacity={.45 * bR.v} /></g>);
-	return <g><defs><clipPath id="yhead"><ellipse cx={hd[0]} cy={hd[1]} rx={hr * .97} ry={hr * 1.05} transform={`rotate(${s.tilt} ${f2(hd[0])} ${f2(hd[1])})`} /></clipPath></defs>
+		<path d={`M${f2(m0.p[0])},${f2(m0.p[1])} Q${f2(m1.p[0])},${f2(m1.p[1])} ${f2(m2.p[0])},${f2(m2.p[1])}`} fill="none" stroke="#2B2724" strokeWidth={hr * .055} strokeLinecap="round" />
+		<circle cx={bL.p[0]} cy={bL.p[1]} r={hr * .14} fill="#F4A9A0" opacity={.45 * bL.v} /><circle cx={bR.p[0]} cy={bR.p[1]} r={hr * .14} fill="#F4A9A0" opacity={.45 * bR.v} /></g>}</g>);
+	return <g><defs><clipPath id="yhead"><ellipse cx={hd[0]} cy={hd[1]} rx={hr * .97} ry={hr * 1.05} /></clipPath></defs>
 		<g filter="url(#yds)">{o}</g></g>; };
 /* the gold 「你」 bubble (demo_v3.bubble_p): 128×96, rx 30, ink 5, tail pointing down at the head; tip at (x, y) */
 const Bubble: React.FC<{x: number; y: number; sc: number; op: number}> = ({x, y, sc, op}) => op <= 0 ? null :
@@ -419,9 +459,9 @@ const footAt = (pl: Plant[], b: number): {P: V3; sup: V3} => {
 const tr = (k: number, x: number): V3 => { const p = TC(k, x); return [p[0], p[1], p[2] + AH]; };
 const fl = (x: number, y: number): V3 => [x, y, SILL + AH];
 const FL = XS + .11, FR = XS - .11;
-const camAt = (t: number) => { const x = cl(t / (NF / FPS)), u = .3 * x + .7 * (1 - Math.pow(1 - x, 2.4));
-	const C0: V3 = [XD + 9.6, 12.6, 3.75], C1: V3 = [XD + 5.9, 7.7, 4.45], L0: V3 = [XD - 1.4, 3.4, 2.95], L1: V3 = [XD - .55, 2.4, 4.0];
-	return new Cam(lerp3(C0, C1, u), lerp3(L0, L1, u), lerp(1120, 1240, u), [960, 560]); };
+const camAt = (t: number) => { const x = cl(t / (NF / FPS)), u = 1 - Math.pow(1 - x, 1.6);   // a crane up and push in that starts on the cut and settles on the door
+	const C0: V3 = [XD + 7.5, 14.5, 4.3], C1: V3 = [XD + 5.2, 11.6, 4.9], L0: V3 = [XD - 1.2, 3.5, 3.2], L1: V3 = [XD - .6, 2.6, 4.1];
+	return new Cam(lerp3(C0, C1, u), lerp3(L0, L1, u), lerp(1150, 1550, u), [960, lerp(600, 650, u)]); };
 const WAVE_C = camAt(5 * BEAT).C, HW: V2 = [XS + .02, 2.8], PSI_W = Math.atan2(WAVE_C[1] - HW[1], WAVE_C[0] - HW[0]) - rad(12);
 const rv = (psi: number): V2 => [Math.sin(psi), -Math.cos(psi)];
 const WL: V3 = fl(HW[0] - rv(PSI_W)[0] * .12, HW[1] - rv(PSI_W)[1] * .12), WR: V3 = fl(HW[0] + rv(PSI_W)[0] * .12, HW[1] + rv(PSI_W)[1] * .12);
@@ -436,9 +476,9 @@ const youAt = (b: number): YouState => {
 	const hip = lerp(.45, .575, sm((b - 3.4) / 1.1)), m = lerp3(L.sup, R.sup, .5);
 	const H: V3 = add([m[0], m[1], m[2] - AH + hip], sc3(f, .03));
 	const lean = rad(b < 4.5 ? lerp(10, 0, sm((b - 3.6) / .8)) : lerp(0, 5, sm((b - 6) / .4)));
-	const A = 17 * (1 - sm((b - 3.7) / .5)), sw = A * Math.cos(Math.PI * b), w2 = 11 * sm((b - 6) / .3) * Math.cos(Math.PI * (b - 6.05) / .8 * 2);
+	const A = 17 * (1 - sm((b - 3.7) / .5)), sw = A * Math.cos(Math.PI * b), w2 = 7 * sm((b - 6.1) / .3) * Math.cos(Math.PI * (b - 6.05) / .8 * 2);
 	const right: Arm = {sw: sw + w2, ab: 18, el: 24, ab2: 8};
-	const raise = sm((b - 4.45) / .5) - sm((b - 5.85) / .4), left: Arm = b < 4.2 ? {sw: -sw, ab: 18, el: 24, ab2: 8} : b > 6.25 ? {sw: -w2, ab: 18, el: 24, ab2: 8} : {raise, wv: 26 * Math.cos(2 * Math.PI * (b - 5))};
+	const raise = sm((b - 4.45) / .5) - sm((b - 5.68) / .36), left: Arm = b < 4.2 ? {sw: -sw, ab: 18, el: 24, ab2: 8} : b > 6.25 ? {sw: -w2, ab: 18, el: 24, ab2: 8} : {raise, wv: 26 * Math.cos(2 * Math.PI * (b - 5))};
 	return {H, psi, lean, feet: [L.P, R.P], arms: [left, right], tilt: lerp(4, 11, raise)}; };
 
 /* ---------- the far world: dawn sky, clouds, the city in haze, the terminal and tower, a departure climbing out ---------- */
@@ -460,7 +500,7 @@ const Sky: React.FC<{cam: Cam; t: number}> = ({cam, t}) => {
 				<ellipse cx={8} cy={11} rx={128} ry={10} fill="#C98A98" opacity={.55} /></g>; })}
 		<circle cx={sun[0]} cy={sun[1]} r={44 * ks} fill="#FFF4D2" stroke="#F8CB80" strokeWidth={3} />
 	</g>; };
-const FarWorld: React.FC<{cam: Cam; t: number}> = ({cam, t}) => {
+const FarWorld: React.FC<{cam: Cam}> = ({cam}) => {
 	const o: React.ReactNode[] = [];
 	CITY.forEach((b, i) => { const D = 6500 + (i % 3) * 900, a = cam.p(dirP(b.az, 0, D)), c = cam.p(dirP(b.az - b.w * .9, 0, D)), top = cam.p([...dirP(b.az, 0, D).slice(0, 2), b.h] as V3);
 		const x0 = Math.min(a[0], c[0]), x1 = Math.max(a[0], c[0]); o.push(<rect key={`c${i}`} x={x0} y={top[1]} width={x1 - x0} height={a[1] - top[1] + 2} fill={['#B596AE', '#A78CA6', '#C2A2B4'][b.c]} />); });
@@ -479,18 +519,6 @@ const FarWorld: React.FC<{cam: Cam; t: number}> = ({cam, t}) => {
 	[240, 249, 258, 267].forEach((az, i) => { const a = dirP(az, 0, TD), b2 = dirP(az, 0, TD - 55), k = cam.k(b2), p = cam.p([b2[0], b2[1], 0]);
 		o.push(<Line key={`jb${i}`} cam={cam} P={[[a[0], a[1], 6], [b2[0], b2[1], 5]]} stroke="#7D7696" sw={Math.max(2, 3.2 * k)} />);
 		o.push(<path key={`ft${i}`} d={`M${f2(p[0] - 8 * k)},${f2(p[1] - 5 * k)} L${f2(p[0] - 2 * k)},${f2(p[1] - 15 * k)} L${f2(p[0] + 3 * k)},${f2(p[1] - 15 * k)} L${f2(p[0] + 1 * k)},${f2(p[1] - 5 * k)} Z`} fill={['#7FA0A4', '#A7A6B8', '#9AA5B8', '#8E9DB5'][i]} stroke="#5C5470" strokeWidth={1.2} />); });
-	{ const b0 = dirP(229, 0, 640), k = cam.k(b0), p = cam.p(b0);
-		o.push(<g key="tower"><rect x={p[0] - 3.2 * k} y={p[1] - 58 * k} width={6.4 * k} height={58 * k} fill="#9C90AA" stroke="#5C5470" strokeWidth={1.4} />
-			<path d={`M${f2(p[0] - 8 * k)},${f2(p[1] - 58 * k)} L${f2(p[0] + 8 * k)},${f2(p[1] - 58 * k)} L${f2(p[0] + 10 * k)},${f2(p[1] - 66 * k)} L${f2(p[0] - 10 * k)},${f2(p[1] - 66 * k)} Z`} fill="#F2C88C" stroke="#5C5470" strokeWidth={1.4} />
-			<path d={`M${f2(p[0] - 9 * k)},${f2(p[1] - 66 * k)} L${f2(p[0] + 9 * k)},${f2(p[1] - 66 * k)} L${f2(p[0] + 5 * k)},${f2(p[1] - 70 * k)} L${f2(p[0] - 5 * k)},${f2(p[1] - 70 * k)} Z`} fill="#8A7E98" stroke="#5C5470" strokeWidth={1.4} /></g>); }
-	// another departure climbing out over the far runway (a rigid side-view sprite, gliding)
-	{ const P0 = dirP(246, 0, 1050), v: V3 = [-Math.sin(rad(246)), Math.cos(rad(246)), Math.tan(rad(9))];   // along increasing azimuth (screen left), climbing 9°
-		const P: V3 = add(add(P0, [0, 0, 22]), sc3(v, 62 * t)), p = cam.p(P), k = cam.k(P), q = cam.p(add(P, sc3(v, 10))), ang = Math.atan2(q[1] - p[1], q[0] - p[0]) * 180 / Math.PI;
-		const dirx = q[0] < p[0] ? -1 : 1;
-		o.push(<g key="dep" transform={`translate(${f2(p[0])},${f2(p[1])}) rotate(${(dirx < 0 ? ang + 180 : ang).toFixed(2)}) scale(${(k * dirx).toFixed(3)},${k.toFixed(3)})`}>
-			<path d="M-18,-1.6 L14,-1.8 Q19,-1.6 19.5,0 Q19,1.6 14,1.9 L-16,1.9 Z" fill="#E9E2EC" stroke="#5C5470" strokeWidth={.5} />
-			<path d="M-14,-1.6 L-18.5,-8.5 L-16,-8.5 L-10,-1.7 Z" fill="#8E9DB5" stroke="#5C5470" strokeWidth={.5} />
-			<path d="M-2,0 L-8,4.5 L-5,4.5 L3,.5 Z" fill="#B9B4C8" stroke="#5C5470" strokeWidth={.5} /></g>); }
 	return <g>{o}</g>; };
 /* the apron: concrete with slab joints, stand markings (lead-in line, stop bar, the red restraint line, the service road) */
 const Ground: React.FC<{cam: Cam}> = ({cam}) => {
@@ -512,14 +540,14 @@ const Ground: React.FC<{cam: Cam}> = ({cam}) => {
 
 /* the boarding pass (right column): route draws, stop 1 of 7 lights, the scanner sweeps and ticks on the bar-2 downbeat, 「已登机」 lands */
 const Pass: React.FC<{b: number}> = ({b}) => {
-	const x = 1440, y = 168, w = 384, h = 420, op = cl(b / .5), dr = eo((b - .9) / .55), d1 = cl((b - 2) / .3), scan = (b - 3) / 1, ck = (b - 4) / .35, st = (b - 6) / .22;
+	const x = 1440, y = 168, w = 384, h = 420, op = cl(b / .5), dr = eo((b - .9) / .55), d1 = cl((b - 2) / .3), scan = (b - 3) / 1, ck = (b - 4) / .35, st = (b - 5.8) / .2;   // the stamp lands on b6
 	return <g opacity={op} transform={`translate(${x + w / 2},${y + h / 2}) scale(${(.94 + .06 * eo(b / .5)).toFixed(3)}) translate(${-x - w / 2},${-y - h / 2})`}>
 		<Widget x={x} y={y} w={w} h={h}>
 			<T2 x={x + 26} y={y + 46} s="登机牌" size={30} col={GOLD} /><T2 x={x + 128} y={y + 44} s="BOARDING PASS" size={19} col="#CFC3AE" w={700} ls={1.5} />
 			<T2 x={x + 26} y={y + 124} s="北京" size={50} /><T2 x={x + w - 26} y={y + 124} s="坎昆" size={50} anchor="end" />
 			<T2 x={x + 28} y={y + 160} s="PEK" size={24} col="#CFC3AE" w={700} ls={2} /><T2 x={x + w - 26} y={y + 160} s="CUN" size={24} col="#CFC3AE" anchor="end" w={700} ls={2} />
-			{dr > 0 && <line x1={x + 138} y1={y + 108} x2={x + 138 + 104 * dr} y2={y + 108} stroke={GOLD} strokeWidth={3} strokeDasharray="7 7" strokeLinecap="round" />}
-			<g transform={`translate(${x + 138 + 104 * dr},${y + 108}) scale(${(.9 + .1 * dr).toFixed(3)})`}><path d="M-11,0 L-4,-2.5 L1,-12 L5,-12 L2,-2.5 L10,-2.5 L13,-6 L15.5,-6 L14,0 L15.5,6 L13,6 L10,2.5 L2,2.5 L5,12 L1,12 L-4,2.5 Z" fill={GOLD} stroke={INK} strokeWidth={1.4} strokeLinejoin="round" /></g>
+			{dr > 0 && <line x1={x + 138} y1={y + 106} x2={x + 138 + 86 * dr} y2={y + 106} stroke={GOLD} strokeWidth={3} strokeDasharray="7 7" strokeLinecap="round" />}
+			<g transform={`translate(${x + 138 + 86 * dr + 12},${y + 106}) scale(${(-.9 - .1 * dr).toFixed(3)},${(.9 + .1 * dr).toFixed(3)})`}><path d="M-11,0 L-4,-2.5 L1,-12 L5,-12 L2,-2.5 L10,-2.5 L13,-6 L15.5,-6 L14,0 L15.5,6 L13,6 L10,2.5 L2,2.5 L5,12 L1,12 L-4,2.5 Z" fill={GOLD} stroke={INK} strokeWidth={1.4} strokeLinejoin="round" /></g>
 			<line x1={x + 18} y1={y + 192} x2={x + w - 18} y2={y + 192} stroke="rgba(242,198,110,.55)" strokeWidth={2} strokeDasharray="6 7" />
 			<T2 x={x + 26} y={y + 232} s="座位" size={22} col="#CFC3AE" w={700} /><T2 x={x + 168} y={y + 232} s="行程" size={22} col="#CFC3AE" w={700} />
 			<T2 x={x + 26} y={y + 292} s="7A" size={56} />
@@ -528,7 +556,7 @@ const Pass: React.FC<{b: number}> = ({b}) => {
 				return <circle key={i} cx={x + 178 + i * 27} cy={y + 312} r={8 * s} fill={on ? GOLD : 'none'} stroke={on ? INK : 'rgba(207,195,174,.7)'} strokeWidth={on ? 2 : 2.2} />; })}
 			<line x1={x + 18} y1={y + 342} x2={x + w - 18} y2={y + 342} stroke="rgba(242,198,110,.55)" strokeWidth={2} strokeDasharray="6 7" />
 			<T2 x={x + 26} y={y + 392} s="状态" size={22} col="#CFC3AE" w={700} />
-			<T2 x={x + 96} y={y + 394} s="待登机" size={30} col="#CFC3AE" w={700} />
+			<g opacity={1 - cl(st * 3)}><T2 x={x + 96} y={y + 394} s="待登机" size={30} col="#CFC3AE" w={700} /></g>
 			{scan > 0 && scan < 1 && <g opacity={Math.sin(Math.PI * scan)}><rect x={x + 8} y={y + 10 + (h - 20) * sm(scan) - 3} width={w - 16} height={6} rx={3} fill={GOLD} /><rect x={x + 8} y={y + 10 + (h - 20) * sm(scan) - 16} width={w - 16} height={32} fill={GOLD} opacity={.18} /></g>}
 			{ck > 0 && <g transform={`translate(${x + w - 40},${y + 36}) scale(${(.4 + .6 * back(ck)).toFixed(3)})`} opacity={cl(ck * 3)}><circle r={20} fill={GOLD} stroke={INK} strokeWidth={2.5} /><path d="M-9,0 L-3,7 L10,-7" fill="none" stroke={INK} strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" /></g>}
 			{st > 0 && <g transform={`translate(${x + 262},${y + 382}) rotate(-9) scale(${(1 + .7 * (1 - eo(st))).toFixed(3)})`} opacity={cl(st * 2.5)}>
@@ -537,13 +565,11 @@ const Pass: React.FC<{b: number}> = ({b}) => {
 		</Widget></g>; };
 
 /* ---------- the scene ---------- */
-const BAGS = [[.05, '#C2493F'], [.24, '#4E78A8'], [.43, '#E0A33A'], [.62, '#5D8A5E'], [.8, '#7A5B9A']] as [number, string][];
-const Scene: React.FC = () => {
-	const fr = useCurrentFrame(), t = fr / FPS, b = t / BEAT, cam = camAt(t), you = youAt(b);
-	const doorS = eio((b - 7) / 1.0), entering = b >= 6.55 && b < 7.0, inside = b >= 7.0;
+const Scene: React.FC<{ts?: number}> = ({ts = 1}) => {
+	const fr = useCurrentFrame() * ts, t = fr / FPS, b = t / BEAT, cam = camAt(t), you = youAt(b);
+	const doorS = sm((b - 6.9) / .95), inside = b >= 7.0;   // by b 7 the whole figure is past the skin: from then on it is seen only through the opening   // the door swings on the last beat and seals just before the cut
 	const camAbove = cam.C[2] > wz(5.75) + .1;
 	const opening = DOOR.map(([x, z]) => cam.p(onSkin(x, z)));
-	const sl = cam.p(onSkin(XD - DW / 2 + .02, SILL)), sr = cam.p(onSkin(XD + DW / 2 - .02, SILL));
 	const footShadow = (P: V3, key: string) => { if (P[2] - AH > SILL + .02 || (P[1] < PY0 && P[2] < SILL - .1)) return null; const q = cam.p([P[0], P[1] + .02, P[2] - AH + .005]), k = cam.k(P);
 		return <ellipse key={key} cx={q[0]} cy={q[1]} rx={.13 * k} ry={.045 * k} fill="#2A2238" opacity={.32} />; };
 	const fig = <g>{footShadow(you.feet[0], 'fs0')}{footShadow(you.feet[1], 'fs1')}<YouFig cam={cam} s={you} /></g>;
@@ -551,40 +577,32 @@ const Scene: React.FC = () => {
 	const bubIn = (b - .02) / (.36 / BEAT), bubOut = cl((7.05 - b) / .28);
 	const bubSc = (bubIn < 1 ? .4 + .6 * back(bubIn) : 1) * (bubOut < 1 ? .6 + .4 * bubOut : 1), bubOp = cl(bubIn / .3) * bubOut;
 	const bob = 5 * Math.sin(t * 5.2);
-	const crewUp = sm((b - 6) / .6) - sm((b - 7.6) / .4);
+	const crewUp = sm((b - .7) / .6);                                                // the dispatcher's thumbs-up to the cabin
 	return <AbsoluteFill style={{background: '#2B2A3A'}}><svg width={W} height={H}>
 		<defs><linearGradient id="mf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#FFFFFF" /><stop offset=".55" stopColor="#F1F1EF" /><stop offset="1" stopColor="#C3C8D0" /></linearGradient>
 			<filter id="yds" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx={3} dy={5} stdDeviation={5} floodColor="#1A1410" floodOpacity={.28} /></filter>
 			<filter id="bds" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx={4} dy={7} stdDeviation={6} floodColor="#1A1410" floodOpacity={.35} /></filter>
 			<clipPath id="dw"><polygon points={pts(opening)} /></clipPath>
-			<clipPath id="dwin"><polygon points={pts(opening)} /><polygon points={pts([[sl[0] - 40, sl[1]], [sr[0] + 40, sr[1]], [sr[0] + 40, H + 50], [sl[0] - 40, H + 50]])} /></clipPath>
+			<radialGradient id="bcn"><stop offset="0" stopColor="#FFE3A0" stopOpacity="1" /><stop offset=".35" stopColor="#FFB44A" stopOpacity=".7" /><stop offset="1" stopColor="#FFB44A" stopOpacity="0" /></radialGradient>
 			<radialGradient id="vig" cx={960} cy={560} r={1180} gradientUnits="userSpaceOnUse"><stop offset=".6" stopColor="#140F1E" stopOpacity="0" /><stop offset="1" stopColor="#140F1E" stopOpacity=".42" /></radialGradient></defs>
 		<Sky cam={cam} t={t} />
-		<FarWorld cam={cam} t={t} />
+		<FarWorld cam={cam} />
 		<Ground cam={cam} />
 		{/* cast shadows from the low sun (one group, so overlaps don't darken) */}
 		<g opacity={.3}>
 			{STA.slice(0, -1).map((x, i) => <ShadowHull key={`sf${i}`} cam={cam} P={[x, STA[i + 1]].flatMap((xx) => Array.from({length: 16}, (_, j) => SP(xx, 2 * Math.PI * j / 16)))} />)}
 			{[1, -1].map((s) => <ShadowHull key={`sw${s}`} cam={cam} P={PLAN.map(([x, y]) => [x, s * y, wz(y)] as V3)} />)}
 			{[1, -1].map((s) => <ShadowHull key={`se${s}`} cam={cam} P={nacPts(s)} />)}
+			<ShadowHull cam={cam} P={boxPts([trainX(t) - 8.3, 8.3, 0], [trainX(t), 9.7, 1.85])} />
 			<ShadowHull cam={cam} P={truckBodyPts()} /><ShadowHull cam={cam} P={truckStairPts()} />
-			<ShadowHull cam={cam} P={boxPts([.5, -1.25, .28], [4.3, 1.25, 1.05])} />
-			<ShadowHull cam={cam} P={boxPts([-10.95, -7.6, .3], [-9.85, -2.4, .85])} />
 		</g>
-		{/* the far side, seen under the belly: starboard wing and engine, the belt loader with bags going up into the forward hold */}
+		{/* the far side: starboard wing and engine (seen under the belly), the belly fairing */}
 		<Wing cam={cam} sgn={-1} /><Engine cam={cam} sgn={-1} />
 		<Gear cam={cam} x={-17.4} y={-3.8} r={.57} top={2.3} dy={.45} />
-		<Box cam={cam} a={[-10.95, -7.6, .3]} b={[-9.85, -2.4, .85]} pal={P_DARK} />
-		<Poly cam={cam} P={[[-10.8, -7.4, .95], [-10.0, -7.4, .95], [-10.0, -1.75, 2.35], [-10.8, -1.75, 2.35]]} fill="#3E3D48" sw={2} />
-		<Rod cam={cam} P={[[-10.0, -7.4, 1.1], [-10.0, -1.75, 2.5]]} c="#C9CBD6" w={3} />
-		<Rod cam={cam} P={[[-10.4, -5.5, .85], [-10.4, -4.0, 1.85]]} c="#8F92A6" w={5} />
-		{BAGS.map(([s0, c], i) => { const s = (s0 + .11 * t) % 1, P = lerp3([-10.4, -7.2, 1.0], [-10.4, -1.9, 2.32], s);
-			return <Box key={`bg${i}`} cam={cam} a={[P[0] - .26, P[1] - .2, P[2]]} b={[P[0] + .26, P[1] + .2, P[2] + .3]} pal={[c, c, c]} sw={1.6} />; })}
-		<Crew cam={cam} P={[-11.3, -7.9, 0]} pose="lift" vest="#E8D040" />
 		<Gear cam={cam} x={-5.0} y={0} r={.36} top={2.15} dy={.3} />
-		<Rod cam={cam} P={[[.5, 0, .55], [-4.75, 0, .42]]} c="#5B5E6E" w={6} />
 		<Tail cam={cam} />
 		{/* the aircraft */}
+		<Fairing cam={cam} />
 		<FusMesh cam={cam} />
 		<Livery cam={cam} />
 		<g clipPath="url(#dw)"><Doorway cam={cam}>
@@ -594,20 +612,22 @@ const Scene: React.FC = () => {
 		<DoorPanel cam={cam} s={doorS} />
 		<Poly cam={cam} P={[[-32.6, 0, 5.1], [-35.8, -6.1, 5.6], [-36.9, -6.1, 5.6], [-36.6, 0, 5.1]]} fill="#C2C5D6" sw={2.2} />
 		<Gear cam={cam} x={-17.4} y={3.8} r={.57} top={2.3} dy={.45} />
-		{camAbove ? <><Engine cam={cam} sgn={1} /><Wing cam={cam} sgn={1} /></> : <><Wing cam={cam} sgn={1} /><Engine cam={cam} sgn={1} /></>}
-		<Cone cam={cam} P={[-8.4, 5.75, 0]} />
-		{/* the pushback tug at the nose, the crew */}
-		<Box cam={cam} a={[.5, -1.25, .28]} b={[4.3, 1.25, 1.05]} pal={P_TUG} />
-		<Box cam={cam} a={[3.0, .15, 1.05]} b={[4.1, 1.2, 1.95]} pal={P_TUG} />
-		{[[1.2, 1.25], [3.6, 1.25]].map(([x, y], i) => <Wheel key={`tw${i}`} cam={cam} c={[x, y, .33]} ax={[0, 1, 0]} r={.33} w={.24} />)}
+		{camAbove ? <><Engine cam={cam} sgn={1} /><BagTrain cam={cam} t={t} /><Wing cam={cam} sgn={1} /></> : <><Wing cam={cam} sgn={1} /><Engine cam={cam} sgn={1} /><BagTrain cam={cam} t={t} /></>}
+		<Cone cam={cam} P={[-11.8, 7.7, 0]} />
+		{/* the crew, the stairs truck with the traveller, the baggage train under the wing */}
 		<Crew cam={cam} P={[-3.4, 2.3, 0]} pose="stand" />
-		<StairsTruck cam={cam} rider={!inside && (entering ? <g clipPath="url(#dwin)">{fig}</g> : fig)} />
-		<Crew cam={cam} P={[XS + 1.55, 7.75, 0]} pose="up" a={crewUp} flip={-1} />
-		<Cone cam={cam} P={[2.2, 4.2, 0]} />
-		<Cone cam={cam} P={[XS + 1.4, 9.4, 0]} />
+		<StairsTruck cam={cam} rider={!inside && fig} />
+		<Crew cam={cam} P={[XD + 1.3, 3.25, 0]} pose="up" a={crewUp} flip={-1} />
+		<Cone cam={cam} P={[-1.6, .6, 0]} />
+		<Cone cam={cam} P={[XS + 1.25, 7.9, 0]} />
+		{(() => { const q = cam.p([XS + .49, 2.99, 2.46]), fl = Math.exp(-6 * (b - Math.floor(b))) * (b >= 0 ? 1 : 0);
+			return <circle cx={q[0]} cy={q[1]} r={22 + 10 * fl} fill="url(#bcn)" opacity={.25 + .75 * fl} />; })()}
 		<Bubble x={hp[0]} y={hp[1] - 16 + bob} sc={bubSc} op={bubOp} />
 		<rect width={W} height={H} fill="url(#vig)" />
 		<Pass b={b} />
 	</svg></AbsoluteFill>;
 };
-registerRoot(() => <Composition id="Q57BOARD" component={Scene} durationInFrames={NF} fps={FPS} width={W} height={H} />);
+/* Q57BOARD106: the same scene for the 106 BPM track (owner 2026-11-03): time scaled so each 0.418 s beat lasts 0.566 s (2 bars = 4.528 s) */
+const TS106 = 0.418 / 0.56606;
+registerRoot(() => <><Composition id="Q57BOARD" component={Scene} durationInFrames={NF} fps={FPS} width={W} height={H} />
+	<Composition id="Q57BOARD106" component={Scene} defaultProps={{ts: TS106}} durationInFrames={Math.round(NF / TS106)} fps={FPS} width={W} height={H} /></>);
