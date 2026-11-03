@@ -62,8 +62,8 @@ const Build: React.FC<{t: number; prog: number}> = ({t, prog}) => {
 	return <g>{o}</g>;
 };
 
-const Scene: React.FC = () => {
-	const t = useCurrentFrame() / FPS;
+const Scene: React.FC<{ts?: number}> = ({ts = 1}) => {
+	const t = useCurrentFrame() * ts / FPS;
 	const fillT = (t - 2 * BAR) / (BAR / 4), fillU = t < 2 * BAR ? 0 : cl((Math.floor(fillT) + sm(fillT % 1)) / 4);   // four cartloads, one per beat
 	const lx = D.lake.map((p: number[]) => p[0]), x0 = Math.min(...lx), x1 = Math.max(...lx), ly = D.lake.map((p: number[]) => p[1]);
 	const a_lake = 1 - sm((t - 2.75 * BAR) / (.25 * BAR));
@@ -102,4 +102,7 @@ const Scene: React.FC = () => {
 		</svg>
 	</AbsoluteFill>;
 };
-registerRoot(() => <Composition id="Q57COLO" component={Scene} durationInFrames={Math.round(DUR * FPS)} fps={FPS} width={W} height={H} />);
+/* Q57COLO106: the same scene for the 106 BPM track (owner 2026-11-03 12:07): time scaled so each 0.418 s beat lasts 0.566 s */
+const TS106 = 0.418 / 0.56606;
+registerRoot(() => <><Composition id="Q57COLO" component={Scene} durationInFrames={Math.round(DUR * FPS)} fps={FPS} width={W} height={H} />
+	<Composition id="Q57COLO106" component={Scene} defaultProps={{ts: TS106}} durationInFrames={Math.round(DUR * FPS / TS106)} fps={FPS} width={W} height={H} /></>);
