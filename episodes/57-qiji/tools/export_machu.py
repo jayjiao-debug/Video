@@ -31,7 +31,8 @@ llamas = ''.join(HA.llama(x, y, s_, c_, sh_, fl) for x, y, s_, c_, sh_, fl in
                  ((560, 742, .62, '#F1E6CF', '#CDBB9C', False), (612, 760, .66, '#9A6B45', '#76502F', True), (700, 726, .55, '#E7DCC6', '#C2B190', False)))
 save('a_city', src_layer(inner[i_city:], llamas))
 picks = sorted([r for r in ridges if 1150 < r[0] < 1450 and 1060 < r[1] < 1200], key=lambda r: r[0])
-smoke = [list(map(lambda v: round(v, 1), m(*r))) for r in (picks[1], picks[-2], picks[len(picks) // 2])]
+left = sorted([r for r in ridges if 300 < r[0] < 700 and 1250 < r[1] < 1420], key=lambda r: r[1])
+smoke = [list(map(lambda v: round(v, 1), m(*r))) for r in (picks[1], picks[-2], left[len(left) // 2])]
 
 # the near layer (screen coords, 1920 x NH): machu_palace's foreground terrace (same code and random sequence; the house
 # plot at the right end is cleared of grass), then the lower farming terraces stepping down below it
@@ -56,7 +57,7 @@ for _ in range(90):
     g.append(HA.line([(x, y), (x + dx, y - dy)], c_, 2))
 # lower terraces: tread k (soil + crop green) on top of wall k (fitted masonry), each a little lower and longer to the right
 R2 = random.Random(5741)
-LEVELS = []
+LEVELS, GAP, XA, XB = [], [], 640, 1180   # the first lower terrace's wall is still being laid between XA and XB (laid live in Remotion)
 top = 1087
 for k in range(1, 6):
     def edge(x, base=top): return base + (0 if x < 1330 else (x - 1330) * .07)
@@ -64,17 +65,27 @@ for k in range(1, 6):
     t_top = [(x, edge(x)) for x in xs]; t_bot = [(x, edge(x) + 30) for x in xs]
     wall_b = [(x, edge(x) + 30 + 150) for x in xs]
     g.append(HA.poly(t_bot + wall_b[::-1], '#756A59', INK, 3))
+    if k == 1:   # raw earth where the wall is not laid yet
+        g.append(HA.poly([(XA - 150, top + 30), (XB + 150, top + 30), (XB + 150, top + 180), (XA - 150, top + 180)], '#8C7556', INK, 2))
+        for x in range(XA - 130, XB + 150, 46):
+            g.append(HA.line([(x, top + 40), (x + 14, top + 90), (x + 6, top + 160)], '#735E43', 2, 'opacity=".7"'))
     for i in range(6):                                                    # masonry courses
-        yy = 30 + 2 + i * 25; x = -40 - R2.uniform(0, 60)
+        yy = 30 + 2 + i * 25; x = -40 - R2.uniform(0, 60); a = b = None
         while x < 1980:
             w_ = R2.uniform(70, 140); c_ = R2.choice(['#7A6F5E', '#857A67', '#6E6454', '#8C806C'])
             y_ = edge(x + w_ / 2) + yy
+            if k == 1 and x + w_ > XA and x < XB:
+                a = round(x, 1) if a is None else a; b = round(x + w_, 1); x += w_; continue
             g.append(f'<rect x="{x + 2:.1f}" y="{y_:.1f}" width="{w_ - 4:.1f}" height="21" rx="6" fill="{c_}" stroke="#4E4538" stroke-width="2"/>'); x += w_
+        if k == 1: GAP.append([a, b])
     g.append(HA.poly(t_top + t_bot[::-1], '#6E8A34' if k % 2 else '#7A9338', INK, 3))
     g.append(HA.poly([(x, y + 18) for x, y in t_top] + t_bot[::-1], '#5C7228', 'none', 0))
+    if k == 1:   # the unfinished stretch of terrace is bare soil on top
+        g.append(HA.poly([(XA - 40, top + 2), (XB + 40, top + 2), (XB + 64, top + 30), (XA - 64, top + 30)], '#9A8160', INK, 2))
     for _ in range(70):
-        x = R2.uniform(-20, 1960); y = edge(x) + R2.uniform(4, 28)
-        g.append(HA.line([(x, y), (x + R2.uniform(-4, 4), y - R2.uniform(6, 12))], R2.choice(['#93AE45', '#4E6322', '#7E9233']), 2))
+        x = R2.uniform(-20, 1960); y = edge(x) + R2.uniform(4, 28); dx, dy = R2.uniform(-4, 4), R2.uniform(6, 12); c_ = R2.choice(['#93AE45', '#4E6322', '#7E9233'])
+        if k == 1 and XA - 70 < x < XB + 70: continue
+        g.append(HA.line([(x, y), (x + dx, y - dy)], c_, 2))
     LEVELS.append(dict(top=top, slope=.07, x_break=1330))
     top = top + 180
 save('a_near', f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{NH}" viewBox="0 0 {W} {NH}">{"".join(g)}</svg>')
@@ -113,5 +124,5 @@ for i, c_ in enumerate(col):                                          # the colu
     if c_ == 'r': figs.append(dict(k='r', x=x + 28, y=round(y, 2), step=i)); x += 100
     else: figs.append(dict(k='s', x=x, y=round(y, 2), step=i)); x += 58
 
-json.dump(dict(smoke=smoke, house=HOUSE, levels=LEVELS, column=figs, NH=NH, MG=MG), open(f'{OUT}/machu.json', 'w'))
+json.dump(dict(smoke=smoke, house=HOUSE, levels=LEVELS, wall1_gap=GAP, wall1_x=[XA, XB], column=figs, NH=NH, MG=MG), open(f'{OUT}/machu.json', 'w'))
 print('ok', os.path.abspath(OUT), 'layers', i_mid, i_city, '| B', i_hu, i_sea, i_riv, i_near, len(hg))

@@ -3,10 +3,10 @@ petra_tax), recomposed so the right column is free for the widgets and every mov
   shot A (the Siq): a_far.svg (sky, far cliff, the finished Treasury) and a_near.svg (both walls, the floor, plants);
                     the caravan as data: each camel's body/load in local coordinates (exported at its own scale, feet at
                     the origin) plus its leg parameters, so Remotion walks the legs and glides the camels in perspective.
-  shot B (the toll point): b_back.svg (sky, far domes, the sunlit cliff, raw), b_mid.svg (shaded cliff with the Siq mouth,
+  shot B (the toll point): b_back.svg (far domes, the sunlit cliff, raw), b_mid.svg (shaded cliff with the Siq mouth,
                     plaza, plants, camel, trader, booth, collector, strongbox); the Treasury as a list of elements (finished
-                    and rough-cut markup, with their heights) so Remotion can carve it from the top down; the masons'
-                    setting-out lines; masons; the coins in the strongbox.
+                    and rough-cut markup, with their heights) so Remotion can carve it from the top down; the cliff's rim;
+                    the masons; the coins in the strongbox.
 Writes <repo>/episodes/37-qiqing/remotion/public/ep57/petra/*.svg + petra.json (generated, not committed).
 usage: python3 episodes/57-qiji/tools/export_petra.py"""
 import os, sys, json, math, random, re
@@ -125,7 +125,7 @@ for (x, y), _ in HC.along(track, 70):
     g.append(ell(x, y + R.uniform(-8, 14) * s_, rx, ry, '#5A3028', 'opacity=".35"'))
 # plants (added): capers hanging from cracks in both walls, shrubs and an oleander at the walls' feet, clear of the track
 P = random.Random(57)
-for cx_, cy_, r_ in ((150, 330, 26), (430, 610, 22), (690, 250, 18), (1520, 470, 24), (1800, 300, 28), (1700, 700, 22)):
+for cx_, cy_, r_ in ((175, 330, 26), (425, 610, 22), (545, 250, 18), (1575, 610, 24), (1840, 760, 26), (1700, 700, 22)):
     g += caper(P, cx_, cy_, r_)
 g += shrub(P, 1560, 858, 46, flowers='#E88AA6'); g += shrub(P, 1830, 905, 64, flowers='#E88AA6'); g += shrub(P, 1390, 818, 26)
 g += shrub(P, 40, 893, 40); g += shrub(P, 470, 846, 24)
@@ -172,10 +172,9 @@ R = random.Random(5702)
 DB = -260                       # the booth group and the shaded cliff move left
 TCX, TBY, TK = 1200, 891, 3.3   # the Treasury: recess top at y 330, below the subtitle zone; right of it the widget column
 CLIFF = dict(c0='#E7A27E', c1='#DA8E6C', c2='#E9A57E')
-defsB = [grad('sky', [(0, '#86AED3'), (.6, '#B7D0E2'), (1, '#E4ECEA')], 0, 0, 0, 200, True),
-         grad('cliff', [(0, CLIFF['c0']), (.5, CLIFF['c1']), (1, CLIFF['c2'])], 0, 0, 0, 900, True),
+defsB = [grad('cliff', [(0, CLIFF['c0']), (.5, CLIFF['c1']), (1, CLIFF['c2'])], 0, 0, 0, 900, True),
          grad('dome', [(0, '#F0C3A6'), (1, '#E3A98C')], 0, 60, 0, 200, True)]
-g = [f'<rect width="{W}" height="{H}" fill="url(#sky)"/>']
+g = []   # (the sky and its clouds are drawn live behind this layer)
 # far: hazy sandstone domes beyond the cliff
 far = [(560, 200), (600, 120), (660, 96), (740, 110), (800, 88), (880, 82), (960, 104), (1040, 92), (1130, 70), (1230, 74), (1300, 98), (1390, 86),
        (1480, 64), (1580, 70), (1660, 96), (1760, 84), (1850, 72), (1940, 80), (1940, 220), (560, 220)]
@@ -192,7 +191,7 @@ for x0, top in ((1470, 200), (1680, 160), (1880, 220), (820, 210)):   # long ver
     while y < 880: L.append((x0 + R.uniform(-10, 10), y)); y += R.uniform(70, 130)
     g.append(line(L, '#A85A44', 2, 'opacity=".5"'))
 P = random.Random(5703)
-for cx_, cy_, r_ in ((1530, 520, 22), (1760, 420, 26), (1640, 760, 20), (900, 300, 18)):
+for cx_, cy_, r_ in ((1660, 520, 22), (1790, 420, 26), (1640, 760, 20), (900, 300, 18)):
     g += caper(P, cx_, cy_, r_)
 for cx_, b_, r_ in ((700, 158, 22), (1010, 128, 18), (1300, 124, 20), (1600, 104, 24), (1840, 116, 20)):   # shrubs on the cliff top
     g += shrub(P, cx_, b_, r_, cols=('#6A7A40', '#7A8A48', '#5E6E38'))
@@ -287,30 +286,13 @@ tre = []
 for i, e in enumerate(els):
     y0, y1 = yr(e)
     tre.append(dict(fin=e, rough=rough(e) if i else e, hatch=hatch(e) if i else '', y0=round(y0, 1), y1=round(y1, 1)))
-# the setting-out: the masons' marks for the whole facade, listed top → bottom (they draw in, then the cut takes them)
-def T(p): return (TCX + p[0] * TK, TBY + p[1] * TK)
-def dashes(a, b, step=6.5):
-    n = max(1, int(math.dist(a, b) / step)); return [(T(lerp(a, b, i / n)), T(lerp(a, b, (i + .5) / n))) for i in range(n)]
-guide = []
-arch = [(-57, -86), (-57, -132), (-50, -156), (-26, -166), (0, -170), (26, -166), (50, -156), (57, -132), (57, -86)]
-for a, b in zip(arch, arch[1:]): guide += dashes(a, b)
-for y in (-134, -128, -90, -86, -68, -60, -2):
-    guide += dashes((-54, y), (54, y))
-for s in (-1, 1):
-    guide += dashes((s * 52, -134), (s * 21, -146)) + dashes((s * 21, -146), (s * 21, -134))
-    for x in (s * 47, s * 25, s * 11.5, s * 4): guide += dashes((x, -128), (x, -90), 7)
-    for x in (s * 44, s * 30, s * 12): guide += dashes((x - 3, -60), (x - 3, -2), 7) + dashes((x + 3, -60), (x + 3, -2), 7)
-guide += dashes((-16, -134), (0, -149)) + dashes((0, -149), (16, -134)) + dashes((-36, -68), (0, -83)) + dashes((0, -83), (36, -68))
-guide += dashes((-6, -40), (6, -40)) + dashes((-6, -40), (-6, -2)) + dashes((6, -40), (6, -2))
-guide.sort(key=lambda s: (round(min(s[0][1], s[1][1]) / 12), s[0][0]))
-guide = [[r1(a), r1(b)] for a, b in guide]
 # the masons on the work ledge (rigid, feet at the origin)
 masons = []
 for x, f, pose, robe in ((-37, 1, 'pick', '#3E4A6A'), (-19, -1, 'carry', '#E6D8C0'), (0, 1, 'pick', '#8E4A2E'), (19, -1, 'pick', '#2E3044'), (35, 1, 'walk', '#7A5A3A')):
     el, _ = HC.figure(0, 0, .5, f, robe=robe, wrap='#EADFC8', skin='#7A4E34', pose=pose, tool='pick' if pose == 'pick' else None, sw=1.5)
     masons.append(dict(x=x, f=f, pick=pose == 'pick', svg=''.join(el)))
-B_DATA = dict(TCX=TCX, TBY=TBY, TK=TK, tre=tre, guide=guide, masons=masons, heap=heap, hand=r1(TA['hand']),
+B_DATA = dict(TCX=TCX, TBY=TBY, TK=TK, tre=tre, rim=[r1(p) for p in rimp], masons=masons, heap=heap, hand=r1(TA['hand']),
               stacks=[[x + DB, n] for x, n in ((848, 2), (894, 4), (940, 6), (986, 9), (1032, 12))], counter=782, ground=900,
               cliff=CLIFF, ledge=pal['ledge'], raw_d='#B8664C')
 json.dump(dict(A=A_DATA, B=B_DATA), open(f'{OUT}/petra.json', 'w'), ensure_ascii=False)
-print('ok', OUT, len(items), 'caravan items,', len(tre), 'treasury elements,', len(guide), 'setting-out marks')
+print('ok', OUT, len(items), 'caravan items,', len(tre), 'treasury elements')
