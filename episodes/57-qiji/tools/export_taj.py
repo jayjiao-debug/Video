@@ -98,16 +98,19 @@ for x, y, rx, ry in ((780, 952, 200, 12), (1240, 968, 260, 14), (1680, 905, 180,
     g.append(ell(x, y, rx, ry, '#D6AE86', 'opacity=".45"'))
 g.append(marks([((x, 937), (x + 46, 937)) for x in range(1440, 1930, 70)] + [((x, 943), (x + 46, 943)) for x in range(1470, 1930, 70)], '#8E6448', 2, 'opacity=".5"'))   # cart ruts
 g.append(marks([((x, 1046), (x + 60, 1046)) for x in range(980, 1930, 96)], '#8E6448', 2.5, 'opacity=".45"'))   # the sled's track
-# trees on the near bank: a clump right (into the low sun) and one behind the terrace, all clear of the building
+tufts(g, R, 12, 1500, 1920, 1046, 1060, k=1.4)
+layer('a_back', defs, g)
+# trees on the near bank (their own layer, so boats pass behind the trunks): a clump right, into the low sun, and one
+# behind the terrace; all clear of the building
+g = []
 for x, h, r in ((1622, 196, 64), (1748, 236, 78), (1872, 204, 70)):
     tree(g, R, x, 884, h, r, '#4E5A36', '#6E7A46', rim='#FFD9A8')
 gp = []; palm(gp, 1690, 884, 250, 18, sw=2.2); g += gp
 for x, h, r in ((470, 210, 70), (556, 172, 56)):
     tree(g, R, x, 888, h, r, '#55603A', '#73804A', rim='#F2C69A')
 tufts(g, R, 40, 1580, 1920, 862, 900, k=1.1)
-tufts(g, R, 18, 580, 640, 860, 900, k=1.0)
-tufts(g, R, 30, 1500, 1920, 1050, 1080, k=1.5)
-layer('a_back', defs, g)
+tufts(g, R, 14, 572, 622, 862, 900, k=1.0)
+layer('a_trees', [], g)
 
 # the foreground: the red-sandstone terrace Shah Jahan stands on, his glow
 defs = [grad('a_terrace', [(0, '#A24E36'), (1, '#6E2E22')], 0, 950, 0, 1080, True), rgrad('a_glow', [(0, '#FFE2B8', .5), (1, '#FFE2B8', 0)])]
@@ -116,6 +119,7 @@ g.append(poly([(-10, 956), (584, 956), (584, H + 10), (-10, H + 10)], 'url(#a_te
 g.append(poly([(-10, 934), (556, 934), (584, 956), (-10, 956)], '#C26A48', INK, 3))
 g.append(line([(-10, 937), (556, 937)], '#E08A62', 2.5, 'opacity=".8"'))
 g.append(path(' '.join(f'M{x},970 L{x},1066 M{x + 64},970 L{x + 64},1066' for x in range(18, 540, 92)), 'none', '#5A221A', 2, 'opacity=".55"'))
+tufts(g, R, 22, 1460, 1920, 1068, 1084, k=1.6)   # the nearest grass, in front of the sled's track
 layer('a_front', defs, g)
 # Shah Jahan, mourning: the body, and the head (turban, plume) drawn upright so Remotion can turn it about the nape
 EX, EY, EK = 300, 946, 4.6
@@ -228,6 +232,9 @@ g.append(marks([((x, 718), (x, 740)) for x in range(872, 1380, 24)], '#7E3A2A', 
 for x in (860, 1380):
     g.append(poly([(x - 12, 742), (x + 12, 742), (x + 12, 704), (x - 12, 704)], '#B85E44', INK, 1.6))
     g += dome(x, 704, 690, 11, 12.5, 699, '#F4E2DA', '#FFF4EA', '#D8BCBC', 1.2)
+g.append(path(curve([(720, 742), (720, 800), (690, 880), (610, 980), (520, 1100)], False) + ' L-200,1100 L-200,742 Z', '#8A6A6C', INK, 2))   # the fort's bank, behind it
+for x in range(-180, 700, 46):
+    g.append(f'<circle cx="{x + R.uniform(-10, 10):.0f}" cy="{782 + R.uniform(0, 12):.0f}" r="{R.uniform(12, 20):.0f}" fill="#7E6070" stroke="#644A58" stroke-width="1.6"/>')
 RIVER = [(-200, 742), (2120, 742), (2120, 772), (1700, 780), (1420, 800), (1260, 836), (1160, 900), (1130, 980), (1150, 1100), (520, 1100), (610, 980), (690, 880), (720, 800)]
 g.append(path(curve(RIVER[2:] + [(720, 790), (700, 770)], False) + ' L-200,770 L-200,742 L2120,742 Z', 'url(#b_river)', 'none', 0))
 g.append(poly([(TJ[0] - 16, 744), (TJ[0] + 16, 744), (TJ[0] + 26, 850), (TJ[0] - 26, 850)], '#FFF0E2', 'none', 0, 'opacity=".35"'))   # the Taj's reflection
@@ -242,8 +249,12 @@ BANK = [(2120, 776), (1700, 784), (1430, 804), (1276, 840), (1180, 902), (1152, 
 g.append(path(curve(BANK, False) + ' L2120,1100 Z', 'url(#b_field)', INK, 2))
 g.append(path(curve([(2120, 776), (1700, 784), (1430, 804), (1276, 840), (1180, 902), (1152, 980), (1170, 1100)], False) + ' L1190,1100 ' +
               curve([(1196, 1100), (1178, 990), (1204, 912), (1296, 852), (1446, 818), (1710, 798), (2120, 790)], False).replace('M', 'L', 1) + ' Z', '#D8B48C', 'none', 0))   # the sand
-for x, y, h, r in ((1520, 830, 96, 34), (1640, 822, 110, 40), (1770, 826, 90, 32), (1880, 830, 120, 44)):
+for i, y in enumerate(range(880, 1080, 34)):   # field strips on the inner bank
+    g.append(path(f'M{1240 + (1080 - y) * .25:.0f},{y} Q1600,{y - 14} 2120,{y - 6}', 'none', '#6E7448' if i % 2 else '#7E8650', 9, 'opacity=".6"'))
+for x, y, h, r in ((1360, 826, 74, 26), (1480, 818, 96, 34), (1600, 812, 110, 40), (1730, 816, 90, 32), (1850, 820, 120, 44), (1960, 822, 100, 38)):
     tree(g, R, x, y, h, r, '#3E4A30', '#566440', rim='#E8A884')
+for x, y, r in ((1300, 870, 20), (1420, 900, 26), (1560, 940, 30), (1700, 900, 24), (1840, 960, 34), (1380, 1010, 30), (1640, 1040, 36)):
+    crown(g, R, x, y, r, '#4A5634', '#647044', rim='#E8A884', n=5)
 tufts(g, R, 40, 1240, 1920, 860, 1080, col='#4E5A34', k=1.3, avoid=lambda x, y: x < 1200 + (1080 - y) * .2)
 layer('b_far', defs, g)
 # --- near: Agra Fort's Musamman Burj, its marble pavilion, the ramparts, the bank at its foot ---
@@ -371,7 +382,7 @@ def prev(name, keys, extra=''):
     d = ''.join(J['layers'][k]['defs'] for k in keys); b = ''.join(J['layers'][k]['body'] for k in keys)
     open(f'{OUT}/{name}.svg', 'w').write(f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><defs>{d}</defs>{b}{extra}</svg>')
 spr = lambda nm, x, y: f'<g transform="translate({x},{y})">{J["sprites"][nm]}</g>'
-prev('preview_a', ['a_back', 'a_front', 'a_emp_body', 'a_emp_head'], S(taj(CX, BY, K, TAJ_DUSK, 2.5)) + spr('oxcart', 1560, 934) + spr('pusher_a', 1700, 1040) +
+prev('preview_a', ['a_back', 'a_trees', 'a_front', 'a_emp_body', 'a_emp_head'], S(taj(CX, BY, K, TAJ_DUSK, 2.5)) + spr('oxcart', 1560, 934) + spr('pusher_a', 1700, 1040) +
      f'<g transform="translate(1400,1040)">{J["A"]["ele"]["shadow"]}{S(J["A"]["ele"]["far"])}{S(J["A"]["ele"]["near"])}{J["A"]["ele"]["body"]}</g>')
 prev('preview_b', ['b_sky', 'b_far', 'b_fort', 'b_inside', 'b_crypt'], S(his[0] + his[1] + his[2] + his[3]))
 print('ok', OUT, round(os.path.getsize(f'{OUT}/taj.json') / 1024), 'KB')
