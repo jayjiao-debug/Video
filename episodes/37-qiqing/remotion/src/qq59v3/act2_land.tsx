@@ -183,7 +183,7 @@ const Larch: React.FC<{x: number; y: number; h: number; s: Season; t: number}> =
 	const clumps: string[] = [];
 	for (let i = 0; i < 150; i++) { const u = rnd(i, 61), yy = y - h * (0.28 + 0.72 * u), spread = h * 0.3 * (1 - u * 0.8), xx = x + (rnd(i, 62) - 0.5) * 2 * spread + Math.sin(t * 1.4 + i) * 2, r = h * (0.012 + 0.016 * rnd(i, 63));
 		clumps.push(`M${f1(xx - r * 1.6)},${f1(yy)} a${f1(r * 1.6)},${f1(r)} 0 1,0 ${f1(r * 3.2)},0 a${f1(r * 1.6)},${f1(r)} 0 1,0 ${f1(-r * 3.2)},0 Z`); }
-	return <g><Shape d={br.join(' ')} fill={fog('#2a2420')} /><Shape d={clumps.join(' ')} fill={fog(s.leaf)} o={s.leafO} /><Shape d={clumps.slice(0, 70).join(' ')} fill="#f4f6fa" o={cl((s.snow - 0.6) / 0.4) * 0.9} /></g>; };
+	return <g><Shape d={br.join(' ')} fill={fog('#2a2420')} /><Shape d={clumps.slice(0, Math.round(150 * s.leafO)).join(' ')} fill={fog(s.leaf)} /><Shape d={clumps.slice(0, 70).join(' ')} fill="#f4f6fa" o={cl((s.snow - 0.6) / 0.4) * 0.9} /></g>; };
 /** the stake with a gold ribbon (x, ground y, height px, lean deg) — `out` lifts it out of the ground */
 const Stake: React.FC<{x: number; y: number; h: number; t: number; wind?: number; snow?: number}> = ({x, y, h, t, wind = 1, snow = 0}) => {
 	const w = h * 0.075, top = y - h;
@@ -197,7 +197,7 @@ const Stake: React.FC<{x: number; y: number; h: number; t: number; wind?: number
 	</g>; };
 /** the obstacle cards */
 const CARDS: {txt: string; icon: 'x' | 'ban' | 'down' | 'virus'; x: number; y: number; b: number}[] = [
-	{txt: '签证', icon: 'x', x: 1360, y: 300, b: 3}, {txt: '禁止入境', icon: 'ban', x: 1420, y: 425, b: 4}, {txt: '2008 金融危机', icon: 'down', x: 1290, y: 548, b: 5}, {txt: '疫情', icon: 'virus', x: 1460, y: 668, b: 6}];
+	{txt: '签证', icon: 'x', x: 1360, y: 300, b: 3}, {txt: '禁止入境', icon: 'ban', x: 1420, y: 425, b: 4}, {txt: '2008 金融危机', icon: 'down', x: 1290, y: 548, b: 5}];
 const Card: React.FC<{c: typeof CARDS[number]; t: number; beat: number; gone: number}> = ({c, t, beat, gone}) => {
 	const t0 = c.b * beat, a = t - t0; if (a < 0) return null;
 	const pop = a < 0.3 ? 1 - Math.exp(-a * 14) * Math.cos(a * 22) : 1, g = sm(gone), dx = -40 * a - g * 900, dy = -g * 140 + Math.sin(a * 2 + c.b) * 4, rot = (rnd(c.b, 1) - 0.5) * 6 - g * 30;
@@ -272,7 +272,7 @@ export const ResumeShot: React.FC<{t: number; dur: number; beat: number}> = ({t,
 		return <svg width={W} height={H} style={{position: 'absolute', inset: 0, background: '#2c3560'}}>
 			<defs><linearGradient id="a2rs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1f2650" /><stop offset="0.42" stopColor="#7a5a7a" /><stop offset="0.62" stopColor="#f39a6a" /><stop offset="0.72" stopColor="#ffdca0" /><stop offset="0.721" stopColor="#6a6a4a" /><stop offset="1" stopColor="#3a3a28" /></linearGradient>
 				<radialGradient id="a2rsun"><stop offset="0" stopColor="#fffbf0" /><stop offset="0.12" stopColor="#ffe6b0" stopOpacity="0.95" /><stop offset="0.4" stopColor="#ffb070" stopOpacity="0.35" /><stop offset="1" stopColor="#ff9a5a" stopOpacity="0" /></radialGradient></defs>
-			<g transform={`translate(0,${f1(lerp(30, -40, e))})`}>
+			<g transform={`translate(960,540) scale(${(1 + 0.07 * pulse(t, 0, 0.03, 0.35)).toFixed(4)}) translate(-960,${f1(-540 + lerp(30, -40, e))})`}>
 				<rect x={-50} y={-100} width={W + 100} height={H + 200} fill="url(#a2rs)" />
 				{/* sun burst behind him on the drop */}
 				<g transform={`rotate(${(t * 8).toFixed(2)} 1240 770)`} opacity={0.35 + 0.4 * flash}>{Array.from({length: 14}, (_, i) => { const a = i / 14 * Math.PI * 2; return <path key={i} d={poly([[1240, 770], [1240 + Math.cos(a - 0.05) * 1500, 770 + Math.sin(a - 0.05) * 1500], [1240 + Math.cos(a + 0.05) * 1500, 770 + Math.sin(a + 0.05) * 1500]])} fill="#ffe2b0" opacity={0.18} />; })}</g>
@@ -292,8 +292,9 @@ export const ResumeShot: React.FC<{t: number; dur: number; beat: number}> = ({t,
 	}
 	// shot 2: wide; he pushes the cart on up the road, the camera rises with him (a crane up: the near ground drops away, the horizon holds)
 	const tt = t - cut, rem = dur - cut, e = sm(cl(tt / Math.max(0.5, rem + 0.4)));
-	const D = 3.15, h = 360 * SB.focus / D, tr = travel('pushCart', tt + 0.5, h, 1.15, 1.15, 0, 1), kx = 720 + tr.dx, ky = sgY(D);
-	const cam: Cam = {x: tr.dx * SB.focus / D * 0.85 + lerp(0, 50, e), y: lerp(40, -190, Math.pow(e, 0.85)), z: lerp(0.05, 0.25, e), zoom: 1, roll: lerp(0.5, 0, e)};
+	const D = 2.8, h = 380 * SB.focus / D, tr = travel('pushCart', tt + 0.5, h, 1.2, 1.2, 0, 1), kx = 640 + tr.dx, ky = sgY(D);
+	// starts low and close beside him, then cranes up and back to show the road running on to the sunrise
+	const cam: Cam = {x: tr.dx * SB.focus / D * 0.9 + lerp(-80, 120, e), y: lerp(70, -230, Math.pow(e, 0.8)), z: lerp(0.75, -0.2, Math.pow(e, 0.7)), zoom: 1, roll: lerp(1.2, 0, e)};
 	const ax = pushCartAxle(tr.phase, kx, ky, h);
 	const karl = <Fig x={kx} y={ky} h={h} depth={D} attire="siberia" action="pushCart" phase={tr.phase} rim="#ffd9a0" lightDir={25} shadow={{k: 0.3, skew: -1.6, o: 0.35, c: '#3a3040', blur: 2}}
 		under={<g transform={`rotate(-10 ${f1(ax[0] - h * 0.12)} ${f1(ax[1] - h * 0.3)})`}><Stake x={ax[0] - h * 0.12} y={ax[1] - h * 0.28} h={h * 0.62} t={t} wind={1.4} /></g>} />;

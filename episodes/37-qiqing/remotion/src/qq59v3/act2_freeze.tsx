@@ -31,7 +31,7 @@ const SkyF: React.FC<{t: number; k: number}> = ({t, k}) => {
 			for (let j = 0, x0 = -800 + rnd(s, 1) * 300; x0 < W + 800; j++) { const len = 500 + rnd(j, s) * 900, top: P[] = [], bot: P[] = [];
 				for (let q = 0; q <= 10; q++) { const u = q / 10, x = x0 + u * len, env = Math.pow(Math.sin(Math.PI * u), 0.5); top.push([x, y - th * env * (0.6 + 0.4 * Math.abs(noise1(x / 90, s)))]); bot.push([x, y + th * 0.35 * env]); }
 				segs.push(spline([...top, ...bot.reverse()], true)); x0 += len * 0.86; }
-			const sp = sm(k * 1.15), dxL = -1500 * sp * (1 - s * 0.06), dxR = 1300 * sp * (1 - s * 0.06);
+			const sp = sm(k * 1.15), dxL = -2400 * sp * (1 - s * 0.05), dxR = 1900 * sp * (1 - s * 0.05);
 			const col = mix('#2f3344', '#4a3a5c', k), under = mix('#6a6c7c', '#ffb07a', k);
 			const id = `a2fz${s}`;
 			return <g key={s}><defs><linearGradient id={id} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={col} /><stop offset="0.7" stopColor={mix(col, under, 0.4)} /><stop offset="1" stopColor={under} /></linearGradient>
@@ -96,8 +96,8 @@ const GroundF: React.FC<{t: number; k: number; f: number}> = ({t, k, f}) => {
 const Walls: React.FC<{D: number; seed: number; cols: IceCols; k?: number}> = ({D, seed, cols, k = 1}) => {
 	const y = fgY(D), s = FB.focus / D, xl = FB.vpx + ROAD.XL * s, xr = FB.vpx + ROAD.XR * s;
 	return <>
-		<IceRidge x0={xl - 420 * s} x1={xl + 8 * s} y={y + 2} hmin={20 * s * k} hmax={150 * s * k} seed={seed} cols={cols} rows={3} />
-		<IceRidge x0={xr - 8 * s} x1={xr + 380 * s} y={y + 2} hmin={20 * s * k} hmax={130 * s * k} seed={seed + 40} cols={cols} rows={3} flip />
+		<IceRidge x0={xl - 420 * s} x1={xl + 8 * s} y={y + 2} hmin={20 * s * k} hmax={150 * s * k} seed={seed} cols={cols} rows={2} />
+		<IceRidge x0={xr - 8 * s} x1={xr + 380 * s} y={y + 2} hmin={20 * s * k} hmax={130 * s * k} seed={seed + 40} cols={cols} rows={2} flip />
 	</>; };
 
 export const FreezeShot: React.FC<{t: number; dur: number; beat: number}> = ({t, dur, beat}) => {
@@ -105,8 +105,8 @@ export const FreezeShot: React.FC<{t: number; dur: number; beat: number}> = ({t,
 	const go = 6 * beat;
 	const tk = travel('haulSled', t, 250, 0, 1, go, go + 2 * beat, 0.5), td = travel('haulSled', t, 250, 0, 1, go + 0.15, go + 0.15 + 2 * beat, 0.0);
 	const cyK = tk.phase - 0.5, cyD = td.phase;
-	const DK = 2.7 + cyK * 1.0, DD = 3.35 + cyD * 1.0;
-	const XK = -380, XD = -560, hK = 250 * FB.focus / 2.7, hD = 250 * FB.focus / 2.7;
+	const DK = 2.7 + cyK * 0.6, DD = 3.6 + cyD * 0.6;
+	const XK = -420, XD = -470, hK = 250 * FB.focus / 2.7, hD = 250 * FB.focus / 2.7;
 	const e = sm(cl(t / dur)), w2 = sm((t - go) / (dur - go));
 	const cam: Cam = {x: lerp(-40, 10, e) + 60 * w2, y: lerp(10, -30, e) - 40 * w2, z: lerp(0, 0.12, e) + 0.75 * Math.pow(w2, 1.2), zoom: 1, roll: lerp(-0.3, 0.2, e)};
 	const c = (a: string, b: string) => mix(a, b, k);

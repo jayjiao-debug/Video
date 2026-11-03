@@ -184,7 +184,7 @@ const LeadWater: React.FC<{t: number}> = ({t}) => {
 /** wind ripples and hummocks on the floe tops either side of the lead (ground decals, raised a little) */
 const FloeTexture: React.FC = () => {
 	const g = useGround(LB.hz, LB.K), sh: string[] = [], hi: string[] = [];
-	for (let i = 0; i < 170; i++) { const y = LB.hz + 3 + Math.pow(rnd(i, 71), 1.7) * 640, d = y - LB.hz, side = rnd(i, 72) < 0.5 ? -1 : 1;
+	for (let i = 0; i < 120; i++) { const y = LB.hz + 3 + Math.pow(rnd(i, 71), 1.7) * 640, d = y - LB.hz, side = rnd(i, 72) < 0.5 ? -1 : 1;
 		const edge = side < 0 ? latX(LB.XL, y) : latX(LB.XR, y), x = edge + side * (40 + rnd(i, 73) * 1600) * d / 300, yy = y - d * LB.fb, L = d * (0.8 + rnd(i, 74) * 2.4), th = d * 0.03;
 		const a: P[] = [[x - L / 2, yy], [x - L * 0.1, yy - th * 0.7], [x + L / 2, yy - th * 0.2], [x + L * 0.1, yy + th * 0.5]];
 		sh.push(spline(a.map(g), true)); hi.push(spline(a.map(([px, py]) => [px - L * 0.05, py - th * 0.55] as P).map(g), true)); }
@@ -220,7 +220,7 @@ export const LeadShot: React.FC<{t: number; dur: number; beat: number}> = ({t, d
 	const swimmer = (x: number, y: number, hh: number, ph: number, D: number, key: string) => <Fig key={key} x={x} y={y} h={hh} depth={D} attire="swim" action="swim" phase={ph} rim="#ffc49a" lightDir={160}
 		foam="#f3ded6" waterHi="#a98aa0" underO={0.16} pitch={Math.sin(t * 1.7 + (key === 'k' ? 0 : 2)) * 2}
 		under={<FloatSled x={x - hh * 0.58} y={y + hh * 0.004} h={hh} t={t + (key === 'k' ? 0 : 1)} tow={[x - hh * 0.36, y - hh * 0.015]} />} />;
-	const Ds = Array.from({length: 22}, (_, i) => 52 * Math.pow(0.86, i)).filter((D) => D > 2.95);
+	const Ds = Array.from({length: 16}, (_, i) => 50 * Math.pow(0.82, i)).filter((D) => D > 2.95);
 	return <Stage t={t} cam={cam} atm={{haze: '#b58a9a', density: 0.035, focus: LB.focus, aperture: 1.6, rim: '#ffc49a', lightDir: 160, grain: 0.06, vignette: 0.55, pp: [LB.vpx, LB.hz]}} bg="#14182c">
 		<Layer D={INF}><LeadSky t={t} /></Layer>
 		<Layer D={INF}><LeadWater t={t} /></Layer>

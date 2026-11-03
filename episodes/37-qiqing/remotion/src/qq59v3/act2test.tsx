@@ -2,12 +2,14 @@
    Frames are the master's frames (ice starts at 52.98 s = f1589 on the DJ track). Picture + furniture, no audio.
    npx remotion still src/qq59v3/act2test.tsx A2 out.png --frame=1650 */
 import React from 'react';
-import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Composition, registerRoot, useCurrentFrame, getInputProps} from 'remotion';
+import {DBG} from './kit3';
 import {FPS, TRACKS, Track, layout, filmEnd, VOICE, Placed} from './story3';
 import {Story, Punch, Stamp, Counter, Seal, INK, GOLD, SANS, KAI, sm, cl, useFonts59, visLen} from '../qq59/skin59';
 import type {SceneDef} from './EP59V3';
 import {ACT2} from './act2';
 
+Object.assign(DBG, getInputProps());   // profiling switches, e.g. --props='{"noBlur":true}'
 const REG: Record<string, SceneDef> = {...ACT2};
 const ageAt = (date: number) => Math.floor(date - 1969.2 + 1e-6);
 const CHARS_PER_S = 15;

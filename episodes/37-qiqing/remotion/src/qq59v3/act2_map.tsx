@@ -97,7 +97,7 @@ const Clouds: React.FC<{t: number; cover: number; tint: string}> = ({t, cover, t
 export const StraitShot: React.FC<{t: number; dur: number; beat: number}> = ({t, dur}) => {
 	useFonts59('美洲亚洲白令海峡');
 	const u = cl(t / dur), e = sm(u);
-	const v: SatView = {lon: lerp(-168.9, -168.3, e), lat: lerp(65.95, 64.6, e), alt: lerp(0.022, 0.16, Math.pow(e, 0.8)), tilt: lerp(18, 6, e), roll: lerp(3, 0, e), cy: 560};
+	const v: SatView = {lon: lerp(-168.95, -168.6, e), lat: lerp(65.8, 65.15, e), alt: lerp(0.022, 0.15, Math.pow(e, 0.8)), tilt: lerp(18, 6, e), roll: lerp(3, 0, e), cy: 600};
 	const p = sm((t - 0.15) / (dur - 0.55));
 	const path = Array.from({length: 41}, (_, i) => crossAt(p * i / 40));
 	const pts = path.map((ll) => satPt(v, ll)).filter((q): q is [number, number] => !!q);

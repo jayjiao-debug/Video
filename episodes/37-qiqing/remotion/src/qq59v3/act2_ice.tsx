@@ -90,17 +90,17 @@ export const IceWorld: React.FC<{t: number; cam: Cam; m: Mood; sun: P; sunR?: nu
 	const cols: IceCols = m === DAY ? ICE_DAY : {lit: '#f4b9a0', shade: '#4f4f80', cap: '#ffe0cc'};
 	return <Stage t={t} cam={cam} atm={{haze: m.haze, density: 0.028, focus: IB.focus, aperture: 1.6, rim: '#ffd6a8', lightDir: 8, grain: 0.055, vignette: 0.5, pp: [sun[0], IB.hz]}} bg={m.bg}>
 		<Layer D={INF}><IceSky t={t} m={m} sun={sun} sunR={sunR} /></Layer>
-		<Layer D={60}><IceRidge x0={-800} x1={2800} y={igY(60)} hmin={1} hmax={5} seed={2} cols={cols} rows={1} /></Layer>
+		<Layer D={60}><IceRidge x0={-500} x1={2500} y={igY(60)} hmin={1} hmax={5} seed={2} cols={cols} rows={1} /></Layer>
 		<Layer D={28}><IceRidge x0={-900} x1={1050} y={igY(28)} hmin={3} hmax={16} seed={5} cols={cols} rows={1} /><IceRidge x0={1620} x1={2800} y={igY(28)} hmin={3} hmax={12} seed={6} cols={cols} rows={1} /></Layer>
 		<Layer D={INF}><LeadDecal t={t} sunX={sun[0]} streak={m.streak} /></Layer>
 		<Layer D={11}><Mist n={7} seed={8} y0={590} y1={612} t={t} speed={14} o={0.5} c="#f7dccf" w={[300, 800]} h={[16, 36]} /></Layer>
 		<Layer D={9}><IceRidge x0={ridgeX[0]} x1={ridgeX[1]} y={igY(9)} hmin={14} hmax={60} seed={9} cols={cols} />{ridge}</Layer>
-		<Layer D={INF}><Sastrugi n={150} seed={4} y0={IB.hz + 30} y1={1120} />{track.map((k, i) => <RowTracks key={i} y={k.y} x1={k.x1} />)}</Layer>
+		<Layer D={INF}><Sastrugi n={115} seed={4} y0={IB.hz + 30} y1={1120} />{track.map((k, i) => <RowTracks key={i} y={k.y} x1={k.x1} />)}</Layer>
 		<Layer D={3.4}><IceRidge x0={-900} x1={430} y={igY(3.4)} hmin={30} hmax={165} seed={13} cols={cols} rows={4} />
 			<FPath d={spline([[-900, igY(3.4) - 20], [0, igY(3.4) - 40], [300, igY(3.4) - 30], [560, igY(3.4) - 6], [700, igY(3.4) + 14], [-900, igY(3.4) + 40]], true)} c="#7884b6" /></Layer>
 		{figs}
 		<Particles kind="diamond" n={30} seed={21} D={[2.5, 10]} box={[700, 572, 1760, 820]} c="#fff1dc" o={0.9} size={0.9} />
-		<Particles kind="spindrift" n={110} seed={22} D={[1.3, 9]} box={[-100, 600, W + 100, 1100]} c="#f8e6e2" o={0.65 * spin} wind={-600} />
+		<Particles kind="spindrift" n={80} seed={22} D={[1.3, 9]} box={[-100, 600, W + 100, 1100]} c="#f8e6e2" o={0.65 * spin} wind={-600} />
 		<Layer D={2.4}><IceRidge x0={1680} x1={3200} y={igY(2.4)} hmin={20} hmax={110} seed={41} cols={cols} rows={2} /></Layer>
 		<Layer D={1.7}><DriftFG x0={1500} /></Layer>
 		{fg && <Layer D={0.5} blur={13}><FgIce blocks={[...(fg === 'right' ? [] : [[80, 1200, 520, 420, 3], [-160, 1180, 420, 560, 9], [330, 1230, 300, 260, 5]] as [number, number, number, number, number][]), [2000, 1200, 480, 380, 7], [1780, 1250, 300, 230, 11]]} /></Layer>}
