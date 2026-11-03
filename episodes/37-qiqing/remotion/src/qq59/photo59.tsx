@@ -50,9 +50,21 @@ export const PhotoSlam: React.FC<{
 	</div>;
 };
 
+/** a full-bleed photo (the opening): the photo point (fx, fy) (photo px) sits on the screen point (sx, sy) at `scale` screen px per photo px.
+    `mask` = radius (px) of a feathered round window around (sx, sy) (omit = the whole frame); `grade` = a CSS filter that bridges the photo
+    toward the film's palette. iw/ih = the photo's pixel size. */
+export const PhotoFull: React.FC<{src: string; iw: number; ih: number; fx: number; fy: number; sx: number; sy: number; scale: number; o?: number; mask?: number; feather?: number; grade?: string}> =
+	({src, iw, ih, fx, fy, sx, sy, scale, o = 1, mask, feather = 0.45, grade = 'saturate(0.82) contrast(1.06) brightness(0.92) sepia(0.12)'}) => {
+	if (o <= 0.001) return null;
+	const m = mask !== undefined ? `radial-gradient(circle ${mask.toFixed(1)}px at ${sx.toFixed(1)}px ${sy.toFixed(1)}px, #000 ${(100 * (1 - feather)).toFixed(1)}%, transparent 100%)` : undefined;
+	return <div style={{position: 'absolute', inset: 0, overflow: 'hidden', opacity: o, WebkitMaskImage: m, maskImage: m}}>
+		<Img src={staticFile(`ep59/photos/${src}`)} style={{position: 'absolute', left: sx - fx * scale, top: sy - fy * scale, width: iw * scale, height: ih * scale, filter: grade, maxWidth: 'none'}} />
+	</div>;
+};
+
 /* the photos that earned a place (see the contact sheet …/scratchpad/ep59photos/clean_sheet.jpg); `pos` frames the subject */
 export const PHOTOS = {
-	nowFace: {src: 's13.jpg', pos: '70% 35%', note: '2026-11-02 Hull: him in the press crowd (tight on his face for the opening)'},
+	nowFace: {src: 's13.jpg', pos: '70% 35%', note: '2026-11-02 Hull: him in the press crowd (tight on his face for the opening)', iw: 1130, ih: 837, face: [655, 222] as [number, number], headH: 230},
 	hug: {src: 's13.jpg', pos: '50% 45%', note: '2026-11-02 Hull: him and his mother hugging (the ending)'},
 	young1998: {src: 's00.jpg', pos: '50% 30%', note: 'young Karl with his first hi-vis cart'},
 	americas: {src: 's06b.jpg', pos: '50% 40%', note: 'cowboy hat, the cart with a Union Jack, cactus desert'},

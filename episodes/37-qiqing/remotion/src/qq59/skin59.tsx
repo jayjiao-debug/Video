@@ -93,21 +93,37 @@ export const Odo: React.FC<{v: number; size: number; blur?: number; sep?: boolea
 		<span style={{display: 'block', transform: `translateY(${-f * lh}px)`, filter: blur > 0.2 ? `blur(${blur}px)` : undefined}}>
 			<span style={{display: 'block', height: lh, lineHeight: `${lh}px`}}>{fmt(a)}</span><span style={{display: 'block', height: lh, lineHeight: `${lh}px`}}>{fmt(a + 1)}</span></span></span>;
 };
-/** bottom-left counter: year · 他 N 岁 · 已走 N 公里 */
+/** bottom-left counter 「第 N 年 · 他 N 岁」 (· 已走约 N 公里 when km is given). The props stay calendar-based: `year` may be fractional
+    while it rolls; the year count is N = year − 1998 (he left on 1 Nov 1998: 1999 is still 第 1 年, mid-2012 is 第 14 年, 2026 第 28 年). */
 export const Counter: React.FC<{year: number; age: number; km?: number | null; kmApprox?: boolean; blur?: number; o?: number; kmO?: number; pulse?: number}> = ({year, age, km, kmApprox, blur = 0, o = 1, kmO = 1, pulse = 0}) => {
-	useFonts59('已走公里约');
-	const yr = Math.round(year);
-	return <div style={{position: 'absolute', left: SAFE_X + 30, bottom: SAFE_Y + 4, display: 'flex', alignItems: 'flex-end', gap: 8, whiteSpace: 'nowrap', color: INK, opacity: 0.9 * o,
+	useFonts59('第年他岁已走公里约·');
+	const n = Math.max(1, year - 1998), small: React.CSSProperties = {fontFamily: KAI, fontWeight: 700, fontSize: 30, letterSpacing: '0.06em', marginBottom: 5};
+	const num: React.CSSProperties = {fontFamily: YEAR, fontWeight: 600, fontSize: 56, lineHeight: 1, fontVariantNumeric: 'lining-nums tabular-nums', fontFeatureSettings: "'lnum' 1, 'tnum' 1"};
+	return <div style={{position: 'absolute', left: SAFE_X + 30, bottom: SAFE_Y + 4, display: 'flex', alignItems: 'flex-end', gap: 7, whiteSpace: 'nowrap', color: INK, opacity: 0.92 * o,
 		textShadow: pulse > 0 ? `0 0 2px rgba(8,8,12,0.9), 0 1px 5px rgba(8,8,12,0.7), 0 0 ${14 + 20 * pulse}px rgba(255,190,90,${0.6 * pulse})` : QUIET}}>
-		<span style={{fontFamily: YEAR, fontStyle: 'italic', fontWeight: 500, fontSize: 46, lineHeight: 1, marginRight: 12, marginBottom: 1}}><Odo v={year} size={46} blur={blur * 0.5} /></span>
-		<span style={{fontFamily: SANS, fontSize: 24, fontWeight: 500, marginBottom: 4}}>他</span>
-		<span style={{fontFamily: FIG, fontSize: 42, fontWeight: 400, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={age} size={42} blur={blur * 0.6} /></span>
-		<span style={{fontFamily: SANS, fontSize: 24, fontWeight: 500, marginBottom: 4}}>岁</span>
+		<span style={small}>第</span><span style={num}><Odo v={n} size={56} blur={blur * 0.6} /></span><span style={small}>年</span>
+		<span style={{...small, color: GOLD, margin: '0 4px 5px'}}>·</span>
+		<span style={small}>他</span><span style={num}><Odo v={age} size={56} blur={blur * 0.6} /></span><span style={small}>岁</span>
 		{km !== null && km !== undefined && <span style={{opacity: kmO, display: 'flex', alignItems: 'flex-end', gap: 6, marginLeft: 18}}>
-			<span style={{fontFamily: KAI, fontSize: 26, fontWeight: 700, marginBottom: 4, opacity: 0.82}}>{kmApprox ? '已走约' : '已走'}</span>
-			<span style={{fontFamily: FIG, fontSize: 34, fontWeight: 400, lineHeight: 1, fontVariantNumeric: 'tabular-nums', color: GOLD_HI}}><Odo v={km} size={34} blur={blur * 0.6} sep /></span>
-			<span style={{fontFamily: KAI, fontSize: 26, fontWeight: 700, marginBottom: 4, opacity: 0.82}}>公里</span></span>}
-		{yr < 0 && <span />}
+			<span style={{...small, opacity: 0.85}}>{kmApprox ? '已走约' : '已走'}</span>
+			<span style={{fontFamily: FIG, fontSize: 38, fontWeight: 400, lineHeight: 1, marginBottom: 3, fontVariantNumeric: 'tabular-nums', color: GOLD_HI}}><Odo v={km} size={38} blur={blur * 0.6} sep /></span>
+			<span style={{...small, opacity: 0.85}}>公里</span></span>}
+	</div>;
+};
+/** a small in-frame counter for a scene (e.g. 「第 N 天」 on the ice, 「已走 N 公里」 on the highway): label, rolling number, unit, an optional bar */
+export const Tally: React.FC<{pre: string; v: number; unit: string; x: number; y: number; o?: number; sep?: boolean; bar?: number; barL?: string; barR?: string; size?: number}> = ({pre, v, unit, x, y, o = 1, sep, bar, barL = '', barR = '', size = 64}) => {
+	useFonts59(`${pre}${unit}${barL}${barR}`);
+	const small: React.CSSProperties = {fontFamily: KAI, fontWeight: 700, fontSize: Math.round(size * 0.5), letterSpacing: '0.06em', marginBottom: Math.round(size * 0.1)};
+	return <div style={{position: 'absolute', left: x, top: y, opacity: o, color: INK, textShadow: halo, whiteSpace: 'nowrap'}}>
+		<div style={{display: 'flex', alignItems: 'flex-end', gap: 8}}>
+			<span style={small}>{pre}</span>
+			<span style={{fontFamily: YEAR, fontWeight: 700, fontSize: size, lineHeight: 1, color: GOLD_HI, fontVariantNumeric: 'lining-nums tabular-nums', fontFeatureSettings: "'lnum' 1, 'tnum' 1"}}><Odo v={v} size={size} sep={sep} /></span>
+			<span style={small}>{unit}</span></div>
+		{bar !== undefined && <div style={{marginTop: 10, width: 420}}>
+			<div style={{position: 'relative', height: 8, borderRadius: 4, background: 'rgba(255,244,226,0.22)', boxShadow: '0 1px 6px rgba(0,0,0,0.6)'}}>
+				<div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: `${(100 * cl(bar)).toFixed(2)}%`, borderRadius: 4, background: GOLD}} />
+				<div style={{position: 'absolute', left: `calc(${(100 * cl(bar)).toFixed(2)}% - 9px)`, top: -5, width: 18, height: 18, borderRadius: 9, background: '#FFF6E0', boxShadow: `0 0 12px ${GOLD}`}} /></div>
+			<div style={{display: 'flex', justifyContent: 'space-between', marginTop: 8, fontFamily: KAI, fontWeight: 700, fontSize: 26, letterSpacing: '0.05em', opacity: 0.86}}><span>{barL}</span><span>{barR}</span></div></div>}
 	</div>;
 };
 /** the brand seal (the owner's red J stamp), bottom-right */

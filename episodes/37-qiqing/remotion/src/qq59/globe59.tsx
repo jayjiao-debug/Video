@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {geoOrthographic, geoPath, geoInterpolate, geoDistance, geoGraticule} from 'd3-geo';
+import {geoOrthographic, geoPath, geoInterpolate, geoDistance, geoGraticule, geoProjection, geoCircle} from 'd3-geo';
 import {feature} from 'topojson-client';
 import type {Topology, GeometryCollection} from 'topojson-specification';
 import land50 from 'world-atlas/land-50m.json';
@@ -62,6 +62,8 @@ export const projOf = (v: GlobeView) => geoOrthographic().rotate([-v.lon, -v.lat
 /** is a lon/lat on the visible hemisphere (with a margin in radians)? */
 export const facing = (v: GlobeView, ll: LL, margin = 0.02) => geoDistance(ll, [v.lon, v.lat]) < Math.PI / 2 - margin;
 export const PAL = {ocean0: '#1a2c40', ocean1: '#08111c', land: '#433a30', landEdge: '#6a5a46', grat: '#cfe0ff', atm: '#6ea6d8', gold: '#FFC24A', goldHi: '#FFE9B0', glow: '#FFA62E', plan: '#F4EAD8'};
+/** the film's one gold (route, home light, key words) */
+export const GOLD59 = PAL.gold;
 export type RouteDraw = {p0: number; p1: number; o?: number; w?: number; head?: number; headO?: number};
 export type Pin = {ll: LL; label?: string; o?: number; kind?: 'start' | 'home'; dy?: number};
 /** the globe; `route` draws the gold line (p0 → p1, a comet head at `head`); `plan` a dashed cream line; `home` = the light of Hull */
@@ -119,3 +121,78 @@ export const Space: React.FC<{id: string; o?: number; drift?: number}> = ({id, o
 		<g transform={`translate(${-drift},0)`}>{stars.map((s, i) => <circle key={i} cx={s.x} cy={s.y} r={s.s} fill="#eef2ff" opacity={s.o} />)}</g>
 	</g>;
 };
+
+/* ================= the perspective camera (a satellite view): altitude, tilt and roll, for the chase along the route and the dives ================= */
+const RAD = Math.PI / 180;
+/** d3-geo-projection's satellite projection (vertical perspective with tilt), written out here */
+const satRaw = (P: number, tilt: number) => { const co = Math.cos(tilt), so = Math.sin(tilt);
+	return (l: number, p: number): [number, number] => { const cp = Math.cos(p), k = (P - 1) / (P - cp * Math.cos(l)), x = k * cp * Math.sin(l), y = k * Math.sin(p);
+		if (!tilt) return [x, y]; const A = y * so / (P - 1) + co; return [x * co / A, y / A]; }; };
+/** a camera over the Earth: looking down at (lon, lat) from `alt` Earth radii up, tilted forward by `tilt`° (clamped so the near side stays
+    in front of the lens), rolled by `roll`° (+ turns the picture counter-clockwise); the nadir lands at (cx, cy); F = focal length (px) */
+export type SatView = {lon: number; lat: number; alt: number; tilt?: number; roll?: number; cx?: number; cy?: number; F?: number};
+export const satMaxTilt = (alt: number) => 0.88 * Math.atan(Math.sqrt((1 + alt) * (1 + alt) - 1)) / RAD;
+export const satProj = (v: SatView) => { const P = 1 + v.alt, tilt = Math.min(v.tilt ?? 0, satMaxTilt(v.alt)), F = v.F ?? 1100;
+	return geoProjection(satRaw(P, tilt * RAD)).scale(F / v.alt).translate([v.cx ?? 960, v.cy ?? 540]).rotate([-v.lon, -v.lat, v.roll ?? 0])
+		.clipAngle(Math.acos(1 / P) / RAD - 0.2).precision(0.35).clipExtent([[-80, -80], [2000, 1160]]); };
+/** the on-screen radius of the whole Earth at altitude alt (untilted) */
+export const satR = (alt: number, F = 1100) => F / Math.sqrt((1 + alt) * (1 + alt) - 1);
+/** the route's heading (degrees clockwise from north) at fraction p, averaged over a window so the roll never jerks */
+export const headingAt = (p: number, win = 0.03): number => { let sx = 0, sy = 0; const n = 8;
+	for (let i = 0; i < n; i++) { const a = routeAt(p - win / 2 + win * i / n), b = routeAt(p - win / 2 + win * (i + 1) / n), la = (a[1] + b[1]) / 2 * RAD;
+		const dx = (b[0] - a[0]) * Math.cos(la), dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1; sx += dx / l; sy += dy / l; }
+	return Math.atan2(sx, sy) / RAD; };
+/** soft clouds lying on the globe (geo circles, fixed seed), so the surface reads as a surface while the camera moves over it */
+const CLOUDS = Array.from({length: 90}, (_, i) => { const r = (k: number) => { const x = Math.sin(i * 91.7 + k * 47.3) * 43758.5453; return x - Math.floor(x); };
+	const q = routeAt(r(1)); return {c: [q[0] + (r(2) - 0.5) * 26, q[1] + (r(3) - 0.5) * 18] as LL, rad: 0.5 + 1.8 * r(4), o: 0.06 + 0.1 * r(5)}; });
+const CLOUD_GEO = CLOUDS.map((c) => geoCircle().center(c.c).radius(c.rad).precision(6)());
+export type EarthProps = {id: string; v: SatView; route?: RouteDraw; plan?: {p: number; o?: number}; pins?: Pin[]; home?: number; o?: number; night?: number; clouds?: number; tint?: string; ice?: {c: LL; r: number}[]};
+/** the Earth through the perspective camera: atmosphere, ocean, land (borderless), clouds, the gold route with its glowing head */
+export const Earth: React.FC<EarthProps> = ({id, v, route, plan, pins = [], home = 0, o = 1, night = 0, clouds = 1, ice = []}) => {
+	const pr = satProj(v), path = geoPath(pr);
+	/* the limb from an unclipped copy (the clipped outline would follow the frame's edges, and its strokes would draw them) */
+	const sphere = geoPath(satProj(v).clipExtent(null))({type: 'Sphere'}) ?? '', landD = path(LAND) ?? '';
+	const line = (cs: LL[]) => (cs.length > 1 ? path({type: 'LineString', coordinates: cs}) ?? '' : '');
+	const routeD = route ? line(routeSlice(route.p0, route.p1)) : '', planD = plan ? line(routeSlice(0, plan.p)) : '';
+	const vis = (ll: LL) => geoDistance(ll, [v.lon, v.lat]) < Math.acos(1 / (1 + v.alt)) - 0.01;
+	const pt = (ll: LL): [number, number] | null => (vis(ll) ? (pr(ll) as [number, number]) : null);
+	const scale = 1100 / v.alt, w = route?.w ?? Math.max(3.4, Math.min(9, 2.4 + scale / 420));
+	const headP = route?.head !== undefined ? pt(routeAt(route.head)) : null, homeP = home > 0 ? pt(HULL) : null;
+	const R = satR(v.alt, v.F), nad: [number, number] = [v.cx ?? 960, v.cy ?? 540];
+	return <g opacity={o}>
+		<defs>
+			<radialGradient id={`${id}oc`} gradientUnits="userSpaceOnUse" cx={nad[0] - R * 0.25} cy={nad[1] - R * 0.3} r={R * 1.25}><stop offset="0" stopColor={PAL.ocean0} /><stop offset="1" stopColor={PAL.ocean1} /></radialGradient>
+			<radialGradient id={`${id}hg`}><stop offset="0" stopColor={PAL.goldHi} stopOpacity="1" /><stop offset="0.35" stopColor={PAL.glow} stopOpacity="0.55" /><stop offset="1" stopColor={PAL.glow} stopOpacity="0" /></radialGradient>
+			<clipPath id={`${id}cp`}><path d={sphere} /></clipPath>
+			<filter id={`${id}cb`} x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation={Math.min(14, 3 + 900 / Math.max(60, R) * 2)} /></filter>
+		</defs>
+		{/* the atmosphere: soft layered strokes on the limb */}
+		<path d={sphere} fill="none" stroke={PAL.atm} strokeOpacity={0.07} strokeWidth={90} />
+		<path d={sphere} fill="none" stroke={PAL.atm} strokeOpacity={0.12} strokeWidth={42} />
+		<path d={sphere} fill="none" stroke={PAL.atm} strokeOpacity={0.22} strokeWidth={16} />
+		<path d={sphere} fill={`url(#${id}oc)`} />
+		{ice.length > 0 && <g filter={`url(#${id}cb)`}>{ice.map((c, i) => { const d = path(geoCircle().center(c.c).radius(c.r).precision(2)()); return d ? <path key={i} d={d} fill="#dde6ee" opacity={0.85} /> : null; })}</g>}
+		<path d={landD} fill={PAL.land} />
+		{clouds > 0 && <g opacity={clouds} filter={`url(#${id}cb)`}>{CLOUD_GEO.map((g, i) => { const d = path(g); return d ? <path key={i} d={d} fill="#dfe6f0" opacity={CLOUDS[i].o} /> : null; })}</g>}
+		{/* the limb: a bright thin line and a shade toward it (sphere depth) */}
+		<g clipPath={`url(#${id}cp)`}><path d={sphere} fill="none" stroke="#000" strokeOpacity={0.35} strokeWidth={Math.min(260, R * 0.5)} /></g>
+		<path d={sphere} fill="none" stroke="#9ccaf0" strokeOpacity={0.55} strokeWidth={2.2} />
+		{night > 0 && <path d={sphere} fill="#03050c" opacity={night} />}
+		{planD && <g opacity={plan?.o ?? 1}><path d={planD} stroke="#0a0d14" strokeOpacity={0.55} strokeWidth={7} fill="none" strokeLinecap="round" />
+			<path d={planD} stroke={PAL.plan} strokeWidth={3.4} fill="none" strokeDasharray="10 9" strokeLinecap="round" /></g>}
+		{routeD && <g opacity={route?.o ?? 1}>
+			<path d={routeD} stroke={PAL.glow} strokeOpacity={0.16} strokeWidth={w * 4.2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+			<path d={routeD} stroke={PAL.glow} strokeOpacity={0.32} strokeWidth={w * 2.2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+			<path d={routeD} stroke={PAL.gold} strokeWidth={w} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+			<path d={routeD} stroke={PAL.goldHi} strokeOpacity={0.6} strokeWidth={w * 0.35} fill="none" strokeLinecap="round" strokeLinejoin="round" /></g>}
+		{headP && (route?.headO ?? 1) > 0.01 && <g opacity={route?.headO ?? 1}><circle cx={headP[0]} cy={headP[1]} r={w * 12} fill={`url(#${id}hg)`} /><circle cx={headP[0]} cy={headP[1]} r={w * 1.2} fill="#fffaf0" /></g>}
+		{homeP && <g opacity={home}><circle cx={homeP[0]} cy={homeP[1]} r={46} fill={`url(#${id}hg)`} /><circle cx={homeP[0]} cy={homeP[1]} r={6} fill="#fff6e0" /></g>}
+		{pins.map((p, i) => { const q = pt(p.ll); if (!q || (p.o ?? 1) < 0.01) return null; const home1 = p.kind === 'home';
+			return <g key={i} opacity={p.o ?? 1} transform={`translate(${q[0].toFixed(1)},${q[1].toFixed(1)})`}>
+				<circle r={home1 ? 9 : 7} fill={home1 ? PAL.gold : PAL.plan} stroke="#0a0d14" strokeWidth={3} />
+				{p.label && <text x={0} y={p.dy ?? (home1 ? -24 : 38)} textAnchor="middle" style={{fontFamily: "'LXGW WenKai','Noto Serif CJK SC',serif", fontWeight: 700, fontSize: 30, letterSpacing: '0.06em'}}
+					fill="#FFF4E2" stroke="rgba(8,8,12,0.8)" strokeWidth={6} paintOrder="stroke">{p.label}</text>}</g>; })}
+	</g>;
+};
+/** the screen point of a lon/lat under a view (null when it is behind the Earth) */
+export const satPt = (v: SatView, ll: LL): [number, number] | null => (geoDistance(ll, [v.lon, v.lat]) < Math.acos(1 / (1 + v.alt)) - 0.01 ? (satProj(v)(ll) as [number, number]) : null);
