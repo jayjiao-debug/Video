@@ -301,14 +301,31 @@ const LayerB: React.FC<{f: Bf; src?: string; children?: React.ReactNode}> = ({f,
 const morion = (cx: number, cy: number): Part => Pp(([[-12, -5], [-9, -1], [-4, .5], [4, .5], [9, -1], [12, -5], [8, -3], [5, -3.5], [5, -7], [3, -10.5], [0, -13], [-3, -10.5], [-5, -7], [-5, -3.5], [-8, -3]] as V2[]).map(([x, y]) => [cx + x, cy + y] as V2));
 const lance = (a: V2, b: V2, w = 2.2): Part[] => { const L = Math.hypot(b[0] - a[0], b[1] - a[1]), ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L, nx = -uy, ny = ux;
 	return [Ll([a, b], w), Pp([[b[0] + nx * 2.4 + ux * 3, b[1] + ny * 2.4 + uy * 3], [b[0] + ux * 11, b[1] + uy * 11], [b[0] - nx * 2.4 + ux * 3, b[1] - ny * 2.4 + uy * 3], b])]; };
-const soldier = (step: number): Part[] => { const k = step % 2 ? 1 : -1;
+/* walking (owner 11:13 "make them walk"): legs from a gait phase with planted feet — in stance a foot slides back at exactly the
+   column's ground speed, so nothing skates; swing lifts it on a smooth arc. Knees by two-bone IK. Smooth functions of time only
+   (no per-frame randomness), so the small figures don't jitter. */
+const SPEED = 62 / 1.08;                                       // the column's speed in figure units per second (colX / figure scale)
+const ik = (h: V2, f: V2, a: number, b: number, dir: number): V2 => {
+	const dx = f[0] - h[0], dy = f[1] - h[1], L = Math.hypot(dx, dy), d = Math.min(L, a + b - .01), ux = dx / L, uy = dy / L;
+	const x = (a * a - b * b + d * d) / (2 * d), y = Math.sqrt(Math.max(0, a * a - x * x)); let nx = -uy, ny = ux; if (nx * dir < 0) {nx = -nx; ny = -ny;}
+	return [h[0] + ux * x + nx * y, h[1] + uy * x + ny * y]; };
+const footOff = (ph: number, L: number, lift: number, stance: number): V2 => { const p = ((ph % 1) + 1) % 1;
+	if (p < stance) return [-L / 2 + L * p / stance, 0];                       // planted: front (−x, the way they walk) to back
+	const u = (p - stance) / (1 - stance), e = .5 - .5 * Math.cos(Math.PI * u); return [L / 2 - L * e, -lift * Math.sin(Math.PI * u)]; };
+const S_CYC = .7, S_ST = .55, H_CYC = .8, H_ST = .6;                // stride cycles (s) and stance fractions: foot travel = SPEED · cycle · stance
+const leg = (hip: V2, ph: number, cyc: number, st: number, lift: number, a: number, b: number, dir: number, gy = -1): [V2, V2] => {
+	const o = footOff(ph, SPEED * cyc * st, lift, st), f: V2 = [hip[0] + o[0], gy + o[1]]; return [ik(hip, f, a, b, dir), f]; };
+const soldier = (ph: number): Part[] => {
+	const legs = [0, .5].map((d, j) => { const hip: V2 = [j ? 3 : -3, -29], [kn, f] = leg(hip, ph + d, S_CYC, S_ST, 3.6, 16, 15.5, -1);
+		return [Ll([hip, kn, f], 4), Pp([[f[0] - 5, f[1] - 2], [f[0] + 3, f[1] - 2], [f[0] + 3, f[1] + 2], [f[0] - 5, f[1] + 2]])]; });
 	return [morion(0, -60), Ee(-.5, -55.5, 4.6, 5.4), Pp([[-5, -54], [-3.5, -49.5], [1, -51]]), Pp([[-6, -51], [6, -51], [7.5, -44], [5, -37], [-6, -37], [-9.5, -41.5], [-8, -47]]), Pp([[4, -51.5], [9.5, -49], [12.5, -38], [6, -37]]),
-		Pp([[-7.5, -38.5], [7, -38.5], [9.5, -31.5], [6, -27], [-6, -27], [-9.5, -31.5]]), Ll([[-3, -29], [-5 - 2 * k, -14], [-9 - 3 * k, -1]], 4), Ll([[3, -29], [4 + k, -14], [7 + 2 * k, -1]], 4),
-		Pp([[-14 - 3 * k, -3], [-6 - 3 * k, -3], [-6 - 3 * k, 1], [-14 - 3 * k, 1]]), Pp([[3 + 2 * k, -3], [11 + 2 * k, -3], [11 + 2 * k, 1], [3 + 2 * k, 1]]), Ll([[-3, -49], [-8, -42], [-11.5, -40]], 3.8), ...lance([-10, -6], [-17.5, -128])]; };
-const rider = (step: number): Part[] => { const k = step % 2 ? 1 : -1;
-	return [Pp([[-22, -54], [-8, -57], [12, -56], [24, -52], [27, -44], [24, -35], [12, -32], [-14, -32], [-23, -38], [-25, -46]]), Pp([[-17, -52], [-26, -66], [-31, -74], [-36, -76], [-47, -64], [-45, -59.5], [-37, -61], [-30, -58], [-21, -44]]),
+		...legs[1], Pp([[-7.5, -38.5], [7, -38.5], [9.5, -31.5], [6, -27], [-6, -27], [-9.5, -31.5]]), ...legs[0], Ll([[-3, -49], [-8, -42], [-11.5, -40]], 3.8), ...lance([-10, -6], [-17.5, -128])]; };
+const rider = (ph: number): Part[] => {                              // a walking horse: hind-left, fore-left, hind-right, fore-right a quarter apart
+	const hl = (hip: V2, d: number, w: number) => { const [kn, f] = leg(hip, ph + d, H_CYC, H_ST, 5, 19.6, 19.6, 1, 0); return Ll([hip, kn, f], w); };
+	return [hl([-18, -36], .25, 4.6), hl([20, -38], .5, 5),          // far legs first
+		Pp([[-22, -54], [-8, -57], [12, -56], [24, -52], [27, -44], [24, -35], [12, -32], [-14, -32], [-23, -38], [-25, -46]]), Pp([[-17, -52], [-26, -66], [-31, -74], [-36, -76], [-47, -64], [-45, -59.5], [-37, -61], [-30, -58], [-21, -44]]),
 		Pp([[-32, -74], [-31, -81], [-28.5, -74]]), Pp([[-24, -66], [-31, -76.5], [-26, -78], [-18, -60]]), Pp([[24, -53], [31, -47], [33, -32], [29, -29], [26, -44]]),
-		Ll([[-18, -36], [-20 - 2 * k, -18], [-22 - 3 * k, 0]], 4.6), Ll([[-12, -36], [-8 + k, -20], [-11 + 2 * k, -2]], 4.6), Ll([[15, -38], [20, -21], [17 - 2 * k, 0]], 5), Ll([[20, -38], [24, -22], [27 + 2 * k, -3]], 5),
+		hl([-12, -36], .75, 4.6), hl([15, -38], 0, 5),
 		morion(1, -91), Ee(.5, -86.5, 4.6, 5.4), Pp([[-4, -85], [-2.5, -80.5], [2, -82]]), Pp([[-5, -82], [6, -82], [8, -66], [-4, -63], [-8, -72]]), Pp([[4, -82.5], [10, -79], [14, -64], [7, -63]]),
 		Ll([[1, -63], [-4, -50], [-2, -38]], 5.2), Ll([[-2, -79], [-7, -70], [-10.5, -68]], 3.8), Pp([[-12, -58], [14, -58], [12, -53], [-11, -53]]), ...lance([-9, -50], [-16, -168])]; };
 const colX = (t: number) => 150 - 62 * t;
@@ -346,8 +363,8 @@ const ShotB: React.FC<{t: number}> = ({t}) => {
 		<LayerB f={F.sea} src="b_sea" />
 		<LayerB f={F.valley} src="b_valley"><svg width={W} height={H} style={{position: 'absolute', overflow: 'visible'}}>
 			{figs.map((f: any, i: number) => f.k === 'r'
-				? <Sil key={i} parts={rider(f.step)} x={f.X} y={f.Y} s={1.08} rim={[2.4, -1.8]} rimc="#E9B27A" />
-				: <Sil key={i} parts={soldier(f.step)} x={f.X} y={f.Y} s={1.08} rim={[2.4, -1.8]} rimc="#E9B27A">{i === 3 && <Flag t={t} />}</Sil>)}
+				? <Sil key={i} parts={rider(t / H_CYC + .29 * i)} x={f.X} y={f.Y} s={1.08} rim={[2.4, -1.8]} rimc="#E9B27A" />
+				: <Sil key={i} parts={soldier(t / S_CYC + .37 * i + .5 * (f.step % 2))} x={f.X} y={f.Y} s={1.08} rim={[2.4, -1.8]} rimc="#E9B27A">{i === 3 && <Flag t={t} />}</Sil>)}
 			{REEDS.map((r, i) => { const y = groundB(r.x) + 9; return <path key={i} d={`M${r.x - 5},${y} L${r.x - 3},${y - r.h * .7} L${r.x},${y} L${r.x + 1},${y - r.h} L${r.x + 3},${y} L${r.x + 6},${y - r.h * .6} L${r.x + 7},${y} Z`} fill={r.c} />; })}
 		</svg></LayerB>
 		<LayerB f={F.near} src="b_near" />
