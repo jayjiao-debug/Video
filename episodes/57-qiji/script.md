@@ -125,3 +125,46 @@ See facts.md (researcher, 2026-11-02 night) for the new and pending rows. Alread
 - Voice test (7 lines).
 - A clean 奇琴伊察 photo.
 - Look test of one full stop: drawing → viewfinder → developing polaroid → album on the tray table.
+
+---
+
+## v8 script (owner 2026-11-03 07:50: cut the takeoff/title scene; the explanation must move; keep each stop to *when it was built* and *what it was for*)
+
+**Shape:** fast opening (3 shots, no takeoff scene) → 7 stops, each = zoom flight → 「XXX欢迎你」 arrival → **建于何时** (2 bars) → **用来干什么** (3 bars) → 拍立得 (3 bars, the photo always develops and holds) → finale album → end card. Every cut on the downbeat 咚. About 2:33 on the extended BGM.
+
+**The explanation moves, with one motif repeated at every stop so it is easy to follow:**
+- **建于何时 = 「时光倒流」**: the coded scene of the site turns sepia, film grain comes up, and a big year counter rolls back from 2026 to the build year (odometer roll, lands on the downbeat); for 基督像 and 泰姬陵 the construction drawing fades in under the counter.
+- **用来干什么 = the history drawing, animated**: one thing moves in each (the light triangles crawl down the stairs one per beat; the Inca procession walks; the coin falls into the box; the crowd streams into the arena; the camels walk; the emperor's gaze line draws to the Taj; riders charge the wall), on top of the camera move.
+
+| # | 画面 | 字幕 |
+|---|---|---|
+| 开场 1 | 北京拉远到整个地球 | 世界这么大！ |
+| 开场 2 | 第一视角踩着舷梯往上（每一拍一步） | 今天，我们一起去看看！ |
+| 开场 3 | 7 张拍立得一拍一张拍在桌上；最后一拍落下片名 | 世界新七大奇迹——你去过几个？ |
+| 1 奇琴伊察 | 到达牌 + 配音 ¡Bienvenido a México! | 第一站，墨西哥，奇琴伊察。 |
+| | 时光倒流 2026 → 约1000年前 | 大约一千年前，玛雅人建了它。 |
+| | 春分蛇影：光三角一拍一个往下爬 | 用来祭祀[羽蛇神]：春分秋分，<br>台阶上会爬下一条“影子蛇”。 |
+| 2 马丘比丘 | 到达牌 + ¡Bienvenido al Perú! | 第二站，秘鲁，马丘比丘。 |
+| | 时光倒流 2026 → 1450 | 1450年左右，印加人把它建在山顶。 |
+| | 行宫：皇帝一行沿梯田走，炊烟升起 | 这是印加皇帝的[山间行宫]，<br>也用来祭祀太阳神。 |
+| 3 基督像 | 到达牌 + Bem-vindo ao Brasil! | 第三站，巴西，基督像。 |
+| | 时光倒流 2026 → 1931（脚手架画面淡入） | 1931年建成，前后修了快十年。 |
+| | 捐款：硬币一枚枚落进箱子，飞向山顶 | 里约人捐钱立起它，<br>张开双臂，[守护]整座城。 |
+| 4 斗兽场 | 到达牌 + Benvenuto in Italia! | 第四站，意大利，罗马斗兽场。 |
+| | 时光倒流 2026 → 公元80年 | 公元80年建成，快两千年了。 |
+| | 人群涌进拱门，旗子飘 | 古罗马人在这里看[角斗士]决斗，<br>能坐五万人。 |
+| 5 佩特拉 | 到达牌 + 阿拉伯语配音 | 第五站，约旦，佩特拉。 |
+| | 时光倒流 2026 → 两千多年前 | 两千多年前，纳巴泰人把城刻进了石头。 |
+| | 骆驼队往宝库走 | 它是[香料商队]的中转站，<br>这座“宝库”其实是一座王陵。 |
+| 6 泰姬陵 | 到达牌 + 印地语配音 | 第六站，印度，泰姬陵。 |
+| | 时光倒流 2026 → 1632（脚手架画面淡入） | 1632年开工，修了二十多年。 |
+| | 皇帝的目光画一条线到泰姬陵 | 皇帝为去世的[皇后]修的陵墓。 |
+| 7 长城 | 到达牌「欢迎回家」+ 配音 | 最后一站：回家，长城！ |
+| | 时光倒流 2026 → 1505 | 八达岭这段是明朝修的，五百多年了。 |
+| | 北方骑兵冲到城墙下停住（new drawing） | 用来挡住北方的[骑兵]。 |
+| | 长城自拍：咔嚓，显影 7/7 | |
+| 结尾 | 7 张照片一拍一张贴进相册 + 登机牌「39,735 公里 · 7 站」 | 这一圈，你的7张[打卡照]。<br>截图存好！ |
+| | 相册推近 | 你去过几个？评论区打个数字👇<br>真去过的，晒出你的照片！ |
+| 片尾 | 片尾卡 | |
+
+**Facts to verify before the build (sources go in facts.md):** El Castillo c. 9th–12th c. (temple of Kukulcán, equinox serpent); Machu Picchu c. 1450, royal estate of Pachacuti, Temple of the Sun; Christ the Redeemer 1922–1931, funded by Catholic donations; Colosseum completed AD 80, about 50,000 seats; Petra Nabataean, 1st c. BC–1st c. AD, incense route, Al-Khazneh likely a royal tomb; Taj Mahal 1632–1653, mausoleum of Mumtaz Mahal; Badaling section built 1505 (Ming), against northern nomads.
