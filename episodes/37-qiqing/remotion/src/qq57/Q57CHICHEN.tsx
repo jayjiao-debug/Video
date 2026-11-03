@@ -86,6 +86,31 @@ const Temple: React.FC<{cam: Cam; c: TC; dz?: number; op?: number}> = ({cam, c, 
 const Txt: React.FC<{x: number; y: number; s: string; size: number; op?: number; sc?: number}> = ({x, y, s, size, op = 1, sc = 1}) =>
 	<g transform={`translate(${x},${y}) scale(${sc})`} opacity={op}><text x={0} y={0} textAnchor="middle" fontFamily="Noto Sans CJK SC" fontWeight={900} fontSize={size} fill={GOLD} stroke={INK} strokeWidth={size * .16} paintOrder="stroke" strokeLinejoin="round">{s}</text></g>;
 
+
+const SerpentHead: React.FC<{cam: Cam; sgn: number; lit: boolean; op?: number}> = ({cam, sgn, lit, op = 1}) => {
+	const c = lit ? {top: '#F6CC8E', end: '#D9965E', cheek: '#FFD999', line: '#B9783E', mouth: '#4A2422', eye: '#3A2A24'}
+		: {top: '#7D7795', end: '#5C5674', cheek: '#6A6484', line: '#4C4864', mouth: '#2A2233', eye: '#2A2233'};
+	const [uo, ui] = sgn > 0 ? [WS + .3, WS - BW - .3] : [-(WS - BW - .3), -(WS + .3)];
+	const r0 = RF - .6, r1 = RF + 3.3, Q = (r: number, z: number, u: number) => P3('N', r, u, z);
+	const prof: [number, number][] = [[r0, 0], [r1, 0], [r1, .55], [r0 + 1.5, .98], [r1 + .2, 1.2], [r1 + .1, 1.8], [r1 - .35, 2.05], [r0 + 1.3, 2.3], [r0, 2.45]];
+	const o: React.ReactNode[] = [];
+	o.push(<Poly key="top" cam={cam} P={[Q(r1 - .35, 2.05, uo), Q(r0 + 1.3, 2.3, uo), Q(r0, 2.45, uo), Q(r0, 2.45, ui), Q(r0 + 1.3, 2.3, ui), Q(r1 - .35, 2.05, ui)]} fill={c.top} />);
+	o.push(<Poly key="snt" cam={cam} P={[Q(r1 + .1, 1.8, uo), Q(r1 - .35, 2.05, uo), Q(r1 - .35, 2.05, ui), Q(r1 + .1, 1.8, ui)]} fill={c.top} sw={2} />);
+	o.push(<Poly key="jaw" cam={cam} P={[Q(r1, 0, uo), Q(r1, .55, uo), Q(r1, .55, ui), Q(r1, 0, ui)]} fill={c.end} sw={2} />);
+	o.push(<Poly key="snf" cam={cam} P={[Q(r1 + .2, 1.2, uo), Q(r1 + .1, 1.8, uo), Q(r1 + .1, 1.8, ui), Q(r1 + .2, 1.2, ui)]} fill={c.end} sw={2} />);
+	o.push(<Poly key="mouth" cam={cam} P={[[r1 + .05, .5], [r0 + 1.4, .98], [r1 + .15, 1.22]].map(([r, z]) => Q(r, z, uo - .05 * sgn))} fill={c.mouth} sw={2} />);
+	if (lit) { o.push(<Line key="tg1" cam={cam} P={[[r1 - .3, .82], [r1 + .7, .8], [r1 + 1.2, .62]].map(([r, z]) => Q(r, z, uo - .4))} stroke="#C2463A" sw={5} />);
+		o.push(<Line key="tg2" cam={cam} P={[[r1 + .7, .8], [r1 + 1.25, .95]].map(([r, z]) => Q(r, z, uo - .4))} stroke="#C2463A" sw={4} />); }
+	o.push(<Poly key="cheek" cam={cam} P={prof.map(([r, z]) => Q(r, z, uo))} fill={c.cheek} />);
+	[r1 - .1, r1 - .55].forEach((fr, i) => { o.push(<Poly key={`fa${i}`} cam={cam} P={[[fr, 1.12], [fr - .14, .78], [fr - .28, 1.08]].map(([r, z]) => Q(r, z, uo))} fill="#FFF6E6" sw={1.3} />);
+		o.push(<Poly key={`fb${i}`} cam={cam} P={[[fr - .05, .6], [fr - .17, .86], [fr - .3, .64]].map(([r, z]) => Q(r, z, uo))} fill="#FFF6E6" sw={1.3} />); });
+	const ex = r0 + 1.0, ez = 1.72;
+	o.push(<Poly key="eye" cam={cam} P={Array.from({length: 16}, (_, i) => Q(ex + .42 * Math.cos(i * Math.PI / 8), ez + .3 * Math.sin(i * Math.PI / 8), uo))} fill={c.eye} sw={2} />);
+	o.push(<Line key="brow" cam={cam} P={Array.from({length: 9}, (_, i) => Q(r0 + .3 + .9 * i / 8, 2.05 + .25 * Math.sin(Math.PI * i / 8), uo))} stroke={c.line} sw={3} />);
+	for (let i = 0; i < 3; i++) { const rr = r0 + .35 + i * .45; o.push(<Line key={`sc${i}`} cam={cam} P={[Q(rr, .25, uo), Q(rr + .25, .55, uo), Q(rr, .8, uo)]} stroke={c.line} sw={2} />); }
+	return <g opacity={op}>{o}</g>;
+};
+
 /* ---------- shared: seeded random, natural ground and trees, the HUD-style widgets ---------- */
 const mul = (seed: number) => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
 const blob = (R: () => number, cx: number, cy: number, r: number, n = 10, j = .25): [number, number][] => Array.from({length: n}, (_, i) => { const a = 2 * Math.PI * i / n, rr = r * (1 + j * (R() - .5) * 2); return [cx + rr * Math.cos(a), cy + rr * Math.sin(a)]; });
@@ -197,9 +222,14 @@ const Serpent: React.FC<{t: number}> = ({t}) => {
 	const head = cl((t - BEAT * 9.6) / .3), hp = cam.p(P3('N', RF + 1.2, WS - .5, 1.2)), dusk = sm(t / SHOT);
 	const R = mul(3); const far = Array.from({length: 80}, (_, i) => ({x: -80 + i * 27 + R() * 10, y: 640 - R() * 26, r: 14 + R() * 16}));
 	const near = Array.from({length: 60}, (_, i) => ({x: -80 + i * 36 + R() * 14, y: 664 - R() * 30, r: 18 + R() * 20}));
-	const tufts = Array.from({length: 90}, () => ({x: R() * 1960 - 20, y: 700 + Math.pow(R(), .8) * 380, s: .6 + R() * 1.2}));
+	const TR = mul(77), tufts: {P: V3; s: number}[] = [];
+	while (tufts.length < 150) { const x = -150 + TR() * 260, y = -120 + TR() * 280, sz = .7 + TR() * .9;
+		if (Math.max(Math.abs(x), Math.abs(y)) < S0 + 9) continue;                 // not under or against the pyramid
+		if (Math.abs(x) < WS + 4 && y > 0 && y < RF + 12) continue;                 // not at the north stair's foot / serpent heads
+		if (Math.abs(y) < WS + 4 && x < 0 && x > -RF - 12) continue;                // nor the west stair's
+		tufts.push({P: [x, y, 0], s: sz}); }
 	const clouds = [[300, 210, 1.2], [760, 150, .9], [1260, 250, 1.0], [1560, 170, .8], [520, 330, .7]];
-	const foot: V2 = [sun[0] - 470, 662], clock = 16 * 60 + 35 + Math.round(50 * t / SHOT);
+	const foot: V2 = [Math.max(1690, sun[0] - 300), 662], clock = 16 * 60 + 35 + Math.round(50 * t / SHOT);
 	return <g>
 		<defs><linearGradient id="sky2" x1="0" y1="0" x2="0" y2="720" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#5E6C93" /><stop offset=".45" stopColor="#B98A86" /><stop offset=".75" stopColor="#E9AC78" /><stop offset="1" stopColor="#F7CF8E" /></linearGradient>
 			<radialGradient id="glow2" cx={sun[0]} cy={sun[1]} r={760} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FFF1C4" stopOpacity=".95" /><stop offset=".18" stopColor="#FFD58A" stopOpacity=".75" /><stop offset=".5" stopColor="#F2A866" stopOpacity=".28" /><stop offset="1" stopColor="#F2A866" stopOpacity="0" /></radialGradient>
@@ -212,20 +242,24 @@ const Serpent: React.FC<{t: number}> = ({t}) => {
 		<g transform={`translate(${-30 * u},0)`}>{far.map((c, i) => <circle key={i} cx={c.x} cy={c.y} r={c.r} fill="#9A7E86" />)}</g>
 		<g transform={`translate(${-70 * u},0)`}>{near.map((c, i) => <circle key={i} cx={c.x} cy={c.y} r={c.r} fill="#4F4044" stroke="#2E2628" strokeWidth={2} />)}</g>
 		<rect x={-20} y={662} width={W + 40} height={H} fill="url(#field2)" />
-		<g transform={`translate(${-120 * u},0)`}>{tufts.map((f, i) => <g key={i} transform={`translate(${f.x},${f.y}) scale(${f.s * (.5 + (f.y - 660) / 420)})`}>
-			<ellipse cx={-30} cy={2} rx={34} ry={3} fill="#2E2420" opacity={.35} /><path d="M-6,0 L-2,-16 L0,0 L3,-20 L5,0 L9,-13 L11,0 Z" fill="#5E6A3A" stroke={INK} strokeWidth={1} /></g>)}</g>
+		{tufts.map((f, i) => { const d = Math.hypot(...sub(cam.C, f.P)); if (dot(sub(f.P, cam.C), cam.F) < 8) return null; const [x, y] = cam.p(f.P), k = f.s * 60 / d;
+			return y < 664 ? null : <g key={i} transform={`translate(${x},${y}) scale(${k})`}>
+			<ellipse cx={-30} cy={2} rx={34} ry={3} fill="#2E2420" opacity={.35} /><path d="M-6,0 L-2,-16 L0,0 L3,-20 L5,0 L9,-13 L11,0 Z" fill="#5E6A3A" stroke={INK} strokeWidth={1} /></g>; })}
 		<Temple cam={cam} c={tc} />
 		{walls}
 		<Stair cam={cam} side="W" c={wc} />
 		<Stair cam={cam} side="N" c={nc} light={tri} />
+		<SerpentHead cam={cam} sgn={-1} lit={false} />
+		<SerpentHead cam={cam} sgn={1} lit={false} />
+		{head > 0 && <SerpentHead cam={cam} sgn={1} lit op={head} />}
 		{rays}
 		{head > 0 && <circle cx={hp[0]} cy={hp[1]} r={70 + 12 * Math.sin(t * 8)} fill="#FFE7A8" opacity={.6 * head} filter="url(#bl2)" />}
 		{/* the sun's height: an angle at the pyramid's foot between the horizon and the ray */}
-		{(() => { const ang = Math.atan2(sun[1] - foot[1], sun[0] - foot[0]); const r = 150;
-			return <g opacity={cl(t / .5)}><line x1={foot[0] - 40} y1={foot[1]} x2={foot[0] + 470} y2={foot[1]} stroke="#FFF6E6" strokeWidth={2.5} strokeDasharray="8 8" />
+		{(() => { const ang = Math.atan2(sun[1] - foot[1], sun[0] - foot[0]); const r = 90;
+			return <g opacity={cl(t / .5)}><line x1={foot[0]} y1={foot[1]} x2={W} y2={foot[1]} stroke="#FFF6E6" strokeWidth={2.5} strokeDasharray="8 8" />
 				<line x1={foot[0]} y1={foot[1]} x2={sun[0] - 62 * Math.cos(ang)} y2={sun[1] - 62 * Math.sin(ang)} stroke={GOLD} strokeWidth={3} />
 				<path d={`M${foot[0] + r},${foot[1]} A${r},${r} 0 0 0 ${foot[0] + r * Math.cos(ang)},${foot[1] + r * Math.sin(ang)}`} fill="none" stroke={GOLD} strokeWidth={4} />
-				<T2 x={foot[0] + r + 14} y={foot[1] - 12} s={`${elev.toFixed(0)}°`} size={40} col={GOLD} /><T2 x={foot[0] - 40} y={foot[1] + 40} s="地平线" size={26} col="#FFF6E6" /></g>; })()}
+				<T2 x={foot[0] + r + 14} y={foot[1] - 12} s={`${elev.toFixed(0)}°`} size={40} col={GOLD} /></g>; })()}
 		<Callout from={cam.p(P3('N', rz(zk(4)), WS, zk(4)))} to={[620, 470]} label="台阶边的影子" u={(t - BEAT * 3) / .6} side={-1} />
 		{head > 0 && <Callout from={hp} to={[560, 880]} label="蛇头" u={head * 2} side={-1} />}
 		{/* the date and time widget, and the triangle counter */}
