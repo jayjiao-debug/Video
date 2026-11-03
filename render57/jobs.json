@@ -1,7 +1,1 @@
-[{"n": "chichen141", "file": "Q57CHICHEN", "id": "Q57CHICHEN141", "pre": ""},
- {"n": "colo141", "file": "Q57COLO", "id": "Q57COLO141", "pre": "python3 episodes/57-qiji/tools/export_colosseum.py"},
- {"n": "christ141", "file": "Q57CHRIST", "id": "Q57CHRIST141", "pre": "python3 episodes/57-qiji/tools/export_christ.py"},
- {"n": "petra141", "file": "Q57PETRA", "id": "Q57PETRA141", "pre": "python3 episodes/57-qiji/tools/export_petra.py"},
- {"n": "machu141", "file": "Q57MACHU", "id": "Q57MACHU141", "pre": "python3 episodes/57-qiji/tools/export_machu.py"},
- {"n": "taj141", "file": "Q57TAJ", "id": "Q57TAJ141", "pre": "python3 episodes/57-qiji/tools/export_taj.py"},
- {"n": "board141", "file": "Q57BOARD", "id": "Q57BOARD141", "pre": ""}]
+[{"n": "ep59demo", "file": "../qq59/EP59", "id": "EP59DEMO", "pre": ""}, {"n": "ep59sb", "file": "../qq59sb/SB59", "id": "SB59", "pre": ""}]
