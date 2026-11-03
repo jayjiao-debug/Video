@@ -1,2 +1,5 @@
 [{"n": "chichen", "file": "Q57CHICHEN", "id": "Q57CHICHEN", "pre": ""},
- {"n": "colo", "file": "Q57COLO", "id": "Q57COLO", "pre": "python3 episodes/57-qiji/tools/export_colosseum.py"}]
+ {"n": "colo", "file": "Q57COLO", "id": "Q57COLO", "pre": "python3 episodes/57-qiji/tools/export_colosseum.py"},
+ {"n": "christ", "file": "Q57CHRIST", "id": "Q57CHRIST", "pre": "python3 episodes/57-qiji/tools/export_christ.py"},
+ {"n": "petra", "file": "Q57PETRA", "id": "Q57PETRA", "pre": "python3 episodes/57-qiji/tools/export_petra.py"},
+ {"n": "machu", "file": "Q57MACHU", "id": "Q57MACHU", "pre": "python3 episodes/57-qiji/tools/export_machu.py"}]
