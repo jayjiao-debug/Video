@@ -274,8 +274,11 @@ const Serpent: React.FC<{t: number}> = ({t}) => {
 	</g>;
 };
 
-const Scene: React.FC = () => {
-	const f = useCurrentFrame(), n1 = Math.round(SHOT * FPS);
+const Scene: React.FC<{ts?: number}> = ({ts = 1}) => {
+	const f = useCurrentFrame() * ts, n1 = Math.round(SHOT * FPS);
 	return <AbsoluteFill style={{background: '#000'}}><svg width={W} height={H}>{f < n1 ? <Calendar t={f / FPS} /> : <Serpent t={(f - n1) / FPS} />}</svg></AbsoluteFill>;
 };
-registerRoot(() => <Composition id="Q57CHICHEN" component={Scene} durationInFrames={2 * Math.round(SHOT * FPS)} fps={FPS} width={W} height={H} />);
+/* Q57CHICHEN106: the same scene for the 106 BPM track (owner 2026-11-03 12:07): time scaled so each 0.418 s beat lasts 0.566 s */
+const TS106 = 0.418 / 0.56606;
+registerRoot(() => <><Composition id="Q57CHICHEN" component={Scene} durationInFrames={2 * Math.round(SHOT * FPS)} fps={FPS} width={W} height={H} />
+	<Composition id="Q57CHICHEN106" component={Scene} defaultProps={{ts: TS106}} durationInFrames={Math.round(2 * SHOT * FPS / TS106)} fps={FPS} width={W} height={H} /></>);
