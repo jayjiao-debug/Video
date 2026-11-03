@@ -16,6 +16,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 import soundfile as sf
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import kf7 as K
+import jump_anim as JA
 B = K.B
 from playwright.sync_api import sync_playwright
 
@@ -273,7 +274,12 @@ class Snap(Shot):
     def frame(s, t):
         s.prep(); u = t - s.tc
         if u < 0:
-            if s.mode == 'dev': im = s.base0.copy(); draw_bubble(im, t, s.t0 + .1, s.tip); return im
+            if s.mode == 'dev':
+                if getattr(s, 'jump', None):
+                    if not hasattr(s, 'jbase'): s.jbase = load_rgb(s.jump[0])
+                    i = min(len(s.jump[1]) - 1, max(0, int(round((t - s.t0) * FPS)))); im = s.jbase.copy(); im.paste(s.jump[1][i], (0, 0), s.jump[1][i])
+                    dx, dy = s.jump[2][i]; draw_bubble(im, t, s.t0 + .1, None if s.tip is None else (s.tip[0] + dx, s.tip[1] + dy)); return im
+                im = s.base0.copy(); draw_bubble(im, t, s.t0 + .1, s.tip); return im
             a = ease((t - s.t0) / .3); z = 1.06 - .06 * a
             base = zoom(Image.blend(s.scene, s.vfimg, a), z)
             tip = None if s.tip is None else (960 + (s.tip[0] - 960) * z, 540 + (s.tip[1] - 540) * z)
@@ -450,10 +456,12 @@ for i, F in enumerate([4, 15, 26, 37, 48, 59]):
     t0, tc, t1 = D[F + 8], D[F + 9], D[F + 11]; CLICKS.append(tc)
     cap = cap_p(f'{STOPS[i][1]} · {i + 1}/7')
     if k == 'machu2':
-        timer_nonum = re.sub(r'<text x="1500".*?</text>', '', K.timer); tb = P(img(scene(k)['fig']) + svgw(timer_nonum))
+        timer_nonum = re.sub(r'<text x="1500".*?</text>', '', K.timer).replace('translate(330,880)', 'translate(700,905)')   # off the figure's legs
+        tb = P(img(scene(k)['fig']) + svgw(timer_nonum)); tbn = P(img(scene(k)['nofig']) + svgw(timer_nonum))
         NUM = lambda n: T(svgw(f'<text x="1500" y="560" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="260" fill="#FFFFFF" opacity=".95" stroke="{INK}" stroke-width="6">{n}</text>'))
         tn = [t0 + BEAT, t0 + 2 * BEAT, t0 + 3 * BEAT, tc]
-        s = Snap(t0, t1, k, tc, cap, mode='dev', origin=(330, 880), base=tb)
+        s = Snap(t0, t1, k, tc, cap, mode='dev', origin=(700, 905), base=tb)
+        s.jump = (tbn, *JA.frames(t0, tc, BEAT, FPS, f'{DEMO}/jump'))     # owner 11:13: anticipate, jump on the count, flash at the top
         s.pops = [Pop(NUM(n), tn[m], 'slam', (1500, 470), t_out=tn[m + 1]) for m, n in enumerate((3, 2, 1))]
         sub(t0, tc, '倒计时3、2、1——[跳]！')
     else:
