@@ -36,23 +36,24 @@ def kraft(w, h):
     return f'<svg width="{w}" height="{h}" style="position:absolute;left:0;top:0"><rect width="{w}" height="{h}" fill="#E9DCC3"/>{dots}</svg>'
 
 def wide():
+    """airy (owner 13:46: not so cramped): the hook alone in the middle of the page, the seven photos round it with space between"""
     W, H = 1440, 1080
     body = kraft(W, H)
-    for k, x, y, w, r in [('chichen', 230, 190, 430, -7), ('machu2', 720, 160, 440, 4), ('christ', 1210, 195, 430, -5),
-                          ('petra2', 200, 900, 420, 6), ('taj', 720, 915, 430, -4), ('greatwall2', 1230, 890, 430, 5), ('colosseum', 1250, 545, 330, 8)]:
-        body += photo(k, x, y, w, r, tag=30)
-    body += letters('绕地球一圈', 610, 470, 190, '#F2C66E', -3) + letters('打卡7大奇迹', 640, 680, 172, '#FF7A59', 2)
-    body += pill('你去过几个？', 1150, 760, 52, -6)
+    for k, x, y, w, r in [('chichen', 255, 165, 320, -6), ('machu2', 720, 150, 320, 3), ('christ', 1185, 165, 320, -4),
+                          ('colosseum', 170, 560, 250, 5), ('petra2', 1270, 560, 250, -5), ('taj', 470, 945, 320, 4), ('greatwall2', 970, 945, 320, -3)]:
+        body += photo(k, x, y, w, r, tag=24)
+    body += letters('绕地球一圈', 720, 450, 140, '#F2C66E', -3) + letters('打卡7大奇迹', 720, 610, 124, '#FF7A59', 2)
+    body += pill('你去过几个？', 720, 765, 44, -4)
     return W, H, body
 
 def tall():
     W, H = 1080, 1440
     body = kraft(W, H)
-    for k, x, y, w, r in [('chichen', 250, 175, 440, -7), ('machu2', 800, 160, 440, 5), ('christ', 230, 470, 400, 5), ('colosseum', 830, 470, 420, -6),
-                          ('petra2', 240, 1170, 400, -5), ('taj', 820, 1180, 420, 6), ('greatwall2', 540, 1310, 380, -2)]:
-        body += photo(k, x, y, w, r, tag=30)
-    body += letters('绕地球一圈', 540, 700, 168, '#F2C66E', -3) + letters('打卡7大奇迹', 540, 890, 150, '#FF7A59', 2)
-    body += pill('你去过几个？', 700, 1030, 50, -5)
+    for k, x, y, w, r in [('chichen', 195, 190, 280, -6), ('machu2', 540, 170, 280, 3), ('christ', 885, 190, 280, -4),
+                          ('colosseum', 295, 1035, 320, 4), ('petra2', 785, 1045, 320, -5), ('taj', 295, 1325, 300, -3), ('greatwall2', 785, 1330, 300, 5)]:
+        body += photo(k, x, y, w, r, tag=24)
+    body += letters('绕地球一圈', 540, 560, 136, '#F2C66E', -3) + letters('打卡7大奇迹', 540, 720, 118, '#FF7A59', 2)
+    body += pill('你去过几个？', 540, 870, 44, -4)
     return W, H, body
 
 if __name__ == '__main__':
