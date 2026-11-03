@@ -74,7 +74,10 @@ Subtitles are added later, so don't draw them. But each shot must *show* its lin
   - Either from exported geometry as JSON (anchors and parameters), or by porting small drawing functions.
   - Import JSON as `import data from '../../public/ep57/<stop>/<stop>.json'`.
 - **Your file:** `episodes/37-qiqing/remotion/src/qq57/Q57<STOP>.tsx`, with its own `registerRoot` and composition id `Q57<STOP>` (e.g. Q57TAJ, Q57PETRA, Q57CHRIST, Q57MACHU).
-- **Rendering.** Use the local Chromium, because Remotion can't download its own. The machine has 2 CPUs shared by 4 agents, so check with `npx remotion still` frames and do one full render at the end with `--concurrency=1`.
+- **Rendering (owner 10:13: always render in parallel on GitHub).**
+  - Locally, only check with `npx remotion still` frames, using the local Chromium because Remotion can't download its own.
+  - Full renders run on the render farm. Push the branch `render-ep57` with your scene listed in `render57/jobs.json`; each scene gets its own 4-core runner, and outputs come back encrypted to `render-ep57-out-<n>`. The main session does this.
+  - Export scripts must write repo-relative paths so the farm can run them.
   ```
   CH=$(python3 -c "from playwright.sync_api import sync_playwright as s; p=s().start(); print(p.chromium.executable_path); p.stop()")
   cd /home/claude/video/episodes/37-qiqing/remotion
