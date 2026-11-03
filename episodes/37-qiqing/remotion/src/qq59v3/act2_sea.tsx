@@ -215,8 +215,8 @@ const EdgeRubble: React.FC<{D: number; seed: number; k?: number}> = ({D, seed, k
 export const LeadShot: React.FC<{t: number; dur: number; beat: number}> = ({t, dur}) => {
 	const e = sm(cl(t / dur)), h = 600, Dk = 1.95, D2 = 2.8, h2 = h * Dk / D2;
 	const tk = travel('swim', t + 0.6, h, 1, 1, 0, 1), td = travel('swim', t + 0.3, h2, 1, 1, 0, 1, 0.45);
-	const cam: Cam = {x: tk.dx * 0.8 + lerp(-30, 20, e), y: lerp(-24, 10, e), z: lerp(0, 0.2, e), zoom: 1, roll: lerp(-0.5, 0.3, e) + Math.sin(t * 0.9) * 0.2};
-	const kx = 1010 + tk.dx, dx2 = 640 + td.dx * Dk / D2;
+	const cam: Cam = {x: tk.dx * 0.55 + lerp(-30, 20, e), y: lerp(-24, 10, e), z: lerp(0, 0.2, e), zoom: 1, roll: lerp(-0.5, 0.3, e) + Math.sin(t * 0.9) * 0.2};
+	const kx = 690 + tk.dx, dx2 = 830 + td.dx * Dk / D2;
 	const swimmer = (x: number, y: number, hh: number, ph: number, D: number, key: string) => <Fig key={key} x={x} y={y} h={hh} depth={D} attire="swim" action="swim" phase={ph} rim="#ffc49a" lightDir={160}
 		foam="#f3ded6" waterHi="#a98aa0" underO={0.16} pitch={Math.sin(t * 1.7 + (key === 'k' ? 0 : 2)) * 2}
 		under={<FloatSled x={x - hh * 0.58} y={y + hh * 0.004} h={hh} t={t + (key === 'k' ? 0 : 1)} tow={[x - hh * 0.36, y - hh * 0.015]} />} />;
