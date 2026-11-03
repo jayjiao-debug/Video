@@ -38,7 +38,8 @@ const Canopy: React.FC<{y: number; seed: number; gaps: [number, number][]; t: nu
 	const fog = useFog(), [mass, fringe] = canopyD(-500, W + 500, y, seed, gaps, t);
 	const lit = gaps.map(([a, b], g) => Array.from({length: 9}, (_, k) => { const x = k % 2 ? a - 10 + rnd(k, g) * 50 : b - 40 + rnd(k, g + 3) * 50, yy = y - 150 + rnd(k, g + 5) * 90;
 		return leafD([x, yy], 40 + rnd(k, g + 7) * 40, 18, 80 + (rnd(k, g + 9) - 0.5) * 90 + Math.sin(t + k) * 4, 25); }).join(' ')).join(' ');
-	return <g><Shape d={mass + ' ' + fringe} fill={fog('#0c1a12', -0.12)} /><Shape d={lit} fill="#b4c45a" o={0.55} /></g>; };
+	const tex = Array.from({length: 60}, (_, i) => { const x = -400 + rnd(i, seed + 20) * (W + 800), yy = y - 140 - rnd(i, seed + 21) * 260; return Array.from({length: 4}, (_, k) => leafD([x + k * 14, yy + (k % 2) * 10], 36 + rnd(k, i) * 30, 14, 60 + k * 25 + (rnd(i, 3) - 0.5) * 40, 20)).join(' '); }).join(' ');
+	return <g><Shape d={mass + ' ' + fringe} fill={fog('#091615', -0.12)} /><Shape d={tex} fill={fog('#1a3027', -0.1)} o={0.7} /><Shape d={lit} fill="#b4c45a" o={0.55} /></g>; };
 
 /** a strangler fig on the left: a host trunk wrapped in braided aerial roots */
 const Strangler: React.FC<{x: number; base: number}> = ({x, base}) => {
@@ -54,7 +55,7 @@ const Strangler: React.FC<{x: number; base: number}> = ({x, base}) => {
 
 /** the giant buttress tree (kapok): trunk out of frame top, plank buttresses flaring into the water; lit on its left edge */
 const BigTree: React.FC<{x: number; base: number; t: number}> = ({x, base, t}) => {
-	const fog = useFog(), dark = fog('#0f1f16', -0.1), rim = fog('#c6cf8f', -0.05), mid = fog('#1d3526', -0.08);
+	const fog = useFog(), dark = fog('#0b1a17', -0.1), rim = fog('#c6cf8f', -0.05), mid = fog('#1d3526', -0.08);
 	const trunk = trunkD(x, -200, base - 120, 250, 330, 11, 0, 0.08);
 	const fins: [number, number, number][] = [[-1, 0.62, 380], [-1, 0.45, 210], [1, 0.58, 330], [1, 0.4, 170], [-0.2, 0.5, 90], [0.35, 0.48, 120]];
 	const finD = fins.map(([s, top, reach], i) => { const y0 = lerp(-200, base, top), ex = x + s * 120, fx = x + s * (120 + reach), th = 26 + 20 * rnd(i, 4);
@@ -72,7 +73,7 @@ const BigTree: React.FC<{x: number; base: number; t: number}> = ({x, base, t}) =
 
 /** the fallen log: from off-frame left to a broken end on the right; branch stubs, moss, ferns on top. Rim of light along its top. */
 const Log: React.FC<{y: number; t: number}> = ({y, t}) => {
-	const fog = useFog(), dark = fog('#0b140f', -0.1), rim = '#e7e3b0', moss = fog('#1f3320', -0.1);
+	const fog = useFog(), dark = fog('#081211', -0.1), rim = '#e7e3b0', moss = fog('#1f3320', -0.1);
 	const x0 = -200, x1 = 1330, top = (x: number) => y + (x - 400) * 0.014 + noise1(x / 170, 5) * 4, thick = (x: number) => 70 - (x - x0) * 0.012;
 	const topPts: P[] = [], botPts: P[] = [];
 	for (let x = x0; x <= x1; x += 40) { topPts.push([x, top(x)]); botPts.push([x, top(x) + thick(x)]); }
@@ -102,12 +103,12 @@ const Pads: React.FC<{seed: number; n: number; y0: number; y1: number; x0?: numb
 
 /** the near bank, bottom right: mud, roots, big drooping leaves and ferns, rim-lit from the upper left */
 const NearBank: React.FC<{t: number}> = ({t}) => {
-	const fog = useFog(), c = fog('#07100b', -0.1), rim = '#c9cf92';
+	const fog = useFog(), c = fog('#060f0e', -0.1), rim = '#c9cf92';
 	const bank = spline([[1150, 1250], [1210, 1010], [1360, 940], [1560, 915], [1760, 900], [2000, 880], [2200, 900], [2200, 1300]], true);
 	const sw = (i: number) => Math.sin(t * 0.9 + i) * 3;
 	const paddle = (b: P, L: number, a: number, bend: number, w = 0.3, i = 0) => { const tip = a + sw(i); return taper(qpts(b, [b[0] + Math.cos(tip * Math.PI / 180) * L * 0.15, b[1] + Math.sin(tip * Math.PI / 180) * L * 0.15], [b[0] + Math.cos(tip * Math.PI / 180) * L * 0.3, b[1] + Math.sin(tip * Math.PI / 180) * L * 0.3], 6), L * 0.05, L * 0.035) + ' ' + leafD([b[0] + Math.cos(tip * Math.PI / 180) * L * 0.28, b[1] + Math.sin(tip * Math.PI / 180) * L * 0.28], L * 0.75, L * w, tip, bend); };
-	const leaves = [paddle([1420, 960], 420, -118, -30, 0.3, 1), paddle([1460, 950], 380, -78, 34, 0.28, 2), paddle([1600, 930], 470, -100, -40, 0.3, 3), paddle([1640, 925], 360, -55, 50, 0.3, 4),
-		paddle([1820, 905], 430, -95, -36, 0.28, 5), paddle([1860, 900], 330, -40, 46, 0.3, 6), droopLeafD([1300, 1000], [1260, 890], 200, 150 + sw(7), 0.42, 30), droopLeafD([1990, 890], [2040, 760], 240, 40 + sw(8), 0.42, 40)].join(' ');
+	const leaves = [paddle([1420, 960], 420, -118, -30, 0.24, 1), paddle([1460, 950], 380, -78, 34, 0.24, 2), paddle([1600, 930], 470, -100, -40, 0.25, 3), paddle([1640, 925], 360, -55, 50, 0.25, 4),
+		paddle([1820, 905], 430, -95, -36, 0.24, 5), paddle([1860, 900], 330, -40, 46, 0.25, 6), paddle([1530, 940], 300, -140, -20, 0.22, 9), paddle([1720, 920], 280, -20, 30, 0.22, 10), droopLeafD([1300, 1000], [1260, 890], 200, 150 + sw(7), 0.42, 30), droopLeafD([1990, 890], [2040, 760], 240, 40 + sw(8), 0.42, 40)].join(' ');
 	const ferns = frondD([1440, 950], 300, -160, 50, 70, 31, 16).concat(frondD([1760, 910], 280, -30, 40, 60, 37, 16)).join(' ');
 	const roots = Array.from({length: 6}, (_, i) => taper([[1220 + i * 90, 990 - i * 12], [1180 + i * 92, 1040], [1160 + i * 96, 1100]], 16, 4)).join(' ');
 	const all = bank + ' ' + leaves + ' ' + ferns + ' ' + roots;
@@ -119,11 +120,10 @@ const NearBank: React.FC<{t: number}> = ({t}) => {
 /** out-of-focus foreground framing: a huge leaf mass bottom-left, a hanging frond top-right, a trunk at the left edge */
 const FgFrame: React.FC<{t: number}> = ({t}) => {
 	const c = '#040805', s1 = Math.sin(t * 0.6) * 1.5, s2 = Math.sin(t * 0.5 + 1) * 1.2;
-	const bl = [leafD([-80, 1200], 620, 230, -34, -14), leafD([-160, 1060], 460, 170, -8, 12), leafD([120, 1240], 440, 160, -72, -24), leafD([-60, 960], 320, 110, 4, 30), leafD([300, 1250], 360, 140, -100, 30)].join(' ');
+	const bl = frondD([-160, 1180], 820, -38, 70, 150, 41, 20).concat([leafD([-120, 1240], 520, 190, -62, -10), leafD([180, 1300], 420, 150, -96, 24)]).join(' ');
 	const tr = frondD([2060, -90], 640, 160, -40, 130, 51, 18).join(' ');
 	const trunk = trunkD(-10, -200, 1300, 170, 210, 61, 0, 0.1);
 	return <g fill={c}>
-		<g transform="translate(5,-4)"><Shape d={bl} fill="#3e4c2c" o={0.8} transform={`rotate(${s1.toFixed(2)} -80 1180)`} /></g>
 		<Shape d={trunk} />
 		<Shape d={hangD([170, -100], 860, 12, 34) + ' ' + hangD([215, -100], 620, 7, -24)} />
 		<g transform={`rotate(${s1.toFixed(2)} -80 1180)`}><Shape d={bl} /></g>
@@ -132,7 +132,7 @@ const FgFrame: React.FC<{t: number}> = ({t}) => {
 
 export const Jungle: React.FC<SetProps & {walk?: boolean}> = ({t, cam, walk}) => {
 	const h = 330, phase = t / 1.0, x = walk ? 560 + phase * STRIDE_B * h * 0.98 : 760;
-	return <Stage t={t} cam={cam} atm={{haze: '#86a585', density: 0.065, focus: JF.focus, aperture: 2.4, rim: '#ffe7ad', lightDir: 118, grain: 0.06, vignette: 0.62}} bg="#0d1712">
+	return <Stage t={t} cam={cam} atm={{haze: '#7da38e', density: 0.065, focus: JF.focus, aperture: 2.4, rim: '#ffe7ad', lightDir: 118, grain: 0.06, vignette: 0.62}} bg="#0d1712">
 		<Layer D={INF}><JBack /></Layer>
 		<Layer D={20}>
 			<TreeBand seed={3} n={28} base={JF.waterY - 4} col="#3f5f48" w={[14, 42]} refl={0.3} vines={1} />
@@ -150,7 +150,7 @@ export const Jungle: React.FC<SetProps & {walk?: boolean}> = ({t, cam, walk}) =>
 		<Layer D={5}>
 			<Strangler x={140} base={JF.waterY + 20} />
 			<Canopy y={150} seed={9} gaps={[[300, 560], [620, 860]]} t={t} />
-			<FPath d={[lianaD([-50, 90], [430, 150], 300, 10), lianaD([840, 90], [1180, 190], 220, 8), hangD([985, 140], 420, 5, 14), hangD([1045, 160], 300, 3.5, -10)].join(' ')} c="#0c1a12" extra={-0.12} />
+			<FPath d={[lianaD([-50, 90], [430, 150], 300, 10), lianaD([840, 90], [1180, 190], 220, 8), hangD([985, 140], 420, 5, 14), hangD([1045, 160], 300, 3.5, -10)].join(' ')} c="#091615" extra={-0.12} />
 		</Layer>
 		<Layer D={4}><BigTree x={1600} base={JF.waterY + 30} t={t} /></Layer>
 		<Layer D={3.6}>

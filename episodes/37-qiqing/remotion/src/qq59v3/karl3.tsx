@@ -123,7 +123,7 @@ const LayerG: React.FC<{L: Layer; id: string; rc: RimCfg}> = ({L, id, rc}) => {
 };
 export const Layers: React.FC<{layers: Layer[]; uid: string; rc: RimCfg}> = ({layers, uid, rc}) => <>{layers.map((L, i) => <LayerG key={i} L={L} id={`${uid}L${i}`} rc={rc} />)}</>;
 const rimCfg = (h: number, rim: string, rimO: number, ld: LightDir, facing: number, body: string): RimCfg => {
-	const r = clamp(0.0042 * h, 1.1, 3.6), lv = lightVec(ld);
+	const r = clamp(0.0034 * h, 1.0, 3.0), lv = lightVec(ld);
 	return {col: rim, o: rimO, off: [lv[0] * r * facing, lv[1] * r], soft: h > 260, body};
 };
 const useUid = () => 'k' + useId().replace(/[^a-zA-Z0-9]/g, '');
@@ -137,14 +137,14 @@ type Pal = {body: string; hair: string; beard: string; top: string; sleeve: stri
 	pack?: string; packHi?: string; strap?: string; vest?: string; band?: string; hood?: string; ruff?: string; scarf?: string; scarfHi?: string; trim?: string; frost?: string};
 export type Look = {who: 'karl' | 'mum'; head: HeadK; beard: boolean; frost: number; top: TopK; mitts: boolean; boots: 'boot' | 'big' | 'bare' | 'shoe';
 	pack: boolean; hivis: boolean; harness: boolean; lifevest: boolean; wet: boolean; bulk: {torso: number; arm: number; leg: number}; pal: Pal};
-const P0 = {body: FIG, hair: '#2f2b2c', beard: '#3d3936', hand: FIG, boots: '#09080b'};
+const P0 = {body: FIG, hair: '#262326', beard: '#2c2928', hand: FIG, boots: '#09080b'};
 export const LOOKS: Record<Attire | 'mum', Look> = {
 	/** 1998: hi-vis vest over a fleece, the big pack (the Beast cart when pushing) */
 	start1998: {who: 'karl', head: 'hair', beard: true, frost: 0, top: 'fleece', mitts: false, boots: 'boot', pack: true, hivis: true, harness: false, lifevest: false, wet: false,
 		bulk: {torso: 1.07, arm: 1.12, leg: 1.0}, pal: {...P0, top: '#18161b', sleeve: '#18161b', legs: '#121116', pack: '#1d1f1b', packHi: '#2b2d27', strap: '#2c2e31', vest: '#565a22', band: '#a3a497'}},
 	/** the Darién: a soaked shirt clinging to him, the pack, a machete */
 	jungle: {who: 'karl', head: 'hair', beard: true, frost: 0, top: 'shirt', mitts: false, boots: 'boot', pack: true, hivis: false, harness: false, lifevest: false, wet: true,
-		bulk: {torso: 1.0, arm: 1.0, leg: 1.0}, pal: {...P0, hair: '#26231f', top: '#16201a', sleeve: '#16201a', legs: '#111014', pack: '#1b1e19', packHi: '#282b24', strap: '#2b2d2d'}},
+		bulk: {torso: 1.0, arm: 1.0, leg: 1.0}, pal: {...P0, hair: '#221f1c', top: '#16201a', sleeve: '#16201a', legs: '#111014', pack: '#1b1e19', packHi: '#282b24', strap: '#2b2d2d'}},
 	/** the Bering Strait: a red expedition suit, hood up, a hauling harness (the red sled) */
 	ice: {who: 'karl', head: 'hood', beard: true, frost: 0.55, top: 'suit', mitts: true, boots: 'big', pack: false, hivis: false, harness: true, lifevest: false, wet: false,
 		bulk: {torso: 1.16, arm: 1.24, leg: 1.16}, pal: {...P0, top: '#4c1518', sleeve: '#4c1518', legs: '#401215', hood: '#4c1518', hand: '#16161b', strap: '#2b303b', frost: '#e4ebef'}},
@@ -156,7 +156,7 @@ export const LOOKS: Record<Attire | 'mum', Look> = {
 		bulk: {torso: 1.05, arm: 1.06, leg: 1.02}, pal: {...P0, top: '#221d18', sleeve: '#221d18', legs: '#141210', scarf: '#4c4130', scarfHi: '#625540'}},
 	/** the swims: a wetsuit and a life vest ("floatimming") */
 	swim: {who: 'karl', head: 'wet', beard: true, frost: 0, top: 'wetsuit', mitts: false, boots: 'bare', pack: false, hivis: false, harness: false, lifevest: true, wet: false,
-		bulk: {torso: 0.97, arm: 0.94, leg: 0.95}, pal: {...P0, hair: '#26231f', top: '#0a0a0d', sleeve: '#0a0a0d', legs: '#0a0a0d', boots: '#0a0a0d', vest: '#6c3517', strap: '#2a1b14'}},
+		bulk: {torso: 0.97, arm: 0.94, leg: 0.95}, pal: {...P0, hair: '#1f1d1c', top: '#0a0a0d', sleeve: '#0a0a0d', legs: '#0a0a0d', boots: '#0a0a0d', vest: '#6c3517', strap: '#2a1b14'}},
 	/** home, 2026: a dark jacket (the orange-bagged cart when pushing) */
 	home2026: {who: 'karl', head: 'hair', beard: true, frost: 0, top: 'jacket', mitts: false, boots: 'boot', pack: false, hivis: false, harness: false, lifevest: false, wet: false,
 		bulk: {torso: 1.05, arm: 1.08, leg: 1.0}, pal: {...P0, top: '#151419', sleeve: '#151419', legs: '#0f0e12', trim: '#83401a'}},
@@ -274,8 +274,8 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 		const big = lk.boots === 'big' ? 1.14 : 1;
 		const shape: number[][] = lk.boots === 'bare' ? [[-0.032, -0.04], [0.04, -0.034], [0.112, -0.018], [0.13, -0.006], [0.118, 0.012], [0.05, 0.026], [0.012, 0.04], [-0.024, 0.036], [-0.036, 0.0]]
 			: lk.boots === 'shoe' ? [[-0.032, -0.044], [0.03, -0.042], [0.105, -0.022], [0.126, -0.01], [0.124, 0.006], [0.1, 0.016], [0.04, 0.026], [0.012, 0.034], [-0.03, 0.03], [-0.04, -0.01]]
-			: [[-0.036, -0.045], [0.02, -0.043], [0.1, -0.023], [0.13, -0.013], [0.135, 0.004], [0.115, 0.021], [0.05, 0.034], [0.02, 0.06 * big], [0.022, 0.08 * big], [-0.038, 0.076 * big], [-0.044, 0.02], [-0.044, -0.03]];
-		sh.push({d: closedD(shape.map(([u, v]) => Fp(u * (big > 1 ? 1.06 : 1), v))), f: lk.boots === 'bare' ? fill : pal.boots});
+			: [[-0.032, -0.045], [0.02, -0.043], [0.092, -0.024], [0.116, -0.014], [0.12, 0.002], [0.104, 0.017], [0.05, 0.03], [0.02, 0.05 * big], [0.022, 0.066 * big], [-0.034, 0.064 * big], [-0.04, 0.02], [-0.04, -0.03]];
+		sh.push({d: closedD(shape.map(([u, v]) => Fp(u * (big > 1 ? 1.05 : 1), v))), f: lk.boots === 'bare' ? fill : pal.boots});
 		return sh;
 	};
 	out.farLeg.push(...leg('R', far(pal.legs))); out.nearLeg.push(...leg('L', pal.legs));
@@ -287,10 +287,11 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 		const wb = pts.map((_, i) => { const u = i / n; return (u < 0.12 ? 0.038 : u < 0.5 ? lerp(0.036, 0.024, (u - 0.12) / 0.38) : lerp(0.024, 0.018, (u - 0.5) / 0.5)) * k * h; });
 		const out1: Sh[] = [{d: chainD(pts.map(S), wa, wb), f: fill}];
 		if (lk.top === 'suit' || lk.top === 'parka') out1.push({d: chainD([wr, add(wr, mul(nrm(sub(el, wr)), 0.03))].map(S), [0.026 * k * h, 0.026 * k * h], [0.026 * k * h, 0.026 * k * h]), f: fill});
-		const d = hd ?? nrm(sub(wr, el)), hc = lk.mitts ? 1.3 : 1, handF = lk.mitts ? pal.hand : (lk.who === 'mum' ? FIG : pal.hand);
-		if (hk === 'open') { const q = [wr, add(wr, mul(d, 0.026 * hc)), add(wr, mul(d, 0.056 * hc)), add(wr, mul(d, 0.078 * hc))].map(S);
-			out1.push({d: chainD(q, [0.016, 0.021, 0.019, 0.007].map((v) => v * h * hc), [0.016, 0.02, 0.018, 0.007].map((v) => v * h * hc)), f: handF}); }
-		else out1.push({d: circD(S(add(wr, mul(d, 0.028 * hc))), 0.024 * h * hc), f: handF});
+		const d = hd ?? nrm(sub(wr, el)), hc = lk.mitts ? 1.22 : lk.who === 'mum' ? 0.9 : 1, handF = pal.hand;
+		if (hk === 'open') { const q = [wr, add(wr, mul(d, 0.022 * hc)), add(wr, mul(d, 0.046 * hc)), add(wr, mul(d, 0.064 * hc))].map(S);
+			out1.push({d: chainD(q, [0.0135, 0.0165, 0.015, 0.006].map((v) => v * h * hc), [0.0135, 0.0175, 0.0155, 0.006].map((v) => v * h * hc)), f: handF}); }
+		else { const q = [add(wr, mul(d, -0.004)), add(wr, mul(d, 0.02 * hc)), add(wr, mul(d, 0.042 * hc))].map(S);
+			out1.push({d: chainD(q, [0.014, 0.02, 0.012].map((v) => v * h * hc), [0.014, 0.02, 0.013].map((v) => v * h * hc)), f: handF}); }
 		return out1;
 	};
 	out.farArm.push(...arm('R', far(pal.sleeve), o.handR ?? 'open', o.dirR)); out.nearArm.push(...arm('L', pal.sleeve, o.handL ?? 'open', o.dirL));
@@ -317,7 +318,7 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 			const fr0: V = add([qf[0], hy + (openFront ? 0.01 : 0)], mul(fx, 0.062 * B.leg + e + flare)), bk0: V = add([qb[0], hy], mul(fx, -(0.074 * B.leg + e + flare * 1.2)));
 			hem = [S(fr0), S(mixV(fr0, bk0, 0.5)), S(add(bk0, [0, 0.004]))];
 		}
-		return [...[...front].reverse().slice(0, 0), ...col.slice(0, 1), ...front, ...hem, ...back.reverse(), ...col.slice(1)];
+		return [...col.slice(0, 1), ...front, ...hem, ...back.reverse(), ...col.slice(1)];
 	};
 	if (top === 'jacket') { out.torso.push({d: closedD(garment(-0.125, 0.012, 0.006, 0.03)), f: tf});
 		out.gear.push({d: barD(TS(-0.12, -(tw(-0.12)[0] * bt + 0.011)), TS(L - 0.01, -(tw(L)[0] * bt + 0.006)), Math.max(1, 0.004 * h)), f: mixHex(tf, '#55545e', 0.3)});
@@ -354,7 +355,6 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 	if (lk.lifevest && pal.vest) {
 		out.gear.push({d: closedD([TS(0.015, -(0.062 * bt + 0.03)), TS(0.11, -(0.07 * bt + 0.034)), TS(0.19, -0.075), TS(0.225, -0.04), TS(L + 0.04, 0.0), TS(L + 0.05, 0.05), TS(0.215, 0.1), TS(0.12, 0.072 * bt + 0.034), TS(0.02, 0.064 * bt + 0.03), TS(-0.005, 0.0)]), f: pal.vest});
 		out.gear.push({d: polyD([TS(0.045, -(0.062 * bt + 0.032)), TS(0.062, -(0.064 * bt + 0.032)), TS(0.062, 0.066 * bt + 0.032), TS(0.045, 0.064 * bt + 0.032)]), f: pal.strap ?? '#2a1b14'});
-		out.gear.push({d: closedD([TS(0.125, -(0.07 * bt + 0.03)), TS(0.175, -(0.072 * bt + 0.028)), TS(0.175, -(0.04)), TS(0.125, -0.045)]), f: mixHex(pal.vest, '#ffb070', 0.18)});
 	}
 	/* --- the head --- */
 	out.head.push(...headShapes(cx, pose, lk, o));
@@ -385,24 +385,24 @@ const headShapes = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Sh[] => {
 			out.push({d: face, f: pal.body}); out.push({d: beard, f: pal.beard});
 			out.push({d: `M${Hs(-0.05, -0.02)} C${Hs(-0.076, -0.04)} ${Hs(-0.072, -0.058)} ${Hs(-0.084, -0.078)} Q${Hs(-0.07, -0.084)} ${Hs(-0.054, -0.07)} Q${Hs(-0.048, -0.04)} ${Hs(-0.04, -0.02)} Z`, f: pal.hair});
 			const t = o.t, wd = o.wind ?? 1, tail: V[] = [];
-			for (let i = 0; i <= 6; i++) { const u = i / 6, fl = Math.sin(t * 7.5 - u * 3.2) * 0.016 * u * wd; tail.push(H(-0.07 - 0.075 * u - 0.03 * u * wd, -0.03 - 0.12 * u + fl)); }
-			out.push({d: chainD(tail, tail.map((_, i) => (0.016 - 0.008 * i / 6) * h), tail.map((_, i) => (0.016 - 0.01 * i / 6) * h)), f: mixHex(pal.scarf ?? '#4c4130', '#000000', 0.12)});
+			for (let i = 0; i <= 6; i++) { const u = i / 6, fl = Math.sin(t * 6.5 - u * 3.4) * 0.012 * u * wd; tail.push(H(-0.074 - 0.022 * u - 0.03 * u * u * wd + fl, -0.03 - 0.13 * u)); }
+			out.push({d: chainD(tail, tail.map((_, i) => (0.017 - 0.004 * i / 6) * h), tail.map((_, i) => (0.017 - 0.006 * i / 6) * h)), f: mixHex(pal.scarf ?? '#4c4130', '#000000', 0.18)});
 			out.push({d: `M${Hs(0.058, 0.024)} C${Hs(0.072, 0.072)} ${Hs(0.034, 0.104)} ${Hs(-0.02, 0.1)} C${Hs(-0.074, 0.096)} ${Hs(-0.094, 0.052)} ${Hs(-0.09, 0.0)} Q${Hs(-0.088, -0.03)} ${Hs(-0.07, -0.042)} Q${Hs(-0.032, -0.012)} ${Hs(-0.004, 0.018)} Q${Hs(0.03, 0.03)} ${Hs(0.058, 0.024)} Z`, f: pal.scarf ?? '#4c4130'});
 			for (const [a0, b0] of [[0.05, 0.05], [0.03, 0.075]]) out.push({d: `M${Hs(a0, b0)} Q${Hs(a0 - 0.05, b0 + 0.02)} ${Hs(a0 - 0.11, b0 - 0.02)} Q${Hs(a0 - 0.05, b0 + 0.008)} ${Hs(a0, b0)} Z`, f: pal.scarfHi ?? '#625540'});
 			out.push({d: circD(H(-0.078, -0.032), 0.016 * h), f: pal.scarfHi ?? '#625540'});
 			break; }
 		case 'hood': case 'ruff': {
 			const hood = pal.hood ?? pal.top, ruff = lk.head === 'ruff';
-			out.push({d: `M${Hs(0.062, 0.062)} C${Hs(0.045, 0.106)} ${Hs(-0.056, 0.112)} ${Hs(-0.092, 0.05)} C${Hs(-0.118, -0.01)} ${Hs(-0.11, -0.1)} ${Hs(-0.074, -0.14)} L${Hs(0.0, -0.13)} Q${Hs(0.04, -0.11)} ${Hs(0.052, -0.088)} Z`, f: hood});
+			out.push({d: `M${Hs(0.058, 0.06)} C${Hs(0.042, 0.1)} ${Hs(-0.05, 0.104)} ${Hs(-0.084, 0.05)} C${Hs(-0.106, -0.01)} ${Hs(-0.1, -0.09)} ${Hs(-0.07, -0.13)} L${Hs(0.0, -0.122)} Q${Hs(0.036, -0.104)} ${Hs(0.046, -0.086)} Z`, f: hood});
 			out.push({d: face, f: pal.body}); out.push({d: beard, f: pal.beard}); beardFrost();
 			// the hood's side panel over the cheek (the face shows in its opening)
-			out.push({d: `M${Hs(0.062, 0.062)} Q${Hs(0.03, 0.03)} ${Hs(0.03, -0.02)} Q${Hs(0.026, -0.07)} ${Hs(0.05, -0.09)} L${Hs(0.0, -0.13)} L${Hs(-0.074, -0.14)} C${Hs(-0.11, -0.1)} ${Hs(-0.118, -0.01)} ${Hs(-0.092, 0.05)} C${Hs(-0.056, 0.112)} ${Hs(0.045, 0.106)} ${Hs(0.062, 0.062)} Z`, f: hood});
+			out.push({d: `M${Hs(0.058, 0.06)} Q${Hs(0.018, 0.03)} ${Hs(0.016, -0.02)} Q${Hs(0.014, -0.07)} ${Hs(0.046, -0.086)} L${Hs(0.0, -0.122)} L${Hs(-0.07, -0.13)} C${Hs(-0.1, -0.09)} ${Hs(-0.106, -0.01)} ${Hs(-0.084, 0.05)} C${Hs(-0.05, 0.104)} ${Hs(0.042, 0.1)} ${Hs(0.058, 0.06)} Z`, f: hood});
 			if (ruff) {   // a ragged fur ruff framing the face, a little proud of the nose
 				const n = 15, pts: V[] = [];
-				for (let i = 0; i <= n; i++) { const u = i / n, a = lerp(0.062, 0.05, u) + (i % 2 ? 0.034 : 0.012) + 0.006 * Math.sin(o.t * 3 + i), b = lerp(0.085, -0.1, u); pts.push(H(a, b)); }
-				for (let i = n; i >= 0; i--) { const u = i / n; pts.push(H(lerp(0.035, 0.024, u) - 0.004, lerp(0.075, -0.09, u))); }
+				for (let i = 0; i <= n; i++) { const u = i / n, a = 0.03 + 0.012 * Math.sin(Math.PI * u) + (i % 2 ? 0.026 : 0.008) + 0.004 * Math.sin(o.t * 3 + i), b = lerp(0.082, -0.096, u); pts.push(H(a, b)); }
+				for (let i = n; i >= 0; i--) { const u = i / n; pts.push(H(0.012 + 0.004 * Math.sin(Math.PI * u), lerp(0.07, -0.088, u))); }
 				out.push({d: closedD(pts), f: pal.ruff ?? '#4d473e'});
-				frostDots(12, (i) => H(lerp(0.07, 0.085, rnd(i, 3)), lerp(0.08, -0.095, i / 11)), 0.004);
+				frostDots(12, (i) => H(lerp(0.045, 0.068, rnd(i, 3)), lerp(0.078, -0.09, i / 11)), 0.0038);
 			} else out.push({d: chainD([H(0.061, 0.07), H(0.04, 0.02), H(0.04, -0.04), H(0.055, -0.09)], [0.006 * h, 0.006 * h, 0.006 * h, 0.006 * h], [0.006 * h, 0.006 * h, 0.006 * h, 0.006 * h]), f: mixHex(hood, '#000000', 0.35)});
 			break; }
 		case 'mum': {
@@ -715,11 +715,10 @@ const build = (b: BuildIn): Built => {
 		case 'hug': return buildHug(b, lk);
 		case 'lookUp': case 'stand': default: {
 			const look = action === 'lookUp';
-			let p = fkPose(lk.pack ? {lean: look ? -2 : 3, neck: look ? -30 : 2, lt: 1.5, lk: 2, rt: -2.5, rk: 3, la: 12, le: 126, ra: 8, re: 130}
-				: {lean: look ? -3 : 1.5, neck: look ? -30 : 0, lt: 1.5, lk: 2, rt: -2.5, rk: 3, la: -3, le: 9, ra: 3, re: 13});
+			let p = fkPose({lean: look ? -3 : (lk.pack ? 4 : 1.5), neck: look ? -30 : 0, lt: 1.5, lk: 2, rt: -2.5, rk: 3, la: -4, le: 10, ra: 3, re: 14});
 			p = breathe(p, ph);
-			const P = figure(cx, p, lk, fo({handL: lk.pack ? 'fist' : 'open', handR: lk.pack ? 'fist' : 'open'}));
-			if (b.attire === 'jungle' && !lk.pack) P.nearArm.push(...macheteSh(cx, p, 'L', p.LHand, 25));
+			const P = figure(cx, p, lk, fo({handL: b.attire === 'jungle' ? 'fist' : 'open', handR: 'open'}));
+			if (b.attire === 'jungle') P.nearArm.push(...macheteSh(cx, p, 'L', p.LHand, 25));
 			return {layers: stackOf(P), fx};
 		}
 	}
