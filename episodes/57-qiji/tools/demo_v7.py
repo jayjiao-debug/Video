@@ -1,4 +1,4 @@
-"""ep57 v7 (owner 12:53): a new 家 marker at Beijing (gold rings + label, no stick), and 马丘比丘's
+"""ep57 v7 (owner 12:53–13:03): the globe stays as it was (pole flags, the original 家; owner liked them), 马丘比丘's
 photo is taken through our own camera like the others (no camera on the rock), the jump still animated.
 ep57 v6 (owner 12:25–12:35): the new boarding shot (Remotion Q57BOARD106, 2 bars) and a one-bar sticker title card (title_v6.py)
 replace the airstairs still and the polaroid table; the rest is v4.
@@ -326,7 +326,7 @@ def slerp(a, b_, u):
 def gdist(a, b_): return math.degrees(math.acos(min(1, max(-1, v3(a) @ v3(b_)))))
 GLOBE_JOBS = []
 def globe_frames(name, specs):
-    tag = hashlib.md5(('home2' + name + json.dumps(specs)).encode()).hexdigest()[:10]
+    tag = hashlib.md5((name + json.dumps(specs)).encode()).hexdigest()[:10]
     paths = [f'{LAY}/gl_{tag}_{i:03d}.jpg' for i in range(len(specs))]
     if not all(os.path.exists(p) for p in paths): GLOBE_JOBS.append((paths, specs))
     return paths
@@ -344,43 +344,21 @@ def globe_page():
     for res in ('50m', '110m'):
         f = f'{LAY}/land{res}.js'
         if not os.path.exists(f): open(f, 'w').write(f'window.L{res}=' + open(f'{NM}/world-atlas/land-{res}.json').read() + ';')
-    cf = f'{LAY}/countries50m.js'
-    if not os.path.exists(cf): open(cf, 'w').write('window.C50T=' + open(f'{NM}/world-atlas/countries-50m.json').read() + ';')
-    pins = {c: K.pin(0, 0, c) for c in set(CC.values()) if c != 'home'}   # owner 12:59: keep the flags on poles
-    flags = {}
-    for c in ('mx', 'pe', 'br', 'it', 'jo', 'in'):
-        f, h = K.flag(c, 300); flags[c] = dict(svg=re.sub(r'<rect width="300" height="[0-9.]+" fill="none"[^>]*/>', '', f), w=300, h=round(h, 1))
-    # India: only a soft core (peninsula and the plains), so no disputed northern border is ever drawn (map rule)
-    india = [[68.9, 23.4], [70.6, 20.8], [72.8, 19.0], [73.8, 15.4], [75.4, 11.6], [76.9, 8.3], [78.2, 8.9], [79.8, 10.4], [80.2, 13.1], [80.9, 15.8],
-             [82.4, 16.7], [84.9, 19.4], [86.9, 21.1], [88.2, 22.0], [88.4, 24.2], [87.6, 26.0], [84.8, 27.0], [81.9, 27.6], [80.2, 28.6], [78.6, 29.6],
-             [76.6, 30.4], [74.9, 30.2], [73.4, 29.1], [71.6, 27.6], [70.1, 25.6]]
+    pins = {c: K.pin(0, 0, c) for c in set(CC.values())}
     stars = ''.join(f'<circle cx="{(i * 397) % 1920}" cy="{(i * 211) % 1080}" r="{1 + (i % 3) * .6}" fill="#FFF" opacity="{.25 + (i % 5) * .1}"/>' for i in range(160))
     return (K.HEAD.replace('<style>', f'<script src="file://{NM}/d3-array/dist/d3-array.min.js"></script><script src="file://{NM}/d3-geo/dist/d3-geo.min.js"></script>'
-                           f'<script src="file://{NM}/topojson-client/dist/topojson-client.min.js"></script><script src="file://{LAY}/land50m.js"></script><script src="file://{LAY}/land110m.js"></script><script src="file://{LAY}/countries50m.js"></script><style>')
+                           f'<script src="file://{NM}/topojson-client/dist/topojson-client.min.js"></script><script src="file://{LAY}/land50m.js"></script><script src="file://{LAY}/land110m.js"></script><style>')
             + f'''<svg id="g" width="1920" height="1080" style="position:absolute;left:0;top:0">{K.DEFS}
 <defs><radialGradient id="oc2" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#2E6A9E"/><stop offset="1" stop-color="#0D2742"/></radialGradient>
 <linearGradient id="sp2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070B16"/><stop offset="1" stop-color="#18213A"/></linearGradient></defs>
 <rect width="1920" height="1080" fill="url(#sp2)"/>{stars}
 <circle id="atm" cx="960" cy="560" r="10" fill="#5FA8E8" opacity=".2" filter="url(#blur30)"/><circle id="oc" cx="960" cy="560" r="10" fill="url(#oc2)"/>
 <path id="grat" stroke="#FFF" stroke-opacity=".07" fill="none"/><path id="land" fill="#C8B48C" stroke="#E9D9B4" stroke-width="1.2"/>
-<g id="flags"></g><g id="dots"></g><path id="a0" stroke="{INK}" stroke-opacity=".55" stroke-width="11" fill="none" stroke-linecap="round"/>
+<g id="dots"></g><path id="a0" stroke="{INK}" stroke-opacity=".55" stroke-width="11" fill="none" stroke-linecap="round"/>
 <path id="a1" stroke="{GOLD}" stroke-width="18" fill="none" opacity=".35" filter="url(#blur8)"/><path id="a2" stroke="{GOLD}" stroke-width="6" fill="none" stroke-linecap="round"/>
 <g id="pins"></g><g id="pl">{K.plane(0, 0, 0, 1.6)}</g></svg>
 <script>
-const PINS={json.dumps(pins)}, PATCH=false; const FL={json.dumps(flags)}; const INDIA={json.dumps(india)};
-const C50=topojson.feature(C50T,C50T.objects.countries).features, IDS={{mx:'484',pe:'604',br:'076',it:'380',jo:'400'}}, CT={{}};
-for(const k in IDS) CT[k]=C50.find(f=>f.id===IDS[k]);
-CT['in']={{type:'Feature',geometry:{{type:'Polygon',coordinates:[INDIA]}}}}; if(d3.geoArea(CT['in'])>2*Math.PI) INDIA.reverse();
-const G='{GOLD}', I='{INK}', CR='#FFF6E6';
-const DOT='<circle r="10" fill="'+CR+'" stroke="'+I+'" stroke-width="3"/><circle r="5" fill="'+G+'"/>';
-function HOME(t){{ const u=(t%1.1)/1.1, r=14+34*u;     // 家: a gold point with a slow pulse ring and a label in the film's widget style
- return '<circle r="'+r.toFixed(1)+'" fill="none" stroke="'+G+'" stroke-width="3" opacity="'+(0.8*(1-u)).toFixed(2)+'"/><circle r="22" fill="'+G+'" opacity=".22"/>'
-  +'<circle r="11" fill="'+G+'" stroke="'+CR+'" stroke-width="4"/><path d="M9,-9 L40,-40" stroke="'+G+'" stroke-width="3" stroke-linecap="round"/>'
-  +'<g transform="translate(40,-40)"><rect x="0" y="-58" width="196" height="64" rx="18" fill="rgba(22,15,10,.86)" stroke="'+G+'" stroke-width="2.5"/>'
-  +'<path d="M20,-22 L20,-36 L32,-46 L44,-36 L44,-22 Z" fill="none" stroke="'+G+'" stroke-width="3.5" stroke-linejoin="round"/><rect x="29" y="-31" width="6" height="9" fill="'+G+'"/>'
-  +'<text x="58" y="-12" font-family="Noto Sans CJK SC" font-weight="900" font-size="42" fill="'+CR+'">家</text>'
-  +'<text x="110" y="-15" font-family="Noto Sans CJK SC" font-weight="700" font-size="26" fill="'+G+'">北京</text></g>'; }}
-const LA=topojson.feature(L50m,L50m.objects.land), LB=topojson.feature(L110m,L110m.objects.land); const GR=d3.geoGraticule().step([30,30])();
+const PINS={json.dumps(pins)}; const LA=topojson.feature(L50m,L50m.objects.land), LB=topojson.feature(L110m,L110m.objects.land); const GR=d3.geoGraticule().step([30,30])();
 function draw(s){{
  const pr=d3.geoOrthographic().rotate([-s.c[0],-s.c[1],0]).scale(s.r).translate([960,560]).clipAngle(90).precision(s.r>2000?0.15:0.3);
  const path=d3.geoPath(pr), vis=ll=>d3.geoDistance(ll,s.c)<Math.PI/2-0.03;
@@ -393,17 +371,7 @@ function draw(s){{
  else pl.style.opacity=0;
  for(const id of ['a0','a1','a2']) document.getElementById(id).setAttribute('d', d);
  document.getElementById('dots').innerHTML=(s.dots||[]).filter(vis).map(ll=>{{const q=pr(ll);return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="9" fill="{GOLD}"/>';}}).join('');
- let fh='';                                                     // each visited country glows with its flag, edges feathered (no border line)
- for(const p of (PATCH?(s.pins||[]):[])){{ if(p.k==='home') continue; const f=CT[p.k]; if(!f) continue; const dd=path(f); if(!dd) continue;
-  const b=path.bounds(f), bw=b[1][0]-b[0][0], bh=b[1][1]-b[0][1]; if(bw<1.5||bh<1.5) continue;
-  const fl=FL[p.k], sc=Math.max(bw/fl.w,bh/fl.h)*1.06, fe=Math.max(1.2,Math.min(11,Math.min(bw,bh)*.055)), k=p.k;
-  fh+='<filter id="fe_'+k+'" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="'+fe.toFixed(2)+'"/></filter>'
-   +'<filter id="fg_'+k+'" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="'+(fe*2.4).toFixed(2)+'"/></filter>'
-   +'<mask id="mk_'+k+'" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><path d="'+dd+'" fill="#fff" filter="url(#fe_'+k+')"/></mask>'
-   +'<path d="'+dd+'" fill="#FFE7A8" opacity=".6" filter="url(#fg_'+k+')"/>'
-   +'<g mask="url(#mk_'+k+')"><g transform="translate('+((b[0][0]+b[1][0])/2-fl.w*sc/2).toFixed(1)+','+((b[0][1]+b[1][1])/2-fl.h*sc/2).toFixed(1)+') scale('+sc.toFixed(4)+')">'+fl.svg+'</g></g>'; }}
- document.getElementById('flags').innerHTML=fh;
- document.getElementById('pins').innerHTML=(s.pins||[]).filter(p=>vis(p.ll)).map(p=>{{const q=pr(p.ll);return '<g transform="translate('+q[0]+','+q[1]+')">'+(p.k==='home'?HOME(s.t||0):PINS[p.k])+'</g>';}}).join('');
+ document.getElementById('pins').innerHTML=(s.pins||[]).filter(p=>vis(p.ll)).map(p=>{{const q=pr(p.ll);return '<g transform="translate('+q[0]+','+q[1]+')">'+PINS[p.k]+'</g>';}}).join('');
 }}
 </script></div></body></html>''')
 def render_globes(pg):
@@ -433,7 +401,7 @@ def sub(t0, t1, text, align='l', top=None): SUBS.append((t0 + .1, t1 - .08, text
 o1 = []
 for i in range(int(round(D[1] * FPS)) + 2):
     t = i / FPS; u = out3(t / (D[0] + .55)); r = math.exp(lerp(math.log(9000), math.log(470), u)) - 40 * cl((t - D[0] - .55) / 1.2)
-    o1.append(dict(c=slerp(LL['gw'], (95, 18), ease(t / D[1])), r=r, pins=[dict(ll=LL['gw'], k='home')], dots=[], t=round(t, 3)))
+    o1.append(dict(c=slerp(LL['gw'], (95, 18), ease(t / D[1])), r=r, pins=[dict(ll=LL['gw'], k='home')], dots=[]))
 SH.append(Frames(0, D[1], globe_frames('open', o1), pops=[Pop(big('世界这么大！'), D[0], 'back', (960, 500))]))
 def board_frames():
     d = f'{S}/farm57/out/board106/f'
