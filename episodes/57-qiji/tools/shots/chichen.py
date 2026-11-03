@@ -267,7 +267,7 @@ def chichen_when():
     defs, L = split(ns['g'])
     W, H = ns['W'], ns['H']; Pc = ns['P']; R = random.Random(5701)
     # sky: the gradient rect made bigger than the drawing (it is the deepest layer), clouds in their own groups (they race back)
-    sky = [f'<rect x="-800" y="-600" width="{W + 1600}" height="{H + 1200}" fill="{Pc["sky0"]}"/>', L['pre'][0].replace('<rect ', '<rect x="-800" ').replace(f'width="{W}"', f'width="{W + 1600}"')]
+    sky = [f'<rect x="-800" y="-600" width="{W + 1600}" height="{H + 1200}" fill="url(#sky)"/>']
     sky += [f'<g id="cl{i}">{e}</g>' for i, e in enumerate(L['sky'])]
     # far tree lines + a filler under them so parallax never opens a gap above the field
     trees = [f'<rect x="-400" y="1560" width="{W + 800}" height="300" fill="{Pc["tree_far"]}"/>'] + L['trees']
@@ -280,12 +280,9 @@ def chichen_when():
     edge_x, LBi, RBi = ns['edge_x'], ns['LBi'], ns['RBi']
     stair_c = [((edge_x(LBi, y) + edge_x(RBi, y)) / 2, y) for y in range(1590, 1080, -30)]
     crowd, rr = [], random.Random(57011)
-    spots = [(250, 1640, .5), (300, 1652, .52), (205, 1660, .55), (560, 1648, .5), (612, 1660, .54), (660, 1642, .5), (720, 1655, .52),
-             (1180, 1636, .48), (1235, 1648, .5), (1290, 1640, .49)]
-    for i, (x, y, s) in enumerate(spots):
-        parts = HA.attendant_parts(pole_to=(-6, -128) if i in (2, 8) else None, bow=rr.choice([0, 0, 1]))
-        crowd.append(f'<g id="pp{i}" opacity="0">{HA.sil(parts, x, y, s, flip=x > 900, rim=(-1.6, -1.1), rimc="#F2C08A")}</g>')
-    climbers = ''.join(f'<g id="cb_{i}" opacity="0"></g>' for i in range(4))
+    for i, (parts, x, y, sc) in enumerate([(HA.ruler_parts(), 868, 1099, .44), (HA.attendant_parts(bow=1), 930, 1093, .4), (HA.attendant_parts(), 1040, 1096, .38)]):
+        crowd.append(f'<g id="pp{i}" opacity="0">{HA.sil(parts, x, y, sc, flip=i == 2, rim=(-1.4, -1.0), rimc="#F2C08A")}</g>')
+    climbers = ''.join(f'<g id="cb_{i}" opacity="0"></g>' for i in range(6))
     mid = L['mid']; fg = L['fg']; canopy = L['canopy']
 
     # camera: the 16:9 frame at t = 0 shows x 34..1898, y 579..1627 of the 1932 x 2576 drawing
@@ -298,13 +295,8 @@ def chichen_when():
     cnt, cdefs, CN = counter_svg(1100, '公元', '前后', 1196, 588)
     body = (svg_layer('back', groups, defs=defs)
             + svg_layer('youS', '<g id="Lyou"><g id="you"></g></g>', defs=fig_defs([(0, '#FFFFFF'), (.55, '#FBFAF6'), (1, '#D9DCE2')], sh=(5, 9, 7, .28)))
-            + svg_layer('front', front, defs=defs.replace('id="', 'id="f_').replace('url(#', 'url(#f_'))
+            + svg_layer('front', front)          # url(#…) refs resolve across the page's inline svgs
             + GRAIN + svg_layer('hud', cnt + BUBBLE, defs=cdefs + BUBBLE_DEFS))
-    # 'front' needs the scene's gradients too (ids prefixed so they stay unique)
-    body = body.replace('<g id="Lfg">', '<g id="Lfg">', 1)
-    front_fixed = front.replace('url(#', 'url(#f_')
-    body = body.replace(front, front_fixed)
-
     K = [  # 你: shading its eyes at the pyramid → looks round on beats 1, 2 → grabs its head → points at the year on the bar
         [0.00, P('shade', look=[-.8, -.55], tilt=-7)],
         [0.30, P('shade', look=[-.7, -.6], tilt=-5), 'io'],
@@ -330,9 +322,9 @@ def chichen_when():
         [3.344, dict(z=1.0, c=0.205, dx=-34, dy=-42, roll=-0.4), 'io'],
     ]
     data = dict(S0=S0, F=F, K=K, C=C, CN=CN, you=dict(b=you_base, s=you_s), stair=stair_c,
-                climb=[dict(p0=.08 + .17 * i, s=.4 + .03 * (i % 2), d=i * .7) for i in range(4)],
+                climb=[dict(p0=.1 + .13 * i, s=.42 + .03 * (i % 2)) for i in range(6)],
                 climbParts=[HA.attendant_parts(bow=0), HA.attendant_parts(pole_to=(-6, -128))],
-                blades=[dict(i=i, d=.18 + .62 * R.random(), y=tip[1]) for i, (tip, *_r) in enumerate(ns['B'])])
+                blades=[dict(i=i, d=.1 + .55 * R.random(), sink=max(0, 1720 - tip[1])) for i, (tip, *_r) in enumerate(ns['B'])])
     js = r'''
 const T0=.15, TL=1.672, DEP={Lsky:9, Ltrees:3.4, Lpyr:1, Lmid:.86, Lyou:.8, Lfg:.56, Lcan:.42};
 window.render=function(t){
@@ -346,17 +338,17 @@ window.render=function(t){
   // clouds race back while time rewinds
   for(let i=0;i<8;i++){const e=$('cl'+i);if(!e)continue;const r=span(t,T0,TL,'io')*(240+60*i%3)+ (t>TL?(t-TL)*30:0) - t*12;e.setAttribute('transform','translate('+f1(r)+',0)')}
   // the modern garden sinks back into the ground, blade by blade
-  for(const b of DATA.blades){const e=$('bl'+b.i);if(!e)continue;const u=span(t,T0+b.d*.9,T0+b.d*.9+.75,'io');e.setAttribute('transform','translate(0,'+f1(u*(2050-b.y+260))+')')}
+  for(const b of DATA.blades){const e=$('bl'+b.i);if(!e)continue;const u=span(t,T0+b.d,T0+b.d+1.05,'ss');e.setAttribute('transform','translate(0,'+f1(u*b.sink)+')')}
   // the past: paint, crowd, climbers, smoke (from the landing, one beat at a time)
   const past=span(t,TL-.05,TL+.5,'ss');
   $('paintL').setAttribute('opacity',f2(.34*past));$('paintR').setAttribute('opacity',f2(.3*past));
-  for(let i=0;i<10;i++){const e=$('pp'+i);const t0=TL+BEAT*(i%4)+ .05*(i>>2);const u=span(t,t0-.08,t0+.12,'o');
-    const bob=-3*Math.abs(Math.sin((t-t0)*Math.PI/BEAT+i));e.setAttribute('opacity',f2(u));e.setAttribute('transform','translate(0,'+f1((1-u)*14+bob*u)+')')}
+  for(let i=0;i<3;i++){const e=$('pp'+i);const t0=TL+BEAT*(i+1);const u=span(t,t0-.1,t0+.1,'o');
+    const bob=-2.5*Math.abs(Math.sin((t-t0)*Math.PI/BEAT+i));e.setAttribute('opacity',f2(u));e.setAttribute('transform','translate(0,'+f1((1-u)*10+bob*u)+')')}
   const sc=DATA.stair;
-  for(let i=0;i<4;i++){const c=DATA.climb[i], t0=TL+i*.11, u=span(t,t0-.05,t0+.2,'o');const steps=Math.max(0,(t-t0)/BEAT);
-    const st=Math.floor(steps)+EASE.io((steps%1)*1.6), pp=c.p0+.045*st, idx=pp*(sc.length-1), j=Math.min(sc.length-2,Math.floor(idx)), f=idx-j;
-    const x=sc[j][0]+(sc[j+1][0]-sc[j][0])*f+(i%2?-14:14), y=sc[j][1]+(sc[j+1][1]-sc[j][1])*f;
-    const e=$('cb_'+i);e.setAttribute('opacity',f2(u));e.innerHTML=silJS(DATA.climbParts[i%2],x,y,c.s*(1-.25*pp),false,[-1.2,-1],'#211A17','#F2C08A')}
+  for(let i=0;i<6;i++){const c=DATA.climb[i], t0=TL+(i%3)*BEAT*.5, u=span(t,t0-.06,t0+.16,'o');const steps=Math.max(0,(t-t0)/BEAT);
+    const st=Math.floor(steps)+EASE.io(Math.min(1,(steps%1)*1.8)), pp=c.p0+.03*st, idx=pp*(sc.length-1), j=Math.min(sc.length-2,Math.floor(idx)), f=idx-j;
+    const x=sc[j][0]+(sc[j+1][0]-sc[j][0])*f+(i%2?-16:16), y=sc[j][1]+(sc[j+1][1]-sc[j][1])*f;
+    const e=$('cb_'+i);e.setAttribute('opacity',f2(u));e.innerHTML=silJS(DATA.climbParts[i%2],x,y,c.s*(1-.3*pp),false,[-1.2,-1],'#211A17','#F2C08A')}
   $('smk').innerHTML=past>0?smoke(872,1030,170,t,3,1.3,'#EFE6D8',.55*past)+smoke(913,1022,150,t+.31,7,1.2,'#EFE6D8',.5*past):'';
   // 你
   let p=breathe(track(DATA.K,t),t,2.5);

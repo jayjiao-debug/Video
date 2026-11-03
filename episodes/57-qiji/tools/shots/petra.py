@@ -163,7 +163,7 @@ function filmFX(t,a){
       s+=`<path d="M${f1(x)},${f1(y0)} L${f1(x+(R()-.5)*14)},${f1(y1)}" stroke="${dark?'#2A1C12':'#FFF4DC'}" stroke-width="${f1(w)}" opacity="${f1(a*(.25+.35*R()))}" fill="none"/>`;}
     const m=4+Math.floor(R()*6);
     for(let i=0;i<m;i++){const x=R()*1920,y=R()*1080,r=1+R()*3.5; s+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="${R()<.6?'#24170F':'#FFF1D6'}" opacity="${f1(a*.6)}"/>`;}
-    if(R()<.35){const y=R()*1080; s+=`<path d="M0,${f1(y)} L1920,${f1(y+(R()-.5)*30)}" stroke="#FFF4DC" stroke-width="1.2" opacity="${f1(a*.18)}"/>`;}
+    if(R()<.25){const y=R()*1080, x=R()*1200; s+=`<path d="M${f1(x)},${f1(y)} L${f1(x+300+R()*400)},${f1(y+(R()-.5)*16)}" stroke="#FFF4DC" stroke-width="1.2" opacity="${f1(a*.14)}"/>`;}
   }
   $('scr').innerHTML=s; $('vig').setAttribute('opacity',f1(.25+.6*a));
   return 1+(R()-.5)*.05*a;   // brightness flicker for the world filter
@@ -294,11 +294,15 @@ def petra_when():
     for cx, b, w, h, shape in sorted(items + extra, key=lambda t: t[1]):
         el = ns['bag'](cx, b, w, h, shape); band = bands[band_of(b)]
         band[0].extend(el[:2] if h > 24 else el[:1]); band[1].extend(el[2:] if h > 24 else el[1:])
-    D = dict(sky=60, cliff=20, sand=15, plat=20, A=18, B=14, C=11, FIG=10, D=8, E=5.5)
+    D = dict(sky=60, cliff=20, sand=15, plat=20, A=18, B=14, cara=14, C=11, FIG=10, D=8, E=5.5)
     world = [G('L_sky', g[a_sky:b_stars]), G('L_cliff', ext_back + g[a_walls:b_low]), G('L_sand', sand_ext + sand_items),
              G('L_plat', plat_items)]
+    rimc = '#FFD6A2'
+    cam_, _ = phased('cc', lambda ph: hc.camel(40, 1858, .95, 1, 'A', rim=rimc, step=1.9 * math.sin(ph)))
+    man_, _ = phased('cm', lambda ph: walker(300, 1866, 1.05, 1, robe='#3E4A6A', wrap='#EADFC8', skin='#7E5036', rim=rimc, staff=((16, -62), (20, 0)), ph=ph))
     for k in 'ABCDE':
         world.append(G(f'L_{k}', [G(f'gl_{k}', bands[k][0]), G(f'bd_{k}', bands[k][1])]))
+        if k == 'B': world.append(G('L_cara', [G('cara', [cam_, hc.rope((230, 1702), (318, 1800), 16, w=2.5), man_], 'opacity="0"')]))
         if k == 'C': world.append(G('L_FIG', ['<g id="FIG"></g>']))
     fill = ('<linearGradient id="yfill" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFE2BC"/><stop offset=".5" stop-color="#F3C9A2"/>'
             '<stop offset="1" stop-color="#C98D6C"/></linearGradient>')
@@ -314,14 +318,15 @@ def petra_when():
                (1.95, dict(lift=0, tuck=0, mouth=.7), 'in'),
                (2.4, dict(ra1=-26, ra2=-16, tilt=-14, lean=4, mouth=.6)),
                (3.344, dict(ra1=-20, ra2=-10, tilt=-6, lean=3, ex=.15, mouth=.4)))
-    cfg = dict(S0=1.16, P0=list(FEET), V=[860, 940], dref=20, D=D, feet=FEET, sc=1.03,
+    cfg = dict(S0=1.16, P0=list(FEET), V=[700, 935], dref=20, D=D, feet=FEET, sc=.98, nph=NPH,
                cam=keys((0, dict(Z=0, zoom=1, TX=0, TY=0, roll=0)),
                         (.15, dict(Z=0.04, zoom=1.0, TX=0, TY=0, roll=0)),
-                        (BAR, dict(Z=1.0, zoom=1.03, TX=-14, TY=10, roll=-1.0), 'io3'),
-                        (2 * BAR + .05, dict(Z=1.4, zoom=1.05, TX=-34, TY=16, roll=-.3), 'out')),
+                        (BAR, dict(Z=.85, zoom=1.02, TX=-14, TY=6, roll=-1.0), 'io3'),
+                        (2 * BAR + .05, dict(Z=1.1, zoom=1.03, TX=-40, TY=8, roll=-.3), 'out')),
                fig=fig, C=dict(target=-100, xr=1718, y=596, lab1='约', lab2='年'))
     js = 'const CFG=' + json.dumps(cfg) + ';\n' + r'''
-const LAY=['sky','cliff','sand','plat','A','B','C','FIG','D','E'];
+const LAY=['sky','cliff','sand','plat','A','B','cara','C','FIG','D','E'];
+let shown={};
 window.render=function(t){
   const cam=track(CFG.cam,t);
   // the landing: a short camera punch
@@ -329,6 +334,13 @@ window.render=function(t){
   const M={}; for(const k of LAY) M[k]=setLayer('L_'+k,cam,CFG.D[k]);
   // candle flicker on the lantern glows (seeded per band)
   for(const k of 'ABCDE'){const f=Math.floor(t*15), r=rng(311+f*13+k.charCodeAt(0))(); $('gl_'+k).setAttribute('opacity',f1(.82+.18*r));}
+  // after the landing the lanterns of today go, near to far, one band per beat; the old city's caravan walks in
+  for(const [ks,tb] of [['DE',2.09],['C',2.508],['AB',2.926]]) for(const k of ks){
+    const u=cl((t-tb)/.2); $('L_'+k).setAttribute('opacity',f1(1-u)); }
+  const cu=t-BAR; $('cara').setAttribute('opacity',f1(cl(cu/.3)));
+  $('cara').setAttribute('transform',`translate(${f1(Math.max(0,cu)*112)},0)`);
+  for(const gid of ['cc','cm']){ const ph=((t/(2*BEAT)+(gid=='cc'?.25:.75))%1+1)%1, i=Math.round(ph*CFG.nph)%CFG.nph;
+    if(shown[gid]!==i){ $(gid+'_'+(shown[gid]===undefined?0:shown[gid])).style.display='none'; $(gid+'_'+i).style.display='inline'; shown[gid]=i; } }
   // 你
   const S=track(CFG.fig,t), br=Math.sin(t*2*Math.PI/1.4);
   S.squat+=.04*br; S.tilt+=1.5*br;

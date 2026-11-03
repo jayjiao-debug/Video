@@ -30,7 +30,7 @@ Hits (a landing, a pop, a stamp, a step) go on beats; the strongest on t = 0, 1.
 ## What every shot must have
 
 - **Depth layers with parallax.** Split the drawing into at least 3 layers (sky/far, middle, the monument, near foreground; 4–5 is better). Move them at different rates as the camera moves.
-  - The sources are flat SVGs in painter's order: read the script that draws them and group by what each element is.
+  - The `_what` sources (history drawings) are flat SVGs in painter's order: read the script that draws them and group by what each element is.
   - Painter's-order vectors keep what is behind the foreground, so you rarely get holes. Where a hole shows, extend the layer.
 - **Real camera work (运镜).**
   - Dolly in or out, truck, crane up or down, a push to a low angle, a slight roll (≤ 2°), or a rack from one subject to another.
@@ -55,27 +55,31 @@ Hits (a landing, a pop, a stamp, a step) go on beats; the strongest on t = 0, 1.
   - Don't put subtitles, the counter or the odometer in your page.
 - **The look.** It must match the drawings already in the film: hand-coded flat palette, ink `#2A211B` at 2–3 px, no photos, no embedded images, no traced shapes. CSS filters are allowed (sepia, blur for depth of field).
 
-## `_when` = 「时光倒流」 (the same device at every stop, so it is easy to follow)
+## `_when` = 「穿越时间轴」 in a **blueprint** style (CHANGED 08:21: owner: do NOT reuse the site drawings, they are only for the photo)
 
-1. Start in the present, in full colour: the site's coded scene (`tools/<site>_vector.py` writes an SVG at photo size; frame it to 16:9 yourself) with 你 looking at it.
-2. From t ≈ 0.15 the time-rewind starts:
-   - Colour drains to sepia (CSS filter ramp on a wrapper).
-   - Film grain or scratches flicker.
-   - The camera eases in.
-   - A **big year counter** (Noto Sans CJK SC 900, about 190 px, `#FFF6E6` with a dark ink shadow) rolls down from **2026** to the target with an ease-out.
-3. The counter lands **exactly at t = 1.672** with a punch (scale 1.15 → 1). The small label next to it appears at that moment.
-4. Placement: the counter's right half, mid-height (x about 1000–1800, y about 380–640). Keep it off the subtitle zone.
-5. 你 reacts while time rewinds: looks around, flinches or grabs its head, then points at the year.
-6. Optional: after the landing, the site visibly becomes its past self (scaffolding, workers, the city lived-in).
+**Do not use `tools/<site>_vector.py` scenes or the site photos' framing at all in `_when`.** Use one shared, different style, the same at every stop, so it reads instantly:
+
+- **Paper:** deep blueprint blue `#1D3557`→`#16263F` (subtle radial vignette) with a faint white grid (40 px, opacity .08; every 5th line .15), paper grain.
+- **The timeline:** a long horizontal ruler across the lower third (y ≈ 760), with white year ticks and labels every 100 years (bigger every 500) and the era's name above the key years in small chalk letters.
+  - From t = 0 the camera **trucks fast from right to left** along it, from 2026 back to the target year, easing out to land at **t = 1.672**.
+  - Use parallax: grid slow, ruler 1×, foreground chalk dust and floating construction tools (a set square, compass or plumb line) 1.4×.
+- **你 runs** along the ruler leftwards (backwards in time), with a run cycle (bob on beats) and speed lines. It skids to a stop at the landing, turns to camera and points up at the year. The gold 「你」 bubble pops in the first 0.4 s.
+- **The big year counter** (Noto Sans CJK SC 900, about 190 px, `#FFF6E6`) rolls down with the truck and lands at t = 1.672 with a punch, with the label next to it (table below).
+  - Place it upper-right (x about 1000–1800, y about 330–560), clear of the subtitle zone.
+- **After the landing, the monument draws itself** in white chalk/blueprint line art above the ruler, as a simplified elevation of that monument:
+  - Draw it stroke by stroke (`stroke-dashoffset`), base → walls → top, in about 3 beats.
+  - Add dimension lines and a few construction marks (scaffold lines, a crane or ramp, tiny worker silhouettes in the era's dress) so "being built" reads.
+  - The line art is new; you may take proportions from the site scripts, but render it only as lines on blueprint.
+- **Camera after the landing:** a slow push and a slight roll toward the drawing.
 
 | stop | target shown | label |
 |---|---|---|
 | chichen | 1100 | 公元 · 前后 |
 | machu | 1450 | 年左右 |
-| christ | 1931 | 年建成 (fade in scaffolding from `christ_1922`) |
+| christ | 1931 | 年建成 |
 | colosseum | 80 | 公元 · 年 |
-| petra | −100 shown as 「公元前100」 | 约 · 年 |
-| taj | 1632 | 年开工 (scaffolding from `taj_build`) |
+| petra | 「公元前100」 | 约 · 年 |
+| taj | 1632 | 年开工 |
 | greatwall | 1505 | 年 · 明朝 |
 
 ## `_what` = 用来干什么: the history drawing, alive
