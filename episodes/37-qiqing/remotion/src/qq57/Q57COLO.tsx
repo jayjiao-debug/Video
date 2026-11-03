@@ -69,7 +69,7 @@ const Scene: React.FC = () => {
 	const a_lake = 1 - sm((t - 2.75 * BAR) / (.25 * BAR));
 	const prog = cl((t - 3 * BAR) / (2.55 * BAR)), fin = sm((t - 5.55 * BAR) / (.3 * BAR)), crowd = sm((t - 5.6 * BAR) / (.35 * BAR));
 	const year = t < 2 * BAR ? 64 : t < 3 * BAR ? 72 : Math.round(72 + 8 * prog);
-	const seats = Math.round(50000 * eo((t - 5.6 * BAR) / (.4 * BAR)));
+	const seats = Math.round(50000 * eo((t - 5.5 * BAR) / (.3 * BAR)));
 	const lakeC: A2 = [(x0 + x1) / 2, (Math.min(...ly) + Math.max(...ly)) / 2];
 	const clouds = [[300, 470, 46], [900, 360, 50], [1300, 250, 44], [1640, 300, 54]].map(([x, y, w], i) => { const cx = ((x + 30 * t) % 2100) - 90;
 		return <g key={i} opacity={.92}><ellipse cx={cx} cy={y} rx={w * 1.4} ry={w * .55} fill="#F4F7FB" stroke="#D5DEEA" strokeWidth={2} /><ellipse cx={cx + w * .7} cy={y - w * .25} rx={w * .8} ry={w * .5} fill="#F4F7FB" /></g>; });
@@ -93,11 +93,11 @@ const Scene: React.FC = () => {
 			</svg></div>}
 		<svg width={W} height={H} style={{position: 'absolute'}}>
 			<Callout from={lakeC} to={[560, 470]} label="尼禄的私人湖" u={(t - .6) / .6 * (t < 2 * BAR ? 1 : 0)} side={-1} />
-			<Widget x={1440} y={150} w={380} h={t > 5.6 * BAR ? 250 : 190} op={sm(t / .4)}>
+			<Widget x={1440} y={150} w={380} h={t > 5.5 * BAR ? 250 : 190} op={sm(t / .4)}>
 				<T2 x={1468} y={205} s={t < 2 * BAR ? '尼禄的金宫' : t < 3 * BAR ? '填湖 · 开工' : prog < 1 ? '建造中' : '落成'} size={32} col={GOLD} />
 				<T2 x={1468} y={275} s={`公元 ${year} 年`} size={56} />
 				{t > 3 * BAR && <g><rect x={1468} y={295} width={320} height={12} rx={6} fill="rgba(255,246,230,.2)" /><rect x={1468} y={295} width={320 * prog} height={12} rx={6} fill={GOLD} /></g>}
-				{t > 5.6 * BAR && <T2 x={1468} y={370} s={`${seats.toLocaleString('en-US')} 个座位`} size={40} col={GOLD} />}
+				{t > 5.5 * BAR && <T2 x={1468} y={370} s={`${seats.toLocaleString('en-US')} 个座位`} size={40} col={GOLD} />}
 			</Widget>
 		</svg>
 	</AbsoluteFill>;

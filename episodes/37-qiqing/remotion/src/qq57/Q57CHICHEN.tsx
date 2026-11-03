@@ -189,7 +189,7 @@ const Calendar: React.FC<{t: number}> = ({t}) => {
 			<T2 x={1460} y={432} s="日历刻度" size={30} col={GOLD} />
 			<T2 x={1460} y={500} s={`第 ${days} 天`} size={56} />
 			<rect x={1460} y={520} width={340} height={12} rx={6} fill="rgba(255,246,230,.2)" /><rect x={1460} y={520} width={340 * days / 365} height={12} rx={6} fill={GOLD} />
-			<T2 x={1460} y={590} s={stairU > 0 ? `91 × 4 = ${4 * count}` : '91 × 4'} size={40} col={stairU >= 1 ? '#FFF6E6' : '#CFC3AE'} />
+			<T2 x={1460} y={590} s={stairU > 0 ? `${count} × 4 = ${4 * count}` : '91 × 4'} size={40} col={stairU >= 1 ? '#FFF6E6' : '#CFC3AE'} />
 			{eu > 0 && <g transform={`translate(1460,652) scale(${1.4 - .4 * eo(eu)})`} opacity={cl(eu * 2)}><T2 x={0} y={0} s="+ 1 = 365" size={48} col={GOLD} /></g>}
 		</Widget>
 	</g>;
