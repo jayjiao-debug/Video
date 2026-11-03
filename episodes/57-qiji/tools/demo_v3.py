@@ -416,8 +416,26 @@ LINES = {'chichen': ('公元1100年前后，\n玛雅人建了它。', '用来祭
 SID = {'chichen': 'chichen', 'machu2': 'machu', 'christ': 'christ', 'colosseum': 'colosseum', 'petra2': 'petra', 'taj': 'taj', 'greatwall2': 'greatwall'}
 FALLBACK = {'chichen': 'chichen_serpent', 'machu2': 'machu_palace', 'christ': 'christ_1922', 'colosseum': 'colosseum_return', 'petra2': 'petra_caravan', 'taj': 'taj_fort'}
 MISSING = []
+# the history scenes built live in Remotion (owner-approved style A), rendered on the GitHub farm (render-ep57) and decrypted here.
+# Each is 2 shots × 3 bars; the slot is 5 bars, so shot A loses its first bar (泰姬陵 keeps its first bar, the 14 children, and loses its last).
+RMX = f'{S}/farm57/out'
+REMO = {'chichen': 'chichen', 'machu2': 'machu', 'christ': 'christ', 'colosseum': 'colo', 'petra2': 'petra', 'taj': 'taj'}
+LINES_R = {'chichen': ('台阶一共[365]级，\n正好一年。', '春分傍晚，台阶的影子\n连成一条下山的[羽蛇]。'),
+           'machu2': ('印加皇帝的[山顶行宫]，\n海拔约2350米。', '西班牙人征服了印加，\n却一直[没找到它]。'),
+           'christ': ('1922年，里约人\n一枚一枚[捐钱]。', '1926年开工，1931年，\n它立上了[山顶]。'),
+           'colosseum': ('这里原本是[尼禄]的私人湖，\n被填平了。', '公元80年，五万个座位的\n[斗兽场]建成了。'),
+           'petra2': ('运[香料]的骆驼队，\n都要经过这里。', '纳巴泰人收过路税发了财，\n把城[刻进了石头]。'),
+           'taj': ('皇后难产去世，\n皇帝为她修了[二十多年]。', '晚年他被软禁，远远望着它；\n死后，[葬在了她身边]。')}
+def remo_frames(n):
+    d = f'{RMX}/{n}/f'
+    if not os.path.exists(f'{d}/0300.jpg'):
+        os.makedirs(d, exist_ok=True); subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', f'{RMX}/{n}/{n}.mp4', '-q:v', '2', f'{d}/%04d.jpg'], check=True)
+    return sorted(glob.glob(f'{d}/*.jpg'))
 def expl(k, F):
     """the two animated explanation shots (frames rendered from tools/shots/<stop>.py pages)"""
+    if k in REMO:
+        fr = remo_frames(REMO[k]); fr = fr[0:100] + fr[150:300] if k == 'taj' else fr[50:300]
+        SH.append(Frames(D[F], D[F + 5], fr)); sub(D[F], D[F + 2], LINES_R[k][0]); sub(D[F + 2], D[F + 5], LINES_R[k][1]); return
     for j, (kind, a, b_) in enumerate((('when', 0, 2), ('what', 2, 5))):
         t0, t1 = D[F + a], D[F + b_]; sid = f'{SID[k]}_{kind}'; fr = sorted(glob.glob(f'{SHOTD}/{sid}/f/*.jpg'))
         if fr: SH.append(Frames(t0, t1, fr, pn=.04))
