@@ -156,3 +156,16 @@ export const CloudBands: React.FC<{bands: [number, number, number, number][]; t:
 			segs.push(spline([...tp, ...bt.reverse()], true)); x0 += len + gap; }
 		return <g key={b}><defs><linearGradient id={`${id}${b}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={top} /><stop offset="0.55" stopColor={mid} /><stop offset="1" stopColor={b >= warmFrom ? warm : under} /></linearGradient></defs>
 			<Shape d={segs.join(' ')} fill={`url(#${id}${b})`} o={o} /></g>; })}</g>;
+
+/** one dune mound: left foot → summit → right foot on base `by`; returns {body, lit, crest}. The lit face is the side toward the light
+    (light = +1: right), split from the shadow face by an S-curve running from the summit down to the base (the crest line). */
+export const moundD = (lx: number, sx: number, sy: number, rx: number, by: number, light: 1 | -1 = 1, bend = 0.3, ext = 900) => {
+	const L: P = [lx, by], S: P = [sx, sy], R: P = [rx, by], hgt = by - sy;
+	const left = qpts(L, [lerp(lx, sx, 0.55), lerp(by, sy, 1.05)], S, 10), right = qpts(S, [lerp(sx, rx, 0.35), sy - hgt * 0.02], R, 12);
+	const toward = light > 0 ? right : left.slice().reverse();
+	const footX = sx + (light > 0 ? 1 : -1) * (Math.abs((light > 0 ? rx : lx) - sx)) * 0.18, mid: P = [lerp(sx, footX, 0.5) - (light > 0 ? 1 : -1) * hgt * bend, lerp(sy, by, 0.55)];
+	const divide = qpts(S, mid, [footX, by + 2], 10);
+	const body = spline([...left, ...right.slice(1)], false) + ` L${f1(rx)},${f1(by + ext)} L${f1(lx)},${f1(by + ext)} Z`;
+	const tl = toward[toward.length - 1];
+	const lit = spline(toward, false) + ` L${f1(tl[0])},${f1(by + ext)} L${f1(footX)},${f1(by + ext)} L${f1(footX)},${f1(by + 2)} ` + spline(divide.slice().reverse(), false).replace(/^M/, 'L') + ' Z';
+	return {body, lit, crest: taper(divide.slice(0, 7), Math.max(1.4, hgt * 0.012), 0.4)}; };

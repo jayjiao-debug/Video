@@ -116,7 +116,7 @@ const Drift: React.FC = () => {
 const FgIce: React.FC = () => {
 	const blk = (x: number, y: number, w: number, h2: number, s: number) => iceBlockPts(x, y, w, h2, s);
 	const L = [blk(80, 1200, 520, 420, 3), blk(-160, 1180, 420, 560, 9), blk(330, 1230, 300, 260, 5)], R = [blk(1900, 1200, 480, 380, 7), blk(1660, 1240, 300, 230, 11)];
-	return <g>{[...L, ...R].map((p, i) => <g key={i}><path d={poly(p)} fill={i % 2 ? '#3d4c80' : '#4a5a92'} /><path d={poly([p[2], p[3], p[4], [lerp(p[3][0], p[5][0], 0.5), lerp(p[3][1], p[5][1], 0.6)], [lerp(p[2][0], p[0][0], 0.2), lerp(p[2][1], p[0][1], 0.3)]])} fill="#a8b6e0" opacity={0.75} />
+	return <g>{[...L, ...R].map((p, i) => <g key={i}><path d={poly(p)} fill={i % 2 ? '#252f5c' : '#2e3a6c'} /><path d={poly([p[2], p[3], p[4], [lerp(p[3][0], p[5][0], 0.5), lerp(p[3][1], p[5][1], 0.6)], [lerp(p[2][0], p[0][0], 0.2), lerp(p[2][1], p[0][1], 0.3)]])} fill="#7f8cc4" opacity={0.75} />
 		<path d={poly([p[2], p[3], [p[3][0], p[3][1] + 18], [p[2][0] + 20, p[2][1] + 26]])} fill="#ffe6da" opacity={0.85} /></g>)}</g>; };
 
 export const Ice: React.FC<SetProps> = ({t, cam}) => {
@@ -128,13 +128,13 @@ export const Ice: React.FC<SetProps> = ({t, cam}) => {
 		<Layer D={INF}><Lead t={t} /></Layer>
 		<Layer D={11}><Mist n={7} seed={8} y0={590} y1={612} t={t} speed={14} o={0.5} c="#f7dccf" w={[300, 800]} h={[16, 36]} /></Layer>
 		<Layer D={9}><IceRidge x0={1380} x1={2300} y={igY(9)} hmin={14} hmax={60} seed={9} cols={ICE} /></Layer>
-		<Layer D={INF}><Sastrugi n={170} seed={4} y0={IB.hz + 30} y1={1120} /><Tracks /></Layer>
+		<Layer D={INF}><Sastrugi n={125} seed={4} y0={IB.hz + 30} y1={1120} /><Tracks /></Layer>
 		<Layer D={3.4}><IceRidge x0={-320} x1={540} y={igY(3.4)} hmin={30} hmax={165} seed={13} cols={ICE} rows={4} />
 			<FPath d={spline([[-320, igY(3.4) - 20], [0, igY(3.4) - 40], [300, igY(3.4) - 30], [560, igY(3.4) - 6], [700, igY(3.4) + 14], [-320, igY(3.4) + 40]], true)} c="#7884b6" /></Layer>
 		<FigureSlot x={760} y={y + 3} h={108} depth={D + 0.5} attire="ice" action="sled" phase={ph + 0.37} facing={1} shadow={{k: 0.34, skew: 3.2, o: 0.85, c: '#323d7c', blur: 1.2}} />
 		<FigureSlot x={930} y={y} h={112} depth={D} attire="ice" action="sled" phase={ph} facing={1} shadow={{k: 0.34, skew: 3.2, o: 0.85, c: '#323d7c', blur: 1.2}} />
 		<Particles kind="diamond" n={30} seed={21} D={[2.5, 10]} box={[860, 572, 1760, 820]} c="#fff1dc" o={0.9} size={0.9} />
-		<Particles kind="spindrift" n={170} seed={22} D={[1.3, 9]} box={[-100, 600, W + 100, 1100]} c="#f8e6e2" o={0.7} wind={-600} />
+		<Particles kind="spindrift" n={125} seed={22} D={[1.3, 9]} box={[-100, 600, W + 100, 1100]} c="#f8e6e2" o={0.7} wind={-600} />
 		<Layer D={2.4}><IceRidge x0={1480} x1={2250} y={igY(2.4)} hmin={20} hmax={110} seed={41} cols={ICE} rows={2} /></Layer>
 		<Layer D={1.7}><Drift /></Layer>
 		<Layer D={0.5} blur={13}><FgIce /></Layer>

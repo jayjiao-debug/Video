@@ -112,6 +112,11 @@ export const useFog = () => { const {atm} = useStage(), {k} = useLayer(); return
 export const useProject = () => { const {cam, atm} = useStage(); return (D: number, p: P) => project(cam, D, atm.focus, p, atm.pp); };
 /** a ground plane (horizon hz, screen y = hz + K/D at rest): maps a rest-screen point on the ground to its projected point */
 export const useGround = (hz: number, K: number) => { const pr = useProject(); return (p: P): P => pr(K / Math.max(0.02, p[1] - hz), p).p; };
+/** a street / deck world in metres: at depth D one metre is S/D px; X = lateral offset from the vanishing point, Y = height.
+    wpt gives the rest-screen point; useWorld projects it through the camera (for shapes spanning depth: façades, rails). */
+export type World = {hz: number; vpx: number; S: number; camH: number};
+export const wpt = (w: World, X: number, Y: number, D: number): P => [w.vpx + X * w.S / D, w.hz + (w.camH - Y) * w.S / D];
+export const useWorld = (w: World) => { const pr = useProject(); return (X: number, Y: number, D: number): P => pr(D, wpt(w, X, Y, D)).p; };
 /** a ground decal: rest-screen polygons on the ground plane, re-projected point by point (true perspective parallax) */
 export const GroundShape: React.FC<{hz: number; K: number; polys: P[][]; fill: string; o?: number; smooth?: boolean}> = ({hz, K, polys, fill, o, smooth = true}) => {
 	const g = useGround(hz, K); return <g fill={fill} opacity={o}>{polys.map((pl, i) => <path key={i} d={smooth ? spline(pl.map(g), true) : poly(pl.map(g))} />)}</g>; };
@@ -119,14 +124,14 @@ export const GroundShape: React.FC<{hz: number; K: number; polys: P[][]; fill: s
 export const useUid = (p = 'k') => p + useId().replace(/[^a-zA-Z0-9]/g, '');
 
 /** the film-grain tile: signed noise (light and dark specks on transparent), generated once */
-let GRAIN_URL = '';
-const grainUrl = () => {
-	if (GRAIN_URL || typeof document === 'undefined') return GRAIN_URL;
+const GRAIN_URL: Record<string, string> = {};
+const grainUrl = (amt: number) => {
+	const key = amt.toFixed(3); if (GRAIN_URL[key] || typeof document === 'undefined') return GRAIN_URL[key] ?? '';
 	const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); if (!g) return '';
 	const im = g.createImageData(256, 256); let s = 987654321;
 	for (let i = 0; i < 256 * 256; i++) { s = (s * 1103515245 + 12345) & 0x7fffffff; const a = (s % 1000) / 1000; s = (s * 1103515245 + 12345) & 0x7fffffff; const b = (s % 1000) / 1000;
-		const v = (a + b - 1); const on = v > 0 ? 255 : 0; im.data[i * 4] = on; im.data[i * 4 + 1] = on; im.data[i * 4 + 2] = on; im.data[i * 4 + 3] = Math.round(Math.abs(v) * 255); }
-	g.putImageData(im, 0, 0); GRAIN_URL = c.toDataURL('image/png'); return GRAIN_URL; };
+		const v = (a + b - 1); const on = v > 0 ? 255 : 0; im.data[i * 4] = on; im.data[i * 4 + 1] = on; im.data[i * 4 + 2] = on; im.data[i * 4 + 3] = Math.round(Math.abs(v) * 255 * amt); }
+	g.putImageData(im, 0, 0); GRAIN_URL[key] = c.toDataURL('image/png'); return GRAIN_URL[key]; };
 
 type LayerProps = {D: number; blur?: number; o?: number; children: React.ReactNode};
 /** the blur a layer gets: its own `blur`, else depth of field (none for the sky) */
@@ -158,7 +163,7 @@ const flatten = (ch: React.ReactNode): React.ReactNode[] => React.Children.toArr
 /** the root of a scene. Its direct children are drawn far → near; runs of sharp children share one full-res SVG, every blurred
     <Layer> gets its own low-res SVG. Then the grade (optional SVG overlay), the vignette and the grain. */
 export const Stage: React.FC<{t: number; cam?: Cam; atm?: Partial<Atm>; bg?: string; children: React.ReactNode; grade?: React.ReactNode}> = ({t, cam = CAM0, atm = {}, bg = '#0b0c0f', children, grade}) => {
-	const A = {...ATM0, ...atm}, gu = A.grain > 0 && !DBG.noGrain ? grainUrl() : '';
+	const A = {...ATM0, ...atm}, gu = A.grain > 0 && !DBG.noGrain ? grainUrl(A.grain) : '';
 	const gx = Math.floor(rnd(Math.floor(t * 30), 7) * 256), gy = Math.floor(rnd(Math.floor(t * 30), 8) * 256);
 	const segs: {b: number; items: React.ReactNode[]}[] = [];
 	for (const c of flatten(children)) {
@@ -166,14 +171,16 @@ export const Stage: React.FC<{t: number; cam?: Cam; atm?: Partial<Atm>; bg?: str
 		if (blurred) segs.push({b, items: [c]}); else if (segs.length && segs[segs.length - 1].b === 0) segs[segs.length - 1].items.push(c); else segs.push({b: 0, items: [c]});
 	}
 	const full = (key: string | number, kids: React.ReactNode) => <svg key={key} width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>{kids}</svg>;
+	const fin = <>{grade}
+		{A.vignette > 0 && !DBG.noVignette && <g><defs><radialGradient id="vig3" cx="0.5" cy="0.52" r="0.72"><stop offset="0.45" stopColor="#000" stopOpacity="0" /><stop offset="0.8" stopColor="#000" stopOpacity={A.vignette * 0.45} /><stop offset="1" stopColor="#000" stopOpacity={A.vignette} /></radialGradient></defs>
+			<rect width={W} height={H} fill="url(#vig3)" /></g>}</>;
+	const lastSharp = segs.length > 0 && segs[segs.length - 1].b === 0;
 	return <AbsoluteFill style={{background: bg, overflow: 'hidden'}}>
 		<StageCtx.Provider value={{cam, t, atm: A}}>
-			{segs.map((sg, i) => (sg.b > 0 ? <LowRes key={i} b={sg.b}>{sg.items}</LowRes> : full(i, sg.items)))}
+			{segs.map((sg, i) => (sg.b > 0 ? <LowRes key={i} b={sg.b}>{sg.items}</LowRes> : full(i, i === segs.length - 1 ? <>{sg.items}{fin}</> : sg.items)))}
 		</StageCtx.Provider>
-		{full('fin', <>{grade}
-			{A.vignette > 0 && !DBG.noVignette && <g><defs><radialGradient id="vig3" cx="0.5" cy="0.52" r="0.72"><stop offset="0.45" stopColor="#000" stopOpacity="0" /><stop offset="0.8" stopColor="#000" stopOpacity={A.vignette * 0.45} /><stop offset="1" stopColor="#000" stopOpacity={A.vignette} /></radialGradient></defs>
-				<rect width={W} height={H} fill="url(#vig3)" /></g>}</>)}
-		{gu && <div style={{position: 'absolute', inset: 0, backgroundImage: `url(${gu})`, backgroundPosition: `${gx}px ${gy}px`, opacity: A.grain, pointerEvents: 'none'}} />}
+		{!lastSharp && full('fin', fin)}
+		{gu && <div style={{position: 'absolute', inset: 0, backgroundImage: `url(${gu})`, backgroundPosition: `${gx}px ${gy}px`, pointerEvents: 'none'}} />}
 	</AbsoluteFill>;
 };
 

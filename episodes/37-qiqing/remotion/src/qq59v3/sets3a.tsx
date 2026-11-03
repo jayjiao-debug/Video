@@ -1,7 +1,7 @@
 import React from 'react';
 import {Stage, Layer, FPath, Shape, FigureSlot, Particles, Shafts, Mist, FogFoot, Glow, SkyGrad, Cam, INF, useFog, P, W, f1, lerp, rnd, noise1, spline, taper, qpts} from './kit3';
 import {trunkD, leafD, frondD, lianaD, hangD, tuftD, ripplesD, canopyD, droopLeafD, mossD} from './props3';
-import {STRIDE_B} from '../qq59/figure59';
+import {walkG, BRISK} from '../qq59/figure59';
 
 /* ep59 v3 · hero sets A: the Darién Gap jungle. */
 export type SetProps = {t: number; cam: Cam};
@@ -74,7 +74,7 @@ const BigTree: React.FC<{x: number; base: number; t: number}> = ({x, base, t}) =
 /** the fallen log: from off-frame left to a broken end on the right; branch stubs, moss, ferns on top. Rim of light along its top. */
 const Log: React.FC<{y: number; t: number}> = ({y, t}) => {
 	const fog = useFog(), dark = fog('#081211', -0.1), rim = '#e7e3b0', moss = fog('#1f3320', -0.1);
-	const x0 = -200, x1 = 1330, top = (x: number) => y + (x - 400) * 0.014 + noise1(x / 170, 5) * 4, thick = (x: number) => 70 - (x - x0) * 0.012;
+	const x0 = -200, x1 = 2050, top = (x: number) => y + (x - 400) * 0.014 + noise1(x / 170, 5) * 4, thick = (x: number) => 72 - (x - x0) * 0.009;
 	const topPts: P[] = [], botPts: P[] = [];
 	for (let x = x0; x <= x1; x += 40) { topPts.push([x, top(x)]); botPts.push([x, top(x) + thick(x)]); }
 	const end: P[] = [[x1 + 14, top(x1) + 4], [x1 + 4, top(x1) + 18], [x1 + 22, top(x1) + 30], [x1 + 6, top(x1) + 42], [x1 + 16, top(x1) + 52]];
@@ -131,7 +131,7 @@ const FgFrame: React.FC<{t: number}> = ({t}) => {
 	</g>; };
 
 export const Jungle: React.FC<SetProps & {walk?: boolean}> = ({t, cam, walk}) => {
-	const h = 330, phase = t / 1.0, x = walk ? 560 + phase * STRIDE_B * h * 0.98 : 760;
+	const h = 330, wg = walkG(t, 0, 470, h, BRISK, 0.27), phase = walk ? wg.phase : t / 1.0, x = walk ? wg.x : 760;
 	return <Stage t={t} cam={cam} atm={{haze: '#7da38e', density: 0.065, focus: JF.focus, aperture: 2.4, rim: '#ffe7ad', lightDir: 118, grain: 0.06, vignette: 0.62}} bg="#0d1712">
 		<Layer D={INF}><JBack /></Layer>
 		<Layer D={20}>
@@ -166,7 +166,7 @@ export const Jungle: React.FC<SetProps & {walk?: boolean}> = ({t, cam, walk}) =>
 			<Shape d={ripplesD(920, 1120, 46, 8, -400, W + 400, [120, 420], t, 10)} fill="#b9c79c" o={0.2} />
 			<Pads seed={9} n={9} y0={950} y1={1120} x0={250} x1={1150} col="#0c1a12" r={[50, 110]} />
 		</Layer>
-		<Layer D={1.5}><NearBank t={t} /></Layer>
+		<Layer D={1.5}><g transform={walk ? 'translate(110,0)' : undefined}><NearBank t={t} /></g></Layer>
 		<Layer D={0.55} blur={8}><FgFrame t={t} /></Layer>
 	</Stage>;
 };

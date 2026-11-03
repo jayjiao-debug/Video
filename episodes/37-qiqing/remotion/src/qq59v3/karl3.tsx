@@ -6,19 +6,32 @@ import {GAITS} from '../qq/gaits';
    The same head, hair (medium length, swept back, collar-length at the nape), short full beard, build and proportions
    in every scene; only the attire and the props change (owner: "unify his hairstyle and figure, give him different attire").
 
-   <Karl x y h attire action phase facing? rim? lightDir? />  inside a 1920×1080 <svg>
-     (x, y)  the feet point (ground under the hips). swim / float: the water line at his chest.
-     h       standing height in px (hair included). Every prop is sized from h (cart wheel ≈ 0.17h radius, camel hump ≈ 1.2h…).
-     phase   cycle position in cycles, driven by the caller from time: phase = t / KARL_CYCLE[action].sec.
-             Travelling actions advance stride = KARL_CYCLE[action].stride × h px per cycle — move x by exactly that
-             (or use karlTravel) and the planted foot never slides (the gait is root-locked on its pivot foot).
-     facing  1 = toward +x (default), -1 = mirrored.   rim = rim-light colour.   lightDir = the side the light comes from
-             ('left' | 'right' | 'top' | degrees: 0 = from the right, 90 = from above, 180 = from the left).
+   <Karl x y h attire action phase facing? rim? lightDir? … />   — an SVG <g>, inside a 1920×1080 <svg>
+     (x, y)   the feet point (ground under the hips).  swim / float: the water line at his chest.
+     h        standing height in px (hair included). Props are sized from h (cart wheel ≈ 0.17h radius, camel hump ≈ 1.25h …).
+     attire   start1998 | jungle | ice | siberia | gobi | swim | home2026
+     action   walk | pushCart | haulSled | wade | swim | float | stand | lookUp | leadCamel | hug
+              pushCart draws the cart for the attire (start1998 'beast98', siberia/ice 'winter', else 'orange'; override `cart`),
+              haulSled the red sled on traces, leadCamel the camel on its lead rope, hug his mother, wade/swim/float their water fx.
+     phase    cycle position in cycles: phase = t / KARL_CYCLE[action].sec. Travelling actions cover KARL_CYCLE[action].stride × h px
+              per cycle — move x by exactly that (karlTravel(action, t, h) returns both) and the planted foot never slides:
+              each gait is root-locked on its pivot foot (heel, then ball), measured ≤ 2–3 px/frame at h = 600.
+     facing   1 = toward +x (default), -1 mirrored.   rim = rim-light colour (default #ffd9a8).   rimO = rim strength 0..1.
+     lightDir 'left' | 'right' | 'top' | degrees (0 = from the right, 90 = from above, 180 = from the left) — screen space,
+              independent of facing.
+     t        seconds for secondary motion (scarf, ruff, splash randomness); default phase × cycle seconds.
+     frost    0..1 rime on beard/brows/ruff (default by attire).   col = figure colour (default FIG).
+     water    foam / waterHi colours, underO = opacity of submerged parts (0 hides them; the scene's water then hides nothing),
+              depth = wade water depth in body units (default 0.56, i.e. waist), pitch = swim/float tilt in degrees.
+   Also exported: <Mum x y h action('stand'|'walk'|'reach') phase facing …/> (h = HER height ≈ 0.88 × his),
+     <Camel x y h phase walking …/> (h = the man's height; walk phase in camel cycles of CAMEL_STRIDE·h),
+     <Cart x y h kind dist gripY …/> (parked; x = axle), <Sled x y h dist …/> (x = nose), KARL_CYCLE, MUM_CYCLE, karlTravel,
+     LOOKS (the attire table), mixHex, and karlGaitPose (inspection). The open-water set for swim/float is karl3sea.tsx.
 
-   Style: dark one-tone figure; every depth layer (far arm, far leg, near leg, torso, kit, head, near arm, props) gets its
-   own thin warm rim on the lit side (clipped inside the shape, so the silhouette never grows), and the kit reads through
-   slightly lighter inner shapes (vest, straps, harness, life vest, fur ruff) — no outlines anywhere. Hands are simple mittens
-   or fists. Units inside: body units, y up, feet at y = 0, facing +x, standing height 1.
+   Style: dark one-tone figure; one strong rim on the figure's outer lit contour (a mask: silhouette minus silhouette shifted away
+   from the light) plus a faint rim per depth layer (far arm, far leg, near leg, torso, kit, head, near arm, props) so overlapping
+   limbs separate. Kit reads through slightly lighter inner shapes (vest, straps, harness, life vest, fur ruff) — no outlines.
+   Hands are simple mittens or fists. Internal units: body units, y up, feet at y = 0, facing +x, standing height 1.
    ============================================================================================================ */
 
 export type V = [number, number];
@@ -106,13 +119,13 @@ export type Sh = {d: string; f: string; o?: number};
 /** a depth layer: its shapes get one rim on the lit side; `mirror` = mirror the layer about this local x (a figure facing the other way) */
 export type Layer = {sh: Sh[]; rim?: number; mirror?: number};
 export const lightVec = (ld: LightDir): V => (ld === 'left' ? [-0.8, -0.6] : ld === 'right' ? [0.8, -0.6] : ld === 'top' ? [0, -1] : [Math.cos(ld * DEG), -Math.sin(ld * DEG)]);
-type RimCfg = {col: string; o: number; off: V; soft: boolean; body: string};
+type RimCfg = {col: string; o: number; off: V; soft: boolean; body: string; inner: number};
 const LayerG: React.FC<{L: Layer; id: string; rc: RimCfg}> = ({L, id, rc}) => {
 	const sx = L.mirror !== undefined ? -1 : 1, ox = rc.off[0] * sx, oy = rc.off[1];
 	const tf = L.mirror !== undefined ? `translate(${f1(2 * L.mirror)},0) scale(-1,1)` : undefined;
 	const plain = L.sh.map((s, j) => <path key={j} d={s.d} fill={s.f} opacity={s.o} />);
 	if (!L.rim || rc.o <= 0) return <g transform={tf}>{plain}</g>;
-	const bright = mixHex(rc.body, rc.col, rc.o * L.rim), mid = mixHex(rc.body, rc.col, 0.36 * rc.o * L.rim), k = rc.soft ? 2 : 1;
+	const ri = rc.inner * L.rim, bright = mixHex(rc.body, rc.col, rc.o * ri), mid = mixHex(rc.body, rc.col, 0.36 * rc.o * ri), k = rc.soft ? 2 : 1;
 	return <g transform={tf}>
 		<clipPath id={id}>{L.sh.filter((s) => (s.o ?? 1) > 0.5).map((s, j) => <path key={j} d={s.d} />)}</clipPath>
 		<g clipPath={`url(#${id})`}>
@@ -121,10 +134,24 @@ const LayerG: React.FC<{L: Layer; id: string; rc: RimCfg}> = ({L, id, rc}) => {
 			<g transform={`translate(${f1(-ox * k)},${f1(-oy * k)})`}>{plain}</g>
 		</g></g>;
 };
-export const Layers: React.FC<{layers: Layer[]; uid: string; rc: RimCfg}> = ({layers, uid, rc}) => <>{layers.map((L, i) => <LayerG key={i} L={L} id={`${uid}L${i}`} rc={rc} />)}</>;
+/** the layers (each with a weak inner rim that separates overlapping limbs), then one strong rim on the figure's outer lit contour:
+    the silhouette minus the silhouette shifted away from the light, through a mask */
+export const Layers: React.FC<{layers: Layer[]; uid: string; rc: RimCfg; box?: [number, number, number, number]}> = ({layers, uid, rc, box = [-4000, -4000, 12000, 12000]}) => {
+	const lit = layers.filter((L) => (L.rim ?? 0) > 0 && rc.o > 0), sx = (L: Layer) => (L.mirror !== undefined ? -1 : 1);
+	const tf = (L: Layer, dx = 0, dy = 0) => (L.mirror !== undefined ? `translate(${f1(2 * L.mirror + dx)},${f1(dy)}) scale(-1,1)` : dx || dy ? `translate(${f1(dx)},${f1(dy)})` : undefined);
+	const solid = (L: Layer) => L.sh.filter((s) => (s.o ?? 1) > 0.5).map((s, j) => <path key={j} d={s.d} />);
+	const k = rc.soft ? 1.6 : 1, ox = rc.off[0] * k, oy = rc.off[1] * k;
+	return <>{layers.map((L, i) => <LayerG key={i} L={L} id={`${uid}L${i}`} rc={rc} />)}
+		{lit.length > 0 && <>
+			<mask id={`${uid}om`} maskUnits="userSpaceOnUse" x={f1(box[0])} y={f1(box[1])} width={f1(box[2])} height={f1(box[3])}>
+				{lit.map((L, i) => <g key={i} fill="#fff" transform={tf(L)}>{solid(L)}</g>)}
+				{lit.map((L, i) => <g key={'b' + i} fill="#000" transform={tf(L, -ox * sx(L) * (L.mirror !== undefined ? -1 : 1), -oy)}>{solid(L)}</g>)}
+			</mask>
+			<rect x={f1(box[0])} y={f1(box[1])} width={f1(box[2])} height={f1(box[3])} fill={mixHex(rc.body, rc.col, rc.o)} mask={`url(#${uid}om)`} />
+		</>}</>; };
 const rimCfg = (h: number, rim: string, rimO: number, ld: LightDir, facing: number, body: string): RimCfg => {
 	const r = clamp(0.0034 * h, 1.0, 3.0), lv = lightVec(ld);
-	return {col: rim, o: rimO, off: [lv[0] * r * facing, lv[1] * r], soft: h > 260, body};
+	return {col: rim, o: rimO, off: [lv[0] * r * facing, lv[1] * r], soft: h > 260, body, inner: 0.42};
 };
 const useUid = () => 'k' + useId().replace(/[^a-zA-Z0-9]/g, '');
 
@@ -156,7 +183,7 @@ export const LOOKS: Record<Attire | 'mum', Look> = {
 		bulk: {torso: 1.05, arm: 1.06, leg: 1.02}, pal: {...P0, top: '#221d18', sleeve: '#221d18', legs: '#141210', scarf: '#4c4130', scarfHi: '#625540'}},
 	/** the swims: a wetsuit and a life vest ("floatimming") */
 	swim: {who: 'karl', head: 'wet', beard: true, frost: 0, top: 'wetsuit', mitts: false, boots: 'bare', pack: false, hivis: false, harness: false, lifevest: true, wet: false,
-		bulk: {torso: 0.97, arm: 0.94, leg: 0.95}, pal: {...P0, hair: '#1f1d1c', top: '#0a0a0d', sleeve: '#0a0a0d', legs: '#0a0a0d', boots: '#0a0a0d', vest: '#6c3517', strap: '#2a1b14'}},
+		bulk: {torso: 0.97, arm: 0.94, leg: 0.95}, pal: {...P0, hair: '#1f1d1c', top: '#0a0a0d', sleeve: '#0a0a0d', legs: '#0a0a0d', boots: '#0a0a0d', vest: '#64301a', strap: '#2a1b14'}},
 	/** home, 2026: a dark jacket (the orange-bagged cart when pushing) */
 	home2026: {who: 'karl', head: 'hair', beard: true, frost: 0, top: 'jacket', mitts: false, boots: 'boot', pack: false, hivis: false, harness: false, lifevest: false, wet: false,
 		bulk: {torso: 1.05, arm: 1.08, leg: 1.0}, pal: {...P0, top: '#151419', sleeve: '#151419', legs: '#0f0e12', trim: '#83401a'}},
@@ -369,8 +396,8 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 	if (lk.pack) strapLoop(pal.strap ?? '#2a2c2e');
 	if (lk.harness) strapLoop(pal.strap ?? '#2a2e38');
 	if (lk.lifevest && pal.vest) {
-		out.gear.push({d: closedD([TS(0.015, -(0.062 * bt + 0.03)), TS(0.11, -(0.07 * bt + 0.034)), TS(0.19, -0.075), TS(0.225, -0.04), TS(L + 0.04, 0.0), TS(L + 0.05, 0.05), TS(0.215, 0.1), TS(0.12, 0.072 * bt + 0.034), TS(0.02, 0.064 * bt + 0.03), TS(-0.005, 0.0)]), f: pal.vest});
-		out.gear.push({d: polyD([TS(0.045, -(0.062 * bt + 0.032)), TS(0.062, -(0.064 * bt + 0.032)), TS(0.062, 0.066 * bt + 0.032), TS(0.045, 0.064 * bt + 0.032)]), f: pal.strap ?? '#2a1b14'});
+		out.gear.push({d: closedD([TS(0.05, -(0.062 * bt + 0.03)), TS(0.12, -(0.07 * bt + 0.034)), TS(0.19, -0.075), TS(0.225, -0.04), TS(L + 0.035, 0.0), TS(L + 0.045, 0.05), TS(0.215, 0.098), TS(0.13, 0.072 * bt + 0.032), TS(0.06, 0.064 * bt + 0.028), TS(0.035, 0.0)]), f: pal.vest});
+		out.gear.push({d: polyD([TS(0.085, -(0.066 * bt + 0.033)), TS(0.1, -(0.067 * bt + 0.033)), TS(0.1, 0.068 * bt + 0.031), TS(0.085, 0.067 * bt + 0.031)]), f: pal.strap ?? '#2a1b14'});
 	}
 	/* --- the head --- */
 	out.head.push(...headShapes(cx, pose, lk, o));
@@ -383,6 +410,7 @@ const headShapes = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Sh[] => {
 	const out: Sh[] = [], mum = lk.who === 'mum', frost = o.frost ?? lk.frost;
 	/* medium-length hair swept back from a high forehead, falling to the collar in a few locks (the 2026 photos); wet = flatter, darker */
 	const hairD = (wet: boolean) => { const q = wet ? 0.9 : 1, P = (a0: number, b0: number) => Hs(a0, b0 > 0.03 ? 0.03 + (b0 - 0.03) * q : b0);
+		if (wet) return `M${P(0.04, 0.05)} C${P(0.054, 0.064)} ${P(0.046, 0.086)} ${P(0.014, 0.088)} C${P(-0.03, 0.09)} ${P(-0.068, 0.072)} ${P(-0.076, 0.035)} C${P(-0.082, 0.0)} ${P(-0.076, -0.03)} ${P(-0.07, -0.062)} Q${P(-0.058, -0.07)} ${P(-0.05, -0.05)} Q${P(-0.046, -0.02)} ${P(-0.03, 0.0)} Q${P(-0.012, 0.02)} ${P(0.006, 0.036)} Q${P(0.022, 0.046)} ${P(0.04, 0.05)} Z`;
 		return `M${P(0.04, 0.05)} C${P(0.056, 0.064)} ${P(0.048, 0.088)} ${P(0.014, 0.09)} C${P(-0.03, 0.092)} ${P(-0.07, 0.074)} ${P(-0.08, 0.035)} C${P(-0.086, 0.0)} ${P(-0.08, -0.03)} ${P(-0.082, -0.05)}`
 			+ ` L${P(-0.092, -0.082)} L${P(-0.074, -0.066)} L${P(-0.08, -0.092)} L${P(-0.063, -0.071)} L${P(-0.06, -0.084)} Q${P(-0.05, -0.06)} ${P(-0.048, -0.04)} Q${P(-0.044, -0.012)} ${P(-0.03, 0.0)} Q${P(-0.012, 0.02)} ${P(0.006, 0.036)} Q${P(0.022, 0.046)} ${P(0.04, 0.05)} Z`; };
 	const combs = [[0.03, 0.074, -0.054, 0.062], [0.008, 0.06, -0.066, 0.032]].map(([a0, b0, a1, b1]) =>
@@ -590,11 +618,11 @@ const SW_E = [[0.0, 0.2, 0.06], [0.1, 0.25, -0.02], [0.25, 0.25, -0.09], [0.4, 0
 const SW_H = [[0.0, 0.37, -0.01], [0.1, 0.46, -0.07], [0.25, 0.4, -0.21], [0.4, 0.12, -0.28], [0.5, -0.18, -0.19], [0.56, -0.3, -0.05], [0.63, -0.28, 0.06], [0.73, -0.15, 0.12], [0.83, 0.06, 0.15], [0.92, 0.25, 0.09]];
 const swimArm = (u: number, S0: V): {E: V; W: V; H: V; dir: V} => { const [ex, ey] = loopKeys(SW_E, u), [hx, hy] = loopKeys(SW_H, u);
 	const E = add(S0, mul(nrm(sub([ex, ey], S0)), BL.upper)), d = nrm(sub([hx, hy], E)); return {E, W: add(E, mul(d, BL.fore)), H: add(E, mul(d, BL.fore + BL.hand)), dir: d}; };
-const swimBreath = (u: number) => ss(0.44, 0.58, fr(u)) * (1 - ss(0.74, 0.9, fr(u)));
+const swimBreath = (u: number) => ss(0.46, 0.6, fr(u)) * (1 - ss(0.76, 0.9, fr(u)));
 const swimPose = (ph: number): {pose: Pose; dirL: V; dirR: V; breath: number} => {
 	const u = fr(ph), roll = Math.cos(2 * Math.PI * (u - 0.72)), br = swimBreath(u), pitch = 0.9 * Math.sin(4 * Math.PI * u);
-	const Hp: V = [-0.31, -0.088], Sp: V = [-0.15, -0.062 + 0.004 * roll], Nk: V = [0.062, -0.036 + 0.006 * roll];
-	const th = 10 + 40 * br, Hd = add(Nk, add(mul(dirA(th), BL.head), [0, 0.02 * br])), Tp = add(Hd, mul(dirA(th), BL.top));
+	const Hp: V = [-0.3, -0.125], Sp: V = [-0.15, -0.078 + 0.004 * roll], Nk: V = [0.058, -0.03 + 0.006 * roll];
+	const th = 14 + 70 * br, Hd = add(Nk, add(mul(dirA(th), BL.head), [0.004 * br, 0.004 + 0.05 * br])), Tp = add(Hd, mul(dirA(th), BL.top));
 	const SL: V = [Nk[0] - 0.022, Nk[1] - 0.004 + 0.02 * roll], SR: V = [Nk[0] - 0.026, Nk[1] - 0.004 - 0.02 * roll];
 	const aL = swimArm(u, SL), aR = swimArm(u + 0.5, SR);
 	const back = nrm(sub(Hp, Sp)), kick = (side: number) => { const k = Math.sin(6 * Math.PI * u + side * Math.PI), up = add(Hp, mul(back, 0.066));
@@ -609,19 +637,21 @@ const swimPose = (ph: number): {pose: Pose; dirL: V; dirR: V; breath: number} =>
 const floatPose = (ph: number, t: number): Pose => {
 	const u = fr(ph), sc = Math.sin(2 * Math.PI * u), b = 0.008 * Math.sin(t * 1.1), look = 4 * Math.sin(t * 0.45);
 	const Hp: V = [0.06, -0.16 + b], Sp: V = [0.0, -0.02 + b], Nk: V = [-0.03, 0.04 + b];
-	const th = 96 + look, Hd = add(Nk, mul(dirA(th), BL.head)), Tp = add(Hd, mul(dirA(th), BL.top));
+	const th = 98 + look, Hd = add(Nk, mul(dirA(th), BL.head)), Tp = add(Hd, mul(dirA(th), BL.top));
 	const SL: V = [Nk[0] + 0.004, Nk[1] - 0.012], SR: V = [Nk[0] - 0.004, Nk[1] - 0.008];
 	const lg = (side: number) => { const k = Math.sin(2 * Math.PI * u * 0.5 + side * 2.2), up = add(Hp, [0.0, -0.06]); const kn = add(up, mul(dirA(-38 + 5 * k), BL.thigh)), an = add(kn, mul(dirA(-72 + 6 * k), BL.shin)); return [up, kn, an, add(an, mul(dirA(-20 + 8 * k), BL.foot))]; };
 	const [LUp, LKnee, LAnk, LToe] = lg(0), [RUp, RKnee, RAnk, RToe] = lg(1);
 	let p: Pose = {Hips: Hp, Spine1: Sp, Neck1: Nk, Head: Hd, Top: Tp, LSh: SL, RSh: SR, LUp, LKnee, LAnk, LToe, RUp, RKnee, RAnk, RToe, LElb: SL, LHand: SL, RElb: SR, RHand: SR};
-	p = armIK(p, 'L', [0.27 + 0.05 * sc, -0.012 - 0.008 * Math.cos(2 * Math.PI * u)], 1);
-	p = armIK(p, 'R', [0.22 - 0.05 * sc, -0.018 + 0.006 * Math.cos(2 * Math.PI * u)], 1);
+	p = armIK(p, 'L', [0.21 + 0.04 * sc, -0.022 - 0.006 * Math.cos(2 * Math.PI * u)], -1);   // forearms resting on the surface, sculling small figure-eights
+	p = armIK(p, 'R', [0.15 - 0.04 * sc, -0.03 + 0.005 * Math.cos(2 * Math.PI * u)], -1);
 	return p;
 };
 
 /* ---------- water fx (local frame; body units → px) ---------- */
 type FxCfg = {foam: string; hi: string};
-const drop = (key: string, c: V, r: number, f: string, o: number) => <circle key={key} cx={f1(c[0])} cy={f1(c[1])} r={f1(Math.max(0.6, r))} fill={f} opacity={clamp(o)} />;
+const drop = (key: string, c: V, r: number, f: string, o: number, vel?: V) => { if (!vel) return <circle key={key} cx={f1(c[0])} cy={f1(c[1])} r={f1(Math.max(0.6, r))} fill={f} opacity={clamp(o)} />;
+	const a = Math.atan2(-vel[1], vel[0]) / DEG, l = Math.max(1, Math.min(3.2, 1 + len(vel) * 1.6));
+	return <ellipse key={key} cx={f1(c[0])} cy={f1(c[1])} rx={f1(Math.max(0.7, r * l))} ry={f1(Math.max(0.5, r * 0.75))} transform={`rotate(${f1(a)} ${f1(c[0])} ${f1(c[1])})`} fill={f} opacity={clamp(o)} />; };
 const G_ACC = 5.4;   // gravity in body units / s² (9.8 m/s² for a 1.8 m man)
 const swimFx = (cx: Ctx, ph: number, cyc: number, fc: FxCfg, wx: (p: V) => V): React.ReactNode[] => {
 	const {S, h} = cx, out: React.ReactNode[] = [], st = SWIM_STRIDE, k0 = Math.floor(ph);
@@ -632,31 +662,35 @@ const swimFx = (cx: Ctx, ph: number, cyc: number, fc: FxCfg, wx: (p: V) => V): R
 		for (let j = 0; j < 4; j++) { const sd = e * 7 + j, x = -0.84 - 0.1 * rnd(sd, 1) - a * st, y = 0.004 + 0.012 * rnd(sd, 2) * (1 - a / 1.6), r = (0.012 + 0.014 * rnd(sd, 3)) * (1 + a * 0.8);
 			out.push(<ellipse key={`kf${e}_${j}`} cx={f1(P([x, y])[0])} cy={f1(P([x, y])[1])} rx={f1(r * h * 1.6)} ry={f1(r * h * 0.55)} fill={fc.foam} opacity={clamp(0.8 * (1 - a / 1.6) * (0.6 + 0.4 * rnd(sd, 4)))} />); }
 		const a2 = a * cyc; if (a2 < 0.35) for (let j = 0; j < 4; j++) { const sd = e * 13 + j, vx = -0.25 - 0.3 * rnd(sd, 5), vy = 0.35 + 0.35 * rnd(sd, 6), x = -0.86 - 0.06 * rnd(sd, 7) + vx * a2 - a * st, y = vy * a2 - 0.5 * G_ACC * a2 * a2;
-			if (y > -0.003) out.push(drop(`ks${e}_${j}`, P([x, y]), (0.004 + 0.004 * rnd(sd, 8)) * h, fc.foam, 0.9 - a2 * 2)); }
+			if (y > -0.003) out.push(drop(`ks${e}_${j}`, P([x, y]), (0.003 + 0.003 * rnd(sd, 8)) * h, fc.foam, 0.9 - a2 * 2, [vx, vy - G_ACC * a2])); }
 	}
+	for (let e = Math.floor(ph * 4) - 6; e <= Math.floor(ph * 4); e++) { const a = ph - e / 4; if (a < 0 || a > 1.5) continue;
+		for (let j = 0; j < 3; j++) { const sd = e * 5 + j + 300, x = -0.3 - 0.22 * rnd(sd, 1) - a * st * 0.9, r = (0.01 + 0.012 * rnd(sd, 2)) * (1 + a), p0 = P([x, 0.002]);
+			out.push(<ellipse key={`bw${e}_${j}`} cx={f1(p0[0])} cy={f1(p0[1])} rx={f1(r * h * 1.8)} ry={f1(r * h * 0.32)} fill={fc.foam} opacity={clamp(0.5 * (1 - a / 1.5) * (0.5 + 0.5 * rnd(sd, 3)))} />); } }
 	// the body breaking the surface: a pale seam along the waterline, the bow wave ahead of the head
-	{ const pts: V[] = []; for (let i = 0; i <= 10; i++) { const x = lerp(-0.34, 0.12, i / 10); pts.push(P([x, 0.004 + 0.004 * Math.sin(ph * 9 + i * 1.7)])); }
-		out.push(<path key="seam" d={'M' + pts.map(ps).join(' L')} stroke={fc.foam} strokeWidth={f1(Math.max(1, 0.006 * h))} strokeLinecap="round" fill="none" opacity={0.75} />);
-		const bw = 0.024 + 0.012 * Math.sin(2 * Math.PI * ph * 2) ** 2 + 0.012 * swimBreath(ph), a = P([0.08, 0]), m = P([0.2, bw]), b = P([0.36, 0]);
-		out.push(<path key="bow" d={`M${ps(a)} Q${ps(m)} ${ps(b)} Q${ps(P([0.22, -0.01]))} ${ps(a)} Z`} fill={fc.hi} opacity={0.55} />);
-		out.push(<path key="bowc" d={`M${ps(a)} Q${ps(m)} ${ps(b)}`} stroke={fc.foam} strokeWidth={f1(Math.max(1, 0.005 * h))} fill="none" opacity={0.8} />); }
+	{ for (const [x0, x1, sg] of [[-0.26, -0.17, 0], [0.02, 0.1, 1]]) { const pts: V[] = []; for (let i = 0; i <= 4; i++) { const x = lerp(x0, x1, i / 4); pts.push(P([x, 0.002 + 0.006 * Math.sin(Math.PI * i / 4) + 0.002 * Math.sin(ph * 7 + i + sg * 2)])); }
+			out.push(<path key={`seam${sg}`} d={'M' + pts.map(ps).join(' L')} stroke={fc.foam} strokeWidth={f1(Math.max(1, 0.004 * h))} strokeLinecap="round" fill="none" opacity={0.6} />); }
+		const bw = 0.012 + 0.008 * Math.sin(2 * Math.PI * ph * 2) ** 2 + 0.01 * swimBreath(ph), a = P([0.1, 0]), m = P([0.19, bw]), b = P([0.31, 0.0]);
+		out.push(<path key="bow" d={`M${ps(a)} Q${ps(m)} ${ps(b)} Q${ps(P([0.2, -0.004]))} ${ps(a)} Z`} fill={fc.hi} opacity={0.45} />);
+		out.push(<path key="bowc" d={`M${ps(a)} Q${ps(m)} ${ps(b)}`} stroke={fc.foam} strokeWidth={f1(Math.max(1, 0.004 * h))} strokeLinecap="round" fill="none" opacity={0.85} />); }
 	// each hand: the splash on entry (a crown + droplets), the foam patch it leaves, and drips off the recovering arm
 	for (const arm of [0, 0.5]) for (let k = k0 - 2; k <= k0 + 1; k++) {
 		const te = k + arm, a = ph - te; if (a < 0) continue;
 		const sec = a * cyc, ex = loopKeys(SW_H, 0)[0], o0: V = [ex - a * st, 0];
-		if (a < 1.4) out.push(<ellipse key={`fp${k}_${arm}`} cx={f1(P(o0)[0])} cy={f1(P(o0)[1])} rx={f1((0.05 + 0.06 * Math.min(1, a * 2)) * h)} ry={f1((0.008 + 0.006 * Math.min(1, a * 2)) * h)} fill={fc.foam} opacity={clamp(0.7 * (1 - a / 1.4))} />);
+		if (a < 1.4) for (let j = 0; j < 5; j++) { const g = Math.min(1, a * 2.5), q: V = [o0[0] + (rnd(k * 7 + j, arm * 3 + 1) - 0.5) * 0.12 * (0.4 + g), 0.002], pq = P(q);
+			out.push(<ellipse key={`fp${k}_${arm}_${j}`} cx={f1(pq[0])} cy={f1(pq[1])} rx={f1((0.012 + 0.02 * rnd(k + j, arm + 5)) * (0.6 + g) * h)} ry={f1(0.0035 * (0.7 + g) * h)} fill={fc.foam} opacity={clamp(0.75 * (1 - a / 1.4))} />); }
 		if (sec < 0.7) {
 			if (sec < 0.28) { const g = Math.sin(Math.PI * sec / 0.28);   // the crown
-				for (let j = 0; j < 6; j++) { const ang = lerp(40, 150, j / 5) + 10 * (rnd(k * 11 + j, arm * 10) - 0.5), l = (0.04 + 0.05 * rnd(k * 5 + j, 3 + arm)) * g, base = P(o0), tip = add(base, [Math.cos(ang * DEG) * l * h, -Math.sin(ang * DEG) * l * h]);
-					out.push(<path key={`cr${k}_${arm}_${j}`} d={`M${ps(add(base, [-0.006 * h, 0]))} Q${ps(mixV(base, tip, 0.6))} ${ps(tip)} Q${ps(mixV(base, tip, 0.6))} ${ps(add(base, [0.006 * h, 0]))} Z`} fill={fc.foam} opacity={0.85 * g} />); } }
+				for (let j = 0; j < 7; j++) { const ang = lerp(35, 150, j / 6) + 12 * (rnd(k * 11 + j, arm * 10) - 0.5), l = (0.025 + 0.04 * rnd(k * 5 + j, 3 + arm)) * g, base = add(P(o0), [(j - 3) * 0.004 * h, 0]), tip = add(base, [Math.cos(ang * DEG) * l * h, -Math.sin(ang * DEG) * l * h]), w0 = 0.0022 * h;
+					out.push(<path key={`cr${k}_${arm}_${j}`} d={`M${ps(add(base, [-w0, 0]))} Q${ps(mixV(base, tip, 0.5))} ${ps(tip)} Q${ps(mixV(base, tip, 0.5))} ${ps(add(base, [w0, 0]))} Z`} fill={fc.foam} opacity={0.85 * g} />); } }
 			for (let j = 0; j < 14; j++) { const sd = k * 31 + j + arm * 100, vx = -0.35 + 0.95 * rnd(sd, 1), vy = 0.45 + 0.85 * rnd(sd, 2), x = o0[0] + vx * sec + 0.03 * (rnd(sd, 3) - 0.5), y = vy * sec - 0.5 * G_ACC * sec * sec;
-				if (y > -0.002) out.push(drop(`sp${k}_${arm}_${j}`, P([x, y]), (0.004 + 0.006 * rnd(sd, 4)) * h, fc.foam, 0.95 - sec)); }
+				if (y > -0.002) out.push(drop(`sp${k}_${arm}_${j}`, P([x, y]), (0.0028 + 0.004 * rnd(sd, 4)) * h, fc.foam, 0.95 - sec, [vx, vy - G_ACC * sec])); }
 		}
 		// drips: shaken off the hand from exit through the recovery
 		for (let j = 0; j < 9; j++) { const ts = te - 1 + 0.6 + 0.035 * j, ad = ph - ts; if (ad < 0 || ad * cyc > 0.6) continue;
 			const sp = swimArm(fr(ts - arm), [0.04, -0.02]).H, sec2 = ad * cyc; if (sp[1] < 0.01) continue;
 			const y = sp[1] - 0.5 * G_ACC * sec2 * sec2, x = sp[0] + 0.2 * sec2 - ad * st;
-			if (y > 0) out.push(drop(`dr${k}_${arm}_${j}`, P([x, y]), (0.0035 + 0.003 * rnd(j, k)) * h, fc.foam, 0.85));
+			if (y > 0) out.push(drop(`dr${k}_${arm}_${j}`, P([x, y]), (0.0026 + 0.002 * rnd(j, k)) * h, fc.foam, 0.85, [0.2, -G_ACC * sec2]));
 			else if (y > -0.03) out.push(<ellipse key={`dri${k}_${arm}_${j}`} cx={f1(P([x, 0])[0])} cy={f1(P([x, 0])[1])} rx={f1(0.012 * h)} ry={f1(0.003 * h)} fill="none" stroke={fc.foam} strokeWidth={1} opacity={0.6} />); }
 	}
 	return out;
@@ -734,8 +768,8 @@ const build = (b: BuildIn): Built => {
 		case 'float': {
 			const p = floatPose(ph, t), P = figure(cx, p, lk, fo({handL: 'open', handR: 'open'}));
 			const L: Layer[] = [{sh: P.farLeg, rim: 0.6}, {sh: P.nearLeg, rim: 0.8}, {sh: P.farArm, rim: 0.85}, {sh: P.torso, rim: 1}, {sh: P.gear, rim: 0.9}, {sh: P.head, rim: 1}, {sh: P.nearArm, rim: 1}];
-			fx.push(...ripples(cx, 'fr', [0.0, 0], ph, 1, 2.2, 0.12, 0.5, b.foam, 0.5));
-			fx.push(...ripples(cx, 'fh', [p.LHand[0] + 0.03, 0], ph, 2, 0.9, 0.02, 0.12, b.foam, 0.55, 0.25));
+			fx.push(...ripples(cx, 'fr', [0.02, 0], ph, 0.7, 2.6, 0.1, 0.3, b.foam, 0.4, 0.14));
+			fx.push(...ripples(cx, 'fh', [p.LHand[0] + 0.03, 0], ph, 2, 0.8, 0.015, 0.08, b.foam, 0.5, 0.22));
 			{ const pts: V[] = []; for (let i = 0; i <= 8; i++) pts.push(cx.S([lerp(-0.1, 0.12, i / 8), 0.003 + 0.003 * Math.sin(t * 5 + i * 1.9)]));
 				fx.push(<path key="fseam" d={'M' + pts.map(ps).join(' L')} stroke={b.foam} strokeWidth={f1(Math.max(1, 0.006 * cx.h))} strokeLinecap="round" fill="none" opacity={0.7} />); }
 			return {layers: L, fx, water: cx.S([0, 0])[1]};
@@ -812,13 +846,14 @@ export const Karl: React.FC<KarlProps> = (p) => {
 	const rc = rimCfg(p.h, p.rim ?? RIM, p.rimO ?? 0.85, p.lightDir ?? 'left', facing, body);
 	const flip = facing === -1 ? `translate(${f1(2 * p.x)},0) scale(-1,1)` : '';
 	const tilt = p.pitch ? `rotate(${f1(-(p.pitch) * facing)} ${f1(p.x)} ${f1(p.y)})` : '';
-	const content = <Layers layers={B.layers} uid={uid} rc={rc} />;
+	const bx: [number, number, number, number] = [p.x - 3.4 * p.h, p.y - 1.7 * p.h, 6.8 * p.h, 2.4 * p.h];
+	const content = <Layers layers={B.layers} uid={uid} rc={rc} box={bx} />;
 	if (B.water === undefined) return <g transform={(tilt + ' ' + flip).trim() || undefined}>{content}{B.fx}</g>;
 	const wy = B.water, uo = p.underO ?? 0.3;
 	return <g transform={(tilt + ' ' + flip).trim() || undefined}>
 		<defs><clipPath id={`${uid}up`}><rect x={-4000} y={-4000} width={12000} height={wy + 4000} /></clipPath>
 			<clipPath id={`${uid}dn`}><rect x={-4000} y={wy} width={12000} height={8000} /></clipPath></defs>
-		<g clipPath={`url(#${uid}dn)`} opacity={uo}><Layers layers={B.layers.map((L) => ({...L, rim: 0, sh: L.sh.map((s) => ({...s, f: body}))}))} uid={uid + 'u'} rc={rc} /></g>
+		{uo > 0 && <g clipPath={`url(#${uid}dn)`} opacity={uo}><Layers layers={B.layers.map((L) => ({...L, rim: 0, sh: L.sh.map((s) => ({...s, f: body}))}))} uid={uid + 'u'} rc={rc} box={bx} /></g>}
 		<g clipPath={`url(#${uid}up)`}>{content}</g>
 		{B.fx}
 	</g>;

@@ -41,7 +41,7 @@ const Actions: React.FC = () => {
 		<rect x={820} y={690 - 0.56 * h} width={300} height={0.56 * h} fill="#22343a" opacity={0.0} />
 		<Karl x={960} y={690} h={h} attire="jungle" action="wade" phase={0.5} rim={rim} />{lab(960, 720, 'wade')}
 		<Karl x={1180} y={690} h={h} attire="siberia" action="stand" phase={0.2} rim={rim} />{lab(1180, 720, 'stand')}
-		<Karl x={1340} y={690} h={h} attire="home2026" action="lookUp" phase={0.2} rim={rim} />{lab(1340, 720, 'lookUp')}
+		<Karl x={1340} y={690} h={h} attire="home2026" action="lookUp" phase={0.2} rim={rim} facing={-1} lightDir="right" />{lab(1340, 720, 'lookUp (facing -1)')}
 		<Karl x={1460} y={690} h={h} attire="home2026" action="pushCart" phase={0.1} rim={rim} />{lab(1600, 720, 'pushCart · 2026')}
 		<rect x={0} y={900} width={W} height={2} fill="#3c4a52" />
 		<Karl x={420} y={900} h={h} attire="swim" action="swim" phase={0.7} rim={rim} />{lab(380, 1000, 'swim')}
@@ -97,7 +97,7 @@ const Idle: React.FC = () => { const f = useCurrentFrame(), t = f / FPS, seg = M
 
 /** the swim (6 s) and the float (3 s): low camera at the water line, dawn */
 const Swim: React.FC<{mode: 'swim' | 'float'}> = ({mode}) => { const f = useCurrentFrame();
-	return <AbsoluteFill style={{background: '#0b0d14'}}><svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}><SeaShot t={f / FPS} mode={mode} h={mode === 'float' ? 660 : 560} dur={mode === 'float' ? 3 : 6} /></svg></AbsoluteFill>; };
+	return <AbsoluteFill style={{background: '#0b0d14'}}><svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}><SeaShot t={f / FPS} mode={mode} h={mode === 'float' ? 1100 : 1150} dur={mode === 'float' ? 3 : 6} /></svg></AbsoluteFill>; };
 
 registerRoot(() => <>
 	<Composition id="K3Sheet" component={Sheet} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{dark: false}} />
