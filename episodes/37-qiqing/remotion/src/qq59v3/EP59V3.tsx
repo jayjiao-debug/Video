@@ -42,7 +42,7 @@ const Furniture: React.FC<{L: Placed[]; i: number; t: number}> = ({L, i, t}) => 
 		const rows = vz ? vz.zh.map((z, k) => ({s: (k === 0 ? '「' : '') + z + (k === vz.zh.length - 1 ? '」' : ''), at: 0.35 + k * 1.4})) : s.rows;
 		const vis = rows.filter((r) => ts >= r.at).map((r) => ({s: r.s, n: Math.floor((ts - r.at) * CHARS_PER_S) + 1, o: out}));
 		if (vis.length) nodes.push(s.punch ? <Punch key="p" s={vis[vis.length - 1].s} o={out} /> : <Story key="s" rows={vis.map((r) => ({...r, n: Math.min(r.n, 999)}))} />);
-		if (vz) nodes.push(<VoiceTag key="v" t={ts} o={out} en={vz.en} />);
+		if (vz) nodes.push(<VoiceTag key="v" t={ts} o={out} en={vz.en} heard={!!VOICE_READY[s.voice!]} />);
 	}
 	// stamp: after the first row has typed
 	if (s.stamp && !def?.noStamp) {
@@ -57,12 +57,12 @@ const Furniture: React.FC<{L: Placed[]; i: number; t: number}> = ({L, i, t}) => 
 	}
 	return <>{nodes}</>;
 };
-/** a small speaker tag under a voice subtitle: 「卡尔·布什比 原声」 and the English words */
-const VoiceTag: React.FC<{t: number; o: number; en: string}> = ({t, o, en}) => {
+/** a small speaker tag under a voice subtitle: 「— 卡尔·布什比」 (+「原声」 only when his recorded voice actually plays) and the English words */
+const VoiceTag: React.FC<{t: number; o: number; en: string; heard: boolean}> = ({t, o, en, heard}) => {
 	useFonts59('卡尔·布什比原声');
 	const u = sm((t - 0.2) / 0.3) * o;
 	return <div style={{position: 'absolute', left: 150, top: 132 + 65 * 1.5 * 2 + 18, opacity: u, color: INK, whiteSpace: 'nowrap', textShadow: '0 1px 6px rgba(0,0,0,0.8)'}}>
-		<span style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, color: GOLD, letterSpacing: '0.06em'}}>— 卡尔·布什比 原声</span>
+		<span style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, color: GOLD, letterSpacing: '0.06em'}}>— 卡尔·布什比{heard ? ' 原声' : ''}</span>
 		<div style={{fontFamily: "'Cormorant59i', serif", fontStyle: 'italic', fontSize: 30, opacity: 0.8, marginTop: 6}}>“{en}”</div></div>;
 };
 
