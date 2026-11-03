@@ -400,7 +400,7 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 	if (lk.rifle) {   // slung on the back, muzzle up over the far shoulder; a sling across the chest
 		const gun = '#1a1816', wood = '#2c241c', bb = (s0: number) => tw(s0)[1] * bt;
 		out.pack.push({d: closedD([TS(-0.17, bb(-0.1) + 0.02), TS(-0.1, bb(-0.1) + 0.03), TS(-0.06, bb(-0.05) + 0.012), TS(-0.12, bb(-0.1) - 0.004)]), f: wood});
-		out.pack.push({d: barD(S(T(-0.08, bb(-0.06) + 0.016)), S(T(L + 0.12, 0.03)), 0.016 * h), f: gun});
+		out.pack.push({d: barD(S(T(-0.08, bb(-0.06) + 0.016)), S(T(L + 0.17, 0.12)), 0.016 * h), f: gun});
 		out.pack.push({d: barD(S(T(0.02, bb(0.02) + 0.012)), S(T(0.1, bb(0.1) + 0.03)), 0.022 * h), f: gun});
 		out.gear.push({d: barD(S(T(L - 0.01, -0.03)), S(T(-0.07, bb(-0.07) + 0.01)), Math.max(1, 0.008 * h)), f: pal.strap ?? '#2a2b2d'});
 	}

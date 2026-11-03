@@ -116,26 +116,25 @@ const RAIL = (() => { let d = 'M-6.95,2.32 L-3,2.44 L1,2.6 L1,2.68 L-3,2.52 L-6.
 export const BoatBack: React.FC<{cols: BoatCols; t: number; night?: boolean}> = ({cols, t, night}) => <g>
 	<path d={CABIN} fill={cols.cabin} /><path d={MAST} fill={cols.mast} />
 	<path d="M-6.4,1.4 L-6.2,4.3 L-6.05,4.3 L-6.25,1.4 Z M-5.0,1.4 L-5.4,4.3 L-5.25,4.3 L-4.85,1.4 Z M-6.3,4.2 L-5.2,4.2 L-5.2,4.34 L-6.3,4.34 Z" fill={cols.mast} />
-	{[[-0.9, 2.55, 0.9], [0.35, 2.55, 0.9], [1.6, 2.55, 0.78]].map(([x, y, w], i) => <rect key={i} x={x} y={-y - 0.62} width={w} height={0.6} fill={cols.win} opacity={cols.winO * (i === 2 ? 0.8 : 1)} transform="scale(1,-1)" />)}
-	<path d="M2.45,-3.75 L3.55,-2.25 L3.2,-2.25 L2.25,-3.55 Z" fill={cols.win} opacity={cols.winO * 0.6} transform="scale(1,-1)" />
-	{night && <><circle cx={0.66} cy={-7.55} r={0.12} fill="#fff6e4" /><circle cx={1.7} cy={-5.5} r={0.08} fill="#ff6a5a" /></>}
+	{[[-0.9, 2.55, 0.9], [0.35, 2.55, 0.9], [1.6, 2.55, 0.78]].map(([x, y, w], i) => <rect key={i} x={x} y={y} width={w} height={0.6} fill={cols.win} opacity={cols.winO * (i === 2 ? 0.8 : 1)} />)}
+	<path d="M2.45,3.75 L3.55,2.25 L3.2,2.25 L2.25,3.55 Z" fill={cols.win} opacity={cols.winO * 0.6} />
+	{night && <><circle cx={0.66} cy={7.55} r={0.12} fill="#fff6e4" /><circle cx={1.7} cy={5.5} r={0.08} fill="#ff6a5a" /></>}
 	{/* the life ring on the cabin wall */}
-	<circle cx={-0.6} cy={-2.0} r={0.28} fill="none" stroke={night ? '#a8442c' : mixHex(cols.cabin, '#c0502c', 0.4)} strokeWidth={0.12} />
+	<circle cx={-0.6} cy={2.0} r={0.28} fill="none" stroke={night ? '#a8442c' : mixHex(cols.cabin, '#c0502c', 0.4)} strokeWidth={0.12} />
 </g>;
 /** the near parts: the hull side, the bulwark highlight, the rail — drawn over a figure's legs */
 export const BoatFront: React.FC<{cols: BoatCols}> = ({cols}) => <g>
-	<path d={HULL} fill={cols.hull} transform="scale(1,-1)" />
-	<path d={BULWARK_HI} fill={cols.hullHi} transform="scale(1,-1)" />
-	<path d={RAIL} fill={cols.mast} transform="scale(1,-1)" />
-	{[-5.5, -3.6, -1.6, 0.6].map((x, i) => <ellipse key={i} cx={x} cy={-1.0} rx={0.22} ry={0.3} fill={mixHex(cols.hull, '#000000', 0.4)} />)}
+	<path d={HULL} fill={cols.hull} />
+	<path d={BULWARK_HI} fill={cols.hullHi} />
+	<path d={RAIL} fill={cols.mast} />
+	{[-5.5, -3.6, -1.6, 0.6].map((x, i) => <ellipse key={i} cx={x} cy={1.0} rx={0.22} ry={0.3} fill={mixHex(cols.hull, '#000000', 0.4)} />)}
 </g>;
 /** a small escort boat in the distance (one piece, cabin lit) */
 export const BoatFar: React.FC<{x: number; y: number; s: number; t: number; cols: BoatCols; refl?: number}> = ({x, y, s, t, cols, refl = 0.3}) => {
 	const pitch = 1.4 * Math.sin(t * 1.3) + 0.6 * Math.sin(t * 2.7 + 1);
 	return <g transform={`translate(${f1(x)},${f1(y + 1.5 * Math.sin(t * 1.1))}) rotate(${f1(pitch)}) scale(${(s).toFixed(3)},${(-s).toFixed(3)})`}>
 		{refl > 0 && <g transform="scale(1,-0.55)" opacity={refl}><path d={HULL + ' ' + CABIN} fill={cols.hull} /></g>}
-		<g transform="scale(1,-1)"><BoatBack cols={cols} t={t} /></g>
-		<g transform="scale(1,-1)"><BoatFront cols={cols} /></g>
+		<BoatBack cols={cols} t={t} /><BoatFront cols={cols} />
 	</g>; };
 export const BOAT_DAWN: BoatCols = {hull: '#262a3c', hullHi: '#5a5466', cabin: '#2c3044', win: '#FFC24A', winO: 0.95, mast: '#2a2e40', lamp: 0};
 
