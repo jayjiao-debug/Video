@@ -1,7 +1,8 @@
 import React from 'react';
-import {Stage, Layer, FPath, Shape, FigureSlot, Particles, Mist, FogFoot, Glow, SkyGrad, Sun, INF, useFog, useGround, useStage, P, W, H, f1, lerp, rnd, noise1, fbm, ridge, spline, taper, mix} from './kit3';
-import {camelD, tuftD, bareTreeD, CloudBands, moundD} from './props3';
+import {Stage, Layer, FPath, Shape, FigureSlot, karlTravel, CastShadow, DBG, Particles, Mist, FogFoot, Glow, SkyGrad, Sun, INF, useFog, useGround, useStage, P, W, H, f1, lerp, rnd, noise1, fbm, ridge, spline, taper, mix} from './kit3';
+import {tuftD, bareTreeD, CloudBands, moundD} from './props3';
 import {SetProps} from './sets3a';
+import {Camel as RigCamel, CAMEL_STRIDE, KARL_CYCLE} from './karl3';
 
 /* ep59 v3 · hero sets C: the Gobi at sunset, the Caspian Sea at dawn. */
 
@@ -9,7 +10,7 @@ import {SetProps} from './sets3a';
    2017, Mongolia. The sun sits on the far dunes at the right third; light rakes in from the right, so every dune splits into a gold
    windward face and a violet slip face. Karl leads a small camel caravan across a lit sand saddle toward the sun; their shadows run
    long to the left. Mountains of the Gobi Altai far off; a big dune sweeps in from the left foreground; saxaul twigs frame the corner. */
-const GB = {focus: 6, hz: 646, K: 444, sun: [1540, 612] as P};
+const GB = {focus: 4, hz: 646, K: 444, sun: [1540, 612] as P};
 const ggY = (D: number) => GB.hz + GB.K / D;
 
 const GobiSky: React.FC<{t: number}> = ({t}) => <>
@@ -40,17 +41,6 @@ const Ripples: React.FC<{n: number; seed: number; y0: number; y1: number; x0?: n
 		out.push(spline(([[x - L / 2, y], [x, y - th], [x + L / 2, y + th * 0.3], [x, y + th * 0.4]] as P[]).map(g), true)); }
 	return <Shape d={out.join(' ')} fill={c} o={o} />; };
 
-/** a walking camel with its long shadow (to the left, on the lit sand) */
-const Camel: React.FC<{x: number; y: number; h: number; phase: number; pack?: boolean; rim: string}> = ({x, y, h, phase, pack = true, rim}) => {
-	const c = camelD(x, y, h, phase, pack), dark = '#130c12';
-	const sk = 3.4, k = 0.26, m = `matrix(1,0,${sk},${-k},${f1(-sk * y)},${f1((1 + k) * y)})`;
-	return <g>
-		<g transform={m} opacity={0.75}><Shape d={c.far + ' ' + c.body + ' ' + c.pack} fill="#4a1d38" /></g>
-		<Shape d={c.far} fill="#0b070b" />
-		<g transform="translate(2.4,-1.4)"><Shape d={c.body + ' ' + c.pack} fill={rim} o={0.85} /></g>
-		<Shape d={c.body} fill={dark} /><Shape d={c.pack} fill="#2a1a1c" />
-	</g>; };
-
 /** small saxaul bushes on the plain, each with a long shadow to the left (ground decal-like skew) */
 const Bushes: React.FC<{items: [number, number, number][]}> = ({items}) => { const fog = useFog();
 	return <g>{items.map(([x, y, s], i) => { const br = bareTreeD(x, y, 46 * s, 30 + i, {w: 5 * s, spread: 50, depth: 3, droop: 8}).join(' '), m = `matrix(1,0,3.4,-0.26,${f1(-3.4 * y)},${f1(1.26 * y)})`;
@@ -64,7 +54,7 @@ const Saxaul: React.FC<{t: number}> = ({t}) => {
 		<path d={tuftD(120, 1120, 30, 220, 300, 3, 10) + ' ' + tuftD(380, 1150, 18, 160, 200, 7, 14)} fill="#24121a" /></g>; };
 
 export const Gobi: React.FC<SetProps> = ({t, cam}) => {
-	const D = GB.focus, y = ggY(D), ph = t / 1.4, h = 160;
+	const D = GB.focus, y = ggY(D), h = 240, ph = karlTravel('leadCamel', t, h).phase, kx = 1290, cph = ph * KARL_CYCLE.leadCamel.stride / CAMEL_STRIDE;
 	return <Stage t={t} cam={cam} atm={{haze: '#ec9a62', density: 0.032, focus: D, aperture: 1.8, rim: '#ffcf7a', lightDir: 12, grain: 0.06, vignette: 0.55, pp: [GB.sun[0], GB.hz]}} bg="#2a1630">
 		<Layer D={INF}><GobiSky t={t} /></Layer>
 		<Layer D={45}><FPath d={ridge(-400, W + 400, (x) => -(GB.hz - 26 - Math.abs(fbm(x, 420, 60, 3, 4, 0.55)) - (x < 1100 ? 18 : 0)), GB.hz + 8, 10)} c="#5e2c55" /></Layer>
@@ -77,15 +67,15 @@ export const Gobi: React.FC<SetProps> = ({t, cam}) => {
 			<Glow x={GB.sun[0] - 200} y={ggY(7)} r={900} ry={60} c="#fff0c0" o={0.55} />
 			<Ripples n={260} seed={4} y0={ggY(11) + 4} y1={ggY(3.5)} c="#a2513e" o={0.38} />
 		</Layer>
-		{[[640, 0.0, true], [460, 0.31, true], [290, 0.62, false]].map(([cx, po, pk], i) =>
-			<Layer key={i} D={D + 0.15 * (i + 1)}><Camel x={cx as number} y={y + 1} h={h * 1.2} phase={ph * 0.8 + (po as number)} pack={pk as boolean} rim="#ffcf7a" /></Layer>)}
-		<FigureSlot x={860} y={y} h={h} attire="americas" action="lead" phase={ph} facing={1} shadow={{k: 0.26, skew: 3.4, o: 0.75, c: '#4a1d38', blur: 0.8}} backlit />
-		<Layer D={6}><path d={`M${f1(860 + 0.05 * h)},${f1(y - 0.52 * h)} Q${f1(780)},${f1(y - 0.2 * h)} ${f1(640 + 0.85 * h * 1.2)},${f1(y - 0.86 * h * 1.2)}`} fill="none" stroke="#1a0f14" strokeWidth={1.8} /></Layer>
-		<Particles kind="dust" n={60} seed={41} D={[2, 12]} box={[700, 300, 1900, 800]} c="#ffe2a8" o={0.8} size={1} />
-		<Particles kind="sand" n={90} seed={42} D={[1.6, 7]} box={[-100, 620, W + 100, 1080]} c="#ffd79a" o={0.45} wind={-300} />
+		<Layer D={7}><BigDune lx={1480} sx={1760} sy={ggY(7) - 62} rx={2500} by={ggY(7) + 3} shade="#5a2440" lit="#f6ab62" bend={0.28} ext={4} /></Layer>
 		<Layer D={7.5}><Bushes items={[[1110, ggY(7.5) + 2, 0.8], [1700, ggY(7.5) + 4, 0.75]]} /></Layer>
 		<Layer D={5}><Bushes items={[[150, ggY(5) + 10, 1.1]]} /></Layer>
-		<Layer D={4.6}><BigDune lx={900} sx={1290} sy={ggY(4.6) - 90} rx={2100} by={ggY(4.6) + 4} shade="#5a2440" lit="#f6ab62" bend={0.28} ext={4} /></Layer>
+		{!DBG.noCamels && [2, 1].map((k) => { const cx = kx - 1.86 * h - k * 1.78 * h;
+			return <Layer key={k} D={D + 0.05 * k}>{!DBG.noCast && <CastShadow y={y} k={0.26} skew={3.4} o={0.7} c="#4a1d38" blur={0.8}><RigCamel x={cx} y={y} h={h} phase={cph + 0.31 * k} walking t={t} rim="#ffcf7a" lightDir={10} /></CastShadow>}
+				<RigCamel x={cx} y={y} h={h} phase={cph + 0.31 * k} walking t={t} rim="#ffcf7a" lightDir={10} rimO={0.9} /></Layer>; })}
+		<FigureSlot x={kx} y={y} h={h} attire="gobi" action="leadCamel" phase={ph} facing={1} rim="#ffcf7a" lightDir={10} rimO={0.95} shadow={{k: 0.26, skew: 3.4, o: 0.7, c: '#4a1d38', blur: 0.8}} />
+		<Particles kind="dust" n={60} seed={41} D={[2, 12]} box={[700, 300, 1900, 800]} c="#ffe2a8" o={0.8} size={1} />
+		<Particles kind="sand" n={90} seed={42} D={[1.6, 7]} box={[-100, 620, W + 100, 1080]} c="#ffd79a" o={0.45} wind={-300} />
 		<Layer D={3.2}><BigDune lx={-800} sx={60} sy={ggY(3.2) + 40} rx={1050} by={ggY(3.2) + 300} shade="#4a1d36" lit="#e98b4c" bend={0.5} /></Layer>
 		<Layer D={2.1}><BigDune lx={900} sx={1640} sy={ggY(2.1) + 30} rx={2700} by={ggY(2.1) + 260} shade="#3d1730" lit="#d98048" bend={0.4} /><Ripples n={40} seed={9} y0={ggY(2.1) + 70} y1={1080} x0={1500} x1={2300} c="#7a3438" o={0.3} /></Layer>
 		<Layer D={0.6} blur={9}><Saxaul t={t} /></Layer>
@@ -166,8 +156,8 @@ export const Caspian: React.FC<SetProps> = ({t, cam}) => {
 		<Layer D={60}><FPath d={'M250,505 L250,470 L262,470 L262,505 Z M300,505 L300,470 L312,470 L312,505 Z M232,470 L352,470 L352,458 L232,458 Z M262,458 L268,420 L274,420 L280,458 Z M320,458 L322,396 L328,396 L336,458 Z M240,458 L240,446 L270,446 L270,458 Z'} c="#3a3a52" extra={-0.25} /><Glow x={325} y={398} r={10} c="#ffb870" o={0.8} /></Layer>
 		<Layer D={16}><Boat x={1520} y={cgY(16)} s={0.95} t={t} /></Layer>
 		<Layer D={9}><Mist n={8} seed={6} y0={CS.hz + 6} y1={CS.hz + 40} t={t} speed={7} o={0.45} c="#f5dcc8" w={[400, 1100]} h={[16, 40]} /></Layer>
-		<Layer D={D}><Wake x={1030} y={cgY(D)} s={3} t={t} /></Layer>
-		<FigureSlot x={1030} y={cgY(D)} h={330} attire="swim" action="swim" phase={0.08 + ph * 0} facing={1} rimO={0.95} />
+		<Layer D={D}><Wake x={900} y={cgY(D)} s={2.2} t={t} /></Layer>
+		<FigureSlot x={1040} y={cgY(D)} h={640} attire="swim" action="swim" phase={karlTravel('swim', t, 640).phase} facing={1} rim="#ffd2a2" lightDir={35} rimO={0.95} foam="#fff2e4" waterHi="#e2bca6" underO={0} />
 		<Particles kind="spray" n={50} seed={51} D={[D * 0.95, D * 1.05]} box={[1060, cgY(D) - 40, 1160, cgY(D)]} c="#fff0d8" o={0.95} size={1.3} />
 		<Layer D={2}><Mist n={5} seed={9} y0={cgY(2) - 30} y1={cgY(2) + 30} t={t} speed={10} o={0.25} c="#f2d7c6" w={[700, 1500]} h={[40, 90]} /></Layer>
 		<Layer D={1.1} blur={6}><NearSwell t={t} /></Layer>

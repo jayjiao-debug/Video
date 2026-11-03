@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useId, useLayoutEffect, useRef} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {AbsoluteFill, delayRender, continueRender} from 'remotion';
-import {Walker, walkPose, withArms, nod, STAGE, PZ, Look59, Rim, CartKind, BRISK} from '../qq59/figure59';
+import {Karl, KarlProps as RigProps, Attire as RigAttire, Action as RigAction, karlTravel, KARL_CYCLE} from './karl3';
 
 /* ep59 v3 · the 2.5D parallax kit (environments).
    A scene is a stack of depth layers drawn far → near inside one <Stage>. Every layer is authored in screen px as it looks
@@ -84,7 +84,7 @@ export const project = (cam: Cam, D: number, focus: number, p: P, pp: P = [W / 2
 	return {p: [W / 2 + cam.zoom * (x * c - y * n), H / 2 + cam.zoom * (x * n + y * c)], s: s * cam.zoom}; };
 
 /* ---------------- debug switches (profiling: set from the test entry's input props) ---------------- */
-export const DBG = {noBlur: false, noGrain: false, noParticles: false, noVignette: false, blurMin: 1.4, lowMode: 'canvas', lowK: 0};
+export const DBG = {noBlur: false, noGrain: false, noParticles: false, noVignette: false, blurMin: 1.4, lowMode: 'canvas', lowK: 0, noCast: false, noCamels: false};
 
 /* ---------------- stage / atmosphere ---------------- */
 export type Atm = {
@@ -299,66 +299,38 @@ export const Particles: React.FC<{kind: PKind; n: number; seed: number; D: [numb
 };
 
 /* ---------------- the figure slot ---------------- */
-export type Attire = '1998' | 'americas' | 'jungle' | 'ice' | 'russia' | '2012' | 'swim' | '2026';
-/** walk = a plain walk; cart = walking with the cart hitched; sled = hauling a sled; lead = walking with one arm back on a lead rope;
-    stand = standing (thumbs in the straps); swim = front crawl at the water line */
-export type Action = 'walk' | 'cart' | 'sled' | 'lead' | 'stand' | 'swim';
-/** the props the new <Karl/> will take (see karl3*.tsx); y = the feet (or the water line for a swimmer) */
-export type KarlProps = {x: number; y: number; h: number; attire: Attire; action: Action; phase: number; facing: 1 | -1; rim: string; lightDir: number; rimO?: number; backlit?: boolean};
+/** Karl's attire / action / props are the rig's own (karl3.tsx): attire start1998 | jungle | ice | siberia | gobi | swim | home2026,
+    action walk | pushCart | haulSled | wade | swim | float | stand | lookUp | leadCamel | hug. Use karlTravel(action, t, h) for x and phase. */
+export type Attire = RigAttire;
+export type Action = RigAction;
+export type KarlProps = RigProps;
+export {karlTravel, KARL_CYCLE};
 
-const LOOKS: Record<Attire, Look59> = {'1998': STAGE.k1998, americas: STAGE.kAmericas, jungle: STAGE.kJungle, ice: STAGE.kIce, russia: STAGE.kRussia, '2012': STAGE.k2012, swim: STAGE.kSwim, '2026': {...STAGE.k2026, pack: 'big'}};
-const CARTS: Partial<Record<Attire, CartKind>> = {'1998': 'hivis', americas: 'box', russia: 'orange', '2012': 'orange', '2026': 'orange'};
+/** ===== THE SWAP POINT =====  every Karl in every set is drawn here (the stand-in Walker was replaced by the karl3 rig). */
+const Figure: React.FC<KarlProps> = (p) => <Karl {...p} />;
 
-/** the stand-in swimmer (front crawl, side view): head turned to breathe, one arm recovering over the water */
-const Swimmer: React.FC<KarlProps> = ({x, y, h, phase, facing, rim, lightDir, rimO = 0.9}) => {
-	const u = ((phase % 1) + 1) % 1, s = h / 100, a = u * Math.PI * 2, col = '#0c0b0e';
-	const sh: P = [x - facing * 4 * s, y - 2 * s], reach = Math.sin(a), lift = Math.max(0, Math.cos(a));
-	const el: P = [sh[0] + facing * (6 + 10 * reach) * s, sh[1] - (10 + 12 * lift) * s], hand: P = [sh[0] + facing * (14 + 20 * reach) * s, sh[1] - (2 + 16 * lift) * s + (lift < 0.15 ? 6 * s : 0)];
-	const head: P = [x + facing * 9 * s, y - 3.2 * s - Math.max(0, Math.sin(a + 1.2)) * 2.2 * s];
-	const shapes = (fill: string, dx = 0, dy = 0) => <g fill={fill} transform={`translate(${dx},${dy})`}>
-		<ellipse cx={head[0]} cy={head[1]} rx={7.2 * s} ry={6.2 * s} />
-		<path d={`M${f1(x - facing * 18 * s)},${f1(y + 1 * s)} Q${f1(x - facing * 6 * s)},${f1(y - 6 * s)} ${f1(x + facing * 6 * s)},${f1(y - 2 * s)} L${f1(x + facing * 6 * s)},${f1(y + 2 * s)} Z`} />
-		{lift > 0.05 && <path d={taper([sh, el, hand], 7 * s, 4.2 * s)} />}
-	</g>;
-	const la = lightDir * Math.PI / 180, ox = Math.cos(la) * 1.6 * Math.max(1, s * 0.6), oy = -Math.sin(la) * 1.6 * Math.max(1, s * 0.6);
-	return <g>{shapes(rim, ox, oy)}<g opacity={rimO}>{shapes(col)}</g>{shapes(col)}</g>;
-};
-
-/** the stand-in (the qq59 Walker) */
-const StandIn: React.FC<KarlProps> = (p) => {
-	if (p.action === 'swim') return <Swimmer {...p} />;
-	const L0 = LOOKS[p.attire], look: Look59 = {...L0, paint: Object.fromEntries(Object.entries(L0.paint ?? {}).map(([k, c]) => [k, mix(c as string, '#0c0b0e', 0.6)]))};   // the house look: near-black one-tone
-	let pose = p.action === 'stand' ? PZ.straps : walkPose(p.phase, BRISK);
-	if (p.action === 'lead') pose = withArms(pose, null, [-38, 12]);
-	if (p.action === 'sled') pose = nod(withArms(pose, [-14, 30], [10, 20]), 8);
-	const la = p.lightDir * Math.PI / 180, o = p.rimO ?? 0.9;
-	const rims: Rim[] = [{c: p.rim, o, dx: Math.cos(la) * 2.8, dy: -Math.sin(la) * 2.8}];
-	if (p.backlit) rims.push({c: p.rim, o: o * 0.55, dx: -Math.cos(la) * 1.8, dy: -Math.abs(Math.sin(la)) * 1.8});
-	const cart = p.action === 'cart' ? CARTS[p.attire] ?? 'orange' : undefined;
-	return <Walker x={p.x} ground={p.y} h={p.h} pose={pose} look={look} rims={rims} flip={p.facing < 0} cart={cart} dist={p.phase * 1.4}
-		sled={p.action === 'sled' ? Math.max(0, Math.sin(p.phase * Math.PI * 2)) * 0.3 : undefined} poles={p.action === 'sled'} />;
-};
-
-/** ===== THE SWAP POINT =====  replace `<StandIn {...p} />` with `<Karl {...p} />` (import from './karl3…') when the new rig lands. */
-const Figure: React.FC<KarlProps> = (p) => <StandIn {...p} />;
+/** a long cast shadow of anything (camels, carts…): its silhouette flooded with c, skewed onto the ground about the line y */
+export const CastShadow: React.FC<{y: number; k: number; skew: number; o?: number; c?: string; blur?: number; children: React.ReactNode}> = ({y, k, skew, o = 0.5, c = '#000', blur = 1.5, children}) => { const id = useUid('cs');
+	return <g><defs><filter id={id} filterUnits="userSpaceOnUse" x={-600} y={y - 500} width={W + 1200} height={1000}><feFlood floodColor={c} /><feComposite in2="SourceAlpha" operator="in" /><feGaussianBlur stdDeviation={blur} /></filter></defs>
+		<g filter={`url(#${id})`} opacity={o}><g transform={`matrix(1,0,${skew.toFixed(3)},${(-k).toFixed(3)},${f1(-skew * y)},${f1((1 + k) * y)})`}>{children}</g></g></g>; };
 
 /** where Karl stands. (x, y) = feet at rest, h = body height px at rest, depth = its layer depth (default: the focus plane).
     rim / lightDir default to the stage's light. Options: a cast shadow (k = length, + toward the camera; skew = sideways lean per px
     of height), a reflection about the water line wy, breath vapour (cold scenes), a soft contact shadow. */
-export const FigureSlot: React.FC<Omit<KarlProps, 'rim' | 'lightDir' | 'phase' | 'facing' | 'attire' | 'action'> & Partial<KarlProps> & {
+export const FigureSlot: React.FC<Omit<KarlProps, 'attire' | 'action' | 'phase'> & Partial<KarlProps> & {
 	depth?: number; shadow?: {k: number; skew: number; o?: number; c?: string; blur?: number}; reflect?: {wy: number; o?: number; c?: string}; breath?: boolean; contact?: number; under?: React.ReactNode; over?: React.ReactNode}> = (props) => {
 	const {cam, atm, t} = useStage(), uid = useUid('fs');
 	const {depth, shadow, reflect, breath, contact, under, over, ...rest} = props;
 	const D = depth ?? atm.focus;
-	const p: KarlProps = {attire: 'jungle', action: 'walk', phase: 0, facing: 1, rim: atm.rim, lightDir: atm.lightDir, ...rest};
-	const {x, y, h} = p, sh = shadow, b = coc(atm, D);
+	const p: KarlProps = {attire: 'jungle', action: 'walk', phase: 0, facing: 1, rim: atm.rim, lightDir: atm.lightDir, t, ...rest};
+	const {x, y, h} = p, sh = shadow, b = coc(atm, D), facing = p.facing ?? 1;
 	const body = <Figure {...p} />;
 	return <LayerCtx.Provider value={{D, k: hazeK(atm, D)}}><g filter={b >= 0.8 ? `url(#${uid}dof)` : undefined}>
 		<defs>
-			{b >= 0.8 && <filter id={`${uid}dof`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={b.toFixed(2)} /></filter>}
-			{sh && <filter id={`${uid}sh`} x="-50%" y="-50%" width="200%" height="200%"><feFlood floodColor={sh.c ?? '#000'} /><feComposite in2="SourceAlpha" operator="in" /><feGaussianBlur stdDeviation={sh.blur ?? 1.5} /></filter>}
+			{b >= 0.8 && <filter id={`${uid}dof`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={W + 400} height={H + 400}><feGaussianBlur stdDeviation={b.toFixed(2)} /></filter>}
+			{sh && <filter id={`${uid}sh`} filterUnits="userSpaceOnUse" x={f1(x - Math.max(4, Math.abs(sh.skew) * 1.3 + 1.5) * h)} y={f1(y - h * 0.6)} width={f1(Math.max(8, Math.abs(sh.skew) * 2.6 + 3) * h)} height={f1(h * (1.2 + sh.k * 1.4))}><feFlood floodColor={sh.c ?? '#000'} /><feComposite in2="SourceAlpha" operator="in" /><feGaussianBlur stdDeviation={sh.blur ?? 1.5} /></filter>}
 			{reflect && <linearGradient id={`${uid}rf`} gradientUnits="userSpaceOnUse" x1="0" y1={reflect.wy} x2="0" y2={reflect.wy + (reflect.wy - (y - h))}><stop offset="0" stopColor="#fff" stopOpacity="1" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>}
-			{reflect && <mask id={`${uid}rm`} maskUnits="userSpaceOnUse" x={x - h * 2} y={reflect.wy} width={h * 4} height={h * 2.2}><rect x={x - h * 2} y={reflect.wy} width={h * 4} height={h * 2.2} fill={`url(#${uid}rf)`} /></mask>}
+			{reflect && <mask id={`${uid}rm`} maskUnits="userSpaceOnUse" x={x - h * 4} y={reflect.wy} width={h * 8} height={h * 2.2}><rect x={x - h * 4} y={reflect.wy} width={h * 8} height={h * 2.2} fill={`url(#${uid}rf)`} /></mask>}
 			{breath && <radialGradient id={`${uid}br`}><stop offset="0" stopColor="#ffffff" stopOpacity="1" /><stop offset="0.55" stopColor="#f6f7fa" stopOpacity="0.5" /><stop offset="1" stopColor="#f4f6fa" stopOpacity="0" /></radialGradient>}
 		</defs>
 		<g transform={layerTransform(cam, D, atm.focus, atm.pp)}>
@@ -367,7 +339,7 @@ export const FigureSlot: React.FC<Omit<KarlProps, 'rim' | 'lightDir' | 'phase' |
 			{reflect && <g mask={`url(#${uid}rm)`} opacity={reflect.o ?? 0.45}><g transform={`translate(0,${f1(2 * reflect.wy)}) scale(1,-1)`}>{body}</g></g>}
 			{under}
 			{body}
-			{breath && Array.from({length: 5}, (_, i) => { const u = ((t / 2.4 + i / 5) % 1), hx = x + p.facing * h * (0.08 + u * 0.26), hy = y - h * (0.87 + u * 0.07), r = h * (0.03 + u * 0.1);
+			{breath && Array.from({length: 5}, (_, i) => { const u = ((t / 2.4 + i / 5) % 1), hx = x + facing * h * (0.08 + u * 0.26), hy = y - h * (0.87 + u * 0.07), r = h * (0.03 + u * 0.1);
 				return <ellipse key={i} cx={hx} cy={hy} rx={r * 1.5} ry={r} fill={`url(#${uid}br)`} opacity={(Math.pow(Math.sin(u * Math.PI), 0.7) * 0.85 * (1 - u * 0.5)).toFixed(3)} />; })}
 			{over}
 		</g></g></LayerCtx.Provider>;

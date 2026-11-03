@@ -1,7 +1,7 @@
 import React from 'react';
-import {Stage, Layer, FPath, Shape, FigureSlot, Particles, Shafts, Mist, FogFoot, Glow, SkyGrad, Cam, INF, useFog, P, W, f1, lerp, rnd, noise1, spline, taper, qpts} from './kit3';
+import {Stage, Layer, FPath, Shape, FigureSlot, karlTravel, Particles, Shafts, Mist, FogFoot, Glow, SkyGrad, Cam, INF, useFog, P, W, f1, lerp, rnd, noise1, spline, taper, qpts} from './kit3';
 import {trunkD, leafD, frondD, lianaD, hangD, tuftD, ripplesD, canopyD, droopLeafD, mossD} from './props3';
-import {walkG, BRISK} from '../qq59/figure59';
+
 
 /* ep59 v3 · hero sets A: the Darién Gap jungle. */
 export type SetProps = {t: number; cam: Cam};
@@ -131,7 +131,7 @@ const FgFrame: React.FC<{t: number}> = ({t}) => {
 	</g>; };
 
 export const Jungle: React.FC<SetProps & {walk?: boolean}> = ({t, cam, walk}) => {
-	const h = 330, wg = walkG(t, 0, 470, h, BRISK, 0.27), phase = walk ? wg.phase : t / 1.0, x = walk ? wg.x : 760;
+	const h = 330, wg = karlTravel('walk', t, h, 0.4), phase = walk ? wg.phase : karlTravel('walk', t, h).phase, x = walk ? 470 + wg.dx : 760;
 	return <Stage t={t} cam={cam} atm={{haze: '#7da38e', density: 0.065, focus: JF.focus, aperture: 2.4, rim: '#ffe7ad', lightDir: 118, grain: 0.06, vignette: 0.62}} bg="#0d1712">
 		<Layer D={INF}><JBack /></Layer>
 		<Layer D={20}>
@@ -159,7 +159,7 @@ export const Jungle: React.FC<SetProps & {walk?: boolean}> = ({t, cam, walk}) =>
 			<Pads seed={5} n={30} y0={JF.waterY + 14} y1={930} col="#1b3022" />
 		</Layer>
 		<Layer D={JF.focus}><Log y={JF.logY} t={t} /></Layer>
-		<FigureSlot x={x} y={JF.logY - 1} h={h} attire="jungle" action="walk" phase={phase} facing={1} reflect={{wy: JF.logY + 64, o: 0.42}} backlit />
+		<FigureSlot x={x} y={JF.logY - 1} h={h} attire="jungle" action="walk" phase={phase} facing={1} reflect={{wy: JF.logY + 64, o: 0.42}} rim="#ffe7ad" lightDir={118} rimO={0.95} />
 		<Particles kind="dust" n={90} seed={11} D={[2.2, 9]} box={[200, 0, 1250, 820]} c="#fff3c4" o={0.95} size={1.15} />
 		<Particles kind="firefly" n={20} seed={12} D={[1.5, 6]} box={[950, 420, 2000, 1060]} c="#f2ff9a" o={1} size={1} />
 		<Layer D={2.1}>

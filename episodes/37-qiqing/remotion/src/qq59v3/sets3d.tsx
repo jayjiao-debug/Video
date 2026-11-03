@@ -1,7 +1,8 @@
 import React from 'react';
-import {Stage, Layer, FPath, Shape, FigureSlot, Particles, Mist, FogBand, FogFoot, Glow, SkyGrad, INF, useFog, useWorld, wpt, World, P, W, H, f1, lerp, rnd, noise1, spline, taper, poly, mix, cl, GOLD} from './kit3';
-import {figParts, grounded, PZ, LOOK, Look59, Pose, jointAt, Lit, Rim} from '../qq59/figure59';
+import {Stage, Layer, FPath, Shape, FigureSlot, karlTravel, Particles, Mist, FogBand, FogFoot, Glow, SkyGrad, INF, useFog, useWorld, wpt, World, P, W, H, f1, lerp, rnd, noise1, spline, taper, poly, mix, cl, GOLD} from './kit3';
+import {figParts, grounded, PZ, LOOK, Look59, Pose, jointAt} from '../qq59/figure59';
 import {SetProps} from './sets3a';
+import {Mum as RigMum} from './karl3';
 
 /* ep59 v3 · hero sets D: the Humber Bridge in fog (1 Nov 2026), the Hull terraced street at the homecoming (2 Nov 2026). */
 
@@ -104,7 +105,7 @@ const FgCrowd: React.FC = () => <g>
 </g>;
 
 export const Bridge: React.FC<SetProps> = ({t, cam}) => {
-	const ph = t / 1.15, Ds = [7, 11, 16, 22, 30, 40, 54];
+	const ph = karlTravel('pushCart', t, 300).phase, Ds = [7, 11, 16, 22, 30, 40, 54];
 	const near = BPPL.filter((p) => p.D < 6.5), mid = BPPL.filter((p) => p.D >= 6.5 && p.D < 13), far = BPPL.filter((p) => p.D >= 13);
 	return <Stage t={t} cam={cam} atm={{haze: '#a9b0b6', density: 0.055, focus: BF, aperture: 1.6, rim: '#ffd8a2', lightDir: 55, grain: 0.07, vignette: 0.55, pp: [BW.vpx, BW.hz]}} bg="#5c636b">
 		<Layer D={INF}>
@@ -123,7 +124,7 @@ export const Bridge: React.FC<SetProps> = ({t, cam}) => {
 		<Layer D={9}><People w={BW} ppl={mid} col="#262a30" rim="#ffd8a2" rimDx={1.5} /></Layer>
 		<Layer D={6}><Mist n={4} seed={7} y0={BW.hz - 40} y1={BW.hz + 160} t={t} speed={18} o={0.3} c="#c9cdd0" w={[800, 1700]} h={[100, 220]} /></Layer>
 		<Layer D={5}><People w={BW} ppl={near} col="#17191d" rim="#ffd8a2" rimDx={1.8} /></Layer>
-		<FigureSlot x={760} y={wpt(BW, 0, 0, BF)[1]} h={300} attire="2026" action="cart" phase={ph} facing={1} contact={0.25} />
+		<FigureSlot x={690} y={wpt(BW, 0, 0, BF)[1]} h={300} attire="home2026" action="pushCart" phase={ph} facing={1} rim="#ffd8a2" lightDir={55} contact={0.25} />
 		<Particles kind="rain" n={120} seed={61} D={[1, 10]} c="#dfe5ea" o={0.35} wind={-60} fall={-700} />
 		<Layer D={1.5} blur={9}><FgCrowd /></Layer>
 	</Stage>;
@@ -234,13 +235,12 @@ const TvCrew: React.FC = () => { const [x, y] = wpt(HW, 1.2, 0, 2.9), s = HW.S /
 const streetPpl: Person[] = Array.from({length: 24}, (_, i) => { const D = 7.5 * Math.pow(4, rnd(i, 21)), side = rnd(i, 22) > 0.5 ? -1 : 1, pose = ['stand', 'wave', 'cheer', 'phone', 'stand'][Math.floor(rnd(i, 23) * 5)];
 	return {X: side < 0 ? -4.6 - rnd(i, 24) * 0.6 : 5.0 + rnd(i, 24) * 0.8, D, m: 1.6 + rnd(i, 25) * 0.25, pose, look: Math.floor(rnd(i, 26) * 6), flip: side > 0, phone: pose === 'phone'}; });
 
-/** his mother in the doorway (a set character, the qq59 rig), backlit by the hall light */
-const Mum: React.FC = () => { const [x, y] = wpt(HW, -5.15, 0.12, (HD.door[0] + HD.door[1]) / 2 - 0.1), h = 1.6 * HW.S / ((HD.door[0] + HD.door[1]) / 2);
-	const rims: Rim[] = [{c: '#ffd68a', o: 0.95, dx: -2.6, dy: -1.2}, {c: '#ffcf7a', o: 0.6, dx: 2.0, dy: -1.6}];
-	return <Lit x={x} ground={y} h={h} pose={PZ.reach} look={LOOK.mum} rims={rims} col="#0d0b10" />; };
+/** his mother in the doorway (the karl3 rig's <Mum/>), backlit by the hall light */
+const Mum: React.FC = () => { const dm = (HD.door[0] + HD.door[1]) / 2 - 0.1, [x, y] = wpt(HW, -5.15, 0.12, dm), h = 1.6 * HW.S / dm;
+	return <RigMum x={x} y={y} h={h} action="reach" phase={0.3} facing={1} rim="#ffd68a" lightDir={175} rimO={1} />; };
 
 export const Hull: React.FC<SetProps> = ({t, cam}) => {
-	const ph = t / 1.2, ky = wpt(HW, 0, 0, HF)[1];
+	const ph = karlTravel('pushCart', t, 1.8 * HW.S / HF).phase, ky = wpt(HW, 0, 0, HF)[1];
 	return <Stage t={t} cam={cam} atm={{haze: '#3b4462', density: 0.05, focus: HF, aperture: 2.2, rim: '#ffcf7a', lightDir: 165, grain: 0.07, vignette: 0.6, pp: [HW.vpx, HW.hz]}} bg="#121628">
 		<Layer D={INF}>
 			<SkyGrad y0={0} y1={H} stops={[[0, '#0f1630'], [0.25, '#1d2a4c'], [0.42, '#36446c'], [0.47, '#5a5c7c'], [0.5, '#7a6a78'], [1, '#2a2c40']]} />
@@ -254,7 +254,7 @@ export const Hull: React.FC<SetProps> = ({t, cam}) => {
 		{[[-4.9, 9], [-4.9, 16], [5.6, 12], [5.6, 22]].map(([X, D], i) => <Layer key={i} D={D}><HLamp X={X} D={D} /></Layer>)}
 		<Layer D={8}><People w={HW} ppl={streetPpl.filter((p) => p.D < 11)} col="#15161f" rim="#ffbf78" rimDx={1.4} /></Layer>
 		<Layer D={4.6}><Terrace X={-5.5} from={HD.d0 - HOUSE} to={HD.d0 + 2 * HOUSE} side={-1} t={t} /><MumsDoor t={t} /><Banner t={t} /><Mum /></Layer>
-		<FigureSlot x={wpt(HW, -3.9, 0, HF)[0]} y={ky} h={1.8 * HW.S / HF} attire="2026" action="walk" phase={ph} facing={-1} reflect={{wy: ky + 2, o: 0.25}} backlit />
+		<FigureSlot x={wpt(HW, -3.6, 0, HF)[0] + 190} y={ky} h={1.8 * HW.S / HF} attire="home2026" action="pushCart" phase={ph} facing={-1} rim="#ffcf7a" lightDir={168} rimO={0.95} reflect={{wy: ky + 2, o: 0.25}} />
 		<Layer D={3.8}><People w={HW} ppl={pressPpl} col="#0f1016" rim="#7f8db0" rimDx={-1.1} /></Layer>
 		<Layer D={2.9}><TvCrew /></Layer>
 		<Flashes t={t} pts={[[1600, 470], [1300, 520], [1760, 440]]} />

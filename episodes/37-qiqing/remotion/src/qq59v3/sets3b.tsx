@@ -1,5 +1,5 @@
 import React from 'react';
-import {Stage, Layer, FPath, Shape, FigureSlot, Particles, Mist, FogBand, FogFoot, Glow, SkyGrad, Sun, Cam, INF, useFog, useGround, useProject, GroundShape, P, W, H, f1, lerp, rnd, noise1, fbm, spline, taper, poly, mix, cl} from './kit3';
+import {Stage, Layer, FPath, Shape, FigureSlot, karlTravel, Particles, Mist, FogBand, FogFoot, Glow, SkyGrad, Sun, Cam, INF, useFog, useGround, useProject, GroundShape, P, W, H, f1, lerp, rnd, noise1, fbm, spline, taper, poly, mix, cl} from './kit3';
 import {iceBlockPts, bareTreeD, coniferD, forestD, tuftD, leafD} from './props3';
 import {SetProps} from './sets3a';
 
@@ -34,7 +34,7 @@ const streakD = (x: number, y: number, w: number, h: number, seed: number) => sp
    March 2006, the frozen strait at the end of a polar day. The sun sits low on the right third; an open lead of black water
    snakes across the middle distance under it (gold streak, sea smoke). Two tiny figures haul sleds left → right toward it, their
    shadows long on the snow; their sled tracks lead in from the bottom left. A pressure ridge frames the left, ice blocks the corners. */
-const IB = {focus: 5, hz: 560, K: 720, sun: [1300, 534] as P};
+const IB = {focus: 2.7, hz: 560, K: 720, sun: [1300, 534] as P};
 const igY = (D: number) => IB.hz + IB.K / D;
 const ICE: IceCols = {lit: '#efc9ba', shade: '#59628f', cap: '#fbe9df'};
 
@@ -97,7 +97,7 @@ const Sastrugi: React.FC<{n: number; seed: number; y0: number; y1: number}> = ({
 
 /** the sled tracks and footprints, from the bottom left to the sleds (ground decals) */
 const Tracks: React.FC = () => {
-	const g = useGround(IB.hz, IB.K), path: P[] = [[980, 1200], [900, 1020], [800, 880], [720, 790], [660, 740], [620, 712]];
+	const g = useGround(IB.hz, IB.K), path: P[] = [[160, 1200], [250, 1040], [330, 920], [400, 840], [450, 800], [480, 786]];
 	const lines = [-1, 1].map((s) => { const L = path.map(([x, y]) => [x + s * (y - IB.hz) * 0.07, y] as P), R = path.map(([x, y]) => [x + s * (y - IB.hz) * 0.07 + (y - IB.hz) * 0.012, y] as P).reverse();
 		return spline([...L, ...R].map(g), false); });
 	const prints = Array.from({length: 26}, (_, i) => { const u = i / 25, k = Math.min(path.length - 2, Math.floor(u * (path.length - 1))), f = u * (path.length - 1) - k, x = lerp(path[k][0], path[k + 1][0], f), y = lerp(path[k][1], path[k + 1][1], f), d = y - IB.hz, side = i % 2 ? 1 : -1;
@@ -120,7 +120,7 @@ const FgIce: React.FC = () => {
 		<path d={poly([p[2], p[3], [p[3][0], p[3][1] + 18], [p[2][0] + 20, p[2][1] + 26]])} fill="#ffe6da" opacity={0.85} /></g>)}</g>; };
 
 export const Ice: React.FC<SetProps> = ({t, cam}) => {
-	const ph = t / 1.25, D = 5.2, y = igY(D);
+	const ph = karlTravel('haulSled', t, 230).phase, D = 2.7, y = igY(D), D2 = 3.25, y2 = igY(D2);
 	return <Stage t={t} cam={cam} atm={{haze: '#d4bccb', density: 0.028, focus: IB.focus, aperture: 1.6, rim: '#ffd6a8', lightDir: 8, grain: 0.055, vignette: 0.5, pp: [IB.sun[0], IB.hz]}} bg="#202a48">
 		<Layer D={INF}><IceSky t={t} /></Layer>
 		<Layer D={60}><IceRidge x0={-300} x1={2300} y={igY(60)} hmin={1} hmax={5} seed={2} cols={ICE} rows={1} /></Layer>
@@ -129,10 +129,10 @@ export const Ice: React.FC<SetProps> = ({t, cam}) => {
 		<Layer D={11}><Mist n={7} seed={8} y0={590} y1={612} t={t} speed={14} o={0.5} c="#f7dccf" w={[300, 800]} h={[16, 36]} /></Layer>
 		<Layer D={9}><IceRidge x0={1380} x1={2300} y={igY(9)} hmin={14} hmax={60} seed={9} cols={ICE} /></Layer>
 		<Layer D={INF}><Sastrugi n={125} seed={4} y0={IB.hz + 30} y1={1120} /><Tracks /></Layer>
-		<Layer D={3.4}><IceRidge x0={-320} x1={540} y={igY(3.4)} hmin={30} hmax={165} seed={13} cols={ICE} rows={4} />
+		<Layer D={3.4}><IceRidge x0={-320} x1={430} y={igY(3.4)} hmin={30} hmax={165} seed={13} cols={ICE} rows={4} />
 			<FPath d={spline([[-320, igY(3.4) - 20], [0, igY(3.4) - 40], [300, igY(3.4) - 30], [560, igY(3.4) - 6], [700, igY(3.4) + 14], [-320, igY(3.4) + 40]], true)} c="#7884b6" /></Layer>
-		<FigureSlot x={760} y={y + 3} h={108} depth={D + 0.5} attire="ice" action="sled" phase={ph + 0.37} facing={1} shadow={{k: 0.34, skew: 3.2, o: 0.85, c: '#323d7c', blur: 1.2}} />
-		<FigureSlot x={930} y={y} h={112} depth={D} attire="ice" action="sled" phase={ph} facing={1} shadow={{k: 0.34, skew: 3.2, o: 0.85, c: '#323d7c', blur: 1.2}} />
+		<FigureSlot x={720} y={y2} h={192} depth={D2} attire="ice" action="haulSled" phase={ph + 0.37} facing={1} rim="#ffd6a8" lightDir={12} shadow={{k: 0.3, skew: 2.6, o: 0.8, c: '#323d7c', blur: 1.2}} />
+		<FigureSlot x={1120} y={y} h={232} depth={D} attire="ice" action="haulSled" phase={ph} facing={1} rim="#ffd6a8" lightDir={12} shadow={{k: 0.3, skew: 2.6, o: 0.8, c: '#323d7c', blur: 1.2}} />
 		<Particles kind="diamond" n={30} seed={21} D={[2.5, 10]} box={[860, 572, 1760, 820]} c="#fff1dc" o={0.9} size={0.9} />
 		<Particles kind="spindrift" n={125} seed={22} D={[1.3, 9]} box={[-100, 600, W + 100, 1100]} c="#f8e6e2" o={0.7} wind={-600} />
 		<Layer D={2.4}><IceRidge x0={1480} x1={2250} y={igY(2.4)} hmin={20} hmax={110} seed={41} cols={ICE} rows={2} /></Layer>
@@ -205,7 +205,7 @@ const FgBranch: React.FC<{t: number}> = ({t}) => {
 	return <g transform={`rotate(${(Math.sin(t * 0.5) * 0.6).toFixed(2)} -120 -260) translate(-60,-40)`}><Shape d={br.join(' ')} fill="#6d6872" /><path d={frost} fill="#fbfaf8" opacity={0.9} /></g>; };
 
 export const Siberia: React.FC<SetProps> = ({t, cam}) => {
-	const ph = t / 1.15;
+	const ph = karlTravel('pushCart', t, 290).phase;
 	const birches: [number, number][] = [[-1500, 2.0], [-1420, 2.6], [-1600, 3.3], [-1450, 4.3], [-1650, 5.6], [-1480, 7.4], [-1620, 9.8], [-1460, 13], [-1650, 18], [-1500, 25]];
 	return <Stage t={t} cam={cam} atm={{haze: '#d7d6d5', density: 0.085, focus: SB.focus, aperture: 1.4, rim: '#fff0d6', lightDir: 40, grain: 0.06, vignette: 0.45, pp: SB.vp}} bg="#9aa0ae">
 		<Layer D={INF}><SibSky /></Layer>
@@ -218,7 +218,7 @@ export const Siberia: React.FC<SetProps> = ({t, cam}) => {
 		{[...POLES].reverse().map(({X, D}, i) => <Layer key={`p${i}`} D={D}><Pole X={X} D={D} /></Layer>)}
 		<Layer D={INF}><Wires /></Layer>
 		<Layer D={3}><Mist n={4} seed={9} y0={SB.hz + 40} y1={SB.hz + 140} t={t} speed={10} o={0.3} c="#f2eee8" w={[700, 1500]} h={[60, 140]} /></Layer>
-		<FigureSlot x={760} y={sgY(SB.focus)} h={290} attire="russia" action="cart" phase={ph} facing={1} breath shadow={{k: 0.1, skew: 1.3, o: 0.22, c: '#6f7890', blur: 3}} />
+		<FigureSlot x={700} y={sgY(SB.focus)} h={290} attire="siberia" action="pushCart" phase={ph} facing={1} rim="#fff0d6" lightDir={40} breath shadow={{k: 0.1, skew: 1.3, o: 0.22, c: '#6f7890', blur: 3}} />
 		<Particles kind="diamond" n={70} seed={31} D={[1.2, 8]} box={[500, 0, 1900, 900]} c="#fff8ea" o={1} size={1.1} />
 		<Particles kind="snow" n={70} seed={32} D={[0.8, 10]} c="#ffffff" o={0.55} wind={30} size={0.7} />
 		<Layer D={1.25}><FPath d={tuftD(80, sgY(1.25) + 10, 26, 120, 260, 4, 8) + ' ' + tuftD(1880, sgY(1.25) + 30, 18, 90, 200, 6, -8)} c="#5b5148" />
