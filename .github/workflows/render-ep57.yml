@@ -1,0 +1,60 @@
+name: render-ep57
+# ep57 render farm (2026-11-03): push the branch render-ep57 to render every scene in render57/jobs.json on its own runner.
+# Each job runs the scene's exporter (generated SVG layers, never committed), renders the Remotion composition, and pushes
+# the result back ENCRYPTED (AES key wrapped with the producer's RSA public key render57/pub.pem) to render-ep57-out-<n>,
+# so no playable video lands on the public repo.
+on:
+  push:
+    branches: [render-ep57]
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      m: ${{ steps.p.outputs.m }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 1}
+      - id: p
+        run: echo "m=$(python3 -c 'import json;print(json.dumps(json.load(open("render57/jobs.json"))))')" >> $GITHUB_OUTPUT
+  r:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        c: ${{ fromJSON(needs.plan.outputs.m) }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 1}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: episodes/37-qiqing/remotion/package-lock.json
+      - name: CJK fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra >/dev/null && fc-list | grep -c "Noto Sans CJK"
+      - name: npm ci
+        working-directory: episodes/37-qiqing/remotion
+        run: npm ci --no-audit --no-fund --loglevel=error
+      - name: export layers
+        if: ${{ matrix.c.pre != '' }}
+        run: ${{ matrix.c.pre }}
+      - name: render
+        working-directory: episodes/37-qiqing/remotion
+        run: |
+          nproc; date +%T
+          npx remotion render src/qq57/${{ matrix.c.file }}.tsx ${{ matrix.c.id }} $RUNNER_TEMP/c.mp4 --concurrency=4 --crf=16
+          date +%T; ls -la $RUNNER_TEMP/c.mp4
+      - name: encrypt and push
+        run: |
+          cd $RUNNER_TEMP
+          openssl rand -hex 32 > k.txt
+          openssl enc -aes-256-cbc -pbkdf2 -pass file:k.txt -in c.mp4 -out c.enc
+          openssl pkeyutl -encrypt -pubin -inkey $GITHUB_WORKSPACE/render57/pub.pem -pkeyopt rsa_padding_mode:oaep -in k.txt -out k.enc
+          rm -f k.txt c.mp4
+          mkdir o && mv c.enc k.enc o/ && cd o && echo "${{ matrix.c.n }} ${{ github.sha }}" > info.txt
+          git init -q -b r && git add . && git -c user.name=render -c user.email=noreply@anthropic.com commit -qm "ep57 ${{ matrix.c.n }} (encrypted)"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:render-ep57-out-${{ matrix.c.n }}
