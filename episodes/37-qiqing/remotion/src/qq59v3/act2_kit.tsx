@@ -1,5 +1,5 @@
 import React from 'react';
-import {useStage, useUid, coc, layerTransform, useFog, Shape, P, W, H, f1, lerp, rnd, cl, sm, mix, poly} from './kit3';
+import {useStage, useUid, coc, layerTransform, useFog, Shape, P, W, H, f1, lerp, rnd, cl, sm, mix, poly, ridge} from './kit3';
 import {Karl, KarlProps, KARL_CYCLE, Action} from './act2_karl';
 import {iceBlockPts} from './props3';
 
@@ -8,9 +8,9 @@ import {iceBlockPts} from './props3';
 
 /** where a figure stands in a <Stage> (as kit3's FigureSlot, but drawing the act-2 rig): depth transform, DOF, cast shadow, breath */
 export const Fig: React.FC<Omit<KarlProps, 'attire' | 'action' | 'phase'> & Partial<KarlProps> & {
-	depth?: number; shadow?: {k: number; skew: number; o?: number; c?: string; blur?: number}; breath?: boolean; contact?: number; under?: React.ReactNode; over?: React.ReactNode; o?: number}> = (props) => {
+	depth?: number; shadow?: {k: number; skew: number; o?: number; c?: string; blur?: number}; vapour?: boolean; contact?: number; under?: React.ReactNode; over?: React.ReactNode; o?: number}> = (props) => {
 	const {cam, atm, t} = useStage(), uid = useUid('a2f');
-	const {depth, shadow, breath, contact, under, over, o, ...rest} = props;
+	const {depth, shadow, vapour: breath, contact, under, over, o, ...rest} = props;
 	const D = depth ?? atm.focus;
 	const p: KarlProps = {attire: 'ice', action: 'walk', phase: 0, facing: 1, rim: atm.rim, lightDir: atm.lightDir, t, ...rest};
 	const {x, y, h} = p, sh = shadow, b = coc(atm, D), facing = p.facing ?? 1;
@@ -35,11 +35,21 @@ export const Fig: React.FC<Omit<KarlProps, 'attire' | 'action' | 'phase'> & Part
 /** travel with an eased pace: pace(t) goes from p0 to p1 between t0 and t1 (smoothstep); returns the gait phase and the distance (px).
     The phase is the integral of the pace, so x = x0 + dx keeps the planted foot still at every speed. */
 export const travel = (action: Action, t: number, h: number, p0: number, p1: number, t0: number, t1: number, ph0 = 0) => {
-	const c = KARL_CYCLE[action], n = 48; let acc = 0;
+	const c = KARL_CYCLE[action];
 	const pace = (u: number) => lerp(p0, p1, sm((u - t0) / Math.max(1e-3, t1 - t0)));
-	if (t > 0) { const dt = t / n; for (let i = 0; i < n; i++) acc += pace((i + 0.5) * dt) * dt; } else acc = p0 * t;
-	const phase = ph0 + acc / c.sec;
-	return {phase, dx: (phase - ph0) * c.stride * h};
+	const acc = (T: number) => { if (T <= 0) return pace(0) * T;
+		let a = p0 * Math.max(0, Math.min(T, t0));
+		const s0 = Math.max(0, t0), s1 = Math.min(T, t1);
+		if (s1 > s0) { const n = 40, dt = (s1 - s0) / n; for (let i = 0; i < n; i++) a += pace(s0 + (i + 0.5) * dt) * dt; }
+		return a + p1 * Math.max(0, T - Math.max(0, t1)); };
+	const phase = ph0 + acc(t) / c.sec;
+	return {phase, dx: (phase - ph0) * c.stride * h, endPhase: ph0 + acc(Math.max(t1, 0)) / c.sec};
+};
+/** like travel, but slowing to a halt (pace p0 → 0 over [t0, t1]) so the last phase lands on `rest` (mod 0.5: both feet down) */
+export const travelStop = (action: Action, t: number, h: number, p0: number, t0: number, t1: number, rest = 0) => {
+	const probe = travel(action, t, h, p0, 0, t0, t1, 0);
+	const off = ((rest - probe.endPhase) % 0.5 + 0.5) % 0.5;
+	return travel(action, t, h, p0, 0, t0, t1, off);
 };
 
 /** 0→1 over [a, a+len] (smooth) */
@@ -73,3 +83,6 @@ export const IceRidge: React.FC<{x0: number; x1: number; y: number; hmin: number
 
 /** text in the film's label face (霞鹜文楷), with a dark halo */
 export const KAI = "'LXGW WenKai','Noto Serif CJK SC',serif";
+
+/** a skyline on base line y: hFn(x) = height above it (px, up = +), closed down to `bottom` (kit3's ridge takes −y) */
+export const ridgeY = (x0: number, x1: number, y: number, hFn: (x: number) => number, bottom: number, step = 12) => ridge(x0, x1, (x) => hFn(x) - y, bottom, step);

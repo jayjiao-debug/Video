@@ -862,6 +862,12 @@ export const gaitJoints = (action: 'walk' | 'pushCart' | 'haulSled', ph: number,
 	const lean = action === 'walk' ? 3 : action === 'pushCart' ? 8 : 19, p = leanP(gaitAt({walk: G_WALK, pushCart: G_PUSH, haulSled: G_HAUL}[action], ph), lean), cx = ctxAt(x, y, h), o: Record<string, V> = {};
 	for (const k of Object.keys(p)) o[k] = cx.S(p[k]); return o; };
 
+/** where the cart's axle is (screen) while he pushes it at a phase (facing +1) — to put something on the load */
+export const pushCartAxle = (ph: number, x: number, y: number, h: number, kind: CartKind = 'winter', lean = 8): V => {
+	const p = leanP(gaitAt(G_PUSH, ph), lean), grip: V = [p.Hips[0] + 0.27, 0.585 + 0.55 * (p.Hips[1] - 0.6)];
+	const R = CART_R[kind], g0 = CART_GRIP[kind], Lg = len(g0), dy = grip[1] - R, ax = grip[0] + Math.sqrt(Math.max(0.01, Lg * Lg - dy * dy));
+	return ctxAt(x, y, h).S([ax, R]); };
+
 /* ============================================================================================================
    COMPONENTS
    ============================================================================================================ */

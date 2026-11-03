@@ -116,11 +116,14 @@ const RAIL = (() => { let d = 'M-6.95,2.32 L-3,2.44 L1,2.6 L1,2.68 L-3,2.52 L-6.
 export const BoatBack: React.FC<{cols: BoatCols; t: number; night?: boolean}> = ({cols, t, night}) => <g>
 	<path d={CABIN} fill={cols.cabin} /><path d={MAST} fill={cols.mast} />
 	<path d="M-6.4,1.4 L-6.2,4.3 L-6.05,4.3 L-6.25,1.4 Z M-5.0,1.4 L-5.4,4.3 L-5.25,4.3 L-4.85,1.4 Z M-6.3,4.2 L-5.2,4.2 L-5.2,4.34 L-6.3,4.34 Z" fill={cols.mast} />
-	{[[-0.9, 2.55, 0.9], [0.35, 2.55, 0.9], [1.6, 2.55, 0.78]].map(([x, y, w], i) => <rect key={i} x={x} y={y} width={w} height={0.6} fill={cols.win} opacity={cols.winO * (i === 2 ? 0.8 : 1)} />)}
-	<path d="M2.45,3.75 L3.55,2.25 L3.2,2.25 L2.25,3.55 Z" fill={cols.win} opacity={cols.winO * 0.6} />
+	<defs><linearGradient id={`bw${night ? 'n' : 'd'}`} x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#ffd890" /><stop offset="0.6" stopColor={cols.win} /><stop offset="1" stopColor="#c86a28" /></linearGradient></defs>
+	{[[-0.9, 2.5, 0.9], [0.35, 2.5, 0.9], [1.6, 2.5, 0.72]].map(([x, y, w], i) => <g key={i}><rect x={x} y={y} width={w} height={0.62} fill={`url(#bw${night ? 'n' : 'd'})`} opacity={cols.winO * (i === 2 ? 0.75 : 0.95)} />
+		<rect x={x + w * 0.48} y={y} width={0.05} height={0.62} fill={cols.cabin} /><rect x={x} y={y + 0.27} width={w} height={0.04} fill={cols.cabin} opacity={0.8} /></g>)}
+	{night && <path d="M0.2,2.5 L0.2,2.9 L0.32,2.98 L0.34,2.5 Z M1.1,2.5 L1.06,2.86 Q1.12,2.96 1.2,2.86 L1.18,2.5 Z" fill="#3a2414" opacity={0.7} />}
+	<path d="M2.45,3.68 L3.5,2.28 L3.22,2.28 L2.3,3.5 Z" fill={mixHex(cols.cabin, '#000000', 0.35)} /><path d="M2.45,3.68 L3.5,2.28" stroke={cols.win} strokeWidth={0.04} opacity={0.5} />
 	{night && <><circle cx={0.66} cy={7.55} r={0.12} fill="#fff6e4" /><circle cx={1.7} cy={5.5} r={0.08} fill="#ff6a5a" /></>}
 	{/* the life ring on the cabin wall */}
-	<circle cx={-0.6} cy={2.0} r={0.28} fill="none" stroke={night ? '#a8442c' : mixHex(cols.cabin, '#c0502c', 0.4)} strokeWidth={0.12} />
+	<circle cx={-0.6} cy={2.0} r={0.28} fill="none" stroke={mixHex(cols.cabin, '#c0502c', night ? 0.55 : 0.4)} strokeWidth={0.12} />
 </g>;
 /** the near parts: the hull side, the bulwark highlight, the rail — drawn over a figure's legs */
 export const BoatFront: React.FC<{cols: BoatCols}> = ({cols}) => <g>
@@ -147,9 +150,15 @@ export type SwimProps = {
 	far?: (c: SeaCam) => React.ReactNode;
 	/** the camera rides up out of a swell at the start (a wave wipes off the lens) */
 	surface?: number;
+	/** scene-local time for the surfacing wipe (t may be shifted for the stroke phase) */
+	wipeT?: number;
+	/** the height (px) of a dark swell right at the lens, rising and falling across the bottom of the frame */
+	lens?: number;
+	/** the nearest row (nearness) */
+	nearMax?: number;
 	id: string;
 };
-export const SwimShot: React.FC<SwimProps> = ({t, dur, mode, h, look, ws = CALM, k = 0.75, camH = 0.32, HZ: HZ0 = 440, sx = [880, 960], Zs = 5, attire = 'swim', boat, far, surface = 0, id}) => {
+export const SwimShot: React.FC<SwimProps> = ({t, dur, mode, h, look, ws = CALM, k = 0.75, camH = 0.32, HZ: HZ0 = 440, sx = [880, 960], Zs = 5, attire = 'swim', boat, far, surface = 0, wipeT, lens = 0, nearMax = 7, id}) => {
 	const camBob = 9 * Math.sin(t * 0.95 + 0.4) + 3.5 * Math.sin(t * 2.1), pxm = h / 1.8, f = pxm * Zs;
 	const sec = KARL_CYCLE[mode].sec, phase = t / sec + 0.15, v = mode === 'swim' ? 0.42 * 1.8 / sec : 0.03;
 	const Xs = v * t, sxScreen = lerp(sx[0], sx[1], sm(t / dur)), Xcam = Xs - (sxScreen - W / 2) / pxm;
@@ -159,7 +168,7 @@ export const SwimShot: React.FC<SwimProps> = ({t, dur, mode, h, look, ws = CALM,
 	const roll = 0.7 * Math.sin(t * 0.8 + 1.1) + 0.25 * Math.sin(t * 1.9);
 	const lights: Light[] = look.sun ? [{x: look.sun.x, col: look.glint, spread: 50, k: 1}] : [];
 	const far0 = Array.from({length: 16}, (_, i) => 0.035 * Math.pow(0.97 / 0.035, i / 15));
-	const near = Array.from({length: 14}, (_, i) => 1.05 * Math.pow(7 / 1.05, i / 13));
+	const near = Array.from({length: 14}, (_, i) => 1.05 * Math.pow(nearMax / 1.05, i / 13));
 	let boatEl: React.ReactNode = null;
 	if (boat) { const bX = Xs + boat.dX, bz = zeta(ws, bX, boat.Z, t, k * 0.5), [bx, by] = proj(c, bX, boat.Z, bz); boatEl = <BoatFar x={bx} y={by} s={c.f / boat.Z} t={t} cols={BOAT_DAWN} refl={boat.refl ?? 0.3} />; }
 	const split = boat ? Math.max(1, far0.findIndex((n) => Zs / n < boat.Z)) : 5;
@@ -167,7 +176,7 @@ export const SwimShot: React.FC<SwimProps> = ({t, dur, mode, h, look, ws = CALM,
 	const u = ((phase % 1) + 1) % 1, puff = mode === 'swim' ? Math.max(0, Math.sin(Math.PI * cl((u - 0.5) / 0.32))) : 0;
 	const head: [number, number] = [kx + 0.08 * h, ky - 0.07 * h];
 	// the surfacing wipe: a dark swell face rises over the lens and drops away
-	const sw = surface > 0 ? 1 - sm(t / surface) : 0;
+	const sw = surface > 0 ? 0.7 * (1 - sm((wipeT ?? t) / surface)) : 0;   // the cut lands on a wave face already dropping (never a dark frame)
 	return <g transform={`rotate(${f1(roll)} ${W / 2} ${H / 2})`}>
 		<SeaSky c={c} look={look} id={id} t={t} />
 		{far && far(c)}
@@ -184,8 +193,21 @@ export const SwimShot: React.FC<SwimProps> = ({t, dur, mode, h, look, ws = CALM,
 			return <circle key={i} cx={f1(x)} cy={f1(y)} r={f1(1.4 + 3 * rnd(i, 5))} fill="#fff1e2" opacity={f1(0.55 * Math.sin(Math.PI * a))} />; })}
 		{Array.from({length: 5}, (_, i) => { const a = (t * (0.18 + 0.1 * rnd(i, 12)) + rnd(i, 11)) % 1, x = lerp(80, W - 80, rnd(i, 13)), y = lerp(-40, H + 60, a), r = 14 + 26 * rnd(i, 14);
 			return <circle key={'b' + i} cx={f1(x)} cy={f1(y)} r={f1(r)} fill="#fff4e4" opacity={f1(0.07 + 0.06 * rnd(i, 15))} />; })}
-		{sw > 0 && <g><path d={`M-300,${f1(lerp(-200, H + 300, 1 - sw))} Q${W / 2},${f1(lerp(-320, H + 120, 1 - sw))} ${W + 300},${f1(lerp(-200, H + 300, 1 - sw))} L${W + 300},${H + 600} L-300,${H + 600} Z`} fill="#121a2a" />
-			<path d={`M-300,${f1(lerp(-200, H + 300, 1 - sw))} Q${W / 2},${f1(lerp(-320, H + 120, 1 - sw))} ${W + 300},${f1(lerp(-200, H + 300, 1 - sw))}`} stroke="#ffe2c0" strokeWidth={5} fill="none" opacity={0.6} /></g>}
+		{lens > 0 && (() => { const lip = Array.from({length: 34}, (_, i) => { const x = -300 + i * (W + 600) / 33; return [x, H - lens * (0.62 + 0.38 * Math.sin(t * 0.85 + x / 640)) - 22 * Math.sin(x / 170 + t * 2.1) - 8 * Math.sin(x / 61 - t * 3.3)] as [number, number]; });
+			const top = Math.min(...lip.map((p) => p[1])), lipD = 'M' + lip.map((p) => `${f1(p[0])},${f1(p[1])}`).join(' L'), body = lipD + ` L${W + 300},${H + 300} L-300,${H + 300} Z`;
+			const gid = `${id}lens`, warm = look.sun ? look.sun.glow : look.crest;
+			return <g><defs><linearGradient id={gid} gradientUnits="userSpaceOnUse" x1="0" y1={top} x2="0" y2={H}><stop offset="0" stopColor={mixHex(stopsAt(look.rows, 0.62), warm, 0.28)} /><stop offset="0.25" stopColor={stopsAt(look.rows, 0.8)} /><stop offset="1" stopColor={stopsAt(look.rows, 1)} /></linearGradient></defs>
+				<path d={body} fill={`url(#${gid})`} />
+				<path d={lipD} stroke={look.crest} strokeWidth={4} fill="none" opacity={0.55} />
+				<path d={lipD} stroke="#ffffff" strokeWidth={1.4} fill="none" opacity={0.5} transform="translate(0,3)" />
+				{lip.filter((_, i) => i % 2 === 0).map((p, i) => <ellipse key={i} cx={f1(p[0] + 20 * Math.sin(i + t))} cy={f1(p[1] + 6)} rx={f1(18 + 14 * rnd(i, 9))} ry={3} fill="#fff6ea" opacity={f1(0.25 + 0.3 * rnd(i, 10))} />)}
+			</g>; })()}
+		{sw > 0 && (() => { const yL = lerp(-260, H + 320, 1 - sw), yM = lerp(-380, H + 140, 1 - sw), lip = `M-300,${f1(yL)} Q${W / 2},${f1(yM)} ${W + 300},${f1(yL)}`;
+			return <g><defs><linearGradient id={`${id}sw`} gradientUnits="userSpaceOnUse" x1="0" y1={yM} x2="0" y2={yM + 520}><stop offset="0" stopColor={mixHex(stopsAt(look.rows, 0.6), look.sun ? look.sun.glow : look.crest, 0.3)} /><stop offset="0.3" stopColor={stopsAt(look.rows, 0.85)} /><stop offset="1" stopColor={stopsAt(look.rows, 1)} /></linearGradient></defs>
+				<path d={lip + ` L${W + 300},${H + 700} L-300,${H + 700} Z`} fill={`url(#${id}sw)`} />
+				<path d={lip} stroke={look.crest} strokeWidth={6} fill="none" opacity={0.7} />
+				{Array.from({length: 40}, (_, i) => { const x = lerp(-100, W + 100, rnd(i, 21)), u = (x + 300) / (W + 600), y = (1 - u) * (1 - u) * yL + 2 * u * (1 - u) * yM + u * u * yL;
+					return <ellipse key={i} cx={f1(x)} cy={f1(y - (1 - sw) * 120 * rnd(i, 22) + 8)} rx={f1(4 + 14 * rnd(i, 23))} ry={f1(2 + 4 * rnd(i, 24))} fill="#fff4e6" opacity={f1(0.35 + 0.4 * rnd(i, 25))} />; })}</g>; })()}
 	</g>; };
 
 /* ---------------- the night boat ---------------- */
@@ -199,9 +221,9 @@ const blanketD = (x: number, y: number, h: number, facing: number, br: number) =
 		hands: `M${P(0.13, 0.66)} m-${f1(0.03 * h)},0 a${f1(0.03 * h)},${f1(0.026 * h)} 0 1,0 ${f1(0.06 * h)},0 a${f1(0.03 * h)},${f1(0.026 * h)} 0 1,0 -${f1(0.06 * h)},0 Z`}; };
 
 export const NightBoat: React.FC<{t: number; dur: number; id: string}> = ({t, dur, id}) => {
-	const ws = ROUGH, k = 1, Zb = 15, camH = 2.2, f = 1950;
+	const ws = ROUGH, k = 1.25, Zb = 15, camH = 1.8, f = 2050;
 	const camBob = 22 * Math.sin(t * 0.62 + 0.4) + 6 * Math.sin(t * 1.5), roll = 2.2 * Math.sin(t * 0.55 + 0.8) + 0.6 * Math.sin(t * 1.3);
-	const Xb = 0.6 * t, Xcam = Xb + 0.6 - 1.6 * sm(t / dur);
+	const Xb = 0.6 * t, Xcam = Xb - 0.6 - 1.0 * sm(t / dur);
 	const c: SeaCam = {HZ: 470 + camBob, cam: camH, f, Xcam};
 	// the boat rides the swell: heave from the mean under it, pitch from bow vs stern
 	const zb = (zeta(ws, Xb - 4, Zb, t, k) + zeta(ws, Xb, Zb, t, k) + zeta(ws, Xb + 4, Zb, t, k)) / 3, pitch = Math.atan2(zeta(ws, Xb + 5, Zb, t, k) - zeta(ws, Xb - 5, Zb, t, k), 10) * 57.3 * 0.8;
@@ -219,7 +241,8 @@ export const NightBoat: React.FC<{t: number; dur: number; id: string}> = ({t, du
 		<SeaSky c={c} look={NIGHT} id={id} t={t} clouds={[[200, 120, 900, 30], [1000, 200, 1100, 26], [500, 300, 700, 16], [1350, 330, 600, 12]]} />
 		{/* stars and a moon glow behind cloud */}
 		{Array.from({length: 60}, (_, i) => <circle key={i} cx={f1(rnd(i, 1) * W)} cy={f1(rnd(i, 2) * (c.HZ - 120))} r={f1(0.6 + rnd(i, 3) * 1.1)} fill="#dfe8ff" opacity={f1(0.25 + 0.5 * rnd(i, 4) * (0.6 + 0.4 * Math.sin(t * 3 + i)))} />)}
-		<ellipse cx={1500} cy={c.HZ - 300} rx={260} ry={200} fill="#4a5c86" opacity={0.25} />
+		<ellipse cx={1500} cy={c.HZ - 330} rx={420} ry={180} fill={`url(#${id}mn)`} />
+		<defs><radialGradient id={`${id}mn`}><stop offset="0" stopColor="#6a7ca6" stopOpacity={0.35} /><stop offset="1" stopColor="#6a7ca6" stopOpacity={0} /></radialGradient></defs>
 		<Rows c={c} Zs={Zb} t={t} ns={far0} ws={ws} k={k} look={NIGHT} lights={lights} keyp="nf" crestK={0.6} />
 		{/* the boat's far parts, the light pool of the lamp, Karl in his blanket, then the hull side over his legs */}
 		<g transform={tf}><BoatBack cols={BOAT_NIGHT} t={t} night /></g>
@@ -227,8 +250,8 @@ export const NightBoat: React.FC<{t: number; dur: number; id: string}> = ({t, du
 		<ellipse cx={f1(lamp[0])} cy={f1(lamp[1] + 0.9 * s)} rx={f1(2.6 * s)} ry={f1(1.9 * s)} fill={`url(#${id}lp)`} />
 		<g transform={`rotate(${f1(-pitch)} ${f1(kx)} ${f1(ky)})`}>
 			<Karl x={kx} y={ky} h={kh} attire="home2026" action="stand" phase={t / 4.2 + 0.2} t={t} facing={-1} rim="#ffd79a" lightDir={lamp[0] > kx ? 'right' : 'left'} rimO={1} />
-			<path d={B.body} fill="#2a3346" /><path d={B.fold} fill="#4a5470" opacity={0.85} /><path d={B.fold2} fill="#1c2232" opacity={0.9} /><path d={B.hands} fill="#0d0c10" />
-			<path d={B.body} fill="none" stroke="#ffd18a" strokeWidth={2} opacity={0.35} transform={`translate(${f1(lamp[0] > kx ? 2 : -2)},-1)`} />
+			<path d={B.body} fill="#232838" /><path d={B.fold} fill="#3c4358" opacity={0.9} /><path d={B.fold2} fill="#171b26" opacity={0.9} /><path d={B.hands} fill="#0d0c10" />
+			<path d={B.body} fill="none" stroke="#ffcf86" strokeWidth={2.4} opacity={0.55} transform={`translate(${f1(lamp[0] > kx ? 2.5 : -2.5)},-1)`} />
 		</g>
 		<g transform={tf}><BoatFront cols={BOAT_NIGHT} /></g>
 		{/* the lamp itself: bracket, cord, a hot bulb and its halo */}
