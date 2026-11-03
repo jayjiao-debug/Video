@@ -392,7 +392,7 @@ def big(text, col=CREAM, y=440, size=118):
     sh = 'text-shadow:0 0 30px rgba(14,8,5,.85),0 4px 8px rgba(14,8,5,.9)' if col == CREAM else 'text-shadow:0 2px 0 rgba(255,255,255,.6)'
     return T(f'<div style="position:absolute;left:0;right:0;top:{y}px;text-align:center;font-family:Noto Sans CJK SC;font-weight:900;font-size:{size}px;letter-spacing:.04em;color:{col};{sh};white-space:nowrap">{text}</div>')
 def cap_p(text): return T(f'<div style="position:absolute;left:20px;top:20px;font-family:\'LXGW WenKai\';font-weight:700;font-size:44px;color:#5A4E44;white-space:nowrap">{text}</div>')
-VOF = {'chichen': '01_mx.mp3', 'machu2': '02_pe.mp3', 'christ': '03_br.mp3', 'colosseum': '04_it.mp3', 'petra2': '05_jo.mp3', 'taj': 'r2_06_in_b.mp3', 'home': 'r2_07_cn.mp3'}
+VOF = {'chichen': 'el_01_mx.mp3', 'machu2': 'el_02_pe.mp3', 'christ': 'el_03_br.mp3', 'colosseum': 'el_04_it.mp3', 'petra2': 'el_05_jo.mp3', 'taj': 'el_06_in.mp3', 'home': 'el_07_cn.mp3'}   # owner 13:00: calmer, more elegant takes (voice farm ep57-arrive-elegant-01)
 VOICES, CLICKS, STAMPS, SH, SUBS, HUDK = [], [], [], [], [], []
 CLOUDS = T(svgw(K.clouds()))
 def sub(t0, t1, text, align='l', top=None): SUBS.append((t0 + .1, t1 - .08, text, align, top))
@@ -625,7 +625,7 @@ def sit_in(v, sr, meter):
     wet = fftconvolve(v, ir)[:len(v) + int(.9 * sr)]; dry = np.concatenate([v, np.zeros(len(wet) - len(v))])
     y = dry + .18 * wet * (np.abs(dry).max() / max(1e-9, np.abs(wet).max()))
     f_in, f_out = int(.03 * sr), int(.35 * sr); y[:f_in] *= np.linspace(0, 1, f_in); y[-f_out:] *= np.linspace(1, 0, f_out)
-    y = pyln.normalize.loudness(y, meter.integrated_loudness(y), -18.0); return .5 * np.tanh(y / .5)
+    y = pyln.normalize.loudness(y, meter.integrated_loudness(y), -19.5); return .5 * np.tanh(y / .5)
 def mix(out):
     import pyloudnorm as pyln, warnings; warnings.filterwarnings('ignore')
     bed, sr = sf.read(f'{MUS}/song.wav'); n = int(END * sr); m = bed[:n].copy(); meter = pyln.Meter(sr)
