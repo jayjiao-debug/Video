@@ -74,13 +74,13 @@ export const addCam = (a: Cam, b: Partial<Cam>): Cam => ({x: a.x + (b.x ?? 0), y
 export const INF = 1e5;
 const den = (cam: Cam, D: number) => Math.max(0.04, D - (cam.z ?? 0));
 /** the screen transform of a layer at depth D */
-export const layerTransform = (cam: Cam, D: number, focus: number) => {
+export const layerTransform = (cam: Cam, D: number, focus: number, pp: P = [W / 2, H / 2]) => {
 	const inf = D >= INF, d = den(cam, D), s = inf ? 1 : D / d, sx = inf ? 0 : -cam.x * focus / d, sy = inf ? 0 : -cam.y * focus / d;
-	return `translate(${W / 2},${H / 2}) rotate(${cam.roll.toFixed(3)}) scale(${cam.zoom.toFixed(4)}) translate(${f1(sx)},${f1(sy)}) scale(${s.toFixed(4)}) translate(${-W / 2},${-H / 2})`; };
+	return `translate(${W / 2},${H / 2}) rotate(${cam.roll.toFixed(3)}) scale(${cam.zoom.toFixed(4)}) translate(${f1(sx + pp[0] - W / 2)},${f1(sy + pp[1] - H / 2)}) scale(${s.toFixed(4)}) translate(${f1(-pp[0])},${f1(-pp[1])})`; };
 /** where a rest-position point at depth D lands on screen, and its scale */
-export const project = (cam: Cam, D: number, focus: number, p: P): {p: P; s: number} => {
+export const project = (cam: Cam, D: number, focus: number, p: P, pp: P = [W / 2, H / 2]): {p: P; s: number} => {
 	const inf = D >= INF, d = den(cam, D), s = inf ? 1 : D / d, sx = inf ? 0 : -cam.x * focus / d, sy = inf ? 0 : -cam.y * focus / d;
-	const x = (p[0] - W / 2) * s + sx, y = (p[1] - H / 2) * s + sy, a = cam.roll * Math.PI / 180, c = Math.cos(a), n = Math.sin(a);
+	const x = (p[0] - pp[0]) * s + pp[0] - W / 2 + sx, y = (p[1] - pp[1]) * s + pp[1] - H / 2 + sy, a = cam.roll * Math.PI / 180, c = Math.cos(a), n = Math.sin(a);
 	return {p: [W / 2 + cam.zoom * (x * c - y * n), H / 2 + cam.zoom * (x * n + y * c)], s: s * cam.zoom}; };
 
 /* ---------------- debug switches (profiling: set from the test entry's input props) ---------------- */
@@ -95,8 +95,10 @@ export type Atm = {
 	/** the rim-light colour handed to the figure, and the light direction (deg, 0 = from screen right, 90 = from above) */
 	rim: string; lightDir: number;
 	grain: number; vignette: number;
+	/** the principal point (where the view axis meets the screen: the road's vanishing point); dolly scales about it */
+	pp: P;
 };
-const ATM0: Atm = {haze: '#8a9aa6', density: 0.05, focus: 4, aperture: 3, rim: '#ffd9a8', lightDir: 120, grain: 0.07, vignette: 0.5};
+const ATM0: Atm = {haze: '#8a9aa6', density: 0.05, focus: 4, aperture: 3, rim: '#ffd9a8', lightDir: 120, grain: 0.07, vignette: 0.5, pp: [W / 2, H / 2]};
 type StageV = {cam: Cam; t: number; atm: Atm};
 const StageCtx = createContext<StageV>({cam: CAM0, t: 0, atm: ATM0});
 const LayerCtx = createContext<{D: number; k: number}>({D: 1, k: 0});
@@ -106,6 +108,13 @@ export const hazeK = (atm: Atm, D: number) => (D >= INF ? 1 : 1 - Math.exp(-atm.
 export const coc = (atm: Atm, D: number) => atm.aperture * Math.abs(atm.focus / Math.min(D, INF) - 1);
 /** colour → hazed for the current layer (extra pushes it further toward the haze) */
 export const useFog = () => { const {atm} = useStage(), {k} = useLayer(); return (c: string, extra = 0, haze?: string) => mix(c, haze ?? atm.haze, cl(k + extra)); };
+/** project rest-position points at any depth through the stage camera (for things spanning depths: wires, tracks, roads) */
+export const useProject = () => { const {cam, atm} = useStage(); return (D: number, p: P) => project(cam, D, atm.focus, p, atm.pp); };
+/** a ground plane (horizon hz, screen y = hz + K/D at rest): maps a rest-screen point on the ground to its projected point */
+export const useGround = (hz: number, K: number) => { const pr = useProject(); return (p: P): P => pr(K / Math.max(0.02, p[1] - hz), p).p; };
+/** a ground decal: rest-screen polygons on the ground plane, re-projected point by point (true perspective parallax) */
+export const GroundShape: React.FC<{hz: number; K: number; polys: P[][]; fill: string; o?: number; smooth?: boolean}> = ({hz, K, polys, fill, o, smooth = true}) => {
+	const g = useGround(hz, K); return <g fill={fill} opacity={o}>{polys.map((pl, i) => <path key={i} d={smooth ? spline(pl.map(g), true) : poly(pl.map(g))} />)}</g>; };
 /** a unique, url-safe id */
 export const useUid = (p = 'k') => p + useId().replace(/[^a-zA-Z0-9]/g, '');
 
@@ -171,7 +180,7 @@ export const Stage: React.FC<{t: number; cam?: Cam; atm?: Partial<Atm>; bg?: str
 /** one depth layer (a direct child of <Stage>). blur: px (default = depth of field); the Stage renders a blurred layer at low res. */
 export const Layer: React.FC<LayerProps> = ({D, o, children}) => {
 	const {cam, atm} = useStage(), k = hazeK(atm, D);
-	return <LayerCtx.Provider value={{D, k}}><g opacity={o} transform={layerTransform(cam, D, atm.focus)}>{children}</g></LayerCtx.Provider>;
+	return <LayerCtx.Provider value={{D, k}}><g opacity={o} transform={layerTransform(cam, D, atm.focus, atm.pp)}>{children}</g></LayerCtx.Provider>;
 };
 
 /** many sub-shapes as separate <path>s (one combined path would punch holes where opposite-wound shapes overlap) */
@@ -253,7 +262,7 @@ export const Particles: React.FC<{kind: PKind; n: number; seed: number; D: [numb
 			case 'spray': mv(wind, -30); break;
 			default: mv(wind + Math.sin(t * 0.5 + ph) * 18, Math.cos(t * 0.4 + ph) * 12); break;
 		}
-		const q = project(cam, d, atm.focus, [wrap(x, bx0, bx1), wrap(y, by0, by1)]);
+		const q = project(cam, d, atm.focus, [wrap(x, bx0, bx1), wrap(y, by0, by1)], atm.pp);
 		const sx = wrap(q.p[0], bx0, bx1), sy = kind === 'spindrift' || kind === 'sand' || kind === 'spray' ? q.p[1] : wrap(q.p[1], by0, by1);
 		sz *= q.s;
 		const fade = 1 - 0.6 * hazeK(atm, d), bl = DBG.noBlur ? 0 : Math.min(16, coc(atm, d)), soft = bl >= 1, sf = soft ? `url(#${id}s)` : undefined;
@@ -311,7 +320,7 @@ const Swimmer: React.FC<KarlProps> = ({x, y, h, phase, facing, rim, lightDir, ri
 /** the stand-in (the qq59 Walker) */
 const StandIn: React.FC<KarlProps> = (p) => {
 	if (p.action === 'swim') return <Swimmer {...p} />;
-	const look = LOOKS[p.attire];
+	const L0 = LOOKS[p.attire], look: Look59 = {...L0, paint: Object.fromEntries(Object.entries(L0.paint ?? {}).map(([k, c]) => [k, mix(c as string, '#0c0b0e', 0.6)]))};   // the house look: near-black one-tone
 	let pose = p.action === 'stand' ? PZ.straps : walkPose(p.phase, BRISK);
 	if (p.action === 'lead') pose = withArms(pose, null, [-38, 12]);
 	if (p.action === 'sled') pose = nod(withArms(pose, [-14, 30], [10, 20]), 8);
@@ -343,16 +352,16 @@ export const FigureSlot: React.FC<Omit<KarlProps, 'rim' | 'lightDir' | 'phase' |
 			{sh && <filter id={`${uid}sh`} x="-50%" y="-50%" width="200%" height="200%"><feFlood floodColor={sh.c ?? '#000'} /><feComposite in2="SourceAlpha" operator="in" /><feGaussianBlur stdDeviation={sh.blur ?? 1.5} /></filter>}
 			{reflect && <linearGradient id={`${uid}rf`} gradientUnits="userSpaceOnUse" x1="0" y1={reflect.wy} x2="0" y2={reflect.wy + (reflect.wy - (y - h))}><stop offset="0" stopColor="#fff" stopOpacity="1" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>}
 			{reflect && <mask id={`${uid}rm`} maskUnits="userSpaceOnUse" x={x - h * 2} y={reflect.wy} width={h * 4} height={h * 2.2}><rect x={x - h * 2} y={reflect.wy} width={h * 4} height={h * 2.2} fill={`url(#${uid}rf)`} /></mask>}
-			{breath && <radialGradient id={`${uid}br`}><stop offset="0" stopColor="#f4f6fa" stopOpacity="0.85" /><stop offset="0.6" stopColor="#f4f6fa" stopOpacity="0.3" /><stop offset="1" stopColor="#f4f6fa" stopOpacity="0" /></radialGradient>}
+			{breath && <radialGradient id={`${uid}br`}><stop offset="0" stopColor="#ffffff" stopOpacity="1" /><stop offset="0.55" stopColor="#f6f7fa" stopOpacity="0.5" /><stop offset="1" stopColor="#f4f6fa" stopOpacity="0" /></radialGradient>}
 		</defs>
-		<g transform={layerTransform(cam, D, atm.focus)}>
+		<g transform={layerTransform(cam, D, atm.focus, atm.pp)}>
 			{contact !== undefined && <ellipse cx={x} cy={y + h * 0.004} rx={h * 0.2} ry={h * 0.022} fill="#000" opacity={contact} />}
 			{sh && <g filter={`url(#${uid}sh)`} opacity={sh.o ?? 0.5}><g transform={`matrix(1,0,${sh.skew.toFixed(3)},${(-sh.k).toFixed(3)},${f1(-sh.skew * y)},${f1((1 + sh.k) * y)})`}>{body}</g></g>}
 			{reflect && <g mask={`url(#${uid}rm)`} opacity={reflect.o ?? 0.45}><g transform={`translate(0,${f1(2 * reflect.wy)}) scale(1,-1)`}>{body}</g></g>}
 			{under}
 			{body}
-			{breath && Array.from({length: 4}, (_, i) => { const u = ((t / 2.6 + i / 4) % 1), hx = x + p.facing * h * (0.09 + u * 0.22), hy = y - h * (0.875 + u * 0.05), r = h * (0.025 + u * 0.09);
-				return <ellipse key={i} cx={hx} cy={hy} rx={r * 1.4} ry={r} fill={`url(#${uid}br)`} opacity={(Math.sin(u * Math.PI) * 0.7).toFixed(3)} />; })}
+			{breath && Array.from({length: 5}, (_, i) => { const u = ((t / 2.4 + i / 5) % 1), hx = x + p.facing * h * (0.08 + u * 0.26), hy = y - h * (0.87 + u * 0.07), r = h * (0.03 + u * 0.1);
+				return <ellipse key={i} cx={hx} cy={hy} rx={r * 1.5} ry={r} fill={`url(#${uid}br)`} opacity={(Math.pow(Math.sin(u * Math.PI), 0.7) * 0.85 * (1 - u * 0.5)).toFixed(3)} />; })}
 			{over}
 		</g></g></LayerCtx.Provider>;
 };

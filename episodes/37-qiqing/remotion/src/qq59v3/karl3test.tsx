@@ -1,6 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
-import {Karl, Mum, Camel, Cart, Sled, ATTIRES, Attire, Action, KARL_CYCLE, RIM} from './karl3';
+import {Karl, Mum, Camel, Cart, Sled, ATTIRES, Attire, Action, KARL_CYCLE, RIM, karlTravel} from './karl3';
+import {SeaShot} from './karl3sea';
 
 /* ep59 v3 · test compositions for the Karl rig (karl3.tsx). Entry point: npx remotion render src/qq59v3/karl3test.tsx <ID> …
    K3Sheet / K3SheetDark  the model sheet (every attire, same scale)       K3Actions  every action in one still
@@ -52,9 +53,58 @@ const Actions: React.FC = () => {
 	</svg></AbsoluteFill>;
 };
 
+/* ---------- motion cycles: a tracking camera (he stays put, the world slides by at exactly his speed: any foot slide shows against the marks) ---------- */
+type Seg = {label: string; attire: Attire; action: Action; sx: number; h: number; sky: [string, string]; ground: string; mark: string; rim: string; light?: 'left' | 'right'};
+const SEGS: Seg[] = [
+	{label: 'walk · 2026', attire: 'home2026', action: 'walk', sx: 900, h: 600, sky: ['#2a2f3c', '#8a7a78'], ground: '#1d1c20', mark: '#3a3840', rim: '#ffd9a8'},
+	{label: 'pushCart · 1998 (the Beast)', attire: 'start1998', action: 'pushCart', sx: 560, h: 560, sky: ['#3a4250', '#b8a890'], ground: '#2a2a2c', mark: '#4a4a4c', rim: '#ffe2b8'},
+	{label: 'pushCart · Siberia', attire: 'siberia', action: 'pushCart', sx: 560, h: 560, sky: ['#5a6a7a', '#c8d0d6'], ground: '#d6dde2', mark: '#aab4bc', rim: '#fff4e4'},
+	{label: 'haulSled · Bering ice', attire: 'ice', action: 'haulSled', sx: 1380, h: 560, sky: ['#26324a', '#e8b890'], ground: '#c4ced6', mark: '#98a6b2', rim: '#ffd0a0', light: 'right'},
+	{label: 'wade · Darién', attire: 'jungle', action: 'wade', sx: 860, h: 640, sky: ['#0e1a14', '#2c4632'], ground: '#1a2a22', mark: '#2a3a30', rim: '#d8f0c8'},
+	{label: 'leadCamel · Gobi', attire: 'gobi', action: 'leadCamel', sx: 1480, h: 430, sky: ['#5a4a5a', '#e8b880'], ground: '#a08060', mark: '#806448', rim: '#ffd9a8', light: 'right'},
+	{label: 'pushCart · 2026 (orange bags)', attire: 'home2026', action: 'pushCart', sx: 560, h: 560, sky: ['#2a2f3c', '#9a8a80'], ground: '#1d1c20', mark: '#3a3840', rim: '#ffd9a8'},
+];
+const SEG_F = 60;
+const SegView: React.FC<{sg: Seg; f: number; idx: number}> = ({sg, f, idx}) => {
+	const G = 900, t = f / FPS, {phase, dx} = karlTravel(sg.action, t, sg.h), wade = sg.action === 'wade', wy = G - 0.56 * sg.h * 1.0;
+	const marks = [] as React.ReactNode[];
+	for (let i = -2; i < 40; i++) { const wx = i * 140, x = wx - dx + 200; if (x < -60 || x > W + 60) continue;
+		marks.push(<rect key={i} x={x - 2} y={G} width={4} height={i % 2 ? 22 : 40} fill={sg.mark} />, <ellipse key={'s' + i} cx={x + 50} cy={G + 8} rx={14} ry={5} fill={sg.mark} opacity={0.7} />); }
+	return <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+		<defs><linearGradient id={`sk${idx}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={sg.sky[0]} /><stop offset="1" stopColor={sg.sky[1]} /></linearGradient></defs>
+		<rect width={W} height={H} fill={`url(#sk${idx})`} />
+		{wade && Array.from({length: 14}, (_, i) => { const x = ((i * 157 - dx * 0.6) % (W + 300) + W + 300) % (W + 300) - 150; return <path key={i} d={`M${x},${wy} Q${x + 30},${wy - 360 - 80 * (i % 3)} ${x + 90 + 40 * (i % 2)},${wy - 520 - 60 * (i % 4)} L${x + 100},${wy - 500} Q${x + 46},${wy - 330} ${x + 26},${wy} Z`} fill="#0c1a12" opacity={0.85} />; })}
+		<rect x={0} y={G} width={W} height={H - G} fill={sg.ground} />{marks}
+		{wade && <rect x={0} y={wy} width={W} height={H - wy} fill="#2a3e34" />}
+		{wade && Array.from({length: 26}, (_, i) => { const x = ((i * 97 - dx) % (W + 200) + W + 200) % (W + 200) - 100; return <rect key={'w' + i} x={x} y={wy + 14 + (i % 5) * 24} width={60 + (i % 3) * 30} height={2} fill="#5e7a6a" opacity={0.5} />; })}
+		<Karl x={sg.sx} y={G} h={sg.h} attire={sg.attire} action={sg.action} phase={phase} rim={sg.rim} lightDir={sg.light ?? 'left'} foam="#c8dccb" underO={0.22} />
+		{wade && <rect x={0} y={wy} width={W} height={2} fill="#9ab8a4" opacity={0.5} />}
+		<text x={60} y={80} fill="#f4efe6" fontFamily="Helvetica, Arial, sans-serif" fontSize={34} fontWeight={700} style={{paintOrder: 'stroke'}} stroke="#00000066" strokeWidth={4}>{sg.label}</text>
+		<text x={60} y={120} fill="#f4efe6" fontFamily="Helvetica, Arial, sans-serif" fontSize={20} opacity={0.8}>phase {phase.toFixed(2)} · stride {KARL_CYCLE[sg.action].stride.toFixed(3)} h / cycle · {KARL_CYCLE[sg.action].sec}s / cycle</text>
+	</svg>;
+};
+const Cycles: React.FC = () => { const f = useCurrentFrame(), i = Math.min(SEGS.length - 1, Math.floor(f / SEG_F));
+	return <AbsoluteFill style={{background: '#111'}}><SegView sg={SEGS[i]} f={f - i * SEG_F} idx={i} /></AbsoluteFill>; };
+/** idle actions: stand (breathing), lookUp, hug (with his mother), Mum walking */
+const Idle: React.FC = () => { const f = useCurrentFrame(), t = f / FPS, seg = Math.min(2, Math.floor(f / 60)), G = 900;
+	return <AbsoluteFill style={{background: '#14161b'}}><svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+		<rect x={0} y={G} width={W} height={H - G} fill="#0b0c0f" />
+		{seg === 0 && <><Karl x={560} y={G} h={620} attire="home2026" action="stand" phase={t / 4.2} /><Karl x={1300} y={G} h={620} attire="siberia" action="stand" phase={t / 4.2 + 0.3} lightDir="right" rim="#cfe0ff" /></>}
+		{seg === 1 && <><Karl x={560} y={G} h={620} attire="home2026" action="lookUp" phase={t / 4.2} /><Karl x={1300} y={G} h={620} attire="gobi" action="lookUp" phase={t / 4.2} t={t} /></>}
+		{seg === 2 && <><Karl x={760} y={G} h={640} attire="home2026" action="hug" phase={t / 3.6} rim="#ffcf90" lightDir="right" /><Mum x={1500} y={G} h={640 * 0.88} action="walk" phase={t / 1.45} facing={-1} rim="#ffcf90" lightDir="right" /></>}
+		<text x={60} y={80} fill="#f4efe6" fontFamily="Helvetica, Arial, sans-serif" fontSize={34} fontWeight={700}>{['stand (breathing)', 'lookUp', 'hug · Mum walking'][seg]}</text>
+	</svg></AbsoluteFill>; };
+
+/** the swim (6 s) and the float (3 s): low camera at the water line, dawn */
+const Swim: React.FC<{mode: 'swim' | 'float'}> = ({mode}) => { const f = useCurrentFrame();
+	return <AbsoluteFill style={{background: '#0b0d14'}}><svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}><SeaShot t={f / FPS} mode={mode} h={mode === 'float' ? 660 : 560} dur={mode === 'float' ? 3 : 6} /></svg></AbsoluteFill>; };
+
 registerRoot(() => <>
 	<Composition id="K3Sheet" component={Sheet} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{dark: false}} />
 	<Composition id="K3SheetDark" component={Sheet} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{dark: true}} />
 	<Composition id="K3Actions" component={Actions} durationInFrames={1} fps={FPS} width={W} height={H} />
+	<Composition id="K3Cycles" component={Cycles} durationInFrames={SEGS.length * SEG_F} fps={FPS} width={W} height={H} />
+	<Composition id="K3Idle" component={Idle} durationInFrames={180} fps={FPS} width={W} height={H} />
+	<Composition id="K3Swim" component={Swim} durationInFrames={180} fps={FPS} width={W} height={H} defaultProps={{mode: 'swim' as const}} />
+	<Composition id="K3Float" component={Swim} durationInFrames={90} fps={FPS} width={W} height={H} defaultProps={{mode: 'float' as const}} />
 </>);
-void useCurrentFrame; void KARL_CYCLE; type _A = Action;

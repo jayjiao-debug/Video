@@ -1,5 +1,5 @@
 import React from 'react';
-import {P, f1, lerp, rnd, noise1, spline, taper, qpts, poly, W} from './kit3';
+import {P, f1, lerp, rnd, noise1, spline, taper, qpts, poly, W, Shape, Glow} from './kit3';
 
 /* ep59 v3 · shared set-dressing generators (pure vector paths). All return path strings or small groups in layer space. */
 
@@ -69,7 +69,7 @@ export const coniferD = (x: number, y: number, h: number, w: number, seed: numbe
 	for (let i = tiers - 1; i >= 0; i--) { const u = i / tiers, yy = y - h * (0.12 + u * 0.86), ww = w * (1 - u) * (0.75 + rnd(i, seed + 9) * 0.5) / 2;
 		pts.push([x + ww * 0.3, yy - h * 0.01], [x + ww, yy + h * 0.035]); }
 	pts.push([x + w * 0.06, y]);
-	return poly(pts); };
+	return poly(pts.map(([px, py], i) => [px, py + (i % 2 ? 0 : h * 0.012)] as P)); };
 /** a row of conifers along a base line (a forest edge), as one path */
 export const forestD = (x0: number, x1: number, y: number, hgt: number, step: number, seed: number, bottom = 1600) => {
 	let d = ''; for (let x = x0, i = 0; x < x1; x += step * (0.6 + rnd(i, seed) * 0.8), i++) d += coniferD(x, y + rnd(i, seed + 2) * hgt * 0.05, hgt * (0.55 + rnd(i, seed + 1) * 0.6), hgt * 0.32, seed + i) + ' ';
@@ -108,3 +108,51 @@ export const droopLeafD = (s: P, b: P, L: number, a: number, wid = 0.42, bend = 
 export const mossD = (pts: P[], seed: number, len = 40) => pts.map((p, i) => { const n = 2 + Math.floor(rnd(i, seed) * 4);
 	return Array.from({length: n}, (_, k) => { const L = len * (0.3 + rnd(k, i + seed) * 1.2), x = p[0] + (rnd(k, i + seed + 2) - 0.5) * 18;
 		return taper([[x, p[1] - 2], [x + (rnd(k, i + 3) - 0.5) * 6, p[1] + L * 0.5], [x + (rnd(k, i + 4) - 0.5) * 10, p[1] + L]], 5 + rnd(k, i) * 5, 1.2); }).join(' '); }).join(' ');
+
+/** side-lit dunes along base y: crests with gentle lit windward faces (toward the light) and steep shadowed slip faces.
+    Returns the body (fill it with the shadow colour), the lit faces and a thin crest rim. light = +1: sun on the right. */
+export const dunesD = (x0: number, x1: number, y: number, amp: number, wl: number, seed: number, light: 1 | -1 = 1, depth = 0.7): {body: string; lit: string; rim: string} => {
+	const pk: P[] = [];
+	for (let x = x0 - wl, i = 0; x < x1 + wl; i++) { pk.push([x, y - amp * (0.35 + rnd(i, seed + 1) * 0.65)]); x += wl * (0.6 + rnd(i, seed) * 0.9); }
+	const crest: P[] = [], lit: string[] = [], rim: string[] = [], bot = y + amp * depth;
+	for (let i = 0; i < pk.length - 1; i++) {
+		const [A, B] = light > 0 ? [pk[i], pk[i + 1]] : [pk[i + 1], pk[i]], V: P = [lerp(A[0], B[0], 0.62), y - amp * 0.06 * (1 + rnd(i, seed + 3))];
+		const down = qpts(A, [lerp(A[0], V[0], 0.55), lerp(A[1], V[1], 0.15)], V, 8), up = qpts(V, [lerp(V[0], B[0], 0.8), V[1]], B, 6);
+		const seg = light > 0 ? [...down, ...up.slice(1)] : [...up.slice().reverse(), ...down.slice(1).reverse()];
+		crest.push(...(crest.length ? seg.slice(1) : seg));
+		const foot: P = [A[0] - light * amp * 0.25, bot];
+		lit.push(spline([...down, [V[0], bot], foot, [A[0] - light * amp * 0.06, lerp(A[1], bot, 0.4)]], true));
+		rim.push(taper(down.slice(0, 6), Math.max(1.5, amp * 0.03), 0.5));
+	}
+	const body = spline([...crest, [crest[crest.length - 1][0], bot + 600], [crest[0][0], bot + 600]], true);
+	return {body, lit: lit.join(' '), rim: rim.join(' ')}; };
+
+/** a Bactrian camel in profile (facing +x unless flipped): two humps, long neck, four legs walking (pace gait), optional packs.
+    (x, y) = between the feet on the ground, h = hump-top height. Returns path strings: [far legs, body + near legs, packs]. */
+export const camelD = (x: number, y: number, h: number, phase: number, pack = true): {far: string; body: string; pack: string} => {
+	const u = phase * Math.PI * 2, H = (fx: number, fy: number): P => [x + fx * h, y - fy * h];
+	const leg = (hx: number, side: number, front: boolean) => { const sw = Math.sin(u + (side > 0 ? 0 : Math.PI)) * 0.13, hip = H(hx, 0.56), knee = H(hx + sw * 0.7 + (front ? 0.02 : -0.03), 0.3), lift = Math.max(0, Math.cos(u + (side > 0 ? 0 : Math.PI))) * 0.05, foot = H(hx + sw * 1.3, lift);
+		return taper([hip, knee, foot], h * (front ? 0.085 : 0.11), h * 0.04) + ' ' + spline([[foot[0] - h * 0.035, foot[1] + 1], [foot[0] + h * 0.06, foot[1] + 1], [foot[0] + h * 0.04, foot[1] - h * 0.035], [foot[0] - h * 0.02, foot[1] - h * 0.03]], true); };
+	const bob = Math.sin(u * 2) * 0.012;
+	const B = (fx: number, fy: number) => H(fx, fy + bob);
+	const body = spline([B(-0.5, 0.62), B(-0.46, 0.8), B(-0.34, 0.86), B(-0.24, 1.0), B(-0.15, 0.86), B(-0.06, 0.84), B(0.04, 0.98), B(0.14, 0.86), B(0.26, 0.8), B(0.36, 0.76),
+		B(0.48, 0.66), B(0.58, 0.74), B(0.66, 0.88), B(0.7, 0.93), B(0.8, 0.93), B(0.86, 0.88), B(0.84, 0.85), B(0.74, 0.84), B(0.68, 0.76), B(0.6, 0.6), B(0.5, 0.56), B(0.36, 0.54),
+		B(0.2, 0.5), B(0.0, 0.48), B(-0.2, 0.48), B(-0.38, 0.52)], true);
+	const tail = taper([B(-0.49, 0.72), B(-0.56, 0.6), B(-0.55, 0.46)], h * 0.04, h * 0.02);
+	const ear = taper([B(0.71, 0.92), B(0.7, 0.98)], h * 0.025, h * 0.01);
+	const packs = pack ? [spline([B(-0.2, 0.86), B(-0.12, 0.9), B(-0.04, 0.87), B(0.02, 0.84), B(0.04, 0.6), B(-0.06, 0.52), B(-0.2, 0.54), B(-0.24, 0.66)], true),
+		spline([B(-0.36, 0.78), B(-0.26, 0.82), B(-0.24, 0.6), B(-0.34, 0.56), B(-0.42, 0.62)], true)].join(' ') : '';
+	return {far: [leg(0.28, -1, true), leg(-0.36, -1, false)].join(' '), body: [body, tail, ear, leg(0.3, 1, true), leg(-0.34, 1, false)].join(' '), pack: packs}; };
+
+/** long broken cloud strata (bumpy tops, flat lit undersides), filled with a vertical gradient top → mid → underside.
+    bands: [y centre, thickness, seed, opacity]; the lowest bands (index ≥ warmFrom) take the warm underside colour. */
+export const CloudBands: React.FC<{bands: [number, number, number, number][]; t: number; top: string; mid: string; under: string; warm: string; warmFrom?: number; id: string; drift?: number}> = ({bands, t, top, mid, under, warm, warmFrom = 3, id, drift = 5}) =>
+	<g>{bands.map(([yc, th, seed, o], b) => {
+		const segs: string[] = [], dx = t * drift * (1 - b * 0.12);
+		for (let x0 = -300 + rnd(b, seed) * 500, j = 0; x0 < W + 300; j++) { const len = (260 + Math.pow(rnd(j, seed), 2) * 1500) * (1 - b * 0.08), gap = (60 + Math.pow(rnd(j, seed + 1), 1.5) * 700) * (1 - b * 0.1), thj = 0.5 + rnd(j, seed + 2) * 0.9, yj = (rnd(j, seed + 3) - 0.5) * th * 0.8;
+			const tp: P[] = [], bt: P[] = [];
+			for (let k = 0; k <= 16; k++) { const u = k / 16, x = x0 + u * len + dx, env = Math.pow(Math.sin(Math.PI * u), 0.5) * thj;
+				tp.push([x, yc + yj - th * env * (0.55 + 0.45 * Math.abs(noise1(x / (60 + b * 10), seed + b)))]); bt.push([x, yc + yj + th * 0.18 * env + noise1(x / 200, seed) * 2]); }
+			segs.push(spline([...tp, ...bt.reverse()], true)); x0 += len + gap; }
+		return <g key={b}><defs><linearGradient id={`${id}${b}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={top} /><stop offset="0.55" stopColor={mid} /><stop offset="1" stopColor={b >= warmFrom ? warm : under} /></linearGradient></defs>
+			<Shape d={segs.join(' ')} fill={`url(#${id}${b})`} o={o} /></g>; })}</g>;

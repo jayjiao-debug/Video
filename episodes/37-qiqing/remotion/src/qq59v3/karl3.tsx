@@ -137,14 +137,14 @@ type Pal = {body: string; hair: string; beard: string; top: string; sleeve: stri
 	pack?: string; packHi?: string; strap?: string; vest?: string; band?: string; hood?: string; ruff?: string; scarf?: string; scarfHi?: string; trim?: string; frost?: string};
 export type Look = {who: 'karl' | 'mum'; head: HeadK; beard: boolean; frost: number; top: TopK; mitts: boolean; boots: 'boot' | 'big' | 'bare' | 'shoe';
 	pack: boolean; hivis: boolean; harness: boolean; lifevest: boolean; wet: boolean; bulk: {torso: number; arm: number; leg: number}; pal: Pal};
-const P0 = {body: FIG, hair: '#262326', beard: '#2c2928', hand: FIG, boots: '#09080b'};
+const P0 = {body: FIG, hair: '#221f21', beard: '#1d1b1c', hand: FIG, boots: '#09080b'};
 export const LOOKS: Record<Attire | 'mum', Look> = {
 	/** 1998: hi-vis vest over a fleece, the big pack (the Beast cart when pushing) */
 	start1998: {who: 'karl', head: 'hair', beard: true, frost: 0, top: 'fleece', mitts: false, boots: 'boot', pack: true, hivis: true, harness: false, lifevest: false, wet: false,
 		bulk: {torso: 1.07, arm: 1.12, leg: 1.0}, pal: {...P0, top: '#18161b', sleeve: '#18161b', legs: '#121116', pack: '#1d1f1b', packHi: '#2b2d27', strap: '#2c2e31', vest: '#565a22', band: '#a3a497'}},
 	/** the Darién: a soaked shirt clinging to him, the pack, a machete */
 	jungle: {who: 'karl', head: 'hair', beard: true, frost: 0, top: 'shirt', mitts: false, boots: 'boot', pack: true, hivis: false, harness: false, lifevest: false, wet: true,
-		bulk: {torso: 1.0, arm: 1.0, leg: 1.0}, pal: {...P0, hair: '#221f1c', top: '#16201a', sleeve: '#16201a', legs: '#111014', pack: '#1b1e19', packHi: '#282b24', strap: '#2b2d2d'}},
+		bulk: {torso: 1.0, arm: 1.0, leg: 1.0}, pal: {...P0, hair: '#1e1c1a', top: '#16201a', sleeve: '#16201a', legs: '#111014', pack: '#1b1e19', packHi: '#282b24', strap: '#2b2d2d'}},
 	/** the Bering Strait: a red expedition suit, hood up, a hauling harness (the red sled) */
 	ice: {who: 'karl', head: 'hood', beard: true, frost: 0.55, top: 'suit', mitts: true, boots: 'big', pack: false, hivis: false, harness: true, lifevest: false, wet: false,
 		bulk: {torso: 1.16, arm: 1.24, leg: 1.16}, pal: {...P0, top: '#4c1518', sleeve: '#4c1518', legs: '#401215', hood: '#4c1518', hand: '#16161b', strap: '#2b303b', frost: '#e4ebef'}},
@@ -167,7 +167,7 @@ export const LOOKS: Record<Attire | 'mum', Look> = {
 
 /* ---------- skeleton & gaits ---------- */
 /** bone lengths (body units) — the CMU mocap's */
-const BL = {thigh: 0.264, shin: 0.269, foot: 0.11, spine: 0.155, neck: 0.0625, head: 0.0618, top: 0.066, upper: 0.194, fore: 0.135, hand: 0.035};
+const BL = {thigh: 0.264, shin: 0.269, foot: 0.11, spine: 0.155, neck: 0.0625, head: 0.0618, top: 0.066, upper: 0.2, fore: 0.148, hand: 0.036};
 const MAPJ: Record<string, string> = {Hips: 'Hips', LUp: 'LeftUpLeg', LKnee: 'LeftLeg', LAnk: 'LeftFoot', LToe: 'LToeTip', RUp: 'RightUpLeg', RKnee: 'RightLeg', RAnk: 'RightFoot', RToe: 'RToeTip',
 	Spine1: 'Spine1', Neck1: 'Neck1', Head: 'Head', Top: 'HeadTop', LSh: 'LeftArm', LElb: 'LeftForeArm', LHand: 'LeftHand', RSh: 'RightArm', RElb: 'RightForeArm', RHand: 'RightHand'};
 const UPPER = ['Spine1', 'Neck1', 'Head', 'Top', 'LSh', 'RSh', 'LElb', 'RElb', 'LHand', 'RHand'];
@@ -176,36 +176,52 @@ const soles = (an: V, to: V) => { const f = nrm(sub(to, an)), n: V = [-f[1], f[0
 const lowOf = (p: Pose) => { const a = soles(p.LAnk, p.LToe), b = soles(p.RAnk, p.RToe); return Math.min(a.heel[1], a.ball[1], b.heel[1], b.ball[1]); };
 const shiftP = (p: Pose, dx: number, dy: number): Pose => { const o: Pose = {}; for (const k of Object.keys(p)) o[k] = [p[k][0] + dx, p[k][1] + dy]; return o; };
 type Gait = {N: number; P: Pose[]; stride: number};
-/** a mocap gait, optionally with shorter steps (sx), the body lowered (drop) and higher swings (lift): knees re-solved by IK;
-    re-grounded every frame and root-locked on the pivot foot (heel, then ball) so a body moving stride·h per cycle never slides */
-const buildGait = (g: string, sx = 1, drop = 0, lift = 0): Gait => {
+/** a mocap gait, optionally with shorter steps (sx scales the thigh swing), bent knees (kAdd, degrees) and higher swings (kSwing, extra
+    knee flexion while the leg is already folding). The leg is re-solved by FK from the mocap's own angles, so the knee pattern stays natural.
+    Re-grounded every frame and root-locked on the pivot of the foot that is moving back (heel, then ball): a body moving stride·h per cycle never slides. */
+const angD = (v: V) => Math.atan2(v[0], -v[1]) / DEG;   // angle from straight down, + = forward
+const buildGait = (g: string, sx = 1, kAdd = 0, kSwing = 0): Gait => {
 	const J = GAITS[g].j, N = J.Hips.length / 2, P: Pose[] = [];
 	for (let i = 0; i < N; i++) {
 		const r: Pose = {}; for (const [k, n] of Object.entries(MAPJ)) r[k] = [J[n][2 * i], J[n][2 * i + 1]];
 		let p: Pose = {...r};
-		if (sx !== 1 || drop || lift) {
-			for (const s of ['L', 'R']) {
-				const up = r[s + 'Up'], kn = r[s + 'Knee'], an = r[s + 'Ank'], to = r[s + 'Toe'], l1 = len(sub(kn, up)), l2 = len(sub(an, kn));
-				const lf = lift * ss(0.085, 0.16, an[1]), an2: V = [an[0] * sx, an[1] + lf], up2: V = [up[0], up[1] - drop];
-				const [k2, a3] = ik2(up2, an2, l1, l2, 1);
-				p[s + 'Up'] = up2; p[s + 'Knee'] = k2; p[s + 'Ank'] = a3; p[s + 'Toe'] = add(a3, sub(to, an));
-			}
-			for (const k of ['Hips', ...UPPER]) p[k] = [p[k][0], p[k][1] - drop];
+		if (sx !== 1 || kAdd || kSwing) for (const s of ['L', 'R']) {
+			const up = r[s + 'Up'], kn = r[s + 'Knee'], an = r[s + 'Ank'], to = r[s + 'Toe'], l1 = len(sub(kn, up)), l2 = len(sub(an, kn));
+			const at = angD(sub(kn, up)), as = angD(sub(an, kn)), k = at - as, k2 = k + kAdd + kSwing * ss(12, 50, k), at2 = at * sx + kAdd * 0.45, as2 = at2 - k2;
+			const kn2 = add(up, mul(down(at2), l1)), an2 = add(kn2, mul(down(as2), l2));
+			p[s + 'Knee'] = kn2; p[s + 'Ank'] = an2; p[s + 'Toe'] = add(an2, rotV(sub(to, an), as2 - as));
 		}
-		p = shiftP(p, 0, -lowOf(p)); P.push(p);
+		for (const s of ['L', 'R']) { const sh0 = p[s + 'Sh'], el0 = p[s + 'Elb'], wr0 = p[s + 'Hand'], sh = add(sh0, [0, -0.014]), el = add(sh, mul(nrm(sub(el0, sh0)), BL.upper));   // longer arms, lower shoulders than the CMU skeleton
+			p[s + 'Sh'] = sh; p[s + 'Elb'] = el; p[s + 'Hand'] = add(el, mul(nrm(sub(wr0, el0)), BL.fore)); }
+		P.push(p);
 	}
-	const root = [0];
+	// the stance foot per frame: of the feet whose pivot (heel while the heel is down, then the ball) travels backward, the lowest
+	type Ft = 'L' | 'R'; type Pv = 'heel' | 'ball';
+	const ST: {f: Ft; k: Pv}[] = [];
 	for (let i = 0; i < N; i++) {
 		const a = P[i], b = P[(i + 1) % N], sa = {L: soles(a.LAnk, a.LToe), R: soles(a.RAnk, a.RToe)}, sb = {L: soles(b.LAnk, b.LToe), R: soles(b.RAnk, b.RToe)};
-		const f = Math.min(sa.L.heel[1], sa.L.ball[1]) <= Math.min(sa.R.heel[1], sa.R.ball[1]) ? 'L' : 'R', k = sa[f].heel[1] <= sa[f].ball[1] ? 'heel' : 'ball';
-		root.push(root[i] - (sb[f][k][0] - sa[f][k][0]));
+		const piv = (f: Ft) => { const k: Pv = sa[f].heel[1] <= sa[f].ball[1] ? 'heel' : 'ball'; return {k, v: sb[f][k][0] - sa[f][k][0], low: Math.min(sa[f].heel[1], sa[f].ball[1])}; };
+		const pl = piv('L'), pr = piv('R'), back = [pl.v < 0, pr.v < 0];
+		const f: Ft = back[0] && !back[1] ? 'L' : back[1] && !back[0] ? 'R' : pl.low <= pr.low ? 'L' : 'R';
+		ST.push({f, k: f === 'L' ? pl.k : pr.k});
 	}
-	const L = root[N];
-	return {N, P: P.map((p, i) => shiftP(p, root[i] - (i / N) * L, 0)), stride: L};
+	// ground every frame on its stance pivot (not on the lowest point: a swinging heel may skim lower)
+	for (let i = 0; i < N; i++) { const {f, k} = ST[i]; P[i] = shiftP(P[i], 0, -soles(P[i][f + 'Ank'], P[i][f + 'Toe'])[k][1]); }
+	const root = [0];
+	for (let i = 0; i < N; i++) { const {f, k} = ST[i], j = (i + 1) % N; root.push(root[i] - (soles(P[j][f + 'Ank'], P[j][f + 'Toe'])[k][0] - soles(P[i][f + 'Ank'], P[i][f + 'Toe'])[k][0])); }
+	const L0 = root[N];
+	// the swing foot keeps a clearance that shrinks with its speed over the ground, so the heel comes down as it stops (no skating at heel strike)
+	for (let i = 0; i < N; i++) {
+		const sw = ST[i].f === 'L' ? 'R' : 'L', j = (i + 1) % N, p = P[i], so = soles(p[sw + 'Ank'], p[sw + 'Toe']), low = Math.min(so.heel[1], so.ball[1]);
+		const vw = Math.abs((P[j][sw + 'Ank'][0] + root[i + 1]) - (p[sw + 'Ank'][0] + root[i])) * N, need = 0.015 * ss(0.05, 1.7, vw) - low;
+		if (need > 0) { const up = p[sw + 'Up'], kn = p[sw + 'Knee'], an = p[sw + 'Ank'], an2: V = [an[0], an[1] + need], [k2, a3] = ik2(up, an2, len(sub(kn, up)), len(sub(an, kn)), 1);
+			P[i] = {...p, [sw + 'Knee']: k2, [sw + 'Ank']: a3, [sw + 'Toe']: add(a3, sub(p[sw + 'Toe'], an))}; }
+	}
+	return {N, P: P.map((p, i) => shiftP(p, root[i] - (i / N) * L0, 0)), stride: L0};
 };
 const gaitAt = (G: Gait, u: number): Pose => { const x = fr(u) * G.N, i = Math.floor(x), f = x - i, a = G.P[i % G.N], b = G.P[(i + 1) % G.N], o: Pose = {};
 	for (const k of Object.keys(a)) o[k] = [lerp(a[k][0], b[k][0], f), lerp(a[k][1], b[k][1], f)]; return o; };
-const G_WALK = buildGait('08_04'), G_PUSH = buildGait('08_04', 0.9, 0.012), G_HAUL = buildGait('08_04', 0.76, 0.035), G_WADE = buildGait('08_04', 0.55, 0.03, 0.05), G_MUM = buildGait('08_04', 0.74, 0.012);
+const G_WALK = buildGait('08_04'), G_PUSH = buildGait('08_04', 0.9, 4), G_HAUL = buildGait('08_04', 0.8, 11), G_WADE = buildGait('08_04', 0.62, 5, 22), G_MUM = buildGait('08_04', 0.76, 3);
 /** natural seconds per cycle and body units travelled per cycle, per action */
 export const KARL_CYCLE: Record<Action, {sec: number; stride: number}> = {
 	walk: {sec: 1.3, stride: G_WALK.stride}, pushCart: {sec: 1.36, stride: G_PUSH.stride}, haulSled: {sec: 1.55, stride: G_HAUL.stride},
@@ -223,7 +239,7 @@ const fkRaw = (k: FK, hipY = 1): Pose => {
 	const leg = (t: number, kn: number, ft = 0): V[] => { const u = add(hips, [0, -0.066]), kp = add(u, mul(down(t), BL.thigh)), an = add(kp, mul(down(t - kn), BL.shin)); return [u, kp, an, add(an, [Math.cos(ft * DEG) * BL.foot, -0.025 + Math.sin(ft * DEG) * BL.foot])]; };
 	const [LUp, LKnee, LAnk, LToe] = leg(k.lt, k.lk, k.lf ?? 0), [RUp, RKnee, RAnk, RToe] = leg(k.rt, k.rk, k.rf ?? 0);
 	const nk = k.neck ?? 0, sp = add(hips, up(k.lean, BL.spine)), n1 = add(sp, up(k.lean + nk * 0.4, BL.neck)), hd = add(n1, up(k.lean + nk, BL.head)), top = add(hd, up(k.lean + nk, BL.top));
-	const sh = add(sp, up(k.lean, BL.neck * 0.82));
+	const sh = add(sp, up(k.lean, BL.neck * 0.6));
 	const arm = (a: number, e: number): V[] => { const el = add(sh, mul(down(a), BL.upper)); return [el, add(el, mul(down(a + e), BL.fore))]; };
 	const [LElb, LHand] = arm(k.la, k.le), [RElb, RHand] = arm(k.ra, k.re);
 	return {Hips: hips, LUp, LKnee, LAnk, LToe, RUp, RKnee, RAnk, RToe, Spine1: sp, Neck1: n1, Head: hd, Top: top, LSh: sh, LElb, LHand, RSh: add(sh, [0.006, -0.008]), RElb, RHand};
@@ -264,7 +280,7 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 	const tight = lk.top === 'wetsuit';
 	const leg = (s: 'L' | 'R', fill: string): Sh[] => {
 		const up = pose[s + 'Up'], kn = pose[s + 'Knee'], an = pose[s + 'Ank'], to = pose[s + 'Toe'], ext = add(up, mul(nrm(sub(up, kn)), 0.06));
-		const pts = [ext, ...along(up, kn, 5), ...along(kn, an, 5).slice(1)], n = pts.length - 1, U = (i: number) => i / n, k = B.leg;
+		const pts = [ext, ...along(up, kn, 5), ...along(kn, an, 5).slice(1)], n = pts.length - 1, U = (i: number) => i / n, k = B.leg * (lk.who === 'mum' ? 1 : 1.05);
 		const back = pts.map((_, i) => { const u = U(i); return (tight ? (u < 0.5 ? lerp(0.07, 0.034, ss(0, 0.5, u)) : 0.026 + 0.016 * Math.sin(Math.PI * clamp((u - 0.5) * 2.3)) - 0.006 * ss(0.85, 1, u))
 			: (u < 0.5 ? lerp(0.074, 0.042, ss(0, 0.5, u)) : lerp(0.042, 0.034, (u - 0.5) * 2))) * k; });
 		const front = pts.map((_, i) => { const u = U(i); return (tight ? (u < 0.5 ? lerp(0.058, 0.03, u * 2) : lerp(0.03, 0.022, (u - 0.5) * 2)) : (u < 0.5 ? lerp(0.06, 0.036, u * 2) : lerp(0.036, 0.031, (u - 0.5) * 2))) * k; });
@@ -281,7 +297,7 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 	out.farLeg.push(...leg('R', far(pal.legs))); out.nearLeg.push(...leg('L', pal.legs));
 	/* --- arms + hands --- */
 	const arm = (s: 'L' | 'R', fill: string, hk: HandK, hd?: V): Sh[] => {
-		const sh0 = pose[s + 'Sh'], el = pose[s + 'Elb'], wr = pose[s + 'Hand'], ext = add(sh0, mul(nrm(sub(sh0, el)), 0.035));
+		const sh0 = pose[s + 'Sh'], el = pose[s + 'Elb'], wr = pose[s + 'Hand'], ext = add(sh0, mul(nrm(sub(sh0, el)), 0.026));
 		const pts = [ext, ...along(sh0, el, 4), ...along(el, wr, 4).slice(1)], n = pts.length - 1, k = B.arm;
 		const wa = pts.map((_, i) => { const u = i / n; return (u < 0.12 ? 0.04 : u < 0.5 ? lerp(0.038, 0.025, (u - 0.12) / 0.38) : u < 0.72 ? lerp(0.025, 0.027, (u - 0.5) / 0.22) : lerp(0.027, 0.019, (u - 0.72) / 0.28)) * k * h; });
 		const wb = pts.map((_, i) => { const u = i / n; return (u < 0.12 ? 0.038 : u < 0.5 ? lerp(0.036, 0.024, (u - 0.12) / 0.38) : lerp(0.024, 0.018, (u - 0.5) / 0.5)) * k * h; });
@@ -297,7 +313,7 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 	out.farArm.push(...arm('R', far(pal.sleeve), o.handR ?? 'open', o.dirR)); out.nearArm.push(...arm('L', pal.sleeve, o.handL ?? 'open', o.dirL));
 	/* --- torso (the body under the clothes) --- */
 	/* torso profile: [s, front, back] half-widths; the body reaches down to the crotch (s ≈ -0.145) */
-	const L = l1 + len(sub(C, Bp)), bt = B.torso, mumB = lk.who === 'mum';
+	const L = l1 + len(sub(C, Bp)), bt = B.torso * (lk.who === 'mum' ? 1 : 1.06), mumB = lk.who === 'mum';
 	const TK = mumB ? [[-0.145, 0.046, 0.05], [-0.105, 0.058, 0.074], [-0.055, 0.06, 0.08], [-0.005, 0.054, 0.062], [0.05, 0.058, 0.056], [0.1, 0.068, 0.062], [0.15, 0.064, 0.068], [0.19, 0.054, 0.066], [L, 0.03, 0.034]]
 		: [[-0.145, 0.048, 0.052], [-0.105, 0.06, 0.072], [-0.055, 0.064, 0.078], [-0.005, 0.059, 0.064], [0.05, 0.061, 0.058], [0.1, 0.071, 0.064], [0.15, 0.069, 0.071], [0.19, 0.06, 0.07], [L, 0.033, 0.037]];
 	const tw = (s: number): [number, number] => { if (s <= TK[0][0]) return [TK[0][1], TK[0][2]]; for (let i = 1; i < TK.length; i++) if (s <= TK[i][0]) { const u = (s - TK[i - 1][0]) / (TK[i][0] - TK[i - 1][0]); return [lerp(TK[i - 1][1], TK[i][1], u), lerp(TK[i - 1][2], TK[i][2], u)]; } return [TK[TK.length - 1][1], TK[TK.length - 1][2]]; };
@@ -364,55 +380,61 @@ const figure = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Parts => {
 /** the one head: skull + face profile, the short full beard, medium hair swept back (or the attire's headwear) */
 const headShapes = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Sh[] => {
 	const {S, h} = cx, pal = lk.pal, {O, U, F} = headO(pose), H = (a: number, b: number): V => S(add(add(O, mul(F, a)), mul(U, b))), Hs = (a: number, b: number) => ps(H(a, b));
-	const out: Sh[] = [], mum = lk.who === 'mum';
-	const hairD = (wet: boolean) => wet
-		? `M${Hs(0.05, 0.034)} C${Hs(0.058, 0.06)} ${Hs(0.035, 0.078)} ${Hs(0.0, 0.077)} C${Hs(-0.048, 0.076)} ${Hs(-0.072, 0.046)} ${Hs(-0.07, 0.0)} C${Hs(-0.07, -0.03)} ${Hs(-0.064, -0.05)} ${Hs(-0.07, -0.068)} Q${Hs(-0.06, -0.072)} ${Hs(-0.05, -0.06)} Q${Hs(-0.046, -0.03)} ${Hs(-0.036, -0.008)} Q${Hs(-0.005, 0.03)} ${Hs(0.05, 0.034)} Z`
-		: `M${Hs(0.05, 0.036)} C${Hs(0.064, 0.068)} ${Hs(0.04, 0.09)} ${Hs(0.0, 0.088)} C${Hs(-0.052, 0.086)} ${Hs(-0.08, 0.052)} ${Hs(-0.078, 0.0)} C${Hs(-0.078, -0.03)} ${Hs(-0.072, -0.056)} ${Hs(-0.084, -0.078)} Q${Hs(-0.07, -0.084)} ${Hs(-0.054, -0.07)} Q${Hs(-0.048, -0.04)} ${Hs(-0.038, -0.01)} Q${Hs(-0.006, 0.03)} ${Hs(0.05, 0.036)} Z`;
-	const sweep = `M${Hs(0.046, 0.052)} C${Hs(0.024, 0.08)} ${Hs(-0.04, 0.078)} ${Hs(-0.064, 0.044)} Q${Hs(-0.03, 0.064)} ${Hs(0.046, 0.052)} Z`;
-	// skull + face (faceless profile: brow, nose, lips, chin)
+	const out: Sh[] = [], mum = lk.who === 'mum', frost = o.frost ?? lk.frost;
+	/* medium-length hair swept back from a high forehead, falling to the collar in a few locks (the 2026 photos); wet = flatter, darker */
+	const hairD = (wet: boolean) => { const q = wet ? 0.9 : 1, P = (a0: number, b0: number) => Hs(a0, b0 > 0.03 ? 0.03 + (b0 - 0.03) * q : b0);
+		return `M${P(0.04, 0.05)} C${P(0.056, 0.064)} ${P(0.048, 0.088)} ${P(0.014, 0.09)} C${P(-0.03, 0.092)} ${P(-0.07, 0.074)} ${P(-0.08, 0.035)} C${P(-0.086, 0.0)} ${P(-0.08, -0.03)} ${P(-0.082, -0.05)}`
+			+ ` L${P(-0.092, -0.082)} L${P(-0.074, -0.066)} L${P(-0.08, -0.092)} L${P(-0.063, -0.071)} L${P(-0.06, -0.084)} Q${P(-0.05, -0.06)} ${P(-0.048, -0.04)} Q${P(-0.044, -0.012)} ${P(-0.03, 0.0)} Q${P(-0.012, 0.02)} ${P(0.006, 0.036)} Q${P(0.022, 0.046)} ${P(0.04, 0.05)} Z`; };
+	const combs = [[0.03, 0.074, -0.054, 0.062], [0.008, 0.06, -0.066, 0.032]].map(([a0, b0, a1, b1]) =>
+		`M${Hs(a0, b0)} Q${Hs((a0 + a1) / 2, Math.max(b0, b1) + 0.012)} ${Hs(a1, b1)} Q${Hs((a0 + a1) / 2, Math.max(b0, b1) + 0.009)} ${Hs(a0, b0 - 0.003)} Z`);
+	/* the faceless profile: sloping forehead, brow, a clear nose, lips; and the short full beard close along the jaw, a little proud at the chin */
 	const face = mum
-		? `M${Hs(-0.028, -0.055)} C${Hs(-0.064, -0.03)} ${Hs(-0.068, 0.04)} ${Hs(-0.032, 0.058)} C${Hs(-0.004, 0.07)} ${Hs(0.042, 0.058)} ${Hs(0.048, 0.028)} L${Hs(0.052, 0.012)} Q${Hs(0.05, 0.003)} ${Hs(0.053, -0.002)} L${Hs(0.064, -0.018)} Q${Hs(0.06, -0.024)} ${Hs(0.054, -0.025)} L${Hs(0.056, -0.034)} L${Hs(0.052, -0.039)} L${Hs(0.054, -0.044)} Q${Hs(0.052, -0.058)} ${Hs(0.038, -0.062)} Q${Hs(0.016, -0.066)} ${Hs(0.0, -0.058)} Z`
-		: `M${Hs(-0.03, -0.055)} C${Hs(-0.068, -0.03)} ${Hs(-0.072, 0.04)} ${Hs(-0.035, 0.06)} C${Hs(-0.005, 0.074)} ${Hs(0.045, 0.062)} ${Hs(0.052, 0.03)} L${Hs(0.056, 0.014)} Q${Hs(0.053, 0.004)} ${Hs(0.057, -0.002)} L${Hs(0.071, -0.02)} Q${Hs(0.066, -0.026)} ${Hs(0.058, -0.027)} L${Hs(0.061, -0.036)} L${Hs(0.057, -0.041)} L${Hs(0.06, -0.047)} Q${Hs(0.06, -0.062)} ${Hs(0.045, -0.068)} Q${Hs(0.02, -0.072)} ${Hs(0.0, -0.062)} Z`;
-	const beard = `M${Hs(-0.006, 0.004)} Q${Hs(0.028, -0.004)} ${Hs(0.048, -0.012)} Q${Hs(0.06, -0.02)} ${Hs(0.067, -0.029)} L${Hs(0.066, -0.035)} Q${Hs(0.061, -0.039)} ${Hs(0.066, -0.045)} Q${Hs(0.074, -0.07)} ${Hs(0.05, -0.083)} Q${Hs(0.02, -0.088)} ${Hs(-0.008, -0.067)} Q${Hs(-0.02, -0.03)} ${Hs(-0.006, 0.004)} Z`;
-	const frostDots = (n: number, region: (i: number) => V, r0: number) => { const fr0 = o.frost ?? lk.frost; if (fr0 <= 0) return;
-		for (let i = 0; i < n; i++) { const p = region(i); out.push({d: circD(p, (r0 + r0 * 0.8 * rnd(i, 9)) * h), f: pal.frost ?? '#e4ebef', o: fr0 * (0.55 + 0.4 * rnd(i, 4))}); } };
-	const beardFrost = () => frostDots(16, (i) => H(lerp(-0.004, 0.068, rnd(i, 1)), lerp(-0.082, -0.012, rnd(i, 2)) + 0.012 * (rnd(i, 1) - 0.5)), 0.0042);
+		? `M${Hs(-0.028, -0.055)} C${Hs(-0.064, -0.03)} ${Hs(-0.068, 0.04)} ${Hs(-0.032, 0.058)} C${Hs(-0.004, 0.07)} ${Hs(0.03, 0.064)} ${Hs(0.04, 0.046)} Q${Hs(0.052, 0.032)} ${Hs(0.053, 0.014)} Q${Hs(0.054, 0.004)} ${Hs(0.05, 0.0)} Q${Hs(0.058, -0.008)} ${Hs(0.066, -0.022)} Q${Hs(0.064, -0.028)} ${Hs(0.055, -0.028)} L${Hs(0.057, -0.035)} L${Hs(0.053, -0.04)} L${Hs(0.055, -0.045)} Q${Hs(0.054, -0.058)} ${Hs(0.04, -0.063)} Q${Hs(0.016, -0.066)} ${Hs(0.0, -0.058)} Z`
+		: `M${Hs(-0.03, -0.055)} C${Hs(-0.068, -0.03)} ${Hs(-0.072, 0.04)} ${Hs(-0.035, 0.06)} C${Hs(-0.005, 0.074)} ${Hs(0.03, 0.068)} ${Hs(0.042, 0.05)} Q${Hs(0.056, 0.036)} ${Hs(0.058, 0.016)} Q${Hs(0.06, 0.006)} ${Hs(0.054, 0.001)} Q${Hs(0.064, -0.008)} ${Hs(0.077, -0.024)} Q${Hs(0.075, -0.031)} ${Hs(0.062, -0.031)} L${Hs(0.064, -0.038)} L${Hs(0.06, -0.043)} L${Hs(0.063, -0.048)} Q${Hs(0.064, -0.062)} ${Hs(0.05, -0.068)} Q${Hs(0.02, -0.072)} ${Hs(0.0, -0.062)} Z`;
+	const beard = `M${Hs(-0.004, 0.0)} Q${Hs(0.004, -0.02)} ${Hs(0.03, -0.023)} Q${Hs(0.05, -0.025)} ${Hs(0.062, -0.031)} L${Hs(0.067, -0.036)} Q${Hs(0.06, -0.04)} ${Hs(0.066, -0.046)} Q${Hs(0.075, -0.066)} ${Hs(0.057, -0.081)} Q${Hs(0.03, -0.091)} ${Hs(0.0, -0.072)} Q${Hs(-0.014, -0.04)} ${Hs(-0.004, 0.0)} Z`;
+	const brow = chainD([H(0.034, 0.012), H(0.046, 0.016), H(0.058, 0.013)], [0.003 * h, 0.004 * h, 0.003 * h], [0.002 * h, 0.003 * h, 0.002 * h]);
+	const frostOn = (k: number) => { if (k <= 0) return;   // rime: the beard goes pale, ice beads on it and on the brow
+		out.push({d: beard, f: pal.frost ?? '#e4ebef', o: 0.42 * k}); out.push({d: brow, f: pal.frost ?? '#e4ebef', o: 0.8 * k});
+		for (let i = 0; i < 18; i++) { const a0 = lerp(0.006, 0.068, rnd(i, 1)), b0 = lerp(-0.084, -0.026, rnd(i, 2)); if (a0 < 0.02 && b0 > -0.03) continue;
+			out.push({d: circD(H(a0, b0), (0.0022 + 0.0018 * rnd(i, 3)) * h), f: pal.frost ?? '#e4ebef', o: k * (0.6 + 0.4 * rnd(i, 4))}); } };
 	switch (lk.head) {
 		case 'hair': case 'wet':
-			out.push({d: face, f: pal.body}); out.push({d: beard, f: pal.beard}); out.push({d: hairD(lk.head === 'wet'), f: pal.hair});
-			out.push({d: sweep, f: mixHex(pal.hair, '#8a8070', 0.12)}); break;
-		case 'scarf': {
-			out.push({d: face, f: pal.body}); out.push({d: beard, f: pal.beard});
-			out.push({d: `M${Hs(-0.05, -0.02)} C${Hs(-0.076, -0.04)} ${Hs(-0.072, -0.058)} ${Hs(-0.084, -0.078)} Q${Hs(-0.07, -0.084)} ${Hs(-0.054, -0.07)} Q${Hs(-0.048, -0.04)} ${Hs(-0.04, -0.02)} Z`, f: pal.hair});
-			const t = o.t, wd = o.wind ?? 1, tail: V[] = [];
-			for (let i = 0; i <= 6; i++) { const u = i / 6, fl = Math.sin(t * 6.5 - u * 3.4) * 0.012 * u * wd; tail.push(H(-0.074 - 0.022 * u - 0.03 * u * u * wd + fl, -0.03 - 0.13 * u)); }
-			out.push({d: chainD(tail, tail.map((_, i) => (0.017 - 0.004 * i / 6) * h), tail.map((_, i) => (0.017 - 0.006 * i / 6) * h)), f: mixHex(pal.scarf ?? '#4c4130', '#000000', 0.18)});
-			out.push({d: `M${Hs(0.058, 0.024)} C${Hs(0.072, 0.072)} ${Hs(0.034, 0.104)} ${Hs(-0.02, 0.1)} C${Hs(-0.074, 0.096)} ${Hs(-0.094, 0.052)} ${Hs(-0.09, 0.0)} Q${Hs(-0.088, -0.03)} ${Hs(-0.07, -0.042)} Q${Hs(-0.032, -0.012)} ${Hs(-0.004, 0.018)} Q${Hs(0.03, 0.03)} ${Hs(0.058, 0.024)} Z`, f: pal.scarf ?? '#4c4130'});
-			for (const [a0, b0] of [[0.05, 0.05], [0.03, 0.075]]) out.push({d: `M${Hs(a0, b0)} Q${Hs(a0 - 0.05, b0 + 0.02)} ${Hs(a0 - 0.11, b0 - 0.02)} Q${Hs(a0 - 0.05, b0 + 0.008)} ${Hs(a0, b0)} Z`, f: pal.scarfHi ?? '#625540'});
-			out.push({d: circD(H(-0.078, -0.032), 0.016 * h), f: pal.scarfHi ?? '#625540'});
-			break; }
-		case 'hood': case 'ruff': {
+			out.push({d: face, f: pal.body}, {d: beard, f: pal.beard}, {d: hairD(lk.head === 'wet'), f: pal.hair});
+			for (const c of combs) out.push({d: c, f: mixHex(pal.hair, '#9a907e', 0.14)});
+			frostOn(frost); break;
+		case 'scarf': {   // a long cotton scarf wound round the head (the hair shows at the nape), two ends hanging from a knot at the back
+			const sc = pal.scarf ?? '#4c4130', hi = pal.scarfHi ?? '#625540', lo = mixHex(sc, '#000000', 0.22);
+			out.push({d: face, f: pal.body}, {d: beard, f: pal.beard}, {d: hairD(false), f: pal.hair});
+			const t = o.t, wd = o.wind ?? 1;
+			for (const [k, len0, ph0] of [[0, 0.15, 0], [1, 0.11, 1.3]]) { const tail: V[] = [];
+				for (let i = 0; i <= 6; i++) { const u = i / 6, fl = Math.sin(t * 6.2 - u * 3.4 + ph0) * 0.012 * u * wd; tail.push(H(-0.078 - 0.01 * k - 0.02 * u - 0.028 * u * u * wd + fl, -0.03 - len0 * u)); }
+				out.push({d: chainD(tail, tail.map((_, i) => (0.016 - 0.005 * i / 6) * h), tail.map((_, i) => (0.016 - 0.007 * i / 6) * h)), f: k ? lo : mixHex(sc, '#000000', 0.12)}); }
+			out.push({d: `M${Hs(0.06, 0.034)} C${Hs(0.07, 0.07)} ${Hs(0.042, 0.1)} ${Hs(-0.01, 0.102)} C${Hs(-0.062, 0.1)} ${Hs(-0.094, 0.07)} ${Hs(-0.096, 0.025)} Q${Hs(-0.097, -0.015)} ${Hs(-0.076, -0.04)} Q${Hs(-0.042, -0.018)} ${Hs(-0.022, 0.004)} Q${Hs(0.02, 0.032)} ${Hs(0.06, 0.034)} Z`, f: sc});
+			for (const [a0, b0, a1, b1] of [[0.062, 0.046, -0.07, 0.084], [0.048, 0.078, -0.09, 0.04], [0.03, 0.032, -0.08, 0.0]]) { const m = mixV([a0, b0], [a1, b1], 0.5);
+				out.push({d: chainD([H(a0, b0), H(m[0], m[1] + 0.008), H(a1, b1)], [0.003 * h, 0.0055 * h, 0.003 * h], [0.003 * h, 0.0055 * h, 0.003 * h]), f: hi}); }
+			out.push({d: circD(H(-0.082, -0.03), 0.018 * h), f: hi});
+			frostOn(frost); break; }
+		case 'hood': case 'ruff': {   // hood up: the face shows in its opening (brow, nose, the beard)
 			const hood = pal.hood ?? pal.top, ruff = lk.head === 'ruff';
-			out.push({d: `M${Hs(0.058, 0.06)} C${Hs(0.042, 0.1)} ${Hs(-0.05, 0.104)} ${Hs(-0.084, 0.05)} C${Hs(-0.106, -0.01)} ${Hs(-0.1, -0.09)} ${Hs(-0.07, -0.13)} L${Hs(0.0, -0.122)} Q${Hs(0.036, -0.104)} ${Hs(0.046, -0.086)} Z`, f: hood});
-			out.push({d: face, f: pal.body}); out.push({d: beard, f: pal.beard}); beardFrost();
-			// the hood's side panel over the cheek (the face shows in its opening)
-			out.push({d: `M${Hs(0.058, 0.06)} Q${Hs(0.018, 0.03)} ${Hs(0.016, -0.02)} Q${Hs(0.014, -0.07)} ${Hs(0.046, -0.086)} L${Hs(0.0, -0.122)} L${Hs(-0.07, -0.13)} C${Hs(-0.1, -0.09)} ${Hs(-0.106, -0.01)} ${Hs(-0.084, 0.05)} C${Hs(-0.05, 0.104)} ${Hs(0.042, 0.1)} ${Hs(0.058, 0.06)} Z`, f: hood});
-			if (ruff) {   // a ragged fur ruff framing the face, a little proud of the nose
-				const n = 15, pts: V[] = [];
-				for (let i = 0; i <= n; i++) { const u = i / n, a = 0.03 + 0.012 * Math.sin(Math.PI * u) + (i % 2 ? 0.026 : 0.008) + 0.004 * Math.sin(o.t * 3 + i), b = lerp(0.082, -0.096, u); pts.push(H(a, b)); }
-				for (let i = n; i >= 0; i--) { const u = i / n; pts.push(H(0.012 + 0.004 * Math.sin(Math.PI * u), lerp(0.07, -0.088, u))); }
+			const outer = `M${Hs(0.056, 0.066)} C${Hs(0.04, 0.104)} ${Hs(-0.05, 0.108)} ${Hs(-0.086, 0.052)} C${Hs(-0.106, -0.01)} ${Hs(-0.1, -0.09)} ${Hs(-0.07, -0.132)} L${Hs(0.0, -0.126)} Q${Hs(0.036, -0.108)} ${Hs(0.048, -0.09)}`;
+			out.push({d: outer + ` L${Hs(0.03, -0.02)} Z`, f: hood});
+			out.push({d: face, f: pal.body}, {d: beard, f: pal.beard}); frostOn(frost);
+			out.push({d: outer + ` Q${Hs(0.02, -0.07)} ${Hs(0.022, -0.02)} Q${Hs(0.024, 0.036)} ${Hs(0.056, 0.066)} Z`, f: hood});   // the side of the hood over the cheek and ear
+			if (ruff) {   // a ragged fur ruff round the opening: proud over the brow and under the chin; the nose and the frosted beard poke through
+				const n = 17, pts: V[] = [], cen = (u: number): V => [0.024 + 0.03 * (1 - Math.sin(Math.PI * u)) ** 1.5, lerp(0.088, -0.1, u)];
+				for (let i = 0; i <= n; i++) { const u = i / n, c = cen(u), j = (i % 2 ? 0.02 : 0.006) + 0.003 * Math.sin(o.t * 3 + i * 1.3); pts.push(H(c[0] + j, c[1])); }
+				for (let i = n; i >= 0; i--) { const u = i / n, c = cen(u); pts.push(H(c[0] - 0.018, c[1] * 0.96)); }
 				out.push({d: closedD(pts), f: pal.ruff ?? '#4d473e'});
-				frostDots(12, (i) => H(lerp(0.045, 0.068, rnd(i, 3)), lerp(0.078, -0.09, i / 11)), 0.0038);
-			} else out.push({d: chainD([H(0.061, 0.07), H(0.04, 0.02), H(0.04, -0.04), H(0.055, -0.09)], [0.006 * h, 0.006 * h, 0.006 * h, 0.006 * h], [0.006 * h, 0.006 * h, 0.006 * h, 0.006 * h]), f: mixHex(hood, '#000000', 0.35)});
+				if (frost > 0) for (let i = 0; i < 12; i++) { const c = cen((i + 0.5) / 12); out.push({d: circD(H(c[0] + 0.006 + 0.012 * rnd(i, 3), c[1]), (0.0022 + 0.0016 * rnd(i, 5)) * h), f: pal.frost ?? '#e4ebef', o: frost * 0.8}); }
+			} else out.push({d: chainD([H(0.056, 0.07), H(0.024, 0.03), H(0.022, -0.04), H(0.048, -0.094)], [0.006 * h, 0.006 * h, 0.006 * h, 0.006 * h], [0.004 * h, 0.004 * h, 0.004 * h, 0.004 * h]), f: mixHex(hood, '#000000', 0.4)});
 			break; }
-		case 'mum': {
+		case 'mum': {   // short curled grey hair, ear length
 			out.push({d: face, f: pal.body});
-			const pts: V[] = [[-0.024, 0.045], [-0.07, 0.036], [-0.082, -0.01], [-0.078, -0.052], [-0.056, -0.064], [-0.072, -0.028], [-0.086, 0.02], [-0.08, 0.06], [-0.05, 0.086], [-0.01, 0.092], [0.032, 0.082], [0.056, 0.058], [0.06, 0.034], [0.046, 0.038]];
+			const pts: V[] = [[-0.024, 0.045], [-0.07, 0.036], [-0.082, -0.01], [-0.078, -0.052], [-0.056, -0.064], [-0.072, -0.028], [-0.086, 0.02], [-0.08, 0.06], [-0.05, 0.086], [-0.01, 0.092], [0.032, 0.082], [0.054, 0.058], [0.056, 0.036], [0.042, 0.04]];
 			const P = pts.map(([a, b]) => H(a, b)); let d = `M${ps(H(0.02, 0.05))} L${ps(P[0])}`;
-			for (let i = 1; i < P.length; i++) { const a = P[i - 1], c = P[i], m = mixV(a, c, 0.5), nx = -(c[1] - a[1]), ny = c[0] - a[0], nl = Math.hypot(nx, ny) || 1; d += ` Q${ps([m[0] - nx / nl * 0.012 * h, m[1] - ny / nl * 0.012 * h])} ${ps(c)}`; }
+			for (let i = 1; i < P.length; i++) { const a = P[i - 1], c = P[i], m = mixV(a, c, 0.5), nx = -(c[1] - a[1]), ny = c[0] - a[0], nl = Math.hypot(nx, ny) || 1; d += ` Q${ps([m[0] - nx / nl * 0.011 * h, m[1] - ny / nl * 0.011 * h])} ${ps(c)}`; }
 			out.push({d: d + 'Z', f: pal.hair}); break; }
 	}
-	if (lk.head === 'hair' || lk.head === 'wet' || lk.head === 'scarf') beardFrost();
 	return out;
 };
 
@@ -421,7 +443,7 @@ const headShapes = (cx: Ctx, pose: Pose, lk: Look, o: FigOpt): Sh[] => {
    ============================================================================================================ */
 const CART_R: Record<CartKind, number> = {beast98: 0.14, winter: 0.17, orange: 0.17};
 /** the grip of the cart's handlebar relative to its axle at rest (body units; the cart is ahead of the walker) */
-const CART_GRIP: Record<CartKind, V> = {beast98: [-0.74, 0.44], winter: [-0.8, 0.42], orange: [-0.8, 0.42]};
+const CART_GRIP: Record<CartKind, V> = {beast98: [-0.56, 0.45], winter: [-0.6, 0.42], orange: [-0.6, 0.42]};
 /** cart layers: `grip` = where the hands hold the handlebar (body units, ground y = 0), the axle sits on the ground ahead;
     `dist` = distance rolled (body units) → the wheels turn. Returns back/front shape lists. */
 const cartShapes = (cx: Ctx, kind: CartKind, grip: V, dist: number, t: number): {back: Sh[]; front: Sh[]} => {
@@ -436,8 +458,9 @@ const cartShapes = (cx: Ctx, kind: CartKind, grip: V, dist: number, t: number): 
 	wheel(add(S(A), [-0.02 * h, -0.012 * h]), R, back, '#1c1c22');
 	// the handlebar: a long bar from the cart's rear frame up to a bike handlebar at the grip
 	const gS = Cc(g0[0], g0[1]);
-	back.push({d: barD(Cc(-0.16, 0.06), gS, 0.016 * h), f: frame});
-	back.push({d: barD(Cc(g0[0] + 0.02, g0[1] - 0.075), add(gS, [0, -0.004 * h]), 0.016 * h), f: frame});   // the stem
+	back.push({d: barD(Cc(-0.2, 0.1), Cc(g0[0] + 0.05, g0[1] - 0.06), 0.02 * h), f: frame});
+	back.push({d: barD(Cc(g0[0] + 0.05, g0[1] - 0.064), add(gS, [0.004 * h, 0.006 * h]), 0.018 * h), f: frame});   // the stem up to the bar
+	back.push({d: barD(add(gS, [-0.018 * h, -0.004 * h]), add(gS, [0.022 * h, 0.0]), 0.02 * h), f: frame});        // the handlebar end
 	back.push({d: barD(Cc(-0.26, 0.04), Cc(0.3, 0.04), 0.02 * h), f: frame});
 	if (kind === 'beast98') {   // a jogging-stroller frame under a hi-vis cover
 		back.push({d: cl([[-0.27, 0.05], [-0.31, 0.24], [-0.22, 0.38], [0.02, 0.42], [0.2, 0.36], [0.27, 0.2], [0.26, 0.05]]), f: '#565a22'});
@@ -452,7 +475,8 @@ const cartShapes = (cx: Ctx, kind: CartKind, grip: V, dist: number, t: number): 
 		back.push({d: cl([[0.0, 0.36], [0.0, 0.43], [0.1, 0.46], [0.28, 0.42], [0.3, 0.34]]), f: winter ? '#30342a' : '#33402a'});   // a green roll
 		back.push({d: cl([[0.26, 0.06], [0.36, 0.08], [0.38, 0.26], [0.29, 0.3]]), f: bag2});   // the front bag (hi-vis vest strapped on)
 		back.push({d: polyD([Cc(-0.3, 0.17), Cc(0.33, 0.17), Cc(0.33, 0.19), Cc(-0.3, 0.19)]), f: winter ? '#1e2018' : '#5a3218'});
-		if (winter) back.push({d: cl([[-0.25, 0.43], [-0.2, 0.5], [0.0, 0.5], [0.16, 0.48], [0.3, 0.44], [0.33, 0.33], [0.2, 0.38], [0.0, 0.4]]), f: '#c8d0d6'});
+		if (winter) { back.push({d: cl([[-0.24, 0.44], [-0.2, 0.475], [0.0, 0.48], [0.14, 0.475], [0.28, 0.43], [0.31, 0.36], [0.2, 0.42], [0.0, 0.445], [-0.16, 0.44]]), f: '#b8c2c8'});
+			back.push({d: cl([[-0.29, 0.3], [-0.31, 0.21], [-0.27, 0.2], [-0.27, 0.29]]), f: '#a8b2b8'}); }
 	}
 	wheel(S(A), R, front, '#121216');
 	front.push({d: barD(Cc(-0.12, 0.08), Cc(0.0, 0.0), 0.014 * h), f: frame});
@@ -462,11 +486,11 @@ const cartShapes = (cx: Ctx, kind: CartKind, grip: V, dist: number, t: number): 
 /** the sled (a pulk): nose at `nose` (body units, on the ground), length 1.0 behind it, traces to the hip belt at `belt` */
 const sledShapes = (cx: Ctx, nose: V, belt: V, dist: number): {sled: Sh[]; traces: Sh[]} => {
 	const {S, h} = cx, bump = 0.6 * Math.max(0, Math.sin(dist * 5.3)) ** 6, a = bump * 1.2, Cc = (u: number, v: number) => S(add(nose, rotV([u, v], a)));
-	const red = '#5c1a1b', redHi = '#7a2a26', sled: Sh[] = [], traces: Sh[] = [];
-	sled.push({d: closedD([[-1.0, 0.0], [-0.98, 0.13], [-0.6, 0.14], [-0.08, 0.13], [0.02, 0.1], [0.06, 0.05], [0.02, 0.0], [-0.5, -0.004]].map(([u, v]) => Cc(u, v))), f: '#2a0f10'});
-	sled.push({d: closedD([[-0.95, 0.11], [-0.94, 0.23], [-0.8, 0.27], [-0.3, 0.26], [-0.1, 0.2], [-0.07, 0.12]].map(([u, v]) => Cc(u, v))), f: red});
-	for (const u of [-0.78, -0.52, -0.26]) sled.push({d: barD(Cc(u, 0.115), Cc(u + 0.02, 0.265), 0.012 * h), f: '#2a0f10'});
-	sled.push({d: barD(Cc(-0.9, 0.2), Cc(-0.2, 0.2), 0.008 * h), f: redHi});
+	const red = '#661d1c', redHi = '#8a3029', hull = '#2e0f10', sled: Sh[] = [], traces: Sh[] = [];
+	sled.push({d: closedD([[-0.9, 0.0], [-0.925, 0.08], [-0.9, 0.125], [-0.4, 0.13], [-0.06, 0.125], [0.03, 0.105], [0.075, 0.06], [0.05, 0.012], [-0.03, 0.0], [-0.5, -0.004]].map(([u, v]) => Cc(u, v))), f: hull});
+	sled.push({d: closedD([[-0.87, 0.115], [-0.86, 0.19], [-0.74, 0.225], [-0.3, 0.222], [-0.12, 0.19], [-0.07, 0.12]].map(([u, v]) => Cc(u, v))), f: red});
+	sled.push({d: closedD([[-0.82, 0.2], [-0.7, 0.218], [-0.3, 0.216], [-0.15, 0.195], [-0.3, 0.205], [-0.7, 0.206]].map(([u, v]) => Cc(u, v))), f: redHi});
+	for (const u of [-0.72, -0.48, -0.24]) sled.push({d: barD(Cc(u, 0.12), Cc(u + 0.015, 0.222), Math.max(1, 0.01 * h)), f: hull});
 	const n0 = Cc(0.03, 0.08), bS = S(belt), mid: V = [(n0[0] + bS[0]) / 2, (n0[1] + bS[1]) / 2 + 0.03 * h];
 	traces.push({d: ropeD(n0, mid, bS, Math.max(1.4, 0.008 * h)), f: '#1e1e24'});
 	traces.push({d: ropeD(add(n0, [0, -0.01 * h]), add(mid, [0.02 * h, -0.006 * h]), add(bS, [0, 0.004 * h]), Math.max(1.2, 0.006 * h)), f: '#2a2a32'});
@@ -474,58 +498,62 @@ const sledShapes = (cx: Ctx, nose: V, belt: V, dist: number): {sled: Sh[]; trace
 };
 
 /* ---------- the Bactrian camel: pace gait (the two legs of a side move together), feet planted while in stance ---------- */
-export const CAMEL_STRIDE = 1.3;
+export const CAMEL_STRIDE = 1.02;
 const camelShapes = (cx: Ctx, cph: number, t: number, walking: boolean): {far: Sh[]; body: Sh[]; near: Sh[]; nose: V} => {
 	const {S, h} = cx, far: Sh[] = [], body: Sh[] = [], near: Sh[] = [], col = '#0e0d10', farCol = mixHex(col, '#3a3a44', 0.12), hair = '#29231c', load = '#3b3226', loadHi = '#4c4130';
 	const bob = walking ? 0.014 * Math.cos(4 * Math.PI * cph) : 0.004 * Math.sin(t * 1.3), pitch = walking ? 1.1 * Math.sin(2 * Math.PI * cph) : 0;
 	const Bd = (u: number, v: number): V => rotAbout([u, v + bob], [0, 0.95], pitch);
 	const P = (pts: number[][]) => pts.map(([u, v]) => S(Bd(u, v)));
 	// legs: [rootX, rootY, upper, lower, bend, phaseOffset, isFore]
-	const LEGS: [number, number, number, number, number, number, boolean][] = [[0.36, 0.84, 0.44, 0.42, 1, 0.5, true], [-0.5, 0.88, 0.48, 0.42, -1, 0.55, false], [0.36, 0.84, 0.44, 0.42, 1, 0.0, true], [-0.5, 0.88, 0.48, 0.42, -1, 0.05, false]];
-	const beta = 0.64, L = CAMEL_STRIDE;
+	// legs: [rootX, rootY (elbow / stifle, inside the body), upper, lower, bend, phase offset, fore?]; pace: a side's two legs move together
+	const LEGS: [number, number, number, number, number, number, boolean][] = [[0.36, 0.7, 0.33, 0.35, 1, 0.5, true], [-0.47, 0.68, 0.31, 0.37, -1, 0.56, false], [0.36, 0.7, 0.33, 0.35, 1, 0.0, true], [-0.47, 0.68, 0.31, 0.37, -1, 0.06, false]];
+	const beta = 0.62, L = CAMEL_STRIDE;
 	LEGS.forEach(([rx, ry, l1, l2, bend, off, fore], i) => {
 		const isNear = i >= 2, root = Bd(rx, ry), ps0 = fr(cph + off);
 		let foot: V;
-		if (!walking) foot = [rx + (fore ? 0.02 : -0.02) + (isNear ? 0.04 : -0.04), 0.035];
-		else if (ps0 < beta) foot = [rx + L * beta * (0.5 - ps0 / beta), 0.035];
-		else { const q = (ps0 - beta) / (1 - beta), e = q * q * (3 - 2 * q); foot = [rx + L * beta * (-0.5 + e), 0.035 + 0.085 * Math.sin(Math.PI * q) * (fore ? 1 : 0.8)]; }
+		if (!walking) foot = [rx + (isNear ? 0.04 : -0.04), 0.03];
+		else if (ps0 < beta) foot = [rx + L * beta * (0.5 - ps0 / beta), 0.03];
+		else { const q = (ps0 - beta) / (1 - beta), e = q * q * (3 - 2 * q); foot = [rx + L * beta * (-0.5 + e), 0.03 + 0.085 * Math.sin(Math.PI * q) * (fore ? 1 : 0.85)]; }
 		const [kn, ft] = ik2(root, foot, l1, l2, bend), list = isNear ? near : far, c = isNear ? col : farCol;
-		const pts = [add(root, [0, 0.06]), ...along(root, kn, 4), ...along(kn, ft, 4).slice(1)].map(S);
-		const w = pts.map((_, j) => { const u = j / (pts.length - 1); return (u < 0.15 ? 0.085 : u < 0.5 ? lerp(0.075, 0.034, (u - 0.15) / 0.35) : u < 0.58 ? 0.04 : lerp(0.03, 0.026, (u - 0.58) / 0.42)) * h; });
+		// the upper leg (forearm / gaskin) is muscular, the knee knobbly, the cannon slim, a broad padded foot
+		const top = Bd(rx + (fore ? 0.0 : 0.04), ry + 0.16), pts = [top, mixV(top, root, 0.5), ...along(root, kn, 4), ...along(kn, ft, 4).slice(1)].map(S);
+		const w = pts.map((_, j) => { const u = j / (pts.length - 1); return (u < 0.2 ? lerp(0.085, 0.06, u / 0.2) : u < 0.52 ? lerp(0.055, 0.032, (u - 0.2) / 0.32) : u < 0.6 ? 0.036 : u < 0.92 ? lerp(0.026, 0.022, (u - 0.6) / 0.32) : 0.028) * h; });
 		list.push({d: chainD(pts, w, w), f: c});
-		const fd = nrm(sub(ft, kn)), fs: V = [ft[0], ft[1] - 0.012];
-		list.push({d: closedD([[-0.07, -0.035], [0.08, -0.035], [0.1, 0.0], [0.04, 0.03], [-0.04, 0.032], [-0.075, 0.0]].map(([u, v]) => S(add(fs, [u + fd[0] * 0.01, v])))), f: c});
-		if (fore) { const sh = [add(root, [0.02, -0.02]), mixV(root, kn, 0.45), mixV(root, kn, 0.85)];   // the shaggy coat on the upper foreleg
-			const pts2: V[] = []; for (let j = 0; j <= 8; j++) { const u = j / 8, p = mixV(sh[0], sh[2], u); pts2.push(S(add(p, [-(0.06 + 0.02 * (j % 2)) * Math.sin(Math.PI * clamp(u * 1.1)), 0]))); }
-			for (let j = 8; j >= 0; j--) { const u = j / 8, p = mixV(sh[0], sh[2], u); pts2.push(S(add(p, [0.045, 0]))); }
+		list.push({d: circD(S(kn), 0.034 * h), f: c});
+		const fs: V = [ft[0], ft[1] - 0.012];
+		list.push({d: closedD([[-0.055, -0.018], [0.075, -0.018], [0.09, 0.0], [0.045, 0.022], [-0.03, 0.026], [-0.06, 0.004]].map(([u, v]) => S(add(fs, [u, v])))), f: c});
+		if (fore) { const a0 = add(root, [0.02, 0.06]), a1 = mixV(root, kn, 0.6);   // the shaggy coat on the upper foreleg
+			const pts2: V[] = []; for (let j = 0; j <= 8; j++) { const u = j / 8, p = mixV(a0, a1, u); pts2.push(S(add(p, [-(0.05 + 0.018 * (j % 2)) * Math.sin(Math.PI * clamp(u * 1.1)), 0]))); }
+			for (let j = 8; j >= 0; j--) { const u = j / 8, p = mixV(a0, a1, u); pts2.push(S(add(p, [0.03, 0]))); }
 			list.push({d: closedD(pts2), f: isNear ? hair : mixHex(hair, '#3a3a44', 0.12)}); }
 	});
 	// body barrel + two humps + tail
-	body.push({d: closedD(P([[-0.74, 0.96], [-0.72, 1.08], [-0.52, 1.13], [-0.42, 1.36], [-0.3, 1.4], [-0.17, 1.2], [-0.05, 1.16], [0.07, 1.34], [0.2, 1.43], [0.33, 1.3], [0.45, 1.15], [0.6, 1.06], [0.64, 0.86], [0.42, 0.72], [0.0, 0.69], [-0.46, 0.72], [-0.7, 0.8]])), f: col});
-	// shaggy hump tufts
-	for (const [hx, hy] of [[-0.3, 1.39], [0.19, 1.42]]) { const tuft: V[] = []; for (let j = 0; j <= 10; j++) { const a = Math.PI * (0.1 + 0.8 * j / 10), r = (j % 2 ? 0.085 : 0.11); tuft.push([hx + Math.cos(a) * r * 1.05, hy - 0.07 + Math.sin(a) * r]); }
+	body.push({d: closedD(P([[-0.72, 0.9], [-0.7, 0.99], [-0.55, 1.03], [-0.45, 1.17], [-0.33, 1.25], [-0.21, 1.15], [-0.09, 1.05], [0.04, 1.17], [0.17, 1.27], [0.3, 1.16], [0.42, 1.05], [0.56, 0.97], [0.62, 0.83], [0.42, 0.66], [0.0, 0.62], [-0.46, 0.66], [-0.68, 0.75]])), f: col});
+	for (const [hx, hy] of [[-0.33, 1.235], [0.17, 1.255]]) { const tuft: V[] = []; for (let j = 0; j <= 12; j++) { const a = Math.PI * (0.1 + 0.8 * j / 12), r = (j % 2 ? 0.07 : 0.082); tuft.push([hx + Math.cos(a) * r * 1.15, hy - 0.052 + Math.sin(a) * r]); }
 		body.push({d: closedD(P(tuft)), f: hair}); }
 	const tw = walking ? Math.sin(2 * Math.PI * cph + 1) * 0.02 : Math.sin(t * 1.7) * 0.01;
-	body.push({d: chainD(P([[-0.72, 1.02], [-0.78, 0.92], [-0.79 + tw, 0.78], [-0.78 + tw * 1.5, 0.7]]), [0.02 * h, 0.014 * h, 0.012 * h, 0.022 * h], [0.016 * h, 0.012 * h, 0.012 * h, 0.022 * h]), f: hair});
-	// neck (a low U) + head, nodding with the step
-	const nod = walking ? 0.025 * Math.sin(4 * Math.PI * cph + 0.8) : 0.01 * Math.sin(t * 0.9);
-	const neck: V[] = [[0.52, 1.02], [0.7, 0.9], [0.86, 0.92 + nod * 0.5], [0.98, 1.08 + nod], [1.02, 1.2 + nod]];
-	body.push({d: chainD(P(neck), [0.13 * h, 0.11 * h, 0.08 * h, 0.062 * h, 0.055 * h], [0.12 * h, 0.1 * h, 0.08 * h, 0.06 * h, 0.05 * h]), f: col});
-	{ const m: V[] = []; for (let j = 0; j <= 12; j++) { const u = j / 12, p = mixV([0.58, 0.86], [0.94, 0.98 + nod], u); m.push([p[0] + (j % 2 ? 0.01 : -0.015), p[1] - (0.1 + 0.05 * (j % 2)) * Math.sin(Math.PI * clamp(u * 1.05))]); }
-		for (let j = 12; j >= 0; j--) { const u = j / 12, p = mixV([0.58, 0.86], [0.94, 0.98 + nod], u); m.push([p[0], p[1] + 0.02]); }
+	body.push({d: chainD(P([[-0.7, 0.98], [-0.75, 0.88], [-0.76 + tw, 0.76], [-0.75 + tw * 1.5, 0.67]]), [0.018 * h, 0.012 * h, 0.011 * h, 0.02 * h], [0.014 * h, 0.011 * h, 0.011 * h, 0.02 * h]), f: hair});
+	// neck: long and low, a U from the withers down and forward, then up to the head; it nods with each step
+	const nod = walking ? 0.022 * Math.sin(4 * Math.PI * cph + 0.8) : 0.01 * Math.sin(t * 0.9);
+	const neck: V[] = [[0.48, 0.96], [0.68, 0.86], [0.88, 0.87 + nod * 0.4], [1.04, 1.0 + nod * 0.8], [1.12, 1.16 + nod]];
+	body.push({d: chainD(P(neck), [0.12 * h, 0.08 * h, 0.06 * h, 0.05 * h, 0.046 * h], [0.11 * h, 0.075 * h, 0.06 * h, 0.05 * h, 0.044 * h]), f: col});
+	{ const m: V[] = []; for (let j = 0; j <= 12; j++) { const u = j / 12, p = mixV([0.56, 0.84], [1.02, 0.98 + nod * 0.8], u); m.push([p[0] + (j % 2 ? 0.012 : -0.012), p[1] - (0.06 + 0.04 * (j % 2)) * Math.sin(Math.PI * clamp(u * 1.05))]); }
+		for (let j = 12; j >= 0; j--) { const u = j / 12, p = mixV([0.56, 0.84], [1.02, 0.98 + nod * 0.8], u); m.push([p[0], p[1] + 0.03]); }
 		body.push({d: closedD(P(m)), f: hair}); }
 	const hd = (u: number, v: number): V => [u, v + nod];
-	body.push({d: closedD(P([hd(0.96, 1.17), hd(0.98, 1.25), hd(1.06, 1.27), hd(1.2, 1.22), hd(1.27, 1.17), hd(1.27, 1.12), hd(1.22, 1.1), hd(1.12, 1.11), hd(1.02, 1.1)])), f: col});
-	body.push({d: closedD(P([hd(0.985, 1.24), hd(0.975, 1.3), hd(1.0, 1.31), hd(1.015, 1.25)])), f: col});   // ear
-	body.push({d: closedD(P([hd(0.94, 1.23), hd(0.98, 1.3), hd(1.05, 1.29), hd(1.04, 1.24)])), f: hair});   // forelock
-	// the load: a saddle frame between the humps, bags hanging on the near side, a bedroll on top
-	body.push({d: closedD(P([[-0.2, 1.17], [-0.24, 0.98], [-0.18, 0.86], [0.0, 0.84], [0.1, 0.9], [0.1, 1.16], [-0.05, 1.2]])), f: load});
-	body.push({d: closedD(P([[-0.16, 1.18], [-0.18, 1.26], [-0.06, 1.28], [0.06, 1.24], [0.06, 1.17]])), f: loadHi});
-	body.push({d: polyD(P([[-0.22, 1.0], [0.1, 1.0], [0.1, 1.02], [-0.22, 1.02]])), f: loadHi});
+	body.push({d: closedD(P([hd(1.08, 1.17), hd(1.1, 1.23), hd(1.16, 1.255), hd(1.25, 1.245), hd(1.35, 1.2), hd(1.42, 1.16), hd(1.43, 1.12), hd(1.41, 1.095), hd(1.33, 1.085), hd(1.2, 1.1), hd(1.1, 1.12)])), f: col});
+	body.push({d: closedD(P([hd(1.11, 1.235), hd(1.1, 1.29), hd(1.125, 1.295), hd(1.14, 1.24)])), f: col});   // ear
+	body.push({d: closedD(P([hd(1.06, 1.2), hd(1.09, 1.27), hd(1.17, 1.275), hd(1.16, 1.235)])), f: hair});   // forelock
+	// the load: a pack saddle between the humps, bags on the near side, a bedroll on top
+	body.push({d: closedD(P([[-0.26, 1.1], [-0.27, 0.9], [-0.22, 0.84], [-0.1, 0.83], [-0.08, 0.95], [-0.1, 1.12]])), f: load});
+	body.push({d: closedD(P([[-0.1, 1.1], [-0.08, 0.92], [-0.02, 0.86], [0.09, 0.87], [0.11, 0.98], [0.08, 1.1]])), f: mixHex(load, '#000000', 0.15)});
+	body.push({d: closedD(P([[-0.21, 1.11], [-0.22, 1.18], [-0.08, 1.2], [0.05, 1.18], [0.06, 1.1]])), f: loadHi});
+	body.push({d: polyD(P([[-0.27, 1.0], [0.11, 1.0], [0.11, 1.018], [-0.27, 1.018]])), f: loadHi});
 	// halter
-	body.push({d: chainD(P([hd(1.03, 1.26), hd(1.06, 1.17), hd(1.12, 1.11)]), [0.006 * h, 0.006 * h, 0.006 * h], [0.006 * h, 0.006 * h, 0.006 * h]), f: '#4c4130'});
-	body.push({d: chainD(P([hd(1.08, 1.21), hd(1.24, 1.18)]), [0.005 * h, 0.005 * h], [0.005 * h, 0.005 * h]), f: '#4c4130'});
-	return {far, body, near, nose: Bd(1.13, 1.1 + nod)};
+	body.push({d: chainD(P([hd(1.14, 1.25), hd(1.2, 1.15), hd(1.3, 1.095)]), [0.005 * h, 0.005 * h, 0.005 * h], [0.005 * h, 0.005 * h, 0.005 * h]), f: '#4c4130'});
+	body.push({d: chainD(P([hd(1.24, 1.21), hd(1.39, 1.165)]), [0.0045 * h, 0.0045 * h], [0.0045 * h, 0.0045 * h]), f: '#4c4130'});
+	return {far, body, near, nose: Bd(1.31, 1.09 + nod)};
+
 };
 
 /* ============================================================================================================
@@ -656,7 +684,7 @@ const build = (b: BuildIn): Built => {
 		}
 		case 'pushCart': {
 			const g = gaitAt(G_PUSH, ph); let p = leanP(g, 8 + (lk.pack ? 3 : 0));
-			const grip: V = [p.Hips[0] + 0.3, 0.6 + 0.55 * (p.Hips[1] - 0.6)];
+			const grip: V = [p.Hips[0] + 0.27, 0.585 + 0.55 * (p.Hips[1] - 0.6)];
 			p = armIK(p, 'L', grip, -1); p = armIK(p, 'R', add(grip, [-0.006, 0.006]), -1);
 			const kind = b.cart === false ? null : (b.cart ?? CART_OF[b.attire]);
 			const P = figure(cx, p, lk, fo({handL: 'fist', handR: 'fist'}));
@@ -676,15 +704,15 @@ const build = (b: BuildIn): Built => {
 			const u = fr(ph); let p = leanP(gaitAt(G_WALK, ph), 3);
 			p = armFK(p, 'L', -24 + 4 * Math.sin(2 * Math.PI * u + 0.4), 16);
 			const P = figure(cx, p, lk, fo({handL: 'fist'}));
-			const cph = ph * G_WALK.stride / CAMEL_STRIDE, camX = -1.78, cam = camelShapes(ctxShift(cx, camX), cph, t, true);
-			const hand = add(p.LHand, mul(nrm(sub(p.LHand, p.LElb)), 0.03)), nose = add(cam.nose, [camX, 0]), sag = 0.16 + 0.03 * Math.sin(2 * Math.PI * u);
+			const cph = ph * G_WALK.stride / CAMEL_STRIDE, camX = -1.86, cam = camelShapes(ctxShift(cx, camX), cph, t, true);
+			const hand = add(p.LHand, mul(nrm(sub(p.LHand, p.LElb)), 0.03)), nose = add(cam.nose, [camX, 0]), sag = 0.09 + 0.025 * Math.sin(2 * Math.PI * u);
 			const rope = ropeD(cx.S(hand), cx.S([(hand[0] + nose[0]) / 2, Math.min(hand[1], nose[1]) - sag]), cx.S(nose), Math.max(1.3, 0.0065 * cx.h));
 			const lay = stackOf(P, {beforeNearArm: [{d: rope, f: '#2a241c'}]});
 			return {layers: [{sh: cam.far, rim: 0.8}, {sh: cam.body, rim: 1}, {sh: cam.near, rim: 1}, ...lay], fx};
 		}
 		case 'wade': {
 			const u = fr(ph), g = gaitAt(G_WADE, ph), K = loopKeys(WADE_KEYS, u), [a, e, bl, ln] = K;
-			let p = leanP(g, ln); p = armFK(p, 'L', a, e); p = armFK(p, 'R', 58 + 9 * Math.sin(2 * Math.PI * u + 2), 32);
+			let p = leanP(g, ln); p = armFK(p, 'L', a, e); p = armFK(p, 'R', 42 + 10 * Math.sin(2 * Math.PI * u + 2), 38 + 8 * Math.sin(2 * Math.PI * u));
 			const P = figure(cx, p, lk, fo({handL: 'fist', handR: 'open'}));
 			const blade = macheteSh(cx, p, 'L', p.LHand, bl), tip = macheteTip(p, 'L', bl);
 			P.nearArm.unshift(...blade.slice(0, 1)); P.nearArm.push(...blade.slice(1));
@@ -826,3 +854,5 @@ export const Sled: React.FC<{x: number; y: number; h: number; dist?: number; fac
 	const uid = useUid(), s = sledShapes(ctxAt(x, y, h), [0, 0], [0.25, 0.04], dist);
 	return <g transform={facing === -1 ? `translate(${f1(2 * x)},0) scale(-1,1)` : undefined}><Layers layers={[{sh: s.sled, rim: 1}]} uid={uid} rc={rimCfg(h, rim, rimO, lightDir, facing, FIG)} /></g>;
 };
+/** debug/inspection: the raw gait pose of a travelling action at a phase (body units) */
+export const karlGaitPose = (action: 'walk' | 'pushCart' | 'haulSled' | 'wade', phase: number): Pose => gaitAt({walk: G_WALK, pushCart: G_PUSH, haulSled: G_HAUL, wade: G_WADE}[action], phase);
