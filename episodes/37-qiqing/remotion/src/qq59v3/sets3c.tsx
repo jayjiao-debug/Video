@@ -1,6 +1,6 @@
 import React from 'react';
-import {Stage, Layer, FPath, Shape, FigureSlot, karlTravel, CastShadow, DBG, Particles, Mist, FogFoot, Glow, SkyGrad, Sun, INF, useFog, useGround, useStage, P, W, H, f1, lerp, rnd, noise1, fbm, ridge, spline, taper, mix} from './kit3';
-import {tuftD, bareTreeD, CloudBands, moundD} from './props3';
+import {Stage, Layer, FPath, Shape, FigureSlot, karlTravel, DBG, Particles, Mist, FogFoot, Glow, SkyGrad, Sun, INF, useFog, useGround, useStage, P, W, H, f1, lerp, rnd, noise1, fbm, ridge, spline, taper, mix} from './kit3';
+import {tuftD, bareTreeD, CloudBands, moundD, camelD} from './props3';
 import {SetProps} from './sets3a';
 import {Camel as RigCamel, CAMEL_STRIDE, KARL_CYCLE} from './karl3';
 
@@ -41,6 +41,10 @@ const Ripples: React.FC<{n: number; seed: number; y0: number; y1: number; x0?: n
 		out.push(spline(([[x - L / 2, y], [x, y - th], [x + L / 2, y + th * 0.3], [x, y + th * 0.4]] as P[]).map(g), true)); }
 	return <Shape d={out.join(' ')} fill={c} o={o} />; };
 
+/** a camel's long shadow on the lit sand: the kit's pure-path camel silhouette skewed onto the ground (cheap: no filter, no masks) */
+const CamelShadow: React.FC<{x: number; y: number; h: number; phase: number}> = ({x, y, h, phase}) => { const c = camelD(x, y, 1.4 * h, phase, true), sk = 3.4, k = 0.26;
+	return <g transform={`matrix(1,0,${sk},${-k},${f1(-sk * y)},${f1((1 + k) * y)})`} opacity={0.7}><Shape d={c.far + ' ' + c.body + ' ' + c.pack} fill="#4a1d38" /></g>; };
+
 /** small saxaul bushes on the plain, each with a long shadow to the left (ground decal-like skew) */
 const Bushes: React.FC<{items: [number, number, number][]}> = ({items}) => { const fog = useFog();
 	return <g>{items.map(([x, y, s], i) => { const br = bareTreeD(x, y, 46 * s, 30 + i, {w: 5 * s, spread: 50, depth: 3, droop: 8}).join(' '), m = `matrix(1,0,3.4,-0.26,${f1(-3.4 * y)},${f1(1.26 * y)})`;
@@ -71,7 +75,7 @@ export const Gobi: React.FC<SetProps> = ({t, cam}) => {
 		<Layer D={7.5}><Bushes items={[[1110, ggY(7.5) + 2, 0.8], [1700, ggY(7.5) + 4, 0.75]]} /></Layer>
 		<Layer D={5}><Bushes items={[[150, ggY(5) + 10, 1.1]]} /></Layer>
 		{!DBG.noCamels && [2, 1].map((k) => { const cx = kx - 1.86 * h - k * 1.78 * h;
-			return <Layer key={k} D={D + 0.05 * k}>{!DBG.noCast && <CastShadow y={y} k={0.26} skew={3.4} o={0.7} c="#4a1d38" blur={0.8}><RigCamel x={cx} y={y} h={h} phase={cph + 0.31 * k} walking t={t} rim="#ffcf7a" lightDir={10} /></CastShadow>}
+			return <Layer key={k} D={D + 0.05 * k}>{!DBG.noCast && <CamelShadow x={cx} y={y} h={h} phase={cph + 0.31 * k} />}
 				<RigCamel x={cx} y={y} h={h} phase={cph + 0.31 * k} walking t={t} rim="#ffcf7a" lightDir={10} rimO={0.9} /></Layer>; })}
 		<FigureSlot x={kx} y={y} h={h} attire="gobi" action="leadCamel" phase={ph} facing={1} rim="#ffcf7a" lightDir={10} rimO={0.95} shadow={{k: 0.26, skew: 3.4, o: 0.7, c: '#4a1d38', blur: 0.8}} />
 		<Particles kind="dust" n={60} seed={41} D={[2, 12]} box={[700, 300, 1900, 800]} c="#ffe2a8" o={0.8} size={1} />
