@@ -87,6 +87,10 @@ function figure(J,u,o){   // o: {fill, tilt}
     `C${f1(nk[0]+ww*1.05)},${f1(nk[1]+tl*.5)} ${f1(hc[0]+wh*1.15)},${f1(hc[1]+tl*.02)} ${f1(hc[0]+wh*.6)},${f1(hc[1]+tl*.13)} `+
     `Q${f1(hc[0])},${f1(hc[1]+tl*.2)} ${f1(hc[0]-wh*.6)},${f1(hc[1]+tl*.13)} C${f1(hc[0]-wh*1.15)},${f1(hc[1]+tl*.02)} ${f1(nk[0]-ww*1.05)},${f1(nk[1]+tl*.5)} ${f1(nk[0]-wc)},${f1(nk[1]+tl*.08)} Z`;
   g.push(`<path d="${body}" fill="${fill}"/>`);
+  // an arm folded across the chest (hand on heart) is drawn again over the body, with a soft shadow, so it reads
+  for(const [root,e,w] of [[lr,'l_elbow','l_wrist'],[rr,'r_elbow','r_wrist']]){ const W=J[w];
+    if(Math.abs(W[0]-hc[0])<u*.3&&W[1]>nk[1]+tl*.12&&W[1]<hc[1]-tl*.1)
+      g.push(`<g filter="url(#yarm)">${limb(root,J[e],W,u*.15,u*.095,fill).split('<circle')[0]}<circle cx="${f1(W[0])}" cy="${f1(W[1])}" r="${f1(u*.072)}" fill="${fill}"/></g>`); }
   const [hx,hy]=J.head, hr=u*.28;
   g.push(`<g transform="rotate(${f1(o.tilt||0)} ${f1(hx)} ${f1(hy)})"><ellipse cx="${f1(hx)}" cy="${f1(hy)}" rx="${f1(hr)}" ry="${f1(hr*1.08)}" fill="${fill}"/>`);
   // the face, exactly as you_figure.figure(face=True): dot eyes, small smile, blush
@@ -131,15 +135,16 @@ function you(S,bx,by,sc,fill,shadow){
 }
 
 // ---------- 2.5D camera: every layer has a depth d; cam = {Z (dolly), zoom, TX, TY (truck/crane, px at depth dref), roll (deg)} ----------
-function layerK(cam,d){ // unrotated: screen = (ex,ey) + src*k
-  const den=Math.max(.05,d-cam.Z), k=CFG.S0*cam.zoom*d/den, sh=CFG.dref/den*cam.zoom;
+function layerK(cam,d,d0){ // unrotated: screen = (ex,ey) + src*k ; d = current depth, d0 = the depth the layer is drawn at
+  if(d0===undefined) d0=d;
+  const den=Math.max(.05,d-cam.Z), k=CFG.S0*cam.zoom*d0/den, sh=CFG.dref/den*cam.zoom;
   return {k:k, ex:CFG.V[0]-CFG.P0[0]*k-cam.TX*sh+(cam.sx||0), ey:CFG.V[1]-CFG.P0[1]*k-cam.TY*sh+(cam.sy||0)};
 }
 function rotM(L,roll){const r=roll*Math.PI/180,c=Math.cos(r),s=Math.sin(r),k=L.k,ex=L.ex-960,ey=L.ey-540;
   return [k*c,k*s,-k*s,k*c,c*ex-s*ey+960,s*ex+c*ey+540];}
 const mstr=M=>`matrix(${M.map(v=>v.toFixed(5)).join(' ')})`;
 const apply=(M,p)=>[M[0]*p[0]+M[2]*p[1]+M[4], M[1]*p[0]+M[3]*p[1]+M[5]];
-function setLayer(id,cam,d){const L=layerK(cam,d),M=rotM(L,cam.roll||0);const e=$(id);if(e)e.setAttribute('transform',mstr(M));return M;}
+function setLayer(id,cam,d,d0){const L=layerK(cam,d,d0),M=rotM(L,cam.roll||0);const e=$(id);if(e)e.setAttribute('transform',mstr(M));return M;}
 
 // ---------- the gold 你 bubble (screen space; tail tip at `tip`) ----------
 function bubble(t,tip,tIn,vis){
@@ -168,6 +173,7 @@ function filmFX(t,a){
 '''
 
 FIG_DEFS = ('<filter id="yds" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="6" dy="12" stdDeviation="12" flood-color="#1A1410" flood-opacity=".3"/></filter>'
+            '<filter id="yarm" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#5A3A34" flood-opacity=".4"/></filter>'
             '<filter id="ysb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>')
 BUBBLE = (f'<g id="bub" opacity="0"><g filter="url(#bds)"><path d="M944,512 L960,540 L978,512 Z" fill="{GOLD}" stroke="{INK}" stroke-width="5" stroke-linejoin="round"/>'
           f'<rect x="896" y="420" width="128" height="96" rx="30" fill="{GOLD}" stroke="{INK}" stroke-width="5"/><rect x="940" y="508" width="40" height="10" fill="{GOLD}"/></g>'
@@ -307,13 +313,13 @@ def silhouette(els, a, fx, fy):
         e = re.sub(r'\sfill="(?!none)[^"]*"', f' fill="{CHALK}"', e); e = re.sub(r'\sstroke="(?!none)[^"]*"', f' stroke="{CHALK}"', e)
         out.append(e)
     return f'<g class="pop" data-a="{a:.3f}" data-x="{fx:.1f}" data-y="{fy:.1f}" opacity="0">' + ''.join(out) + '</g>'
-def dim_v(x, y0, y1, label, a, tick=14):
+def dim_v(x, y0, y1, label, a, tick=14, side=1):
     """a vertical dimension line with arrowheads and its label"""
     out = [cline([(x - tick, y0), (x + tick, y0)], 2, .8, a=a, d=.15), cline([(x - tick, y1), (x + tick, y1)], 2, .8, a=a, d=.15),
            cline([(x, y0), (x, y1)], 2.2, .85, a=a + .05, d=.3),
            cline([(x - 8, y1 + 14), (x, y1), (x + 8, y1 + 14)], 2.2, .85, a=a + .3, d=.08), cline([(x - 8, y0 - 14), (x, y0), (x + 8, y0 - 14)], 2.2, .85, a=a + .3, d=.08)]
     my = (y0 + y1) / 2
-    out.append(f'<text x="{x + 16}" y="{my + 10:.0f}" font-family="LXGW WenKai" font-weight="700" font-size="32" fill="{CHALK}" class="fade" data-a="{a + .2:.3f}" data-d=".2" opacity="0">{label}</text>')
+    out.append(f'<text x="{x + 16 * side}" y="{my + 10:.0f}" text-anchor="{"start" if side > 0 else "end"}" font-family="LXGW WenKai" font-weight="700" font-size="32" fill="{CHALK}" class="fade" data-a="{a + .2:.3f}" data-d=".2" opacity="0">{label}</text>')
     return out
 
 def year_label(y):
@@ -338,7 +344,7 @@ def ruler(T, minor, mid, major, label_every, eras, target_label, era_target):
         else: tk.append(((x, y0), (x, y0 + 11)))
     out.append(hc.marks(tk, CHALK, 2, 'opacity=".9"'))
     for y in range(ymin // label_every * label_every, 2026, label_every):
-        if y < ymin or abs(y - T) * ppy < 70 or (2026 - y) * ppy < 70: continue
+        if y < ymin or abs(y - T) * ppy < 95 or (2026 - y) * ppy < 70: continue
         big = y % major == 0
         out.append(f'<text x="{X(y):.1f}" y="{y1 + (44 if big else 38)}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="700" font-size="{30 if big else 24}" fill="{CHALK}" opacity="{.92 if big else .7}">{year_label(y)}</text>')
     out.append(f'<text x="{X(2026):.1f}" y="{y1 + 44}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="700" font-size="30" fill="{CHALK}">2026</text>')
@@ -620,18 +626,18 @@ def petra_what():
     fill = ('<linearGradient id="yfill" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6EC"/><stop offset=".55" stop-color="#F8E4D6"/>'
             '<stop offset="1" stop-color="#C99A8E"/></linearGradient>')
     # 你 walks beside the last camel (steps on the beats), looks up at the cargo, points ahead to the Treasury on bar 3
-    fig = keys((0, dict(REST, stride=10, tilt=-4, ex=.25, ey=-.1)),
-               (1.4, dict(tilt=-12, ex=.15, ey=-.35, mouth=.3)),
-               (2.9, dict(tilt=-8, ex=.3, ey=-.2, mouth=.2)),
-               (3.344, dict(ra1=-22, ra2=-16, tilt=-10, ex=.35, ey=-.15, mouth=1, lean=5), 'out'),
-               (4.2, dict(ra1=-26, ra2=-20, mouth=.7, lean=4)),
-               (5.016, dict(ra1=-24, ra2=-18, mouth=.5, lean=4)))
+    fig = keys((0, dict(REST, stride=10, tilt=-4)),
+               (1.4, dict(tilt=-12)),
+               (2.9, dict(tilt=-8)),
+               (3.344, dict(ra1=-36, ra2=-30, tilt=-10, lean=5), 'out'),
+               (4.2, dict(ra1=-40, ra2=-34, lean=4)),
+               (5.016, dict(ra1=-38, ra2=-32, lean=4)))
     cfg = dict(S0=1.045, P0=[1330, 790], V=[1330 - 370 * .045, 790 - 250 * .045], dref=13, D=D, an=an, nph=NPH,
-               cam=keys((0, dict(Z=0, zoom=1, TX=0, TY=0, roll=.5)),
-                        (5.016, dict(Z=2.6, zoom=1.07, TX=-40, TY=-22, roll=-.6), 'lin')),
-               fwd={'lead': .62, 'c4': .6, 'c3': .58, 't2': .55, 'c2': .56, 'c1': .53, 't1': .51, 'FIG': .505, 'puffs': .53},
+               cam=keys((0, dict(Z=0, zoom=1, TX=0, TY=0, roll=.6)),
+                        (5.016, dict(Z=3.2, zoom=1.1, TX=-40, TY=26, roll=-1.2), 'lin')),
+               fwd={'lead': .72, 'c4': .7, 'c3': .68, 't2': .66, 'c2': .66, 'c1': .645, 't1': .64, 'FIG': .638, 'puffs': .645},
                off={'lead': .75, 'c4': .25, 'c3': .75, 't2': .25, 'c2': .75, 'c1': .25, 't1': .75, 'FIG': 0},
-               fig=fig, figpath=[[262, 951], [400, 942]], sc=.66)
+               fig=fig, figpath=[[232, 951], [292, 947]], sc=.66)
     js = 'const CFG=' + json.dumps(cfg) + ';\n' + r'''
 const LAY=['sky','far','walls','floor','motes','lead','c4','rope4','c3','rope3','t2','c2','rope2','puffs','c1','rope1','FIG','t1'];
 const DEP={rope4:'c4',rope3:'c3',rope2:'c2',rope1:'c1'};   // a rope rides with the camel it hangs from
@@ -639,7 +645,7 @@ const STRIDE=2*BEAT;                                       // one stride = two s
 let shown={};
 window.render=function(t){
   const cam=track(CFG.cam,t), M={};
-  for(const k of LAY){ const base=DEP[k]||k, d=CFG.D[base]+(CFG.fwd[base]||0)*t; M[k]=setLayer('L_'+k,cam,d); }
+  for(const k of LAY){ const base=DEP[k]||k, d=CFG.D[base]+(CFG.fwd[base]||0)*t; M[k]=setLayer('L_'+k,cam,d,CFG.D[base]); }
   // leg cycles: phase 0 is a footfall; footfalls on the beats
   for(const g of ['lead','c4','c3','t2','c2','c1','t1']){
     const gid={lead:'w_lead',t2:'w_t2',t1:'w_t1'}[g]||g;

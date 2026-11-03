@@ -254,3 +254,465 @@ def P(*parts, **kw):
     d.update(kw); return pose(**d)
 
 
+# =====================================================================================================
+# 「穿越时间轴」 — the shared blueprint _when device (the same at every stop)
+# =====================================================================================================
+BP0, BP1, CHALK = '#1D3557', '#16263F', '#F3F0E6'
+DYNASTIES = [(-202, 220, '汉'), (266, 420, '晋'), (420, 589, '南北朝'), (618, 907, '唐'), (960, 1279, '宋'), (1279, 1368, '元'),
+             (1368, 1644, '明'), (1644, 1912, '清'), (1912, 1949, '民国')]
+RY = 776                                   # top edge of the ruler: 你 runs on it
+
+def pth(*runs, close=False): return ' '.join('M' + ' L'.join(f'{x:.1f},{y:.1f}' for x, y in r) + (' Z' if close else '') for r in runs)
+def dw(d, a, b, w=3.0, op=1.0, col=CHALK, extra=''):
+    """a line that draws itself between t = a and b (stroke-dashoffset over a normalised pathLength)"""
+    return (f'<path class="dw" data-a="{a:.3f}" data-b="{b:.3f}" data-o="{op}" d="{d}" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" '
+            f'fill="none" stroke="{col}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round" opacity="0" {extra}/>')
+def fd(inner, a, b, op=1.0, id_=''):
+    """a group that fades in between t = a and b"""
+    return f'<g class="fd" data-a="{a:.3f}" data-b="{b:.3f}" data-o="{op}" opacity="0"{f" id={chr(34)}{id_}{chr(34)}" if id_ else ""}>{inner}</g>'
+def dashed(d, w=2.0, op=.6, dash='10 8', col=CHALK):
+    return f'<path d="{d}" fill="none" stroke="{col}" stroke-width="{w}" stroke-dasharray="{dash}" stroke-linecap="round" opacity="{op}"/>'
+def ctext(x, y, s, size=26, anchor='middle', col=CHALK, op=1.0, extra=''):
+    return (f'<text x="{x:.1f}" y="{y:.1f}" text-anchor="{anchor}" font-family="LXGW WenKai" font-weight="700" font-size="{size}" fill="{col}" '
+            f'opacity="{op}" {extra}>{s}</text>')
+def dim_v(x, ya, yb, label, a, b, side=1):
+    """a vertical dimension line with ticks and the label beside it (draws, then the label fades in)"""
+    o = dw(pth([(x - 10, ya), (x + 10, ya)], [(x - 10, yb), (x + 10, yb)]), a, a + .12, 2, .8)
+    o += dw(pth([(x, yb), (x, ya)]), a + .05, b, 2, .8)
+    o += dw(pth([(x - 7, ya + 14), (x, ya), (x + 7, ya + 14)], [(x - 7, yb - 14), (x, yb), (x + 7, yb - 14)]), b - .1, b, 2, .8)
+    o += fd(ctext(x + side * 16, (ya + yb) / 2 + 9, label, 26, 'start' if side > 0 else 'end'), b - .05, b + .15)
+    return o
+def dim_h(y, xa, xb, label, a, b):
+    o = dw(pth([(xa, y - 10), (xa, y + 10)], [(xb, y - 10), (xb, y + 10)]), a, a + .12, 2, .8)
+    xm = (xa + xb) / 2
+    o += dw(pth([(xm - 34, y), (xa, y)], [(xm + 34, y), (xb, y)]), a + .05, b, 2, .8)
+    o += dw(pth([(xa + 14, y - 7), (xa, y), (xa + 14, y + 7)], [(xb - 14, y - 7), (xb, y), (xb - 14, y + 7)]), b - .1, b, 2, .8)
+    o += fd(ctext(xm, y + 9, label, 26), b - .05, b + .15)
+    return o
+
+def tool_set_square(x, y, s=1.0, rot=0, op=.5):
+    q = lambda pts: ' '.join(f'{px * s:.1f},{py * s:.1f}' for px, py in pts)
+    ticks = ''.join(f'M{i * 20 * s:.1f},0 L{i * 20 * s:.1f},{-(10 if i % 5 else 18) * s:.1f} ' for i in range(1, 11))
+    return (f'<g class="tool" data-x="{x}" data-y="{y}" data-r="{rot}" transform="translate({x},{y}) rotate({rot})"><g opacity="{op}">'
+            f'<polygon points="{q([(0, 0), (230, 0), (0, -175)])}" fill="#FFFFFF" fill-opacity=".05" stroke="{CHALK}" stroke-width="4" stroke-linejoin="round"/>'
+            f'<polygon points="{q([(34, -26), (150, -26), (34, -114)])}" fill="none" stroke="{CHALK}" stroke-width="3" stroke-linejoin="round"/>'
+            f'<path d="{ticks}" stroke="{CHALK}" stroke-width="2"/></g></g>')
+def tool_compass(x, y, s=1.0, rot=0, op=.5):
+    return (f'<g class="tool" data-x="{x}" data-y="{y}" data-r="{rot}" transform="translate({x},{y}) rotate({rot})"><g opacity="{op}" fill="none" stroke="{CHALK}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">'
+            f'<path d="M0,{-50 * s} L0,{-16 * s}"/><circle cx="0" cy="0" r="{15 * s}" fill="#FFFFFF" fill-opacity=".06"/>'
+            f'<path d="M{-8 * s},{12 * s} L{-70 * s},{210 * s} L{-74 * s},{232 * s}"/><path d="M{8 * s},{12 * s} L{64 * s},{190 * s}"/>'
+            f'<path d="M{58 * s},{186 * s} L{74 * s},{192 * s} L{72 * s},{226 * s} L{60 * s},{222 * s} Z" fill="#FFFFFF" fill-opacity=".08"/>'
+            f'<path d="M{-40 * s},{110 * s} L{36 * s},{104 * s}" stroke-width="3"/></g></g>')
+def tool_plumb(x, y0, L, op=.55):
+    return (f'<g id="plumb" data-x="{x}" data-y="{y0}" transform="translate({x},{y0})"><g opacity="{op}" stroke="{CHALK}" fill="none" stroke-linecap="round">'
+            f'<path d="M0,0 L0,{L}" stroke-width="2.5"/><path d="M-14,{L} L14,{L} L0,{L + 44} Z" stroke-width="3.5" fill="#FFFFFF" fill-opacity=".1"/>'
+            f'<circle cx="0" cy="{L}" r="5" stroke-width="3"/></g></g>')
+
+BP_JS = r'''
+const TL=1.672, T1=1.15, DT=DATA.D, V=DT/(T1+.5*(TL-T1));
+function trav(t){if(t<=T1)return V*t;const u=cl((t-T1)/(TL-T1));return V*(T1+(TL-T1)*(u-u*u*u+u*u*u*u/2))}
+function vel(t){if(t<=T1)return V;return V*(1-EASE.ss((t-T1)/(TL-T1)))}
+const DW=[...document.querySelectorAll('.dw')].map(e=>[e,+e.dataset.a,+e.dataset.b,+e.dataset.o]);
+const FD=[...document.querySelectorAll('.fd')].map(e=>[e,+e.dataset.a,+e.dataset.b,+e.dataset.o]);
+const TOOLS=[...document.querySelectorAll('.tool')].map(e=>[e,+e.dataset.x,+e.dataset.y,+e.dataset.r]);
+const S=DATA.youS;
+function P0(o){return Object.assign({ra:[60,86],la:[120,94],lk:[-25,-60],lf:[-26,0],rk:[25,-60],rf:[26,0],hip:[0,0],nk:[0,0],hd:[0,0],tilt:6,look:[0,0],expr:'smile',root:[0,0]},o)}
+function runPose(t){const th=2*Math.PI*t/BEAT, w=Math.cos(th);
+  const leg=(psi,side)=>{const cx=side*10-6, fx=cx-40*Math.cos(psi), sw=Math.sin(psi)<0, lift=sw?40*(-Math.sin(psi)):0, f=[fx,-lift], hp=[side*22-8,-116];
+    return [[(hp[0]+f[0])/2-17,(hp[1]+f[1])/2-(sw?8:0)],f]};
+  const [lk,lf]=leg(th,-1), [rk,rf]=leg(th+Math.PI,1), up=80-42*w, lu=100+42*w;
+  return P0({ra:[up,up-5-85*w],la:[lu,lu-5+85*w],lk:lk,lf:lf,rk:rk,rf:rf,hip:[-8,4],nk:[-17,5],hd:[-6,0],tilt:-10,look:[-.95,-.05],expr:'smile',root:[0,-12*Math.abs(Math.sin(th))]})}
+const lead=t=>-46*(1-span(t,1.12,TL,'io'));
+const youW=t=>DATA.youX+(DT-trav(t))+lead(t);
+window.render=function(t){
+  const dx=DT-trav(t), k=track(DATA.C,t);
+  const C={S0:1,fx:k.fx,fy:k.fy,z:k.z*(1+.014*pulse(t,TL,.08)),c:k.c,dx:dx,dy:0,roll:k.roll};
+  setL('Lgrid',C,2.857); setL('Lfar',C,1.667); setL('Lmain',C,1); setL('Lfg',C,.714);
+  const sp=vel(t)/30; $('mbg').setAttribute('stdDeviation',f1(sp*.4)+' 0'); $('mbf').setAttribute('stdDeviation',f1(1.6+sp*.55)+' 1.6');
+  for(const [e,a,b,o] of DW){const u=span(t,a,b,'io');e.setAttribute('stroke-dashoffset',f2(1-u));e.setAttribute('opacity',u>0?o:0)}
+  for(const [e,a,b,o] of FD)e.setAttribute('opacity',f2(o*span(t,a,b,'ss')));
+  for(const [e,x,y,r] of TOOLS)e.setAttribute('transform','translate('+f1(x)+','+f1(y+6*Math.sin(t*1.7+x)) +') rotate('+f2(r+3*Math.sin(t*1.1+y))+')');
+  const pl=$('plumb'); if(pl)pl.setAttribute('transform','translate('+pl.dataset.x+','+pl.dataset.y+') rotate('+f2(5*Math.sin(t*3.1)*(1-.5*span(t,TL,3.3)))+')');
+  // landing: the gold pin and the era name
+  const pin=span(t,TL-.02,TL+.22,'ob'); $('pin').setAttribute('transform','translate('+DATA.pinX+','+(RYV+34)+') scale('+f2(pin)+')');
+  $('eraT').setAttribute('fill',t>=TL?'#F2C66E':'#F3F0E6');
+  // 你: runs (2 steps a beat, the bob on the beat), skids, turns, points up at the year
+  let p=runPose(t); if(t>1.1){const q=track(DATA.K,t);p=t<1.32?mix(p,q,EASE.ss((t-1.1)/.22)):q}
+  p=breathe(p,t,t>TL?2.5:0); if(t>TL)p.nk[1]+=3*beatPulse(t,TL+BEAT,DUR,.06);
+  const xw=youW(t);
+  const Y=you(p,xw,RYV,S,{shadow:(X,Yy,s)=>'<ellipse cx="'+f1(X)+'" cy="'+f1(RYV+2)+'" rx="'+f1(52*s*(1-.004*Math.min(60,-p.root[1])))+'" ry="'+f1(9*s)+'" fill="#08111F" opacity=".45"/>'});
+  $('you').innerHTML=Y.svg;
+  // speed lines behind, chalk puffs on each footfall, the skid spray
+  const fr=Math.floor(t*12), vv=vel(t)/V; let sl='';
+  if(vv>.05)for(let i=0;i<6;i++){const y=RYV-(26+48*i)*S, x0=xw+(70+30*hash(fr*7+i))*S, L=(120+220*hash(fr*3+i))*S*vv;
+    sl+='<path d="M'+f1(x0)+','+f1(y)+' L'+f1(x0+L)+','+f1(y)+'" stroke="#F3F0E6" stroke-width="'+f1(3+2*hash(i))+'" stroke-linecap="round" opacity="'+f2(.55*vv*(.5+.5*hash(fr+i*5)))+'"/>'}
+  let du='';
+  for(let kk=0;kk*BEAT/2<1.2;kk++){const tk=kk*BEAT/2, age=(t-tk)/.42;if(age<0||age>1)continue;const px=youW(tk)-40*S;
+    for(let j=0;j<3;j++)du+='<circle cx="'+f1(px+(j-1)*10*S+age*18)+'" cy="'+f1(RYV-4-age*(18+j*8))+'" r="'+f1((5+age*(22+6*j))*S)+'" fill="#F3F0E6" opacity="'+f2(.42*(1-age))+'"/>'}
+  for(let i=0;i<26;i++){const te=1.2+.42*i/26, age=t-te;if(age<0||age>.65)continue;const x0=youW(te)-82*S, vx=-(90+220*hash(i)), vy=-(110+230*hash(i+50));
+    const x=x0+vx*age, y=Math.min(RYV-2,RYV-6+vy*age+520*age*age);du+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="'+f1(2+4.5*hash(i+9))+'" fill="#F3F0E6" opacity="'+f2(.75*(1-age/.65))+'"/>'}
+  $('spd').innerHTML=sl; $('dust').innerHTML=du;
+  bubble(t,Y.head,Y.hr,MATS.Lmain);
+  // the year rolls with the truck and lands on the bar
+  counterV(t,2026+(DATA.CN.target-2026)*trav(t)/DT,Math.abs(DATA.CN.target-2026)*vel(t)/DT,TL,DATA.CN);
+  if(window.monHook)window.monHook(t);
+};
+function counterV(t,v,dv,TL,CN){const g=$('cnt');
+  for(let i=0;i<4;i++){const p=10**(3-i);let pos;if(i===3)pos=v%10;else{const low=v%p;pos=Math.floor(v/p)%10+Math.max(0,low-(p-1))}
+    $('cs'+i).setAttribute('transform','translate(0,'+f1(-pos*CN.lh)+')');$('cbg'+i).setAttribute('stdDeviation','0 '+f1(Math.min(16,dv/p*.5)))}
+  const pop=span(t,0,.22,'ob'), punch=t>=TL?1+.15*(1-EASE.o((t-TL)/.3)):1, k=(.7+.3*pop)*punch;
+  g.setAttribute('opacity',f2(cl(t/.1)));
+  g.setAttribute('transform','translate('+CN.cx+','+CN.cy+') scale('+k.toFixed(4)+') translate('+(-CN.cx)+','+(-CN.cy)+')');
+  for(const id of ['lpre','lsuf']){const e=$(id);if(!e)continue;const a=t>=TL?EASE.ob((t-TL)/.3):0;e.setAttribute('opacity',f2(cl((t-TL)/.08)));
+    const bb=e.getBBox(), cx=bb.x+bb.width/2, cy=bb.y+bb.height/2, s=.4+.6*a;
+    e.setAttribute('transform','translate('+f1(cx)+','+f1(cy)+') scale('+f2(s)+') translate('+f1(-cx)+','+f1(-cy)+')')}}
+'''
+
+def blueprint_when(target, pre, suf, monument, you_x=1030, D=750, nx=1180, mon_js='', eras=DYNASTIES):
+    """the 「穿越时间轴」 shot: blueprint paper, grid (0.35x), faint construction arcs (0.6x), the year ruler with dynasty bands (1x),
+    chalk dust and floating drafting tools (1.4x). The camera trucks right → left from 2026 to `target` and lands on t = 1.672;
+    你 runs, skids, turns and points at the year; then `monument` (a string of dw / fd elements, world = screen at the landing)
+    draws itself above the ruler while the camera pushes in with a slight roll."""
+    TL = BAR; ppy = D / (2026 - target); X = lambda yr: you_x + (yr - target) * ppy
+    y_lo = int(math.floor((target - 1500) / 100.0) * 100)
+    R = random.Random(target)
+    # --- paper (screen-fixed)
+    pdefs = (f'<radialGradient id="bpg" cx="900" cy="470" r="1300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#21406A"/><stop offset=".45" stop-color="{BP0}"/><stop offset="1" stop-color="{BP1}"/></radialGradient>'
+             '<radialGradient id="bpv" cx="960" cy="540" r="1180" gradientUnits="userSpaceOnUse"><stop offset=".5" stop-color="#08101D" stop-opacity="0"/><stop offset="1" stop-color="#08101D" stop-opacity=".6"/></radialGradient>'
+             '<filter id="pgr" x="0" y="0" width="1920" height="1080" filterUnits="userSpaceOnUse"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3" seed="11"/>'
+             '<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.1 0 0 0 -.5"/></filter>'
+             '<filter id="pgr2" x="0" y="0" width="1920" height="1080" filterUnits="userSpaceOnUse"><feTurbulence type="fractalNoise" baseFrequency=".012 .03" numOctaves="2" seed="4"/>'
+             '<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .5 0 0 0 -.2"/></filter>')
+    paper = svg_layer('paper', '<rect width="1920" height="1080" fill="url(#bpg)"/><rect width="1920" height="1080" filter="url(#pgr2)" opacity=".5"/>', defs=pdefs)
+    # --- grid (0.35x): 40 px, every 5th line brighter
+    gl = ''.join(f'<path d="M{i * 40},0 V200 M0,{i * 40} H200" stroke="#FFFFFF" stroke-width="{1.6 if i == 0 else 1.1}" opacity="{.15 if i == 0 else .08}"/>' for i in range(5))
+    grid = f'<g id="Lgrid"><rect x="-1400" y="-600" width="4800" height="2400" fill="url(#gridp)"/></g>'
+    gdefs = f'<pattern id="gridp" width="200" height="200" patternUnits="userSpaceOnUse">{gl}</pattern>'
+    # --- faint construction arcs (0.6x)
+    far = []
+    for cx, cy, r in [(260, 330, 430), (1480, 900, 560), (2300, 260, 380), (-300, 760, 300), (900, -120, 520)]:
+        far.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#FFFFFF" stroke-width="2" opacity=".07"/>')
+        for k in range(24):
+            a = math.radians(k * 15); far.append(f'<path d="M{cx + math.cos(a) * r:.1f},{cy + math.sin(a) * r:.1f} L{cx + math.cos(a) * (r - (22 if k % 6 == 0 else 10)):.1f},{cy + math.sin(a) * (r - (22 if k % 6 == 0 else 10)):.1f}" stroke="#FFFFFF" stroke-width="2" opacity=".09"/>')
+    for x0, y0, x1, y1 in [(-400, 980, 2600, 120), (-200, 60, 2400, 1020), (600, -50, 600, 1150), (1900, -50, 1900, 1150)]:
+        far.append(dashed(pth([(x0, y0), (x1, y1)]), 1.6, .07, '18 12 4 12'))
+    far = f'<g id="Lfar">{"".join(far)}</g>'
+    # --- the ruler (1x), with motion blur while trucking
+    xa, xn = X(y_lo), X(2026)
+    rul = [f'<rect x="{xa:.1f}" y="{RY}" width="{xn - xa:.1f}" height="32" fill="#FFFFFF" opacity=".06"/>',
+           f'<path d="M{xa:.1f},{RY} H{xn:.1f} M{xa:.1f},{RY + 32} H{xn:.1f}" stroke="{CHALK}" stroke-width="3"/>',
+           dashed(f'M{xn:.1f},{RY} H{xn + 1300:.1f} M{xn:.1f},{RY + 32} H{xn + 1300:.1f}', 2.5, .28, '16 12')]
+    t10, t50, t100 = [], [], []
+    for yr in range(y_lo, 2027, 10):
+        x = X(yr); (t100 if yr % 100 == 0 else t50 if yr % 50 == 0 else t10).append(x)
+    for xs, L, op, w in ((t10, 9, .45, 1.6), (t50, 15, .7, 2), (t100, 24, .95, 2.6)):
+        rul.append(f'<path d="{"".join(f"M{x:.1f},{RY} v{L} " for x in xs)}" stroke="{CHALK}" stroke-width="{w}" opacity="{op}"/>')
+    for yr in range(y_lo, 2027, 100):
+        big = yr % 500 == 0; lab = f'前{-yr}' if yr < 0 else ('公元' if yr == 0 else str(yr))
+        if yr == target: continue
+        rul.append(ctext(X(yr), RY + (76 if big else 68), lab, 34 if big else 25, op=1 if big else .72, extra='font-family="Noto Sans CJK SC" font-weight="700"' if False else ''))
+    for a, b, name in eras:
+        if b < y_lo or a > 2026: continue
+        xa_, xb_ = X(max(a, y_lo)) + 4, X(min(b, 2026)) - 4
+        tid = ' id="eraT"' if a <= target < b else ''
+        rul.append(f'<path d="M{xa_:.1f},{RY - 6} V{RY - 13} H{xb_:.1f} V{RY - 6}" fill="none" stroke="{CHALK}" stroke-width="2" opacity=".5"/>')
+        if xb_ - xa_ > 26 * len(name): rul.append(ctext((xa_ + xb_) / 2, RY - 22, name, 28, op=.85, extra=tid))
+    if 'id="eraT"' not in ''.join(rul): rul.append('<text id="eraT"></text>')
+    rul.append(f'<path d="M{xn:.1f},{RY - 22} V{RY + 40}" stroke="{GOLD}" stroke-width="4"/>' + ctext(xn, RY + 76, '2026', 34, col=GOLD))
+    ruler = f'<g filter="url(#mb)">{"".join(rul)}</g>'
+    pin = (f'<g id="pin" transform="translate({X(target):.1f},{RY + 34}) scale(0)"><path d="M0,0 L-16,26 L16,26 Z" fill="{GOLD}" stroke="{DARK}" stroke-width="3" stroke-linejoin="round"/>'
+           f'<text x="0" y="66" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="34" fill="{GOLD}" stroke="{DARK}" stroke-width="6" paint-order="stroke">{target}</text></g>')
+    chalk_f = ('<filter id="chalk" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.3" numOctaves="2" seed="5" result="n"/>'
+               '<feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="d"/>'
+               '<feGaussianBlur in="d" stdDeviation="2.2" result="g"/><feComponentTransfer in="g" result="g2"><feFuncA type="linear" slope=".55"/></feComponentTransfer>'
+               '<feMerge><feMergeNode in="g2"/><feMergeNode in="d"/></feMerge></filter>'
+               '<filter id="mb" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur id="mbg" stdDeviation="0 0"/></filter>'
+               '<filter id="mbf" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur id="mbf" stdDeviation="2 2"/></filter>')
+    main = (f'<g id="Lmain">{ruler}{pin}<g filter="url(#chalk)">{monument}</g><g id="spd"></g><g id="dust"></g><g id="you"></g></g>')
+    # --- foreground (1.4x): drafting tools and chalk dust, out of focus
+    fgs = [tool_compass(2150, 850, 1.1, -18), tool_set_square(2900, 230, 1.0, 12), tool_set_square(1430, 1110, .9, -8, .42),
+           tool_compass(-120, 260, .9, 24, .4), tool_set_square(3500, 1000, 1.1, -20)]
+    for _ in range(70):
+        x, y, r = R.uniform(-300, 3300), R.uniform(0, 1080), R.uniform(1.5, 5.5)
+        fgs.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.1f}" fill="{CHALK}" opacity="{R.uniform(.12, .4):.2f}"/>')
+    fg = f'<g id="Lfg"><g filter="url(#mbf)">{"".join(fgs)}</g>{tool_plumb(150, -30, 250)}</g>'
+    cnt, cdefs, CN = counter_svg(target, pre, suf, nx, 545)
+    body = (paper + svg_layer('scene', grid + far + main, defs=gdefs + chalk_f
+                              + fig_defs([(0, '#FFFFFF'), (.55, '#F3F6FA'), (1, '#C6D0E0')], sh=(3, 6, 5, .45)))
+            + svg_layer('fgS', fg) + svg_layer('grain', '<rect width="1920" height="1080" filter="url(#pgr)"/><rect width="1920" height="1080" fill="url(#bpv)"/>', 'opacity:.9')
+            + svg_layer('hud', cnt + BUBBLE, defs=cdefs + BUBBLE_DEFS))
+    K = [  # from the skid on (the run before it is procedural)
+        [1.12, P('hang', lk=[-30, -60], lf=[-40, 0], rk=[22, -60], rf=[30, 0], nk=[-12, 4], look=[-.95, 0], tilt=-8)],
+        [1.32, P(ra=[-25, -55], la=[200, 175], lk=[-54, -50], lf=[-86, 0], rk=[14, -52], rf=[20, 0], hip=[10, 16], nk=[16, 8], hd=[4, 0], look=[-.6, -.1], tilt=9, expr='wide'), 'o'],
+        [1.58, P(ra=[-30, -60], la=[195, 172], lk=[-50, -50], lf=[-80, 0], rk=[14, -52], rf=[22, 0], hip=[10, 16], nk=[18, 8], hd=[4, 0], look=[-.6, -.1], tilt=10, expr='wide'), 'l'],
+        [1.672, P('hang', 'wide', hip=[0, 12], nk=[0, 10], look=[-.3, .1], tilt=2, expr='o'), 'o'],
+        [1.86, P('hang', 'wide', look=[.1, -.2], tilt=4, expr='smile'), 'io'],
+        [2.09, P('hips', 'wide', ra=[-50, -55], look=[.75, -.85], tilt=11), 'ob'],
+        [2.40, P('hips', 'wide', ra=[-48, -53], look=[.7, -.8], tilt=10), 'io'],
+        [2.508, P('hang', 'wide', ra=[50, 70], look=[-.9, -.45], tilt=-8, expr='o'), 'ob'],
+        [2.80, P('hang', 'wide', ra=[55, 78], look=[-.85, -.5], tilt=-7, expr='o'), 'io'],
+        [2.926, P('cheer', 'wide', look=[-.5, -.5], tilt=-3, expr='joy', root=[0, -10]), 'ob'],
+        [3.344, P('cheer', 'wide', ra=[-55, -72], la=[235, 252], look=[-.4, -.4], tilt=-1, expr='joy', root=[0, 0]), 'io'],
+    ]
+    C = [[0.0, dict(fx=960, fy=540, z=1.0, c=0.0, roll=-1.1)], [1.672, dict(fx=960, fy=540, z=1.0, c=0.0, roll=0.0), 'o'],
+         [3.344, dict(fx=905, fy=552, z=1.0, c=0.075, roll=-0.9), 'io']]
+    data = dict(D=D, youX=you_x, youS=.57, K=K, C=C, CN=CN, pinX=X(target))
+    js = 'const RYV=' + str(RY) + ';\n' + BP_JS + mon_js
+    return page(2 * BAR, body, data, js)
+
+
+# ---------------- El Castillo, front elevation in chalk (proportions from hist_a's model) ----------------
+WORKER_JS = r'''
+// a builder in chalk (white silhouette), facing right; mode: pull (rope forward), carry (block on the back), lift (block overhead)
+function worker(x,y,s,ph,mode,flip){const sw=Math.sin(ph), L=[];
+  const leg=(o)=>{const a=o*sw*24;return ['l',[[o*3,-40],[o*3+Math.sin(a*Math.PI/180)*20+4,-21],[o*3+Math.sin(a*Math.PI/180)*38,-1]],6]};
+  L.push(leg(1),leg(-1),['p',[[-8,-72],[8,-72],[10,-44],[-9,-44]]],['p',[[-10,-47],[10,-47],[6,-31],[0,-25],[-6,-31]]],['e',2,-81,7,8],
+    ['l',[[-3,-87],[-9,-98],[-15,-103]],3]);
+  if(mode==='pull')L.push(['l',[[4,-68],[16,-58],[28,-56]],5],['l',[[0,-66],[12,-54],[26,-50]],5]);
+  else if(mode==='carry')L.push(['p',[[-24,-92],[-4,-92],[-4,-68],[-24,-68]]],['l',[[4,-68],[2,-82],[-6,-90]],5],['l',[[-2,-90],[4,-84],[6,-90]],3]);
+  else L.push(['p',[[-14,-128],[14,-128],[14,-108],[-14,-108]]],['l',[[-6,-68],[-12,-92],[-8,-108]],5],['l',[[6,-68],[12,-92],[8,-108]],5]);
+  return silJS(L,x,y,s,flip,[0,0],'#F3F0E6','#F3F0E6')}
+'''
+def castillo_bp(X0=575, Y0=690, K=11.2, t0=BAR):
+    """El Castillo's north elevation as chalk line art: ground, 9 battered terraces (bottom → top), the stair with its
+    balustrades, treads and serpent heads, the temple; then dimensions, centre line, an earth ramp with builders
+    dragging a block, a scaffold with a plumb line, stone stock. Returns (svg, js hook)."""
+    sb, st, zk, NT, WS, BW, BH, ZT, TQ, TZ = HA.sb, HA.st, HA.zk, HA.NT, HA.WS, HA.BW, HA.BH, HA.ZT, HA.TQ, HA.TZ
+    p = lambda u, z: (X0 + u * K, Y0 - z * K)
+    a = t0; o = []
+    # the sheet: a faint panel with registration corners
+    x0_, y0_, x1_, y1_ = 150, 340, 995, 742
+    o.append(dw(pth([(x0_, y0_), (x1_, y0_), (x1_, y1_), (x0_, y1_)], close=True), a - .04, a + .3, 1.8, .35))
+    o.append(fd(f'<rect x="{x0_}" y="{y0_}" width="{x1_ - x0_}" height="{y1_ - y0_}" fill="#FFFFFF" opacity=".035"/>'
+                + ''.join(f'<path d="M{x},{y + 22 * sy} V{y} H{x + 22 * sx}" stroke="{CHALK}" stroke-width="3" fill="none"/>' for x, y, sx, sy in
+                          [(x0_ + 8, y0_ + 8, 1, 1), (x1_ - 8, y0_ + 8, -1, 1), (x0_ + 8, y1_ - 8, 1, -1), (x1_ - 8, y1_ - 8, -1, -1)]), a, a + .25))
+    o.append(dw(pth([(x0_ + 20, Y0), (x1_ - 20, Y0)]), a, a + .3, 3))                                  # ground line
+    o.append(fd(dashed(pth([(X0, Y0 + 30), (X0, y0_ + 14)]), 1.6, .45, '22 8 4 8'), a + .2, a + .5))   # centre line
+    # terraces, bottom → top
+    for k in range(NT):
+        ta = a + .1 + k * .085; tb = ta + .22
+        for sgn in (-1, 1):
+            o.append(dw(pth([p(sgn * WS, zk(k)), p(sgn * sb(k), zk(k)), p(sgn * st(k), zk(k + 1)), p(sgn * WS, zk(k + 1))]), ta, tb, 2.8))
+            zm = zk(k) + (zk(k + 1) - zk(k)) * .56
+            o.append(dw(pth([p(sgn * (st(k) + (sb(k) - st(k)) * .44), zm), p(sgn * WS, zm)]), ta + .06, tb + .06, 1.6, .5))
+            for j in range(1, 5):   # panel joints
+                u = WS + (st(k) - WS) * j / 5
+                o.append(dw(pth([p(sgn * u, zk(k + 1) - .2), p(sgn * u, zm)]), tb - .05, tb + .08, 1.4, .4))
+    # the stair: balustrades up, then the treads, the serpent heads at the foot
+    for u in (-WS, -(WS - BW), WS - BW, WS):
+        o.append(dw(pth([p(u, 0), p(u, ZT + BH)]), a + .32, a + .95, 2.6 if abs(u) == WS else 2))
+    for i in range(1, 31):
+        z = ZT * i / 31; ta = a + .42 + .55 * i / 31
+        o.append(dw(pth([p(-(WS - BW), z), p(WS - BW, z)]), ta, ta + .08, 1.5, .7))
+    for sgn in (-1, 1):
+        u = sgn * (WS - BW / 2)
+        hx, hy = p(u, 0)
+        o.append(dw(pth([(hx - 16, hy), (hx - 18, hy - 22), (hx - 8, hy - 30), (hx + 8, hy - 30), (hx + 18, hy - 22), (hx + 16, hy)]), a + .3, a + .5, 2.4))
+        o.append(fd(f'<circle cx="{hx - 7:.1f}" cy="{hy - 20:.1f}" r="2.6" fill="{CHALK}"/><circle cx="{hx + 7:.1f}" cy="{hy - 20:.1f}" r="2.6" fill="{CHALK}"/>'
+                    f'<path d="M{hx - 10:.1f},{hy - 8:.1f} L{hx - 5:.1f},{hy - 3:.1f} L{hx:.1f},{hy - 8:.1f} L{hx + 5:.1f},{hy - 3:.1f} L{hx + 10:.1f},{hy - 8:.1f}" stroke="{CHALK}" stroke-width="2" fill="none"/>', a + .42, a + .55))
+    # the temple
+    ta = a + .95
+    o.append(dw(pth([p(-TQ, ZT), p(-TQ, ZT + 3.6), p(TQ, ZT + 3.6), p(TQ, ZT)]), ta, ta + .2, 2.8))
+    o.append(dw(pth([p(-TQ - .35, ZT + 4.0), p(-TQ - .35, ZT + TZ), p(TQ + .35, ZT + TZ), p(TQ + .35, ZT + 4.0)], close=True), ta + .08, ta + .28, 2.8))
+    o.append(dw(pth([p(-TQ - .25, ZT + 3.6), p(TQ + .25, ZT + 3.6)], [p(-TQ - .35, ZT + 5.5), p(TQ + .35, ZT + 5.5)]), ta + .15, ta + .3, 2))
+    for u0, u1 in [(-2.6, -1.6), (-.7, .7), (1.6, 2.6)]:
+        o.append(dw(pth([p(u0, ZT), p(u0, ZT + 2.6), p(u1, ZT + 2.6), p(u1, ZT)]), ta + .18, ta + .32, 2.2))
+    for j in range(1, 8):
+        u = -TQ + 2 * TQ * j / 8; o.append(dw(pth([p(u, ZT + 4.1), p(u, ZT + 5.4)]), ta + .26, ta + .34, 1.4, .6))
+    # dimensions, level mark, scale bar
+    o.append(dim_v(p(sb(0) + 6.5, 0)[0], Y0, p(0, ZT + TZ)[1], '30 m', a + 1.05, a + 1.35))
+    o.append(dim_h(Y0 + 22, p(-sb(0), 0)[0], p(sb(0), 0)[0], '55 m', a + 1.0, a + 1.3))
+    o.append(fd(f'<path d="M{x1_ - 150},{y1_ - 26} h100 M{x1_ - 150},{y1_ - 32} v12 M{x1_ - 100},{y1_ - 30} v8 M{x1_ - 50},{y1_ - 32} v12" stroke="{CHALK}" stroke-width="2" fill="none"/>'
+                + ctext(x1_ - 150, y1_ - 38, '0', 18) + ctext(x1_ - 50, y1_ - 38, '10 m', 18), a + 1.2, a + 1.4, .8))
+    # construction: the earth ramp on the left, builders dragging a block, a scaffold with a plumb line, stone stock
+    r0, r1 = p(-sb(0) - 9.5, 0), p(-st(4), zk(5))
+    ramp = (dashed(pth([r0, r1, p(-st(4), 0)]), 2.2, .7, '12 7')
+            + ''.join(dashed(pth([p(-sb(0) - 9.5 + 3.2 * j, 0), lerp2(r0, r1, (3.2 * j) / (sb(0) + 9.5 - st(4)))]), 1.5, .35, '6 6') for j in range(1, 7)))
+    o.append(fd(ramp, a + .8, a + 1.05))
+    sc = ''
+    for u in (7.5, 11, 14.5): sc += dashed(pth([p(u, zk(4)), p(u, ZT + TZ + 1.5)]), 2, .6, '14 6')
+    for z in (14, 18, 22, 26, 30.5): sc += dashed(pth([p(6.5, z), p(15.5, z)]), 2, .55, '14 6')
+    o.append(fd(sc, a + .9, a + 1.15))
+    o.append(fd(tool_plumb(p(15, 30.5)[0], p(15, 30.5)[1], 70, .85).replace('id="plumb"', 'id="plumbm"'), a + 1.1, a + 1.25))
+    stock = ''.join(f'<rect x="{p(u, 0)[0]:.1f}" y="{p(u, 0)[1] - h:.1f}" width="22" height="{h}" fill="none" stroke="{CHALK}" stroke-width="2" opacity=".7"/>'
+                    for u, h in [(29, 16), (31.2, 16), (30.1, 32)])
+    o.append(fd(stock, a + 1.0, a + 1.2))
+    o.append('<g id="wk"></g>')
+    js = WORKER_JS + r'''
+const RAMP=%s;
+window.monHook=function(t){const a=TL+1.0;if(t<a){$('wk').innerHTML='';return}
+  const op=span(t,a,a+.25), st=Math.max(0,(t-a)/BEAT), q=.18+.05*(Math.floor(st)+EASE.io(Math.min(1,(st%%1)*1.6)));
+  const at=f=>[RAMP[0][0]+(RAMP[1][0]-RAMP[0][0])*f,RAMP[0][1]+(RAMP[1][1]-RAMP[0][1])*f];
+  let g='';const ang=Math.atan2(RAMP[1][1]-RAMP[0][1],RAMP[1][0]-RAMP[0][0])*180/Math.PI;
+  const b=at(q), w1=at(q+.17), w2=at(q+.27);
+  g+='<g transform="translate('+f1(b[0])+','+f1(b[1])+') rotate('+f2(ang)+')"><rect x="-22" y="-24" width="40" height="24" fill="none" stroke="#F3F0E6" stroke-width="2.6"/><path d="M-26,2 H24" stroke="#F3F0E6" stroke-width="3"/></g>';
+  g+='<path d="M'+f1(b[0]+16)+','+f1(b[1]-14)+' L'+f1(w2[0]+8)+','+f1(w2[1]-22)+'" stroke="#F3F0E6" stroke-width="1.8" fill="none"/>';
+  g+=worker(w1[0],w1[1],.42,t*2*Math.PI/BEAT,'pull',false)+worker(w2[0],w2[1],.42,t*2*Math.PI/BEAT+1.6,'pull',false);
+  const tp=%s; g+=worker(tp[0],tp[1],.42,0,'lift',false);
+  const cp=%s; g+=worker(cp[0]+8*Math.sin(t*2),cp[1],.42,t*2*Math.PI/BEAT,'carry',true);
+  $('wk').innerHTML='<g opacity="'+f2(op)+'">'+g+'</g>';
+  const pl=$('plumbm');if(pl)pl.setAttribute('transform','translate('+pl.dataset.x+','+pl.dataset.y+') rotate('+f2(4*Math.sin(t*3.3))+')')};
+''' % (json.dumps([r0, r1]), json.dumps(p(11, 30.5)), json.dumps(p(23, 0)))
+    return ''.join(o), js
+def lerp2(a, b, t): return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+
+def chichen_when():
+    mon, js = castillo_bp()
+    return blueprint_when(1100, '公元', '前后', mon, mon_js=js)
+
+
+# =====================================================================================================
+# chichen_what — the equinox serpent, alive (hist_a.chichen_serpent rebuilt in depth layers)
+# =====================================================================================================
+def chichen_what():
+    W, H = HA.W, HA.H; poly, line, cam_ = HA.poly, HA.line, None
+    R = random.Random(572)
+    phi = math.radians(36); Dd = 92
+    cam = HA.Cam((-Dd * math.sin(phi), Dd * math.cos(phi), 4.0), (0, 0, 13.5), 1630, (1160, 652))
+    sun = (1886, 572)
+    defs = (HA.lgrad('sky', [(0, '#5E6C93', None), (.45, '#B98A86', None), (.75, '#E9AC78', None), (1, '#F7CF8E', None)], units='userSpaceOnUse', x2=0, y2=720)
+            + HA.rgrad('glow', sun[0], sun[1], 760, [(0, '#FFF1C4', .95), (.18, '#FFD58A', .75), (.5, '#F2A866', .28), (1, '#F2A866', 0)])
+            + HA.lgrad('field', [(0, '#B07A55', None), (1, '#5E4436', None)], units='userSpaceOnUse', y1=640, y2=1080))
+    sky = [f'<rect x="-900" y="-600" width="{W + 1800}" height="{H + 1200}" fill="url(#sky)"/>', f'<rect x="-900" y="-600" width="{W + 1800}" height="{H + 1200}" fill="url(#glow)"/>',
+           f'<g id="sun"><circle cx="{sun[0]}" cy="{sun[1]}" r="62" fill="#FFF3CF" stroke="#F7C77E" stroke-width="3"/></g>']
+    hz = 655; cs = []; x = -40
+    while x < W + 40:
+        r = R.uniform(16, 34); cs.append((x, hz - R.uniform(0, 26) - (12 if x > 1500 else 0), r)); x += r * R.uniform(1.0, 1.5)
+    R2 = random.Random(5722); x = -700        # extra crowns beyond the drawing's edges (own seed: keeps the original sequence)
+    while x < -40: r = R2.uniform(16, 34); cs.append((x, hz - R2.uniform(0, 26), r)); x += r * R2.uniform(1.0, 1.5)
+    x = W + 40
+    while x < W + 700: r = R2.uniform(16, 34); cs.append((x, hz - R2.uniform(0, 26) - 12, r)); x += r * R2.uniform(1.0, 1.5)
+    top = []
+    for xi in range(-700, W + 701, 6):
+        ys = [cy - math.sqrt(r * r - (xi - cx) ** 2) for cx, cy, r in cs if abs(xi - cx) < r]
+        top.append((xi, min(ys) if ys else hz))
+    trees = [poly([(-700, hz + 60)] + top + [(W + 700, hz + 60)], '#4A3F3E', '#2E2628', 2.5)]
+    field = [poly([(-900, hz + 6), (W + 900, hz + 6), (W + 900, H + 700), (-900, H + 700)], 'url(#field)', INK, 2.5)]
+    for _ in range(60):
+        x, y = R.uniform(0, W), R.uniform(700, 1070); r = R.uniform(3, 8) * (y - 600) / 300
+        field.append(f'<ellipse cx="{x - r * 4:.1f}" cy="{y + r * .3:.1f}" rx="{r * 4:.1f}" ry="{r * .35:.1f}" fill="#4A3330" opacity=".35"/>')
+        field.append(f'<ellipse cx="{x:.1f}" cy="{y:.1f}" rx="{r:.1f}" ry="{r * .55:.1f}" fill="{R.choice(["#C99266", "#8E6248", "#D9A574"])}"/>')
+    R3 = random.Random(5723)
+    for _ in range(40):   # more pebbles on the extended near ground
+        x, y = R3.uniform(-300, W + 300), R3.uniform(1080, 1500); r = R3.uniform(3, 8) * (y - 600) / 300
+        field.append(f'<ellipse cx="{x - r * 4:.1f}" cy="{y + r * .3:.1f}" rx="{r * 4:.1f}" ry="{r * .35:.1f}" fill="#3A2826" opacity=".35"/>')
+        field.append(f'<ellipse cx="{x:.1f}" cy="{y:.1f}" rx="{r:.1f}" ry="{r * .55:.1f}" fill="{R3.choice(["#A97A58", "#7A5440", "#B98A62"])}"/>')
+    # the pyramid, painted far → near as in hist_a
+    lit = dict(W=('#DE9C62', '#F3C58E', '#B57446'), N=('#625E7C', '#7A7592', '#4C4864'), E=('#5A5470', '#6E6886', '#45405C'), S=('#5A5470', '#6E6886', '#45405C'))
+    tc = dict(W=dict(wall='#E8AE74', corn='#B77A4C', frieze='#D49A66', joint='#B57E52'), N=dict(wall='#706A86', corn='#4E4964', frieze='#625C79', joint='#57516C'),
+              E=dict(wall='#706A86', corn='#4E4964', frieze='#625C79', joint='#57516C'), S=dict(wall='#706A86', corn='#4E4964', frieze='#625C79', joint='#57516C'),
+              door='#231B22', roof='#C48E6A')
+    pyr = HA.temple(cam, tc); zc = cam.C[2]
+    for k in sorted(range(HA.NT), key=lambda k: -abs(HA.zk(k) + HA.HT / 2 - zc)):
+        for side in HA.SIDES:
+            if cam.sees(HA.P3(side, (HA.sb(k) + HA.st(k)) / 2, 0, HA.zk(k) + HA.HT / 2), HA.wall_normal(side)):
+                pyr += HA.terrace_wall(cam, side, k, *lit[side])
+        if cam.sees((0, 0, HA.zk(k + 1)), (0, 0, 1)): pyr.append(HA.terrace_top(cam, k, '#B98564'))
+    wc = dict(ramp='#EDB57A', tread='#C48550', top='#F6CB92', out_p='#D99860', out_m='#D99860', end='#E2A46C', **{'in': '#C98A58'})
+    pyr += HA.stair(cam, 'W', wc, step=2)
+    tris = []
+    for k in range(1, 8):
+        z0 = HA.zk(k); r0 = HA.rz(z0 - HA.BH); w = HA.HT * (HA.RF - HA.SP) / HA.ZT * .97
+        a_, b_, c_ = (r0, z0), (r0 - w, z0), (r0 - w, HA.zr(r0 - w) + HA.BH)
+        P3 = lambda r, z: HA.P3('N', r, HA.WS, z)
+        g_ = (cam.poly([P3(r, z) for r, z in (a_, b_, c_)], 'none', '#FFC56E', 16, 'class="glow" opacity=".4"')
+              + cam.poly([P3(r, z) for r, z in (a_, b_, c_)], '#FFDC8E', '#C98A3E', 1.5)
+              + cam.line([P3(r, z) for r, z in ((a_[0] - .12, a_[1] + .1), (c_[0] + .02, c_[1] - .1))], '#FFF3CF', 2.5))
+        tris.append(f'<g id="tri{k}" opacity="0">{g_}</g>')
+    nc = dict(ramp='#857C93', tread='#6B6380', top='#9C93A9', out_p='#2F2A45', out_m='#3F3A55', end='#585170', **{'in': '#5C5672'})
+    pyr += HA.stair(cam, 'N', nc, step=2, light={'out_p': ['<g id="tris">' + ''.join(tris) + '</g>']})
+    pyr += HA.serpent_head(cam, -1, False)
+    pyr.append('<g id="headD">' + ''.join(HA.serpent_head(cam, 1, False)) + '</g>')
+    pyr.append('<g id="headL" opacity="0">' + ''.join(HA.serpent_head(cam, 1, True)) + '</g>')
+    head_c = cam(HA.P3('N', HA.RF + 1.2, HA.WS - .4, 1.2))
+    tri_c = []
+    for k in range(1, 8):
+        z0 = HA.zk(k); r0 = HA.rz(z0 - HA.BH); w = HA.HT * (HA.RF - HA.SP) / HA.ZT * .97
+        tri_c.append(cam(HA.P3('N', r0 - w * .6, HA.WS, z0 + .5)))
+    # foreground agaves (same draws from R as hist_a)
+    def agave(cx, cy, rad, n):
+        o = [f'<ellipse cx="{cx - rad * 1.6:.1f}" cy="{cy + 3:.1f}" rx="{rad * 1.9:.1f}" ry="{rad * .12:.1f}" fill="#3A2830" opacity=".45"/>']
+        for i in range(n):
+            a = math.radians(-165 + 150 * (i + R.uniform(-.3, .3)) / (n - 1)); L = rad * R.uniform(.6, 1.05) * (1 if -150 < math.degrees(a) < -30 else .75); w = rad * .09
+            tip = (cx + math.cos(a) * L, cy + math.sin(a) * L); nx, ny = -math.sin(a), math.cos(a)
+            o.append(poly([(cx + nx * w + 3, cy + ny * w), (tip[0] + 2, tip[1]), (cx - nx * w + 3, cy - ny * w)], '#E9A060', 'none', 0))
+            o.append(poly([(cx + nx * w, cy + ny * w), tip, (cx - nx * w, cy - ny * w)], R.choice(['#3E4630', '#33392A']), INK, 1.5))
+        return o
+    fg = []
+    for cx, cy, rad, n in ((150, 905, 70, 9), (1560, 1010, 95, 10), (1240, 1050, 60, 8), (880, 1072, 80, 10)):
+        fg += agave(cx, cy, rad, n)
+    fg2 = []
+    for cx, cy, rad, n in ((560, 1190, 150, 11), (1420, 1230, 190, 12)):   # two big ones close to the lens
+        fg2 += agave(cx, cy, rad, n)
+    tgt = cam(HA.P3('N', HA.rz(HA.zk(5)) - .9, HA.WS, HA.zk(5) + .7))
+    over = (f'<path id="ray" d="" stroke="{GOLD}" stroke-width="3.5" stroke-dasharray="16 12" fill="none"/><circle id="rayd" r="7" fill="{GOLD}" stroke="{DARK}" stroke-width="2.5"/>'
+            f'<g id="burst" opacity="0"></g>'
+            + HA.text(0, 0, '春分 · 秋分', 48, anchor='end', extra='id="lab" opacity="0"'))
+    body = (svg_layer('back', f'<g id="Lsky">{"".join(sky)}</g><g id="Ltrees">{"".join(trees)}</g><g id="Lfield">{"".join(field)}</g><g id="Lpyr">{"".join(pyr)}</g><g id="Lfg">{"".join(fg)}</g>',
+                      defs=defs)
+            + svg_layer('youS', '<g id="Lyou"><g id="you"></g></g>', defs=fig_defs([(0, '#FFF3DF'), (.5, '#F2D6BC'), (1, '#8E7E9A')], 1, 0, 0, 1, sh=(-6, 5, 5, .35)))
+            + svg_layer('near', f'<g id="Lnear">{"".join(fg2)}</g>', 'filter:blur(3px)')
+            + svg_layer('ovl', over) + svg_layer('hud', BUBBLE, defs=BUBBLE_DEFS))
+    K = [  # 你 watches the light come down, walks up to the head, peers, jumps back when it lights, then cheers
+        [0.00, P('hang', look=[-.6, -.9], tilt=-6)],
+        [0.418, P('hang', ra=[60, 86], la=[215, 210], look=[-.7, -.95], tilt=-8, expr='o'), 'ob'],
+        [0.80, P('hang', la=[210, 205], look=[-.75, -.8], tilt=-7, expr='o'), 'io'],
+        [1.254, P('hang', 'stepL', look=[-.8, -.6], tilt=-6, root=[-30, 0]), 'io'],
+        [1.672, P('hang', 'stepR', look=[-.8, -.45], tilt=-6, root=[-62, 0]), 'io'],
+        [2.09, P('hang', 'stepL', look=[-.85, -.3], tilt=-7, root=[-94, 0]), 'io'],
+        [2.508, P('hang', 'stepR', look=[-.9, -.15], tilt=-8, root=[-122, 0]), 'io'],
+        [2.926, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-26, 26], hd=[-6, 4], look=[-.95, .25], tilt=-14, expr='o', root=[-132, 0]), 'io'],
+        [3.30, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-28, 28], hd=[-6, 4], look=[-.95, .3], tilt=-15, expr='o', root=[-134, 0]), 'l'],
+        [3.344, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-28, 28], hd=[-6, 4], look=[-.95, .3], tilt=-15, expr='wide', root=[-134, 0]), 'l'],
+        [3.55, P('fling', 'tuck', nk=[10, -4], look=[-.6, -.2], tilt=12, expr='wide', root=[-60, -95]), 'o'],
+        [3.762, P('fling', 'crouch', nk=[6, 14], look=[-.7, -.3], tilt=8, expr='wide', root=[-20, 0]), 'i2'],
+        [4.18, P('hips', 'wide', la=[205, 200], look=[-.85, -.6], tilt=-6, expr='o', root=[-20, 0]), 'ob'],
+        [4.598, P('cheer', 'wide', look=[-.6, -.5], tilt=-4, expr='joy', root=[-20, -14]), 'ob'],
+        [5.016, P('cheer', 'wide', ra=[-55, -72], la=[235, 252], look=[-.5, -.5], tilt=-2, expr='joy', root=[-20, 0]), 'io'],
+    ]
+    C = [[0.0, dict(z=1.0, fx=960, fy=540, c=0.0, dy=0, roll=0.0)],
+         [0.836, dict(z=1.03, fx=940, fy=575, c=0.03, dy=0, roll=-0.3), 'l'],
+         [2.926, dict(z=1.30, fx=840, fy=760, c=0.2, dy=0, roll=-0.9), 'io'],
+         [3.344, dict(z=1.38, fx=830, fy=780, c=0.23, dy=0, roll=-1.1), 'io'],
+         [5.016, dict(z=1.12, fx=930, fy=600, c=0.1, dy=60, roll=1.4), 'io']]
+    data = dict(K=K, C=C, sun=sun, tgt=tgt, head=head_c, tri=tri_c, you=dict(b=(1060, 1040), s=.33))
+    js = r'''
+const DEP={Lsky:12,Ltrees:4,Lfield:1.12,Lpyr:1,Lfg:.62,Lyou:.6,Lnear:.42};
+window.render=function(t){
+  const k=track(DATA.C,t), HIT=3.344, C={S0:1,fx:k.fx,fy:k.fy,z:k.z*(1+.02*pulse(t,HIT,.08)),c:k.c,dx:0,dy:k.dy,roll:k.roll};
+  for(const id in DEP)setL(id,C,DEP[id]);
+  // the light crawls down: one triangle per beat, top → bottom, then the head lights on the bar
+  for(let k7=7;k7>=1;k7--){const tb=BEAT*(8-k7), u=span(t,tb-.06,tb+.06,'ss'), e=$('tri'+k7);e.setAttribute('opacity',f2(u));
+    const gl=e.querySelector('.glow');gl.setAttribute('stroke-width',f1(16+30*pulse(t,tb+.04,.12)));gl.setAttribute('opacity',f2(.4+.5*pulse(t,tb+.04,.12)))}
+  const hl=span(t,HIT-.05,HIT+.05,'ss');$('headL').setAttribute('opacity',f2(hl));$('headD').setAttribute('opacity',f2(1-hl));
+  // sunset: the sun sinks a little
+  $('sun').setAttribute('transform','translate(0,'+f1(t*6)+')');
+  // the gold ray from the sun to the corner of the balustrade, dashes flowing
+  const ms=MATS.Lsky, mp=MATS.Lpyr, a=app(ms,[DATA.sun[0],DATA.sun[1]+t*6]), b=app(mp,DATA.tgt), dr=span(t,.1,.8,'o');
+  $('ray').setAttribute('d','M'+f1(a[0])+','+f1(a[1])+' L'+f1(a[0]+(b[0]-a[0])*dr)+','+f1(a[1]+(b[1]-a[1])*dr));$('ray').setAttribute('stroke-dashoffset',f1(-t*60));
+  $('rayd').setAttribute('cx',f1(b[0]));$('rayd').setAttribute('cy',f1(b[1]));$('rayd').setAttribute('opacity',f2(span(t,.7,.85)));
+  $('ray').setAttribute('opacity',f2(.9*(1-.6*span(t,2.9,3.3))));
+  const lb=app(ms,[DATA.sun[0]-92,DATA.sun[1]-100]);$('lab').setAttribute('transform','translate('+f1(lb[0])+','+f1(lb[1])+')');$('lab').setAttribute('opacity',f2(span(t,3.70,3.85)));
+  // the burst when the head lights
+  const h=app(mp,DATA.head), bu=span(t,HIT,HIT+.5,'o');let s='';
+  if(t>=HIT-.01&&bu<1){for(let i=0;i<12;i++){const an=i*30+15, r0=40+120*bu, r1=r0+40*(1-bu);s+='<path d="M'+f1(h[0]+cosd(an)*r0)+','+f1(h[1]+sind(an)*r0)+' L'+f1(h[0]+cosd(an)*r1)+','+f1(h[1]+sind(an)*r1)+'" stroke="#FFE7A8" stroke-width="7" stroke-linecap="round"/>'}
+    s+='<circle cx="'+f1(h[0])+'" cy="'+f1(h[1])+'" r="'+f1(30+150*bu)+'" fill="none" stroke="#FFE7A8" stroke-width="'+f1(10*(1-bu))+'"/>'}
+  $('burst').innerHTML=s;$('burst').setAttribute('opacity',f2(1-bu));
+  // 你 (lit by the sunset from the right; its shadow falls long to the left)
+  let p=breathe(track(DATA.K,t),t,2);
+  const steps=[1.254,1.672,2.09,2.508];for(const c of steps)p.root[1]-=6*Math.exp(-Math.pow((t-c+.2)/.09,2));
+  const Y=you(p,DATA.you.b[0],DATA.you.b[1],DATA.you.s,{shadow:(X,Yy,s,pp)=>{const air=Math.max(0,-pp.root[1])/100;return '<ellipse cx="'+f1(X-70*s)+'" cy="'+f1(DATA.you.b[1]+3)+'" rx="'+f1(95*s*(1-.4*air))+'" ry="'+f1(9*s)+'" fill="#3A2830" opacity="'+f2(.45*(1-.5*air))+'"/>'}});
+  $('you').innerHTML=Y.svg;
+  bubble(t,Y.head,Y.hr,MATS.Lyou);
+};'''
+    return page(3 * BAR, body, data, js)
+
+
+if __name__ == '__main__':
+    out = sys.argv[1] if len(sys.argv) > 1 else '.'
+    os.makedirs(out, exist_ok=True)
+    which = sys.argv[2:] or ['chichen_when', 'chichen_what']
+    for name in which:
+        fn = globals().get(name)
+        if fn:
+            open(os.path.join(out, name + '.html'), 'w').write(fn()); print('page', name)
