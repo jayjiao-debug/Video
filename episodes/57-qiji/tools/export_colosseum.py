@@ -5,7 +5,7 @@ Writes remotion/public/ep57/colo/*.svg + colo.json (generated, not committed).""
 import os, sys, json, math, random
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import hist_b as HB
-OUT = '/home/claude/video/episodes/37-qiqing/remotion/public/ep57/colo'; os.makedirs(OUT, exist_ok=True)
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../37-qiqing/remotion/public/ep57/colo'); os.makedirs(OUT, exist_ok=True)
 CAP = {}
 HB.write = lambda name, defs, body: CAP.update(defs=defs if isinstance(defs, str) else ''.join(defs), body=list(body))
 def svg(defs, body): return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><defs>{defs}</defs>{"".join(body)}</svg>'
