@@ -112,18 +112,40 @@ const rrect = (x0: number, x1: number, z0: number, z1: number, r: number, n = 5)
 	for (const [cx, cz, a0] of c) for (let i = 0; i <= n; i++) { const a = a0 + Math.PI / 2 * i / n; o.push([cx + r * Math.cos(a), cz + r * Math.sin(a)]); }
 	return o; };
 const DOOR = rrect(XD - DW / 2, XD + DW / 2, SILL, DTOP, DR);
-const FusMesh: React.FC<{cam: Cam}> = ({cam}) => {
-	const fills: React.ReactNode[] = [], sil: React.ReactNode[] = [];
-	for (let i = 0; i < STA.length - 1; i++) { const xa = STA[i], xb = STA[i + 1], xm = (xa + xb) / 2;
-		const vis: boolean[] = [], col: string[] = [];
-		for (let j = 0; j < NA; j++) { const th = (THS[j] + THS[j + 1]) / 2, n = fusN(xm, th), P = SP(xm, th);
-			vis.push(cam.sees(P, n)); col.push(tone(n, th < rad(-50) || th > rad(230) ? P_BELLY : P_WHITE)); }
-		let s0 = 0; while (vis[(s0 + NA - 1) % NA] && s0 < NA) s0++;
-		let j = 0; while (j < NA) { const a = (s0 + j) % NA; if (!vis[a]) { j++; continue; } let e = j; while (e + 1 < NA && vis[(s0 + e + 1) % NA] && col[(s0 + e + 1) % NA] === col[a]) e++;
-			const P: V3[] = []; for (let k = j; k <= e + 1; k++) P.push(SP(xa, THS[(s0 + k) % NA])); for (let k = e + 1; k >= j; k--) P.push(SP(xb, THS[(s0 + k) % NA]));
-			fills.push(<Poly key={`${i}_${j}`} cam={cam} P={P} fill={col[a]} stroke={col[a]} sw={1.2} />); j = e + 1; }
-		for (let k = 0; k < NA; k++) if (vis[k] !== vis[(k + NA - 1) % NA]) sil.push(<Line key={`s${i}_${k}`} cam={cam} P={[SP(xa, THS[k]), SP(xb, THS[k])]} sw={2.8} />); }
-	return <g>{fills}<g>{sil}</g></g>; };
+/* a surface of revolution about an axis parallel to x, drawn as flat toon bands with exact (sub-sample) boundaries per station:
+   for each ring, the visible arc (between the two silhouette angles) and the angles where the tone changes; bands are joined
+   station to station, so the band edges and the outline are smooth curves, not facets. prof(x) = [radius, axis y, axis z]. */
+type Prof = (x: number) => [number, number, number];
+const revP = (pf: Prof, x: number, th: number): V3 => { const [r, cy, cz] = pf(x); return [x, cy + r * Math.cos(th), cz + r * Math.sin(th)]; };
+const revN = (pf: Prof, x: number, th: number): V3 => { const e = .01, a = pf(x + e), b = pf(x - e), dr = (a[0] - b[0]) / (2 * e), dy = (a[1] - b[1]) / (2 * e), dz = (a[2] - b[2]) / (2 * e);
+	return norm([-Math.sin(th) * dz - Math.cos(th) * dy - dr, Math.cos(th), Math.sin(th)]); };
+const Rev: React.FC<{cam: Cam; pf: Prof; st: number[]; band: (n: V3, th: number) => number; cols: string[]; sw?: number; endArc?: boolean}> = ({cam, pf, st, band, cols, sw = 2.8, endArc = true}) => {
+	const nb = cols.length, B: number[][] = [];
+	const g = (x: number, th: number) => dot(revN(pf, x, th), sub(cam.C, revP(pf, x, th)));
+	const bis = (lo: number, hi: number, inLo: (th: number) => boolean) => { for (let i = 0; i < 12; i++) { const m = (lo + hi) / 2; if (inLo(m)) lo = m; else hi = m; } return (lo + hi) / 2; };
+	for (const x of st) { const [r, cy, cz] = pf(x), thc = Math.atan2(cam.C[2] - cz, cam.C[1] - cy);
+		if (r < 1e-3) { B.push(Array(nb + 1).fill(thc)); continue; }
+		let top = thc + Math.PI, bot = thc - Math.PI;
+		for (let d = rad(3); d <= Math.PI; d += rad(3)) if (g(x, thc + d) <= 0) { top = bis(thc + d - rad(3), thc + d, (th) => g(x, th) > 0); break; }
+		for (let d = rad(3); d <= Math.PI; d += rad(3)) if (g(x, thc - d) <= 0) { bot = bis(thc - d, thc - d + rad(3), (th) => g(x, th) <= 0); break; }
+		const idx = (th: number) => band(revN(pf, x, th), th), row = [bot];
+		for (let i = 1; i < nb; i++) { const S = 48; let v = top;
+			for (let j = 0; j <= S; j++) { const th = lerp(bot, top, j / S); if (idx(th) >= i) { v = j === 0 ? bot : bis(lerp(bot, top, (j - 1) / S), th, (q) => idx(q) < i); break; } }
+			row.push(Math.max(v, row[row.length - 1])); }
+		row.push(top); B.push(row); }
+	const arc = (x: number, a: number, b: number, n = 10) => Array.from({length: n + 1}, (_, i) => revP(pf, x, lerp(a, b, i / n)));
+	const N = st.length, o: React.ReactNode[] = [];
+	for (let i = 0; i < nb; i++) { if (B.every((row) => row[i + 1] - row[i] < 1e-4)) continue;
+		const P: V3[] = [...st.map((x, s) => revP(pf, x, B[s][i])), ...arc(st[N - 1], B[N - 1][i], B[N - 1][i + 1]), ...st.slice().reverse().map((x, s) => revP(pf, x, B[N - 1 - s][i + 1])), ...arc(st[0], B[0][i + 1], B[0][i])];
+		o.push(<Poly key={`b${i}`} cam={cam} P={P} fill={cols[i]} stroke={cols[i]} sw={1} />); }
+	o.push(<Line key="top" cam={cam} P={st.map((x, s) => revP(pf, x, B[s][nb]))} sw={sw} />, <Line key="bot" cam={cam} P={st.map((x, s) => revP(pf, x, B[s][0]))} sw={sw} />);
+	if (endArc) o.push(<Line key="end" cam={cam} P={arc(st[N - 1], B[N - 1][0], B[N - 1][nb], 24)} sw={sw * .8} />);
+	return <g>{o}</g>; };
+const FUS_PF: Prof = (x) => { const [r, zc] = fus(x); return [r, 0, zc]; };
+const FUS_ST = [...Array.from({length: 21}, (_, i) => -LN * Math.pow(i / 20, 1.8)), ...Array.from({length: 21}, (_, i) => lerp(-LN, XT0, (i + 1) / 21)), ...Array.from({length: 12}, (_, i) => XT0 + (XEND - XT0) * (i + 1) / 12)];
+const fusBand = (n: V3, th: number) => { const a = Math.atan2(Math.sin(th), Math.cos(th)), belly = a < rad(-50) && a > rad(-130);
+	return dot(n, SUN) > .03 ? 3 : n[2] < -.42 ? (belly ? 0 : 1) : 2; };
+const FusMesh: React.FC<{cam: Cam}> = ({cam}) => <Rev cam={cam} pf={FUS_PF} st={FUS_ST} band={fusBand} cols={[P_BELLY[2], P_WHITE[2], P_WHITE[1], P_WHITE[0]]} />;
 /* a patch on the skin given by (x, θ) corners, bilinear, sampled so it follows the curve */
 const skinQuad = (c: [number, number][], out = .005, n = 6): V3[] => { const o: V3[] = [];
 	for (let e = 0; e < 4; e++) { const [xa, ta] = c[e], [xb, tb] = c[(e + 1) % 4]; for (let i = 0; i < n; i++) { const u = i / n; o.push(SP(lerp(xa, xb, u), lerp(ta, tb, u), out)); } }
