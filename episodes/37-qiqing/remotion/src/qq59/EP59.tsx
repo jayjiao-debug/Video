@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame, Audio, staticFile} from 'remotion';
 import {FPS, D, LINES59, STAMPS59, COUNTER59, DEMO_END} from './lines59';
 import {W, H, Story, Punch, Stamp, Counter, Seal, RewindMark, Title, SubRow, seg, sm, visLen} from './skin59';
-import {Homecoming, GlobeAct, SignpostScene, GoalGlobe, RulesScene, WindowScene, KitScene, CalendarScene, signSun} from './demo59';
+import {Homecoming, GlobeAct, SignpostScene, GoalGlobe, RulesScene, WindowScene, KitScene, CalendarScene, signSun, craneQ, comet, dateAt} from './demo59';
 /* ep59 《他走路回家，走了28年》 — master. Composition EP59DEMO = bars 0–21 (film 0 → the bar-21 downbeat, 35.94 s, 1078 frames).
    Picture (film time t):
      0      → 10.75  Homecoming: Hull at dusk; cut on bar 2 to the door; the question; the hug; from 8.1 the crane rises off them
@@ -35,7 +35,7 @@ const TYPE = 0.3;
 const rowsAt = (t: number): {rows: SubRow[]; punch?: {s: string; o: number}; title?: {u: number; o: number}} => {
 	const L = LINES59.find((l) => t >= l.a && t < l.b); if (!L) return {rows: []};
 	if (L.title) return {rows: [], title: {u: t - L.a, o: 1 - sm(seg(t, L.b - 0.36, L.b - 0.06))}};
-	if (L.punch) return {rows: [], punch: {s: L.rows[0].s, o: sm(seg(t, L.a, L.a + 0.12)) * (1 - sm(seg(t, L.b - 0.2, L.b - 0.02)))}};
+	if (L.punch) { const o0 = L.out ?? L.b - 0.2; return {rows: [], punch: {s: L.rows[0].s, o: sm(seg(t, L.a, L.a + 0.12)) * (1 - sm(seg(t, o0, o0 + 0.22)))}}; }
 	const rows: SubRow[] = [];
 	for (const r of L.rows) { if (t < r.at) continue; const len = visLen(r.s);
 		let n: number;
@@ -45,22 +45,27 @@ const rowsAt = (t: number): {rows: SubRow[]; punch?: {s: string; o: number}; tit
 	return {rows};
 };
 const lerpN = (a: number, b: number, u: number) => a + (b - a) * u;
-const stampAt = (t: number) => { const s = STAMPS59.find((x) => t >= x.a && t < x.b); return s ? {s, o: sm(seg(t, s.a, s.a + 0.08))} : null; };
+const stampAt = (t: number) => { const s = STAMPS59.find((x) => t >= x.a && t < x.b); return s ? {s, o: s.a === 0 ? 1 : sm(seg(t, s.a, s.a + 0.08))} : null; };
+/* the counter: 2026 · 他 57 岁 at the door; the crane rolls 已走约 N 公里 up with the gold line (0 → 50,000 as the line is drawn);
+   the title's rewind light drives it back: date and age follow the light along the route (Russia's decade rolls by fast), km back to 0;
+   from the dive on: 1998 · 他 29 岁 (COUNTER59 in lines59.ts lists the same keys) */
+/** odometer values for calendar numbers: hold the whole number, roll only through the last 12 % before the next one */
+const snapRoll = (v: number) => { const a = Math.floor(v), f = v - a; return a + Math.max(0, (f - 0.88) / 0.12); };
 const counterAt = (t: number) => {
-	let i = 0; while (i + 1 < COUNTER59.length && t >= COUNTER59[i + 1].t) i++;
-	const K = COUNTER59[i], P = i > 0 ? COUNTER59[i - 1] : K, k = K.roll > 0 ? sm(seg(t, K.t, K.t + K.roll)) : 1, k2 = K.roll > 0 ? sm(seg(t + 1 / FPS, K.t, K.t + K.roll)) : 1;
-	const year = P.year + (K.year - P.year) * k, age = P.age + (K.age - P.age) * k;
-	const km = K.km === null ? null : (P.km ?? 0) + (K.km - (P.km ?? 0)) * k;
-	const speed = Math.max(Math.abs((K.year - P.year) * (k2 - k)), Math.abs((K.age - P.age) * (k2 - k))) * FPS;
-	return {year, age, km, approx: !!K.approx, blur: Math.min(4, speed / 6)};
+	const C0 = COUNTER59;
+	if (t < C0[1].t) return {year: 2026, age: 57, km: null as number | null, approx: false, blur: 0};
+	if (t < 12.2) { const q = craneQ(t), q2 = craneQ(t + 1 / FPS); return {year: 2026, age: 57, km: 50000 * q, approx: true, blur: Math.min(1.2, Math.abs(q2 - q) * 50000 * FPS / 60000)}; }
+	if (t < D(9) - 0.05) { const c = comet(t), y = dateAt(c), y2 = dateAt(comet(t + 1 / FPS)), sp = Math.abs(y2 - y) * FPS;
+		return {year: snapRoll(y), age: snapRoll(29 + (y - 1998.83)), km: 50000 * c, approx: true, blur: Math.min(1.5, sp / 12)}; }
+	return {year: 1998, age: 29, km: null, approx: false, blur: 0};
 };
 export const Furniture: React.FC<{t: number}> = ({t}) => {
 	const R = rowsAt(t), st = stampAt(t), c = counterAt(t);
 	const rew = t > D(7) + 0.4 && t < D(9) - 0.5 ? (0.65 + 0.35 * Math.sin((t - D(7)) * 9)) * sm(seg(t, D(7) + 0.4, D(7) + 0.6)) * (1 - sm(seg(t, D(9) - 0.75, D(9) - 0.5))) : 0;
 	return <>
 		{R.rows.length > 0 && <Story rows={R.rows} />}
-		{R.punch && <Punch s={R.punch.s} o={R.punch.o} />}
-		{R.title && <Title u={R.title.u} o={R.title.o} top={690} />}
+		{R.punch && <Punch s={R.punch.s} o={R.punch.o} top={436} />}
+		{R.title && <Title u={R.title.u} o={R.title.o} top={640} />}
 		{rew > 0.01 && <RewindMark o={rew} />}
 		{st && <Stamp y={st.s.y} place={st.s.place} note={st.s.note} o={st.o} />}
 		<Counter year={c.year} age={c.age} km={c.km} kmApprox={c.approx} blur={c.blur} />

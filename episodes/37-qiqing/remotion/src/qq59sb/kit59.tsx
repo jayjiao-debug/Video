@@ -3,12 +3,13 @@ import {Figure4, Look4, Pose, fkPose} from '../qq44/figure44';
 import {walkPose, grounded, jointAt, STRIDE, seated} from '../qq47/pose47';
 import {Subs, Stamp, Seal, Theme, SAFE_X, SAFE_Y, KAI, YEAR, SANS} from '../qq50/kit50';
 import {useStampFonts, Odo} from '../qq44/skin44';
+import {figPaths, LOOK, Look59} from '../qq59/figure59';
 /* ep59 《他走路回家，走了28年》 · storyboard bars 21–95 · the shared layer.
    House style (ep44/ep55 "dark silhouette"): flat-vector sets in dark, desaturated planes with layered set dressing; one-tone
    figures (#0c0b0f) with a warm rim on the lit edge; ONE accent colour = gold (the route, the home light, key words, widgets).
    Furniture: layout-D subtitles (kit50), two-line stamp (kit50), 「第 N 年 · 他 N 岁」 counter, the J seal. */
 export {Figure4, fkPose, walkPose, grounded, jointAt, STRIDE, seated, Subs, Stamp, Seal, SAFE_X, SAFE_Y, KAI, YEAR, SANS};
-export type {Look4, Pose, Theme};
+export type {Look4, Pose, Theme, Look59};
 export const W = 1920, H = 1080, FPS = 30;
 /* music grid (script v2): DJ remix 140.8 BPM, bar 1.70444 s; downbeat n at D(n) */
 export const BAR = 1.70444, BEAT = BAR / 4, D = (n: number) => 0.144 + BAR * n;
@@ -90,17 +91,15 @@ export const Glints: React.FC<{t: number; y0: number; y1: number; n?: number; co
 		return <rect key={i} x={f1(x)} y={f1(y)} width={f1(w)} height={f1(lerp(1.2, 4, k))} rx={1} fill={col} opacity={o * (0.3 + 0.7 * Math.abs(Math.sin(t * 1.3 + i)))} />; })}</g>;
 
 /* ---------- the traveller (figure44 rig) with his expedition pack ---------- */
-export const LK: Record<string, Look4> = {
-	young: {dress: 'jacket', head: 'cap', build: 1.04},
-	mid: {dress: 'jacket', head: 'cap', beard: 'short', build: 1.05},
-	old: {dress: 'jacket', head: 'cap', beard: 'full', build: 1.06},
-	swim: {dress: 'shirt', head: 'bald', build: 1.04},
-	mum: {dress: 'dress', head: 'bob', build: 0.95},
-	guard: {dress: 'coat', head: 'cap', build: 1.1},
-	man: {dress: 'jacket', head: 'short', build: 1.06},
-	woman: {dress: 'coat', head: 'long', build: 0.96},
-	press: {dress: 'jacket', head: 'short', build: 1.05},
-	dimitri: {dress: 'jacket', head: 'cylcap', build: 1.0},
+/* the cast: the hero's looks come from the demo's rig (qq59/figure59, read-only) so he is the same man from bar 0 to the end:
+   young = 1998–2006 (cap, stubble, jacket, the big pack); mid = the Russia/Asia years (cap, short beard); old = 2024–26 (bush hat, full beard, parka) */
+export const LK: Record<string, Look59> = {
+	young: LOOK.karlYoung, mid: {...LOOK.karlYoung, beard: 'short', build: 1.0}, old: LOOK.karlOld,
+	swim: {dress: 'shirt', head: 'bald', beard: 'full', pack: 'none', build: 1.0},
+	mum: LOOK.mum, man: LOOK.man, woman: LOOK.woman,
+	guard: {dress: 'coat', head: 'cap', build: 1.1, pack: 'none'},
+	dimitri: {dress: 'parka', head: 'beanie', beard: 'short', pack: 'big', build: 1.0},
+	press: {dress: 'jacket', head: 'short', build: 1.05, pack: 'none'},
 };
 /** the pack: a tall expedition rucksack + a bedroll, built along the torso axis (w > 0 = behind the back) */
 export type Shape = {d: string; tr?: string};
@@ -115,15 +114,13 @@ export const packD = (pose: Pose, x: number, g: number, h: number, size = 1, wit
 	const strap = spline([T(0.235, 0.03), T(0.24, -0.02), T(0.17, -0.06), T(0.08, -0.055), T(0.08, -0.04), T(0.16, -0.045), T(0.215, -0.01), T(0.215, 0.03)]);
 	return withRoll ? [{d: body}, {d: roll, tr: `rotate(${f1(ang)} ${f1(rc[0])} ${f1(rc[1])})`}, {d: strap}] : [{d: body}, {d: strap}];
 };
-type TravP = {x: number; g: number; h: number; pose: Pose; look?: Look4; flip?: boolean; pack?: number; col?: string; rim?: string; rimOp?: number; side?: 1 | -1; under?: React.ReactNode; over?: React.ReactNode; extra?: Shape[]; roll?: boolean};
-/** one-tone figure (+ pack) with a thin rim of light on the lit side (side = −1: light from the left, +1: from the right).
-    `extra` = more one-tone shapes in the figure's unflipped frame (a machete, a strap, a vest), drawn with the body and rimmed with it */
-export const Trav: React.FC<TravP> = ({x, g, h, pose, look = LK.young, flip, pack = 1, col = FIG, rim = RIM, rimOp = 0.6, side = -1, under, over, extra = [], roll = true}) => {
-	const k = Math.max(1, h / 420), pk = pack > 0 ? packD(pose, x, g, h, pack, roll) : [];
-	const body = (c: string, key: string) => <g key={key} transform={flip ? `translate(${2 * x},0) scale(-1,1)` : undefined}>
-		{pk.map((s, i) => <path key={i} d={s.d} transform={s.tr} fill={c} />)}
-		<Figure4 x={x} ground={g} h={h} pose={pose} look={look} col={c} />
-		{extra.map((s, i) => <path key={`e${i}`} d={s.d} transform={s.tr} fill={c} />)}{key === 'b' && under}</g>;
+type TravP = {x: number; g: number; h: number; pose: Pose; look?: Look59; flip?: boolean; pack?: number; col?: string; rim?: string; rimOp?: number; side?: 1 | -1; under?: React.ReactNode; over?: React.ReactNode; extra?: Shape[]; roll?: boolean};
+/** one-tone figure with a thin rim of light on the lit side (side = −1: light from the left, +1: from the right); drawn with the demo's
+    figPaths (its pack included when look.pack = 'big'; pack = 0 takes it off). `extra` = more one-tone shapes in the figure's unflipped
+    frame (a machete, a life vest), drawn and rimmed with the body */
+export const Trav: React.FC<TravP> = ({x, g, h, pose, look = LK.young, flip, pack = 1, col = FIG, rim = RIM, rimOp = 0.6, side = -1, under, over, extra = []}) => {
+	const k = Math.max(1, h / 420), lk: Look59 = pack > 0 ? look : {...look, pack: 'none'}, ds = [...figPaths(x, g, h, pose, lk), ...extra.map((s) => s.d)];
+	const body = (c: string, key: string) => <g key={key} transform={flip ? `translate(${2 * x},0) scale(-1,1)` : undefined}>{ds.map((d, i) => <path key={i} d={d} fill={c} />)}{key === 'b' && under}</g>;
 	return <g>{rimOp > 0 && <g transform={`translate(${f1(side * 2.4 * k)},${f1(-1.8 * k)})`} opacity={rimOp}>{body(rim, 'r')}</g>}{body(col, 'b')}{over}</g>;
 };
 /** the torso frame of a posed figure: T(s, w) = hips + s along the spine + w toward the back (body heights) */

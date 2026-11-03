@@ -61,11 +61,11 @@ export const projOf = (v: GlobeView) => geoOrthographic().rotate([-v.lon, -v.lat
 	.clipExtent([[-60, -60], [1980, 1140]]);
 /** is a lon/lat on the visible hemisphere (with a margin in radians)? */
 export const facing = (v: GlobeView, ll: LL, margin = 0.02) => geoDistance(ll, [v.lon, v.lat]) < Math.PI / 2 - margin;
-export const PAL = {ocean0: '#1b3044', ocean1: '#0a1420', land: '#4a4035', landEdge: '#6a5a46', grat: '#cfe0ff', atm: '#6ea6d8', gold: '#FFC24A', goldHi: '#FFE9B0', glow: '#FFA62E', plan: '#F4EAD8'};
+export const PAL = {ocean0: '#1a2c40', ocean1: '#08111c', land: '#433a30', landEdge: '#6a5a46', grat: '#cfe0ff', atm: '#6ea6d8', gold: '#FFC24A', goldHi: '#FFE9B0', glow: '#FFA62E', plan: '#F4EAD8'};
 export type RouteDraw = {p0: number; p1: number; o?: number; w?: number; head?: number; headO?: number};
 export type Pin = {ll: LL; label?: string; o?: number; kind?: 'start' | 'home'; dy?: number};
 /** the globe; `route` draws the gold line (p0 → p1, a comet head at `head`); `plan` a dashed cream line; `home` = the light of Hull */
-export const Globe: React.FC<{id: string; v: GlobeView; route?: RouteDraw; plan?: {p: number; o?: number; head?: boolean}; pins?: Pin[]; home?: number; o?: number; gratO?: number}> = ({id, v, route, plan, pins = [], home = 0, o = 1, gratO = 0.06}) => {
+export const Globe: React.FC<{id: string; v: GlobeView; route?: RouteDraw; comet?: {p: number; len: number}; plan?: {p: number; o?: number; head?: boolean}; pins?: Pin[]; home?: number; o?: number; gratO?: number}> = ({id, v, route, comet, plan, pins = [], home = 0, o = 1, gratO = 0.06}) => {
 	const pr = projOf(v), path = geoPath(pr);
 	const landD = path(LAND) ?? '', gratD = gratO > 0 ? path(GRAT) ?? '' : '';
 	const line = (cs: LL[]) => (cs.length > 1 ? path({type: 'LineString', coordinates: cs}) ?? '' : '');
@@ -76,6 +76,7 @@ export const Globe: React.FC<{id: string; v: GlobeView; route?: RouteDraw; plan?
 	const headLL = route?.head !== undefined ? routeAt(route.head) : null, headP = headLL ? pt(headLL) : null;
 	const planHead = plan?.head ? pt(routeAt(plan.p)) : null;
 	const homeP = home > 0 ? pt(HULL) : null;
+	const cometD = comet ? line(routeSlice(comet.p, Math.min(1, comet.p + comet.len))) : '', cometP = comet ? pt(routeAt(comet.p)) : null;
 	return <g opacity={o}>
 		<defs>
 			<radialGradient id={`${id}oc`} cx="0.36" cy="0.32" r="0.78"><stop offset="0" stopColor={PAL.ocean0} /><stop offset="1" stopColor={PAL.ocean1} /></radialGradient>
@@ -96,6 +97,8 @@ export const Globe: React.FC<{id: string; v: GlobeView; route?: RouteDraw; plan?
 			<path d={routeD} stroke={PAL.glow} strokeOpacity={0.32} strokeWidth={w * 2.2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
 			<path d={routeD} stroke={PAL.gold} strokeWidth={w} fill="none" strokeLinecap="round" strokeLinejoin="round" />
 			<path d={routeD} stroke={PAL.goldHi} strokeOpacity={0.6} strokeWidth={w * 0.35} fill="none" strokeLinecap="round" strokeLinejoin="round" /></g>}
+		{cometD && <g><path d={cometD} stroke={PAL.goldHi} strokeOpacity={0.45} strokeWidth={w * 3.4} fill="none" strokeLinecap="round" /><path d={cometD} stroke="#fffaf0" strokeWidth={w * 1.3} fill="none" strokeLinecap="round" /></g>}
+		{cometP && <g><circle cx={cometP[0]} cy={cometP[1]} r={w * 11} fill={`url(#${id}hg)`} /><circle cx={cometP[0]} cy={cometP[1]} r={w * 1.3} fill="#fffaf0" /></g>}
 		{headP && (route?.headO ?? 1) > 0.01 && <g opacity={route?.headO ?? 1}><circle cx={headP[0]} cy={headP[1]} r={w * 9} fill={`url(#${id}hg)`} /><circle cx={headP[0]} cy={headP[1]} r={w * 1.1} fill="#fffaf0" /></g>}
 		{planHead && <g opacity={plan?.o ?? 1}><circle cx={planHead[0]} cy={planHead[1]} r={26} fill={`url(#${id}hg)`} opacity={0.6} /><circle cx={planHead[0]} cy={planHead[1]} r={5.5} fill={PAL.plan} /></g>}
 		{homeP && <g opacity={home}><circle cx={homeP[0]} cy={homeP[1]} r={46} fill={`url(#${id}hg)`} /><circle cx={homeP[0]} cy={homeP[1]} r={6} fill="#fff6e0" /></g>}

@@ -40,6 +40,9 @@ export const useFonts59 = (text: string) => {
 			.then(() => { fontsReady.add(text); continueRender(h); }, () => continueRender(h)); }, [h, text]);
 };
 
+/** centred lines: close the full-width gaps around corner brackets (「…？」 would otherwise read with a hole before 」 and after 「) */
+const tight = (s: string, next = ''): React.ReactNode => s.split('').map((ch, i, a) => (ch === '「' && i === 0 ? <span key={i} style={{marginLeft: '-0.45em'}}>{ch}</span>
+	: /[？。！]/.test(ch) && (a[i + 1] ?? next) === '」' ? <span key={i} style={{marginRight: '-0.42em'}}>{ch}</span> : ch));
 /** "[key]" markup → spans, revealing only the first n characters; key words cream with a gold underline that grows as they type */
 export const Marked: React.FC<{s: string; n?: number; pull?: boolean}> = ({s, n = 1e9, pull}) => {
 	let left = n; const parts = s.split(/(\[[^\]]+\])/).filter(Boolean), out: React.ReactNode[] = [];
@@ -48,7 +51,8 @@ export const Marked: React.FC<{s: string; n?: number; pull?: boolean}> = ({s, n 
 		if (key) out.push(<span key={i} style={{color: INK, textShadow: KEY_SH, position: 'relative', display: 'inline-block'}}>
 			{vis && <span style={{position: 'absolute', left: '0.05em', width: `calc(${(100 * vis.length) / txt.length}% - 0.1em)`, bottom: '0.12em', height: '0.11em', borderRadius: '0.06em', background: GOLD, boxShadow: '0 0 0 1.5px rgba(16,9,8,0.55), 0 2px 8px rgba(16,9,8,0.6)'}} />}
 			<span style={{position: 'relative'}}>{vis}</span><span style={{opacity: 0}}>{hid}</span></span>);
-		else if (pull && i === parts.length - 1 && /[？。！」]$/.test(vis) && hid === '') out.push(<span key={i}>{vis.slice(0, -1)}<span style={{marginRight: '-0.5em'}}>{vis.slice(-1)}</span></span>);
+		else if (pull && i === parts.length - 1 && /[？。！」]$/.test(vis) && hid === '') out.push(<span key={i}>{tight(vis.slice(0, -1), vis.slice(-1))}<span style={{marginRight: '-0.5em'}}>{vis.slice(-1)}</span></span>);
+		else if (pull) out.push(<span key={i}>{tight(vis)}<span style={{opacity: 0}}>{hid}</span></span>);
 		else out.push(<span key={i}>{vis}<span style={{opacity: 0}}>{hid}</span></span>);
 	});
 	return <>{out}</>;
@@ -101,7 +105,7 @@ export const Counter: React.FC<{year: number; age: number; km?: number | null; k
 		<span style={{fontFamily: SANS, fontSize: 24, fontWeight: 500, marginBottom: 4}}>岁</span>
 		{km !== null && km !== undefined && <span style={{opacity: kmO, display: 'flex', alignItems: 'flex-end', gap: 6, marginLeft: 18}}>
 			<span style={{fontFamily: KAI, fontSize: 26, fontWeight: 700, marginBottom: 4, opacity: 0.82}}>{kmApprox ? '已走约' : '已走'}</span>
-			<span style={{fontFamily: FIG, fontSize: 34, fontWeight: 400, lineHeight: 1, fontVariantNumeric: 'tabular-nums', color: GOLD_HI}}><Odo v={km} size={34} blur={blur} sep /></span>
+			<span style={{fontFamily: FIG, fontSize: 34, fontWeight: 400, lineHeight: 1, fontVariantNumeric: 'tabular-nums', color: GOLD_HI}}><Odo v={km} size={34} blur={blur * 0.6} sep /></span>
 			<span style={{fontFamily: KAI, fontSize: 26, fontWeight: 700, marginBottom: 4, opacity: 0.82}}>公里</span></span>}
 		{yr < 0 && <span />}
 	</div>;

@@ -15,7 +15,7 @@ const SCENES: Record<string, SC> = {
 	darienIn: A.DarienIn, jungle: A.Jungle, jail: A.Jail, north: A.North, alaska: A.Alaska, ice: A.Ice, rshore: A.RShore,
 	arrest: B.Arrest, waiting: B.Waiting, patches: B.Patches, refused: B.Refused, shoulder: B.Shoulder, highway: B.Highway, steps: B.Steps, sign: B.Sign, seasons: B.Seasons,
 	steppe: C.Steppe, mountains: C.Mountains, gate: C.Gate, stall: C.Stall, shore: C.Shore, stepin: C.StepIn, caspian: C.Caspian, nights: C.Nights, tunnel: C.Tunnel, channel: C.Channel,
-	humber: Dd.Humber, farEnd: Dd.FarEnd, street: Dd.Street, banner: Dd.Banner, window: Dd.Window, door: Dd.Door, hug: Dd.Hug, globeUp: Dd.GlobeUp, twoSelves: Dd.TwoSelves, globeHome: Dd.GlobeHome, nightWindow: Dd.NightWindow,
+	humber: Dd.Humber, farEnd: Dd.FarEnd, street: Dd.Street, banner: Dd.BannerScene, window: Dd.Window, door: Dd.DoorScene, hug: Dd.Hug, globeUp: Dd.GlobeUp, twoSelves: Dd.TwoSelves, globeHome: Dd.GlobeHome, nightWindow: Dd.NightWindow,
 };
 export const T0 = D(21), T1 = D(95);
 const span = (r: Row) => [D(r.bar), D(r.bar + r.len)] as const;

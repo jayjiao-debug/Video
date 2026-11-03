@@ -27,7 +27,9 @@ export const Arrest: React.FC<SP> = ({u, d}) => {
 			<rect x={1660} y={600} width={220} height={124} rx={6} />
 			{[1440, 1560, 1760].map((x, i) => <circle key={i} cx={x} cy={884} r={42} />)}
 		</g>
-		<rect x={1530} y={652} width={60} height={34} fill="#3a4658" opacity={0.7} />
+		<path d="M1416,700 L1416,690 L1522,690 L1558,648 L1600,648 L1600,700 Z" fill="#3a4658" opacity={0.85} /><rect x={1606} y={656} width={46} height={40} fill="#3a4658" opacity={0.6} />
+		{[1680, 1750, 1820].map((x) => <path key={x} d={`M${x},604 Q${x + 30},588 ${x + 60},604`} stroke="#3a4250" strokeWidth={3} fill="none" />)}
+		<path d="M1380,720 L1880,720" stroke="#4a5262" strokeWidth={3} opacity={0.6} />
 		<Glow x={1392} y={760} r={200} c="#fff6e0" o={0.6} id="ar_h1" /><circle cx={1392} cy={760} r={12} fill="#fffaf0" />
 		<path d={`M1392,752 L700,680 L700,900 L1392,770 Z`} fill="#fff6e0" opacity={0.07} />
 		<Specks t={u} n={110} seed={4} col="#dfe8f4" o={0.55} vx={-40} vy={80} r={2.2} />
@@ -123,12 +125,12 @@ export const Refused: React.FC<SP> = ({u, d}) => {
 		<rect x={1380} y={700} width={190} height={260} rx={8} fill="#3e1a1e" transform="rotate(14 1475 830)" />
 		<rect x={300} y={760} width={300} height={14} rx={7} fill="#121010" transform="rotate(-24 450 767)" />
 		{/* the visa form */}
-		<g transform="translate(960,560) rotate(-3)">
+		<g transform="translate(1000,600) rotate(-3)">
 			<rect x={-400} y={-470} width={800} height={1000} fill="#d9d2c0" />
-			<text x={-340} y={-390} style={{fontFamily: YEAR, fontWeight: 700, fontSize: 46, letterSpacing: '0.12em'}} fill="#3a3430">VISA</text>
-			<rect x={-340} y={-372} width={300} height={4} fill="#3a3430" />
+			<text x={-120} y={-300} style={{fontFamily: YEAR, fontWeight: 700, fontSize: 52, letterSpacing: '0.14em'}} fill="#3a3430">VISA</text>
+			<rect x={-120} y={-282} width={250} height={4} fill="#3a3430" />
 			<rect x={200} y={-420} width={150} height={190} fill="#b8b0a0" /><circle cx={275} cy={-345} r={34} fill="#7a7266" /><path d="M215,-230 Q275,-300 335,-230 Z" fill="#7a7266" />
-			{Array.from({length: 11}, (_, i) => <g key={i}><rect x={-340} y={-300 + i * 62} width={120 + 60 * rnd(i, 2)} height={10} fill="#8a8274" /><rect x={-150} y={-286 + i * 62} width={460 - 120 * rnd(i, 3)} height={2} fill="#8a8274" /></g>)}
+			{Array.from({length: 10}, (_, i) => <g key={i}><rect x={-340} y={-230 + i * 62} width={120 + 60 * rnd(i, 2)} height={10} fill="#8a8274" /><rect x={-150} y={-216 + i * 62} width={460 - 120 * rnd(i, 3)} height={2} fill="#8a8274" /></g>)}
 			{/* the imprint */}
 			{hit && <g transform="translate(20,40) rotate(-11)" opacity={0.88}>
 				<rect x={-300} y={-95} width={600} height={190} rx={10} fill="none" stroke="#8e2a24" strokeWidth={14} />
@@ -153,8 +155,8 @@ export const Refused: React.FC<SP> = ({u, d}) => {
 
 /* ============ bar 42 · he shoulders the pack again (dawn, backlit) ============ */
 export const Shoulder: React.FC<SP> = ({u, d}) => {
-	const p = u / d, g = 880, h = 620, x = 820;
-	const pose = fkPose({hip: 0.655, lean: 4 + 4 * eio(p), neck: -6, lt: 4, lk: 4, rt: -7, rk: 6, la: 18, le: 104, ra: 14, re: 108});
+	const p = u / d, g = 900, h = 560, x = 1120;
+	const pose = grounded({lean: 6 + 5 * eio(p), neck: -8, lt: 4, lk: 4, rt: -7, rk: 6, la: 0, le: 118, ra: -4, re: 112});
 	return <g><Cam z={1.0 + 0.04 * p} py={lerp(30, 0, eio(p))}>
 		<Sky id="sh_s" stops={[[0, '#1e2a40'], [0.45, '#5a6478'], [0.68, '#d8b494'], [0.72, '#f0d8b4'], [1, '#2a2422']]} />
 		<Glow x={1300} y={720} r={520} c="#ffe2b0" o={0.7} id="sh_g" /><circle cx={1300} cy={735} r={46} fill="#fff4dc" />
@@ -163,7 +165,7 @@ export const Shoulder: React.FC<SP> = ({u, d}) => {
 		{/* the road leaving to the right, toward the sun */}
 		<path d={`M600,${H} L1270,772 L1330,772 L2100,${H} Z`} fill="#2a2424" /><path d={`M1300,772 L1360,${H}`} stroke="#d8c0a0" strokeWidth={4} strokeDasharray="30 40" opacity={0.6} />
 		{[200, 420, 1560, 1780].map((px, i) => <g key={i} fill="#120f0f"><rect x={px} y={600 + i * 14} width={8} height={200 - i * 10} /><rect x={px - 30} y={612 + i * 14} width={68} height={5} /></g>)}
-		<path d={`M-400,${g + 6} L${x - 40},${g + 6} L${x - 700},${H + 80} L-400,${H + 80} Z`} fill="#0e0c0c" opacity={0.6} />
+		<path d={`M${x - 120},${g + 4} L${x + 60},${g + 4} L${x - 500},${H + 80} L${x - 900},${H + 80} Z`} fill="#0e0c0c" opacity={0.6} />
 		<Trav x={x} g={g} h={h} pose={pose} look={LK.mid} side={1} rimOp={0.85} rim="#ffe8c0" />
 	</Cam></g>;
 };
@@ -231,21 +233,21 @@ export const Steps: React.FC<SP> = ({u, d}) => {
 export const Sign: React.FC<SP> = ({u, d}) => {
 	const p = u / d, y0 = 560, stepH = 46, g = 880, h = 400, x = 960, up = eout(seg(u, 0, 0.18));
 	const pose = fkPose({hip: 0.655, lean: -2, neck: -4, lt: 4, lk: 4, rt: -6, rk: 5, la: lerp(30, 158, up), le: lerp(60, 14, up), ra: lerp(26, 150, up), re: lerp(60, 22, up)});
-	const hl = hand(pose, 'LHand', x, g, h), hr = hand(pose, 'RHand', x, g, h), cx = (hl[0] + hr[0]) / 2 + 10, cy = (hl[1] + hr[1]) / 2;
+	const hl = hand(pose, 'LHand', x, g, h), hr = hand(pose, 'RHand', x, g, h), top = hand(pose, 'Top', x, g, h), cx = (hl[0] + hr[0]) / 2 + 10, cy = Math.min((hl[1] + hr[1]) / 2, top[1] - 40);
 	const flash = (t0: number) => Math.exp(-Math.max(0, u - t0) * 12) * (u >= t0 ? 1 : 0);
 	const fl = [flash(BEAT * 0.02), flash(BEAT * 2), flash(BEAT * 3.1)];
 	/* a photographer seen from behind: shoulders, back of the head, elbows out, camera at the eye, flash gun on top */
 	const Press: React.FC<{px: number; s: number; i: number; f: number}> = ({px, s, i, f}) => <g transform={`translate(${px},1090) scale(${s})`}>
 		<g fill="#07080a"><path d={spline([[-190, 80], [-175, -120], [-110, -190], [0, -205], [110, -190], [175, -120], [190, 80]])} />
 			<path d={`M-120,-170 Q-200,-260 -150,-330 L-110,-320 Q-130,-260 -70,-200 Z M120,-170 Q200,-260 150,-330 L110,-320 Q130,-260 70,-200 Z`} />
-			<circle cx={0} cy={-280} r={66} /><rect x={-95} y={-345} width={190} height={70} rx={12} /><rect x={-24} y={-400} width={48} height={52} rx={6} /></g>
-		<Glow x={0} y={-380} r={240} c="#ffffff" o={0.95 * f} id={`sg_f${i}`} /><rect x={-20} y={-396} width={40} height={20} fill="#ffffff" opacity={f} /></g>;
+			<circle cx={0} cy={-280} r={66} /><rect x={50} y={-318} width={70} height={56} rx={10} /><rect x={-14} y={-392} width={44} height={50} rx={6} /><rect x={-4} y={-352} width={24} height={12} /></g>
+		<Glow x={8} y={-372} r={240} c="#ffffff" o={0.95 * f} id={`sg_f${i}`} /><rect x={-10} y={-388} width={36} height={18} fill="#ffffff" opacity={f} /></g>;
 	return <g><Cam z={1.04 + 0.02 * p}>
 		<g transform="translate(-200,-40) scale(1.2)"><Portico y0={y0} steps={10} stepH={stepH} light={1} /></g>
 		<rect x={0} y={0} width={W} height={H} fill="#1a1e24" opacity={0.35} />
 		<Trav x={x} g={g} h={h} pose={pose} look={LK.mid} side={-1} rimOp={0.6} rim="#f4f0e8" />
 		{/* the handwritten sign: cardboard, marker scrawl (deliberately unreadable) */}
-		<g transform={`translate(${cx},${cy - 40}) rotate(-3)`}>
+		<g transform={`translate(${cx},${cy - 60}) rotate(-3)`}>
 			<rect x={-150} y={-90} width={300} height={170} fill="#b49a72" /><rect x={-150} y={-90} width={300} height={170} fill="none" stroke="#7a6446" strokeWidth={3} />
 			{[0, 1, 2].map((j) => <path key={j} d={`M${-120},${-50 + j * 46} ` + Array.from({length: 9}, (_, k) => `q${10},${-18 + 30 * rnd(j * 9 + k, 3)} ${24 + 6 * rnd(k, j)},${-4 + 8 * rnd(j * 9 + k, 4)}`).join(' ')} stroke="#2a2220" strokeWidth={7} fill="none" strokeLinecap="round" />)}
 		</g>

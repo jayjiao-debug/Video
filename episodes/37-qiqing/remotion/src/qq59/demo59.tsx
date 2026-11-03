@@ -2,12 +2,14 @@ import React from 'react';
 import {D, BT} from './lines59';
 import {W, H, rnd, seg, lerp, sm, eio, eo, ei, land, Glow, Sky, Cam, CamT, Par, Haze, StreetBack, StreetFront, Door, DoorSpill, Banner, MUM, TownPlanes, CloudLayer,
 	Signpost, FlagTree, Grass, Gulls, Strait, Bus, Pickup, Plane, RedX, Guanaco, WireFence, PackTop, TentBag, Cash, PlasticCam, Planks, Tag, YearCard, Lamp, ParkedCar} from './bg59';
-import {Lit, Rim, Pose, LOOK, PZ, grounded, walkTo, walkNat, walkPose, withArms, mixPose, nod, jointAt, Look59} from './figure59';
+import {Lit, Rim, Pose, LOOK, PZ, grounded, walkTo, walkNat, walkPose, withArms, mixPose, nod, jointAt, Look59, PackProp} from './figure59';
 import {Globe, Space, ROUTE, routeAt, followAt, HULL, PUNTA, GlobeView, projOf} from './globe59';
 /* ep59 demo scenes (bars 0–21, film 0–35.94 s). Every scene takes film time t, runs its own camera and acting.
    Hits (tier 1–2) sit on the grid: cuts on downbeats; the door, the ✕s, the kit pops, the first step and the calendar stop on beats.
    Continuous actions (walking, waves, smoke, flipping pages) keep their own clocks. */
 type P2 = [number, number];
+/** constant speed with soft ends: accelerate over the first fraction a, cruise, decelerate over the last a (position 0 → 1) */
+export const trap = (u: number, a: number) => { const v = 1 / (1 - a); return u <= 0 ? 0 : u >= 1 ? 1 : u < a ? v * u * u / (2 * a) : u > 1 - a ? 1 - v * (1 - u) * (1 - u) / (2 * a) : v * (u - a / 2); };
 const mixCam = (a: CamT, b: CamT, k: number): CamT => ({cx: lerp(a.cx, b.cx, k), cy: lerp(a.cy, b.cy, k), z: lerp(a.z, b.z, k), r: lerp(a.r ?? 0, b.r ?? 0, k)});
 /** zoom interpolated in log space (constant-rate zooms) */
 const mixCamL = (a: CamT, b: CamT, k: number): CamT => ({cx: lerp(a.cx, b.cx, k), cy: lerp(a.cy, b.cy, k), z: Math.exp(lerp(Math.log(a.z), Math.log(b.z), k)), r: lerp(a.r ?? 0, b.r ?? 0, k)});
@@ -17,17 +19,19 @@ const KH = 270, MH = 0.9 * KH;   // Karl's and his mother's heights (px at zoom 
 const RIM_DUSK: Rim[] = [{c: '#ffc58a', o: 0.5, dx: -2.4, dy: -1.4}, {c: '#8094c4', o: 0.22, dx: 2.0, dy: -1.0}];
 const RIM_DOOR: Rim[] = [{c: '#ffd59a', o: 0.7, dx: 2.6, dy: -1.2}, {c: '#ffc58a', o: 0.3, dx: -2.2, dy: -1.4}];
 const RIM_BACKLIT: Rim[] = [{c: '#ffd9a0', o: 0.75, dx: 2.4, dy: -1.6}, {c: '#ffd9a0', o: 0.75, dx: -2.4, dy: -1.6}, {c: '#ffe2b0', o: 0.5, dx: 0, dy: -2.6}];
+/* his mother (七十多岁): a slight stoop; one hand still on the door, then both hands come up, to her face, then round him */
 const MP = {
-	door: grounded({lean: 0, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: 24, le: 40, ra: 50, re: 22}),
-	see: grounded({lean: -5, neck: -4, lt: 2, lk: 2, rt: -3, rk: 3, la: 30, le: 70, ra: 22, re: 60}),
-	face: grounded({lean: 6, neck: 10, lt: 2, lk: 3, rt: -3, rk: 3, la: 30, le: 140, ra: 24, re: 146}),
-	hug: grounded({lean: 5, neck: -12, lt: 4, lk: 4, rt: -4, rk: 4, la: 96, le: 46, ra: 88, re: 52}),
+	door: grounded({lean: 8, neck: 6, lt: 2, lk: 3, rt: -3, rk: 3, la: 8, le: 22, ra: -18, re: 34}),
+	see: grounded({lean: 3, neck: 0, lt: 2, lk: 3, rt: -3, rk: 3, la: 26, le: 64, ra: 20, re: 56}),
+	face: grounded({lean: 10, neck: 12, lt: 2, lk: 3, rt: -3, rk: 3, la: 30, le: 140, ra: 24, re: 146}),
+	hug: grounded({lean: 7, neck: -10, lt: 4, lk: 5, rt: -4, rk: 4, la: 40, le: 90, ra: 46, re: 84}),
 };
+/* Karl: arms open as he steps in; in the hug one forearm crosses her back (hidden in the one-tone shape), head bowed to her */
 const KP = {
-	open: grounded({lean: 8, neck: 4, lt: 4, lk: 4, rt: -5, rk: 5, la: 52, le: 24, ra: 44, re: 28}),
-	hug: grounded({lean: 13, neck: 24, lt: 4, lk: 8, rt: -6, rk: 7, la: 64, le: 62, ra: 72, re: 56}),
+	open: grounded({lean: 8, neck: 4, lt: 4, lk: 4, rt: -5, rk: 5, la: 46, le: 30, ra: 38, re: 34}),
+	hug: grounded({lean: 13, neck: 24, lt: 4, lk: 8, rt: -6, rk: 7, la: 4, le: 128, ra: 10, re: 122}),
 };
-const T_HOME = {stop: 2.3, door: BT(2, 1), face: D(3), stepOut: D(3) + 0.62, hug: D(3) + 1.42, crane: 8.1, craneEnd: 10.45};
+const T_HOME = {stop: 2.3, door: BT(2, 1), face: D(3), stepOut: D(3) + 0.62, hug: D(3) + 1.42, crane: 8.05, craneEnd: 10.0};
 /** Karl at the homecoming: position, ground, pose */
 const karlHome = (t: number): {x: number; g: number; pose: Pose} => {
 	if (t < D(2)) {   // S1: walking in along the pavement, stops at the gate, looks up at the banner
@@ -50,7 +54,7 @@ const mumHome = (t: number): {x: number; g: number; pose: Pose; inDoor: boolean}
 	let pose = mixPose(MP.door, MP.see, sm(seg(t, T_HOME.door + 0.3, T_HOME.door + 0.55)));
 	pose = mixPose(pose, MP.face, sm(seg(t, T_HOME.face, T_HOME.face + 0.32)));
 	// she comes down the step to him (two steps), then holds him
-	const w = walkTo(t, T_HOME.stepOut, T_HOME.hug - 0.05, 1196, 1104, MH, MP.face);
+	const w = walkTo(t, T_HOME.stepOut, T_HOME.hug - 0.05, 1196, 1088, MH, MP.face);
 	if (w.moving) pose = mixPose(w.pose, MP.face, 0.25);
 	else if (t >= T_HOME.hug - 0.05) pose = mixPose(MP.face, MP.hug, sm(seg(t, T_HOME.hug - 0.15, T_HOME.hug + 0.3)));
 	const g = lerp(MUM.step, MUM.path, sm(seg(t, T_HOME.stepOut + 0.15, T_HOME.stepOut + 0.45)));
@@ -60,14 +64,15 @@ const mumHome = (t: number): {x: number; g: number; pose: Pose; inDoor: boolean}
 /** the homecoming camera, keyframed per shot; the crane rises off the hug (smoothstep, ≤ ~28 px/frame on the chimneys) */
 export const homeCam = (t: number): CamT => {
 	if (t < D(2)) return mixCam({cx: 1000, cy: 560, z: 1.0}, {cx: 1075, cy: 590, z: 1.1}, sm(seg(t, 0, D(2))));
-	if (t < D(3)) return mixCam({cx: 1150, cy: 700, z: 1.85}, {cx: 1156, cy: 702, z: 1.92}, seg(t, D(2), D(3)));
-	const s3 = mixCamL({cx: 1156, cy: 702, z: 1.92}, {cx: 1150, cy: 628, z: 1.3}, sm(seg(t, D(3), D(3) + 0.85)));
-	const drift = mixCam(s3, {cx: 1146, cy: 622, z: 1.33}, seg(t, D(3) + 0.85, T_HOME.crane));
-	return mixCamL(drift, {cx: 1110, cy: -250, z: 0.5}, sm(seg(t, T_HOME.crane, T_HOME.craneEnd)));
+	if (t < D(3)) return mixCam({cx: 1150, cy: 752, z: 2.2}, {cx: 1153, cy: 749, z: 2.27}, seg(t, D(2), D(3)));
+	/* the question (hard cut on bar 3): the banner above the centred line, the two of them below it; a slow push while they hold */
+	const drift = mixCam({cx: 1196, cy: 584, z: 1.6}, {cx: 1190, cy: 588, z: 1.66}, seg(t, D(3), T_HOME.crane));
+	/* the crane: rises off the hug at a near-constant rate (trap ≈ 22 px/frame avg, ≤ 27 peak on the roofline), then drifts up into the clouds */
+	return mixCamL(drift, {cx: 1110, cy: -500, z: 0.7}, trap(seg(t, T_HOME.crane, T_HOME.craneEnd), 0.22));
 };
 export const Homecoming: React.FC<{t: number}> = ({t}) => {
 	const cam = homeCam(t), K = karlHome(t), M = mumHome(t), open = sm(seg(t, T_HOME.door, T_HOME.door + 0.36));
-	const bg = 1 - sm(seg(t, 8.35, 9.2));   // the street-level sky gives way to the high view of the town as the camera rises
+	const bg = 1 - sm(seg(t, 8.3, 9.0));   // the street-level sky gives way to the high view of the town as the camera rises
 	const rimK = t < D(2) ? RIM_DUSK : RIM_DOOR.map((r, i) => (i === 0 ? {...r, o: r.o * open} : r));
 	const mumFig = <Lit x={M.x} ground={M.g} h={MH} pose={M.pose} look={LOOK.mum} flip col="#0f0b0c" rims={M.inDoor ? RIM_BACKLIT : [{c: '#ffd9a0', o: 0.65, dx: 2.4, dy: -1.6}, {c: '#ffc58a', o: 0.28, dx: -2.0, dy: -1.4}]} />;
 	return <g>
@@ -79,7 +84,7 @@ export const Homecoming: React.FC<{t: number}> = ({t}) => {
 			<DoorSpill open={open} />
 			{!M.inDoor && mumFig}
 			{/* bystanders down the street (neighbours waiting, faceless), on their own small idle clocks */}
-			{[[1930, 0.94, 0], [2010, 0.9, 1]].map(([x, s, i]) => <Lit key={i} x={x} ground={930} h={KH * s} pose={mixPose(PZ.stand, PZ.lookUp, 0.15 + 0.1 * Math.sin(t * 0.9 + i * 2))} look={i ? LOOK.woman : LOOK.man} flip col="#0e0c10" rims={RIM_DUSK} />)}
+			{[[1800, 0.94, 0], [1866, 0.9, 1]].map(([x, s, i]) => <Lit key={i} x={x} ground={930} h={KH * s} pose={mixPose(PZ.stand, PZ.lookUp, 0.15 + 0.1 * Math.sin(t * 0.9 + i * 2))} look={i ? LOOK.woman : LOOK.man} flip col="#0e0c10" rims={RIM_DUSK} />)}
 			<StreetFront mode="dusk" />
 			<Lit x={K.x} ground={K.g} h={KH} pose={K.pose} look={LOOK.karlOld} col="#0c0a0e" rims={rimK} />
 			<ParkedCar x={2140} ground={1000} s={1.15} />
@@ -88,38 +93,43 @@ export const Homecoming: React.FC<{t: number}> = ({t}) => {
 };
 
 /* ====================== B. the globe: crane → title (route drawn back to the start, the years rewind) → the dive (10.2 → 16.2) ====================== */
-const G_IN = 10.2, G_TITLE = D(7), DIVE = 14.95, SIGN_IN = 15.72;
+const G_IN = 10.2, CRANE0 = 10.45, CRANE1 = 12.0, COMET0 = 12.2, COMET1 = 14.95, DIVE = 14.95, SIGN_IN = 15.72;
 const HULL_U: P2 = [-360.33, 53.745];   // Hull with the route's unwrapped longitude
-/** how much of the route is drawn (backward from Hull): 0 → 1 */
-export const backDraw = (t: number) => { const a = seg(t, 10.45, 12.1), b = seg(t, 12.1, 14.75);
-	return t < 12.1 ? 0.12 * Math.pow(a, 1.25) : 0.12 + 0.88 * (b < 0.85 ? b / 0.85 * 0.93 : 0.93 + 0.07 * eo((b - 0.85) / 0.15)); };
+const EURASIA: P2 = [-305, 42];          // the end-of-crane view: Europe and Asia in front, the far side (Bering, the Americas) behind
+/** the crane: the gold line draws itself out of Hull back along the whole route (0 → 1), landing as the line 「约5万公里」 ends */
+export const craneQ = (t: number) => { const u = seg(t, CRANE0, CRANE1); return u < 0.3 ? 0.12 * (u / 0.3) ** 2 : 0.12 + 0.88 * (u - 0.3) / 0.7; };
+/** the title: a light runs back along the route from Hull (1) to Punta Arenas (0) at a near-constant speed (≈ 25 px/frame on the surface) */
+export const comet = (t: number) => 1 - trap(seg(t, COMET0, COMET1), 0.12);
+/** route fraction → date (fractional year), for the rewinding counter (facts: start 1 Nov 1998, Darién 2001, Bering 2006, Mongolia 2017, China 2018, Caspian 2024, Channel Oct 2026, home 2 Nov 2026) */
+const DATES: [number, number][] = [[0, 1998.83], [0.215, 2001.1], [0.511, 2006.22], [0.671, 2017.6], [0.707, 2018.5], [0.852, 2024.62], [0.916, 2025.33], [0.988, 2026.76], [1, 2026.84]];
+export const dateAt = (p: number) => { for (let i = 1; i < DATES.length; i++) if (p <= DATES[i][0]) { const [a0, y0] = DATES[i - 1], [a1, y1] = DATES[i]; return y0 + (y1 - y0) * (p - a0) / (a1 - a0); } return 2026.84; };
 /** the globe camera for the crane/title/dive; `sun` = where the signpost scene's sun sits on screen (the dive aims at it) */
 export const globeView = (t: number, sun: P2): GlobeView => {
-	const q = backDraw(t), head = routeAt(1 - q), fol = followAt(1 - q, 0.02, 0.07);
-	const wF = sm(seg(t, 10.6, 12.2));
-	let lon = lerp(HULL_U[0], fol[0], wF), lat = lerp(HULL_U[1], lerp(fol[1], 30, 0.25), wF);
-	void head;
-	const r0 = Math.exp(lerp(Math.log(2600), Math.log(450), eo(seg(t, G_IN, 12.05))));
-	let cx = 960, cy = lerp(540, 470, sm(seg(t, 11.3, 12.1))), r = r0;
+	const kC = sm(seg(t, 10.7, 12.1)), c = comet(t), fol = followAt(c, 0.025, 0.065), kF = sm(seg(t, COMET0, COMET0 + 0.7));
+	let lon = lerp(lerp(HULL_U[0], EURASIA[0], kC), fol[0], kF), lat = lerp(lerp(HULL_U[1], EURASIA[1], kC), lerp(fol[1], 30, 0.25), kF);
+	let r = Math.exp(lerp(Math.log(2600), Math.log(380), eo(seg(t, G_IN, 12.05)))), cx = 960, cy = lerp(540, 430, sm(seg(t, 11.3, 12.1)));
 	if (t > DIVE) { const k = seg(t, DIVE, 16.25), e = ei(k) * 0.6 + sm(k) * 0.4;
-		r = Math.exp(lerp(Math.log(450), Math.log(7200), e));
-		const pk = sm(seg(t, DIVE - 0.4, DIVE + 0.3)); lon = lerp(lon, PUNTA[0] - 360 + 360, pk); lat = lerp(lat, PUNTA[1], pk);
-		cx = lerp(960, sun[0], sm(k)); cy = lerp(470, sun[1], sm(k)); }
+		r = Math.exp(lerp(Math.log(380), Math.log(7200), e));
+		const pk = sm(seg(t, DIVE - 0.3, DIVE + 0.3)); lon = lerp(lon, PUNTA[0], pk); lat = lerp(lat, PUNTA[1], pk);
+		const ks = sm(seg(t, DIVE, SIGN_IN + 0.05)); cx = lerp(960, sun[0], ks); cy = lerp(430, sun[1], ks); }
 	return {cx, cy, r, lon, lat};
 };
 export const GlobeAct: React.FC<{t: number; sun: P2}> = ({t, sun}) => {
-	const v = globeView(t, sun), q = backDraw(t), gO = sm(seg(t, G_IN + 0.05, G_IN + 0.35));
-	const cloudsIn = sm(seg(t, 9.55, 10.15)), cloudsOut = 1 - sm(seg(t, 10.35, 10.95)), cO = cloudsIn * cloudsOut;
-	const cy0 = lerp(-150, 420, sm(seg(t, 9.5, 10.9)));
+	const v = globeView(t, sun), q = craneQ(t), c = comet(t), gO = sm(seg(t, G_IN + 0.05, G_IN + 0.35));
+	const cloudsIn = sm(seg(t, 9.7, 10.2)), cloudsOut = 1 - sm(seg(t, 10.38, 10.95)), cO = cloudsIn * cloudsOut;
+	const cy0 = lerp(-150, 420, sm(seg(t, 9.6, 10.9)));
 	const haze = sm(seg(t, 15.35, 15.85)) * (1 - sm(seg(t, 15.95, 16.25)));
+	const inTitle = t >= COMET0;
 	return <g>
 		{gO > 0 && <g opacity={gO}>
 			<Space id="gs" drift={(t - G_IN) * 6} />
-			<Globe id="g1" v={v} route={{p0: 1 - q, p1: 1, head: 1 - q, headO: q > 0.002 && q < 0.995 ? 1 : 0}} home={1} gratO={0.05} />
+			<Globe id="g1" v={v} route={{p0: 1 - q, p1: 1, head: inTitle ? undefined : 1 - q, headO: !inTitle && q > 0.002 && q < 0.995 ? 1 : 0}}
+				comet={inTitle && c > 0.002 && t < COMET1 + 0.2 ? {p: c, len: 0.035} : undefined} home={1} gratO={0.05}
+				pins={[{ll: PUNTA, kind: 'start', o: sm(seg(t, COMET1 - 0.35, COMET1))}]} />
 		</g>}
 		{/* clouds the crane rises through: they come down from above, fill the frame, then part over the globe */}
 		{cO > 0.01 && <g>
-			<rect x={0} y={0} width={W} height={H} fill="#4a4660" opacity={0.85 * sm(seg(t, 9.85, 10.2)) * cloudsOut} />
+			<rect x={0} y={0} width={W} height={H} fill="#4a4660" opacity={0.88 * sm(seg(t, 9.95, 10.25)) * cloudsOut} />
 			<CloudLayer y={cy0 - 260} k={1} t={t} tint="#5e5874" under="#c08a70" o={cO} seed={1} s={1.3} />
 			<CloudLayer y={cy0 + 120} k={1} t={t} tint="#6c6680" under="#d09a78" o={cO} seed={2} s={1.6} />
 			<CloudLayer y={cy0 + 520} k={1} t={t} tint="#7a7290" under="#d8a888" o={cO} seed={3} s={1.9} />
@@ -148,11 +158,6 @@ export const signCam = (t: number, kx: number): CamT => {
 /** where the sun of the signpost scene sits on screen at time t (its plane has parallax k = 0.15): the dive lands on it, the goal globe leaves from it */
 export const signSun = (t: number): P2 => { const c = signCam(Math.max(t, SIGN_IN), youngAt(Math.max(t, SIGN_IN)).x), k = 0.15, z = Math.pow(c.z, k);
 	return [(SUN_W[0] - (960 + (c.cx - 960) * k)) * z + 960, (SUN_W[1] - (540 + (c.cy - 540) * k)) * z + 540]; };
-/** the side-view pack as a loose prop: centre (x, y), height-scale h (the figure's), angle (deg; 0 = upright) */
-const PackSide: React.FC<{x: number; y: number; h: number; a?: number; col?: string; rim?: string}> = ({x, y, h, a = 0, col = '#0c0b0e', rim = '#f2f0e4'}) => {
-	const d = `M${-0.095 * h},${0.2 * h} Q${-0.1 * h},${0.215 * h} ${-0.08 * h},${0.215 * h} L${0.08 * h},${0.215 * h} Q${0.1 * h},${0.215 * h} ${0.095 * h},${0.19 * h} L${0.09 * h},${-0.19 * h} Q${0.085 * h},${-0.215 * h} ${0.06 * h},${-0.215 * h} L${-0.07 * h},${-0.215 * h} Q${-0.095 * h},${-0.21 * h} ${-0.095 * h},${-0.18 * h} Z M${-0.1 * h},${-0.2 * h} L${0.1 * h},${-0.2 * h} Q${0.11 * h},${-0.24 * h} ${0.1 * h},${-0.28 * h} L${-0.1 * h},${-0.28 * h} Q${-0.11 * h},${-0.24 * h} ${-0.1 * h},${-0.2 * h} Z`;
-	return <g transform={`translate(${x},${y}) rotate(${a})`}><path d={d} fill={rim} opacity={0.5} transform="translate(-2.5,-1.8)" /><path d={d} fill={col} /></g>;
-};
 const handsMid = (pose: Pose, x: number): P2 => { const l = jointAt(pose, 'LHand', x, SG, YH), r = jointAt(pose, 'RHand', x, SG, YH); return [(l[0] + r[0]) / 2, (l[1] + r[1]) / 2]; };
 /** the pack on his back (torso frame s = 0.195, w = 0.14, as figure59 draws it): centre and angle */
 const backPack = (pose: Pose, x: number): {x: number; y: number; a: number} => {
@@ -188,9 +193,9 @@ export const SignpostScene: React.FC<{t: number}> = ({t}) => {
 	return <g>
 		<Sky id="pgs" stops={[[0, '#3c4c5e'], [0.45, '#6e7f8e'], [0.62, '#a9b3b6'], [0.7, '#c8c6ba']]} x={-200} y={-200} w={2400} h={1500} />
 		<Par cam={cam} k={0.15}>
-			<Glow x={SUN_W[0]} y={SUN_W[1]} r={420} c="#fff4dc" o={0.45} id="psun" /><circle cx={SUN_W[0]} cy={SUN_W[1]} r={34} fill="#fffaf0" opacity={0.95} />
 			{Array.from({length: 7}, (_, i) => { const x = ((rnd(i, 3) * 3000 + t * (26 + 14 * rnd(i, 4))) % 3000) - 600, y = 120 + rnd(i, 5) * 300;
-				return <path key={i} d={`M${x},${y} q120,-26 300,-6 q140,10 260,4 q-160,30 -300,22 q-160,-6 -260,-20 Z`} fill="#e8eaea" opacity={0.25 + 0.2 * rnd(i, 6)} />; })}
+				return <path key={i} d={`M${x},${y} q120,-26 300,-6 q140,10 260,4 q-160,30 -300,22 q-160,-6 -260,-20 Z`} fill="#e8eaea" opacity={0.18 + 0.15 * rnd(i, 6)} />; })}
+			<Glow x={SUN_W[0]} y={SUN_W[1]} r={460} c="#fff0d0" o={0.55} id="psun" /><Glow x={SUN_W[0]} y={SUN_W[1]} r={110} c="#fffaf0" o={0.8} id="psun2" /><circle cx={SUN_W[0]} cy={SUN_W[1]} r={32} fill="#fffdf6" />
 		</Par>
 		<Par cam={cam} k={0.45}><Strait t={t} y0={560} y1={720} /></Par>
 		<Par cam={cam} k={0.6}><Gulls t={t} x={1100 - 0} y={360} n={3} /></Par>
@@ -200,9 +205,11 @@ export const SignpostScene: React.FC<{t: number}> = ({t}) => {
 			<Grass x0={-600} x1={3600} y={770} t={t} n={70} seed={1} col="#5a4c30" hi="#c8b07a" s={0.7} />
 			<FlagTree x={1720} ground={860} s={1.05} t={t} />
 			<path d="M-600,905 L3600,905 L3600,1400 L-600,1400 Z" fill="#2e281c" />
-			<path d="M200,905 Q900,890 1600,905 L3000,905" stroke="#6a5c40" strokeWidth={4} opacity={0.5} fill="none" />
+			{/* the gravel track north starts at the post */}
+			<path d="M800,898 L3600,896 L3600,918 L790,914 Q770,906 800,898 Z" fill="#5e523c" />
+			{Array.from({length: 40}, (_, i) => <circle key={i} cx={820 + rnd(i, 81) * 2700} cy={900 + rnd(i, 82) * 14} r={1.5 + rnd(i, 83) * 1.5} fill="#8a7c5c" opacity={0.6} />)}
 			<Signpost x={780} ground={SG} t={t} s={0.92} />
-			{!Y.pack && Y.packP && <PackSide x={Y.packP.x} y={Y.packP.y} h={YH} a={Y.packP.a} />}
+			{!Y.pack && Y.packP && <PackProp x={Y.packP.x} y={Y.packP.y} h={YH} a={Y.packP.a} rims={RIM_SEA} />}
 			<Lit x={Y.x} ground={SG} h={YH} pose={Y.pose} look={Y.pack ? LOOK.karlYoung : LOOK.karlYoungNoPack} col="#0c0b0e" rims={RIM_SEA} />
 			<Grass x0={-600} x1={3600} y={1000} t={t} n={46} seed={7} col="#211c12" hi="#a08a5a" s={1.6} />
 		</Cam>
@@ -211,7 +218,7 @@ export const SignpostScene: React.FC<{t: number}> = ({t}) => {
 
 /* ====================== D. the goal: on the globe, a dashed line from Chile up and over to England (20.45 → 24.0) ====================== */
 const GOAL_IN = 20.45, PLAN0 = 21.05, PLAN1 = 23.7;
-export const planP = (t: number) => { const u = seg(t, PLAN0, PLAN1); return u < 0.12 ? 0.5 * (u / 0.12) ** 2 * 0.12 / 0.94 * 2 * 0.5 : u > 0.88 ? 1 - 0.5 * ((1 - u) / 0.12) ** 2 * 0.12 / 0.94 * 2 * 0.5 : (u - 0.06) / 0.88; };
+export const planP = (t: number) => trap(seg(t, PLAN0, PLAN1), 0.14);
 export const GoalGlobe: React.FC<{t: number; sun: P2}> = ({t, sun}) => {
 	const p = Math.max(0, Math.min(1, planP(t))), fol = followAt(p, 0.06, 0.03);
 	const zk = eo(seg(t, GOAL_IN, 21.3)), r = Math.exp(lerp(Math.log(900), Math.log(380), zk));
@@ -240,7 +247,7 @@ export const RulesScene: React.FC<{t: number}> = ({t}) => {
 	// pickup: comes up from behind on the near lane, slows ahead of him (driver waving him in), then drives on
 	const pk0 = seg(t, D(14) + 0.5, D(15) + 0.15), pkX = lerp(kx - 1700, kx - 390, eo(pk0)) + 1900 * ei(seg(t, BT(15, 2.2), BT(15, 2.2) + 1.5));
 	// plane: climbs across the upper right
-	const pl = seg(t, D(14) + 1.5, D(16) + 0.2), plX = cam.cx - 960 + lerp(640, 2050, pl), plY = lerp(420, 250, pl);
+	const pl = seg(t, 24.55, 27.6), plX = cam.cx - 960 + lerp(-320, 2250, pl), plY = lerp(500, 250, pl);
 	const xk = (i: number) => seg(t, X_HITS[i], X_HITS[i] + 0.3);
 	return <g>
 		<Sky id="rds" stops={[[0, '#4a5866'], [0.5, '#7c8a92'], [0.7, '#a8aca4']]} x={-200} y={-200} w={2400} h={1500} />
@@ -271,7 +278,8 @@ export const RulesScene: React.FC<{t: number}> = ({t}) => {
 
 /* ====================== F. the promise: his mother's window, Hull, at night (27.4 → 29.1) ====================== */
 export const WindowScene: React.FC<{t: number}> = ({t}) => {
-	const u = seg(t, D(16), D(17)), cam = mixCamL({cx: 1500, cy: 470, z: 1.18}, {cx: 1540, cy: 440, z: 1.34}, u);
+	/* a wide night: roofs, stars, one warm window; a slow push toward it */
+	const u = seg(t, D(16), D(17)), cam = mixCamL({cx: 1480, cy: 240, z: 0.86}, {cx: 1530, cy: 268, z: 0.98}, u);
 	const sway = Math.sin(t * 1.3) * 3;
 	return <g>
 		<Cam {...cam}>
@@ -287,6 +295,8 @@ export const WindowScene: React.FC<{t: number}> = ({t}) => {
 			<Lamp x={2300} ground={930} h={560} id="lpn" />
 		</Cam>
 		<rect x={0} y={0} width={W} height={H} fill="#0a0c18" opacity={0.18} />
+		{/* the window's light falls out into the night */}
+		<Cam {...cam}><Glow x={1585} y={330} r={420} c="#ffcf8a" o={0.22} id="wglow" /></Cam>
 	</g>;
 };
 
@@ -314,6 +324,7 @@ export const KitScene: React.FC<{t: number}> = ({t}) => {
 };
 
 /* ====================== H. "he thought ten-odd years": sunset road, a tear-off calendar flips 1998 → 2008 and stops (32.5 → 35.94) ====================== */
+const CARD: P2 = [1080, 330];
 const TEARS = Array.from({length: 10}, (_, k) => 32.9 + (BT(19, 3.75) - 32.9) * (1 - Math.pow(1 - k / 9, 1.7)));
 export const CalendarScene: React.FC<{t: number}> = ({t}) => {
 	const w = walkNat(t, D(19) - 0.8, 99, 470, 1, RH, PZ.straps), kx = w.x;
@@ -327,8 +338,9 @@ export const CalendarScene: React.FC<{t: number}> = ({t}) => {
 	const RIM_SUN: Rim[] = [{c: '#ffc070', o: 0.8, dx: 2.8, dy: -1.4}, {c: '#ffd8a0', o: 0.25, dx: -1.8, dy: -1.6}];
 	return <g>
 		<Sky id="ssk" stops={[[0, '#2a2240'], [0.4, '#6a3c58'], [0.58, '#c8665a'], [0.66, '#f0a060'], [0.7, '#ffd090']]} x={-200} y={-200} w={2400} h={1500} />
-		<Par cam={cam} k={0.06}><Glow x={1560} y={700} r={520} c="#ffcf80" o={0.55} id="csun" /><circle cx={1560} cy={700} r={70} fill="#fff0c8" /></Par>
-		<Par cam={cam} k={0.12}><path d="M-800,720 L-500,600 L-300,650 L-60,540 L200,640 L460,560 L700,660 L980,580 L1240,670 L1500,600 L1800,690 L2100,610 L2600,700 L2600,800 L-800,800 Z" fill="#4a3048" /></Par>
+		<Par cam={cam} k={0.04}><Glow x={1500} y={650} r={640} c="#ffc070" o={0.6} id="csun" /><Glow x={1500} y={650} r={200} c="#fff0c8" o={0.7} id="csun2" /><circle cx={1500} cy={650} r={62} fill="#fff4d8" /></Par>
+		<Par cam={cam} k={0.12}><path d="M-800,720 L-500,600 L-300,650 L-60,560 L200,640 L460,580 L700,670 L980,600 L1240,690 L1420,676 L1600,700 L1800,680 L2100,630 L2600,700 L2600,800 L-800,800 Z" fill="#4a3048" />
+			<path d="M-800,720 L-500,600 L-300,650 L-60,560 L200,640 L460,580 L700,670 L980,600" stroke="#ffb070" strokeWidth={3} opacity={0.35} fill="none" /></Par>
 		<Par cam={cam} k={0.3}><path d="M-1200,740 Q0,710 1200,730 Q2400,750 4200,720 L4200,900 L-1200,900 Z" fill="#3a2630" /></Par>
 		<Cam {...cam}>
 			<rect x={-2000} y={760} width={8000} height={600} fill="#2e2026" />
@@ -341,8 +353,8 @@ export const CalendarScene: React.FC<{t: number}> = ({t}) => {
 		</Cam>
 		{/* the calendar (a widget card, upper right): pages tear off downwind, faster and faster, and stop on 2008 */}
 		<g opacity={sm(seg(t, D(19) + 0.05, D(19) + 0.3))} transform={`translate(0,${-8 * Math.sin(Math.PI * stop) * (1 - stop)})`}>
-			<YearCard x={1300} y={300} year={Math.min(2008, year)} ring={ring} s={0.92} />
-			{flying.map((f) => <g key={f.k} transform={`translate(${1300 + 700 * ei(f.u)},${300 - 120 * f.u + 380 * f.u * f.u}) rotate(${f.u * 80}) scale(${0.92 * (1 - 0.3 * f.u)})`} opacity={1 - sm(seg(f.u, 0.55, 1))}>
+			<YearCard x={CARD[0]} y={CARD[1]} year={Math.min(2008, year)} ring={ring} s={0.92} />
+			{flying.map((f) => <g key={f.k} transform={`translate(${CARD[0] + 820 * ei(f.u)},${CARD[1] - 120 * f.u + 380 * f.u * f.u}) rotate(${f.u * 80}) scale(${0.92 * (1 - 0.3 * f.u)})`} opacity={1 - sm(seg(f.u, 0.55, 1))}>
 				<rect x={-170} y={-10} width={340} height={300} rx={10} fill="#efe4cc" />
 				<text x={0} y={160} textAnchor="middle" style={{fontFamily: "'Cormorant59','DejaVu Serif',serif", fontWeight: 700, fontSize: 150}} fill="#2a2018">{1998 + f.k}</text></g>)}
 		</g>

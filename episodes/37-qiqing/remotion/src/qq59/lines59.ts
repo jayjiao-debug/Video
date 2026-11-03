@@ -12,12 +12,12 @@ export const fr = (t: number) => Math.round(t * FPS);
 /** a subtitle row: text with [key] markup; `at` = when it starts typing; `chunks` = [chars visible, time] steps (typing in beats) */
 export type Row59 = {s: string; at: number; chunks?: [number, number][]};
 /** a line = what is on screen between a and b: stacked rows (layout D), or a centred punch, or the title */
-export type Line59 = {bar: number; a: number; b: number; rows: Row59[]; punch?: boolean; title?: boolean; note?: string};
+export type Line59 = {bar: number; a: number; b: number; rows: Row59[]; punch?: boolean; title?: boolean; note?: string; out?: number};
 
 export const LINES59: Line59[] = [
 	{bar: 0, a: 0, b: D(2), rows: [{s: '28年后，他走到[妈妈家门口]。', at: 0}]},
 	{bar: 2, a: D(2), b: D(3), rows: [{s: '妈妈的第一句话是——', at: D(2)}]},
-	{bar: 3, a: D(3), b: D(5), rows: [{s: '「你去哪儿了？」', at: D(3)}], punch: true},
+	{bar: 3, a: D(3), b: D(5), rows: [{s: '「你去哪儿了？」', at: D(3)}], punch: true, out: 7.82, note: 'fades before the crane rises (the hard hold, then the rise)'},
 	{bar: 5, a: D(5), b: D(7), rows: [{s: '这一趟，他走了[约5万公里]。', at: D(5)}]},
 	{bar: 7, a: D(7), b: D(9), rows: [], title: true},
 	{bar: 9, a: D(9), b: D(10), rows: [{s: '[1998年]，智利最南端。', at: D(9)}]},

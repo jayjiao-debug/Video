@@ -91,6 +91,20 @@ const chain = (pts: P[], back: number[], front: number[]) => {
 const along = (a: P, b: P, n: number): P[] => Array.from({length: n + 1}, (_, i) => [lerp(a[0], b[0], i / n), lerp(a[1], b[1], i / n)]);
 const prof = (n: number, f: (s: number) => number) => Array.from({length: n + 1}, (_, i) => f(i / n));
 
+/** the big pack's outline in the torso frame (P(s, w): s up the spine, w toward the back, both × h): body, mat roll, side pocket, shoulder strap */
+export const packD = (P: (s: number, w: number) => string, bw = 1): string[] => [
+	`M${P(0.02, 0.05 * bw)} Q${P(-0.02, 0.12 * bw)} ${P(0.0, 0.2 * bw)} Q${P(0.02, 0.235 * bw)} ${P(0.08, 0.235 * bw)} L${P(0.33, 0.215 * bw)} Q${P(0.4, 0.21 * bw)} ${P(0.405, 0.15 * bw)} L${P(0.41, 0.07 * bw)} Q${P(0.4, 0.045 * bw)} ${P(0.36, 0.05 * bw)} L${P(0.24, 0.055 * bw)} Q${P(0.12, 0.06 * bw)} ${P(0.02, 0.05 * bw)} Z`,
+	`M${P(0.395, 0.03 * bw)} Q${P(0.43, 0.025 * bw)} ${P(0.465, 0.04 * bw)} L${P(0.475, 0.235 * bw)} Q${P(0.44, 0.255 * bw)} ${P(0.405, 0.235 * bw)} Z`,
+	`M${P(0.06, 0.215 * bw)} L${P(0.06, 0.262 * bw)} Q${P(0.1, 0.27 * bw)} ${P(0.18, 0.262 * bw)} L${P(0.18, 0.218 * bw)} Z`,
+	`M${P(0.31, 0.035 * bw)} Q${P(0.34, -0.02 * bw)} ${P(0.3, -0.06 * bw)} L${P(0.27, -0.055 * bw)} Q${P(0.3, -0.015 * bw)} ${P(0.28, 0.035 * bw)} Z`,
+];
+/** the same pack as a loose prop: centre (x, y) = its torso-frame point (s 0.195, w 0.14), `a` = tilt (deg, 0 = upright), h = the wearer's scale */
+export const PackProp: React.FC<{x: number; y: number; h: number; a?: number; col?: string; rims?: Rim[]}> = ({x, y, h, a = 0, col = '#0c0b0e', rims = []}) => {
+	const P = (s: number, w: number) => `${f1(-(w - 0.14) * h)},${f1(-(s - 0.195) * h)}`, ds = packD(P).slice(0, 3);
+	return <g transform={`translate(${f1(x)},${f1(y)}) rotate(${f1(a)})`}>
+		{rims.map((r, i) => <g key={i} opacity={r.o} transform={`translate(${r.dx * h / 450},${r.dy * h / 450})`}>{ds.map((d, j) => <path key={j} d={d} fill={r.c} />)}</g>)}
+		{ds.map((d, j) => <path key={j} d={d} fill={col} />)}</g>;
+};
 /** the outline paths of one figure (screen coordinates, unflipped) */
 export const figPaths = (x: number, ground: number, h: number, pose: Pose, look: Look59): string[] => {
 	const S = (p: P): P => [x + p[0] * h, ground - p[1] * h];
@@ -102,13 +116,7 @@ export const figPaths = (x: number, ground: number, h: number, pose: Pose, look:
 	const ax0 = sp[0] - hips[0], ay0 = sp[1] - hips[1], al = Math.hypot(ax0, ay0) || 1, ax = ax0 / al, ay = ay0 / al, bkx = ay, bky = -ax;
 	const tq = (s: number, w: number) => { const p: P = [hips[0] + (ax * s + bkx * w) * h, hips[1] + (ay * s + bky * w) * h]; return `${f1(p[0])},${f1(p[1])}`; };
 	// the pack first (behind): an expedition pack from the hips to above the head, a rolled sleeping mat across its top, a side bottle
-	if (look.pack === 'big') {
-		const bw = b;
-		parts.push(`M${tq(0.02, 0.05 * bw)} Q${tq(-0.02, 0.12 * bw)} ${tq(0.0, 0.2 * bw)} Q${tq(0.02, 0.235 * bw)} ${tq(0.08, 0.235 * bw)} L${tq(0.33, 0.215 * bw)} Q${tq(0.4, 0.21 * bw)} ${tq(0.405, 0.15 * bw)} L${tq(0.41, 0.07 * bw)} Q${tq(0.4, 0.045 * bw)} ${tq(0.36, 0.05 * bw)} L${tq(0.24, 0.055 * bw)} Q${tq(0.12, 0.06 * bw)} ${tq(0.02, 0.05 * bw)} Z`);
-		parts.push(`M${tq(0.395, 0.03 * bw)} Q${tq(0.43, 0.025 * bw)} ${tq(0.465, 0.04 * bw)} L${tq(0.475, 0.235 * bw)} Q${tq(0.44, 0.255 * bw)} ${tq(0.405, 0.235 * bw)} Z`);
-		parts.push(`M${tq(0.06, 0.215 * bw)} L${tq(0.06, 0.262 * bw)} Q${tq(0.1, 0.27 * bw)} ${tq(0.18, 0.262 * bw)} L${tq(0.18, 0.218 * bw)} Z`);
-		parts.push(`M${tq(0.31, 0.035 * bw)} Q${tq(0.34, -0.02 * bw)} ${tq(0.3, -0.06 * bw)} L${tq(0.27, -0.055 * bw)} Q${tq(0.3, -0.015 * bw)} ${tq(0.28, 0.035 * bw)} Z`);   // shoulder strap over the collarbone
-	}
+	if (look.pack === 'big') parts.push(...packD(tq, b));
 	// legs: thigh + shin as one smooth chain, shoe
 	const leg = (s: 'L' | 'R') => { const hip = J(`${s}Up`), kn = J(`${s}Knee`), an = J(`${s}Ank`), toe = J(`${s}Toe`);
 		const tl = Math.hypot(hip[0] - kn[0], hip[1] - kn[1]) || 1, ext: P = [hip[0] + (hip[0] - kn[0]) / tl * 0.05 * h, hip[1] + (hip[1] - kn[1]) / tl * 0.05 * h];
@@ -177,10 +185,11 @@ export type Rim = {c: string; o: number; dx: number; dy: number};
 /** one figure with rims of light hugging its outer contour (each rim = the figure offset toward its light, drawn underneath).
     dx/dy are in screen px at h = 450 (scaled with h); a rim from the right has dx > 0. */
 export const Lit: React.FC<React.ComponentProps<typeof Fig59> & {rims?: Rim[]}> = ({rims = [{c: '#ffd9a8', o: 0.4, dx: -2.2, dy: -1.6}], ...p}) => {
-	const k = Math.max(0.6, p.h / 450), paths = figPaths(p.x, p.ground, p.h, p.pose, p.look), d = paths.join(' ');
+	const k = Math.max(0.6, p.h / 450), paths = figPaths(p.x, p.ground, p.h, p.pose, p.look);
+	/* each part is its own path: joined into one d, overlapping parts of opposite winding would punch holes (nonzero fill) */
 	return <g transform={p.flip ? `translate(${2 * p.x},0) scale(-1,1)` : undefined}>
-		{rims.map((r, i) => <path key={i} d={d} fill={r.c} opacity={r.o} transform={`translate(${(p.flip ? -1 : 1) * r.dx * k},${r.dy * k})`} />)}
-		<path d={d} fill={p.col ?? '#0d0b10'} /></g>;
+		{rims.map((r, i) => <g key={i} opacity={r.o} transform={`translate(${(p.flip ? -1 : 1) * r.dx * k},${r.dy * k})`}>{paths.map((d, j) => <path key={j} d={d} fill={r.c} />)}</g>)}
+		{paths.map((d, j) => <path key={j} d={d} fill={p.col ?? '#0d0b10'} />)}</g>;
 };
 /** a screen point of a joint (accounts for flip) */
 export const jointAt = (pose: Pose, n: string, x: number, ground: number, h: number, flip = false): P => [x + (flip ? -1 : 1) * pose[n][0] * h, ground - pose[n][1] * h];

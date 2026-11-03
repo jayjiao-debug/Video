@@ -54,7 +54,8 @@ export const Mountains: React.FC<SP> = ({u, d}) => {
 		{/* far peaks with snow caps; the last light on their tops */}
 		<path d={ridgeD(400, 170, 3.3, {f: 1.1, sharp: 0.85, step: 10})} fill="#9aa6b8" />
 		<g opacity={0.95}><defs><clipPath id="mt_c"><path d={ridgeD(400, 170, 3.3, {f: 1.1, sharp: 0.85, step: 10})} /></clipPath></defs>
-			<rect x={-400} y={180} width={W + 800} height={200} fill="#eef0f4" clipPath="url(#mt_c)" /><rect x={-400} y={180} width={W + 800} height={70} fill="#ffe2b8" opacity={0.5} clipPath="url(#mt_c)" /></g>
+			<path d={`M-400,150 L${W + 400},150 ` + Array.from({length: 60}, (_, i) => { const xx = W + 400 - i * 46; return `L${xx},${300 + 40 * Math.sin(i * 1.7) + 30 * rnd(i, 4)}`; }).join(' ') + ' Z'} fill="#eef0f4" clipPath="url(#mt_c)" />
+			<rect x={-400} y={150} width={W + 800} height={100} fill="#ffe2b8" opacity={0.45} clipPath="url(#mt_c)" /></g>
 		<path d={ridgeD(520, 130, 6.2, {f: 1.4, sharp: 0.7, step: 10})} fill="#5c687a" />
 		<path d={ridgeD(640, 110, 1.9, {f: 1.2, sharp: 0.5})} fill="#3e4858" />
 		<path d={`M-300,${H + 60} L-300,820 Q400,760 900,800 Q1400,840 2300,720 L2300,${H + 60} Z`} fill="#2a3240" />
@@ -123,7 +124,7 @@ export const Shore: React.FC<SP> = ({u, d}) => {
 		{/* waves breaking in rows toward the beach */}
 		{[0, 1, 2].map((i) => { const k = ((u * 0.3 + i / 3) % 1), y = lerp(620, 860, k); return <path key={i} d={`M${600 + 200 * k},${y} Q${1100},${y - 10} ${2300},${y - 40 + 30 * k}`} stroke="#eef2f4" strokeWidth={3 + 4 * k} fill="none" opacity={0.6 * Math.sin(k * Math.PI)} />; })}
 		{/* the chalky plateau edge (left) and the pebble beach */}
-		<path d={`M-300,${hz + 10} L180,${hz + 6} L230,${hz + 50} L120,${hz + 120} L-300,${hz + 140} Z`} fill="#b0a690" />
+		<path d={`M-300,${hz + 2} L-40,${hz - 30} L120,${hz - 26} L210,${hz + 4} L250,${hz + 60} L-300,${hz + 90} Z`} fill="#a89e88" /><path d={`M120,${hz - 26} L210,${hz + 4} L250,${hz + 60} L200,${hz + 60} Z`} fill="#8a8270" />
 		<path d={`M-300,${H + 60} L-300,800 Q400,860 900,940 Q1100,980 1300,${H + 60} Z`} fill="#6a6258" />
 		<path d={`M-300,800 Q400,860 900,940 Q1100,980 1300,${H + 60}`} stroke="#e8e4dc" strokeWidth={5} fill="none" opacity={0.7} />
 		{Array.from({length: 50}, (_, i) => <ellipse key={i} cx={-200 + rnd(i, 1) * 1300} cy={870 + rnd(i, 2) * 200} rx={6 + 10 * rnd(i, 3)} ry={4 + 5 * rnd(i, 4)} fill="#4e4840" />)}
@@ -192,9 +193,9 @@ export const Nights: React.FC<SP> = ({u, d}) => {
 	return <g><Cam z={1.02} px={-10 * u}>
 		<Sky id="ni_s" stops={[[0, '#060a14'], [0.6, '#16203a'], [1, '#1e2a40']]} />
 		{Array.from({length: 120}, (_, i) => <circle key={i} cx={rnd(i, 1) * W} cy={rnd(i, 2) * 520} r={0.6 + 1.4 * rnd(i, 3)} fill="#e8eef8" opacity={0.3 + 0.5 * rnd(i, 4)} />)}
-		<Glow x={560} y={260} r={260} c="#e8eef8" o={0.35} id="ni_m" /><circle cx={560} cy={260} r={40} fill="#f2f4f0" />
+		<Glow x={720} y={420} r={240} c="#e8eef8" o={0.35} id="ni_m" /><circle cx={720} cy={420} r={36} fill="#f2f4f0" />
 		<SeaBand hz={hz} t={u} c0="#1a2438" c1="#0a0e18" id="ni_sea" glint="#c8d4e8" />
-		{Array.from({length: 26}, (_, i) => <rect key={i} x={560 - (20 + i * 6) + 30 * Math.sin(u * 2 + i)} y={hz + 6 + i * 18} width={(40 + i * 12) * (0.5 + 0.5 * rnd(i, 7))} height={3 + i * 0.3} fill="#e8eef8" opacity={0.5 - i * 0.015} />)}
+		{Array.from({length: 26}, (_, i) => <rect key={i} x={720 - (20 + i * 6) + 30 * Math.sin(u * 2 + i)} y={hz + 6 + i * 18} width={(40 + i * 12) * (0.5 + 0.5 * rnd(i, 7))} height={3 + i * 0.3} fill="#e8eef8" opacity={0.5 - i * 0.015} />)}
 		{/* the support boat at anchor: cabin lit, someone on deck */}
 		<g transform={`translate(1180,${640 + bob})`}>
 			<path d="M-260,0 L260,0 Q240,40 200,56 L-220,56 Q-250,30 -260,0 Z" fill="#0a0c12" /><rect x={-140} y={-80} width={220} height={80} fill="#0e1018" /><rect x={-120} y={-64} width={60} height={34} fill={GOLD} opacity={0.85} /><rect x={-40} y={-64} width={60} height={34} fill={GOLD} opacity={0.6} />

@@ -36,7 +36,7 @@ export const Haze: React.FC<{id: string; y: number; h: number; c: string; o: num
    to the right in 660 px houses; each house: door on the left (132 × 318), a canted bay on the right, two sashes upstairs,
    eaves y 95, slate roof to the ridge y −230, chimney stacks on the party walls. The mother's house is x 1100–1760. */
 export const HOUSES = [520, 1100, 1760, 2420];
-export const MUM = {x0: 1100, door: [1130, 1262] as [number, number], doorTop: 582, step: 900, path: 915, pave: 930, banner: [450, 540] as [number, number]};
+export const MUM = {x0: 1100, door: [1130, 1262] as [number, number], doorTop: 582, step: 900, path: 915, pave: 930, banner: [372, 462] as [number, number]};
 export type StreetMode = 'dusk' | 'night';
 const PAL_S = {
 	dusk: {brick: '#3b2a27', brick2: '#33241f', mortar: '#4a3631', trim: '#5c4a40', slate: '#262a33', slateHi: '#3d4350', sill: '#6b5a4c', glass: '#28303c', wall: '#3a2c28', pave: '#2c2a2e', road: '#1d1c20'},
@@ -140,7 +140,9 @@ export const Banner: React.FC<{t: number; o?: number}> = ({t, o = 1}) => {
 	return <g opacity={o}>
 		<path d={`M${top.join(' L')} L${bot.join(' L')} Z`} fill="#e9e0cc" /><path d={`M${top.join(' L')} L${bot.join(' L')} Z`} fill="#000" opacity={0.18} />
 		<path d={`M${x0},${y0} L${x0 - 16},${y0 - 20} M${x1},${y0} L${x1 + 16},${y0 - 20}`} stroke="#d8ccb4" strokeWidth={3} />
-		<text x={(x0 + x1) / 2} y={(y0 + y1) / 2 + 22 + 6} textAnchor="middle" style={{fontFamily: "'DejaVu Sans', sans-serif", fontWeight: 700, fontSize: 52, letterSpacing: '0.04em'}} fill="#2c2430" transform={`rotate(-0.6 ${(x0 + x1) / 2} ${(y0 + y1) / 2})`}>WELCOME HOME SON</text>
+		<text x={(x0 + x1) / 2} y={(y0 + y1) / 2 + 22} textAnchor="middle" rotate={'WELCOME HOME SON'.split('').map((_, i) => ((rnd(i, 71) - 0.5) * 7).toFixed(1)).join(' ')}
+			style={{fontFamily: "'DejaVu Sans', sans-serif", fontWeight: 700, fontSize: 46, letterSpacing: '0.02em'}} fill="#3a1e22" transform={`rotate(-0.8 ${(x0 + x1) / 2} ${(y0 + y1) / 2})`}>
+			{'WELCOME HOME SON'.split('').map((ch, i) => <tspan key={i} dy={i === 0 ? 0 : ((rnd(i, 72) - 0.5) * 5).toFixed(1)}>{ch}</tspan>)}</text>
 	</g>;
 };
 /** bunting from the upstairs window to the lamppost: muted triangles */
@@ -216,31 +218,33 @@ export const StreetFront: React.FC<{mode: StreetMode; gateOpen?: number}> = ({mo
 		<path d="M-600,1060 H3400" stroke="#d8d0c0" strokeWidth={5} strokeDasharray="70 60" opacity={0.18} />
 	</g>;
 };
-/** the crane's planes behind the near roofs: rows of roofs further back, the docks, the Humber with its bridge, the far shore */
+/** the crane's planes behind the near roofs (tuned so that at the top of the crane, cam ≈ (1110, −500, 0.7), they stack:
+    sky · the Humber estuary with its bridge (screen ≈ 330–410) · the town's rows of roofs (≈ 400–560) · the next terrace (≈ 550–730) · the near roofs) */
 export const TownPlanes: React.FC<{cam: CamT; t: number}> = ({cam, t}) => <g>
 	<Par cam={cam} k={0.12}>
-		<Sky id="crsky" stops={[[0, '#060a16'], [0.3, '#121a30'], [0.55, '#2a2c48'], [0.66, '#6a5060'], [0.72, '#b07a5a'], [0.78, '#5a4048']]} x={-3000} y={-3000} w={9000} h={5200} />
-		{Array.from({length: 70}, (_, i) => <circle key={i} cx={-1500 + rnd(i, 31) * 5000} cy={-2400 + rnd(i, 32) * 2600} r={0.8 + 1.5 * rnd(i, 33)} fill="#eef0ff" opacity={0.5 * (0.4 + 0.6 * rnd(i, 34))} />)}
+		<Sky id="crsky" stops={[[0, '#060a16'], [0.3, '#121a30'], [0.52, '#2a2c48'], [0.6, '#6a5060'], [0.66, '#b07a5a'], [0.72, '#5a4048']]} x={-3000} y={-2600} w={9000} h={3400} />
+		{Array.from({length: 70}, (_, i) => <circle key={i} cx={-1500 + rnd(i, 31) * 5000} cy={-2400 + rnd(i, 32) * 2300} r={0.8 + 1.5 * rnd(i, 33)} fill="#eef0ff" opacity={0.5 * (0.4 + 0.6 * rnd(i, 34))} />)}
+		<Glow x={-200} y={60} r={900} c="#f0a060" o={0.25} id="crsun" />
 	</Par>
 	<Par cam={cam} k={0.22}>
-		{/* the estuary at the horizon, the bridge far to the right, the far shore */}
-		<rect x={-3000} y={140} width={9000} height={60} fill="#2c2838" />
-		<rect x={-3000} y={196} width={9000} height={120} fill="#3a3a52" /><path d="M-3000,200 H6000" stroke="#c09070" strokeWidth={3} opacity={0.4} />
-		{Array.from({length: 30}, (_, i) => <path key={i} d={`M${-2000 + rnd(i, 41) * 6000},${215 + rnd(i, 42) * 90} h${40 + 80 * rnd(i, 43)}`} stroke="#d8a888" strokeWidth={2} opacity={0.25} />)}
-		<g fill="#1a1824"><rect x={2280} y={40} width={12} height={160} /><rect x={2740} y={40} width={12} height={160} /><rect x={1900} y={170} width={1300} height={8} />
-			<path d="M1900,172 Q2090,150 2286,42 Q2516,160 2746,42 Q2950,150 3200,172" stroke="#1a1824" strokeWidth={3} fill="none" /></g>
+		{/* the far (Lincolnshire) shore, the estuary catching the last light, the Humber Bridge far to the west */}
+		<path d="M-3000,90 Q-1500,62 0,80 Q1500,96 3000,72 Q4500,60 6000,84 L6000,100 L-3000,100 Z" fill="#2c2838" />
+		<rect x={-3000} y={92} width={9000} height={90} fill="#3c3c56" /><path d="M-3000,94 H6000" stroke="#d09070" strokeWidth={3} opacity={0.45} />
+		{Array.from({length: 34}, (_, i) => <path key={i} d={`M${-2000 + rnd(i, 41) * 6000},${104 + rnd(i, 42) * 70} h${40 + 80 * rnd(i, 43)}`} stroke="#d8a888" strokeWidth={2} opacity={0.28} />)}
+		<g fill="#1a1824"><rect x={-1180} y={-30} width={10} height={122} /><rect x={-800} y={-30} width={10} height={122} /><rect x={-1500} y={70} width={1040} height={7} />
+			<path d="M-1500,72 Q-1340,50 -1176,-28 Q-984,72 -796,-28 Q-620,50 -460,72" stroke="#1a1824" strokeWidth={3} fill="none" /></g>
+		<rect x={-3000} y={180} width={9000} height={60} fill="#22202c" />
 	</Par>
 	<Par cam={cam} k={0.4}>
-		{/* the town: rows of terraces in haze, lit windows and street lamps */}
-		{[0, 1, 2].map((r) => { const y = 250 + r * 120, c = ['#24222e', '#1e1d28', '#1a1922'][r];
-			return <g key={r}><path d={`M-2600,${y + 120} ${Array.from({length: 40}, (_, i) => { const x = -2600 + i * 150 + r * 40, hh = 40 + 30 * rnd(i, 50 + r); return `L${x},${y + 120 - hh} L${x + 75},${y + 90 - hh} L${x + 150},${y + 120 - hh}`; }).join(' ')} L3600,${y + 300} L-2600,${y + 300} Z`} fill={c} />
-				{Array.from({length: 40}, (_, i) => <circle key={i} cx={-2500 + rnd(i, 60 + r) * 6000} cy={y + 100 + rnd(i, 70 + r) * 60} r={3} fill={WARM} opacity={0.3 + 0.4 * rnd(i, 80 + r)} />)}</g>; })}
-		{/* dock cranes */}
-		{[-900, -620, 2600].map((x, i) => <g key={i} stroke="#1a1922" strokeWidth={8} fill="none"><path d={`M${x},${260} V${120} L${x + 160},${120} M${x},${150} L${x + 120},${120}`} /></g>)}
+		{/* the town: rows of terraced roofs in haze, lit windows and street lamps, dock cranes */}
+		{[0, 1, 2].map((r) => { const yb = [10, 70, 130][r], c = ['#26242f', '#201f2a', '#1b1a24'][r];
+			return <g key={r}><path d={`M-2600,${yb + 60} ${Array.from({length: 40}, (_, i) => { const x = -2600 + i * 150 + r * 50, hh = 22 + 20 * rnd(i, 50 + r); return `L${x},${yb + 30 - hh} L${x + 75},${yb + 8 - hh} L${x + 150},${yb + 30 - hh}`; }).join(' ')} L3600,${yb + 60} L3600,${yb + 260} L-2600,${yb + 260} Z`} fill={c} />
+				{Array.from({length: 46}, (_, i) => <circle key={i} cx={-2500 + rnd(i, 60 + r) * 6000} cy={yb + 34 + rnd(i, 70 + r) * 24} r={2.6} fill={WARM} opacity={0.3 + 0.45 * rnd(i, 80 + r)} />)}</g>; })}
+		{[-900, -640, 2500].map((x, i) => <g key={i} stroke="#1c1b26" strokeWidth={7} fill="none"><path d={`M${x},${40} V${-80} L${x + 150},${-80} M${x},${-50} L${x + 110},${-80}`} /></g>)}
 	</Par>
 	<Par cam={cam} k={0.7}>
 		{/* the back of the next terrace row: roofs and stacks */}
-		<path d={`M-1200,${-60} ${Array.from({length: 26}, (_, i) => { const x = -1200 + i * 200; return `L${x},${-40} L${x + 100},${-120} L${x + 200},${-40}`; }).join(' ')} L4000,${200} L-1200,${200} Z`} fill="#1e1c26" />
+		<path d={`M-1200,${-40} ${Array.from({length: 26}, (_, i) => { const x = -1200 + i * 200; return `L${x},${-40} L${x + 100},${-120} L${x + 200},${-40}`; }).join(' ')} L4000,${-40} L4000,${300} L-1200,${300} Z`} fill="#1e1c26" />
 		{Array.from({length: 26}, (_, i) => <g key={i}><rect x={-1180 + i * 200} y={-170} width={40} height={70} fill="#1a1820" />
 			{rnd(i, 90) > 0.6 && <rect x={-1120 + i * 200} y={-30} width={22} height={28} fill={WARM} opacity={0.5} />}</g>)}
 		{Array.from({length: 5}, (_, j) => { const u = ((t * 0.18 + j / 5) % 1); return <circle key={j} cx={-160 - u * 200} cy={-180 - u * 300} r={16 + u * 50} fill="#6a6478" opacity={0.18 * (1 - u) * Math.min(1, u * 6)} />; })}
@@ -273,16 +277,21 @@ export const Signpost: React.FC<{x: number; ground: number; t: number; s?: numbe
 	</g>;
 };
 /** a wind-bent tree (Patagonian "flag" tree): the crown streams downwind (+x) */
-export const FlagTree: React.FC<{x: number; ground: number; s?: number; t: number; col?: string}> = ({x, ground, s = 1, t, col = '#16140f'}) => { const w = Math.sin(t * 2.4) * 4;
+export const FlagTree: React.FC<{x: number; ground: number; s?: number; t: number; col?: string}> = ({x, ground, s = 1, t, col = '#16140f'}) => {
+	const lobes: [number, number, number, number][] = [[60, -262, 70, 34], [140, -284, 80, 36], [230, -280, 74, 30], [310, -266, 64, 24], [380, -252, 48, 16], [110, -236, 70, 28], [200, -232, 66, 24], [280, -226, 50, 18], [170, -306, 52, 22]];
 	return <g transform={`translate(${x},${ground}) scale(${s})`} fill={col}>
-		<path d="M-14,0 Q-10,-120 20,-220 Q40,-280 90,-300 L96,-290 Q54,-268 40,-210 Q16,-110 14,0 Z" />
-		<path d={`M30,-250 Q120,-${330 + w} 300,-${292 + w} Q380,-${276 + w} 420,-${254 + w * 1.4} Q330,-${236 + w} 240,-${232 + w} Q300,-${214 + w} 360,-${196 + w * 1.4} Q240,-${180} 140,-${196} Q90,-${200} 40,-${214} Z`} />
+		<path d="M-16,0 Q-12,-110 14,-200 Q30,-250 70,-270 L80,-258 Q44,-240 34,-196 Q14,-110 16,0 Z" />
+		<path d="M24,-170 Q70,-200 120,-206 L118,-196 Q74,-190 34,-160 Z" />
+		{lobes.map(([lx, ly, rx, ry], i) => { const w = Math.sin(t * 2.3 + i * 0.9) * (2 + i * 0.4); return <ellipse key={i} cx={lx + w} cy={ly + w * 0.3} rx={rx} ry={ry} transform={`rotate(${-6 + 4 * Math.sin(i)} ${lx} ${ly})`} />; })}
 	</g>; };
-/** tussock grass: clumps whose blades lean with the wind */
+/** tussock grass: each clump is a fan of thin tapered blades leaning downwind (own clock) */
 export const Grass: React.FC<{x0: number; x1: number; y: number; t: number; n: number; seed?: number; col?: string; hi?: string; s?: number}> = ({x0, x1, y, t, n, seed = 0, col = '#3e3420', hi = '#a8905a', s = 1}) => <g>
-	{Array.from({length: n}, (_, i) => { const x = lerp(x0, x1, rnd(i, seed + 1)), hh = (26 + 34 * rnd(i, seed + 2)) * s, lean = 10 + 8 * Math.sin(t * 2.2 + x * 0.01 + i) + 6 * rnd(i, seed + 3);
-		return <g key={i}><path d={`M${f1(x - 16 * s)},${y} Q${f1(x - 4 * s + lean * 0.3)},${f1(y - hh * 0.6)} ${f1(x + lean)},${f1(y - hh)} Q${f1(x + 2 * s + lean * 0.4)},${f1(y - hh * 0.4)} ${f1(x + 16 * s)},${y} Z`} fill={col} />
-			<path d={`M${f1(x - 4 * s)},${y} Q${f1(x + lean * 0.5)},${f1(y - hh * 0.6)} ${f1(x + lean * 1.1)},${f1(y - hh * 0.95)}`} stroke={hi} strokeWidth={2 * s} opacity={0.35} fill="none" /></g>; })}
+	{Array.from({length: n}, (_, i) => { const x = lerp(x0, x1, rnd(i, seed + 1)), hh = (24 + 30 * rnd(i, seed + 2)) * s, wind = 8 + 6 * Math.sin(t * 2.2 + x * 0.01 + i) + 5 * rnd(i, seed + 3), nb = 5;
+		let d = '', dh = '';
+		for (let j = 0; j < nb; j++) { const a = (j / (nb - 1) - 0.5) * 1.1, L = hh * (0.7 + 0.3 * Math.cos(a * 2)), bx = x + (j - 2) * 3 * s, tx = bx + Math.sin(a) * L + wind * (L / hh) * s * 0.9, ty = y - Math.cos(a) * L, w = 2.6 * s;
+			d += `M${f1(bx - w)},${y} Q${f1(bx + (tx - bx) * 0.35)},${f1(y - L * 0.55)} ${f1(tx)},${f1(ty)} Q${f1(bx + (tx - bx) * 0.45 + w)},${f1(y - L * 0.5)} ${f1(bx + w)},${y} Z `;
+			if (j % 2 === 0) dh += `M${f1(bx)},${f1(y - 2)} Q${f1(bx + (tx - bx) * 0.4)},${f1(y - L * 0.55)} ${f1(tx)},${f1(ty)} `; }
+		return <g key={i}><path d={d} fill={col} /><path d={dh} stroke={hi} strokeWidth={1.2 * s} opacity={0.3} fill="none" /></g>; })}
 </g>;
 /** gulls: small gliding Ms */
 export const Gulls: React.FC<{t: number; n?: number; x: number; y: number; seed?: number; col?: string}> = ({t, n = 3, x, y, seed = 0, col = '#e8ecee'}) => <g>
@@ -291,8 +300,9 @@ export const Gulls: React.FC<{t: number; n?: number; x: number; y: number; seed?
 </g>;
 /** the Strait of Magellan: the far shore and its snowy range, the sea with whitecaps (own clocks) */
 export const Strait: React.FC<{t: number; y0: number; y1: number}> = ({t, y0, y1}) => <g>
-	<path d={`M-800,${y0} L-600,${y0 - 70} L-420,${y0 - 40} L-200,${y0 - 120} L0,${y0 - 60} L260,${y0 - 150} L420,${y0 - 90} L700,${y0 - 170} L880,${y0 - 110} L1100,${y0 - 60} L1400,${y0 - 140} L1640,${y0 - 70} L1900,${y0 - 120} L2200,${y0 - 50} L2700,${y0 - 90} L2700,${y0 + 10} L-800,${y0 + 10} Z`} fill="#6c7a88" />
+	<path d={`M-800,${y0} L-600,${y0 - 70} L-420,${y0 - 40} L-200,${y0 - 120} L0,${y0 - 60} L260,${y0 - 150} L420,${y0 - 90} L700,${y0 - 170} L880,${y0 - 110} L1100,${y0 - 60} L1400,${y0 - 140} L1640,${y0 - 70} L1900,${y0 - 120} L2200,${y0 - 50} L2700,${y0 - 90} L2700,${y0 + 10} L-800,${y0 + 10} Z`} fill="#46525e" />
 	<path d={`M-200,${y0 - 120} L-150,${y0 - 96} L-120,${y0 - 104} L-80,${y0 - 86} L-120,${y0 - 86} Z M260,${y0 - 150} L320,${y0 - 118} L280,${y0 - 120} L250,${y0 - 112} L210,${y0 - 122} Z M700,${y0 - 170} L760,${y0 - 134} L720,${y0 - 138} L680,${y0 - 128} L650,${y0 - 140} Z M1400,${y0 - 140} L1460,${y0 - 108} L1420,${y0 - 112} L1380,${y0 - 104} L1350,${y0 - 118} Z`} fill="#e4e8ec" opacity={0.8} />
+	<rect x={-800} y={y0 - 40} width={3600} height={40} fill="#8a9aa6" opacity={0.25} />
 	<rect x={-800} y={y0} width={3600} height={y1 - y0 + 40} fill="#3a4a58" />
 	<defs><linearGradient id="sea59" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6a7a86" stopOpacity="0.6" /><stop offset="1" stopColor="#1e2a34" stopOpacity="0.6" /></linearGradient></defs>
 	<rect x={-800} y={y0} width={3600} height={y1 - y0 + 40} fill="url(#sea59)" />
