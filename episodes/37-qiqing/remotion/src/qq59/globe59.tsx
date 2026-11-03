@@ -171,7 +171,7 @@ export const Earth: React.FC<EarthProps> = ({id, v, route, plan, pins = [], home
 		<path d={sphere} fill="none" stroke={PAL.atm} strokeOpacity={0.12} strokeWidth={42} />
 		<path d={sphere} fill="none" stroke={PAL.atm} strokeOpacity={0.22} strokeWidth={16} />
 		<path d={sphere} fill={`url(#${id}oc)`} />
-		{ice.length > 0 && <g filter={`url(#${id}cb)`}>{ice.map((c, i) => { const d = path(geoCircle().center(c.c).radius(c.r).precision(2)()); return d ? <path key={i} d={d} fill="#dde6ee" opacity={0.85} /> : null; })}</g>}
+		{ice.length > 0 && <g filter={`url(#${id}cb)`}>{ice.map((c, i) => { const d = path(geoCircle().center(c.c).radius(c.r).precision(2)()); return d ? <path key={i} d={d} fill="#dde6ee" opacity={0.55} /> : null; })}</g>}
 		<path d={landD} fill={PAL.land} />
 		{clouds > 0 && <g opacity={clouds} filter={`url(#${id}cb)`}>{CLOUD_GEO.map((g, i) => { const d = path(g); return d ? <path key={i} d={d} fill="#dfe6f0" opacity={CLOUDS[i].o} /> : null; })}</g>}
 		{/* the limb: a bright thin line and a shade toward it (sphere depth) */}

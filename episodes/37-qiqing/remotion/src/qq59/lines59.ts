@@ -33,7 +33,7 @@ export const LINES59: Line59[] = [
 	{bar: 21, a: D(21), b: D(22), rows: [{s: '先往北，穿过[达连隘口]：', at: D(21)}], note: 'the chase north along the Andes, the dive into the canopy'},
 	{bar: 22, a: D(22), b: D(24), rows: [{s: '先往北，穿过[达连隘口]：', at: D(21)}, {s: '没有路，只有沼泽和丛林。', at: D(22)}]},
 	{bar: 24, a: D(24), b: D(26), rows: [{s: '出了丛林，', at: D(24)}, {s: '他在巴拿马坐了[18天]牢。', at: BT(24, 2)}]},
-	{bar: 26, a: D(26), b: D(28), rows: [{s: '再一路向北：', at: D(26)}, {s: '[美国]、[加拿大]、[阿拉斯加]。', at: D(27) + 0.05, chunks: [[3, D(27) + 0.05], [7, BT(27, 1.5)], [12, BT(27, 3.1)]]}],
+	{bar: 26, a: D(26), b: D(28), rows: [{s: '再一路向北：', at: D(26)}, {s: '[美国]、[加拿大]、[阿拉斯加]。', at: D(27) + 0.05, chunks: [[3, D(27) + 0.05], [7, BT(27, 1.5)], [12, BT(27, 2.9)]]}],
 		note: 'the photo on bar 26; the three names type as the gold head passes them'},
 	{bar: 28, a: D(28), b: D(30), rows: [{s: '[2006年]，', at: D(28)}, {s: '他走到了美洲的尽头。', at: BT(28, 2)}]},
 	{bar: 30, a: D(30), b: D(32), rows: [{s: '海面结了冰，', at: D(30)}, {s: '他就[踩着冰]过海。', at: D(31)}]},

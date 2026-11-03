@@ -316,7 +316,7 @@ export const Steps: React.FC<{t: number}> = ({t}) => {
 	const sl = Math.max(0, Math.min(8.5, (t - D(48)) / BEAT + 0.4)), wx = EX0 + (sl * RUN + 0.1) * EH, wy = EG - (sl * RISE + 0.62) * EH, u = seg(t, D(48) - 0.3, D(50));
 	const cam: CamT = {cx: wx + 120, cy: wy - 30, z: Math.exp(lerp(Math.log(0.92), Math.log(1.3), ei(u) * 0.6 + u * 0.4)) + k, r: -2.5};
 	const hand: P2 = [EX0 + pose.LHand[0] * EH, EG - pose.LHand[1] * EH];
-	const sign: Part = {d: `M${f1(hand[0] - 70)},${f1(hand[1] - 10)} L${f1(hand[0] + 80)},${f1(hand[1] - 18)} L${f1(hand[0] + 86)},${f1(hand[1] + 92)} L${f1(hand[0] - 64)},${f1(hand[1] + 100)} Z`, role: 'gear', fill: '#7a6448'};
+	const sign: Part = {d: `M${f1(hand[0] - 70)},${f1(hand[1] - 10)} L${f1(hand[0] + 80)},${f1(hand[1] - 18)} L${f1(hand[0] + 86)},${f1(hand[1] + 92)} L${f1(hand[0] - 64)},${f1(hand[1] + 100)} Z`, role: 'gear', fill: '#b49a72'};
 	const RIM_E: Rim[] = [{c: '#d8dee8', o: 0.5, dx: -2.4, dy: -1.6}, {c: '#ffcf9a', o: 0.35, dx: 2.2, dy: -1.2}];
 	const n = 11, treadX = (i: number) => EX0 + i * RUN * EH, treadY = (i: number) => EG - i * RISE * EH;
 	return <g>

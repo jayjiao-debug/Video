@@ -13,7 +13,7 @@ export type {Look4, Pose, Theme, Look59};
 export const W = 1920, H = 1080, FPS = 30;
 /* music grid (script v2): DJ remix 140.8 BPM, bar 1.70444 s; downbeat n at D(n) */
 export const BAR = 1.70444, BEAT = BAR / 4, D = (n: number) => 0.144 + BAR * n;
-export const GOLD = '#E8BC66', GOLD_HI = '#FFD98A', CREAM = '#FFF6E6', FIG = '#0c0b0f', RIM = '#ffd9a8';
+export const GOLD = '#FFC24A', GOLD_HI = '#FFD98A', CREAM = '#FFF6E6', FIG = '#0c0b0f', RIM = '#ffd9a8';
 export type P = [number, number];
 export const rnd = (i: number, s = 0) => { const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453; return x - Math.floor(x); };
 export const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));

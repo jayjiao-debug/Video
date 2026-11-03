@@ -22,11 +22,11 @@ const pulse = (t: number, hits: number[], k = 9) => hits.reduce((a, h) => a + (t
 /* ====================== the chase south → north (bar 20½ → 22): the gold line races up the Andes, the camera riding behind its head,
    tilted over the curve of the Earth; at the Darién it dives through the clouds into the canopy ====================== */
 export const CH_S0 = CAL_OUT + 0.42, CH_DIVE = D(21) + 0.85;
-export const pSouth = pchip([[CH_S0, 0], [CH_S0 + 0.3, 0.008], [D(21) + 0.25, 0.152], [CH_DIVE + 0.4, 0.2149]]);
+export const pSouth = (t: number) => 0.2149 * trap(seg(t, CH_S0, CH_DIVE + 0.4), 0.25);
 export const southView = (t: number): SatView => {
-	const p = pSouth(t), c = routeAt(p), hd = headingAt(Math.min(p, 0.205), 0.07), kd = seg(t, CH_DIVE, D(22) + 0.02);
-	const cruise = lerp(1.3, 1.0, sm(seg(t, CH_S0, CH_S0 + 0.8)));
-	return {lon: c[0], lat: c[1], alt: Math.exp(lerp(Math.log(cruise), Math.log(0.0009), Math.pow(kd, 1.7))), tilt: 30 * (1 - sm(seg(kd, 0, 0.6))), roll: hd, cx: 960, cy: lerp(720, 540, sm(seg(kd, 0, 0.5)))};
+	const p = pSouth(t), c = routeAt(p), hd = headingAt(Math.min(p, 0.16), 0.12), kd = seg(t, CH_DIVE, D(22) + 0.02);
+	const cruise = lerp(1.4, 1.15, sm(seg(t, CH_S0, CH_S0 + 0.8)));
+	return {lon: c[0], lat: c[1], alt: Math.exp(lerp(Math.log(cruise), Math.log(0.0009), Math.pow(kd, 1.7))), tilt: 26 * (1 - sm(seg(kd, 0, 0.6))), roll: hd, cx: 960, cy: lerp(720, 540, sm(seg(kd, 0, 0.5)))};
 };
 /** clouds seen from above, rushing outward as the camera drops through them */
 const CloudBurst: React.FC<{u: number; col?: string}> = ({u, col = '#eef2f6'}) => { if (u <= 0 || u >= 1) return null;
@@ -162,17 +162,17 @@ export const Jail: React.FC<{t: number}> = ({t}) => {
 
 /* ====================== the Americas (bars 26–28): under the real photo, the gold line runs on north; when the photo flies off the camera is
    riding its head up through the US and Canada to Alaska (the names type as it passes), then drops into the white of the Arctic ====================== */
-export const pNorth = pchip([[D(26) - 0.1, 0.228], [D(27), 0.352], [BT(27, 1.5), 0.41], [BT(27, 3.1), 0.476], [D(28) - 0.25, 0.486]]);
+export const pNorth = pchip([[D(26) - 0.1, 0.228], [D(27), 0.352], [BT(27, 1.5), 0.41], [BT(27, 3.0), 0.474], [D(28) - 0.6, 0.481]]);
 export const northView = (t: number): SatView => {
-	const p = pNorth(t), c = routeAt(p), hd = headingAt(Math.min(0.49, p), 0.06), kd = seg(t, D(28) - 0.3, D(28) + 0.06);
-	return {lon: c[0], lat: c[1], alt: Math.exp(lerp(Math.log(0.75), Math.log(0.004), Math.pow(kd, 1.5))), tilt: 32 * (1 - kd), roll: hd, cx: 960, cy: lerp(720, 540, sm(kd))};
+	const p = pNorth(t), c = routeAt(p), hd = headingAt(Math.min(0.48, p), 0.12), kd = seg(t, D(28) - 0.62, D(28) + 0.06);
+	return {lon: c[0], lat: c[1], alt: Math.exp(lerp(Math.log(1.0), Math.log(0.004), Math.pow(kd, 1.5))), tilt: 24 * (1 - kd), roll: hd, cx: 960, cy: lerp(720, 540, sm(kd))};
 };
 export const ChaseNorth: React.FC<{t: number}> = ({t}) => {
-	const v = northView(t), p = pNorth(t), white = sm(seg(t, D(28) - 0.26, D(28) - 0.02));
+	const v = northView(t), p = pNorth(t), white = sm(seg(t, D(28) - 0.34, D(28) - 0.02));
 	return <g>
 		<Space id="cn" drift={(t - D(26)) * 8} />
 		<Earth id="cne" v={v} route={{p0: 0, p1: p, head: p}} clouds={0.9} />
-		<CloudBurst u={seg(t, D(28) - 0.3, D(28) + 0.02)} />
+		<CloudBurst u={seg(t, D(28) - 0.42, D(28) + 0.02)} />
 		{white > 0 && <rect x={0} y={0} width={W} height={H} fill="#eef3f7" opacity={white} />}
 	</g>;
 };
@@ -268,13 +268,13 @@ const IceTop: React.FC<{t: number; s: number; o: number}> = ({t, s, o}) => { con
 	</g>; };
 export const STRAIT: P2 = [-169.0, 65.9];
 /** the frozen Bering Sea and the Chukchi Sea in March (soft white over the ocean, under the land) */
-const SEA_ICE: {c: P2; r: number}[] = [{c: [-169, 65.8], r: 3.2}, {c: [-172, 63.5], r: 3.5}, {c: [-166, 62.5], r: 3.6}, {c: [-170, 69.5], r: 4.2}, {c: [-176, 66.5], r: 2.6}, {c: [-162, 67.5], r: 2.6}];
+const SEA_ICE: {c: P2; r: number}[] = Array.from({length: 22}, (_, i) => ({c: [-178 + 18 * rnd(i, 41), 61 + 10 * rnd(i, 42)] as P2, r: 1.2 + 1.6 * rnd(i, 43)}));
 const pStrait = pchip([[D(32) - 0.2, 0.5085], [D(33) + 0.3, 0.5137], [BT(33, 2), 0.5142]]);
 export const pullView = (t: number): SatView => {
-	const k = seg(t, D(32) + 0.45, D(33) + 0.4), dv = seg(t, BT(33, 2), D(34)), p = pStrait(t), c = routeAt(p), hd = headingAt(0.512, 0.02), end = routeAt(0.5142);
-	let alt = Math.exp(lerp(Math.log(0.008), Math.log(0.38), trap(k, 0.3))), lon = lerp(c[0], STRAIT[0], 0.6), lat = lerp(c[1], STRAIT[1], 0.6);
+	const k = seg(t, D(32) + 0.45, D(33) + 0.55), dv = seg(t, BT(33, 2), D(34)), p = pStrait(t), c = routeAt(p), hd = headingAt(0.512, 0.02), end = routeAt(0.5142);
+	let alt = Math.exp(lerp(Math.log(0.02), Math.log(0.3), trap(k, 0.3))), lon = lerp(c[0], STRAIT[0], 0.6), lat = lerp(c[1], STRAIT[1], 0.6);
 	/* the drop into the night: the nadir settles on the shore first, then the camera falls (no slide at low altitude) */
-	if (dv > 0) { const ks = sm(seg(dv, 0, 0.45)); lon = lerp(lon, end[0], ks); lat = lerp(lat, end[1], ks); alt = Math.exp(lerp(Math.log(alt), Math.log(0.004), Math.pow(seg(dv, 0.15, 1), 1.4))); }
+	if (dv > 0) { const ks = sm(seg(dv, 0, 0.45)); lon = lerp(lon, end[0], ks); lat = lerp(lat, end[1], ks); alt = Math.exp(lerp(Math.log(alt), Math.log(0.02), Math.pow(seg(dv, 0.15, 1), 1.4))); }
 	return {lon, lat, alt, tilt: 22 * sm(seg(t, D(32) + 0.6, D(33))) * (1 - 0.5 * dv), roll: hd - 90, cx: 960, cy: 560};
 };
 export const PullUp: React.FC<{t: number}> = ({t}) => {

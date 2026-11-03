@@ -4,7 +4,9 @@ import {W, H, rnd, seg, lerp, sm, eio, eo, ei, land, Glow, Sky, Cam, CamT, Par, 
 	Signpost, FlagTree, Grass, Gulls, Strait, Bus, Pickup, Plane, RedX, Guanaco, WireFence, PackTop, TentBag, Cash, PlasticCam, Planks, Tag, YearCard, Lamp, ParkedCar} from './bg59';
 import {Lit, Rim, Pose, LOOK, PZ, STAGE, grounded, walkTo, walkNat, walkPose, withArms, mixPose, nod, jointAt, Look59, PackProp, Walker, walkG, cartParts, CART_PAINT, LitParts} from './figure59';
 import {Globe, Space, ROUTE, routeAt, followAt, HULL, PUNTA, GlobeView, projOf, Earth, SatView, satPt, headingAt} from './globe59';
-/* ep59 demo scenes (bars 0–21, film 0–35.94 s). Every scene takes film time t, runs its own camera and acting.
+/* ep59 part 1, bars 0–20½ (film 0 → 35.2 s; the first pass's demo scenes, reworked after the owner's 19:04 notes: the real-photo opening
+   matched onto the drawn Karl, the perspective Earth, the stage looks with the cart, pushes/tilts/iris/flare instead of cuts).
+   Bars 20½–50 are in part1b59.tsx / part1c59.tsx; the timeline is EP59.tsx. Every scene takes film time t, runs its own camera and acting.
    Hits (tier 1–2) sit on the grid: cuts on downbeats; the door, the ✕s, the kit pops, the first step and the calendar stop on beats.
    Continuous actions (walking, waves, smoke, flipping pages) keep their own clocks. */
 type P2 = [number, number];
@@ -121,22 +123,22 @@ export const dateAt = (p: number) => { for (let i = 1; i < DATES.length; i++) if
     on screen (the dive aims at it). The crane comes out of the clouds low over Britain, tilted toward the horizon, and rises to the whole
     Earth; under the title the Earth spins at a uniform rate (the route's own speed is very uneven: Russia flies by); the dive drops onto
     Patagonia, the nadir sliding onto the sun. Screen speed measured ≤ ~27 px/frame. */
-export const ALT_TITLE = 2.15;
+export const ALT_TITLE = 5.6, F_FAR = 2400;
 export const globeView = (t: number, sun: P2): SatView => {
-	const kC = sm(seg(t, 10.55, 12.3)), u = seg(t, COMET0 - 0.1, COMET1);
+	const kC = sm(seg(t, 11.0, 12.4)), u = seg(t, COMET0 - 0.1, COMET1);
 	let lon = lerp(HULL_U[0], EURASIA[0], kC), lat = lerp(HULL_U[1] - 4, EURASIA[1], kC);
 	if (t > COMET0 - 0.1) { lon = lerp(EURASIA[0], TITLE_END[0], trap(u, 0.15)); lat = lerp(EURASIA[1], TITLE_END[1], sm(seg(u, 0.3, 1))); }
 	const ku = trap(seg(t, G_IN, 12.08), 0.18);
-	let alt = Math.exp(lerp(Math.log(0.12), Math.log(ALT_TITLE), ku)), tilt = 34 * (1 - sm(seg(t, G_IN + 0.3, 11.7))), cx = 960, cy = lerp(lerp(860, 540, sm(seg(t, G_IN + 0.2, 11.5))), 430, sm(seg(t, 11.3, 12.1)));
+	let F = lerp(1100, F_FAR, sm(seg(t, 11.0, 12.1))), alt = Math.exp(lerp(Math.log(0.2), Math.log(ALT_TITLE), ku)), tilt = 34 * (1 - sm(seg(t, G_IN + 0.3, 11.7))), cx = 960, cy = lerp(lerp(860, 540, sm(seg(t, G_IN + 0.2, 11.5))), 430, sm(seg(t, 11.3, 12.1)));
 	if (t > DIVE) { const k = seg(t, DIVE, 16.25), e = Math.pow(k, 2.6);   // slow at first; the fast end is under the haze and the dissolve
-		alt = Math.exp(lerp(Math.log(ALT_TITLE), Math.log(0.004), e)); tilt = 18 * sm(seg(k, 0.4, 1));
+		alt = Math.exp(lerp(Math.log(ALT_TITLE), Math.log(0.004), e)); tilt = 18 * sm(seg(k, 0.4, 1)); F = lerp(F_FAR, 1100, sm(seg(k, 0, 0.6)));
 		const ks = sm(seg(t, DIVE - 0.1, SIGN_IN + 0.3)); cx = lerp(960, sun[0], ks); cy = lerp(430, sun[1] + 120 * ks, ks); }
 	const pk = sm(seg(t, DIVE - 0.2, DIVE + 0.35)); lon = lerp(lon, PUNTA[0], pk); lat = lerp(lat, PUNTA[1], pk);
-	return {lon, lat, alt, tilt, cx, cy, roll: 0};
+	return {lon, lat, alt, tilt, cx, cy, roll: 0, F};
 };
 export const GlobeAct: React.FC<{t: number; sun: P2}> = ({t, sun}) => {
 	const v = globeView(t, sun), q = craneQ(t), c = comet(t), gO = sm(seg(t, G_IN + 0.05, G_IN + 0.35));
-	const cloudsIn = sm(seg(t, 9.7, 10.2)), cloudsOut = 1 - sm(seg(t, 10.38, 10.95)), cO = cloudsIn * cloudsOut;
+	const cloudsIn = sm(seg(t, 9.7, 10.2)), cloudsOut = 1 - sm(seg(t, 10.5, 11.12)), cO = cloudsIn * cloudsOut;
 	const cy0 = lerp(-150, 420, sm(seg(t, 9.6, 10.9)));
 	const haze = sm(seg(t, 15.3, 15.8)) * (1 - sm(seg(t, 15.95, 16.25)));
 	const inTitle = t >= COMET0;
@@ -243,15 +245,15 @@ export const planP = (t: number) => trap(seg(t, PLAN0, PLAN1), 0.14);
 export const BUS_LIGHT: P2 = [1250, 778];
 export const goalView = (t: number, sun: P2): SatView => {
 	const u = seg(t, PLAN0 - 0.1, PLAN1 + 0.05);
-	const zk = sm(seg(t, GOAL_IN, 21.4)), alt = Math.exp(lerp(Math.log(1.25), Math.log(1.75), zk));
+	const zk = sm(seg(t, GOAL_IN, 21.4)), alt = Math.exp(lerp(Math.log(4.4), Math.log(6.0), zk));
 	const lon = lerp(PUNTA[0] + 4, -340, trap(u, 0.18)), lat = lerp(-30, 44, sm(seg(u, 0, 0.88)));
 	void sun;   // a straight cross-dissolve from the coast (a slide off the sun measured > 30 px/frame)
-	const v: SatView = {lon, lat, alt, tilt: 12, cx: 930, cy: 600};
+	const v: SatView = {lon, lat, alt, tilt: 10, cx: 930, cy: 600, F: F_FAR};
 	/* the push: the camera drops toward Hull while the Earth slides so that Hull lands where the bus headlight will be (its light
 	   becomes the headlight); the slide starts as the plan reaches Europe, the zoom keeps Hull fixed on screen */
-	const kp = sm(seg(t, D(14) - 1.25, D(14) - 0.05)), kz = seg(t, D(14) - 0.85, D(14) + 0.1);
-	if (kz > 0) { v.alt = Math.exp(lerp(Math.log(alt), Math.log(0.45), trap(kz, 0.3))); v.tilt = 12 * (1 - kz); }
-	if (kp > 0) { const h = satPt(v, HULL); if (h) { v.cx += (BUS_LIGHT[0] - h[0]) * kp; v.cy += (BUS_LIGHT[1] - h[1]) * kp; } }
+	const kp = sm(seg(t, D(14) - 1.6, D(14) - 0.05)), kz = seg(t, D(14) - 0.95, D(14) + 0.1);
+	if (kz > 0) { v.alt = Math.exp(lerp(Math.log(alt), Math.log(2.2), trap(kz, 0.3))); v.tilt = 10 * (1 - kz); }
+	if (kp > 0) { const h = satPt(v, HULL); if (h) { v.cx = (v.cx ?? 960) + (BUS_LIGHT[0] - h[0]) * kp; v.cy = (v.cy ?? 540) + (BUS_LIGHT[1] - h[1]) * kp; } }
 	return v;
 };
 export const GoalGlobe: React.FC<{t: number; sun: P2}> = ({t, sun}) => {
@@ -376,8 +378,8 @@ export const IRIS_T = D(19);
 /** [x, y, r] of the iris hole at time t (closing on the lens before IRIS_T, opening from the sun after), null when fully open */
 export const irisAt = (t: number): [number, number, number] | null => {
 	if (t < IRIS_T - 0.4 || t > IRIS_T + 0.45) return null;
-	if (t < IRIS_T) { const k = seg(t, IRIS_T - 0.4, IRIS_T - 1 / 30), p = camPt(kitCamAt(t), LENS_W); return [p[0], p[1], 1500 * Math.pow(1 - ei(k), 1.6)]; }
-	const k = seg(t, IRIS_T + 1 / 30, IRIS_T + 0.45), sun = calSun(t); return [sun[0], sun[1], 1900 * Math.pow(eo(k), 1.6)];
+	if (t < IRIS_T) { const k = seg(t, IRIS_T - 0.4, IRIS_T), p = camPt(kitCamAt(t), LENS_W); return [p[0], p[1], 1500 * Math.pow(1 - ei(k), 1.25)]; }
+	const k = seg(t, IRIS_T - 0.01, IRIS_T + 0.45), sun = calSun(t); return [sun[0], sun[1], 1900 * Math.pow(eo(k), 1.25)];
 };
 export const Iris: React.FC<{x: number; y: number; r: number}> = ({x, y, r}) => <path fillRule="evenodd" fill="#07060a"
 	d={`M-10,-10 H${W + 10} V${H + 10} H-10 Z M${(x - r).toFixed(1)},${y.toFixed(1)} a${r.toFixed(1)},${r.toFixed(1)} 0 1,0 ${(2 * r).toFixed(1)},0 a${r.toFixed(1)},${r.toFixed(1)} 0 1,0 ${(-2 * r).toFixed(1)},0 Z`} />;
