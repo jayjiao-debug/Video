@@ -1,4 +1,15 @@
-{"id":"ep57-arrive-02","model_prefs":["eleven_v4"],"items":[
- {"name":"07_cn","lang":"zh","voice_id":"hkfHEbBvdQFNX4uWHqRF","text":"欢迎回家。"},
- {"name":"07_cn_b","lang":"zh","voice_id":"hkfHEbBvdQFNX4uWHqRF","text":"欢迎回家！"},
- {"name":"06_in_b","lang":"hi","accent":"standard","gender":"female","pick":1,"text":"भारत में आपका स्वागत है!"}]}
+{"id":"ep57-arrive-elegant-01","model_prefs":["eleven_v4"],"items":[
+ {"name":"01_mx_a","lang":"es","gender":"female","use_case":"narrative_story","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Bienvenido a México."},
+ {"name":"01_mx_b","lang":"es","gender":"female","search":"soft","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Bienvenido a México."},
+ {"name":"02_pe_a","lang":"es","gender":"female","use_case":"narrative_story","pick":1,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Bienvenido al Perú."},
+ {"name":"02_pe_b","lang":"es","gender":"female","search":"calm","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Bienvenido al Perú."},
+ {"name":"03_br_a","lang":"pt","gender":"female","use_case":"narrative_story","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Bem-vindo ao Brasil."},
+ {"name":"03_br_b","lang":"pt","gender":"female","search":"soft","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Bem-vindo ao Brasil."},
+ {"name":"04_it_a","lang":"it","gender":"female","use_case":"narrative_story","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Benvenuto in Italia."},
+ {"name":"04_it_b","lang":"it","gender":"female","search":"calm","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"Benvenuto in Italia."},
+ {"name":"05_jo_a","lang":"ar","gender":"female","use_case":"narrative_story","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"أهلاً وسهلاً بك في الأردن."},
+ {"name":"05_jo_b","lang":"ar","gender":"female","search":"calm","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"أهلاً وسهلاً بك في الأردن."},
+ {"name":"06_in_a","lang":"hi","gender":"female","use_case":"narrative_story","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"भारत में आपका स्वागत है।"},
+ {"name":"06_in_b","lang":"hi","gender":"female","search":"soft","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"भारत में आपका स्वागत है।"},
+ {"name":"07_cn_a","lang":"zh","gender":"female","accent":"standard","use_case":"narrative_story","pick":0,"settings":{"stability":0.62,"similarity_boost":0.8,"style":0.08,"use_speaker_boost":true,"speed":0.9},"text":"欢迎回家。"},
+ {"name":"07_cn_b","lang":"zh","voice_id":"hkfHEbBvdQFNX4uWHqRF","settings":{"stability":0.65,"similarity_boost":0.8,"style":0.05,"use_speaker_boost":true,"speed":0.9},"text":"欢迎回家。"}]}
