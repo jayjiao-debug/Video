@@ -562,6 +562,11 @@ class Sub:
         im = s.im.copy(); im.putalpha(Image.fromarray((s.a0 * M * fade).astype(np.uint8)))
         base.paste(im, (s.x0, s.y0 + int(16 * (1 - out3(u / .3)))), im)
 SUBO = [Sub(*x) for x in SUBS]
+def _scrim():
+    """a soft dark pool behind the subtitle block (top-left), so the cream text reads on light, busy scenes"""
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); r2 = ((xx - 420) / 1050) ** 2 + ((yy - 205) / 300) ** 2
+    return Image.fromarray((150 * np.clip(1 - r2, 0, 1) ** 1.4).astype(np.uint8))
+SCRIM = _scrim()
 
 # ---------------- HUD ----------------
 def roll(a, b_, t, t0, t1): return int(round(a + (b_ - a) * ease((t - t0) / (t1 - t0))))
@@ -616,6 +621,9 @@ def compose(t):
     sh = [x for x in SHAKES + [c for c in CLICKS if abs(c - D[80]) > .01] if 0 <= t - x < .12]
     if sh:
         a = 1 - (t - sh[0]) / .12; im = zoom(im, 1.012, dx=RNG.uniform(-7, 7) * a, dy=RNG.uniform(-7, 7) * a)
+    d_sub = min((max(0.0, su.t0 - t, t - su.t1) for su in SUBO), default=9.0)     # owner 11:46: light scenes made the subtitles hard to read
+    a_scr = cl(1 - d_sub / .2)
+    if a_scr > 0: im = Image.composite(Image.new('RGB', (W, H), (14, 9, 6)), im, SCRIM if a_scr >= 1 else SCRIM.point(lambda v: int(v * a_scr)))
     for su in SUBO: su.draw(im, t)
     hs = hud_state(t)
     if hs:
