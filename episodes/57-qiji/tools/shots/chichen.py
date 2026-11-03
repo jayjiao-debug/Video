@@ -317,11 +317,12 @@ const FD=[...document.querySelectorAll('.fd')].map(e=>[e,+e.dataset.a,+e.dataset
 const TOOLS=[...document.querySelectorAll('.tool')].map(e=>[e,+e.dataset.x,+e.dataset.y,+e.dataset.r]);
 const S=DATA.youS;
 function P0(o){return Object.assign({ra:[60,86],la:[120,94],lk:[-25,-60],lf:[-26,0],rk:[25,-60],rf:[26,0],hip:[0,0],nk:[0,0],hd:[0,0],tilt:6,look:[0,0],expr:'smile',root:[0,0]},o)}
-function runPose(t){const th=2*Math.PI*t/BEAT, w=Math.cos(th);
-  const leg=(psi,side)=>{const cx=side*10-6, fx=cx-40*Math.cos(psi), sw=Math.sin(psi)<0, lift=sw?40*(-Math.sin(psi)):0, f=[fx,-lift], hp=[side*22-8,-116];
-    return [[(hp[0]+f[0])/2-17,(hp[1]+f[1])/2-(sw?8:0)],f]};
-  const [lk,lf]=leg(th,-1), [rk,rf]=leg(th+Math.PI,1), up=80-42*w, lu=100+42*w;
-  return P0({ra:[up,up-5-85*w],la:[lu,lu-5+85*w],lk:lk,lf:lf,rk:rk,rf:rf,hip:[-8,4],nk:[-17,5],hd:[-6,0],tilt:-10,look:[-.95,-.05],expr:'smile',root:[0,-12*Math.abs(Math.sin(th))]})}
+function runPose(t){const th=2*Math.PI*t/BEAT, sn=Math.sin(th);
+  const leg=(sg,v)=>{const lf=Math.max(0,v), push=-12*Math.cos(th)*sg;
+    return [[sg*30-6-(sg<0?12:16)*lf+push*.5,-62-30*lf],[sg*24-4+(sg<0?6:18)*lf+push,-46*lf]]};
+  const [lk,lf]=leg(-1,sn), [rk,rf]=leg(1,-sn);
+  const arm=v=>[52+24*v,-37+60*v], r=arm(sn), l=arm(-sn);
+  return P0({ra:r,la:[180-l[0],180-l[1]],lk:lk,lf:lf,rk:rk,rf:rf,hip:[-6,4],nk:[-16,6],hd:[-6,0],tilt:-11,look:[-.95,-.05],expr:'smile',root:[0,-11*Math.abs(sn)]})}
 const lead=t=>-46*(1-span(t,1.12,TL,'io'));
 const youW=t=>DATA.youX+(DT-trav(t))+lead(t);
 window.render=function(t){
@@ -368,7 +369,7 @@ function counterV(t,v,dv,TL,CN){const g=$('cnt');
     e.setAttribute('transform','translate('+f1(cx)+','+f1(cy)+') scale('+f2(s)+') translate('+f1(-cx)+','+f1(-cy)+')')}}
 '''
 
-def blueprint_when(target, pre, suf, monument, you_x=1030, D=750, nx=1180, mon_js='', eras=DYNASTIES):
+def blueprint_when(target, pre, suf, monument, you_x=1030, D=750, nx=1240, fs=176, mon_js='', eras=DYNASTIES):
     """the 「穿越时间轴」 shot: blueprint paper, grid (0.35x), faint construction arcs (0.6x), the year ruler with dynasty bands (1x),
     chalk dust and floating drafting tools (1.4x). The camera trucks right → left from 2026 to `target` and lands on t = 1.672;
     你 runs, skids, turns and points at the year; then `monument` (a string of dw / fd elements, world = screen at the landing)
@@ -383,7 +384,7 @@ def blueprint_when(target, pre, suf, monument, you_x=1030, D=750, nx=1180, mon_j
              '<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.1 0 0 0 -.5"/></filter>'
              '<filter id="pgr2" x="0" y="0" width="1920" height="1080" filterUnits="userSpaceOnUse"><feTurbulence type="fractalNoise" baseFrequency=".012 .03" numOctaves="2" seed="4"/>'
              '<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .5 0 0 0 -.2"/></filter>')
-    paper = svg_layer('paper', '<rect width="1920" height="1080" fill="url(#bpg)"/><rect width="1920" height="1080" filter="url(#pgr2)" opacity=".5"/>', defs=pdefs)
+    paper = svg_layer('paper', '<rect width="1920" height="1080" fill="url(#bpg)"/>', defs=pdefs)
     # --- grid (0.35x): 40 px, every 5th line brighter
     gl = ''.join(f'<path d="M{i * 40},0 V200 M0,{i * 40} H200" stroke="#FFFFFF" stroke-width="{1.6 if i == 0 else 1.1}" opacity="{.15 if i == 0 else .08}"/>' for i in range(5))
     grid = f'<g id="Lgrid"><rect x="-1400" y="-600" width="4800" height="2400" fill="url(#gridp)"/></g>'
@@ -409,14 +410,14 @@ def blueprint_when(target, pre, suf, monument, you_x=1030, D=750, nx=1180, mon_j
         rul.append(f'<path d="{"".join(f"M{x:.1f},{RY} v{L} " for x in xs)}" stroke="{CHALK}" stroke-width="{w}" opacity="{op}"/>')
     for yr in range(y_lo, 2027, 100):
         big = yr % 500 == 0; lab = f'前{-yr}' if yr < 0 else ('公元' if yr == 0 else str(yr))
-        if yr == target: continue
+        if yr == target or abs(X(yr) - xn) < 80: continue
         rul.append(ctext(X(yr), RY + (76 if big else 68), lab, 34 if big else 25, op=1 if big else .72, extra='font-family="Noto Sans CJK SC" font-weight="700"' if False else ''))
     for a, b, name in eras:
         if b < y_lo or a > 2026: continue
         xa_, xb_ = X(max(a, y_lo)) + 4, X(min(b, 2026)) - 4
         tid = ' id="eraT"' if a <= target < b else ''
         rul.append(f'<path d="M{xa_:.1f},{RY - 6} V{RY - 13} H{xb_:.1f} V{RY - 6}" fill="none" stroke="{CHALK}" stroke-width="2" opacity=".5"/>')
-        if xb_ - xa_ > 26 * len(name): rul.append(ctext((xa_ + xb_) / 2, RY - 22, name, 28, op=.85, extra=tid))
+        if xb_ - xa_ > 30 * len(name) + 14: rul.append(ctext(xa_ + 10, RY - 22, name, 28, 'start', op=.85, extra=tid))
     if 'id="eraT"' not in ''.join(rul): rul.append('<text id="eraT"></text>')
     rul.append(f'<path d="M{xn:.1f},{RY - 22} V{RY + 40}" stroke="{GOLD}" stroke-width="4"/>' + ctext(xn, RY + 76, '2026', 34, col=GOLD))
     ruler = f'<g filter="url(#mb)">{"".join(rul)}</g>'
@@ -435,11 +436,11 @@ def blueprint_when(target, pre, suf, monument, you_x=1030, D=750, nx=1180, mon_j
     for _ in range(70):
         x, y, r = R.uniform(-300, 3300), R.uniform(0, 1080), R.uniform(1.5, 5.5)
         fgs.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.1f}" fill="{CHALK}" opacity="{R.uniform(.12, .4):.2f}"/>')
-    fg = f'<g id="Lfg"><g filter="url(#mbf)">{"".join(fgs)}</g>{tool_plumb(150, -30, 250)}</g>'
-    cnt, cdefs, CN = counter_svg(target, pre, suf, nx, 545)
+    fg = f'<g id="Lfg"><g filter="url(#mbf)">{"".join(fgs)}</g>{tool_plumb(84, -30, 250)}</g>'
+    cnt, cdefs, CN = counter_svg(target, pre, suf, nx, 545, fs)
     body = (paper + svg_layer('scene', grid + far + main, defs=gdefs + chalk_f
                               + fig_defs([(0, '#FFFFFF'), (.55, '#F3F6FA'), (1, '#C6D0E0')], sh=(3, 6, 5, .45)))
-            + svg_layer('fgS', fg) + svg_layer('grain', '<rect width="1920" height="1080" filter="url(#pgr)"/><rect width="1920" height="1080" fill="url(#bpv)"/>', 'opacity:.9')
+            + svg_layer('fgS', fg) + svg_layer('grain', '<rect width="1920" height="1080" filter="url(#pgr)" opacity=".55"/><rect width="1920" height="1080" fill="url(#bpv)"/>')
             + svg_layer('hud', cnt + BUBBLE, defs=cdefs + BUBBLE_DEFS))
     K = [  # from the skid on (the run before it is procedural)
         [1.12, P('hang', lk=[-30, -60], lf=[-40, 0], rk=[22, -60], rf=[30, 0], nk=[-12, 4], look=[-.95, 0], tilt=-8)],
@@ -520,7 +521,7 @@ def castillo_bp(X0=575, Y0=690, K=11.2, t0=BAR):
     for j in range(1, 8):
         u = -TQ + 2 * TQ * j / 8; o.append(dw(pth([p(u, ZT + 4.1), p(u, ZT + 5.4)]), ta + .26, ta + .34, 1.4, .6))
     # dimensions, level mark, scale bar
-    o.append(dim_v(p(sb(0) + 6.5, 0)[0], Y0, p(0, ZT + TZ)[1], '30 m', a + 1.05, a + 1.35))
+    o.append(dim_v(p(sb(0) + 4.2, 0)[0], Y0, p(0, ZT + TZ)[1], '30 m', a + 1.05, a + 1.35, -1))
     o.append(dim_h(Y0 + 22, p(-sb(0), 0)[0], p(sb(0), 0)[0], '55 m', a + 1.0, a + 1.3))
     o.append(fd(f'<path d="M{x1_ - 150},{y1_ - 26} h100 M{x1_ - 150},{y1_ - 32} v12 M{x1_ - 100},{y1_ - 30} v8 M{x1_ - 50},{y1_ - 32} v12" stroke="{CHALK}" stroke-width="2" fill="none"/>'
                 + ctext(x1_ - 150, y1_ - 38, '0', 18) + ctext(x1_ - 50, y1_ - 38, '10 m', 18), a + 1.2, a + 1.4, .8))
@@ -530,12 +531,12 @@ def castillo_bp(X0=575, Y0=690, K=11.2, t0=BAR):
             + ''.join(dashed(pth([p(-sb(0) - 9.5 + 3.2 * j, 0), lerp2(r0, r1, (3.2 * j) / (sb(0) + 9.5 - st(4)))]), 1.5, .35, '6 6') for j in range(1, 7)))
     o.append(fd(ramp, a + .8, a + 1.05))
     sc = ''
-    for u in (7.5, 11, 14.5): sc += dashed(pth([p(u, zk(4)), p(u, ZT + TZ + 1.5)]), 2, .6, '14 6')
-    for z in (14, 18, 22, 26, 30.5): sc += dashed(pth([p(6.5, z), p(15.5, z)]), 2, .55, '14 6')
+    for u in (7.5, 11, 14.5): sc += dashed(pth([p(u, zk(4)), p(u, 28.5)]), 2, .6, '14 6')
+    for z in (14, 18, 22, 26): sc += dashed(pth([p(6.5, z), p(15.5, z)]), 2, .55, '14 6')
     o.append(fd(sc, a + .9, a + 1.15))
-    o.append(fd(tool_plumb(p(15, 30.5)[0], p(15, 30.5)[1], 70, .85).replace('id="plumb"', 'id="plumbm"'), a + 1.1, a + 1.25))
+    o.append(fd(tool_plumb(p(15, 26)[0], p(15, 26)[1], 70, .85).replace('id="plumb"', 'id="plumbm"'), a + 1.1, a + 1.25))
     stock = ''.join(f'<rect x="{p(u, 0)[0]:.1f}" y="{p(u, 0)[1] - h:.1f}" width="22" height="{h}" fill="none" stroke="{CHALK}" stroke-width="2" opacity=".7"/>'
-                    for u, h in [(29, 16), (31.2, 16), (30.1, 32)])
+                    for u, h in [(27.9, 16), (25.9, 16), (26.9, 32)])
     o.append(fd(stock, a + 1.0, a + 1.2))
     o.append('<g id="wk"></g>')
     js = WORKER_JS + r'''
@@ -547,12 +548,12 @@ window.monHook=function(t){const a=TL+1.0;if(t<a){$('wk').innerHTML='';return}
   const b=at(q), w1=at(q+.17), w2=at(q+.27);
   g+='<g transform="translate('+f1(b[0])+','+f1(b[1])+') rotate('+f2(ang)+')"><rect x="-22" y="-24" width="40" height="24" fill="none" stroke="#F3F0E6" stroke-width="2.6"/><path d="M-26,2 H24" stroke="#F3F0E6" stroke-width="3"/></g>';
   g+='<path d="M'+f1(b[0]+16)+','+f1(b[1]-14)+' L'+f1(w2[0]+8)+','+f1(w2[1]-22)+'" stroke="#F3F0E6" stroke-width="1.8" fill="none"/>';
-  g+=worker(w1[0],w1[1],.42,t*2*Math.PI/BEAT,'pull',false)+worker(w2[0],w2[1],.42,t*2*Math.PI/BEAT+1.6,'pull',false);
-  const tp=%s; g+=worker(tp[0],tp[1],.42,0,'lift',false);
-  const cp=%s; g+=worker(cp[0]+8*Math.sin(t*2),cp[1],.42,t*2*Math.PI/BEAT,'carry',true);
+  g+=worker(w1[0],w1[1],.5,t*2*Math.PI/BEAT,'pull',false)+worker(w2[0],w2[1],.5,t*2*Math.PI/BEAT+1.6,'pull',false);
+  const tp=%s; g+=worker(tp[0],tp[1],.5,0,'lift',false);
+  const cp=%s; g+=worker(cp[0]+8*Math.sin(t*2),cp[1],.5,t*2*Math.PI/BEAT,'carry',true);
   $('wk').innerHTML='<g opacity="'+f2(op)+'">'+g+'</g>';
   const pl=$('plumbm');if(pl)pl.setAttribute('transform','translate('+pl.dataset.x+','+pl.dataset.y+') rotate('+f2(4*Math.sin(t*3.3))+')')};
-''' % (json.dumps([r0, r1]), json.dumps(p(11, 30.5)), json.dumps(p(23, 0)))
+''' % (json.dumps([r0, r1]), json.dumps(p(10.6, 22)), json.dumps(p(23, 0)))
     return ''.join(o), js
 def lerp2(a, b, t): return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
 
@@ -650,32 +651,32 @@ def chichen_what():
             + HA.text(0, 0, '春分 · 秋分', 48, anchor='end', extra='id="lab" opacity="0"'))
     body = (svg_layer('back', f'<g id="Lsky">{"".join(sky)}</g><g id="Ltrees">{"".join(trees)}</g><g id="Lfield">{"".join(field)}</g><g id="Lpyr">{"".join(pyr)}</g><g id="Lfg">{"".join(fg)}</g>',
                       defs=defs)
-            + svg_layer('youS', '<g id="Lyou"><g id="you"></g></g>', defs=fig_defs([(0, '#FFF3DF'), (.5, '#F2D6BC'), (1, '#8E7E9A')], 1, 0, 0, 1, sh=(-6, 5, 5, .35)))
+            + svg_layer('youS', '<g id="Lyou"><g id="you"></g></g>', defs=fig_defs([(0, '#FFF8EC'), (.6, '#F8E4CF'), (1, '#A897B0')], 1, 0, 0, 1, sh=(-6, 5, 5, .35)))
             + svg_layer('near', f'<g id="Lnear">{"".join(fg2)}</g>', 'filter:blur(3px)')
             + svg_layer('ovl', over) + svg_layer('hud', BUBBLE, defs=BUBBLE_DEFS))
     K = [  # 你 watches the light come down, walks up to the head, peers, jumps back when it lights, then cheers
         [0.00, P('hang', look=[-.6, -.9], tilt=-6)],
         [0.418, P('hang', ra=[60, 86], la=[215, 210], look=[-.7, -.95], tilt=-8, expr='o'), 'ob'],
         [0.80, P('hang', la=[210, 205], look=[-.75, -.8], tilt=-7, expr='o'), 'io'],
-        [1.254, P('hang', 'stepL', look=[-.8, -.6], tilt=-6, root=[-30, 0]), 'io'],
-        [1.672, P('hang', 'stepR', look=[-.8, -.45], tilt=-6, root=[-62, 0]), 'io'],
-        [2.09, P('hang', 'stepL', look=[-.85, -.3], tilt=-7, root=[-94, 0]), 'io'],
-        [2.508, P('hang', 'stepR', look=[-.9, -.15], tilt=-8, root=[-122, 0]), 'io'],
-        [2.926, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-26, 26], hd=[-6, 4], look=[-.95, .25], tilt=-14, expr='o', root=[-132, 0]), 'io'],
-        [3.30, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-28, 28], hd=[-6, 4], look=[-.95, .3], tilt=-15, expr='o', root=[-134, 0]), 'l'],
-        [3.344, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-28, 28], hd=[-6, 4], look=[-.95, .3], tilt=-15, expr='wide', root=[-134, 0]), 'l'],
-        [3.55, P('fling', 'tuck', nk=[10, -4], look=[-.6, -.2], tilt=12, expr='wide', root=[-60, -95]), 'o'],
-        [3.762, P('fling', 'crouch', nk=[6, 14], look=[-.7, -.3], tilt=8, expr='wide', root=[-20, 0]), 'i2'],
-        [4.18, P('hips', 'wide', la=[205, 200], look=[-.85, -.6], tilt=-6, expr='o', root=[-20, 0]), 'ob'],
-        [4.598, P('cheer', 'wide', look=[-.6, -.5], tilt=-4, expr='joy', root=[-20, -14]), 'ob'],
-        [5.016, P('cheer', 'wide', ra=[-55, -72], la=[235, 252], look=[-.5, -.5], tilt=-2, expr='joy', root=[-20, 0]), 'io'],
+        [1.254, P('hang', 'stepL', look=[-.8, -.6], tilt=-6, root=[-50, 0]), 'io'],
+        [1.672, P('hang', 'stepR', look=[-.8, -.45], tilt=-6, root=[-100, 0]), 'io'],
+        [2.09, P('hang', 'stepL', look=[-.85, -.3], tilt=-7, root=[-150, 0]), 'io'],
+        [2.508, P('hang', 'stepR', look=[-.9, -.15], tilt=-8, root=[-196, 0]), 'io'],
+        [2.926, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-26, 26], hd=[-6, 4], look=[-.95, .25], tilt=-14, expr='o', root=[-210, 0]), 'io'],
+        [3.30, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-28, 28], hd=[-6, 4], look=[-.95, .3], tilt=-15, expr='o', root=[-212, 0]), 'l'],
+        [3.344, P(ra=[110, 70], la=[118, 70], lk=[-40, -48], lf=[-30, 0], rk=[36, -48], rf=[30, 0], hip=[-6, 22], nk=[-28, 28], hd=[-6, 4], look=[-.95, .3], tilt=-15, expr='wide', root=[-212, 0]), 'l'],
+        [3.55, P('fling', 'tuck', nk=[10, -4], look=[-.6, -.2], tilt=12, expr='wide', root=[-130, -95]), 'o'],
+        [3.762, P('fling', 'crouch', nk=[6, 14], look=[-.7, -.3], tilt=8, expr='wide', root=[-80, 0]), 'i2'],
+        [4.18, P('hips', 'wide', la=[205, 200], look=[-.85, -.6], tilt=-6, expr='o', root=[-80, 0]), 'ob'],
+        [4.598, P('cheer', 'wide', look=[-.6, -.5], tilt=-4, expr='joy', root=[-80, -14]), 'ob'],
+        [5.016, P('cheer', 'wide', ra=[-55, -72], la=[235, 252], look=[-.5, -.5], tilt=-2, expr='joy', root=[-80, 0]), 'io'],
     ]
     C = [[0.0, dict(z=1.0, fx=960, fy=540, c=0.0, dy=0, roll=0.0)],
          [0.836, dict(z=1.03, fx=940, fy=575, c=0.03, dy=0, roll=-0.3), 'l'],
          [2.926, dict(z=1.30, fx=840, fy=760, c=0.2, dy=0, roll=-0.9), 'io'],
          [3.344, dict(z=1.38, fx=830, fy=780, c=0.23, dy=0, roll=-1.1), 'io'],
-         [5.016, dict(z=1.12, fx=930, fy=600, c=0.1, dy=60, roll=1.4), 'io']]
-    data = dict(K=K, C=C, sun=sun, tgt=tgt, head=head_c, tri=tri_c, you=dict(b=(1060, 1040), s=.33))
+         [5.016, dict(z=1.1, fx=1150, fy=625, c=0.1, dy=70, roll=1.5), 'io']]
+    data = dict(K=K, C=C, sun=sun, tgt=tgt, head=head_c, tri=tri_c, you=dict(b=(1110, 1052), s=.45))
     js = r'''
 const DEP={Lsky:12,Ltrees:4,Lfield:1.12,Lpyr:1,Lfg:.62,Lyou:.6,Lnear:.42};
 window.render=function(t){
@@ -692,11 +693,12 @@ window.render=function(t){
   $('ray').setAttribute('d','M'+f1(a[0])+','+f1(a[1])+' L'+f1(a[0]+(b[0]-a[0])*dr)+','+f1(a[1]+(b[1]-a[1])*dr));$('ray').setAttribute('stroke-dashoffset',f1(-t*60));
   $('rayd').setAttribute('cx',f1(b[0]));$('rayd').setAttribute('cy',f1(b[1]));$('rayd').setAttribute('opacity',f2(span(t,.7,.85)));
   $('ray').setAttribute('opacity',f2(.9*(1-.6*span(t,2.9,3.3))));
-  const lb=app(ms,[DATA.sun[0]-92,DATA.sun[1]-100]);$('lab').setAttribute('transform','translate('+f1(lb[0])+','+f1(lb[1])+')');$('lab').setAttribute('opacity',f2(span(t,3.70,3.85)));
+  const lb=app(ms,[DATA.sun[0]-92,DATA.sun[1]-100]);$('lab').setAttribute('transform','translate('+f1(Math.min(1830,lb[0]))+','+f1(Math.max(380,lb[1]))+')');$('lab').setAttribute('opacity',f2(span(t,3.70,3.85)));
   // the burst when the head lights
   const h=app(mp,DATA.head), bu=span(t,HIT,HIT+.5,'o');let s='';
-  if(t>=HIT-.01&&bu<1){for(let i=0;i<12;i++){const an=i*30+15, r0=40+120*bu, r1=r0+40*(1-bu);s+='<path d="M'+f1(h[0]+cosd(an)*r0)+','+f1(h[1]+sind(an)*r0)+' L'+f1(h[0]+cosd(an)*r1)+','+f1(h[1]+sind(an)*r1)+'" stroke="#FFE7A8" stroke-width="7" stroke-linecap="round"/>'}
-    s+='<circle cx="'+f1(h[0])+'" cy="'+f1(h[1])+'" r="'+f1(30+150*bu)+'" fill="none" stroke="#FFE7A8" stroke-width="'+f1(10*(1-bu))+'"/>'}
+  if(t>=HIT-.01&&bu<1){for(let i=0;i<12;i++){const an=i*30+15, r0=40+120*bu, r1=r0+40*(1-bu);s+='<path d="M'+f1(h[0]+cosd(an)*r0)+','+f1(h[1]+sind(an)*r0)+' L'+f1(h[0]+cosd(an)*r1)+','+f1(h[1]+sind(an)*r1)+'" stroke="#FFD27A" stroke-width="11" stroke-linecap="round"/>'}
+    s='<circle cx="'+f1(h[0])+'" cy="'+f1(h[1])+'" r="'+f1(70+60*bu)+'" fill="#FFE2A0" opacity="'+f2(.55*(1-bu))+'"/>'+s;
+    s+='<circle cx="'+f1(h[0])+'" cy="'+f1(h[1])+'" r="'+f1(30+170*bu)+'" fill="none" stroke="#FFD27A" stroke-width="'+f1(14*(1-bu))+'"/>'}
   $('burst').innerHTML=s;$('burst').setAttribute('opacity',f2(1-bu));
   // 你 (lit by the sunset from the right; its shadow falls long to the left)
   let p=breathe(track(DATA.K,t),t,2);
