@@ -103,6 +103,9 @@ const Scene: React.FC<{ts?: number}> = ({ts = 1}) => {
 	</AbsoluteFill>;
 };
 /* Q57COLO106: the same scene for the 106 BPM track (owner 2026-11-03 12:07): time scaled so each 0.418 s beat lasts 0.566 s */
+/* ...141: the same for the 140.8 BPM DJ track (owner 17:08): each 0.418 s beat lasts 0.42611 s */
+const TS141 = 0.418 / 0.42611;
 const TS106 = 0.418 / 0.56606;
 registerRoot(() => <><Composition id="Q57COLO" component={Scene} durationInFrames={Math.round(DUR * FPS)} fps={FPS} width={W} height={H} />
-	<Composition id="Q57COLO106" component={Scene} defaultProps={{ts: TS106}} durationInFrames={Math.round(DUR * FPS / TS106)} fps={FPS} width={W} height={H} /></>);
+	<Composition id="Q57COLO106" component={Scene} defaultProps={{ts: TS106}} durationInFrames={Math.round(DUR * FPS / TS106)} fps={FPS} width={W} height={H} />
+	<Composition id="Q57COLO141" component={Scene} defaultProps={{ts: TS141}} durationInFrames={Math.round(DUR * FPS / TS141)} fps={FPS} width={W} height={H} /></>);
