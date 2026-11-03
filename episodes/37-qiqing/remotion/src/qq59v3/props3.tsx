@@ -88,3 +88,23 @@ export const ripplesD = (y0: number, y1: number, n: number, seed: number, x0 = -
 		d += `M${f1(x)},${f1(y)} Q${f1(x + L / 2)},${f1(y - th)} ${f1(x + L)},${f1(y)} Q${f1(x + L / 2)},${f1(y + th * 0.6)} ${f1(x)},${f1(y)} Z `; }
 	return d; };
 export {poly, spline, taper, qpts};
+/** a canopy mass hanging down to y: a solid ceiling with a scalloped lower edge (overlapping clumps) and a fringe of hanging leaves.
+    gaps: x-ranges where the ceiling lifts (light comes through). Returns [mass, fringe] paths. */
+export const canopyD = (x0: number, x1: number, y: number, seed: number, gaps: [number, number][] = [], t = 0): [string, string] => {
+	const lift = (x: number) => gaps.reduce((m, [a, b]) => Math.max(m, x > a - 60 && x < b + 60 ? Math.sin(Math.PI * Math.min(1, Math.max(0, (x - a + 60) / (b - a + 120)))) * 160 : 0), 0);
+	let mass = `M${x0},${y - 1400} L${x1},${y - 1400} L${x1},${y - 120} L${x0},${y - 120} Z `, fringe = '';
+	for (let i = 0, x = x0; x < x1; i++, x += 46 + rnd(i, seed) * 50) {
+		const yy = y - lift(x) + noise1(x / 260, seed) * 50 + rnd(i, seed + 1) * 30, r = 48 + rnd(i, seed + 2) * 60;
+		mass += blobD(x, yy - r * 0.6, r * 1.25, r, seed + i, 9, 0.22) + ' ' + `M${f1(x - r * 1.2)},${f1(yy - r * 0.6)} L${f1(x + r * 1.2)},${f1(yy - r * 0.6)} L${f1(x + r)},${f1(y - 1400)} L${f1(x - r)},${f1(y - 1400)} Z `;
+		const nf = 2 + Math.floor(rnd(i, seed + 3) * 4);
+		for (let k = 0; k < nf; k++) { const bx = x + (rnd(k, i + seed) - 0.5) * r * 2, by = yy + r * 0.1 - rnd(k, i + 5) * r * 0.3, L = 34 + rnd(k, i + 9) * 56;
+			fringe += leafD([bx, by], L, L * 0.34, 90 + (rnd(k, i + 4) - 0.5) * 70 + Math.sin(t * 0.7 + i + k) * 3, (rnd(k, i + 6) - 0.5) * 40) + ' '; }
+	}
+	return [mass, fringe]; };
+/** a drooping broad leaf on a stalk: stalk from s up to the leaf base b, the blade hanging out at angle a (deg) */
+export const droopLeafD = (s: P, b: P, L: number, a: number, wid = 0.42, bend = 40) =>
+	taper(qpts(s, [lerp(s[0], b[0], 0.2), lerp(s[1], b[1], 0.8)], b, 8), Math.max(3, L * 0.05), Math.max(2, L * 0.03)) + ' ' + leafD(b, L, L * wid, a, bend);
+/** moss hanging under a branch or log: irregular clumps of strands */
+export const mossD = (pts: P[], seed: number, len = 40) => pts.map((p, i) => { const n = 2 + Math.floor(rnd(i, seed) * 4);
+	return Array.from({length: n}, (_, k) => { const L = len * (0.3 + rnd(k, i + seed) * 1.2), x = p[0] + (rnd(k, i + seed + 2) - 0.5) * 18;
+		return taper([[x, p[1] - 2], [x + (rnd(k, i + 3) - 0.5) * 6, p[1] + L * 0.5], [x + (rnd(k, i + 4) - 0.5) * 10, p[1] + L]], 5 + rnd(k, i) * 5, 1.2); }).join(' '); }).join(' ');

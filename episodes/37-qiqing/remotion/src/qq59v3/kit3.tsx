@@ -1,5 +1,6 @@
-import React, {createContext, useContext, useId} from 'react';
-import {AbsoluteFill} from 'remotion';
+import React, {createContext, useContext, useId, useLayoutEffect, useRef} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {AbsoluteFill, delayRender, continueRender} from 'remotion';
 import {Walker, walkPose, withArms, nod, STAGE, PZ, Look59, Rim, CartKind, BRISK} from '../qq59/figure59';
 
 /* ep59 v3 · the 2.5D parallax kit (environments).
@@ -82,6 +83,9 @@ export const project = (cam: Cam, D: number, focus: number, p: P): {p: P; s: num
 	const x = (p[0] - W / 2) * s + sx, y = (p[1] - H / 2) * s + sy, a = cam.roll * Math.PI / 180, c = Math.cos(a), n = Math.sin(a);
 	return {p: [W / 2 + cam.zoom * (x * c - y * n), H / 2 + cam.zoom * (x * n + y * c)], s: s * cam.zoom}; };
 
+/* ---------------- debug switches (profiling: set from the test entry's input props) ---------------- */
+export const DBG = {noBlur: false, noGrain: false, noParticles: false, noVignette: false, blurMin: 1.4, lowMode: 'canvas', lowK: 0};
+
 /* ---------------- stage / atmosphere ---------------- */
 export type Atm = {
 	/** haze colour and density (per focus unit of depth): haze(D) = 1 − e^(−density·D) */
@@ -115,34 +119,66 @@ const grainUrl = () => {
 		const v = (a + b - 1); const on = v > 0 ? 255 : 0; im.data[i * 4] = on; im.data[i * 4 + 1] = on; im.data[i * 4 + 2] = on; im.data[i * 4 + 3] = Math.round(Math.abs(v) * 255); }
 	g.putImageData(im, 0, 0); GRAIN_URL = c.toDataURL('image/png'); return GRAIN_URL; };
 
-/** the root of a scene: one SVG (layers drawn far → near as children), then vignette + grain */
+type LayerProps = {D: number; blur?: number; o?: number; children: React.ReactNode};
+/** the blur a layer gets: its own `blur`, else depth of field (none for the sky) */
+const layerBlur = (atm: Atm, p: LayerProps) => (DBG.noBlur ? 0 : p.blur ?? (p.D >= INF ? 0 : coc(atm, p.D)));
+/** a blurred layer is drawn in its own SVG at ½ or ¼ resolution with a CSS blur, then scaled back up (blur once, cheaply).
+    The SVG overscans the frame by a margin so the blur never pulls transparency in from the edges. */
+const LowRes: React.FC<{b: number; children: React.ReactNode}> = ({b, children}) => {
+	const k = DBG.lowK || (b >= 7 ? 4 : b >= 1.5 ? 2 : 1), m = Math.ceil(b * 3 / k) * k, id = useUid('lr');
+	if (DBG.lowMode === 'canvas') return <CanvasLayer b={b} k={k} m={m}>{children}</CanvasLayer>;
+	const css = DBG.lowMode === 'css', svgf = DBG.lowMode === 'svg';
+	return <svg width={(W + 2 * m) / k} height={(H + 2 * m) / k} viewBox={`${-m} ${-m} ${W + 2 * m} ${H + 2 * m}`}
+		style={{position: 'absolute', left: -m, top: -m, transform: `scale(${k})`, transformOrigin: `${0}px ${0}px`, filter: css ? `blur(${(b / k).toFixed(2)}px)` : undefined}}>
+		{svgf && <defs><filter id={id} filterUnits="userSpaceOnUse" x={-m} y={-m} width={W + 2 * m} height={H + 2 * m}><feGaussianBlur stdDeviation={b.toFixed(2)} /></filter></defs>}
+		<g filter={svgf ? `url(#${id})` : undefined}>{children}</g></svg>; };
+/** the blurred layer as a real low-res raster: its SVG markup → an image drawn at 1/k size into a canvas with a canvas blur,
+    then the canvas is scaled back up (bilinear). Chrome rasterizes the vector at 1/k² of the pixels, and blurs that. */
+const CanvasLayer: React.FC<{b: number; k: number; m: number; children: React.ReactNode}> = ({b, k, m, children}) => {
+	const st = useStage(), ref = useRef<HTMLCanvasElement>(null), cw = Math.round((W + 2 * m) / k), ch = Math.round((H + 2 * m) / k);
+	const markup = renderToStaticMarkup(<svg xmlns="http://www.w3.org/2000/svg" width={cw} height={ch} viewBox={`${-m} ${-m} ${W + 2 * m} ${H + 2 * m}`}><StageCtx.Provider value={st}>{children}</StageCtx.Provider></svg>);
+	useLayoutEffect(() => {
+		const h = delayRender('blur layer'), img = new Image();
+		img.onload = () => { const c = ref.current, g = c?.getContext('2d'); if (c && g) { g.clearRect(0, 0, cw, ch); g.filter = `blur(${(b / k).toFixed(2)}px)`; g.drawImage(img, 0, 0, cw, ch); } continueRender(h); };
+		img.onerror = () => continueRender(h);
+		img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markup);
+	}, [markup, b, k, cw, ch]);
+	return <canvas ref={ref} width={cw} height={ch} style={{position: 'absolute', left: -m, top: -m, width: W + 2 * m, height: H + 2 * m}} />; };
+const flatten = (ch: React.ReactNode): React.ReactNode[] => React.Children.toArray(ch).flatMap((c) => (React.isValidElement(c) && c.type === React.Fragment ? flatten((c.props as {children?: React.ReactNode}).children) : [c]));
+
+/** the root of a scene. Its direct children are drawn far → near; runs of sharp children share one full-res SVG, every blurred
+    <Layer> gets its own low-res SVG. Then the grade (optional SVG overlay), the vignette and the grain. */
 export const Stage: React.FC<{t: number; cam?: Cam; atm?: Partial<Atm>; bg?: string; children: React.ReactNode; grade?: React.ReactNode}> = ({t, cam = CAM0, atm = {}, bg = '#0b0c0f', children, grade}) => {
-	const A = {...ATM0, ...atm}, gu = A.grain > 0 ? grainUrl() : '';
+	const A = {...ATM0, ...atm}, gu = A.grain > 0 && !DBG.noGrain ? grainUrl() : '';
 	const gx = Math.floor(rnd(Math.floor(t * 30), 7) * 256), gy = Math.floor(rnd(Math.floor(t * 30), 8) * 256);
+	const segs: {b: number; items: React.ReactNode[]}[] = [];
+	for (const c of flatten(children)) {
+		const b = React.isValidElement(c) && c.type === Layer ? layerBlur(A, c.props as LayerProps) : 0, blurred = b >= DBG.blurMin;
+		if (blurred) segs.push({b, items: [c]}); else if (segs.length && segs[segs.length - 1].b === 0) segs[segs.length - 1].items.push(c); else segs.push({b: 0, items: [c]});
+	}
+	const full = (key: string | number, kids: React.ReactNode) => <svg key={key} width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>{kids}</svg>;
 	return <AbsoluteFill style={{background: bg, overflow: 'hidden'}}>
-		<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
-			<StageCtx.Provider value={{cam, t, atm: A}}>{children}</StageCtx.Provider>
-			{grade}
-			{A.vignette > 0 && <g><defs><radialGradient id="vig3" cx="0.5" cy="0.52" r="0.72"><stop offset="0.45" stopColor="#000" stopOpacity="0" /><stop offset="0.8" stopColor="#000" stopOpacity={A.vignette * 0.45} /><stop offset="1" stopColor="#000" stopOpacity={A.vignette} /></radialGradient></defs>
-				<rect width={W} height={H} fill="url(#vig3)" /></g>}
-		</svg>
+		<StageCtx.Provider value={{cam, t, atm: A}}>
+			{segs.map((sg, i) => (sg.b > 0 ? <LowRes key={i} b={sg.b}>{sg.items}</LowRes> : full(i, sg.items)))}
+		</StageCtx.Provider>
+		{full('fin', <>{grade}
+			{A.vignette > 0 && !DBG.noVignette && <g><defs><radialGradient id="vig3" cx="0.5" cy="0.52" r="0.72"><stop offset="0.45" stopColor="#000" stopOpacity="0" /><stop offset="0.8" stopColor="#000" stopOpacity={A.vignette * 0.45} /><stop offset="1" stopColor="#000" stopOpacity={A.vignette} /></radialGradient></defs>
+				<rect width={W} height={H} fill="url(#vig3)" /></g>}</>)}
 		{gu && <div style={{position: 'absolute', inset: 0, backgroundImage: `url(${gu})`, backgroundPosition: `${gx}px ${gy}px`, opacity: A.grain, pointerEvents: 'none'}} />}
 	</AbsoluteFill>;
 };
 
-/** one depth layer. blur: px (default = depth of field); region: the screen rect the blur needs (default full frame) */
-export const Layer: React.FC<{D: number; blur?: number; o?: number; region?: [number, number, number, number]; children: React.ReactNode}> = ({D, blur, o, region, children}) => {
-	const {cam, atm} = useStage(), id = useUid('L'), b = blur ?? (D >= INF ? 0 : coc(atm, D)), k = hazeK(atm, D);
-	const inner = <g transform={layerTransform(cam, D, atm.focus)}>{children}</g>;
-	const [rx, ry, rw, rh] = region ?? [-40, -40, W + 80, H + 80];
-	return <LayerCtx.Provider value={{D, k}}>
-		{b >= 0.7 ? <><defs><filter id={id} filterUnits="userSpaceOnUse" x={rx} y={ry} width={rw} height={rh}><feGaussianBlur stdDeviation={b.toFixed(2)} /></filter></defs>
-			<g filter={`url(#${id})`} opacity={o}>{inner}</g></> : <g opacity={o}>{inner}</g>}
-	</LayerCtx.Provider>;
+/** one depth layer (a direct child of <Stage>). blur: px (default = depth of field); the Stage renders a blurred layer at low res. */
+export const Layer: React.FC<LayerProps> = ({D, o, children}) => {
+	const {cam, atm} = useStage(), k = hazeK(atm, D);
+	return <LayerCtx.Provider value={{D, k}}><g opacity={o} transform={layerTransform(cam, D, atm.focus)}>{children}</g></LayerCtx.Provider>;
 };
 
-/** a path filled with a colour hazed for its layer */
-export const FPath: React.FC<{d: string; c: string; extra?: number; o?: number; transform?: string}> = ({d, c, extra = 0, o, transform}) => { const fog = useFog(); return <path d={d} fill={fog(c, extra)} opacity={o} transform={transform} />; };
+/** many sub-shapes as separate <path>s (one combined path would punch holes where opposite-wound shapes overlap) */
+export const Shape: React.FC<{d: string; fill?: string; o?: number; transform?: string}> = ({d, fill, o, transform}) =>
+	<g fill={fill} opacity={o} transform={transform}>{d.split(/(?=M)/).map((s, i) => (s.trim() ? <path key={i} d={s} /> : null))}</g>;
+/** a set of shapes filled with a colour hazed for its layer */
+export const FPath: React.FC<{d: string; c: string; extra?: number; o?: number; transform?: string}> = ({d, c, extra = 0, o, transform}) => { const fog = useFog(); return <Shape d={d} fill={fog(c, extra)} o={o} transform={transform} />; };
 
 /* ---------------- sky and light ---------------- */
 /** a vertical sky gradient (screen space, covers the overscan) */
@@ -170,19 +206,21 @@ export const HaloRing: React.FC<{x: number; y: number; R: number; c: string}> = 
 		<stop offset={(R - w) / (R + w)} stopColor={c} stopOpacity="0" /><stop offset={(R - w * 0.3) / (R + w)} stopColor="#ffb08a" stopOpacity="0.32" /><stop offset={R / (R + w)} stopColor="#fff4e2" stopOpacity="0.4" />
 		<stop offset={(R + w * 0.45) / (R + w)} stopColor="#d8e4f4" stopOpacity="0.16" /><stop offset="1" stopColor={c} stopOpacity="0" /></radialGradient></defs>
 		<circle cx={x} cy={y} r={R + w} fill={`url(#${id})`} /></>; };
-/** light shafts: parallel beams from the top edge points (x, y0) at `angle` (deg from vertical, + leans right), each {x, w, o, len} */
+/** light shafts: parallel beams from the top edge points (x, y0) at `angle` (deg from vertical, + leans right), each {x, w, o, len}.
+    Soft edges without a filter: each beam is 4 nested quads (wide + faint → narrow), fading along its length. */
 export const Shafts: React.FC<{beams: {x: number; w: number; o: number; len?: number; spread?: number}[]; y0: number; angle: number; c: string; len?: number; t?: number}> = ({beams, y0, angle, c, len = 900, t = 0}) => {
 	const id = useUid('sh'), a = angle * Math.PI / 180, dx = Math.sin(a), dy = Math.cos(a);
-	return <g>{beams.map((b, i) => { const L = b.len ?? len, sp = b.spread ?? 0.25, ax = b.x, ay = y0, ex = ax + dx * L, ey = ay + dy * L, nx = dy, ny = -dx, w0 = b.w / 2, w1 = b.w * (1 + sp) / 2;
-		const breathe = 0.82 + 0.18 * Math.sin(t * (0.5 + rnd(i, 3) * 0.6) + i * 2.1);
-		return <g key={i}><defs><linearGradient id={`${id}${i}`} gradientUnits="userSpaceOnUse" x1={ax} y1={ay} x2={ex} y2={ey}><stop offset="0" stopColor={c} stopOpacity="0.95" /><stop offset="0.45" stopColor={c} stopOpacity="0.55" /><stop offset="1" stopColor={c} stopOpacity="0" /></linearGradient></defs>
-			<path d={poly([[ax + nx * w0, ay + ny * w0], [ex + nx * w1, ey + ny * w1], [ex - nx * w1, ey - ny * w1], [ax - nx * w0, ay - ny * w0]])} fill={`url(#${id}${i})`} opacity={b.o * breathe} /></g>; })}</g>; };
+	return <g>{beams.map((b, i) => { const L = b.len ?? len, sp = b.spread ?? 0.25, ax = b.x, ay = y0, ex = ax + dx * L, ey = ay + dy * L, nx = dy, ny = -dx;
+		const breathe = 0.8 + 0.2 * Math.sin(t * (0.5 + rnd(i, 3) * 0.6) + i * 2.1);
+		return <g key={i}><defs><linearGradient id={`${id}${i}`} gradientUnits="userSpaceOnUse" x1={ax} y1={ay} x2={ex} y2={ey}><stop offset="0" stopColor={c} stopOpacity="1" /><stop offset="0.4" stopColor={c} stopOpacity="0.6" /><stop offset="0.8" stopColor={c} stopOpacity="0.15" /><stop offset="1" stopColor={c} stopOpacity="0" /></linearGradient></defs>
+			<g opacity={b.o * breathe} fill={`url(#${id}${i})`}>{[1.6, 1.0, 0.62, 0.3].map((f, j) => { const w0 = b.w * f / 2, w1 = b.w * (1 + sp) * f / 2;
+				return <path key={j} d={poly([[ax + nx * w0, ay + ny * w0], [ex + nx * w1, ey + ny * w1], [ex - nx * w1, ey - ny * w1], [ax - nx * w0, ay - ny * w0]])} opacity={0.28} />; })}</g></g>; })}</g>; };
 /** a horizontal fog band (layer space): soft top and bottom, densest at y */
 export const FogBand: React.FC<{y: number; h: number; o: number; c?: string; x0?: number; x1?: number}> = ({y, h, o, c, x0 = -1400, x1 = W + 1400}) => { const id = useUid('fb'), {atm} = useStage(), col = c ?? atm.haze;
 	return <><defs><linearGradient id={id} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={col} stopOpacity="0" /><stop offset="0.5" stopColor={col} stopOpacity={o} /><stop offset="1" stopColor={col} stopOpacity="0" /></linearGradient></defs>
 		<rect x={x0} y={y - h / 2} width={x1 - x0} height={h} fill={`url(#${id})`} /></>; };
 /** fog pooled at the foot of a layer: transparent at y0 → o at y1 (and below) */
-export const FogFoot: React.FC<{y0: number; y1: number; o: number; c?: string; down?: number}> = ({y0, y1, o, c, down = 600}) => { const id = useUid('ff'), {atm} = useStage(), col = c ?? atm.haze;
+export const FogFoot: React.FC<{y0: number; y1: number; o: number; c?: string; down?: number}> = ({y0, y1, o, c, down = 0}) => { const id = useUid('ff'), {atm} = useStage(), col = c ?? atm.haze;
 	return <><defs><linearGradient id={id} gradientUnits="userSpaceOnUse" x1="0" y1={y0} x2="0" y2={y1}><stop offset="0" stopColor={col} stopOpacity="0" /><stop offset="1" stopColor={col} stopOpacity={o} /></linearGradient></defs>
 		<rect x={-1400} y={y0} width={W + 2800} height={y1 - y0 + down} fill={`url(#${id})`} /></>; };
 /** drifting mist sheets (layer space): long soft ellipses that wrap horizontally */
@@ -195,10 +233,11 @@ export const Mist: React.FC<{n: number; seed: number; y0: number; y1: number; t:
 /* ---------------- particles in depth ---------------- */
 export type PKind = 'snow' | 'spindrift' | 'dust' | 'rain' | 'spray' | 'firefly' | 'diamond' | 'sand';
 /** particles spread over depths [D0, D1] (log-uniform) inside a rest-screen box; projected through the camera per particle,
-    re-wrapped into the box (so a camera move never empties the frame); drawn in 3 depth bins, each blurred once by its DOF. */
+    re-wrapped into the box (so a camera move never empties the frame); near / far ones drawn as soft bokeh discs by their DOF (gradients, no filters). */
 export const Particles: React.FC<{kind: PKind; n: number; seed: number; D: [number, number]; box?: [number, number, number, number]; c?: string; o?: number; size?: number; wind?: number; fall?: number}> = ({kind, n, seed, D, box = [-60, -60, W + 60, H + 60], c = '#ffffff', o = 0.8, size = 1, wind = 0, fall = 0}) => {
 	const {cam, atm, t} = useStage(), id = useUid('pt'), [bx0, by0, bx1, by1] = box, bw = bx1 - bx0, bh = by1 - by0;
-	const bins: React.ReactNode[][] = [[], [], []], binD = [0, 0, 0], binN = [0, 0, 0];
+	if (DBG.noParticles) return null;
+	const els: React.ReactNode[] = [];
 	const gid = `${id}g`;
 	for (let i = 0; i < n; i++) {
 		const r = rnd(i, seed), d = D[0] * Math.pow(D[1] / D[0], r), par = atm.focus / d;   // nearer = bigger and faster
@@ -217,26 +256,29 @@ export const Particles: React.FC<{kind: PKind; n: number; seed: number; D: [numb
 		const q = project(cam, d, atm.focus, [wrap(x, bx0, bx1), wrap(y, by0, by1)]);
 		const sx = wrap(q.p[0], bx0, bx1), sy = kind === 'spindrift' || kind === 'sand' || kind === 'spray' ? q.p[1] : wrap(q.p[1], by0, by1);
 		sz *= q.s;
-		const fade = 1 - 0.6 * hazeK(atm, d);
+		const fade = 1 - 0.6 * hazeK(atm, d), bl = DBG.noBlur ? 0 : Math.min(16, coc(atm, d)), soft = bl >= 1, sf = soft ? `url(#${id}s)` : undefined;
+		/** a dot of radius r: crisp, or a soft bokeh disc grown by the blur (dimmer as it grows) */
+		const dot = (cx: number, cy: number, r: number) => { if (!soft) return <circle cx={f1(cx)} cy={f1(cy)} r={r.toFixed(2)} />; const R = r + bl * 1.3; op *= Math.min(1, Math.pow((r + 0.6) / R, 0.9) * 1.6); return <circle cx={f1(cx)} cy={f1(cy)} r={R.toFixed(2)} fill={sf} />; };
+		const streak = (cx: number, cy: number, rx: number, ry: number) => { const R = soft ? ry + bl * 1.2 : ry; if (soft) op *= Math.min(1, (ry + 0.6) / R * 1.5); return <ellipse cx={f1(cx)} cy={f1(cy)} rx={f1(rx + (soft ? bl : 0))} ry={R.toFixed(2)} fill={soft ? sf : undefined} />; };
 		switch (kind) {
-			case 'snow': el = <circle cx={f1(sx)} cy={f1(sy)} r={Math.max(0.6, 2.2 * sz).toFixed(2)} />; op *= fade * (0.55 + 0.45 * rnd(i, seed + 5)); break;
-			case 'dust': el = <circle cx={f1(sx)} cy={f1(sy)} r={Math.max(0.5, 1.5 * sz).toFixed(2)} />; op *= fade * (0.3 + 0.7 * Math.pow(Math.sin(t * 0.9 + ph) * 0.5 + 0.5, 2)); break;
-			case 'spindrift': { const L = (90 + rnd(i, seed + 6) * 220) * par * Math.min(1, size); el = <ellipse cx={f1(sx)} cy={f1(sy)} rx={f1(L / 2)} ry={Math.max(0.6, 1.6 * sz).toFixed(2)} />; op *= fade * (0.25 + 0.6 * rnd(i, seed + 7)) * (0.6 + 0.4 * Math.sin(t * 3 + ph)); break; }
-			case 'sand': { const L = (30 + rnd(i, seed + 6) * 70) * par; el = <ellipse cx={f1(sx)} cy={f1(sy)} rx={f1(L / 2)} ry={Math.max(0.5, 1.1 * sz).toFixed(2)} />; op *= fade * (0.2 + 0.6 * rnd(i, seed + 7)); break; }
-			case 'rain': { const L = 26 * par; el = <line x1={f1(sx)} y1={f1(sy)} x2={f1(sx - L * 0.08)} y2={f1(sy - L)} strokeWidth={Math.max(0.6, 1.2 * sz).toFixed(2)} stroke="currentColor" />; op *= fade * (0.3 + 0.5 * rnd(i, seed + 5)); break; }
-			case 'spray': { const life = (t * 0.7 + rnd(i, seed + 8)) % 1, dy = -life * 60 * par + life * life * 110 * par; el = <circle cx={f1(sx + (rnd(i, seed + 9) - 0.5) * life * 80 * par)} cy={f1(sy + dy)} r={Math.max(0.6, 2 * sz * (1 - life * 0.5)).toFixed(2)} />; op *= fade * (1 - life); break; }
+			case 'snow': op *= fade * (0.55 + 0.45 * rnd(i, seed + 5)); el = dot(sx, sy, Math.max(0.6, 2.2 * sz)); break;
+			case 'dust': op *= fade * (0.3 + 0.7 * Math.pow(Math.sin(t * 0.9 + ph) * 0.5 + 0.5, 2)); el = dot(sx, sy, Math.max(0.5, 1.5 * sz)); break;
+			case 'spindrift': { const L = (90 + rnd(i, seed + 6) * 220) * par * Math.min(1, size); op *= fade * (0.25 + 0.6 * rnd(i, seed + 7)) * (0.6 + 0.4 * Math.sin(t * 3 + ph)); el = streak(sx, sy, L / 2, Math.max(0.6, 1.6 * sz)); break; }
+			case 'sand': { const L = (30 + rnd(i, seed + 6) * 70) * par; op *= fade * (0.2 + 0.6 * rnd(i, seed + 7)); el = streak(sx, sy, L / 2, Math.max(0.5, 1.1 * sz)); break; }
+			case 'rain': { const L = 26 * par; op *= fade * (0.3 + 0.5 * rnd(i, seed + 5)) / (1 + bl * 0.4); el = <line x1={f1(sx)} y1={f1(sy)} x2={f1(sx - L * 0.08)} y2={f1(sy - L)} strokeWidth={(Math.max(0.6, 1.2 * sz) + bl * 0.8).toFixed(2)} stroke="currentColor" strokeLinecap="round" />; break; }
+			case 'spray': { const life = (t * 0.7 + rnd(i, seed + 8)) % 1, dy = -life * 60 * par + life * life * 110 * par; op *= fade * (1 - life); el = dot(sx + (rnd(i, seed + 9) - 0.5) * life * 80 * par, sy + dy, Math.max(0.6, 2 * sz * (1 - life * 0.5))); break; }
 			case 'diamond': { const tw = Math.pow(Math.max(0, Math.sin(t * (1.5 + rnd(i, seed + 5) * 2.5) + ph)), 6), s = Math.max(1, 3.4 * sz) * (0.4 + tw);
-				el = <path d={`M${f1(sx - s)},${f1(sy)} L${f1(sx)},${f1(sy - s * 0.18)} L${f1(sx + s)},${f1(sy)} L${f1(sx)},${f1(sy + s * 0.18)} Z M${f1(sx)},${f1(sy - s)} L${f1(sx + s * 0.18)},${f1(sy)} L${f1(sx)},${f1(sy + s)} L${f1(sx - s * 0.18)},${f1(sy)} Z`} />; op *= fade * (0.15 + 0.85 * tw); break; }
-			case 'firefly': { const bl = Math.pow(Math.max(0, Math.sin(t * (0.7 + rnd(i, seed + 5) * 0.9) + ph)), 3), r0 = Math.max(1, 2.4 * sz);
-				el = <g><circle cx={f1(sx)} cy={f1(sy)} r={f1(r0 * 7)} fill={`url(#${gid})`} /><circle cx={f1(sx)} cy={f1(sy)} r={r0.toFixed(2)} /></g>; op *= fade * (0.1 + 0.9 * bl); break; }
+				op *= fade * (0.15 + 0.85 * tw);
+				el = soft ? dot(sx, sy, s * 0.4) : <path d={`M${f1(sx - s)},${f1(sy)} L${f1(sx)},${f1(sy - s * 0.18)} L${f1(sx + s)},${f1(sy)} L${f1(sx)},${f1(sy + s * 0.18)} Z M${f1(sx)},${f1(sy - s)} L${f1(sx + s * 0.18)},${f1(sy)} L${f1(sx)},${f1(sy + s)} L${f1(sx - s * 0.18)},${f1(sy)} Z`} />; break; }
+			case 'firefly': { const blink = Math.pow(Math.max(0, Math.sin(t * (0.7 + rnd(i, seed + 5) * 0.9) + ph)), 3), r0 = Math.max(1, 2.4 * sz);
+				op *= fade * (0.1 + 0.9 * blink); el = <g><circle cx={f1(sx)} cy={f1(sy)} r={f1(r0 * 7 + bl)} fill={`url(#${gid})`} />{soft ? <circle cx={f1(sx)} cy={f1(sy)} r={(r0 + bl).toFixed(2)} fill={sf} /> : <circle cx={f1(sx)} cy={f1(sy)} r={r0.toFixed(2)} />}</g>; break; }
 		}
-		const bin = d < atm.focus * 0.7 ? 0 : d < atm.focus * 1.8 ? 1 : 2;
-		bins[bin].push(<g key={i} opacity={op.toFixed(3)}>{el}</g>); binD[bin] += d; binN[bin]++;
+		els.push(<g key={i} opacity={cl(op).toFixed(3)}>{el}</g>);
 	}
 	return <g fill={c} color={c}>
-		{kind === 'firefly' && <defs><radialGradient id={gid}><stop offset="0" stopColor={c} stopOpacity="0.55" /><stop offset="0.3" stopColor={c} stopOpacity="0.16" /><stop offset="1" stopColor={c} stopOpacity="0" /></radialGradient></defs>}
-		{[2, 1, 0].map((b) => { if (!binN[b]) return null; const bd = binD[b] / binN[b], bl = coc(atm, bd) * (b === 0 ? 1.15 : 0.8);
-			return bl >= 0.8 ? <g key={b}><defs><filter id={`${id}b${b}`} filterUnits="userSpaceOnUse" x={bx0} y={by0} width={bw} height={bh}><feGaussianBlur stdDeviation={Math.min(14, bl).toFixed(2)} /></filter></defs><g filter={`url(#${id}b${b})`}>{bins[b]}</g></g> : <g key={b}>{bins[b]}</g>; })}
+		<defs><radialGradient id={`${id}s`}><stop offset="0" stopColor={c} stopOpacity="1" /><stop offset="0.55" stopColor={c} stopOpacity="0.75" /><stop offset="1" stopColor={c} stopOpacity="0" /></radialGradient>
+			{kind === 'firefly' && <radialGradient id={gid}><stop offset="0" stopColor={c} stopOpacity="0.55" /><stop offset="0.3" stopColor={c} stopOpacity="0.16" /><stop offset="1" stopColor={c} stopOpacity="0" /></radialGradient>}</defs>
+		{els}
 	</g>;
 };
 

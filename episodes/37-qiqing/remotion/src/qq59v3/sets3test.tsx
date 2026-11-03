@@ -1,6 +1,7 @@
 import React from 'react';
-import {Composition, registerRoot, useCurrentFrame} from 'remotion';
-import {W, H, FPS, CAM0, Cam, camPath, addCam, drift} from './kit3';
+import {Composition, registerRoot, useCurrentFrame, getInputProps} from 'remotion';
+import {W, H, FPS, CAM0, Cam, camPath, addCam, drift, DBG} from './kit3';
+Object.assign(DBG, getInputProps());
 import {Jungle} from './sets3a';
 
 /* ep59 v3 · test entry for the hero sets. Stills: one frame per set (camera at rest + a slow drift); a 6 s parallax camera test.
@@ -16,5 +17,6 @@ const JungleMove: React.FC = () => { const f = useCurrentFrame(), t = f / FPS;
 const SETS: [string, SetC][] = [['SetJungle', Jungle]];
 registerRoot(() => <>
 	{SETS.map(([id, S]) => <Composition key={id} id={id} component={still(S)} durationInFrames={90} fps={FPS} width={W} height={H} />)}
+	<Composition id="Empty" component={() => <div style={{width: W, height: H, background: '#123'}} />} durationInFrames={30} fps={FPS} width={W} height={H} />
 	<Composition id="MoveJungle" component={JungleMove} durationInFrames={6 * FPS} fps={FPS} width={W} height={H} />
 </>);
