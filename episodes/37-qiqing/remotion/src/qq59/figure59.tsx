@@ -151,7 +151,7 @@ export const figPaths = (x: number, ground: number, h: number, pose: Pose, look:
 	switch (look.head) {
 		case 'short': parts.push(`M${Q(-0.066, 0.012)} Q${Q(-0.068, -0.072)} ${Q(0.01, -0.071)} Q${Q(0.055, -0.066)} ${Q(0.058, -0.032)} Q${Q(0.01, -0.047)} ${Q(-0.012, 0)} Z`); break;
 		case 'cap': parts.push(`M${Q(-0.068, -0.012)} Q${Q(-0.058, -0.084)} ${Q(0.01, -0.081)} Q${Q(0.056, -0.076)} ${Q(0.06, -0.046)} L${Q(0.112, -0.036)} Q${Q(0.1, -0.026)} ${Q(0.056, -0.027)} Z`); break;
-		case 'hat': parts.push(`M${Q(-0.104, -0.03)} Q${Q(0, -0.052)} ${Q(0.104, -0.03)} Q${Q(0.106, -0.022)} ${Q(0.096, -0.02)} Q${Q(0.06, -0.034)} ${Q(0.056, -0.05)} L${Q(0.052, -0.112)} Q${Q(0.004, -0.14)} ${Q(-0.054, -0.114)} L${Q(-0.06, -0.05)} Q${Q(-0.07, -0.034)} ${Q(-0.098, -0.02)} Q${Q(-0.108, -0.022)} ${Q(-0.104, -0.03)} Z`); break;
+		case 'hat': parts.push(`M${Q(-0.104, -0.03)} Q${Q(0, -0.052)} ${Q(0.104, -0.03)} Q${Q(0.106, -0.022)} ${Q(0.096, -0.02)} Q${Q(0.06, -0.034)} ${Q(0.058, -0.05)} Q${Q(0.06, -0.1)} ${Q(0.004, -0.108)} Q${Q(-0.058, -0.104)} ${Q(-0.062, -0.05)} Q${Q(-0.07, -0.034)} ${Q(-0.098, -0.02)} Q${Q(-0.108, -0.022)} ${Q(-0.104, -0.03)} Z`); break;   // a soft bush hat: wide brim, low rounded crown
 		case 'beanie': parts.push(`M${Q(-0.07, -0.004)} Q${Q(-0.076, -0.09)} ${Q(0.0, -0.094)} Q${Q(0.062, -0.088)} ${Q(0.062, -0.03)} L${Q(0.05, -0.024)} Q${Q(0.0, -0.04)} ${Q(-0.06, -0.0)} Z`); break;
 		case 'bob': parts.push(`M${Q(-0.07, 0.07)} Q${Q(-0.09, -0.03)} ${Q(-0.04, -0.07)} Q${Q(0.02, -0.088)} ${Q(0.06, -0.03)} Q${Q(0.02, -0.035)} ${Q(0.0, 0.02)} Q${Q(-0.02, 0.07)} ${Q(-0.07, 0.07)} Z`); break;
 		case 'perm': {   // short curled hair: a scalloped cap a little bigger than the skull, down to the nape
@@ -213,7 +213,7 @@ export const PZ = {
 	straps: grounded({lean: 6, neck: 2, lt: 2, lk: 2, rt: -4, rk: 4, la: 12, le: 128, ra: 8, re: 132}),
 	lookUp: grounded({lean: -3, neck: -26, lt: 2, lk: 2, rt: -4, rk: 3, la: 10, le: 125, ra: 6, re: 130}),
 	/** head bowed (moved) */
-	bow: grounded({lean: 8, neck: 22, lt: 2, lk: 3, rt: -4, rk: 4, la: 6, le: 40, ra: 2, re: 30}),
+	bow: grounded({lean: 8, neck: 22, lt: 2, lk: 3, rt: -4, rk: 4, la: 2, le: 12, ra: -3, re: 16}),
 	/** hand on the gate / reaching forward low */
 	reach: grounded({lean: 10, neck: 6, lt: 4, lk: 5, rt: -6, rk: 5, la: 52, le: 20, ra: 4, re: 16}),
 };

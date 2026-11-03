@@ -45,13 +45,13 @@ export const STAMPS59: Stamp59[] = [
 	{a: D(19), b: D(21), y: '1998', place: '智利 巴塔哥尼亚', note: '他当时的估计'},
 ];
 /* bottom-left counter: year · 他 N 岁 · 已走 N 公里 (km only while it means something).
-   Keys: [time, year, age, km (null = hidden), roll s]. The crane rolls km 0 → 50,000 with the gold line;
-   the title rewinds year 2026 → 1998, age 57 → 29 and km back to 0. */
+   Keys: [time, year, age, km (null = hidden), roll s]. EP59.tsx drives the values from the picture (craneQ / comet / dateAt in demo59)
+   so the numbers move exactly with the gold line; these keys document the beats (key 1's time is read for when the km appear). */
 export type CKey = {t: number; year: number; age: number; km: number | null; roll: number; approx?: boolean};
 export const COUNTER59: CKey[] = [
 	{t: 0, year: 2026, age: 57, km: null, roll: 0},
-	{t: D(5) + 0.25, year: 2026, age: 57, km: 0, roll: 0},
-	{t: D(5) + 0.9, year: 2026, age: 57, km: 50000, roll: 3.6, approx: true},
-	{t: D(7) + 0.75, year: 1998, age: 29, km: 0, roll: 2.3},
+	{t: 10.45, year: 2026, age: 57, km: 0, roll: 0},                              // the km appear when the gold line starts out of Hull
+	{t: 10.45, year: 2026, age: 57, km: 50000, roll: 1.55, approx: true},         // … and land on 50,000 as the line ends (demo59 craneQ)
+	{t: 12.1, year: 1998, age: 29, km: 0, roll: 2.85, approx: true},              // the rewind light: date/age follow it along the route (demo59 comet, dateAt)
 	{t: D(9) - 0.05, year: 1998, age: 29, km: null, roll: 0},
 ];

@@ -22,7 +22,7 @@ const RIM_BACKLIT: Rim[] = [{c: '#ffd9a0', o: 0.75, dx: 2.4, dy: -1.6}, {c: '#ff
 /* his mother (七十多岁): a slight stoop; one hand still on the door, then both hands come up, to her face, then round him */
 const MP = {
 	door: grounded({lean: 8, neck: 6, lt: 2, lk: 3, rt: -3, rk: 3, la: 8, le: 22, ra: -18, re: 34}),
-	see: grounded({lean: 3, neck: 0, lt: 2, lk: 3, rt: -3, rk: 3, la: 26, le: 64, ra: 20, re: 56}),
+	see: grounded({lean: 2, neck: -2, lt: 2, lk: 3, rt: -3, rk: 3, la: 22, le: 104, ra: -14, re: 32}),
 	face: grounded({lean: 10, neck: 12, lt: 2, lk: 3, rt: -3, rk: 3, la: 30, le: 140, ra: 24, re: 146}),
 	hug: grounded({lean: 7, neck: -10, lt: 4, lk: 5, rt: -4, rk: 4, la: 40, le: 90, ra: 46, re: 84}),
 };
@@ -31,7 +31,7 @@ const KP = {
 	open: grounded({lean: 8, neck: 4, lt: 4, lk: 4, rt: -5, rk: 5, la: 46, le: 30, ra: 38, re: 34}),
 	hug: grounded({lean: 13, neck: 24, lt: 4, lk: 8, rt: -6, rk: 7, la: 4, le: 128, ra: 10, re: 122}),
 };
-const T_HOME = {stop: 2.3, door: BT(2, 1), face: D(3), stepOut: D(3) + 0.62, hug: D(3) + 1.42, crane: 8.05, craneEnd: 10.0};
+const T_HOME = {stop: 2.3, door: BT(2, 1), face: D(3), stepOut: D(3) + 0.62, hug: D(3) + 1.42, crane: 7.72, craneEnd: 10.3};
 /** Karl at the homecoming: position, ground, pose */
 const karlHome = (t: number): {x: number; g: number; pose: Pose} => {
 	if (t < D(2)) {   // S1: walking in along the pavement, stops at the gate, looks up at the banner
@@ -67,12 +67,14 @@ export const homeCam = (t: number): CamT => {
 	if (t < D(3)) return mixCam({cx: 1150, cy: 752, z: 2.2}, {cx: 1153, cy: 749, z: 2.27}, seg(t, D(2), D(3)));
 	/* the question (hard cut on bar 3): the banner above the centred line, the two of them below it; a slow push while they hold */
 	const drift = mixCam({cx: 1196, cy: 584, z: 1.6}, {cx: 1190, cy: 588, z: 1.66}, seg(t, D(3), T_HOME.crane));
-	/* the crane: rises off the hug at a near-constant rate (trap ≈ 22 px/frame avg, ≤ 27 peak on the roofline), then drifts up into the clouds */
-	return mixCamL(drift, {cx: 1110, cy: -500, z: 0.7}, trap(seg(t, T_HOME.crane, T_HOME.craneEnd), 0.22));
+	/* the crane: rises off the hug at a near-constant rate, little zoom (rise and zoom add up on the roofline): measured ≤ ~26 px/frame */
+	const u = trap(seg(t, T_HOME.crane, T_HOME.craneEnd), 0.25), z0 = drift.z, z1 = 1.0, lr = Math.log(z0 / z1);
+	const w = (Math.exp(lr * u) - 1) / (Math.exp(lr) - 1);   // rise slower while the zoom is high: constant speed on screen
+	return {cx: lerp(drift.cx, 1110, u), cy: lerp(drift.cy, -400, w), z: z0 * Math.pow(z1 / z0, u)};
 };
 export const Homecoming: React.FC<{t: number}> = ({t}) => {
 	const cam = homeCam(t), K = karlHome(t), M = mumHome(t), open = sm(seg(t, T_HOME.door, T_HOME.door + 0.36));
-	const bg = 1 - sm(seg(t, 8.3, 9.0));   // the street-level sky gives way to the high view of the town as the camera rises
+	const bg = 1 - sm(seg(t, 8.2, 9.0));   // the street-level sky gives way to the high view of the town as the camera rises
 	const rimK = t < D(2) ? RIM_DUSK : RIM_DOOR.map((r, i) => (i === 0 ? {...r, o: r.o * open} : r));
 	const mumFig = <Lit x={M.x} ground={M.g} h={MH} pose={M.pose} look={LOOK.mum} flip col="#0f0b0c" rims={M.inDoor ? RIM_BACKLIT : [{c: '#ffd9a0', o: 0.65, dx: 2.4, dy: -1.6}, {c: '#ffc58a', o: 0.28, dx: -2.0, dy: -1.4}]} />;
 	return <g>
@@ -80,8 +82,9 @@ export const Homecoming: React.FC<{t: number}> = ({t}) => {
 		<Cam {...cam}>
 			<StreetBack t={t} mode="dusk" skyO={bg} />
 			<Banner t={t} />
-			<Door open={open} inside={M.inDoor ? mumFig : null} />
+			{/* the door's light first, so it lights the bricks and the path but never washes over her */}
 			<DoorSpill open={open} />
+			<Door open={open} inside={M.inDoor ? mumFig : null} />
 			{!M.inDoor && mumFig}
 			{/* bystanders down the street (neighbours waiting, faceless), on their own small idle clocks */}
 			{[[1800, 0.94, 0], [1866, 0.9, 1]].map(([x, s, i]) => <Lit key={i} x={x} ground={930} h={KH * s} pose={mixPose(PZ.stand, PZ.lookUp, 0.15 + 0.1 * Math.sin(t * 0.9 + i * 2))} look={i ? LOOK.woman : LOOK.man} flip col="#0e0c10" rims={RIM_DUSK} />)}
@@ -95,7 +98,8 @@ export const Homecoming: React.FC<{t: number}> = ({t}) => {
 /* ====================== B. the globe: crane → title (route drawn back to the start, the years rewind) → the dive (10.2 → 16.2) ====================== */
 const G_IN = 10.2, CRANE0 = 10.45, CRANE1 = 12.0, COMET0 = 12.2, COMET1 = 14.95, DIVE = 14.95, SIGN_IN = 15.72;
 const HULL_U: P2 = [-360.33, 53.745];   // Hull with the route's unwrapped longitude
-const EURASIA: P2 = [-305, 42];          // the end-of-crane view: Europe and Asia in front, the far side (Bering, the Americas) behind
+const EURASIA: P2 = [-325, 45];          // the end-of-crane view: Europe and Asia in front, the far side (Bering, the Americas) behind
+const TITLE_END: P2 = [-71, -38];        // the rewind ends over Patagonia
 /** the crane: the gold line draws itself out of Hull back along the whole route (0 → 1), landing as the line 「约5万公里」 ends */
 export const craneQ = (t: number) => { const u = seg(t, CRANE0, CRANE1); return u < 0.3 ? 0.12 * (u / 0.3) ** 2 : 0.12 + 0.88 * (u - 0.3) / 0.7; };
 /** the title: a light runs back along the route from Hull (1) to Punta Arenas (0) at a near-constant speed (≈ 25 px/frame on the surface) */
@@ -104,21 +108,25 @@ export const comet = (t: number) => 1 - trap(seg(t, COMET0, COMET1), 0.12);
 const DATES: [number, number][] = [[0, 1998.83], [0.215, 2001.1], [0.511, 2006.22], [0.671, 2017.6], [0.707, 2018.5], [0.852, 2024.62], [0.916, 2025.33], [0.988, 2026.76], [1, 2026.84]];
 export const dateAt = (p: number) => { for (let i = 1; i < DATES.length; i++) if (p <= DATES[i][0]) { const [a0, y0] = DATES[i - 1], [a1, y1] = DATES[i]; return y0 + (y1 - y0) * (p - a0) / (a1 - a0); } return 2026.84; };
 /** the globe camera for the crane/title/dive; `sun` = where the signpost scene's sun sits on screen (the dive aims at it) */
+/* the globe camera for the crane/title/dive; `sun` = where the signpost scene's sun sits on screen (the dive aims at it).
+   Under the title the globe spins at a uniform rate (the comet runs along the route and stays within ~45° of the centre):
+   the route's own longitude speed is very uneven (Russia flies by), and following it hit ~50 px/frame. Measured ≤ ~27 px/frame. */
 export const globeView = (t: number, sun: P2): GlobeView => {
-	const kC = sm(seg(t, 10.7, 12.1)), c = comet(t), fol = followAt(c, 0.025, 0.065), kF = sm(seg(t, COMET0, COMET0 + 0.7));
-	let lon = lerp(lerp(HULL_U[0], EURASIA[0], kC), fol[0], kF), lat = lerp(lerp(HULL_U[1], EURASIA[1], kC), lerp(fol[1], 30, 0.25), kF);
-	let r = Math.exp(lerp(Math.log(2600), Math.log(380), eo(seg(t, G_IN, 12.05)))), cx = 960, cy = lerp(540, 430, sm(seg(t, 11.3, 12.1)));
-	if (t > DIVE) { const k = seg(t, DIVE, 16.25), e = ei(k) * 0.6 + sm(k) * 0.4;
+	const kC = sm(seg(t, 10.7, 12.1)), u = seg(t, COMET0 - 0.1, COMET1);
+	let lon = lerp(HULL_U[0], EURASIA[0], kC), lat = lerp(HULL_U[1], EURASIA[1], kC);
+	if (t > COMET0 - 0.1) { lon = lerp(EURASIA[0], TITLE_END[0], trap(u, 0.15)); lat = lerp(EURASIA[1], TITLE_END[1], sm(seg(u, 0.3, 1))); }
+	let r = Math.exp(lerp(Math.log(1400), Math.log(380), trap(seg(t, G_IN, 12.08), 0.12))), cx = 960, cy = lerp(540, 430, sm(seg(t, 11.3, 12.1)));   // a constant log-rate zoom
+	if (t > DIVE) { const k = seg(t, DIVE, 16.25), e = Math.pow(k, 3.6);   // slow at first; the fast end is under the haze and the dissolve
 		r = Math.exp(lerp(Math.log(380), Math.log(7200), e));
-		const pk = sm(seg(t, DIVE - 0.3, DIVE + 0.3)); lon = lerp(lon, PUNTA[0], pk); lat = lerp(lat, PUNTA[1], pk);
 		const ks = sm(seg(t, DIVE, SIGN_IN + 0.05)); cx = lerp(960, sun[0], ks); cy = lerp(430, sun[1], ks); }
+	const pk = sm(seg(t, DIVE - 0.2, DIVE + 0.35)); lon = lerp(lon, PUNTA[0], pk); lat = lerp(lat, PUNTA[1], pk);
 	return {cx, cy, r, lon, lat};
 };
 export const GlobeAct: React.FC<{t: number; sun: P2}> = ({t, sun}) => {
 	const v = globeView(t, sun), q = craneQ(t), c = comet(t), gO = sm(seg(t, G_IN + 0.05, G_IN + 0.35));
 	const cloudsIn = sm(seg(t, 9.7, 10.2)), cloudsOut = 1 - sm(seg(t, 10.38, 10.95)), cO = cloudsIn * cloudsOut;
 	const cy0 = lerp(-150, 420, sm(seg(t, 9.6, 10.9)));
-	const haze = sm(seg(t, 15.35, 15.85)) * (1 - sm(seg(t, 15.95, 16.25)));
+	const haze = sm(seg(t, 15.3, 15.8)) * (1 - sm(seg(t, 15.95, 16.25)));
 	const inTitle = t >= COMET0;
 	return <g>
 		{gO > 0 && <g opacity={gO}>
@@ -217,14 +225,18 @@ export const SignpostScene: React.FC<{t: number}> = ({t}) => {
 };
 
 /* ====================== D. the goal: on the globe, a dashed line from Chile up and over to England (20.45 → 24.0) ====================== */
-const GOAL_IN = 20.45, PLAN0 = 21.05, PLAN1 = 23.7;
+const GOAL_IN = 20.45, PLAN0 = 21.15, PLAN1 = 23.82;
 export const planP = (t: number) => trap(seg(t, PLAN0, PLAN1), 0.14);
+/** the goal globe's camera: the dashed plan runs along the route while the globe spins at a uniform rate from Chile to England */
+export const goalView = (t: number, sun: P2): GlobeView => {
+	const u = seg(t, PLAN0 - 0.1, PLAN1 + 0.05);
+	const zk = sm(seg(t, GOAL_IN, 21.4)), r = Math.exp(lerp(Math.log(520), Math.log(355), zk));
+	const lon = lerp(PUNTA[0] + 4, -340, trap(u, 0.18)), lat = lerp(-30, 44, sm(seg(u, 0, 0.88)));
+	const cx = 930, cy = 590; void sun;   // a straight cross-dissolve from the coast (a slide off the sun measured > 30 px/frame)
+	return {cx, cy, r, lon, lat};
+};
 export const GoalGlobe: React.FC<{t: number; sun: P2}> = ({t, sun}) => {
-	const p = Math.max(0, Math.min(1, planP(t))), fol = followAt(p, 0.06, 0.03);
-	const zk = eo(seg(t, GOAL_IN, 21.3)), r = Math.exp(lerp(Math.log(900), Math.log(380), zk));
-	const lon = fol[0], lat = lerp(fol[1], 28, 0.3) + 6;
-	const cx = lerp(sun[0], 1000, sm(seg(t, GOAL_IN, 21.2))), cy = lerp(sun[1], 600, sm(seg(t, GOAL_IN, 21.2)));
-	const v: GlobeView = {cx, cy, r, lon, lat};
+	const p = Math.max(0, Math.min(1, planP(t))), v = goalView(t, sun);
 	const startO = sm(seg(t, 20.75, 21.05)), endO = sm(seg(t, PLAN1 - 0.25, PLAN1 + 0.05));
 	return <g>
 		<Space id="gg" drift={(t - GOAL_IN) * 5} />
