@@ -86,19 +86,42 @@ const Temple: React.FC<{cam: Cam; c: TC; dz?: number; op?: number}> = ({cam, c, 
 const Txt: React.FC<{x: number; y: number; s: string; size: number; op?: number; sc?: number}> = ({x, y, s, size, op = 1, sc = 1}) =>
 	<g transform={`translate(${x},${y}) scale(${sc})`} opacity={op}><text x={0} y={0} textAnchor="middle" fontFamily="Noto Sans CJK SC" fontWeight={900} fontSize={size} fill={GOLD} stroke={INK} strokeWidth={size * .16} paintOrder="stroke" strokeLinejoin="round">{s}</text></g>;
 
+/* ---------- shared: seeded random, natural ground and trees, the HUD-style widgets ---------- */
+const mul = (seed: number) => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const blob = (R: () => number, cx: number, cy: number, r: number, n = 10, j = .25): [number, number][] => Array.from({length: n}, (_, i) => { const a = 2 * Math.PI * i / n, rr = r * (1 + j * (R() - .5) * 2); return [cx + rr * Math.cos(a), cy + rr * Math.sin(a)]; });
+type Tree = {x: number; y: number; h: number; r: number; c: number};
+const TREES: Tree[] = (() => { const R = mul(57), o: Tree[] = [];
+	for (let i = 0; i < 900; i++) { const a = R() * 2 * Math.PI, d = 92 + Math.pow(R(), .7) * 330; const x = d * Math.cos(a), y = d * Math.sin(a);
+		if (Math.abs(x) < 6 && y > 60) continue; if (Math.abs(y) < 5 && x < -60) continue;   // the sacbé causeways stay open
+		o.push({x, y, h: 9 + R() * 8, r: 3.6 + R() * 3.4, c: Math.floor(R() * 4)}); }
+	for (let i = 0; i < 18; i++) { const a = R() * 2 * Math.PI, d = 62 + R() * 26; o.push({x: d * Math.cos(a), y: d * Math.sin(a), h: 7 + R() * 5, r: 2.6 + R() * 2, c: Math.floor(R() * 4)}); }
+	return o; })();
+const CROWN = [['#3F5A2E', '#5C7A3C'], ['#46632F', '#6A8A44'], ['#36502A', '#527034'], ['#4E6A32', '#76944A']];
+const PATCH = (() => { const R = mul(91); return Array.from({length: 40}, () => { const a = R() * 2 * Math.PI, d = 50 + R() * 60; return {pts: blob(R, d * Math.cos(a), d * Math.sin(a), 6 + R() * 12, 9, .3), c: ['#879A58', '#7A8C4E', '#94A562', '#6F8247'][Math.floor(R() * 4)]}; }); })();
+const PLAZA = blob(mul(5), 0, 0, 78, 22, .12);
+const Widget: React.FC<{x: number; y: number; w: number; h: number; children: React.ReactNode; op?: number}> = ({x, y, w, h, children, op = 1}) =>
+	<g opacity={op}><rect x={x} y={y} width={w} height={h} rx={18} fill="rgba(20,16,12,.72)" stroke="rgba(242,198,110,.85)" strokeWidth={2.5} />{children}</g>;
+const T2: React.FC<{x: number; y: number; s: string; size: number; col?: string; anchor?: 'start' | 'middle' | 'end'; w?: number}> = ({x, y, s, size, col = '#FFF6E6', anchor = 'start', w = 900}) =>
+	<text x={x} y={y} textAnchor={anchor} fontFamily="Noto Sans CJK SC" fontWeight={w} fontSize={size} fill={col} style={{fontVariantNumeric: 'tabular-nums'}}>{s}</text>;
+const Callout: React.FC<{from: V2; to: V2; label: string; u: number; side?: number}> = ({from, to, label, u, side = 1}) => {
+	if (u <= 0) return null; const a = cl(u / .5), b = cl((u - .4) / .4), mx = from[0] + (to[0] - from[0]) * a, my = from[1] + (to[1] - from[1]) * a;
+	return <g><line x1={from[0]} y1={from[1]} x2={mx} y2={my} stroke={GOLD} strokeWidth={3} /><circle cx={from[0]} cy={from[1]} r={7} fill={GOLD} stroke={INK} strokeWidth={2} />
+		<g opacity={b}><rect x={to[0] - (side > 0 ? 0 : 20 + label.length * 34)} y={to[1] - 30} width={20 + label.length * 34} height={50} rx={12} fill="rgba(20,16,12,.8)" stroke={GOLD} strokeWidth={2} />
+		<T2 x={to[0] + (side > 0 ? 10 : -10)} y={to[1] + 7} s={label} size={30} col={GOLD} anchor={side > 0 ? 'start' : 'end'} /></g></g>; };
+
 /* ---------- shot 1: the stone calendar, built ---------- */
 const Calendar: React.FC<{t: number}> = ({t}) => {
 	const u = eio(t / SHOT), e = (62 - 12 * u) * Math.PI / 180, az = (-16 + 26 * u) * Math.PI / 180, D = 1000;
 	const cam = new Cam([D * Math.cos(e) * Math.sin(az), -D * Math.cos(e) * Math.cos(az), D * Math.sin(e) + 8], [0, 0, 8], (10.2 + 1.2 * u) * D, [900, 610]);
-	const terr = (k: number) => { const t0 = BEAT * (.25 + k * .5); return (t - t0) / (.45 * BEAT); };   // two terraces per beat
-	const stairU = cl((t - BEAT * 4.9) / (BEAT * 3.8));                                                    // the four stairs climb together
+	const terr = (k: number) => { const t0 = BEAT * (.25 + k * .5); return (t - t0) / (.45 * BEAT); };
+	const stairU = cl((t - BEAT * 4.9) / (BEAT * 3.8));
 	const tTemple = BEAT * 9, tEq = BEAT * 10.2;
 	const lit: Record<string, [string, string, string]> = {W: ['#A9AFA6', '#C9CBBF', '#7A8884'], S: ['#7E9496', '#9FB0AD', '#5A6E72'], E: ['#4E666D', '#67797C', '#3A4F55'], N: ['#4E666D', '#67797C', '#3A4F55']};
 	const RR = 44, ring = (r: number) => Array.from({length: 181}, (_, i) => [r * Math.cos(2 * Math.PI * i / 180), r * Math.sin(2 * Math.PI * i / 180), 0] as V3);
 	const count = Math.round(91 * eo(stairU)), days = 4 * count + (t > tTemple ? 1 : 0);
 	const ticks: React.ReactNode[] = [];
 	for (let i = 0; i < 365; i++) { const a = -Math.PI / 2 + 2 * Math.PI * i / 365, ca = Math.cos(a), sa = Math.sin(a), on = i < days;
-		ticks.push(<Line key={i} cam={cam} P={[[RR * ca, RR * sa, 0], [(RR + (on ? 3.4 : 2.4)) * ca, (RR + (on ? 3.4 : 2.4)) * sa, 0]]} stroke={on ? '#FFE3A0' : GOLD} sw={on ? 2.2 : 1.4} op={on ? .95 : .35} />); }
+		ticks.push(<Line key={i} cam={cam} P={[[RR * ca, RR * sa, .05], [(RR + (on ? 3.4 : 2.4)) * ca, (RR + (on ? 3.4 : 2.4)) * sa, .05]]} stroke={on ? '#FFE3A0' : GOLD} sw={on ? 2.2 : 1.4} op={on ? .95 : .35} />); }
 	const parts: React.ReactNode[] = [];
 	for (let k = 0; k < NT; k++) { const p = terr(k); if (p <= 0) continue; const dz = -HT * (1 - eo(p));
 		if (k) parts.push(<TerraceTop key={`tt${k}`} cam={cam} k={k - 1} col="#AEB6AE" />);
@@ -110,34 +133,48 @@ const Calendar: React.FC<{t: number}> = ({t}) => {
 		W: {wall: '#D0C5B0', corn: '#8C9490', frieze: '#B7B2A4', joint: '#958F84'}, N: {wall: '#A59A86', corn: '#68716E', frieze: '#8F8A7D', joint: '#76716A'}, door: '#2A2622', roof: '#9AA29D'};
 	const tu = (t - tTemple) / (.3 * BEAT), eu = (t - tEq) / .18;
 	const q = st(NT - 1), plat: V3[] = [[-q, -q, ZT], [q, -q, ZT], [q, q, ZT], [-q, q, ZT]];
-	// a few blocks being lifted while it is built (fall away when finished)
+	// the ground: grass, a pale limestone plaza, the causeways, then the jungle (crowns at their real height, shadows on the ground)
+	const SUN: V3 = [-.45, .25, 1];
+	const trees = TREES.map((tr) => ({tr, d: Math.hypot(...sub(cam.C, [tr.x, tr.y, tr.h]))})).sort((a, b) => b.d - a.d);
 	return <g>
-		<defs><radialGradient id="lawn" cx={925} cy={640} r={1000} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#8E9A5E" /><stop offset=".55" stopColor="#6E7B48" /><stop offset="1" stopColor="#3C4A2E" /></radialGradient></defs>
-		<rect width={W} height={H} fill="url(#lawn)" />
-		{[[60, '#2E3F2A', '#1F2C1C', 34], [150, '#3B5034', '#24331F', 40]].map(([y0, col, edge, r], row) => <g key={row} transform={`translate(${(az * 180 / Math.PI) * (row ? 3 : 1.6)},0)`}>
-			{Array.from({length: 46}, (_, i) => { const x = -120 + i * 47 + ((i * 37) % 19), yy = (y0 as number) + ((i * 53) % 30) - 15, rr = (r as number) * (.8 + ((i * 29) % 10) / 25);
-				return <circle key={i} cx={x} cy={yy} r={rr} fill={col as string} stroke={edge as string} strokeWidth={2.5} />; })}
-			<rect x={-200} y={-200} width={2400} height={(y0 as number) + 182} fill={col as string} />
-		</g>)}
-		<Poly cam={cam} P={[[-S0 + 5, -S0 - 4, 0], [S0 + 9, -S0 - 4, 0], [S0 + 10, S0 - 5, 0], [-S0 + 5, S0 - 2, 0]]} fill="#2E3A22" stroke="none" sw={0} op={.5 * cl(t / (BEAT * 4))} />
+		<defs><radialGradient id="grass" cx={900} cy={610} r={1300} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#8A9A58" /><stop offset=".6" stopColor="#748648" /><stop offset="1" stopColor="#56683A" /></radialGradient>
+			<radialGradient id="vig" cx={900} cy={600} r={1150} gradientUnits="userSpaceOnUse"><stop offset=".55" stopColor="#0E120A" stopOpacity="0" /><stop offset="1" stopColor="#0E120A" stopOpacity=".5" /></radialGradient></defs>
+		<rect width={W} height={H} fill="url(#grass)" />
+		{PATCH.map((pt, i) => <Poly key={i} cam={cam} P={pt.pts.map(([x, y]) => [x, y, 0] as V3)} fill={pt.c} stroke="none" sw={0} op={.7} />)}
+		<Poly cam={cam} P={PLAZA.map(([x, y]) => [x, y, 0] as V3)} fill="#CBBE92" stroke="#A9996C" sw={2} op={.95} />
+		<Poly cam={cam} P={[[-5, 70, 0], [5, 70, 0], [5, 480, 0], [-5, 480, 0]]} fill="#D3C69C" stroke="#A9996C" sw={1.5} />
+		<Poly cam={cam} P={[[-70, -4.5, 0], [-480, -4.5, 0], [-480, 4.5, 0], [-70, 4.5, 0]]} fill="#D3C69C" stroke="#A9996C" sw={1.5} />
+		{trees.map(({tr}, i) => { const [sx, sy] = cam.p([tr.x + SUN[0] * tr.h * .9, tr.y + SUN[1] * tr.h * .9, 0]); const rr = tr.r * cam.f / Math.hypot(...sub(cam.C, [tr.x, tr.y, 0]));
+			return <ellipse key={`s${i}`} cx={sx} cy={sy} rx={rr * 1.1} ry={rr * .8} fill="#1F2A16" opacity={.35} />; })}
+		<Poly cam={cam} P={[[-S0 + 5, -S0 - 4, 0], [S0 + 9, -S0 - 4, 0], [S0 + 10, S0 - 5, 0], [-S0 + 5, S0 - 2, 0]]} fill="#2E3A22" stroke="none" sw={0} op={.45 * cl(t / (BEAT * 4))} />
 		<Line cam={cam} P={ring(RR)} stroke={GOLD} sw={2.5} op={.55} /><Line cam={cam} P={ring(RR + 2.4)} stroke={GOLD} sw={1.5} op={.35} />
 		{ticks}
+		{trees.map(({tr, d}, i) => { const [x, y] = cam.p([tr.x, tr.y, tr.h]), rr = tr.r * cam.f / d, [c0, c1] = CROWN[tr.c];
+			return <g key={i}><circle cx={x} cy={y} r={rr} fill={c0} stroke={INK} strokeWidth={1.6} /><circle cx={x - rr * .28} cy={y - rr * .3} r={rr * .55} fill={c1} /></g>; })}
 		{parts}
 		{order.map((side) => <Stair key={side} cam={cam} side={side} c={sc} step={3} upto={stairU} />)}
 		{stairU > 0 && order.map((side) => <Poly key={`g${side}`} cam={cam} P={[P3(side, RF, -WS, 0), P3(side, RF, WS, 0), P3(side, rz(ZT * stairU), WS, ZT * stairU + BH), P3(side, rz(ZT * stairU), -WS, ZT * stairU + BH)]} fill="none" stroke={GOLD} sw={3.5} />)}
 		{tu > 0 && <Temple cam={cam} c={tc} dz={8 * (1 - eo(tu))} op={cl(tu * 3)} />}
 		{tu > 1 && <Poly cam={cam} P={plat} fill="none" stroke={GOLD} sw={4} />}
+		<rect width={W} height={H} fill="url(#vig)" />
 		{stairU > 0 && Object.keys(SIDES).map((side) => { const [x, y] = cam.p(P3(side, RF + 5.4, 0, 0)); return <Txt key={side} x={x} y={y + 22} s={String(count)} size={64} />; })}
 		{tu > 0 && (() => { const [x, y] = cam.p([0, 0, ZT + TZ]); return <Txt x={x} y={y + 18} s="+1" size={56} op={cl(tu * 2)} sc={.6 + .4 * back(tu)} />; })()}
-		{eu > 0 && <Txt x={1660} y={700} s="= 365" size={150} sc={1.8 - .8 * eo(eu)} op={cl(eu * 2)} />}
+		{/* the counting widget: days lit on the dial, and the sum building up */}
+		<Widget x={1430} y={380} w={400} h={300} op={cl(t / .4)}>
+			<T2 x={1460} y={432} s="日历刻度" size={30} col={GOLD} />
+			<T2 x={1460} y={500} s={`第 ${days} 天`} size={56} />
+			<rect x={1460} y={520} width={340} height={12} rx={6} fill="rgba(255,246,230,.2)" /><rect x={1460} y={520} width={340 * days / 365} height={12} rx={6} fill={GOLD} />
+			<T2 x={1460} y={590} s={stairU > 0 ? `91 × 4 = ${4 * count}` : '91 × 4'} size={40} col={stairU >= 1 ? '#FFF6E6' : '#CFC3AE'} />
+			{eu > 0 && <g transform={`translate(1460,652) scale(${1.4 - .4 * eo(eu)})`} opacity={cl(eu * 2)}><T2 x={0} y={0} s="+ 1 = 365" size={48} col={GOLD} /></g>}
+		</Widget>
 	</g>;
 };
 
-/* ---------- shot 2: the equinox serpent ---------- */
+/* ---------- shot 2: the equinox serpent — the sun, the terrace corners and the light on the balustrade ---------- */
 const Serpent: React.FC<{t: number}> = ({t}) => {
 	const u = eio(t / SHOT), phi = (40 - 8 * u) * Math.PI / 180, D = 96 - 8 * u;
 	const cam = new Cam([-D * Math.sin(phi), D * Math.cos(phi), 4.0], [0, 0, 13.5], 1630, [1160, 652]);
-	const sun: V2 = [1880 - 40 * u, 470 + 120 * eo(t / SHOT)];
+	const sun: V2 = [1840 - 40 * u, 430 + 160 * eo(t / SHOT)], elev = 19 - 12 * eo(t / SHOT);
 	const lit: Record<string, [string, string, string]> = {W: ['#DE9C62', '#F3C58E', '#B57446'], N: ['#625E7C', '#7A7592', '#4C4864'], E: ['#5A5470', '#6E6886', '#45405C'], S: ['#5A5470', '#6E6886', '#45405C']};
 	const tc = {W: {wall: '#E8AE74', corn: '#B77A4C', frieze: '#D49A66', joint: '#B57E52'}, N: {wall: '#706A86', corn: '#4E4964', frieze: '#625C79', joint: '#57516C'},
 		E: {wall: '#706A86', corn: '#4E4964', frieze: '#625C79', joint: '#57516C'}, S: {wall: '#706A86', corn: '#4E4964', frieze: '#625C79', joint: '#57516C'}, door: '#231B22', roof: '#C48E6A'};
@@ -145,29 +182,61 @@ const Serpent: React.FC<{t: number}> = ({t}) => {
 	[...Array(NT).keys()].sort((a, b) => Math.abs(zk(b) + HT / 2 - zc) - Math.abs(zk(a) + HT / 2 - zc)).forEach((k) => {
 		for (const side of Object.keys(SIDES)) if (cam.sees(P3(side, (sb(k) + st(k)) / 2, 0, zk(k) + HT / 2), wallN(side))) walls.push(<TerraceWall key={`w${k}${side}`} cam={cam} side={side} k={k} c={lit[side]} />);
 		if (cam.sees([0, 0, zk(k + 1)], [0, 0, 1])) walls.push(<TerraceTop key={`t${k}`} cam={cam} k={k} col="#B98564" />); });
-	const tri: React.ReactNode[] = [];
-	for (let k = 1; k < 8; k++) { const p = (t - BEAT * (1.5 + (8 - k))) / .25; if (p <= 0) continue;   // from the top down, one per beat
+	const tri: React.ReactNode[] = [], rays: React.ReactNode[] = []; let shown = 0;
+	for (let k = 1; k < 8; k++) { const t0 = BEAT * (1.5 + (8 - k)), p = (t - t0) / .25; if (p <= 0) continue; shown++;
 		const z0 = zk(k), r0 = rz(z0 - BH), w = HT * (RF - SP) / ZT * .97, A: [number, number] = [r0, z0], B: [number, number] = [r0 - w, z0], C: [number, number] = [r0 - w, zr(r0 - w) + BH];
-		const P = [A, B, C].map(([r, z]) => P3('N', r, WS, z)), op = cl(p);
-		tri.push(<g key={k} opacity={op}><Poly cam={cam} P={P} fill="none" stroke="#FFC56E" sw={16} op={.4} /><Poly cam={cam} P={P} fill="#FFDC8E" stroke="#C98A3E" sw={1.5} /></g>); }
+		const P = [A, B, C].map(([r, z]) => P3('N', r, WS, z));
+		tri.push(<g key={k} opacity={cl(p)}><Poly cam={cam} P={P} fill="none" stroke="#FFC56E" sw={16} op={.4} /><Poly cam={cam} P={P} fill="#FFDC8E" stroke="#C98A3E" sw={1.5} /></g>);
+		// the ray: from the sun, skimming the terrace corner, onto the balustrade where it makes this triangle
+		const corner = cam.p([-st(k - 1), st(k - 1) - 1.2, zk(k)]), tip = cam.p(P3('N', (A[0] + C[0]) / 2, WS, (A[1] + C[1]) / 2)), ru = cl((t - t0 + .15) / .3), fade = 1 - .65 * cl((t - t0 - .6) / .6);
+		const mx = sun[0] + (tip[0] - sun[0]) * ru, my = sun[1] + (tip[1] - sun[1]) * ru;
+		rays.push(<g key={k} opacity={fade}><line x1={sun[0]} y1={sun[1]} x2={mx} y2={my} stroke="#FFE7A8" strokeWidth={3.5} strokeDasharray="14 10" />
+			{ru >= 1 && <circle cx={corner[0]} cy={corner[1]} r={8} fill={GOLD} stroke={INK} strokeWidth={2} />}</g>); }
 	const nc: SC = {ramp: '#857C93', tread: '#6B6380', top: '#9C93A9', out_p: '#2F2A45', out_m: '#3F3A55', end: '#585170', in: '#5C5672'};
 	const wc: SC = {ramp: '#EDB57A', tread: '#C48550', top: '#F6CB92', out_p: '#D99860', out_m: '#D99860', end: '#E2A46C', in: '#C98A58'};
-	const head = cl((t - BEAT * 9.6) / .3), hp = cam.p(P3('N', RF + 1.2, WS - .5, 1.2));
-	const dusk = sm(t / SHOT);
+	const head = cl((t - BEAT * 9.6) / .3), hp = cam.p(P3('N', RF + 1.2, WS - .5, 1.2)), dusk = sm(t / SHOT);
+	const R = mul(3); const far = Array.from({length: 80}, (_, i) => ({x: -80 + i * 27 + R() * 10, y: 640 - R() * 26, r: 14 + R() * 16}));
+	const near = Array.from({length: 60}, (_, i) => ({x: -80 + i * 36 + R() * 14, y: 664 - R() * 30, r: 18 + R() * 20}));
+	const tufts = Array.from({length: 90}, () => ({x: R() * 1960 - 20, y: 700 + Math.pow(R(), .8) * 380, s: .6 + R() * 1.2}));
+	const clouds = [[300, 210, 1.2], [760, 150, .9], [1260, 250, 1.0], [1560, 170, .8], [520, 330, .7]];
+	const foot: V2 = [sun[0] - 470, 662], clock = 16 * 60 + 35 + Math.round(50 * t / SHOT);
 	return <g>
 		<defs><linearGradient id="sky2" x1="0" y1="0" x2="0" y2="720" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#5E6C93" /><stop offset=".45" stopColor="#B98A86" /><stop offset=".75" stopColor="#E9AC78" /><stop offset="1" stopColor="#F7CF8E" /></linearGradient>
 			<radialGradient id="glow2" cx={sun[0]} cy={sun[1]} r={760} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#FFF1C4" stopOpacity=".95" /><stop offset=".18" stopColor="#FFD58A" stopOpacity=".75" /><stop offset=".5" stopColor="#F2A866" stopOpacity=".28" /><stop offset="1" stopColor="#F2A866" stopOpacity="0" /></radialGradient>
-			<linearGradient id="field2" x1="0" y1="640" x2="0" y2="1080" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#B07A55" /><stop offset="1" stopColor="#5E4436" /></linearGradient>
+			<linearGradient id="field2" x1="0" y1="660" x2="0" y2="1080" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#A08A56" /><stop offset=".5" stopColor="#7E6E42" /><stop offset="1" stopColor="#4E4630" /></linearGradient>
 			<filter id="bl2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16" /></filter></defs>
 		<rect width={W} height={H} fill="url(#sky2)" /><rect width={W} height={H} fill="#3A2A44" opacity={.22 * dusk} /><rect width={W} height={H} fill="url(#glow2)" />
+		{clouds.map(([x, y, k], i) => <g key={i} transform={`translate(${x + 18 * t - 40 * u},${y}) scale(${k})`} opacity={.85}>
+			<ellipse cx={0} cy={0} rx={130} ry={26} fill="#E9B190" /><ellipse cx={-50} cy={-14} rx={70} ry={24} fill="#F2C4A0" /><ellipse cx={40} cy={-18} rx={60} ry={22} fill="#F2C4A0" /><ellipse cx={0} cy={10} rx={110} ry={10} fill="#C98A86" opacity={.6} /></g>)}
 		<circle cx={sun[0]} cy={sun[1]} r={62} fill="#FFF3CF" stroke="#F7C77E" strokeWidth={3} />
-		<g transform={`translate(${-60 * u},0)`}>{Array.from({length: 70}, (_, i) => { const x = -60 + i * 33 + ((i * 17) % 11), r = 16 + ((i * 41) % 18); return <circle key={i} cx={x} cy={655 - ((i * 23) % 26) - (x > 1500 ? 12 : 0)} r={r} fill="#4A3F3E" stroke="#2E2628" strokeWidth={2.5} />; })}</g>
-		<rect x={-20} y={661} width={W + 40} height={H} fill="url(#field2)" stroke={INK} strokeWidth={2.5} />
+		<g transform={`translate(${-30 * u},0)`}>{far.map((c, i) => <circle key={i} cx={c.x} cy={c.y} r={c.r} fill="#9A7E86" />)}</g>
+		<g transform={`translate(${-70 * u},0)`}>{near.map((c, i) => <circle key={i} cx={c.x} cy={c.y} r={c.r} fill="#4F4044" stroke="#2E2628" strokeWidth={2} />)}</g>
+		<rect x={-20} y={662} width={W + 40} height={H} fill="url(#field2)" />
+		<g transform={`translate(${-120 * u},0)`}>{tufts.map((f, i) => <g key={i} transform={`translate(${f.x},${f.y}) scale(${f.s * (.5 + (f.y - 660) / 420)})`}>
+			<ellipse cx={-30} cy={2} rx={34} ry={3} fill="#2E2420" opacity={.35} /><path d="M-6,0 L-2,-16 L0,0 L3,-20 L5,0 L9,-13 L11,0 Z" fill="#5E6A3A" stroke={INK} strokeWidth={1} /></g>)}</g>
 		<Temple cam={cam} c={tc} />
 		{walls}
 		<Stair cam={cam} side="W" c={wc} />
 		<Stair cam={cam} side="N" c={nc} light={tri} />
+		{rays}
 		{head > 0 && <circle cx={hp[0]} cy={hp[1]} r={70 + 12 * Math.sin(t * 8)} fill="#FFE7A8" opacity={.6 * head} filter="url(#bl2)" />}
+		{/* the sun's height: an angle at the pyramid's foot between the horizon and the ray */}
+		{(() => { const ang = Math.atan2(sun[1] - foot[1], sun[0] - foot[0]); const r = 150;
+			return <g opacity={cl(t / .5)}><line x1={foot[0] - 40} y1={foot[1]} x2={foot[0] + 470} y2={foot[1]} stroke="#FFF6E6" strokeWidth={2.5} strokeDasharray="8 8" />
+				<line x1={foot[0]} y1={foot[1]} x2={sun[0] - 62 * Math.cos(ang)} y2={sun[1] - 62 * Math.sin(ang)} stroke={GOLD} strokeWidth={3} />
+				<path d={`M${foot[0] + r},${foot[1]} A${r},${r} 0 0 0 ${foot[0] + r * Math.cos(ang)},${foot[1] + r * Math.sin(ang)}`} fill="none" stroke={GOLD} strokeWidth={4} />
+				<T2 x={foot[0] + r + 14} y={foot[1] - 12} s={`${elev.toFixed(0)}°`} size={40} col={GOLD} /><T2 x={foot[0] - 40} y={foot[1] + 40} s="地平线" size={26} col="#FFF6E6" /></g>; })()}
+		<Callout from={cam.p(P3('N', rz(zk(4)), WS, zk(4)))} to={[620, 470]} label="台阶边的影子" u={(t - BEAT * 3) / .6} side={-1} />
+		{head > 0 && <Callout from={hp} to={[560, 880]} label="蛇头" u={head * 2} side={-1} />}
+		{/* the date and time widget, and the triangle counter */}
+		<Widget x={1440} y={160} w={380} h={200} op={cl(t / .4)}>
+			<T2 x={1468} y={210} s="春分 · 3月20日" size={32} col={GOLD} />
+			<T2 x={1468} y={278} s={`${Math.floor(clock / 60)}:${String(clock % 60).padStart(2, '0')}`} size={60} />
+			<T2 x={1468} y={334} s={`太阳高度 ${elev.toFixed(0)}°`} size={30} col="#CFC3AE" />
+		</Widget>
+		<Widget x={1440} y={380} w={380} h={120} op={cl((t - BEAT * 2) / .4)}>
+			<T2 x={1468} y={455} s={`光三角 ${shown} / 7`} size={44} col={shown === 7 ? GOLD : '#FFF6E6'} />
+		</Widget>
 	</g>;
 };
 
