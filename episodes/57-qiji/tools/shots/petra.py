@@ -50,6 +50,7 @@ const EASE={io:x=>{x=cl(x);return x*x*(3-2*x);}, lin:x=>cl(x), out:x=>{x=cl(x);r
   io3:x=>{x=cl(x);return x<.5?4*x*x*x:1-(-2*x+2)**3/2;}, back:x=>{x=cl(x)-1;return 1+2.7*x**3+1.7*x**2;}};
 const ease=EASE.io, out3=EASE.out;
 const BEAT=0.418, BAR=1.672;
+const REST={ra1:58,ra2:84,la1:122,la2:96,tilt:0,squat:0,lift:0,tuck:0,lean:0,walk:0,stride:0};
 function track(keys,t){            // keys: [[t,{...},easing], ...] (every key carries every field)
   if(t<=keys[0][0]) return Object.assign({},keys[0][1]);
   for(let i=0;i<keys.length-1;i++){const a=keys[i],b=keys[i+1];
@@ -72,7 +73,7 @@ function limb(a,e,b,w0,w1,fill){
   return `<path d="M${poly.map(p=>f1(p[0])+','+f1(p[1])).join(' L')}Z" fill="${fill}"/><circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="${f1(w0/2)}" fill="${fill}"/>`;
 }
 const mid=(a,b,t)=>{t=t===undefined?.5:t;return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];};
-function figure(J,u,o){   // o: {fill, tilt, ex, ey (eye look, in head radii), close (0..1 eyes to happy arcs), mouth (0 smile .. 1 open O)}
+function figure(J,u,o){   // o: {fill, tilt}
   const fill=o.fill, nk=J.neck, hc=mid(J.l_hip,J.r_hip), tl=Math.hypot(nk[0]-hc[0],nk[1]-hc[1]);
   const side=J.r_shoulder[0]>J.l_shoulder[0]?1:-1;
   const lr=[nk[0]-side*u*.3,nk[1]+tl*.14], rr=[nk[0]+side*u*.3,nk[1]+tl*.14], lh=[hc[0]-side*u*.17,hc[1]], rh=[hc[0]+side*u*.17,hc[1]];
@@ -88,15 +89,11 @@ function figure(J,u,o){   // o: {fill, tilt, ex, ey (eye look, in head radii), c
   g.push(`<path d="${body}" fill="${fill}"/>`);
   const [hx,hy]=J.head, hr=u*.28;
   g.push(`<g transform="rotate(${f1(o.tilt||0)} ${f1(hx)} ${f1(hy)})"><ellipse cx="${f1(hx)}" cy="${f1(hy)}" rx="${f1(hr)}" ry="${f1(hr*1.08)}" fill="${fill}"/>`);
-  const ex=hr*.34, ey=hr*.05, lx=(o.ex||0)*hr, ly=(o.ey||0)*hr, cz=o.close||0, mo=o.mouth||0;
-  if(cz<.5){ const sy=1-cz*1.4;
-    g.push(`<ellipse cx="${f1(hx-ex+lx)}" cy="${f1(hy+ey+ly)}" rx="${f1(hr*.075)}" ry="${f1(hr*.1*sy)}" fill="#2B2724"/><ellipse cx="${f1(hx+ex+lx)}" cy="${f1(hy+ey+ly)}" rx="${f1(hr*.075)}" ry="${f1(hr*.1*sy)}" fill="#2B2724"/>`);
-  } else { for(const s of [-1,1]){const cx=hx+s*ex+lx, cy=hy+ey+ly;
-    g.push(`<path d="M${f1(cx-hr*.1)},${f1(cy+hr*.03)} Q${f1(cx)},${f1(cy-hr*.11)} ${f1(cx+hr*.1)},${f1(cy+hr*.03)}" fill="none" stroke="#2B2724" stroke-width="${f1(hr*.05)}" stroke-linecap="round"/>`);}}
-  const mx=hx+lx*.6, my=hy+ly*.5;
-  if(mo<.5) g.push(`<path d="M${f1(mx-hr*.16)},${f1(my+hr*.3)} Q${f1(mx)},${f1(my+hr*(.45+.1*mo))} ${f1(mx+hr*.16)},${f1(my+hr*.3)}" fill="none" stroke="#2B2724" stroke-width="${f1(hr*.055)}" stroke-linecap="round"/>`);
-  else g.push(`<ellipse cx="${f1(mx)}" cy="${f1(my+hr*.36)}" rx="${f1(hr*(.06+.06*mo))}" ry="${f1(hr*(.06+.08*mo))}" fill="#2B2724"/>`);
-  g.push(`<circle cx="${f1(hx-hr*.56+lx*.4)}" cy="${f1(hy+hr*.3)}" r="${f1(hr*.14)}" fill="#F4A9A0" opacity=".45"/><circle cx="${f1(hx+hr*.56+lx*.4)}" cy="${f1(hy+hr*.3)}" r="${f1(hr*.14)}" fill="#F4A9A0" opacity=".45"/>`);
+  // the face, exactly as you_figure.figure(face=True): dot eyes, small smile, blush
+  const ex=hr*.34, ey=hr*.05;
+  g.push(`<ellipse cx="${f1(hx-ex)}" cy="${f1(hy+ey)}" rx="${f1(hr*.075)}" ry="${f1(hr*.1)}" fill="#2B2724"/><ellipse cx="${f1(hx+ex)}" cy="${f1(hy+ey)}" rx="${f1(hr*.075)}" ry="${f1(hr*.1)}" fill="#2B2724"/>`+
+    `<path d="M${f1(hx-hr*.16)},${f1(hy+hr*.3)} Q${f1(hx)},${f1(hy+hr*.45)} ${f1(hx+hr*.16)},${f1(hy+hr*.3)}" fill="none" stroke="#2B2724" stroke-width="${f1(hr*.055)}" stroke-linecap="round"/>`+
+    `<circle cx="${f1(hx-hr*.56)}" cy="${f1(hy+hr*.3)}" r="${f1(hr*.14)}" fill="#F4A9A0" opacity=".45"/><circle cx="${f1(hx+hr*.56)}" cy="${f1(hy+hr*.3)}" r="${f1(hr*.14)}" fill="#F4A9A0" opacity=".45"/>`);
   g.push('</g>');
   return `<g filter="url(#yds)">${g.join('')}</g>`;
 }
@@ -128,7 +125,7 @@ function you(S,bx,by,sc,fill,shadow){
   for(const k in P) J[k]=[bx+P[k][0]*sc, by-lift+P[k][1]*sc];
   const u=120*sc; let sh='';
   if(shadow!==false){ const k=1/(1+(S.lift||0)/60); sh=`<ellipse cx="${f1(bx)}" cy="${f1(by+u*.04)}" rx="${f1(u*.5*k)}" ry="${f1(u*.08*k)}" fill="#1A0E08" opacity="${f1(.35*k)}" filter="url(#ysb)"/>`; }
-  const svg=sh+figure(J,u,{fill:fill,tilt:S.tilt||0,ex:S.ex,ey:S.ey,close:S.close,mouth:S.mouth});
+  const svg=sh+figure(J,u,{fill:fill,tilt:S.tilt||0});
   const hr=u*.28, th=(S.tilt||0)*Math.PI/180;
   return {svg:svg, head:J.head, top:[J.head[0]+Math.sin(th)*hr*1.08, J.head[1]-Math.cos(th)*hr*1.08], J:J, u:u};
 }
@@ -196,13 +193,13 @@ def counter_svg():
             f'<text id="lab2" x="0" y="0" font-size="66" text-anchor="start" {st} opacity="0"></text></g></g>')
 
 COUNTER_JS = r'''
-// year counter: rolls 2026 → C.target from t0 (ease-out), lands exactly on BAR with a punch; label pops at the landing
-function counter(t,C){
-  const t0=.15, t1=BAR, u=cl((t-t0)/(t1-t0)), f=out3(u), v=Math.round(2026+(C.target-2026)*f);
-  const g=$('ctr'); g.setAttribute('opacity',f1(cl((t-.04)/.14)));
+// year counter: rolls 2026 → C.target with the progress F(u) (u = t/BAR) and lands exactly on BAR with a punch; label pops at the landing
+function counter(t,C,F){
+  const t1=BAR, u=cl(t/t1), f=F(u), v=Math.round(2026+(C.target-2026)*f);
+  const g=$('ctr'); g.setAttribute('opacity','1');
   const yr=$('yr'), pre=$('pre'), l1=$('lab1'), l2=$('lab2');
   yr.textContent=String(Math.abs(v)); yr.setAttribute('x',C.xr); yr.setAttribute('y',C.y);
-  const rate=t<t1&&t>t0? Math.abs((C.target-2026)*3*(1-u)**2/(t1-t0)):0;   // years per second
+  const rate=t<t1? Math.abs((C.target-2026)*(F(Math.min(1,u+.01))-f)/.01/t1):0;   // years per second
   $('cblurS').setAttribute('stdDeviation','0 '+f1(Math.min(9,rate/450)));
   const w=yr.getComputedTextLength();
   const bc=v<=0; pre.setAttribute('opacity',bc?'1':'0'); pre.setAttribute('x',f1(C.xr-w-12)); pre.setAttribute('y',C.y);
@@ -253,109 +250,240 @@ def keys(*ks, fields=None):
         for f in allk: k[1].setdefault(f, first[f])
     return out
 
-REST = dict(ra1=58, ra2=84, la1=122, la2=96, tilt=0, squat=0, lift=0, tuck=0, lean=0, walk=0, stride=0, ex=0, ey=0, close=0, mouth=0)
+REST = dict(ra1=58, ra2=84, la1=122, la2=96, tilt=0, squat=0, lift=0, tuck=0, lean=0, walk=0, stride=0)
 
 def G(gid, items, extra=''):
     return f'<g id="{gid}"{(" " + extra) if extra else ""}>' + '\n'.join(items) + '</g>'
 
 # ======================================================================================================
-# petra_when
+# _when: 「穿越时间轴」 on blueprint (one device for every stop; taj.py imports it)
 # ======================================================================================================
-def petra_when():
-    ns, mk = run_sections(f'{TOOLS}/petra_vector.py', stop='for cx, b, w, h, shape in sorted(items')
-    g = ns['g']; defs_el = g[1]; defs = defs_el[len('<defs>'):-len('</defs>')]
-    a_sky = 2; b_stars = sec(mk, 'sky: stars')[1]
-    a_walls, b_low = sec(mk, 'canyon walls')[0], sec(mk, 'lower storey')[1]
-    a_gr, b_gr = sec(mk, 'ground:')
-    i_sand = next(i for i in range(a_gr, b_gr) if 'url(#sand)' in g[i])
-    W_, H_ = ns['W'], ns['H']; R = random.Random(571)
-    # extensions so the frame can roll and truck past the photo's edges (same gradients, the walls continue)
-    ext_back = [f'<polygon points="-420,520 0,565 0,1800 -420,1800" fill="url(#rock)"/>',
-                f'<polygon points="-420,1050 0,1050 0,1800 -420,1800" fill="url(#warmL)"/>',
-                f'<polygon points="{W_},0 {W_ + 420},0 {W_ + 420},1790 {W_},1765" fill="url(#rwall)"/>']
-    for x0 in (-330, -170):
-        y = 700 + R.uniform(0, 100); L = []
-        while y < 1790: L.append((x0 + R.uniform(-10, 10), y)); y += R.uniform(80, 150)
-        ext_back.append(ns['line'](L, '#0C0504', 3, 'opacity=".5"'))
-    sand_ext = [f'<polygon points="-420,1792 0,1792 0,{H_} -420,{H_}" fill="url(#sand)"/>',
-                f'<polygon points="{W_},1765 {W_ + 420},1785 {W_ + 420},{H_} {W_},{H_}" fill="url(#sand)"/>',
-                # the sand continues under the platform so a little parallax never opens a seam
-                f'<polygon points="205,1795 262,1750 505,1716 1400,1676 1460,1698 1460,1745 200,1805" fill="url(#sand)"/>']
-    plat_items = g[a_gr:i_sand]; sand_items = g[i_sand:b_gr]
-    # lanterns, exactly as the scene draws them (same order and random draws), split into depth bands by their base y
-    FEET = (785, 1992)
-    bands = {k: ([], []) for k in 'ABCDE'}   # (glows, bodies)
-    def band_of(b): return 'A' if b < 1800 else 'B' if b < 1900 else 'C' if b < FEET[1] else 'D' if b < 2120 else 'E'
-    items = sorted(ns['items'], key=lambda t: t[1])
-    extra = []   # a few more lanterns in the side extensions (same recipe)
-    for _ in range(26):
-        side = R.random() < .5; x = R.uniform(-380, -30) if side else R.uniform(W_ + 30, W_ + 380); b = R.uniform(1800, 2450)
-        sc = (b - 1700) / 800; extra.append((x, b, 20 + 70 * sc, 30 + 120 * sc, None))
-    for cx, b, w, h, shape in sorted(items + extra, key=lambda t: t[1]):
-        el = ns['bag'](cx, b, w, h, shape); band = bands[band_of(b)]
-        band[0].extend(el[:2] if h > 24 else el[:1]); band[1].extend(el[2:] if h > 24 else el[1:])
-    D = dict(sky=60, cliff=20, sand=15, plat=20, A=18, B=14, cara=14, C=11, FIG=10, D=8, E=5.5)
-    world = [G('L_sky', g[a_sky:b_stars]), G('L_cliff', ext_back + g[a_walls:b_low]), G('L_sand', sand_ext + sand_items),
-             G('L_plat', plat_items)]
-    rimc = '#FFD6A2'
-    cam_, _ = phased('cc', lambda ph: hc.camel(40, 1858, .95, 1, 'A', rim=rimc, step=1.9 * math.sin(ph)))
-    man_, _ = phased('cm', lambda ph: walker(300, 1866, 1.05, 1, robe='#3E4A6A', wrap='#EADFC8', skin='#7E5036', rim=rimc, staff=((16, -62), (20, 0)), ph=ph))
-    for k in 'ABCDE':
-        world.append(G(f'L_{k}', [G(f'gl_{k}', bands[k][0]), G(f'bd_{k}', bands[k][1])]))
-        if k == 'B': world.append(G('L_cara', [G('cara', [cam_, hc.rope((230, 1702), (318, 1800), 16, w=2.5), man_], 'opacity="0"')]))
-        if k == 'C': world.append(G('L_FIG', ['<g id="FIG"></g>']))
-    fill = ('<linearGradient id="yfill" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFE2BC"/><stop offset=".5" stop-color="#F3C9A2"/>'
-            '<stop offset="1" stop-color="#C98D6C"/></linearGradient>')
-    # 你: present → flinch (hands to head) → looks left, right → wind-up → points at the year on the landing, beat bobs
-    P = REST
-    fig = keys((0, dict(P, tilt=-8, ey=-.25, ex=.1, ra1=62, ra2=88, la1=118, la2=92)),
-               (.15, dict(tilt=-6)),
-               (.42, dict(ra1=-30, ra2=-145, la1=210, la2=325, squat=.45, tilt=4, mouth=1, ey=-.05, ex=0, lean=0), 'out'),
-               (.80, dict(tilt=14, ex=-.32, ey=0, squat=.3, lean=-5, mouth=.8)),
-               (1.20, dict(tilt=-12, ex=.32, lean=5, squat=.25, mouth=.9)),
-               (1.46, dict(ra1=60, ra2=95, la1=120, la2=85, squat=.55, tilt=-4, ex=.2, lean=2, mouth=.2), 'io'),
-               (1.672, dict(ra1=-22, ra2=-12, la1=112, la2=52, squat=0, lift=34, tuck=.25, tilt=-10, ex=.34, ey=-.1, lean=6, mouth=1), 'out'),
-               (1.95, dict(lift=0, tuck=0, mouth=.7), 'in'),
-               (2.4, dict(ra1=-26, ra2=-16, tilt=-14, lean=4, mouth=.6)),
-               (3.344, dict(ra1=-20, ra2=-10, tilt=-6, lean=3, ex=.15, mouth=.4)))
-    cfg = dict(S0=1.16, P0=list(FEET), V=[700, 935], dref=20, D=D, feet=FEET, sc=.98, nph=NPH,
-               cam=keys((0, dict(Z=0, zoom=1, TX=0, TY=0, roll=0)),
-                        (.15, dict(Z=0.04, zoom=1.0, TX=0, TY=0, roll=0)),
-                        (BAR, dict(Z=.85, zoom=1.02, TX=-14, TY=6, roll=-1.0), 'io3'),
-                        (2 * BAR + .05, dict(Z=1.1, zoom=1.03, TX=-40, TY=8, roll=-.3), 'out')),
-               fig=fig, C=dict(target=-100, xr=1718, y=596, lab1='约', lab2='年'))
-    js = 'const CFG=' + json.dumps(cfg) + ';\n' + r'''
-const LAY=['sky','cliff','sand','plat','A','B','cara','C','FIG','D','E'];
-let shown={};
+CHALK = '#F3F8FF'
+RULER_Y = 770                              # the ruler's top edge: 你 runs on it
+X_START, X_LAND, TRUCK = 1150, 840, 580    # 你 on screen at 2026 and at the landing; the camera's truck (px, ≤ 18 px/frame)
+MON_X = 470                                # the monument's axis on screen after the landing
+
+def _pairs(e):
+    m = re.search(r'\s(?:points|d)="([^"]*)"', e)
+    return [(float(a), float(b)) for a, b in re.findall(r'(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)', m.group(1))] if m else []
+def yext(e):
+    """(top, bottom) y of an element string"""
+    if e.startswith(('<ellipse', '<circle')):
+        cy = float(re.search(r'\scy="([-\d.]+)"', e).group(1)); r = re.search(r'\s(?:ry|r)="([-\d.]+)"', e)
+        r = float(r.group(1)) if r else 0; return cy - r, cy + r
+    ys = [y for _, y in _pairs(e)]
+    return (min(ys), max(ys)) if ys else (0, 0)
+def chalk(els, swk=1.0, deco_op=.6, cls='dr'):
+    """line art on blueprint: fills dropped, every outline in chalk; fill-only shading is dropped.
+    returns [(top, bottom, element)] with pathLength=1 dashes ready for the draw-on"""
+    out = []
+    for e in els:
+        if not e.startswith(('<polygon', '<polyline', '<path', '<ellipse', '<circle', '<line')): continue
+        st = re.search(r'\sstroke="([^"]*)"', e); sw = re.search(r'\sstroke-width="([^"]*)"', e)
+        if not st or st.group(1) == 'none' or not sw or float(sw.group(1)) == 0: continue
+        deco = st.group(1).upper() != INK.upper()
+        w = max(1.4, float(sw.group(1)) * swk * (.75 if deco else 1))
+        top, bot = yext(e)
+        for a in ('fill', 'stroke', 'stroke-width', 'opacity'): e = re.sub(rf'\s{a}="[^"]*"', '', e)
+        e = e[:-2].rstrip() + (f' fill="none" stroke="{CHALK}" stroke-width="{w:.1f}" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"'
+                               f' visibility="hidden" class="{cls}"' + (f' opacity="{deco_op}"' if deco else '') + '/>')
+        out.append((top, bot, e))
+    return out
+def timed(items, t0, t1, dur=.3):
+    """give drawn lines their start times: base first (largest bottom y), the top last"""
+    items = sorted(items, key=lambda it: -(it[0] + it[1]) / 2); n = max(1, len(items) - 1)
+    return [e.replace(' class=', f' data-a="{t0 + (t1 - dur - t0) * i / n:.3f}" data-d="{dur}" class=', 1) for i, (_, _, e) in enumerate(items)]
+def cline(p, w=2.5, op=None, cls='dr', a=0, d=.3, dash=None):
+    """a chalk polyline to draw on at time a"""
+    extra = (f' opacity="{op}"' if op is not None else '')
+    if dash: return f'<polyline points="{hc.pts(p)}" fill="none" stroke="{CHALK}" stroke-width="{w}" stroke-dasharray="{dash}" stroke-linecap="round" class="fade" data-a="{a:.3f}" data-d="{d}" opacity="0"{"" if op is None else f" data-o=\"{op}\""}/>'
+    return (f'<polyline points="{hc.pts(p)}" fill="none" stroke="{CHALK}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round" pathLength="1" '
+            f'stroke-dasharray="1 1" stroke-dashoffset="1" visibility="hidden" class="{cls}" data-a="{a:.3f}" data-d="{d}"{extra}/>')
+def silhouette(els, a, fx, fy):
+    """a tiny figure (hist_c.figure / elephant) as a filled chalk silhouette that pops in at time a (feet at fx, fy)"""
+    out = []
+    for e in els:
+        if 'opacity=".25"' in e or 'opacity=".35"' in e: continue   # their ground shadows
+        e = re.sub(r'\sfill="(?!none)[^"]*"', f' fill="{CHALK}"', e); e = re.sub(r'\sstroke="(?!none)[^"]*"', f' stroke="{CHALK}"', e)
+        out.append(e)
+    return f'<g class="pop" data-a="{a:.3f}" data-x="{fx:.1f}" data-y="{fy:.1f}" opacity="0">' + ''.join(out) + '</g>'
+def dim_v(x, y0, y1, label, a, tick=14):
+    """a vertical dimension line with arrowheads and its label"""
+    out = [cline([(x - tick, y0), (x + tick, y0)], 2, .8, a=a, d=.15), cline([(x - tick, y1), (x + tick, y1)], 2, .8, a=a, d=.15),
+           cline([(x, y0), (x, y1)], 2.2, .85, a=a + .05, d=.3),
+           cline([(x - 8, y1 + 14), (x, y1), (x + 8, y1 + 14)], 2.2, .85, a=a + .3, d=.08), cline([(x - 8, y0 - 14), (x, y0), (x + 8, y0 - 14)], 2.2, .85, a=a + .3, d=.08)]
+    my = (y0 + y1) / 2
+    out.append(f'<text x="{x + 16}" y="{my + 10:.0f}" font-family="LXGW WenKai" font-weight="700" font-size="32" fill="{CHALK}" class="fade" data-a="{a + .2:.3f}" data-d=".2" opacity="0">{label}</text>')
+    return out
+
+def year_label(y):
+    return str(y) if y > 0 else ('公元元年' if y == 0 else f'前{-y}')
+
+def ruler(T, minor, mid, major, label_every, eras, target_label, era_target):
+    """the time ruler in world px (x = X_START at 2026, years to the left); returns (elements, px per year)"""
+    ppy = (X_START - X_LAND + TRUCK) / (2026 - T)
+    X = lambda y: X_START + (y - 2026) * ppy
+    y0 = RULER_Y; y1 = RULER_Y + 36
+    ymin = int(2026 + (-TRUCK - 520 - X_START) / ppy) // minor * minor
+    out = [f'<rect x="{X(ymin):.1f}" y="{y0}" width="{X(2026) - X(ymin):.1f}" height="36" fill="#2E5385" opacity=".55"/>',
+           hc.line([(X(ymin), y0), (X(2026), y0)], CHALK, 3), hc.line([(X(ymin), y1), (X(2026), y1)], CHALK, 2, 'opacity=".8"'),
+           hc.line([(X(2026), y0 - 10), (X(2026), y1 + 10)], CHALK, 3.5),
+           # today onwards: the ruler goes on, dashed
+           f'<path d="M{X(2026) + 8:.1f},{y0} H{X(2026) + 1200:.1f} M{X(2026) + 8:.1f},{y1} H{X(2026) + 1200:.1f}" stroke="{CHALK}" stroke-width="2" stroke-dasharray="10 12" opacity=".45" fill="none"/>']
+    tk = []
+    for y in range(ymin, 2026 + 1, minor):
+        x = X(y)
+        if y % major == 0: tk.append(((x, y0), (x, y1 + 8)))
+        elif y % mid == 0: tk.append(((x, y0), (x, y0 + 22)))
+        else: tk.append(((x, y0), (x, y0 + 11)))
+    out.append(hc.marks(tk, CHALK, 2, 'opacity=".9"'))
+    for y in range(ymin // label_every * label_every, 2026, label_every):
+        if y < ymin or abs(y - T) * ppy < 70 or (2026 - y) * ppy < 70: continue
+        big = y % major == 0
+        out.append(f'<text x="{X(y):.1f}" y="{y1 + (44 if big else 38)}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="700" font-size="{30 if big else 24}" fill="{CHALK}" opacity="{.92 if big else .7}">{year_label(y)}</text>')
+    out.append(f'<text x="{X(2026):.1f}" y="{y1 + 44}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="700" font-size="30" fill="{CHALK}">2026</text>')
+    for name, y in eras:   # the eras' names, small chalk letters above the ruler
+        out.append(f'<text x="{X(y):.1f}" y="{y0 - 14}" text-anchor="middle" font-family="LXGW WenKai" font-weight="700" font-size="28" fill="{CHALK}" opacity=".62">{name}</text>')
+    # the target: a gold tick, its year and its era
+    xt = X(T)
+    out.append(f'<g id="tgt"><path d="M{xt:.1f},{y0 - 26} V{y1 + 12}" stroke="{GOLD}" stroke-width="5" stroke-linecap="round"/>'
+               f'<text x="{xt:.1f}" y="{y1 + 50}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="38" fill="{GOLD}" stroke="#16263F" stroke-width="6" paint-order="stroke">{target_label}</text>'
+               f'<text x="{xt + 34:.1f}" y="{y0 - 14}" text-anchor="start" font-family="LXGW WenKai" font-weight="700" font-size="34" fill="{GOLD}">{era_target}</text></g>')
+    return out, ppy, xt
+
+def tools_fg():
+    """floating construction tools (set square, compass, plumb line), chalk line art, foreground (1.4×)"""
+    def sq(cx, cy, s):
+        return (f'<g class="tool" data-c="{cx},{cy}"><polygon points="{cx - s * .5:.0f},{cy + s * .4:.0f} {cx + s * .5:.0f},{cy + s * .4:.0f} {cx - s * .5:.0f},{cy - s * .5:.0f}" fill="none" stroke="{CHALK}" stroke-width="4"/>'
+                f'<polygon points="{cx - s * .36:.0f},{cy + s * .27:.0f} {cx + s * .1:.0f},{cy + s * .27:.0f} {cx - s * .36:.0f},{cy - s * .2:.0f}" fill="none" stroke="{CHALK}" stroke-width="3"/>'
+                + ''.join(f'<path d="M{cx - s * .5 + i * s / 8:.0f},{cy + s * .4:.0f} v{-10 if i % 2 else -18}" stroke="{CHALK}" stroke-width="2.5"/>' for i in range(1, 8)) + '</g>')
+    def compass(cx, cy, s):
+        return (f'<g class="tool" data-c="{cx},{cy}"><path d="M{cx},{cy - s * .5} L{cx - s * .3},{cy + s * .5} M{cx},{cy - s * .5} L{cx + s * .3},{cy + s * .5}" stroke="{CHALK}" stroke-width="5" fill="none" stroke-linecap="round"/>'
+                f'<circle cx="{cx}" cy="{cy - s * .5}" r="{s * .07:.0f}" fill="none" stroke="{CHALK}" stroke-width="4"/><path d="M{cx},{cy - s * .62} v{-s * .14:.0f}" stroke="{CHALK}" stroke-width="5"/>'
+                f'<path d="M{cx - s * .55},{cy + s * .55} Q{cx},{cy + s * .85} {cx + s * .55},{cy + s * .55}" stroke="{CHALK}" stroke-width="2.5" stroke-dasharray="8 8" fill="none"/></g>')
+    def plumb(cx, cy, L):
+        return (f'<g class="tool" data-c="{cx},{cy - L}"><path d="M{cx},{cy - L} V{cy}" stroke="{CHALK}" stroke-width="2.5"/>'
+                f'<path d="M{cx - 16},{cy} L{cx + 16},{cy} L{cx},{cy + 40} Z" fill="none" stroke="{CHALK}" stroke-width="4" stroke-linejoin="round"/></g>')
+    return [sq(490, 935, 150), compass(860, 900, 120), plumb(-740, 330, 330), sq(-560, 960, 110)]
+
+def when_page(name, T, label1, label2, xr, eras, target_label, era_target, monument, minor=100, mid=100, major=500, label_every=500, mon_cx=None):
+    """the blueprint 「穿越时间轴」 page. monument(cx, by) → [elements] in world coords (drawn after the landing)"""
+    rul, ppy, xt = ruler(T, minor, mid, major, label_every, eras, target_label, era_target)
+    mon = monument(MON_X - TRUCK, RULER_Y)
+    R = random.Random(hash(name) % 1000)
+    dust = ''.join(f'<circle cx="{R.uniform(-1300, 1900):.0f}" cy="{R.uniform(140, 1040):.0f}" r="{R.uniform(1.5, 4.5):.1f}" fill="{CHALK}" opacity="{R.uniform(.12, .45):.2f}"/>' for _ in range(70))
+    defs = (f'<radialGradient id="paper" cx="50%" cy="46%" r="75%"><stop offset="0" stop-color="#1D3557"/><stop offset="1" stop-color="#16263F"/></radialGradient>'
+            f'<pattern id="grid" width="200" height="200" patternUnits="userSpaceOnUse"><path d="M40 0V200M80 0V200M120 0V200M160 0V200M0 40H200M0 80H200M0 120H200M0 160H200" stroke="#FFFFFF" stroke-opacity=".08" stroke-width="1.3" fill="none"/>'
+            f'<path d="M0 0V200M0 0H200" stroke="#FFFFFF" stroke-opacity=".15" stroke-width="1.8" fill="none"/></pattern>'
+            '<filter id="pgrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="7"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 -.18"/></filter>'
+            '<filter id="chalkF" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="3" result="n"/>'
+            '<feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="d"/>'
+            '<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.3 1.55" result="a"/><feComposite in="d" in2="a" operator="in"/></filter>'
+            '<filter id="dof" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter>'
+            f'<radialGradient id="puff"><stop offset="0" stop-color="{CHALK}" stop-opacity=".7"/><stop offset="1" stop-color="{CHALK}" stop-opacity="0"/></radialGradient>')
+    world = [f'<rect width="1920" height="1080" fill="url(#paper)"/>',
+             G('L_grid', [f'<rect x="-900" y="-400" width="3800" height="1900" fill="url(#grid)"/>']),
+             f'<rect width="1920" height="1080" filter="url(#pgrain)" opacity=".22"/>',
+             G('L_main', [G('rul', rul), G('mon', mon, 'filter="url(#chalkF)"'), '<g id="skid"></g>', '<g id="FIG"></g>']),
+             G('L_fg', [G('tools', tools_fg(), 'opacity=".4" filter="url(#dof)"'), G('fdust', [dust])]),
+             '<g id="speed"></g>']
+    fill = ('<linearGradient id="yfill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F1F4F8"/>'
+            '<stop offset="1" stop-color="#B9C4D4"/></linearGradient>')
+    cfg = dict(T=T, truck=TRUCK, xs=X_START, xl=X_LAND, ry=RULER_Y, sc=.84, F=[MON_X + 10, 560], push=.05, roll=-1.0,
+               C=dict(target=T, xr=xr, y=520, lab1=label1, lab2=label2))
+    js = 'const CFG=' + json.dumps(cfg) + ';\n' + WHEN_JS
+    return page(name, round(2 * BAR, 3), '\n'.join(world), js, defs, fill, extra_hud=counter_svg())
+
+WHEN_JS = r'''
+// the truck: a quick start, cruise, then a long smooth ease-out that lands on BAR (peak ≈ 1.5× the mean speed)
+const TA=.08, TB=.4, TAREA=TA/2+(TB-TA)+(1-TB)/2;
+function E(u){u=cl(u); let a; if(u<TA) a=u*u/(2*TA); else if(u<TB) a=TA/2+(u-TA); else {const w=(u-TB)/(1-TB); a=TA/2+(TB-TA)+(1-TB)*(w-w*w*w+w*w*w*w/2);} return a/TAREA;}
+function Ev(u){u=cl(u); let v; if(u<TA) v=u/TA; else if(u<TB) v=1; else {const w=(u-TB)/(1-TB); v=1-w*w*(3-2*w);} return v;}   // speed, 0..1
+function camM(p,camX,zoom,roll,F){ const z=1+(zoom-1)*p, r=roll*Math.PI/180, c=Math.cos(r), s=Math.sin(r), qx=(-p*camX-F[0])*z, qy=-F[1]*z;
+  return [z*c,z*s,-z*s,z*c,F[0]+c*qx-s*qy,F[1]+s*qx+c*qy]; }
+const DR=[...document.querySelectorAll('.dr')].map(e=>[e,+e.dataset.a,+e.dataset.d]);
+const FADE=[...document.querySelectorAll('.fade')].map(e=>[e,+e.dataset.a,+e.dataset.d,e.dataset.o?+e.dataset.o:1]);
+const POP=[...document.querySelectorAll('.pop')].map(e=>[e,+e.dataset.a,+e.dataset.x,+e.dataset.y]);
+const TOOLS=[...document.querySelectorAll('.tool')].map(e=>[e,e.dataset.c.split(',').map(Number)]);
+function mixJ(list){ // blend the joints of several poses: [[S,w],...]
+  const out={}; let lift=0,tilt=0;
+  for(const [S,w] of list){ if(w<=0) continue; const P=joints(S); for(const k in P){ if(!out[k]) out[k]=[0,0]; out[k][0]+=P[k][0]*w; out[k][1]+=P[k][1]*w; } lift+=(S.lift||0)*w; tilt+=(S.tilt||0)*w; }
+  return {P:out,lift:lift,tilt:tilt};
+}
 window.render=function(t){
-  const cam=track(CFG.cam,t);
-  // the landing: a short camera punch
-  const pk=kick(t,BAR,.32); cam.zoom*=1+.022*pk; cam.sy=(t>=BAR&&t<BAR+.2)?Math.sin((t-BAR)*90)*5*(1-(t-BAR)/.2):0;
-  const M={}; for(const k of LAY) M[k]=setLayer('L_'+k,cam,CFG.D[k]);
-  // candle flicker on the lantern glows (seeded per band)
-  for(const k of 'ABCDE'){const f=Math.floor(t*15), r=rng(311+f*13+k.charCodeAt(0))(); $('gl_'+k).setAttribute('opacity',f1(.82+.18*r));}
-  // after the landing the lanterns of today go, near to far, one band per beat; the old city's caravan walks in
-  for(const [ks,tb] of [['DE',2.09],['C',2.508],['AB',2.926]]) for(const k of ks){
-    const u=cl((t-tb)/.2); $('L_'+k).setAttribute('opacity',f1(1-u)); }
-  const cu=t-BAR; $('cara').setAttribute('opacity',f1(cl(cu/.3)));
-  $('cara').setAttribute('transform',`translate(${f1(Math.max(0,cu)*112)},0)`);
-  for(const gid of ['cc','cm']){ const ph=((t/(2*BEAT)+(gid=='cc'?.25:.75))%1+1)%1, i=Math.round(ph*CFG.nph)%CFG.nph;
-    if(shown[gid]!==i){ $(gid+'_'+(shown[gid]===undefined?0:shown[gid])).style.display='none'; $(gid+'_'+i).style.display='inline'; shown[gid]=i; } }
-  // 你
-  const S=track(CFG.fig,t), br=Math.sin(t*2*Math.PI/1.4);
-  S.squat+=.04*br; S.tilt+=1.5*br;
-  for(const b of [2.09,2.508,2.926]){ S.squat+=.22*dip(t,b,.3); S.ra1-=6*dip(t,b,.3); }
-  S.lift+=10*hop(t,.418,.22);
-  if(t<.15) S.la2+=0;
-  const Y=you(S,CFG.feet[0],CFG.feet[1],CFG.sc,'url(#yfill)');
-  $('FIG').innerHTML=Y.svg;
-  const top=apply(M.FIG,Y.top); bubble(t,[top[0],top[1]-14],.04,inFrame(top));
-  // time rewind: colour drains, grain, scratches, flicker
-  const a=ease((t-.15)/.75), fl=filmFX(t,a);
-  $('world').style.filter=`sepia(${(.9*a).toFixed(3)}) saturate(${(1-.25*a).toFixed(3)}) contrast(${(1+.1*a).toFixed(3)}) brightness(${(fl*(1-.1*a)).toFixed(3)})`;
-  counter(t,CFG.C);
+  const u=t/BAR, e=E(u), v=t<BAR?Ev(u):0;
+  const camX=-CFG.truck*e;
+  const pa=cl((t-BAR)/BAR), zoom=1+CFG.push*EASE.out(pa)+.018*kick(t,BAR,.3), roll=CFG.roll*ease(pa);
+  const M={}; for(const [id,p] of [['L_grid',.5],['L_main',1],['L_fg',1.4]]){ M[id]=camM(p,camX,zoom,roll,CFG.F); $(id).setAttribute('transform',mstr(M[id])); }
+  // 你: runs left (a step every half beat), skids into the landing, turns and points up at the year
+  const xw=CFG.xs-(CFG.xs-CFG.xl+CFG.truck)*e;
+  const ph=Math.PI/2+2*Math.PI*t/BEAT, sp=Math.sin(ph);
+  const run=Object.assign({},REST,{walk:ph,stride:26,lean:-13,squat:.1+.12*Math.abs(sp),lift:14*Math.abs(Math.cos(ph))+6*hop(t%BEAT,0,.2),
+      ra1:70-42*sp,ra2:-10-42*sp,la1:110+42*sp,la2:190+42*sp,tilt:-6});
+  const skid=Object.assign({},REST,{walk:-Math.PI/2,stride:24,lean:15,squat:.5,ra1:-25,ra2:-70,la1:215,la2:250,tilt:10});
+  const pt=Object.assign({},REST,{ra1:-50,ra2:-44,la1:112,la2:52,tilt:-8,lean:3});
+  pt.squat+=.3*dip(t,BAR,.32)+.04*Math.sin(t*4.5); for(const b of [2.09,2.508,2.926]){ pt.squat+=.18*dip(t,b,.3); pt.ra1-=5*dip(t,b,.3); }
+  pt.lift=10*hop(t,BAR+.12,.25);
+  const ws=ease((t-1.12)/.16), wp=ease((t-BAR+.02)/.15);
+  const W=[[run,(1-ws)],[skid,ws*(1-wp)],[pt,wp]];
+  const mj=mixJ(W), sc=CFG.sc, J={}, bx=xw, by=CFG.ry;
+  for(const k in mj.P) J[k]=[bx+mj.P[k][0]*sc, by-mj.lift*sc+mj.P[k][1]*sc];
+  const uu=120*sc, sh=`<ellipse cx="${f1(bx)}" cy="${f1(by+uu*.03)}" rx="${f1(uu*.5)}" ry="${f1(uu*.07)}" fill="#0A1424" opacity=".45" filter="url(#ysb)"/>`;
+  $('FIG').innerHTML=sh+figure(J,uu,{fill:'url(#yfill)',tilt:mj.tilt});
+  const hr=uu*.28, th=mj.tilt*Math.PI/180, top=apply(M.L_main,[J.head[0]+Math.sin(th)*hr*1.08, J.head[1]-Math.cos(th)*hr*1.08]);
+  bubble(t,[top[0],top[1]-14],.04,inFrame(top));
+  // speed lines behind (to the right of) the runner
+  let sl=''; if(v>.05){ const R=rng(77+Math.floor(t*30)), hs=apply(M.L_main,[bx,by]);
+    for(let i=0;i<6;i++){ const yy=hs[1]-(40+i*42)*sc*1.05, x0=hs[0]+60+R()*30, L=(90+R()*170)*v; sl+=`<path d="M${f1(x0)},${f1(yy)} h${f1(L)}" stroke="${'#F3F8FF'}" stroke-width="${f1(3+R()*3)}" stroke-linecap="round" opacity="${f1(.55*v)}"/>`; } }
+  $('speed').innerHTML=sl;
+  // chalk dust from the skidding foot, and a ring on the landing
+  let sk=''; for(let i=0;i<12;i++){ const t0=1.15+i*.045; if(t<t0) break; const a=t-t0; if(a>.7) continue; const R=rng(400+i);
+    const x=xw-34*sc-a*(120+90*R()), y=CFG.ry-6-a*(60+80*R()), r=(10+60*a)*(0.7+.6*R()); sk+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="url(#puff)" opacity="${f1(1-a/.7)}"/>`; }
+  if(t>=BAR&&t<BAR+.5){ const a=(t-BAR)/.5; sk+=`<ellipse cx="${f1(xw)}" cy="${CFG.ry}" rx="${f1(40+260*a)}" ry="${f1(8+40*a)}" fill="none" stroke="#F2C66E" stroke-width="${f1(6*(1-a))}" opacity="${f1(1-a)}"/>`; }
+  $('skid').innerHTML=sk;
+  const tg=$('tgt'), tk=t>=BAR? 1+.5*kick(t,BAR,.4):1; tg.setAttribute('opacity',f1(.65+.35*cl((t-1.3)/.3)));
+  // the monument draws itself, stroke by stroke, base → top; then construction marks, workers, dimensions
+  for(const [el,a,d] of DR){ const k=cl((t-a)/d); el.setAttribute('visibility',k>0?'visible':'hidden'); el.setAttribute('stroke-dashoffset',(1-k).toFixed(3)); }
+  for(const [el,a,d,o] of FADE){ el.setAttribute('opacity',f1(o*cl((t-a)/d))); }
+  for(const [el,a,x,y] of POP){ const k=cl((t-a)/.3), s=k>0?.3+.7*EASE.back(k):0; el.setAttribute('opacity',f1(cl(k*3)));
+    el.setAttribute('transform',`translate(${f1(x)},${f1(y)}) scale(${s.toFixed(3)}) translate(${f1(-x)},${f1(-y)})`); }
+  for(const [el,c] of TOOLS){ el.setAttribute('transform',`rotate(${f1(8*Math.sin(t*.9+c[0]*.01))} ${c[0]} ${c[1]}) translate(0,${f1(10*Math.sin(t*1.3+c[1]*.02))})`); }
+  counter(t,CFG.C,E);
 };'''
-    return page('petra_when', round(2 * BAR, 3), '\n'.join(world), js, defs, fill, extra_hud=counter_svg())
+
+
+def petra_monument(cx, by):
+    """the Treasury as chalk line art (hist_c.treasury's proportions), in its cliff, carved from the top down:
+    scaffold and a rope with a basket on the right, tiny Nabataean masons, the height dimensioned"""
+    k = 2.3; by = by - 2 * k; T = lambda x, y: (cx + x * k, by + y * k); R = random.Random(571)
+    out = timed(chalk(hc.treasury(cx, by, k, hc.PETRA_LIT, 2.6), swk=1.0, deco_op=.55), BAR, BAR + 3 * BEAT + .05, .3)
+    cliff_l = hc.jag(T(-76, 2), T(-80, -96), 5, 5, R)[:-1] + hc.jag(T(-80, -96), T(-71, -170), 5, 5, R)
+    cliff_t = hc.jag(T(-71, -170), T(-20, -176), 5, 4, R)[:-1] + hc.jag(T(-20, -176), T(73, -168), 7, 4, R)
+    cliff_r = hc.jag(T(73, -168), T(80, -80), 5, 5, R)[:-1] + hc.jag(T(80, -80), T(77, 2), 5, 5, R)
+    out += [cline(cliff_l, 2.6, a=BAR + .05, d=.7), cline(cliff_t, 2.6, a=BAR + .7, d=.5), cline(cliff_r, 2.6, a=BAR + .05, d=.7)]
+    for i in range(7):   # bedding lines in the rock either side
+        for sgn in (-1, 1):
+            y = -20 - i * 22 + R.uniform(-5, 5); x0, x1 = (sgn * 60, sgn * 76) if sgn > 0 else (sgn * 76, sgn * 60)
+            out.append(cline([T(x0, y), T((x0 + x1) / 2, y + R.uniform(-2, 2)), T(x1, y - 2)], 1.6, .45, a=BAR + .2 + i * .12, d=.2))
+    # construction: a scaffold against the lower storey, a rope and basket from the cliff top
+    a0 = BAR + 2.2 * BEAT
+    for j, x in enumerate((18, 32, 46)):
+        out.append(cline([T(x, 1), T(x, -62)], 2.2, .9, a=a0 + j * .06, d=.25))
+    for j, y in enumerate((-20, -40, -60)):
+        out.append(cline([T(14, y), T(50, y)], 2.2, .9, a=a0 + .15 + j * .06, d=.2))
+        out.append(cline([T(18 if j % 2 else 46, y + 20), T(46 if j % 2 else 18, y)], 1.6, .7, a=a0 + .25 + j * .06, d=.2))
+    out.append(cline([T(62, -170), T(62, -112)], 1.8, .85, a=a0 + .1, d=.3))
+    out.append(cline([T(58, -112), T(66, -112), T(65, -104), T(59, -104), T(58, -112)], 2, .9, a=a0 + .35, d=.15))
+    # tiny masons in robes and head wraps (silhouettes): two chiselling on the scaffold, one carrying a basket
+    for i, (x, y, f, pose, tool) in enumerate(((30, -60, -1, 'pick', 'pick'), (-40, -90, 1, 'pick', 'pick'), (-64, 0, 1, 'carry', None))):
+        fx, fy = T(x, y); el, _ = hc.figure(fx, fy, .34, f, robe='#fff', head='wrap', pose=pose, tool=tool, sw=1.2)
+        out.append(silhouette(el, 3 * BEAT + BAR + i * BEAT / 2, fx, fy))
+    out += dim_v(cx + 90 * k, by + 2 * k, by - 162 * k, '39 m', BAR + 3 * BEAT)
+    return out
+
+def petra_when():
+    return when_page('petra_when', -100, '约', '年', 1715,
+                     [('清', 1778), ('明', 1506), ('元', 1320), ('宋', 1120), ('唐', 762), ('晋', 340)], '前100', '西汉', petra_monument)
 
 # ======================================================================================================
 # petra_what
