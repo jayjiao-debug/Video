@@ -1,0 +1,13 @@
+import React from 'react';
+type SP = {u: number; d: number};
+export const Humber: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const FarEnd: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const Street: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const Banner: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const Window: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const Door: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const Hug: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const GlobeUp: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const TwoSelves: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const GlobeHome: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
+export const NightWindow: React.FC<SP> = () => <rect width={1920} height={1080} fill="#333" />;
