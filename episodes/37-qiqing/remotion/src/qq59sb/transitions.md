@@ -52,3 +52,38 @@ Rules kept: camera ≤ ~25 px per frame, no whip pans; each transition is motiva
 - Bars 72–82 reuse the demo's Hull terrace (`qq59/bg59`) and, for the hug, the demo's own hug staging (`qq59/demo59` Homecoming at 7.2 s, held and pushed in): the payoff is the same shot as the hook, now earned.
 - Bars 83–88 use the demo's borderless globe (`qq59/globe59`): land only, no countries, the gold route; bar 85 splits the screen between the demo's signpost scene (1998) and the door (2026).
 - Not drawn yet (marked in the cam/transition columns): the white flash frames, the ice-crack wipe, the calendar page flying into the lens, the bridge fog wipe. They are planned here; the key frames show the shot each one lands on.
+
+---
+
+# PART 2 · final pass (bars 50–95), after the owner's notes of 19:04–19:05
+
+Code: `part2.tsx` (timeline, lines, stamps, counter, photos, end card; exports `Part2({t})`, t = s since the bar-50 downbeat),
+`p2a.tsx` (bars 50–67), `p2b.tsx` (bars 68–95), `stage59.tsx` (his looks per stage on the rig's STAGE variants + frost/camo accents, the rig's cart),
+`chase59.tsx` (the globe chase on qq59/globe59 `Earth`, fixed roll per leg, the Caspian drawn in). `SB59.tsx` re-exports `Part2` and has no
+registerRoot (safe to import); the check compositions `SB59`, `KF59`, `SB59P2` live in `root59sb.tsx`. Review sheet: …/scratchpad/sb59/rework_part2.jpg.
+Measured camera speed (optical flow, p98): every move ≤ ~23 px/frame except object wipes (the tossed photos, the camel and wave wipes).
+
+| bar | shot | in (transition) | hits |
+|---|---|---|---|
+| 50 | the sign, embassy steps, press in the foreground | DROP hard cut (from part 1's steps) | sign up on 1; a flash + a push on each beat; the last flash blooms white |
+| 51–52 | Russia, one tracking shot: he pulls the orange cart (kRussia, hood + frost in winter) | the white bloom becomes snow | a season wipes in on every beat of 51; the frost-face PHOTO slams on 52 |
+| 53 | Earth chase Siberia → Mongolia (fixed roll), then a drop into warm haze | the photo is tossed across the cut | 「蒙古」 lands on beat 2 |
+| 53.5–54.5 | the steppe, the caravan; the head becomes the low sun | light match (same screen point) | — |
+| 54.5–55 | China: alone with his pack on a mountain road | a camel's flank wipes the lens on 54 beat 3 | — |
+| 55–57 | the border gate → grey (2020) → the gate dissolves, the road ends | stride-match cut (same x, same gait phase) | ✕ on 55 beat 3; colour drains on 56; he lifts his head on 57 beat 3 |
+| 58 | 2024, the Caspian shore | match dissolve (same place on screen) | — |
+| 59–60 | the pack thumps onto the pebbles; he wades in (wetsuit) and dives | cut on the downbeat | pack lands on 59 beat 2; the dive on 60 beat 4 |
+| 61 | top-down sea → Earth rising over the Caspian, the gold line across the water | the dive's white water | 「里海」「巴库」 on beat 2 |
+| 62–63 | sea level time-lapse, the support boat, km to 「近300」 | — | day / dusk / night / dawn flip on every beat; push into the cabin light |
+| 63.75–64.7 | Earth chase Baku → Istanbul → France (2024 → 2026), drop into grey haze | the cabin light = the gold head | labels on beats |
+| 64.7–65 | Calais: the tunnel mouth, he and the cart at the fence | out of the haze | ✕ on the 65 downbeat |
+| 66–67 | the Channel at dawn, the white cliffs, the boat | a wall of water wipes up the lens | the dawn wetsuit PHOTO slams on 67; the cliffs' white becomes fog |
+| 68–69 | the Humber Bridge in fog, the cart, people at the rail | out of the white | push into the fog from 69 beat 2.4 |
+| 70–71 | the far end comes out of the fog, Hull's lights | fog clears | push into the lights |
+| 72–79 | the street → the banner → his mother at the window → the door (half-time: one move per shot) | light match, then 0.3 s dissolves | the door's light floods the frame on the 80 downbeat |
+| 80 | the hug, 「你去哪儿了？」 centred (1 bar) | the light flood | — |
+| 81–82 | the real hug PHOTO (2 bars, 「2026.11.2 · 赫尔」) | slams on the 81 downbeat | — |
+| 83–84 | Earth (high camera): the whole route blazes, a ring bursts, the head runs start → home, km 0 → 50,000 | DROP hard cut + a 2-frame flash | a pulse on every beat |
+| 85–86 | split screen on a gold seam: 1998 at the signpost / 2026 at the door | the seam draws down, the halves slide in | the seam flares on 86 |
+| 87–88 | Earth down onto Britain, the line closes at Hull | dissolve | flare on 88; push into Hull's light |
+| 89–95 | night, one lit window; 「你上一次回家，是什么时候？」 centred; end card from 91 (picture at ~30 %), black by 95 | light match | — |

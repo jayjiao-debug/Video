@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {W, H, FPS, D, seg, eio, sm, Subs, Stamp, Seal, TH, Counter59, Centre, Vignette} from './kit59';
 import {typed} from '../qq50/kit50';
 import {ROWS, Row, CENTRE} from './rows59';
@@ -43,9 +43,9 @@ export const Film: React.FC<{t: number}> = ({t}) => {
 		<div style={{position: 'absolute', inset: 0, willChange: 'transform'}}><Furniture i={i} t={t} /></div>
 	</AbsoluteFill>;
 };
-const SB: React.FC = () => <Film t={T0 + useCurrentFrame() / FPS} />;
-const KF: React.FC = () => <Film t={kfTime(Math.min(ROWS.length - 1, useCurrentFrame()))} />;
-registerRoot(() => <>
-	<Composition id="SB59" component={SB} durationInFrames={Math.round((T1 - T0) * FPS)} fps={FPS} width={W} height={H} />
-	<Composition id="KF59" component={KF} durationInFrames={ROWS.length} fps={FPS} width={W} height={H} />
-</>);
+export const SB: React.FC = () => <Film t={T0 + useCurrentFrame() / FPS} />;
+export const KF: React.FC = () => <Film t={kfTime(Math.min(ROWS.length - 1, useCurrentFrame()))} />;
+/* PART 2 (bars 50–95, the final pass after the owner's 19:04 notes): Part2({t}) with t = seconds since the bar-50 downbeat (85.37 s).
+   EP59FULL (qq59/EP59.tsx) plays it from bar 50. This module has no registerRoot (safe to import); the check compositions SB59, KF59
+   and SB59P2 are registered in ./root59sb.tsx. */
+export {Part2, P2_FRAMES} from './part2';
