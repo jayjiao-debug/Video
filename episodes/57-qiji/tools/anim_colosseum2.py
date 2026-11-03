@@ -22,13 +22,13 @@ def svg(defs, body, style=''):
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" style="position:absolute;left:0;top:0;{style}"><defs>{defs}</defs>{"".join(body)}</svg>'
 
 def camera(t):
-    u = eio(t / DUR); HB.D = D0 + 26 - 60 * u; HB.PHI = PHI0 + math.radians(-9 + 18 * u)
+    HB.D = D0; HB.PHI = PHI0   # owner 09:25: no camera move here, just the time-lapse (a moving 3D camera shimmered)
 
 def lake_layer():
     lk = HB.colosseum_nero_lake(); body = [e for e in CAP['body'] if '尼禄的私人湖' not in e]
     return svg(CAP['defs'], body), lk
 
-def return_layers(t, tl):
+def return_layers(t, tl, prog=1.0):
     """the morning scene split: back (sky, hills, square), colosseum, crowd + family, front (slope, pine, terrace)"""
     R = random.Random(80); pal = dict(sky0='#3A6BBB', sky1='#5B8FD6', sky2='#A9CBEB', cloud='#F4F7FB',
         far='#A9B6C6', far_l='#8796AA', hillL='#7E8E5A', hillR='#86964F', hill_lit='#C7D58A', cyp='#3D5230', pine='#4F6A36',
@@ -47,7 +47,7 @@ def return_layers(t, tl):
     HB.backdrop(g, R, pal, palace=False)
     for zr in [100, 108, 117, 127, 138, 150, 163]:
         y = HB.HY + HB.FL * HB.HC / zr; g.append(HB.line([(0, y), (1920, y)], '#B9A780', 1.5, 'opacity=".55"'))
-    back = len(g); dfs = []; info, bt, Lb, tnear, xnear = HB.colosseum(g, R, pal, dfs); defs.extend(dfs); col = len(g)
+    back = len(g); dfs = []; info, bt, Lb, tnear, xnear = colosseum_build(g, R, pal, dfs, prog, t); defs.extend(dfs); col = len(g)
     TOPS = ['#E9E0CB', '#D8C7A2', '#B9473A', '#C98F45', '#5B6E8E', '#7C7A48', '#8E5B3E', '#F1EBDD', '#A4643F', '#3F5A73', '#C7B07A']
     SK = ['#C99572', '#B07F62', '#D9A88C', '#8E5E45']; HR = ['#2A211B', '#3A2A20', '#5A3A26', '#1A1512']
     crowd = []; gates = [x for x in info if x[3] > .3]
@@ -76,7 +76,8 @@ def frame_html(t):
     camera(t)
     lake_svg, lk = lake_layer()
     tl = ease((t - 2 * BAR) / BAR)                                     # bar 3: the fill
-    d, back, col, crowd, fam, front = return_layers(t, tl)
+    prog = cl((t - 3 * BAR) / (2.7 * BAR))
+    d, back, col, crowd, fam, front = return_layers(t, tl, prog)
     # the earth fills the lake from the left, in carts' rhythm (four pushes, one per beat)
     xs = [p[0] for p in lk]; x0, x1 = min(xs), max(xs); beats = (t - 2 * BAR) / (BAR / 4)
     fillx = x0 + (x1 - x0) * cl((math.floor(beats) + ease(beats % 1)) / 4) if t > 2 * BAR else x0
@@ -94,16 +95,120 @@ def frame_html(t):
             + ''.join(f'<line x1="{sx0 + (sx1 - sx0) * i / nP:.0f}" y1="{yc - 46:.0f}" x2="{sx0 + (sx1 - sx0) * i / nP:.0f}" y2="{yc + 24:.0f}" stroke="#8A6A48" stroke-width="5"/>' for i in range(nP + 1))
             + f'<line x1="{sx0:.0f}" y1="{yc - 40:.0f}" x2="{sx1:.0f}" y2="{yc - 40:.0f}" stroke="#8A6A48" stroke-width="5"/><line x1="{sx0:.0f}" y1="{yc - 8:.0f}" x2="{sx1:.0f}" y2="{yc - 8:.0f}" stroke="#8A6A48" stroke-width="4"/></g>')
     a_crowd = ease((t - 5.3 * BAR) / (.5 * BAR))
-    u = eio(t / DUR); z = 1.10 + .12 * u; px = 60 - 120 * u; py = -16 * u
+    z, px, py = 1.0, 0.0, 0.0
     return ('<div id="f" style="position:relative;width:1920px;height:1080px;overflow:hidden;background:#000">'
             + f'<div style="position:absolute;inset:0;transform-origin:960px 600px;transform:translate({px:.1f}px,{py:.1f}px) scale({z:.4f})">'
             + svg(d, back, f'opacity:{1 - a_lake:.3f}')
-            + svg(d, col, f'clip-path:inset({yc:.1f}px 0 0 0)')
-            + svg('', [scaf])
+            + svg(d, col)
             + svg('', crowd, f'opacity:{a_crowd:.3f}')
             + svg('', fam, f'opacity:{a_crowd:.3f}')
             + svg('', front, f'opacity:{1 - a_lake:.3f}')
             + f'<div style="position:absolute;inset:0;opacity:{a_lake:.3f}">' + lake_svg.replace('</svg>', earth + '</svg>') + '</div></div></div>')
+
+# ------------------------------------------------------------------------------------------------ the Colosseum under construction
+TOP = 46.4
+def colosseum_build(g, R, pal, defs_out, prog, t):
+    """HB.colosseum drawn part-built: each bay's wall stands at its own height (a building front sweeping round the ring,
+    rising in stone courses on the beat); arches turned on timber centring; scaffolding and treadwheel cranes on the bays
+    still being built; masts, flags and hangings only when it is finished."""
+    A, B = HB.A_C, HB.B_C; vis = HB.vis_ts(A, B, 1440)
+    def S(tt, Y): X, Z = HB.ring(A, B, tt); return HB.P3(X, Y, Z)
+    wall = [S(tt, 48) for tt in vis] + [S(tt, 0) for tt in vis[::-1]]; xs = [p[0] for p in wall]; x0, x1 = min(xs), max(xs)
+    tnear = max(vis, key=lambda tt: HB.facing(A, B, tt)); xnear = S(tnear, 0)[0]
+    defs_out.append(f'<linearGradient id="r_wall" gradientUnits="userSpaceOnUse" x1="{x0:.0f}" y1="0" x2="{x1:.0f}" y2="0"><stop offset="0" stop-color="{pal["w0"]}"/>'
+                    f'<stop offset="{(xnear - x0) / (x1 - x0):.2f}" stop-color="{pal["w1"]}"/><stop offset=".86" stop-color="{pal["w2"]}"/><stop offset="1" stop-color="{pal["w3"]}"/></linearGradient>')
+    bt, Lb = HB.bays(A, B, 80, 4000, t0=tnear - math.pi)
+    info = []
+    for k in range(80):
+        ta, tb = bt[k], bt[k + 1]; ca, cb = HB.facing(A, B, ta), HB.facing(A, B, tb)
+        if max(ca, cb) <= 0: continue
+        info.append((k, ta, tb, (ca + cb) / 2))
+    order = sorted(info, key=lambda r: S(r[1], 0)[0]); rank = {r[0]: i / max(1, len(order) - 1) for i, r in enumerate(order)}
+    COURSE = 1.2
+    def height(k):   # the building front sweeps left → right, a step behind; heights snap to stone courses
+        h = TOP * cl(prog * 1.35 - .35 * rank[k]); return min(TOP, math.floor(h / COURSE) * COURSE) if h < TOP else TOP
+    HK = {k: height(k) for k, *_ in info}
+    done = prog >= .999
+    if prog < .35:   # the foundation trench, marked out before the walls go up
+        g.append(HB.line([S(tt, 0) for tt in vis], '#8A6A48', 6, f'opacity="{1 - prog / .35:.2f}"')); g.append(HB.line([S(tt, 0) for tt in vis], '#5E4632', 2, 'stroke-dasharray="10 8"'))
+    # stone piles on the ground (shrinking as it rises)
+    for i, tt in enumerate(vis[::160]):
+        X, Z = HB.ring(A + 6, B + 6, tt); p = HB.P3(X, 0, Z); s = HB.FL / (Z + HB.D); n = int(5 * (1 - prog))
+        for j in range(n): g.append(HB.poly([(p[0] + (j - n / 2) * s * 1.1, p[1]), (p[0] + (j - n / 2 + 1) * s * 1.1, p[1]), (p[0] + (j - n / 2 + 1) * s * 1.1, p[1] - s), (p[0] + (j - n / 2) * s * 1.1, p[1] - s)], '#E2D3B0', HB.INK, 1.2))
+    for k, ta, tb, cm in info:   # the wall, bay by bay, up to its height
+        Yb = HK[k]
+        if Yb <= 0: continue
+        g.append(HB.poly([S(ta, 0), S(tb, 0), S(tb, Yb), S(ta, Yb)], 'url(#r_wall)', HB.INK, 2))
+        g.append(HB.line([S(ta, Yb), S(tb, Yb)], HB.INK, 3))
+    for k, ta, tb, cm in info:   # arches: open when finished, on timber centring while the crown is being turned
+        if cm < .1: continue
+        Yb = HK[k]; sw = 2.2 if cm > .45 else 1.5
+        def Q(w, Y): return S(ta + (tb - ta) * w, Y)
+        right_side = Q(1, 0)[0] > Q(0, 0)[0]
+        for si, (y0, y1, sill, crown) in enumerate(HB.STOREYS):
+            if Yb <= sill: break
+            w0, w1 = .5 - HB.KW / 2, .5 + HB.KW / 2
+            def archp(w0, w1, sl, cr):
+                rr = (w1 - w0) * Lb / 2; sp = cr - rr; c = (w0 + w1) / 2
+                return [Q(w0, sl)] + [Q(c - (w1 - w0) / 2 * math.cos(math.pi * i / 10), sp + rr * math.sin(math.pi * i / 10)) for i in range(11)] + [Q(w1, sl)]
+            rr = (w1 - w0) * Lb / 2; spring = crown - rr
+            if Yb >= crown:
+                g.append(HB.poly(archp(w0, w1, sill, crown), pal['jamb'], HB.INK, sw))
+                d = HB.KW * min(.42, (1 - cm) * .8); far_right = Q(.5, 0)[0] < xnear
+                inner = archp(w0, w1 - d, sill, crown - .2) if far_right == right_side else archp(w0 + d, w1, sill, crown - .2)
+                g.append(HB.poly(inner, pal['open'], 'none', 0))
+            else:   # the opening so far, and the wooden centring waiting for the voussoirs
+                top_ = min(Yb, spring)
+                g.append(HB.poly([Q(w0, sill), Q(w1, sill), Q(w1, top_), Q(w0, top_)], pal['open'], HB.INK, sw))
+                if Yb > spring - 1.5:
+                    c_ = [Q(.5 - (w1 - w0) / 2 * math.cos(math.pi * i / 10), spring + rr * math.sin(math.pi * i / 10)) for i in range(11)]
+                    g.append(HB.line(c_, '#9A7044', max(2.5, sw * 1.8)))
+                    for i in (2, 5, 8): g.append(HB.line([Q(.5 - (w1 - w0) / 2 * math.cos(math.pi * i / 10), spring), c_[i]], '#9A7044', 1.6))
+    for k, ta, tb, cm in info:   # engaged columns, storey by storey, as far as they are built
+        if cm < .1 or k == info[0][0]: continue
+        Yb = HK[k]; dt = tb - ta; cw = .62 / Lb
+        def Bq(dw, Y): return S(ta + dt * dw, Y)
+        col = pal['pil'] if (HB.nrm(A, B, ta)[0] * HB.LIGHT[0] + HB.nrm(A, B, ta)[1] * HB.LIGHT[1]) > .2 else pal['pil_d']; sw = 2 if cm > .45 else 1.4
+        for (y0, y1, sill, crown) in HB.STOREYS:
+            if Yb <= y0 + .3: break
+            g.append(HB.poly([Bq(-cw, y0 + .3), Bq(cw, y0 + .3), Bq(cw, min(Yb, y1 - .6)), Bq(-cw, min(Yb, y1 - .6))], col, HB.INK, sw))
+    for y0, y1 in HB.BANDS:   # entablatures where the wall has reached them
+        for k, ta, tb, cm in info:
+            if HK[k] >= y1: g.append(HB.poly([S(ta, y1), S(tb, y1), S(tb, y0), S(ta, y0)], pal['band'], HB.INK, 1.6))
+    # scaffolding on the bays being built: poles, ledgers at each lift, a few braces
+    for k, ta, tb, cm in info:
+        Yb = HK[k]
+        if Yb >= TOP or Yb <= 0 or cm < .12: continue
+        X, Z = HB.ring(A + 1.4, B + 1.4, ta); s = HB.FL / (Z + HB.D)
+        p0, p1 = HB.P3(X, 0, Z), HB.P3(X, Yb + 3.2, Z); g.append(HB.line([p0, p1], '#8A6A48', max(1.6, s * .22)))
+        X2, Z2 = HB.ring(A + 1.4, B + 1.4, tb)
+        for lift in range(3, int(Yb + 3), 3):
+            g.append(HB.line([HB.P3(X, lift, Z), HB.P3(X2, lift, Z2)], '#8A6A48', max(1.4, s * .18)))
+        if k % 3 == 0: g.append(HB.line([HB.P3(X, 0, Z), HB.P3(X2, min(Yb, 9), Z2)], '#7A5A3A', max(1.2, s * .14)))
+    # treadwheel cranes on the wall top where the work is (a block goes up on every beat)
+    front = [r for r in info if 0 < HK[r[0]] < TOP and r[3] > .35]
+    for r in front[::max(1, len(front) // 3)][:3]:
+        k, ta, tb, cm = r; Yb = HK[k]; X, Z = HB.ring(A - 1.5, B - 1.5, (ta + tb) / 2); s = HB.FL / (Z + HB.D); base = HB.P3(X, Yb, Z)
+        top_ = (base[0] + s * 1.5, base[1] - s * 8.5); g.append(HB.line([base, top_], '#7A5A3A', max(2, s * .35)))
+        g.append(HB.line([(base[0] + s * 3, base[1]), top_], '#7A5A3A', max(2, s * .3)))
+        jib = (top_[0] - s * 5, top_[1] + s * 1.5); g.append(HB.line([top_, jib], '#7A5A3A', max(2, s * .3)))
+        g.append(HB.ell(base[0] + s * 1.6, base[1] - s * 2.2, s * 2.0, s * 2.0, 'none', '#7A5A3A', max(2, s * .3)))
+        ph = (t / .418) % 1.0; by = base[1] + s * 9 - (s * 9 + 1.5 * s) * ease(min(1, ph / .8))   # the block rises from the ground to the wall top
+        g.append(HB.line([jib, (jib[0], by)], HB.INK, 1.2))
+        g.append(HB.poly([(jib[0] - s * .8, by), (jib[0] + s * .8, by), (jib[0] + s * .8, by + s * 1.1), (jib[0] - s * .8, by + s * 1.1)], '#E2D3B0', HB.INK, 1.4))
+    if done:   # finished: attic, masts and flags, hangings
+        for k, ta, tb, cm in info:
+            if cm < .2: continue
+            def Q(w, Y): return S(ta + (tb - ta) * w, Y)
+            if k % 2: g.append(HB.poly([Q(.4, 38.6), Q(.6, 38.6), Q(.6, 41.8), Q(.4, 41.8)], pal['open'], HB.INK, 1.5))
+            else: g.append(HB.poly([Q(.5 + .14 * math.cos(a), 40.2 + 1.1 * math.sin(a)) for a in [2 * math.pi * i / 12 for i in range(12)]], pal['shield'], HB.INK, 1.5))
+        FLAGS = ['#B8322A', '#E9B64C', '#F4EEE2', '#3E5A8C']
+        for k, ta, tb, cm in info:
+            if cm < .12: continue
+            X, Z = HB.ring(A, B, ta); s = HB.FL / (Z + HB.D); b_ = HB.P3(X, 46.0, Z); t_ = HB.P3(X, 52.5, Z)
+            g.append(HB.line([b_, t_], HB.INK, max(1.6, s * .28)))
+            if k % 2 == 0: c = FLAGS[(k // 2) % 4]; fw = s * 2.4; g.append(HB.poly([t_, (t_[0] + fw, t_[1] + fw * .22), (t_[0], t_[1] + fw * .5)], c, HB.INK, 1.4))
+    return [r for r in info if r[3] > .1], bt, Lb, tnear, xnear
 
 if __name__ == '__main__':
     os.makedirs(f'{OUT}/f', exist_ok=True); n = int(round(DUR * FPS))
@@ -116,3 +221,4 @@ if __name__ == '__main__':
             pg.locator('#f').screenshot(path=f'{OUT}/f/{i:04d}.jpg', type='jpeg', quality=90)
         br.close()
     print('frames', len(only) or n, OUT)
+
