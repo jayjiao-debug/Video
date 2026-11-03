@@ -100,11 +100,8 @@ const fus = (x: number): [number, number] => {                                  
 	if (x < XT0) { const s = cl((XT0 - x) / (XT0 - XEND)); return [R0 * (1 - .8 * Math.pow(s, 1.25)), ZC + 1.05 * Math.pow(s, 1.6)]; }
 	return [R0, ZC]; };
 const SP = (x: number, th: number, out = 0): V3 => { const [r, zc] = fus(x); return [x, (r + out) * Math.cos(th), zc + (r + out) * Math.sin(th)]; };
-const fusN = (x: number, th: number): V3 => { const e = .01, [r1, z1] = fus(x + e), [r0, z0] = fus(x - e), dr = (r1 - r0) / (2 * e), dz = (z1 - z0) / (2 * e);
-	return norm([-Math.sin(th) * dz - dr, Math.cos(th), Math.sin(th)]); };
 const onSkin = (x: number, z: number, out = 0): V3 => { const [r, zc] = fus(x), rr = r + out, dz = z - zc; return [x, Math.sqrt(Math.max(0, rr * rr - dz * dz)), z]; };
 const STA: number[] = [...Array.from({length: 17}, (_, i) => -LN * Math.pow(i / 16, 1.7)), XT0, ...Array.from({length: 10}, (_, i) => XT0 + (XEND - XT0) * (i + 1) / 10)];
-const NA = 72, THS = Array.from({length: NA + 1}, (_, j) => -Math.PI / 2 + 2 * Math.PI * j / NA);
 const P_WHITE: Pal = ['#F7E2C4', '#C9CBDC', '#B0B3C8'], P_BELLY: Pal = ['#E0CAB0', '#A9ACC0', '#9195AC'], P_TEAL: Pal = ['#86AFAA', '#3F6E7E', '#335D6C'];
 /* rounded rectangle in (x, z) on the skin */
 const rrect = (x0: number, x1: number, z0: number, z1: number, r: number, n = 5): [number, number][] => { const o: [number, number][] = [];
@@ -481,7 +478,7 @@ const youAt = (b: number): YouState => {
 	const lean = rad(b < 4.5 ? lerp(10, 0, sm((b - 3.6) / .8)) : lerp(0, 5, sm((b - 6) / .4)));
 	const A = 17 * (1 - sm((b - 3.7) / .5)), sw = A * Math.cos(Math.PI * b), w2 = 7 * sm((b - 6.1) / .3) * Math.cos(Math.PI * (b - 6.05) / .8 * 2);
 	const right: Arm = {sw: sw + w2, ab: 18, el: 24, ab2: 8};
-	const raise = sm((b - 4.45) / .5) - sm((b - 5.85) / .4), left: Arm = b < 4.2 ? {sw: -sw, ab: 18, el: 24, ab2: 8} : b > 6.25 ? {sw: -w2, ab: 18, el: 24, ab2: 8} : {raise, wv: 26 * Math.cos(2 * Math.PI * (b - 5))};
+	const raise = sm((b - 4.45) / .5) - sm((b - 5.68) / .36), left: Arm = b < 4.2 ? {sw: -sw, ab: 18, el: 24, ab2: 8} : b > 6.25 ? {sw: -w2, ab: 18, el: 24, ab2: 8} : {raise, wv: 26 * Math.cos(2 * Math.PI * (b - 5))};
 	return {H, psi, lean, feet: [L.P, R.P], arms: [left, right], tilt: lerp(4, 11, raise)}; };
 
 /* ---------- the far world: dawn sky, clouds, the city in haze, the terminal and tower, a departure climbing out ---------- */
@@ -568,7 +565,6 @@ const Pass: React.FC<{b: number}> = ({b}) => {
 		</Widget></g>; };
 
 /* ---------- the scene ---------- */
-const BAGS = [[.05, '#C2493F'], [.24, '#4E78A8'], [.43, '#E0A33A'], [.62, '#5D8A5E'], [.8, '#7A5B9A']] as [number, string][];
 const Scene: React.FC<{ts?: number}> = ({ts = 1}) => {
 	const fr = useCurrentFrame() * ts, t = fr / FPS, b = t / BEAT, cam = camAt(t), you = youAt(b);
 	const doorS = sm((b - 6.9) / .95), inside = b >= 7.0;   // by b 7 the whole figure is past the skin: from then on it is seen only through the opening   // the door swings on the last beat and seals just before the cut
