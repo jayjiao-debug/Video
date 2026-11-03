@@ -1,1 +1,6 @@
-[{"n": "machu", "file": "Q57MACHU", "id": "Q57MACHU", "pre": "python3 episodes/57-qiji/tools/export_machu.py"}]
+[{"n": "chichen106", "file": "Q57CHICHEN", "id": "Q57CHICHEN106", "pre": ""},
+ {"n": "colo106", "file": "Q57COLO", "id": "Q57COLO106", "pre": "python3 episodes/57-qiji/tools/export_colosseum.py"},
+ {"n": "christ106", "file": "Q57CHRIST", "id": "Q57CHRIST106", "pre": "python3 episodes/57-qiji/tools/export_christ.py"},
+ {"n": "petra106", "file": "Q57PETRA", "id": "Q57PETRA106", "pre": "python3 episodes/57-qiji/tools/export_petra.py"},
+ {"n": "machu106", "file": "Q57MACHU", "id": "Q57MACHU106", "pre": "python3 episodes/57-qiji/tools/export_machu.py"},
+ {"n": "taj106", "file": "Q57TAJ", "id": "Q57TAJ106", "pre": "python3 episodes/57-qiji/tools/export_taj.py"}]
