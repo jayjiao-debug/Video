@@ -37,7 +37,7 @@ export const PhotoSlam: React.FC<{
 	const flash = Math.max(0, 1 - t / .12) * .85;
 	return <div style={{position: 'absolute', inset: 0, pointerEvents: 'none'}}>
 		<div style={{position: 'absolute', inset: 0, background: `rgba(8,6,4,${(dim * inU * (1 - (out === 'fly' ? u : out === 'dissolve' ? sm(u) : 0))).toFixed(3)})`}} />
-		<div style={{position: 'absolute', left: cx - w / 2 - bd, top: cy - h / 2 - bd, width: w, padding: `${bd}px ${bd}px ${bot}px`, background: '#F7F3EA',
+		<div style={{position: 'absolute', left: cx - w / 2 - bd, top: cy - h / 2 - bd, width: w, padding: `${bd}px ${bd}px ${bot}px`, boxSizing: 'content-box', background: '#F7F3EA',
 			boxShadow: '0 26px 60px rgba(0,0,0,.6)', opacity: op * cl(t / .05),
 			transform: `translate(${ox}px, ${oy}px) rotate(${(rot + settle + orot).toFixed(2)}deg) scale(${sc.toFixed(4)})`, transformOrigin: '50% 50%'}}>
 			<div style={{width: w, height: h, overflow: 'hidden', background: '#111'}}>
