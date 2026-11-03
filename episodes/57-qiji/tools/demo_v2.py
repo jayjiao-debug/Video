@@ -486,7 +486,7 @@ def album_bg():
          '<linearGradient id="seat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B4A63"/><stop offset="1" stop-color="#2A3548"/></linearGradient></defs>',
          '<rect width="1920" height="1080" fill="url(#seat)"/><path d="M60,330 L1860,330 L1920,1080 L0,1080 Z" fill="url(#tray)"/><rect x="110" y="300" width="1700" height="50" rx="12" fill="#B4BAC2"/>',
          '<g filter="url(#ds)"><rect x="180" y="360" width="790" height="660" rx="10" fill="#F6EEDC"/><rect x="950" y="360" width="790" height="660" rx="10" fill="#F3EAD6"/></g><rect x="945" y="360" width="30" height="660" fill="#E2D6BC"/>',
-         f'<text x="960" y="200" text-anchor="middle" font-family="LXGW WenKai" font-weight="700" font-size="84" fill="{GOLD}">我的新七大奇迹</text>']
+]
     for i, (x, y) in enumerate(SLOTS[:7]):
         s.append(f'<rect x="{x}" y="{y}" width="330" height="270" rx="8" fill="none" stroke="#B9AA8E" stroke-width="4" stroke-dasharray="14 10"/>'
                  f'<text x="{x + 165}" y="{y + 150}" text-anchor="middle" font-family="LXGW WenKai" font-weight="700" font-size="44" fill="#B9AA8E">{i + 1}</text>')
