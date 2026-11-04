@@ -118,7 +118,7 @@ const Door2: React.FC<SceneProps> = ({t, dur, beat}) => {
 	}
 	const open = eo(t / 0.5);
 	// she is in the hall; at tStep she comes out onto the step and down to him (half a slow stride cycle), then reaches for him
-	const tStep = 0.5, mc = MUM_CYCLE.walk, half = mc.sec * 0.42, mph = cl((t - tStep) / mc.sec), mX = FX - 0.02 - mph * mc.stride * 1.6;
+	const tStep = 0.5, mc = MUM_CYCLE.walk, half = mc.sec * 0.42, mph = cl((t - tStep) / mc.sec), mX = FX - 0.02 - (FX - 0.02 - (KX + 0.62)) * cl(mph / 0.42);   // she stops in front of him (owner 02:58: she reached past him to the cart)
 	const onStep = cl((mX - (FX - 0.36)) / 0.12);
 	const mum = t < tStep ? undefined : {X: mX, D: MD, Y: 0.15 * onStep, action: (t < tStep + half ? 'walk' : 'reach') as 'walk' | 'reach', phase: t < tStep + half ? mph : 0.3 + (t - tStep - half) / 4.6, facing: -1 as const};
 	const flashes = [0.03, 0.5, 1, 2, 3, 4.5, 5, 6, 7].map((b, i) => b * beat + (i % 2) * 0.02);
