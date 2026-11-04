@@ -131,8 +131,13 @@ def mix(lib, sfxd, out):
     y = music + fx; k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
     y = lib60.master(y, target=-14.0, ceil=-2.0)
     sf.write(out, y.astype(np.float32), SR, subtype='PCM_24')
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', out, '-c:a', 'libmp3lame', '-b:a', '256k', out[:-4] + '.mp3'], check=True)
-    dec = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'quiet', '-i', out[:-4] + '.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout, np.float32).reshape(-1, 2).astype(np.float64)
+    ceil = -3.0   # the mp3: re-limit its source until the decoded mp3 is <= -1.1 dBTP (sharp SFX transients overshoot in the encode)
+    while True:
+        tmp = out[:-4] + '_mp3src.wav'; sf.write(tmp, E.limit(y, ceil).astype(np.float32), SR, subtype='PCM_24')
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-c:a', 'libmp3lame', '-b:a', '256k', out[:-4] + '.mp3'], check=True); os.remove(tmp)
+        dec = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'quiet', '-i', out[:-4] + '.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout, np.float32).reshape(-1, 2).astype(np.float64)
+        if E.true_peak(dec) <= -1.1 or ceil < -6: break
+        ceil -= 1.0
     # audibility: each event's loudness in the final mix vs the music around it (same gains as the master)
     gm = np.sqrt(np.mean(y ** 2) / max(np.mean((music + fx) ** 2), 1e-20))
     for r in rep: r['sfx_vs_music_db'] = round(r['target'] - (r['music_local'] - 3 if r['music_local'] > -60 else -70), 1)
