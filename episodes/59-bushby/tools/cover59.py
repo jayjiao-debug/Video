@@ -21,5 +21,5 @@ def place(W, H, ph, cx, top):
     sc = ph / P.height; im = P.resize((int(P.width * sc), ph), Image.LANCZOS)
     x0 = int(min(max(0, cx * im.width - W / 2), im.width - W)); c = Image.new('RGB', (W, H), (10, 12, 15)); c.paste(im.crop((x0, 0, x0 + W, ph)), (0, top)); return c
 t = fade(place(1080, 1440, 1140, 0.30, 300), 330, 1080, 1440); text_block(t, 78, 96, K, L1, L2, SUB, 96, 124); t.save(f'{out}/他走路回家_封面_竖版_3x4.png')
-w = fade(place(1440, 1080, 1060, 0.36, 20), 120, 1440, 1080, darken_tl=True); text_block(w, 80, 60, K, L1, L2, SUB, 86, 108); w.save(f'{out}/他走路回家_封面_横版_4x3.png')
+w = fade(place(1440, 1080, 1060, 0.40, 150), 250, 1440, 1080, darken_tl=True); text_block(w, 80, 60, K, L1, L2, SUB, 86, 108); w.save(f'{out}/他走路回家_封面_横版_4x3.png')
 print('ok')
