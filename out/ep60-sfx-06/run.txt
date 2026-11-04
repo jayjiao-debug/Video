@@ -1,0 +1,149 @@
+plan: {'tier': 'starter', 'character_count': 9243, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "X30_lioness_roar_a", "type": "sfx", "text": "a real lioness roaring once, close up, raspy and powerful, fast attack, about one and a half seconds, wildlife field recording, no music, not a monster", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X30_lioness_roar_a.mp3", "bytes": 26792}
+{"name": "X30_lioness_roar_b", "type": "sfx", "text": "one loud roar of an adult lioness, throaty rasp, aggressive, short and powerful, close microphone, natural, dry, no echo", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X30_lioness_roar_b.mp3", "bytes": 24702}
+{"name": "X30_lioness_roar_c", "type": "sfx", "text": "a lion snarling roar, open mouth, breathy raspy growl rising into a roar and stopping, realistic animal sound, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X30_lioness_roar_c.mp3", "bytes": 23030}
+{"name": "X31_lion_snarl_short_a", "type": "sfx", "text": "a short sharp lioness snarl roar, under one second, aggressive, close, realistic, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X31_lion_snarl_short_a.mp3", "bytes": 15089}
+{"name": "X31_lion_snarl_short_b", "type": "sfx", "text": "a quick angry big-cat roar burst, short, raspy, close, realistic, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X31_lion_snarl_short_b.mp3", "bytes": 13835}
+{"name": "X32_crunchy_bite_a", "type": "sfx", "text": "huge jaws snapping shut on something with a mean wet crunch, teeth clacking, crunchy bite, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X32_crunchy_bite_a.mp3", "bytes": 17179}
+{"name": "X32_crunchy_bite_b", "type": "sfx", "text": "a crocodile chomp: heavy jaws slam shut with a crunching bite and a short wet squelch, close, dry, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X32_crunchy_bite_b.mp3", "bytes": 17179}
+{"name": "X33_bone_snap_a", "type": "sfx", "text": "a bone snapped in two by hand: one sharp dry crack with a splintering crunch, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X33_bone_snap_a.mp3", "bytes": 13835}
+{"name": "X33_bone_snap_b", "type": "sfx", "text": "a stick-like bone breaking with a crisp crack and small splinters, close, no reverb", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X33_bone_snap_b.mp3", "bytes": 13835}
+{"name": "X34_small_wings_a", "type": "sfx", "text": "a small bird taking off: soft quick feathery wing flaps, about six flaps, close, dry, no chirping", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X34_small_wings_a.mp3", "bytes": 29300}
+{"name": "X34_small_wings_b", "type": "sfx", "text": "gentle fluttering wings of a small bird flying away, soft feathers, close, no birdsong", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X34_small_wings_b.mp3", "bytes": 26792}
+{"name": "X35_papyrus_flick_a", "type": "sfx", "text": "a single sheet of dry papyrus flipped over quickly: one crisp papery flick, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X35_papyrus_flick_a.mp3", "bytes": 10492}
+{"name": "X35_papyrus_flick_b", "type": "sfx", "text": "three quick page flips of thick old paper, crisp papery flicks, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X35_papyrus_flick_b.mp3", "bytes": 24702}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "X30_lioness_roar_a",
+  "type": "sfx",
+  "text": "a real lioness roaring once, close up, raspy and powerful, fast attack, about one and a half seconds, wildlife field recording, no music, not a monster",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X30_lioness_roar_a.mp3",
+  "bytes": 26792
+ },
+ {
+  "name": "X30_lioness_roar_b",
+  "type": "sfx",
+  "text": "one loud roar of an adult lioness, throaty rasp, aggressive, short and powerful, close microphone, natural, dry, no echo",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X30_lioness_roar_b.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X30_lioness_roar_c",
+  "type": "sfx",
+  "text": "a lion snarling roar, open mouth, breathy raspy growl rising into a roar and stopping, realistic animal sound, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X30_lioness_roar_c.mp3",
+  "bytes": 23030
+ },
+ {
+  "name": "X31_lion_snarl_short_a",
+  "type": "sfx",
+  "text": "a short sharp lioness snarl roar, under one second, aggressive, close, realistic, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X31_lion_snarl_short_a.mp3",
+  "bytes": 15089
+ },
+ {
+  "name": "X31_lion_snarl_short_b",
+  "type": "sfx",
+  "text": "a quick angry big-cat roar burst, short, raspy, close, realistic, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X31_lion_snarl_short_b.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "X32_crunchy_bite_a",
+  "type": "sfx",
+  "text": "huge jaws snapping shut on something with a mean wet crunch, teeth clacking, crunchy bite, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X32_crunchy_bite_a.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X32_crunchy_bite_b",
+  "type": "sfx",
+  "text": "a crocodile chomp: heavy jaws slam shut with a crunching bite and a short wet squelch, close, dry, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X32_crunchy_bite_b.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X33_bone_snap_a",
+  "type": "sfx",
+  "text": "a bone snapped in two by hand: one sharp dry crack with a splintering crunch, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X33_bone_snap_a.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "X33_bone_snap_b",
+  "type": "sfx",
+  "text": "a stick-like bone breaking with a crisp crack and small splinters, close, no reverb",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X33_bone_snap_b.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "X34_small_wings_a",
+  "type": "sfx",
+  "text": "a small bird taking off: soft quick feathery wing flaps, about six flaps, close, dry, no chirping",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X34_small_wings_a.mp3",
+  "bytes": 29300
+ },
+ {
+  "name": "X34_small_wings_b",
+  "type": "sfx",
+  "text": "gentle fluttering wings of a small bird flying away, soft feathers, close, no birdsong",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X34_small_wings_b.mp3",
+  "bytes": 26792
+ },
+ {
+  "name": "X35_papyrus_flick_a",
+  "type": "sfx",
+  "text": "a single sheet of dry papyrus flipped over quickly: one crisp papery flick, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X35_papyrus_flick_a.mp3",
+  "bytes": 10492
+ },
+ {
+  "name": "X35_papyrus_flick_b",
+  "type": "sfx",
+  "text": "three quick page flips of thick old paper, crisp papery flicks, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X35_papyrus_flick_b.mp3",
+  "bytes": 24702
+ }
+]
