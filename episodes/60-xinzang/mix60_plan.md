@@ -127,7 +127,7 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | s37_whisper | amb | 99.45 | X09_judges_42_whisper_loop | 0 | 0 | 102.4 | -4 | 0.6 | 0.6 | - | t<-37:whispering | Ani whispering the spell |
 | y | s38_wink | sfx | 103.86 | G3_zills | hit | - | - | -4 | - | - | - | t<-38:ting | the wink |
 | y | s41_tip | sfx | 112.32 | X18_scale_tip_heavy | hit | - | - | 0 | - | - | - | t<-41:pan+crash | the pan crashes down |
-| y | s41_snarl | sfx | 113.25 | X31_ammit_snarl_heavy | hit | - | - | 0 | - | 0.3 | abs=-5.5,impact,bright | t<-41:roar@+0.13 | Ammit roars again (41): the heavy snarl (chest layer, saturated, stone hall); the doom and the heartbeats duck hard under it |
+| y | s41_snarl | sfx | 113.25 | X31_ammit_snarl_heavy | hit | - | - | 0 | - | 0.3 | abs=-7,impact,bright | t<-41:roar@+0.13 | Ammit roars again (41): the heavy snarl (chest layer, saturated, stone hall); the doom and the heartbeats duck hard under it |
 | y | s42_growl | sfx | 113.97 | X28_ammit_growl | hit | - | +1.5 | 1 | - | 0.08 | duck=3,bright | t<-42:chomp@-1.45 | Ammit's growl rising into the bite |
 | y | s42_chomp | sfx | 115.42 | X41_ammit_slam | hit | - | - | 0 | - | - | abs=-7,impact | t<-42:chomp | [deliberate] the BITE (owner 19:21): a heavy wet jaw SLAM with a low body, no crunch |
 | y | s43_sand | amb | 117.35 | X03_natron_salt_pour | 0.4 | 0.4 | 119.5 | -5 | 0.3 | 1.0 | lp=8000,hp=500,env=117.35:0;119.5:-8 | t<-43:sand+dissolve | owner 20:27 (read as a river): a dry fine grain trickle, airy, quiet (about 12 LU under the dark bed), fading as the figure vanishes |
