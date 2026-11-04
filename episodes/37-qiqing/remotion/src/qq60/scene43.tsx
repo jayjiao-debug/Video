@@ -4,7 +4,7 @@ import {Balance, Mat, ShrineBack, ShrineFront, Throne, GlyphColumns, SHRINE, Gat
 import {WState, STILL, stateAt, LAY, S as S1920, anubisPose, thothPose, osirisPose, aniPose} from './scene60';
 import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Embers, camPath, Sub, Stamp, Tag} from './frame60';
 import {Torch, OfferingTable, JudgeDefs, JudgeRow} from './props60b';
-import {leadPair, judgePose} from './cast60';
+import {leadPair, judgePose, CAST2, tutuPose} from './cast60';
 import {PAL} from './geo60';
 
 /* ep60 · the two approved key scenes re-laid out for 4:3 (1440 × 1080).
@@ -35,15 +35,19 @@ export const Ennead: React.FC<{x0: number; gy: number; dx: number; s: number; t:
 		</g>; })}
 </g>;
 
-export const Weighing43: React.FC<{st?: WState; t: number; prev?: WState; sub?: Sub; stamp?: Stamp; tags?: Tag[]; cam?: {x: number; y: number; z: number}}> = ({st = STILL, t, prev, sub = {text: '把你的[心]，和一根羽毛放上天平。'}, stamp = {era: '约公元前1250年', place: '底比斯', src: '《亡灵书》 阿尼纸草'}, tags, cam}) => {
+/** mood: 'papyrus' = the approved warm wall; 'lapis' = the script's night-blue hall wall (gold glyphs, red rim on Ammit). Tutu stands behind Ani
+    off the left edge (world x ≈ -110): pan the camera left to frame the couple (script shot 37). */
+export const Weighing43: React.FC<{st?: WState; t: number; prev?: WState; sub?: Sub; stamp?: Stamp; tags?: Tag[]; cam?: {x: number; y: number; z: number}; mood?: 'papyrus' | 'lapis'}> = ({st = STILL, t, prev, sub = {text: '把你的[心]，和一根羽毛放上天平。'}, stamp = {era: '约公元前1250年', place: '底比斯', src: '《亡灵书》 阿尼纸草'}, tags, cam, mood = 'papyrus'}) => {
 	const vel = (a: number, b: number | undefined) => (b === undefined ? 0 : (a - b) * 30);
 	const th = thothPose(st), GY = 932, S = S1920;
 	const ANUBIS: Cast = {...CAST.anubis, bHand: 'open', fHand: 'open', bProp: 'none', fProp: 'none'};
 	const camera = cam ?? camPath(t, [[0, 720, 486, 1], [5, 700, 500, 1.05]]);
-	return <Stage60 t={t} cam={camera} grade="papyrus" sub={sub} stamp={stamp} tags={tags ?? [{x: 64, y: 470, text: '阿尼'}, {x: 592, y: 694, text: '阿米特'}]}
+	const lapis = mood === 'lapis', gold = lapis ? '#E8B83E' : undefined;
+	return <Stage60 t={t} cam={camera} grade={lapis ? 'lapis' : 'papyrus'} bg={lapis ? '#17224F' : 'plaster'} wear={lapis ? 0.4 : 0.9} sub={sub} stamp={stamp} tags={tags ?? [{x: 64, y: 470, text: '阿尼'}, {x: 592, y: 694, text: '阿米特'}]}
 		light={<>
 			<Glow x={40} y={612} r={260} c="warm" o={0.42} />
-			<Glow x={W43.x(LAY.ammit)} y={760} r={190} c="red" o={0.12 + 0.18 * Math.max(0, st.ammit.jaw - 6) / 14} />
+			<Glow x={W43.x(LAY.ammit)} y={760} r={190} c="red" o={(lapis ? 0.3 : 0.12) + 0.18 * Math.max(0, st.ammit.jaw - 6) / 14} />
+			{lapis && <Glow x={W43.x(LAY.post)} y={520} r={420} c="gold" o={0.3} />}
 			<Dust t={t} box={[0, 300, 1300, 850]} n={46} seed={3} o={0.5} />
 			<Embers t={t} x={40} y={600} n={9} seed={6} h={220} spread={16} />
 		</>}>
@@ -52,14 +56,15 @@ export const Weighing43: React.FC<{st?: WState; t: number; prev?: WState; sub?: 
 		<Ennead x0={76} gy={286} dx={84} s={8.2} t={t} />
 		<OfferingTable x={1010} y={274} s={9} t={t} />
 		<RegisterLine x0={-60} x1={1560} y={286} h={16} />
-		<GlyphColumns x={56} y={322} cols={5} rows={3} cell={30} seed={3} />
-		<GlyphColumns x={724} y={316} cols={3} rows={4} cell={29} seed={11} />
+		<GlyphColumns x={56} y={322} cols={5} rows={3} cell={30} seed={3} mono={gold} />
+		<GlyphColumns x={724} y={316} cols={3} rows={4} cell={29} seed={11} mono={gold} />
 		{/* lower register: the 1920 layout's pose code through one transform */}
 		<g transform={`translate(${POST43},${GY43}) scale(${K}) translate(${-LAY.post},${-GY})`}>
 			<ShrineBack x={LAY.shrine} y={GY} s={S} />
 			<Throne x={LAY.throne} y={GY - SHRINE.plinth * S} s={S} />
 			<God id="w43os" cast={CAST.osiris} pose={osirisPose(st)} x={LAY.osiris} y={GY - SHRINE.plinth * S} s={S} face={-1} sec={{t}} />
 			<ShrineFront x={LAY.shrine} y={GY} s={S} />
+			<God id="w43tutu" cast={CAST2.tutu} pose={tutuPose(t)} x={LAY.ani - 300} y={GY} s={S} sec={{t}} />
 			<God id="w43ani" cast={CAST.ani} pose={aniPose(st)} x={LAY.ani} y={GY} s={S} sec={{t, vel: {head: vel(st.ani.head, prev?.ani.head)}}} />
 			<Balance p={{tilt: st.tilt, swingL: st.swingL, swingR: st.swingR, plumb: st.plumb, look: st.look}} x={LAY.post} y={GY} s={S} t={t} />
 			<God id="w43an" cast={ANUBIS} pose={anubisPose(st)} x={LAY.anubis} y={GY} s={S} sec={{t, vel: {head: vel(st.anubis.head, prev?.anubis.head)}}} />

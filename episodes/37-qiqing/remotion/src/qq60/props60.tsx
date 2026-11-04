@@ -198,14 +198,16 @@ const G: Record<string, {d: string; r: Role}> = {
 	feather: {d: sp([[0.48, 0.95, 1], [0.56, 0.95, 1], [0.6, 0.5], [0.55, 0.15], [0.4, 0.06], [0.35, 0.14], [0.45, 0.3], [0.44, 0.6]]), r: 'linen'},
 };
 export const GLYPHS = Object.keys(G);
+/** the glyph shapes (1 × 1 cell) for other ep60 props (scarab base, scroll text) */
+export const GLYPH_D = G;
 /** columns of decorative glyphs between ruled lines; `seed` picks the signs */
-export const GlyphColumns: React.FC<{x: number; y: number; cols: number; rows: number; cell: number; seed?: number}> = ({x, y, cols, rows, cell, seed = 1}) => {
+export const GlyphColumns: React.FC<{x: number; y: number; cols: number; rows: number; cell: number; seed?: number; mono?: string}> = ({x, y, cols, rows, cell, seed = 1, mono}) => {
 	let r = seed * 9301 + 49297; const rnd = () => (r = (r * 9301 + 49297) % 233280) / 233280;
 	const out: React.ReactNode[] = [], lw = 1.3 / cell;
 	for (let i = 0; i < cols; i++) {
 		for (let j = 0; j < rows; j++) {
 			const k = GLYPHS[Math.floor(rnd() * GLYPHS.length)], g = G[k];
-			out.push(<g key={`${i}-${j}`} transform={`translate(${i * 1.25 + 0.12},${j * 1.08})`}><path d={g.d} fill={PAL[g.r]} stroke={PAL.ink} strokeWidth={lw * 1.4} strokeLinejoin="round" /></g>);
+			out.push(<g key={`${i}-${j}`} transform={`translate(${i * 1.25 + 0.12},${j * 1.08})`}><path d={g.d} fill={mono ?? PAL[g.r]} stroke={mono ? 'none' : PAL.ink} strokeWidth={lw * 1.4} strokeLinejoin="round" /></g>);
 		}
 		out.push(<line key={`l${i}`} x1={i * 1.25 - 0.05} x2={i * 1.25 - 0.05} y1={-0.1} y2={rows * 1.08} stroke={PAL.ink} strokeWidth={lw * 1.2} />);
 	}

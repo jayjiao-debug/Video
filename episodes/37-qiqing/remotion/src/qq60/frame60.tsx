@@ -85,13 +85,13 @@ export type Stamp = {era: string; place: string; src?: string};
 /** top-right stamp: era · place / source, cream on a dark outline, with a rule at the right (inside the safe area) */
 export const Stamp43: React.FC<{stamp: Stamp; o?: number}> = ({stamp, o = 1}) => <div style={{position: 'absolute', top: PIC_T + 20, right: FW - SAFE_R, textAlign: 'right', paddingRight: 14, opacity: o, fontFamily: F_SERIF, color: FC.cream, whiteSpace: 'nowrap'}}>
 	<div style={{position: 'absolute', right: 0, top: 4, bottom: 4, width: 3, background: FC.cream, boxShadow: `0 0 0 1.5px ${FC.ink}`}} />
-	<div style={{fontWeight: 900, fontSize: 34, lineHeight: 1.2, letterSpacing: '0.03em', textShadow: outline('#2a1608', 1.6)}}>{stamp.era}<span style={{color: FC.key, margin: '0 0.18em'}}>·</span>{stamp.place}</div>
-	{stamp.src && <div style={{fontWeight: 700, fontSize: 25, lineHeight: 1.45, letterSpacing: '0.04em', textShadow: outline('#2a1608', 1.3)}}>{stamp.src}</div>}
+	<div style={{fontWeight: 900, fontSize: 37, lineHeight: 1.2, letterSpacing: '0.03em', textShadow: outline('#2a1608', 1.7)}}>{stamp.era}<span style={{color: FC.key, margin: '0 0.18em'}}>·</span>{stamp.place}</div>
+	{stamp.src && <div style={{fontWeight: 900, fontSize: 29, lineHeight: 1.45, letterSpacing: '0.04em', textShadow: outline('#2a1608', 1.5)}}>{stamp.src}</div>}
 </div>;
 /** the J seal, bottom-right inside the picture */
 export const Seal43: React.FC<{o?: number}> = ({o = 0.86}) => <Img src={staticFile('ep44/jseal.png')} style={{position: 'absolute', left: SAFE_R - 68, top: PIC_B - 80, width: 66, height: 66, opacity: o, transform: 'rotate(-5deg)'}} />;
 /** a character's name: a vertical cream paper column with a red rule; (x, y) = top centre in frame px */
-export const NameTag: React.FC<{x: number; y: number; text: string; o?: number; size?: number}> = ({x, y, text, o = 1, size = 32}) => {
+export const NameTag: React.FC<{x: number; y: number; text: string; o?: number; size?: number}> = ({x, y, text, o = 1, size = 36}) => {
 	const w = size + 22;
 	return <div style={{position: 'absolute', left: x - w / 2, top: y, width: w, opacity: o, background: '#F2E3C0', border: `2px solid ${FC.ink}`, borderRadius: 4, padding: '11px 0',
 		boxShadow: '0 3px 8px rgba(30,15,5,0.35), inset 0 0 10px rgba(150,100,40,0.25)'}}>
@@ -110,7 +110,7 @@ export const Frame60: React.FC<{t: number; sub?: Sub; stamp?: Stamp; seal?: bool
 </>;
 
 /* ---------------- grades (mood colour per beat) ---------------- */
-export type Grade = 'plaster' | 'papyrus' | 'tomb' | 'blood' | 'night' | 'reeds';
+export type Grade = 'plaster' | 'papyrus' | 'tomb' | 'blood' | 'night' | 'reeds' | 'lapis';
 type GradeDef = {tint: string; mode: React.CSSProperties['mixBlendMode']; o: number; vig: string; vigO: number; grain: number; dust?: number; haze: number; flick?: number; css: string};
 export const GRADES: Record<Grade, GradeDef> = {
 	plaster: {tint: '#f2c27a', mode: 'soft-light', o: 0.25, vig: '#3a2410', vigO: 0.62, grain: 0.62, haze: 0.1, css: 'saturate(0.8) sepia(0.12)'},
@@ -118,6 +118,7 @@ export const GRADES: Record<Grade, GradeDef> = {
 	tomb: {tint: '#ff9a44', mode: 'multiply', o: 0.22, vig: '#100602', vigO: 0.92, grain: 0.62, haze: 0.03, flick: 0.07, css: 'saturate(0.86) sepia(0.1)'},
 	blood: {tint: '#c0281c', mode: 'multiply', o: 0.5, vig: '#160101', vigO: 0.94, grain: 0.55, haze: 0.0, flick: 0.05, css: 'saturate(0.9) contrast(1.05)'},
 	night: {tint: '#3d5fb8', mode: 'multiply', o: 0.26, vig: '#02040f', vigO: 0.9, grain: 0.3, dust: 0.55, haze: 0.0, css: 'saturate(0.88)'},
+	lapis: {tint: '#6a86d8', mode: 'soft-light', o: 0.25, vig: '#040818', vigO: 0.85, grain: 0.4, dust: 0.35, haze: 0.0, css: 'saturate(0.9) sepia(0.06)'},
 	reeds: {tint: '#dfe58e', mode: 'soft-light', o: 0.32, vig: '#1c260a', vigO: 0.55, grain: 0.58, haze: 0.07, css: 'saturate(0.86) sepia(0.08)'},
 };
 const TEX = {plaster: 'ep60/plaster.jpg', papyrus: 'ep60/papyrus.jpg', wear: 'ep60/wear.png', grain: 'ep60/grain.jpg', dust: 'ep60/dust.jpg'};
@@ -186,10 +187,12 @@ export type StageProps = {
 	screen?: React.ReactNode;
 	sub?: Sub; stamp?: Stamp; tags?: Tag[]; seal?: boolean;
 	wear?: number; stain?: number; wobble?: number; frame?: boolean; flickSeed?: number;
+	/** world-space darkness (multiply) laid over the paint before the light layer: lamps and glows then carve light pools out of it */
+	dark?: number; darkC?: string;
 };
 /** Composes a scene at 1440 × 1080: world under a camera (pan/zoom), the aged-paper finish (texture ground, paint loss, stains,
     hand-painted wobble), the mood grade (tint, vignette, torch flicker), ONE fixed grain image, then the frame on top. */
-export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster', bg = 'plaster', ground, children, light, screen, sub, stamp, tags = [], seal = true, wear = 0.9, stain = 0.42, wobble = 2.4, frame = true, flickSeed = 0}) => {
+export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster', bg = 'plaster', ground, children, light, screen, sub, stamp, tags = [], seal = true, wear = 0.9, stain = 0.42, wobble = 2.4, frame = true, flickSeed = 0, dark = 0, darkC = '#2A1408'}) => {
 	const G = GRADES[grade], z = cam.z;
 	const vx0 = cam.x - FW / 2 / z - 40, vy0 = cam.y - PIC_CY / z - 40, vw = FW / z + 80, vh = FH / z + 80;
 	const tex = bg === 'plaster' || bg === 'papyrus' ? bg : null;
@@ -204,7 +207,7 @@ export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster',
 				<pattern id="p60-papyrus" patternUnits="userSpaceOnUse" width={2048} height={1024}><image href={staticFile(TEX.papyrus)} width={2048} height={1024} /></pattern>
 				<pattern id="p60-wear" patternUnits="userSpaceOnUse" width={2048} height={1024} x={-300} y={-120}><image href={staticFile(TEX.wear)} width={2048} height={1024} /></pattern>
 				<filter id="f60-wob" x="-2%" y="-2%" width="104%" height="104%" filterUnits="objectBoundingBox"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves={2} seed={4} result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale={wobble} xChannelSelector="R" yChannelSelector="G" /></filter>
-				<radialGradient id="g60-vig" cx="0.47" cy="0.47" r="0.72"><stop offset="0.5" stopColor={G.vig} stopOpacity={0} /><stop offset="0.82" stopColor={G.vig} stopOpacity={G.vigO * 0.55} /><stop offset="1" stopColor={G.vig} stopOpacity={G.vigO} /></radialGradient>
+				<radialGradient id="g60-vig" cx="0.47" cy="0.46" r="0.72"><stop offset="0.42" stopColor={G.vig} stopOpacity={0} /><stop offset="0.82" stopColor={G.vig} stopOpacity={G.vigO * 0.55} /><stop offset="1" stopColor={G.vig} stopOpacity={G.vigO} /></radialGradient>
 				<GlowDefs />
 			</defs>
 			<rect width={FW} height={FH} fill={ground ?? (tex ? PAL.plaster : bg)} />
@@ -214,6 +217,7 @@ export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster',
 				{wear > 0 && <rect x={vx0} y={vy0} width={vw} height={vh} fill="url(#p60-wear)" opacity={wear} />}
 				{stain > 0 && <rect x={vx0} y={vy0} width={vw} height={vh} fill={`url(#p60-${tex ?? 'plaster'})`} opacity={stain} style={{mixBlendMode: 'multiply'}} />}
 				{G.haze > 0 && <rect x={vx0} y={vy0} width={vw} height={vh} fill="#F3E4C2" opacity={G.haze} />}
+				{dark > 0 && <rect x={vx0} y={vy0} width={vw} height={vh} fill={darkC} opacity={dark} style={{mixBlendMode: 'multiply'}} />}
 				{light}
 			</g>
 			{/* grade: tint, vignette, torch flicker, fixed grain */}

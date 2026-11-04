@@ -1,7 +1,9 @@
 import React from 'react';
-import {God, CAST, Cast, POSES} from './rig60';
+import {God, CAST, Cast, POSES, SHAPES} from './rig60';
+const MK = 1.18; // mummy mask scale (head units)
 import {V, M, T, R, chain, ap, mx, sp, poly, Pt, PAL, Role, lerp, sm, cl} from './geo60';
 import {Flame, Glow, rng} from './frame60';
+import {GLYPH_D} from './props60';
 import {judgePose} from './cast60';
 
 /* ep60 · 4:3 set props in the tomb-painting paint (ink outline under a flat fill, like the rig).
@@ -17,12 +19,14 @@ export const STONE = {alab: '#EDE3CC', alab2: '#D8C9A8', scarab: '#3F7F5C', scar
 
 /* ---------------- the mummy, lying on its back (profile), head to +x; origin = bed surface under the feet ---------------- */
 export const MUMMY_LEN = 17.6;
-export const Mummy: React.FC<{x: number; y: number; s: number; heart?: number; t?: number; flip?: 1 | -1}> = ({x, y, s, heart = 0, t = 0, flip = 1}) => {
+export const Mummy: React.FC<{x: number; y: number; s: number; heart?: number; t?: number; flip?: 1 | -1; masked?: boolean}> = ({x, y, s, heart = 0, t = 0, flip = 1, masked = true}) => {
 	const c = cx(s);
 	const body = sp([[0.3, 0, 1], [0.0, -0.9], [0.25, -2.3], [0.85, -2.75], [1.6, -2.3], [3.2, -2.05], [5.6, -2.25], [7.6, -2.55], [9.8, -2.7], [11.8, -3.05], [13.2, -3.35], [14.3, -3.2], [15.0, -2.85], [15.4, 0, 1]], true, 0.16);
-	const head = sp([[14.6, 0, 1], [14.5, -2.6], [15.2, -3.55], [16.2, -3.75], [16.75, -4.05], [17.1, -4.45], [17.2, -4.15], [17.55, -3.85], [17.7, -3.3], [17.85, -2.6], [18.3, -2.1], [18.6, -1.0], [18.5, 0, 1]], true, 0.16);
-	const face = sp([[16.05, -3.55], [16.7, -3.95], [17.05, -4.4], [17.2, -4.15], [17.5, -3.9], [17.62, -3.4], [17.7, -2.85], [17.2, -2.6], [16.5, -2.8]], true, 0.18);
-	const cloth = sp([[15.0, 0, 1], [14.85, -2.2], [15.4, -3.3], [16.0, -3.62], [16.2, -3.0], [16.6, -2.6], [17.6, -2.55], [18.2, -2.1], [18.55, -1.0], [18.45, 0, 1]], true, 0.16);
+		// the head lies on its back: crown toward +x, the face's profile looking up (nose at -y); striped headcloth framing a gold mask
+		const cloth = sp([[14.95, 0, 1], [14.85, -1.6], [15.15, -2.75], [15.7, -3.0], [16.6, -3.05], [17.5, -3.2], [17.98, -3.38], [18.42, -2.7], [18.68, -1.4], [18.58, 0, 1]], true, 0.16);
+	const face = sp([[15.3, -2.92], [15.55, -3.24, 1], [15.85, -3.36], [16.0, -3.3, 1], [16.15, -3.44], [16.32, -3.48, 1], [16.52, -3.98, 1], [16.86, -3.62], [17.05, -3.53], [17.3, -3.65], [17.66, -3.53], [17.9, -3.3], [17.62, -2.72], [16.8, -2.52], [15.9, -2.58]], true, 0.18);
+	const wrapHead = sp([[14.7, 0, 1], [14.55, -2.3], [15.05, -3.1], [16.0, -3.45], [16.7, -3.75], [17.0, -3.95], [17.6, -3.85], [18.25, -3.3], [18.62, -1.6], [18.55, 0, 1]], true, 0.16);
+	const hid = `mumh${Math.round(x)}_${Math.round(y)}`;
 	const cid = `mum${Math.round(x)}_${Math.round(y)}`;
 	const wraps: React.ReactNode[] = [];
 	for (let i = -6; i < 30; i++) { const x0 = i * 0.62; wraps.push(<line key={'a' + i} x1={x0} y1={0} x2={x0 + 2.6} y2={-4} stroke={PAL.linen2} strokeWidth={c.LW * 1.6} />, <line key={'b' + i} x1={x0 + 2.6} y1={0} x2={x0} y2={-4} stroke="#CFC2A2" strokeWidth={c.LW * 1.1} opacity={0.8} />); }
@@ -39,22 +43,33 @@ export const Mummy: React.FC<{x: number; y: number; s: number; heart?: number; t
 		{/* broad collar across the chest, the cloth and gold mask */}
 		<path d={sp([[13.2, -3.32], [14.6, -3.15], [15.1, -2.2], [14.9, -0.9], [14.3, -1.0], [14.4, -2.2], [13.6, -2.7]])} fill={PAL.blue} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
 		{[0.25, 0.5, 0.75].map((u) => <path key={u} d={`M${13.2 + u * 0.8} ${-3.3 + u * 0.4}Q${14.3 + u * 0.3} ${-2.6} ${14.3 + u * 0.3} ${-1.0}`} fill="none" stroke={[PAL.red, PAL.gold, PAL.green][Math.round(u * 4) - 1]} strokeWidth={c.LW * 2} />)}
-		<Solid d={cloth} r={PAL.blue} c={c} />
-		{[15.6, 16.2, 16.8, 17.4, 18.0].map((xx) => <path key={xx} d={`M${xx} ${xx < 16.1 ? -3.2 : -2.6}L${xx + 0.25} 0`} stroke={PAL.gold} strokeWidth={c.LW * 2.4} />)}
-		<Solid d={face} r="gold" c={c} />
-		<path d="M16.6 -3.45Q16.9 -3.62 17.1 -3.5" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} />
-		<path d="M16.55 -3.25Q16.85 -3.34 17.1 -3.22L16.85 -3.1Z" fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW} />
-		<path d="M17.48 -3.6L17.62 -3.48" stroke={PAL.ink} strokeWidth={c.LW} />
-		<path d={sp([[17.2, -2.62], [17.35, -2.0], [17.25, -1.6, 1], [17.05, -1.65], [17.05, -2.3]])} fill={PAL.blue} stroke={PAL.ink} strokeWidth={c.LW} />
+				{masked ? <g>
+			{/* the gold mask = the cast's own head + tripartite wig, laid face-up: head frame (x, y) → (-y, -x) (a mirrored quarter turn) */}
+			<Solid d={sp([[14.9, 0, 1], [14.95, -1.3], [15.6, -1.5], [17.6, -1.6], [18.3, -1.2], [18.45, 0, 1]], true, 0.16)} r={PAL.blue} c={c} />
+			{[15.4, 15.9, 16.4, 16.9, 17.4, 17.9].map((xx) => <rect key={xx} x={xx} y={-1.45} width={0.24} height={1.45} fill={PAL.gold} />)}
+			<g transform={`matrix(0,${-MK},${-MK},0,15.25,-2.2)`}>
+				<Solid d={SHAPES.human} r="gold" c={{OW: c.OW / MK, LW: c.LW / MK}} />
+				<clipPath id={hid}><path d={SHAPES.wigTri} /></clipPath>
+				<Solid d={SHAPES.wigTri} r="gold" c={{OW: c.OW / MK, LW: c.LW / MK}} />
+				<g clipPath={`url(#${hid})`}>{Array.from({length: 14}, (_, i) => <path key={i} d={`M${0.9 - i * 0.2} -2.9L${0.2 - i * 0.2} 2.2`} stroke={PAL.blue} strokeWidth={0.11} />)}</g>
+				<path d="M0.74 -1.62Q0.95 -2.0 0.6 -2.5" fill="none" stroke={PAL.gold2} strokeWidth={0.1} />
+				<path d={sp([[0.52, -1.17, 1], [0.78, -1.35], [1.08, -1.32], [1.22, -1.16, 1], [1.02, -1.02], [0.72, -1.04]], true, 0.2)} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW / MK * 1.4} />
+				<circle cx={0.96} cy={-1.18} r={0.12} fill={PAL.ink} />
+				<path d="M0.52 -1.17L0.12 -1.08L0.2 -0.98Z M1.25 -1.5Q0.8 -1.62 0.36 -1.5" fill={PAL.ink} stroke={PAL.ink} strokeWidth={c.LW / MK * 1.4} />
+				<path d="M1.2 -0.5L1.0 -0.5M1.31 -0.8Q1.24 -0.74 1.26 -0.84" fill="none" stroke={PAL.ink} strokeWidth={c.LW / MK} />
+				<Solid d={sp([[1.0, -0.06, 1], [1.24, 0.0], [1.3, 0.55], [1.38, 1.0], [1.5, 1.12], [1.5, 1.28], [1.28, 1.28], [1.12, 1.1], [1.04, 0.5]])} r="blue" c={{OW: c.OW / MK, LW: c.LW / MK}} />
+				<rect x={-0.15} y={-2.62} width={0.9} height={0.14} fill={PAL.blue} transform="rotate(-8)" />
+			</g>
+		</g> : <g><Solid d={wrapHead} r="#E9DDBF" c={c} />{[15.4, 16.0, 16.6, 17.2, 17.8].map((xx) => <path key={xx} d={`M${xx} ${-3.6 + Math.abs(xx - 17) * 0.1}L${xx + 0.6} 0`} stroke={PAL.linen2} strokeWidth={c.LW * 1.6} />)}</g>}
 	</g>;
 };
 /** the lion bier: lion head at +x end, lion legs, tail at the foot end; origin = floor under the foot end; bed top at -BIER_H */
 export const BIER_H = 5.2;
-export const LionBier: React.FC<{x: number; y: number; s: number; len?: number; flip?: 1 | -1}> = ({x, y, s, len = 19.4, flip = 1}) => {
+export const LionBier: React.FC<{x: number; y: number; s: number; len?: number; flip?: 1 | -1}> = ({x, y, s, len = 20.2, flip = 1}) => {
 	const c = cx(s), top = -BIER_H;
 	const leg = (lx: number, front: boolean) => sp([[lx - 0.55, top + 0.6, 1], [lx + 0.65, top + 0.6, 1], [lx + 0.55, top + 2.2], [lx + 0.3, top + 3.4], [lx + 0.45, -0.6], [lx + 1.25 * (front ? 1 : -1), -0.45], [lx + 1.3 * (front ? 1 : -1), 0, 1], [lx - 0.35 * (front ? 1 : -1), 0, 1], [lx - 0.3, top + 3.2], [lx - 0.62, top + 1.8]], true, 0.16);
-	const head = sp([[len - 1.1, top + 0.1, 1], [len - 0.9, top - 1.4], [len - 0.4, top - 2.6], [len + 0.4, top - 3.1], [len + 1.2, top - 2.95], [len + 1.75, top - 2.5], [len + 1.85, top - 2.05], [len + 1.45, top - 1.65], [len + 1.2, top - 0.9], [len + 0.6, top + 0.15, 1]], true, 0.16);
-	const mane = sp([[len - 1.1, top + 0.1, 1], [len - 1.3, top - 1.6], [len - 0.6, top - 2.9], [len + 0.3, top - 3.15], [len + 0.55, top - 2.2], [len + 0.25, top - 1.0], [len + 0.4, top + 0.15, 1]], true, 0.16);
+		const head = sp([[len - 0.5, top + 0.1, 1], [len - 0.6, top - 1.6], [len - 0.1, top - 2.8], [len + 0.7, top - 3.25], [len + 1.5, top - 3.05], [len + 2.0, top - 2.55], [len + 2.15, top - 2.0], [len + 2.05, top - 1.55, 1], [len + 1.6, top - 1.3], [len + 1.45, top - 0.75], [len + 0.9, top + 0.15, 1]], true, 0.16);
+	const mane = sp([[len - 1.4, top + 0.1, 1], [len - 1.75, top - 1.4], [len - 1.3, top - 2.9], [len - 0.4, top - 3.65], [len + 0.55, top - 3.6], [len + 0.3, top - 2.4], [len + 0.0, top - 1.0], [len + 0.3, top + 0.15, 1]], true, 0.16);
 	const tail = sp([[-0.2, top + 0.2], [-1.0, top - 0.6], [-1.5, top - 1.8], [-1.1, top - 2.7], [-0.75, top - 2.5], [-1.1, top - 1.8], [-0.7, top - 0.9], [0.1, top + 0.55]], true, 0.18);
 	return <g transform={at(x, y, s, flip)}>
 		<Solid d={tail} r="lion" c={c} />
@@ -63,11 +78,16 @@ export const LionBier: React.FC<{x: number; y: number; s: number; len?: number; 
 		<Solid d={rect(-0.2, top, len + 0.6, top + 0.9)} r="lion" c={c} />
 		<path d={`M0 ${top + 0.45}L${len + 0.4} ${top + 0.45}`} stroke={PAL.lion2} strokeWidth={c.LW * 2.4} />
 		{Array.from({length: 9}, (_, i) => <rect key={i} x={1.5 + i * 1.8} y={top + 0.25} width={0.9} height={0.4} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} opacity={0.85} />)}
-		<Solid d={mane} r="lion2" c={c} /><Solid d={head} r="lion" c={c} />
-		<path d={`M${len + 0.55} ${top - 2.45}Q${len + 0.8} ${top - 2.6} ${len + 1.0} ${top - 2.45}`} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.4} />
-		<circle cx={len + 0.8} cy={top - 2.42} r={0.1} fill={PAL.ink} />
-		<path d={`M${len + 1.8} ${top - 2.0}L${len + 1.35} ${top - 1.95}`} stroke={PAL.ink} strokeWidth={c.LW} />
-		{[0.0, 0.5, 1.0].map((k) => <path key={k} d={`M${len - 0.9 + k * 0.3} ${top - 2.5 + k * 0.8}Q${len - 0.2 + k * 0.2} ${top - 2.0 + k * 0.8} ${len - 0.7 + k * 0.3} ${top - 1.2 + k * 0.8}`} fill="none" stroke={PAL.ink} strokeWidth={c.LW} opacity={0.6} />)}
+				<Solid d={mane} r="lion2" c={c} />
+		{[-150, -120, -90, -60, -35].map((a, i) => { const r = a * Math.PI / 180; return <path key={i} d={`M${len - 0.4} ${top - 1.6}L${len - 0.4 + Math.cos(r) * 1.9} ${top - 1.6 + Math.sin(r) * 1.9}`} stroke={PAL.ink} strokeWidth={c.LW} opacity={0.55} />; })}
+		<Solid d={sp([[len + 0.15, top - 3.0], [len + 0.3, top - 3.7], [len + 0.85, top - 3.55], [len + 0.85, top - 3.15]], true, 0.2)} r="lion" c={c} />
+		<Solid d={head} r="lion" c={c} />
+		<path d={`M${len + 0.95} ${top - 2.55}Q${len + 1.2} ${top - 2.72} ${len + 1.45} ${top - 2.55}Q${len + 1.2} ${top - 2.45} ${len + 0.95} ${top - 2.55}Z`} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
+		<circle cx={len + 1.22} cy={top - 2.57} r={0.08} fill={PAL.ink} />
+		<path d={`M${len + 0.85} ${top - 2.8}Q${len + 1.2} ${top - 2.95} ${len + 1.55} ${top - 2.78}`} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.3} />
+		<ellipse cx={len + 2.05} cy={top - 1.98} rx={0.16} ry={0.12} fill={PAL.ink} />
+		<path d={`M${len + 2.05} ${top - 1.58}Q${len + 1.75} ${top - 1.5} ${len + 1.45} ${top - 1.62}`} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
+		{[0, 1, 2].map((k) => <circle key={k} cx={len + 1.65 + k * 0.16} cy={top - 1.85 + k * 0.05} r={0.045} fill={PAL.ink} />)}
 	</g>;
 };
 /* ---------------- canopic jar (alabaster) with one of the Four Sons of Horus on the lid; origin = base centre ---------------- */
@@ -143,42 +163,53 @@ export const Lamp: React.FC<{x: number; y: number; s?: number; t: number; seed?:
 </g>;
 
 /* ---------------- the heart scarab (green stone, gold mount): top view, or the inscribed base; origin = centre ---------------- */
-export const HeartScarab: React.FC<{x: number; y: number; s: number; flip?: number; t?: number; lines?: number; glint?: number}> = ({x, y, s, flip = 0, t = 0, lines = 1, glint = 0}) => {
+/** horizontal lines of incised glyphs inside a clip; reveal 0..1 writes them line by line */
+const GlyphLines: React.FC<{x0: number; x1: number; y0: number; rows: number; cell: number; seed: number; color: string; reveal?: number; rowGap?: number}> = ({x0, x1, y0, rows, cell, seed, color, reveal = 1, rowGap = 1.18}) => {
+	const R = rng(seed), keys = Object.keys(GLYPH_D), out: React.ReactNode[] = [];
+	for (let j = 0; j < rows; j++) { const show = cl(reveal * rows - j); if (show <= 0) continue;
+		for (let x = x0; x < x1 - cell * 0.8; x += cell * (0.82 + R() * 0.3)) { const g = GLYPH_D[keys[Math.floor(R() * keys.length)]];
+			out.push(<path key={`${j}.${x}`} d={g.d} fill={color} transform={`translate(${x},${y0 + j * cell * rowGap}) scale(${cell})`} opacity={show} />); } }
+	return <g>{out}</g>;
+};
+export const HeartScarab: React.FC<{x: number; y: number; s: number; flip?: number; t?: number; lines?: number; glint?: number; id?: string}> = ({x, y, s, flip = 0, t = 0, lines = 1, glint = 0, id = 'hs'}) => {
 	// flip 0 = back up (beetle), 1 = base up (inscription); the turn is a horizontal squash through 0.5
-	const kx = Math.abs(Math.cos(flip * Math.PI)), base = flip > 0.5, c = cx(s / Math.max(0.2, 1));
-	const oval = sp([[0, -4.6], [2.6, -4.0], [3.5, -1.8], [3.6, 0.6], [3.0, 3.0], [1.6, 4.4], [0, 4.7], [-1.6, 4.4], [-3.0, 3.0], [-3.6, 0.6], [-3.5, -1.8], [-2.6, -4.0]], true, 0.2);
-	const legs = [-1, 1].map((sg) => <g key={sg} stroke={PAL.ink} strokeWidth={c.LW * 1.4} fill="none" opacity={0.8}>
-		<path d={`M${sg * 2.9} -2.6L${sg * 3.9} -3.3L${sg * 4.3} -4.4`} /><path d={`M${sg * 3.4} 0.4L${sg * 4.4} 0.6L${sg * 4.7} 1.8`} /><path d={`M${sg * 3.0} 2.6L${sg * 3.8} 3.6L${sg * 3.7} 4.8`} /></g>);
-	const glyphs: React.ReactNode[] = []; const R = rng(30);
-	for (let i = 0; i < 8; i++) { const yy = -3.4 + i * 0.95, half = Math.sqrt(Math.max(0, 1 - (yy / 4.7) ** 2)) * 3.1, show = cl(lines * 8 - i);
-		glyphs.push(<line key={'l' + i} x1={-half} x2={half} y1={yy - 0.45} y2={yy - 0.45} stroke={PAL.ink} strokeWidth={c.LW * 1.2} opacity={0.6} />);
-		for (let xx = -half + 0.35; xx < half - 0.45; xx += 0.42 + R() * 0.4) { const w = 0.2 + R() * 0.35, kind = R();
-			glyphs.push(kind < 0.35 ? <ellipse key={`${i}.${xx}`} cx={xx + w / 2} cy={yy} rx={w / 2} ry={0.2} fill="none" stroke="#1B2A22" strokeWidth={c.LW * 1.6} opacity={show} />
-				: kind < 0.7 ? <path key={`${i}.${xx}`} d={`M${xx} ${yy + 0.25}L${xx + w * 0.5} ${yy - 0.3}L${xx + w} ${yy + 0.25}`} fill="none" stroke="#1B2A22" strokeWidth={c.LW * 1.6} opacity={show} />
-					: <rect key={`${i}.${xx}`} x={xx} y={yy - 0.28} width={0.12} height={0.56} fill="#1B2A22" opacity={show} />); } }
+	const kx = Math.abs(Math.cos(flip * Math.PI)), base = flip > 0.5, c = cx(s);
+		const oval = sp([[0, -4.75], [2.25, -4.25], [3.25, -2.4], [3.62, 0.2], [3.35, 2.8], [2.05, 4.35], [0, 4.8], [-2.05, 4.35], [-3.35, 2.8], [-3.62, 0.2], [-3.25, -2.4], [-2.25, -4.25]], true, 0.2);
+	const clyp = sp([[-2.0, -3.3, 1], [-1.4, -4.25], [0, -4.72], [1.4, -4.25], [2.0, -3.3, 1], [1.0, -3.05], [-1.0, -3.05]], true, 0.2);
+	const prono = sp([[-3.25, -1.05, 1], [-2.85, -2.6], [-2.0, -3.3, 1], [-1.0, -3.05], [1.0, -3.05], [2.0, -3.3, 1], [2.85, -2.6], [3.25, -1.05, 1], [0, -0.8]], true, 0.2);
+	const gid = `${id}-g`, bid = `${id}-c`;
 	return <g transform={`translate(${x},${y}) scale(${s * Math.max(0.04, kx)},${s})`}>
-		<ellipse cx={0.4} cy={0.6} rx={4.6} ry={5.2} fill="#000" opacity={0.28} />
-		{!base && legs}
+		<defs>
+			<radialGradient id={gid} cx="0.4" cy="0.36" r="0.72"><stop offset="0" stopColor={base ? '#5FAE7E' : '#86D69C'} /><stop offset="0.5" stopColor="#2F9160" /><stop offset="1" stopColor="#144A2E" /></radialGradient>
+			<clipPath id={bid}><path d={oval} /></clipPath>
+		</defs>
+		<ellipse cx={0.5} cy={0.7} rx={4.5} ry={5.3} fill="#000" opacity={0.3} />
 		<path d={oval} fill={PAL.ink} stroke={PAL.ink} strokeWidth={c.OW * 2.4} />
-		<path d={oval} fill={STONE.scarab} />
+		<path d={oval} fill={`url(#${gid})`} />
 		{!base ? <g>
-			{/* head (clypeus with the serrated edge), pronotum, elytra split, carved lines */}
-			<path d={sp([[-1.8, -3.6], [-1.0, -4.5], [0, -4.75], [1.0, -4.5], [1.8, -3.6], [1.2, -3.1], [0, -2.95], [-1.2, -3.1]], true, 0.2)} fill={STONE.scarab2} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
-			{[-1.2, -0.6, 0, 0.6, 1.2].map((xx) => <path key={xx} d={`M${xx - 0.2} ${-4.55 + Math.abs(xx) * 0.25}L${xx} ${-4.9 + Math.abs(xx) * 0.25}L${xx + 0.2} ${-4.55 + Math.abs(xx) * 0.25}`} fill={STONE.scarab2} stroke={PAL.ink} strokeWidth={c.LW} />)}
-			<path d="M-3.3 -1.1Q0 -0.4 3.3 -1.1" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} />
-			<path d="M0 -1.0L0 4.6" stroke={PAL.ink} strokeWidth={c.LW * 1.6} />
-			<path d="M-0.35 -0.75L-0.35 -0.3M0.35 -0.75L0.35 -0.3" stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
-			<path d="M-2.2 -2.6Q-0.6 -3.3 0.6 -2.6" fill="none" stroke={STONE.scarabHi} strokeWidth={c.LW * 3} opacity={0.6} />
-			<path d="M-2.6 0.6Q-2.4 2.6 -1.0 3.7" fill="none" stroke={STONE.scarabHi} strokeWidth={c.LW * 4} opacity={0.45} />
-			<path d="M1.0 0.2Q1.4 2.2 0.7 3.6" fill="none" stroke={STONE.scarabHi} strokeWidth={c.LW * 2} opacity={0.35} />
+			{/* carved: clypeus with its serrated edge and the eyes, the pronotum, the split of the wing cases, the humeral notches */}
+			<path d={clyp} fill="#2E5E43" stroke={PAL.ink} strokeWidth={c.LW * 2} strokeLinejoin="round" />
+			{[-1.3, -0.65, 0, 0.65, 1.3].map((xx) => <path key={xx} d={`M${xx - 0.24} ${-4.42 + Math.abs(xx) * 0.22}L${xx} ${-4.95 + Math.abs(xx) * 0.24}L${xx + 0.24} ${-4.42 + Math.abs(xx) * 0.22}Z`} fill="#2E5E43" stroke={PAL.ink} strokeWidth={c.LW * 1.2} strokeLinejoin="round" />)}
+			{[-1, 1].map((sg) => <ellipse key={sg} cx={sg * 1.75} cy={-3.15} rx={0.32} ry={0.22} fill="#173323" stroke={PAL.ink} strokeWidth={c.LW} />)}
+			<path d={prono} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 2.2} strokeLinejoin="round" />
+			<path d="M-3.1 -0.85Q0 -0.5 3.1 -0.85" fill="none" stroke={STONE.scarabHi} strokeWidth={c.LW * 1.4} opacity={0.6} />
+			<path d="M0 -0.78L0 4.72" stroke={PAL.ink} strokeWidth={c.LW * 2.2} /><path d="M0.12 -0.6L0.12 4.6" stroke={STONE.scarabHi} strokeWidth={c.LW} opacity={0.5} />
+			{[-1, 1].map((sg) => <path key={sg} d={`M${sg * 0.18} -0.75L${sg * 0.55} -0.2L${sg * 0.18} 0.25`} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} />)}
+			{[-1, 1].map((sg) => <path key={'e' + sg} d={`M${sg * 0.35} 4.55Q${sg * 2.8} 3.6 ${sg * 3.25} 0.2`} fill="none" stroke={PAL.ink} strokeWidth={c.LW} opacity={0.5} />)}
+			{/* polished sheen */}
+			<path d="M-2.4 -2.4Q-1.0 -3.0 0.4 -2.6" fill="none" stroke="#E8FFF0" strokeWidth={c.LW * 3} opacity={0.5} strokeLinecap="round" />
+			<path d="M-2.5 0.4Q-2.5 2.4 -1.2 3.6" fill="none" stroke="#E8FFF0" strokeWidth={c.LW * 4.5} opacity={0.35} strokeLinecap="round" />
+			<path d="M1.1 0.4Q1.6 2.0 1.0 3.4" fill="none" stroke="#E8FFF0" strokeWidth={c.LW * 2.2} opacity={0.25} strokeLinecap="round" />
 		</g> : <g>
-			<path d={oval} fill="none" stroke={PAL.gold} strokeWidth={c.LW * 5} />
-			<path d={oval} fill="none" stroke={PAL.gold2} strokeWidth={c.LW * 1.2} transform="scale(0.93)" />
-			{glyphs}
+			<g clipPath={`url(#${bid})`}><GlyphLines x0={-3.3} x1={3.4} y0={-4.1} rows={8} cell={0.86} seed={30} color="#10241A" reveal={lines} />
+				{Array.from({length: 9}, (_, j) => <line key={j} x1={-4} x2={4} y1={-4.15 + j * 0.86 * 1.18} y2={-4.15 + j * 0.86 * 1.18} stroke="#10241A" strokeWidth={c.LW * 1.2} opacity={0.55} />)}</g>
+			<path d={oval} fill="none" stroke={STONE.scarabHi} strokeWidth={c.LW * 1.4} opacity={0.5} transform="scale(0.94)" />
 		</g>}
 		{/* gold mount band around the rim */}
-		{!base && <path d={oval} fill="none" stroke={PAL.gold} strokeWidth={c.LW * 3.4} opacity={0.95} />}
-		{glint > 0 && <g style={{mixBlendMode: 'screen'}} opacity={glint}><ellipse cx={-1.6 + 0.6 * Math.sin(t * 0.7)} cy={-1.8} rx={1.4} ry={0.6} fill="url(#g60-white)" /><circle cx={2.2} cy={-3.2} r={0.5} fill="url(#g60-white)" /></g>}
+		<path d={oval} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 5.6} />
+		<path d={oval} fill="none" stroke={PAL.gold} strokeWidth={c.LW * 3.8} />
+		<path d={oval} fill="none" stroke={PAL.goldHi} strokeWidth={c.LW * 1.0} opacity={0.8} />
+		{glint > 0 && <g style={{mixBlendMode: 'screen'}} opacity={glint}><ellipse cx={-1.6 + 0.8 * Math.sin(t * 0.7)} cy={-2.0} rx={1.5} ry={0.7} fill="url(#g60-white)" /><circle cx={2.3} cy={-3.0 + 0.3 * Math.sin(t)} r={0.6} fill="url(#g60-white)" /></g>}
 	</g>;
 };
 
@@ -198,14 +229,14 @@ export const Barque: React.FC<{x: number; y: number; s: number; t: number; ra?: 
 		<path d="M-12.5 -0.9Q0 1.4 12.5 -0.9" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 3} />
 		{umbel(16.1, -6.8, 1)}{umbel(-16.2, -6.4, -1)}
 		{/* shrine (cabin) */}
-		<Solid d={rect(-4.2, -9.6, 4.2, 0.2)} r="#E9DDBF" c={c} />
-		<Solid d={rect(-4.8, -10.4, 4.8, -9.4)} r="gold" c={c} />
-		{Array.from({length: 8}, (_, i) => <rect key={i} x={-4.1 + i * 1.05} y={-10.25} width={0.6} height={0.7} fill={[PAL.blue, PAL.red][i % 2]} />)}
+		<Solid d={rect(-4.2, -12.4, 4.2, 0.2)} r="#E9DDBF" c={c} />
+		<Solid d={rect(-4.8, -13.2, 4.8, -12.2)} r="gold" c={c} />
+		{Array.from({length: 8}, (_, i) => <rect key={i} x={-4.1 + i * 1.05} y={-13.05} width={0.6} height={0.7} fill={[PAL.blue, PAL.red][i % 2]} />)}
 		<g>{children}</g>
 		{/* Mehen: the coiled serpent arching over the shrine */}
-		<path d="M-5.2 -0.4Q-6.6 -13.0 0 -13.4Q6.4 -13.6 5.4 -2.6" fill="none" stroke={PAL.ink} strokeWidth={c.OW * 5.4} strokeLinecap="round" />
-		<path d="M-5.2 -0.4Q-6.6 -13.0 0 -13.4Q6.4 -13.6 5.4 -2.6" fill="none" stroke={PAL.green} strokeWidth={c.OW * 3.6} strokeLinecap="round" />
-		<path d="M-5.2 -0.4Q-6.6 -13.0 0 -13.4Q6.4 -13.6 5.4 -2.6" fill="none" stroke={PAL.gold} strokeWidth={c.OW * 1.2} strokeDasharray="0.5 0.7" />
+		<path d="M-5.2 -0.4Q-6.8 -16.2 0 -16.6Q6.6 -16.8 5.4 -2.6" fill="none" stroke={PAL.ink} strokeWidth={c.OW * 5.4} strokeLinecap="round" />
+		<path d="M-5.2 -0.4Q-6.8 -16.2 0 -16.6Q6.6 -16.8 5.4 -2.6" fill="none" stroke={PAL.green} strokeWidth={c.OW * 3.6} strokeLinecap="round" />
+		<path d="M-5.2 -0.4Q-6.8 -16.2 0 -16.6Q6.6 -16.8 5.4 -2.6" fill="none" stroke={PAL.gold} strokeWidth={c.OW * 1.2} strokeDasharray="0.5 0.7" />
 		<Solid d={sp([[5.0, -2.8], [5.9, -2.6], [6.4, -3.5], [6.0, -4.2], [5.3, -4.0]])} r="green" c={c} />
 	</g>;
 };
@@ -240,8 +271,9 @@ export const Serpent: React.FC<{x: number; y: number; s: number; t: number; flip
 export const DuatGate: React.FC<{x: number; gy: number; h: number; w: number; t: number; seed?: number; glow?: number}> = ({x, gy, h, w, t, seed = 0, glow = 1}) => {
 	const tw = w * 1.15, top = gy - h, k = flickK(t, seed);
 	const tower = (x0: number, sg: number) => <g>
-		<path d={poly([[x0, gy], [x0 + sg * tw, gy], [x0 + sg * tw * 0.86, top], [x0, top]])} fill={STONE.night2} stroke={PAL.ink} strokeWidth={3} />
-		<path d={poly([[x0, top], [x0 + sg * tw * 0.86, top], [x0 + sg * tw * 0.9, top - 26], [x0, top - 26]])} fill="#2A3768" stroke={PAL.ink} strokeWidth={2.4} />
+				<path d={poly([[x0, gy], [x0 + sg * tw, gy], [x0 + sg * tw * 0.86, top], [x0, top]])} fill="#34447E" stroke={PAL.ink} strokeWidth={3} />
+		<path d={poly([[x0 + sg * 6, gy - 4], [x0 + sg * (tw - 8), gy - 4], [x0 + sg * (tw * 0.86 - 6), top + 6], [x0 + sg * 6, top + 6]])} fill="none" stroke={PAL.gold} strokeWidth={2} opacity={0.75} />
+		<path d={poly([[x0, top], [x0 + sg * tw * 0.86, top], [x0 + sg * tw * 0.9, top - 26], [x0, top - 26]])} fill="#4A5CA0" stroke={PAL.ink} strokeWidth={2.4} />
 		{Array.from({length: 6}, (_, i) => <path key={i} d={`M${x0 + sg * (10 + i * tw * 0.14)} ${top - 4}L${x0 + sg * (10 + i * tw * 0.14)} ${top - 22}`} stroke={[PAL.gold, PAL.red, PAL.turq][i % 3]} strokeWidth={3} opacity={0.7} />)}
 		{Array.from({length: 4}, (_, i) => <g key={i} opacity={0.55}><rect x={sg > 0 ? x0 + 14 : x0 - 14 - 26} y={top + 30 + i * 60} width={26} height={44} fill="none" stroke={PAL.gold} strokeWidth={1.5} />
 			<circle cx={sg > 0 ? x0 + 27 : x0 - 27} cy={top + 52 + i * 60} r={6} fill={PAL.gold} opacity={0.7} /></g>)}
@@ -334,7 +366,7 @@ export const JudgeDefs: React.FC<{s: number; t?: number; prefix?: string}> = ({s
 	<g key={i} id={`${prefix}${i}`}>
 		<path d={rect(-1.6 * s, -5.9 * s, 3.2 * s, 0)} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} stroke={PAL.ink} strokeWidth={2} transform="translate(-3,0)" />
 		<path d={rect(-1.9 * s, -6.3 * s, -1.0 * s, 0)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={1.6} transform="translate(-3,0)" />
-		<God id={`${prefix}g${i}`} cast={cst} pose={judgePose()} x={0} y={0} s={s} sec={{t: t + i * 0.7}} bProp="none" fProp="none" />
+				<God id={`${prefix}g${i}`} cast={cst} pose={judgePose()} x={0} y={0} s={s} sec={{t: t + i * 0.7}} bProp="none" fProp={i % 2 ? 'knife' : 'none'} />
 	</g>)}</defs>;
 /** a row of n judges on a dais from x0 with spacing dx, ground gy; uses JudgeDefs symbols (render JudgeDefs once per scene) */
 export const JudgeRow: React.FC<{x0: number; gy: number; n: number; dx: number; t?: number; face?: 1 | -1; prefix?: string; seed?: number; s: number}> = ({x0, gy, n, dx, t = 0, face = 1, prefix = 'jd', seed = 0, s}) => <g>
@@ -354,15 +386,14 @@ export const ScrollRoll: React.FC<{x: number; y: number; len: number; r?: number
 /** an unrolled Book of the Dead sheet: a vignette strip on top, columns of text, and BLANK spaces where the buyer's name goes
     (blank = 0..1 how strongly the empty spaces are pointed out) */
 export const OpenScroll: React.FC<{x: number; y: number; w: number; h: number; t?: number; blank?: number; name?: number}> = ({x, y, w, h, t = 0, blank = 1, name = 0}) => {
-	const R = rng(7), cols: React.ReactNode[] = [], colW = 22, n = Math.floor((w - 40) / colW), vH = h * 0.34;
-	const gaps = [3, 8, 13, 18].filter((g) => g < n);
+		const R = rng(7), GK = Object.keys(GLYPH_D), cols: React.ReactNode[] = [], colW = 22, n = Math.floor((w - 40) / colW), vH = h * 0.34;
+	const gaps = [4, 5, 12, 13].filter((g) => g < n), gapStarts = [4, 12].filter((g) => g + 1 < n);
 	for (let i = 0; i < n; i++) { const cx_ = x + 24 + i * colW + colW / 2; cols.push(<line key={'r' + i} x1={x + 24 + i * colW} x2={x + 24 + i * colW} y1={y + vH + 16} y2={y + h - 16} stroke={PAL.ink} strokeWidth={1} opacity={0.55} />);
 		for (let yy = y + vH + 24; yy < y + h - 28; yy += 18 + R() * 8) {
 			const gap = gaps.includes(i) && yy > y + vH + 60 && yy < y + vH + 150;
 			if (gap) continue;
-			const k = R(); cols.push(k < 0.4 ? <ellipse key={`${i}.${yy}`} cx={cx_} cy={yy} rx={6} ry={3.4} fill="none" stroke={PAL.ink} strokeWidth={1.8} />
-				: k < 0.7 ? <path key={`${i}.${yy}`} d={`M${cx_ - 6} ${yy + 3}L${cx_} ${yy - 4}L${cx_ + 6} ${yy + 3}`} fill="none" stroke={k < 0.55 ? PAL.red : PAL.ink} strokeWidth={1.8} />
-					: <rect key={`${i}.${yy}`} x={cx_ - 1.2} y={yy - 6} width={2.4} height={12} fill={PAL.ink} />); } }
+						const g = GLYPH_D[GK[Math.floor(R() * GK.length)]];
+			cols.push(<path key={`${i}.${yy}`} d={g.d} fill={i % 7 === 0 ? PAL.red : '#2A1912'} transform={`translate(${cx_ - 9},${yy - 9}) scale(18)`} />); } }
 	const pulse = 0.6 + 0.4 * Math.sin(t * 3);
 	return <g>
 		<path d={sp([[x, y + 4, 1], [x + w, y, 1], [x + w + 3, y + h, 1], [x + 2, y + h + 4, 1]])} fill="#EBD7A4" stroke={PAL.ink} strokeWidth={2.4} />
@@ -375,11 +406,13 @@ export const OpenScroll: React.FC<{x: number; y: number; w: number; h: number; t
 			<path d="M96 0L98 -56L112 -70L132 -78L120 -64L116 -50L118 0" /><path d="M-24 0L-16 -40L-8 0" stroke={PAL.red} />
 		</g>
 		{cols}
-		{gaps.map((g, i) => { const gx = x + 24 + g * colW + 2, gy = y + vH + 56;
+		{gapStarts.map((g, i) => { const gx = x + 24 + g * colW2 + 2, gy = y + vH + 56, colW2 = colW * 2;
 			return <g key={i}>
-				<rect x={gx} y={gy} width={colW - 4} height={96} rx={4} fill={name > 0 ? 'none' : '#F6E8C0'} stroke={PAL.red} strokeWidth={2} strokeDasharray="6 4" opacity={blank * (0.55 + 0.45 * pulse)} />
-				{blank > 0 && <rect x={gx - 3} y={gy - 3} width={colW + 2} height={102} rx={6} fill="url(#g60-gold)" opacity={blank * 0.35 * pulse} style={{mixBlendMode: 'screen'}} />}
-				{name > 0 && <g opacity={name}>{[0, 1, 2].map((k) => <ellipse key={k} cx={gx + colW / 2 - 2} cy={gy + 18 + k * 28} rx={6} ry={4} fill="none" stroke={PAL.red} strokeWidth={2} />)}</g>}
+												<rect x={gx} y={gy} width={colW2 - 4} height={96} rx={4} fill={name > 0 ? 'none' : '#FFF6DC'} stroke={PAL.ink} strokeWidth={5} opacity={blank * (0.35 + 0.3 * pulse)} />
+				<rect x={gx} y={gy} width={colW2 - 4} height={96} rx={4} fill="none" stroke="#FFFFFF" strokeWidth={3} opacity={blank * (0.5 + 0.5 * pulse)} />
+				{name <= 0 && <ellipse cx={gx + colW2 / 2 - 2} cy={gy + 48} rx={12} ry={38} fill="none" stroke={PAL.red} strokeWidth={1.4} opacity={blank * 0.45} />}
+				{blank > 0 && <rect x={gx - 3} y={gy - 3} width={colW2 + 2} height={102} rx={6} fill="url(#g60-gold)" opacity={blank * 0.6 * pulse} style={{mixBlendMode: 'screen'}} />}
+				{name > 0 && <g opacity={name}>{[0, 1, 2].map((k) => <ellipse key={k} cx={gx + colW2 / 2 - 2} cy={gy + 18 + k * 28} rx={6} ry={4} fill="none" stroke={PAL.red} strokeWidth={2} />)}</g>}
 			</g>; })}
 		{/* the rolled ends */}
 		<rect x={x - 12} y={y - 6} width={20} height={h + 16} rx={9} fill="#D9BC7A" stroke={PAL.ink} strokeWidth={2} />
@@ -418,3 +451,50 @@ export const Basket: React.FC<{x: number; y: number; w: number; h: number; fill?
 </g>;
 export {POSES};
 export const _unused = {T, R, chain, ap, sm};
+
+/* ---------------- the Field of Reeds: oxen, the plough, a papyrus skiff ---------------- */
+/** an ox in profile facing +x (Egyptian cattle: white hide with black patches, lyre horns), walking (ph radians); origin = ground under the chest */
+export const Ox: React.FC<{x: number; y: number; s: number; ph?: number; t?: number; hide?: 'spot' | 'red'; flip?: 1 | -1}> = ({x, y, s, ph = 0, t = 0, hide = 'spot', flip = 1}) => {
+	const c = cx(s), bob = 0.12 * Math.cos(ph * 2), nod = 3 * Math.sin(ph * 2 + 0.6);
+	const body = sp([[-7.2, -7.6], [-4.2, -8.3], [-0.6, -8.2], [1.6, -8.9], [3.2, -8.6], [3.6, -7.0], [3.4, -5.2], [2.8, -4.2], [0.4, -4.0], [-3.2, -4.1], [-6.4, -4.6], [-7.6, -5.8]], true, 0.18);
+	const leg = (hx: number, a: number, k: string, front: boolean) => { const knee = front ? -2.4 : -2.6;
+		return <g key={k} transform={`translate(${hx},-4.6) rotate(${a})`}><Solid d={sp([[-0.55, -0.4, 1], [0.55, -0.4, 1], [0.42, 2.2], [0.3, 4.0], [0.42, 4.6, 1], [-0.42, 4.6, 1], [-0.28, 4.0], [front ? -0.3 : -0.55, 2.2 + knee * 0.05]], true, 0.18)} r={hide === 'red' ? '#A85A32' : '#EFE6D2'} c={c} />
+			<path d={poly([[-0.42, 4.25], [0.44, 4.25], [0.46, 4.62], [-0.44, 4.62]])} fill={PAL.ink} /></g>; };
+	const sw = (o: number) => 16 * Math.sin(ph + o);
+	const head = sp([[0, 0], [0.9, -0.6], [2.6, 0.2], [3.4, 1.4], [3.3, 2.1], [2.6, 2.3], [1.6, 1.9], [0.2, 1.6], [-0.6, 0.8]], true, 0.2);
+	const tail = sp([[-7.3, -7.2], [-7.0, -7.4], [-7.9, -4.6], [-7.6, -3.0], [-8.1, -2.6], [-8.3, -3.2], [-8.25, -4.6]], true, 0.2);
+	const fill = hide === 'red' ? '#B5643A' : '#F1E9D6';
+	return <g transform={`translate(${x},${y - bob * s}) scale(${s * flip},${s})`}>
+		<Solid d={tail} r={fill} c={c} />
+		{leg(-5.6, sw(Math.PI) * 0.8, 'lb', false)}{leg(1.8, sw(0) * 0.8, 'lf', true)}
+		<Solid d={body} r={fill} c={c} />
+		{hide === 'spot' && [[-5.0, -6.8, 1.2, 0.9], [-1.8, -7.4, 1.5, 0.8], [0.8, -5.4, 1.0, 0.7], [-3.6, -5.1, 0.9, 0.6]].map(([a, b, rx, ry], i) => <ellipse key={i} cx={a} cy={b} rx={rx} ry={ry} fill="#2A2224" />)}
+		<path d="M-6.8 -5.0Q-3 -3.6 2.6 -4.4" fill="none" stroke={PAL.ink} strokeWidth={c.LW} opacity={0.5} />
+		{leg(-4.6, sw(0) * 0.8, 'rb', false)}{leg(2.6, sw(Math.PI) * 0.8, 'rf', true)}
+		<g transform={`translate(3.0,-7.4) rotate(${nod + 18})`}>
+			<path d={sp([[0.2, 0.0], [-0.6, -1.2], [-0.2, -2.4], [0.5, -2.9], [0.8, -2.6], [0.3, -2.2], [0.1, -1.2], [0.8, -0.2]], true, 0.2)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.OW * 1.3} />
+			<path d={sp([[1.0, 0.0], [1.6, -1.2], [1.4, -2.5], [0.9, -3.0], [0.75, -2.7], [1.1, -2.3], [1.15, -1.2], [0.6, -0.2]], true, 0.2)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.OW * 1.3} />
+			<Solid d={head} r={fill} c={c} />
+			<circle cx={1.5} cy={0.5} r={0.18} fill={PAL.ink} />
+			<path d="M3.0 1.6L3.25 1.75" stroke={PAL.ink} strokeWidth={c.LW * 1.4} />
+			<ellipse cx={0.4} cy={0.15} rx={0.5} ry={0.25} fill={fill} stroke={PAL.ink} strokeWidth={c.LW} transform="rotate(-30 0.4 0.15)" />
+		</g>
+	</g>;
+};
+/** the ard plough: beam from the yoke (front) down to the share, two handles back to the ploughman; px points */
+export const Plough: React.FC<{yoke: V; share: V; grip: V}> = ({yoke, share, grip}) => <g>
+	<path d={`M${yoke[0]} ${yoke[1]}L${share[0]} ${share[1]}`} stroke={PAL.ink} strokeWidth={9} strokeLinecap="round" /><path d={`M${yoke[0]} ${yoke[1]}L${share[0]} ${share[1]}`} stroke={PAL.wood} strokeWidth={5.5} strokeLinecap="round" />
+	{[0, 9].map((o) => <g key={o}><path d={`M${share[0]} ${share[1]}L${grip[0] + o} ${grip[1] - o * 0.3}`} stroke={PAL.ink} strokeWidth={8} strokeLinecap="round" /><path d={`M${share[0]} ${share[1]}L${grip[0] + o} ${grip[1] - o * 0.3}`} stroke={PAL.wood} strokeWidth={4.5} strokeLinecap="round" /></g>)}
+	<path d={poly([[share[0] - 4, share[1] - 6], [share[0] + 26, share[1] + 4], [share[0] - 2, share[1] + 8]])} fill="#8A8278" stroke={PAL.ink} strokeWidth={2} />
+	<path d={`M${yoke[0] - 34} ${yoke[1] - 6}Q${yoke[0]} ${yoke[1] + 8} ${yoke[0] + 30} ${yoke[1] - 8}`} fill="none" stroke={PAL.ink} strokeWidth={8} /><path d={`M${yoke[0] - 34} ${yoke[1] - 6}Q${yoke[0]} ${yoke[1] + 8} ${yoke[0] + 30} ${yoke[1] - 8}`} fill="none" stroke={PAL.wood} strokeWidth={4.5} />
+</g>;
+/** a papyrus skiff (no shrine), faces +x; origin = waterline centre; len in units */
+export const Skiff: React.FC<{x: number; y: number; s: number; t: number; len?: number}> = ({x, y, s, t, len = 11}) => {
+	const c = cx(s), L = len / 2, rock = 1.5 * Math.sin(t * 1.2), bob = 0.15 * Math.sin(t * 1.7);
+	const hull = sp([[-L - 1.2, -3.2], [-L, -1.2], [-L * 0.6, 0.2], [0, 0.6], [L * 0.6, 0.2], [L, -1.2], [L + 1.4, -3.6], [L + 1.7, -3.9], [L + 1.5, -2.8], [L + 0.6, -0.2], [L * 0.6, 1.2], [0, 1.6], [-L * 0.6, 1.2], [-L - 0.4, -0.2], [-L - 1.4, -3.0], [-L - 1.6, -3.4]], true, 0.18);
+	return <g transform={`translate(${x},${y + bob * s}) rotate(${rock}) scale(${s})`}>
+		<Solid d={hull} r="green" c={c} />
+		{Array.from({length: Math.round(len)}, (_, i) => <path key={i} d={`M${-L + 0.5 + i} ${0.1 + Math.abs(-L + 0.5 + i) * -0.04}L${-L + 0.8 + i} ${1.2 - Math.abs(-L + 0.5 + i) * 0.05}`} stroke={PAL.ink} strokeWidth={c.LW * 1.6} />)}
+		<path d={`M${-L} -0.4Q0 1.0 ${L} -0.4`} fill="none" stroke={PAL.gold} strokeWidth={c.LW * 3} />
+	</g>;
+};
