@@ -1,10 +1,11 @@
 """Generate the clips listed in request.json with ElevenLabs, then transcribe each with Whisper as a check."""
-import json, os, sys, requests
+import json, os, re, sys, requests
 KEY = os.environ.get("ELEVENLABS_API_KEY", "")
 H = {"xi-api-key": KEY}
 API = "https://api.elevenlabs.io"
 req = json.load(open("request.json"))
 report = {"id": req["id"], "clips": []}
+SONGS = {}
 def log(*a): print(*a, flush=True)
 if not KEY: log("NO KEY: add the ELEVENLABS_API_KEY repository secret"); sys.exit(1)
 
@@ -75,9 +76,19 @@ for it in req["items"]:
         if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         else: rec["error"] = r.text[:400]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "upload":   # ElevenLabs Music upload (for audio-reference conditioning): {"type":"upload","name","file","extract_plan"?}
+        files = {"file": (os.path.basename(it["file"]), open(it["file"], "rb"), "audio/mpeg")}
+        data = {}
+        if it.get("extract_plan"): data["extract_composition_plan"] = it["extract_plan"]
+        r = requests.post(f"{API}/v1/music/upload", headers=H, files=files, data=data, timeout=600)
+        rec = {"name": it["name"], "type": "upload", "file_in": it["file"], "status": r.status_code}
+        if r.ok:
+            j = r.json(); SONGS[it["name"]] = j.get("song_id"); rec["song_id"] = j.get("song_id"); rec["composition_plan"] = j.get("composition_plan")
+        else: rec["error"] = r.text[:600]
+        log(json.dumps(rec, ensure_ascii=False)[:3000]); report["clips"].append(rec); continue
     if it.get("type") == "music":   # ElevenLabs Music: {"type":"music","name","text" (prompt) | "plan" (composition plan),"ms"?,"model"?,"instrumental"?}
         body = {}
-        if it.get("plan"): body["composition_plan"] = it["plan"]
+        if it.get("plan"): body["composition_plan"] = json.loads(re.sub(r'"@([A-Za-z0-9_]+)"', lambda m: json.dumps(SONGS.get(m.group(1), m.group(0))), json.dumps(it["plan"])))
         else:
             body["prompt"] = it["text"]; body["music_length_ms"] = int(it.get("ms", 30000))
             if it.get("instrumental", True): body["force_instrumental"] = True
