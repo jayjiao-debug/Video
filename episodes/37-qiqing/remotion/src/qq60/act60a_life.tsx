@@ -404,42 +404,44 @@ const MaskTop: React.FC<{x: number; y: number; s: number; id: string}> = ({x, y,
 	</g>;
 };
 export const Shot9: React.FC<ShotProps> = ({t}) => {
-	// v4 (owner 17:59): the heart scarab at its REAL size. Met 36.3.2 is 6.6 × 5.3 cm, so at 26 px per cm it is ~170 × 140 px on a chest
-	// ~1100 px (42 cm) wide; the hand (palm ~9 cm) is clearly bigger and pinches it between thumb and fingers. Start wide on the upper body,
-	// push in to the chest; it still reads as a small amulet on a big chest.
-	const SX = 640, SY = 900, SS = 18, tTap = 0.85, tR = 1.1, tF1 = 1.9;
+	// v4 (owner 17:59): the heart scarab at its REAL size. Met 36.3.2 is 6.6 × 5.3 cm: here ~250 × 190 px (≈36 px/cm), about 1/6 of the
+	// chest's width (~1180 px); the hand (back of the hand ~9 cm ≈ 320 px) is clearly bigger and pinches it between index finger and thumb.
+	// Start wide on the upper body, push in to the chest; at the end the collar is still in frame and the scarab reads as a small amulet.
+	const SX = 640, SY = 720, SS = 26, tTap = 0.85, tR = 1.1, tF1 = 1.9;
 	const frz = t > tR && t < tF1 ? 1 : 0, tt = t < tR ? t : t < tF1 ? tR : t - (tF1 - tR);
-	const cam = aimPath(t, [[-0.3, SX, 380, 720, 486, 0.46], [0.95, SX, SY - 20, 720, 470, 1.12], [2.9, SX, SY - 20, 720, 470, 1.2]]);
+	const cam = aimPath(t, [[-0.3, SX, 360, 720, 486, 0.46], [0.95, SX, SY - 60, 720, 470, 0.95], [2.9, SX, SY - 60, 720, 470, 1.02]]);
 	const desc = sm(seg(t, -0.3, tTap)), flip = 1 - sm(seg(t, 0.05, 0.7)), lift = t < tTap ? 1 - desc : 0;
-	const sc = 1 + 0.25 * lift, sx = SX + 380 * lift, sy = SY - 50 * lift;
-	const handOut = sm(seg(t, tTap + 0.1, tTap + 0.6)), handX = sx + 700 * handOut, handY = sy - 30 * handOut;
+	const sc = 1 + 0.25 * lift, sx = SX + 380 * lift, sy = SY - 40 * lift;
+	const handOut = sm(seg(t, tTap + 0.1, tTap + 0.6)), handX = sx + 800 * handOut, handY = sy - 30 * handOut;
 	const ring = seg(t, tR, tR + 0.55), ringO = (t > tR ? 1 : 0) * (1 - sm(seg(t, tF1 + 0.1, tF1 + 0.6)));
-	const tap = pulse(t, tTap, 0.02, 0.18), RX = 108, RY = 128;
+	const tap = pulse(t, tTap, 0.02, 0.18), RX = 128, RY = 158;
 	const torso = sp([[-600, 380], [-340, 300], [340, 300], [600, 380], [560, 1800, 1], [-560, 1800, 1]], true, 0.2);
 	const wraps: React.ReactNode[] = [];
 	for (let i = -16; i < 44; i++) { const x0 = -700 + i * 50; wraps.push(<path key={'a' + i} d={`M${x0} 250L${x0 + 700} 1800`} stroke="#C9B88E" strokeWidth={14} opacity={0.55} />, <path key={'b' + i} d={`M${x0 + 700} 250L${x0} 1800`} stroke="#F2E9D2" strokeWidth={9} opacity={0.55} />); }
 	const net: React.ReactNode[] = [];
 	for (let i = 0; i < 18; i++) for (let j = 0; j < 12; j++) { const bx = SX - 680 + i * 80 + (j % 2) * 40, by = SY - 330 + j * 60;
-		if (Math.hypot(bx - SX, (by - SY) * 0.85) < 120) continue;
+		if (Math.hypot(bx - SX, (by - SY) * 0.8) < 150) continue;
 		net.push(<g key={`${i}.${j}`}><path d={poly([[bx, by - 28], [bx + 38, by], [bx, by + 28], [bx - 38, by]])} fill="none" stroke={STONE.faience} strokeWidth={5} opacity={0.55} /><circle cx={bx} cy={by - 28} r={5} fill={j % 2 ? PAL.gold : PAL.red} stroke={PAL.ink} strokeWidth={1.2} /></g>); }
-	const fingers = {
-		index: sp([[95, -120], [10, -104], [-24, -88], [-16, -66], [18, -72], [90, -84]], true, 0.22),
-		middle: sp([[100, -86], [52, -66], [40, -44], [66, -36], [106, -52]], true, 0.22),
-		thumb: sp([[95, 118], [12, 106], [-20, 86], [-12, 64], [20, 72], [92, 84]], true, 0.22),
-		palm: sp([[100, -112], [230, -92], [262, 0], [232, 96], [104, 116], [70, 40], [62, -52]], true, 0.2)};
+	// the hand from the right, seen from above (origin = scarab centre): back of the hand beside the scarab, the other fingers curled under,
+	// the index finger along its top rim and the thumb along its bottom rim, pinching it
+	const hand = {
+		back: sp([[640, -150], [330, -178], [262, -132], [250, -60], [256, 20], [252, 96], [300, 158], [640, 140]], true, 0.22),
+		index: sp([[300, -186], [70, -178], [26, -160], [24, -128], [58, -112], [300, -116]], true, 0.22),
+		thumb: sp([[330, 104], [80, 108], [32, 120], [30, 154], [70, 172], [340, 196]], true, 0.22),
+		curl: sp([[320, -122], [236, -116], [206, -64], [212, -4], [206, 54], [224, 110], [320, 116]], true, 0.3)};
 	return <Stage60 t={t} cam={cam} grade="tomb" bg="#3A2416" dark={0.2} darkC="#2A1206" wear={wearAt(cam.z, 0.45)} stain={0.22}
 		screen={(() => { const sp_ = toScreen(cam, SX, SY), fo = sm(seg(t, tR - 0.05, tR + 0.15)) * (1 - sm(seg(t, tF1, tF1 + 0.4)));
 			return fo > 0 ? <g><defs><radialGradient id="a9-spot" gradientUnits="userSpaceOnUse" cx={sp_[0]} cy={sp_[1]} r={460}><stop offset="0.35" stopColor="#120600" stopOpacity={0} /><stop offset="1" stopColor="#120600" stopOpacity={0.55} /></radialGradient></defs>
 				<rect width={FW} height={1080} fill="url(#a9-spot)" opacity={fo} /></g> : null; })()}
-		tags={t > 1.2 ? [{x: SX + 150, y: SY - 220, text: '心脏圣甲虫', o: sm(seg(t, 1.2, 1.5))}] : []}
+		tags={t > 1.2 ? [{x: SX + 175, y: SY - 175, text: '心脏圣甲虫', o: sm(seg(t, 1.2, 1.5))}] : []}
 		light={<>
 			<Glow x={SX} y={SY + 20} r={380} c="red" o={0.35} />
 			<Glow x={SX - 400} y={0} r={900} c="warm" o={0.55 + 0.1 * flick(tt, 2)} />
-			<Glow x={sx} y={sy} r={170 * sc} c="green" o={0.4 + 0.3 * (1 - lift) + 0.4 * tap + 0.35 * frz} />
-			<Glow x={sx} y={sy} r={90 * sc} c="gold" o={0.2 + 0.4 * frz} />
+			<Glow x={sx} y={sy} r={230 * sc} c="green" o={0.4 + 0.3 * (1 - lift) + 0.4 * tap + 0.35 * frz} />
+			<Glow x={sx} y={sy} r={120 * sc} c="gold" o={0.2 + 0.4 * frz} />
 			{ringO > 0 && <g style={{mixBlendMode: 'screen'}} opacity={ringO}>
-				<ellipse cx={SX} cy={SY} rx={RX} ry={RY} fill="none" stroke="#FFE7A0" strokeWidth={5} strokeDasharray={`${740 * ring} 1000`} transform={`rotate(-90 ${SX} ${SY})`} />
-				<ellipse cx={SX} cy={SY} rx={RX} ry={RY} fill="none" stroke="#FFD060" strokeWidth={16} opacity={0.3} strokeDasharray={`${740 * ring} 1000`} transform={`rotate(-90 ${SX} ${SY})`} />
+				<ellipse cx={SX} cy={SY} rx={RX} ry={RY} fill="none" stroke="#FFE7A0" strokeWidth={5} strokeDasharray={`${910 * ring} 1200`} transform={`rotate(-90 ${SX} ${SY})`} />
+				<ellipse cx={SX} cy={SY} rx={RX} ry={RY} fill="none" stroke="#FFD060" strokeWidth={16} opacity={0.3} strokeDasharray={`${910 * ring} 1200`} transform={`rotate(-90 ${SX} ${SY})`} />
 				{(() => { const a = -Math.PI / 2 + 2 * Math.PI * ring; return <Sparkle x={SX + RX * Math.cos(a)} y={SY + RY * Math.sin(a)} r={30} a={t * 90} />; })()}
 				{ring >= 1 && [0, 1, 2, 3, 4, 5].map((i) => { const a = i * Math.PI / 3 + 0.4; return <Sparkle key={i} x={SX + (RX + 22) * Math.cos(a)} y={SY + (RY + 24) * Math.sin(a)} r={10 + 5 * Math.sin(t * 8 + i)} />; })}
 			</g>}
@@ -457,19 +459,24 @@ export const Shot9: React.FC<ShotProps> = ({t}) => {
 			<MaskTop x={0} y={30} s={150} id="a9" />
 		</g>
 		{/* the scarab (real size), its small shadow, the hand that pinches it between thumb and fingers (drawn over it) */}
-		<ellipse cx={sx + 14 + 30 * lift} cy={sy + 18 + 40 * lift} rx={72 * sc} ry={92 * sc} fill="#2A1206" opacity={0.25 * (1 - 0.5 * lift)} />
+		<ellipse cx={sx + 16 + 30 * lift} cy={sy + 20 + 40 * lift} rx={100 * sc} ry={130 * sc} fill="#2A1206" opacity={0.25 * (1 - 0.5 * lift)} />
 		<g transform={`translate(${sx},${sy}) scale(${sc}) translate(${-sx},${-sy})`}><HeartScarab id="a9-hs" x={sx} y={sy} s={SS} flip={flip} t={t} lines={1} glint={0.8} /></g>
 		{handOut < 1 && <g transform={`translate(${handX},${handY}) scale(${sc})`}>
-			<path d={poly([[230, -84], [1400, -100], [1400, 100], [230, 84]])} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
-			<path d="M260 30L1400 40" stroke={PAL.skinM2} strokeWidth={14} opacity={0.4} />
-			<rect x={300} y={-92} width={52} height={184} rx={8} fill={PAL.gold} stroke={PAL.ink} strokeWidth={3} /><rect x={318} y={-92} width={14} height={184} fill={PAL.blue} />
-			<path d={fingers.palm} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
-			<path d={fingers.middle} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />
-			<path d={fingers.index} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />
-			<path d={fingers.thumb} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />
-			{[[40, -96, 46, -76], [40, 78, 46, 98], [140, -60, 150, -20], [150, 10, 152, 50]].map(([x1, y1, x2, y2], i) => <path key={i} d={`M${x1} ${y1}Q${x1 + 8} ${(y1 + y2) / 2} ${x2} ${y2}`} fill="none" stroke={PAL.skinM2} strokeWidth={3} strokeLinecap="round" />)}
+			<path d={poly([[600, -140], [1900, -170], [1900, 170], [600, 132]])} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
+			<path d="M620 40L1900 50" stroke={PAL.skinM2} strokeWidth={16} opacity={0.4} />
+			{/* the curled middle, ring and little fingers (their middle joints seen from above) */}
+			<path d={hand.curl} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />
+			{[-44, 34].map((yy) => <path key={yy} d={`M${210} ${yy}Q${232} ${yy + 4} ${256} ${yy}`} fill="none" stroke={PAL.ink} strokeWidth={3} strokeLinecap="round" />)}
+			<path d={hand.back} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
+			{[[-122, -40], [-6, 50], [76, 120]].map(([y0, y1], i) => <path key={i} d={`M${282 + i * 3} ${y0 + 14}Q${300} ${(y0 + y1) / 2} ${282 + i * 3} ${y1 - 14}`} fill="none" stroke={PAL.skinM2} strokeWidth={3} strokeLinecap="round" />)}
+			<rect x={640} y={-150} width={60} height={296} rx={10} fill={PAL.gold} stroke={PAL.ink} strokeWidth={3} /><rect x={660} y={-150} width={18} height={296} fill={PAL.blue} />
+			<path d={hand.index} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.6} />
+			<path d={hand.thumb} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.6} />
+			<path d={sp([[34, -168], [74, -170], [78, -128], [36, -126]], true, 0.4)} fill="#D98A62" stroke={PAL.skinM2} strokeWidth={2.5} opacity={0.85} />
+			<path d={sp([[40, 126], [82, 122], [86, 162], [42, 162]], true, 0.4)} fill="#D98A62" stroke={PAL.skinM2} strokeWidth={2.5} opacity={0.85} />
+			{[[170, -180, 172, -114], [200, 106, 204, 186]].map(([x1, y1, x2, y2], i) => <path key={i} d={`M${x1} ${y1 + 10}Q${x1 + 8} ${(y1 + y2) / 2} ${x2} ${y2 - 10}`} fill="none" stroke={PAL.skinM2} strokeWidth={3} strokeLinecap="round" />)}
 		</g>}
-		{tap > 0.02 && <DustBurst t={t} t0={tTap} x={SX} y={SY} rx={80} ry={100} n={24} seed={9} c="#FFF2C8" life={0.5} />}
+		{tap > 0.02 && <DustBurst t={t} t0={tTap} x={SX} y={SY} rx={110} ry={140} n={26} seed={9} c="#FFF2C8" life={0.5} />}
 	</Stage60>;
 };
 export const _l = {Embers, Stars, FW, GlyphRun, GoldDefs, Torch: Lamp, ANI, River, holdAt};
