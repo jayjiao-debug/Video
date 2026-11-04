@@ -406,7 +406,7 @@ export const OpenScroll: React.FC<{x: number; y: number; w: number; h: number; t
 			<path d="M96 0L98 -56L112 -70L132 -78L120 -64L116 -50L118 0" /><path d="M-24 0L-16 -40L-8 0" stroke={PAL.red} />
 		</g>
 		{cols}
-		{gapStarts.map((g, i) => { const gx = x + 24 + g * colW2 + 2, gy = y + vH + 56, colW2 = colW * 2;
+		{gapStarts.map((g, i) => { const colW2 = colW * 2, gx = x + 24 + g * colW + 2, gy = y + vH + 56;
 			return <g key={i}>
 												<rect x={gx} y={gy} width={colW2 - 4} height={96} rx={4} fill={name > 0 ? 'none' : '#FFF6DC'} stroke={PAL.ink} strokeWidth={5} opacity={blank * (0.35 + 0.3 * pulse)} />
 				<rect x={gx} y={gy} width={colW2 - 4} height={96} rx={4} fill="none" stroke="#FFFFFF" strokeWidth={3} opacity={blank * (0.5 + 0.5 * pulse)} />

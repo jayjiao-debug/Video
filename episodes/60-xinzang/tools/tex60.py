@@ -139,3 +139,10 @@ di = di.filter(ImageFilter.GaussianBlur(0.4))
 di.convert('RGB').save(f'{out}/dust.jpg', quality=86, optimize=True)
 for f in sorted(os.listdir(out)):
     print(f, os.path.getsize(f'{out}/{f}') // 1024, 'KB')
+
+# ---------------- displacement tile for the hand-painted edge wobble (R = dx, G = dy), 512 px, periodic ----------------
+dx = fnoise(512, 512, 2.0, 6, 40, seed=41); dy = fnoise(512, 512, 2.0, 6, 40, seed=42)
+disp = np.zeros((512, 512, 3), np.uint8)
+disp[..., 0] = np.clip(128 + 127 * dx, 0, 255); disp[..., 1] = np.clip(128 + 127 * dy, 0, 255); disp[..., 2] = 128
+Image.fromarray(disp).save(f'{out}/disp.png', optimize=True)
+print('disp.png', os.path.getsize(f'{out}/disp.png') // 1024, 'KB')

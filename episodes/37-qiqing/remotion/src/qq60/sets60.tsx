@@ -67,10 +67,19 @@ export const EmbalmSet: React.FC<SetP & {close?: number}> = ({t, sub = {text: '�
 	const bHand: V = [chest[0] - 40, chest[1] - 26 - 5 * breathe], fHand: V = [chest[0] + 64, chest[1] - 96 + 8 * Math.sin(t * 0.9)];
 		const pose = {...tendPose(toF(bHand), toF(fHand), t, 13), neck: 3, head: 9 + 2 * Math.sin(t * 0.8)};
 	const heart = 0.7 + 0.3 * (0.5 + 0.5 * Math.sin(t * 2.6));
-	const cam = close > 0 ? camPath(t, [[0, ex + 60, 360, 2.0], [3, ex + 70, 380, 2.2]]) : camPath(t, [[0, 700, 486, 1], [8, 760, 540, 1.12]]);
-	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.3} darkC="#2A1408" sub={sub} stamp={stamp} tags={[{x: ex - 236, y: 230, text: '防腐祭司'}, {x: 1040, y: 520, text: '卡诺匹斯罐'}]}
+	const cam = close > 0 ? camPath(t, [[0, ex + 90, 330, 2.3], [3, ex + 96, 336, 2.55]]) : camPath(t, [[0, 700, 486, 1], [8, 760, 540, 1.12]]);
+	// close > 0: the hook's extreme close-up on the mask over starry lapis (script shot 1): a separate, bare night world
+	if (close > 0) return <Stage60 t={t} cam={cam} grade="lapis" bg="#131D4A" wear={0.12} stain={0.2} sub={sub} stamp={stamp}
+		light={<><Glow x={ex - 160} y={300} r={420} c="warm" o={0.55 + 0.12 * flick(t, 7)} /><Glow x={ex + 120} y={330} r={200} c="gold" o={0.35} />
+			<Dust t={t} box={[ex - 400, 120, ex + 500, 700]} n={60} seed={17} c="#FFE2A0" o={0.7} vx={-6} vy={-4} r={1.6} /></>}>
+		<rect x={ex - 900} y={PIC_T - 200} width={1800} height={1300} fill="#131D4A" />
+		<Stars t={t} box={[ex - 600, 60, ex + 700, 760]} n={140} seed={17} />
+		<God id="em-mask" cast={CAST2.embalmer} pose={{...pose, lean: 6, neck: 1, head: -2 + 1.5 * Math.sin(t * 0.9)}} x={ex} y={GY} s={s} sec={{t}} />
+	</Stage60>;
+	return <Stage60 t={t} cam={cam} grade={close > 0 ? 'lapis' : 'papyrus'} dark={close > 0 ? 0.62 : 0.3} darkC={close > 0 ? '#0A1236' : '#2A1408'} sub={sub} stamp={stamp} tags={close > 0 ? [] : [{x: ex - 236, y: 230, text: '防腐祭司'}, {x: 1040, y: 520, text: '卡诺匹斯罐'}]}
 		light={<>
-			<Shaft pts={[[40, PIC_T], [320, PIC_T], [800, GY], [380, GY]]} o={0.55} />
+			<Shaft pts={[[40, PIC_T], [320, PIC_T], [800, GY], [380, GY]]} o={close > 0 ? 0 : 0.55} />
+			{close > 0 && <><Stars t={t} box={[ex - 500, 100, ex + 600, 700]} n={90} seed={17} /><Glow x={ex + 40} y={330} r={260} c="warm" o={0.65 + 0.12 * flick(t, 7)} /></>}
 			<Dust t={t} box={[100, 120, 800, 840]} n={60} seed={5} o={0.75} vx={5} vy={6} />
 			<Glow x={chest[0]} y={chest[1] + 30} r={150 * heart} c="red" o={0.75 * heart} />
 			<Glow x={1236} y={GY - 300} r={300} c="warm" o={0.65 + 0.1 * flick(t, 5)} />
