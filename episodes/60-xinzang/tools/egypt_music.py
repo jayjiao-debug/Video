@@ -9,6 +9,7 @@ DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 30.0
 BPM = float(sys.argv[3]) if len(sys.argv) > 3 else 100.0
 rng = np.random.default_rng(int(sys.argv[4]) if len(sys.argv) > 4 else 7)
 BEAT = 60 / BPM; E8 = BEAT / 2; BAR = 4 * BEAT
+DR = 0.68   # drum level (the liked clip is melody-led: harmonic ≈ 10 dB over percussion)
 N = int(DUR * SR) + SR * 3
 L = np.zeros(N); R = np.zeros(N)
 def hz(note):   # 'D4', 'Eb4', 'F#4'
@@ -58,7 +59,7 @@ def reed(f0s, durs, g=1.0, breath=0.15, nasal=1.0):   # mizmar/ney lead: a list 
     t = np.arange(n) / SR; vib = 1 + 0.008 * np.sin(2 * np.pi * 5.6 * t) * np.minimum(1, t / 0.4)
     ph = np.cumsum(f * vib) / SR; saw = 2 * (ph % 1) - 1; pulse = np.where((ph % 1) < 0.3, 1.0, -0.4)
     s = 0.55 * pulse + 0.45 * saw
-    s = bp(s, 1250, 2.2) * 1.4 * nasal + bp(s, 2600, 3.0) * 0.8 * nasal + lp(s, 1800) * 0.6
+    s = bp(s, 1400, 2.2) * 1.5 * nasal + bp(s, 2900, 3.0) * 1.0 * nasal + lp(s, 2200) * 0.6
     s += breath * bp(rng.standard_normal(n), 1800, 1.2) * 0.6
     a = np.ones(n); a[:int(0.03 * SR)] = np.linspace(0, 1, int(0.03 * SR)); a[-int(0.08 * SR):] *= np.linspace(1, 0, int(0.08 * SR))
     return s * a * g
@@ -95,9 +96,9 @@ for b in range(bars):
     t = b * BAR
     if b >= INTRO:
         for e, kind in ((0, 'D'), (1, 'T'), (3, 'T'), (4, 'D'), (6, 'T')):   # maqsum: dum tek . tek dum . tek .
-            put(dum(0.9) if kind == 'D' else tek(0.55), t + e * E8, -0.05 if kind == 'D' else 0.1)
-        for e in (2, 5, 7): put(tek(0.18, 1.3), t + e * E8, 0.15)          # ghost notes
-        for e in range(8): put(riq(0.5 if e % 2 else 0.25), t + e * E8 + 0.01, 0.35)
+            put(dum(0.9 * DR) if kind == 'D' else tek(0.55 * DR), t + e * E8, -0.05 if kind == 'D' else 0.1)
+        for e in (2, 5, 7): put(tek(0.18 * DR, 1.3), t + e * E8, 0.15)          # ghost notes
+        for e in range(8): put(riq((0.5 if e % 2 else 0.25) * DR), t + e * E8 + 0.01, 0.35)
         if b % 4 == 3:   # a roll into the next phrase
             for j in range(8): put(tek(0.25 + 0.05 * j), t + 6 * E8 + j * E8 / 4, 0.1)
     if b % 2 == 0: put(zills(0.9 if b >= INTRO else 0.6), t, -0.3)
