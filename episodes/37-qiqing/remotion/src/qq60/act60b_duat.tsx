@@ -19,7 +19,7 @@ export const Shot15: React.FC<ShotProps> = ({t}) => {
 	const cam = camPath(t, [[-0.5, 640, 560, 1.1], [3.0, 900, 590, 1.24]]);
 	const u = cl((t - S15_DOOR.grind) / (S15_DOOR.thud - S15_DOOR.grind)), shut = Math.pow(u, 1.35), thud = hit(t, S15_DOOR.thud, 0.25);
 	const doorLight = 1 - shut;
-	const shakeY = 3 * thud * Math.sin(t * 90);
+	const shakeY = 0 * thud * Math.sin(t * 90); // owner 15:10: no screen shake
 	const boatX = 1110 + 7 * t;
 	const R = rng(15);
 	return <Stage60 t={t} cam={{...cam, y: cam.y + shakeY / cam.z}} grade="lapis" bg="#0B1236" wear={wearFor(cam.z, 0.28)} stain={0.22} dark={0.18} darkC="#05081A"
@@ -149,7 +149,7 @@ export const Shot17: React.FC<ShotProps> = ({t}) => {
 	const crX = lerp(1500, 1230, lunge) + 60 * recoil, crK = lerp(0.9, 1.9, lunge) * lerp(1, 0.75, recoil);
 	const jaw = t < S17.snap - 0.08 ? 34 * sm(seg(t, 0.35, 0.9)) : t < S17.snap ? 34 * (1 - (t - S17.snap + 0.08) / 0.08) : 2 + 16 * bell(t, S17.flare + 0.05, S17.flare + 0.6);
 	const cam = camPath(t, [[-0.2, 660, 560, 1.06], [3.4, 690, 540, 1.13]]);
-	const shake = 6 * snapK * Math.sin(t * 95) + 4 * flare * Math.sin(t * 80);
+	const shake = 0 * (6 * snapK * Math.sin(t * 95) + 4 * flare * Math.sin(t * 80)); // owner 15:10: no screen shake
 	const R = rng(17);
 	return <Stage60 t={t} cam={{x: cam.x + shake / cam.z, y: cam.y, z: cam.z}} grade="blood" bg="#300C08" wear={wearFor(cam.z, 0.3)} stain={0.3} flickSeed={7}
 		light={<>

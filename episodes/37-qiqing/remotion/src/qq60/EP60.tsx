@@ -21,7 +21,7 @@ export type ShotDef = {C: React.FC<ShotProps>; tin?: 'cut' | 'dissolve' | 'own';
 const REG: Record<number, ShotDef> = {...ACT60A, ...ACT60B, ...ACT60C};
 
 /** a shot not built yet: its number, line and brief (so the whole film can be read as an animatic) */
-const Missing: React.FC<ShotProps> = ({t, n}) => { const s = SHOTS[n - 1];
+const Missing: React.FC<ShotProps> = ({t, n}) => { const s = SHOTS.find((x) => x.n === n)!;
 	return <AbsoluteFill style={{background: '#141a33'}}>
 		<div style={{position: 'absolute', left: 90, top: PIC_T + 60, width: SAFE_R - 180, color: '#b9c2e0', fontFamily: F_SERIF, fontSize: 30, lineHeight: 1.45}}>
 			<div style={{fontSize: 64, fontWeight: 900, color: FC.gold}}>{n} · {t.toFixed(1)} s</div>
@@ -73,7 +73,7 @@ const Film: React.FC = () => {
 
 /** a single shot on its own (for builders): SHOT60 with input prop {n, from} renders shot n from `from` s before its start */
 const One: React.FC<{n?: number; from?: number}> = ({n = 1, from = 0}) => {
-	const f = useCurrentFrame(), s = SHOTS[n - 1], t = f / FPS - from, D = REG[n], C = D ? D.C : Missing;
+	const f = useCurrentFrame(), s = SHOTS.find((x) => x.n === n)!, t = f / FPS - from, D = REG[n], C = D ? D.C : Missing;
 	return <InMaster60.Provider value={true}><AbsoluteFill style={{background: '#08090b'}}><C t={t} dur={s.b - s.a} n={n} />
 		<AbsoluteFill style={{zIndex: 10}}><Seal43 /><Bands t={t} />{s.sub && <Subtitle t={t} sub={{text: s.sub}} />}
 			{s.stamp && <Stamp43 stamp={s.stamp} />}</AbsoluteFill></AbsoluteFill></InMaster60.Provider>;

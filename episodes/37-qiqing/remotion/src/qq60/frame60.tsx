@@ -198,8 +198,9 @@ export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster',
 	const master = useContext(InMaster60), wobId = 'f60-wob-' + useId().replace(/[^a-zA-Z0-9]/g, '');
 	const G = GRADES[grade], z = cam.z, ip = getInputProps() as {fast?: boolean; noWobble?: boolean; noCss?: boolean};
 	// the hand-painted edge wobble is a FIXED displacement field: still things look painted, but anything that moves through it boils
-	// frame to frame (owner 14:47: "why is the film glitchy"). Off in the film (InMaster60); the kit stills keep it.
-	if (ip.fast || ip.noWobble || master) wobble = 0;
+	// frame to frame (owner 14:47: "why is the film glitchy"). In the film (InMaster60) it is kept at ~40 %.
+	if (ip.fast || ip.noWobble) wobble = 0;
+	if (master) wobble = Math.min(wobble, 2.4) * 0.38;   // owner 15:10: "I've come to take a liking to the glitch but reduce its effect"
 	const vx0 = cam.x - FW / 2 / z - 40, vy0 = cam.y - PIC_CY / z - 40, vw = FW / z + 80, vh = FH / z + 80;
 	const tex = bg === 'plaster' || bg === 'papyrus' ? bg : null;
 	const camT = `translate(${FW / 2},${PIC_CY}) scale(${z}) translate(${-cam.x},${-cam.y})`;

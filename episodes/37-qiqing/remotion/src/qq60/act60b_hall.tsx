@@ -21,7 +21,7 @@ export const Shot18: React.FC<ShotProps> = ({t}) => {
 	const open = keys(t, [[0.14, 0], [0.36, 1]]), boom = hit(t, S18.boom, 0.45), th = open * 78 * Math.PI / 180;
 	const cam = camPath(t, [[0.0, 300, 640, 1.5], [2.95, 700, 480, 0.95]]);
 	const as = 7, wu = Math.max(0, t - S18.walk0), ax = 150 + STRIDE * as * S18.om * wu * 0.9, ani: Pose = wu > 0 ? walkPose(S18.om * wu, {lean: 3, stride: 0.9}) : {...POSES.rest, rt: -4, at: 6, lean: 1, head: -3};
-	const shake = 4 * boom * Math.sin(t * 70);
+	const shake = 0 * boom * Math.sin(t * 70); // owner 15:10: no screen shake
 	const leaf = (hx: number, dir: 1 | -1, k: string) => { const w = 80 * Math.cos(th), d = 16 * Math.sin(th);
 		return <g key={k}><path d={poly([[hx, 568], [hx + dir * w, 568 + d * 0.2], [hx + dir * w, GY - d * 0.2], [hx, GY]])} fill="#6A3A1E" stroke={PAL.ink} strokeWidth={2.4} />
 			{[0.18, 0.5, 0.82].map((u) => <path key={u} d={`M${hx + dir * 4} ${lerp(568, GY, u)}L${hx + dir * (w - 4)} ${lerp(568, GY, u)}`} stroke={PAL.gold} strokeWidth={5} />)}

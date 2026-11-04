@@ -26,7 +26,7 @@ const S41: React.FC<ShotProps> = ({t}) => {
 	const sp_ = seg(t, T41.spring, 2.25), lift = eOut(sp_);
 	const ap_: AmmitPose = {lean: lerp(-2, 13, sm(seg(t, T41.spring - 0.1, T41.spring + 0.3))), neck: lerp(2, 16, sm(seg(t, T41.spring, T41.spring + 0.35))), jaw: lerp(7 + 3 * Math.max(0, Math.sin(t * 9)), 40, sm(seg(t, T41.spring + 0.05, T41.roar))), tail: 18 * Math.sin(t * 5), breathe: 0.5 + 0.5 * Math.sin(t * 6)};
 	const AX = 1022, dx = -300 * lift, dy = -95 * Math.sin(Math.PI * 0.62 * lift) - 20 * lift, rot = -10 * sm(seg(t, T41.spring, T41.spring + 0.4)) + 6 * sm(seg(t, 1.5, 2.2));
-	const shake = t > b ? 7 * Math.exp(-tb / 0.13) * Math.sin(tb * 70) : 0;
+	const shake = 0 * (t > b ? 7 * Math.exp(-tb / 0.13) * Math.sin(tb * 70) : 0); // owner 15:10: no screen shake
 	const cam = camE(t, 0, 2.3, [700, 486, 1.0], [650, 480, 1.07]);
 	return <Stage60 t={t} cam={{...cam, x: cam.x + shake, y: cam.y + shake * 0.6}} grade="blood" bg="#3A0E0A" wear={0.45} stain={0.4} flickSeed={41}
 		tags={[{x: 1150, y: 340, text: '阿米特', o: sm((t - 0.3) / 0.3)}]}
