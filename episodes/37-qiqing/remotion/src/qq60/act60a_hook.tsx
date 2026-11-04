@@ -1,13 +1,13 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Stage60, Glow, Dust, Embers, Stars, Flame, Smoke, Shaft, toScreen, flick, FW} from './frame60';
+import {Stage60, Glow, Dust, Embers, Flame, Smoke, Shaft, toScreen, flick, FW} from './frame60';
 import {Ceiling} from './sets60';
 import {GlyphColumns, WingedSun} from './props60';
 import {Column, Basket, LionBier, CanopicJar, Lamp} from './props60b';
 import {God, CAST, POSES, Pose} from './rig60';
 import {PAL, sp, poly, lerp, cl, sm, V} from './geo60';
 import type {ShotProps} from './EP60';
-import {pulse, seg, aimPath, aim, GoldDefs, MaskFront, Puff, BigBalance, panPos, BigMummy, HEART_AT, GlowHeart, Sparkle, DustBurst, wearAt,
+import {pulse, seg, aimPath, aim, GoldDefs, MaskFront, Puff, BigBalance, panPos, BigMummy, HEART_AT, GlowHeart, DustBurst, wearAt,
 	layerT, Brazier, GateCrown} from './act60a_kit';
 
 /* ep60 act A · the hook (shots 1–3, 0.0–7.9 s), v2 after the owner's notes (15:10): Egypt from frame 0 (gold + lapis, pylon towers,
@@ -66,33 +66,31 @@ export const Shot1: React.FC<ShotProps> = ({t}) => {
 	if (t >= tRel) { const u = cl((t - tRel) / (tLand - tRel)); puff = arc(u); pa = 420 * u; sq = 0.1 * Math.sin(u * 9); }
 	if (t > tLand) { const v = t - tLand; puff = [B[0], B[1] + 14 * sm(v / 0.2)]; pa = 420; sq = 0.18 * Math.exp(-v / 0.12) * Math.cos(v * 40); }
 	const bask = 1 - 0.06 * pulse(t, tLand, 0.03, 0.12);
-	const glint = Math.max(0, 1 - t / 0.42), eyesFlare = 0.5 * pulse(t, 1.45, 0.12, 0.45);
+	const eyesFlare = 0.2 * pulse(t, 1.45, 0.12, 0.45);   // v6 (owner 20:59): no glint, no stars, no sparkles in shot 1
 	const trail = t > tRel && t < tLand ? Array.from({length: 5}, (_, i) => { const tt = t - (i + 1) * 0.035; if (tt < tRel) return null; const p = arc(cl((tt - tRel) / (tLand - tRel)));
 		return <circle key={i} cx={p[0]} cy={p[1]} r={44 - i * 6} fill="#C8CED8" opacity={0.2 - i * 0.035} />; }) : null;
 	const rays = Array.from({length: 24}, (_, i) => { const a = (i / 24) * Math.PI * 2 + t * 0.08, r0 = 230, r1 = i % 2 ? 520 : 640;
-		return <path key={i} d={poly([[720 + Math.cos(a - 0.035) * r0, 300 + Math.sin(a - 0.035) * r0], [720 + Math.cos(a) * r1, 300 + Math.sin(a) * r1], [720 + Math.cos(a + 0.035) * r0, 300 + Math.sin(a + 0.035) * r0]])} fill="#F6CB55" opacity={0.28} />; });
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0E1640" wear={0.1} stain={0.14} wobble={1.6}
+		return <path key={i} d={poly([[720 + Math.cos(a - 0.035) * r0, 300 + Math.sin(a - 0.035) * r0], [720 + Math.cos(a) * r1, 300 + Math.sin(a) * r1], [720 + Math.cos(a + 0.035) * r0, 300 + Math.sin(a + 0.035) * r0]])} fill="#E8B848" opacity={0.2} />; });
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0A1030" wear={0.1} stain={0.14} wobble={1.6} dark={0.24} darkC="#140C2A"
 		light={<>
-			<g transform={layerT(kB, C)}><Glow x={720} y={300} r={560} c="gold" o={0.55} /><g style={{mixBlendMode: 'screen'}}>{rays}</g></g>
 			<g transform={layerT(kM, C)}>
-				<Glow x={EX - 220} y={EY - 20} r={240} c="warm" o={0.3 + 0.08 * flick(t, 5)} />
+				<Glow x={EX - 220} y={EY - 20} r={240} c="warm" o={0.16 + 0.05 * flick(t, 5)} />
 				{t > tLand - 0.05 && <DustBurst t={t} t0={tLand} x={B[0]} y={B[1] - 26} rx={60} ry={14} n={26} seed={4} c="#E8E2D2" life={0.7} />}
 			</g>
 			{kF < 3 && <g transform={layerT(kF, C)}>
-				{[-1, 1].map((k) => <Glow key={k} x={720 + k * 562} y={500} r={420 * (1 + 0.5 * flare)} c="warm" o={0.75 + 0.1 * flick(t, k + 3)} />)}
+				{[-1, 1].map((k) => <Glow key={k} x={720 + k * 562} y={500} r={380 * (1 + 0.4 * flare)} c="warm" o={0.5 + 0.08 * flick(t, k + 3)} />)}
 				<Embers t={t} x={720 - 562} y={520} n={14} seed={3} h={400} spread={40} s={1.4} /><Embers t={t} x={720 + 562} y={520} n={14} seed={4} h={400} spread={40} s={1.4} />
 			</g>}
-			{/* gold dust flying toward us */}
-			<g transform={layerT(1 + 0.12 * t, C)}><Dust t={t} box={[0, 40, 1440, 940]} n={90} seed={13} c="#FFE2A0" o={0.85} vx={-5} vy={-8} r={2.2} /></g>
-			<Shaft pts={[[300, 40], [440, 40], [560, 940], [380, 940]]} o={0.14} />
 		</>}>
 		<GoldDefs id={id} />
-		<defs><linearGradient id="a1-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0B1236" /><stop offset="0.55" stopColor="#1C2F86" /><stop offset="0.85" stopColor="#5A3A86" /><stop offset="1" stopColor="#B8604A" /></linearGradient>
-			<radialGradient id="a1-sun" cx="0.45" cy="0.4" r="0.6"><stop offset="0" stopColor="#FFF0B0" /><stop offset="0.55" stopColor="#F6C14A" /><stop offset="1" stopColor="#D88A1E" /></radialGradient></defs>
-		{/* background: the night sky, the gold sun disk behind his head, the pyramids on the horizon */}
+		<defs><linearGradient id="a1-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#070B26" /><stop offset="0.55" stopColor="#13216A" /><stop offset="0.85" stopColor="#3A2A66" /><stop offset="1" stopColor="#7A4038" /></linearGradient>
+			<radialGradient id="a1-sun" cx="0.45" cy="0.4" r="0.6"><stop offset="0" stopColor="#F8DA8C" /><stop offset="0.55" stopColor="#E8B23E" /><stop offset="1" stopColor="#B8761A" /></radialGradient>
+			<radialGradient id="a1-halo" cx="0.5" cy="0.5" r="0.5"><stop offset="0.5" stopColor="#D8962E" stopOpacity={0.38} /><stop offset="1" stopColor="#D8962E" stopOpacity={0} /></radialGradient></defs>
+		{/* background: the night sky, the sun's halo and rays (behind everything else), the gold sun disk behind his head, the pyramids */}
 		<g transform={layerT(kB, C)}>
 			<rect x={-600} y={-600} width={2700} height={1400} fill="url(#a1-sky)" />
-			<Stars t={t} box={[-200, -60, 1640, 640]} n={170} seed={21} />
+			<circle cx={720} cy={300} r={430} fill="url(#a1-halo)" />
+			<g style={{mixBlendMode: 'screen'}}>{rays}</g>
 			<circle cx={720} cy={300} r={236} fill="#2A1608" opacity={0.5} />
 			<circle cx={720} cy={300} r={228} fill="url(#a1-sun)" stroke={PAL.ink} strokeWidth={5} />
 			<circle cx={720} cy={300} r={196} fill="none" stroke="#C2381E" strokeWidth={10} opacity={0.8} />
@@ -122,7 +120,7 @@ export const Shot1: React.FC<ShotProps> = ({t}) => {
 			</g>
 			<path d={TORSO(EX, EY, s)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={5} />
 			<path d={`M${EX - 2.6 * s} ${EY + 5.4 * s}Q${EX - 1.3 * s} ${EY + 6.0 * s} ${EX - 0.2 * s} ${EY + 5.5 * s}M${EX + 0.2 * s} ${EY + 5.5 * s}Q${EX + 1.3 * s} ${EY + 6.0 * s} ${EX + 2.6 * s} ${EY + 5.4 * s}`} fill="none" stroke={PAL.skinM2} strokeWidth={5} opacity={0.7} />
-			<g transform={`rotate(${0.7 * Math.sin(t * 1.2)} ${EX} ${EY + 500})`}><MaskFront x={EX} y={EY} s={s} t={t} id={id} glint={glint} flare={eyesFlare} /></g>
+			<g transform={`rotate(${0.7 * Math.sin(t * 1.2)} ${EX} ${EY + 500})`}><MaskFront x={EX} y={EY} s={s} t={t} id={id} flare={eyesFlare} /></g>
 			{t >= tRel && <Puff x={puff[0]} y={puff[1]} r={56} a={pa} sq={sq} />}
 			<g transform={`translate(${B[0]},975) scale(1,${bask}) translate(${-B[0]},-975)`}><Basket x={B[0]} y={975} w={176} h={124} /></g>
 			<path d={`M${B[0] - 88} 851Q${B[0]} 837 ${B[0] + 88} 851`} fill="none" stroke="#8A5A2E" strokeWidth={4} />
@@ -209,7 +207,8 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 	const cam = aim(lerp(A[0], B[0], u), lerp(A[1], B[1], u), lerp(A[2], B[2], u), lerp(A[3], B[3], u), Math.exp(lerp(Math.log(A[4]), Math.log(B[4]), u)) * dz);
 	const fall = t < tL ? sm(t / tL) : 1, hy = t < tL ? lerp(pan0[1] - 220, pan0[1], fall * fall) : 0;
 	const clang = pulse(t, tL, 0.02, 0.25), eyes = sm(seg(t, 2.2, 2.6));
-	const lit = sm(seg(t, 0.9, 1.3)), land = pulse(t, 1.3, 0.04, 0.5);
+	// v6 (owner 20:59): the landing is a warm glow that swells and fades softly, one slow sheen across the letters, gold dust drifting down
+	const lit = sm(seg(t, 0.9, 1.3)), land = 0.8 * sm(seg(t, 1.05, 1.45)) * (1 - sm(seg(t, 1.6, 3.0))), sheen = seg(t, 1.4, 2.6);
 	const kF = Math.pow(cam.z / C3.z, 0.35), cc: V = [cam.x, cam.y];
 	const cw = 5 * FS3 * 1.13 + FS3 * 1.5;
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#101A48" wear={wearAt(cam.z, 0.35)} stain={wearAt(cam.z, 0.3)}
@@ -218,18 +217,16 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 			<Glow x={GX} y={GG - 450} r={720} c="gold" o={0.38} />
 			<Shaft pts={[[GX - 300, 80], [GX + 300, 80], [GX + 560, GG], [GX - 560, GG]]} o={0.22 + 0.2 * lit} />
 			<Glow x={pan[0]} y={pan[1] - 30} r={200 * (1 + 0.6 * clang)} c="red" o={0.55 + 0.4 * clang} />
-			{clang > 0.02 && <Sparkle x={pan[0] - 36} y={pan[1] + 6} r={64 * clang} o={clang} a={20} />}
 			{t < tL && <GlowHeart x={pan0[0]} y={hy} s={BS} glow={1.2} a={-8 * (1 - fall)} />}
 			<ellipse cx={GX - 290} cy={GG - 100} rx={420} ry={240} fill="url(#a3-shade)" />
 			<AmmitEyes x={GX - 300} y={GG - 130} s={96} open={eyes} t={t} />
 			{eyes > 0.05 && <Glow x={GX - 300} y={GG - 130} r={190} c="gold" o={0.35 * eyes} />}
 			{/* the crown of the gate with the title (in the light layer: the gold is never worn) */}
-			<GateCrown cx={GX} cy={C3.cy} fs={FS3} lit={lit} land={land} t={t} id="a3c" title="死后的心脏" clean />
-			{land > 0.02 && <g style={{mixBlendMode: 'screen'}} opacity={land}>{Array.from({length: 16}, (_, i) => { const an = (i / 16) * Math.PI * 2 + 0.2;
-				return <path key={i} d={poly([[GX, C3.cy], [GX + Math.cos(an - 0.04) * 1600, C3.cy + Math.sin(an - 0.04) * 900], [GX + Math.cos(an + 0.04) * 1600, C3.cy + Math.sin(an + 0.04) * 900]])} fill="#FFE29A" opacity={0.18} />; })}</g>}
-			<DustBurst t={t} t0={1.3} x={GX} y={C3.cy} rx={cw / 2} ry={FS3 * 0.85} n={110} seed={12} life={1.5} />
-			{land > 0.05 && [[GX - cw / 2 + 120, C3.cy - 120], [GX + cw / 2 - 140, C3.cy + 110], [GX, C3.cy - 520]].map(([x, y], i) => <Sparkle key={i} x={x} y={y} r={160 * land} a={20 + i * 30} />)}
-			<Dust t={t} box={[-900, -1000, 2200, 900]} n={110} seed={9} c="#FFE2A0" o={0.6} vx={-4} vy={-5} r={2.6} />
+			<GateCrown cx={GX} cy={C3.cy} fs={FS3} lit={lit} land={land} t={t} id="a3c" title="死后的心脏" clean sheen={sheen} />
+			{/* a warm glow round the cartouche that swells as the gold settles and fades softly */}
+			<Glow x={GX} y={C3.cy} r={cw * 0.62} ry={FS3 * 1.5} c="warm" o={0.45 * land} />
+			{/* fine gold dust drifting down from the lintel after the landing */}
+			<g opacity={sm(seg(t, 1.2, 1.9))}><Dust t={t} box={[GX - cw / 2, C3.cy + FS3 * 0.9, GX + cw / 2, GG - 60]} n={46} seed={9} c="#F2CF7A" o={0.5} vx={1.5} vy={22} r={2.2} /></g>
 			<g transform={layerT(kF, cc)}>{[[GX - 1330, 1], [GX + 1330, -1]].map(([x, k]) => <g key={x}><Glow x={x} y={450} r={480} c="warm" o={0.7 + 0.1 * flick(t, k + 2)} /><Embers t={t} x={x} y={440} n={16} seed={x > GX ? 5 : 6} h={620} spread={120} s={1.9} /></g>)}</g>
 		</>}>
 		<GoldDefs id="a3" />
@@ -237,7 +234,6 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 		<rect x={-2000} y={-2000} width={5000} height={4000} fill="#13205A" />
 		<Ceiling x0={-2000} x1={3600} y0={-1600} y1={-1000} bg="#16214F" />
 		<rect x={GX - 470} y={80} width={940} height={GG - 80} fill="#060B22" />
-		<Stars t={t} box={[GX - 450, 100, GX + 450, GG - 40]} n={30} seed={12} o={0.45} />
 		{[-1, 1].map((k) => <g key={k}><rect x={GX + k * 590 - 120} y={80} width={240} height={GG - 80} fill="#1B2A6A" stroke={PAL.ink} strokeWidth={5} />
 			<rect x={GX + k * 590 - 96} y={104} width={192} height={GG - 128} fill="none" stroke={PAL.gold} strokeWidth={6} opacity={0.85} /></g>)}
 		{[GX - 1060, GX + 1060].map((x) => <Column key={x} x={x} gy={GG} top={-1000} w={120} />)}

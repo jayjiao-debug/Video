@@ -333,7 +333,7 @@ const GSIGN = (k: string) => GLYPH_D[k].d;
 /** the crown of the hall's gateway: winged sun with two rearing uraei, cornice, the lintel with the royal cartouche of the title,
     life-stability-dominion (ankh · djed · was) either side, khekher bands at the ends. (cx, cy) = cartouche centre, fs = letter size;
     lit 0..1 = gold running into the carved letters (left → right), land = the landing pulse (0..1, decaying). */
-export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: number; land: number; t: number; id: string; title: string; clean?: boolean}> = ({cx, cy, fs, lit, land, t, id, title, clean = false}) => {
+export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: number; land: number; t: number; id: string; title: string; clean?: boolean; sheen?: number}> = ({cx, cy, fs, lit, land, t, id, title, clean = false, sheen = -1}) => {
 	const k = fs / 96, h = fs * 1.62, w = title.length * fs * 1.13 + fs * 1.5, x0 = cx - w / 2, y0 = cy - h / 2, r = h / 2;
 	const lintel = {x0: cx - w / 2 - fs * 2.4, x1: cx + w / 2 + fs * 2.4, y0: cy - h / 2 - fs * 0.22, y1: cy + h / 2 + fs * 0.22};
 	const front = x0 - 20 + lit * (w + 60), glowLit = 0.35 + 0.65 * lit, sh = Math.sin(t * 2.4);
@@ -346,6 +346,8 @@ export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: numbe
 			<linearGradient id={`${id}-lap`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#263A86" /><stop offset="1" stopColor="#101943" /></linearGradient>
 			<linearGradient id={`${id}-tg`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF3C4" /><stop offset="0.38" stopColor="#F6D27A" /><stop offset="0.56" stopColor="#C8902E" /><stop offset="0.78" stopColor="#F3CF73" /><stop offset="1" stopColor="#FFE7A6" /></linearGradient>
 			<clipPath id={`${id}-lit`}><rect x={x0 - 40} y={y0 - 40} width={Math.max(0, front - (x0 - 40))} height={h + 80} /></clipPath>
+			<clipPath id={`${id}-tx`}>{txt({})}</clipPath>
+			<linearGradient id={`${id}-sh`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#FFF6D8" stopOpacity={0} /><stop offset="0.5" stopColor="#FFF6D8" stopOpacity={0.85} /><stop offset="1" stopColor="#FFF6D8" stopOpacity={0} /></linearGradient>
 		</defs>
 		{/* glow behind the whole crown; it pulses when the title lands */}
 		<ellipse cx={cx} cy={cy - fs * 0.6} rx={w * (0.75 + 0.15 * land)} ry={fs * (2.6 + 0.8 * land)} fill="url(#g60-gold)" opacity={0.18 + 0.3 * lit + 0.45 * land} style={{mixBlendMode: 'screen'}} />
@@ -387,6 +389,11 @@ export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: numbe
 			{txt({fill: '#4A2E0A', transform: `translate(0,${3 * k})`})}
 			{txt({fill: `url(#${id}-tg)`, stroke: '#3A1E06', strokeWidth: fs * 0.012})}
 		</g>
+		{/* a slow light sheen gliding once across the carved gold (sheen 0..1), soft-edged, inside the letters only */}
+		{sheen > 0 && sheen < 1 && <g clipPath={`url(#${id}-tx)`} style={{mixBlendMode: 'screen'}} opacity={Math.sin(Math.PI * sheen)}>
+			{(() => { const sx = x0 - fs * 1.2 + sheen * (w + fs * 2.4), sk = h * 0.32;
+				return <path d={poly([[sx + sk, y0 - 10], [sx + sk + fs * 1.1, y0 - 10], [sx - sk + fs * 1.1, y0 + h + 10], [sx - sk, y0 + h + 10]])} fill={`url(#${id}-sh)`} />; })()}
+		</g>}
 		{lit > 0 && lit < 1 && <g style={{mixBlendMode: 'screen'}}><rect x={front - fs * 0.35} y={y0 + 8 * k} width={fs * 0.7} height={h - 16 * k} fill="url(#g60-gold)" opacity={0.95} /><circle cx={front} cy={cy} r={fs * 0.7} fill="url(#g60-white)" opacity={0.55} /></g>}
 	</g>;
 };
