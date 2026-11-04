@@ -1,7 +1,6 @@
 import React from 'react';
 import {God, CAST, POSES, Cast, Pose, solve, Rig, AmmitPose, AMMIT_PIV, wristTo, holdAt, SHAPES, HandLines} from './rig60';
 import {Feather, Heart, Baboon, BAL, balanceGeo, BalancePose, GLYPH_D, GLYPHS, featherD} from './props60';
-import {Heart60} from './heart60';
 import {Glow, rng, Stars} from './frame60';
 import {KhekherFrieze, RegisterLine, Dado} from './frame60';
 import {Ceiling} from './sets60';
@@ -432,7 +431,7 @@ export const Ammit2: React.FC<{pose: AmmitPose; x: number; y: number; s: number;
 };
 
 /* ---------------- the balance, driveable: heart / feather offsets, plumb, baboon facing, a glint on the beam ---------------- */
-export type Bal2 = BalancePose & {heartDy?: number; heartK?: number; heartO?: number; hid?: string; featherDy?: number; featherRot?: number; featherO?: number; featherDx?: number; baboonFace?: 1 | -1; glint?: number; tick?: number};
+export type Bal2 = BalancePose & {heartDy?: number; heartK?: number; heartO?: number; /** unused since v3.1 (v1 hearts restored) */ hid?: string; featherDy?: number; featherRot?: number; featherO?: number; featherDx?: number; baboonFace?: 1 | -1; glint?: number; tick?: number};
 const rect = (x0: number, y0: number, x1: number, y1: number) => poly([[x0, y0], [x1, y0], [x1, y1], [x0, y1]]);
 export const Balance2: React.FC<{p: Bal2; x: number; y: number; s: number; t?: number}> = ({p, x, y, s, t = 0}) => {
 	const c = cx(s), g = balanceGeo(p);
@@ -460,7 +459,7 @@ export const Balance2: React.FC<{p: Bal2; x: number; y: number; s: number; t?: n
 		{tk > 0.01 && <g style={{mixBlendMode: 'screen'}} opacity={tk}><circle cx={0.36} cy={g.bob[1] + 0.4} r={1.4} fill="url(#g60-white)" /><path d={`M0.36 ${g.bob[1] - 0.6}L0.45 ${g.bob[1] + 0.3}L1.3 ${g.bob[1] + 0.4}L0.45 ${g.bob[1] + 0.5}L0.36 ${g.bob[1] + 1.4}L0.27 ${g.bob[1] + 0.5}L-0.6 ${g.bob[1] + 0.4}L0.27 ${g.bob[1] + 0.3}Z`} fill="#FFFBE8" /></g>}
 		{cords(g.panL, g.eL, 'cl')}{cords(g.panR, g.eR, 'cr')}
 		<g transform={mx(g.panL)}>
-			{(p.heartO ?? 1) > 0 && <Heart60 x={-20 * (2.6 / 150)} y={-72 * (2.6 / 150) + (p.heartDy ?? 0)} h={2.6} beat={(hk - 1) / 0.07} id={p.hid ?? 'b2h'} o={p.heartO ?? 1} />}
+			{(p.heartO ?? 1) > 0 && <g opacity={p.heartO ?? 1} transform={`translate(0,${0.02 + (p.heartDy ?? 0)}) scale(${hk})`}><Heart c={{OW: c.OW / hk, LW: c.LW / hk}} /></g>}
 			<Solid d={panD} r="gold" c={c} /><path d="M-1.7 0.28Q0 0.5 1.7 0.28" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} /></g>
 		<g transform={mx(g.panR)}>
 			{(p.featherO ?? 1) > 0 && <g opacity={p.featherO ?? 1} transform={`translate(${0.05 + (p.featherDx ?? 0)},${0.02 + (p.featherDy ?? 0)}) rotate(${p.featherRot ?? 0})`}><Feather c={c} h={3.0} /></g>}

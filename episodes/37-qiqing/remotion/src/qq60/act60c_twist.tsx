@@ -68,6 +68,20 @@ export const ScarabC: React.FC<{x: number; y: number; s: number; flip?: number; 
 		{glint > 0 && <g style={{mixBlendMode: 'screen'}} opacity={glint}><ellipse cx={-1.6 + 0.8 * Math.sin(t * 0.7)} cy={-2.0} rx={1.5} ry={0.7} fill="url(#g60-white)" /><circle cx={2.3} cy={-3.0 + 0.3 * Math.sin(t)} r={0.6} fill="url(#g60-white)" /></g>}
 	</g>;
 };
+/** a fingertip (flat style): a capsule from the tip running off at angle ang (deg, 0 = +x), with its nail */
+const Finger: React.FC<{tip: V; ang: number; w: number; len: number; thumb?: boolean}> = ({tip, ang, w, len, thumb}) => {
+	const a = ang * Math.PI / 180, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux, r = w / 2;
+	const c: V = [tip[0] + ux * r * (thumb ? -1 : -1) * -1, tip[1] + uy * r];
+	const c0: V = [tip[0] + ux * r, tip[1] + uy * r], e: V = [c0[0] + ux * len, c0[1] + uy * len];
+	const d = `M${c0[0] + nx * r} ${c0[1] + ny * r}L${e[0] + nx * r} ${e[1] + ny * r}L${e[0] - nx * r} ${e[1] - ny * r}L${c0[0] - nx * r} ${c0[1] - ny * r}A${r} ${r} 0 0 1 ${c0[0] + nx * r} ${c0[1] + ny * r}Z`;
+	const side = thumb ? 1 : -1, nb: V = [c0[0] + ux * r * 0.15 + nx * r * 0.3 * side, c0[1] + uy * r * 0.15 + ny * r * 0.3 * side];
+	return <g>
+		<path d={d} fill="#C9744A" stroke={PAL.ink} strokeWidth={3.5} strokeLinejoin="round" />
+		<ellipse cx={nb[0]} cy={nb[1]} rx={r * 0.62} ry={r * 0.4} transform={`rotate(${ang} ${nb[0]} ${nb[1]})`} fill="#ECBDA2" stroke={PAL.ink} strokeWidth={2} />
+		{[1.6, 2.0].map((k) => { const p: V = [c0[0] + ux * r * k * 1.6, c0[1] + uy * r * k * 1.6]; return <path key={k} d={`M${p[0] + nx * r * 0.55} ${p[1] + ny * r * 0.55}Q${p[0] + ux * 6} ${p[1] + uy * 6} ${p[0] - nx * r * 0.55} ${p[1] - ny * r * 0.55}`} fill="none" stroke="#8A4428" strokeWidth={2.4} opacity={0.7} />; })}
+		{c && null}
+	</g>;
+};
 /** rays from a point (screen), rotating */
 const Rays: React.FC<{x: number; y: number; r0: number; r1: number; n: number; a0: number; o: number; w?: number; c?: string}> = ({x, y, r0, r1, n, a0, o, w = 2.6, c = '#FFE7A0'}) => o <= 0 ? null : <g style={{mixBlendMode: 'screen'}} opacity={o}>
 	{Array.from({length: n}, (_, i) => { const a = (a0 + (i * 360) / n) * Math.PI / 180, da = (w * Math.PI / 180) * (i % 2 ? 0.6 : 1), L = i % 2 ? r1 * 0.72 : r1;
@@ -90,28 +104,64 @@ const ChestLinen: React.FC = () => {
 	</g>;
 };
 export const T34 = {shine: 1.0};
+/** the mummy's chest from above at the scarab's true scale (Met 36.3.2 is 6.6 × 5.3 cm: about a sixth of the chest's width):
+    the gold mask's chin and beard at the top, the striped lappets, the broad collar, the wrapped chest with its bead net */
+export const SC34 = {x: 720, y: 606, s: 22.5};
+const ChestTop: React.FC<{id: string}> = ({id}) => {
+	const body = 'M150 1100L170 330Q190 150 380 110L1060 110Q1250 150 1270 330L1290 1100Z';
+	const wraps: React.ReactNode[] = [];
+	for (let i = -20; i < 60; i++) { const x0 = -300 + i * 30; wraps.push(<path key={'a' + i} d={`M${x0} 100L${x0 + 560} 1100`} stroke="#C9B88E" strokeWidth={9} opacity={0.6} />, <path key={'b' + i} d={`M${x0 + 560} 100L${x0} 1100`} stroke="#F2E9D2" strokeWidth={6} opacity={0.55} />); }
+	const net: React.ReactNode[] = [];
+	for (let i = 0; i < 26; i++) for (let j = 0; j < 12; j++) { const bx = 160 + i * 46 + (j % 2) * 23, by = 470 + j * 34;
+		net.push(<g key={`${i}.${j}`}><path d={poly([[bx, by - 15], [bx + 22, by], [bx, by + 15], [bx - 22, by]])} fill="none" stroke="#3FA6A0" strokeWidth={3.2} opacity={0.55} />
+			<circle cx={bx} cy={by - 15} r={3.6} fill={j % 2 ? PAL.gold : PAL.red} stroke={PAL.ink} strokeWidth={1} /></g>); }
+	const collar: [number, number, string][] = [[150, 178, PAL.gold], [178, 226, PAL.blue], [226, 244, PAL.gold], [244, 292, PAL.red], [292, 308, PAL.gold], [308, 352, PAL.turq], [352, 368, PAL.gold]];
+	const arc = (r0: number, r1: number) => { const pts: string[] = [];
+		for (let i = 0; i <= 40; i++) { const a = Math.PI * i / 40; pts.push(`${720 + r1 * Math.cos(a)} ${70 + r1 * Math.sin(a) * 1.12}`); }
+		for (let i = 40; i >= 0; i--) { const a = Math.PI * i / 40; pts.push(`${720 + r0 * Math.cos(a)} ${70 + r0 * Math.sin(a) * 1.12}`); }
+		return 'M' + pts.join('L') + 'Z'; };
+	return <g>
+		<rect x={-400} y={-100} width={2300} height={1300} fill="#0E1638" />
+		<defs><clipPath id={`${id}-b`}><path d={body} /></clipPath></defs>
+		<path d={body} fill="#E6D7B2" stroke={PAL.ink} strokeWidth={4} />
+		<g clipPath={`url(#${id}-b)`}>{wraps}{net}</g>
+		{/* the broad collar, its drop beads */}
+		{Array.from({length: 23}, (_, i) => { const a = Math.PI * (i + 0.5) / 23, x = 720 + 380 * Math.cos(a), y = 70 + 380 * Math.sin(a) * 1.12;
+			return <ellipse key={i} cx={x} cy={y} rx={9} ry={15} transform={`rotate(${a * 180 / Math.PI - 90} ${x} ${y})`} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} stroke={PAL.ink} strokeWidth={1.6} />; })}
+		<path d={arc(146, 372)} fill={PAL.ink} />
+		{collar.map(([r0, r1, c], i) => <path key={i} d={arc(r0, r1)} fill={c} stroke={PAL.ink} strokeWidth={1.4} />)}
+		{/* the headcloth's lappets over the collar and the gold mask's chin with its beard */}
+		{[470, 880].map((x) => <g key={x}><path d={poly([[x, 20], [x + 90, 20], [x + 84, 300], [x + 6, 300]])} fill={PAL.gold} stroke={PAL.ink} strokeWidth={3} />
+			{Array.from({length: 9}, (_, i) => <rect key={i} x={x + 4} y={34 + i * 30} width={82} height={13} fill={PAL.blue} />)}</g>)}
+		<ellipse cx={720} cy={36} rx={150} ry={96} fill={PAL.gold} stroke={PAL.ink} strokeWidth={3.5} />
+		<path d="M640 70Q720 112 800 70" fill="none" stroke={PAL.gold2} strokeWidth={4} />
+		<path d={poly([[696, 112], [744, 112], [740, 236], [700, 236]])} fill={PAL.blue} stroke={PAL.ink} strokeWidth={3} />
+		{[0, 1, 2, 3].map((i) => <path key={i} d={`M697 ${130 + i * 28}L743 ${138 + i * 28}`} stroke={PAL.gold} strokeWidth={6} />)}
+		<path d="M700 236Q720 262 740 236" fill={PAL.blue} stroke={PAL.ink} strokeWidth={3} />
+	</g>;
+};
 const S34: React.FC<ShotProps> = ({t}) => {
-	const SX = 720, SY = 560, s = 40, sh = bump(t, T34.shine - 0.16, T34.shine + 0.34), shP = Math.pow(sh, 1.5);
-	const cam = camE(t, -0.4, 2.5, [720, 470, 1.0], [722, 546, 1.42], eOut);
+	const {x: SX, y: SY, s} = SC34, sh = bump(t, T34.shine - 0.16, T34.shine + 0.34), shP = Math.pow(sh, 1.5);
+	// hold on the whole chest (the amulet at its real size), then push in through the flare and the shine
+	const cam = camE(t, 0.3, 2.65, [720, 486, 1.0], [720, 590, 2.2]);
 	const flare = t < 0 ? 0 : Math.exp(-t / 0.45), ring = cl(t / 0.7), hum = sm(cl((t - 0.05) / 2.3));
-	const rot = -10 * (1 - eOut((t + 0.3) / 1.7)), turn = 0.13 * bump(t, 0.55, 1.45);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#E6D7B2" wear={wearZ(cam.z, 0.7)} stain={0.3} wobble={wobIn(t)} tags={[{x: 430, y: 330, text: '心脏圣甲虫', o: sm((t - 0.5) / 0.3)}]}
+	const rot = -6 * (1 - eOut((t + 0.3) / 1.7)), turn = 0.1 * bump(t, 0.55, 1.45);
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0E1638" wear={wearZ(cam.z, 0.7)} stain={0.3} wobble={wobIn(t)} tags={[{x: 560, y: 520, text: '心脏圣甲虫', o: sm((t - 0.4) / 0.3)}]}
 		light={<>
-			{/* a green-gold halo hugging the scarab's rim (outside it: the stone keeps its colour) */}
 			<g style={{mixBlendMode: 'screen'}} opacity={0.35 + 0.55 * hum}>{[34, 20, 9].map((w, i) => <path key={i} d={OVAL} transform={`translate(${SX},${SY}) rotate(${rot}) scale(${s * (1.05 + w / 400)})`} fill="none" stroke={i ? '#FFE08A' : '#BFF2A0'} strokeWidth={w / s} opacity={[0.25, 0.4, 0.8][i]} />)}</g>
-			{t >= 0 && ring < 1 && <g style={{mixBlendMode: 'screen'}} opacity={1 - ring}><ellipse cx={SX} cy={SY} rx={180 + 420 * eOut(ring)} ry={220 + 420 * eOut(ring)} fill="none" stroke="#FFE7A0" strokeWidth={10} />
-				<ellipse cx={SX} cy={SY} rx={180 + 420 * eOut(ring)} ry={220 + 420 * eOut(ring)} fill="none" stroke="#FFD060" strokeWidth={34} opacity={0.35} /></g>}
-			<Dust t={t} box={[300, 200, 1150, 900]} n={46} seed={34} c="#FFE7A0" o={0.75} vx={-5} vy={-8} r={2.4} />
+			{t >= 0 && ring < 1 && <g style={{mixBlendMode: 'screen'}} opacity={1 - ring}><ellipse cx={SX} cy={SY} rx={110 + 300 * eOut(ring)} ry={130 + 300 * eOut(ring)} fill="none" stroke="#FFE7A0" strokeWidth={8} />
+				<ellipse cx={SX} cy={SY} rx={110 + 300 * eOut(ring)} ry={130 + 300 * eOut(ring)} fill="none" stroke="#FFD060" strokeWidth={26} opacity={0.35} /></g>}
+			<Dust t={t} box={[420, 380, 1020, 860]} n={36} seed={34} c="#FFE7A0" o={0.75} vx={-3} vy={-5} r={1.8} />
 			{/* THE shine: a star flashes on the beetle's shoulder as the sheen crosses it */}
-			<Sparkle x={SX - 70} y={SY - 112} r={150 * shP} rot={15 + 30 * t} c="#FFFFFF" />
-			<Sparkle x={SX - 70} y={SY - 112} r={70 * shP} rot={60 + 30 * t} c="#FFF6C8" />
+			<Sparkle x={SX - 1.75 * s} y={SY - 2.8 * s} r={3.8 * s * shP} rot={15 + 30 * t} c="#FFFFFF" />
+			<Sparkle x={SX - 1.75 * s} y={SY - 2.8 * s} r={1.8 * s * shP} rot={60 + 30 * t} c="#FFF6C8" />
 		</>}
-		screen={<rect width={FW} height={FH} fill="#FFF6DE" opacity={0.28 * flare + 0.12 * shP} style={{mixBlendMode: 'screen'}} />}>
-		<ChestLinen />
-		<rect x={-400} y={-100} width={2300} height={1300} fill="#0B1438" opacity={0.6} />
-		<Glow x={SX} y={SY} r={360 + 130 * hum} c="green" o={0.4 + 0.35 * hum} />
-		<Glow x={SX} y={SY} r={270 + 60 * hum} c="gold" o={0.35 + 0.4 * hum + 0.5 * flare} />
-		<Rays x={SX} y={SY} r0={170} r1={460 + 120 * hum} n={18} a0={t * 9} o={0.4 * hum + 0.5 * flare} />
+		screen={<rect width={FW} height={FH} fill="#FFF6DE" opacity={0.22 * flare + 0.1 * shP} style={{mixBlendMode: 'screen'}} />}>
+		<ChestTop id="c34c" />
+		<rect x={150} y={110} width={1140} height={1000} fill="#0B1438" opacity={0.35 + 0.15 * hum} />
+		<Glow x={SX} y={SY} r={200 + 90 * hum} c="green" o={0.4 + 0.35 * hum} />
+		<Glow x={SX} y={SY} r={150 + 40 * hum} c="gold" o={0.35 + 0.4 * hum + 0.5 * flare} />
+		<Rays x={SX} y={SY} r0={100} r1={280 + 80 * hum} n={18} a0={t * 9} o={0.4 * hum + 0.5 * flare} w={2.2} />
 		<ScarabC id="c34s" x={SX} y={SY} s={s} flip={turn} rot={rot} t={t} glint={0.7 + 0.3 * hum} sheen={(t - T34.shine + 0.18) / 0.4} />
 	</Stage60>;
 };
@@ -132,22 +182,29 @@ const S35: React.FC<ShotProps> = ({t}) => {
 			{lit.map((a, j) => a > 0 && a < 1 ? <Sparkle key={j} x={SX + 150} y={SY - 4.0 * s + j * 1.02 * 1.24 * s + 22} r={36 * Math.sin(Math.PI * a)} rot={45 * a} /> : null)}
 			<Dust t={t} box={[200, 80, 1250, 900]} n={50} seed={35} c="#FFE7A0" o={0.7} vx={4} vy={-7} r={2.2} />
 		</>}>
-		<rect x={-300} y={-100} width={2100} height={1300} fill="#111A45" />
-		<Stars t={t} box={[-100, 40, 1550, 930]} n={170} seed={35} />
+		{/* the same chest as in 34, magnified about the amulet: the bead net and the linen keep the true scale */}
+		<g transform={`translate(${SX},${SY}) scale(${s / SC34.s}) translate(${-SC34.x},${-SC34.y})`}><ChestTop id="c35c" /></g>
+		<rect x={-300} y={-100} width={2100} height={1300} fill="#0B1438" opacity={0.55} />
 		<Rays x={SX} y={SY} r0={200} r1={620} n={14} a0={-t * 6} o={0.32 + 0.25 * nlit} w={3.2} />
 		<ellipse cx={SX + 30 * lift} cy={SY + 250} rx={190 * (1 - 0.3 * lift)} ry={34} fill="#000" opacity={0.25 * (1 - lift * 0.5)} />
-		<ScarabC id="c35s" x={SX} y={SY - 26 * lift + 6 * land} s={s * (1 + 0.07 * lift)} flip={flip} rot={-5 * Math.sin(Math.PI * flip)} t={t} rows={ROWS35} cell={1.02} lit={lit} glint={flip < 0.5 ? 0.8 : 0.3} />
+		<ScarabC id="c35s" x={SX} y={SY - 26 * lift + 6 * land} s={s * (1 + 0.07 * lift)} flip={flip} rot={0} t={t} rows={ROWS35} cell={1.02} lit={lit} glint={flip < 0.5 ? 0.8 : 0.3} />
+		{/* a thumb and a forefinger hold it by its two ends and turn it (it is egg-sized: 6.6 × 5.3 cm) */}
+		{(() => { const ss = s * (1 + 0.07 * lift), cy = SY - 26 * lift + 6 * land, fin = eOut(seg(t, -0.35, 0.1)), off = (1 - fin) * 360;
+			return <g transform={`translate(${off},${off * 0.4})`}>
+				<Finger tip={[SX + 0.2 * ss, cy - 4.95 * ss]} ang={-38} w={2.3 * ss} len={700} />
+				<Finger tip={[SX + 0.2 * ss, cy + 5.0 * ss]} ang={36} w={2.7 * ss} len={700} thumb />
+			</g>; })()}
 	</Stage60>;
 };
 
 /* ======================= 36 · 「“心啊，别站出来[指控]我！”」 the heart on the pan opens its mouth to testify; the spell ribbon hushes it ======================= */
 /** the shared Heart60 as the talking heart, seated on the pan (pan units): open = mouth open to testify; ribbon 0..1 = the gold spell
     band wrapping it twice (above the brows, below the mouth: the face stays readable); hush 0..1 = mouth shut, innocent smile */
-const TH = {h: 2.4, y: -1.16};
+const TH = {h: 2.4, y: -1.18};
 const TalkHeart: React.FC<{open: number; ribbon: number; hush: number; t: number; id: string}> = ({open, ribbon, hush, t, id}) => {
 	const k = TH.h / 150;
 	// two bands in the heart's own 150-unit space: [centre x, centre y, rx, ry, tilt, start angle]
-	const B: [number, number, number, number, number, number][] = [[2, -24, 62, 15, -9, Math.PI * 0.85], [10, 52, 44, 12, 8, Math.PI * 0.2]];
+	const B: [number, number, number, number, number, number][] = [[0, -47, 50, 11, -8, Math.PI * 0.85], [0, 55, 60, 12, 6, Math.PI * 0.2]]; // round the jar's neck, round its lower body
 	const band = (j: number, front: boolean) => {
 		const [cx0, cy0, rx, ry, tl, th0] = B[j], tilt = tl * Math.PI / 180, r = cl(ribbon * 2 - j);
 		if (r <= 0) return null;
@@ -346,7 +403,7 @@ const MacroWorld: React.FC<{t: number; sand: number; cut: number; s: number; x: 
 </g>;
 const S39: React.FC<ShotProps> = ({t}) => {
 	const SW = 0.95, xf = sm(seg(t, 0.85, 1.1)); // crossfade wide → macro
-	const camW = camE(t, -0.4, 1.1, [720, 486, 1.0], [720, 440, 1.5], (u) => u * u);
+	const camW = camE(t, -0.4, 1.1, [650, 500, 1.0], [720, 468, 2.5], (u) => u * u);
 	const camM = camE(t, 0.85, 3.6, [730, 520, 1.0], [700, 500, 1.06]);
 	const sand = seg(t, T39.sand0, T39.sand1), cut = cut39(t), rasp = t > T39.sand0 && t < T39.sand1;
 	// macro: the base at s = 120, the patch row centred
@@ -356,17 +413,31 @@ const S39: React.FC<ShotProps> = ({t}) => {
 	const hit = T39.taps.reduce((a, tt) => Math.max(a, 1 - cl(Math.abs(t - tt) / 0.11)), 0);
 	const chiselP: V = [mx0 + (0.55 + ci * 1.08) * ms, my0 + (ROWS39[PATCH.j].y + 0.1) * ms];
 	return <AbsoluteFill>
-		{xf < 1 && <Stage60 t={t} cam={camW} grade="night" bg="#10131C" wear={0.3} stain={0.3} wobble={wobIn(t)} tags={[{x: 420, y: 230, text: '哈特妮菲尔'}]}
+		{xf < 1 && <Stage60 t={t} cam={camW} grade="night" bg="#10131C" wear={0.3} stain={0.3} wobble={wobIn(t)} tags={[{x: 560, y: 250, text: '哈特妮菲尔'}]}
 			light={<>
-				<Shaft pts={[[620, PIC_T - 60], [820, PIC_T - 60], [930, 860], [510, 860]]} o={0.55} />
-				<Glow x={720} y={480} r={330} c="gold" o={0.45} />
-				<Glow x={720} y={480} r={180} c="green" o={0.35} />
-				<Dust t={t} box={[520, 80, 920, 850]} n={30} seed={39} o={0.6} vx={2} vy={4} r={1.8} />
+				<Shaft pts={[[660, PIC_T - 60], [780, PIC_T - 60], [850, 800], [590, 800]]} o={0.55} />
+				<Glow x={720} y={478} r={150} c="gold" o={0.55} />
+				<Glow x={720} y={478} r={60} c="green" o={0.5} />
+				<Sparkle x={716} y={472} r={20 + 8 * Math.sin(t * 5)} rot={20 * t} />
+				<Dust t={t} box={[590, 80, 850, 800]} n={26} seed={39} o={0.6} vx={2} vy={4} r={1.6} />
 			</>}>
+			<defs><filter id="c39sil" x="-20%" y="-10%" width="140%" height="120%"><feColorMatrix type="matrix" values="0 0 0 0 0.03  0 0 0 0 0.035  0 0 0 0 0.06  0 0 0 1 0" /></filter></defs>
 			<rect x={-300} y={-100} width={2100} height={1300} fill="#10131C" />
-			<rect x={-300} y={760} width={2100} height={500} fill="#0B0D14" />
-			<MuseumCase x0={500} x1={940} y0={190} y1={760} t={t} label="大都会艺术博物馆" />
-			<MetScarab id="c39w" x={720} y={470} s={26} t={t} sand={0} cut={0} />
+			<rect x={-300} y={800} width={2100} height={500} fill="#0B0D14" />
+			{/* a visitor (1.7 m) at the pedestal (1.05 m) with its small vitrine: the amulet is egg-sized */}
+			<g filter="url(#c39sil)"><God id="c39vis" cast={CAST.ani} pose={{...POSES.rest, lean: 8, neck: 6, head: 12, bs: -2, be: 8, fs: 4, fe: 20}} x={430} y={800} s={22.6} sec={{t}} /></g>
+			<path d={poly([[640, 800], [800, 800], [790, 548], [650, 548]])} fill="#2A2420" stroke="#0A0806" strokeWidth={3} />
+			<rect x={630} y={534} width={180} height={16} fill="#5A4A3A" stroke="#0A0806" strokeWidth={2} />
+			<rect x={670} y={432} width={100} height={102} fill="#1B2232" opacity={0.5} />
+			<rect x={670} y={432} width={100} height={102} fill="none" stroke="#C9D4E0" strokeWidth={2.4} opacity={0.8} />
+			<path d={poly([[686, 432], [702, 432], [680, 534], [670, 534]])} fill="#FFFFFF" opacity={0.12} />
+			<rect x={708} y={516} width={24} height={18} fill="#3A3330" />
+			<MetScarab id="c39w" x={720} y={478} s={2.4} t={t} sand={0} cut={0} />
+			{/* the wall label */}
+			<rect x={880} y={420} width={250} height={128} rx={4} fill="#EDE6D6" stroke="#0A0806" strokeWidth={2} />
+			<text x={1005} y={452} textAnchor="middle" fontFamily={F_SERIF} fontWeight={700} fontSize={19} fill="#2A2420">哈特妮菲尔的心脏圣甲虫</text>
+			<text x={1005} y={496} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={34} fill="#B8371F">6.6 × 5.3 厘米</text>
+			<text x={1005} y={530} textAnchor="middle" fontFamily={F_SERIF} fontWeight={700} fontSize={17} fill="#2A2420">大都会艺术博物馆</text>
 		</Stage60>}
 		{xf > 0 && <AbsoluteFill style={{opacity: xf}}><Stage60 t={t} cam={camM} grade="night" bg="#151A26" wear={0.25} stain={0.25} wobble={xf < 1 ? 0 : wobIn(t - 1.1)} tags={[{x: 110, y: 120, text: '哈特妮菲尔'}]}
 			light={<>

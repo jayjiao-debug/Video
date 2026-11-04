@@ -65,7 +65,7 @@ const rect = (x0: number, y0: number, x1: number, y1: number) => poly([[x0, y0],
 export {ctx as ctxC, Solid as SolidC};
 /** heart: null = the painted heart; a node = drawn in the left pan frame (units, base at y = 0); feather: false hides it */
 /** the shared Heart60 seated on a pan (pan-frame units: h = 2.2, its tip sunk a little behind the pan's front rim) */
-export const PAN_HEART = {h: 2.2, y: -0.9};
+export const PAN_HEART = {h: 1.9, y: -0.93};
 export const PanHeart: React.FC<{id: string; beat?: number; glow?: number}> = ({id, beat = 0, glow = 0}) => <Heart60 x={0} y={PAN_HEART.y} h={PAN_HEART.h} id={id} beat={beat} glow={glow} />;
 export const BalanceC: React.FC<{p: BalancePose; x: number; y: number; s: number; t?: number; heart?: React.ReactNode; feather?: boolean; baboon?: boolean; hid?: string; beat?: number}> = ({p, x, y, s, t = 0, heart, feather = true, baboon = true, hid, beat = 0}) => {
 	const c = ctx(s), g = balanceGeo(p);
