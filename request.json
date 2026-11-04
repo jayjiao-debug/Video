@@ -1,134 +1,68 @@
 {
- "id": "ep60-sfx-01",
+ "id": "ep60-sfx-02",
  "items": [
   {
    "type": "sfx",
-   "name": "X01_linen_wrap",
-   "text": "linen bandage being wrapped tightly around a body, soft dry cloth rustle and gentle pulling, close and intimate, no music",
-   "duration": 4,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X02_canopic_lid",
-   "text": "a small carved stone lid set down onto a ceramic jar, one soft clink and a short gritty scrape, close and dry",
-   "duration": 1.5,
+   "name": "X04_papyrus_unroll_b",
+   "text": "close-up foley: a stiff dry papyrus scroll unrolled quickly on a wooden table, loud crisp crackle and paper flutter, ends with a soft slap as it lies flat",
+   "duration": 2.5,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X03_natron_pour",
-   "text": "dry coarse salt poured from a clay bowl onto linen, fine granular trickle, close",
-   "duration": 3,
-   "influence": 0.5
+   "name": "X04_papyrus_unroll_c",
+   "text": "foley: old parchment scroll unrolling, crunchy crackling paper, close and clear",
+   "duration": 2.0,
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X04_papyrus_unroll",
-   "text": "an old dry papyrus scroll unrolled across a wooden table, crisp crackling paper rustle",
-   "duration": 2.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X05_reed_pen",
-   "text": "a reed pen writing on papyrus, three scratchy strokes and a light tap into an ink palette, close",
-   "duration": 3,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X06_boat_oars",
-   "text": "wooden oars dipping slowly into calm dark river water, rhythmic strokes, a wooden boat creaking softly, cavernous echo, quiet, seamless loop",
+   "name": "X06_boat_oars_b",
+   "text": "two wooden oars pulling through calm water in a slow steady rhythm, clear splash and drip on every stroke, a wooden boat creaking, quiet river at night",
    "duration": 6,
-   "influence": 0.4,
-   "loop": true
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X07_serpent_hiss",
-   "text": "a large serpent hissing, one long sharp hiss swelling and fading, close",
-   "duration": 2.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X08_bronze_gate",
-   "text": "heavy bronze temple gate creaking open slowly, metallic groan with a low resonant hum, ends with a soft thud",
-   "duration": 3.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X09_judges_whisper",
-   "text": "a crowd of forty people whispering in a large stone hall, many overlapping hushed voices, no intelligible words, reverberant, seamless loop",
+   "name": "X06_boat_oars_c",
+   "text": "a small wooden rowing boat, slow oar strokes, each stroke a distinct dip, swirl and drip of water, calm and dark",
    "duration": 6,
-   "influence": 0.4,
-   "loop": true
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X10_scarab_clack",
-   "text": "a small hard stone amulet dropped onto a stone floor, one sharp clack and a tiny bounce, dry",
+   "name": "X15_sickle_wheat_b",
+   "text": "close-up foley: a curved metal sickle swiftly slicing through a bunch of dry wheat stalks, a sharp swish followed by a crisp crunchy cut, twice",
+   "duration": 2,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "X15_sickle_wheat_c",
+   "text": "foley: one fast sickle cut through dry grain stalks, crisp swish and snap, close",
    "duration": 1.5,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X11_feather_land",
-   "text": "a single feather drifting down and landing, soft airy whoosh ending in one tiny delicate bell chime",
-   "duration": 2.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X12_scale_ding",
-   "text": "small brass balance scale pans coming level, one clear soft metallic ding with a gentle ring-out",
-   "duration": 2.5,
+   "name": "X17_heart_on_pan_b",
+   "text": "close-up foley: a raw wet heart dropped onto a small bronze dish, a clear squelchy thud and a short metallic ring",
+   "duration": 1.5,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X13_ammit_gulp",
-   "text": "cartoon monster gulp, a big wet comedic swallow followed by a small satisfied grunt",
-   "duration": 2,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X14_reeds_birds_water",
-   "text": "peaceful riverbank of tall reeds, gentle flowing water, soft birdsong, warm sunny morning, seamless loop",
-   "duration": 8,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "X15_sickle_wheat",
-   "text": "a bronze sickle cutting through a handful of dry wheat stalks, two crisp swishes and snaps, close",
-   "duration": 2,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X16_shabti_clatter",
-   "text": "many small clay figurines rattling and clattering on a stone shelf as they come to life, tiny ceramic clicks and scuttling",
-   "duration": 3,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X17_heart_on_pan",
-   "text": "a soft wet fleshy object placed onto a bronze scale pan, a muffled thump and a faint metallic ring",
+   "name": "X17_heart_on_pan_c",
+   "text": "foley: a soft wet piece of meat placed onto a metal plate, squishy thump with a brief bright metal ring",
    "duration": 1.5,
-   "influence": 0.5
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X18_scale_tip_heavy",
-   "text": "a bronze balance scale tipping hard to one side, chains rattling and a heavy metal clunk",
+   "name": "X12_scale_ding_b",
+   "text": "one single soft bright metallic ding from a small brass bell, struck once, long gentle ring-out, nothing else",
    "duration": 2.5,
-   "influence": 0.5
+   "influence": 0.7
   }
  ]
 }
