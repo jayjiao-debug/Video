@@ -41,7 +41,7 @@ const Furniture: React.FC<{L: Placed[]; i: number; t: number}> = ({L, i, t}) => 
 		const vz = s.voice ? VOICE[s.voice] : null;
 		const rows = vz ? vz.zh.map((z, k) => ({s: (k === 0 ? '「' : '') + z + (k === vz.zh.length - 1 ? '」' : ''), at: 0.35 + k * 1.4})) : s.rows;
 		const vis = rows.filter((r) => ts >= r.at).map((r) => ({s: r.s, n: Math.floor((ts - r.at) * CHARS_PER_S) + 1, o: out}));
-		if (vis.length) nodes.push(s.punch ? <Punch key="p" s={vis[vis.length - 1].s} o={out} /> : <Story key="s" rows={vis.map((r) => ({...r, n: Math.min(r.n, 999)}))} />);
+		if (vis.length) nodes.push(s.punch ? <Punch key="p" s={vis[vis.length - 1].s} o={out} /> : <Story key="s" rows={vis.map((r) => ({...r, n: Math.min(r.n, 999)}))} pool={0.56} />);
 		if (vz) nodes.push(<VoiceTag key="v" t={ts} o={out} en={vz.en} heard={!!VOICE_READY[s.voice!]} />);
 	}
 	// stamp: after the first row has typed
@@ -61,9 +61,9 @@ const Furniture: React.FC<{L: Placed[]; i: number; t: number}> = ({L, i, t}) => 
 const VoiceTag: React.FC<{t: number; o: number; en: string; heard: boolean}> = ({t, o, en, heard}) => {
 	useFonts59('卡尔·布什比原声');
 	const u = sm((t - 0.2) / 0.3) * o;
-	return <div style={{position: 'absolute', left: 150, top: 132 + 65 * 1.5 * 2 + 18, opacity: u, color: INK, whiteSpace: 'nowrap', textShadow: '0 1px 6px rgba(0,0,0,0.8)'}}>
+	return <div style={{position: 'absolute', left: 150, top: 132 + 65 * 1.5 * 2 + 18, opacity: u, color: INK, whiteSpace: 'nowrap', textShadow: '0 0 3px rgba(0,0,0,0.95), 0 1px 4px rgba(0,0,0,0.9), 0 2px 14px rgba(0,0,0,0.85)'}}>
 		<span style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, color: GOLD, letterSpacing: '0.06em'}}>— 卡尔·布什比{heard ? ' 原声' : ''}</span>
-		<div style={{fontFamily: "'Cormorant59i', serif", fontStyle: 'italic', fontSize: 30, opacity: 0.8, marginTop: 6}}>“{en}”</div></div>;
+		<div style={{fontFamily: "'Cormorant59i', serif", fontStyle: 'italic', fontSize: 30, opacity: 0.95, marginTop: 6}}>“{en}”</div></div>;
 };
 
 const Film: React.FC<{tr: Track; music?: boolean; pictureOnly?: boolean}> = ({tr, music = true, pictureOnly = false}) => {

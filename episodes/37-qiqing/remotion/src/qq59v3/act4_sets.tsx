@@ -148,9 +148,9 @@ export const Bridge4: React.FC<{t: number; w?: Partial<W4>; fog: number; part: n
    its second hand ticking on the beat. `tick` = the clock's seconds (the scene steps it on the beats); `flash` 0..1 = a press flash outside. */
 export const WindowSet: React.FC<{t: number; z: number; tick: number; flash: number}> = ({t, z, tick, flash}) => {
 	const cam = {x: 0, y: 0, zoom: 1, roll: 0, z};
-	const G = {x0: 760, x1: 1520, y0: 150, y1: 870, mid: 520};   // the glass of the window (screen px at rest)
+	const G = {x0: 920, x1: 1640, y0: 150, y1: 870, mid: 520};   // moved right (owner 02:26: the subtitle ran into the window)   // the glass of the window (screen px at rest)
 	const fw = 26;   // frame width
-	return <Stage t={t} cam={cam} atm={{haze: '#2c3150', density: 0.03, focus: 4, aperture: 2.4, rim: '#ffd68a', lightDir: 170, grain: 0.07, vignette: 0.62, pp: [1180, 470]}} bg="#120f14">
+	return <Stage t={t} cam={cam} atm={{haze: '#2c3150', density: 0.03, focus: 4, aperture: 2.4, rim: '#ffd68a', lightDir: 170, grain: 0.07, vignette: 0.62, pp: [1310, 470]}} bg="#120f14">
 		<Layer D={7}><Room G={G} tick={tick} t={t} /></Layer>
 		<Layer D={4.4}><MumBehind G={G} t={t} /></Layer>
 		<Layer D={4.1}><NetCurtain G={G} t={t} /></Layer>

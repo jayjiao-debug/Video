@@ -5,6 +5,7 @@
    3D camera in metres (act4_sets W4), so the door that opens on the second drop is the same door, in the same framing, as the opening
    `door` shot (DOOR_END) — the film comes back to where it started, now complete. */
 import React from 'react';
+import {layout} from './story3';
 import {AbsoluteFill, Img} from 'remotion';
 import type {SceneDef, SceneProps} from './EP59V3';
 import {Bridge4, WindowSet, BW4, W4, approach, lerpW, floatW, wp4} from './act4_sets';
@@ -57,7 +58,7 @@ const streetW = (t: number, T: number) => floatW(lerpW({vpx: 600, hz: 680, camH:
 const Street: React.FC<SceneProps> = ({t, dur, beat}) => {
 	const c = KARL_CYCLE.pushCart, ph = t / c.sec * STREET_PACE + 0.15, X = -2.75 + (t / c.sec) * STREET_PACE * c.stride * 1.8;
 	const flashes = [0.02, 1, 2, 2.5, 3, 4, 5, 6, 6.5, 7].map((b, i) => b * beat + (i % 3) * 0.02);
-	return <Dawn4 t={t + 40} w={streetW(t, dur)} open={0} cast={{karl: {X, D: 4.75, action: 'pushCart', phase: ph, facing: 1}}} flashes={flashes} />;
+	return <Dawn4 t={t + 40} w={streetW(t, dur)} open={0} nearL={3} cast={{karl: {X, D: 4.75, action: 'pushCart', phase: ph, facing: 1}}} flashes={flashes} />;
 };
 
 /* ============================================ window ============================================
@@ -65,7 +66,7 @@ const Street: React.FC<SceneProps> = ({t, dur, beat}) => {
 const Window: React.FC<SceneProps> = ({t, dur, beat}) => {
 	const n = Math.floor(Math.max(0, t) / beat), f = (Math.max(0, t) - n * beat) / beat, tick = 17 + n + (f < 0.12 ? -0.1 * Math.sin(f / 0.12 * Math.PI) : 0) - (f < 0.06 ? 1 - f / 0.06 : 0);
 	const fl = (b: number) => { const u = t - b * beat; return u >= 0 && u < 0.14 ? 1 - u / 0.14 : 0; };
-	return <WindowSet t={t + 60} z={0.45 * eio(cl(t / dur)) + 0.04 * Math.sin(t * 0.3)} tick={tick} flash={Math.max(fl(3), fl(5.5) * 0.6)} />;
+	return <WindowSet t={t + 60} z={0.3 * eio(cl(t / dur)) + 0.04 * Math.sin(t * 0.3)} tick={tick} flash={Math.max(fl(3), fl(5.5) * 0.6)} />;
 };
 
 /* ============================================ son ============================================
@@ -139,9 +140,12 @@ const Hug: React.FC<SceneProps> = ({t, dur, beat}) => {
 	const t0 = 3 * beat, flashes = [0.5, 1.5, 2.5, 4.5, 5.5, 7].map((b) => b * beat);
 	return <AbsoluteFill>
 		<Dawn4 t={t + 120} w={hugW(t, dur)} open={1} cast={{hug: {...HUG, phase: t / KARL_CYCLE.hug.sec + 0.05, facing: 1}, cart: {X: 1.25, D: 5.6, facing: 1}}} hallMum={false} flashes={flashes} aperture={2.6} />
-		<Print3 src={PH3.hug.src} pos={PH3.hug.pos} aspect={PH3.hug.aspect} t={t - t0} dur={dur - t0 - 0.3} w={860} cx={1215} cy={548} rot={-2} from="right" caption="2026.11.2 · 赫尔" z={2} />
+		<HugPrint t={t - t0} hold={60} />
 	</AbsoluteFill>;
 };
+/** the real hug photo: lands in `hug` and holds through the cut into `world` (owner 02:27: hold it longer, to ~2:33) */
+const HugPrint: React.FC<{t: number; hold: number}> = ({t, hold}) =>
+	<Print3 src={PH3.hug.src} pos={PH3.hug.pos} aspect={PH3.hug.aspect} t={t} dur={hold} w={860} cx={1215} cy={548} rot={-2} from="right" caption="2026.11.2 · 赫尔" z={2} />;
 
 /* ============================================ world ============================================
    "It took a world to get me here": from the two of them on the step the camera pulls back and cranes up over the street — the press,
@@ -150,10 +154,12 @@ const WORLD_A: Partial<W4> = {camX: 0.9, dz: -0.35, hz: 470, camH: 1.6, vpx: 330
 const WORLD_B: Partial<W4> = {camX: -0.8, dz: 14.5, hz: 195, camH: 12, vpx: 640, S: 900};
 const worldW = (t: number, T: number) => { const u = cl(t / T), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
 	return floatW(lerpW(WORLD_A, WORLD_B, e, DW4), t, 0.6, 13); };
-const World: React.FC<SceneProps> = ({t, dur, beat}) => {
+const World: React.FC<SceneProps> = ({t, dur, beat, tr}) => {
 	const T = dur + 0.5, w = worldW(t, T), flashes = [1, 3, 4.5, 6, 8, 9.5].map((b) => b * beat);
-	return <Dawn4 t={t + 140} w={w} open={1} cast={{hug: {...HUG, phase: t / KARL_CYCLE.hug.sec + 0.95, facing: 1}, cart: {X: 1.25, D: 5.6, facing: 1}}} hallMum={false}
-		flashes={flashes} crowd={1} town={1} focus={DF} aperture={1.2} density={lerp(0.045, 0.012, sm(t / T))} rain={1 - 0.7 * sm(t / T)} dawn={sm(t / T)} />;
+	const hugS = layout(tr).find((p) => p.id === 'hug')!, since = hugS.dur - 3 * beat;   // the print's age at the cut
+	return <AbsoluteFill><Dawn4 t={t + 140} w={w} open={1} cast={{hug: {...HUG, phase: t / KARL_CYCLE.hug.sec + 0.95, facing: 1}, cart: {X: 1.25, D: 5.6, facing: 1}}} hallMum={false}
+		flashes={flashes} crowd={1} town={1} focus={DF} aperture={1.2} density={lerp(0.045, 0.012, sm(t / T))} rain={1 - 0.7 * sm(t / T)} dawn={sm(t / T)} />
+		<HugPrint t={t + since} hold={since + 8 * beat} /></AbsoluteFill>;
 };
 
 /* ============================================ totals ============================================

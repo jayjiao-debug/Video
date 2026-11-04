@@ -223,7 +223,7 @@ export type DawnCast = {
 };
 /** act 1's street at dawn (mum's house on the right), on the act's true camera, with act 4's additions. */
 export const Dawn4: React.FC<{t: number; w?: Partial<W4>; open: number; cast?: DawnCast; hallMum?: boolean; press?: number; crowd?: number; flashes?: number[]; banner?: boolean; town?: number;
-	focus?: number; aperture?: number; density?: number; rain?: number; dawn?: number}> = ({t, w: wIn = {}, open, cast = {}, hallMum = true, press = 1, crowd = 1, flashes = [], banner = true, town = 0, focus, aperture = 1.6, density = 0.045, rain = 1, dawn = 0}) => {
+	focus?: number; aperture?: number; density?: number; rain?: number; dawn?: number; nearL?: number}> = ({t, w: wIn = {}, open, cast = {}, hallMum = true, press = 1, crowd = 1, flashes = [], banner = true, town = 0, focus, aperture = 1.6, density = 0.045, rain = 1, dawn = 0, nearL = 0}) => {
 	const w: W4 = {...DW4, ...wIn}, k = cast.karl, m = cast.mum, hg = cast.hug, c = cast.cart;
 	const fD = Math.max(1, (focus ?? (hg ? hg.D : k ? k.D : DF)) + w.dz);
 	const atm = {haze: '#5b5f84', density, focus: fD, aperture, rim: '#ffcf7a', lightDir: 12, grain: 0.075, vignette: 0.62, pp: [w.vpx, w.hz] as P};
@@ -249,7 +249,7 @@ export const Dawn4: React.FC<{t: number; w?: Partial<W4>; open: number; cast?: D
 		{town > 0 && <><TownRow w={w} X={-24.6} from={-20} to={160} side={-1} seed={5} /><TownRow w={w} X={23} from={-20} to={160} side={1} seed={6} /></>}
 		{town > 0 && <><TownRow w={w} X={-14.6} from={-20} to={160} side={-1} seed={7} /><TownRow w={w} X={13} from={-20} to={160} side={1} seed={8} /></>}
 		<DStreet w={w} open={open} />
-		<Facade w={w} X={-4.6} base={7.6} from={town > 0 ? 7.6 - 5 * HOUSE : 7.6} to={town > 0 ? 140 : 90} side={-1} lit={1} />
+		<Facade w={w} X={-4.6} base={7.6} from={town > 0 ? 7.6 - 5 * HOUSE : 7.6 - nearL * HOUSE} to={town > 0 ? 140 : 90} side={-1} lit={1} />
 		{crowd > 0 && <Layer D={L(12)} o={crowd}><People w={w} ppl={CROWD_L} col="#191a26" rim="#ffbf88" rimDx={1.3} t={t} /></Layer>}
 		{crowd > 0 && town > 0 && <Layer D={L(14)} o={crowd}><People w={w} ppl={CROWD_R} col="#191a26" rim="#ffbf88" rimDx={1.3} t={t} /></Layer>}
 		<Facade w={w} X={FX} base={H0} from={town > 0 ? H0 - 4 * HOUSE : w.dz > 0.2 ? H0 - 2 * HOUSE : H0} to={town > 0 ? 145 : 95} side={1} mum lit={open} />
