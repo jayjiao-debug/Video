@@ -83,20 +83,25 @@ export const Subtitle: React.FC<{t: number; sub: Sub}> = ({t, sub}) => {
 const outline = (c: string, w: number) => [[-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [0, 1], [-1, 0], [1, 0]].map(([a, b]) => `${a * w}px ${b * w}px 0 ${c}`).join(',') + `, 0 3px 8px rgba(0,0,0,0.45)`;
 export type Stamp = {era: string; place: string; src?: string};
 /** top-right stamp: era · place / source, cream on a dark outline, with a rule at the right (inside the safe area) */
-export const Stamp43: React.FC<{stamp: Stamp; o?: number}> = ({stamp, o = 1}) => <div style={{position: 'absolute', top: PIC_T + 20, right: FW - SAFE_R, textAlign: 'right', paddingRight: 14, opacity: o, fontFamily: F_SERIF, color: FC.cream, whiteSpace: 'nowrap'}}>
-	<div style={{position: 'absolute', right: 0, top: 4, bottom: 4, width: 3, background: FC.cream, boxShadow: `0 0 0 1.5px ${FC.ink}`}} />
+export const Stamp43: React.FC<{stamp: Stamp; o?: number}> = ({stamp, o = 1}) => <div style={{position: 'absolute', top: PIC_T + 20, right: FW - SAFE_R, textAlign: 'right', paddingRight: 20, opacity: o, fontFamily: F_SERIF, color: FC.cream, whiteSpace: 'nowrap'}}>
+	<div style={{position: 'absolute', right: 0, top: 2, bottom: 2, width: 7, background: `repeating-linear-gradient(180deg, #2C46A8 0 8px, #C23A22 8px 16px, #2F8A5A 16px 24px)`, boxShadow: `0 0 0 1.5px ${FC.gold}, 0 0 0 3px ${FC.ink}`}} />
 	<div style={{fontWeight: 900, fontSize: 37, lineHeight: 1.2, letterSpacing: '0.03em', textShadow: outline('#2a1608', 1.7)}}>{stamp.era}{stamp.place && <><span style={{color: FC.key, margin: '0 0.18em'}}>·</span>{stamp.place}</>}</div>
 	{stamp.src && <div style={{fontWeight: 900, fontSize: 29, lineHeight: 1.45, letterSpacing: '0.04em', textShadow: outline('#2a1608', 1.5)}}>{stamp.src}</div>}
 </div>;
 /** the J seal, bottom-right inside the picture */
 export const Seal43: React.FC<{o?: number}> = ({o = 0.86}) => <Img src={staticFile('ep44/jseal.png')} style={{position: 'absolute', left: SAFE_R - 68, top: PIC_B - 80, width: 66, height: 66, opacity: o, transform: 'rotate(-5deg)'}} />;
 /** a character's name: a vertical cream paper column with a red rule; (x, y) = top centre in frame px */
+/** a character's name: a vertical painted plaque — cream papyrus between lapis/gold rims with a striped khekher band top and
+    bottom, like a column of text in a tomb painting (owner 15:10: "give the elements characters"); (x, y) = top centre in frame px */
+const Band: React.FC<{w: number}> = ({w}) => <div style={{display: 'flex', height: 9, borderTop: `2px solid ${FC.gold}`, borderBottom: `2px solid ${FC.gold}`}}>
+	{Array.from({length: Math.max(3, Math.round(w / 9))}, (_, i) => <div key={i} style={{flex: 1, background: ['#2C46A8', '#C23A22', '#2F8A5A'][i % 3]}} />)}</div>;
 export const NameTag: React.FC<{x: number; y: number; text: string; o?: number; size?: number}> = ({x, y, text, o = 1, size = 36}) => {
-	const w = size + 22;
-	return <div style={{position: 'absolute', left: x - w / 2, top: y, width: w, opacity: o, background: '#F2E3C0', border: `2px solid ${FC.ink}`, borderRadius: 4, padding: '11px 0',
-		boxShadow: '0 3px 8px rgba(30,15,5,0.35), inset 0 0 10px rgba(150,100,40,0.25)'}}>
-		<div style={{position: 'absolute', inset: 3, border: `1.6px solid ${PAL.red}`, borderRadius: 2}} />
-		<div style={{writingMode: 'vertical-rl', margin: '0 auto', fontFamily: F_SERIF, fontWeight: 900, fontSize: size, lineHeight: 1, letterSpacing: '0.08em', color: FC.ink, textAlign: 'center', width: size}}>{text}</div>
+	const w = size + 24;
+	return <div style={{position: 'absolute', left: x - w / 2, top: y, width: w, opacity: o, background: '#F3E4C2', border: `2.5px solid ${FC.lapis}`, borderRadius: 3,
+		boxShadow: `0 0 0 1.5px ${FC.gold}, 0 4px 10px rgba(10,8,30,0.45), inset 0 0 10px rgba(150,100,40,0.22)`}}>
+		<Band w={w} />
+		<div style={{writingMode: 'vertical-rl', margin: '9px auto', fontFamily: F_SERIF, fontWeight: 900, fontSize: size, lineHeight: 1, letterSpacing: '0.08em', color: FC.ink, textAlign: 'center', width: size}}>{text}</div>
+		<Band w={w} />
 	</div>;
 };
 export type Tag = {x: number; y: number; text: string; o?: number; size?: number};

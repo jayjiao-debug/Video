@@ -12,6 +12,7 @@ import {AbsoluteFill, Composition, Img, registerRoot, staticFile, useCurrentFram
 import {FW, FH, PIC_T, PIC_B, SUB_B, SAFE_R, PIC_CY, FC, F_SERIF, Bands, Subtitle, Stamp43, Seal43, InMaster60} from './frame60';
 import {SHOTS, FILM_END, FPS, Shot} from './story60';
 import {cl, sm} from './geo60';
+import {JCartouche} from './egypt60';
 import {ACT60A} from './act60a';
 import {ACT60B} from './act60b';
 import {ACT60C} from './act60c';
@@ -31,19 +32,25 @@ const Missing: React.FC<ShotProps> = ({t, n}) => { const s = SHOTS.find((x) => x
 const END_N = 55, TITLE = '死后称心脏';
 const SOURCES = '资料：大英博物馆（阿尼纸草 EA10470、胡内弗纸草 EA9901）· 大都会艺术博物馆 · 沃尔特斯美术馆 · 利物浦博物馆 · 伦敦大学学院 · Lichtheim《古埃及文学》';
 
-/** the end card over shot 55: picture dims to ~30 %, the J seal is pressed in, the title, the follow pill and the sources; fade to black */
+/** the end card over shot 55, seamless (owner 15:10): the picture keeps running under a soft vignette (no dim plate), the J cartouche,
+    the title, the follow pill and the sources fade in one after another; the music plays on; only the last 0.9 s fades to black */
 const EndCard: React.FC<{t: number; dur: number}> = ({t, dur}) => {
-	const dim = sm((t - 0.3) / 0.9), seal = sm((t - 0.7) / 0.35), title = sm((t - 1.0) / 0.5), pill = sm((t - 1.6) / 0.5), src = sm((t - 2.0) / 0.6);
-	const press = 1 + 0.5 * (1 - seal);
+	const veil = sm((t - 0.1) / 1.4), seal = sm((t - 0.35) / 0.6), title = sm((t - 0.75) / 0.7), pill = sm((t - 1.5) / 0.6), src = sm((t - 2.0) / 0.7);
+	const titleS: React.CSSProperties = {fontFamily: F_SERIF, fontWeight: 900, fontSize: 100, letterSpacing: '0.12em', color: '#F2C964',
+		textShadow: '0 3px 0 #5A3A0E, 0 5px 0 rgba(8,10,28,0.65), 0 0 30px rgba(255,200,90,0.45)', whiteSpace: 'nowrap'};
+	const rope = (sg: 1 | -1) => <div style={{width: 130, height: 16, borderTop: `3px solid ${FC.gold}`, borderBottom: `3px solid ${FC.gold}`, background: `repeating-linear-gradient(90deg, #2C46A8 0 10px, #C23A22 10px 20px, #2F8A5A 20px 30px)`,
+		transform: `scaleX(${sm(title)})`, transformOrigin: sg > 0 ? 'left' : 'right', opacity: 0.95}} />;
 	return <>
-		<div style={{position: 'absolute', left: 0, top: PIC_T, width: FW, height: PIC_B - PIC_T, background: '#05081a', opacity: 0.7 * dim}} />
-		<Img src={staticFile('ep44/jseal.png')} style={{position: 'absolute', left: FW / 2 - 70, top: PIC_T + 120, width: 140, height: 140, opacity: 0.92 * seal, transform: `scale(${press}) rotate(-6deg)`}} />
-		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 300, textAlign: 'center', opacity: title, fontFamily: F_SERIF, fontWeight: 900, fontSize: 104, letterSpacing: '0.12em', color: FC.gold,
-			textShadow: '0 4px 0 rgba(8,10,28,0.7), 0 0 26px rgba(216,168,69,0.35)', transform: `translateY(${(1 - title) * 14}px)`}}>《{TITLE}》</div>
-		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 480, display: 'flex', justifyContent: 'center', opacity: pill}}>
-			<div style={{fontFamily: F_SERIF, fontWeight: 900, fontSize: 40, color: FC.cream, border: `2px solid ${FC.gold}`, borderRadius: 40, padding: '10px 38px', letterSpacing: '0.08em', background: 'rgba(18,26,61,0.55)'}}>关注 Juno · 一起看懂世界</div></div>
-		<div style={{position: 'absolute', left: 150, width: FW - 300, top: PIC_B - 190, textAlign: 'center', opacity: 0.85 * src, fontFamily: F_SERIF, fontWeight: 700, fontSize: 25, lineHeight: 1.6, color: FC.cream}}>{SOURCES}</div>
-		<AbsoluteFill style={{background: '#000', opacity: cl((t - (dur - 0.75)) / 0.7)}} />
+		<div style={{position: 'absolute', left: 0, top: PIC_T, width: FW, height: PIC_B - PIC_T, opacity: veil,
+			background: 'radial-gradient(ellipse 62% 58% at 50% 46%, rgba(6,9,30,0.52) 0%, rgba(6,9,30,0.38) 55%, rgba(6,9,30,0.62) 100%)'}} />
+		<JCartouche x={FW / 2} y={PIC_T + 182} h={190} o={seal} glow={0.6 * seal} />
+		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 300, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 26, opacity: title, transform: `translateY(${(1 - title) * 12}px)`}}>
+			{rope(-1)}<div style={titleS}>{TITLE}</div>{rope(1)}</div>
+		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 465, display: 'flex', justifyContent: 'center', opacity: pill}}>
+			<div style={{fontFamily: F_SERIF, fontWeight: 900, fontSize: 40, color: FC.cream, border: `2.5px solid ${FC.gold}`, borderRadius: 40, padding: '10px 40px', letterSpacing: '0.08em', background: 'rgba(18,26,61,0.7)',
+				boxShadow: `0 0 0 2px ${FC.ink}, 0 6px 16px rgba(5,8,25,0.5)`}}>关注 Juno · 一起看懂世界</div></div>
+		<div style={{position: 'absolute', left: 150, width: FW - 300, top: PIC_B - 180, textAlign: 'center', opacity: 0.9 * src, fontFamily: F_SERIF, fontWeight: 700, fontSize: 25, lineHeight: 1.6, color: FC.cream,
+			textShadow: '0 2px 4px rgba(5,8,25,0.9)'}}>{SOURCES}</div>
 	</>;
 };
 
@@ -62,11 +69,10 @@ const Film: React.FC = () => {
 		{/* the frame, once */}
 		<AbsoluteFill style={{zIndex: 10}}>
 			{s.stamp && stampO > 0 && <Stamp43 stamp={s.stamp} o={stampO} />}
-			{s.n !== END_N && <Seal43 />}
 			{s.n === END_N && <EndCard t={ts} dur={dur} />}
 			<Bands t={t} />
 			{s.sub && <Subtitle t={t} sub={{text: s.sub, t0: s.a, t1: s.b}} />}
-			{s.n === END_N && <AbsoluteFill style={{background: '#000', opacity: cl((ts - (dur - 0.75)) / 0.7)}} />}
+			{s.n === END_N && <AbsoluteFill style={{background: '#000', opacity: sm((ts - (dur - 0.9)) / 0.9)}} />}
 		</AbsoluteFill>
 	</AbsoluteFill></InMaster60.Provider>;
 };
@@ -75,10 +81,10 @@ const Film: React.FC = () => {
 const One: React.FC<{n?: number; from?: number}> = ({n = 1, from = 0}) => {
 	const f = useCurrentFrame(), s = SHOTS.find((x) => x.n === n)!, t = f / FPS - from, D = REG[n], C = D ? D.C : Missing;
 	return <InMaster60.Provider value={true}><AbsoluteFill style={{background: '#08090b'}}><C t={t} dur={s.b - s.a} n={n} />
-		<AbsoluteFill style={{zIndex: 10}}><Seal43 /><Bands t={t} />{s.sub && <Subtitle t={t} sub={{text: s.sub}} />}
+		<AbsoluteFill style={{zIndex: 10}}><Bands t={t} />{s.sub && <Subtitle t={t} sub={{text: s.sub}} />}
 			{s.stamp && <Stamp43 stamp={s.stamp} />}</AbsoluteFill></AbsoluteFill></InMaster60.Provider>;
 };
-const _keep = {PIC_CY, SUB_B, FH};
+const _keep = {PIC_CY, SUB_B, FH, Seal43, Img, staticFile, cl, SAFE_R};
 
 const END = Math.round(FILM_END * FPS);
 registerRoot(() => <>
