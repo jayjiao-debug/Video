@@ -1,5 +1,5 @@
-import React from 'react';
-import {AbsoluteFill, Img, staticFile} from 'remotion';
+import React, {createContext, useContext} from 'react';
+import {AbsoluteFill, Img, staticFile, getInputProps} from 'remotion';
 import {PAL, sp, poly, lerp, cl, sm} from './geo60';
 import {WingedSun} from './props60';
 
@@ -121,7 +121,7 @@ export const GRADES: Record<Grade, GradeDef> = {
 	lapis: {tint: '#6a86d8', mode: 'soft-light', o: 0.25, vig: '#040818', vigO: 0.85, grain: 0.4, dust: 0.35, haze: 0.0, css: 'saturate(0.9) sepia(0.06)'},
 	reeds: {tint: '#dfe58e', mode: 'soft-light', o: 0.32, vig: '#1c260a', vigO: 0.55, grain: 0.58, haze: 0.07, css: 'saturate(0.86) sepia(0.08)'},
 };
-const TEX = {plaster: 'ep60/plaster.jpg', papyrus: 'ep60/papyrus.jpg', wear: 'ep60/wear.png', grain: 'ep60/grain.jpg', dust: 'ep60/dust.jpg'};
+const TEX = {plaster: 'ep60/plaster.jpg', papyrus: 'ep60/papyrus.jpg', wear: 'ep60/wear.png', grain: 'ep60/grain.jpg', dust: 'ep60/dust.jpg', disp: 'ep60/disp.png'};
 
 /* ---------------- light & particle layers (world space) ---------------- */
 /** shared radial gradients (one set per Stage): url(#g60-<name>) */
@@ -177,6 +177,8 @@ export const Stars: React.FC<{t: number; box: [number, number, number, number]; 
 };
 
 /* ---------------- the stage ---------------- */
+/** true inside the EP60 master: the master draws the bands, subtitle, stamp and seal once over all shots; a Stage60 then draws only its name tags */
+export const InMaster60 = createContext(false);
 export type StageProps = {
 	t: number; cam?: Cam; grade?: Grade; bg?: 'plaster' | 'papyrus' | string; ground?: string;
 	/** world-space content (painted; gets the hand-painted wobble, paint loss and stains) */
@@ -193,7 +195,9 @@ export type StageProps = {
 /** Composes a scene at 1440 × 1080: world under a camera (pan/zoom), the aged-paper finish (texture ground, paint loss, stains,
     hand-painted wobble), the mood grade (tint, vignette, torch flicker), ONE fixed grain image, then the frame on top. */
 export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster', bg = 'plaster', ground, children, light, screen, sub, stamp, tags = [], seal = true, wear = 0.9, stain = 0.42, wobble = 2.4, frame = true, flickSeed = 0, dark = 0, darkC = '#2A1408'}) => {
-	const G = GRADES[grade], z = cam.z;
+	const master = useContext(InMaster60);
+	const G = GRADES[grade], z = cam.z, ip = getInputProps() as {fast?: boolean; noWobble?: boolean; noCss?: boolean};
+	if (ip.fast || ip.noWobble) wobble = 0;
 	const vx0 = cam.x - FW / 2 / z - 40, vy0 = cam.y - PIC_CY / z - 40, vw = FW / z + 80, vh = FH / z + 80;
 	const tex = bg === 'plaster' || bg === 'papyrus' ? bg : null;
 	const camT = `translate(${FW / 2},${PIC_CY}) scale(${z}) translate(${-cam.x},${-cam.y})`;
@@ -201,12 +205,16 @@ export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster',
 	const screenTags = tags.map((g) => { const [sx, sy] = toScreen(cam, g.x, g.y); return {...g, x: sx, y: sy}; }).filter((g) => g.x > 30 && g.x < SAFE_R - 20);
 	return <AbsoluteFill style={{background: ground ?? PAL.plaster, overflow: 'hidden'}}>
 		{Object.values(TEX).map((p) => <Img key={p} src={staticFile(p)} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />)}
-		<svg width={FW} height={FH} viewBox={`0 0 ${FW} ${FH}`} style={{position: 'absolute', inset: 0, filter: G.css}}>
+		<svg width={FW} height={FH} viewBox={`0 0 ${FW} ${FH}`} style={{position: 'absolute', inset: 0, filter: ip.fast || ip.noCss ? undefined : G.css}}>
 			<defs>
 				<pattern id="p60-plaster" patternUnits="userSpaceOnUse" width={2048} height={1024}><image href={staticFile(TEX.plaster)} width={2048} height={1024} /></pattern>
 				<pattern id="p60-papyrus" patternUnits="userSpaceOnUse" width={2048} height={1024}><image href={staticFile(TEX.papyrus)} width={2048} height={1024} /></pattern>
 				<pattern id="p60-wear" patternUnits="userSpaceOnUse" width={2048} height={1024} x={-300} y={-120}><image href={staticFile(TEX.wear)} width={2048} height={1024} /></pattern>
-				<filter id="f60-wob" x="-2%" y="-2%" width="104%" height="104%" filterUnits="objectBoundingBox"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves={2} seed={4} result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale={wobble} xChannelSelector="R" yChannelSelector="G" /></filter>
+				{/* hand-painted edge wobble: a FIXED displacement tile (no per-frame turbulence), only over the visible world rect */}
+				<filter id="f60-wob" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" x={vx0} y={vy0} width={vw} height={vh} colorInterpolationFilters="sRGB">
+					<feImage href={staticFile(TEX.disp)} x={Math.floor(vx0 / 512) * 512} y={Math.floor(vy0 / 512) * 512} width={512} height={512} preserveAspectRatio="none" result="tile" />
+					<feTile in="tile" result="n" />
+					<feDisplacementMap in="SourceGraphic" in2="n" scale={wobble * 2.2} xChannelSelector="R" yChannelSelector="G" /></filter>
 				<radialGradient id="g60-vig" cx="0.47" cy="0.46" r="0.72"><stop offset="0.42" stopColor={G.vig} stopOpacity={0} /><stop offset="0.82" stopColor={G.vig} stopOpacity={G.vigO * 0.55} /><stop offset="1" stopColor={G.vig} stopOpacity={G.vigO} /></radialGradient>
 				<GlowDefs />
 			</defs>
@@ -228,7 +236,7 @@ export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster',
 			{G.dust && <image href={staticFile(TEX.dust)} width={FW} height={FH} opacity={G.dust} style={{mixBlendMode: 'screen'}} />}
 			{screen}
 		</svg>
-		{frame && <Frame60 t={t} sub={sub} stamp={stamp} seal={seal} tags={screenTags} />}
+		{frame && (master ? screenTags.map((g, i) => <NameTag key={i} {...g} />) : <Frame60 t={t} sub={sub} stamp={stamp} seal={seal} tags={screenTags} />)}
 	</AbsoluteFill>;
 };
 
