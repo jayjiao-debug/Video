@@ -41,6 +41,9 @@ export const gripOf = (pose: Pose, side: 'b' | 'f', female = false): V => ap(sol
 
 type C = {OW: number; LW: number};
 const cx = (s: number): C => ({OW: 2.7 / s, LW: 1.5 / s});
+/** a fist drawn again over a held prop (figure units, inside the figure's transform), so the fingers close round the handle */
+export const FistOver: React.FC<{pose: Pose; side: 'b' | 'f'; c: C; skin: string; female?: boolean}> = ({pose, side, c, skin, female}) => { const h = solve(pose, female)[side === 'b' ? 'bH' : 'fH'];
+	return <g transform={mx(h)}><path d={SHAPES.fist} fill={skin} stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinejoin="round" /><path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" fill="none" stroke={PAL.line} strokeWidth={c.LW} /></g>; };
 const col = (r: Role | string) => (PAL as Record<string, string>)[r] ?? r;
 const Solid: React.FC<{d: string; r: Role | string; c: C; m?: M; k?: number; o?: number}> = ({d, r, c, m, k = 1, o}) => <g transform={m && mx(m)} opacity={o}>
 	<path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW * k} strokeLinejoin="round" /><path d={d} fill={col(r)} /></g>;
@@ -59,7 +62,7 @@ export const JUDGE: Record<'red' | 'green' | 'gold' | 'jackal' | 'falcon' | 'ibi
 /** a seated judge: hands at the chest, the front fist a little forward so a held knife / feather stays clear of the face */
 export const jPose = (t = 0, k = 0, o: {lean?: number; head?: number; neck?: number} = {}): Pose => {
 	let p: Pose = {...POSES.throne, y: 5.95, lean: o.lean ?? -2, neck: o.neck ?? 0, head: (o.head ?? 0) + 0.8 * Math.sin(t * 0.9 + k * 1.7)};
-	p = wristTo(holdAt(p, 'f', [2.3, -4.2]), 'f', 92);
+	p = wristTo(holdAt(p, 'f', [2.6, -3.7]), 'f', 92);
 	return wristTo(holdAt(p, 'b', [1.1, -4.6]), 'b', 98);
 };
 /** a knife held blade-up at the grip (figure units), longer than the rig's, with an optional glint (0..1) */
@@ -84,8 +87,9 @@ export const Judge: React.FC<{id: string; cast: Cast; pose: Pose; x: number; y: 
 		</g>
 		<God id={id} cast={cast} pose={pose} x={x} y={y} s={s} face={face} sec={{t}} />
 		<g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
-			{hold === 'knife' && <BigKnife at={G} c={c} L={3.2} glint={glint} />}
-			{hold === 'feather' && <g transform={`translate(${G[0]},${G[1] + 0.4}) rotate(${4 * Math.sin(t * 1.3)})`}><Feather c={c} h={3.0} /></g>}
+			{hold === 'knife' && <BigKnife at={G} c={c} L={2.9} glint={glint} />}
+			{hold === 'feather' && <g transform={`translate(${G[0]},${G[1] + 0.4}) rotate(${4 * Math.sin(t * 1.3)})`}><Feather c={c} h={2.5} /></g>}
+			{hold !== 'none' && <FistOver pose={pose} side="f" c={c} skin={col(cast.skin)} />}
 			{children}
 		</g>
 	</g>;
@@ -106,8 +110,8 @@ export const MiniJudge: React.FC<{cast: Cast; s: number; seat?: string; hold?: '
 		<path d={`M-1.3 -12.2A1.9 1.4 0 0 0 2.1 -12.2`} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 4.6} />
 		<path d={`M-1.3 -12.2A1.9 1.4 0 0 0 2.1 -12.2`} fill="none" stroke={PAL.blue} strokeWidth={c.OW * 2.6} />
 		<path d={`M-0.9 -12.3A1.5 1.0 0 0 0 1.7 -12.3`} fill="none" stroke={PAL.red} strokeWidth={c.OW * 1.4} />
-		{hold === 'knife' ? <path d="M2.55 -9.6L2.62 -12.1L2.82 -9.6Z" fill="#E9E4D8" stroke={PAL.ink} strokeWidth={c.LW} /> : <path d={featherD(2.6)} transform="translate(2.5,-9.4)" fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.LW} />}
-		<circle cx={2.25} cy={-9.4} r={0.45} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.LW} /><circle cx={1.6} cy={-8.9} r={0.42} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.LW} />
+		{hold === 'knife' ? <path d="M2.75 -8.4L2.82 -10.6L3.02 -8.4Z" fill="#E9E4D8" stroke={PAL.ink} strokeWidth={c.LW} /> : <path d={featherD(2.2)} transform="translate(2.75,-8.2)" fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.LW} />}
+		<circle cx={2.55} cy={-8.4} r={0.45} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.LW} /><circle cx={1.9} cy={-8.0} r={0.42} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.LW} />
 		<g transform={H}>
 			{head !== 'human' && <path d={wig} fill={col(cast.wigColor ?? 'wig')} stroke={PAL.ink} strokeWidth={c.OW * 1.6} />}
 			<path d={hs} fill={hf} stroke={PAL.ink} strokeWidth={c.OW * 1.8} />
@@ -202,19 +206,24 @@ export const Croc: React.FC<{x: number; y: number; s: number; face?: 1 | -1; t: 
 	const upper = sp([[3.9, -2.0], [4.6, -2.45], [5.3, -2.3], [7.2, -1.85], [8.3, -1.6], [8.75, -1.35], [8.6, -1.1, 1], [4.3, -1.3, 1], [3.8, -1.5]], true, 0.16);
 	const lower = sp([[4.0, -1.3, 1], [8.5, -1.12, 1], [8.45, -0.85], [7.0, -0.8], [5.0, -0.8], [4.0, -0.95]], true, 0.16);
 	const teeth = (y0: number, dir: number, m?: M) => <g transform={m && mx(m)}>{Array.from({length: 10}, (_, i) => { const xx = 4.6 + i * 0.4; return <path key={i} d={`M${xx} ${y0}L${xx + 0.13} ${y0 + dir * 0.28}L${xx + 0.26} ${y0}Z`} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 0.6} />; })}</g>;
+	const mid = `croc${Math.round(x)}${Math.round(s)}`, ink = (d: string, k = 2) => <path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={c.OW * k} strokeLinejoin="round" />;
 	return <g transform={`translate(${x},${y - lift * s}) scale(${s * face},${s})`}>
+		<defs><mask id={mid} maskUnits="userSpaceOnUse" x={-12} y={-6} width={24} height={8}><rect x={-12} y={-6} width={24} height={8} fill="white" /><path d={body} fill="black" /><path d={tail} fill="black" /></mask></defs>
 		<path d={leg(-2.2, 1)} fill={PAL.croc2} stroke={PAL.ink} strokeWidth={c.OW * 2} /><path d={leg(2.3, 0)} fill={PAL.croc2} stroke={PAL.ink} strokeWidth={c.OW * 2} />
-		<Solid d={tail} r="croc" c={c} />
-		<Solid d={body} r="croc" c={c} />
+		{/* tail, body and upper head share one outline: inks first, fills after */}
+		{ink(tail)}{ink(body)}{ink(upper)}
+		<path d={tail} fill={PAL.croc} /><path d={body} fill={PAL.croc} />
 		<path d="M-3.2 -0.85Q0.5 -0.45 4.1 -1.05" fill="none" stroke="#C9C27A" strokeWidth={c.LW * 5} opacity={0.8} />
 		{Array.from({length: 16}, (_, i) => { const xx = -8.6 + i * 0.75, yy = xx < -3 ? lerp(-0.6 + tw, -2.05, (xx + 9.4) / 6.4) : -2.35 - 0.1 * Math.sin(xx); return <path key={i} d={`M${xx - 0.22} ${yy + 0.05}L${xx} ${yy - 0.32}L${xx + 0.22} ${yy + 0.05}Z`} fill={PAL.croc2} stroke={PAL.ink} strokeWidth={c.LW * 0.7} />; })}
 		{[-1.6, -0.4, 0.8, 2.0].map((xx) => <path key={xx} d={`M${xx} -2.3L${xx + 0.1} -0.7`} stroke={PAL.croc2} strokeWidth={c.LW * 1.2} />)}
-		<path d={leg(-1.6, 0)} fill={PAL.croc} stroke={PAL.ink} strokeWidth={c.OW * 2} /><path d={leg(2.9, 1)} fill={PAL.croc} stroke={PAL.ink} strokeWidth={c.OW * 2} />
+		<path d={leg(-1.6, 0)} fill={PAL.croc} /><path d={leg(2.9, 1)} fill={PAL.croc} />
+		<g mask={`url(#${mid})`}><path d={leg(-1.6, 0)} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 2} /><path d={leg(2.9, 1)} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 2} /></g>
 		{jaw > 1 && <path d={poly([[4.1, -1.3], [8.6, -1.12], ap(jm, [8.5, -1.0])])} fill="#7A1E1A" />}
 		{teeth(-1.12, -1, jm)}
 		<Solid d={lower} r="croc" c={c} m={jm} />
 		{teeth(-1.28, 1)}
-		<Solid d={upper} r="croc" c={c} />
+		<path d={upper} fill={PAL.croc} />
+		<path d="M4.3 -1.3L6.5 -1.22L8.6 -1.1" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} />
 		<ellipse cx={5.0} cy={-2.42} rx={0.42} ry={0.3} fill={PAL.croc} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
 		<ellipse cx={5.05} cy={-2.45} rx={0.22} ry={0.16} fill="#FFD95A" stroke={PAL.ink} strokeWidth={c.LW * 0.8} /><ellipse cx={5.08} cy={-2.45} rx={0.05} ry={0.14} fill={PAL.ink} />
 		<ellipse cx={8.45} cy={-1.65} rx={0.1} ry={0.06} fill={PAL.ink} />
@@ -311,7 +320,7 @@ export const ammit2Solve = (p: AmmitPose, roar = 0) => {
 	return {B, N, J: J_};
 };
 const AM_BODY = (br: number) => sp([[-2.6, 2.38, 1], [-3.15, 1.0], [-3.1, -0.7], [-2.45, -2.1], [-0.9, -2.95], [0.9, -3.2], [2.2, -3.5], [3.2, -3.9], [4.2, -3.65], [4.85 + br * 0.08, -2.6], [4.8 + br * 0.1, -1.0], [4.1, 0.3], [2.9, 0.95], [1.7, 1.3], [0.2, 1.9], [-1.4, 2.32]], true, 0.17);
-export const Ammit2: React.FC<{pose: AmmitPose; x: number; y: number; s: number; face?: 1 | -1; t?: number; mr?: number; wig?: number; look?: number; rim?: number; roar?: number; id?: string}> = ({pose, x, y, s, face = 1, t = 0, mr = 0, wig = 0, look = 0.6, rim = 0, roar = 0, id = 'am2'}) => {
+export const Ammit2: React.FC<{pose: AmmitPose; x: number; y: number; s: number; face?: 1 | -1; t?: number; mr?: number; wig?: number; look?: number; rim?: number; roar?: number; id?: string; inMouth?: React.ReactNode}> = ({pose, x, y, s, face = 1, t = 0, mr = 0, wig = 0, look = 0.6, rim = 0, roar = 0, id = 'am2', inMouth}) => {
 	const c = cx(s), g = ammit2Solve(pose, roar), br = pose.breathe, bristle = Math.max(roar, 0.35 * mr);
 	const W = chain(g.B, T(3.0, -1.6), R(wig), T(-3.0, 1.6));
 	const body = AM_BODY(br), paw = pose.paw ?? 0, rimC = '#FF3A1E', ink = PAL.ink;
@@ -389,9 +398,13 @@ export const Ammit2: React.FC<{pose: AmmitPose; x: number; y: number; s: number;
 			{Array.from({length: 11}, (_, i) => { const a = (75 + i * 25) * Math.PI / 180, r0 = 0.9, r1 = 2.05 + 0.45 * bristle + 0.15 * mr * Math.sin(t * 17 + i * 2);
 				return <path key={i} d={`M${-0.45 + Math.cos(a) * r0 * 0.95} ${0.5 + Math.sin(a) * r0 * 1.1}Q${-0.45 + Math.cos(a + 0.12) * (r0 + r1) / 2 * 0.95} ${0.5 + Math.sin(a + 0.12) * (r0 + r1) / 2 * 1.1} ${-0.45 + Math.cos(a) * r1 * 0.95} ${0.5 + Math.sin(a) * r1 * 1.1}`} fill="none" stroke={PAL.lion2} strokeWidth={c.LW * 2.2} />; })}
 			{/* the mouth (behind both jaws), the lower jaw and its teeth */}
-			{open > 1.5 && <path d={poly([[0.5, -0.05], [6.55, -0.14], ap(T(0, 0), jawTip), ap(T(0, 0), jawBack)])} fill="#4A0A10" />}
+			{open > 1.5 && <path d={sp([[0.5, -0.05, 1], [5.9, -0.14, 1], [lerp(5.2, lerp(jawBack[0], jawTip[0], 0.82), 0.5) - 0.5, lerp(-0.14, lerp(jawBack[1], jawTip[1], 0.82), 0.5)], [lerp(jawBack[0], jawTip[0], 0.84), lerp(jawBack[1], jawTip[1], 0.84), 1], [jawBack[0], jawBack[1], 1]], true, 0.2)} fill="#A3222F" />}
+			{open > 1.5 && <path d={poly([[0.5, -0.05], [2.2, -0.1], [lerp(jawBack[0], jawTip[0], 0.28), lerp(jawBack[1], jawTip[1], 0.28)], jawBack])} fill="#3A0408" />}
 			{open > 6 && <path d={sp([[0.9, 0.0], [jawTip[0] * 0.55, jawTip[1] * 0.55 - 0.05], [jawTip[0] * 0.62, jawTip[1] * 0.62 + 0.12], [1.0, 0.3]], true, 0.2)} fill="#C4505A" />}
 		</g>
+		{inMouth && <g transform={`scale(${1 / (s * face)},${1 / s}) translate(${-x},${-y})`}>{inMouth}</g>}
+		<g transform={mx(g.N)}>
+					</g>
 		<g transform={mx(g.J)}>{loT}<Solid d={jawD} r="croc" c={c} />
 			<path d="M0.2 0.4Q2.6 0.56 5.2 0.32" fill="none" stroke={PAL.croc2} strokeWidth={c.LW * 1.8} />
 			{[1.4, 2.4, 3.4, 4.4].map((xx) => <path key={xx} d={`M${xx} 0.12L${xx + 0.25} 0.5`} stroke={PAL.croc2} strokeWidth={c.LW * 1.2} />)}</g>
@@ -432,6 +445,7 @@ export const Balance2: React.FC<{p: Bal2; x: number; y: number; s: number; t?: n
 		{[-2.0, -1.0, 0, 1.0].map((xx, i) => <rect key={xx} x={xx + 0.08} y={-0.72} width={0.84} height={0.55} fill={[PAL.blue, PAL.red, PAL.green, PAL.blue][i]} stroke={PAL.ink} strokeWidth={c.LW * 0.8} />)}
 		<rect x={-1.5} y={-1.5} width={3.0} height={0.22} fill={PAL.red} />
 		<Solid d={post} r="gold" c={c} />{bands}
+		<g transform={`translate(0,${BAL.beamY - 0.3})`}><Feather c={c} h={1.6} /></g>
 		<Solid d={capital} r="green" c={c} />{[-0.6, -0.2, 0.2, 0.6].map((xx) => <line key={xx} x1={xx * 0.4} y1={BAL.postTop + 0.6} x2={xx * 1.5} y2={BAL.postTop - 0.05} stroke={PAL.ink} strokeWidth={c.LW * 0.8} />)}
 		<Solid d={abacus} r="gold" c={c} />
 		<g transform={`translate(${bf < 0 ? 0.15 : -0.15},${BAL.postTop - 0.45}) scale(${bf},1)`}><Baboon c={c} t={t} look={p.look ?? 0} /></g>
@@ -458,7 +472,6 @@ export const Balance2: React.FC<{p: Bal2; x: number; y: number; s: number; t?: n
 			</g>}
 		</g>
 		<circle cx={0} cy={BAL.beamY} r={0.32} fill={PAL.red} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
-		<g transform={`translate(0,${BAL.beamY - 0.3})`}><Feather c={c} h={1.6} /></g>
 	</g>;
 };
 /** world positions of the balance's pans (centre of the pan floor) */

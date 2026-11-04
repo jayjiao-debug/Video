@@ -7,7 +7,7 @@ import {ANI, walkPose, STRIDE, adoreArms} from './cast60';
 import {Ceiling} from './sets60';
 import type {ShotProps} from './EP60';
 import {up, hit, keys, bell, wearFor, figXY, InBone, placeBy, gripOf, JUDGE, jPose, Judge, BigKnife, Horns, BrowRaise, Squint, JackalTongue, IbisGape,
-	GlyphStack, Check, Sweat, Baby, Balance2, HallWall, MiniJudge} from './act60b_kit';
+	GlyphStack, Check, Sweat, Baby, Balance2, HallWall, MiniJudge, FistOver} from './act60b_kit';
 import {V, PAL, poly, sp, lerp, cl, sm, seg, ap, mx, chain, T, R} from './geo60';
 
 /* act60b · the Hall of Two Truths (shots 18–26): the reveal, the 42 judges, three scary names, the oath (one tick per declaration),
@@ -20,7 +20,7 @@ export const S18 = {boom: 0.2, walk0: 0.95, om: 5.0};
 export const Shot18: React.FC<ShotProps> = ({t}) => {
 	const open = keys(t, [[0.14, 0], [0.36, 1]]), boom = hit(t, S18.boom, 0.45), th = open * 78 * Math.PI / 180;
 	const cam = camPath(t, [[0.0, 300, 640, 1.5], [2.95, 700, 480, 0.95]]);
-	const as = 7, wu = Math.max(0, t - S18.walk0), ax = 150 + STRIDE * as * S18.om * wu * 0.9, ani: Pose = wu > 0 ? walkPose(S18.om * wu, {lean: 3, stride: 0.9}) : {...POSES.rest, rt: -4, at: 6, lean: 1, head: -3};
+	const as = 7, wu = Math.max(0, t - S18.walk0), ax = 150 + Math.min(48, STRIDE * as * S18.om * wu * 0.5), ani: Pose = wu > 0 ? walkPose(S18.om * wu, {lean: 3, stride: 0.9}) : {...POSES.rest, rt: -4, at: 6, lean: 1, head: -3};
 	const shake = 0 * boom * Math.sin(t * 70); // owner 15:10: no screen shake
 	const leaf = (hx: number, dir: 1 | -1, k: string) => { const w = 80 * Math.cos(th), d = 16 * Math.sin(th);
 		return <g key={k}><path d={poly([[hx, 568], [hx + dir * w, 568 + d * 0.2], [hx + dir * w, GY - d * 0.2], [hx, GY]])} fill="#6A3A1E" stroke={PAL.ink} strokeWidth={2.4} />
@@ -69,7 +69,7 @@ const JudgeDefs19: React.FC<{s: number; t: number; pre: string; mini?: boolean}>
 		: <Judge id={`${pre}g${k}`} cast={cst} pose={jPose(t, k)} x={0} y={0} s={s} face={-1} t={t + k} hold={k % 2 ? 'feather' : 'knife'} seat={[PAL.blue, PAL.red, PAL.green][k % 3]} />}</g>)}</defs>;
 const Row19: React.FC<{pre: string; x0: number; gy: number; n: number; dx: number; s: number; t: number; seed: number}> = ({pre, x0, gy, n, dx, s, t, seed}) => <g>
 	<rect x={x0 - dx} y={gy} width={dx * (n + 1)} height={12} fill={PAL.linen} stroke={PAL.ink} strokeWidth={2} />
-	{Array.from({length: n}, (_, i) => { const k = (i * 5 + seed) % ROW_CASTS.length, x = x0 + i * dx, nod = 2.2 * Math.sin(t * 1.4 + i * 1.9) + 4 * bell(t, 0.6 + ((i * 0.37 + seed) % 1.6), 1.2 + ((i * 0.37 + seed) % 1.6));
+	{Array.from({length: n}, (_, j) => { const i = n - 1 - j, k = (i * 5 + seed) % ROW_CASTS.length, x = x0 + i * dx, nod = 2.2 * Math.sin(t * 1.4 + i * 1.9) + 4 * bell(t, 0.6 + ((i * 0.37 + seed) % 1.6), 1.2 + ((i * 0.37 + seed) % 1.6));
 		return <use key={i} href={`#${pre}${k}`} transform={`translate(${x},${gy}) rotate(${-nod} 0 ${-13 * s})`} />; })}
 </g>;
 export const Shot19: React.FC<ShotProps> = ({t}) => {
@@ -92,7 +92,7 @@ export const Shot19: React.FC<ShotProps> = ({t}) => {
 		<rect x={-300} y={130} width={2400} height={160} fill="#0A0F2E" opacity={0.35} />
 		<g opacity={0.85}><Row19 pre="b19b" x0={-80} gy={530} n={19} dx={92} s={12.5} t={t + 2} seed={4} /></g>
 		<rect x={-300} y={300} width={2400} height={240} fill="#0A0F2E" opacity={0.15} />
-		<Row19 pre="b19c" x0={40} gy={846} n={14} dx={118} s={18.5} t={t + 4} seed={1} />
+		<Row19 pre="b19c" x0={40} gy={846} n={13} dx={128} s={18.5} t={t + 4} seed={1} />
 		<rect x={-300} y={858} width={2400} height={200} fill="#0E1538" />
 	</Stage60>;
 };
@@ -127,13 +127,14 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 	if (i === 0) { // 碎骨者: snaps a bone between his fists
 		const brk = up(t, S20.crack, 0.09), shake = hit(t, S20.crack, 0.12) * Math.sin(t * 120) * 0.6;
 		pose = jPose(t, 0, {lean: 1, head: 3 - 4 * hit(t, S20.crack, 0.3)});
-		pose = wristTo(holdAt(pose, 'f', [2.9 + 0.25 * brk, -4.9 - 0.25 * brk]), 'f', 92 + 20 * brk); pose = wristTo(holdAt(pose, 'b', [0.7 - 0.15 * brk, -4.9 - 0.2 * brk]), 'b', 92 - 20 * brk);
+		pose = wristTo(holdAt(pose, 'f', [4.05 + 0.25 * brk, -3.75 - 0.25 * brk]), 'f', 92 + 20 * brk); pose = wristTo(holdAt(pose, 'b', [2.45 - 0.15 * brk, -3.75 - 0.2 * brk]), 'b', 92 - 20 * brk);
 		const [fx, fy] = placeBy(pose, s, -1, 'head', [0.6, -1.2], face), gb = gripOf(pose, 'b'), gf = gripOf(pose, 'f');
 		const R_ = rng(201);
 		extra = <g transform={`translate(${fx + shake},${fy}) scale(${-s},${s})`}><Bone a={gb} b={gf} c={c_(s)} brk={brk} t={t} />
+			<FistOver pose={pose} side="b" c={c_(s)} skin={PAL.skinM} /><FistOver pose={pose} side="f" c={c_(s)} skin={PAL.skinM} />
 			{brk > 0 && Array.from({length: 8}, (_, k) => { const v = (t - S20.crack), vx = (R_() - 0.5) * 9, vy = -3 - R_() * 5, px = (gb[0] + gf[0]) / 2 + vx * v, py = (gb[1] + gf[1]) / 2 + vy * v + 14 * v * v;
 				return v < 0.6 ? <path key={k} d={`M${px} ${py}l0.2 0.1l-0.1 0.22z`} fill="#F3EBD6" stroke={PAL.ink} strokeWidth={0.03} opacity={1 - v / 0.6} /> : null; })}</g>;
-		light = <>{(() => { const g = hit(t, S20.crack, 0.2); const p = figXY(pose, fx, fy, s, -1, 'torso', [1.8, -4.9]); return g > 0.02 ? <><Glow x={p[0]} y={p[1]} r={260} c="white" o={0.8 * g} />
+		light = <>{(() => { const g = hit(t, S20.crack, 0.2); const p = figXY(pose, fx, fy, s, -1, 'torso', [3.25, -3.2]); return g > 0.02 ? <><Glow x={p[0]} y={p[1]} r={260} c="white" o={0.8 * g} />
 			<path d={`M${p[0]} ${p[1] - 140 * g}L${p[0] + 12} ${p[1] - 12}L${p[0] + 140 * g} ${p[1]}L${p[0] + 12} ${p[1] + 12}L${p[0]} ${p[1] + 140 * g}L${p[0] - 12} ${p[1] + 12}L${p[0] - 140 * g} ${p[1]}L${p[0] - 12} ${p[1] - 12}Z`} fill="#FFFBEA" opacity={g} style={{mixBlendMode: 'screen'}} /></> : null; })()}</>;
 		fig = [fx + shake, fy];
 	} else if (i === 1) { // 吞影者: the ibis opens his beak and gulps a little shadow of a person
@@ -157,7 +158,7 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 		const [fx, fy] = placeBy(pose, s, -1, 'head', [0.6, -1.2], face), G = gripOf(pose, 'f');
 		const tip: V = [fx - (G[0] + 0.12) * s, fy + (G[1] - 3.0) * s];
 		const drop = t < S20.drip ? 1 : 0, fall = cl((t - S20.drip) / 0.12);
-		extra = <g><g transform={`translate(${fx},${fy}) scale(${-s},${s})`}><BigKnife at={G} c={c_(s)} L={3.0} glint={0.4 * bell(t, 1.85, 2.2)} /></g>
+		extra = <g><g transform={`translate(${fx},${fy}) scale(${-s},${s})`}><BigKnife at={G} c={c_(s)} L={3.0} glint={0.4 * bell(t, 1.85, 2.2)} /><FistOver pose={pose} side="f" c={c_(s)} skin={PAL.skinM} /></g>
 			<InBone pose={pose} x={fx} y={fy} s={s} face={-1} bone="head"><JackalTongue c={c_(s * 1.13)} out={lick} /></InBone></g>;
 		front = <g>{drop ? <path d={`M${tip[0]} ${tip[1] - 4}C${tip[0] + 9} ${tip[1] + 10} ${tip[0] + 10} ${tip[1] + 18} ${tip[0]} ${tip[1] + 22 + 6 * up(t, 1.9, 0.3)}C${tip[0] - 10} ${tip[1] + 18} ${tip[0] - 9} ${tip[1] + 10} ${tip[0]} ${tip[1] - 4}Z`} fill="#D0221A" stroke={PAL.ink} strokeWidth={2} />
 			: fall < 1 ? <circle cx={tip[0] + 6} cy={tip[1] + 20 + 40 * fall} r={8 * (1 - fall)} fill="#D0221A" /> : null}</g>;
@@ -206,7 +207,7 @@ export const Shot21: React.FC<ShotProps> = ({t}) => {
 		<God id="b21ani" cast={ANI} pose={ani} x={ax} y={GY} s={s} sec={{t}} />
 		{S21.cols.map((t0, k) => { const u = up(t, t0 - 0.05, 0.35), slot: V = [mouth[0] + 120 + k * 100, 200 + (k % 2) * 34];
 			if (t < t0 - 0.05) return null;
-			const x = lerp(mouth[0] + 30, slot[0], u) + 6 * (t - t0), y = lerp(mouth[1] - 30, slot[1], u) - 10 * Math.max(0, t - t0) + 4 * Math.sin(t * 2 + k);
+			const x = lerp(mouth[0] + 120, slot[0], u) + 6 * (t - t0), y = lerp(mouth[1] - 30, slot[1], u) - 10 * Math.max(0, t - t0) + 4 * Math.sin(t * 2 + k);
 			return <g key={k} transform={`translate(${x},${y}) scale(${lerp(0.3, 1, u)}) translate(${-x},${-y})`}><GlyphStack x={x} y={y} cell={56} n={4} seed={220 + k} glow={0.7 * (0.6 + 0.4 * hit(t, t0, 0.3))} /></g>; })}
 	</Stage60>;
 };
@@ -302,7 +303,7 @@ export const Shot24: React.FC<ShotProps> = ({t}) => {
 		<g opacity={0.92}><Balance2 p={{tilt: 0.8 * Math.sin(t * 0.9), swingL: 0.6 * Math.sin(t * 1.2), swingR: -0.5 * Math.sin(t * 1.2), plumb: Math.sin(t * 1.5), glint: Math.max(gl, gl2)}} x={sx} y={sgy} s={24} t={t} /></g>
 		<rect x={-300} y={sgy + 22} width={2400} height={GY - sgy - 22} fill="#121A42" />
 		<God id="b24ani" cast={{...ANI, fHand: 'palm'}} pose={ani} x={ax} y={GY} s={s} sec={{t}} />
-		<Check x={top[0]} y={top[1] - 60} t={t} t0={S24.tick} s={1.3} />
+		<Check x={top[0] + 120} y={top[1] + 40} t={t} t0={S24.tick} s={1.3} />
 	</Stage60>;
 };
 

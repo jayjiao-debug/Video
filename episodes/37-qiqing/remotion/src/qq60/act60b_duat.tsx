@@ -5,7 +5,7 @@ import {DuatGate, River, Serpent, PapyrusClump} from './props60b';
 import {ANI, walkPose, STRIDE} from './cast60';
 import {GlyphColumns} from './props60';
 import type {ShotProps} from './EP60';
-import {up, hit, keys, bell, gripOf, BigKnife, Croc, Beetles, GlyphStack, wearFor} from './act60b_kit';
+import {up, hit, keys, bell, gripOf, BigKnife, Croc, Beetles, GlyphStack, wearFor, FistOver} from './act60b_kit';
 import {V, PAL, poly, sp, lerp, cl, sm, seg, ap} from './geo60';
 
 /* act60b · the road through the Duat (shots 15–17). Film times of the sound events are listed in episodes/60-xinzang/sync60_b.md. */
@@ -92,10 +92,10 @@ export const Shot15: React.FC<ShotProps> = ({t}) => {
 /* ================= 16 · 43.5–46.5 · BLOOD RED: a pylon gate; kneeling animal-headed guardians with knives; each knife glints as the camera trucks past ================= */
 export const S16_GLINTS = [0.3, 0.9, 1.5, 2.1];
 const GUARD16 = [
-	{x: 372, cast: {...CAST.anubis, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
-	{x: 552, cast: {...CAST.horus, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
-	{x: 912, cast: {...CAST.thoth, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
-	{x: 1092, cast: {...CAST.anubis, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
+	{x: 330, cast: {...CAST.anubis, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
+	{x: 550, cast: {...CAST.horus, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
+	{x: 920, cast: {...CAST.thoth, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
+	{x: 1140, cast: {...CAST.anubis, crown: 'none' as const, bProp: 'none' as const, fProp: 'none' as const}},
 ];
 export const Shot16: React.FC<ShotProps> = ({t}) => {
 	const GY = 852, s = 20, gx = 732;
@@ -126,7 +126,7 @@ export const Shot16: React.FC<ShotProps> = ({t}) => {
 		{GUARD16.map((G, k) => { const {p, g} = guard(k), at = gripOf(p, 'f');
 			return <g key={k}>
 				<God id={`b16g${k}`} cast={G.cast} pose={p} x={G.x} y={GY + 2} s={s} face={-1} sec={{t: t + k}} />
-				<g transform={`translate(${G.x},${GY + 2}) scale(${-s},${s})`}><BigKnife at={at} c={{OW: 2.7 / s, LW: 1.5 / s}} L={4.4} glint={g} a={-6 * g} /></g>
+				<g transform={`translate(${G.x},${GY + 2}) scale(${-s},${s})`}><BigKnife at={at} c={{OW: 2.7 / s, LW: 1.5 / s}} L={4.4} glint={g} a={-6 * g} /><FistOver pose={p} side="f" c={{OW: 2.7 / s, LW: 1.5 / s}} skin={PAL.skinM} /></g>
 			</g>; })}
 	</Stage60>;
 };
@@ -170,12 +170,13 @@ export const Shot17: React.FC<ShotProps> = ({t}) => {
 		{Array.from({length: 14}, (_, i) => <path key={i} d={`M${-300 + R() * 2000} ${GY + 30 + R() * 50}l50 -3`} stroke="#45140C" strokeWidth={3} />)}
 		<g transform={`rotate(${14 * recoil} 1170 ${GY})`}><Serpent x={1170} y={GY} s={30} t={t} flip={-1} rear={rear} fire={0.25 * bell(t, 0.1, 0.9)} /></g>
 		<Beetles x={ax + 140} y={GY + 30} t={t} t0={S17.skitter} n={12} seed={17} r={220} s={2.1} floor={GY + 40} />
-		<God id="b17ani" cast={ANI} pose={ani} x={ax} y={GY} s={s} sec={{t, amp: 1.2}} />
+		<God id="b17ani" cast={{...ANI, bHand: 'fist', fHand: 'fist'}} pose={ani} x={ax} y={GY} s={s} sec={{t, amp: 1.2}} />
 		{/* the open scroll between the hands */}
 		<g>
 			<path d={poly([[sb[0], sb[1] - 4], [sf[0], sf[1] - 4], [sf[0] + 6, sf[1] - 92], [sb[0] - 6, sb[1] - 92]])} fill="#EBD7A4" stroke={PAL.ink} strokeWidth={2.4} />
 			<g transform={`translate(${sb[0] + 4},${sb[1] - 84})`}><GlyphColumns x={0} y={0} cols={Math.max(1, Math.round((sf[0] - sb[0]) / 26))} rows={3} cell={22} seed={171} mono={glowOn > 0 ? '#E8A21E' : undefined} /></g>
 			{[sb, sf].map((p, i) => <rect key={i} x={p[0] - 9} y={p[1] - 100} width={18} height={104} rx={8} fill="#D9BE7E" stroke={PAL.ink} strokeWidth={2.4} />)}
+			<g transform={`translate(${ax},${GY}) scale(${s})`}><FistOver pose={ani} side="b" c={{OW: 2.7 / s, LW: 1.5 / s}} skin={PAL.skinM} /><FistOver pose={ani} side="f" c={{OW: 2.7 / s, LW: 1.5 / s}} skin={PAL.skinM} /></g>
 		</g>
 		<g transform={`translate(${crX},${GY + 190}) scale(${crK}) translate(${-crX},${-GY - 190})`}><Croc x={crX} y={GY + 64} s={30} face={-1} t={t} jaw={jaw} walk={t * 9 * (lunge < 1 && lunge > 0 ? 1 : 0.2)} /></g>
 	</Stage60>;

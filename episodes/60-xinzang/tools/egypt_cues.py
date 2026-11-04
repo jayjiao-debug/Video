@@ -804,12 +804,16 @@ def make_intro(out, meta, T):
     riq + sistrum under the held D5; bar 2 the ney states the Hijaz motif (no drums: the heart's two glow pulses are SFX);
     bar 3+ light maqsum builds into the drop."""
     g = Groove(); bar, e8 = g.bar, g.beat / 2
-    N = max(1, int((T - 0.35) // bar)); lead = T - N * bar
+    Nr = int(round(T / bar))
+    if Nr >= 1 and abs(T - Nr * bar) < 0.2: N = Nr          # T is (almost) whole bars from 0: the first downbeat is frame 0
+    else: N = max(1, int((T - 0.35) // bar))
+    lead = T - N * bar
     m = Mix(T + 4.0, 7, 1); r = np.random.default_rng(77); rr = lambda k: np.random.default_rng([77, k])
     m.add('dum', dum(r, 1.0), 0.0, 0); m.add('zill', zills(r, 0.95, 2.5), 0.002, -0.3); m.add('frame', frame(r, 0.6, buzz=0.15), 0.004, 0.1)
-    run = ['D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C#5']; k = len(run); d = max(0.045, (lead - 0.03) / k) if lead > 0.25 else 0.06
-    t_run = max(0.0, lead - k * d)
-    m.add('reed', reed([(n_, d * 0.95) for n_ in run] + [('D5', 1.9, 'fall')], 0.62, rr(1), 'mizmar'), t_run + 0.005, -0.25)
+    run = ['D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C#5']; k = len(run)
+    if lead > 0.25: d = min(0.1, max(0.045, (lead - 0.03) / k)); t_run = max(0.0, lead - k * d)   # the run lands on the first downbeat
+    else: d = 0.065; t_run = 0.0                                                                  # downbeat at 0: the run is an ornament in beat 1
+    m.add('reed', reed([(n_, round(d * 0.95, 3)) for n_ in run] + [('D5', 1.9, 'fall')], 0.62, rr(1), 'mizmar'), t_run + 0.005, -0.25)   # whole-ms notes (contour)
     for b in range(N):
         t = lead + b * bar; rb = rr(10 + b); ph = b % 4; last = (b == N - 1)
         v = 0.55 + 0.35 * b / max(1, N - 1)

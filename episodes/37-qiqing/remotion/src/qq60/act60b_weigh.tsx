@@ -33,7 +33,7 @@ const leadWalk = (phL: number, phF: number, s: number, xL: number, xF: number): 
 	let lead = walkPose(phL, {lean: 2, arm: 0.6});
 	const sh = ap(solve(lead).bU, [0, 0]), ra = -34 * Math.PI / 180, hand: V = [sh[0] + Math.sin(ra) * 6.75, sh[1] + Math.cos(ra) * 6.75];
 	lead = wristTo(reach(lead, 'b', hand), 'b', -40);
-	lead = wristTo(holdAt(lead, 'f', [2.6, -3.4]), 'f', 30);
+	lead = wristTo(holdAt(lead, 'f', [3.0, -0.2 + 0.2 * Math.sin(phL)]), 'f', 14);
 	const hw: V = [xL + hand[0] * s, GY + hand[1] * s];
 	let fol = walkPose(phF, {lean: 4, arm: 0.5});
 	fol = wristTo(reach(fol, 'f', [(hw[0] - 0.55 * s - xF) / s, (hw[1] + 0.2 * s - GY) / s]), 'f', 82);
@@ -64,7 +64,7 @@ export const Shot27: React.FC<ShotProps> = ({t}) => {
 	const tick = Math.max(...S27.ticks.map((x) => hit(t, x, 0.12, 0.03)));
 	const cam = camPath(t, [[-0.4, BX - 300, 476, 1.0], [3.3, BX - 170, 452, 1.08]]);
 	const head = figXY(anubis, xL, GY, as, 1, 'head', [0.3, -3.2]);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(cam.z, 0.3)} stain={0.24} tags={[{x: xL - 2.9 * as, y: GY - 15.2 * as, text: '阿努比斯', size: 38}]}
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(cam.z, 0.3)} stain={0.24} tags={[{x: xL - 2.9 * as, y: GY - 17.7 * as, text: '阿努比斯', size: 38}]}
 		light={<>
 			<Glow x={BX} y={300} r={520} c="gold" o={0.34} />
 			<Glow x={BX + 300} y={GY - 60} r={360} c="red" o={0.28} />
@@ -108,13 +108,13 @@ export const Shot28: React.FC<ShotProps> = ({t}) => {
 /* ================= 29 · 80.4–82.8 · Thoth wets his reed pen and makes the first stroke; the baboon on the post watches ================= */
 export const S29 = {dip: 0.5, scratch: 1.35};
 export const Shot29: React.FC<ShotProps> = ({t}) => {
-	const ts = 34, tx = BX + 420;
+	const ts = 34, tx = BX + 520;
 	const dipU = keys(t, [[0.1, 0.5], [0.42, -0.05], [S29.dip, -0.18], [0.75, 0.55], [1.25, 0.35], [S29.scratch, 0.0], [1.7, 0.0], [1.95, 0.45]]);
 	const penU = keys(t, [[0.15, -0.2], [0.42, -1.25], [0.75, -1.25], [1.25, 0.25], [S29.scratch, 0.3], [1.7, 0.85], [2.0, 0.9]]);
 	const look = up(t, 1.9, 0.4);
 	const st: WState = {...STILL, thoth: {neck: lerp(5, -2, look), head: lerp(9, -8, look), penU, lift: dipU, lean: 3 + 0.4 * Math.sin(t * 1.3)}};
 	const th = thothPose(st);
-	const cam = camPath(t, [[0, BX + 250, 330, 1.14], [2.8, BX + 280, 320, 1.2]]);
+	const cam = camPath(t, [[0, BX + 330, 330, 1.14], [2.8, BX + 360, 320, 1.2]]);
 	const grip = gripOf(th.p, 'b'), wellW: V = [tx - grip[0] * ts, GY + grip[1] * ts];
 	const ripple = hit(t, S29.dip, 0.4), scr = cl((t - S29.scratch) / 0.35);
 	const pa = th.paletteA * Math.PI / 180, pal = (u: number, v: number): V => { const x = grip[0] + Math.cos(pa) * (1.45 + u) - Math.sin(pa) * v, y = grip[1] + Math.sin(pa) * (1.45 + u) + Math.cos(pa) * v; return [tx - x * ts, GY + y * ts]; };
@@ -174,7 +174,7 @@ export const Shot31: React.FC<ShotProps> = ({t}) => {
 	const wig = 11 * Math.sin((t - S31.plop) * 26) * Math.exp(-Math.max(0, t - S31.plop) / 0.25) * (t > S31.plop - 0.02 ? 1 : 0);
 	const pose = ammitP(t, {jaw: 4 + 30 * clack, neck: 6 + 5 * wind, lean: 1 - 3 * wind, tail: 18 * Math.sin(t * 3) + 30 * bell(t, S31.plop, S31.plop + 0.5) + 25 * roar});
 	const W = (u: number, v: number): V => [ax - u * s, ay + v * s];
-	const head = W(4.6, -7.4), fore = W(1.9, -4.2), rump = W(-1.7, -2.9);
+	const head = W(4.8, -7.4), fore = W(2.6, -5.1), rump = W(-1.7, -2.9);
 	const m = S31.moves, cx_ = keys(t, [[m[0][0], head[0]], [m[0][1], fore[0]], [m[1][0], fore[0]], [m[1][1], rump[0]]]), cy_ = keys(t, [[m[0][0], head[1]], [m[0][1], fore[1]], [m[1][0], fore[1]], [m[1][1], rump[1]]]);
 	const z = 1.3 + 0.03 * Math.sin(t * 1.3), cam: Cam = {x: cx_ - 40, y: cy_ + 10, z};
 	const pop = hit(t, S31.plop, 0.3);
@@ -211,15 +211,15 @@ const Emblem: React.FC<{c: {OW: number; LW: number}; kind: 'meskh' | 'cobra'; t:
 	<path d={sp([[0.2, -3.1], [0.45, -3.3], [0.55, -3.8], [0.3, -3.95], [0.05, -3.5]], true, 0.2)} fill={PAL.green} stroke={PAL.ink} strokeWidth={c.LW} />
 </g>;
 export const Shot32: React.FC<ShotProps> = ({t}) => {
-	const s = 24, xs = BX - 390, xm = BX - 560, xr = BX - 730, xn = BX - 920;
+	const s = 24, xs = BX - 470, xm = BX - 640, xr = BX - 810, xn = BX - 1000;
 	const nod = bell(t, S32.nod - 0.1, S32.nod + 0.25) + 0.7 * bell(t, S32.nod + 0.22, S32.nod + 0.5), lean = bell(t, 1.0, 1.9);
 	const shai = folded({...POSES.rest, lean: 1 + 0.4 * Math.sin(t * 1.2), neck: 4 * nod, head: -2 + 14 * nod, rt: -6, at: 9, rk: 2, ak: 1});
 	const mes = folded({...POSES.rest, lean: 1 - 3 * lean, head: -3 - 4 * lean + 0.5 * Math.sin(t * 1.4), rt: -5, at: 7, rk: 1, ak: 1}, true);
 	const ren = folded({...POSES.rest, lean: 2 + 4 * lean, head: 2 + 3 * lean + 0.5 * Math.sin(t * 1.1 + 1), rt: -5, at: 7, rk: 1, ak: 1}, true);
 	const peek = up(t, S32.peek[0], S32.peek[1] - S32.peek[0]), chirp = bell(t, S32.chirp - 0.05, S32.chirp + 0.25);
 	const bal = {tilt: 0.5 * Math.sin(t * 1.1), swingL: 0.5 * Math.sin(t * 1.4), swingR: -0.4 * Math.sin(t * 1.4), plumb: 0.5 * Math.sin(t * 1.7)};
-	const cam = camPath(t, [[0, BX - 450, 540, 1.16], [3.1, BX - 480, 546, 1.21]]);
-	const tag: V = [BX - 300, 470];
+	const cam = camPath(t, [[0, BX - 520, 540, 1.16], [3.1, BX - 550, 546, 1.21]]);
+	const tag: V = [BX - 380, 470];
 	const nh = 300, nw = 200, baY = GY - nh * 0.18 - 6 + lerp(96, -4, peek);
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(cam.z, 0.3)} stain={0.22} tags={[{x: tag[0], y: tag[1], text: '命运之神 沙伊', size: 34}]}
 		light={<>
@@ -256,7 +256,7 @@ export const Shot33: React.FC<ShotProps> = ({t}) => {
 	const anX = BX - 200 + 26 * lean, an = kneelAt([P.bob[0] - 120, P.bob[1] + 200], anX, 34, 8 + 8 * lean, -16 - 6 * lean);
 	const st: WState = {...STILL, thoth: {neck: -6 + 4 * lean, head: -14 + 6 * lean, penU: 0.6, lift: 0.5, lean: 2 + 8 * lean}};
 	const th = thothPose(st), thX = BX + 440 - 28 * lean;
-	const am = ammitP(t, {neck: 16 + 6 * lean, lean: 2 + 4 * lean, jaw: 3 + 5 * beat});
+	const am = ammitP(t, {neck: 24 + 6 * lean, lean: 3 + 4 * lean, jaw: 3 + 5 * beat});
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#141B44" wear={wearFor(z, 0.2)} stain={0.16} dark={0.12} darkC="#0A0420"
 		light={<>
 			<Glow x={P.L[0]} y={P.L[1] - 26} r={120 + 70 * beat} c="red" o={0.5 + 0.45 * beat} />
@@ -267,9 +267,10 @@ export const Shot33: React.FC<ShotProps> = ({t}) => {
 		</>}>
 		<Room t={t} />
 		<Balance2 p={bal} x={BX} y={GY} s={BS} t={t} />
+		<Ammit2 pose={am} x={BX + 250 - 20 * lean} y={GY + 70} s={34} face={-1} t={t} rim={0.8} look={2.4} id="b33am" />
 		<God id="b33an" cast={ANUBIS} pose={an} x={anX} y={GY + 40} s={34} sec={{t}} />
 		<God id="b33th" cast={THOTH} pose={th.p} x={thX} y={GY + 210} s={33} face={-1} sec={{t}} bProp="palette" fProp="pen" paletteA={th.paletteA} />
-		<Ammit2 pose={am} x={BX + 230 - 24 * lean} y={GY + 40} s={36} face={-1} t={t} rim={0.8} look={2.4} id="b33am" />
+
 	</Stage60>;
 };
 export const _keep = {Embers, Stars, rng, poly, sm, seg, GlyphStack, balanceGeo, placeBy};
