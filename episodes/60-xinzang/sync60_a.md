@@ -1,8 +1,8 @@
 > v2 (owner 15:10): shot 4 (the title card) removed; every time from 10.9 s on is 3.0 s earlier (shifted in this file).
-> v2 rework (bA, after the owner's notes): **new opening (shots 1–3) and the title INSIDE the world** — rows 1, 2, 3, 5 rewritten on the new clock.
-> **TITLE 死后称心脏 LANDS AT 6.90 s** (gong + reed swell): its gold runs into the carved cartouche on the hall's lintel 6.45–6.90 as the
-> camera settles from the pull-back; it stays legible 6.90–7.90 in shot 3, then carries at the same place on screen into shot 5 (the Theban
-> temple pylon's lintel) through 7.30–11.30 → about 4.4 s on screen in total, no separate card, subtitles keep running.
+> v3 (bA, owner 15:40): shot 3 runs 5.0–8.4, shot 5 8.4–11.3. **The title lives in shot 3 only**, as the crown of the hall's gateway
+> (winged sun with two rearing uraei, cornice, lapis lintel, the royal cartouche with engraved gold letters, ankh · djed · was either side).
+> **TITLE 死后称心脏 LANDS AT 6.30 s** (gong + reed swell: gold glow pulse, rays, sparks); the gold runs into the carved letters 5.90–6.30 as the
+> gate comes into view; finished and steady 6.30–8.10 (1.8 s), then shot 5 dissolves in from 8.10. No title in shot 5.
 
 # ep60 · sync table, act A (shots 1–14, 0.0–37.8 s) · builder bA
 
@@ -14,8 +14,8 @@ Beat-locked events: shot 2 and 3 on the tension grid (78 bpm from 2.80), shots 6
 |---|---|---|---|
 | 1 | 0.0–2.8 | cut | frame 0: the camera is already pushing through a temple pylon gate (gold signs on lapis), Anubis's mask against a gold sun disk, pyramids under the stars · **0.00** both torches FLARE + gold glint on the eye (finger-cymbal crash + low dum) · the gate slides out past the edges 0.0–0.5 (air whoosh, optional) · **0.55** the flick, puff leaves the hand (whoosh; puff in the air 0.55–1.30) · **1.30** puff drops into the reed basket (soft thup, dust puff) · 1.45–1.9 the mask's eyes flare (optional shimmer) · from 2.35 the camera tilts down into shot 2 |
 | 2 | 2.8–5.0 | own 0.35 (from 2.45: shot 2 fades in over 1 while both cameras tilt down = the match on the arc) | tilt down past winged Isis on the tomb wall onto the mummy (canopic jars and a lamp pass in the foreground) · heartbeat 1 **3.57** (lub) + 3.74 (dub) · heartbeat 2 **4.34** (lub) + 4.51 (dub): each lub is a glow pulse + a heart-shaped light ring inside the body |
-| 3 | 5.0–7.9 | cut | heart falls 5.00–5.45 · **5.45** heart lands on the left pan (heavy metal CLANG + gold flash) · chain rattle **5.45–6.25** (pans swing, decaying) · pull-back 5.55–6.90 (braziers slide in at the edges; optional air whoosh) · **6.45–6.90** molten gold runs into the carved title on the lintel, left to right (rising shimmer) · **6.90 TITLE LANDS** (deep GONG + reed swell; gold flash on the cartouche) · **7.15** two yellow eyes open in the dark under the balance (low growl from 7.10, eyes fully open 7.55) |
-| 5 | 7.9–11.3 | dissolve 0.6 (from 7.30; the title stays put on screen while Thebes dissolves in under it) | title on the west-bank temple pylon's lintel all shot, the sun setting in its gate · Nile lapping throughout (sail drifting across) · **9.25** reed palette set down on the table (wood tap) · **9.65** the blue lotus slips from your (far) hand · **10.20** lotus lands on the terrace behind you (soft) · master stamp from 8.40 (top right is sky, the cartouche stays below it) |
+| 3 | 5.0–8.4 | cut | heart falls 5.00–5.30 · **5.30** heart lands on the left pan (heavy metal CLANG + gold flash) · chain rattle **5.30–6.10** (pans swing, decaying) · pull-back 5.32–6.42 (braziers slide in at the edges; optional air whoosh) · **5.90–6.30** molten gold runs into the carved title on the gateway's lintel, left to right (rising shimmer) · **6.30 TITLE LANDS** (deep GONG + reed swell; gold glow pulse, rays, sparks) · camera steady from 6.42 · **7.20** two yellow eyes open in the dark under the balance (low growl from 7.15, fully open 7.60) |
+| 5 | 8.4–11.3 | dissolve 0.3 (from 8.10) | Thebes at sunset, a temple pylon across the Nile with the sun setting in its gate (no title) · Nile lapping throughout (sail drifting across) · **9.75** reed palette set down on the table (wood tap) · **10.15** the blue lotus slips from your (far) hand · **10.70** lotus lands on the terrace behind you (soft) · master stamp from 8.90 |
 | 6 | 11.3–14.5 | dissolve 0.4 (from 10.90) | canopic jars land (clay clunks, on the groove beats): **11.88 · 12.45 · 13.03 · 13.61** · linen swish once per wrap, half a beat off the jars: 11.59 · 12.17 · 12.74 · 13.32 · 13.90 · day counter rolls 第1天→第70天 **11.45–14.20** (ticks; fast in the middle, slowing to 70) · time-lapse sun crosses the tent opening every 0.8 s (light only) |
 | 7 | 14.5–17.4 | cut | twirl 14.70–15.35 (whirr) · **15.35** the hook stops with a springy wobble (comic BOING / oud pluck drop) · hook lowered out of frame 15.50–15.82 · **15.92** the grey puff pops up on the hook tip at frame left (pop + sparkle) · **16.42** flick back over the shoulder (whoosh) · **17.07** puff lands in the basket behind him (thup); he never looks |
 | 8 | 17.4–20.6 | dissolve 0.4 (from 17.00) | heartbeat under (lub-dub): 17.65 · 18.50 · 19.35 · 20.20 (dub +0.17 each) · heart doors open **17.75–18.15** (soft creak) · vignettes flip in (paper flutter): **18.15** boy learning to write · **18.70** counting grain · **19.25** market quarrel · **19.80** you nudging the weight · **20.02** red flash (2 frames, to 20.09) on the scale vignette (tiny TING) |
@@ -27,7 +27,7 @@ Beat-locked events: shot 2 and 3 on the tension grid (78 bpm from 2.80), shots 6
 | 14 | 34.9–37.8 | dissolve 0.4 (from 34.50) | museum case held wide 34.50–35.35 (label 大英博物馆 EA 10470 legible) · push through the glass 35.35–35.95 · reed pen writes Ani's name in browner ink **35.95–36.95** (pen SCRATCH; signs at 35.95 · 36.28 · 36.62) · name glows 36.95 · tag 书吏 阿尼 from 37.10 · soft glass-case hum throughout |
 
 Notes
-- **Title: lands at 6.90 s** in shot 3 (the cartouche on the lintel above the giant balance), carried into shot 5 at the same screen place; no title card (shot 4 is gone).
+- **Title: lands at 6.30 s** in shot 3 (the royal cartouche in the crown of the gateway above the giant balance), steady to 8.10; shot 3 only, no title card (shot 4 is gone).
 - Shot 2's transition is `own`: from 2.45 shot 2 is drawn over shot 1 with its own fade (0.35 s) while both cameras tilt down.
 - Name tags: 你 (5), 防腐祭司 (6), 心脏圣甲虫 (9), 书吏 (12), 书吏 阿尼 (14).
 - No screen shakes anywhere in act A (camera moves are pushes, pulls, tilts and parallax, ≤ ~25 px per frame).

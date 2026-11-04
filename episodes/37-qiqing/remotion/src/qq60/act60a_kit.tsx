@@ -2,7 +2,7 @@ import React from 'react';
 import {Cam, FW, PIC_CY, rng} from './frame60';
 import {PAL, sp, poly, lerp, cl, sm, V, M, T, R, chain, ap, mx, Pt} from './geo60';
 import {band} from './rig60';
-import {Heart, Feather, Baboon, BAL, balanceGeo, BalancePose, GLYPH_D} from './props60';
+import {Heart, Feather, Baboon, BAL, balanceGeo, BalancePose, GLYPH_D, WingedSun} from './props60';
 import {Mummy} from './props60b';
 
 /* ep60 act A (shots 1–14) · shared helpers: cameras, pulses, the frontal Anubis mask (hook), the cartoon puff, the giant balance
@@ -307,3 +307,84 @@ export const Brazier: React.FC<{x: number; y: number; s?: number; t: number; see
 	<path d="M-90 -186L90 -186" stroke="#F2C46A" strokeWidth={4} />
 	{[-54, -20, 16, 50].map((fx, i) => <g key={i} transform={`translate(${fx},-188) scale(${1.3 + 0.25 * Math.sin(t * 6 + i * 1.7 + seed)})`}><path d={`M-14 0Q-18 -40 ${-2 + 6 * Math.sin(t * 7 + i)} -78Q16 -40 14 0Z`} fill="#E8642A" stroke={PAL.ink} strokeWidth={2} /><path d="M-7 0Q-8 -24 0 -44Q8 -24 7 0Z" fill="#F8C24A" /></g>)}
 </g>;
+
+/* ---------------- v3 (owner 15:40): the title as a royal piece carved and inlaid in the gateway (world px; draw in the `light` layer
+   so wear and wobble never dull the gold). Family of the end card's TitleCartouche (egypt60.tsx): lapis faience, solid gold rope +
+   dashed inner rope, the tie bar at the right end, engraved gold-gradient letters with a dark offset shadow. ---------------- */
+const Uraeus: React.FC<{x: number; y: number; h: number; face: 1 | -1; lit: number; id: string}> = ({x, y, h, face, lit, id}) => {
+	const lw = 3;
+	const body = sp([[0.34, 0, 1], [0.16, -0.22], [0.2, -0.5], [0.34, -0.72], [0.36, -0.92], [0.26, -1.1], [0.06, -1.16], [-0.1, -1.06], [-0.14, -0.86], [-0.06, -0.62], [-0.12, -0.36], [-0.3, -0.12], [-0.42, 0, 1]], true, 0.2);
+	const hood = sp([[-0.02, -0.98], [0.3, -0.92], [0.42, -0.66], [0.3, -0.44], [0.06, -0.42], [-0.04, -0.62]], true, 0.22);
+	return <g transform={`translate(${x},${y}) scale(${h * face},${h})`}>
+		<ellipse cx={-0.02} cy={0.02} rx={0.5} ry={0.12} fill={`url(#${id}-gold)`} stroke={PAL.ink} strokeWidth={lw / h} />
+		<path d={body} fill={`url(#${id}-gold)`} stroke={PAL.ink} strokeWidth={lw / h} strokeLinejoin="round" />
+		<path d={hood} fill="#2C46A8" stroke={PAL.ink} strokeWidth={lw / h} />
+		{[0, 1, 2].map((k) => <path key={k} d={`M${0.06 + k * 0.08} -0.9L${0.1 + k * 0.08} -0.48`} stroke={PAL.gold} strokeWidth={2 / h} />)}
+		<path d="M0.3 -1.08L0.46 -1.02L0.36 -0.98Z" fill={PAL.red} />
+		<circle cx={0.18} cy={-1.08} r={0.035} fill={lit > 0.5 ? '#FFF2B0' : PAL.ink} />
+		<circle cx={0.06} cy={-1.36} r={0.16} fill="#D8402A" stroke={PAL.gold} strokeWidth={4 / h} />
+	</g>;
+};
+/** the was sceptre (dominion): forked foot, straight staff, the Set-animal head; origin = foot, height h */
+const WasSign: React.FC<{x: number; y: number; h: number; c: string}> = ({x, y, h, c}) => <g transform={`translate(${x},${y}) scale(${h})`}>
+	<path d="M-0.1 0L-0.04 -0.08L0.04 -0.08L0.1 0L0.06 0L0.0 -0.05L-0.06 0Z M-0.03 -0.08L-0.03 -0.86L0.03 -0.86L0.03 -0.08Z M-0.03 -0.86L0.2 -0.98L0.22 -0.92L0.04 -0.82Z M0.0 -0.88L-0.02 -1.0L0.04 -0.9Z" fill={c} stroke={PAL.ink} strokeWidth={2.2 / h} strokeLinejoin="round" />
+</g>;
+const GSIGN = (k: string) => GLYPH_D[k].d;
+/** the crown of the hall's gateway: winged sun with two rearing uraei, cornice, the lintel with the royal cartouche of the title,
+    life-stability-dominion (ankh · djed · was) either side, khekher bands at the ends. (cx, cy) = cartouche centre, fs = letter size;
+    lit 0..1 = gold running into the carved letters (left → right), land = the landing pulse (0..1, decaying). */
+export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: number; land: number; t: number; id: string; title: string}> = ({cx, cy, fs, lit, land, t, id, title}) => {
+	const k = fs / 96, h = fs * 1.62, w = title.length * fs * 1.13 + fs * 1.5, x0 = cx - w / 2, y0 = cy - h / 2, r = h / 2;
+	const lintel = {x0: cx - w / 2 - fs * 2.4, x1: cx + w / 2 + fs * 2.4, y0: cy - h / 2 - fs * 0.22, y1: cy + h / 2 + fs * 0.22};
+	const front = x0 - 20 + lit * (w + 60), glowLit = 0.35 + 0.65 * lit, sh = Math.sin(t * 2.4);
+	const stad = (ins: number) => `M${x0 + ins + (r - ins)} ${y0 + ins}L${x0 + w - ins - (r - ins)} ${y0 + ins}A${r - ins} ${r - ins} 0 0 1 ${x0 + w - ins - (r - ins)} ${y0 + h - ins}L${x0 + ins + (r - ins)} ${y0 + h - ins}A${r - ins} ${r - ins} 0 0 1 ${x0 + ins + (r - ins)} ${y0 + ins}Z`;
+	const txt = (p: React.SVGProps<SVGTextElement>) => <text x={cx + fs * 0.065} y={cy + fs * 0.36} textAnchor="middle" fontFamily={"'Noto Serif CJK SC','Noto Serif CJK',serif"} fontWeight={900} fontSize={fs} letterSpacing={fs * 0.13} {...p}>{title}</text>;
+	const sideX = (side: number, i: number) => cx + side * (w / 2 + fs * 0.62 + i * fs * 0.5);
+	const cor = fs * 0.6, wsS = fs * 0.4, wy = lintel.y0 - cor - wsS * 1.72;   // cornice height, winged sun scale and centre (its wings clear the cornice)
+	return <g>
+		<defs>
+			<linearGradient id={`${id}-lap`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#263A86" /><stop offset="1" stopColor="#101943" /></linearGradient>
+			<linearGradient id={`${id}-tg`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF3C4" /><stop offset="0.38" stopColor="#F6D27A" /><stop offset="0.56" stopColor="#C8902E" /><stop offset="0.78" stopColor="#F3CF73" /><stop offset="1" stopColor="#FFE7A6" /></linearGradient>
+			<clipPath id={`${id}-lit`}><rect x={x0 - 40} y={y0 - 40} width={Math.max(0, front - (x0 - 40))} height={h + 80} /></clipPath>
+		</defs>
+		{/* glow behind the whole crown; it pulses when the title lands */}
+		<ellipse cx={cx} cy={cy - fs * 0.6} rx={w * (0.75 + 0.15 * land)} ry={fs * (2.6 + 0.8 * land)} fill="url(#g60-gold)" opacity={0.18 + 0.3 * lit + 0.45 * land} style={{mixBlendMode: 'screen'}} />
+		{/* the winged sun disk spanning the gate, with two rearing uraei */}
+		<g opacity={0.75 + 0.25 * glowLit}><WingedSun x={cx} y={wy} s={wsS} span={(lintel.x1 - lintel.x0) / wsS / 2 - 1.2} t={t} /></g>
+		<circle cx={cx} cy={wy} r={wsS * 0.95} fill="url(#g60-gold)" opacity={0.35 + 0.4 * lit + 0.4 * land} style={{mixBlendMode: 'screen'}} />
+		<Uraeus x={cx - wsS * 1.8} y={lintel.y0 - cor} h={fs * 0.56} face={-1} lit={lit} id={id} />
+		<Uraeus x={cx + wsS * 1.8} y={lintel.y0 - cor} h={fs * 0.56} face={1} lit={lit} id={id} />
+		{/* cavetto cornice + torus over the lintel */}
+		<path d={poly([[lintel.x0 - fs * 0.1, lintel.y0], [lintel.x1 + fs * 0.1, lintel.y0], [lintel.x1 + fs * 0.4, lintel.y0 - cor], [lintel.x0 - fs * 0.4, lintel.y0 - cor]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={5} />
+		{Array.from({length: 40}, (_, i) => { const u = (i + 0.5) / 40, a = lintel.x0 - fs * 0.1 + u * (lintel.x1 - lintel.x0 + fs * 0.2), b = lintel.x0 - fs * 0.4 + u * (lintel.x1 - lintel.x0 + fs * 0.8), hw = (lintel.x1 - lintel.x0) / 80 * 0.7;
+			return <path key={i} d={poly([[a - hw, lintel.y0 - 3], [a + hw, lintel.y0 - 3], [b + hw * 1.15, lintel.y0 - cor + 3], [b - hw * 1.15, lintel.y0 - cor + 3]])} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} stroke={PAL.ink} strokeWidth={2} />; })}
+		<rect x={lintel.x0 - fs * 0.12} y={lintel.y0 - fs * 0.12} width={lintel.x1 - lintel.x0 + fs * 0.24} height={fs * 0.14} fill={`url(#${id}-gold)`} stroke={PAL.ink} strokeWidth={3} />
+		{/* the lintel: lapis-painted stone between gold rules, khekher bands at both ends */}
+		<rect x={lintel.x0} y={lintel.y0} width={lintel.x1 - lintel.x0} height={lintel.y1 - lintel.y0} fill="#1A2766" stroke={PAL.ink} strokeWidth={5} />
+		{[lintel.y0 + 6, lintel.y1 - fs * 0.12 - 6].map((yy) => <rect key={yy} x={lintel.x0} y={yy} width={lintel.x1 - lintel.x0} height={fs * 0.12} fill={`url(#${id}-gold)`} />)}
+		{[lintel.x0, lintel.x1 - fs * 0.5].map((xx) => <g key={xx}>{Array.from({length: 9}, (_, i) => <rect key={i} x={xx} y={lintel.y0 + fs * 0.2 + i * (lintel.y1 - lintel.y0 - fs * 0.4) / 9} width={fs * 0.5} height={(lintel.y1 - lintel.y0 - fs * 0.4) / 9 - 3} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} stroke={PAL.ink} strokeWidth={2} />)}
+			<rect x={xx} y={lintel.y0} width={fs * 0.5} height={lintel.y1 - lintel.y0} fill="none" stroke={PAL.gold} strokeWidth={6} /></g>)}
+		{/* ankh · djed · was, inlaid gold, facing the cartouche on both sides */}
+		{[-1, 1].map((side) => <g key={side}>
+			{['ankh', 'djed'].map((g, i) => <path key={g} d={GSIGN(g)} fill={`url(#${id}-tg)`} stroke={PAL.ink} strokeWidth={2.4 / (fs * 0.85)} transform={`translate(${sideX(side, i) - fs * 0.42},${cy - fs * 0.44}) scale(${fs * 0.85})`} />)}
+			<WasSign x={sideX(side, 2)} y={cy + fs * 0.46} h={fs * 0.95} c={PAL.gold} />
+		</g>)}
+		{/* the royal cartouche: lapis faience, solid gold rope + dashed inner rope, the tie bar at the right end */}
+		<rect x={x0 + 4} y={y0 + 10} width={w - 8} height={h - 6} rx={(h - 6) / 2} fill="#000" opacity={0.4} />
+		<path d={stad(0)} fill="#2A1912" />
+		<path d={stad(6 * k)} fill={`url(#${id}-lap)`} stroke={PAL.gold} strokeWidth={7 * k} />
+		<path d={stad(6 * k)} fill="none" stroke="#FFF0B0" strokeWidth={2 * k} opacity={0.35 + 0.4 * lit} transform={`translate(0,${-2 * k})`} />
+		<path d={stad(17 * k)} fill="none" stroke={PAL.gold} strokeWidth={1.8 * k} strokeDasharray={`${4 * k} ${4 * k}`} opacity={0.9} />
+		<path d={stad(4 * k)} fill="none" stroke="#2A1912" strokeWidth={2.2 * k} />
+		<rect x={x0 + w - 4 * k} y={y0 + h * 0.06} width={20 * k} height={h * 0.88} rx={3 * k} fill={PAL.gold} stroke="#2A1912" strokeWidth={2.6 * k} />
+		<rect x={x0 + w + 1 * k} y={y0 + h * 0.06 + 6 * k} width={10 * k} height={h * 0.88 - 12 * k} fill="none" stroke="#9C7426" strokeWidth={1.5 * k} />
+		{/* the letters: carved dark into the lapis, then filled with gold from the left */}
+		{txt({fill: '#0A1030', stroke: '#4A5AA0', strokeWidth: fs * 0.02})}
+		<g clipPath={`url(#${id}-lit)`}>
+			{txt({fill: 'none', stroke: '#FFD98A', strokeWidth: fs * 0.16, opacity: 0.16 + 0.08 * sh + 0.3 * land})}
+			{txt({fill: '#4A2E0A', transform: `translate(0,${3 * k})`})}
+			{txt({fill: `url(#${id}-tg)`, stroke: '#3A1E06', strokeWidth: fs * 0.012})}
+		</g>
+		{lit > 0 && lit < 1 && <g style={{mixBlendMode: 'screen'}}><rect x={front - fs * 0.35} y={y0 + 8 * k} width={fs * 0.7} height={h - 16 * k} fill="url(#g60-gold)" opacity={0.95} /><circle cx={front} cy={cy} r={fs * 0.7} fill="url(#g60-white)" opacity={0.55} /></g>}
+	</g>;
+};

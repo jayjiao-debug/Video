@@ -1,12 +1,12 @@
 import React from 'react';
 import {Stage60, Glow, Dust, Embers, Smoke, Shaft, Stars, Flame, flick, rng, PIC_T, FW, F_SERIF, toScreen} from './frame60';
-import {GlyphColumns, Balance} from './props60';
+import {GlyphColumns, Balance, WingedSun} from './props60';
 import {Mummy, LionBier, BIER_H, CanopicJar, Lamp, HeartScarab, Basket, River, Palm, STONE, JarHead} from './props60b';
 import {God, CAST, POSES, Pose, solve, reach, wristTo, holdAt} from './rig60';
 import {CAST2, ANI, tendPose, scribePose} from './cast60';
 import {PAL, sp, poly, lerp, cl, sm, V, ap, mx} from './geo60';
 import type {ShotProps} from './EP60';
-import {pulse, seg, aimPath, GoldDefs, Puff, HEART_D, Sparkle, DustBurst, wearAt, GlyphRun, GildedTitle, TS} from './act60a_kit';
+import {pulse, seg, aimPath, GoldDefs, Puff, HEART_D, Sparkle, DustBurst, wearAt, GlyphRun} from './act60a_kit';
 
 /* ep60 act A · life and death (shots 5–9, 10.9–26.5 s): Thebes at sunset; the 70-day embalming (time-lapse); the hook twirl;
    the heart that remembers everything; the heart scarab laid on the chest. Times: shot seconds (t), film seconds in [brackets]. */
@@ -74,6 +74,8 @@ const Pylon5: React.FC<{t: number}> = ({t}) => {
 		<path d={poly([[214, 150], [1066, 150], [1090, 108], [190, 108]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={3} />
 		{Array.from({length: 30}, (_, i) => { const u = (i + 0.5) / 30, a2 = 214 + u * 852, b2 = 190 + u * 900;
 			return <path key={i} d={poly([[a2 - 9, 148], [a2 + 9, 148], [b2 + 10, 110], [b2 - 10, 110]])} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} stroke={PAL.ink} strokeWidth={1.2} />; })}
+		<WingedSun x={640} y={214} s={16} span={22} t={t} />
+		<GlyphColumns x={262} y={276} cols={20} rows={2} cell={38} seed={52} mono="#7A3A1A" />
 		<rect x={220} y={380} width={840} height={12} fill={PAL.red} opacity={0.8} />
 		<rect x={470} y={392} width={340} height={128} fill="#F6B05A" />
 		<circle cx={640} cy={498} r={58} fill="#FFD27A" stroke="#E8642A" strokeWidth={4} />
@@ -81,14 +83,13 @@ const Pylon5: React.FC<{t: number}> = ({t}) => {
 		{[300, 900].map((x) => <GlyphColumns key={x} x={x} y={404} cols={2} rows={3} cell={34} seed={x} mono="#7A3A1A" />)}
 	</g>;
 };
-/* ================= 5 · 7.9–11.3 (v2) · Thebes at sunset: across the Nile the temple pylon carries the title, the sun sets in its gate;
+/* ================= 5 · 8.4–11.3 (v3) · Thebes at sunset: across the Nile a temple pylon, the sun setting in its gate (no title here);
    you, a young scribe, set down your palette; a blue lotus slips =================
-   dissolve in (0.6, from 7.30): the title stays where shot 3 left it (TS) while the world changes under it; it stays lit and legible
-   the whole shot, the camera cranes down ~30 px. Palette tap 1.35 [9.25] · lotus slips 1.75 [9.65] · lands 2.3 [10.20] · Nile lapping. */
+   dissolve in (0.3, from 8.10); slow crane down. Palette tap 1.35 [9.75] · lotus slips 1.75 [10.15] · lands 2.3 [10.70] · Nile lapping. */
 export const TX5 = 640, TY5 = 268;
 export const Shot5: React.FC<ShotProps> = ({t}) => {
 	const S = 25, fx = 380, tableX = 590, tableY = 640, GY5 = 860;
-	const cam = aimPath(t, [[-0.6, TX5, TY5, TS.x, TS.y, 1.0], [3.4, TX5, TY5, TS.x, TS.y - 32, 1.03]], (u) => u);
+	const cam = aimPath(t, [[-0.3, TX5, TY5, 640, 300, 1.0], [2.9, TX5, TY5, 640, 240, 1.04]], (u) => u);
 	const tTap = 1.35, tSlip = 1.75, tLand = 2.3;
 	const hTarget = keyV(t, [[0, 3.5, -12.6], [tTap, (tableX - 30 - fx) / S, (tableY - 14 - GY5) / S], [tTap + 0.25, (tableX - 30 - fx) / S, (tableY - 14 - GY5) / S], [tTap + 0.9, 3.0, -9.0]]);
 	let pose: Pose = {...POSES.rest, lean: lerp(1, 7, sm(seg(t, 0.2, tTap))) - 3 * sm(seg(t, tTap + 0.3, tTap + 1.0)), neck: 4, head: lerp(2, 10, sm(seg(t, 0, tTap))) - 6 * sm(seg(t, 1.9, 2.5)), rt: -8, at: 11, rk: 3, ak: 2};
@@ -102,19 +103,17 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 	if (t > tLand) { const v = t - tLand; lotus = [bGrip[0] - 90, GY5 - 6 - 5 * Math.exp(-v / 0.1) * Math.abs(Math.sin(v * 22))]; la = -100; }
 	// the reed pen tucked behind the ear: drawn over the head, then the ear drawn again over the pen (it passes UNDER the ear)
 	const H = g.head, penA = ap(H, [-0.75, -1.9]), penB = ap(H, [0.34, -0.86]);
-	const tp = toScreen(cam, TX5, TY5);
 	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={0.16} stain={0.12} tags={[{x: fx - 130, y: 440, text: '你'}]}
 		light={<>
 			<Glow x={640} y={480} r={560} c="warm" o={0.85} />
 			<Glow x={640} y={490} r={150} c="white" o={0.75} />
 			<Shaft pts={[[480, 392], [800, 392], [1000, 900], [280, 900]]} o={0.28} />
 			<Glow x={640} y={570} r={240} ry={60} c="warm" o={0.7} />
-			<Glow x={TX5} y={TY5} r={520} ry={170} c="gold" o={0.3} />
 			<Glow x={fx - 60} y={600} r={260} c="warm" o={0.3} />
 			<Dust t={t} box={[0, 100, 1300, 860]} n={60} seed={5} c="#FFE0A0" o={0.65} vx={6} vy={-3} />
 			{t > tLand - 0.02 && <DustBurst t={t} t0={tLand} x={lotus[0] - 20} y={GY5 - 4} rx={30} ry={6} n={14} seed={2} c="#FFF0C0" life={0.6} />}
 		</>}
-		screen={<GildedTitle x={tp[0]} y={tp[1]} w={TS.w * cam.z} lit={1} t={t + 3} id="a5t" />}>
+>
 		<defs><linearGradient id="a5-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3E2470" /><stop offset="0.35" stopColor="#B23A56" /><stop offset="0.7" stopColor="#F2743A" /><stop offset="1" stopColor="#FFC456" /></linearGradient>
 			<linearGradient id="a5-nile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E89A5A" /><stop offset="0.25" stopColor="#4E6FB0" /><stop offset="1" stopColor="#2E4F94" /></linearGradient></defs>
 		<rect x={-400} y={-500} width={2300} height={1020} fill="url(#a5-sky)" />
