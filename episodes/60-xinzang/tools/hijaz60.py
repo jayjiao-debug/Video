@@ -104,12 +104,13 @@ def pluck(T, inst, m, t, dur, vel, pan, stem, stacc=False):
     T.put(stem, s, t, pan)
 
 def string_line(T, ev, t0=0.0, inst='oud', octv=-1, vel=0.6, pan=0.35, trem=4, rate=0.125, stacc=False, late=0.012,
-                skip16=True, octave_double=False, stem=None):
+                skip16=True, octave_double=False, stem=None, quarters=False):
     """heterophony: the lead's line on a plucked string, a touch late, simplified (every other 16th), tremolo on long notes."""
     stem = stem or inst; rng = T.rng; k16 = 0
     for t, n, d, fl in timed(ev, t0):
         if n is None: continue
         m = tr(n, octv); sec = d * E8; tt = t + late + jit(rng)
+        if quarters and abs(((t - t0) / BEAT) - round((t - t0) / BEAT)) > 0.05: continue   # heterophony on the beats only
         if d < 1:
             k16 += 1
             if skip16 and k16 % 2 == 0: continue
@@ -423,6 +424,72 @@ def mixdown(T, side=1.5):
     thin_names = [k for k in names if k not in PERC]
     return full, (bus(thin_names) if thin_names else None), dry
 
+# ------------------------------------------------------------------ owner 23:16: three catchy theme options (8 bars each)
+HA_RIFF = M('hook A (riff, oud + qanun in octaves)',
+            'D4:1. D4:1. Eb4:1 F#4:2> r:1 G4:1 F#4:1', 'Eb4:1 F#4:1 Eb4:1 D4:3 r:2',
+            'D4:1. D4:1. Eb4:1 F#4:2> r:1 G4:1 F#4:1', 'Eb4:1 F#4:1 Eb4:1 D4:3 r:2',
+            'G4:1. G4:1. A4:1 Bb4:2> r:1 C5:1 Bb4:1', 'A4:1 G4:1 F#4:1 Eb4:1 D4:2 r:2',
+            'D4:1. D4:1. Eb4:1 F#4:2> r:1 G4:1 F#4:1', 'Eb4:1 F#4:1 Eb4:1 D4:3 r:2')
+HA_MIZ = M('hook A (mizmar answer)', 'r:8', 'r:8', 'r:8', 'r:8', 'G5:1. G5:1. A5:1 Bb5:2 r:1 C6:1 Bb5:1', 'A5:1 G5:1 F#5:1 Eb5:1 D5:2 r:2', 'r:8', 'r:8')
+HB_NEY = M('hook B (ney, AABA)',
+           'D4:1 F#4:1.5 G4:0.5 A4:3 r:2', 'G4:1.5 F#4:0.5 Eb4:2 D4:2 r:2',
+           'D4:1 F#4:1.5 G4:0.5 A4:3t r:2', 'G4:1.5 F#4:0.5 Eb4:2 D4:2 r:2',
+           'G4:1 Bb4:1.5 C5:0.5 D5:3 r:2', 'C5:1.5 Bb4:0.5 A4:2 G4:2 r:2',
+           'A4:1 Bb4:1 A4:1.5 G4:0.5 F#4:2 r:2', 'G4:1.5 F#4:0.5 Eb4:2m D4:3 r:1')
+HC_CALL = M('hook C (mizmar calls)',
+            'D4:1. Eb4:1. F#4:2> G4:1. F#4:1. r:2', 'r:8', 'Eb4:1. F#4:1. A4:2> G4:1. F#4:1. r:2', 'r:8',
+            'G4:1. A4:1. Bb4:2> C5:1. Bb4:1. r:2', 'r:8', 'D5:2> C5:1. Bb4:1. A4:1. G4:1. F#4:1. Eb4:1.', 'r:8')
+HC_ANS = M('hook C (oud + qanun answers in unison)',
+           'r:8', 'Eb4:1 F#4:1 Eb4:1 D4:2> r:3', 'r:8', 'Eb4:1 F#4:1 G4:1 F#4:2> r:3',
+           'r:8', 'Eb4:1 F#4:1 A4:1 G4:2> r:3', 'r:8', 'D4:2> r:1 D4:1> r:1 D4:1> r:2')
+
+def m_hookA(T):
+    drone(T, level=0.55, reed_amt=0.12)
+    string_line(T, HA_RIFF, 0.0, 'oud', -1, 0.75, pan=0.35, trem=0, late=0.0, skip16=False)
+    string_line(T, HA_RIFF, 0.0, 'qanun', 0, 0.5, pan=-0.38, trem=0, late=0.006, skip16=False)
+    lead(T, HA_MIZ, 0.0, kind='mizmar', vel=0.5, pan=-0.12, breath=0.06, octv=-1)
+    for b in range(8):
+        drums(T, b * BAR, 'maqsum', 0.95)
+        if b % 2 == 0: stroke(T, b * BAR + 3 * E8, 'T', 0.9)          # the riff's syncopation, doubled on the drum
+    for b in (0, 4): stroke(T, b * BAR, 'Z', 0.7)
+    roll(T, 7 * BAR + 6 * E8, 0.5, 0.25, 0.75)
+
+def m_hookB(T):
+    drone(T, level=0.7, reed_amt=0.2)
+    lead(T, HB_NEY, 0.0, breath=0.2, vel=0.74)
+    string_line(T, HB_NEY, 0.0, 'oud', -1, 0.5, trem=0, quarters=True)
+    for t, n, d, fl in timed(HB_NEY):
+        if n and d >= 3: qroll(T, t + 0.02, n, min(d * E8, 0.9), 0.22)
+    for b in range(8): drums(T, b * BAR, 'wahda', 0.9); stroke(T, b * BAR + 6 * E8, 'D', 0.55); riq_bar(T, b * BAR, 0.35)
+    for b in (0, 4): stroke(T, b * BAR, 'z', 0.6)
+
+def m_hookC(T):
+    drone(T, notes=(('D2', 1.0), ('A2', 0.25)), level=0.6, reed_amt=0.15)
+    lead(T, HC_CALL, 0.0, kind='mizmar', vel=0.62, pan=-0.12, breath=0.06)
+    string_line(T, HC_ANS, 0.0, 'oud', -1, 0.75, pan=0.35, trem=0, late=0.0, skip16=False)
+    string_line(T, HC_ANS, 0.0, 'qanun', 0, 0.55, pan=-0.38, trem=0, late=0.004, skip16=False)
+    for t, n, d, fl in timed(HC_ANS):
+        if n and '>' in fl: stroke(T, t, 'D', 1.0); stroke(T, t + 0.003, 'T', 0.8)
+        if n and '>' in fl and t >= 7 * BAR: stroke(T, t, 'Z', 0.8)
+    for b in range(8):
+        if b % 2 == 0: drums(T, b * BAR, 'wahda', 0.7)
+        riq_bar(T, b * BAR, 0.4)
+
+HOOKS = {'A': (m_hookA, 'riff-led'), 'B': (m_hookB, 'singable theme'), 'C': (m_hookC, 'call and response')}
+def hooks(out, ref):
+    rend = {}
+    for k, (fn, _) in HOOKS.items():
+        T = Take(8, True, seed=101 + ord(k)); fn(T); rend[k] = mixdown(T)[0]; E._KS.clear(); print('rendered hook', k, flush=True)
+    segs = []
+    for k, x in rend.items():   # each candidate EQ'd on its own toward the targets (the library EQ is set once the theme is picked)
+        fir = lib_eq([x], ref, {})
+        eq = lambda z: signal.fftconvolve(np.concatenate([z, np.zeros((len(fir), 2))]), fir[:, None], mode='full')[len(fir) // 2:len(fir) // 2 + len(z)]
+        x = lib60.circ(eq, x); y = np.concatenate([x, x[:int(0.4 * SR)]]); r = int(0.4 * SR); y[-r:] *= np.linspace(1, 0, r)[:, None] ** 2
+        q = int(0.02 * SR); y[:q] *= np.linspace(0, 1, q)[:, None]; y *= 10 ** ((-20 - E.lufs(y)) / 20); segs.append(y)
+        sf.write(out.replace('.wav', f'_{k}.wav'), y.astype(np.float32), SR, subtype='PCM_24')
+    gap = np.zeros((int(0.8 * SR), 2)); y = np.concatenate([segs[0], gap, segs[1], gap, segs[2]])
+    y = lib60.master(y); sf.write(out, y.astype(np.float32), SR, subtype='PCM_24'); print('hooks', out, round(len(y) / SR, 2), 's', round(E.lufs(y), 2), 'LUFS')
+
 def lib_eq(loops, ref, meta):
     """one band-share EQ for the library (targets: the reference's shares, <120 Hz -6, 500-2k -4; the top 1-4 dB under the mids)."""
     rp, *rr = ref.split(':'); r = lib60.load(rp, *rr) if rr else lib60.load(rp)
@@ -431,7 +498,7 @@ def lib_eq(loops, ref, meta):
     edges = [(20, 120), (120, 500), (500, 2000), (2000, 6000)]; cen = np.array([60., 245., 1000., 3460.])
     share = lambda P: np.array([10 * np.log10(P[(f >= a) & (f < b)].sum() / P[f >= 20].sum()) for a, b in edges])
     target = share(Pr); target[0] = -6.0; target[2] = -4.0; gc = np.zeros(4)
-    curve = lambda fq, gc: np.where(fq >= 6000, np.clip(gc[3], gc[2] - 4, gc[2] - 1), np.interp(np.log(np.maximum(fq, 20)), np.log(cen), gc))
+    curve = lambda fq, gc: np.where(fq >= 6000, np.clip(gc[3], gc[2] - 6, gc[2] - 3), np.interp(np.log(np.maximum(fq, 20)), np.log(cen), gc))
     for _ in range(14):
         gc += 0.8 * (target - share(Pl * 10 ** (curve(f, gc) / 10))); gc -= gc[2]; gc = np.clip(gc, [-8, -8, 0, -8], [3, 6, 0, 6])   # 1 kHz fixed; sub boost <= +3 dB
     c = np.geomspace(31.5, 16000, 28); g = curve(c, gc)
@@ -511,4 +578,5 @@ if __name__ == '__main__':
     if sys.argv[1] == 'build': build(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'preview': lib60.preview(sys.argv[2], sys.argv[3], PLAN)
     elif sys.argv[1] == 'sampler': sampler(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == 'hooks': hooks(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'direction': direction(sys.argv[2], sys.argv[3], *(sys.argv[4:5]))
