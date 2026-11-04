@@ -442,7 +442,7 @@ const S39: React.FC<ShotProps> = ({t}) => {
 				<Sparkle x={716} y={472} r={20 + 8 * Math.sin(t * 5)} rot={20 * t} />
 				<Dust t={t} box={[590, 80, 850, 800]} n={26} seed={39} o={0.6} vx={2} vy={4} r={1.6} />
 			</>}>
-			<defs><filter id="c39sil" x="-20%" y="-10%" width="140%" height="120%"><feColorMatrix type="matrix" values="0 0 0 0 0.03  0 0 0 0 0.035  0 0 0 0 0.06  0 0 0 1 0" /></filter></defs>
+			<defs><filter id="c39sil" x="-20%" y="-10%" width="140%" height="120%" colorInterpolationFilters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0.02  0 0 0 0 0.024  0 0 0 0 0.04  0 0 0 1 0" /></filter></defs>
 			<rect x={-300} y={-100} width={2100} height={1300} fill="#10131C" />
 			<rect x={-300} y={800} width={2100} height={500} fill="#0B0D14" />
 			{/* a visitor (1.7 m) at the pedestal (1.05 m) with its small vitrine: the amulet is egg-sized */}
