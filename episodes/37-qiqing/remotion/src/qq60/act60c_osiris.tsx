@@ -69,25 +69,26 @@ const MAAKHERU = [
 /* v6: 45 + 46 are ONE picture in the hall: Thoth stands at the left with his palette; Horus walks you in by the hand and you both come to
    a halt before the throne (line 1); then Thoth writes, the verdict 「言语真实」 lifts off his palette and floats up between you and the
    throne, and Osiris lowers his crook (line 2). 46's pieces are drawn at this hall's scale (its shrine was S 25, here S 21: × 0.84). */
-const L45 = line2(45, 3.29), WK = {x0: 470, a: 2.2, b: 3.1};
+const L45 = line2(45, 3.29), WK = {x0: 400, a: 2.2, b: 3.1};
 /** the walk phase: full speed, then an eased halt between a and b (the integral of 1 − smoothstep) */
 const walkPh = (t: number) => { const D = WK.b - WK.a, u = cl((t - WK.a) / D); return W45.om * (Math.min(t, WK.a) + (t > WK.a ? D * (u - (u * u * u - u * u * u * u / 2)) : 0)); };
 const S45: React.FC<ShotProps> = ({t, dur}) => {
 	const tb = t - L45, S = 21, ph = walkPh(t), xL = WK.x0 + STRIDE * W45.stride * ph * S, xF = xL - W45.gap;
 	const {lead, fol} = leadWalk(ph, S, xL, xF);
-	const cam = camK(t, [[-0.4, 680, 486, 1.0], [L45 - 0.2, 730, 478, 1.04], [dur + 0.2, 700, 470, 1.07]]);
+	/* line 1 follows the walk to the throne (Thoth is off to the left); line 2 eases back and left to take Thoth in */
+	const cam = camK(t, [[-0.4, 740, 486, 1.0], [L45 - 0.15, 775, 478, 1.04], [L45 + 1.2, 632, 470, 0.92], [dur + 0.2, 626, 468, 0.93]]);
 	const shim = bump(t, 0.1, 0.9);
 	// line 2: Thoth writes (46's clock, s after line 2), the verdict rises, Osiris nods
 	const wt = seg(tb, T46.write[0], T46.write[1]), stroke = wt * 3, k = Math.floor(Math.min(2.999, stroke)), f = stroke - k;
 	const penU = 0.35 + 0.42 * (k + sm(f)), lift = 0.07 * (1 - Math.cos(2 * Math.PI * stroke)) * (wt > 0 && wt < 1 ? 1 : 0) + 0.5 * sm(seg(tb, T46.write[1], T46.write[1] + 0.25));
 	const up = sm(seg(tb, T46.up[0], T46.up[1]));
 	const th = thothPose({...STILL, thoth: {neck: lerp(4, -2, up), head: lerp(7, -6, up), penU: tb < T46.write[0] ? 0.35 : penU, lift, lean: 3 + 0.5 * Math.sin(t * 1.3)}});
-	const TX = 70, TS = 25, nod = sm(seg(tb, T46.nod[0], T46.nod[1])) * (1 - 0.4 * sm(seg(tb, T46.ease[0], T46.ease[1])));
+	const TX = -110, TS = 25, nod = sm(seg(tb, T46.nod[0], T46.nod[1])) * (1 - 0.4 * sm(seg(tb, T46.ease[0], T46.ease[1])));
 	const g = solve(th.p), grip = ap(g.bH, [0.02, 0.6]), pc: V = [TX + (grip[0] + 1.45 * Math.cos(th.paletteA * Math.PI / 180)) * TS, GY + (grip[1] + 1.45 * Math.sin(th.paletteA * Math.PI / 180)) * TS];
 	const gl = sm(seg(tb, T46.glow - 0.1, T46.glow + 0.25)), rise = sm(seg(tb, T46.glow, T46.glow + 0.6));
-	const vx = lerp(pc[0] + 34, 600, sm(Math.min(1, rise * 1.7))), vy = lerp(pc[1] - 26, 300, rise * rise);
+	const vx = lerp(pc[0] + 34, 330, sm(Math.min(1, rise * 1.7))), vy = lerp(pc[1] - 26, 290, rise * rise);
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#16214F" wear={0.4} stain={0.3} wobble={wobIn(t)}
-		tags={[{x: xL + 40, y: 360, text: '荷鲁斯'}, {x: 862, y: 290, text: '奥西里斯'}, {x: 1180, y: 160, text: '伊西斯'}, {x: TX + 70, y: 380, text: '托特', o: sm(seg(tb, -0.1, 0.3))}]}
+		tags={[{x: xL - 110, y: 360, text: '荷鲁斯'}, {x: 862, y: 290, text: '奥西里斯'}, {x: 1180, y: 160, text: '伊西斯'}, {x: TX + 20, y: 236, text: '托特', o: sm(seg(tb, 0.2, 0.6))}]}
 		light={<>
 			<Glow x={1060} y={560} r={480} c="gold" o={0.6 + 0.2 * nod} />
 			<Shaft pts={[[930, 40], [1200, 40], [1260, GY], [860, GY]]} o={0.4} />
@@ -95,7 +96,7 @@ const S45: React.FC<ShotProps> = ({t, dur}) => {
 			<Sparkle x={1088} y={520} r={44 * shim} rot={30 * t} />
 			<Glow x={vx} y={vy} r={(160 + 200 * gl) * 0.84} c="gold" o={(0.2 + 0.7 * gl) * sm(seg(tb, T46.glow - 0.3, T46.glow))} />
 			{gl > 0 && <Sparkle x={vx + 110} y={vy - 60} r={60 * bump(tb, T46.glow - 0.05, T46.glow + 0.7)} rot={25} />}
-			<Dust t={t} box={[0, 120, 1300, 840]} n={60} seed={45} c="#FFE7A8" o={0.75} vx={-3} vy={-5} />
+			<Dust t={t} box={[-150, 120, 1400, 840]} n={60} seed={45} c="#FFE7A8" o={0.75} vx={-3} vy={-5} />
 		</>}>
 		<LapisWall x0={-300} x1={1700} />
 		<Shrine fx={920} S={21} t={t} nod={nod} />
