@@ -1,95 +1,88 @@
 {
- "id": "ep60-sfx-06",
+ "id": "ep60-sfx-07",
  "items": [
   {
    "type": "sfx",
-   "name": "X30_lioness_roar_a",
-   "text": "a real lioness roaring once, close up, raspy and powerful, fast attack, about one and a half seconds, wildlife field recording, no music, not a monster",
-   "duration": 1.6,
+   "name": "X40_deep_roar_a",
+   "text": "a huge deep lion roar from the chest, very low and resonant, rumbling body, then a long breathy throaty tail, close, powerful, realistic, no music",
+   "duration": 2.5,
    "influence": 0.75
   },
   {
    "type": "sfx",
-   "name": "X30_lioness_roar_b",
-   "text": "one loud roar of an adult lioness, throaty rasp, aggressive, short and powerful, close microphone, natural, dry, no echo",
-   "duration": 1.5,
-   "influence": 0.8
+   "name": "X40_deep_roar_b",
+   "text": "a big lioness roaring deep and loud, heavy low chest rumble and a long throaty fade out, realistic animal, close, dry",
+   "duration": 2.2,
+   "influence": 0.75
   },
   {
    "type": "sfx",
-   "name": "X30_lioness_roar_c",
-   "text": "a lion snarling roar, open mouth, breathy raspy growl rising into a roar and stopping, realistic animal sound, close, dry",
-   "duration": 1.4,
+   "name": "X40_deep_roar_c",
+   "text": "the deep resonant roar of a large lion, low growling chest, powerful, long tail, realistic, no music",
+   "duration": 2.5,
+   "influence": 0.65
+  },
+  {
+   "type": "sfx",
+   "name": "X41_jaw_slam_a",
+   "text": "giant jaws slamming shut: one heavy deep wet thud with a low body, a huge crocodile bite, no crunch, close, dry",
+   "duration": 1.0,
+   "influence": 0.75
+  },
+  {
+   "type": "sfx",
+   "name": "X41_jaw_slam_b",
+   "text": "a massive monster mouth closing hard: a deep heavy wet thump, low and short, no crunching, no music",
+   "duration": 1.0,
+   "influence": 0.65
+  },
+  {
+   "type": "sfx",
+   "name": "X42_small_chomp_a",
+   "text": "a small creature chomps once: quick jaws snap shut with a soft wet gulp, short, cartoon",
+   "duration": 0.7,
    "influence": 0.7
   },
   {
    "type": "sfx",
-   "name": "X31_lion_snarl_short_a",
-   "text": "a short sharp lioness snarl roar, under one second, aggressive, close, realistic, dry",
-   "duration": 0.9,
-   "influence": 0.75
-  },
-  {
-   "type": "sfx",
-   "name": "X31_lion_snarl_short_b",
-   "text": "a quick angry big-cat roar burst, short, raspy, close, realistic, no music",
+   "name": "X43_lick_a",
+   "text": "a dog licking once, one wet slurpy tongue lick, close, short, dry",
    "duration": 0.8,
    "influence": 0.7
   },
   {
    "type": "sfx",
-   "name": "X32_crunchy_bite_a",
-   "text": "huge jaws snapping shut on something with a mean wet crunch, teeth clacking, crunchy bite, close, dry",
-   "duration": 1.0,
-   "influence": 0.7
-  },
-  {
-   "type": "sfx",
-   "name": "X32_crunchy_bite_b",
-   "text": "a crocodile chomp: heavy jaws slam shut with a crunching bite and a short wet squelch, close, dry, no music",
+   "name": "X43_lick_b",
+   "text": "a slow wet lick, a tongue licking a drop off a blade, slurp, close, dry",
    "duration": 1.0,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X33_bone_snap_a",
-   "text": "a bone snapped in two by hand: one sharp dry crack with a splintering crunch, close, dry",
-   "duration": 0.8,
-   "influence": 0.7
+   "name": "X44_magic_whoosh_a",
+   "text": "a magical whoosh of glowing energy shooting forward, airy and sparkling, short, fantasy, no music",
+   "duration": 1.2,
+   "influence": 0.65
   },
   {
    "type": "sfx",
-   "name": "X33_bone_snap_b",
-   "text": "a stick-like bone breaking with a crisp crack and small splinters, close, no reverb",
-   "duration": 0.8,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "X34_small_wings_a",
-   "text": "a small bird taking off: soft quick feathery wing flaps, about six flaps, close, dry, no chirping",
+   "name": "X45_magic_impact_a",
+   "text": "a magic spell blast impact: a deep soft boom with a bright shimmering burst and a short ring, fantasy, no music",
    "duration": 1.8,
+   "influence": 0.65
+  },
+  {
+   "type": "sfx",
+   "name": "X45_magic_impact_b",
+   "text": "an energy shield blasting outward: a warm thump, a whoosh and glittering sparkles, short, fantasy",
+   "duration": 1.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X34_small_wings_b",
-   "text": "gentle fluttering wings of a small bird flying away, soft feathers, close, no birdsong",
+   "name": "X46_magic_shield",
+   "text": "a magic shield forming: a soft shimmering hum swelling with glittering sparkles, fantasy, no music",
    "duration": 1.6,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "X35_papyrus_flick_a",
-   "text": "a single sheet of dry papyrus flipped over quickly: one crisp papery flick, close, dry",
-   "duration": 0.6,
-   "influence": 0.7
-  },
-  {
-   "type": "sfx",
-   "name": "X35_papyrus_flick_b",
-   "text": "three quick page flips of thick old paper, crisp papery flicks, close, dry",
-   "duration": 1.5,
    "influence": 0.6
   }
  ]
