@@ -22,11 +22,11 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 
 | on | id | type | t | file | at | in | end | gain | fin | fout | fx | sync | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| y | m01_intro | cue | 0 | intro | 0 | 0 | 7.2 | 0 | 0.002 | 0.7 | - | end<-3,5:title+lands~title@+0.3 | frame 0: dum + finger cymbals + a mizmar run up D Hijaz; oud ostinato, arghul drone, riq, sistrum; the ney states the Hijaz motif over the heart; light maqsum builds to the title |
-| y | m02_title | cue | 6.9 | groove_loop | 18.4615 | 17.8846 | 11.25 | -1 | 0.45 | 0.5 | - | t<-3,5:title+lands~title | the title drop (6.90): groove bar 9 with its own darbuka roll into it, the mizmar Hijaz phrase + zills on it; runs under the title and Thebes |
-| y | m02b_bridge | sting | 11.3 | sting_roll_hit | hit | 0.55 | 11.3 | -4 | 0.02 | 0.01 | - | - | shot 5->6 dissolve: a one-beat darbuka roll re-phases the groove onto builder A grid (11.30) |
-| y | m02c_embalm | cue | 11.3 | groove_loop | 27.6923 | 27.6923 | 17.069 | -1 | 0.03 | 0.45 | - | - | embalming: groove bar 13 (a phrase start) on 11.30; jars, boing, pop, thup sit on its beats |
-| y | m03_memory | cue | 17.069 | mystic_loop | 13.846 | 13.246 | 23.9 | -1 | 0.6 | 0.8 | - | - | mystic bar 5 (Eb colour) enters on the thup (17.07, a groove beat; 2:3 tempo, the pulse carries on) |
+| y | m01_intro | cue | 0 | intro | 0 | 0 | 8.7 | 0 | 0.002 | 0.7 | - | - | frame 0: dum + finger cymbals + the mizmar climbing D Hijaz (a 1.4 s wail onto the first downbeat); oud ostinato, arghul drone, riq, sistrum; the ney states the Hijaz motif over the heart; light maqsum builds to shot 5 |
+| y | m02_title | cue | 8.4 | groove_loop | 18.4615 | 17.8846 | 17.054 | -1 | 0.45 | 0.45 | - | - | shot 5 (8.40): groove bar 9, its own darbuka roll into it and the mizmar Hijaz phrase on Thebes; runs on through the embalming (its 5th beat = builder A 11.30 grid, 15 ms) |
+| n | m02b_bridge | sting | 11.3 | sting_roll_hit | hit | 0.55 | 11.3 | -4 | 0.02 | 0.01 | - | - | shot 5->6 dissolve: a one-beat darbuka roll re-phases the groove onto builder A grid (11.30) |
+| n | m02c_embalm | cue | 11.3 | groove_loop | 27.6923 | 27.6923 | 17.069 | -1 | 0.03 | 0.45 | - | - | embalming: groove bar 13 (a phrase start) on 11.30; jars, boing, pop, thup sit on its beats |
+| y | m03_memory | cue | 17.054 | mystic_loop | 13.846 | 13.246 | 23.9 | -1 | 0.6 | 0.8 | - | - | mystic bar 5 (Eb colour) enters on a groove beat (17.05, the thup; 2:3 tempo, the pulse carries on) |
 | y | m04_book | cue | 23.5 | playful_loop | 0 | -0.536 | 38.2 | -1 | 0.45 | 0.9 | - | - | Book of the Dead: playful from 23.50 (builder A's flips sit on its eighths); its last-bar pickup bridges in |
 | y | m05_duat | cue | 37.8 | tension | 24.615 | 23.615 | 46.75 | -1 | 1.0 | 0.5 | - | - | the Duat: tension bars 9-11 (arghul rub, heartbeat bendir, teks), swelling in over 1 s as the playful fades |
 | y | m06_hall | cue | 47.0 | mystic_loop | 0 | 0 | 55.7 | 0 | 0.002 | 0.7 | - | t<-18:doors+boom | **[deliberate]** the hall reveal: 0.25 s breath, then bowl + bendir on the doors' boom |
@@ -51,7 +51,8 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | y | s03_clang | sfx | 5.45 | X18_scale_tip_heavy | hit | - | - | 0 | - | - | - | t<-3:heart+lands | the heart lands on the pan: clang + chains |
 | y | s03_eyes | sfx | 7.15 | X27_ammit_grunt | hit | - | - | -8 | - | - | bright | t<-3:yellow+eyes@+0.05 | Ammit's eyes open: a low grunt (first glimpse) |
-| y | s05_gong | sfx | 7.8386 | S07_gong | hit | - | - | -2 | - | 0.8 | - | t<-3,5:title+lands~title | temple gong on the title |
+| y | s05_gong | sfx | 6.3 | S07_gong | hit | - | - | -2 | - | 0.8 | - | t<-3,5:title+lands~title | temple gong on the title (lit into the lintel in shot 3) |
+| y | s05_swell | sfx | 6.3 | synth:reedswell | hit | - | - | 0 | - | 0.5 | - | t<-3,5:title+lands~title | the title: a mizmar swell on D5 peaking as the title lands |
 | y | s06_jar1 | sfx | 11.88 | X02_canopic_lid_clink | hit | - | +0.35 | -3 | - | 0.1 | pan=-0.3 | t<-6:canopic#1 | four jars land on the groove's beats |
 | y | s06_jar2 | sfx | 12.45 | X02_canopic_lid_clink | hit | - | +0.35 | -4 | - | 0.1 | pan=-0.1 | t<-6:canopic#2 | |
 | y | s06_jar3 | sfx | 13.03 | X02_canopic_lid_clink | hit | - | +0.35 | -4 | - | 0.1 | pan=0.1 | t<-6:canopic#3 | |

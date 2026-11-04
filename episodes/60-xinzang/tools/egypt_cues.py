@@ -797,9 +797,10 @@ def make_hushdry(out, meta):   # only the dry hush variant (same seed and gain r
                                    downbeat0_s=0.0, hits=hu.hits(), lufs=round(lufs(hf), 2), tp=round(true_peak(hf), 2))
     print('tension_hushdry', meta['tension_hushdry'], flush=True)
 INTRO_CFG = dict(GROOVE_CFG, ney=dict(db=-6, send=0.5, hp=200), frame=dict(db=-4, send=0.4), sis=dict(db=-15, send=0.5, hp=2500))
-def make_intro(out, meta, T):
-    """v2 opening (owner: "make the intro more egyptian styled so people would know off the bat"): film 0 -> the title at T,
-    on the groove's 104 BPM grid so its last downbeat is T (where groove_loop enters at bar 9 with its own roll + reed motif).
+def make_intro(out, meta, T, Tt=None):
+    """v2 opening (owner: "make the intro more egyptian styled so people would know off the bat"): film 0 -> T, the downbeat where
+    groove_loop enters at bar 9 with its own roll + reed motif (since 15:40 the shot 5 cut, 8.4; the title itself, ~6.3, gets a gong +
+    reed swell in the mix), on the groove's 104 BPM grid.
     frame 0: dum + finger cymbals + a mizmar run up D Hijaz landing on the first downbeat; bar 1 oud ostinato + arghul drone +
     riq + sistrum under the held D5; bar 2 the ney states the Hijaz motif (no drums: the heart's two glow pulses are SFX);
     bar 3+ light maqsum builds into the drop."""
@@ -811,18 +812,27 @@ def make_intro(out, meta, T):
     m = Mix(T + 4.0, 7, 1); r = np.random.default_rng(77); rr = lambda k: np.random.default_rng([77, k])
     m.add('dum', dum(r, 1.0), 0.0, 0); m.add('zill', zills(r, 0.95, 2.5), 0.002, -0.3); m.add('frame', frame(r, 0.6, buzz=0.15), 0.004, 0.1)
     run = ['D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C#5']; k = len(run)
-    if lead > 0.25: d = min(0.1, max(0.045, (lead - 0.03) / k)); t_run = max(0.0, lead - k * d)   # the run lands on the first downbeat
+    if lead > 0.25: d = min(0.21, max(0.045, (lead - 0.03) / k)); t_run = max(0.0, lead - k * d)   # from frame 0, a Hijaz ascent (up to 0.21 s a note) onto the first downbeat
     else: d = 0.065; t_run = 0.0                                                                  # downbeat at 0: the run is an ornament in beat 1
     m.add('reed', reed([(n_, round(d * 0.95, 3)) for n_ in run] + [('D5', 1.9, 'fall')], 0.62, rr(1), 'mizmar'), t_run + 0.005, -0.25)   # whole-ms notes (contour)
     for b in range(N):
         t = lead + b * bar; rb = rr(10 + b); ph = b % 4; last = (b == N - 1)
         v = 0.55 + 0.35 * b / max(1, N - 1)
-        oud_line(m, t, e8, g.RIFF[ph], rb, 0.75 * v + 0.2, pan=0.5, oct=1)
-        if b >= 1: oud_line(m, t, e8, g.RIFF[ph], rr(20 + b), 0.35 * v, 'oud', -0.55, oct=0, trem=False)
-        riq_bar(m, t, e8, rb, 0.45 + 0.4 * v)
+        rest = Tt + 0.12 if (Tt is not None and t - 0.05 <= Tt < t + bar) else None   # the title's bar: the band holds off for the gong
+        keep = (lambda line: line) if rest is None else (lambda line: [x for x in line if t + x[0] * e8 >= rest])
+        oud_line(m, t, e8, keep(g.RIFF[ph]), rb, 0.75 * v + 0.2, pan=0.5, oct=1)
+        if b >= 1: oud_line(m, t, e8, keep(g.RIFF[ph]), rr(20 + b), 0.35 * v, 'oud', -0.55, oct=0, trem=False)
+        if rest is None: riq_bar(m, t, e8, rb, 0.45 + 0.4 * v)
+        else:
+            for e in range(8):
+                if t + e * e8 >= rest: m.add('perc', riq(rb, (0.28 if e % 2 == 0 else 0.42) * (0.45 + 0.4 * v)), t + e * e8 + (0.04 * e8 if e % 2 else 0), 0.72)
+            m.add('sis', sistrum(rb, 0.9, 4, 0.06), Tt + 0.06, 0.3)
         m.add('sis', sistrum(rb, 0.7, 3), t + 0.02, -0.5 + b * 0.5)
         if b == 0: m.add('frame', frame(rb, 0.55, buzz=0.1), t, 0)
-        if b >= 2 or (N <= 2 and last): darbuka_bar(m, t, b, e8, rb, 0.45 + 0.35 * v, ghosts=True, fill=False, roll=False)
+        if rest is not None and (b >= 1 or N <= 2):   # half a maqsum after the gong: tek . DUM . tek
+            for e, kind_, vv in ((3, 'T', .7), (4, 'D', .85), (6, 'T', .75)):
+                if t + e * e8 >= rest: m.add('dum' if kind_ == 'D' else 'tek', (dum if kind_ == 'D' else tek)(rb, vv * (0.45 + 0.35 * v)), t + e * e8, -0.05 if kind_ == 'D' else 0.12)
+        elif b >= 2 or (N <= 2 and last): darbuka_bar(m, t, b, e8, rb, 0.45 + 0.35 * v, ghosts=True, fill=False, roll=False)
         for e, n_ in ((0, 'D2'), (4, 'D2')):
             if b >= 1: m.add('bass', bass(n_, 0.7, 0.45 + 0.3 * v, int(rb.integers(4)), t60=0.6), t + e * e8, 0)
     if N >= 2:   # the ney: the Hijaz motif, slow, from bar 2
@@ -836,7 +846,7 @@ def make_intro(out, meta, T):
     y = render(m, INTRO_CFG, make_ir(1.1, seed=60))
     G = fit_gain(y[:int(T * SR)]); y = master(y, G)
     write(f'{out}/intro.wav', y)
-    meta['intro'] = dict(file='intro.wav', bpm=104, title_T=round(T, 3), lead_s=round(lead, 3), bars=N, length_s=round(len(y) / SR, 3),
+    meta['intro'] = dict(file='intro.wav', bpm=104, end_downbeat_T=round(T, 3), title_s=Tt, lead_s=round(lead, 3), bars=N, length_s=round(len(y) / SR, 3),
                          note='film 0 = file 0; downbeats lead + k*bar; the title T = the next downbeat (groove_loop bar 9 enters there)',
                          lufs=round(lufs(y[:int(T * SR)]), 2), tp=round(true_peak(y), 2))
     print('intro', meta['intro'], flush=True)
@@ -857,6 +867,7 @@ if __name__ == '__main__':
     for w in which:
         if w == 'stings': make_stings(out, meta)
         elif w == 'tension_hushdry': make_hushdry(out, meta)
-        elif w.startswith('intro'): make_intro(out, meta, float(w.split(':')[1]) if ':' in w else 7.6)
+        elif w.startswith('intro'):   # intro:END[:TITLE]  (END = the downbeat where the groove takes over; TITLE = the title's gong)
+            a_ = w.split(':'); make_intro(out, meta, float(a_[1]) if len(a_) > 1 else 8.4, float(a_[2]) if len(a_) > 2 else None)
         else: make_cue(w, out, meta)
         json.dump(meta, open(mp, 'w'), ensure_ascii=False, indent=1)

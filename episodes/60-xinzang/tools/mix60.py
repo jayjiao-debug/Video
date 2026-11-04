@@ -132,6 +132,12 @@ def synth_sfx(spec):
         if kind == 'heart': b = E.heart(rng, 0.55); i = int(0.17 * SR); m[i:i + len(b)] += b[:n - i]
         x = np.stack([m, m], 1); x = 0.8 * x + 0.3 * E.conv_st(x, E.make_ir(0.9, seed=31))
         return (x / np.abs(x).max() * 10 ** (-3 / 20)).astype(np.float32), 0.004
+    if kind == 'reedswell':   # the title: a mizmar on D5 (over A4) swelling to a peak at 0.35 s, held, falling away
+        y = np.asarray(E.reed([('A4', 0.12), ('D5', 2.2, 'fall')], 0.75, np.random.default_rng(12), 'mizmar'), np.float64)
+        y = y if y.ndim == 2 else np.stack([y, y], 1); n = len(y); t = np.arange(n) / SR
+        env = np.where(t < 0.35, np.sin(np.pi / 2 * t / 0.35) ** 2, np.exp(-(t - 0.35) / 0.9)); y = y * env[:, None]
+        y = np.concatenate([y, np.zeros((int(0.8 * SR), 2))]); y = 0.8 * y + 0.35 * E.conv_st(y, E.make_ir(1.4, seed=35))
+        return (y / np.abs(y).max() * 10 ** (-3 / 20)).astype(np.float32), 0.35
     if kind == 'squeak':   # one reed player squeaks as the band stops: Eb6 -> C6 blip on the mizmar (in D Hijaz)
         y = E.reed([('Eb6', 0.08), ('C6', 0.11)], 0.8, np.random.default_rng(4), 'mizmar'); y = np.asarray(y, np.float64)
         y = y if y.ndim == 2 else np.stack([y, y], 1); y = np.concatenate([y, np.zeros((int(0.6 * SR), 2))])   # room for the tail
