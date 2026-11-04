@@ -61,6 +61,7 @@ ITEMS = [
  ('X44_magic_whoosh', NEW, 'X44_magic_whoosh_a', 0, 'shot', 'magic: glowing energy whooshing forward, sparkly (the glyph burst, shot 17)'),
  ('X45_magic_blast', NEW, 'X45_magic_impact_b', 0, 'shot', 'magic: the shield blasting outward, warm thump + whoosh + glitter (shot 17)'),
  ('X46_magic_shield', NEW, 'X46_magic_shield', -1.95, 'shot', 'magic: a shield forming, shimmering hum + sparkles (tuned E6 -> D6)'),
+ ('X31_ammit_snarl_heavy', NEW, 'X31_lion_snarl_short_b', -1.5, 'layer', 'AMMIT v6 shot-41 roar (owner 21:04 "louder, menacing"): the short snarl -1.5 st + chest layer + stone hall, saturated'),
  ('S01_heartbeat', OLD, 'S01_heartbeat', 0, 'shot', 'slow deep heartbeat, close'),
  ('S02_scale_settle', OLD, 'S02_scale_settle', +0.61, 'shot', 'balance tilting and settling, creak + small tick (tick tuned to D6)'),
  ('S03_croc_snap', OLD, 'S03_croc_snap', 0, 'shot', 'crocodile jaws snap with a short low growl'),
@@ -81,7 +82,10 @@ LAYERS = {'X26_ammit_roar': dict(src='X26_ammit_roar_b', lp=300, seg=(0.0, 0.6),
           'X27_ammit_grunt': dict(src='X27_ammit_grunt_b', lp=None, seg=(0.0, 0.8), db=-6, keep=0.75),
           'X30_lioness_roar': dict(src='X07_serpent_hiss', lp=None, seg=(0.9, 1.9), db=-14, keep=1.3),
           'X32_mean_chomp': dict(src='X32_crunchy_bite_a', lp=None, seg=(0.0, 0.7), db=-3, keep=1.0, dir='NEW'),
-          'X40_ammit_roar_deep': dict(parts=[dict(src='X40_deep_roar_a', st=-3.0, lp=700, seg=(0.0, 2.6), db=-10, delay=0.04)], room=(1.6, -12), keep=2.4, fade=0.8),
+          'X40_ammit_roar_deep': dict(parts=[dict(src='X40_deep_roar_a', st=-3.0, lp=700, seg=(0.0, 2.6), db=-7, delay=0.04)], drive=3.2, squash=4.0,
+                                      hp=90, eq=[(500, 3.0, 1.0), (1800, 4.0, 0.8)], room=(1.9, -10), keep=2.7, fade=0.9),
+          'X31_ammit_snarl_heavy': dict(parts=[dict(src='X40_deep_roar_a', st=-5.0, lp=700, seg=(0.3, 1.6), db=-8, delay=0.02)], drive=3.2, squash=4.0,
+                                        hp=90, eq=[(500, 3.0, 1.0), (1800, 4.0, 0.8)], room=(1.5, -10), keep=1.7, fade=0.6),
           'X41_ammit_slam': dict(parts=[dict(src='X41_jaw_slam_a', lp=1800, seg=(0.0, 0.9), db=-9),
                                         dict(src='S11_frame_drum', dir='OLD', st=-3.0, lp=260, seg=(0.0, 1.2), db=-5)], keep=1.1, fade=0.4)}
 def load(p):
@@ -114,6 +118,14 @@ if __name__ == '__main__':
                 kz = min(len(z) // 3, int(0.08 * SR)); z[-kz:] *= np.linspace(1, 0, kz)[:, None]
                 z *= pk / (np.abs(z).max() + 1e-9) * 10 ** (P_['db'] / 20); dl = int(P_.get('delay', 0) * SR)
                 n_ = max(len(y), dl + len(z)); y = np.pad(y, ((0, n_ - len(y)), (0, 0))); y[dl:dl + len(z)] += z
+            if L_.get('hp'): y = signal.sosfilt(signal.butter(2, L_['hp'], 'high', fs=SR, output='sos'), y, axis=0)   # sub a phone can't play eats headroom
+            for f_, g_, q_ in L_.get('eq', []):   # presence where a phone speaker is loud (throat 500 Hz, rasp ~1.8 kHz)
+                import egypt_cues as E_; y = E_.peak_eq(y, f_, g_, q_)
+            if L_.get('drive'):   # owner 21:04 "louder, menacing": soft saturation after the EQ clamps its peaks: more body at the same peak, grit
+                k_ = L_['drive']; y = y / (np.abs(y).max() + 1e-9); y = np.tanh(k_ * y) / np.tanh(k_)
+            if L_.get('squash'):   # a smooth look-ahead limiter on the roar itself (5 ms / 120 ms): its crest drops by ~squash dB, so the film's
+                import egypt_cues as E_   # master limiter only shaves the very peak when the roar is raised (owner 21:04 "louder")
+                y = y / (np.abs(y).max() + 1e-9) * 10 ** (L_['squash'] / 20); y = E_.limit(y, 0.0, look=0.005, rel=0.12)
             if L_.get('room'):   # a stone hall: the long resonant tail (owner 19:21 "not deep enough")
                 import egypt_cues as E_; rt, wet = L_['room']; y = np.pad(y, ((0, int(rt * SR)), (0, 0)))
                 y = y + 10 ** (wet / 20) * E_.conv_st(y, E_.make_ir(rt, seed=41))
