@@ -230,6 +230,8 @@ def place(buf, r, x, loop):
     else:
         seg = np.zeros((i1 - i0, 2), np.float32); ok = (idx >= 0) & (idx < len(x)); seg[ok] = x[idx[ok]]
     seg = seg.copy()
+    if 'lp' in fx: seg = signal.sosfilt(signal.butter(4, float(fx['lp']), 'low', fs=SR, output='sos'), seg, axis=0).astype(np.float32)
+    if 'hp' in fx: seg = signal.sosfilt(signal.butter(2, float(fx['hp']), 'high', fs=SR, output='sos'), seg, axis=0).astype(np.float32)
     if 'wind' in fx:   # a soft drop: the band slows a little (to 0.6x) while it fades out (cos^2) over the last d s
         k = min(len(seg), int(float(fx['wind']) * SR)); s0 = so + len(seg) - k; src = np.concatenate([x, x]) if loop else x
         j = np.arange(k); pos = (s0 % len(x) if loop else s0) + j * (1 - 0.4 * j / (2 * k))

@@ -130,15 +130,15 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | s41_snarl | sfx | 113.25 | X31_lion_snarl | hit | - | - | 0 | - | 0.15 | abs=-8,impact,bright | t<-41:roar@+0.13 | Ammit rears and roars (short; onset ~113.0, jaws wide 113.12), the doom dips under it |
 | y | s42_growl | sfx | 113.97 | X28_ammit_growl | hit | - | +1.5 | 1 | - | 0.08 | duck=3,bright | t<-42:chomp@-1.45 | Ammit's growl rising into the bite |
 | y | s42_chomp | sfx | 115.42 | X41_ammit_slam | hit | - | - | 0 | - | - | abs=-7,impact | t<-42:chomp | [deliberate] the BITE (owner 19:21): a heavy wet jaw SLAM with a low body, no crunch |
-| y | s43_sand | amb | 117.35 | S09_sand_wind_loop | 0 | 0 | 119.55 | 2 | 0.5 | 0.3 | - | t<-43:sand+dissolve | the silhouette blows away as sand |
-| y | s44_rewind | sfx | 120.05 | S09_sand_wind_loop | 0.6 | 0.6 | 120.95 | 0 | 0.05 | 0.02 | rev,ramp=-14>0@0.85,abs=-16 | t<-44:reverse+whoosh | the same sand reversed: the rewind |
+| y | s43_sand | amb | 117.35 | X03_natron_salt_pour | 0.4 | 0.4 | 119.5 | -5 | 0.3 | 1.0 | lp=8000,hp=500,env=117.35:0;119.5:-8 | t<-43:sand+dissolve | owner 20:27 (read as a river): a dry fine grain trickle, airy, quiet (about 12 LU under the dark bed), fading as the figure vanishes |
+| y | s44_rewind | sfx | 120.05 | X03_natron_salt_pour | 0.6 | 0.6 | 120.95 | 0 | 0.05 | 0.02 | rev,lp=8000,hp=500,ramp=-14>0@0.85,abs=-21 | t<-44:reverse+whoosh | the same dry sand, reversed: it rewinds into you |
 | y | s45_sistrum | sfx | 122.7 | S06_sistrum | hit | - | - | -2 | - | - | - | t<-45:sistrum@+0.3 | Isis's sistrum |
 | y | s46_gong | sfx | 126.25 | S07_gong | hit | - | - | -3 | - | 0.8 | - | t<-46:gong | warm gong: 言语真实 |
-| y | s47_reeds | amb | 127.5 | X14_reeds_birds_water_loop | 0 | 0 | 134.45 | 1 | 0.8 | 0.6 | - | - | birds and water over the Field of Reeds |
+| y | s47_reeds | amb | 127.5 | X14_reeds_birds_water_loop | 0 | 0 | 134.45 | -4 | 0.8 | 0.6 | - | - | birds and water over the Field of Reeds (5 dB lower, owner 20:27) |
 | y | s49_shabti | sfx | 135.2 | X16_shabti_clatter | 0 | 0 | - | -2 | - | 0.3 | - | t<-49:clatter@-0.05 | the shabtis stand up |
 | y | s50_chorus | sfx | 138.0 | X25_tiny_chorus | hit | - | - | 1 | - | - | - | t<-50:squeaky+chorus | 「我在！」 |
 | y | s51_whip | sfx | 142.4 | X23_whip_crack | hit | - | - | -2 | - | - | - | t<-51:whip | the overseer's whip |
-| y | s52_reeds | amb | 143.6 | X14_reeds_birds_water_loop | 2.0 | 2.0 | 146.6 | -2 | 0.3 | 1.0 | - | - | water round the reed boat |
+| y | s52_reeds | amb | 143.6 | X14_reeds_birds_water_loop | 2.0 | 2.0 | 146.6 | -7 | 0.3 | 1.0 | - | - | water round the reed boat (5 dB lower, owner 20:27) |
 | y | s53_roll | sfx | 146.95 | X04_papyrus_unroll | 0 | 0 | +0.95 | -3 | 0.05 | 0.25 | - | t<-53:scroll+rolling | the scroll rolls up |
 | y | s54_heart | sfx | 150.0 | synth:heart | hit | - | +0.7 | 0 | - | 0.15 | - | t<-54:last+heartbeat | one last heartbeat |
 
