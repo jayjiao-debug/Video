@@ -1,0 +1,72 @@
+plan: {'tier': 'starter', 'character_count': 8955, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "X19_knife_shing", "type": "sfx", "text": "a bronze knife blade glinting: one short bright metallic shing, clean, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X19_knife_shing.mp3", "bytes": 24702}
+{"name": "X20_cricket", "type": "sfx", "text": "a single cricket chirping in a quiet empty stone hall, awkward silence, nothing else", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X20_cricket.mp3", "bytes": 65244}
+{"name": "X21_stone_footsteps", "type": "sfx", "text": "slow barefoot footsteps on a smooth stone floor in a large hall, six steps, soft echo", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X21_stone_footsteps.mp3", "bytes": 65244}
+{"name": "X22_comic_plop", "type": "sfx", "text": "a cartoon plop, short round comic pop like a cork, playful", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X22_comic_plop.mp3", "bytes": 17179}
+{"name": "X23_whip_crack", "type": "sfx", "text": "one sharp leather whip crack, close, short echo", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X23_whip_crack.mp3", "bytes": 24702}
+{"name": "X24_hoe_chops", "type": "sfx", "text": "a wooden hoe chopping into soft field earth, four rhythmic chops, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X24_hoe_chops.mp3", "bytes": 48944}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "X19_knife_shing",
+  "type": "sfx",
+  "text": "a bronze knife blade glinting: one short bright metallic shing, clean, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X19_knife_shing.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X20_cricket",
+  "type": "sfx",
+  "text": "a single cricket chirping in a quiet empty stone hall, awkward silence, nothing else",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X20_cricket.mp3",
+  "bytes": 65244
+ },
+ {
+  "name": "X21_stone_footsteps",
+  "type": "sfx",
+  "text": "slow barefoot footsteps on a smooth stone floor in a large hall, six steps, soft echo",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X21_stone_footsteps.mp3",
+  "bytes": 65244
+ },
+ {
+  "name": "X22_comic_plop",
+  "type": "sfx",
+  "text": "a cartoon plop, short round comic pop like a cork, playful",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X22_comic_plop.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X23_whip_crack",
+  "type": "sfx",
+  "text": "one sharp leather whip crack, close, short echo",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X23_whip_crack.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X24_hoe_chops",
+  "type": "sfx",
+  "text": "a wooden hoe chopping into soft field earth, four rhythmic chops, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X24_hoe_chops.mp3",
+  "bytes": 48944
+ }
+]
