@@ -1,0 +1,204 @@
+plan: {'tier': 'starter', 'character_count': 8125, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "X01_linen_wrap", "type": "sfx", "text": "linen bandage being wrapped tightly around a body, soft dry cloth rustle and gentle pulling, close and intimate, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X01_linen_wrap.mp3", "bytes": 65244}
+{"name": "X02_canopic_lid", "type": "sfx", "text": "a small carved stone lid set down onto a ceramic jar, one soft clink and a short gritty scrape, close and dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X02_canopic_lid.mp3", "bytes": 24702}
+{"name": "X03_natron_pour", "type": "sfx", "text": "dry coarse salt poured from a clay bowl onto linen, fine granular trickle, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X03_natron_pour.mp3", "bytes": 48944}
+{"name": "X04_papyrus_unroll", "type": "sfx", "text": "an old dry papyrus scroll unrolled across a wooden table, crisp crackling paper rustle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X04_papyrus_unroll.mp3", "bytes": 40585}
+{"name": "X05_reed_pen", "type": "sfx", "text": "a reed pen writing on papyrus, three scratchy strokes and a light tap into an ink palette, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X05_reed_pen.mp3", "bytes": 48944}
+{"name": "X06_boat_oars", "type": "sfx", "text": "wooden oars dipping slowly into calm dark river water, rhythmic strokes, a wooden boat creaking softly, cavernous echo, quiet, seamless loop", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X06_boat_oars.mp3", "bytes": 97009}
+{"name": "X07_serpent_hiss", "type": "sfx", "text": "a large serpent hissing, one long sharp hiss swelling and fading, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X07_serpent_hiss.mp3", "bytes": 40585}
+{"name": "X08_bronze_gate", "type": "sfx", "text": "heavy bronze temple gate creaking open slowly, metallic groan with a low resonant hum, ends with a soft thud", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X08_bronze_gate.mp3", "bytes": 56885}
+{"name": "X09_judges_whisper", "type": "sfx", "text": "a crowd of forty people whispering in a large stone hall, many overlapping hushed voices, no intelligible words, reverberant, seamless loop", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X09_judges_whisper.mp3", "bytes": 97009}
+{"name": "X10_scarab_clack", "type": "sfx", "text": "a small hard stone amulet dropped onto a stone floor, one sharp clack and a tiny bounce, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X10_scarab_clack.mp3", "bytes": 24702}
+{"name": "X11_feather_land", "type": "sfx", "text": "a single feather drifting down and landing, soft airy whoosh ending in one tiny delicate bell chime", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X11_feather_land.mp3", "bytes": 40585}
+{"name": "X12_scale_ding", "type": "sfx", "text": "small brass balance scale pans coming level, one clear soft metallic ding with a gentle ring-out", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X12_scale_ding.mp3", "bytes": 40585}
+{"name": "X13_ammit_gulp", "type": "sfx", "text": "cartoon monster gulp, a big wet comedic swallow followed by a small satisfied grunt", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X13_ammit_gulp.mp3", "bytes": 33061}
+{"name": "X14_reeds_birds_water", "type": "sfx", "text": "peaceful riverbank of tall reeds, gentle flowing water, soft birdsong, warm sunny morning, seamless loop", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X14_reeds_birds_water.mp3", "bytes": 129192}
+{"name": "X15_sickle_wheat", "type": "sfx", "text": "a bronze sickle cutting through a handful of dry wheat stalks, two crisp swishes and snaps, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X15_sickle_wheat.mp3", "bytes": 33061}
+{"name": "X16_shabti_clatter", "type": "sfx", "text": "many small clay figurines rattling and clattering on a stone shelf as they come to life, tiny ceramic clicks and scuttling", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X16_shabti_clatter.mp3", "bytes": 48944}
+{"name": "X17_heart_on_pan", "type": "sfx", "text": "a soft wet fleshy object placed onto a bronze scale pan, a muffled thump and a faint metallic ring", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X17_heart_on_pan.mp3", "bytes": 24702}
+{"name": "X18_scale_tip_heavy", "type": "sfx", "text": "a bronze balance scale tipping hard to one side, chains rattling and a heavy metal clunk", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X18_scale_tip_heavy.mp3", "bytes": 40585}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "X01_linen_wrap",
+  "type": "sfx",
+  "text": "linen bandage being wrapped tightly around a body, soft dry cloth rustle and gentle pulling, close and intimate, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X01_linen_wrap.mp3",
+  "bytes": 65244
+ },
+ {
+  "name": "X02_canopic_lid",
+  "type": "sfx",
+  "text": "a small carved stone lid set down onto a ceramic jar, one soft clink and a short gritty scrape, close and dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X02_canopic_lid.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X03_natron_pour",
+  "type": "sfx",
+  "text": "dry coarse salt poured from a clay bowl onto linen, fine granular trickle, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X03_natron_pour.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "X04_papyrus_unroll",
+  "type": "sfx",
+  "text": "an old dry papyrus scroll unrolled across a wooden table, crisp crackling paper rustle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X04_papyrus_unroll.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "X05_reed_pen",
+  "type": "sfx",
+  "text": "a reed pen writing on papyrus, three scratchy strokes and a light tap into an ink palette, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X05_reed_pen.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "X06_boat_oars",
+  "type": "sfx",
+  "text": "wooden oars dipping slowly into calm dark river water, rhythmic strokes, a wooden boat creaking softly, cavernous echo, quiet, seamless loop",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X06_boat_oars.mp3",
+  "bytes": 97009
+ },
+ {
+  "name": "X07_serpent_hiss",
+  "type": "sfx",
+  "text": "a large serpent hissing, one long sharp hiss swelling and fading, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X07_serpent_hiss.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "X08_bronze_gate",
+  "type": "sfx",
+  "text": "heavy bronze temple gate creaking open slowly, metallic groan with a low resonant hum, ends with a soft thud",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X08_bronze_gate.mp3",
+  "bytes": 56885
+ },
+ {
+  "name": "X09_judges_whisper",
+  "type": "sfx",
+  "text": "a crowd of forty people whispering in a large stone hall, many overlapping hushed voices, no intelligible words, reverberant, seamless loop",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X09_judges_whisper.mp3",
+  "bytes": 97009
+ },
+ {
+  "name": "X10_scarab_clack",
+  "type": "sfx",
+  "text": "a small hard stone amulet dropped onto a stone floor, one sharp clack and a tiny bounce, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X10_scarab_clack.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X11_feather_land",
+  "type": "sfx",
+  "text": "a single feather drifting down and landing, soft airy whoosh ending in one tiny delicate bell chime",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X11_feather_land.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "X12_scale_ding",
+  "type": "sfx",
+  "text": "small brass balance scale pans coming level, one clear soft metallic ding with a gentle ring-out",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X12_scale_ding.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "X13_ammit_gulp",
+  "type": "sfx",
+  "text": "cartoon monster gulp, a big wet comedic swallow followed by a small satisfied grunt",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X13_ammit_gulp.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "X14_reeds_birds_water",
+  "type": "sfx",
+  "text": "peaceful riverbank of tall reeds, gentle flowing water, soft birdsong, warm sunny morning, seamless loop",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X14_reeds_birds_water.mp3",
+  "bytes": 129192
+ },
+ {
+  "name": "X15_sickle_wheat",
+  "type": "sfx",
+  "text": "a bronze sickle cutting through a handful of dry wheat stalks, two crisp swishes and snaps, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X15_sickle_wheat.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "X16_shabti_clatter",
+  "type": "sfx",
+  "text": "many small clay figurines rattling and clattering on a stone shelf as they come to life, tiny ceramic clicks and scuttling",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X16_shabti_clatter.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "X17_heart_on_pan",
+  "type": "sfx",
+  "text": "a soft wet fleshy object placed onto a bronze scale pan, a muffled thump and a faint metallic ring",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X17_heart_on_pan.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X18_scale_tip_heavy",
+  "type": "sfx",
+  "text": "a bronze balance scale tipping hard to one side, chains rattling and a heavy metal clunk",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X18_scale_tip_heavy.mp3",
+  "bytes": 40585
+ }
+]
