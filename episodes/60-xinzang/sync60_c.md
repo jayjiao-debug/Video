@@ -1,3 +1,4 @@
+> v3 (owner 17:07, clock as in story60: film 157.6 s): every heart is the shared Heart60 sitting on its pan (36 talking heart with a face, 37, 41, 42 in Ammit's jaws, 44, 54, 55) · 34 a clear SHINE at 92.40 · 36 no jar lid: the heart's mouth opens and snaps shut · 40 the two floating arcs removed · 41 a held ROAR from 113.12, ~1 s before the cut · 42 CHOMP on a visible bite frame 115.42, red flash 115.52 · 46 the verdict box also reads 言语真实.
 > v2 (owner 15:10): shot 4 (the title card) removed; every time from 10.9 s on is 3.0 s earlier (shifted in this file).
 
 # ep60 · sync table, act C (shots 34–55, 91.4–157.6 s)
@@ -9,19 +10,19 @@ Beat grid used where the script asks for on-beat hits: 100 bpm from 0 s (beats e
 
 | shot | tin | sound events (film s) |
 |---|---|---|
-| 34 「等等——你胸口那只甲虫！」 | dissolve 0.35 (from 91.05) | **finger-cymbal crash / gold flare burst 91.40** (ring expands to 91.9) · rising glow hum 91.45 → 93.75 · glint sweeps the stone 92.30–93.00 · label 「心脏圣甲虫」 in 91.9 |
+| 34 「等等——你胸口那只甲虫！」 | dissolve 0.35 (from 91.05) | **finger-cymbal crash / gold flare burst 91.40** (ring expands to 91.9) · rising glow hum 91.45 → 93.75 · **SHINE 92.40** (a white star flashes on the beetle's shoulder as the sheen crosses the stone, 92.24–92.74) · label 「心脏圣甲虫」 in 91.9 |
 | 35 「背面的咒语，专防心告密：」 | cut | scarab lifts 94.00–94.40 · **stone flip 94.30–94.85, lands 94.85** · one chime per lit line: **95.00 · 95.25 · 95.50 · 95.75 · 96.00 · 96.25** |
-| 36 「“心啊，别站出来指控我！”」 | dissolve 0.3 | **lid creak 96.82–97.32** (heart opens its mouth, two gold signs puff out 97.3–97.6) · **glyph-ribbon zip 97.48–98.12** · **lid click 98.18** · innocent smile 98.25–98.50 (sparkle 98.3–98.9) |
+| 36 「“心啊，别站出来指控我！”」 | dissolve 0.3 | heart (Heart60, with a face) on the pan · **mouth opens to testify 96.82–97.32** (two gold signs puff out 97.3–97.6) · **glyph-ribbon zip 97.48–98.12** (wraps it twice, above the brows and below the mouth) · **mouth snaps shut 98.18** · innocent smile 98.25–98.50 (sparkle 98.3–98.9) |
 | 37 「阿尼称心时，嘴里正念着这段咒。」 | dissolve 0.4 | low whispering 99.45 → end (gold wisps from Ani's mouth) · gold rule runs down the text, column by column 99.65 → 101.95 |
 | 38 「作弊？古埃及人管这叫魔法。」 | cut | eye slides to camera 102.80–103.20 · smirk 103.65–103.95 · **wink shut 103.82, "ting" 103.86** (sparkle peaks 104.11) · eye reopens by 104.26 |
 | 39 「大都会馆藏一只，名字是改刻的——」 | dissolve 0.4 | glass-case hum 105.0 → 106.5 (wide, push into the case) · cross-fade into the macro 106.25–106.50 · **sanding rasp 106.40–107.15** · **three chisel taps 107.40 · 107.75 · 108.10** (one new sign + spark per tap) |
-| 40 「原本不是给她做的。改个名，照用。」 | cut | reed tag swings in 108.65–109.22, **tag "tink" 109.22** (then swings, damped) · red circle drawn round the re-cut patch 109.50–110.00 · **sly darbuka roll ~109.8 → 110.50, ending on Hatnefer's shrug 110.15–110.50** · shrug eases 111.3–111.7 |
-| 41 「可如果，秤歪了——」 | cut | **pan crash 112.32** (camera jolt, red flash; the feather flips off the other pan) · Ammit springs 112.80 · **roar 112.98** (jaws wide) |
-| 42 「阿米特一口，吞掉你的心。」 | cut | Ammit stalks in 114.2–115.05, strikes 115.05–115.42 · **CHOMP 115.42 = cut on contact to a red flash** · black from ~115.95 · silence to the end |
+| 40 「原本不是给她做的。改个名，照用。」 | cut | reed tag swings in 108.65–109.22, **tag "tink" 109.22** (then swings, damped) · red circle drawn round the re-cut patch 109.50–110.00 · **sly darbuka roll ~109.8 → 110.50, ending on Hatnefer's shrug 110.15–110.50** (palms up, a small lift; no arcs) · shrug eases 111.3–111.7 |
+| 41 「可如果，秤歪了——」 | cut | **pan crash 112.32** (red flash, no shake; the feather flips off the other pan) · Ammit rears 112.45–113.05 (growl) · **ROAR 113.12** (onset 113.00; jaws wide, head up, sound rings out of the jaws, held to 113.62) · springs at the heart 113.62 → cut 114.20 |
+| 42 「阿米特一口，吞掉你的心。」 | cut | Ammit stalks in 114.2–115.05, strikes 115.05–115.42 · **CHOMP 115.42 = the jaws shut on the heart (bite frame, impact lines, 115.42–115.52)** · red flash 115.52 · black from ~115.6 · silence to the end |
 | 43 「这叫“第二次死亡”：彻底消失。」 | cut | **sand-dissolve whoosh 117.35–119.50** (head to feet, blown right) · empty dark 119.5–120.1 · **music dead stop 120.10** |
 | 44 「如果秤平了——」 | cut | **reverse whoosh 120.05–120.95** (the sand flies back into you, feet first) · **bright chime 121.30 = the beam levels** (sparkle at the pivot) · gold flood 121.30–122.00 |
 | 45 「荷鲁斯牵你，去见奥西里斯。」 | dissolve 0.4 | sistrum shimmer 122.4–123.2 (Isis shakes it throughout) · **footsteps 122.675 · 123.425 · 124.175 · 124.925** (both walkers plant together) |
-| 46 「托特记下：你“言语真实”。」 | cut | **pen scratch 125.30–126.15** (three strokes: 125.30 / 125.58 / 125.87) · verdict 「言语真实」 lifts off the palette and glows 126.15–126.85, **warm low gong 126.25** · Osiris lowers his crook and nods 126.45–127.05 |
+| 46 「托特记下：你“言语真实”。」 | cut | **pen scratch 125.30–126.15** (three strokes: 125.30 / 125.58 / 125.87) · verdict (three gold signs over 「言语真实」) lifts off the palette and glows 126.15–126.85, **warm low gong 126.25** · Osiris lowers his crook and nods 126.45–127.05 |
 | 47 「你进入芦苇之野：完美版的埃及。」 | dissolve 0.5 | crane up 127.3 → 131.5 · **ducks lift off 128.05** (birdsong from 128.0) · water throughout (canals drift) |
 | 48 「但是——天堂里，也要种地。」 | cut | **ox moo 131.80** (breath puff) · plough scrape throughout (clods fly) · sweat drops 132.10 · 132.45 · 133.30 · **deadpan look to camera 132.80 = music hiccup** |
 | 49 「所以，你带了一箱小人：沙布提。」 | cut | **lid creak 134.40–135.15** · inner glow from 134.6 · **tiny clatter as each row stands up: 135.25 · 135.50 · 135.75** · label 「沙布提」 in 135.4 |
