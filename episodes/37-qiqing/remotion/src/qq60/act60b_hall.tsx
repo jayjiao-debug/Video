@@ -126,7 +126,6 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 	let fig: [number, number] = [0, 0];
 	let pose: Pose, cast = JUDGE.red, name = '碎骨者', extra: React.ReactNode = null, light: React.ReactNode = null, front: React.ReactNode = null;
 	if (i === 0) { // 碎骨者: snaps a bone between his fists
-		cast = {...JUDGE.red, bHand: 'fist'};
 		const brk = up(t, S20.crack, 0.09), shake = hit(t, S20.crack, 0.12) * Math.sin(t * 120) * 0.6;
 		pose = jPose(t, 0, {lean: 1, head: 3 - 4 * hit(t, S20.crack, 0.3)});
 		pose = wristTo(holdAt(pose, 'f', [3.35 + 0.25 * brk, -4.0 - 0.25 * brk]), 'f', 92 + 20 * brk); pose = wristTo(holdAt(pose, 'b', [1.75 - 0.15 * brk, -4.0 - 0.2 * brk]), 'b', 92 - 20 * brk);
@@ -143,7 +142,6 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 		cast = JUDGE.ibis; name = '吞影者';
 		const gape = keys(t, [[1.0, 0], [1.15, 1], [1.22, 1], [1.26, 0]]), gulp = hit(t, S20.gulp, 0.25);
 		pose = jPose(t, 1, {lean: 2, head: 2 - 8 * gape + 6 * gulp, neck: -4 * gape + 3 * gulp});
-		pose = wristTo(holdAt(pose, 'f', [3.3, -4.3]), 'f', 92);
 		const [fx, fy] = placeBy(pose, s, -1, 'head', [0.6, -1.2], face);
 		const beakTip = figXY(pose, fx, fy, s, -1, 'head', [3.2, 0.0]), beakBase = figXY(pose, fx, fy, s, -1, 'head', [1.2, -0.75]);
 		const inGape = figXY(pose, fx, fy, s, -1, 'head', [2.35, 0.0]);

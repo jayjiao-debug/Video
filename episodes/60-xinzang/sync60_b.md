@@ -10,7 +10,7 @@
 > v4 (owner 19:21, builder B): 17 rebuilt: the crocodile walks on the floor (contact shadow); the spell is a flare → glyph burst → spinning
 > glyph shield → blast (**scroll flare 45.05 · glyph burst 45.20 · shield forms 45.55 · blast 45.95**, recoil to 46.40); the beasts' sounds
 > stay (hiss 43.75 · growl 43.90 · snap 44.60). 16: four clear glints **40.80 · 41.40 · 42.00 · 42.60**. 18: no glow on you in the door.
-> Judges (19–26) are seated gods with real arms and the sculpted hands. 20: **吞影者 beak shut chomp 53.66** (gulp 53.70), **食血者 lick 54.60**.
+> Judges (19–26): v4b (owner 19:50) back to the v3 mummiform judges with fists. 20: **吞影者 beak shut chomp 53.66** (gulp 53.70), **食血者 lick 54.60**.
 
 # ep60 · sync table, act B (shots 15–33, 37.8–91.4 s)
 

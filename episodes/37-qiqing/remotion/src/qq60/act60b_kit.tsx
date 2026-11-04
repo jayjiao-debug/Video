@@ -49,25 +49,21 @@ const Solid: React.FC<{d: string; r: Role | string; c: C; m?: M; k?: number; o?:
 	<path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW * k} strokeLinejoin="round" /><path d={d} fill={col(r)} /></g>;
 
 /* ---------------- the judges ---------------- */
-/* v4 (owner 19:21: "give these characters some arms similar to the protagonist"): the judges are seated gods in a kilt with real arms
-   (shoulder, elbow, forearm, the rig's sculpted hands) instead of mummiform blocks; the back hand rests flat on the knee, the front fist
-   holds the knife / feather upright in front of the chest; the collar covers the shoulders (rig draw order). */
-const JD = {dress: 'kilt' as const, apron: true, tail: false, collar: 'god' as const, bHand: 'open' as const, fHand: 'fist' as const, bProp: 'none' as const, fProp: 'none' as const};
-const J = (o: Partial<Cast>): Cast => ({...CAST.ani, name: 'judge', wig: 'tri', crown: 'maat', ...JD, ...o});
+const J = (o: Partial<Cast>): Cast => ({...CAST.ani, name: 'judge', wig: 'tri', crown: 'maat', dress: 'mummy', collar: 'god', bHand: 'fist', fHand: 'fist', bProp: 'none', fProp: 'none', ...o});
 export const JUDGE: Record<'red' | 'green' | 'gold' | 'jackal' | 'falcon' | 'ibis' | 'horned', Cast> = {
 	red: J({name: 'jr', skin: 'skinM', skin2: 'skinM2'}),
 	green: J({name: 'jg', skin: 'skinO', skin2: 'skinO2'}),
 	gold: J({name: 'jy', skin: 'skinF', skin2: 'gold2'}),
-	jackal: {...CAST.anubis, crown: 'maat', ...JD},
-	falcon: {...CAST.horus, crown: 'maat', ...JD},
-	ibis: {...CAST.thoth, crown: 'maat', ...JD},
+	jackal: {...CAST.anubis, crown: 'maat', dress: 'mummy', bProp: 'none', fProp: 'none'},
+	falcon: {...CAST.horus, crown: 'maat', dress: 'mummy', bProp: 'none', fProp: 'none'},
+	ibis: {...CAST.thoth, crown: 'maat', dress: 'mummy', bProp: 'none', fProp: 'none'},
 	horned: J({name: 'jh', skin: 'skinM2', skin2: 'skinM2', crown: 'none', wigColor: 'wigH'}),
 };
-/** a seated judge: the back hand flat on the knee, the front fist forward at chest height (its knife / feather stands clear of the face) */
+/** a seated judge: hands at the chest, the front fist a little forward so a held knife / feather stays clear of the face */
 export const jPose = (t = 0, k = 0, o: {lean?: number; head?: number; neck?: number} = {}): Pose => {
 	let p: Pose = {...POSES.throne, y: 5.95, lean: o.lean ?? -2, neck: o.neck ?? 0, head: (o.head ?? 0) + 0.8 * Math.sin(t * 0.9 + k * 1.7)};
-	p = wristTo(holdAt(p, 'f', [3.05, -2.7 + 0.04 * Math.sin(t * 1.3 + k)]), 'f', 92);
-	return wristTo(holdAt(p, 'b', [3.15, -1.0]), 'b', 84);
+	p = wristTo(holdAt(p, 'f', [2.6, -3.7]), 'f', 92);
+	return wristTo(holdAt(p, 'b', [1.1, -4.6]), 'b', 98);
 };
 /** a knife held blade-up at the grip (figure units), longer than the rig's, with an optional glint (0..1) */
 export const BigKnife: React.FC<{at: V; c: C; L?: number; glint?: number; a?: number}> = ({at, c, L = 3.8, glint = 0, a = 0}) => <g transform={`translate(${at[0]},${at[1]}) rotate(${a})`}>
@@ -108,19 +104,14 @@ export const MiniJudge: React.FC<{cast: Cast; s: number; seat?: string; hold?: '
 	return <g transform={`scale(${s})`}>
 		<path d={poly([[-2.3, -5.9], [1.6, -5.9], [1.6, 0], [-2.3, 0]])} fill={seat} stroke={PAL.ink} strokeWidth={c.OW * 1.6} />
 		<path d={poly([[-2.6, -6.4], [-1.7, -6.4], [-1.7, 0], [-2.6, 0]])} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.OW * 1.2} />
-		<path d={body} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.OW * 2} />
-		{/* kilt over the hips and thighs */}
-		<path d={poly([[-1.7, -7.0], [1.75, -7.0], [1.7, -6.6], [3.95, -6.5], [4.0, -4.95], [0.2, -4.9], [-1.55, -4.9]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.OW * 1.6} />
-		<path d="M-1.7 -6.85L1.75 -6.85" stroke={PAL.gold} strokeWidth={c.LW * 4} />
-		{/* the front arm: shoulder, elbow, the fist forward over the thigh */}
-		<path d="M1.35 -11.5L1.75 -9.0L3.15 -7.65" fill="none" stroke={PAL.ink} strokeWidth={0.95} strokeLinecap="round" strokeLinejoin="round" />
-		<path d="M1.35 -11.5L1.75 -9.0L3.15 -7.65" fill="none" stroke={col(cast.skin)} strokeWidth={0.95 - 2 * c.OW} strokeLinecap="round" strokeLinejoin="round" />
-		<path d="M1.38 -9.85L2.1 -9.95" stroke={PAL.gold} strokeWidth={c.LW * 3} />
+		<path d={body} fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.OW * 2} />
+		{[-9.5, -7.5, -3.5, -1.8].map((y, i) => <path key={i} d={`M${i < 2 ? -1.4 : 3.2} ${y}L${i < 2 ? 1.9 : 4.2} ${y - 0.5}`} stroke={PAL.turq} strokeWidth={c.LW * 1.4} opacity={0.8} />)}
+		<path d="M-1.6 -6.4L1.7 -6.4" stroke={PAL.red} strokeWidth={c.LW * 4} />
 		<path d={`M-1.3 -12.2A1.9 1.4 0 0 0 2.1 -12.2`} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 4.6} />
 		<path d={`M-1.3 -12.2A1.9 1.4 0 0 0 2.1 -12.2`} fill="none" stroke={PAL.blue} strokeWidth={c.OW * 2.6} />
 		<path d={`M-0.9 -12.3A1.5 1.0 0 0 0 1.7 -12.3`} fill="none" stroke={PAL.red} strokeWidth={c.OW * 1.4} />
-		{hold === 'knife' ? <path d="M3.25 -7.9L3.32 -10.1L3.52 -7.9Z" fill="#E9E4D8" stroke={PAL.ink} strokeWidth={c.LW} /> : <path d={featherD(2.2)} transform="translate(3.3,-7.7)" fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.LW} />}
-		<path d={sp([[2.85, -8.05], [3.6, -8.0], [3.75, -7.55], [3.55, -7.2], [2.95, -7.25]], true, 0.2)} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.LW} />
+		{hold === 'knife' ? <path d="M2.75 -8.4L2.82 -10.6L3.02 -8.4Z" fill="#E9E4D8" stroke={PAL.ink} strokeWidth={c.LW} /> : <path d={featherD(2.2)} transform="translate(2.75,-8.2)" fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.LW} />}
+		<circle cx={2.55} cy={-8.4} r={0.45} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.LW} /><circle cx={1.9} cy={-8.0} r={0.42} fill={col(cast.skin)} stroke={PAL.ink} strokeWidth={c.LW} />
 		<g transform={H}>
 			{head !== 'human' && <path d={wig} fill={col(cast.wigColor ?? 'wig')} stroke={PAL.ink} strokeWidth={c.OW * 1.6} />}
 			<path d={hs} fill={hf} stroke={PAL.ink} strokeWidth={c.OW * 1.8} />
