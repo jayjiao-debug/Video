@@ -30,7 +30,7 @@ SR = 48000; BEAT = 0.5; E8 = 0.25; BAR = 2.0
 def parse(bar):
     ev = []
     for tok in bar.split():
-        n, rest = tok.split(':'); m = re.match(r'([\d.]+)(.*)', rest); ev.append((None if n == 'r' else n, float(m.group(1)), m.group(2)))
+        n, rest = tok.split(':'); m = re.match(r'(\d*\.?\d+)(.*)', rest); ev.append((None if n == 'r' else n, float(m.group(1)), m.group(2)))
     return ev
 def score(*bars):
     out = []
@@ -196,172 +196,159 @@ def drone(T, notes=(('D2', 1.0), ('A2', 0.55)), reed_amt=0.22, level=1.0, swell=
         e = np.minimum(1, np.arange(n) / (1.2 * SR)); y *= e[:, None]
     T.put('drone', y * level, -T.pre if not T.loop else 0.0)
 
-# ------------------------------------------------------------------ the score (D Hijaz throughout)
+# ------------------------------------------------------------------ the score (owner 23:28: theme B is the leitmotif; hook A's riff
+# drives the two dangerous passages; calm parts sparser: long ney notes, D-Eb trills, downbeat + light pickup percussion)
 MEL = {}
 def M(name, *bars): MEL[name] = bars; return score(*bars)
+THEME = ('D4:1 F#4:1.5 G4:0.5 A4:3 r:2', 'G4:1.5 F#4:0.5 Eb4:2 D4:2 r:2', 'D4:1 F#4:1.5 G4:0.5 A4:3t r:2', 'G4:1.5 F#4:0.5 Eb4:2 D4:2 r:2',
+         'G4:1 Bb4:1.5 C5:0.5 D5:3 r:2', 'C5:1.5 Bb4:0.5 A4:2 G4:2 r:2', 'A4:1 Bb4:1 A4:1.5 G4:0.5 F#4:2 r:2', 'G4:1.5 F#4:0.5 Eb4:2m D4:3 r:1')
+RIFF = ('D4:1. D4:1. Eb4:1 F#4:2> r:1 G4:1 F#4:1', 'Eb4:1 F#4:1 Eb4:1 D4:3 r:2', 'G4:1. G4:1. A4:1 Bb4:2> r:1 C5:1 Bb4:1', 'A4:1 G4:1 F#4:1 Eb4:1 D4:2 r:2')
+HOOK_NEY = M('hook (ney solo; D5 lands on the gong = the title)', 'D4:4s~ Eb4:2 D4:2', 'F#4:3 G4:1 A4:4', 'G4:1 A4:1 Bb4:2 A4:1 Bb4:1 C5:2', 'D5:4> C5:1 Bb4:1 A4:2')
+CALM_NEY = M('calm / calm2 (ney; bars 7-8 hint the theme)', 'D4:6~ Eb4:1 D4:1', 'D4:2 Eb4:2 F#4:4', 'G4:2 F#4:1 Eb4:1 F#4:4~', 'Eb4:2 D4:4 r:2',
+             'A4:4s Bb4:2 A4:2', 'G4:3 F#4:1 G4:2 F#4:1 Eb4:1', 'D4:1 F#4:1.5 G4:0.5 A4:3 r:2', 'G4:1.5 F#4:0.5 Eb4:2~ D4:2 r:2')
+DANGER_RIFF = M('danger (hook A riff: oud + qanun in octaves; mizmar doubles bars 3-4)', *RIFF)
+THEME_NEY = M('theme (the leitmotif, ney)', *THEME)
+TENS_RIFF = M('tension (the riff building; bars 7-8 climb and stop on F#)', RIFF[0], RIFF[1], RIFF[0], RIFF[1], RIFF[2], RIFF[3],
+              'G4:1. G4:1. A4:1 Bb4:2> r:1 C5:1 Bb4:1', 'A4:1 Bb4:1 A4:1 G4:1 F#4:1 Eb4:1 F#4:2>')
+TENS_NEY = M('tension (ney, from bar 5)', 'r:8', 'r:8', 'r:8', 'r:8', 'F#4:6s G4:1 F#4:1', 'Eb5:6~ D5:2', 'F#5:4 Eb5:2 F#5:2', 'G5:2 F#5:2 Eb5:2 F#5:2')
+PLAY_MIZ = M('playful (mizmar: the theme, staccato)', 'D4:1. F#4:1.5. G4:0.5. A4:1. r:4', 'G4:1.5. F#4:0.5. Eb4:1. D4:1. r:4', 'r:8',
+             'G4:1.5. F#4:0.5. Eb4:1. D4:1f r:4', 'G4:1. Bb4:1.5. C5:0.5. D5:1. r:4', 'C5:1.5. Bb4:0.5. A4:1. G4:1. r:4', 'r:8',
+             'G4:1.5. F#4:0.5. Eb4:1. D4:2f r:3')
+PLAY_OUD = M('playful (oud answers)', 'r:5 Eb4:1. D4:1. Eb4:1.', 'r:5 D4:1. Eb4:1. F#4:1.', 'D4:1. F#4:1.5. G4:0.5. A4:1. G4:1. F#4:1. Eb4:1. D4:1.', 'r:8',
+             'r:5 Eb4:1. F#4:1. Eb4:1.', 'r:5 G3:1. F#3:1. Eb3:1.', 'G4:1. Bb4:1.5. A4:0.5. G4:1. F#4:1. Eb4:1. F#4:1. G4:1.', 'r:8')
+DARK_NEY = M('dark (low ney, D-Eb trill)', 'r:8', 'D4:6s~ Eb4:2', 'D4:4 Eb4:2 D4:2', 'r:8')
+BRIGHT_NEY = M('bright (the theme an octave up)', *[' '.join(f"{t.split(':')[0][:-1]}{int(t.split(':')[0][-1]) + 1}:{t.split(':')[1]}" if not t.startswith('r:') else t for t in b.split()) for b in THEME])
+RES_NEY = M('resolution (the theme slow, the chromatic slide C#-C-B-Bb, D)', 'D4:2 F#4:3 G4:1 A4:2', 'A4:4 r:2 A4:1 Bb4:1', 'C#5:2s C5:2 B4:2 Bb4:2',
+            'A4:3 G4:1 F#4:2 Eb4:2~', 'D4:8', 'Eb4:1 D4:3 r:4')
+PAT.update({'sparse1': [(0, 'D', .85), (2, 'T', .35)], 'sparse2': [(0, 'D', .85), (2, 'T', .35), (6, 'T', .4)],
+            'drive': [(0, 'D', 1), (1, 'D', .75), (2, 'T', .6), (3, 'T', .5), (4, 'T', .62), (5, 'T', .5), (7, 'T', .6)]})
 
-HOOK_NEY = M('hook', 'D4:3s Eb4:1 F#4:4~', 'G4:1 F#4:1 G4:1g A4:5', 'Bb4:1 A4:1 Bb4:1 C5:1 Bb4:1 A4:1 Bb4:1 C5:1', 'D5:4t C5:1 Bb4:1 A4:1 G4:1')
-MYST_NEY = M('mystery', 'F#4:4s Eb4:2 D4:2', 'D4:6 Eb4:1 F#4:1', 'G4:4t F#4:2 G4:2', 'A4:6~ r:2', 'Bb4:2s A4:2 G4:2 F#4:2',
-             'G4:3 F#4:1 Eb4:4m', 'F#4:2 G4:1 F#4:1 Eb4:2 F#4:1 Eb4:1', 'D4:6 r:2')
-CUR_QAN = M('curious', 'D4:1 Eb4:1 F#4:1 G4:1 A4:1 G4:1 F#4:1 Eb4:1', 'D4:1 F#4:1 A4:1 D5:1 C5:1 Bb4:1 A4:1 G4:1',
-            'F#4:1 G4:1 A4:1 Bb4:1 C5:1 Bb4:1 A4:1 G4:1', 'F#4:2 Eb4:1 F#4:1 D4:4', 'A4:1 Bb4:1 C5:1 D5:1 C5:1 Bb4:1 A4:1 G4:1',
-            'A4:1 Bb4:1 A4:1 G4:1 F#4:1 G4:1 F#4:1 Eb4:1', 'F#4:1 Eb4:1 F#4:1 G4:1 A4:2 G4:1 F#4:1', 'Eb4:2 D4:2 r:4')
-CUR_OUD_ANSWER = score('r:4 A3:1 G3:1 F#3:1 Eb3:1')
-DANGER_OUD = M('danger (oud ostinato, 16ths)',
-               'D3:.5 Eb3:.5 D3:.5 C3:.5 D3:.5 Eb3:.5 F#3:.5 Eb3:.5 D3:.5 Eb3:.5 D3:.5 C3:.5 D3:.5 Eb3:.5 F#3:.5 Eb3:.5',
-               'F#3:.5 G3:.5 F#3:.5 Eb3:.5 F#3:.5 G3:.5 A3:.5 G3:.5 F#3:.5 G3:.5 F#3:.5 Eb3:.5 F#3:.5 G3:.5 A3:.5 G3:.5',
-               'A3:.5 Bb3:.5 A3:.5 G3:.5 F#3:.5 G3:.5 F#3:.5 Eb3:.5 A3:.5 Bb3:.5 A3:.5 G3:.5 F#3:.5 G3:.5 F#3:.5 Eb3:.5',
-               'D3:4 Eb3:2 D3:2')
-DANGER_NEY = M('danger (ney)', 'r:8', 'r:8', 'A4:4~ Bb4:2 A4:2', 'Eb4:4m D4:4')
-GROOVE_NEY = M('groove', 'D4:1 Eb4:1 F#4:1 G4:1 A4:2 Bb4:1 A4:1', 'G4:2 F#4:2 D4:4', 'r:4 A4:1 Bb4:1 C5:2m', 'Bb4:1 A4:1 G4:1 F#4:1 G4:4t',
-               'Bb4:2 C5:1 Bb4:1 A4:1 G4:1 F#4:1 Eb4:1', 'D4:6 r:2', 'A4:1 Bb4:1 A4:1 G4:1 F#4:1 G4:1 F#4:1 Eb4:1', 'F#4:1 Eb4:1 D4:4 r:2')
-GROOVE_CALL = score('r:8', 'r:4 D5:.5 C5:.5 Bb4:.5 A4:.5 G4:.5 F#4:.5 Eb4:.5 D4:.5', 'A3:1 G3:1 F#3:1 Eb3:1 r:4', 'r:8',
-                    'r:8', 'r:6 C5:1 Bb4:1', 'r:8', 'r:6 Eb3:1 F#3:1')
-TENS_BASE = ['D4', 'D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C5']
-def tens_bar(b):
-    x = E.midi(TENS_BASE[b]); u1, u2 = E.step(x, 1), E.step(x, 2); nm = lambda m: E_name(m)
-    return ' '.join(f'{nm(m)}:1' for m in (x, u1, x, u2, x, u1, x, E.step(x, -1)))
-def E_name(m):
-    names = {0: 'C', 1: 'C#', 2: 'D', 3: 'Eb', 4: 'E', 5: 'F', 6: 'F#', 7: 'G', 8: 'Ab', 9: 'A', 10: 'Bb', 11: 'B'}
-    return f'{names[m % 12]}{m // 12 - 1}'
-TENS_OST = M('tension (ostinato, rising one Hijaz step per bar)', *[tens_bar(b) for b in range(8)])
-TENS_NEY = M('tension (ney)', 'r:8', 'r:8', 'r:8', 'r:8', 'G4:8s', 'A4:6~ Bb4:2', 'Bb4:4 C5:4', 'D5:7~ r:1')
-PLAY_MIZ = M('playful (mizmar)', 'D5:1. C5:1. Bb4:1. A4:1. Bb4:2 A4:2', 'G4:1. F#4:1. G4:1. A4:1. F#4:2 Eb4:1. D4:1.', 'r:8',
-             'A4:1. Bb4:1. A4:1. G4:1. F#4:1. Eb4:1. F#4:2f', 'D5:1. C5:1. Bb4:1. A4:1. Bb4:1. C5:1. D5:2', 'Eb5:1. D5:1. C5:1. Bb4:1. A4:2 G4:2',
-             'r:8', 'F#4:1. G4:1. F#4:1. Eb4:1. D4:3f r:1')
-PLAY_OUD_ANS = score('r:8', 'r:8', 'D4:1. F#4:1. A4:1. F#4:1. G4:1. Eb4:1. D4:2', 'r:8', 'r:8', 'r:8', 'G3:1. A3:1. Bb3:1. A3:1. G3:1. F#3:1. Eb3:2', 'r:8')
-DARK_NEY = M('dark (low ney)', 'r:8', 'D4:4s Eb4:4', 'F#4:2 Eb4:2 D4:4', 'r:8')
-BRIGHT_NEY = M('bright (ney, an octave up)', 'D5:1 Eb5:1 F#5:1 G5:1 A5:4', 'Bb5:2 A5:1 G5:1 F#5:2 G5:2', 'A5:6t Bb5:1 A5:1', 'G5:2 F#5:2 Eb5:2 F#5:2',
-               'Bb5:2 C6:1 Bb5:1 A5:2 G5:2', 'F#5:2 G5:1 F#5:1 Eb5:4m', 'F#5:1 G5:1 A5:2 G5:1 F#5:1 Eb5:1 F#5:1', 'D5:6 r:2')
-RES_NEY = M('resolution', 'Bb4:1 A4:1 G4:1 F#4:1 G4:1 F#4:1 Eb4:2m', 'D4:8')
-
-# ------------------------------------------------------------------ modules
 def m_hook(T):
     drone(T, reed_amt=0.3)
     lead(T, HOOK_NEY, 0.0, breath=0.28, vel=0.72)
-    stroke(T, 0.0, 'z', 0.7); stroke(T, 4.0, 'X', 0.6)
-    qrun(T, 5.5, 'D4', 'D5', 0.5, 0.5)
-    for k, v in (('G', 1.0), ('F', 1.0), ('Z', 1.0), ('D', 0.8)): stroke(T, 6.0, k, v)
-    pluck(T, 'oud', E.midi('D3'), 6.0, 2.0, 0.9, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), 6.0, 2.2, 0.7, 0.35, 'oud')
-    qroll(T, 6.0, 'D5', 1.0, 0.35)
+    stroke(T, 0.0, 'z', 0.6); stroke(T, 4.0, 'X', 0.55); qrun(T, 5.5, 'D4', 'D5', 0.5, 0.45)
+    for k, v in (('G', 1.0), ('F', 1.0), ('Z', 1.0), ('D', 0.7)): stroke(T, 6.0, k, v)
+    pluck(T, 'oud', E.midi('D3'), 6.0, 2.0, 0.85, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), 6.006, 2.2, 0.6, 0.35, 'oud')
+    qroll(T, 6.0, 'D5', 1.2, 0.3)
 
-def m_mystery(T, thin=False):
+def m_calm(T, book=False):
     drone(T, reed_amt=0.28)
-    lead(T, MYST_NEY, 0.0, breath=0.26, vel=0.7)
-    string_line(T, [(n, d, fl) for n, d, fl in MYST_NEY], 0.0, 'oud', -1, 0.38, trem=6, rate=0.125)
-    for b, n in ((0, 'D2'), (4, 'D2'), (7, 'D2')): pluck(T, 'oud', E.midi(n), b * BAR + 0.01, 2.0, 0.55, 0.3, 'oud')
-    for b in (0, 4): stroke(T, b * BAR, 'f', 0.55)
-    stroke(T, 0.0, 'z', 0.5)
-
-def m_curious(T):
-    drone(T, level=0.7, reed_amt=0.15)
-    string_line(T, CUR_QAN, 0.0, 'qanun', 0, 0.55, pan=-0.38, trem=4, rate=0.0625, octave_double=True)
-    string_line(T, CUR_QAN, 0.0, 'oud', -1, 0.42, pan=0.35, trem=0, late=0.018, skip16=True)
-    string_line(T, CUR_OUD_ANSWER, 7 * BAR, 'oud', 0, 0.5, pan=0.35, trem=0)
-    for b in range(8): riq_bar(T, b * BAR, 0.55)
-    for b in (0, 4): stroke(T, b * BAR, 'z', 0.6)
-    for b in (0, 4): stroke(T, b * BAR, 'f', 0.45)
+    lead(T, CALM_NEY, 0.0, breath=0.26, vel=0.7)
+    string_line(T, CALM_NEY, 0.0, 'oud', -1, 0.42, trem=0, quarters=True)
+    for b in range(8): drums(T, b * BAR, 'sparse1', 0.75)
+    for b in (0, 4): stroke(T, b * BAR, 'z', 0.5)
+    if book:   # the Book of the Dead: the same melody, the qanun joins in octaves, light riq on the beats, sistrum on the phrase starts
+        string_line(T, CALM_NEY, 0.0, 'qanun', 0, 0.36, pan=-0.38, trem=4, rate=0.0625, quarters=True, late=0.006)
+        for b in range(8): riq_bar(T, b * BAR, 0.38)
+        for b in (0, 4): stroke(T, b * BAR, 'X', 0.45)
+    else:
+        for t, n, d, fl in timed(CALM_NEY):
+            if n and d >= 4: qroll(T, t + 0.03, n, min(d * E8, 1.0), 0.18)
 
 def m_danger(T):
-    drone(T, notes=(('D2', 1.0), ('A2', 0.4)), reed_amt=0.3)
-    for t, n, d, fl in timed(DANGER_OUD):
-        if d >= 2:
-            j = 0; tk = t
-            while tk < t + d * E8 - 0.03: pluck(T, 'oud', E.midi(n), tk + jit(T.rng, 0.003), 0.35, 0.62 if j % 2 == 0 else 0.45, 0.3, 'oud'); j += 1; tk += 0.0625
-        else: pluck(T, 'oud', E.midi(n), t + jit(T.rng, 0.004), 0.3, 0.6 if int(round(t / E8 * 2)) % 4 == 0 else 0.45, 0.3, 'oud', stacc=True)
-    lead(T, DANGER_NEY, 0.0, breath=0.26, vel=0.62)
-    for b in range(4): drums(T, b * BAR, 'frame2', 0.9)
-    roll(T, 3 * BAR + 6 * E8, 0.5, 0.2, 0.7)
+    drone(T, notes=(('D2', 1.0), ('A2', 0.35)), reed_amt=0.3)
+    string_line(T, DANGER_RIFF, 0.0, 'oud', -1, 0.75, pan=0.35, trem=0, late=0.0, skip16=False)
+    string_line(T, DANGER_RIFF, 0.0, 'qanun', 0, 0.42, pan=-0.38, trem=0, late=0.006, skip16=False)
+    lead(T, score('r:8', 'r:8', RIFF[2], RIFF[3]), 0.0, kind='mizmar', vel=0.5, pan=-0.12, breath=0.06)
+    qrun(T, BAR + 6 * E8, 'D4', 'A4', 0.5, 0.5); qrun(T, 3 * BAR + 6 * E8, 'Eb4', 'D5', 0.5, 0.55)
+    for b in range(4): drums(T, b * BAR, 'drive', 0.9)
+    stroke(T, 0.0, 'Z', 0.7); roll(T, 3 * BAR + 6 * E8, 0.5, 0.25, 0.75)
 
-def m_groove(T):
-    drone(T, level=0.6, reed_amt=0.12)
-    lead(T, GROOVE_NEY, 0.0, breath=0.16, vel=0.72)
-    string_line(T, GROOVE_NEY, 0.0, 'oud', -1, 0.42, trem=4, rate=0.125)
-    for t, n, d, fl in timed(GROOVE_CALL):
-        if n is None: continue
-        inst = 'qanun' if E.midi(n) >= E.midi('C4') else 'oud'
-        pluck(T, inst, E.midi(n), t + jit(T.rng, 0.004), 0.7, 0.6 if inst == 'qanun' else 0.62, -0.38 if inst == 'qanun' else 0.35, inst)
-    for b in range(8):
-        drums(T, b * BAR, 'maqsum', 0.95); riq_bar(T, b * BAR, 0.6)
-        if b in (3, 7): roll(T, b * BAR + 6 * E8, 0.5, 0.25, 0.75)
-    for b in (0, 4): stroke(T, b * BAR, 'Z', 0.7)
+def m_theme(T):
+    drone(T, level=0.65, reed_amt=0.18)
+    lead(T, THEME_NEY, 0.0, breath=0.2, vel=0.74)
+    string_line(T, THEME_NEY, 0.0, 'oud', -1, 0.5, trem=0, quarters=True)
+    for t, n, d, fl in timed(THEME_NEY):
+        if n and d >= 3: qroll(T, t + 0.02, n, min(d * E8, 0.9), 0.22)
+    for b in range(8): drums(T, b * BAR, 'sparse2', 0.9); riq_bar(T, b * BAR, 0.34)
+    for b in (0, 4): stroke(T, b * BAR, 'Z', 0.6)
+    roll(T, 7 * BAR + 6 * E8, 0.5, 0.2, 0.6)
 
 def m_tension(T):
-    drone(T, reed_amt=0.3)
+    drone(T, reed_amt=0.32)
     for b in range(8):
-        cres = 0.45 + 0.55 * b / 7; ev = parse(tens_bar(b))
-        string_line(T, ev, b * BAR, 'oud', -1, 0.5 * cres + 0.1, pan=0.3, trem=0, late=0.0)
-        if b >= 2: string_line(T, ev, b * BAR, 'qanun', 0, 0.42 * cres, pan=-0.38, trem=0, late=0.01)
-        drums(T, b * BAR, 'heart', 0.8 + 0.3 * cres)
-        if b >= 2:
-            for e in (1, 3, 5, 7): stroke(T, b * BAR + e * E8 + jit(T.rng), 'g', 1.6 * cres)
-        if b >= 4: drums(T, b * BAR, 'ayyub', 0.75 * cres, skip=('T',)); riq_bar(T, b * BAR, 0.5 * cres, full=b >= 6)
+        cres = 0.45 + 0.55 * b / 7; ev = parse(TENS_RIFF_BARS[b])
+        string_line(T, ev, b * BAR, 'oud', -1, 0.45 + 0.35 * cres, pan=0.35, trem=0, late=0.0, skip16=False)
+        if b >= 2: string_line(T, ev, b * BAR, 'qanun', 0, 0.45 * cres, pan=-0.38, trem=0, late=0.006, skip16=False)
+        drums(T, b * BAR, 'heart', 0.75 + 0.3 * cres)
+        if 2 <= b < 4:
+            for e in (3, 7): stroke(T, b * BAR + e * E8 + jit(T.rng), 'T', 0.5 * cres)
+        if b >= 4: drums(T, b * BAR, 'drive', 0.8 * cres)
+        if b >= 6: riq_bar(T, b * BAR, 0.5 * cres, full=True)
     lead(T, TENS_NEY, 0.0, breath=0.2, vel=0.74)
-    roll(T, 7 * BAR, 1.5, 0.3, 1.0, rate=0.0625); qroll(T, 7 * BAR, 'D5', 1.5, 0.5)
+    roll(T, 7 * BAR, 1.75, 0.3, 1.0); qroll(T, 7 * BAR + 4 * E8, 'D5', 1.0, 0.45)
     for k in ('F', 'Z'): stroke(T, 7 * BAR, k, 1.0)
+TENS_RIFF_BARS = (RIFF[0], RIFF[1], RIFF[0], RIFF[1], RIFF[2], RIFF[3], 'G4:1. G4:1. A4:1 Bb4:2> r:1 C5:1 Bb4:1', 'A4:1 Bb4:1 A4:1 G4:1 F#4:1 Eb4:1 F#4:2>')
 
 def m_playful(T):
-    drone(T, level=0.5, reed_amt=0.1)
-    lead(T, PLAY_MIZ, 0.0, kind='mizmar', vel=0.6, pan=-0.12, breath=0.06)
-    string_line(T, PLAY_MIZ, 0.0, 'oud', -1, 0.45, trem=0, stacc=True, late=0.014)
-    string_line(T, PLAY_OUD_ANS, 0.0, 'oud', 0, 0.58, trem=0, stacc=True)
+    drone(T, notes=(('D2', 1.0), ('A2', 0.25)), level=0.85, reed_amt=0.1)
+    lead(T, PLAY_MIZ, 0.0, kind='mizmar', vel=0.48, pan=-0.12, breath=0.06)
+    string_line(T, PLAY_MIZ, 0.0, 'oud', -1, 0.42, trem=0, stacc=True, late=0.014, quarters=True)
+    string_line(T, PLAY_OUD, 0.0, 'oud', 0, 0.58, trem=0, stacc=True, skip16=False)
     for b in range(8):
-        drums(T, b * BAR, 'baladi', 0.85); riq_bar(T, b * BAR, 0.5)
-        for e in ((0, 2, 3) if b % 4 == 0 else ()): stroke(T, b * BAR + e * E8 + jit(T.rng), 'z', 0.55)
-    roll(T, 7 * BAR + 6 * E8, 0.5, 0.25, 0.7)
+        drums(T, b * BAR, 'sparse2', 0.85); stroke(T, b * BAR + 7 * E8 + jit(T.rng), 'K', 0.45)
+        if b % 4 == 0:
+            for e in (0, 2, 3): stroke(T, b * BAR + e * E8 + jit(T.rng), 'z', 0.5)
+    roll(T, 7 * BAR + 6 * E8, 0.5, 0.2, 0.6)
 
 def m_dark(T):
     drone(T, notes=(('D2', 1.0), ('A2', 0.45)), reed_amt=0.35, level=1.2)
-    stroke(T, 0.0, 'G', 0.9); stroke(T, 2 * BAR, 'f', 0.5)
+    stroke(T, 0.0, 'G', 0.9); stroke(T, 2 * BAR, 'f', 0.45)
     lead(T, DARK_NEY, 0.0, breath=0.32, vel=0.55)
 
 def m_bright(T):
-    drone(T, level=0.6, reed_amt=0.12)
-    lead(T, BRIGHT_NEY, 0.0, breath=0.14, vel=0.66)
-    string_line(T, BRIGHT_NEY, 0.0, 'oud', -1, 0.45, trem=4, rate=0.125)
-    string_line(T, BRIGHT_NEY, 0.0, 'qanun', -2, 0.32, pan=-0.38, trem=6, rate=0.0625, late=0.008)
-    qrun(T, -0.5, 'D4', 'D6', 0.5, 0.55); qrun(T, 4 * BAR - 0.5, 'D4', 'D6', 0.5, 0.5)
-    for b in range(8):
-        drums(T, b * BAR, 'saidi', 0.95); riq_bar(T, b * BAR, 0.7, full=True)
-        if b in (0, 4): stroke(T, b * BAR, 'X', 0.7); stroke(T, b * BAR, 'Z', 0.75); stroke(T, b * BAR + 4 * E8, 'z', 0.6)
-    roll(T, 7 * BAR + 6 * E8, 0.5, 0.3, 0.8)
+    drone(T, level=1.0, reed_amt=0.15)
+    lead(T, BRIGHT_NEY, 0.0, breath=0.16, vel=0.5)
+    string_line(T, BRIGHT_NEY, 0.0, 'oud', -2, 0.8, trem=4, rate=0.125, quarters=True)
+    for t, n, d, fl in timed(BRIGHT_NEY):
+        if n and d >= 3: qroll(T, t + 0.02, tr(n, -1), min(d * E8, 0.9), 0.28)
+    qrun(T, -0.5, 'D4', 'D6', 0.5, 0.5); qrun(T, 4 * BAR - 0.5, 'D4', 'D6', 0.5, 0.45)
+    for b in range(8): drums(T, b * BAR, 'sparse2', 0.9); riq_bar(T, b * BAR, 0.5, full=True)
+    for b in (0, 4): stroke(T, b * BAR, 'X', 0.6); stroke(T, b * BAR, 'Z', 0.65)
 
 def m_resolution(T):
     drone(T, reed_amt=0.25)
     lead(T, RES_NEY, 0.0, breath=0.22, vel=0.7)
-    string_line(T, RES_NEY, 0.0, 'oud', -1, 0.45, trem=0)
-    qrun(T, 0.0, 'D4', 'A4', 1.0, 0.35)
-    for k, v in (('F', 0.9), ('D', 0.7), ('Z', 0.9), ('G', 0.5)): stroke(T, BAR, k, v)
-    pluck(T, 'oud', E.midi('D3'), BAR, 2.2, 0.85, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), BAR + 0.008, 2.4, 0.6, 0.35, 'oud')
-    qroll(T, BAR, 'D5', 1.6, 0.4)
+    string_line(T, RES_NEY, 0.0, 'oud', -1, 0.45, trem=0, quarters=True)
+    for t, n, d, fl in timed(RES_NEY):
+        if n and d >= 4 and t < 4 * BAR: qroll(T, t + 0.03, n, min(d * E8, 1.0), 0.2)
+    for b in range(4): drums(T, b * BAR, 'sparse1', 0.6)
+    for k, v in (('F', 0.9), ('D', 0.6), ('Z', 0.85), ('G', 0.45)): stroke(T, 4 * BAR, k, v)
+    pluck(T, 'oud', E.midi('D3'), 4 * BAR, 2.4, 0.8, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), 4 * BAR + 0.008, 2.6, 0.55, 0.35, 'oud')
+    qroll(T, 4 * BAR, 'D5', 2.0, 0.32)
 
 def m_intro(T, mood):   # one pickup bar into the loop
     drone(T, reed_amt=0.2)
-    if mood in ('groove', 'playful', 'bright', 'tension', 'danger'): roll(T, 1.0, 1.0, 0.15, 0.7)
-    if mood in ('curious', 'bright', 'groove'): qrun(T, 1.0, 'D4', 'A4' if mood != 'bright' else 'D5', 1.0, 0.45)
-    if mood in ('mystery', 'dark'): stroke(T, 0.0, 'z', 0.4)
-    if mood == 'mystery': lead(T, score('r:4 C4:2s D4:2'), 0.0, breath=0.5, vel=0.55)
+    if mood in ('danger', 'tension', 'playful'): roll(T, 1.0, 1.0, 0.15, 0.7)
+    if mood in ('theme', 'bright', 'calm2'): qrun(T, 1.0, 'D4', 'A4' if mood != 'bright' else 'D5', 1.0, 0.42)
+    if mood in ('calm', 'dark'): stroke(T, 0.0, 'z', 0.4); lead(T, score('r:4 Eb4:2 D4:2~'), 0.0, breath=0.3, vel=0.5)
 
-def m_end(T, mood):     # the button: everyone hits D on the downbeat, then the room rings
+def m_end(T, mood):     # the button: D on the downbeat, then the room rings
     if mood == 'dark': stroke(T, 0.0, 'G', 0.8); drone(T, reed_amt=0.3, swell=False); return
-    for k, v in (('F', 0.95), ('D', 0.8), ('Z', 0.85)): stroke(T, 0.0, k, v)
+    for k, v in (('F', 0.9), ('D', 0.75), ('Z', 0.8)): stroke(T, 0.0, k, v)
     pluck(T, 'oud', E.midi('D3'), 0.0, 2.0, 0.85, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), 0.006, 2.2, 0.6, 0.35, 'oud')
-    pluck(T, 'qanun', E.midi('D5'), 0.004, 1.8, 0.55, -0.38, 'qanun'); pluck(T, 'qanun', E.midi('D4'), 0.008, 1.8, 0.5, -0.38, 'qanun')
-    if mood in ('mystery', 'curious', 'resolution', 'bright'): lead(T, score('D4:4 r:4'), 0.0, breath=0.4, vel=0.55)
+    pluck(T, 'qanun', E.midi('D5'), 0.004, 1.8, 0.5, -0.38, 'qanun'); pluck(T, 'qanun', E.midi('D4'), 0.008, 1.8, 0.45, -0.38, 'qanun')
+    if mood in ('calm', 'calm2', 'theme', 'bright'): lead(T, score('D4:4 r:4'), 0.0, breath=0.3, vel=0.5)
 
 MODS = {   # mood: (loop bars, composer, thin?, character)
- 'mystery': (8, m_mystery, False, 'ney + low drone, sparse oud (heterophony, tremolo on the long A), soft bendir, finger cymbal'),
- 'curious': (8, m_curious, False, 'qanun eighth-note line in octaves, oud doubling on the beats, light riq, cymbal ting'),
- 'danger': (4, m_danger, False, 'low oud ostinato in 16ths around the D-Eb rub, tremolo on the last bar, bendir pattern, ney trill'),
- 'groove': (8, m_groove, True, 'stately maqsum on darbuka + riq, ney lead (the main theme), oud heterophony, qanun/oud call and response'),
- 'tension': (8, m_tension, True, 'ostinato rising one Hijaz step per bar, heartbeat bendir, teks, then ayyub and riq, ney climbs to a D5 trill'),
- 'playful': (8, m_playful, True, 'staccato mizmar riff answered by staccato oud, baladi darbuka, riq, cymbal taps, comic falls'),
- 'dark': (4, m_dark, True, 'low drone (strings + arghul reed), low gong, sparse breathy low ney (thin = the drone alone)'),
- 'bright': (8, m_bright, True, 'the melody an octave up on ney, oud and qanun heterophony, qanun glissandi, saidi darbuka, full riq, sistrum'),
+ 'calm': (8, m_calm, False, 'die / mummy: ney long notes with D-Eb trills, oud on the beats, qanun rolls on the long notes, drone, dum on 1 + a light tek pickup'),
+ 'calm2': (8, lambda T: m_calm(T, book=True), False, 'the Book of the Dead: the same melody, qanun joins in octaves, light riq, sistrum on the phrase starts'),
+ 'danger': (4, m_danger, False, 'the road: hook A riff on oud + qanun in octaves, mizmar doubles the answer, Eb-F# qanun runs, driving darbuka (DDtttt.t)'),
+ 'theme': (8, m_theme, True, 'hall of the 42 judges: the leitmotif in full on ney, oud on the beats, qanun rolls, sparse darbuka (D.t...t.), riq, zills'),
+ 'tension': (8, m_tension, True, 'the weighing: the riff builds (oud, + qanun, + drive, + riq), heartbeat bendir, ney climbs to a D5-Eb5 trill, stops on F#'),
+ 'playful': (8, m_playful, True, 'the scarab cheat: the theme as a staccato mizmar line, oud answers, sparse darbuka + ka, cymbal taps, comic falls'),
+ 'dark': (4, m_dark, True, 'the second death / the hush: low drone (strings + arghul), low gong, low ney D-Eb trill (thin = the drone alone)'),
+ 'bright': (8, m_bright, True, 'paradise + shabtis: the theme an octave up, oud on the beats, qanun rolls and glissandi, full riq, sistrum'),
 }
-ONESHOT = {'hook_intro_4bar': (4, 0.3, m_hook, 'ney solo rising over the drone; qanun run; gong + bendir + zills + oud D on bar 4 (film 6.30, the title)'),
-           'resolution_cadence': (2, 0.0, m_resolution, 'the closing phrase to D, then the final D hit with a qanun roll and a soft gong, ringing out')}
+ONESHOT = {'hook_intro_4bar': (4, 0.3, m_hook, 'ney solo rising over the drone (D-Eb trill, the augmented second, up to D5 on the gong = the title at 6.30)'),
+           'resolution_6bar': (6, 0.0, m_resolution, 'the theme slow, the chromatic slide C#-C-B-Bb, the final D (bar 5) with qanun roll and soft gong, ringing out')}
 PERC = {'dum', 'tek', 'riq', 'zills', 'frame', 'sis'}
+MOOD_LUFS = {'calm': -21.0, 'calm2': -20.5, 'danger': -19.0, 'theme': -20.0, 'tension': -18.5, 'playful': -20.0, 'dark': -25.0,
+             'bright': -19.0, 'hook_intro_4bar': -21.0, 'resolution_6bar': -20.5}
+MOD_MELODIES = ['hook (ney solo; D5 lands on the gong = the title)', 'calm / calm2 (ney; bars 7-8 hint the theme)',
+                'danger (hook A riff: oud + qanun in octaves; mizmar doubles bars 3-4)', 'theme (the leitmotif, ney)',
+                'tension (the riff building; bars 7-8 climb and stop on F#)', 'tension (ney, from bar 5)', 'playful (mizmar: the theme, staccato)',
+                'playful (oud answers)', 'dark (low ney, D-Eb trill)', 'bright (the theme an octave up)', 'resolution (the theme slow, the chromatic slide C#-C-B-Bb, D)']
 
 # ------------------------------------------------------------------ production
 CFG = {
@@ -490,7 +477,7 @@ def hooks(out, ref):
     gap = np.zeros((int(0.8 * SR), 2)); y = np.concatenate([segs[0], gap, segs[1], gap, segs[2]])
     y = lib60.master(y); sf.write(out, y.astype(np.float32), SR, subtype='PCM_24'); print('hooks', out, round(len(y) / SR, 2), 's', round(E.lufs(y), 2), 'LUFS')
 
-def lib_eq(loops, ref, meta):
+def lib_eq(loops, ref, meta, strength=1.0, lim=8.0):
     """one band-share EQ for the library (targets: the reference's shares, <120 Hz -6, 500-2k -4; the top 1-4 dB under the mids)."""
     rp, *rr = ref.split(':'); r = lib60.load(rp, *rr) if rr else lib60.load(rp)
     f, Pr = signal.welch(r.mean(1), SR, nperseg=16384)
@@ -501,13 +488,13 @@ def lib_eq(loops, ref, meta):
     curve = lambda fq, gc: np.where(fq >= 6000, np.clip(gc[3], gc[2] - 6, gc[2] - 3), np.interp(np.log(np.maximum(fq, 20)), np.log(cen), gc))
     for _ in range(14):
         gc += 0.8 * (target - share(Pl * 10 ** (curve(f, gc) / 10))); gc -= gc[2]; gc = np.clip(gc, [-8, -8, 0, -8], [3, 6, 0, 6])   # 1 kHz fixed; sub boost <= +3 dB
-    c = np.geomspace(31.5, 16000, 28); g = curve(c, gc)
+    gc = np.clip(gc * strength, -lim, lim); c = np.geomspace(31.5, 16000, 28); g = curve(c, gc)
     meta['eq_db'] = {f'{int(a)}': round(float(v), 1) for a, v in zip(c, g)}
     meta['band_shares'] = dict(target=[round(v, 1) for v in target], before=[round(v, 1) for v in share(Pl)], after=[round(v, 1) for v in share(Pl * 10 ** (curve(f, gc) / 10))])
     print('EQ', ' '.join(f'{int(a)}:{v:+.1f}' for a, v in zip(c, g)), '\nbands', meta['band_shares'], flush=True)
     return lib60.eq_fir(c, g)
 
-def direction(out, ref, mood='groove'):
+def direction(out, ref, mood='theme'):
     """owner 23:09: one short direction sample (8 bars of one mood, mastered to -14 LUFS)."""
     N, fn, *_ = MODS[mood]; T = Take(N, True, seed=hash(mood) % 10000); fn(T); full = mixdown(T)[0]; meta = {}
     fir = lib_eq([full], ref, meta)
@@ -531,39 +518,48 @@ def build(lib, ref):
     for name, (N, pre, fn, what) in ONESHOT.items():
         T = Take(N, False, pre=pre, tail=4.0, seed=5); fn(T); files[name] = E.trim_tail(mixdown(T)[0], -70, 0.4)
         meta['modules'][name] = dict(bars=N, pickup_s=pre, seconds=round(len(files[name]) / SR, 2), character=what); print('rendered', name, flush=True)
-    meta['melodies'] = {k: list(v) for k, v in MEL.items()}
+    meta['melodies'] = {k: list(MEL[k]) for k in MOD_MELODIES}
     fir = lib_eq([files[f'{m}_{MODS[m][0]}bar'] for m in MODS], ref, meta)
     eq = lambda x: signal.fftconvolve(np.concatenate([x, np.zeros((len(fir), 2))]), fir[:, None], mode='full')[len(fir) // 2:len(fir) // 2 + len(x)]
     isloop = lambda k: (k.endswith('bar') or k.endswith('bar_thin')) and 'intro' not in k
     for k in files: files[k] = lib60.circ(eq, files[k]) if isloop(k) else eq(files[k])
-    gain = 10 ** ((-20 - E.lufs(files['groove_8bar'])) / 20); meta['library_gain_db'] = round(20 * np.log10(gain), 2)
+    # one tone for every module: a gentle per-module trim (60 % toward the same band targets, +-3 dB), shared by its thin/intro/end
+    for mood, (N, *_r) in MODS.items():
+        mm = {}; fm = lib_eq([files[f'{mood}_{N}bar']], ref, mm, strength=0.6, lim=3.0); meta['modules'][mood]['trim_db'] = mm['eq_db']
+        eqm = lambda x, fm=fm: signal.fftconvolve(np.concatenate([x, np.zeros((len(fm), 2))]), fm[:, None], mode='full')[len(fm) // 2:len(fm) // 2 + len(x)]
+        for k in [k for k in files if k.startswith(mood + '_')]: files[k] = lib60.circ(eqm, files[k]) if isloop(k) else eqm(files[k])
+    # energy flat like the reference (sections within ~4 dB; the hush lower): one loudness per mood, shared by all its files
+    gains = {}
+    for mood, (N, *_r) in MODS.items(): gains[mood] = 10 ** ((MOOD_LUFS[mood] - E.lufs(files[f'{mood}_{N}bar'])) / 20)
+    for name in ONESHOT: gains[name] = 10 ** ((MOOD_LUFS[name] - E.lufs(files[name])) / 20)
+    meta['mood_lufs'] = MOOD_LUFS; meta['library_gain_db'] = 'per mood (mood_lufs)'
     for k, x in files.items():
+        mood = k if k in ONESHOT else k.split('_')[0]; gain = gains[mood]
         x = E.limit(x * gain, -1.0, circular=isloop(k)); sf.write(f'{lib}/{k}.wav', x.astype(np.float32), SR, subtype='PCM_24')
         meta.setdefault('files', {})[k] = dict(seconds=round(len(x) / SR, 3), lufs=round(E.lufs(x), 1) if len(x) > SR else None, tp=round(E.true_peak(x), 2))
     json.dump(meta, open(f'{lib}/lib.json', 'w'), indent=1, ensure_ascii=False); print('wrote', lib, len(files), 'files')
 
 # ------------------------------------------------------------------ the v6 layout (same plan as v6b, our modules)
 PLAN = [
- (0.0, 8.3, 'hook_intro_4bar', dict(inn='hard', out='x')),            # 0.3 s pickup, bars at 0.3/2.3/4.3/6.3: gong on the title 6.30
- (8.3, 26.3, 'mystery_8bar', dict(inn='x')),                           # you die, the mummy
- (26.3, 42.3, 'curious_8bar', dict(inn='x')),                          # Book of the Dead
- (42.3, 52.3, 'danger_4bar', dict(inn='x')),                           # the road
- (52.3, 72.3, 'groove_8bar', dict(inn='x', out='button')),             # hall + oath; bar 2 of the theme ends on D, button on 72.3 = 「话太多」
- (76.3, 92.3, 'tension_8bar', dict(inn='swell')),                      # the weighing (Ammit roar in 31 at 90.77: BGM out with the SFX pass)
- (92.3, 96.3, 'dark_4bar', dict(inn='x')),                             # 32: the hush begins: drone + low gong
+ (0.0, 8.3, 'hook_intro_4bar', dict(inn='hard', out='x')),            # 0.3 s pickup; bars at 0.3/2.3/4.3/6.3: D5 + gong on the title 6.30
+ (8.3, 26.3, 'calm_8bar', dict(inn='x')),                              # you die, the mummy
+ (26.3, 42.3, 'calm2_8bar', dict(inn='eg', bar0=1)),                   # the Book: same melody, new arrangement (sample-aligned: equal-gain swap)
+ (42.3, 52.3, 'danger_4bar', dict(inn='x')),                           # the road: the riff
+ (52.3, 72.3, 'theme_8bar', dict(inn='x', out='button')),              # hall + oath: the leitmotif; bar 2 ends on D, button on 72.3 = 「话太多」
+ (76.3, 92.3, 'tension_8bar', dict(inn='swell')),                      # the weighing (BGM out for the roar at 90.77 in the SFX pass)
+ (92.3, 96.3, 'dark_4bar', dict(inn='x')),                             # 32: the bed thins: drone + low gong
  (96.3, 98.3, 'dark_4bar_thin', dict(inn='eg', out='cut', bar0=2, db=-3)),   # 33: drone only; cut on 98.3
- (98.3, 106.3, 'playful_8bar', dict(inn='hard')),                      # 34 「等等——」 the scarab cheat
+ (98.3, 106.3, 'playful_8bar', dict(inn='hard')),                      # 34 「等等——」 the cheat: the theme, staccato
  (106.3, 114.3, 'playful_8bar_thin', dict(inn='eg', out='eg', bar0=4)),# 37: drums out under the papyrus line
  (114.3, 121.57, 'playful_8bar', dict(inn='eg', out='cut', bar0=0)),   # cut on the pan crash 121.57
  (126.3, 130.11, 'dark_4bar', dict(inn='swell', out='cut', db=-2)),    # 43: after the chomp, the doom drone; dead stop 130.11
- (130.3, 142.17, 'bright_8bar', dict(inn='swell', out='cut')),         # pass: Osiris, the Field of Reeds; hiccup 142.17
- (142.3, 156.3, 'playful_8bar', dict(inn='hard')),                     # shabtis (reuse)
- (156.3, 164.3, 'mystery_8bar', dict(inn='x', out='x', cresc=4, bar0=4)),   # the theme's second half returns, ends on D
- (164.3, 169.25, 'resolution_cadence', dict(inn='x')),                 # end card: cadence, final D at 166.3, ring-out
+ (130.3, 142.17, 'bright_8bar', dict(inn='swell', out='cut')),         # pass: the theme an octave up; the hiccup at 142.17
+ (142.3, 156.3, 'bright_8bar', dict(inn='hard', out='x', bar0=6)),     # shabtis: picks up where it hiccuped
+ (156.3, 169.25, 'resolution_6bar', dict(inn='x')),                    # close: the theme slow, chromatic slide, final D on 164.3, ring through the card
 ]
 
 def sampler(lib, out):
-    parts = [('mystery_8bar', 0, 4), ('groove_8bar', 0, 4), ('tension_8bar', 5, 3), ('playful_8bar', 0, 4), ('bright_8bar', 0, 4)]
+    parts = [('calm_8bar', 0, 3), ('theme_8bar', 0, 4), ('danger_4bar', 0, 2), ('tension_8bar', 5, 3), ('playful_8bar', 0, 3), ('bright_8bar', 0, 4)]
     segs = []
     for name, b0, nb in parts:
         x = sf.read(f'{lib}/{name}.wav', always_2d=True)[0]; x = np.roll(x, -b0 * int(BAR * SR), 0)[:nb * int(BAR * SR)].copy()
