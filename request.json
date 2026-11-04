@@ -1,47 +1,96 @@
 {
- "id": "ep60-sfx-05",
+ "id": "ep60-sfx-06",
  "items": [
   {
    "type": "sfx",
-   "name": "X26_ammit_roar_a",
-   "text": "one huge menacing roar of a beast that is half lioness half crocodile: raspy, breathy snarl with a throaty rattle, fast attack, pitch falling, close, dry, then silence",
-   "duration": 2.0,
-   "influence": 0.6
+   "name": "X30_lioness_roar_a",
+   "text": "a real lioness roaring once, close up, raspy and powerful, fast attack, about one and a half seconds, wildlife field recording, no music, not a monster",
+   "duration": 1.6,
+   "influence": 0.75
   },
   {
    "type": "sfx",
-   "name": "X26_ammit_roar_b",
-   "text": "a big lion roar with a deep crocodile hiss underneath, aggressive and raspy, short and powerful, dry studio recording, no music",
-   "duration": 1.6,
+   "name": "X30_lioness_roar_b",
+   "text": "one loud roar of an adult lioness, throaty rasp, aggressive, short and powerful, close microphone, natural, dry, no echo",
+   "duration": 1.5,
+   "influence": 0.8
+  },
+  {
+   "type": "sfx",
+   "name": "X30_lioness_roar_c",
+   "text": "a lion snarling roar, open mouth, breathy raspy growl rising into a roar and stopping, realistic animal sound, close, dry",
+   "duration": 1.4,
    "influence": 0.7
   },
   {
    "type": "sfx",
-   "name": "X27_ammit_grunt_a",
-   "text": "a low menacing grunt from a huge crocodile-lion monster: one short throaty huff, close, dry",
+   "name": "X31_lion_snarl_short_a",
+   "text": "a short sharp lioness snarl roar, under one second, aggressive, close, realistic, dry",
+   "duration": 0.9,
+   "influence": 0.75
+  },
+  {
+   "type": "sfx",
+   "name": "X31_lion_snarl_short_b",
+   "text": "a quick angry big-cat roar burst, short, raspy, close, realistic, no music",
+   "duration": 0.8,
+   "influence": 0.7
+  },
+  {
+   "type": "sfx",
+   "name": "X32_crunchy_bite_a",
+   "text": "huge jaws snapping shut on something with a mean wet crunch, teeth clacking, crunchy bite, close, dry",
+   "duration": 1.0,
+   "influence": 0.7
+  },
+  {
+   "type": "sfx",
+   "name": "X32_crunchy_bite_b",
+   "text": "a crocodile chomp: heavy jaws slam shut with a crunching bite and a short wet squelch, close, dry, no music",
    "duration": 1.0,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X27_ammit_grunt_b",
-   "text": "a deep guttural predator chuff with a low rumble, a warning, single short sound, close, dry",
-   "duration": 1.0,
+   "name": "X33_bone_snap_a",
+   "text": "a bone snapped in two by hand: one sharp dry crack with a splintering crunch, close, dry",
+   "duration": 0.8,
+   "influence": 0.7
+  },
+  {
+   "type": "sfx",
+   "name": "X33_bone_snap_b",
+   "text": "a stick-like bone breaking with a crisp crack and small splinters, close, no reverb",
+   "duration": 0.8,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X28_ammit_growl_a",
-   "text": "a deep guttural growl of a crocodile-lion beast rumbling low and rising in menace, close, dry, no music",
-   "duration": 3.0,
+   "name": "X34_small_wings_a",
+   "text": "a small bird taking off: soft quick feathery wing flaps, about six flaps, close, dry, no chirping",
+   "duration": 1.8,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X28_ammit_growl_b",
-   "text": "a low hungry monster growl, wet and throaty, crocodile jaws creaking, slowly building, menacing",
-   "duration": 3.0,
+   "name": "X34_small_wings_b",
+   "text": "gentle fluttering wings of a small bird flying away, soft feathers, close, no birdsong",
+   "duration": 1.6,
    "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "X35_papyrus_flick_a",
+   "text": "a single sheet of dry papyrus flipped over quickly: one crisp papery flick, close, dry",
+   "duration": 0.6,
+   "influence": 0.7
+  },
+  {
+   "type": "sfx",
+   "name": "X35_papyrus_flick_b",
+   "text": "three quick page flips of thick old paper, crisp papery flicks, close, dry",
+   "duration": 1.5,
+   "influence": 0.6
   }
  ]
 }
