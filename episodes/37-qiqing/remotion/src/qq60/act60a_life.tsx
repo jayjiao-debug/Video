@@ -2,7 +2,7 @@ import React from 'react';
 import {Stage60, Glow, Dust, Embers, Smoke, Shaft, Stars, Flame, flick, rng, PIC_T, FW, F_SERIF, toScreen} from './frame60';
 import {GlyphColumns, Balance, WingedSun} from './props60';
 import {Mummy, LionBier, BIER_H, CanopicJar, Lamp, HeartScarab, Basket, River, Palm, STONE, JarHead} from './props60b';
-import {God, CAST, POSES, Pose, solve, reach, wristTo, holdAt, SHAPES} from './rig60';
+import {God, CAST, POSES, Pose, solve, reach, wristTo, holdAt, SHAPES, lerpPose} from './rig60';
 import {CAST2, ANI, tendPose, scribePose} from './cast60';
 import {PAL, sp, poly, lerp, cl, sm, V, ap, mx} from './geo60';
 import type {ShotProps} from './EP60';
@@ -151,12 +151,13 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-/* ================= 6 · 11.3–14.5 (v3, owner 17:07) · the embalming tent, time-lapse: day 1 → day 70. Readable action: each beat the priest
-   feeds a new linen band that sweeps over your body (turn by turn) up to the collar, the gold mask lies whole on the head end (v5, owner
-   20:27: no cut at the lappets, no gleam), and four canopic jars (内脏罐) land one per beat =================
-   dissolve in (0.4). Jars land 0.58, 1.15, 1.73, 2.31 [11.88, 12.45, 13.03, 13.61] (groove beats, 104 bpm from 11.30) · linen swish as each
-   band completes, half a beat later: [11.59, 12.17, 12.74, 13.32, 13.90, 14.47] · counter ticks
-   0.15–2.9 [11.45–14.20]. */
+/* ================= 6 · 12.17–18.98 (v6: shots 6 + 7 merged into one picture, two lines) · the embalming tent =================
+   line 1 (12.17–15.69) time-lapse, day 1 → day 70: each beat the priest feeds a new linen band over your body (turn by turn) up to the collar,
+   the gold mask lies whole at the head end, four canopic jars (内脏罐) land one per beat. line 2 (15.69–18.98) in the same tent, the time-lapse
+   stopped at noon: the camera pushes in on the priest; he pulls a bronze hook from his belt, twirls it like a baton, hooks a grey puff out of
+   the nose and flicks it back over his shoulder into a basket without looking (callback to frame 0).
+   dissolve in (0.4). t (shot) → film = 12.17 + t. Jars land 0.58, 1.15, 1.73, 2.31 · bands complete [0.29, 0.87, 1.44, 2.02, 2.60, 3.17] ·
+   counter 0.15–2.9 · push-in 3.2–3.95 · twirl 3.67–4.39 (boing at the stop 4.39) · pop 5.01 · flick 5.56 · basket 6.28. */
 const JARS: JarHead[] = ['human', 'baboon', 'jackal', 'falcon'];
 const JAR_T = [0.58, 1.15, 1.73, 2.31];
 const BEAT6 = 60 / 104;
@@ -167,7 +168,9 @@ const limb6 = (a: V, b: V, r0: number, r1: number) => { const dx = b[0] - a[0], 
 	return sp([[a[0] + nx * r0, a[1] + ny * r0], [b[0] + nx * r1, b[1] + ny * r1], [b[0] + dx / L * r1, b[1] + dy / L * r1], [b[0] - nx * r1, b[1] - ny * r1], [a[0] - nx * r0, a[1] - ny * r0], [a[0] - dx / L * r0, a[1] - dy / L * r0]], true, 0.2); };
 export const Shot6: React.FC<ShotProps> = ({t}) => {
 	const ms = 56, mx0 = -60, bed = 690, FL = 900, px = 610, ps = 36;
-	const cam = aimPath(t, [[-0.4, 640, 520, 700, 486, 1.0], [3.4, 680, 540, 700, 486, 1.05]]);
+	// part 2 (line 2) runs on shot 7's beats: t7 = (t - T2) / K7; P2 = the pose hand-over from wrapping to the hook
+	const T2 = 3.45, K7 = 1.1, t7 = (t - T2) / K7, P2 = sm(seg(t, 3.2, 3.45)), tPop7 = 1.42, tRel7 = 1.92, tLand7 = 2.57;
+	const cam = aimPath(t, [[-0.4, 640, 520, 700, 486, 1.0], [3.2, 676, 538, 700, 486, 1.05], [3.95, 545, 505, 720, 486, 1.26], [6.9, 556, 500, 720, 486, 1.32]]);
 	const U = (u: number) => mx0 + u * ms;   // mummy units → world x
 	// the wrapping: band k (6 of them) sweeps over the body during beat k and completes half a beat later; three bands at the feet are done
 	const BX = (k: number) => 7.2 + k * 0.96, done = [2.4, 3.6, 4.8];
@@ -176,9 +179,31 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 	// the priest's hands feed the roll at the top edge of the band being wound (small circles: the roll turns)
 	const ph = 2 * Math.PI * cyc, roll: V = [xc + 18 * Math.cos(ph), topY - 34 + 10 * Math.sin(ph)];
 	const toF = (p: V): V => [(p[0] - px) / ps, (p[1] - FL) / ps];
-	const pose = {...tendPose(toF([roll[0] - 22, roll[1] + 4]), toF([roll[0] + 24, roll[1] - 2]), t, 18), neck: 4, head: 14 + 2 * Math.sin(t * 2)};
+	const pose1 = {...tendPose(toF([roll[0] - 22, roll[1] + 4]), toF([roll[0] + 24, roll[1] - 2]), t, 18), neck: 4, head: 14 + 2 * Math.sin(t * 2)};
+	// part 2: standing up behind the bier, the front hand goes to the belt (behind your body), comes up with the hook, twirls it, dips it to
+	// the mask's nose, flicks it back over the shoulder; the back hand rests at the hip
+	const twirl = (u: number, tt: number): Pose => { const hand = keyV(u, [[-0.25, 1.4, -10.2], [0, 1.4, -10.2], [0.18, 4.6, -13.2], [0.9, 4.6, -13.2], [1.3, 5.5, -16.4], [tPop7, 5.5, -16.2], [tRel7, 3.0, -15.0], [2.5, 3.8, -13.0]]);
+		let q: Pose = {...POSES.rest, lean: 4 - 5 * sm(seg(u, tPop7, tRel7)), neck: -2, head: -4 + 2 * Math.sin(tt * 1.5), rt: -6, at: 9, rk: 2, ak: 1};
+		q = wristTo(reach(q, 'f', hand), 'f', key1(u, [[0, 120], [0.9, 120], [1.3, 70], [tPop7, 70], [tRel7, 150], [2.5, 120]]));
+		return wristTo(holdAt(q, 'b', [1.3, -1.6]), 'b', 60); };
+	const rodTh = (u: number) => { const tw = sm(seg(u, 0.2, 0.85)), wob = u > 0.85 ? 14 * Math.exp(-(u - 0.85) / 0.18) * Math.sin((u - 0.85) * 34) : 0;
+		return key1(u, [[0, 18], [0.85, 18], [1.0, 18], [1.3, 160], [tPop7, 150], [tRel7, -20], [2.5, -6]]) + 720 * tw - wob; };
+	const rodAt = (u: number, tt: number) => { const gq = solve(twirl(u, tt)), grip = toW(px, FL, ps, 1, ap(gq.fH, [0.02, 0.6])), th = rodTh(u), d: V = [Math.sin(th * Math.PI / 180), -Math.cos(th * Math.PI / 180)];
+		return {grip, th, tip: [grip[0] + d[0] * 160, grip[1] + d[1] * 160] as V, butt: [grip[0] - d[0] * 50, grip[1] - d[1] * 50] as V}; };
+	const pose = P2 <= 0 ? pose1 : P2 >= 1 ? twirl(t7, t) : lerpPose(pose1, twirl(t7, t), P2);
+	const rod = rodAt(t7, t), hookOn = t7 >= -0.02;
+	// the puff: rides the hook tip from the pop, flies from the release over the priest's head into the basket behind him
+	const B: V = [36, 846], rel = rodAt(tRel7, T2 + tRel7 * K7).tip;
+	let puff: V | null = null, pa = 0, sq = 0;
+	if (t7 >= tPop7 && t7 < tRel7) { puff = [rod.tip[0], rod.tip[1] - 20]; pa = rod.th * 0.2; sq = 0.25 * Math.exp(-(t7 - tPop7) / 0.1) * Math.cos((t7 - tPop7) * 40); }
+	else if (t7 >= tRel7) { const u = cl((t7 - tRel7) / (tLand7 - tRel7)); puff = [lerp(rel[0], B[0], u), lerp(rel[1] - 20, B[1], u) - 200 * 4 * u * (1 - u)]; pa = -500 * u;
+		if (t7 > tLand7) { puff = [B[0], B[1] + 12 * sm((t7 - tLand7) / 0.15)]; pa = -500; sq = 0.2 * Math.exp(-(t7 - tLand7) / 0.12) * Math.cos((t7 - tLand7) * 40); } }
+	const tPopA = T2 + tPop7 * K7, tLandA = T2 + tLand7 * K7;
+	// "above your body": the clip that hides the priest's arms and the hook where they pass behind you
+	const bodyW = MUMMY_BODY.replace(/(-?\d*\.?\d+)\s+(-?\d*\.?\d+)/g, (_m, a1: string, b1: string) => `${(mx0 + Number(a1) * ms).toFixed(1)} ${(bed + Number(b1) * ms).toFixed(1)}`);
 	const day = Math.min(70, 1 + Math.floor(69 * sm(seg(t, 0.15, 2.9))));
-	const sunPh = (t * 1.25) % 1, sunX = lerp(1010, 1250, sunPh), sunY = 300 - 150 * Math.sin(Math.PI * sunPh), dayL = Math.sin(Math.PI * sunPh);
+	const tl = Math.min(t, 2.8);   // the time-lapse stops at noon on day 70
+	const sunPh = (tl * 1.25) % 1, sunX = lerp(1010, 1250, sunPh), sunY = 300 - 150 * Math.sin(Math.PI * sunPh), dayL = Math.sin(Math.PI * sunPh);
 	const masked = true;   // the gold mask on your face throughout
 	const band = (u0: number, k: string, grow = 1, fresh = 0) => { const y0 = 0.3, y1 = -3.6, yb = lerp(y1, y0, grow);
 		const sl = 0.75 * (yb - y1) / (y0 - y1);
@@ -188,14 +213,18 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 	const bands: React.ReactNode[] = done.map((u, i) => band(u, 'd' + i));
 	for (let k = 0; k <= kNow; k++) bands.push(band(BX(k), 'k' + k, k < kNow ? 1 : sm(cyc), k === kNow ? 1 - cyc : 0));
 	// the front arms: drawn again over the body (the rig draws arms behind it): elbow → wrist + fist, gold bracelet
+	const tagO = 1 - sm(seg(t, 3.1, 3.4)), rollO = 1 - P2;
 	const g = solve(pose), arms = (['b', 'f'] as const).map((sd) => { const F = sd === 'b' ? g.bF : g.fF, H = sd === 'b' ? g.bH : g.fH, el = toW(px, FL, ps, 1, ap(F, [0, 0])), wr = toW(px, FL, ps, 1, ap(H, [0, 0])), fi = toW(px, FL, ps, 1, ap(H, [0, 0.55]));
 		return <g key={sd}><path d={limb6(el, wr, 15, 11)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={2.6} /><circle cx={fi[0]} cy={fi[1]} r={15} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={2.6} />
 			<path d={limb6(lerp(el[0], wr[0], 0.8) < 0 ? el : [lerp(el[0], wr[0], 0.82), lerp(el[1], wr[1], 0.82)], wr, 12, 12)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={2} /></g>; });
-	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.3 - 0.06 * dayL} darkC="#1A1030" tags={[{x: px - 190, y: 150, text: '防腐祭司'}, {x: 64, y: 690, text: '内脏罐'}]}
+	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.3 - 0.06 * dayL} darkC="#1A1030" tags={tagO > 0 ? [{x: px - 190, y: 150, text: '防腐祭司', o: tagO}, {x: 64, y: 690, text: '内脏罐', o: tagO}] : []}
 		light={<>
 			<Shaft pts={[[sunX - 60, 140], [sunX + 40, 140], [lerp(760, 300, sunPh) + 160, FL], [lerp(760, 300, sunPh) - 120, FL]]} o={0.5 * dayL} />
 			<Glow x={sunX} y={sunY} r={200} c="warm" o={0.9 * dayL} />
-			<Glow x={xc} y={topY + 60} r={180} c="gold" o={0.25 + 0.2 * (1 - cyc)} />
+			<Glow x={xc} y={topY + 60} r={180} c="gold" o={(0.25 + 0.2 * (1 - cyc)) * rollO} />
+			{hookOn && <Glow x={rod.grip[0]} y={rod.grip[1]} r={150} c="gold" o={0.2} />}
+			{t > tPopA - 0.02 && t < tPopA + 0.5 && <DustBurst t={t} t0={tPopA} x={rod.tip[0]} y={rod.tip[1] - 20} rx={34} ry={22} n={12} seed={7} c="#D8DCE4" life={0.4} />}
+			{t > tLandA - 0.02 && <DustBurst t={t} t0={tLandA} x={B[0]} y={B[1] - 24} rx={50} ry={10} n={18} seed={6} c="#E8E2D2" life={0.6} />}
 			<Glow x={1236} y={FL - 330} r={300} c="warm" o={(0.4 + 0.35 * (1 - dayL)) + 0.1 * flick(t, 5)} />
 			<Dust t={t * 2} box={[100, 120, 1200, 880]} n={50} seed={5} o={0.6} vx={8} vy={6} />
 			{JAR_T.map((jt, i) => t > jt - 0.02 && t < jt + 0.5 ? <DustBurst key={i} t={t} t0={jt} x={150 + i * 112} y={FL + 8} rx={46} ry={8} n={14} seed={i + 5} c="#F0DEB0" life={0.45} /> : null)}
@@ -244,13 +273,24 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 			<path d={SHAPES.wigTri} transform={MASK6} strokeWidth={5.4 / ms / 1.18} />
 		</g>
 		<g clipPath="url(#a6-hd)"><Mummy x={mx0} y={bed} s={ms} t={t} masked={masked} /></g>
-		{/* the strip from the roll down to the band being wound; the roll and the hands over it */}
-		{/* the linen band runs from the roll over the top of your body into the band being wound */}
+		{/* the linen band runs from the roll over the top of your body into the band being wound (set down at the end of line 1) */}
+		<clipPath id="a6-up"><path d={`M-2000 -2000H4000V4000H-2000Z ${bodyW}`} clipRule="evenodd" /></clipPath>
+		{rollO > 0 && <g opacity={rollO} transform={`translate(0,${30 * P2})`}>
 		<path d={`M${roll[0]} ${roll[1] + 6}Q${(roll[0] + xc) / 2 + 8 * Math.sin(ph)} ${topY - 6} ${xc + 14} ${topY + 14}`} fill="none" stroke={PAL.ink} strokeWidth={30} strokeLinecap="butt" />
 		<path d={`M${roll[0]} ${roll[1] + 6}Q${(roll[0] + xc) / 2 + 8 * Math.sin(ph)} ${topY - 6} ${xc + 14} ${topY + 14}`} fill="none" stroke="#FFFBF0" strokeWidth={25} strokeLinecap="butt" />
 		<path d={`M${roll[0]} ${roll[1] + 6}Q${(roll[0] + xc) / 2 + 8 * Math.sin(ph)} ${topY - 6} ${xc + 14} ${topY + 14}`} fill="none" stroke="#D8CBA8" strokeWidth={3} strokeDasharray="10 14" />
 		<g transform={`translate(${roll[0]},${roll[1]}) rotate(${-20})`}><rect x={-34} y={-14} width={68} height={28} rx={12} fill="#F4ECD8" stroke={PAL.ink} strokeWidth={2.4} /><ellipse cx={34} cy={0} rx={6} ry={14} fill="#E2D6B6" stroke={PAL.ink} strokeWidth={2} /></g>
-		{arms}
+		</g>}
+		{/* the bronze hook (from line 2): behind the hand, hidden where it passes behind your body */}
+		{hookOn && <g clipPath="url(#a6-up)">
+			<path d={`M${rod.butt[0]} ${rod.butt[1]}L${rod.tip[0]} ${rod.tip[1]}`} stroke={PAL.ink} strokeWidth={11} strokeLinecap="round" />
+			<path d={`M${rod.butt[0]} ${rod.butt[1]}L${rod.tip[0]} ${rod.tip[1]}`} stroke="#C8863A" strokeWidth={6.5} strokeLinecap="round" />
+			<path d={`M${rod.butt[0]} ${rod.butt[1]}L${rod.tip[0]} ${rod.tip[1]}`} stroke="#F2C27A" strokeWidth={2} strokeLinecap="round" opacity={0.8} />
+			<g transform={`translate(${rod.tip[0]},${rod.tip[1]}) rotate(${rod.th}) scale(-0.75,0.75)`}><path d="M0 0Q-2 -22 14 -26Q26 -26 26 -12" fill="none" stroke={PAL.ink} strokeWidth={11} strokeLinecap="round" /><path d="M0 0Q-2 -22 14 -26Q26 -26 26 -12" fill="none" stroke="#C8863A" strokeWidth={6} strokeLinecap="round" /></g>
+		</g>}
+		<g clipPath="url(#a6-up)">{arms}</g>
+		{puff && <Puff x={puff[0]} y={puff[1]} r={36} a={pa} sq={sq} />}
+		<Basket x={B[0]} y={FL + 10} w={130} h={92} />
 		{/* the four canopic jars land in a row in front, one per beat */}
 		{JARS.map((h, i) => { const jt = JAR_T[i], u = seg(t, jt - 0.3, jt); if (u <= 0) return null; const x = lerp(150 + i * 112 - 520, 150 + i * 112, 1 - Math.pow(1 - u, 3));
 			const bump = 1 - 0.08 * pulse(t, jt, 0.02, 0.1);

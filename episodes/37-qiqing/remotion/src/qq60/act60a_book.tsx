@@ -86,27 +86,43 @@ const BookBanner: React.FC<{x0: number; y: number; t: number; glow?: number; ba?
 	</g>;
 };
 
-/* ================= 10 · 26.5–29.1 · the roll is laid in the coffin beside you; the string slips; it whips open like a banner =================
-   dissolve in (0.4). Roll set down 0.42 [26.92] · string snaps 0.9 [27.40] · unrolling whoosh 0.95–1.6 [27.45–28.10]. */
+/* ================= 10 · 26.03–31.89 (v6: shots 10 + 11 merged into one picture, two lines) =================
+   line 1 (26.03–28.84): the roll is laid in the coffin beside you; the string slips; it whips open like a banner and rises to face us.
+   line 2 (28.84–31.89): the camera pushes in on the banner's first page; dawn light rakes across it, its title column glows gold, and the
+   human-headed ba flies out of the tomb door toward the sun. t (shot) → film = 26.03 + t.
+   dissolve in (0.4). Roll set down 0.42 · string snaps 0.9 · unrolling whoosh 0.95–1.6 · push-in 2.1–3.05 · light sweep 2.65–4.05 · title fully
+   gold 3.40 (riq shake) · the ba leaves the door 3.90, wing flaps every 0.26 s from 3.95. */
 export const Shot10: React.FC<ShotProps> = ({t}) => {
 	const RX = 300, RY = 690, R0 = 40, RL = 320, L = 1900, by = 300;
 	const tSet = 0.42, tSnap = 0.9, tU0 = 0.95, tU1 = 1.6;
 	const un = 1 - Math.pow(1 - sm(seg(t, tU0, tU1)), 1.6), x0 = RX - RL / 2, rollX = x0 + L * un;
 	// the banner lifts from the coffin floor to face us as it opens
 	const rise = sm(seg(t, tU0 + 0.15, tU1 + 0.25)), bTop = lerp(RY - BH / 2, by, rise);
-	const cam = aimPath(t, [[-0.4, RX + 20, RY - 90, 700, 500, 1.45], [tU0, RX + 40, RY - 70, 700, 500, 1.5], [tU1 + 0.15, x0 + 690, by + BH / 2, 640, 486, 0.9], [2.6 + 0.4, x0 + 750, by + BH / 2, 640, 486, 0.93]]);
+	// line 2 runs on shot 11's beats: t11 = t - T2 (positions relative to the banner: x0, by)
+	const T2 = 2.75, t11 = t - T2;
+	const cam = aimPath(t, [[-0.4, RX + 20, RY - 90, 700, 500, 1.45], [tU0, RX + 40, RY - 70, 700, 500, 1.5], [tU1 + 0.15, x0 + 690, by + BH / 2, 640, 486, 0.9], [2.1, x0 + 700, by + BH / 2, 640, 486, 0.92],
+		[T2 + 0.3, x0 + 150, by + 230, 520, 486, 1.55], [T2 + 1.2, x0 + 200, by + 230, 560, 486, 1.6], [6.0, x0 + 290, by + 170, 620, 470, 1.75]]);
+	const sweep = seg(t11, -0.1, 1.3), glow = sm(seg(t11, 0.25, 0.65)), dawn = sm(seg(t11, -0.1, 1.0));
+	const fly = seg(t11, 1.15, 2.7), gy = by + BH - 34, door: V = [x0 + 222, gy - 120], sun: V = [x0 + 330, by + 120];
+	const baP: V = [lerp(door[0], sun[0] + 30, sm(fly)) - 90 * Math.sin(fly * Math.PI), lerp(door[1], sun[1] + 30, sm(fly))], baS = lerp(26, 58, sm(fly));
+	const flaps = t11 < 1.15 ? 1.2 : 1.2 + (t11 - 1.15) * (2 * Math.PI / 0.26), lx = lerp(x0 - 300, x0 + 900, sweep);
 	// the roll is lowered into the coffin, bounces softly, its linen tie (a bow) pops at the snap
 	const setY = t < tSet ? lerp(RY - 420, RY, sm(cl((t + 0.4) / (tSet + 0.4))) ** 1.5) : RY - 10 * Math.exp(-(t - tSet) / 0.08) * Math.abs(Math.sin((t - tSet) * 30));
 	const snap = pulse(t, tSnap, 0.02, 0.2), su = seg(t, tSnap, tSnap + 0.35);
 	const spin = (t * 900) % 24;
-	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={wearAt(cam.z, 0.35)} stain={wearAt(cam.z, 0.2)} dark={0.18 + 0.22 * rise}
+	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={wearAt(cam.z, 0.35)} stain={wearAt(cam.z, 0.2)} dark={0.18 + 0.22 * rise - 0.3 * dawn}
 		light={<>
 			<Glow x={RX} y={RY - 80} r={520} c="warm" o={0.55} />
 			{rise > 0 && <rect x={x0} y={bTop} width={rollX - x0} height={BH} fill="#FFF0C8" opacity={0.08 * rise} style={{mixBlendMode: 'screen'}} />}
 			{un > 0 && <Glow x={rollX} y={bTop + BH / 2} r={260} c="gold" o={0.4 * (1 - sm(seg(t, tU1, tU1 + 0.4)))} />}
 			<Glow x={760} y={by + 200} r={900} ry={380} c="gold" o={0.3 * rise} />
 			<Dust t={t} box={[-200, 100, 1900, 900]} n={60} seed={41} o={0.6} vx={14} vy={-3} />
-			{snap > 0.02 && <Sparkle x={RX - 40} y={setY - R0} r={34 * snap} o={snap} a={10} />}
+			{snap > 0.02 && <Glow x={RX - 10} y={setY - R0} r={90} c="gold" o={0.5 * snap} />}
+			{/* line 2: the dawn light raking across the banner, the title glow, the sun the ba flies to (no white bloom, no star sparkles) */}
+			{t11 > -0.1 && t11 < 1.8 && <path d={poly([[lx - 160, by - 200], [lx + 40, by - 200], [lx - 120, by + 700], [lx - 320, by + 700]])} fill="#FFE6A0" opacity={0.5 * (1 - sm(seg(t11, 1.3, 1.8)))} style={{mixBlendMode: 'screen'}} />}
+			{glow > 0 && <Glow x={x0 + 80} y={by + 200} r={300} ry={360} c="gold" o={0.55 * glow} />}
+			{t11 > -0.3 && <Glow x={sun[0]} y={sun[1]} r={420} c="warm" o={(0.4 + 0.4 * fly) * sm(seg(t11, -0.3, 0.4))} />}
+			{t11 > -0.3 && <Glow x={sun[0]} y={sun[1]} r={130} c="gold" o={(0.25 + 0.35 * fly) * sm(seg(t11, -0.3, 0.4))} />}
 		</>}>
 		{/* the coffin: painted inner wall with a glyph band, you lying in it, the plank floor */}
 		<rect x={-600} y={-300} width={3400} height={1700} fill="#B9844E" />
@@ -129,7 +145,7 @@ export const Shot10: React.FC<ShotProps> = ({t}) => {
 			</g>
 		</g> : <g>
 			<clipPath id="a10-open"><rect x={x0} y={-400} width={rollX - x0} height={1800} /></clipPath>
-			<g clipPath="url(#a10-open)"><BookBanner x0={x0} y={bTop} t={t} id="a10" glow={0} /></g>
+			<g clipPath="url(#a10-open)"><BookBanner x0={x0} y={bTop} t={t} id="a10" glow={glow} ba={t11 < 1.15} /></g>
 			{/* the rolling end: a vertical tube, its fibres racing as it turns */}
 			<g transform={`translate(${rollX},${bTop + BH / 2})`}>
 				<rect x={-R0 * 0.8} y={-BH / 2 - 6} width={R0 * 1.6} height={BH + 12} rx={R0 * 0.8} fill="#D9BC7A" stroke={PAL.ink} strokeWidth={3} />
@@ -138,6 +154,9 @@ export const Shot10: React.FC<ShotProps> = ({t}) => {
 				<rect x={-R0 * 0.35} y={-BH / 2 - 6} width={R0 * 0.3} height={BH + 12} fill="#F4E4B8" opacity={0.7} />
 			</g>
 		</g>}
+		{/* line 2: the door glows as the ba comes out; the ba flies off the page toward the sun */}
+		{t11 >= 1.0 && <rect x={x0 + 192} y={gy - 92} width={60} height={92} fill="#FFE9A8" opacity={sm(seg(t11, 1.0, 1.2))} />}
+		{t11 >= 1.15 && <BaBird x={baP[0]} y={baP[1]} s={baS} ph={flaps} a={-12} />}
 	</Stage60>;
 };
 
@@ -169,9 +188,12 @@ export const Shot11: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-/* ================= 12 · 31.8–34.8 · the scribe's stall: the vendor flips spell sheets like a menu; the client points; picks fly to a pile =================
-   dissolve in (0.4). Sheet flips on the playful eighths [32.13, 32.39, 32.66] and [33.20, 33.46, 33.73] and [34.27];
-   picks (reed-pen tap) at 1.13 [32.93] and 2.20 [34.00]; each pick lands on the pile 0.4 s later [33.33, 34.40]. */
+/* ================= 12 · 31.89–38.35 (v6: shots 12 + 13 merged into one picture, two lines) · the scribe's stall =================
+   line 1 (31.89–35.06): the vendor flips spell sheets in an open book like a menu; the client points; picks fly to his basket. A finished
+   scroll (ready-made, 现货) hangs on the stall's back wall. line 2 (35.06–38.35): the camera pushes from the stall up onto that scroll and its
+   owner's name column: the name is a blank gap, which blinks with a white outline. t (shot) → film = 31.89 + t.
+   dissolve in (0.4). Sheet flips 0.33, 0.60, 0.87 · 1.40, 1.67, 1.94 · 2.47 · picks (reed-pen tap) 1.13, 2.20, landing 0.4 s later ·
+   push-in 2.95–4.35 · the gap blinks 4.50 (ding), then stays outlined, softly pulsing. */
 const E8 = 60 / 112 / 2;
 const FLIPS = [0.33, 0.33 + E8, 0.33 + 2 * E8, 1.4, 1.4 + E8, 1.4 + 2 * E8, 2.47];
 const PICKS = [1.13, 2.2];
@@ -194,7 +216,11 @@ const SheetFace: React.FC<{k: number}> = ({k}) => {
 };
 export const Shot12: React.FC<ShotProps> = ({t}) => {
 	const vx = 420, cx = 1050, MX = 690, MY = 600, PW = 160;
-	const cam = aimPath(t, [[-0.4, 700, 560, 700, 500, 1.0], [3.4, 710, 590, 700, 500, 1.1]], (u) => u);
+	// the finished scroll on the back wall (Sheet13 at 0.42 scale) and its name gap (world)
+	const HSx = 215, HSy = 236, HK = 0.42, gapW: V = [HSx + HK * 380, HSy + HK * 160], tB = 4.5;
+	const blink = pulse(t, tB, 0.03, 0.35), gap = t < tB ? 0 : 0.55 + 0.45 * blink + 0.1 * Math.sin(t * 6);
+	const cam = aimPath(t, [[-0.4, 700, 560, 700, 500, 1.0], [2.95, 710, 585, 700, 500, 1.08], [4.35, gapW[0] + 25, gapW[1] + 17, 720, 486, 4.0], [6.6, gapW[0] + 21, gapW[1] + 13, 720, 486, 4.3]]);
+	const tagO = 1 - sm(seg(t, 2.9, 3.2));
 	// the menu is an open book on a lectern: the current spell on the left page, pages already turned stack on the right
 	const flipped = FLIPS.filter((f) => t >= f + 0.2).length, picked = PICKS.filter((p) => t >= p).length, top = flipped + picked;
 	const fl = FLIPS.find((f) => t >= f && t < f + 0.2), fu = fl !== undefined ? (t - fl) / 0.2 : -1;
@@ -211,17 +237,23 @@ export const Shot12: React.FC<ShotProps> = ({t}) => {
 	cPose = wristTo(holdAt(cPose, 'b', [0.8, -2.2]), 'b', 10);
 	const pile: V = [910, GY - 4];
 	const page = (k: number) => <g transform={`translate(${MX - PW / 2},${MY})`}><SheetFace k={k} /></g>;
-	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.1} wear={0.4} stain={0.25} tags={[{x: vx - 130, y: 470, text: '书吏'}]}
+	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.1} wear={wearAt(cam.z, 0.4)} stain={wearAt(cam.z, 0.25)} tags={tagO > 0 ? [{x: vx - 150, y: 690, text: '书吏', o: tagO}] : []}
 		light={<>
 			<Shaft pts={[[540, PIC_T], [880, PIC_T], [920, GY], [480, GY]]} o={0.45} />
 			<Glow x={MX} y={MY} r={320} c="gold" o={0.4} />
 			<Dust t={t} box={[400, 120, 1000, 840]} n={50} seed={23} o={0.7} vx={-4} vy={5} />
-			{PICKS.map((q, i) => t > q - 0.02 && t < q + 0.4 ? <Sparkle key={i} x={MX - 80} y={MY - 40} r={50 * pulse(t, q, 0.02, 0.15)} /> : null)}
+			{PICKS.map((q, i) => t > q - 0.02 && t < q + 0.4 ? <Glow key={i} x={MX - 80} y={MY - 40} r={110} c="gold" o={0.5 * pulse(t, q, 0.02, 0.15)} /> : null)}
+			{t > 3.2 && <Glow x={gapW[0]} y={gapW[1]} r={110} c="gold" o={(0.25 + 0.4 * blink) * sm(seg(t, 3.2, 3.8))} />}
 		</>}>
 		<rect x={-300} y={-200} width={2200} height={1400} fill="#D9C08C" />
 		<GlyphColumns x={40} y={190} cols={3} rows={3} cell={28} seed={61} />
 		<Awning x0={120} x1={1180} y={160} gy={GY} t={t} />
 		<ScrollShelf x={880} y={230} w={300} h={300} rows={4} cols={4} seed={9} />
+		{/* the finished scroll on the back wall: hung from a peg on two cords, wooden rods top and bottom; every picture painted, the name blank */}
+		<path d={`M${HSx + 30} ${HSy - 4}L${HSx + 206} ${HSy - 52}L${HSx + 382} ${HSy - 4}`} fill="none" stroke="#6A4626" strokeWidth={3} />
+		<circle cx={HSx + 206} cy={HSy - 54} r={7} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={2} />
+		<g transform={`translate(${HSx},${HSy}) scale(${HK})`}><Sheet13 x={0} y={0} t={t} id="a12s" gap={gap} /></g>
+		{[HSy - 6, HSy + HK * 640 - 2].map((yy) => <rect key={yy} x={HSx - 14} y={yy} width={HK * 980 + 28} height={9} rx={4} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={2} />)}
 		{/* the lectern and the open book */}
 		<path d={poly([[MX - 150, GY], [MX + 150, GY], [MX + 110, MY + 122], [MX - 110, MY + 122]])} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={2.4} />
 		<rect x={MX - PW - 8} y={MY - 118} width={2 * PW + 16} height={240} rx={6} fill="#6A4426" stroke={PAL.ink} strokeWidth={2.4} />

@@ -208,7 +208,7 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 	const fall = t < tL ? sm(t / tL) : 1, hy = t < tL ? lerp(pan0[1] - 220, pan0[1], fall * fall) : 0;
 	const clang = pulse(t, tL, 0.02, 0.25), eyes = sm(seg(t, 2.2, 2.6));
 	// v6 (owner 20:59): the landing is a warm glow that swells and fades softly, one slow sheen across the letters, gold dust drifting down
-	const lit = sm(seg(t, 0.9, 1.3)), land = 0.8 * sm(seg(t, 1.05, 1.45)) * (1 - sm(seg(t, 1.6, 3.0))), sheen = seg(t, 1.4, 2.6);
+	const lit = sm(seg(t, 0.89, 1.29)), land = 0.8 * sm(seg(t, 1.04, 1.44)) * (1 - sm(seg(t, 1.6, 3.0))), sheen = seg(t, 1.39, 2.59);   // lands 1.29 = 6.30
 	const kF = Math.pow(cam.z / C3.z, 0.35), cc: V = [cam.x, cam.y];
 	const cw = 5 * FS3 * 1.13 + FS3 * 1.5;
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#101A48" wear={wearAt(cam.z, 0.35)} stain={wearAt(cam.z, 0.3)}
