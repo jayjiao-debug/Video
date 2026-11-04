@@ -8,7 +8,9 @@ Writes OUTDIR/<cue>.wav (first pass + ending button + tail), <cue>_loop.wav (exa
 loudness). 48 kHz stereo 24-bit, each cue normalised to -14 LUFS integrated, true peak <= -1.5 dBTP.
 
 Tempi share one grid: groove 104 (24 bars), mystic 69.33 = 2/3 x 104 (16 bars), tension and paradise 78 = 3/4 x 104
-(18/16 bars) -> groove, mystic and tension all last 55.385 s and every 6.92 s their downbeats coincide. playful 112.
+(18/16 bars). groove, mystic and tension all last 55.385 s; downbeats coincide groove/mystic every 6.923 s (3:2 bars),
+groove/tension+paradise every 9.231 s (4:3 bars), all of them every 27.69 s; every groove bar line is also a tension
+beat. playful 112 (stands alone: cut it in on its own downbeat).
 
 Instruments (measured against the two liked code-synth clips, ref60b/v1+v2): Karplus-Strong strings with a
 fractional-delay allpass (in tune), a paired oud course through a modal body; additive mizmar/ney with formants,
@@ -201,10 +203,11 @@ def lfo(n, hz_, L, phase=0.0, t0=0.0):
     t = t0 + np.arange(n) / SR; fq = qf(hz_, L) if L else hz_; return np.sin(2 * np.pi * fq * t + phase)
 def drone_voice(n, note, L, spec_fn, detune=3.0, vib=0.0015, seed=0, t0=0.0):
     f = qf(hz(note), L); tab = table(f, spec_fn); rng = np.random.default_rng(seed)
-    out = np.zeros((n, 2))
-    for ch, dc in ((0, -detune), (1, detune)):   # slightly different pitch per side: width without phase tricks
+    centre = wt(tab, f * (1 + vib * lfo(n, 0.11, L, rng.random() * 6, t0)))
+    out = np.stack([centre, centre], 1) * 0.8
+    for ch, dc in ((0, -detune), (1, detune)):   # a centre voice carries the pitch; small detuned side voices give width
         ff = qf(f * 2 ** (dc / 1200), L) * (1 + vib * lfo(n, 0.13 + 0.05 * ch, L, rng.random() * 6, t0))
-        out[:, ch] = wt(tab, ff)
+        out[:, ch] += 0.35 * wt(tab, ff)   # mono fold can never comb-cancel the centre (owner's audience: phone speakers)
     return out
 def arghul(f, k):   # Egyptian double-pipe drone reed: nasal, formant near 1.1 kHz
     return k ** -1.0 * (0.5 + 1.5 * formant(f, 880, 420) + 0.6 * formant(f, 2350, 700)) / (1 + (f / 3500) ** 3)
@@ -341,7 +344,7 @@ try:
 except Exception: _release = _release_py
 def limit(x, ceiling_db=-1.6, look=0.002, rel=0.08, circular=False):
     c = 10 ** (ceiling_db / 20); pad = int(0.5 * SR)
-    xx = np.concatenate([x[-pad:], x]) if circular else x
+    xx = np.concatenate([x[-pad:], x, x[:pad]]) if circular else x   # a loop: the limiter sees both neighbours of the seam
     up = np.abs(signal.resample_poly(xx, 4, 1, axis=0)).max(1).reshape(-1, 4).max(1)[:len(xx)]
     need = np.minimum(1, c / np.maximum(up, 1e-9)); la = int(look * SR)
     from scipy.ndimage import minimum_filter1d
@@ -350,7 +353,7 @@ def limit(x, ceiling_db=-1.6, look=0.002, rel=0.08, circular=False):
     att = la or 1
     out = np.minimum(out, signal.lfilter(np.ones(att) / att, 1, np.concatenate([np.ones(att), out]))[att:])
     y = xx * out[:, None]
-    return y[pad:] if circular else y
+    return y[pad:-pad] if circular else y
 def lufs(x):
     import pyloudnorm as pyln
     return pyln.Meter(SR).integrated_loudness(x)
@@ -385,7 +388,8 @@ def build(cue, mode):
         if cue.next_pass:   # the ending sits on the next pass's downbeat (and its pre-roll), exactly as the loop continues
             m.cut = t_end + 0.03; cue.score(m, t_end, first=False); m.cut = None
         cue.ending(m, t_end)
-    cue.beds(m, 0.0, secs, L, fade_in=(mode == 'full'), t_end=t_end)   # same loop-quantised drones in every mode -> loop + end splice
+    Lq = round(L * SR) / SR   # the loop file is round(L*SR) samples: drones/LFOs get whole cycles in exactly that many samples
+    cue.beds(m, 0.0, secs, Lq, fade_in=(mode == 'full'), t_end=t_end)   # same loop-quantised drones in every mode -> loop + end splice
     y = render(m, cue.cfg, make_ir(cue.rt60, seed=cue.seed))
     if mode == 'loop': return y[int(round(L * SR)):int(round(L * SR)) + int(round(L * SR))]
     if mode == 'end': return y[int(round(L * SR)):]   # pass 2 + ending (trimmed after mastering)
@@ -411,7 +415,7 @@ def darbuka_bar(m, t, b, e8, r, vel=1.0, ghosts=True, fill=False, roll=False, li
         for j in range(8): m.add('tek', tek(r, (.18 + .06 * j) * vel, j % 2 == 1), t + 6 * e8 + j * e8 / 4 + r.normal(0, .002), (-1) ** j * 0.15)
 def riq_bar(m, t, e8, r, vel=1.0):
     for e in range(8):
-        m.add('perc', riq(r, (0.28 if e % 2 == 0 else 0.42) * vel * (0.85 + 0.3 * r.random())), t + e * e8 + (0.04 * e8 if e % 2 else 0) + r.normal(0, .004), 0.6)
+        m.add('perc', riq(r, (0.28 if e % 2 == 0 else 0.42) * vel * (0.85 + 0.3 * r.random())), t + e * e8 + (0.04 * e8 if e % 2 else 0) + r.normal(0, .004), 0.72)
 def oud_line(m, t, e8, line, r, g=1.0, bus='oud', pan=0.28, oct=0, stacc=1.0, trem=True, lilt=0.04):
     """line: [(eighth_pos, note, length_in_eighths, vel)]; long notes get the oud's tremolo (rish)."""
     for e, n, k, v in line:
@@ -421,7 +425,7 @@ def oud_line(m, t, e8, line, r, g=1.0, bus='oud', pan=0.28, oct=0, stacc=1.0, tr
         else: m.add(bus, oud(mm, 0.9 if stacc >= 1 else 0.5, v, int(r.integers(4)), stacc), t0, pan, g)
 
 GROOVE_CFG = {'dum': dict(db=-2.5, send=0.1), 'tek': dict(db=-11, send=0.2, eq=[(2500, -4, 1.2)]), 'perc': dict(db=-16, send=0.3, hp=3000),
-              'oud': dict(body=OUD_BODY, db=0.0, send=0.3), 'bass': dict(body=OUD_BODY, db=-3, send=0.05, lp=900),
+              'oud': dict(body=OUD_BODY, db=0.0, send=0.38), 'bass': dict(body=OUD_BODY, db=-3, send=0.05, lp=900),
               'reed': dict(db=-10.5, send=0.38, hp=180), 'qanun': dict(body=QANUN_BODY, db=-9, send=0.3), 'drone': dict(db=-9.0, send=0.15, lp=1700),
               'zill': dict(db=-15, send=0.35)}
 class Groove(Cue):
@@ -441,17 +445,17 @@ class Groove(Cue):
             t = t0 + b * self.bar; r = m.r(b, 'g'); ph = b % 4
             darbuka_bar(m, t, b, e8, r, 0.95, fill=(ph == 3 and b % 8 != 7), roll=(b % 8 == 7))
             riq_bar(m, t, e8, r, 0.9)
-            if ph == 0: m.add('zill', zills(r, 0.8 if b % 8 == 0 else 0.5), t + r.normal(0, .003), -0.35)
+            if ph == 0: m.add('zill', zills(r, 0.8 if b % 8 == 0 else 0.5), t + abs(r.normal(0, .003)), -0.55)
             low = 'A1' if (ph == 3) else 'D2'
             for e, n_ in ((0, 'D2'), (4, low)): m.add('bass', bass(n_, 0.7, 0.75, int(r.integers(4)), t60=0.6), t + e * e8 + r.normal(0, .004), 0)
-            oud_line(m, t, e8, self.RIFF[ph], r, 1.0, pan=0.4, oct=1)
-            if 8 <= b < 16: oud_line(m, t, e8, self.RIFF[ph], m.r(b, 'g2'), 0.45, 'oud', -0.4, oct=0, trem=False)   # second oud, an octave down
+            oud_line(m, t, e8, self.RIFF[ph], r, 1.0, pan=0.55, oct=1)   # width from separate sources, not L/R tricks (mono-safe)
+            if 8 <= b < 16: oud_line(m, t, e8, self.RIFF[ph], m.r(b, 'g2'), 0.45, 'oud', -0.6, oct=0, trem=False)   # second oud, an octave down
         bt = self.bar
         for b0, ph_, v in ((8, self.PH_A, .6), (16, self.PH_B, .6), (22, self.PH_TAG, .5)):
-            m.add('reed', reed(mel(ph_, e8), v, m.r(b0, 'reed'), 'mizmar'), t0 + b0 * bt + 0.01, -0.3)
+            m.add('reed', reed(mel(ph_, e8), v, m.r(b0, 'reed'), 'mizmar'), t0 + b0 * bt + 0.01, -0.42)
         run = ['D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C5', 'D5']
         r = m.r(15, 'qn')
-        for j, n_ in enumerate(run): m.add('qanun', qanun(n_, 1.0, 0.35 + 0.05 * j, j), t0 + 15 * bt + 6 * e8 + j * e8 / 4 + r.normal(0, .003), 0.4)
+        for j, n_ in enumerate(run): m.add('qanun', qanun(n_, 1.0, 0.35 + 0.05 * j, j), t0 + 15 * bt + 6 * e8 + j * e8 / 4 + r.normal(0, .003), -0.5 + 0.14 * j)
     def beds(self, m, t0, secs, L, fade_in, t_end=None):
         n = m.n; d = drone_voice(n, 'D2', L, arghul, seed=1) + 0.7 * drone_voice(n, 'A2', L, arghul, seed=2) + 0.45 * drone_voice(n, 'D3', L, arghul, seed=3)
         e = np.ones(n)
@@ -494,7 +498,7 @@ class Mystic(Cue):
     def beds(self, m, t0, secs, L, fade_in, t_end=None):
         n = m.n; d = drone_voice(n, 'D2', L, arghul, seed=4) + 0.55 * drone_voice(n, 'A2', L, arghul, seed=5)
         swell = 0.8 + 0.2 * lfo(n, 1 / (2 * self.bar), L, -np.pi / 2)
-        rng = np.random.default_rng(9); Lk = int((L or secs) * SR)
+        rng = np.random.default_rng(9); Lk = int(round((L or secs) * SR))
         base = rng.standard_normal(min(n, Lk)); nz = np.resize(base, n)   # periodic noise for loop-safe air
         air = filt(sos_bp(300, 2200), np.stack([nz, np.roll(nz, 977)], 1)) * (0.6 + 0.4 * lfo(n, 0.09, L))[:, None]
         e = np.ones(n)
@@ -516,21 +520,24 @@ TENSION_CFG = {'frame': dict(db=0, send=0.3), 'heart': dict(db=-3, send=0.15), '
 class Tension(Cue):
     """the weighing: low drone, heartbeat bendir, the Eb/D rub climbing D-Eb > F#-G > A-Bb > D-Eb, sparse plucks,
     a riser, one beat of silence, then the verdict hit on bar 18. 78 BPM (3/4 of groove), 18 bars = 55.38 s.
-    mode='bed': an 8-bar loop at a steady low intensity for the waiting before the weighing."""
-    def __init__(self, bars=18, seed=62, bed=False):
-        super().__init__('tension_loop' if bed else 'tension', 78, 8 if bed else bars, seed, 1.9, TENSION_CFG); self.bed = bed; self.next_pass = False
-    def I(self, b): return 0.45 if self.bed else min(1.0, b / 15)
+    bed=True: an 8-bar loop at a steady low intensity for the waiting before the weighing.
+    hush=True (script shot 33): same build, but bar 17 drops to drone + a heartbeat that speeds up, then the silent beat."""
+    def __init__(self, bars=18, seed=62, bed=False, hush=False):
+        name = 'tension_loop' if bed else ('tension_hush' if hush else 'tension')
+        super().__init__(name, 78, 8 if bed else bars, seed, 1.9, TENSION_CFG); self.bed = bed; self.hush = hush; self.next_pass = False
+    def I(self, b): return 0.45 if self.bed else min(1.0, 0.2 + 0.8 * b / 15)
     def score(self, m, t0, first):
         bt, B = self.beat, self.bar; last = self.N - 1
         for b in range(self.N if self.bed else last):
             t = t0 + b * B; r = m.r(b, 't'); I = self.I(b)
-            per = 2 if (not self.bed and b < 4) else 1
+            per = 2 if (not self.bed and b < 2) else 1
             hits = np.arange(0, 4, per) if b < 16 or self.bed else np.arange(0, 3, 0.5)   # bar 17: eighths, beat 4 silent
+            if b == 16 and self.hush: hits = np.array([0, 0.8, 1.45, 1.95, 2.35, 2.65, 2.88])   # the heart speeds up alone
             for h in hits:
-                v = (0.3 + 0.7 * I) * (1 if h % 1 == 0 else 0.7) * (0.92 + 0.16 * r.random())
+                v = (0.3 + 0.7 * I) * (1 if h % 1 == 0 else 0.7) * (0.92 + 0.16 * r.random()) * (0.75 if (b == 16 and self.hush) else 1)
                 m.add('heart', heart(r, v), t + h * bt + r.normal(0, .003), 0)
                 if h % 1 == 0 and b < 16: m.add('heart', heart(r, v * 0.55), t + (h + 0.32) * bt + r.normal(0, .003), 0)
-            if I > 0.55 and b < 16:
+            if I > 0.55 and b < 16 and not (self.hush and b == 15):
                 for h in (1.5, 3.5): m.add('tek', tek(r, 0.18 + 0.25 * I, True), t + h * bt + r.normal(0, .004), 0.3)
             if (b % 2 == 1 or I > 0.6) and (self.bed or b < 16):   # sparse plucks: the semitone that won't resolve
                 pair = ('D3', 'Eb3') if b % 4 < 2 else ('Eb3', 'D3')
@@ -541,23 +548,23 @@ class Tension(Cue):
                 m.add('qanun', qanun('D5', 1.2, 0.45 + 0.3 * I, b + 1), t + 3.5 * bt + r.normal(0, .004), -0.45)
         # the rub: sustained semitone pairs, rising in the last quarter (the bed keeps D4/Eb4 as a continuous drone)
         pairs = [] if self.bed else [(2, 2, ('D4',)), (4, 8, ('D4', 'Eb4')), (12, 1, ('F#4', 'G4')), (13, 1, ('A4', 'Bb4')),
-                                     (14, 1, ('C5', 'Bb4')), (15, 1 + 3 / 4, ('D5', 'Eb5'))]
+                                     (14, 1, ('C5', 'Bb4')), (15, 1 if self.hush else 1 + 3 / 4, ('D5', 'Eb5'))]
         for b0, nb, notes in pairs:
             for j, n_ in enumerate(notes):
-                g = 0.35 + 0.5 * self.I(b0 + nb); last_pair = b0 >= 15
+                g = 0.35 + 0.5 * self.I(b0 + nb); last_pair = b0 >= 15 and not self.hush
                 m.add('rub', held(nb * B, n_, strings, att=1.2 if b0 < 12 else 0.25, rel=0.012 if last_pair else 0.6, gain=g, seed=b0 * 3 + j), t0 + b0 * B)
         if not self.bed:   # riser over bars 13-17, stopping dead one beat before the hit
-            n0 = int((t0 + 12 * B) * SR); n1 = int((t0 + 16 * B + 3 * bt) * SR); k = n1 - n0
+            n0 = int((t0 + 12 * B) * SR); n1 = int((t0 + 16 * B + (0 if self.hush else 3 * bt)) * SR); k = n1 - n0
             if 0 <= n0 and n1 <= m.n:
                 r = m.r(12, 'riser'); nz = r.standard_normal((k, 2)); x = np.linspace(0, 1, k)
                 out = np.zeros((k, 2)); seg = 8
                 for s in range(seg):   # piecewise band-pass sweep 400 Hz -> 5 kHz
                     a, z = s * k // seg, (s + 1) * k // seg; fc = 400 * (12.5 ** ((s + .5) / seg))
                     out[a:z] = filt(sos_bp(fc / 1.6, fc * 1.6), nz[a:z + 0])
-                out *= (x ** 2.2)[:, None]; out[-int(0.01 * SR):] *= np.linspace(1, 0, int(0.01 * SR))[:, None]
+                out *= (x ** 2.2)[:, None]; kf = int((0.6 if self.hush else 0.01) * SR); out[-kf:] *= np.linspace(1, 0, kf)[:, None]
                 m.addbuf('riser', np.pad(out, ((n0, m.n - n1), (0, 0))))
                 # tremolo strings on the climb: the rub pair re-articulated as sixteenths in bar 17
-                for j in range(12):
+                for j in range(0 if self.hush else 12):
                     tt = t0 + 16 * B + j * bt / 4
                     for n_ in ('D4', 'Eb4', 'A4'): m.add('rub', reed([(n_, bt / 4 * 0.9, 'stacc')], 0.25 + 0.04 * j, m.r(16, f'tr{j}{n_}'), 'mizmar'), tt, 0.0)
     def beds(self, m, t0, secs, L, fade_in, t_end=None):
@@ -565,7 +572,7 @@ class Tension(Cue):
         e = np.ones(n)
         if fade_in: k = int(1.2 * SR); e[:k] = np.linspace(0, 1, k)
         if not self.bed:
-            t = np.arange(n) / SR; e *= np.clip(0.7 + 0.3 * t / (16 * self.bar), 0, 1)
+            t = np.arange(n) / SR; e *= np.clip(0.8 + 0.2 * t / (16 * self.bar), 0, 1)
             i = int((16 * self.bar + 3 * self.beat) * SR); k2 = int(0.012 * SR)   # the drone stops too: the pause before the hit
             j = int(17 * self.bar * SR); e[i:i + k2] *= np.linspace(1, 0, k2); e[i + k2:j] = 0
             e[j:] = np.exp(-np.arange(n - j) / (1.2 * SR)) * 0.9
@@ -580,6 +587,8 @@ class Tension(Cue):
         m.add('reed', reed([('D4', 1.6, 'fall')], 0.55, r, 'mizmar'), t + 0.01, -0.15)
     def hits(self):
         if self.bed: return {'loop': '8 bars, steady heartbeat every beat, D4/Eb4 rub'}
+        if self.hush: return {'hush_bar17_from_s': round(16 * self.bar, 3), 'silence_from_s': round(16 * self.bar + 3 * self.beat, 3),
+                              'VERDICT_HIT_s': round(17 * self.bar, 3), 'note': 'bar 17 = drone + accelerating heartbeat only (script shot 33)'}
         return {'rub_enters_bar': 5, 'climb_bars': [13, 14, 15, 16], 'silence_from_s': round(16 * self.bar + 3 * self.beat, 3),
                 'VERDICT_HIT_s': round(17 * self.bar, 3), 'verdict_hit_bar': 18}
 
@@ -759,6 +768,10 @@ def make_cue(name, out, meta):
         full = full + render(m, cue.cfg, make_ir(cue.rt60, seed=cue.seed))
         full = trim_tail(master(full, fit_gain(full, int(17 * cue.bar * SR)))); write(f'{out}/tension.wav', full)
         bed = Tension(bed=True); lp = build(bed, 'loop'); lp = master(lp, fit_gain(lp), circular=True); write(f'{out}/tension_loop.wav', lp)
+        hu = Tension(hush=True); hf = build(hu, 'full'); m2 = Mix(hf.shape[0] / SR, hu.seed, hu.N); hu.score_hit(m2, hu.L - hu.bar)
+        hf = hf + render(m2, hu.cfg, make_ir(hu.rt60, seed=hu.seed)); hf = trim_tail(master(hf, fit_gain(hf, int(16 * hu.bar * SR)))); write(f'{out}/tension_hush.wav', hf)
+        meta['tension_hush'] = dict(file='tension_hush.wav', bpm=78, beats_per_bar=4, bar_s=round(hu.bar, 4), bars=hu.N, length_s=round(len(hf) / SR, 3),
+                                    downbeat0_s=0.0, hits=hu.hits(), lufs=round(lufs(hf), 2), tp=round(true_peak(hf), 2))
         meta['tension'] = dict(file='tension.wav', bpm=78, beats_per_bar=4, bar_s=round(cue.bar, 4), bars=cue.N, length_s=round(len(full) / SR, 3),
                                downbeat0_s=0.0, hits=cue.hits(), lufs=round(lufs(full), 2), tp=round(true_peak(full), 2))
         meta['tension_loop'] = dict(file='tension_loop.wav', bpm=78, bar_s=round(bed.bar, 4), bars=8, length_s=round(len(lp) / SR, 3),
