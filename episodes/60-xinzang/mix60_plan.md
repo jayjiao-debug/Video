@@ -85,8 +85,8 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | s28_heart | sfx | 74.9 | X17_heart_on_pan | hit | - | - | -3 | - | - | pan=-0.45 | t<-28:left+pan | the heart on the left pan |
 | y | s28_feather | sfx | 75.5 | X11_feather_land | hit | - | - | -3 | - | - | pan=0.45 | t<-28:right+pan | the feather on the right |
 | y | s29_pen | sfx | 78.75 | X05_reed_pen_scratch | 0.8 | 0.8 | +0.45 | -4 | - | 0.12 | - | t<-29:first+scratch | Thoth's first stroke |
-| y | s30_grunt | sfx | 80.25 | X27_ammit_grunt | hit | - | - | 2 | - | - | duck=3,bright | t<-30:growl~grunt | Ammit revealed: a menacing grunt |
-| y | s31_roar | sfx | 83.85 | X26_ammit_roar | hit | - | - | 3 | - | 0.2 | duck=6,bright,impact | t<-31,42:roar | **[deliberate]** AMMIT'S ROAR: the music thins under it (as the reference's lioness roars in a gap) |
+| y | s30_grunt | sfx | 80.25 | X27_ammit_grunt | hit | - | - | 1 | - | - | duck=3,bright | t<-30:growl~grunt | Ammit revealed: a menacing grunt |
+| y | s31_roar | sfx | 83.85 | X26_ammit_roar | hit | - | - | 6 | - | 0.2 | duck=6,bright,impact | t<-31,42:roar | **[deliberate]** AMMIT'S ROAR: the music thins under it (as the reference's lioness roars in a gap) |
 | y | s31_plop | sfx | 84.75 | X22_comic_plop | hit | - | - | -2 | - | - | - | t<-31:plop | the hippo rump wiggles |
 | y | s33_creak | sfx | 89.7 | S02_scale_settle | hit | - | 90.6 | -3 | - | 0.25 | - | t<-33:creak | the chain creaks as the pans wobble |
 | y | s33_beat1 | sfx | 88.7 | synth:heart | hit | - | +0.6 | 0 | - | 0.1 | abs=-18 | t<-33:beat_1 | the heart alone, speeding up into the HIT |
