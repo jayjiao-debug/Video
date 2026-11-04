@@ -12,7 +12,7 @@ import {AbsoluteFill, Composition, Img, registerRoot, staticFile, useCurrentFram
 import {FW, FH, PIC_T, PIC_B, SUB_B, SAFE_R, PIC_CY, FC, F_SERIF, Bands, Subtitle, Stamp43, Seal43, InMaster60} from './frame60';
 import {SHOTS, FILM_END, FPS, Shot} from './story60';
 import {cl, sm} from './geo60';
-import {JCartouche} from './egypt60';
+import {JCartouche, TitleCartouche, FollowPlaque} from './egypt60';
 import {ACT60A} from './act60a';
 import {ACT60B} from './act60b';
 import {ACT60C} from './act60c';
@@ -36,19 +36,14 @@ const SOURCES = '资料：大英博物馆（阿尼纸草 EA10470、胡内弗纸�
     the title, the follow pill and the sources fade in one after another; the music plays on; only the last 0.9 s fades to black */
 const EndCard: React.FC<{t: number; dur: number}> = ({t, dur}) => {
 	const veil = sm((t - 0.1) / 1.4), seal = sm((t - 0.35) / 0.6), title = sm((t - 0.75) / 0.7), pill = sm((t - 1.5) / 0.6), src = sm((t - 2.0) / 0.7);
-	const titleS: React.CSSProperties = {fontFamily: F_SERIF, fontWeight: 900, fontSize: 100, letterSpacing: '0.12em', color: '#F2C964',
-		textShadow: '0 3px 0 #5A3A0E, 0 5px 0 rgba(8,10,28,0.65), 0 0 30px rgba(255,200,90,0.45)', whiteSpace: 'nowrap'};
-	const rope = (sg: 1 | -1) => <div style={{width: 130, height: 16, borderTop: `3px solid ${FC.gold}`, borderBottom: `3px solid ${FC.gold}`, background: `repeating-linear-gradient(90deg, #2C46A8 0 10px, #C23A22 10px 20px, #2F8A5A 20px 30px)`,
-		transform: `scaleX(${sm(title)})`, transformOrigin: sg > 0 ? 'left' : 'right', opacity: 0.95}} />;
 	return <>
 		<div style={{position: 'absolute', left: 0, top: PIC_T, width: FW, height: PIC_B - PIC_T, opacity: veil,
 			background: 'radial-gradient(ellipse 62% 58% at 50% 46%, rgba(6,9,30,0.52) 0%, rgba(6,9,30,0.38) 55%, rgba(6,9,30,0.62) 100%)'}} />
 		<JCartouche x={FW / 2} y={PIC_T + 182} h={190} o={seal} glow={0.6 * seal} />
-		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 300, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 26, opacity: title, transform: `translateY(${(1 - title) * 12}px)`}}>
-			{rope(-1)}<div style={titleS}>{TITLE}</div>{rope(1)}</div>
-		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 465, display: 'flex', justifyContent: 'center', opacity: pill}}>
-			<div style={{fontFamily: F_SERIF, fontWeight: 900, fontSize: 40, color: FC.cream, border: `2.5px solid ${FC.gold}`, borderRadius: 40, padding: '10px 40px', letterSpacing: '0.08em', background: 'rgba(18,26,61,0.7)',
-				boxShadow: `0 0 0 2px ${FC.ink}, 0 6px 16px rgba(5,8,25,0.5)`}}>关注 Juno · 一起看懂世界</div></div>
+		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 288, display: 'flex', justifyContent: 'center', opacity: title, transform: `translateY(${(1 - title) * 12}px)`}}>
+			<TitleCartouche title={TITLE} size={92} reveal={sm((t - 0.75) / 0.9)} /></div>
+		<div style={{position: 'absolute', left: 0, width: FW, top: PIC_T + 482, display: 'flex', justifyContent: 'center', opacity: pill}}>
+			<FollowPlaque text="关注 Juno · 一起看懂世界" size={38} /></div>
 		<div style={{position: 'absolute', left: 150, width: FW - 300, top: PIC_B - 180, textAlign: 'center', opacity: 0.9 * src, fontFamily: F_SERIF, fontWeight: 700, fontSize: 25, lineHeight: 1.6, color: FC.cream,
 			textShadow: '0 2px 4px rgba(5,8,25,0.9)'}}>{SOURCES}</div>
 	</>;
