@@ -127,14 +127,14 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 	if (i === 0) { // 碎骨者: snaps a bone between his fists
 		const brk = up(t, S20.crack, 0.09), shake = hit(t, S20.crack, 0.12) * Math.sin(t * 120) * 0.6;
 		pose = jPose(t, 0, {lean: 1, head: 3 - 4 * hit(t, S20.crack, 0.3)});
-		pose = wristTo(holdAt(pose, 'f', [4.05 + 0.25 * brk, -3.75 - 0.25 * brk]), 'f', 92 + 20 * brk); pose = wristTo(holdAt(pose, 'b', [2.45 - 0.15 * brk, -3.75 - 0.2 * brk]), 'b', 92 - 20 * brk);
+		pose = wristTo(holdAt(pose, 'f', [3.35 + 0.25 * brk, -4.0 - 0.25 * brk]), 'f', 92 + 20 * brk); pose = wristTo(holdAt(pose, 'b', [1.75 - 0.15 * brk, -4.0 - 0.2 * brk]), 'b', 92 - 20 * brk);
 		const [fx, fy] = placeBy(pose, s, -1, 'head', [0.6, -1.2], face), gb = gripOf(pose, 'b'), gf = gripOf(pose, 'f');
 		const R_ = rng(201);
 		extra = <g transform={`translate(${fx + shake},${fy}) scale(${-s},${s})`}><Bone a={gb} b={gf} c={c_(s)} brk={brk} t={t} />
 			<FistOver pose={pose} side="b" c={c_(s)} skin={PAL.skinM} /><FistOver pose={pose} side="f" c={c_(s)} skin={PAL.skinM} />
 			{brk > 0 && Array.from({length: 8}, (_, k) => { const v = (t - S20.crack), vx = (R_() - 0.5) * 9, vy = -3 - R_() * 5, px = (gb[0] + gf[0]) / 2 + vx * v, py = (gb[1] + gf[1]) / 2 + vy * v + 14 * v * v;
 				return v < 0.6 ? <path key={k} d={`M${px} ${py}l0.2 0.1l-0.1 0.22z`} fill="#F3EBD6" stroke={PAL.ink} strokeWidth={0.03} opacity={1 - v / 0.6} /> : null; })}</g>;
-		light = <>{(() => { const g = hit(t, S20.crack, 0.2); const p = figXY(pose, fx, fy, s, -1, 'torso', [3.25, -3.2]); return g > 0.02 ? <><Glow x={p[0]} y={p[1]} r={260} c="white" o={0.8 * g} />
+		light = <>{(() => { const g = hit(t, S20.crack, 0.2); const p = figXY(pose, fx, fy, s, -1, 'torso', [2.55, -3.4]); return g > 0.02 ? <><Glow x={p[0]} y={p[1]} r={260} c="white" o={0.8 * g} />
 			<path d={`M${p[0]} ${p[1] - 140 * g}L${p[0] + 12} ${p[1] - 12}L${p[0] + 140 * g} ${p[1]}L${p[0] + 12} ${p[1] + 12}L${p[0]} ${p[1] + 140 * g}L${p[0] - 12} ${p[1] + 12}L${p[0] - 140 * g} ${p[1]}L${p[0] - 12} ${p[1] - 12}Z`} fill="#FFFBEA" opacity={g} style={{mixBlendMode: 'screen'}} /></> : null; })()}</>;
 		fig = [fx + shake, fy];
 	} else if (i === 1) { // 吞影者: the ibis opens his beak and gulps a little shadow of a person
@@ -205,9 +205,9 @@ export const Shot21: React.FC<ShotProps> = ({t}) => {
 		{[0, 1, 2, 3, 4, 5].map((k) => <rect key={k} x={jx - 220 + k * 76} y={jgy + 8} width={60} height={18} fill={[PAL.blue, PAL.red, PAL.green][k % 3]} />)}
 		<Judge id="b21j" cast={JUDGE.falcon} pose={jp} x={jx} y={jgy} s={s + 2} face={-1} t={t} hold="feather" seat={PAL.red} />
 		<God id="b21ani" cast={ANI} pose={ani} x={ax} y={GY} s={s} sec={{t}} />
-		{S21.cols.map((t0, k) => { const u = up(t, t0 - 0.05, 0.35), slot: V = [mouth[0] + 120 + k * 100, 200 + (k % 2) * 34];
+		{S21.cols.map((t0, k) => { const u = up(t, t0 - 0.05, 0.35), slot: V = [mouth[0] + 175 + k * 100, 200 + (k % 2) * 34];
 			if (t < t0 - 0.05) return null;
-			const x = lerp(mouth[0] + 120, slot[0], u) + 6 * (t - t0), y = lerp(mouth[1] - 30, slot[1], u) - 10 * Math.max(0, t - t0) + 4 * Math.sin(t * 2 + k);
+			const x = lerp(mouth[0] + 160, slot[0], u) + 6 * (t - t0), y = lerp(mouth[1] - 30, slot[1], u) - 10 * Math.max(0, t - t0) + 4 * Math.sin(t * 2 + k);
 			return <g key={k} transform={`translate(${x},${y}) scale(${lerp(0.3, 1, u)}) translate(${-x},${-y})`}><GlyphStack x={x} y={y} cell={56} n={4} seed={220 + k} glow={0.7 * (0.6 + 0.4 * hit(t, t0, 0.3))} /></g>; })}
 	</Stage60>;
 };

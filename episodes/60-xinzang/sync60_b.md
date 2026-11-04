@@ -1,4 +1,7 @@
 > v2 (owner 15:10): shot 4 (the title card) removed; every time from 10.9 s on is 3.0 s earlier (shifted in this file).
+> v2.1 (owner 15:13, builder B): Ammit redesigned (one shared component, also used in act C's 41–42) and a layering pass over 15–33.
+> New picture beat: **shot 31 ROAR 83.85** (wind-up 83.45–83.83, jaws wide + head thrown forward + mane bristling 83.85–84.20, settles by 84.50);
+> it replaces the "small roar" at the same time, so the mix key `31:roar` lands on it. No other time changed; camera shakes stay off.
 
 # ep60 · sync table, act B (shots 15–33, 37.8–91.4 s)
 
@@ -26,8 +29,8 @@ Each event label is written before its time; ranges are "a–b".
 | 27 「阿努比斯领你上秤，校准秤砣。」 | dissolve, ov 0.4 | footsteps 71.67 · 71.89 · 72.11 · 72.33 · 72.55 (Anubis and you, hand in hand) · **tick_1 72.50** · **tick_2 73.00** · **tick_3 73.45** (the plumb-bob taps the post, a spark each) · Anubis kneels 72.60–73.05 · finger on the bob 73.65, settled by 74.00 · label 「阿努比斯」 |
 | 28 「左边你的心，右边真理之羽。」 | cut | **left pan clink 74.90** (the heart lands; the pan bobs) · **right pan clink 75.50** (the feather drifts down and lands) · Ma'at fades in behind the feather 75.70–76.60 · label 「玛阿特」 from ~76.0 |
 | 29 「托特提笔，准备记录。」 | cut | **pen dipped 77.90** (ripple at the well) · **first scratch 78.75** (the stroke runs 78.75–79.10) · the baboon turns to watch 77.70–78.20 · Thoth looks up at the beam 79.30–79.70 · label 「托特」 |
-| 30 「秤下蹲着“吞噬者”阿米特。」 | dissolve, ov 0.3 | **growl 80.25** (jaws open, body trembles, red light swells) · **claws scrape 81.35** (front paw drags 81.23–81.47, scratch marks + dust) · tail swishing throughout · label 「阿米特」 |
-| 31 「鳄鱼头，狮子前身，河马屁股。」 | cut | mouth opens 82.62–82.80 · **jaw clack 82.90** (on the crocodile head) · tilt down 83.10–83.70 · **small roar 83.85** (lion forepart: the mane ripples 83.70–84.30) · tilt down 84.05–84.60 · **hippo rump wiggle plop 84.75** (wiggle 84.75–85.30, tail flick) |
+| 30 「秤下蹲着“吞噬者”阿米特。」 | dissolve, ov 0.3 | **growl 80.25** (jaws open, mane bristles, body trembles, red light swells) · **claws scrape 81.35** (front paw drags 81.23–81.47, scratch marks + dust) · tail swishing throughout · label 「阿米特」 |
+| 31 「鳄鱼头，狮子前身，河马屁股。」 | cut | mouth opens 82.62–82.80 · **jaw clack 82.90** (on the crocodile head) · tilt down 83.10–83.70 · Ammit rears back 83.45–83.83 · **ROAR 83.85** (jaws wide, head thrown forward, mane bristling, held to 84.20, settles by 84.50) · tilt down 84.05–84.60 · **hippo rump wiggle plop 84.75** (wiggle 84.75–85.30, tail flick) |
 | 32 「秤旁还站着你的命运，在围观。」 | cut | **mm-hm nod 86.10** (Shai nods twice 86.00–86.30) · the two birth goddesses lean together 86.40–87.30 · ba bird peeks out 86.85–87.15 · **ba bird chirp 87.25** · label 「命运之神 沙伊」 |
 | 33 「秤盘开始晃……」 | cut | heartbeat speeding up: **beat_1 88.70** · **beat_2 89.35** · **beat_3 89.90** · **beat_4 90.35** · **beat_5 90.70** · **beat_6 90.98** · **beat_7 91.20** (the heart pulses + red glow on each) · **chain creak heart pan dips 89.70** (dips a hair 89.50–90.20) · the feather trembles harder from 89.2 · Anubis, Thoth and Ammit lean in from below 88.6 → 91.4 · near-silence |
 

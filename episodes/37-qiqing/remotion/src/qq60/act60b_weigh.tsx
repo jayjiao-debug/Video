@@ -64,7 +64,7 @@ export const Shot27: React.FC<ShotProps> = ({t}) => {
 	const tick = Math.max(...S27.ticks.map((x) => hit(t, x, 0.12, 0.03)));
 	const cam = camPath(t, [[-0.4, BX - 300, 476, 1.0], [3.3, BX - 170, 452, 1.08]]);
 	const head = figXY(anubis, xL, GY, as, 1, 'head', [0.3, -3.2]);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(cam.z, 0.3)} stain={0.24} tags={[{x: xL - 2.9 * as, y: GY - 17.7 * as, text: '阿努比斯', size: 38}]}
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(cam.z, 0.3)} stain={0.24} tags={[{x: xL - 2.3 * as, y: GY - 23.5 * as, text: '阿努比斯', size: 38}]}
 		light={<>
 			<Glow x={BX} y={300} r={520} c="gold" o={0.34} />
 			<Glow x={BX + 300} y={GY - 60} r={360} c="red" o={0.28} />
@@ -108,13 +108,13 @@ export const Shot28: React.FC<ShotProps> = ({t}) => {
 /* ================= 29 · 80.4–82.8 · Thoth wets his reed pen and makes the first stroke; the baboon on the post watches ================= */
 export const S29 = {dip: 0.5, scratch: 1.35};
 export const Shot29: React.FC<ShotProps> = ({t}) => {
-	const ts = 34, tx = BX + 520;
+	const ts = 34, tx = BX + 620;
 	const dipU = keys(t, [[0.1, 0.5], [0.42, -0.05], [S29.dip, -0.18], [0.75, 0.55], [1.25, 0.35], [S29.scratch, 0.0], [1.7, 0.0], [1.95, 0.45]]);
 	const penU = keys(t, [[0.15, -0.2], [0.42, -1.25], [0.75, -1.25], [1.25, 0.25], [S29.scratch, 0.3], [1.7, 0.85], [2.0, 0.9]]);
 	const look = up(t, 1.9, 0.4);
 	const st: WState = {...STILL, thoth: {neck: lerp(5, -2, look), head: lerp(9, -8, look), penU, lift: dipU, lean: 3 + 0.4 * Math.sin(t * 1.3)}};
 	const th = thothPose(st);
-	const cam = camPath(t, [[0, BX + 330, 330, 1.14], [2.8, BX + 360, 320, 1.2]]);
+	const cam = camPath(t, [[0, BX + 430, 330, 1.12], [2.8, BX + 455, 320, 1.17]]);
 	const grip = gripOf(th.p, 'b'), wellW: V = [tx - grip[0] * ts, GY + grip[1] * ts];
 	const ripple = hit(t, S29.dip, 0.4), scr = cl((t - S29.scratch) / 0.35);
 	const pa = th.paletteA * Math.PI / 180, pal = (u: number, v: number): V => { const x = grip[0] + Math.cos(pa) * (1.45 + u) - Math.sin(pa) * v, y = grip[1] + Math.sin(pa) * (1.45 + u) + Math.cos(pa) * v; return [tx - x * ts, GY + y * ts]; };
@@ -255,8 +255,10 @@ export const Shot33: React.FC<ShotProps> = ({t}) => {
 	// the three lean in from below, looking up at the pans
 	const anX = BX - 200 + 26 * lean, an = kneelAt([P.bob[0] - 120, P.bob[1] + 200], anX, 34, 8 + 8 * lean, -16 - 6 * lean);
 	const st: WState = {...STILL, thoth: {neck: -6 + 4 * lean, head: -14 + 6 * lean, penU: 0.6, lift: 0.5, lean: 2 + 8 * lean}};
-	const th = thothPose(st), thX = BX + 440 - 28 * lean;
-	const am = ammitP(t, {neck: 24 + 6 * lean, lean: 3 + 4 * lean, jaw: 3 + 5 * beat});
+	const th = thothPose(st), thX = BX + 485 - 28 * lean;
+	let th33: Pose = {...POSES.rest, lean: 4 + 9 * lean, neck: -6 + 4 * lean, head: -14 + 6 * lean, rt: -6, at: 9, rk: 2, ak: 1};
+	th33 = wristTo(holdAt(th33, 'b', [-0.9, -0.3]), 'b', 4); th33 = wristTo(holdAt(th33, 'f', [1.5, -0.6]), 'f', 12);
+	const am = ammitP(t, {neck: 20 + 6 * lean, lean: 3 + 4 * lean, jaw: 3 + 5 * beat});
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#141B44" wear={wearFor(z, 0.2)} stain={0.16} dark={0.12} darkC="#0A0420"
 		light={<>
 			<Glow x={P.L[0]} y={P.L[1] - 26} r={120 + 70 * beat} c="red" o={0.5 + 0.45 * beat} />
@@ -267,9 +269,10 @@ export const Shot33: React.FC<ShotProps> = ({t}) => {
 		</>}>
 		<Room t={t} />
 		<Balance2 p={bal} x={BX} y={GY} s={BS} t={t} />
-		<Ammit2 pose={am} x={BX + 250 - 20 * lean} y={GY + 70} s={34} face={-1} t={t} rim={0.8} look={2.4} id="b33am" />
+		<Ammit2 pose={am} x={BX + 262 - 20 * lean} y={GY - 40} s={34} face={-1} t={t} rim={0.8} look={2.4} id="b33am" />
 		<God id="b33an" cast={ANUBIS} pose={an} x={anX} y={GY + 40} s={34} sec={{t}} />
-		<God id="b33th" cast={THOTH} pose={th.p} x={thX} y={GY + 210} s={33} face={-1} sec={{t}} bProp="palette" fProp="pen" paletteA={th.paletteA} />
+		{/* Thoth leans in to look (palette and pen lowered out of the way, so nothing crosses Ammit's mane) */}
+		<God id="b33th" cast={THOTH} pose={th33} x={thX} y={GY + 210} s={33} face={-1} sec={{t}} bProp="none" fProp="none" />
 
 	</Stage60>;
 };
