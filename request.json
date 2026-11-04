@@ -1,25 +1,26 @@
 {
- "id": "ep60-music-01",
+ "id": "ep60-music-02",
  "items": [
   {
    "type": "music",
-   "name": "ep60v6_music_A_cinematic",
+   "name": "ep60lib_mystery",
    "plan": {
     "positive_global_styles": [
      "Egyptian cinematic documentary score",
-     "Arabic maqam hijaz in D",
-     "120 bpm steady",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
      "oud",
      "qanun",
      "ney flute",
-     "soft cinematic strings",
-     "frame drums",
-     "belly-dance darbuka",
-     "warm mid-forward mix",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
      "natural room reverb",
      "real acoustic instruments",
      "background score under narration, understated melody",
-     "instrumental"
+     "instrumental",
+     "one consistent ensemble and production"
     ],
     "negative_global_styles": [
      "EDM",
@@ -33,206 +34,79 @@
      "vocals",
      "singing",
      "harsh hi-hats",
-     "dubstep",
-     "sub bass drop",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
      "synth lead",
-     "bright cymbal crashes"
+     "tempo changes",
+     "minor key without the augmented second"
     ],
     "sections": [
      {
-      "section_name": "hook and title",
+      "section_name": "intro",
       "positive_local_styles": [
-       "mysterious opening",
-       "solo ney flute over a low drone",
-       "finger cymbals",
-       "a slow swell into a deep temple gong at about 6 seconds"
+       "mysterious intro",
+       "the ensemble enters softly on the downbeat"
       ],
       "negative_local_styles": [
-       "full drum groove"
+       "full groove"
       ],
-      "duration_ms": 8400,
+      "duration_ms": 4000,
       "lines": []
      },
      {
-      "section_name": "you die, the mummy",
+      "section_name": "loop",
       "positive_local_styles": [
        "calm mystery",
-       "gentle oud ostinato",
-       "soft frame drum on the downbeat",
-       "low warm drone",
-       "sparse and spacious"
+       "low drone",
+       "slow oud ostinato",
+       "breathy ney phrases",
+       "soft frame drum on beat one",
+       "sparse, steady, loopable"
       ],
       "negative_local_styles": [
-       "fast drums",
+       "busy",
        "loud"
       ],
-      "duration_ms": 17600,
+      "duration_ms": 32000,
       "lines": []
      },
      {
-      "section_name": "Book of the Dead",
+      "section_name": "ending",
       "positive_local_styles": [
-       "light and curious",
-       "qanun plucks",
-       "light darbuka maqsum",
-       "playful but soft"
+       "final button: one clear hit on the downbeat with oud and frame drum, then a short ring out on D"
       ],
       "negative_local_styles": [
-       "dark",
-       "heavy"
+       "new melody",
+       "fade in"
       ],
-      "duration_ms": 15600,
-      "lines": []
-     },
-     {
-      "section_name": "underworld road",
-      "positive_local_styles": [
-       "dark danger",
-       "low frame drums",
-       "tense ostinato",
-       "ney trills",
-       "suspense"
-      ],
-      "negative_local_styles": [
-       "happy",
-       "bright"
-      ],
-      "duration_ms": 10100,
-      "lines": []
-     },
-     {
-      "section_name": "hall of 42 judges and the oath",
-      "positive_local_styles": [
-       "stately groove",
-       "full darbuka maqsum",
-       "oud and qanun melody in call and response",
-       "steady and dignified",
-       "ends with a light comic button and a short stop"
-      ],
-      "negative_local_styles": [
-       "chaotic",
-       "aggressive"
-      ],
-      "duration_ms": 25200,
-      "lines": []
-     },
-     {
-      "section_name": "the weighing",
-      "positive_local_styles": [
-       "building tension",
-       "slow heartbeat-like frame drum",
-       "rising intensity",
-       "long crescendo",
-       "ends in near silence: only a held low drone"
-      ],
-      "negative_local_styles": [
-       "cheerful",
-       "busy melody"
-      ],
-      "duration_ms": 21400,
-      "lines": []
-     },
-     {
-      "section_name": "twist: the scarab cheat",
-      "positive_local_styles": [
-       "playful and sly",
-       "staccato oud",
-       "sneaky mizmar melody",
-       "light darbuka",
-       "tiptoe rhythm"
-      ],
-      "negative_local_styles": [
-       "dark",
-       "epic"
-      ],
-      "duration_ms": 23300,
-      "lines": []
-     },
-     {
-      "section_name": "fail: second death",
-      "positive_local_styles": [
-       "dark and ominous",
-       "low drone",
-       "sparse low drum hits",
-       "hollow"
-      ],
-      "negative_local_styles": [
-       "melody",
-       "bright"
-      ],
-      "duration_ms": 8500,
-      "lines": []
-     },
-     {
-      "section_name": "pass: Osiris and the Field of Reeds",
-      "positive_local_styles": [
-       "bright and open",
-       "qanun arpeggios",
-       "warm uplifting melody",
-       "sunlit"
-      ],
-      "negative_local_styles": [
-       "dark",
-       "tense"
-      ],
-      "duration_ms": 12100,
-      "lines": []
-     },
-     {
-      "section_name": "shabtis at farm work",
-      "positive_local_styles": [
-       "playful and busy",
-       "bouncy darbuka",
-       "oud riff",
-       "riq tambourine",
-       "light comedy"
-      ],
-      "negative_local_styles": [
-       "dark",
-       "slow"
-      ],
-      "duration_ms": 15000,
-      "lines": []
-     },
-     {
-      "section_name": "close and end card",
-      "positive_local_styles": [
-       "warm resolution",
-       "final cadence on D",
-       "ney and oud",
-       "slow fade out to silence"
-      ],
-      "negative_local_styles": [
-       "new themes",
-       "drums groove"
-      ],
-      "duration_ms": 12100,
+      "duration_ms": 4000,
       "lines": []
      }
     ]
    },
-   "model": "music_v2_5",
    "instrumental": true
   },
   {
    "type": "music",
-   "name": "ep60v6_music_B_traditional",
+   "name": "ep60lib_curious",
    "plan": {
     "positive_global_styles": [
-     "traditional Egyptian ensemble",
-     "Arabic maqam hijaz in D",
-     "120 bpm steady",
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
      "oud",
      "qanun",
      "ney flute",
-     "mizmar",
-     "belly-dance darbuka maqsum rhythm",
-     "riq tambourine",
-     "finger cymbals",
-     "warm acoustic room",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
      "real acoustic instruments",
-     "background music under narration, understated melody",
-     "instrumental"
+     "background score under narration, understated melody",
+     "instrumental",
+     "one consistent ensemble and production"
     ],
     "negative_global_styles": [
      "EDM",
@@ -246,209 +120,78 @@
      "vocals",
      "singing",
      "harsh hi-hats",
-     "dubstep",
-     "sub bass drop",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
      "synth lead",
-     "bright cymbal crashes",
-     "orchestra",
-     "string section",
-     "choir",
-     "brass"
+     "tempo changes",
+     "minor key without the augmented second"
     ],
     "sections": [
      {
-      "section_name": "hook and title",
+      "section_name": "intro",
       "positive_local_styles": [
-       "mysterious opening",
-       "solo ney flute over a low drone",
-       "finger cymbals",
-       "a slow swell into a deep temple gong at about 6 seconds"
+       "light curious intro",
+       "the ensemble enters softly on the downbeat"
       ],
       "negative_local_styles": [
-       "full drum groove"
+       "full groove"
       ],
-      "duration_ms": 8400,
+      "duration_ms": 4000,
       "lines": []
      },
      {
-      "section_name": "you die, the mummy",
-      "positive_local_styles": [
-       "calm mystery",
-       "gentle oud ostinato",
-       "soft frame drum on the downbeat",
-       "low warm drone",
-       "sparse and spacious"
-      ],
-      "negative_local_styles": [
-       "fast drums",
-       "loud"
-      ],
-      "duration_ms": 17600,
-      "lines": []
-     },
-     {
-      "section_name": "Book of the Dead",
+      "section_name": "loop",
       "positive_local_styles": [
        "light and curious",
        "qanun plucks",
        "light darbuka maqsum",
-       "playful but soft"
+       "playful oud figure",
+       "steady, loopable"
       ],
       "negative_local_styles": [
        "dark",
        "heavy"
       ],
-      "duration_ms": 15600,
+      "duration_ms": 16000,
       "lines": []
      },
      {
-      "section_name": "underworld road",
+      "section_name": "ending",
       "positive_local_styles": [
-       "dark danger",
-       "low frame drums",
-       "tense ostinato",
-       "ney trills",
-       "suspense"
+       "final button: one clear hit on the downbeat with oud and frame drum, then a short ring out on D"
       ],
       "negative_local_styles": [
-       "happy",
-       "bright"
+       "new melody",
+       "fade in"
       ],
-      "duration_ms": 10100,
-      "lines": []
-     },
-     {
-      "section_name": "hall of 42 judges and the oath",
-      "positive_local_styles": [
-       "stately groove",
-       "full darbuka maqsum",
-       "oud and qanun melody in call and response",
-       "steady and dignified",
-       "ends with a light comic button and a short stop"
-      ],
-      "negative_local_styles": [
-       "chaotic",
-       "aggressive"
-      ],
-      "duration_ms": 25200,
-      "lines": []
-     },
-     {
-      "section_name": "the weighing",
-      "positive_local_styles": [
-       "building tension",
-       "slow heartbeat-like frame drum",
-       "rising intensity",
-       "long crescendo",
-       "ends in near silence: only a held low drone"
-      ],
-      "negative_local_styles": [
-       "cheerful",
-       "busy melody"
-      ],
-      "duration_ms": 21400,
-      "lines": []
-     },
-     {
-      "section_name": "twist: the scarab cheat",
-      "positive_local_styles": [
-       "playful and sly",
-       "staccato oud",
-       "sneaky mizmar melody",
-       "light darbuka",
-       "tiptoe rhythm"
-      ],
-      "negative_local_styles": [
-       "dark",
-       "epic"
-      ],
-      "duration_ms": 23300,
-      "lines": []
-     },
-     {
-      "section_name": "fail: second death",
-      "positive_local_styles": [
-       "dark and ominous",
-       "low drone",
-       "sparse low drum hits",
-       "hollow"
-      ],
-      "negative_local_styles": [
-       "melody",
-       "bright"
-      ],
-      "duration_ms": 8500,
-      "lines": []
-     },
-     {
-      "section_name": "pass: Osiris and the Field of Reeds",
-      "positive_local_styles": [
-       "bright and open",
-       "qanun arpeggios",
-       "warm uplifting melody",
-       "sunlit"
-      ],
-      "negative_local_styles": [
-       "dark",
-       "tense"
-      ],
-      "duration_ms": 12100,
-      "lines": []
-     },
-     {
-      "section_name": "shabtis at farm work",
-      "positive_local_styles": [
-       "playful and busy",
-       "bouncy darbuka",
-       "oud riff",
-       "riq tambourine",
-       "light comedy"
-      ],
-      "negative_local_styles": [
-       "dark",
-       "slow"
-      ],
-      "duration_ms": 15000,
-      "lines": []
-     },
-     {
-      "section_name": "close and end card",
-      "positive_local_styles": [
-       "warm resolution",
-       "final cadence on D",
-       "ney and oud",
-       "slow fade out to silence"
-      ],
-      "negative_local_styles": [
-       "new themes",
-       "drums groove"
-      ],
-      "duration_ms": 12100,
+      "duration_ms": 4000,
       "lines": []
      }
     ]
    },
-   "model": "music_v2_5",
    "instrumental": true
   },
   {
    "type": "music",
-   "name": "ep60v6_music_C_epic",
+   "name": "ep60lib_danger",
    "plan": {
     "positive_global_styles": [
-     "Egyptian epic hybrid score",
-     "Arabic maqam hijaz in D",
-     "120 bpm steady",
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
      "oud",
      "qanun",
      "ney flute",
-     "cinematic strings",
-     "frame drums",
-     "belly-dance darbuka",
-     "warm mid-forward mix",
-     "big natural hall reverb",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
+     "real acoustic instruments",
      "background score under narration, understated melody",
-     "instrumental"
+     "instrumental",
+     "one consistent ensemble and production"
     ],
     "negative_global_styles": [
      "EDM",
@@ -462,191 +205,574 @@
      "vocals",
      "singing",
      "harsh hi-hats",
-     "dubstep",
-     "sub bass drop",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
      "synth lead",
-     "bright cymbal crashes"
+     "tempo changes",
+     "minor key without the augmented second"
     ],
     "sections": [
      {
-      "section_name": "hook and title",
+      "section_name": "intro",
       "positive_local_styles": [
-       "mysterious opening",
-       "solo ney flute over a low drone",
-       "finger cymbals",
-       "a slow swell into a deep temple gong at about 6 seconds",
-       "low choir under the gong"
+       "tense intro",
+       "the ensemble enters softly on the downbeat"
       ],
       "negative_local_styles": [
-       "full drum groove"
+       "full groove"
       ],
-      "duration_ms": 8400,
+      "duration_ms": 4000,
       "lines": []
      },
      {
-      "section_name": "you die, the mummy",
+      "section_name": "loop",
       "positive_local_styles": [
-       "calm mystery",
-       "gentle oud ostinato",
-       "soft frame drum on the downbeat",
-       "low warm drone",
-       "sparse and spacious"
-      ],
-      "negative_local_styles": [
-       "fast drums",
-       "loud"
-      ],
-      "duration_ms": 17600,
-      "lines": []
-     },
-     {
-      "section_name": "Book of the Dead",
-      "positive_local_styles": [
-       "light and curious",
-       "qanun plucks",
-       "light darbuka maqsum",
-       "playful but soft"
-      ],
-      "negative_local_styles": [
-       "dark",
-       "heavy"
-      ],
-      "duration_ms": 15600,
-      "lines": []
-     },
-     {
-      "section_name": "underworld road",
-      "positive_local_styles": [
-       "dark danger",
+       "danger, suspense",
        "low frame drums",
-       "tense ostinato",
+       "tense oud and strings ostinato",
        "ney trills",
-       "suspense",
-       "low brass hits"
+       "steady, loopable"
       ],
       "negative_local_styles": [
        "happy",
        "bright"
       ],
-      "duration_ms": 10100,
+      "duration_ms": 16000,
       "lines": []
      },
      {
-      "section_name": "hall of 42 judges and the oath",
+      "section_name": "ending",
+      "positive_local_styles": [
+       "final button: one clear hit on the downbeat with oud and frame drum, then a short ring out on D"
+      ],
+      "negative_local_styles": [
+       "new melody",
+       "fade in"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     }
+    ]
+   },
+   "instrumental": true
+  },
+  {
+   "type": "music",
+   "name": "ep60lib_groove",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
+     "oud",
+     "qanun",
+     "ney flute",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
+     "real acoustic instruments",
+     "background score under narration, understated melody",
+     "instrumental",
+     "one consistent ensemble and production"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
+     "synth lead",
+     "tempo changes",
+     "minor key without the augmented second"
+    ],
+    "sections": [
+     {
+      "section_name": "intro",
+      "positive_local_styles": [
+       "stately intro",
+       "the ensemble enters softly on the downbeat"
+      ],
+      "negative_local_styles": [
+       "full groove"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     },
+     {
+      "section_name": "loop",
       "positive_local_styles": [
        "stately groove",
-       "full darbuka maqsum",
+       "full darbuka maqsum rhythm",
        "oud and qanun melody in call and response",
-       "steady and dignified",
-       "ends with a light comic button and a short stop"
+       "dignified, steady, loopable"
       ],
       "negative_local_styles": [
        "chaotic",
        "aggressive"
       ],
-      "duration_ms": 25200,
+      "duration_ms": 32000,
       "lines": []
      },
      {
-      "section_name": "the weighing",
+      "section_name": "ending",
       "positive_local_styles": [
-       "building tension",
-       "slow heartbeat-like frame drum",
-       "rising intensity",
-       "long crescendo",
-       "ends in near silence: only a held low drone",
-       "low male choir swells",
-       "low brass swells"
+       "final button: one clear hit on the downbeat with oud and frame drum, then a short ring out on D"
       ],
       "negative_local_styles": [
-       "cheerful",
-       "busy melody"
+       "new melody",
+       "fade in"
       ],
-      "duration_ms": 21400,
+      "duration_ms": 4000,
+      "lines": []
+     }
+    ]
+   },
+   "instrumental": true
+  },
+  {
+   "type": "music",
+   "name": "ep60lib_tension",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
+     "oud",
+     "qanun",
+     "ney flute",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
+     "real acoustic instruments",
+     "background score under narration, understated melody",
+     "instrumental",
+     "one consistent ensemble and production"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
+     "synth lead",
+     "tempo changes",
+     "minor key without the augmented second"
+    ],
+    "sections": [
+     {
+      "section_name": "intro",
+      "positive_local_styles": [
+       "suspense intro",
+       "the ensemble enters softly on the downbeat"
+      ],
+      "negative_local_styles": [
+       "full groove"
+      ],
+      "duration_ms": 4000,
       "lines": []
      },
      {
-      "section_name": "twist: the scarab cheat",
+      "section_name": "loop",
+      "positive_local_styles": [
+       "suspense",
+       "slow heartbeat-like frame drum",
+       "low string drone with the semitone rub D and Eb",
+       "steady, loopable"
+      ],
+      "negative_local_styles": [
+       "melody",
+       "cheerful"
+      ],
+      "duration_ms": 16000,
+      "lines": []
+     },
+     {
+      "section_name": "rise",
+      "positive_local_styles": [
+       "rising tension",
+       "crescendo",
+       "oud tremolo climbing the hijaz scale",
+       "drums building"
+      ],
+      "negative_local_styles": [
+       "release"
+      ],
+      "duration_ms": 8000,
+      "lines": []
+     },
+     {
+      "section_name": "hush",
+      "positive_local_styles": [
+       "sudden near silence: only a soft held low drone"
+      ],
+      "negative_local_styles": [
+       "drums",
+       "melody"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     }
+    ]
+   },
+   "instrumental": true
+  },
+  {
+   "type": "music",
+   "name": "ep60lib_playful",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
+     "oud",
+     "qanun",
+     "ney flute",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
+     "real acoustic instruments",
+     "background score under narration, understated melody",
+     "instrumental",
+     "one consistent ensemble and production"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
+     "synth lead",
+     "tempo changes",
+     "minor key without the augmented second"
+    ],
+    "sections": [
+     {
+      "section_name": "intro",
+      "positive_local_styles": [
+       "sly playful intro",
+       "the ensemble enters softly on the downbeat"
+      ],
+      "negative_local_styles": [
+       "full groove"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     },
+     {
+      "section_name": "loop",
       "positive_local_styles": [
        "playful and sly",
        "staccato oud",
-       "sneaky mizmar melody",
+       "sneaky ney melody",
        "light darbuka",
-       "tiptoe rhythm"
+       "tiptoe rhythm",
+       "steady, loopable"
       ],
       "negative_local_styles": [
        "dark",
        "epic"
       ],
-      "duration_ms": 23300,
+      "duration_ms": 32000,
       "lines": []
      },
      {
-      "section_name": "fail: second death",
+      "section_name": "ending",
+      "positive_local_styles": [
+       "final button: one clear hit on the downbeat with oud and frame drum, then a short ring out on D"
+      ],
+      "negative_local_styles": [
+       "new melody",
+       "fade in"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     }
+    ]
+   },
+   "instrumental": true
+  },
+  {
+   "type": "music",
+   "name": "ep60lib_dark",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
+     "oud",
+     "qanun",
+     "ney flute",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
+     "real acoustic instruments",
+     "background score under narration, understated melody",
+     "instrumental",
+     "one consistent ensemble and production"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
+     "synth lead",
+     "tempo changes",
+     "minor key without the augmented second"
+    ],
+    "sections": [
+     {
+      "section_name": "intro",
+      "positive_local_styles": [
+       "dark intro",
+       "the ensemble enters softly on the downbeat"
+      ],
+      "negative_local_styles": [
+       "full groove"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     },
+     {
+      "section_name": "loop",
       "positive_local_styles": [
        "dark and ominous",
        "low drone",
-       "sparse low drum hits",
-       "hollow"
+       "sparse low frame drum hits",
+       "hollow, steady, loopable"
       ],
       "negative_local_styles": [
        "melody",
        "bright"
       ],
-      "duration_ms": 8500,
+      "duration_ms": 16000,
       "lines": []
      },
      {
-      "section_name": "pass: Osiris and the Field of Reeds",
+      "section_name": "ending",
+      "positive_local_styles": [
+       "final button: one clear hit on the downbeat with oud and frame drum, then a short ring out on D"
+      ],
+      "negative_local_styles": [
+       "new melody",
+       "fade in"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     }
+    ]
+   },
+   "instrumental": true
+  },
+  {
+   "type": "music",
+   "name": "ep60lib_bright",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
+     "oud",
+     "qanun",
+     "ney flute",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
+     "real acoustic instruments",
+     "background score under narration, understated melody",
+     "instrumental",
+     "one consistent ensemble and production"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
+     "synth lead",
+     "tempo changes",
+     "minor key without the augmented second"
+    ],
+    "sections": [
+     {
+      "section_name": "intro",
+      "positive_local_styles": [
+       "bright intro",
+       "the ensemble enters softly on the downbeat"
+      ],
+      "negative_local_styles": [
+       "full groove"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     },
+     {
+      "section_name": "loop",
       "positive_local_styles": [
        "bright and open",
        "qanun arpeggios",
-       "warm uplifting melody",
-       "sunlit",
-       "warm choir pad",
-       "soft brass swell"
+       "warm uplifting oud and ney melody",
+       "sunlit, steady, loopable"
       ],
       "negative_local_styles": [
        "dark",
        "tense"
       ],
-      "duration_ms": 12100,
+      "duration_ms": 16000,
       "lines": []
      },
      {
-      "section_name": "shabtis at farm work",
+      "section_name": "ending",
       "positive_local_styles": [
-       "playful and busy",
-       "bouncy darbuka",
-       "oud riff",
-       "riq tambourine",
-       "light comedy"
+       "final button: one clear hit on the downbeat with oud and frame drum, then a short ring out on D"
       ],
       "negative_local_styles": [
-       "dark",
-       "slow"
+       "new melody",
+       "fade in"
       ],
-      "duration_ms": 15000,
-      "lines": []
-     },
-     {
-      "section_name": "close and end card",
-      "positive_local_styles": [
-       "warm resolution",
-       "final cadence on D",
-       "ney and oud",
-       "slow fade out to silence"
-      ],
-      "negative_local_styles": [
-       "new themes",
-       "drums groove"
-      ],
-      "duration_ms": 12100,
+      "duration_ms": 4000,
       "lines": []
      }
     ]
    },
-   "model": "music_v2_5",
+   "instrumental": true
+  },
+  {
+   "type": "music",
+   "name": "ep60lib_resolution",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz on D (D Eb F# G A Bb C)",
+     "120 bpm, 4/4, strict steady tempo",
+     "oud",
+     "qanun",
+     "ney flute",
+     "soft cinematic string pad",
+     "frame drum and darbuka",
+     "warm mid-forward mix, present oud and qanun",
+     "light low end",
+     "natural room reverb",
+     "real acoustic instruments",
+     "background score under narration, understated melody",
+     "instrumental",
+     "one consistent ensemble and production"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "sub bass",
+     "boomy bass",
+     "dark muddy mix",
+     "synth lead",
+     "tempo changes",
+     "minor key without the augmented second"
+    ],
+    "sections": [
+     {
+      "section_name": "intro",
+      "positive_local_styles": [
+       "warm intro",
+       "the ensemble enters softly on the downbeat"
+      ],
+      "negative_local_styles": [
+       "full groove"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     },
+     {
+      "section_name": "body",
+      "positive_local_styles": [
+       "warm resolution",
+       "ney and oud melody",
+       "soft strings",
+       "gentle"
+      ],
+      "negative_local_styles": [
+       "drums groove"
+      ],
+      "duration_ms": 12000,
+      "lines": []
+     },
+     {
+      "section_name": "cadence",
+      "positive_local_styles": [
+       "final cadence on D, ring out and fade"
+      ],
+      "negative_local_styles": [
+       "new themes"
+      ],
+      "duration_ms": 4000,
+      "lines": []
+     }
+    ]
+   },
    "instrumental": true
   }
  ]
