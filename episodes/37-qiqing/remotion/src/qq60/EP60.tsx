@@ -1,5 +1,5 @@
 /* ep60 master 《死后称心脏》 · 4:3 1440 × 1080 · 30 fps · 160.6 s (script: episodes/60-xinzang/script.md, timeline: story60.ts).
-   Each shot is a component from one of the act files (act60a: 1–19, act60b: 20–40, act60c: 41–55), drawn on its own clock:
+   Each shot is a component from one of the act files (act60a: 1–14, act60b: 15–33, act60c: 34–55), drawn on its own clock:
    <C t dur n /> with t = seconds since the shot's start (negative while it transitions in; > dur while the next one transitions in over it).
    The master draws the frame ONCE over every shot: bands, the subtitle line (story60), the stamp (shots 5, 51, 53), the J seal and the
    end card. A Stage60 inside the master (InMaster60) therefore draws only its picture and its name tags.
