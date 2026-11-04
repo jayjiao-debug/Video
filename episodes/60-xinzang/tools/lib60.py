@@ -174,7 +174,8 @@ PLAN = [
 ]
 FILM = 169.25
 
-def preview(lib, out, plan=None):
+def render_plan(lib, plan=None):
+    """the plan's modules on the film clock, unmastered (the mixer's music bus)."""
     plan = plan or PLAN; n = int(FILM * SR); y = np.zeros((n, 2)); h = Q // 2
     eqp = lambda m: (np.sin(np.linspace(0, np.pi / 2, m)), np.cos(np.linspace(0, np.pi / 2, m)))
     for t0, t1, name, o in plan:
@@ -199,7 +200,10 @@ def preview(lib, out, plan=None):
             tail = ring(seg[-int(0.3 * SR):], wet=0.6)[int(0.3 * SR):] * 0.6; e = min(n, ib + len(tail)); y[ib:e] += tail[:e - ib]
         if outm == 'button':
             mood = name.split('_')[0]; bt = sf.read(f'{lib}/{mood}_end.wav', always_2d=True)[0]; e = min(n, a1 + len(bt)); y[a1:e] += bt[:e - a1] * 10 ** (o.get('db', 0) / 20)
-    y = master(y); k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
+    return y
+
+def preview(lib, out, plan=None):
+    y = master(render_plan(lib, plan)); k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
     sf.write(out, y.astype(np.float32), SR, subtype='PCM_24'); print('preview', out, round(len(y) / SR, 2), 's', round(E.lufs(y), 2), 'LUFS', round(E.true_peak(y), 2), 'dBTP')
 
 def softclip(x, ceil_db=-1.0, knee_db=2.5):
