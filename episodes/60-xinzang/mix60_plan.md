@@ -55,7 +55,7 @@ Columns
 | y | s06_jar2 | sfx | 15.45 | X02_canopic_lid_clink | hit | - | +0.35 | -2 | - | 0.1 | pan=-0.1 | t<-6:canopic#2 |  |
 | y | s06_jar3 | sfx | 16.03 | X02_canopic_lid_clink | hit | - | +0.35 | -2 | - | 0.1 | pan=0.1 | t<-6:canopic#3 |  |
 | y | s06_jar4 | sfx | 16.61 | X02_canopic_lid_clink | hit | - | +0.35 | -1 | - | 0.1 | pan=0.3 | t<-6:canopic#4 |  |
-| y | s07_basket | sfx | 20.07 | X22_comic_plop | hit | - | - | 3 | - | - | - | t<-7:puff+lands | the puff lands in the basket (callback of 1.20), on a groove beat |
+| y | s07_basket | sfx | 20.07 | X22_comic_plop | hit | - | - | -2 | - | - | - | t<-7:puff+lands | the puff lands in the basket (callback of 1.20), on a groove beat |
 | y | s08_beat1 | sfx | 20.65 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat#1 | the heart-lantern pulses (heartbeat under) |
 | y | s08_beat2 | sfx | 21.50 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat#2 |  |
 | y | s08_beat3 | sfx | 22.35 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat#3 |  |
@@ -95,7 +95,7 @@ Columns
 | y | s30_growl | sfx | 83.25 | S04_beast_growl | hit | - | - | -3 | - | 0.4 | - | t<-30:growl | Ammit under the scale |
 | y | s31_jaw | sfx | 85.9 | S03_croc_snap | hit | - | +0.5 | -1 | - | 0.15 | - | t<-31:jaw | tilt 1: crocodile jaws clack |
 | y | s31_roar | sfx | 86.85 | S04_beast_growl | hit | - | +0.7 | -4 | - | 0.25 | - | t<-31:roar | tilt 2: the lion forepart, a small roar |
-| y | s31_plop | sfx | 87.75 | X22_comic_plop | hit | - | - | 1 | - | - | - | t<-31:plop | tilt 3: the hippo bottom wiggles |
+| y | s31_plop | sfx | 87.75 | X22_comic_plop | hit | - | - | -1 | - | - | - | t<-31:plop | tilt 3: the hippo bottom wiggles |
 | y | s33_creak | sfx | 92.7 | S02_scale_settle | hit | - | 93.6 | -2 | - | 0.25 | - | t<-33:creak | chain creak as the pans wobble (kept out of the silent beat) |
 | y | s33_beat1 | sfx | 91.7 | synth:heart | hit | - | +0.6 | - | - | 0.1 | abs=-18 | t<-33:beat_1 | the heart alone, speeding up on the picture pulses, through the silent beat into the HIT |
 | y | s33_beat2 | sfx | 92.35 | synth:heart | hit | - | +0.55 | - | - | 0.1 | abs=-17 | t<-33:beat_2 | - |
