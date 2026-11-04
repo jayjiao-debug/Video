@@ -144,8 +144,8 @@ const Hug: React.FC<SceneProps> = ({t, dur, beat}) => {
 	</AbsoluteFill>;
 };
 /** the real hug photo: lands in `hug` and holds through the cut into `world` (owner 02:27: hold it longer, to ~2:33) */
-const HugPrint: React.FC<{t: number; hold: number}> = ({t, hold}) =>
-	<Print3 src={PH3.hug.src} pos={PH3.hug.pos} aspect={PH3.hug.aspect} t={t} dur={hold} w={860} cx={1215} cy={548} rot={-2} from="right" caption="2026.11.2 · 赫尔" z={2} />;
+const HugPrint: React.FC<{t: number; hold: number; k?: number}> = ({t, hold, k = 0}) =>   // k: 0 = big (hug), 1 = smaller, right, clear of the voice subtitle (world)
+	<Print3 src={PH3.hug.src} pos={PH3.hug.pos} aspect={PH3.hug.aspect} t={t} dur={hold} w={lerp(860, 580, k)} cx={lerp(1215, 1400, k)} cy={lerp(548, 650, k)} rot={-2} from="right" caption="2026.11.2 · 赫尔" z={k > 0 ? 0 : 2} />;
 
 /* ============================================ world ============================================
    "It took a world to get me here": from the two of them on the step the camera pulls back and cranes up over the street — the press,
@@ -159,7 +159,7 @@ const World: React.FC<SceneProps> = ({t, dur, beat, tr}) => {
 	const hugS = layout(tr).find((p) => p.id === 'hug')!, since = hugS.dur - 3 * beat;   // the print's age at the cut
 	return <AbsoluteFill><Dawn4 t={t + 140} w={w} open={1} cast={{hug: {...HUG, phase: t / KARL_CYCLE.hug.sec + 0.95, facing: 1}, cart: {X: 1.25, D: 5.6, facing: 1}}} hallMum={false}
 		flashes={flashes} crowd={1} town={1} focus={DF} aperture={1.2} density={lerp(0.045, 0.012, sm(t / T))} rain={1 - 0.7 * sm(t / T)} dawn={sm(t / T)} />
-		<HugPrint t={t + since} hold={since + 8 * beat} /></AbsoluteFill>;
+		<HugPrint t={t + since} hold={since + 8 * beat} k={eio(cl(t / 0.45))} /></AbsoluteFill>;
 };
 
 /* ============================================ totals ============================================
