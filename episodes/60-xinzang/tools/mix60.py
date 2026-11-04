@@ -52,29 +52,47 @@ def load_shots():
 SHOTS = load_shots(); SHOTW = {x['n']: (x['a'], x['b']) for x in SHOTS}
 
 def parse_sync(paths):
-    """tolerant reader for the builders' tables: a line that starts with a shot number, then events 'label 12.34' separated by
-    · | ; . A bare number repeats the last label (heartbeats 20.65, 21.50 -> heartbeats #1, #2). Only times inside the shot's window
-    (+-1 s) on the clock count, which drops shot-relative numbers ('0.58 [14.88]' keeps 14.88)."""
+    """tolerant reader for the builders' tables. A line starts with a shot number (table row or list); events are separated by
+    · | ; and written either 'label 12.34' or '12.34 label (comment)'. A time takes the words before it, or the words after it
+    when nothing comes before; a parenthesis right after a time belongs to that time; 'a–b' gives b the label '<a's label> end';
+    a bare time repeats the last label (#2, #3 ...). Only times inside the shot's window (+-1 s) count (drops shot-relative ones)."""
+    num = re.compile(r'(?<![\d.])(\d{1,3}\.\d{1,3})(?![\d.])')
+    def clean(x): return re.sub(r'\s+', ' ', re.sub(r'[\[\]()=:@`*",+\u2013\u2014\-]+', ' ', x)).strip().lower()
+    def has_word(x): return re.search(r'[a-z\u4e00-\u9fff]', x.lower()) is not None
     ev = []
     for p in paths:
         for line in open(p, encoding='utf-8'):
             m = re.match(r'\s*[|*#>\-\s]*(?:shot\s*)?(\d{1,2})\b', line, re.I)
             if not m or int(m.group(1)) not in SHOTW: continue
-            shot = int(m.group(1)); a, b = SHOTW[shot]; rest = line[m.end():]
-            for tok in re.split(r'[·|;]', rest):
-                pos, last, k = 0, None, 0
-                for mm in re.finditer(r'(?<![\d.])(\d{1,3}\.\d{1,3})(?![\d.])', tok):
-                    lab = re.sub(r'[\[\]()=:@`*",–\-]+', ' ', tok[pos:mm.start()]).strip().lower(); pos = mm.end(); tv = float(mm.group(1))
-                    if lab and not re.fullmatch(r'[\d.\s]*s?', lab): last, k = lab, 0
-                    if last is None or not (a - 1.0 <= tv <= b + 1.0): continue
-                    k += 1; ev.append(dict(shot=shot, label=last, k=k, t=tv, src=os.path.basename(p)))
+            shot = int(m.group(1)); a, b = SHOTW[shot]; last, k = None, 0
+            for cell in line[m.end():].split('|'):
+                for tok in re.split(r'[·;]', cell):
+                    ms = list(num.finditer(tok))
+                    for j, mm in enumerate(ms):
+                        before = tok[ms[j - 1].end() if j else 0:mm.start()]; after = tok[mm.end():ms[j + 1].start() if j + 1 < len(ms) else len(tok)]
+                        before_s = re.sub(r'^\s*\*?\*?\s*\([^)]*\)', '', before) if j else before   # '(lub) +' after the previous time is its comment
+                        tv = float(mm.group(1))
+                        nxt = tok[ms[j + 1].end():ms[j + 2].start() if j + 2 < len(ms) else len(tok)] if j + 1 < len(ms) else ''
+                        if not has_word(before_s) and re.fullmatch(r'\W*[\u2013\-]\W*', after) and has_word(nxt):   # '27.45–28.10 label'
+                            lab = clean(re.split(r'\(', nxt)[0]) or clean(nxt)
+                        elif re.fullmatch(r'\W*[\u2013\-]\W*', before) and last: lab = last + ' end'
+                        elif has_word(before_s): lab = clean(before_s)
+                        elif last and after.strip().startswith('(') or (last and not has_word(after)): lab = None
+                        else: lab = clean(re.split(r'\(', after)[0]) or clean(after)
+                        if lab is None: k += 1; lab_use = last
+                        else:
+                            if lab != last: last, k = lab, 0
+                            k += 1; lab_use = lab
+                        if lab_use is None or not (a - 1.0 <= tv <= b + 1.0): continue
+                        ev.append(dict(shot=shot, label=lab_use, k=k, t=tv, src=os.path.basename(p)))
     return ev
 
 def find_sync(ev, key):
-    """key 'shot:label~label#2': every word of a label must occur in the event's label; '#n' picks the n-th time of that label."""
+    """key 'shot:a+b~c#2': alternatives split by ~; in each, every word (split by space or +) must occur in the event's label;
+    '#n' picks the n-th time of that label."""
     shot, labs = key.split(':', 1); shot = int(shot)
     for lab in labs.lower().split('~'):
-        lab, _, n = lab.strip().partition('#'); words = lab.split()
+        lab, _, n = lab.strip().partition('#'); words = lab.replace('+', ' ').split()   # '+' = and
         if not words: continue
         for e in ev:
             if e['shot'] == shot and all(w in e['label'] for w in words) and (not n or e['k'] == int(n)): return e

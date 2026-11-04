@@ -21,9 +21,9 @@ Columns
 | on | id | type | t | file | at | in | end | gain | fin | fout | fx | sync | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | y | m01_frame0 | sting | 0 | sting_roll_hit | hit | 1.152 | - | -3 | 0.002 | 0.3 | - | - | frame 0: dum + zills on the first sample (owner: something happens on the music inside the first second) |
-| y | m02_heart | cue | 2.8 | tension_loop | 3.0769 | 0.2769 | 7.75 | -1 | 0.002 | 0.2 | lock=0.76923 | lock<-2:lub~beat~pulse~heart | heartbeat bed; its bar line on the 2.8 cut, so the lub-dubs land on the two glow pulses (3.57, 4.34); fades after the 7.42 beat |
-| y | m03_flourish | sting | 8.0 | sting_reed_flourish | hit | 0 | - | -6 | 0.01 | 0.4 | - | - | the reed run (7.6-8.0) bridges the cut and lands with the cartouche slam (8.00): the title is the hardest hit so far |
-| y | m04_title | cue | 8.0 | mystic_loop | 0 | 0 | 14.3 | -1 | 0.002 | 0.08 | - | - | title + Thebes: bowl + bendir on the slam (8.00); palette tap 12.25 sits on a mystic beat |
+| y | m02_heart | cue | 2.8 | tension_loop | 3.0769 | 0.2769 | 7.75 | -1 | 0.002 | 0.2 | lock=0.76923 | lock<-2:heartbeat#1 | heartbeat bed; its bar line on the 2.8 cut, so the lub-dubs land on the two glow pulses (3.57, 4.34); fades after the 7.42 beat |
+| y | m03_flourish | sting | 8.0 | sting_reed_flourish | hit | 0 | - | -6 | 0.01 | 0.4 | - | t<-4:cartouche+lands | the reed run (7.6-8.0) bridges the cut and lands with the cartouche slam (8.00): the title is the hardest hit so far |
+| y | m04_title | cue | 8.0 | mystic_loop | 0 | 0 | 14.3 | -1 | 0.002 | 0.08 | - | t<-4:cartouche+lands | title + Thebes: bowl + bendir on the slam (8.00); palette tap 12.25 sits on a mystic beat |
 | y | m05_embalm | cue | 14.3 | groove_loop | 0 | 0 | 20.4 | 0 | 0.002 | 0.3 | - | - | embalming: jars on groove beats from 14.30 (builder A locked 14.88-16.61, boing 18.35, pop 18.92, thup 20.07 to it) |
 | y | m05b_memory | cue | 20.4 | mystic_loop | 13.846 | - | 26.5 | 0 | 0.3 | 0.08 | - | - | inside the mummy: mystic from bar 5 (the Eb colour, darker than the title) under the heart-lantern and the scarab |
 | y | m06_book | cue | 26.5 | playful_loop | 0 | 0 | 40.8 | -1 | 0.002 | 0.08 | - | - | Book of the Dead, spell menu, CB1 |
@@ -48,21 +48,22 @@ Columns
 | on | id | type | t | file | at | in | end | gain | fin | fout | fx | sync | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | n | s01_thup | sfx | 1.2 | X22_comic_plop | hit | - | - | 3 | - | - | - | t<-1:basket~lands~thup | (muted: it lands 70 ms before a bed heartbeat and merges with it) |
-| y | s03_pan | sfx | 5.45 | X18_scale_tip_heavy | hit | - | - | 0 | - | - | - | t<-3:heart~drop~clang~lands | CLANG + chain rattle as the heart drops on the pan (the scale's own sound; it returns at 115.0) |
-| y | s03_eyes | sfx | 7.5 | S04_beast_growl | hit | - | 8.05 | -3 | 0.05 | 0.4 | - | t<-3:eyes~growl | low growl as the yellow eyes open (7.15) |
-| y | s04_gong | sfx | 8.0 | S07_gong | hit | - | - | -4 | - | - | - | - | deep gong on the cartouche slam |
-| y | s06_jar1 | sfx | 14.88 | X02_canopic_lid_clink | hit | - | +0.35 | -1 | - | 0.1 | pan=-0.3 | t<-6:jar 1~jar1 | four jars land |
-| y | s06_jar2 | sfx | 15.45 | X02_canopic_lid_clink | hit | - | +0.35 | -2 | - | 0.1 | pan=-0.1 | t<-6:jar 2~jar2 |  |
-| y | s06_jar3 | sfx | 16.03 | X02_canopic_lid_clink | hit | - | +0.35 | -2 | - | 0.1 | pan=0.1 | t<-6:jar 3~jar3 |  |
-| y | s06_jar4 | sfx | 16.61 | X02_canopic_lid_clink | hit | - | +0.35 | -1 | - | 0.1 | pan=0.3 | t<-6:jar 4~jar4 |  |
-| y | s07_basket | sfx | 20.07 | X22_comic_plop | hit | - | - | 3 | - | - | - | t<-7:basket~lands~thup | the puff lands in the basket (callback of 1.20), on a groove beat |
-| y | s08_beat1 | sfx | 20.65 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat 1~heartbeat#1~beat 1 | the heart-lantern pulses (heartbeat under) |
-| y | s08_beat2 | sfx | 21.50 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat 2~heartbeat#2~beat 2 |  |
-| y | s08_beat3 | sfx | 22.35 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat 3~heartbeat#3~beat 3 |  |
-| y | s08_beat4 | sfx | 23.20 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat 4~heartbeat#4~beat 4 |  |
-| y | s09_ring | sfx | 24.75 | G3_zills | hit | - | - | -2 | - | - | - | t<-9:ring~highlight | scarab highlight: the zill motif is planted (pays off at 94.4) |
-| y | s10_unroll | sfx | 28.0 | X04b_papyrus_unroll_slap | hit | - | - | 3 | - | - | - | t<-10:unroll~open~slap | the roll whips open like a banner |
-| y | s14_pen | sfx | 39.4 | X05_reed_pen_scratch | hit | - | - | -1 | - | 0.2 | - | t<-14:pen~writes~name | Ani's name written into the gap |
+| y | s03_pan | sfx | 5.45 | X18_scale_tip_heavy | hit | - | - | 0 | - | - | - | t<-3:heart+lands | CLANG + chain rattle as the heart drops on the pan (the scale's own sound; it returns at 115.0) |
+| y | s03_eyes | sfx | 7.5 | S04_beast_growl | hit | - | 8.05 | -3 | 0.05 | 0.4 | - | t<-3:yellow+eyes@+0.4 | low growl as the yellow eyes open (7.15) |
+| y | s04_gong | sfx | 8.0 | S07_gong | hit | - | - | -4 | - | - | - | t<-4:cartouche+lands | deep gong on the cartouche slam |
+| y | s06_jar1 | sfx | 14.88 | X02_canopic_lid_clink | hit | - | +0.35 | -1 | - | 0.1 | pan=-0.3 | t<-6:canopic#1 | four jars land |
+| y | s06_jar2 | sfx | 15.45 | X02_canopic_lid_clink | hit | - | +0.35 | -2 | - | 0.1 | pan=-0.1 | t<-6:canopic#2 |  |
+| y | s06_jar3 | sfx | 16.03 | X02_canopic_lid_clink | hit | - | +0.35 | -2 | - | 0.1 | pan=0.1 | t<-6:canopic#3 |  |
+| y | s06_jar4 | sfx | 16.61 | X02_canopic_lid_clink | hit | - | +0.35 | -1 | - | 0.1 | pan=0.3 | t<-6:canopic#4 |  |
+| y | s07_basket | sfx | 20.07 | X22_comic_plop | hit | - | - | 3 | - | - | - | t<-7:puff+lands | the puff lands in the basket (callback of 1.20), on a groove beat |
+| y | s08_beat1 | sfx | 20.65 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat#1 | the heart-lantern pulses (heartbeat under) |
+| y | s08_beat2 | sfx | 21.50 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat#2 |  |
+| y | s08_beat3 | sfx | 22.35 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat#3 |  |
+| y | s08_beat4 | sfx | 23.20 | synth:heart | hit | - | +0.6 | 0 | - | 0.12 | - | t<-8:heartbeat#4 |  |
+| y | s09_ring | sfx | 24.75 | G3_zills | hit | - | - | -2 | - | - | - | t<-9:gold+ring | scarab highlight: the zill motif is planted (pays off at 94.4) |
+| y | s10_unroll | sfx | 28.0 | X04_papyrus_unroll | hit | - | - | 3 | - | 0.3 | - | t<-10:whips+open@+0.6 | the roll whips open like a banner (27.45-28.10): crackle peaks as it lands flat |
+| y | s13_blink | sfx | 36.1 | G3_zills | hit | - | - | -3 | - | - | - | t<-13:slot+blinks | CB1: the empty name slot blinks (the zill family: magic / the cheat) |
+| y | s14_pen | sfx | 38.95 | X05_reed_pen_scratch | 0.8 | 0.8 | 40.0 | -1 | - | 0.15 | - | t<-14:pen+writes | Ani name written into the gap (38.95-39.95) |
 | y | s15_door | sfx | 41.58 | S08_stone_door | hit | 0.75 | - | -1 | 0.05 | 0.3 | - | t<-15:thud~shut~door | tomb door grinds shut behind you |
 | y | s16_knife1 | sfx | 43.8 | X19_knife_shing | hit | - | - | -1 | - | - | pan=-0.45 | t<-16:knife 1~glint 1 | knives glint one after another |
 | y | s16_knife2 | sfx | 44.4 | X19_knife_shing | hit | - | - | -2 | - | - | pan=-0.15 | t<-16:knife 2~glint 2 |  |
@@ -113,7 +114,7 @@ Columns
 | n | s44_ding | sfx | 123.63 | X12_scale_ding | hit | - | - | 0 | - | - | - | t<-44:level~flat~gold | (muted: the reveal sting already rings its chord + bowl on the level; a second ding only piled up) |
 | y | s45_sistrum | sfx | 126.4 | S06_sistrum | hit | - | - | -2 | - | - | - | t<-45:osiris~shrine~sistrum | sistrum as Osiris is revealed |
 | y | s46_gong | sfx | 129.25 | S07_gong | hit | - | - | -2 | - | 0.8 | - | t<-46:verdict~glyph~crook | warm low gong: 言语真实 (rhymes with the title gong) |
-| y | s47_reeds | amb | 130.8 | X14_reeds_birds_water_loop | 0 | 0 | 136.0 | 3 | 0.8 | 1.2 | - | - | birds and water over the Field of Reeds |
+| y | s47_reeds | amb | 130.8 | X14_reeds_birds_water_loop | 0 | 0 | 137.45 | 3 | 0.8 | 0.6 | - | - | birds and water over the Field of Reeds, carried through the deadpan plough beat (no dead air before the shabtis) |
 | y | s49_shabti | sfx | 138.5 | X16_shabti_clatter | hit | - | - | -1 | - | 0.3 | - | t<-49:stand~clatter~box | the shabtis stand up in rows |
 | y | s51_whip | sfx | 145.4 | X23_whip_crack | hit | - | - | 4 | - | - | - | t<-51:whip | one overseer's whip crack |
 | y | s52_reeds | amb | 146.6 | X14_reeds_birds_water_loop | 2.0 | 2.0 | 149.6 | -1 | 0.3 | 1.0 | - | - | water and birds round the reed boat |
