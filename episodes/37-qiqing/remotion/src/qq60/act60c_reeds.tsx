@@ -6,7 +6,7 @@ import {GlyphColumns, GLYPH_D} from './props60';
 import {Stage60, Dado, RegisterLine, Glow, Dust, Shaft, rng, F_SERIF, FW, FH, PIC_T, PIC_B} from './frame60';
 import {Wheat, Palm, PapyrusClump, Ox, Plough, Skiff, River} from './props60b';
 import {ANI, ANI_POSES, ploughPose, Shabti, ShabtiPose, walkPose} from './cast60';
-import {wobIn, camE, wearZ, eOut, bump, EyeFx, Sparkle, Drop} from './act60c_common';
+import {wobIn, camE, wearZ, eOut, bump, EyeFx, Sparkle, Drop, ArmOver} from './act60c_common';
 import {TextCols} from './act60c_twist';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
@@ -125,7 +125,6 @@ const S49: React.FC<ShotProps> = ({t}) => {
 	let pose: Pose = {...POSES.rest, lean: lerp(10, 4, letGo) + 0.6 * Math.sin(t * 1.4), neck: 4, head: lerp(6, 10, letGo), rt: -8, at: 12, rk: 3, ak: 2};
 	const hand: V = [(BOX.x0 + 40 - AX) / AS, (lidBot - 4 - GY) / AS], rest: V = [3.4, -8.2];
 	pose = wristTo(reach(pose, 'f', [lerp(hand[0], rest[0], letGo), lerp(hand[1], rest[1], letGo)]), 'f', lerp(150, 60, letGo));
-	pose = wristTo(holdAt(pose, 'b', [1.2, -2.6]), 'b', 20);
 	const rows = [0, 1, 2].map((r) => { const u = cl((t - T49.rows[r]) / 0.28), b = u < 1 ? eOut(u) + 0.18 * Math.sin(Math.PI * u) : 1; return {y: BOX.top + 10 + r * 22 + (1 - b) * 130, s: 9 + 1.0 * r, n: 8 - (r % 2), r}; });
 	const cam = camE(t, 0, 3.1, [700, 486, 1.0], [800, 520, 1.12]);
 	return <Stage60 t={t} cam={cam} grade="reeds" bg="#F4D98E" wear={wearZ(cam.z, 0.8)} stain={0.34}
@@ -168,8 +167,8 @@ export const T50 = {snap: 0.8, march: 1.286, step: 60 / 112 / 2}; // march on th
 const S50: React.FC<ShotProps> = ({t}) => {
 	const AX = 210, AS = 20;
 	let pose: Pose = {...POSES.rest, lean: 3 + 0.5 * Math.sin(t * 1.5), neck: 6, head: 12, rt: -6, at: 9, rk: 2, ak: 1};
-	pose = wristTo(holdAt(pose, 'f', [4.4, -5.9]), 'f', 140);
-	pose = wristTo(holdAt(pose, 'b', [3.9, -5.4]), 'b', 150);
+	pose = wristTo(holdAt(pose, 'f', [5.0, -5.5]), 'f', 168);
+	pose = wristTo(holdAt(pose, 'b', [2.3, -5.7]), 'b', 172);
 	const g = solve(pose), fh = ap(g.fH, [0, 0.9]), bh = ap(g.bH, [0, 0.9]), F: V = [AX + fh[0] * AS, GY + fh[1] * AS], B: V = [AX + bh[0] * AS, GY + bh[1] * AS];
 	const alive = sm(seg(t, T50.snap, T50.snap + 0.08)), hop = bump(t, T50.snap, T50.snap + 0.32), mt = Math.max(0, t - T50.march);
 	const ph = Math.PI * mt / T50.step, mx = 150 * mt;
@@ -198,8 +197,14 @@ const S50: React.FC<ShotProps> = ({t}) => {
 			return <Shabti key={`${r}.${i}`} x={rw.x0 + i * rw.dx + mx} y={rw.y - 26 * hop * (1 - r * 0.2)} s={rw.s} t={t} p={p} />; }))}
 		{/* you, reading the roll call off a papyrus */}
 		<God id="c50ani" cast={ANI} pose={pose} x={AX} y={GY} s={AS} sec={{t}} />
-		<g><path d={poly([[B[0] - 6, B[1] - 70], [F[0] + 10, F[1] - 76], [F[0] + 12, F[1] + 30], [B[0] - 4, B[1] + 34]])} fill="#EBD7A4" stroke={PAL.ink} strokeWidth={2.4} />
-			<GlyphColumns x={B[0] + 4} y={B[1] - 56} cols={2} rows={4} cell={18} seed={50} /></g>
+		{(() => { const top = Math.min(B[1], F[1]) - 4, x0 = B[0] - 8, x1 = F[0] + 12, sw = 2 * Math.sin(t * 2.2);
+			return <g>
+				<path d={poly([[x0, top], [x1, top], [x1 + 2 + sw, top + 118], [x0 + 2 + sw, top + 118]])} fill="#EBD7A4" stroke={PAL.ink} strokeWidth={2.4} />
+				<GlyphColumns x={x0 + 9} y={top + 12} cols={3} rows={5} cell={17} seed={50} />
+				<rect x={x0 - 4 + sw} y={top + 112} width={x1 - x0 + 12} height={14} rx={7} fill="#D9BC7A" stroke={PAL.ink} strokeWidth={2} />
+				<rect x={x0 - 3} y={top - 6} width={x1 - x0 + 8} height={10} rx={5} fill="#D9BC7A" stroke={PAL.ink} strokeWidth={2} />
+			</g>; })()}
+		<ArmOver cast={ANI} pose={pose} x={AX} y={GY} s={AS} side="f" only="hand" id="c50h" />
 		<Dado x0={-200} x1={1900} y={GY} h={80} />
 	</Stage60>;
 };
@@ -258,7 +263,7 @@ const S51: React.FC<ShotProps> = ({t}) => {
 /** reclining: the whole figure tipped back about the hip, legs forward (one knee up), both hands behind the head */
 export const lieBack = (t: number): {pose: Pose; rot: number} => {
 	const br = Math.sin(t * 1.6);
-	let p: Pose = {lean: 0, neck: 10, head: 6 + 1.5 * Math.sin(t * 0.7), bs: 0, be: 0, bw: 0, fs: 0, fe: 0, fw: 0, rt: 28, rk: 10, at: 72, ak: 78 + 3 * Math.sin(t * 0.6), y: 9.6};
+	let p: Pose = {lean: 0, neck: 10, head: 6 + 1.5 * Math.sin(t * 0.7), bs: 0, be: 0, bw: 0, fs: 0, fe: 0, fw: 0, rt: 38, rk: 4, at: 80, ak: 70 + 3 * Math.sin(t * 0.6), y: 9.6}; // both feet stay on or above the gunwale (they poked through the hull)
 	p = wristTo(holdAt(p, 'b', [-1.6, -8.2 - 0.05 * br], false, -1), 'b', -170);
 	p = wristTo(holdAt(p, 'f', [-1.3, -8.6 - 0.05 * br], false, -1), 'f', -175);
 	return {pose: p, rot: -58 + 1.2 * br};
@@ -266,7 +271,7 @@ export const lieBack = (t: number): {pose: Pose; rot: number} => {
 export const T52 = {sigh: 1.0};
 const S52: React.FC<ShotProps> = ({t}) => {
 	const bx = 610 + 14 * t, by = 640 + 3 * Math.sin(t * 1.7), rock = 1.4 * Math.sin(t * 1.2), sigh = bump(t, T52.sigh, T52.sigh + 0.8);
-	const {pose, rot} = lieBack(t), AS = 20, hip: V = [bx - 70, by - 18];
+	const {pose, rot} = lieBack(t), AS = 20, hip: V = [bx - 70, by + 4], HL = 0.86 * 13 * 20;
 	const g = solve(pose), mouth = ap(g.head, [1.3, -0.5]);
 	const cam = camE(t, -0.4, 2.6, [700, 500, 1.04], [740, 492, 1.09]);
 	const harv = [0, 1, 2, 3, 4, 5].map((i) => ({x: 250 + i * 150, a: i % 2 ? 'carry' as const : 'hoe' as const}));
@@ -285,14 +290,16 @@ const S52: React.FC<ShotProps> = ({t}) => {
 		<Shabti x={1070} y={482} s={9} t={t} p={{alive: 1, act: 'idle', overseer: true, ph: t * 3}} />
 		<River x0={-200} x1={1900} y={510} h={300} t={t} speed={-8} />
 		{/* the boat and you, tipped back with your hands behind your head */}
+		<defs><clipPath id="c52hull"><rect x={bx - HL} y={by - 24} width={2 * HL} height={90} /></clipPath></defs>
 		<g transform={`rotate(${rock} ${bx} ${by})`}>
+			<Skiff x={bx} y={by} s={20} t={0} len={26} />
 			<g transform={`translate(${hip[0]},${hip[1]}) rotate(${rot}) translate(${-hip[0]},${-hip[1]})`}>
 				<God id="c52ani" cast={ANI} pose={pose} x={hip[0]} y={hip[1] + pose.y! * AS} s={AS} sec={{t}} />
 				<EyeFx id="c52e" pose={pose} x={hip[0]} y={hip[1] + pose.y! * AS} s={AS} skin={PAL.skinM} lid={1} smile={0.8 + 0.2 * sigh} />
 				{sigh > 0.05 && <g transform={`translate(${hip[0] + mouth[0] * AS + 18},${hip[1] + pose.y! * AS + mouth[1] * AS - 6})`} opacity={sigh}>
 					<path d={`M0 0Q${16 + 14 * sigh} ${-10} ${30 + 20 * sigh} ${4}Q${40 + 24 * sigh} ${14} ${54 + 30 * sigh} ${2}`} fill="none" stroke="#FFFFFF" strokeWidth={4} strokeLinecap="round" /></g>}
 			</g>
-			<Skiff x={bx} y={by} s={20} t={0} len={22} />
+			<g clipPath="url(#c52hull)"><Skiff x={bx} y={by} s={20} t={0} len={26} /></g>
 		</g>
 		{[0, 1].map((i) => { const u = cl((t + 0.3 - i * 0.5) / 2.6); return <Duck key={i} x={lerp(-80, 1250, u) + i * 60} y={lerp(170, 90, u) + i * 30 + 8 * Math.sin(t * 3 + i)} s={14} ph={t * 14 + i * 2} a={-6} />; })}
 		<PapyrusClump x={140} y={GY} h={170} t={t} n={9} seed={52} />
@@ -310,14 +317,22 @@ const Vignette: React.FC<{x0: number; y0: number; w: number; h: number; t: numbe
 		<rect x={x0} y={y0} width={w} height={h} fill="#EAD6A2" stroke={PAL.ink} strokeWidth={3} />
 		{/* register 1: the boat on the canal */}
 		<rect x={x0} y={r1 - 26} width={w} height={26} fill={PAL.blue} /><path d={`M${x0} ${r1 - 12}` + Array.from({length: Math.floor(w / 18)}, (_, i) => `L${x0 + i * 18 + 9} ${r1 - 18}L${x0 + i * 18 + 18} ${r1 - 12}`).join('')} fill="none" stroke="#BFD8F0" strokeWidth={2} />
-		<g transform={`translate(${x0 + w * 0.55},${r1 - 18})`}><Skiff x={0} y={0} s={5} t={t} len={20} /></g>
-		<g transform={`translate(${x0 + w * 0.55 - 8},${r1 - 26}) rotate(-64)`}><God id="c53rec" cast={ANI} pose={lieBack(t).pose} x={0} y={0} s={4.6} sec={{t}} /></g>
+		{(() => { const bx = x0 + w * 0.55, by = r1 - 16, lb = lieBack(t), hp: V = [bx - 17.5, by + 1], hl = 0.86 * 10 * 5;
+			return <g>
+				<defs><clipPath id="c53hull"><rect x={bx - hl} y={by - 6} width={2 * hl} height={24} /></clipPath></defs>
+				<Skiff x={bx} y={by} s={5} t={0} len={20} />
+				<g transform={`translate(${hp[0]},${hp[1]}) rotate(${lb.rot}) translate(${-hp[0]},${-hp[1]})`}><God id="c53rec" cast={ANI} pose={lb.pose} x={hp[0]} y={hp[1] + 9.6 * 5} s={5} sec={{t}} /></g>
+				<g clipPath="url(#c53hull)"><Skiff x={bx} y={by} s={5} t={0} len={20} /></g>
+			</g>; })()}
 		{[0.12, 0.3, 0.84].map((u, i) => <Palm key={i} x={x0 + w * u} y={r1 - 26} h={h * 0.22} t={t} seed={i + 30} />)}
 		<RegisterLine x0={x0} x1={x0 + w} y={r1} h={8} />
 		{/* register 2: ploughing and reaping */}
 		<Wheat x0={x0 + w * 0.5} x1={x0 + w - 10} y={r2} h={h * 0.26} t={t} seed={53} dense={0.9} />
 		<Ox x={x0 + w * 0.36} y={r2} s={5.6} ph={t * 3} t={t} />
-		<God id="c53plo" cast={ANI} pose={ploughPose(t * 3, [5.2, -7.6])} x={x0 + w * 0.12} y={r2} s={5.2} sec={{t}} />
+		{(() => { const px = x0 + w * 0.12, ox = x0 + w * 0.36, grip: V = [px + 5.2 * 5.2, r2 - 7.6 * 5.2], share: V = [px + 62, r2 - 1], yoke: V = [ox + 3.2 * 5.6, r2 - 7.4 * 5.6];
+			const d = `M${yoke[0]} ${yoke[1]}L${share[0]} ${share[1]}M${share[0]} ${share[1]}L${grip[0]} ${grip[1]}`;
+			return <g><path d={d} stroke={PAL.ink} strokeWidth={3.2} strokeLinecap="round" fill="none" /><path d={d} stroke={PAL.wood} strokeWidth={1.6} strokeLinecap="round" fill="none" />
+				<God id="c53plo" cast={ANI} pose={ploughPose(t * 3, [5.2, -7.6])} x={px} y={r2} s={5.2} sec={{t}} /></g>; })()}
 		<God id="c53har" cast={ANI} pose={ANI_POSES.harvest(t * 2)} x={x0 + w * 0.56} y={r2} s={5.2} sec={{t}} fProp="sickle" />
 		<RegisterLine x0={x0} x1={x0 + w} y={r2} h={8} />
 		{/* register 3: the shabtis hoeing, canals */}

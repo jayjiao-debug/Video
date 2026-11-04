@@ -7,7 +7,7 @@ import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Shaft} from './f
 import {Ceiling} from './sets60';
 import {ANI, walkPose, STRIDE} from './cast60';
 import {thothPose, STILL} from './scene60';
-import {wobIn, camE, bump, Sparkle, OsirisProps} from './act60c_common';
+import {wobIn, camE, bump, Sparkle, OsirisProps, ArmOver} from './act60c_common';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
 
@@ -36,7 +36,8 @@ const Shrine: React.FC<{fx: number; S: number; t: number; nod?: number; sisters?
 	return <g>
 		<ShrineBack x={fx} y={GY} s={S} />
 		{sisters && <><God id="c45neph" cast={NEPH} pose={sis(t, 1)} x={X(13.5)} y={top} s={S * 0.84} face={-1} sec={{t: t + 1}} />
-			<God id="c45isis" cast={ISIS} pose={sis(t, 0)} x={X(11.1)} y={top} s={S * 0.84} face={-1} sec={{t}} fProp="sistrum" /></>}
+			<God id="c45isis" cast={ISIS} pose={sis(t, 0)} x={X(11.1)} y={top} s={S * 0.84} face={-1} sec={{t}} fProp="sistrum" />
+			<ArmOver cast={{...ISIS, fHand: 'fist'}} pose={sis(t, 0)} x={X(11.1)} y={top} s={S * 0.84} face={-1} side="f" only="hand" id="c45ih" /></>}
 		<Throne x={X(4.4)} y={top} s={S} />
 		<God id="c45os" cast={CAST.osiris} pose={osirisNod(t, nod)} x={X(7.8)} y={top} s={S} face={-1} sec={{t}} hide={{props: true}} />
 		<OsirisProps id="c45op" pose={osirisNod(t, nod)} x={X(7.8)} y={top} s={S} face={-1} t={t} />
@@ -97,20 +98,23 @@ const S46: React.FC<ShotProps> = ({t}) => {
 	// the palette in the world (Thoth faces +1): grip of the back hand + the palette frame
 	const g = solve(th.p), grip = ap(g.bH, [0.02, 0.6]), pc: V = [TX + (grip[0] + 1.45 * Math.cos(th.paletteA * Math.PI / 180)) * TS, GY + (grip[1] + 1.45 * Math.sin(th.paletteA * Math.PI / 180)) * TS];
 	const gl = sm(seg(t, T46.glow - 0.1, T46.glow + 0.25)), rise = sm(seg(t, T46.glow, T46.glow + 0.6));
+	// the verdict leaves the palette sideways first (away from his beak), then rises: it never crosses Thoth's head
+	const vx = lerp(pc[0] + 40, 612, sm(Math.min(1, rise * 1.7))), vy = lerp(pc[1] - 30, 238, rise * rise);
 	const cam = camE(t, 0, 2.7, [700, 486, 1.0], [660, 476, 1.06]);
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#16214F" wear={0.4} stain={0.3}
 		tags={[{x: 132, y: 300, text: '托特'}]}
 		light={<>
 			<Glow x={1010} y={560} r={420} c="gold" o={0.55 + 0.2 * nod} />
-			<Glow x={lerp(pc[0], 600, rise)} y={lerp(pc[1], 250, rise)} r={160 + 200 * gl} c="gold" o={0.2 + 0.7 * gl} />
-			{gl > 0 && <Sparkle x={lerp(pc[0], 600, rise) + 130} y={lerp(pc[1], 250, rise) - 70} r={70 * bump(t, T46.glow - 0.05, T46.glow + 0.7)} rot={25} />}
+			<Glow x={vx} y={vy} r={160 + 200 * gl} c="gold" o={0.2 + 0.7 * gl} />
+			{gl > 0 && <Sparkle x={vx + 130} y={vy - 70} r={70 * bump(t, T46.glow - 0.05, T46.glow + 0.7)} rot={25} />}
 			<Dust t={t} box={[100, 120, 1260, 840]} n={50} seed={46} c="#FFE7A8" o={0.7} vx={-2} vy={-5} />
 		</>}>
 		<LapisWall x0={-200} x1={1700} />
 		<Shrine fx={790} S={25} t={t} nod={nod} sisters={false} />
 		<God id="c46th" cast={CAST.thoth} pose={th.p} x={TX} y={GY} s={TS} sec={{t}} bProp="palette" fProp="pen" paletteA={th.paletteA} />
+		<ArmOver cast={CAST.thoth} pose={th.p} x={TX} y={GY} s={TS} side="f" only="hand" id="c46h" />
 		{/* the verdict: three gold signs lifting off the palette */}
-		{gl > 0 && <g transform={`translate(${lerp(pc[0], 600, rise)},${lerp(pc[1] - 40, 250, rise)}) scale(${lerp(0.35, 1, rise)})`} opacity={gl}>
+		{gl > 0 && <g transform={`translate(${vx},${vy}) scale(${lerp(0.35, 1, rise)})`} opacity={gl}>
 			<rect x={-150} y={-80} width={300} height={160} rx={22} fill="#121A44" stroke="#F3C64E" strokeWidth={5} opacity={0.9} />
 			<rect x={-138} y={-68} width={276} height={136} rx={14} fill="none" stroke="#F3C64E" strokeWidth={2} opacity={0.7} />
 			{MAAKHERU.map((d, i) => <g key={i} transform={`translate(${-135 + i * 90},-55) scale(100)`}><path d={d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.025} /></g>)}

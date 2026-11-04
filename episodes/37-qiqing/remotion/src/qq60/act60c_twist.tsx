@@ -8,7 +8,7 @@ import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Stars, Shaft, rn
 import {CAST2, tutuPose} from './cast60';
 import {STILL, LAY, S as S1920, aniPose, anubisPose, WState} from './scene60';
 import {W43} from './scene43';
-import {wobIn, camE, eOut, wearZ, bump, EyeFx, BalanceC, ctxC, SolidC, Sparkle, AdoreArms} from './act60c_common';
+import {wobIn, camE, eOut, wearZ, bump, EyeFx, BalanceC, ctxC, SolidC, Sparkle, AdoreArms, ArmOver} from './act60c_common';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
 
@@ -243,12 +243,13 @@ const AniVignette: React.FC<{t: number; lit: number; whisper: number}> = ({t, li
 		<TextCols x={650} y={318} cols={4} rows={4} cell={27} seed={38} lit={0} />
 		<g transform={`translate(${W43.post},852) scale(${W43.k}) translate(${-LAY.post},${-GY})`}>
 			<God id="c37tutu" cast={CAST2.tutu} pose={tutuPose(t)} x={LAY.ani - 300} y={GY} s={S} sec={{t}} />
+			<ArmOver cast={CAST2.tutu} pose={tutuPose(t)} x={LAY.ani - 300} y={GY} s={S} side="f" only="hand" id="c37th" />
 			<God id="c37ani" cast={CAST.ani} pose={aP} x={LAY.ani} y={GY} s={S} sec={{t}} />
 			<AdoreArms cast={CAST.ani} pose={aP} x={LAY.ani} y={GY} s={S} id="c37aa" />
 			<BalanceC p={{tilt: st.tilt, swingL: st.swingL, swingR: st.swingR, plumb: st.plumb, look: st.look}} x={LAY.post} y={GY} s={S} t={t} />
 			<God id="c37an" cast={ANUBIS} pose={anubisPose(st)} x={LAY.anubis} y={GY} s={S} sec={{t}} />
 		</g>
-		<Wisps from={mouth} via={[mouth[0] + 58, 392]} to={[mouth[0] - 70, 352]} t={t} o={whisper} />
+		<Wisps from={[mouth[0] + 14, mouth[1]]} via={[mouth[0] + 120, 372]} to={[mouth[0] - 60, 332]} t={t} o={whisper} />
 		<Dado x0={-900} x1={1560} y={852} h={80} />
 	</g>;
 };
