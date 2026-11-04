@@ -1,0 +1,105 @@
+plan: {'tier': 'starter', 'character_count': 8700, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "X04_papyrus_unroll_b", "type": "sfx", "text": "close-up foley: a stiff dry papyrus scroll unrolled quickly on a wooden table, loud crisp crackle and paper flutter, ends with a soft slap as it lies flat", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X04_papyrus_unroll_b.mp3", "bytes": 40585}
+{"name": "X04_papyrus_unroll_c", "type": "sfx", "text": "foley: old parchment scroll unrolling, crunchy crackling paper, close and clear", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X04_papyrus_unroll_c.mp3", "bytes": 33061}
+{"name": "X06_boat_oars_b", "type": "sfx", "text": "two wooden oars pulling through calm water in a slow steady rhythm, clear splash and drip on every stroke, a wooden boat creaking, quiet river at night", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X06_boat_oars_b.mp3", "bytes": 97009}
+{"name": "X06_boat_oars_c", "type": "sfx", "text": "a small wooden rowing boat, slow oar strokes, each stroke a distinct dip, swirl and drip of water, calm and dark", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X06_boat_oars_c.mp3", "bytes": 97009}
+{"name": "X15_sickle_wheat_b", "type": "sfx", "text": "close-up foley: a curved metal sickle swiftly slicing through a bunch of dry wheat stalks, a sharp swish followed by a crisp crunchy cut, twice", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X15_sickle_wheat_b.mp3", "bytes": 33061}
+{"name": "X15_sickle_wheat_c", "type": "sfx", "text": "foley: one fast sickle cut through dry grain stalks, crisp swish and snap, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X15_sickle_wheat_c.mp3", "bytes": 24702}
+{"name": "X17_heart_on_pan_b", "type": "sfx", "text": "close-up foley: a raw wet heart dropped onto a small bronze dish, a clear squelchy thud and a short metallic ring", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X17_heart_on_pan_b.mp3", "bytes": 24702}
+{"name": "X17_heart_on_pan_c", "type": "sfx", "text": "foley: a soft wet piece of meat placed onto a metal plate, squishy thump with a brief bright metal ring", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X17_heart_on_pan_c.mp3", "bytes": 24702}
+{"name": "X12_scale_ding_b", "type": "sfx", "text": "one single soft bright metallic ding from a small brass bell, struck once, long gentle ring-out, nothing else", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X12_scale_ding_b.mp3", "bytes": 40585}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "X04_papyrus_unroll_b",
+  "type": "sfx",
+  "text": "close-up foley: a stiff dry papyrus scroll unrolled quickly on a wooden table, loud crisp crackle and paper flutter, ends with a soft slap as it lies flat",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X04_papyrus_unroll_b.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "X04_papyrus_unroll_c",
+  "type": "sfx",
+  "text": "foley: old parchment scroll unrolling, crunchy crackling paper, close and clear",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X04_papyrus_unroll_c.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "X06_boat_oars_b",
+  "type": "sfx",
+  "text": "two wooden oars pulling through calm water in a slow steady rhythm, clear splash and drip on every stroke, a wooden boat creaking, quiet river at night",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X06_boat_oars_b.mp3",
+  "bytes": 97009
+ },
+ {
+  "name": "X06_boat_oars_c",
+  "type": "sfx",
+  "text": "a small wooden rowing boat, slow oar strokes, each stroke a distinct dip, swirl and drip of water, calm and dark",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X06_boat_oars_c.mp3",
+  "bytes": 97009
+ },
+ {
+  "name": "X15_sickle_wheat_b",
+  "type": "sfx",
+  "text": "close-up foley: a curved metal sickle swiftly slicing through a bunch of dry wheat stalks, a sharp swish followed by a crisp crunchy cut, twice",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X15_sickle_wheat_b.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "X15_sickle_wheat_c",
+  "type": "sfx",
+  "text": "foley: one fast sickle cut through dry grain stalks, crisp swish and snap, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X15_sickle_wheat_c.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X17_heart_on_pan_b",
+  "type": "sfx",
+  "text": "close-up foley: a raw wet heart dropped onto a small bronze dish, a clear squelchy thud and a short metallic ring",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X17_heart_on_pan_b.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X17_heart_on_pan_c",
+  "type": "sfx",
+  "text": "foley: a soft wet piece of meat placed onto a metal plate, squishy thump with a brief bright metal ring",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X17_heart_on_pan_c.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "X12_scale_ding_b",
+  "type": "sfx",
+  "text": "one single soft bright metallic ding from a small brass bell, struck once, long gentle ring-out, nothing else",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X12_scale_ding_b.mp3",
+  "bytes": 40585
+ }
+]
