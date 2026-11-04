@@ -3,6 +3,7 @@ import {Composition, registerRoot, useCurrentFrame} from 'remotion';
 import {Weighing, STILL, stateAt, LedIn} from './scene60';
 import {RigSheet} from './sheet60';
 import {W, H} from './wall60';
+import {KitCompositions} from './kit60';
 
 /* ep60 entry: LOOKA (the weighing key frame), LOOKA2 (Anubis leads the deceased in), RIG60 (rig sheet), MOTIONA (5 s motion test).
    Render: TMPDIR=/dev/shm/eg60 npx remotion still src/qq60/root60.tsx LOOKA out.png --browser-executable=… */
@@ -14,4 +15,5 @@ registerRoot(() => <>
 	<Composition id="LOOKA2" component={LookA2} durationInFrames={1} fps={30} width={W} height={H} />
 	<Composition id="RIG60" component={RigSheet} durationInFrames={1} fps={30} width={W} height={H} />
 	<Composition id="MOTIONA" component={MotionA} durationInFrames={150} fps={30} width={W} height={H} />
+	<KitCompositions />
 </>);

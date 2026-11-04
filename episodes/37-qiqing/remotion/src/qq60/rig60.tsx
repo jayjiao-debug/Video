@@ -99,12 +99,14 @@ export const POSES = {
 
 /* ---------------- the cast ---------------- */
 export type HeadKind = 'human' | 'jackal' | 'ibis' | 'falcon';
-export type Crown = 'none' | 'atef' | 'pschent' | 'moon' | 'isis' | 'maat';
+export type Crown = 'none' | 'atef' | 'pschent' | 'moon' | 'isis' | 'maat' | 'cone' | 'sun';
 export type Hand = 'open' | 'fist' | 'palm';
-export type PropKind = 'none' | 'ankh' | 'was' | 'palette' | 'pen' | 'crook' | 'flail';
+export type PropKind = 'none' | 'ankh' | 'was' | 'palette' | 'pen' | 'crook' | 'flail' | 'sickle' | 'sistrum' | 'hoe' | 'knife' | 'stalks' | 'menat';
 export type Cast = {
 	name: string; skin: Role; skin2: Role; head: HeadKind; headFill?: Role; headFill2?: Role;
-	wig: 'tri' | 'duplex' | 'none'; crown: Crown; dress: 'kilt' | 'robe' | 'sheath' | 'mummy';
+	wig: 'tri' | 'duplex' | 'none'; crown: Crown; dress: 'kilt' | 'robe' | 'sheath' | 'mummy' | 'gown' | 'longkilt';
+	/** ep60 4:3 cast: wig colour override, a jackal mask edge (priest), kilt without the royal apron */
+	wigColor?: Role; mask?: boolean; apron?: boolean;
 	female?: boolean; beard?: boolean; wings?: boolean; tail?: boolean; collar?: 'god' | 'plain';
 	bHand?: Hand; fHand?: Hand; bProp?: PropKind; fProp?: PropKind;
 };
@@ -282,6 +284,49 @@ const Flail: React.FC<{at: V; a: number; c: Ctx; t: number}> = ({at, a, c, t}) =
 	</g>;
 };
 
+/* ---------------- ep60 4:3 props ---------------- */
+/** sickle / hoe gripped across the fist (hand frame: the shaft passes through the fist along +x, the thumb side) */
+const HeldTool: React.FC<{kind: 'sickle' | 'hoe'; h: M; c: Ctx}> = ({kind, h, c}) => {
+	if (kind === 'sickle') {
+		const handle = sp([[-0.55, 0.42, 1], [0.75, 0.42, 1], [0.75, 0.8, 1], [-0.55, 0.8, 1]]);
+		const blade = sp([[0.7, 0.45], [1.25, 0.05], [2.0, -0.05], [2.65, 0.35], [2.95, 1.0], [2.85, 1.6, 1], [2.55, 1.05], [2.15, 0.62], [1.55, 0.5], [0.75, 0.8]], true, 0.18);
+		return <g transform={mx(h)}><Solid d={blade} r="linen" c={c} /><path d="M1.0 0.5Q2.0 0.12 2.7 0.75" fill="none" stroke={PAL.line} strokeWidth={c.LW} opacity={0.6} />
+			<Solid d={handle} r="wood" c={c} />{[0.6, 0.66].map((y) => <line key={y} x1={0.75} x2={0.95} y1={y} y2={y} stroke={PAL.ink} strokeWidth={c.LW * 0.7} />)}</g>;
+	}
+	const handle = sp([[-0.75, 0.46, 1], [3.6, 0.46, 1], [3.6, 0.76, 1], [-0.75, 0.76, 1]]);
+	const blade = sp([[3.35, 0.55, 1], [3.65, 0.75], [2.75, 2.6], [2.35, 3.25, 1], [2.25, 2.95], [3.05, 0.95]], true, 0.16);
+	return <g transform={mx(h)}><Solid d={blade} r="wood" c={c} /><Solid d={handle} r="wood" c={c} /><path d="M1.6 0.76L2.9 1.9" stroke={PAL.ink} strokeWidth={c.LW * 1.4} /></g>;
+};
+/** sistrum (Hathor rattle), held upright: loop frame with jingling bars */
+const Sistrum: React.FC<{at: V; c: Ctx; t: number}> = ({at, c, t}) => {
+	const loop = sp([[-0.42, -1.25, 1], [-0.62, -2.2], [-0.5, -3.1], [0, -3.45], [0.5, -3.1], [0.62, -2.2], [0.42, -1.25, 1], [0.24, -1.3, 1], [0.38, -2.2], [0.3, -2.9], [0, -3.15], [-0.3, -2.9], [-0.38, -2.2], [-0.24, -1.3, 1]], true, 0.18);
+	return <g transform={`translate(${at[0]},${at[1]})`}>
+		<Solid d={poly([[-0.14, 1.3], [0.14, 1.3], [0.14, -0.6], [-0.14, -0.6]])} r="gold" c={c} />
+		<Solid d={sp([[-0.42, -0.55], [0.42, -0.55], [0.5, -1.0], [0.3, -1.32], [-0.3, -1.32], [-0.5, -1.0]])} r="gold" c={c} />
+		<circle cx={0} cy={-0.95} r={0.17} fill={PAL.blue} />
+		<Solid d={loop} r="gold" c={c} />
+		{[-1.9, -2.35, -2.8].map((y, i) => { const j = 0.08 * Math.sin(t * 9 + i * 2); return <g key={y}><line x1={-0.5} x2={0.5} y1={y + j} y2={y - j} stroke={PAL.ink} strokeWidth={c.LW * 1.6} />{[-0.22, 0.22].map((x) => <circle key={x} cx={x + j} cy={y} r={0.09} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW * 0.7} />)}</g>; })}
+	</g>;
+};
+/** knife held blade-up (guardians, judges) */
+const Knife: React.FC<{at: V; c: Ctx}> = ({at, c}) => <g transform={`translate(${at[0]},${at[1]})`}>
+	<Solid d={sp([[-0.16, 0.9, 1], [0.16, 0.9, 1], [0.16, -0.2, 1], [-0.16, -0.2, 1]])} r="wood" c={c} />
+	<Solid d={sp([[-0.2, -0.2, 1], [0.26, -0.2, 1], [0.34, -1.6], [0.1, -2.9, 1], [-0.12, -1.7]], true, 0.16)} r="linen" c={c} />
+</g>;
+/** a sheaf of grain stalks held at the grip */
+const Stalks: React.FC<{at: V; c: Ctx; t: number}> = ({at, c, t}) => <g transform={`translate(${at[0]},${at[1]})`}>
+	{[-28, -14, 0, 12, 24].map((a, i) => { const aa = a + 3 * Math.sin(t * 1.7 + i), r = aa * Math.PI / 180, L = 3.2 + (i % 2) * 0.6, x1 = Math.sin(r) * L, y1 = -Math.cos(r) * L;
+		return <g key={i}><line x1={0} y1={0.6} x2={x1} y2={y1} stroke={PAL.gold2} strokeWidth={c.LW * 1.8} />
+			<g transform={`translate(${x1},${y1}) rotate(${aa})`}><Solid d={sp([[0, 0.3], [0.22, -0.3], [0.18, -1.0], [0, -1.35, 1], [-0.18, -1.0], [-0.22, -0.3]])} r="gold" c={c} />{[-0.3, -0.65, -1.0].map((y) => <path key={y} d={`M-0.18 ${y}L0 ${y - 0.14}L0.18 ${y}`} fill="none" stroke={PAL.gold2} strokeWidth={c.LW} />)}</g></g>; })}
+	<line x1={-0.1} y1={0.9} x2={0.1} y2={2.0} stroke={PAL.gold2} strokeWidth={c.LW * 1.8} />
+</g>;
+/** menat (necklace counterpoise) hanging from the hand */
+const Menat: React.FC<{at: V; c: Ctx; t: number}> = ({at, c, t}) => { const a = 6 * Math.sin(t * 1.9);
+	return <g transform={`translate(${at[0]},${at[1] + 0.4}) rotate(${a})`}>
+		{[-0.3, 0, 0.3].map((x, i) => <path key={i} d={`M${x * 0.4} 0Q${x} 1.0 ${x * 0.5} 1.9`} fill="none" stroke={[PAL.blue, PAL.red, PAL.green][i]} strokeWidth={c.LW * 2.4} />)}
+		<Solid d={sp([[-0.2, 1.8, 1], [0.2, 1.8, 1], [0.22, 2.6], [0.55, 3.0], [0.4, 3.5], [0, 3.62], [-0.4, 3.5], [-0.55, 3.0], [-0.22, 2.6]])} r="green" c={c} />
+	</g>; };
+
 /* ---------------- wings (Isis): feathers hung along the arm, procedural for any arm pose ---------------- */
 const Wing: React.FC<{U: M; F: M; c: Ctx; t: number; seed: number}> = ({U, F, c, t, seed}) => {
 	const at = (u: number) => (u < 0.45 ? chain(U, T(0, (u / 0.45) * BONE.upper)) : chain(F, T(0, ((u - 0.45) / 0.55) * (BONE.fore + 1.1))));
@@ -337,7 +382,7 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 	const tP = (m: M, p: V) => ap(m, p);
 	const kilt = () => {
 		const wb = tP(g.torso, [-1.16, -1.95]), wf = tP(g.torso, [0.98, -1.95]), bt = tP(g.torso, [-1.5, 0.15]);
-		const backs = [tP(g.rT, [-1.0, 2.75]), tP(g.aT, [-1.0, 2.75])], fronts = [tP(g.rT, [1.04, 2.55]), tP(g.aT, [1.04, 2.55])];
+		const long = cast.dress === 'longkilt', backs = long ? [tP(g.rS, [-0.85, 2.7]), tP(g.aS, [-0.85, 2.7])] : [tP(g.rT, [-1.0, 2.75]), tP(g.aT, [-1.0, 2.75])], fronts = long ? [tP(g.rS, [0.95, 2.4]), tP(g.aS, [0.95, 2.4])] : [tP(g.rT, [1.04, 2.55]), tP(g.aT, [1.04, 2.55])];
 		const hb = backs[0][0] < backs[1][0] ? backs[0] : backs[1], hf = fronts[0][0] > fronts[1][0] ? fronts[0] : fronts[1];
 		const mid = lv(hb, hf, 0.5), dropMid: V = [mid[0], mid[1] + 0.12];
 		const d = sp([[wb[0], wb[1], 1], bt, [hb[0], hb[1], 1], dropMid, [hf[0], hf[1], 1], lv(hf, wf, 0.55), [wf[0], wf[1], 1]], true, 0.15);
@@ -350,13 +395,14 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		const apron = poly([[-0.42, 0], [0.42, 0], [0.55, 3.55], [-0.55, 3.55]]);
 		return <g key="kilt">
 			<Solid d={d} r="linen" c={c} />{pleats}
-			<g transform={mx(am)}><Solid d={apron} r="gold" c={c} />
+			{cast.apron !== false && <g transform={mx(am)}><Solid d={apron} r="gold" c={c} />
 				{[0.5, 1.1, 1.7, 2.3].map((yy, i) => <rect key={yy} x={-0.48} y={yy} width={0.96 + (yy / 3.55) * 0.15} height={0.3} fill={[PAL.blue, PAL.red, PAL.blue, PAL.green][i]} transform={`translate(${-(yy / 3.55) * 0.07},0)`} />)}
 				{[-0.36, 0, 0.36].map((xx) => <path key={xx} d={`M${xx - 0.14} 3.55L${xx - 0.14} 3.05Q${xx} 2.8 ${xx + 0.14} 3.05L${xx + 0.14} 3.55Z`} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} />)}
-			</g>
+			</g>}
 			{/* belt */}
-			<g transform={mx(g.torso)}><path d={poly([[-1.22, -2.2], [1.02, -2.2], [1.02, -1.7], [-1.26, -1.7]])} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
-				{[-0.9, -0.45, 0, 0.45].map((xx, i) => <rect key={xx} x={xx} y={-2.1} width={0.3} height={0.3} fill={[PAL.blue, PAL.red][i % 2]} />)}</g>
+			<g transform={mx(g.torso)}><path d={poly([[-1.22, -2.2], [1.02, -2.2], [1.02, -1.7], [-1.26, -1.7]])} fill={cast.apron === false ? PAL.linen : PAL.gold} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
+				{cast.apron !== false && [-0.9, -0.45, 0, 0.45].map((xx, i) => <rect key={xx} x={xx} y={-2.1} width={0.3} height={0.3} fill={[PAL.blue, PAL.red][i % 2]} />)}
+				{cast.apron === false && <path d={sp([[0.75, -1.8], [1.15, -0.6], [1.0, 0.4], [0.75, 0.45], [0.82, -0.6], [0.5, -1.75]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.LW} />}</g>
 		</g>; };
 	const bullTail = () => { if (!cast.tail || cast.dress !== 'kilt') return null; const o = tP(g.torso, [-1.25, -1.8]), a = -0.85 * (torsoRot) + sway(1.7, 0.4, 4) - vt * 0.05;
 		const d = sp([[-0.13, 0], [0.13, 0], [0.12, 4.2], [0.25, 5.0], [0.05, 5.6, 1], [-0.25, 5.0], [-0.12, 4.2]], true, 0.16);
@@ -392,6 +438,19 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 			<line x1={back[0]} y1={back[1]} x2={tP(g.torso, [-0.9, -6.5])[0]} y2={tP(g.torso, [-0.9, -6.5])[1]} stroke={PAL.red} strokeWidth={c.LW * 3} />
 			<path d={sp([[top[0], top[1], 1], [lv(back as V, top as V, 0.5)[0], lv(back as V, top as V, 0.5)[1] + 0.12], [back[0], back[1], 1]], false)} fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.2} />
 		</g>; };
+	const gown = () => { // ep60 Tutu: a sheer white linen gown from the shoulders to the ankles, legs showing through
+		const P = (m: M, p: V): Pt => tP(m, p);
+		const pts: Pt[] = [P(g.torso, [-2.6, -6.2]), P(g.torso, [-1.5, -4.2]), P(g.torso, [-1.1, -2.1]), P(g.torso, [-1.65, 0.2]), P(g.rT, [-1.05, 2.0]), P(g.rS, [-0.95, 1.4]), P(g.rS, [-0.9, 4.8]), [...P(g.rS, [-0.8, 5.1]), 1] as Pt,
+			[...P(g.aS, [1.0, 5.1]), 1] as Pt, P(g.aS, [0.95, 1.6]), P(g.aT, [1.2, 1.4]), P(g.torso, [1.35, -0.6]), P(g.torso, [1.0, -2.1]), P(g.torso, [2.1, -3.9]), P(g.torso, [2.9, -6.1])];
+		const d = sp(pts, true, 0.15), hb = P(g.rS, [-0.8, 5.1]) as V, hf = P(g.aS, [1.0, 5.1]) as V, wb = P(g.torso, [-1.1, -2.1]) as V, wf = P(g.torso, [1.0, -2.1]) as V;
+		const pleats: React.ReactNode[] = [];
+		for (let i = 1; i < 12; i++) { const u = i / 12, a = lv(wb, wf, u), b = lv(hb, hf, u); pleats.push(<line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={PAL.linen2} strokeWidth={c.LW} opacity={0.85} />); }
+		const sash = [P(g.torso, [-1.15, -2.3]), P(g.torso, [1.05, -2.3])] as V[];
+		return <g key="gown"><path d={d} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 1.4} strokeLinejoin="round" />
+			<path d={d} fill={PAL.linen} opacity={0.66} />{pleats}
+			<line x1={sash[0][0]} y1={sash[0][1]} x2={sash[1][0]} y2={sash[1][1]} stroke={PAL.red} strokeWidth={c.LW * 2.6} />
+			<g transform={`translate(${sash[1][0]},${sash[1][1]}) rotate(${-torsoRot * 0.8 + sway(1.3, 0.6, 3)})`}><path d={sp([[-0.1, 0, 1], [0.14, 0, 1], [0.22, 2.4], [0.0, 2.7, 1], [-0.16, 2.4]])} fill={PAL.red} stroke={PAL.ink} strokeWidth={c.OW * 1.1} /></g>
+		</g>; };
 	const shroud = () => { // Osiris: mummiform wrapping over body and legs, legs together
 		const P = (m: M, p: V): Pt => tP(m, p);
 		const pts: Pt[] = [P(g.torso, [-0.5, -6.9]), P(g.torso, [-2.6, -6.3]), P(g.torso, [-2.2, -4.6]), P(g.torso, [-1.6, -2.2]), P(g.torso, [-1.6, 0.3]), P(g.rT, [-0.95, 1.6]), P(g.rT, [-0.9, 3.0]), P(g.rS, [-0.8, 1.0]), P(g.rS, [-0.62, 4.3]), P(g.rF, [-0.5, 0.5]), [...P(g.rF, [-0.35, 0.73]), 1] as Pt,
@@ -409,9 +468,9 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		</g>; };
 	// ---- head ----
 	const H = g.head, lapA = -headRot * 0.9 + sway(1.25, 0.2, 2.2) - vh * 0.06, lapO: V = cast.head === 'human' ? [0.26, -1.22] : [-0.12, -1.0], lapM = chain(H, T(lapO[0], lapO[1]), R(lapA), cast.head === 'human' ? I : [0.82, 0, 0, 0.92, 0, 0]);
-	const wigFill: Role = cast.wig === 'duplex' ? 'wigH' : 'wig';
+	const wigFill: Role = cast.wigColor ?? (cast.wig === 'duplex' ? 'wigH' : 'wig'), wigLine = cast.mask ? PAL.gold : wigFill === 'wig' ? PAL.wig2 : '#3a3436';
 	const lappet = cast.wig === 'tri' && <g key="lappet" transform={mx(lapM)}><Solid d={SH.lappet} r={wigFill} c={c} />
-		{[-0.2, 0.0, 0.2].map((xx) => <line key={xx} x1={xx} y1={0.15} x2={xx * 1.15} y2={2.7} stroke={PAL.wig2} strokeWidth={c.LW * 1.1} />)}
+		{[-0.2, 0.0, 0.2].map((xx) => <line key={xx} x1={xx} y1={0.15} x2={xx * 1.15} y2={2.7} stroke={wigLine} strokeWidth={c.LW * 1.1} />)}
 		<rect x={-0.4} y={2.72} width={0.92} height={0.18} fill={PAL.gold} /><rect x={-0.38} y={3.02} width={0.88} height={0.18} fill={PAL.gold} /></g>;
 	const headShape = cast.head === 'jackal' ? SH.jackal : cast.head === 'ibis' ? SH.ibis : cast.head === 'falcon' ? SH.falcon : SH.human;
 	const headFill = cast.head === 'human' ? skin : cast.headFill ?? skin;
@@ -421,6 +480,8 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 	const headGroup = <g key="head">
 		{streamers}
 		{cast.wig === 'tri' && cast.head !== 'human' && <g transform={mx(H)}><Solid d={SH.wigTriAnimal} r={wigFill} c={c} /></g>}
+		{cast.mask && <g transform={mx(g.neck)}><path d={sp([[-0.75, -0.55, 1], [-0.62, -1.25, 1], [0.7, -1.18, 1], [0.86, -0.5, 1]])} fill={PAL.jackal} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
+			<path d="M-0.72 -0.62L0.84 -0.56" stroke={PAL.gold} strokeWidth={c.LW * 2.6} /><path d="M-0.66 -0.9L0.78 -0.84" stroke={PAL.blue} strokeWidth={c.LW * 1.6} /></g>}
 		{cast.head !== 'human' && lappet}
 		<g transform={mx(H)}>
 			<Solid d={headShape} r={headFill} c={c} />
@@ -436,7 +497,7 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 				<Eye x={1.04} y={-1.3} L={0.5} c={c} rim={PAL.ink} brow={false} tail={0.25} /></>}
 			{cast.beard && <><Solid d={SH.beard} r="skinO2" c={c} />{[0.15, 0.4, 0.65, 0.9].map((yy) => <line key={yy} x1={1.1 + yy * 0.12} y1={yy} x2={1.36 + yy * 0.08} y2={yy + 0.04} stroke={PAL.ink} strokeWidth={c.LW * 0.8} />)}
 				<path d="M1.08 -0.1Q0.5 -0.25 0.2 -0.85" fill="none" stroke={PAL.ink} strokeWidth={c.LW} /></>}
-			{cast.wig === 'tri' && cast.head === 'human' && <><Solid d={SH.wigTri} r={wigFill} c={c} />{[-1.2, -0.85, -0.5].map((xx) => <path key={xx} d={`M${xx + 0.8} -2.5Q${xx} -1.6 ${xx - 0.1} 1.6`} fill="none" stroke={PAL.wig2} strokeWidth={c.LW * 1.1} />)}
+			{cast.wig === 'tri' && cast.head === 'human' && <><Solid d={SH.wigTri} r={wigFill} c={c} />{[-1.2, -0.85, -0.5].map((xx) => <path key={xx} d={`M${xx + 0.8} -2.5Q${xx} -1.6 ${xx - 0.1} 1.6`} fill="none" stroke={wigLine} strokeWidth={c.LW * 1.1} />)}
 				<path d="M0.74 -1.62Q0.95 -2.0 0.6 -2.5" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.4} /></>}
 			{cast.wig === 'duplex' && <><Solid d={SH.wigDuplex} r={wigFill} c={c} />{[-0.3, 0.2, 0.7].map((yy) => <path key={yy} d={`M${0.75} ${yy - 0.6}Q${-0.5} ${yy - 0.2} ${-1.5} ${yy - 0.65}`} fill="none" stroke="#3a3436" strokeWidth={c.LW * 1.1} />)}
 				<path d="M1.1 -1.72Q0.2 -1.55 -1.2 -2.15" fill="none" stroke={PAL.red} strokeWidth={c.LW * 2.6} /></>}
@@ -455,6 +516,11 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		if (k === 'palette') return <Palette key={key} m={chain(T(G[0], G[1]), R(paletteA), T(1.45, 0))} c={c} />;
 		if (k === 'crook') return <g key={key} transform={`translate(${G[0]},${G[1]}) scale(1.25) translate(${-G[0]},${-G[1]})`}><Crook at={G} a={16} c={{OW: c.OW / 1.25, LW: c.LW / 1.25}} /></g>;
 		if (k === 'flail') return <Flail key={key} at={G} a={-30} c={c} t={t} />;
+		if (k === 'sickle' || k === 'hoe') return <HeldTool key={key} kind={k} h={Hm} c={c} />;
+		if (k === 'sistrum') return <Sistrum key={key} at={G} c={c} t={t} />;
+		if (k === 'knife') return <Knife key={key} at={G} c={c} />;
+		if (k === 'stalks') return <Stalks key={key} at={G} c={c} t={t} />;
+		if (k === 'menat') return <Menat key={key} at={G} c={c} t={t} />;
 		return null; };
 	// ---- assemble (back → front) ----
 	const female = cast.female;
@@ -474,6 +540,8 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 	if (cast.dress === 'kilt') parts.push(kilt());
 	if (cast.dress === 'robe') parts.push(robe());
 	if (cast.dress === 'sheath') parts.push(sheath());
+	if (cast.dress === 'gown') parts.push(gown());
+	if (cast.dress === 'longkilt') parts.push(kilt());
 	if (mummy) parts.push(shroud());
 	parts.push(<Collar key="collar" m={g.torso} c={c} female={female} plain={cast.collar === 'plain'} />);
 	if (cast.dress === 'robe') parts.push(<path key="shirt" d={sp([[-3.3, -5.9], [-3.0, -6.7], [3.3, -6.7], [3.45, -5.8], [2.4, -5.0], [1.7, -4.4], [1.3, -2.4], [-1.0, -2.3], [-1.6, -4.6], [-2.6, -5.2]])} transform={mx(g.torso)} fill={PAL.linen} opacity={0.3} />);
@@ -562,6 +630,17 @@ function crown(k: Crown, c: Ctx, t: number, amp: number): React.ReactNode {
 			<g transform="translate(1.12,-3.2)"><Solid d={sp([[-0.12, 0.65], [-0.05, -0.1], [0.12, -0.38], [0.36, -0.3], [0.3, -0.08], [0.14, -0.04], [0.12, 0.65]])} r="gold" c={c} /></g>
 		</g>;
 	}
+	if (k === 'cone') return <g>{/* perfume cone on the wig + a lotus bud over the brow */}
+		<Solid d={sp([[-0.75, -2.62, 1], [0.55, -2.68, 1], [0.42, -3.3], [-0.05, -3.62], [-0.55, -3.36]])} r="#F1E1B2" c={c} />
+		{[-0.45, -0.1, 0.25].map((x) => <path key={x} d={`M${x} -3.35Q${x + 0.08} -3.0 ${x - 0.05} -2.66`} fill="none" stroke="#D98A3A" strokeWidth={c.LW * 1.6} />)}
+		<path d="M0.62 -2.25Q1.05 -2.05 1.2 -1.75" fill="none" stroke={PAL.green} strokeWidth={c.LW * 2} />
+		<Solid d={sp([[1.12, -1.82, 1], [1.5, -1.6], [1.62, -1.2, 1], [1.3, -1.36], [1.16, -1.05, 1], [1.0, -1.42]], true, 0.2)} r="blue" c={c} />
+	</g>;
+	if (k === 'sun') return <g>{/* Ra's sun disc with the uraeus */}
+		<circle cx={0.0} cy={-3.15} r={1.22} fill={PAL.ink} stroke={PAL.ink} strokeWidth={c.OW * 2} /><circle cx={0.0} cy={-3.15} r={1.22} fill={PAL.red} />
+		<circle cx={0.0} cy={-3.15} r={0.95} fill="none" stroke={PAL.gold} strokeWidth={c.LW * 1.6} />
+		<g transform="translate(-0.15,-0.25)"><Solid d={SH.uraeus} r="gold" c={c} /></g>
+	</g>;
 	if (k === 'maat') return <g transform="translate(-0.6,-1.95)"><Solid d={sp([[0, 0, 1], [0.24, -0.7], [0.18, -2.0], [0.05, -2.6], [-0.42, -2.82], [-0.62, -2.55], [-0.35, -2.4], [-0.25, -1.8], [-0.2, -0.6], [-0.18, 0, 1]])} r="linen" c={c} /></g>;
 	return null;
 }
