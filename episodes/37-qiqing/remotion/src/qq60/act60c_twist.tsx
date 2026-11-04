@@ -4,7 +4,6 @@ import React from 'react';
 import {AbsoluteFill} from 'remotion';
 import {God, CAST, Cast, Pose, POSES, solve, wristTo, reach} from './rig60';
 import {GLYPH_D, featherD} from './props60';
-import {Heart60} from './heart60';
 import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Stars, Shaft, rng, flick, F_SERIF, FW, FH, PIC_T, PIC_B} from './frame60';
 import {CAST2, tutuPose} from './cast60';
 import {STILL, LAY, S as S1920, aniPose, anubisPose, WState} from './scene60';
@@ -197,37 +196,59 @@ const S35: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-/* ======================= 36 · 「“心啊，别站出来[指控]我！”」 the heart on the pan opens its mouth to testify; the spell ribbon hushes it ======================= */
-/** the shared Heart60 as the talking heart, seated on the pan (pan units): open = mouth open to testify; ribbon 0..1 = the gold spell
-    band wrapping it twice (above the brows, below the mouth: the face stays readable); hush 0..1 = mouth shut, innocent smile */
-const TH = {h: 2.4, y: -1.18};
-const TalkHeart: React.FC<{open: number; ribbon: number; hush: number; t: number; id: string}> = ({open, ribbon, hush, t, id}) => {
-	const k = TH.h / 150;
-	// two bands in the heart's own 150-unit space: [centre x, centre y, rx, ry, tilt, start angle]
-	const B: [number, number, number, number, number, number][] = [[0, -47, 50, 11, -8, Math.PI * 0.85], [0, 55, 60, 12, 6, Math.PI * 0.2]]; // round the jar's neck, round its lower body
-	const band = (j: number, front: boolean) => {
-		const [cx0, cy0, rx, ry, tl, th0] = B[j], tilt = tl * Math.PI / 180, r = cl(ribbon * 2 - j);
+/* ======================= 36 · 「“心啊，别站出来[指控]我！”」 the heart on the pan opens its lid to speak; the spell ribbon hushes it ======================= */
+const HEART = sp([[-0.42, 0, 1], [0.42, 0, 1], [0.7, -0.35], [0.78, -0.95], [0.6, -1.32], [0.4, -1.42], [0.48, -1.62], [0.32, -1.78], [0.18, -1.6], [-0.18, -1.6], [-0.32, -1.78], [-0.48, -1.62], [-0.4, -1.42], [-0.6, -1.32], [-0.78, -0.95], [-0.7, -0.35]], true, 0.16);
+const HY = -1.37;
+/** the papyri's jar-shaped heart as a little character (units, base at y = 0): open = lid lifted like a mouth; ribbon 0..1 = the spell
+    band wrapping it twice; hush 0..1 = the innocent smile after the click */
+const TalkHeart: React.FC<{s: number; open: number; ribbon: number; hush: number; t: number; id: string}> = ({s, open, ribbon, hush, t, id}) => {
+	const c = ctxC(s);
+	const band = (k: number, front: boolean) => {
+		const yc = -0.42 - 0.52 * k, tilt = (k ? 9 : -11) * Math.PI / 180, rx = 1.0, ry = 0.24, r = cl(ribbon * 2 - k), th0 = Math.PI * 0.85 + k * 1.3;
 		if (r <= 0) return null;
-		const at = (th: number): V => { const ex = rx * Math.cos(th), ey = ry * Math.sin(th); return [cx0 + ex * Math.cos(tilt) - ey * Math.sin(tilt), cy0 + ex * Math.sin(tilt) + ey * Math.cos(tilt)]; };
-		const pts: V[][] = [[]], N = 64;
-		for (let i = 0; i <= N * r; i++) { const th = th0 + (i / N) * Math.PI * 2, isF = Math.sin(th) > 0;
-			if (isF === front) pts[pts.length - 1].push(at(th)); else if (pts[pts.length - 1].length) pts.push([]); }
+		const pts: V[][] = [[]]; const N = 64;
+		for (let i = 0; i <= N * r; i++) { const th = th0 + (i / N) * Math.PI * 2, ex = rx * Math.cos(th), ey = ry * Math.sin(th);
+			const p: V = [ex * Math.cos(tilt) - ey * Math.sin(tilt), yc + ex * Math.sin(tilt) + ey * Math.cos(tilt)], isF = Math.sin(th) > 0;
+			if (isF === front) pts[pts.length - 1].push(p); else if (pts[pts.length - 1].length) pts.push([]); }
 		const glyphs: React.ReactNode[] = [];
-		if (front) for (let i = 0; i < 6; i++) { const th = Math.PI * (0.16 + i * 0.135), u = ((th - th0) / (Math.PI * 2) + 2) % 1; if (u > r) continue;
-			const p = at(th); glyphs.push(<path key={i} d={GLYPH_D[GK[(i * 5 + j * 3) % GK.length]].d} fill={PAL.ink} transform={`translate(${p[0] - 6},${p[1] - 6.5}) scale(12)`} />); }
-		const head = r < 1 ? at(th0 + r * Math.PI * 2) : null;
-		return <g key={`${j}${front}`}>{pts.filter((q) => q.length > 1).map((q, i) => { const d = q.map((p, m) => `${m ? 'L' : 'M'}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('');
-			return <g key={i}><path d={d} fill="none" stroke={PAL.ink} strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" /><path d={d} fill="none" stroke="#F3C64E" strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" /></g>; })}
-			{glyphs}{front && head && <circle cx={head[0]} cy={head[1]} r={9} fill="url(#g60-white)" />}</g>;
+		if (front) for (let i = 0; i < 7; i++) { const th = Math.PI * (0.12 + i * 0.12), u = ((th - th0) / (Math.PI * 2) + 2) % 1; if (u > r) continue;
+			const ex = rx * Math.cos(th), ey = ry * Math.sin(th), p: V = [ex * Math.cos(tilt) - ey * Math.sin(tilt), yc + ex * Math.sin(tilt) + ey * Math.cos(tilt)];
+			glyphs.push(<path key={i} d={GLYPH_D[GK[(i * 5 + k * 3) % GK.length]].d} fill={PAL.ink} transform={`translate(${p[0] - 0.08},${p[1] - 0.09}) scale(0.17)`} />); }
+		return <g key={`${k}${front}`}>{pts.filter((q) => q.length > 1).map((q, i) => { const d = q.map((p, j) => `${j ? 'L' : 'M'}${p[0].toFixed(3)} ${p[1].toFixed(3)}`).join('');
+			return <g key={i}><path d={d} fill="none" stroke={PAL.ink} strokeWidth={0.2} strokeLinecap="round" strokeLinejoin="round" /><path d={d} fill="none" stroke="#F3C64E" strokeWidth={0.14} strokeLinecap="round" strokeLinejoin="round" /></g>; })}{glyphs}</g>;
 	};
-	const puffs = [0, 1].map((m) => { const u = cl((open - 0.55 - m * 0.2) / 0.45) * (1 - ribbon); if (u <= 0) return null;
-		return <g key={m} transform={`translate(${44 + 60 * u + 30 * m},${20 - 46 * u - 22 * m}) scale(36)`} opacity={u}><circle r={0.75} fill="url(#g60-gold)" opacity={0.8} /><path d={GLYPH_D[m ? 'mouth' : 'eye'].d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.05} transform="translate(-0.5,-0.5)" /></g>; });
-	const mouth = open * (1 - hush);
+	const lidA = -20 * open, look = hush;
+	const eye = (sg: number) => { const ex = sg * 0.27, ey = -0.82;
+		return <g key={sg}>
+			<ellipse cx={ex} cy={ey} rx={0.13} ry={0.17 - 0.03 * (1 - hush) * open} fill="#FFF8EC" stroke={PAL.ink} strokeWidth={c.LW * 1.1} />
+			<circle cx={ex + 0.02 - 0.03 * look} cy={ey - 0.02 - 0.06 * look} r={0.075} fill={PAL.ink} />
+			<circle cx={ex + 0.04 - 0.03 * look} cy={ey - 0.05 - 0.06 * look} r={0.026} fill="#FFFFFF" />
+			{/* brows: determined (slanted in) while speaking, raised and soft when hushed */}
+			<path d={`M${ex - 0.13} ${ey - 0.26 + sg * 0.05 * (1 - hush) - 0.04 * hush}Q${ex} ${ey - 0.31 - 0.04 * hush} ${ex + 0.13} ${ey - 0.26 - sg * 0.05 * (1 - hush) - 0.04 * hush}`} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} strokeLinecap="round" />
+		</g>; };
+	const puffs = [0, 1].map((k) => { const u = cl((open - 0.55 - k * 0.2) / 0.45) * (1 - ribbon); if (u <= 0) return null;
+		return <g key={k} transform={`translate(${-0.05 + k * 0.32},${-1.75 - u * 0.75 - k * 0.15}) scale(0.34)`} opacity={u}><path d={GLYPH_D[k ? 'mouth' : 'eye'].d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.06} transform="translate(-0.5,-0.5)" /></g>; });
 	return <g>
-		<g transform={`translate(0,${TH.y}) scale(${k})`}>{band(0, false)}{band(1, false)}</g>
-		<Heart60 x={0} y={TH.y} h={TH.h} id={id} glow={0.55} beat={0.35 * mouth * Math.max(0, Math.sin(t * 14))}
-			face={{eyes: 1, mouth, look: lerp(0.5, -0.9, hush), brow: lerp(0.25, 1, hush) + 0.4 * mouth, smile: hush}} />
-		<g transform={`translate(0,${TH.y}) scale(${k})`}>{band(0, true)}{band(1, true)}{puffs}</g>
+		<defs><clipPath id={`${id}-b`}><rect x={-2} y={HY} width={4} height={3} /></clipPath><clipPath id={`${id}-l`}><rect x={-2} y={-3} width={4} height={3 + HY} /></clipPath></defs>
+		{band(0, false)}{band(1, false)}
+		<g clipPath={`url(#${id}-b)`}><SolidC d={HEART} r="red" c={c} />
+			<path d="M-0.5 -0.45Q0 -0.3 0.5 -0.45" fill="none" stroke={PAL.red2} strokeWidth={c.LW * 1.6} />
+			<path d="M-0.58 -1.12Q-0.66 -0.7 -0.44 -0.32" fill="none" stroke="#E87A62" strokeWidth={c.LW * 3} strokeLinecap="round" /></g>
+		{open > 0.02 && <ellipse cx={0} cy={HY} rx={0.5} ry={0.03 + 0.14 * open} fill="#3A0604" stroke={PAL.ink} strokeWidth={c.LW} />}
+		<path d={`M-0.56 ${HY}L0.56 ${HY}`} stroke={PAL.ink} strokeWidth={c.LW * 1.4} />
+		<g transform={`translate(0,${-0.04 * open}) rotate(${lidA} -0.5 ${HY})`}><g clipPath={`url(#${id}-l)`}><SolidC d={HEART} r="red" c={c} />
+			<path d="M-0.38 -1.42Q0 -1.32 0.38 -1.42" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.6} /></g>
+			<path d={`M-0.5 ${HY - 0.035}L0.5 ${HY - 0.035}`} stroke={PAL.ink} strokeWidth={0.1} strokeLinecap="round" />
+			<path d={`M-0.48 ${HY - 0.035}L0.48 ${HY - 0.035}`} stroke={PAL.gold} strokeWidth={0.055} strokeLinecap="round" /></g>
+		<circle cx={-0.5} cy={HY - 0.02} r={0.055} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} />
+		{eye(-1)}{eye(1)}
+		{open > 0.05 && hush < 1 && <ellipse cx={0} cy={-0.47} rx={0.1 + 0.03 * open} ry={0.03 + 0.11 * open * (1 - hush)} fill="#3A0604" stroke={PAL.ink} strokeWidth={c.LW * 1.2} />}
+		{hush > 0 && <g opacity={hush}><path d="M-0.17 -0.5Q0 -0.36 0.17 -0.5" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} strokeLinecap="round" />
+			{[-1, 1].map((sg) => <ellipse key={sg} cx={sg * 0.45} cy={-0.56} rx={0.1} ry={0.055} fill="#FF9A8A" opacity={0.7} />)}</g>}
+		{band(0, true)}{band(1, true)}
+		{puffs}
+		{ribbon > 0 && ribbon < 1 && <circle cx={Math.cos(Math.PI * 0.85 + ribbon * 4 * Math.PI) * 1.0} cy={-0.42 - (ribbon > 0.5 ? 0.52 : 0) + 0.24 * Math.sin(Math.PI * 0.85 + ribbon * 4 * Math.PI)} r={0.12} fill="url(#g60-white)" />}
+		{t < -99 && null}
 	</g>;
 };
 const S36: React.FC<ShotProps> = ({t}) => {
@@ -246,7 +267,7 @@ const S36: React.FC<ShotProps> = ({t}) => {
 		{/* the far hall: two columns, out of focus */}
 		<circle cx={panX} cy={panY - 170} r={520} fill="url(#g60-gold)" opacity={0.35 + 0.25 * ribbon} />
 		<g opacity={0.35}>{[110, 1180].map((cx) => <g key={cx}><rect x={cx - 40} y={60} width={80} height={900} fill="#25347A" /><rect x={cx - 40} y={230} width={80} height={12} fill={PAL.gold} /></g>)}</g>
-		<BalanceC p={{tilt: 0.4 * Math.sin(t * 1.3), swingL: sw, swingR: -sw}} x={bx} y={by} s={s} t={t} heart={<TalkHeart open={open} ribbon={ribbon} hush={hush} t={t} id="c36h" />} />
+		<BalanceC p={{tilt: 0.4 * Math.sin(t * 1.3), swingL: sw, swingR: -sw}} x={bx} y={by} s={s} t={t} heart={<TalkHeart s={s} open={open} ribbon={ribbon} hush={hush} t={t} id="c36h" />} />
 	</Stage60>;
 };
 

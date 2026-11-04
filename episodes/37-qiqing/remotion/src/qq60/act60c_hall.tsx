@@ -9,8 +9,7 @@ import {ANI, ANI_POSES} from './cast60';
 import {wobIn, camE, eOut, eIn, bump, BalanceC, balW, HallBg, ctxC, Sparkle} from './act60c_common';
 import {PAL, lerp, sm, cl, seg, V, sp} from './geo60';
 import type {ShotProps} from './EP60';
-import {Ammit2} from './act60b_kit';
-import {Heart60} from './heart60'; // ep60 v2: the shared Ammit (builder B owns her design)
+import {Ammit2} from './act60b_kit'; // ep60 v2: the shared Ammit (builder B owns her design)
 
 const GY = 852;
 const silM = (r: number, g: number, b: number) => `0 0 0 0 ${r}  0 0 0 0 ${g}  0 0 0 0 ${b}  0 0 0 1 0`;
@@ -84,7 +83,7 @@ const S42: React.FC<ShotProps> = ({t}) => {
 			{[-1.85, -0.6, 0.6, 1.85].map((u) => <line key={u} x1={HX + u * pan} y1={HY} x2={HX + 260} y2={-60} stroke={PAL.ink} strokeWidth={2.4} />)}
 			<g transform={`translate(${HX},${HY}) scale(${pan})`}><path d={sp([[-2.05, 0, 1], [2.05, 0, 1], [1.6, 0.5], [0.7, 0.74], [-0.7, 0.74], [-1.6, 0.5]], true, 0.2)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={2.4 / pan} /></g>
 			{/* the heart goes between the inside of the mouth and the jaws (Ammit2 inMouth) */}
-			<Ammit2 pose={ap_} x={ax} y={ay} s={58} face={-1} t={t} rim={0.9} id="c42am" inMouth={<Heart60 x={HX} y={HY - 60} h={150} id="c42h" glow={0.45} beat={(beat - 1) * 4} />} />
+			<Ammit2 pose={ap_} x={ax} y={ay} s={58} face={-1} t={t} rim={0.9} id="c42am" inMouth={<g transform={`translate(${HX},${HY}) scale(${hs * beat})`}><Heart c={ctxC(hs)} /></g>} />
 		</>}
 	</Stage60>;
 };
@@ -165,7 +164,7 @@ const S54: React.FC<ShotProps> = ({t, dur}) => {
 		</>}
 		screen={<rect width={FW} height={FH} fill="#05081A" opacity={0.28 * dim} />}>
 		<HallBg t={t} x0={-300} x1={1700} cols={[110, 1330]} glyphs={false} />
-		<BalanceC p={p} x={BX} y={GY} s={s} t={t} beat={beat} />
+		<BalanceC p={p} x={BX} y={GY} s={s} t={t} />
 	</Stage60>;
 };
 
