@@ -1,4 +1,4 @@
-import React, {createContext, useContext} from 'react';
+import React, {createContext, useContext, useId} from 'react';
 import {AbsoluteFill, Img, staticFile, getInputProps} from 'remotion';
 import {PAL, sp, poly, lerp, cl, sm} from './geo60';
 import {WingedSun} from './props60';
@@ -85,7 +85,7 @@ export type Stamp = {era: string; place: string; src?: string};
 /** top-right stamp: era · place / source, cream on a dark outline, with a rule at the right (inside the safe area) */
 export const Stamp43: React.FC<{stamp: Stamp; o?: number}> = ({stamp, o = 1}) => <div style={{position: 'absolute', top: PIC_T + 20, right: FW - SAFE_R, textAlign: 'right', paddingRight: 14, opacity: o, fontFamily: F_SERIF, color: FC.cream, whiteSpace: 'nowrap'}}>
 	<div style={{position: 'absolute', right: 0, top: 4, bottom: 4, width: 3, background: FC.cream, boxShadow: `0 0 0 1.5px ${FC.ink}`}} />
-	<div style={{fontWeight: 900, fontSize: 37, lineHeight: 1.2, letterSpacing: '0.03em', textShadow: outline('#2a1608', 1.7)}}>{stamp.era}<span style={{color: FC.key, margin: '0 0.18em'}}>·</span>{stamp.place}</div>
+	<div style={{fontWeight: 900, fontSize: 37, lineHeight: 1.2, letterSpacing: '0.03em', textShadow: outline('#2a1608', 1.7)}}>{stamp.era}{stamp.place && <><span style={{color: FC.key, margin: '0 0.18em'}}>·</span>{stamp.place}</>}</div>
 	{stamp.src && <div style={{fontWeight: 900, fontSize: 29, lineHeight: 1.45, letterSpacing: '0.04em', textShadow: outline('#2a1608', 1.5)}}>{stamp.src}</div>}
 </div>;
 /** the J seal, bottom-right inside the picture */
@@ -195,7 +195,7 @@ export type StageProps = {
 /** Composes a scene at 1440 × 1080: world under a camera (pan/zoom), the aged-paper finish (texture ground, paint loss, stains,
     hand-painted wobble), the mood grade (tint, vignette, torch flicker), ONE fixed grain image, then the frame on top. */
 export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster', bg = 'plaster', ground, children, light, screen, sub, stamp, tags = [], seal = true, wear = 0.9, stain = 0.42, wobble = 2.4, frame = true, flickSeed = 0, dark = 0, darkC = '#2A1408'}) => {
-	const master = useContext(InMaster60);
+	const master = useContext(InMaster60), wobId = 'f60-wob-' + useId().replace(/[^a-zA-Z0-9]/g, '');
 	const G = GRADES[grade], z = cam.z, ip = getInputProps() as {fast?: boolean; noWobble?: boolean; noCss?: boolean};
 	if (ip.fast || ip.noWobble) wobble = 0;
 	const vx0 = cam.x - FW / 2 / z - 40, vy0 = cam.y - PIC_CY / z - 40, vw = FW / z + 80, vh = FH / z + 80;
@@ -211,7 +211,7 @@ export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster',
 				<pattern id="p60-papyrus" patternUnits="userSpaceOnUse" width={2048} height={1024}><image href={staticFile(TEX.papyrus)} width={2048} height={1024} /></pattern>
 				<pattern id="p60-wear" patternUnits="userSpaceOnUse" width={2048} height={1024} x={-300} y={-120}><image href={staticFile(TEX.wear)} width={2048} height={1024} /></pattern>
 				{/* hand-painted edge wobble: a FIXED displacement tile (no per-frame turbulence), only over the visible world rect */}
-				<filter id="f60-wob" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" x={vx0} y={vy0} width={vw} height={vh} colorInterpolationFilters="sRGB">
+				<filter id={wobId} filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" x={vx0} y={vy0} width={vw} height={vh} colorInterpolationFilters="sRGB">
 					<feImage href={staticFile(TEX.disp)} x={Math.floor(vx0 / 512) * 512} y={Math.floor(vy0 / 512) * 512} width={512} height={512} preserveAspectRatio="none" result="tile" />
 					<feTile in="tile" result="n" />
 					<feDisplacementMap in="SourceGraphic" in2="n" scale={wobble * 2.2} xChannelSelector="R" yChannelSelector="G" /></filter>
@@ -221,7 +221,7 @@ export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster',
 			<rect width={FW} height={FH} fill={ground ?? (tex ? PAL.plaster : bg)} />
 			<g transform={camT}>
 				{tex && <rect x={vx0} y={vy0} width={vw} height={vh} fill={`url(#p60-${tex})`} />}
-				<g filter={wobble > 0 ? 'url(#f60-wob)' : undefined}>{children}</g>
+				<g filter={wobble > 0 ? `url(#${wobId})` : undefined}>{children}</g>
 				{wear > 0 && <rect x={vx0} y={vy0} width={vw} height={vh} fill="url(#p60-wear)" opacity={wear} />}
 				{stain > 0 && <rect x={vx0} y={vy0} width={vw} height={vh} fill={`url(#p60-${tex ?? 'plaster'})`} opacity={stain} style={{mixBlendMode: 'multiply'}} />}
 				{G.haze > 0 && <rect x={vx0} y={vy0} width={vw} height={vh} fill="#F3E4C2" opacity={G.haze} />}
