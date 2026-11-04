@@ -134,11 +134,11 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 	const pose = {...tendPose(toF(bH), toF(fH), t, 16), neck: 2, head: 10 + 3 * Math.sin(ph)};
 	const day = Math.min(70, 1 + Math.floor(69 * sm(seg(t, 0.15, 2.9))));
 	// the sun arcs over the tent opening again and again (time-lapse); light breathes day/night
-	const sunPh = (t * 2.3) % 1, sunX = lerp(1010, 1250, sunPh), sunY = 300 - 150 * Math.sin(Math.PI * sunPh), dayL = Math.sin(Math.PI * sunPh);
+	const sunPh = (t * 1.25) % 1, sunX = lerp(1010, 1250, sunPh), sunY = 300 - 150 * Math.sin(Math.PI * sunPh), dayL = Math.sin(Math.PI * sunPh);
 	const masked = day >= 66;
 	const linen = (() => { const g = solve(pose), hp = toW(ex, GY, s, 1, ap(g.bH, [0.02, 0.6]));
 		return `M${hp[0]} ${hp[1]}Q${chest[0] - 10} ${chest[1] - 60 + 30 * Math.sin(ph)} ${chest[0] - 60 + 80 * Math.cos(ph)} ${chest[1] + 10}`; })();
-	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.32 - 0.14 * dayL} darkC="#1A1030" tags={[{x: ex - 170, y: 150, text: '防腐祭司'}]}
+	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.3 - 0.06 * dayL} darkC="#1A1030" tags={[{x: ex - 170, y: 150, text: '防腐祭司'}]}
 		light={<>
 			<Shaft pts={[[sunX - 60, 140], [sunX + 40, 140], [lerp(760, 300, sunPh) + 160, GY], [lerp(760, 300, sunPh) - 120, GY]]} o={0.55 * dayL} />
 			<Glow x={sunX} y={sunY} r={200} c="warm" o={0.9 * dayL} />
@@ -150,7 +150,7 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 		</>}>
 		<rect x={-200} y={PIC_T - 100} width={1900} height={GY + 200} fill="#D8BE8C" />
 		{/* the tent opening: sky racing through days and nights */}
-		<rect x={980} y={120} width={300} height={GY - 120} fill={dayL > 0.15 ? '#F2C878' : '#1E2A5E'} />
+		<rect x={980} y={120} width={300} height={GY - 120} fill="#F2C878" />
 		<rect x={980} y={120} width={300} height={GY - 120} fill="#1E2A5E" opacity={cl(1 - dayL * 1.6)} />
 		{dayL < 0.3 && <Stars t={t} box={[990, 130, 1270, 500]} n={20} seed={8} o={1 - dayL / 0.3} />}
 		<circle cx={sunX} cy={sunY} r={34} fill="#FFD27A" stroke="#E8642A" strokeWidth={3} opacity={cl(dayL * 3)} />

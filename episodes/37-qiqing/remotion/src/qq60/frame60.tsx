@@ -197,7 +197,9 @@ export type StageProps = {
 export const Stage60: React.FC<StageProps> = ({t, cam = CAM0, grade = 'plaster', bg = 'plaster', ground, children, light, screen, sub, stamp, tags = [], seal = true, wear = 0.9, stain = 0.42, wobble = 2.4, frame = true, flickSeed = 0, dark = 0, darkC = '#2A1408'}) => {
 	const master = useContext(InMaster60), wobId = 'f60-wob-' + useId().replace(/[^a-zA-Z0-9]/g, '');
 	const G = GRADES[grade], z = cam.z, ip = getInputProps() as {fast?: boolean; noWobble?: boolean; noCss?: boolean};
-	if (ip.fast || ip.noWobble) wobble = 0;
+	// the hand-painted edge wobble is a FIXED displacement field: still things look painted, but anything that moves through it boils
+	// frame to frame (owner 14:47: "why is the film glitchy"). Off in the film (InMaster60); the kit stills keep it.
+	if (ip.fast || ip.noWobble || master) wobble = 0;
 	const vx0 = cam.x - FW / 2 / z - 40, vy0 = cam.y - PIC_CY / z - 40, vw = FW / z + 80, vh = FH / z + 80;
 	const tex = bg === 'plaster' || bg === 'papyrus' ? bg : null;
 	const camT = `translate(${FW / 2},${PIC_CY}) scale(${z}) translate(${-cam.x},${-cam.y})`;

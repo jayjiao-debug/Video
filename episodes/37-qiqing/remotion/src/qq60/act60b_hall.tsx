@@ -19,7 +19,7 @@ const c_ = (s: number) => ({OW: 2.7 / s, LW: 1.5 / s});
 export const S18 = {boom: 0.2, walk0: 0.95, om: 5.0};
 export const Shot18: React.FC<ShotProps> = ({t}) => {
 	const open = keys(t, [[0.14, 0], [0.36, 1]]), boom = hit(t, S18.boom, 0.45), th = open * 78 * Math.PI / 180;
-	const cam = camPath(t, [[0.4, 150, 694, 2.0], [2.95, 720, 470, 0.92]]);
+	const cam = camPath(t, [[0.0, 300, 640, 1.5], [2.95, 700, 480, 0.95]]);
 	const as = 7, wu = Math.max(0, t - S18.walk0), ax = 150 + STRIDE * as * S18.om * wu * 0.9, ani: Pose = wu > 0 ? walkPose(S18.om * wu, {lean: 3, stride: 0.9}) : {...POSES.rest, rt: -4, at: 6, lean: 1, head: -3};
 	const shake = 4 * boom * Math.sin(t * 70);
 	const leaf = (hx: number, dir: 1 | -1, k: string) => { const w = 80 * Math.cos(th), d = 16 * Math.sin(th);
@@ -118,7 +118,7 @@ const Wisp: React.FC<{x: number; y: number; k: number; o: number; t: number; str
 export const Shot20: React.FC<ShotProps> = ({t}) => {
 	const i = t < S20.cuts[1] ? 0 : t < S20.cuts[2] ? 1 : 2, u = t - S20.cuts[i], s = 80;
 	const face: V = [760, 350];
-	const flash = cl(1 - u / 0.07) * (i > 0 || t >= 0 ? 0.3 : 0);
+	const flash = 0 * cl(1 - u / 0.07) * (i > 0 || t >= 0 ? 0.3 : 0);
 	const zoom = 1.0 + 0.09 * sm(u / 0.22) + 0.04 * u;
 	const cam: Cam = {x: face[0] + 40, y: face[1] + 130, z: zoom};
 	const bg = ['#16214F', '#0F2A3E', '#2A1030'][i], rim = ['gold', 'blue', 'red'][i];
@@ -389,7 +389,7 @@ const FrontBust: React.FC<{k: number; t: number; look: number; blink: number}> =
 export const Shot26: React.FC<ShotProps> = ({t}) => {
 	const k = 92, bx = 640, by = 560, eyes: V = [bx, by - 0.72 * k];
 	const turnA = cl((t - S26.turn[0]) / 0.14), turnB = cl((t - S26.turn[0] - 0.14) / (S26.turn[1] - S26.turn[0] - 0.14));
-	const prof = t < S26.turn[0] + 0.14, sx = prof ? lerp(1, 0.1, sm(turnA)) : lerp(0.1, 1, sm(turnB));
+	const xf = sm(cl((t - S26.turn[0]) / (S26.turn[1] - S26.turn[0]))), _turn = [turnA, turnB];
 	const lock = up(t, S26.lock - 0.1, 0.12), look = lerp(-1.1, 0, lock), blink = bell(t, 1.9, 2.05);
 	const z = keys(t, [[S26.turn[1], 1.0], [2.6, 1.42]]);
 	const cam: Cam = {x: eyes[0] + 87 / z, y: lerp(by - 40, eyes[1], up(t, 0.3, 2.0)), z};
@@ -405,10 +405,11 @@ export const Shot26: React.FC<ShotProps> = ({t}) => {
 		</>}>
 		<rect x={-400} y={-600} width={2400} height={2000} fill="#121B46" />
 		{[-1, 1].map((sg) => <g key={sg}>{[0, 1, 2].map((j) => <GlyphStack key={j} x={bx + sg * (520 + j * 120)} y={-180 + j * 40} cell={70} n={10} seed={262 + j + (sg > 0 ? 5 : 0)} color="#B8923A" glow={0} o={0.45 - j * 0.1} />)}</g>)}
-		{prof ? <g transform={`translate(${bx},0) scale(${sx},1) translate(${-bx},0)`}>
+		{xf < 1 && <g opacity={1 - xf}>
 			<Judge id="b26p" cast={JUDGE.horned} pose={jp} x={fx} y={fy} s={js} face={-1} t={t} hold="none" seat={PAL.green} />
 			<InBone pose={jp} x={fx} y={fy} s={js} face={-1} bone="head"><Horns c={c_(js * 1.13)} t={t} /><BrowRaise c={c_(js * 1.13)} raise={1} skin={PAL.skinM2} /></InBone>
-		</g> : <g transform={`translate(${bx},${by}) scale(${sx},1)`}><FrontBust k={k} t={t} look={look} blink={blink} /></g>}
+		</g>}
+		{xf > 0 && <g opacity={xf} transform={`translate(${bx},${by})`}><FrontBust k={k} t={t} look={look} blink={blink} /></g>}
 	</Stage60>;
 };
 export const _keep = {Embers, Stars, Shaft, ap, mx, chain, T, R, rng, Ceiling, solve, BigKnife, hit, seg, sm, GlyphColumns, PIC_CY};
