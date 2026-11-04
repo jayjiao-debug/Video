@@ -1,0 +1,51 @@
+plan: {'tier': 'starter', 'character_count': 4000, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+music retry without force_instrumental: 429 {"detail":{"type":"rate_limit_error","code":"system_busy","message":"The system is experiencing heavy traffic. Please try again.","status":"system_busy","request_id":"5e056e97dd9d9861a22d1b21edde7e91","docs_url":"https://elevenlabs.io/docs/eleven-api/resources/errors#rate-limiting-and-concurrency"}}
+{"name": "E1_snake_charmer", "type": "music", "text": "Instantly recognizable stereotypical 'ancient Egypt' music as heard in cartoons and adventure films: a nasal, buzzy snake-charmer mizmar / zurna melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C), with sinuous ornaments and trills; belly-dance darbuka groove (doum-tek baladi rhythm) loud in the mix, finger cymbals (zills) and tambourine, oud strumming, 120 BPM. Exotic, sly, catchy, bazaar and pyramids feeling. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "E1_snake_charmer.mp3", "bytes": 529180}
+{"name": "E2_epic_pharaoh", "type": "music", "text": "Epic Hollywood ancient Egypt adventure score: full orchestra playing sweeping Hijaz-scale string runs with the augmented second clearly heard, deep low male choir chanting 'ah', huge war drums and taiko hits, brass stabs, and a soaring female wordless Middle-Eastern vocal melisma with ululation-like ornaments over the top; pyramids, pharaohs and gods, majestic and mysterious, 100 BPM.", "model": null, "status": 200, "sfx": true, "file": "E2_epic_pharaoh.mp3", "bytes": 529180}
+{"name": "E3_tomb_mystic", "type": "music", "text": "Mysterious ancient Egyptian tomb music: an ethereal female voice singing a wordless Arabic-style melisma in the Hijaz scale with heavy ornamentation, oud tremolo, a low drone, a slow darbuka pattern, sistrum and finger cymbal shimmers, deep temple reverb; dark, sacred, mystical, unmistakably 'Egypt'.", "model": null, "status": 200, "sfx": true, "file": "E3_tomb_mystic.mp3", "bytes": 529180}
+{"name": "E4_playful_egypt", "type": "music", "text": "Playful, comedic stereotypical Egyptian cartoon music: a sneaky clarinet and mizmar melody in the Hijaz scale (snake-charmer style), bouncy pizzicato strings, darbuka and riq groove with finger cymbals, little oud flourishes, 115 BPM; cheeky and fun, like a cartoon character tiptoeing past the pyramids. Instrumental.", "model": null, "status": 200, "sfx": true, "file": "E4_playful_egypt.mp3", "bytes": 527926}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "E1_snake_charmer",
+  "type": "music",
+  "text": "Instantly recognizable stereotypical 'ancient Egypt' music as heard in cartoons and adventure films: a nasal, buzzy snake-charmer mizmar / zurna melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C), with sinuous ornaments and trills; belly-dance darbuka groove (doum-tek baladi rhythm) loud in the mix, finger cymbals (zills) and tambourine, oud strumming, 120 BPM. Exotic, sly, catchy, bazaar and pyramids feeling. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "E1_snake_charmer.mp3",
+  "bytes": 529180
+ },
+ {
+  "name": "E2_epic_pharaoh",
+  "type": "music",
+  "text": "Epic Hollywood ancient Egypt adventure score: full orchestra playing sweeping Hijaz-scale string runs with the augmented second clearly heard, deep low male choir chanting 'ah', huge war drums and taiko hits, brass stabs, and a soaring female wordless Middle-Eastern vocal melisma with ululation-like ornaments over the top; pyramids, pharaohs and gods, majestic and mysterious, 100 BPM.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "E2_epic_pharaoh.mp3",
+  "bytes": 529180
+ },
+ {
+  "name": "E3_tomb_mystic",
+  "type": "music",
+  "text": "Mysterious ancient Egyptian tomb music: an ethereal female voice singing a wordless Arabic-style melisma in the Hijaz scale with heavy ornamentation, oud tremolo, a low drone, a slow darbuka pattern, sistrum and finger cymbal shimmers, deep temple reverb; dark, sacred, mystical, unmistakably 'Egypt'.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "E3_tomb_mystic.mp3",
+  "bytes": 529180
+ },
+ {
+  "name": "E4_playful_egypt",
+  "type": "music",
+  "text": "Playful, comedic stereotypical Egyptian cartoon music: a sneaky clarinet and mizmar melody in the Hijaz scale (snake-charmer style), bouncy pizzicato strings, darbuka and riq groove with finger cymbals, little oud flourishes, 115 BPM; cheeky and fun, like a cartoon character tiptoeing past the pyramids. Instrumental.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "E4_playful_egypt.mp3",
+  "bytes": 527926
+ }
+]
