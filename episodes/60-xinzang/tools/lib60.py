@@ -170,7 +170,7 @@ PLAN = [
  (130.3, 142.17, 'bright_8bar', dict(inn='swell', out='cut')),          # 44-47 pass: Osiris, the Field of Reeds; the hiccup at 142.17
  (142.3, 156.3, 'playful_4bar', dict(inn='hard')),                      # 48-52 shabtis: playful again (reuse)
  (156.3, 164.3, 'mystery_8bar', dict(inn='x', out='x', cresc=4)),       # 53-54: the opening theme returns (bookend), +4 dB over its last bar into the cadence
- (164.3, 169.25, 'resolution_cadence', dict(inn='x')),                  # 55 end card: the last bar and the final chord ring through the card
+ (164.3, 169.25, 'resolution_cadence', dict(inn='x', db=-2.5)),         # 55 end card: the last bar and the final chord ring through the card (-2.5 dB: the crescendo already lifts it)
 ]
 FILM = 169.25
 
@@ -208,10 +208,11 @@ def softclip(x, ceil_db=-1.0, knee_db=2.5):
     c = 10 ** (ceil_db / 20); t = c * 10 ** (-knee_db / 20); up = signal.resample_poly(x, 4, 1, axis=0); a = np.abs(up); o = a > t
     a[o] = t + (c - t) * np.tanh((a[o] - t) / (c - t)); return signal.resample_poly(np.sign(up) * a, 1, 4, axis=0)[:len(x)]
 
-def master(y, target=-14.0, ceil=-1.75):
+def master(y, target=-14.0, ceil=-2.6):   # -2.6 dBTP in the wav = <= -1.5 dBTP after the mp3 encode (lame adds ~0.9 dB of overshoot here)
     g = 10 ** ((target - E.lufs(y)) / 20)
     for _ in range(3):
         z = softclip(y * g); g *= 10 ** ((target - E.lufs(z)) / 20)
+    z = E.limit(softclip(y * g), ceil, look=0.005, rel=0.15); g *= 10 ** ((target - E.lufs(z)) / 20)   # one pass with the limiter in the loop
     z = softclip(y * g); tp_in, tp_sc = E.true_peak(y * g), E.true_peak(z); z = E.limit(z, ceil, look=0.005, rel=0.15)
     print(f'master: gain {20 * np.log10(g):+.1f} dB, peaks {tp_in:+.1f} dBTP -> soft clip {tp_sc:+.1f} -> limiter (max GR {max(0, tp_sc - ceil):.1f} dB)')
     return z
