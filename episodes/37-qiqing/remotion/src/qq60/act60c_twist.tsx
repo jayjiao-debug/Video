@@ -67,18 +67,31 @@ export const ScarabC: React.FC<{x: number; y: number; s: number; flip?: number; 
 		{glint > 0 && <g style={{mixBlendMode: 'screen'}} opacity={glint}><ellipse cx={-1.6 + 0.8 * Math.sin(t * 0.7)} cy={-2.0} rx={1.5} ry={0.7} fill="url(#g60-white)" /><circle cx={2.3} cy={-3.0 + 0.3 * Math.sin(t)} r={0.6} fill="url(#g60-white)" /></g>}
 	</g>;
 };
-/** a fingertip (flat style): a capsule from the tip running off at angle ang (deg, 0 = +x), with its nail */
-const Finger: React.FC<{tip: V; ang: number; w: number; len: number; thumb?: boolean}> = ({tip, ang, w, len, thumb}) => {
+/** a fingertip (flat style, house rule: no nail, no outline): a soft-shaded capsule from the rounded tip running off at angle ang (deg, 0 = +x) */
+const Finger: React.FC<{id: string; tip: V; ang: number; w: number; len: number; thumb?: boolean}> = ({id, tip, ang, w, len, thumb}) => {
 	const a = ang * Math.PI / 180, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux, r = w / 2;
-	const c: V = [tip[0] + ux * r * (thumb ? -1 : -1) * -1, tip[1] + uy * r];
 	const c0: V = [tip[0] + ux * r, tip[1] + uy * r], e: V = [c0[0] + ux * len, c0[1] + uy * len];
-	const d = `M${c0[0] + nx * r} ${c0[1] + ny * r}L${e[0] + nx * r} ${e[1] + ny * r}L${e[0] - nx * r} ${e[1] - ny * r}L${c0[0] - nx * r} ${c0[1] - ny * r}A${r} ${r} 0 0 1 ${c0[0] + nx * r} ${c0[1] + ny * r}Z`;
-	const side = thumb ? 1 : -1, nb: V = [c0[0] + ux * r * 0.15 + nx * r * 0.3 * side, c0[1] + uy * r * 0.15 + ny * r * 0.3 * side];
+	const cap = (k: number, dx = 0, dy = 0) => { const rr = r * k, q: V = [c0[0] + dx, c0[1] + dy], f: V = [e[0] + dx, e[1] + dy];
+		return `M${q[0] + nx * rr} ${q[1] + ny * rr}L${f[0] + nx * rr} ${f[1] + ny * rr}L${f[0] - nx * rr} ${f[1] - ny * rr}L${q[0] - nx * rr} ${q[1] - ny * rr}A${rr} ${rr} 0 0 0 ${q[0] + nx * rr} ${q[1] + ny * rr}Z`; };
+	/* light from the upper left: the side facing it is lit, the far side is in shade */
+	const lit = -1; void thumb;
 	return <g>
-		<path d={d} fill="#C9744A" stroke={PAL.ink} strokeWidth={3.5} strokeLinejoin="round" />
-		<ellipse cx={nb[0]} cy={nb[1]} rx={r * 0.62} ry={r * 0.4} transform={`rotate(${ang} ${nb[0]} ${nb[1]})`} fill="#ECBDA2" stroke={PAL.ink} strokeWidth={2} />
-		{[1.6, 2.0].map((k) => { const p: V = [c0[0] + ux * r * k * 1.6, c0[1] + uy * r * k * 1.6]; return <path key={k} d={`M${p[0] + nx * r * 0.55} ${p[1] + ny * r * 0.55}Q${p[0] + ux * 6} ${p[1] + uy * 6} ${p[0] - nx * r * 0.55} ${p[1] - ny * r * 0.55}`} fill="none" stroke="#8A4428" strokeWidth={2.4} opacity={0.7} />; })}
-		{c && null}
+		<defs>
+			<linearGradient id={`${id}g`} gradientUnits="userSpaceOnUse" x1={c0[0] + nx * r * lit} y1={c0[1] + ny * r * lit} x2={c0[0] - nx * r * lit} y2={c0[1] - ny * r * lit}>
+				<stop offset="0" stopColor="#E6A27A" /><stop offset="0.4" stopColor="#CF7E55" /><stop offset="0.8" stopColor="#A2583A" /><stop offset="1" stopColor="#7E4028" />
+			</linearGradient>
+			<radialGradient id={`${id}p`} gradientUnits="userSpaceOnUse" cx={tip[0] + ux * r * 0.55} cy={tip[1] + uy * r * 0.55} r={r * 1.1}>
+				<stop offset="0" stopColor="#B4603E" stopOpacity={0.45} /><stop offset="1" stopColor="#B4603E" stopOpacity={0} />
+			</radialGradient>
+			<filter id={`${id}b`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={r * 0.18} /></filter>
+		</defs>
+		{/* soft contact shadow on the stone */}
+		<path d={cap(1.02, 4 + r * 0.08, 7 + r * 0.12)} fill="#06140E" opacity={0.35} filter={`url(#${id}b)`} />
+		<path d={cap(1)} fill={`url(#${id}g)`} />
+		{/* the pad pressed on the edge, a little warmer */}
+		<path d={cap(1)} fill={`url(#${id}p)`} />
+		{/* a soft sheen along the lit side */}
+		<path d={`M${c0[0] + ux * r * 0.9 + nx * r * 0.55 * lit} ${c0[1] + uy * r * 0.9 + ny * r * 0.55 * lit}L${c0[0] + ux * len * 0.6 + nx * r * 0.55 * lit} ${c0[1] + uy * len * 0.6 + ny * r * 0.55 * lit}`} stroke="#F4C3A0" strokeWidth={r * 0.22} strokeLinecap="round" opacity={0.35} filter={`url(#${id}b)`} />
 	</g>;
 };
 /** rays from a point (screen), rotating */
@@ -190,8 +203,8 @@ const S35: React.FC<ShotProps> = ({t}) => {
 		{/* a thumb and a forefinger hold it by its two ends and turn it (it is egg-sized: 6.6 × 5.3 cm) */}
 		{(() => { const ss = s * (1 + 0.07 * lift), cy = SY - 26 * lift + 6 * land, fin = eOut(seg(t, -0.35, 0.1)), off = (1 - fin) * 360;
 			return <g transform={`translate(${off},${off * 0.4})`}>
-				<Finger tip={[SX + 0.2 * ss, cy - 4.95 * ss]} ang={-38} w={2.3 * ss} len={700} />
-				<Finger tip={[SX + 0.2 * ss, cy + 5.0 * ss]} ang={36} w={2.7 * ss} len={700} thumb />
+				<Finger id="c35f" tip={[SX + 0.2 * ss, cy - 4.45 * ss]} ang={-38} w={2.3 * ss} len={700} />
+				<Finger id="c35t" tip={[SX + 0.2 * ss, cy + 4.5 * ss]} ang={36} w={2.7 * ss} len={700} thumb />
 			</g>; })()}
 	</Stage60>;
 };
@@ -434,7 +447,7 @@ const S39: React.FC<ShotProps> = ({t}) => {
 	const hit = T39.taps.reduce((a, tt) => Math.max(a, 1 - cl(Math.abs(t - tt) / 0.11)), 0);
 	const chiselP: V = [mx0 + (0.55 + ci * 1.08) * ms, my0 + (ROWS39[PATCH.j].y + 0.1) * ms];
 	return <AbsoluteFill>
-		{xf < 1 && <Stage60 t={t} cam={camW} grade="night" bg="#10131C" wear={0.3} stain={0.3} wobble={wobIn(t)} tags={[{x: 560, y: 250, text: '哈特妮菲尔'}]}
+		{xf < 1 && <Stage60 t={t} cam={camW} grade="night" bg="#10131C" wear={0.3} stain={0.3} wobble={wobIn(t)}
 			light={<>
 				<Shaft pts={[[660, PIC_T - 60], [780, PIC_T - 60], [850, 800], [590, 800]]} o={0.55} />
 				<Glow x={720} y={478} r={150} c="gold" o={0.55} />
@@ -460,7 +473,7 @@ const S39: React.FC<ShotProps> = ({t}) => {
 			<text x={1005} y={496} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={34} fill="#B8371F">6.6 × 5.3 厘米</text>
 			<text x={1005} y={530} textAnchor="middle" fontFamily={F_SERIF} fontWeight={700} fontSize={17} fill="#2A2420">大都会艺术博物馆</text>
 		</Stage60>}
-		{xf > 0 && <AbsoluteFill style={{opacity: xf}}><Stage60 t={t} cam={camM} grade="night" bg="#151A26" wear={0.25} stain={0.25} wobble={xf < 1 ? 0 : wobIn(t - 1.1)} tags={[{x: 110, y: 120, text: '哈特妮菲尔'}]}
+		{xf > 0 && <AbsoluteFill style={{opacity: xf}}><Stage60 t={t} cam={camM} grade="night" bg="#151A26" wear={0.25} stain={0.25} wobble={xf < 1 ? 0 : wobIn(t - 1.1)}
 			light={<>
 				<Glow x={mx0 + 1.5 * ms} y={my0 + ROWS39[PATCH.j].y * ms} r={420} c="gold" o={0.2 + 0.25 * cl(cut / 3)} />
 				{rasp && <Dust t={t * 3} box={[mx0 - 60, my0 - 40, mx0 + 420, my0 + 120]} n={40} seed={391} c="#E8F5DA" o={0.8} vx={60} vy={-30} r={3} />}
