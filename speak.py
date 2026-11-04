@@ -75,6 +75,24 @@ for it in req["items"]:
         if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         else: rec["error"] = r.text[:400]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "music":   # ElevenLabs Music: {"type":"music","name","text" (prompt) | "plan" (composition plan),"ms"?,"model"?,"instrumental"?}
+        body = {}
+        if it.get("plan"): body["composition_plan"] = it["plan"]
+        else:
+            body["prompt"] = it["text"]; body["music_length_ms"] = int(it.get("ms", 30000))
+            if it.get("instrumental", True): body["force_instrumental"] = True
+        mm = it.get("model") or next((m for m in ids if m and "music" in m), None)
+        if mm: body["model_id"] = mm
+        url = f"{API}/v1/music?output_format=mp3_44100_192"
+        r = requests.post(url, headers=H, json=body, timeout=900)
+        if not r.ok and "model_id" in body:
+            log("music retry without model_id:", r.status_code, r.text[:300]); body.pop("model_id"); r = requests.post(url, headers=H, json=body, timeout=900)
+        if not r.ok and "force_instrumental" in body:
+            log("music retry without force_instrumental:", r.status_code, r.text[:300]); body.pop("force_instrumental"); r = requests.post(url, headers=H, json=body, timeout=900)
+        rec = {"name": it["name"], "type": "music", "text": it.get("text", ""), "model": body.get("model_id"), "status": r.status_code, "sfx": True}
+        if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
+        else: rec["error"] = r.text[:600]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     vid, vname = (it.get("voice_id"), it.get("voice_id"))
     if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
