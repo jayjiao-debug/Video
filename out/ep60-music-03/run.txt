@@ -1,0 +1,28 @@
+plan: {'tier': 'starter', 'character_count': 18473, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "ep60lib_danger", "type": "music", "text": "", "model": null, "status": 200, "sfx": true, "file": "ep60lib_danger.mp3", "bytes": 577454}
+{"name": "ep60lib_groove", "type": "music", "text": "", "model": null, "status": 200, "sfx": true, "file": "ep60lib_groove.mp3", "bytes": 960514}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "ep60lib_danger",
+  "type": "music",
+  "text": "",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "ep60lib_danger.mp3",
+  "bytes": 577454
+ },
+ {
+  "name": "ep60lib_groove",
+  "type": "music",
+  "text": "",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "ep60lib_groove.mp3",
+  "bytes": 960514
+ }
+]
