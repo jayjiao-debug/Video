@@ -521,9 +521,10 @@ class Tension(Cue):
     """the weighing: low drone, heartbeat bendir, the Eb/D rub climbing D-Eb > F#-G > A-Bb > D-Eb, sparse plucks,
     a riser, one beat of silence, then the verdict hit on bar 18. 78 BPM (3/4 of groove), 18 bars = 55.38 s.
     bed=True: an 8-bar loop at a steady low intensity for the waiting before the weighing.
-    hush=True (script shot 33): same build, but bar 17 drops to drone + a heartbeat that speeds up, then the silent beat."""
+    hush=True (script shot 33): same build, but bar 17 drops to drone + a heartbeat that speeds up, then the silent beat.
+    hush='dry': the same, with no heartbeat in bar 17 (the film plays the heart as SFX on the picture's own pulses)."""
     def __init__(self, bars=18, seed=62, bed=False, hush=False):
-        name = 'tension_loop' if bed else ('tension_hush' if hush else 'tension')
+        name = 'tension_loop' if bed else ('tension_hushdry' if hush == 'dry' else 'tension_hush' if hush else 'tension')
         super().__init__(name, 78, 8 if bed else bars, seed, 1.9, TENSION_CFG); self.bed = bed; self.hush = hush; self.next_pass = False
     def I(self, b): return 0.45 if self.bed else min(1.0, 0.2 + 0.8 * b / 15)
     def score(self, m, t0, first):
@@ -532,7 +533,7 @@ class Tension(Cue):
             t = t0 + b * B; r = m.r(b, 't'); I = self.I(b)
             per = 2 if (not self.bed and b < 2) else 1
             hits = np.arange(0, 4, per) if b < 16 or self.bed else np.arange(0, 3, 0.5)   # bar 17: eighths, beat 4 silent
-            if b == 16 and self.hush: hits = np.array([0, 0.8, 1.45, 1.95, 2.35, 2.65, 2.88])   # the heart speeds up alone
+            if b == 16 and self.hush: hits = np.array([]) if self.hush == 'dry' else np.array([0, 0.8, 1.45, 1.95, 2.35, 2.65, 2.88])   # the heart speeds up alone
             for h in hits:
                 v = (0.3 + 0.7 * I) * (1 if h % 1 == 0 else 0.7) * (0.92 + 0.16 * r.random()) * (0.75 if (b == 16 and self.hush) else 1)
                 m.add('heart', heart(r, v), t + h * bt + r.normal(0, .003), 0)
@@ -587,6 +588,8 @@ class Tension(Cue):
         m.add('reed', reed([('D4', 1.6, 'fall')], 0.55, r, 'mizmar'), t + 0.01, -0.15)
     def hits(self):
         if self.bed: return {'loop': '8 bars, steady heartbeat every beat, D4/Eb4 rub'}
+        if self.hush == 'dry': return {'hush_bar17_from_s': round(16 * self.bar, 3), 'silence_from_s': round(16 * self.bar + 3 * self.beat, 3),
+                                       'VERDICT_HIT_s': round(17 * self.bar, 3), 'note': 'bar 17 = drone only; bars 1-16 sample-identical to tension_hush'}
         if self.hush: return {'hush_bar17_from_s': round(16 * self.bar, 3), 'silence_from_s': round(16 * self.bar + 3 * self.beat, 3),
                               'VERDICT_HIT_s': round(17 * self.bar, 3), 'note': 'bar 17 = drone + accelerating heartbeat only (script shot 33)'}
         return {'rub_enters_bar': 5, 'climb_bars': [13, 14, 15, 16], 'silence_from_s': round(16 * self.bar + 3 * self.beat, 3),
@@ -786,6 +789,12 @@ def make_cue(name, out, meta):
                           downbeat0_s=0.0, hits=cue.hits(), lufs=round(lufs(full[:int(cue.L * SR)]), 2), tp=round(true_peak(full), 2),
                           loop_lufs=round(lufs(lp), 2), loop_tp=round(true_peak(lp), 2))
     print(name, 'done', round(time.time() - t_, 1), 's', json.dumps(meta.get(name, meta.get('tension')), ensure_ascii=False)[:300], flush=True)
+def make_hushdry(out, meta):   # only the dry hush variant (same seed and gain rule as tension_hush, so bars 1-16 are identical)
+    hu = Tension(hush='dry'); hf = build(hu, 'full'); m2 = Mix(hf.shape[0] / SR, hu.seed, hu.N); hu.score_hit(m2, hu.L - hu.bar)
+    hf = hf + render(m2, hu.cfg, make_ir(hu.rt60, seed=hu.seed)); hf = trim_tail(master(hf, fit_gain(hf, int(16 * hu.bar * SR)))); write(f'{out}/tension_hushdry.wav', hf)
+    meta['tension_hushdry'] = dict(file='tension_hushdry.wav', bpm=78, beats_per_bar=4, bar_s=round(hu.bar, 4), bars=hu.N, length_s=round(len(hf) / SR, 3),
+                                   downbeat0_s=0.0, hits=hu.hits(), lufs=round(lufs(hf), 2), tp=round(true_peak(hf), 2))
+    print('tension_hushdry', meta['tension_hushdry'], flush=True)
 def make_stings(out, meta):
     for nm in ('sting_reed_flourish', 'sting_roll_hit', 'sting_doom', 'sting_reveal', 'sting_comic'):
         y, hit = sting(nm); y = filt(sos_hp(28), y)
@@ -802,5 +811,6 @@ if __name__ == '__main__':
     mp = f'{out}/cues.json'; meta = json.load(open(mp)) if os.path.exists(mp) else {}
     for w in which:
         if w == 'stings': make_stings(out, meta)
+        elif w == 'tension_hushdry': make_hushdry(out, meta)
         else: make_cue(w, out, meta)
         json.dump(meta, open(mp, 'w'), ensure_ascii=False, indent=1)

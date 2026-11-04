@@ -44,23 +44,40 @@ def parse_plan(path):
         rows.append(r)
     return rows
 
+def load_shots():
+    try:
+        s = open(os.path.join(EP, '..', '37-qiqing/remotion/src/qq60/story60.ts'), encoding='utf-8').read()
+        i = s.index('= [', s.index('export const SHOTS')) + 2; return json.loads(s[i:s.index('];', i) + 1])
+    except Exception: return []
+SHOTS = load_shots(); SHOTW = {x['n']: (x['a'], x['b']) for x in SHOTS}
+
 def parse_sync(paths):
-    """tolerant reader: any line that starts with a shot number, then 'label 12.34' pairs."""
+    """tolerant reader for the builders' tables: a line that starts with a shot number, then events 'label 12.34' separated by
+    · | ; . A bare number repeats the last label (heartbeats 20.65, 21.50 -> heartbeats #1, #2). Only times inside the shot's window
+    (+-1 s) on the clock count, which drops shot-relative numbers ('0.58 [14.88]' keeps 14.88)."""
     ev = []
     for p in paths:
         for line in open(p, encoding='utf-8'):
             m = re.match(r'\s*[|*#>\-\s]*(?:shot\s*)?(\d{1,2})\b', line, re.I)
-            if not m: continue
-            shot = int(m.group(1)); rest = line[m.end():]
-            for lab, tm in re.findall(r'([^·|;,\d\s][^·|;,]*?)\s*[:=@]?\s*(\d{1,3}\.\d{1,3})\s*s?(?![\d.])', rest):
-                ev.append(dict(shot=shot, label=lab.strip(' -–:*`"').lower(), t=float(tm), src=os.path.basename(p)))
+            if not m or int(m.group(1)) not in SHOTW: continue
+            shot = int(m.group(1)); a, b = SHOTW[shot]; rest = line[m.end():]
+            for tok in re.split(r'[·|;]', rest):
+                pos, last, k = 0, None, 0
+                for mm in re.finditer(r'(?<![\d.])(\d{1,3}\.\d{1,3})(?![\d.])', tok):
+                    lab = re.sub(r'[\[\]()=:@`*",–\-]+', ' ', tok[pos:mm.start()]).strip().lower(); pos = mm.end(); tv = float(mm.group(1))
+                    if lab and not re.fullmatch(r'[\d.\s]*s?', lab): last, k = lab, 0
+                    if last is None or not (a - 1.0 <= tv <= b + 1.0): continue
+                    k += 1; ev.append(dict(shot=shot, label=last, k=k, t=tv, src=os.path.basename(p)))
     return ev
 
 def find_sync(ev, key):
+    """key 'shot:label~label#2': every word of a label must occur in the event's label; '#n' picks the n-th time of that label."""
     shot, labs = key.split(':', 1); shot = int(shot)
     for lab in labs.lower().split('~'):
+        lab, _, n = lab.strip().partition('#'); words = lab.split()
+        if not words: continue
         for e in ev:
-            if e['shot'] == shot and lab.strip() and lab.strip() in e['label']: return e
+            if e['shot'] == shot and all(w in e['label'] for w in words) and (not n or e['k'] == int(n)): return e
     return None
 
 def num(v, d=None):
@@ -85,10 +102,27 @@ def load(path):
 
 CUEMETA = json.load(open(f'{CUES}/cues.json'))
 SFXMETA = {r['name']: r for r in json.load(open(f'{SFX}/sfx_rows.json'))}
+def synth_sfx(spec):
+    """one-shot instruments from the score, so story sounds match the music: synth:heart = lub-dub (dub +0.17 s, as the
+    builders animate the heart glow) from egypt_cues.heart, whose knock (150-400 Hz) a phone speaker can play."""
+    kind = spec.split(':', 1)[1]
+    if kind in ('heart', 'heart1'):   # heart1: the lub alone (fast beats, where a dub would smear into the next lub)
+        rng = np.random.default_rng(9); n = int(0.9 * SR); m = np.zeros(n)
+        a = E.heart(rng, 1.0); m[:len(a)] += a
+        if kind == 'heart': b = E.heart(rng, 0.55); i = int(0.17 * SR); m[i:i + len(b)] += b[:n - i]
+        x = np.stack([m, m], 1); x = 0.8 * x + 0.3 * E.conv_st(x, E.make_ir(0.9, seed=31))
+        return (x / np.abs(x).max() * 10 ** (-3 / 20)).astype(np.float32), 0.004
+    if kind == 'squeak':   # one reed player squeaks as the band stops: Eb6 -> C6 blip on the mizmar (in D Hijaz)
+        y = E.reed([('Eb6', 0.08), ('C6', 0.11)], 0.8, np.random.default_rng(4), 'mizmar'); y = np.asarray(y, np.float64)
+        y = y if y.ndim == 2 else np.stack([y, y], 1); y = np.concatenate([y, np.zeros((int(0.6 * SR), 2))])   # room for the tail
+        y = 0.85 * y + 0.25 * E.conv_st(y, E.make_ir(1.0, seed=33)); return (y / np.abs(y).max() * 10 ** (-3 / 20)).astype(np.float32), 0.01
+    raise ValueError(spec)
+
 def base_cue(name):
     return name.replace('_loop', '').replace('_end', '')
 def hit_of(r):
     f = r['file']
+    if f.startswith('synth:'): return synth_sfx(f)[1]
     if r['type'] in ('sfx', 'amb'): return SFXMETA[f]['hit']
     m = CUEMETA.get(f) or CUEMETA.get(base_cue(f), {})
     return m.get('hit_s', m.get('hits', {}).get('VERDICT_HIT_s', 0.0))
@@ -122,6 +156,7 @@ def tapestop(src, s0, k):
 def place(buf, r, x, loop):
     """x: source (frames, 2). Returns (film_start_s, film_end_s) actually written."""
     fx = fx_of(r); t, at = r['_t'], r['_at']
+    if 'rev' in fx: x = x[::-1].copy()   # reversed (e.g. the sand blowing away, played backwards = the rewind)
     inn = num(r.get('in'), at if r['type'] in ('cue', 'sting', 'synth') else 0.0)
     if r['type'] in ('sfx', 'amb') and r.get('in') is None: inn = 0.0
     fs = t - (at - inn)
@@ -175,17 +210,19 @@ def seg_lufs(x):
     L = pyln.Meter(SR).integrated_loudness(x.astype(np.float64)); return L if np.isfinite(L) else -70.0
 
 BANDS = np.geomspace(100, 12500, 22)   # third-octave-ish edges
-def audibility(sfx, mus, i0, win=0.3):
-    """max over bands of (sfx band energy - music band energy) in dB, over win s from i0 (0 dB = level with the music
-    in its strongest band; > +3 dB pokes out on a phone; < -6 dB is likely masked)."""
-    n = int(win * SR); a = sfx[i0:i0 + n].mean(1); b = mus[i0:i0 + n].mean(1)
-    if len(a) < 256: return None
-    w = np.hanning(len(a)); A = np.abs(np.fft.rfft(a * w)) ** 2; Bm = np.abs(np.fft.rfft(b * w)) ** 2; f = np.fft.rfftfreq(len(a), 1 / SR)
-    best = -99.0
+def audibility(sfx, mus, i0, win=0.35):
+    """how far the effect pokes out: max over ~21 ms frames and third-octave bands (100 Hz-12.5 kHz, what a phone plays) of
+    (sfx band level - music band level) in dB. > +6 clearly heard on a phone; 0...+6 noticed; < 0 masked."""
+    n = int(win * SR); a = sfx[i0:i0 + n].mean(1).astype(np.float64); b = mus[i0:i0 + n].mean(1).astype(np.float64)
+    if len(a) < 2048: return None
+    f, _, A = signal.stft(a, SR, nperseg=1024, noverlap=512); _, _, Bm = signal.stft(b, SR, nperseg=1024, noverlap=512)
+    A, Bm = np.abs(A) ** 2, np.abs(Bm) ** 2; best = -99.0; floor = A.max() * 1e-4
     for lo, hi in zip(BANDS[:-1], BANDS[1:]):
-        k = (f >= lo) & (f < hi); ea, eb = A[k].sum(), Bm[k].sum()
-        if ea > 1e-12 * len(a): best = max(best, 10 * np.log10(ea / (eb + 1e-12)))
-    return round(float(best), 1)
+        k = (f >= lo) & (f < hi)
+        if not k.any(): continue
+        ea, eb = A[k].sum(0), Bm[k].sum(0); ok = ea > floor
+        if ok.any(): best = max(best, float((10 * np.log10(ea[ok] / (eb[ok] + 1e-12))).max()))
+    return round(best, 1)
 
 def true_peak_long(x):
     m = 0.0
@@ -225,10 +262,11 @@ def main():
         r['_fin'], r['_fout'] = num(r.get('fin'), dfin), num(r.get('fout'), dfout)
         r['_sync'] = None
         if r.get('sync'):
-            what, _, key = r['sync'].partition('<-'); e = find_sync(ev, key)
+            what, _, key = r['sync'].partition('<-'); key, _, off = key.partition('@'); e = find_sync(ev, key)
+            if e is not None: e = dict(e, t=e['t'] + float(off or 0))
             if e is None: waiting.append(r['id'])
             else:
-                used.add((e['shot'], e['label'], e['t'])); r['_sync'] = f"{e['src']}: {e['shot']} {e['label']} {e['t']:.2f}"
+                used.add((e['shot'], e['label'], e['t'])); r['_sync'] = f"{e['src']}: {e['shot']} {e['label']}#{e['k']} {e['t']:.2f}"
                 if what == 't': r['_t'] = e['t']
                 elif what == 'end': r['_endsync'] = e['t']
                 elif what == 'lock':
@@ -253,7 +291,8 @@ def main():
     sfxbus = np.zeros((NF, 2), np.float32)
     for r in rows:
         if r['type'] not in ('sfx', 'amb'): continue
-        fx = fx_of(r); x = load(f"{SFX}/{r['file']}.wav"); loop = r['type'] == 'amb' and r.get('_end') is not None
+        fx = fx_of(r); x = synth_sfx(r['file'])[0] if r['file'].startswith('synth:') else load(f"{SFX}/{r['file']}.wav")
+        loop = r['type'] == 'amb' and r.get('_end') is not None
         tmp = np.zeros((NF, 2), np.float32); g0 = r['_gain']; r['_gain'] = 0.0
         span = place(tmp, r, x, loop)
         if not span: continue
@@ -304,11 +343,7 @@ def main():
 
 def plot(y, music, sfxbus, log, path):
     import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
-    shots = []
-    try:
-        s = open(os.path.join(EP, '..', '37-qiqing/remotion/src/qq60/story60.ts'), encoding='utf-8').read()
-        i = s.index('= [', s.index('export const SHOTS')) + 2; shots = json.loads(s[i:s.index('];', i) + 1])
-    except Exception: pass
+    shots = SHOTS
     t, L = momentary(y); _, Ls = momentary(y, 3.0, 0.1)
     fig, ax = plt.subplots(3, 1, figsize=(22, 11), sharex=True, gridspec_kw=dict(height_ratios=[3, 2.2, 1]))
     ax[0].plot(t, L, lw=0.6, color='#555', label='momentary 400 ms'); ax[0].plot(_, Ls, lw=1.6, color='#c33', label='short-term 3 s')
