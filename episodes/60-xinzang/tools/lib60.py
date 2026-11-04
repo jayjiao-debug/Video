@@ -15,8 +15,8 @@ chroma of the bars that meet at the wrap). 'pre' seam: the loop's last beat cros
 end of the file flows into its start exactly as A flowed into bar 1 (clean first entrance); 'tail' seam: the beat after the loop
 cross-fades over the head (used when the bar before is a different texture). Thin = the same loop's harmonic layer (HPSS, sample
 aligned: full <-> thin switches on any bar without phasing). Button (_end) = the downbeat after the loop, dry, then a short ring-out
-(RT 1.2 s room, 35 % wet: a stop, not a wash). One match-EQ for the whole library (third-octave average of the loops vs the reference, 75 %, -8..+6 dB, 1-octave smoothing,
-linear phase, no cut deeper than 2.5 dB above 5 kHz: the reference's top end is codec roll-off) and one gain for the whole library (groove loop at -14 LUFS), so the moods keep A's relative dynamics.
+(RT 1.2 s room, 35 % wet: a stop, not a wash). One EQ for the whole library (broad gains solved so the loops' band shares <120 / 120-500 / 500-2k / 2-6k Hz match the
+reference's; the top follows the presence band within -2.5/+0.5 dB: the reference's top end is codec roll-off; linear phase) and one gain for the whole library (groove loop at -14 LUFS), so the moods keep A's relative dynamics.
 """
 import os, sys, json, subprocess, numpy as np, soundfile as sf
 from scipy import signal
@@ -113,13 +113,23 @@ def build(src, lib, ref):
     for name, (a, b, what) in ONESHOTS.items():
         x = y[int(a * SR):(int(b * SR) if b else len(y))].copy(); x = E.trim_tail(x, -70, 0.4); files[name] = x
         meta['modules'][name] = dict(seconds=round(len(x) / SR, 3), from_A=a, character=what)
-    # one match-EQ for the library, toward the reference's long-term spectrum
-    rp, *rr = ref.split(':'); r = load(rp, *rr) if rr else load(rp); c, Rs = third_oct(r)
-    Ls = np.mean([third_oct(files[f'{m}_{LOOPS[m][0]}bar'])[1] for m in LOOPS], 0)
-    g = 0.75 * ((Rs - Rs.mean()) - (Ls - Ls.mean())); g = np.convolve(np.pad(g, 1, mode='edge'), np.ones(3) / 3, 'valid'); g = np.clip(g - np.interp(1000, c, g), -8, 6)
-    g = np.where(c >= 6000, np.clip(g, -2.5, 1.5), g)   # above 6 kHz the reference is a screen recording (codec roll-off): do not copy it
-    fir = eq_fir(c, g); meta['match_eq_db'] = {f'{int(a)}': round(float(v), 1) for a, v in zip(c, g)}
-    print('match EQ (dB):', ' '.join(f'{int(a)}:{v:+.1f}' for a, v in zip(c, g)), flush=True)
+    # one EQ for the library, toward the reference's balance: iterate broad gains (log-f interpolation between band centres) until the
+    # library's band shares (<120, 120-500, 500-2k, 2-6k Hz, % of power) match the reference's; above 6 kHz follow the presence band
+    # within -2.5/+0.5 dB of the mids (the reference's top end is codec roll-off, and its 50 Hz line is not music: no third-octave chasing)
+    rp, *rr = ref.split(':'); r = load(rp, *rr) if rr else load(rp)
+    f, Pr = signal.welch(r.mean(1), SR, nperseg=16384)
+    Pl = np.mean([signal.welch(files[f'{m}_{LOOPS[m][0]}bar'].mean(1), SR, nperseg=16384)[1] for m in LOOPS], 0)
+    edges = [(20, 120), (120, 500), (500, 2000), (2000, 6000)]; cen = np.array([60., 245., 1000., 3460.])
+    share = lambda P: np.array([10 * np.log10(P[(f >= a) & (f < b)].sum() / P[f >= 20].sum()) for a, b in edges])
+    target = share(Pr); gc = np.zeros(4)
+    def curve(fq, gc):
+        G = np.interp(np.log(np.maximum(fq, 20)), np.log(cen), gc)
+        return np.where(fq >= 6000, np.clip(gc[3], gc[2] - 2.5, gc[2] + 0.5), G)
+    for _ in range(12): gc += 0.8 * (target - share(Pl * 10 ** (curve(f, gc) / 10)))
+    gc = np.clip(gc - gc[2], -9, 7); c = np.geomspace(31.5, 16000, 28); g = curve(c, gc)
+    fir = eq_fir(c, g); meta['eq_db'] = {f'{int(a)}': round(float(v), 1) for a, v in zip(c, g)}
+    meta['band_shares'] = dict(reference=[round(v, 1) for v in target], library_before=[round(v, 1) for v in share(Pl)], library_after=[round(v, 1) for v in share(Pl * 10 ** (curve(f, gc) / 10))])
+    print('EQ (dB):', ' '.join(f'{int(a)}:{v:+.1f}' for a, v in zip(c, g)), flush=True); print('band shares', meta['band_shares'], flush=True)
     eq = lambda x: signal.fftconvolve(np.concatenate([x, np.zeros((len(fir), 2))]), fir[:, None], mode='full')[len(fir) // 2:len(fir) // 2 + len(x)]
     for kk in files:
         files[kk] = circ(eq, files[kk]) if (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk else eq(files[kk])
@@ -130,10 +140,12 @@ def build(src, lib, ref):
     for kk in files:
         files[kk] = circ(ms, files[kk]) if (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk else ms(files[kk])
     meta['stereo'] = 'side high-passed at 150 Hz (bass mono), side -3 dB'
-    gain = 10 ** ((-14 - E.lufs(files['groove_8bar'])) / 20); meta['library_gain_db'] = round(20 * np.log10(gain), 2)
+    # stems with headroom: one gain for the whole library (groove loop at -22 LUFS) so nothing is limited here (the limiter is a -1 dBTP
+    # safety only); loudness is made once, in the master (soft clip + true-peak limiter), not by squashing every module
+    gain = 10 ** ((-22 - E.lufs(files['groove_8bar'])) / 20); meta['library_gain_db'] = round(20 * np.log10(gain), 2)
     for kk, x in files.items():
         loop = (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk
-        x = E.limit(x * gain, -2.0, circular=loop and not kk.startswith('hook')); sf.write(f'{lib}/{kk}.wav', x.astype(np.float32), SR, subtype='PCM_24')
+        x = E.limit(x * gain, -1.0, circular=loop and not kk.startswith('hook')); sf.write(f'{lib}/{kk}.wav', x.astype(np.float32), SR, subtype='PCM_24')
         meta.setdefault('files', {})[kk] = dict(seconds=round(len(x) / SR, 3), lufs=round(E.lufs(x), 1) if len(x) > SR else None, tp=round(E.true_peak(x), 2))
     json.dump(meta, open(f'{lib}/lib.json', 'w'), indent=1, ensure_ascii=False); print('wrote', lib, len(files), 'files')
 
@@ -187,8 +199,22 @@ def preview(lib, out):
             tail = ring(seg[-int(0.3 * SR):], wet=0.6)[int(0.3 * SR):] * 0.6; e = min(n, ib + len(tail)); y[ib:e] += tail[:e - ib]
         if outm == 'button':
             mood = name.split('_')[0]; bt = sf.read(f'{lib}/{mood}_end.wav', always_2d=True)[0]; e = min(n, a1 + len(bt)); y[a1:e] += bt[:e - a1] * 10 ** (o.get('db', 0) / 20)
-    L = E.lufs(y); y = E.limit(y * 10 ** ((-14 - L) / 20), -1.75); k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
+    y = master(y); k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
     sf.write(out, y.astype(np.float32), SR, subtype='PCM_24'); print('preview', out, round(len(y) / SR, 2), 's', round(E.lufs(y), 2), 'LUFS', round(E.true_peak(y), 2), 'dBTP')
+
+def softclip(x, ceil_db=-1.0, knee_db=2.5):
+    """4x oversampled tanh soft clip above a knee 2.5 dB under the ceiling: shaves the darbuka's few-ms peaks (a few dB at most)
+    without the pumping a deep brickwall would add to the oud between hits; the rare tutti hits are left to the limiter."""
+    c = 10 ** (ceil_db / 20); t = c * 10 ** (-knee_db / 20); up = signal.resample_poly(x, 4, 1, axis=0); a = np.abs(up); o = a > t
+    a[o] = t + (c - t) * np.tanh((a[o] - t) / (c - t)); return signal.resample_poly(np.sign(up) * a, 1, 4, axis=0)[:len(x)]
+
+def master(y, target=-14.0, ceil=-1.75):
+    g = 10 ** ((target - E.lufs(y)) / 20)
+    for _ in range(3):
+        z = softclip(y * g); g *= 10 ** ((target - E.lufs(z)) / 20)
+    z = softclip(y * g); tp_in, tp_sc = E.true_peak(y * g), E.true_peak(z); z = E.limit(z, ceil, look=0.005, rel=0.15)
+    print(f'master: gain {20 * np.log10(g):+.1f} dB, peaks {tp_in:+.1f} dBTP -> soft clip {tp_sc:+.1f} -> limiter (max GR {max(0, tp_sc - ceil):.1f} dB)')
+    return z
 
 if __name__ == '__main__':
     if sys.argv[1] == 'build': build(sys.argv[2], sys.argv[3], sys.argv[4])
