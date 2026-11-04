@@ -1,89 +1,653 @@
 {
- "id": "ep60-sfx-07",
+ "id": "ep60-music-01",
  "items": [
   {
-   "type": "sfx",
-   "name": "X40_deep_roar_a",
-   "text": "a huge deep lion roar from the chest, very low and resonant, rumbling body, then a long breathy throaty tail, close, powerful, realistic, no music",
-   "duration": 2.5,
-   "influence": 0.75
+   "type": "music",
+   "name": "ep60v6_music_A_cinematic",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian cinematic documentary score",
+     "Arabic maqam hijaz in D",
+     "120 bpm steady",
+     "oud",
+     "qanun",
+     "ney flute",
+     "soft cinematic strings",
+     "frame drums",
+     "belly-dance darbuka",
+     "warm mid-forward mix",
+     "natural room reverb",
+     "real acoustic instruments",
+     "background score under narration, understated melody",
+     "instrumental"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "dubstep",
+     "sub bass drop",
+     "synth lead",
+     "bright cymbal crashes"
+    ],
+    "sections": [
+     {
+      "section_name": "hook and title",
+      "positive_local_styles": [
+       "mysterious opening",
+       "solo ney flute over a low drone",
+       "finger cymbals",
+       "a slow swell into a deep temple gong at about 6 seconds"
+      ],
+      "negative_local_styles": [
+       "full drum groove"
+      ],
+      "duration_ms": 8400,
+      "lines": []
+     },
+     {
+      "section_name": "you die, the mummy",
+      "positive_local_styles": [
+       "calm mystery",
+       "gentle oud ostinato",
+       "soft frame drum on the downbeat",
+       "low warm drone",
+       "sparse and spacious"
+      ],
+      "negative_local_styles": [
+       "fast drums",
+       "loud"
+      ],
+      "duration_ms": 17600,
+      "lines": []
+     },
+     {
+      "section_name": "Book of the Dead",
+      "positive_local_styles": [
+       "light and curious",
+       "qanun plucks",
+       "light darbuka maqsum",
+       "playful but soft"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "heavy"
+      ],
+      "duration_ms": 15600,
+      "lines": []
+     },
+     {
+      "section_name": "underworld road",
+      "positive_local_styles": [
+       "dark danger",
+       "low frame drums",
+       "tense ostinato",
+       "ney trills",
+       "suspense"
+      ],
+      "negative_local_styles": [
+       "happy",
+       "bright"
+      ],
+      "duration_ms": 10100,
+      "lines": []
+     },
+     {
+      "section_name": "hall of 42 judges and the oath",
+      "positive_local_styles": [
+       "stately groove",
+       "full darbuka maqsum",
+       "oud and qanun melody in call and response",
+       "steady and dignified",
+       "ends with a light comic button and a short stop"
+      ],
+      "negative_local_styles": [
+       "chaotic",
+       "aggressive"
+      ],
+      "duration_ms": 25200,
+      "lines": []
+     },
+     {
+      "section_name": "the weighing",
+      "positive_local_styles": [
+       "building tension",
+       "slow heartbeat-like frame drum",
+       "rising intensity",
+       "long crescendo",
+       "ends in near silence: only a held low drone"
+      ],
+      "negative_local_styles": [
+       "cheerful",
+       "busy melody"
+      ],
+      "duration_ms": 21400,
+      "lines": []
+     },
+     {
+      "section_name": "twist: the scarab cheat",
+      "positive_local_styles": [
+       "playful and sly",
+       "staccato oud",
+       "sneaky mizmar melody",
+       "light darbuka",
+       "tiptoe rhythm"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "epic"
+      ],
+      "duration_ms": 23300,
+      "lines": []
+     },
+     {
+      "section_name": "fail: second death",
+      "positive_local_styles": [
+       "dark and ominous",
+       "low drone",
+       "sparse low drum hits",
+       "hollow"
+      ],
+      "negative_local_styles": [
+       "melody",
+       "bright"
+      ],
+      "duration_ms": 8500,
+      "lines": []
+     },
+     {
+      "section_name": "pass: Osiris and the Field of Reeds",
+      "positive_local_styles": [
+       "bright and open",
+       "qanun arpeggios",
+       "warm uplifting melody",
+       "sunlit"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "tense"
+      ],
+      "duration_ms": 12100,
+      "lines": []
+     },
+     {
+      "section_name": "shabtis at farm work",
+      "positive_local_styles": [
+       "playful and busy",
+       "bouncy darbuka",
+       "oud riff",
+       "riq tambourine",
+       "light comedy"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "slow"
+      ],
+      "duration_ms": 15000,
+      "lines": []
+     },
+     {
+      "section_name": "close and end card",
+      "positive_local_styles": [
+       "warm resolution",
+       "final cadence on D",
+       "ney and oud",
+       "slow fade out to silence"
+      ],
+      "negative_local_styles": [
+       "new themes",
+       "drums groove"
+      ],
+      "duration_ms": 12100,
+      "lines": []
+     }
+    ]
+   },
+   "model": "music_v2_5",
+   "instrumental": true
   },
   {
-   "type": "sfx",
-   "name": "X40_deep_roar_b",
-   "text": "a big lioness roaring deep and loud, heavy low chest rumble and a long throaty fade out, realistic animal, close, dry",
-   "duration": 2.2,
-   "influence": 0.75
+   "type": "music",
+   "name": "ep60v6_music_B_traditional",
+   "plan": {
+    "positive_global_styles": [
+     "traditional Egyptian ensemble",
+     "Arabic maqam hijaz in D",
+     "120 bpm steady",
+     "oud",
+     "qanun",
+     "ney flute",
+     "mizmar",
+     "belly-dance darbuka maqsum rhythm",
+     "riq tambourine",
+     "finger cymbals",
+     "warm acoustic room",
+     "real acoustic instruments",
+     "background music under narration, understated melody",
+     "instrumental"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "dubstep",
+     "sub bass drop",
+     "synth lead",
+     "bright cymbal crashes",
+     "orchestra",
+     "string section",
+     "choir",
+     "brass"
+    ],
+    "sections": [
+     {
+      "section_name": "hook and title",
+      "positive_local_styles": [
+       "mysterious opening",
+       "solo ney flute over a low drone",
+       "finger cymbals",
+       "a slow swell into a deep temple gong at about 6 seconds"
+      ],
+      "negative_local_styles": [
+       "full drum groove"
+      ],
+      "duration_ms": 8400,
+      "lines": []
+     },
+     {
+      "section_name": "you die, the mummy",
+      "positive_local_styles": [
+       "calm mystery",
+       "gentle oud ostinato",
+       "soft frame drum on the downbeat",
+       "low warm drone",
+       "sparse and spacious"
+      ],
+      "negative_local_styles": [
+       "fast drums",
+       "loud"
+      ],
+      "duration_ms": 17600,
+      "lines": []
+     },
+     {
+      "section_name": "Book of the Dead",
+      "positive_local_styles": [
+       "light and curious",
+       "qanun plucks",
+       "light darbuka maqsum",
+       "playful but soft"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "heavy"
+      ],
+      "duration_ms": 15600,
+      "lines": []
+     },
+     {
+      "section_name": "underworld road",
+      "positive_local_styles": [
+       "dark danger",
+       "low frame drums",
+       "tense ostinato",
+       "ney trills",
+       "suspense"
+      ],
+      "negative_local_styles": [
+       "happy",
+       "bright"
+      ],
+      "duration_ms": 10100,
+      "lines": []
+     },
+     {
+      "section_name": "hall of 42 judges and the oath",
+      "positive_local_styles": [
+       "stately groove",
+       "full darbuka maqsum",
+       "oud and qanun melody in call and response",
+       "steady and dignified",
+       "ends with a light comic button and a short stop"
+      ],
+      "negative_local_styles": [
+       "chaotic",
+       "aggressive"
+      ],
+      "duration_ms": 25200,
+      "lines": []
+     },
+     {
+      "section_name": "the weighing",
+      "positive_local_styles": [
+       "building tension",
+       "slow heartbeat-like frame drum",
+       "rising intensity",
+       "long crescendo",
+       "ends in near silence: only a held low drone"
+      ],
+      "negative_local_styles": [
+       "cheerful",
+       "busy melody"
+      ],
+      "duration_ms": 21400,
+      "lines": []
+     },
+     {
+      "section_name": "twist: the scarab cheat",
+      "positive_local_styles": [
+       "playful and sly",
+       "staccato oud",
+       "sneaky mizmar melody",
+       "light darbuka",
+       "tiptoe rhythm"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "epic"
+      ],
+      "duration_ms": 23300,
+      "lines": []
+     },
+     {
+      "section_name": "fail: second death",
+      "positive_local_styles": [
+       "dark and ominous",
+       "low drone",
+       "sparse low drum hits",
+       "hollow"
+      ],
+      "negative_local_styles": [
+       "melody",
+       "bright"
+      ],
+      "duration_ms": 8500,
+      "lines": []
+     },
+     {
+      "section_name": "pass: Osiris and the Field of Reeds",
+      "positive_local_styles": [
+       "bright and open",
+       "qanun arpeggios",
+       "warm uplifting melody",
+       "sunlit"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "tense"
+      ],
+      "duration_ms": 12100,
+      "lines": []
+     },
+     {
+      "section_name": "shabtis at farm work",
+      "positive_local_styles": [
+       "playful and busy",
+       "bouncy darbuka",
+       "oud riff",
+       "riq tambourine",
+       "light comedy"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "slow"
+      ],
+      "duration_ms": 15000,
+      "lines": []
+     },
+     {
+      "section_name": "close and end card",
+      "positive_local_styles": [
+       "warm resolution",
+       "final cadence on D",
+       "ney and oud",
+       "slow fade out to silence"
+      ],
+      "negative_local_styles": [
+       "new themes",
+       "drums groove"
+      ],
+      "duration_ms": 12100,
+      "lines": []
+     }
+    ]
+   },
+   "model": "music_v2_5",
+   "instrumental": true
   },
   {
-   "type": "sfx",
-   "name": "X40_deep_roar_c",
-   "text": "the deep resonant roar of a large lion, low growling chest, powerful, long tail, realistic, no music",
-   "duration": 2.5,
-   "influence": 0.65
-  },
-  {
-   "type": "sfx",
-   "name": "X41_jaw_slam_a",
-   "text": "giant jaws slamming shut: one heavy deep wet thud with a low body, a huge crocodile bite, no crunch, close, dry",
-   "duration": 1.0,
-   "influence": 0.75
-  },
-  {
-   "type": "sfx",
-   "name": "X41_jaw_slam_b",
-   "text": "a massive monster mouth closing hard: a deep heavy wet thump, low and short, no crunching, no music",
-   "duration": 1.0,
-   "influence": 0.65
-  },
-  {
-   "type": "sfx",
-   "name": "X42_small_chomp_a",
-   "text": "a small creature chomps once: quick jaws snap shut with a soft wet gulp, short, cartoon",
-   "duration": 0.7,
-   "influence": 0.7
-  },
-  {
-   "type": "sfx",
-   "name": "X43_lick_a",
-   "text": "a dog licking once, one wet slurpy tongue lick, close, short, dry",
-   "duration": 0.8,
-   "influence": 0.7
-  },
-  {
-   "type": "sfx",
-   "name": "X43_lick_b",
-   "text": "a slow wet lick, a tongue licking a drop off a blade, slurp, close, dry",
-   "duration": 1.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "X44_magic_whoosh_a",
-   "text": "a magical whoosh of glowing energy shooting forward, airy and sparkling, short, fantasy, no music",
-   "duration": 1.2,
-   "influence": 0.65
-  },
-  {
-   "type": "sfx",
-   "name": "X45_magic_impact_a",
-   "text": "a magic spell blast impact: a deep soft boom with a bright shimmering burst and a short ring, fantasy, no music",
-   "duration": 1.8,
-   "influence": 0.65
-  },
-  {
-   "type": "sfx",
-   "name": "X45_magic_impact_b",
-   "text": "an energy shield blasting outward: a warm thump, a whoosh and glittering sparkles, short, fantasy",
-   "duration": 1.6,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "X46_magic_shield",
-   "text": "a magic shield forming: a soft shimmering hum swelling with glittering sparkles, fantasy, no music",
-   "duration": 1.6,
-   "influence": 0.6
+   "type": "music",
+   "name": "ep60v6_music_C_epic",
+   "plan": {
+    "positive_global_styles": [
+     "Egyptian epic hybrid score",
+     "Arabic maqam hijaz in D",
+     "120 bpm steady",
+     "oud",
+     "qanun",
+     "ney flute",
+     "cinematic strings",
+     "frame drums",
+     "belly-dance darbuka",
+     "warm mid-forward mix",
+     "big natural hall reverb",
+     "background score under narration, understated melody",
+     "instrumental"
+    ],
+    "negative_global_styles": [
+     "EDM",
+     "trap",
+     "pop drums",
+     "drum kit",
+     "piano",
+     "guitar",
+     "Indian sitar",
+     "tabla",
+     "vocals",
+     "singing",
+     "harsh hi-hats",
+     "dubstep",
+     "sub bass drop",
+     "synth lead",
+     "bright cymbal crashes"
+    ],
+    "sections": [
+     {
+      "section_name": "hook and title",
+      "positive_local_styles": [
+       "mysterious opening",
+       "solo ney flute over a low drone",
+       "finger cymbals",
+       "a slow swell into a deep temple gong at about 6 seconds",
+       "low choir under the gong"
+      ],
+      "negative_local_styles": [
+       "full drum groove"
+      ],
+      "duration_ms": 8400,
+      "lines": []
+     },
+     {
+      "section_name": "you die, the mummy",
+      "positive_local_styles": [
+       "calm mystery",
+       "gentle oud ostinato",
+       "soft frame drum on the downbeat",
+       "low warm drone",
+       "sparse and spacious"
+      ],
+      "negative_local_styles": [
+       "fast drums",
+       "loud"
+      ],
+      "duration_ms": 17600,
+      "lines": []
+     },
+     {
+      "section_name": "Book of the Dead",
+      "positive_local_styles": [
+       "light and curious",
+       "qanun plucks",
+       "light darbuka maqsum",
+       "playful but soft"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "heavy"
+      ],
+      "duration_ms": 15600,
+      "lines": []
+     },
+     {
+      "section_name": "underworld road",
+      "positive_local_styles": [
+       "dark danger",
+       "low frame drums",
+       "tense ostinato",
+       "ney trills",
+       "suspense",
+       "low brass hits"
+      ],
+      "negative_local_styles": [
+       "happy",
+       "bright"
+      ],
+      "duration_ms": 10100,
+      "lines": []
+     },
+     {
+      "section_name": "hall of 42 judges and the oath",
+      "positive_local_styles": [
+       "stately groove",
+       "full darbuka maqsum",
+       "oud and qanun melody in call and response",
+       "steady and dignified",
+       "ends with a light comic button and a short stop"
+      ],
+      "negative_local_styles": [
+       "chaotic",
+       "aggressive"
+      ],
+      "duration_ms": 25200,
+      "lines": []
+     },
+     {
+      "section_name": "the weighing",
+      "positive_local_styles": [
+       "building tension",
+       "slow heartbeat-like frame drum",
+       "rising intensity",
+       "long crescendo",
+       "ends in near silence: only a held low drone",
+       "low male choir swells",
+       "low brass swells"
+      ],
+      "negative_local_styles": [
+       "cheerful",
+       "busy melody"
+      ],
+      "duration_ms": 21400,
+      "lines": []
+     },
+     {
+      "section_name": "twist: the scarab cheat",
+      "positive_local_styles": [
+       "playful and sly",
+       "staccato oud",
+       "sneaky mizmar melody",
+       "light darbuka",
+       "tiptoe rhythm"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "epic"
+      ],
+      "duration_ms": 23300,
+      "lines": []
+     },
+     {
+      "section_name": "fail: second death",
+      "positive_local_styles": [
+       "dark and ominous",
+       "low drone",
+       "sparse low drum hits",
+       "hollow"
+      ],
+      "negative_local_styles": [
+       "melody",
+       "bright"
+      ],
+      "duration_ms": 8500,
+      "lines": []
+     },
+     {
+      "section_name": "pass: Osiris and the Field of Reeds",
+      "positive_local_styles": [
+       "bright and open",
+       "qanun arpeggios",
+       "warm uplifting melody",
+       "sunlit",
+       "warm choir pad",
+       "soft brass swell"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "tense"
+      ],
+      "duration_ms": 12100,
+      "lines": []
+     },
+     {
+      "section_name": "shabtis at farm work",
+      "positive_local_styles": [
+       "playful and busy",
+       "bouncy darbuka",
+       "oud riff",
+       "riq tambourine",
+       "light comedy"
+      ],
+      "negative_local_styles": [
+       "dark",
+       "slow"
+      ],
+      "duration_ms": 15000,
+      "lines": []
+     },
+     {
+      "section_name": "close and end card",
+      "positive_local_styles": [
+       "warm resolution",
+       "final cadence on D",
+       "ney and oud",
+       "slow fade out to silence"
+      ],
+      "negative_local_styles": [
+       "new themes",
+       "drums groove"
+      ],
+      "duration_ms": 12100,
+      "lines": []
+     }
+    ]
+   },
+   "model": "music_v2_5",
+   "instrumental": true
   }
  ]
 }
