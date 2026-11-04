@@ -9,6 +9,8 @@ DUR = float(sys.argv[2]) if len(sys.argv) > 2 else 30.0
 BPM = float(sys.argv[3]) if len(sys.argv) > 3 else 100.0
 rng = np.random.default_rng(int(sys.argv[4]) if len(sys.argv) > 4 else 7)
 BEAT = 60 / BPM; E8 = BEAT / 2; BAR = 4 * BEAT
+import os
+BGM = os.environ.get('BGM') == '1'   # background mode: lead rests, softer, no qanun sweeps
 DR = 0.68   # drum level (the liked clip is melody-led: harmonic ≈ 10 dB over percussion)
 N = int(DUR * SR) + SR * 3
 L = np.zeros(N); R = np.zeros(N)
@@ -101,14 +103,15 @@ for b in range(bars):
         for e in range(8): put(riq((0.5 if e % 2 else 0.25) * DR), t + e * E8 + 0.01, 0.35)
         if b % 4 == 3:   # a roll into the next phrase
             for j in range(8): put(tek(0.25 + 0.05 * j), t + 6 * E8 + j * E8 / 4, 0.1)
-    if b % 2 == 0: put(zills(0.9 if b >= INTRO else 0.6), t, -0.3)
+    if b % 2 == 0 and (not BGM or b % 4 == 0): put(zills((0.9 if b >= INTRO else 0.6) * (0.5 if BGM else 1)), t, -0.3)
 plan = [A, B, A, C]
 k = 0; b = 0
 while (b + 2) * BAR <= DUR + 0.01:
     ph = plan[k % 4]; t0 = b * BAR
-    play_lead(ph, t0, g=0.30 if b >= INTRO else 0.26, breath=0.25 if b < INTRO else 0.12)
-    if b >= INTRO: play_oud(ph, t0 + 2 * BAR - 2 * E8 if False else t0, g=0.13)
-    if b >= 6 and k % 2 == 1:   # qanun runs answering the lead
+    if not BGM: play_lead(ph, t0, g=0.30 if b >= INTRO else 0.26, breath=0.25 if b < INTRO else 0.12)
+    elif k % 4 == 0: play_lead(ph, t0, g=0.13, breath=0.3)        # BGM: the reed only every 4th phrase, quiet and breathy
+    if b >= INTRO or BGM: play_oud(ph, t0, g=0.10 if BGM else 0.13)
+    if b >= 6 and k % 2 == 1 and not BGM:   # qanun runs answering the lead
         qanun_run(t0 + 2 * BAR - 4 * E8, ['D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C5', 'D5'], E8 / 4)
     k += 1; b += 2
 mix = np.stack([L, R], 1)[: int(DUR * SR)]
