@@ -1,103 +1,29 @@
 {
- "id": "ep60-sound-01",
+ "id": "ep60-sound-02",
  "items": [
   {
    "type": "music",
-   "name": "M1_bed_groove",
-   "ms": 30000,
-   "text": "Instrumental ancient Egyptian cinematic folk music, 110 BPM, Hijaz maqam on D (D, E-flat, F-sharp, G, A, B-flat, C) over a D drone. Opens with a solo ney flute over a low drone for about 6 seconds, then a darbuka plays the maqsum rhythm with riq and finger cymbals, an oud plucks a catchy motif and a qanun answers with fast runs, frame drum hits on each bar; it builds to a fuller, majestic finish with low strings. Playful, mysterious, majestic. Clean, punchy mix. No vocals."
+   "name": "E1_snake_charmer",
+   "ms": 22000,
+   "text": "Instantly recognizable stereotypical 'ancient Egypt' music as heard in cartoons and adventure films: a nasal, buzzy snake-charmer mizmar / zurna melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C), with sinuous ornaments and trills; belly-dance darbuka groove (doum-tek baladi rhythm) loud in the mix, finger cymbals (zills) and tambourine, oud strumming, 120 BPM. Exotic, sly, catchy, bazaar and pyramids feeling. Instrumental, no vocals."
   },
   {
    "type": "music",
-   "name": "M2_bed_underworld",
-   "ms": 20000,
-   "text": "Instrumental mystical ancient Egyptian underworld music for a judgement scene, slow 70 BPM, Hijaz maqam on D, deep drone and soft low strings, a breathy ney flute melody, slow frame drum pulses like a heartbeat, sistrum shimmers, large temple reverb. Sacred, tense, awe. No vocals."
+   "name": "E2_epic_pharaoh",
+   "ms": 22000,
+   "text": "Epic Hollywood ancient Egypt adventure score: full orchestra playing sweeping Hijaz-scale string runs with the augmented second clearly heard, deep low male choir chanting 'ah', huge war drums and taiko hits, brass stabs, and a soaring female wordless Middle-Eastern vocal melisma with ululation-like ornaments over the top; pyramids, pharaohs and gods, majestic and mysterious, 100 BPM."
   },
   {
-   "type": "sfx",
-   "name": "S01_heartbeat",
-   "duration": 4,
-   "influence": 0.5,
-   "text": "slow deep human heartbeat, close and intimate, in a quiet stone chamber"
+   "type": "music",
+   "name": "E3_tomb_mystic",
+   "ms": 22000,
+   "text": "Mysterious ancient Egyptian tomb music: an ethereal female voice singing a wordless Arabic-style melisma in the Hijaz scale with heavy ornamentation, oud tremolo, a low drone, a slow darbuka pattern, sistrum and finger cymbal shimmers, deep temple reverb; dark, sacred, mystical, unmistakably 'Egypt'."
   },
   {
-   "type": "sfx",
-   "name": "S02_scale_settle",
-   "duration": 3,
-   "influence": 0.5,
-   "text": "ancient bronze balance scale tilting and settling, soft wooden creak and a small metal tick at the end"
-  },
-  {
-   "type": "sfx",
-   "name": "S03_croc_snap",
-   "duration": 2,
-   "influence": 0.5,
-   "text": "crocodile jaws snapping shut, heavy wet bite with a short low growl"
-  },
-  {
-   "type": "sfx",
-   "name": "S04_beast_growl",
-   "duration": 3,
-   "influence": 0.5,
-   "text": "deep low monster growl, crocodile hiss mixed with lion rumble, menacing but restrained"
-  },
-  {
-   "type": "sfx",
-   "name": "S05_wings",
-   "duration": 2.5,
-   "influence": 0.5,
-   "text": "large feathered wings unfolding and beating twice, soft whoosh"
-  },
-  {
-   "type": "sfx",
-   "name": "S06_sistrum",
-   "duration": 1.5,
-   "influence": 0.6,
-   "text": "ancient Egyptian sistrum shaken once, bright metallic jingle, dry"
-  },
-  {
-   "type": "sfx",
-   "name": "S07_gong",
-   "duration": 4,
-   "influence": 0.5,
-   "text": "deep temple gong hit with a long shimmering tail"
-  },
-  {
-   "type": "sfx",
-   "name": "S08_stone_door",
-   "duration": 3,
-   "influence": 0.5,
-   "text": "heavy stone tomb door grinding open, dust and grit falling"
-  },
-  {
-   "type": "sfx",
-   "name": "S09_sand_wind",
-   "duration": 6,
-   "influence": 0.4,
-   "loop": true,
-   "text": "desert wind blowing sand across stone, airy and soft, seamless loop"
-  },
-  {
-   "type": "sfx",
-   "name": "S10_magic_reveal",
-   "duration": 2.5,
-   "influence": 0.5,
-   "text": "reversed shimmer swelling into a soft magical chime, mystical reveal"
-  },
-  {
-   "type": "sfx",
-   "name": "S11_frame_drum",
-   "duration": 1.5,
-   "influence": 0.6,
-   "text": "single deep frame drum hit with room reverb, cinematic transition accent"
-  },
-  {
-   "type": "sfx",
-   "name": "S12_torch",
-   "duration": 4,
-   "influence": 0.4,
-   "loop": true,
-   "text": "torch fire crackling inside a tomb, close, seamless loop"
+   "type": "music",
+   "name": "E4_playful_egypt",
+   "ms": 22000,
+   "text": "Playful, comedic stereotypical Egyptian cartoon music: a sneaky clarinet and mizmar melody in the Hijaz scale (snake-charmer style), bouncy pizzicato strings, darbuka and riq groove with finger cymbals, little oud flourishes, 115 BPM; cheeky and fun, like a cartoon character tiptoeing past the pyramids. Instrumental."
   }
  ]
 }
