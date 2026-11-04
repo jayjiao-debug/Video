@@ -1,0 +1,28 @@
+plan: {'tier': 'starter', 'character_count': 9105, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "X25_tiny_chorus_here", "type": "sfx", "text": "a crowd of tiny squeaky toy figurines all shout one short syllable together, high pitched cartoon chorus, very short, then silence", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X25_tiny_chorus_here.mp3", "bytes": 20105}
+{"name": "X25b_tiny_chorus_hey", "type": "sfx", "text": "dozens of tiny chipmunk-like voices answer at once with a single short squeaky 'hey!', comic, dry, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X25b_tiny_chorus_hey.mp3", "bytes": 17179}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "X25_tiny_chorus_here",
+  "type": "sfx",
+  "text": "a crowd of tiny squeaky toy figurines all shout one short syllable together, high pitched cartoon chorus, very short, then silence",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X25_tiny_chorus_here.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "X25b_tiny_chorus_hey",
+  "type": "sfx",
+  "text": "dozens of tiny chipmunk-like voices answer at once with a single short squeaky 'hey!', comic, dry, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X25b_tiny_chorus_hey.mp3",
+  "bytes": 17179
+ }
+]
