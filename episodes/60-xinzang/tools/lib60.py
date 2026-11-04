@@ -1,40 +1,97 @@
 #!/usr/bin/env python3
-"""ep60 v6 music library (owner 21:58: "aim for X number of bars, reusable for scenes ... the same style so that immersive is kept
-constant"): turn ElevenLabs Music generations (one per mood: 2-bar intro, N-bar loop, 2-bar button) into loopable modules on one
-120 BPM grid, matched to the reference's timbre, and lay them out on the film's timeline for a music-only preview.
+"""ep60 v6 music library (owner 21:58: "aim for X number of bars, reusable for scenes and fit the atmosphere of the event, they should
+sound the same style so that immersive is kept constant").
 
-    python3 lib60.py build RAW_DIR LIB_DIR [REF_AUDIO[:start:end]]   -> LIB_DIR/<mood>_<N>bar.wav (+ _intro, _end), lib.json
-    python3 lib60.py preview LIB_DIR OUT.wav                         -> the cues on the v6 timeline (music only), mastered
+One source, one ensemble: every module is cut from ElevenLabs take A (ep60v6_music_A_cinematic: oud, qanun, ney, soft strings, frame
+drum / darbuka; D centre; measured 120.00 BPM over the whole take, beats at 0.355 + 0.5 k s, downbeats at 1.855 + 2 k s). The nine
+per-mood generations (ep60-music-02) came back in five different keys (A, C, Bb, Eb, A) and three tempi, mostly static drones, so they
+fail "the same style"; they are not used.
 
-Build, per generation: beat grid (librosa) -> tempo (median beat period) -> if it is off 120 by > 0.25 BPM, time-stretch the
-whole take to 120 (ffmpeg atempo, pitch kept) -> downbeat phase = the beat phase (mod 4) with the strongest onsets -> the loop
-starts on the downbeat nearest the nominal end of the intro (2 bars); intro = the 2 bars before it, loop = N bars, end = the rest.
-Seamless loop: the loop's last bar is cross-faded (equal power) into the bar that precedes its first bar in the take, so the end
-of the file flows into its start the way the intro flowed into bar 1. One match-EQ for the whole library (third-octave average
-of all loops vs the reference, +-6 dB, smoothed, linear phase), then every module at -14 LUFS (loop), true peak <= -1.5 dBTP.
+    python3 lib60.py build A.mp3 LIB_DIR REF_AUDIO[:start:end]   -> LIB_DIR/<mood>_<N>bar.wav, _thin (drums out), _intro_1bar, _end; lib.json
+    python3 lib60.py preview LIB_DIR OUT.wav                     -> the modules on the v6 timeline (169.25 s, music only), mastered
+
+Loops: for each mood, candidate starts on A's downbeats inside the mood's region; the loop point with the most similar seam wins (MFCC +
+chroma of the bars that meet at the wrap). 'pre' seam: the loop's last beat cross-fades into the beat that precedes bar 1 in A, so the
+end of the file flows into its start exactly as A flowed into bar 1 (clean first entrance); 'tail' seam: the beat after the loop
+cross-fades over the head (used when the bar before is a different texture). Thin = the same loop's harmonic layer (HPSS, sample
+aligned: full <-> thin switches on any bar without phasing). Button (_end) = the downbeat after the loop, dry, then a short ring-out
+(RT 1.2 s room, 35 % wet: a stop, not a wash). One match-EQ for the whole library (third-octave average of the loops vs the reference, 80 %, +-6 dB, smoothed,
+linear phase, no cut deeper than 2.5 dB above 5 kHz: the reference's top end is codec roll-off) and one gain for the whole library (groove loop at -14 LUFS), so the moods keep A's relative dynamics.
 """
 import os, sys, json, subprocess, numpy as np, soundfile as sf
 from scipy import signal
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
-SR = 48000; BPM = 120.0; BAR = 4 * 60 / BPM
-# mood -> loop bars and the sections the generation was asked for (bars): intro 2, loop N, end 2; tension: loop 8, rise 4, hush 2
-MOODS = {'mystery': 16, 'curious': 8, 'danger': 8, 'groove': 16, 'tension': 8, 'playful': 16, 'dark': 8, 'bright': 8, 'resolution': 6}
+import egypt_cues as E
+SR = 48000; BEAT = 0.5; BAR = 2.0; B = int(BAR * SR); Q = int(BEAT * SR)
+A_D0 = 1.855          # take A: downbeats at 1.855 + 2 k s
+FILM_D0 = 0.3         # film bar grid: downbeats at 0.3 + 2 k s (title 6.30 on bar 4; 「话太多」 72.3; hush 96.3; 「等等」 98.3; pass 130.3; shabtis 142.3)
+# mood: (loop bars, region in A the loop must stay inside, thin layer?, character)
+LOOPS = {
+ 'mystery': (8, (7.855, 27.855), False, 'calm mystery: oud ostinato over a warm low drone, ney phrases; no drums'),
+ 'curious': (8, (23.855, 43.855), False, 'light and curious: qanun and oud plucks, ney answers; no drums'),
+ 'danger':  (4, (39.855, 51.855), False, 'danger: tense oud/strings ostinato, ney trills, higher register; no drums'),
+ 'groove':  (8, (51.855, 69.855), True,  'stately groove: darbuka maqsum enters, oud and qanun call and response'),
+ 'tension': (8, (81.855, 101.855), True, 'the weighing: driving frame drum and darbuka, the ensemble climbs across the 8 bars (A runs it straight into dark)'),
+ 'dark':    (2, (101.855, 106.355), True,  'dark: the low held drone with a soft low drum on the downbeats (thin = the drone alone: the hush)'),
+ 'playful': (4, (107.855, 119.855), True, 'playful and sly: lighter darbuka, staccato oud and reed riff'),
+ 'bright':  (8, (127.855, 147.855), True, 'bright and open: full ensemble, warm qanun/oud melody, riq'),
+ 'busy':    (8, (143.855, 163.855), True, 'busy: the fullest, brightest groove (spare: shabtis, a finale)'),
+}
+ONESHOTS = {'hook_intro_4bar': (0.0, 7.855 + BEAT, 'the opening: drone swell, solo ney, temple gong at 5.35 s (lands on the title)'),
+            'resolution_cadence': (163.855, None, 'the last bar and the final chord on D, ringing out (~4 s)')}
 
-def load(p, sr=SR, ss=None, to=None):
-    a = ['ffmpeg', '-v', 'quiet'] + (['-ss', str(ss), '-to', str(to)] if ss is not None else []) + ['-i', p, '-ac', '2', '-ar', str(sr), '-f', 'f32le', '-']
+def load(p, ss=None, to=None):
+    a = ['ffmpeg', '-v', 'quiet'] + (['-ss', str(ss), '-to', str(to)] if ss is not None else []) + ['-i', p, '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-']
     return np.frombuffer(subprocess.run(a, capture_output=True).stdout, np.float32).reshape(-1, 2).astype(np.float64)
 
-def grid(y):
+def bar_feats(y, t):
     import librosa
-    m = librosa.resample(y.mean(1).astype(np.float32), orig_sr=SR, target_sr=22050)
-    oenv = librosa.onset.onset_strength(y=m, sr=22050)
-    tempo, beats = librosa.beat.beat_track(onset_envelope=oenv, sr=22050, start_bpm=BPM, tightness=400, units='frames')
-    bt = librosa.frames_to_time(beats, sr=22050); per = float(np.median(np.diff(bt))) if len(bt) > 8 else 60 / BPM
-    st = oenv[np.clip(beats, 0, len(oenv) - 1)]; phase = int(np.argmax([st[k::4].mean() for k in range(4)]))
-    return 60 / per, bt, phase
+    s = y[int(t * SR):int(t * SR) + B].mean(1).astype(np.float32); s = librosa.resample(s, orig_sr=SR, target_sr=22050)
+    mf = librosa.feature.mfcc(y=s, sr=22050, n_mfcc=20)[1:].mean(1); ch = librosa.feature.chroma_cqt(y=s, sr=22050).mean(1)
+    return np.r_[mf / (np.linalg.norm(mf) + 1e-9), ch / (np.linalg.norm(ch) + 1e-9)]
 
-def stretch(p_in, factor, p_out):
-    subprocess.run(['ffmpeg', '-v', 'quiet', '-y', '-i', p_in, '-af', f'atempo={factor:.6f}', '-ar', str(SR), p_out], check=True)
+def beat_db(y, t): k = int(round(t * SR)); return 10 * np.log10(np.mean(y[k:k + Q] ** 2) + 1e-12)
+
+def best_loop(y, N, lo, hi):
+    """candidate starts on A's downbeats; score = cosine similarity of the two bars that meet at the seam. Level guard: the beat
+    that is blended in at the seam must be within 6 dB of the loop's median beat (A has breaks: a seam into a break = a hole)."""
+    cands = []
+    s = lo
+    while s + N * BAR <= hi + 1e-6:
+        med = np.median([beat_db(y, s + i * BEAT) for i in range(4 * N)])
+        if s - BAR >= lo - 1e-6 and beat_db(y, s - BEAT) > med - 6: cands.append((float(bar_feats(y, s + (N - 1) * BAR) @ bar_feats(y, s - BAR)) / 2, s, 'pre'))
+        if s + N * BAR + BEAT <= hi + 1e-6 and beat_db(y, s + N * BAR) > med - 6: cands.append((float(bar_feats(y, s + N * BAR) @ bar_feats(y, s)) / 2, s, 'tail'))
+        s += BAR
+    return max(cands)
+
+def make_loop(y, s, N, seam):
+    k = int(round(s * SR)); L = N * B; x = y[k:k + L].copy(); fo, fi = np.cos(np.linspace(0, np.pi / 2, Q))[:, None], np.sin(np.linspace(0, np.pi / 2, Q))[:, None]
+    if seam == 'pre': x[-Q:] = x[-Q:] * fo + y[k - Q:k] * fi          # end of file = the beat before bar 1
+    else: x[:Q] = x[:Q] * fi + y[k + L:k + L + Q] * fo                 # head = the beat after the loop, fading into bar 1
+    return x
+
+def circ(fn, x, pad=int(1.5 * SR)):
+    """process a loop as a loop: wrap-pad with its own end/start, process, crop (keeps the seam seamless)."""
+    return fn(np.concatenate([x[-pad:], x, x[:pad]]))[pad:pad + len(x)]
+
+def hpss_h(x, margin=1.5):
+    import librosa
+    out = np.zeros_like(x)
+    for c in (0, 1):
+        S = librosa.stft(x[:, c].astype(np.float32), n_fft=4096, hop_length=1024)
+        H, P = librosa.decompose.hpss(S, margin=margin, kernel_size=(31, 31))
+        out[:, c] = librosa.istft(H, hop_length=1024, length=len(x))
+    return out
+
+IR = None
+def ring(x, rt=1.2, wet=0.35):
+    global IR
+    if IR is None or len(IR) != int(rt * 1.3 * SR): IR = E.make_ir(rt60=rt, pre=0.015, seed=21)
+    xx = np.concatenate([x, np.zeros((len(IR), 2))]); return xx + wet * E.conv_st(xx, IR)
+
+def button(y, t):
+    k = int(round(t * SR)); hit = y[k:k + Q].copy(); f = int(0.15 * SR); hit[-f:] *= np.linspace(1, 0, f)[:, None] ** 2
+    return E.trim_tail(ring(hit), -62, 0.3)
 
 def third_oct(y):
     f, P = signal.welch(y.mean(1), SR, nperseg=8192); c = np.geomspace(40, 16000, 28)
@@ -44,75 +101,87 @@ def eq_fir(c, gain_db, n=4097):
     f = np.linspace(0, SR / 2, n // 2 + 1); g = np.interp(np.log(np.maximum(f, 20)), np.log(c), gain_db)
     return signal.firwin2(n, f / (SR / 2), 10 ** (g / 20))
 
-def build(raw, lib, ref=None):
-    import egypt_cues as E
-    os.makedirs(lib, exist_ok=True); parts, meta = {}, {}
-    for mood, N in MOODS.items():
-        p = f'{raw}/ep60lib_{mood}.mp3'
-        if not os.path.exists(p): print('missing', p); continue
-        y = load(p); tempo, bt, ph = grid(y); note = ''
-        if abs(tempo - BPM) > 0.25:
-            tmp = f'{lib}/_st_{mood}.wav'; stretch(p, BPM / tempo, tmp); y = load(tmp); os.remove(tmp)
-            t2, bt, ph = grid(y); note = f'stretched {tempo:.2f}->{t2:.2f} BPM'; tempo = t2
-        down = bt[ph::4]; s = float(down[np.argmin(np.abs(down - 2 * BAR))]) if len(down) else 2 * BAR
-        k = int(round(s * SR)); b = int(round(BAR * SR))
-        if k < b: k += 4 * int(round(60 / BPM * SR))   # need one full bar before the loop for the seam
-        L = N * b if mood != 'tension' else 8 * b
-        intro = y[max(0, k - 2 * b):k]; loop = y[k:k + L].copy(); rest = y[k + L:]
-        pre = y[k - b:k]; w = np.sin(np.linspace(0, np.pi / 2, b))[:, None]   # last bar of the loop -> the bar before its start
-        loop[-b:] = loop[-b:] * np.cos(np.linspace(0, np.pi / 2, b))[:, None] + pre * w
-        d = {'intro': intro, 'loop': loop}
-        if mood == 'tension': d['rise'] = rest[:4 * b]; d['hush'] = rest[4 * b:6 * b + int(0.8 * SR)]
-        elif mood == 'resolution': d['loop'] = y[k:k + N * b]; d['end'] = rest   # resolution plays through: body + cadence
-        else: d['end'] = rest
-        if 'end' in d:
-            e = d['end']; i = np.flatnonzero(np.abs(e).max(1) > 10 ** (-60 / 20)); e = e[:i[-1] + 1] if len(i) else e
-            kf = min(len(e) // 3, int(0.4 * SR)); e[-kf:] *= np.linspace(1, 0, kf)[:, None] ** 2; d['end'] = e
-        parts[mood] = d; meta[mood] = dict(tempo=round(tempo, 2), downbeat_s=round(s, 3), loop_bars=N if mood != 'tension' else 8, note=note)
-        print(f'{mood:10s} tempo {tempo:6.2f}  downbeat phase {ph}  loop from {s:6.3f} s  {note}', flush=True)
-    # one match-EQ for the library
-    if ref:
-        rp, *rr = ref.split(':'); r = load(rp, ss=rr[0], to=rr[1]) if rr else load(rp)
-        c, Rs = third_oct(r); Ls = np.mean([third_oct(d['loop'])[1] for d in parts.values()], 0)
-        g = (Rs - Rs.mean()) - (Ls - Ls.mean()); g = np.convolve(np.pad(g, 2, mode='edge'), np.ones(5) / 5, 'valid'); g = np.clip(g, -6, 6)
-        fir = eq_fir(c, g); meta['_eq_db'] = {f'{int(a)}': round(float(v), 1) for a, v in zip(c, g)}
-        for d in parts.values():
-            for kk in d: d[kk] = signal.fftconvolve(d[kk], fir[:, None], mode='same')
-    for mood, d in parts.items():
-        Lm = E.lufs(d['loop']); gain = 10 ** ((-14 - Lm) / 20); N = meta[mood]['loop_bars']
-        names = {'intro': f'{mood}_intro_2bar', 'loop': f'{mood}_{N}bar' if mood != 'resolution' else f'{mood}_{N}bar_body',
-                 'end': f'{mood}_end' if mood != 'resolution' else f'{mood}_cadence', 'rise': 'tension_rise_4bar', 'hush': 'tension_hush_2bar'}
-        files = {}
-        for kk, x in d.items():
-            x = E.limit(x * gain, -1.75, circular=(kk == 'loop' and mood != 'resolution')); fn = f'{names[kk]}.wav'
-            sf.write(f'{lib}/{fn}', x.astype(np.float32), SR, subtype='PCM_24'); files[kk] = dict(file=fn, seconds=round(len(x) / SR, 3), bars=round(len(x) / SR / BAR, 2))
-        meta[mood]['files'] = files
-    json.dump(meta, open(f'{lib}/lib.json', 'w'), indent=1); print('wrote', lib)
+def build(src, lib, ref):
+    os.makedirs(lib, exist_ok=True); y = load(src); files, meta = {}, {'source': os.path.basename(src), 'grid': 'A downbeats 1.855 + 2k s; film downbeats 0.3 + 2k s', 'modules': {}}
+    for mood, (N, (lo, hi), thin, what) in LOOPS.items():
+        sc, s, seam = best_loop(y, N, lo, hi); x = make_loop(y, s, N, seam)
+        files[f'{mood}_{N}bar'] = x; files[f'{mood}_intro_1bar'] = y[int(round((s - BAR) * SR)):int(round(s * SR))]
+        if mood != 'dark': files[f'{mood}_end'] = button(y, s + N * BAR)
+        if thin: files[f'{mood}_{N}bar_thin'] = circ(hpss_h, x)
+        meta['modules'][mood] = dict(bars=N, seconds=N * BAR, loop_from_A=round(s, 3), seam=seam, seam_similarity=round(sc, 3), thin=thin, character=what)
+        print(f'{mood:8s} {N:2d} bars  A {s:7.3f}-{s + N * BAR:7.3f} s  seam {seam:4s} sim {sc:.3f}', flush=True)
+    for name, (a, b, what) in ONESHOTS.items():
+        x = y[int(a * SR):(int(b * SR) if b else len(y))].copy(); x = E.trim_tail(x, -70, 0.4); files[name] = x
+        meta['modules'][name] = dict(seconds=round(len(x) / SR, 3), from_A=a, character=what)
+    # one match-EQ for the library, toward the reference's long-term spectrum
+    rp, *rr = ref.split(':'); r = load(rp, *rr) if rr else load(rp); c, Rs = third_oct(r)
+    Ls = np.mean([third_oct(files[f'{m}_{LOOPS[m][0]}bar'])[1] for m in LOOPS], 0)
+    g = 0.8 * ((Rs - Rs.mean()) - (Ls - Ls.mean())); g = np.convolve(np.pad(g, 2, mode='edge'), np.ones(5) / 5, 'valid'); g = np.clip(g - np.interp(1000, c, g), -6, 6)
+    g = np.where(c >= 5000, np.maximum(g, -2.5), g)   # above 5 kHz the reference is a screen recording (codec roll-off): do not copy it
+    fir = eq_fir(c, g); meta['match_eq_db'] = {f'{int(a)}': round(float(v), 1) for a, v in zip(c, g)}
+    print('match EQ (dB):', ' '.join(f'{int(a)}:{v:+.1f}' for a, v in zip(c, g)), flush=True)
+    eq = lambda x: signal.fftconvolve(np.concatenate([x, np.zeros((len(fir), 2))]), fir[:, None], mode='full')[len(fir) // 2:len(fir) // 2 + len(x)]
+    for kk in files:
+        files[kk] = circ(eq, files[kk]) if (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk else eq(files[kk])
+    gain = 10 ** ((-14 - E.lufs(files['groove_8bar'])) / 20); meta['library_gain_db'] = round(20 * np.log10(gain), 2)
+    for kk, x in files.items():
+        loop = (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk
+        x = E.limit(x * gain, -2.0, circular=loop and not kk.startswith('hook')); sf.write(f'{lib}/{kk}.wav', x.astype(np.float32), SR, subtype='PCM_24')
+        meta.setdefault('files', {})[kk] = dict(seconds=round(len(x) / SR, 3), lufs=round(E.lufs(x), 1) if len(x) > SR else None, tp=round(E.true_peak(x), 2))
+    json.dump(meta, open(f'{lib}/lib.json', 'w'), indent=1, ensure_ascii=False); print('wrote', lib, len(files), 'files')
 
-# ---------------------------------------------------------------- the v6 preview: cues on the timeline, changes on bar lines
-PLAN = [  # (start s, mood, part, note) on one 2 s bar grid from 0; each change cross-fades over half a bar into the next downbeat
- (0, 'mystery', 'intro', 'hook: the ensemble enters'), (4, 'mystery', 'loop', 'you die, the mummy (title ~6.3 lands in bar 2 of the loop)'),
- (26, 'curious', 'loop', 'Book of the Dead'), (42, 'danger', 'loop', 'the road through the underworld'),
- (52, 'groove', 'loop', 'hall of the 42 judges + the oath'), (72, 'groove', 'end', '话太多: the groove buttons and stops (the comic stop)'),
- (76, 'tension', 'loop', 'the weighing'), (92, 'tension', 'rise', 'the pans wobble'), (96, 'tension', 'hush', 'near silence before 「等等——」'),
- (98, 'playful', 'loop', 'the scarab cheat'), (122, 'dark', 'loop', 'fail: the second death'), (130, 'bright', 'loop', 'pass: Osiris, the Field of Reeds'),
- (142, 'playful', 'loop', 'the shabtis at work'), (158, 'resolution', 'loop', 'close'), (170, None, None, 'end')]
+# ---------------------------------------------------------------- the v6 preview: modules on the film's bar grid
+# (film start, film end, file, options)  in: x = 1-beat equal-power cross-fade centred on the start (pre-roll = the loop's own tail),
+# hard = straight in on the downbeat (10 ms), swell = 1-beat fade-in from silence, eg = equal-gain cross-fade (same loop, full <-> thin)
+# out: x / eg = cross-fade centred on the end, button = the module's _end at the end time, cut = stop at the end (30 ms) and let the
+# room ring (reverb of the last 0.3 s), hold = to the end of the file.  bar0 = loop bar to start from (continuation after a switch).
+PLAN = [
+ (0.95, 8.3, 'hook_intro_4bar', dict(inn='hard', out='x')),                         # 0-8.4 hook: the gong (A 5.35) lands on the title at 6.30
+ (8.3, 26.3, 'mystery_8bar', dict(inn='x')),                            # you die, the mummy
+ (26.3, 42.3, 'curious_8bar', dict(inn='x')),                           # Book of the Dead
+ (42.3, 52.3, 'danger_4bar', dict(inn='x')),                            # the road: gates, knives, cobra and crocodile
+ (52.3, 72.3, 'groove_8bar', dict(inn='x', out='button')),              # hall of the 42 judges + the oath; button on 72.3 = 「话太多」
+ (76.3, 92.3, 'tension_8bar', dict(inn='swell')),                       # the weighing (Ammit roars in 31, ~86-92: BGM drop comes with the SFX pass)
+ (92.3, 96.3, 'dark_2bar', dict(inn='x')),                              # 32: the bed thins to the drone (A's own tension -> drone join)
+ (96.3, 98.3, 'dark_2bar_thin', dict(inn='eg', out='cut', bar0=0, db=-3, lp=900)), # 33: drone only (the thin layer: no drum), darker; cut on 98.3
+ (98.3, 106.3, 'playful_4bar', dict(inn='hard')),                       # 34 「等等——」 the scarab cheat, straight in on the downbeat
+ (106.3, 114.3, 'playful_4bar_thin', dict(inn='eg', out='eg', bar0=0)), # 37: the bed thins under the papyrus line (drums out)
+ (114.3, 121.57, 'playful_4bar', dict(inn='eg', out='cut', bar0=0)),    # 39-40; cut on the pan crash 121.57
+ (124.3, 130.11, 'dark_2bar', dict(inn='swell', out='cut', db=-2)),     # 42-43 after the chomp: the drone, dead stop at 130.11
+ (130.3, 142.17, 'bright_8bar', dict(inn='swell', out='cut')),          # 44-47 pass: Osiris, the Field of Reeds; the hiccup at 142.17
+ (142.3, 156.3, 'playful_4bar', dict(inn='hard')),                      # 48-52 shabtis: playful again (reuse)
+ (156.3, 164.3, 'mystery_8bar', dict(inn='x', out='x')),                # 53-54: the opening theme returns (bookend)
+ (164.3, 169.25, 'resolution_cadence', dict(inn='x')),                  # 55 end card: the last bar and the final chord ring through the card
+]
+FILM = 169.25
 
 def preview(lib, out):
-    import egypt_cues as E
-    meta = json.load(open(f'{lib}/lib.json')); n = int(169.25 * SR); y = np.zeros((n, 2)); x_ = int(0.5 * BAR * SR)
-    for (t0, mood, part, _), (t1, *_r) in zip(PLAN[:-1], PLAN[1:]):
-        f = meta[mood]['files'][part]['file']; src = sf.read(f'{lib}/{f}', always_2d=True)[0]
-        if mood == 'resolution':   # body + cadence play through to the end
-            src = np.concatenate([src, sf.read(f"{lib}/{meta[mood]['files']['end']['file']}", always_2d=True)[0]])
-        a, b = int(t0 * SR), min(n, int(t1 * SR) + x_)
-        seg = src[np.arange(b - a) % len(src)] if part == 'loop' and mood != 'resolution' else np.pad(src, ((0, max(0, b - a - len(src))), (0, 0)))[:b - a]
-        g = np.ones(b - a)
-        if t1 < 169 and part not in ('end', 'hush'): g[-x_:] = np.cos(np.linspace(0, np.pi / 2, x_))   # out: half a bar into the next downbeat
-        y[a:b] += seg * g[:, None]
-    L = E.lufs(y); y = E.limit(y * 10 ** ((-14 - L) / 20), -1.75); k = int(1.0 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None]
-    sf.write(out, y.astype(np.float32), SR, subtype='PCM_24'); print('preview', out, round(len(y) / SR, 2), 's', round(E.lufs(y), 2), 'LUFS')
+    n = int(FILM * SR); y = np.zeros((n, 2)); h = Q // 2
+    eqp = lambda m: (np.sin(np.linspace(0, np.pi / 2, m)), np.cos(np.linspace(0, np.pi / 2, m)))
+    for t0, t1, name, o in PLAN:
+        src = sf.read(f'{lib}/{name}.wav', always_2d=True)[0]; L = len(src); loop = (name.endswith('bar') or name.endswith('bar_thin')) and 'intro' not in name
+        inn, outm = o.get('inn', 'x'), o.get('out', 'x'); a0 = int(round(t0 * SR)); a1 = int(round(t1 * SR))
+        pre = h if inn in ('x', 'eg') else (Q if inn == 'swell' else 0)
+        post = h if outm in ('x', 'eg') else 0
+        ia, ib = a0 - pre, min(n, a1 + post); idx = np.arange(ia, ib) - a0 + o.get('bar0', 0) * B
+        if loop: seg = src[idx % L]
+        else: seg = np.where(((idx >= 0) & (idx < L))[:, None], src[np.clip(idx, 0, L - 1)], 0.0)
+        g = np.ones(len(seg))
+        if inn in ('x', 'eg'): up, _ = eqp(2 * h); g[:2 * h] *= up if inn == 'x' else np.linspace(0, 1, 2 * h)
+        elif inn == 'swell': g[:Q] *= np.linspace(0, 1, Q) ** 2
+        else: g[:int(0.01 * SR)] *= np.linspace(0, 1, int(0.01 * SR))
+        if outm in ('x', 'eg') and ib == a1 + post: _, dn = eqp(2 * h); g[-2 * h:] *= dn if outm == 'x' else np.linspace(1, 0, 2 * h)
+        elif outm in ('cut', 'button'): k = int(0.03 * SR); g[-k:] *= np.linspace(1, 0, k)
+        seg = seg * g[:, None]
+        if 'lp' in o: seg = E.filt(E.sos_lp(o['lp'], 4), seg)
+        seg *= 10 ** (o.get('db', 0) / 20); y[ia:ib] += seg
+        if outm == 'cut':
+            tail = ring(seg[-int(0.3 * SR):], wet=0.6)[int(0.3 * SR):] * 0.6; e = min(n, ib + len(tail)); y[ib:e] += tail[:e - ib]
+        if outm == 'button':
+            mood = name.split('_')[0]; bt = sf.read(f'{lib}/{mood}_end.wav', always_2d=True)[0]; e = min(n, a1 + len(bt)); y[a1:e] += bt[:e - a1] * 10 ** (o.get('db', 0) / 20)
+    L = E.lufs(y); y = E.limit(y * 10 ** ((-14 - L) / 20), -1.75); k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
+    sf.write(out, y.astype(np.float32), SR, subtype='PCM_24'); print('preview', out, round(len(y) / SR, 2), 's', round(E.lufs(y), 2), 'LUFS', round(E.true_peak(y), 2), 'dBTP')
 
 if __name__ == '__main__':
-    if sys.argv[1] == 'build': build(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else None)
+    if sys.argv[1] == 'build': build(sys.argv[2], sys.argv[3], sys.argv[4])
     else: preview(sys.argv[2], sys.argv[3])
