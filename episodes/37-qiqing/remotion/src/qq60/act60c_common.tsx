@@ -12,6 +12,7 @@ import {BAL, balanceGeo, BalancePose, Heart, Feather, Baboon, GlyphColumns} from
 import {Ceiling} from './sets60';
 import {FeatherCornice, Column} from './props60b';
 import {Dado, RegisterLine, Stars, Cam} from './frame60';
+import {Heart60} from './heart60';
 import {PAL, sp, poly, mx, ap, sm, cl, lerp, V, M, chain, T as Tm, R as Rm, RAD} from './geo60';
 
 export const wobIn = (t: number) => (t < 0 ? 0 : 2.4 * sm(t / 0.45));
@@ -63,7 +64,10 @@ const Solid: React.FC<{d: string; r: string; c: C; k?: number}> = ({d, r, c, k =
 const rect = (x0: number, y0: number, x1: number, y1: number) => poly([[x0, y0], [x1, y0], [x1, y1], [x0, y1]]);
 export {ctx as ctxC, Solid as SolidC};
 /** heart: null = the painted heart; a node = drawn in the left pan frame (units, base at y = 0); feather: false hides it */
-export const BalanceC: React.FC<{p: BalancePose; x: number; y: number; s: number; t?: number; heart?: React.ReactNode; feather?: boolean; baboon?: boolean}> = ({p, x, y, s, t = 0, heart, feather = true, baboon = true}) => {
+/** the shared Heart60 seated on a pan (pan-frame units: h = 2.2, its tip sunk a little behind the pan's front rim) */
+export const PAN_HEART = {h: 2.2, y: -0.9};
+export const PanHeart: React.FC<{id: string; beat?: number; glow?: number}> = ({id, beat = 0, glow = 0}) => <Heart60 x={0} y={PAN_HEART.y} h={PAN_HEART.h} id={id} beat={beat} glow={glow} />;
+export const BalanceC: React.FC<{p: BalancePose; x: number; y: number; s: number; t?: number; heart?: React.ReactNode; feather?: boolean; baboon?: boolean; hid?: string; beat?: number}> = ({p, x, y, s, t = 0, heart, feather = true, baboon = true, hid, beat = 0}) => {
 	const c = ctx(s), g = balanceGeo(p);
 	const post = poly([[-0.36, -1.75], [0.36, -1.75], [0.3, BAL.postTop + 0.6], [-0.3, BAL.postTop + 0.6]]);
 	const capital = sp([[-0.3, BAL.postTop + 0.62, 1], [0.3, BAL.postTop + 0.62, 1], [0.95, BAL.postTop + 0.05], [1.05, BAL.postTop - 0.1, 1], [-1.05, BAL.postTop - 0.1, 1], [-0.95, BAL.postTop + 0.05]]);
@@ -85,7 +89,7 @@ export const BalanceC: React.FC<{p: BalancePose; x: number; y: number; s: number
 		<line x1={BAL.plumbX} y1={BAL.plumbY} x2={g.bob[0]} y2={g.bob[1]} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
 		<g transform={`translate(${g.bob[0]},${g.bob[1]}) rotate(${-(p.plumb ?? 0)})`}><Solid d={sp([[0, -0.1], [0.32, 0.22], [0.36, 0.55], [0, 0.95, 1], [-0.36, 0.55], [-0.32, 0.22]])} r="gold" c={c} /><circle cx={0} cy={0.45} r={0.12} fill={PAL.red} /></g>
 		{cords(g.panL, g.eL, 'cl')}{cords(g.panR, g.eR, 'cr')}
-		<g transform={mx(g.panL)}><g transform="translate(0,0.02)">{heart ?? <Heart c={c} />}</g><Solid d={panD} r="gold" c={c} /><path d="M-1.7 0.28Q0 0.5 1.7 0.28" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} /></g>
+		<g transform={mx(g.panL)}><g transform="translate(0,0.02)">{heart ?? <PanHeart id={hid ?? `bh${Math.round(x)}_${Math.round(y)}_${Math.round(s)}`} beat={beat} />}</g><Solid d={panD} r="gold" c={c} /><path d="M-1.7 0.28Q0 0.5 1.7 0.28" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} /></g>
 		<g transform={mx(g.panR)}>{feather && <g transform="translate(0.05,0.02)"><Feather c={c} h={3.0} /></g>}<Solid d={panD} r="gold" c={c} /><path d="M-1.7 0.28Q0 0.5 1.7 0.28" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} /></g>
 		<g transform={mx(g.beam)}>
 			<Solid d={beamD} r="gold" c={c} />
@@ -198,4 +202,4 @@ export const OsirisProps: React.FC<{pose: Pose; x: number; y: number; s: number;
 			<path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" transform={mx(h)} fill="none" stroke={PAL.line} strokeWidth={c.LW} /></g>)}
 	</g>;
 };
-export const _keepC = {eIn, chain, Tm, Rm};
+export const _keepC = {eIn, chain, Tm, Rm, Heart};

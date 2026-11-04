@@ -5,7 +5,7 @@ import {Mat, GlyphColumns, BAL, balanceGeo} from './props60';
 import {ANI, walkPose, STRIDE, adoreArms} from './cast60';
 import {thothPose, STILL, WState} from './scene60';
 import type {ShotProps} from './EP60';
-import {up, hit, keys, bell, wearFor, figXY, InBone, placeBy, gripOf, GlyphStack, Ammit2, Balance2, panAt, HallWall, BaBird, Naos} from './act60b_kit';
+import {up, hit, keys, bell, wearFor, figXY, InBone, placeBy, gripOf, GlyphStack, Ammit2, ammit2Solve, Balance2, panAt, HallWall, BaBird, Naos} from './act60b_kit';
 import {V, PAL, poly, sp, lerp, cl, sm, seg, ap} from './geo60';
 
 /* act60b · the weighing (shots 27–33): Anubis leads you in and steadies the plumb, heart and feather, Ma'at, Thoth and his baboon,
@@ -72,7 +72,7 @@ export const Shot27: React.FC<ShotProps> = ({t}) => {
 			<Dust t={t} box={[BX - 900, 60, BX + 700, 860]} n={44} seed={271} c="#FFE2A0" o={0.55} />
 		</>}>
 		<Room t={t} />
-		<Balance2 p={{...bal, tick, heartO: 0, featherO: 0}} x={BX} y={GY} s={BS} t={t} />
+		<Balance2 p={{...bal, tick, heartO: 0, featherO: 0, hid: 'b27h'}} x={BX} y={GY} s={BS} t={t} />
 		<God id="b27ani" cast={ANI} pose={ani} x={xF} y={GY} s={as} sec={{t}} />
 		<God id="b27an" cast={ANUBIS} pose={anubis} x={xL} y={GY} s={as} sec={{t}} />
 	</Stage60>;
@@ -101,7 +101,7 @@ export const Shot28: React.FC<ShotProps> = ({t}) => {
 		</>}>
 		<Room t={t} />
 		<g opacity={0.9 * maat}><God id="b28maat" cast={MAAT} pose={mp} x={mx_} y={GY} s={ms} face={-1} sec={{t}} /></g>
-		<Balance2 p={bal} x={BX} y={GY} s={BS} t={t} />
+		<Balance2 p={{...bal, hid: 'b28h'}} x={BX} y={GY} s={BS} t={t} />
 	</Stage60>;
 };
 
@@ -130,7 +130,7 @@ export const Shot29: React.FC<ShotProps> = ({t}) => {
 			<Dust t={t} box={[BX - 300, 0, BX + 900, 860]} n={40} seed={291} c="#FFE2A0" o={0.55} />
 		</>}>
 		<Room t={t} />
-		<Balance2 p={bal} x={BX} y={GY} s={BS} t={t} />
+		<Balance2 p={{...bal, hid: 'b29h'}} x={BX} y={GY} s={BS} t={t} />
 		<God id="b29th" cast={THOTH} pose={th.p} x={tx} y={GY} s={ts} face={-1} sec={{t}} bProp="palette" fProp="pen" paletteA={th.paletteA} />
 		{scr > 0 && <path d={`M${s0[0]} ${s0[1]}L${s1[0]} ${s1[1] + 2 * Math.sin(scr * 12)}`} stroke="#1A1410" strokeWidth={4} strokeLinecap="round" />}
 		{ripple > 0.02 && <ellipse cx={wellW[0]} cy={wellW[1] - 6} rx={14 + 26 * (1 - ripple)} ry={5 + 8 * (1 - ripple)} fill="none" stroke="#DDEBFF" strokeWidth={3} opacity={ripple} />}
@@ -158,7 +158,7 @@ export const Shot30: React.FC<ShotProps> = ({t}) => {
 		</>}>
 		<Room t={t} />
 		<rect x={-500} y={-600} width={2600} height={1500} fill="#2A0610" opacity={0.35} />
-		<Balance2 p={bal} x={BX} y={GY} s={BS} t={t} />
+		<Balance2 p={{...bal, hid: 'b30h'}} x={BX} y={GY} s={BS} t={t} />
 		<Glow x={ax} y={GY - 200} r={420} ry={300} c="red" o={0.6} />
 		<Mat x0={ax - 360} x1={ax + 260} y={GY} s={BS} />
 		<Ammit2 pose={pose} x={ax} y={GY - 0.5 * BS} s={s} face={-1} t={t} rim={0.85} look={2.2} mr={0.4 * g} id="b30am" />
@@ -167,16 +167,16 @@ export const Shot30: React.FC<ShotProps> = ({t}) => {
 };
 
 /* ================= 31 · 85.5–88.4 · tilt down Ammit in three beats: crocodile head (jaws clack), lion forepart (mane ripples, small roar), hippo rump (it wiggles) ================= */
-export const S31 = {clack: 0.4, roar: 1.35, plop: 2.25, moves: [[0.6, 1.2], [1.55, 2.1]]};
+export const S31 = {clack: 0.4, roar: 1.35, plop: 2.25, moves: [[0.6, 1.2], [1.78, 2.22]]};
 export const Shot31: React.FC<ShotProps> = ({t}) => {
 	const s = 60, ax = 1000, ay = GY;
-	const clack = keys(t, [[0.12, 0], [0.3, 1], [S31.clack, 0]]), wind = bell(t, S31.roar - 0.4, S31.roar - 0.02), roar = keys(t, [[S31.roar - 0.1, 0], [S31.roar, 1], [S31.roar + 0.35, 1], [S31.roar + 0.65, 0]]);
+	const clack = keys(t, [[0.12, 0], [0.3, 1], [S31.clack, 0]]), wind = keys(t, [[S31.roar - 0.42, 0], [S31.roar - 0.1, 1], [S31.roar - 0.02, 0]]), roar = keys(t, [[S31.roar - 0.07, 0], [S31.roar, 1], [S31.roar + 0.42, 1], [S31.roar + 0.68, 0]]);
 	const wig = 11 * Math.sin((t - S31.plop) * 26) * Math.exp(-Math.max(0, t - S31.plop) / 0.25) * (t > S31.plop - 0.02 ? 1 : 0);
-	const pose = ammitP(t, {jaw: 4 + 30 * clack, neck: 6 + 5 * wind, lean: 1 - 3 * wind, tail: 18 * Math.sin(t * 3) + 30 * bell(t, S31.plop, S31.plop + 0.5) + 25 * roar});
+	const pose = ammitP(t, {jaw: 4 + 30 * clack + 56 * roar, neck: 6 + 10 * wind + 3 * roar, lean: 1 - 6 * wind, tail: 18 * Math.sin(t * 3) + 30 * bell(t, S31.plop, S31.plop + 0.5) + 30 * roar});
 	const W = (u: number, v: number): V => [ax - u * s, ay + v * s];
 	const head = W(4.8, -7.4), fore = W(2.6, -5.1), rump = W(-1.7, -2.9);
 	const m = S31.moves, cx_ = keys(t, [[m[0][0], head[0]], [m[0][1], fore[0]], [m[1][0], fore[0]], [m[1][1], rump[0]]]), cy_ = keys(t, [[m[0][0], head[1]], [m[0][1], fore[1]], [m[1][0], fore[1]], [m[1][1], rump[1]]]);
-	const z = 1.3 + 0.03 * Math.sin(t * 1.3), cam: Cam = {x: cx_ - 40, y: cy_ + 10, z};
+	const z = 1.3 + 0.03 * Math.sin(t * 1.3) + 0.07 * keys(t, [[S31.roar - 0.05, 0], [S31.roar + 0.2, 1], [S31.roar + 0.5, 1], [S31.roar + 0.8, 0]]), cam: Cam = {x: cx_ - 40, y: cy_ + 10 - 30 * roar, z};
 	const pop = hit(t, S31.plop, 0.3);
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#120C2E" wear={wearFor(z, 0.3)} stain={0.2} dark={0.15} darkC="#100410"
 		light={<>
@@ -190,6 +190,8 @@ export const Shot31: React.FC<ShotProps> = ({t}) => {
 		<Glow x={ax} y={GY - 220} r={520} ry={330} c="red" o={0.55} />
 		<Mat x0={ax - 420} x1={ax + 320} y={GY} s={BS} />
 		<Ammit2 pose={pose} x={ax} y={GY - 0.5 * BS} s={s} face={-1} t={t} rim={0.75} mr={roar} wig={wig} look={2.2} roar={roar} id="b31am" />
+		{roar > 0.05 && (() => { const g = ammit2Solve(pose, roar), m = ap(g.N, [7.6, 0.6]), mw: V = [ax - m[0] * s, GY - 0.5 * BS + m[1] * s], u = cl((t - S31.roar) / 0.6);
+			return <g opacity={roar * (1 - 0.5 * u)}>{[0, 1, 2].map((i) => { const r = 40 + i * 46 + 120 * u; return <path key={i} d={`M${mw[0] - r * 0.55} ${mw[1] - r * 0.85}A${r} ${r} 0 0 0 ${mw[0] - r * 0.55} ${mw[1] + r * 0.85}`} fill="none" stroke="#FFE7C0" strokeWidth={6 - i * 1.4} strokeLinecap="round" opacity={0.9 - i * 0.22} />; })}</g>; })()}
 		{pop > 0.05 && <g opacity={pop}>{[0, 1, 2].map((i) => <path key={i} d={`M${rump[0] + 150 + i * 14} ${rump[1] - 60 + i * 30}q${20 + 30 * (1 - pop)} 0 ${30 + 40 * (1 - pop)} ${-10}`} fill="none" stroke="#FFE7C0" strokeWidth={4} strokeLinecap="round" />)}</g>}
 	</Stage60>;
 };
@@ -230,7 +232,7 @@ export const Shot32: React.FC<ShotProps> = ({t}) => {
 			<Dust t={t} box={[BX - 1000, 0, BX + 300, 860]} n={44} seed={321} c="#FFE2A0" o={0.55} />
 		</>}>
 		<Room t={t} />
-		<Balance2 p={bal} x={BX} y={GY} s={BS} t={t} />
+		<Balance2 p={{...bal, hid: 'b32h'}} x={BX} y={GY} s={BS} t={t} />
 		<Naos x={xn} y={GY} w={nw} h={nh}>
 			<g clipPath="url(#b32door)"><BaBird x={xn + 8} y={baY} s={36} t={t} face={1} tilt={-6 + 10 * chirp} beak={chirp} /></g>
 		</Naos>
@@ -268,7 +270,7 @@ export const Shot33: React.FC<ShotProps> = ({t}) => {
 			<Dust t={t} box={[BX - 600, 0, BX + 600, 760]} n={30} seed={331} c="#FFE2A0" o={0.45} vx={-1} vy={-2} />
 		</>}>
 		<Room t={t} />
-		<Balance2 p={bal} x={BX} y={GY} s={BS} t={t} />
+		<Balance2 p={{...bal, hid: 'b33h'}} x={BX} y={GY} s={BS} t={t} />
 		<Ammit2 pose={am} x={BX + 262 - 20 * lean} y={GY - 40} s={34} face={-1} t={t} rim={0.8} look={2.4} id="b33am" />
 		<God id="b33an" cast={ANUBIS} pose={an} x={anX} y={GY + 40} s={34} sec={{t}} />
 		{/* Thoth leans in to look (palette and pen lowered out of the way, so nothing crosses Ammit's mane) */}

@@ -47,7 +47,7 @@ export const Shot18: React.FC<ShotProps> = ({t}) => {
 			<g transform={`scale(${i ? -1 : 1},1)`}><MiniJudge cast={[JUDGE.jackal, JUDGE.red, JUDGE.ibis, JUDGE.falcon, JUDGE.green][k % 5]} s={5.6} hold={k % 2 ? 'feather' : 'knife'} seat={[PAL.blue, PAL.red, PAL.green][k % 3]} /></g></g>)}
 			<rect x={a - 10} y={430} width={b - a + 20} height={8} fill={PAL.linen} stroke={PAL.ink} strokeWidth={1.4} /></g>)}
 		{/* the giant balance at the centre */}
-		<Balance2 p={{tilt: 1.2 * Math.sin(t * 0.9), swingL: 0.8 * Math.sin(t * 1.3), swingR: -0.6 * Math.sin(t * 1.3), plumb: 1.5 * Math.sin(t * 1.6)}} x={760} y={GY} s={28} t={t} />
+		<Balance2 p={{tilt: 1.2 * Math.sin(t * 0.9), swingL: 0.8 * Math.sin(t * 1.3), swingR: -0.6 * Math.sin(t * 1.3), plumb: 1.5 * Math.sin(t * 1.6), hid: 'b18h'}} x={760} y={GY} s={28} t={t} />
 		{/* the door: outside is the night of the Duat; the leaves swing open on the boom */}
 		<rect x={70} y={568} width={160} height={GY - 568} fill="#080C26" />
 		<g opacity={open}><Stars t={t} box={[74, 572, 226, 760]} n={14} seed={183} /></g>
@@ -143,12 +143,17 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 		pose = jPose(t, 1, {lean: 2, head: 2 - 8 * gape + 6 * gulp, neck: -4 * gape + 3 * gulp});
 		const [fx, fy] = placeBy(pose, s, -1, 'head', [0.6, -1.2], face);
 		const beakTip = figXY(pose, fx, fy, s, -1, 'head', [3.2, 0.0]), beakBase = figXY(pose, fx, fy, s, -1, 'head', [1.2, -0.75]);
-		const suck = up(t, 1.05, 0.2), wx = lerp(beakTip[0] - 110, beakBase[0], suck), wy = lerp(beakTip[1] + 20, beakBase[1], suck) + 10 * Math.sin(t * 5) * (1 - suck);
-		front = <g>{t < 1.26 && <Wisp x={wx} y={wy} k={lerp(2.3, 0.3, suck)} o={1 - 0.6 * suck} t={t} stretch={0.6 * bell(t, 1.05, 1.26)} />}</g>;
-		extra = <InBone pose={pose} x={fx} y={fy} s={s} face={-1} bone="head"><IbisGape c={c_(s * 1.13)} open={gape} /></InBone>;
-		const lump = up(t, S20.gulp - 0.05, 0.35), lp = figXY(pose, fx, fy, s, -1, 'neck', [0.05, lerp(-1.1, 0.4, lump)]);
-		light = <>{lump > 0 && lump < 1 && <ellipse cx={lp[0]} cy={lp[1]} rx={22} ry={16} fill="#3C3F47" stroke={PAL.ink} strokeWidth={2} />}
-			<Glow x={wx} y={wy} r={170} c="blue" o={0.6 * (1 - suck)} /></>;
+		const inGape = figXY(pose, fx, fy, s, -1, 'head', [2.35, 0.0]);
+		const suck = up(t, 1.05, 0.19), wx = lerp(beakTip[0] - 110, inGape[0], suck), wy = lerp(beakTip[1] + 20, inGape[1], suck) + 10 * Math.sin(t * 5) * (1 - suck);
+		const wisp = t < 1.25 ? <Wisp x={wx} y={wy} k={lerp(2.3, 0.12, suck)} o={1 - 0.5 * suck} t={t} stretch={0.6 * bell(t, 1.05, 1.25)} /> : null;
+		extra = <g>
+			<InBone pose={pose} x={fx} y={fy} s={s} face={-1} bone="head"><IbisGape c={c_(s * 1.13)} open={gape} part="back" /></InBone>
+			{wisp}
+			<InBone pose={pose} x={fx} y={fy} s={s} face={-1} bone="head"><IbisGape c={c_(s * 1.13)} open={gape} part="front" /></InBone>
+		</g>;
+		void beakBase;
+		light = <><Glow x={wx} y={wy} r={170} c="blue" o={0.6 * (1 - suck)} />
+			{gulp > 0.05 && [0, 1].map((k) => <path key={k} d={`M${inGape[0] + 40 + k * 22} ${inGape[1] + 60 + k * 8}q14 10 0 22`} fill="none" stroke="#DDEBFF" strokeWidth={4} strokeLinecap="round" opacity={gulp} />)}</>;
 		fig = [fx, fy];
 	} else { // 食血者: a red drop on his knife tip; the jackal's tongue flicks and licks it off
 		cast = JUDGE.jackal; name = '食血者';
@@ -300,7 +305,7 @@ export const Shot24: React.FC<ShotProps> = ({t}) => {
 		<HallWall x0={-300} x1={1900} t={t} ceil={70} glyphY={150} />
 		{[220, 1420].map((x) => <g key={x} opacity={0.8}><Column x={x} gy={sgy} top={110} w={46} /></g>)}
 		<rect x={sx - 330} y={sgy} width={660} height={22} fill={PAL.linen} stroke={PAL.ink} strokeWidth={2} />
-		<g opacity={0.92}><Balance2 p={{tilt: 0.8 * Math.sin(t * 0.9), swingL: 0.6 * Math.sin(t * 1.2), swingR: -0.5 * Math.sin(t * 1.2), plumb: Math.sin(t * 1.5), glint: Math.max(gl, gl2)}} x={sx} y={sgy} s={24} t={t} /></g>
+		<g opacity={0.92}><Balance2 p={{tilt: 0.8 * Math.sin(t * 0.9), swingL: 0.6 * Math.sin(t * 1.2), swingR: -0.5 * Math.sin(t * 1.2), plumb: Math.sin(t * 1.5), glint: Math.max(gl, gl2), hid: 'b24h'}} x={sx} y={sgy} s={24} t={t} /></g>
 		<rect x={-300} y={sgy + 22} width={2400} height={GY - sgy - 22} fill="#121A42" />
 		<God id="b24ani" cast={{...ANI, fHand: 'palm'}} pose={ani} x={ax} y={GY} s={s} sec={{t}} />
 		<Check x={top[0] + 120} y={top[1] + 40} t={t} t0={S24.tick} s={1.3} />
@@ -344,13 +349,13 @@ export const Shot25: React.FC<ShotProps> = ({t}) => {
 };
 
 /* ================= 26 · 72.1–74.5 · 「这条，你能过吗？」: the horned judge turns and stares straight at you; slow push on his eyes ================= */
-export const S26 = {turn: [0.16, 0.46], lock: 0.76};
-const FrontBust: React.FC<{k: number; t: number; look: number; blink: number}> = ({k, t, look, blink}) => {
+export const S26 = {turn: [0.16, 0.46], lock: 0.76, brow: 1.05};
+const FrontBust: React.FC<{k: number; t: number; look: number; blink: number; raise?: number}> = ({k, t, look, blink, raise = 0}) => {
 	const c = {OW: 2.7 / k, LW: 1.5 / k}, br = 0.04 * Math.sin(t * 1.6);
-	const eye = (sg: number) => { const ex = sg * 0.66, ey = -0.72, L = 0.92, h = 0.26 * (1 - 0.85 * blink), rb = sg > 0 ? 1 : 0;
+	const eye = (sg: number) => { const ex = sg * 0.66, ey = -0.72, L = 0.92, h = (0.26 + 0.05 * (sg > 0 ? raise : 0)) * (1 - 0.85 * blink), rb = sg > 0 ? raise : 0;
 		const al = sp([[ex - sg * L * 0.55, ey + 0.02, 1], [ex - sg * L * 0.2, ey - h], [ex + sg * L * 0.25, ey - h * 0.95], [ex + sg * L * 0.5, ey, 1], [ex + sg * L * 0.15, ey + h * 0.75], [ex - sg * L * 0.25, ey + h * 0.65]], true, 0.2);
 		const lid = sp([[ex - sg * L * 0.58, ey + 0.03], [ex - sg * L * 0.2, ey - h - 0.03], [ex + sg * L * 0.25, ey - h * 0.95 - 0.03], [ex + sg * L * 0.55, ey - 0.01]], false, 0.2);
-		const by = ey - 0.5 - 0.2 * rb, arch = 0.12 * rb;
+		const by = ey - 0.5 - 0.34 * rb, arch = 0.2 * rb;
 		return <g key={sg}>
 			<path d={al} fill={PAL.eye} stroke={PAL.black} strokeWidth={c.LW * 2.2} strokeLinejoin="round" />
 			<clipPath id={`b26eye${sg}`}><path d={al} /></clipPath>
@@ -359,6 +364,7 @@ const FrontBust: React.FC<{k: number; t: number; look: number; blink: number}> =
 			<path d={lid} fill="none" stroke={PAL.black} strokeWidth={c.LW * 5.5} strokeLinecap="round" />
 			<path d={sp([[ex + sg * L * 0.5, ey - 0.02], [ex + sg * (L * 0.5 + 0.42), ey + 0.06], [ex + sg * (L * 0.5 + 0.62), ey + 0.22, 1], [ex + sg * (L * 0.5 + 0.3), ey + 0.14], [ex + sg * L * 0.45, ey + 0.08]], true, 0.15)} fill={PAL.black} />
 			<path d={sp([[ex - sg * 0.52, by + 0.1 - 0.08 * (1 - rb)], [ex, by - 0.06 - arch], [ex + sg * 0.6, by + 0.02], [ex + sg * 0.8, by + 0.14, 1], [ex + sg * 0.55, by + 0.1], [ex, by + 0.06 - arch], [ex - sg * 0.5, by + 0.22 - 0.08 * (1 - rb), 1]], true, 0.15)} fill={PAL.black} />
+			{rb > 0.25 && [0, 1].map((j) => <path key={j} d={`M${ex - sg * 0.35} ${by - 0.2 - j * 0.14}Q${ex + sg * 0.05} ${by - 0.3 - j * 0.14 - arch} ${ex + sg * 0.45} ${by - 0.18 - j * 0.14}`} fill="none" stroke="#5A2010" strokeWidth={c.LW * 1.6} opacity={(rb - 0.25) * 1.3} strokeLinecap="round" />)}
 		</g>; };
 	const horn = (sg: number) => { const d = sp([[sg * 1.0, -2.55, 1], [sg * 1.9, -3.0], [sg * 3.0, -3.8], [sg * 3.75, -5.2], [sg * 3.6, -6.8], [sg * 2.95, -8.0], [sg * 2.55, -8.25, 1], [sg * 3.0, -7.0], [sg * 3.05, -5.6], [sg * 2.5, -4.4], [sg * 1.6, -3.45], [sg * 0.75, -3.1, 1]], true, 0.18);
 		return <g key={'h' + sg}><path d={d} fill="#E6D6A8" stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinejoin="round" />
@@ -410,7 +416,7 @@ export const Shot26: React.FC<ShotProps> = ({t}) => {
 			<Judge id="b26p" cast={JUDGE.horned} pose={jp} x={fx} y={fy} s={js} face={-1} t={t} hold="none" seat={PAL.green} />
 			<InBone pose={jp} x={fx} y={fy} s={js} face={-1} bone="head"><Horns c={c_(js * 1.13)} t={t} /><BrowRaise c={c_(js * 1.13)} raise={1} skin={PAL.skinM2} /></InBone>
 		</g>}
-		{xf > 0 && <g opacity={xf} transform={`translate(${bx},${by})`}><FrontBust k={k} t={t} look={look} blink={blink} /></g>}
+		{xf > 0 && <g opacity={xf} transform={`translate(${bx},${by})`}><FrontBust k={k} t={t} look={look} blink={blink} raise={up(t, S26.brow, 0.22)} /></g>}
 	</Stage60>;
 };
 export const _keep = {Embers, Stars, Shaft, ap, mx, chain, T, R, rng, Ceiling, solve, BigKnife, hit, seg, sm, GlyphColumns, PIC_CY};

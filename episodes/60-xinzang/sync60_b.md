@@ -2,6 +2,11 @@
 > v2.1 (owner 15:13, builder B): Ammit redesigned (one shared component, also used in act C's 41–42) and a layering pass over 15–33.
 > New picture beat: **shot 31 ROAR 83.85** (wind-up 83.45–83.83, jaws wide + head thrown forward + mane bristling 83.85–84.20, settles by 84.50);
 > it replaces the "small roar" at the same time, so the mix key `31:roar` lands on it. No other time changed; camera shakes stay off.
+> v3 (owner 17:07, builder B): sculpted hands in the shared rig (every god), the shared Heart60 on every pan (18, 24, 27–33), the gulp in 20
+> goes into the beak (shadow between the inside of the beak and the mandibles; it is sucked in 53.35–53.54, beak shut 53.66), the horned judge
+> raises one brow again in 26 (**brow raise 70.15**, held to the end), the 31 roar is bigger (rear back 83.43–83.75, **ROAR 83.85**, jaws
+> wide to 84.27, settles by 84.53; push-in on the roar). Sound events asked for: **17 cobra hiss 43.75 · croc growl 43.90 (jaws open
+> 43.85–44.40) · croc snap 44.60** · **20 bone crack 52.80 · gulp 53.70**. All other times unchanged.
 
 # ep60 · sync table, act B (shots 15–33, 37.8–91.4 s)
 
@@ -16,16 +21,16 @@ Each event label is written before its time; ranges are "a–b".
 |---|---|---|
 | 15 「下葬后，你上路了：去冥界。」 | dissolve, ov 0.4 | stone door grinds 37.95–38.58 · **door shuts thud 38.58** (dust puff, the warm tomb light cut off) · night wind throughout (mist wisps drift over the river) · footsteps (optional) 37.98 · 38.56 · 39.14 · 39.73 · 40.31 |
 | 16 「一道道门，守门的手里拿着刀。」 | dissolve, ov 0.3 | **knife_1 glint 40.80** (left-most guardian, screen left) · **knife_2 glint 41.40** · **knife_3 glint 42.00** · **knife_4 glint 42.60** (right-most); each guardian jabs his knife up on its glint; camera trucks left → right |
-| 17 「蛇和鳄鱼扑过来，全靠咒语挡。」 | cut | **cobra rears hiss 43.75** · lunge at the lens 43.80–44.55 · **croc jaw snap 44.60** (camera jolt) · scroll lifted 44.70–45.02 · **gold flare whoomp 45.05** (glyph line shoots right, gold flash) · both recoil 45.05–45.55 · **beetle skitter 45.12–45.70** |
+| 17 「蛇和鳄鱼扑过来，全靠咒语挡。」 | cut | **cobra rears hiss 43.75** · lunge at the lens 43.80–44.55 · **croc growl 43.90** (jaws open wide 43.85–44.40) · **croc jaw snap 44.60** (camera jolt) · scroll lifted 44.70–45.02 · **gold flare whoomp 45.05** (glyph line shoots right, gold flash) · both recoil 45.05–45.55 · **beetle skitter 45.12–45.70** |
 | 18 「终点：双真理之厅。」 | dissolve, ov 0.4 | **doors boom open 47.00** (leaves swing 46.94–47.16, gold light floods the threshold) · crane up and back 47.20 → 49.75 · footsteps echo 48.06 · 48.69 · 49.32 (you, tiny, step in) |
 | 19 「42位神排排坐，等着你。」 | cut | murmur of whispers rising 50.00 → 52.40 (gold whisper wisps appear along the rows, full by ~52.2) · truck along the rows throughout · label 「四十二判官」 |
-| 20 「名字都很吓人：碎骨者、吞影者……」 | cut | **punch 1 碎骨者 52.40** · **bone crack 52.80** (the bone snaps between his fists, flash + chips) · **punch 2 吞影者 53.30** · beak opens, the little shadow is sucked in 53.30–53.56 · **gulp 53.70** (beak shut 53.56, lump down the neck 53.65–54.00) · **punch 3 食血者 54.20** · **drip lick 54.60** (the red drop leaves the knife tip, the tongue flicks 54.55–54.90) |
+| 20 「名字都很吓人：碎骨者、吞影者……」 | cut | **punch 1 碎骨者 52.40** · **bone crack 52.80** (the bone snaps between his fists, flash + chips) · **punch 2 吞影者 53.30** · beak opens 53.30–53.45, the little shadow is sucked into the open beak 53.35–53.54 · **gulp 53.70** (beak shut 53.66, a gulp puff by the throat) · **punch 3 食血者 54.20** · **drip lick 54.60** (the red drop leaves the knife tip, the tongue flicks 54.55–54.90) |
 | 21 「第125章：对每一位逐条发誓——」 | cut | you step up 55.40–55.85 and bow 55.78–56.18 · **tek column 1 56.00** · **tek column 2 56.60** · **tek column 3 57.20** · **tek column 4 57.80** (each gold glyph column leaves your mouth) · the judge leans in 56.60–57.20 |
 | 22 「“我没偷，没杀人，没撒谎。”」 | cut | **check 1 tick nod 59.00** · **check 2 tick nod 59.60** · **check 3 tick nod 60.20** (gold tick pops over each judge as he nods; gold signs fly into his ear just before) |
 | 23 「“我没夺过婴儿嘴边的奶。”」 | cut | panel pops in 61.15–61.42 · **baby gurgle 61.50** (bounce, sparkles) · your hand hovers 61.48–61.75, pulls back palm-up 61.86–62.12 · judge squints 62.05–62.45 · **check tick nod 62.65** |
 | 24 「“我没在秤上做过手脚。”」 | cut | **glint ting 64.30** (the giant balance behind you; camera glances at it 64.32–64.97, a smaller second glint 65.05, back 65.17–65.82) · **check tick 65.90** (gold tick over you) |
 | 25 「“我没有……话太多。”」 | cut | you talk 66.50–67.40 (a stream of gold signs to the judge) · **freeze music stops dead 67.40** (the signs stop in the air, then sink and fade) · **reed squeak 67.50** (the 长角者 raises one brow 67.45–67.95) · sweat drop 68.00, slides 68.10–68.70 · **cricket 68.30** (dead air) · slow push to the judge 67.40 → 69.0 |
-| 26 「这条，你能过吗？」 | cut | cricket (continues) · the judge turns to face you 69.26–69.56 · **eyes lock tink 69.86** (glint in both eyes) · slow push on his eyes 69.56 → 71.5 · blink 71.00–71.15 |
+| 26 「这条，你能过吗？」 | cut | cricket (continues) · the judge turns to face you 69.26–69.56 · **eyes lock tink 69.86** (glint in both eyes) · **brow raise 70.15** (one brow up, forehead creases, held to the end) · slow push on his eyes 69.56 → 71.5 · blink 71.00–71.15 |
 | 27 「阿努比斯领你上秤，校准秤砣。」 | dissolve, ov 0.4 | footsteps 71.67 · 71.89 · 72.11 · 72.33 · 72.55 (Anubis and you, hand in hand) · **tick_1 72.50** · **tick_2 73.00** · **tick_3 73.45** (the plumb-bob taps the post, a spark each) · Anubis kneels 72.60–73.05 · finger on the bob 73.65, settled by 74.00 · label 「阿努比斯」 |
 | 28 「左边你的心，右边真理之羽。」 | cut | **left pan clink 74.90** (the heart lands; the pan bobs) · **right pan clink 75.50** (the feather drifts down and lands) · Ma'at fades in behind the feather 75.70–76.60 · label 「玛阿特」 from ~76.0 |
 | 29 「托特提笔，准备记录。」 | cut | **pen dipped 77.90** (ripple at the well) · **first scratch 78.75** (the stroke runs 78.75–79.10) · the baboon turns to watch 77.70–78.20 · Thoth looks up at the beam 79.30–79.70 · label 「托特」 |

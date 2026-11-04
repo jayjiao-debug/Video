@@ -1,6 +1,7 @@
 import React from 'react';
-import {God, CAST, POSES, Cast, Pose, solve, Rig, AmmitPose, AMMIT_PIV, wristTo, holdAt, SHAPES} from './rig60';
+import {God, CAST, POSES, Cast, Pose, solve, Rig, AmmitPose, AMMIT_PIV, wristTo, holdAt, SHAPES, HandLines} from './rig60';
 import {Feather, Heart, Baboon, BAL, balanceGeo, BalancePose, GLYPH_D, GLYPHS, featherD} from './props60';
+import {Heart60} from './heart60';
 import {Glow, rng, Stars} from './frame60';
 import {KhekherFrieze, RegisterLine, Dado} from './frame60';
 import {Ceiling} from './sets60';
@@ -43,7 +44,7 @@ type C = {OW: number; LW: number};
 const cx = (s: number): C => ({OW: 2.7 / s, LW: 1.5 / s});
 /** a fist drawn again over a held prop (figure units, inside the figure's transform), so the fingers close round the handle */
 export const FistOver: React.FC<{pose: Pose; side: 'b' | 'f'; c: C; skin: string; female?: boolean}> = ({pose, side, c, skin, female}) => { const h = solve(pose, female)[side === 'b' ? 'bH' : 'fH'];
-	return <g transform={mx(h)}><path d={SHAPES.fist} fill={skin} stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinejoin="round" /><path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" fill="none" stroke={PAL.line} strokeWidth={c.LW} /></g>; };
+	return <g><path d={SHAPES.fist} transform={mx(h)} fill={skin} stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinejoin="round" /><HandLines m={h} kind="fist" c={c} /></g>; };
 const col = (r: Role | string) => (PAL as Record<string, string>)[r] ?? r;
 const Solid: React.FC<{d: string; r: Role | string; c: C; m?: M; k?: number; o?: number}> = ({d, r, c, m, k = 1, o}) => <g transform={m && mx(m)} opacity={o}>
 	<path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW * k} strokeLinejoin="round" /><path d={d} fill={col(r)} /></g>;
@@ -156,12 +157,16 @@ export const JackalTongue: React.FC<{c: C; out: number}> = ({c, out}) => out <= 
 	<path d={`M2.6 -0.5Q${2.6 + 0.5 * out} ${-0.35 + 0.2 * out} ${2.65 + 0.8 * out} ${-0.2 + 0.35 * out}`} fill="none" stroke="#9E2B3A" strokeWidth={c.LW} />
 </g>;
 /** an ibis's lower beak opening (head frame): open 0..1 (degrees ×22) */
-export const IbisGape: React.FC<{c: C; open: number}> = ({c, open}) => {
-	const a = 22 * open, base: V = [1.05, -0.92];
+export const IbisGape: React.FC<{c: C; open: number; part?: 'back' | 'front' | 'all'}> = ({c, open, part = 'all'}) => {
+	const a = 22 * open, base: V = [1.05, -0.92], rm = chain(T(base[0], base[1]), R(a), T(-base[0], -base[1]));
 	const lower = sp([[1.0, -0.9], [1.6, -0.86], [2.3, -0.58], [2.95, -0.22], [3.36, 0.14, 1], [3.1, 0.12], [2.6, -0.12], [1.9, -0.45], [1.25, -0.62], [0.95, -0.7]], true, 0.16);
+	const upperFill = SHAPES.ibisBeak, upperEdge = sp([[1.2, -1.16], [1.65, -0.94], [2.25, -0.62], [2.85, -0.26], [3.24, 0.08], [3.46, 0.2]], false, 0.16), mouth = sp([[1.25, -0.9], [1.85, -0.82], [2.5, -0.6], [3.05, -0.28], [3.38, 0.02], [3.46, 0.2]], false, 0.16);
 	return <g>
-		{open > 0.02 && <path d={poly([[1.0, -0.9], [3.4, 0.15], ap(chain(T(base[0], base[1]), R(a), T(-base[0], -base[1])), [3.36, 0.14])])} fill="#3A0E14" />}
-		<Solid d={lower} r={PAL.ibis2} c={c} m={chain(T(base[0], base[1]), R(a), T(-base[0], -base[1]))} />
+		{part !== 'front' && open > 0.02 && <path d={poly([[1.0, -0.9], [3.4, 0.15], ap(rm, [3.36, 0.14])])} fill="#3A0E14" />}
+		{part !== 'back' && <>
+			<Solid d={lower} r={PAL.ibis2} c={c} m={rm} />
+			{open > 0.02 && <><path d={upperFill} fill={PAL.ibis2} /><path d={upperEdge} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinecap="round" /><path d={mouth} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinecap="round" /></>}
+		</>}
 	</g>;
 };
 
@@ -427,7 +432,7 @@ export const Ammit2: React.FC<{pose: AmmitPose; x: number; y: number; s: number;
 };
 
 /* ---------------- the balance, driveable: heart / feather offsets, plumb, baboon facing, a glint on the beam ---------------- */
-export type Bal2 = BalancePose & {heartDy?: number; heartK?: number; heartO?: number; featherDy?: number; featherRot?: number; featherO?: number; featherDx?: number; baboonFace?: 1 | -1; glint?: number; tick?: number};
+export type Bal2 = BalancePose & {heartDy?: number; heartK?: number; heartO?: number; hid?: string; featherDy?: number; featherRot?: number; featherO?: number; featherDx?: number; baboonFace?: 1 | -1; glint?: number; tick?: number};
 const rect = (x0: number, y0: number, x1: number, y1: number) => poly([[x0, y0], [x1, y0], [x1, y1], [x0, y1]]);
 export const Balance2: React.FC<{p: Bal2; x: number; y: number; s: number; t?: number}> = ({p, x, y, s, t = 0}) => {
 	const c = cx(s), g = balanceGeo(p);
@@ -455,7 +460,7 @@ export const Balance2: React.FC<{p: Bal2; x: number; y: number; s: number; t?: n
 		{tk > 0.01 && <g style={{mixBlendMode: 'screen'}} opacity={tk}><circle cx={0.36} cy={g.bob[1] + 0.4} r={1.4} fill="url(#g60-white)" /><path d={`M0.36 ${g.bob[1] - 0.6}L0.45 ${g.bob[1] + 0.3}L1.3 ${g.bob[1] + 0.4}L0.45 ${g.bob[1] + 0.5}L0.36 ${g.bob[1] + 1.4}L0.27 ${g.bob[1] + 0.5}L-0.6 ${g.bob[1] + 0.4}L0.27 ${g.bob[1] + 0.3}Z`} fill="#FFFBE8" /></g>}
 		{cords(g.panL, g.eL, 'cl')}{cords(g.panR, g.eR, 'cr')}
 		<g transform={mx(g.panL)}>
-			{(p.heartO ?? 1) > 0 && <g opacity={p.heartO ?? 1} transform={`translate(0,${0.02 + (p.heartDy ?? 0)}) scale(${hk})`}><Heart c={{OW: c.OW / hk, LW: c.LW / hk}} /></g>}
+			{(p.heartO ?? 1) > 0 && <Heart60 x={-20 * (2.6 / 150)} y={-72 * (2.6 / 150) + (p.heartDy ?? 0)} h={2.6} beat={(hk - 1) / 0.07} id={p.hid ?? 'b2h'} o={p.heartO ?? 1} />}
 			<Solid d={panD} r="gold" c={c} /><path d="M-1.7 0.28Q0 0.5 1.7 0.28" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} /></g>
 		<g transform={mx(g.panR)}>
 			{(p.featherO ?? 1) > 0 && <g opacity={p.featherO ?? 1} transform={`translate(${0.05 + (p.featherDx ?? 0)},${0.02 + (p.featherDy ?? 0)}) rotate(${p.featherRot ?? 0})`}><Feather c={c} h={3.0} /></g>}

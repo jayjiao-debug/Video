@@ -157,9 +157,11 @@ const SH = {
 	hornR: sp([[0.25, -3.12], [1.1, -3.4], [1.47, -4.2], [1.31, -5.15], [1.03, -5.62, 1], [1.15, -5.08], [1.23, -4.25], [0.91, -3.62], [0.23, -3.36]]),
 	beard: sp([[1.02, -0.12, 1], [1.24, -0.06], [1.32, 0.5], [1.4, 1.05], [1.6, 1.18], [1.62, 1.36], [1.36, 1.38], [1.18, 1.2], [1.08, 0.5]]),
 	// hands: wrist at 0, fingers along +y, thumb on +x (front)
-	open: sp([[-0.34, -0.12], [0.32, -0.12], [0.4, 0.22], [0.6, 0.5], [0.66, 0.84], [0.5, 0.9], [0.36, 0.66], [0.38, 1.1], [0.3, 1.46], [0.06, 1.62], [-0.2, 1.52], [-0.36, 1.0], [-0.4, 0.4]], true, 0.16),
-	fist: sp([[-0.34, -0.12], [0.33, -0.12], [0.46, 0.3], [0.5, 0.72], [0.36, 1.0], [0.0, 1.08], [-0.34, 0.98], [-0.44, 0.5]], true, 0.18),
-	palm: sp([[-0.34, -0.12], [0.32, -0.12], [0.42, 0.18], [0.66, 0.4], [0.72, 0.7], [0.56, 0.76], [0.4, 0.6], [0.4, 1.1], [0.3, 1.48], [0.04, 1.6], [-0.22, 1.5], [-0.38, 1.0], [-0.4, 0.4]], true, 0.16),
+	// (ep60 v3, owner 17:07: "hands like their sculpture"): long flat fingers held together and a separate thumb; the fist a squared
+	// grip, curled fingers under the thumb (finger lines in HAND_LINES), no nails
+	open: sp([[-0.34, -0.12], [0.32, -0.12], [0.42, 0.16], [0.62, 0.4], [0.74, 0.66], [0.72, 0.84], [0.58, 0.84], [0.42, 0.64], [0.41, 1.06], [0.39, 1.48], [0.3, 1.64, 1], [0.04, 1.71], [-0.22, 1.64, 1], [-0.37, 1.3], [-0.42, 0.6]], true, 0.14),
+	fist: sp([[-0.36, -0.12], [0.33, -0.12], [0.43, 0.1], [0.6, 0.3], [0.67, 0.55], [0.56, 0.74], [0.52, 0.95], [0.34, 1.1, 1], [-0.22, 1.13], [-0.45, 0.99, 1], [-0.49, 0.56], [-0.43, 0.15]], true, 0.15),
+	palm: sp([[-0.34, -0.12], [0.32, -0.12], [0.42, 0.16], [0.64, 0.38], [0.73, 0.64], [0.66, 0.79], [0.52, 0.78], [0.43, 0.62], [0.42, 1.06], [0.39, 1.48], [0.3, 1.63, 1], [0.04, 1.69], [-0.22, 1.62, 1], [-0.37, 1.26], [-0.42, 0.6]], true, 0.14),
 };
 export const SHAPES = SH;
 
@@ -171,6 +173,21 @@ const Ln: React.FC<{d: string; m?: M; c: Ctx; w?: number; col?: string; o?: numb
 /** a shape with its own outline (ink pass + fill) */
 const Solid: React.FC<{d: string; m?: M; r: Role | string; c: Ctx; k?: number}> = ({d, m, r, c, k}) => <><Ink d={d} m={m} c={c} k={k} /><Fl d={d} m={m} r={r} /></>;
 
+/** finger and thumb lines of a hand (hand frame), after Egyptian sculpture: three finger divisions and the thumb; no nails */
+export const HandLines: React.FC<{m: M; kind?: Hand; c: Ctx}> = ({m, kind, c}) => kind === 'open' || kind === 'palm'
+	? <g transform={mx(m)} fill="none" stroke={PAL.line} strokeWidth={c.LW * 1.05} strokeLinecap="round" opacity={0.85}>
+		<path d="M0.41 0.62Q0.38 0.36 0.3 0.18" /><path d="M0.2 0.98L0.21 1.52" /><path d="M-0.01 1.0L-0.01 1.6" /><path d="M-0.21 0.98L-0.22 1.48" /></g>
+	: <g transform={mx(m)} fill="none" stroke={PAL.line} strokeWidth={c.LW * 1.05} strokeLinecap="round" opacity={0.85}>
+		<path d="M-0.46 0.68Q0 0.75 0.53 0.71" /><path d="M-0.2 0.73Q-0.24 0.92 -0.2 1.11" /><path d="M0.06 0.74Q0.02 0.94 0.06 1.12" /><path d="M0.3 0.74Q0.26 0.9 0.3 1.05" />
+		<path d="M0.37 0.14Q0.6 0.38 0.53 0.7" /></g>;
+/** the curled fingers of a fist drawn again over a held prop (hand frame), so the hand grips it */
+export const FingersOver: React.FC<{m: M; skin: string; c: Ctx}> = ({m, skin, c}) => <g transform={mx(m)}>
+	<path d="M-0.48 0.66Q0 0.74 0.54 0.7L0.52 0.95Q0.34 1.1 -0.22 1.13Q-0.46 1.0 -0.48 0.66Z" fill={skin} />
+	<path d="M0.52 0.95Q0.34 1.1 -0.22 1.13Q-0.46 1.0 -0.49 0.62" fill="none" stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinecap="round" strokeLinejoin="round" />
+	<path d="M-0.47 0.67Q0 0.75 0.53 0.71" fill="none" stroke={PAL.ink} strokeWidth={c.OW * 1.1} strokeLinecap="round" />
+	<g fill="none" stroke={PAL.line} strokeWidth={c.LW * 1.05} strokeLinecap="round" opacity={0.85}><path d="M-0.2 0.75Q-0.24 0.93 -0.2 1.11" /><path d="M0.06 0.76Q0.02 0.95 0.06 1.12" /><path d="M0.3 0.76Q0.26 0.9 0.3 1.05" /></g>
+</g>;
+const GRIPS: PropKind[] = ['ankh', 'knife', 'sistrum', 'stalks', 'menat'];
 /** half-elliptic band (collar rows): angles 0..180 below the centre */
 export const band = (cx: number, cy: number, r0: number, r1: number, k = 0.78, a0 = 0, a1 = 180, n = 28): string => {
 	const pts: V[] = [];
@@ -372,8 +389,7 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 	const armInk = (U: M, F: M, H: M, hand: Hand | undefined, k: string) => <g key={k}><Ink d={SH.upper} m={U} c={c} /><Ink d={SH.fore} m={F} c={c} /><Ink d={handShape(hand)} m={H} c={c} /></g>;
 	const armFill = (U: M, F: M, H: M, hand: Hand | undefined, k: string) => <g key={k}><Fl d={SH.upper} m={U} r={skin} /><Fl d={SH.fore} m={F} r={skin} /><Fl d={handShape(hand)} m={H} r={skin} /></g>;
 	const armDetail = (U: M, F: M, H: M, hand: Hand | undefined, k: string) => <g key={k}>
-		{hand === 'fist' && <path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" transform={mx(H)} fill="none" stroke={PAL.line} strokeWidth={c.LW} opacity={0.75} />}
-		{hand !== 'fist' && <path d="M0.36 0.62Q0.36 0.36 0.3 0.2" transform={mx(H)} fill="none" stroke={PAL.line} strokeWidth={c.LW * 0.9} opacity={0.7} />}
+		<HandLines m={H} kind={hand} c={c} />
 		<g transform={mx(U)}><rect x={-0.62} y={1.0} width={1.26} height={0.42} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} /><rect x={-0.62} y={1.12} width={1.26} height={0.17} fill={PAL.blue} /></g>
 		<g transform={mx(F)}><rect x={-0.42} y={2.7} width={0.86} height={0.58} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} />
 			{[0, 1, 2].map((i) => <rect key={i} x={-0.42} y={2.78 + i * 0.16} width={0.86} height={0.07} fill={[PAL.blue, PAL.red, PAL.blue][i]} />)}</g>
@@ -550,7 +566,7 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		parts.push(prop(bp, bG, g.bH, 'bpb'));
 		parts.push(prop(fp, fG, g.fH, 'fp'));
 		parts.push(<g key="mh"><Solid d={SH.fist} m={g.bH} r={skin} c={c} /><Solid d={SH.fist} m={g.fH} r={skin} c={c} />
-			<path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" transform={mx(g.bH)} fill="none" stroke={PAL.line} strokeWidth={c.LW} /><path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" transform={mx(g.fH)} fill="none" stroke={PAL.line} strokeWidth={c.LW} /></g>);
+			<HandLines m={g.bH} kind="fist" c={c} /><HandLines m={g.fH} kind="fist" c={c} /></g>);
 	} else {
 		if (cast.wings) parts.push(<Wing key="wf" U={g.fU} F={g.fF} c={c} t={t + 0.4} seed={0.2} />);
 		const holdsTop = fp === 'was';
@@ -558,7 +574,8 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		if (showF) parts.push(<g key="farm"><mask id={mid} maskUnits="userSpaceOnUse" x={-60} y={-60} width={120} height={120}><rect x={-60} y={-60} width={120} height={120} fill="white" /><circle cx={fsh[0]} cy={fsh[1]} r={1.05} fill="black" /></mask>
 			<g mask={`url(#${mid})`}>{armInk(g.fU, g.fF, g.fH, cast.fHand, 'oi')}{armFill(g.fU, g.fF, g.fH, cast.fHand, 'of')}</g>{armDetail(g.fU, g.fF, g.fH, cast.fHand, 'od')}</g>);
 		if (!holdsTop) parts.push(prop(fp, fG, g.fH, 'fp'));
-		if (holdsTop && showF) parts.push(<g key="fistover" transform={mx(g.fH)}><path d="M-0.34 0.42Q0 0.5 0.48 0.42L0.5 0.72Q0.2 0.95 -0.36 0.85Z" fill={PAL[skin]} /><path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" fill="none" stroke={PAL.line} strokeWidth={c.LW} opacity={0.75} /></g>);
+		// the curled fingers close over whatever the front fist holds (staff, ankh loop, knife, sistrum handle, stalks)
+		if (showF && cast.fHand === 'fist' && (holdsTop || GRIPS.includes(fp))) parts.push(<FingersOver key="fistover" m={g.fH} skin={(PAL as Record<string, string>)[skin]} c={c} />);
 	}
 	if (explode) { // rig sheet: bare parts pulled apart, every pivot marked, the bone chain dashed
 		const bare: React.ReactNode[] = [];

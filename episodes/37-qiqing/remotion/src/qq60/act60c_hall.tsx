@@ -9,13 +9,14 @@ import {ANI, ANI_POSES} from './cast60';
 import {wobIn, camE, eOut, eIn, bump, BalanceC, balW, HallBg, ctxC, Sparkle} from './act60c_common';
 import {PAL, lerp, sm, cl, seg, V, sp} from './geo60';
 import type {ShotProps} from './EP60';
-import {Ammit2} from './act60b_kit'; // ep60 v2: the shared Ammit (builder B owns her design)
+import {Ammit2} from './act60b_kit';
+import {Heart60} from './heart60'; // ep60 v2: the shared Ammit (builder B owns her design)
 
 const GY = 852;
 const silM = (r: number, g: number, b: number) => `0 0 0 0 ${r}  0 0 0 0 ${g}  0 0 0 0 ${b}  0 0 0 1 0`;
 
 /* ======================= 41 · 「可如果，秤[歪]了——」 the heart's pan crashes down, the feather flips off, Ammit springs ======================= */
-export const T41 = {bang: 0.32, spring: 0.8, roar: 0.98};
+export const T41 = {bang: 0.32, rear: [0.45, 1.05], roar: 1.12, roarEnd: 1.62, spring: 1.62};
 const S41: React.FC<ShotProps> = ({t}) => {
 	const BX = 560, s = 32, b = T41.bang, tb = t - b;
 	const tilt = t < b ? lerp(1.5, 22.5, eIn(cl((t + 0.15) / (b + 0.15)))) : 20 + 2.5 * Math.exp(-tb / 0.2) * Math.cos(tb * 24);
@@ -23,10 +24,11 @@ const S41: React.FC<ShotProps> = ({t}) => {
 	const p = {tilt, swingL: -swing, swingR: swing * 1.3, plumb: -0.3 * tilt + (t > b ? 12 * Math.exp(-tb / 0.6) * Math.sin(tb * 7) : 0)};
 	const w0 = balW({tilt: 22.5, swingL: 0, swingR: 0}, BX, GY, s);
 	const fu = Math.max(0, tb), fx = w0.panR[0] + 150 * fu, fy = w0.panR[1] - 560 * fu + 330 * fu * fu, fr = 620 * fu;
-	// Ammit: crouched growl, then the spring (jaws wide) toward the fallen heart
-	const sp_ = seg(t, T41.spring, 2.25), lift = eOut(sp_);
-	const ap_: AmmitPose = {lean: lerp(-2, 13, sm(seg(t, T41.spring - 0.1, T41.spring + 0.3))), neck: lerp(2, 16, sm(seg(t, T41.spring, T41.spring + 0.35))), jaw: lerp(7 + 3 * Math.max(0, Math.sin(t * 9)), 40, sm(seg(t, T41.spring + 0.05, T41.roar))), tail: 18 * Math.sin(t * 5), breathe: 0.5 + 0.5 * Math.sin(t * 6)};
-	const AX = 1022, dx = -300 * lift, dy = -95 * Math.sin(Math.PI * 0.62 * lift) - 20 * lift, rot = -10 * sm(seg(t, T41.spring, T41.spring + 0.4)) + 6 * sm(seg(t, 1.5, 2.2));
+	// Ammit: growls, rears up, ROARS (held, jaws wide, head up), then springs at the fallen heart
+	const rear = sm(seg(t, T41.rear[0], T41.rear[1])), roar = sm(seg(t, T41.roar - 0.12, T41.roar + 0.06)) * (1 - sm(seg(t, T41.roarEnd - 0.06, T41.roarEnd + 0.14)));
+	const sp_ = seg(t, T41.spring, 2.3), lift = eOut(sp_);
+	const ap_: AmmitPose = {lean: lerp(-2, 9, rear) + 4 * lift, neck: lerp(2, 12, rear) + 6 * roar - 4 * lift, jaw: lerp(6 + 3 * Math.max(0, Math.sin(t * 9)), 16, rear) + 18 * lift, tail: 18 * Math.sin(t * 5), breathe: 0.5 + 0.5 * Math.sin(t * (roar > 0.5 ? 14 : 6))};
+	const AX = 1022, dx = -300 * lift, dy = -95 * Math.sin(Math.PI * 0.62 * lift) - 20 * lift, rot = -9 * rear + 4 * roar + 5 * lift;
 	const shake = 0 * (t > b ? 7 * Math.exp(-tb / 0.13) * Math.sin(tb * 70) : 0); // owner 15:10: no screen shake
 	const cam = camE(t, 0, 2.3, [700, 486, 1.0], [650, 480, 1.07]);
 	return <Stage60 t={t} cam={{...cam, x: cam.x + shake, y: cam.y + shake * 0.6}} grade="blood" bg="#3A0E0A" wear={0.45} stain={0.4} flickSeed={41}
@@ -36,30 +38,35 @@ const S41: React.FC<ShotProps> = ({t}) => {
 			<Glow x={w0.panL[0]} y={w0.panL[1] - 40} r={240} c="red" o={0.5 + 0.4 * Math.exp(-Math.max(0, tb) / 0.3)} />
 			{t > b && <Glow x={w0.panL[0]} y={w0.panL[1] + 10} r={300} c="white" o={0.7 * Math.exp(-tb / 0.12)} />}
 			<Embers t={t} x={AX - 150} y={GY - 30} n={18} seed={41} h={420} spread={360} />
+			{/* the roar: sound rings out of the open jaws (no screen shake) */}
+			{roar > 0.05 && [0, 1, 2].map((i) => { const u = ((t - T41.roar + 0.1 + i * 0.16) % 0.48) / 0.48, mx = 500 + dx, my = 330 + dy;
+				return u > 0 && <path key={i} d={`M${mx - 30 - 220 * u} ${my - 40 - 170 * u}Q${mx - 90 - 300 * u} ${my} ${mx - 30 - 220 * u} ${my + 40 + 170 * u}`} fill="none" stroke="#FFD27A" strokeWidth={7 - 4 * u} strokeLinecap="round" opacity={roar * (1 - u)} style={{mixBlendMode: 'screen'}} />; })}
 			<Dust t={t} box={[0, 60, 1300, 900]} n={30} seed={41} c="#FFB080" o={0.5} vx={-4} vy={-6} />
 		</>}
 		screen={t > b ? <rect width={FW} height={FH} fill="#FF3A1E" opacity={0.25 * Math.exp(-tb / 0.18)} style={{mixBlendMode: 'screen'}} /> : null}>
 		<HallBg t={t} x0={-300} x1={1700} red cols={[40, 1250]} />
 		<BalanceC p={p} x={BX} y={GY} s={s} t={t} feather={t < b} />
 		{t > b && fy < 1100 && <g transform={`translate(${fx},${fy}) rotate(${fr}) scale(${s})`}><Feather c={ctxC(s)} h={3.0} /></g>}
-		<g transform={`translate(${dx},${dy}) rotate(${rot} ${AX - 150} ${GY - 120})`}><Ammit2 pose={ap_} x={AX} y={GY} s={44} face={-1} t={t} rim={0.7} id="c41am" roar={sm(seg(t, T41.spring + 0.02, T41.roar)) * (1 - sm(seg(t, 1.75, 2.15)))} /></g>
+		<g transform={`translate(${dx},${dy}) rotate(${rot} ${AX - 150} ${GY - 120})`}><Ammit2 pose={ap_} x={AX} y={GY} s={44} face={-1} t={t} rim={0.7} id="c41am" roar={roar} /></g>
 	</Stage60>;
 };
 
 /* ======================= 42 · 「阿米特一口，[吞]掉你的心。」 the jaws close on the heart in silhouette; cut on contact to red, then black ======================= */
-export const T42 = {bite: 1.22};
+export const T42 = {bite: 1.22, flash: 1.32};
 const S42: React.FC<ShotProps> = ({t}) => {
-	const bt = T42.bite, after = t >= bt;
+	const bt = T42.bite, after = t >= T42.flash, shut = t >= bt; // the jaws shut on the heart (a visible bite frame), THEN the red flash
 	const HX = 470, HY = 612, hs = 80, beat = 1 + 0.05 * Math.max(0, Math.sin(t * 9));
 	const a1 = eOut(seg(t, -0.3, 0.85)), a2 = eIn(seg(t, 0.85, bt));
 	const ax = lerp(lerp(1430, 1020, a1), 772, a2), ay = 905 - 30 * Math.sin(Math.PI * a2);
 	const jaw = t < bt - 0.1 ? lerp(10, 34, sm(seg(t, 0, 0.8))) : lerp(34, 0, cl((t - (bt - 0.1)) / 0.1));
 	const ap_: AmmitPose = {lean: lerp(-1, 3, a2), neck: lerp(3, -3, a2), jaw, tail: 16 * Math.sin(t * 6), breathe: 0.5 + 0.5 * Math.sin(t * 7)};
-	const fl = after ? Math.exp(-(t - bt) / 0.28) : 0, black = sm(seg(t, bt + 0.05, bt + 0.55));
+	const fl = after ? Math.exp(-(t - T42.flash) / 0.28) : 0, black = sm(seg(t, T42.flash + 0.05, T42.flash + 0.55));
 	const pan = 46;
-	return <Stage60 t={t} cam={camE(t, -0.3, bt, [720, 486, 1.0], [690, 496, 1.07])} grade="blood" bg="#2A0806" wear={0.35} stain={0.35} flickSeed={42}
+	return <Stage60 t={t} cam={camE(t, -0.3, T42.flash, [720, 486, 1.0], [690, 496, 1.07])} grade="blood" bg="#2A0806" wear={0.35} stain={0.35} flickSeed={42}
 		tags={!after ? [{x: 1150, y: 260, text: '阿米特'}] : []}
-		light={!after ? <Dust t={t} box={[0, 60, 1300, 900]} n={30} seed={42} c="#FFB080" o={0.5} vx={-30} vy={-10} /> : <Embers t={t} x={HX + 120} y={HY} n={8} seed={42} h={300} spread={300} />}
+		light={!after ? <><Dust t={t} box={[0, 60, 1300, 900]} n={30} seed={42} c="#FFB080" o={0.5} vx={-30} vy={-10} />
+			{shut && <g stroke="#FFF1C8" strokeWidth={6} strokeLinecap="round" style={{mixBlendMode: 'screen'}}>{[0, 1, 2, 3, 4].map((i) => { const a = (-150 + i * 48) * Math.PI / 180, r0 = 120, r1 = 190; return <line key={i} x1={HX + Math.cos(a) * r0} y1={HY - 70 + Math.sin(a) * r0} x2={HX + Math.cos(a) * r1} y2={HY - 70 + Math.sin(a) * r1} />; })}</g>}</>
+			: <Embers t={t} x={HX + 120} y={HY} n={8} seed={42} h={300} spread={300} />}
 		screen={after ? <>
 			<rect width={FW} height={FH} fill="#FF2A10" opacity={0.95 * fl} />
 			<circle cx={HX + 60} cy={HY - 60} r={620} fill="url(#g60-white)" opacity={0.9 * fl} style={{mixBlendMode: 'screen'}} />
@@ -77,7 +84,7 @@ const S42: React.FC<ShotProps> = ({t}) => {
 			{[-1.85, -0.6, 0.6, 1.85].map((u) => <line key={u} x1={HX + u * pan} y1={HY} x2={HX + 260} y2={-60} stroke={PAL.ink} strokeWidth={2.4} />)}
 			<g transform={`translate(${HX},${HY}) scale(${pan})`}><path d={sp([[-2.05, 0, 1], [2.05, 0, 1], [1.6, 0.5], [0.7, 0.74], [-0.7, 0.74], [-1.6, 0.5]], true, 0.2)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={2.4 / pan} /></g>
 			{/* the heart goes between the inside of the mouth and the jaws (Ammit2 inMouth) */}
-			<Ammit2 pose={ap_} x={ax} y={ay} s={58} face={-1} t={t} rim={0.9} id="c42am" inMouth={<g transform={`translate(${HX},${HY}) scale(${hs * beat})`}><Heart c={ctxC(hs)} /></g>} />
+			<Ammit2 pose={ap_} x={ax} y={ay} s={58} face={-1} t={t} rim={0.9} id="c42am" inMouth={<Heart60 x={HX} y={HY - 60} h={150} id="c42h" glow={0.45} beat={(beat - 1) * 4} />} />
 		</>}
 	</Stage60>;
 };

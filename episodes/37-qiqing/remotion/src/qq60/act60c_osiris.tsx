@@ -3,7 +3,7 @@
 import React from 'react';
 import {God, CAST, Cast, Pose, POSES, solve, wristTo, holdAt, reach} from './rig60';
 import {ShrineBack, ShrineFront, Throne, SHRINE, GlyphColumns, GLYPH_D} from './props60';
-import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Shaft} from './frame60';
+import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Shaft, F_SERIF} from './frame60';
 import {Ceiling} from './sets60';
 import {ANI, walkPose, STRIDE} from './cast60';
 import {thothPose, STILL} from './scene60';
@@ -117,7 +117,8 @@ const S46: React.FC<ShotProps> = ({t}) => {
 		{gl > 0 && <g transform={`translate(${vx},${vy}) scale(${lerp(0.35, 1, rise)})`} opacity={gl}>
 			<rect x={-150} y={-80} width={300} height={160} rx={22} fill="#121A44" stroke="#F3C64E" strokeWidth={5} opacity={0.9} />
 			<rect x={-138} y={-68} width={276} height={136} rx={14} fill="none" stroke="#F3C64E" strokeWidth={2} opacity={0.7} />
-			{MAAKHERU.map((d, i) => <g key={i} transform={`translate(${-135 + i * 90},-55) scale(100)`}><path d={d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.025} /></g>)}
+			{MAAKHERU.map((d, i) => <g key={i} transform={`translate(${-120 + i * 82},-66) scale(76)`}><path d={d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.03} /></g>)}
+			<text x={0} y={52} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={40} fill="#FFE7A0" letterSpacing="0.12em">言语真实</text>
 		</g>}
 		<Dado x0={-200} x1={1700} y={GY} h={80} />
 	</Stage60>;
