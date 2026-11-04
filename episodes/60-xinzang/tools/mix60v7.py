@@ -71,7 +71,7 @@ ev(85.14, 'pen_scratch', -6); ev(86.77, 'ammit_growl', 0, onset=True); ev(88.02,
 ev(90.30, 'leadin_roll', 0, abs=True)
 ev(90.77, 'ammit_roar_1', 5.0, onset=True, abs=True)          # [deliberate] Ammit roars alone, BGM out (90.30-92.30)
 ev(92.07, 'plop', -3, abs=True)
-for i, t in enumerate((96.35, 96.83, 97.23, 97.56, 97.82, 98.02, 98.18)): ev(t, 'heartbeat', 1 if i < 2 else 0, abs=True, dur=0.45 if i < 2 else 0.22)
+for i, t in enumerate((96.35, 96.83, 97.23, 97.56, 97.82, 98.02, 98.18)): ev(t, 'heartbeat', -6 + 0.5 * i, abs=True, dur=0.45 if i < 2 else 0.22)
 ev(97.08, 'creak', -5, abs=True)
 # act C
 ev(98.33, 'flare_hit', 1); ev(98.38, 'magic_shimmer', -8); ev(99.33, 'chime_glint', -3); ev(101.99, 'tick_wood', -3)
@@ -82,7 +82,7 @@ for t in (116.65, 117.00, 117.35): ev(t, 'tick_metal', -2)
 ev(118.76, 'chime_glint', -5); ev(119.40, 'darbuka_roll', -2)
 ev(121.89, 'pan_crash', 3)                                     # [deliberate] the pan crashes, the music cuts
 ev(122.02, 'ammit_growl', -2, onset=True, abs=True)
-ev(122.69, 'ammit_roar_2', 3.5, onset=True, abs=True)         # roar 2, a touch softer than roar 1 (owner 21:13)
+ev(122.69, 'ammit_roar_2', 1.5, onset=True, abs=True)         # roar 2, a touch softer than roar 1 (owner 21:13)
 ev(125.15, 'ammit_jaw_slam', 4, onset=True, abs=True); ev(125.15, 'bite_hit', -3, abs=True)   # [deliberate] the bite, then silence
 ev(127.28, 'sand_trickle', -1, abs=True, dur=2.4)
 ev(130.06, 'sand_reverse', -2, abs=True, crop_end=1.2)        # ends on 131.26
