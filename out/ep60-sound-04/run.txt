@@ -1,0 +1,39 @@
+plan: {'tier': 'starter', 'character_count': 7000, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "H1_bgm_groove", "type": "music", "text": "Ancient Egyptian storytelling background music, 104 BPM: Hijaz scale on D (D, E-flat, F-sharp, G, A, B-flat, C) over a low D and A drone; a darbuka playing the Egyptian maqsum rhythm (doum-tek, tek-doum, tek) with soft riq jingles and occasional finger cymbals; an oud plucking a repeating Hijaz ostinato; a soft nasal reed (mizmar / ney) playing short, quiet phrases that rise D, E-flat, F-sharp, G, A, B-flat and fall back to D. It is BACKGROUND MUSIC that sits under on-screen subtitles in a short history video: understated, steady and low-key, no big build-ups, no climaxes, no loud solos, nothing that grabs attention; the melody stays soft and in the background, leaving space; consistent energy from start to end. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "H1_bgm_groove.mp3", "bytes": 721023}
+{"name": "H2_bgm_minimal", "type": "music", "text": "Minimal ancient Egyptian background bed, 100 BPM: mostly the D drone, a quiet darbuka maqsum pattern and a gentle oud ostinato in the Hijaz scale on D, with only a few faint reed notes now and then. It is BACKGROUND MUSIC that sits under on-screen subtitles in a short history video: understated, steady and low-key, no big build-ups, no climaxes, no loud solos, nothing that grabs attention; the melody stays soft and in the background, leaving space; consistent energy from start to end. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "H2_bgm_minimal.mp3", "bytes": 719769}
+{"name": "H3_bgm_curious", "type": "music", "text": "Light, curious ancient Egyptian background music for a myth story, 108 BPM: Hijaz scale on D (D, E-flat, F-sharp, G, A, B-flat, C) over a low D and A drone; a darbuka playing the Egyptian maqsum rhythm (doum-tek, tek-doum, tek) with soft riq jingles and occasional finger cymbals; an oud plucking a repeating Hijaz ostinato; a soft nasal reed (mizmar / ney) playing short, quiet phrases that rise D, E-flat, F-sharp, G, A, B-flat and fall back to D; a playful, slightly mysterious mood. It is BACKGROUND MUSIC that sits under on-screen subtitles in a short history video: understated, steady and low-key, no big build-ups, no climaxes, no loud solos, nothing that grabs attention; the melody stays soft and in the background, leaving space; consistent energy from start to end. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "H3_bgm_curious.mp3", "bytes": 719769}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "H1_bgm_groove",
+  "type": "music",
+  "text": "Ancient Egyptian storytelling background music, 104 BPM: Hijaz scale on D (D, E-flat, F-sharp, G, A, B-flat, C) over a low D and A drone; a darbuka playing the Egyptian maqsum rhythm (doum-tek, tek-doum, tek) with soft riq jingles and occasional finger cymbals; an oud plucking a repeating Hijaz ostinato; a soft nasal reed (mizmar / ney) playing short, quiet phrases that rise D, E-flat, F-sharp, G, A, B-flat and fall back to D. It is BACKGROUND MUSIC that sits under on-screen subtitles in a short history video: understated, steady and low-key, no big build-ups, no climaxes, no loud solos, nothing that grabs attention; the melody stays soft and in the background, leaving space; consistent energy from start to end. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "H1_bgm_groove.mp3",
+  "bytes": 721023
+ },
+ {
+  "name": "H2_bgm_minimal",
+  "type": "music",
+  "text": "Minimal ancient Egyptian background bed, 100 BPM: mostly the D drone, a quiet darbuka maqsum pattern and a gentle oud ostinato in the Hijaz scale on D, with only a few faint reed notes now and then. It is BACKGROUND MUSIC that sits under on-screen subtitles in a short history video: understated, steady and low-key, no big build-ups, no climaxes, no loud solos, nothing that grabs attention; the melody stays soft and in the background, leaving space; consistent energy from start to end. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "H2_bgm_minimal.mp3",
+  "bytes": 719769
+ },
+ {
+  "name": "H3_bgm_curious",
+  "type": "music",
+  "text": "Light, curious ancient Egyptian background music for a myth story, 108 BPM: Hijaz scale on D (D, E-flat, F-sharp, G, A, B-flat, C) over a low D and A drone; a darbuka playing the Egyptian maqsum rhythm (doum-tek, tek-doum, tek) with soft riq jingles and occasional finger cymbals; an oud plucking a repeating Hijaz ostinato; a soft nasal reed (mizmar / ney) playing short, quiet phrases that rise D, E-flat, F-sharp, G, A, B-flat and fall back to D; a playful, slightly mysterious mood. It is BACKGROUND MUSIC that sits under on-screen subtitles in a short history video: understated, steady and low-key, no big build-ups, no climaxes, no loud solos, nothing that grabs attention; the melody stays soft and in the background, leaving space; consistent energy from start to end. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "H3_bgm_curious.mp3",
+  "bytes": 719769
+ }
+]
