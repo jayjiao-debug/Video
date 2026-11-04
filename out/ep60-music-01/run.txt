@@ -1,0 +1,42 @@
+plan: {'tier': 'starter', 'character_count': 9575, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+music retry without model_id: 422 {"detail":{"type":"unprocessable_entity","code":"unprocessable_entity","message":"Invalid type of `composition_plan` used for model music_v2_5","status":"unprocessable_entity","request_id":"76f6e30487e489eb2a6dee117d4d4a62","param":"composition_plan"}}
+{"name": "ep60v6_music_A_cinematic", "type": "music", "text": "", "model": null, "status": 200, "sfx": true, "file": "ep60v6_music_A_cinematic.mp3", "bytes": 4065742}
+music retry without model_id: 422 {"detail":{"type":"unprocessable_entity","code":"unprocessable_entity","message":"Invalid type of `composition_plan` used for model music_v2_5","status":"unprocessable_entity","request_id":"cf971b81edd5926c7fb65b9692403c3b","param":"composition_plan"}}
+{"name": "ep60v6_music_B_traditional", "type": "music", "text": "", "model": null, "status": 200, "sfx": true, "file": "ep60v6_music_B_traditional.mp3", "bytes": 4065742}
+music retry without model_id: 422 {"detail":{"type":"unprocessable_entity","code":"unprocessable_entity","message":"Invalid type of `composition_plan` used for model music_v2_5","status":"unprocessable_entity","request_id":"4abc18378ae4566ef57e452377ff943c","param":"composition_plan"}}
+{"name": "ep60v6_music_C_epic", "type": "music", "text": "", "model": null, "status": 200, "sfx": true, "file": "ep60v6_music_C_epic.mp3", "bytes": 4065742}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "ep60v6_music_A_cinematic",
+  "type": "music",
+  "text": "",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "ep60v6_music_A_cinematic.mp3",
+  "bytes": 4065742
+ },
+ {
+  "name": "ep60v6_music_B_traditional",
+  "type": "music",
+  "text": "",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "ep60v6_music_B_traditional.mp3",
+  "bytes": 4065742
+ },
+ {
+  "name": "ep60v6_music_C_epic",
+  "type": "music",
+  "text": "",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "ep60v6_music_C_epic.mp3",
+  "bytes": 4065742
+ }
+]
