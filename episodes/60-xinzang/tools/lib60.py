@@ -15,7 +15,7 @@ chroma of the bars that meet at the wrap). 'pre' seam: the loop's last beat cros
 end of the file flows into its start exactly as A flowed into bar 1 (clean first entrance); 'tail' seam: the beat after the loop
 cross-fades over the head (used when the bar before is a different texture). Thin = the same loop's harmonic layer (HPSS, sample
 aligned: full <-> thin switches on any bar without phasing). Button (_end) = the downbeat after the loop, dry, then a short ring-out
-(RT 1.2 s room, 35 % wet: a stop, not a wash). One match-EQ for the whole library (third-octave average of the loops vs the reference, 80 %, +-6 dB, smoothed,
+(RT 1.2 s room, 35 % wet: a stop, not a wash). One match-EQ for the whole library (third-octave average of the loops vs the reference, 75 %, -8..+6 dB, 1-octave smoothing,
 linear phase, no cut deeper than 2.5 dB above 5 kHz: the reference's top end is codec roll-off) and one gain for the whole library (groove loop at -14 LUFS), so the moods keep A's relative dynamics.
 """
 import os, sys, json, subprocess, numpy as np, soundfile as sf
@@ -116,13 +116,20 @@ def build(src, lib, ref):
     # one match-EQ for the library, toward the reference's long-term spectrum
     rp, *rr = ref.split(':'); r = load(rp, *rr) if rr else load(rp); c, Rs = third_oct(r)
     Ls = np.mean([third_oct(files[f'{m}_{LOOPS[m][0]}bar'])[1] for m in LOOPS], 0)
-    g = 0.8 * ((Rs - Rs.mean()) - (Ls - Ls.mean())); g = np.convolve(np.pad(g, 2, mode='edge'), np.ones(5) / 5, 'valid'); g = np.clip(g - np.interp(1000, c, g), -6, 6)
-    g = np.where(c >= 5000, np.maximum(g, -2.5), g)   # above 5 kHz the reference is a screen recording (codec roll-off): do not copy it
+    g = 0.75 * ((Rs - Rs.mean()) - (Ls - Ls.mean())); g = np.convolve(np.pad(g, 1, mode='edge'), np.ones(3) / 3, 'valid'); g = np.clip(g - np.interp(1000, c, g), -8, 6)
+    g = np.where(c >= 6000, np.clip(g, -2.5, 1.5), g)   # above 6 kHz the reference is a screen recording (codec roll-off): do not copy it
     fir = eq_fir(c, g); meta['match_eq_db'] = {f'{int(a)}': round(float(v), 1) for a, v in zip(c, g)}
     print('match EQ (dB):', ' '.join(f'{int(a)}:{v:+.1f}' for a, v in zip(c, g)), flush=True)
     eq = lambda x: signal.fftconvolve(np.concatenate([x, np.zeros((len(fir), 2))]), fir[:, None], mode='full')[len(fir) // 2:len(fir) // 2 + len(x)]
     for kk in files:
         files[kk] = circ(eq, files[kk]) if (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk else eq(files[kk])
+    # stereo: A is very wide (side ~ mid, bass 3 dB heavier on the right, L/R correlation < 0.2): bass mono below 150 Hz, side -3 dB
+    hp = signal.butter(4, 150, 'high', fs=SR, output='sos')
+    def ms(x):
+        M, S_ = (x[:, 0] + x[:, 1]) / 2, (x[:, 0] - x[:, 1]) / 2; S_ = 0.7 * signal.sosfiltfilt(hp, S_); return np.stack([M + S_, M - S_], 1)
+    for kk in files:
+        files[kk] = circ(ms, files[kk]) if (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk else ms(files[kk])
+    meta['stereo'] = 'side high-passed at 150 Hz (bass mono), side -3 dB'
     gain = 10 ** ((-14 - E.lufs(files['groove_8bar'])) / 20); meta['library_gain_db'] = round(20 * np.log10(gain), 2)
     for kk, x in files.items():
         loop = (kk.endswith('bar') or kk.endswith('bar_thin')) and 'intro' not in kk
@@ -143,14 +150,14 @@ PLAN = [
  (52.3, 72.3, 'groove_8bar', dict(inn='x', out='button')),              # hall of the 42 judges + the oath; button on 72.3 = 「话太多」
  (76.3, 92.3, 'tension_8bar', dict(inn='swell')),                       # the weighing (Ammit roars in 31, ~86-92: BGM drop comes with the SFX pass)
  (92.3, 96.3, 'dark_2bar', dict(inn='x')),                              # 32: the bed thins to the drone (A's own tension -> drone join)
- (96.3, 98.3, 'dark_2bar_thin', dict(inn='eg', out='cut', bar0=0, db=-3, lp=900)), # 33: drone only (the thin layer: no drum), darker; cut on 98.3
+ (96.3, 98.3, 'dark_2bar_thin', dict(inn='eg', out='cut', bar0=0, db=-5, lp=900)), # 33: drone only (the thin layer: no drum), darker; cut on 98.3
  (98.3, 106.3, 'playful_4bar', dict(inn='hard')),                       # 34 「等等——」 the scarab cheat, straight in on the downbeat
  (106.3, 114.3, 'playful_4bar_thin', dict(inn='eg', out='eg', bar0=0)), # 37: the bed thins under the papyrus line (drums out)
  (114.3, 121.57, 'playful_4bar', dict(inn='eg', out='cut', bar0=0)),    # 39-40; cut on the pan crash 121.57
- (124.3, 130.11, 'dark_2bar', dict(inn='swell', out='cut', db=-2)),     # 42-43 after the chomp: the drone, dead stop at 130.11
+ (126.3, 130.11, 'dark_2bar', dict(inn='swell', out='cut', db=-2)),     # 43 「第二次死亡」: chomp (123.77) then silence, the doom drone from 126.3, dead stop at 130.11
  (130.3, 142.17, 'bright_8bar', dict(inn='swell', out='cut')),          # 44-47 pass: Osiris, the Field of Reeds; the hiccup at 142.17
  (142.3, 156.3, 'playful_4bar', dict(inn='hard')),                      # 48-52 shabtis: playful again (reuse)
- (156.3, 164.3, 'mystery_8bar', dict(inn='x', out='x')),                # 53-54: the opening theme returns (bookend)
+ (156.3, 164.3, 'mystery_8bar', dict(inn='x', out='x', cresc=4)),       # 53-54: the opening theme returns (bookend), +4 dB over its last bar into the cadence
  (164.3, 169.25, 'resolution_cadence', dict(inn='x')),                  # 55 end card: the last bar and the final chord ring through the card
 ]
 FILM = 169.25
@@ -172,6 +179,7 @@ def preview(lib, out):
         else: g[:int(0.01 * SR)] *= np.linspace(0, 1, int(0.01 * SR))
         if outm in ('x', 'eg') and ib == a1 + post: _, dn = eqp(2 * h); g[-2 * h:] *= dn if outm == 'x' else np.linspace(1, 0, 2 * h)
         elif outm in ('cut', 'button'): k = int(0.03 * SR); g[-k:] *= np.linspace(1, 0, k)
+        if o.get('cresc'): k = a1 - B - ia; g[k:] *= 10 ** (np.clip((np.arange(len(g) - k)) / B, 0, 1) * o['cresc'] / 20)
         seg = seg * g[:, None]
         if 'lp' in o: seg = E.filt(E.sos_lp(o['lp'], 4), seg)
         seg *= 10 ** (o.get('db', 0) / 20); y[ia:ib] += seg
