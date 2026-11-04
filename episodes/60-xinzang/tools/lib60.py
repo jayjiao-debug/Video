@@ -174,10 +174,10 @@ PLAN = [
 ]
 FILM = 169.25
 
-def preview(lib, out):
-    n = int(FILM * SR); y = np.zeros((n, 2)); h = Q // 2
+def preview(lib, out, plan=None):
+    plan = plan or PLAN; n = int(FILM * SR); y = np.zeros((n, 2)); h = Q // 2
     eqp = lambda m: (np.sin(np.linspace(0, np.pi / 2, m)), np.cos(np.linspace(0, np.pi / 2, m)))
-    for t0, t1, name, o in PLAN:
+    for t0, t1, name, o in plan:
         src = sf.read(f'{lib}/{name}.wav', always_2d=True)[0]; L = len(src); loop = (name.endswith('bar') or name.endswith('bar_thin')) and 'intro' not in name
         inn, outm = o.get('inn', 'x'), o.get('out', 'x'); a0 = int(round(t0 * SR)); a1 = int(round(t1 * SR))
         pre = h if inn in ('x', 'eg') else (Q if inn == 'swell' else 0)
