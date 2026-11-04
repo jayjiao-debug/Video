@@ -7,7 +7,6 @@ import {CAST2, ANI, tendPose, scribePose} from './cast60';
 import {PAL, sp, poly, lerp, cl, sm, V, ap, mx} from './geo60';
 import type {ShotProps} from './EP60';
 import {pulse, seg, aimPath, GoldDefs, Puff, HEART_D, Sparkle, DustBurst, wearAt, GlyphRun, MUMMY_BODY} from './act60a_kit';
-import {Heart60} from './heart60';
 
 /* ep60 act A · life and death (shots 5–9, 10.9–26.5 s): Thebes at sunset; the 70-day embalming (time-lapse); the hook twirl;
    the heart that remembers everything; the heart scarab laid on the chest. Times: shot seconds (t), film seconds in [brackets]. */
@@ -303,8 +302,8 @@ export const Shot7: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-/* ================= 8 · 17.4–20.6 (v3) · inside your body only the heart is lit; your life flows out of it into a papyrus disc =================
-   dissolve in (0.4). The memory disc opens 0.35–0.75 [17.75–18.15]; vignettes flip in (paper flutter) at 0.75, 1.3, 1.85, 2.4
+/* ================= 8 · 17.4–20.6 · inside the mummy: only the heart is lit; it opens like a lantern; your life flickers inside =================
+   (owner 18:06: back to the v1/v2 heart lantern.) dissolve in (0.4). Doors open 0.35–0.75 [17.75–18.15]; vignettes flip in (paper flutter) at 0.75, 1.3, 1.85, 2.4
    [18.15, 18.70, 19.25, 19.80]; the scale-nudging one flashes red 2.62–2.69 [20.02] (ting); heartbeats 0.25, 1.1, 1.95, 2.8 [17.65, 18.50, 19.35, 20.20]. */
 const HB8 = [0.25, 1.1, 1.95, 2.8], VT = [0.75, 1.3, 1.85, 2.4], RED8 = 2.62;
 const Vignette: React.FC<{k: number; t: number; red: number}> = ({k, t, red}) => {
@@ -335,42 +334,46 @@ const Vignette: React.FC<{k: number; t: number; red: number}> = ({k, t, red}) =>
 	</g>;
 };
 export const Shot8: React.FC<ShotProps> = ({t}) => {
-	// v3 (owner 17:07): one big, clear heart (Heart60) beating in the dark of the body; your memories flow out of it as gold light into a
-	// papyrus disc beside it, one vignette after another; the one where you nudge the market weight flashes red.
-	const HX = 460, HY = 490, HH = 560, MX = 960, MY = 430, MR = 245;
-	const cam = aimPath(t, [[-0.4, 700, 500, 700, 486, 1.0], [3.4, 720, 490, 700, 486, 1.08]], (u) => u);
+	const HS = 315, HX = 680, HYb = 812;
+	const cam = aimPath(t, [[-0.4, HX, 520, 700, 486, 1.0], [3.4, HX, 500, 700, 486, 1.12]], (u) => u);
 	const beat = HB8.reduce((a, b) => a + pulse(t, b, 0.04, 0.16) + 0.5 * pulse(t, b + 0.17, 0.04, 0.2), 0);
-	const vi = VT.reduce((a, v, i) => (t >= v ? i : a), -1), vu = vi >= 0 ? seg(t, VT[vi], VT[vi] + 0.14) : 0;
-	const red = t >= RED8 && t < RED8 + 0.07 ? 1 : 0, disc = sm(seg(t, 0.35, 0.75));
-	const R = rng(4), stream = Array.from({length: 26}, (_, i) => { const life = 0.9, off = R() * life, u = ((t + off) % life) / life, w = 0.5 + 0.5 * R();
-		const x = lerp(HX + 120, MX - MR * 0.8, u), y = lerp(HY - 40, MY, u) - 90 * Math.sin(Math.PI * u) * w;
-		return <circle key={i} cx={x} cy={y} r={3 + 4 * Math.sin(Math.PI * u)} fill="#FFE29A" opacity={disc * Math.sin(Math.PI * u)} />; });
+	const open = sm(seg(t, 0.35, 0.75)), vi = VT.reduce((a, v, i) => (t >= v ? i : a), -1), vu = vi >= 0 ? seg(t, VT[vi], VT[vi] + 0.14) : 0;
+	const red = t >= RED8 && t < RED8 + 0.07 ? 1 : 0;
+	const door = (k: number) => { const sx = 1 - 0.9 * open, hx = k * 0.78;
+		return <g transform={`translate(${hx},0) scale(${sx},1) translate(${-hx},0)`}>
+			<g clipPath="url(#a8-half)" transform={k > 0 ? 'scale(-1,1)' : undefined}>
+				<path d={HEART_D} fill={PAL.red} /><path d="M-0.55 -1.15Q-0.62 -0.7 -0.42 -0.32" fill="none" stroke="#E0705A" strokeWidth={0.04} />
+				<path d="M-0.7 -0.9L0 -0.9M-0.66 -0.5L0 -0.5" stroke={PAL.gold} strokeWidth={0.035} />
+				{[-0.5, -0.25].map((x) => <circle key={x} cx={x} cy={-0.7} r={0.05} fill={PAL.gold} />)}
+			</g>
+			<path d={`M0 -1.6L0 0`} stroke={PAL.gold2} strokeWidth={0.04} />
+		</g>; };
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0A1030" wear={0.15} stain={0.15}
 		light={<>
-			<Glow x={HX} y={HY} r={620 * (0.9 + 0.12 * beat)} c="red" o={0.55 + 0.3 * beat} />
-			<Glow x={HX} y={HY} r={220} c="gold" o={0.3 + 0.3 * beat} />
-			<Glow x={MX} y={MY} r={MR * 1.6} c="gold" o={0.45 * disc} />
-			<g style={{mixBlendMode: 'screen'}}>{stream}</g>
-			<Embers t={t} x={HX} y={HY + 120} n={16} seed={8} h={480} spread={260} />
-			<Dust t={t} box={[100, 60, 1300, 900]} n={50} seed={18} c="#FFC890" o={0.5} vx={2} vy={-6} />
-			{red > 0 && <circle cx={MX} cy={MY} r={MR + 40} fill="#FF2010" opacity={0.55} style={{mixBlendMode: 'screen'}} />}
+			<Glow x={HX} y={HYb - 0.9 * HS} r={720 * (0.9 + 0.12 * beat)} c="red" o={0.55 + 0.25 * beat} />
+			<Glow x={HX} y={HYb - 0.85 * HS} r={260} c="gold" o={0.35 + 0.45 * open} />
+			{open > 0 && <path d={`M${HX - 120} ${HYb - 0.85 * HS}L${HX - 640} ${PIC_T - 60}L${HX + 640} ${PIC_T - 60}L${HX + 120} ${HYb - 0.85 * HS}Z`} fill="url(#g60-shaft)" opacity={0.18 * open} style={{mixBlendMode: 'screen'}} />}
+			<Embers t={t} x={HX} y={HYb - 0.4 * HS} n={18} seed={8} h={520} spread={300} />
+			<Dust t={t} box={[100, 60, 1300, 900]} n={60} seed={18} c="#FFC890" o={0.55} vx={2} vy={-6} />
+			{red > 0 && <circle cx={HX} cy={HYb - 0.85 * HS} r={260} fill="#FF2010" opacity={0.55} style={{mixBlendMode: 'screen'}} />}
 		</>}>
-		<defs><clipPath id="a8-disc"><circle cx={MX} cy={MY} r={MR} /></clipPath>
-			<radialGradient id="a8-in" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stopColor="#FFF2CE" /><stop offset="0.75" stopColor="#F2D38E" /><stop offset="1" stopColor="#D99A4A" /></radialGradient></defs>
+		<defs><clipPath id="a8-half"><rect x={-1} y={-2} width={1} height={2.2} /></clipPath><clipPath id="a8-win"><path d={HEART_D} transform="translate(0,-0.12) scale(0.86)" /></clipPath>
+			<radialGradient id="a8-in" cx="0.5" cy="0.55" r="0.6"><stop offset="0" stopColor="#FFF2CE" /><stop offset="0.7" stopColor="#F2D38E" /><stop offset="1" stopColor="#D99A4A" /></radialGradient></defs>
 		<rect x={-400} y={-300} width={2300} height={1700} fill="#0A1030" />
-		{/* x-ray: the linen wraps of your body, faint blue lines */}
-		{Array.from({length: 30}, (_, i) => <path key={i} d={`M${-300 + i * 70} -100L${300 + i * 70} 1100`} stroke="#3A5AB0" strokeWidth={3} opacity={0.18} />)}
-		{Array.from({length: 30}, (_, i) => <path key={'b' + i} d={`M${i * 70 - 300} 1100L${i * 70 + 300} -100`} stroke="#3A5AB0" strokeWidth={2} opacity={0.12} />)}
-		<Heart60 x={HX} y={HY} h={HH} rot={-6} beat={beat} glow={0.5 + 0.4 * beat} id="a8h" />
-		{/* the memory disc: a round papyrus in a gold rim; the vignettes flip in one by one */}
-		<g opacity={disc} transform={`translate(${MX},${MY}) scale(${0.85 + 0.15 * disc}) translate(${-MX},${-MY})`}>
-			<circle cx={MX} cy={MY} r={MR + 14} fill={PAL.gold} stroke={PAL.ink} strokeWidth={4} />
-			<circle cx={MX} cy={MY} r={MR} fill="url(#a8-in)" stroke={PAL.ink} strokeWidth={3} />
-			<g clipPath="url(#a8-disc)">
-				{vi >= 0 && <g transform={`translate(${MX},${MY + 10}) scale(${1.25 * Math.max(0.05, vu)},1.25)`}><Vignette k={vi} t={t} red={red} /></g>}
-				{red > 0 && <circle cx={MX} cy={MY} r={MR} fill="#FF2A10" opacity={0.5} />}
+		{/* x-ray: the linen wraps of the body around the heart, faint blue lines */}
+		{Array.from({length: 30}, (_, i) => <path key={i} d={`M${-300 + i * 70} -100L${300 + i * 70} 1100`} stroke="#3A5AB0" strokeWidth={3} opacity={0.22} />)}
+		{Array.from({length: 30}, (_, i) => <path key={'b' + i} d={`M${300 + i * 70 - 600} 1100L${i * 70 + 300} -100`} stroke="#3A5AB0" strokeWidth={2} opacity={0.14} />)}
+		<path d={sp([[-300, 1000], [-300, 140], [300, 70], [1000, 60], [1700, 110], [1700, 1000]], true, 0.2)} fill="none" stroke="#6F8CE0" strokeWidth={5} opacity={0.35} />
+		<g transform={`translate(${HX},${HYb}) scale(${HS * (1 + 0.025 * beat)})`}>
+			<path d={HEART_D} fill="#5A0C08" stroke={PAL.ink} strokeWidth={0.05} />
+			<g clipPath="url(#a8-win)">
+				<path d={HEART_D} fill="url(#a8-in)" />
+				{vi >= 0 && <g transform={`translate(0,-0.84) scale(${(1 / HS) * Math.max(0.05, vu)},${1 / HS})`}><Vignette k={vi} t={t} red={red} /></g>}
+				{red > 0 && <path d={HEART_D} fill="#FF2A10" opacity={0.55} />}
 			</g>
-			<circle cx={MX} cy={MY} r={MR + 7} fill="none" stroke="#2C46A8" strokeWidth={4} strokeDasharray="10 8" />
+			{door(-1)}{door(1)}
+			<path d={HEART_D} fill="none" stroke={PAL.gold} strokeWidth={0.045} />
+			<path d="M-0.38 -1.42Q0 -1.32 0.38 -1.42" fill="none" stroke={PAL.gold} strokeWidth={0.06} />
 		</g>
 	</Stage60>;
 };

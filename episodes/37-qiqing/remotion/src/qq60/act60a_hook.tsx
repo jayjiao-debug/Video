@@ -219,7 +219,7 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 			<Shaft pts={[[GX - 300, 80], [GX + 300, 80], [GX + 560, GG], [GX - 560, GG]]} o={0.22 + 0.2 * lit} />
 			<Glow x={pan[0]} y={pan[1] - 30} r={200 * (1 + 0.6 * clang)} c="red" o={0.55 + 0.4 * clang} />
 			{clang > 0.02 && <Sparkle x={pan[0] - 36} y={pan[1] + 6} r={64 * clang} o={clang} a={20} />}
-			{t < tL && <GlowHeart x={pan0[0]} y={hy} s={BS} glow={1.2} a={-8 * (1 - fall)} id="a3fh" />}
+			{t < tL && <GlowHeart x={pan0[0]} y={hy} s={BS} glow={1.2} a={-8 * (1 - fall)} />}
 			<ellipse cx={GX - 290} cy={GG - 100} rx={420} ry={240} fill="url(#a3-shade)" />
 			<AmmitEyes x={GX - 300} y={GG - 130} s={96} open={eyes} t={t} />
 			{eyes > 0.05 && <Glow x={GX - 300} y={GG - 130} r={190} c="gold" o={0.35 * eyes} />}
@@ -243,7 +243,7 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 		{[GX - 1060, GX + 1060].map((x) => <Column key={x} x={x} gy={GG} top={-1000} w={120} />)}
 		<rect x={-2000} y={GG} width={5000} height={900} fill="#0B1236" />
 		<rect x={-2000} y={GG} width={5000} height={8} fill={PAL.gold} opacity={0.85} />
-		<BigBalance p={p} x={GX} y={GG} s={BS} t={t} heart={t >= tL} heartGlow={0.9 + 0.6 * clang} featherA={2 * Math.sin(t * 2.3)} hid="a3ph" beat={clang} />
+		<BigBalance p={p} x={GX} y={GG} s={BS} t={t} heart={t >= tL} heartGlow={0.9 + 0.6 * clang} featherA={2 * Math.sin(t * 2.3)} />
 		{/* foreground braziers (parallax: they slide in from the edges as we pull back) */}
 		<g transform={layerT(kF, cc)}><Brazier x={GX - 1330} y={741} s={1.6} t={t} seed={1} /><Brazier x={GX + 1330} y={741} s={1.6} t={t} seed={2} /></g>
 	</Stage60>;
