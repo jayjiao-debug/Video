@@ -1,0 +1,72 @@
+plan: {'tier': 'starter', 'character_count': 9127, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "X26_ammit_roar_a", "type": "sfx", "text": "one huge menacing roar of a beast that is half lioness half crocodile: raspy, breathy snarl with a throaty rattle, fast attack, pitch falling, close, dry, then silence", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X26_ammit_roar_a.mp3", "bytes": 33061}
+{"name": "X26_ammit_roar_b", "type": "sfx", "text": "a big lion roar with a deep crocodile hiss underneath, aggressive and raspy, short and powerful, dry studio recording, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X26_ammit_roar_b.mp3", "bytes": 26792}
+{"name": "X27_ammit_grunt_a", "type": "sfx", "text": "a low menacing grunt from a huge crocodile-lion monster: one short throaty huff, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X27_ammit_grunt_a.mp3", "bytes": 17179}
+{"name": "X27_ammit_grunt_b", "type": "sfx", "text": "a deep guttural predator chuff with a low rumble, a warning, single short sound, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X27_ammit_grunt_b.mp3", "bytes": 17179}
+{"name": "X28_ammit_growl_a", "type": "sfx", "text": "a deep guttural growl of a crocodile-lion beast rumbling low and rising in menace, close, dry, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X28_ammit_growl_a.mp3", "bytes": 48944}
+{"name": "X28_ammit_growl_b", "type": "sfx", "text": "a low hungry monster growl, wet and throaty, crocodile jaws creaking, slowly building, menacing", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X28_ammit_growl_b.mp3", "bytes": 48944}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "X26_ammit_roar_a",
+  "type": "sfx",
+  "text": "one huge menacing roar of a beast that is half lioness half crocodile: raspy, breathy snarl with a throaty rattle, fast attack, pitch falling, close, dry, then silence",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X26_ammit_roar_a.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "X26_ammit_roar_b",
+  "type": "sfx",
+  "text": "a big lion roar with a deep crocodile hiss underneath, aggressive and raspy, short and powerful, dry studio recording, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X26_ammit_roar_b.mp3",
+  "bytes": 26792
+ },
+ {
+  "name": "X27_ammit_grunt_a",
+  "type": "sfx",
+  "text": "a low menacing grunt from a huge crocodile-lion monster: one short throaty huff, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X27_ammit_grunt_a.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X27_ammit_grunt_b",
+  "type": "sfx",
+  "text": "a deep guttural predator chuff with a low rumble, a warning, single short sound, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X27_ammit_grunt_b.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X28_ammit_growl_a",
+  "type": "sfx",
+  "text": "a deep guttural growl of a crocodile-lion beast rumbling low and rising in menace, close, dry, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X28_ammit_growl_a.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "X28_ammit_growl_b",
+  "type": "sfx",
+  "text": "a low hungry monster growl, wet and throaty, crocodile jaws creaking, slowly building, menacing",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X28_ammit_growl_b.mp3",
+  "bytes": 48944
+ }
+]
