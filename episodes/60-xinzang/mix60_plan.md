@@ -30,7 +30,7 @@ Columns
 | y | m07_duat | cue | 40.8 | tension | 24.615 | 24.315 | 49.7 | 0 | 0.3 | 0.3 | - | - | the journey: tension bars 9-11 (heartbeat, rub, teks); pad pre-laps the cut by 0.3 s; a breath (0.1 s) before the hall downbeat |
 | y | m08_hall | cue | 49.8 | mystic_loop | 0 | 0 | 58.4 | 0 | 0.002 | 0.6 | - | - | HALL REVEAL on the mystic downbeat (bowl + bendir), runs under the 42 judges and the three names |
 | y | m09_roll | sting | 58.4 | sting_roll_hit | hit | 0.55 | 58.4 | -4 | 0.02 | 0.01 | - | - | one-beat darbuka roll into the oath groove (shot 21: "darbuka groove starts"); stops on the groove's own dum |
-| y | m10_oath | cue | 58.4 | groove_loop | 0 | 0 | 70.65 | 0 | 0.002 | 0.01 | tapestop=0.3 | end<-25:freeze~stop@+0.25 | the oath groove; tape-stops on the freeze (70.40, 话太多) and is dead by 70.65 |
+| y | m10_oath | cue | 58.4 | groove_loop | 0 | 0 | 70.65 | 0 | 0.002 | 0.01 | tapestop=0.3 | end<-25:freeze@+0.25 | the oath groove; tape-stops on the freeze (70.40, 话太多) and is dead by 70.65 |
 | y | m11_weigh | cue | 94.4 | tension_hushdry | hit | 29.99 | 97.3 | 0 | 0.01 | 0.7 | ramp=-6>0@3.0 | - | heartbeat enters on the 72.1 cut (beat 4 of bar 10); bar 11 downbeat 72.86 = the judge eyes lock; climb 79.0-91.3; hush (drone only) 91.32; music silent 93.63; HIT 94.40 = 「等等——」 |
 | y | m12_magic | cue | 97.0 | playful_loop | 0 | 0 | 115.0 | -1 | 0.002 | 0.04 | - | - | the scarab spell, Ani, Hatnefer (CB3); bar-8 "bwoop" lands on 改个名 |
 | y | m13_doom | sting | 115.32 | sting_doom | hit | 0 | 118.42 | -1 | 0.002 | 0.03 | - | t<-41:pan+crash | 秤歪了: the red cut, 0.3 s of air, then the doom on the pan bang; cut dead on the bite |
@@ -64,41 +64,46 @@ Columns
 | y | s10_unroll | sfx | 28.0 | X04_papyrus_unroll | hit | - | - | 3 | - | 0.3 | - | t<-10:whips+open@+0.6 | the roll whips open like a banner (27.45-28.10): crackle peaks as it lands flat |
 | y | s13_blink | sfx | 36.1 | G3_zills | hit | - | - | -3 | - | - | - | t<-13:slot+blinks | CB1: the empty name slot blinks (the zill family: magic / the cheat) |
 | y | s14_pen | sfx | 38.95 | X05_reed_pen_scratch | 0.8 | 0.8 | 40.0 | -1 | - | 0.15 | - | t<-14:pen+writes | Ani name written into the gap (38.95-39.95) |
-| y | s15_door | sfx | 41.58 | S08_stone_door | hit | 0.75 | - | -1 | 0.05 | 0.3 | - | t<-15:thud~shut~door | tomb door grinds shut behind you |
-| y | s16_knife1 | sfx | 43.8 | X19_knife_shing | hit | - | - | -1 | - | - | pan=-0.45 | t<-16:knife 1~glint 1 | knives glint one after another |
-| y | s16_knife2 | sfx | 44.4 | X19_knife_shing | hit | - | - | -2 | - | - | pan=-0.15 | t<-16:knife 2~glint 2 |  |
-| y | s16_knife3 | sfx | 45.0 | X19_knife_shing | hit | - | - | -2 | - | - | pan=0.15 | t<-16:knife 3~glint 3 |  |
-| y | s16_knife4 | sfx | 45.6 | X19_knife_shing | hit | - | - | -3 | - | - | pan=0.45 | t<-16:knife_4~glint_4~glint#4 | - |
-| y | s17_hiss | sfx | 46.75 | X07_serpent_hiss | hit | - | - | -3 | - | - | - | t<-17:cobra~hiss | the cobra rears |
-| y | s17_croc | sfx | 47.6 | S03_croc_snap | hit | - | - | 3 | - | - | - | t<-17:croc~snap~lunge | the crocodile lunges at the lens |
-| y | s18_doors | sfx | 50.0 | X08_bronze_gate_creak | hit | - | - | -2 | - | 0.3 | - | t<-18:doors~open~boom | huge doors open on the hall |
-| y | s19_whisper | amb | 52.7 | X09_judges_42_whisper_loop | 0 | 0 | 55.6 | 0 | 1.2 | 0.4 | - | - | murmur rising along the 42 judges |
-| y | s20_stab1 | sfx | 55.4 | S11_frame_drum | hit | - | - | 0 | - | - | - | t<-20:punch 1~punch-in 1~碎骨者 | three stabs, one per punch-in |
-| y | s20_stab2 | sfx | 56.3 | S11_frame_drum | hit | - | - | 0 | - | - | - | t<-20:punch 2~punch-in 2~吞影者 |  |
-| y | s20_stab3 | sfx | 57.2 | S11_frame_drum | hit | - | - | 1 | - | - | - | t<-20:punch 3~punch-in 3~食血者 |  |
-| y | s22_tick1 | sfx | 62.0 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-22:check 1~tick 1~nod 1 | gold check-marks: one stone "tock" each |
-| y | s22_tick2 | sfx | 62.6 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-22:check 2~tick 2~nod 2 |  |
-| y | s22_tick3 | sfx | 63.2 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-22:check 3~tick 3~nod 3 |  |
-| y | s23_tick | sfx | 65.65 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-23:check~tick~nod |  |
-| y | s24_glint | sfx | 67.3 | X12_scale_ding | hit | - | - | -3 | - | 0.4 | - | t<-24:glint~ting | the scale glints behind you (plant for the twist) |
-| y | s24_tick | sfx | 68.9 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-24:check~tick~nod | |
+| y | s15_door | sfx | 40.95 | S08_stone_door | 1.0 | 1.0 | 41.64 | -1 | 0.08 | 0.06 | - | t<-15:stone+door+grinds | the tomb door grinds shut behind you, stopping dead on the thud |
+| y | s15_thud | sfx | 41.58 | S11_frame_drum | hit | - | - | -4 | - | - | - | t<-15:thud | the slab lands (warm light cut off) |
+| y | s16_knife1 | sfx | 43.8 | X19_knife_shing | hit | - | - | -1 | - | - | pan=-0.45 | t<-16:knife_1 | knives glint one after another |
+| y | s16_knife2 | sfx | 44.4 | X19_knife_shing | hit | - | - | -2 | - | - | pan=-0.15 | t<-16:knife_2 |  |
+| y | s16_knife3 | sfx | 45.0 | X19_knife_shing | hit | - | - | -2 | - | - | pan=0.15 | t<-16:knife_3 |  |
+| y | s16_knife4 | sfx | 45.6 | X19_knife_shing | hit | - | - | -3 | - | - | pan=0.45 | t<-16:knife_4 | - |
+| y | s17_hiss | sfx | 46.75 | X07_serpent_hiss | hit | - | - | -3 | - | - | - | t<-17:hiss | the cobra rears |
+| y | s17_croc | sfx | 47.6 | S03_croc_snap | hit | - | - | 3 | - | - | - | t<-17:croc+snap | the crocodile lunges at the lens |
+| y | s18_doors | sfx | 50.0 | X08_bronze_gate_creak | 0.05 | - | - | -2 | - | 0.3 | - | t<-18:doors+boom | huge doors open on the hall |
+| y | s19_whisper | amb | 53.0 | X09_judges_42_whisper_loop | 0 | 0 | 55.6 | 0 | 1.2 | 0.4 | - | t<-19:murmur | murmur rising along the 42 judges |
+| y | s20_stab1 | sfx | 55.4 | S11_frame_drum | hit | - | - | 0 | - | - | - | t<-20:punch+1 | three stabs, one per punch-in |
+| y | s20_stab2 | sfx | 56.3 | S11_frame_drum | hit | - | - | 0 | - | - | - | t<-20:punch+2 |  |
+| y | s20_stab3 | sfx | 57.2 | S11_frame_drum | hit | - | - | 1 | - | - | - | t<-20:punch+3 |  |
+| y | s22_tick1 | sfx | 62.0 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-22:check+1 | gold check-marks: one stone "tock" each |
+| y | s22_tick2 | sfx | 62.6 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-22:check+2 |  |
+| y | s22_tick3 | sfx | 63.2 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-22:check+3 |  |
+| y | s23_tick | sfx | 65.65 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-23:check |  |
+| y | s24_glint | sfx | 67.3 | X12_scale_ding | hit | - | - | -3 | - | 0.4 | - | t<-24:glint | the scale glints behind you (plant for the twist) |
+| y | s24_tick | sfx | 68.9 | X10_scarab_clack | hit | - | +0.14 | 0 | - | 0.04 | - | t<-24:check |  |
 | y | s25_squeak | sfx | 70.5 | synth:squeak | hit | - | - | 2 | - | - | - | t<-25:squeak | one reed squeaks as the band stops |
 | y | s25_cricket | sfx | 71.3 | X20_cricket | hit | - | 72.9 | 0 | - | 0.5 | abs=-17 | t<-25:cricket | one cricket in the dead air |
-| y | s27_tick1 | sfx | 75.5 | X10_scarab_clack | hit | - | +0.14 | -3 | - | 0.04 | - | t<-27:tick_1~ticks#1~tick#1 | the plumb-bob taps the post |
-| y | s27_tick2 | sfx | 76.0 | X10_scarab_clack | hit | - | +0.14 | -4 | - | 0.04 | - | t<-27:tick_2~ticks#2~tick#2 | - |
-| y | s27_tick3 | sfx | 76.45 | X10_scarab_clack | hit | - | +0.14 | -5 | - | 0.04 | - | t<-27:tick_3~ticks#3~tick#3 | - |
-| y | s29_pen | sfx | 81.75 | X05_reed_pen_scratch | hit | - | - | -1 | - | 0.2 | - | t<-29:scratch~pen~writes | Thoth's first stroke |
-| y | s30_growl | sfx | 83.25 | S04_beast_growl | hit | - | - | -3 | - | 0.4 | - | t<-30:growl~ammit | Ammit under the scale |
-| y | s31_jaw | sfx | 85.9 | S03_croc_snap | hit | - | +0.5 | -1 | - | 0.15 | - | t<-31:jaw~clack~croc | tilt 1: crocodile jaws clack |
-| y | s31_plop | sfx | 87.75 | X22_comic_plop | hit | - | - | 1 | - | - | - | t<-31:wiggle~hippo~plop | tilt 3: the hippo bottom wiggles |
-| y | s33_creak | sfx | 92.7 | S02_scale_settle | hit | - | 93.6 | -2 | - | 0.25 | - | t<-33:wobble~creak~dip | chain creak as the pans wobble (kept out of the silent beat) |
-| y | s33_beat1 | sfx | 91.7 | synth:heart | hit | - | +0.6 | - | - | 0.1 | abs=-18 | t<-33:beat_1~beats#1 | the heart alone, speeding up on the picture pulses, through the silent beat into the HIT |
-| y | s33_beat2 | sfx | 92.35 | synth:heart | hit | - | +0.55 | - | - | 0.1 | abs=-17 | t<-33:beat_2~beats#2 | - |
-| y | s33_beat3 | sfx | 92.9 | synth:heart | hit | - | +0.45 | - | - | 0.08 | abs=-16 | t<-33:beat_3~beats#3 | - |
-| y | s33_beat4 | sfx | 93.35 | synth:heart | hit | - | +0.35 | - | - | 0.08 | abs=-15 | t<-33:beat_4~beats#4 | - |
-| y | s33_beat5 | sfx | 93.7 | synth:heart1 | hit | - | +0.28 | - | - | 0.06 | abs=-14 | t<-33:beat_5~beats#5 | - |
-| y | s33_beat6 | sfx | 93.98 | synth:heart1 | hit | - | +0.22 | - | - | 0.05 | abs=-13 | t<-33:beat_6~beats#6 | - |
-| y | s33_beat7 | sfx | 94.2 | synth:heart1 | hit | - | +0.2 | - | - | 0.05 | abs=-12 | t<-33:beat_7~beats#7 | - |
+| y | s26_tink | sfx | 72.86 | G3_zills | hit | - | - | -5 | - | - | - | t<-26:eyes+lock | CB2: the horned judge eyes lock on you (tink, on the heartbeat bar line) |
+| y | s27_tick1 | sfx | 75.5 | X10_scarab_clack | hit | - | +0.14 | -3 | - | 0.04 | - | t<-27:tick_1 | the plumb-bob taps the post |
+| y | s27_tick2 | sfx | 76.0 | X10_scarab_clack | hit | - | +0.14 | -4 | - | 0.04 | - | t<-27:tick_2 | - |
+| y | s27_tick3 | sfx | 76.45 | X10_scarab_clack | hit | - | +0.14 | -5 | - | 0.04 | - | t<-27:tick_3 | - |
+| y | s28_heart | sfx | 77.9 | X17_heart_on_pan | hit | - | - | -2 | - | - | pan=-0.45 | t<-28:left+pan | the heart lands on the left pan |
+| y | s28_feather | sfx | 78.5 | X11_feather_land | hit | - | - | -2 | - | - | pan=0.45 | t<-28:right+pan | the feather lands on the right pan (airy + tiny chime) |
+| y | s29_pen | sfx | 81.75 | X05_reed_pen_scratch | 0.8 | 0.8 | 82.2 | -1 | - | 0.12 | - | t<-29:first+scratch | Thoth's first stroke |
+| y | s30_growl | sfx | 83.25 | S04_beast_growl | hit | - | - | -3 | - | 0.4 | - | t<-30:growl | Ammit under the scale |
+| y | s31_jaw | sfx | 85.9 | S03_croc_snap | hit | - | +0.5 | -1 | - | 0.15 | - | t<-31:jaw | tilt 1: crocodile jaws clack |
+| y | s31_roar | sfx | 86.85 | S04_beast_growl | hit | - | +0.7 | -4 | - | 0.25 | - | t<-31:roar | tilt 2: the lion forepart, a small roar |
+| y | s31_plop | sfx | 87.75 | X22_comic_plop | hit | - | - | 1 | - | - | - | t<-31:plop | tilt 3: the hippo bottom wiggles |
+| y | s33_creak | sfx | 92.7 | S02_scale_settle | hit | - | 93.6 | -2 | - | 0.25 | - | t<-33:creak | chain creak as the pans wobble (kept out of the silent beat) |
+| y | s33_beat1 | sfx | 91.7 | synth:heart | hit | - | +0.6 | - | - | 0.1 | abs=-18 | t<-33:beat_1 | the heart alone, speeding up on the picture pulses, through the silent beat into the HIT |
+| y | s33_beat2 | sfx | 92.35 | synth:heart | hit | - | +0.55 | - | - | 0.1 | abs=-17 | t<-33:beat_2 | - |
+| y | s33_beat3 | sfx | 92.9 | synth:heart | hit | - | +0.45 | - | - | 0.08 | abs=-16 | t<-33:beat_3 | - |
+| y | s33_beat4 | sfx | 93.35 | synth:heart | hit | - | +0.35 | - | - | 0.08 | abs=-15 | t<-33:beat_4 | - |
+| y | s33_beat5 | sfx | 93.7 | synth:heart1 | hit | - | +0.28 | - | - | 0.06 | abs=-14 | t<-33:beat_5 | - |
+| y | s33_beat6 | sfx | 93.98 | synth:heart1 | hit | - | +0.22 | - | - | 0.05 | abs=-13 | t<-33:beat_6 | - |
+| y | s33_beat7 | sfx | 94.2 | synth:heart1 | hit | - | +0.2 | - | - | 0.05 | abs=-12 | t<-33:beat_7 | - |
 | y | s34_zills | sfx | 94.4 | G3_zills | hit | - | - | -1 | - | - | - | t<-34:crash | the scarab: finger-cymbal crash on the verdict hit (pays off 25.0) |
 | y | s35_flip | sfx | 97.85 | X10_scarab_clack | hit | - | - | 0 | - | - | - | t<-35:lands | the scarab flips over |
 | y | s36_lid | sfx | 101.18 | X02_canopic_lid_clink | hit | - | - | 0 | - | 0.1 | - | t<-36:lid+click | the heart's lid clicks shut |
@@ -118,6 +123,7 @@ Columns
 | y | s46_gong | sfx | 129.25 | S07_gong | hit | - | - | -2 | - | 0.8 | - | t<-46:gong | warm low gong: 言语真实 (rhymes with the title gong) |
 | y | s47_reeds | amb | 130.5 | X14_reeds_birds_water_loop | 0 | 0 | 137.45 | 3 | 0.8 | 0.6 | - | - | birds and water over the Field of Reeds, carried through the deadpan plough beat (no dead air before the shabtis) |
 | y | s49_shabti | sfx | 138.2 | X16_shabti_clatter | 0 | 0 | - | -1 | - | 0.3 | - | t<-49:clatter@-0.05 | the shabtis stand up in rows |
+| y | s50_chorus | sfx | 141.0 | X25_tiny_chorus | hit | - | - | 2 | - | - | - | t<-50:squeaky+chorus | CB4: the shabtis answer 「我在！」 (a tiny squeaky crowd) |
 | y | s51_whip | sfx | 145.4 | X23_whip_crack | hit | - | - | 4 | - | - | - | t<-51:whip | one overseer's whip crack |
 | y | s52_reeds | amb | 146.6 | X14_reeds_birds_water_loop | 2.0 | 2.0 | 149.6 | -1 | 0.3 | 1.0 | - | - | water and birds round the reed boat |
 | y | s53_roll | sfx | 149.95 | X04_papyrus_unroll | 0 | 0 | +0.95 | 1 | 0.05 | 0.25 | - | t<-53:scroll+rolling | the scroll rolls up into the case |
