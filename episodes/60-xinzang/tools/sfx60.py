@@ -167,12 +167,114 @@ SYNTH = {   # name: (composer, length s, what it is for)
  'door_boom': (door_boom, 3.0, 'huge stone doors: a low boom + grind + bendir'),
  'bite_hit': (bite_hit, 3.0, 'a designed bite hit (dum + bendir + low gong), to sit under the jaw slam'),
 }
+# ---------------------------------------------------------------- v6 sync additions (acts A-C), same family
+def flare_hit(T): H.stroke(T, 0.0, 'Z', 0.9); H.stroke(T, 0.0, 'D', 0.8); H.stroke(T, 0.0, 'f', 0.6)
+def metal_clang(T):
+    n = int(2.0 * SR); s = E.modes(n, [(311, 1.0, 0.9), (523, 0.8, 0.7), (741, 0.6, 0.5), (1046, 0.5, 0.4), (1480, 0.35, 0.3), (2210, 0.25, 0.2)], T.rng)
+    s += E.filt(E.sos_bp(300, 3000), noise(T.rng, n)) * np.exp(-np.arange(n) / (0.01 * SR)) * 1.5; T.put('fx', s * 0.4, 0.0, -0.1); H.stroke(T, 0.0, 'D', 0.6)
+def chain_rattle(T):
+    for j in range(9):
+        n = int(0.06 * SR); ff = 2400 + 1500 * T.rng.random()
+        T.put('fx', E.modes(n, [(ff, 1, 0.02), (ff * 1.7, 0.5, 0.012)], T.rng) * (0.5 - 0.04 * j), 0.08 * j + 0.02 * T.rng.random(), 0.3 * np.sin(j))
+def string_snap(T):
+    H.pluck(T, 'oud', E.midi('D5'), 0.0, 0.5, 0.9, 0.2, 'oud', stacc=True); n = int(0.03 * SR)
+    T.put('fx', E.filt(E.sos_hp(3000), noise(T.rng, n)) * np.exp(-np.arange(n) / (0.003 * SR)) * 0.8, 0.0, 0.2)
+def wing_flap(T):
+    n = int(0.35 * SR); t = np.arange(n) / SR; e = np.sin(np.pi * np.minimum(1, t / 0.3)) ** 2
+    T.put('fx', E.filt(E.sos_bp(120, 1800), noise(T.rng, n)) * e * 1.2, 0.0, 0.0)
+def pen_scratch(T):
+    n = int(1.1 * SR); t = np.arange(n) / SR; e = np.where((t % 0.38) < 0.28, 1.0, 0.1) * np.minimum(1, (1.1 - t) / 0.1)
+    T.put('fx', grains(T.rng, n, 4000 * e, 0.5, e, 2500, 9000) * 1.2, 0.0, 0.1)
+def hiss(T):
+    n = int(0.9 * SR); t = np.arange(n) / SR; e = np.minimum(1, t / 0.05) * np.exp(-np.maximum(0, t - 0.4) / 0.2)
+    T.put('fx', E.filt(E.sos_bp(3500, 11000), noise(T.rng, n)) * e * 0.8, 0.0, -0.3)
+def bone_crack(T):
+    for j, (d, v) in enumerate(((0, 1.0), (0.025, 0.7), (0.06, 0.5))):
+        n = int(0.08 * SR); T.put('fx', E.filt(E.sos_bp(600, 5000), noise(T.rng, n)) * np.exp(-np.arange(n) / (0.006 * SR)) * v * 1.6, d, 0.0)
+    H.stroke(T, 0.0, 'D', 0.4)
+def cricket(T):
+    n = int(0.9 * SR); t = np.arange(n) / SR; chirp = np.sin(2 * np.pi * 4400 * t) * (np.sin(2 * np.pi * 30 * t) > 0.2) * (((t % 0.45) < 0.16)) * 0.3
+    T.put('fxdry', chirp * np.exp(-t / 0.9), 0.0, 0.5)
+def claw_scrape(T):
+    n = int(0.4 * SR); t = np.arange(n) / SR; e = np.sin(np.pi * t / 0.4)
+    T.put('fx', grains(T.rng, n, 2500 * e, 1.0, e, 800, 6000) * 1.4 + E.filt(E.sos_bp(500, 2000), noise(T.rng, n)) * e * 0.08, 0.0, 0.2)
+def plop(T):
+    n = int(0.3 * SR); t = np.arange(n) / SR; f = 320 * np.exp(-t / 0.08) + 110
+    T.put('fx', np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.07) * 0.8, 0.0, 0.0); H.stroke(T, 0.0, 'g', 1.2)
+def creak(T):
+    n = int(0.7 * SR); t = np.arange(n) / SR; imp = (np.sin(2 * np.pi * np.cumsum(28 + 18 * np.sin(2 * np.pi * 1.3 * t)) / SR) > 0.97) * 1.0
+    s = sum(E.filt(E.sos_bp(f * 0.9, f * 1.1), imp) * a for f, a in ((420, 1.0), (930, 0.6), (1650, 0.4))) * np.sin(np.pi * t / 0.7)
+    T.put('fx', s * 6, 0.0, -0.1)
+def pan_crash(T):
+    metal_clang(T); H.stroke(T, 0.0, 'Z', 1.0); H.stroke(T, 0.0, 'F', 0.9); T.put('gong', H.gong(T.rng, 0.5, f0=73.4, dur=3.0), 0.0)
+def whip_crack(T):
+    n = int(0.12 * SR); t = np.arange(n) / SR; s = sweep_noise(T.rng, 0.12, 800, 7000, 0.4) * np.minimum(1, t / 0.08) ** 3
+    k = int(0.09 * SR); s[k:] += E.filt(E.sos_hp(1500), noise(T.rng, n - k)) * np.exp(-np.arange(n - k) / (0.004 * SR)) * 3; T.put('fx', s, 0.0, 0.3)
+def hoe_chop(T):
+    n = int(0.25 * SR); t = np.arange(n) / SR
+    s = np.sin(2 * np.pi * (130 + 80 * np.exp(-t / 0.01)) * t) * np.exp(-t / 0.04) + grains(T.rng, n, 2500 * np.exp(-t / 0.04), 1.0, np.exp(-t / 0.04), 500, 4000)
+    T.put('fx', s * 0.8, 0.0, 0.25)
+def squeak_chorus(T):
+    for j, nm in enumerate(('D6', 'F#6', 'A6', 'Eb6', 'G6')):
+        H.lead(T, H.score(f'{nm}:0.7. r:7.3'), 0.004 * j * 5 + 0.01 * T.rng.random(), kind='mizmar', vel=0.25, pan=-0.4 + 0.2 * j, breath=0.05, octv=-1)
+def chime_note(note):
+    def f(T):
+        T.put('zills', E.bowl(T.rng, note, 0.7, 2.0), 0.0, 0.1); H.pluck(T, 'qanun', E.midi(note), 0.0, 1.0, 0.45, 0.1, 'qanun')
+    return f
+def leadin_roll(T):   # the lead-in to the roar: a darbuka roll + the mizmar climbing D Hijaz, a breath, then (the roar)
+    H.roll(T, 0.0, 0.34, 0.25, 1.0, rate=0.042)
+    H.lead(T, H.score('D4:0.25 Eb4:0.25 F#4:0.25 G4:0.25 A4:0.25 Bb4:0.25 r:6.5'), 0.0, kind='mizmar', vel=0.55, breath=0.05)
+def darbuka_roll(T): H.roll(T, 0.0, 0.7, 0.15, 0.85, rate=0.0625); H.stroke(T, 0.71, 'D', 0.8); H.stroke(T, 0.71, 'z', 0.5)
+def rasp(T):
+    n = int(0.8 * SR); t = np.arange(n) / SR; e = 0.6 + 0.4 * np.sin(2 * np.pi * 5 * t) ** 2
+    T.put('fx', grains(T.rng, n, 3500 * e, 1.2, e, 1500, 8000) * np.minimum(1, (0.8 - t) / 0.08) * 1.1, 0.0, 0.1)
+def skitter(T):
+    n = int(0.65 * SR); t = np.arange(n) / SR; e = (np.sin(2 * np.pi * 14 * t) > 0) * np.sin(np.pi * t / 0.65)
+    T.put('fx', grains(T.rng, n, 1800 * e, 0.6, e, 2500, 9000) * 1.5, 0.0, 0.4)
+def tek_hit(T): H.stroke(T, 0.0, 'T', 0.9)
+def thup(T):
+    n = int(0.2 * SR); t = np.arange(n) / SR
+    T.put('fx', E.filt(E.sos_lp(500), noise(T.rng, n)) * np.exp(-t / 0.025) * 1.2 + np.sin(2 * np.pi * 120 * t) * np.exp(-t / 0.04) * 0.4, 0.0, 0.0)
+def magic_blast(T):
+    whoosh(T, 0.5, 2500, 300); T.put('gong', H.gong(T.rng, 0.45, f0=110.0, dur=2.5), 0.0); H.stroke(T, 0.0, 'Z', 0.8); H.stroke(T, 0.0, 'F', 0.7)
+def gong_warm(T): T.put('gong', H.gong(T.rng, 0.7, f0=73.4, dur=5.0), 0.0); H.pluck(T, 'oud', E.midi('D3'), 0.0, 2.0, 0.5, 0.3, 'oud')
+
+SYNTH.update({
+ 'flare_hit': (flare_hit, 2.0, 'torches flare / a frame-0 accent: finger cymbals + dum + soft bendir'),
+ 'metal_clang': (metal_clang, 2.2, 'a heavy bronze clang (the heart lands on the pan)'),
+ 'chain_rattle': (chain_rattle, 1.2, 'the balance chains rattle'),
+ 'string_snap': (string_snap, 0.8, 'a cord / bow snaps loose'),
+ 'wing_flap': (wing_flap, 0.6, 'one wing downstroke (the ba)'),
+ 'pen_scratch': (pen_scratch, 1.4, 'a reed pen writing (three strokes)'),
+ 'hiss': (hiss, 1.2, 'a cobra hiss'),
+ 'bone_crack': (bone_crack, 0.6, 'a bone crack'),
+ 'cricket': (cricket, 1.2, 'one cricket (the awkward silence)'),
+ 'claw_scrape': (claw_scrape, 0.7, 'claws dragged on stone'),
+ 'plop': (plop, 0.6, 'a comic plop (the hippo rump)'),
+ 'creak': (creak, 1.0, 'a wooden lid / chain creak'),
+ 'pan_crash': (pan_crash, 3.0, 'the pan crashes down (clang + cymbal + bendir + gong)'),
+ 'whip_crack': (whip_crack, 0.6, 'a comic whip crack'),
+ 'hoe_chop': (hoe_chop, 0.5, 'a hoe chopping earth'),
+ 'squeak_chorus': (squeak_chorus, 1.2, 'a tiny squeaky chorus (the shabtis: 「我在!」)'),
+ 'leadin_roll': (leadin_roll, 1.0, 'the lead-in to a roar: darbuka roll + mizmar climb D-Eb-F#-G-A-Bb (0.34 s), then space'),
+ 'darbuka_roll': (darbuka_roll, 1.5, 'a sly darbuka roll landing on a dum + cymbal tap at 0.71 s'),
+ 'rasp': (rasp, 1.0, 'sanding / rasping stone'),
+ 'skitter': (skitter, 0.9, 'a beetle skittering'),
+ 'tek_hit': (tek_hit, 0.5, 'one darbuka tek'),
+ 'thup': (thup, 0.4, 'a soft landing thud'),
+ 'magic_blast': (magic_blast, 2.8, 'a spell blast: reverse whoosh into a gong, cymbal and bendir'),
+ 'gong_warm': (gong_warm, 4.0, 'a warm low gong (the verdict is good)'),
+})
+for nm in ('D6', 'Eb6', 'F#6', 'G6', 'A6', 'Bb6'):
+    SYNTH[f'chime_{nm.replace("#", "s")}'] = (chime_note(nm), 2.0, f'a chime on {nm} (D Hijaz): bowl + qanun')
+
 TAKES = {   # owner-approved realistic takes (voice farm), through the same room and tone
  'ammit_roar_1': ('X40_ammit_roar_deep.wav', 'Ammit roar 1 (shot 31): deep lioness, saturated chest'),
  'ammit_roar_2': ('X31_ammit_snarl_heavy.wav', 'Ammit roar 2 (shot 41): the heavy snarl (place it a touch softer)'),
  'ammit_growl': ('X28_ammit_growl.wav', 'Ammit growl'), 'ammit_grunt': ('X27_ammit_grunt.wav', 'Ammit grunt (reveal)'),
  'ammit_jaw_slam': ('X41_ammit_slam.wav', 'the bite: heavy wet jaw slam'),
  'chomp_small': ('X42_shadow_chomp.wav', 'the shadow eater chomp (small)'), 'lick_dog': ('X43_blood_lick.wav', 'the dog lick'),
+ 'gulp': ('X13_ammit_gulp.wav', 'a gulp (the shadow is swallowed)'),
 }
 
 def finish(y, name):
@@ -195,16 +297,20 @@ def build(out, takes):
         meta[k] = dict(seconds=round(len(y) / SR, 2), kind='approved take', source=fn, what=what)
     json.dump(meta, open(f'{out}/sfx.json', 'w'), indent=1, ensure_ascii=False); print('wrote', out, len(meta))
 
-TOUR = ['gong_title', 'chime_ding', 'glyph_light', 'magic_shimmer', 'tick_wood', 'tick_wood', 'tick_metal', 'whoosh_short', 'papyrus_unroll',
+TOUR = ['gong_title', 'chime_ding', 'glyph_light', 'magic_shimmer', 'tick_wood', 'tick_wood', 'whoosh_short', 'papyrus_unroll',
         'page_flips', 'steps_stone', 'knife_shing', 'jar_clunk', 'heartbeat_fast', 'sand_trickle', 'sand_reverse', 'door_boom', 'stinger_comic',
         'swell_rise', 'ammit_roar_1', 'ammit_jaw_slam', 'stinger_doom']
-CAP = {'gong_title': 2.4, 'magic_shimmer': 1.8, 'door_boom': 2.0, 'stinger_doom': 3.0, 'ammit_roar_1': 2.6, 'heartbeat_fast': 2.6, 'sand_trickle': 2.0}
+CAP = {'gong_title': 2.2, 'magic_shimmer': 1.6, 'door_boom': 1.8, 'stinger_doom': 2.4, 'ammit_roar_1': 2.4, 'heartbeat_fast': 2.0,
+       'sand_trickle': 1.6, 'sand_reverse': 1.4, 'swell_rise': 2.3, 'ammit_jaw_slam': 1.2, 'papyrus_unroll': 1.4, 'steps_stone': 2.0}
 def sampler(out_dir, out):
     t = 0.2; parts = []; marks = []
     for k in TOUR:
-        x = sf.read(f'{out_dir}/{k}.wav', always_2d=True)[0]; cap = CAP.get(k)
-        if cap and len(x) > cap * SR: x = x[:int(cap * SR)].copy(); f = int(0.4 * SR); x[-f:] *= np.linspace(1, 0, f)[:, None] ** 2
-        parts.append((t, x)); marks.append((round(t, 2), k)); t += len(x) / SR + (0.15 if k.startswith('tick') else 0.35)
+        x = sf.read(f'{out_dir}/{k}.wav', always_2d=True)[0]; cap = CAP.get(k, 1.1)
+        if len(x) > cap * SR:
+            f = int(0.3 * SR)
+            if 'reverse' in k: x = x[-int(cap * SR):].copy(); x[:f] *= np.linspace(0, 1, f)[:, None] ** 2   # reverse sounds: keep the end (the point)
+            else: x = x[:int(cap * SR)].copy(); x[-f:] *= np.linspace(1, 0, f)[:, None] ** 2
+        parts.append((t, x)); marks.append((round(t, 2), k)); t += len(x) / SR + (0.1 if k.startswith('tick') else 0.2)
     y = np.zeros((int((t + 0.3) * SR), 2))
     for t0, x in parts: i = int(t0 * SR); y[i:i + len(x)] += x
     y = lib60.master(y, target=-16.0); sf.write(out, y.astype(np.float32), SR, subtype='PCM_24'); print('sfx sampler', round(len(y) / SR, 2), 's'); print(marks)
