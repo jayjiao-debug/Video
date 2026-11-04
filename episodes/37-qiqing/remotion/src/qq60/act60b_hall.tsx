@@ -197,7 +197,7 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 
 /* ================= 21 · 58.4–61.6 · you step up to the first judge and bow; your oath rises as gold glyph columns; he leans in ================= */
 export const S21 = {cols: [0.6, 1.2, 1.8, 2.4], lean: [1.2, 1.8]};
-const bowPose = (t: number, k: number): Pose => { const p: Pose = {...POSES.adore, lean: lerp(4, 17, k) + 0.6 * Math.sin(t * 1.4), neck: lerp(0, 5, k), head: lerp(0, 6, k), rt: -7, at: 10, rk: 4, ak: 2};
+export const bowPose = (t: number, k: number): Pose => { const p: Pose = {...POSES.adore, lean: lerp(4, 17, k) + 0.6 * Math.sin(t * 1.4), neck: lerp(0, 5, k), head: lerp(0, 6, k), rt: -7, at: 10, rk: 4, ak: 2};
 	return adoreArms(p, false, 1); };
 export const Shot21: React.FC<ShotProps> = ({t}) => {
 	const s = 29, om = 5.0, walkEnd = 0.45, wt = Math.min(t, walkEnd), ax = 196 + STRIDE * s * om * Math.max(-0.3, wt), bow = up(t, 0.38, 0.4);
@@ -357,7 +357,7 @@ export const Shot25: React.FC<ShotProps> = ({t}) => {
 
 /* ================= 26 · 72.1–74.5 · 「这条，你能过吗？」: the horned judge turns and stares straight at you; slow push on his eyes ================= */
 export const S26 = {turn: [0.16, 0.46], lock: 0.76, brow: 1.05};
-const FrontBust: React.FC<{k: number; t: number; look: number; blink: number; raise?: number}> = ({k, t, look, blink, raise = 0}) => {
+export const FrontBust: React.FC<{k: number; t: number; look: number; blink: number; raise?: number}> = ({k, t, look, blink, raise = 0}) => {
 	const c = {OW: 2.7 / k, LW: 1.5 / k}, br = 0.04 * Math.sin(t * 1.6);
 	const eye = (sg: number) => { const ex = sg * 0.66, ey = -0.72, L = 0.92, h = (0.26 + 0.05 * (sg > 0 ? raise : 0)) * (1 - 0.85 * blink), rb = sg > 0 ? raise : 0;
 		const al = sp([[ex - sg * L * 0.55, ey + 0.02, 1], [ex - sg * L * 0.2, ey - h], [ex + sg * L * 0.25, ey - h * 0.95], [ex + sg * L * 0.5, ey, 1], [ex + sg * L * 0.15, ey + h * 0.75], [ex - sg * L * 0.25, ey + h * 0.65]], true, 0.2);

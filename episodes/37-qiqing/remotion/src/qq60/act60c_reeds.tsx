@@ -6,7 +6,7 @@ import {GlyphColumns, GLYPH_D} from './props60';
 import {Stage60, Dado, RegisterLine, Glow, Dust, Shaft, rng, F_SERIF, FW, FH, PIC_T, PIC_B} from './frame60';
 import {Wheat, Palm, PapyrusClump, Ox, Plough, Skiff, River} from './props60b';
 import {ANI, ANI_POSES, ploughPose, Shabti, ShabtiPose, walkPose} from './cast60';
-import {wobIn, camE, wearZ, eOut, bump, EyeFx, Sparkle, Drop, ArmOver} from './act60c_common';
+import {wobIn, camE, camK, line2, wearZ, eOut, bump, EyeFx, Sparkle, Drop, ArmOver} from './act60c_common';
 import {TextCols} from './act60c_twist';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
@@ -114,38 +114,67 @@ const S48: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-/* ======================= 49 · 「所以，你带了一箱小人：[沙布提]。」 you open a painted box; rows of shabtis stand up ======================= */
-export const T49 = {lid: [0.2, 0.95], rows: [1.05, 1.3, 1.55]};
+/* ======================= 49 (+50) · 「所以，你带了一箱小人：[沙布提]。」「一点名，它们就答：“[我在]！”」 ======================= */
+/* v6: ONE picture: you open the painted box and rows of shabtis stand up inside it (line 1); you raise the papyrus and read the roll call,
+   gold signs fly to them, they snap alive ("!"), hop out over the rim one after another and march off to the right, hoes on shoulders
+   (line 2). T49: s since the shot start; T50: s since line 2. */
+export const T49 = {lid: [0.3, 1.2], rows: [1.35, 1.65, 1.95], letGo: [1.2, 1.6]};
+export const T50 = {raise: [-0.35, 0.35], call: 0.15, snap: 0.9, hop0: 1.0, gap: 0.045, fly: 0.5, step: 60 / 112 / 2, v: 150};
 const BOX = {x0: 600, x1: 1080, top: 548, D: 130};
-const S49: React.FC<ShotProps> = ({t}) => {
+const L49 = line2(49, 3.52);
+/** the shabtis of the box: slot (inside), landing spot (on the ground in front), hop order (front row first, right to left) */
+const SHAB = (() => { const out: {r: number; i: number; sx: number; s: number; lx: number; ly: number; ls: number; q: number}[] = [];
+	[0, 1, 2].forEach((r) => { const n = 8 - (r % 2); for (let i = 0; i < n; i++) { const sx = BOX.x0 + 60 + i * ((BOX.x1 - BOX.x0 - 120) / (n - 1));
+		out.push({r, i, sx, s: 9 + 1.0 * r, lx: sx + 70 + (2 - r) * 22, ly: GY - (2 - r) * 16, ls: 10 - (2 - r) * 0.6, q: 0}); } });
+	const ord = [...out].sort((a, b) => (b.r - a.r) || (b.sx - a.sx)); ord.forEach((o, q) => { o.q = q; });
+	return out; })();
+const S49: React.FC<ShotProps> = ({t, dur}) => {
+	const tb = t - L49;
 	const th = (Math.PI / 180) * 104 * eOut(seg(t, T49.lid[0], T49.lid[1])), up = Math.sin(th) * BOX.D, face = Math.max(0, Math.cos(th)) * 62;
 	const lidBot = BOX.top - up, open = cl(th / (Math.PI / 2));
-	// you, bending to lift the lid's front edge, then straightening to look in
-	const AX = 486, AS = 19, letGo = sm(seg(t, 0.95, 1.3));
-	let pose: Pose = {...POSES.rest, lean: lerp(10, 4, letGo) + 0.6 * Math.sin(t * 1.4), neck: 4, head: lerp(6, 10, letGo), rt: -8, at: 12, rk: 3, ak: 2};
-	const hand: V = [(BOX.x0 + 40 - AX) / AS, (lidBot - 4 - GY) / AS], rest: V = [3.4, -8.2];
-	pose = wristTo(reach(pose, 'f', [lerp(hand[0], rest[0], letGo), lerp(hand[1], rest[1], letGo)]), 'f', lerp(150, 60, letGo));
-	const rows = [0, 1, 2].map((r) => { const u = cl((t - T49.rows[r]) / 0.28), b = u < 1 ? eOut(u) + 0.18 * Math.sin(Math.PI * u) : 1; return {y: BOX.top + 10 + r * 22 + (1 - b) * 130, s: 9 + 1.0 * r, n: 8 - (r % 2), r}; });
-	const cam = camE(t, 0, 3.1, [700, 486, 1.0], [800, 520, 1.12]);
+	// you: bend to lift the lid's front edge, straighten to look in; on line 2 raise the papyrus in both hands and read the roll call
+	const AX = 486, AS = 19, letGo = sm(seg(t, T49.letGo[0], T49.letGo[1])), k = sm(seg(tb, T50.raise[0], T50.raise[1]));
+	let pose: Pose = {...POSES.rest, lean: lerp(lerp(10, 4, letGo) + 0.6 * Math.sin(t * 1.4), 3 + 0.5 * Math.sin(t * 1.5), k), neck: lerp(4, 6, k), head: lerp(lerp(6, 10, letGo), 12, k), rt: lerp(-8, -6, k), at: lerp(12, 9, k), rk: lerp(3, 2, k), ak: lerp(2, 1, k)};
+	const hand: V = [(BOX.x0 + 40 - AX) / AS, (lidBot - 4 - GY) / AS], rest: V = [3.4, -8.2], tor = solve(pose).torso, fR = ap(tor, [5.0, -5.5]), bR = ap(tor, [2.3, -5.7]);
+	const fT: V = [lerp(lerp(hand[0], rest[0], letGo), fR[0], k), lerp(lerp(hand[1], rest[1], letGo), fR[1], k)];
+	pose = wristTo(reach(pose, 'f', fT), 'f', lerp(lerp(150, 60, letGo), 168, k));
+	if (k > 0) { const bh = ap(solve(pose).bH, [0, 0]); pose = wristTo(reach(pose, 'b', [lerp(bh[0], bR[0], k), lerp(bh[1], bR[1], k)]), 'b', lerp(pose.bw + (pose.bs - pose.lean + pose.be), 172, k)); }
+	const g = solve(pose), fh = ap(g.fH, [0, 0.9]), bh = ap(g.bH, [0, 0.9]), F: V = [AX + fh[0] * AS, GY + fh[1] * AS], B: V = [AX + bh[0] * AS, GY + bh[1] * AS];
+	// the shabtis: rise in the box, snap alive, hop out, march
+	const alive = sm(seg(tb, T50.snap, T50.snap + 0.08)), bounce = bump(tb, T50.snap, T50.snap + 0.32);
+	const rise = (r: number) => { const u = cl((t - T49.rows[r]) / 0.28); return u < 1 ? eOut(u) + 0.18 * Math.sin(Math.PI * u) : 1; };
+	const shab = SHAB.map((o) => { const sy = BOX.top + 10 + o.r * 22 + (1 - rise(o.r)) * 130 - 14 * bounce, t0 = T50.hop0 + o.q * T50.gap, u = cl((tb - t0) / T50.fly);
+		if (u <= 0) return {o, x: o.sx, y: sy, s: o.s, front: false, p: {alive, act: 'march', ph: 0} as ShabtiPose};
+		const e = sm(u), H = (sy + o.ly) / 2 - BOX.top + 60, mt = Math.max(0, tb - t0 - T50.fly - 0.04);
+		const x = lerp(o.sx, o.lx, e) + T50.v * mt, y = lerp(sy, o.ly, u) - H * 4 * u * (1 - u);
+		return {o, x, y, s: lerp(o.s, o.ls, e), front: u > 0.5, p: {alive: 1, act: 'march', ph: Math.PI * mt / T50.step} as ShabtiPose}; });
+	const cam = camK(t, [[0, 700, 486, 1.0], [L49 - 0.1, 800, 520, 1.12], [L49 + 1.7, 880, 500, 1.0], [dur + 0.2, 910, 496, 0.98]]);
 	return <Stage60 t={t} cam={cam} grade="reeds" bg="#F4D98E" wear={wearZ(cam.z, 0.8)} stain={0.34}
-		tags={[{x: 1150, y: 300, text: '沙布提', o: sm((t - 1.2) / 0.3)}]}
+		tags={[{x: 1150, y: 300, text: '沙布提', o: sm((t - 1.5) / 0.3)}]}
 		light={<>
 			<Glow x={300} y={140} r={480} c="gold" o={0.55} />
-			<Glow x={(BOX.x0 + BOX.x1) / 2} y={BOX.top - 20} r={340} c="green" o={0.7 * open} />
-			<Glow x={(BOX.x0 + BOX.x1) / 2} y={BOX.top - 30} r={200} c="white" o={0.4 * open} />
+			<Glow x={(BOX.x0 + BOX.x1) / 2} y={BOX.top - 20} r={340} c="green" o={0.7 * open * (1 - 0.5 * sm(seg(tb, 1.0, 2.0)))} />
+			<Glow x={(BOX.x0 + BOX.x1) / 2} y={BOX.top - 30} r={200} c="white" o={0.4 * open * (1 - 0.5 * sm(seg(tb, 1.0, 2.0)))} />
 			<Dust t={t} box={[BOX.x0 - 60, 200, BOX.x1 + 60, 620]} n={34} seed={49} c="#DFFFF0" o={0.7 * open} vx={2} vy={-14} r={2.4} />
+			{/* the summons: gold signs flying off the papyrus to the figures */}
+			{Array.from({length: 9}, (_, i) => { const u = cl((tb - T50.call - i * 0.07) / 0.55); if (u <= 0 || u >= 1) return null; const tx = BOX.x0 + 70 + i * 42, ty = BOX.top - 70 - (i % 3) * 26;
+				return <g key={i} transform={`translate(${lerp(F[0], tx, eOut(u))},${lerp(F[1] - 20, ty, eOut(u)) - 60 * Math.sin(Math.PI * u)}) scale(28)`} opacity={Math.sin(Math.PI * u)}><path d={GLYPH_D[Object.keys(GLYPH_D)[i % 16]].d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.04} transform="translate(-0.5,-0.5)" /></g>; })}
+			{/* "I am here!": a red mark over each one as it snaps alive */}
+			{tb > T50.snap && tb < T50.snap + 0.6 && shab.filter((z) => z.o.r === 2 || z.o.i % 2 === 0).map((z, i) => { const hx = z.x, hy = z.y - 9.6 * z.s - 14 - 20 * bounce;
+				return <g key={i} opacity={bump(tb, T50.snap, T50.snap + 0.6)}><path d={`M${hx - 6} ${hy - 40}L${hx + 6} ${hy - 40}L${hx + 3} ${hy - 4}L${hx - 3} ${hy - 4}Z`} fill="#B8371F" stroke={PAL.ink} strokeWidth={1.5} /><circle cx={hx} cy={hy + 8} r={5} fill="#B8371F" stroke={PAL.ink} strokeWidth={1.5} /></g>; })}
+			<Dust t={t} box={[0, 120, 1700, 840]} n={44} seed={50} c="#FFF0B0" o={0.5 * k} vx={6} vy={-4} />
 		</>}>
-		<SkyBand x0={-200} x1={1900} y1={330} sun={[260, 140]} />
-		{[150, 400, 1220, 1420].map((x, i) => <Palm key={x} x={x} y={332} h={140 + 26 * (i % 2)} t={t} seed={i + 2} />)}
-		<Canal x0={-200} x1={1900} y={330} h={40} t={t} />
-		<rect x={-200} y={370} width={2100} height={GY - 370} fill="#5E964A" />
-		<Wheat x0={-200} x1={1900} y={470} h={110} t={t} seed={49} dense={1.2} />
-		<rect x={-200} y={470} width={2100} height={GY - 470} fill="#7A9A44" />
+		<SkyBand x0={-300} x1={2000} y1={330} sun={[260, 140]} />
+		{[150, 400, 1220, 1420, 1680].map((x, i) => <Palm key={x} x={x} y={332} h={140 + 26 * (i % 2)} t={t} seed={i + 2} />)}
+		<Canal x0={-300} x1={2000} y={330} h={40} t={t} />
+		<rect x={-300} y={370} width={2300} height={GY - 370} fill="#5E964A" />
+		<Wheat x0={-300} x1={2000} y={470} h={110} t={t} seed={49} dense={1.2} />
+		<rect x={-300} y={470} width={2300} height={GY - 470} fill="#7A9A44" />
+		{Array.from({length: 13}, (_, i) => <path key={i} d={`M${-100 + i * 180} ${GY - 8}Q${-10 + i * 180} ${GY - 26} ${80 + i * 180} ${GY - 8}`} fill="none" stroke="#4A3418" strokeWidth={4} opacity={0.5} />)}
 		{/* the lid's inside, standing up behind the box as it opens */}
 		{up > 2 && <path d={sp([[BOX.x0 + 4, BOX.top, 1], [BOX.x1 - 4, BOX.top, 1], [BOX.x1 - 4, lidBot, 1], [(BOX.x0 + BOX.x1) / 2, lidBot - 26 * open], [BOX.x0 + 4, lidBot, 1]], true, 0.2)} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={3} />}
-		{/* the shabtis inside, rising row by row (the box front hides what is below the rim) */}
-		{rows.map((rw) => Array.from({length: rw.n}, (_, i) => { const x = BOX.x0 + 60 + i * ((BOX.x1 - BOX.x0 - 120) / (rw.n - 1));
-			return <Shabti key={`${rw.r}.${i}`} x={x} y={rw.y} s={rw.s} t={t} p={{alive: 0}} />; }))}
+		{/* the shabtis still inside (the box front hides what is below the rim) */}
+		{shab.filter((z) => !z.front).map((z) => <Shabti key={`${z.o.r}.${z.o.i}`} x={z.x} y={z.y} s={z.s} t={t} p={z.p} />)}
 		{/* the box: yellow ground, red and blue frame, painted signs, sledge runners */}
 		<path d={poly([[BOX.x0, BOX.top], [BOX.x1, BOX.top], [BOX.x1, GY - 22], [BOX.x0, GY - 22]])} fill="#E7C46A" stroke={PAL.ink} strokeWidth={3.5} />
 		<rect x={BOX.x0 + 10} y={BOX.top + 10} width={BOX.x1 - BOX.x0 - 20} height={GY - 22 - BOX.top - 20} fill="none" stroke={PAL.red} strokeWidth={6} />
@@ -157,55 +186,19 @@ const S49: React.FC<ShotProps> = ({t}) => {
 		{face > 1 && <g><path d={sp([[BOX.x0 - 14, lidBot, 1], [BOX.x1 + 14, lidBot, 1], [BOX.x1 + 14, lidBot - face * 0.55, 1], [(BOX.x0 + BOX.x1) / 2, lidBot - face], [BOX.x0 - 14, lidBot - face * 0.55, 1]], true, 0.22)} fill="#D9A23E" stroke={PAL.ink} strokeWidth={3.5} />
 			<path d={`M${BOX.x0} ${lidBot - face * 0.2}L${BOX.x1} ${lidBot - face * 0.2}`} stroke={PAL.red} strokeWidth={5 * (face / 62)} />
 			<circle cx={(BOX.x0 + BOX.x1) / 2} cy={lidBot - face * 0.5} r={9 * (face / 62) + 1} fill={PAL.blue} stroke={PAL.ink} strokeWidth={2} /></g>}
+		{/* out of the box: back rows first */}
+		{shab.filter((z) => z.front).sort((a, b) => a.y - b.y).map((z) => <Shabti key={`${z.o.r}.${z.o.i}`} x={z.x} y={z.y} s={z.s} t={t} p={z.p} />)}
 		<God id="c49ani" cast={ANI} pose={pose} x={AX} y={GY} s={AS} sec={{t}} />
-		<Dado x0={-200} x1={1900} y={GY} h={80} />
-	</Stage60>;
-};
-
-/* ======================= 50 · 「一点名，它们就答：“[我在]！”」 the roll call; they snap alive and march off, hoes on shoulders ======================= */
-export const T50 = {snap: 0.8, march: 1.286, step: 60 / 112 / 2}; // march on the playful cue's 112 bpm grid (141.486 = downbeat)
-const S50: React.FC<ShotProps> = ({t}) => {
-	const AX = 210, AS = 20;
-	let pose: Pose = {...POSES.rest, lean: 3 + 0.5 * Math.sin(t * 1.5), neck: 6, head: 12, rt: -6, at: 9, rk: 2, ak: 1};
-	pose = wristTo(holdAt(pose, 'f', [5.0, -5.5]), 'f', 168);
-	pose = wristTo(holdAt(pose, 'b', [2.3, -5.7]), 'b', 172);
-	const g = solve(pose), fh = ap(g.fH, [0, 0.9]), bh = ap(g.bH, [0, 0.9]), F: V = [AX + fh[0] * AS, GY + fh[1] * AS], B: V = [AX + bh[0] * AS, GY + bh[1] * AS];
-	const alive = sm(seg(t, T50.snap, T50.snap + 0.08)), hop = bump(t, T50.snap, T50.snap + 0.32), mt = Math.max(0, t - T50.march);
-	const ph = Math.PI * mt / T50.step, mx = 150 * mt;
-	const rowsS = [{y: GY - 70, s: 8.2, n: 8, x0: 610, dx: 76}, {y: GY, s: 10, n: 8, x0: 560, dx: 84}];
-	const R = rng(50);
-	return <Stage60 t={t} cam={camE(t, 0, 2.7, [700, 500, 1.02], [740, 496, 1.08])} grade="reeds" bg="#F4D98E" wear={0.75} stain={0.34}
-		light={<>
-			<Glow x={300} y={140} r={480} c="gold" o={0.55} />
-			{/* the summons: gold signs flying off the papyrus to the figures */}
-			{Array.from({length: 9}, (_, i) => { const u = cl((t - 0.02 - i * 0.07) / 0.55); if (u <= 0 || u >= 1) return null; const tx = 640 + i * 70, ty = GY - 160 - (i % 3) * 30;
-				return <g key={i} transform={`translate(${lerp(F[0], tx, eOut(u))},${lerp(F[1] - 20, ty, eOut(u)) - 60 * Math.sin(Math.PI * u)}) scale(30)`} opacity={Math.sin(Math.PI * u)}><path d={GLYPH_D[Object.keys(GLYPH_D)[i % 16]].d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.04} transform="translate(-0.5,-0.5)" /></g>; })}
-			{t > T50.snap && t < T50.snap + 0.6 && rowsS[1] && Array.from({length: 8}, (_, i) => <g key={i} opacity={bump(t, T50.snap, T50.snap + 0.6)}>
-				<path d={`M${rowsS[1].x0 + i * rowsS[1].dx + mx - 7} ${GY - 196 - 30 * hop}L${rowsS[1].x0 + i * rowsS[1].dx + mx + 7} ${GY - 196 - 30 * hop}L${rowsS[1].x0 + i * rowsS[1].dx + mx + 3} ${GY - 150 - 30 * hop}L${rowsS[1].x0 + i * rowsS[1].dx + mx - 3} ${GY - 150 - 30 * hop}Z`} fill="#B8371F" stroke={PAL.ink} strokeWidth={1.5} />
-				<circle cx={rowsS[1].x0 + i * rowsS[1].dx + mx} cy={GY - 136 - 30 * hop} r={6} fill="#B8371F" stroke={PAL.ink} strokeWidth={1.5} /></g>)}
-			<Dust t={t} box={[0, 120, 1500, 840]} n={44} seed={50} c="#FFF0B0" o={0.55} vx={6} vy={-4} />
-		</>}>
-		<SkyBand x0={-200} x1={1900} y1={330} sun={[1000, 150]} />
-		{[130, 380, 1240, 1440].map((x, i) => <Palm key={x} x={x} y={332} h={140 + 26 * (i % 2)} t={t} seed={i + 6} />)}
-		<Canal x0={-200} x1={1900} y={330} h={40} t={t} />
-		<rect x={-200} y={370} width={2100} height={GY - 370} fill="#5E964A" />
-		<Wheat x0={-200} x1={1900} y={560} h={170} t={t} seed={50} dense={1.2} />
-		<rect x={-200} y={560} width={2100} height={GY - 560} fill="#7A9A44" />
-		{Array.from({length: 12}, (_, i) => <path key={i} d={`M${-100 + i * 180} ${GY - 8}Q${-10 + i * 180} ${GY - 26} ${80 + i * 180} ${GY - 8}`} fill="none" stroke="#4A3418" strokeWidth={4} opacity={0.5} />)}
-		{rowsS.map((rw, r) => Array.from({length: rw.n}, (_, i) => { const jig = 0.4 * R();
-			const p: ShabtiPose = alive < 1 && t < T50.march ? {alive, act: 'march', ph: 0} : {alive: 1, act: 'march', ph: ph + jig * 0};
-			return <Shabti key={`${r}.${i}`} x={rw.x0 + i * rw.dx + mx} y={rw.y - 26 * hop * (1 - r * 0.2)} s={rw.s} t={t} p={p} />; }))}
-		{/* you, reading the roll call off a papyrus */}
-		<God id="c50ani" cast={ANI} pose={pose} x={AX} y={GY} s={AS} sec={{t}} />
-		{(() => { const top = Math.min(B[1], F[1]) - 4, x0 = B[0] - 8, x1 = F[0] + 12, sw = 2 * Math.sin(t * 2.2);
-			return <g>
-				<path d={poly([[x0, top], [x1, top], [x1 + 2 + sw, top + 118], [x0 + 2 + sw, top + 118]])} fill="#EBD7A4" stroke={PAL.ink} strokeWidth={2.4} />
-				<GlyphColumns x={x0 + 9} y={top + 12} cols={3} rows={5} cell={17} seed={50} />
-				<rect x={x0 - 4 + sw} y={top + 112} width={x1 - x0 + 12} height={14} rx={7} fill="#D9BC7A" stroke={PAL.ink} strokeWidth={2} />
+		{/* the roll-call papyrus, unrolled between your hands */}
+		{k > 0.02 && (() => { const top = Math.min(B[1], F[1]) - 4, x0 = B[0] - 8, x1 = F[0] + 12, sw = 2 * Math.sin(t * 2.2), h = 118 * sm(seg(tb, -0.1, 0.45));
+			return <g opacity={sm(k * 2)}>
+				<path d={poly([[x0, top], [x1, top], [x1 + 2 + sw, top + h], [x0 + 2 + sw, top + h]])} fill="#EBD7A4" stroke={PAL.ink} strokeWidth={2.4} />
+				<g clipPath={undefined} opacity={cl(h / 118)}><GlyphColumns x={x0 + 9} y={top + 12} cols={3} rows={5} cell={17} seed={50} /></g>
+				<rect x={x0 - 4 + sw} y={top + h - 6} width={x1 - x0 + 12} height={14} rx={7} fill="#D9BC7A" stroke={PAL.ink} strokeWidth={2} />
 				<rect x={x0 - 3} y={top - 6} width={x1 - x0 + 8} height={10} rx={5} fill="#D9BC7A" stroke={PAL.ink} strokeWidth={2} />
 			</g>; })()}
-		<ArmOver cast={ANI} pose={pose} x={AX} y={GY} s={AS} side="f" only="hand" id="c50h" />
-		<Dado x0={-200} x1={1900} y={GY} h={80} />
+		{k > 0.02 && <ArmOver cast={ANI} pose={pose} x={AX} y={GY} s={AS} side="f" only="hand" id="c49h" />}
+		<Dado x0={-300} x1={2000} y={GY} h={80} />
 	</Stage60>;
 };
 
@@ -377,5 +370,5 @@ const S53: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-export const REEDS: Record<number, React.FC<ShotProps>> = {47: S47, 48: S48, 49: S49, 50: S50, 51: S51, 52: S52, 53: S53};
+export const REEDS: Record<number, React.FC<ShotProps>> = {47: S47, 48: S48, 49: S49, 51: S51, 52: S52, 53: S53}; // v6: 50 merged into 49
 export const _keepR = {CAST, walkPose, FW, FH, PIC_B, Shaft} as Record<string, unknown>;

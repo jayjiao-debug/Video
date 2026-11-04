@@ -13,7 +13,10 @@ import {Ceiling} from './sets60';
 import {FeatherCornice, Column} from './props60b';
 import {Dado, RegisterLine, Stars, Cam} from './frame60';
 import {PAL, sp, poly, mx, ap, sm, cl, lerp, V, M, chain, T as Tm, R as Rm, RAD} from './geo60';
+import {SHOTS} from './story60';
 
+/** v6: the start of a merged shot's second line, s since the shot's start (from story60 `lines`) */
+export const line2 = (n: number, fallback: number) => { const sh = SHOTS.find((x) => x.n === n); return sh && sh.lines.length > 1 ? sh.lines[1].t0 - sh.a : fallback; };
 export const wobIn = (t: number) => (t < 0 ? 0 : 2.4 * sm(t / 0.45));
 export const eOut = (u: number) => 1 - Math.pow(1 - cl(u), 3);
 export const eIn = (u: number) => Math.pow(cl(u), 2);
@@ -21,6 +24,21 @@ export const eIn = (u: number) => Math.pow(cl(u), 2);
 export const camE = (t: number, t0: number, t1: number, a: [number, number, number], b: [number, number, number], ease: (u: number) => number = sm): Cam => {
 	const u = ease((t - t0) / (t1 - t0));
 	return {x: lerp(a[0], b[0], u), y: lerp(a[1], b[1], u), z: lerp(a[2], b[2], u)};
+};
+/** a camera through several keys [t, x, y, z] on a monotone cubic per channel (no overshoot, no stop at interior keys unless a channel
+    turns there; eased in at the first key and out at the last); holds outside. For the v6 merged shots (one camera move across two lines). */
+export const camK = (t: number, keys: [number, number, number, number][]): Cam => {
+	const n = keys.length, ch = (c: number) => {
+		if (t <= keys[0][0]) return keys[0][c];
+		if (t >= keys[n - 1][0]) return keys[n - 1][c];
+		const h = keys.slice(1).map((k, i) => k[0] - keys[i][0]), d = keys.slice(1).map((k, i) => (k[c] - keys[i][c]) / h[i]);
+		const m = keys.map((_, i) => { if (i === 0 || i === n - 1) return 0; const a = d[i - 1], b = d[i]; if (a * b <= 0) return 0;
+			return 3 * (h[i - 1] + h[i]) / ((2 * h[i] + h[i - 1]) / a + (h[i] + 2 * h[i - 1]) / b); });
+		let i = 0; while (t > keys[i + 1][0]) i++;
+		const u = (t - keys[i][0]) / h[i], u2 = u * u, u3 = u2 * u;
+		return (2 * u3 - 3 * u2 + 1) * keys[i][c] + (u3 - 2 * u2 + u) * h[i] * m[i] + (-2 * u3 + 3 * u2) * keys[i + 1][c] + (u3 - u2) * h[i] * m[i + 1];
+	};
+	return {x: ch(1), y: ch(2), z: ch(3)};
 };
 /** wear / stain lowered as the camera zooms in (the paper texture grows with zoom) */
 export const wearZ = (z: number, w = 0.9) => w * cl(1.35 - 0.6 * (z - 1), 0.25, 1);

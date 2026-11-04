@@ -7,7 +7,7 @@ import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Shaft, F_SERIF} 
 import {Ceiling} from './sets60';
 import {ANI, walkPose, STRIDE} from './cast60';
 import {thothPose, STILL} from './scene60';
-import {wobIn, camE, bump, Sparkle, OsirisProps, ArmOver} from './act60c_common';
+import {wobIn, camE, camK, line2, bump, Sparkle, OsirisProps, ArmOver} from './act60c_common';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
 
@@ -58,71 +58,61 @@ const leadWalk = (ph: number, s: number, xL: number, xF: number): {lead: Pose; f
 	fol = wristTo(reach(fol, 'f', [(handW[0] - 0.55 * s - xF) / s, (handW[1] + 0.2 * s - GY) / s]), 'f', 82);
 	return {lead, fol}; // the follower's free arm keeps its walk swing (raised, it came out of his wig)
 };
-const S45: React.FC<ShotProps> = ({t}) => {
-	const S = 21, ph = W45.om * t, xL = W45.x0 + STRIDE * W45.stride * ph * S, xF = xL - W45.gap;
-	const {lead, fol} = leadWalk(ph, S, xL, xF);
-	const cam = camE(t, -0.4, 3.3, [640, 486, 1.0], [720, 470, 1.05]);
-	const shim = bump(t, 0.1, 0.9);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#16214F" wear={0.4} stain={0.3} wobble={wobIn(t)}
-		tags={[{x: xL + 130, y: 330, text: '荷鲁斯'}, {x: 862, y: 290, text: '奥西里斯'}, {x: 1180, y: 160, text: '伊西斯'}]}
-		light={<>
-			<Glow x={1060} y={560} r={480} c="gold" o={0.6} />
-			<Shaft pts={[[930, 40], [1200, 40], [1260, GY], [860, GY]]} o={0.4} />
-			<Glow x={xL + 60} y={560} r={260} c="gold" o={0.3} />
-			<Sparkle x={1088} y={520} r={44 * shim} rot={30 * t} />
-			<Dust t={t} box={[300, 120, 1260, 840]} n={56} seed={45} c="#FFE7A8" o={0.75} vx={-3} vy={-5} />
-		</>}>
-		<LapisWall x0={-200} x1={1700} />
-		<GlyphColumns x={60} y={290} cols={4} rows={4} cell={30} seed={46} mono="#E8B83E" />
-		<Shrine fx={920} S={21} t={t} />
-		<God id="c45ani" cast={ANI} pose={fol} x={xF} y={GY} s={S} sec={{t}} />
-		<God id="c45hor" cast={{...CAST.horus, bHand: 'fist', fHand: 'fist'}} pose={lead} x={xL} y={GY} s={S} sec={{t}} bProp="none" fProp="ankh" />
-		<Dado x0={-200} x1={1700} y={GY} h={80} />
-	</Stage60>;
-};
-
 /* ======================= 46 · 「托特记下：你“[言语真实]”。」 Thoth writes; the verdict glows gold; Osiris nods ======================= */
-export const T46 = {write: [0.1, 0.95], glow: 1.05, nod: [1.25, 1.85]};
+export const T46 = {write: [0.3, 1.15], glow: 1.25, nod: [1.45, 2.05], up: [1.4, 1.8], ease: [2.4, 2.75]}; // v6: s after line 2 of shot 45
 /** mꜣꜥ-ḫrw, "true of voice": the Ma'at feather, the oar, the man with his hand to his mouth (1 × 1 cells) */
 const MAAKHERU = [
 	GLYPH_D.feather.d,
 	sp([[0.47, 0.06, 1], [0.55, 0.06, 1], [0.55, 0.62], [0.66, 0.74], [0.6, 0.96, 1], [0.42, 0.96, 1], [0.38, 0.74], [0.47, 0.62]], true, 0.16),
 	sp([[0.24, 0.96, 1], [0.3, 0.66], [0.42, 0.52], [0.46, 0.34], [0.4, 0.2], [0.5, 0.08], [0.64, 0.14], [0.66, 0.28], [0.74, 0.3], [0.74, 0.38], [0.6, 0.42], [0.56, 0.56], [0.74, 0.7], [0.78, 0.96, 1]], true, 0.16),
 ];
-const S46: React.FC<ShotProps> = ({t}) => {
-	const wt = seg(t, T46.write[0], T46.write[1]), stroke = wt * 3, k = Math.floor(Math.min(2.999, stroke)), f = stroke - k;
-	const penU = 0.35 + 0.42 * (k + sm(f)), lift = 0.07 * (1 - Math.cos(2 * Math.PI * stroke)) * (wt > 0 && wt < 1 ? 1 : 0) + 0.5 * sm(seg(t, T46.write[1], T46.write[1] + 0.25));
-	const up = sm(seg(t, 1.2, 1.6));
-	const th = thothPose({...STILL, thoth: {neck: lerp(4, -2, up), head: lerp(7, -6, up), penU, lift, lean: 3 + 0.5 * Math.sin(t * 1.3)}});
-	const TX = 300, TS = 30, nod = sm(seg(t, T46.nod[0], T46.nod[1])) * (1 - 0.4 * sm(seg(t, 2.2, 2.6)));
-	// the palette in the world (Thoth faces +1): grip of the back hand + the palette frame
+/* v6: 45 + 46 are ONE picture in the hall: Thoth stands at the left with his palette; Horus walks you in by the hand and you both come to
+   a halt before the throne (line 1); then Thoth writes, the verdict 「言语真实」 lifts off his palette and floats up between you and the
+   throne, and Osiris lowers his crook (line 2). 46's pieces are drawn at this hall's scale (its shrine was S 25, here S 21: × 0.84). */
+const L45 = line2(45, 3.29), WK = {x0: 470, a: 2.2, b: 3.1};
+/** the walk phase: full speed, then an eased halt between a and b (the integral of 1 − smoothstep) */
+const walkPh = (t: number) => { const D = WK.b - WK.a, u = cl((t - WK.a) / D); return W45.om * (Math.min(t, WK.a) + (t > WK.a ? D * (u - (u * u * u - u * u * u * u / 2)) : 0)); };
+const S45: React.FC<ShotProps> = ({t, dur}) => {
+	const tb = t - L45, S = 21, ph = walkPh(t), xL = WK.x0 + STRIDE * W45.stride * ph * S, xF = xL - W45.gap;
+	const {lead, fol} = leadWalk(ph, S, xL, xF);
+	const cam = camK(t, [[-0.4, 680, 486, 1.0], [L45 - 0.2, 730, 478, 1.04], [dur + 0.2, 700, 470, 1.07]]);
+	const shim = bump(t, 0.1, 0.9);
+	// line 2: Thoth writes (46's clock, s after line 2), the verdict rises, Osiris nods
+	const wt = seg(tb, T46.write[0], T46.write[1]), stroke = wt * 3, k = Math.floor(Math.min(2.999, stroke)), f = stroke - k;
+	const penU = 0.35 + 0.42 * (k + sm(f)), lift = 0.07 * (1 - Math.cos(2 * Math.PI * stroke)) * (wt > 0 && wt < 1 ? 1 : 0) + 0.5 * sm(seg(tb, T46.write[1], T46.write[1] + 0.25));
+	const up = sm(seg(tb, T46.up[0], T46.up[1]));
+	const th = thothPose({...STILL, thoth: {neck: lerp(4, -2, up), head: lerp(7, -6, up), penU: tb < T46.write[0] ? 0.35 : penU, lift, lean: 3 + 0.5 * Math.sin(t * 1.3)}});
+	const TX = 70, TS = 25, nod = sm(seg(tb, T46.nod[0], T46.nod[1])) * (1 - 0.4 * sm(seg(tb, T46.ease[0], T46.ease[1])));
 	const g = solve(th.p), grip = ap(g.bH, [0.02, 0.6]), pc: V = [TX + (grip[0] + 1.45 * Math.cos(th.paletteA * Math.PI / 180)) * TS, GY + (grip[1] + 1.45 * Math.sin(th.paletteA * Math.PI / 180)) * TS];
-	const gl = sm(seg(t, T46.glow - 0.1, T46.glow + 0.25)), rise = sm(seg(t, T46.glow, T46.glow + 0.6));
-	// the verdict leaves the palette sideways first (away from his beak), then rises: it never crosses Thoth's head
-	const vx = lerp(pc[0] + 40, 612, sm(Math.min(1, rise * 1.7))), vy = lerp(pc[1] - 30, 238, rise * rise);
-	const cam = camE(t, 0, 2.7, [700, 486, 1.0], [660, 476, 1.06]);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#16214F" wear={0.4} stain={0.3}
-		tags={[{x: 132, y: 300, text: '托特'}]}
+	const gl = sm(seg(tb, T46.glow - 0.1, T46.glow + 0.25)), rise = sm(seg(tb, T46.glow, T46.glow + 0.6));
+	const vx = lerp(pc[0] + 34, 600, sm(Math.min(1, rise * 1.7))), vy = lerp(pc[1] - 26, 300, rise * rise);
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#16214F" wear={0.4} stain={0.3} wobble={wobIn(t)}
+		tags={[{x: xL + 40, y: 360, text: '荷鲁斯'}, {x: 862, y: 290, text: '奥西里斯'}, {x: 1180, y: 160, text: '伊西斯'}, {x: TX + 70, y: 380, text: '托特', o: sm(seg(tb, -0.1, 0.3))}]}
 		light={<>
-			<Glow x={1010} y={560} r={420} c="gold" o={0.55 + 0.2 * nod} />
-			<Glow x={vx} y={vy} r={160 + 200 * gl} c="gold" o={0.2 + 0.7 * gl} />
-			{gl > 0 && <Sparkle x={vx + 130} y={vy - 70} r={70 * bump(t, T46.glow - 0.05, T46.glow + 0.7)} rot={25} />}
-			<Dust t={t} box={[100, 120, 1260, 840]} n={50} seed={46} c="#FFE7A8" o={0.7} vx={-2} vy={-5} />
+			<Glow x={1060} y={560} r={480} c="gold" o={0.6 + 0.2 * nod} />
+			<Shaft pts={[[930, 40], [1200, 40], [1260, GY], [860, GY]]} o={0.4} />
+			<Glow x={xL + 60} y={560} r={260} c="gold" o={0.3} />
+			<Sparkle x={1088} y={520} r={44 * shim} rot={30 * t} />
+			<Glow x={vx} y={vy} r={(160 + 200 * gl) * 0.84} c="gold" o={(0.2 + 0.7 * gl) * sm(seg(tb, T46.glow - 0.3, T46.glow))} />
+			{gl > 0 && <Sparkle x={vx + 110} y={vy - 60} r={60 * bump(tb, T46.glow - 0.05, T46.glow + 0.7)} rot={25} />}
+			<Dust t={t} box={[0, 120, 1300, 840]} n={60} seed={45} c="#FFE7A8" o={0.75} vx={-3} vy={-5} />
 		</>}>
-		<LapisWall x0={-200} x1={1700} />
-		<Shrine fx={790} S={25} t={t} nod={nod} sisters={false} />
+		<LapisWall x0={-300} x1={1700} />
+		<Shrine fx={920} S={21} t={t} nod={nod} />
 		<God id="c46th" cast={CAST.thoth} pose={th.p} x={TX} y={GY} s={TS} sec={{t}} bProp="palette" fProp="pen" paletteA={th.paletteA} />
 		<ArmOver cast={CAST.thoth} pose={th.p} x={TX} y={GY} s={TS} side="f" only="hand" id="c46h" />
+		<God id="c45ani" cast={ANI} pose={fol} x={xF} y={GY} s={S} sec={{t}} />
+		<God id="c45hor" cast={{...CAST.horus, bHand: 'fist', fHand: 'fist'}} pose={lead} x={xL} y={GY} s={S} sec={{t}} bProp="none" fProp="ankh" />
 		{/* the verdict: three gold signs lifting off the palette */}
-		{gl > 0 && <g transform={`translate(${vx},${vy}) scale(${lerp(0.35, 1, rise)})`} opacity={gl}>
+		{gl > 0 && <g transform={`translate(${vx},${vy}) scale(${0.84 * lerp(0.35, 1, rise)})`} opacity={gl}>
 			<rect x={-150} y={-80} width={300} height={160} rx={22} fill="#121A44" stroke="#F3C64E" strokeWidth={5} opacity={0.9} />
 			<rect x={-138} y={-68} width={276} height={136} rx={14} fill="none" stroke="#F3C64E" strokeWidth={2} opacity={0.7} />
 			{MAAKHERU.map((d, i) => <g key={i} transform={`translate(${-120 + i * 82},-66) scale(76)`}><path d={d} fill="#FFD86A" stroke={PAL.ink} strokeWidth={0.03} /></g>)}
 			<text x={0} y={52} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={40} fill="#FFE7A0" letterSpacing="0.12em">言语真实</text>
 		</g>}
-		<Dado x0={-200} x1={1700} y={GY} h={80} />
+		<Dado x0={-300} x1={1700} y={GY} h={80} />
 	</Stage60>;
 };
 
-export const OSIRIS: Record<number, React.FC<ShotProps>> = {45: S45, 46: S46};
+export const OSIRIS: Record<number, React.FC<ShotProps>> = {45: S45}; // v6: 46 merged into 45
 export const _keepO = {poly, cl, Shaft};

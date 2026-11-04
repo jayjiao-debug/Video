@@ -8,7 +8,7 @@ import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Stars, Shaft, rn
 import {CAST2, tutuPose} from './cast60';
 import {STILL, LAY, S as S1920, aniPose, anubisPose, WState} from './scene60';
 import {W43} from './scene43';
-import {wobIn, camE, eOut, wearZ, bump, EyeFx, BalanceC, ctxC, SolidC, Sparkle, AdoreArms, ArmOver} from './act60c_common';
+import {wobIn, camE, camK, line2, eOut, wearZ, bump, EyeFx, BalanceC, ctxC, SolidC, Sparkle, AdoreArms, ArmOver} from './act60c_common';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
 
@@ -152,60 +152,59 @@ const ChestTop: React.FC<{id: string}> = ({id}) => {
 		<path d="M700 236Q720 262 740 236" fill={PAL.blue} stroke={PAL.ink} strokeWidth={3} />
 	</g>;
 };
-const S34: React.FC<ShotProps> = ({t}) => {
-	const {x: SX, y: SY, s} = SC34, sh = bump(t, T34.shine - 0.16, T34.shine + 0.34), shP = Math.pow(sh, 1.5);
-	// hold on the whole chest (the amulet at its real size), then push in through the flare and the shine
-	const cam = camE(t, 0.3, 2.65, [720, 486, 1.0], [720, 590, 2.2]);
+/* v6 (owner 21:54): 34 + 35 are ONE picture across the two lines: the chest at true scale, the flare, the push in, the shine (line 1);
+   at line 2 (L2) a finger and thumb come in, lift the amulet, turn it, and the spell on its base lights up line by line. The old 35
+   macro is the same chest magnified K35 about the amulet, so its pieces are drawn in a group mapped back into this world (G35). */
+export const ROWS35 = scarabRows(6, 1.02, -3.95, 1.24, 35);
+export const T35 = [0.95, 1.25, 1.55, 1.85, 2.15, 2.45]; // the lit lines, s after line 2
+const K35 = 44 / SC34.s;
+const S34: React.FC<ShotProps> = ({t, dur}) => {
+	const {x: SX, y: SY, s} = SC34, L2 = line2(34, 2.81), tb = t - L2;
+	const sh = bump(t, T34.shine - 0.16, T34.shine + 0.34), shP = Math.pow(sh, 1.5);
+	// one camera: hold on the whole chest, push in through the flare and the shine, arrive at the old macro framing as line 2 starts, drift
+	const cam = camK(t, [[0.3, 720, 486, 1.0], [L2 - 0.05, 720, SY, K35], [dur + 0.2, 720, SY - 6, K35 * 1.1]]);
 	const flare = t < 0 ? 0 : Math.exp(-t / 0.45), ring = cl(t / 0.7), hum = sm(cl((t - 0.05) / 2.3));
 	const rot = -6 * (1 - eOut((t + 0.3) / 1.7)), turn = 0.1 * bump(t, 0.55, 1.45);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0E1638" wear={wearZ(cam.z, 0.7)} stain={0.3} wobble={wobIn(t)} tags={[{x: 560, y: 520, text: '心脏圣甲虫', o: sm((t - 0.4) / 0.3)}]}
+	// line 2: the hand, the lift, the turn, the lit lines (35's numbers, in 35's own coordinates: centre 720, 486, s 44)
+	const k = sm(seg(tb, -0.45, 0.3)), lift = sm(seg(tb, 0.0, 0.4)), flip = sm(seg(tb, 0.3, 0.85)), land = tb > 0.85 ? Math.exp(-(tb - 0.85) / 0.12) * Math.sin((tb - 0.85) * 30) : 0;
+	const lit = T35.map((a) => cl((tb - a) / 0.12)), nlit = lit.reduce((a, b) => a + b, 0) / T35.length;
+	const G35 = `translate(${SX},${SY}) scale(${1 / K35}) translate(-720,-486)`, S5 = 44, ss = S5 * (1 + 0.07 * lift), cy = 486 - 26 * lift + 6 * land;
+	const fin = eOut(seg(tb, -0.55, 0.15)), off = (1 - fin) * 380;
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0E1638" wear={wearZ(cam.z, 0.7)} stain={0.3} wobble={wobIn(t) / Math.max(1, cam.z * 0.8)}
+		tags={[{x: 560, y: 520, text: '心脏圣甲虫', o: sm((t - 0.4) / 0.3) * (1 - sm(seg(tb, -0.6, -0.2)))}]}
 		light={<>
-			<g style={{mixBlendMode: 'screen'}} opacity={0.35 + 0.55 * hum}>{[34, 20, 9].map((w, i) => <path key={i} d={OVAL} transform={`translate(${SX},${SY}) rotate(${rot}) scale(${s * (1.05 + w / 400)})`} fill="none" stroke={i ? '#FFE08A' : '#BFF2A0'} strokeWidth={w / s} opacity={[0.25, 0.4, 0.8][i]} />)}</g>
+			<g style={{mixBlendMode: 'screen'}} opacity={(0.35 + 0.55 * hum) * (1 - k)}>{[34, 20, 9].map((w, i) => <path key={i} d={OVAL} transform={`translate(${SX},${SY}) rotate(${rot}) scale(${s * (1.05 + w / 400)})`} fill="none" stroke={i ? '#FFE08A' : '#BFF2A0'} strokeWidth={w / s} opacity={[0.25, 0.4, 0.8][i]} />)}</g>
 			{t >= 0 && ring < 1 && <g style={{mixBlendMode: 'screen'}} opacity={1 - ring}><ellipse cx={SX} cy={SY} rx={110 + 300 * eOut(ring)} ry={130 + 300 * eOut(ring)} fill="none" stroke="#FFE7A0" strokeWidth={8} />
 				<ellipse cx={SX} cy={SY} rx={110 + 300 * eOut(ring)} ry={130 + 300 * eOut(ring)} fill="none" stroke="#FFD060" strokeWidth={26} opacity={0.35} /></g>}
 			<Dust t={t} box={[420, 380, 1020, 860]} n={36} seed={34} c="#FFE7A0" o={0.75} vx={-3} vy={-5} r={1.8} />
 			{/* THE shine: a star flashes on the beetle's shoulder as the sheen crosses it */}
 			<Sparkle x={SX - 1.75 * s} y={SY - 2.8 * s} r={3.8 * s * shP} rot={15 + 30 * t} c="#FFFFFF" />
 			<Sparkle x={SX - 1.75 * s} y={SY - 2.8 * s} r={1.8 * s * shP} rot={60 + 30 * t} c="#FFF6C8" />
+			{k > 0 && <g transform={G35} opacity={k}>
+				<Glow x={720} y={486} r={520} c="green" o={0.45} />
+				<Glow x={720} y={486} r={330} c="gold" o={0.3 + 0.45 * nlit} />
+				{lit.map((a, j) => a > 0 && a < 1 ? <Sparkle key={j} x={720 + 150} y={486 - 4.0 * S5 + j * 1.02 * 1.24 * S5 + 22} r={36 * Math.sin(Math.PI * a)} rot={45 * a} /> : null)}
+			</g>}
 		</>}
 		screen={<rect width={FW} height={FH} fill="#FFF6DE" opacity={0.22 * flare + 0.1 * shP} style={{mixBlendMode: 'screen'}} />}>
 		<ChestTop id="c34c" />
-		<rect x={150} y={110} width={1140} height={1000} fill="#0B1438" opacity={0.35 + 0.15 * hum} />
+		<rect x={-400} y={-100} width={2300} height={1300} fill="#0B1438" opacity={lerp(0.35 + 0.15 * hum, 0.55, k)} />
 		<Glow x={SX} y={SY} r={200 + 90 * hum} c="green" o={0.4 + 0.35 * hum} />
 		<Glow x={SX} y={SY} r={150 + 40 * hum} c="gold" o={0.35 + 0.4 * hum + 0.5 * flare} />
-		<Rays x={SX} y={SY} r0={100} r1={280 + 80 * hum} n={18} a0={t * 9} o={0.4 * hum + 0.5 * flare} w={2.2} />
-		<ScarabC id="c34s" x={SX} y={SY} s={s} flip={turn} rot={rot} t={t} glint={0.7 + 0.3 * hum} sheen={(t - T34.shine + 0.18) / 0.4} />
-	</Stage60>;
-};
-
-/* ======================= 35 · 「背面的咒语，专防心[告密]：」 lifted into the dark, it flips; the lines light up one by one ======================= */
-export const ROWS35 = scarabRows(6, 1.02, -3.95, 1.24, 35);
-export const T35 = [1.0, 1.25, 1.5, 1.75, 2.0, 2.25];
-const S35: React.FC<ShotProps> = ({t}) => {
-	const SX = 720, SY = 486, s = 44;
-	const lift = sm(seg(t, 0.0, 0.4)), flip = sm(seg(t, 0.3, 0.85)), land = t > 0.85 ? Math.exp(-(t - 0.85) / 0.12) * Math.sin((t - 0.85) * 30) : 0;
-	const lit = T35.map((a) => cl((t - a) / 0.12));
-	const nlit = lit.reduce((a, b) => a + b, 0) / T35.length;
-	const cam = camE(t, -0.3, 2.9, [720, 486, 1.0], [720, 474, 1.1]);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#111A45" wear={0.3} stain={0.28} wobble={wobIn(t)}
-		light={<>
-			<Glow x={SX} y={SY} r={520} c="green" o={0.45} />
-			<Glow x={SX} y={SY} r={330} c="gold" o={0.3 + 0.45 * nlit} />
-			{lit.map((a, j) => a > 0 && a < 1 ? <Sparkle key={j} x={SX + 150} y={SY - 4.0 * s + j * 1.02 * 1.24 * s + 22} r={36 * Math.sin(Math.PI * a)} rot={45 * a} /> : null)}
-			<Dust t={t} box={[200, 80, 1250, 900]} n={50} seed={35} c="#FFE7A0" o={0.7} vx={4} vy={-7} r={2.2} />
-		</>}>
-		{/* the same chest as in 34, magnified about the amulet: the bead net and the linen keep the true scale */}
-		<g transform={`translate(${SX},${SY}) scale(${s / SC34.s}) translate(${-SC34.x},${-SC34.y})`}><ChestTop id="c35c" /></g>
-		<rect x={-300} y={-100} width={2100} height={1300} fill="#0B1438" opacity={0.55} />
-		<Rays x={SX} y={SY} r0={200} r1={620} n={14} a0={-t * 6} o={0.32 + 0.25 * nlit} w={3.2} />
-		<ellipse cx={SX + 30 * lift} cy={SY + 250} rx={190 * (1 - 0.3 * lift)} ry={34} fill="#000" opacity={0.25 * (1 - lift * 0.5)} />
-		<ScarabC id="c35s" x={SX} y={SY - 26 * lift + 6 * land} s={s * (1 + 0.07 * lift)} flip={flip} rot={0} t={t} rows={ROWS35} cell={1.02} lit={lit} glint={flip < 0.5 ? 0.8 : 0.3} />
-		{/* a thumb and a forefinger hold it by its two ends and turn it (it is egg-sized: 6.6 × 5.3 cm) */}
-		{(() => { const ss = s * (1 + 0.07 * lift), cy = SY - 26 * lift + 6 * land, fin = eOut(seg(t, -0.35, 0.1)), off = (1 - fin) * 360;
-			return <g transform={`translate(${off},${off * 0.4})`}>
-				<Finger id="c35f" tip={[SX + 0.2 * ss, cy - 4.45 * ss]} ang={-38} w={2.3 * ss} len={700} />
-				<Finger id="c35t" tip={[SX + 0.2 * ss, cy + 4.5 * ss]} ang={36} w={2.7 * ss} len={700} thumb />
-			</g>; })()}
+		<Rays x={SX} y={SY} r0={100} r1={280 + 80 * hum} n={18} a0={t * 9} o={(0.4 * hum + 0.5 * flare) * (1 - k)} w={2.2} />
+		{k > 0 && <g transform={G35}>
+			<Rays x={720} y={486} r0={200} r1={620} n={14} a0={-t * 6} o={(0.32 + 0.25 * nlit) * k} w={3.2} />
+			<ellipse cx={720 + 30 * lift} cy={486 + 250} rx={190 * (1 - 0.3 * lift)} ry={34} fill="#000" opacity={0.25 * (1 - lift * 0.5) * k} />
+		</g>}
+		<g transform={G35}>
+			<ScarabC id="c34s" x={720} y={cy} s={ss} flip={tb < 0 ? turn : flip} rot={tb < 0 ? rot : 0} t={t} rows={ROWS35} cell={1.02} lit={lit}
+				glint={lerp(0.7 + 0.3 * hum, flip < 0.5 ? 0.8 : 0.3, k)} sheen={(t - T34.shine + 0.18) / 0.4} />
+			{/* a thumb and a forefinger take it by its two ends and turn it (it is egg-sized: 6.6 × 5.3 cm) */}
+			{fin > 0 && <g transform={`translate(${off},${off * 0.4})`}>
+				<Finger id="c34f" tip={[720 + 0.2 * ss, cy - 4.45 * ss]} ang={-38} w={2.3 * ss} len={700} />
+				<Finger id="c34t" tip={[720 + 0.2 * ss, cy + 4.5 * ss]} ang={36} w={2.7 * ss} len={700} thumb />
+			</g>}
+		</g>
 	</Stage60>;
 };
 
@@ -307,7 +306,8 @@ const Wisps: React.FC<{from: V; via: V; to: V; t: number; o: number; n?: number}
 		const d = pts.join(''), op = o * Math.sin(Math.PI * u0);
 		return <g key={k} opacity={op}><path d={d} fill="none" stroke="#4A2A08" strokeWidth={7} strokeLinecap="round" opacity={0.45} /><path d={d} fill="none" stroke="#F2B42A" strokeWidth={4.5} strokeLinecap="round" /></g>; })}
 </g>;
-const AniVignette: React.FC<{t: number; lit: number; whisper: number}> = ({t, lit, whisper}) => {
+type EyeK = {look: number; lid: number; smile: number};
+const AniVignette: React.FC<{t: number; lit: number; whisper: number; eye?: EyeK}> = ({t, lit, whisper, eye}) => {
 	const st = st37(t), GY = 932, S = S1920, aP = aniPose(st);
 	const m = ap(solve(aP).head, [1.25, -0.55]), mouth: V = [W43.x(LAY.ani + m[0] * S), W43.y(GY + m[1] * S)];
 	return <g>
@@ -320,6 +320,7 @@ const AniVignette: React.FC<{t: number; lit: number; whisper: number}> = ({t, li
 			<ArmOver cast={CAST2.tutu} pose={tutuPose(t)} x={LAY.ani - 300} y={GY} s={S} side="f" only="hand" id="c37th" />
 			<God id="c37ani" cast={CAST.ani} pose={aP} x={LAY.ani} y={GY} s={S} sec={{t}} />
 			<AdoreArms cast={CAST.ani} pose={aP} x={LAY.ani} y={GY} s={S} id="c37aa" />
+			{eye && <EyeFx id="c37e" pose={aP} x={LAY.ani} y={GY} s={S} skin={PAL.skinM} look={eye.look} lid={eye.lid} smile={eye.smile} />}
 			<BalanceC p={{tilt: st.tilt, swingL: st.swingL, swingR: st.swingR, plumb: st.plumb, look: st.look}} x={LAY.post} y={GY} s={S} t={t} />
 			<God id="c37an" cast={ANUBIS} pose={anubisPose(st)} x={LAY.anubis} y={GY} s={S} sec={{t}} />
 		</g>
@@ -327,40 +328,27 @@ const AniVignette: React.FC<{t: number; lit: number; whisper: number}> = ({t, li
 		<Dado x0={-900} x1={1560} y={852} h={80} />
 	</g>;
 };
-const S37: React.FC<ShotProps> = ({t}) => {
-	const cam = camE(t, -0.4, 3.4, [150, 572, 1.3], [96, 556, 1.46]);
-	const lit = cl((t - 0.35) / 2.3) * 12, whisper = sm(seg(t, 0.15, 0.5));
-	return <Stage60 t={t} cam={cam} grade="papyrus" bg="plaster" wear={wearZ(cam.z)} stain={0.32} wobble={wobIn(t)}
-		tags={[{x: 22, y: 610, text: '阿尼'}, {x: -238, y: 560, text: '图图'}]}
+/** a point on Ani's head (units) → world, at time t */
+const aniHeadW = (t: number, u: V): V => { const h = ap(solve(aniPose(st37(t))).head, u); return [W43.x(LAY.ani + h[0] * S1920), W43.y(932 + h[1] * S1920)]; };
+/* v6: 37 + 38 are ONE picture: the vignette, the whisper and the text lighting up (line 1), then one push in to Ani's face; he slides an
+   eye to the camera, smirks and winks (line 2). Same pose clock throughout (st37(t)). */
+const L37 = line2(37, 3.76), FACE37 = aniHeadW(L37 + 1.5, [0.4, -1.25]), Z37 = 2.6;
+const S37: React.FC<ShotProps> = ({t, dur}) => {
+	const tb = t - L37;
+	const cam = camK(t, [[-0.4, 150, 572, 1.3], [L37 - 0.35, 112, 560, 1.42], [L37 + 1.05, FACE37[0] + 60 / Z37, FACE37[1] + 16 / Z37, Z37], [dur + 0.2, FACE37[0] + 50 / Z37, FACE37[1] + 12 / Z37, Z37 * 1.06]]);
+	const lit = cl((t - 0.35) / 2.9) * 12, whisper = sm(seg(t, 0.15, 0.5)) * (1 - sm(seg(tb, 0.2, 0.7)));
+	const look = sm(seg(tb, 0.75, 1.15)), wink = cl((tb - 1.62) / 0.07) * (1 - cl((tb - 1.92) / 0.14)), smile = sm(seg(tb, 1.45, 1.75));
+	const ew = aniHeadW(t, [0.98, -1.2]), tagO = 1 - sm(seg(tb, -0.5, -0.1));
+	return <Stage60 t={t} cam={cam} grade="papyrus" bg="plaster" wear={wearZ(cam.z)} stain={0.32} wobble={wobIn(t) / Math.max(1, cam.z * 0.8)}
+		tags={[{x: 22, y: 610, text: '阿尼', o: tagO}, {x: -238, y: 560, text: '图图', o: tagO}]}
 		light={<>
 			<Glow x={40} y={380} r={420} c="gold" o={0.18 + 0.3 * cl(lit / 12)} />
 			<Glow x={-40} y={600} r={380} c="warm" o={0.35} />
-			<Dust t={t} box={[-400, 300, 700, 850]} n={40} seed={37} o={0.6} vx={4} vy={-4} />
+			<Sparkle x={ew[0] - 8 / Z37} y={ew[1] - 30 / Z37} r={(70 / Z37) * bump(tb, 1.66, 2.16)} rot={15 + 40 * t} />
+			<Sparkle x={ew[0] + 46 / Z37} y={ew[1] - 66 / Z37} r={(34 / Z37) * bump(tb, 1.76, 2.16)} rot={-10} />
+			<Dust t={t} box={[-400, 300, 700, 850]} n={40} seed={37} o={0.6} vx={4} vy={-4} r={2.2 / Math.max(1, cam.z * 0.7)} />
 		</>}>
-		<AniVignette t={t} lit={lit} whisper={whisper} />
-	</Stage60>;
-};
-
-/* ======================= 38 · 「作弊？古埃及人管这叫[魔法]。」 Ani, still bowing, slides one eye to the camera and winks ======================= */
-const S38: React.FC<ShotProps> = ({t}) => {
-	const s = 80, st = st37(t + 3.2), pose = aniPose(st), g = solve(pose), hc = ap(g.head, [0.4, -1.25]);
-	const fx = 590 - hc[0] * s, fy = 470 - hc[1] * s;
-	const look = sm(seg(t, 0.3, 0.7)), wink = cl((t - 1.32) / 0.07) * (1 - cl((t - 1.62) / 0.14)), smile = sm(seg(t, 1.15, 1.45));
-	const eyeW = ap(g.head, [0.98, -1.2]), ew: V = [fx + eyeW[0] * s, fy + eyeW[1] * s];
-	const cam = camE(t, 0, 2.9, [650, 486, 1.0], [628, 478, 1.07]);
-	return <Stage60 t={t} cam={cam} grade="papyrus" bg="plaster" wear={0.55} stain={0.3}
-		light={<>
-			<Glow x={300} y={300} r={520} c="gold" o={0.35} />
-			<Sparkle x={ew[0] - 8} y={ew[1] - 30} r={70 * bump(t, 1.36, 1.86)} rot={15 + 40 * t} />
-			<Sparkle x={ew[0] + 46} y={ew[1] - 66} r={34 * bump(t, 1.46, 1.86)} rot={-10} />
-			<Dust t={t} box={[0, 60, 1300, 900]} n={36} seed={38} o={0.55} vx={3} vy={-5} r={2.6} />
-		</>}>
-		<KhekherFrieze x0={-100} x1={1600} y={40} h={58} />
-		<TextCols x={40} y={150} cols={7} rows={6} cell={50} seed={37} lit={7} />
-		<TextCols x={930} y={150} cols={5} rows={6} cell={50} seed={39} lit={0} />
-		<God id="c38ani" cast={CAST.ani} pose={pose} x={fx} y={fy} s={s} sec={{t}} />
-		<AdoreArms cast={CAST.ani} pose={pose} x={fx} y={fy} s={s} id="c38aa" />
-		<EyeFx id="c38e" pose={pose} x={fx} y={fy} s={s} skin={PAL.skinM} look={look} lid={wink} smile={smile} />
+		<AniVignette t={t} lit={lit} whisper={whisper} eye={{look, lid: wink, smile}} />
 	</Stage60>;
 };
 
@@ -424,7 +412,7 @@ const MuseumCase: React.FC<{x0: number; x1: number; y0: number; y1: number; t: n
 		<path d={poly([[x1 - 160 + 4 * t, y0], [x1 - 135 + 4 * t, y0], [x1 - 235 + 4 * t, y1], [x1 - 260 + 4 * t, y1]])} fill="#FFFFFF" />
 	</g>
 </g>;
-const T39 = {sand0: 1.0, sand1: 1.75, taps: [2.0, 2.35, 2.7]};
+const T39 = {wide: [1.05, 1.35] as V, sand0: 1.5, sand1: 2.3, taps: [2.6, 2.95, 3.3]};
 const cut39 = (t: number) => T39.taps.reduce((a, tt) => a + cl((t - tt) / 0.06), 0);
 /** the macro world of 39–40: the base fills the frame (s large) on a dark velvet with a gold rim light */
 const MacroWorld: React.FC<{t: number; sand: number; cut: number; s: number; x: number; y: number; sw?: number; glow?: number; stone?: {x: number; y: number; o: number}; chisel?: {x: number; y: number; o: number; hit: number}}> = ({t, sand, cut, s, x, y, sw = 0, glow = 0, stone, chisel}) => <g>
@@ -435,17 +423,38 @@ const MacroWorld: React.FC<{t: number; sand: number; cut: number; s: number; x: 
 		<rect x={-9} y={-210} width={18} height={150} rx={3} fill="#C98C1E" stroke={PAL.ink} strokeWidth={3} /><path d={poly([[-9, -60], [9, -60], [5, 0], [-5, 0]])} fill="#A86E3A" stroke={PAL.ink} strokeWidth={3} />
 		<rect x={-16} y={-260} width={32} height={56} rx={8} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={3} /></g>}
 </g>;
-const S39: React.FC<ShotProps> = ({t}) => {
-	const SW = 0.95, xf = sm(seg(t, 0.85, 1.1)); // crossfade wide → macro
-	const camW = camE(t, -0.4, 1.1, [650, 500, 1.0], [720, 468, 2.5], (u) => u * u);
-	const camM = camE(t, 0.85, 3.6, [730, 520, 1.0], [700, 500, 1.06]);
+/* v6: 39 + 40 are ONE piece: the museum wide (the visitor, the small vitrine, the label) dissolves into the macro of the base (as before);
+   the old name is sanded off and hers cut in (line 1); then the camera eases back over the same base to the old 40 framing: the reed tag
+   「改名」 swings onto the chain, the patch is circled in red, and Hatnefer's silhouette rises in the backlight and shrugs (line 2).
+   The old 40 pieces are drawn in G40, mapped into the macro world (40's base was s 82 at 470, 470). */
+/* 40 · 「原本不是给她做的。改个名，[照用]。」 the reed tag 「改名」 swings onto the chain; Hatnefer's silhouette shrugs */
+const HATNEFER: Cast = {...CAST.isis, name: 'Hatnefer', wings: false, crown: 'none', dress: 'sheath', bHand: 'open', fHand: 'open'};
+const shrugPose = (u: number, t: number): Pose => {
+	let p: Pose = {...POSES.rest, lean: -1 - 2 * u + 0.4 * Math.sin(t * 1.3), neck: -2 * u, head: -7 * u + 1.5 * Math.sin(t * 1.1), rt: -5, at: 7, rk: 2, ak: 1};
+	const g = solve(p, true), fs = ap(g.fU, [0, 0]), bs = ap(g.bU, [0, 0]);
+	p = wristTo(reach(p, 'f', [fs[0] + lerp(0.4, 2.5, u), fs[1] + lerp(6.8, 2.6, u)], true), 'f', lerp(4, 112, u));
+	return wristTo(reach(p, 'b', [bs[0] + lerp(-0.3, -1.6, u), bs[1] + lerp(6.8, 3.0, u)], true), 'b', lerp(-2, -100, u));
+};
+const L39 = line2(39, 3.76);
+const S39: React.FC<ShotProps> = ({t, dur}) => {
+	const tb = t - L39, xf = sm(seg(t, T39.wide[0], T39.wide[1])); // crossfade wide → macro
+	const camW = camE(t, -0.4, T39.wide[1], [650, 500, 1.0], [720, 468, 2.5], (u) => u * u);
 	const sand = seg(t, T39.sand0, T39.sand1), cut = cut39(t), rasp = t > T39.sand0 && t < T39.sand1;
-	// macro: the base at s = 120, the patch row centred
+	// macro: the base at s = 128, the patch row centred
 	const ms = 128, mx0 = 520, my0 = 520 - (ROWS39[PATCH.j].y + 0.45) * 128;
+	const R40 = ms / 82, m40 = (x: number, y: number): V => [mx0 + (x - 470) * R40, my0 + (y - 470) * R40], G40 = `translate(${mx0},${my0}) scale(${R40}) translate(-470,-470)`;
+	const c1 = m40(720, 486), c2 = m40(705, 476);
+	const camM = camK(t, [[T39.wide[0], 730, 520, 1.0], [L39 - 0.1, 700, 500, 1.06], [L39 + 1.15, c1[0], c1[1], 1.0 / R40], [dur + 0.2, c2[0], c2[1], 1.05 / R40]]);
 	const tap = T39.taps.reduce((a, tt) => Math.max(a, t > tt ? Math.exp(-(t - tt) / 0.07) : 0), 0);
 	const ci = sm(seg(t, T39.taps[0] + 0.1, T39.taps[1] - 0.08)) + sm(seg(t, T39.taps[1] + 0.1, T39.taps[2] - 0.08));
 	const hit = T39.taps.reduce((a, tt) => Math.max(a, 1 - cl(Math.abs(t - tt) / 0.11)), 0);
 	const chiselP: V = [mx0 + (0.55 + ci * 1.08) * ms, my0 + (ROWS39[PATCH.j].y + 0.1) * ms];
+	// line 2 (40's numbers, s after line 2)
+	const k40 = sm(seg(tb, 0, 0.8)), land = 0.95, sw = tb < land ? 0 : 22 * Math.exp(-(tb - land) / 0.6) * Math.cos((tb - land) * 7.5);
+	const inU = eOut(seg(tb, 0.3, land)), tagA = tb < land ? lerp(-70, -8, inU) : sw;
+	const ms4 = 82, anchor: V = [470 + 2.3 * ms4, 470 - 7.2 * ms4];
+	const shrug = sm(seg(tb, 1.9, 2.3)) * (1 - 0.35 * sm(seg(tb, 3.2, 3.6))), hp = shrugPose(shrug, t), hatO = sm(seg(tb, 0.1, 0.9));
+	const glow = 0.6 + 0.4 * Math.sin(t * 3), tagW = m40(1110, 190), sparkW = m40(anchor[0] + 40, 470 - 300);
 	return <AbsoluteFill>
 		{xf < 1 && <Stage60 t={t} cam={camW} grade="night" bg="#10131C" wear={0.3} stain={0.3} wobble={wobIn(t)}
 			light={<>
@@ -473,64 +482,45 @@ const S39: React.FC<ShotProps> = ({t}) => {
 			<text x={1005} y={496} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={34} fill="#B8371F">6.6 × 5.3 厘米</text>
 			<text x={1005} y={530} textAnchor="middle" fontFamily={F_SERIF} fontWeight={700} fontSize={17} fill="#2A2420">大都会艺术博物馆</text>
 		</Stage60>}
-		{xf > 0 && <AbsoluteFill style={{opacity: xf}}><Stage60 t={t} cam={camM} grade="night" bg="#151A26" wear={0.25} stain={0.25} wobble={xf < 1 ? 0 : wobIn(t - 1.1)}
+		{xf > 0 && <AbsoluteFill style={{opacity: xf}}><Stage60 t={t} cam={camM} grade="night" bg="#151A26" wear={0.25} stain={0.25} wobble={xf < 1 ? 0 : wobIn(t - T39.wide[1])}
+			tags={[{x: tagW[0], y: tagW[1], text: '哈特妮菲尔', o: sm(seg(tb, 1.0, 1.4))}]}
 			light={<>
-				<Glow x={mx0 + 1.5 * ms} y={my0 + ROWS39[PATCH.j].y * ms} r={420} c="gold" o={0.2 + 0.25 * cl(cut / 3)} />
+				<Glow x={mx0 + 1.5 * ms} y={my0 + ROWS39[PATCH.j].y * ms} r={420} c="gold" o={(0.2 + 0.25 * cl(cut / 3)) * (1 - k40)} />
+				{k40 > 0 && <g transform={G40} opacity={k40}><Glow x={470 + 1.5 * ms4} y={470} r={460} c="gold" o={0.25 + 0.1 * glow} /></g>}
 				{rasp && <Dust t={t * 3} box={[mx0 - 60, my0 - 40, mx0 + 420, my0 + 120]} n={40} seed={391} c="#E8F5DA" o={0.8} vx={60} vy={-30} r={3} />}
 				{tap > 0 && <><Sparkle x={chiselP[0] - 40} y={chiselP[1] + 30} r={60 * tap} rot={30} /><Glow x={chiselP[0] - 40} y={chiselP[1] + 30} r={120} c="white" o={0.6 * tap} /></>}
-				<Dust t={t} box={[0, 60, 1300, 900]} n={24} seed={392} o={0.4} vx={2} vy={-3} r={2} />
+				{tb > land && <Sparkle x={sparkW[0]} y={sparkW[1]} r={48 * R40 * bump(tb, land, land + 0.4)} rot={20} />}
+				<Dust t={t} box={[-200, -100, 2000, 1300]} n={40} seed={392} o={0.4} vx={2} vy={-3} r={2 + 1.2 * k40} />
 			</>}>
-			<MacroWorld t={t} sand={sand} cut={cut} s={ms} x={mx0} y={my0}
+			<defs><filter id="c40sil" x="-20%" y="-10%" width="140%" height="120%"><feColorMatrix type="matrix" values="0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0 0.09  0 0 0 1 0" /></filter></defs>
+			<MacroWorld t={t} sand={sand} cut={cut} s={ms} x={mx0} y={my0} glow={k40 * (0.5 + 0.5 * glow)}
 				stone={{x: mx0 + (1.4 + 1.1 * Math.sin(t * 26)) * ms, y: my0 + (ROWS39[PATCH.j].y + 0.5) * ms, o: cl(Math.min((t - T39.sand0 + 0.12) / 0.12, (T39.sand1 + 0.1 - t) / 0.12))}}
-				chisel={{x: chiselP[0] - 40, y: chiselP[1] + 30, o: cl(Math.min((t - 1.82) / 0.12, (2.92 - t) / 0.12)), hit}} />
+				chisel={{x: chiselP[0] - 40, y: chiselP[1] + 30, o: cl(Math.min((t - T39.taps[0] + 0.18) / 0.12, (T39.taps[2] + 0.22 - t) / 0.12)), hit}} />
+			{tb > -0.2 && <g transform={G40}>
+				{/* Hatnefer, backlit: her light rises as the camera eases back; then she shrugs */}
+				<g opacity={hatO}>
+					<circle cx={1010} cy={600} r={330} fill="url(#g60-gold)" opacity={0.75} />
+					<circle cx={1010} cy={600} r={190} fill="#F3D88A" opacity={0.35} />
+					<g filter="url(#c40sil)"><God id="c40hat" cast={HATNEFER} pose={hp} x={1000} y={900 - 8 * shrug} s={24} sec={{t}} /></g>
+				</g>
+				{/* the re-carved patch outlined in red ink, as if circled */}
+				<rect x={470 + (PATCH.x0 - 0.12) * ms4} y={470 + (ROWS39[PATCH.j].y - 0.32) * ms4} width={(PATCH.x1 - PATCH.x0 + 0.24) * ms4} height={1.5 * ms4} rx={24} fill="none" stroke="#E0503A" strokeWidth={6}
+					strokeDasharray={`${1400 * sm(seg(tb, 1.15, 1.65))} 2000`} opacity={0.9} />
+				{/* the reed tag on its string from the chain */}
+				{inU > 0 && <g transform={`translate(${anchor[0] + lerp(-260, 0, inU)},${anchor[1] + lerp(-120, 0, inU)}) rotate(${tagA})`} opacity={sm(inU * 3)}>
+					<path d={`M0 0L0 ${3.0 * ms4}`} stroke="#8A6A3A" strokeWidth={4} />
+					<g transform={`translate(0,${3.0 * ms4})`}>
+						<path d={poly([[-58, 0], [58, 0], [58, 170], [-58, 170]])} fill="#E8D6A0" stroke={PAL.ink} strokeWidth={4} />
+						{Array.from({length: 7}, (_, i) => <line key={i} x1={-58 + i * 19} x2={-58 + i * 19} y1={4} y2={166} stroke="#C9B077" strokeWidth={2} />)}
+						<circle cx={0} cy={16} r={8} fill="#5A3A1A" />
+						<text x={0} y={92} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={60} fill="#B8371F">改</text>
+						<text x={0} y={154} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={60} fill="#B8371F">名</text>
+					</g>
+				</g>}
+			</g>}
 		</Stage60></AbsoluteFill>}
 	</AbsoluteFill>;
 };
-/* 40 · 「原本不是给她做的。改个名，[照用]。」 the reed tag 「改名」 swings onto the chain; Hatnefer's silhouette shrugs */
-const HATNEFER: Cast = {...CAST.isis, name: 'Hatnefer', wings: false, crown: 'none', dress: 'sheath', bHand: 'open', fHand: 'open'};
-const shrugPose = (u: number, t: number): Pose => {
-	let p: Pose = {...POSES.rest, lean: -1 - 2 * u + 0.4 * Math.sin(t * 1.3), neck: -2 * u, head: -7 * u + 1.5 * Math.sin(t * 1.1), rt: -5, at: 7, rk: 2, ak: 1};
-	const g = solve(p, true), fs = ap(g.fU, [0, 0]), bs = ap(g.bU, [0, 0]);
-	p = wristTo(reach(p, 'f', [fs[0] + lerp(0.4, 2.5, u), fs[1] + lerp(6.8, 2.6, u)], true), 'f', lerp(4, 112, u));
-	return wristTo(reach(p, 'b', [bs[0] + lerp(-0.3, -1.6, u), bs[1] + lerp(6.8, 3.0, u)], true), 'b', lerp(-2, -100, u));
-};
-const S40: React.FC<ShotProps> = ({t}) => {
-	const ms = 82, mx0 = 470, my0 = 470;
-	const land = 0.62, sw = t < land ? 0 : 22 * Math.exp(-(t - land) / 0.6) * Math.cos((t - land) * 7.5);
-	const inU = eOut(seg(t, 0.05, land)), tagA = t < land ? lerp(-70, -8, inU) : sw;
-	const anchor: V = [mx0 + 2.3 * ms, my0 - 7.2 * ms];
-	const shrug = sm(seg(t, 1.55, 1.9)) * (1 - 0.35 * sm(seg(t, 2.7, 3.1))), hp = shrugPose(shrug, t);
-	const cam = camE(t, 0, 3.6, [720, 486, 1.0], [705, 476, 1.05]);
-	const glow = 0.6 + 0.4 * Math.sin(t * 3);
-	return <Stage60 t={t} cam={cam} grade="night" bg="#151A26" wear={0.25} stain={0.25}
-		tags={[{x: 1110, y: 190, text: '哈特妮菲尔', o: sm((t - 0.9) / 0.4)}]}
-		light={<>
-			<Glow x={mx0 + 1.5 * ms} y={my0} r={460} c="gold" o={0.25 + 0.1 * glow} />
-			{t > land && <Sparkle x={anchor[0] + 40} y={my0 - 300} r={48 * bump(t, land, land + 0.4)} rot={20} />}
-			<Dust t={t} box={[0, 60, 1300, 900]} n={30} seed={40} o={0.45} vx={2} vy={-3} r={2} />
-		</>}>
-		<defs><filter id="c40sil" x="-20%" y="-10%" width="140%" height="120%"><feColorMatrix type="matrix" values="0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0 0.09  0 0 0 1 0" /></filter></defs>
-		<MacroWorld t={t} sand={1} cut={3} s={ms} x={mx0} y={my0} glow={0.5 + 0.5 * glow} />
-		{/* the re-carved patch outlined in red ink, as if circled */}
-		<rect x={mx0 + (PATCH.x0 - 0.12) * ms} y={my0 + (ROWS39[PATCH.j].y - 0.32) * ms} width={(PATCH.x1 - PATCH.x0 + 0.24) * ms} height={1.5 * ms} rx={24} fill="none" stroke="#E0503A" strokeWidth={6}
-			strokeDasharray={`${1400 * sm(seg(t, 0.9, 1.4))} 2000`} opacity={0.9} />
-		{/* the reed tag on its string from the chain */}
-		<g transform={`translate(${anchor[0] + lerp(-260, 0, inU)},${anchor[1] + lerp(-120, 0, inU)}) rotate(${tagA})`}>
-			<path d={`M0 0L0 ${3.0 * ms}`} stroke="#8A6A3A" strokeWidth={4} />
-			<g transform={`translate(0,${3.0 * ms})`}>
-				<path d={poly([[-58, 0], [58, 0], [58, 170], [-58, 170]])} fill="#E8D6A0" stroke={PAL.ink} strokeWidth={4} />
-				{Array.from({length: 7}, (_, i) => <line key={i} x1={-58 + i * 19} x2={-58 + i * 19} y1={4} y2={166} stroke="#C9B077" strokeWidth={2} />)}
-				<circle cx={0} cy={16} r={8} fill="#5A3A1A" />
-				<text x={0} y={92} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={60} fill="#B8371F">改</text>
-				<text x={0} y={154} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={60} fill="#B8371F">名</text>
-			</g>
-		</g>
-		{/* Hatnefer, backlit: a silhouette that shrugs */}
-		<circle cx={1010} cy={600} r={330} fill="url(#g60-gold)" opacity={0.75} />
-		<circle cx={1010} cy={600} r={190} fill="#F3D88A" opacity={0.35} />
-		<g filter="url(#c40sil)"><God id="c40hat" cast={HATNEFER} pose={hp} x={1000} y={900 - 8 * shrug} s={24} sec={{t}} /></g>
-	</Stage60>;
-};
 
-export const TWIST: Record<number, React.FC<ShotProps>> = {34: S34, 35: S35, 36: S36, 37: S37, 38: S38, 39: S39, 40: S40};
+export const TWIST: Record<number, React.FC<ShotProps>> = {34: S34, 36: S36, 37: S37, 39: S39}; // v6: 35, 38, 40 merged into 34, 37, 39
 export const _keepT = {Shaft, flick, PIC_B, featherD, eOut};

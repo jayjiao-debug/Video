@@ -13,15 +13,15 @@ import {V, PAL, poly, sp, lerp, cl, sm, seg, ap} from './geo60';
    One world for all seven shots: the balance stands at BX on the floor GY. Sound-event times: episodes/60-xinzang/sync60_b.md. */
 const GY = 852, BX = 760, BS = 32;
 const c_ = (s: number) => ({OW: 2.7 / s, LW: 1.5 / s});
-const ANUBIS: Cast = {...CAST.anubis, bHand: 'open', fHand: 'open', bProp: 'none', fProp: 'none'};
-const MAAT: Cast = {...CAST.isis, name: 'Maat', crown: 'maat', wings: false};
+export const ANUBIS: Cast = {...CAST.anubis, bHand: 'open', fHand: 'open', bProp: 'none', fProp: 'none'};
+export const MAAT: Cast = {...CAST.isis, name: 'Maat', crown: 'maat', wings: false};
 const THOTH: Cast = {...CAST.thoth};
-const Room: React.FC<{t: number; red?: number}> = ({t}) => <g>
+export const Room: React.FC<{t: number; red?: number}> = ({t}) => <g>
 	<HallWall x0={-500} x1={2100} t={t} ceil={-60} glyphY={140} />
 	{[[60, 300], [1300, 300]].map(([x, y], i) => <g key={i} opacity={0.75}><GlyphColumns x={x} y={y} cols={4} rows={4} cell={34} seed={270 + i} mono="#C9A23E" /></g>)}
 </g>;
 /** Anubis kneeling at the post, front hand to the plumb-bob (the kit's anubisPose for any balance placement); bob in world px */
-const kneelAt = (bob: V, ax: number, as: number, lean = 5, head = -4): Pose => {
+export const kneelAt = (bob: V, ax: number, as: number, lean = 5, head = -4): Pose => {
 	let p: Pose = {...POSES.kneel, rt: -12, rk: 98, rf: 38, at: 122, ak: 122, lean, head, neck: 3};
 	const b: V = [(bob[0] - ax) / as, (bob[1] - GY) / as];
 	p = wristTo(reach(p, 'f', [b[0] - 1.05, b[1] + 0.75]), 'f', 128);
@@ -29,7 +29,7 @@ const kneelAt = (bob: V, ax: number, as: number, lean = 5, head = -4): Pose => {
 	return wristTo(reach(p, 'b', [knee[0] - 0.7, knee[1] - 0.95]), 'b', 96);
 };
 /** a leader walking with his back hand reaching back; the follower's front hand holds it (both walk cycles) */
-const leadWalk = (phL: number, phF: number, s: number, xL: number, xF: number): {lead: Pose; fol: Pose} => {
+export const leadWalk = (phL: number, phF: number, s: number, xL: number, xF: number): {lead: Pose; fol: Pose} => {
 	let lead = walkPose(phL, {lean: 2, arm: 0.6});
 	const sh = ap(solve(lead).bU, [0, 0]), ra = -34 * Math.PI / 180, hand: V = [sh[0] + Math.sin(ra) * 6.75, sh[1] + Math.cos(ra) * 6.75];
 	lead = wristTo(reach(lead, 'b', hand), 'b', -40);
@@ -42,7 +42,7 @@ const leadWalk = (phL: number, phF: number, s: number, xL: number, xF: number): 
 
 /* ================= 27 · 74.5–77.5 · low angle: Anubis leads you in by the hand, kneels, steadies the plumb-bob with one finger ================= */
 export const S27 = {om: 7.1, ph0: 0.4, stop: 1.1, kneel: [1.1, 1.55], ticks: [1.0, 1.5, 1.95], touch: 2.15};
-const plumb27 = (t: number) => { // bounces off the post at each tick (−4.7°), damped by the finger after `touch`
+export const plumb27 = (t: number) => { // bounces off the post at each tick (−4.7°), damped by the finger after `touch`
 	const T_ = S27.ticks, out = [-1.2, 7.5, 5.8, 3.6];
 	if (t < T_[0]) { const u = cl((t + 0.6) / (T_[0] + 0.6)); return lerp(out[0], -4.7, u) + 8 * Math.sin(Math.PI * u) * 0.9; }
 	for (let i = 0; i < T_.length; i++) { const a = T_[i], b = T_[i + 1] ?? S27.touch + 0.15; if (t < b) { const u = (t - a) / (b - a); return -4.7 + (out[i + 1] + 4.7) * Math.sin(Math.PI * u) * (i === T_.length - 1 ? Math.exp(-u * 1.5) : 1); } }
@@ -139,7 +139,7 @@ export const Shot29: React.FC<ShotProps> = ({t}) => {
 
 /* ================= 30 · 82.8–85.5 · BLOOD-RED rim light: Ammit crouches under the balance, tail swishing, eyes on your heart ================= */
 export const S30 = {growl: 0.45, scrape: 1.55};
-const ammitP = (t: number, o: Partial<AmmitPose> = {}): AmmitPose => ({lean: 1 + 0.6 * Math.sin(t * 2.1), neck: 9 + 1.2 * Math.sin(t * 1.7), jaw: 4 + 2 * Math.max(0, Math.sin(t * 2.6)), tail: 18 * Math.sin(t * 3.0), breathe: 0.5 + 0.5 * Math.sin(t * 3.2), ...o});
+export const ammitP = (t: number, o: Partial<AmmitPose> = {}): AmmitPose => ({lean: 1 + 0.6 * Math.sin(t * 2.1), neck: 9 + 1.2 * Math.sin(t * 1.7), jaw: 4 + 2 * Math.max(0, Math.sin(t * 2.6)), tail: 18 * Math.sin(t * 3.0), breathe: 0.5 + 0.5 * Math.sin(t * 3.2), ...o});
 export const Shot30: React.FC<ShotProps> = ({t}) => {
 	const s = 42, ax = BX + 330, BS = 36, g = hit(t, S30.growl, 0.5, 0.1), scr = keys(t, [[S30.scrape - 0.12, 0], [S30.scrape + 0.12, -0.7], [2.3, -0.7], [2.6, 0]]);
 	const tremble = g * Math.sin(t * 60) * 0.8;
