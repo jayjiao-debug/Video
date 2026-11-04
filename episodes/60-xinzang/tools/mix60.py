@@ -21,11 +21,10 @@ sys.path.insert(0, HERE)
 import egypt_cues as E
 
 SR = E.SR
-FILM = 160.6
-NF = int(round(FILM * SR))
 S = os.environ.get('SND60', '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60')
 CUES, SFX = f'{S}/cues', f'{S}/sfx'
-SFX_OVER_MUSIC = 2.0      # dB: sfx peak over the local music momentary loudness
+SFX_OVER_MUSIC = 0.0      # dB: sfx peak over the local music momentary loudness (v2, owner: softer, never piercing)
+SFX_SHELF = (4500, -4.0)  # every sfx gets a gentle high shelf (Hz, dB) unless fx 'bright'
 AMB_UNDER_MUSIC = 8.0     # LU: ambience loudness under the local music
 TARGET, TP_CEIL = -14.0, -1.5
 
@@ -50,6 +49,8 @@ def load_shots():
         i = s.index('= [', s.index('export const SHOTS')) + 2; return json.loads(s[i:s.index('];', i) + 1])
     except Exception: return []
 SHOTS = load_shots(); SHOTW = {x['n']: (x['a'], x['b']) for x in SHOTS}
+FILM = SHOTS[-1]['b'] if SHOTS else 157.6   # the film's length = the clock's last shot end
+NF = int(round(FILM * SR))
 
 def parse_sync(paths):
     """tolerant reader for the builders' tables. A line starts with a shot number (table row or list); events are separated by
@@ -90,12 +91,13 @@ def parse_sync(paths):
 def find_sync(ev, key):
     """key 'shot:a+b~c#2': alternatives split by ~; in each, every word (split by space or +) must occur in the event's label;
     '#n' picks the n-th time of that label."""
-    shot, labs = key.split(':', 1); shot = int(shot)
-    for lab in labs.lower().split('~'):
-        lab, _, n = lab.strip().partition('#'); words = lab.replace('+', ' ').split()   # '+' = and
-        if not words: continue
-        for e in ev:
-            if e['shot'] == shot and all(w in e['label'] for w in words) and (not n or e['k'] == int(n)): return e
+    shot, labs = key.split(':', 1); shots = [int(x) for x in shot.split(',')]   # '31,42:roar' = look in 31, then 42
+    for sh in shots:
+        for lab in labs.lower().split('~'):
+            lab, _, n = lab.strip().partition('#'); words = lab.replace('+', ' ').split()   # '+' = and
+            if not words: continue
+            for e in ev:
+                if e['shot'] == sh and all(w in e['label'] for w in words) and (not n or e['k'] == int(n)): return e
     return None
 
 def num(v, d=None):
@@ -151,7 +153,10 @@ def synth(spec, dur):
     """drone:D2,A2 (choir 'oo', slow) or bowl:D4 (struck singing bowl in a small room); normalised to -14 LUFS."""
     kind, _, arg = spec.partition(':'); n = int(dur * SR)
     if kind == 'drone':
-        x = sum(E.held(dur, nt, E.choir_oo, att=0.6, rel=0.01, gain=1.0, seed=7 + i, voices=3)[:n] for i, nt in enumerate(arg.split(',')))
+        x = 0   # low notes on the arghul (Egyptian reed drone), upper notes on the 'oo' choir; an Eb (the Hijaz semitone) sits quieter
+        for i, nt in enumerate(arg.split(',')):
+            low = int(nt[-1]) <= 2; v = E.held(dur, nt, E.arghul if low else E.choir_oo, att=0.6, rel=0.01, gain=1.0, seed=7 + i, voices=3)[:n]
+            x = x + v * (0.45 if nt.startswith('Eb') else 1.0) * (0.8 if low else 1.0)
     elif kind == 'bowl':
         rng = np.random.default_rng(5); m = E.bowl(rng, arg or 'D4', 1.0, dur)[:n]
         m2 = E.bowl(np.random.default_rng(6), 'D3', 0.35, dur)[:n]   # a soft octave below
@@ -188,6 +193,10 @@ def place(buf, r, x, loop):
     else:
         seg = np.zeros((i1 - i0, 2), np.float32); ok = (idx >= 0) & (idx < len(x)); seg[ok] = x[idx[ok]]
     seg = seg.copy()
+    if 'wind' in fx:   # a soft drop: the band slows a little (to 0.6x) while it fades out (cos^2) over the last d s
+        k = min(len(seg), int(float(fx['wind']) * SR)); s0 = so + len(seg) - k; src = np.concatenate([x, x]) if loop else x
+        j = np.arange(k); pos = (s0 % len(x) if loop else s0) + j * (1 - 0.4 * j / (2 * k))
+        seg[-k:] = np.stack([np.interp(pos, np.arange(len(src)), src[:, c]) for c in (0, 1)], 1) * (np.cos(np.linspace(0, np.pi / 2, k)) ** 2)[:, None]
     if 'tapestop' in fx:
         k = min(len(seg), int(float(fx['tapestop']) * SR)); s0 = so + len(seg) - k
         src = np.concatenate([x, x]) if loop else x
@@ -197,6 +206,9 @@ def place(buf, r, x, loop):
     if 'ramp' in fx:
         a, b, d = re.match(r'(-?[\d.]+)>(-?[\d.]+)@([\d.]+)', fx['ramp']).groups(); k = len(seg)
         tt = np.arange(k) / SR; g *= 10 ** ((float(a) + (float(b) - float(a)) * np.clip(tt / float(d), 0, 1)) / 20)
+    if 'env' in fx:   # absolute film-time gain envelope: env=t1:dB1;t2:dB2;... (linear in dB)
+        pts = [tuple(map(float, q.split(':'))) for q in fx['env'].split(';')]; tt = i0 / SR + np.arange(len(seg)) / SR
+        g *= 10 ** (np.interp(tt, [p_[0] for p_ in pts], [p_[1] for p_ in pts]) / 20)
     fin, fout = r['_fin'], r['_fout']
     if fin and fs >= -1e-6:
         k = min(len(g), max(1, int(fin * SR))); g[:k] *= fade_curve(k)
@@ -301,6 +313,13 @@ def main():
             x = load(f"{CUES}/{r['file']}.wav"); loop = r['file'].endswith('_loop')
         span = place(music, r, x, loop)
         if span: log.append(dict(id=r['id'], type=r['type'], file=r['file'], t=round(r['_t'], 3), start=round(span[0], 3), end=round(span[1], 3), gain=r['_gain'], sync=r['_sync'], note=r.get('note')))
+    # ducks: the music dips under a motivated big sound (Ammit's roar), like the reference's lioness roaring in a gap
+    for r in rows:
+        fx = fx_of(r)
+        if r['type'] in ('sfx', 'amb') and 'duck' in fx:
+            dd, T = float(fx['duck']), r['_t']; ln = len(load(f"{SFX}/{r['file']}.wav")) / SR if not r['file'].startswith('synth:') else 0.8
+            t1, t2 = T - 0.15, min(FILM, T + 0.75 * ln); tt = np.arange(int(max(0, t1 - 0.12) * SR), int(min(FILM, t2 + 0.5) * SR)) / SR
+            gd = np.interp(tt, [t1 - 0.12, t1, t2, t2 + 0.5], [0, -dd, -dd, 0]); music[int(tt[0] * SR):int(tt[0] * SR) + len(tt)] *= (10 ** (gd / 20))[:, None].astype(np.float32)
     # SFX bus, levelled against the music
     tm, Lm = momentary(music)
     def local(t0, t1): s = Lm[(tm >= t0) & (tm <= t1)]; return float(s.max()) if len(s) else -70.0
@@ -310,6 +329,10 @@ def main():
     for r in rows:
         if r['type'] not in ('sfx', 'amb'): continue
         fx = fx_of(r); x = synth_sfx(r['file'])[0] if r['file'].startswith('synth:') else load(f"{SFX}/{r['file']}.wav")
+        if 'bright' not in fx and SFX_SHELF:
+            key = (r['file'], 'shelf')
+            if key not in _cache: _cache[key] = E.shelf(x.astype(np.float64), SFX_SHELF[0], SFX_SHELF[1], high=True).astype(np.float32)
+            x = _cache[key]
         loop = r['type'] == 'amb' and r.get('_end') is not None
         tmp = np.zeros((NF, 2), np.float32); g0 = r['_gain']; r['_gain'] = 0.0
         span = place(tmp, r, x, loop)
@@ -354,6 +377,12 @@ def main():
                 sync_events_not_used=[f"{e['src']}: {e['shot']} {e['label']} {e['t']}" for e in unused])
     json.dump(meta, open(os.path.splitext(a.out)[0] + '_placed.json', 'w'), ensure_ascii=False, indent=1, default=float)
     print('limiter > 1 dB at:', hot)
+    tq, Lq = momentary(y.astype(np.float32), 1.0, 0.05); cliffs = []   # sudden level changes: 1 s loudness moves > 8 dB within 0.5 s
+    for i in range(10, len(Lq)):                                            # (rhythm averages out at 1 s; drop-outs and slams don't)
+        d_ = Lq[i] - Lq[i - 10]
+        if abs(d_) > 8 and (not cliffs or tq[i] - cliffs[-1][0] > 0.8): cliffs.append((round(float(tq[i]), 2), round(float(d_), 1)))
+    meta['cliffs'] = cliffs; json.dump(meta, open(os.path.splitext(a.out)[0] + '_placed.json', 'w'), ensure_ascii=False, indent=1, default=float)
+    print('sudden level changes (1 s loudness, > 8 dB in 0.5 s):', cliffs)
     for e in log: print(f"{e['start']:8.3f}-{e['end']:8.3f}  {e['type']:5s} {e['id']:16s} {e['file']:28s} gain {e['gain']:+6.1f}" + (f"  peak {e['peak_dbfs']:+.1f} over local {e['local_lufs']:+.1f}" if 'peak_dbfs' in e else '') + (f"  aud {e['audible_db']:+.1f}" if e.get('audible_db') is not None else '') + (f"  [{e['sync']}]" if e['sync'] else ''))
     print('waiting for sync:', ', '.join(waiting) or '-')
     if unused: print('sync events not used by any row:', len(unused))
