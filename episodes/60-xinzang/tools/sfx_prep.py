@@ -47,6 +47,12 @@ ITEMS = [
  ('X26_ammit_roar', NEW, 'X26_ammit_roar_a', 0, 'layer', 'AMMIT: the full roar, raspy lioness snarl + a low chest punch (2nd take < 300 Hz), 1.55 s, hit ~0.1 s'),
  ('X27_ammit_grunt', NEW, 'X27_ammit_grunt_a', 0, 'layer', 'AMMIT: a low menacing grunt + a wet throat rattle under it, 0.75 s (her reveal)'),
  ('X28_ammit_growl', NEW, 'X28_ammit_growl_a', 0, 'shot', 'AMMIT: deep guttural crocodile-lion growl rising, 2.6 s (into the bite); its throat tone ~Eb4 rubs the D drone on purpose'),
+ ('X30_lioness_roar', NEW, 'X30_lioness_roar_a', 0, 'layer', 'AMMIT v3 (owner 17:07 "similar to the lioness roar sample"): a real lioness roar, raspy, ~1 s, + a faint croc hiss under it'),
+ ('X31_lion_snarl', NEW, 'X31_lion_snarl_short_b', 0, 'shot', 'AMMIT v3: a short snarling roar (shot 41, before the bite), 0.8 s'),
+ ('X32_mean_chomp', OLD, 'S03_croc_snap', 0, 'layer', 'AMMIT v3: a mean crunchy chomp: the jaws slam (croc snap) + teeth crunching (2nd take) on top'),
+ ('X33_bone_snap', NEW, 'X33_bone_snap_a', 0, 'shot', 'a bone snapped between two fists: crack + splinter (碎骨者, shot 20)'),
+ ('X34_ba_wings', NEW, 'X34_small_wings_a', 0, 'shot', 'a small bird takes off: six soft feathery flaps over ~0.85 s (the ba, shot 11)'),
+ ('X35_papyrus_flick', NEW, 'X35_papyrus_flick_a', 0, 'shot', 'one crisp papyrus page flick at ~0.1 s (two softer ones follow: take 0-0.22 s for a single flip)'),
  ('S01_heartbeat', OLD, 'S01_heartbeat', 0, 'shot', 'slow deep heartbeat, close'),
  ('S02_scale_settle', OLD, 'S02_scale_settle', +0.61, 'shot', 'balance tilting and settling, creak + small tick (tick tuned to D6)'),
  ('S03_croc_snap', OLD, 'S03_croc_snap', 0, 'shot', 'crocodile jaws snap with a short low growl'),
@@ -64,7 +70,9 @@ ITEMS = [
  ('G3_zills', OLD, 'G3_zills', -0.20, 'shot', 'finger cymbals (tuned to F#7)'),
 ]
 LAYERS = {'X26_ammit_roar': dict(src='X26_ammit_roar_b', lp=300, seg=(0.0, 0.6), db=-4, keep=1.55),
-          'X27_ammit_grunt': dict(src='X27_ammit_grunt_b', lp=None, seg=(0.0, 0.8), db=-6, keep=0.75)}
+          'X27_ammit_grunt': dict(src='X27_ammit_grunt_b', lp=None, seg=(0.0, 0.8), db=-6, keep=0.75),
+          'X30_lioness_roar': dict(src='X07_serpent_hiss', lp=None, seg=(0.9, 1.9), db=-14, keep=1.3),
+          'X32_mean_chomp': dict(src='X32_crunchy_bite_a', lp=None, seg=(0.0, 0.7), db=-3, keep=1.0, dir='NEW')}
 def load(p):
     raw = subprocess.run(['ffmpeg', '-v', 'quiet', '-i', p, '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout
     return np.frombuffer(raw, np.float32).reshape(-1, 2).astype(np.float64)
@@ -86,7 +94,7 @@ if __name__ == '__main__':
             k = int(0.002 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]
         elif kind == 'layer':   # (owner v1: "a menacing grunt/roar like the lion in the reference")
             L_ = LAYERS[name]; e = np.abs(y).max(1); i0 = max(0, int(np.argmax(e > pk * 10 ** (-40 / 20))) - int(0.005 * SR)); y = y[i0:]
-            z = load(f'{d}/{L_["src"]}.mp3'); z = z[int(L_['seg'][0] * SR):int(L_['seg'][1] * SR)]
+            z = load(f'{NEW if L_.get("dir") == "NEW" else d}/{L_["src"]}.mp3'); z = z[int(L_['seg'][0] * SR):int(L_['seg'][1] * SR)]
             if L_['lp']: z = signal.sosfilt(signal.butter(4, L_['lp'], 'low', fs=SR, output='sos'), z, axis=0)
             kz = int(0.08 * SR); z[-kz:] *= np.linspace(1, 0, kz)[:, None]
             z *= pk / (np.abs(z).max() + 1e-9) * 10 ** (L_['db'] / 20); n_ = max(len(y), len(z)); y = np.pad(y, ((0, n_ - len(y)), (0, 0)))

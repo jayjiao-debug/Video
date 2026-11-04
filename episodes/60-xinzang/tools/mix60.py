@@ -72,6 +72,7 @@ def parse_sync(paths):
                     for j, mm in enumerate(ms):
                         before = tok[ms[j - 1].end() if j else 0:mm.start()]; after = tok[mm.end():ms[j + 1].start() if j + 1 < len(ms) else len(tok)]
                         before_s = re.sub(r'^\s*\*?\*?\s*\([^)]*\)', '', before) if j else before   # '(lub) +' after the previous time is its comment
+                        before_s = re.sub(r'^\W*s\b\W*', '', before_s) if j else before_s   # 'every 0.26 s: 27.30' -> the 's' is the unit, not a label
                         tv = float(mm.group(1))
                         nxt = tok[ms[j + 1].end():ms[j + 2].start() if j + 2 < len(ms) else len(tok)] if j + 1 < len(ms) else ''
                         if not has_word(before_s) and re.fullmatch(r'\W*[\u2013\-]\W*', after) and has_word(nxt):   # '27.45–28.10 label'
@@ -80,12 +81,12 @@ def parse_sync(paths):
                         elif has_word(before_s): lab = clean(before_s)
                         elif last and (after.strip().lstrip('*').strip().startswith('(') or not has_word(after)): lab = None
                         else: lab = clean(re.split(r'\(', after)[0]) or clean(after)
-                        if lab is None: k += 1; lab_use = last
+                        if lab is None: lab_use = last
                         else:
                             if lab != last: last, k = lab, 0
-                            k += 1; lab_use = lab
-                        if lab_use is None or not (a - 1.0 <= tv <= b + 1.0): continue
-                        ev.append(dict(shot=shot, label=lab_use, k=k, t=tv, src=os.path.basename(p)))
+                            lab_use = lab
+                        if lab_use is None or not (a - 1.0 <= tv <= b + 1.0): continue   # out of the shot's window: not counted
+                        k += 1; ev.append(dict(shot=shot, label=lab_use, k=k, t=tv, src=os.path.basename(p)))
     return ev
 
 def find_sync(ev, key):
@@ -138,6 +139,34 @@ def synth_sfx(spec):
         env = np.where(t < 0.35, np.sin(np.pi / 2 * t / 0.35) ** 2, np.exp(-(t - 0.35) / 0.9)); y = y * env[:, None]
         y = np.concatenate([y, np.zeros((int(0.8 * SR), 2))]); y = 0.8 * y + 0.35 * E.conv_st(y, E.make_ir(1.4, seed=35))
         return (y / np.abs(y).max() * 10 ** (-3 / 20)).astype(np.float32), 0.35
+    if kind == 'shine':   # owner 17:07 "a shine SE" on the scarab's flare: qanun glissando up D Hijaz + sistrum shimmer + D6 bowl + sparkles
+        rng = np.random.default_rng(14); n = int(2.6 * SR); L = np.zeros(n); R = np.zeros(n)
+        run = ['D5', 'Eb5', 'F#5', 'G5', 'A5', 'Bb5', 'C#6', 'D6', 'Eb6', 'F#6', 'G6', 'A6', 'D7']
+        for j, nt in enumerate(run):
+            q = E.qanun(nt, 1.6, 0.35 + 0.04 * j, j); i = int(j * 0.032 * SR); k = min(len(q), n - i); p_ = -0.7 + 1.4 * j / (len(run) - 1)
+            L[i:i + k] += q[:k] * np.cos((p_ + 1) * np.pi / 4); R[i:i + k] += q[:k] * np.sin((p_ + 1) * np.pi / 4)
+        sh = E.sistrum(rng, 0.8, 6, 0.05); i = int(0.05 * SR); k = min(len(sh), n - i); L[i:i + k] += 0.7 * sh[:k]; R[i:i + k] += 0.9 * sh[:k]
+        bw = E.bowl(rng, 'D6', 0.7, 2.4); i = int(0.4 * SR); k = min(len(bw), n - i); L[i:i + k] += bw[:k]; R[i:i + k] += bw[:k]
+        for j in range(9):   # the glint sweeping the stone: a scatter of tiny high zills
+            z = E.zills(rng, 0.18 + 0.05 * rng.random(), 0.6); i = int((0.7 + 0.11 * j + 0.03 * rng.random()) * SR); k = min(len(z), n - i)
+            p_ = -0.6 + 1.2 * j / 8; L[i:i + k] += z[:k] * np.cos((p_ + 1) * np.pi / 4); R[i:i + k] += z[:k] * np.sin((p_ + 1) * np.pi / 4)
+        y = np.stack([L, R], 1); y = 0.75 * y + 0.4 * E.conv_st(y, E.make_ir(1.6, seed=36))
+        y[-int(0.4 * SR):] *= np.linspace(1, 0, int(0.4 * SR))[:, None] ** 2
+        return (y / np.abs(y).max() * 10 ** (-3 / 20)).astype(np.float32), 0.42
+    if kind.startswith('leadin'):   # owner 17:07: "a sequence of tunes that lead into the roar": darbuka roll + reed rising, then a breath
+        dur = float(kind.split('=')[1]) if '=' in kind else 1.5; rng = np.random.default_rng(15); n = int((dur + 0.6) * SR); out = np.zeros((n, 2))
+        notes = ['D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C#5', 'D5', 'Eb5']; d = round((dur - 0.06) / len(notes), 3)
+        rd = np.asarray(E.reed([(nt, d) for nt in notes], 0.7, rng, 'mizmar'), np.float64); rd = rd if rd.ndim == 2 else np.stack([rd, rd], 1)
+        rd = rd[:int((dur - 0.06) * SR)] * np.linspace(0.45, 1.0, min(len(rd), int((dur - 0.06) * SR)))[:, None]
+        k = int(0.03 * SR); rd[-k:] *= np.linspace(1, 0, k)[:, None]; out[:len(rd)] += rd * 0.9
+        tt = 0.0; j = 0   # the roll: strokes accelerating from eighths to 32nds, swelling, last stroke 60 ms before the end
+        while tt < dur - 0.06:
+            v = 0.15 + 0.85 * (tt / dur) ** 1.6; x = E.tek(rng, v, j % 2 == 1) if j % 4 else E.dum(rng, 0.35 * v + 0.15)
+            i = int(tt * SR); kk = min(len(x), n - i); pan = 0.15 * (-1) ** j
+            out[i:i + kk, 0] += x[:kk] * np.cos((pan + 1) * np.pi / 4); out[i:i + kk, 1] += x[:kk] * np.sin((pan + 1) * np.pi / 4)
+            tt += max(0.045, 0.19 * (1 - tt / dur) ** 1.3); j += 1
+        out = 0.85 * out + 0.25 * E.conv_st(out, E.make_ir(1.0, seed=37))
+        return (out / np.abs(out).max() * 10 ** (-3 / 20)).astype(np.float32), dur   # hit = the end of the lead-in (the roar comes here)
     if kind == 'squeak':   # one reed player squeaks as the band stops: Eb6 -> C6 blip on the mizmar (in D Hijaz)
         y = E.reed([('Eb6', 0.08), ('C6', 0.11)], 0.8, np.random.default_rng(4), 'mizmar'); y = np.asarray(y, np.float64)
         y = y if y.ndim == 2 else np.stack([y, y], 1); y = np.concatenate([y, np.zeros((int(0.6 * SR), 2))])   # room for the tail
