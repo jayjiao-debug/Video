@@ -33,6 +33,23 @@ MUSIC = [
  (144.3, 156.3, 'bright_8bar', dict(inn='hard', out='x', bar0=7)),      # 48-52: picks up on the next downbeat where it would have been
  (156.3, 169.25, 'resolution_6bar', dict(inn='x')),                     # 53-55: the theme slow, chromatic slide, final D 164.3 through the card
 ]
+# owner 23:55: "another of the film with music similar to v4" -- the v4/v6b egypt_cues score re-laid on the v6 acts, smoother changes
+MUSIC_V4 = [
+ (0.0, 8.41, 'intro_hook', dict(inn='hard', out='x')),                 # v6b intro: Egyptian from frame 0, gong on the title 6.30
+ (8.41, 26.03, 'mystic_16bar', dict(inn='x')),                         # you die, the mummy
+ (26.03, 41.64, 'playful_24bar', dict(inn='x')),                       # the Book (the playful eighths the stall was built on)
+ (41.64, 51.73, 'tension_8bar', dict(inn='x')),                        # the road
+ (51.73, 73.38, 'groove_24bar', dict(inn='x', out='cut')),             # hall + oath; dead stop on the freeze 73.38
+ (76.3, 90.3, 'tension_8bar', dict(inn='swell', out='cut')),           # the weighing; out for the lead-in + roar
+ (92.3, 98.3, 'mystic_16bar', dict(inn='swell', out='cut', db=-8, lp=700)),   # the hush: the mystic bed, dark and low
+ (98.3, 121.89, 'playful_24bar', dict(inn='hard', out='cut')),         # the cheat; cut on the pan crash
+ (126.82, 130.11, 'sting_doom', dict(inn='swell', out='cut', db=-3)),  # the second death; dead stop 130.11
+ (130.3, 143.57, 'paradise_16bar', dict(inn='swell', out='cut')),      # pass; the hiccup 143.57
+ (144.3, 156.3, 'playful_24bar', dict(inn='hard', out='x')),           # shabtis
+ (156.3, 164.3, 'paradise_16bar', dict(inn='x', out='x')),             # close
+ (164.3, 169.25, 'paradise_end', dict(inn='x')),                       # the paradise ending rings through the end card
+]
+
 # (time, sfx, offset dB vs local music, options)   options: dur (crop + fade), crop_end (keep the last s), onset (align the take's onset),
 # abs (level vs the music's average, not the local music: the music is out)
 EV = []
@@ -116,8 +133,8 @@ def st_lufs(y, a, b):
     if b - a < int(0.45 * SR): return -70.0
     L = E.lufs(seg); return L if np.isfinite(L) else -70.0
 
-def mix(lib, sfxd, out):
-    music = lib60.render_plan(lib, MUSIC); Mavg = E.lufs(music); n = len(music); fx = np.zeros((n, 2)); rep = []
+def mix(lib, sfxd, out, plan=None):
+    plan = plan or MUSIC; music = lib60.render_plan(lib, plan); Mavg = E.lufs(music); n = len(music); fx = np.zeros((n, 2)); rep = []
     for t, name, off, o in EV:
         x = sf.read(f'{sfxd}/{name}.wav', always_2d=True)[0]
         if o.get('crop_end'): x = x[-int(o['crop_end'] * SR):].copy(); f = int(0.15 * SR); x[:f] *= np.linspace(0, 1, f)[:, None]
@@ -142,8 +159,8 @@ def mix(lib, sfxd, out):
     gm = np.sqrt(np.mean(y ** 2) / max(np.mean((music + fx) ** 2), 1e-20))
     for r in rep: r['sfx_vs_music_db'] = round(r['target'] - (r['music_local'] - 3 if r['music_local'] > -60 else -70), 1)
     meta = dict(seconds=round(len(y) / SR, 2), lufs=round(E.lufs(y), 2), tp=round(E.true_peak(y), 2), mp3_lufs=round(E.lufs(dec), 2), mp3_tp=round(E.true_peak(dec), 2),
-                music_avg_lufs_premaster=round(Mavg, 1), events=rep, deliberate=DELIBERATE, music_plan=[(a, b, c) for a, b, c, _ in MUSIC])
+                music_avg_lufs_premaster=round(Mavg, 1), events=rep, deliberate=DELIBERATE, music_plan=[(a, b, c) for a, b, c, _ in plan])
     json.dump(meta, open(out[:-4] + '.json', 'w'), indent=1, ensure_ascii=False)
     print(f"mix {out}: {meta['seconds']} s, {meta['lufs']} LUFS, {meta['tp']} dBTP; mp3 {meta['mp3_lufs']} LUFS, {meta['mp3_tp']} dBTP; {len(rep)} SFX events")
 
-if __name__ == '__main__': mix(sys.argv[1], sys.argv[2], sys.argv[3])
+if __name__ == '__main__': mix(sys.argv[1], sys.argv[2], sys.argv[3], MUSIC_V4 if sys.argv[4:5] == ['v4'] else None)
