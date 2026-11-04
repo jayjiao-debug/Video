@@ -1,9 +1,9 @@
 """ep60 sound effects: pick the good ElevenLabs takes, tune the tonal ones onto D Hijaz tones (owner: tonal SFX in the
 track's key), trim lead-in silence, fade abrupt ends, peak-normalise to -3 dBFS, write 48 kHz 24-bit WAV.
 
-    python3 sfx_prep.py NEW_DIR OLD_DIR OUT_DIR
+    python3 sfx_prep.py NEW_DIR OLD_DIR OUT_DIR          (ONLY=name1,name2 ... to rebuild some and merge into sfx_rows.json)
 
-NEW_DIR = the mp3s from voice-output out/ep60-sfx-01, -02, -03; OLD_DIR = the first 15 (S01-S12, G1-G3).
+NEW_DIR = the mp3s from voice-output out/ep60-sfx-01 ... -04; OLD_DIR = the first 15 (S01-S12, G1-G3).
 Tuning is varispeed (pitch and length move together), measured first: the strongest partial -> nearest D/F#/A
 (or an in-scale tone when that is the smaller move). Prints name, length, peak time, loudness.
 """
@@ -12,7 +12,8 @@ from fractions import Fraction
 from scipy import signal
 SR = 48000
 NEW, OLD, OUT = sys.argv[1:4]
-# (out name, dir, source file, semitones, kind, what it is)   kind: shot = one-shot, amb = ambience take, loop = seamless loop
+# (out name, dir, source file, semitones, kind, what it is)   kind: shot = one-shot, amb = ambience take, loop = seamless loop,
+#   chorus = one voice layered into a tiny crowd (4 copies detuned -1..+2 st, 0-31 ms apart, spread L-R, cut short)
 ITEMS = [
  ('X01_linen_wrap', NEW, 'X01_linen_wrap', 0, 'shot', 'linen bandage wrapped round a body: soft dry cloth rustle and pulls (embalming)'),
  ('X02_canopic_lid_clink', NEW, 'X02_canopic_lid', +1.12, 'shot', 'stone lid set on a canopic jar: clinks + short scrape (tuned F7 -> F#7)'),
@@ -41,6 +42,7 @@ ITEMS = [
  ('X22_comic_plop', NEW, 'X22_comic_plop', +1.93, 'shot', 'cartoon cork plop, 0.35 s (Ammit\'s hippo wiggle, shot 31; tuned C4 -> D4)'),
  ('X23_whip_crack', NEW, 'X23_whip_crack', 0, 'shot', 'one leather whip crack + short echo (the overseer shabti, shot 51)'),
  ('X24_hoe_chops', NEW, 'X24_hoe_chops', 0, 'shot', 'wooden hoe into soft earth, four chops ~0.88 s apart: slice them onto beats (shot 51)'),
+ ('X25_tiny_chorus', NEW, 'X25b_tiny_chorus_hey', 0, 'chorus', 'a tiny crowd of squeaky voices answers at once, 0.6 s (the shabtis\' 「我在！」, shot 50)'),
  ('S01_heartbeat', OLD, 'S01_heartbeat', 0, 'shot', 'slow deep heartbeat, close'),
  ('S02_scale_settle', OLD, 'S02_scale_settle', +0.61, 'shot', 'balance tilting and settling, creak + small tick (tick tuned to D6)'),
  ('S03_croc_snap', OLD, 'S03_croc_snap', 0, 'shot', 'crocodile jaws snap with a short low growl'),
@@ -66,7 +68,9 @@ def retune(y, st):
 if __name__ == '__main__':
     import pyloudnorm as pyln
     os.makedirs(OUT, exist_ok=True); rows = []
+    only = set(filter(None, os.environ.get('ONLY', '').split(',')))
     for name, d, src, st, kind, what in ITEMS:
+        if only and name not in only: continue
         y = load(f'{d}/{src}.mp3'); y = signal.sosfilt(signal.butter(2, 25, 'high', fs=SR, output='sos'), y, axis=0); y = retune(y, st)
         pk = np.abs(y).max()
         if kind == 'shot':   # keep 10 ms before the first sound; fade an abrupt end (or a 50 ms safety fade)
@@ -74,6 +78,13 @@ if __name__ == '__main__':
             abrupt = np.abs(y[-int(0.03 * SR):]).max() / pk > 10 ** (-30 / 20)
             k = min(int((0.5 if abrupt else 0.05) * SR), len(y) // 3); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
             k = int(0.002 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]
+        elif kind == 'chorus':
+            e = np.abs(y).max(1); i0 = max(0, int(np.argmax(e > pk * 10 ** (-45 / 20))) - int(0.005 * SR)); y = y[i0:i0 + int(0.62 * SR)]
+            out = np.zeros((len(y) + int(0.05 * SR), 2))
+            for st_, d_, pan in ((0, 0.0, 0.0), (-1.0, 0.012, -0.6), (1.0, 0.022, 0.6), (2.0, 0.031, -0.25)):
+                v = retune(y, st_).mean(1)[:len(y)]; i = int(d_ * SR); th = (pan + 1) * np.pi / 4
+                out[i:i + len(v), 0] += v * np.cos(th); out[i:i + len(v), 1] += v * np.sin(th)
+            y = out; k = int(0.15 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2; k = int(0.002 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]
         elif kind == 'amb':
             k = int(0.08 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]; k = int(0.3 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None]
         g = 10 ** (-3 / 20) / np.abs(y).max(); y = y * g
@@ -81,4 +92,7 @@ if __name__ == '__main__':
         L = pyln.Meter(SR, block_size=min(0.4, len(y) / SR - 0.01)).integrated_loudness(y)
         row = dict(name=name, len=round(len(y) / SR, 2), hit=round(float(np.argmax(np.abs(y).max(1)) / SR), 2), lufs=round(L, 1), kind=kind, st=st, what=what)
         rows.append(row); print(json.dumps(row, ensure_ascii=False))
+    if only and os.path.exists(f'{OUT}/sfx_rows.json'):   # merge: keep the other rows, in ITEMS order
+        old = {r['name']: r for r in json.load(open(f'{OUT}/sfx_rows.json'))}; old.update({r['name']: r for r in rows})
+        rows = [old[n] for n, *_ in ITEMS if n in old]
     json.dump(rows, open(f'{OUT}/sfx_rows.json', 'w'), ensure_ascii=False, indent=1)

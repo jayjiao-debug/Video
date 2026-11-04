@@ -77,7 +77,7 @@ def parse_sync(paths):
                             lab = clean(re.split(r'\(', nxt)[0]) or clean(nxt)
                         elif re.fullmatch(r'\W*[\u2013\-]\W*', before) and last: lab = last + ' end'
                         elif has_word(before_s): lab = clean(before_s)
-                        elif last and after.strip().startswith('(') or (last and not has_word(after)): lab = None
+                        elif last and (after.strip().lstrip('*').strip().startswith('(') or not has_word(after)): lab = None
                         else: lab = clean(re.split(r'\(', after)[0]) or clean(after)
                         if lab is None: k += 1; lab_use = last
                         else:

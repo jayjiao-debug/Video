@@ -98,7 +98,7 @@ export const Shot19: React.FC<ShotProps> = ({t}) => {
 };
 
 /* ================= 20 · 55.4–58.4 · three punch-ins: 碎骨者 snaps a bone, 吞影者 gulps a shadow, 食血者 licks a red drop ================= */
-export const S20 = {cuts: [0, 0.9, 1.8], crack: 0.4, gulp: 1.35, drip: 2.25};
+export const S20 = {cuts: [0, 0.9, 1.8], crack: 0.4, gulp: 1.3, drip: 2.2};
 const Bone: React.FC<{a: V; b: V; c: {OW: number; LW: number}; brk: number; t: number}> = ({a, b, c, brk}) => {
 	const m: V = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], half = (p: V, q: V, rot: number, piv: V, k: string) => {
 		const L = Math.hypot(q[0] - p[0], q[1] - p[1]), ang = Math.atan2(q[1] - p[1], q[0] - p[0]) * 180 / Math.PI;
@@ -138,12 +138,12 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 		fig = [fx + shake, fy];
 	} else if (i === 1) { // 吞影者: the ibis opens his beak and gulps a little shadow of a person
 		cast = JUDGE.ibis; name = '吞影者';
-		const gape = keys(t, [[1.05, 0], [1.2, 1], [1.27, 1], [1.31, 0]]), gulp = hit(t, S20.gulp, 0.25);
+		const gape = keys(t, [[1.0, 0], [1.15, 1], [1.22, 1], [1.26, 0]]), gulp = hit(t, S20.gulp, 0.25);
 		pose = jPose(t, 1, {lean: 2, head: 2 - 8 * gape + 6 * gulp, neck: -4 * gape + 3 * gulp});
 		const [fx, fy] = placeBy(pose, s, -1, 'head', [0.6, -1.2], face);
 		const beakTip = figXY(pose, fx, fy, s, -1, 'head', [3.2, 0.0]), beakBase = figXY(pose, fx, fy, s, -1, 'head', [1.2, -0.75]);
-		const suck = up(t, 1.1, 0.2), wx = lerp(beakTip[0] - 110, beakBase[0], suck), wy = lerp(beakTip[1] + 20, beakBase[1], suck) + 10 * Math.sin(t * 5) * (1 - suck);
-		front = <g>{t < 1.31 && <Wisp x={wx} y={wy} k={lerp(2.3, 0.3, suck)} o={1 - 0.6 * suck} t={t} stretch={0.6 * bell(t, 1.1, 1.31)} />}</g>;
+		const suck = up(t, 1.05, 0.2), wx = lerp(beakTip[0] - 110, beakBase[0], suck), wy = lerp(beakTip[1] + 20, beakBase[1], suck) + 10 * Math.sin(t * 5) * (1 - suck);
+		front = <g>{t < 1.26 && <Wisp x={wx} y={wy} k={lerp(2.3, 0.3, suck)} o={1 - 0.6 * suck} t={t} stretch={0.6 * bell(t, 1.05, 1.26)} />}</g>;
 		extra = <InBone pose={pose} x={fx} y={fy} s={s} face={-1} bone="head"><IbisGape c={c_(s * 1.13)} open={gape} /></InBone>;
 		const lump = up(t, S20.gulp - 0.05, 0.35), lp = figXY(pose, fx, fy, s, -1, 'neck', [0.05, lerp(-1.1, 0.4, lump)]);
 		light = <>{lump > 0 && lump < 1 && <ellipse cx={lp[0]} cy={lp[1]} rx={22} ry={16} fill="#3C3F47" stroke={PAL.ink} strokeWidth={2} />}
@@ -343,7 +343,7 @@ export const Shot25: React.FC<ShotProps> = ({t}) => {
 };
 
 /* ================= 26 · 72.1–74.5 · 「这条，你能过吗？」: the horned judge turns and stares straight at you; slow push on his eyes ================= */
-export const S26 = {turn: [0.16, 0.46], lock: 0.8};
+export const S26 = {turn: [0.16, 0.46], lock: 0.76};
 const FrontBust: React.FC<{k: number; t: number; look: number; blink: number}> = ({k, t, look, blink}) => {
 	const c = {OW: 2.7 / k, LW: 1.5 / k}, br = 0.04 * Math.sin(t * 1.6);
 	const eye = (sg: number) => { const ex = sg * 0.66, ey = -0.72, L = 0.92, h = 0.26 * (1 - 0.85 * blink), rb = sg > 0 ? 1 : 0;
