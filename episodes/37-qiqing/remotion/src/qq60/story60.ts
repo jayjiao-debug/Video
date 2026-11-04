@@ -1,4 +1,4 @@
-/* ep60 《死后称心脏》 timeline, generated from episodes/60-xinzang/script.md (v1); v2 (owner 15:10): the separate title card (shot 4, 3.0 s) is gone — the title lives inside the opening scenes — so every shot after 7.9 s is 3.0 s earlier (157.6 s). Shot numbers are kept (there is no shot 4). v2b (owner 15:40): the title stays in shot 3 only, so shot 3 runs to 8.4 and shot 5 is 8.4–11.3. Times in seconds; this is the final clock (our music
+/* ep60 《死后的心脏》 timeline, generated from episodes/60-xinzang/script.md (v1); v2 (owner 15:10): the separate title card (shot 4, 3.0 s) is gone — the title lives inside the opening scenes — so every shot after 7.9 s is 3.0 s earlier (157.6 s). Shot numbers are kept (there is no shot 4). v2b (owner 15:40): the title stays in shot 3 only, so shot 3 runs to 8.4 and shot 5 is 8.4–11.3. Times in seconds; this is the final clock (our music
    is composed to this cut). sub: one centred line, [key] = gold key word. pic: the shot brief. cue/sfx: the soundtrack plan. */
 export type Shot = {n: number; a: number; b: number; sub: string; cue: string; pic: string; sfx: string; cb: boolean; stamp?: {era: string; place: string; src?: string}};
 export const SHOTS: Shot[] = [
@@ -550,7 +550,7 @@ export const SHOTS: Shot[] = [
   "b": 157.6,
   "sub": "你的心，和羽毛一样[轻]吗？",
   "cue": "mystic → dead stop",
-  "pic": "END CARD: the last shot dims to ~30 %; red J seal pressed in; film title 《死后称心脏》 (two lines); the closing question centred; pill 「关注 Juno · 一起探索世界」; sources line (below). Hold 6.0 s, fade to black.",
+  "pic": "END CARD: the last shot dims to ~30 %; red J seal pressed in; film title 《死后的心脏》 (two lines); the closing question centred; pill 「关注 Juno · 一起探索世界」; sources line (below). Hold 6.0 s, fade to black.",
   "sfx": "Music already stopped (dead stop before the card); seal-press thump; one finger-cymbal ring-out.",
   "cb": false
  }

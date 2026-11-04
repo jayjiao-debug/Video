@@ -263,7 +263,7 @@ export const _k = {T, R, chain};
 /* ---------------- v2 (owner 15:10): parallax layers and the title inside the world ---------------- */
 /** a layer scaled by k about world point c (parallax inside one Stage camera) */
 export const layerT = (k: number, c: V) => `translate(${c[0]},${c[1]}) scale(${k}) translate(${-c[0]},${-c[1]})`;
-export const TITLE_TXT = '死后称心脏';
+export const TITLE_TXT = '死后的心脏';
 /** where the title sits on screen at the 3 → 5 dissolve (shot 3 settles on it, shot 5 starts on it): centre x, y and the title width */
 export const TS = {x: 640, y: 268, w: 700};
 /** the gilded title in its cartouche, drawn in SCREEN space (put it in Stage60's `screen` layer, projected from its world anchor).

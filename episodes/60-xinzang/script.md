@@ -1,4 +1,4 @@
-# ep60 《死后称心脏》 · script v1 (2026-11-04)
+# ep60 《死后的心脏》（原名《死后称心脏》，owner 15:55 改名） · script v1 (2026-11-04)
 
 Douyin knowledge film, Juno / VIBE知识大赏, new Egypt series. Subtitle-only, no narration. Facts: `facts.md` in this folder (only ✓ rows are on screen; every line carries its fact rows in round brackets).
 

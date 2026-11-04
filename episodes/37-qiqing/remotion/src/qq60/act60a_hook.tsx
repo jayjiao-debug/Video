@@ -223,7 +223,7 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 			<ellipse cx={GX - 280} cy={GG - 90} rx={460} ry={240} fill="url(#a3-shade)" />
 			<AmmitEyes x={GX - 300} y={GG - 120} s={84} open={eyes} t={t} />
 			{/* the crown of the gate with the title (in the light layer: the gold is never worn) */}
-			<GateCrown cx={GX} cy={C3.cy} fs={FS3} lit={lit} land={land} t={t} id="a3c" title="死后称心脏" />
+			<GateCrown cx={GX} cy={C3.cy} fs={FS3} lit={lit} land={land} t={t} id="a3c" title="死后的心脏" />
 			{land > 0.02 && <g style={{mixBlendMode: 'screen'}} opacity={land}>{Array.from({length: 16}, (_, i) => { const an = (i / 16) * Math.PI * 2 + 0.2;
 				return <path key={i} d={poly([[GX, C3.cy], [GX + Math.cos(an - 0.04) * 1600, C3.cy + Math.sin(an - 0.04) * 900], [GX + Math.cos(an + 0.04) * 1600, C3.cy + Math.sin(an + 0.04) * 900]])} fill="#FFE29A" opacity={0.18} />; })}</g>}
 			<DustBurst t={t} t0={1.3} x={GX} y={C3.cy} rx={cw / 2} ry={FS3 * 0.85} n={110} seed={12} life={1.5} />

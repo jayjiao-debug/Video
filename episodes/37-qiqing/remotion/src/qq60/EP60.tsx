@@ -1,4 +1,4 @@
-/* ep60 master 《死后称心脏》 · 4:3 1440 × 1080 · 30 fps · 160.6 s (script: episodes/60-xinzang/script.md, timeline: story60.ts).
+/* ep60 master 《死后的心脏》 · 4:3 1440 × 1080 · 30 fps · 160.6 s (script: episodes/60-xinzang/script.md, timeline: story60.ts).
    Each shot is a component from one of the act files (act60a: 1–14, act60b: 15–33, act60c: 34–55), drawn on its own clock:
    <C t dur n /> with t = seconds since the shot's start (negative while it transitions in; > dur while the next one transitions in over it).
    The master draws the frame ONCE over every shot: bands, the subtitle line (story60), the stamp (shots 5, 51, 53), the J seal and the
@@ -29,7 +29,7 @@ const Missing: React.FC<ShotProps> = ({t, n}) => { const s = SHOTS.find((x) => x
 			<div style={{marginTop: 18}}>{s.pic}</div>
 			<div style={{marginTop: 18, fontSize: 24, opacity: 0.7}}>♪ {s.cue} · {s.sfx}</div></div></AbsoluteFill>; };
 
-const END_N = 55, TITLE = '死后称心脏';
+const END_N = 55, TITLE = '死后的心脏';
 const SOURCES = '资料：大英博物馆（阿尼纸草 EA10470、胡内弗纸草 EA9901）· 大都会艺术博物馆 · 沃尔特斯美术馆 · 利物浦博物馆 · 伦敦大学学院 · Lichtheim《古埃及文学》';
 
 /** the end card over shot 55, seamless (owner 15:10): the picture keeps running under a soft vignette (no dim plate), the J cartouche,
