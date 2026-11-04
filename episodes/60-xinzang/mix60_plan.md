@@ -70,13 +70,13 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | s11_wing4 | sfx | 28.08 | X34_ba_wings | 0.39 | 0.33 | +0.11 | -1 | - | 0.04 | - | t<-11:wing+flaps#4 | - |
 | y | s11_wing5 | sfx | 28.34 | X34_ba_wings | 0.39 | 0.33 | +0.11 | -2 | - | 0.04 | - | t<-11:wing+flaps#5 | - |
 | y | s11_wing6 | sfx | 28.60 | X34_ba_wings | 0.39 | 0.33 | +0.11 | -3 | - | 0.04 | - | t<-11:wing+flaps#6 | - |
-| y | s12_flip1 | sfx | 29.13 | X35_papyrus_flick | hit | 0.03 | +0.1 | -2 | - | 0.03 | - | t<-12:spell+sheets#1 | spell sheets flip on the playful eighths: one papyrus flick each |
-| y | s12_flip2 | sfx | 29.4 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:spell+sheets#2 | - |
-| y | s12_flip3 | sfx | 29.67 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:spell+sheets#3 | - |
-| y | s12_flip4 | sfx | 30.2 | X35_papyrus_flick | hit | 0.03 | +0.1 | -2 | - | 0.03 | - | t<-12:spell+sheets#4 | - |
-| y | s12_flip5 | sfx | 30.47 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:spell+sheets#5 | - |
-| y | s12_flip6 | sfx | 30.74 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:spell+sheets#6 | - |
-| y | s12_flip7 | sfx | 31.27 | X35_papyrus_flick | hit | 0.03 | +0.1 | -2 | - | 0.03 | - | t<-12:spell+sheets#7 | - |
+| y | s12_flip1 | sfx | 29.13 | X35_papyrus_flick | hit | 0.03 | +0.1 | -2 | - | 0.03 | - | t<-12:page+flips#1~spell+sheets#1 | spell sheets flip on the playful eighths: one papyrus flick each |
+| y | s12_flip2 | sfx | 29.4 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:page+flips#2~spell+sheets#2 | - |
+| y | s12_flip3 | sfx | 29.67 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:page+flips#3~spell+sheets#3 | - |
+| y | s12_flip4 | sfx | 30.2 | X35_papyrus_flick | hit | 0.03 | +0.1 | -2 | - | 0.03 | - | t<-12:page+flips#4~spell+sheets#4 | - |
+| y | s12_flip5 | sfx | 30.47 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:page+flips#5~spell+sheets#5 | - |
+| y | s12_flip6 | sfx | 30.74 | X35_papyrus_flick | hit | 0.03 | +0.1 | -4 | - | 0.03 | - | t<-12:page+flips#6~spell+sheets#6 | - |
+| y | s12_flip7 | sfx | 31.27 | X35_papyrus_flick | hit | 0.03 | +0.1 | -2 | - | 0.03 | - | t<-12:page+flips#7~spell+sheets#7 | - |
 | y | s14_pen | sfx | 35.95 | X05_reed_pen_scratch | 0.8 | 0.8 | +1.05 | -2 | - | 0.15 | - | t<-14:pen+writes | Ani's name written in |
 | y | s15_door | sfx | 37.95 | S08_stone_door | 1.0 | 1.0 | +0.69 | -3 | 0.08 | 0.06 | - | t<-15:stone+door+grinds | the tomb door grinds shut |
 | y | s16_knife1 | sfx | 40.8 | X19_knife_shing | hit | - | - | -4 | - | - | pan=-0.45 | t<-16:knife_1 | first and last knife glint only |
