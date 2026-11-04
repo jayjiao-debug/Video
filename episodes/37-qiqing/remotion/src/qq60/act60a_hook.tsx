@@ -84,7 +84,7 @@ export const Shot1: React.FC<ShotProps> = ({t}) => {
 			</g>}
 			{/* gold dust flying toward us */}
 			<g transform={layerT(1 + 0.12 * t, C)}><Dust t={t} box={[0, 40, 1440, 940]} n={90} seed={13} c="#FFE2A0" o={0.85} vx={-5} vy={-8} r={2.2} /></g>
-			<Shaft pts={[[380, 40], [560, 40], [900, 940], [620, 940]]} o={0.22} />
+			<Shaft pts={[[300, 40], [440, 40], [560, 940], [380, 940]]} o={0.14} />
 		</>}>
 		<GoldDefs id={id} />
 		<defs><linearGradient id="a1-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0B1236" /><stop offset="0.55" stopColor="#1C2F86" /><stop offset="0.85" stopColor="#5A3A86" /><stop offset="1" stopColor="#B8604A" /></linearGradient>
@@ -109,8 +109,6 @@ export const Shot1: React.FC<ShotProps> = ({t}) => {
 			{trail}
 			{t < tRel && <Puff x={puff[0]} y={puff[1]} r={56} a={pa} sq={sq} />}
 			<path d={limb(Sh, E, 74, 58)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={5} />
-			{(() => { const m = [lerp(Sh[0], E[0], 0.55), lerp(Sh[1], E[1], 0.55)], a = Math.atan2(E[1] - Sh[1], E[0] - Sh[0]) * 180 / Math.PI + 90;
-				return <g transform={`translate(${m[0]},${m[1]}) rotate(${a})`}><rect x={-64} y={-18} width={128} height={36} rx={8} fill={`url(#${id}-gold)`} stroke={PAL.ink} strokeWidth={4} /><rect x={-64} y={-5} width={128} height={11} fill={PAL.blue} /></g>; })()}
 			<path d={limb(E, W, 56, 40)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={5} />
 			<path d={`M${E[0] + 22} ${E[1] - 4}Q${lerp(E[0], W[0], 0.5) + 30} ${lerp(E[1], W[1], 0.5)} ${W[0] + 24} ${W[1] + 10}`} fill="none" stroke={PAL.skinM2} strokeWidth={11} opacity={0.6} strokeLinecap="round" />
 			<g transform={`translate(${W[0]},${W[1]}) rotate(${fa * 180 / Math.PI + 90})`}>
@@ -154,7 +152,7 @@ export const Shot2: React.FC<ShotProps> = ({t}) => {
 				<Glow x={hp[0]} y={hp[1]} r={160} c="gold" o={0.35 + 0.4 * beat} />
 				<Shaft pts={[[560, -200], [700, -200], [hp[0] + 160, hp[1] + 120], [hp[0] - 60, hp[1] + 120]]} o={0.3} />
 				<g transform={layerT(kB, cc)}><Glow x={720} y={260} r={380} c="gold" o={0.28} /></g>
-				<g transform={layerT(kF, cc)}><Glow x={1280} y={880} r={260} c="warm" o={0.6 + 0.1 * flick(t, 2)} /><Smoke t={t} x={1280} y={850} n={8} seed={6} h={420} o={0.25} /></g>
+				<g transform={layerT(kF, cc)}><Glow x={1040} y={880} r={260} c="warm" o={0.6 + 0.1 * flick(t, 2)} /><Smoke t={t} x={1040} y={870} n={8} seed={6} h={420} o={0.25} /></g>
 				<Dust t={t} box={[200, 0, 1500, 900]} n={50} seed={8} c="#FFD2A0" o={0.55} vx={-3} vy={-5} />
 			</>}>
 			<GoldDefs id={id} />
@@ -174,8 +172,9 @@ export const Shot2: React.FC<ShotProps> = ({t}) => {
 			<BigMummy x={mx0} y={my0} s={ms} t={t} id={id} glow={glow} heartShow={0.7 + 0.3 * beat} rings={B2.map((b) => (t - b) / 0.75)} />
 			{/* foreground: a canopic jar and a lamp, passing faster */}
 			<g transform={layerT(kF, cc)}>
-				<CanopicJar x={1180} y={1080} s={42} head="jackal" t={t} glow={0.3} />
-				<Lamp x={1300} y={1000} s={2.0} t={t} seed={3} />
+				<CanopicJar x={1150} y={930} s={26} head="jackal" t={t} glow={0.3} />
+				<CanopicJar x={1255} y={945} s={24} head="falcon" t={t} glow={0.3} />
+				<Lamp x={1040} y={940} s={1.6} t={t} seed={3} />
 			</g>
 		</Stage60>
 	</AbsoluteFill>;
@@ -215,8 +214,8 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 			<Glow x={pan[0]} y={pan[1] - 30} r={220 * (1 + 0.6 * clang)} c="red" o={0.55 + 0.4 * clang} />
 			{clang > 0.02 && <Sparkle x={pan[0] - 40} y={pan[1] + 6} r={70 * clang} o={clang} a={20} />}
 			{t < tL && <GlowHeart x={pan0[0]} y={hy} s={BS} glow={1.2} a={-8 * (1 - fall)} />}
-			<ellipse cx={GX - 300} cy={GG - 60} rx={420} ry={200} fill="url(#a3-shade)" />
-			<AmmitEyes x={GX - 330} y={GG - 84} s={56} open={eyes} t={t} />
+			<ellipse cx={GX - 300} cy={GG - 80} rx={460} ry={240} fill="url(#a3-shade)" />
+			<AmmitEyes x={GX - 330} y={GG - 110} s={84} open={eyes} t={t} />
 			<Dust t={t} box={[-600, -700, 1900, 900]} n={110} seed={9} c="#FFE2A0" o={0.6} vx={-4} vy={-5} r={2.4} />
 			{/* the braziers in the foreground (parallax: they slide in from the edges as we pull back) */}
 			<g transform={layerT(kF, cc)}>{[[-299, 1], [1579, -1]].map(([x, k]) => <g key={x}><Glow x={x} y={430} r={460} c="warm" o={0.7 + 0.1 * flick(t, k + 2)} /><Embers t={t} x={x} y={420} n={16} seed={x > 0 ? 5 : 6} h={600} spread={110} s={1.8} /></g>)}</g>

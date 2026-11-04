@@ -61,8 +61,8 @@ const Pylon5: React.FC<{t: number}> = ({t}) => {
 		<path d={poly([[x0, 520], [x1, 520], [x1 - k * 34, 122], [x0 + k * 34, 122]])} fill="#D9A866" stroke={PAL.ink} strokeWidth={3} />
 		<path d={poly([[x0 + k * 34 - 6, 122], [x1 - k * 34 + 6, 122], [x1 - k * 30 + 10, 104], [x0 + k * 30 - 10, 104]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={2.4} />
 		{Array.from({length: 9}, (_, i) => <line key={i} x1={x0 + 10} x2={x1 - 10} y1={160 + i * 40} y2={160 + i * 40} stroke="#B98A50" strokeWidth={2} opacity={0.6} />)}
-		{/* a relief: the king before a god, in red-ochre outline, low on the tower */}
-		<g opacity={0.55} transform={`translate(${(x0 + x1) / 2 - 40},330)`} fill="none" stroke="#8A3A1E" strokeWidth={4}><path d="M0 170L6 40L24 0L40 40L44 170M-10 70L60 50M80 170L84 50L100 20L116 50L118 170" /><circle cx={24} cy={-12} r={12} /><circle cx={100} cy={8} r={12} /></g>
+		{/* carved sign columns low on the tower (the upper face stays plain: the stamp sits over the right one) */}
+		<GlyphColumns x={(x0 + x1) / 2 - 70} y={300} cols={3} rows={5} cell={42} seed={x0 > 0 ? 8 : 7} mono="#8A4A22" />
 	</g>;
 	const pen = (x: number, ph: number) => <g><line x1={x} y1={520} x2={x} y2={128} stroke="#6A4626" strokeWidth={7} />
 		<path d={`M${x} 132Q${x + 26} ${138 + 6 * Math.sin(t * 3 + ph)} ${x + 52} ${136 + 10 * Math.sin(t * 3.4 + ph)}L${x + 50} ${152 + 8 * Math.sin(t * 3 + ph)}Q${x + 24} ${152 + 4 * Math.sin(t * 2.6 + ph)} ${x} 150Z`} fill={PAL.red} stroke={PAL.ink} strokeWidth={1.6} /></g>;
@@ -94,12 +94,12 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 	let pose: Pose = {...POSES.rest, lean: lerp(1, 7, sm(seg(t, 0.2, tTap))) - 3 * sm(seg(t, tTap + 0.3, tTap + 1.0)), neck: 4, head: lerp(2, 10, sm(seg(t, 0, tTap))) - 6 * sm(seg(t, 1.9, 2.5)), rt: -8, at: 11, rk: 3, ak: 2};
 	pose = wristTo(reach(pose, 'f', hTarget), 'f', t < tTap + 0.3 ? 82 : 40);
 	const slip = seg(t, tSlip - 0.15, tSlip);
-	pose = wristTo(reach(pose, 'b', [0.6 - 0.2 * slip, -8.3]), 'b', 20 + 30 * slip);
+	pose = wristTo(reach(pose, 'b', [-2.0 - 0.2 * slip, -8.6]), 'b', -20 + 30 * slip);
 	const g = solve(pose), fGrip = toW(fx, GY5, S, 1, ap(g.fH, [0.02, 0.6])), bGrip = toW(fx, GY5, S, 1, ap(g.bH, [0.02, 0.6]));
 	const palOn = t >= tTap, palP: V = palOn ? [tableX + 22, tableY - 11] : [fGrip[0] + 52, fGrip[1] - 2];
-	let lotus: V = [bGrip[0] + 4, bGrip[1] + 6], la = 18;
-	if (t > tSlip) { const u = cl((t - tSlip) / (tLand - tSlip)); lotus = [lerp(bGrip[0] + 4, bGrip[0] + 70, u), lerp(bGrip[1] + 6, GY5 - 6, u * u)]; la = lerp(18, 96, sm(u)); }
-	if (t > tLand) { const v = t - tLand; lotus = [bGrip[0] + 70, GY5 - 6 - 5 * Math.exp(-v / 0.1) * Math.abs(Math.sin(v * 22))]; la = 96; }
+	let lotus: V = [bGrip[0] - 2, bGrip[1] + 8], la = -32;
+	if (t > tSlip) { const u = cl((t - tSlip) / (tLand - tSlip)); lotus = [lerp(bGrip[0] - 2, bGrip[0] - 90, u), lerp(bGrip[1] + 8, GY5 - 6, u * u)]; la = lerp(-32, -100, sm(u)); }
+	if (t > tLand) { const v = t - tLand; lotus = [bGrip[0] - 90, GY5 - 6 - 5 * Math.exp(-v / 0.1) * Math.abs(Math.sin(v * 22))]; la = -100; }
 	// the reed pen tucked behind the ear: drawn over the head, then the ear drawn again over the pen (it passes UNDER the ear)
 	const H = g.head, penA = ap(H, [-0.75, -1.9]), penB = ap(H, [0.34, -0.86]);
 	const tp = toScreen(cam, TX5, TY5);
@@ -112,7 +112,7 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 			<Glow x={TX5} y={TY5} r={520} ry={170} c="gold" o={0.3} />
 			<Glow x={fx - 60} y={600} r={260} c="warm" o={0.3} />
 			<Dust t={t} box={[0, 100, 1300, 860]} n={60} seed={5} c="#FFE0A0" o={0.65} vx={6} vy={-3} />
-			{t > tLand - 0.02 && <DustBurst t={t} t0={tLand} x={lotus[0] + 20} y={GY5 - 4} rx={30} ry={6} n={14} seed={2} c="#FFF0C0" life={0.6} />}
+			{t > tLand - 0.02 && <DustBurst t={t} t0={tLand} x={lotus[0] - 20} y={GY5 - 4} rx={30} ry={6} n={14} seed={2} c="#FFF0C0" life={0.6} />}
 		</>}
 		screen={<GildedTitle x={tp[0]} y={tp[1]} w={TS.w * cam.z} lit={1} t={t + 3} id="a5t" />}>
 		<defs><linearGradient id="a5-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3E2470" /><stop offset="0.35" stopColor="#B23A56" /><stop offset="0.7" stopColor="#F2743A" /><stop offset="1" stopColor="#FFC456" /></linearGradient>
@@ -127,7 +127,7 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 		<River x0={-400} x1={1900} y={528} h={88} t={t} speed={10} />
 		<rect x={584} y={528} width={112} height={86} fill="#FFC870" opacity={0.5} />
 		{[0, 1, 2].map((k) => <rect key={k} x={598 + 8 * Math.sin(t * 2 + k)} y={536 + k * 24} width={84 - k * 14} height={5} fill="#FFE6A0" opacity={0.85} />)}
-		<SailBoat x={200 + 18 * t} y={600} s={0.7} t={t} />
+		<SailBoat x={730 + 16 * t} y={604} s={0.62} t={t} />
 		{/* east bank (ours): palms, mud-brick houses */}
 		<rect x={-400} y={614} width={2300} height={90} fill="#C9935A" />
 		{[[840, 110, 700], [970, 150, 704], [1130, 100, 700], [1240, 170, 706]].map(([x, h, y], i) => <House key={x} x={x} y={y} w={i % 2 ? 140 : 110} h={h} seed={i + 3} c={['#C98A52', '#D49A60', '#BE7E48', '#CF955C'][i]} />)}
@@ -139,15 +139,13 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 		<path d={poly([[tableX - 70, tableY], [tableX + 110, tableY], [tableX + 104, tableY + 12], [tableX - 64, tableY + 12]])} fill="#9A6A3A" stroke={PAL.ink} strokeWidth={2.4} />
 		{[tableX - 54, tableX + 94].map((lx) => <path key={lx} d={poly([[lx - 5, tableY + 12], [lx + 5, tableY + 12], [lx + 7, GY5], [lx - 7, GY5]])} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={2} />)}
 		<path d={poly([[tableX + 40, tableY], [tableX + 70, tableY], [tableX + 66, tableY - 34], [tableX + 44, tableY - 34]])} fill="#C9874A" stroke={PAL.ink} strokeWidth={2} />
-		{/* the palette lies on the table once set down (drawn before you: your hand rests on it, not under it) */}
-		{palOn && <ScribePalette x={palP[0]} y={palP[1]} a={0} w={140} />}
+		{/* layering: the palette (carried or set down) and the lotus in the far hand are drawn BEFORE you, so the fists close over them */}
+		<ScribePalette x={palP[0]} y={palP[1]} a={palOn ? 0 : -8} w={140} />
+		<Lotus x={lotus[0]} y={lotus[1]} a={la} len={84} />
 		<God id="a5-you" cast={{...CAST2.scribe, bHand: 'fist', fHand: 'fist'}} pose={pose} x={fx} y={GY5} s={S} sec={{t}} bProp="none" fProp="none" />
 		<line x1={fx + penA[0] * S} y1={GY5 + penA[1] * S} x2={fx + penB[0] * S} y2={GY5 + penB[1] * S} stroke={PAL.ink} strokeWidth={6} strokeLinecap="round" />
 		<line x1={fx + penA[0] * S} y1={GY5 + penA[1] * S} x2={fx + penB[0] * S} y2={GY5 + penB[1] * S} stroke="#C9A060" strokeWidth={3} strokeLinecap="round" />
 		<g transform={`translate(${fx},${GY5}) scale(${S})`}><path transform={mx(H)} d="M0.12 -1.22Q0.42 -1.3 0.42 -0.95Q0.42 -0.62 0.12 -0.62Z" fill={PAL.skinM2} stroke={PAL.ink} strokeWidth={1.5 / S} /></g>
-		{/* carried: the palette in the fist (drawn after the hand, held by its end under the thumb) */}
-		{!palOn && <ScribePalette x={palP[0]} y={palP[1]} a={-8} w={140} />}
-		<Lotus x={lotus[0]} y={lotus[1]} a={la} len={84} />
 	</Stage60>;
 };
 
@@ -219,7 +217,6 @@ const MaskShine: React.FC<{pose: Pose; x: number; y: number; s: number; face: 1 
 		<path d={sp([[1.0, -1.86], [1.5, -1.3], [2.1, -1.08], [2.7, -0.92]], false)} fill="none" stroke={PAL.gold} strokeWidth={lw * 3.2} strokeLinecap="round" />
 		<path d={sp([[0.95, -0.2], [1.6, -0.36], [2.3, -0.52], [2.82, -0.66]], false)} fill="none" stroke={PAL.gold} strokeWidth={lw * 2.4} strokeLinecap="round" />
 		<path d="M-0.52 0.1Q0.0 0.35 0.5 0.12" fill="none" stroke={PAL.gold} strokeWidth={lw * 4} strokeLinecap="round" />
-		<ellipse cx={0.2 + 0.08 * Math.sin(t * 2)} cy={-1.5} rx={0.45} ry={0.2} fill="#9FB0E0" opacity={0.35} transform="rotate(-30 0.2 -1.5)" />
 		<circle cx={1.42} cy={-1.38} r={0.32} fill="url(#g60-gold)" opacity={0.7 + 0.2 * flick(t, 3)} style={{mixBlendMode: 'screen'}} />
 	</g></g>;
 };

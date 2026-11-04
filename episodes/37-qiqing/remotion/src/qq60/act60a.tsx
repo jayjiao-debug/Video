@@ -1,5 +1,7 @@
 /* ep60 act file (a): shots 1–14 (0.0–40.8 s), registered by number (see episodes/60-xinzang/build60.md, sync table sync60_a.md).
    v2 (owner 15:10): the title card (shot 4) is gone; the title is lit into shot 3's lintel and carried into shot 5.
+   Note: [film-second] brackets in the shot comments of act60a_life / act60a_book are on the v1 clock (shots 5+ now start 3.0 s
+   earlier); sync60_a.md has the current times.
    hook 1–3: act60a_hook · life 5–9: act60a_life · the book 10–14: act60a_book · shared helpers: act60a_kit. */
 import type {ShotDef} from './EP60';
 import {Shot1, Shot2, Shot3} from './act60a_hook';

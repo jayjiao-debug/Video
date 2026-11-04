@@ -171,8 +171,10 @@ export const BigMummy: React.FC<{x: number; y: number; s: number; t: number; id:
 		if (i % 2 === 0) wraps.push(<path key={'b' + i} d={poly([[x0 + 2.4, 0.2], [x0 + 2.66, 0.2], [x0 + 0.26, -4.2], [x0, -4.2]])} fill="#EADFC6" stroke="#B9A57E" strokeWidth={lw * 0.7} opacity={0.7} />); }
 	const hp = HEART_AT, g = glow;
 	const heartM = `translate(${hp[0]},${hp[1] + 1.05}) scale(1.25)`;
-	return <g><Mummy x={x} y={y} s={s} t={t} masked /><g transform={`translate(${x},${y}) scale(${s})`}>
-		<clipPath id={cid}><path d={MUMMY_BODY} /></clipPath><clipPath id={`${id}-mx`}><rect x={-2} y={-6} width={15.25} height={8} /></clipPath>
+	// the kit mummy gives the gold mask; its false beard (which would float above the chest when lying face up) is clipped out
+	const hole = `M${x - 5 * s} ${y - 12 * s}H${x + 25 * s}V${y + 5 * s}H${x - 5 * s}Z M${x + 13.4 * s} ${y - 4.4 * s}H${x + 15.2 * s}V${y - 3.36 * s}H${x + 13.4 * s}Z`;
+	return <g><clipPath id={`${id}-kb`}><path d={hole} clipRule="evenodd" /></clipPath><g clipPath={`url(#${id}-kb)`}><Mummy x={x} y={y} s={s} t={t} masked /></g><g transform={`translate(${x},${y}) scale(${s})`}>
+		<clipPath id={cid}><path d={MUMMY_BODY} /></clipPath><clipPath id={`${id}-mx`}><rect x={-2} y={-6} width={16.75} height={8} /></clipPath>
 		<g clipPath={`url(#${id}-mx)`}>
 		<path d={MUMMY_BODY} fill="#E3D5B4" stroke={PAL.ink} strokeWidth={lw * 2.2} />
 		<g clipPath={`url(#${cid})`}>
@@ -190,9 +192,9 @@ export const BigMummy: React.FC<{x: number; y: number; s: number; t: number; id:
 		</g>
 		<path d={MUMMY_BODY} fill="none" stroke={PAL.ink} strokeWidth={lw * 2.2} />
 		</g>
-		{/* a gold collar band across the chest */}
-		<path d="M13.0 -3.36Q13.6 -1.6 13.2 0.1" fill="none" stroke={PAL.ink} strokeWidth={0.42} /><path d="M13.0 -3.36Q13.6 -1.6 13.2 0.1" fill="none" stroke={`url(#${id}-gold)`} strokeWidth={0.32} />
-		<path d="M13.25 -3.3Q13.85 -1.6 13.45 0.1" fill="none" stroke={PAL.blue} strokeWidth={0.12} />
+		{/* a broad collar laid over the chest, below the mask */}
+		{([[13.35, '#2A1912', 0.5], [13.4, `url(#${id}-gold)`, 0.4], [13.75, PAL.blue, 0.26], [14.05, PAL.red, 0.24], [14.32, '#2FA39A', 0.24], [14.58, `url(#${id}-gold)`, 0.22]] as [number, string, number][]).map(([xx, c, w], i) =>
+			<path key={i} d={`M${xx - 0.25} -3.3Q${xx + 0.45} -1.6 ${xx + 0.1} 0.05`} fill="none" stroke={c} strokeWidth={w} />)}
 	</g></g>;
 };
 /** the jar-shaped heart (props60 heart outline, units: base at 0, ~1.8 tall) */
