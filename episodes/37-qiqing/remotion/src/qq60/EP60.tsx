@@ -66,7 +66,7 @@ const Film: React.FC = () => {
 			{s.stamp && stampO > 0 && <Stamp43 stamp={s.stamp} o={stampO} />}
 			{s.n === END_N && <EndCard t={ts} dur={dur} />}
 			<Bands t={t} />
-			{s.sub && <Subtitle t={t} sub={{text: s.sub, t0: s.a, t1: s.b}} />}
+			{s.lines.filter((l) => l.text && t >= l.t0 - 0.2 && t < l.t1 + 0.2).map((l) => <Subtitle key={l.t0} t={t} sub={{text: l.text, t0: l.t0, t1: l.t1}} />)}
 			{s.n === END_N && <AbsoluteFill style={{background: '#000', opacity: sm((ts - (dur - 0.9)) / 0.9)}} />}
 		</AbsoluteFill>
 	</AbsoluteFill></InMaster60.Provider>;
@@ -76,7 +76,7 @@ const Film: React.FC = () => {
 const One: React.FC<{n?: number; from?: number}> = ({n = 1, from = 0}) => {
 	const f = useCurrentFrame(), s = SHOTS.find((x) => x.n === n)!, t = f / FPS - from, D = REG[n], C = D ? D.C : Missing;
 	return <InMaster60.Provider value={true}><AbsoluteFill style={{background: '#08090b'}}><C t={t} dur={s.b - s.a} n={n} />
-		<AbsoluteFill style={{zIndex: 10}}><Bands t={t} />{s.sub && <Subtitle t={t} sub={{text: s.sub}} />}
+		<AbsoluteFill style={{zIndex: 10}}><Bands t={t} />{s.lines.filter((l) => l.text && t + s.a >= l.t0 && t + s.a < l.t1).map((l) => <Subtitle key={l.t0} t={t + s.a} sub={{text: l.text, t0: l.t0, t1: l.t1}} />)}
 			{s.stamp && <Stamp43 stamp={s.stamp} />}</AbsoluteFill></AbsoluteFill></InMaster60.Provider>;
 };
 const _keep = {PIC_CY, SUB_B, FH, Seal43, Img, staticFile, cl, SAFE_R};
