@@ -70,26 +70,26 @@ export const Shot1: React.FC<ShotProps> = ({t}) => {
 	const trail = t > tRel && t < tLand ? Array.from({length: 5}, (_, i) => { const tt = t - (i + 1) * 0.035; if (tt < tRel) return null; const p = arc(cl((tt - tRel) / (tLand - tRel)));
 		return <circle key={i} cx={p[0]} cy={p[1]} r={44 - i * 6} fill="#C8CED8" opacity={0.2 - i * 0.035} />; }) : null;
 	const rays = Array.from({length: 24}, (_, i) => { const a = (i / 24) * Math.PI * 2 + t * 0.08, r0 = 230, r1 = i % 2 ? 520 : 640;
-		return <path key={i} d={poly([[720 + Math.cos(a - 0.035) * r0, 300 + Math.sin(a - 0.035) * r0], [720 + Math.cos(a) * r1, 300 + Math.sin(a) * r1], [720 + Math.cos(a + 0.035) * r0, 300 + Math.sin(a + 0.035) * r0]])} fill="#E8B848" opacity={0.2} />; });
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0A1030" wear={0.1} stain={0.14} wobble={1.6} dark={0.24} darkC="#140C2A"
+		return <path key={i} d={poly([[720 + Math.cos(a - 0.035) * r0, 300 + Math.sin(a - 0.035) * r0], [720 + Math.cos(a) * r1, 300 + Math.sin(a) * r1], [720 + Math.cos(a + 0.035) * r0, 300 + Math.sin(a + 0.035) * r0]])} fill="#EEBF50" opacity={0.24} />; });
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0A1030" wear={0.1} stain={0.14} wobble={1.6} dark={0.12} darkC="#140C2A"
 		light={<>
 			<g transform={layerT(kM, C)}>
-				<Glow x={EX - 220} y={EY - 20} r={240} c="warm" o={0.16 + 0.05 * flick(t, 5)} />
+				<Glow x={EX - 220} y={EY - 20} r={240} c="warm" o={0.22 + 0.06 * flick(t, 5)} />
 				{t > tLand - 0.05 && <DustBurst t={t} t0={tLand} x={B[0]} y={B[1] - 26} rx={60} ry={14} n={26} seed={4} c="#E8E2D2" life={0.7} />}
 			</g>
 			{kF < 3 && <g transform={layerT(kF, C)}>
-				{[-1, 1].map((k) => <Glow key={k} x={720 + k * 562} y={500} r={380 * (1 + 0.4 * flare)} c="warm" o={0.5 + 0.08 * flick(t, k + 3)} />)}
+				{[-1, 1].map((k) => <Glow key={k} x={720 + k * 562} y={500} r={400 * (1 + 0.45 * flare)} c="warm" o={0.62 + 0.09 * flick(t, k + 3)} />)}
 				<Embers t={t} x={720 - 562} y={520} n={14} seed={3} h={400} spread={40} s={1.4} /><Embers t={t} x={720 + 562} y={520} n={14} seed={4} h={400} spread={40} s={1.4} />
 			</g>}
 		</>}>
 		<GoldDefs id={id} />
-		<defs><linearGradient id="a1-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#070B26" /><stop offset="0.55" stopColor="#13216A" /><stop offset="0.85" stopColor="#3A2A66" /><stop offset="1" stopColor="#7A4038" /></linearGradient>
-			<radialGradient id="a1-sun" cx="0.45" cy="0.4" r="0.6"><stop offset="0" stopColor="#F8DA8C" /><stop offset="0.55" stopColor="#E8B23E" /><stop offset="1" stopColor="#B8761A" /></radialGradient>
-			<radialGradient id="a1-halo" cx="0.5" cy="0.5" r="0.5"><stop offset="0.5" stopColor="#D8962E" stopOpacity={0.38} /><stop offset="1" stopColor="#D8962E" stopOpacity={0} /></radialGradient></defs>
+		<defs><linearGradient id="a1-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#090E2E" /><stop offset="0.55" stopColor="#172878" /><stop offset="0.85" stopColor="#4A3276" /><stop offset="1" stopColor="#995041" /></linearGradient>
+			<radialGradient id="a1-sun" cx="0.45" cy="0.4" r="0.6"><stop offset="0" stopColor="#FCE59E" /><stop offset="0.55" stopColor="#EFBA44" /><stop offset="1" stopColor="#C8801C" /></radialGradient>
+			<radialGradient id="a1-halo" cx="0.5" cy="0.5" r="0.5"><stop offset="0.5" stopColor="#E0A036" stopOpacity={0.46} /><stop offset="1" stopColor="#D8962E" stopOpacity={0} /></radialGradient></defs>
 		{/* background: the night sky, the sun's halo and rays (behind everything else), the gold sun disk behind his head, the pyramids */}
 		<g transform={layerT(kB, C)}>
 			<rect x={-600} y={-600} width={2700} height={1400} fill="url(#a1-sky)" />
-			<circle cx={720} cy={300} r={430} fill="url(#a1-halo)" />
+			<circle cx={720} cy={300} r={490} fill="url(#a1-halo)" />
 			<g style={{mixBlendMode: 'screen'}}>{rays}</g>
 			<circle cx={720} cy={300} r={236} fill="#2A1608" opacity={0.5} />
 			<circle cx={720} cy={300} r={228} fill="url(#a1-sun)" stroke={PAL.ink} strokeWidth={5} />

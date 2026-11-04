@@ -1,5 +1,5 @@
 > v2 (owner 15:10): shot 4 (the title card) removed; every time from 10.9 s on is 3.0 s earlier (shifted in this file).
-> v7 (bA, owner 20:59): shot 1 darker, rays behind Anubis, no stars/glint/dust; shot 3 title landing without the line burst and star sparkles (glow swell, sheen, falling gold dust). Title still lands 6.30.
+> v7 (bA, owner 20:59; v7b 21:09 exposure brought halfway back up): shot 1 darker, rays behind Anubis, no stars/glint/dust; shot 3 title landing without the line burst and star sparkles (glow swell, sheen, falling gold dust). Title still lands 6.30.
 > v6 (bA, owner 20:27): shot 6 mask drawn whole (no cut at the lappets), the 13.70 gleam removed; shot 12 signs centred in each page frame. No times moved.
 > v5 (bA, owner 17:59 / 18:06): the hearts are back to the v1/v2 heart scenes (2: the heart's glow under the wrappings, 3: the jar heart
 > dropping onto the pan, 8: the heart lantern with the memory vignettes inside); shot 9's scarab is real size (6.6 × 5.3 cm, ~1/6 of the chest,
