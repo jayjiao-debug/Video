@@ -165,7 +165,7 @@ const S54: React.FC<ShotProps> = ({t, dur}) => {
 		</>}
 		screen={<rect width={FW} height={FH} fill="#05081A" opacity={0.28 * dim} />}>
 		<HallBg t={t} x0={-300} x1={1700} cols={[110, 1330]} glyphs={false} />
-		<BalanceC p={p} x={BX} y={GY} s={s} t={t} />
+		<BalanceC p={p} x={BX} y={GY} s={s} t={t} beat={beat} />
 	</Stage60>;
 };
 

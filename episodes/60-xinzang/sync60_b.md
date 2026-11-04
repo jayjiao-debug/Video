@@ -5,8 +5,8 @@
 > v3 (owner 17:07, builder B): sculpted hands in the shared rig (every god), the shared Heart60 on every pan (18, 24, 27–33), the gulp in 20
 > goes into the beak (shadow between the inside of the beak and the mandibles; it is sucked in 53.35–53.54, beak shut 53.66), the horned judge
 > raises one brow again in 26 (**brow raise 70.15**, held to the end), the 31 roar is bigger (rear back 83.43–83.75, **ROAR 83.85**, jaws
-> wide to 84.27, settles by 84.53; push-in on the roar). Sound events asked for: **17 cobra hiss 43.75 · croc growl 43.90 (jaws open
-> 43.85–44.40) · croc snap 44.60** · **20 bone crack 52.80 · gulp 53.70**. All other times unchanged.
+> wide to 84.27, settles by 84.53; push-in on the roar). Sound events asked for: **17 cobra hiss 43.75 · growl 43.90 (jaws gape
+> 43.85–44.40) · jaw snap 44.60** · **20 bone crack 52.80 · gulp 53.70**. All other times unchanged.
 
 # ep60 · sync table, act B (shots 15–33, 37.8–91.4 s)
 
@@ -21,7 +21,7 @@ Each event label is written before its time; ranges are "a–b".
 |---|---|---|
 | 15 「下葬后，你上路了：去冥界。」 | dissolve, ov 0.4 | stone door grinds 37.95–38.58 · **door shuts thud 38.58** (dust puff, the warm tomb light cut off) · night wind throughout (mist wisps drift over the river) · footsteps (optional) 37.98 · 38.56 · 39.14 · 39.73 · 40.31 |
 | 16 「一道道门，守门的手里拿着刀。」 | dissolve, ov 0.3 | **knife_1 glint 40.80** (left-most guardian, screen left) · **knife_2 glint 41.40** · **knife_3 glint 42.00** · **knife_4 glint 42.60** (right-most); each guardian jabs his knife up on its glint; camera trucks left → right |
-| 17 「蛇和鳄鱼扑过来，全靠咒语挡。」 | cut | **cobra rears hiss 43.75** · lunge at the lens 43.80–44.55 · **croc growl 43.90** (jaws open wide 43.85–44.40) · **croc jaw snap 44.60** (camera jolt) · scroll lifted 44.70–45.02 · **gold flare whoomp 45.05** (glyph line shoots right, gold flash) · both recoil 45.05–45.55 · **beetle skitter 45.12–45.70** |
+| 17 「蛇和鳄鱼扑过来，全靠咒语挡。」 | cut | **cobra rears hiss 43.75** · lunge at the lens 43.80–44.55 · **growl 43.90** (jaws gape 43.85–44.40) · **croc jaw snap 44.60** (camera jolt) · scroll lifted 44.70–45.02 · **gold flare whoomp 45.05** (glyph line shoots right, gold flash) · both recoil 45.05–45.55 · **beetle skitter 45.12–45.70** |
 | 18 「终点：双真理之厅。」 | dissolve, ov 0.4 | **doors boom open 47.00** (leaves swing 46.94–47.16, gold light floods the threshold) · crane up and back 47.20 → 49.75 · footsteps echo 48.06 · 48.69 · 49.32 (you, tiny, step in) |
 | 19 「42位神排排坐，等着你。」 | cut | murmur of whispers rising 50.00 → 52.40 (gold whisper wisps appear along the rows, full by ~52.2) · truck along the rows throughout · label 「四十二判官」 |
 | 20 「名字都很吓人：碎骨者、吞影者……」 | cut | **punch 1 碎骨者 52.40** · **bone crack 52.80** (the bone snaps between his fists, flash + chips) · **punch 2 吞影者 53.30** · beak opens 53.30–53.45, the little shadow is sucked into the open beak 53.35–53.54 · **gulp 53.70** (beak shut 53.66, a gulp puff by the throat) · **punch 3 食血者 54.20** · **drip lick 54.60** (the red drop leaves the knife tip, the tongue flicks 54.55–54.90) |
