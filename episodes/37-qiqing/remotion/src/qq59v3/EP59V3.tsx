@@ -82,7 +82,7 @@ const Film: React.FC<{tr: Track; music?: boolean; pictureOnly?: boolean}> = ({tr
 	return <AbsoluteFill style={{background: '#08090b', overflow: 'hidden'}}>
 		<AbsoluteFill>{draw(s, t - s.a)}</AbsoluteFill>
 		{incoming && <AbsoluteFill style={{opacity: nd!.tin === 'dissolve' ? sm((t - (next!.a - ov)) / ov) : 1}}>{draw(next!, t - next!.a)}</AbsoluteFill>}
-		{!pictureOnly && <AbsoluteFill><Furniture L={L} i={i} t={t} />{s.id !== 'end' && <Seal />}</AbsoluteFill>}
+		{!pictureOnly && <AbsoluteFill style={{zIndex: 10}}><Furniture L={L} i={i} t={t} />{s.id !== 'end' && <Seal />}</AbsoluteFill>}
 		{music && <Audio src={staticFile(tr.file)} volume={duck} />}
 		{music && L.filter((p) => p.voice && VOICE_READY[p.voice]).map((p) => <Sequence key={p.id} from={Math.round((p.a + 0.3) * FPS)}><Audio src={staticFile(`ep59/voice/${p.voice}.wav`)} /></Sequence>)}
 	</AbsoluteFill>;
