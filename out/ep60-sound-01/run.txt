@@ -1,0 +1,160 @@
+plan: {'tier': 'starter', 'character_count': 3005, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "M1_bed_groove", "type": "music", "text": "Instrumental ancient Egyptian cinematic folk music, 110 BPM, Hijaz maqam on D (D, E-flat, F-sharp, G, A, B-flat, C) over a D drone. Opens with a solo ney flute over a low drone for about 6 seconds, then a darbuka plays the maqsum rhythm with riq and finger cymbals, an oud plucks a catchy motif and a qanun answers with fast runs, frame drum hits on each bar; it builds to a fuller, majestic finish with low strings. Playful, mysterious, majestic. Clean, punchy mix. No vocals.", "model": null, "status": 200, "sfx": true, "file": "M1_bed_groove.mp3", "bytes": 721023}
+{"name": "M2_bed_underworld", "type": "music", "text": "Instrumental mystical ancient Egyptian underworld music for a judgement scene, slow 70 BPM, Hijaz maqam on D, deep drone and soft low strings, a breathy ney flute melody, slow frame drum pulses like a heartbeat, sistrum shimmers, large temple reverb. Sacred, tense, awe. No vocals.", "model": null, "status": 200, "sfx": true, "file": "M2_bed_underworld.mp3", "bytes": 481533}
+{"name": "S01_heartbeat", "type": "sfx", "text": "slow deep human heartbeat, close and intimate, in a quiet stone chamber", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S01_heartbeat.mp3", "bytes": 65244}
+{"name": "S02_scale_settle", "type": "sfx", "text": "ancient bronze balance scale tilting and settling, soft wooden creak and a small metal tick at the end", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S02_scale_settle.mp3", "bytes": 48944}
+{"name": "S03_croc_snap", "type": "sfx", "text": "crocodile jaws snapping shut, heavy wet bite with a short low growl", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S03_croc_snap.mp3", "bytes": 33061}
+{"name": "S04_beast_growl", "type": "sfx", "text": "deep low monster growl, crocodile hiss mixed with lion rumble, menacing but restrained", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S04_beast_growl.mp3", "bytes": 48944}
+{"name": "S05_wings", "type": "sfx", "text": "large feathered wings unfolding and beating twice, soft whoosh", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S05_wings.mp3", "bytes": 40585}
+{"name": "S06_sistrum", "type": "sfx", "text": "ancient Egyptian sistrum shaken once, bright metallic jingle, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S06_sistrum.mp3", "bytes": 24702}
+{"name": "S07_gong", "type": "sfx", "text": "deep temple gong hit with a long shimmering tail", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S07_gong.mp3", "bytes": 65244}
+{"name": "S08_stone_door", "type": "sfx", "text": "heavy stone tomb door grinding open, dust and grit falling", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S08_stone_door.mp3", "bytes": 48944}
+{"name": "S09_sand_wind", "type": "sfx", "text": "desert wind blowing sand across stone, airy and soft, seamless loop", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S09_sand_wind.mp3", "bytes": 97009}
+{"name": "S10_magic_reveal", "type": "sfx", "text": "reversed shimmer swelling into a soft magical chime, mystical reveal", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S10_magic_reveal.mp3", "bytes": 40585}
+{"name": "S11_frame_drum", "type": "sfx", "text": "single deep frame drum hit with room reverb, cinematic transition accent", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S11_frame_drum.mp3", "bytes": 24702}
+{"name": "S12_torch", "type": "sfx", "text": "torch fire crackling inside a tomb, close, seamless loop", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "S12_torch.mp3", "bytes": 65244}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "M1_bed_groove",
+  "type": "music",
+  "text": "Instrumental ancient Egyptian cinematic folk music, 110 BPM, Hijaz maqam on D (D, E-flat, F-sharp, G, A, B-flat, C) over a D drone. Opens with a solo ney flute over a low drone for about 6 seconds, then a darbuka plays the maqsum rhythm with riq and finger cymbals, an oud plucks a catchy motif and a qanun answers with fast runs, frame drum hits on each bar; it builds to a fuller, majestic finish with low strings. Playful, mysterious, majestic. Clean, punchy mix. No vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "M1_bed_groove.mp3",
+  "bytes": 721023
+ },
+ {
+  "name": "M2_bed_underworld",
+  "type": "music",
+  "text": "Instrumental mystical ancient Egyptian underworld music for a judgement scene, slow 70 BPM, Hijaz maqam on D, deep drone and soft low strings, a breathy ney flute melody, slow frame drum pulses like a heartbeat, sistrum shimmers, large temple reverb. Sacred, tense, awe. No vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "M2_bed_underworld.mp3",
+  "bytes": 481533
+ },
+ {
+  "name": "S01_heartbeat",
+  "type": "sfx",
+  "text": "slow deep human heartbeat, close and intimate, in a quiet stone chamber",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S01_heartbeat.mp3",
+  "bytes": 65244
+ },
+ {
+  "name": "S02_scale_settle",
+  "type": "sfx",
+  "text": "ancient bronze balance scale tilting and settling, soft wooden creak and a small metal tick at the end",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S02_scale_settle.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "S03_croc_snap",
+  "type": "sfx",
+  "text": "crocodile jaws snapping shut, heavy wet bite with a short low growl",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S03_croc_snap.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "S04_beast_growl",
+  "type": "sfx",
+  "text": "deep low monster growl, crocodile hiss mixed with lion rumble, menacing but restrained",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S04_beast_growl.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "S05_wings",
+  "type": "sfx",
+  "text": "large feathered wings unfolding and beating twice, soft whoosh",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S05_wings.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "S06_sistrum",
+  "type": "sfx",
+  "text": "ancient Egyptian sistrum shaken once, bright metallic jingle, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S06_sistrum.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "S07_gong",
+  "type": "sfx",
+  "text": "deep temple gong hit with a long shimmering tail",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S07_gong.mp3",
+  "bytes": 65244
+ },
+ {
+  "name": "S08_stone_door",
+  "type": "sfx",
+  "text": "heavy stone tomb door grinding open, dust and grit falling",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S08_stone_door.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "S09_sand_wind",
+  "type": "sfx",
+  "text": "desert wind blowing sand across stone, airy and soft, seamless loop",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S09_sand_wind.mp3",
+  "bytes": 97009
+ },
+ {
+  "name": "S10_magic_reveal",
+  "type": "sfx",
+  "text": "reversed shimmer swelling into a soft magical chime, mystical reveal",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S10_magic_reveal.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "S11_frame_drum",
+  "type": "sfx",
+  "text": "single deep frame drum hit with room reverb, cinematic transition accent",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S11_frame_drum.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "S12_torch",
+  "type": "sfx",
+  "text": "torch fire crackling inside a tomb, close, seamless loop",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "S12_torch.mp3",
+  "bytes": 65244
+ }
+]
