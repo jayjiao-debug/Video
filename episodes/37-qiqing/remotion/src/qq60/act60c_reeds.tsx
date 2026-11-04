@@ -164,7 +164,7 @@ const S49: React.FC<ShotProps> = ({t}) => {
 };
 
 /* ======================= 50 · 「一点名，它们就答：“[我在]！”」 the roll call; they snap alive and march off, hoes on shoulders ======================= */
-export const T50 = {snap: 0.8, march: 1.1, step: 0.3};
+export const T50 = {snap: 0.8, march: 1.286, step: 60 / 112 / 2}; // march on the playful cue's 112 bpm grid (141.486 = downbeat)
 const S50: React.FC<ShotProps> = ({t}) => {
 	const AX = 210, AS = 20;
 	let pose: Pose = {...POSES.rest, lean: 3 + 0.5 * Math.sin(t * 1.5), neck: 6, head: 12, rt: -6, at: 9, rk: 2, ak: 1};
@@ -205,9 +205,9 @@ const S50: React.FC<ShotProps> = ({t}) => {
 };
 
 /* ======================= 51 · 「后来全套：365个干活，36个[监工]。」 the field fills with the full set; a counter rolls to 401 ======================= */
-export const T51 = {fill: [0.25, 2.0], beat0: 0.6, crack: 2.6};
+export const T51 = {fill: [0.25, 2.0], beat0: 0.293, crack: 2.436, beat: 60 / 112}; // hoes on the 112 bpm beats (143.093 …), crack on 145.236
 const S51: React.FC<ShotProps> = ({t}) => {
-	const phH = 2 * Math.PI * (t - T51.beat0) / 0.6, phO = t * 3; // the hoe strikes the ground at ph = 0: on the beat
+	const phH = 2 * Math.PI * (t - T51.beat0) / T51.beat, phO = t * 3; // the hoe strikes the ground at ph = 0: on the beat
 	const ROWK = [0.56, 0.66, 0.77, 0.89, 1.02, 1.16], ROWY = [298, 382, 478, 588, 708, 838], CX = 650, BW = 185;
 	const blocks: {r: number; c: number; i: number}[] = [];
 	for (let r = 0; r < 6; r++) for (let c = 0; c < 6; c++) blocks.push({r, c, i: r * 6 + c});

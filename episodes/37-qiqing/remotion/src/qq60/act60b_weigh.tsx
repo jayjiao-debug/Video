@@ -87,11 +87,11 @@ export const Shot28: React.FC<ShotProps> = ({t}) => {
 		swingL: 2 * kL * Math.sin((t - S28.heart[1]) * 11), swingR: -1.6 * kR * Math.sin((t - S28.feather[1]) * 11),
 		heartDy: -7 * (1 - hU * hU), featherDy: -7.5 * (1 - fU), featherRot: 24 * (1 - fU) * Math.sin(fU * 9), featherDx: 1.2 * (1 - fU) * Math.sin(fU * 7), plumb: 0.6 * Math.sin(t * 1.7)};
 	const z = keys(t, [[0, 1.4], [2.9, 1.5]]), cam: Cam = {x: BX + (720 - 633) / z, y: 336, z};
-	const maat = up(t, S28.maat[0], S28.maat[1] - S28.maat[0]), mx_ = BX + BAL.half * BS + 26, ms = 30;
+	const maat = up(t, S28.maat[0], S28.maat[1] - S28.maat[0]), mx_ = BX + BAL.half * BS + 50, ms = 30;
 	let mp: Pose = {...POSES.rest, lean: 1, head: -1 + 0.5 * Math.sin(t), rt: -4, at: 6, rk: 1, ak: 1};
 	mp = wristTo(holdAt(mp, 'f', [3.0, -5.6], true), 'f', 150); mp = wristTo(holdAt(mp, 'b', [2.2, -5.0], true), 'b', 140);
 	const tag = figXY(mp, mx_, GY, ms, -1, 'head', [-2.2, -3.6], true);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(z, 0.3)} stain={0.2} tags={maat > 0.3 ? [{x: tag[0] + 30, y: tag[1], text: '玛阿特', size: 40, o: up(maat, 0.3, 0.4)}] : []}
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(z, 0.3)} stain={0.2} tags={maat > 0.3 ? [{x: Math.min(tag[0] + 30, cam.x + (1210 - 720) / z), y: tag[1], text: '玛阿特', size: 40, o: up(maat, 0.3, 0.4)}] : []}
 		light={<>
 			<Glow x={BX} y={250} r={500} c="gold" o={0.3} />
 			<Glow x={BX - BAL.half * BS} y={400} r={130 + 40 * kL} c="red" o={0.55 + 0.3 * kL} />
@@ -143,7 +143,7 @@ const ammitP = (t: number, o: Partial<AmmitPose> = {}): AmmitPose => ({lean: 1 +
 export const Shot30: React.FC<ShotProps> = ({t}) => {
 	const s = 42, ax = BX + 330, BS = 36, g = hit(t, S30.growl, 0.5, 0.1), scr = keys(t, [[S30.scrape - 0.12, 0], [S30.scrape + 0.12, -0.7], [2.3, -0.7], [2.6, 0]]);
 	const tremble = g * Math.sin(t * 60) * 0.8;
-	const pose = ammitP(t, {jaw: 4 + 16 * g, lean: 1 + 2.5 * g + tremble, neck: 7 + 3 * g + tremble, paw: scr});
+	const pose = ammitP(t, {jaw: 4 + 16 * g, lean: 1 + 2.5 * g + tremble, neck: 15 + 3 * g + tremble, paw: scr});
 	const bal = {tilt: 0.5 * Math.sin(t * 1.1), swingL: 0.6 * Math.sin(t * 1.4), swingR: -0.5 * Math.sin(t * 1.4), plumb: 0.6 * Math.sin(t * 1.7)};
 	const P = panAt(bal, BX, GY, BS);
 	const cam = camPath(t, [[0, BX + 20, 540, 1.04], [2.9, BX + 50, 548, 1.12]]);

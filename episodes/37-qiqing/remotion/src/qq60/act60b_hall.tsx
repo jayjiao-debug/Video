@@ -360,8 +360,9 @@ const FrontBust: React.FC<{k: number; t: number; look: number; blink: number}> =
 			<path d={sp([[ex - sg * 0.52, by + 0.1 - 0.08 * (1 - rb)], [ex, by - 0.06 - arch], [ex + sg * 0.6, by + 0.02], [ex + sg * 0.8, by + 0.14, 1], [ex + sg * 0.55, by + 0.1], [ex, by + 0.06 - arch], [ex - sg * 0.5, by + 0.22 - 0.08 * (1 - rb), 1]], true, 0.15)} fill={PAL.black} />
 		</g>; };
 	const horn = (sg: number) => { const d = sp([[sg * 1.0, -2.55, 1], [sg * 1.9, -3.0], [sg * 3.0, -3.8], [sg * 3.75, -5.2], [sg * 3.6, -6.8], [sg * 2.95, -8.0], [sg * 2.55, -8.25, 1], [sg * 3.0, -7.0], [sg * 3.05, -5.6], [sg * 2.5, -4.4], [sg * 1.6, -3.45], [sg * 0.75, -3.1, 1]], true, 0.18);
-		return <g key={'h' + sg}><path d={d} fill="#EFE4C4" stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinejoin="round" />
-			{[0.2, 0.35, 0.5, 0.65].map((u, i) => { const y = lerp(-3.4, -7.0, u), x0 = sg * lerp(1.4, 2.8, u), x1 = sg * lerp(2.3, 3.6, Math.min(1, u * 1.1)); return <path key={i} d={`M${x0} ${y + 0.1}L${x1} ${y - 0.15}`} stroke={PAL.ink} strokeWidth={c.LW * 1.4} />; })}
+		return <g key={'h' + sg}><path d={d} fill="#E6D6A8" stroke={PAL.ink} strokeWidth={c.OW * 2} strokeLinejoin="round" />
+			{[0.1, 0.22, 0.34, 0.46, 0.58, 0.7].map((u, i) => { const y = lerp(-3.3, -7.2, u), x0 = sg * lerp(1.3, 2.75, u), x1 = sg * lerp(2.2, 3.55, Math.min(1, u * 1.1)); return <g key={i}><path d={`M${x0} ${y + 0.1}L${x1} ${y - 0.15}`} stroke="#6A5A3A" strokeWidth={c.LW * 3} />
+				<path d={`M${x1 - sg * 0.05} ${y - 0.32}Q${x1 + sg * 0.22} ${y - 0.14} ${x1 - sg * 0.02} ${y + 0.04}`} fill="#E6D6A8" stroke={PAL.ink} strokeWidth={c.LW * 1.6} /></g>; })}
 			<circle cx={sg * 2.62} cy={-8.15} r={0.17} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} /></g>; };
 	const collarRows: [number, number, string][] = [[2.0, 2.45, PAL.gold], [2.45, 3.1, PAL.blue], [3.1, 3.35, PAL.gold], [3.35, 3.95, PAL.red], [3.95, 4.2, PAL.gold], [4.2, 4.8, PAL.turq], [4.8, 5.0, PAL.gold]];
 	const ring = (r0: number, r1: number) => `M${-r1} 1.1A${r1} ${r1 * 0.8} 0 0 0 ${r1} 1.1L${r0} 1.1A${r0} ${r0 * 0.8} 0 0 1 ${-r0} 1.1Z`;
