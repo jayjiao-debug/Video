@@ -1,4 +1,4 @@
-/* ep60 《死后称心脏》 timeline, generated from episodes/60-xinzang/script.md (v1); v2 (owner 15:10): the separate title card (shot 4, 3.0 s) is gone — the title lives inside the opening scenes — so every shot after 7.9 s is 3.0 s earlier (157.6 s). Shot numbers are kept (there is no shot 4). Times in seconds; this is the final clock (our music
+/* ep60 《死后称心脏》 timeline, generated from episodes/60-xinzang/script.md (v1); v2 (owner 15:10): the separate title card (shot 4, 3.0 s) is gone — the title lives inside the opening scenes — so every shot after 7.9 s is 3.0 s earlier (157.6 s). Shot numbers are kept (there is no shot 4). v2b (owner 15:40): the title stays in shot 3 only, so shot 3 runs to 8.4 and shot 5 is 8.4–11.3. Times in seconds; this is the final clock (our music
    is composed to this cut). sub: one centred line, [key] = gold key word. pic: the shot brief. cue/sfx: the soundtrack plan. */
 export type Shot = {n: number; a: number; b: number; sub: string; cue: string; pic: string; sfx: string; cb: boolean; stamp?: {era: string; place: string; src?: string}};
 export const SHOTS: Shot[] = [
@@ -25,7 +25,7 @@ export const SHOTS: Shot[] = [
  {
   "n": 3,
   "a": 5.0,
-  "b": 7.9,
+  "b": 8.4,
   "sub": "因为它要上[秤]，出庭作证。",
   "cue": "tension",
   "pic": "The glowing heart (drawn as the papyri's jar-shaped heart) drops onto the left pan of a giant gold balance; a single white ostrich feather on the right pan. Fast pull-back: the scale is three storeys tall; under it two yellow eyes open in the dark (Ammit, not yet seen).",
@@ -34,7 +34,7 @@ export const SHOTS: Shot[] = [
  },
  {
   "n": 5,
-  "a": 7.9,
+  "a": 8.4,
   "b": 11.3,
   "sub": "假如你死在[3000多年前]的埃及。",
   "cue": "mystic",
