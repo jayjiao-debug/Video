@@ -7,12 +7,12 @@
    - HallBg: the Hall of Two Truths backdrop (lapis or blood), starry ceiling, feather cornice, columns, dado;
    - Sparkle / Wisp / Drops: small life. */
 import React from 'react';
-import {Pose, solve} from './rig60';
+import {Pose, Cast, solve, SHAPES, band} from './rig60';
 import {BAL, balanceGeo, BalancePose, Heart, Feather, Baboon, GlyphColumns} from './props60';
 import {Ceiling} from './sets60';
 import {FeatherCornice, Column} from './props60b';
 import {Dado, RegisterLine, Stars, Cam} from './frame60';
-import {PAL, sp, poly, mx, sm, cl, lerp, V} from './geo60';
+import {PAL, sp, poly, mx, ap, sm, cl, lerp, V, M, chain, T as Tm, R as Rm, RAD} from './geo60';
 
 export const wobIn = (t: number) => (t < 0 ? 0 : 2.4 * sm(t / 0.45));
 export const eOut = (u: number) => 1 - Math.pow(1 - cl(u), 3);
@@ -128,4 +128,74 @@ export const Drop: React.FC<{x: number; y: number; r: number; o?: number; a?: nu
 	<path d={`M0 ${-r * 1.7}Q${r} ${-r * 0.2} ${r} ${r * 0.3}A${r} ${r} 0 0 1 ${-r} ${r * 0.3}Q${-r} ${-r * 0.2} 0 ${-r * 1.7}Z`} fill="#BFE6FF" stroke={PAL.ink} strokeWidth={Math.max(1.2, r * 0.18)} />
 	<ellipse cx={-r * 0.35} cy={-r * 0.1} rx={r * 0.2} ry={r * 0.35} fill="#FFFFFF" opacity={0.85} />
 </g>;
-export const _keepC = {eIn};
+/* ---------------- layering fixes over the shared rig ---------------- */
+/** an arm redrawn over a finished figure (same pose / x / y / s / face). behindTorso: hidden where the torso and collar are, so the far
+    arm of an adoring figure rises from the front of the chest IN FRONT of the face (the Egyptian convention) instead of out of the wig;
+    shoulder: hidden in the shoulder disc (the rig's own seam-free joint); only 'hand' = just the hand (a fist over a held object). */
+export const ArmOver: React.FC<{cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; side: 'b' | 'f'; behindTorso?: boolean; shoulder?: boolean; only?: 'hand'; id: string}> = ({cast, pose, x, y, s, face = 1, side, behindTorso, shoulder, only, id}) => {
+	const g = solve(pose, cast.female), OW = 2.7 / s, LW = 1.5 / s;
+	const [U, F, H] = side === 'b' ? [g.bU, g.bF, g.bH] : [g.fU, g.fF, g.fH];
+	const hand = side === 'b' ? cast.bHand : cast.fHand, skin = (PAL as Record<string, string>)[cast.skin] ?? cast.skin;
+	const hs = SHAPES[hand === 'open' ? 'open' : hand === 'palm' ? 'palm' : 'fist'], sh = ap(U, [0, 0]);
+	const torso = cast.female ? SHAPES.torsoF : SHAPES.torsoM, cy = cast.female ? -6.78 : -6.86, k = cast.female ? 0.9 : 1;
+	const parts: [string, M][] = only === 'hand' ? [[hs, H]] : [[SHAPES.upper, U], [SHAPES.fore, F], [hs, H]];
+	return <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
+		{(behindTorso || shoulder) && <defs><mask id={`${id}-m`} maskUnits="userSpaceOnUse" x={-60} y={-60} width={120} height={120}>
+			<rect x={-60} y={-60} width={120} height={120} fill="white" />
+			{behindTorso && <g transform={mx(g.torso)} fill="black" stroke="black" strokeWidth={2.2 * OW}><path d={torso} /><path d={band(0.18, cy, 0, 2.96 * k)} /></g>}
+			{shoulder && <circle cx={sh[0]} cy={sh[1]} r={1.05} fill="black" />}
+		</mask></defs>}
+		<g mask={behindTorso || shoulder ? `url(#${id}-m)` : undefined}>
+			{parts.map(([d, m], i) => <path key={'i' + i} d={d} transform={mx(m)} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * OW} strokeLinejoin="round" />)}
+			{parts.map(([d, m], i) => <path key={'f' + i} d={d} transform={mx(m)} fill={skin} />)}
+			{hand === 'fist' ? <path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" transform={mx(H)} fill="none" stroke={PAL.line} strokeWidth={LW} opacity={0.75} />
+				: <path d="M0.36 0.62Q0.36 0.36 0.3 0.2" transform={mx(H)} fill="none" stroke={PAL.line} strokeWidth={LW * 0.9} opacity={0.7} />}
+			{only !== 'hand' && <><g transform={mx(U)}><rect x={-0.62} y={1.0} width={1.26} height={0.42} fill={PAL.gold} stroke={PAL.ink} strokeWidth={LW} /><rect x={-0.62} y={1.12} width={1.26} height={0.17} fill={PAL.blue} /></g>
+				<g transform={mx(F)}><rect x={-0.42} y={2.7} width={0.86} height={0.58} fill={PAL.gold} stroke={PAL.ink} strokeWidth={LW} />
+					{[0, 1, 2].map((i) => <rect key={i} x={-0.42} y={2.78 + i * 0.16} width={0.86} height={0.07} fill={[PAL.blue, PAL.red, PAL.blue][i]} />)}</g></>}
+		</g>
+	</g>;
+};
+/** an adoring figure fixed: the far arm in front of the face (rising from the chest), the near arm over it */
+export const AdoreArms: React.FC<{cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; id: string}> = (p) => <>
+	<ArmOver {...p} side="b" behindTorso id={p.id + 'b'} />
+	<ArmOver {...p} side="f" shoulder id={p.id + 'f'} />
+</>;
+/* Osiris's crook and flail, own copies (rig60 draws them over the head): the flail is hidden behind the head and crown */
+type Cx = {OW: number; LW: number};
+const SolidX: React.FC<{d: string; r: string; c: Cx}> = ({d, r, c}) => <><path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW} strokeLinejoin="round" /><path d={d} fill={(PAL as Record<string, string>)[r] ?? r} /></>;
+const CrookC: React.FC<{at: V; a: number; c: Cx}> = ({at, a, c}) => {
+	const d = sp([[-0.15, 1.2, 1], [0.15, 1.2, 1], [0.15, -2.4], [0.2, -2.95], [0.55, -3.3], [1.0, -3.25], [1.2, -2.9], [1.12, -2.62, 1], [0.92, -2.62, 1], [0.95, -2.88], [0.75, -3.05], [0.45, -2.95], [-0.15, -2.4]], true, 0.16);
+	return <g transform={`translate(${at[0]},${at[1]}) rotate(${a})`}><SolidX d={d} r="gold" c={c} />{[-2.1, -1.5, -0.9, -0.3, 0.3, 0.9].map((y) => <rect key={y} x={-0.16} y={y} width={0.32} height={0.28} fill={PAL.blue} />)}</g>;
+};
+const FlailC: React.FC<{at: V; a: number; c: Cx; t: number}> = ({at, a, c, t}) => {
+	const k = 1.25, top: V = [Math.sin(a * RAD) * 3.6 * k, -Math.cos(a * RAD) * 3.6 * k];
+	const handle = poly([[-0.15, 0.9], [0.15, 0.9], [0.15, -3.6], [-0.15, -3.6]]);
+	const strands = [0, 1, 2].map((i) => { const sw = (i - 1) * 9 + 5 * Math.sin(t * 2.1 + i * 0.8) + 2 * Math.sin(t * 4.7 + i), out: V[] = [top];
+		for (let j = 1; j <= 5; j++) { const aa = (sw + j * 2) * RAD; out.push([top[0] + Math.sin(aa) * 0.5 * j * k, top[1] + Math.cos(aa) * 0.5 * j * k]); }
+		return out; });
+	return <g transform={`translate(${at[0]},${at[1]})`}>
+		<g transform={`rotate(${a}) scale(${k})`}><SolidX d={handle} r="gold" c={{OW: c.OW / k, LW: c.LW / k}} />{[-3.0, -2.4, -1.8, -1.2, -0.6, 0.0].map((y) => <rect key={y} x={-0.16} y={y} width={0.32} height={0.26} fill={PAL.blue} />)}</g>
+		{strands.map((sg, i) => <g key={i}><polyline points={sg.map((p) => p.join(',')).join(' ')} fill="none" stroke={PAL.ink} strokeWidth={0.3} strokeLinecap="round" />
+			{sg.slice(1).map((p, j) => <ellipse key={j} cx={p[0]} cy={p[1]} rx={0.2} ry={0.26} fill={[PAL.blue, PAL.red, PAL.gold, PAL.green][(j + i) % 4]} stroke={PAL.ink} strokeWidth={c.LW * 0.9} />)}</g>)}
+		<circle cx={top[0]} cy={top[1]} r={0.3} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} />
+	</g>;
+};
+/** draw after a God rendered with hide={{props: true}} (mummiform, crook in the front hand, flail in the back): the flail passes BEHIND
+    the head, beard and crown; the crook in front; the fists closed over both */
+export const OsirisProps: React.FC<{pose: Pose; x: number; y: number; s: number; face?: 1 | -1; t: number; id: string; skin?: string}> = ({pose, x, y, s, face = 1, t, id, skin = PAL.skinO}) => {
+	const g = solve(pose), c: Cx = {OW: 2.7 / s, LW: 1.5 / s}, gp = (h: M): V => ap(h, [0.02, 0.6]), bG = gp(g.bH), fG = gp(g.fH);
+	return <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
+		<defs><mask id={`${id}-hm`} maskUnits="userSpaceOnUse" x={-60} y={-60} width={120} height={120}>
+			<rect x={-60} y={-60} width={120} height={120} fill="white" />
+			<g transform={mx(g.head)} fill="black" stroke="black" strokeWidth={2.4 * c.OW}>
+				<path d={SHAPES.human} /><path d={SHAPES.beard} /><path d={SHAPES.hedjet} /><path d={SHAPES.horns} />
+				<path d={SHAPES.plume} transform="translate(-0.62,-1.85)" /><path d={SHAPES.plume} transform="translate(1.0,-1.85) scale(-1,1)" />
+			</g></mask></defs>
+		<g mask={`url(#${id}-hm)`}><FlailC at={bG} a={-30} c={c} t={t} /></g>
+		<g transform={`translate(${fG[0]},${fG[1]}) scale(1.25) translate(${-fG[0]},${-fG[1]})`}><CrookC at={fG} a={16} c={{OW: c.OW / 1.25, LW: c.LW / 1.25}} /></g>
+		{[g.bH, g.fH].map((h, i) => <g key={i}><path d={SHAPES.fist} transform={mx(h)} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW} strokeLinejoin="round" /><path d={SHAPES.fist} transform={mx(h)} fill={skin} />
+			<path d="M0.42 0.32Q0.12 0.42 -0.05 0.72" transform={mx(h)} fill="none" stroke={PAL.line} strokeWidth={c.LW} /></g>)}
+	</g>;
+};
+export const _keepC = {eIn, chain, Tm, Rm};

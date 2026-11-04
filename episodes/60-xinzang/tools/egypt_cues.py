@@ -517,6 +517,7 @@ TENSION_CFG = {'frame': dict(db=0, send=0.3), 'heart': dict(db=-3, send=0.15), '
                'rub': dict(db=-1.0, send=0.45, lp=4500), 'drone': dict(db=-8, send=0.2), 'oud': dict(body=OUD_BODY, db=0, send=0.35),
                'qanun': dict(body=QANUN_BODY, db=-5, send=0.45), 'riser': dict(db=-15, send=0.5), 'zill': dict(db=-12, send=0.4),
                'reed': dict(db=-7, send=0.4, hp=150), 'boom': dict(db=-4, send=0.35)}
+TENSION_RUB = arghul   # v2 (owner 15:10 "more egyptian"): the semitone rub on the arghul's nasal reed drone, not strings
 class Tension(Cue):
     """the weighing: low drone, heartbeat bendir, the Eb/D rub climbing D-Eb > F#-G > A-Bb > D-Eb, sparse plucks,
     a riser, one beat of silence, then the verdict hit on bar 18. 78 BPM (3/4 of groove), 18 bars = 55.38 s.
@@ -553,7 +554,7 @@ class Tension(Cue):
         for b0, nb, notes in pairs:
             for j, n_ in enumerate(notes):
                 g = 0.35 + 0.5 * self.I(b0 + nb); last_pair = b0 >= 15 and not self.hush
-                m.add('rub', held(nb * B, n_, strings, att=1.2 if b0 < 12 else 0.25, rel=0.012 if last_pair else 0.6, gain=g, seed=b0 * 3 + j), t0 + b0 * B)
+                m.add('rub', held(nb * B, n_, TENSION_RUB, att=1.2 if b0 < 12 else 0.25, rel=0.012 if last_pair else 0.6, gain=g, seed=b0 * 3 + j), t0 + b0 * B)
         if not self.bed:   # riser over bars 13-17, stopping dead one beat before the hit
             n0 = int((t0 + 12 * B) * SR); n1 = int((t0 + 16 * B + (0 if self.hush else 3 * bt)) * SR); k = n1 - n0
             if 0 <= n0 and n1 <= m.n:
@@ -569,7 +570,7 @@ class Tension(Cue):
                     tt = t0 + 16 * B + j * bt / 4
                     for n_ in ('D4', 'Eb4', 'A4'): m.add('rub', reed([(n_, bt / 4 * 0.9, 'stacc')], 0.25 + 0.04 * j, m.r(16, f'tr{j}{n_}'), 'mizmar'), tt, 0.0)
     def beds(self, m, t0, secs, L, fade_in, t_end=None):
-        n = m.n; d = drone_voice(n, 'D2', L, arghul, seed=6) + 0.6 * drone_voice(n, 'D3', L, strings, seed=7)
+        n = m.n; d = drone_voice(n, 'D2', L, arghul, seed=6) + 0.6 * drone_voice(n, 'D3', L, TENSION_RUB, seed=7)
         e = np.ones(n)
         if fade_in: k = int(1.2 * SR); e[:k] = np.linspace(0, 1, k)
         if not self.bed:
@@ -578,7 +579,7 @@ class Tension(Cue):
             j = int(17 * self.bar * SR); e[i:i + k2] *= np.linspace(1, 0, k2); e[i + k2:j] = 0
             e[j:] = np.exp(-np.arange(n - j) / (1.2 * SR)) * 0.9
         m.addbuf('drone', d * e[:, None] * 0.5)
-        if self.bed: m.addbuf('rub', 0.32 * (drone_voice(n, 'D4', L, strings, seed=12) + drone_voice(n, 'Eb4', L, strings, seed=13)))
+        if self.bed: m.addbuf('rub', 0.32 * (drone_voice(n, 'D4', L, TENSION_RUB, seed=12) + drone_voice(n, 'Eb4', L, TENSION_RUB, seed=13)))
     def ending(self, m, t): pass
     def score_hit(self, m, t):
         r = m.r(0, 'hit')
@@ -795,6 +796,46 @@ def make_hushdry(out, meta):   # only the dry hush variant (same seed and gain r
     meta['tension_hushdry'] = dict(file='tension_hushdry.wav', bpm=78, beats_per_bar=4, bar_s=round(hu.bar, 4), bars=hu.N, length_s=round(len(hf) / SR, 3),
                                    downbeat0_s=0.0, hits=hu.hits(), lufs=round(lufs(hf), 2), tp=round(true_peak(hf), 2))
     print('tension_hushdry', meta['tension_hushdry'], flush=True)
+INTRO_CFG = dict(GROOVE_CFG, ney=dict(db=-6, send=0.5, hp=200), frame=dict(db=-4, send=0.4), sis=dict(db=-15, send=0.5, hp=2500))
+def make_intro(out, meta, T):
+    """v2 opening (owner: "make the intro more egyptian styled so people would know off the bat"): film 0 -> the title at T,
+    on the groove's 104 BPM grid so its last downbeat is T (where groove_loop enters at bar 9 with its own roll + reed motif).
+    frame 0: dum + finger cymbals + a mizmar run up D Hijaz landing on the first downbeat; bar 1 oud ostinato + arghul drone +
+    riq + sistrum under the held D5; bar 2 the ney states the Hijaz motif (no drums: the heart's two glow pulses are SFX);
+    bar 3+ light maqsum builds into the drop."""
+    g = Groove(); bar, e8 = g.bar, g.beat / 2
+    N = max(1, int((T - 0.35) // bar)); lead = T - N * bar
+    m = Mix(T + 4.0, 7, 1); r = np.random.default_rng(77); rr = lambda k: np.random.default_rng([77, k])
+    m.add('dum', dum(r, 1.0), 0.0, 0); m.add('zill', zills(r, 0.95, 2.5), 0.002, -0.3); m.add('frame', frame(r, 0.6, buzz=0.15), 0.004, 0.1)
+    run = ['D4', 'Eb4', 'F#4', 'G4', 'A4', 'Bb4', 'C#5']; k = len(run); d = max(0.045, (lead - 0.03) / k) if lead > 0.25 else 0.06
+    t_run = max(0.0, lead - k * d)
+    m.add('reed', reed([(n_, d * 0.95) for n_ in run] + [('D5', 1.9, 'fall')], 0.62, rr(1), 'mizmar'), t_run + 0.005, -0.25)
+    for b in range(N):
+        t = lead + b * bar; rb = rr(10 + b); ph = b % 4; last = (b == N - 1)
+        v = 0.55 + 0.35 * b / max(1, N - 1)
+        oud_line(m, t, e8, g.RIFF[ph], rb, 0.75 * v + 0.2, pan=0.5, oct=1)
+        if b >= 1: oud_line(m, t, e8, g.RIFF[ph], rr(20 + b), 0.35 * v, 'oud', -0.55, oct=0, trem=False)
+        riq_bar(m, t, e8, rb, 0.45 + 0.4 * v)
+        m.add('sis', sistrum(rb, 0.7, 3), t + 0.02, -0.5 + b * 0.5)
+        if b == 0: m.add('frame', frame(rb, 0.55, buzz=0.1), t, 0)
+        if b >= 2 or (N <= 2 and last): darbuka_bar(m, t, b, e8, rb, 0.45 + 0.35 * v, ghosts=True, fill=False, roll=False)
+        for e, n_ in ((0, 'D2'), (4, 'D2')):
+            if b >= 1: m.add('bass', bass(n_, 0.7, 0.45 + 0.3 * v, int(rb.integers(4)), t60=0.6), t + e * e8, 0)
+    if N >= 2:   # the ney: the Hijaz motif, slow, from bar 2
+        ney = [('A4', 2, 'grace'), ('Bb4', 1), ('A4', 1), ('G4', 1), ('F#4', 1), ('Eb4', 2, 'turn'), ('D4', 5)]
+        m.add('ney', reed(mel(ney, e8), 0.55, rr(3), 'ney', breath=0.5), lead + bar + 0.02, 0.2)
+    n = m.n; Lq = 0
+    dr = drone_voice(n, 'D2', 0, arghul, seed=1) + 0.7 * drone_voice(n, 'A2', 0, arghul, seed=2) + 0.45 * drone_voice(n, 'D3', 0, arghul, seed=3)
+    env = np.ones(n); kk = int(0.04 * SR); env[:kk] = np.linspace(0, 1, kk)
+    env *= np.clip(0.75 + 0.25 * np.arange(n) / SR / max(T, 1e-3), 0, 1)
+    m.addbuf('drone', dr * env[:, None] * 0.5)
+    y = render(m, INTRO_CFG, make_ir(1.1, seed=60))
+    G = fit_gain(y[:int(T * SR)]); y = master(y, G)
+    write(f'{out}/intro.wav', y)
+    meta['intro'] = dict(file='intro.wav', bpm=104, title_T=round(T, 3), lead_s=round(lead, 3), bars=N, length_s=round(len(y) / SR, 3),
+                         note='film 0 = file 0; downbeats lead + k*bar; the title T = the next downbeat (groove_loop bar 9 enters there)',
+                         lufs=round(lufs(y[:int(T * SR)]), 2), tp=round(true_peak(y), 2))
+    print('intro', meta['intro'], flush=True)
 def make_stings(out, meta):
     for nm in ('sting_reed_flourish', 'sting_roll_hit', 'sting_doom', 'sting_reveal', 'sting_comic'):
         y, hit = sting(nm); y = filt(sos_hp(28), y)
@@ -812,5 +853,6 @@ if __name__ == '__main__':
     for w in which:
         if w == 'stings': make_stings(out, meta)
         elif w == 'tension_hushdry': make_hushdry(out, meta)
+        elif w.startswith('intro'): make_intro(out, meta, float(w.split(':')[1]) if ':' in w else 7.6)
         else: make_cue(w, out, meta)
         json.dump(meta, open(mp, 'w'), ensure_ascii=False, indent=1)

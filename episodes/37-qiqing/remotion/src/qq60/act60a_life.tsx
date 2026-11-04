@@ -6,7 +6,7 @@ import {God, CAST, POSES, Pose, solve, reach, wristTo, holdAt} from './rig60';
 import {CAST2, ANI, tendPose, scribePose} from './cast60';
 import {PAL, sp, poly, lerp, cl, sm, V, ap, mx} from './geo60';
 import type {ShotProps} from './EP60';
-import {pulse, seg, aimPath, GoldDefs, Puff, HEART_D, Sparkle, DustBurst, wearAt, GlyphRun} from './act60a_kit';
+import {pulse, seg, aimPath, GoldDefs, Puff, HEART_D, Sparkle, DustBurst, wearAt, GlyphRun, GildedTitle, TS} from './act60a_kit';
 
 /* ep60 act A · life and death (shots 5–9, 10.9–26.5 s): Thebes at sunset; the 70-day embalming (time-lapse); the hook twirl;
    the heart that remembers everything; the heart scarab laid on the chest. Times: shot seconds (t), film seconds in [brackets]. */
@@ -55,66 +55,98 @@ const House: React.FC<{x: number; y: number; w: number; h: number; c?: string; s
 		<path d={`M${x} ${y - h * 0.4}L${x + w} ${y - h * 0.4}`} stroke="#A86E3A" strokeWidth={1.4} opacity={0.5} />
 	</g>; };
 
-/* ================= 5 · 10.9–14.3 · Thebes at sunset; you, a young scribe, set down your palette; a blue lotus slips =================
-   dissolve in (0.5). Palette tap 1.35 [12.25] · lotus slips 1.75 [12.65] · lotus lands 2.3 [13.20] · Nile lapping throughout.
-   crane down from the sunset sky to you; the top-right corner stays sky (the master's stamp from 0.5). */
+/* ---------------- the west-bank temple pylon at sunset (world px): towers, the gateway whose lintel carries the title, the sun in its door ---------------- */
+const Pylon5: React.FC<{t: number}> = ({t}) => {
+	const tower = (x0: number, x1: number, k: number) => <g>
+		<path d={poly([[x0, 520], [x1, 520], [x1 - k * 34, 122], [x0 + k * 34, 122]])} fill="#D9A866" stroke={PAL.ink} strokeWidth={3} />
+		<path d={poly([[x0 + k * 34 - 6, 122], [x1 - k * 34 + 6, 122], [x1 - k * 30 + 10, 104], [x0 + k * 30 - 10, 104]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={2.4} />
+		{Array.from({length: 9}, (_, i) => <line key={i} x1={x0 + 10} x2={x1 - 10} y1={160 + i * 40} y2={160 + i * 40} stroke="#B98A50" strokeWidth={2} opacity={0.6} />)}
+		{/* a relief: the king before a god, in red-ochre outline, low on the tower */}
+		<g opacity={0.55} transform={`translate(${(x0 + x1) / 2 - 40},330)`} fill="none" stroke="#8A3A1E" strokeWidth={4}><path d="M0 170L6 40L24 0L40 40L44 170M-10 70L60 50M80 170L84 50L100 20L116 50L118 170" /><circle cx={24} cy={-12} r={12} /><circle cx={100} cy={8} r={12} /></g>
+	</g>;
+	const pen = (x: number, ph: number) => <g><line x1={x} y1={520} x2={x} y2={128} stroke="#6A4626" strokeWidth={7} />
+		<path d={`M${x} 132Q${x + 26} ${138 + 6 * Math.sin(t * 3 + ph)} ${x + 52} ${136 + 10 * Math.sin(t * 3.4 + ph)}L${x + 50} ${152 + 8 * Math.sin(t * 3 + ph)}Q${x + 24} ${152 + 4 * Math.sin(t * 2.6 + ph)} ${x} 150Z`} fill={PAL.red} stroke={PAL.ink} strokeWidth={1.6} /></g>;
+	return <g>
+		{tower(-180, 250, 1)}{tower(1030, 1460, -1)}
+		{pen(262, 0)}{pen(1014, 1.4)}
+		{/* the gateway: cornice, the lintel (the title's cartouche sits on it, drawn in screen space), jambs, the door with the setting sun */}
+		<rect x={220} y={150} width={840} height={370} fill="#E2B474" stroke={PAL.ink} strokeWidth={3} />
+		<path d={poly([[214, 150], [1066, 150], [1090, 108], [190, 108]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={3} />
+		{Array.from({length: 30}, (_, i) => { const u = (i + 0.5) / 30, a2 = 214 + u * 852, b2 = 190 + u * 900;
+			return <path key={i} d={poly([[a2 - 9, 148], [a2 + 9, 148], [b2 + 10, 110], [b2 - 10, 110]])} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} stroke={PAL.ink} strokeWidth={1.2} />; })}
+		<rect x={220} y={380} width={840} height={12} fill={PAL.red} opacity={0.8} />
+		<rect x={470} y={392} width={340} height={128} fill="#F6B05A" />
+		<circle cx={640} cy={498} r={58} fill="#FFD27A" stroke="#E8642A" strokeWidth={4} />
+		<rect x={470} y={392} width={340} height={128} fill="none" stroke={PAL.ink} strokeWidth={4} />
+		{[300, 900].map((x) => <GlyphColumns key={x} x={x} y={404} cols={2} rows={3} cell={34} seed={x} mono="#7A3A1A" />)}
+	</g>;
+};
+/* ================= 5 · 7.9–11.3 (v2) · Thebes at sunset: across the Nile the temple pylon carries the title, the sun sets in its gate;
+   you, a young scribe, set down your palette; a blue lotus slips =================
+   dissolve in (0.6, from 7.30): the title stays where shot 3 left it (TS) while the world changes under it; it stays lit and legible
+   the whole shot, the camera cranes down ~30 px. Palette tap 1.35 [9.25] · lotus slips 1.75 [9.65] · lands 2.3 [10.20] · Nile lapping. */
+export const TX5 = 640, TY5 = 268;
 export const Shot5: React.FC<ShotProps> = ({t}) => {
-	const S = 25, fx = 400, tableX = 600, tableY = 628;
-	const cam = aimPath(t, [[-0.5, 690, 300, 720, 486, 1.07], [3.6, 640, 590, 700, 486, 1.0]], (u) => sm(u));
+	const S = 25, fx = 380, tableX = 590, tableY = 640, GY5 = 860;
+	const cam = aimPath(t, [[-0.6, TX5, TY5, TS.x, TS.y, 1.0], [3.4, TX5, TY5, TS.x, TS.y - 32, 1.03]], (u) => u);
 	const tTap = 1.35, tSlip = 1.75, tLand = 2.3;
-	// front hand carries the palette from the chest down onto the table, then leaves it; back hand holds the lotus low at the side
-	const hTarget = keyV(t, [[0, 3.5, -12.6], [tTap, (tableX - 30 - fx) / S, (tableY - 14 - GY) / S], [tTap + 0.25, (tableX - 30 - fx) / S, (tableY - 14 - GY) / S], [tTap + 0.9, 3.0, -9.0]]);
+	const hTarget = keyV(t, [[0, 3.5, -12.6], [tTap, (tableX - 30 - fx) / S, (tableY - 14 - GY5) / S], [tTap + 0.25, (tableX - 30 - fx) / S, (tableY - 14 - GY5) / S], [tTap + 0.9, 3.0, -9.0]]);
 	let pose: Pose = {...POSES.rest, lean: lerp(1, 7, sm(seg(t, 0.2, tTap))) - 3 * sm(seg(t, tTap + 0.3, tTap + 1.0)), neck: 4, head: lerp(2, 10, sm(seg(t, 0, tTap))) - 6 * sm(seg(t, 1.9, 2.5)), rt: -8, at: 11, rk: 3, ak: 2};
 	pose = wristTo(reach(pose, 'f', hTarget), 'f', t < tTap + 0.3 ? 82 : 40);
 	const slip = seg(t, tSlip - 0.15, tSlip);
 	pose = wristTo(reach(pose, 'b', [0.6 - 0.2 * slip, -8.3]), 'b', 20 + 30 * slip);
-	const g = solve(pose), fGrip = toW(fx, GY, S, 1, ap(g.fH, [0.02, 0.6])), bGrip = toW(fx, GY, S, 1, ap(g.bH, [0.02, 0.6]));
+	const g = solve(pose), fGrip = toW(fx, GY5, S, 1, ap(g.fH, [0.02, 0.6])), bGrip = toW(fx, GY5, S, 1, ap(g.bH, [0.02, 0.6]));
 	const palOn = t >= tTap, palP: V = palOn ? [tableX + 22, tableY - 11] : [fGrip[0] + 52, fGrip[1] - 2];
-	// lotus: held, slips, falls turning, lands softly on the terrace
 	let lotus: V = [bGrip[0] + 4, bGrip[1] + 6], la = 18;
-	if (t > tSlip) { const u = cl((t - tSlip) / (tLand - tSlip)); lotus = [lerp(bGrip[0] + 4, bGrip[0] + 70, u), lerp(bGrip[1] + 6, GY - 6, u * u)]; la = lerp(18, 96, sm(u)); }
-	if (t > tLand) { const v = t - tLand; lotus = [bGrip[0] + 70, GY - 6 - 5 * Math.exp(-v / 0.1) * Math.abs(Math.sin(v * 22))]; la = 96; }
-	const H = g.head, penA = ap(H, [-0.7, -1.95]), penB = ap(H, [0.3, -0.88]);
-	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={0.16} stain={0.12} tags={[{x: fx - 130, y: 430, text: '你'}]}
+	if (t > tSlip) { const u = cl((t - tSlip) / (tLand - tSlip)); lotus = [lerp(bGrip[0] + 4, bGrip[0] + 70, u), lerp(bGrip[1] + 6, GY5 - 6, u * u)]; la = lerp(18, 96, sm(u)); }
+	if (t > tLand) { const v = t - tLand; lotus = [bGrip[0] + 70, GY5 - 6 - 5 * Math.exp(-v / 0.1) * Math.abs(Math.sin(v * 22))]; la = 96; }
+	// the reed pen tucked behind the ear: drawn over the head, then the ear drawn again over the pen (it passes UNDER the ear)
+	const H = g.head, penA = ap(H, [-0.75, -1.9]), penB = ap(H, [0.34, -0.86]);
+	const tp = toScreen(cam, TX5, TY5);
+	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={0.16} stain={0.12} tags={[{x: fx - 130, y: 440, text: '你'}]}
 		light={<>
-			<Glow x={200} y={370} r={620} c="warm" o={0.85} />
-			<Glow x={200} y={370} r={180} c="white" o={0.7} />
-			<Glow x={200} y={500} r={260} ry={60} c="warm" o={0.7} />
-			<Glow x={fx - 60} y={560} r={260} c="warm" o={0.35} />
-			<Dust t={t} box={[0, 300, 1300, 860]} n={50} seed={5} c="#FFE0A0" o={0.6} vx={6} vy={-3} />
-			{t > tLand - 0.02 && <DustBurst t={t} t0={tLand} x={lotus[0] + 20} y={GY - 4} rx={30} ry={6} n={14} seed={2} c="#FFF0C0" life={0.6} />}
-		</>}>
-		<defs><linearGradient id="a5-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3E2470" /><stop offset="0.3" stopColor="#B23A56" /><stop offset="0.62" stopColor="#F2743A" /><stop offset="1" stopColor="#FFC456" /></linearGradient>
+			<Glow x={640} y={480} r={560} c="warm" o={0.85} />
+			<Glow x={640} y={490} r={150} c="white" o={0.75} />
+			<Shaft pts={[[480, 392], [800, 392], [1000, 900], [280, 900]]} o={0.28} />
+			<Glow x={640} y={570} r={240} ry={60} c="warm" o={0.7} />
+			<Glow x={TX5} y={TY5} r={520} ry={170} c="gold" o={0.3} />
+			<Glow x={fx - 60} y={600} r={260} c="warm" o={0.3} />
+			<Dust t={t} box={[0, 100, 1300, 860]} n={60} seed={5} c="#FFE0A0" o={0.65} vx={6} vy={-3} />
+			{t > tLand - 0.02 && <DustBurst t={t} t0={tLand} x={lotus[0] + 20} y={GY5 - 4} rx={30} ry={6} n={14} seed={2} c="#FFF0C0" life={0.6} />}
+		</>}
+		screen={<GildedTitle x={tp[0]} y={tp[1]} w={TS.w * cam.z} lit={1} t={t + 3} id="a5t" />}>
+		<defs><linearGradient id="a5-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3E2470" /><stop offset="0.35" stopColor="#B23A56" /><stop offset="0.7" stopColor="#F2743A" /><stop offset="1" stopColor="#FFC456" /></linearGradient>
 			<linearGradient id="a5-nile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E89A5A" /><stop offset="0.25" stopColor="#4E6FB0" /><stop offset="1" stopColor="#2E4F94" /></linearGradient></defs>
-		<rect x={-400} y={-500} width={2300} height={930} fill="url(#a5-sky)" />
-		{/* the sun setting behind the west-bank hills (the peak of el-Qurn) */}
-		<circle cx={200} cy={376} r={74} fill="#FFD27A" stroke="#E8642A" strokeWidth={4} />
-		<path d={`M-400 430L-200 406L20 400L120 392L200 400L300 380L400 322L460 302L530 330L660 392L860 404L1100 410L1300 400L1900 414L1900 430Z`} fill="#7E3E50" stroke={PAL.ink} strokeWidth={2.4} />
-		<path d={`M340 362L400 322L460 302L480 312`} fill="none" stroke="#F6B26A" strokeWidth={3} opacity={0.8} />
-		{[60, 150, 560, 680].map((x, i) => <Palm key={x} x={x} y={430} h={70 + (i % 2) * 18} t={t} seed={i + 4} />)}
+		<rect x={-400} y={-500} width={2300} height={1020} fill="url(#a5-sky)" />
+		{/* the west bank: the Theban hills, palms, the temple pylon */}
+		<path d={`M-400 520L-200 470L0 440L120 420L200 380L260 400L1100 420L1240 380L1320 400L1900 470L1900 520Z`} fill="#7E3E50" stroke={PAL.ink} strokeWidth={2.4} />
+		<Pylon5 t={t} />
+		{[60, 1240, 1330].map((x, i) => <Palm key={x} x={x} y={520} h={90 + (i % 2) * 20} t={t} seed={i + 4} />)}
 		{/* the Nile with the sunset in it, a sail going by */}
-		<rect x={-400} y={430} width={2300} height={120} fill="url(#a5-nile)" />
-		<River x0={-400} x1={1900} y={440} h={110} t={t} speed={10} />
-		<rect x={140} y={444} width={120} height={100} fill="#FFC870" opacity={0.45} />
-		{[0, 1, 2, 3].map((k) => <rect key={k} x={156 + 8 * Math.sin(t * 2 + k)} y={452 + k * 22} width={88 - k * 10} height={5} fill="#FFE6A0" opacity={0.85} />)}
-		<SailBoat x={620 + 16 * t} y={512} s={0.82} t={t} />
-		{/* east bank: palms, mud-brick houses */}
-		<rect x={-400} y={548} width={2300} height={120} fill="#C9935A" />
-		{[[740, 140, 640], [890, 180, 660], [1080, 120, 650], [1210, 200, 664]].map(([x, h, y], i) => <House key={x} x={x} y={y} w={i % 2 ? 150 : 120} h={h} seed={i + 3} c={['#C98A52', '#D49A60', '#BE7E48', '#CF955C'][i]} />)}
-		{[700, 1040, 1340].map((x, i) => <Palm key={x} x={x} y={650} h={190 + 30 * (i % 2)} t={t} seed={i} />)}
+		<rect x={-400} y={520} width={2300} height={96} fill="url(#a5-nile)" />
+		<River x0={-400} x1={1900} y={528} h={88} t={t} speed={10} />
+		<rect x={584} y={528} width={112} height={86} fill="#FFC870" opacity={0.5} />
+		{[0, 1, 2].map((k) => <rect key={k} x={598 + 8 * Math.sin(t * 2 + k)} y={536 + k * 24} width={84 - k * 14} height={5} fill="#FFE6A0" opacity={0.85} />)}
+		<SailBoat x={200 + 18 * t} y={600} s={0.7} t={t} />
+		{/* east bank (ours): palms, mud-brick houses */}
+		<rect x={-400} y={614} width={2300} height={90} fill="#C9935A" />
+		{[[840, 110, 700], [970, 150, 704], [1130, 100, 700], [1240, 170, 706]].map(([x, h, y], i) => <House key={x} x={x} y={y} w={i % 2 ? 140 : 110} h={h} seed={i + 3} c={['#C98A52', '#D49A60', '#BE7E48', '#CF955C'][i]} />)}
+		{[800, 1100].map((x, i) => <Palm key={x} x={x} y={704} h={170 + 30 * (i % 2)} t={t} seed={i} />)}
 		{/* the terrace: parapet, floor, the little table */}
-		<rect x={-400} y={668} width={2300} height={40} fill="#B98252" stroke={PAL.ink} strokeWidth={2.4} />
-		<rect x={-400} y={708} width={2300} height={500} fill="#D9AE74" />
-		<path d={`M-400 ${GY}L1900 ${GY}`} stroke="#A87A48" strokeWidth={3} />
-		{[0, 1, 2, 3, 4, 5, 6].map((k) => <path key={k} d={`M${-100 + k * 230} ${GY + 6}L${-160 + k * 230} 1100`} stroke="#BC8E58" strokeWidth={2} />)}
+		<rect x={-400} y={704} width={2300} height={40} fill="#B98252" stroke={PAL.ink} strokeWidth={2.4} />
+		<rect x={-400} y={744} width={2300} height={500} fill="#D9AE74" />
+		<path d={`M-400 ${GY5}L1900 ${GY5}`} stroke="#A87A48" strokeWidth={3} />
 		<path d={poly([[tableX - 70, tableY], [tableX + 110, tableY], [tableX + 104, tableY + 12], [tableX - 64, tableY + 12]])} fill="#9A6A3A" stroke={PAL.ink} strokeWidth={2.4} />
-		{[tableX - 54, tableX + 94].map((lx) => <path key={lx} d={poly([[lx - 5, tableY + 12], [lx + 5, tableY + 12], [lx + 7, GY], [lx - 7, GY]])} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={2} />)}
+		{[tableX - 54, tableX + 94].map((lx) => <path key={lx} d={poly([[lx - 5, tableY + 12], [lx + 5, tableY + 12], [lx + 7, GY5], [lx - 7, GY5]])} fill="#8A5A2E" stroke={PAL.ink} strokeWidth={2} />)}
 		<path d={poly([[tableX + 40, tableY], [tableX + 70, tableY], [tableX + 66, tableY - 34], [tableX + 44, tableY - 34]])} fill="#C9874A" stroke={PAL.ink} strokeWidth={2} />
-		{/* you */}
-		<God id="a5-you" cast={{...CAST2.scribe, bHand: 'fist', fHand: 'fist'}} pose={pose} x={fx} y={GY} s={S} sec={{t}} bProp="none" fProp="none" />
-		<line x1={fx + penA[0] * S} y1={GY + penA[1] * S} x2={fx + penB[0] * S} y2={GY + penB[1] * S} stroke={PAL.ink} strokeWidth={6} strokeLinecap="round" />
-		<line x1={fx + penA[0] * S} y1={GY + penA[1] * S} x2={fx + penB[0] * S} y2={GY + penB[1] * S} stroke="#C9A060" strokeWidth={3} strokeLinecap="round" />
-		<ScribePalette x={palP[0]} y={palP[1]} a={palOn ? 0 : -8} w={140} />
+		{/* the palette lies on the table once set down (drawn before you: your hand rests on it, not under it) */}
+		{palOn && <ScribePalette x={palP[0]} y={palP[1]} a={0} w={140} />}
+		<God id="a5-you" cast={{...CAST2.scribe, bHand: 'fist', fHand: 'fist'}} pose={pose} x={fx} y={GY5} s={S} sec={{t}} bProp="none" fProp="none" />
+		<line x1={fx + penA[0] * S} y1={GY5 + penA[1] * S} x2={fx + penB[0] * S} y2={GY5 + penB[1] * S} stroke={PAL.ink} strokeWidth={6} strokeLinecap="round" />
+		<line x1={fx + penA[0] * S} y1={GY5 + penA[1] * S} x2={fx + penB[0] * S} y2={GY5 + penB[1] * S} stroke="#C9A060" strokeWidth={3} strokeLinecap="round" />
+		<g transform={`translate(${fx},${GY5}) scale(${S})`}><path transform={mx(H)} d="M0.12 -1.22Q0.42 -1.3 0.42 -0.95Q0.42 -0.62 0.12 -0.62Z" fill={PAL.skinM2} stroke={PAL.ink} strokeWidth={1.5 / S} /></g>
+		{/* carried: the palette in the fist (drawn after the hand, held by its end under the thumb) */}
+		{!palOn && <ScribePalette x={palP[0]} y={palP[1]} a={-8} w={140} />}
 		<Lotus x={lotus[0]} y={lotus[1]} a={la} len={84} />
 	</Stage60>;
 };

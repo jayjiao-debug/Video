@@ -9,6 +9,7 @@ import {ANI, ANI_POSES} from './cast60';
 import {wobIn, camE, eOut, eIn, bump, BalanceC, balW, HallBg, ctxC, Sparkle} from './act60c_common';
 import {PAL, lerp, sm, cl, seg, V, sp} from './geo60';
 import type {ShotProps} from './EP60';
+import {Ammit2} from './act60b_kit'; // ep60 v2: the shared Ammit (builder B owns her design)
 
 const GY = 852;
 const silM = (r: number, g: number, b: number) => `0 0 0 0 ${r}  0 0 0 0 ${g}  0 0 0 0 ${b}  0 0 0 1 0`;
@@ -41,7 +42,7 @@ const S41: React.FC<ShotProps> = ({t}) => {
 		<HallBg t={t} x0={-300} x1={1700} red cols={[40, 1250]} />
 		<BalanceC p={p} x={BX} y={GY} s={s} t={t} feather={t < b} />
 		{t > b && fy < 1100 && <g transform={`translate(${fx},${fy}) rotate(${fr}) scale(${s})`}><Feather c={ctxC(s)} h={3.0} /></g>}
-		<g transform={`translate(${dx},${dy}) rotate(${rot} ${AX - 150} ${GY - 120})`}><Ammit pose={ap_} x={AX} y={GY} s={44} face={-1} t={t} /></g>
+		<g transform={`translate(${dx},${dy}) rotate(${rot} ${AX - 150} ${GY - 120})`}><Ammit2 pose={ap_} x={AX} y={GY} s={44} face={-1} t={t} rim={0.7} id="c41am" roar={sm(seg(t, T41.spring + 0.02, T41.roar)) * (1 - sm(seg(t, 1.75, 2.15)))} /></g>
 	</Stage60>;
 };
 
@@ -76,8 +77,7 @@ const S42: React.FC<ShotProps> = ({t}) => {
 			{[-1.85, -0.6, 0.6, 1.85].map((u) => <line key={u} x1={HX + u * pan} y1={HY} x2={HX + 260} y2={-60} stroke={PAL.ink} strokeWidth={2.4} />)}
 			<g transform={`translate(${HX},${HY}) scale(${hs * beat})`}><Heart c={ctxC(hs)} /></g>
 			<g transform={`translate(${HX},${HY}) scale(${pan})`}><path d={sp([[-2.05, 0, 1], [2.05, 0, 1], [1.6, 0.5], [0.7, 0.74], [-0.7, 0.74], [-1.6, 0.5]], true, 0.2)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={2.4 / pan} /></g>
-			<g filter="url(#c42rim)"><Ammit pose={ap_} x={ax} y={ay} s={58} face={-1} t={t} /></g>
-			<Ammit pose={ap_} x={ax} y={ay} s={58} face={-1} t={t} />
+			<Ammit2 pose={ap_} x={ax} y={ay} s={58} face={-1} t={t} rim={0.9} id="c42am" />
 		</>}
 	</Stage60>;
 };

@@ -257,3 +257,51 @@ export const DustBurst: React.FC<{t: number; t0: number; x: number; y: number; r
 		return <circle key={i} cx={x + Math.cos(an) * rx * (1 + d * 0.9 * sp_)} cy={y + Math.sin(an) * ry * (1 + d * 1.4 * sp_) + 30 * u * u} r={rr * (1 - u * 0.5)} fill={c} opacity={(1 - u) * (0.5 + 0.5 * R())} />; })}</g>;
 };
 export const _k = {T, R, chain};
+
+/* ---------------- v2 (owner 15:10): parallax layers and the title inside the world ---------------- */
+/** a layer scaled by k about world point c (parallax inside one Stage camera) */
+export const layerT = (k: number, c: V) => `translate(${c[0]},${c[1]}) scale(${k}) translate(${-c[0]},${-c[1]})`;
+export const TITLE_TXT = '死后称心脏';
+/** where the title sits on screen at the 3 → 5 dissolve (shot 3 settles on it, shot 5 starts on it): centre x, y and the title width */
+export const TS = {x: 640, y: 268, w: 700};
+/** the gilded title in its cartouche, drawn in SCREEN space (put it in Stage60's `screen` layer, projected from its world anchor).
+    lit 0..1: molten gold runs into the carved signs left to right; flash 0..1: the landing. */
+export const GildedTitle: React.FC<{x: number; y: number; w: number; lit: number; flash?: number; t: number; id: string; o?: number}> = ({x, y, w, lit, flash = 0, t, id, o = 1}) => {
+	const fs = w / 5.5, ls = fs * 0.1, hw = w * 0.57, hh = fs * 0.8, r = hh;
+	const cart = `M${x - hw + r} ${y - hh}L${x + hw - r} ${y - hh}A${r} ${r} 0 0 1 ${x + hw - r} ${y + hh}L${x - hw + r} ${y + hh}A${r} ${r} 0 0 1 ${x - hw + r} ${y - hh}Z`;
+	const ty = y + fs * 0.36, tx = x + ls / 2, front = x - hw - 20 + lit * (2 * hw + 60);
+	const txt = (p: React.SVGProps<SVGTextElement>) => <text x={tx} y={ty} textAnchor="middle" fontFamily={"'Noto Serif CJK SC','Noto Serif CJK',serif"} fontWeight={900} fontSize={fs} letterSpacing={ls} {...p}>{TITLE_TXT}</text>;
+	const sh = Math.sin(t * 2.2);
+	return <g opacity={o}>
+		<defs>
+			<linearGradient id={`${id}-tg`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFF6CF" /><stop offset="0.38" stopColor="#F9D46A" /><stop offset="0.6" stopColor="#D79A2A" /><stop offset="0.82" stopColor="#F4CF6C" /><stop offset="1" stopColor="#B07816" /></linearGradient>
+			<linearGradient id={`${id}-ti`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1B2C74" /><stop offset="1" stopColor="#0B1238" /></linearGradient>
+			<clipPath id={`${id}-tl`}><rect x={x - hw - 40} y={y - hh - 80} width={Math.max(0, front - (x - hw - 40))} height={2 * hh + 160} /></clipPath>
+		</defs>
+		<path d={cart} fill="#000" opacity={0.35} transform="translate(6,9)" />
+		<rect x={x + hw + 6} y={y - hh - 5} width={fs * 0.2} height={2 * hh + 10} rx={5} fill={`url(#${id}-tg)`} stroke="#2A1608" strokeWidth={3} opacity={0.55 + 0.45 * lit} />
+		<path d={cart} fill={`url(#${id}-ti)`} stroke="#2A1608" strokeWidth={fs * 0.14} />
+		<path d={cart} fill="none" stroke={`url(#${id}-tg)`} strokeWidth={fs * 0.09} opacity={0.5 + 0.5 * lit} />
+		<path d={cart} fill="none" stroke="#7A4C10" strokeWidth={fs * 0.025} strokeDasharray={`${fs * 0.07} ${fs * 0.06}`} opacity={0.75} />
+		<path d={cart} fill="none" stroke={PAL.red} strokeWidth={2.5} transform={`translate(${x},${y}) scale(0.95,0.86) translate(${-x},${-y})`} opacity={0.85} />
+		{/* the carved signs (before the gold): dark incised, a light bevel */}
+		{txt({fill: '#0A0F2A', stroke: '#5A6AAA', strokeWidth: fs * 0.022, opacity: 0.95})}
+		{/* the gold, running in from the left */}
+		<g clipPath={`url(#${id}-tl)`}>
+			{txt({fill: 'none', stroke: '#FFD87A', strokeWidth: fs * 0.14, opacity: 0.2 + 0.1 * sh})}
+			{txt({fill: '#1A0C02', stroke: '#1A0C02', strokeWidth: fs * 0.07, strokeLinejoin: 'round', transform: `translate(0,${fs * 0.035})`})}
+			{txt({fill: `url(#${id}-tg)`, stroke: '#3A1E06', strokeWidth: fs * 0.02})}
+		</g>
+		{lit > 0 && lit < 1 && <g style={{mixBlendMode: 'screen'}}><rect x={front - 34} y={y - hh} width={68} height={2 * hh} fill="url(#g60-gold)" opacity={0.9} /><circle cx={front} cy={y} r={hh * 0.9} fill="url(#g60-white)" opacity={0.5} /></g>}
+		{flash > 0.01 && <g style={{mixBlendMode: 'screen'}}><ellipse cx={x} cy={y} rx={hw * (1 + 0.25 * (1 - flash))} ry={hh * (1.6 + 0.6 * (1 - flash))} fill="url(#g60-gold)" opacity={0.85 * flash} />
+			<Sparkle x={x - hw + r * 0.6} y={y - hh * 0.7} r={60 * flash} a={20} /><Sparkle x={x + hw - r * 0.6} y={y + hh * 0.6} r={48 * flash} a={-10} /></g>}
+		{lit >= 1 && [[x - hw + r * 0.55, y - hh * 0.62], [x + hw - r * 0.7, y + hh * 0.55]].map(([sx, sy], i) => <Sparkle key={i} x={sx} y={sy} r={fs * (0.14 + 0.06 * Math.sin(t * 3 + i * 2))} o={0.75} a={t * 30} />)}
+	</g>;
+};
+/** a bronze brazier on three legs with a big flame (world px; origin = floor under it) */
+export const Brazier: React.FC<{x: number; y: number; s?: number; t: number; seed?: number}> = ({x, y, s = 1, t, seed = 0}) => <g transform={`translate(${x},${y}) scale(${s})`}>
+	<path d="M-60 0L-34 -150M60 0L34 -150M0 6L0 -150" stroke={PAL.ink} strokeWidth={12} /><path d="M-60 0L-34 -150M60 0L34 -150M0 6L0 -150" stroke="#B07A2A" strokeWidth={7} />
+	<path d={sp([[-96, -190, 1], [96, -190, 1], [70, -150], [0, -136], [-70, -150]], true, 0.2)} fill="#C98A2A" stroke={PAL.ink} strokeWidth={4} />
+	<path d="M-90 -186L90 -186" stroke="#F2C46A" strokeWidth={4} />
+	{[-54, -20, 16, 50].map((fx, i) => <g key={i} transform={`translate(${fx},-188) scale(${1.3 + 0.25 * Math.sin(t * 6 + i * 1.7 + seed)})`}><path d={`M-14 0Q-18 -40 ${-2 + 6 * Math.sin(t * 7 + i)} -78Q16 -40 14 0Z`} fill="#E8642A" stroke={PAL.ink} strokeWidth={2} /><path d="M-7 0Q-8 -24 0 -44Q8 -24 7 0Z" fill="#F8C24A" /></g>)}
+</g>;

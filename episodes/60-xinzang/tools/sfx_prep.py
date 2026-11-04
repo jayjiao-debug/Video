@@ -14,6 +14,7 @@ SR = 48000
 NEW, OLD, OUT = sys.argv[1:4]
 # (out name, dir, source file, semitones, kind, what it is)   kind: shot = one-shot, amb = ambience take, loop = seamless loop,
 #   chorus = one voice layered into a tiny crowd (4 copies detuned -1..+2 st, 0-31 ms apart, spread L-R, cut short)
+#   layer  = the take + a second take under it (LAYERS: partner, low-pass, segment, gain), cut to `keep` s with a fade
 ITEMS = [
  ('X01_linen_wrap', NEW, 'X01_linen_wrap', 0, 'shot', 'linen bandage wrapped round a body: soft dry cloth rustle and pulls (embalming)'),
  ('X02_canopic_lid_clink', NEW, 'X02_canopic_lid', +1.12, 'shot', 'stone lid set on a canopic jar: clinks + short scrape (tuned F7 -> F#7)'),
@@ -43,6 +44,9 @@ ITEMS = [
  ('X23_whip_crack', NEW, 'X23_whip_crack', 0, 'shot', 'one leather whip crack + short echo (the overseer shabti, shot 51)'),
  ('X24_hoe_chops', NEW, 'X24_hoe_chops', 0, 'shot', 'wooden hoe into soft earth, four chops ~0.88 s apart: slice them onto beats (shot 51)'),
  ('X25_tiny_chorus', NEW, 'X25b_tiny_chorus_hey', 0, 'chorus', 'a tiny crowd of squeaky voices answers at once, 0.6 s (the shabtis\' 「我在！」, shot 50)'),
+ ('X26_ammit_roar', NEW, 'X26_ammit_roar_a', 0, 'layer', 'AMMIT: the full roar, raspy lioness snarl + a low chest punch (2nd take < 300 Hz), 1.55 s, hit ~0.1 s'),
+ ('X27_ammit_grunt', NEW, 'X27_ammit_grunt_a', 0, 'layer', 'AMMIT: a low menacing grunt + a wet throat rattle under it, 0.75 s (her reveal)'),
+ ('X28_ammit_growl', NEW, 'X28_ammit_growl_a', 0, 'shot', 'AMMIT: deep guttural crocodile-lion growl rising, 2.6 s (into the bite); its throat tone ~Eb4 rubs the D drone on purpose'),
  ('S01_heartbeat', OLD, 'S01_heartbeat', 0, 'shot', 'slow deep heartbeat, close'),
  ('S02_scale_settle', OLD, 'S02_scale_settle', +0.61, 'shot', 'balance tilting and settling, creak + small tick (tick tuned to D6)'),
  ('S03_croc_snap', OLD, 'S03_croc_snap', 0, 'shot', 'crocodile jaws snap with a short low growl'),
@@ -59,6 +63,8 @@ ITEMS = [
  ('G2_darbuka_roll_hit', OLD, 'G2_darbuka_roll_hit', 0, 'shot', 'ElevenLabs darbuka roll into a hit'),
  ('G3_zills', OLD, 'G3_zills', -0.20, 'shot', 'finger cymbals (tuned to F#7)'),
 ]
+LAYERS = {'X26_ammit_roar': dict(src='X26_ammit_roar_b', lp=300, seg=(0.0, 0.6), db=-4, keep=1.55),
+          'X27_ammit_grunt': dict(src='X27_ammit_grunt_b', lp=None, seg=(0.0, 0.8), db=-6, keep=0.75)}
 def load(p):
     raw = subprocess.run(['ffmpeg', '-v', 'quiet', '-i', p, '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout
     return np.frombuffer(raw, np.float32).reshape(-1, 2).astype(np.float64)
@@ -77,6 +83,14 @@ if __name__ == '__main__':
             e = np.abs(y).max(1); i0 = max(0, int(np.argmax(e > pk * 10 ** (-45 / 20))) - int(0.01 * SR)); y = y[i0:]
             abrupt = np.abs(y[-int(0.03 * SR):]).max() / pk > 10 ** (-30 / 20)
             k = min(int((0.5 if abrupt else 0.05) * SR), len(y) // 3); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
+            k = int(0.002 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]
+        elif kind == 'layer':   # (owner v1: "a menacing grunt/roar like the lion in the reference")
+            L_ = LAYERS[name]; e = np.abs(y).max(1); i0 = max(0, int(np.argmax(e > pk * 10 ** (-40 / 20))) - int(0.005 * SR)); y = y[i0:]
+            z = load(f'{d}/{L_["src"]}.mp3'); z = z[int(L_['seg'][0] * SR):int(L_['seg'][1] * SR)]
+            if L_['lp']: z = signal.sosfilt(signal.butter(4, L_['lp'], 'low', fs=SR, output='sos'), z, axis=0)
+            kz = int(0.08 * SR); z[-kz:] *= np.linspace(1, 0, kz)[:, None]
+            z *= pk / (np.abs(z).max() + 1e-9) * 10 ** (L_['db'] / 20); n_ = max(len(y), len(z)); y = np.pad(y, ((0, n_ - len(y)), (0, 0)))
+            y[:len(z)] += z; y = y[:int(L_['keep'] * SR)]; k = int(0.3 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
             k = int(0.002 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]
         elif kind == 'chorus':
             e = np.abs(y).max(1); i0 = max(0, int(np.argmax(e > pk * 10 ** (-45 / 20))) - int(0.005 * SR)); y = y[i0:i0 + int(0.62 * SR)]

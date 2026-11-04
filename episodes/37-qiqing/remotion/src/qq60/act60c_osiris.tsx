@@ -7,7 +7,7 @@ import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Shaft} from './f
 import {Ceiling} from './sets60';
 import {ANI, walkPose, STRIDE} from './cast60';
 import {thothPose, STILL} from './scene60';
-import {wobIn, camE, bump, Sparkle} from './act60c_common';
+import {wobIn, camE, bump, Sparkle, OsirisProps} from './act60c_common';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
 
@@ -38,7 +38,8 @@ const Shrine: React.FC<{fx: number; S: number; t: number; nod?: number; sisters?
 		{sisters && <><God id="c45neph" cast={NEPH} pose={sis(t, 1)} x={X(13.5)} y={top} s={S * 0.84} face={-1} sec={{t: t + 1}} />
 			<God id="c45isis" cast={ISIS} pose={sis(t, 0)} x={X(11.1)} y={top} s={S * 0.84} face={-1} sec={{t}} fProp="sistrum" /></>}
 		<Throne x={X(4.4)} y={top} s={S} />
-		<God id="c45os" cast={CAST.osiris} pose={osirisNod(t, nod)} x={X(7.8)} y={top} s={S} face={-1} sec={{t}} />
+		<God id="c45os" cast={CAST.osiris} pose={osirisNod(t, nod)} x={X(7.8)} y={top} s={S} face={-1} sec={{t}} hide={{props: true}} />
+		<OsirisProps id="c45op" pose={osirisNod(t, nod)} x={X(7.8)} y={top} s={S} face={-1} t={t} />
 		<ShrineFront x={fx} y={GY} s={S} t={t} />
 	</g>;
 };
@@ -54,9 +55,7 @@ const leadWalk = (ph: number, s: number, xL: number, xF: number): {lead: Pose; f
 	lead = wristTo(reach(lead, 'b', handL), 'b', -40);
 	lead = wristTo(holdAt(lead, 'f', [5.2, -2.0]), 'f', 62);
 	fol = wristTo(reach(fol, 'f', [(handW[0] - 0.55 * s - xF) / s, (handW[1] + 0.2 * s - GY) / s]), 'f', 82);
-	const sh = ap(solve(fol).fU, [0, 0]);
-	fol = wristTo(reach(fol, 'b', [sh[0] + 2.6, sh[1] - 1.0]), 'b', 166);
-	return {lead, fol};
+	return {lead, fol}; // the follower's free arm keeps its walk swing (raised, it came out of his wig)
 };
 const S45: React.FC<ShotProps> = ({t}) => {
 	const S = 21, ph = W45.om * t, xL = W45.x0 + STRIDE * W45.stride * ph * S, xF = xL - W45.gap;

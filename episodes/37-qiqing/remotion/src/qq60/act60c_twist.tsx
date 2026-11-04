@@ -8,7 +8,7 @@ import {Stage60, KhekherFrieze, RegisterLine, Dado, Glow, Dust, Stars, Shaft, rn
 import {CAST2, tutuPose} from './cast60';
 import {STILL, LAY, S as S1920, aniPose, anubisPose, WState} from './scene60';
 import {W43} from './scene43';
-import {wobIn, camE, eOut, wearZ, bump, EyeFx, BalanceC, ctxC, SolidC, Sparkle} from './act60c_common';
+import {wobIn, camE, eOut, wearZ, bump, EyeFx, BalanceC, ctxC, SolidC, Sparkle, AdoreArms} from './act60c_common';
 import {PAL, sp, poly, lerp, sm, cl, seg, ap, V} from './geo60';
 import type {ShotProps} from './EP60';
 
@@ -156,7 +156,7 @@ const TalkHeart: React.FC<{s: number; open: number; ribbon: number; hush: number
 		return <g key={`${k}${front}`}>{pts.filter((q) => q.length > 1).map((q, i) => { const d = q.map((p, j) => `${j ? 'L' : 'M'}${p[0].toFixed(3)} ${p[1].toFixed(3)}`).join('');
 			return <g key={i}><path d={d} fill="none" stroke={PAL.ink} strokeWidth={0.2} strokeLinecap="round" strokeLinejoin="round" /><path d={d} fill="none" stroke="#F3C64E" strokeWidth={0.14} strokeLinecap="round" strokeLinejoin="round" /></g>; })}{glyphs}</g>;
 	};
-	const lidA = -24 * open, look = hush;
+	const lidA = -20 * open, look = hush;
 	const eye = (sg: number) => { const ex = sg * 0.27, ey = -0.82;
 		return <g key={sg}>
 			<ellipse cx={ex} cy={ey} rx={0.13} ry={0.17 - 0.03 * (1 - hush) * open} fill="#FFF8EC" stroke={PAL.ink} strokeWidth={c.LW * 1.1} />
@@ -175,9 +175,11 @@ const TalkHeart: React.FC<{s: number; open: number; ribbon: number; hush: number
 			<path d="M-0.58 -1.12Q-0.66 -0.7 -0.44 -0.32" fill="none" stroke="#E87A62" strokeWidth={c.LW * 3} strokeLinecap="round" /></g>
 		{open > 0.02 && <ellipse cx={0} cy={HY} rx={0.5} ry={0.03 + 0.14 * open} fill="#3A0604" stroke={PAL.ink} strokeWidth={c.LW} />}
 		<path d={`M-0.56 ${HY}L0.56 ${HY}`} stroke={PAL.ink} strokeWidth={c.LW * 1.4} />
-		<g transform={`translate(0,${-0.07 * open}) rotate(${lidA} -0.52 ${HY})`}><g clipPath={`url(#${id}-l)`}><SolidC d={HEART} r="red" c={c} />
+		<g transform={`translate(0,${-0.04 * open}) rotate(${lidA} -0.5 ${HY})`}><g clipPath={`url(#${id}-l)`}><SolidC d={HEART} r="red" c={c} />
 			<path d="M-0.38 -1.42Q0 -1.32 0.38 -1.42" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.6} /></g>
-			<path d={`M-0.56 ${HY}L0.56 ${HY}`} stroke={PAL.ink} strokeWidth={c.LW * 1.4} /></g>
+			<path d={`M-0.5 ${HY - 0.035}L0.5 ${HY - 0.035}`} stroke={PAL.ink} strokeWidth={0.1} strokeLinecap="round" />
+			<path d={`M-0.48 ${HY - 0.035}L0.48 ${HY - 0.035}`} stroke={PAL.gold} strokeWidth={0.055} strokeLinecap="round" /></g>
+		<circle cx={-0.5} cy={HY - 0.02} r={0.055} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} />
 		{eye(-1)}{eye(1)}
 		{open > 0.05 && hush < 1 && <ellipse cx={0} cy={-0.47} rx={0.1 + 0.03 * open} ry={0.03 + 0.11 * open * (1 - hush)} fill="#3A0604" stroke={PAL.ink} strokeWidth={c.LW * 1.2} />}
 		{hush > 0 && <g opacity={hush}><path d="M-0.17 -0.5Q0 -0.36 0.17 -0.5" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} strokeLinecap="round" />
@@ -224,10 +226,10 @@ const st37 = (t: number): WState => ({...STILL, tilt: 2.2 + 0.4 * Math.sin(t * 1
 	ani: {lean: 7 + 0.6 * Math.sin(t * 1.4), head: 3 + 0.8 * Math.sin(t * 1.1)}, anubis: {lean: 5 + 0.6 * Math.sin(t * 1.3), head: -3}});
 const ANUBIS: Cast = {...CAST.anubis, bHand: 'open', fHand: 'open', bProp: 'none', fProp: 'none'};
 /** whisper wisps rising from a point toward a target (gold curls) */
-const Wisps: React.FC<{from: V; to: V; t: number; o: number; n?: number}> = ({from, to, t, o, n = 3}) => o <= 0 ? null : <g>
+const Wisps: React.FC<{from: V; via: V; to: V; t: number; o: number; n?: number}> = ({from, via, to, t, o, n = 3}) => o <= 0 ? null : <g>
 	{Array.from({length: n}, (_, k) => { const u0 = ((t * 0.75 + k / n) % 1), pts: string[] = [];
 		for (let i = 0; i <= 14; i++) { const u = cl(u0 - 0.42 + 0.03 * i), q = u * u * (3 - 2 * u), side = Math.sin(u * 9 + k * 2) * 18 * Math.sin(Math.PI * u);
-			const px = lerp(from[0], to[0], q) + side, py = lerp(from[1], to[1], u); pts.push(`${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`); }
+			const w = 1 - q, px = w * w * from[0] + 2 * w * q * via[0] + q * q * to[0] + side * 0.6, py = w * w * from[1] + 2 * w * q * via[1] + q * q * to[1] + side * 0.4; pts.push(`${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`); }
 		const d = pts.join(''), op = o * Math.sin(Math.PI * u0);
 		return <g key={k} opacity={op}><path d={d} fill="none" stroke="#4A2A08" strokeWidth={7} strokeLinecap="round" opacity={0.45} /><path d={d} fill="none" stroke="#F2B42A" strokeWidth={4.5} strokeLinecap="round" /></g>; })}
 </g>;
@@ -242,10 +244,11 @@ const AniVignette: React.FC<{t: number; lit: number; whisper: number}> = ({t, li
 		<g transform={`translate(${W43.post},852) scale(${W43.k}) translate(${-LAY.post},${-GY})`}>
 			<God id="c37tutu" cast={CAST2.tutu} pose={tutuPose(t)} x={LAY.ani - 300} y={GY} s={S} sec={{t}} />
 			<God id="c37ani" cast={CAST.ani} pose={aP} x={LAY.ani} y={GY} s={S} sec={{t}} />
+			<AdoreArms cast={CAST.ani} pose={aP} x={LAY.ani} y={GY} s={S} id="c37aa" />
 			<BalanceC p={{tilt: st.tilt, swingL: st.swingL, swingR: st.swingR, plumb: st.plumb, look: st.look}} x={LAY.post} y={GY} s={S} t={t} />
 			<God id="c37an" cast={ANUBIS} pose={anubisPose(st)} x={LAY.anubis} y={GY} s={S} sec={{t}} />
 		</g>
-		<Wisps from={mouth} to={[mouth[0] - 90, 350]} t={t} o={whisper} />
+		<Wisps from={mouth} via={[mouth[0] + 58, 392]} to={[mouth[0] - 70, 352]} t={t} o={whisper} />
 		<Dado x0={-900} x1={1560} y={852} h={80} />
 	</g>;
 };
@@ -281,6 +284,7 @@ const S38: React.FC<ShotProps> = ({t}) => {
 		<TextCols x={40} y={150} cols={7} rows={6} cell={50} seed={37} lit={7} />
 		<TextCols x={930} y={150} cols={5} rows={6} cell={50} seed={39} lit={0} />
 		<God id="c38ani" cast={CAST.ani} pose={pose} x={fx} y={fy} s={s} sec={{t}} />
+		<AdoreArms cast={CAST.ani} pose={pose} x={fx} y={fy} s={s} id="c38aa" />
 		<EyeFx id="c38e" pose={pose} x={fx} y={fy} s={s} skin={PAL.skinM} look={look} lid={wink} smile={smile} />
 	</Stage60>;
 };

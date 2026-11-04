@@ -297,73 +297,118 @@ export const Naos: React.FC<{x: number; y: number; w: number; h: number; front?:
 	</g>;
 };
 
-/* ---------------- Ammit, clearer: croc head, a full lion mane and lion forelegs with claws, a round hippo rump that can wiggle ----------------
-   Same pivots as the rig's Ammit (facing +x, units, ground y = 0). mr = mane ripple (0..1), wig = rump wiggle angle (deg). */
-export const ammit2Solve = (p: AmmitPose) => {
-	const B = chain(T(AMMIT_PIV.hip[0], AMMIT_PIV.hip[1]), R(-p.lean));
-	const N = chain(B, T(AMMIT_PIV.neck[0], AMMIT_PIV.neck[1]), R(-p.neck + p.lean * 0.6));
-	const J_ = chain(N, T(AMMIT_PIV.jaw[0], AMMIT_PIV.jaw[1]), R(p.jaw));
+/* ---------------- Ammit v2 (shared by acts B and C): croc head with long toothy jaws, a lion mane and lion forelegs, hippo hindquarters, crouched.
+   One body silhouette with ONE outline (hippo rump and lion forepart meet as fur, no seam); draw order back → front: rim light, far
+   hind leg, far foreleg, tail, body, near hind foot, near foreleg (their outlines are masked out inside the body, so legs grow out of it
+   without joint lines), mane over the neck joint, mouth, lower jaw, upper teeth, skull, eye.
+   Same pivots as the rig's Ammit (facing +x, units, ground y = 0), so poses carry over.
+   mr = mane ripple, wig = rump wiggle (deg), look = pupil direction (rad), rim = red rim light,
+   roar 0..1 = jaws wide, head thrown forward, body lunges, mane bristles. ---------------- */
+export const ammit2Solve = (p: AmmitPose, roar = 0) => {
+	const lean = p.lean + 5 * roar, B = chain(T(AMMIT_PIV.hip[0], AMMIT_PIV.hip[1]), R(-lean));
+	const N = chain(B, T(AMMIT_PIV.neck[0] + 0.85 * roar, AMMIT_PIV.neck[1] + 0.1 * roar), R(-(p.neck + 4 * roar) + lean * 0.6));
+	const J_ = chain(N, T(AMMIT_PIV.jaw[0], AMMIT_PIV.jaw[1]), R(Math.max(p.jaw, 46 * roar)));
 	return {B, N, J: J_};
 };
-export const Ammit2: React.FC<{pose: AmmitPose; x: number; y: number; s: number; face?: 1 | -1; t?: number; mr?: number; wig?: number; look?: number; rim?: number}> = ({pose, x, y, s, face = 1, t = 0, mr = 0, wig = 0, look = 0, rim = 0}) => {
-	const c = cx(s), g = ammit2Solve(pose), br = pose.breathe;
-	const Ink: React.FC<{d: string; m?: M}> = ({d, m}) => <path d={d} transform={m && mx(m)} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW} strokeLinejoin="round" />;
-	const Fl: React.FC<{d: string; m?: M; r: Role | string}> = ({d, m, r}) => <path d={d} transform={m && mx(m)} fill={col(r)} />;
-	const hippo = sp([[-2.75, 2.4, 1], [-3.15, 1.0], [-3.1, -0.7], [-2.4, -2.1], [-0.9, -2.95], [0.9, -3.2], [2.2, -3.0], [2.0, -0.6], [1.6, 1.3], [0.2, 1.85], [-1.4, 2.3]]);
-	const lion = sp([[1.2, -3.15], [2.6, -3.7], [4.0, -3.6], [4.75 + br * 0.08, -2.6], [4.7 + br * 0.1, -1.0], [4.1, 0.3], [2.9, 0.9], [1.7, 1.2], [1.1, -0.6]]);
-	const thigh = sp([[-2.4, 0.7], [-1.9, -1.0], [-0.3, -1.45], [1.0, -0.8], [1.35, 0.5], [1.1, 1.7], [0.0, 2.1], [-1.6, 2.0]]);
-	const hf = ap(g.B, [0.4, 2.4]);
-	const hindFoot = sp([[hf[0] - 1.25, hf[1] - 1.35], [hf[0] + 0.35, hf[1] - 1.5], [hf[0] + 1.3, hf[1] - 0.6], [hf[0] + 1.5, hf[1] - 0.1], [hf[0] + 1.45, 0, 1], [hf[0] - 1.0, 0, 1], [hf[0] - 1.45, -0.6]]);
-	const paw = pose.paw ?? 0;
-	const leg = (dx: number) => { const S = ap(g.B, [AMMIT_PIV.shoulder[0] + dx * 0.5, AMMIT_PIV.shoulder[1]]), P: V = [3.35 + dx + (dx === 0 ? paw : 0), 0];
-		return sp([[S[0] - 0.95, S[1] - 0.2], [S[0] + 0.8, S[1] - 0.5], [S[0] + 0.75, S[1] + 1.2], [P[0] + 0.5, P[1] - 1.6], [P[0] + 0.6, P[1] - 0.6], [P[0] + 1.45, P[1] - 0.45], [P[0] + 1.6, P[1], 1], [P[0] - 0.55, P[1], 1], [P[0] - 0.5, P[1] - 1.5], [S[0] - 0.6, S[1] + 1.4]], true, 0.17); };
-	const claws = (dx: number) => { const px = 3.35 + dx + (dx === 0 ? paw : 0); return <g>{[0.6, 1.0, 1.4].map((k) => <path key={k} d={`M${px + k} -0.12L${px + k + 0.32} 0.02L${px + k + 0.05} 0.06Z`} fill="#F8F3E7" stroke={PAL.ink} strokeWidth={c.LW * 0.7} />)}</g>; };
-	const W = chain(g.B, T(-0.4, -0.4), R(wig), T(0.4, 0.4));
-	const tailM = chain(W, T(-2.95, -0.6), R(28 + pose.tail + 5 * Math.sin(t * 1.7)));
-	const tail = sp([[-0.2, -0.1], [0.22, -0.05], [0.2, 0.7], [0.32, 1.2], [-0.1, 1.3], [-0.3, 0.7]]);
-	// the lion mane: a ruff of locks round the neck frame, rippling
-	const NL = 15, mane = sp(Array.from({length: NL * 2}, (_, i) => { const a = (-200 + (i / (NL * 2)) * 300) * Math.PI / 180, out = i % 2 === 0, rr = out ? 2.55 + 0.25 * Math.sin(i * 1.7) + 0.22 * mr * Math.sin(t * 16 + i) : 1.95;
-		return [-0.55 + Math.cos(a) * rr * 0.92, 0.25 + Math.sin(a) * rr] as Pt; }), true, 0.12);
-	const maneIn = sp(Array.from({length: NL * 2}, (_, i) => { const a = (-200 + (i / (NL * 2)) * 300) * Math.PI / 180, out = i % 2 === 0, rr = out ? 2.0 + 0.15 * Math.sin(i * 2.3) + 0.16 * mr * Math.sin(t * 16 + i + 1) : 1.55;
-		return [-0.45 + Math.cos(a) * rr * 0.92, 0.2 + Math.sin(a) * rr] as Pt; }), true, 0.12);
-	const skull = sp([[-0.7, -1.2], [0.4, -1.65], [1.25, -1.62], [1.6, -1.98], [2.1, -1.75], [2.9, -1.45], [4.4, -1.18], [5.3, -0.98], [5.62, -0.62], [5.5, -0.22, 1], [0.9, -0.12, 1], [-0.5, 0.2]], true, 0.16);
-	const jaw = sp([[-0.1, -0.12, 1], [4.75, -0.12, 1], [4.95, 0.12], [4.55, 0.45], [2.4, 0.62], [0.5, 0.62], [-0.25, 0.32]], true, 0.16);
-	const teethU: React.ReactNode[] = [], teethL: React.ReactNode[] = [];
-	for (let i = 0; i < 10; i++) { const xx = 1.35 + i * 0.4; teethU.push(<path key={i} d={`M${xx} -0.14L${xx + 0.12} 0.24L${xx + 0.24} -0.14Z`} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 0.6} />);
-		teethL.push(<path key={i} d={`M${xx - 0.85} -0.1L${xx - 0.73} -0.46L${xx - 0.61} -0.1Z`} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 0.6} />); }
-	const rimC = '#FF4A2A';
+const AM_BODY = (br: number) => sp([[-2.6, 2.38, 1], [-3.15, 1.0], [-3.1, -0.7], [-2.45, -2.1], [-0.9, -2.95], [0.9, -3.2], [2.2, -3.5], [3.2, -3.9], [4.2, -3.65], [4.85 + br * 0.08, -2.6], [4.8 + br * 0.1, -1.0], [4.1, 0.3], [2.9, 0.95], [1.7, 1.3], [0.2, 1.9], [-1.4, 2.32]], true, 0.17);
+export const Ammit2: React.FC<{pose: AmmitPose; x: number; y: number; s: number; face?: 1 | -1; t?: number; mr?: number; wig?: number; look?: number; rim?: number; roar?: number; id?: string}> = ({pose, x, y, s, face = 1, t = 0, mr = 0, wig = 0, look = 0.6, rim = 0, roar = 0, id = 'am2'}) => {
+	const c = cx(s), g = ammit2Solve(pose, roar), br = pose.breathe, bristle = Math.max(roar, 0.35 * mr);
+	const W = chain(g.B, T(3.0, -1.6), R(wig), T(-3.0, 1.6));
+	const body = AM_BODY(br), paw = pose.paw ?? 0, rimC = '#FF3A1E', ink = PAL.ink;
+	const S0 = ap(g.B, [AMMIT_PIV.shoulder[0], AMMIT_PIV.shoulder[1]]);
+	// forelegs between the (moving) shoulder and the (planted) paw: fill shape grows up into the chest; outline only below
+	const fore = (dx: number, pw: number) => { const S: V = [S0[0] + dx * 0.5, S0[1]], P: V = [3.35 + dx + pw, 0];
+		const fill = sp([[S[0] - 1.05, S[1] - 0.5], [S[0] + 0.95, S[1] - 0.7], [S[0] + 0.85, S[1] + 1.2], [P[0] + 0.5, P[1] - 1.6], [P[0] + 0.62, P[1] - 0.62], [P[0] + 1.5, P[1] - 0.45], [P[0] + 1.66, P[1], 1], [P[0] - 0.58, P[1], 1], [P[0] - 0.52, P[1] - 1.5], [S[0] - 0.62, S[1] + 1.4]], true, 0.17);
+		const edge = sp([[S[0] + 0.85, S[1] + 1.2], [P[0] + 0.5, P[1] - 1.6], [P[0] + 0.62, P[1] - 0.62], [P[0] + 1.5, P[1] - 0.45], [P[0] + 1.66, P[1], 1], [P[0] - 0.58, P[1], 1], [P[0] - 0.52, P[1] - 1.5], [S[0] - 0.62, S[1] + 1.4]], false, 0.17);
+		const claws = [0.62, 1.02, 1.42].map((k) => <path key={k} d={`M${P[0] + k} -0.1L${P[0] + k + 0.36} 0.04L${P[0] + k + 0.04} 0.07Z`} fill="#F8F3E7" stroke={ink} strokeWidth={c.LW * 0.7} />);
+		const toes = [0.45, 0.85].map((k) => <path key={k} d={`M${P[0] + k + 0.15} -0.02L${P[0] + k + 0.05} -0.34`} stroke={ink} strokeWidth={c.LW} />);
+		return {fill, edge, claws, toes}; };
+	const far = fore(-0.95, 0), near = fore(0, paw);
+	// near hind foot, planted forward under the belly (fill grows up into the haunch)
+	const hf = ap(W, [0.45, 2.4]), hind = {fill: sp([[hf[0] - 1.6, hf[1] - 2.2], [hf[0] + 0.5, hf[1] - 2.0], [hf[0] + 1.35, hf[1] - 0.62], [hf[0] + 1.55, hf[1] - 0.1], [hf[0] + 1.5, 0, 1], [hf[0] - 1.0, 0, 1], [hf[0] - 1.5, -0.6]], true, 0.17),
+		edge: sp([[hf[0] + 0.62, hf[1] - 1.75], [hf[0] + 1.35, hf[1] - 0.62], [hf[0] + 1.55, hf[1] - 0.1], [hf[0] + 1.5, 0, 1], [hf[0] - 1.0, 0, 1], [hf[0] - 1.5, -0.6], [hf[0] - 1.62, hf[1] - 1.3]], false, 0.17)};
+	const farHind = sp([[1.0, 0.9], [2.4, 0.8], [2.5, 1.9], [2.8, 2.4, 1], [1.1, 2.4, 1], [0.95, 1.8]], true, 0.17);
+	const tailM = chain(W, T(-3.0, -0.5), R(30 + pose.tail + 5 * Math.sin(t * 1.7)));
+	const tail = sp([[-0.2, -0.1], [0.22, -0.05], [0.24, 0.7], [0.34, 1.25], [-0.12, 1.32], [-0.3, 0.7]]);
+	// the mane: a ruff of locks round the neck joint (back, top, chin), bristling on the roar
+	const NL = 22, a0 = 62, a1 = 336, mane = sp([...Array.from({length: NL * 2 + 1}, (_, i) => { const a = (a0 + (i / (NL * 2)) * (a1 - a0)) * Math.PI / 180, out = i % 2 === 0;
+		const rr = out ? 2.55 + 0.28 * Math.sin(i * 1.7) + 0.75 * bristle + 0.2 * mr * Math.sin(t * 17 + i) + 0.06 * bristle * Math.sin(t * 40 + i * 2) : 1.95 + 0.25 * bristle;
+		return [-0.5 + Math.cos(a) * rr * 0.95, 0.55 + Math.sin(a) * rr * 1.12] as Pt; }), [0.9, 0.0], [0.55, 1.4]], true, 0.1);
+	const maneIn = sp(Array.from({length: NL * 2 + 1}, (_, i) => { const a = (a0 + 8 + (i / (NL * 2)) * (a1 - a0 - 16)) * Math.PI / 180, out = i % 2 === 0;
+		const rr = out ? 1.9 + 0.18 * Math.sin(i * 2.3) + 0.45 * bristle + 0.15 * mr * Math.sin(t * 17 + i + 1) : 1.4;
+		return [-0.4 + Math.cos(a) * rr * 0.95, 0.5 + Math.sin(a) * rr * 1.1] as Pt; }), true, 0.1);
+	// the head: long croc skull and lower jaw, interlocking teeth, a raised eye under a heavy brow
+	const skull = sp([[-0.55, -1.15], [0.2, -1.78], [1.1, -2.08], [1.75, -2.38], [2.45, -2.0], [3.4, -1.64], [4.8, -1.34], [6.0, -1.16], [6.42, -1.32], [6.86, -1.06], [6.95, -0.6, 1], [6.6, -0.16, 1], [4.0, -0.1], [1.2, -0.08, 1], [0.3, 0.15], [-0.45, 0.25]], true, 0.16);
+	const jawD = sp([[-1.05, -0.12, 1], [5.95, -0.14, 1], [6.18, 0.08], [5.6, 0.44], [3.0, 0.64], [0.6, 0.74], [-0.5, 0.56], [-1.1, 0.2]], true, 0.16);
+	const jawTip = ap(chain(T(AMMIT_PIV.jaw[0], AMMIT_PIV.jaw[1]), R(Math.max(pose.jaw, 46 * roar))), [5.95, -0.14]), jawBack = ap(chain(T(AMMIT_PIV.jaw[0], AMMIT_PIV.jaw[1]), R(Math.max(pose.jaw, 46 * roar))), [0.2, 0.3]);
+	const open = Math.max(pose.jaw, 46 * roar);
+	const upT = Array.from({length: 14}, (_, i) => { const xx = 1.35 + i * 0.38, L = i === 2 || i === 9 || i === 12 ? 0.46 : 0.27; return <path key={i} d={`M${xx} -0.16L${xx + 0.09} ${-0.1 + L}L${xx + 0.19} -0.16Z`} fill={PAL.white} stroke={ink} strokeWidth={c.LW * 0.6} />; });
+	const loT = Array.from({length: 13}, (_, i) => { const xx = 0.6 + i * 0.4, L = i === 1 || i === 8 || i === 12 ? 0.44 : 0.26; return <path key={i} d={`M${xx} -0.06L${xx + 0.1} ${-0.12 - L}L${xx + 0.2} -0.06Z`} fill={PAL.white} stroke={ink} strokeWidth={c.LW * 0.6} />; });
+	const lion = poly([[1.0, -4.6], [6.0, -4.6], [6.0, 2.5], [1.45, 2.5], [1.2, 1.4], [1.55, 0.6], [1.05, -0.2], [1.5, -1.0], [1.0, -1.8], [1.45, -2.6], [0.95, -3.4], [1.35, -4.0]]);
+	const tufts = [[1.2, 1.4], [1.05, -0.2], [1.0, -1.8], [0.95, -3.4]].map(([a, b], i) => <path key={i} d={`M${a + 0.3} ${b - 0.35}L${a - 0.45} ${b + 0.1}L${a + 0.35} ${b + 0.4}Z`} fill={PAL.lion} />);
+	const pid = `${id}-${face}`;
+	const rimStroke = (d: string, m: M, k = 8) => <path d={d} transform={mx(m)} fill="none" stroke={rimC} strokeWidth={c.OW * k} strokeLinejoin="round" />;
 	return <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
-		{rim > 0 && <g opacity={rim} style={{mixBlendMode: 'screen'}}><g transform={mx(g.B)}><path d={hippo} fill="none" stroke={rimC} strokeWidth={c.OW * 7} /><path d={lion} fill="none" stroke={rimC} strokeWidth={c.OW * 7} /></g>
-			<g transform={mx(g.N)}><path d={mane} fill="none" stroke={rimC} strokeWidth={c.OW * 7} /><path d={skull} fill="none" stroke={rimC} strokeWidth={c.OW * 6} /></g></g>}
-		<g transform={mx(tailM)}><Solid d={tail} r="hippo" c={c} />
-			{[-0.2, 0.0, 0.2].map((dx) => <path key={dx} d={`M${dx * 0.8} 1.2L${dx * 1.6} 1.75`} stroke={PAL.ink} strokeWidth={c.LW * 2.2} strokeLinecap="round" />)}</g>
-		<Ink d={leg(-0.9)} /><Fl d={leg(-0.9)} r="lion2" />{claws(-0.9)}
-		<g transform={mx(W)}><Ink d={hippo} /><Fl d={hippo} r="hippo" />
-			<path d="M-2.4 1.0Q-0.5 2.15 1.3 1.45" fill="none" stroke={PAL.hippo2} strokeWidth={c.LW * 2.4} />
-			<path d="M-2.6 -1.2Q-1.6 -2.4 -0.2 -2.75" fill="none" stroke="#D27A55" strokeWidth={c.LW * 3} opacity={0.7} />
-			<Solid d={thigh} r="hippo" c={c} /><path d="M-1.8 -0.5Q-0.3 -1.1 0.9 -0.3" fill="none" stroke={PAL.hippo2} strokeWidth={c.LW * 2} /></g>
-		<g transform={mx(g.B)}><Ink d={lion} /><Fl d={lion} r="lion" />
-			<path d="M1.25 -3.1Q2.0 -1.0 1.6 1.2" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
-			{([[2.9, -2.6], [3.7, -1.7], [3.2, -0.6], [4.1, -0.3], [2.3, -1.6]] as V[]).map(([a, b], i) => <ellipse key={i} cx={a} cy={b} rx={0.22} ry={0.15} fill={PAL.lion2} />)}</g>
-		<g><Solid d={hindFoot} r="hippo" c={c} />
-			{[0.45, 0.85].map((k) => <line key={k} x1={hf[0] + k} y1={-0.02} x2={hf[0] + k - 0.1} y2={-0.32} stroke={PAL.ink} strokeWidth={c.LW} />)}</g>
-		<Ink d={leg(0)} /><Fl d={leg(0)} r="lion" />{claws(0)}
-		<g transform={mx(g.N)}>
-			<Solid d={mane} r="lion2" c={c} />
-			<path d={maneIn} fill={PAL.lion} />
-			{Array.from({length: 9}, (_, i) => { const a = (-185 + i * 30) * Math.PI / 180, r0 = 1.0, r1 = 2.25 + 0.2 * mr * Math.sin(t * 16 + i * 2);
-				return <path key={i} d={`M${-0.5 + Math.cos(a) * r0} ${0.2 + Math.sin(a) * r0}Q${-0.5 + Math.cos(a + 0.15) * (r0 + r1) / 2} ${0.2 + Math.sin(a + 0.15) * (r0 + r1) / 2} ${-0.5 + Math.cos(a) * r1} ${0.2 + Math.sin(a) * r1}`} fill="none" stroke={PAL.lion2} strokeWidth={c.LW * 2.2} />; })}
+		<defs>
+			<clipPath id={`${pid}-clip`}><path d={body} transform={mx(W)} /></clipPath>
+			<mask id={`${pid}-mask`} maskUnits="userSpaceOnUse" x={-20} y={-20} width={40} height={40}><rect x={-20} y={-20} width={40} height={40} fill="white" /><path d={body} transform={mx(W)} fill="black" /></mask>
+		</defs>
+		{/* rim light: thick red strokes behind the whole silhouette, only their outer half shows */}
+		{rim > 0 && <g opacity={rim} style={{mixBlendMode: 'screen'}}>
+			{rimStroke(body, W)}{rimStroke(mane, g.N, 7)}{rimStroke(skull, g.N, 7)}{rimStroke(jawD, g.J, 7)}
+			<path d={near.fill} fill="none" stroke={rimC} strokeWidth={c.OW * 7} /><path d={far.fill} fill="none" stroke={rimC} strokeWidth={c.OW * 7} />
+		</g>}
+		{/* far legs and the tail, behind the body */}
+		<path d={farHind} transform={mx(W)} fill={PAL.hippo2} stroke={ink} strokeWidth={c.OW * 2} strokeLinejoin="round" />
+		<path d={far.fill} fill={PAL.lion2} stroke={ink} strokeWidth={c.OW * 2} strokeLinejoin="round" />{far.claws}
+		<g transform={mx(tailM)}><Solid d={tail} r="hippo" c={c} />{[-0.2, 0.0, 0.2].map((dx) => <path key={dx} d={`M${dx * 0.8} 1.2L${dx * 1.6} 1.75`} stroke={ink} strokeWidth={c.LW * 2.2} strokeLinecap="round" />)}</g>
+		{/* the body: one silhouette, hippo rump into lion forepart without a seam */}
+		<path d={body} transform={mx(W)} fill={PAL.hippo} stroke={ink} strokeWidth={c.OW * 2} strokeLinejoin="round" />
+		<g clipPath={`url(#${pid}-clip)`}><g transform={mx(W)}>
+			<ellipse cx={-1.4} cy={0.3} rx={1.9} ry={1.7} fill={PAL.hippo2} opacity={0.35} />
+			<ellipse cx={-1.0} cy={-0.2} rx={1.5} ry={1.3} fill={PAL.hippo} />
+			<path d="M-2.9 -0.9Q-1.9 -2.5 -0.2 -2.85" fill="none" stroke="#D27A55" strokeWidth={c.LW * 3.4} opacity={0.75} />
+			<path d={lion} fill={PAL.lion} />{tufts}
+			<ellipse cx={3.6} cy={0.4} rx={1.6} ry={0.7} fill={PAL.lion2} opacity={0.5} />
+			{([[2.9, -2.6], [3.7, -1.7], [3.2, -0.6], [4.1, -0.3], [2.3, -1.6], [2.6, -0.2]] as V[]).map(([a, b], i) => <ellipse key={i} cx={a} cy={b} rx={0.2} ry={0.13} fill={PAL.lion2} />)}
+			<path d="M-2.3 1.1Q-0.6 2.1 1.1 1.55" fill="none" stroke={PAL.hippo2} strokeWidth={c.LW * 3} opacity={0.6} />
+		</g></g>
+		{/* near legs in front of the body: fills overlap it, outlines only outside it */}
+		<path d={hind.fill} fill={PAL.hippo} />
+		<path d={near.fill} fill={PAL.lion} />
+		<g mask={`url(#${pid}-mask)`}>
+			<path d={hind.edge} fill="none" stroke={ink} strokeWidth={c.OW * 2} strokeLinejoin="round" strokeLinecap="round" />
+			<path d={near.edge} fill="none" stroke={ink} strokeWidth={c.OW * 2} strokeLinejoin="round" strokeLinecap="round" />
 		</g>
-		<g transform={mx(g.J)}><path d={sp([[-0.1, -0.1], [4.6, -0.1], [4.5, -0.6], [0.4, -0.75]])} fill={PAL.red2} /><Solid d={jaw} r="croc" c={c} />{teethL}
-			<path d="M0.4 0.38Q2.4 0.5 4.4 0.32" fill="none" stroke={PAL.croc2} strokeWidth={c.LW * 1.6} /></g>
-		<g transform={mx(g.N)}><Solid d={skull} r="croc" c={c} />{teethU}
-			{[2.4, 3.0, 3.6, 4.2, 4.8].map((xx) => <path key={xx} d={`M${xx} ${-1.48 + (xx - 2.4) * 0.2}Q${xx + 0.18} -0.7 ${xx} -0.25`} fill="none" stroke={PAL.croc2} strokeWidth={c.LW * 1.3} />)}
-			<path d="M0.6 -1.55Q1.6 -1.3 2.6 -1.4" fill="none" stroke={PAL.croc2} strokeWidth={c.LW * 1.2} />
-			<ellipse cx={1.6} cy={-1.4} rx={0.36} ry={0.24} fill="#FFD24A" stroke={PAL.ink} strokeWidth={c.LW * 1.4} />
-			<ellipse cx={1.6 + 0.12 * Math.cos(look)} cy={-1.4 - 0.08 * Math.sin(look)} rx={0.07} ry={0.19} fill={PAL.ink} />
-			<path d="M1.15 -1.7Q1.6 -1.85 2.05 -1.62" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.8} />
-			<ellipse cx={5.38} cy={-0.78} rx={0.11} ry={0.07} fill={PAL.ink} />
-			<path d="M0.95 -1.6Q1.25 -0.7 0.95 0.1" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 3} /><path d="M0.95 -1.6Q1.25 -0.7 0.95 0.1" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 0.8} />
+		{[0.45, 0.85].map((k) => <line key={k} x1={hf[0] + k} y1={-0.02} x2={hf[0] + k - 0.1} y2={-0.32} stroke={ink} strokeWidth={c.LW} />)}
+		{near.toes}{near.claws}
+		{/* the mane over the neck joint */}
+		<g transform={mx(g.N)}>
+			<path d={mane} fill={PAL.lion2} stroke={ink} strokeWidth={c.OW * 2} strokeLinejoin="round" />
+			<path d={maneIn} fill={PAL.lion} />
+			{Array.from({length: 11}, (_, i) => { const a = (75 + i * 25) * Math.PI / 180, r0 = 0.9, r1 = 2.05 + 0.45 * bristle + 0.15 * mr * Math.sin(t * 17 + i * 2);
+				return <path key={i} d={`M${-0.45 + Math.cos(a) * r0 * 0.95} ${0.5 + Math.sin(a) * r0 * 1.1}Q${-0.45 + Math.cos(a + 0.12) * (r0 + r1) / 2 * 0.95} ${0.5 + Math.sin(a + 0.12) * (r0 + r1) / 2 * 1.1} ${-0.45 + Math.cos(a) * r1 * 0.95} ${0.5 + Math.sin(a) * r1 * 1.1}`} fill="none" stroke={PAL.lion2} strokeWidth={c.LW * 2.2} />; })}
+			{/* the mouth (behind both jaws), the lower jaw and its teeth */}
+			{open > 1.5 && <path d={poly([[0.5, -0.05], [6.55, -0.14], ap(T(0, 0), jawTip), ap(T(0, 0), jawBack)])} fill="#4A0A10" />}
+			{open > 6 && <path d={sp([[0.9, 0.0], [jawTip[0] * 0.55, jawTip[1] * 0.55 - 0.05], [jawTip[0] * 0.62, jawTip[1] * 0.62 + 0.12], [1.0, 0.3]], true, 0.2)} fill="#C4505A" />}
+		</g>
+		<g transform={mx(g.J)}>{loT}<Solid d={jawD} r="croc" c={c} />
+			<path d="M0.2 0.4Q2.6 0.56 5.2 0.32" fill="none" stroke={PAL.croc2} strokeWidth={c.LW * 1.8} />
+			{[1.4, 2.4, 3.4, 4.4].map((xx) => <path key={xx} d={`M${xx} 0.12L${xx + 0.25} 0.5`} stroke={PAL.croc2} strokeWidth={c.LW * 1.2} />)}</g>
+		<g transform={mx(g.N)}>
+			{upT}
+			<Solid d={skull} r="croc" c={c} />
+			{[2.7, 3.3, 3.9, 4.5, 5.1].map((xx, i) => <path key={xx} d={`M${xx - 0.16} ${-1.55 + i * 0.065 + 0.05}Q${xx} ${-1.75 + i * 0.065} ${xx + 0.16} ${-1.55 + i * 0.065 + 0.05}`} fill={PAL.croc2} stroke={ink} strokeWidth={c.LW * 0.8} />)}
+			{[2.4, 3.0, 3.6, 4.2, 4.8, 5.4].map((xx) => <path key={'l' + xx} d={`M${xx} ${-1.3 + (xx - 2.4) * 0.05}Q${xx + 0.16} -0.75 ${xx} -0.3`} fill="none" stroke={PAL.croc2} strokeWidth={c.LW * 1.3} />)}
+			<ellipse cx={6.55} cy={-1.2} rx={0.13} ry={0.08} fill={ink} />
+			{/* the eye on its raised socket, under a heavy brow, glowing */}
+			<ellipse cx={1.8} cy={-1.6} rx={0.56} ry={0.42} fill={PAL.croc2} stroke={ink} strokeWidth={c.LW * 1.2} />
+			<circle cx={1.85} cy={-1.58} r={0.55} fill="url(#g60-gold)" opacity={0.55} style={{mixBlendMode: 'screen'}} />
+			<ellipse cx={1.86} cy={-1.57} rx={0.33} ry={0.24} fill="#FFC21A" stroke={ink} strokeWidth={c.LW * 1.4} />
+			<ellipse cx={1.86 + 0.1 * Math.cos(look)} cy={-1.57 - 0.05 * Math.sin(look)} rx={0.065} ry={0.21} fill={ink} />
+			<circle cx={1.78} cy={-1.65} r={0.05} fill="#FFFFFF" />
+			<path d={sp([[1.15, -2.05, 1], [2.45, -1.86], [2.6, -1.68, 1], [2.1, -1.74], [1.3, -1.82]], true, 0.2)} fill={PAL.croc2} stroke={ink} strokeWidth={c.LW * 1.2} />
+			<path d="M0.15 -1.75Q0.4 -0.8 0.1 0.12" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 3.2} /><path d="M0.15 -1.75Q0.4 -0.8 0.1 0.12" fill="none" stroke={ink} strokeWidth={c.LW * 0.8} />
 		</g>
 	</g>;
 };
