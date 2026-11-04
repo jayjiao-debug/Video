@@ -6,7 +6,8 @@ import {God, CAST, POSES, Pose, solve, reach, wristTo, holdAt} from './rig60';
 import {CAST2, ANI, tendPose, scribePose} from './cast60';
 import {PAL, sp, poly, lerp, cl, sm, V, ap, mx} from './geo60';
 import type {ShotProps} from './EP60';
-import {pulse, seg, aimPath, GoldDefs, Puff, HEART_D, Sparkle, DustBurst, wearAt, GlyphRun} from './act60a_kit';
+import {pulse, seg, aimPath, GoldDefs, Puff, HEART_D, Sparkle, DustBurst, wearAt, GlyphRun, MUMMY_BODY} from './act60a_kit';
+import {Heart60} from './heart60';
 
 /* ep60 act A · life and death (shots 5–9, 10.9–26.5 s): Thebes at sunset; the 70-day embalming (time-lapse); the hook twirl;
    the heart that remembers everything; the heart scarab laid on the chest. Times: shot seconds (t), film seconds in [brackets]. */
@@ -148,64 +149,95 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-/* ================= 6 · 14.3–17.5 · the embalming tent, time-lapse: day 1 → day 70, four jars land on the beat =================
-   dissolve in (0.4). Jars land 0.58, 1.15, 1.73, 2.31 [14.88, 15.45, 16.03, 16.61] (groove beats at 104 bpm from 14.30);
-   linen swish once per wrap, half a beat later: [15.17, 15.74, 16.32, 16.90] + [14.59]; counter ticks 0.15–2.9 [14.45–17.2]. */
+/* ================= 6 · 11.3–14.5 (v3, owner 17:07) · the embalming tent, time-lapse: day 1 → day 70. Readable action: each beat the priest
+   feeds a new linen band that sweeps over your body (turn by turn), your gold-masked face gleams at day 60, and four canopic jars (内脏罐)
+   land one per beat =================
+   dissolve in (0.4). Jars land 0.58, 1.15, 1.73, 2.31 [11.88, 12.45, 13.03, 13.61] (groove beats, 104 bpm from 11.30) · linen swish as each
+   band completes, half a beat later: [11.59, 12.17, 12.74, 13.32, 13.90, 14.47] · the gold mask gleams 2.40 [13.70] · counter ticks
+   0.15–2.9 [11.45–14.20]. */
 const JARS: JarHead[] = ['human', 'baboon', 'jackal', 'falcon'];
 const JAR_T = [0.58, 1.15, 1.73, 2.31];
 const BEAT6 = 60 / 104;
+const limb6 = (a: V, b: V, r0: number, r1: number) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.max(1, Math.hypot(dx, dy)), nx = -dy / L, ny = dx / L;
+	return sp([[a[0] + nx * r0, a[1] + ny * r0], [b[0] + nx * r1, b[1] + ny * r1], [b[0] + dx / L * r1, b[1] + dy / L * r1], [b[0] - nx * r1, b[1] - ny * r1], [a[0] - nx * r0, a[1] - ny * r0], [a[0] - dx / L * r0, a[1] - dy / L * r0]], true, 0.2); };
 export const Shot6: React.FC<ShotProps> = ({t}) => {
-	const s = 36, bx = 70, bedTop = GY - BIER_H * s, ex = bx + 12.6 * s, chest: V = [bx + (0.3 + 12.4) * s, bedTop - 2.0 * s];
-	const cam = aimPath(t, [[-0.4, 640, 500, 700, 486, 1.0], [3.4, 720, 540, 700, 486, 1.07]]);
-	// wrapping: one turn per beat, the hands circle the chest
-	const ph = 2 * Math.PI * (t / BEAT6), toF = (p: V): V => [(p[0] - ex) / s, (p[1] - GY) / s];
-	const bH: V = [chest[0] - 30 + 40 * Math.cos(ph), chest[1] - 40 + 26 * Math.sin(ph)], fH: V = [chest[0] + 70 + 30 * Math.cos(ph + 1), chest[1] - 70 + 30 * Math.sin(ph + 1)];
-	const pose = {...tendPose(toF(bH), toF(fH), t, 16), neck: 2, head: 10 + 3 * Math.sin(ph)};
+	const ms = 56, mx0 = -60, bed = 690, FL = 900, px = 610, ps = 36;
+	const cam = aimPath(t, [[-0.4, 640, 520, 700, 486, 1.0], [3.4, 680, 540, 700, 486, 1.05]]);
+	const U = (u: number) => mx0 + u * ms;   // mummy units → world x
+	// the wrapping: band k (6 of them) sweeps over the body during beat k and completes half a beat later; three bands at the feet are done
+	const BX = (k: number) => 7.2 + k * 0.96, done = [2.4, 3.6, 4.8];
+	const kNow = Math.min(5, Math.floor(t / BEAT6)), cyc = cl((t - kNow * BEAT6) / (0.5 * BEAT6));
+	const xc = U(BX(kNow) + 0.45), topY = bed - 3.25 * ms;
+	// the priest's hands feed the roll at the top edge of the band being wound (small circles: the roll turns)
+	const ph = 2 * Math.PI * cyc, roll: V = [xc + 18 * Math.cos(ph), topY - 34 + 10 * Math.sin(ph)];
+	const toF = (p: V): V => [(p[0] - px) / ps, (p[1] - FL) / ps];
+	const pose = {...tendPose(toF([roll[0] - 22, roll[1] + 4]), toF([roll[0] + 24, roll[1] - 2]), t, 18), neck: 4, head: 14 + 2 * Math.sin(t * 2)};
 	const day = Math.min(70, 1 + Math.floor(69 * sm(seg(t, 0.15, 2.9))));
-	// the sun arcs over the tent opening again and again (time-lapse); light breathes day/night
 	const sunPh = (t * 1.25) % 1, sunX = lerp(1010, 1250, sunPh), sunY = 300 - 150 * Math.sin(Math.PI * sunPh), dayL = Math.sin(Math.PI * sunPh);
-	const masked = day >= 66;
-	const linen = (() => { const g = solve(pose), hp = toW(ex, GY, s, 1, ap(g.bH, [0.02, 0.6]));
-		return `M${hp[0]} ${hp[1]}Q${chest[0] - 10} ${chest[1] - 60 + 30 * Math.sin(ph)} ${chest[0] - 60 + 80 * Math.cos(ph)} ${chest[1] + 10}`; })();
-	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.3 - 0.06 * dayL} darkC="#1A1030" tags={[{x: ex - 170, y: 150, text: '防腐祭司'}]}
+	const tMask = 2.4, masked = true, flash = pulse(t, tMask, 0.03, 0.35);   // the gold mask on your face throughout; it gleams at day 60
+	const band = (u0: number, k: string, grow = 1, fresh = 0) => { const y0 = 0.3, y1 = -3.6, yb = lerp(y1, y0, grow);
+		const sl = 0.75 * (yb - y1) / (y0 - y1);
+		return <g key={k}><path d={poly([[u0 + 0.62, y1], [u0 + 1.62, y1], [u0 + 1.62 - sl, yb], [u0 + 0.62 - sl, yb]])} fill={fresh > 0.3 ? '#FFFFFF' : '#FBF6EA'} stroke={PAL.ink} strokeWidth={0.045} />
+			<path d={poly([[u0 + 0.62, y1], [u0 + 0.78, y1], [u0 + 0.78 - sl, yb], [u0 + 0.62 - sl, yb]])} fill="#CDBE98" />
+			<path d={`M${u0 + 1.1} ${y1}L${u0 + 1.1 - sl} ${yb}`} stroke="#E2D6B8" strokeWidth={0.05} /></g>; };
+	const bands: React.ReactNode[] = done.map((u, i) => band(u, 'd' + i));
+	for (let k = 0; k <= kNow; k++) bands.push(band(BX(k), 'k' + k, k < kNow ? 1 : sm(cyc), k === kNow ? 1 - cyc : 0));
+	// the front arms: drawn again over the body (the rig draws arms behind it): elbow → wrist + fist, gold bracelet
+	const g = solve(pose), arms = (['b', 'f'] as const).map((sd) => { const F = sd === 'b' ? g.bF : g.fF, H = sd === 'b' ? g.bH : g.fH, el = toW(px, FL, ps, 1, ap(F, [0, 0])), wr = toW(px, FL, ps, 1, ap(H, [0, 0])), fi = toW(px, FL, ps, 1, ap(H, [0, 0.55]));
+		return <g key={sd}><path d={limb6(el, wr, 15, 11)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={2.6} /><circle cx={fi[0]} cy={fi[1]} r={15} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={2.6} />
+			<path d={limb6(lerp(el[0], wr[0], 0.8) < 0 ? el : [lerp(el[0], wr[0], 0.82), lerp(el[1], wr[1], 0.82)], wr, 12, 12)} fill={PAL.gold} stroke={PAL.ink} strokeWidth={2} /></g>; });
+	return <Stage60 t={t} cam={cam} grade="papyrus" dark={0.3 - 0.06 * dayL} darkC="#1A1030" tags={[{x: px - 190, y: 150, text: '防腐祭司'}, {x: 64, y: 690, text: '内脏罐'}]}
 		light={<>
-			<Shaft pts={[[sunX - 60, 140], [sunX + 40, 140], [lerp(760, 300, sunPh) + 160, GY], [lerp(760, 300, sunPh) - 120, GY]]} o={0.55 * dayL} />
+			<Shaft pts={[[sunX - 60, 140], [sunX + 40, 140], [lerp(760, 300, sunPh) + 160, FL], [lerp(760, 300, sunPh) - 120, FL]]} o={0.5 * dayL} />
 			<Glow x={sunX} y={sunY} r={200} c="warm" o={0.9 * dayL} />
-			<Glow x={chest[0]} y={chest[1]} r={140} c="red" o={0.35} />
-			<Glow x={1236} y={GY - 300} r={300} c="warm" o={(0.4 + 0.35 * (1 - dayL)) + 0.1 * flick(t, 5)} />
-			<Smoke t={t * 3} x={1236} y={GY - 300} n={9} seed={9} h={380} o={0.3} />
-			<Dust t={t * 2} box={[100, 120, 1200, 840]} n={50} seed={5} o={0.6} vx={8} vy={6} />
-			{JAR_T.map((jt, i) => t > jt - 0.02 && t < jt + 0.5 ? <DustBurst key={i} t={t} t0={jt} x={880 + i * 74} y={GY - 4} rx={34} ry={6} n={12} seed={i + 5} c="#F0DEB0" life={0.45} /> : null)}
+			<Glow x={xc} y={topY + 60} r={180} c="gold" o={0.25 + 0.2 * (1 - cyc)} />
+			{flash > 0.02 && <g><Glow x={U(16.8)} y={bed - 3.3 * ms} r={260} c="gold" o={0.9 * flash} /><Sparkle x={U(16.6)} y={bed - 3.6 * ms} r={90 * flash} a={20} /></g>}
+			<Glow x={1236} y={FL - 330} r={300} c="warm" o={(0.4 + 0.35 * (1 - dayL)) + 0.1 * flick(t, 5)} />
+			<Dust t={t * 2} box={[100, 120, 1200, 880]} n={50} seed={5} o={0.6} vx={8} vy={6} />
+			{JAR_T.map((jt, i) => t > jt - 0.02 && t < jt + 0.5 ? <DustBurst key={i} t={t} t0={jt} x={150 + i * 112} y={FL + 8} rx={46} ry={8} n={14} seed={i + 5} c="#F0DEB0" life={0.45} /> : null)}
 		</>}>
-		<rect x={-200} y={PIC_T - 100} width={1900} height={GY + 200} fill="#D8BE8C" />
+		<rect x={-300} y={PIC_T - 200} width={2000} height={FL + 300} fill="#D8BE8C" />
 		{/* the tent opening: sky racing through days and nights */}
-		<rect x={980} y={120} width={300} height={GY - 120} fill="#F2C878" />
-		<rect x={980} y={120} width={300} height={GY - 120} fill="#1E2A5E" opacity={cl(1 - dayL * 1.6)} />
+		<rect x={980} y={120} width={300} height={FL - 120} fill="#F2C878" />
+		<rect x={980} y={120} width={300} height={FL - 120} fill="#1E2A5E" opacity={cl(1 - dayL * 1.6)} />
 		{dayL < 0.3 && <Stars t={t} box={[990, 130, 1270, 500]} n={20} seed={8} o={1 - dayL / 0.3} />}
 		<circle cx={sunX} cy={sunY} r={34} fill="#FFD27A" stroke="#E8642A" strokeWidth={3} opacity={cl(dayL * 3)} />
-		<rect x={980} y={560} width={300} height={GY - 560} fill="#B88A52" />
-		{[980, 1280].map((px) => <rect key={px} x={px - 12} y={110} width={24} height={GY - 110} fill="#9A6A3A" stroke={PAL.ink} strokeWidth={2} />)}
-		<GlyphColumns x={340} y={200} cols={4} rows={5} cell={30} seed={31} />
-		<path d={`M-200 ${PIC_T - 100}L1700 ${PIC_T - 100}L1700 116Q1240 ${150 + 6 * Math.sin(t * 2)} 860 120Q480 ${158 + 6 * Math.sin(t * 2.4 + 1)} 120 118Q0 130 -200 124Z`} fill="#F1E3C2" stroke={PAL.ink} strokeWidth={2.4} />
-		{Array.from({length: 16}, (_, i) => <path key={i} d={`M${-160 + i * 120} ${PIC_T - 100}L${-150 + i * 120} ${126 + 18 * Math.sin(i * 1.3)}`} stroke={i % 2 ? PAL.red : PAL.blue} strokeWidth={10} opacity={0.6} />)}
-		{/* the day counter, painted on a board hanging from the tent pole */}
+		{[980, 1280].map((x) => <rect key={x} x={x - 12} y={110} width={24} height={FL - 110} fill="#9A6A3A" stroke={PAL.ink} strokeWidth={2} />)}
+		<path d={`M-300 ${PIC_T - 200}L1700 ${PIC_T - 200}L1700 116Q1240 ${150 + 6 * Math.sin(t * 2)} 860 120Q480 ${158 + 6 * Math.sin(t * 2.4 + 1)} 120 118Q0 130 -300 124Z`} fill="#F1E3C2" stroke={PAL.ink} strokeWidth={2.4} />
+		{Array.from({length: 16}, (_, i) => <path key={i} d={`M${-260 + i * 120} ${PIC_T - 200}L${-250 + i * 120} ${126 + 18 * Math.sin(i * 1.3)}`} stroke={i % 2 ? PAL.red : PAL.blue} strokeWidth={10} opacity={0.6} />)}
+		{/* the day counter on a board hanging from the tent pole */}
 		<line x1={150} y1={126} x2={150} y2={176} stroke={PAL.ink} strokeWidth={3} />
 		<g transform={`rotate(${2 * Math.sin(t * 3)} 150 176)`}>
 			<rect x={44} y={176} width={212} height={92} rx={8} fill="#F4E4BC" stroke={PAL.ink} strokeWidth={3} />
 			<rect x={52} y={184} width={196} height={76} rx={5} fill="none" stroke={PAL.red} strokeWidth={2.4} />
 			<text x={150} y={240} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={48} fill={PAL.ink}>第<tspan fill={PAL.red}>{day}</tspan>天</text>
 		</g>
-		<God id="a6-pr" cast={CAST2.embalmer} pose={pose} x={ex} y={GY} s={s} sec={{t}} />
-		<LionBier x={bx} y={GY} s={s} />
-		<Mummy x={bx + 0.3 * s} y={bedTop} s={s} heart={0.5} t={t} masked={masked} />
-		<path d={linen} fill="none" stroke={PAL.ink} strokeWidth={13} strokeLinecap="round" /><path d={linen} fill="none" stroke="#F7F0DE" strokeWidth={9} strokeLinecap="round" />
-		{/* the four jars slide in from the right and land in a row, one per beat */}
-		{JARS.map((h, i) => { const jt = JAR_T[i], u = seg(t, jt - 0.3, jt); if (u <= 0) return null; const x = lerp(880 + i * 74 + 520, 880 + i * 74, 1 - Math.pow(1 - u, 3));
+		{/* the priest stands behind the bier (his arms are drawn again in front where they cross your body) */}
+		<God id="a6-pr" cast={CAST2.embalmer} pose={pose} x={px} y={FL} s={ps} sec={{t}} />
+		{/* the bier: a gilded rail on lion legs */}
+		{[150, 1040].map((x, i) => <path key={x} d={sp([[x - 26, bed + 30, 1], [x + 26, bed + 30, 1], [x + 20, FL - 60], [x + (i ? 46 : -46), FL - 8], [x + (i ? 50 : -50), FL, 1], [x - (i ? 20 : -20), FL, 1], [x - 18, FL - 60]], true, 0.2)} fill={PAL.lion} stroke={PAL.ink} strokeWidth={3} />)}
+		<rect x={-300} y={bed} width={1420} height={30} fill={PAL.lion} stroke={PAL.ink} strokeWidth={3} />
+		{Array.from({length: 12}, (_, i) => <rect key={i} x={-260 + i * 112} y={bed + 9} width={56} height={12} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} opacity={0.85} />)}
+		{/* you: the body (bare linen, bands added turn by turn), the head (wrapped, then the gold mask) */}
+		<g><clipPath id="a6-hd"><rect x={U(14.55)} y={0} width={900} height={1200} /></clipPath><g clipPath="url(#a6-hd)"><Mummy x={mx0} y={bed} s={ms} t={t} masked={masked} /></g></g>
+		<g transform={`translate(${mx0},${bed}) scale(${ms})`}>
+			<clipPath id="a6-mb"><path d={MUMMY_BODY} /></clipPath><clipPath id="a6-mx"><rect x={-2} y={-6} width={16.6} height={8} /></clipPath>
+			<g clipPath="url(#a6-mx)"><path d={MUMMY_BODY} fill="#CDBB92" stroke={PAL.ink} strokeWidth={2.4 / ms} />
+				<g clipPath="url(#a6-mb)">{Array.from({length: 18}, (_, i) => <line key={i} x1={i * 0.85} y1={0} x2={i * 0.85 + 0.6} y2={-4} stroke="#B8A47A" strokeWidth={0.03} />)}{bands}</g>
+				<path d={MUMMY_BODY} fill="none" stroke={PAL.ink} strokeWidth={2.4 / ms} /></g>
+		</g>
+		{/* the strip from the roll down to the band being wound; the roll and the hands over it */}
+		{/* the linen band runs from the roll over the top of your body into the band being wound */}
+		<path d={`M${roll[0]} ${roll[1] + 6}Q${(roll[0] + xc) / 2 + 8 * Math.sin(ph)} ${topY - 6} ${xc + 14} ${topY + 14}`} fill="none" stroke={PAL.ink} strokeWidth={30} strokeLinecap="butt" />
+		<path d={`M${roll[0]} ${roll[1] + 6}Q${(roll[0] + xc) / 2 + 8 * Math.sin(ph)} ${topY - 6} ${xc + 14} ${topY + 14}`} fill="none" stroke="#FFFBF0" strokeWidth={25} strokeLinecap="butt" />
+		<path d={`M${roll[0]} ${roll[1] + 6}Q${(roll[0] + xc) / 2 + 8 * Math.sin(ph)} ${topY - 6} ${xc + 14} ${topY + 14}`} fill="none" stroke="#D8CBA8" strokeWidth={3} strokeDasharray="10 14" />
+		<g transform={`translate(${roll[0]},${roll[1]}) rotate(${-20})`}><rect x={-34} y={-14} width={68} height={28} rx={12} fill="#F4ECD8" stroke={PAL.ink} strokeWidth={2.4} /><ellipse cx={34} cy={0} rx={6} ry={14} fill="#E2D6B6" stroke={PAL.ink} strokeWidth={2} /></g>
+		{arms}
+		{/* the four canopic jars land in a row in front, one per beat */}
+		{JARS.map((h, i) => { const jt = JAR_T[i], u = seg(t, jt - 0.3, jt); if (u <= 0) return null; const x = lerp(150 + i * 112 - 520, 150 + i * 112, 1 - Math.pow(1 - u, 3));
 			const bump = 1 - 0.08 * pulse(t, jt, 0.02, 0.1);
-			return <g key={h} transform={`translate(${x},${GY}) scale(${2 - bump},${bump}) translate(${-x},${-GY})`}><CanopicJar x={x} y={GY} s={19} head={h} t={t} glow={0.4} /></g>; })}
-		<Lamp x={1150} y={GY} s={1.1} t={t} seed={5} />
-		<rect x={-200} y={GY} width={1900} height={120} fill="#7A5230" />
-		<rect x={-200} y={GY} width={1900} height={5} fill={PAL.ink} />
+			return <g key={h} transform={`translate(${x},${FL + 12}) scale(${2 - bump},${bump}) translate(${-x},${-FL - 12})`}><CanopicJar x={x} y={FL + 12} s={27} head={h} t={t} glow={0.5} /></g>; })}
+		<rect x={-300} y={FL} width={2000} height={200} fill="#7A5230" opacity={0.0} />
 	</Stage60>;
 };
 
@@ -271,9 +303,9 @@ export const Shot7: React.FC<ShotProps> = ({t}) => {
 	</Stage60>;
 };
 
-/* ================= 8 · 20.4–23.6 · inside the mummy: only the heart is lit; it opens like a lantern; your life flickers inside =================
-   dissolve in (0.4). Doors open 0.35–0.75 [20.75–21.15]; vignettes flip in (paper flutter) at 0.75, 1.3, 1.85, 2.4 [21.15, 21.70, 22.25, 22.80];
-   the scale-nudging one flashes red 2.62–2.69 [23.02] (ting); heartbeats under at 0.25, 1.1, 1.95, 2.8 [20.65, 21.50, 22.35, 23.20]. */
+/* ================= 8 · 17.4–20.6 (v3) · inside your body only the heart is lit; your life flows out of it into a papyrus disc =================
+   dissolve in (0.4). The memory disc opens 0.35–0.75 [17.75–18.15]; vignettes flip in (paper flutter) at 0.75, 1.3, 1.85, 2.4
+   [18.15, 18.70, 19.25, 19.80]; the scale-nudging one flashes red 2.62–2.69 [20.02] (ting); heartbeats 0.25, 1.1, 1.95, 2.8 [17.65, 18.50, 19.35, 20.20]. */
 const HB8 = [0.25, 1.1, 1.95, 2.8], VT = [0.75, 1.3, 1.85, 2.4], RED8 = 2.62;
 const Vignette: React.FC<{k: number; t: number; red: number}> = ({k, t, red}) => {
 	const gy = 96, ink = red > 0 ? '#B01810' : PAL.ink;
@@ -303,102 +335,127 @@ const Vignette: React.FC<{k: number; t: number; red: number}> = ({k, t, red}) =>
 	</g>;
 };
 export const Shot8: React.FC<ShotProps> = ({t}) => {
-	const HS = 315, HX = 680, HYb = 812;
-	const cam = aimPath(t, [[-0.4, HX, 520, 700, 486, 1.0], [3.4, HX, 500, 700, 486, 1.12]], (u) => u);
+	// v3 (owner 17:07): one big, clear heart (Heart60) beating in the dark of the body; your memories flow out of it as gold light into a
+	// papyrus disc beside it, one vignette after another; the one where you nudge the market weight flashes red.
+	const HX = 460, HY = 490, HH = 560, MX = 960, MY = 430, MR = 245;
+	const cam = aimPath(t, [[-0.4, 700, 500, 700, 486, 1.0], [3.4, 720, 490, 700, 486, 1.08]], (u) => u);
 	const beat = HB8.reduce((a, b) => a + pulse(t, b, 0.04, 0.16) + 0.5 * pulse(t, b + 0.17, 0.04, 0.2), 0);
-	const open = sm(seg(t, 0.35, 0.75)), vi = VT.reduce((a, v, i) => (t >= v ? i : a), -1), vu = vi >= 0 ? seg(t, VT[vi], VT[vi] + 0.14) : 0;
-	const red = t >= RED8 && t < RED8 + 0.07 ? 1 : 0;
-	const door = (k: number) => { const sx = 1 - 0.9 * open, hx = k * 0.78;
-		return <g transform={`translate(${hx},0) scale(${sx},1) translate(${-hx},0)`}>
-			<g clipPath="url(#a8-half)" transform={k > 0 ? 'scale(-1,1)' : undefined}>
-				<path d={HEART_D} fill={PAL.red} /><path d="M-0.55 -1.15Q-0.62 -0.7 -0.42 -0.32" fill="none" stroke="#E0705A" strokeWidth={0.04} />
-				<path d="M-0.7 -0.9L0 -0.9M-0.66 -0.5L0 -0.5" stroke={PAL.gold} strokeWidth={0.035} />
-				{[-0.5, -0.25].map((x) => <circle key={x} cx={x} cy={-0.7} r={0.05} fill={PAL.gold} />)}
-			</g>
-			<path d={`M0 -1.6L0 0`} stroke={PAL.gold2} strokeWidth={0.04} />
-		</g>; };
+	const vi = VT.reduce((a, v, i) => (t >= v ? i : a), -1), vu = vi >= 0 ? seg(t, VT[vi], VT[vi] + 0.14) : 0;
+	const red = t >= RED8 && t < RED8 + 0.07 ? 1 : 0, disc = sm(seg(t, 0.35, 0.75));
+	const R = rng(4), stream = Array.from({length: 26}, (_, i) => { const life = 0.9, off = R() * life, u = ((t + off) % life) / life, w = 0.5 + 0.5 * R();
+		const x = lerp(HX + 120, MX - MR * 0.8, u), y = lerp(HY - 40, MY, u) - 90 * Math.sin(Math.PI * u) * w;
+		return <circle key={i} cx={x} cy={y} r={3 + 4 * Math.sin(Math.PI * u)} fill="#FFE29A" opacity={disc * Math.sin(Math.PI * u)} />; });
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#0A1030" wear={0.15} stain={0.15}
 		light={<>
-			<Glow x={HX} y={HYb - 0.9 * HS} r={720 * (0.9 + 0.12 * beat)} c="red" o={0.55 + 0.25 * beat} />
-			<Glow x={HX} y={HYb - 0.85 * HS} r={260} c="gold" o={0.35 + 0.45 * open} />
-			{open > 0 && <path d={`M${HX - 120} ${HYb - 0.85 * HS}L${HX - 640} ${PIC_T - 60}L${HX + 640} ${PIC_T - 60}L${HX + 120} ${HYb - 0.85 * HS}Z`} fill="url(#g60-shaft)" opacity={0.18 * open} style={{mixBlendMode: 'screen'}} />}
-			<Embers t={t} x={HX} y={HYb - 0.4 * HS} n={18} seed={8} h={520} spread={300} />
-			<Dust t={t} box={[100, 60, 1300, 900]} n={60} seed={18} c="#FFC890" o={0.55} vx={2} vy={-6} />
-			{red > 0 && <circle cx={HX} cy={HYb - 0.85 * HS} r={260} fill="#FF2010" opacity={0.55} style={{mixBlendMode: 'screen'}} />}
+			<Glow x={HX} y={HY} r={620 * (0.9 + 0.12 * beat)} c="red" o={0.55 + 0.3 * beat} />
+			<Glow x={HX} y={HY} r={220} c="gold" o={0.3 + 0.3 * beat} />
+			<Glow x={MX} y={MY} r={MR * 1.6} c="gold" o={0.45 * disc} />
+			<g style={{mixBlendMode: 'screen'}}>{stream}</g>
+			<Embers t={t} x={HX} y={HY + 120} n={16} seed={8} h={480} spread={260} />
+			<Dust t={t} box={[100, 60, 1300, 900]} n={50} seed={18} c="#FFC890" o={0.5} vx={2} vy={-6} />
+			{red > 0 && <circle cx={MX} cy={MY} r={MR + 40} fill="#FF2010" opacity={0.55} style={{mixBlendMode: 'screen'}} />}
 		</>}>
-		<defs><clipPath id="a8-half"><rect x={-1} y={-2} width={1} height={2.2} /></clipPath><clipPath id="a8-win"><path d={HEART_D} transform="translate(0,-0.12) scale(0.86)" /></clipPath>
-			<radialGradient id="a8-in" cx="0.5" cy="0.55" r="0.6"><stop offset="0" stopColor="#FFF2CE" /><stop offset="0.7" stopColor="#F2D38E" /><stop offset="1" stopColor="#D99A4A" /></radialGradient></defs>
+		<defs><clipPath id="a8-disc"><circle cx={MX} cy={MY} r={MR} /></clipPath>
+			<radialGradient id="a8-in" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stopColor="#FFF2CE" /><stop offset="0.75" stopColor="#F2D38E" /><stop offset="1" stopColor="#D99A4A" /></radialGradient></defs>
 		<rect x={-400} y={-300} width={2300} height={1700} fill="#0A1030" />
-		{/* x-ray: the linen wraps of the body around the heart, faint blue lines */}
-		{Array.from({length: 30}, (_, i) => <path key={i} d={`M${-300 + i * 70} -100L${300 + i * 70} 1100`} stroke="#3A5AB0" strokeWidth={3} opacity={0.22} />)}
-		{Array.from({length: 30}, (_, i) => <path key={'b' + i} d={`M${300 + i * 70 - 600} 1100L${i * 70 + 300} -100`} stroke="#3A5AB0" strokeWidth={2} opacity={0.14} />)}
-		<path d={sp([[-300, 1000], [-300, 140], [300, 70], [1000, 60], [1700, 110], [1700, 1000]], true, 0.2)} fill="none" stroke="#6F8CE0" strokeWidth={5} opacity={0.35} />
-		<g transform={`translate(${HX},${HYb}) scale(${HS * (1 + 0.025 * beat)})`}>
-			<path d={HEART_D} fill="#5A0C08" stroke={PAL.ink} strokeWidth={0.05} />
-			<g clipPath="url(#a8-win)">
-				<path d={HEART_D} fill="url(#a8-in)" />
-				{vi >= 0 && <g transform={`translate(0,-0.84) scale(${(1 / HS) * Math.max(0.05, vu)},${1 / HS})`}><Vignette k={vi} t={t} red={red} /></g>}
-				{red > 0 && <path d={HEART_D} fill="#FF2A10" opacity={0.55} />}
+		{/* x-ray: the linen wraps of your body, faint blue lines */}
+		{Array.from({length: 30}, (_, i) => <path key={i} d={`M${-300 + i * 70} -100L${300 + i * 70} 1100`} stroke="#3A5AB0" strokeWidth={3} opacity={0.18} />)}
+		{Array.from({length: 30}, (_, i) => <path key={'b' + i} d={`M${i * 70 - 300} 1100L${i * 70 + 300} -100`} stroke="#3A5AB0" strokeWidth={2} opacity={0.12} />)}
+		<Heart60 x={HX} y={HY} h={HH} rot={-6} beat={beat} glow={0.5 + 0.4 * beat} id="a8h" />
+		{/* the memory disc: a round papyrus in a gold rim; the vignettes flip in one by one */}
+		<g opacity={disc} transform={`translate(${MX},${MY}) scale(${0.85 + 0.15 * disc}) translate(${-MX},${-MY})`}>
+			<circle cx={MX} cy={MY} r={MR + 14} fill={PAL.gold} stroke={PAL.ink} strokeWidth={4} />
+			<circle cx={MX} cy={MY} r={MR} fill="url(#a8-in)" stroke={PAL.ink} strokeWidth={3} />
+			<g clipPath="url(#a8-disc)">
+				{vi >= 0 && <g transform={`translate(${MX},${MY + 10}) scale(${1.25 * Math.max(0.05, vu)},1.25)`}><Vignette k={vi} t={t} red={red} /></g>}
+				{red > 0 && <circle cx={MX} cy={MY} r={MR} fill="#FF2A10" opacity={0.5} />}
 			</g>
-			{door(-1)}{door(1)}
-			<path d={HEART_D} fill="none" stroke={PAL.gold} strokeWidth={0.045} />
-			<path d="M-0.38 -1.42Q0 -1.32 0.38 -1.42" fill="none" stroke={PAL.gold} strokeWidth={0.06} />
+			<circle cx={MX} cy={MY} r={MR + 7} fill="none" stroke="#2C46A8" strokeWidth={4} strokeDasharray="10 8" />
 		</g>
 	</Stage60>;
 };
 
-/* ================= 9 · 23.6–26.5 · top-down: a hand lays the green heart scarab on the chest; a gold ring circles it (freeze highlight) =================
+/* ================= 9 · 20.6–23.5 (v3) · from above: your upper body (mask, collar, chest); a hand lays the green heart scarab on the chest;
+   a gold ring circles it (freeze highlight) =================
    dissolve in (0.3). The scarab turns over in the fingers (the inscribed base shows) 0.05–0.7 · stone tap 0.85 [24.45] ·
    ring + freeze 1.1–1.9, chime 1.15 [24.75] · label 心脏圣甲虫 from 1.2. */
+/** a gold mummy mask seen from above (frontal face, striped nemes, false beard); (x, y) = face centre, s = px per unit (face ≈ 2.4 × 3 units) */
+const MaskTop: React.FC<{x: number; y: number; s: number; id: string}> = ({x, y, s, id}) => {
+	const lw = 2.4 / s;
+	const nemes = sp([[-1.7, -1.6], [-1.2, -2.2], [0, -2.45], [1.2, -2.2], [1.7, -1.6], [2.0, 0.4], [2.5, 2.6, 1], [1.2, 2.7, 1], [1.05, 0.8], [0, 1.9], [-1.05, 0.8], [-1.2, 2.7, 1], [-2.5, 2.6, 1], [-2.0, 0.4]], true, 0.18);
+	const face = sp([[0, -1.55], [0.95, -1.25], [1.15, -0.2], [0.95, 0.9], [0.45, 1.5], [0, 1.62], [-0.45, 1.5], [-0.95, 0.9], [-1.15, -0.2], [-0.95, -1.25]], true, 0.2);
+	return <g transform={`translate(${x},${y}) scale(${s})`}>
+		<clipPath id={`${id}-n`}><path d={nemes} /></clipPath>
+		<path d={nemes} fill="#2C46A8" stroke={PAL.ink} strokeWidth={lw * 2} />
+		<g clipPath={`url(#${id}-n)`}>{Array.from({length: 22}, (_, i) => <path key={i} d={`M-3 ${-2.4 + i * 0.26}L3 ${-2.4 + i * 0.26}`} stroke={`url(#${id}-gold)`} strokeWidth={0.12} />)}</g>
+		<path d={nemes} fill="none" stroke={PAL.ink} strokeWidth={lw * 2} />
+		<path d={face} fill={`url(#${id}-gold)`} stroke={PAL.ink} strokeWidth={lw * 1.6} />
+		{[-1, 1].map((k) => <g key={k}>
+			<path d={`M${k * 0.15} -0.5Q${k * 0.5} -0.78 ${k * 0.85} -0.6`} fill="none" stroke="#2C46A8" strokeWidth={0.1} strokeLinecap="round" />
+			<path d={`M${k * 0.2} -0.2Q${k * 0.5} -0.42 ${k * 0.8} -0.22Q${k * 0.5} -0.05 ${k * 0.2} -0.2Z`} fill={PAL.white} stroke={PAL.ink} strokeWidth={lw} />
+			<circle cx={k * 0.5} cy={-0.22} r={0.09} fill={PAL.ink} /><path d={`M${k * 0.8} -0.22L${k * 1.05} -0.3`} stroke="#2C46A8" strokeWidth={0.08} strokeLinecap="round" /></g>)}
+		<path d="M0 -0.2L-0.12 0.45L0.12 0.45" fill="none" stroke="#9C6A12" strokeWidth={0.06} />
+		<path d="M-0.3 0.85Q0 0.97 0.3 0.85Q0 1.02 -0.3 0.85Z" fill="#A8452A" stroke={PAL.ink} strokeWidth={lw * 0.8} />
+		<path d={sp([[-0.18, 1.55, 1], [0.18, 1.55, 1], [0.22, 2.5], [0, 2.7], [-0.22, 2.5]], true, 0.2)} fill="#2C46A8" stroke={PAL.ink} strokeWidth={lw} />
+		{[1.8, 2.05, 2.3].map((yy) => <line key={yy} x1={-0.2} x2={0.2} y1={yy} y2={yy} stroke={PAL.gold} strokeWidth={0.06} />)}
+	</g>;
+};
 export const Shot9: React.FC<ShotProps> = ({t}) => {
-	const SX = 640, SY = 560, tTap = 0.85, tR = 1.1, tF1 = 1.9;
+	// v3 (owner 17:07): start wide on your upper body (gold mask, broad collar, wrapped chest) so it is clearly the chest; push in as the
+	// hand lays the scarab on it.
+	const SX = 640, SY = 640, tTap = 0.85, tR = 1.1, tF1 = 1.9;
 	const frz = t > tR && t < tF1 ? 1 : 0, tt = t < tR ? t : t < tF1 ? tR : t - (tF1 - tR);
-	const cam = aimPath(t, [[-0.3, SX, SY, 680, 470, 1.0], [2.9, SX, SY, 680, 470, 1.1]], (u) => u);
+	const cam = aimPath(t, [[-0.3, SX, 360, 720, 486, 0.6], [0.95, SX, SY, 720, 470, 1.0], [2.9, SX, SY, 720, 470, 1.08]]);
 	const desc = sm(seg(t, -0.3, tTap)), flip = 1 - sm(seg(t, 0.05, 0.7)), lift = t < tTap ? 1 - desc : 0;
-	const sc = 1 + 0.22 * lift, sy = SY - 90 * lift;
-	const handOut = sm(seg(t, tTap + 0.1, tTap + 0.6)), handY = sy - 120 - 760 * handOut, handX = SX + 40 + 120 * handOut;
+	const sc = 1 + 0.22 * lift, sx = SX + 420 * lift, sy = SY - 60 * lift;
+	const handOut = sm(seg(t, tTap + 0.1, tTap + 0.6)), handX = sx + 150 + 760 * handOut, handY = sy - 20 - 80 * handOut;
 	const ring = seg(t, tR, tR + 0.55), ringO = (t > tR ? 1 : 0) * (1 - sm(seg(t, tF1 + 0.1, tF1 + 0.6)));
 	const tap = pulse(t, tTap, 0.02, 0.18);
+	const torso = sp([[-520, 330], [-300, 250], [300, 250], [520, 330], [480, 1500, 1], [-480, 1500, 1]], true, 0.2);
 	const wraps: React.ReactNode[] = [];
-	for (let i = -14; i < 40; i++) { const x0 = -400 + i * 56; wraps.push(<path key={'a' + i} d={`M${x0} -100L${x0 + 620} 1150`} stroke="#C9B88E" strokeWidth={18} opacity={0.55} />, <path key={'b' + i} d={`M${x0 + 620} -100L${x0} 1150`} stroke="#F2E9D2" strokeWidth={11} opacity={0.55} />); }
+	for (let i = -14; i < 40; i++) { const x0 = -600 + i * 56; wraps.push(<path key={'a' + i} d={`M${x0} 200L${x0 + 620} 1450`} stroke="#C9B88E" strokeWidth={18} opacity={0.55} />, <path key={'b' + i} d={`M${x0 + 620} 200L${x0} 1450`} stroke="#F2E9D2" strokeWidth={11} opacity={0.55} />); }
 	const net: React.ReactNode[] = [];
-	for (let i = 0; i < 20; i++) for (let j = 0; j < 10; j++) { const bx = -200 + i * 96 + (j % 2) * 48, by = 300 + j * 70;
+	for (let i = 0; i < 14; i++) for (let j = 0; j < 9; j++) { const bx = SX - 600 + i * 96 + (j % 2) * 48, by = SY - 170 + j * 70;
 		if (Math.hypot(bx - SX, (by - SY) * 0.8) < 230) continue;
 		net.push(<g key={`${i}.${j}`}><path d={poly([[bx, by - 32], [bx + 44, by], [bx, by + 32], [bx - 44, by]])} fill="none" stroke={STONE.faience} strokeWidth={6} opacity={0.55} /><circle cx={bx} cy={by - 32} r={6} fill={j % 2 ? PAL.gold : PAL.red} stroke={PAL.ink} strokeWidth={1.4} /></g>); }
-	return <Stage60 t={t} cam={cam} grade="tomb" bg="#E6D7B2" dark={0.22} darkC="#2A1206" wear={wearAt(cam.z, 0.5)} stain={0.25}
+	return <Stage60 t={t} cam={cam} grade="tomb" bg="#3A2416" dark={0.2} darkC="#2A1206" wear={wearAt(cam.z, 0.45)} stain={0.22}
 		screen={(() => { const sp_ = toScreen(cam, SX, SY), fo = sm(seg(t, tR - 0.05, tR + 0.15)) * (1 - sm(seg(t, tF1, tF1 + 0.4)));
 			return fo > 0 ? <g><defs><radialGradient id="a9-spot" gradientUnits="userSpaceOnUse" cx={sp_[0]} cy={sp_[1]} r={560}><stop offset="0.42" stopColor="#120600" stopOpacity={0} /><stop offset="1" stopColor="#120600" stopOpacity={0.6} /></radialGradient></defs>
 				<rect width={FW} height={1080} fill="url(#a9-spot)" opacity={fo} /></g> : null; })()}
-		tags={t > 1.2 ? [{x: SX + 250, y: SY - 230, text: '心脏圣甲虫', o: sm(seg(t, 1.2, 1.5))}] : []}
+		tags={t > 1.2 ? [{x: SX + 270, y: SY - 230, text: '心脏圣甲虫', o: sm(seg(t, 1.2, 1.5))}] : []}
 		light={<>
-			<Glow x={SX} y={SY + 40} r={520} c="red" o={0.45} />
-			<Glow x={260} y={200} r={700} c="warm" o={0.6 + 0.1 * flick(tt, 2)} />
-			<Glow x={SX} y={sy} r={300 * sc} c="green" o={0.4 + 0.3 * (1 - lift) + 0.4 * tap + 0.35 * frz} />
-			<Glow x={SX} y={sy} r={150 * sc} c="gold" o={0.2 + 0.4 * frz} />
+			<Glow x={SX} y={SY + 40} r={480} c="red" o={0.4} />
+			<Glow x={SX - 300} y={100} r={760} c="warm" o={0.55 + 0.1 * flick(tt, 2)} />
+			<Glow x={sx} y={sy} r={300 * sc} c="green" o={0.4 + 0.3 * (1 - lift) + 0.4 * tap + 0.35 * frz} />
+			<Glow x={sx} y={sy} r={150 * sc} c="gold" o={0.2 + 0.4 * frz} />
 			{ringO > 0 && <g style={{mixBlendMode: 'screen'}} opacity={ringO}>
 				<ellipse cx={SX} cy={SY} rx={226} ry={268} fill="none" stroke="#FFE7A0" strokeWidth={7} strokeDasharray={`${1550 * ring} 2000`} transform={`rotate(-90 ${SX} ${SY})`} />
 				<ellipse cx={SX} cy={SY} rx={226} ry={268} fill="none" stroke="#FFD060" strokeWidth={26} opacity={0.3} strokeDasharray={`${1550 * ring} 2000`} transform={`rotate(-90 ${SX} ${SY})`} />
 				{(() => { const a = -Math.PI / 2 + 2 * Math.PI * ring; return <Sparkle x={SX + 226 * Math.cos(a)} y={SY + 268 * Math.sin(a)} r={46} a={t * 90} />; })()}
 				{ring >= 1 && [0, 1, 2, 3, 4, 5].map((i) => { const a = i * Math.PI / 3 + 0.4; return <Sparkle key={i} x={SX + 250 * Math.cos(a)} y={SY + 292 * Math.sin(a)} r={16 + 8 * Math.sin(t * 8 + i)} />; })}
 			</g>}
-			<Dust t={tt} box={[0, 100, 1300, 900]} n={50} seed={19} o={0.55} />
+			<Dust t={tt} box={[0, -200, 1400, 1100]} n={50} seed={19} o={0.55} />
 		</>}>
-		<rect x={-400} y={-200} width={2300} height={1500} fill="#E6D7B2" />
-		{wraps}
-		{[[PAL.gold, 0], [PAL.blue, 26], [PAL.red, 54], [PAL.green, 80], [PAL.gold, 108]].map(([c, o], i) => <path key={i} d={`M-400 ${40 + (o as number)}Q720 ${250 + (o as number)} 1900 ${40 + (o as number)}L1900 ${68 + (o as number)}Q720 ${278 + (o as number)} -400 ${68 + (o as number)}Z`} fill={c as string} stroke={PAL.ink} strokeWidth={2} opacity={0.92} />)}
-		{net}
-		{/* the scarab, its shadow, the hand that lays it */}
-		<ellipse cx={SX + 30 + 40 * lift} cy={SY + 40 + 60 * lift} rx={170 * sc} ry={200 * sc} fill="#2A1206" opacity={0.25 * (1 - 0.5 * lift)} />
-		<g transform={`translate(${SX},${sy}) scale(${sc}) translate(${-SX},${-sy})`}><HeartScarab id="a9-hs" x={SX} y={sy} s={44} flip={flip} t={t} lines={1} glint={0.8} /></g>
-		{handOut < 1 && <g transform={`translate(${handX - 40},${handY - 140}) scale(${sc})`}>
-			<path d={sp([[-58, -900, 1], [58, -900, 1], [52, -120], [60, -40], [46, 6], [-46, 6], [-62, -40], [-52, -120]], true, 0.18)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
-			<path d="M20 -880Q30 -400 26 -120" fill="none" stroke={PAL.skinM2} strokeWidth={14} opacity={0.5} strokeLinecap="round" />
-			<rect x={-62} y={-190} width={124} height={40} rx={8} fill={PAL.gold} stroke={PAL.ink} strokeWidth={3} /><rect x={-62} y={-176} width={124} height={11} fill={PAL.blue} />
-			{/* palm over the scarab's top rim, four fingers curled down onto it, the thumb at its side */}
-			<path d={sp([[-66, -40], [66, -40], [74, 30], [60, 80], [-60, 80], [-74, 30]], true, 0.2)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
-			{[-45, -15, 15, 45].map((xx, i) => <g key={xx}><path d={sp([[xx - 15, 60], [xx + 15, 60], [xx + 14, 110 + (i % 3 ? 8 : 0)], [xx, 122 + (i % 3 ? 8 : 0)], [xx - 14, 110 + (i % 3 ? 8 : 0)]], true, 0.22)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />
-				<path d={`M${xx - 9} ${92 + (i % 3 ? 4 : 0)}Q${xx} ${98 + (i % 3 ? 4 : 0)} ${xx + 9} ${92 + (i % 3 ? 4 : 0)}`} fill="none" stroke={PAL.skinM2} strokeWidth={2.4} /></g>)}
-			<path d={sp([[-70, 10], [-112, 60], [-124, 120], [-104, 132], [-84, 92], [-56, 50]], true, 0.2)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />
+		<GoldDefs id="a9" />
+		<rect x={-800} y={-800} width={2800} height={2600} fill="#3A2416" />
+		{/* you, seen from above: the wrapped body, the broad collar, the gold mask */}
+		<g transform={`translate(${SX},0)`}>
+			<clipPath id="a9-tor"><path d={torso} /></clipPath>
+			<path d={torso} fill="#E6D7B2" stroke={PAL.ink} strokeWidth={5} />
+			<g clipPath="url(#a9-tor)"><g transform={`translate(${-SX},0)`}>{wraps}{net}</g></g>
+			{([[0, '#2A1912', 300], [8, '#E8B83E', 290], [36, '#2C46A8', 262], [62, '#C2381E', 236], [86, '#2FA39A', 212], [110, '#E8B83E', 186]] as [number, string, number][]).map(([dy, c, r], i) =>
+				<path key={i} d={`M${-r - 40} ${190 + dy * 0.2}Q0 ${330 + r * 0.55} ${r + 40} ${190 + dy * 0.2}`} fill="none" stroke={c} strokeWidth={i === 0 ? 40 : 26} />)}
+			<MaskTop x={0} y={70} s={82} id="a9" />
+		</g>
+		{/* the scarab, its shadow, the hand that lays it (coming in from the right) */}
+		<ellipse cx={sx + 30 + 40 * lift} cy={sy + 40 + 60 * lift} rx={170 * sc} ry={200 * sc} fill="#2A1206" opacity={0.25 * (1 - 0.5 * lift)} />
+		<g transform={`translate(${sx},${sy}) scale(${sc}) translate(${-sx},${-sy})`}><HeartScarab id="a9-hs" x={sx} y={sy} s={44} flip={flip} t={t} lines={1} glint={0.8} /></g>
+		{handOut < 1 && <g transform={`translate(${handX},${handY}) rotate(90) scale(${sc})`}>
+			<path d={sp([[-56, -900, 1], [56, -900, 1], [50, -120], [58, -40], [44, 6], [-44, 6], [-60, -40], [-50, -120]], true, 0.18)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
+			<rect x={-60} y={-190} width={120} height={40} rx={8} fill={PAL.gold} stroke={PAL.ink} strokeWidth={3} /><rect x={-60} y={-176} width={120} height={11} fill={PAL.blue} />
+			<path d={sp([[-64, -40], [64, -40], [72, 30], [58, 80], [-58, 80], [-72, 30]], true, 0.2)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={4} />
+			{[-44, -14, 16, 46].map((xx, i) => <path key={xx} d={sp([[xx - 15, 60], [xx + 15, 60], [xx + 14, 108 + (i % 3 ? 8 : 0)], [xx, 120 + (i % 3 ? 8 : 0)], [xx - 14, 108 + (i % 3 ? 8 : 0)]], true, 0.22)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />)}
+			<path d={sp([[-68, 10], [-110, 60], [-120, 118], [-100, 130], [-82, 90], [-54, 50]], true, 0.2)} fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />
 		</g>}
 		{tap > 0.02 && <DustBurst t={t} t0={tTap} x={SX} y={SY} rx={170} ry={210} n={30} seed={9} c="#FFF2C8" life={0.5} />}
 	</Stage60>;

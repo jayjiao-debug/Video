@@ -4,6 +4,7 @@ import {PAL, sp, poly, lerp, cl, sm, V, M, T, R, chain, ap, mx, Pt} from './geo6
 import {band} from './rig60';
 import {Heart, Feather, Baboon, BAL, balanceGeo, BalancePose, GLYPH_D, WingedSun} from './props60';
 import {Mummy} from './props60b';
+import {Heart60} from './heart60';
 
 /* ep60 act A (shots 1–14) · shared helpers: cameras, pulses, the frontal Anubis mask (hook), the cartoon puff, the giant balance
    (a copy of props60 Balance with an optional heart, glow and beaded cords), the big mummy whose heart glows through the linen,
@@ -116,7 +117,7 @@ type C = {OW: number; LW: number};
 const Solid: React.FC<{d: string; r: string; c: C; k?: number}> = ({d, r, c, k = 1}) => <g>
 	<path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW * k} strokeLinejoin="round" /><path d={d} fill={(PAL as Record<string, string>)[r] ?? r} /></g>;
 const rect = (x0: number, y0: number, x1: number, y1: number) => poly([[x0, y0], [x1, y0], [x1, y1], [x0, y1]]);
-export const BigBalance: React.FC<{p: BalancePose; x: number; y: number; s: number; t?: number; heart?: boolean; heartGlow?: number; featherA?: number; gold?: string; baboon?: boolean}> = ({p, x, y, s, t = 0, heart = true, heartGlow = 0, featherA = 0, gold, baboon = true}) => {
+export const BigBalance: React.FC<{p: BalancePose; x: number; y: number; s: number; t?: number; heart?: boolean; heartGlow?: number; featherA?: number; gold?: string; baboon?: boolean; hid?: string; beat?: number}> = ({p, x, y, s, t = 0, heart = true, heartGlow = 0, featherA = 0, gold, baboon = true, hid = 'bbh', beat = 0}) => {
 	const c = {OW: 2.7 / s, LW: 1.5 / s}, g = balanceGeo(p), G = gold ?? PAL.gold;
 	const post = poly([[-0.36, -1.75], [0.36, -1.75], [0.3, BAL.postTop + 0.6], [-0.3, BAL.postTop + 0.6]]);
 	const capital = sp([[-0.3, BAL.postTop + 0.62, 1], [0.3, BAL.postTop + 0.62, 1], [0.95, BAL.postTop + 0.05], [1.05, BAL.postTop - 0.1, 1], [-1.05, BAL.postTop - 0.1, 1], [-0.95, BAL.postTop + 0.05]]);
@@ -142,7 +143,7 @@ export const BigBalance: React.FC<{p: BalancePose; x: number; y: number; s: numb
 		{cords(g.panL, g.eL, 'cl')}{cords(g.panR, g.eR, 'cr')}
 		<g transform={mx(g.panL)}>
 			{heart && heartGlow > 0 && <ellipse cx={0} cy={-0.9} rx={1.8 * (0.8 + 0.4 * heartGlow)} ry={1.6 * (0.8 + 0.4 * heartGlow)} fill="url(#g60-red)" opacity={0.75 * heartGlow} style={{mixBlendMode: 'screen'}} />}
-			{heart && <g transform="translate(0,0.02)"><Heart c={c} /></g>}
+			{heart && <Heart60 x={0} y={-1.12} h={2.4} beat={beat} id={hid} />}
 			{heart && heartGlow > 0 && <ellipse cx={0} cy={-0.9} rx={0.55} ry={0.6} fill="url(#g60-gold)" opacity={0.6 * heartGlow} style={{mixBlendMode: 'screen'}} />}
 			<Solid d={panD} r={G} c={c} /><path d="M-1.7 0.28Q0 0.5 1.7 0.28" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} /></g>
 		<g transform={mx(g.panR)}><g transform={`translate(0.05,0.02) rotate(${featherA})`}><Feather c={c} h={3.0} /></g><Solid d={panD} r={G} c={c} /><path d="M-1.7 0.28Q0 0.5 1.7 0.28" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} /></g>
@@ -178,17 +179,17 @@ export const BigMummy: React.FC<{x: number; y: number; s: number; t: number; id:
 		<g clipPath={`url(#${id}-mx)`}>
 		<path d={MUMMY_BODY} fill="#E3D5B4" stroke={PAL.ink} strokeWidth={lw * 2.2} />
 		<g clipPath={`url(#${cid})`}>
-			{/* the glow under the linen, the heart's shape seen through it */}
+			{/* the glow under the linen, the heart (Heart60) seen through it */}
 			<ellipse cx={hp[0]} cy={hp[1]} rx={2.6 * (0.7 + 0.3 * g)} ry={1.9 * (0.7 + 0.3 * g)} fill={`url(#${id}-heart)`} opacity={cl(g)} />
-			<g transform={heartM} opacity={heartShow * cl(g)}><path d={HEART_D} fill="#E8452A" /></g>
+			<Heart60 x={hp[0] + 0.1} y={hp[1] - 0.1} h={2.7} rot={-8} beat={cl(g - 0.55)} id={`${id}-h1`} o={heartShow * cl(g)} />
 			<g opacity={0.72}>{wraps}</g>
 			{/* straps (red-brown) and the linen shroud lines */}
 			{[3.4, 7.6].map((xx) => <rect key={xx} x={xx} y={-4} width={0.34} height={4.2} fill="#A8452A" opacity={0.85} />)}
 			<path d="M0.4 -1.3Q7 -1.0 14.8 -1.55" fill="none" stroke="#A8452A" strokeWidth={0.22} opacity={0.75} />
 			{/* glow passing through the wraps */}
 			<ellipse cx={hp[0]} cy={hp[1]} rx={2.0 * (0.6 + 0.4 * g)} ry={1.5 * (0.6 + 0.4 * g)} fill={`url(#${id}-heart)`} opacity={0.75 * cl(g)} style={{mixBlendMode: 'screen'}} />
-			<g transform={heartM} opacity={0.7 * heartShow * cl(g)} style={{mixBlendMode: 'screen'}}><path d={HEART_D} fill="#FF6A2A" /><path d={HEART_D} fill="none" stroke="#FFE08A" strokeWidth={0.07} /><path d="M-0.38 -1.42Q0 -1.32 0.38 -1.42" fill="none" stroke="#FFE08A" strokeWidth={0.1} /></g>
-			{rings.map((u, i) => u > 0 && u < 1 ? <path key={i} d={HEART_D} fill="none" stroke="#FFC080" strokeWidth={0.12 * (1 - u)} opacity={0.8 * (1 - u)} transform={`translate(${hp[0]},${hp[1] + 1.05 + 0.9 * u}) scale(${1.25 + 2.2 * u})`} style={{mixBlendMode: 'screen'}} /> : null)}
+			<Heart60 x={hp[0] + 0.1} y={hp[1] - 0.1} h={2.7} rot={-8} beat={cl(g - 0.55)} id={`${id}-h2`} o={0.42 * heartShow * cl(g)} />
+			{rings.map((u, i) => u > 0 && u < 1 ? <ellipse key={i} cx={hp[0]} cy={hp[1]} rx={1.0 + 3.0 * u} ry={0.8 + 2.2 * u} fill="none" stroke="#FFC080" strokeWidth={0.12 * (1 - u)} opacity={0.8 * (1 - u)} style={{mixBlendMode: 'screen'}} /> : null)}
 		</g>
 		<path d={MUMMY_BODY} fill="none" stroke={PAL.ink} strokeWidth={lw * 2.2} />
 		</g>
@@ -200,10 +201,9 @@ export const BigMummy: React.FC<{x: number; y: number; s: number; t: number; id:
 /** the jar-shaped heart (props60 heart outline, units: base at 0, ~1.8 tall) */
 export const HEART_D = sp([[-0.42, 0, 1], [0.42, 0, 1], [0.7, -0.35], [0.78, -0.95], [0.6, -1.32], [0.4, -1.42], [0.48, -1.62], [0.32, -1.78], [0.18, -1.6], [-0.18, -1.6], [-0.32, -1.78], [-0.48, -1.62], [-0.4, -1.42], [-0.6, -1.32], [-0.78, -0.95], [-0.7, -0.35]], true, 0.16);
 /** the heart as a glowing object (units as props60 Heart, scaled by s; origin = base centre) */
-export const GlowHeart: React.FC<{x: number; y: number; s: number; glow?: number; a?: number}> = ({x, y, s, glow = 1, a = 0}) => <g transform={`translate(${x},${y}) rotate(${a}) scale(${s})`}>
-	<ellipse cx={0} cy={-0.9} rx={2.2} ry={2.0} fill="url(#g60-red)" opacity={0.7 * glow} style={{mixBlendMode: 'screen'}} />
-	<Heart c={{OW: 2.7 / s, LW: 1.5 / s}} />
-	<ellipse cx={-0.2} cy={-1.0} rx={0.5} ry={0.55} fill="url(#g60-gold)" opacity={0.55 * glow} style={{mixBlendMode: 'screen'}} />
+export const GlowHeart: React.FC<{x: number; y: number; s: number; glow?: number; a?: number; id?: string}> = ({x, y, s, glow = 1, a = 0, id = 'gh'}) => <g transform={`translate(${x},${y})`}>
+	<ellipse cx={0} cy={-1.1 * s} rx={2.4 * s} ry={2.2 * s} fill="url(#g60-red)" opacity={0.7 * glow} style={{mixBlendMode: 'screen'}} />
+	<Heart60 x={0} y={-1.12 * s} h={2.4 * s} rot={a} id={id} glow={0.6 * glow} />
 </g>;
 
 /* ---------------- the ba bird: human head (striped wig), falcon body, wings flapping (ph radians); faces +x; origin = body centre ---------------- */
@@ -333,7 +333,7 @@ const GSIGN = (k: string) => GLYPH_D[k].d;
 /** the crown of the hall's gateway: winged sun with two rearing uraei, cornice, the lintel with the royal cartouche of the title,
     life-stability-dominion (ankh · djed · was) either side, khekher bands at the ends. (cx, cy) = cartouche centre, fs = letter size;
     lit 0..1 = gold running into the carved letters (left → right), land = the landing pulse (0..1, decaying). */
-export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: number; land: number; t: number; id: string; title: string}> = ({cx, cy, fs, lit, land, t, id, title}) => {
+export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: number; land: number; t: number; id: string; title: string; clean?: boolean}> = ({cx, cy, fs, lit, land, t, id, title, clean = false}) => {
 	const k = fs / 96, h = fs * 1.62, w = title.length * fs * 1.13 + fs * 1.5, x0 = cx - w / 2, y0 = cy - h / 2, r = h / 2;
 	const lintel = {x0: cx - w / 2 - fs * 2.4, x1: cx + w / 2 + fs * 2.4, y0: cy - h / 2 - fs * 0.22, y1: cy + h / 2 + fs * 0.22};
 	const front = x0 - 20 + lit * (w + 60), glowLit = 0.35 + 0.65 * lit, sh = Math.sin(t * 2.4);
@@ -364,8 +364,8 @@ export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: numbe
 		{[lintel.y0 + 6, lintel.y1 - fs * 0.12 - 6].map((yy) => <rect key={yy} x={lintel.x0} y={yy} width={lintel.x1 - lintel.x0} height={fs * 0.12} fill={`url(#${id}-gold)`} />)}
 		{[lintel.x0, lintel.x1 - fs * 0.5].map((xx) => <g key={xx}>{Array.from({length: 9}, (_, i) => <rect key={i} x={xx} y={lintel.y0 + fs * 0.2 + i * (lintel.y1 - lintel.y0 - fs * 0.4) / 9} width={fs * 0.5} height={(lintel.y1 - lintel.y0 - fs * 0.4) / 9 - 3} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} stroke={PAL.ink} strokeWidth={2} />)}
 			<rect x={xx} y={lintel.y0} width={fs * 0.5} height={lintel.y1 - lintel.y0} fill="none" stroke={PAL.gold} strokeWidth={6} /></g>)}
-		{/* ankh · djed · was, inlaid gold, facing the cartouche on both sides */}
-		{[-1, 1].map((side) => <g key={side}>
+		{/* ankh · djed · was, inlaid gold, facing the cartouche on both sides (left out in the clean, centred version) */}
+		{!clean && [-1, 1].map((side) => <g key={side}>
 			{['ankh', 'djed'].map((g, i) => <path key={g} d={GSIGN(g)} fill={`url(#${id}-tg)`} stroke={PAL.ink} strokeWidth={2.4 / (fs * 0.85)} transform={`translate(${sideX(side, i) - fs * 0.42},${cy - fs * 0.44}) scale(${fs * 0.85})`} />)}
 			<WasSign x={sideX(side, 2)} y={cy + fs * 0.46} h={fs * 0.95} c={PAL.gold} />
 		</g>)}
@@ -376,8 +376,10 @@ export const GateCrown: React.FC<{cx: number; cy: number; fs: number; lit: numbe
 		<path d={stad(6 * k)} fill="none" stroke="#FFF0B0" strokeWidth={2 * k} opacity={0.35 + 0.4 * lit} transform={`translate(0,${-2 * k})`} />
 		<path d={stad(17 * k)} fill="none" stroke={PAL.gold} strokeWidth={1.8 * k} strokeDasharray={`${4 * k} ${4 * k}`} opacity={0.9} />
 		<path d={stad(4 * k)} fill="none" stroke="#2A1912" strokeWidth={2.2 * k} />
-		<rect x={x0 + w - 4 * k} y={y0 + h * 0.06} width={20 * k} height={h * 0.88} rx={3 * k} fill={PAL.gold} stroke="#2A1912" strokeWidth={2.6 * k} />
-		<rect x={x0 + w + 1 * k} y={y0 + h * 0.06 + 6 * k} width={10 * k} height={h * 0.88 - 12 * k} fill="none" stroke="#9C7426" strokeWidth={1.5 * k} />
+		{/* the binding bars: one at each end, so the cartouche sits dead centre */}
+		{(clean ? [x0 - 16 * k, x0 + w - 4 * k] : [x0 + w - 4 * k]).map((bx) => <g key={bx}>
+			<rect x={bx} y={y0 + h * 0.06} width={20 * k} height={h * 0.88} rx={3 * k} fill={PAL.gold} stroke="#2A1912" strokeWidth={2.6 * k} />
+			<rect x={bx + 5 * k} y={y0 + h * 0.06 + 6 * k} width={10 * k} height={h * 0.88 - 12 * k} fill="none" stroke="#9C7426" strokeWidth={1.5 * k} /></g>)}
 		{/* the letters: carved dark into the lapis, then filled with gold from the left */}
 		{txt({fill: '#0A1030', stroke: '#4A5AA0', strokeWidth: fs * 0.02})}
 		<g clipPath={`url(#${id}-lit)`}>

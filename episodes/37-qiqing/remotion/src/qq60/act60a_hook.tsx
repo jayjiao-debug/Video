@@ -186,7 +186,7 @@ export const Shot2: React.FC<ShotProps> = ({t}) => {
    0.30 [5.30] CLANG + chain rattle (to ~6.1) · pull-back 0.32–1.42 [5.32–6.42] · gold runs into the title 0.90–1.30 [5.90–6.30] ·
    TITLE LANDS 1.30 [6.30] (gong + reed swell: glow pulse, sparks, rays) · steady from 6.42 · eyes open 2.20 [7.20] (low growl) · shot 5
    dissolves in from 8.10. The title lives in this shot only. */
-const GX = 640, GG = 900, BS = 31, FS3 = 260;
+const GX = 720, GG = 900, BS = 31, FS3 = 250;
 const C3 = {cy: -188, aimY: -14, z: 0.459};   // cartouche centre (world y) and the settled camera
 const tiltAt = (t: number, tL: number) => { if (t < tL) return {tilt: -0.6, swingL: 0, swingR: 0};
 	const u = t - tL; return {tilt: 3.2 + 4.8 * Math.exp(-u / 0.55) * Math.cos(2 * Math.PI * u / 1.05), swingL: 5 * Math.exp(-u / 0.7) * Math.sin(2 * Math.PI * u / 0.8), swingR: -3.5 * Math.exp(-u / 0.8) * Math.sin(2 * Math.PI * u / 0.9 + 0.5)}; };
@@ -204,14 +204,14 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 	const tL = 0.3, st = tiltAt(t, tL), p = {tilt: st.tilt, swingL: st.swingL, swingR: st.swingR, plumb: -0.4 * st.tilt, look: -3};
 	const pan = panPos(p, GX, GG, BS, 'L'), pan0 = panPos({tilt: -0.6}, GX, GG, BS, 'L');
 	// camera: on the pan for the drop, then one smooth pull-back to the settled frame (log zoom, trapezoid ease), then steady
-	const A: [number, number, number, number, number] = [pan0[0] + 6, pan0[1] - 26, 700, 474, 1.6], B: [number, number, number, number, number] = [GX, C3.aimY, 640, 486, C3.z];
+	const A: [number, number, number, number, number] = [pan0[0] + 6, pan0[1] - 26, 700, 474, 1.6], B: [number, number, number, number, number] = [GX, C3.aimY, 720, 486, C3.z];
 	const u = trap((t - 0.32) / 1.1), dz = 1 + 0.012 * sm(seg(t, 1.42, 3.4));
 	const cam = aim(lerp(A[0], B[0], u), lerp(A[1], B[1], u), lerp(A[2], B[2], u), lerp(A[3], B[3], u), Math.exp(lerp(Math.log(A[4]), Math.log(B[4]), u)) * dz);
 	const fall = t < tL ? sm(t / tL) : 1, hy = t < tL ? lerp(pan0[1] - 220, pan0[1], fall * fall) : 0;
 	const clang = pulse(t, tL, 0.02, 0.25), eyes = sm(seg(t, 2.2, 2.6));
 	const lit = sm(seg(t, 0.9, 1.3)), land = pulse(t, 1.3, 0.04, 0.5);
 	const kF = Math.pow(cam.z / C3.z, 0.35), cc: V = [cam.x, cam.y];
-	const youX = GX + 340, cw = 5 * FS3 * 1.13 + FS3 * 1.5;
+	const cw = 5 * FS3 * 1.13 + FS3 * 1.5;
 	return <Stage60 t={t} cam={cam} grade="lapis" bg="#101A48" wear={wearAt(cam.z, 0.35)} stain={wearAt(cam.z, 0.3)}
 		light={<>
 			<GoldDefs id="a3c" />
@@ -219,35 +219,33 @@ export const Shot3: React.FC<ShotProps> = ({t}) => {
 			<Shaft pts={[[GX - 300, 80], [GX + 300, 80], [GX + 560, GG], [GX - 560, GG]]} o={0.22 + 0.2 * lit} />
 			<Glow x={pan[0]} y={pan[1] - 30} r={200 * (1 + 0.6 * clang)} c="red" o={0.55 + 0.4 * clang} />
 			{clang > 0.02 && <Sparkle x={pan[0] - 36} y={pan[1] + 6} r={64 * clang} o={clang} a={20} />}
-			{t < tL && <GlowHeart x={pan0[0]} y={hy} s={BS} glow={1.2} a={-8 * (1 - fall)} />}
-			<ellipse cx={GX - 280} cy={GG - 90} rx={460} ry={240} fill="url(#a3-shade)" />
-			<AmmitEyes x={GX - 300} y={GG - 120} s={84} open={eyes} t={t} />
+			{t < tL && <GlowHeart x={pan0[0]} y={hy} s={BS} glow={1.2} a={-8 * (1 - fall)} id="a3fh" />}
+			<ellipse cx={GX - 290} cy={GG - 100} rx={420} ry={240} fill="url(#a3-shade)" />
+			<AmmitEyes x={GX - 300} y={GG - 130} s={96} open={eyes} t={t} />
+			{eyes > 0.05 && <Glow x={GX - 300} y={GG - 130} r={190} c="gold" o={0.35 * eyes} />}
 			{/* the crown of the gate with the title (in the light layer: the gold is never worn) */}
-			<GateCrown cx={GX} cy={C3.cy} fs={FS3} lit={lit} land={land} t={t} id="a3c" title="死后的心脏" />
+			<GateCrown cx={GX} cy={C3.cy} fs={FS3} lit={lit} land={land} t={t} id="a3c" title="死后的心脏" clean />
 			{land > 0.02 && <g style={{mixBlendMode: 'screen'}} opacity={land}>{Array.from({length: 16}, (_, i) => { const an = (i / 16) * Math.PI * 2 + 0.2;
 				return <path key={i} d={poly([[GX, C3.cy], [GX + Math.cos(an - 0.04) * 1600, C3.cy + Math.sin(an - 0.04) * 900], [GX + Math.cos(an + 0.04) * 1600, C3.cy + Math.sin(an + 0.04) * 900]])} fill="#FFE29A" opacity={0.18} />; })}</g>}
 			<DustBurst t={t} t0={1.3} x={GX} y={C3.cy} rx={cw / 2} ry={FS3 * 0.85} n={110} seed={12} life={1.5} />
 			{land > 0.05 && [[GX - cw / 2 + 120, C3.cy - 120], [GX + cw / 2 - 140, C3.cy + 110], [GX, C3.cy - 520]].map(([x, y], i) => <Sparkle key={i} x={x} y={y} r={160 * land} a={20 + i * 30} />)}
 			<Dust t={t} box={[-900, -1000, 2200, 900]} n={110} seed={9} c="#FFE2A0" o={0.6} vx={-4} vy={-5} r={2.6} />
-			<g transform={layerT(kF, cc)}>{[[-502, 1], [1782, -1]].map(([x, k]) => <g key={x}><Glow x={x} y={450} r={480} c="warm" o={0.7 + 0.1 * flick(t, k + 2)} /><Embers t={t} x={x} y={440} n={16} seed={x > 0 ? 5 : 6} h={620} spread={120} s={1.9} /></g>)}</g>
+			<g transform={layerT(kF, cc)}>{[[GX - 1330, 1], [GX + 1330, -1]].map(([x, k]) => <g key={x}><Glow x={x} y={450} r={480} c="warm" o={0.7 + 0.1 * flick(t, k + 2)} /><Embers t={t} x={x} y={440} n={16} seed={x > GX ? 5 : 6} h={620} spread={120} s={1.9} /></g>)}</g>
 		</>}>
 		<GoldDefs id="a3" />
-		{/* the hall: lapis wall with gold signs, the gateway (dark opening, jambs with sign columns), papyrus columns */}
+		{/* the hall, kept clean (owner 17:07): plain lapis wall, the gateway's dark opening, plain jambs with a gold border, two papyrus columns */}
 		<rect x={-2000} y={-2000} width={5000} height={4000} fill="#13205A" />
 		<Ceiling x0={-2000} x1={3600} y0={-1600} y1={-1000} bg="#16214F" />
-		{[-1, 1].map((k) => <GlyphColumns key={k} x={k < 0 ? -1500 : GX + 1100} y={-950} cols={6} rows={22} cell={84} seed={k < 0 ? 31 : 32} mono="#E8B83E" />)}
 		<rect x={GX - 470} y={80} width={940} height={GG - 80} fill="#060B22" />
-		<Stars t={t} box={[GX - 450, 100, GX + 450, GG - 40]} n={60} seed={12} o={0.5} />
+		<Stars t={t} box={[GX - 450, 100, GX + 450, GG - 40]} n={30} seed={12} o={0.45} />
 		{[-1, 1].map((k) => <g key={k}><rect x={GX + k * 590 - 120} y={80} width={240} height={GG - 80} fill="#1B2A6A" stroke={PAL.ink} strokeWidth={5} />
-			<GlyphColumns x={GX + k * 590 - 86} y={130} cols={2} rows={9} cell={80} seed={40 + k} mono="#F2C14E" /></g>)}
+			<rect x={GX + k * 590 - 96} y={104} width={192} height={GG - 128} fill="none" stroke={PAL.gold} strokeWidth={6} opacity={0.85} /></g>)}
 		{[GX - 1060, GX + 1060].map((x) => <Column key={x} x={x} gy={GG} top={-1000} w={120} />)}
 		<rect x={-2000} y={GG} width={5000} height={900} fill="#0B1236" />
 		<rect x={-2000} y={GG} width={5000} height={8} fill={PAL.gold} opacity={0.85} />
-		<BigBalance p={p} x={GX} y={GG} s={BS} t={t} heart={t >= tL} heartGlow={0.9 + 0.6 * clang} featherA={2 * Math.sin(t * 2.3)} />
-		{/* you, tiny, at its foot, looking up */}
-		<God id="a3-you" cast={{...CAST.ani}} pose={{...POSES.rest, head: -14, neck: -6, lean: -3, bs: -2, be: 8, fs: 8, fe: 20}} x={youX} y={GG} s={7.3} face={-1} sec={{t}} />
+		<BigBalance p={p} x={GX} y={GG} s={BS} t={t} heart={t >= tL} heartGlow={0.9 + 0.6 * clang} featherA={2 * Math.sin(t * 2.3)} hid="a3ph" beat={clang} />
 		{/* foreground braziers (parallax: they slide in from the edges as we pull back) */}
-		<g transform={layerT(kF, cc)}><Brazier x={-502} y={741} s={1.6} t={t} seed={1} /><Brazier x={1782} y={741} s={1.6} t={t} seed={2} /></g>
+		<g transform={layerT(kF, cc)}><Brazier x={GX - 1330} y={741} s={1.6} t={t} seed={1} /><Brazier x={GX + 1330} y={741} s={1.6} t={t} seed={2} /></g>
 	</Stage60>;
 };
 export const _h = {aimPath, Embers, FW, Shaft, WingedSun};

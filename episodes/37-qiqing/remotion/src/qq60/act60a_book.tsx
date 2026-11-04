@@ -149,7 +149,7 @@ export const Shot11: React.FC<ShotProps> = ({t}) => {
 	const cam = aimPath(t, [[0, x0 + 150, by + 230, 520, 486, 1.55], [1.2, x0 + 200, by + 230, 560, 486, 1.6], [2.7, x0 + 290, by + 170, 620, 470, 1.75]]);
 	const sweep = seg(t, -0.1, 1.3), glow = sm(seg(t, 0.25, 0.65));
 	const fly = seg(t, 1.15, 2.7), door: V = [x0 + 222, gy - 120], sun: V = [x0 + 330, by + 120];
-	const baP: V = [lerp(door[0], sun[0] + 30, sm(fly)) - 90 * Math.sin(fly * Math.PI), lerp(door[1], sun[1] + 30, sm(fly))], baS = lerp(20, 40, sm(fly));
+	const baP: V = [lerp(door[0], sun[0] + 30, sm(fly)) - 90 * Math.sin(fly * Math.PI), lerp(door[1], sun[1] + 30, sm(fly))], baS = lerp(26, 58, sm(fly));
 	const flaps = t < 1.15 ? 1.2 : 1.2 + (t - 1.15) * (2 * Math.PI / 0.26);
 	const lx = lerp(x0 - 300, x0 + 900, sweep);
 	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={wearAt(cam.z, 0.35)} stain={wearAt(cam.z, 0.2)}
