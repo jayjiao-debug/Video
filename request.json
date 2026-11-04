@@ -1,19 +1,47 @@
 {
- "id": "ep60-sfx-04",
+ "id": "ep60-sfx-05",
  "items": [
   {
    "type": "sfx",
-   "name": "X25_tiny_chorus_here",
-   "text": "a crowd of tiny squeaky toy figurines all shout one short syllable together, high pitched cartoon chorus, very short, then silence",
-   "duration": 1.2,
-   "influence": 0.55
+   "name": "X26_ammit_roar_a",
+   "text": "one huge menacing roar of a beast that is half lioness half crocodile: raspy, breathy snarl with a throaty rattle, fast attack, pitch falling, close, dry, then silence",
+   "duration": 2.0,
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "X25b_tiny_chorus_hey",
-   "text": "dozens of tiny chipmunk-like voices answer at once with a single short squeaky 'hey!', comic, dry, no music",
-   "duration": 1.0,
+   "name": "X26_ammit_roar_b",
+   "text": "a big lion roar with a deep crocodile hiss underneath, aggressive and raspy, short and powerful, dry studio recording, no music",
+   "duration": 1.6,
    "influence": 0.7
+  },
+  {
+   "type": "sfx",
+   "name": "X27_ammit_grunt_a",
+   "text": "a low menacing grunt from a huge crocodile-lion monster: one short throaty huff, close, dry",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "X27_ammit_grunt_b",
+   "text": "a deep guttural predator chuff with a low rumble, a warning, single short sound, close, dry",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "X28_ammit_growl_a",
+   "text": "a deep guttural growl of a crocodile-lion beast rumbling low and rising in menace, close, dry, no music",
+   "duration": 3.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "X28_ammit_growl_b",
+   "text": "a low hungry monster growl, wet and throaty, crocodile jaws creaking, slowly building, menacing",
+   "duration": 3.0,
+   "influence": 0.5
   }
  ]
 }
