@@ -25,6 +25,8 @@ S = os.environ.get('SND60', '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-
 CUES, SFX = f'{S}/cues', f'{S}/sfx'
 SFX_OVER_MUSIC = 0.0      # dB: sfx peak over the local music momentary loudness (v2, owner: softer, never piercing)
 SFX_SHELF = (4500, -4.0)  # every sfx gets a gentle high shelf (Hz, dB) unless fx 'bright'
+MUSIC_TRIM = -3.0         # dB on the music bus AFTER the effects are levelled (owner 19:21: "the BGM is overpowering the sound effects");
+                          # the master gain makes the film -14 LUFS again, so the effects come up ~3 dB against the music
 AMB_UNDER_MUSIC = 8.0     # LU: ambience loudness under the local music
 TARGET, TP_CEIL = -14.0, -1.5
 
@@ -386,6 +388,7 @@ def main():
         info['audible_db'] = audibility(seg * 10 ** (gdb / 20), music[a_:b_], max(0, int((T - 0.05) * SR) - a_))
         log.append(dict(id=r['id'], type=r['type'], file=r['file'], t=round(T, 3), start=round(span[0], 3), end=round(span[1], 3), gain=round(gdb, 1), sync=r['_sync'], note=r.get('note'), **info))
     # master
+    music *= np.float32(10 ** (MUSIC_TRIM / 20))
     mix = music + sfxbus
     L0 = E.lufs(mix.astype(np.float64)); g = 10 ** ((TARGET - L0) / 20)
     for it in range(3):

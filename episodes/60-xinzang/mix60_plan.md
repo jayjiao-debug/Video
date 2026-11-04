@@ -32,7 +32,7 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | m06_hall | cue | 47.0 | mystic_loop | 0 | 0 | 55.7 | 0 | 0.002 | 0.7 | - | t<-18:doors+boom | **[deliberate]** the hall reveal: 0.25 s breath, then bowl + bendir on the doors' boom |
 | y | m07_roll | sting | 55.4 | sting_roll_hit | hit | 0.55 | 55.4 | -4 | 0.02 | 0.01 | - | - | one-beat darbuka roll bridges the mystic into the oath groove |
 | y | m08_oath | cue | 55.4 | groove_loop | 0 | 0 | 67.9 | -1 | 0.002 | 0.01 | wind=0.5 | end<-25:freeze@+0.5 | **[deliberate, the one comic stop]** the oath groove; on 「话太多」 the band slows a little and fades over 0.5 s (a soft drop, not a cliff) |
-| y | m09_weigh | cue | 91.4 | tension_hushdry | hit | 29.99 | 94.4 | 0 | 0.05 | 0.8 | ramp=-9>0@3.5,env=82.17:0;83.5:-4;83.68:-30;84.5:-30;84.85:0;85.25:0;88.25:-4;88.4:0 | - | the weighing: heartbeat enters on the 69.1 cut; arghul climb; [deliberate] for Ammit the music sinks under the lead-in and drops out for the roar alone (83.68-84.50), back on the hippo plop; ramp into the drone-only hush (88.32); [deliberate] silent beat 90.63, HIT 91.40 |
+| y | m09_weigh | cue | 91.4 | tension_hushdry | hit | 29.99 | 94.4 | 0 | 0.05 | 0.8 | ramp=-9>0@3.5,env=82.17:0;83.3:-4;83.47:-30;84.7:-30;85.05:0;85.25:0;88.25:-4;88.4:0 | - | the weighing: heartbeat enters on the 69.1 cut; arghul climb; [deliberate] for Ammit the music sinks under the lead-in and drops out for the roar alone (83.68-84.50), back on the hippo plop; ramp into the drone-only hush (88.32); [deliberate] silent beat 90.63, HIT 91.40 |
 | y | m10_twist | cue | 94.0 | playful_loop | 0 | -0.536 | 112.05 | -1 | 0.45 | 0.35 | - | - | the scarab spell, Ani, Hatnefer; the hit's tail cross-fades into the playful pickup |
 | y | m11_sly | sting | 110.5 | sting_roll_hit | hit | 0.35 | 112.0 | -9 | 0.05 | 0.3 | - | t<-40:ending+shrug | a soft sly roll ending on Hatnefer's shrug |
 | y | m12_doom | sting | 112.32 | sting_doom | hit | 0 | 115.7 | -1 | 0.002 | 0.35 | env=112.9:0;113.02:-9;113.7:-9;114.1:0 | t<-41:pan+crash | **[deliberate]** 秤歪了: the playful fades by 112.05, a breath, then the doom on the pan crash |
@@ -79,17 +79,24 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | s12_flip7 | sfx | 31.27 | X35_papyrus_flick | hit | 0.03 | +0.1 | -2 | - | 0.03 | - | t<-12:page+flips#7~spell+sheets#7 | - |
 | y | s14_pen | sfx | 35.95 | X05_reed_pen_scratch | 0.8 | 0.8 | +1.05 | -2 | - | 0.15 | - | t<-14:pen+writes | Ani's name written in |
 | y | s15_door | sfx | 37.95 | S08_stone_door | 1.0 | 1.0 | +0.69 | -3 | 0.08 | 0.06 | - | t<-15:stone+door+grinds | the tomb door grinds shut |
-| y | s16_knife1 | sfx | 40.8 | X19_knife_shing | hit | - | - | -4 | - | - | pan=-0.45 | t<-16:knife_1 | first and last knife glint only |
-| y | s16_knife4 | sfx | 42.6 | X19_knife_shing | hit | - | - | -5 | - | - | pan=0.45 | t<-16:knife_4 | |
+| y | s16_knife1 | sfx | 40.8 | X19_knife_shing | hit | - | - | -2 | - | - | pan=-0.45 | t<-16:knife_1 | first and last knife glint only |
+| y | s16_knife2 | sfx | 41.4 | X19_knife_shing | hit | - | - | -3 | - | - | pan=-0.15 | t<-16:knife_2 | one glint per guardian (owner: 4 knives) |
+| y | s16_knife3 | sfx | 42.0 | X19_knife_shing | hit | - | - | -3 | - | - | pan=0.15 | t<-16:knife_3 | - |
+| y | s16_knife4 | sfx | 42.6 | X19_knife_shing | hit | - | - | -3 | - | - | pan=0.45 | t<-16:knife_4 |  |
 | y | s17_hiss | sfx | 44.25 | X07_serpent_hiss | 1.65 | 1.0 | 44.95 | -2 | - | 0.3 | - | t<-17:cobra+hiss@+0.5 | the cobra rears and hisses |
 | y | s17_growl | sfx | 44.1 | X28_ammit_growl | 1.1 | 0.9 | 44.6 | -3 | 0.05 | 0.12 | bright | t<-17:growl@+0.2 | the crocodile growls as its jaws gape (43.90), then snaps |
 | y | s17_croc | sfx | 44.6 | S03_croc_snap | hit | - | - | 0 | - | - | - | t<-17:croc+snap | the crocodile lunges: jaw snap + a short low growl |
+| y | s17_burst | sfx | 44.75 | X44_magic_whoosh | hit | - | - | 0 | - | 0.3 | - | t<-17:glyph+burst~burst | the spell: the glyphs burst off the scroll (magic whoosh) |
+| y | s17_shield | sfx | 45.0 | X46_magic_shield | hit | - | - | -1 | - | 0.3 | - | t<-17:shield | a shield of light forms (shimmer on D) |
+| y | s17_blast | sfx | 45.3 | X45_magic_blast | hit | - | - | 1 | - | 0.4 | - | t<-17:blast~whoomp | the shield blasts the beasts back (magic impact) |
 | y | s18_doors | sfx | 47.0 | X08_bronze_gate_creak | 0.05 | - | - | -1 | - | 0.3 | - | t<-18:doors+boom | the hall doors open |
 | y | s19_whisper | amb | 50.0 | X09_judges_42_whisper_loop | 0 | 0 | 52.6 | -2 | 1.2 | 0.4 | - | t<-19:murmur | the 42 judges murmur |
-| y | s20_stab1 | sfx | 52.4 | S11_frame_drum | hit | - | - | -1 | - | - | - | t<-20:punch+1 | frame-drum stab per punch-in |
+| y | s20_stab1 | sfx | 52.4 | S11_frame_drum | hit | - | - | -2 | - | - | - | t<-20:punch+1 | frame-drum stab per punch-in |
 | y | s20_bone | sfx | 52.8 | X33_bone_snap | hit | - | - | 0 | - | - | - | t<-20:bone+crack | 碎骨者 snaps a bone |
-| y | s20_stab2 | sfx | 53.3 | S11_frame_drum | hit | - | - | -1 | - | - | - | t<-20:punch+2 | |
-| y | s20_stab3 | sfx | 54.2 | S11_frame_drum | hit | - | - | 0 | - | - | - | t<-20:punch+3 | |
+| y | s20_stab2 | sfx | 53.3 | S11_frame_drum | hit | - | - | -2 | - | - | - | t<-20:punch+2 |  |
+| y | s20_chomp | sfx | 53.66 | X42_shadow_chomp | hit | - | - | 0 | - | - | - | t<-20:chomp~beak+shut | 吞影者 chomps the shadow |
+| y | s20_stab3 | sfx | 54.2 | S11_frame_drum | hit | - | - | -3 | - | - | - | t<-20:punch+3 |  |
+| y | s20_lick | sfx | 54.6 | X43_blood_lick | hit | - | - | 0 | - | - | - | t<-20:lick | 食血者 licks the red drop |
 | y | s22_tick1 | sfx | 59.0 | X10_scarab_clack | hit | - | +0.14 | -3 | - | 0.04 | - | t<-22:check+1 | a soft stone tock per accepted oath |
 | y | s22_tick2 | sfx | 59.6 | X10_scarab_clack | hit | - | +0.14 | -3 | - | 0.04 | - | t<-22:check+2 | |
 | y | s22_tick3 | sfx | 60.2 | X10_scarab_clack | hit | - | +0.14 | -3 | - | 0.04 | - | t<-22:check+3 | |
@@ -102,8 +109,8 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | s28_feather | sfx | 75.5 | X11_feather_land | hit | - | - | -3 | - | - | pan=0.45 | t<-28:right+pan | the feather on the right |
 | y | s29_pen | sfx | 78.75 | X05_reed_pen_scratch | 0.8 | 0.8 | +0.45 | -4 | - | 0.12 | - | t<-29:first+scratch | Thoth's first stroke |
 | y | s30_grunt | sfx | 80.25 | X27_ammit_grunt | hit | - | - | 1 | - | - | duck=3,bright | t<-30:growl~grunt | Ammit revealed: a menacing grunt |
-| y | s31_leadin | sfx | 83.67 | synth:leadin=1.5 | hit | - | +0.05 | 4 | - | 0.05 | bright | t<-31:roar@-0.18 | the lead-in: darbuka roll + the mizmar climbing D Hijaz from the bar line (82.17), a breath, then the roar |
-| y | s31_roar | sfx | 84.15 | X30_lioness_roar | hit | - | - | 0 | - | 0.25 | abs=-6,impact,bright | t<-31:roar@+0.3 | [deliberate] AMMIT ROARS ALONE: a real lioness roar (+ a faint croc hiss), onset as the jaws open, peak on jaws wide; the biggest sound of the film |
+| y | s31_leadin | sfx | 83.45 | synth:leadin=1.28 | hit | - | +0.05 | 4 | - | 0.05 | bright | t<-31:roar@-0.4 | the lead-in: darbuka roll + the mizmar climbing D Hijaz from the bar line (82.17), a breath, then the roar |
+| y | s31_roar | sfx | 84.0 | X40_ammit_roar_deep | hit | - | - | 0 | - | 0.4 | abs=-6,impact,bright | t<-31:roar@+0.15 | [deliberate] AMMIT ROARS ALONE (owner 19:21 deeper): a deep lioness roar -2 st + chest layer + stone-hall tail, swelling from the rear-back to jaws wide; BGM out 83.47-84.70 |
 | y | s31_plop | sfx | 84.75 | X22_comic_plop | hit | - | - | -2 | - | - | - | t<-31:plop | the hippo rump wiggles |
 | y | s33_creak | sfx | 89.7 | S02_scale_settle | hit | - | 90.6 | -3 | - | 0.25 | - | t<-33:creak | the chain creaks as the pans wobble |
 | y | s33_beat1 | sfx | 88.7 | synth:heart | hit | - | +0.6 | 0 | - | 0.1 | abs=-18 | t<-33:beat_1 | the heart alone, speeding up into the HIT |
@@ -116,13 +123,13 @@ fade), `ramp=a>b@d`, `env=t:dB;t:dB` (film-time gain curve), `duck=dB` (music di
 | y | s34_zills | sfx | 91.4 | G3_zills | hit | - | - | -1 | - | - | - | t<-34:crash | the scarab: finger-cymbal crash on the verdict hit |
 | y | s34_shine | sfx | 92.4 | synth:shine | hit | - | - | 6 | - | - | bright | t<-34:shine | the scarab SHINE (owner 17:07): a qanun glissando up D Hijaz rises into the white star (92.40), a D6 bowl rings from it, sistrum and sparkles after |
 | y | s35_flip | sfx | 94.85 | X10_scarab_clack | hit | - | - | -2 | - | - | - | t<-35:lands | the scarab flips |
-| y | s36_lid | sfx | 98.18 | X10_scarab_clack | hit | - | - | -3 | - | 0.1 | - | t<-36:mouth+snaps | the heart mouth snaps shut (a small stone snap) |
+| y | s36_lid | sfx | 98.18 | X02_canopic_lid_clink | hit | - | - | -3 | - | 0.1 | - | t<-36:lid+clicks~mouth+snaps | the jar heart lid clicks shut |
 | y | s37_whisper | amb | 99.45 | X09_judges_42_whisper_loop | 0 | 0 | 102.4 | -4 | 0.6 | 0.6 | - | t<-37:whispering | Ani whispering the spell |
 | y | s38_wink | sfx | 103.86 | G3_zills | hit | - | - | -4 | - | - | - | t<-38:ting | the wink |
 | y | s41_tip | sfx | 112.32 | X18_scale_tip_heavy | hit | - | - | 0 | - | - | - | t<-41:pan+crash | the pan crashes down |
 | y | s41_snarl | sfx | 113.25 | X31_lion_snarl | hit | - | - | 0 | - | 0.15 | abs=-8,impact,bright | t<-41:roar@+0.13 | Ammit rears and roars (short; onset ~113.0, jaws wide 113.12), the doom dips under it |
 | y | s42_growl | sfx | 113.97 | X28_ammit_growl | hit | - | +1.5 | 1 | - | 0.08 | duck=3,bright | t<-42:chomp@-1.45 | Ammit's growl rising into the bite |
-| y | s42_chomp | sfx | 115.42 | X32_mean_chomp | hit | - | - | 0 | - | - | abs=-8,impact,bright | t<-42:chomp | [deliberate] a mean crunchy CHOMP: the jaws slam + teeth crunching |
+| y | s42_chomp | sfx | 115.42 | X41_ammit_slam | hit | - | - | 0 | - | - | abs=-7,impact | t<-42:chomp | [deliberate] the BITE (owner 19:21): a heavy wet jaw SLAM with a low body, no crunch |
 | y | s43_sand | amb | 117.35 | S09_sand_wind_loop | 0 | 0 | 119.55 | 2 | 0.5 | 0.3 | - | t<-43:sand+dissolve | the silhouette blows away as sand |
 | y | s44_rewind | sfx | 120.05 | S09_sand_wind_loop | 0.6 | 0.6 | 120.95 | 0 | 0.05 | 0.02 | rev,ramp=-14>0@0.85,abs=-16 | t<-44:reverse+whoosh | the same sand reversed: the rewind |
 | y | s45_sistrum | sfx | 122.7 | S06_sistrum | hit | - | - | -2 | - | - | - | t<-45:sistrum@+0.3 | Isis's sistrum |

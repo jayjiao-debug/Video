@@ -8,6 +8,7 @@ Tuning is varispeed (pitch and length move together), measured first: the strong
 (or an in-scale tone when that is the smaller move). Prints name, length, peak time, loudness.
 """
 import sys, os, json, subprocess, numpy as np, soundfile as sf
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fractions import Fraction
 from scipy import signal
 SR = 48000
@@ -53,6 +54,13 @@ ITEMS = [
  ('X33_bone_snap', NEW, 'X33_bone_snap_a', 0, 'shot', 'a bone snapped between two fists: crack + splinter (碎骨者, shot 20)'),
  ('X34_ba_wings', NEW, 'X34_small_wings_a', 0, 'shot', 'a small bird takes off: six soft feathery flaps over ~0.85 s (the ba, shot 11)'),
  ('X35_papyrus_flick', NEW, 'X35_papyrus_flick_a', 0, 'shot', 'one crisp papyrus page flick at ~0.1 s (two softer ones follow: take 0-0.22 s for a single flip)'),
+ ('X40_ammit_roar_deep', NEW, 'X40_deep_roar_b', -2.0, 'layer', 'AMMIT v4 (owner 19:21 "not deep enough"): a deep lioness roar -2 st (rasp + ~200 Hz body), a chest layer an extra -3 st under it, a stone-hall tail'),
+ ('X41_ammit_slam', NEW, 'X41_jaw_slam_b', -2.0, 'layer', 'AMMIT v4 bite (owner: "too crispy like an apple"): a heavy wet jaw SLAM -2 st + a low frame-drum body, no crunch'),
+ ('X42_shadow_chomp', NEW, 'X41_jaw_slam_a', 3.0, 'shot', 'a small wet chomp (+3 st): the shadow eater (吞影者) shuts its beak'),
+ ('X43_blood_lick', NEW, 'X43_lick_a', 0, 'shot', 'a wet slurpy lick (食血者 licks the red drop)'),
+ ('X44_magic_whoosh', NEW, 'X44_magic_whoosh_a', 0, 'shot', 'magic: glowing energy whooshing forward, sparkly (the glyph burst, shot 17)'),
+ ('X45_magic_blast', NEW, 'X45_magic_impact_b', 0, 'shot', 'magic: the shield blasting outward, warm thump + whoosh + glitter (shot 17)'),
+ ('X46_magic_shield', NEW, 'X46_magic_shield', -1.95, 'shot', 'magic: a shield forming, shimmering hum + sparkles (tuned E6 -> D6)'),
  ('S01_heartbeat', OLD, 'S01_heartbeat', 0, 'shot', 'slow deep heartbeat, close'),
  ('S02_scale_settle', OLD, 'S02_scale_settle', +0.61, 'shot', 'balance tilting and settling, creak + small tick (tick tuned to D6)'),
  ('S03_croc_snap', OLD, 'S03_croc_snap', 0, 'shot', 'crocodile jaws snap with a short low growl'),
@@ -72,7 +80,10 @@ ITEMS = [
 LAYERS = {'X26_ammit_roar': dict(src='X26_ammit_roar_b', lp=300, seg=(0.0, 0.6), db=-4, keep=1.55),
           'X27_ammit_grunt': dict(src='X27_ammit_grunt_b', lp=None, seg=(0.0, 0.8), db=-6, keep=0.75),
           'X30_lioness_roar': dict(src='X07_serpent_hiss', lp=None, seg=(0.9, 1.9), db=-14, keep=1.3),
-          'X32_mean_chomp': dict(src='X32_crunchy_bite_a', lp=None, seg=(0.0, 0.7), db=-3, keep=1.0, dir='NEW')}
+          'X32_mean_chomp': dict(src='X32_crunchy_bite_a', lp=None, seg=(0.0, 0.7), db=-3, keep=1.0, dir='NEW'),
+          'X40_ammit_roar_deep': dict(parts=[dict(src='X40_deep_roar_a', st=-3.0, lp=700, seg=(0.0, 2.6), db=-10, delay=0.04)], room=(1.6, -12), keep=2.4, fade=0.8),
+          'X41_ammit_slam': dict(parts=[dict(src='X41_jaw_slam_a', lp=1800, seg=(0.0, 0.9), db=-9),
+                                        dict(src='S11_frame_drum', dir='OLD', st=-3.0, lp=260, seg=(0.0, 1.2), db=-5)], keep=1.1, fade=0.4)}
 def load(p):
     raw = subprocess.run(['ffmpeg', '-v', 'quiet', '-i', p, '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout
     return np.frombuffer(raw, np.float32).reshape(-1, 2).astype(np.float64)
@@ -92,13 +103,21 @@ if __name__ == '__main__':
             abrupt = np.abs(y[-int(0.03 * SR):]).max() / pk > 10 ** (-30 / 20)
             k = min(int((0.5 if abrupt else 0.05) * SR), len(y) // 3); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
             k = int(0.002 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]
-        elif kind == 'layer':   # (owner v1: "a menacing grunt/roar like the lion in the reference")
+        elif kind == 'layer':   # the take + partner layers (each: src, dir, seg, st, lp, hp, db, delay), optional room, cut to keep
             L_ = LAYERS[name]; e = np.abs(y).max(1); i0 = max(0, int(np.argmax(e > pk * 10 ** (-40 / 20))) - int(0.005 * SR)); y = y[i0:]
-            z = load(f'{NEW if L_.get("dir") == "NEW" else d}/{L_["src"]}.mp3'); z = z[int(L_['seg'][0] * SR):int(L_['seg'][1] * SR)]
-            if L_['lp']: z = signal.sosfilt(signal.butter(4, L_['lp'], 'low', fs=SR, output='sos'), z, axis=0)
-            kz = int(0.08 * SR); z[-kz:] *= np.linspace(1, 0, kz)[:, None]
-            z *= pk / (np.abs(z).max() + 1e-9) * 10 ** (L_['db'] / 20); n_ = max(len(y), len(z)); y = np.pad(y, ((0, n_ - len(y)), (0, 0)))
-            y[:len(z)] += z; y = y[:int(L_['keep'] * SR)]; k = int(0.3 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
+            pk = np.abs(y).max()
+            for P_ in L_.get('parts', [L_]):
+                z = load(f'{NEW if P_.get("dir") == "NEW" else OLD if P_.get("dir") == "OLD" else d}/{P_["src"]}.mp3')
+                z = retune(z, P_.get('st', 0)); z = z[int(P_['seg'][0] * SR):int(P_['seg'][1] * SR)]
+                if P_.get('lp'): z = signal.sosfilt(signal.butter(4, P_['lp'], 'low', fs=SR, output='sos'), z, axis=0)
+                if P_.get('hp'): z = signal.sosfilt(signal.butter(2, P_['hp'], 'high', fs=SR, output='sos'), z, axis=0)
+                kz = min(len(z) // 3, int(0.08 * SR)); z[-kz:] *= np.linspace(1, 0, kz)[:, None]
+                z *= pk / (np.abs(z).max() + 1e-9) * 10 ** (P_['db'] / 20); dl = int(P_.get('delay', 0) * SR)
+                n_ = max(len(y), dl + len(z)); y = np.pad(y, ((0, n_ - len(y)), (0, 0))); y[dl:dl + len(z)] += z
+            if L_.get('room'):   # a stone hall: the long resonant tail (owner 19:21 "not deep enough")
+                import egypt_cues as E_; rt, wet = L_['room']; y = np.pad(y, ((0, int(rt * SR)), (0, 0)))
+                y = y + 10 ** (wet / 20) * E_.conv_st(y, E_.make_ir(rt, seed=41))
+            y = y[:int(L_['keep'] * SR)]; k = int(L_.get('fade', 0.3) * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
             k = int(0.002 * SR); y[:k] *= np.linspace(0, 1, k)[:, None]
         elif kind == 'chorus':
             e = np.abs(y).max(1); i0 = max(0, int(np.argmax(e > pk * 10 ** (-45 / 20))) - int(0.005 * SR)); y = y[i0:i0 + int(0.62 * SR)]
