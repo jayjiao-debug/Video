@@ -52,7 +52,6 @@ export const Shot18: React.FC<ShotProps> = ({t}) => {
 		<defs><radialGradient id="b18door" cx="0.5" cy="0.62" r="0.7"><stop offset="0" stopColor="#FFE7A0" stopOpacity={0.85} /><stop offset="0.6" stopColor="#D8A845" stopOpacity={0.35} /><stop offset="1" stopColor="#D8A845" stopOpacity={0} /></radialGradient></defs>
 		<rect x={70} y={568} width={160} height={GY - 568} fill="url(#b18door)" opacity={0.85 * open + 0.3 * boom} />
 		<g opacity={open}><Stars t={t} box={[74, 572, 226, 760]} n={14} seed={183} /></g>
-		<God id="b18ani" cast={ANI} pose={ani} x={ax} y={GY} s={as} sec={{t}} />
 		{leaf(70, 1, 'l')}{leaf(230, -1, 'r')}
 		<path d={poly([[40, GY], [70, GY], [70, 568], [40, 568]])} fill="#E9D3A0" stroke={PAL.ink} strokeWidth={2.4} /><path d={poly([[230, GY], [260, GY], [260, 568], [230, 568]])} fill="#E9D3A0" stroke={PAL.ink} strokeWidth={2.4} />
 		{[46, 236].map((x) => <rect key={x} x={x} y={580} width={18} height={GY - 592} fill="none" stroke={PAL.red} strokeWidth={2} />)}
@@ -60,6 +59,9 @@ export const Shot18: React.FC<ShotProps> = ({t}) => {
 		<path d={poly([[26, 540], [274, 540], [290, 512], [10, 512]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={2.4} />
 		{Array.from({length: 12}, (_, i) => <path key={i} d={`M${30 + i * 21} 538L${18 + i * 23.4} 514`} stroke={[PAL.blue, PAL.red, PAL.green][i % 3]} strokeWidth={6} />)}
 		<WingedSun x={150} y={554} s={6} span={15} t={t} />
+		{/* (owner 20:27: "he should be the top layer") you, in front of the leaves and jambs, feet on the threshold */}
+		<ellipse cx={ax + 4} cy={GY + 1} rx={34} ry={4} fill="#05081A" opacity={0.5} />
+		<God id="b18ani" cast={ANI} pose={ani} x={ax} y={GY} s={as} sec={{t}} />
 	</Stage60>;
 };
 
