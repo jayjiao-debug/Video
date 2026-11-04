@@ -10,7 +10,7 @@ import {REEDS} from './act60c_reeds';
 const C = {...TWIST, ...HALL, ...OSIRIS, ...REEDS};
 const TIN: Record<number, Pick<ShotDef, 'tin' | 'ov'>> = {
 	34: {tin: 'dissolve', ov: 0.35}, 35: {tin: 'cut'}, 36: {tin: 'dissolve', ov: 0.3}, 37: {tin: 'dissolve', ov: 0.4}, 38: {tin: 'cut'},
-	39: {tin: 'dissolve', ov: 0.4}, 40: {tin: 'cut'}, 41: {tin: 'cut'}, 42: {tin: 'cut'}, 43: {tin: 'cut'}, 44: {tin: 'cut'},
+	39: {tin: 'dissolve', ov: 0.4}, 40: {tin: 'cut'}, 41: {tin: 'cut'}, 42: {tin: 'cut'}, 43: {tin: 'cut'}, 44: {tin: 'dissolve', ov: 0.4},
 	45: {tin: 'dissolve', ov: 0.4}, 46: {tin: 'cut'}, 47: {tin: 'dissolve', ov: 0.5}, 48: {tin: 'cut'}, 49: {tin: 'cut'}, 50: {tin: 'cut'},
 	51: {tin: 'cut'}, 52: {tin: 'dissolve', ov: 0.4}, 53: {tin: 'dissolve', ov: 0.4}, 54: {tin: 'dissolve', ov: 0.4}, 55: {tin: 'cut'},
 };

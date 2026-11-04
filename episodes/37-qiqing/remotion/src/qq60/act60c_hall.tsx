@@ -127,7 +127,7 @@ const S43: React.FC<ShotProps> = ({t}) => {
 /* v5 (owner 20:27 "not very smooth"): every grain flies home on an eased, curving path (deterministic, a function of t only, with a
    short motion streak); a soft sand fill rises feet → head inside the true silhouette as the grains land, and the drawn figure
    resolves out of the sand a beat behind it under a soft glow, all settled before the chime (level 1.20 = 121.30). */
-export const T44 = {level: 1.2, fill: [0.1, 1.0] as V, form: [0.3, 1.1] as V};
+export const T44 = {level: 1.2, fill: [0.1, 1.0] as V, form: [0.3, 1.1] as V, sand: [-0.05, 0.35] as V, hall: [0.05, 0.75] as V, scale: [0.4, 1.0] as V, pivot: [0.55, 1.15] as V};
 const ANI44 = {x: 300, s: 22};
 const smr = (u: number) => { const x = cl(u); return x * x * x * (x * (x * 6 - 15) + 10); };
 const smrInv = (v: number) => { let a = 0, b = 1; for (let k = 0; k < 30; k++) { const m = (a + b) / 2; if (smr(m) < v) a = m; else b = m; } return (a + b) / 2; };
@@ -166,19 +166,22 @@ const Grains44: React.FC<{t: number}> = ({t}) => <g>
 const S44: React.FC<ShotProps> = ({t}) => {
 	const aniX = ANI44.x, s = ANI44.s, pose = ANI_POSES.judged(t);
 	const f = smr(seg(t, T44.fill[0], T44.fill[1])), fy = lerp(F0, F1, f), f2 = smr(seg(t, T44.form[0], T44.form[1])), fy2 = lerp(F0, F1, f2);
+	/* v6 (owner 20:42 "fade every element gradually back in"): 44 dissolves out of 43's dark void and starts black; the sand glints in first,
+	   then the hall (wall, ceiling, pillars, floor) rises from black, then the scale, then the pivot glow; the shaft and flood follow the chime */
+	const sandIn = smr(seg(t, T44.sand[0], T44.sand[1])), hallO = smr(seg(t, T44.hall[0], T44.hall[1])), balO = smr(seg(t, T44.scale[0], T44.scale[1])), pivO = smr(seg(t, T44.pivot[0], T44.pivot[1]));
 	const band = Math.sin(Math.PI * f) * 0.85, halo = bump(t, 0.35, 1.7), sandO = 1 - smr(seg(t, T44.form[1] - 0.3, T44.form[1] + 0.05)); /* the sand under the sheer linen fades as the figure completes */
 	const L = T44.level, tilt = 7 * (1 - sm(seg(t, 0, L))) * Math.cos(t * 7.5), flood = sm(seg(t, L, L + 0.7));
 	const p = {tilt, swingL: 1.5 * (1 - sm(seg(t, 0, L + 0.3))) * Math.sin(t * 6), swingR: -1.5 * (1 - sm(seg(t, 0, L + 0.3))) * Math.sin(t * 6), plumb: -0.3 * tilt};
 	const BX = 870, bs = 30, w = balW({tilt: 0}, BX, GY, bs);
 	const fig = (id: string) => <God id={id} cast={ANI} pose={pose} x={aniX} y={GY} s={s} sec={{t}} />;
 	const U = {maskUnits: 'userSpaceOnUse' as const, x: -300, y: -100, width: 2100, height: 1300};
-	return <Stage60 t={t} cam={camE(t, 0, 2.4, [720, 486, 1.0], [740, 470, 1.06])} grade="lapis" bg="#18245A" wear={0.45} stain={0.32}
+	return <Stage60 t={t} cam={camE(t, 0, 2.4, [720, 486, 1.0], [740, 470, 1.06])} grade="lapis" bg="#07080E" wear={0.45 * hallO} stain={0.32 * hallO} wobble={wobIn(t)}
 		light={<>
-			<Glow x={w.pivot[0]} y={w.pivot[1] + 120} r={520 + 300 * flood} c="gold" o={0.25 + 0.55 * flood} />
+			<Glow x={w.pivot[0]} y={w.pivot[1] + 120} r={520 + 300 * flood} c="gold" o={(0.25 + 0.55 * flood) * pivO} />
 			<Shaft pts={[[620, PIC_T - 40], [1120, PIC_T - 40], [1260, GY], [480, GY]]} o={0.55 * flood} />
-			<Grains44 t={t} />
+			<g opacity={sandIn}><Grains44 t={t} /></g>
 			{t > L - 0.05 && <Sparkle x={w.pivot[0]} y={w.pivot[1]} r={90 * bump(t, L - 0.05, L + 0.6)} rot={20} />}
-			<Dust t={t} box={[0, 60, 1300, 900]} n={50} seed={44} c="#FFE7A0" o={0.4 + 0.4 * flood} vx={3} vy={-8} />
+			<Dust t={t} box={[0, 60, 1300, 900]} n={50} seed={44} c="#FFE7A0" o={(0.4 + 0.4 * flood) * hallO} vx={3} vy={-8} />
 		</>}
 		screen={<rect width={FW} height={FH} fill="#FFD98A" opacity={0.22 * flood} style={{mixBlendMode: 'screen'}} />}>
 		<defs>
@@ -192,8 +195,9 @@ const S44: React.FC<ShotProps> = ({t}) => {
 			<mask id="c44form" {...U}><rect x={-300} y={-100} width={2100} height={1300} fill="url(#c44dg)" /></mask>
 			<mask id="c44band" {...U}><rect x={-300} y={-100} width={2100} height={1300} fill="url(#c44bg)" /></mask>
 		</defs>
-		<HallBg t={t} x0={-300} x1={1700} cols={[60, 1290]} />
-		<BalanceC p={p} x={BX} y={GY} s={bs} t={t} />
+		<rect x={-300} y={-100} width={2100} height={1300} fill="#07080E" />
+		{hallO > 0 && <g opacity={hallO}><HallBg t={t} x0={-300} x1={1700} cols={[60, 1290]} /></g>}
+		{balO > 0 && <g opacity={balO}><BalanceC p={p} x={BX} y={GY} s={bs} t={t} /></g>}
 		{/* a soft gold glow follows the fill up the body, then holds round the whole figure and eases off */}
 		<Glow x={aniX + 10} y={lerp(GY - 40, TOP44 + 140, f)} r={230} c="gold" o={0.5 * Math.sin(Math.PI * f) + 0.35 * halo + 0.3 * flood} />
 		{/* the sand fill: the true silhouette, filled from the feet up, speckled with the grains that have landed */}
