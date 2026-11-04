@@ -93,8 +93,8 @@ const Son: React.FC<SceneProps> = ({t, dur, beat}) => {
 			<Layer D={2.2} blur={10}><Bokeh n={6} seed={13} t={tt} r={[90, 170]} o={0.22} cols={['#ffb860']} /></Layer>
 		</Stage>
 		<div style={{position: 'absolute', inset: 0, transform: `scale(${push.toFixed(4)})`, transformOrigin: '1220px 560px'}}>
-			<Print3 src={PH3.young1998.src} pos={PH3.young1998.pos} aspect={PH3.young1998.aspect} t={t - a} dur={hold - a} w={380} cx={1020} cy={566} rot={-4} from="left" caption="1998" />
-			<Print3 src={PH3.nowFace.src} pos={PH3.nowFace.pos} aspect={PH3.nowFace.aspect} t={t - b} dur={hold - b} w={380} cx={1430} cy={552} rot={3} from="right" caption="2026" z={1} />
+			<Print3 src={PH3.young1998.src} pos={PH3.young1998.pos} aspect={PH3.young1998.aspect} t={t - a} dur={hold - a} w={380} cx={1020} cy={566} rot={-4} from="left" caption="1998 · 29岁" />
+			<Print3 src={PH3.nowFace.src} pos={PH3.nowFace.pos} aspect={PH3.nowFace.aspect} t={t - b} dur={hold - b} w={380} cx={1430} cy={552} rot={3} from="right" caption="2026 · 57岁" z={1} />
 		</div>
 	</AbsoluteFill>;
 };

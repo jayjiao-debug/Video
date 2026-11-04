@@ -108,7 +108,7 @@ export const SCENES: Scene[] = [
 		stamp: ['2026 · 英国 亨伯桥', '11月1日'], note: 'Humber Bridge in thick fog (kit3 Humber), crowds lining both sides, phones up'},
 	{id: 'street', nominal: 3, rows: [{s: '门口挂着：[欢迎回家，儿子]。', at: 0}], date: 2026.84, stamp: ['2026 · 英国 赫尔', '11月2日'], note: 'the Hull street, the banner, warm windows, press crowd'},
 	{id: 'window', nominal: 2.5, rows: [{s: '妈妈已经[十年]没见过他了。', at: 0}], date: 2026.84, note: 'mum at the window'},
-	{id: 'son', nominal: 4, rows: [{s: '他走时，儿子8岁；', at: 0}, {s: '如今，儿子[36岁]。', at: 1.5}], photo: 'young1998+nowFace', date: 2026.84,
+	{id: 'son', nominal: 4, rows: [{s: '出发时，他29岁；', at: 0}, {s: '到家时，他[57岁]。', at: 1.5}], photo: 'young1998+nowFace', date: 2026.84,
 		note: 'two small prints side by side: Karl 1998 / Karl 2026'},
 	{id: 'door2', nominal: 4, anchor: 'drop2', rows: [{s: '她的第一句话是：', at: 0}, {s: '「你去哪儿了？」', at: 1.3}], date: 2026.84,
 		note: 'the door opens on the DROP; light spills; they face each other'},

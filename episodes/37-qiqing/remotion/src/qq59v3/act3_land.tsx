@@ -285,8 +285,8 @@ export const EmptyRoad: React.FC<{t: number; cam: Cam; kx: number; kh: number}> 
 		<Particles kind="dust" n={50} seed={71} D={[1.5, 10]} box={[-60, 200, 1980, 1000]} c="#dfe2e0" o={0.5} wind={160} />
 		{/* the near fence post (weathered wood, barbed wire) with a surgical mask hooked on the wire, flapping */}
 		<Layer D={1.5}>{(() => { const x = 1470, top = 330, wy1 = 476, wy2 = 640; return <g>
-			<path d={`M-200,${wy1 - 6} Q700,${wy1 + 14} ${x},${wy1} Q1800,${wy1 - 8} ${W + 200},${wy1 + 6} M-200,${wy2 - 4} Q700,${wy2 + 16} ${x},${wy2} Q1800,${wy2 - 6} ${W + 200},${wy2 + 8}`} stroke="#25221f" strokeWidth={3.4} fill="none" />
-			{[260, 640, 1020, 1720].map((bx, i) => <path key={i} d={`M${bx - 8},${wy1 + 6 - i} l8,-14 l6,16 l8,-12 M${bx + 40},${wy2 + 4} l8,-14 l6,16 l8,-12`} stroke="#25221f" strokeWidth={2.6} fill="none" />)}
+			<path d={`M-1700,${wy1 - 14} Q-500,${wy1 + 12} -200,${wy1 - 6} Q700,${wy1 + 14} ${x},${wy1} Q1800,${wy1 - 8} ${W + 200},${wy1 + 6} Q${W + 1300},${wy1 + 16} ${W + 2600},${wy1 + 2} M-1700,${wy2 - 10} Q-500,${wy2 + 14} -200,${wy2 - 4} Q700,${wy2 + 16} ${x},${wy2} Q1800,${wy2 - 6} ${W + 200},${wy2 + 8} Q${W + 1300},${wy2 + 18} ${W + 2600},${wy2 + 4}`} stroke="#25221f" strokeWidth={3.4} fill="none" />
+			{[-1300, -900, -480, -60, 260, 640, 1020, 1720, 2300, 2800, 3300].map((bx, i) => <path key={i} d={`M${bx - 8},${wy1 + 6 - i} l8,-14 l6,16 l8,-12 M${bx + 40},${wy2 + 4} l8,-14 l6,16 l8,-12`} stroke="#25221f" strokeWidth={2.6} fill="none" />)}
 			<path d={`M${x - 26},${1200} L${x - 22},${top + 12} L${x - 8},${top} L${x + 22},${top + 4} L${x + 26},${1200} Z`} fill="#3b3430" />
 			<path d={`M${x - 22},${top + 12} L${x - 8},${top} L${x - 2},${top + 2} L${x - 12},${1200} L${x - 26},${1200} Z`} fill="#5a4e44" opacity={0.6} />
 			{[0, 1, 2, 3].map((k) => <path key={k} d={`M${x - 10 + k * 7},${top + 60 + k * 90} q4,40 -2,90`} stroke="#2a2420" strokeWidth={2} fill="none" />)}

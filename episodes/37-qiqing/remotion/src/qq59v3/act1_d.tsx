@@ -183,10 +183,10 @@ const BowlScene: React.FC<SceneProps> = ({t, dur, beat}) => {
 				<path d={`M-60,${tableY} L${W + 60},${tableY - 20} L${W + 60},${H + 60} L-60,${H + 60} Z`} fill={`url(#${id}t)`} />
 				<path d={`M-60,${tableY} L${W + 60},${tableY - 20} L${W + 60},${tableY - 12} L-60,${tableY + 8} Z`} fill="#b0844c" opacity={0.6} />
 				{Array.from({length: 7}, (_, i) => <path key={i} d={`M-60,${tableY + 40 + i * 32} L${W + 60},${tableY + 22 + i * 32}`} stroke="#1a1008" strokeWidth={2} opacity={0.5} />)}
+				{/* his hand holds the big bowl's far rim from behind (drawn before the bowl, so the bowl sits in front of it) until it lets go */}
+				<g opacity={1 - sm((t - 4.4 * b) / (0.5 * b))}><ellipse cx={bigX + 66} cy={tableY - 56} rx={32} ry={20} fill="#120c0a" /><path d={taper([[bigX + 76, tableY - 58], [hand[0] + 40, hand[1] - 10]], 40, 46)} fill="#120c0a" /></g>
 				{bowl(780, tableY + 14, 56, 0.2)}
 				{bowl(bigX, tableY + 4, 92, 0.6)}
-				{/* his hand on the big bowl until it lets go */}
-				<g opacity={1 - sm((t - 4.4 * b) / (0.5 * b))}><ellipse cx={bigX + 70} cy={tableY - 40} rx={34} ry={22} fill="#120c0a" /><path d={taper([[bigX + 80, tableY - 40], [hand[0] + 40, hand[1] - 10]], 40, 46)} fill="#120c0a" /></g>
 				<Glow x={760} y={tableY - 30} r={300} ry={90} c="#ffb860" o={0.25 + 0.25 * slide} />
 			</g>
 			<radialGradient id={`${id}v`} cx="0.5" cy="0.45" r="0.7"><stop offset="0.5" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.75" /></radialGradient>
