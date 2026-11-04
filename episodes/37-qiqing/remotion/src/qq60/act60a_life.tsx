@@ -2,7 +2,7 @@ import React from 'react';
 import {Stage60, Glow, Dust, Embers, Smoke, Shaft, Stars, Flame, flick, rng, PIC_T, FW, F_SERIF, toScreen} from './frame60';
 import {GlyphColumns, Balance, WingedSun} from './props60';
 import {Mummy, LionBier, BIER_H, CanopicJar, Lamp, HeartScarab, Basket, River, Palm, STONE, JarHead} from './props60b';
-import {God, CAST, POSES, Pose, solve, reach, wristTo, holdAt} from './rig60';
+import {God, CAST, POSES, Pose, solve, reach, wristTo, holdAt, SHAPES} from './rig60';
 import {CAST2, ANI, tendPose, scribePose} from './cast60';
 import {PAL, sp, poly, lerp, cl, sm, V, ap, mx} from './geo60';
 import type {ShotProps} from './EP60';
@@ -149,14 +149,17 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 };
 
 /* ================= 6 · 11.3–14.5 (v3, owner 17:07) · the embalming tent, time-lapse: day 1 → day 70. Readable action: each beat the priest
-   feeds a new linen band that sweeps over your body (turn by turn), your gold-masked face gleams at day 60, and four canopic jars (内脏罐)
-   land one per beat =================
+   feeds a new linen band that sweeps over your body (turn by turn) up to the collar, the gold mask lies whole on the head end (v5, owner
+   20:27: no cut at the lappets, no gleam), and four canopic jars (内脏罐) land one per beat =================
    dissolve in (0.4). Jars land 0.58, 1.15, 1.73, 2.31 [11.88, 12.45, 13.03, 13.61] (groove beats, 104 bpm from 11.30) · linen swish as each
-   band completes, half a beat later: [11.59, 12.17, 12.74, 13.32, 13.90, 14.47] · the gold mask gleams 2.40 [13.70] · counter ticks
+   band completes, half a beat later: [11.59, 12.17, 12.74, 13.32, 13.90, 14.47] · counter ticks
    0.15–2.9 [11.45–14.20]. */
 const JARS: JarHead[] = ['human', 'baboon', 'jackal', 'falcon'];
 const JAR_T = [0.58, 1.15, 1.73, 2.31];
 const BEAT6 = 60 / 104;
+// the kit mummy's collar and the mask transform (props60b Mummy, mummy units): its collar, lappets and face are drawn whole over the linen
+const COLLAR6 = sp([[13.2, -3.32], [14.6, -3.15], [15.1, -2.2], [14.9, -0.9], [14.3, -1.0], [14.4, -2.2], [13.6, -2.7]]);
+const MASK6 = 'matrix(0,-1.18,-1.18,0,15.25,-2.2)';
 const limb6 = (a: V, b: V, r0: number, r1: number) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.max(1, Math.hypot(dx, dy)), nx = -dy / L, ny = dx / L;
 	return sp([[a[0] + nx * r0, a[1] + ny * r0], [b[0] + nx * r1, b[1] + ny * r1], [b[0] + dx / L * r1, b[1] + dy / L * r1], [b[0] - nx * r1, b[1] - ny * r1], [a[0] - nx * r0, a[1] - ny * r0], [a[0] - dx / L * r0, a[1] - dy / L * r0]], true, 0.2); };
 export const Shot6: React.FC<ShotProps> = ({t}) => {
@@ -173,7 +176,7 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 	const pose = {...tendPose(toF([roll[0] - 22, roll[1] + 4]), toF([roll[0] + 24, roll[1] - 2]), t, 18), neck: 4, head: 14 + 2 * Math.sin(t * 2)};
 	const day = Math.min(70, 1 + Math.floor(69 * sm(seg(t, 0.15, 2.9))));
 	const sunPh = (t * 1.25) % 1, sunX = lerp(1010, 1250, sunPh), sunY = 300 - 150 * Math.sin(Math.PI * sunPh), dayL = Math.sin(Math.PI * sunPh);
-	const tMask = 2.4, masked = true, flash = pulse(t, tMask, 0.03, 0.35);   // the gold mask on your face throughout; it gleams at day 60
+	const masked = true;   // the gold mask on your face throughout
 	const band = (u0: number, k: string, grow = 1, fresh = 0) => { const y0 = 0.3, y1 = -3.6, yb = lerp(y1, y0, grow);
 		const sl = 0.75 * (yb - y1) / (y0 - y1);
 		return <g key={k}><path d={poly([[u0 + 0.62, y1], [u0 + 1.62, y1], [u0 + 1.62 - sl, yb], [u0 + 0.62 - sl, yb]])} fill={fresh > 0.3 ? '#FFFFFF' : '#FBF6EA'} stroke={PAL.ink} strokeWidth={0.045} />
@@ -190,7 +193,6 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 			<Shaft pts={[[sunX - 60, 140], [sunX + 40, 140], [lerp(760, 300, sunPh) + 160, FL], [lerp(760, 300, sunPh) - 120, FL]]} o={0.5 * dayL} />
 			<Glow x={sunX} y={sunY} r={200} c="warm" o={0.9 * dayL} />
 			<Glow x={xc} y={topY + 60} r={180} c="gold" o={0.25 + 0.2 * (1 - cyc)} />
-			{flash > 0.02 && <g><Glow x={U(16.8)} y={bed - 3.3 * ms} r={260} c="gold" o={0.9 * flash} /><Sparkle x={U(16.6)} y={bed - 3.6 * ms} r={90 * flash} a={20} /></g>}
 			<Glow x={1236} y={FL - 330} r={300} c="warm" o={(0.4 + 0.35 * (1 - dayL)) + 0.1 * flick(t, 5)} />
 			<Dust t={t * 2} box={[100, 120, 1200, 880]} n={50} seed={5} o={0.6} vx={8} vy={6} />
 			{JAR_T.map((jt, i) => t > jt - 0.02 && t < jt + 0.5 ? <DustBurst key={i} t={t} t0={jt} x={150 + i * 112} y={FL + 8} rx={46} ry={8} n={14} seed={i + 5} c="#F0DEB0" life={0.45} /> : null)}
@@ -217,14 +219,28 @@ export const Shot6: React.FC<ShotProps> = ({t}) => {
 		{[150, 1040].map((x, i) => <path key={x} d={sp([[x - 26, bed + 30, 1], [x + 26, bed + 30, 1], [x + 20, FL - 60], [x + (i ? 46 : -46), FL - 8], [x + (i ? 50 : -50), FL, 1], [x - (i ? 20 : -20), FL, 1], [x - 18, FL - 60]], true, 0.2)} fill={PAL.lion} stroke={PAL.ink} strokeWidth={3} />)}
 		<rect x={-300} y={bed} width={1420} height={30} fill={PAL.lion} stroke={PAL.ink} strokeWidth={3} />
 		{Array.from({length: 12}, (_, i) => <rect key={i} x={-260 + i * 112} y={bed + 9} width={56} height={12} fill={[PAL.blue, PAL.red, PAL.green][i % 3]} opacity={0.85} />)}
-		{/* you: the body (bare linen, bands added turn by turn), the head (wrapped, then the gold mask) */}
-		<g><clipPath id="a6-hd"><rect x={U(14.55)} y={0} width={900} height={1200} /></clipPath><g clipPath="url(#a6-hd)"><Mummy x={mx0} y={bed} s={ms} t={t} masked={masked} /></g></g>
+		{/* you: the body (bare linen, bands added turn by turn up to the collar) */}
 		<g transform={`translate(${mx0},${bed}) scale(${ms})`}>
-			<clipPath id="a6-mb"><path d={MUMMY_BODY} /></clipPath><clipPath id="a6-mx"><rect x={-2} y={-6} width={16.6} height={8} /></clipPath>
-			<g clipPath="url(#a6-mx)"><path d={MUMMY_BODY} fill="#CDBB92" stroke={PAL.ink} strokeWidth={2.4 / ms} />
-				<g clipPath="url(#a6-mb)">{Array.from({length: 18}, (_, i) => <line key={i} x1={i * 0.85} y1={0} x2={i * 0.85 + 0.6} y2={-4} stroke="#B8A47A" strokeWidth={0.03} />)}{bands}</g>
-				<path d={MUMMY_BODY} fill="none" stroke={PAL.ink} strokeWidth={2.4 / ms} /></g>
+			<clipPath id="a6-mb"><path d={MUMMY_BODY} /></clipPath>
+			<path d={MUMMY_BODY} fill="#CDBB92" stroke={PAL.ink} strokeWidth={2.4 / ms} />
+			<g clipPath="url(#a6-mb)">{Array.from({length: 18}, (_, i) => <line key={i} x1={i * 0.85} y1={0} x2={i * 0.85 + 0.6} y2={-4} stroke="#B8A47A" strokeWidth={0.03} />)}{bands}</g>
+			<path d={MUMMY_BODY} fill="none" stroke={PAL.ink} strokeWidth={2.4 / ms} />
 		</g>
+		{/* ... and over it, whole, the kit mummy's broad collar, the mask's lappets lying on the chest, the headcloth and the gold face
+		    (only those parts of it are shown: its own body is hidden under your linen; the false beard is left out, as in shot 2) */}
+		<clipPath id="a6-hd">
+			<path d={COLLAR6} transform={`translate(${mx0},${bed}) scale(${ms})`} />
+			<path d={SHAPES.wigTri} transform={`translate(${mx0},${bed}) scale(${ms}) ${MASK6}`} />
+			<path d={SHAPES.human} transform={`translate(${mx0},${bed}) scale(${ms}) ${MASK6}`} />
+			<rect x={15.33} y={-6} width={6} height={7} transform={`translate(${mx0},${bed}) scale(${ms})`} />
+			<rect x={14.82} y={-3.36} width={0.6} height={4.4} transform={`translate(${mx0},${bed}) scale(${ms})`} />
+		</clipPath>
+		{/* the outlines the clip halves, drawn just under it (their outer half shows) */}
+		<g transform={`translate(${mx0},${bed}) scale(${ms})`} fill="none" stroke={PAL.ink} strokeLinejoin="round">
+			<path d={COLLAR6} strokeWidth={3.2 / ms} />
+			<path d={SHAPES.wigTri} transform={MASK6} strokeWidth={5.4 / ms / 1.18} />
+		</g>
+		<g clipPath="url(#a6-hd)"><Mummy x={mx0} y={bed} s={ms} t={t} masked={masked} /></g>
 		{/* the strip from the roll down to the band being wound; the roll and the hands over it */}
 		{/* the linen band runs from the roll over the top of your body into the band being wound */}
 		<path d={`M${roll[0]} ${roll[1] + 6}Q${(roll[0] + xc) / 2 + 8 * Math.sin(ph)} ${topY - 6} ${xc + 14} ${topY + 14}`} fill="none" stroke={PAL.ink} strokeWidth={30} strokeLinecap="butt" />

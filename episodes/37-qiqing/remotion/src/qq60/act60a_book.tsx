@@ -175,14 +175,20 @@ export const Shot11: React.FC<ShotProps> = ({t}) => {
 const E8 = 60 / 112 / 2;
 const FLIPS = [0.33, 0.33 + E8, 0.33 + 2 * E8, 1.4, 1.4 + E8, 1.4 + 2 * E8, 2.47];
 const PICKS = [1.13, 2.2];
+/** bounding box of a path made only of absolute x y pairs (M L Q C Z), for centring a sign in its frame */
+const pathBox = (d: string) => { const n = (d.match(/-?\d*\.?\d+(e-?\d+)?/g) || []).map(Number); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+	for (let i = 0; i + 1 < n.length; i += 2) { x0 = Math.min(x0, n[i]); x1 = Math.max(x1, n[i]); y0 = Math.min(y0, n[i + 1]); y1 = Math.max(y1, n[i + 1]); }
+	return {cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, w: x1 - x0, h: y1 - y0}; };
+/** v5 (owner 20:27): every sign sits centred in the red frame (136 × 110, centre 0, -43) with a clear margin, never touching its border */
+const FRAME12 = {cx: 0, cy: -43, w: 96, h: 74};
 const SheetFace: React.FC<{k: number}> = ({k}) => {
 	const keys = ['viper', 'bird', 'ankh', 'eye', 'disc', 'djed', 'feather', 'water', 'house', 'basket'];
-	const icon = k % 5 === 0 ? <path d={HEART_D} fill={PAL.red} stroke={INK} strokeWidth={0.05} transform="translate(0,40) scale(46)" />
-		: <path d={GLYPH_D[keys[k % keys.length]].d} fill={[PAL.red, PAL.blue, PAL.green, INK][k % 4]} stroke={INK} strokeWidth={0.03} transform="translate(-44,-50) scale(88)" />;
+	const d = k % 5 === 0 ? HEART_D : GLYPH_D[keys[k % keys.length]].d, b = pathBox(d), sc = Math.min(96, FRAME12.w / b.w, FRAME12.h / b.h);
+	const fill = k % 5 === 0 ? PAL.red : [PAL.red, PAL.blue, PAL.green, INK][k % 4];
 	return <g>
 		<rect x={-80} y={-110} width={160} height={220} fill={PAPY} stroke={INK} strokeWidth={2.4} />
 		<rect x={-68} y={-98} width={136} height={110} fill="none" stroke={PAL.red} strokeWidth={2} />
-		{icon}
+		<path d={d} fill={fill} stroke={INK} strokeWidth={2.4 / sc} transform={`translate(${FRAME12.cx - b.cx * sc},${FRAME12.cy - b.cy * sc}) scale(${sc})`} />
 		<TextCols x={-66} y={22} cols={6} rows={3} cw={22} seed={90 + k} />
 	</g>;
 };
