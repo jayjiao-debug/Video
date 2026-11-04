@@ -1,0 +1,138 @@
+plan: {'tier': 'starter', 'character_count': 9396, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "X40_deep_roar_a", "type": "sfx", "text": "a huge deep lion roar from the chest, very low and resonant, rumbling body, then a long breathy throaty tail, close, powerful, realistic, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X40_deep_roar_a.mp3", "bytes": 40585}
+{"name": "X40_deep_roar_b", "type": "sfx", "text": "a big lioness roaring deep and loud, heavy low chest rumble and a long throaty fade out, realistic animal, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X40_deep_roar_b.mp3", "bytes": 36405}
+{"name": "X40_deep_roar_c", "type": "sfx", "text": "the deep resonant roar of a large lion, low growling chest, powerful, long tail, realistic, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X40_deep_roar_c.mp3", "bytes": 40585}
+{"name": "X41_jaw_slam_a", "type": "sfx", "text": "giant jaws slamming shut: one heavy deep wet thud with a low body, a huge crocodile bite, no crunch, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X41_jaw_slam_a.mp3", "bytes": 17179}
+{"name": "X41_jaw_slam_b", "type": "sfx", "text": "a massive monster mouth closing hard: a deep heavy wet thump, low and short, no crunching, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X41_jaw_slam_b.mp3", "bytes": 17179}
+{"name": "X42_small_chomp_a", "type": "sfx", "text": "a small creature chomps once: quick jaws snap shut with a soft wet gulp, short, cartoon", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X42_small_chomp_a.mp3", "bytes": 12163}
+{"name": "X43_lick_a", "type": "sfx", "text": "a dog licking once, one wet slurpy tongue lick, close, short, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X43_lick_a.mp3", "bytes": 13835}
+{"name": "X43_lick_b", "type": "sfx", "text": "a slow wet lick, a tongue licking a drop off a blade, slurp, close, dry", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X43_lick_b.mp3", "bytes": 17179}
+{"name": "X44_magic_whoosh_a", "type": "sfx", "text": "a magical whoosh of glowing energy shooting forward, airy and sparkling, short, fantasy, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X44_magic_whoosh_a.mp3", "bytes": 20105}
+{"name": "X45_magic_impact_a", "type": "sfx", "text": "a magic spell blast impact: a deep soft boom with a bright shimmering burst and a short ring, fantasy, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X45_magic_impact_a.mp3", "bytes": 29300}
+{"name": "X45_magic_impact_b", "type": "sfx", "text": "an energy shield blasting outward: a warm thump, a whoosh and glittering sparkles, short, fantasy", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X45_magic_impact_b.mp3", "bytes": 26792}
+{"name": "X46_magic_shield", "type": "sfx", "text": "a magic shield forming: a soft shimmering hum swelling with glittering sparkles, fantasy, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "X46_magic_shield.mp3", "bytes": 26792}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "X40_deep_roar_a",
+  "type": "sfx",
+  "text": "a huge deep lion roar from the chest, very low and resonant, rumbling body, then a long breathy throaty tail, close, powerful, realistic, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X40_deep_roar_a.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "X40_deep_roar_b",
+  "type": "sfx",
+  "text": "a big lioness roaring deep and loud, heavy low chest rumble and a long throaty fade out, realistic animal, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X40_deep_roar_b.mp3",
+  "bytes": 36405
+ },
+ {
+  "name": "X40_deep_roar_c",
+  "type": "sfx",
+  "text": "the deep resonant roar of a large lion, low growling chest, powerful, long tail, realistic, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X40_deep_roar_c.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "X41_jaw_slam_a",
+  "type": "sfx",
+  "text": "giant jaws slamming shut: one heavy deep wet thud with a low body, a huge crocodile bite, no crunch, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X41_jaw_slam_a.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X41_jaw_slam_b",
+  "type": "sfx",
+  "text": "a massive monster mouth closing hard: a deep heavy wet thump, low and short, no crunching, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X41_jaw_slam_b.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X42_small_chomp_a",
+  "type": "sfx",
+  "text": "a small creature chomps once: quick jaws snap shut with a soft wet gulp, short, cartoon",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X42_small_chomp_a.mp3",
+  "bytes": 12163
+ },
+ {
+  "name": "X43_lick_a",
+  "type": "sfx",
+  "text": "a dog licking once, one wet slurpy tongue lick, close, short, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X43_lick_a.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "X43_lick_b",
+  "type": "sfx",
+  "text": "a slow wet lick, a tongue licking a drop off a blade, slurp, close, dry",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X43_lick_b.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "X44_magic_whoosh_a",
+  "type": "sfx",
+  "text": "a magical whoosh of glowing energy shooting forward, airy and sparkling, short, fantasy, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X44_magic_whoosh_a.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "X45_magic_impact_a",
+  "type": "sfx",
+  "text": "a magic spell blast impact: a deep soft boom with a bright shimmering burst and a short ring, fantasy, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X45_magic_impact_a.mp3",
+  "bytes": 29300
+ },
+ {
+  "name": "X45_magic_impact_b",
+  "type": "sfx",
+  "text": "an energy shield blasting outward: a warm thump, a whoosh and glittering sparkles, short, fantasy",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X45_magic_impact_b.mp3",
+  "bytes": 26792
+ },
+ {
+  "name": "X46_magic_shield",
+  "type": "sfx",
+  "text": "a magic shield forming: a soft shimmering hum swelling with glittering sparkles, fantasy, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "X46_magic_shield.mp3",
+  "bytes": 26792
+ }
+]
