@@ -77,8 +77,9 @@ const Pylon5: React.FC<{t: number}> = ({t}) => {
 		<WingedSun x={640} y={214} s={16} span={22} t={t} />
 		<GlyphColumns x={262} y={276} cols={20} rows={2} cell={38} seed={52} mono="#7A3A1A" />
 		<rect x={220} y={380} width={840} height={12} fill={PAL.red} opacity={0.8} />
-		<rect x={470} y={392} width={340} height={128} fill="#F6B05A" />
-		<circle cx={640} cy={498} r={58} fill="#FFD27A" stroke="#E8642A" strokeWidth={4} />
+		<rect x={470} y={392} width={340} height={128} fill="#E8964A" />
+		<circle cx={640} cy={498} r={58} fill="#F4A440" stroke="#C84E1C" strokeWidth={4} />
+		<circle cx={632} cy={490} r={36} fill="#FAC060" opacity={0.7} />
 		<rect x={470} y={392} width={340} height={128} fill="none" stroke={PAL.ink} strokeWidth={4} />
 		{[300, 900].map((x) => <GlyphColumns key={x} x={x} y={404} cols={2} rows={3} cell={34} seed={x} mono="#7A3A1A" />)}
 	</g>;
@@ -103,18 +104,20 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 	if (t > tLand) { const v = t - tLand; lotus = [bGrip[0] - 90, GY5 - 6 - 5 * Math.exp(-v / 0.1) * Math.abs(Math.sin(v * 22))]; la = -100; }
 	// the reed pen tucked behind the ear: drawn over the head, then the ear drawn again over the pen (it passes UNDER the ear)
 	const H = g.head, penA = ap(H, [-0.75, -1.9]), penB = ap(H, [0.34, -0.86]);
-	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={0.16} stain={0.12} tags={[{x: fx - 130, y: 440, text: '你'}]}
+	// v7b (owner 21:09 'exposure a bit too high'): a warm orange-gold sunset disk with a soft, small glow (no white bloom), the whole shot a
+	// touch darker to match shot 1
+	return <Stage60 t={t} cam={cam} grade="papyrus" bg="papyrus" wear={0.16} stain={0.12} dark={0.14} darkC="#3A1A12" tags={[{x: fx - 130, y: 440, text: '你'}]}
 		light={<>
-			<Glow x={640} y={480} r={560} c="warm" o={0.85} />
-			<Glow x={640} y={490} r={150} c="white" o={0.75} />
-			<Shaft pts={[[480, 392], [800, 392], [1000, 900], [280, 900]]} o={0.28} />
-			<Glow x={640} y={570} r={240} ry={60} c="warm" o={0.7} />
-			<Glow x={fx - 60} y={600} r={260} c="warm" o={0.3} />
-			<Dust t={t} box={[0, 100, 1300, 860]} n={60} seed={5} c="#FFE0A0" o={0.65} vx={6} vy={-3} />
+			<Glow x={640} y={490} r={380} c="warm" o={0.42} />
+			<Glow x={640} y={496} r={120} c="gold" o={0.32} />
+			<Shaft pts={[[480, 392], [800, 392], [1000, 900], [280, 900]]} o={0.1} />
+			<Glow x={640} y={570} r={220} ry={50} c="warm" o={0.35} />
+			<Glow x={fx - 60} y={600} r={240} c="warm" o={0.18} />
+			<Dust t={t} box={[0, 100, 1300, 860]} n={40} seed={5} c="#FFE0A0" o={0.4} vx={6} vy={-3} />
 			{t > tLand - 0.02 && <DustBurst t={t} t0={tLand} x={lotus[0] - 20} y={GY5 - 4} rx={30} ry={6} n={14} seed={2} c="#FFF0C0" life={0.6} />}
 		</>}
 >
-		<defs><linearGradient id="a5-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3E2470" /><stop offset="0.35" stopColor="#B23A56" /><stop offset="0.7" stopColor="#F2743A" /><stop offset="1" stopColor="#FFC456" /></linearGradient>
+		<defs><linearGradient id="a5-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3E2470" /><stop offset="0.35" stopColor="#B23A56" /><stop offset="0.7" stopColor="#E86C36" /><stop offset="1" stopColor="#F2A848" /></linearGradient>
 			<linearGradient id="a5-nile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E89A5A" /><stop offset="0.25" stopColor="#4E6FB0" /><stop offset="1" stopColor="#2E4F94" /></linearGradient></defs>
 		<rect x={-400} y={-500} width={2300} height={1020} fill="url(#a5-sky)" />
 		{/* the west bank: the Theban hills, palms, the temple pylon */}
@@ -124,8 +127,8 @@ export const Shot5: React.FC<ShotProps> = ({t}) => {
 		{/* the Nile with the sunset in it, a sail going by */}
 		<rect x={-400} y={520} width={2300} height={96} fill="url(#a5-nile)" />
 		<River x0={-400} x1={1900} y={528} h={88} t={t} speed={10} />
-		<rect x={584} y={528} width={112} height={86} fill="#FFC870" opacity={0.5} />
-		{[0, 1, 2].map((k) => <rect key={k} x={598 + 8 * Math.sin(t * 2 + k)} y={536 + k * 24} width={84 - k * 14} height={5} fill="#FFE6A0" opacity={0.85} />)}
+		<rect x={584} y={528} width={112} height={86} fill="#F2A858" opacity={0.45} />
+		{[0, 1, 2].map((k) => <rect key={k} x={598 + 8 * Math.sin(t * 2 + k)} y={536 + k * 24} width={84 - k * 14} height={5} fill="#FAC878" opacity={0.75} />)}
 		<SailBoat x={730 + 16 * t} y={604} s={0.62} t={t} />
 		{/* east bank (ours): palms, mud-brick houses */}
 		<rect x={-400} y={614} width={2300} height={90} fill="#C9935A" />
