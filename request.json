@@ -1,29 +1,56 @@
 {
- "id": "ep60-sound-02",
+ "id": "ep60-sound-03",
  "items": [
   {
    "type": "music",
-   "name": "E1_snake_charmer",
+   "name": "F1_charmer_hype",
    "ms": 22000,
-   "text": "Instantly recognizable stereotypical 'ancient Egypt' music as heard in cartoons and adventure films: a nasal, buzzy snake-charmer mizmar / zurna melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C), with sinuous ornaments and trills; belly-dance darbuka groove (doum-tek baladi rhythm) loud in the mix, finger cymbals (zills) and tambourine, oud strumming, 120 BPM. Exotic, sly, catchy, bazaar and pyramids feeling. Instrumental, no vocals."
+   "text": "High-energy stereotypical snake-charmer 'ancient Egypt' music: a nasal, buzzy mizmar / zurna / pungi reed melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C) with sinuous ornaments and trills, belly-dance darbuka doum-tek groove loud in the mix, finger cymbals (zills), tambourine, oud strumming, 128 BPM, punchy and driving, extra darbuka fills and claps, sly and catchy, made for a fast hook. Instrumental, no vocals."
   },
   {
    "type": "music",
-   "name": "E2_epic_pharaoh",
+   "name": "F2_charmer_mystery",
    "ms": 22000,
-   "text": "Epic Hollywood ancient Egypt adventure score: full orchestra playing sweeping Hijaz-scale string runs with the augmented second clearly heard, deep low male choir chanting 'ah', huge war drums and taiko hits, brass stabs, and a soaring female wordless Middle-Eastern vocal melisma with ululation-like ornaments over the top; pyramids, pharaohs and gods, majestic and mysterious, 100 BPM."
+   "text": "Slow, hypnotic and mysterious stereotypical snake-charmer 'ancient Egypt' music: a nasal, buzzy mizmar / zurna / pungi reed melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C) with sinuous ornaments and trills, belly-dance darbuka doum-tek groove loud in the mix, finger cymbals (zills), tambourine, oud strumming, 90 BPM, a low drone under the reed melody like a cobra rising from a basket, sparse darbuka, shimmering finger cymbals, dark and enticing. Instrumental, no vocals."
   },
   {
    "type": "music",
-   "name": "E3_tomb_mystic",
+   "name": "F3_charmer_epic",
    "ms": 22000,
-   "text": "Mysterious ancient Egyptian tomb music: an ethereal female voice singing a wordless Arabic-style melisma in the Hijaz scale with heavy ornamentation, oud tremolo, a low drone, a slow darbuka pattern, sistrum and finger cymbal shimmers, deep temple reverb; dark, sacred, mystical, unmistakably 'Egypt'."
+   "text": "Cinematic stereotypical snake-charmer 'ancient Egypt' music: a nasal, buzzy mizmar / zurna / pungi reed melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C) with sinuous ornaments and trills, belly-dance darbuka doum-tek groove loud in the mix, finger cymbals (zills), tambourine, oud strumming, 110 BPM, with huge cinematic drums, low strings and big hits under the snake-charmer reed lead; majestic pharaohs and gods, still unmistakably the snake-charmer sound. Instrumental, no vocals."
   },
   {
    "type": "music",
-   "name": "E4_playful_egypt",
+   "name": "F4_charmer_classic",
    "ms": 22000,
-   "text": "Playful, comedic stereotypical Egyptian cartoon music: a sneaky clarinet and mizmar melody in the Hijaz scale (snake-charmer style), bouncy pizzicato strings, darbuka and riq groove with finger cymbals, little oud flourishes, 115 BPM; cheeky and fun, like a cartoon character tiptoeing past the pyramids. Instrumental."
+   "text": "In the style of the old public-domain 1890s 'snake charmer' tune everyone knows from cartoons: stereotypical snake-charmer 'ancient Egypt' music: a nasal, buzzy mizmar / zurna / pungi reed melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C) with sinuous ornaments and trills, belly-dance darbuka doum-tek groove loud in the mix, finger cymbals (zills), tambourine, oud strumming, 115 BPM, the simple sinuous rising-and-falling snake-charmer motif repeated and varied, playful and iconic. Instrumental, no vocals."
+  },
+  {
+   "type": "music",
+   "name": "F5_charmer_full60",
+   "ms": 60000,
+   "text": "A 60-second film score bed of stereotypical snake-charmer 'ancient Egypt' music: a nasal, buzzy mizmar / zurna / pungi reed melody that leans hard on the Hijaz scale's signature step (D, E-flat, F-sharp, G, A, B-flat, C) with sinuous ornaments and trills, belly-dance darbuka doum-tek groove loud in the mix, finger cymbals (zills), tambourine, oud strumming. 0-8 s: solo reed melody over a drone. 8-30 s: the full belly-dance groove at 115 BPM with the reed lead. 30-38 s: a break, drums drop out, only the drone, finger cymbals and a quiet reed phrase. 38-60 s: the biggest section, all drums back with frame-drum hits and cinematic low strings, the reed melody soaring. Instrumental, no vocals."
+  },
+  {
+   "type": "sfx",
+   "name": "G1_reed_flourish",
+   "duration": 2,
+   "influence": 0.6,
+   "text": "short snake charmer reed flute flourish, nasal mizmar trill rising, Middle Eastern"
+  },
+  {
+   "type": "sfx",
+   "name": "G2_darbuka_roll_hit",
+   "duration": 2,
+   "influence": 0.6,
+   "text": "darbuka drum roll building into one strong hit, belly dance accent"
+  },
+  {
+   "type": "sfx",
+   "name": "G3_zills",
+   "duration": 1,
+   "influence": 0.6,
+   "text": "finger cymbals clashed twice, bright, belly dance zills"
   }
  ]
 }
