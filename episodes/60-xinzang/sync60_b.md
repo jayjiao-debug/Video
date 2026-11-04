@@ -7,6 +7,10 @@
 > raises one brow again in 26 (**brow raise 70.15**, held to the end), the 31 roar is bigger (rear back 83.43–83.75, **ROAR 83.85**, jaws
 > wide to 84.27, settles by 84.53; push-in on the roar). Sound events asked for: **17 cobra hiss 43.75 · growl 43.90 (jaws gape
 > 43.85–44.40) · jaw snap 44.60** · **20 bone crack 52.80 · gulp 53.70**. All other times unchanged.
+> v4 (owner 19:21, builder B): 17 rebuilt: the crocodile walks on the floor (contact shadow); the spell is a flare → glyph burst → spinning
+> glyph shield → blast (**scroll flare 45.05 · glyph burst 45.20 · shield forms 45.55 · blast 45.95**, recoil to 46.40); the beasts' sounds
+> stay (hiss 43.75 · growl 43.90 · snap 44.60). 16: four clear glints **40.80 · 41.40 · 42.00 · 42.60**. 18: no glow on you in the door.
+> Judges (19–26) are seated gods with real arms and the sculpted hands. 20: **吞影者 beak shut chomp 53.66** (gulp 53.70), **食血者 lick 54.60**.
 
 # ep60 · sync table, act B (shots 15–33, 37.8–91.4 s)
 
@@ -20,11 +24,11 @@ Each event label is written before its time; ranges are "a–b".
 | shot | tin | sound events (film s) |
 |---|---|---|
 | 15 「下葬后，你上路了：去冥界。」 | dissolve, ov 0.4 | stone door grinds 37.95–38.58 · **door shuts thud 38.58** (dust puff, the warm tomb light cut off) · night wind throughout (mist wisps drift over the river) · footsteps (optional) 37.98 · 38.56 · 39.14 · 39.73 · 40.31 |
-| 16 「一道道门，守门的手里拿着刀。」 | dissolve, ov 0.3 | **knife_1 glint 40.80** (left-most guardian, screen left) · **knife_2 glint 41.40** · **knife_3 glint 42.00** · **knife_4 glint 42.60** (right-most); each guardian jabs his knife up on its glint; camera trucks left → right |
-| 17 「蛇和鳄鱼扑过来，全靠咒语挡。」 | cut | **cobra rears hiss 43.75** · lunge at the lens 43.80–44.55 · **growl 43.90** (jaws gape 43.85–44.40) · **croc jaw snap 44.60** (camera jolt) · scroll lifted 44.70–45.02 · **gold flare whoomp 45.05** (glyph line shoots right, gold flash) · both recoil 45.05–45.55 · **beetle skitter 45.12–45.70** |
+| 16 「一道道门，守门的手里拿着刀。」 | dissolve, ov 0.3 | **knife_1 glint 40.80** (left-most guardian, screen left) · **knife_2 glint 41.40** · **knife_3 glint 42.00** · **knife_4 glint 42.60** (right-most); each guardian jabs his knife up on its glint (a big white star flash on each blade, ~0.3 s); camera trucks left → right |
+| 17 「蛇和鳄鱼扑过来，全靠咒语挡。」 | cut | **cobra rears hiss 43.75** · walks in along the floor 43.70–44.55 (feet planted, contact shadow) · **growl 43.90** (jaws gape 43.80–44.10) · **croc jaw snap 44.60** · scroll lifted 44.70–45.02 · **scroll flare 45.05** (the scroll blazes, rays turn round it) · **glyph burst 45.20** (twelve gold glyphs fly out of the scroll 45.20–45.44) · they swirl into an orbit round you 45.38–45.55 · **shield forms 45.55** (spinning glyph ring + dome of light, ring spins to 45.95) · **blast 45.95** (the shield bursts outward: two shock rings 45.95–46.77, sparks, the glyphs fly out) · both beasts recoil 45.95–46.40 · **beetle skitter 46.00–46.60** |
 | 18 「终点：双真理之厅。」 | dissolve, ov 0.4 | **doors boom open 47.00** (leaves swing 46.94–47.16, gold light floods the threshold) · crane up and back 47.20 → 49.75 · footsteps echo 48.06 · 48.69 · 49.32 (you, tiny, step in) |
 | 19 「42位神排排坐，等着你。」 | cut | murmur of whispers rising 50.00 → 52.40 (gold whisper wisps appear along the rows, full by ~52.2) · truck along the rows throughout · label 「四十二判官」 |
-| 20 「名字都很吓人：碎骨者、吞影者……」 | cut | **punch 1 碎骨者 52.40** · **bone crack 52.80** (the bone snaps between his fists, flash + chips) · **punch 2 吞影者 53.30** · beak opens 53.30–53.45, the little shadow is sucked into the open beak 53.35–53.54 · **gulp 53.70** (beak shut 53.66, a gulp puff by the throat) · **punch 3 食血者 54.20** · **drip lick 54.60** (the red drop leaves the knife tip, the tongue flicks 54.55–54.90) |
+| 20 「名字都很吓人：碎骨者、吞影者……」 | cut | **punch 1 碎骨者 52.40** · **bone crack 52.80** (the bone snaps between his fists, flash + chips) · **punch 2 吞影者 53.30** · beak opens 53.30–53.45, the little shadow is sucked into the open beak 53.35–53.54 · **beak shut chomp 53.66** (the shadow swallowed) · **gulp 53.70** (a gulp puff by the throat) · **punch 3 食血者 54.20** · **lick 54.60** (the red drop leaves the knife tip, the tongue flicks 54.55–54.90) |
 | 21 「第125章：对每一位逐条发誓——」 | cut | you step up 55.40–55.85 and bow 55.78–56.18 · **tek column 1 56.00** · **tek column 2 56.60** · **tek column 3 57.20** · **tek column 4 57.80** (each gold glyph column leaves your mouth) · the judge leans in 56.60–57.20 |
 | 22 「“我没偷，没杀人，没撒谎。”」 | cut | **check 1 tick nod 59.00** · **check 2 tick nod 59.60** · **check 3 tick nod 60.20** (gold tick pops over each judge as he nods; gold signs fly into his ear just before) |
 | 23 「“我没夺过婴儿嘴边的奶。”」 | cut | panel pops in 61.15–61.42 · **baby gurgle 61.50** (bounce, sparkles) · your hand hovers 61.48–61.75, pulls back palm-up 61.86–62.12 · judge squints 62.05–62.45 · **check tick nod 62.65** |

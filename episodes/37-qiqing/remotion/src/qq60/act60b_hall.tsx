@@ -32,8 +32,7 @@ export const Shot18: React.FC<ShotProps> = ({t}) => {
 			<Glow x={760} y={430} r={560} ry={420} c="gold" o={0.42 + 0.06 * Math.sin(t * 1.3)} />
 			<Glow x={760} y={330} r={240} c="white" o={0.22} />
 			<Shaft pts={[[620, 120], [900, 120], [1060, GY], [460, GY]]} o={0.35} />
-			<Glow x={150} y={720} r={170} c="gold" o={0.8 * open + 0.4 * boom} />
-			<Glow x={ax + 10} y={GY - 70} r={60} c="white" o={0.22 * open} />
+			{/* (owner 19:21: no glow on the figure) the doorway light is painted inside the door, behind you */}
 			<Dust t={t} box={[300, 140, 1240, 840]} n={60} seed={181} c="#FFE7A8" o={0.7} vx={-4} vy={-5} />
 			<Embers t={t} x={760} y={GY - 40} n={16} seed={182} h={500} spread={520} />
 		</>}>
@@ -50,6 +49,8 @@ export const Shot18: React.FC<ShotProps> = ({t}) => {
 		<Balance2 p={{tilt: 1.2 * Math.sin(t * 0.9), swingL: 0.8 * Math.sin(t * 1.3), swingR: -0.6 * Math.sin(t * 1.3), plumb: 1.5 * Math.sin(t * 1.6), hid: 'b18h'}} x={760} y={GY} s={28} t={t} />
 		{/* the door: outside is the night of the Duat; the leaves swing open on the boom */}
 		<rect x={70} y={568} width={160} height={GY - 568} fill="#080C26" />
+		<defs><radialGradient id="b18door" cx="0.5" cy="0.62" r="0.7"><stop offset="0" stopColor="#FFE7A0" stopOpacity={0.85} /><stop offset="0.6" stopColor="#D8A845" stopOpacity={0.35} /><stop offset="1" stopColor="#D8A845" stopOpacity={0} /></radialGradient></defs>
+		<rect x={70} y={568} width={160} height={GY - 568} fill="url(#b18door)" opacity={0.85 * open + 0.3 * boom} />
 		<g opacity={open}><Stars t={t} box={[74, 572, 226, 760]} n={14} seed={183} /></g>
 		<God id="b18ani" cast={ANI} pose={ani} x={ax} y={GY} s={as} sec={{t}} />
 		{leaf(70, 1, 'l')}{leaf(230, -1, 'r')}
@@ -125,6 +126,7 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 	let fig: [number, number] = [0, 0];
 	let pose: Pose, cast = JUDGE.red, name = '碎骨者', extra: React.ReactNode = null, light: React.ReactNode = null, front: React.ReactNode = null;
 	if (i === 0) { // 碎骨者: snaps a bone between his fists
+		cast = {...JUDGE.red, bHand: 'fist'};
 		const brk = up(t, S20.crack, 0.09), shake = hit(t, S20.crack, 0.12) * Math.sin(t * 120) * 0.6;
 		pose = jPose(t, 0, {lean: 1, head: 3 - 4 * hit(t, S20.crack, 0.3)});
 		pose = wristTo(holdAt(pose, 'f', [3.35 + 0.25 * brk, -4.0 - 0.25 * brk]), 'f', 92 + 20 * brk); pose = wristTo(holdAt(pose, 'b', [1.75 - 0.15 * brk, -4.0 - 0.2 * brk]), 'b', 92 - 20 * brk);
@@ -141,6 +143,7 @@ export const Shot20: React.FC<ShotProps> = ({t}) => {
 		cast = JUDGE.ibis; name = '吞影者';
 		const gape = keys(t, [[1.0, 0], [1.15, 1], [1.22, 1], [1.26, 0]]), gulp = hit(t, S20.gulp, 0.25);
 		pose = jPose(t, 1, {lean: 2, head: 2 - 8 * gape + 6 * gulp, neck: -4 * gape + 3 * gulp});
+		pose = wristTo(holdAt(pose, 'f', [3.3, -4.3]), 'f', 92);
 		const [fx, fy] = placeBy(pose, s, -1, 'head', [0.6, -1.2], face);
 		const beakTip = figXY(pose, fx, fy, s, -1, 'head', [3.2, 0.0]), beakBase = figXY(pose, fx, fy, s, -1, 'head', [1.2, -0.75]);
 		const inGape = figXY(pose, fx, fy, s, -1, 'head', [2.35, 0.0]);
