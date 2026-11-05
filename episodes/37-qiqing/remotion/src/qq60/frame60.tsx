@@ -14,7 +14,7 @@ import {WingedSun} from './props60';
 export const FW = 1440, FH = 1080, PIC_T = 40, PIC_B = 932, SUB_B = 1034, SAFE_R = 1266, PIC_CY = (PIC_T + PIC_B) / 2;
 export const CAM0: Cam = {x: FW / 2, y: PIC_CY, z: 1};
 export const F_SERIF = "'Noto Serif CJK SC','Noto Serif CJK',serif";
-export const FC = {lapis: '#1B2652', lapis2: '#121A3D', navy: '#18224A', gold: '#D8A845', gold2: '#9C7426', cream: '#F4E8CC', key: '#EC6A3E', ink: '#2A1912',
+export const FC = {god: '#8FCBFF', lapis: '#1B2652', lapis2: '#121A3D', navy: '#18224A', gold: '#D8A845', gold2: '#9C7426', cream: '#F4E8CC', key: '#EC6A3E', ink: '#2A1912',
 	tri: ['#E0B04A', '#3FA49A', '#D0573A', '#EADCB8', '#4B79C8']};
 
 /* ---------------- deterministic helpers ---------------- */
@@ -44,31 +44,76 @@ const Wedjat: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => <g tr
 	<path d="M-1.3 -0.95Q0 -1.25 1.35 -0.75" /><path d="M1.35 -0.05L2.1 -0.1" />
 	<path d="M-0.25 0.42L-0.3 1.35" /><path d="M0.35 0.4Q0.6 1.0 1.25 1.05Q1.6 1.0 1.5 0.65" />
 </g>;
+/* ---- band variants (owner 16:50: "give me some border variations for the top, bottom") — chosen by input prop `band` (A–F) ---- */
+const lotusRow = (y: number, h: number, step: number) => { const out: React.ReactNode[] = [];
+	for (let i = 0, x = 6; x < FW + step; i++, x += step) { const bud = i % 2 === 1, w = step * 0.42;
+		out.push(bud
+			? <path key={i} d={`M${x} ${y + h}L${x} ${y + h * 0.55}Q${x - w * 0.55} ${y + h * 0.35} ${x} ${y}Q${x + w * 0.55} ${y + h * 0.35} ${x} ${y + h * 0.55}Z`} fill={FC.tri[0]} stroke={FC.gold} strokeWidth={1} />
+			: <g key={i}><path d={`M${x} ${y + h}L${x - w} ${y + h * 0.15}L${x - w * 0.45} ${y + h * 0.35}L${x} ${y}L${x + w * 0.45} ${y + h * 0.35}L${x + w} ${y + h * 0.15}Z`} fill={FC.tri[1]} stroke={FC.gold} strokeWidth={1} />
+				<path d={`M${x} ${y + h}L${x} ${y + h * 0.2}`} stroke={FC.gold} strokeWidth={1.2} /></g>); }
+	return out; };
+const khekherRow = (y: number, h: number, w: number) => { const out: React.ReactNode[] = [];
+	for (let i = 0, x = 0; x < FW + w; i++, x += w) { const c = [FC.tri[0], FC.tri[1], FC.tri[2]][i % 3];
+		out.push(<g key={i}><path d={`M${x + 2} ${y + h}L${x + 2} ${y + w * 0.5}Q${x + w / 2} ${y - w * 0.15} ${x + w - 2} ${y + w * 0.5}L${x + w - 2} ${y + h}Z`} fill={c} stroke={FC.gold} strokeWidth={1.2} />
+			<circle cx={x + w / 2} cy={y + h * 0.62} r={w * 0.13} fill={FC.cream} opacity={0.9} /></g>); }
+	return out; };
+const blockRow = (y: number, h: number, w: number, k0 = 0) => { const out: React.ReactNode[] = [];
+	for (let i = 0, x = 0; x < FW + w; i++, x += w) out.push(<rect key={i} x={x + 1.5} y={y} width={w - 3} height={h} fill={[FC.tri[0], FC.tri[1], FC.tri[2], FC.gold][(i + k0) % 4]} stroke={FC.ink} strokeWidth={1} />);
+	return out; };
+const zigzag = (y: number, h: number, step: number) => { let d = `M0 ${y + h}`; for (let x = 0, k = 0; x <= FW + step; x += step / 2, k++) d += `L${x} ${k % 2 ? y : y + h}`;
+	return <path d={d} fill="none" stroke={FC.gold} strokeWidth={2.2} strokeLinejoin="round" />; };
+const glyphRow = (y: number, s: number, step: number) => { const out: React.ReactNode[] = [];
+	for (let i = 0, x = step / 2; x < FW + step; i++, x += step) { const k = i % 3;
+		out.push(<g key={i} transform={`translate(${x},${y}) scale(${s})`} fill="none" stroke={FC.gold} strokeWidth={0.16} strokeLinecap="round">
+			{k === 0 && <><ellipse cx={0} cy={-0.55} rx={0.3} ry={0.38} /><path d="M-0.55 0L0.55 0M0 -0.15L0 1" /></>}
+			{k === 1 && <><path d="M0 -0.9L0 1M-0.45 -0.6L0.45 -0.6M-0.45 -0.3L0.45 -0.3M-0.45 0L0.45 0" /></>}
+			{k === 2 && <><path d="M0 1L0 -0.75M0 -0.75L0.35 -0.95M0 -0.75L-0.2 -0.6M0 1L-0.2 0.8" /></>}
+		</g>); }
+	return out; };
+type BandStyle = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 /** the bands only (no text); drawn above the picture */
-export const Bands: React.FC<{t?: number}> = ({t = 0}) => <svg width={FW} height={FH} viewBox={`0 0 ${FW} ${FH}`} style={{position: 'absolute', inset: 0}}>
-	{/* top band */}
-	<rect x={0} y={0} width={FW} height={PIC_T} fill={FC.lapis} />
-	<rect x={0} y={0} width={FW} height={2.5} fill={FC.gold2} />
-	{triRow(7, 15, 13, 7, 0, false, [552, 888])}
-	{beadRow(28, 3.2, 10, 1, [552, 888])}
-	<rect x={0} y={PIC_T - 6} width={FW} height={4} fill={FC.gold} /><rect x={0} y={PIC_T - 2} width={FW} height={2} fill={FC.ink} />
-	{/* winged sun over the band's centre, dipping a little into the picture */}
-	<g opacity={0.98}><WingedSun x={FW / 2} y={17} s={15} span={9.6} t={t} /></g>
-	{/* subtitle band */}
-	<rect x={0} y={PIC_B} width={FW} height={SUB_B - PIC_B} fill={FC.navy} />
-	<rect x={0} y={PIC_B} width={FW} height={2} fill={FC.ink} /><rect x={0} y={PIC_B + 2} width={FW} height={4} fill={FC.gold} />
-	{beadRow(PIC_B + 12, 2.6, 9, 2)}
-	<rect x={0} y={PIC_B + 18} width={FW} height={1.2} fill={FC.gold} opacity={0.55} />
-	<rect x={0} y={SUB_B - 19} width={FW} height={1.2} fill={FC.gold} opacity={0.55} />
-	{beadRow(SUB_B - 11, 2.6, 9, 0)}
-	{/* bottom band */}
-	<rect x={0} y={SUB_B - 5} width={FW} height={4} fill={FC.gold} /><rect x={0} y={SUB_B - 1} width={FW} height={FH - SUB_B + 1} fill={FC.lapis} />
-	{triRow(SUB_B + 8, 15, 13, 7, 2, false, [648, 792])}
-	<rect x={0} y={FH - 7} width={FW} height={2.5} fill={FC.gold2} />
-	<Wedjat x={FW / 2 - 6} y={SUB_B + 22} s={10.5} />
-</svg>;
+export const Bands: React.FC<{t?: number}> = ({t = 0}) => {
+	const st = ((getInputProps() as {band?: BandStyle}).band ?? 'A') as BandStyle;
+	const topHole: [number, number] = [552, 888], botHole: [number, number] = [648, 792];
+	const holeMask = (hole: [number, number], y0: number, y1: number) => <rect x={hole[0]} y={y0} width={hole[1] - hole[0]} height={y1 - y0} fill={FC.lapis} />;
+	const topPattern = st === 'A' ? <>{triRow(7, 15, 13, 7, 0, false, topHole)}{beadRow(28, 3.2, 10, 1, topHole)}</>
+		: st === 'B' ? <>{lotusRow(5, 26, 22)}{holeMask(topHole, 3, 33)}</>
+		: st === 'C' ? <>{khekherRow(6, 28, 16)}{holeMask(topHole, 3, 34)}</>
+		: st === 'D' ? <>{blockRow(9, 20, 24, 0)}{holeMask(topHole, 3, 33)}</>
+		: st === 'E' ? <>{zigzag(10, 9, 22)}{zigzag(21, 9, 22)}{holeMask(topHole, 3, 33)}</>
+		: <>{glyphRow(19, 13, 30)}{holeMask(topHole, 3, 33)}</>;
+	const botPattern = st === 'A' ? <>{triRow(SUB_B + 8, 15, 13, 7, 2, false, botHole)}</>
+		: st === 'B' ? <>{lotusRow(SUB_B + 6, 30, 22)}{holeMask(botHole, SUB_B + 3, FH - 8)}</>
+		: st === 'C' ? <>{khekherRow(SUB_B + 6, 32, 16)}{holeMask(botHole, SUB_B + 3, FH - 8)}</>
+		: st === 'D' ? <>{blockRow(SUB_B + 10, 24, 24, 2)}{holeMask(botHole, SUB_B + 3, FH - 8)}</>
+		: st === 'E' ? <>{zigzag(SUB_B + 11, 10, 22)}{zigzag(SUB_B + 24, 10, 22)}{holeMask(botHole, SUB_B + 3, FH - 8)}</>
+		: <>{glyphRow(SUB_B + 22, 14, 30)}{holeMask(botHole, SUB_B + 3, FH - 8)}</>;
+	return <svg width={FW} height={FH} viewBox={`0 0 ${FW} ${FH}`} style={{position: 'absolute', inset: 0}}>
+		{/* top band */}
+		<rect x={0} y={0} width={FW} height={PIC_T} fill={FC.lapis} />
+		<rect x={0} y={0} width={FW} height={2.5} fill={FC.gold2} />
+		{topPattern}
+		<rect x={0} y={PIC_T - 6} width={FW} height={4} fill={FC.gold} /><rect x={0} y={PIC_T - 2} width={FW} height={2} fill={FC.ink} />
+		<g opacity={0.98}><WingedSun x={FW / 2} y={17} s={15} span={9.6} t={t} /></g>
+		{/* subtitle band */}
+		<rect x={0} y={PIC_B} width={FW} height={SUB_B - PIC_B} fill={FC.navy} />
+		<rect x={0} y={PIC_B} width={FW} height={2} fill={FC.ink} /><rect x={0} y={PIC_B + 2} width={FW} height={4} fill={FC.gold} />
+		{beadRow(PIC_B + 12, 2.6, 9, 2)}
+		<rect x={0} y={PIC_B + 18} width={FW} height={1.2} fill={FC.gold} opacity={0.55} />
+		<rect x={0} y={SUB_B - 19} width={FW} height={1.2} fill={FC.gold} opacity={0.55} />
+		{beadRow(SUB_B - 11, 2.6, 9, 0)}
+		{/* bottom band */}
+		<rect x={0} y={SUB_B - 5} width={FW} height={4} fill={FC.gold} /><rect x={0} y={SUB_B - 1} width={FW} height={FH - SUB_B + 1} fill={FC.lapis} />
+		{botPattern}
+		<rect x={0} y={FH - 7} width={FW} height={2.5} fill={FC.gold2} />
+		<Wedjat x={FW / 2 - 6} y={SUB_B + 22} s={10.5} />
+	</svg>;
+};
 
 export type Sub = {text: string; t0?: number; t1?: number};
+/** gods' names are light blue in the subtitles (owner 16:50) */
+const GODS = ['阿努比斯', '奥西里斯', '荷鲁斯', '阿米特', '托特', '玛阿特', '伊西斯', '碎骨者', '吞影者', '食血者', '长角者', '沙伊'];
+const GOD_RE = new RegExp(`(${GODS.join('|')})`);
 const fade = (t: number, t0 = -1e9, t1 = 1e9, d = 0.14) => cl((t - t0) / d) * cl((t1 - t) / d);
 const visLen = (s: string) => s.replace(/[[\]]/g, '').length;
 /** the subtitle line in the navy band: one line, centred, heavy serif; "[key]" words in red-orange */
@@ -77,7 +122,8 @@ export const Subtitle: React.FC<{t: number; sub: Sub}> = ({t, sub}) => {
 	const parts = sub.text.split(/(\[[^\]]+\])/).filter(Boolean);
 	return <div style={{position: 'absolute', left: 0, width: FW, top: PIC_B + 19, height: SUB_B - PIC_B - 38, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: o,
 		fontFamily: F_SERIF, fontWeight: 900, fontSize: fs, letterSpacing: '0.03em', color: FC.cream, whiteSpace: 'nowrap', textShadow: '0 3px 0 rgba(8,10,28,0.55), 0 0 14px rgba(8,10,28,0.5)'}}>
-		{parts.map((p, i) => { const key = p.startsWith('['); return <span key={i} style={{color: key ? FC.key : FC.cream}}>{key ? p.slice(1, -1) : p}</span>; })}
+		{parts.flatMap((p, i) => { const key = p.startsWith('['), txt = key ? p.slice(1, -1) : p;
+			return txt.split(GOD_RE).filter(Boolean).map((q, j) => <span key={`${i}.${j}`} style={{color: GODS.includes(q) ? FC.god : key ? FC.key : FC.cream}}>{q}</span>); })}
 	</div>;
 };
 const outline = (c: string, w: number) => [[-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [0, 1], [-1, 0], [1, 0]].map(([a, b]) => `${a * w}px ${b * w}px 0 ${c}`).join(',') + `, 0 3px 8px rgba(0,0,0,0.45)`;
