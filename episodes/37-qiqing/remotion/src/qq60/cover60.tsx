@@ -9,6 +9,8 @@ import {AbsoluteFill} from 'remotion';
 import {Heart60} from './heart60';
 import {featherD} from './props60';
 import {F_SERIF} from './frame60';
+import {GlyphColumns, WingedSun} from './props60';
+import {CAST} from './rig60';
 import {Ammit2} from './act60b_kit';
 import {MaskFront, GoldDefs} from './act60a_kit';
 import {TORSO} from './act60a_hook';
@@ -222,6 +224,114 @@ export const CoverSeries: React.FC = () => {
 				filter: 'drop-shadow(0 5px 0 #3A2206) drop-shadow(0 0 22px rgba(255,190,90,0.45))'}}>古埃及神话故事</div>
 			<div style={{marginTop: 22, display: 'flex', alignItems: 'center', gap: 22, fontFamily: F_SERIF, fontWeight: 700, fontSize: 40, color: '#F2DFAE', letterSpacing: '0.3em', marginRight: '-0.3em', whiteSpace: 'nowrap', textShadow: '0 3px 0 rgba(10,8,20,0.9)'}}>
 				<span style={{width: 70, height: 3, background: '#E8B44A', display: 'inline-block'}} />众神 · 冥界 · 来世<span style={{width: 70, height: 3, background: '#E8B44A', display: 'inline-block'}} /></div>
+		</div>
+	</AbsoluteFill>;
+};
+
+/* ---------- v3 cover (owner 11-05 21:45/21:46: "this composition" for 死后的心脏): the temple front, symmetrical — painted columns at both
+   edges, the winged sun and two Eyes of Horus on top, the title under them, a gold mural wall with Isis (left) and enthroned Osiris (right)
+   behind the colossal Anubis in his sun disk, the balance in front of him (jar heart / feather), Ammit lunging from the bottom left, black
+   jackal statues on pedestals, braziers, you on the dais steps looking up, a hieroglyph frieze along the bottom. ---------- */
+const EyeOfHorus: React.FC<{x: number; y: number; k: number; flip?: boolean}> = ({x, y, k, flip}) => <g transform={`translate(${x},${y}) scale(${flip ? -k : k},${k})`}>
+	{[[INK, 9], [GOLD, 5]].map(([c, w], i) => <g key={i} fill="none" stroke={String(c)} strokeWidth={Number(w)} strokeLinecap="round" strokeLinejoin="round">
+		<path d="M-46 -20Q0 -46 50 -20" /><path d="M-40 0Q0 -26 44 0Q0 18 -40 0Z" /><path d="M-6 12L-12 46" /><path d="M14 12Q24 40 46 40Q56 36 52 26" /></g>)}
+	<circle cx={2} cy={-4} r={9} fill={INK} />
+</g>;
+export const Jackal: React.FC<{x: number; y: number; k: number; face: 1 | -1}> = ({x, y, k, face}) => <g transform={`translate(${x},${y}) scale(${face * k},${k})`}>
+	<path d="M-70 0L-70 -18Q-60 -40 -20 -42L22 -44Q30 -70 34 -96L40 -122L50 -98L58 -120L66 -92Q70 -76 84 -66L108 -58Q112 -50 100 -46L74 -42Q66 -30 62 -14L74 -4L74 0Z" fill="#0C0B12" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+	<path d="M30 -60Q50 -50 64 -56" fill="none" stroke={GOLD} strokeWidth={5} /><circle cx={62} cy={-80} r={3.5} fill={GOLD} />
+	<path d="M-62 -26Q-30 -36 10 -36" fill="none" stroke="#3A3A5A" strokeWidth={3} opacity={0.8} />
+</g>;
+const Brazier: React.FC<{x: number; y: number; k: number}> = ({x, y, k}) => <g>
+	<path d={`M${x - 14 * k} ${y}L${x + 14 * k} ${y}L${x + 8 * k} ${y - 90 * k}L${x - 8 * k} ${y - 90 * k}Z`} fill="url(#cva-gold)" stroke={INK} strokeWidth={3} />
+	<path d={`M${x - 46 * k} ${y - 100 * k}L${x + 46 * k} ${y - 100 * k}Q${x + 38 * k} ${y - 70 * k} ${x} ${y - 66 * k}Q${x - 38 * k} ${y - 70 * k} ${x - 46 * k} ${y - 100 * k}Z`} fill="url(#cva-gold)" stroke={INK} strokeWidth={3} />
+	<ellipse cx={x} cy={y - 104 * k} rx={70 * k} ry={60 * k} fill="url(#cv-warm)" opacity={0.85} style={{mixBlendMode: 'screen'}} />
+	<path d={`M${x - 30 * k} ${y - 100 * k}Q${x - 26 * k} ${y - 150 * k} ${x - 6 * k} ${y - 178 * k}Q${x - 2 * k} ${y - 140 * k} ${x + 8 * k} ${y - 150 * k}Q${x + 16 * k} ${y - 190 * k} ${x + 6 * k} ${y - 214 * k}Q${x + 40 * k} ${y - 160 * k} ${x + 30 * k} ${y - 100 * k}Z`} fill="#FF8A2A" />
+	<path d={`M${x - 16 * k} ${y - 100 * k}Q${x - 10 * k} ${y - 136 * k} ${x + 2 * k} ${y - 152 * k}Q${x + 22 * k} ${y - 130 * k} ${x + 16 * k} ${y - 100 * k}Z`} fill="#FFE07A" />
+</g>;
+const Pillar: React.FC<{x: number; w: number; y0: number; y1: number; seed: number}> = ({x, w, y0, y1, seed}) => <g>
+	<rect x={x} y={y0} width={w} height={y1 - y0} fill="url(#ct-stone)" stroke={INK} strokeWidth={4} />
+	{Array.from({length: Math.ceil((y1 - y0) / 150)}, (_, i) => <g key={i}>
+		<rect x={x} y={y0 + i * 150} width={w} height={14} fill={LAPIS} /><rect x={x} y={y0 + i * 150 + 14} width={w} height={6} fill={GOLD} /><rect x={x} y={y0 + i * 150 + 20} width={w} height={8} fill={RED} /></g>)}
+	<g opacity={0.85}><GlyphColumns x={x + w * 0.14} y={y0 + 40} cols={2} rows={Math.floor((y1 - y0 - 60) / 46)} cell={w * 0.36} seed={seed} mono="#5A3410" /></g>
+	<rect x={x + w * 0.72} y={y0} width={w * 0.28} height={y1 - y0} fill="#000" opacity={0.28} />
+	<rect x={x} y={y0} width={w * 0.12} height={y1 - y0} fill="#FFE2A0" opacity={0.18} />
+</g>;
+export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tall'}) => {
+	const wide = layout === 'wide', W = wide ? 1440 : 1080, H = wide ? 1080 : 1440, cx = W / 2;
+	const G = wide
+		? {colW: 128, wall: [250, 250, 1190, 840], ms: 46, EY: 450, beamY: 610, half: 300, drop: 150, dais: 900, frieze: 960, title: 46, tsize: 86, jackY: 640, jx: 330, braz: 905, isis: [330, 720, 11], osiris: [1110, 720, 11]}
+		: {colW: 128, wall: [150, 470, 930, 1060], ms: 56, EY: 690, beamY: 860, half: 300, drop: 170, dais: 1180, frieze: 1290, title: 120, tsize: 108, jackY: 880, jx: 205, braz: 1260, isis: [262, 940, 12], osiris: [818, 940, 12]};
+	const [wx0, wy0, wx1, wy1] = G.wall, tilt = 6, a = tilt * Math.PI / 180;
+	const heartPan = [cx - G.half * Math.cos(a), G.beamY + G.half * Math.sin(a) + G.drop];
+	return <AbsoluteFill style={{background: '#0C0704'}}>
+		<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
+			<Defs />
+			<defs>
+				<linearGradient id="ct-bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#0A0604" /><stop offset="0.5" stopColor="#24140A" /><stop offset="1" stopColor="#120A05" /></linearGradient>
+				<linearGradient id="ct-stone" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stopColor="#D9B377" /><stop offset="0.5" stopColor="#B98A4E" /><stop offset="1" stopColor="#7A5428" /></linearGradient>
+				<linearGradient id="ct-wall" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#8A6232" /><stop offset="0.5" stopColor="#C29254" /><stop offset="1" stopColor="#7A5228" /></linearGradient>
+			</defs>
+			<rect x={0} y={0} width={W} height={H} fill="url(#ct-bg)" />
+			{/* the mural wall: gold plaster, a lapis-red-gold border, hieroglyph columns, Isis spreading her wings, Osiris enthroned */}
+			<rect x={wx0} y={wy0} width={wx1 - wx0} height={wy1 - wy0} fill="url(#ct-wall)" stroke={INK} strokeWidth={4} />
+			<rect x={wx0 + 10} y={wy0 + 10} width={wx1 - wx0 - 20} height={wy1 - wy0 - 20} fill="none" stroke={LAPIS} strokeWidth={8} />
+			<rect x={wx0 + 22} y={wy0 + 22} width={wx1 - wx0 - 44} height={wy1 - wy0 - 44} fill="none" stroke={RED} strokeWidth={4} />
+			<g opacity={0.55}><GlyphColumns x={wx0 + 40} y={wy0 + 40} cols={Math.floor((wx1 - wx0 - 80) / 44)} rows={Math.floor((wy1 - wy0 - 80) / 44)} cell={40} seed={61} mono="#4A2A0E" /></g>
+			<g opacity={0.92}>
+				<God id="ctisis" cast={CAST.isis} pose={POSES.protect} x={G.isis[0]} y={G.isis[1]} s={G.isis[2]} />
+				<rect x={G.osiris[0] - 3.2 * G.osiris[2]} y={G.osiris[1] - 4.9 * G.osiris[2]} width={4.4 * G.osiris[2]} height={4.9 * G.osiris[2]} fill="#2A4A8A" stroke={INK} strokeWidth={3} />
+				<God id="ctosiris" cast={CAST.osiris} pose={POSES.throne} x={G.osiris[0]} y={G.osiris[1]} s={G.osiris[2]} face={-1} />
+			</g>
+			<rect x={wx0} y={wy0} width={wx1 - wx0} height={wy1 - wy0} fill="url(#cv-vig)" opacity={0.6} />
+			{/* the god in his sun disk, the balance in front */}
+			<FilmAnubis x={cx} y={G.EY} s={G.ms} />
+			{/* the dais */}
+			<path d={`M${cx - 260} ${G.dais}L${cx + 260} ${G.dais}L${cx + 280} ${G.dais + 36}L${cx - 280} ${G.dais + 36}Z`} fill="url(#ct-stone)" stroke={INK} strokeWidth={3} />
+			<path d={`M${cx - 320} ${G.dais + 36}L${cx + 320} ${G.dais + 36}L${cx + 340} ${G.dais + 76}L${cx - 340} ${G.dais + 76}Z`} fill="url(#ct-stone)" stroke={INK} strokeWidth={3} />
+			<rect x={cx - 340} y={G.dais + 70} width={680} height={6} fill={GOLD} />
+			<rect x={0} y={G.dais + 76} width={W} height={G.frieze - G.dais - 76} fill="#1A0F08" />
+			{/* the columns at both edges */}
+			<Pillar x={0} w={G.colW} y0={0} y1={G.frieze} seed={71} /><Pillar x={W - G.colW} w={G.colW} y0={0} y1={G.frieze} seed={72} />
+			{/* jackal statues on pedestals, braziers */}
+			{[-1, 1].map((sg) => <g key={sg}>
+				{/* (v3.1: the jackal statues hid behind the pans: dropped) */}
+				<Brazier x={sg < 0 ? G.colW + 46 : W - G.colW - 46} y={G.braz} k={wide ? 0.85 : 1} />
+			</g>)}
+			<g transform={`translate(${cx},${G.dais})`}><BalanceBig H={G.dais - G.beamY} half={G.half} tilt={tilt} drop={G.drop} heartH={1.9 * G.ms} featherH={2.7 * G.ms} /></g>
+			{/* you, on the dais step, looking up */}
+			<ellipse cx={cx - 120} cy={G.dais + 2} rx={50} ry={8} fill="#000" opacity={0.55} />
+			<God id="ctani" cast={ANI} pose={{...POSES.rest, head: -16, neck: -7, lean: -3, fs: 10, fe: 12, bs: -6, be: 8}} x={cx - 120} y={G.dais + 2} s={wide ? 8.5 : 9.5} />
+			{/* the frieze along the bottom */}
+			<rect x={0} y={G.frieze} width={W} height={H - G.frieze} fill="url(#ct-wall)" stroke={INK} strokeWidth={4} />
+			<rect x={0} y={G.frieze} width={W} height={12} fill={LAPIS} /><rect x={0} y={G.frieze + 12} width={W} height={5} fill={GOLD} />
+			<g opacity={0.8}><GlyphColumns x={30} y={G.frieze + 34} cols={Math.floor((W - 60) / 64)} rows={Math.max(1, Math.floor((H - G.frieze - 50) / 64))} cell={60} seed={81} mono="#4A2A0E" /></g>
+			{/* Ammit lunging out of the dark at the heart pan */}
+			<ellipse cx={heartPan[0] - 80} cy={heartPan[1] + 180} rx={300} ry={220} fill="url(#cv-redrim)" opacity={0.3} style={{mixBlendMode: 'screen'}} />
+			<Ammit2 pose={{lean: 14, neck: 26, jaw: 44, tail: 10, breathe: 0.6}} x={heartPan[0] - (wide ? 400 : 330)} y={heartPan[1] + (wide ? 330 : 380)} s={wide ? 44 : 48} face={1} t={0.3} rim={1} look={0.9} mr={1} roar={1} id="ctam" />
+			<Motes W={W} H={H} n={90} seed={21} />
+			<rect x={0} y={0} width={W} height={H} fill="url(#cv-vig)" opacity={0.75} />
+			{/* the top: a dark band for the title, the winged sun and two Eyes of Horus */}
+			<defs><linearGradient id="ct-top" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#060302" stopOpacity={0.95} /><stop offset="0.75" stopColor="#060302" stopOpacity={0.6} /><stop offset="1" stopColor="#060302" stopOpacity={0} /></linearGradient></defs>
+			<rect x={G.colW} y={0} width={W - 2 * G.colW} height={wide ? 270 : 470} fill="url(#ct-top)" />
+			{!wide && <WingedSun x={cx} y={70} s={30} />}
+			<EyeOfHorus x={wide ? 192 : 210} y={wide ? 96 : 130} k={wide ? 0.9 : 1} />
+			<EyeOfHorus x={wide ? W - 192 : W - 210} y={wide ? 96 : 130} k={wide ? 0.9 : 1} flip />
+		</svg>
+		{/* the title */}
+		<div style={{position: 'absolute', left: 0, width: W, top: G.title, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+			{(() => { const gold = {background: 'linear-gradient(180deg, #FFF3C4 0%, #F6D27A 40%, #C8902E 60%, #F7D27A 82%, #FFE9A8 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent',
+				filter: 'drop-shadow(0 5px 0 #3A2206) drop-shadow(0 0 22px rgba(255,190,90,0.45))'} as React.CSSProperties;
+				const cream = {color: '#FFF4DC', textShadow: '0 5px 0 rgba(10,8,20,0.9), 0 0 26px rgba(5,6,20,0.9)'} as React.CSSProperties;
+				const base = {fontFamily: F_SERIF, fontWeight: 900, fontSize: G.tsize, lineHeight: 1.12, whiteSpace: 'nowrap', letterSpacing: '0.04em'} as React.CSSProperties;
+				return wide ? <div style={{display: 'flex', gap: G.tsize * 0.5}}><div style={{...base, ...cream}}>心比羽毛重</div><div style={{...base, ...gold}}>就会被吃掉</div></div>
+					: <><div style={{...base, ...cream}}>心比羽毛重</div><div style={{...base, ...gold, fontSize: G.tsize * 1.06}}>就会被吃掉</div></>; })()}
+			<div style={{marginTop: G.tsize * 0.22, display: 'flex', alignItems: 'center', gap: 18, fontFamily: F_SERIF, color: '#F2DFAE', whiteSpace: 'nowrap', textShadow: '0 3px 0 rgba(10,8,20,0.9)'}}>
+				<span style={{width: 60, height: 3, background: '#E8B44A'}} />
+				<span style={{fontSize: G.tsize * 0.3, fontWeight: 700, letterSpacing: '0.2em'}}>古埃及神话故事</span>
+				<span style={{fontSize: G.tsize * 0.4, fontWeight: 900, color: '#FFE3A0'}}>《死后的心脏》</span>
+				<span style={{width: 60, height: 3, background: '#E8B44A'}} />
+			</div>
 		</div>
 	</AbsoluteFill>;
 };
