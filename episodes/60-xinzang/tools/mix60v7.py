@@ -47,7 +47,7 @@ MUSIC_V4 = [
  (76.3, 90.3, 'tension_8bar', dict(inn='x', out='cut')),               # the weighing; out for the lead-in + roar
  (91.6, 98.3, 'mystic_16bar', dict(inn='swell', out='cut', db=-8, lp=700)),   # back after the roar: the hush, dark and low
  (98.3, 121.89, 'playful_24bar', dict(inn='hard', out='cut')),         # the cheat; cut on the pan crash
- (121.95, 126.82, 'mystic_16bar', dict(inn='swell', out='x', db=-10, lp=500)),   # a low dark bed under roar 2 and the bite
+ (121.95, 130.3, 'mystic_16bar', dict(inn='swell', out='x', db=-10, lp=500)),    # runs on under the doom into the pass   # a low dark bed under roar 2 and the bite
  (126.82, 130.3, 'sting_doom', dict(inn='x', out='x', db=-3)),         # the second death, fading as
  (130.3, 143.57, 'paradise_16bar', dict(inn='x', out='cut')),      # pass swells in; the hiccup 143.57
  (143.57, 144.3, 'mystic_16bar', dict(inn='hard', out='x', db=-12)),   # a bed through the hiccup
