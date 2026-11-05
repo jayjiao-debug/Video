@@ -76,9 +76,11 @@ EV_V4 = [(53.9, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80
           dict(dur=3.0, fin=1.2, fout=1.0))]   # owner: the 42 judges whisper like before (v4/v5 level), swelling in with the rows, gone by 56.9
 EV_V4 += [(138.41, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X14_reeds_birds_water_loop.wav', -4, dict(dur=3.76, fin=0.8, fout=0.6)),     # owner 16:34: the Field of Reeds water + birds (v5 level)
           (154.95, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X14_reeds_birds_water_loop.wav', -7, dict(seek=2.0, dur=2.2, fin=0.3, fout=1.0)),  # water round the reed boat
-          (146.33, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X16_shabti_clatter.wav', -2, dict()), (149.40, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X25_tiny_chorus.wav', 1, dict(onset=True))]   # the shabtis (v5 takes)
+          (146.33, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X16_shabti_clatter.wav', -7, dict()), (149.40, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X25_tiny_chorus.wav', 1, dict(onset=True))]   # the shabtis (v5 takes)
 EV_V4 += [(150.0 + 0.27 * k, 'tick_wood', -12, dict()) for k in range(18)]   # their light marching taps
-SKIP_V4 = {(149.40, 'squeak_chorus'), (146.33, 'tick_wood'), (146.63, 'tick_wood'), (146.93, 'tick_wood')}
+EV_V4 += [(58.36, 'bite_hit', -7, dict())]   # owner: no voice-like layer in shot 20: a designed (non-vocal) beak chomp
+MENV_V4 = [(15.6, 18.6, -6.0)]   # owner: the brain-hook SFX (15.84-18.45) read clearly: the music -6 dB under them
+SKIP_V4 = {(58.36, 'chomp_small'), (58.41, 'gulp'), (149.40, 'squeak_chorus'), (146.33, 'tick_wood'), (146.63, 'tick_wood'), (146.93, 'tick_wood')}
 # (time, sfx, offset dB vs local music, options)   options: dur (crop + fade), crop_end (keep the last s), onset (align the take's onset),
 # abs (level vs the music's average, not the local music: the music is out)
 EV = []
@@ -179,6 +181,8 @@ def mix(lib, sfxd, out, plan=None, extra=()):
         g = 10 ** ((ref + off - Lx) / 20); i = int(round(t0 * SR)); j = min(n, i + len(x)); fx[i:j] += x[:j - i] * g
         rep.append(dict(t=t, sfx=name, music_local=round(Lm, 1), target=round(ref + off, 1)))
     music *= 10 ** (-3 / 20)   # the music bus -3 dB (owner 19:21)
+    for a, b, gdb in (MENV_V4 if extra else ()):   # music dips (0.15 s ramps)
+        t = np.arange(n) / SR; r = np.clip(np.minimum((t - a) / 0.15, (b - t) / 0.15), 0, 1); music *= (10 ** (gdb * r / 20))[:, None]
     y = music + fx; k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
     from scipy import signal as _sg; y = _sg.sosfiltfilt(_sg.butter(8, 16500, 'low', fs=SR, output='sos'), y, axis=0)   # owner: nothing above ~16.5 kHz (AAC overshoot)
     y = lib60.master(y, target=-14.0, ceil=-2.6)   # owner 12:38: <= -2 dBTP so the AAC encode doesn't overshoot
