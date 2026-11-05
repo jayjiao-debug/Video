@@ -74,6 +74,11 @@ MUSIC_V8 = [
 
 EV_V4 = [(53.9, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X09_judges_42_whisper_loop.wav', -2,
           dict(dur=3.0, fin=1.2, fout=1.0))]   # owner: the 42 judges whisper like before (v4/v5 level), swelling in with the rows, gone by 56.9
+EV_V4 += [(138.41, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X14_reeds_birds_water_loop.wav', -4, dict(dur=3.76, fin=0.8, fout=0.6)),     # owner 16:34: the Field of Reeds water + birds (v5 level)
+          (154.95, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X14_reeds_birds_water_loop.wav', -7, dict(seek=2.0, dur=2.2, fin=0.3, fout=1.0)),  # water round the reed boat
+          (146.33, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X16_shabti_clatter.wav', -2, dict()), (149.40, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X25_tiny_chorus.wav', 1, dict(onset=True))]   # the shabtis (v5 takes)
+EV_V4 += [(150.0 + 0.27 * k, 'tick_wood', -12, dict()) for k in range(18)]   # their light marching taps
+SKIP_V4 = {(149.40, 'squeak_chorus'), (146.33, 'tick_wood'), (146.63, 'tick_wood'), (146.93, 'tick_wood')}
 # (time, sfx, offset dB vs local music, options)   options: dur (crop + fade), crop_end (keep the last s), onset (align the take's onset),
 # abs (level vs the music's average, not the local music: the music is out)
 EV = []
@@ -100,7 +105,7 @@ ev(48.48, 'hiss', -2); ev(48.64, 'ammit_growl', -4, onset=True); ev(49.38, 'ammi
 ev(49.86, 'glyph_light', -3); ev(50.02, 'magic_shimmer', -3); ev(50.82, 'magic_blast', 1); ev(50.88, 'skitter', -5)
 ev(51.91, 'door_boom', 1)
 for t in (53.15, 53.71, 54.27): ev(t, 'step_stone', -6)
-ev(57.35, 'bone_crack', -1); ev(58.36, 'chomp_small', -1, onset=True); ev(58.41, 'gulp', -5, onset=True); ev(59.46, 'lick_dog', -2, onset=True)
+ev(57.35, 'bone_crack', -1); ev(58.36, 'chomp_small', -1, onset=True); ev(58.41, 'gulp', -5, onset=True); pass   # owner 16:33 "that ahh sound at 食血者 去掉": the lick take (59.46) is gone
 for t in (61.00, 61.60, 62.20, 62.80): ev(t, 'tek_hit', -4)
 for t in (64.45, 65.05, 65.65, 68.57, 71.87): ev(t, 'tick_wood', -4)
 ev(70.22, 'chime_glint', -4)
@@ -159,9 +164,11 @@ def st_lufs(y, a, b):
 
 def mix(lib, sfxd, out, plan=None, extra=()):
     plan = plan or MUSIC; music = lib60.render_plan(lib, plan); Mavg = E.lufs(music); n = len(music); fx = np.zeros((n, 2)); rep = []
-    for t, name, off, o in list(EV) + list(extra):
+    skip = SKIP_V4 if extra else set()
+    for t, name, off, o in [e for e in EV if (e[0], e[1]) not in skip] + list(extra):
         x = sf.read(name if name.startswith('/') else f'{sfxd}/{name}.wav', always_2d=True)[0]
         if x.shape[1] == 1: x = np.repeat(x, 2, 1)
+        if o.get('seek'): x = x[int(o['seek'] * SR):]
         if o.get('crop_end'): x = x[-int(o['crop_end'] * SR):].copy(); f = int(0.15 * SR); x[:f] *= np.linspace(0, 1, f)[:, None]
         if o.get('dur') and len(x) > o['dur'] * SR: x = x[:int(o['dur'] * SR)].copy(); f = int(min(0.25, o['dur'] / 3) * SR); x[-f:] *= np.linspace(1, 0, f)[:, None] ** 2
         if o.get('fin'): f = int(o['fin'] * SR); x = x.copy(); x[:f] *= np.linspace(0, 1, f)[:, None] ** 2
