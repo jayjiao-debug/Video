@@ -231,14 +231,16 @@ def m_hook(T):
     pluck(T, 'oud', E.midi('D3'), 6.0, 2.0, 0.85, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), 6.006, 2.2, 0.6, 0.35, 'oud')
     qroll(T, 6.0, 'D5', 1.2, 0.3)
 
-def m_calm(T, book=False):
+CALM_OST = score(*['D3:1. A3:1. D4:1. A3:1. Eb4:1. A3:1. D4:1. A3:1.'] * 8)
+def m_calm(T, book=False):   # owner 12:38 "always some music": a soft oud ostinato + a frame-drum pulse under the ney; calm2 = the theme
     drone(T, reed_amt=0.28)
-    lead(T, CALM_NEY, 0.0, breath=0.26, vel=0.7)
-    string_line(T, CALM_NEY, 0.0, 'oud', -1, 0.42, trem=0, quarters=True)
-    for b in range(8): drums(T, b * BAR, 'sparse1', 0.75)
+    lead(T, THEME_NEY if book else CALM_NEY, 0.0, breath=0.24, vel=0.68)
+    string_line(T, CALM_OST, 0.0, 'oud', 0, 0.34, pan=0.35, trem=0, stacc=True, skip16=False, late=0.0)
+    for b in range(8):
+        drums(T, b * BAR, 'sparse1', 0.75); stroke(T, b * BAR, 'f', 0.5); stroke(T, b * BAR + 7 * E8, 'f', 0.3)
     for b in (0, 4): stroke(T, b * BAR, 'z', 0.5)
     if book:   # the Book of the Dead: the same melody, the qanun joins in octaves, light riq on the beats, sistrum on the phrase starts
-        string_line(T, CALM_NEY, 0.0, 'qanun', 0, 0.36, pan=-0.38, trem=4, rate=0.0625, quarters=True, late=0.006)
+        string_line(T, THEME_NEY, 0.0, 'qanun', 0, 0.36, pan=-0.38, trem=4, rate=0.0625, quarters=True, late=0.006)
         for b in range(8): riq_bar(T, b * BAR, 0.38)
         for b in (0, 4): stroke(T, b * BAR, 'X', 0.45)
     else:

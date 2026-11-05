@@ -21,31 +21,37 @@ MUSIC = [
  (8.3, 26.3, 'calm_8bar', dict(inn='x')),                               # 5-9: you die, the mummy
  (26.3, 42.3, 'calm2_8bar', dict(inn='eg', bar0=1)),                    # 10-14: the Book (same melody, the qanun joins)
  (42.3, 52.3, 'danger_4bar', dict(inn='x')),                            # 15-17: the road (the riff)
- (52.3, 73.38, 'theme_8bar', dict(inn='x', out='cut')),                 # 18-25: the hall, the leitmotif; dead stop on the freeze 73.38
- (76.3, 90.3, 'tension_8bar', dict(inn='swell', out='cut')),            # 27-30: the weighing builds; out at 90.30 for the lead-in + roar
- (92.3, 96.3, 'dark_4bar', dict(inn='swell')),                          # 32: after the roar and the plop, the hush: drone + low gong
- (96.3, 98.3, 'dark_4bar_thin', dict(inn='eg', out='cut', bar0=2, db=-3)),   # 33: drone only under the heartbeats; cut on 98.3
+ (52.3, 73.38, 'theme_8bar', dict(inn='x', out='cut')),                 # 18-25: the hall, the leitmotif; the freeze 73.38 stops it
+ (73.38, 76.3, 'dark_4bar_thin', dict(inn='swell', out='x', db=-12)),   # owner 12:38: a low drone bed under the squeak and the cricket
+ (76.3, 90.3, 'tension_8bar', dict(inn='x', out='cut')),                # 27-30: the weighing builds; out at 90.30 for the lead-in + roar
+ (91.6, 96.3, 'dark_4bar', dict(inn='swell')),                          # back 0.8 s after the roar: the hush, drone + low gong
+ (96.3, 98.3, 'dark_4bar_thin', dict(inn='x', out='cut', db=-3)),       # 33: drone only under the heartbeats; cut on 98.3
  (98.3, 106.3, 'playful_8bar', dict(inn='hard')),                       # 34 「等等——」 crash: the cheat, the theme staccato
  (106.3, 114.3, 'playful_8bar_thin', dict(inn='eg', out='eg', bar0=4)), # 37: drums out under the papyrus line
  (114.3, 121.89, 'playful_8bar', dict(inn='eg', out='cut', bar0=0)),    # 39-40, cut on the pan crash 121.89
- (126.82, 130.11, 'dark_4bar', dict(inn='swell', out='cut', db=-2)),    # 43: after the bite and the silence, the doom drone; dead stop 130.11
- (130.3, 143.57, 'bright_8bar', dict(inn='swell', out='cut')),          # 44-48: the theme an octave up; the hiccup on the deadpan look 143.57
- (144.3, 156.3, 'bright_8bar', dict(inn='hard', out='x', bar0=7)),      # 48-52: picks up on the next downbeat where it would have been
+ (121.95, 126.82, 'dark_4bar_thin', dict(inn='swell', out='x', db=-6)), # a low drone under roar 2 and the bite (no dead silence)
+ (126.82, 130.3, 'dark_4bar', dict(inn='x', out='x', db=-2)),          # 43: the doom drone, fading out as
+ (130.3, 143.57, 'bright_8bar', dict(inn='swell', out='cut')),          # 44-48: the theme an octave up swells in; the hiccup 143.57
+ (143.57, 144.3, 'dark_4bar_thin', dict(inn='hard', out='x', db=-12)),  # a drone holds through the hiccup
+ (144.3, 156.3, 'bright_8bar', dict(inn='x', out='x', bar0=7)),         # 48-52: picks up on the next downbeat
  (156.3, 169.25, 'resolution_6bar', dict(inn='x')),                     # 53-55: the theme slow, chromatic slide, final D 164.3 through the card
 ]
 # owner 23:55: "another of the film with music similar to v4" -- the v4/v6b egypt_cues score re-laid on the v6 acts, smoother changes
 MUSIC_V4 = [
  (0.0, 8.41, 'intro_hook', dict(inn='hard', out='x')),                 # v6b intro: Egyptian from frame 0, gong on the title 6.30
- (8.41, 26.03, 'mystic_16bar', dict(inn='x')),                         # you die, the mummy
+ (8.41, 26.03, 'paradise_16bar', dict(inn='x', db=-2)),                # you die, the mummy: a melodic, calm cue (owner 12:38)
  (26.03, 41.64, 'playful_24bar', dict(inn='x')),                       # the Book (the playful eighths the stall was built on)
  (41.64, 51.73, 'tension_8bar', dict(inn='x')),                        # the road
- (51.73, 73.38, 'groove_24bar', dict(inn='x', out='cut')),             # hall + oath; dead stop on the freeze 73.38
- (76.3, 90.3, 'tension_8bar', dict(inn='swell', out='cut')),           # the weighing; out for the lead-in + roar
- (92.3, 98.3, 'mystic_16bar', dict(inn='swell', out='cut', db=-8, lp=700)),   # the hush: the mystic bed, dark and low
+ (51.73, 73.38, 'groove_24bar', dict(inn='x', out='cut')),             # hall + oath; the freeze 73.38 stops it
+ (73.38, 76.3, 'mystic_16bar', dict(inn='swell', out='x', db=-12)),   # a low bed under the squeak and the cricket
+ (76.3, 90.3, 'tension_8bar', dict(inn='x', out='cut')),               # the weighing; out for the lead-in + roar
+ (91.6, 98.3, 'mystic_16bar', dict(inn='swell', out='cut', db=-8, lp=700)),   # back after the roar: the hush, dark and low
  (98.3, 121.89, 'playful_24bar', dict(inn='hard', out='cut')),         # the cheat; cut on the pan crash
- (126.82, 130.11, 'sting_doom', dict(inn='swell', out='cut', db=-3)),  # the second death; dead stop 130.11
- (130.3, 143.57, 'paradise_16bar', dict(inn='swell', out='cut')),      # pass; the hiccup 143.57
- (144.3, 156.3, 'playful_24bar', dict(inn='hard', out='x')),           # shabtis
+ (121.95, 126.82, 'mystic_16bar', dict(inn='swell', out='x', db=-10, lp=500)),   # a low dark bed under roar 2 and the bite
+ (126.82, 130.3, 'sting_doom', dict(inn='x', out='x', db=-3)),         # the second death, fading as
+ (130.3, 143.57, 'paradise_16bar', dict(inn='swell', out='cut')),      # pass swells in; the hiccup 143.57
+ (143.57, 144.3, 'mystic_16bar', dict(inn='hard', out='x', db=-12)),   # a bed through the hiccup
+ (144.3, 156.3, 'playful_24bar', dict(inn='x', out='x')),              # shabtis
  (156.3, 164.3, 'paradise_16bar', dict(inn='x', out='x')),             # close
  (164.3, 169.25, 'paradise_end', dict(inn='x')),                       # the paradise ending rings through the end card
 ]
@@ -115,14 +121,14 @@ ev(153.65, 'whip_crack', -1); ev(158.45, 'papyrus_unroll', -4); ev(161.70, 'hear
 DELIBERATE = [
  (0.00, 'start', 'frame 0: torches flare (finger cymbals + dum) as the hook drone begins: Egyptian from the first frame'),
  (6.30, 'loud', 'the title: ney D5 + gong + bendir + zills + oud D on the downbeat (the biggest musical moment of the opening)'),
- (73.38, 'silent', '「话太多」: the picture freezes and the music stops dead (short room ring), then a reed squeak and a cricket in the silence; the weighing swells in from 75.8'),
- (90.30, 'silent', 'the BGM drops for Ammit: a lead-in (darbuka roll + mizmar climbing D Hijaz, 0.34 s), a breath, the ROAR alone at 90.77, the hippo plop 92.07'),
+ (73.38, 'quiet', '「话太多」: the picture freezes and the music stops (short room ring); a low drone bed (-12 dB) holds under the reed squeak and the cricket'),
+ (90.30, 'silent', 'the BGM drops for Ammit: a lead-in (darbuka roll + mizmar climb, 0.34 s), a breath, the ROAR alone at 90.77; the drone is back from 91.1 (swell to 91.6)'),
  (96.30, 'quiet', 'the hush: drone only under the speeding heartbeats and the chain creak before 「等等——」'),
  (98.33, 'loud', '「等等——」: finger-cymbal crash + gold flare, the playful theme comes straight in on the downbeat'),
- (121.89, 'loud->silent', 'the pan crashes and the music cuts (room ring); growl and roar 2 at 122.69 alone'),
- (125.15, 'loud->silent', 'the bite: the deep wet jaw slam on the bite frame, then silence (black) until 43 starts at 126.82'),
- (130.11, 'silent', 'the dead stop at the end of 「彻底消失」 (43), then the reversed sand and the bright chime as the beam levels'),
- (143.57, 'silent', 'the music hiccups on the deadpan look (out 143.57-144.30, back on the next downbeat)'),
+ (121.89, 'loud', 'the pan crashes and the music cuts to a low drone; growl and roar 2 at 122.69 over it'),
+ (125.15, 'loud', 'the bite: the deep wet jaw slam on the bite frame, then the low drone alone until 43'),
+ (130.30, 'swell', 'the doom fades as the bright theme swells in under the reversed sand and the chime (no dead stop)'),
+ (143.57, 'hiccup', 'the music hiccups on the deadpan look (a drone holds 143.57-144.30, the theme is back on the next downbeat)'),
 ]
 
 def onset(x):
@@ -146,14 +152,14 @@ def mix(lib, sfxd, out, plan=None):
         rep.append(dict(t=t, sfx=name, music_local=round(Lm, 1), target=round(ref + off, 1)))
     music *= 10 ** (-3 / 20)   # the music bus -3 dB (owner 19:21)
     y = music + fx; k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
-    y = lib60.master(y, target=-14.0, ceil=-2.0)
+    y = lib60.master(y, target=-14.0, ceil=-2.6)   # owner 12:38: <= -2 dBTP so the AAC encode doesn't overshoot
     sf.write(out, y.astype(np.float32), SR, subtype='PCM_24')
     ceil = -3.0   # the mp3: re-limit its source until the decoded mp3 is <= -1.1 dBTP (sharp SFX transients overshoot in the encode)
     while True:
         tmp = out[:-4] + '_mp3src.wav'; sf.write(tmp, E.limit(y, ceil).astype(np.float32), SR, subtype='PCM_24')
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-c:a', 'libmp3lame', '-b:a', '256k', out[:-4] + '.mp3'], check=True); os.remove(tmp)
         dec = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'quiet', '-i', out[:-4] + '.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout, np.float32).reshape(-1, 2).astype(np.float64)
-        if E.true_peak(dec) <= -1.1 or ceil < -6: break
+        if E.true_peak(dec) <= -2.1 or ceil < -7: break
         ceil -= 1.0
     # audibility: each event's loudness in the final mix vs the music around it (same gains as the master)
     gm = np.sqrt(np.mean(y ** 2) / max(np.mean((music + fx) ** 2), 1e-20))
