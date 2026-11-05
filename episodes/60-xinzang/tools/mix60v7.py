@@ -39,8 +39,8 @@ MUSIC = [
 # owner 23:55: "another of the film with music similar to v4" -- the v4/v6b egypt_cues score re-laid on the v6 acts, smoother changes
 MUSIC_V4 = [
  (0.0, 8.41, 'intro_hook', dict(inn='hard', out='x')),                 # v6b intro: Egyptian from frame 0, gong on the title 6.30
- (8.41, 26.03, 'paradise_16bar', dict(inn='x', db=-2)),                # you die, the mummy: a melodic, calm cue (owner 12:38)
- (26.03, 41.64, 'playful_24bar', dict(inn='x')),                       # the Book (the playful eighths the stall was built on)
+ (8.41, 26.03, 'playful_24bar', dict(inn='x', out='eg', db=-2)),       # owner: "the tune at 28 s ... start earlier, after the title" (-2 dB here)
+ (26.03, 41.64, 'playful_24bar', dict(inn='eg', off_s=17.62)),        # the Book: the same tune continues (no restart), full level
  (41.64, 51.73, 'tension_8bar', dict(inn='x')),                        # the road
  (51.73, 73.38, 'groove_24bar', dict(inn='x', out='cut')),             # hall + oath; the freeze 73.38 stops it
  (73.38, 76.3, 'mystic_16bar', dict(inn='swell', out='x', db=-12)),   # a low bed under the squeak and the cricket
@@ -72,6 +72,8 @@ MUSIC_V8 = [
  (157.15, 169.25, 'resolution_6bar', dict(inn='x')),                   # final D at 165.32, ring through the card
 ]
 
+EV_V4 = [(53.9, '/tmp/claude-0/-home-claude/240969aa-174a-5914-92b5-d529595dbe80/scratchpad/snd60/sfx/X09_judges_42_whisper_loop.wav', -2,
+          dict(dur=3.0, fin=1.2, fout=1.0))]   # owner: the 42 judges whisper like before (v4/v5 level), swelling in with the rows, gone by 56.9
 # (time, sfx, offset dB vs local music, options)   options: dur (crop + fade), crop_end (keep the last s), onset (align the take's onset),
 # abs (level vs the music's average, not the local music: the music is out)
 EV = []
@@ -155,12 +157,15 @@ def st_lufs(y, a, b):
     if b - a < int(0.45 * SR): return -70.0
     L = E.lufs(seg); return L if np.isfinite(L) else -70.0
 
-def mix(lib, sfxd, out, plan=None):
+def mix(lib, sfxd, out, plan=None, extra=()):
     plan = plan or MUSIC; music = lib60.render_plan(lib, plan); Mavg = E.lufs(music); n = len(music); fx = np.zeros((n, 2)); rep = []
-    for t, name, off, o in EV:
-        x = sf.read(f'{sfxd}/{name}.wav', always_2d=True)[0]
+    for t, name, off, o in list(EV) + list(extra):
+        x = sf.read(name if name.startswith('/') else f'{sfxd}/{name}.wav', always_2d=True)[0]
+        if x.shape[1] == 1: x = np.repeat(x, 2, 1)
         if o.get('crop_end'): x = x[-int(o['crop_end'] * SR):].copy(); f = int(0.15 * SR); x[:f] *= np.linspace(0, 1, f)[:, None]
         if o.get('dur') and len(x) > o['dur'] * SR: x = x[:int(o['dur'] * SR)].copy(); f = int(min(0.25, o['dur'] / 3) * SR); x[-f:] *= np.linspace(1, 0, f)[:, None] ** 2
+        if o.get('fin'): f = int(o['fin'] * SR); x = x.copy(); x[:f] *= np.linspace(0, 1, f)[:, None] ** 2
+        if o.get('fout'): f = int(o['fout'] * SR); x = x.copy(); x[-f:] *= np.linspace(1, 0, f)[:, None] ** 2
         t0 = t - (onset(x) / SR if o.get('onset') else 0.0)
         Lx = E.lufs(np.concatenate([x, np.zeros((max(0, int(0.5 * SR) - len(x)), 2))]))
         Lm = st_lufs(music, t - 0.4, t + 0.8); ref = Mavg if o.get('abs') else float(np.clip(Lm, Mavg - 6, Mavg + 3))
@@ -168,6 +173,7 @@ def mix(lib, sfxd, out, plan=None):
         rep.append(dict(t=t, sfx=name, music_local=round(Lm, 1), target=round(ref + off, 1)))
     music *= 10 ** (-3 / 20)   # the music bus -3 dB (owner 19:21)
     y = music + fx; k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
+    from scipy import signal as _sg; y = _sg.sosfiltfilt(_sg.butter(8, 16500, 'low', fs=SR, output='sos'), y, axis=0)   # owner: nothing above ~16.5 kHz (AAC overshoot)
     y = lib60.master(y, target=-14.0, ceil=-2.6)   # owner 12:38: <= -2 dBTP so the AAC encode doesn't overshoot
     sf.write(out, y.astype(np.float32), SR, subtype='PCM_24')
     ceil = -3.0   # the mp3: re-limit its source until the decoded mp3 is <= -1.1 dBTP (sharp SFX transients overshoot in the encode)
@@ -190,4 +196,4 @@ if __name__ == '__main__':
     if mode == 'v8':
         import hijaz60 as H; lib60.B = int(round(H.BAR * SR))   # the 117.5 BPM bar for bar0
         if len(sys.argv) > 5: lib60.preview(sys.argv[1], sys.argv[5], MUSIC_V8)
-    mix(sys.argv[1], sys.argv[2], sys.argv[3], {'v4': MUSIC_V4, 'v8': MUSIC_V8}.get(mode))
+    mix(sys.argv[1], sys.argv[2], sys.argv[3], {'v4': MUSIC_V4, 'v8': MUSIC_V8}.get(mode), EV_V4 if mode == 'v4' else ())
