@@ -27,15 +27,15 @@ export const CAST61: Record<string, Cast61> = {
 	shu: {base: mk('Shu', {wig: 'none', crown: 'maat', tail: true, bProp: 'ankh', fProp: 'was'})},
 	/** Tefnut: lioness head, sun disc + uraeus, sheath dress, ankh + was (I4) */
 	tefnut: {base: mk('Tefnut', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bProp: 'ankh', fProp: 'was', bHand: 'fist'}), head: 'lioness', crown: 'sun'},
-	/** Geb: man, green skin, goose on the head (I5) */
-	geb: {base: mk('Geb', {skin: 'skinO', skin2: 'skinO2', wig: 'tri', tail: true, bProp: 'ankh', fProp: 'was'}), hat: 'goose'},
+	/** Geb: man, green skin (design choice: no object found; the goose is NOT attested in the researched records, so it is not drawn) (I5) */
+	geb: {base: mk('Geb', {skin: 'skinO', skin2: 'skinO2', wig: 'tri', tail: true, bProp: 'ankh', fProp: 'was'})},
 	/** Nut: woman with the red nu-jar on her head (I6) */
 	nut: {base: mk('Nut', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open'}), hat: 'nu'},
-	/** Isis: woman, throne sign on the head, wings (I9) */
+	/** Isis: woman, throne sign on the head, wings (I8) */
 	isis: {base: {...CAST.isis, crown: 'none'}, hat: 'throne'},
-	/** Set: the Set animal head, kilt, was + ankh (I10) */
+	/** Set: the Set animal head, kilt, was + ankh (I9) */
 	set: {base: mk('Set', {tail: true, bProp: 'ankh', fProp: 'was'}), head: 'seth', color: '#9A4A2A', color2: '#6E2F1A'},
-	/** Nephthys: woman, house-and-basket sign on the head (I11) */
+	/** Nephthys: woman, house-and-basket sign on the head (I10) */
 	nephthys: {base: mk('Nephthys', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open'}), hat: 'house'},
 	/** Sekhmet: lioness head + sun disc, red sheath dress (I14) */
 	sekhmet: {base: mk('Sekhmet', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bProp: 'ankh', fProp: 'was'}), head: 'lioness', crown: 'sun'},
