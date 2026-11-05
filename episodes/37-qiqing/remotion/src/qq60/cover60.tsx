@@ -10,55 +10,37 @@ import {Heart60} from './heart60';
 import {featherD} from './props60';
 import {F_SERIF} from './frame60';
 import {Ammit2} from './act60b_kit';
+import {MaskFront, GoldDefs} from './act60a_kit';
+import {TORSO} from './act60a_hook';
+import {PAL} from './geo60';
 import {God, POSES} from './rig60';
 import {ANI} from './cast60';
 
 const INK = '#0A0806', GOLD = '#E8B44A', LAPIS = '#1E2F7A', TURQ = '#2FA3A0', RED = '#B8341E';
 const rng = (seed: number) => { let s = seed; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; };
 
-/** the colossal frontal Anubis: (0, 0) = the tip of the nose; k = scale (1 ≈ 520 px between ear tips' outer edges) */
-const Anubis: React.FC<{k: number; eye?: number}> = ({k, eye = 1}) => <g transform={`scale(${k})`}>
-	{/* the sun-disk halo behind the head */}
-	<circle cx={0} cy={-260} r={520} fill="url(#cv-warm)" opacity={0.75} style={{mixBlendMode: 'screen'}} />
-	<circle cx={0} cy={-260} r={430} fill="none" stroke="#FFD98A" strokeWidth={5} opacity={0.5} />
-	<circle cx={0} cy={-260} r={455} fill="none" stroke="#FFD98A" strokeWidth={2} opacity={0.35} strokeDasharray="6 14" />
-	{/* shoulders + body in shadow */}
-	<path d="M-520 620Q-470 330 -250 280L250 280Q470 330 520 620Z" fill="#06070F" />
-	{/* the lappets of the striped wig, behind the head, falling to the chest */}
-	{[-1, 1].map((sg) => <g key={sg}>
-		<path d={`M${sg * 120} -300L${sg * 250} -260L${sg * 268} 300L${sg * 140} 330Z`} fill={LAPIS} stroke={INK} strokeWidth={6} />
-		{Array.from({length: 13}, (_, i) => { const y = -250 + i * 44, x0 = sg * (122 + i * 1.5), x1 = sg * (252 + i * 1.3);
-			return <path key={i} d={`M${x0} ${y}L${x1} ${y + 6}`} stroke={GOLD} strokeWidth={14} opacity={0.95} />; })}
-		<path d={`M${sg * 250} -260L${sg * 268} 300`} stroke="#FFE3A0" strokeWidth={4} opacity={0.7} />
-	</g>)}
-	{/* the broad collar (wesekh): rows of gold, turquoise, red, lapis */}
-	{[[300, GOLD, 34], [272, TURQ, 26], [248, RED, 22], [226, LAPIS, 22], [204, GOLD, 18]].map(([r, c, w], i) =>
-		<path key={i} d={`M${-Number(r)} 250A${r} ${Number(r) * 0.5} 0 0 0 ${r} 250`} fill="none" stroke={String(c)} strokeWidth={Number(w)} />)}
-	{Array.from({length: 23}, (_, i) => { const a = Math.PI * (0.06 + 0.88 * i / 22), r = 316; return <path key={i} d={`M${-Math.cos(a) * r} ${250 + Math.sin(a) * r * 0.5}l${-Math.cos(a) * 26} ${Math.sin(a) * 13}`} stroke={GOLD} strokeWidth={10} strokeLinecap="round" />; })}
-	{/* the ears: tall, upright, a gold edge and a dark inner ear */}
-	{[-1, 1].map((sg) => <g key={sg}>
-		<path d={`M${sg * 70} -300L${sg * 205} -330L${sg * 190} -640Z`} fill="#0B0D18" stroke={INK} strokeWidth={6} />
-		<path d={`M${sg * 98} -318L${sg * 180} -336L${sg * 178} -560Z`} fill="#1A1430" />
-		<path d={`M${sg * 205} -330L${sg * 190} -640`} stroke="#FFD27A" strokeWidth={5} opacity={0.85} />
-	</g>)}
-	{/* the head: skull narrowing into the long muzzle */}
-	<path d="M-165 -300Q-190 -230 -150 -160Q-100 -95 -56 -40Q-36 10 -30 70L30 70Q36 10 56 -40Q100 -95 150 -160Q190 -230 165 -300Q85 -348 0 -350Q-85 -348 -165 -300Z" fill="#0B0D18" stroke={INK} strokeWidth={6} />
-	{/* sheen on the black stone: the brow and the bridge of the muzzle */}
-	<path d="M-40 -300Q0 -320 40 -300L20 40Q0 50 -20 40Z" fill="#232A4E" opacity={0.75} />
-	<path d="M-48 -60Q-60 20 -34 64M48 -60Q60 20 34 64" fill="none" stroke="#FFD27A" strokeWidth={4} opacity={0.45} />
-	<path d="M-175 -300Q-200 -230 -165 -150" fill="none" stroke="#FFD27A" strokeWidth={5} opacity={0.6} />
-	<path d="M175 -300Q200 -230 165 -150" fill="none" stroke="#FFD27A" strokeWidth={5} opacity={0.6} />
-	{/* the nose */}
-	<path d="M-36 56Q0 40 36 56Q32 84 0 88Q-32 84 -36 56Z" fill="#000" stroke="#3A3A5A" strokeWidth={3} />
-	{/* the eyes: almond, slanting up and out, gold glow, kohl lines */}
-	{[-1, 1].map((sg) => <g key={sg}>
-		<ellipse cx={sg * 92} cy={-196} rx={74} ry={44} fill="url(#cv-eyeglow)" opacity={0.85 * eye} />
-		<path d={`M${sg * 40} -190Q${sg * 85} -232 ${sg * 140} -214Q${sg * 112} -172 ${sg * 40} -190Z`} fill="#FFC93A" stroke={INK} strokeWidth={5} opacity={eye} />
-		<ellipse cx={sg * 92} cy={-200} rx={9} ry={17} fill={INK} />
-		<path d={`M${sg * 138} -214L${sg * 196} -236`} stroke={INK} strokeWidth={8} strokeLinecap="round" />
-		<path d={`M${sg * 48} -222Q${sg * 96} -262 ${sg * 150} -244`} fill="none" stroke={GOLD} strokeWidth={6} opacity={0.8} />
-	</g>)}
-</g>;
+/** the film's own Anubis (shot 1, owner 11-05 20:57 "the video one is more awesome"): the black-and-gold mask with the striped lappets and
+    the collar (MaskFront), the frontal torso, the gold sun disk behind his head with its halo and rays. (x, y) = between the eyes, s = mask unit */
+const FilmAnubis: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const sx = x, sy = y - 1.77 * s;
+	const rays = Array.from({length: 24}, (_, i) => { const a = (i / 24) * Math.PI * 2, r0 = 2.4 * s, r1 = (i % 2 ? 5.4 : 6.7) * s;
+		return <path key={i} d={`M${sx + Math.cos(a - 0.035) * r0} ${sy + Math.sin(a - 0.035) * r0}L${sx + Math.cos(a) * r1} ${sy + Math.sin(a) * r1}L${sx + Math.cos(a + 0.035) * r0} ${sy + Math.sin(a + 0.035) * r0}Z`} fill="#EEBF50" opacity={0.3} />; });
+	return <g>
+		<GoldDefs id="cva" />
+		<defs><radialGradient id="cva-sun" cx="0.45" cy="0.4" r="0.6"><stop offset="0" stopColor="#FCE59E" /><stop offset="0.55" stopColor="#EFBA44" /><stop offset="1" stopColor="#C8801C" /></radialGradient>
+			<radialGradient id="cva-halo" cx="0.5" cy="0.5" r="0.5"><stop offset="0.5" stopColor="#E0A036" stopOpacity={0.5} /><stop offset="1" stopColor="#D8962E" stopOpacity={0} /></radialGradient></defs>
+		<circle cx={sx} cy={sy} r={5.1 * s} fill="url(#cva-halo)" />
+		<g style={{mixBlendMode: 'screen'}}>{rays}</g>
+		<circle cx={sx} cy={sy} r={2.46 * s} fill="#2A1608" opacity={0.5} />
+		<circle cx={sx} cy={sy} r={2.375 * s} fill="url(#cva-sun)" stroke={INK} strokeWidth={5} />
+		<circle cx={sx} cy={sy} r={2.04 * s} fill="none" stroke="#C2381E" strokeWidth={10} opacity={0.8} />
+		<circle cx={sx} cy={sy} r={1.83 * s} fill="none" stroke="#FFF2C0" strokeWidth={3} opacity={0.7} />
+		<defs><linearGradient id="cva-shade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#05060E" stopOpacity={0} /><stop offset="0.3" stopColor="#05060E" stopOpacity={0.62} /><stop offset="0.7" stopColor="#05060E" stopOpacity={0.9} /><stop offset="1" stopColor="#05060E" stopOpacity={0.97} /></linearGradient></defs>
+		<path d={TORSO(x, y, s)} fill={PAL.skinM} stroke={INK} strokeWidth={5} />
+		<rect x={x - 3.9 * s + 2.5} y={y + 7.4 * s} width={7.8 * s - 5} height={12 * s} fill={PAL.skinM} />
+		<path d={`M${x - 3.9 * s} ${y + 7.5 * s}L${x - 3.9 * s} ${y + 19 * s}M${x + 3.9 * s} ${y + 7.5 * s}L${x + 3.9 * s} ${y + 19 * s}`} stroke={INK} strokeWidth={5} />
+		<rect x={x - 4.2 * s} y={y + 3.2 * s} width={8.4 * s} height={16 * s} fill="url(#cva-shade)" />
+		<MaskFront x={x} y={y} s={s} t={0.4} id="cva" flare={0.25} />
+	</g>; };
 
 /** the monumental balance: (0, 0) = the foot of the post on the floor; H = height to the beam; tilt in degrees (+ = left pan down) */
 const BalanceBig: React.FC<{H: number; half: number; tilt: number; drop: number; heartH: number; featherH: number}> = ({H, half, tilt, drop, heartH, featherH}) => {
@@ -92,7 +74,6 @@ const BalanceBig: React.FC<{H: number; half: number; tilt: number; drop: number;
 		<path d={`M0 ${-H}L0 ${-H + 70}`} stroke="#C99A3A" strokeWidth={3} />
 		<path d={`M-9 ${-H + 70}L9 ${-H + 70}L0 ${-H + 92}Z`} fill={GOLD} stroke={INK} strokeWidth={2.5} />
 		<circle cx={0} cy={-H} r={16} fill="url(#cv-goldv)" stroke={INK} strokeWidth={4} />
-		<g transform={`translate(0,${-H - 14}) scale(18)`}><path d={featherD(3.2)} fill={GOLD} stroke={INK} strokeWidth={0.14} /></g>
 		{pan(L, -1)}{pan(R, 1)}
 	</g>;
 };
@@ -182,16 +163,15 @@ const Hook: React.FC<{l1: string; l2: string; size: number; x: number; y: number
 export const Cover60: React.FC<{layout?: 'wide' | 'tall'; variant?: 'A' | 'B'}> = ({layout = 'wide', variant = 'A'}) => {
 	const wide = layout === 'wide', W = wide ? 1440 : 1080, H = wide ? 1080 : 1440;
 	const cx = wide ? 1000 : 540, hz = wide ? 780 : 1020;
-	const k = wide ? 0.84 : 0.88, headY = wide ? 540 : 720;
-	const balY = wide ? 1010 : 1230, balH = wide ? 370 : 410, half = wide ? 270 : 290, drop = wide ? 190 : 200, tilt = variant === 'A' ? 7 : 4;
+	const ms = wide ? 76 : 64, EY = wide ? 380 : 750;
+	const balY = wide ? 1010 : 1210, balH = wide ? 410 : 290, half = wide ? 270 : 290, drop = wide ? 190 : 200, tilt = variant === 'A' ? 7 : 4;
 	const a = tilt * Math.PI / 180, heartPan = [cx - half * Math.cos(a), balY - balH + half * Math.sin(a) + drop];
 	const hook = variant === 'A' ? ['心比羽毛重', '就会被吃掉'] : ['3000年前', '死后要先称心'];
 	return <AbsoluteFill style={{background: '#04050E'}}>
 		<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
 			<Defs />
 			<Hall W={W} H={H} cx={cx} hz={hz} />
-			<Rays cx={cx} W={W} H={H} o={0.9} />
-			<g transform={`translate(${cx},${headY})`}><Anubis k={k} eye={1} /></g>
+			<FilmAnubis x={cx} y={EY} s={ms} />
 			<g transform={`translate(${cx},${balY})`}><BalanceBig H={balH} half={half} tilt={tilt} drop={drop} heartH={wide ? 118 : 120} featherH={wide ? 160 : 165} /></g>
 			{variant === 'B' && <>
 				{/* you, tiny at the foot of the balance (in front of it, left of the post), looking up at the god */}

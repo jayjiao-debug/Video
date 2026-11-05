@@ -41,7 +41,7 @@ const PylonJamb: React.FC<{x: number; side: -1 | 1; t: number; flare: number}> =
 	</g>;
 };
 /** a frontal torso under the mask (units of the mask, origin = between the eyes) */
-const TORSO = (EX: number, EY: number, s: number) => sp([[-4.1, 4.4], [-3.5, 3.25], [-2.2, 2.55], [-1.2, 2.3], [1.2, 2.3], [2.2, 2.55], [3.5, 3.25], [4.1, 4.4], [3.9, 7.5, 1], [-3.9, 7.5, 1]].map(([x, y, c]) => (c ? [EX + x * s, EY + y * s, 1] : [EX + x * s, EY + y * s]) as [number, number] | [number, number, number]), true, 0.18);
+export const TORSO = (EX: number, EY: number, s: number) => sp([[-4.1, 4.4], [-3.5, 3.25], [-2.2, 2.55], [-1.2, 2.3], [1.2, 2.3], [2.2, 2.55], [3.5, 3.25], [4.1, 4.4], [3.9, 7.5, 1], [-3.9, 7.5, 1]].map(([x, y, c]) => (c ? [EX + x * s, EY + y * s, 1] : [EX + x * s, EY + y * s]) as [number, number] | [number, number, number]), true, 0.18);
 
 /* ================= 1 · 0.0–2.8 · through the temple gate to Anubis; he tosses the grey puff into a basket =================
    frame 0: the camera is already pushing through a pylon gate (gold signs on lapis, torches flaring), Anubis's black-and-gold mask
