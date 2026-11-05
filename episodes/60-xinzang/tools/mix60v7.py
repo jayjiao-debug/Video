@@ -22,17 +22,17 @@ MUSIC = [
  (26.3, 42.3, 'calm2_8bar', dict(inn='eg', bar0=1)),                    # 10-14: the Book (same melody, the qanun joins)
  (42.3, 52.3, 'danger_4bar', dict(inn='x')),                            # 15-17: the road (the riff)
  (52.3, 73.38, 'theme_8bar', dict(inn='x', out='cut')),                 # 18-25: the hall, the leitmotif; the freeze 73.38 stops it
- (73.38, 76.3, 'dark_4bar_thin', dict(inn='swell', out='x', db=-12)),   # owner 12:38: a low drone bed under the squeak and the cricket
+ (73.38, 76.3, 'dark_4bar_thin', dict(inn='swell', out='x', db=-1)),   # owner 12:38: a low drone bed under the squeak and the cricket
  (76.3, 90.3, 'tension_8bar', dict(inn='x', out='cut')),                # 27-30: the weighing builds; out at 90.30 for the lead-in + roar
  (91.6, 96.3, 'dark_4bar', dict(inn='swell')),                          # back 0.8 s after the roar: the hush, drone + low gong
  (96.3, 98.3, 'dark_4bar_thin', dict(inn='x', out='cut', db=-3)),       # 33: drone only under the heartbeats; cut on 98.3
  (98.3, 106.3, 'playful_8bar', dict(inn='hard')),                       # 34 「等等——」 crash: the cheat, the theme staccato
  (106.3, 114.3, 'playful_8bar_thin', dict(inn='eg', out='eg', bar0=4)), # 37: drums out under the papyrus line
  (114.3, 121.89, 'playful_8bar', dict(inn='eg', out='cut', bar0=0)),    # 39-40, cut on the pan crash 121.89
- (121.95, 126.82, 'dark_4bar_thin', dict(inn='swell', out='x', db=-6)), # a low drone under roar 2 and the bite (no dead silence)
+ (121.95, 126.82, 'dark_4bar_thin', dict(inn='swell', out='x', db=0)), # a low drone under roar 2 and the bite (no dead silence)
  (126.82, 130.3, 'dark_4bar', dict(inn='x', out='x', db=-2)),          # 43: the doom drone, fading out as
- (130.3, 143.57, 'bright_8bar', dict(inn='swell', out='cut')),          # 44-48: the theme an octave up swells in; the hiccup 143.57
- (143.57, 144.3, 'dark_4bar_thin', dict(inn='hard', out='x', db=-12)),  # a drone holds through the hiccup
+ (130.3, 143.57, 'bright_8bar', dict(inn='x', out='cut')),          # 44-48: the theme an octave up swells in; the hiccup 143.57
+ (143.57, 144.3, 'dark_4bar_thin', dict(inn='hard', out='x', db=-1)),  # a drone holds through the hiccup
  (144.3, 156.3, 'bright_8bar', dict(inn='x', out='x', bar0=7)),         # 48-52: picks up on the next downbeat
  (156.3, 169.25, 'resolution_6bar', dict(inn='x')),                     # 53-55: the theme slow, chromatic slide, final D 164.3 through the card
 ]
@@ -49,7 +49,7 @@ MUSIC_V4 = [
  (98.3, 121.89, 'playful_24bar', dict(inn='hard', out='cut')),         # the cheat; cut on the pan crash
  (121.95, 126.82, 'mystic_16bar', dict(inn='swell', out='x', db=-10, lp=500)),   # a low dark bed under roar 2 and the bite
  (126.82, 130.3, 'sting_doom', dict(inn='x', out='x', db=-3)),         # the second death, fading as
- (130.3, 143.57, 'paradise_16bar', dict(inn='swell', out='cut')),      # pass swells in; the hiccup 143.57
+ (130.3, 143.57, 'paradise_16bar', dict(inn='x', out='cut')),      # pass swells in; the hiccup 143.57
  (143.57, 144.3, 'mystic_16bar', dict(inn='hard', out='x', db=-12)),   # a bed through the hiccup
  (144.3, 156.3, 'playful_24bar', dict(inn='x', out='x')),              # shabtis
  (156.3, 164.3, 'paradise_16bar', dict(inn='x', out='x')),             # close
