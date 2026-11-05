@@ -156,6 +156,51 @@ DELIBERATE = [
  (143.57, 'hiccup', 'the music hiccups on the deadpan look (a drone holds 143.57-144.30, the theme is back on the next downbeat)'),
 ]
 
+
+# ---------- v7 clock (owner 11-05 17:46-18:04, the clarity rewrite; film 171.75 s) ----------
+# Every v6 time is mapped shot by shot onto the v7 timeline (story60.ts v7): an offset for shots that only moved, a scale for shots that are
+# played faster/slower (14, 15, 17, 25), shot 10 keeps only its first line (events after 2.81 s dropped), 37/39 keep line 1 on its own clock
+# and line 2 starts at the new L2 (events past the shot's end dropped). New beats of the new pictures are added in EV_V7 (v7 times).
+V6 = {1: (0.0, 2.81), 2: (2.81, 5.01), 3: (5.01, 8.41), 5: (8.41, 12.17), 6: (12.17, 18.98), 8: (18.98, 22.74), 9: (22.74, 26.03), 10: (26.03, 31.89),
+      12: (31.89, 38.35), 14: (38.35, 41.64), 15: (41.64, 44.69), 16: (44.69, 48.21), 17: (48.21, 51.73), 18: (51.73, 56.88), 20: (56.88, 60.4),
+      21: (60.4, 66.62), 23: (66.62, 72.48), 25: (72.48, 76.88), 27: (76.88, 83.69), 29: (83.69, 86.27), 30: (86.27, 92.61), 32: (92.61, 96.13),
+      33: (96.13, 98.33), 34: (98.33, 104.19), 36: (104.19, 107.0), 37: (107.0, 114.05), 39: (114.05, 121.57), 41: (121.57, 123.77), 42: (123.77, 126.82),
+      43: (126.82, 130.11), 44: (130.11, 132.31), 45: (132.31, 138.41), 47: (138.41, 142.17), 48: (142.17, 144.98), 49: (144.98, 151.31), 51: (151.31, 154.95),
+      52: (154.95, 157.15), 53: (157.15, 160.44), 54: (160.44, 163.25), 55: (163.25, 169.25)}
+V7 = {1: (0.0, 2.81), 2: (2.81, 5.01), 3: (5.01, 8.41), 5: (8.41, 12.17), 6: (12.17, 18.98), 8: (18.98, 22.74), 9: (22.74, 26.03), 10: (26.03, 28.84),
+      12: (28.84, 35.77), 14: (35.77, 38.82), 15: (38.82, 44.69), 16: (44.69, 51.5), 17: (51.5, 55.26), 18: (55.26, 60.41), 20: (60.41, 63.93),
+      21: (63.93, 70.15), 23: (70.15, 76.01), 25: (76.01, 79.61), 27: (79.61, 86.42), 29: (86.42, 89.0), 30: (89.0, 95.34), 32: (95.34, 98.86),
+      33: (98.86, 101.06), 34: (101.06, 106.92), 36: (106.92, 109.73), 37: (109.73, 116.54), 39: (116.54, 123.83), 41: (123.83, 126.03), 42: (126.03, 129.08),
+      43: (129.08, 132.37), 44: (132.37, 134.57), 45: (134.57, 140.91), 47: (140.91, 144.67), 48: (144.67, 147.48), 49: (147.48, 153.81), 51: (153.81, 157.45),
+      52: (157.45, 159.65), 53: (159.65, 162.94), 54: (162.94, 165.75), 55: (165.75, 171.75)}
+SCALE7 = {14: 3.05 / 3.29, 15: 2.7 / 3.05, 17: 3.76 / 3.52, 25: 3.6 / 4.4}
+L2_7 = {37: (3.76, 4.0), 39: (3.76, 4.0)}   # (v6 L2, v7 L2)
+def W7(t):
+    """a v6 film time -> the v7 film time (None = the moment is cut)"""
+    if t >= 169.25: return t + 2.5
+    n = next(k for k, (a, b) in V6.items() if a <= t < b); a6, b6 = V6[n]; a7, b7 = V7[n]; r = t - a6
+    if n == 10 and r > b7 - a7: return None
+    if n in L2_7:
+        l6, l7 = L2_7[n]; r = r if r < l6 else l7 + (r - l6)
+        return a7 + r if a7 + r < b7 else None
+    return a7 + r * SCALE7.get(n, 1.0)
+def warp_plan(plan):
+    out = []
+    for a, b, c, o in plan:
+        a7 = 0.0 if a == 0 else (V7[next(k for k, v in V6.items() if v[0] == a)][0] if any(v[0] == a for v in V6.values()) else W7(a))
+        b7 = 171.75 if b >= 169.25 else (V7[next(k for k, v in V6.items() if v[0] == b)][0] if any(v[0] == b for v in V6.values()) else W7(b))
+        out.append((round(a7, 2), round(b7, 2), c, o))
+    return out
+EV_V7 = []   # (v7 time, sfx, dB vs local music, options) for the new beats
+# 15: the sun touches the hills (a low swell), the gate rises out of the horizon (rumble), its doorway fills with light
+EV_V7 += [(42.02, 'swell_rise', -7, dict(dur=1.4)), (42.67, 'door_boom', -7, dict()), (42.75, 'creak', -8, dict()), (43.47, 'magic_shimmer', -4, dict()), (43.52, 'chime_glint', -5, dict())]
+# 16 line 2: you walk in, unroll the scroll, read the names (glyphs), the four knives come down, the doorway lights
+EV_V7 += [(48.31, 'step_stone', -7, dict()), (48.71, 'step_stone', -8, dict()), (48.91, 'papyrus_unroll', -5, dict()), (49.21, 'glyph_light', -3, dict()), (49.25, 'magic_shimmer', -9, dict())]
+EV_V7 += [(48.21 + 2.35 + 0.12 * k, 'tick_metal', -4 - k, dict()) for k in range(4)]
+EV_V7 += [(50.51, 'chime_ding', -3, dict()), (50.55, 'swell_rise', -9, dict(dur=1.0))]
+# 17: the crocodile page of the guide pops up
+EV_V7 += [(52.64, 'papyrus_flick', -3, dict())]
+
 def onset(x):
     e = np.sqrt(np.convolve((x ** 2).sum(1), np.ones(int(0.02 * SR)) / int(0.02 * SR), 'same')); i = np.flatnonzero(e > e.max() * 10 ** (-15 / 20))
     return int(i[0]) if len(i) else 0
@@ -164,10 +209,15 @@ def st_lufs(y, a, b):
     if b - a < int(0.45 * SR): return -70.0
     L = E.lufs(seg); return L if np.isfinite(L) else -70.0
 
-def mix(lib, sfxd, out, plan=None, extra=()):
-    plan = plan or MUSIC; music = lib60.render_plan(lib, plan); Mavg = E.lufs(music); n = len(music); fx = np.zeros((n, 2)); rep = []
+def mix(lib, sfxd, out, plan=None, extra=(), v7=False):
+    global FILM
+    plan = plan or MUSIC
+    if v7: plan = warp_plan(plan); FILM = 171.75; lib60.FILM = 171.75
+    music = lib60.render_plan(lib, plan); Mavg = E.lufs(music); n = len(music); fx = np.zeros((n, 2)); rep = []
     skip = SKIP_V4 if extra else set()
-    for t, name, off, o in [e for e in EV if (e[0], e[1]) not in skip] + list(extra):
+    evs = [e for e in EV if (e[0], e[1]) not in skip] + list(extra)
+    if v7: evs = [(W7(t), nm, off, o) for t, nm, off, o in evs if W7(t) is not None] + EV_V7
+    for t, name, off, o in evs:
         x = sf.read(name if name.startswith('/') else f'{sfxd}/{name}.wav', always_2d=True)[0]
         if x.shape[1] == 1: x = np.repeat(x, 2, 1)
         if o.get('seek'): x = x[int(o['seek'] * SR):]
@@ -181,7 +231,7 @@ def mix(lib, sfxd, out, plan=None, extra=()):
         g = 10 ** ((ref + off - Lx) / 20); i = int(round(t0 * SR)); j = min(n, i + len(x)); fx[i:j] += x[:j - i] * g
         rep.append(dict(t=t, sfx=name, music_local=round(Lm, 1), target=round(ref + off, 1)))
     music *= 10 ** (-3 / 20)   # the music bus -3 dB (owner 19:21)
-    for a, b, gdb in (MENV_V4 if extra else ()):   # music dips (0.15 s ramps)
+    for a, b, gdb in (MENV_V4 if extra else ()):   # (before 26 s: the same on the v6 and v7 clocks)   # music dips (0.15 s ramps)
         t = np.arange(n) / SR; r = np.clip(np.minimum((t - a) / 0.15, (b - t) / 0.15), 0, 1); music *= (10 ** (gdb * r / 20))[:, None]
     y = music + fx; k = int(0.5 * SR); y[-k:] *= np.linspace(1, 0, k)[:, None] ** 2
     from scipy import signal as _sg; y = _sg.sosfiltfilt(_sg.butter(8, 16500, 'low', fs=SR, output='sos'), y, axis=0)   # owner: nothing above ~16.5 kHz (AAC overshoot)
@@ -207,4 +257,4 @@ if __name__ == '__main__':
     if mode == 'v8':
         import hijaz60 as H; lib60.B = int(round(H.BAR * SR))   # the 117.5 BPM bar for bar0
         if len(sys.argv) > 5: lib60.preview(sys.argv[1], sys.argv[5], MUSIC_V8)
-    mix(sys.argv[1], sys.argv[2], sys.argv[3], {'v4': MUSIC_V4, 'v8': MUSIC_V8}.get(mode), EV_V4 if mode == 'v4' else ())
+    mix(sys.argv[1], sys.argv[2], sys.argv[3], {'v4': MUSIC_V4, 'v7': MUSIC_V4, 'v8': MUSIC_V8}.get(mode), EV_V4 if mode in ('v4', 'v7') else (), v7=(mode == 'v7'))

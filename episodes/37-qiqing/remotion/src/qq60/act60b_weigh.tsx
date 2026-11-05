@@ -223,7 +223,7 @@ export const Shot32: React.FC<ShotProps> = ({t}) => {
 	const cam = camPath(t, [[0, BX - 520, 540, 1.16], [3.1, BX - 550, 546, 1.21]]);
 	const tag: V = [BX - 380, 470];
 	const nh = 300, nw = 200, baY = GY - nh * 0.18 - 6 + lerp(96, -4, peek);
-	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(cam.z, 0.3)} stain={0.22} tags={[{x: tag[0], y: tag[1], text: '命运之神 沙伊', size: 34}]}
+	return <Stage60 t={t} cam={cam} grade="lapis" bg="#17224F" wear={wearFor(cam.z, 0.3)} stain={0.22} tags={[{x: tag[0], y: tag[1], text: '命运之神', size: 34}]}
 		light={<>
 			<Glow x={BX - 300} y={300} r={500} c="gold" o={0.3} />
 			<Glow x={xn} y={GY - 200} r={200} c="gold" o={0.3 + 0.35 * peek} />

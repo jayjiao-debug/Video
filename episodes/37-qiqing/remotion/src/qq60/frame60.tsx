@@ -112,7 +112,7 @@ export const Bands: React.FC<{t?: number}> = ({t = 0}) => {
 
 export type Sub = {text: string; t0?: number; t1?: number};
 /** gods' names are light blue in the subtitles (owner 16:50) */
-const GODS = ['阿努比斯', '奥西里斯', '荷鲁斯', '阿米特', '托特', '玛阿特', '伊西斯', '碎骨者', '吞影者', '食血者', '长角者', '沙伊'];
+const GODS = ['阿努比斯', '奥西里斯', '荷鲁斯', '阿米特', '托特', '玛阿特', '伊西斯', '碎骨者', '吞影者', '食血者', '长角者', '沙伊', '命运之神'];
 const GOD_RE = new RegExp(`(${GODS.join('|')})`);
 const fade = (t: number, t0 = -1e9, t1 = 1e9, d = 0.14) => cl((t - t0) / d) * cl((t1 - t) / d);
 const visLen = (s: string) => s.replace(/[[\]]/g, '').length;

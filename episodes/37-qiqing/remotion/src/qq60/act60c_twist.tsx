@@ -340,7 +340,7 @@ const S37: React.FC<ShotProps> = ({t, dur}) => {
 	const look = sm(seg(tb, 0.75, 1.15)), wink = cl((tb - 1.62) / 0.07) * (1 - cl((tb - 1.92) / 0.14)), smile = sm(seg(tb, 1.45, 1.75));
 	const ew = aniHeadW(t, [0.98, -1.2]), tagO = 1 - sm(seg(tb, -0.5, -0.1));
 	return <Stage60 t={t} cam={cam} grade="papyrus" bg="plaster" wear={wearZ(cam.z)} stain={0.32} wobble={wobIn(t) / Math.max(1, cam.z * 0.8)}
-		tags={[{x: 22, y: 610, text: '阿尼', o: tagO}, {x: -238, y: 560, text: '图图', o: tagO}]}
+		tags={[] /* v7: no 阿尼 / 图图 names (owner 11-05) */}
 		light={<>
 			<Glow x={40} y={380} r={420} c="gold" o={0.18 + 0.3 * cl(lit / 12)} />
 			<Glow x={-40} y={600} r={380} c="warm" o={0.35} />
@@ -478,12 +478,12 @@ const S39: React.FC<ShotProps> = ({t, dur}) => {
 			<MetScarab id="c39w" x={720} y={478} s={2.4} t={t} sand={0} cut={0} />
 			{/* the wall label */}
 			<rect x={880} y={420} width={250} height={128} rx={4} fill="#EDE6D6" stroke="#0A0806" strokeWidth={2} />
-			<text x={1005} y={452} textAnchor="middle" fontFamily={F_SERIF} fontWeight={700} fontSize={19} fill="#2A2420">哈特妮菲尔的心脏圣甲虫</text>
+			<text x={1005} y={452} textAnchor="middle" fontFamily={F_SERIF} fontWeight={700} fontSize={19} fill="#2A2420">心脏圣甲虫</text>
 			<text x={1005} y={496} textAnchor="middle" fontFamily={F_SERIF} fontWeight={900} fontSize={34} fill="#B8371F">6.6 × 5.3 厘米</text>
 			<text x={1005} y={530} textAnchor="middle" fontFamily={F_SERIF} fontWeight={700} fontSize={17} fill="#2A2420">大都会艺术博物馆</text>
 		</Stage60>}
 		{xf > 0 && <AbsoluteFill style={{opacity: xf}}><Stage60 t={t} cam={camM} grade="night" bg="#151A26" wear={0.25} stain={0.25} wobble={xf < 1 ? 0 : wobIn(t - T39.wide[1])}
-			tags={[{x: tagW[0], y: tagW[1], text: '哈特妮菲尔', o: sm(seg(tb, 1.0, 1.4))}]}
+			tags={[{x: tagW[0], y: tagW[1], text: '主人', o: sm(seg(tb, 1.0, 1.4))}]}
 			light={<>
 				<Glow x={mx0 + 1.5 * ms} y={my0 + ROWS39[PATCH.j].y * ms} r={420} c="gold" o={(0.2 + 0.25 * cl(cut / 3)) * (1 - k40)} />
 				{k40 > 0 && <g transform={G40} opacity={k40}><Glow x={470 + 1.5 * ms4} y={470} r={460} c="gold" o={0.25 + 0.1 * glow} /></g>}

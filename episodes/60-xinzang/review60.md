@@ -46,3 +46,12 @@ The owner's principle (17:07): **"fabulous but simple to understand and comprehe
 - [ ] Brand: no J seal inside the film; the Egyptian J cartouche only on the end card (15:10); end card Egyptian (15:37); title 《死后的心脏》 (15:55).
 - [ ] Facts match `facts.md` (✓ rows only); no bordered maps, no gore, no real photos.
 - [ ] Format 1440 × 1080, 30 fps, ≈ 2:49; send version < 30 MB.
+
+## v7 (owner 2026-11-05 17:46–18:14: clarity for viewers with no background)
+Principle: no line or picture may need knowledge the film hasn't given — every proper name is explained in its line, replaced by a role
+(抄写员, 主人) or cut. Changes: 现货/阿尼纸草 → 「书是提前写好的，名字先空着」「谁买，就在空格里填名字」 (shot 14 without the museum case);
+the Book = 「冥界通关攻略」 (the 白昼出行之书 line cut); 15 = walk west into the sunset, the gate rises in the horizon notch; 16 line 2 = you read
+the guardian's name off the scroll, the knives come down, the doorway lights; 17 = 「翻攻略，念驱鳄咒」 with the crocodile page;
+审判大厅; 25 = 「“我没有……话太多吧？”」 alone (the 「这条，你能过吗？」 line dropped, owner 18:01); 命运之神 (blue); 37 = 「当年的埃及人…」
+(no 阿尼/图图 tags); 39 = 「不是给她定做的——」「只是磨掉旧字，改个名，照用。」 (facts F21: never claim a previous owner; tag 主人);
+45 = 「此人诚实，通过」. Sound: mix60v7.py v7 = the v4-style mix mapped shot by shot onto the v7 clock + the new beats (EV_V7). 171.75 s.

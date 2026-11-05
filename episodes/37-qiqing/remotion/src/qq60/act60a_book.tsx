@@ -334,26 +334,20 @@ export const Shot14: React.FC<ShotProps> = ({t}) => {
 	const k = Math.min(2, Math.floor(w * 3)), ku = w * 3 - k;
 	const pen: V = [gapC[0] - 6 + 10 * Math.sin(ku * Math.PI * 2), gapC[1] - 50 + k * 31 + 18 * ku];
 	const penIn = sm(seg(t, 0.8, 1.05)) * (1 - sm(seg(t, 2.1, 2.4)));
-	return <Stage60 t={t} cam={cam} grade="papyrus" bg="#15171D" dark={0.12} darkC="#0A0A10" wear={wearAt(cam.z, 0.25)} stain={wearAt(cam.z, 0.15)}
-		tags={t > 2.2 ? [{x: sx + 314, y: sy + 418, text: '书吏 阿尼', o: sm(seg(t, 2.2, 2.45)), size: 30}] : []}
+	return <Stage60 t={t} cam={cam} grade="papyrus" bg="#5A3A20" dark={0.1} wear={wearAt(cam.z, 0.25)} stain={wearAt(cam.z, 0.15)}
 		light={<>
 			<Shaft pts={[[sx + 300, -300], [sx + 700, -300], [sx + 1100, sy + 720], [sx - 100, sy + 720]]} o={0.4} />
 			<Glow x={sx + 490} y={sy + 330} r={700} ry={420} c="warm" o={0.35} />
 			{penIn > 0 && <Glow x={pen[0]} y={pen[1]} r={60} c="gold" o={0.5 * penIn} />}
-			{/* the glass: reflections */}
-			<g opacity={0.5 * cl(glass)} style={{mixBlendMode: 'screen'}}>
-				<path d={poly([[sx + 80, sy - 40], [sx + 220, sy - 40], [sx - 40, sy + 700], [sx - 180, sy + 700]])} fill="#BFD4FF" opacity={0.18} />
-				<path d={poly([[sx + 700, sy - 40], [sx + 740, sy - 40], [sx + 480, sy + 700], [sx + 440, sy + 700]])} fill="#BFD4FF" opacity={0.22} />
-			</g>
+			
 		</>}>
-		<rect x={-800} y={-600} width={3200} height={2200} fill="#15171D" />
-		{/* the case: dark frame, the sheet mounted inside, the small label */}
-		<rect x={sx - 60} y={sy - 60} width={1100} height={760} fill="#20232B" stroke="#0A0B0E" strokeWidth={6} />
-		<rect x={sx - 44} y={sy - 44} width={1068} height={728} fill="#2C2F38" />
+		<rect x={-800} y={-600} width={3200} height={2200} fill="#6B4626" />
+		{Array.from({length: 14}, (_, i) => <line key={i} x1={-800} x2={2400} y1={-560 + i * 150} y2={-540 + i * 150} stroke="#5A3A1E" strokeWidth={6} />)}
+		{/* v7 (owner 11-05): no museum case — just the pre-written sheet on the scribe's table, its name gap being filled */}
+		<rect x={sx + 14} y={sy + 16} width={1000} height={680} fill="#2A1810" opacity={0.35} />
 		<Sheet13 x={sx} y={sy} t={t} id="a14" name={name} nameInk="#5A2E12" owner="ani" />
 		{w > 0 && w < 1 && <circle cx={pen[0] + 6} cy={pen[1] + 6} r={5} fill="#5A2E12" opacity={0.6} />}
-		<rect x={sx - 40} y={sy + 662} width={290} height={38} rx={3} fill="#E9E2CF" stroke="#0A0B0E" strokeWidth={2} />
-		<text x={sx - 28} y={sy + 690} fontFamily={F_SERIF} fontWeight={700} fontSize={24} fill="#2A2A2A">大英博物馆 EA 10470</text>
+		
 		{penIn > 0 && <g opacity={penIn}><ReedPen x={pen[0]} y={pen[1]} len={170} a={28} ink="#5A2E12" />
 			<g transform={`translate(${pen[0]},${pen[1]}) rotate(28)`}>
 				<path d="M-34 -150L-60 -560L60 -560L36 -150Z" fill={PAL.skinM} stroke={PAL.ink} strokeWidth={3.4} />

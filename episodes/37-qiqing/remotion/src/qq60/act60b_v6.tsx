@@ -7,7 +7,8 @@ import {GlyphColumns, Mat, BAL} from './props60';
 import {ANI, walkPose, STRIDE, adoreArms} from './cast60';
 import type {ShotProps} from './EP60';
 import {up, hit, keys, bell, wearFor, figXY, InBone, placeBy, JUDGE, jPose, Judge, Horns, BrowRaise, Squint, GlyphStack, Check, Sweat, Baby, Balance2, HallWall, Ammit2, ammit2Solve, panAt} from './act60b_kit';
-import {Shot15, Shot16, Shot17} from './act60b_duat';
+import {Shot15W, Shot16, Shot17} from './act60b_duat';
+import {SHOTS} from './story60';
 import {Shot18, Shot19, Shot20, S21, bowPose, hornedPose, FrontBust} from './act60b_hall';
 import {Shot29, Shot32, Shot33, Room, kneelAt, leadWalk, plumb27, ammitP, ANUBIS, MAAT, S27} from './act60b_weigh';
 import {V, PAL, sp, lerp, cl, sm, ap} from './geo60';
@@ -20,8 +21,11 @@ const c_ = (s: number) => ({OW: 2.7 / s, LW: 1.5 / s});
 
 /* ---------- the single-line shots: the v5 picture spread over the new length (time-stretched, so nothing freezes) ---------- */
 const stretch = (C: React.FC<ShotProps>, oldDur: number): React.FC<ShotProps> => ({t, dur, n}) => <C t={t * (oldDur / dur)} dur={oldDur} n={n} />;
-export const Shot15v6 = stretch(Shot15, 2.7);
-export const Shot16v6 = stretch(Shot16, 3.0);
+/* v7 (owner 11-05): 15 = the walk west into the sunset and the gate rising (two lines, own clock); 16 = the gates (line 1, the v5 picture
+   spread over it) and then reading the guardian's name off the scroll (line 2, continuous: same set, same camera) */
+export const Shot15v6 = Shot15W;
+const L2_16 = (() => { const sh = SHOTS.find((x) => x.n === 16)!; return sh.lines.length > 1 ? sh.lines[1].t0 - sh.a : 3.52; })();
+export const Shot16v6: React.FC<ShotProps> = ({t, n}) => t < L2_16 ? <Shot16 t={t * 3.0 / L2_16} dur={3.0} n={n} /> : <Shot16 t={3.0 + (t - L2_16)} dur={3.0} n={n} b={t - L2_16} />;
 export const Shot17v6 = stretch(Shot17, 3.3);
 export const Shot20v6 = stretch(Shot20, 3.0);
 export const Shot29v6 = stretch(Shot29, 2.4);
