@@ -76,7 +76,7 @@ const S4: React.FC = () => <g>
 const Path: React.FC<{wind?: boolean}> = () => <g fill="none" stroke="#FFFFFF" strokeWidth={6} strokeLinecap="round" opacity={0.85}>
 	{[300, 380, 460, 540].map((y, i) => <path key={y} d={`M${250 + i * 20} ${y}q60 -26 120 0t120 0`} />)}</g>;
 
-const NutArch: React.FC<{cx: number; gy: number; span: number; h: number; w?: number; seed?: number}> = ({cx, gy, span, h, w = 66, seed = 4}) => {
+export const NutArch: React.FC<{cx: number; gy: number; span: number; h: number; w?: number; seed?: number}> = ({cx, gy, span, h, w = 66, seed = 4}) => {
 	const x0 = cx - span / 2, x1 = cx + span / 2, d = `M${x0} ${gy}Q${cx} ${gy - 2 * h} ${x1} ${gy}`, R = rng(seed);
 	const pt = (u: number): [number, number] => [(1 - u) ** 2 * x0 + 2 * (1 - u) * u * cx + u * u * x1, (1 - u) ** 2 * gy + 2 * (1 - u) * u * (gy - 2 * h) + u * u * gy];
 	return <g>

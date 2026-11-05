@@ -107,7 +107,7 @@ export type Cast = {
 	wig: 'tri' | 'duplex' | 'none'; crown: Crown; dress: 'kilt' | 'robe' | 'sheath' | 'mummy' | 'gown' | 'longkilt';
 	/** ep60 4:3 cast: wig colour override, a jackal mask edge (priest), kilt without the royal apron */
 	wigColor?: Role; mask?: boolean; apron?: boolean;
-	female?: boolean; beard?: boolean; wings?: boolean; tail?: boolean; collar?: 'god' | 'plain';
+	/** ep61 lioness roar: skip the bare human face under an overlaid head */ faceless?: boolean; female?: boolean; beard?: boolean; wings?: boolean; tail?: boolean; collar?: 'god' | 'plain';
 	bHand?: Hand; fHand?: Hand; bProp?: PropKind; fProp?: PropKind;
 };
 export const CAST: Record<'anubis' | 'thoth' | 'osiris' | 'horus' | 'isis' | 'ani', Cast> = {
@@ -197,7 +197,7 @@ export const band = (cx: number, cy: number, r0: number, r1: number, k = 0.78, a
 };
 
 /** Egyptian eye: almond, iris, kohl tail and brow (head frame) */
-const Eye: React.FC<{x: number; y: number; L?: number; c: Ctx; brow?: boolean; rim?: string; tail?: number}> = ({x, y, L = 0.5, c, brow = true, rim = PAL.black, tail = 0.36}) => {
+export const Eye: React.FC<{x: number; y: number; L?: number; c: Ctx; brow?: boolean; rim?: string; tail?: number}> = ({x, y, L = 0.5, c, brow = true, rim = PAL.black, tail = 0.36}) => {
 	const h = L * 0.36;
 	const al = sp([[x - L * 0.55, y, 1], [x - L * 0.2, y - h], [x + L * 0.25, y - h * 0.9], [x + L * 0.45, y + h * 0.05, 1], [x + L * 0.15, y + h * 0.75], [x - L * 0.25, y + h * 0.6]], true, 0.2);
 	return <g>
@@ -274,12 +274,12 @@ export const Palette: React.FC<{m: M; c: Ctx}> = ({m, c}) => {
 };
 /** reed pen held at the grip, along the hand's axis */
 export const PEN_TIP: V = [0.05 - 1.4 * Math.sin(40 * RAD), 0.62 + 1.4 * Math.cos(40 * RAD)];
-const Pen: React.FC<{h: M; c: Ctx}> = ({h, c}) => <g transform={mx(chain(h, T(0.05, 0.62), R(40)))}>
+export const Pen: React.FC<{h: M; c: Ctx}> = ({h, c}) => <g transform={mx(chain(h, T(0.05, 0.62), R(40)))}>
 	<path d={poly([[-0.06, -1.25], [0.06, -1.25], [0.06, 1.15], [0, 1.4], [-0.06, 1.15]])} fill={PAL.wood} stroke={PAL.ink} strokeWidth={c.LW} strokeLinejoin="round" />
 	<path d={poly([[-0.065, 1.08], [0.065, 1.08], [0, 1.4]])} fill={PAL.black} />
 </g>;
 /** crook (heka): striped staff with a hook above the fist (world upright, tilted by a) */
-const Crook: React.FC<{at: V; a: number; c: Ctx}> = ({at, a, c}) => {
+export const Crook: React.FC<{at: V; a: number; c: Ctx}> = ({at, a, c}) => {
 	const shaft: Pt[] = [[-0.15, 1.2, 1], [0.15, 1.2, 1], [0.15, -2.4], [0.2, -2.95], [0.55, -3.3], [1.0, -3.25], [1.2, -2.9], [1.12, -2.62, 1], [0.92, -2.62, 1], [0.95, -2.88], [0.75, -3.05], [0.45, -2.95], [-0.15, -2.4]];
 	const d = sp(shaft, true, 0.16);
 	return <g transform={`translate(${at[0]},${at[1]}) rotate(${a})`}><Solid d={d} r="gold" c={c} />
@@ -287,7 +287,7 @@ const Crook: React.FC<{at: V; a: number; c: Ctx}> = ({at, a, c}) => {
 	</g>;
 };
 /** flail (nekhakha): handle with three bead strands that swing (secondary motion) */
-const Flail: React.FC<{at: V; a: number; c: Ctx; t: number}> = ({at, a, c, t}) => {
+export const Flail: React.FC<{at: V; a: number; c: Ctx; t: number}> = ({at, a, c, t}) => {
 	const k = 1.25, top: V = [Math.sin(a * RAD) * 3.6 * k, -Math.cos(a * RAD) * 3.6 * k];
 	const handle = poly([[-0.15, 0.9], [0.15, 0.9], [0.15, -3.6], [-0.15, -3.6]]);
 	const strands = [0, 1, 2].map((i) => { const sw = (i - 1) * 9 + 5 * Math.sin(t * 2.1 + i * 0.8) + 2 * Math.sin(t * 4.7 + i), out: V[] = [top];
@@ -315,7 +315,7 @@ const HeldTool: React.FC<{kind: 'sickle' | 'hoe'; h: M; c: Ctx}> = ({kind, h, c}
 	return <g transform={mx(h)}><Solid d={blade} r="wood" c={c} /><Solid d={handle} r="wood" c={c} /><path d="M1.6 0.76L2.9 1.9" stroke={PAL.ink} strokeWidth={c.LW * 1.4} /></g>;
 };
 /** sistrum (Hathor rattle), held upright: loop frame with jingling bars */
-const Sistrum: React.FC<{at: V; c: Ctx; t: number}> = ({at, c, t}) => {
+export const Sistrum: React.FC<{at: V; c: Ctx; t: number}> = ({at, c, t}) => {
 	const loop = sp([[-0.42, -1.25, 1], [-0.62, -2.2], [-0.5, -3.1], [0, -3.45], [0.5, -3.1], [0.62, -2.2], [0.42, -1.25, 1], [0.24, -1.3, 1], [0.38, -2.2], [0.3, -2.9], [0, -3.15], [-0.3, -2.9], [-0.38, -2.2], [-0.24, -1.3, 1]], true, 0.18);
 	return <g transform={`translate(${at[0]},${at[1]})`}>
 		<Solid d={poly([[-0.14, 1.3], [0.14, 1.3], [0.14, -0.6], [-0.14, -0.6]])} r="gold" c={c} />
@@ -368,9 +368,51 @@ const Wing: React.FC<{U: M; F: M; c: Ctx; t: number; seed: number}> = ({U, F, c,
 
 /* ---------------- the figure ---------------- */
 export type Sec = {t?: number; amp?: number; vel?: {head?: number; torso?: number}};
-export type FigProps = {cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; sec?: Sec; id: string; explode?: number; pivots?: boolean; hide?: Partial<Record<'bArm' | 'fArm' | 'props', boolean>>; bProp?: PropKind; fProp?: PropKind; propTop?: number; paletteA?: number};
+export type FigProps = {cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; sec?: Sec; id: string; explode?: number; pivots?: boolean; hide?: Partial<Record<'bArm' | 'fArm' | 'props', boolean>>; bProp?: PropKind; fProp?: PropKind; propTop?: number; paletteA?: number; /** open the jaw / beak 0..1 (jackal, ibis, falcon heads); default closed = the ep60 drawing */ jaw?: number; /** jackal ear fold, degrees (+ = back); 0 = ep60 drawing */ ear?: number};
 
-export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}, id, hide = {}, bProp, fProp, propTop, paletteA = -12, explode = 0, pivots = false}) => {
+/* ---------------- opening jaws / beaks / ear fold (jaw, ear props; zero = the original single head shape) ---------------- */
+type JawSpec = {hinge: V; mouth: V[]; max: number; inner: string};
+const JAWS: Record<'jackal' | 'ibis', JawSpec> = {
+	jackal: {hinge: [1.22, -0.36], mouth: [[1.3, -0.46], [1.8, -0.52], [2.4, -0.58], [2.86, -0.66], [3.05, -0.7]], max: 36, inner: '#7A1F2B'},
+	ibis: {hinge: [1.05, -1.0], mouth: [[1.12, -1.02], [1.8, -0.88], [2.45, -0.62], [3.0, -0.3], [3.36, 0.06], [3.62, 0.22]], max: 17, inner: '#B8384A'},
+};
+const earXf = (a: number) => mx(chain(T(0.3, -2.1), R(-a), T(-0.3, 2.1)));
+/** the head drawn as separate parts: the head without its lower jaw, the lower jaw turned about the hinge, and the ear folded about its root */
+const SplitHead: React.FC<{kind: HeadKind; jaw: number; ear: number; d: string; r: Role | string; c: Ctx; id: string}> = ({kind, jaw, ear, d, r, c, id}) => {
+	const fill = (PAL as Record<string, string>)[r] ?? r;
+	const earClip = poly([[-2, -9], [3, -9], [3, -2.1], [-2, -2.1]]);
+	const stroke = (k = 1) => ({fill: PAL.ink, stroke: PAL.ink, strokeWidth: 2 * c.OW * k, strokeLinejoin: 'round' as const});
+	if (kind === 'falcon') { // the rig's falcon has one beak solid: add a hinged lower mandible and a dark mouth
+		const a = 40 * jaw, rm = chain(T(1.0, -0.42), R(a), T(-1.0, 0.42));
+		const low = sp([[0.98, -0.5, 1], [1.4, -0.56], [1.82, -0.46], [1.88, -0.38, 1], [1.6, -0.24], [1.2, -0.14], [0.98, -0.1, 1]], true, 0.14);
+		return <g><path d={d} {...stroke()} /><path d={d} fill={fill} />
+			{jaw > 0.04 && <><path d={poly([[0.98, -0.52], [1.8, -0.5], ap(rm, [1.86, -0.44]), ap(rm, [0.98, -0.1])])} fill="#6A1A22" />
+				<g transform={mx(rm)}><path d={low} {...stroke(0.9)} /><path d={low} fill={PAL.ink} /></g>
+				<path d="M1.05 -0.55Q1.45 -0.5 1.78 -0.5" fill="none" stroke={PAL.ink} strokeWidth={c.OW * 1.4} strokeLinecap="round" /></>}
+		</g>;
+	}
+	const sp_ = JAWS[kind as 'jackal' | 'ibis'], a = sp_.max * jaw, rm = chain(T(sp_.hinge[0], sp_.hinge[1]), R(a), T(-sp_.hinge[0], -sp_.hinge[1]));
+	const last = sp_.mouth[sp_.mouth.length - 1];
+	const lowR = poly([sp_.hinge, ...sp_.mouth, [last[0] + 0.3, 3], [sp_.hinge[0], 3]]);
+	const cut = sp(sp_.mouth, false, 0.1), cid = `${id}-hd`;
+	const earA = ear !== 0 && kind === 'jackal';
+	return <g>
+		<defs>
+			<clipPath id={`${cid}-up`}><path clipRule="evenodd" d={`M-3 -9H8V6H-3Z${jaw > 0 ? lowR : ''}${earA ? earClip : ''}`} /></clipPath>
+			<clipPath id={`${cid}-lo`}><path d={lowR} /></clipPath>
+			{earA && <clipPath id={`${cid}-ear`}><path d={earClip} /></clipPath>}
+		</defs>
+		{earA && <g transform={earXf(ear)} clipPath={`url(#${cid}-ear)`}><path d={d} {...stroke()} /><path d={d} fill={fill} /></g>}
+		{jaw > 0.02 && <path d={poly([sp_.hinge, ...sp_.mouth, ap(rm, last), ap(rm, sp_.mouth[0])])} fill={sp_.inner} />}
+		{jaw > 0 && <g clipPath={`url(#${cid}-lo)`} transform={mx(rm)}><path d={d} {...stroke()} /><path d={d} fill={fill} />
+			<path d={cut} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 1.6} strokeLinecap="round" /></g>}
+		<g clipPath={`url(#${cid}-up)`}><path d={d} {...stroke()} /><path d={d} fill={fill} /></g>
+		{jaw > 0 && <path d={cut} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 1.6} strokeLinecap="round" />}
+		{jaw > 0.3 && kind === 'jackal' && [0, 1, 2].map((i) => { const x0 = 2.3 + i * 0.22, y0 = -0.58 - (x0 - 2.3) * 0.12; return <path key={i} d={`M${x0} ${y0}l0.07 ${0.22 * Math.min(1, jaw * 1.3)}l0.07 ${-0.22 * Math.min(1, jaw * 1.3)}Z`} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 0.6} />; })}
+	</g>;
+};
+
+export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}, id, hide = {}, bProp, fProp, propTop, paletteA = -12, explode = 0, pivots = false, jaw = 0, ear = 0}) => {
 	const c: Ctx = {OW: 2.7 / s, LW: 1.5 / s};
 	const g0 = solve(pose, cast.female), g = explode ? explodeRig(g0, explode) : g0, t = sec.t ?? 0, amp = sec.amp ?? 1, vh = sec.vel?.head ?? 0, vt = sec.vel?.torso ?? 0;
 	const skin = cast.skin, skin2 = cast.skin2, mummy = cast.dress === 'mummy';
@@ -500,13 +542,13 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 			<path d="M-0.72 -0.62L0.84 -0.56" stroke={PAL.gold} strokeWidth={c.LW * 2.6} /><path d="M-0.66 -0.9L0.78 -0.84" stroke={PAL.blue} strokeWidth={c.LW * 1.6} /></g>}
 		{cast.head !== 'human' && lappet}
 		<g transform={mx(H)}>
-			<Solid d={headShape} r={headFill} c={c} />
-			{cast.head === 'human' && cast.wig === 'none' && <path d="M0.12 -1.22Q0.42 -1.3 0.42 -0.95Q0.42 -0.62 0.12 -0.62Z" fill={PAL[skin2]} stroke={PAL.ink} strokeWidth={c.LW} />}
-			{cast.head === 'human' && <><Eye x={0.98} y={-1.17} L={0.48} c={c} /><path d="M1.31 -0.5L1.16 -0.5" stroke={PAL.ink} strokeWidth={c.LW} strokeLinecap="round" /><path d="M1.36 -0.78Q1.28 -0.72 1.3 -0.82" stroke={PAL.ink} strokeWidth={c.LW * 0.8} fill="none" /></>}
-			{cast.head === 'jackal' && <><Fl d={SH.jackalEar} r="gold" /><path d={sp([[2.86, -0.66], [2.4, -0.55], [1.8, -0.42], [1.55, -0.45]], false)} fill="none" stroke={PAL.jackal2} strokeWidth={c.LW * 1.4} />
+			{cast.faceless ? null : (jaw > 0 || ear !== 0) && (cast.head === 'jackal' || cast.head === 'ibis' || cast.head === 'falcon') ? <SplitHead kind={cast.head} jaw={jaw} ear={ear} d={headShape} r={headFill} c={c} id={id} /> : <Solid d={headShape} r={headFill} c={c} />}
+			{cast.head === 'human' && !cast.faceless && cast.wig === 'none' && <path d="M0.12 -1.22Q0.42 -1.3 0.42 -0.95Q0.42 -0.62 0.12 -0.62Z" fill={PAL[skin2]} stroke={PAL.ink} strokeWidth={c.LW} />}
+			{cast.head === 'human' && !cast.faceless && <><Eye x={0.98} y={-1.17} L={0.48} c={c} /><path d="M1.31 -0.5L1.16 -0.5" stroke={PAL.ink} strokeWidth={c.LW} strokeLinecap="round" /><path d="M1.36 -0.78Q1.28 -0.72 1.3 -0.82" stroke={PAL.ink} strokeWidth={c.LW * 0.8} fill="none" /></>}
+			{cast.head === 'jackal' && <><g transform={ear ? earXf(ear) : undefined}><Fl d={SH.jackalEar} r="gold" /></g>{jaw <= 0 && <path d={sp([[2.86, -0.66], [2.4, -0.55], [1.8, -0.42], [1.55, -0.45]], false)} fill="none" stroke={PAL.jackal2} strokeWidth={c.LW * 1.4} />}
 				<path d={sp([[2.75, -0.95], [2.2, -1.06], [1.65, -1.25], [1.32, -1.52]], false)} fill="none" stroke={PAL.jackal2} strokeWidth={c.LW * 1.6} />
 				<Eye x={1.4} y={-1.38} L={0.46} c={c} rim={PAL.gold} brow={false} tail={0.3} /><ellipse cx={2.84} cy={-0.8} rx={0.1} ry={0.07} fill={PAL.jackal2} /></>}
-			{cast.head === 'ibis' && <><Fl d={SH.ibisBeak} r={PAL.ibis2} /><path d={sp([[1.12, -1.02], [1.8, -0.88], [2.45, -0.62], [3.0, -0.3], [3.36, 0.06]], false)} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.1} />
+			{cast.head === 'ibis' && <>{jaw <= 0 && <><Fl d={SH.ibisBeak} r={PAL.ibis2} /><path d={sp([[1.12, -1.02], [1.8, -0.88], [2.45, -0.62], [3.0, -0.3], [3.36, 0.06]], false)} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.1} /></>}
 				<Eye x={0.62} y={-1.32} L={0.4} c={c} rim={PAL.gold} brow={false} tail={0.22} /></>}
 			{cast.head === 'falcon' && <><path d={sp([[0.52, 0.1], [0.98, -0.14], [1.2, -0.52], [1.1, -0.9], [0.72, -0.95], [0.5, -0.5]])} fill={PAL.white} />
 				<Fl d={SH.falconBeak} r={PAL.ink} /><path d={sp([[1.05, -1.05], [0.98, -0.6], [0.86, -0.22, 1], [0.74, -0.6], [0.8, -1.05]])} fill={PAL.falcon2} />
