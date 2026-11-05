@@ -154,7 +154,7 @@ const Hook: React.FC<{l1: string; l2: string; size: number; x: number; y: number
 	return <div style={{position: 'absolute', left: x, top: y, width: w, display: 'flex', flexDirection: 'column', alignItems: align === 'left' ? 'flex-start' : 'center'}}>
 		{line(l1, false, size)}{line(l2, true, size * 1.08)}
 		<div style={{marginTop: size * 0.32, display: 'flex', alignItems: 'center', gap: size * 0.2, fontFamily: F_SERIF, color: '#F2DFAE', whiteSpace: 'nowrap'}}>
-			<span style={{fontSize: size * 0.26, fontWeight: 700, letterSpacing: '0.22em', opacity: 0.9}}>VIBE知识大赏</span>
+			<span style={{fontSize: size * 0.26, fontWeight: 700, letterSpacing: '0.22em', opacity: 0.9}}>古埃及神话故事</span>
 			<span style={{fontSize: size * 0.4, fontWeight: 900, letterSpacing: '0.06em', color: '#FFE3A0', textShadow: '0 3px 0 rgba(10,8,20,0.9)'}}>《死后的心脏》</span>
 		</div>
 	</div>;
