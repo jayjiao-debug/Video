@@ -1,48 +1,38 @@
-# ep61《古埃及众神，其实是一家人》· 分镜交付说明
+The ep61 storyboard is finished and committed on `api-task/ep61-storyboard`. It has 22 shots, a family-tree design, the iconography table, verified facts and boards as code. All 22 board frames and the standalone family-tree image render on the runner; I checked the frames visually and fixed the layouts. I committed only code and markdown, no images.
 
-**状态：已完成并提交到分支 `api-task/ep61-storyboard`（只提交了代码和 markdown，没有图片 / 视频 / 音频）。**
+**What's in it**
+- **Shots:** the 43 lines are grouped into 22 shots of one or two lines each. `storyboard.md` gives each shot's time range, framing, camera move, layer order, gods, animation beat, transition, SFX and music mood.
+- **Family tree:** it is the throughline. Each god lights up in it the moment they appear, with a small tree chip on most shots. Shots 1, 18, 21 and 22 show the tree full-screen, and shot 22 is the final frame. A `TREE61` composition exports it as a standalone image for the pinned comment.
+- **Facts:** all nine ⚠ rows are now ✓ with quotes in `facts.md`, and the sixteen I-rows are added.
+- **Boards:** `episodes/37-qiqing/remotion/src/qq61/board61.tsx` registers `BOARD61` (1440×1080, 30 fps, 22 frames, frame i = key frame of shot i+1). The ep60 gods are reused unchanged. The new gods are built on the same rig, with the new heads and headdresses painted over it. The one edit to an ep60 file is `export {crown};` added at the end of `rig60.tsx`, which doesn't change what it renders.
+- **Summary:** `tasks/ep61-storyboard/result.md` is the Chinese summary with the render command.
 
-## 交付物
-- `episodes/61-zhongshen/storyboard.md` —— 22 镜分镜、家谱设计、I1…I16 造型表、渲染命令
-- `episodes/61-zhongshen/facts.md` —— 9 个 ⚠ 行已核实，并新增 I1…I16 造型行、Greenfield 纸草三行、风险清单
-- `episodes/37-qiqing/remotion/src/qq61/`（`board61.tsx` 入口，`cast61.tsx`、`tree61.tsx`、`shots61.tsx`）
-- `tasks/ep61-storyboard/out/research_facts.md`、`research_icons.md` —— 研究员的原始记录（带引文和链接）
-- 唯一改动的 ep60 文件：`qq60/rig60.tsx` 末尾加了一行 `export {crown};`，ep60 渲染不变
+**What the fact check changed**
+- **Line 35:** "也个个不好惹" contradicts lines 38–39. A Penn Museum curator calls Bastet Sekhmet's gentle counterpart. I changed it to 「太阳神的女儿们，脾气天差地别。」 in the storyboard; `script.md` is unchanged.
+- **Sekhmet (F19):** the tomb text names the goddess Hathor, and the red is beer flooding the fields, not a red sky. I kept your red sky and fleeing silhouettes as a stylisation. The flooded red fields are the alternative.
+- **"80 years" (F16):** it is the myth's own figure, said twice in the Contendings of Horus and Seth, and it means years in court. The optional exact line is 「叔侄俩，在法庭上争了80年」.
+- **Isis (F10):** "最会魔法" overstates it, since "Great of Magic" is a shared epithet. The optional safer line is 「伊西斯，法力强大的女神」.
+- **Atum (F3):** the double crown is attested, but the sceptre is not.
 
-## 镜头数：22 镜（43 句，每镜 1–2 句，约 3.7–7.7 s）
-1 神像墙→空家谱｜2 黑水·亚图姆｜3 亚图姆＝拉｜4 舒+泰芙努特｜5 盖布+努特｜6 舒撑天｜7 拉的诅咒｜8 托特下棋｜9 360→365｜10 奥西里斯｜11 伊西斯/赛特分屏｜12 奈芙蒂斯 + 奥西里斯伊西斯｜13 箱子｜14 伊西斯唤醒 + 荷鲁斯｜15 冥界之王 + 第1集闪回｜16 荷鲁斯对赛特·80年｜17 阿努比斯｜18 回到家谱·三个女儿位｜19 塞赫麦特｜20 巴斯特 + 玛阿特｜21 托特写家谱｜22 家谱变壁画·片尾卡
+**Decisions and gaps for you**
+- **Unattested designs.** Geb's green skin, Nut's nu-jar and Sekhmet's red dress have no object I could find. Set's ochre colour has none either, though a scholarly paper supports the squared ears and curved snout. These are design choices in the boards, not "attested" claims. I dropped Geb's goose because nothing supports it. Please confirm or change these, in particular Geb's green.
+- **British Museum.** Its pages, and Brooklyn's and the Walters', would not open. I could only confirm the Greenfield papyrus as BM 1910,0509.1.87 through Google Arts & Culture. The "EA 10554" number is unverified and should be checked in a browser before it goes on screen.
+- **Pyramid Text 600.** I never got a verbatim line for the mound or for F4, so those still lack a direct quote.
+- **Boards are static.** They are one key frame per shot. No animation or audio has been built.
 
-## 家谱主线
-一棵家谱（亚图姆·拉在顶，舒/泰芙努特 → 盖布/努特 → 奥西里斯、伊西斯、赛特、奈芙蒂斯 → 荷鲁斯、阿努比斯；右上是拉的三个女儿；托特在树外左侧当书记官）。
-**神一出场，家谱里的节点就亮起**（暗色虚线空章 → 金圈 + 青金底 + 头像），当前这位多一圈红光。每个镜头左上角有家谱小图；镜 1、18、21、22 家谱是主角。
-最后一帧（镜 22）整棵树全亮、全带名字；`TREE61` 合成是去掉框和字幕的独立家谱图（置顶评论用）。
-
-## 每位神的一个动作
-舒：风吹羽毛，托起努特｜泰芙努特：吼（母狮吼截短 ~1.2 s）｜塞赫麦特：全长吼，BGM 让开，红天+奔逃剪影｜托特：下塞尼特棋 / 写家谱｜
-伊西斯：展翅｜赛特：沙暴里冷笑｜荷鲁斯：鹰啸｜巴斯特：摇叉铃、舔爪｜阿努比斯：耳朵一抖｜玛阿特：羽毛飘到天平上｜
-亚图姆：吐气，脸转成拉｜拉：怒目，金光炸开｜盖布：长草｜努特：弓身压低 → 被托高｜奥西里斯：坐上王座｜奈芙蒂斯：走到赛特身边。
-
-## ⚠ 事实核实结果（均有引文，见 facts.md）
-- **全部 ✓**：F2（Nun 黑水）、F3、F5、F10、F11、F16、F18、F19、F20。
-- **F16「80年」✓**：Lichtheim 译《荷鲁斯与赛特》（Chester Beatty I）里两处原文 "eighty years"；是"在法庭上争了80年"（可改成「叔侄俩，在法庭上争了80年」，可选）。
-- **F18 ✗ 必须改第 35 句**：「也个个不好惹」和后两句矛盾（巴斯特是温和的守护女神，Penn 博物馆馆员 Wegner 说她是塞赫麦特的"温和对应"）→ 改为 **「太阳神的女儿们，脾气天差地别。」**（分镜里已用）。巴斯特是拉的女儿只有一处博物馆来源，只说"女儿"，不说"拉之眼"。
-- **F19**：塞赫麦特灭人类 ✓；但墓室原文里那位是哈托尔，红色是**红啤酒淹田**，不是红天。红天 + 剪影按你的规则保留，是风格化；备选画面 = 红啤酒淹没田野。
-- **F10**：可选更稳的 21 句「伊西斯，法力强大的女神」（"Great of Magic" 是共用称号）。**F3**：亚图姆戴双冠 ✓（Penn/Ranke），权杖没找到出处。**F5**：泰芙努特狮首 ✓，日盘+圣蛇仅卢浮宫 N 2699 一件实物，有。
-
-## 造型出处（I1…I16）
-每位神 ≥ 1 件有编号的馆藏（Met、卢浮宫、Petrie、Penn Museum Bulletin），Met 编号取自 Met Open Access API，卢浮宫页面直接读取。
-**仍缺 / 需要你拍板（⚠ 设计选择，没有有出处的实物）**：
-1. **盖布的绿皮肤、头顶鹅**没有找到实物证据 → 已**去掉鹅**；绿色保留为设计，请确认，或改成普通肤色。
-2. 努特头顶 nu 罐、赛特的赭红肤色 / 方耳 / 叉尾（方耳弯吻有 Shanley 论文支持）、塞赫麦特红衣、舒/泰芙努特/荷鲁斯/玛阿特的上色：无上色实物，属设计。
-3. 大英博物馆、布鲁克林、沃尔特斯页面打不开：大英博物馆 Greenfield 纸草编号只确认到 1910,0509.1.87（Google Arts & Culture），"EA 10554" **未核实**，上屏前请在浏览器里打开 BM 页面确认。
-4. 一神多色（拉、阿努比斯、托特）已各选一种，不会写成"唯一颜色"。
-5. 板子是静态关键帧（每镜一帧），动作、镜头、SFX 写在 storyboard.md 里；还没做任何动画、没有出声音。
-
-## 渲染板子的命令
+To render the boards:
 ```
 cd episodes/37-qiqing/remotion && npm ci
 SFPS=1 REMOTION_BROWSER=/usr/bin/chromium ENTRY=qq61/board61 CID=BOARD61 JPG=1 node scripts/frame.mjs stills /tmp/board $(seq 0 21)
-# 独立家谱图
 REMOTION_BROWSER=/usr/bin/chromium ENTRY=qq61/board61 CID=TREE61 JPG=1 node scripts/frame.mjs stills /tmp/tree 0
 ```
-输出 `/tmp/board/f_0.0.jpg … f_21.0.jpg`（第 N 个文件 = 第 N+1 镜）。本次已在 runner 上渲染全部 22 帧 + 家谱图，编译通过，逐帧看过并修了版面。
+This writes `f_0.0.jpg` through `f_21.0.jpg`; file N is shot N+1.
+
+Files are in `episodes/61-zhongshen/`:
+- storyboard.md
+- facts.md
+
+Files are in `tasks/ep61-storyboard/`:
+- result.md
+- out/research_facts.md
+- out/research_icons.md
