@@ -724,3 +724,6 @@ export const Ammit: React.FC<{pose: AmmitPose; x: number; y: number; s: number; 
 		{pivots && <g>{[ap(g.B, [0, 0]), g.S, ap(g.N, [0, 0]), ap(g.J, [0, 0]), ap(tailM, [0, 0]), [3.35 + (pose.paw ?? 0), -0.2] as V, [hf[0], -0.2] as V].map((v, i) => <g key={i}><circle cx={v[0]} cy={v[1]} r={0.3} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 1.2} /><circle cx={v[0]} cy={v[1]} r={0.17} fill={i > 4 ? PAL.blue : PAL.red} /></g>)}</g>}
 	</g>;
 };
+
+/* ep61: crowns are reused by the qq61 casts */
+export {crown};
