@@ -196,3 +196,32 @@ export const Cover60: React.FC<{layout?: 'wide' | 'tall'; variant?: 'A' | 'B'}> 
 			: <Hook l1={hook[0]} l2={hook[1]} size={120} x={0} y={96} w={W} align="center" />}
 	</AbsoluteFill>;
 };
+
+/** the collection cover 「古埃及神话故事」 (owner 11-05 21:34), 1080 × 1080: the film's Anubis before his sun disk in the pillared hall,
+    pyramids on the horizon, the series title in gold across the lower third — no single episode's content, so it fits every episode */
+export const CoverSeries: React.FC = () => {
+	const W = 1080, H = 1080, cx = 540, hz = 760, ms = 68, EY = 420;
+	return <AbsoluteFill style={{background: '#04050E'}}>
+		<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
+			<Defs />
+			<Hall W={W} H={H} cx={cx} hz={hz} />
+			{/* pyramids on the horizon either side */}
+			{[[150, 600, 210], [330, 660, 130], [930, 610, 200]].map(([x, top, hw], i) => <g key={i} opacity={0.9}>
+				<path d={`M${x - hw} ${hz}L${x} ${top}L${x + hw} ${hz}Z`} fill="#2A2250" stroke={INK} strokeWidth={3} />
+				<path d={`M${x} ${top}L${x + hw} ${hz}L${x + hw * 0.55} ${hz}Z`} fill="#4A3468" opacity={0.85} />
+				<path d={`M${x - hw} ${hz}L${x} ${top}`} stroke="#F6C14A" strokeWidth={3} opacity={0.8} /></g>)}
+			<FilmAnubis x={cx} y={EY} s={ms} />
+			<Motes W={W} H={H} n={110} seed={11} />
+			<rect x={0} y={0} width={W} height={H} fill="url(#cv-vig)" />
+			<defs><linearGradient id="cs-bot" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#03040C" stopOpacity={0} /><stop offset="0.4" stopColor="#03040C" stopOpacity={0.7} /><stop offset="1" stopColor="#03040C" stopOpacity={0.92} /></linearGradient></defs>
+			<rect x={0} y={640} width={W} height={440} fill="url(#cs-bot)" />
+		</svg>
+		<div style={{position: 'absolute', left: 0, width: W, top: 742, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+			<div style={{fontFamily: F_SERIF, fontWeight: 900, fontSize: 118, lineHeight: 1.1, whiteSpace: 'nowrap', letterSpacing: '0.06em', marginRight: '-0.06em',
+				background: 'linear-gradient(180deg, #FFF3C4 0%, #F6D27A 40%, #C8902E 60%, #F7D27A 82%, #FFE9A8 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent',
+				filter: 'drop-shadow(0 5px 0 #3A2206) drop-shadow(0 0 22px rgba(255,190,90,0.45))'}}>古埃及神话故事</div>
+			<div style={{marginTop: 22, display: 'flex', alignItems: 'center', gap: 22, fontFamily: F_SERIF, fontWeight: 700, fontSize: 40, color: '#F2DFAE', letterSpacing: '0.3em', marginRight: '-0.3em', whiteSpace: 'nowrap', textShadow: '0 3px 0 rgba(10,8,20,0.9)'}}>
+				<span style={{width: 70, height: 3, background: '#E8B44A', display: 'inline-block'}} />众神 · 冥界 · 来世<span style={{width: 70, height: 3, background: '#E8B44A', display: 'inline-block'}} /></div>
+		</div>
+	</AbsoluteFill>;
+};

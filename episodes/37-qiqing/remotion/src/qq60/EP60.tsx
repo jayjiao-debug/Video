@@ -16,7 +16,7 @@ import {JCartouche, TitleCartouche, FollowPlaque} from './egypt60';
 import {ACT60A} from './act60a';
 import {ACT60B} from './act60b';
 import {ACT60C} from './act60c';
-import {Cover60} from './cover60';
+import {Cover60, CoverSeries} from './cover60';
 
 export type ShotProps = {t: number; dur: number; n: number};
 export type ShotDef = {C: React.FC<ShotProps>; tin?: 'cut' | 'dissolve' | 'own'; ov?: number};
@@ -89,5 +89,6 @@ registerRoot(() => <>
 	{/* the Douyin covers (cover60.tsx): input prop {variant: 'A' | 'B'} */}
 	<Composition id="COVER60W" component={((p: {variant?: 'A' | 'B'}) => <Cover60 layout="wide" variant={p.variant} />) as React.FC} durationInFrames={1} fps={FPS} width={1440} height={1080} defaultProps={{variant: 'A'}} />
 	<Composition id="COVER60T" component={((p: {variant?: 'A' | 'B'}) => <Cover60 layout="tall" variant={p.variant} />) as React.FC} durationInFrames={1} fps={FPS} width={1080} height={1440} defaultProps={{variant: 'A'}} />
+	<Composition id="COVERSERIES" component={CoverSeries} durationInFrames={1} fps={FPS} width={1080} height={1080} />
 </>);
 export {_keep};
