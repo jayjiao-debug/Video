@@ -22,7 +22,7 @@ from scipy import signal
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import egypt_cues as E
 import lib60
-SR = 48000; BEAT = 0.5; E8 = 0.25; BAR = 2.0
+SR = 48000; BPM = float(os.environ.get('HIJAZ_BPM', '120')); BEAT = 60 / BPM; E8 = BEAT / 2; BAR = 4 * BEAT   # v8: 117.5 (the reference's tempo)
 
 # ------------------------------------------------------------------ notation
 # a bar = "note:eighths[flags] ..." summing to 8; r = rest. flags: s slide-in from below, ~ trill, m mordent, t turn,
@@ -226,10 +226,10 @@ PAT.update({'sparse1': [(0, 'D', .85), (2, 'T', .35)], 'sparse2': [(0, 'D', .85)
 def m_hook(T):
     drone(T, reed_amt=0.3)
     lead(T, HOOK_NEY, 0.0, breath=0.28, vel=0.72)
-    stroke(T, 0.0, 'z', 0.6); stroke(T, 4.0, 'X', 0.55); qrun(T, 5.5, 'D4', 'D5', 0.5, 0.45)
-    for k, v in (('G', 1.0), ('F', 1.0), ('Z', 1.0), ('D', 0.7)): stroke(T, 6.0, k, v)
-    pluck(T, 'oud', E.midi('D3'), 6.0, 2.0, 0.85, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), 6.006, 2.2, 0.6, 0.35, 'oud')
-    qroll(T, 6.0, 'D5', 1.2, 0.3)
+    stroke(T, 0.0, 'z', 0.6); stroke(T, 2 * BAR, 'X', 0.55); qrun(T, 3 * BAR - 0.5, 'D4', 'D5', 0.5, 0.45)
+    for k, v in (('G', 1.0), ('F', 1.0), ('Z', 1.0), ('D', 0.7)): stroke(T, 3 * BAR, k, v)
+    pluck(T, 'oud', E.midi('D3'), 3 * BAR, 2.0, 0.85, 0.35, 'oud'); pluck(T, 'oud', E.midi('D2'), 3 * BAR + 0.006, 2.2, 0.6, 0.35, 'oud')
+    qroll(T, 3 * BAR, 'D5', 1.2, 0.3)
 
 CALM_OST = score(*['D3:1. A3:1. D4:1. A3:1. Eb4:1. A3:1. D4:1. A3:1.'] * 8)
 def m_calm(T, book=False):   # owner 12:38 "always some music": a soft oud ostinato + a frame-drum pulse under the ney; calm2 = the theme
@@ -305,7 +305,7 @@ def m_bright(T):
     for t, n, d, fl in timed(BRIGHT_NEY):
         if n and d >= 3: qroll(T, t + 0.02, tr(n, -1), min(d * E8, 0.9), 0.28)
     qrun(T, -0.5, 'D4', 'D6', 0.5, 0.5); qrun(T, 4 * BAR - 0.5, 'D4', 'D6', 0.5, 0.45)
-    for b in range(8): drums(T, b * BAR, 'sparse2', 0.9); riq_bar(T, b * BAR, 0.5, full=True)
+    for b in range(8): drums(T, b * BAR, 'sparse2', 0.9); riq_bar(T, b * BAR, 0.45)   # sparse like the reference
     for b in (0, 4): stroke(T, b * BAR, 'X', 0.6); stroke(T, b * BAR, 'Z', 0.65)
 
 def m_resolution(T):
@@ -342,7 +342,7 @@ MODS = {   # mood: (loop bars, composer, thin?, character)
  'dark': (4, m_dark, True, 'the second death / the hush: low drone (strings + arghul), low gong, low ney D-Eb trill (thin = the drone alone)'),
  'bright': (8, m_bright, True, 'paradise + shabtis: the theme an octave up, oud on the beats, qanun rolls and glissandi, full riq, sistrum'),
 }
-ONESHOT = {'hook_intro_4bar': (4, 0.3, m_hook, 'ney solo rising over the drone (D-Eb trill, the augmented second, up to D5 on the gong = the title at 6.30)'),
+ONESHOT = {'hook_intro_4bar': (4, 6.30 - 3 * BAR, m_hook, 'ney solo rising over the drone (D-Eb trill, the augmented second, up to D5 on the gong = the title at 6.30)'),
            'resolution_6bar': (6, 0.0, m_resolution, 'the theme slow, the chromatic slide C#-C-B-Bb, the final D (bar 5) with qanun roll and soft gong, ringing out')}
 PERC = {'dum', 'tek', 'riq', 'zills', 'frame', 'sis'}
 MOOD_LUFS = {'calm': -21.0, 'calm2': -20.5, 'danger': -19.0, 'theme': -20.0, 'tension': -18.5, 'playful': -20.0, 'dark': -25.0,

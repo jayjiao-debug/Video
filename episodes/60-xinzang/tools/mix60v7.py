@@ -56,6 +56,22 @@ MUSIC_V4 = [
  (164.3, 169.25, 'paradise_end', dict(inn='x')),                       # the paradise ending rings through the end card
 ]
 
+# owner 16:09: our own score in the reference's style at 117.5 BPM, cues entering at the scene starts (v8 library)
+MUSIC_V8 = [
+ (0.0, 8.41, 'hook_intro_4bar', dict(inn='hard', out='x')),            # gong on the title 6.30
+ (8.41, 26.03, 'calm_8bar', dict(inn='x')), (26.03, 41.64, 'calm2_8bar', dict(inn='x')),
+ (41.64, 51.73, 'danger_4bar', dict(inn='x')),                         # the one driving section
+ (51.73, 73.38, 'theme_8bar', dict(inn='x', out='cut')), (73.38, 76.88, 'dark_4bar_thin', dict(inn='swell', out='x', db=-1)),
+ (76.88, 90.3, 'tension_8bar', dict(inn='x', out='cut')), (91.1, 96.13, 'dark_4bar', dict(inn='swell')),
+ (96.13, 98.33, 'dark_4bar_thin', dict(inn='x', out='cut', db=-3)),
+ (98.33, 107.0, 'playful_8bar', dict(inn='hard')), (107.0, 114.05, 'playful_8bar_thin', dict(inn='eg', out='eg', off_s=8.67)),
+ (114.05, 121.89, 'playful_8bar', dict(inn='eg', out='cut', off_s=15.72)),
+ (121.95, 126.82, 'dark_4bar_thin', dict(inn='swell', out='x', db=0)), (126.82, 130.11, 'dark_4bar', dict(inn='x', out='x', db=-2)),
+ (130.11, 143.57, 'bright_8bar', dict(inn='x', out='cut')), (143.57, 144.41, 'dark_4bar_thin', dict(inn='hard', out='x', db=-1)),
+ (144.41, 157.15, 'bright_8bar', dict(inn='x', out='x', off_s=14.30)),
+ (157.15, 169.25, 'resolution_6bar', dict(inn='x')),                   # final D at 165.32, ring through the card
+]
+
 # (time, sfx, offset dB vs local music, options)   options: dur (crop + fade), crop_end (keep the last s), onset (align the take's onset),
 # abs (level vs the music's average, not the local music: the music is out)
 EV = []
@@ -159,7 +175,7 @@ def mix(lib, sfxd, out, plan=None):
         tmp = out[:-4] + '_mp3src.wav'; sf.write(tmp, E.limit(y, ceil).astype(np.float32), SR, subtype='PCM_24')
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', tmp, '-c:a', 'libmp3lame', '-b:a', '256k', out[:-4] + '.mp3'], check=True); os.remove(tmp)
         dec = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'quiet', '-i', out[:-4] + '.mp3', '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout, np.float32).reshape(-1, 2).astype(np.float64)
-        if E.true_peak(dec) <= -2.1 or ceil < -7: break
+        if E.true_peak(dec) <= -2.6 or ceil < -7: break
         ceil -= 1.0
     # audibility: each event's loudness in the final mix vs the music around it (same gains as the master)
     gm = np.sqrt(np.mean(y ** 2) / max(np.mean((music + fx) ** 2), 1e-20))
@@ -169,4 +185,9 @@ def mix(lib, sfxd, out, plan=None):
     json.dump(meta, open(out[:-4] + '.json', 'w'), indent=1, ensure_ascii=False)
     print(f"mix {out}: {meta['seconds']} s, {meta['lufs']} LUFS, {meta['tp']} dBTP; mp3 {meta['mp3_lufs']} LUFS, {meta['mp3_tp']} dBTP; {len(rep)} SFX events")
 
-if __name__ == '__main__': mix(sys.argv[1], sys.argv[2], sys.argv[3], MUSIC_V4 if sys.argv[4:5] == ['v4'] else None)
+if __name__ == '__main__':
+    mode = sys.argv[4] if len(sys.argv) > 4 else ''
+    if mode == 'v8':
+        import hijaz60 as H; lib60.B = int(round(H.BAR * SR))   # the 117.5 BPM bar for bar0
+        if len(sys.argv) > 5: lib60.preview(sys.argv[1], sys.argv[5], MUSIC_V8)
+    mix(sys.argv[1], sys.argv[2], sys.argv[3], {'v4': MUSIC_V4, 'v8': MUSIC_V8}.get(mode))

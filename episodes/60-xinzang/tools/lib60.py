@@ -183,7 +183,7 @@ def render_plan(lib, plan=None):
         inn, outm = o.get('inn', 'x'), o.get('out', 'x'); a0 = int(round(t0 * SR)); a1 = int(round(t1 * SR))
         pre = h if inn in ('x', 'eg') else (Q if inn == 'swell' else 0)
         post = h if outm in ('x', 'eg') else 0
-        ia, ib = a0 - pre, min(n, a1 + post); idx = np.arange(ia, ib) - a0 + o.get('bar0', 0) * B
+        ia, ib = a0 - pre, min(n, a1 + post); idx = np.arange(ia, ib) - a0 + o.get('bar0', 0) * B + int(round(o.get('off_s', 0) * SR))
         if loop: seg = src[idx % L]
         else: seg = np.where(((idx >= 0) & (idx < L))[:, None], src[np.clip(idx, 0, L - 1)], 0.0)
         g = np.ones(len(seg))
