@@ -69,7 +69,7 @@ const S4: React.FC = () => <g>
 	<Ground c="#C49A55" />
 	<God61 id="s4a" who="shu" pose={P61.rest()} x={470} y={GY} s={30} />
 	<Path wind />
-	<God61 id="s4b" who="tefnut" pose={P61.roar()} x={960} y={GY} s={30} face={-1} open={1} />
+	<God61 id="s4b" who="tefnut" pose={P61.roar()} x={960} y={GY} s={30} face={-1} roar={1} />
 	<Rings x={headPt('tefnut', P61.roar(), 960, GY, 30, -1, [2.3, -0.3])[0]} y={headPt('tefnut', P61.roar(), 960, GY, 30, -1, [2.3, -0.3])[1]} dir={-1} />
 	<Label x={470} y={GY + 50} t="舒 · 空气" size={34} /><Label x={960} y={GY + 50} t="泰芙努特 · 湿气" size={34} /></g>;
 /* wind lines around Shu */
@@ -221,7 +221,7 @@ const S19: React.FC = () => { const R = rng(41); return <g>
 	<Bg a="#4A0A06" b="#C0281C" /><Disc x={760} y={330} r={250} c="#E8451F" /><Rays x={760} y={330} r0={270} r1={520} n={26} c="#FF7A3A" o={0.35} />
 	<Ground y={890} c="#3A0A06" c2="#1A0402" />
 	{Array.from({length: 9}, (_, i) => <Silh key={i} x={1000 + i * 52} y={890} s={9 + R() * 2} k={i} c="#1A0402" />)}
-	<God61 id="s19" who="sekhmet" pose={P61.roar()} x={500} y={GY + 20} s={40} open={1} dress="sheath" />
+	<God61 id="s19" who="sekhmet" pose={P61.roar()} x={500} y={GY + 20} s={40} roar={1} dress="sheath" />
 	<Rings x={headPt('sekhmet', P61.roar(), 500, GY + 20, 40, 1, [2.3, -0.3])[0]} y={headPt('sekhmet', P61.roar(), 500, GY + 20, 40, 1, [2.3, -0.3])[1]} dir={1} n={5} c="#FFE0C0" r0={60} /></g>; };
 
 const S20: React.FC = () => <g>
