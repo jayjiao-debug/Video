@@ -70,22 +70,23 @@ export const BoxScene: React.FC<{t: number}> = ({t}) => {
 	const close = t >= L2 && t < L2 + 1.65, z = t < L2 ? 1.0 + 0.04 * sm(t / L2) : close ? 1.22 : 1.12, cx = t < L2 ? 720 : close ? 760 : lerp(780, 1180, tip), cy = t < L2 ? 486 : close ? 560 : 540;
 	const armUp = BOX_STRIKES.reduce((m, a) => (t > a - 0.32 && t < a ? Math.max(m, sm((t - (a - 0.32)) / 0.25)) : m), 0);
 	const hinge: [number, number] = [X0 - CW / 2, BASE - CH];
-	/* the lid (hinged at the back-left top): behind Osiris while open, in front once it closes */
+	/* the lid (hinged at the back-left top) is drawn over Osiris; he is clipped to the inner side of the lid's underside line, so it closes over him */
+	const la = (-78 * lid * Math.PI) / 180, Q: [number, number] = [hinge[0] + 2600 * Math.cos(la), hinge[1] + 2600 * Math.sin(la)];
+	const LIDCLIP = `M${hinge[0]} ${hinge[1]}L${Q[0]} ${Q[1]}L${X0 + CW / 2 + 2600} ${Q[1]}L${X0 + CW / 2 + 2600} ${BASE + 60}L${hinge[0]} ${BASE + 60}Z`;
 	const LID = <g transform={`rotate(${-78 * lid} ${hinge[0]} ${hinge[1]})`}><path d={`M${hinge[0]} ${hinge[1]}V${hinge[1] - 30}Q${X0} ${hinge[1] - 52} ${X0 + CW / 2} ${hinge[1] - 30}V${hinge[1]}Z`} fill={PAL.wood} stroke="#2A1408" strokeWidth={5} />
 				<path d={`M${hinge[0]} ${hinge[1] - 16}H${X0 + CW / 2}`} stroke={PAL.gold} strokeWidth={6} />
 				{BOX_STRIKES.map((a, i) => t > a - 0.02 ? <circle key={i} cx={hinge[0] + CW * (0.2 + 0.3 * i)} cy={hinge[1] - 22} r={6} fill="#1A0C08" /> : null)}</g>;
 	/* the chest with its lid, Osiris and the nails; drawn behind Set until it tips into the river, then in front of him */
 	const CHEST = <g transform={`translate(${dx},${dy}) rotate(${rot} ${X0} ${BASE})`}>
-			{lid >= 0.5 && LID}
 			{/* Osiris lying in it (head left, face up), clipped to the chest; body hidden by the front panel */}
-			<defs><clipPath id="boxin"><rect x={X0 - CW / 2 + 6} y={BASE - CH - 140} width={CW - 12} height={CH + 140} /></clipPath></defs>
-			{lieK > 0 && lid >= 0.5 && <g clipPath="url(#boxin)" opacity={lieK}><g transform={`translate(0,${(1 - lieK) * -40}) rotate(-90 ${X0 + CW / 2 - 22} ${BASE - CH + 18})`}>
-				<God61 id="bxo" who="osiris" pose={{...POSES.rest, fs: -6, fe: 4, bs: -2, be: 4, head: -4}} x={X0 + CW / 2 - 22} y={BASE - CH + 18} s={s} t={T} /></g></g>}
+			<defs><clipPath id="boxlid"><path d={LIDCLIP} /></clipPath><clipPath id="boxin"><rect x={X0 - CW / 2 + 6} y={BASE - CH - 140} width={CW - 12} height={CH + 140} /></clipPath></defs>
+			{lieK > 0 && <g clipPath="url(#boxlid)"><g clipPath="url(#boxin)" opacity={lieK}><g transform={`translate(0,${(1 - lieK) * -40}) rotate(-90 ${X0 + CW / 2 - 22} ${BASE - CH + 18})`}>
+				<God61 id="bxo" who="osiris" pose={{...POSES.rest, fs: -6, fe: 4, bs: -2, be: 4, head: -4}} x={X0 + CW / 2 - 22} y={BASE - CH + 18} s={s} t={T} /></g></g></g>}
 			{/* the front panel */}
 			<rect x={X0 - CW / 2} y={BASE - CH} width={CW} height={CH} fill={PAL.wood} stroke="#2A1408" strokeWidth={6} />
 			<rect x={X0 - CW / 2} y={BASE - CH} width={CW} height={14} fill={PAL.gold} /><rect x={X0 - CW / 2} y={BASE - 34} width={CW} height={12} fill={PAL.gold} />
 			{[0.2, 0.4, 0.6, 0.8].map((u) => <path key={u} d={`M${X0 - CW / 2 + CW * u} ${BASE - CH + 30}v60M${X0 - CW / 2 + CW * u - 12} ${BASE - CH + 52}h24`} stroke={PAL.gold} strokeWidth={5} opacity={0.8} />)}
-			{lid < 0.5 && LID}
+			{LID}
 			{/* sparks on the nails */}
 			{hits.map((h, i) => h > 0 && <g key={i} opacity={h}>{Array.from({length: 8}, (_, k) => { const a = (k / 8) * Math.PI * 2, x = hinge[0] + CW * (0.2 + 0.3 * i), y = hinge[1] - 22;
 				return <path key={k} d={`M${x + Math.cos(a) * 10} ${y + Math.sin(a) * 10}L${x + Math.cos(a) * (26 + 30 * (1 - h))} ${y + Math.sin(a) * (26 + 30 * (1 - h))}`} stroke="#FFE0A0" strokeWidth={4} strokeLinecap="round" />; })}</g>)}
