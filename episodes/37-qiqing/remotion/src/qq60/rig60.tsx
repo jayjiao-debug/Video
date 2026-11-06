@@ -434,7 +434,15 @@ const Wing: React.FC<{U: M; F: M; c: Ctx; t: number; seed: number}> = ({U, F, c,
 
 /* ---------------- the figure ---------------- */
 export type Sec = {t?: number; amp?: number; vel?: {head?: number; torso?: number}};
-export type FigProps = {cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; sec?: Sec; id: string; explode?: number; pivots?: boolean; hide?: Partial<Record<'bArm' | 'fArm' | 'props', boolean>>; bProp?: PropKind; fProp?: PropKind; propTop?: number; paletteA?: number; /** open the jaw / beak 0..1 (jackal, ibis, falcon heads); default closed = the ep60 drawing */ jaw?: number; /** jackal ear fold, degrees (+ = back); 0 = ep60 drawing */ ear?: number; /** ep61: a complete head drawn in the head frame in place of the head shape and its face (wig, lappet, beard, crown still drawn by the rig); undefined = the ep60 drawing */ headArt?: React.ReactNode; /** ep61: a headdress drawn in the head frame over the wig (under the human lappet and the crown, behind the front arm); undefined = nothing */ hatArt?: React.ReactNode};
+/** wigFront (ep61 design test): the near front lappet as one strip whose top is pinned to the HEAD frame, its middle to the NECK frame
+ *  and its end to the TORSO frame, so it follows head tilt / roar head-back / neck bend with no gap and always lies on the chest over the
+ *  collar's top edge, slanting forward in front of the shoulder. f / b = front / back edge in the head frame (top → head-neck join);
+ *  tuck = head-frame "jowl line" (back → front): the strip is drawn in front of the head only BELOW it, so its top slips behind the
+ *  cheek / ear / jaw hinge and never covers the eye, the muzzle or beak, the ears or the open mouth (animal heads; undefined = human:
+ *  the whole strip in front, over the wig). */
+export type LapFit = {f: V[]; b: V[]; tuck?: V[]};
+export const LAP_HUMAN: LapFit = {f: [[0.66, -1.25], [0.66, -0.25], [0.6, 0.55]], b: [[-0.12, -1.25], [-0.15, -0.25], [-0.22, 0.55]]};
+export type FigProps = {cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; sec?: Sec; id: string; explode?: number; pivots?: boolean; hide?: Partial<Record<'bArm' | 'fArm' | 'props', boolean>>; bProp?: PropKind; fProp?: PropKind; propTop?: number; paletteA?: number; /** open the jaw / beak 0..1 (jackal, ibis, falcon heads); default closed = the ep60 drawing */ jaw?: number; /** jackal ear fold, degrees (+ = back); 0 = ep60 drawing */ ear?: number; /** ep61: a complete head drawn in the head frame in place of the head shape and its face (wig, lappet, beard, crown still drawn by the rig); undefined = the ep60 drawing */ headArt?: React.ReactNode; /** ep61: a headdress drawn in the head frame over the wig (under the human lappet and the crown, behind the front arm); undefined = nothing */ hatArt?: React.ReactNode; /** ep61 design test WIGTEST61 (default off = the ep60 drawing): the near front lappet of the tripartite wig drawn IN FRONT of the neck and shoulder, over the collar's top edge (see LapFit) */ wigFront?: boolean; /** wigFront geometry; undefined = LAP_HUMAN */ lapFit?: LapFit};
 
 /* ---------------- opening jaws / beaks / ear fold (jaw, ear props; zero = the original single head shape) ---------------- */
 type JawSpec = {hinge: V; mouth: V[]; max: number; inner: string};
@@ -478,7 +486,7 @@ const SplitHead: React.FC<{kind: HeadKind; jaw: number; ear: number; d: string; 
 	</g>;
 };
 
-export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}, id, hide = {}, bProp, fProp, propTop, paletteA = -12, explode = 0, pivots = false, jaw = 0, ear = 0, headArt, hatArt}) => {
+export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}, id, hide = {}, bProp, fProp, propTop, paletteA = -12, explode = 0, pivots = false, jaw = 0, ear = 0, headArt, hatArt, wigFront = false, lapFit}) => {
 	const c: Ctx = {OW: 2.7 / s, LW: 1.5 / s};
 	if (cast.body && cast.dress === 'mummy') pose = mummyArms(pose, cast.body); // body types: Osiris' hands always crossed on the chest
 	const g0 = solve(pose, castBody(cast)), g = explode ? explodeRig(g0, explode) : g0, t = sec.t ?? 0, amp = sec.amp ?? 1, vh = sec.vel?.head ?? 0, vt = sec.vel?.torso ?? 0;
@@ -627,6 +635,24 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 	const lappet = cast.wig === 'tri' && <g key="lappet" transform={mx(lapM)}><Solid d={SH.lappet} r={wigFill} c={c} />
 		{[-0.2, 0.0, 0.2].map((xx) => <line key={xx} x1={xx} y1={0.15} x2={xx * 1.15} y2={2.7} stroke={wigLine} strokeWidth={c.LW * 1.1} />)}
 		<rect x={-0.4} y={2.72} width={0.92} height={0.18} fill={PAL.gold} /><rect x={-0.38} y={3.02} width={0.88} height={0.18} fill={PAL.gold} /></g>;
+	// wigFront: the front strip (head → neck → torso frames), its strands and gold end bands clipped to it, and for animal heads the
+	// jowl-line clip + the cheek contour drawn across it where it slips under the head
+	const lapFront = (() => { if (!wigFront || cast.wig !== 'tri') return null;
+		const L = lapFit ?? LAP_HUMAN, N = g.neck, TT = g.torso, endY = BT === 'f' ? -4.72 : -4.98;
+		const F: V[] = [...L.f.map((p) => ap(H, p)), ap(N, [1.0, -0.26]), ap(TT, [1.56, endY])], B: V[] = [...L.b.map((p) => ap(H, p)), ap(N, [0.08, -0.3]), ap(TT, [0.64, endY - 0.08])];
+		const n = F.length, cn = (p: V): Pt => [p[0], p[1], 1];
+		const d = sp([cn(F[0]), ...F.slice(1, n - 1), cn(F[n - 1]), cn(B[n - 1]), ...B.slice(1, n - 1).reverse(), cn(B[0])], true, 0.16);
+		const cid = `${id}-lapf`, tid = `${id}-lapt`, Fn = F[n - 2], Ft = F[n - 1], Bn = B[n - 2], Bt = B[n - 1];
+		const band = (v: number, w: number, k: number) => { const a = lv(Fn, Ft, v), b = lv(Fn, Ft, v + w), e = lv(Bn, Bt, v + w), f = lv(Bn, Bt, v); return <path key={k} d={poly([a, b, e, f])} fill={PAL.gold} />; };
+		const strands = [0.25, 0.5, 0.75].map((u) => { const pts = F.slice(0, n - 1).map((p, i) => lv(p, B[i], u)); pts.push(lv(lv(Fn, Ft, 0.8), lv(Bn, Bt, 0.8), u));
+			return <path key={u} d={sp(pts, false, 0.16)} fill="none" stroke={wigLine} strokeWidth={c.LW * 1.1} />; });
+		const tuck = L.tuck, tk = tuck && [...tuck, [tuck[tuck.length - 1][0], 9], [-5, 9], [-5, tuck[0][1]]] as V[];
+		return <g key="lapfront" clipPath={tk ? `url(#${tid})` : undefined}>
+			<defs><clipPath id={cid}><path d={d} /></clipPath>{tk && <clipPath id={tid}><path d={poly(tk)} transform={mx(H)} /></clipPath>}</defs>
+			<Solid d={d} r={wigFill} c={c} />
+			<g clipPath={`url(#${cid})`}>{strands}{band(0.82, 0.07, 0)}{band(0.92, 0.07, 1)}
+				{tuck && <path d={sp(tuck, false, 0.2)} transform={mx(H)} fill="none" stroke={PAL.ink} strokeWidth={c.OW * 1.1} strokeLinecap="round" />}</g>
+		</g>; })();
 	const headShape = cast.head === 'jackal' ? SH.jackal : cast.head === 'ibis' ? SH.ibis : cast.head === 'falcon' ? SH.falcon : SH.human;
 	const headFill = cast.head === 'human' ? skin : cast.headFill ?? skin;
 	// headband streamers (fillet ribbons at the back of the head) for gods with tri wig
@@ -637,7 +663,7 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		{cast.wig === 'tri' && cast.head !== 'human' && <g transform={mx(H)}><Solid d={SH.wigTriAnimal} r={wigFill} c={c} /></g>}
 		{cast.mask && <g transform={mx(g.neck)}><path d={sp([[-0.75, -0.55, 1], [-0.62, -1.25, 1], [0.7, -1.18, 1], [0.86, -0.5, 1]])} fill={PAL.jackal} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
 			<path d="M-0.72 -0.62L0.84 -0.56" stroke={PAL.gold} strokeWidth={c.LW * 2.6} /><path d="M-0.66 -0.9L0.78 -0.84" stroke={PAL.blue} strokeWidth={c.LW * 1.6} /></g>}
-		{cast.head !== 'human' && lappet}
+		{cast.head !== 'human' && !lapFront && lappet}
 		<g transform={mx(H)}>
 			{headArt !== undefined ? headArt : <>
 			{cast.faceless ? null : (jaw > 0 || ear !== 0) && (cast.head === 'jackal' || cast.head === 'ibis' || cast.head === 'falcon') ? <SplitHead kind={cast.head} jaw={jaw} ear={ear} d={headShape} r={headFill} c={c} id={id} /> : <Solid d={headShape} r={headFill} c={c} />}
@@ -661,7 +687,7 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 				<path d="M1.1 -1.72Q0.2 -1.55 -1.2 -2.15" fill="none" stroke={PAL.red} strokeWidth={c.LW * 2.6} /></>}
 			{cast.wig === 'tri' && cast.head !== 'human' && headArt === undefined && <path d="M0.42 -1.25Q-0.4 -1.7 -1.35 -1.5" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.2} />}
 		</g>
-		{cast.head === 'human' && lappet}
+		{lapFront ?? (cast.head === 'human' && lappet)}
 		<g transform={mx(H)}>{crown(cast.crown, c, t, amp)}</g>
 	</g>;
 	// ---- props ----

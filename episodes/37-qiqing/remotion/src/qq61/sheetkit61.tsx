@@ -13,7 +13,7 @@ export const LIGHT: Theme = {bg: '#E8D4AA', panel: '#F1E2BF', line: '#B08F58', t
 export const DARK: Theme = {bg: '#101838', panel: '#1B2652', line: '#D8A845', text: '#F4E8CC', sub: '#B8C4F2', accent: '#F08A5A', ground: '#2C3A78', dark: true};
 
 /* ---------------- the actor ---------------- */
-export type ActorOpts = {pivots?: boolean; hands?: {b?: Cast['bHand']; f?: Cast['fHand']}; /** Ma'at: the feather of the balance held in the front fist */ feather?: boolean; bProp?: Cast['bProp']; fProp?: Cast['fProp']; wings?: boolean; dress?: Cast['dress']; open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; look?: Look; basket?: boolean; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}; t?: number; face?: 1 | -1};
+export type ActorOpts = {pivots?: boolean; hands?: {b?: Cast['bHand']; f?: Cast['fHand']}; /** Ma'at: the feather of the balance held in the front fist */ feather?: boolean; bProp?: Cast['bProp']; fProp?: Cast['fProp']; wings?: boolean; dress?: Cast['dress']; open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; look?: Look; basket?: boolean; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}; t?: number; face?: 1 | -1; /** design test WIGTEST61: the tripartite wig's front lappet in front of the shoulder (default off) */ wigFront?: boolean};
 export const headKindOf = (who: string): HeadKind61 => { const k = CAST61[who]; return (k.head ?? k.base.head) as HeadKind61; };
 export const headFillOf = (who: string): string => { const k = CAST61[who], hk = headKindOf(who), P = PAL as Record<string, string>;
 	if (hk === 'human') return P[k.base.skin]; if (hk === 'lioness') return k.color ?? PAL.lion; if (hk === 'cat' || hk === 'seth') return k.color ?? PAL.lion;

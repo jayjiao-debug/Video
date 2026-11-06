@@ -1,5 +1,5 @@
 import React from 'react';
-import {God, CAST, POSES, Cast, Pose, solve, crown, castBody, Body, BodyArg, Hand} from '../qq60/rig60';
+import {God, CAST, POSES, Cast, Pose, solve, crown, castBody, Body, BodyArg, Hand, LapFit} from '../qq60/rig60';
 import {ap} from '../qq60/geo60';
 import {CAST2} from '../qq60/cast60';
 import {mx, sp, poly, PAL, Pt, lerp} from '../qq60/geo60';
@@ -15,7 +15,7 @@ export type Head61 = 'lioness' | 'cat' | 'seth';
 export type Hat61 = 'throne' | 'nu' | 'house' | 'goose';
 /** round 3 headdress pieces worn with / under the hat: Isis' vulture cap, a gold fillet (Nephthys), a red headband (Ma'at) */
 export type Band61 = 'vulture' | 'fillet' | 'redband';
-export type Cast61 = {base: Cast; head?: Head61; hat?: Hat61; band?: Band61; crown?: Cast['crown']; color?: string; color2?: string; /** Sekhmet: the fuller, darker mane */ mane?: boolean};
+export type Cast61 = {base: Cast; head?: Head61; hat?: Hat61; band?: Band61; crown?: Cast['crown']; color?: string; color2?: string; /** Sekhmet: the fuller, darker mane */ mane?: boolean; /** design test (WIGTEST61): front lappet in front of the shoulder; default off */ wigFront?: boolean};
 
 /* ---------------- signature colours (owner 2026-11-06, round 3) ----------------
    One colour per character, used for the dress / kilt (or the dominant accent) and repeated on the node ring of the family tree
@@ -136,11 +136,23 @@ const Basket: React.FC<{p: [number, number]; c: Ctx}> = ({p, c}) => <g transform
 	{[0.45, 0.85, 1.2].map((y) => <path key={y} d={`M-0.75 ${y}L0.75 ${y}`} stroke={PAL.mat2} strokeWidth={c.LW} />)}
 	<path d="M-0.7 0.1Q0 -1.2 0.7 0.1" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} /></g>;
 
+/* ---------------- wigFront design test (WIGTEST61): where the front lappet sits on each animal head ----------------
+   Head frame (face +x, neck pivot 0,0). f / b = the strip's front / back edge from its (hidden) top to the head-neck join; the front edge
+   stays BEHIND the jaw hinge and below / behind the eye (falcon: below the white cheek patch too), so the muzzle or beak, the eye, the ears and the open mouth stay clear.
+   tuck = the jowl line: above it the skull is in front (the lappet's top slips behind the cheek and the ear), below it the lappet lies
+   over the throat, the jaw hinge, the neck (and Sekhmet's mane) and then over the collar. The cat head wears no wig (canon §0.2). */
+export const LAPFIT61: Partial<Record<AnimalKind, LapFit>> = {
+	lioness: {f: [[0.22, -1.25], [0.42, -0.5], [0.46, 0.5]], b: [[-0.78, -1.25], [-0.56, -0.5], [-0.46, 0.5]], tuck: [[-1.7, -0.78], [-0.9, -0.64], [-0.2, -0.68], [0.3, -0.62], [0.72, -0.42]]},
+	seth: {f: [[0.4, -1.2], [0.7, -0.56], [0.72, 0.45]], b: [[-0.6, -1.2], [-0.28, -0.56], [-0.2, 0.45]], tuck: [[-1.7, -0.82], [-0.8, -0.7], [0.0, -0.74], [0.55, -0.7], [1.0, -0.52]]},
+	jackal: {f: [[0.5, -1.2], [0.84, -0.56], [0.84, 0.45]], b: [[-0.5, -1.2], [-0.14, -0.56], [-0.08, 0.45]], tuck: [[-1.7, -0.82], [-0.8, -0.7], [0.1, -0.74], [0.7, -0.7], [1.15, -0.52]]},
+	ibis: {f: [[0.2, -1.0], [0.5, -0.55], [0.56, 0.4]], b: [[-0.6, -1.0], [-0.48, -0.55], [-0.36, 0.4]], tuck: [[-1.6, -0.8], [-0.7, -0.76], [0.0, -0.86], [0.45, -0.86], [0.9, -0.76]]},
+	falcon: {f: [[0.1, -0.9], [0.4, -0.3], [0.5, 0.42]], b: [[-0.9, -0.9], [-0.58, -0.3], [-0.42, 0.42]], tuck: [[-1.6, -0.6], [-0.7, -0.5], [0.05, -0.55], [0.32, -0.38], [0.56, -0.1]]},
+};
 export type God61Props = {id: string; who: string; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; t?: number; vel?: {head?: number; torso?: number};
-	bProp?: Cast['bProp']; fProp?: Cast['fProp']; /** hand shapes override; by default a goddess opens an empty hand (no fist unless she holds something) */ hands?: {b?: Hand; f?: Hand}; /** old ep61 film param: = jaw */ open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; /** animal heads: eyes / look / brow (human heads use expr61 FaceOver) */ look?: {eyes?: number; look?: number; brow?: number}; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}};
+	bProp?: Cast['bProp']; fProp?: Cast['fProp']; /** hand shapes override; by default a goddess opens an empty hand (no fist unless she holds something) */ hands?: {b?: Hand; f?: Hand}; /** old ep61 film param: = jaw */ open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; /** animal heads: eyes / look / brow (human heads use expr61 FaceOver) */ look?: {eyes?: number; look?: number; brow?: number}; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}; /** design test: the tripartite wig's near front lappet in front of the shoulder / over the collar (default: the cast's wigFront, else off) */ wigFront?: boolean};
 /** an ep61 god: the ep60 `God` with the layered animal head (headArt) or the ep60 human head + a headdress painted on top */
-export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, hands, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, look, pivots = false, basket, wings, dress, hide}) => {
-	const k = CAST61[who], c: Ctx = {OW: 2.7 / s, LW: 1.5 / s}, kind = animalOf(k), rr = Math.max(0, Math.min(1, roar));
+export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, hands, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, look, pivots = false, basket, wings, dress, hide, wigFront}) => {
+	const k = CAST61[who], wf = wigFront ?? k.wigFront ?? false, c: Ctx = {OW: 2.7 / s, LW: 1.5 / s}, kind = animalOf(k), rr = Math.max(0, Math.min(1, roar));
 	// a roar throws the head back a little
 	const P: Pose = kind && rr > 0 ? {...pose, head: pose.head - 7 * rr} : pose;
 	// goddesses: an empty hand is open and elegant (a fist only round a prop, the basket handle or an explicit override)
@@ -162,7 +174,7 @@ export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t
 	const g = solve(P, castBody(cast));
 	const bh = g.bH, grip: [number, number] = [bh[0] * 0.02 + bh[2] * 0.6 + bh[4], bh[1] * 0.02 + bh[3] * 0.6 + bh[5]];
 	return <g>
-		<God id={id} cast={cast} pose={P} x={x} y={y} s={s} face={face} sec={{t, vel}} bProp={bProp} fProp={fProp} hide={hide} jaw={kind ? 0 : jaw} ear={kind ? 0 : ear} pivots={pivots} headArt={headArt} hatArt={hatArt} />
+		<God id={id} cast={cast} pose={P} x={x} y={y} s={s} face={face} sec={{t, vel}} bProp={bProp} fProp={fProp} hide={hide} jaw={kind ? 0 : jaw} ear={kind ? 0 : ear} pivots={pivots} headArt={headArt} hatArt={hatArt} wigFront={wf} lapFit={kind ? LAPFIT61[kind] : undefined} />
 		{(basket || (!kind && k.crown)) && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
 			<g transform={mx(g.head)}>
 				{!kind && k.crown && k.crown !== 'none' && crown(k.crown, c, t, 1)}
