@@ -49,3 +49,21 @@ Canon: `episodes/61-zhongshen/designbook.md`. Follow ancient Egyptian canon, whi
   graceful poses — never from the chest. Male: pectoral contour only, no nipples.
 - Re-render every character sheet, the line-up, RIGTEST61 key frames and all BOARD61 frames and check each female figure at full
   size for any chest shape before committing.
+
+## Round 3 (owner 2026-11-06 11:27): "all the characters having blue hair makes it difficult to distinguish"
+Make every character instantly distinguishable at phone size, staying within attested Egyptian iconography:
+- Human-headed gods and goddesses get BLACK wigs (the most common colour in tomb painting), each with its own headdress so the
+  silhouettes differ: Isis — vulture headdress (New Kingdom, e.g. tomb of Nefertari QV66) under her throne sign; Nephthys — gold
+  fillet + her house-and-basket sign; Ma'at — red headband with the ostrich feather; Nut — plain black wig (her starry body/dress is
+  the identifier); Shu — feather on a black wig; Geb — the goose on his head; Atum — the double crown over a black wig. Reserve the
+  lapis-blue wig/lappets for the animal-headed gods (Anubis, Horus, Ra, Thoth, Set, Tefnut, Sekhmet, Bastet), whose heads identify them.
+- One SIGNATURE COLOUR per character, used for the dress/kilt or a dominant accent, and repeated on their node ring in the family
+  tree (TREE61, BOARD61 mini-tree) and on their name tag edge:
+  Isis red · Nephthys green · Nut deep starry blue · Ma'at white + gold · Tefnut ochre gold · Sekhmet red linen (her epithet "Lady of
+  the Red Linen") with a darker crimson than Isis · Bastet turquoise · Osiris green skin + white wrappings · Set red-ochre · Horus
+  blue + gold · Ra gold (sun) · Anubis black + gold · Thoth deep blue + white · Shu sky blue · Geb earth brown + green · Atum white +
+  red (the double crown). Tefnut vs Sekhmet (both lionesses): different dress colour AND Sekhmet's fuller, darker mane; Horus vs Ra
+  (both falcons): Ra with the sun disk and uraeus, Horus with the double crown.
+- Put a "辨识" row on each character sheet (silhouette at 1/4 size + the signature colour swatch) and re-render the line-up so all
+  characters stand side by side in their colours. Check the boards: in every multi-character shot each figure must be distinguishable.
+- Same rules as before: ep60 renders unchanged; code + markdown only; update designbook (§ colours / headdresses + sources).
