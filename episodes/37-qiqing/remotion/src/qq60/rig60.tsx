@@ -91,6 +91,11 @@ export const penReach = (p: Pose, tip: V, A: number, female: BodyArg = false): P
 	return wristTo(reach(p, 'f', [tip[0] - o[0], tip[1] - o[1]], female), 'f', A);
 };
 export const wristTo = (p: Pose, side: 'b' | 'f', a: number): Pose => (side === 'b' ? {...p, bw: a - (p.bs - p.lean + p.be)} : {...p, fw: a - (p.fs - p.lean + p.fe)});
+/** body types, mummiform (Osiris, as on his statues): the two hands come out of the wrappings crossed over the chest, the front (crook)
+ *  hand high, the back (flail) hand lower; the wrists are turned so crook and flail cross in an X. Depends only on the torso, so applying
+ *  it twice gives the same pose (God applies it to every body-typed mummy; sheets may pass it in already). */
+export const MUMMY_GRIP = {f: [1.38, -4.92] as V, b: [0.78, -3.55] as V, fA: 76, bA: 114};
+export const mummyArms = (p: Pose, body: BodyArg): Pose => wristTo(wristTo(holdAt(holdAt(p, 'f', MUMMY_GRIP.f, body), 'b', MUMMY_GRIP.b, body), 'f', MUMMY_GRIP.fA), 'b', MUMMY_GRIP.bA);
 /** the rig's pivots in figure units (for the rig sheet) */
 export const PIVOTS = (g: Rig) => ({
 	hip: ap(g.root, [0, 0]), neck: ap(g.neck, [0, 0]), head: ap(g.head, [0, 0]),
@@ -137,8 +142,9 @@ export type Cast = {
 	/** ep61 lioness roar: skip the bare human face under an overlaid head */ faceless?: boolean; female?: boolean; beard?: boolean; wings?: boolean; tail?: boolean; collar?: 'god' | 'plain';
 	bHand?: Hand; fHand?: Hand; bProp?: PropKind; fProp?: PropKind;
 	/** ep61 body type (see BODY): 'f' = the goddess body (narrow shoulders, slim limbs, small hands / feet, long neck, waist and hip,
-	 *  ankle-length kalasiris over the bust with straps, deep collar, long lappets, short stride, 0.94 tall); 'm' = the god body (broad
-	 *  shoulders, pectorals, deltoids and biceps, thick neck, V torso, sturdy calves, long stride). Undefined = the ep60 drawing. */
+	 *  ankle-length kalasiris covering the chest up to the collar with no bust shape, deep collar, long lappets, short stride, 0.94 tall);
+	 *  'm' = the god body (broad shoulders, pectoral contour (no nipples), deltoids and biceps, thick neck, V torso, sturdy calves, long
+	 *  stride; mummiform: hands out of the wrappings gripping crook and flail). Undefined = the ep60 drawing. */
 	body?: Body;
 	/** body 'f': the dress colour (default red) and whether it carries the gold bead-net (default true) */
 	dressCol?: Role | string; net?: boolean;
@@ -210,9 +216,10 @@ export const BSH: Record<Body, BodyShapes> = {
 		thigh: sp(limb(BONE.thigh, 1.04, 0.66, 0.18, 0.04)),
 		shin: sp([[0, -0.64], [0.46, -0.48], [0.64, 0.05], [0.56, 1.4], [0.42, 3.2], [0.33, 4.6], [0.35, 5.05], [0, 5.32], [-0.37, 5.05], [-0.42, 4.5], [-0.6, 3.3], [-0.96, 1.7], [-0.84, 0.5], [-0.5, -0.42]]),
 		band: {u: 0.76, f: 0.47, a: 0.5}},
-	/** the goddess: narrow shoulders (±3.1 × 0.94 ≈ 80 % of the god), slim arms, long slender neck, small waist, gentle hip, bust in profile */
+	/** the goddess: narrow shoulders (±3.1 × 0.94 ≈ 80 % of the god), slim arms, long slender neck, small waist, gentle hip. The chest is a
+	 *  smooth, modest line from the armpit to the waist (owner 2026-11-06: no bust shape, ever; femininity never comes from the chest) */
 	f: {
-		torso: sp([[-1.62, 0.6], [-1.5, -0.6], [-0.84, -2.4], [-0.98, -3.4], [-1.38, -4.6], [-2.1, -5.32], [-2.95, -5.72], [-3.08, -6.38], [-2.55, -6.78], [-1.55, -6.88], [-0.5, -6.94], [0.7, -6.94], [1.8, -6.88], [2.65, -6.78], [3.12, -6.38], [3.02, -5.72], [2.25, -5.3], [1.5, -4.95], [1.55, -4.55], [2.08, -3.98], [1.98, -3.42], [1.28, -3.12], [0.72, -2.4], [1.3, -0.8], [1.55, 0.6]]),
+		torso: sp([[-1.62, 0.6], [-1.5, -0.6], [-0.84, -2.4], [-0.98, -3.4], [-1.38, -4.6], [-2.1, -5.32], [-2.95, -5.72], [-3.08, -6.38], [-2.55, -6.78], [-1.55, -6.88], [-0.5, -6.94], [0.7, -6.94], [1.8, -6.88], [2.65, -6.78], [3.12, -6.38], [3.02, -5.72], [2.25, -5.3], [1.68, -4.8], [1.38, -4.0], [1.06, -3.15], [0.74, -2.4], [1.3, -0.8], [1.55, 0.6]]),
 		neck: sp([[-0.46, 0.6, 1], [-0.42, -0.4], [-0.38, -1.72], [0.46, -1.76], [0.5, -0.3], [0.6, 0.6, 1]]),
 		upper: sp(limb(BONE.upper, 0.6, 0.41, 0.04, 0.02)),
 		fore: sp(limb(BONE.fore, 0.43, 0.27, 0.03, 0.02, 0.35)),
@@ -470,6 +477,7 @@ const SplitHead: React.FC<{kind: HeadKind; jaw: number; ear: number; d: string; 
 
 export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}, id, hide = {}, bProp, fProp, propTop, paletteA = -12, explode = 0, pivots = false, jaw = 0, ear = 0, headArt}) => {
 	const c: Ctx = {OW: 2.7 / s, LW: 1.5 / s};
+	if (cast.body && cast.dress === 'mummy') pose = mummyArms(pose, cast.body); // body types: Osiris' hands always crossed on the chest
 	const g0 = solve(pose, castBody(cast)), g = explode ? explodeRig(g0, explode) : g0, t = sec.t ?? 0, amp = sec.amp ?? 1, vh = sec.vel?.head ?? 0, vt = sec.vel?.torso ?? 0;
 	const skin = cast.skin, skin2 = cast.skin2, mummy = cast.dress === 'mummy';
 	// body type (undefined = the ep60 drawing): its shapes, and the outline compensation for the scaled hand / foot frames
@@ -558,26 +566,23 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 			<line x1={back[0]} y1={back[1]} x2={tP(g.torso, [-0.9, -6.5])[0]} y2={tP(g.torso, [-0.9, -6.5])[1]} stroke={PAL.red} strokeWidth={c.LW * 3} />
 			<path d={sp([[top[0], top[1], 1], [lv(back as V, top as V, 0.5)[0], lv(back as V, top as V, 0.5)[1] + 0.12], [back[0], back[1], 1]], false)} fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.2} />
 		</g>; };
-	const kalasiris = () => { // body 'f': the ankle-length close-fitting sheath (kalasiris) from above the bust, on two shoulder straps;
-		// its line gives the bust, waist and hip in the canonical profile; the hem rides on the shins so it follows the legs in the walk
+	const kalasiris = () => { // body 'f': the ankle-length close-fitting sheath (kalasiris). It covers the chest COMPLETELY: its top edge runs
+		// straight across at y −6.5, under the broad collar (which overlaps it all the way), and its front is one smooth, modest line from
+		// the collar to the waist — no bust contour, no neckline curve, no gap (owner 2026-11-06). Waist and hip give the feminine line; the
+		// hem rides on the shins so it follows the legs in the walk
 		const P = (m: M, p: V): Pt => tP(m, p), col = cast.dressCol ?? 'red', dc = (PAL as Record<string, string>)[col] ?? col;
 		// the hem and the leg-side outline take the envelope of both legs (back-most leg behind, front-most in front), so the dress never
 		// twists or lets a leg through when the legs cross mid-stride
 		const bk = (m1: M, m2: M, p: V): V => { const a = tP(m1, p), b = tP(m2, p); return a[0] < b[0] ? a : b; }, fr = (m1: M, m2: M, p: V): V => { const a = tP(m1, p), b = tP(m2, p); return a[0] > b[0] ? a : b; };
-		const pts: Pt[] = [[...P(g.torso, [-1.72, -5.02]), 1] as Pt, P(g.torso, [-1.1, -3.4]), P(g.torso, [-0.94, -2.4]), P(g.torso, [-1.98, 0.4]), bk(g.rT, g.aT, [-1.08, 2.0]), bk(g.rS, g.aS, [-0.74, 1.2]), bk(g.rS, g.aS, [-0.48, 4.75]), [...bk(g.rS, g.aS, [-0.4, 5.02]), 1] as Pt,
-			[...fr(g.rS, g.aS, [0.5, 5.02]), 1] as Pt, fr(g.rS, g.aS, [0.6, 1.4]), fr(g.rT, g.aT, [1.02, 1.4]), P(g.torso, [1.6, -0.5]), P(g.torso, [0.84, -2.4]), P(g.torso, [1.4, -3.06]), P(g.torso, [2.12, -3.42]), P(g.torso, [2.22, -3.98]), [...P(g.torso, [1.62, -5.0]), 1] as Pt];
+		const pts: Pt[] = [[...P(g.torso, [-2.1, -6.5]), 1] as Pt, [...P(g.torso, [-2.22, -5.4]), 1] as Pt, P(g.torso, [-1.46, -4.6]), P(g.torso, [-1.08, -3.4]), P(g.torso, [-0.94, -2.4]), P(g.torso, [-1.98, 0.4]), bk(g.rT, g.aT, [-1.08, 2.0]), bk(g.rS, g.aS, [-0.74, 1.2]), bk(g.rS, g.aS, [-0.48, 4.75]), [...bk(g.rS, g.aS, [-0.4, 5.02]), 1] as Pt,
+			[...fr(g.rS, g.aS, [0.5, 5.02]), 1] as Pt, fr(g.rS, g.aS, [0.6, 1.4]), fr(g.rT, g.aT, [1.02, 1.4]), P(g.torso, [1.6, -0.5]), P(g.torso, [0.86, -2.4]), P(g.torso, [1.17, -3.15]), P(g.torso, [1.49, -4.0]), P(g.torso, [1.8, -4.8]), [...P(g.torso, [2.38, -5.34]), 1] as Pt, [...P(g.torso, [2.36, -6.5]), 1] as Pt];
 		const d = sp(pts, true, 0.15), cid = `${id}-dress`, net: React.ReactNode[] = [];
 		if (cast.net !== false) for (let i = -22; i < 22; i++) net.push(<line key={'a' + i} x1={i * 0.7 - 11} y1={-17} x2={i * 0.7 + 11} y2={5} stroke={PAL.gold} strokeWidth={c.LW * 1.1} />, <line key={'b' + i} x1={i * 0.7 + 11} y1={-17} x2={i * 0.7 - 11} y2={5} stroke={PAL.gold} strokeWidth={c.LW * 1.1} />);
-		const strap = (a: V, b: V, k: string) => { const A = tP(g.torso, a), Bq = tP(g.torso, b); return <line key={k} x1={A[0]} y1={A[1]} x2={Bq[0]} y2={Bq[1]} stroke={dc} strokeWidth={c.LW * 3.4} strokeLinecap="round" />; };
 		// the fold between the legs and the advanced leg's line under the linen
 		const lead = tP(g.aS, [0, 4])[0] > tP(g.rS, [0, 4])[0] ? [g.aT, g.aS] : [g.rT, g.rS], fold = sp([P(lead[0], [-0.62, 1.5]), P(lead[1], [-0.42, 0.6]), P(lead[1], [-0.3, 4.4])], false);
-		const edge = [P(g.torso, [-1.72, -5.02]), P(g.torso, [1.62, -5.0])] as V[];
 		return <g key="sheath"><clipPath id={cid}><path d={d} /></clipPath>
-			{strap([-1.3, -5.0], [-0.95, -6.62], 'sb')}
 			<Solid d={d} r={dc} c={c} />
 			<g clipPath={`url(#${cid})`}>{net}<path d={fold} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.1} opacity={0.35} /></g>
-			{strap([1.25, -4.98], [1.05, -6.6], 'sf')}
-			<line x1={edge[0][0]} y1={edge[0][1]} x2={edge[1][0]} y2={edge[1][1]} stroke={PAL.gold} strokeWidth={c.LW * 2.2} />
 		</g>; };
 	const gown = () => { // ep60 Tutu: a sheer white linen gown from the shoulders to the ankles, legs showing through
 		const P = (m: M, p: V): Pt => tP(m, p);
@@ -652,14 +657,14 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 	</g>;
 	// ---- props ----
 	const bG = gripPt(g.bH), fG = gripPt(g.fH);
-	const prop = (k: PropKind, G: V, Hm: M, key: string) => {
+	const prop = (k: PropKind, G: V, Hm: M, key: string, /** crook / flail tilt (default: the ep60 angles) */ a?: number) => {
 		if (hide.props) return null;
 		if (k === 'ankh') return <Ankh key={key} at={G} c={c} />;
 		if (k === 'was') return <Was key={key} at={G} top={propTop ?? G[1] - 6.2} c={c} />;
 		if (k === 'pen') return <Pen key={key} h={Hm} c={c} />;
 		if (k === 'palette') return <Palette key={key} m={chain(T(G[0], G[1]), R(paletteA), T(1.45, 0))} c={c} />;
-		if (k === 'crook') return <g key={key} transform={`translate(${G[0]},${G[1]}) scale(1.25) translate(${-G[0]},${-G[1]})`}><Crook at={G} a={16} c={{OW: c.OW / 1.25, LW: c.LW / 1.25}} /></g>;
-		if (k === 'flail') return <Flail key={key} at={G} a={-30} c={c} t={t} />;
+		if (k === 'crook') return <g key={key} transform={`translate(${G[0]},${G[1]}) scale(1.25) translate(${-G[0]},${-G[1]})`}><Crook at={G} a={a ?? 16} c={{OW: c.OW / 1.25, LW: c.LW / 1.25}} /></g>;
+		if (k === 'flail') return <Flail key={key} at={G} a={a ?? -30} c={c} t={t} />;
 		if (k === 'sickle' || k === 'hoe') return <HeldTool key={key} kind={k} h={Hm} c={c} />;
 		if (k === 'sistrum') return <Sistrum key={key} at={G} c={c} t={t} />;
 		if (k === 'knife') return <Knife key={key} at={G} c={c} />;
@@ -681,9 +686,8 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		{showB && armInk(g.bU, g.bF, g.bH, cast.bHand, 'bi')}<Ink d={neckD} m={g.neck} c={c} /><Ink d={torsoD} m={g.torso} c={c} />{showF && armInk(g.fU, g.fF, g.fH, cast.fHand, 'fi')}
 		{showB && armFill(g.bU, g.bF, g.bH, cast.bHand, 'bf')}<Fl d={torsoD} m={g.torso} r={skin} /><Fl d={neckD} m={g.neck} r={skin} />{showF && armFill(g.fU, g.fF, g.fH, cast.fHand, 'ff')}
 		{showB && armDetail(g.bU, g.bF, g.bH, cast.bHand, 'bd')}
-		{BT === 'm' && <g transform={mx(g.torso)} fill="none" stroke={PAL.line} strokeLinecap="round">{/* pectoral, sternum and the abdominal line of the canon */}
-			<path d="M2.0 -4.3Q1.7 -3.3 0.75 -3.42" strokeWidth={c.LW * 1.1} opacity={0.75} /><path d="M0.3 -4.6Q0.38 -3.9 0.32 -3.3" strokeWidth={c.LW} opacity={0.4} /><path d="M0.55 -2.95Q0.62 -2.55 0.56 -2.2" strokeWidth={c.LW} opacity={0.45} />
-			<circle cx={1.62} cy={-3.78} r={0.075} fill={PAL.ink} stroke="none" /></g>}
+		{BT === 'm' && <g transform={mx(g.torso)} fill="none" stroke={PAL.line} strokeLinecap="round">{/* pectoral contour, sternum and the abdominal line of the canon; no nipple mark (owner 2026-11-06) */}
+			<path d="M2.0 -4.3Q1.7 -3.3 0.75 -3.42" strokeWidth={c.LW * 1.1} opacity={0.75} /><path d="M0.3 -4.6Q0.38 -3.9 0.32 -3.3" strokeWidth={c.LW} opacity={0.4} /><path d="M0.55 -2.95Q0.62 -2.55 0.56 -2.2" strokeWidth={c.LW} opacity={0.45} /></g>}
 		{!female && !BT && <><circle cx={1.42} cy={-3.62} r={0.07} fill={PAL.ink} transform={mx(g.torso)} /><path d="M0.62 -1.2Q0.7 -1.05 0.58 -0.95" transform={mx(g.torso)} fill="none" stroke={PAL.ink} strokeWidth={c.LW} /></>}</g>);
 	if (cast.dress === 'kilt') parts.push(kilt());
 	if (cast.dress === 'robe') parts.push(robe());
@@ -694,7 +698,14 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 	parts.push(<Collar key="collar" m={g.torso} c={c} female={female} plain={cast.collar === 'plain'} fit={collarFit} />);
 	if (cast.dress === 'robe') parts.push(<path key="shirt" d={(BT === 'm' ? (q: Pt[]) => sp(tf(q, [1.12, 0, 0, 1, 0, 0])) : sp)([[-3.3, -5.9], [-3.0, -6.7], [3.3, -6.7], [3.45, -5.8], [2.4, -5.0], [1.7, -4.4], [1.3, -2.4], [-1.0, -2.3], [-1.6, -4.6], [-2.6, -5.2]])} transform={mx(g.torso)} fill={PAL.linen} opacity={0.3} />);
 	parts.push(headGroup);
-	if (mummy) { // hands only, emerging from the shroud
+	if (mummy && BT) { // body types: real hands out of the wrappings, crossed on the chest. Each staff is drawn along its fist's grip axis
+		// (hand frame +x), then the fist is drawn OVER the shaft with its finger lines, and a wrapped cuff closes the wrist into the shroud
+		const along = (Hm: M) => rot(Hm) + 90, cuff = poly([[-0.44, -0.42], [0.42, -0.42], [0.4, 0.0], [-0.42, 0.0]]);
+		const mHand = (Hm: M, key: string) => <g key={key}><Solid d={SH.fist} m={Hm} r={skin} c={c} k={hk} /><HandLines m={Hm} kind="fist" c={c} />
+			<Solid d={cuff} m={Hm} r="linen" c={c} k={hk} /><g transform={mx(Hm)} stroke={PAL.turq} strokeWidth={c.LW * 0.9}><line x1={-0.42} y1={-0.21} x2={0.4} y2={-0.21} /></g></g>;
+		parts.push(prop(bp, bG, g.bH, 'bpb', along(g.bH)), mHand(g.bH, 'mhb'));
+		parts.push(prop(fp, fG, g.fH, 'fp', along(g.fH)), mHand(g.fH, 'mhf'));
+	} else if (mummy) { // hands only, emerging from the shroud
 		parts.push(prop(bp, bG, g.bH, 'bpb'));
 		parts.push(prop(fp, fG, g.fH, 'fp'));
 		parts.push(<g key="mh"><Solid d={SH.fist} m={g.bH} r={skin} c={c} /><Solid d={SH.fist} m={g.fH} r={skin} c={c} />

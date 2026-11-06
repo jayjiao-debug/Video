@@ -1,7 +1,6 @@
 import React from 'react';
-import {POSES, Pose, Rig, wristTo, reach, solve, AMMIT_REST} from '../qq60/rig60';
+import {POSES, Pose, Rig, wristTo, reach, solve, AMMIT_REST, mummyArms} from '../qq60/rig60';
 import {walkPose, ANI_POSES} from '../qq60/cast60';
-import {mummyHands} from '../qq60/scene60';
 import {Throne, Balance, balanceGeo} from '../qq60/props60';
 import {Ammit61 as Ammit2} from './ammit61';
 import {GoldDefs, MaskFront} from '../qq60/act60a_kit';
@@ -10,6 +9,9 @@ import {PAL, V, ap, lerp} from '../qq60/geo60';
 import {P61} from './cast61';
 import {NutArch} from './shots61';
 import {ActorOpts, Actor, Theme} from './sheetkit61';
+/** Osiris (god body): both hands out of the wrappings, crossed on the chest round crook and flail (the rig's mummyArms; the rig applies
+ *  it too, so the callouts here and the drawing agree) */
+const mummyHands = (p: Pose): Pose => mummyArms(p, 'm');
 import {Look} from './expr61';
 
 /* ep61 · the character table: every sheet's content (poses, stress poses, expressions, parts, callouts, palette, rules).
