@@ -10,9 +10,9 @@ import {GlowHeart, MaskFront, GoldDefs} from '../qq60/act60a_kit';
 import {Heart60} from '../qq60/heart60';
 import {PAL, V, ap, mx, lerp, sm, cl} from '../qq60/geo60';
 import {FC} from '../qq60/frame60';
-import {CAST61, God61} from './cast61';
+import {CAST61, God61, bodyOf} from './cast61';
 import {Actor, ActorOpts, at, Callouts, Crop, DARK, LIGHT, Ground, headFillOf, Lines, Palette, palHeight, Panel, Rules, SW, SH_, Theme, Tx, wrap, headAt} from './sheetkit61';
-import {CHARS, CharCfg, Cell, Part, FaceCell, Slot, SHEET_COUNT, REST, S_RAISE, S_STEP, S_BACK, FACES} from './chars61';
+import {CHARS, CharCfg, Cell, Part, FaceCell, Slot, SHEET_COUNT, REST, S_RAISE, S_STEP, S_BACK, FACES, restF} from './chars61';
 import {Look} from './expr61';
 import {FaceCheck, FACE_N} from './facecheck61';
 
@@ -22,7 +22,7 @@ import {FaceCheck, FACE_N} from './facecheck61';
 const TITLE_H = 98;
 const BY = (k: string) => CHARS.find((c) => c.key === k)!;
 /** Ani's measured height incl. wig, in grid units (line-up sheet measures it live): the 「凡人 × 1.00」 reference */
-const ANI_TOP = 20.1;
+const ANI_TOP = 20.0;
 
 /** measure the top of a group (px) once rendered: used for the height ruler */
 const useTop = (): [React.RefObject<SVGGElement | null>, {top: number; left: number; right: number} | null] => {
@@ -58,7 +58,7 @@ const FaceRow: React.FC<{cells: FaceCell[]; x0: number; y0: number; w: number; h
 	return <g>{cells.map((c, i) => { const who = c.who ?? cfg.who, [fx, fy] = headAt(who, c.pose, s, cw, h, cfg.focus), x = x0 + i * (cw + gap);
 		return <Crop key={i} x={x} y={y0} w={cw} h={h} th={th} label={c.label}>{() => <Actor id={`${cfg.key}-f${i}`} who={who} pose={c.pose} x={fx} y={fy} s={s} {...c.o} look={c.look} />}</Crop>; })}</g>;
 };
-const figAt = (who: string, pose: Pose, s: number, w: number, h: number): V => { const q = ap(solve(pose, !!CAST61[who].base.female).torso, [0, -3.6]); return [w / 2 - s * q[0], h / 2 - s * q[1]]; };
+const figAt = (who: string, pose: Pose, s: number, w: number, h: number): V => { const q = ap(solve(pose, bodyOf(who)).torso, [0, -3.6]); return [w / 2 - s * q[0], h / 2 - s * q[1]]; };
 const PartRow: React.FC<{parts: Part[]; x0: number; y0: number; w: number; h: number; th: Theme; cfg: CharCfg}> = ({parts, x0, y0, w, h, th, cfg}) => {
 	const gap = 8, cw = (w - gap * (parts.length - 1)) / parts.length;
 	return <g>{parts.map((p, i) => { const who = p.who ?? cfg.who, s = p.s ?? 19, x = x0 + i * (cw + gap);
@@ -71,10 +71,10 @@ const MX = 24, MY = 112, MW = 640, MH = 590, RX = 680, RW = 736;
 export const CharSheet: React.FC<{cfg: CharCfg}> = ({cfg}) => {
 	const th = cfg.dark ? DARK : LIGHT, gy = MY + MH - 76, cx = MX + 321, s = cfg.main.s;
 	const [ref, bb] = useTop();
-	const m = cfg.main, mainWho = m.who ?? cfg.who, female = !!CAST61[mainWho]?.base.female;
+	const m = cfg.main, mainWho = m.who ?? cfg.who, female = CAST61[mainWho] ? bodyOf(mainWho) : false;
 	const slot: Slot = {x: MX, y: MY, w: MW, h: MH, gy, id: `${cfg.key}-main`, th, s};
 	const ex = cfg.key === 'atum' ? {who: 'ra', dx: 82} : null, mainDx = ex ? -82 : m.dx ?? 0;
-	const targets = cfg.notes.map((n) => { const w2 = n.on === 2 && ex ? ex.who : mainWho, dx = n.on === 2 && ex ? ex.dx : mainDx, fem = !!CAST61[w2]?.base.female;
+	const targets = cfg.notes.map((n) => { const w2 = n.on === 2 && ex ? ex.who : mainWho, dx = n.on === 2 && ex ? ex.dx : mainDx, fem = CAST61[w2] ? bodyOf(w2) : false;
 		const to: V = n.abs ?? (n.bone && n.p ? at(m.pose ?? REST, cx + dx, gy, s, 1, n.bone, n.p, fem) : [cx, gy - 200]);
 		return {t: n.t, d: n.d, src: n.src, to, side: n.side}; });
 	const topU = bb ? (gy - bb.top) / s : 0, aniY = gy - ANI_TOP * s;
@@ -86,7 +86,7 @@ export const CharSheet: React.FC<{cfg: CharCfg}> = ({cfg}) => {
 		{!m.custom && <g>{[0, 5, 10, 15, 20, 25].map((u) => <g key={u}><line x1={206} x2={217} y1={gy - u * s} y2={gy - u * s} stroke={th.sub} strokeWidth={1.2} opacity={0.85} /><Tx x={202} y={gy - u * s + 4} t={String(u)} size={12} fill={th.sub} w={700} anchor="end" /></g>)}
 			<line x1={206} x2={206} y1={gy} y2={gy - 25 * s} stroke={th.sub} strokeWidth={1.2} opacity={0.7} />
 			<line x1={206} x2={492} y1={aniY} y2={aniY} stroke={th.accent} strokeWidth={1.4} strokeDasharray="7 5" opacity={0.9} />
-			<Tx x={214} y={aniY + 15} t={`阿尼头顶 = ${ANI_TOP} 格`} size={12.5} fill={th.accent} w={900} /></g>}
+			<Tx x={214} y={aniY + 15} t={`阿尼头顶 = ${ANI_TOP.toFixed(1)} 格`} size={12.5} fill={th.accent} w={900} /></g>}
 		{m.custom ? <>{m.custom(slot)}</> : <>
 			<g ref={ref}><Actor id={`${cfg.key}-m`} who={mainWho} pose={m.pose ?? REST} x={cx + mainDx} y={gy} s={s} {...m.o} /></g>
 			{ex && <Actor id={`${cfg.key}-m2`} who={ex.who} pose={m.pose ?? REST} x={cx + ex.dx} y={gy} s={s} /> }</>}
@@ -123,18 +123,18 @@ const AmmitHeads: React.FC<{x: number; y: number; w: number; h: number; th: Them
 
 /* ---------------- 01 line-up ---------------- */
 const LINEUP: {who: string; zh: string; pose?: Pose; o?: ActorOpts}[] = [
-	{who: 'atum', zh: '阿图姆'}, {who: 'ra', zh: '拉'}, {who: 'shu', zh: '舒'}, {who: 'tefnut', zh: '泰芙努特', o: {dress: 'sheath'}}, {who: 'geb', zh: '盖布'}, {who: 'nut', zh: '努特', o: {bProp: 'none', fProp: 'none'}},
-	{who: 'osiris', zh: '奥西里斯', pose: {...walkPose(0, {}), lean: 0}}, {who: 'isis', zh: '伊西斯', o: {wings: false}}, {who: 'set', zh: '赛特', o: {sneer: 1}}, {who: 'nephthys', zh: '奈芙蒂斯', o: {bProp: 'none', fProp: 'none'}},
+	{who: 'atum', zh: '阿图姆'}, {who: 'ra', zh: '拉'}, {who: 'shu', zh: '舒'}, {who: 'tefnut', zh: '泰芙努特', o: {dress: 'sheath'}}, {who: 'geb', zh: '盖布'}, {who: 'nut', zh: '努特', pose: restF(), o: {bProp: 'none', fProp: 'none'}},
+	{who: 'osiris', zh: '奥西里斯', pose: {...walkPose(0, {}), lean: 0}}, {who: 'isis', zh: '伊西斯', o: {wings: false}}, {who: 'set', zh: '赛特', o: {sneer: 1}}, {who: 'nephthys', zh: '奈芙蒂斯', pose: restF(), o: {bProp: 'none', fProp: 'none'}},
 	{who: 'horus', zh: '荷鲁斯'}, {who: 'anubis', zh: '阿努比斯'}, {who: 'thoth', zh: '托特'}, {who: 'sekhmet', zh: '塞赫迈特', o: {dress: 'sheath'}}, {who: 'bastet', zh: '巴斯特'}, {who: 'maat', zh: '玛阿特', o: {wings: false}}, {who: 'ani', zh: '阿尼（凡人）'}];
 export const LineUp: React.FC = () => {
 	const th = LIGHT, s = 11, gy = 520, step = 78, x0 = 54, refs = useRef<(SVGGElement | null)[]>([]), [tops, setTops] = useState<number[] | null>(null), [h] = useState(() => delayRender('lineup'));
 	useLayoutEffect(() => { setTops(refs.current.map((r) => (r ? r.getBBox().y : gy))); continueRender(h); }, [h]);
 	const pose = (i: number) => LINEUP[i].pose ?? (LINEUP[i].who === 'osiris' ? BY('osiris').main.pose! : REST);
 	return <SheetBg th={th}>
-		<Title n={1} zh="总排 · 身高对照" role="全体神 + 凡人" sub="同一副骨架、同一比例尺：神 = 凡人 × 1.00，头饰另算" en="Line-up" th={th} />
+		<Title n={1} zh="总排 · 身高对照" role="全体神 + 凡人" sub="同一副骨架、同一比例尺：男身 = 凡人 × 1.00，女身 × 0.94，头饰另算" en="Line-up" th={th} />
 		<Panel x={24} y={112} w={1392} h={450} th={th} title="并排 · 同一地平线 · 同一比例尺（s = 11 px/格）" />
 		<g>{[0, 5, 10, 15, 20, 25].map((u) => <g key={u}><line x1={44} x2={1400} y1={gy - u * s} y2={gy - u * s} stroke={th.sub} strokeWidth={0.9} strokeDasharray="2 6" opacity={0.8} /><Tx x={40} y={gy - u * s - 3} t={String(u)} size={12} fill={th.sub} w={700} /></g>)}
-			<line x1={44} x2={1400} y1={gy - ANI_TOP * s} y2={gy - ANI_TOP * s} stroke={th.accent} strokeWidth={1.6} strokeDasharray="8 6" /><Tx x={60} y={150} t={`红色虚线 = 阿尼头顶（含假发）= ${ANI_TOP} 格 = 神的身体基准线；灰点线每 5 格；名字下的数字 = 含头饰总高`} size={15} fill={th.accent} w={900} /></g>
+			<line x1={44} x2={1400} y1={gy - ANI_TOP * s} y2={gy - ANI_TOP * s} stroke={th.accent} strokeWidth={1.6} strokeDasharray="8 6" /><Tx x={60} y={150} t={`红色虚线 = 阿尼头顶（含假发）= ${ANI_TOP.toFixed(1)} 格 = 男身基准线（女身 × 0.94）；灰点线每 5 格；名字下的数字 = 含头饰总高`} size={15} fill={th.accent} w={900} /></g>
 		<Ground x0={30} x1={1410} y={gy} th={th} />
 		{LINEUP.map((l, i) => { const x = x0 + 18 + i * step, ani = l.who === 'ani'; return <g key={l.who}><g ref={(r) => { refs.current[i] = r; }}><Actor id={`lu${i}`} who={l.who} pose={pose(i)} x={x} y={gy} s={s} {...l.o} /></g>
 			<Tx x={x} y={gy + 24} t={l.zh} size={l.zh.length > 4 ? 12.5 : 15} fill={ani ? th.accent : th.text} w={900} anchor="middle" />
@@ -144,12 +144,11 @@ export const LineUp: React.FC = () => {
 			return <Crop key={l.who} x={x} y={592} w={w} h={150} th={th}>{() => <Actor id={`luh${i}`} who={l.who} pose={pose(i)} x={fx} y={fy + 10} s={hs} {...l.o} />}</Crop>; })}
 		<Panel x={24} y={770} w={1392} h={298} th={th} title="身高规则（全系列统一，新集必须照做）" />
 		<Lines x={44} y={808} lines={[
-			'● 骨架：神与凡人（阿尼）共用 ep60 的同一副骨架：脚底 0、膝 6、髋 9.5、肩 16（19 方格网）；阿尼连假发实测 20.1 格。同一 s → 身体一样高，所以「神 = 凡人 × 1.00」。',
-			'● 神靠头（豺/朱鹮/隼/狮/猫/Set 兽）、头饰（冠、羽毛、日轮、月冠、nu 罐、王座符）和手里的东西来辨认，不靠变高。',
-			'● 头饰另算：含头饰的总高是渲染后量出来的（名字下的数字，÷20.1 = 倍数，约 ×0.99 – ×1.20；最高是奥西里斯的阿特夫冠）。',
-			'● 例外只有两种：① 孩童荷鲁斯（ep61 镜 14）= 同骨架 ×0.75；② 特写时整体放大（比例不变，所有人一起放大）。',
-			'● 非人形的阿米特是独立小骨架（右下）；努特的拱形与盖布的躺姿由同一骨架 / 星拱组件旋转得到。',
-			'● 总排里伊西斯、玛阿特收起了翅膀（展翼见各自的表）。'].flatMap((t) => wrap(t, 54)).slice(0, 15)} size={15} lh={1.42} fill={th.text} w={600} />
+			'● 骨架：神与凡人（阿尼）共用 ep60 的同一副骨架（脚底 0、膝 6、髋 9.5、肩 16，19 方格网）；阿尼连假发实测 20.0 格（男身站得宽，比 ep60 的 20.1 低 0.1）。',
+			'● 男身（rig60 BODY.m）= 凡人 × 1.00：宽肩、胸肌 / 三角肌 / 二头肌、粗颈、细腰 V 形躯干、壮小腿；短裙 + 腰带 + 前垂、臂环；站得宽、步子大；握拳、握紧权杖。',
+			'● 女身（BODY.f）= × 0.94：肩宽 ≈ 男身 80%、细臂、小手小脚、长颈、细腰与柔和的臀线；及踝紧身长裙盖过胸部（肩带）、深宽领、长垂发；双脚靠拢、步子小；空手时手掌张开。',
+			'● 神靠头、头饰和手里的东西来认；含头饰总高是渲染后量出来的（名字下的数字，÷20.0 = 倍数）。',
+			'● 例外：孩童荷鲁斯 ×0.75；特写整体放大；阿米特是独立小骨架（右下）；奥西里斯木乃伊形但保留宽肩；总排里伊西斯、玛阿特收起了翅膀。'].flatMap((t) => wrap(t, 54)).slice(0, 13)} size={15} lh={1.38} fill={th.text} w={600} />
 		<g><Actor id="lu-ani2" who="ani" pose={REST} x={1040} y={1050} s={9.6} /><Ammit2 id="lu-am" pose={{...AMMIT_REST, jaw: 5}} x={1215} y={1050} s={13} t={0.5} look={0.6} />
 			<Tx x={1040} y={1066} t="阿尼" size={13} fill={th.accent} w={900} anchor="middle" /><Tx x={1300} y={1066} t="阿米特（ep60 称重厅 s34 : s26）" size={13} fill={th.text} w={800} anchor="middle" /></g>
 	</SheetBg>;
@@ -167,7 +166,7 @@ const PC = {OW: 2.7 / 40, LW: 1.5 / 40};
 export const PropsSheet: React.FC = () => {
 	const th = LIGHT, cw = 270, ch = 344, gx = 10, x0 = 24, y0 = 116, y1 = y0 + ch + 12;
 	const cell = (i: number) => ({x: x0 + (i % 5) * (cw + gx), y: i < 5 ? y0 : y1, w: cw, h: ch});
-	const hold = (who: string, pose: Pose, o: ActorOpts, bone: keyof Rig, p: V, s: number, id: string, w = 130, h = 120) => { const q = ap(solve(pose, !!CAST61[who].base.female)[bone], p); return <Crop x={0} y={0} w={w} h={h} th={th}>{() => <Actor id={id} who={who} pose={pose} x={w / 2 - s * q[0]} y={h / 2 - s * q[1]} s={s} {...o} />}</Crop>; };
+	const hold = (who: string, pose: Pose, o: ActorOpts, bone: keyof Rig, p: V, s: number, id: string, w = 130, h = 120) => { const q = ap(solve(pose, bodyOf(who))[bone], p); return <Crop x={0} y={0} w={w} h={h} th={th}>{() => <Actor id={id} who={who} pose={pose} x={w / 2 - s * q[0]} y={h / 2 - s * q[1]} s={s} {...o} />}</Crop>; };
 	const items: {zh: string; en: string; note: string; src: string; node: React.ReactNode}[] = [
 		{zh: '坛形心脏', en: 'jar heart', note: '红色坛形心脏，口沿金；怀疑 / 称重时会跳动、发光（Heart60 / GlowHeart）', src: '系列设计 · ep60 facts F11/F15 + 心脏象形 ib', node: <g><Heart60 x={cw / 2 - 62} y={150} h={118} beat={0.3} id="pr-h1" /><GlowHeart x={cw / 2 + 66} y={222} s={62} glow={0.8} /></g>},
 		{zh: '玛阿特羽毛', en: "Ma'at's feather", note: '一根窄而直的鸵鸟羽，根部蓝带；秤右盘与头顶共用同一形（3.2 格）', src: 'I16 · Louvre E 4436 · BM EA9901/3', node: <g transform={`translate(${cw / 2 + 6},236) scale(64)`}><Feather c={{OW: 2.7 / 64, LW: 1.5 / 64}} h={3.2} /></g>},
@@ -184,7 +183,7 @@ export const PropsSheet: React.FC = () => {
 		{items.map((it, i) => { const c = cell(i); return <PropCell key={i} {...c} zh={it.zh} en={it.en} note={it.note} src={it.src} th={th}>{it.node}</PropCell>; })}
 		<Panel x={24} y={y1 + ch + 26} w={1392} h={SH_ - 12 - (y1 + ch + 26)} th={th} title="握法 · 手在物体上（拳头盖在物体前面，手指绕杆；无指甲）" />
 		{[{who: 'anubis', pose: REST, bone: 'bH' as keyof Rig, p: [0.0, 1.9] as V, o: {}, l: 'ankh · 后手'}, {who: 'horus', pose: REST, bone: 'fH' as keyof Rig, p: [0.2, 0.8] as V, o: {}, l: 'was · 前手'}, {who: 'osiris', pose: BY('osiris').main.pose!, bone: 'fH' as keyof Rig, p: [0.2, 0.6] as V, o: {}, l: '弯钩 + 连枷 · 胸前'}, {who: 'bastet', pose: BY('bastet').main.pose!, bone: 'fH' as keyof Rig, p: [0.2, 0.6] as V, o: {}, l: '叉铃 · 摇'}, {who: 'thoth', pose: BY('thoth').poses[2].pose!, bone: 'fH' as keyof Rig, p: [0.2, 0.9] as V, o: {bProp: 'palette' as const, fProp: 'pen' as const}, l: '笔 · 前手 / 调色板 · 后手'}].map((h, i) => {
-			const w = 262, x = 34 + i * (w + 8), q = ap(solve(h.pose, false)[h.bone], h.p), s = 30, ww = w, hh = SH_ - 12 - (y1 + ch + 26) - 56;
+			const w = 262, x = 34 + i * (w + 8), q = ap(solve(h.pose, bodyOf(h.who))[h.bone], h.p), s = 30, ww = w, hh = SH_ - 12 - (y1 + ch + 26) - 56;
 			return <g key={i}><Crop x={x} y={y1 + ch + 40} w={ww} h={hh} th={th} label={h.l}>{() => <Actor id={`pr-hold${i}`} who={h.who} pose={h.pose} x={ww / 2 - s * q[0]} y={hh / 2 - s * q[1]} s={s} {...h.o} />}</Crop></g>; })}
 	</SheetBg>;
 };
@@ -203,12 +202,12 @@ export const RigTest: React.FC = () => {
 	const f = useCurrentFrame(), i = Math.min(N_CHARS - 1, Math.floor(f / (SEC * FPS))), t = (f - i * SEC * FPS) / FPS, cfg = CHARS[i], th = cfg.dark ? DARK : LIGHT;
 	const sigCell = cfg.rig ? {pose: cfg.rig.pose, label: cfg.rig.label, o: cfg.rig.o} : [cfg.poses[2], cfg.poses[3], cfg.stress[0]].find((c) => c.pose) ?? cfg.stress[0];
 	const base = cfg.poses[0].pose ?? REST, sig = sigCell.pose ?? S_RAISE, sigO = sigCell.o, st = cfg.stress.map((c) => c.pose ?? REST), stO = cfg.stress.map((c) => c.o);
-	const who = cfg.who, mainO = cfg.poses[0].o;
+	const who = cfg.who, mainO = cfg.poses[0].o, armK = who && CAST61[who]?.base.body === 'f' ? 0.6 : 1; // goddesses: soft arm swing (the short stride is the body's)
 	const mummy = cfg.key === 'osiris', isAmmit = cfg.key === 'ammit';
 	let pose: Pose = base, o: ActorOpts = {...mainO}, seg = isAmmit ? '站 → 嗅 → 抬爪 → 怒吼 → 后坐（循环）' : '走 · 步行循环', pivots = false;
 	const ph = t * 5.6;
-	if (t < 1.8) { pose = mummy ? {...base, lean: 3 * Math.sin(ph), head: 6 * Math.sin(ph * 0.5)} : walkPose(ph, {arm: 1}); pivots = true; }
-	else if (t < 2.0) { pose = lerpPose(walkPose(1.8 * 5.6, {arm: 1}), base, ease((t - 1.8) / 0.2)); seg = '收步'; }
+	if (t < 1.8) { pose = mummy ? {...base, lean: 3 * Math.sin(ph), head: 6 * Math.sin(ph * 0.5)} : walkPose(ph, {arm: armK}); pivots = true; }
+	else if (t < 2.0) { pose = lerpPose(walkPose(1.8 * 5.6, {arm: armK}), base, ease((t - 1.8) / 0.2)); seg = '收步'; }
 	else if (t < 3.4) { const u = t < 2.4 ? ease((t - 2.0) / 0.4) : t < 3.0 ? 1 : 1 - ease((t - 3.0) / 0.4); pose = lerpPose(base, sig, u); o = {...mainO, ...mixOpts(undefined, sigO, u), ...(u > 0.5 ? {wings: sigO?.wings ?? mainO?.wings} : {})}; seg = '标志动作：' + sigCell.label.replace(/（.*）/, ''); pivots = true; if (sigO?.basket !== undefined) o.basket = sigO.basket; if (sigO?.fProp) o.fProp = u > 0.5 ? sigO.fProp : mainO?.fProp; if (sigO?.bProp) o.bProp = u > 0.5 ? sigO.bProp : mainO?.bProp; if (sigO?.dress) o.dress = sigO.dress; }
 	else if (t < 4.6) { const k = Math.min(2, Math.floor((t - 3.4) / 0.4)), u = ease(((t - 3.4) % 0.4) / 0.25), a = k === 0 ? sig : st[k - 1], b = st[k]; pose = lerpPose(a, b, u); o = {...mainO, ...mixOpts(k === 0 ? sigO : stO[k - 1], stO[k], u), ...(stO[k]?.wings !== undefined ? {wings: stO[k]!.wings} : {})}; seg = `压力姿势 ${k + 1}/3：${cfg.stress[k].label}`; pivots = true; if (stO[k]?.dress) o.dress = stO[k]!.dress; }
 	else { const u0 = (t - 4.6) / 1.4, fr = cfg.faces; const e = u0 < 0.25 ? 0 : u0 < 0.6 ? 1 : 2, pu = ease(u0 < 0.25 ? u0 / 0.25 : u0 < 0.6 ? (u0 - 0.25) / 0.35 : (u0 - 0.6) / 0.4);

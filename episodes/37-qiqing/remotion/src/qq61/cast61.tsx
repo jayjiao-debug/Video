@@ -1,5 +1,5 @@
 import React from 'react';
-import {God, CAST, POSES, Cast, Pose, solve, crown} from '../qq60/rig60';
+import {God, CAST, POSES, Cast, Pose, solve, crown, castBody, Body, BodyArg, Hand} from '../qq60/rig60';
 import {ap} from '../qq60/geo60';
 import {CAST2} from '../qq60/cast60';
 import {mx, sp, poly, PAL, Pt, lerp} from '../qq60/geo60';
@@ -16,11 +16,14 @@ export type Hat61 = 'throne' | 'nu' | 'house' | 'goose';
 export type Cast61 = {base: Cast; head?: Head61; hat?: Hat61; crown?: Cast['crown']; color?: string; color2?: string};
 type Ctx = {OW: number; LW: number};
 
-const mk = (name: string, o: Partial<Cast>): Cast => ({name, skin: 'skinM', skin2: 'skinM2', head: 'human', wig: 'tri', crown: 'none', dress: 'kilt', collar: 'god', bHand: 'fist', fHand: 'fist', ...o});
+const mk = (name: string, o: Partial<Cast>): Cast => ({name, skin: 'skinM', skin2: 'skinM2', head: 'human', wig: 'tri', crown: 'none', dress: 'kilt', collar: 'god', bHand: 'fist', fHand: 'fist', body: o.female ? 'f' : 'm', ...o});
 
-/** the ep61 cast. Keys: ep60 gods are re-used as they are (anubis, thoth, osiris, horus, ra); the rest are built the same way. */
+/** an ep60 cast with an ep61 body type (ep60 itself keeps using CAST / CAST2 without one, so its films draw the old bodies) */
+const bd = (c: Cast, body: Body): Cast => ({...c, body});
+/** the ep61 cast. Keys: ep60 gods are re-used (anubis, thoth, osiris, horus, ra, ani) with the god body; the rest are built the same way.
+ *  Body types (rig60 BODY / BSH): 'm' = Atum, Ra, Shu, Geb, Osiris, Set, Horus, Anubis, Thoth, Ani; 'f' = Isis, Nephthys, Nut, Tefnut, Sekhmet, Bastet, Ma'at. */
 export const CAST61: Record<string, Cast61> = {
-	ani: {base: CAST.ani}, anubis: {base: CAST.anubis}, thoth: {base: CAST.thoth}, osiris: {base: CAST.osiris}, horus: {base: CAST.horus}, ra: {base: CAST2.ra},
+	ani: {base: bd(CAST.ani, 'm')}, anubis: {base: bd(CAST.anubis, 'm')}, thoth: {base: bd(CAST.thoth, 'm')}, osiris: {base: bd(CAST.osiris, 'm')}, horus: {base: bd(CAST.horus, 'm')}, ra: {base: bd(CAST2.ra, 'm')},
 	/** Atum: man in the red-and-white double crown, was sceptre + ankh (I1) */
 	atum: {base: mk('Atum', {crown: 'pschent', tail: true, bProp: 'ankh', fProp: 'was'})},
 	/** Shu: man with the ostrich feather (I3) */
@@ -32,11 +35,11 @@ export const CAST61: Record<string, Cast61> = {
 	/** Nut: woman with the red nu-jar on her head (I6) */
 	nut: {base: mk('Nut', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open'}), hat: 'nu'},
 	/** Isis: woman, throne sign on the head, wings (I8) */
-	isis: {base: {...CAST.isis, crown: 'none'}, hat: 'throne'},
+	isis: {base: {...CAST.isis, crown: 'none', body: 'f'}, hat: 'throne'},
 	/** Set: the Set animal head, kilt, was + ankh (I9) */
 	set: {base: mk('Set', {tail: true, bProp: 'ankh', fProp: 'was'}), head: 'seth', color: '#9A4A2A', color2: '#6E2F1A'},
 	/** Nephthys: woman, house-and-basket sign on the head (I10) */
-	nephthys: {base: mk('Nephthys', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open'}), hat: 'house'},
+	nephthys: {base: mk('Nephthys', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open', dressCol: 'green'}), hat: 'house'},
 	/** Sekhmet: lioness head + sun disc, red sheath dress (I14) */
 	sekhmet: {base: mk('Sekhmet', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bProp: 'ankh', fProp: 'was'}), head: 'lioness', crown: 'sun'},
 	/** Bastet: cat head, sheath dress, sistrum + basket (I15) */
@@ -82,13 +85,16 @@ const Basket: React.FC<{p: [number, number]; c: Ctx}> = ({p, c}) => <g transform
 	<path d="M-0.7 0.1Q0 -1.2 0.7 0.1" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} /></g>;
 
 export type God61Props = {id: string; who: string; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; t?: number; vel?: {head?: number; torso?: number};
-	bProp?: Cast['bProp']; fProp?: Cast['fProp']; /** old ep61 film param: = jaw */ open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; /** animal heads: eyes / look / brow (human heads use expr61 FaceOver) */ look?: {eyes?: number; look?: number; brow?: number}; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}};
+	bProp?: Cast['bProp']; fProp?: Cast['fProp']; /** hand shapes override; by default a goddess opens an empty hand (no fist unless she holds something) */ hands?: {b?: Hand; f?: Hand}; /** old ep61 film param: = jaw */ open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; /** animal heads: eyes / look / brow (human heads use expr61 FaceOver) */ look?: {eyes?: number; look?: number; brow?: number}; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}};
 /** an ep61 god: the ep60 `God` with the layered animal head (headArt) or the ep60 human head + a headdress painted on top */
-export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, look, pivots = false, basket, wings, dress, hide}) => {
+export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, hands, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, look, pivots = false, basket, wings, dress, hide}) => {
 	const k = CAST61[who], c: Ctx = {OW: 2.7 / s, LW: 1.5 / s}, kind = animalOf(k), rr = Math.max(0, Math.min(1, roar));
 	// a roar throws the head back a little
 	const P: Pose = kind && rr > 0 ? {...pose, head: pose.head - 7 * rr} : pose;
-	const extra = {...(wings !== undefined ? {wings} : {}), ...(dress ? {dress} : {})};
+	// goddesses: an empty hand is open and elegant (a fist only round a prop, the basket handle or an explicit override)
+	const fem = k.base.body === 'f', bEmpty = (bProp ?? k.base.bProp ?? 'none') === 'none' && !basket, fEmpty = (fProp ?? k.base.fProp ?? 'none') === 'none';
+	const hb: Hand | undefined = hands?.b ?? (fem && bEmpty && k.base.bHand === 'fist' ? 'open' : undefined), hf: Hand | undefined = hands?.f ?? (fem && fEmpty && k.base.fHand === 'fist' ? 'open' : undefined);
+	const extra = {...(wings !== undefined ? {wings} : {}), ...(dress ? {dress} : {}), ...(hb ? {bHand: hb} : {}), ...(hf ? {fHand: hf} : {})};
 	let cast: Cast, headArt: React.ReactNode = undefined;
 	if (kind) { const [col, col2] = animalCols(k);
 		// the sun disc (lioness, Ra's falcon): it sits ON TOP of the head, behind the ears / skull, so it is drawn here, behind the head
@@ -98,7 +104,7 @@ export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t
 		// a non-human HeadKind so the rig draws the animal-head wig, lappet and fillet; the crown is drawn by the rig on top of the head
 		cast = {...k.base, head: k.base.head === 'human' ? 'jackal' : k.base.head, wig: kind === 'cat' ? 'none' : k.base.wig, crown: k.head || (k.crown ?? k.base.crown) === 'sun' ? 'none' : k.base.crown, mask: false, faceless: false, ...extra};
 	} else cast = {...k.base, ...(k.hat ? {crown: 'none' as const} : {}), ...extra};
-	const g = solve(P, cast.female);
+	const g = solve(P, castBody(cast));
 	const bh = g.bH, grip: [number, number] = [bh[0] * 0.02 + bh[2] * 0.6 + bh[4], bh[1] * 0.02 + bh[3] * 0.6 + bh[5]];
 	return <g>
 		<God id={id} cast={cast} pose={P} x={x} y={y} s={s} face={face} sec={{t, vel}} bProp={bProp} fProp={fProp} hide={hide} jaw={kind ? 0 : jaw} ear={kind ? 0 : ear} pivots={pivots} headArt={headArt} />
@@ -134,4 +140,6 @@ export type {Pt};
 
 /** world position (px) of a point given in the head frame of a posed figure (mouth, ear tip, …) */
 export const headPt = (who: string, pose: Pose, x: number, y: number, s: number, face: 1 | -1, p: [number, number]): [number, number] => {
-	const g = solve(pose, CAST61[who].base.female), q = ap(g.head, p); return [x + q[0] * s * face, y + q[1] * s]; };
+	const g = solve(pose, bodyOf(who)), q = ap(g.head, p); return [x + q[0] * s * face, y + q[1] * s]; };
+/** the body argument for solve() / reach() of an ep61 character (its body type) */
+export const bodyOf = (who: string): BodyArg => castBody(CAST61[who].base);

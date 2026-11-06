@@ -1,10 +1,9 @@
 import React from 'react';
-import {Pose, solve, Rig, Cast} from '../qq60/rig60';
+import {Pose, solve, Rig, Cast, BodyArg, SHAPES, HandLines, BODY} from '../qq60/rig60';
 import {ap, mx, V, PAL, Role} from '../qq60/geo60';
 import {F_SERIF} from '../qq60/frame60';
-import {God61, CAST61} from './cast61';
+import {God61, CAST61, bodyOf} from './cast61';
 import {FaceOver, Look, HeadKind61} from './expr61';
-import {gripOf, FistOver} from '../qq60/act60b_kit';
 import {Feather} from '../qq60/props60';
 
 /* ep61 · character sheet kit: the Actor (God61 + face layer), themes, panels, wrapped text, callouts, head crops, palette strip. */
@@ -14,21 +13,25 @@ export const LIGHT: Theme = {bg: '#E8D4AA', panel: '#F1E2BF', line: '#B08F58', t
 export const DARK: Theme = {bg: '#101838', panel: '#1B2652', line: '#D8A845', text: '#F4E8CC', sub: '#B8C4F2', accent: '#F08A5A', ground: '#2C3A78', dark: true};
 
 /* ---------------- the actor ---------------- */
-export type ActorOpts = {pivots?: boolean; /** Ma'at: the feather of the balance held in the front fist */ feather?: boolean; bProp?: Cast['bProp']; fProp?: Cast['fProp']; wings?: boolean; dress?: Cast['dress']; open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; look?: Look; basket?: boolean; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}; t?: number; face?: 1 | -1};
+export type ActorOpts = {pivots?: boolean; hands?: {b?: Cast['bHand']; f?: Cast['fHand']}; /** Ma'at: the feather of the balance held in the front fist */ feather?: boolean; bProp?: Cast['bProp']; fProp?: Cast['fProp']; wings?: boolean; dress?: Cast['dress']; open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; look?: Look; basket?: boolean; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}; t?: number; face?: 1 | -1};
 export const headKindOf = (who: string): HeadKind61 => { const k = CAST61[who]; return (k.head ?? k.base.head) as HeadKind61; };
 export const headFillOf = (who: string): string => { const k = CAST61[who], hk = headKindOf(who), P = PAL as Record<string, string>;
 	if (hk === 'human') return P[k.base.skin]; if (hk === 'lioness') return k.color ?? PAL.lion; if (hk === 'cat' || hk === 'seth') return k.color ?? PAL.lion;
 	return P[k.base.headFill ?? 'jackal']; };
+/** grip point of a hand (figure units) and a fist drawn again over a held prop — the body-aware versions of act60b_kit gripOf / FistOver */
+const gripOf = (pose: Pose, side: 'b' | 'f', body: BodyArg): V => ap(solve(pose, body)[side === 'b' ? 'bH' : 'fH'], [0.02, 0.6]);
+const FistOver: React.FC<{pose: Pose; side: 'b' | 'f'; c: {OW: number; LW: number}; skin: string; body: BodyArg}> = ({pose, side, c, skin, body}) => { const h = solve(pose, body)[side === 'b' ? 'bH' : 'fH'], hk = typeof body === 'string' ? BODY[body].hand : 1;
+	return <g><path d={SHAPES.fist} transform={mx(h)} fill={skin} stroke={PAL.ink} strokeWidth={(c.OW * 2) / hk} strokeLinejoin="round" /><HandLines m={h} kind="fist" c={c} /></g>; };
 export const Actor: React.FC<{id: string; who: string; pose: Pose; x: number; y: number; s: number} & ActorOpts> = ({id, who, pose, x, y, s, face = 1, look, feather, ...o}) => {
-	const k = CAST61[who], female = !!k.base.female, c = {OW: 2.7 / s, LW: 1.5 / s}, human = headKindOf(who) === 'human';
+	const k = CAST61[who], female = bodyOf(who), c = {OW: 2.7 / s, LW: 1.5 / s}, human = headKindOf(who) === 'human';
 	return <g>
-		<God61 id={id} who={who} pose={pose} x={x} y={y} s={s} face={face} {...o} look={human ? undefined : look} />
-		{feather && (() => { const G = gripOf(pose, 'f', female); return <g transform={`translate(${x},${y}) scale(${s * face},${s})`}><g transform={`translate(${G[0]},${G[1] + 0.45})`}><Feather c={c} h={2.9} /></g><FistOver pose={pose} side="f" c={c} skin={(PAL as Record<string, string>)[k.base.skin]} female={female} /></g>; })()}
+		<God61 id={id} who={who} pose={pose} x={x} y={y} s={s} face={face} {...o} hands={feather ? {f: 'fist'} : o.hands} look={human ? undefined : look} />
+		{feather && (() => { const G = gripOf(pose, 'f', female); return <g transform={`translate(${x},${y}) scale(${s * face},${s})`}><g transform={`translate(${G[0]},${G[1] + 0.45})`}><Feather c={c} h={2.9} /></g><FistOver pose={pose} side="f" c={c} skin={(PAL as Record<string, string>)[k.base.skin]} body={female} /></g>; })()}
 		{look && human && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}><g transform={mx(solve(pose, female).head)}><FaceOver kind={headKindOf(who)} fill={headFillOf(who)} c={c} look={look} id={id} /></g></g>}
 	</g>;
 };
 /** world position (px) of a point in a bone frame of a posed actor */
-export const at = (pose: Pose, x: number, y: number, s: number, face: 1 | -1, bone: keyof Rig, p: V, female = false): V => { const q = ap(solve(pose, female)[bone], p); return [x + face * s * q[0], y + s * q[1]]; };
+export const at = (pose: Pose, x: number, y: number, s: number, face: 1 | -1, bone: keyof Rig, p: V, female: BodyArg = false): V => { const q = ap(solve(pose, female)[bone], p); return [x + face * s * q[0], y + s * q[1]]; };
 
 /* ---------------- text ---------------- */
 export const wrap = (text: string, n: number): string[] => { const out: string[] = []; let cur = '', w = 0;
@@ -74,7 +77,7 @@ export const Crop: React.FC<{x: number; y: number; w: number; h: number; th: The
 	{label && <g><rect x={x + w - label.length * 14 - 16} y={y + h - 26} width={label.length * 14 + 12} height={20} rx={4} fill={th.dark ? '#0B1230' : '#2A1912'} opacity={0.9} /><Tx x={x + w - label.length * 14 - 10} y={y + h - 11} t={label} size={13} fill={th.dark ? '#F8D97A' : '#F4E8CC'} /></g>}
 </g>;
 /** an actor placed so that head-frame point `focus` sits at the middle of a w×h box */
-export const headAt = (who: string, pose: Pose, s: number, w: number, h: number, focus: V): V => { const q = ap(solve(pose, !!CAST61[who].base.female).head, focus); return [w / 2 - s * q[0], h / 2 - s * q[1]]; };
+export const headAt = (who: string, pose: Pose, s: number, w: number, h: number, focus: V): V => { const q = ap(solve(pose, bodyOf(who)).head, focus); return [w / 2 - s * q[0], h / 2 - s * q[1]]; };
 
 /* ---------------- palette strip ---------------- */
 export const hexOf = (k: string) => (PAL as Record<string, string>)[k] ?? k;

@@ -1,6 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
-import {POSES, Pose, solve} from '../qq60/rig60';
+import {POSES, Pose, solve, castBody} from '../qq60/rig60';
 import {mx, ap} from '../qq60/geo60';
 import {CAST61, animalOf, animalCols} from './cast61';
 import {AnimalHead, FaceState, AnimalKind} from './heads61';
@@ -36,7 +36,7 @@ const LONG: Record<string, boolean> = {seth: true, jackal: true, ibis: true};
 
 /** a head in a cell: the actor + its own outline in magenta */
 const HeadCell: React.FC<{who: string; st: St; x: number; y: number; w: number; h: number; s: number; id: string; label?: string}> = ({who, st, x, y, w, h, s, id, label}) => {
-	const k = CAST61[who], kind = animalOf(k) as AnimalKind, [col, col2] = animalCols(k), female = !!k.base.female;
+	const k = CAST61[who], kind = animalOf(k) as AnimalKind, [col, col2] = animalCols(k), female = castBody(k.base);
 	const roar = st.o.roar ?? 0, P: Pose = roar > 0 ? {...STAND, head: STAND.head - 7 * roar} : STAND;
 	const focus: [number, number] = LONG[kind] ? [1.25, -1.5] : [0.75, -1.45], H = solve(P, female).head;
 	const q: [number, number] = [H[0] * focus[0] + H[2] * focus[1] + H[4], H[1] * focus[0] + H[3] * focus[1] + H[5]];
