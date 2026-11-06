@@ -10,7 +10,7 @@ import {GlowHeart, MaskFront, GoldDefs} from '../qq60/act60a_kit';
 import {Heart60} from '../qq60/heart60';
 import {PAL, V, ap, mx, lerp, sm, cl} from '../qq60/geo60';
 import {FC} from '../qq60/frame60';
-import {CAST61, God61, bodyOf} from './cast61';
+import {CAST61, God61, bodyOf, sigOf} from './cast61';
 import {Actor, ActorOpts, at, Callouts, Crop, DARK, LIGHT, Ground, headFillOf, Lines, Palette, palHeight, Panel, Rules, SW, SH_, Theme, Tx, wrap, headAt} from './sheetkit61';
 import {CHARS, CharCfg, Cell, Part, FaceCell, Slot, SHEET_COUNT, REST, S_RAISE, S_STEP, S_BACK, FACES, restF} from './chars61';
 import {Look} from './expr61';
@@ -93,11 +93,13 @@ export const CharSheet: React.FC<{cfg: CharCfg}> = ({cfg}) => {
 		{bb && !m.custom && <g><line x1={206} x2={cx + 150} y1={bb.top} y2={bb.top} stroke={th.dark ? '#F8D97A' : '#2F7F54'} strokeWidth={1.4} strokeDasharray="3 4" /><Tx x={300} y={bb.top - 5} t={`含冠总高 ${topU.toFixed(1)} 格`} size={12.5} fill={th.dark ? '#F8D97A' : '#2F7F54'} w={900} /></g>}
 		<Callouts items={targets} th={th} cx={cx} xL={MX + 10} xR={MX + MW - 168} bw={158} y0={MY + 14} y1={MY + MH - 70} />
 		<Lines x={MX + 14} y={MY + MH - 46} lines={wrap(`身高：${cfg.height}`, 44).concat(wrap(`关节：${cfg.joints}`, 44))} size={13.5} lh={1.32} fill={th.text} w={700} />
-		{/* colour palette (hex read from the code's PAL / cast colours) */}
-		<Panel x={MX} y={718} w={MW} h={palHeight(cfg.pal.length) + 30} th={th} title="色板（取自代码 PAL / cast 颜色）" />
-		<Palette x={MX + 10} y={738} w={MW - 20} items={cfg.pal} th={th} />
-		<Panel x={MX} y={718 + palHeight(cfg.pal.length) + 44} w={MW} h={SH_ - 12 - (718 + palHeight(cfg.pal.length) + 44)} th={th} title="必须 / 不要" />
-		<Rules x={MX + 4} y={718 + palHeight(cfg.pal.length) + 56} w={MW - 8} must={cfg.must} dont={cfg.dont} th={th} size={16} />
+		{/* colour palette (hex read from the code's PAL / cast colours, 4 per row) + the 「辨识」 row: 1/4-size silhouette, the figure in its
+		    colours and the signature colour swatch (round 3: every character must read at phone size) */}
+		<Panel x={MX} y={718} w={MW} h={ID_H + 30} th={th} title="色板 · 辨识（剪影 1/4 + 签名色）" />
+		<Palette x={MX + 10} y={740} w={PAL_W} items={cfg.pal} th={th} per={4} />
+		{cfg.key !== 'ammit' && <IdRow whos={cfg.key === 'atum' ? ['atum', 'ra'] : [mainWho]} x={MX + PAL_W + 18} y={732} w={MW - PAL_W - 28} h={ID_H} s={s / 4} th={th} id={cfg.key} />}
+		<Panel x={MX} y={RULES_Y} w={MW} h={SH_ - 12 - RULES_Y} th={th} title="必须 / 不要" />
+		<Rules x={MX + 4} y={RULES_Y + 12} w={MW - 8} must={cfg.must} dont={cfg.dont} th={th} size={14} />
 		{/* right column */}
 		<Panel x={RX} y={MY} w={RW} h={330} th={th} title="关键姿势 · 来自骨架（静 / 走 / 标志动作）" />
 		<CellRow cells={cfg.poses} x0={RX + 8} y0={MY + 12} w={RW - 16} h={314} gap={8} th={th} cfg={cfg} s={11.2} tag="p" lab={22} />
@@ -110,6 +112,29 @@ export const CharSheet: React.FC<{cfg: CharCfg}> = ({cfg}) => {
 		{cfg.faces.length === 0 && <><Panel x={RX} y={708} w={RW} h={360} th={th} title="特写 · 张口 / 怒吼 · 下颌枢轴" />
 			<AmmitHeads x={RX + 8} y={720} w={RW - 16} h={342} th={th} /></>}
 	</SheetBg>;
+};
+
+/* ---------------- 辨识 row ---------------- */
+const PAL_W = 384, ID_H = 128, RULES_Y = 718 + ID_H + 30 + 14;
+/** the line-up pose + options of a character (the 辨识 silhouettes use the same stance as the line-up) */
+const idOf = (who: string): {pose: Pose; o?: ActorOpts} => { const i = LINEUP.findIndex((l) => l.who === who), l = LINEUP[i];
+	return {pose: l?.pose ?? (who === 'osiris' ? BY('osiris').main.pose! : REST), o: {...l?.o, ...(who === 'isis' || who === 'maat' ? {wings: false} : {})}}; };
+/** for each character: the solid silhouette and the figure in its colours at 1/4 of the main view, then the signature colour swatch */
+const IdRow: React.FC<{whos: string[]; x: number; y: number; w: number; h: number; s: number; th: Theme; id: string}> = ({whos, x, y, w, h, s, th, id}) => {
+	const bw = w / whos.length, gy = y + h - 8, one = whos.length === 1;
+	return <g>
+		<defs><filter id={`sil-${id}`} x="-50%" y="-50%" width="200%" height="200%"><feFlood floodColor="#1A120E" /><feComposite operator="in" in2="SourceAlpha" /></filter></defs>
+		<rect x={x} y={y} width={w} height={h} rx={4} fill="#F7EBCB" stroke={th.line} strokeWidth={1.2} />
+		{whos.map((who, i) => { const bx = x + i * bw, sig = sigOf(who), {pose, o} = idOf(who), fx = one ? [bx + 34, bx + 92] : [bx + 24, bx + 62], sx = one ? bx + 128 : bx + 88, swW = one ? w - 136 : bw - 96;
+			return <g key={who}>
+				<line x1={bx + 6} x2={bx + (one ? 116 : 82)} y1={gy} y2={gy} stroke="#B08F58" strokeWidth={1.2} />
+				<g filter={`url(#sil-${id})`}><Actor id={`id-${id}-s${i}`} who={who} pose={pose} x={fx[0]} y={gy} s={s} {...o} /></g>
+				<Actor id={`id-${id}-c${i}`} who={who} pose={pose} x={fx[1]} y={gy} s={s} {...o} />
+				<rect x={sx} y={y + 10} width={swW} height={one ? 44 : h - 20} rx={3} fill={sig.c} stroke="#2A1912" strokeWidth={1.6} />
+				<rect x={sx} y={one ? y + 40 : y + h - 10 - (h - 20) / 3} width={swW} height={one ? 14 : (h - 20) / 3} fill={sig.c2} stroke="#2A1912" strokeWidth={1.2} />
+				{one && <><Lines x={sx + swW / 2} y={y + 74} lines={wrap(sig.zh, 6)} size={13.5} lh={1.25} fill="#2A1912" w={900} anchor="middle" />
+					<Tx x={sx + swW / 2} y={y + h - 8} t={sig.c.toUpperCase()} size={12} fill="#6B4A2B" w={800} anchor="middle" /></>}</g>; })}
+	</g>;
 };
 
 /* ---------------- Ammit close-ups ---------------- */
@@ -137,7 +162,8 @@ export const LineUp: React.FC = () => {
 			<line x1={44} x2={1400} y1={gy - ANI_TOP * s} y2={gy - ANI_TOP * s} stroke={th.accent} strokeWidth={1.6} strokeDasharray="8 6" /><Tx x={60} y={150} t={`红色虚线 = 阿尼头顶（含假发）= ${ANI_TOP.toFixed(1)} 格 = 男身基准线（女身 × 0.94）；灰点线每 5 格；名字下的数字 = 含头饰总高`} size={15} fill={th.accent} w={900} /></g>
 		<Ground x0={30} x1={1410} y={gy} th={th} />
 		{LINEUP.map((l, i) => { const x = x0 + 18 + i * step, ani = l.who === 'ani'; return <g key={l.who}><g ref={(r) => { refs.current[i] = r; }}><Actor id={`lu${i}`} who={l.who} pose={pose(i)} x={x} y={gy} s={s} {...l.o} /></g>
-			<Tx x={x} y={gy + 24} t={l.zh} size={l.zh.length > 4 ? 12.5 : 15} fill={ani ? th.accent : th.text} w={900} anchor="middle" />
+			<rect x={x - 30} y={gy + 6} width={60} height={6} fill={sigOf(l.who).c} stroke="#2A1912" strokeWidth={1} /><rect x={x - 30} y={gy + 9} width={60} height={3} fill={sigOf(l.who).c2} />
+			<Tx x={x} y={gy + 26} t={l.zh} size={l.zh.length > 4 ? 12.5 : 15} fill={ani ? th.accent : th.text} w={900} anchor="middle" />
 			{tops && <Tx x={x} y={gy + 42} t={`${((gy - tops[i]) / s).toFixed(1)} 格`} size={12} fill={th.sub} w={700} anchor="middle" />}</g>; })}
 		<Panel x={24} y={578} w={1392} h={176} th={th} title="脸的索引 · 同一比例尺的头部（认人用）" />
 		{LINEUP.map((l, i) => { const w = 76, x = 36 + i * 81, hs = 15, [fx, fy] = headAt(l.who, pose(i), hs, w, 128, [l.who === 'osiris' || l.who === 'horus' || l.who === 'atum' ? 0.6 : 0.9, -1.75]);
@@ -147,8 +173,8 @@ export const LineUp: React.FC = () => {
 			'● 骨架：神与凡人（阿尼）共用 ep60 的同一副骨架（脚底 0、膝 6、髋 9.5、肩 16，19 方格网）；阿尼连假发实测 20.0 格（男身站得宽，比 ep60 的 20.1 低 0.1）。',
 			'● 男身（rig60 BODY.m）= 凡人 × 1.00：宽肩、胸肌轮廓线（不画乳点）/ 三角肌 / 二头肌、粗颈、细腰 V 形躯干、壮小腿；短裙 + 腰带 + 前垂、臂环；站得宽、步子大；握拳、握紧权杖。',
 			'● 女身（BODY.f）= × 0.94：肩宽 ≈ 男身 80%、细臂、小手小脚、长颈、细腰与柔和的臀线；及踝紧身长裙一直盖到宽领下，胸前是一条平顺的线（不画胸形）、深宽领、长垂发；双脚靠拢、步子小；空手时手掌张开。',
-			'● 神靠头、头饰和手里的东西来认；含头饰总高是渲染后量出来的（名字下的数字，÷20.0 = 倍数）。',
-			'● 例外：孩童荷鲁斯 ×0.75；特写整体放大；阿米特是独立小骨架（右下）；奥西里斯木乃伊形但保留宽肩，双手从裹布里伸出、交叉在胸前握住弯钩与连枷；总排里伊西斯、玛阿特收起了翅膀。'].flatMap((t) => wrap(t, 54)).slice(0, 13)} size={15} lh={1.38} fill={th.text} w={600} />
+			'● 神靠头、头饰、签名色（裙 / 短裙或主色 = 名字上方的色条）和手里的东西来认；人头神一律黑假发，青金蓝假发只给兽头神。含头饰总高是渲染后量出来的（名字下的数字，÷20.0 = 倍数）。',
+			'● 例外：孩童荷鲁斯 ×0.75；特写整体放大；阿米特是独立小骨架（右下）；奥西里斯木乃伊形但保留宽肩，双手从裹布里伸出、交叉在胸前握住弯钩与连枷；总排里伊西斯、玛阿特收起了翅膀。'].flatMap((t) => wrap(t, 54)).slice(0, 14)} size={15} lh={1.38} fill={th.text} w={600} />
 		<g><Actor id="lu-ani2" who="ani" pose={REST} x={1040} y={1050} s={9.6} /><Ammit2 id="lu-am" pose={{...AMMIT_REST, jaw: 5}} x={1215} y={1050} s={13} t={0.5} look={0.6} />
 			<Tx x={1040} y={1066} t="阿尼" size={13} fill={th.accent} w={900} anchor="middle" /><Tx x={1300} y={1066} t="阿米特（ep60 称重厅 s34 : s26）" size={13} fill={th.text} w={800} anchor="middle" /></g>
 	</SheetBg>;

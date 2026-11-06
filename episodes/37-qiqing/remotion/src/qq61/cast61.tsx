@@ -13,7 +13,23 @@ import {AnimalHead, AnimalKind} from './heads61';
 
 export type Head61 = 'lioness' | 'cat' | 'seth';
 export type Hat61 = 'throne' | 'nu' | 'house' | 'goose';
-export type Cast61 = {base: Cast; head?: Head61; hat?: Hat61; crown?: Cast['crown']; color?: string; color2?: string};
+/** round 3 headdress pieces worn with / under the hat: Isis' vulture cap, a gold fillet (Nephthys), a red headband (Ma'at) */
+export type Band61 = 'vulture' | 'fillet' | 'redband';
+export type Cast61 = {base: Cast; head?: Head61; hat?: Hat61; band?: Band61; crown?: Cast['crown']; color?: string; color2?: string; /** Sekhmet: the fuller, darker mane */ mane?: boolean};
+
+/* ---------------- signature colours (owner 2026-11-06, round 3) ----------------
+   One colour per character, used for the dress / kilt (or the dominant accent) and repeated on the node ring of the family tree
+   (TREE61, the BOARD61 mini-tree), on the tree name tag edge and on the 「辨识」 row of the character sheet. c = main, c2 = second colour. */
+export type Sig = {c: string; c2: string; zh: string};
+export const SIG61: Record<string, Sig> = {
+	atum: {c: '#F8F3E7', c2: '#B8371F', zh: '白 + 红'}, ra: {c: '#ECB637', c2: '#B8371F', zh: '金'}, shu: {c: '#6FB2E0', c2: '#ECB637', zh: '天蓝'},
+	tefnut: {c: '#C98C1E', c2: '#ECB637', zh: '赭金'}, geb: {c: '#7A4E2A', c2: '#3A9160', zh: '土褐 + 绿'}, nut: {c: '#1D2E6E', c2: '#F2C649', zh: '星空深蓝'},
+	osiris: {c: '#2F8E62', c2: '#F8F3E7', zh: '绿 + 白'}, isis: {c: '#B8371F', c2: '#ECB637', zh: '红'}, set: {c: '#8E3519', c2: '#ECB637', zh: '红赭'},
+	nephthys: {c: '#3A9160', c2: '#ECB637', zh: '绿'}, horus: {c: '#2E58A6', c2: '#ECB637', zh: '蓝 + 金'}, anubis: {c: '#1F1B1C', c2: '#ECB637', zh: '黑 + 金'},
+	thoth: {c: '#1E3A7C', c2: '#F8F3E7', zh: '深蓝 + 白'}, sekhmet: {c: '#7A1424', c2: '#ECB637', zh: '深绯红亚麻'}, bastet: {c: '#36A39B', c2: '#ECB637', zh: '绿松石'},
+	maat: {c: '#F8F3E7', c2: '#ECB637', zh: '白 + 金'}, ani: {c: '#F8F3E7', c2: '#B8371F', zh: '亚麻白'},
+};
+export const sigOf = (who: string): Sig => SIG61[who] ?? SIG61.ani;
 type Ctx = {OW: number; LW: number};
 
 const mk = (name: string, o: Partial<Cast>): Cast => ({name, skin: 'skinM', skin2: 'skinM2', head: 'human', wig: 'tri', crown: 'none', dress: 'kilt', collar: 'god', bHand: 'fist', fHand: 'fist', body: o.female ? 'f' : 'm', ...o});
@@ -23,35 +39,39 @@ const bd = (c: Cast, body: Body): Cast => ({...c, body});
 /** the ep61 cast. Keys: ep60 gods are re-used (anubis, thoth, osiris, horus, ra, ani) with the god body; the rest are built the same way.
  *  Body types (rig60 BODY / BSH): 'm' = Atum, Ra, Shu, Geb, Osiris, Set, Horus, Anubis, Thoth, Ani; 'f' = Isis, Nephthys, Nut, Tefnut, Sekhmet, Bastet, Ma'at. */
 export const CAST61: Record<string, Cast61> = {
-	ani: {base: bd(CAST.ani, 'm')}, anubis: {base: bd(CAST.anubis, 'm')}, thoth: {base: bd(CAST.thoth, 'm')}, osiris: {base: bd(CAST.osiris, 'm')}, horus: {base: bd(CAST.horus, 'm')}, ra: {base: bd(CAST2.ra, 'm')},
+	ani: {base: bd(CAST.ani, 'm')}, osiris: {base: bd(CAST.osiris, 'm')},
+	/** the animal-headed gods keep the lapis-blue wig; the kilt carries the signature colour (round 3) */
+	anubis: {base: {...bd(CAST.anubis, 'm'), kiltCol: SIG61.anubis.c, kiltCol2: 'gold'}}, thoth: {base: {...bd(CAST.thoth, 'm'), kiltCol2: SIG61.thoth.c}},
+	horus: {base: {...bd(CAST.horus, 'm'), kiltCol: SIG61.horus.c, kiltCol2: 'gold'}}, ra: {base: {...bd(CAST2.ra, 'm'), kiltCol: SIG61.ra.c, kiltCol2: 'red'}},
 	/** Atum: man in the red-and-white double crown, was sceptre + ankh (I1) */
-	atum: {base: mk('Atum', {crown: 'pschent', tail: true, bProp: 'ankh', fProp: 'was'})},
+	atum: {base: mk('Atum', {crown: 'pschent', wigColor: 'wigH', tail: true, bProp: 'ankh', fProp: 'was', kiltCol2: 'red'})},
 	/** Shu: man with the ostrich feather (I3) */
-	shu: {base: mk('Shu', {wig: 'none', crown: 'maat', tail: true, bProp: 'ankh', fProp: 'was'})},
+	shu: {base: mk('Shu', {wigColor: 'wigH', crown: 'maat', tail: true, bProp: 'ankh', fProp: 'was', kiltCol: SIG61.shu.c, kiltCol2: 'gold'})},
 	/** Tefnut: lioness head, sun disc + uraeus, sheath dress, ankh + was (I4) */
-	tefnut: {base: mk('Tefnut', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bProp: 'ankh', fProp: 'was', bHand: 'fist'}), head: 'lioness', crown: 'sun'},
-	/** Geb: man, green skin (design choice: no object found; the goose is NOT attested in the researched records, so it is not drawn) (I5) */
-	geb: {base: mk('Geb', {skin: 'skinO', skin2: 'skinO2', wig: 'tri', tail: true, bProp: 'ankh', fProp: 'was'})},
-	/** Nut: woman with the red nu-jar on her head (I6) */
-	nut: {base: mk('Nut', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open'}), hat: 'nu'},
-	/** Isis: woman, throne sign on the head, wings (I8) */
-	isis: {base: {...CAST.isis, crown: 'none', body: 'f'}, hat: 'throne'},
+	tefnut: {base: mk('Tefnut', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bProp: 'ankh', fProp: 'was', bHand: 'fist', dressCol: SIG61.tefnut.c, net: false}), head: 'lioness', crown: 'sun'},
+	/** Geb: man, green skin, the goose (gb, the sign that writes his name) on a black wig (owner round 3), earth-brown kilt (I5) */
+	geb: {base: mk('Geb', {skin: 'skinO', skin2: 'skinO2', wig: 'tri', wigColor: 'wigH', tail: true, bProp: 'ankh', fProp: 'was', kiltCol: SIG61.geb.c, kiltCol2: 'green'}), hat: 'goose'},
+	/** Nut: woman, plain black wig; her deep-blue starry dress is the identifier (owner round 3; the nu-jar hat is no longer worn) (I6) */
+	nut: {base: mk('Nut', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open', wigColor: 'wigH', dressCol: SIG61.nut.c, net: false, stars: true})},
+	/** Isis: woman, vulture headdress under the throne sign on a black wig, red dress, wings (I8; vulture cap: tomb of Nefertari QV66) */
+	isis: {base: {...CAST.isis, crown: 'none', body: 'f', wigColor: 'wigH', dressCol: SIG61.isis.c, net: false}, hat: 'throne', band: 'vulture'},
 	/** Set: the Set animal head, kilt, was + ankh (I9) */
-	set: {base: mk('Set', {tail: true, bProp: 'ankh', fProp: 'was'}), head: 'seth', color: '#9A4A2A', color2: '#6E2F1A'},
+	set: {base: mk('Set', {tail: true, bProp: 'ankh', fProp: 'was', kiltCol: SIG61.set.c, kiltCol2: 'gold'}), head: 'seth', color: '#9A4A2A', color2: '#6E2F1A'},
 	/** Nephthys: woman, house-and-basket sign on the head (I10) */
-	nephthys: {base: mk('Nephthys', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open', dressCol: 'green'}), hat: 'house'},
-	/** Sekhmet: lioness head + sun disc, red sheath dress (I14) */
-	sekhmet: {base: mk('Sekhmet', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bProp: 'ankh', fProp: 'was'}), head: 'lioness', crown: 'sun'},
+	nephthys: {base: mk('Nephthys', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bHand: 'open', fHand: 'open', dressCol: SIG61.nephthys.c, net: false, wigColor: 'wigH'}), hat: 'house', band: 'fillet'},
+	/** Sekhmet: lioness head with the fuller, darker mane + sun disc, dark crimson sheath ("Lady of the Red Linen") (I14) */
+	sekhmet: {base: mk('Sekhmet', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, bProp: 'ankh', fProp: 'was', dressCol: SIG61.sekhmet.c, net: false}), head: 'lioness', crown: 'sun', color: '#CF8E34', color2: '#7A4314', mane: true},
 	/** Bastet: cat head, sheath dress, sistrum + basket (I15) */
-	bastet: {base: mk('Bastet', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, fProp: 'sistrum', bHand: 'fist'}), head: 'cat', color: '#A8957A', color2: '#7A6A54'},
+	bastet: {base: mk('Bastet', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, fProp: 'sistrum', bHand: 'fist', dressCol: SIG61.bastet.c, net: false}), head: 'cat', color: '#A8957A', color2: '#7A6A54'},
 	/** Ma'at: woman, the feather on her head, wings (I16) */
-	maat: {base: mk('Maat', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, crown: 'maat', wings: true, bProp: 'ankh', fProp: 'was'})},
+	maat: {base: mk('Maat', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, crown: 'maat', wings: true, bProp: 'ankh', fProp: 'was', wigColor: 'wigH', dressCol: 'linen', netCol: 'gold'}), band: 'redband'},
 };
 
 /* ---------------- head overlays (head frame: face +x, neck pivot at 0,0, crown base at y ≈ -2.5) ----------------
    Animal heads (lioness, cat, Set animal, and the ep60 jackal / ibis / falcon when drawn by God61) are the layered heads of heads61.tsx,
    handed to the rig as `headArt` so they sit in the rig's own head layer (arms in front, wig / lappet behind, crown on top).
-   Human heads with a headdress (throne, nu-jar, house, goose) keep the ep60 face; the headdress is painted on top. */
+   Human heads with a headdress (throne, house, goose; Isis' vulture cap, Nephthys' fillet, Ma'at's headband) keep the ep60 face; the
+   headdress is handed to the rig as `hatArt` (over the wig, under the crown, behind the front arm). */
 const Sol: React.FC<{d: string; f: string; c: Ctx; k?: number}> = ({d, f, c, k = 1}) => <><path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW * k} strokeLinejoin="round" /><path d={d} fill={f} /></>;
 /** the animal head kind of a cast (undefined = human head) */
 export const animalOf = (k: Cast61): AnimalKind | undefined => k.head ?? (k.base.head !== 'human' ? k.base.head : undefined);
@@ -78,6 +98,38 @@ const hat = (k: Hat61, c: Ctx) => {
 		<path d="M-0.6 -3.0Q-0.1 -2.8 0.4 -3.0" fill="none" stroke={PAL.line} strokeWidth={c.LW} /></g>;
 };
 
+/** headdress pieces on the wig (round 3). Isis' vulture cap (New Kingdom, e.g. the tomb of Nefertari, QV66): the bird's body over the
+ *  crown of the wig, its wing hanging down the side (gold with blue and red feather rows), its head over the brow, the tail at the back,
+ *  and a low gold modius on top that carries the throne sign. Nephthys' gold fillet and Ma'at's red headband run round the wig at the
+ *  brow (the feather is tucked into the band at the back). */
+const band = (k: Band61, c: Ctx) => {
+	if (k === 'vulture') {
+		const wing = sp([[0.84, -2.12], [0.5, -2.74], [-0.2, -2.92], [-0.98, -2.62], [-1.5, -1.76], [-1.7, -0.62, 1], [-1.36, -0.84], [-0.9, -1.36], [-0.22, -1.8], [0.42, -1.92], [0.8, -1.8, 1]], true, 0.16);
+		const tips: React.ReactNode[] = [];
+		for (let i = 0; i < 7; i++) { const u = i / 6, x = lerp(0.62, -1.56, u), y = lerp(-1.9, -0.76, u * u * 0.6 + u * 0.4); tips.push(<path key={i} d={`M${x + 0.14} ${y - 0.04}Q${x} ${y + 0.22} ${x - 0.16} ${y + 0.02}`} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 0.9} />); }
+		return <g>
+			<Sol d={sp([[-1.0, -2.56], [-1.62, -2.66], [-1.98, -2.36, 1], [-1.56, -2.1]], true, 0.2)} f={PAL.gold} c={c} /><path d="M-1.3 -2.5L-1.82 -2.38" stroke={PAL.blue} strokeWidth={c.LW * 1.4} />{/* tail */}
+			<Sol d={wing} f={PAL.gold} c={c} />
+			<path d={sp([[0.62, -2.18], [-0.2, -2.12], [-0.96, -1.68], [-1.46, -1.0]], false)} fill="none" stroke={PAL.blue} strokeWidth={c.LW * 3.2} />
+			<path d={sp([[0.56, -2.46], [-0.24, -2.44], [-1.06, -2.04], [-1.52, -1.4]], false)} fill="none" stroke={PAL.red} strokeWidth={c.LW * 2.6} />
+			<path d={sp([[0.36, -2.7], [-0.26, -2.72], [-0.98, -2.38]], false)} fill="none" stroke={PAL.blue} strokeWidth={c.LW * 2.2} />
+			{tips}
+			{/* the vulture's head and neck over the brow, hooked beak forward */}
+			<Sol d={sp([[0.62, -2.0], [0.98, -2.34], [1.1, -2.62], [1.32, -2.7], [1.5, -2.56], [1.56, -2.4, 1], [1.4, -2.42], [1.28, -2.36], [1.08, -2.12], [0.92, -1.86, 1]], true, 0.16)} f={PAL.gold} c={c} />
+			<path d="M1.5 -2.56Q1.62 -2.44 1.54 -2.34" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.2} /><circle cx={1.26} cy={-2.54} r={0.055} fill={PAL.ink} />
+			<path d="M0.92 -2.08Q1.0 -2.3 1.1 -2.5" fill="none" stroke={PAL.blue} strokeWidth={c.LW * 1.6} />
+			{/* the modius that carries the throne sign */}
+			<Sol d={poly([[-0.82, -2.82], [0.82, -2.82], [0.74, -3.22], [-0.74, -3.22]])} f={PAL.gold} c={c} />
+			<path d="M-0.76 -3.02L0.78 -3.02" stroke={PAL.blue} strokeWidth={c.LW * 1.8} />
+		</g>; }
+	const col = k === 'fillet' ? PAL.gold : PAL.red, d = 'M0.88 -1.98Q-0.3 -2.08 -1.5 -1.7';
+	return <g><path d={d} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 5.2} strokeLinecap="round" /><path d={d} fill="none" stroke={col} strokeWidth={c.LW * 3.0} strokeLinecap="round" />
+		{k === 'fillet' && <circle cx={-1.42} cy={-1.72} r={0.2} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} />}</g>;
+};
+/** Sekhmet's fuller, darker mane: a tufted ruff round the back of the skull and under the jaw, behind the head (the blue wig still shows) */
+const MANE = (() => { const pts: Pt[] = []; for (let i = 0; i <= 22; i++) { const a = (-72 - i * 10.5) * Math.PI / 180, r = i % 2 ? 0.86 : 1;
+	pts.push([-0.12 + 1.26 * r * Math.cos(a), -1.0 + 1.82 * r * Math.sin(a)]); } pts.push([0.7, 0.2], [0.3, -1.0], [0.4, -2.4]); return sp(pts, true, 0.12); })();
+
 /** basket held in the hand (Bastet's aegis basket) */
 const Basket: React.FC<{p: [number, number]; c: Ctx}> = ({p, c}) => <g transform={`translate(${p[0]},${p[1]})`}>
 	<Sol d={poly([[-0.8, 0.1], [0.8, 0.1], [0.6, 1.5], [-0.6, 1.5]])} f={PAL.mat} c={c} />
@@ -100,17 +152,19 @@ export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t
 		// the sun disc (lioness, Ra's falcon): it sits ON TOP of the head, behind the ears / skull, so it is drawn here, behind the head
 		const cr = k.crown ?? k.base.crown, own = cr === 'sun', off = kind === 'lioness' ? 'translate(-0.3,-0.78)' : 'translate(-0.1,-0.24)';
 		headArt = <g>{own && <g transform={off}>{crown(cr, c, t, 1)}</g>}
+			{k.mane && <Sol d={MANE} f={col2} c={c} />}
 			<AnimalHead kind={kind} col={col} col2={col2} st={{jaw: Math.max(jaw, open), roar: rr, ear, sneer, ...look}} c={c} id={`${id}-ah`} fillet={kind !== 'cat' && k.base.wig === 'tri'} /></g>;
 		// a non-human HeadKind so the rig draws the animal-head wig, lappet and fillet; the crown is drawn by the rig on top of the head
 		cast = {...k.base, head: k.base.head === 'human' ? 'jackal' : k.base.head, wig: kind === 'cat' ? 'none' : k.base.wig, crown: k.head || (k.crown ?? k.base.crown) === 'sun' ? 'none' : k.base.crown, mask: false, faceless: false, ...extra};
 	} else cast = {...k.base, ...(k.hat ? {crown: 'none' as const} : {}), ...extra};
+	// human heads: the band / vulture cap and the hat go in the rig's own head layer (over the wig, behind the front arm)
+	const hatArt = !kind && (k.hat || k.band) ? <g>{k.band && band(k.band, c)}{k.hat && <g transform={k.band === 'vulture' ? 'translate(0,-0.8)' : undefined}>{hat(k.hat, c)}</g>}</g> : undefined;
 	const g = solve(P, castBody(cast));
 	const bh = g.bH, grip: [number, number] = [bh[0] * 0.02 + bh[2] * 0.6 + bh[4], bh[1] * 0.02 + bh[3] * 0.6 + bh[5]];
 	return <g>
-		<God id={id} cast={cast} pose={P} x={x} y={y} s={s} face={face} sec={{t, vel}} bProp={bProp} fProp={fProp} hide={hide} jaw={kind ? 0 : jaw} ear={kind ? 0 : ear} pivots={pivots} headArt={headArt} />
-		{(k.hat || basket || (!kind && k.crown)) && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
+		<God id={id} cast={cast} pose={P} x={x} y={y} s={s} face={face} sec={{t, vel}} bProp={bProp} fProp={fProp} hide={hide} jaw={kind ? 0 : jaw} ear={kind ? 0 : ear} pivots={pivots} headArt={headArt} hatArt={hatArt} />
+		{(basket || (!kind && k.crown)) && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
 			<g transform={mx(g.head)}>
-				{k.hat && hat(k.hat, c)}
 				{!kind && k.crown && k.crown !== 'none' && crown(k.crown, c, t, 1)}
 			</g>
 			{basket && <Basket p={grip} c={c} />}

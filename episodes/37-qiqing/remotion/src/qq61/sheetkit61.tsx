@@ -81,15 +81,15 @@ export const headAt = (who: string, pose: Pose, s: number, w: number, h: number,
 
 /* ---------------- palette strip ---------------- */
 export const hexOf = (k: string) => (PAL as Record<string, string>)[k] ?? k;
-export const Palette: React.FC<{x: number; y: number; w: number; items: [string, string][]; th: Theme}> = ({x, y, w, items, th}) => {
-	const per = Math.min(items.length, 8), sw = w / per, rows = Math.ceil(items.length / per);
+export const Palette: React.FC<{x: number; y: number; w: number; items: [string, string][]; th: Theme; per?: number}> = ({x, y, w, items, th, per: perMax = 8}) => {
+	const per = Math.min(items.length, perMax), sw = w / per, rows = Math.ceil(items.length / per);
 	return <g>{items.map(([k, name], i) => { const cx = x + (i % per) * sw, cy = y + Math.floor(i / per) * 62;
 		return <g key={i}><rect x={cx + 2} y={cy} width={sw - 6} height={26} rx={3} fill={hexOf(k)} stroke={th.dark ? '#F4E8CC' : '#2A1912'} strokeWidth={1.6} />
 			<Tx x={cx + sw / 2 - 2} y={cy + 40} t={hexOf(k).toUpperCase()} size={12.5} fill={th.text} w={800} anchor="middle" />
 			<Tx x={cx + sw / 2 - 2} y={cy + 55} t={name} size={11.5} fill={th.sub} w={600} anchor="middle" /></g>; })}
 		<rect x={x} y={y - 4} width={0} height={rows * 62} /></g>;
 };
-export const palHeight = (n: number) => Math.ceil(n / 8) * 62;
+export const palHeight = (n: number, per = 8) => Math.ceil(n / per) * 62;
 
 /* ---------------- must / don't ---------------- */
 export const Rules: React.FC<{x: number; y: number; w: number; must: string[]; dont: string[]; th: Theme; size?: number}> = ({x, y, w, must, dont, th, size = 15}) => {

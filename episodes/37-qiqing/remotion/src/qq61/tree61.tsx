@@ -1,7 +1,7 @@
 import React from 'react';
 import {PAL} from '../qq60/geo60';
 import {FC, F_SERIF} from '../qq60/frame60';
-import {God61, P61, CAST61} from './cast61';
+import {God61, P61, CAST61, sigOf} from './cast61';
 
 /* ep61 · the family tree (the throughline). Tree space 1040 × 760, node = medallion r 46 with the god's bust.
    Rows: Atum-Ra on top (Ra's daughters beside him, right) · Shu + Tefnut · Geb + Nut · Osiris Isis | Set Nephthys · Horus | Anubis.
@@ -32,18 +32,24 @@ export const LIT: Record<number, NodeId[]> = (() => {
 export const FOCUS: Record<number, NodeId[]> = {2: ['atum'], 3: ['atum'], 4: ['shu', 'tefnut'], 5: ['geb', 'nut'], 8: ['thoth'], 10: ['osiris'], 11: ['isis', 'set'], 12: ['nephthys'], 14: ['horus'], 17: ['anubis'], 19: ['sekhmet'], 20: ['bastet', 'maat']};
 
 const Medallion: React.FC<{id: NodeId; lit: boolean; focus: boolean; labels: boolean; icon: boolean; cid: string; sk?: boolean}> = ({id, lit, focus, labels, icon, cid, sk}) => {
-	const n = nodeAt(id), who = n.who, cast = CAST61[who].base;
+	const n = nodeAt(id), who = n.who, cast = CAST61[who].base, sig = sigOf(who);
 	const sc = who === 'ra' || who === 'atum' ? 7 : 8, headY = who === 'osiris' || who === 'sekhmet' ? 17.4 : 17.6;
 	return <g>
 		{focus && <circle cx={n.x} cy={n.y} r={NR + 16} fill={FC.gold} opacity={0.35} />}
 		<circle cx={n.x} cy={n.y} r={NR + 4} fill={lit ? FC.gold : 'none'} stroke={lit ? FC.gold2 : sk ? FC.gold : '#7C6A4A'} strokeWidth={sk ? 5 : 3} strokeDasharray={lit ? undefined : '7 6'} opacity={lit || sk ? 1 : 0.7} />
+		{/* round 3: the lit node ring carries the god's signature colour (c, with c2 as the thin outer ring) */}
+		{lit && <g fill="none"><circle cx={n.x} cy={n.y} r={NR + 10} stroke={FC.ink} strokeWidth={4.5} /><circle cx={n.x} cy={n.y} r={NR + 10} stroke={sig.c2} strokeWidth={2.5} />
+			<circle cx={n.x} cy={n.y} r={NR + 4} stroke={FC.ink} strokeWidth={11} /><circle cx={n.x} cy={n.y} r={NR + 4} stroke={sig.c} strokeWidth={8} /></g>}
 		<circle cx={n.x} cy={n.y} r={NR} fill={lit ? FC.lapis : sk ? FC.lapis2 : '#D9C7A0'} opacity={lit ? 1 : sk ? 0.9 : 0.55} />
 		{lit && icon && <g>
 			<clipPath id={`tc-${cid}-${id}`}><path d={`M${n.x - NR},${n.y - NR * 3} L${n.x + NR},${n.y - NR * 3} L${n.x + NR},${n.y} A${NR},${NR} 0 0 1 ${n.x - NR},${n.y} Z`} /></clipPath>
 			<g clipPath={`url(#tc-${cid}-${id})`}><God61 id={`ti-${cid}-${id}`} who={who} pose={P61.rest()} x={n.x - 0.6 * sc} y={n.y + (headY - 1.4) * sc} s={sc} /></g></g>}
 		{lit && !icon && <circle cx={n.x} cy={n.y} r={NR * 0.45} fill={FC.cream} />}
 		{!lit && !sk && <text x={n.x} y={n.y + 14} textAnchor="middle" fontSize={44} fontFamily={F_SERIF} fontWeight={900} fill="#7C6A4A" opacity={0.7}>？</text>}
-		{labels && <text x={n.x} y={n.y + NR + 38} textAnchor="middle" fontSize={30} fontFamily={F_SERIF} fontWeight={900} fill={lit ? FC.ink : '#8A7852'} stroke={lit ? '#F4E8CC' : 'none'} strokeWidth={6} paintOrder="stroke">{n.zh}</text>}
+		{labels && lit && <g>{/* the name tag: cream plate edged in the signature colour */}
+			<rect x={n.x - n.zh.length * 13 - 6} y={n.y + NR + 13} width={n.zh.length * 26 + 12} height={28} rx={7} fill="#F4E8CC" stroke={FC.ink} strokeWidth={6} />
+			<rect x={n.x - n.zh.length * 13 - 6} y={n.y + NR + 13} width={n.zh.length * 26 + 12} height={28} rx={7} fill="#F4E8CC" stroke={sig.c} strokeWidth={3.5} /></g>}
+		{labels && <text x={n.x} y={n.y + NR + (lit ? 36 : 38)} textAnchor="middle" fontSize={lit ? 25 : 30} fontFamily={F_SERIF} fontWeight={900} fill={lit ? FC.ink : '#8A7852'} stroke={lit ? '#F4E8CC' : 'none'} strokeWidth={6} paintOrder="stroke">{n.zh}</text>}
 	</g>;
 };
 
@@ -73,6 +79,6 @@ export const TreeChip: React.FC<{n: number}> = ({n}) => {
 		{LINK.map(([a, b]) => { const p = P(a), q = P(b); return <line key={a + b} x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke={lit.has(a) && lit.has(b) ? FC.gold : '#55618F'} strokeWidth={1.4} strokeDasharray="2 4" />; })}
 		{ids.map((id) => { const p = P(id), on = lit.has(id);
 			return <g key={id}>{foc.has(id) && <circle cx={p[0]} cy={p[1]} r={13} fill="none" stroke={FC.key} strokeWidth={3} />}
-				<circle cx={p[0]} cy={p[1]} r={8} fill={on ? FC.gold : '#2A3566'} stroke={on ? '#FFF2C0' : '#55618F'} strokeWidth={1.6} /></g>; })}
+				<circle cx={p[0]} cy={p[1]} r={8} fill={on ? sigOf(nodeAt(id).who).c : '#2A3566'} stroke={on ? FC.gold : '#55618F'} strokeWidth={on ? 2.4 : 1.6} /></g>; })}
 	</g>;
 };

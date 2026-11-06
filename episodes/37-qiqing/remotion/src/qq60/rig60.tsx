@@ -148,6 +148,9 @@ export type Cast = {
 	body?: Body;
 	/** body 'f': the dress colour (default red) and whether it carries the gold bead-net (default true) */
 	dressCol?: Role | string; net?: boolean;
+	/** ep61 signature colours (round 3): the bead-net colour, a starry dress (Nut), the kilt cloth colour and the belt / apron colour.
+	 *  Undefined = the ep60 drawing (gold net, linen kilt, gold belt and apron) */
+	netCol?: Role | string; stars?: boolean; kiltCol?: Role | string; kiltCol2?: Role | string;
 };
 export const CAST: Record<'anubis' | 'thoth' | 'osiris' | 'horus' | 'isis' | 'ani', Cast> = {
 	anubis: {name: 'Anubis', skin: 'skinM', skin2: 'skinM2', head: 'jackal', headFill: 'jackal', headFill2: 'jackal2', wig: 'tri', crown: 'none', dress: 'kilt', tail: true, collar: 'god', bHand: 'fist', fHand: 'fist', bProp: 'ankh', fProp: 'was'},
@@ -431,7 +434,7 @@ const Wing: React.FC<{U: M; F: M; c: Ctx; t: number; seed: number}> = ({U, F, c,
 
 /* ---------------- the figure ---------------- */
 export type Sec = {t?: number; amp?: number; vel?: {head?: number; torso?: number}};
-export type FigProps = {cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; sec?: Sec; id: string; explode?: number; pivots?: boolean; hide?: Partial<Record<'bArm' | 'fArm' | 'props', boolean>>; bProp?: PropKind; fProp?: PropKind; propTop?: number; paletteA?: number; /** open the jaw / beak 0..1 (jackal, ibis, falcon heads); default closed = the ep60 drawing */ jaw?: number; /** jackal ear fold, degrees (+ = back); 0 = ep60 drawing */ ear?: number; /** ep61: a complete head drawn in the head frame in place of the head shape and its face (wig, lappet, beard, crown still drawn by the rig); undefined = the ep60 drawing */ headArt?: React.ReactNode};
+export type FigProps = {cast: Cast; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; sec?: Sec; id: string; explode?: number; pivots?: boolean; hide?: Partial<Record<'bArm' | 'fArm' | 'props', boolean>>; bProp?: PropKind; fProp?: PropKind; propTop?: number; paletteA?: number; /** open the jaw / beak 0..1 (jackal, ibis, falcon heads); default closed = the ep60 drawing */ jaw?: number; /** jackal ear fold, degrees (+ = back); 0 = ep60 drawing */ ear?: number; /** ep61: a complete head drawn in the head frame in place of the head shape and its face (wig, lappet, beard, crown still drawn by the rig); undefined = the ep60 drawing */ headArt?: React.ReactNode; /** ep61: a headdress drawn in the head frame over the wig (under the human lappet and the crown, behind the front arm); undefined = nothing */ hatArt?: React.ReactNode};
 
 /* ---------------- opening jaws / beaks / ear fold (jaw, ear props; zero = the original single head shape) ---------------- */
 type JawSpec = {hinge: V; mouth: V[]; max: number; inner: string};
@@ -475,7 +478,7 @@ const SplitHead: React.FC<{kind: HeadKind; jaw: number; ear: number; d: string; 
 	</g>;
 };
 
-export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}, id, hide = {}, bProp, fProp, propTop, paletteA = -12, explode = 0, pivots = false, jaw = 0, ear = 0, headArt}) => {
+export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}, id, hide = {}, bProp, fProp, propTop, paletteA = -12, explode = 0, pivots = false, jaw = 0, ear = 0, headArt, hatArt}) => {
 	const c: Ctx = {OW: 2.7 / s, LW: 1.5 / s};
 	if (cast.body && cast.dress === 'mummy') pose = mummyArms(pose, cast.body); // body types: Osiris' hands always crossed on the chest
 	const g0 = solve(pose, castBody(cast)), g = explode ? explodeRig(g0, explode) : g0, t = sec.t ?? 0, amp = sec.amp ?? 1, vh = sec.vel?.head ?? 0, vt = sec.vel?.torso ?? 0;
@@ -521,15 +524,17 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		const ap0 = tP(g.torso, [0.42, -1.75]), dir = ((pose.at + pose.rt) / 2) * 0.55 - pose.lean * 0.2;
 		const am = chain(T(ap0[0], ap0[1]), R(-dir));
 		const apron = poly([[-0.42, 0], [0.42, 0], [0.55, 3.55], [-0.55, 3.55]]);
+		const hx = (r: Role | string) => (PAL as Record<string, string>)[r] ?? r, k2 = cast.kiltCol2 ? hx(cast.kiltCol2) : undefined;
+		const stripes = k2 ? [PAL.gold, k2 === PAL.gold ? PAL.red : PAL.ink, PAL.gold, k2 === PAL.gold ? PAL.red : PAL.ink] : [PAL.blue, PAL.red, PAL.blue, PAL.green];
 		return <g key="kilt">
-			<Solid d={d} r="linen" c={c} />{pleats}
-			{cast.apron !== false && <g transform={mx(am)}><Solid d={apron} r="gold" c={c} />
-				{[0.5, 1.1, 1.7, 2.3].map((yy, i) => <rect key={yy} x={-0.48} y={yy} width={0.96 + (yy / 3.55) * 0.15} height={0.3} fill={[PAL.blue, PAL.red, PAL.blue, PAL.green][i]} transform={`translate(${-(yy / 3.55) * 0.07},0)`} />)}
+			<Solid d={d} r={cast.kiltCol ?? 'linen'} c={c} />{cast.kiltCol ? <g opacity={0.32}>{pleats.map((p) => React.cloneElement(p as React.ReactElement<{stroke: string}>, {stroke: PAL.ink}))}</g> : pleats}
+			{cast.apron !== false && <g transform={mx(am)}><Solid d={apron} r={k2 ?? 'gold'} c={c} />
+				{[0.5, 1.1, 1.7, 2.3].map((yy, i) => <rect key={yy} x={-0.48} y={yy} width={0.96 + (yy / 3.55) * 0.15} height={k2 ? 0.16 : 0.3} fill={stripes[i]} transform={`translate(${-(yy / 3.55) * 0.07},0)`} />)}
 				{[-0.36, 0, 0.36].map((xx) => <path key={xx} d={`M${xx - 0.14} 3.55L${xx - 0.14} 3.05Q${xx} 2.8 ${xx + 0.14} 3.05L${xx + 0.14} 3.55Z`} fill={PAL.gold} stroke={PAL.ink} strokeWidth={c.LW} />)}
 			</g>}
 			{/* belt */}
-			<g transform={mx(g.torso)}><path d={poly([[-1.22, -2.2], [1.02, -2.2], [1.02, -1.7], [-1.26, -1.7]])} fill={cast.apron === false ? PAL.linen : PAL.gold} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
-				{cast.apron !== false && [-0.9, -0.45, 0, 0.45].map((xx, i) => <rect key={xx} x={xx} y={-2.1} width={0.3} height={0.3} fill={[PAL.blue, PAL.red][i % 2]} />)}
+			<g transform={mx(g.torso)}><path d={poly([[-1.22, -2.2], [1.02, -2.2], [1.02, -1.7], [-1.26, -1.7]])} fill={cast.apron === false ? PAL.linen : k2 ?? PAL.gold} stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
+				{cast.apron !== false && [-0.9, -0.45, 0, 0.45].map((xx, i) => <rect key={xx} x={xx} y={-2.1} width={0.3} height={0.3} fill={k2 ? (k2 === PAL.gold ? PAL.red : PAL.gold) : [PAL.blue, PAL.red][i % 2]} />)}
 				{cast.apron === false && <path d={sp([[0.75, -1.8], [1.15, -0.6], [1.0, 0.4], [0.75, 0.45], [0.82, -0.6], [0.5, -1.75]])} fill={PAL.linen} stroke={PAL.ink} strokeWidth={c.LW} />}</g>
 		</g>; };
 	const bullTail = () => { if (!cast.tail || cast.dress !== 'kilt') return null; const o = tP(g.torso, [-1.25, -1.8]), a = -0.85 * (torsoRot) + sway(1.7, 0.4, 4) - vt * 0.05;
@@ -570,14 +575,17 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 		// straight across at y −6.5, under the broad collar (which overlaps it all the way), and its front is one smooth, modest line from
 		// the collar to the waist — no bust contour, no neckline curve, no gap (owner 2026-11-06). Waist and hip give the feminine line; the
 		// hem rides on the shins so it follows the legs in the walk
-		const P = (m: M, p: V): Pt => tP(m, p), col = cast.dressCol ?? 'red', dc = (PAL as Record<string, string>)[col] ?? col;
+		const P = (m: M, p: V): Pt => tP(m, p), col = cast.dressCol ?? 'red', dc = (PAL as Record<string, string>)[col] ?? col, nc = cast.netCol ? (PAL as Record<string, string>)[cast.netCol] ?? cast.netCol : PAL.gold;
 		// the hem and the leg-side outline take the envelope of both legs (back-most leg behind, front-most in front), so the dress never
 		// twists or lets a leg through when the legs cross mid-stride
 		const bk = (m1: M, m2: M, p: V): V => { const a = tP(m1, p), b = tP(m2, p); return a[0] < b[0] ? a : b; }, fr = (m1: M, m2: M, p: V): V => { const a = tP(m1, p), b = tP(m2, p); return a[0] > b[0] ? a : b; };
 		const pts: Pt[] = [[...P(g.torso, [-2.1, -6.5]), 1] as Pt, [...P(g.torso, [-2.22, -5.4]), 1] as Pt, P(g.torso, [-1.46, -4.6]), P(g.torso, [-1.08, -3.4]), P(g.torso, [-0.94, -2.4]), P(g.torso, [-1.98, 0.4]), bk(g.rT, g.aT, [-1.08, 2.0]), bk(g.rS, g.aS, [-0.74, 1.2]), bk(g.rS, g.aS, [-0.48, 4.75]), [...bk(g.rS, g.aS, [-0.4, 5.02]), 1] as Pt,
 			[...fr(g.rS, g.aS, [0.5, 5.02]), 1] as Pt, fr(g.rS, g.aS, [0.6, 1.4]), fr(g.rT, g.aT, [1.02, 1.4]), P(g.torso, [1.6, -0.5]), P(g.torso, [0.86, -2.4]), P(g.torso, [1.17, -3.15]), P(g.torso, [1.49, -4.0]), P(g.torso, [1.8, -4.8]), [...P(g.torso, [2.38, -5.34]), 1] as Pt, [...P(g.torso, [2.36, -6.5]), 1] as Pt];
 		const d = sp(pts, true, 0.15), cid = `${id}-dress`, net: React.ReactNode[] = [];
-		if (cast.net !== false) for (let i = -22; i < 22; i++) net.push(<line key={'a' + i} x1={i * 0.7 - 11} y1={-17} x2={i * 0.7 + 11} y2={5} stroke={PAL.gold} strokeWidth={c.LW * 1.1} />, <line key={'b' + i} x1={i * 0.7 + 11} y1={-17} x2={i * 0.7 - 11} y2={5} stroke={PAL.gold} strokeWidth={c.LW * 1.1} />);
+		if (cast.net !== false) for (let i = -22; i < 22; i++) net.push(<line key={'a' + i} x1={i * 0.7 - 11} y1={-17} x2={i * 0.7 + 11} y2={5} stroke={nc} strokeWidth={c.LW * 1.1} />, <line key={'b' + i} x1={i * 0.7 + 11} y1={-17} x2={i * 0.7 - 11} y2={5} stroke={nc} strokeWidth={c.LW * 1.1} />);
+		// Nut's starry dress: five-pointed gold stars (the sky goddess' body), a fixed scatter in figure space
+		if (cast.stars) for (let i = 0; i < 60; i++) { const sx = -4.5 + ((0.5 + i * 0.7548777) % 1) * 10, sy = -16.6 + ((0.5 + i * 0.5698403) % 1) * 16.4, r = 0.22 + (i % 3) * 0.06;
+			net.push(<path key={'s' + i} d={poly(Array.from({length: 10}, (_, j) => { const a = -Math.PI / 2 + (j * Math.PI) / 5, rr = j % 2 ? r * 0.42 : r; return [sx + rr * Math.cos(a), sy + rr * Math.sin(a)] as V; }))} fill={PAL.star} />); }
 		// the fold between the legs and the advanced leg's line under the linen
 		const lead = tP(g.aS, [0, 4])[0] > tP(g.rS, [0, 4])[0] ? [g.aT, g.aS] : [g.rT, g.rS], fold = sp([P(lead[0], [-0.62, 1.5]), P(lead[1], [-0.42, 0.6]), P(lead[1], [-0.3, 4.4])], false);
 		return <g key="sheath"><clipPath id={cid}><path d={d} /></clipPath>
@@ -648,6 +656,7 @@ export const God: React.FC<FigProps> = ({cast, pose, x, y, s, face = 1, sec = {}
 				<path d="M1.08 -0.1Q0.5 -0.25 0.2 -0.85" fill="none" stroke={PAL.ink} strokeWidth={c.LW} /></>}
 			{cast.wig === 'tri' && cast.head === 'human' && <><Solid d={SH.wigTri} r={wigFill} c={c} />{[-1.2, -0.85, -0.5].map((xx) => <path key={xx} d={`M${xx + 0.8} -2.5Q${xx} -1.6 ${xx - 0.1} 1.6`} fill="none" stroke={wigLine} strokeWidth={c.LW * 1.1} />)}
 				<path d="M0.74 -1.62Q0.95 -2.0 0.6 -2.5" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.4} /></>}
+			{hatArt}
 			{cast.wig === 'duplex' && <><Solid d={SH.wigDuplex} r={wigFill} c={c} />{[-0.3, 0.2, 0.7].map((yy) => <path key={yy} d={`M${0.75} ${yy - 0.6}Q${-0.5} ${yy - 0.2} ${-1.5} ${yy - 0.65}`} fill="none" stroke="#3a3436" strokeWidth={c.LW * 1.1} />)}
 				<path d="M1.1 -1.72Q0.2 -1.55 -1.2 -2.15" fill="none" stroke={PAL.red} strokeWidth={c.LW * 2.6} /></>}
 			{cast.wig === 'tri' && cast.head !== 'human' && headArt === undefined && <path d="M0.42 -1.25Q-0.4 -1.7 -1.35 -1.5" fill="none" stroke={PAL.gold} strokeWidth={c.LW * 2.2} />}

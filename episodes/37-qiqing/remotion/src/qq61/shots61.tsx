@@ -84,7 +84,7 @@ export const NutArch: React.FC<{cx: number; gy: number; span: number; h: number;
 		{Array.from({length: 46}, (_, i) => { const u = 0.03 + i / 48, p = pt(u), q = 5 + R() * 4; return <path key={i} d={`M${p[0]} ${p[1] - w * 0.28 + (R() - 0.5) * w * 0.5 - q}l${q * 0.3} ${q * 0.7}l${q * 0.7} ${q * 0.3}l${-q * 0.7} ${q * 0.3}l${-q * 0.3} ${q * 0.7}l${-q * 0.3} ${-q * 0.7}l${-q * 0.7} ${-q * 0.3}l${q * 0.7} ${-q * 0.3}Z`} fill={PAL.star} />; })}
 		{/* head (left end), hands and feet (touching the earth) */}
 		<g transform={`translate(${x0 + 6},${gy - 40})`}><circle r={40} fill={PAL.ink} /><circle r={35} fill={PAL.skinF} /><path d="M-35 -4Q-30 -40 5 -38Q36 -34 34 -2Q26 -26 0 -24Q-22 -22 -35 -4Z" fill={PAL.wigH} /><circle cx={14} cy={-6} r={4} fill={PAL.ink} />
-			<g transform="translate(0,-38)"><path d="M-14 0Q-18 -34 0 -38Q18 -34 14 0Z" fill={PAL.red} stroke={PAL.ink} strokeWidth={4} /></g></g>
+			{/* round 3: Nut wears a plain black wig (no nu-jar); her starry body identifies her */}</g>
 		<ellipse cx={x1 + 10} cy={gy - 4} rx={36} ry={14} fill={PAL.skinF} stroke={PAL.ink} strokeWidth={5} /></g>; };
 
 const S5: React.FC = () => <g>
