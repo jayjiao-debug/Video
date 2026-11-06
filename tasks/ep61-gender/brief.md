@@ -34,3 +34,18 @@ Canon: `episodes/61-zhongshen/designbook.md`. Follow ancient Egyptian canon, whi
 - Only change `episodes/37-qiqing/remotion/src/qq61/`, `src/qq60/rig60.tsx` (non-breaking), the designbook, `tasks/ep61-gender/`.
   No keys in files. Set a git identity before committing (git config user.name "Claude"; user.email "noreply@anthropic.com").
   End commits with: Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+## Round 2 (owner 2026-11-06 10:50, with a screenshot of BOARD61 shot 17: Nephthys + Anubis)
+- NO NIPPLES on any character, ever: remove every nipple dot/mark on male chests (Anubis in shot 17 shows one) — keep only the
+  pectoral contour line; female dresses get a clean straight neckline (or the strap line) with no bust mark, no curve or dot that
+  can read as a nipple (Nephthys in shot 17 shows a curved mark under the collar). Check every character sheet, RIGTEST61 and all
+  BOARD61 frames at full size.
+- Osiris: give him NORMAL HANDS. Keep his mummiform wrapped body, but his two hands come out of the wrappings crossed over the chest
+  and grip the crook and the flail properly (fingers wrapped round the shafts, hand drawn over the shaft), as on Osiris statues.
+- Owner 10:53: "for the female the breast is showing". Round 1 drew the bust through the dress line and gave the male chest nipple
+  dots — both must go. Female: the dress (and the broad collar) covers the chest COMPLETELY, up to the collar, with a modest, smooth
+  profile line from collar to waist — no bust contour, no breast shape, no cleavage, no bare-chest gap between collar and dress top.
+  Femininity comes from the narrow shoulders, slim arms, long neck, small waist, the hip line, the long dress, wig, jewellery and
+  graceful poses — never from the chest. Male: pectoral contour only, no nipples.
+- Re-render every character sheet, the line-up, RIGTEST61 key frames and all BOARD61 frames and check each female figure at full
+  size for any chest shape before committing.
