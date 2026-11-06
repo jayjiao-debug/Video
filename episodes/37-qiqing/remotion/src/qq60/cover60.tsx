@@ -260,8 +260,8 @@ const Pillar: React.FC<{x: number; w: number; y0: number; y1: number; seed: numb
 export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tall'}) => {
 	const wide = layout === 'wide', W = wide ? 1440 : 1080, H = wide ? 1080 : 1440, cx = W / 2;
 	const G = wide
-		? {colW: 128, wall: [250, 250, 1190, 840], ms: 46, EY: 450, beamY: 610, half: 300, drop: 150, dais: 900, frieze: 960, title: 46, tsize: 86, jackY: 640, jx: 330, braz: 905, isis: [330, 720, 11], osiris: [1110, 720, 11]}
-		: {colW: 128, wall: [150, 470, 930, 1060], ms: 56, EY: 690, beamY: 860, half: 300, drop: 170, dais: 1180, frieze: 1290, title: 120, tsize: 108, jackY: 880, jx: 205, braz: 1260, isis: [262, 940, 12], osiris: [818, 940, 12]};
+		? {colW: 128, wall: [250, 250, 1190, 840], ms: 46, EY: 450, beamY: 655, half: 300, drop: 150, dais: 900, frieze: 960, title: 46, tsize: 86, jackY: 640, jx: 330, braz: 905, isis: [330, 720, 11], osiris: [1110, 720, 11]}
+		: {colW: 128, wall: [150, 470, 930, 1060], ms: 56, EY: 690, beamY: 905, half: 300, drop: 170, dais: 1180, frieze: 1290, title: 120, tsize: 108, jackY: 880, jx: 205, braz: 1260, isis: [262, 940, 12], osiris: [818, 940, 12]};
 	const [wx0, wy0, wx1, wy1] = G.wall, tilt = 6, a = tilt * Math.PI / 180;
 	const heartPan = [cx - G.half * Math.cos(a), G.beamY + G.half * Math.sin(a) + G.drop];
 	return <AbsoluteFill style={{background: '#0C0704'}}>
@@ -285,6 +285,10 @@ export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tal
 			</g>
 			<rect x={wx0} y={wy0} width={wx1 - wx0} height={wy1 - wy0} fill="url(#cv-vig)" opacity={0.6} />
 			{/* the god in his sun disk, the balance in front */}
+			{/* v3.2 (owner 11-06 08:44): the god's dark red cloak, like the reference — it frames the figure and hides the torso's edge */}
+			<defs><linearGradient id="ct-cloak" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stopColor="#3A0A08" /><stop offset="0.3" stopColor="#7A1E14" /><stop offset="0.5" stopColor="#8E2818" /><stop offset="0.7" stopColor="#7A1E14" /><stop offset="1" stopColor="#3A0A08" /></linearGradient></defs>
+			<path d={`M${cx - 3.6 * G.ms} ${G.EY + 3.4 * G.ms}Q${cx - 5.6 * G.ms} ${G.EY + 4.2 * G.ms} ${cx - 6.6 * G.ms} ${G.dais + 40}L${cx + 6.6 * G.ms} ${G.dais + 40}Q${cx + 5.6 * G.ms} ${G.EY + 4.2 * G.ms} ${cx + 3.6 * G.ms} ${G.EY + 3.4 * G.ms}Z`} fill="url(#ct-cloak)" stroke={INK} strokeWidth={4} />
+			{Array.from({length: 9}, (_, i) => { const u = -1 + i / 4; return <path key={i} d={`M${cx + u * 3.2 * G.ms} ${G.EY + 5 * G.ms}Q${cx + u * 4.6 * G.ms} ${G.EY + 9 * G.ms} ${cx + u * 6.0 * G.ms} ${G.dais + 30}`} fill="none" stroke="#2A0604" strokeWidth={3} opacity={0.45} />; })}
 			<FilmAnubis x={cx} y={G.EY} s={G.ms} />
 			{/* the dais */}
 			<path d={`M${cx - 260} ${G.dais}L${cx + 260} ${G.dais}L${cx + 280} ${G.dais + 36}L${cx - 280} ${G.dais + 36}Z`} fill="url(#ct-stone)" stroke={INK} strokeWidth={3} />
@@ -309,7 +313,12 @@ export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tal
 			{/* Ammit lunging out of the dark at the heart pan */}
 			<ellipse cx={heartPan[0] - 80} cy={heartPan[1] + 180} rx={300} ry={220} fill="url(#cv-redrim)" opacity={0.3} style={{mixBlendMode: 'screen'}} />
 			<Ammit2 pose={{lean: 14, neck: 26, jaw: 44, tail: 10, breathe: 0.6}} x={heartPan[0] - (wide ? 400 : 330)} y={heartPan[1] + (wide ? 330 : 380)} s={wide ? 44 : 48} face={1} t={0.3} rim={1} look={0.9} mr={1} roar={1} id="ctam" />
-			<Motes W={W} H={H} n={90} seed={21} />
+			<g style={{mixBlendMode: 'screen'}}>
+				<ellipse cx={cx} cy={G.EY - 60} rx={W * 0.6} ry={H * 0.42} fill="url(#cv-warm)" opacity={0.35} />
+				{Array.from({length: 6}, (_, i) => <ellipse key={i} cx={(i * 263 + 120) % W} cy={G.dais - 40 - (i % 3) * 120} rx={260} ry={40} fill="#FFE2B0" opacity={0.07} />)}
+			</g>
+			<rect x={0} y={0} width={W} height={H} fill="#FFB050" opacity={0.08} style={{mixBlendMode: 'soft-light'}} />
+			<Motes W={W} H={H} n={140} seed={21} />
 			<rect x={0} y={0} width={W} height={H} fill="url(#cv-vig)" opacity={0.75} />
 			{/* the top: a dark band for the title, the winged sun and two Eyes of Horus */}
 			<defs><linearGradient id="ct-top" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#060302" stopOpacity={0.95} /><stop offset="0.75" stopColor="#060302" stopOpacity={0.6} /><stop offset="1" stopColor="#060302" stopOpacity={0} /></linearGradient></defs>
