@@ -14,9 +14,10 @@ import {CAST61, God61} from './cast61';
 import {Actor, ActorOpts, at, Callouts, Crop, DARK, LIGHT, Ground, headFillOf, Lines, Palette, palHeight, Panel, Rules, SW, SH_, Theme, Tx, wrap, headAt} from './sheetkit61';
 import {CHARS, CharCfg, Cell, Part, FaceCell, Slot, SHEET_COUNT, REST, S_RAISE, S_STEP, S_BACK, FACES} from './chars61';
 import {Look} from './expr61';
+import {FaceCheck, FACE_N} from './facecheck61';
 
 /* ep61 · SHEETS61 (19 sheets, frame i = sheet i+1) and RIGTEST61 (the joints moving, 6 s per character).
-   Everything is drawn by the films' own components (God61 → ep60 God rig, Ammit2, Balance2, HeartScarab, …) so a sheet can never drift from a film.
+   Everything is drawn by the films' own components (God61 → ep60 God rig + heads61 layered animal heads, Ammit61 (ep61 fork of Ammit2), Balance2, HeartScarab, …) so a sheet can never drift from a film.
    Render: cd episodes/37-qiqing/remotion && ENTRY=qq61/sheets61 CID=SHEETS61 JPG=1 node scripts/frame.mjs stills /tmp/sheets 0 0.0333 0.0667 …  (seconds = frame/30) */
 const TITLE_H = 98;
 const BY = (k: string) => CHARS.find((c) => c.key === k)!;
@@ -112,7 +113,7 @@ export const CharSheet: React.FC<{cfg: CharCfg}> = ({cfg}) => {
 };
 
 /* ---------------- Ammit close-ups ---------------- */
-import {Ammit2} from '../qq60/act60b_kit';
+import {Ammit61 as Ammit2} from './ammit61';
 import {AMMIT_REST} from '../qq60/rig60';
 const AmmitHeads: React.FC<{x: number; y: number; w: number; h: number; th: Theme}> = ({x, y, w, h, th}) => {
 	const gap = 8, cw = (w - gap * 2) / 3, st = [{l: '闭口 5°', jaw: 5, roar: 0}, {l: '半张 24°', jaw: 24, roar: 0}, {l: '怒吼 46° · 鬃毛竖起', jaw: 5, roar: 1}], s = 27;
@@ -243,5 +244,6 @@ const STAND0: Pose = {...REST, lean: 0, neck: 0, head: 0};
 registerRoot(() => <>
 	<Composition id="SHEETS61" component={Sheets61} durationInFrames={SHEET_COUNT} fps={30} width={SW} height={SH_} />
 	<Composition id="RIGTEST61" component={RigTest} durationInFrames={N_CHARS * SEC * FPS} fps={30} width={SW} height={SH_} />
+	<Composition id="FACECHECK61" component={FaceCheck} durationInFrames={FACE_N} fps={30} width={SW} height={SH_} />
 </>);
 export {FC, God61, Eye, S_STEP, S_BACK, FACES, headFillOf, mx, Rig};

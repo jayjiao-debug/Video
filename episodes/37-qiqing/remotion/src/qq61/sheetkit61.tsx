@@ -20,11 +20,11 @@ export const headFillOf = (who: string): string => { const k = CAST61[who], hk =
 	if (hk === 'human') return P[k.base.skin]; if (hk === 'lioness') return k.color ?? PAL.lion; if (hk === 'cat' || hk === 'seth') return k.color ?? PAL.lion;
 	return P[k.base.headFill ?? 'jackal']; };
 export const Actor: React.FC<{id: string; who: string; pose: Pose; x: number; y: number; s: number} & ActorOpts> = ({id, who, pose, x, y, s, face = 1, look, feather, ...o}) => {
-	const k = CAST61[who], female = !!k.base.female, c = {OW: 2.7 / s, LW: 1.5 / s};
+	const k = CAST61[who], female = !!k.base.female, c = {OW: 2.7 / s, LW: 1.5 / s}, human = headKindOf(who) === 'human';
 	return <g>
-		<God61 id={id} who={who} pose={pose} x={x} y={y} s={s} face={face} {...o} />
+		<God61 id={id} who={who} pose={pose} x={x} y={y} s={s} face={face} {...o} look={human ? undefined : look} />
 		{feather && (() => { const G = gripOf(pose, 'f', female); return <g transform={`translate(${x},${y}) scale(${s * face},${s})`}><g transform={`translate(${G[0]},${G[1] + 0.45})`}><Feather c={c} h={2.9} /></g><FistOver pose={pose} side="f" c={c} skin={(PAL as Record<string, string>)[k.base.skin]} female={female} /></g>; })()}
-		{look && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}><g transform={mx(solve(pose, female).head)}><FaceOver kind={headKindOf(who)} fill={headFillOf(who)} c={c} look={look} id={id} /></g></g>}
+		{look && human && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}><g transform={mx(solve(pose, female).head)}><FaceOver kind={headKindOf(who)} fill={headFillOf(who)} c={c} look={look} id={id} /></g></g>}
 	</g>;
 };
 /** world position (px) of a point in a bone frame of a posed actor */

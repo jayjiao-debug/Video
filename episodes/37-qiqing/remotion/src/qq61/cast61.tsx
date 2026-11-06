@@ -2,7 +2,8 @@ import React from 'react';
 import {God, CAST, POSES, Cast, Pose, solve, crown} from '../qq60/rig60';
 import {ap} from '../qq60/geo60';
 import {CAST2} from '../qq60/cast60';
-import {mx, sp, poly, PAL, Pt, lerp, T, R, chain} from '../qq60/geo60';
+import {mx, sp, poly, PAL, Pt, lerp} from '../qq60/geo60';
+import {AnimalHead, AnimalKind} from './heads61';
 
 /* ep61 · the Ennead cast on the ep60 god rig.
    The ep60 rig draws five head kinds (human, jackal, ibis, falcon + crowns). ep61 needs a lioness, a cat and the Set animal, and a few
@@ -15,7 +16,6 @@ export type Hat61 = 'throne' | 'nu' | 'house' | 'goose';
 export type Cast61 = {base: Cast; head?: Head61; hat?: Hat61; crown?: Cast['crown']; color?: string; color2?: string};
 type Ctx = {OW: number; LW: number};
 
-const bare = (c: Cast): Cast => ({...c, head: 'human', headFill: undefined, headFill2: undefined, crown: 'none', mask: false});
 const mk = (name: string, o: Partial<Cast>): Cast => ({name, skin: 'skinM', skin2: 'skinM2', head: 'human', wig: 'tri', crown: 'none', dress: 'kilt', collar: 'god', bHand: 'fist', fHand: 'fist', ...o});
 
 /** the ep61 cast. Keys: ep60 gods are re-used as they are (anubis, thoth, osiris, horus, ra); the rest are built the same way. */
@@ -45,77 +45,16 @@ export const CAST61: Record<string, Cast61> = {
 	maat: {base: mk('Maat', {skin: 'skinF', skin2: 'gold2', dress: 'sheath', female: true, crown: 'maat', wings: true, bProp: 'ankh', fProp: 'was'})},
 };
 
-/* ---------------- head overlays (head frame: face +x, neck pivot at 0,0, crown base at y ≈ -2.5) ---------------- */
+/* ---------------- head overlays (head frame: face +x, neck pivot at 0,0, crown base at y ≈ -2.5) ----------------
+   Animal heads (lioness, cat, Set animal, and the ep60 jackal / ibis / falcon when drawn by God61) are the layered heads of heads61.tsx,
+   handed to the rig as `headArt` so they sit in the rig's own head layer (arms in front, wig / lappet behind, crown on top).
+   Human heads with a headdress (throne, nu-jar, house, goose) keep the ep60 face; the headdress is painted on top. */
 const Sol: React.FC<{d: string; f: string; c: Ctx; k?: number}> = ({d, f, c, k = 1}) => <><path d={d} fill={PAL.ink} stroke={PAL.ink} strokeWidth={2 * c.OW * k} strokeLinejoin="round" /><path d={d} fill={f} /></>;
-const eyeAt = (x: number, y: number, c: Ctx, L = 0.52, rim = PAL.ink) => <g>
-	<path d={`M${x - L * 0.5} ${y}Q${x} ${y - L * 0.36} ${x + L * 0.55} ${y - 0.02}Q${x} ${y + L * 0.2} ${x - L * 0.5} ${y}Z`} fill={PAL.eye} stroke={rim} strokeWidth={c.LW} />
-	<circle cx={x + 0.1} cy={y - 0.03} r={L * 0.14} fill={PAL.ink} /><path d={`M${x - L * 0.5} ${y}L${x - L * 1.15} ${y + 0.05}`} stroke={PAL.ink} strokeWidth={c.LW * 1.4} /></g>;
-
-const lioness = (c: Ctx, col: string, col2: string, open: number, uid = 'lio', roar = 0) => {
-	if (roar > 0.02) open = roar;
-	const head = sp([[0.5, 0.14], [1.1, 0.1], [1.7, -0.02], [2.1, -0.3], [2.2, -0.62], [2.05, -0.9], [1.6, -1.02], [1.3, -1.35], [1.2, -1.85], [0.95, -2.25], [0.4, -2.58], [-0.2, -2.62], [-0.75, -2.35], [-0.95, -1.7], [-0.9, -0.9], [-0.7, -0.2], [-0.2, 0.1]]);
-	// the roar (open > 0): the muzzle is cut along the mouth line; the lower jaw turns about a hinge behind the mouth corner (30 deg per unit of `open`),
-	// the mouth shows a dark red inside, a tongue, and the fangs of both jaws
-	const hinge: [number, number] = [0.95, -0.3], a = 42 * open, rm = chain(T(hinge[0], hinge[1]), R(a), T(-hinge[0], -hinge[1]));
-	const lowR = poly([hinge, [2.8, -0.3], [2.8, 3], [hinge[0], 3]]), ink = {fill: PAL.ink, stroke: PAL.ink, strokeWidth: 2 * c.OW, strokeLinejoin: 'round' as const};
-	const jawD = sp([[0.9, -0.3, 1], [2.2, -0.3, 1], [2.38, -0.04], [2.12, 0.3], [1.5, 0.55], [0.95, 0.42]], true, 0.14);
-	const cut = 'M0.95 -0.3L2.15 -0.3', fang = (x: number, y: number, L: number, up: boolean) => <path d={`M${x - 0.07} ${y}L${x} ${y + (up ? L : -L)}L${x + 0.07} ${y}Z`} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 0.7} strokeLinejoin="round" />;
-	const eyebrow = <><path d="M2.05 -0.86Q2.3 -0.7 2.08 -0.46Q1.9 -0.62 2.05 -0.86Z" fill={PAL.ink} />{eyeAt(1.2, -1.55, c, 0.56, PAL.gold2)}<path d="M1.1 -1.85Q1.4 -1.95 1.6 -1.78" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.4} /></>;
-	if (roar > 0.02) { return <g>
-		<defs><clipPath id={`${uid}-up`}><path clipRule="evenodd" d={`M-3 -9H8V6H-3Z${lowR}`} /></clipPath><clipPath id={`${uid}-lo`}><path d={lowR} /></clipPath></defs>
-		<circle cx={-0.35} cy={-2.5} r={0.4} fill={PAL.ink} stroke={PAL.ink} strokeWidth={c.OW * 2} /><circle cx={-0.35} cy={-2.5} r={0.4} fill={col2} />
-		<path d={poly([hinge, [2.15, -0.3], ap(rm, [2.15, -0.3]), ap(rm, [1.3, -0.3])])} fill={PAL.red2} />
-		<g transform={mx(rm)}>
-			<Sol d={jawD} f={col} c={c} k={0.9} />
-			<path d="M1.05 -0.3Q1.5 -0.55 2.1 -0.44Q1.9 -0.3 1.5 -0.27Q1.2 -0.25 1.05 -0.3Z" fill="#E0566A" stroke={PAL.ink} strokeWidth={c.LW * 0.7} />
-			{fang(2.12, -0.32, 0.34 * Math.min(1, open), false)}{fang(1.75, -0.32, 0.22 * Math.min(1, open), false)}
-			<path d="M0.95 -0.3L2.15 -0.3" stroke={PAL.ink} strokeWidth={c.OW * 1.2} strokeLinecap="round" /></g>
-		<g clipPath={`url(#${uid}-up)`}><path d={head} {...ink} /><path d={head} fill={col} /></g>
-		<path d={cut} stroke={PAL.ink} strokeWidth={c.OW * 1.6} strokeLinecap="round" />{fang(2.0, -0.3, 0.3 * Math.min(1, open), true)}{fang(1.72, -0.3, 0.22 * Math.min(1, open), true)}{fang(1.45, -0.3, 0.16 * Math.min(1, open), true)}
-		<path d={sp([[0.1, -1.2], [0.5, -0.9], [1.0, -0.55], [1.5, -0.45]], false)} fill="none" stroke={col2} strokeWidth={c.LW * 1.2} />
-		{eyebrow}
-	</g>; }
-	return <g>
-		<circle cx={-0.35} cy={-2.5} r={0.4} fill={PAL.ink} stroke={PAL.ink} strokeWidth={c.OW * 2} /><circle cx={-0.35} cy={-2.5} r={0.4} fill={col2} />
-		{open > 0 && <g><path d={poly([[2.12, -0.48], [1.25, -0.32], [1.5, 0.15 + 0.85 * open], [2.1, 0.1 + 0.95 * open]])} fill={PAL.red2} stroke={PAL.ink} strokeWidth={c.LW} />
-			<g transform={`rotate(${28 * open} 0.7 0)`}><Sol d={sp([[0.7, 0.0, 1], [2.0, -0.28, 1], [2.1, 0.0], [1.5, 0.34], [0.9, 0.3, 1]], true, 0.1)} f={col} c={c} k={0.8} /></g>
-			{[1.95, 1.75, 1.55].map((x) => <path key={x} d={`M${x} -0.46L${x - 0.06} -0.2L${x + 0.1} -0.44`} fill={PAL.white} stroke={PAL.ink} strokeWidth={c.LW * 0.6} />)}</g>}
-		<Sol d={head} f={col} c={c} />
-		{open <= 0 && <path d="M2.06 -0.34Q1.6 -0.22 1.1 -0.3" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.1} strokeLinecap="round" />}
-		<path d={sp([[0.1, -1.2], [0.5, -0.9], [1.0, -0.55], [1.5, -0.45]], false)} fill="none" stroke={col2} strokeWidth={c.LW * 1.2} />
-		<path d="M2.05 -0.86Q2.3 -0.7 2.08 -0.46Q1.9 -0.62 2.05 -0.86Z" fill={PAL.ink} />
-		{eyeAt(1.2, -1.55, c, 0.56, PAL.gold2)}
-		<path d="M1.1 -1.85Q1.4 -1.95 1.6 -1.78" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.4} />
-	</g>;
-};
-const cat = (c: Ctx, col: string, col2: string, ear = 0) => {
-	const head = sp([[0.5, 0.14], [1.0, 0.1], [1.45, -0.1], [1.8, -0.4], [1.85, -0.65], [1.62, -0.85], [1.3, -1.0], [1.15, -1.4], [1.0, -1.9], [0.85, -2.3], [0.5, -2.6], [0, -2.62], [-0.6, -2.4], [-0.95, -1.7], [-0.9, -0.9], [-0.6, -0.2]]);
-	return <g>
-		<g transform={`rotate(${-ear} -0.4 -2.3)`}><Sol d={poly([[-0.75, -2.2], [-0.62, -3.6], [0.0, -2.5]])} f={col2} c={c} /></g>
-		<Sol d={head} f={col} c={c} />
-		<g transform={`rotate(${-ear} 0.6 -2.35)`}><Sol d={poly([[0.1, -2.45], [0.62, -3.75], [1.1, -2.2]])} f={col} c={c} />
-		<path d={poly([[0.35, -2.5], [0.62, -3.3], [0.85, -2.45]])} fill="#E8A0A0" /></g>
-		{[-0.2, 0.2, 0.6].map((y) => <path key={y} d={`M${-0.4} ${-1.6 + y * 0.5}Q0.0 ${-1.7 + y * 0.5} 0.4 ${-1.9 + y * 0.5}`} fill="none" stroke={col2} strokeWidth={c.LW * 1.2} />)}
-		{eyeAt(1.1, -1.5, c, 0.6, PAL.ink)}
-		<path d="M1.78 -0.68L1.9 -0.55L1.7 -0.5Z" fill="#C07070" stroke={PAL.ink} strokeWidth={c.LW * 0.7} />
-		<path d="M1.7 -0.5Q1.55 -0.3 1.3 -0.34" fill="none" stroke={PAL.ink} strokeWidth={c.LW} />
-		{[-0.12, 0.06, 0.24].map((y) => <path key={y} d={`M1.5 ${-0.55 + y}L2.5 ${-0.75 + y * 2.2}`} stroke={PAL.ink} strokeWidth={c.LW * 0.6} />)}
-	</g>;
-};
-const seth = (c: Ctx, col: string, col2: string, sneer: number, ear = 0) => {
-	const head = sp([[0.5, 0.14], [0.95, 0.05], [1.3, -0.2], [1.5, -0.62], [2.2, -0.88], [2.9, -0.72], [3.35, -0.4], [3.5, -0.05, 1], [3.2, -0.2], [2.7, -0.42], [2.0, -0.52], [1.6, -0.5], [1.5, -1.0], [1.55, -1.5], [1.1, -1.95], [0.9, -2.3], [0.3, -2.6], [-0.4, -2.45], [-0.9, -1.8], [-0.95, -0.9], [-0.6, -0.15]], true, 0.14);
-	const earP = (dx: number, f: string) => <g transform={`translate(${dx},0) rotate(${-ear} 0 -2.4)`}><Sol d={poly([[-0.3, -2.35], [-0.78, -3.95], [-0.2, -4.1], [0.28, -3.95], [0.32, -2.4]])} f={f} c={c} /></g>;
-	return <g>
-		{earP(-0.45, col2)}
-		<Sol d={head} f={col} c={c} />
-		{earP(0.2, col)}
-		<path d={poly([[-0.02, -3.7], [0.24, -3.78], [0.35, -2.7], [0.1, -2.62]])} fill={col2} opacity={0.6} />
-		<path d="M0.9 -2.25Q1.4 -1.5 1.55 -1.1" fill="none" stroke={col2} strokeWidth={c.LW * 1.2} />
-		{sneer > 0 && <path d={`M2.2 -0.55Q1.8 ${-0.5 + 0.1 * sneer} 1.5 -0.55`} fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.3} />}
-		<path d="M0.9 -1.62Q1.2 -1.9 1.55 -1.55Q1.2 -1.4 0.9 -1.62Z" fill={PAL.red} stroke={PAL.ink} strokeWidth={c.LW} /><path d="M0.85 -1.78L1.5 -1.72" stroke={PAL.ink} strokeWidth={c.LW * 1.3} />
-		<path d="M3.45 -0.1Q3.55 0.05 3.4 0.12" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.2} />
-	</g>;
-};
+/** the animal head kind of a cast (undefined = human head) */
+export const animalOf = (k: Cast61): AnimalKind | undefined => k.head ?? (k.base.head !== 'human' ? k.base.head : undefined);
+/** head colours: ep61 heads from the cast61 entry, ep60 heads from the ep60 cast (headFill / headFill2) */
+export const animalCols = (k: Cast61): [string, string] => { const P = PAL as Record<string, string>;
+	return k.head ? [k.color ?? PAL.lion, k.color2 ?? PAL.lion2] : [P[k.base.headFill ?? 'jackal'], P[k.base.headFill2 ?? 'jackal2']]; };
 const hat = (k: Hat61, c: Ctx) => {
 	if (k === 'throne') return <g>
 		<Sol d={poly([[-0.85, -2.4], [-0.85, -4.5], [-0.15, -4.5], [-0.15, -3.55], [0.85, -3.55], [0.85, -2.4]])} f={PAL.blue} c={c} />
@@ -143,21 +82,30 @@ const Basket: React.FC<{p: [number, number]; c: Ctx}> = ({p, c}) => <g transform
 	<path d="M-0.7 0.1Q0 -1.2 0.7 0.1" fill="none" stroke={PAL.ink} strokeWidth={c.LW * 1.6} /></g>;
 
 export type God61Props = {id: string; who: string; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; t?: number; vel?: {head?: number; torso?: number};
-	bProp?: Cast['bProp']; fProp?: Cast['fProp']; open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}};
-/** an ep61 god: the ep60 `God` plus the new head / headdress painted in the head frame */
-export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, pivots = false, basket, wings, dress, hide}) => {
-	const k = CAST61[who], c: Ctx = {OW: 2.7 / s, LW: 1.5 / s};
-	const base = k.head ? bare({...k.base, wig: k.head === 'cat' ? 'none' : k.base.wig}) : k.hat ? {...k.base, wig: k.base.wig} : k.base;
-	const cast: Cast = {...base, ...(k.head === 'lioness' && roar > 0 ? {faceless: true} : {}), ...(k.head || k.hat ? {crown: 'none' as const} : {}), ...(wings !== undefined ? {wings} : {}), ...(dress ? {dress} : {})};
-	const g = solve(pose, cast.female), col = k.color ?? PAL.lion, col2 = k.color2 ?? PAL.lion2;
+	bProp?: Cast['bProp']; fProp?: Cast['fProp']; /** old ep61 film param: = jaw */ open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; /** animal heads: eyes / look / brow (human heads use expr61 FaceOver) */ look?: {eyes?: number; look?: number; brow?: number}; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}};
+/** an ep61 god: the ep60 `God` with the layered animal head (headArt) or the ep60 human head + a headdress painted on top */
+export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, look, pivots = false, basket, wings, dress, hide}) => {
+	const k = CAST61[who], c: Ctx = {OW: 2.7 / s, LW: 1.5 / s}, kind = animalOf(k), rr = Math.max(0, Math.min(1, roar));
+	// a roar throws the head back a little
+	const P: Pose = kind && rr > 0 ? {...pose, head: pose.head - 7 * rr} : pose;
+	const extra = {...(wings !== undefined ? {wings} : {}), ...(dress ? {dress} : {})};
+	let cast: Cast, headArt: React.ReactNode = undefined;
+	if (kind) { const [col, col2] = animalCols(k);
+		// the sun disc (lioness, Ra's falcon): it sits ON TOP of the head, behind the ears / skull, so it is drawn here, behind the head
+		const cr = k.crown ?? k.base.crown, own = cr === 'sun', off = kind === 'lioness' ? 'translate(-0.3,-0.78)' : 'translate(-0.1,-0.24)';
+		headArt = <g>{own && <g transform={off}>{crown(cr, c, t, 1)}</g>}
+			<AnimalHead kind={kind} col={col} col2={col2} st={{jaw: Math.max(jaw, open), roar: rr, ear, sneer, ...look}} c={c} id={`${id}-ah`} fillet={kind !== 'cat' && k.base.wig === 'tri'} /></g>;
+		// a non-human HeadKind so the rig draws the animal-head wig, lappet and fillet; the crown is drawn by the rig on top of the head
+		cast = {...k.base, head: k.base.head === 'human' ? 'jackal' : k.base.head, wig: kind === 'cat' ? 'none' : k.base.wig, crown: k.head || (k.crown ?? k.base.crown) === 'sun' ? 'none' : k.base.crown, mask: false, faceless: false, ...extra};
+	} else cast = {...k.base, ...(k.hat ? {crown: 'none' as const} : {}), ...extra};
+	const g = solve(P, cast.female);
 	const bh = g.bH, grip: [number, number] = [bh[0] * 0.02 + bh[2] * 0.6 + bh[4], bh[1] * 0.02 + bh[3] * 0.6 + bh[5]];
 	return <g>
-		<God id={id} cast={cast} pose={pose} x={x} y={y} s={s} face={face} sec={{t, vel}} bProp={bProp} fProp={fProp} hide={hide} jaw={jaw} ear={ear} pivots={pivots} />
-		{(k.head || k.hat || k.crown) && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
+		<God id={id} cast={cast} pose={P} x={x} y={y} s={s} face={face} sec={{t, vel}} bProp={bProp} fProp={fProp} hide={hide} jaw={kind ? 0 : jaw} ear={kind ? 0 : ear} pivots={pivots} headArt={headArt} />
+		{(k.hat || basket || (!kind && k.crown)) && <g transform={`translate(${x},${y}) scale(${s * face},${s})`}>
 			<g transform={mx(g.head)}>
-				{k.head === 'lioness' && lioness(c, col, col2, open, `${id}-lio`, roar)}{k.head === 'cat' && cat(c, col, col2, ear)}{k.head === 'seth' && seth(c, col, col2, sneer, ear)}
 				{k.hat && hat(k.hat, c)}
-				{k.crown && k.crown !== 'none' && crown(k.crown, c, t, 1)}
+				{!kind && k.crown && k.crown !== 'none' && crown(k.crown, c, t, 1)}
 			</g>
 			{basket && <Basket p={grip} c={c} />}
 		</g>}
