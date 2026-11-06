@@ -61,7 +61,7 @@ const S1: React.FC = () => { const {up, down, live} = useShot(); const R = rng(7
 		<g opacity={tree} transform={`translate(${CX - TCX * 0.78},${MID - 270 + (1 - tree) * 30}) scale(0.78)`}><FamilyTree61 lit={[]} labels={false} icons={false} cid="s1" skeleton /></g>
 		<g opacity={lab}><Label x={CX} y={110} t={`${n} 多位神`} size={56} c={PAL.goldHi} /></g></g>; };
 
-const S2: React.FC = () => { const {up, T, L2, live} = useShot(); const u = up(L2 - 0.5, 1.5), dy = (1 - u) * 160;
+const S2: React.FC = () => { const {up, T, L2, live} = useShot(); const u = up(L2 - 0.5, 1.6), dy = (1 - u) * 540;   // Atum's crown (≈ y 207) starts below the waterline (722)
 	return <g>
 		<Bg a="#0E1538" b="#1D2E6E" /><g opacity={0.6 + 0.4 * Math.sin(T * 1.3)}><Stars box={[0, 60, 1440, 360]} seed={5} n={40} /></g>
 		<rect x={0} y={640} width={1440} height={292} fill="#0B1230" />
