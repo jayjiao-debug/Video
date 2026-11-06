@@ -23,7 +23,7 @@ const rng = (seed: number) => { let s = seed; return () => { s = (s * 16807) % 2
 
 /** the film's own Anubis (shot 1, owner 11-05 20:57 "the video one is more awesome"): the black-and-gold mask with the striped lappets and
     the collar (MaskFront), the frontal torso, the gold sun disk behind his head with its halo and rays. (x, y) = between the eyes, s = mask unit */
-const FilmAnubis: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const sx = x, sy = y - 1.77 * s;
+const FilmAnubis: React.FC<{x: number; y: number; s: number; attire?: boolean}> = ({x, y, s, attire}) => { const sx = x, sy = y - 1.77 * s;
 	const rays = Array.from({length: 24}, (_, i) => { const a = (i / 24) * Math.PI * 2, r0 = 2.4 * s, r1 = (i % 2 ? 5.4 : 6.7) * s;
 		return <path key={i} d={`M${sx + Math.cos(a - 0.035) * r0} ${sy + Math.sin(a - 0.035) * r0}L${sx + Math.cos(a) * r1} ${sy + Math.sin(a) * r1}L${sx + Math.cos(a + 0.035) * r0} ${sy + Math.sin(a + 0.035) * r0}Z`} fill="#EEBF50" opacity={0.3} />; });
 	return <g>
@@ -41,7 +41,37 @@ const FilmAnubis: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => {
 		<rect x={x - 3.9 * s + 2.5} y={y + 7.4 * s} width={7.8 * s - 5} height={12 * s} fill={PAL.skinM} />
 		<path d={`M${x - 3.9 * s} ${y + 7.5 * s}L${x - 3.9 * s} ${y + 19 * s}M${x + 3.9 * s} ${y + 7.5 * s}L${x + 3.9 * s} ${y + 19 * s}`} stroke={INK} strokeWidth={5} />
 		<rect x={x - 4.2 * s} y={y + 3.2 * s} width={8.4 * s} height={16 * s} fill="url(#cva-shade)" />
+		{attire && <RoyalAttire x={x} y={y} s={s} />}
 		<MaskFront x={x} y={y} s={s} t={0.4} id="cva" flare={0.25} />
+	</g>; };
+
+/** v3.2 (owner 11-06 08:47 "give Anubis more awe attire"): a royal feather corselet (rows of lapis / turquoise / red feathers with
+    gold edges, as Tutankhamun's corselet), a gold winged-scarab pectoral on gold chains, a gold belt with lapis and red checks */
+const RoyalAttire: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const P = (u: number, v: number) => [x + u * s, y + v * s];
+	const rows = 13, top = 4.0, bot = 9.6, cols = 17;
+	return <g>
+		<defs><clipPath id="cva-corsclip"><path d={TORSO(x, y, s)} /><rect x={x - 3.9 * s} y={y + 7.4 * s} width={7.8 * s} height={3 * s} /></clipPath></defs>
+		<g clipPath="url(#cva-corsclip)">
+			<rect x={x - 4 * s} y={y + top * s} width={8 * s} height={(bot - top) * s} fill="#1B2A6E" />
+			{Array.from({length: rows}, (_, r) => Array.from({length: cols + 1}, (_, c) => { const v = top + r * (bot - top) / rows, u = -4 + (c + (r % 2) * 0.5) * (8 / cols), w = 8 / cols, h = (bot - top) / rows * 1.35;
+				const [px, py] = P(u, v), col = r % 4 === 3 ? '#B8341E' : r % 2 ? '#2A8F8C' : '#22357F';
+				return <path key={`${r}-${c}`} d={`M${px - w * s / 2} ${py}Q${px - w * s / 2} ${py + h * s} ${px} ${py + h * s}Q${px + w * s / 2} ${py + h * s} ${px + w * s / 2} ${py}Z`} fill={col} stroke="#E2B04A" strokeWidth={1.4} />; }))}
+			<rect x={x - 4 * s} y={y + top * s} width={8 * s} height={(bot - top) * s} fill="url(#cva-shade)" />
+		</g>
+		{/* the belt */}
+		<rect x={P(-3.85, 9.45)[0]} y={P(0, 9.45)[1]} width={7.7 * s} height={0.6 * s} fill="url(#cva-gold)" stroke={INK} strokeWidth={3} />
+		{Array.from({length: 10}, (_, i) => <rect key={i} x={P(-3.6 + i * 0.74, 9.58)[0]} y={P(0, 9.58)[1]} width={0.36 * s} height={0.34 * s} fill={i % 2 ? LAPIS : RED} />)}
+		{/* the winged-scarab pectoral on its chains */}
+		{[-1, 1].map((sg) => <path key={sg} d={`M${P(sg * 1.5, 3.9)[0]} ${P(0, 3.9)[1]}L${P(sg * 0.7, 4.6)[0]} ${P(0, 4.6)[1]}`} stroke={GOLD} strokeWidth={4} strokeDasharray="5 3" />)}
+		<g transform={`translate(${P(0, 5.0)[0]},${P(0, 5.0)[1]}) scale(${s / 28})`}>
+			{[-1, 1].map((sg) => <g key={sg} transform={`scale(${sg},1)`}>
+				<path d="M14 -6Q60 -26 108 -12Q90 2 60 4Q34 6 14 8Z" fill="url(#cva-gold)" stroke={INK} strokeWidth={3} />
+				{[0, 1, 2].map((k) => <path key={k} d={`M${22 + k * 26} ${-6 - k * 3}Q${36 + k * 26} ${-2} ${30 + k * 26} ${6}`} fill="none" stroke={k === 1 ? RED : LAPIS} strokeWidth={5} />)}
+			</g>)}
+			<ellipse cx={0} cy={4} rx={18} ry={24} fill="#1E2F7A" stroke={INK} strokeWidth={3} />
+			<path d="M-14 -4L14 -4M0 -18L0 26" stroke="#4A66C8" strokeWidth={2.5} />
+			<circle cx={0} cy={-30} r={11} fill="#D8402A" stroke={GOLD} strokeWidth={3} />
+		</g>
 	</g>; };
 
 /** the monumental balance: (0, 0) = the foot of the post on the floor; H = height to the beam; tilt in degrees (+ = left pan down) */
@@ -260,7 +290,7 @@ const Pillar: React.FC<{x: number; w: number; y0: number; y1: number; seed: numb
 export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tall'}) => {
 	const wide = layout === 'wide', W = wide ? 1440 : 1080, H = wide ? 1080 : 1440, cx = W / 2;
 	const G = wide
-		? {colW: 128, wall: [250, 250, 1190, 840], ms: 46, EY: 450, beamY: 655, half: 300, drop: 150, dais: 900, frieze: 960, title: 46, tsize: 86, jackY: 640, jx: 330, braz: 905, isis: [330, 720, 11], osiris: [1110, 720, 11]}
+		? {colW: 120, wall: [230, 350, 1210, 900], ms: 42, EY: 560, beamY: 770, half: 300, drop: 105, dais: 935, frieze: 995, title: 64, tsize: 84, jackY: 640, jx: 330, braz: 990, isis: [340, 730, 11], osiris: [1100, 730, 11]}
 		: {colW: 128, wall: [150, 470, 930, 1060], ms: 56, EY: 690, beamY: 905, half: 300, drop: 170, dais: 1180, frieze: 1290, title: 120, tsize: 108, jackY: 880, jx: 205, braz: 1260, isis: [262, 940, 12], osiris: [818, 940, 12]};
 	const [wx0, wy0, wx1, wy1] = G.wall, tilt = 6, a = tilt * Math.PI / 180;
 	const heartPan = [cx - G.half * Math.cos(a), G.beamY + G.half * Math.sin(a) + G.drop];
@@ -289,7 +319,15 @@ export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tal
 			<defs><linearGradient id="ct-cloak" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stopColor="#3A0A08" /><stop offset="0.3" stopColor="#7A1E14" /><stop offset="0.5" stopColor="#8E2818" /><stop offset="0.7" stopColor="#7A1E14" /><stop offset="1" stopColor="#3A0A08" /></linearGradient></defs>
 			<path d={`M${cx - 3.6 * G.ms} ${G.EY + 3.4 * G.ms}Q${cx - 5.6 * G.ms} ${G.EY + 4.2 * G.ms} ${cx - 6.6 * G.ms} ${G.dais + 40}L${cx + 6.6 * G.ms} ${G.dais + 40}Q${cx + 5.6 * G.ms} ${G.EY + 4.2 * G.ms} ${cx + 3.6 * G.ms} ${G.EY + 3.4 * G.ms}Z`} fill="url(#ct-cloak)" stroke={INK} strokeWidth={4} />
 			{Array.from({length: 9}, (_, i) => { const u = -1 + i / 4; return <path key={i} d={`M${cx + u * 3.2 * G.ms} ${G.EY + 5 * G.ms}Q${cx + u * 4.6 * G.ms} ${G.EY + 9 * G.ms} ${cx + u * 6.0 * G.ms} ${G.dais + 30}`} fill="none" stroke="#2A0604" strokeWidth={3} opacity={0.45} />; })}
-			<FilmAnubis x={cx} y={G.EY} s={G.ms} />
+			{/* the cloak's lapis lining and gold-and-hieroglyph trim down its front edges, gold clasps with red stones */}
+			{[-1, 1].map((sg) => <g key={sg}>
+				<path d={`M${cx + sg * 3.6 * G.ms} ${G.EY + 3.4 * G.ms}Q${cx + sg * 4.3 * G.ms} ${G.EY + 8 * G.ms} ${cx + sg * 4.4 * G.ms} ${G.dais + 40}`} fill="none" stroke="#1E2F7A" strokeWidth={0.5 * G.ms} />
+				<path d={`M${cx + sg * 3.85 * G.ms} ${G.EY + 3.5 * G.ms}Q${cx + sg * 4.6 * G.ms} ${G.EY + 8 * G.ms} ${cx + sg * 4.75 * G.ms} ${G.dais + 40}`} fill="none" stroke={GOLD} strokeWidth={0.26 * G.ms} />
+				<path d={`M${cx + sg * 3.85 * G.ms} ${G.EY + 3.5 * G.ms}Q${cx + sg * 4.6 * G.ms} ${G.EY + 8 * G.ms} ${cx + sg * 4.75 * G.ms} ${G.dais + 40}`} fill="none" stroke={LAPIS} strokeWidth={0.1 * G.ms} strokeDasharray="6 10" />
+				<circle cx={cx + sg * 3.75 * G.ms} cy={G.EY + 3.55 * G.ms} r={0.42 * G.ms} fill="url(#cva-gold)" stroke={INK} strokeWidth={3} />
+				<circle cx={cx + sg * 3.75 * G.ms} cy={G.EY + 3.55 * G.ms} r={0.2 * G.ms} fill="#C2241A" />
+			</g>)}
+			<FilmAnubis x={cx} y={G.EY} s={G.ms} attire />
 			{/* the dais */}
 			<path d={`M${cx - 260} ${G.dais}L${cx + 260} ${G.dais}L${cx + 280} ${G.dais + 36}L${cx - 280} ${G.dais + 36}Z`} fill="url(#ct-stone)" stroke={INK} strokeWidth={3} />
 			<path d={`M${cx - 320} ${G.dais + 36}L${cx + 320} ${G.dais + 36}L${cx + 340} ${G.dais + 76}L${cx - 340} ${G.dais + 76}Z`} fill="url(#ct-stone)" stroke={INK} strokeWidth={3} />
@@ -312,7 +350,7 @@ export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tal
 			<g opacity={0.8}><GlyphColumns x={30} y={G.frieze + 34} cols={Math.floor((W - 60) / 64)} rows={Math.max(1, Math.floor((H - G.frieze - 50) / 64))} cell={60} seed={81} mono="#4A2A0E" /></g>
 			{/* Ammit lunging out of the dark at the heart pan */}
 			<ellipse cx={heartPan[0] - 80} cy={heartPan[1] + 180} rx={300} ry={220} fill="url(#cv-redrim)" opacity={0.3} style={{mixBlendMode: 'screen'}} />
-			<Ammit2 pose={{lean: 14, neck: 26, jaw: 44, tail: 10, breathe: 0.6}} x={heartPan[0] - (wide ? 400 : 330)} y={heartPan[1] + (wide ? 330 : 380)} s={wide ? 44 : 48} face={1} t={0.3} rim={1} look={0.9} mr={1} roar={1} id="ctam" />
+			<Ammit2 pose={{lean: 14, neck: 26, jaw: 44, tail: 10, breathe: 0.6}} x={heartPan[0] - (wide ? 380 : 330)} y={heartPan[1] + (wide ? 250 : 380)} s={wide ? 42 : 48} face={1} t={0.3} rim={1} look={0.9} mr={1} roar={1} id="ctam" />
 			<g style={{mixBlendMode: 'screen'}}>
 				<ellipse cx={cx} cy={G.EY - 60} rx={W * 0.6} ry={H * 0.42} fill="url(#cv-warm)" opacity={0.35} />
 				{Array.from({length: 6}, (_, i) => <ellipse key={i} cx={(i * 263 + 120) % W} cy={G.dais - 40 - (i % 3) * 120} rx={260} ry={40} fill="#FFE2B0" opacity={0.07} />)}
@@ -322,10 +360,10 @@ export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tal
 			<rect x={0} y={0} width={W} height={H} fill="url(#cv-vig)" opacity={0.75} />
 			{/* the top: a dark band for the title, the winged sun and two Eyes of Horus */}
 			<defs><linearGradient id="ct-top" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#060302" stopOpacity={0.95} /><stop offset="0.75" stopColor="#060302" stopOpacity={0.6} /><stop offset="1" stopColor="#060302" stopOpacity={0} /></linearGradient></defs>
-			<rect x={G.colW} y={0} width={W - 2 * G.colW} height={wide ? 270 : 470} fill="url(#ct-top)" />
-			{!wide && <WingedSun x={cx} y={70} s={30} />}
-			<EyeOfHorus x={wide ? 192 : 210} y={wide ? 96 : 130} k={wide ? 0.9 : 1} />
-			<EyeOfHorus x={wide ? W - 192 : W - 210} y={wide ? 96 : 130} k={wide ? 0.9 : 1} flip />
+			<rect x={G.colW} y={0} width={W - 2 * G.colW} height={wide ? 360 : 470} fill="url(#ct-top)" />
+			<WingedSun x={cx} y={wide ? 40 : 70} s={wide ? 24 : 30} />
+			<EyeOfHorus x={wide ? 300 : 210} y={wide ? 150 : 130} k={wide ? 0.9 : 1} />
+			<EyeOfHorus x={wide ? W - 300 : W - 210} y={wide ? 150 : 130} k={wide ? 0.9 : 1} flip />
 		</svg>
 		{/* the title */}
 		<div style={{position: 'absolute', left: 0, width: W, top: G.title, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -333,8 +371,7 @@ export const CoverTemple: React.FC<{layout?: 'wide' | 'tall'}> = ({layout = 'tal
 				filter: 'drop-shadow(0 5px 0 #3A2206) drop-shadow(0 0 22px rgba(255,190,90,0.45))'} as React.CSSProperties;
 				const cream = {color: '#FFF4DC', textShadow: '0 5px 0 rgba(10,8,20,0.9), 0 0 26px rgba(5,6,20,0.9)'} as React.CSSProperties;
 				const base = {fontFamily: F_SERIF, fontWeight: 900, fontSize: G.tsize, lineHeight: 1.12, whiteSpace: 'nowrap', letterSpacing: '0.04em'} as React.CSSProperties;
-				return wide ? <div style={{display: 'flex', gap: G.tsize * 0.5}}><div style={{...base, ...cream}}>心比羽毛重</div><div style={{...base, ...gold}}>就会被吃掉</div></div>
-					: <><div style={{...base, ...cream}}>心比羽毛重</div><div style={{...base, ...gold, fontSize: G.tsize * 1.06}}>就会被吃掉</div></>; })()}
+				return <><div style={{...base, ...cream}}>心比羽毛重</div><div style={{...base, ...gold, fontSize: G.tsize * 1.06}}>就会被吃掉</div></>; })()}
 			<div style={{marginTop: G.tsize * 0.22, display: 'flex', alignItems: 'center', gap: 18, fontFamily: F_SERIF, color: '#F2DFAE', whiteSpace: 'nowrap', textShadow: '0 3px 0 rgba(10,8,20,0.9)'}}>
 				<span style={{width: 60, height: 3, background: '#E8B44A'}} />
 				<span style={{fontSize: G.tsize * 0.3, fontWeight: 700, letterSpacing: '0.2em'}}>古埃及神话故事</span>
