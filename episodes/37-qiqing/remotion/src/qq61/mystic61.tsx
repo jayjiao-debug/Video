@@ -17,7 +17,7 @@ export const back = (v: number, k = 1.7) => { const u = cl(v) - 1; return 1 + (k
 export const u_ = (t: number, a: number, d: number) => sm((t - a) / d);
 
 export const MysticDefs: React.FC = () => <defs>
-	<filter id="my4"><feGaussianBlur stdDeviation={4} /></filter><filter id="my14"><feGaussianBlur stdDeviation={14} /></filter><filter id="my50"><feGaussianBlur stdDeviation={50} /></filter>
+	<filter id="my4" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation={4} /></filter><filter id="my14" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation={14} /></filter><filter id="my50" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation={50} /></filter>
 	<filter id="mygrain"><feTurbulence type="fractalNoise" baseFrequency={0.85} numOctaves={2} seed={7} /><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.8 0" /></filter>
 	<radialGradient id="myvig" cx="50%" cy="48%" r="72%"><stop offset="52%" stopColor="#000" stopOpacity={0} /><stop offset="100%" stopColor="#02030A" stopOpacity={0.82} /></radialGradient>
 	<linearGradient id="mynight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#04061A" /><stop offset="0.55" stopColor="#141C4E" /><stop offset="1" stopColor="#1E3554" /></linearGradient>

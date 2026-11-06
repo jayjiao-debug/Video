@@ -26,7 +26,7 @@ ev(10.4, 'swell_rise', -7, dur=1.8); ev(10.8, 'door_boom', -10); ev(12.0, 'magic
 # S3 14.58: the disc rises, Ra appears, "=", the breath
 ev(14.6, 'swell_rise', -9, dur=1.8); ev(15.48, 'chime_glint', -6); ev(15.98, 'chime_ding', -8); ev(18.49, 'whoosh_long', -9); ev(18.7, 'magic_shimmer', -9)
 # S4 22.11: Shu's wind; Tefnut's short low roar
-ev(22.2, 'whoosh_long', -8); ev(24.9, 'ammit_roar_1', 3.0, onset=True, abs=True, dur=1.5)
+ev(22.2, 'whoosh_long', -8); ev(24.9, 'ammit_roar_1', 1.5, onset=True, abs=True, dur=1.5)
 # N1 27.97: the two lights; Geb (earth) sprouts; Nut's stars; she grows into the sky; the couple; pressed + the bud; Shu forms; the push; air
 ev(28.3, 'magic_shimmer', -9); ev(29.2, 'chime_glint', -10)
 ev(31.3, 'glyph_light', -10); ev(33.1, 'swell_rise', -11, dur=1.4); ev(33.8, 'chime_glint', -9)
@@ -34,7 +34,7 @@ ev(35.3, 'swell_rise', -7, dur=3.0); ev(36.6, 'magic_shimmer', -9)
 ev(39.6, 'chime_ding', -10)
 ev(42.6, 'whoosh_reverse', -10); ev(44.45, 'old:X22_comic_plop', -7); ev(44.84, 'thup', -7)
 ev(46.1, 'whoosh_long', -7); ev(46.2, 'old:S09_sand_wind_loop', -15, dur=2.5, fin=0.4, fout=0.8); ev(47.0, 'magic_shimmer', -8)
-ev(50.38, 'door_boom', -5); ev(50.4, 'flare_hit', -7); ev(50.42, 'whoosh_long', -8)
+ev(50.38, 'door_boom', -9); ev(50.4, 'flare_hit', -7); ev(50.42, 'whoosh_long', -8)
 ev(52.8, 'chime_glint', -9); ev(53.0, 'glyph_light', -11); ev(52.7, 'old:S09_sand_wind_loop', -19, dur=3.4, fin=0.6, fout=1.0)
 # S7 56.16: Ra's flare; the calendar fills; the cross
 ev(56.51, 'flare_hit', -2); ev(56.55, 'stinger_doom', -9, dur=2.4)
@@ -60,9 +60,9 @@ ev(103.78, 'chime_glint', -7)
 # S13a 107.71: Set measures him with a knotted cord
 ev(108.2, 'papyrus_unroll', -10); ev(109.4, 'hiss', -10)
 # S13 112.18: the lid, three nails, the river
-ev(112.6, 'creak', -6); ev(113.65, 'thup', -3); ev(113.67, 'door_boom', -10)
-for d in (0.25, 0.7, 1.15): ev(116.18 + d, 'metal_clang', -7)
-ev(117.88, 'old:X22_comic_plop', -6); ev(118.0, 'old:X14_reeds_birds_water_loop', -13, seek=0.5, dur=1.8, fin=0.3, fout=0.9)
+ev(114.5, 'papyrus_flick', -12); ev(115.63, 'creak', -6); ev(116.03, 'thup', -3); ev(116.05, 'door_boom', -12)
+for d in (0.42, 0.87, 1.32): ev(116.18 + d, 'metal_clang', -10)
+ev(118.35, 'old:X22_comic_plop', -7); ev(118.45, 'old:X14_reeds_birds_water_loop', -13, seek=0.5, dur=2.0, fin=0.3, fout=0.9)
 # S14 120.65: Isis' wings and the gold light; Horus and his cry
 ev(120.75, 'magic_shimmer', -3); ev(121.25, 'swell_rise', -7, dur=1.6); ev(124.79, 'chime_glint', -5); ev(125.39, 'synth:falcon', -7)
 # S15 128.18: through the gate; the underworld throne; episode 1

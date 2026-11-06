@@ -35,28 +35,25 @@ MOOD = {   # composer, module bars, mood loudness (LUFS, before the music bus)
  'playful': (H.m_playful, 8, -20.0), 'bright': (H.m_bright, 8, -19.5), 'resolution': (H.m_resolution, 6, -20.5),
 }
 # (film start s, film end s, mood, first module bar, extra dB, fade-in s)
-SECTIONS = [
+SECTIONS = [   # v2.1 after the review: fewer, longer sections (no 4-s mood cues), entries on phrase starts except the two builds
  (0, 8, 'hook', 0, 0, 0),          # 1-2: the 1500 gods; gong + D5 on bar 3 = 6.0 = the title
- (8, 24, 'calm', 0, 0, 0),         # 3-7: black water, Atum = Ra, the breath, Shu
- (24, 28, 'calm', 4, -1.5, 0),     # 8: Tefnut (the music dips under her roar in the mix)
- (28, 44, 'calm2', 0, 0, 0),       # 9-12: Geb & Nut, the theme with qanun (she becomes the sky; spouses)
- (44, 52, 'tension', 4, 0, 0),     # 13-15: pressed together -> Shu squeezes in -> the push on bar 7 = 50.0
- (52, 56, 'bright', 0, 0, 0),      # 16: air between sky and earth: the theme an octave up
+ (8, 28, 'calm', 0, 0, 0),         # 3-8: black water ... Tefnut (10 bars: the calm melody, then its opening again)
+ (28, 44, 'calm2', 0, 0, 0),       # 9-12: Geb & Nut, the same melody with qanun
+ (44, 52, 'tension', 4, 0, 0),     # 13-15: the build to Shu's push on bar 7 = 50.0
+ (52, 56, 'bright', 0, 0, 0),      # 16: air: the theme an octave up (the build's release)
  (56, 64, 'danger', 0, 0, 0),      # 17-18: Ra's curse: the riff
- (64, 80, 'playful', 0, 0, 0),     # 19-22: Thoth plays the moon, 365
- (80, 84, 'calm', 6, -1, 0),       # 23: the curse bounces off (the theme hint)
- (84, 100, 'theme', 0, 0, 0),      # 24-27: the five children
- (100, 108, 'bright', 4, -1, 0),   # 28-29: Nephthys; Osiris & Isis rule
- (108, 120, 'tension', 0, 0, 0),   # 30-32: Set measures, the box, the nails
+ (64, 84, 'playful', 0, 0, 0),     # 19-23: Thoth, the moon, 365, the curse bounces off (10 bars)
+ (84, 108, 'theme', 0, 0, 0),      # 24-29: the children, the reign (12 bars)
+ (108, 120, 'tension', 0, 0, 0),   # 30-32: the plot, the box, the nails
  (120, 128, 'bright', 0, 0, 0),    # 33-34: Isis revives him, Horus
  (128, 136, 'calm', 0, -0.5, 0),   # 35-36: king of the dead, episode 1
  (136, 146, 'danger', 0, 0, 0),    # 37-38: 80 years in court
  (146, 154, 'calm2', 4, -0.5, 0),  # 39-40: Anubis
- (154, 158, 'tension', 6, 0, 0),   # 41: Ra's daughters: the climb, stops on F#
+ (154, 158, 'tension', 6, 0, 0),   # 41: the climb, stops on F#
  (160, 164, 'danger', 0, 0, 0.8),  # 43: after the roar: the rampage
  (164, 172, 'playful', 0, -0.5, 0),# 44-45: Bastet, Ma'at
  (172, 182, 'theme', 0, 0, 0),     # 46-47: Thoth writes the tree
- (182, FILM, 'resolution', 0, 0, 0),  # 48 + card: the slow theme, the final D on bar 4 = 190.0
+ (182, FILM, 'resolution', 0, 0, 0),  # 48 + card: the final D on 190.0
 ]
 
 def section(s0, s1, mood, b0, seed):

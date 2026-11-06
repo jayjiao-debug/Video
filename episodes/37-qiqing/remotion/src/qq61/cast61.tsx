@@ -149,9 +149,9 @@ export const LAPFIT61: Partial<Record<AnimalKind, LapFit>> = {
 	falcon: {f: [[0.1, -0.9], [0.4, -0.3], [0.5, 0.42]], b: [[-0.9, -0.9], [-0.58, -0.3], [-0.42, 0.42]], tuck: [[-1.6, -0.6], [-0.7, -0.5], [0.05, -0.55], [0.32, -0.38], [0.56, -0.1]]},
 };
 export type God61Props = {id: string; who: string; pose: Pose; x: number; y: number; s: number; face?: 1 | -1; t?: number; vel?: {head?: number; torso?: number};
-	bProp?: Cast['bProp']; fProp?: Cast['fProp']; /** hand shapes override; by default a goddess opens an empty hand (no fist unless she holds something) */ hands?: {b?: Hand; f?: Hand}; /** old ep61 film param: = jaw */ open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; /** animal heads: eyes / look / brow (human heads use expr61 FaceOver) */ look?: {eyes?: number; look?: number; brow?: number}; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}; /** design test: the tripartite wig's near front lappet in front of the shoulder / over the collar (default: the cast's wigFront, else off) */ wigFront?: boolean};
+	bProp?: Cast['bProp']; fProp?: Cast['fProp']; /** hand shapes override; by default a goddess opens an empty hand (no fist unless she holds something) */ hands?: {b?: Hand; f?: Hand}; /** old ep61 film param: = jaw */ open?: number; roar?: number; sneer?: number; jaw?: number; ear?: number; /** animal heads: eyes / look / brow (human heads use expr61 FaceOver) */ look?: {eyes?: number; look?: number; brow?: number}; pivots?: boolean; basket?: boolean; wings?: boolean; dress?: Cast['dress']; hide?: {bArm?: boolean; fArm?: boolean; props?: boolean}; /** v2: leave the hat off (Geb lying: the goose reads as a white blob) */ noHat?: boolean; /** design test: the tripartite wig's near front lappet in front of the shoulder / over the collar (default: the cast's wigFront, else off) */ wigFront?: boolean};
 /** an ep61 god: the ep60 `God` with the layered animal head (headArt) or the ep60 human head + a headdress painted on top */
-export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, hands, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, look, pivots = false, basket, wings, dress, hide, wigFront}) => {
+export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t = 0, vel, bProp, fProp, hands, open = 0, roar = 0, sneer = 0, jaw = 0, ear = 0, look, pivots = false, basket, wings, dress, hide, wigFront, noHat}) => {
 	const k = CAST61[who], wf = wigFront ?? k.wigFront ?? false, c: Ctx = {OW: 2.7 / s, LW: 1.5 / s}, kind = animalOf(k), rr = Math.max(0, Math.min(1, roar));
 	// a roar throws the head back a little
 	const P: Pose = kind && rr > 0 ? {...pose, head: pose.head - 7 * rr} : pose;
@@ -170,7 +170,7 @@ export const God61: React.FC<God61Props> = ({id, who, pose, x, y, s, face = 1, t
 		cast = {...k.base, head: k.base.head === 'human' ? 'jackal' : k.base.head, wig: kind === 'cat' ? 'none' : k.base.wig, crown: k.head || (k.crown ?? k.base.crown) === 'sun' ? 'none' : k.base.crown, mask: false, faceless: false, ...extra};
 	} else cast = {...k.base, ...(k.hat ? {crown: 'none' as const} : {}), ...extra};
 	// human heads: the band / vulture cap and the hat go in the rig's own head layer (over the wig, behind the front arm)
-	const hatArt = !kind && (k.hat || k.band) ? <g>{k.band && band(k.band, c)}{k.hat && <g transform={k.band === 'vulture' ? 'translate(0,-0.8)' : undefined}>{hat(k.hat, c)}</g>}</g> : undefined;
+	const hatArt = !kind && !noHat && (k.hat || k.band) ? <g>{k.band && band(k.band, c)}{k.hat && <g transform={k.band === 'vulture' ? 'translate(0,-0.8)' : undefined}>{hat(k.hat, c)}</g>}</g> : undefined;
 	const g = solve(P, castBody(cast));
 	const bh = g.bH, grip: [number, number] = [bh[0] * 0.02 + bh[2] * 0.6 + bh[4], bh[1] * 0.02 + bh[3] * 0.6 + bh[5]];
 	return <g>
