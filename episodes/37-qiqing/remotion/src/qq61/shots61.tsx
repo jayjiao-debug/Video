@@ -3,7 +3,7 @@ import {PAL, sp, poly} from '../qq60/geo60';
 import {FC, F_SERIF, rng, PIC_T, PIC_B} from '../qq60/frame60';
 import {Throne, Balance, WingedSun, featherD} from '../qq60/props60';
 import {God61, P61, headPt} from './cast61';
-import {FamilyTree61, NodeId, LIT, FOCUS, NODES, TW} from './tree61';
+import {FamilyTree61, NodeId, LIT, FOCUS, NODES, TW, TH} from './tree61';
 import {POSES, lerpPose, Pose} from '../qq60/rig60';
 import {walkPose, STRIDE} from '../qq60/cast60';
 import {Glow, flick} from '../qq60/frame60';
@@ -24,6 +24,14 @@ export type Shot = {n: number; t0: number; t1: number; lines: string; text: stri
 /* ---------- small shared pieces ---------- */
 const Bg: React.FC<{a: string; b: string}> = ({a, b}) => <><defs><linearGradient id={`bg-${a.slice(1)}${b.slice(1)}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={a} /><stop offset="1" stopColor={b} /></linearGradient></defs>
 	<rect x={0} y={PIC_T} width={1440} height={PIC_B - PIC_T} fill={`url(#bg-${a.slice(1)}${b.slice(1)})`} /></>;
+/** the temple at night (v2 "mystical" pass): dusky lapis-violet wall, faint gold glyph columns, a warm torch pool */
+const WG = ['M0 -9a5 6 0 1 0 0.1 0M0 -3V12M-7 1H7', 'M-9 0Q0 -8 9 0Q0 8 -9 0', 'M0 12V-12Q6 -4 3 6Z', 'M-2 12Q-4 0 2 -12Q4 0 -2 12', 'M-10 0l3 -3l3 3l3 -3l3 3l3 -3l3 3', 'M0 0m-6 0a6 6 0 1 0 12 0a6 6 0 1 0 -12 0'];
+const TempleBg: React.FC = () => <g>
+	<Bg a="#2E2852" b="#1C1936" />
+	{[90, 330, 1110, 1350].map((x) => <g key={x} opacity={0.24}><rect x={x - 34} y={PIC_T} width={68} height={GY - PIC_T} fill="#3A3366" />
+		{Array.from({length: 9}, (_, j) => <path key={j} d={WG[j % 6]} transform={`translate(${x},${PIC_T + 60 + j * 88}) scale(2.2)`} stroke="#E8C25A" strokeWidth={1.3} fill="none" />)}</g>)}
+	<ellipse cx={720} cy={430} rx={640} ry={400} fill="#FFB45A" opacity={0.17} filter="url(#my50)" />
+</g>;
 const Ground: React.FC<{y?: number; c?: string; c2?: string}> = ({y = GY, c = PAL.mat, c2 = PAL.mat2}) => <g><rect x={0} y={y} width={1440} height={PIC_B - y} fill={c} /><rect x={0} y={y} width={1440} height={6} fill={c2} /></g>;
 const Label: React.FC<{x: number; y: number; t: string; size?: number; c?: string; o?: string}> = ({x, y, t, size = 30, c = FC.cream, o = '#18224A'}) => <text x={x} y={y} textAnchor="middle" fontSize={size} fontFamily={F_SERIF} fontWeight={900} fill={c} stroke={o} strokeWidth={7} paintOrder="stroke">{t}</text>;
 const Disc: React.FC<{x: number; y: number; r: number; c?: string}> = ({x, y, r, c = PAL.red}) => <g><circle cx={x} cy={y} r={r + 5} fill={PAL.ink} /><circle cx={x} cy={y} r={r} fill={c} /><circle cx={x} cy={y} r={r * 0.78} fill="none" stroke={PAL.gold} strokeWidth={Math.max(3, r * 0.06)} /></g>;
@@ -58,7 +66,7 @@ const S1: React.FC = () => { const {up, down, live} = useShot(); const R = rng(7
 			<rect x={0} y={150 + row * 160} width={1440} height={5} fill={o > 0.5 ? PAL.gold : PAL.blue} opacity={0.7} />
 			<g opacity={0.3 + 0.7 * o}>{Array.from({length: 26}, (_, i) => <Silh key={i} x={30 + i * 56 + (row % 2) * 24} y={142 + row * 160} s={11 + R() * 3} k={Math.floor(R() * 4)} c="#4A3626" />)}</g></g>; })}
 		<g opacity={veil}><rect x={0} y={PIC_T} width={1440} height={PIC_B - PIC_T} fill={FC.lapis2} opacity={0.72} /><Disc x={CX} y={MID + 30} r={420} c="#E8B64A" /><circle cx={CX} cy={MID + 30} r={410} fill={FC.lapis2} opacity={0.9} /></g>
-		<g opacity={tree} transform={`translate(${CX - TCX * 0.78},${MID - 270 + (1 - tree) * 30}) scale(0.78)`}><FamilyTree61 lit={[]} labels={false} icons={false} cid="s1" skeleton /></g>
+		<g opacity={tree} transform={`translate(${CX - TCX * 0.6},${MID + 30 - TH * 0.3 + (1 - tree) * 30}) scale(0.6)`}><FamilyTree61 lit={[]} labels={false} icons={false} cid="s1" skeleton /></g>
 		<g opacity={lab}><Label x={CX} y={110} t={`${n} 多位神`} size={56} c={PAL.goldHi} /></g></g>; };
 
 const S2: React.FC = () => { const {up, T, L2, live} = useShot(); const u = up(L2 - 0.5, 1.6), dy = (1 - u) * 660;   // Atum's crown tip (≈ y 140) starts below the waterline (722)
@@ -88,7 +96,7 @@ const S3: React.FC = () => { const {up, T, L2} = useShot(); const rise = up(0, 1
 const S4: React.FC = () => { const {up, env, T, L2, t, live} = useShot(); const r = env(L2 + 0.15, 0.25, 1.15, 0.5), rp = P61.roar(r);
 	const mo = headPt('tefnut', rp, 960, GY, 30, -1, [2.3, -0.3]), k = live ? Math.max(0, Math.min(1, (t - L2 - 0.2) / 1.3)) : 0.5;
 	return <g>
-		<Bg a="#E9D8AE" b="#D9C08E" />
+		<TempleBg />
 		<g opacity={up(0.1, 0.8)}><Mist x={560} y={380} dx={-260} dy={-60 + 10 * Math.sin(T)} r={50} /><Mist x={880} y={380} dx={260} dy={-60 + 10 * Math.sin(T + 1)} r={50} /></g>
 		<Ground c="#C49A55" />
 		<God61 id="s4a" who="shu" pose={P61.rest(T)} x={470} y={GY} s={30} t={T} />
@@ -184,7 +192,7 @@ const S9: React.FC = () => { const {up, L2} = useShot(); const d = up(0, 0.9), f
 const S10: React.FC = () => { const {up, L2, T} = useShot(); const os = up(L2 - 0.35, 0.8);
 	return <g>
 		<SetDefs61 />
-		<Bg a="#E9D8AE" b="#D9C08E" />
+		<TempleBg />
 		<Column61 x={1330} y={GY} s={42} h={(GY - 120) / 42} kind="papyrus" />
 		{[0, 1, 2, 3, 4].map((i) => { const on = up(0.25 + i * 0.4, 0.3), lit = i === 0 ? PAL.gold : FC.lapis, li = i === 0 ? PAL.goldHi : '#8FA6E8', x = 470 + i * 150 - 340, Y = 110;   // film: the row sits 110 px lower, clear of the tree chip
 			const shape = `M${x} ${330 + Y}V${230 + Y}Q${x} ${170 + Y} ${x + 50} ${170 + Y}Q${x + 100} ${170 + Y} ${x + 100} ${230 + Y}V${330 + Y}Z`;
@@ -204,7 +212,7 @@ const Sand: React.FC<{x0: number; x1: number; T?: number}> = ({x0, x1, T = 0}) =
 	return <path key={i} d={`M${xx} ${300 + i * 38}q70 -${24 + (i % 3) * 10} 150 0t150 0`} fill="none" stroke="#E8B25A" strokeWidth={8} strokeLinecap="round" opacity={0.75} />; })}</g>;
 const S11: React.FC = () => { const {up, L2, T} = useShot(); const w = up(0.15, 1.1), sn = up(L2 + 0.15, 0.4);
 	return <g>
-		<Bg a="#E9D8AE" b="#D9C08E" /><rect x={720} y={PIC_T} width={720} height={PIC_B - PIC_T} fill="#B5702E" opacity={0.55} />
+		<TempleBg /><rect x={720} y={PIC_T} width={720} height={PIC_B - PIC_T} fill="#B5702E" opacity={0.55} />
 		<defs><clipPath id="s11r"><rect x={724} y={PIC_T} width={716} height={PIC_B - PIC_T} /></clipPath></defs>
 		<g clipPath="url(#s11r)"><Sand x0={730} x1={1560} T={T} /></g>
 		<Ground c="#C49A55" /><rect x={716} y={PIC_T} width={8} height={PIC_B - PIC_T} fill={PAL.gold} stroke={PAL.ink} strokeWidth={3} />
@@ -217,7 +225,7 @@ const Sparkles: React.FC<{x: number; y: number}> = ({x, y}) => <Stars box={[x - 
 const S12: React.FC = () => { const {up, L2, T, t, live} = useShot(); const wl = live ? Math.max(0, Math.min(1, (t - 0.15) / 1.6)) : 1, dist = 170 * wl, ph = dist / (STRIDE * 26);
 	const np = lerpPose(walkPose(ph, {stride: 0.85}), P61.rest(T), up(1.7, 0.35));
 	return <g>
-		<Bg a="#E9D8AE" b="#D9C08E" />
+		<TempleBg />
 		<rect x={0} y={640} width={560} height={292} fill="#D9B16A" /><Sand x0={0} x1={700} T={T * 0.5} />
 		<rect x={560} y={650} width={880} height={282} fill="#E8C25A" />
 		{Array.from({length: 22}, (_, i) => <path key={i} d={`M${590 + i * 40} ${860}V${700 + (i % 3) * 14}M${590 + i * 40} ${720 + (i % 3) * 14}l-8 -22M${590 + i * 40} ${735 + (i % 3) * 14}l9 -20`} stroke="#B58A2A" strokeWidth={5} fill="none" transform={`rotate(${2.5 * Math.sin(T * 1.3 + i * 0.6)} ${590 + i * 40} 860)`} />)}
@@ -277,7 +285,7 @@ const S15: React.FC = () => { const {up, L2, T} = useShot(); const pip = up(L2 -
 
 const S16: React.FC = () => { const {up, hit, L2, T} = useShot(); const n = Math.round(80 * up(L2 + 0.15, 1.9)), no = up(L2 - 0.2, 0.4), pop = hit(L2 + 2.1, 0.3);
 	return <g>
-		<Bg a="#E9D8AE" b="#D9C08E" />
+		<TempleBg />
 		<Column61 x={70} y={GY} s={40} h={(GY - PIC_T - 20) / 40} kind="lotus" /><Column61 x={1370} y={GY} s={40} h={(GY - PIC_T - 20) / 40} kind="lotus" />
 		<Ground c="#C49A55" />
 		<Throne x={CX - 100} y={GY} s={40} />
@@ -290,7 +298,7 @@ const S16: React.FC = () => { const {up, hit, L2, T} = useShot(); const n = Math
 const S17: React.FC = () => { const {up, env, L2, T} = useShot(); const a = up(0.25, 0.9), ear = Math.min(1, env(L2 + 0.5, 0.1, 0.2, 0.2) + env(L2 + 1.05, 0.1, 0.2, 0.25));
 	return <g>
 		<SetDefs61 />
-		<Bg a="#E9D8AE" b="#D9C08E" /><Ground c="#C49A55" />
+		<TempleBg /><Ground c="#C49A55" />
 		<OilLamp x={150} y={GY + 24} s={20} t={T} seed={1} /><OilLamp x={1360} y={GY + 24} s={20} t={T} seed={4} />
 		<God61 id="s17n" who="nephthys" pose={P61.rest(T)} x={420} y={GY} s={27} t={T} />
 		<Balance p={{tilt: 2 * Math.sin(T * 1.1)}} x={1120} y={GY} s={30} />
@@ -299,12 +307,12 @@ const S17: React.FC = () => { const {up, env, L2, T} = useShot(); const a = up(0
 		<g opacity={up(0.3, 0.5)}><Label x={420} y={GY + 55} t="奈芙蒂斯" size={30} /></g><g opacity={up(0.9, 0.5)}><Label x={820} y={GY + 55} t="阿努比斯" size={32} /></g></g>; };
 const Twitch: React.FC<{p: [number, number]}> = ({p}) => <g fill="none" stroke={PAL.goldHi} strokeWidth={6} strokeLinecap="round"><path d={`M${p[0] - 38} ${p[1] - 20}q-14 -22 6 -40`} /><path d={`M${p[0] + 34} ${p[1] - 26}q14 -22 -6 -40`} /><path d={`M${p[0] - 58} ${p[1] - 4}q-26 -14 -20 -42`} /></g>;
 
-const S18: React.FC = () => { const {up} = useShot(); const g = up(0.3, 0.6), ax = CX - 640 * 1.3 + 1.3 * NODES.atum.x, ay = 150 + 1.3 * NODES.atum.y;
+const S18: React.FC = () => { const {up} = useShot(); const g = up(0.3, 0.6), ax = CX - TCX * 0.95 + 0.95 * NODES.atum.x, ay = 118 + 0.95 * NODES.atum.y;
 	return <g>
 		<SetDefs61 />
 		<Bg a="#16205A" b="#1B2652" />
 		<Glow x={ax} y={ay} r={150} c="gold" o={0.7 * g} />
-		<g transform={`translate(${CX - 640 * 1.3},${150}) scale(1.3)`}><FamilyTree61 lit={LIT[18] as NodeId[]} focus={['atum', 'sekhmet', 'bastet', 'maat']} cid="s18" /></g></g>; };
+		<g transform={`translate(${CX - TCX * 0.95},${118}) scale(0.95)`}><FamilyTree61 lit={LIT[18] as NodeId[]} focus={['atum', 'sekhmet', 'bastet', 'maat']} cid="s18" /></g></g>; };
 
 const S19: React.FC = () => { const {env, T, t, live} = useShot(); const R = rng(41), r = env(0.3, 0.3, 2.3, 0.6), k = live ? (((t - 0.3) % 0.8) + 0.8) % 0.8 / 0.8 : 0.5;
 	const rp = P61.roar(r), mo = headPt('sekhmet', rp, 500, GY + 20, 40, 1, [2.3, -0.3]);
@@ -321,7 +329,7 @@ const S19: React.FC = () => { const {env, T, t, live} = useShot(); const R = rng
 const S20: React.FC = () => { const {up, L2, T} = useShot(); const k = up(L2 + 0.3, 2.0), land = up(L2 + 2.25, 0.6), tilt = 3 * land;
 	const fx = 790 + 102 * k + 36 * Math.sin(k * Math.PI * 2) * (1 - k), fy = 330 + (136 + 13 * land) * k, rot = 14 * (1 - k) + 18 * Math.sin(k * 8) * (1 - k);
 	return <g>
-		<Bg a="#E9D8AE" b="#D9C08E" /><Ground c="#C49A55" />
+		<TempleBg /><Ground c="#C49A55" />
 		<Cat61 x={175} y={GY + 8} s={17} t={T} />
 		<God61 id="s20a" who="bastet" pose={P61.shake(T)} x={330} y={GY} s={30} basket t={T} />
 		<God61 id="s20b" who="maat" pose={P61.rest(T)} x={720} y={GY} s={30} wings t={T} />

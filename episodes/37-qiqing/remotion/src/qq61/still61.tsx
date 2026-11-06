@@ -4,9 +4,8 @@ import {AbsoluteFill, Composition, registerRoot} from 'remotion';
 import {Pose, POSES} from '../qq60/rig60';
 import {Bands, Subtitle, FC, PIC_T, PIC_B, FW, FH, InMaster60, rng} from '../qq60/frame60';
 import {God61, P61} from './cast61';
+import {NUT_LOW, NUT_ARCH} from './mystic61';
 import {GY} from './shots61';
-export const NUT_LOW: Pose = {lean: 85, neck: -6, head: -16, bs: 88, be: 72, bw: 0, fs: 88, fe: 72, fw: 0, rt: 0, rk: 90, at: 0, ak: 90};
-export const NUT_ARCH: Pose = {lean: 86, neck: -8, head: -18, bs: 56, be: 0, bw: 0, fs: 56, fe: 0, fw: 0, rt: -36, rk: 0, at: -26, ak: 0};
 const W = FW, CY = (PIC_T + PIC_B) / 2;
 const Night: React.FC = () => <g>
 	<defs><linearGradient id="s61n" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#04061A" /><stop offset="0.6" stopColor="#141C4E" /><stop offset="1" stopColor="#1E3554" /></linearGradient>
