@@ -117,13 +117,14 @@ const GOD_RE = new RegExp(`(${GODS.join('|')})`);
 const fade = (t: number, t0 = -1e9, t1 = 1e9, d = 0.14) => cl((t - t0) / d) * cl((t1 - t) / d);
 const visLen = (s: string) => s.replace(/[[\]]/g, '').length;
 /** the subtitle line in the navy band: one line, centred, heavy serif; "[key]" words in red-orange */
-export const Subtitle: React.FC<{t: number; sub: Sub}> = ({t, sub}) => {
+export const Subtitle: React.FC<{t: number; sub: Sub; gods?: string[]}> = ({t, sub, gods}) => {
+	const G = gods ?? GODS, RE = gods ? new RegExp(`(${[...gods].sort((a, b) => b.length - a.length).join('|')})`) : GOD_RE;   // ep61 passes its own list
 	const o = fade(t, sub.t0, sub.t1), n = visLen(sub.text), fs = Math.min(54, 1090 / (n * 1.03));
 	const parts = sub.text.split(/(\[[^\]]+\])/).filter(Boolean);
 	return <div style={{position: 'absolute', left: 0, width: FW, top: PIC_B + 19, height: SUB_B - PIC_B - 38, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: o,
 		fontFamily: F_SERIF, fontWeight: 900, fontSize: fs, letterSpacing: '0.03em', color: FC.cream, whiteSpace: 'nowrap', textShadow: '0 3px 0 rgba(8,10,28,0.55), 0 0 14px rgba(8,10,28,0.5)'}}>
 		{parts.flatMap((p, i) => { const key = p.startsWith('['), txt = key ? p.slice(1, -1) : p;
-			return txt.split(GOD_RE).filter(Boolean).map((q, j) => <span key={`${i}.${j}`} style={{color: GODS.includes(q) ? FC.god : key ? FC.key : FC.cream}}>{q}</span>); })}
+			return txt.split(RE).filter(Boolean).map((q, j) => <span key={`${i}.${j}`} style={{color: G.includes(q) ? FC.god : key ? FC.key : FC.cream}}>{q}</span>); })}
 	</div>;
 };
 const outline = (c: string, w: number) => [[-1, -1], [1, -1], [-1, 1], [1, 1], [0, -1], [0, 1], [-1, 0], [1, 0]].map(([a, b]) => `${a * w}px ${b * w}px 0 ${c}`).join(',') + `, 0 3px 8px rgba(0,0,0,0.45)`;
