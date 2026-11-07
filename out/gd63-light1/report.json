@@ -1,0 +1,109 @@
+{
+ "wall_s": 31.1,
+ "shots": [
+  {
+   "shot": "S1",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 18.8,
+   "ms_per_frame": 4710,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "S2",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 21.4,
+   "ms_per_frame": 5359,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "S3",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 21.6,
+   "ms_per_frame": 5409,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "S4",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 23.6,
+   "ms_per_frame": 5904,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "S5",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 19.3,
+   "ms_per_frame": 4820,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "S6",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 20.8,
+   "ms_per_frame": 5208,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "S7",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 20.8,
+   "ms_per_frame": 5202,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "S8",
+   "frames": 4,
+   "of": 4,
+   "unpack_s": 0.6,
+   "render_s": 20.7,
+   "ms_per_frame": 5170,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  }
+ ]
+}
