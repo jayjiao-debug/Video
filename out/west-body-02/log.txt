@@ -1,0 +1,19 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-Z1tcgzJyqwF2qb4GxmqCU3
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/render.py
+├── ✓ Uploaded gd63/ws_pub.pem
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/project
+└── ✓ Created Function shot.
+uploaded sealed assets_westb.tar.sealed 19159582 a9d43a85b535
+{"shot": "B1_NIGHT", "frames": 192, "of": 192, "unpack_s": 0.4, "render_s": 100.7, "ms_per_frame": 524, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_A", "frames": 303, "of": 303, "unpack_s": 0.4, "render_s": 111.1, "ms_per_frame": 367, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_B", "frames": 303, "of": 303, "unpack_s": 0.4, "render_s": 108.9, "ms_per_frame": 360, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_C", "frames": 303, "of": 303, "unpack_s": 0.5, "render_s": 106.3, "ms_per_frame": 351, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_D", "frames": 303, "of": 303, "unpack_s": 0.5, "render_s": 101.1, "ms_per_frame": 333, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+DONE wall 120.9
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-Z1tcgzJyqwF2qb4GxmqCU3

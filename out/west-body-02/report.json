@@ -1,0 +1,70 @@
+{
+ "wall_s": 120.9,
+ "shots": [
+  {
+   "shot": "B1_NIGHT",
+   "frames": 192,
+   "of": 192,
+   "unpack_s": 0.4,
+   "render_s": 100.7,
+   "ms_per_frame": 524,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "B2_ROOM_A",
+   "frames": 303,
+   "of": 303,
+   "unpack_s": 0.4,
+   "render_s": 111.1,
+   "ms_per_frame": 367,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "B2_ROOM_B",
+   "frames": 303,
+   "of": 303,
+   "unpack_s": 0.4,
+   "render_s": 108.9,
+   "ms_per_frame": 360,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "B2_ROOM_C",
+   "frames": 303,
+   "of": 303,
+   "unpack_s": 0.5,
+   "render_s": 106.3,
+   "ms_per_frame": 351,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "B2_ROOM_D",
+   "frames": 303,
+   "of": 303,
+   "unpack_s": 0.5,
+   "render_s": 101.1,
+   "ms_per_frame": 333,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  }
+ ]
+}
