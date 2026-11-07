@@ -62,14 +62,16 @@ def unseal(blob, priv_pem):
 def shot(args):
     name, frames, uargs = args[:3]
     res = args[3] if len(args) > 3 else "1440x1080"   # e.g. "1080x1920" for a vertical shot
+    scene = args[4] if len(args) > 4 else ""          # e.g. "res://west.tscn"; default = the project main scene
+    bundle = args[5] if len(args) > 5 else "assets.tar.sealed"
     t0 = time.time()
-    tar = unseal(pathlib.Path("/synty/assets.tar.sealed").read_bytes(), pathlib.Path("/vault/synty_rsa.pem").read_bytes())
+    tar = unseal(pathlib.Path("/synty/" + bundle).read_bytes(), pathlib.Path("/vault/synty_rsa.pem").read_bytes())
     pathlib.Path("/tmp/a.tar").write_bytes(tar); del tar
     sh("rm -rf /tmp/gp && mkdir -p /tmp/gp && cp -r /work/project/. /tmp/gp/ && tar xf /tmp/a.tar -C /tmp/gp && rm /tmp/a.tar")
     t_unpack = time.time() - t0
     d = "/tmp/frames"; sh(f"rm -rf {d}; mkdir -p {d}")
     t1 = time.time()
-    log = sh(f'xvfb-run -a -s "-screen 0 2048x2048x24" {GD} --path /tmp/gp --rendering-driver vulkan --write-movie {d}/f.png '
+    log = sh(f'xvfb-run -a -s "-screen 0 2048x2048x24" {GD} --path /tmp/gp {scene} --rendering-driver vulkan --write-movie {d}/f.png '
              f'--fixed-fps 30 --quit-after {frames} --resolution {res} -- {uargs}',
              {"VK_ICD_FILENAMES": nvidia_icd(), "GP_ASSETS": "/tmp/gp/assets/"})
     t_render = time.time() - t1
@@ -88,10 +90,9 @@ def shot(args):
 @app.local_entrypoint()
 def main():
     out = pathlib.Path("out"); out.mkdir(exist_ok=True)
-    b = pathlib.Path("gd63/vault/assets.tar.sealed")
-    if b.exists():   # ciphertext only; the Volume holds it so shots can read it
-        with synty.batch_upload(force=True) as up: up.put_file(str(b), "/assets.tar.sealed")
-        print("uploaded sealed assets", b.stat().st_size, hashlib.sha256(b.read_bytes()).hexdigest()[:12])
+    for b in sorted(pathlib.Path("gd63/vault").glob("*.sealed")):   # ciphertext only; the Volume holds it so shots can read it
+        with synty.batch_upload(force=True) as up: up.put_file(str(b), "/" + b.name)
+        print("uploaded sealed", b.name, b.stat().st_size, hashlib.sha256(b.read_bytes()).hexdigest()[:12])
     shots = JOB.get("shots", [["S6", 90, "shot=seal t0=0"]])
     t0 = time.time(); infos = []
     for name, blob, info in shot.map([tuple(s) for s in shots]):
