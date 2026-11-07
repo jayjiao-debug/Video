@@ -53,7 +53,7 @@ vo = [("V3", C0 + 1.6), ("V4", C0 + 4.1)]
 for name, at in vo: inputs += ["-i", f"{VO}/{name}.mp3"]
 afc = [f"[{5 + i}:a]aresample=48000,atempo=1.06,adelay={int(at * 1000)}|{int(at * 1000)},volume=1.55[v{i}]" for i, (name, at) in enumerate(vo)]
 afc.append("[4:a]volume=1.0[bed]")
-afc.append("[bed]" + "".join(f"[v{i}]" for i in range(len(vo))) + f"amix=inputs={len(vo) + 1}:normalize=0,atrim=0:{END:.3f},loudnorm=I=-14:TP=-1.5:LRA=14,alimiter=limit=0.8:level=false[aout]")
+afc.append("[bed]" + "".join(f"[v{i}]" for i in range(len(vo))) + f"amix=inputs={len(vo) + 1}:normalize=0,atrim=0:{END:.3f},loudnorm=I=-14:TP=-1.5:LRA=14,aresample=192000,alimiter=limit=0.82:attack=1:release=40:level=false,aresample=48000[aout]")
 cmd = ["ffmpeg", "-v", "error", "-y"] + inputs + ["-filter_complex", fc + ";" + ";".join(afc), "-map", "[v]", "-map", "[aout]",
        "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-t", f"{END:.3f}", "-movflags", "+faststart", OUT]
