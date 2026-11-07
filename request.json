@@ -1,47 +1,101 @@
 {
- "id": "ep60-sfx-03",
+ "id": "ep63-vo-test-01",
+ "model_prefs": [
+  "eleven_v4"
+ ],
  "items": [
   {
-   "type": "sfx",
-   "name": "X19_knife_shing",
-   "text": "a bronze knife blade glinting: one short bright metallic shing, clean, close",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "N_A_martin",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3
+   },
+   "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。"
   },
   {
-   "type": "sfx",
-   "name": "X20_cricket",
-   "text": "a single cricket chirping in a quiet empty stone hall, awkward silence, nothing else",
-   "duration": 4,
-   "influence": 0.5
+   "name": "N_B_male_story",
+   "lang": "zh",
+   "gender": "male",
+   "accent": "standard",
+   "age": "middle_aged",
+   "use_case": "narrative_story",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3
+   },
+   "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。"
   },
   {
-   "type": "sfx",
-   "name": "X21_stone_footsteps",
-   "text": "slow barefoot footsteps on a smooth stone floor in a large hall, six steps, soft echo",
-   "duration": 4,
-   "influence": 0.5
+   "name": "N_C_female_story",
+   "lang": "zh",
+   "gender": "female",
+   "accent": "standard",
+   "use_case": "narrative_story",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3
+   },
+   "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。"
   },
   {
-   "type": "sfx",
-   "name": "X22_comic_plop",
-   "text": "a cartoon plop, short round comic pop like a cork, playful",
-   "duration": 1,
-   "influence": 0.6
+   "name": "C1_carnarvon",
+   "lang": "zh",
+   "gender": "male",
+   "accent": "standard",
+   "age": "old",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "卡特……你能看见什么吗？"
   },
   {
-   "type": "sfx",
-   "name": "X23_whip_crack",
-   "text": "one sharp leather whip crack, close, short echo",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "C2_carter",
+   "lang": "zh",
+   "gender": "male",
+   "accent": "standard",
+   "age": "middle_aged",
+   "use_case": "characters_animation",
+   "settings": {
+    "stability": 0.4,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "text": "能……太奇妙了。"
   },
   {
-   "type": "sfx",
-   "name": "X24_hoe_chops",
-   "text": "a wooden hoe chopping into soft field earth, four rhythmic chops, dry",
-   "duration": 3,
-   "influence": 0.6
+   "name": "C3_corelli",
+   "lang": "zh",
+   "gender": "female",
+   "accent": "standard",
+   "age": "middle_aged",
+   "use_case": "characters_animation",
+   "settings": {
+    "stability": 0.4,
+    "similarity_boost": 0.8,
+    "style": 0.5
+   },
+   "text": "擅闯法老墓者，死神将展翅降临。"
+  },
+  {
+   "name": "C4_carter_late",
+   "lang": "zh",
+   "gender": "male",
+   "accent": "standard",
+   "age": "middle_aged",
+   "use_case": "characters_animation",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "所有理智的人，都应该对这种编造，嗤之以鼻。"
   }
  ]
 }
