@@ -197,15 +197,15 @@ func stars(n := 420) -> void:
 # ================================================================ B1 · night over Springfield, down to the hotel's lit window (6.3 s)
 func build_night() -> void:
 	night_town(); stars()
-	for p in [Vector3(-10.0, 1.6, -36.5), Vector3(-10.0, 1.6, -41.5), Vector3(-10.0, 4.6, -39.0), Vector3(-15.0, 1.8, -13.0), Vector3(-12.0, 4.6, -15.0), Vector3(9.5, 1.6, -26.0), Vector3(9.0, 1.6, -14.0)]:
+	for p in [Vector3(-5.2, 1.6, -36.6), Vector3(-5.2, 1.6, -41.4), Vector3(-5.2, 4.6, -39.0), Vector3(-15.0, 1.8, -13.0), Vector3(-12.0, 4.6, -15.0), Vector3(9.5, 1.6, -26.0), Vector3(9.0, 1.6, -14.0)]:
 		lamp(p, Color(1.0, 0.62, 0.3), 3.2, 7.0, false)
 	for p in [Vector3(-5.6, 2.6, -34.6), Vector3(-5.6, 2.6, -43.4), Vector3(4.9, 2.6, -21.0), Vector3(-6.0, 2.6, -24.0)]:
 		lamp(p, Color(1.0, 0.66, 0.34), 1.6, 4.5, false); glow_ball(p, Color(1.0, 0.7, 0.4), 0.06, 8.0)
 	var K := [
-		[0.0, Vector3(6.0, 17.0, -6.0), Vector3(-6.0, 1.5, -38.0), 46.0],
-		[2.6, Vector3(1.5, 8.0, -24.0), Vector3(-7.0, 2.0, -38.5), 40.0],
-		[5.0, Vector3(-2.2, 2.4, -36.2), Vector3(-7.1, 1.9, -38.4), 34.0],
-		[6.4, Vector3(-3.4, 2.1, -37.4), Vector3(-7.3, 1.8, -38.6), 28.0]]
+		[0.0, Vector3(7.0, 17.0, -8.0), Vector3(-3.0, 1.5, -38.0), 46.0],
+		[2.6, Vector3(3.5, 7.5, -25.0), Vector3(-3.0, 2.0, -38.5), 40.0],
+		[5.0, Vector3(1.2, 2.5, -35.6), Vector3(-3.0, 1.9, -38.5), 34.0],
+		[6.4, Vector3(0.0, 2.2, -37.2), Vector3(-3.0, 1.85, -38.6), 28.0]]
 	upd = func():
 		var k := keyed(K, t); cam.fov = k[2]; cam.look_at_from_position(k[0], k[1])
 		dof(k[0].distance_to(k[1]) + 2.0, 8.0)
@@ -233,7 +233,7 @@ func build_cardroom() -> void:
 		piece(b[1], b[0], 0.0, 0.8)
 	piece("SM_Prop_Photo_01", Vector3(-1.2, fy + 1.9, -7.9), 0.0, 1.0); piece("SM_Prop_Photo_02", Vector3(0.6, fy + 2.0, -7.9), 0.0, 1.0)
 	piece("SM_Prop_Table_Small_01", Vector3(-3.8, fy, -3.0), 0.4, 1.0); piece("SM_Prop_Lantern_02", Vector3(-3.8, fy + 0.78, -3.0), 0.0, 0.8)
-	piece("SM_Prop_Bottle_02", R + Vector3(0.18, top - fy, -0.3), 0.0, 0.7); piece("SM_Prop_Cup_01", R + Vector3(-0.35, top - fy, -0.28), 0.0, 0.7)
+	piece("SM_Prop_Bottle_02", R + Vector3(-0.1, top - fy, -0.52), 0.0, 0.7); piece("SM_Prop_Cup_01", R + Vector3(-0.35, top - fy, -0.28), 0.0, 0.7)
 	piece("SM_Prop_Cup_02", R + Vector3(0.36, top - fy, 0.3), 0.0, 0.7)
 	for c in [["SM_Prop_Card_Pile_01", Vector3(0.1, 0, -0.12), 0.4], ["SM_Prop_Card_01", Vector3(-0.3, 0, 0.12), 0.9], ["SM_Prop_Card_02", Vector3(-0.26, 0.001, 0.16), 1.4],
 			["SM_Prop_Card_03", Vector3(0.3, 0, -0.18), -0.6], ["SM_Prop_Poker_Chip_01", Vector3(-0.42, 0, 0.0), 0.0], ["SM_Prop_Poker_Chip_02", Vector3(-0.4, 0, -0.12), 0.0]]:
@@ -261,9 +261,9 @@ func build_cardroom() -> void:
 		[8.2, R + Vector3(-1.52, 1.36, -0.5), T_HEAD, 28.0],
 		[9.8, R + Vector3(-1.44, 1.32, -0.28), T_HEAD, 26.0],
 		[12.4, R + Vector3(0.3, 2.25, -1.15), R + Vector3(0, 0.82, 0), 48.0],
-		[14.8, R + Vector3(-0.12, 1.06, 0.58), R + Vector3(0.32, 0.86, 0.05), 32.0],
+		[14.8, R + Vector3(-0.05, 1.32, 1.0), R + Vector3(0.42, 0.9, 0.02), 32.0],
 		[17.4, R + Vector3(-0.98, 1.3, 0.48), T_HEAD + Vector3(-0.2, -0.05, 0), 30.0],
-		[19.2, R + Vector3(0.62, 1.24, 0.62), H_HEAD, 28.0],
+		[19.2, R + Vector3(0.45, 1.3, 1.05), H_HEAD, 28.0],
 		[21.0, R + Vector3(0.02, 1.02, 0.48), WAT, 24.0],
 		[23.4, R + Vector3(0.0, 0.98, 0.36), WAT + Vector3(0.02, 0.0, 0), 22.0],
 		[25.6, R + Vector3(-0.48, 1.2, 0.58), R + Vector3(0.62, 1.1, -0.02), 30.0],
