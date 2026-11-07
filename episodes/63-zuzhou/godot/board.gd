@@ -379,6 +379,45 @@ func rain(center: Vector3, ext: Vector3, n: int, alpha := 0.2, width := 0.012) -
 func cam_path(p0: Vector3, p1: Vector3, l0: Vector3, l1: Vector3, fov: float, dur: float) -> void:
 	cam_keys = {"p0": p0, "p1": p1, "l0": l0, "l1": l1, "fov": fov, "dur": dur}
 
+# ---------------------------------------------------------------- DEMO: the duel (9:16). Over the shoulder -> dolly zoom -> his POV.
+# The 16:9 band and its opening to full 9:16 are masked afterwards (ffmpeg), so the full frame is composed for both.
+var duel := {}
+func build_duel() -> void:
+	sky_env(Color(0.14, 0.3, 0.68), Color(0.95, 0.68, 0.45), Vector3(0, -1, 0), 0.0, 0.0, 0.45, 0.0, Color(1, 0.9, 0.75), 0.8, 0.0, 0.0, 1.08)
+	var sun := DirectionalLight3D.new(); add_child(sun)
+	sun.look_at_from_position(Vector3(6, 7.5, 34), Vector3(0, 0, -6))   # low, behind the hero: long shadows toward his opponent
+	sun.light_color = Color(1, 0.74, 0.5); sun.light_energy = 2.7; sun.shadow_enabled = true; sun.directional_shadow_max_distance = 60
+	solid_box(Vector3(300, 0.2, 300), Vector3(0, -0.1, -40), Color(0.86, 0.7, 0.5), "Stucco_01.png", Vector2(60, 60))
+	piece("SM_Env_Rock_Cliff_16", Vector3(0, -1, -62), 0, 1.6)
+	piece("SM_Env_Rock_Cliff_12", Vector3(-36, -1, -44), 0.9, 1.3)
+	piece("SM_Env_Rock_Cliff_09", Vector3(34, -1, -40), -0.8, 1.4)
+	piece("SM_Env_Rock_Rough_01", Vector3(6.5, 0, -19), 0.4, 1.0)
+	piece("SM_Env_Rock_Rough_01", Vector3(-8, 0, -27), 2.0, 1.3)
+	dust(Vector3(0, 0.35, -6), Vector3(9, 0.35, 7), 260, Color(1.0, 0.9, 0.75))
+	var hero := person("SK_Chr_Explorer_Male_01", Vector3(0, 0, 0), PI, "Base_Masc", 0.0, ["SM_Chr_Attach_Hat_Hunter_01"])
+	var foe := person("SK_Chr_Explorer_Male_01", Vector3(0, 0, -10), 0.0, "Base_Masc", 0.7, ["SM_Chr_Attach_Hat_Male_01"])
+	var we: WorldEnvironment = find_children("*", "WorldEnvironment", true, false)[-1]
+	var ca: CameraAttributesPractical = we.camera_attributes
+	ca.dof_blur_far_enabled = true; ca.dof_blur_far_transition = 4.0; ca.dof_blur_amount = 0.18; ca.dof_blur_near_enabled = false
+	duel = {"hero": hero, "ca": ca, "p0": Vector3(0.85, 1.74, 11.0), "p1": Vector3(0.0, 1.62, -0.12), "look": Vector3(0, 1.3, -10.0),
+		"head": Vector3(0, 1.6, -10.0), "k": 21.0 * 0.1778, "hidden": false}
+
+func _update_duel() -> void:
+	var u: float
+	if t < 1.2: u = 0.05 * t / 1.2                                   # hold the band, a slow creep
+	elif t < 3.4: u = 0.05 + 0.95 * sm01((t - 1.2) / 2.2)           # the push into his eyes
+	else: u = 1.0
+	var p: Vector3 = duel["p0"].lerp(duel["p1"], u)
+	if t >= 3.4: p += Vector3(sin(t * 1.3) * 0.004, sin(t * 2.1) * 0.003, 0)   # breathing, in his eyes
+	var d: float = p.distance_to(duel["head"])
+	cam.fov = rad_to_deg(2.0 * atan(duel["k"] / d))                  # dolly zoom: the opponent keeps his size
+	cam.look_at_from_position(p, duel["look"])
+	duel["ca"].dof_blur_far_distance = d + 1.0                       # sharp to just past the opponent, background soft
+	if not duel["hidden"] and p.z < 0.42:                            # through the back of his head: keep only his shadow
+		for gi in duel["hero"].find_children("*", "GeometryInstance3D", true, false):
+			gi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+		duel["hidden"] = true
+
 # ---------------------------------------------------------------- S1 / S3: Cairo rooftops at night
 func build_cairo() -> void:
 	sky_env(Color(0.01, 0.016, 0.06), Color(0.1, 0.13, 0.28), Vector3(0.28, 0.2, -0.94), 0.0025, 1.4, 0.75, 0.012, Color(0.3, 0.36, 0.6), 1.55, 0.0, 60.0, 0.95)
@@ -584,6 +623,7 @@ func build_valley() -> void:
 	cam_path(Vector3(-0.2, 1.62, 2.0), Vector3(-0.3, 1.6, 1.75), Vector3(1.8, 0.7, -10.8), Vector3(2.0, 0.55, -11.0), 30, 5.0)
 
 func _update_board() -> void:
+	if not duel.is_empty(): _update_duel(); return
 	if cam_keys.is_empty(): return
 	var u := sm01(t / cam_keys["dur"])
 	cam.fov = cam_keys["fov"]

@@ -53,3 +53,13 @@ errors are harmless, the movie writer still saves every frame). `render.py` rend
 - `board.gd` reads the assets folder from `GP_ASSETS` (default /dev/shm/gp/assets/). 4x MSAA on Modal.
 - Speed (2026-11-07, 1440x1080, 960 frames in 8 parallel shots): 0.3-0.56 s/frame with Synty scenes, about 2.2 min of
   Modal time, ~3 min round trip; the same 32 s takes ~35 min on the 2-core workspace CPU.
+
+## Demo: the duel move (`shot=duel`, 9:16)
+Owner's idea (2026-11-07): a 9:16 video that opens as a 16:9 band, over the hero's shoulder; a dolly zoom carries the
+camera through his hat into his eyes while the black bars open to full screen. Only the two duelists are sharp.
+- Render 1080x1920, 168 frames (job shot `["DUEL",168,"shot=duel t0=0","1080x1920"]`). Hold 0–1.2 s, push 1.2–3.4 s,
+  POV to 5.6 s. FOV = 2·atan(k/d) keeps the opponent's size; far DOF tracks the opponent's distance + 1 m.
+- At z < 0.42 the hero turns shadows-only, so his long shadow (low sun behind-right) points at the opponent in POV.
+- Bars added afterwards (band = 608 px of 1920; bars open 1.4–3.4 s, smoothstep):
+  `color=black:s=1080x656[k];[0:v][k]overlay=y='-656*P':eval=frame` and the mirror at `y='H-656+656*P'`,
+  with P = smoothstep(clip((t-1.4)/2,0,1)). Sound: tools/duel_sfx.py.
