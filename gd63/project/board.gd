@@ -256,7 +256,7 @@ void sky(){ float h = clamp(EYEDIR.y, 0.0, 1.0);
 	e.sdfgi_enabled = true; e.sdfgi_use_occlusion = true
 	e.glow_enabled = true; e.glow_intensity = 0.7; e.glow_bloom = 0.0; e.glow_hdr_threshold = 1.0
 	e.volumetric_fog_enabled = fog > 0.0; e.volumetric_fog_density = fog; e.volumetric_fog_albedo = fog_col
-	e.adjustment_enabled = true; e.adjustment_contrast = 1.1; e.adjustment_saturation = sat
+	e.adjustment_enabled = true; e.adjustment_contrast = 1.15; e.adjustment_saturation = sat
 	var we := WorldEnvironment.new(); we.environment = e
 	var ca := CameraAttributesPractical.new()
 	if dof_near > 0.0: ca.dof_blur_near_enabled = true; ca.dof_blur_near_distance = dof_near; ca.dof_blur_near_transition = dof_near * 0.5
@@ -381,9 +381,9 @@ func cam_path(p0: Vector3, p1: Vector3, l0: Vector3, l1: Vector3, fov: float, du
 
 # ---------------------------------------------------------------- S1 / S3: Cairo rooftops at night
 func build_cairo() -> void:
-	sky_env(Color(0.008, 0.012, 0.05), Color(0.07, 0.09, 0.2), Vector3(0.28, 0.2, -0.94), 0.0025, 1.4, 0.3, 0.022, Color(0.3, 0.36, 0.6), 1.2, 0.0, 60.0, 0.95)
+	sky_env(Color(0.01, 0.016, 0.06), Color(0.1, 0.13, 0.28), Vector3(0.28, 0.2, -0.94), 0.0025, 1.4, 0.75, 0.012, Color(0.3, 0.36, 0.6), 1.55, 0.0, 60.0, 0.95)
 	var moon := DirectionalLight3D.new(); add_child(moon); moon.look_at_from_position(Vector3(-35, 42, 84), Vector3.ZERO)
-	moon.light_color = Color(0.6, 0.7, 1.0); moon.light_energy = 0.55; moon.shadow_enabled = true; moon.directional_shadow_max_distance = 120
+	moon.light_color = Color(0.6, 0.7, 1.0); moon.light_energy = 1.2; moon.shadow_enabled = true; moon.directional_shadow_max_distance = 120
 	var g := solid_box(Vector3(300, 0.2, 300), Vector3(0, -0.1, -40), Color(0.42, 0.36, 0.3), "Stucco_01.png", Vector2(40, 40))
 	var rng := RandomNumberGenerator.new(); rng.seed = 23
 	var hotel := Vector3(9, 0, -24)
@@ -429,7 +429,7 @@ func build_cairo() -> void:
 
 # ---------------------------------------------------------------- S2: the hotel room, seen through the half-open door
 func build_hotel() -> void:
-	dark_env(Color(0.25, 0.3, 0.45), 0.18, 0.02, Color(0.5, 0.45, 0.4), 1.15, 0.0, 9.0, 0.9)
+	dark_env(Color(0.25, 0.3, 0.45), 0.5, 0.01, Color(0.5, 0.45, 0.4), 1.55, 0.0, 9.0, 0.9)
 	var floor := solid_box(Vector3(12, 0.1, 12), Vector3(0, -0.05, -2), Color(0.5, 0.36, 0.26), "Wood_Fancy_01.png", Vector2(6, 6))
 	for k in range(-2, 2): piece("SM_Bld_Wall_Window_01" if k == 0 else "SM_Bld_Wall_Door_01" if false else "SM_Bld_Wall_Window_01", Vector3(k * 2.5, 0, -5), 0, 1.0)
 	for k in range(-2, 1): piece("SM_Bld_Wall_Window_01", Vector3(5, 0, -5 + (k + 1) * 2.5 + 2.5), -PI / 2, 1.0)
@@ -448,10 +448,10 @@ func build_hotel() -> void:
 	mi.position = Vector3(0.1, 0.75, -3.35); mi.rotation = Vector3(PI / 2, 0, 0.08); mi.scale = Vector3(1, 1, 0.55); add_child(mi)
 	piece("SM_Prop_Table_Side_01", Vector3(-1.5, 0, -4.3), 0, 1.0)
 	piece("SM_Prop_Lamp_01", Vector3(-1.5, 0.64, -4.3), 0.4, 0.9)
-	var lamp := OmniLight3D.new(); lamp.position = Vector3(-1.5, 1.35, -4.2); lamp.light_color = Color(1, 0.62, 0.32); lamp.light_energy = 4.0; lamp.omni_range = 8; lamp.shadow_enabled = true; add_child(lamp)
-	flames.append([lamp, 5.0, 4.0])
+	var lamp := OmniLight3D.new(); lamp.position = Vector3(-1.5, 1.35, -4.2); lamp.light_color = Color(1, 0.62, 0.32); lamp.light_energy = 7.0; lamp.omni_range = 8; lamp.shadow_enabled = true; add_child(lamp)
+	flames.append([lamp, 5.0, 7.0])
 	piece("SM_Prop_Curtain_02_Open_01", Vector3(-0.25, 0.4, -4.75), 0, 1.0)
-	var moon := SpotLight3D.new(); add_child(moon); moon.look_at_from_position(Vector3(1.5, 4, -9), Vector3(0.5, 0.4, -2.5)); moon.light_color = Color(0.55, 0.65, 1.0); moon.light_energy = 3.0; moon.spot_range = 14; moon.spot_angle = 22; moon.shadow_enabled = true; moon.light_volumetric_fog_energy = 2.0
+	var moon := SpotLight3D.new(); add_child(moon); moon.look_at_from_position(Vector3(1.5, 4, -9), Vector3(0.5, 0.4, -2.5)); moon.light_color = Color(0.55, 0.65, 1.0); moon.light_energy = 6.0; moon.spot_range = 14; moon.spot_angle = 22; moon.shadow_enabled = true; moon.light_volumetric_fog_energy = 2.0
 	piece("SM_Prop_Dresser_01", Vector3(3.6, 0, -3.2), -PI / 2, 1.0)
 	piece("SM_Prop_Clock_02", Vector3(4.8, 1.9, -1.6), -PI / 2, 1.0)
 	piece("SM_Prop_Gramophone_01", Vector3(3.6, 0.85, -3.4), -2.0, 1.0)
@@ -462,10 +462,10 @@ func build_hotel() -> void:
 
 # ---------------------------------------------------------------- S4: the manor in the rain
 func build_manor(close := false) -> void:
-	sky_env(Color(0.015, 0.02, 0.04), Color(0.08, 0.1, 0.14), Vector3(-0.3, 0.3, -0.9), 0.0, 0.0, 0.3, 0.03, Color(0.4, 0.45, 0.55), 1.2, 0.0, 30.0, 0.7)
-	var sky_l := DirectionalLight3D.new(); add_child(sky_l); sky_l.look_at_from_position(Vector3(10, 30, 20), Vector3.ZERO); sky_l.light_color = Color(0.55, 0.65, 0.9); sky_l.light_energy = 0.35; sky_l.shadow_enabled = true
+	sky_env(Color(0.02, 0.03, 0.06), Color(0.12, 0.16, 0.24), Vector3(-0.3, 0.3, -0.9), 0.0, 0.0, 0.8, 0.012, Color(0.4, 0.45, 0.55), 1.6, 0.0, 30.0, 0.8)
+	var sky_l := DirectionalLight3D.new(); add_child(sky_l); sky_l.look_at_from_position(Vector3(10, 30, 20), Vector3.ZERO); sky_l.light_color = Color(0.55, 0.65, 0.9); sky_l.light_energy = 1.3; sky_l.shadow_enabled = true
 	flash_light = sky_l
-	solid_box(Vector3(200, 0.2, 200), Vector3(0, -0.1, 0), Color(0.18, 0.22, 0.16), "", Vector2(1, 1))
+	solid_box(Vector3(200, 0.2, 200), Vector3(0, -0.1, 0), Color(0.24, 0.3, 0.2), "", Vector2(1, 1))
 	var y0 := 1.5   # the house sits up on a plinth; the steps lead to the door
 	solid_box(Vector3(20, y0, 1.5), Vector3(0, y0 / 2, -0.7), Color(0.45, 0.42, 0.4), "Brick_Brown_Tex.png", Vector2(6, 1))
 	for fl in 2:
@@ -478,33 +478,33 @@ func build_manor(close := false) -> void:
 	for sx in [-2.3, 0.0]: piece("SM_Bld_Porch_Pillar_01", Vector3(sx - 0.2, y0 + 1.0, 2.4), 0, 0.75)
 	piece("SM_Bld_Porch_Roof_01", Vector3(-2.5, y0 + 3.0, 2.9), 0, 1.0)
 	piece("SM_Prop_Light_Wall_01", Vector3(-0.2, y0 + 2.4, 0.25), 0, 1.0)
-	var pl := OmniLight3D.new(); pl.position = Vector3(-1.25, y0 + 2.2, 1.0); pl.light_color = Color(1, 0.66, 0.35); pl.light_energy = 2.5; pl.omni_range = 7; pl.shadow_enabled = true; add_child(pl)
-	flames.append([pl, 7.0, 2.5])
+	var pl := OmniLight3D.new(); pl.position = Vector3(-1.25, y0 + 2.2, 1.0); pl.light_color = Color(1, 0.66, 0.35); pl.light_energy = 4.5; pl.omni_range = 7; pl.shadow_enabled = true; add_child(pl)
+	flames.append([pl, 7.0, 4.5])
 	glow_quad(Vector2(1.3, 1.6), Vector3(5.0 + 1.25, y0 + 4.6, 0.05), 0, Color(1.0, 0.66, 0.36), 1.5)   # one lit window upstairs
 	piece("SM_Prop_Door_Mat_01", Vector3(-1.25, y0 + 0.01, 0.9), 0, 1.0)
 	dog("SK_Animal_Dog_Pointer_01", Vector3(-1.25, y0, 1.1), float(_opt("dogry", "0.25")), _opt("dogclip", "_POLYGON_Dog_Action_Standing_Howl"), float(_opt("dogt", "1.2")))
-	solid_box(Vector3(4.4, 0.05, 16), Vector3(-1.25, 0.03, 10), Color(0.16, 0.15, 0.14), "Stucco_01.png", Vector2(2, 8))   # wet gravel drive
+	solid_box(Vector3(4.4, 0.05, 16), Vector3(-1.25, 0.03, 10), Color(0.32, 0.3, 0.27), "Stucco_01.png", Vector2(2, 8))   # wet gravel drive
 	piece("SM_Env_Tree_Large_Twisted_01", Vector3(-11, 0, 9), 0.6, 0.9)
 	piece("SM_Env_Tree_Large_Twisted_02", Vector3(10, 0, 7), 2.2, 0.9)
 	piece("SM_Bld_Fence_Gate_Fancy_01", Vector3(-3.6, 0, 19), 0, 1.0)
 	for k in range(-3, 3): piece("SM_Env_Hedge_01", Vector3(k * 4.0 + 2.0, 0, 5.5), 0, 1.0)
 	if close:
-		rain(Vector3(-2.5, y0 + 3.4, 3.35), Vector3(1.6, 0.4, 0.08), 260, 0.28, 0.008)   # a sheet running off the porch roof edge
-		rain(Vector3(-1, 8, 14), Vector3(14, 4, 6), 1600, 0.16)
+		rain(Vector3(-2.5, y0 + 3.4, 3.35), Vector3(1.6, 0.4, 0.08), 260, 0.2, 0.008)   # a sheet running off the porch roof edge
+		rain(Vector3(-1, 8, 14), Vector3(14, 4, 6), 1600, 0.1)
 	else:
-		rain(Vector3(-1, 8, 10), Vector3(14, 4, 10), 2600, 0.2)
-	cam_path(Vector3(-2.4, 1.1, 21), Vector3(-2.0, 1.3, 15), Vector3(-1.3, 3.2, 0), Vector3(-1.3, 2.8, 0), 46, 4.6)
+		rain(Vector3(-1, 8, 10), Vector3(14, 4, 10), 2600, 0.12)
+	cam_path(Vector3(-2.3, 1.2, 14), Vector3(-1.9, 1.4, 10.5), Vector3(-1.3, 2.7, 0), Vector3(-1.3, 2.5, 0), 46, 4.6)
 
 # ---------------------------------------------------------------- S5: the dog lies down (side-on, low, from the porch edge)
 func build_dog() -> void:
 	build_manor(true)
-	var rim := OmniLight3D.new(); rim.position = Vector3(-0.6, 2.3, 2.6); rim.light_color = Color(0.55, 0.65, 1.0); rim.light_energy = 0.7; rim.omni_range = 4.0; add_child(rim)   # cool spill from the wet night
+	var rim := OmniLight3D.new(); rim.position = Vector3(-0.6, 2.3, 2.6); rim.light_color = Color(0.55, 0.65, 1.0); rim.light_energy = 1.6; rim.omni_range = 4.0; add_child(rim)   # cool spill from the wet night
 	cam_path(Vector3(0.5, 1.9, 2.2), Vector3(0.42, 1.88, 2.1), Vector3(-1.3, 1.66, 1.0), Vector3(-1.3, 1.64, 1.0), 34, 2.4)
 
 # ---------------------------------------------------------------- S6 / S8: the sealed doorway
 func build_seal() -> void:
 	var burst := _opt("burst") == "1"
-	dark_env(Color(0.3, 0.25, 0.2), 0.1, 0.05 if burst else 0.03, Color(0.9, 0.75, 0.5), 1.0, 0.0, 0.0, 0.85)
+	dark_env(Color(0.3, 0.25, 0.2), 0.2, 0.05 if burst else 0.03, Color(0.9, 0.75, 0.5), 1.25, 0.0, 0.0, 0.85)
 	# KV62's corridor is plain rock-cut limestone (no carved walls); the end is the plastered, seal-stamped doorway
 	solid_box(Vector3(8, 0.1, 14), Vector3(0, -0.05, 2), Color(0.5, 0.42, 0.32), "Stucco_01.png", Vector2(4, 7))
 	for sx in [-1.9, 1.9]:
@@ -540,8 +540,8 @@ func build_seal() -> void:
 
 # ---------------------------------------------------------------- S7: the Valley of the Kings, over Weigall's shoulder
 func build_valley() -> void:
-	sky_env(Color(0.35, 0.55, 0.85), Color(0.95, 0.85, 0.7), Vector3(0.4, 0.8, -0.3), 0.0, 0.0, 0.9, 0.006, Color(0.95, 0.85, 0.7), 1.0, 1.4, 0.0, 0.7)
-	var sun := DirectionalLight3D.new(); add_child(sun); sun.look_at_from_position(Vector3(20, 40, 12), Vector3.ZERO); sun.light_color = Color(1, 0.92, 0.78); sun.light_energy = 2.6; sun.shadow_enabled = true; sun.directional_shadow_max_distance = 80
+	sky_env(Color(0.25, 0.45, 0.85), Color(0.85, 0.8, 0.72), Vector3(0.4, 0.8, -0.3), 0.0, 0.0, 0.55, 0.002, Color(0.95, 0.85, 0.7), 0.82, 1.4, 0.0, 0.9)
+	var sun := DirectionalLight3D.new(); add_child(sun); sun.look_at_from_position(Vector3(20, 40, 12), Vector3.ZERO); sun.light_color = Color(1, 0.92, 0.78); sun.light_energy = 2.4; sun.shadow_enabled = true; sun.directional_shadow_max_distance = 80
 	var sand := Color(0.86, 0.72, 0.52)
 	# KV62's entrance is a stairwell cut down into the valley floor: build the ground round a rectangular hole
 	var x0 := 0.9; var x1 := 3.1; var zf := -9.6; var zb := -12.6
