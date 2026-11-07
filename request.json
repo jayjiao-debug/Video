@@ -1,40 +1,16 @@
 {
- "id": "ep63-vo-test-01",
+ "id": "ep63-vo-test-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "N_A_martin",
+   "name": "N_D_female_story",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。"
-  },
-  {
-   "name": "N_B_male_story",
-   "lang": "zh",
-   "gender": "male",
    "accent": "standard",
-   "age": "middle_aged",
-   "use_case": "narrative_story",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。"
-  },
-  {
-   "name": "N_C_female_story",
-   "lang": "zh",
    "gender": "female",
-   "accent": "standard",
    "use_case": "narrative_story",
+   "pick": 1,
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
@@ -43,11 +19,11 @@
    "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。"
   },
   {
-   "name": "C1_carnarvon",
+   "name": "K_a",
    "lang": "zh",
-   "gender": "male",
    "accent": "standard",
-   "age": "old",
+   "gender": "male",
+   "search": "mature",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
@@ -56,46 +32,82 @@
    "text": "卡特……你能看见什么吗？"
   },
   {
-   "name": "C2_carter",
+   "name": "K_b",
    "lang": "zh",
-   "gender": "male",
    "accent": "standard",
-   "age": "middle_aged",
+   "gender": "male",
+   "search": "deep",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "卡特……你能看见什么吗？"
+  },
+  {
+   "name": "C_a",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "male",
    "use_case": "characters_animation",
    "settings": {
     "stability": 0.4,
     "similarity_boost": 0.8,
     "style": 0.45
    },
-   "text": "能……太奇妙了。"
+   "text": "再给我一个季度。钱，我自己出。"
   },
   {
-   "name": "C3_corelli",
+   "name": "C_b",
    "lang": "zh",
-   "gender": "female",
    "accent": "standard",
-   "age": "middle_aged",
+   "gender": "male",
+   "use_case": "conversational",
+   "settings": {
+    "stability": 0.4,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "text": "再给我一个季度。钱，我自己出。"
+  },
+  {
+   "name": "M_a",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "search": "mature",
+   "settings": {
+    "stability": 0.4,
+    "similarity_boost": 0.8,
+    "style": 0.5
+   },
+   "text": "闯入埃及国王的长眠之地，难免要冒些风险。"
+  },
+  {
+   "name": "M_b",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
    "use_case": "characters_animation",
    "settings": {
     "stability": 0.4,
     "similarity_boost": 0.8,
     "style": 0.5
    },
-   "text": "擅闯法老墓者，死神将展翅降临。"
+   "text": "闯入埃及国王的长眠之地，难免要冒些风险。"
   },
   {
-   "name": "C4_carter_late",
+   "name": "W_a",
    "lang": "zh",
-   "gender": "male",
    "accent": "standard",
-   "age": "middle_aged",
-   "use_case": "characters_animation",
+   "gender": "male",
+   "use_case": "entertainment_tv",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.4,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.5
    },
-   "text": "所有理智的人，都应该对这种编造，嗤之以鼻。"
+   "text": "他要是带着这种心态下去，我看他只剩六个星期好活。"
   }
  ]
 }
