@@ -1,0 +1,166 @@
+plan: {'tier': 'starter', 'character_count': 19721, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01b", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01b.mp3", "bytes": 97009}
+{"name": "01c", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01c.mp3", "bytes": 97009}
+{"name": "04b", "lang": "zh", "text": "一层放不下？那就造两层。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "04b.mp3", "bytes": 46018}
+{"name": "04c", "lang": "zh", "text": "一层放不下？那就造两层。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "04c.mp3", "bytes": 46018}
+{"name": "07b", "lang": "zh", "text": "上将只叹了口气：“要是国王在家就好了。”", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07b.mp3", "bytes": 72767}
+{"name": "07c", "lang": "zh", "text": "上将只叹了口气：“要是国王在家就好了。”", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07c.mp3", "bytes": 71514}
+{"name": "13b", "lang": "zh", "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13b.mp3", "bytes": 85724}
+{"name": "13c", "lang": "zh", "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13c.mp3", "bytes": 88232}
+{"name": "16b", "lang": "zh", "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "16b.mp3", "bytes": 99517}
+{"name": "16c", "lang": "zh", "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "16c.mp3", "bytes": 95755}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01b",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01b.mp3",
+  "bytes": 97009,
+  "heard": "1628年瑞典最猛的新战舰手航开了1000多米就沉了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.0
+ },
+ {
+  "name": "01c",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01c.mp3",
+  "bytes": 97009,
+  "heard": "1628年瑞典最猛的新战舰手航开了1000多米就沉了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.0
+ },
+ {
+  "name": "04b",
+  "lang": "zh",
+  "text": "一层放不下？那就造两层。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04b.mp3",
+  "bytes": 46018,
+  "heard": "一層放不下那就造兩層",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "04c",
+  "lang": "zh",
+  "text": "一层放不下？那就造两层。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04c.mp3",
+  "bytes": 46018,
+  "heard": "一層放不下那就照兩層",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "07b",
+  "lang": "zh",
+  "text": "上将只叹了口气：“要是国王在家就好了。”",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07b.mp3",
+  "bytes": 72767,
+  "heard": "上将只探了口气要是国王在家就好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.48
+ },
+ {
+  "name": "07c",
+  "lang": "zh",
+  "text": "上将只叹了口气：“要是国王在家就好了。”",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07c.mp3",
+  "bytes": 71514,
+  "heard": "上将只探了口气要是国王在家就好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.4
+ },
+ {
+  "name": "13b",
+  "lang": "zh",
+  "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13b.mp3",
+  "bytes": 85724,
+  "heard": "幾分鐘後,他乘載離岸120米的地方約30人遇難",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.28
+ },
+ {
+  "name": "13c",
+  "lang": "zh",
+  "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13c.mp3",
+  "bytes": 88232,
+  "heard": "几分钟后,他乘载离岸120米的地方,约30人遇难",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 5.44
+ },
+ {
+  "name": "16b",
+  "lang": "zh",
+  "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "16b.mp3",
+  "bytes": 99517,
+  "heard": "瓦薩號正好相反大炮雕像全在上面水下傳生又窄又淺",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 6.16
+ },
+ {
+  "name": "16c",
+  "lang": "zh",
+  "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "16c.mp3",
+  "bytes": 95755,
+  "heard": "瓦薩號正好相反大炮雕像全在上面水下傳生又窄又淺",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.92
+ }
+]
