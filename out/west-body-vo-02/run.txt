@@ -1,0 +1,54 @@
+plan: {'tier': 'starter', 'character_count': 20109, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "N04", "lang": "zh", "text": "一个是南军老兵，戴维斯塔特。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "N04.mp3", "bytes": 48526}
+{"name": "N04b", "lang": "zh", "text": "一个是南军老兵，叫戴维斯·塔特。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "N04b.mp3", "bytes": 53541}
+{"name": "N32", "lang": "zh", "text": "可故事还没完。二零二六年二月，当地翻出了一批旧档案。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "N32.mp3", "bytes": 95755}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "N04",
+  "lang": "zh",
+  "text": "一个是南军老兵，戴维斯塔特。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N04.mp3",
+  "bytes": 48526,
+  "heard": "一個是南軍老兵 黛維斯塔特",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.96
+ },
+ {
+  "name": "N04b",
+  "lang": "zh",
+  "text": "一个是南军老兵，叫戴维斯·塔特。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N04b.mp3",
+  "bytes": 53541,
+  "heard": "一个是南军老兵 叫Davis Tutter",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "N32",
+  "lang": "zh",
+  "text": "可故事还没完。二零二六年二月，当地翻出了一批旧档案。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N32.mp3",
+  "bytes": 95755,
+  "heard": "可故事還沒完2026年2月當地翻出了一批舊檔案",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.92
+ }
+]
