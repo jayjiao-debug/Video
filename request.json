@@ -1,63 +1,52 @@
 {
- "id": "ep63-hook-01",
+ "id": "west-hero-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "H1_weigall",
-   "lang": "zh",
-   "voice_id": "ZJsn5HnrE3eUbep2ia8D",
-   "settings": {
-    "stability": 0.4,
-    "similarity_boost": 0.8,
-    "style": 0.45
-   },
-   "text": "他要是这样下去……只剩六个星期好活。"
-  },
-  {
-   "name": "H2_narr",
+   "name": "V1",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.4
    },
-   "text": "七周后，他真的死了。"
+   "text": "这是电影里的西部对决。"
   },
   {
-   "name": "H3_narr",
+   "name": "V2",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.4
    },
-   "text": "据说那一刻，开罗全城停电，"
+   "text": "真实的那一场，两个人，隔着六十九米。"
   },
   {
-   "name": "H4_narr",
+   "name": "V3",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.4
    },
-   "text": "他的狗，倒地不起。"
+   "text": "而起因，只是一块怀表。"
   },
   {
-   "name": "H5_title",
+   "name": "V4",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.45,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.5
    },
-   "text": "法老的诅咒，是真的吗？"
+   "text": "一块怀表，引发了西部史上，第一场对决。"
   }
  ]
 }
