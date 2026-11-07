@@ -1,1 +1,9 @@
-{"id":"gd63-test1","entry":"gd63/render.py","shots":[["S6",90,"shot=seal t0=0"]]}
+{"id":"gd63-open1","entry":"gd63/render.py","shots":[
+ ["S1",108,"shot=cairo t0=0"],
+ ["S2",126,"shot=hotel t0=0"],
+ ["S3",144,"shot=cairo out=1 t0=0"],
+ ["S4",138,"shot=manor t0=0 dogt=0.6"],
+ ["S5",72,"shot=dog t0=0 dogclip=_POLYGON_Dog_Transition_Stand_ToSleep dogt=0.3 dogry=1.82"],
+ ["S6",120,"shot=seal t0=0"],
+ ["S7",150,"shot=valley t0=0"],
+ ["S8",102,"shot=seal burst=1 t0=0"]]}
