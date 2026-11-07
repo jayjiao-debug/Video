@@ -22,14 +22,22 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if "=" in a: opts[a.get_slice("=", 0)] = a.get_slice("=", 1)
 	shot = opts.get("shot", shot); t = float(opts.get("t0", "0"))
+	if opts.has("tl"):
+		for x in String(opts["tl"]).split(","): tl.append(float(x))
+		t = tl[0]
 	wm = JSON.parse_string(FileAccess.get_file_as_string(A + "west_mat.json"))
 	for f in wm["frontier"]: frontier[f] = true
 	cam = Camera3D.new(); add_child(cam); cam.make_current(); cam.near = 0.03; cam.far = 1500
 	call("build_" + shot)
 	_tick()
 
+var tl := PackedFloat32Array()   # test stills: tl=0.3,1.2,… jumps to those times, one per frame
+var tk := 0
 func _process(delta: float) -> void:
-	t += delta
+	if tl.size() > 0:
+		t = tl[mini(tk, tl.size() - 1)]; tk += 1
+	else:
+		t += delta
 	_tick()
 
 func _tick() -> void:
@@ -156,7 +164,7 @@ func person(p: String, pos: Vector3, ry: float, idle: String, ph: float) -> Dict
 	c.position = pos; c.rotation.y = ry
 	add_child(c)
 	ap.play("idle"); ap.seek(fmod(ph + t, clip.length), true)
-	return {"node": c, "sk": sk}
+	return {"node": c, "sk": sk, "ap": ap}
 
 func bone(sk: Skeleton3D, n: String) -> int:
 	for i in sk.get_bone_count():
@@ -181,11 +189,11 @@ func squint(ch: Dictionary, amount: float) -> void:
 		var ax := 0
 		if absf(up.y) > absf(up[ax]): ax = 1
 		if absf(up.z) > absf(up[ax]): ax = 2
-		s[ax] = lerpf(1.0, 0.32, amount)
+		s[ax] = lerpf(1.0, 0.55, amount) if amount >= 0.0 else 1.0 - 0.7 * amount   # negative = eyes wide (the stare)
 		sk.set_bone_pose_scale(e, s)
 	if br >= 0:
 		var up2 := sk.get_bone_global_rest(br).basis.inverse() * Vector3.UP
-		sk.set_bone_pose_position(br, sk.get_bone_rest(br).origin - up2.normalized() * 0.012 * amount)
+		sk.set_bone_pose_position(br, sk.get_bone_rest(br).origin - up2.normalized() * (0.0035 * amount if amount >= 0.0 else 0.009 * amount))
 
 # ---------------------------------------------------------------- world: sky, sun, ground, atmosphere
 func world(sun_dir_from: Vector3, sun_col: Color, sun_e: float, exposure: float, fog: float) -> DirectionalLight3D:
@@ -227,7 +235,7 @@ void sky(){
 	env.fog_enabled = true; env.fog_light_color = Color(0.95, 0.72, 0.52); env.fog_density = 0.0016; env.fog_aerial_perspective = 0.6; env.fog_sky_affect = 0.0
 	env.adjustment_enabled = true; env.adjustment_contrast = 1.12; env.adjustment_saturation = 1.08
 	var we := WorldEnvironment.new(); we.environment = env
-	ca = CameraAttributesPractical.new(); ca.dof_blur_amount = 0.12
+	ca = CameraAttributesPractical.new(); ca.dof_blur_amount = 0.22
 	we.camera_attributes = ca
 	add_child(we)
 	var sun := DirectionalLight3D.new(); add_child(sun)
@@ -563,13 +571,24 @@ func build_watch() -> void:
 	var lid := Node3D.new(); lid.position = Vector3(-0.026, 0.0045, 0); lid.rotation.z = deg_to_rad(-100); w.add_child(lid)
 	var lidm := cyl(0.026, 0.0025, g, Vector3(0.026, 0, 0), lid)
 	var glass := cyl(0.0225, 0.0008, mat("", true), Vector3(0, 0.0074, 0), w)
-	# chain: links along a lazy curve from the bow toward the camera and off the table edge
-	for i in 110:
-		var u := i / 109.0
-		var pp := Vector3(0.012 * sin(u * 5.0) + u * 0.05, 0.0, -0.04 - u * 0.0) .lerp(Vector3(-0.06 + 0.04 * sin(u * 3.0), 0, 0.26), u)
+	# chain: straight out of the bow and away across the felt (in the top shot it runs up the frame like the 69 m line)
+	var cpts: Array = [Vector3(0, 0, -0.04)]
+	for q in 9: cpts.append(cpts[-1] + Vector3(0.0025 * sin(q * 1.7), 0, -0.05))
+	var dense: Array = []
+	for q in cpts.size() - 1:
+		for m in 12: dense.append(catmull(cpts[maxi(q - 1, 0)], cpts[q], cpts[q + 1], cpts[mini(q + 2, cpts.size() - 1)], m / 12.0))
+	dense.append(cpts[-1])
+	var acc := [0.0]
+	for q in range(1, dense.size()): acc.append(acc[-1] + dense[q].distance_to(dense[q - 1]))
+	var step := 0.0034; var nl := int(acc[-1] / step); var qi := 0
+	for i in nl:
+		var sdist := i * step
+		while qi < dense.size() - 2 and acc[qi + 1] < sdist: qi += 1
+		var f: float = (sdist - acc[qi]) / maxf(acc[qi + 1] - acc[qi], 1e-6)
+		var pp: Vector3 = dense[qi].lerp(dense[qi + 1], f); var tg: Vector3 = dense[qi + 1] - dense[qi]
 		var lk := MeshInstance3D.new(); var lt := TorusMesh.new(); lt.inner_radius = 0.0011; lt.outer_radius = 0.0019; lt.rings = 12; lt.ring_segments = 8; lk.mesh = lt
-		lk.material_override = g; lk.position = Vector3(pp.x, 0.0018, pp.z) if i > 0 else Vector3(0, 0, -0.04)
-		lk.rotation = Vector3(0, atan2(0.05 - 0.1, 0.3) + u * 1.5, PI / 2 if i % 2 == 0 else 0.0); w.add_child(lk)
+		lk.material_override = g; lk.position = Vector3(pp.x, 0.0019 if i % 2 == 0 else 0.0013, pp.z)
+		lk.rotation = Vector3(0, atan2(tg.x, tg.z), PI / 2 if i % 2 == 0 else 0.0); w.add_child(lk)
 	upd = func():
 		var sec := floorf(t + 0.0)
 		var frac := t - sec
@@ -582,3 +601,348 @@ func build_watch() -> void:
 		cam.fov = lerpf(36.0, 31.0, u); cam.look_at_from_position(p, w.position + Vector3(0, 0, 0.03))
 		ca.dof_blur_far_enabled = true; ca.dof_blur_far_distance = p.distance_to(w.position) + 0.05; ca.dof_blur_far_transition = 0.25
 		ca.dof_blur_near_enabled = true; ca.dof_blur_near_distance = maxf(p.distance_to(w.position) - 0.08, 0.02); ca.dof_blur_near_transition = 0.06
+
+
+# ---------------------------------------------------------------- the draw: no gun animations exist, so the right arm is posed in code
+## The idle keeps the body alive; the right arm's tracks are removed and the arm is aimed each frame:
+## each bone's rest direction is turned onto a target direction (skeleton space), then made local to its parent.
+func arm_rig(ch: Dictionary, aim_at: Vector3, times: Array, gun_scale := 1.35) -> Dictionary:
+	var sk: Skeleton3D = ch["sk"]
+	var ids := {}
+	for k in [["ua", "UpperArm_R"], ["la", "lowerarm_r"], ["hd", "Hand_R"], ["pel", "Pelvis"]]:
+		ids[k[0]] = bone(sk, k[1])
+	var ap: AnimationPlayer = ch["ap"]
+	var clip: Animation = ap.get_animation("idle").duplicate()
+	for i in range(clip.get_track_count() - 1, -1, -1):
+		var bn := String(clip.track_get_path(i)).get_slice(":", 1).to_lower()
+		if bn in ["upperarm_r", "lowerarm_r", "hand_r"]: clip.remove_track(i)
+	var lib := AnimationLibrary.new(); lib.add_animation("idle", clip)
+	var pos := ap.current_animation_position
+	ap.remove_animation_library(""); ap.add_animation_library("", lib); ap.play("idle"); ap.seek(pos, true)
+	var gr := func(b: int) -> Transform3D: return sk.get_bone_global_rest(b)
+	var r := {"ch": ch, "sk": sk, "ids": ids, "times": times,
+		"d_ua": (gr.call(ids["la"]).origin - gr.call(ids["ua"]).origin).normalized(),
+		"d_la": (gr.call(ids["hd"]).origin - gr.call(ids["la"]).origin).normalized()}
+	# the gun: in the holster at the right hip until the grab, then in the hand
+	var gun := fbx("SM_Wep_Revolver_01"); apply_west(gun, "SM_Wep_Revolver_01"); gun.scale = Vector3.ONE * gun_scale; add_child(gun)
+	r["gun"] = gun
+	r["aim_world"] = aim_at
+	# muzzle flash light + flare + smoke
+	var fl := OmniLight3D.new(); fl.light_color = Color(1.0, 0.78, 0.45); fl.omni_range = 5; fl.light_energy = 0.0; fl.shadow_enabled = true; add_child(fl)
+	var flare := MeshInstance3D.new(); var sp := SphereMesh.new(); sp.radius = 0.055; sp.height = 0.11; flare.mesh = sp
+	var fm := StandardMaterial3D.new(); fm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; fm.albedo_color = Color(1, 0.9, 0.6); fm.emission_enabled = true; fm.emission = Color(1, 0.75, 0.4); fm.emission_energy_multiplier = 40
+	flare.material_override = fm; flare.visible = false; add_child(flare)
+	var smoke := CPUParticles3D.new(); smoke.amount = 60; smoke.lifetime = 1.6; smoke.one_shot = true; smoke.explosiveness = 0.9; smoke.emitting = false
+	smoke.direction = Vector3(0, 0.3, 1); smoke.spread = 25; smoke.initial_velocity_min = 0.6; smoke.initial_velocity_max = 2.2; smoke.gravity = Vector3(0, 0.25, 0); smoke.damping_min = 1.5; smoke.damping_max = 3.0
+	smoke.scale_amount_min = 0.15; smoke.scale_amount_max = 0.5
+	var q := QuadMesh.new(); var qm := StandardMaterial3D.new(); qm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; qm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	qm.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES; qm.billboard_keep_scale = true; qm.albedo_texture = soft_dot(); qm.albedo_color = Color(0.85, 0.8, 0.72, 0.35); q.material = qm; smoke.mesh = q
+	add_child(smoke)
+	r["fl"] = fl; r["flare"] = flare; r["smoke"] = smoke; r["fired"] = false
+	return r
+
+func _dir_lerp(a: Vector3, b: Vector3, u: float) -> Vector3:
+	return a.slerp(b, clampf(u, 0.0, 1.0)).normalized()
+
+func pose_arm(r: Dictionary) -> void:
+	var sk: Skeleton3D = r["sk"]; var ids: Dictionary = r["ids"]; var tm: Array = r["times"]   # [grab, draw, aimed, fire]
+	var sx: Transform3D = sk.global_transform
+	var to_sk := sx.affine_inverse()
+	var sh_world: Vector3 = sx * sk.get_bone_global_pose(ids["ua"]).origin
+	var aim: Vector3 = (to_sk.basis * (r["aim_world"] - sh_world)).normalized()
+	var hang_ua := Vector3(-0.16, -1.0, 0.04).normalized(); var hang_la := Vector3(-0.08, -1.0, 0.12).normalized()
+	var grab_ua := Vector3(-0.12, -1.0, -0.12).normalized(); var grab_la := Vector3(0.05, -0.85, 0.5).normalized()
+	var up_kick := (aim + Vector3(0, 0.22, 0)).normalized()
+	var u_ua := hang_ua; var u_la := hang_la
+	if t < tm[0]:
+		pass
+	elif t < tm[1]:
+		var k := sm((t - tm[0]) / (tm[1] - tm[0])); u_ua = _dir_lerp(hang_ua, grab_ua, k); u_la = _dir_lerp(hang_la, grab_la, k)
+	elif t < tm[2]:
+		var k := sm((t - tm[1]) / (tm[2] - tm[1])); u_ua = _dir_lerp(grab_ua, aim, k); u_la = _dir_lerp(grab_la, aim, k)
+	else:
+		u_ua = aim; u_la = aim
+		if t >= tm[3]:
+			var kk := clampf((t - tm[3]) / 0.09, 0.0, 1.0); var back := clampf((t - tm[3] - 0.09) / 0.35, 0.0, 1.0)
+			var kick := sin(kk * PI * 0.5) * (1.0 - back)
+			u_la = _dir_lerp(aim, up_kick, kick); u_ua = _dir_lerp(aim, up_kick, kick * 0.4)
+	var pp: Transform3D = sk.get_bone_global_pose(sk.get_bone_parent(ids["ua"]))
+	var g_ua := Basis(Quaternion(r["d_ua"], u_ua)) * sk.get_bone_global_rest(ids["ua"]).basis
+	var g_la := Basis(Quaternion(r["d_la"], u_la)) * sk.get_bone_global_rest(ids["la"]).basis
+	var g_hd := Basis(Quaternion(r["d_la"], u_la)) * sk.get_bone_global_rest(ids["hd"]).basis
+	sk.set_bone_pose_rotation(ids["ua"], (pp.basis.orthonormalized().inverse() * g_ua.orthonormalized()).get_rotation_quaternion())
+	sk.set_bone_pose_rotation(ids["la"], (g_ua.orthonormalized().inverse() * g_la.orthonormalized()).get_rotation_quaternion())
+	sk.set_bone_pose_rotation(ids["hd"], (g_la.orthonormalized().inverse() * g_hd.orthonormalized()).get_rotation_quaternion())
+	# the gun
+	var gun: Node3D = r["gun"]
+	var in_hand := t >= lerpf(tm[0], tm[1], 0.85)
+	var fwd: Vector3; var org: Vector3
+	if in_hand:
+		var hd_g: Transform3D = sk.get_bone_global_pose(ids["hd"])
+		var dir_w := (sx.basis * u_la).normalized()
+		org = sx * hd_g.origin + dir_w * 0.07 + Vector3(0, -0.015, 0)
+		fwd = dir_w
+	else:
+		var pel: Transform3D = sk.get_bone_global_pose(ids["pel"])
+		org = sx * (pel.origin + Vector3(-0.2, -0.16, 0.05))
+		fwd = (sx.basis * Vector3(0.05, -1.0, 0.25)).normalized()
+	var upv := Vector3.UP if absf(fwd.y) < 0.9 else (sx.basis * Vector3(0, 0, 1)).normalized()
+	gun.global_transform = Transform3D(Basis.looking_at(fwd, upv) * GUN_FIX, org)
+	gun.scale = Vector3.ONE * 1.35
+	var muzzle := org + fwd * 0.3 + Vector3(0, 0.03, 0)
+	var on: bool = t >= tm[3] and t < tm[3] + 0.06
+	r["fl"].position = muzzle; r["fl"].light_energy = 3.2 if on else 0.0
+	r["flare"].position = muzzle; r["flare"].visible = on
+	if t >= tm[3] and not r["fired"]:
+		r["smoke"].global_position = muzzle; r["smoke"].direction = fwd; r["smoke"].restart(); r["fired"] = true
+
+var GUN_FIX := Basis(Vector3.UP, PI)   # the Synty revolver's barrel runs along +Z; looking_at aims -Z
+
+## test: both men draw; hero fires first (side-on, close)
+var rigs := []
+func build_drawtest() -> void:
+	town()
+	var hp := at_ground(0.3, -8); var fp := at_ground(0.3, -20)
+	cast(hp, fp)
+	rigs = [arm_rig(hero, fp + Vector3(0, 1.25, 0), [0.3, 0.45, 0.62, 0.8]), arm_rig(foe, hp + Vector3(0, 1.25, 0), [0.4, 0.55, 0.8, 1.2])]
+	var cam_at: String = opts.get("cam", "hero")
+	upd = func():
+		for r in rigs: pose_arm(r)
+		if cam_at == "hero":
+			look_lens(hp + Vector3(2.4, 1.3, -1.2), hp + Vector3(0, 1.1, -0.4), 40, 2.8, 2.0)
+		else:
+			look_lens(fp + Vector3(-2.4, 1.3, 1.2), fp + Vector3(0, 1.1, 0.4), 40, 2.8, 2.0)
+
+# ================================================================ v3: three continuous shots
+func catmull(p0, p1, p2, p3, u: float):
+	var u2: float = u * u; var u3: float = u2 * u
+	return 0.5 * ((2.0 * p1) + (-p0 + p2) * u + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * u2 + (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * u3)
+
+## keys: [[time, pos, look, fov], …]; Catmull-Rom through them, time-linear between keys
+func keyed(keys: Array, tt: float) -> Array:
+	if tt <= keys[0][0]: return [keys[0][1], keys[0][2], keys[0][3]]
+	if tt >= keys[-1][0]: return [keys[-1][1], keys[-1][2], keys[-1][3]]
+	var i := 0
+	while i < keys.size() - 2 and tt > keys[i + 1][0]: i += 1
+	var u: float = (tt - keys[i][0]) / (keys[i + 1][0] - keys[i][0])
+	var a: Array = keys[max(i - 1, 0)]; var b: Array = keys[i]; var c: Array = keys[i + 1]; var d: Array = keys[min(i + 2, keys.size() - 1)]
+	return [catmull(a[1], b[1], c[1], d[1], u), catmull(a[2], b[2], c[2], d[2], u), lerpf(b[3], c[3], sm(u))]
+
+## SHOT A (0–7.15 s): over the shoulder → dolly zoom into his eyes → POV → zoom onto the opponent → eye-level dolly zoom
+## (his face holds, the street stretches away) → the eyes; he narrows them → the camera swings behind his head (his dark
+## head is the wipe) to over his shoulder → the gunslinger draws and fires at us.
+func build_duel2() -> void:
+	town()
+	var hp := at_ground(0.3, -8); var fp := at_ground(0.3, -20)
+	cast(hp, fp)
+	catchlights(foe)
+	var H := Vector3(0.3, fp.y + 1.645, -20.0)
+	var p0 := Vector3(0.9, hp.y + 1.72, hp.z + 7.5); var p1 := Vector3(0.3, hp.y + 1.6, hp.z - 0.1)
+	var look0 := Vector3(0.3, fp.y + 1.25, -20.0)
+	var k0 := p0.distance_to(H) * 0.240
+	var hero_aim := hp + Vector3(0, 1.22, 0)
+	var fill := OmniLight3D.new(); fill.position = H + Vector3(0.1, -0.3, 0.9); fill.light_color = Color(1.0, 0.78, 0.6); fill.light_energy = 1.0; fill.omni_range = 2.2; add_child(fill)
+	var kick := OmniLight3D.new(); kick.position = H + Vector3(-0.9, 0.35, -0.7); kick.light_color = Color(1.0, 0.7, 0.45); kick.light_energy = 1.3; kick.omni_range = 1.8; add_child(kick)
+	var hfill := OmniLight3D.new(); hfill.position = hp + Vector3(0.0, 1.4, -1.6); hfill.light_color = Color(1.0, 0.8, 0.62); hfill.light_energy = 1.4; hfill.omni_range = 3.5; add_child(hfill)
+	rigs = [arm_rig(hero, H + Vector3(0, -0.35, 0), [6.45, 6.6, 6.8, 6.97]), arm_rig(foe, hero_aim, [6.52, 6.7, 7.05, 99.0])]
+	var hidden := [false]
+	upd = func():
+		for r in rigs: pose_arm(r)
+		var p: Vector3; var look: Vector3 = look0; var tanv: float; var focus: float; var near := 0.0
+		if t < 2.4:
+			var u: float = 0.04 * t / 0.6 if t < 0.6 else (0.04 + 0.96 * seg(0.6, 1.6))
+			p = p0.lerp(p1, minf(u, 1.0))
+			if t >= 1.6: p += Vector3(sin(t * 1.3) * 0.004, sin(t * 2.1) * 0.003, 0)
+			tanv = k0 / p.distance_to(H); focus = p.distance_to(H) + 0.8
+		elif t < 4.0:
+			var d0: float = p1.distance_to(H)
+			if t < 2.8:   # optical zoom onto him, the camera holds
+				p = p1; tanv = lerpf(k0 / d0, 0.8 / d0, seg(2.4, 2.8))
+			else:         # the dolly zoom: in toward him at eye level, the lens widening so his face holds its size
+				var u: float = seg(2.8, 4.0)
+				p = p1.lerp(Vector3(0.3, H.y, H.z + 2.2), u); p.y = lerpf(p1.y, H.y, sm(u * 1.5))
+				tanv = 0.8 / p.distance_to(H)
+			look = look0.lerp(H, seg(2.4, 2.9)); focus = p.distance_to(H) + 0.15
+		elif t < 4.95:    # the last push: eyes fill the slit, a beat, then he narrows them
+			var u: float = seg(4.0, 4.35)
+			p = Vector3(0.3, H.y, H.z + lerpf(2.2, 0.85, u)); look = H
+			tanv = lerpf(0.8 / 2.2, 0.29, u); focus = p.distance_to(H) + 0.05
+		else:             # swing round behind his head to over his right shoulder; settle on the gunslinger and creep in
+			var u: float = seg(4.95, 5.85)
+			var th: float = lerpf(0.0, deg_to_rad(-162.0), u)
+			var r: float = lerpf(0.85, 1.0, u) + 0.45 * sin(u * PI)
+			p = H + Vector3(sin(th) * r, lerpf(0.0, -0.02, u), cos(th) * r)
+			var lu: float = sm(clampf((u - 0.25) / 0.55, 0.0, 1.0))
+			look = H.lerp(hero_aim, lu)
+			tanv = lerpf(0.29, 0.25, u) - 0.07 * seg(5.85, 6.9)
+			focus = lerpf(0.85, p.distance_to(hero_aim), lu)
+			near = 0.0 if u < 0.3 else lerpf(0.0, 1.1, lu)
+		cam.fov = rad_to_deg(2.0 * atan(tanv)); cam.look_at_from_position(p, look)
+		ca.dof_blur_far_enabled = true; ca.dof_blur_far_distance = focus; ca.dof_blur_far_transition = clampf(focus * 0.25, 0.4, 3.0)
+		ca.dof_blur_near_enabled = near > 0.0; ca.dof_blur_near_distance = maxf(near, 0.05); ca.dof_blur_near_transition = 0.5
+		if not hidden[0] and (p.z < hp.z + 0.45 or opts.has("nohero")) and t < 2.4: hide_hero(true); hidden[0] = true
+		if hidden[0] and t > 2.6: hide_hero(false); hidden[0] = false
+		# the stare (eyes wide) through the dolly zoom, then he narrows them; they stay narrowed for the draw
+		var sq: float = -0.7 * seg(2.8, 3.4) + 1.7 * seg(4.5, 4.8) - 0.45 * seg(5.3, 5.7)
+		squint(foe, sq)
+
+## small warm glints on the eyes (the eyes bone carries them, so they narrow with a squint)
+func catchlights(ch: Dictionary) -> void:
+	var sk: Skeleton3D = ch["sk"]; var e := bone(sk, "eyes")
+	if e < 0: return
+	var ba := BoneAttachment3D.new(); ba.bone_name = sk.get_bone_name(e); sk.add_child(ba)
+	var gb: Transform3D = sk.global_transform * sk.get_bone_global_rest(e)
+	var fwd: Vector3 = ch["node"].global_transform.basis.z.normalized(); var side := Vector3.UP.cross(fwd).normalized()
+	for sgn in [-1.0, 1.0]:
+		var o := MeshInstance3D.new(); var sp := SphereMesh.new(); sp.radius = 0.0032; sp.height = 0.0045; o.mesh = sp
+		var om := StandardMaterial3D.new(); om.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; om.albedo_color = Color(1.0, 0.95, 0.85)
+		om.emission_enabled = true; om.emission = Color(1.0, 0.92, 0.8); om.emission_energy_multiplier = 2.2; o.material_override = om
+		var wpos: Vector3 = gb.origin + side * (0.041 * sgn) + Vector3(0, 0.0025, 0) + fwd * 0.007
+		o.position = gb.affine_inverse() * wpos
+		ba.add_child(o)
+
+## SHOT B (6.4 s): the real one. On Hickok's face; the camera flies backwards down the whole street, the line growing out
+## from his boots, until it stops behind Tutt: Tutt's hat in the foreground, Hickok a speck 69 m away. Then up over the town.
+func build_reveal2() -> void:
+	town()
+	var hp := at_ground(-3.0, 6.0); var fp := at_ground(6.5, -62.5)
+	hero = person("SK_Chr_Bandit_Male_01", hp, atan2(fp.x - hp.x, fp.z - hp.z), "Base_Masc", 0.0)
+	foe = person("SK_Character_Badguy_01", fp, atan2(hp.x - fp.x, hp.z - fp.z), "Base_Masc", 0.9)
+	var dv := fp - hp; dv.y = 0; var L := dv.length(); var dn := dv / L; var right := Vector3(-dn.z, 0, dn.x); var up := Vector3.UP
+	var hfill := OmniLight3D.new(); hfill.position = hp + dn * 1.2 + up * 1.5; hfill.light_color = Color(1.0, 0.8, 0.62); hfill.light_energy = 1.6; hfill.omni_range = 3.0; add_child(hfill)
+	var lm := StandardMaterial3D.new(); lm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; lm.albedo_color = Color(1.0, 0.93, 0.78); lm.emission_enabled = true; lm.emission = Color(1, 0.9, 0.7); lm.emission_energy_multiplier = 2.5
+	var mid := (hp + fp) * 0.5
+	var side := 0.24
+	var s_end := L + 1.3
+	var STEP := 0.5; var n := int((L + 6.0) / STEP)
+	var gl: Array = heights_along(hp, dn, 0.0, n, STEP, hp.y + 2.5)
+	var gc: Array = heights_along(hp, dn, side, n, STEP, hp.y + 2.5)
+	var gcs: Array = []
+	for i in n:
+		var acc := 0.0; var cnt := 0
+		for j in range(maxi(i - 4, 0), mini(i + 5, n)): acc += gc[j]; cnt += 1
+		gcs.append(maxf(acc / cnt, gc[i] - 0.3))
+	var cam_ground := func(sv: float) -> float:
+		var f: float = clampf(sv / STEP, 0.0, n - 1.001); var i0 := int(f)
+		return lerpf(gcs[i0], gcs[i0 + 1], f - i0)
+	var segs: Array = []
+	for i in int(L / STEP):
+		var a := hp + dn * (i * STEP); var b := hp + dn * ((i + 1) * STEP)
+		a.y = gl[i] + 0.05; b.y = gl[i + 1] + 0.05
+		var sg := MeshInstance3D.new(); var bx := BoxMesh.new(); bx.size = Vector3(0.26, 0.03, a.distance_to(b) + 0.02); sg.mesh = bx; sg.material_override = lm
+		add_child(sg); sg.look_at_from_position((a + b) * 0.5, b, Vector3.UP); sg.visible = false; segs.append(sg)
+	var ots := hp + dn * s_end + right * side; ots.y = cam_ground.call(s_end) + 1.74
+	var K := [
+		[3.3, ots, hp + up * 1.0, 40.0],
+		[4.5, fp + dn * 7.0 + right * 1.2 + up * 13.0, mid + dn * 14.0, 44.0],
+		[5.8, fp + dn * 22.0 + right * 2.5 + up * 50.0, mid + dn * 8.0, 48.0],
+		[6.4, fp + dn * 23.0 + right * 2.6 + up * 51.5, mid + dn * 8.0, 48.0]]
+	upd = func():
+		var p: Vector3; var look: Vector3; var fov: float; var foc: float; var near := 0.0
+		if t < 3.3:
+			var s: float; var h: float
+			if t < 0.5:
+				s = lerpf(1.6, 1.25, sm(t / 0.5)); h = 1.66
+				look = hp + up * 1.62; fov = 30.0
+			else:
+				var g: float = seg(0.5, 2.9)
+				s = lerpf(1.25, s_end, g); h = lerpf(1.66, 1.74, g)
+				look = hp + up * lerpf(1.62, 1.0, sm(g * 3.0)); fov = lerpf(30.0, 40.0, sm(g * 2.0))
+			p = hp + dn * s + right * side * clampf((s - 1.0) / 3.0, 0.0, 1.0)
+			p.y = lerpf(hp.y, cam_ground.call(s), clampf((s - 1.0) / 3.0, 0.0, 1.0)) + h
+			foc = p.distance_to(hp + up * 1.3)
+			near = 0.0 if s < s_end - 3.0 else 1.0
+		else:
+			var k := keyed(K, t)
+			p = k[0]; look = k[1]; fov = k[2]
+			var cu: float = seg(3.3, 5.8)
+			foc = lerpf(p.distance_to(hp), p.distance_to(mid), cu)
+			near = 1.0 * (1.0 - seg(3.3, 3.9))
+		cam.fov = fov; cam.look_at_from_position(p, look)
+		ca.dof_blur_far_enabled = true; ca.dof_blur_far_distance = foc; ca.dof_blur_far_transition = clampf(foc * 0.35, 0.6, 40.0)
+		ca.dof_blur_near_enabled = near > 0.0; ca.dof_blur_near_distance = maxf(near, 0.05); ca.dof_blur_near_transition = 0.6
+		var g2: float = seg(0.6, 3.2)   # the line's tip runs just ahead of the camera, and reaches Tutt as it settles (counter uses the same curve)
+		var shown := int(L * g2 / STEP)
+		for i in segs.size(): segs[i].visible = i >= 1 and i < shown
+
+## SHOT C (7 s): the watch. Opens straight down on it, the chain running up the frame where the 69 m line ran, then tilts
+## down to the table.
+func build_watch2() -> void:
+	build_watch()
+	var watch_upd: Callable = upd
+	var wn: Node3D = null
+	for c in get_children():
+		if c is Node3D and c.get_child_count() > 60: wn = c
+	var cdir_w: Vector3 = (wn.global_transform.basis * Vector3(0, 0, -1)).normalized()
+	var top_c: Vector3 = wn.global_position + cdir_w * 0.06
+	var top := top_c + Vector3(0, 0.42, 0)
+	upd = func():
+		watch_upd.call()
+		var u: float = seg(0.6, 2.4)
+		var pe := Vector3(0.015, 0.105, 0.2); var le := wn.global_position + Vector3(0, 0, 0.03)
+		var p := top.lerp(pe, u); p.y = lerpf(top.y, pe.y, sm(u * 1.15))
+		p += (Vector3(0.012, 0.095, 0.178) - pe) * seg(2.4, 7.2)   # a slow creep in once it has landed
+		var look := top_c.lerp(le, sm(u * 1.3))
+		var upv := cdir_w.lerp(Vector3.UP, sm(u)).normalized()
+		cam.fov = lerpf(30.0, 31.0, u); cam.look_at_from_position(p, look, upv)
+		ca.dof_blur_far_distance = p.distance_to(look) + 0.05
+		ca.dof_blur_near_distance = maxf(p.distance_to(look) - 0.08, 0.02)
+
+func eye_world(ch: Dictionary) -> Vector3:
+	var sk: Skeleton3D = ch["sk"]; var e := bone(sk, "eyes")
+	return sk.global_transform * sk.get_bone_global_pose(e).origin
+
+## eye test: t is used as the squint amount (-1 wide … 1 narrow); 9 = probe (eyes bone ×3)
+func build_eyetest() -> void:
+	town()
+	var hp := at_ground(0.3, -8); var fp := at_ground(0.3, -20)
+	cast(hp, fp)
+	var fill := OmniLight3D.new(); fill.position = fp + Vector3(0.1, 1.35, 0.9); fill.light_color = Color(1.0, 0.78, 0.6); fill.light_energy = 1.0; fill.omni_range = 2.2; add_child(fill)
+	upd = func():
+		var E := eye_world(foe)
+		squint(foe, 0.0 if t > 5.0 else t)
+		if t > 5.0:
+			if get_node_or_null("mk0") == null:
+				for q in 9:
+					var o := MeshInstance3D.new(); var sp := SphereMesh.new(); sp.radius = 0.003; sp.height = 0.006; o.mesh = sp; o.name = "mk%d" % q
+					var om := StandardMaterial3D.new(); om.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; om.albedo_color = Color.from_hsv(q / 9.0, 1, 1); o.material_override = om
+					o.position = E + Vector3(0.043, 0, 0.01 * q); sp.radius = 0.002; sp.height = 0.004; add_child(o)
+			cam.fov = 24.0; cam.look_at_from_position(E + Vector3(0.45, 0.08, 0.55), E + Vector3(0.02, 0, 0.03))
+		else:
+			cam.fov = 26.0; cam.look_at_from_position(E + Vector3(0, 0.0, 0.75), E)
+		ca.dof_blur_far_enabled = true; ca.dof_blur_far_distance = 0.9; ca.dof_blur_far_transition = 0.5
+		if tk == 2: print("EYES ", E, " foot ", fp)
+
+## ground heights at n points along a straight line (origin + dir*i*step, offset sideways by offs), one pass over the faces
+func heights_along(origin: Vector3, dir: Vector3, offs: float, n: int, step: float, maxy: float) -> Array:
+	var out: Array = []; out.resize(n); out.fill(-INF)
+	var perp := Vector3(-dir.z, 0, dir.x)
+	var pts: Array = []
+	for i in n: pts.append(origin + dir * (i * step) + perp * offs)
+	for mi in find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		if m.mesh == null or not m.is_inside_tree() or m.skin != null or m.get_parent() is Skeleton3D: continue
+		var gx := m.global_transform
+		var bb := gx * m.get_aabb()
+		if bb.position.y > maxy: continue
+		var f := m.mesh.get_faces()
+		for i in range(0, f.size(), 3):
+			var a := gx * f[i]; var b := gx * f[i + 1]; var c := gx * f[i + 2]
+			var pa := (a - origin).dot(perp); var pb := (b - origin).dot(perp); var pc := (c - origin).dot(perp)
+			if maxf(pa, maxf(pb, pc)) < offs or minf(pa, minf(pb, pc)) > offs: continue
+			var sa := (a - origin).dot(dir); var sb := (b - origin).dot(dir); var sc := (c - origin).dot(dir)
+			var i0 := maxi(int(ceil(minf(sa, minf(sb, sc)) / step)), 0); var i1 := mini(int(floor(maxf(sa, maxf(sb, sc)) / step)), n - 1)
+			if i1 < i0: continue
+			var d := (b.z - c.z) * (a.x - c.x) + (c.x - b.x) * (a.z - c.z)
+			if absf(d) < 1e-9: continue
+			for k in range(i0, i1 + 1):
+				var q: Vector3 = pts[k]
+				var l1 := ((b.z - c.z) * (q.x - c.x) + (c.x - b.x) * (q.z - c.z)) / d
+				var l2 := ((c.z - a.z) * (q.x - c.x) + (a.x - c.x) * (q.z - c.z)) / d
+				var l3 := 1.0 - l1 - l2
+				if l1 < 0 or l2 < 0 or l3 < 0: continue
+				var y := l1 * a.y + l2 * b.y + l3 * c.y
+				if y <= maxy and y > out[k]: out[k] = y
+	for k in n:
+		if out[k] == -INF: out[k] = out[k - 1] if k > 0 else G
+	return out
