@@ -3,20 +3,26 @@
 Start here in a new chat. The owner's direction: 3D story films built from Synty assets that stand out on Douyin and can
 still be made often. ep63 is the pilot.
 
-## Where things are
-- Production bible (Claude Doc, owner comments there): https://claude.ai/artifact/1c6zGkqyMX4Ypgr7FgW8C2
-  - the 15-field scene brief, story map v2 (~4:10, 10 beats, 「诅咒档案」 case-file device), hook briefs 0A–0E,
-    hook asset check, 5 open decisions.
-- Storyboard canvas (first opening, 8 shots, superseded by the hook): https://claude.ai/artifact/HctpLsBdTgkWkyZfPi1CTU
-- Repo files: facts.md (F1–F40, all sourced), script_v2.md (long linear version, lines reused), hook_v1.md (the 14 s
-  hook, timings), storyboard_opening.md, godot/ (board.gd = all scenes; README = how to run), tools/hook_sfx.py.
+## The script: start fresh
+The owner wants a NEW take on the script (2026-11-07). Earlier takes are kept for reference only and are not the
+starting point: script.md, script_v2.md, hook_v1.md, storyboard_opening.md, and the story map and hook briefs in the
+old production bible (https://claude.ai/artifact/1c6zGkqyMX4Ypgr7FgW8C2). Don't reuse their structure or lines unless
+the owner asks. facts.md (F1–F40, all sourced) is research, not script: use it, and add to it.
 
-## Status
-- Owner approved the process: no 3D build until the scene's brief is approved; every beat raises a new question
-  (Douyin 2 s / 5 s swipe rule); readability rule: dark is fine, the subject always has its own key light.
-- Waiting on the owner: approve story map v2; then write briefs for beats 1–9 in the bible (one section per beat),
-  each with an asset check. Also open: voice picks, a pack with 1920s suits, music source, 巨量算数 check.
+## What stays (owner-approved process)
+- No 3D build until the scene's brief is approved. Brief fields: goal; viewer in → out; the question that carries them
+  on; takeaway; main element (readable in 0.5 s on a phone); setting; characters & costume; props (in our packs /
+  missing); movement; shots (size, angle, move and why, length); light; sound and why; voice & on-screen text;
+  in/out transitions; facts & limits.
+- Douyin 2 s / 5 s swipe rule: the first frame asks a question; every beat opens a new one. Not linear, not dragging
+  (the owner judged 5:50 too long; ~4 min with good rhythm), never rushed.
+- Readability: dark is fine; the subject always has its own key light and stands off its background.
 - Never publish anything with Synty assets until Synty's written OK on AI-assisted production.
+
+## Reusable pieces
+- godot/ (board.gd builds sets: Cairo rooftops, hotel room, rainy manor + dog, sealed tomb corridor + gold burst,
+  Valley of the Kings stairwell + press; README = how to run), tools/hook_sfx.py (synthesised sound bed).
+- Open owner decisions: voice picks, a Synty pack with 1920s suits, music source, 巨量算数 check.
 
 ## Rendering on Modal (works, ~3 min round trip for 8 shots)
 - Branch `modal-farm`, folder `gd63/`: push `job.json` (`{"id","entry":"gd63/render.py","shots":[[name,frames,"shot=… t0=…"],…]}`)
