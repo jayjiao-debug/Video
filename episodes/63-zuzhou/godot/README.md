@@ -40,3 +40,16 @@ Shots: `cairo` (S1; `out=1` = the lights going out, S3), `hotel` (S2), `manor` (
 - Dogs: every breed is one mesh in the dog rig; show one and give it `PolygonDog_<Breed>_01.png` (the shared atlas gives
   rainbow colours). Dog clips share the rig, so no retarget.
 - Omni lights fall off with the inverse square: a torch of energy 2.5 is black 6 m away. Put lights near what they light.
+
+## Rendering on Modal (T4 GPU), Synty files locked
+Branch `modal-farm`, folder `gd63/`: `key_probe.py` made an RSA-4096 key pair inside Modal (private key only in the
+Modal Volume `juno-vault`) and probed Godot on the T4 (Vulkan on the NVIDIA driver under Xvfb works: the swap-chain
+errors are harmless, the movie writer still saves every frame). `render.py` renders one shot per T4 container.
+- Synty files go up only as `gd63/vault/assets.tar.sealed` (AES-256-GCM, key wrapped to Modal's public key); the runner
+  copies the ciphertext into the Volume `juno-synty`; each container unlocks it into its own /tmp. Push the sealed file
+  again only when the asset set changes, then remove it from the branch tip.
+- Each shot's MP4 comes back sealed to the workspace key (`gd63/ws_pub.pem`; private half kept outside the repo), so
+  `modal-output` only ever holds ciphertext. If the workspace key is lost, make a new pair and push the new public key.
+- `board.gd` reads the assets folder from `GP_ASSETS` (default /dev/shm/gp/assets/). 4x MSAA on Modal.
+- Speed (2026-11-07, 1440x1080, 960 frames in 8 parallel shots): 0.3-0.56 s/frame with Synty scenes, about 2.2 min of
+  Modal time, ~3 min round trip; the same 32 s takes ~35 min on the 2-core workspace CPU.

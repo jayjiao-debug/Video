@@ -3,7 +3,7 @@ extends Node3D
 ## texture atlas; no editor import. Shots: shot=temple (the night temple from the three.js test, for comparison) and
 ## shot=ante (Carter's first look into Tutankhamun's antechamber by candlelight, 法老的诅咒 B3). t0=<s> starts the clock there.
 
-const A := "/dev/shm/gp/assets/"  # the project assets folder (Synty files, not in the repo)
+var A := OS.get_environment("GP_ASSETS") if OS.has_environment("GP_ASSETS") else "/dev/shm/gp/assets/"  # the Synty assets folder (never in the repo)
 var matmap: Dictionary
 var tex_cache := {}
 var fbx_cache := {}
@@ -535,6 +535,8 @@ func build_seal() -> void:
 	fire(Vector3(0.9, 1.8, 3.4), 4.0, 3.0, 10.0, true, 0.4, false)
 	dust(Vector3(0, 1.4, -2.8), Vector3(1.4, 1.1, 2.0), 260, Color(1.2, 0.9, 0.5))
 	cam_path(Vector3(0.15, 1.45, 3.2), Vector3(0.05, 1.35, 0.8), Vector3(0, 1.05, -4.8), Vector3(0, 1.0, -4.8), 40, 4.0)
+	if burst:   # S8 carries S6's push-in on through the doorway
+		cam_path(Vector3(0.05, 1.35, 0.8), Vector3(0.0, 1.3, -1.8), Vector3(0, 1.0, -4.8), Vector3(0, 1.0, -4.8), 40, 3.4)
 
 # ---------------------------------------------------------------- S7: the Valley of the Kings, over Weigall's shoulder
 func build_valley() -> void:
