@@ -1,0 +1,15 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-mHbAO5UMwgaJadDVVnlyOA
+✓ Created objects.
+├── ✓ Uploaded gd63/ws_pub.pem
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/render.py
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/project
+└── ✓ Created Function shot.
+uploaded sealed assets 68332062 e9e46cd7db04
+{"shot": "S6", "frames": 90, "of": 90, "unpack_s": 1.5, "render_s": 59.4, "ms_per_frame": 660, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+DONE wall 69.7
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-mHbAO5UMwgaJadDVVnlyOA

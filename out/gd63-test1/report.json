@@ -1,0 +1,18 @@
+{
+ "wall_s": 69.7,
+ "shots": [
+  {
+   "shot": "S6",
+   "frames": 90,
+   "of": 90,
+   "unpack_s": 1.5,
+   "render_s": 59.4,
+   "ms_per_frame": 660,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  }
+ ]
+}
