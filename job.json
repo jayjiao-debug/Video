@@ -1,5 +1,1 @@
-{"id":"gd63-hook2","entry":"gd63/render.py","shots":[
- ["H2",69,"shot=hotel t0=1.4"],
- ["H3",87,"shot=cairo out=1 wave=1.8 t0=0"],
- ["H5",39,"shot=dog t0=0.5 dogclip=_POLYGON_Dog_Transition_Stand_ToSleep dogt=0 dogry=1.82"],
- ["H6b",81,"shot=seal burst=1 t0=0"]]}
+{"id":"gd63-hook3","entry":"gd63/render.py","shots":[["H1",93,"shot=valley close=1 t0=0"]]}

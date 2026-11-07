@@ -566,7 +566,8 @@ func build_valley() -> void:
 	piece("SM_Env_Rock_Cliff_09", Vector3(20, -1, -14), -0.8, 1.3)
 	piece("SM_Env_Rock_Rough_01", Vector3(7, 0, -7), 0.4, 1.0)
 	person("SK_Character_Grandpa", Vector3(2.0, -0.6, zf - 0.85), PI, "Base_Masc", 0.4)   # Carnarvon, two steps down
-	person("SK_Chr_Explorer_Male_01", Vector3(-0.5, 0, 0.55), PI + 0.3, "ArmsFolded_Casual_Loop_Masc", 0.0, ["SM_Chr_Attach_Hat_Hunter_01"])   # Weigall (sun hat), back to us
+	var close := _opt("close") == "1"   # the hook's first frame: tight on the earl at the top of the steps, Weigall's shoulder soft
+	person("SK_Chr_Explorer_Male_01", Vector3(0.15, 0, -6.4) if close else Vector3(-0.5, 0, 0.55), PI + 0.3, "ArmsFolded_Casual_Loop_Masc", 0.0, ["SM_Chr_Attach_Hat_Hunter_01"])   # Weigall (sun hat), back to us
 	# the press round the wall, in suits and sun hats, all turned to the stairwell
 	var press := [["SK_Chr_Explorer_Male_01", ["SM_Chr_Attach_Hat_Hunter_01"], Vector3(-0.4, 0, -9.4), 2.0], ["SK_Chr_Explorer_Male_01", ["SM_Chr_Attach_Hat_Male_01"], Vector3(-0.3, 0, -10.8), 1.6],
 		["SK_Chr_Explorer_Female_01", ["SM_Chr_Attach_Hat_Female_01"], Vector3(-1.0, 0, -11.9), 1.3], ["SK_Chr_Explorer_Male_01", ["SM_Chr_Attach_Hat_Male_01"], Vector3(4.3, 0, -10.0), -1.9],
@@ -576,7 +577,10 @@ func build_valley() -> void:
 		person(pr[0], pr[2], pr[3], ["Base_Masc", "HeadNod_Small_Masc", "ArmsFolded_Casual_Loop_Masc"][k % 3], k * 0.37, pr[1])
 	var we: WorldEnvironment = find_children("*", "WorldEnvironment", true, false)[-1]
 	var ca: CameraAttributesPractical = we.camera_attributes
-	ca.dof_blur_near_enabled = true; ca.dof_blur_near_distance = 4.0; ca.dof_blur_near_transition = 2.0; ca.dof_blur_amount = 0.12
+	ca.dof_blur_near_enabled = true; ca.dof_blur_near_distance = 2.6 if close else 4.0; ca.dof_blur_near_transition = 1.2 if close else 2.0; ca.dof_blur_amount = 0.12
+	if close:
+		cam_path(Vector3(0.75, 1.6, -4.9), Vector3(0.7, 1.58, -5.15), Vector3(2.0, 0.55, -10.4), Vector3(2.0, 0.45, -10.5), 30, 3.2)
+		return
 	cam_path(Vector3(-0.2, 1.62, 2.0), Vector3(-0.3, 1.6, 1.75), Vector3(1.8, 0.7, -10.8), Vector3(2.0, 0.55, -11.0), 30, 5.0)
 
 func _update_board() -> void:
