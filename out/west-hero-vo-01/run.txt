@@ -1,0 +1,70 @@
+plan: {'tier': 'starter', 'character_count': 19451, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "V1", "lang": "zh", "text": "这是电影里的西部对决。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V1.mp3", "bytes": 40585}
+{"name": "V2", "lang": "zh", "text": "真实的那一场，两个人，隔着六十九米。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V2.mp3", "bytes": 70260}
+{"name": "V3", "lang": "zh", "text": "而起因，只是一块怀表。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V3.mp3", "bytes": 41838}
+{"name": "V4", "lang": "zh", "text": "一块怀表，引发了西部史上，第一场对决。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V4.mp3", "bytes": 66498}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "V1",
+  "lang": "zh",
+  "text": "这是电影里的西部对决。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V1.mp3",
+  "bytes": 40585,
+  "heard": "這是電影裡的西部對決",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.48
+ },
+ {
+  "name": "V2",
+  "lang": "zh",
+  "text": "真实的那一场，两个人，隔着六十九米。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V2.mp3",
+  "bytes": 70260,
+  "heard": "真实的那一场,两个人隔着69米。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.32
+ },
+ {
+  "name": "V3",
+  "lang": "zh",
+  "text": "而起因，只是一块怀表。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V3.mp3",
+  "bytes": 41838,
+  "heard": "而起音只是一塊懷表",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.56
+ },
+ {
+  "name": "V4",
+  "lang": "zh",
+  "text": "一块怀表，引发了西部史上，第一场对决。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V4.mp3",
+  "bytes": 66498,
+  "heard": "一塊懷錶引發了西部史上第一場對決",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.08
+ }
+]
