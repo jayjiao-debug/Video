@@ -383,10 +383,10 @@ func cam_path(p0: Vector3, p1: Vector3, l0: Vector3, l1: Vector3, fov: float, du
 # The 16:9 band and its opening to full 9:16 are masked afterwards (ffmpeg), so the full frame is composed for both.
 var duel := {}
 func build_duel() -> void:
-	sky_env(Color(0.22, 0.42, 0.82), Color(0.98, 0.78, 0.55), Vector3(0, -1, 0), 0.0, 0.0, 0.7, 0.0, Color(1, 0.9, 0.75), 1.0, 0.0, 0.0, 0.95)
+	sky_env(Color(0.14, 0.3, 0.68), Color(0.95, 0.68, 0.45), Vector3(0, -1, 0), 0.0, 0.0, 0.45, 0.0, Color(1, 0.9, 0.75), 0.8, 0.0, 0.0, 1.08)
 	var sun := DirectionalLight3D.new(); add_child(sun)
-	sun.look_at_from_position(Vector3(14, 9, 34), Vector3(0, 0, -6))   # low, behind the hero: long shadows toward his opponent
-	sun.light_color = Color(1, 0.8, 0.58); sun.light_energy = 2.3; sun.shadow_enabled = true; sun.directional_shadow_max_distance = 60
+	sun.look_at_from_position(Vector3(6, 7.5, 34), Vector3(0, 0, -6))   # low, behind the hero: long shadows toward his opponent
+	sun.light_color = Color(1, 0.74, 0.5); sun.light_energy = 2.7; sun.shadow_enabled = true; sun.directional_shadow_max_distance = 60
 	solid_box(Vector3(300, 0.2, 300), Vector3(0, -0.1, -40), Color(0.86, 0.7, 0.5), "Stucco_01.png", Vector2(60, 60))
 	piece("SM_Env_Rock_Cliff_16", Vector3(0, -1, -62), 0, 1.6)
 	piece("SM_Env_Rock_Cliff_12", Vector3(-36, -1, -44), 0.9, 1.3)
@@ -398,9 +398,9 @@ func build_duel() -> void:
 	var foe := person("SK_Chr_Explorer_Male_01", Vector3(0, 0, -10), 0.0, "Base_Masc", 0.7, ["SM_Chr_Attach_Hat_Male_01"])
 	var we: WorldEnvironment = find_children("*", "WorldEnvironment", true, false)[-1]
 	var ca: CameraAttributesPractical = we.camera_attributes
-	ca.dof_blur_far_enabled = true; ca.dof_blur_far_transition = 4.0; ca.dof_blur_amount = 0.14; ca.dof_blur_near_enabled = false
-	duel = {"hero": hero, "ca": ca, "p0": Vector3(0.5, 1.72, 8.0), "p1": Vector3(0.0, 1.62, -0.12), "look": Vector3(0, 1.3, -10.0),
-		"head": Vector3(0, 1.6, -10.0), "k": 18.0 * 0.2444, "hidden": false}
+	ca.dof_blur_far_enabled = true; ca.dof_blur_far_transition = 4.0; ca.dof_blur_amount = 0.18; ca.dof_blur_near_enabled = false
+	duel = {"hero": hero, "ca": ca, "p0": Vector3(0.85, 1.74, 11.0), "p1": Vector3(0.0, 1.62, -0.12), "look": Vector3(0, 1.3, -10.0),
+		"head": Vector3(0, 1.6, -10.0), "k": 21.0 * 0.1778, "hidden": false}
 
 func _update_duel() -> void:
 	var u: float
