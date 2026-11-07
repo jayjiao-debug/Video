@@ -1,0 +1,374 @@
+plan: {'tier': 'starter', 'character_count': 19574, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01.mp3", "bytes": 95755}
+{"name": "02", "lang": "zh", "text": "最离谱的是：出发前，船上的人就知道它会翻。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "02.mp3", "bytes": 74021}
+{"name": "03", "lang": "zh", "text": "国王亲自下单：要七十二门大炮。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "03.mp3", "bytes": 54795}
+{"name": "04", "lang": "zh", "text": "一层放不下？那就造两层。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "04.mp3", "bytes": 46018}
+{"name": "05", "lang": "zh", "text": "出发前，船长让三十个水手在甲板上来回跑。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "05.mp3", "bytes": 67752}
+{"name": "06", "lang": "zh", "text": "跑到第三趟，船就快翻了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "06.mp3", "bytes": 47272}
+{"name": "07", "lang": "zh", "text": "上将只叹了口气：“要是国王在家就好了。”", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07.mp3", "bytes": 74021}
+{"name": "08", "lang": "zh", "text": "然后，照常出发。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "08.mp3", "bytes": 33061}
+{"name": "09", "lang": "zh", "text": "那天下午，全城都来看。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "09.mp3", "bytes": 41838}
+{"name": "10", "lang": "zh", "text": "一阵风，船歪了一下，又慢慢正了回来。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "10.mp3", "bytes": 59811}
+{"name": "11", "lang": "zh", "text": "紧接着，又一阵风。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "11.mp3", "bytes": 34315}
+{"name": "12", "lang": "zh", "text": "海水从开着的炮门灌了进去。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "12.mp3", "bytes": 46018}
+{"name": "13", "lang": "zh", "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13.mp3", "bytes": 84470}
+{"name": "14", "lang": "zh", "text": "为什么会翻？想想不倒翁。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "14.mp3", "bytes": 51034}
+{"name": "15", "lang": "zh", "text": "不倒翁不倒，是因为重量全在底下。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15.mp3", "bytes": 57303}
+{"name": "16", "lang": "zh", "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "16.mp3", "bytes": 95755}
+{"name": "17", "lang": "zh", "text": "一个头重脚轻的不倒翁。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "17.mp3", "bytes": 38077}
+{"name": "18", "lang": "zh", "text": "国王下令严查。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "18.mp3", "bytes": 30554}
+{"name": "19", "lang": "zh", "text": "船厂说：尺寸是国王您批准的。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "19.mp3", "bytes": 56049}
+{"name": "20", "lang": "zh", "text": "设计师呢？前一年就去世了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "20.mp3", "bytes": 48526}
+{"name": "21", "lang": "zh", "text": "承包商更妙：只有上帝知道是谁的错。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "21.mp3", "bytes": 63990}
+{"name": "22", "lang": "zh", "text": "最后，没人受罚。被问话的人，后来全都升了职。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "22.mp3", "bytes": 80291}
+{"name": "23", "lang": "zh", "text": "那天唯一说了实话的，只有那三十个水手。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "23.mp3", "bytes": 61065}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01.mp3",
+  "bytes": 95755,
+  "heard": "1628年瑞典最猛的新战舰首航开了1000多米就成了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.92
+ },
+ {
+  "name": "02",
+  "lang": "zh",
+  "text": "最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02.mp3",
+  "bytes": 74021,
+  "heard": "最離譜的是出發前船上的人就知道他會翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.56
+ },
+ {
+  "name": "03",
+  "lang": "zh",
+  "text": "国王亲自下单：要七十二门大炮。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "03.mp3",
+  "bytes": 54795,
+  "heard": "國王親自下單要72門大炮",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.36
+ },
+ {
+  "name": "04",
+  "lang": "zh",
+  "text": "一层放不下？那就造两层。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04.mp3",
+  "bytes": 46018,
+  "heard": "一層放不下那就照兩層",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.8
+ },
+ {
+  "name": "05",
+  "lang": "zh",
+  "text": "出发前，船长让三十个水手在甲板上来回跑。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05.mp3",
+  "bytes": 67752,
+  "heard": "出發前,船長讓30個水手在甲板上來回跑",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.16
+ },
+ {
+  "name": "06",
+  "lang": "zh",
+  "text": "跑到第三趟，船就快翻了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "06.mp3",
+  "bytes": 47272,
+  "heard": "跑到第三趟船就快翻了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.88
+ },
+ {
+  "name": "07",
+  "lang": "zh",
+  "text": "上将只叹了口气：“要是国王在家就好了。”",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07.mp3",
+  "bytes": 74021,
+  "heard": "上将只贪了口气要是国王在家就好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.56
+ },
+ {
+  "name": "08",
+  "lang": "zh",
+  "text": "然后，照常出发。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "08.mp3",
+  "bytes": 33061,
+  "heard": "然後照常出發",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.0
+ },
+ {
+  "name": "09",
+  "lang": "zh",
+  "text": "那天下午，全城都来看。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09.mp3",
+  "bytes": 41838,
+  "heard": "那天下午全程都來看",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.56
+ },
+ {
+  "name": "10",
+  "lang": "zh",
+  "text": "一阵风，船歪了一下，又慢慢正了回来。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "10.mp3",
+  "bytes": 59811,
+  "heard": "一陣風 船歪了一下 又慢慢正了回來",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.68
+ },
+ {
+  "name": "11",
+  "lang": "zh",
+  "text": "紧接着，又一阵风。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "11.mp3",
+  "bytes": 34315,
+  "heard": "緊接著又一陣風",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.08
+ },
+ {
+  "name": "12",
+  "lang": "zh",
+  "text": "海水从开着的炮门灌了进去。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "12.mp3",
+  "bytes": 46018,
+  "heard": "海水從開著的泡門灌了進去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.8
+ },
+ {
+  "name": "13",
+  "lang": "zh",
+  "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13.mp3",
+  "bytes": 84470,
+  "heard": "幾分鐘後,他乘載離岸120米的地方約30人遇難",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 5.2
+ },
+ {
+  "name": "14",
+  "lang": "zh",
+  "text": "为什么会翻？想想不倒翁。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "14.mp3",
+  "bytes": 51034,
+  "heard": "為什麼會翻想想不倒翁",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.12
+ },
+ {
+  "name": "15",
+  "lang": "zh",
+  "text": "不倒翁不倒，是因为重量全在底下。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15.mp3",
+  "bytes": 57303,
+  "heard": "不倒翁不倒是因為重量全在底下",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.52
+ },
+ {
+  "name": "16",
+  "lang": "zh",
+  "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "16.mp3",
+  "bytes": 95755,
+  "heard": "瓦薩號正好相反大炮雕像全在上面水下傳生又窄又淺",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.92
+ },
+ {
+  "name": "17",
+  "lang": "zh",
+  "text": "一个头重脚轻的不倒翁。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "17.mp3",
+  "bytes": 38077,
+  "heard": "一个头重脚轻的不倒翁",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.32
+ },
+ {
+  "name": "18",
+  "lang": "zh",
+  "text": "国王下令严查。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "18.mp3",
+  "bytes": 30554,
+  "heard": "國王下令嚴查",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 1.84
+ },
+ {
+  "name": "19",
+  "lang": "zh",
+  "text": "船厂说：尺寸是国王您批准的。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "19.mp3",
+  "bytes": 56049,
+  "heard": "傳場說,尺寸是國王您批准的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 3.44
+ },
+ {
+  "name": "20",
+  "lang": "zh",
+  "text": "设计师呢？前一年就去世了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "20.mp3",
+  "bytes": 48526,
+  "heard": "設計師前一年就去世了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 2.96
+ },
+ {
+  "name": "21",
+  "lang": "zh",
+  "text": "承包商更妙：只有上帝知道是谁的错。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "21.mp3",
+  "bytes": 63990,
+  "heard": "承包商更妙只有上帝知道是谁的错",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.92
+ },
+ {
+  "name": "22",
+  "lang": "zh",
+  "text": "最后，没人受罚。被问话的人，后来全都升了职。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "22.mp3",
+  "bytes": 80291,
+  "heard": "最后没人受罚被问话的人后来全都升了职",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.96
+ },
+ {
+  "name": "23",
+  "lang": "zh",
+  "text": "那天唯一说了实话的，只有那三十个水手。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "23.mp3",
+  "bytes": 61065,
+  "heard": "那天唯一說了實話的只有那30個水手",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.76
+ }
+]
