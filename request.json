@@ -1,11 +1,11 @@
 {
- "id": "vasa-vo-02-retakes",
+ "id": "vasa-vo-03-reword",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01b",
+   "name": "13d",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -14,10 +14,10 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。"
+   "text": "几分钟后，船就沉了，离岸只有一百二十米，约三十人遇难。"
   },
   {
-   "name": "01c",
+   "name": "13e",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -26,10 +26,10 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。"
+   "text": "几分钟后，船就沉了，离岸只有一百二十米，约三十人遇难。"
   },
   {
-   "name": "04b",
+   "name": "16d",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -38,10 +38,10 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "一层放不下？那就造两层。"
+   "text": "瓦萨号正好相反：大炮雕像全在上面，水下船体又窄又浅。"
   },
   {
-   "name": "04c",
+   "name": "16e",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -50,79 +50,7 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "一层放不下？那就造两层。"
-  },
-  {
-   "name": "07b",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "上将只叹了口气：“要是国王在家就好了。”"
-  },
-  {
-   "name": "07c",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "上将只叹了口气：“要是国王在家就好了。”"
-  },
-  {
-   "name": "13b",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。"
-  },
-  {
-   "name": "13c",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。"
-  },
-  {
-   "name": "16b",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。"
-  },
-  {
-   "name": "16c",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。"
+   "text": "瓦萨号正好相反：大炮雕像全在上面，水下船体又窄又浅。"
   }
  ]
 }
