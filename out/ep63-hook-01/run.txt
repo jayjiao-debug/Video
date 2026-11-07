@@ -1,0 +1,86 @@
+plan: {'tier': 'starter', 'character_count': 19427, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "H1_weigall", "lang": "zh", "text": "他要是这样下去……只剩六个星期好活。", "voice": "ZJsn5HnrE3eUbep2ia8D", "voice_id": "ZJsn5HnrE3eUbep2ia8D", "model": "eleven_v4", "status": 200, "file": "H1_weigall.mp3", "bytes": 59811}
+{"name": "H2_narr", "lang": "zh", "text": "七周后，他真的死了。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "H2_narr.mp3", "bytes": 41838}
+{"name": "H3_narr", "lang": "zh", "text": "据说那一刻，开罗全城停电，", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "H3_narr.mp3", "bytes": 54795}
+{"name": "H4_narr", "lang": "zh", "text": "他的狗，倒地不起。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "H4_narr.mp3", "bytes": 34315}
+{"name": "H5_title", "lang": "zh", "text": "法老的诅咒，是真的吗？", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "H5_title.mp3", "bytes": 39331}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "H1_weigall",
+  "lang": "zh",
+  "text": "他要是这样下去……只剩六个星期好活。",
+  "voice": "ZJsn5HnrE3eUbep2ia8D",
+  "voice_id": "ZJsn5HnrE3eUbep2ia8D",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "H1_weigall.mp3",
+  "bytes": 59811,
+  "heard": "他要是这样下去只剩六个星期好活",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.68
+ },
+ {
+  "name": "H2_narr",
+  "lang": "zh",
+  "text": "七周后，他真的死了。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "H2_narr.mp3",
+  "bytes": 41838,
+  "heard": "七周后他真的死了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.99,
+  "seconds": 2.56
+ },
+ {
+  "name": "H3_narr",
+  "lang": "zh",
+  "text": "据说那一刻，开罗全城停电，",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "H3_narr.mp3",
+  "bytes": 54795,
+  "heard": "據說那一刻,開羅全城停電。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "H4_narr",
+  "lang": "zh",
+  "text": "他的狗，倒地不起。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "H4_narr.mp3",
+  "bytes": 34315,
+  "heard": "他的狗倒地不起",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.986,
+  "seconds": 2.08
+ },
+ {
+  "name": "H5_title",
+  "lang": "zh",
+  "text": "法老的诅咒，是真的吗？",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "H5_title.mp3",
+  "bytes": 39331,
+  "heard": "法老的詛咒是真的嗎",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.4
+ }
+]
