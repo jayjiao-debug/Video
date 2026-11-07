@@ -1,0 +1,134 @@
+plan: {'tier': 'starter', 'character_count': 19358, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "N_D_female_story", "lang": "zh", "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。", "voice": "shared:Sage - Soothing & Gentle (standard, zh)", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "N_D_female_story.mp3", "bytes": 201917}
+{"name": "K_a", "lang": "zh", "text": "卡特……你能看见什么吗？", "voice": "shared:Vincent - Clear, Brisk and Mature (standard, zh)", "voice_id": "WkcRFJo38X9XEP8kGExm", "model": "eleven_v4", "status": 200, "file": "K_a.mp3", "bytes": 44764}
+{"name": "K_b", "lang": "zh", "text": "卡特……你能看见什么吗？", "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "K_b.mp3", "bytes": 40585}
+{"name": "C_a", "lang": "zh", "text": "再给我一个季度。钱，我自己出。", "voice": "shared:DJ Allen - Rock style radio DJ (standard, zh)", "voice_id": "lcRaSg5QsH61bfHjo8qM", "model": "eleven_v4", "status": 200, "file": "C_a.mp3", "bytes": 46018}
+{"name": "C_b", "lang": "zh", "text": "再给我一个季度。钱，我自己出。", "voice": "shared:Xinghe Jiang - Magnetic Conversational (standard, zh)", "voice_id": "lt7GBaCoAHWbT7JSZ5Xs", "model": "eleven_v4", "status": 200, "file": "C_b.mp3", "bytes": 49780}
+{"name": "M_a", "lang": "zh", "text": "闯入埃及国王的长眠之地，难免要冒些风险。", "voice": "shared:Helen Sun - Smooth, Clear and Mature (standard, zh)", "voice_id": "Iqi0ix5WGtiSXX9VDZB4", "model": "eleven_v4", "status": 200, "file": "M_a.mp3", "bytes": 71514}
+{"name": "M_b", "lang": "zh", "text": "闯入埃及国王的长眠之地，难免要冒些风险。", "voice": "shared:Caty - Droll, Wry and Dry (american, en)", "voice_id": "54Cze5LrTSyLgbO6Fhlc", "model": "eleven_v4", "status": 200, "file": "M_b.mp3", "bytes": 71514}
+{"name": "W_a", "lang": "zh", "text": "他要是带着这种心态下去，我看他只剩六个星期好活。", "voice": "shared:Qiao Feng - Warm, Clear & Friendly (standard, zh)", "voice_id": "ZJsn5HnrE3eUbep2ia8D", "model": "eleven_v4", "status": 200, "file": "W_a.mp3", "bytes": 76529}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "N_D_female_story",
+  "lang": "zh",
+  "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。",
+  "voice": "shared:Sage - Soothing & Gentle (standard, zh)",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N_D_female_story.mp3",
+  "bytes": 201917,
+  "heard": "1923年4月5日,开罗,一位英国伯爵在这里咽下了最后一口气据说,就在那一刻,整座城市的灯同时熄灭了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 12.56
+ },
+ {
+  "name": "K_a",
+  "lang": "zh",
+  "text": "卡特……你能看见什么吗？",
+  "voice": "shared:Vincent - Clear, Brisk and Mature (standard, zh)",
+  "voice_id": "WkcRFJo38X9XEP8kGExm",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "K_a.mp3",
+  "bytes": 44764,
+  "heard": "卡特,你能看见什么吗?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 2.72
+ },
+ {
+  "name": "K_b",
+  "lang": "zh",
+  "text": "卡特……你能看见什么吗？",
+  "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "K_b.mp3",
+  "bytes": 40585,
+  "heard": "卡特 你能看见什么吗",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.48
+ },
+ {
+  "name": "C_a",
+  "lang": "zh",
+  "text": "再给我一个季度。钱，我自己出。",
+  "voice": "shared:DJ Allen - Rock style radio DJ (standard, zh)",
+  "voice_id": "lcRaSg5QsH61bfHjo8qM",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C_a.mp3",
+  "bytes": 46018,
+  "heard": "再给我一个嫉妒钱 我自己出",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "C_b",
+  "lang": "zh",
+  "text": "再给我一个季度。钱，我自己出。",
+  "voice": "shared:Xinghe Jiang - Magnetic Conversational (standard, zh)",
+  "voice_id": "lt7GBaCoAHWbT7JSZ5Xs",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C_b.mp3",
+  "bytes": 49780,
+  "heard": "再给我一个嫉妒钱我自己出",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.04
+ },
+ {
+  "name": "M_a",
+  "lang": "zh",
+  "text": "闯入埃及国王的长眠之地，难免要冒些风险。",
+  "voice": "shared:Helen Sun - Smooth, Clear and Mature (standard, zh)",
+  "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "M_a.mp3",
+  "bytes": 71514,
+  "heard": "闯入埃及国王的长年之地难免要冒些风险",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.4
+ },
+ {
+  "name": "M_b",
+  "lang": "zh",
+  "text": "闯入埃及国王的长眠之地，难免要冒些风险。",
+  "voice": "shared:Caty - Droll, Wry and Dry (american, en)",
+  "voice_id": "54Cze5LrTSyLgbO6Fhlc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "M_b.mp3",
+  "bytes": 71514,
+  "heard": "闖入埃及國王的長棉之地, 難免要冒些風險。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "W_a",
+  "lang": "zh",
+  "text": "他要是带着这种心态下去，我看他只剩六个星期好活。",
+  "voice": "shared:Qiao Feng - Warm, Clear & Friendly (standard, zh)",
+  "voice_id": "ZJsn5HnrE3eUbep2ia8D",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "W_a.mp3",
+  "bytes": 76529,
+  "heard": "他要是带着这种心态下去我看他只剩六个星期好活",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ }
+]
