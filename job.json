@@ -1,9 +1,8 @@
-{"id":"gd63-light1","entry":"gd63/render.py","shots":[
- ["S1",4,"shot=cairo t0=2.0"],
- ["S2",4,"shot=hotel t0=2.5"],
- ["S3",4,"shot=cairo out=1 t0=4.0"],
- ["S4",4,"shot=manor t0=2.5 dogt=1.4"],
- ["S5",4,"shot=dog t0=1.0 dogclip=_POLYGON_Dog_Transition_Stand_ToSleep dogt=9 dogry=1.82"],
- ["S6",4,"shot=seal t0=2.5"],
- ["S7",4,"shot=valley t0=2.5"],
- ["S8",4,"shot=seal burst=1 t0=1.5"]]}
+{"id":"gd63-hook1","entry":"gd63/render.py","shots":[
+ ["H1",96,"shot=valley t0=0.5"],
+ ["H2",60,"shot=hotel t0=1.5"],
+ ["H3",78,"shot=cairo out=1 wave=2.0 t0=0"],
+ ["H4",30,"shot=manor t0=3.0 dogt=1.2"],
+ ["H5",36,"shot=dog t0=0.5 dogclip=_POLYGON_Dog_Transition_Stand_ToSleep dogt=0 dogry=1.82"],
+ ["H6a",30,"shot=seal t0=2.6"],
+ ["H6b",75,"shot=seal burst=1 t0=0"]]}

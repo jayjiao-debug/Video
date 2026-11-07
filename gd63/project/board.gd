@@ -451,6 +451,7 @@ func build_hotel() -> void:
 	var lamp := OmniLight3D.new(); lamp.position = Vector3(-1.5, 1.35, -4.2); lamp.light_color = Color(1, 0.62, 0.32); lamp.light_energy = 7.0; lamp.omni_range = 8; lamp.shadow_enabled = true; add_child(lamp)
 	flames.append([lamp, 5.0, 7.0])
 	piece("SM_Prop_Curtain_02_Open_01", Vector3(-0.25, 0.4, -4.75), 0, 1.0)
+	var key := OmniLight3D.new(); key.position = Vector3(0.6, 2.6, -2.2); key.light_color = Color(1, 0.75, 0.5); key.light_energy = 3.0; key.omni_range = 5.0; add_child(key)   # soft key on the bed, so the shape under the covers reads
 	var moon := SpotLight3D.new(); add_child(moon); moon.look_at_from_position(Vector3(1.5, 4, -9), Vector3(0.5, 0.4, -2.5)); moon.light_color = Color(0.55, 0.65, 1.0); moon.light_energy = 6.0; moon.spot_range = 14; moon.spot_angle = 22; moon.shadow_enabled = true; moon.light_volumetric_fog_energy = 2.0
 	piece("SM_Prop_Dresser_01", Vector3(3.6, 0, -3.2), -PI / 2, 1.0)
 	piece("SM_Prop_Clock_02", Vector3(4.8, 1.9, -1.6), -PI / 2, 1.0)
@@ -585,7 +586,7 @@ func _update_board() -> void:
 	cam.look_at_from_position(cam_keys["p0"].lerp(cam_keys["p1"], u), cam_keys["l0"].lerp(cam_keys["l1"], u))
 	if _opt("out") == "1":
 		for w in windows:
-			var on: bool = t < w[2]
+			var on: bool = t * float(_opt("wave", "1")) < w[2]
 			if w[0] is StandardMaterial3D: w[0].albedo_color = w[1] if on else Color(0.02, 0.02, 0.03)
 			else: w[0].visible = on
 	for f in flames:
