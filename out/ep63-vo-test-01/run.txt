@@ -1,0 +1,118 @@
+plan: {'tier': 'starter', 'character_count': 19273, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "N_A_martin", "lang": "zh", "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "N_A_martin.mp3", "bytes": 204425}
+{"name": "N_B_male_story", "lang": "zh", "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "N_B_male_story.mp3", "bytes": 201917}
+{"name": "N_C_female_story", "lang": "zh", "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。", "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)", "voice_id": "hkfHEbBvdQFNX4uWHqRF", "model": "eleven_v4", "status": 200, "file": "N_C_female_story.mp3", "bytes": 196901}
+{"name": "C1_carnarvon", "lang": "zh", "text": "卡特……你能看见什么吗？", "voice": "shared:Julian - Deep, Rich and Mature (british, en)", "voice_id": "7p1Ofvcwsv7UBPoFNcpI", "model": "eleven_v4", "status": 200, "file": "C1_carnarvon.mp3", "bytes": 44764}
+{"name": "C2_carter", "lang": "zh", "text": "能……太奇妙了。", "voice": "shared:Edward - British, Dark, Seductive, Low (british, en)", "voice_id": "goT3UYdM9bhm0n2lmKQx", "model": "eleven_v4", "status": 200, "file": "C2_carter.mp3", "bytes": 39331}
+{"name": "C3_corelli", "lang": "zh", "text": "擅闯法老墓者，死神将展翅降临。", "voice": "shared:Elen Kuragina – Golden & Dangerous (standard, ru)", "voice_id": "TPIitICAZ8CqlGZ81AKm", "model": "eleven_v4", "status": 200, "file": "C3_corelli.mp3", "bytes": 65244}
+{"name": "C4_carter_late", "lang": "zh", "text": "所有理智的人，都应该对这种编造，嗤之以鼻。", "voice": "shared:Edward - British, Dark, Seductive, Low (british, en)", "voice_id": "goT3UYdM9bhm0n2lmKQx", "model": "eleven_v4", "status": 200, "file": "C4_carter_late.mp3", "bytes": 72767}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "N_A_martin",
+  "lang": "zh",
+  "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N_A_martin.mp3",
+  "bytes": 204425,
+  "heard": "1923年4月5日 開鑼一位英國伯爵在這裡宴下了最後一口氣據說就在那一刻整座城市的燈同時熄滅了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 12.72
+ },
+ {
+  "name": "N_B_male_story",
+  "lang": "zh",
+  "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N_B_male_story.mp3",
+  "bytes": 201917,
+  "heard": "1923年4月5日 开罗一位英国伯爵在这里宴下了最后一口气据说就在那一刻整座城市的灯同时熄灭了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 12.56
+ },
+ {
+  "name": "N_C_female_story",
+  "lang": "zh",
+  "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。",
+  "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)",
+  "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N_C_female_story.mp3",
+  "bytes": 196901,
+  "heard": "1923年4月5日,開羅一位英國伯爵在這裡驗下了最後一口氣據說就在那一刻整座城市的燈同時熄滅了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 12.24
+ },
+ {
+  "name": "C1_carnarvon",
+  "lang": "zh",
+  "text": "卡特……你能看见什么吗？",
+  "voice": "shared:Julian - Deep, Rich and Mature (british, en)",
+  "voice_id": "7p1Ofvcwsv7UBPoFNcpI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C1_carnarvon.mp3",
+  "bytes": 44764,
+  "heard": "卡特 你能看见什么吗",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.72
+ },
+ {
+  "name": "C2_carter",
+  "lang": "zh",
+  "text": "能……太奇妙了。",
+  "voice": "shared:Edward - British, Dark, Seductive, Low (british, en)",
+  "voice_id": "goT3UYdM9bhm0n2lmKQx",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C2_carter.mp3",
+  "bytes": 39331,
+  "heard": "能…太奇妙了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.978,
+  "seconds": 2.4
+ },
+ {
+  "name": "C3_corelli",
+  "lang": "zh",
+  "text": "擅闯法老墓者，死神将展翅降临。",
+  "voice": "shared:Elen Kuragina – Golden & Dangerous (standard, ru)",
+  "voice_id": "TPIitICAZ8CqlGZ81AKm",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C3_corelli.mp3",
+  "bytes": 65244,
+  "heard": "擅闖法老募者,死神將展翅降臨",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 4.0
+ },
+ {
+  "name": "C4_carter_late",
+  "lang": "zh",
+  "text": "所有理智的人，都应该对这种编造，嗤之以鼻。",
+  "voice": "shared:Edward - British, Dark, Seductive, Low (british, en)",
+  "voice_id": "goT3UYdM9bhm0n2lmKQx",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C4_carter_late.mp3",
+  "bytes": 72767,
+  "heard": "所有理智的人都应该对这种编造赤之以鼻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.48
+ }
+]
