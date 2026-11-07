@@ -1,0 +1,16 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-qx5mfBADmjDberDN479psl
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/render.py
+├── ✓ Uploaded gd63/ws_pub.pem
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/project
+└── ✓ Created Function shot.
+{"shot": "DUEL4", "frames": 263, "of": 263, "unpack_s": 0.4, "render_s": 139.5, "ms_per_frame": 530, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "DUEL4B", "frames": 36, "of": 36, "unpack_s": 0.4, "render_s": 37.0, "ms_per_frame": 1027, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "WATCH4", "frames": 250, "of": 250, "unpack_s": 0.4, "render_s": 206.3, "ms_per_frame": 825, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+DONE wall 215.7
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-qx5mfBADmjDberDN479psl
