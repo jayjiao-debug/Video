@@ -1,0 +1,70 @@
+plan: {'tier': 'starter', 'character_count': 19809, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "13d", "lang": "zh", "text": "几分钟后，船就沉了，离岸只有一百二十米，约三十人遇难。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13d.mp3", "bytes": 88232}
+{"name": "13e", "lang": "zh", "text": "几分钟后，船就沉了，离岸只有一百二十米，约三十人遇难。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13e.mp3", "bytes": 91994}
+{"name": "16d", "lang": "zh", "text": "瓦萨号正好相反：大炮雕像全在上面，水下船体又窄又浅。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "16d.mp3", "bytes": 98263}
+{"name": "16e", "lang": "zh", "text": "瓦萨号正好相反：大炮雕像全在上面，水下船体又窄又浅。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "16e.mp3", "bytes": 94501}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "13d",
+  "lang": "zh",
+  "text": "几分钟后，船就沉了，离岸只有一百二十米，约三十人遇难。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13d.mp3",
+  "bytes": 88232,
+  "heard": "几分钟后船就沉了离岸只有120米约30人遇难",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.44
+ },
+ {
+  "name": "13e",
+  "lang": "zh",
+  "text": "几分钟后，船就沉了，离岸只有一百二十米，约三十人遇难。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13e.mp3",
+  "bytes": 91994,
+  "heard": "幾分鐘後船就沉了離岸只有120米約30人遇難",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.68
+ },
+ {
+  "name": "16d",
+  "lang": "zh",
+  "text": "瓦萨号正好相反：大炮雕像全在上面，水下船体又窄又浅。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "16d.mp3",
+  "bytes": 98263,
+  "heard": "瓦薩號正好相反大號雕像全在上面水下船體又窄又淺",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 6.08
+ },
+ {
+  "name": "16e",
+  "lang": "zh",
+  "text": "瓦萨号正好相反：大炮雕像全在上面，水下船体又窄又浅。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "16e.mp3",
+  "bytes": 94501,
+  "heard": "瓦萨号正好相反大炮雕像全在上面水下船体又窄又浅",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.84
+ }
+]
