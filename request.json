@@ -1,11 +1,11 @@
 {
- "id": "west-hero-vo-01",
+ "id": "vasa-vo-test-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "V1",
+   "name": "01_voiceA",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -13,40 +13,33 @@
     "similarity_boost": 0.8,
     "style": 0.4
    },
-   "text": "这是电影里的西部对决。"
+   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
   },
   {
-   "name": "V2",
+   "name": "02_voiceB",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "gender": "male",
+   "accent": "standard",
+   "pick": 1,
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
     "style": 0.4
    },
-   "text": "真实的那一场，两个人，隔着六十九米。"
+   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
   },
   {
-   "name": "V3",
+   "name": "03_voiceC",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "gender": "male",
+   "accent": "standard",
+   "pick": 2,
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
     "style": 0.4
    },
-   "text": "而起因，只是一块怀表。"
-  },
-  {
-   "name": "V4",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.5
-   },
-   "text": "一块怀表，引发了西部史上，第一场对决。"
+   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
   }
  ]
 }
