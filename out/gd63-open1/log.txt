@@ -1,0 +1,21 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-rlpFSyGIhhmeBqSJV6FLrd
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/render.py
+├── ✓ Uploaded gd63/ws_pub.pem
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/project
+└── ✓ Created Function shot.
+{"shot": "S1", "frames": 108, "of": 108, "unpack_s": 0.6, "render_s": 43.6, "ms_per_frame": 404, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "S2", "frames": 126, "of": 126, "unpack_s": 0.6, "render_s": 40.8, "ms_per_frame": 324, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "S3", "frames": 144, "of": 144, "unpack_s": 0.6, "render_s": 53.8, "ms_per_frame": 374, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "S4", "frames": 138, "of": 138, "unpack_s": 0.6, "render_s": 52.3, "ms_per_frame": 379, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "S5", "frames": 72, "of": 72, "unpack_s": 0.6, "render_s": 29.9, "ms_per_frame": 416, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "S6", "frames": 120, "of": 120, "unpack_s": 0.6, "render_s": 63.2, "ms_per_frame": 527, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "S7", "frames": 150, "of": 150, "unpack_s": 0.6, "render_s": 68.7, "ms_per_frame": 458, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "S8", "frames": 102, "of": 102, "unpack_s": 0.7, "render_s": 57.2, "ms_per_frame": 561, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+DONE wall 133.5
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-rlpFSyGIhhmeBqSJV6FLrd
