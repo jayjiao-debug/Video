@@ -1,34 +1,284 @@
 {
- "id": "vasa-vo-test-02",
+ "id": "vasa-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01_voiceD",
+   "name": "01",
    "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "pick": 3,
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.45,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.4
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
+   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。"
   },
   {
-   "name": "02_voiceE",
+   "name": "02",
    "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "pick": 4,
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.45,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.4
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
+   "text": "最离谱的是：出发前，船上的人就知道它会翻。"
+  },
+  {
+   "name": "03",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "国王亲自下单：要七十二门大炮。"
+  },
+  {
+   "name": "04",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "一层放不下？那就造两层。"
+  },
+  {
+   "name": "05",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "出发前，船长让三十个水手在甲板上来回跑。"
+  },
+  {
+   "name": "06",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "跑到第三趟，船就快翻了。"
+  },
+  {
+   "name": "07",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "上将只叹了口气：“要是国王在家就好了。”"
+  },
+  {
+   "name": "08",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "然后，照常出发。"
+  },
+  {
+   "name": "09",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "那天下午，全城都来看。"
+  },
+  {
+   "name": "10",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "一阵风，船歪了一下，又慢慢正了回来。"
+  },
+  {
+   "name": "11",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "紧接着，又一阵风。"
+  },
+  {
+   "name": "12",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "海水从开着的炮门灌了进去。"
+  },
+  {
+   "name": "13",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "几分钟后，它沉在离岸一百二十米的地方，约三十人遇难。"
+  },
+  {
+   "name": "14",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "为什么会翻？想想不倒翁。"
+  },
+  {
+   "name": "15",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "不倒翁不倒，是因为重量全在底下。"
+  },
+  {
+   "name": "16",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "瓦萨号正好相反：大炮雕像全在上面，水下船身又窄又浅。"
+  },
+  {
+   "name": "17",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "一个头重脚轻的不倒翁。"
+  },
+  {
+   "name": "18",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "国王下令严查。"
+  },
+  {
+   "name": "19",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "船厂说：尺寸是国王您批准的。"
+  },
+  {
+   "name": "20",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "设计师呢？前一年就去世了。"
+  },
+  {
+   "name": "21",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "承包商更妙：只有上帝知道是谁的错。"
+  },
+  {
+   "name": "22",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "最后，没人受罚。被问话的人，后来全都升了职。"
+  },
+  {
+   "name": "23",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "那天唯一说了实话的，只有那三十个水手。"
   }
  ]
 }
