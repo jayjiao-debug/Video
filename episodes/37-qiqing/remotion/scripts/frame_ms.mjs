@@ -6,7 +6,7 @@ import path from 'node:path';
 import {createRequire} from 'node:module';
 const [mode, out, ...a] = process.argv.slice(2);
 const root = path.dirname(path.dirname(new URL(import.meta.url).pathname));
-const serveUrl = await bundle({outDir: process.env.BUNDLE_DIR, entryPoint: path.join(root, 'src', process.env.ENTRY + '.tsx'), publicDir: path.join(root, 'public'), webpackOverride: (c) => { const webpack = createRequire(import.meta.url)('webpack'); return {...c, plugins: [...(c.plugins || []), new webpack.DefinePlugin({'process.env.NO_FX': JSON.stringify(process.env.NO_FX || ''), 'process.env.FX': JSON.stringify(process.env.FX || 'bdcvn')})]}; }});
+const serveUrl = await bundle({outDir: process.env.BUNDLE_DIR, entryPoint: path.join(root, 'src', process.env.ENTRY + '.tsx'), publicDir: process.env.PUBLIC_DIR || path.join(root, 'public'), webpackOverride: (c) => { const webpack = createRequire(import.meta.url)('webpack'); return {...c, plugins: [...(c.plugins || []), new webpack.DefinePlugin({'process.env.NO_FX': JSON.stringify(process.env.NO_FX || ''), 'process.env.FX': JSON.stringify(process.env.FX || 'bdcvn')})]}; }});
 const browserExecutable = process.env.REMOTION_BROWSER || null;
 const composition = await selectComposition({serveUrl, id: process.env.CID || 'FILM31', inputProps: {}, browserExecutable});
 if (mode === 'stills') {
