@@ -5,7 +5,7 @@ the public key from step 1). The runner copies that ciphertext into the Modal Vo
 unseals it into its own /tmp with the private key from the Volume `juno-vault`, renders, and deletes nothing it didn't
 make (the container is thrown away). Plain Synty files never leave a running container.
 Output: each shot's MP4 sealed to the workspace key (gd63/ws_pub.pem) -> out/<shot>.mp4.sealed. Nothing viewable is
-published. job.json: {"id", "entry": "gd63/render.py", "shots": [["S6", 90, "shot=seal t0=0"], ...]}"""
+published. job.json: {"id", "entry": "gd63/render.py", "shots": [["S6", 90, "shot=seal t0=0"(, "1080x1920")], ...]}"""
 import modal, os, subprocess, time, json, pathlib, hashlib
 
 GODOT = "https://github.com/godotengine/godot/releases/download/4.5.1-stable/Godot_v4.5.1-stable_linux.x86_64.zip"
@@ -60,7 +60,8 @@ def unseal(blob, priv_pem):
 
 @app.function(image=img, gpu="T4", volumes={"/vault": vault, "/synty": synty}, timeout=3600, memory=16384)
 def shot(args):
-    name, frames, uargs = args
+    name, frames, uargs = args[:3]
+    res = args[3] if len(args) > 3 else "1440x1080"   # e.g. "1080x1920" for a vertical shot
     t0 = time.time()
     tar = unseal(pathlib.Path("/synty/assets.tar.sealed").read_bytes(), pathlib.Path("/vault/synty_rsa.pem").read_bytes())
     pathlib.Path("/tmp/a.tar").write_bytes(tar); del tar
@@ -68,8 +69,8 @@ def shot(args):
     t_unpack = time.time() - t0
     d = "/tmp/frames"; sh(f"rm -rf {d}; mkdir -p {d}")
     t1 = time.time()
-    log = sh(f'xvfb-run -a -s "-screen 0 1440x1080x24" {GD} --path /tmp/gp --rendering-driver vulkan --write-movie {d}/f.png '
-             f'--fixed-fps 30 --quit-after {frames} --resolution 1440x1080 -- {uargs}',
+    log = sh(f'xvfb-run -a -s "-screen 0 2048x2048x24" {GD} --path /tmp/gp --rendering-driver vulkan --write-movie {d}/f.png '
+             f'--fixed-fps 30 --quit-after {frames} --resolution {res} -- {uargs}',
              {"VK_ICD_FILENAMES": nvidia_icd(), "GP_ASSETS": "/tmp/gp/assets/"})
     t_render = time.time() - t1
     got = len(list(pathlib.Path(d).glob("*.png")))
