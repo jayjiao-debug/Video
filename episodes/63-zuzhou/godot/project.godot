@@ -1,0 +1,12 @@
+config_version=5
+
+[application]
+config/name="synty_egypt_test"
+run/main_scene="res://main.tscn"
+
+[display]
+window/size/viewport_width=1440
+window/size/viewport_height=1080
+
+[rendering]
+renderer/rendering_method="forward_plus"
