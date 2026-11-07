@@ -1,13 +1,15 @@
 {
- "id": "vasa-vo-test-01",
+ "id": "vasa-vo-test-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01_voiceA",
+   "name": "01_voiceD",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "gender": "male",
+   "accent": "standard",
+   "pick": 3,
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
@@ -16,24 +18,11 @@
    "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
   },
   {
-   "name": "02_voiceB",
+   "name": "02_voiceE",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
-   "pick": 1,
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4
-   },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
-  },
-  {
-   "name": "03_voiceC",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "pick": 2,
+   "pick": 4,
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
