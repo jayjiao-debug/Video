@@ -1,0 +1,31 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-tGSe7YcX5w4SaHPwSq4U7b
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/render.py
+├── ✓ Uploaded gd63/ws_pub.pem
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/project
+└── ✓ Created Function shot.
+uploaded sealed assets_westb.tar.sealed 19159582 a9d43a85b535
+{"shot": "B1_NIGHT", "frames": 192, "of": 192, "unpack_s": 0.9, "render_s": 69.6, "ms_per_frame": 362, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_A", "frames": 303, "of": 303, "unpack_s": 0.5, "render_s": 111.0, "ms_per_frame": 366, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_B", "frames": 303, "of": 303, "unpack_s": 0.6, "render_s": 101.1, "ms_per_frame": 334, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_C", "frames": 303, "of": 303, "unpack_s": 0.5, "render_s": 99.4, "ms_per_frame": 328, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B2_ROOM_D", "frames": 303, "of": 303, "unpack_s": 0.5, "render_s": 90.3, "ms_per_frame": 298, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B3_SQA", "frames": 285, "of": 285, "unpack_s": 0.5, "render_s": 128.3, "ms_per_frame": 450, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B4_SQB", "frames": 306, "of": 306, "unpack_s": 0.5, "render_s": 149.8, "ms_per_frame": 490, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B4_SQC", "frames": 156, "of": 156, "unpack_s": 0.4, "render_s": 88.7, "ms_per_frame": 569, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B5_TRIAL", "frames": 405, "of": 405, "unpack_s": 0.4, "render_s": 144.5, "ms_per_frame": 357, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B6_PRESS", "frames": 282, "of": 282, "unpack_s": 1.3, "render_s": 103.5, "ms_per_frame": 367, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B6_NOVELS", "frames": 102, "of": 102, "unpack_s": 0.4, "render_s": 18.4, "ms_per_frame": 180, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B6_WIDE", "frames": 156, "of": 156, "unpack_s": 0.4, "render_s": 85.4, "ms_per_frame": 548, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B7_ARCHIVE", "frames": 177, "of": 177, "unpack_s": 0.4, "render_s": 56.0, "ms_per_frame": 317, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B7_MAP", "frames": 228, "of": 228, "unpack_s": 0.4, "render_s": 177.4, "ms_per_frame": 778, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B8_SALOON", "frames": 330, "of": 330, "unpack_s": 0.4, "render_s": 63.5, "ms_per_frame": 193, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B8_CARDS", "frames": 423, "of": 423, "unpack_s": 0.4, "render_s": 57.7, "ms_per_frame": 136, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "B9_DUSK", "frames": 165, "of": 165, "unpack_s": 0.4, "render_s": 65.2, "ms_per_frame": 395, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+DONE wall 289.5
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-tGSe7YcX5w4SaHPwSq4U7b
