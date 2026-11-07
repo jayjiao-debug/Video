@@ -1,0 +1,18 @@
+{
+ "wall_s": 84.3,
+ "shots": [
+  {
+   "shot": "DUEL",
+   "frames": 168,
+   "of": 168,
+   "unpack_s": 0.7,
+   "render_s": 76.3,
+   "ms_per_frame": 454,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  }
+ ]
+}
