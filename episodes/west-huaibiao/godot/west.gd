@@ -946,3 +946,204 @@ func heights_along(origin: Vector3, dir: Vector3, offs: float, n: int, step: flo
 	for k in n:
 		if out[k] == -INF: out[k] = out[k - 1] if k > 0 else G
 	return out
+
+# ================================================================ v4: one scoop, the draw, the bullet
+## trapezoid velocity ease: accelerate over a, cruise, decelerate over b (all fractions of x in 0..1)
+func ease_trap(x: float, a: float, b: float) -> float:
+	x = clampf(x, 0.0, 1.0); var v := 2.0 / (2.0 - a - b)
+	if x < a: return v * x * x / (2.0 * a)
+	if x < 1.0 - b: return v * (a * 0.5 + (x - a))
+	return 1.0 - v * (1.0 - x) * (1.0 - x) / (2.0 * b)
+
+## dense polyline through Catmull-Rom points, with cumulative lengths, sampled by arc length
+func make_path(pts: Array) -> Dictionary:
+	var dense: Array = []
+	for q in pts.size() - 1:
+		for m in 24: dense.append(catmull(pts[maxi(q - 1, 0)], pts[q], pts[q + 1], pts[mini(q + 2, pts.size() - 1)], m / 24.0))
+	dense.append(pts[-1])
+	var acc: Array = [0.0]
+	for q in range(1, dense.size()): acc.append(acc[-1] + dense[q].distance_to(dense[q - 1]))
+	return {"p": dense, "acc": acc, "len": acc[-1]}
+func path_at(P: Dictionary, s: float) -> Vector3:
+	var acc: Array = P["acc"]; var pp: Array = P["p"]; s = clampf(s, 0.0, P["len"])
+	var lo := 0; var hi := acc.size() - 1
+	while hi - lo > 1:
+		var mid := (lo + hi) / 2
+		if acc[mid] <= s: lo = mid
+		else: hi = mid
+	var f: float = (s - acc[lo]) / maxf(acc[hi] - acc[lo], 1e-6)
+	return pp[lo].lerp(pp[hi], f)
+
+const TF := 5.82          # the shot
+const T_IMP := 8.75       # the bullet reaches the glass (the screen)
+const BULLET_V := 280.0   # m/s, a .44 ball
+func slow_at(tt: float) -> float:   # world speed after the shot: frozen to a crawl, then picking up into the glass
+	return 0.003
+func wt_at(tt: float) -> float:     # world time
+	if tt <= TF: return tt
+	var w := TF; var x := TF; var dt := 1.0 / 240.0
+	while x < tt:
+		var h: float = minf(dt, tt - x); w += slow_at(x + h * 0.5) * h; x += h
+	return w
+
+func make_bullet() -> Node3D:
+	var b := Node3D.new(); add_child(b)
+	var m := StandardMaterial3D.new(); m.albedo_color = Color(0.8, 0.56, 0.34); m.metallic = 0.9; m.roughness = 0.26; m.metallic_specular = 0.8
+	var body := MeshInstance3D.new(); var cy := CylinderMesh.new(); cy.top_radius = 0.0105; cy.bottom_radius = 0.0105; cy.height = 0.024; cy.radial_segments = 24; body.mesh = cy
+	body.material_override = m; body.rotation.x = PI / 2; b.add_child(body)
+	var nose := MeshInstance3D.new(); var sp := SphereMesh.new(); sp.radius = 0.0105; sp.height = 0.03; sp.radial_segments = 24; nose.mesh = sp
+	nose.material_override = m; nose.rotation.x = PI / 2; nose.position = Vector3(0, 0, -0.012); b.add_child(nose)
+	var dark := StandardMaterial3D.new(); dark.albedo_color = Color(0.18, 0.12, 0.08); dark.metallic = 0.6; dark.roughness = 0.5
+	for k in 3:   # rifling marks, so the spin reads
+		var st := MeshInstance3D.new(); var bx := BoxMesh.new(); bx.size = Vector3(0.0022, 0.0012, 0.022); st.mesh = bx; st.material_override = dark
+		var a := k * TAU / 3.0; st.position = Vector3(cos(a) * 0.0104, sin(a) * 0.0104, 0.0); st.rotation.z = a; b.add_child(st)
+	var hot := StandardMaterial3D.new(); hot.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; hot.albedo_color = Color(1.0, 0.55, 0.2); hot.emission_enabled = true; hot.emission = Color(1.0, 0.5, 0.18); hot.emission_energy_multiplier = 5.0
+	var base := MeshInstance3D.new(); var bc := CylinderMesh.new(); bc.top_radius = 0.0098; bc.bottom_radius = 0.0098; bc.height = 0.002; base.mesh = bc
+	base.material_override = hot; base.rotation.x = PI / 2; base.position = Vector3(0, 0, 0.0125); b.add_child(base)
+	for tr in [[0.0075, 0.24, 0.45, 1.6], [0.016, 0.34, 0.12, 0.8]]:   # the heat trail: a hot core and a wide soft wake
+		var tm := MeshInstance3D.new(); var cn := CylinderMesh.new(); cn.top_radius = tr[0]; cn.bottom_radius = 0.0005; cn.height = tr[1]; tm.mesh = cn
+		var mm := StandardMaterial3D.new(); mm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; mm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA; mm.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		mm.albedo_color = Color(1.0, 0.72, 0.42, tr[2]); mm.emission_enabled = true; mm.emission = Color(1.0, 0.65, 0.35); mm.emission_energy_multiplier = tr[3]; mm.cull_mode = BaseMaterial3D.CULL_DISABLED
+		tm.material_override = mm; tm.rotation.x = -PI / 2; tm.position = Vector3(0, 0, 0.013 + tr[1] * 0.5); tm.name = "trail"; b.add_child(tm)
+	b.visible = false
+	return b
+
+## SHOT A + the bullet (0–8.75 s): beside his shoulder → one scoop: into his eyes (POV) and on down the street in a dolly zoom
+## onto the opponent's eyes → he narrows them → swing round behind his head → the gunslinger draws and fires → time all but
+## stops: the camera meets the bullet at the muzzle and rides beside it; the street sinks into black; the camera comes round
+## to 45° in front and the bullet flies into the glass (the screen breaks in the edit).
+func build_duel3() -> void:
+	town()
+	var hp := at_ground(0.3, -8); var fp := at_ground(0.3, -20)
+	cast(hp, fp)
+	catchlights(foe)
+	var H := Vector3(0.3, fp.y + 1.645, -20.0)
+	var p0 := Vector3(0.55, hp.y + 1.57, hp.z + 0.55)
+	var p1 := Vector3(0.3, hp.y + 1.62, hp.z - 0.12)
+	var pend := Vector3(0.3, H.y, H.z + 0.85)
+	var P := make_path([p0, p1, p1.lerp(pend, 0.3), pend])
+	var lt0 := H + Vector3(-tan(deg_to_rad(8.0)) * p0.distance_to(H), 0.0, 0.0)
+	var S0 := 0.829 * p0.distance_to(H)
+	var hero_aim := hp + Vector3(0, 1.22, 0)
+	var fill := OmniLight3D.new(); fill.position = H + Vector3(0.1, -0.3, 0.9); fill.light_color = Color(1.0, 0.78, 0.6); fill.light_energy = 1.0; fill.omni_range = 2.2; add_child(fill)
+	var kick := OmniLight3D.new(); kick.position = H + Vector3(-0.9, 0.35, -0.7); kick.light_color = Color(1.0, 0.7, 0.45); kick.light_energy = 1.3; kick.omni_range = 1.8; add_child(kick)
+	var hfill := OmniLight3D.new(); hfill.position = hp + Vector3(0.0, 1.4, -1.6); hfill.light_color = Color(1.0, 0.8, 0.62); hfill.light_energy = 1.4; hfill.omni_range = 3.5; add_child(hfill)
+	var nape := OmniLight3D.new(); nape.position = hp + Vector3(0.35, 1.75, 0.9); nape.light_color = Color(1.0, 0.8, 0.6); nape.light_energy = 0.8; nape.omni_range = 1.6; add_child(nape)
+	rigs = [arm_rig(hero, H + Vector3(0, -0.35, 0), [5.30, 5.45, 5.65, TF]), arm_rig(foe, hero_aim, [5.36, 5.55, 5.9, 99.0])]
+	var bullet := make_bullet()
+	var bkey := OmniLight3D.new(); bkey.light_color = Color(1.0, 0.86, 0.7); bkey.light_energy = 0.0; bkey.omni_range = 0.9; add_child(bkey)
+	var brim := OmniLight3D.new(); brim.light_color = Color(0.7, 0.8, 1.0); brim.light_energy = 0.0; brim.omni_range = 0.5; add_child(brim)
+	var veil := MeshInstance3D.new(); var vs := SphereMesh.new(); vs.radius = 1.2; vs.height = 2.4; vs.flip_faces = true; veil.mesh = vs
+	var vm := StandardMaterial3D.new(); vm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; vm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA; vm.albedo_color = Color(0, 0, 0, 0); vm.disable_fog = true
+	vm.cull_mode = BaseMaterial3D.CULL_DISABLED; vm.render_priority = -100; veil.material_override = vm; veil.visible = false; add_child(veil)
+	var parts: Array = find_children("*", "CPUParticles3D", true, false)
+	var st := {"hidden": false, "fire_cam": Vector3.ZERO, "fire_look": Vector3.ZERO, "have": false}
+	upd = func():
+		var wt: float = wt_at(t); var slow: float = 1.0 if t < TF else slow_at(t)
+		hero["ap"].speed_scale = slow; foe["ap"].speed_scale = slow
+		for pa in find_children("*", "CPUParticles3D", true, false): pa.speed_scale = slow
+		var treal := t; t = wt
+		for r in rigs: pose_arm(r)
+		t = treal
+		var r0: Dictionary = rigs[0]
+		var muzzle: Vector3 = r0["fl"].position
+		if t >= TF:   # the flash lingers a moment in real time, then dies
+			r0["fl"].light_energy = 3.2 * exp(-(t - TF) / 0.3); r0["flare"].visible = t < TF + 0.22
+			r0["flare"].scale = Vector3.ONE * maxf(0.05, 1.0 - (t - TF) / 0.22)
+		var p: Vector3; var look: Vector3 = H; var tanv: float; var focus: float; var near := 0.0
+		var upv := Vector3.UP
+		if t < 0.45:
+			p = p0 + Vector3(sin(t * 1.7) * 0.003, sin(t * 2.3) * 0.002, -t * 0.04); look = lt0
+			tanv = S0 / p.distance_to(H); focus = p.distance_to(H)
+			near = 0.5
+		elif t < 3.2:   # the scoop
+			var s: float = ease_trap((t - 0.45) / 2.75, 0.15, 0.3) * P["len"]
+			p = path_at(P, s + 0.04 * 0.45)
+			var d: float = p.distance_to(H)
+			look = lt0.lerp(H, sm(s / 0.8))
+			var lnS: float
+			if d > 2.2: lnS = lerpf(log(S0), log(0.8), sm((12.2 - d) / 4.2))
+			else: lnS = lerpf(log(0.8), log(0.2465), sm((2.2 - d) / 1.35))
+			tanv = exp(lnS) / d; focus = d + 0.1
+			near = 0.5 * (1.0 - sm(s / 0.6))
+		elif t < 3.95:  # the eyes: a beat, then he narrows them
+			p = pend; look = H; tanv = 0.29; focus = 0.9
+		elif t < TF:    # swing round behind his head to over his right shoulder; settle on the gunslinger and creep in
+			var u: float = seg(3.95, 4.85)
+			var th: float = lerpf(0.0, deg_to_rad(-162.0), u)
+			var r: float = lerpf(0.85, 1.0, u) + 0.45 * sin(u * PI)
+			p = H + Vector3(sin(th) * r, lerpf(0.0, -0.02, u), cos(th) * r)
+			var lu: float = sm(clampf((u - 0.25) / 0.55, 0.0, 1.0))
+			look = H.lerp(hero_aim, lu)
+			tanv = lerpf(0.29, 0.25, u) - 0.07 * seg(4.85, 5.8)
+			focus = lerpf(0.85, p.distance_to(hero_aim), lu)
+			near = 0.0 if u < 0.3 else lerpf(0.0, 1.1, lu)
+			st["fire_cam"] = p; st["fire_look"] = look; st["have"] = true
+		else:           # the bullet
+			if not st["have"]:   # (test stills that jump straight here)
+				var th2 := deg_to_rad(-162.0); st["fire_cam"] = H + Vector3(sin(th2), -0.02, cos(th2)); st["fire_look"] = hero_aim
+			var D: Vector3 = (r0["aim_world"] - muzzle).normalized()
+			var side := D.cross(Vector3.UP).normalized()
+			var B: Vector3 = muzzle + D * BULLET_V * (wt - TF)
+			bullet.visible = true
+			bullet.look_at_from_position(B, B + D, Vector3.UP); bullet.rotate_object_local(Vector3(0, 0, 1), (t - TF) * TAU * 1.4)
+			for tr in bullet.get_children():
+				if tr.name.begins_with("trail"): tr.scale = Vector3(1, minf(1.0, BULLET_V * (wt - TF) / 0.3 + 0.05), 1)
+			var Bm: Vector3 = muzzle + D * BULLET_V * (wt_at(6.7) - TF)
+			var meet := Bm + side * 0.30 + D * 0.06 + Vector3(0, 0.02, 0)
+			if t < 6.7:   # fly down the line to meet it
+				var u: float = (t - TF) / (6.7 - TF)
+				var FP := make_path([st["fire_cam"], st["fire_cam"].lerp(meet, 0.45) + side * 0.7 + Vector3(0, 0.25, 0), Bm + D * 2.2 + side * 0.65, meet])
+				p = path_at(FP, (1.0 - pow(1.0 - u, 2.6)) * FP["len"])
+				look = st["fire_look"].lerp(muzzle, sm(u * 2.0)).lerp(B, sm((u - 0.5) * 2.0))
+				tanv = lerpf(0.18, 0.42, sm(u)); focus = p.distance_to(look); near = 0.0
+			else:         # ride beside it; in the dark come round to 45° in front, ease back, and let it fly into the lens
+				var phi: float; var rr: float; var lift: float
+				if t < 7.9:
+					var u: float = seg(6.7, 7.9); phi = lerpf(79.0, 66.0, u); rr = lerpf(0.305, 0.36, u); lift = 0.02 + 0.03 * u
+				elif t < 8.3:
+					var u: float = seg(7.9, 8.3); phi = lerpf(66.0, 45.0, u); rr = lerpf(0.36, 0.6, u); lift = lerpf(0.05, 0.16, u)
+				else:
+					var x: float = clampf((t - 8.3) / (T_IMP - 8.3), 0.0, 1.0); phi = 45.0; rr = lerpf(0.6, 0.11, pow(x, 1.7)); lift = 0.16
+				var ph: float = deg_to_rad(phi)
+				var dirv: Vector3 = (D * cos(ph) + side * sin(ph)).normalized()
+				dirv = (dirv + Vector3.UP * lift).normalized()
+				p = B + dirv * rr; look = B + D * 0.01
+				tanv = lerpf(0.42, 0.5, seg(7.9, 8.3)); focus = rr; near = 0.0
+				if opts.has("dbg") and t >= T_IMP - 0.001:
+					cam.fov = rad_to_deg(2.0 * atan(tanv)); cam.look_at_from_position(p, look, upv)
+					var nose: Vector3 = B + D * 0.026
+					print("NOSE_SCREEN ", cam.unproject_position(nose), " of ", get_viewport().get_visible_rect().size)
+			var vb := (p - B).normalized()
+			bkey.position = p + (cam.global_transform.basis * Vector3(-0.12, 0.1, 0.0)) * 0.6; bkey.light_energy = 1.4
+			brim.position = B - vb * 0.12 + Vector3(0, 0.05, 0); brim.light_energy = 2.0
+			veil.visible = true; veil.position = p; vm.albedo_color = Color(0, 0, 0, seg(7.2, 8.0))
+		cam.fov = rad_to_deg(2.0 * atan(tanv)); cam.look_at_from_position(p, look, upv)
+		ca.dof_blur_far_enabled = true; ca.dof_blur_far_distance = focus; ca.dof_blur_far_transition = clampf(focus * 0.25, 0.08, 3.0)
+		ca.dof_blur_near_enabled = near > 0.0; ca.dof_blur_near_distance = maxf(near, 0.05); ca.dof_blur_near_transition = 0.4
+		var hide: bool = opts.has("nohero") and t < 2.4 or (t >= 1.0 and t < 2.4)
+		if hide != st["hidden"]: hide_hero(hide); st["hidden"] = hide
+		var sq: float = -0.7 * seg(1.6, 2.4) + 1.7 * seg(3.5, 3.8) - 0.45 * seg(4.3, 4.7)
+		squint(foe, sq)
+
+## SHOT C (v4): under the broken glass, the watch's own glass: straight down on the dial, then tilting down to the table.
+func build_watch3() -> void:
+	build_watch()
+	var watch_upd: Callable = upd
+	var wn: Node3D = null
+	for c in get_children():
+		if c is Node3D and c.get_child_count() > 60: wn = c
+	var twelve: Vector3 = (wn.global_transform.basis * Vector3(0, 0, -1)).normalized()
+	var wc: Vector3 = wn.global_position + Vector3(0, 0.005, 0)
+	upd = func():
+		watch_upd.call()
+		var u: float = seg(0.85, 2.2)
+		var top := wc + Vector3(0, lerpf(0.225, 0.212, clampf(t / 0.85, 0.0, 1.0)), 0)
+		var pe := Vector3(0.015, 0.105, 0.2); var le := wn.global_position + Vector3(0, 0, 0.03)
+		var p := top.lerp(pe, u); p.y = lerpf(top.y, pe.y, sm(u * 1.15))
+		p += (Vector3(0.012, 0.095, 0.178) - pe) * seg(2.2, 8.3)
+		var look := wc.lerp(le, sm(u * 1.3))
+		var upv := twelve.lerp(Vector3.UP, sm(u)).normalized()
+		cam.fov = lerpf(30.0, 31.0, u); cam.look_at_from_position(p, look, upv)
+		ca.dof_blur_far_distance = p.distance_to(look) + 0.05
+		ca.dof_blur_near_distance = maxf(p.distance_to(look) - 0.08, 0.02)
