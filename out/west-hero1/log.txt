@@ -1,0 +1,23 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-TX7FlSyiR80yJZuP844SAE
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/render.py
+├── ✓ Uploaded gd63/ws_pub.pem
+├── ✓ Uploaded /home/runner/work/Video/Video/gd63/project
+└── ✓ Created Function shot.
+uploaded sealed assets_west.tar.sealed 11100702 91445a3cb9c3
+{"shot": "DUEL", "frames": 234, "of": 234, "unpack_s": 0.6, "render_s": 148.4, "ms_per_frame": 634, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "HHAND", "frames": 20, "of": 20, "unpack_s": 0.5, "render_s": 28.1, "ms_per_frame": 1406, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "TUMBLE", "frames": 24, "of": 24, "unpack_s": 0.4, "render_s": 29.0, "ms_per_frame": 1209, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "OHAND", "frames": 18, "of": 18, "unpack_s": 0.5, "render_s": 26.4, "ms_per_frame": 1466, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "HEYES", "frames": 21, "of": 21, "unpack_s": 0.4, "render_s": 24.6, "ms_per_frame": 1171, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "OEYES", "frames": 14, "of": 14, "unpack_s": 0.5, "render_s": 26.0, "ms_per_frame": 1856, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "FLASH", "frames": 12, "of": 12, "unpack_s": 0.5, "render_s": 21.4, "ms_per_frame": 1787, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "REVEAL", "frames": 132, "of": 132, "unpack_s": 1.8, "render_s": 91.0, "ms_per_frame": 690, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+{"shot": "WATCH", "frames": 204, "of": 204, "unpack_s": 0.5, "render_s": 192.4, "ms_per_frame": 943, "nvenc": true, "renderer": ["Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"], "errors": []}
+DONE wall 206.0
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-TX7FlSyiR80yJZuP844SAE
