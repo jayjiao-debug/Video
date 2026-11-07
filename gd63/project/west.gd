@@ -336,7 +336,7 @@ func build_duel() -> void:
 	var hy := hp.y; var fy := fp.y
 	var oh := Vector3(0.3, fy + 1.62, -20)
 	D = {"p0": Vector3(1.0, hy + 1.72, 0.5), "p1": Vector3(0.3, hy + 1.6, -8.1), "pe": Vector3(0.3, fy + 1.63, -18.65),
-		"look0": Vector3(0.3, fy + 1.25, -20), "lookE": Vector3(0.3, fy + 1.665, -19.92), "head": oh, "hidden": false, "hz": hp.z}
+		"look0": Vector3(0.3, fy + 1.25, -20), "lookE": Vector3(0.3, fy + 1.648, -19.92), "head": oh, "hidden": false, "hz": hp.z}
 	D["k"] = D["p0"].distance_to(oh) * 0.240
 	var fill := OmniLight3D.new(); fill.position = Vector3(0.35, fy + 1.3, -19.0); fill.light_color = Color(1.0, 0.78, 0.6); fill.light_energy = 1.2; fill.omni_range = 2.2; add_child(fill)   # bounce from the street onto his face
 	upd = _upd_duel
@@ -404,7 +404,7 @@ func build_hhand() -> void:
 	duel_set(); var h: Vector3 = hero["node"].position
 	upd = func():
 		var u := t / 1.0
-		look_lens(h + Vector3(0.62 - 0.04 * u, 0.74, 1.15), h + Vector3(0.1, 0.8, -1.2), 30, 1.35, 0.8)
+		look_lens(h + Vector3(0.95 - 0.05 * u, 0.92, 1.45), h + Vector3(0.3, 0.72, 0.0), 22, 1.6, 0.6)
 
 ## the opponent's hand, the gunslinger soft behind
 func build_ohand() -> void:
@@ -412,7 +412,7 @@ func build_ohand() -> void:
 	var fill := OmniLight3D.new(); fill.position = f + Vector3(-0.6, 0.9, 0.9); fill.light_energy = 0.8; fill.omni_range = 2.5; fill.light_color = Color(1, 0.8, 0.6); add_child(fill)
 	upd = func():
 		var u := t / 1.0
-		look_lens(f + Vector3(-0.7 + 0.04 * u, 0.72, 1.25), f + Vector3(-0.18, 0.82, 0.0), 30, 1.35, 0.8)
+		look_lens(f + Vector3(-0.95 + 0.05 * u, 0.92, 1.45), f + Vector3(-0.3, 0.72, 0.0), 22, 1.6, 0.6)
 
 ## low between their boots: a tumbleweed rolls through
 func build_tumble() -> void:
@@ -429,7 +429,7 @@ func build_heyes() -> void:
 	var fill := OmniLight3D.new(); fill.position = h + Vector3(0.05, 1.3, -1.0); fill.light_energy = 1.3; fill.omni_range = 2.2; fill.light_color = Color(1, 0.78, 0.6); add_child(fill)
 	upd = func():
 		squint(hero, seg(0.12, 0.55))
-		look_lens(h + Vector3(0, 1.665, -1.38 + 0.05 * t), h + Vector3(0, 1.665, -0.05), 16, 1.4, 0.8)
+		look_lens(h + Vector3(0, 1.648, -1.38 + 0.05 * t), h + Vector3(0, 1.648, -0.05), 11, 1.4, 0.8)
 
 ## the opponent's eyes, tighter
 func build_oeyes() -> void:
@@ -437,7 +437,7 @@ func build_oeyes() -> void:
 	var fill := OmniLight3D.new(); fill.position = f + Vector3(0.05, 1.3, 1.0); fill.light_energy = 1.2; fill.omni_range = 2.2; fill.light_color = Color(1, 0.78, 0.6); add_child(fill)
 	upd = func():
 		squint(foe, 1.0)
-		look_lens(f + Vector3(0, 1.665, 1.3 - 0.06 * t), f + Vector3(0, 1.665, 0.05), 19, 1.3, 0.8)
+		look_lens(f + Vector3(0, 1.648, 1.3 - 0.06 * t), f + Vector3(0, 1.648, 0.05), 12, 1.3, 0.8)
 
 ## the draw, from high above the street: a flash from his hip
 func build_flash() -> void:
@@ -469,12 +469,12 @@ func build_reveal() -> void:
 		tk.position = e + right * 1.4 + Vector3(0, 0.06, 0); tk.rotation.y = atan2(dn.x, dn.z); tk.visible = false; add_child(tk); ticks.append(tk)
 	var mid := (hp + fp) * 0.5
 	var p0 := hp - dn * 8.5 + right * 0.8 + Vector3(0, 1.72, 0)
-	var p1 := hp - dn * 34.0 + right * -14.0 + Vector3(0, 50.0, 0)
+	var p1 := hp - dn * 8.0 + right * -8.0 + Vector3(0, 80.0, 0)
 	upd = func():
 		var u := seg(0.0, 3.6)
 		var p := p0.lerp(p1, u); p.y = lerpf(p0.y, p1.y, sm(u * 1.1))
-		var look := (fp + Vector3(0, 1.2, 0)).lerp(mid, sm(u))
-		look_lens(p, look, lerpf(27.0, 36.0, u), p.distance_to(look) + 40.0, 30.0)
+		var look := (fp + Vector3(0, 1.2, 0)).lerp(mid - dn * 3.0, sm(u))
+		look_lens(p, look, lerpf(27.0, 48.0, u), p.distance_to(look) + 40.0, 30.0)
 		var g := seg(2.2, 3.4)
 		var a := hp + right * 1.4 + Vector3(0, 0.06, 0)
 		var b := a + (fp - hp) * g
