@@ -763,27 +763,27 @@ func build_duel2() -> void:
 				p = p1.lerp(Vector3(0.3, H.y, H.z + 2.2), u); p.y = lerpf(p1.y, H.y, sm(u * 1.5))
 				tanv = 0.8 / p.distance_to(H)
 			look = look0.lerp(H, seg(2.4, 2.9)); focus = p.distance_to(H) + 0.15
-		elif t < 4.8:     # the last push: eyes fill the slit
-			var u: float = seg(4.0, 4.5)
-			p = Vector3(0.3, H.y, H.z + lerpf(2.2, 0.75, u)); look = H
+		elif t < 4.95:    # the last push: eyes fill the slit, a beat, then he narrows them
+			var u: float = seg(4.0, 4.35)
+			p = Vector3(0.3, H.y, H.z + lerpf(2.2, 0.85, u)); look = H
 			tanv = lerpf(0.8 / 2.2, 0.29, u); focus = p.distance_to(H) + 0.05
 		else:             # swing round behind his head to over his right shoulder; settle on the gunslinger and creep in
-			var u: float = seg(4.8, 5.75)
+			var u: float = seg(4.95, 5.85)
 			var th: float = lerpf(0.0, deg_to_rad(-162.0), u)
-			var r: float = lerpf(0.75, 1.0, u) + 0.45 * sin(u * PI)
+			var r: float = lerpf(0.85, 1.0, u) + 0.45 * sin(u * PI)
 			p = H + Vector3(sin(th) * r, lerpf(0.0, -0.02, u), cos(th) * r)
 			var lu: float = sm(clampf((u - 0.25) / 0.55, 0.0, 1.0))
 			look = H.lerp(hero_aim, lu)
 			tanv = lerpf(0.29, 0.25, u) - 0.07 * seg(5.85, 6.9)
-			focus = lerpf(0.75, p.distance_to(hero_aim), lu)
+			focus = lerpf(0.85, p.distance_to(hero_aim), lu)
 			near = 0.0 if u < 0.3 else lerpf(0.0, 1.1, lu)
 		cam.fov = rad_to_deg(2.0 * atan(tanv)); cam.look_at_from_position(p, look)
 		ca.dof_blur_far_enabled = true; ca.dof_blur_far_distance = focus; ca.dof_blur_far_transition = clampf(focus * 0.25, 0.4, 3.0)
 		ca.dof_blur_near_enabled = near > 0.0; ca.dof_blur_near_distance = maxf(near, 0.05); ca.dof_blur_near_transition = 0.5
-		if not hidden[0] and p.z < hp.z + 0.45 and t < 2.4: hide_hero(true); hidden[0] = true
+		if not hidden[0] and (p.z < hp.z + 0.45 or opts.has("nohero")) and t < 2.4: hide_hero(true); hidden[0] = true
 		if hidden[0] and t > 2.6: hide_hero(false); hidden[0] = false
 		# the stare (eyes wide) through the dolly zoom, then he narrows them; they stay narrowed for the draw
-		var sq: float = -0.7 * seg(2.8, 3.4) + 1.7 * seg(4.25, 4.6) - 0.45 * seg(5.2, 5.6)
+		var sq: float = -0.7 * seg(2.8, 3.4) + 1.7 * seg(4.5, 4.8) - 0.45 * seg(5.3, 5.7)
 		squint(foe, sq)
 
 ## small warm glints on the eyes (the eyes bone carries them, so they narrow with a squint)
