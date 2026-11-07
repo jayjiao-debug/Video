@@ -1,0 +1,38 @@
+plan: {'tier': 'starter', 'character_count': 19534, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01_voiceD", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Karo Yang - Clear, Lively and Energetic (standard, zh)", "voice_id": "5mZxJZhSmJTjL7GoYfYI", "model": "eleven_v4", "status": 200, "file": "01_voiceD.mp3", "bytes": 173914}
+{"name": "02_voiceE", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Jin - Clear, Warm and Casual (standard, zh)", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "02_voiceE.mp3", "bytes": 159703}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01_voiceD",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Karo Yang - Clear, Lively and Energetic (standard, zh)",
+  "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_voiceD.mp3",
+  "bytes": 173914,
+  "heard": "1628年,瑞典最猛的新戰艦守航,開了一千多米就沉了最離譜的是,出發前船上的人就知道他會翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 10.8
+ },
+ {
+  "name": "02_voiceE",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Jin - Clear, Warm and Casual (standard, zh)",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02_voiceE.mp3",
+  "bytes": 159703,
+  "heard": "1628年瑞典最猛的新战舰手航开了1000多米就沉了最离谱的是出发前船上的人就知道他会翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 9.92
+ }
+]
