@@ -484,13 +484,15 @@ func own(n: String) -> Texture2D:
 	var img := Image.load_from_file(ProjectSettings.globalize_path("res://own/" + n + ".png")); img.generate_mipmaps()
 	own_cache[n] = ImageTexture.create_from_image(img); return own_cache[n]
 
-func slab(size: Vector3, front: Texture2D, back_col := Color(0.9, 0.88, 0.82), rough := 0.8) -> Node3D:   # a thin box with a picture on its +Y face
+func slab(size: Vector3, front: Texture2D, back_col := Color(0.9, 0.88, 0.82), rough := 0.8, both := false) -> Node3D:   # a thin box with a picture on its +Y face
 	var n := Node3D.new(); add_child(n)
 	var bx := MeshInstance3D.new(); var bm := BoxMesh.new(); bm.size = size; bx.mesh = bm
 	var m := StandardMaterial3D.new(); m.albedo_color = back_col; m.roughness = rough; bx.material_override = m; n.add_child(bx)
 	if front:
 		var f := MeshInstance3D.new(); var pm := PlaneMesh.new(); pm.size = Vector2(size.x, size.z); f.mesh = pm
 		var fm := StandardMaterial3D.new(); fm.albedo_texture = front; fm.roughness = rough; f.material_override = fm; f.position = Vector3(0, size.y * 0.5 + 0.0005, 0); n.add_child(f)
+		if both:
+			var f2 := f.duplicate(); f2.position = Vector3(0, -size.y * 0.5 - 0.0005, 0); f2.rotation.z = PI; n.add_child(f2)
 	return n
 
 func bbox_of(n: Node) -> AABB:
@@ -511,7 +513,7 @@ func sit_listen(ch: Dictionary) -> void:
 
 # ================================================================ B5 · the trial: a packed room, the evidence, the gavel, out into the light (13.5 s)
 func build_trial() -> void:
-	interior_env(Color(0.6, 0.58, 0.55), Color(0.6, 0.55, 0.5), 0.6, 1.3)
+	interior_env(Color(0.6, 0.58, 0.55), Color(0.62, 0.56, 0.5), 0.9, 1.55)
 	var room := piece("SM_Bld_Church_01", Vector3.ZERO, 0.0, 1.0)
 	var fy := floor_y(0.0, 0.0)
 	var desk := piece("SM_Prop_Desk_01", Vector3(0, fy, -4.3), PI, 1.0)
@@ -544,9 +546,10 @@ func build_trial() -> void:
 		var sl := SpotLight3D.new(); sl.position = p + Vector3(signf(p.x) * 2.0, 1.5, 0); sl.look_at_from_position(sl.position, Vector3(0, fy + 0.8, p.z - 0.5))
 		sl.light_color = Color(1.0, 0.86, 0.66); sl.light_energy = 6.0; sl.spot_range = 12; sl.spot_angle = 18; sl.shadow_enabled = true; sl.light_volumetric_fog_energy = 2.0; add_child(sl)
 	var doorlight := lamp(Vector3(0, fy + 2.0, 5.2), Color(1.0, 0.92, 0.8), 0.0, 9.0, false)
-	lamp(Vector3(0, fy + 2.6, -3.5), Color(1.0, 0.82, 0.62), 1.2, 6.0, false)
+	lamp(Vector3(0, fy + 2.6, -3.5), Color(1.0, 0.82, 0.62), 1.6, 6.0, false)
+	for z in [-0.5, 2.3]: lamp(Vector3(0, fy + 2.8, z), Color(1.0, 0.86, 0.7), 2.2, 5.0, false)
 	var K := [
-		[0.0, Vector3(0.9, fy + 2.7, 5.0), Vector3(0, fy + 1.0, -3.5), 44.0],
+		[0.0, Vector3(0.7, fy + 2.1, 4.6), Vector3(0, fy + 1.0, -3.5), 46.0],
 		[2.6, Vector3(0.6, fy + 2.0, 1.2), Vector3(0, fy + 1.1, -4.0), 40.0],
 		[3.4, Vector3(1.0, fy + 1.4, -2.2), Vector3(1.5, et, -3.4), 34.0],
 		[5.5, Vector3(1.35, et + 0.35, -2.95), Vector3(1.5, et + 0.02, -3.4), 30.0],
@@ -576,7 +579,7 @@ func build_trial() -> void:
 			var u := clampf((t - 9.4) / 4.2, 0.0, 1.0); var a := Vector3(-0.3, fy, -3.0); var b := Vector3(0.0, fy, 2.6)
 			hk["base"] = a.lerp(b, u); hk["ry"] = face(a, b); anim_at(hk); walk_pose(hk, u * a.distance_to(b) / 0.7 * PI)
 		doorlight.light_energy = 14.0 * seg(9.8, 13.3)
-		env.tonemap_exposure = 1.3 + 2.6 * pow(seg(11.0, 13.5), 2.0)
+		env.tonemap_exposure = 1.55 + 2.4 * pow(seg(11.0, 13.5), 2.0)
 		var k := keyed(K, t); cam.fov = k[2]; cam.look_at_from_position(k[0], k[1])
 		var fd: float = k[0].distance_to(k[1]) if t < 9.4 else k[0].distance_to(hk["node"].global_position + Vector3(0, 1.2, 0))
 		dof(fd + 0.1, clampf(fd * 0.3, 0.12, 3.0))
@@ -601,13 +604,14 @@ func build_press() -> void:
 	var key := SpotLight3D.new(); key.position = Vector3(-1.6, 3.2, 1.8); key.look_at_from_position(key.position, Vector3(0, 0.8, 0.4)); key.light_color = Color(1.0, 0.8, 0.55); key.light_energy = 9.0
 	key.spot_range = 8; key.spot_angle = 34; key.shadow_enabled = true; key.light_volumetric_fog_energy = 2.0; add_child(key)
 	lamp(Vector3(1.2, 1.4, 1.6), Color(1.0, 0.6, 0.3), 2.4, 4.0, false)
-	lamp(Vector3(-0.9, 2.6, -1.2), Color(0.7, 0.75, 1.0), 3.0, 4.5, false)
+	lamp(Vector3(-0.9, 2.6, -1.2), Color(0.7, 0.75, 1.0), 4.5, 4.5, false)
+	lamp(Vector3(-1.4, 1.2, 1.2), Color(1.0, 0.75, 0.5), 2.5, 3.5, false)
 	lamp(Vector3(0.0, 1.2, 1.4), Color(1.0, 0.78, 0.55), 1.2, 3.0, false)
 	iron.albedo_color = Color(0.2, 0.19, 0.2); iron.metallic = 0.6; iron.roughness = 0.35
 	var cycle := func(tt: float) -> float:   # press strokes: slow, then faster and faster (the count runs to 100 in the edit)
 		return tt / 0.9 if tt < 5.6 else 5.6 / 0.9 + (tt - 5.6) / 0.9 + pow(maxf(tt - 5.6, 0.0), 2.0) * 1.1
 	var K := [
-		[0.0, Vector3(1.6, 1.5, 2.6), Vector3(0, 1.1, 0), 40.0],
+		[0.0, Vector3(2.0, 1.6, 3.0), Vector3(0, 1.2, 0), 42.0],
 		[3.0, Vector3(0.7, 1.35, 1.7), Vector3(0, 0.8, 0.5), 36.0],
 		[5.2, Vector3(0.05, 1.45, 1.25), Vector3(0, 0.78, 0.75), 34.0],
 		[9.4, Vector3(-0.9, 1.7, 2.3), Vector3(0, 0.9, 0.6), 42.0]]
@@ -637,7 +641,7 @@ func build_novels() -> void:
 	var books: Array = []
 	var rng := RandomNumberGenerator.new(); rng.seed = 7
 	for i in 14:
-		var b := slab(Vector3(0.16, 0.012, 0.24), own("cover%d" % (i % 6)), Color(0.85, 0.8, 0.7), 0.6)
+		var b := slab(Vector3(0.16, 0.012, 0.24), own("cover%d" % (i % 6)), Color(0.85, 0.8, 0.7), 0.6, true)
 		books.append([b, Vector3(rng.randf_range(-0.45, 0.45), rng.randf_range(0.25, 0.9) + i * 0.1, rng.randf_range(-0.45, 0.35)), Vector3(rng.randf_range(-2, 2), rng.randf_range(-2, 2), rng.randf_range(-2, 2)), rng.randf_range(0.0, TAU)])
 	upd = func():
 		for bk in books:
@@ -747,14 +751,14 @@ func build_saloon() -> void:
 	var key := lamp(T0 + Vector3(0, 1.62, 0), Color(1.0, 0.66, 0.34), 3.0, 5.0)
 	glow_ball(T0 + Vector3(0, 1.66, 0), Color(1.0, 0.72, 0.4), 0.035, 10.0)
 	for p in [Vector3(4.5, fy + 2.2, -5.0), Vector3(-5.5, fy + 2.2, 3.0), Vector3(3.0, fy + 2.2, 4.0)]: lamp(p, Color(1.0, 0.6, 0.3), 1.0, 5.0, false)
-	var killer := puppet("SK_Chr_Thug_Male_02", T0 + Vector3(0.4, 0, 4.6), PI, 0.3)
-	var door := SpotLight3D.new(); door.position = T0 + Vector3(0.6, 2.2, 7.0); door.look_at_from_position(door.position, T0 + Vector3(0, 0.6, 0.6)); door.light_color = Color(1.0, 0.86, 0.66)
+	var killer := puppet("SK_Chr_Thug_Male_02", T0 + Vector3(0.9, 0, 4.0), face(Vector3(0.9, 0, 4.0), Vector3(0.0, 0, 0.82)), 0.3)
+	var door := SpotLight3D.new(); door.position = T0 + Vector3(1.4, 2.1, 6.5); door.look_at_from_position(door.position, T0 + Vector3(0, 0.7, 0.4)); door.light_color = Color(1.0, 0.86, 0.66)
 	door.light_energy = 0.0; door.spot_range = 12; door.spot_angle = 22; door.shadow_enabled = true; door.light_volumetric_fog_energy = 3.0; add_child(door)
 	var K := [
 		[0.0, T0 + Vector3(-3.6, 3.2, -3.4), T0 + Vector3(0, 1.0, 0), 42.0],
-		[4.0, T0 + Vector3(-2.8, 1.9, 1.6), T0 + Vector3(0, 1.05, 0.6), 38.0],
-		[7.4, T0 + Vector3(-1.6, 1.45, 2.4), T0 + Vector3(0, 1.15, 0.8), 34.0],
-		[11.0, T0 + Vector3(-1.3, 1.4, 2.25), T0 + Vector3(0.1, 1.15, 0.85), 32.0]]
+		[4.0, T0 + Vector3(-2.4, 1.8, -1.6), T0 + Vector3(0, 1.1, 0.5), 38.0],
+		[7.4, T0 + Vector3(0.35, 1.38, -1.1), T0 + Vector3(0.15, 1.25, 1.3), 34.0],
+		[11.0, T0 + Vector3(0.3, 1.35, -0.85), T0 + Vector3(0.2, 1.3, 1.5), 30.0]]
 	upd = func():
 		for ch in [hk, p1, p2, p3]:
 			anim_at(ch); sit(ch)
@@ -762,7 +766,7 @@ func build_saloon() -> void:
 			var c: Vector3 = ch["base"] + f * 0.42; c.y = top + 0.03
 			reach(ch, "l", c + rt * 0.16, ch["base"] + Vector3(0, 1.0, 0) + rt * 0.7 - f * 0.4)
 			reach(ch, "r", c - rt * 0.16, ch["base"] + Vector3(0, 1.0, 0) - rt * 0.7 - f * 0.4)
-		killer["base"] = T0 + Vector3(0.4, 0, 4.6).lerp(Vector3(0.3, 0, 3.2), seg(7.6, 9.6)); anim_at(killer)
+		killer["base"] = T0 + Vector3(0.9, 0, 4.0).lerp(Vector3(0.45, 0, 2.2), seg(7.6, 9.6)); anim_at(killer)
 		if t > 7.6 and t < 9.6: walk_pose(killer, (t - 7.6) * 4.0, 0.6)
 		door.light_energy = 18.0 * seg(7.4, 8.4)
 		key.light_energy = 3.0 + 0.2 * sin(t * 12.0)
