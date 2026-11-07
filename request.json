@@ -1,113 +1,63 @@
 {
- "id": "ep63-vo-test-02",
+ "id": "ep63-hook-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "N_D_female_story",
+   "name": "H1_weigall",
    "lang": "zh",
-   "accent": "standard",
-   "gender": "female",
-   "use_case": "narrative_story",
-   "pick": 1,
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "1923年4月5日，开罗。一位英国伯爵，在这里咽下了最后一口气。据说就在那一刻，整座城市的灯，同时熄灭了。"
-  },
-  {
-   "name": "K_a",
-   "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "search": "mature",
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4
-   },
-   "text": "卡特……你能看见什么吗？"
-  },
-  {
-   "name": "K_b",
-   "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "search": "deep",
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4
-   },
-   "text": "卡特……你能看见什么吗？"
-  },
-  {
-   "name": "C_a",
-   "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "use_case": "characters_animation",
+   "voice_id": "ZJsn5HnrE3eUbep2ia8D",
    "settings": {
     "stability": 0.4,
     "similarity_boost": 0.8,
     "style": 0.45
    },
-   "text": "再给我一个季度。钱，我自己出。"
+   "text": "他要是这样下去……只剩六个星期好活。"
   },
   {
-   "name": "C_b",
+   "name": "H2_narr",
    "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "use_case": "conversational",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.45
+    "style": 0.35
    },
-   "text": "再给我一个季度。钱，我自己出。"
+   "text": "七周后，他真的死了。"
   },
   {
-   "name": "M_a",
+   "name": "H3_narr",
    "lang": "zh",
-   "accent": "standard",
-   "gender": "female",
-   "search": "mature",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.5
+    "style": 0.35
    },
-   "text": "闯入埃及国王的长眠之地，难免要冒些风险。"
+   "text": "据说那一刻，开罗全城停电，"
   },
   {
-   "name": "M_b",
+   "name": "H4_narr",
    "lang": "zh",
-   "accent": "standard",
-   "gender": "female",
-   "use_case": "characters_animation",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.5
+    "style": 0.35
    },
-   "text": "闯入埃及国王的长眠之地，难免要冒些风险。"
+   "text": "他的狗，倒地不起。"
   },
   {
-   "name": "W_a",
+   "name": "H5_title",
    "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "use_case": "entertainment_tv",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.5
+    "style": 0.35
    },
-   "text": "他要是带着这种心态下去，我看他只剩六个星期好活。"
+   "text": "法老的诅咒，是真的吗？"
   }
  ]
 }
