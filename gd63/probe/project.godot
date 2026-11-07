@@ -1,0 +1,12 @@
+config_version=5
+
+[application]
+config/name="gpu_probe"
+run/main_scene="res://test.tscn"
+
+[display]
+window/size/viewport_width=1440
+window/size/viewport_height=1080
+
+[rendering]
+renderer/rendering_method="forward_plus"
