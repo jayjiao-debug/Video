@@ -17,9 +17,9 @@ for r, _, fs in os.walk(f'{SRC}/Textures'):
     for f in fs: tex.setdefault(f, os.path.join(r, f))
 # Synty's material list names the atlas PolygonAncientEgypt_01_A.png; the file ships as Alts/PolygonAncientEgypt_Texture_01_A.png
 alias = {'PolygonAncientEgypt_01_A.png': 'PolygonAncientEgypt_Texture_01_A.png'}
-want = sys.argv[1:]
+want = [a for a in sys.argv[1:] if not a.startswith('tex:')]   # 'tex:NAME.png' args add a texture by file name (normal maps, floors)
 os.makedirs(f'{PUB}/fbx', exist_ok=True); os.makedirs(f'{PUB}/tex', exist_ok=True)
-need = {'PolygonAncientEgypt_01_A.png', 'Simple_Sky_01.png', 'Stucco_01.png'}; out = {}
+need = {'PolygonAncientEgypt_01_A.png', 'Simple_Sky_01.png', 'Stucco_01.png'} | {a[4:] for a in sys.argv[1:] if a.startswith('tex:')}; out = {}
 for w in want:
     p = None
     for r, _, fs in os.walk(f'{SRC}/FBX'):

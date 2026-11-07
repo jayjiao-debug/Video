@@ -1,11 +1,20 @@
 /* Synty POLYGON Ancient Egypt · look test (owner 2026-11-07: "see if you will be able to use these").
    The FBX source files + texture atlas, loaded with three.js FBXLoader inside Remotion. The assets are NOT in the repo (licence + public
    repo): they live in a local public dir built by mkpub (PUBLIC_DIR=/dev/shm/synty/pub). Units are Synty's centimetres.
-   Compositions: HEADS62 (diagnostic: every body and head piece in a row), SYNTY62 (8 s: the avenue at golden hour, then the gods). */
+   Compositions: HEADS62 (diagnostic: every body and head piece in a row), SYNTY62 (8 s: the avenue at golden hour, then the gods),
+   SYNTYB62 (look v2 after "the lighting, facial expressions etc is very mid": normal + glow maps, image-based light, a film lighting set-up,
+   haze, light shafts, dust, AO + bloom + depth of field + grade, eyebrow/eye acting). */
 import React, {useEffect, useMemo, useState} from 'react';
 import {AbsoluteFill, Composition, continueRender, delayRender, registerRoot, staticFile, useCurrentFrame} from 'remotion';
 import {ThreeCanvas} from '@remotion/three';
-import {useThree} from '@react-three/fiber';
+import {useFrame, useThree} from '@react-three/fiber';
+import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js';
+import {GTAOPass} from 'three/examples/jsm/postprocessing/GTAOPass.js';
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import {BokehPass} from 'three/examples/jsm/postprocessing/BokehPass.js';
+import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';
+import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import * as THREE from 'three';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader.js';
 import {clone as skClone} from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -14,7 +23,9 @@ const W = 1440, H = 1080, FPS = 30;
 type MatMap = {mat: Record<string, string[]>; tex: string[]};
 type Lib = {fbx: Record<string, THREE.Group>; tex: Record<string, THREE.Texture>; mm: MatMap};
 const ATLAS = 'PolygonAncientEgypt_01_A.png';
-const TILED = new Set(['Wall_Hieroglyph_01.png', 'Wall_Mural_01.png', 'Wall_Mural_02.png', 'Stucco_01.png']);
+const TILED = new Set(['Wall_Hieroglyph_01.png', 'Wall_Mural_01.png', 'Wall_Mural_02.png', 'Stucco_01.png', 'Temple_Middle_01.png', 'Temple_Middle_01_Normals.png', 'Ornate_Marble_01.png', 'Ornate_Marble_01_Normals.png']);
+const ATLAS_N = 'PolygonAncientEgypt_Texture_01_Normals.png', ATLAS_E = 'PolygonEgypt_Emissive_01_A.png';
+const LINEAR = (n: string) => /_Normals\.png$/.test(n);
 
 let LIB: Promise<Lib> | null = null;
 const loadLib = (): Promise<Lib> => {
@@ -24,7 +35,7 @@ const loadLib = (): Promise<Lib> => {
 		const tl = new THREE.TextureLoader(), fl = new FBXLoader();
 		const tex: Record<string, THREE.Texture> = {};
 		await Promise.all(mm.tex.map(async (n) => {
-			const t = await tl.loadAsync(staticFile('tex/' + n)); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+			const t = await tl.loadAsync(staticFile('tex/' + n)); t.colorSpace = LINEAR(n) ? THREE.NoColorSpace : THREE.SRGBColorSpace; t.anisotropy = 8;
 			if (TILED.has(n)) t.wrapS = t.wrapT = THREE.RepeatWrapping;
 			tex[n] = t;
 		}));
@@ -37,7 +48,11 @@ const loadLib = (): Promise<Lib> => {
 				const one = (i: number) => {
 					const n = slots[i] ?? slots[0] ?? ATLAS;
 					if (p === 'SM_Env_Skydome_01') return new THREE.MeshBasicMaterial({map: tex[n], side: THREE.BackSide, fog: false});
-					return new THREE.MeshStandardMaterial({map: tex[n] ?? tex[ATLAS], roughness: 0.82, metalness: 0});
+					const atlas = !tex[n] || n === ATLAS;
+					// the atlas also has a normal map and a glow (emissive) map: gems, gold leaf and flames light up and catch the bloom
+					return new THREE.MeshStandardMaterial({map: tex[n] ?? tex[ATLAS], roughness: 0.78, metalness: 0,
+						...(atlas && tex[ATLAS_N] ? {normalMap: tex[ATLAS_N], normalScale: new THREE.Vector2(1, 1)} : {}),
+						...(atlas && tex[ATLAS_E] ? {emissiveMap: tex[ATLAS_E], emissive: new THREE.Color('#FFFFFF'), emissiveIntensity: 1.2} : {})});
 				};
 				m.material = Array.isArray(m.material) ? m.material.map((_, i) => one(i)) : one(0);
 				m.castShadow = true; m.receiveShadow = true;
@@ -80,7 +95,10 @@ const rotW = (bone: THREE.Object3D, axis: THREE.Vector3, ang: number) => {
 };
 const sm = (u: number) => { const v = Math.max(0, Math.min(1, u)); return v * v * (3 - 2 * v); };
 type Gest = {side: 'L' | 'R'; to: Arms; t0: number; t1: number; back?: number};
-type Fig = {body: string; att?: string[]; extra?: string[]; at: [number, number, number]; ry?: number; s?: number; arms?: Arms; armsR?: Arms; gest?: Gest; look?: number; ph?: number};
+/** brow: eyebrows up (+, surprise) / down (-, anger) in cm, eased in over [t0, t0 + 0.4]; eyes: a sideways glance in cm (the faces have no mouth
+    bone or blendshapes: brows and eyes are all the pack's faces can do) */
+type Face = {brow: number; t0?: number; eyes?: number};
+type Fig = {body: string; att?: string[]; extra?: string[]; at: [number, number, number]; ry?: number; s?: number; arms?: Arms; armsR?: Arms; gest?: Gest; look?: number; ph?: number; face?: Face};
 const Figure: React.FC<{lib: Lib; f: Fig; t?: number}> = ({lib, f, t = 0}) => {
 	const rig = useMemo(() => {
 		const g = new THREE.Group();
@@ -89,8 +107,8 @@ const Figure: React.FC<{lib: Lib; f: Fig; t?: number}> = ({lib, f, t = 0}) => {
 		c.traverse((o) => { const m = o as THREE.SkinnedMesh; if (!m.isMesh) return; m.visible = keep.has(m.name); if (m.name === f.body) body = m; m.frustumCulled = false; });
 		g.add(c); c.updateMatrixWorld(true);
 		const B = (n: string) => (body ? mainOf((body as THREE.SkinnedMesh).skeleton.bones.find((b) => b.name === n)) : undefined);
-		const bones = {shL: B('Shoulder_L'), elL: B('Elbow_L'), haL: B('Hand_L'), shR: B('Shoulder_R'), elR: B('Elbow_R'), haR: B('Hand_R'), sp: B('Spine_02'), hd: B('Head')};
-		const rest = new Map<THREE.Object3D, THREE.Quaternion>(); Object.values(bones).forEach((b) => b && rest.set(b, b.quaternion.clone()));
+		const bones = {shL: B('Shoulder_L'), elL: B('Elbow_L'), haL: B('Hand_L'), shR: B('Shoulder_R'), elR: B('Elbow_R'), haR: B('Hand_R'), sp: B('Spine_02'), hd: B('Head'), br: B('Eyebrows'), ey: B('Eyes')};
+		const rest = new Map<THREE.Object3D, [THREE.Quaternion, THREE.Vector3]>(); Object.values(bones).forEach((b) => b && rest.set(b, [b.quaternion.clone(), b.position.clone()]));
 		// static head pieces (crowns, the leopard head) are modelled around the head joint: hang them on the main Head bone, world-aligned
 		for (const e of f.extra ?? []) {
 			const x = lib.fbx[e].clone(), hd = bones.hd;
@@ -102,7 +120,7 @@ const Figure: React.FC<{lib: Lib; f: Fig; t?: number}> = ({lib, f, t = 0}) => {
 	// per frame: back to the bind pose, then idle sway, arms (world directions), head turn; posed with the group at identity
 	const {g, c, bones: k, rest} = rig;
 	g.position.set(0, 0, 0); g.rotation.set(0, 0, 0); g.scale.setScalar(1);
-	rest.forEach((q, b) => b.quaternion.copy(q)); c.updateMatrixWorld(true);
+	rest.forEach(([q, p], b) => { b.quaternion.copy(q); b.position.copy(p); }); c.updateMatrixWorld(true);
 	const ph = f.ph ?? 0;
 	if (k.sp) { rotW(k.sp, V(0, 1, 0), 0.05 * Math.sin(t * 0.8 + ph)); rotW(k.sp, V(1, 0, 0), 0.015 * Math.sin(t * 1.7 + ph)); }
 	for (const s of ['L', 'R'] as const) {
@@ -115,6 +133,16 @@ const Figure: React.FC<{lib: Lib; f: Fig; t?: number}> = ({lib, f, t = 0}) => {
 		aim(sh, el, V(p[0].x * side, p[0].y, p[0].z)); aim(el, ha, V(p[1].x * side, p[1].y, p[1].z));
 	}
 	if (k.hd && f.look) rotW(k.hd, V(0, 1, 0), f.look * Math.sin(t * 0.45 + ph));
+	const nudge = (b: THREE.Object3D | undefined, d: THREE.Vector3) => {   // move a bone by a world-space offset
+		if (!b || !b.parent) return; b.parent.updateWorldMatrix(true, false);
+		const w = V(0, 0, 0).setFromMatrixPosition(b.matrixWorld).add(d); b.position.copy(b.parent.worldToLocal(w)); b.updateWorldMatrix(false, true);
+	};
+	if (f.face) {
+		const u = f.face.t0 === undefined ? 1 : sm((t - f.face.t0) / 0.4);
+		// posed with the group at identity, so world up / world x are the figure's own up / sideways
+		nudge(k.br, V(0, f.face.brow * u, 0));
+		if (f.face.eyes) nudge(k.ey, V(f.face.eyes * u, 0, 0));
+	}
 	g.position.set(...f.at); g.rotation.y = f.ry ?? 0; g.scale.setScalar(f.s ?? 1); g.updateMatrixWorld(true);
 	return <primitive object={g} />;
 };
@@ -252,8 +280,116 @@ const Synty: React.FC = () => {
 		: <Canvas exposure={1.2} fog={['#141A48', 2500, 9000]}><Gods lib={lib} t={t - 4} T={t} /></Canvas>)}</AbsoluteFill>;
 };
 
+/* ---------- look v2: the same temple shot, lit and finished like a film ---------- */
+const GradeShader = {
+	uniforms: {tDiffuse: {value: null as THREE.Texture | null}, T: {value: 0}, vig: {value: 0.6}, grain: {value: 0.03}},
+	vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+	fragmentShader: `uniform sampler2D tDiffuse; uniform float T, vig, grain; varying vec2 vUv;
+		float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+		void main(){ vec3 c = texture2D(tDiffuse, vUv).rgb; float l = dot(c, vec3(0.299, 0.587, 0.114));
+			c = mix(c, c * vec3(0.82, 0.94, 1.15), (1.0 - smoothstep(0.0, 0.45, l)) * 0.55);   // cool shadows
+			c = mix(c, c * vec3(1.1, 1.0, 0.86), smoothstep(0.45, 1.0, l) * 0.5);            // warm highlights
+			c = (c - 0.5) * 1.07 + 0.5;
+			vec2 d = vUv - 0.5; d.x *= 1.333; c *= 1.0 - vig * smoothstep(0.32, 0.95, length(d));
+			c += (h(vUv * vec2(1440.0, 1080.0) + fract(T * 7.0)) - 0.5) * grain;
+			gl_FragColor = vec4(c, 1.0); }`,
+};
+/** takes over rendering: scene -> ambient occlusion -> bloom -> depth of field -> tone map -> grade (vignette, grain, split tone) */
+const Post: React.FC<{T: number; focus: number; aperture?: number; maxblur?: number; bloom?: [number, number, number]}> = ({T, focus, aperture = 1.1e-5, maxblur = 0.006, bloom = [0.5, 0.5, 0.92]}) => {
+	const {gl, scene, camera} = useThree();
+	const P = useMemo(() => {
+		const c = new EffectComposer(gl); c.setPixelRatio(1); c.setSize(W, H);
+		c.addPass(new RenderPass(scene, camera));
+		const ao = new GTAOPass(scene, camera, W, H); ao.blendIntensity = 0.9; ao.updateGtaoMaterial({radius: 28, distanceExponent: 1.5, thickness: 60, scale: 1.2, samples: 16}); c.addPass(ao);
+		c.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), bloom[0], bloom[1], bloom[2]));
+		const k = new BokehPass(scene, camera, {focus, aperture, maxblur}); c.addPass(k);
+		c.addPass(new OutputPass());
+		const g = new ShaderPass(GradeShader); c.addPass(g);
+		return {c, k, g};
+	}, [gl, scene, camera]);
+	P.g.uniforms.T.value = T; (P.k.uniforms as unknown as Record<string, {value: number}>).focus.value = focus;
+	useFrame(() => P.c.render(), 1);
+	return null;
+};
+/** image-based light: a small night-sky dome with two fire spots, pre-filtered into scene.environment */
+const EnvLight: React.FC<{k: number; warm: [number, number, number][]}> = ({k, warm}) => {
+	const {gl, scene} = useThree();
+	useMemo(() => {
+		const es = new THREE.Scene();
+		es.add(new THREE.Mesh(new THREE.SphereGeometry(100, 32, 16), new THREE.ShaderMaterial({side: THREE.BackSide,
+			vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+			fragmentShader: 'varying vec3 vP; void main(){ float h = normalize(vP).y; vec3 c = mix(vec3(0.10, 0.07, 0.05), vec3(0.16, 0.2, 0.42), smoothstep(-0.2, 0.15, h)); c = mix(c, vec3(0.03, 0.04, 0.12), smoothstep(0.2, 0.9, h)); gl_FragColor = vec4(c, 1.0); }'})));
+		for (const w of warm) { const m = new THREE.Mesh(new THREE.SphereGeometry(9, 12, 8), new THREE.MeshBasicMaterial({color: new THREE.Color(4, 1.9, 0.6)})); m.position.set(...w); es.add(m); }
+		const pm = new THREE.PMREMGenerator(gl); scene.environment = pm.fromScene(es, 0, 0.1, 1000).texture; scene.environmentIntensity = k; pm.dispose();
+	}, [gl, scene, k, warm]);
+	return null;
+};
+const canvasTex = (w: number, h: number, draw: (x: CanvasRenderingContext2D) => void) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d')!); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
+const shaftTex = (() => { let t: THREE.Texture | null = null; return () => t ?? (t = canvasTex(64, 256, (x) => {
+	const g = x.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, 'rgba(255,255,255,0.9)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 256);
+	x.globalCompositeOperation = 'destination-in'; const s = x.createLinearGradient(0, 0, 64, 0); s.addColorStop(0, 'rgba(0,0,0,0)'); s.addColorStop(0.5, 'rgba(0,0,0,1)'); s.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = s; x.fillRect(0, 0, 64, 256); })); })();
+const hazeTex = (() => { let t: THREE.Texture | null = null; return () => { if (t) return t; let r = 7; const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+	t = canvasTex(512, 512, (x) => { for (let i = 0; i < 70; i++) { const cx = R() * 512, cy = R() * 512, rr = 40 + R() * 110; const g = x.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, 'rgba(255,255,255,0.35)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 512, 512); } });
+	t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }; })();
+/** moonlight shafts falling between the pillars (additive planes) */
+const Shafts: React.FC<{T: number}> = ({T}) => {
+	const mat = useMemo(() => new THREE.MeshBasicMaterial({map: shaftTex(), color: '#8FA8FF', transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false}), []);
+	mat.opacity = 0.15 + 0.02 * Math.sin(T * 0.7);
+	return <group>{[-630, -210, 210, 630].map((x, i) => <mesh key={i} material={mat} position={[x + 120, 330, -330]} rotation={[0, 0, 0.32]}><planeGeometry args={[170, 760]} /></mesh>)}</group>;
+};
+/** drifting haze near the floor */
+const Haze: React.FC<{T: number}> = ({T}) => {
+	const mats = useMemo(() => [0, 1].map((i) => { const t = hazeTex().clone(); t.needsUpdate = true; t.repeat.set(2, 2);
+		return new THREE.MeshBasicMaterial({map: t, color: i ? '#4A56A8' : '#7A6A90', transparent: true, opacity: 0.32, depthWrite: false, fog: false}); }), []);
+	mats.forEach((m, i) => { m.map!.offset.set(T * (0.008 + i * 0.006), T * 0.003 * (i ? -1 : 1)); });
+	return <group>{mats.map((m, i) => <mesh key={i} material={m} rotation={[-Math.PI / 2, 0, 0]} position={[0, 14 + i * 22, 0]}><planeGeometry args={[4200, 3000]} /></mesh>)}</group>;
+};
+/** dust in the air, catching the fire light */
+const Dust: React.FC<{T: number}> = ({T}) => {
+	const {geo, base} = useMemo(() => { let r = 11; const R = () => (r = (r * 16807) % 2147483647) / 2147483647; const n = 500, base = new Float32Array(n * 4);
+		for (let i = 0; i < n; i++) { base[i * 4] = -800 + R() * 1600; base[i * 4 + 1] = R() * 420; base[i * 4 + 2] = -350 + R() * 800; base[i * 4 + 3] = R() * 6.28; }
+		const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); return {geo, base}; }, []);
+	const mat = useMemo(() => new THREE.PointsMaterial({map: glowTex(), color: '#FFCF94', size: 3.2, sizeAttenuation: true, transparent: true, opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false}), []);
+	const pa = geo.attributes.position as THREE.BufferAttribute;
+	for (let i = 0; i < pa.count; i++) { const ph = base[i * 4 + 3]; pa.setXYZ(i, base[i * 4] + 18 * Math.sin(T * 0.3 + ph) + T * 6, ((base[i * 4 + 1] + T * 4 + 30 * Math.sin(T * 0.2 + ph)) % 420 + 420) % 420, base[i * 4 + 2] + 14 * Math.cos(T * 0.25 + ph)); }
+	pa.needsUpdate = true;
+	return <points geometry={geo} material={mat} frustumCulled={false} />;
+};
+const TempleFloor: React.FC<{lib: Lib}> = ({lib}) => {
+	const mat = useMemo(() => { const m = lib.tex['Temple_Middle_01.png'].clone(), n = lib.tex['Temple_Middle_01_Normals.png'].clone(); [m, n].forEach((t) => { t.repeat.set(18, 18); t.needsUpdate = true; });
+		return new THREE.MeshStandardMaterial({map: m, normalMap: n, color: '#C9B49A', roughness: 0.5, metalness: 0}); }, [lib]);
+	return <mesh rotation={[-Math.PI / 2, 0, 0]} material={mat} receiveShadow><planeGeometry args={[7200, 7200]} /></mesh>;
+};
+const GODS2: Fig[] = GODS.map((f, i) => ({...f, face: [undefined, {brow: 1.1, t0: 4.3, eyes: 0.35}, {brow: -0.9, t0: 3.9}, {brow: -0.6, t0: 4.1, eyes: -0.3}, undefined][i]}));
+const GodsV2: React.FC<{lib: Lib; t: number; T: number}> = ({lib, t, T}) => {
+	// 0-3 s: the same dolly as v1 (for the before/after); 3-6 s: a push in on Ra and the queen (the brows react)
+	let pos: THREE.Vector3, look: THREE.Vector3, fov: number, focus: number;
+	if (t < 3) { const u = sm((t + 0.5) / 4); pos = V(-120 + 260 * u, 155, 800 - 80 * u); look = V(-20 + 90 * u, 128, 0); fov = 36; focus = 740; }
+	else { const u = sm((t - 3) / 3); pos = V(-150 + 40 * u, 162, 340 - 50 * u); look = V(-60 + 10 * u, 152, 50); fov = 30; focus = 300 - 50 * u; }
+	return <>
+		<Cam pos={pos} look={look} fov={fov} />
+		<Sky top="#04051A" mid="#10164A" hor="#262E66" sun={V(0, -1, 0)} sunI={0} stars={1.6} T={T} />
+		<EnvLight k={0.55} warm={[[-55, 8, 30], [55, 8, 30]]} />
+		<hemisphereLight args={['#5A63B0', '#2A1A10', 0.25]} />
+		<Sun pos={[-1500, 2600, -3000]} target={[0, 100, 0]} i={2.6} color="#A9BCFF" ext={1800} />
+		<spotLight position={[350, 520, 950]} target-position={[0, 140, 40]} angle={0.45} penumbra={1} intensity={90000} distance={3000} decay={1.6} color="#FFC9A0" />
+		<TempleFloor lib={lib} />
+		{[-1, 1].map((sd) => <group key={sd}><Piece lib={lib} p="SM_Prop_Brazier_01" at={[sd * 470, 0, 230]} s={1.2} /><Fire at={[sd * 470, 92, 230]} T={T} seed={sd === -1 ? 1 : 2} /></group>)}
+		{[-4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => <Piece key={k} lib={lib} p="SM_Bld_Pillar_Ornate_Large_01" at={[k * 420, 0, -440]} s={0.9} />)}
+		<Piece lib={lib} p="SM_Prop_Statue_12" at={[-600, 0, -150]} ry={0.4} s={1.4} /><Piece lib={lib} p="SM_Prop_Statue_01" at={[600, 0, -150]} ry={-0.4} s={1.4} />
+		{GODS2.map((f, i) => <Figure key={i} lib={lib} f={f} t={t + 0.5} />)}
+		<Shafts T={T} /><Haze T={T} /><Dust T={T} />
+		<Post T={T} focus={focus} />
+	</>;
+};
+const SyntyB: React.FC = () => {
+	const lib = useLib(); const t = useCurrentFrame() / FPS;
+	return <AbsoluteFill style={{background: '#000'}}>{lib && <Canvas exposure={1.25} fog={['#11163A', 1800, 9000]}><GodsV2 lib={lib} t={t} T={t + 4} /></Canvas>}</AbsoluteFill>;
+};
+
 const Root: React.FC = () => <>
 	<Composition id="SYNTY62" component={Synty} durationInFrames={8 * FPS} fps={FPS} width={W} height={H} />
+	<Composition id="SYNTYB62" component={SyntyB} durationInFrames={6 * FPS} fps={FPS} width={W} height={H} />
 	<Composition id="HEADSA62" component={() => <Heads row={0} />} durationInFrames={1} fps={FPS} width={W} height={H} />
 	<Composition id="HEADSB62" component={() => <Heads row={1} />} durationInFrames={1} fps={FPS} width={W} height={H} />
 </>;
