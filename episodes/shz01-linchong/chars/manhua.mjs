@@ -177,7 +177,7 @@ export function front(E = NE, o = {}) {
     add(`<path d="M196,268 C194,200 240,160 300,158 C360,160 406,200 404,268 C360,256 240,256 196,268Z" fill="#141519" ${L()}/>`);
     add(`<path d="M250,170 C266,124 334,124 350,170Z" fill="#141519" ${L()}/>`);
   }
-  if (o.shade === 'half') add(`<clipPath id="${id}sh"><ellipse cx="300" cy="420" rx="215" ry="300"/><rect x="150" y="560" width="300" height="240"/></clipPath><path clip-path="url(#${id}sh)" d="M304,100 L620,100 L620,820 L304,820Z" fill="#0b0d14" opacity="0.6"/>`);
+  if (o.shade === 'half') add(`<path clip-path="url(#${id}fc)" d="M304,100 L620,100 L620,820 L304,820Z" fill="#0b0d14" opacity="0.55"/>`);
   if (o.light) add(`<rect x="0" y="0" width="600" height="800" fill="${o.light}" opacity="0.28" style="mix-blend-mode:multiply"/><rect x="0" y="0" width="600" height="800" fill="${o.light}" opacity="0.12" style="mix-blend-mode:screen"/>`);
   return { defs, body: d };
 }
@@ -253,6 +253,12 @@ export function side(E = NE, o = {}) {
     add(`<path d="M188,240 C188,182 232,142 292,140 C254,160 232,200 234,238Z" fill="${C.hatS}"/>`);
     add(`<path d="M280,146 C312,142 344,152 366,172 C342,162 314,156 290,158Z" fill="${C.snow}"/>`);
     add(`<path d="M300,224 C380,220 460,218 512,218" fill="none" stroke="${C.snow}" stroke-width="5" stroke-linecap="round"/>`);
+  }
+  if (o.hat === false && o.headscarf === 'tokyo') {
+    add(`<path d="M226,196 L156,150 L166,138 L240,176Z" fill="#20252d" ${L(2.4)}/>`);
+    add(`<path d="M374,264 C378,202 342,154 290,152 C238,152 204,190 200,252 C198,304 206,354 222,404 L246,408 C238,362 238,312 252,282 C282,266 332,258 374,264Z" fill="#22272f" ${L()}/>`);
+    add(`<path d="M250,176 C270,162 296,158 318,162" fill="none" stroke="#3c4452" stroke-width="7" stroke-linecap="round"/>`);
+    add(`<circle cx="238" cy="304" r="12" fill="none" stroke="${C.line}" stroke-width="9"/><circle cx="238" cy="304" r="12" fill="none" stroke="#f4f1e8" stroke-width="5"/>`);
   }
   if (o.hat === false && o.cap === 'gao') {
     add(`<path d="M200,262 C196,190 240,146 300,146 C356,146 386,190 384,262 C330,250 250,252 200,262Z" fill="#1a1a20" ${L()}/>`);
