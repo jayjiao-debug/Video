@@ -120,8 +120,8 @@ const PUSH = JSON.parse(fs.readFileSync(new URL('../mocap/clips/push_heavy.json'
 const PF0 = 428, PF1 = 508, PUSH_A = T0 + 0.18;
 const PUSH_EXPR = { ...EX.隐忍, jaw: 1, eye: 0.6, brow: -0.9, mouth: -0.5 };
 function pushPoseAt(fr) {
-  const F = PUSH.frames, i = Math.max(0, Math.min(F.length - 2, F.findIndex((r) => r.frame > fr) - 1));
-  const a = F[i], b = F[i + 1], u = Math.max(0, Math.min(1, (fr - a.frame) / (b.frame - a.frame)));
+  const F = PUSH.frames, i = Math.max(0, Math.min(F.length - 2, F.findIndex((r) => r.f > fr) - 1));
+  const a = F[i], b = F[i + 1], u = Math.max(0, Math.min(1, (fr - a.f) / (b.f - a.f)));
   const m = (k) => a[k] + (b[k] - a[k]) * u;
   // mirrored: the capture's right (front, planted) leg is the rig's far leg L when he faces right
   return { torso: m('torso'), spine: 0.4, legL: m('thighR'), kneeL: Math.max(0, m('kneeR')), legR: m('thighL'), kneeR: Math.max(0, m('kneeL')), headWorld: 40, cloakFront: 0.1 };
