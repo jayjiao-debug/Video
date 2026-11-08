@@ -47,8 +47,10 @@ def split(sub):
     k = min(cands, key=lambda i: abs(i - len(sub) / 2)); a, b = sub[:k + 1], sub[k + 1:]
     a = a.rstrip("，；：")
     return [a] + split(b)
+MANUAL = {"N27": ["1867年，《哈珀斯》杂志", "把他写成了无所畏惧的英雄。"], "N29": ["廉价小说一本接一本。", "后来，好莱坞把它拍成了", "你开头看到的样子："],
+          "N12": ["他还放话：", "明天要戴着这块表，走过广场。"], "N35": ["11年后，1876年，", "达科他的一家酒馆。", "希科克又坐上了牌桌。"]}
 for l in lines:
-    parts = split(l["sub"]); tot = sum(len(p) for p in parts); t = l["start"]
+    parts = MANUAL.get(l["name"]) or split(l["sub"]); tot = sum(len(p) for p in parts); t = l["start"]
     sty = "SubT" if l["name"].startswith("T") else ("SubH" if l["name"].startswith("H") else "Sub")
     if l["name"] == "N39": continue
     for p in parts:
