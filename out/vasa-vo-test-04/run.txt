@@ -1,0 +1,102 @@
+plan: {'tier': 'starter', 'character_count': 20131, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01_female_a", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "voice_id": "9lHjugDhwqoxA5MhX0az", "model": "eleven_v4", "status": 200, "file": "01_female_a.mp3", "bytes": 163465}
+{"name": "02_female_b", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)", "voice_id": "hkfHEbBvdQFNX4uWHqRF", "model": "eleven_v4", "status": 200, "file": "02_female_b.mp3", "bytes": 164718}
+{"name": "03_male_f", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Steven Gor - Low, Calm and Soothing (standard, zh)", "voice_id": "M0TrFmFeBJS9H4xzdk8Z", "model": "eleven_v4", "status": 200, "file": "03_male_f.mp3", "bytes": 168898}
+{"name": "04_male_g", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Xinghe Jiang - Magnetic Conversational (standard, zh)", "voice_id": "lt7GBaCoAHWbT7JSZ5Xs", "model": "eleven_v4", "status": 200, "file": "04_male_g.mp3", "bytes": 171406}
+{"name": "05_story", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "05_story.mp3", "bytes": 177675}
+{"name": "06_young", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Karo Yang - Clear, Lively and Energetic (standard, zh)", "voice_id": "5mZxJZhSmJTjL7GoYfYI", "model": "eleven_v4", "status": 200, "file": "06_young.mp3", "bytes": 175167}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01_female_a",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "voice_id": "9lHjugDhwqoxA5MhX0az",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_female_a.mp3",
+  "bytes": 163465,
+  "heard": "1628年,瑞典最猛的新戰艦手航開了一千多米就成了最離譜的是,出發前船上的人就知道他會翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 10.16
+ },
+ {
+  "name": "02_female_b",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)",
+  "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02_female_b.mp3",
+  "bytes": 164718,
+  "heard": "1628年,瑞典最猛的新戰艦手航開了一千多米就成了最離譜的是,出發前船上的人就知道他會翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 10.24
+ },
+ {
+  "name": "03_male_f",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Steven Gor - Low, Calm and Soothing (standard, zh)",
+  "voice_id": "M0TrFmFeBJS9H4xzdk8Z",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "03_male_f.mp3",
+  "bytes": 168898,
+  "heard": "1628年,瑞典最猛的新戰艦手航,開了一千多米就沉了最離譜的是,出發前船上的人就知道他會翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 10.48
+ },
+ {
+  "name": "04_male_g",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Xinghe Jiang - Magnetic Conversational (standard, zh)",
+  "voice_id": "lt7GBaCoAHWbT7JSZ5Xs",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04_male_g.mp3",
+  "bytes": 171406,
+  "heard": "1628年,瑞典最猛的新战舰首航,开了一千多米就沉了最离谱的是,出发前船上的人就知道他会翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 10.64
+ },
+ {
+  "name": "05_story",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05_story.mp3",
+  "bytes": 177675,
+  "heard": "1628年 瑞典最猛的新战舰手航开了一千多米就沉了最离谱的是 出发前船上的人就知道他会翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 11.04
+ },
+ {
+  "name": "06_young",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Karo Yang - Clear, Lively and Energetic (standard, zh)",
+  "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "06_young.mp3",
+  "bytes": 175167,
+  "heard": "1628年,瑞典最猛的新戰艦手航,開了一千多米就沉了最離譜的是,出發前船上的人就知道他會煩",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 10.88
+ }
+]
