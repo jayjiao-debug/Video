@@ -51,11 +51,17 @@ export function front(E = NE, o = {}) {
   if (!o.headOnly) add(`<path d="M300,742 L356,640 L372,660 L300,790Z" fill="${C.shirtS}"/>`);
   // wrapped scarf around the neck
   const scarfF = 'M206,596 C230,572 268,582 300,588 C332,582 370,572 394,596 C414,628 402,668 368,680 C332,672 314,694 300,706 C286,694 268,672 232,680 C198,668 186,628 206,596Z';
-  add(`<path d="${scarfF}" fill="${C.scarf}" ${L()}/>`);
-  add(`<path d="M224,632 C256,644 282,650 300,666 M300,666 C318,650 344,644 376,632 M216,604 C250,612 280,616 300,622 C320,616 350,612 384,604" fill="none" stroke="${C.scarfS}" stroke-width="5" stroke-linecap="round"/>`);
+  if (!o.noScarf) add(`<path d="${scarfF}" fill="${C.scarf}" ${L()}/>`);
+  if (!o.noScarf) add(`<path d="M224,632 C256,644 282,650 300,666 M300,666 C318,650 344,644 376,632 M216,604 C250,612 280,616 300,622 C320,616 350,612 384,604" fill="none" stroke="${C.scarfS}" stroke-width="5" stroke-linecap="round"/>`);
   // --- neck
   add(`<path d="M258,548 C260,580 256,600 252,618 L348,618 C344,600 340,580 342,548Z" fill="${C.skin}" ${L()}/>`);
   add(`<path d="M258,560 C290,590 320,592 342,560 L344,600 C320,612 280,612 256,600Z" fill="${C.skinS}"/>`);
+  if (o.cangue) {
+    add(`<path d="M96,604 L504,604 L516,712 L84,712Z" fill="#8a6440" ${L()}/>`);
+    add(`<path d="M96,604 L504,604 L508,628 L92,628Z" fill="#a47a50"/>`);
+    add(`<path d="M150,640 L176,640 L172,706 L146,706Z M424,640 L450,640 L454,706 L428,706Z" fill="#6b4a2c"/>`);
+    add(`<path d="M330,616 L380,616 L384,708 L334,708Z" fill="#efe9dc" ${L(2)}/><path d="M344,632 h26 M346,652 h22 M344,672 h26 M346,692 h22" stroke="${C.red}" stroke-width="3" stroke-linecap="round"/>`);
+  }
   // --- hair behind (side locks fall in front later)
   // hat cords run behind the face and tie under the chin
   if (o.hat !== false) add(`<path d="M214,248 C200,330 196,420 222,500 C246,556 276,584 300,594 C324,584 354,556 378,500 C404,420 400,330 386,248" fill="none" stroke="${C.red}" stroke-width="4.5" stroke-linecap="round"/><path d="M300,594 l-10,22 M300,594 l12,20" stroke="${C.red}" stroke-width="4" stroke-linecap="round"/>`);
@@ -80,11 +86,16 @@ export function front(E = NE, o = {}) {
   // blush
   add(`<ellipse cx="240" cy="438" rx="22" ry="9" fill="${C.blush}" opacity="0.28"/><ellipse cx="360" cy="438" rx="22" ry="9" fill="${C.blush}" opacity="0.2"/>`);
   // --- jaw beard (燕颔虎须: thin line along the jaw) + goatee + moustache
+  const mo = 6 * E.mouth;
+  if (o.beard !== false) {
   add(stubble([[208, 436], [214, 480], [230, 520], [256, 552], [284, 568], [300, 572], [316, 568], [344, 552], [370, 520], [386, 480], [392, 436]], C.hair, 1));
   add(`<path d="M287,514 C289,540 293,572 300,610 C307,572 311,540 313,514 C306,520 294,520 287,514Z" fill="${C.hair}" ${L(2)}/>`);
-  const mo = 6 * E.mouth;
   add(`<path d="M298,470 C284,470 270,478 262,${f(498 - mo * 0.5)} C274,486 286,480 298,478Z" fill="${C.hair}"/>`);
   add(`<path d="${mirrorD(`M298,470 C284,470 270,478 262,${f(498 - mo * 0.5)} C274,486 286,480 298,478Z`)}" fill="${C.hair}"/>`);
+  } else if (o.thinMoustache) {
+    add(`<path d="M298,472 C286,472 276,478 270,488 C280,482 290,478 298,478Z" fill="${C.hair}"/>`);
+    add(`<path d="${mirrorD('M298,472 C286,472 276,478 270,488 C280,482 290,478 298,478Z')}" fill="${C.hair}"/>`);
+  }
   // --- mouth
   const mY = 494, cl = [282, mY - mo], cr = [318, mY - mo];
   if (E.open > 0.05) {
@@ -152,6 +163,22 @@ export function front(E = NE, o = {}) {
     add(`<path d="M70,228 C110,220 150,214 190,212 M440,212 C480,214 520,220 548,226" fill="none" stroke="${C.snow}" stroke-width="6" stroke-linecap="round" stroke-dasharray="30 14"/>`);
     add(`<path d="M196,226 C240,238 360,238 404,226" fill="none" stroke="${C.hatIn}" stroke-width="5" stroke-linecap="round"/>`);
   }
+  if (o.tattoo) add(`<path d="M348,428 h12v12h-12z M348,434 h12 M354,428 v12 M348,448 h12 M350,453 h8 M347,458 h14 M354,446 v14 M366,428 l10,10 M376,428 l-10,10 M365,433 h12 M366,448 h11v11h-11z M368,453 h7" fill="none" stroke="#2a3a55" stroke-width="2.2" stroke-linecap="round" opacity="0.8"/>`);
+  if (o.hat === false && o.headscarf === 'tokyo') {
+    add(`<path d="M206,250 L150,206 L162,198 L222,232Z M394,250 L450,206 L438,198 L378,232Z" fill="#20252d" ${L(2.4)}/>`);
+    add(`<path d="M194,266 C192,196 238,150 300,150 C362,150 408,196 406,266 C360,252 240,252 194,266Z" fill="#22272f" ${L()}/>`);
+    add(`<path d="M232,186 C254,164 280,156 304,156" fill="none" stroke="#3c4452" stroke-width="7" stroke-linecap="round"/>`);
+    add(`<path d="M196,262 C240,250 360,250 404,262" fill="none" stroke="#0f1216" stroke-width="5"/>`);
+    add(`<circle cx="190" cy="282" r="12" fill="none" stroke="${C.line}" stroke-width="9"/><circle cx="190" cy="282" r="12" fill="none" stroke="#f4f1e8" stroke-width="5"/>`);
+    add(`<circle cx="410" cy="282" r="12" fill="none" stroke="${C.line}" stroke-width="9"/><circle cx="410" cy="282" r="12" fill="none" stroke="#f4f1e8" stroke-width="5"/>`);
+  }
+  if (o.hat === false && o.headscarf === 'futou') {
+    add(`<path d="M206,268 C186,330 182,420 192,500 L206,500 C200,420 204,330 218,272Z M394,268 C414,330 418,420 408,500 L394,500 C400,420 396,330 382,272Z" fill="#141519"/>`);
+    add(`<path d="M196,268 C194,200 240,160 300,158 C360,160 406,200 404,268 C360,256 240,256 196,268Z" fill="#141519" ${L()}/>`);
+    add(`<path d="M250,170 C266,124 334,124 350,170Z" fill="#141519" ${L()}/>`);
+  }
+  if (o.shade === 'half') add(`<clipPath id="${id}sh"><ellipse cx="300" cy="420" rx="215" ry="300"/><rect x="150" y="560" width="300" height="240"/></clipPath><path clip-path="url(#${id}sh)" d="M304,100 L620,100 L620,820 L304,820Z" fill="#0b0d14" opacity="0.6"/>`);
+  if (o.light) add(`<rect x="0" y="0" width="600" height="800" fill="${o.light}" opacity="0.28" style="mix-blend-mode:multiply"/><rect x="0" y="0" width="600" height="800" fill="${o.light}" opacity="0.12" style="mix-blend-mode:screen"/>`);
   return { defs, body: d };
 }
 
@@ -187,9 +214,9 @@ export function side(E = NE, o = {}) {
   // ear
   add(`<path d="M262,356 C246,348 236,364 240,388 C244,410 254,422 268,420" fill="${C.skin}" ${L()}/><path d="M254,370 C248,378 250,396 258,404" fill="none" ${L(2)}/>`);
   // jaw beard, goatee, moustache
-  add(stubble([[266, 420], [274, 456], [292, 488], [318, 508], [346, 516], [372, 510], [386, 500]], C.hair, 1));
-  add(`<path d="M376,500 C384,520 392,548 398,578 C384,556 370,534 362,512Z" fill="${C.hair}" ${L(2)}/>`);
-  add(`<path d="M392,434 C384,438 376,446 370,${f(458 - 4 * E.mouth)} C380,452 388,446 396,442Z" fill="${C.hair}"/>`);
+  if (o.beard !== false) add(stubble([[266, 420], [274, 456], [292, 488], [318, 508], [346, 516], [372, 510], [386, 500]], C.hair, 1));
+  if (o.beard !== false) add(`<path d="M376,500 C384,520 392,548 398,578 C384,556 370,534 362,512Z" fill="${C.hair}" ${L(2)}/>`);
+  if (o.beard !== false) add(`<path d="M392,434 C384,438 376,446 370,${f(458 - 4 * E.mouth)} C380,452 388,446 396,442Z" fill="${C.hair}"/>`);
   // mouth corner
   add(`<path d="M392,${f(452 + (E.open > 0.05 ? 2 : 0))} L378,${f(454 - 4 * E.mouth)}" fill="none" ${L(2.4)}/>`);
   if (E.open > 0.05) add(`<path d="M392,454 C388,${f(462 + 10 * E.open)} 382,${f(462 + 10 * E.open)} 378,456Z" fill="#5a2a22" ${L(2)}/>`);
@@ -226,6 +253,11 @@ export function side(E = NE, o = {}) {
     add(`<path d="M188,240 C188,182 232,142 292,140 C254,160 232,200 234,238Z" fill="${C.hatS}"/>`);
     add(`<path d="M280,146 C312,142 344,152 366,172 C342,162 314,156 290,158Z" fill="${C.snow}"/>`);
     add(`<path d="M300,224 C380,220 460,218 512,218" fill="none" stroke="${C.snow}" stroke-width="5" stroke-linecap="round"/>`);
+  }
+  if (o.hat === false && o.cap === 'gao') {
+    add(`<path d="M200,262 C196,190 240,146 300,146 C356,146 386,190 384,262 C330,250 250,252 200,262Z" fill="#1a1a20" ${L()}/>`);
+    add(`<path d="M250,150 C254,110 330,104 344,150Z" fill="#1a1a20" ${L()}/>`);
+    add(`<circle cx="214" cy="196" r="20" fill="#e88aa8" ${L(2.4)}/><circle cx="214" cy="196" r="8" fill="#f6d36b"/><circle cx="232" cy="178" r="12" fill="#f0a6bf" ${L(2)}/>`);
   }
   return { defs: '', body: d };
 }
