@@ -846,13 +846,27 @@ function legGeo(D, n, Href) {
 }
 const sstep = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 const lerpM = (A, B, t) => A.map((v, i) => v + (B[i] - v) * t);
-function bodyPose(D, view, pose, Href, flip) {
+const invM = (m) => { const det = m[0] * m[3] - m[1] * m[2]; return [m[3] / det, -m[1] / det, -m[2] / det, m[0] / det, (m[2] * m[5] - m[3] * m[4]) / det, (m[1] * m[4] - m[0] * m[5]) / det]; };
+function bodyPose(D, view, pose, Href, flip, root) {
   const keys = ['torso', 'kneeR', 'kneeL', 'footR', 'footL'];
   if (view !== 'side' || !keys.some((k) => pose[k] !== undefined)) return null;
   const M = D.meta, ns = flip ? 'R' : 'L', fs = flip ? 'L' : 'R';
   const legs = {};
   for (const [n, s] of [['legNear', ns], ['legFar', fs]]) {
-    const g = legGeo(D, n, Href), th = pose[`leg${s}`] || 0, kn = pose[`knee${s}`] || 0, ft = pose[`foot${s}`] ?? 0;
+    const g = legGeo(D, n, Href), ft = pose[`foot${s}`] ?? 0;
+    let th = pose[`leg${s}`] || 0, kn = pose[`knee${s}`] || 0;
+    const lock = pose.footLock && pose.footLock[s];
+    if (lock && root) {
+      // foot IK: put this ankle at a locked spot (lin's output coordinates, ground: false), the knee bending forward
+      const T = ap(invM(root), lock), H = g.hip;
+      const Lt = Math.hypot(g.K[0] - H[0], g.K[1] - H[1]), Ls = Math.hypot(g.A[0] - g.K[0], g.A[1] - g.K[1]);
+      const v = [T[0] - H[0], T[1] - H[1]], d = Math.max(Math.abs(Lt - Ls) + 1, Math.min(Lt + Ls - 0.5, Math.hypot(v[0], v[1])));
+      const dg = (r) => (r * 180) / Math.PI, dirOf = (a, b) => dg(Math.atan2(-(b[0] - a[0]), b[1] - a[1])); // from straight down, + forward (-x)
+      const phi = dg(Math.atan2(-v[0], v[1])), al = dg(Math.acos(Math.max(-1, Math.min(1, (Lt * Lt + d * d - Ls * Ls) / (2 * Lt * d)))));
+      const ka = 180 - dg(Math.acos(Math.max(-1, Math.min(1, (Lt * Lt + Ls * Ls - d * d) / (2 * Lt * Ls)))));
+      const t0 = dirOf(H, g.K), s0 = dirOf(g.K, g.A);
+      th = phi + al - t0; kn = s0 - t0 + ka;
+    }
     const Mt = rot(th, g.hip[0], g.hip[1]);
     const Ms = mul(Mt, rot(-kn, g.K[0], g.K[1]));
     const footM = (h) => mul(Ms, rot(-(th - kn) - h, g.A[0], g.A[1])); // h = heel lift in the world, 0 = flat
@@ -892,8 +906,11 @@ function bodyPose(D, view, pose, Href, flip) {
   const K0 = [(legs.legNear.g.K[0] + legs.legFar.g.K[0]) / 2, legs.legNear.g.K[1]];
   const kp = Object.values(legs).map((l) => ap(l.Mt, l.g.K));
   const kf = kp.reduce((a, b) => (b[0] < a[0] ? b : a)), kb = kp.reduce((a, b) => (b[0] > a[0] ? b : a));
-  const dxF = Math.min(0, kf[0] - K0[0]) * (pose.cloakFront ?? 0.45), dxB = Math.max(0, kb[0] - K0[0]) * (pose.cloakBack ?? 0.8);
-  const liftF = Math.max(0, K0[1] - kf[1]) * 0.45, liftB = Math.max(0, K0[1] - kb[1]) * 0.3;
+  const tgt = { dxF: Math.min(0, kf[0] - K0[0]) * (pose.cloakFront ?? 0.45), dxB: Math.max(0, kb[0] - K0[0]) * (pose.cloakBack ?? 0.8),
+    liftF: Math.max(0, K0[1] - kf[1]) * 0.45, liftB: Math.max(0, K0[1] - kb[1]) * 0.3 };
+  // pose.cloak overrides the push (a motion driver passes values run through a spring, so the cloth lags the legs
+  // instead of being glued to them); the instantaneous targets are reported in info.cloakTarget
+  const { dxF, dxB, liftF, liftB } = pose.cloak || tgt;
   const gTop = hipC[1] - 0.35 * Href;
   const garment = (x, y) => {
     let X = x, Y = y;
@@ -915,7 +932,7 @@ function bodyPose(D, view, pose, Href, flip) {
   }
   const dy = pose.ground === false ? 0 : M.sole - Math.max(...soleY);
   const dx = pose.anchor === 'R' || pose.anchor === 'L' ? -toes[pose.anchor] : 0;
-  return { legs, CH, garment, G: tr(dx, dy), hipC, rot: lean };
+  return { legs, CH, garment, G: tr(dx, dy), hipC, rot: lean, cloakTarget: tgt };
 }
 // a leg cut at knee and ankle: thigh, shin, foot each turned by its own matrix; caps fill the outer wedges
 function legPieces(D, n, L, PAL, u) {
@@ -971,7 +988,7 @@ export function lin(opt = {}) {
   }
   const O = { hat: opt.hat !== false, tattoo: opt.tattoo ?? (costume === 'C' ? 1 : 0), rings: opt.headCloth !== 'plain', cangue: !!opt.cangue };
   const ang = jointAngles(D, view, pose, flip);
-  const BP = bodyPose(D, view, pose, Href, flip);
+  const BP = bodyPose(D, view, pose, Href, flip, root);
   const rootM = BP ? mul(root, BP.G) : root;
   if (BP && pose.armsWorld) {
     // shoulder angles given in the world (as captured): add back the chest's turn
@@ -1098,7 +1115,11 @@ export function lin(opt = {}) {
       opt.info.handAngNear = angOf(mul(rootM, wm(nhn)));
       if (BP) {
         for (const [n, Lg] of Object.entries(BP.legs)) opt.info[n] = { hip: Wp(I, Lg.g.hip), knee: Wp(Lg.Mt, Lg.g.K), ankle: Wp(Lg.Ms, Lg.g.A), toe: Wp(Lg.Mf, Lg.g.toe), heel: Wp(Lg.Mf, Lg.g.heel), side: Lg.side };
-        opt.info.hip = Wp(I, BP.hipC); opt.info.groundDy = BP.G[5]; opt.info.hipLocal = BP.hipC;
+        opt.info.hip = Wp(I, BP.hipC); opt.info.groundDy = BP.G[5]; opt.info.hipLocal = BP.hipC; opt.info.chestRot = BP.rot; opt.info.cloakTarget = BP.cloakTarget;
+        // a few cloak / robe sample points (rest -> posed) for motion checks: back hem, front hem, back at the waist, shoulder blade
+        const tp = partPoints(D, 'torso').flatMap((q) => q.pts), ymax = Math.max(...tp.map((q) => q[1])), xs = tp.map((q) => q[0]);
+        const xmin = Math.min(...xs), xmax = Math.max(...xs), hy = BP.hipC[1];
+        opt.info.cloak = [[xmax - 5, ymax - 5], [xmin + 5, ymax - 5], [xmax - 5, hy], [xmax - 20, hy - 2.2 * Href]].map((q) => Wp(I, BP.garment(q[0], q[1])));
       }
     }
   }
