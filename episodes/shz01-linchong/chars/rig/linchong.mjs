@@ -574,14 +574,15 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 5) {
   const L = (w = 1) => `stroke="#1e1612" stroke-width="${f(lw * w)}" stroke-linejoin="round" stroke-linecap="round"`;
   const skin = neckColour(D), id = uid('cg');
   const blur = `<filter id="${id}b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${f(0.7 * cm)}"/></filter><filter id="${id}s" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${f(0.25 * cm)}"/></filter>`;
-  let board = blur, under = '';
+  let board = blur, under = '', below = null;
   const ell = (cx, cy, rx, ry, rot = 0) => `M${f(cx - rx * Math.cos(rot))},${f(cy - rx * Math.sin(rot))} A${f(rx)},${f(ry)} ${f((rot * 180) / Math.PI)} 1 0 ${f(cx + rx * Math.cos(rot))},${f(cy + rx * Math.sin(rot))} A${f(rx)},${f(ry)} ${f((rot * 180) / Math.PI)} 1 0 ${f(cx - rx * Math.cos(rot))},${f(cy - rx * Math.sin(rot))}Z`;
   let neckCol = '';
   if (view === 'front') {
     // seen from slightly above; the long end (62 cm) comes toward us and down; far edge under the jaw
-    const far = F.chin[1] + drop + 0.08 * Href, ny = far + 2.2 * cm, nx = F.chin[0];  // far edge below the jaw; neck enters ~0.2 H under the chin
+    const far = F.chin[1] + drop + 0.02 * Href, ny = far + 2.0 * cm, nx = F.chin[0];  // far edge just under the chin; neck enters ~0.15 H under it
     const hw = 21 * cm, near = ny + 10 * cm, th = 3 * cm;
-    const nw = 5.6 * cm, hy = 1.2 * cm;                                 // neck half width, entry-ellipse half height
+    const nw = 5.6 * cm, hy = 1.1 * cm;                                 // neck half width, entry-ellipse half height
+    below = [[-1e4, far + 0.3 * cm], [1e4, far + 0.3 * cm], [1e4, 1e5], [-1e4, 1e5]];
     const nearEdge = `C${f(nx + hw * 1.05)},${f(near + 1 * cm)} ${f(nx + hw * 0.5)},${f(near + 2 * cm)} ${f(nx)},${f(near + 2 * cm)} C${f(nx - hw * 0.5)},${f(near + 2 * cm)} ${f(nx - hw * 1.05)},${f(near + 1 * cm)} ${f(nx - hw * 1.07)},${f(near - 4 * cm)}`;
     const top = `M${f(nx - hw)},${f(far)} C${f(nx - hw * 0.5)},${f(far - 1.2 * cm)} ${f(nx + hw * 0.5)},${f(far - 1.2 * cm)} ${f(nx + hw)},${f(far)} L${f(nx + hw * 1.07)},${f(near - 4 * cm)} ${nearEdge}Z`;
     // end face (thickness) of the near end, then the whole top face
@@ -638,9 +639,10 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 5) {
     // 62 cm forward in front of the chest, 28 cm behind the nape; seen a little from above
     const a = (tilt * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a);
     const W = 4, T = 3;
-    const nx = F.ear[0] - 6 * u, ny = F.chin[1] + drop + 0.2 * Href + (W / 2) * cm * ca;  // neck enters ~0.2 H below the chin
+    const nx = F.ear[0] - 6 * u, ny = F.chin[1] + drop + 0.1 * Href + (W / 2) * cm * ca;  // neck enters ~0.15 H below the chin
     const Q = (d, o) => [nx - d * cm * ca + o * cm * sa, ny + d * cm * sa + o * cm * ca]; // d forward, o down (cm)
     const pth = (pts) => 'M' + pts.map(P).join(' L') + 'Z';
+    below = [Q(-400, -W + 0.3), Q(400, -W + 0.3), [Q(400, 0)[0], 1e5], [Q(-400, 0)[0], 1e5]];
     const topF = `M${P(Q(-26.5, -W))} L${P(Q(60.5, -W))} C${P(Q(62.5, -W))} ${P(Q(63, 0))} ${P(Q(61, 0))} L${P(Q(-26, 0))} C${P(Q(-28, 0))} ${P(Q(-28.5, -W))} ${P(Q(-26.5, -W))}Z`;
     const hc = Q(0, -W / 2), nw = 5.4 * cm, hry = 1.6 * cm;
     board += `<path d="M${P(Q(-26, 0))} L${P(Q(61, 0))} C${P(Q(63, 0))} ${P(Q(63, T))} ${P(Q(61, T))} L${P(Q(-26, T))} C${P(Q(-28, T))} ${P(Q(-28, 0))} ${P(Q(-26, 0))}Z" fill="${C.woodE}" ${L()}/>`;
@@ -674,7 +676,7 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 5) {
       `<path d="${lip}" fill="none" stroke="#7a5638" stroke-width="${f(0.5 * cm)}" stroke-linecap="round"/>` +
       `<path d="${lip}" fill="none" stroke="${C.woodE}" stroke-width="${f(lw * 0.7)}" opacity="0.6" transform="translate(0,${f(-0.25 * cm)})"/>`;
   }
-  return { board, under: neckCol };
+  return { board, under: neckCol, below };
 }
 
 // ------------------------------------------------------------------ wide sleeve (costume A) on a raised forearm
@@ -807,6 +809,7 @@ export function lin(opt = {}) {
   let defs = '';
   const items = []; // [z, svg]
   const nearSide = view === 'side' ? (flip ? 'R' : 'L') : null;
+  const CG = O.cangue ? cangueSVG(D, view, Href, u, drop, opt.cangueTilt ?? 5) : null;
   const draped = {}, handItems = {};
   // with the cangue on, the head layer (head, jaw, mouth) is lifted above the board (z 25)
   const headZ = D.parts.head ? D.parts.head.z : 15;
@@ -829,6 +832,11 @@ export function lin(opt = {}) {
       const cid = uid('tc');
       inner = `<clipPath id="${cid}"><path d="M${pclip.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
     }
+    if (CG && CG.below && (n === 'torso' || n === 'neck' || n === 'capelet' || n === 'cloak')) {
+      // the board rests on the collarbones: no collar or robe shows above its far edge
+      const cid = uid('cb');
+      inner = `<clipPath id="${cid}"><path d="M${CG.below.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
+    }
     let g = `<g data-part="${n}" transform="${mstr(wm(n))}">${inner}</g>`;
     let z = zc(p.z);
     if (costume === 'A' && /^arm._up$/.test(n) && opt.sleeve !== 'rigid' && p.pivot) {
@@ -850,7 +858,7 @@ export function lin(opt = {}) {
   if (O.cangue) {
     // board (hole cut out) over the shoulders and arms, then the neck rising through the hole,
     // then the head and beard (raised to z 26 above both)
-    const cg = cangueSVG(D, view, Href, u, drop, opt.cangueTilt ?? 5), mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
+    const cg = CG, mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
     items.push([25, `<g data-part="cangue" transform="${mt}">${cg.board}</g>`]);
     items.push([25.5, `<g data-part="cangueNeck" transform="${mt}">${cg.under}</g>`]);
   }
