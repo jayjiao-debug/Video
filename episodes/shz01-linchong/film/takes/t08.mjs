@@ -514,9 +514,9 @@ function sceneC(t) {
   let z = zhang({ ...zo, e: ze });
   // his arm reaches to 林冲's shoulder: lands 68.592
   const sh = ZH.anchor('shoulderR', zo);
-  const land = ramp(t, 68.1, T.hand, E.out);
+  const land = ramp(t, 67.95, T.hand, E.inOut);
   const handRest = [812, 566];       // wrist; the fingers drape over the shoulder cap at ≈ (680, 690)
-  const handFrom = [960, 470];
+  const handFrom = [1010, 640];      // his hand rests on the table edge before he reaches
   const sqz = Math.sin(clamp((t - T.sq) / 0.3) * Math.PI) * (t > T.sq ? 1 : 0);
   const hp = [lerp(handFrom[0], handRest[0], land), lerp(handFrom[1], handRest[1], land) + 3 * sqz];
   const handOp = 1 - ramp(t, T.dis, 73.4, E.inOut);
@@ -524,12 +524,12 @@ function sceneC(t) {
   let tab = `<path d="M-200,690 L2200,690 L2200,1300 L-200,1300Z" fill="#7A5536"/>`;
   tab += `<path d="M-200,690 L2200,690" stroke="#9A7048" stroke-width="6"/>`;
   tab += `<path d="M-200,700 L2200,700 L2200,760 L-200,760Z" fill="#8C6440" opacity="0.5"/>`;
-  tab += `<g transform="translate(860 712) skewX(-12) scale(1 0.34)">${xiushu({ w: 420, h: 470, id: 't08xs', sign: 1, print: 1, printOp: 0.9 })}</g>`;
+  tab += `<g transform="translate(1340 704) skewX(-12) scale(1 0.3)">${xiushu({ w: 420, h: 470, id: 't08xs', sign: 1, print: 1, printOp: 0.9 })}</g>`;
   const cup = (x, y, r) => `<path d="M${x - r},${y} C${x - r * 0.9},${y + r * 0.55} ${x - r * 0.35},${y + r * 0.72} ${x},${y + r * 0.72} C${x + r * 0.35},${y + r * 0.72} ${x + r * 0.9},${y + r * 0.55} ${x + r},${y}Z" fill="#8FA58F" stroke="#2A1C17" stroke-width="2.5"/>` +
     `<path d="M${x - r * 0.3},${y + r * 0.7} L${x - r * 0.36},${y + r * 0.95} L${x + r * 0.36},${y + r * 0.95} L${x + r * 0.3},${y + r * 0.7}Z" fill="#7A8F7A" stroke="#2A1C17" stroke-width="2"/>` +
     `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * 0.28}" fill="#5A3E2B" stroke="#2A1C17" stroke-width="2.5"/><ellipse cx="${x}" cy="${y + 2}" rx="${r * 0.8}" ry="${r * 0.2}" fill="#9A6A3A"/>` +
     `<path d="M${x - r * 0.75},${y + r * 0.2} C${x - r * 0.6},${y + r * 0.45} ${x - r * 0.4},${y + r * 0.55} ${x - r * 0.2},${y + r * 0.58}" fill="none" stroke="#C8D8C4" stroke-width="3" opacity="0.7"/>`;
-  tab += cup(1440, 752, 44) + cup(1580, 744, 38);
+  tab += cup(940, 748, 44) + cup(1080, 742, 38);
   s += L(c, 0.9, z, { id: 't08zhang' });
   s += L(c, 0.95, tab, { id: 't08table', bleed: 'lrb' });
   // light pool on the hand

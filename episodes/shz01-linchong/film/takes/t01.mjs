@@ -167,7 +167,7 @@ function S01(t) {
   const r = ramp(t, 0, 4.5, E.sine);
   const c = { x: -40 * r, y: 30 * r, zoom: 1 + 0.1 * r };
   const S = sheetTf(t);
-  const slide = ramp(t, 4.95, 5.5, E.in) * 900;
+  const slide = ramp(t, 4.95, 5.5, E.inOut) * 300;
   // press dynamics
   const sq = pulse(t, T.press, 0.1);
   const [shx, shy] = shake(t, T.press, 2, 3, 2);
@@ -225,7 +225,7 @@ function S01(t) {
       else if (t < 2.43) { p = mix(dishP, hover, ramp(t, 2.0, 2.43)); lift = 0.5 * Math.sin(ramp(t, 2.0, 2.43, E.lin) * Math.PI); }
       else if (t < T.press) { const tr = noise1(t * 14, 3) * 3; p = [hover[0] + tr, hover[1] - 20 * ramp(t, 2.43, 2.75) + 20 * ramp(t, 2.75, T.press, E.in) + noise1(t * 13, 7) * 2.5]; lift = 0.22 * (1 - ramp(t, 2.43, T.press, E.in)); }
       else if (t < T.lift) { p = [hover[0], hover[1]]; lift = 0; }
-      else { const k = ramp(t, T.lift, 4.12, E.inOut); p = mix(hover, [1700, 1300], k); lift = Math.min(1, k * 2.5); }
+      else { const k = ramp(t, T.lift, 4.35, E.inOut); p = mix(hover, [1700, 1300], k); lift = Math.min(1, k * 2.5); }
       const sc = 1 + lift * 0.12;
       const sqx = 1 + sq * 0.04, sqy = 1 - sq * 0.05;
       // wrist below the palm centre; palm centre ~ 45 units above the wrist
@@ -343,7 +343,7 @@ function S03(t) {
   const push = ramp(t, 10.6, T.s4, E.inOut);
   const settle = ramp(t, 9.95, 11.4, E.inOut);
   const out = ramp(t, 14.05, 14.75, E.in); // dolly-out start (he rises)
-  const pan = ramp(t, 14.05, 14.7, E.inOut) * 330;
+  const pan = ramp(t, 14.05, 14.75, E.inOut) * 260;
   const c = { x: 40 * push - pan, y: 0, zoom: (0.65 + 0.35 * settle) * (1 + 0.05 * push) * (1 - 0.2 * out), blurK: 6, focusD: 1 };
   // expression timeline
   let open = 0, look = [-0.35, 0.15], jaw = 0.4, tear = 0;
