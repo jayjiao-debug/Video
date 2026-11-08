@@ -1,80 +1,437 @@
 {
- "id": "vasa-vo-04-v3lines",
+ "id": "shz01-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01x",
+   "name": "V01",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.35
    },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开出去一公里，就沉了。"
+   "text": "如果有一天，你要亲手签下一封休书，给你最爱的人。"
   },
   {
-   "name": "01y",
+   "name": "V02",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.35
    },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开出去一公里，就沉了。"
+   "text": "她哭着问你：我清清白白，你为什么不要我？"
   },
   {
-   "name": "07x",
+   "name": "V03",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.35
    },
-   "text": "上将只叹了口气：“要是国王在场就好了。”"
+   "text": "你说不出口——你是怕自己回不来，误了她一辈子。"
   },
   {
-   "name": "07y",
+   "name": "V04",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.35
    },
-   "text": "上将只叹了口气：“要是国王在场就好了。”"
+   "text": "可这一别，就是一辈子。"
   },
   {
-   "name": "09x",
+   "name": "V05",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.35
    },
-   "text": "那天下午，全城的人都来看了。"
+   "text": "这个人，叫林冲。"
   },
   {
-   "name": "09y",
+   "name": "V06",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.35
    },
-   "text": "那天下午，全城的人都来看了。"
+   "text": "你本来什么都有：八十万禁军教头，一身本事。"
+  },
+  {
+   "name": "V07",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "家里的娘子，成亲三年，没跟你红过一次脸。"
+  },
+  {
+   "name": "V08",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你只想，日子就这样过下去。"
+  },
+  {
+   "name": "V09",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "直到那天在岳庙，有人当众调戏她。"
+  },
+  {
+   "name": "V10",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你一把扳过那人，拳头举了起来——"
+  },
+  {
+   "name": "V11",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "却认出，那是你上司的干儿子。"
+  },
+  {
+   "name": "V12",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "拳头，软了。"
+  },
+  {
+   "name": "V13",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你忍了。"
+  },
+  {
+   "name": "V14",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "最好的朋友陆谦，帮着他们害你，"
+  },
+  {
+   "name": "V15",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你忍了。"
+  },
+  {
+   "name": "V16",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "被诬陷，脸上刺字，发配沧州，"
+  },
+  {
+   "name": "V17",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你还是忍了。"
+  },
+  {
+   "name": "V18",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你总觉得，忍一忍，就能回去。"
+  },
+  {
+   "name": "V19",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "岳父也说：放你回来时，依旧夫妻完聚。"
+  },
+  {
+   "name": "V20",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "到了沧州，你守着一座草料场。"
+  },
+  {
+   "name": "V21",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "那年冬天，雪下得特别大。"
+  },
+  {
+   "name": "V22",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "雪压塌了草屋，你躲进山神庙，搬石头抵住了门。"
+  },
+  {
+   "name": "V23",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "半夜，草料场烧起来了。"
+  },
+  {
+   "name": "V24",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "门外有人说：烧死了，拾他一两块骨头回去交差。"
+  },
+  {
+   "name": "V25",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "那个声音，你认得。"
+  },
+  {
+   "name": "V26",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你终于明白，"
+  },
+  {
+   "name": "V27",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "忍，是回不去的。"
+  },
+  {
+   "name": "V28",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你推开了门。"
+  },
+  {
+   "name": "V29",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "那一夜雪越下越大，你一个人，上了梁山。"
+  },
+  {
+   "name": "V30",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你想把娘子接上山，可这件事，一拖再拖。"
+  },
+  {
+   "name": "V31",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "等派去的人回来，只带回一句话："
+  },
+  {
+   "name": "V32",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "娘子被逼，自缢身死，已故半载。"
+  },
+  {
+   "name": "V33",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你哭了。"
+  },
+  {
+   "name": "V34",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "从此，心里再没有可挂念的人。"
+  },
+  {
+   "name": "V35",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "后来，仇人高俅被捉上山，又被好酒好肉送了回去。"
+  },
+  {
+   "name": "V36",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "再后来，你病倒在杭州六和寺，再没起来。"
+  },
+  {
+   "name": "V37",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "你这一辈子，都在等那句：依旧夫妻完聚。"
+  },
+  {
+   "name": "V38",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "如果重来一次，岳庙那一拳，你打不打？"
+  },
+  {
+   "name": "V32b",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "娘子被逼，自缢身死，已故半宰。"
   }
  ]
 }
