@@ -83,6 +83,7 @@ export function blurDefs() {
  * Depth blur = blurK * |d - focusD| unless an explicit blur is given.
  */
 export function L(c, d, content, opts = {}) {
+  if (globalThis.HIDE_LAYERS && opts.id && globalThis.HIDE_LAYERS.has(opts.id)) return '';   // board variants drop a layer (e.g. a hand)
   const s = 1 + ((c.zoom || 1) - 1) * d;
   const x = (c.x || 0) * d, y = (c.y || 0) * d;
   const rot = c.rot ? ` rotate(${f2(c.rot * d)})` : '';
