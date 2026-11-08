@@ -1,0 +1,102 @@
+plan: {'tier': 'starter', 'character_count': 20351, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01x", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开出去一公里，就沉了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01x.mp3", "bytes": 91994}
+{"name": "01y", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开出去一公里，就沉了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01y.mp3", "bytes": 94501}
+{"name": "07x", "lang": "zh", "text": "上将只叹了口气：“要是国王在场就好了。”", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07x.mp3", "bytes": 74021}
+{"name": "07y", "lang": "zh", "text": "上将只叹了口气：“要是国王在场就好了。”", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07y.mp3", "bytes": 72767}
+{"name": "09x", "lang": "zh", "text": "那天下午，全城的人都来看了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "09x.mp3", "bytes": 47272}
+{"name": "09y", "lang": "zh", "text": "那天下午，全城的人都来看了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "09y.mp3", "bytes": 47272}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01x",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开出去一公里，就沉了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01x.mp3",
+  "bytes": 91994,
+  "heard": "1628年瑞典最猛的新战舰首航开出去一公里就沉了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.68
+ },
+ {
+  "name": "01y",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开出去一公里，就沉了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01y.mp3",
+  "bytes": 94501,
+  "heard": "1628年瑞典最猛的新战舰首航开出去一公里就沉了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.84
+ },
+ {
+  "name": "07x",
+  "lang": "zh",
+  "text": "上将只叹了口气：“要是国王在场就好了。”",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07x.mp3",
+  "bytes": 74021,
+  "heard": "上将只探了口气要是国王在场就好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.56
+ },
+ {
+  "name": "07y",
+  "lang": "zh",
+  "text": "上将只叹了口气：“要是国王在场就好了。”",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07y.mp3",
+  "bytes": 72767,
+  "heard": "上将只探了口气要是国王在场就好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.48
+ },
+ {
+  "name": "09x",
+  "lang": "zh",
+  "text": "那天下午，全城的人都来看了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09x.mp3",
+  "bytes": 47272,
+  "heard": "那天下午全城的人都來看了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.88
+ },
+ {
+  "name": "09y",
+  "lang": "zh",
+  "text": "那天下午，全城的人都来看了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09y.mp3",
+  "bytes": 47272,
+  "heard": "那天下午全城的人都來看了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.88
+ }
+]
