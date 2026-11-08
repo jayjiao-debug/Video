@@ -228,7 +228,9 @@ class BtWorld {
     for (const z of [-1.5, 2.35]) { const rp = P.rammerPair(poleM, headM, fleeceM); rp.position.set(1.3, 0, z); rp.rotation.y = z < 0 ? -0.69 : 0.45; rp.scale.setScalar(0.85); R.add(rp); }
     for (const z of [1.55, 4.6]) { const sr = P.shotRack(woodCar, ballM); sr.position.set(1.47, 0, z); R.add(sr); }
     const rc2 = P.ropeCoil(ropeM); rc2.position.set(0.55, 0, -1.05); rc2.rotation.y = 2.4; R.add(rc2); rc2.traverse((o) => { if ((o as THREE.Mesh).isMesh) W.tubeUV((o as THREE.Mesh).geometry); });
-    { const fl = P.flag(P.swedishFlag(), poleM, 3.4); fl.group.position.set(1.42, 0, 3.75); fl.group.rotation.y = -0.4; R.add(fl.group); this.flagWave = fl.wave; }
+    { const fl = P.flag(P.swedishFlag(), poleM, 3.4); fl.group.position.set(1.42, 0, 3.75); fl.group.rotation.y = -0.4; R.add(fl.group); this.flagWave = fl.wave;
+      // the prop's Lambert cloth gets no fill without a hemisphere light (rendered black): PBR paint with the sky fill
+      (fl.group.children[2] as THREE.Mesh).material = M.paint({ map: P.swedishFlag(), side: THREE.DoubleSide, roughness: 0.9, envMapIntensity: 1.4 }); }
     for (const [x, z, s] of [[-3.3, -1.6, 1], [-3.0, -2.3, 0.9], [-3.8, -2.0, 1.05]]) { const b = P.barrel(barrelW, iron, 0.85 * s, 0.3 * s); b.position.set(x, 0, z); b.rotation.y = x; R.add(b); }
     // texture coordinates in metres on the boxy wooden parts, so plank and grain scale match everywhere
     W.metricUV(R, (m) => m.material === red || m.material === railM || m.material === dark || m.material === woodCar || m.material === wheelM);
@@ -238,13 +240,14 @@ class BtWorld {
       uniforms: { uT: { value: 0 }, uWhite: { value: 0 }, uDeep: { value: 0 }, uDash: { value: P.canvasTex(512, 512, (g) => {
         g.fillStyle = "#000"; g.fillRect(0, 0, 512, 512); g.lineCap = "round";
         let sd = 29; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
-        for (let i = 0; i < 280; i++) { // red = light dash, green = dark dash, long along canvas x (= world z, screen horizontal)
-          const x = rn() * 512, y = rn() * 512, L = 18 + 46 * rn(), th = 2.2 + 3 * rn(), light = rn() < 0.6;
-          g.strokeStyle = light ? `rgba(255,0,0,${0.6 + 0.4 * rn()})` : `rgba(0,255,0,${0.5 + 0.4 * rn()})`; g.lineWidth = th;
+        g.filter = "blur(2.5px)"; // soft ripples, not hard-edged blocks
+        for (let i = 0; i < 220; i++) { // red = light dash, green = dark dash, long along canvas x (= world z, screen horizontal)
+          const x = rn() * 512, y = rn() * 512, L = 22 + 50 * rn(), th = 1.6 + 2.2 * rn(), light = rn() < 0.65;
+          g.strokeStyle = light ? `rgba(255,0,0,${0.45 + 0.35 * rn()})` : `rgba(0,255,0,${0.35 + 0.35 * rn()})`; g.lineWidth = th;
           g.globalCompositeOperation = "lighter";
           for (const ox of [0, -512, 512]) for (const oy of [0, -512, 512]) { g.beginPath(); g.moveTo(x + ox, y + oy); g.lineTo(x + ox + L, y + oy + (rn() - 0.5) * 3); g.stroke(); }
         }
-        g.globalCompositeOperation = "source-over";
+        g.globalCompositeOperation = "source-over"; g.filter = "none";
       }) }, uScroll: { value: new THREE.Vector2() }, uStreak: { value: P.canvasTex(512, 512, (g) => {
         g.clearRect(0, 0, 512, 512); g.lineCap = "round";
         let sd = 11; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
@@ -259,10 +262,18 @@ class BtWorld {
         void main(){ float d = length(vW.xz - cameraPosition.xz);
           vec3 nearC = mix(vec3(0.10,0.58,0.66), vec3(0.03,0.30,0.42), uDeep), farC = vec3(0.36,0.78,0.78);
           vec3 c = mix(nearC, farC, smoothstep(mix(6.0, 1.5, uDeep), mix(200.0, 110.0, uDeep), d)); c = mix(c, vec3(0.09, 0.55, 0.66), 0.5 * uWhite);
+          // shot B (camera ~0.5 m over the water, so distance hardly varies on screen): grade by view depression like the
+          // reference, light turquoise under the horizon to deep blue at the frame bottom, milky right at the horizon
+          float dep = max(-normalize(vW - cameraPosition).y, 0.0);
+          vec3 bC = mix(vec3(0.17, 0.58, 0.65), vec3(0.085, 0.54, 0.61), smoothstep(0.0, 0.08, dep));
+          bC = mix(bC, vec3(0.025, 0.42, 0.53), smoothstep(0.08, 0.21, dep));
+          bC = mix(bC, vec3(0.018, 0.30, 0.41), smoothstep(0.21, 0.38, dep));
+          bC = mix(bC, farC, (1.0 - smoothstep(0.0, 0.014, dep)) * 0.55);
+          c = mix(c, bC, uDeep);
           float s = texture2D(uStreak, vW.xz / 6.0 + uScroll).a * (1.0 - smoothstep(12.0, 70.0, d)) * (1.0 - uDeep);
           float s2 = texture2D(uStreak, vW.xz / 17.0 + uScroll * 0.5 + 0.37).a * (1.0 - smoothstep(40.0, 190.0, d)) * 0.65 * (1.0 - uDeep);
-          vec4 dsh = texture2D(uDash, vec2(vW.z / 3.4, vW.x / 26.0)) * uDeep * (1.0 - smoothstep(30.0, 110.0, d)) * smoothstep(1.4, 4.0, d);
-          c = mix(c, vec3(0.62, 0.88, 0.92), dsh.r * 0.6); c = mix(c, vec3(0.02, 0.22, 0.33), dsh.g * 0.45);
+          vec4 dsh = texture2D(uDash, vec2(vW.z / 3.4, vW.x / 26.0)) * uDeep * (1.0 - smoothstep(12.0, 60.0, d)) * smoothstep(1.4, 4.0, d);
+          c = mix(c, vec3(0.45, 0.80, 0.86), dsh.r * 0.4); c = mix(c, vec3(0.02, 0.26, 0.38), dsh.g * 0.3);
           c = mix(c, vec3(0.86,0.97,1.0), clamp(s + s2, 0.0, 1.0) * 0.72);
           c = mix(c, vec3(0.72,0.9,0.88), smoothstep(140.0, 420.0, d) * 0.55);
           float a = 1.0 - smoothstep(170.0, 420.0, d);
@@ -297,11 +308,19 @@ class BtWorld {
     { const ship = S.galleon(); ship.position.set(108, -2.4, -3.5); R.add(ship); this.enemy = ship; }
     // ball + water streaks for shot B
     this.ball = new THREE.Mesh(new THREE.SphereGeometry(0.075, 24, 16), new THREE.MeshMatcapMaterial({ matcap: P.ballMatcap(), color: "#ffffff" })); R.add(this.ball);
-    const sm = new THREE.MeshBasicMaterial({ color: "#eafcff", transparent: true, opacity: 0.85, depthWrite: false });
+    // speed streaks: soft pale-turquoise bands (feathered edges, tapered ends) like the reference, not hard white bars
+    const sm = new THREE.MeshBasicMaterial({ color: "#c8f3f7", transparent: true, opacity: 0.6, depthWrite: false, map: P.canvasTex(256, 32, (g) => {
+      const im = g.createImageData(256, 32);
+      for (let y = 0; y < 32; y++) for (let x = 0; x < 256; x++) {
+        const v = (y + 0.5) / 32 - 0.5, u = (x + 0.5) / 256, a = Math.exp(-v * v / 0.045) * Math.min(1, u / 0.25) * Math.min(1, (1 - u) / 0.12);
+        const i = (y * 256 + x) * 4; im.data[i] = im.data[i + 1] = im.data[i + 2] = 255; im.data[i + 3] = Math.round(255 * a);
+      }
+      g.putImageData(im, 0, 0);
+    }, false) });
     for (let i = 0; i < 46; i++) {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), sm);
       const h = Math.sin(i * 12.9898) * 43758.5453, r = h - Math.floor(h), h2 = Math.sin(i * 78.233) * 12345.678, r2 = h2 - Math.floor(h2);
-      const zz = (r2 - 0.5) * 7 * (1 + i / 30); m.position.set(4 + i * 2.6 + 2 * r, -2.38, zz + Math.sign(zz || 1) * 1.0); m.scale.set(2.5 + 4 * r, 1, 0.035 + 0.03 * r2);
+      const zz = (r2 - 0.5) * 7 * (1 + i / 30); m.position.set(4 + i * 2.6 + 2 * r, -2.38, zz + Math.sign(zz || 1) * 1.0); m.scale.set(2.5 + 4 * r, 1, 0.07 + 0.06 * r2);
       m.layers.set(NOINK); m.visible = false; this.streaks.push(m); R.add(m);
     }
     // light: one shadow-casting sun, the film's two-tone constants (day preset)
@@ -492,7 +511,7 @@ class BtWorld {
     }
     this.pool.flush();
     this.officer.bind(); this.gunner.bind(); this.fxBlast.bind(); this.fxJet.bind(); for (const e of this.fxSmoke) e.bind(); this.fxPuff.bind(); this.fxSpray.bind(); this.fxSparks.bind(); for (const b of this.blobs) b.bind(); this.wisp.bind();
-    this.enemy.position.z = shotB ? -0.4 : -3.5;
+    this.enemy.position.set(shotB ? 90 : 108, -2.4, shotB ? -0.4 : -3.5); // closer in shot B so the ship fills the frame as the ball closes in
     S.animate(t);
     return focus;
   }
