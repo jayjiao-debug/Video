@@ -542,16 +542,16 @@ function endCard(t) {
     return `<text x="${f2(960 + dx)}" y="${f2(y + 14 * (1 - k))}" text-anchor="middle" dominant-baseline="central" font-family="${font}" font-weight="700" font-size="${fs}" fill="${fill}" opacity="${f2(k)}" ${extra}>${str}</text>`;
   };
   s += `<g data-layer="text-end" data-z="90">`;
-  s += txt(142.27, 392, '《水浒人物志 · 壹 · 林冲》', 66, '#E2B865', 'LXGW WenKai', 'letter-spacing="3"');
-  s += txt(142.69, 552, '如果重来一次，岳庙那一拳，你打不打？', 76, '#F6F0E4', 'LXGW WenKai', 'letter-spacing="2"', 76 * 0.25);
+  s += txt(142.27, 430, '《水浒人物志 · 壹 · 林冲》', 74, '#E2B865', 'LXGW WenKai', 'letter-spacing="3"');
+  // owner 2026-11-08: no closing question on the end card
   // follow pill
   const kp = fin(143.523);
   if (kp > 0) {
     const pw = 600, ph = 76;
-    s += `<g opacity="${f2(kp)}" transform="translate(0 ${f2(12 * (1 - kp))})"><rect x="${960 - pw / 2}" y="${712 - ph / 2}" width="${pw}" height="${ph}" rx="${ph / 2}" fill="#E2B865" fill-opacity="0.12" stroke="#E2B865" stroke-width="2.5"/>` +
-      `<text x="960" y="712" text-anchor="middle" dominant-baseline="central" font-family="Noto Sans CJK SC" font-weight="700" font-size="38" fill="#F2DDA6" letter-spacing="2">关注 Juno · 一起看懂世界</text></g>`;
+    s += `<g opacity="${f2(kp)}" transform="translate(0 ${f2(12 * (1 - kp))})"><rect x="${960 - pw / 2}" y="${600 - ph / 2}" width="${pw}" height="${ph}" rx="${ph / 2}" fill="#E2B865" fill-opacity="0.12" stroke="#E2B865" stroke-width="2.5"/>` +
+      `<text x="960" y="600" text-anchor="middle" dominant-baseline="central" font-family="Noto Sans CJK SC" font-weight="700" font-size="38" fill="#F2DDA6" letter-spacing="2">关注 Juno · 一起看懂世界</text></g>`;
   }
-  s += txt(144.35, 828, '下回：鲁智深', 40, '#E9E1D0', 'LXGW WenKai', 'letter-spacing="4"');
+  s += txt(144.35, 735, '下回：鲁智深', 40, '#E9E1D0', 'LXGW WenKai', 'letter-spacing="4"');
   s += txt(144.76, 940, '资料：《水浒传》一百二十回本 第七—十一、二十、八十、一百一十九回', 28, '#A99F8E', 'Noto Sans CJK SC', 'font-weight="400" letter-spacing="1"');
   s += '</g>';
   return s;

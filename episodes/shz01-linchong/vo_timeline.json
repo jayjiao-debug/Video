@@ -2,7 +2,8 @@
  "tempo": 1.08,
  "cut": [
   "V20",
-  "V21"
+  "V21",
+  "V38"
  ],
  "lines": [
   {
@@ -252,16 +253,10 @@
    "dur": 4.593,
    "end": 136.093,
    "text": "你这一辈子，都在等那句：依旧夫妻完聚。"
-  },
-  {
-   "id": "V38",
-   "start": 137.5,
-   "dur": 3.481,
-   "end": 140.981,
-   "text": "如果重来一次，岳庙那一拳，你打不打？"
   }
  ],
  "notes": [
-  "2026-11-08 gate 4: V03 and V29 re-recorded for accuracy (L10 he says 「娘子，我是好意」; L16/L18 梁山 is reached on a later snowy night). Old clips kept as V03.mp3 / V29.mp3."
+  "2026-11-08 gate 4: V03 and V29 re-recorded for accuracy (L10 he says 「娘子，我是好意」; L16/L18 梁山 is reached on a later snowy night). Old clips kept as V03.mp3 / V29.mp3.",
+  "2026-11-08 owner: no closing question — V38 cut (voice, subtitle, end card)."
  ]
 }
