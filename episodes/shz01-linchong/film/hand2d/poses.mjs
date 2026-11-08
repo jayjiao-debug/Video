@@ -261,68 +261,95 @@ const POSES = {
     for (const n of ['index', 'middle', 'ring']) { const c = F[n][0]; s += crease([[c[0] - 3.2, c[1] + 1.2], [c[0], c[1] - 0.6], [c[0] + 3.2, c[1] + 1.2]], W * 0.32); }
     return s;
   },
-  brush(o) { // holding a writing brush (执笔): shaft vertical between thumb (near) and index/middle (hooked over it)
-    const L = o.light, W = o.w0, k = o.k;
-    const palm = blob([[-3, 2], [17, -2], [23, -20], [19, -38], [7, -48], [-5, -46], [-11, -34], [-10, -16]]);
-    const F = {
-      pinky: [[15, -35], [10, -41], [5, -38], [4, -33]], ring: [[11, -40], [4, -49], [-3, -45], [-5, -40]],
-      middle: [[6, -44], [-3, -56], [-13, -53], [-16, -47]], index: [[0, -45], [-8, -63], [-18, -62], [-21, -55]],
+  brush(o) { // 执笔 (五指执笔法), 3/4 side, wrist level, forearm from the right; the shaft passes between the thumb and the fingertips
+    const L = o.light, W = o.w0;
+    const SX = -46;   // shaft centre x; the brush stands vertical
+    // hollow palm: back of the hand seen from the thumb side, level with the wrist
+    const palm = blob([[3, -11], [3, 9], [-8, 12], [-21, 11], [-31, 6], [-35, -4], [-33, -14], [-22, -19], [-9, -18]]);
+    const F = { // knuckles on the palm's front edge; index and middle hook over the far side, tips peek out left of the shaft
+      index: [[-31, -12], [-40, -20], [-48, -15], [-50.5, -8.5]],
+      middle: [[-32, -4], [-41, -6], [-49, -1], [-50.5, 5.5]],
+      ring: [[-31, 4], [-39, 7], [-43.5, 11.5], [-43.5, 15.5]],    // supports the shaft from behind (nail side on its right edge)
+      pinky: [[-28, 9], [-34, 13], [-37.5, 16.5], [-37, 20]],      // tucked behind the ring finger
     };
-    const shaft = (layerTop) => {
-      const x0 = -11.5, top = -96, bot = 22;
-      let s = `<rect x="${f(x0 - 2.4)}" y="${f(top)}" width="4.8" height="${f(bot - top)}" rx="2.2" fill="#a07a48"/>` +
-        `<rect x="${f(x0 + 0.4)}" y="${f(top)}" width="1.6" height="${f(bot - top)}" fill="#7a5a32" opacity="0.7"/>`;
-      for (const yy of [-96, -70, -18]) s += `<rect x="${f(x0 - 2.4)}" y="${f(yy)}" width="4.8" height="1.4" fill="#6b4c28"/>`;
-      // hair tip
-      s += `<path d="M${f(x0 - 3)},${f(bot)} C${f(x0 - 3.6)},${f(bot + 8)} ${f(x0 - 1)},${f(bot + 15)} ${f(x0)},${f(bot + 19)} C${f(x0 + 1)},${f(bot + 15)} ${f(x0 + 3.6)},${f(bot + 8)} ${f(x0 + 3)},${f(bot)}Z" fill="#1d1712"/>`;
-      s += `<rect x="${f(x0 - 2.4)}" y="${f(top)}" width="4.8" height="${f(bot - top)}" rx="2.2" fill="none" stroke="${INK}" stroke-width="${f(W * 0.6)}"/>`;
+    const shaft = () => {
+      const top = -84, bot = 40;
+      let s = `<rect x="${f(SX - 2.6)}" y="${f(top)}" width="5.2" height="${f(bot - top)}" rx="2.4" fill="#a07a48"/>` +
+        `<rect x="${f(SX + 0.6)}" y="${f(top)}" width="1.6" height="${f(bot - top)}" fill="#7a5a32" opacity="0.7"/>`;
+      for (const yy of [-70, -46, 26]) s += `<rect x="${f(SX - 2.6)}" y="${f(yy)}" width="5.2" height="1.4" fill="#6b4c28"/>`;
+      s += `<path d="M${f(SX - 3.2)},${f(bot)} C${f(SX - 3.8)},${f(bot + 8)} ${f(SX - 1)},${f(bot + 15)} ${f(SX)},${f(bot + 19)} C${f(SX + 1)},${f(bot + 15)} ${f(SX + 3.8)},${f(bot + 8)} ${f(SX + 3.2)},${f(bot)}Z" fill="#1d1712"/>`;
+      s += `<rect x="${f(SX - 2.6)}" y="${f(top)}" width="5.2" height="${f(bot - top)}" rx="2.4" fill="none" stroke="${INK}" stroke-width="${f(W * 0.6)}"/>`;
       return s;
     };
-    let back = part(palm, { d: 4.5, w0: W, light: L });
-    for (const n of ['pinky', 'ring']) back += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.2 });
-    let front = '';
-    for (const n of ['middle', 'index']) front += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.2 });
-    const th = chain([[6, -6], [-2, -19], [-8, -28], [-10, -36]], TW);  // thumb pad presses the shaft from the near side, below the index
+    const pad = (c, r) => { // the fingertip wrapping round the shaft, in front of it
+      const sh = blob([[c[0] - r * 0.9, c[1] - r * 0.6], [c[0] + r * 0.2, c[1] - r * 1.05], [c[0] + r * 1.15, c[1] - r * 0.15], [c[0] + r * 0.6, c[1] + r * 0.95], [c[0] - r * 0.7, c[1] + r * 0.75]]);
+      return part(sh, { d: 1.4, w0: W * 0.85, light: L });
+    };
+    let back = part(palm, { d: 4.5, w0: W, light: L, skip: (i) => palm.pts[i][0] > 1 });
+    for (const n of ['pinky', 'ring']) back += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.18 });
+    for (const n of ['middle', 'index']) back += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.18 });
+    let front = pad([SX - 4.2, -9.5], 4.6) + pad([SX - 4.4, 3.8], 4.4);
+    // the thumb on the near side, its pad pressing the shaft's right edge above the fingers
+    const th = chain([[-11, -14], [-23, -24], [-34, -29], [-41.5, -27]], [7.6, 6.2, 5.3, 4.7]);
     front += part(th, { d: 2.6, w0: W, light: L, skip: (i, S) => S.s[i] < 0.24 });
-    return o.layer === 'back' ? back + shaft() : o.layer === 'front' ? front : back + shaft() + front;
+    front += `<path d="${pathOf(cr([[-38.5, -31], [-36.5, -32.6], [-34.6, -31.4]], false, 4), false)}" stroke="${INK}" stroke-width="${f(W * 0.35)}" fill="none" stroke-linecap="round"/>`;
+    return o.layer === 'back' ? back : o.layer === 'front' ? front : back + shaft() + front;
   },
-  grip(o) { // gripping a paper edge (paper edge at y ≈ -50): fingers behind the paper, thumb in front on the paper
+  grip(o) { // pinching the paper's lower corner (seen from the front, S02): thumb in FRONT on the paper, fingers BEHIND it
+    // local: the paper's bottom edge at y = -40, its right edge at x = 24 (the corner); the hand comes from below right
     const L = o.light, W = o.w0;
-    const palm = blob([[-15, 2], [14, 2], [18, -18], [17, -38], [10, -50], [-6, -52], [-15, -44], [-18, -24]]);
-    const F = {
-      index: [[-8, -46], [-9, -64], [-9, -75], [-9, -83]], middle: [[-1, -48], [0, -67], [0.5, -79], [1, -87]],
-      ring: [[6, -46], [8, -63], [9, -73], [10, -80]], pinky: [[12, -42], [15, -56], [16, -64], [17, -70]],
-    };
-    let back = '';
-    for (const n of ['pinky', 'ring', 'middle', 'index']) back += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.12 });
-    const pk = palm.pts;
-    back += part(palm, { d: 4.5, w0: W, light: L, skip: (i) => pk[i][1] < -46 });
-    const th = chain([[14, -16], [18, -34], [14, -50], [8, -60]], [8, 6.4, 5.4, 4.6]);
-    const front = part(th, { d: 2.6, w0: W, light: L, skip: (i, S) => S.s[i] < 0.22 }) +
-      `<path d="${pathOf(cr([[6, -61.5], [8.4, -63.6], [11, -62]], false, 4), false)}" stroke="${INK}" stroke-width="${f(W * 0.35)}" fill="none" stroke-linecap="round"/>`;
+    const EDGE = -40;
+    // below the edge: the back of the hand / heel and the wrist (the part above the edge is behind the paper)
+    const palm = blob([[-22, -36], [-8, -44], [10, -44], [20, -36], [18, -18], [10, -4], [-6, 0], [-16, -10]]);
+    const idEdge = chain([[-2, -40.5], [-12, -42.5], [-21, -43.5], [-28, -43]], [4.6, 4.4, 4.1, 3.8]);  // index finger curling round the edge
+    let back = part(idEdge, { d: 1.6, w0: W * 0.85, light: L });
+    back += part(palm, { d: 4.5, w0: W, light: L, skip: (i) => palm.pts[i][1] < EDGE + 1 });
+    // through the back-lit paper: soft finger shadows (front layer, drawn on the paper)
+    const sid = `gs${UID++}`;
+    let shadows = `<filter id="${sid}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter><g filter="url(#${sid})" opacity="0.2" fill="#5a3a24">`;
+    for (const [c, r] of [[[[-3, -42], [-8, -60], [-11, -71], [-13, -79]], FW.index], [[[4, -42], [1, -62], [-1, -74], [-2, -83]], FW.middle], [[[10, -41], [9, -59], [8, -69], [7, -76]], FW.ring], [[[15, -39], [16, -53], [16, -61], [16, -67]], FW.pinky]])
+      shadows += `<path d="${pathOf(chain(c, r).pts)}"/>`;
+    shadows += '</g>';
+    // the thumb on the paper: pad covering a little of the corner, angled ~45° inward along the edge
+    const th = chain([[14, -24], [10, -40], [1, -50], [-8, -57]], [8.4, 6.8, 5.8, 5.0], { base: 'flat' });
+    let front = shadows + part(th, { d: 2.6, w0: W, light: L, skip: (i, S) => S.s[i] < 0.2 && th.pts[i][1] > EDGE });
+    // thumbnail
+    const nb = blob([[-3.5, -54.5], [-6.6, -57.6], [-9.2, -59.6], [-8, -56.4], [-5, -53.4]]);
+    front += `<path d="${pathOf(nb.pts)}" fill="${NAIL}" stroke="${INK}" stroke-width="${f(W * 0.3)}"/>`;
     return o.layer === 'back' ? back : o.layer === 'front' ? front : back + front;
   },
-  shoulder(o) { // resting on a shoulder: back of the hand, fingers going over and down (tips behind the shoulder line)
+  shoulder(o) { // resting on a shoulder (S19, seen from behind it): forearm from the FAR side (top), back of the hand up,
+    // knuckle row on the shoulder curve, fingers draping toward the camera and curling down over the near edge, thumb along the side
     const L = o.light, W = o.w0;
-    const palm = blob([[-16, 2], [15, 2], [20, -18], [20, -34], [13, -42], [3, -45], [-6, -45], [-14, -43], [-19, -34], [-20, -18]]);
-    const F = { // foreshortened: proximal visible, the rest curls away (and down past the shoulder line)
-      index: [[-12, -40], [-14, -56], [-14, -63], [-13.5, -67]], middle: [[-3, -42], [-4, -60], [-4, -67], [-3.5, -71]],
-      ring: [[6, -41], [8, -57], [8.6, -64], [9, -68]], pinky: [[13, -37], [16, -51], [17, -57], [17.5, -61]],
+    // local: wrist at (0,0) at the top, fingers pointing DOWN the screen (toward the camera); right hand -> thumb on the right
+    const palm = blob([[-15, -2], [15, -2], [19, 11], [18, 24], [12, 31], [1, 33], [-7, 32], [-14, 29], [-19, 20], [-19, 8]]);
+    const F = { // foreshortened: short proximal, shorter middle, the distal curling down toward the lens
+      pinky: [[-12, 27], [-14.5, 38], [-15.3, 44], [-15.5, 48.5]],
+      ring: [[-6, 30], [-7.5, 43], [-8, 50], [-8, 55]],
+      middle: [[1, 31], [1.5, 46], [1.6, 53.5], [1.6, 58.5]],
+      index: [[8, 29], [10, 42], [10.6, 49], [10.8, 53.5]],
     };
-    let back = '', front = '';
+    const TIPW = (w) => [w[0], w[1] * 1.04, w[2] * 1.12, w[3] * 1.18];   // curling tips read a little wider
+    let s = '';
+    // thumb first (it lies along the side, partly under the palm edge)
+    const th = chain([[11, 5], [19, 15], [23.5, 25], [25, 34]], [7.4, 6.0, 5.2, 4.6]);
+    s += part(th, { d: 2.6, w0: W, light: L, skip: (i, S) => S.s[i] < 0.25 });
     for (const n of ['pinky', 'ring', 'middle', 'index']) {
-      const c = F[n];
-      const sh = chain(c, [FW[n][0], FW[n][1], FW[n][2] * 0.95, FW[n][3] * 0.95]);
-      back += part(sh, { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.12 });
-      const dd = V.norm(V.sub(c[2], c[0])), nn = V.perp(dd), r = FW[n][1] * 0.5;
-      back += crease([V.add(c[1], V.mul(nn, -r)), V.add(c[1], V.mul(dd, -1)), V.add(c[1], V.mul(nn, r))], W * 0.32);
+      const c = F[n], w = TIPW(FW[n]);
+      s += part(chain(c, w), { d: 2.0, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.12 });
+      // nail on the curled tip (we see the backs of the fingers as they bend toward us)
+      const tip = c[3], r = w[3] * 0.62;
+      s += `<path d="${pathOf(blob([[tip[0] - r, tip[1] - r * 0.4], [tip[0], tip[1] - r * 1.05], [tip[0] + r, tip[1] - r * 0.4], [tip[0] + r * 0.7, tip[1] + r * 0.65], [tip[0] - r * 0.7, tip[1] + r * 0.65]]).pts)}" fill="${NAIL}" stroke="${INK}" stroke-width="${f(W * 0.28)}"/>`;
+      // knuckle wrinkle at the PIP
+      const dd = V.norm(V.sub(c[2], c[0])), nn = V.perp(dd), rr = w[1] * 0.55;
+      s += crease([V.add(c[1], V.mul(nn, -rr)), V.add(c[1], V.mul(dd, 1.1)), V.add(c[1], V.mul(nn, rr))], W * 0.32);
     }
-    const th = chain([[-12, -8], [-22, -16], [-29, -21], [-34, -24]], [7.4, 5.8, 5.0, 4.4]);
+    // back of the hand over the finger bases; no ink on the knuckle edge or where the thumb joins
     const pk = palm.pts;
-    front += part(th, { d: 2.6, w0: W, light: L, skip: (i, S) => S.s[i] < 0.25 });
-    front += part(palm, { d: 4.5, w0: W, light: L, skip: (i) => pk[i][1] < -39 || (pk[i][0] < -17 && pk[i][1] < -8 && pk[i][1] > -30) });
-    for (const n of ['index', 'middle', 'ring']) { const c = F[n][0]; front += crease([[c[0] - 3.2, c[1] + 1.2], [c[0], c[1] - 0.6], [c[0] + 3.2, c[1] + 1.2]], W * 0.32); }
-    return o.layer === 'back' ? back : o.layer === 'front' ? front : back + front;
+    s += part(palm, { d: 4.5, w0: W, light: L, skip: (i) => pk[i][1] > 27 || (pk[i][0] > 14 && pk[i][1] > 2 && pk[i][1] < 20) || pk[i][1] < 0 });
+    // knuckle bumps on top of the shoulder curve
+    for (const n of ['ring', 'middle', 'index']) { const c = F[n][0]; s += crease([[c[0] - 3.4, c[1] - 1.4], [c[0], c[1] + 0.8], [c[0] + 3.4, c[1] - 1.4]], W * 0.32); }
+    return s;
   },
   stone(o) { // pushing flat against a stone face on the right (x ≈ 15): heel of the hand pressed, fingers up the stone
     const L = o.light, W = o.w0;
@@ -373,6 +400,6 @@ export function hand(pose, o = {}) {
     body = drawSide(P, ctx);
   } else body = POSES[pose](ctx);
   const showSleeve = o.sleeve !== false && ctx.layer !== 'front';
-  const sl = showSleeve ? sleeveSVG(ctx, pose === 'stone' ? 38 : pose === 'brush' ? -55 : 0) : '';
+  const sl = showSleeve ? sleeveSVG(ctx, { stone: 38, brush: -90, grip: -40, shoulder: 168 }[pose] || 0) : '';
   return `<g data-hand="${pose}" transform="translate(${f(o.x || 0)} ${f(o.y || 0)}) rotate(${f(rot)}) scale(${f(flip ? -k : k)} ${f(k)})">${body}${sl}</g>`;  // cuff over the wrist
 }
