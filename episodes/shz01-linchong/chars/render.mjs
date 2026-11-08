@@ -33,7 +33,7 @@ if (mode === 'test') {
   await shot(html, path.join(out, `test_${st}.png`), 1200, 900);
 } else if (mode === 'style') {
   // one sheet per style: big front, three expressions, big side
-  for (const st of ['A', 'B', 'C']) {
+  for (const st of ['A', 'B', 'C', 'D']) {
     const big = cell(frontSVG(st, EXPR['平静']), '正面特写 · 平静', 520);
     const ex = ['隐忍', '怒', '悲'].map((k) => cell(frontSVG(st, EXPR[k]), k, 250)).join('');
     const sd = cell(sideSVG(st, EXPR['平静']), '侧面', 520);
