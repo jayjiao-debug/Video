@@ -485,7 +485,7 @@ function linBack(t) {
 function shoulderSnow(k) {
   // a soft mound of snow on his shoulder cap where the hand was (72.55 →), growing; bumpy top
   const h = 6 + 30 * k;
-  const top = (x, y0) => `${f2(x)},${f2(y0 - h * (0.75 + 0.25 * Math.sin(x * 0.05)))}`;
+  const top = (x, y0) => `${f2(x)},${f2(y0 - h * Math.pow(Math.sin(Math.PI * clamp((x - 450) / 350)), 0.6) * (0.8 + 0.2 * Math.sin(x * 0.05)))}`;
   const line = (x) => 624 + (x - 440) * 0.2 + Math.max(0, x - 640) * 0.18;   // the shoulder contour
   let d = `M450,${f2(line(450) + 4)}`;
   for (let x = 450; x <= 800; x += 25) d += ` L${top(x, line(x))}`;
