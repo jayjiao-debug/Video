@@ -41,12 +41,12 @@ const KA = FA.height / 7.5 / ((1468 - 331) / 6.5);                      // rig d
 const dA = (p) => [FA.x + KA * (p[0] - 428), FA.y + KA * (p[1] - 1468)];
 const TAT = [458, 293];                                                   // tattoo centre, rig data (front, left cheek)
 const TATW = dA(TAT);
-const ZA = 6.0;                                                           // ECU zoom
+const ZA = 2.5;                                                           // ECU zoom
 
 function zoomA(t) {
-  if (t < 60.12) return lerp(ZA, ZA * 0.985, ramp(t, T.a, 60.12, E.lin));
-  // constant-ratio pull-back with 8-frame eased ends (≈ 1.9 %/frame), then a slow settle
-  const z0 = ZA * 0.985, a = 60.12, b = 63.5;
+  if (t < 60.75) return lerp(ZA, ZA * 0.97, ramp(t, T.a, 60.75, E.lin));
+  // constant-ratio pull-back with 8-frame eased ends, then a slow settle
+  const z0 = ZA * 0.97, a = 60.75, b = 63.35;
   const u = clamp((t - a) / (b - a)), e = 8 / FPS / (b - a);
   let k;
   if (u < e) k = (u * u) / (2 * e * (1 - e));
@@ -54,9 +54,10 @@ function zoomA(t) {
   else k = (u - e / 2) / (1 - e);
   return z0 * Math.pow(1 / z0, k) * (t > b ? lerp(1, 0.99, ramp(t, b, T.b, E.inOut)) : 1);
 }
-// zoom about the screen centre; the world point under the centre drifts from the cheek (ECU) to the figure (MS)
-// in proportion to 1/zoom, so its screen speed stays constant (≈ 4 px/frame).
-const W_ECU = [TATW[0] - 290 / ZA, 322];                                 // cheek on the right, chin in frame
+// zoom about the screen centre; the world point under the centre drifts from the face (CU) to the figure (MS)
+// in proportion to 1/zoom, so its screen speed stays constant.
+const EYEW = dA([428, 253.5]);
+const W_ECU = [960, EYEW[1] + (540 - 385) / ZA];                       // eyes at y ≈ 385 at the CU
 const W_MS = [960, 480];
 function camA(t) {
   const z = zoomA(t);
@@ -65,31 +66,29 @@ function camA(t) {
 }
 
 // abstract tattoo marks (rig data coords around TAT), three groups bloom in turn
-const MARKS = [
-  [[-12, -8, 4.5, 4], [-6.5, -9, 3, 5.5], [-11, -2.5, 6, 2.5]],
-  [[0, -8.5, 4, 3.5], [1.5, -3.5, 3, 4.5], [6.5, -7, 2.5, 6]],
-  [[-9, 3, 6, 2.5], [-1.5, 3.5, 4, 3.5], [4.5, 2.5, 3.5, 4.5]],
+// two short columns of small, irregular, squarish dabs (data px around TAT); [x, y, w, h, angle, group]
+const DABS = [
+  [-4.2, -6.0, 2.6, 2.3, 8, 0], [-4.6, -2.6, 2.2, 2.5, -6, 0], [-4.0, 0.9, 2.7, 2.1, 12, 1], [-4.5, 4.2, 2.1, 2.4, -3, 1],
+  [0.8, -5.2, 2.3, 2.6, -10, 1], [1.2, -1.7, 2.6, 2.2, 5, 2], [0.7, 1.8, 2.2, 2.4, -14, 2], [1.0, 5.0, 2.5, 2.0, 7, 2],
 ];
 function marks(t) {
   const times = [T.a, T.m2, T.m3];
   let s = '';
-  MARKS.forEach((g, gi) => {
-    const k = ramp(t, times[gi], times[gi] + 0.42, E.out);
-    if (k <= 0) return;
-    for (const [x, y, w, h] of g) {
-      const cx = TAT[0] + x + w / 2, cy = TAT[1] + y + h / 2;
-      const hw = (w / 2) * (0.35 + 0.65 * k), hh = (h / 2) * (0.35 + 0.65 * k);
-      s += `<rect x="${f2(cx - hw * 1.7)}" y="${f2(cy - hh * 1.7)}" width="${f2(hw * 3.4)}" height="${f2(hh * 3.4)}" rx="${f2(hw)}" fill="#2A3A55" opacity="${f2(0.16 * k)}"/>`;
-      s += `<rect x="${f2(cx - hw)}" y="${f2(cy - hh)}" width="${f2(hw * 2)}" height="${f2(hh * 2)}" rx="${f2(Math.min(hw, hh) * 0.45)}" fill="#2A3A55" opacity="${f2(0.8 * k)}"/>`;
-    }
-  });
-  return s;
+  for (const [x, y, w, h, ang, g] of DABS) {
+    const k = ramp(t, times[g], times[g] + 0.42, E.out);
+    if (k <= 0) continue;
+    const cx = TAT[0] + x, cy = TAT[1] + y, sw = w * (0.4 + 0.6 * k), sh = h * (0.4 + 0.6 * k);
+    const j = (v) => f2(v);
+    // irregular quad (a squarish dab), soaked edge via the feather filter
+    s += `<path d="M${j(cx - sw / 2)},${j(cy - sh / 2 + 0.2)} L${j(cx + sw / 2 - 0.2)},${j(cy - sh / 2)} L${j(cx + sw / 2)},${j(cy + sh / 2 - 0.3)} L${j(cx - sw / 2 + 0.3)},${j(cy + sh / 2)}Z" transform="rotate(${ang} ${j(cx)} ${j(cy)})" fill="#2A3A55" opacity="${f2(0.85 * k)}"/>`;
+  }
+  return `<g filter="url(#t08ink)">${s}</g>`;
 }
 
 // the 文笔匠's hand and slim tool, in rig data coords; tip at the active mark
 function tattooHand(t) {
   if (t > 61.1) return '';
-  const tips = [[TAT[0] - 8, TAT[1] - 5], [TAT[0] + 3, TAT[1] - 4], [TAT[0] - 2, TAT[1] + 5]];
+  const tips = [[TAT[0] - 4.4, TAT[1] - 4.3], [TAT[0] - 1.6, TAT[1] + 1.2], [TAT[0] + 1.0, TAT[1] + 2.4]];
   const times = [T.a, T.m2, T.m3];
   let gi = 0;
   for (let i = 0; i < 3; i++) if (t >= times[i] - 0.18) gi = i;
@@ -100,12 +99,12 @@ function tattooHand(t) {
   const nextT = gi < 2 ? times[gi + 1] : 99;
   const lift = t < tPrev ? 1 - ramp(t, tPrev - 0.18, tPrev, E.in) : ramp(t, tPrev + 0.12, tPrev + 0.26, E.out) * (1 - ramp(t, nextT - 0.18, nextT, E.in));
   const u = [0.6, -0.8];
-  let off = 7 * lift;
-  if (t > 60.84) off += 260 * ramp(t, 60.84, 61.08, E.in);               // exits to the upper right
+  let off = 5 * lift;
+  if (t > 60.84) off += 160 * ramp(t, 60.84, 61.08, E.in);               // exits to the upper right
   const tx = tip[0] + u[0] * off, ty = tip[1] + u[1] * off;
   const ang = (Math.atan2(u[1], u[0]) * 180) / Math.PI;
   const LN = '#2A1C17', sk = '#D8A27E', skS = '#B98463';
-  let s = `<g transform="translate(${f2(tx)} ${f2(ty)}) rotate(${f2(ang)})">`;
+  let s = `<g transform="translate(${f2(tx)} ${f2(ty)}) rotate(${f2(ang)}) scale(0.62)">`;
   // the tool: slim dark wood with a dull metal tip, passing between thumb and index finger
   s += `<path d="M0,0 L9,-1.6 L150,-2.8 L150,2.8 L9,1.6Z" fill="#4A3A2C" stroke="${LN}" stroke-width="0.7"/>`;
   s += `<path d="M0,0 L9,-1.6 L9,1.6Z" fill="#A3A9AE"/>`;
@@ -154,6 +153,7 @@ function figA(t) {
   // hide the 东京 sleeve roundels that peek out beside the board (status gone: convict robe)
   out += `<ellipse cx="263" cy="493" rx="13" ry="26" fill="#454C61"/><ellipse cx="611" cy="489" rx="13" ry="26" fill="#454C61"/>`;
   if (sw < 1) out += `<g transform="${cTf}">${cang}</g>`;
+  out += `<defs><filter id="t08ink" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="0.45"/></filter></defs>`;
   out += `<g transform="${hTf}">${head}<g>${marks(t)}</g></g>`;
   out += tattooHand(t);
   out += '</g></g>';
