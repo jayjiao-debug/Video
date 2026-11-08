@@ -178,9 +178,10 @@ const SHOT_A: CamK[] = [
   // behind the gun, just left of it, on a wide lens: barrel runs up to the port, officer and gunner beside it on the right
   { t: 36 / 30, pos: [-2.65, 2.05, -0.55], look: [4.4, 0.62, 1.3], fov: 76 },
   { t: 41 / 30, pos: [-2.55, 1.97, -0.52], look: [4.45, 0.75, 1.25], fov: 75 },
-  // then a quick push in past the recoiled breech, low over the barrel, out through the port to the target
-  { t: 47 / 30, pos: [-1.6, 1.8, -0.4], look: [6.0, 0.9, 0.7], fov: 68 },
-  { t: 53 / 30, pos: [-0.95, 1.72, -0.3], look: [8.0, 0.95, 0.25], fov: 62 },
+  // then a fast push past the recoiled breech, over the barrel, to the rail: by frame 47 the frame is sea, fireball and target
+  { t: 44 / 30, pos: [-0.6, 1.68, -0.32], look: [8.0, 0.95, 0.55], fov: 68 },
+  { t: 47 / 30, pos: [0.2, 1.66, -0.3], look: [12.0, 0.95, 0.35], fov: 64 },
+  { t: 53 / 30, pos: [0.45, 1.64, -0.28], look: [12.0, 0.95, 0.3], fov: 62 },
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
@@ -199,7 +200,7 @@ class BtWorld {
   root = new THREE.Group(); pool = new Pool();
   cannons: P.Cannon[] = []; officer: Actor; gunner: Actor; fxBlast: Fx; fxJet: Fx; fxSmoke: Fx[] = [];
   fxPuff: Fx; fxSpray: Fx; fxSparks: Fx; linstock: THREE.Mesh; match: THREE.Mesh; arms: THREE.Mesh[] = []; hands: THREE.Mesh[] = []; dropped: THREE.Mesh; blobs: Fx[] = []; wake: THREE.Mesh[] = []; sun: THREE.DirectionalLight; ball: THREE.Mesh; streaks: THREE.Mesh[] = []; waterMat: THREE.ShaderMaterial; enemy: THREE.Mesh;
-  breech: THREE.Mesh[] = []; ropeMat!: THREE.Material; flagWave: (t: number) => void = () => {}; wisp!: Fx;
+  breech: THREE.Mesh[] = []; contact!: THREE.Mesh; ropeMat!: THREE.Material; flagWave: (t: number) => void = () => {}; wisp!: Fx;
   constructor(T: Tex) {
     const R = this.root;
     // materials
@@ -249,7 +250,7 @@ class BtWorld {
     const rc = P.ropeCoil(ropeM); rc.position.set(-1.65, 0, -1.4); rc.rotation.y = 0.6; R.add(rc);
     const bp = P.ballPile(ballM, woodCar); bp.position.set(-2.6, 0, 1.7); R.add(bp);
     // second pass set dressing: rammer/sponge pairs on the rail, shot garlands, a second rope coil, the ensign
-    for (const z of [-0.98, 2.35]) { const rp = P.rammerPair(poleM, headM, fleeceM); rp.position.set(1.3, 0, z); rp.rotation.y = z < 0 ? -0.69 : 0.45; R.add(rp); }
+    for (const z of [-1.5, 2.35]) { const rp = P.rammerPair(poleM, headM, fleeceM); rp.position.set(1.3, 0, z); rp.rotation.y = z < 0 ? -0.69 : 0.45; rp.scale.setScalar(0.85); R.add(rp); }
     for (const z of [1.55, 4.6]) { const sr = P.shotRack(woodCar, ballM); sr.position.set(1.47, 0, z); R.add(sr); }
     const rc2 = P.ropeCoil(ropeM); rc2.position.set(0.55, 0, -1.05); rc2.rotation.y = 2.4; R.add(rc2);
     { const fl = P.flag(P.swedishFlag(), poleM, 3.4); fl.group.position.set(1.42, 0, 3.75); fl.group.rotation.y = -0.4; R.add(fl.group); this.flagWave = fl.wave; }
@@ -257,7 +258,17 @@ class BtWorld {
     // sea: big disk below the deck, painted colours by distance, fading into the backdrop plate
     this.waterMat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, fog: false,
-      uniforms: { uT: { value: 0 }, uWhite: { value: 0 }, uScroll: { value: new THREE.Vector2() }, uStreak: { value: P.canvasTex(512, 512, (g) => {
+      uniforms: { uT: { value: 0 }, uWhite: { value: 0 }, uDeep: { value: 0 }, uDash: { value: P.canvasTex(512, 512, (g) => {
+        g.fillStyle = "#000"; g.fillRect(0, 0, 512, 512); g.lineCap = "round";
+        let sd = 29; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
+        for (let i = 0; i < 170; i++) { // red = light dash, green = dark dash, long along canvas x (= world z, screen horizontal)
+          const x = rn() * 512, y = rn() * 512, L = 26 + 70 * rn(), th = 4 + 5 * rn(), light = rn() < 0.6;
+          g.strokeStyle = light ? `rgba(255,0,0,${0.6 + 0.4 * rn()})` : `rgba(0,255,0,${0.5 + 0.4 * rn()})`; g.lineWidth = th;
+          g.globalCompositeOperation = "lighter";
+          for (const ox of [0, -512, 512]) for (const oy of [0, -512, 512]) { g.beginPath(); g.moveTo(x + ox, y + oy); g.lineTo(x + ox + L, y + oy + (rn() - 0.5) * 3); g.stroke(); }
+        }
+        g.globalCompositeOperation = "source-over";
+      }) }, uScroll: { value: new THREE.Vector2() }, uStreak: { value: P.canvasTex(512, 512, (g) => {
         g.clearRect(0, 0, 512, 512); g.lineCap = "round";
         let sd = 11; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
         for (let i = 0; i < 110; i++) {
@@ -267,12 +278,14 @@ class BtWorld {
         }
       }) } },
       vertexShader: "varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position,1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }",
-      fragmentShader: `uniform float uT; uniform float uWhite; uniform vec2 uScroll; uniform sampler2D uStreak; varying vec3 vW;
+      fragmentShader: `uniform float uT; uniform float uWhite; uniform float uDeep; uniform sampler2D uDash; uniform vec2 uScroll; uniform sampler2D uStreak; varying vec3 vW;
         void main(){ float d = length(vW.xz - cameraPosition.xz);
-          vec3 nearC = vec3(0.10,0.58,0.66), farC = vec3(0.36,0.78,0.78);
-          vec3 c = mix(nearC, farC, smoothstep(6.0, 200.0, d)); c = mix(c, vec3(0.09, 0.55, 0.66), 0.5 * uWhite);
-          float s = texture2D(uStreak, vW.xz / 6.0 + uScroll).a * (1.0 - smoothstep(12.0, 70.0, d));
-          float s2 = texture2D(uStreak, vW.xz / 17.0 + uScroll * 0.5 + 0.37).a * (1.0 - smoothstep(40.0, 190.0, d)) * 0.65;
+          vec3 nearC = mix(vec3(0.10,0.58,0.66), vec3(0.03,0.30,0.42), uDeep), farC = vec3(0.36,0.78,0.78);
+          vec3 c = mix(nearC, farC, smoothstep(mix(6.0, 1.5, uDeep), mix(200.0, 110.0, uDeep), d)); c = mix(c, vec3(0.09, 0.55, 0.66), 0.5 * uWhite);
+          float s = texture2D(uStreak, vW.xz / 6.0 + uScroll).a * (1.0 - smoothstep(12.0, 70.0, d)) * (1.0 - uDeep);
+          float s2 = texture2D(uStreak, vW.xz / 17.0 + uScroll * 0.5 + 0.37).a * (1.0 - smoothstep(40.0, 190.0, d)) * 0.65 * (1.0 - uDeep);
+          vec4 dsh = texture2D(uDash, vec2(vW.z / 3.0, vW.x / 34.0)) * uDeep * (1.0 - smoothstep(30.0, 110.0, d)) * smoothstep(1.4, 4.0, d);
+          c = mix(c, vec3(0.62, 0.88, 0.92), dsh.r * 0.75); c = mix(c, vec3(0.02, 0.22, 0.33), dsh.g * 0.55);
           c = mix(c, vec3(0.86,0.97,1.0), clamp(s + s2, 0.0, 1.0) * 0.72);
           c = mix(c, vec3(0.72,0.9,0.88), smoothstep(140.0, 420.0, d) * 0.55);
           float a = 1.0 - smoothstep(170.0, 420.0, d);
@@ -289,13 +302,14 @@ class BtWorld {
           vec3 s(float r, float g, float b){ return vec3(r, g, b) / 255.0; }
           void main(){
             vec3 d = normalize(vW - cameraPosition); float e = degrees(asin(clamp(d.y, -1.0, 1.0)));
-            vec3 c = mix(s(150.,214.,214.), s(236.,242.,232.), smoothstep(-1.6, 0.0, e));
+            vec3 c = mix(s(150.,214.,214.), s(248.,226.,204.), smoothstep(-1.6, 0.0, e));
             if (e > 0.0) {
-              c = mix(s(250.,244.,226.), s(236.,242.,244.), smoothstep(0.0, 2.0, e));
-              c = mix(c, s(200.,228.,250.), smoothstep(2.0, 6.0, e));
-              c = mix(c, s(160.,204.,246.), smoothstep(6.0, 14.0, e));
-              c = mix(c, s(112.,168.,226.), smoothstep(14.0, 26.0, e));
-              c = mix(c, s(78.,138.,208.), smoothstep(26.0, 50.0, e)); }
+              c = mix(s(250.,222.,190.), s(250.,236.,218.), smoothstep(0.0, 2.5, e));
+              c = mix(c, s(234.,240.,246.), smoothstep(2.5, 5.0, e));
+              c = mix(c, s(178.,214.,246.), smoothstep(5.0, 10.0, e));
+              c = mix(c, s(128.,188.,240.), smoothstep(10.0, 18.0, e));
+              c = mix(c, s(90.,163.,232.), smoothstep(18.0, 30.0, e));
+              c = mix(c, s(66.,142.,224.), smoothstep(30.0, 55.0, e)); }
             gl_FragColor = vec4(pow(c, vec3(2.2)), 1.0); }`,
       }));
       dome.position.copy(C); dome.layers.set(NOINK); dome.renderOrder = -2; R.add(dome);
@@ -349,9 +363,17 @@ class BtWorld {
     this.dropped = new THREE.Mesh(new THREE.SphereGeometry(0.11, 20, 14), ballM); this.dropped.castShadow = true; R.add(this.dropped);
     for (let i = 0; i < 2; i++) this.blobs.push(new Fx(R));
     this.wisp = new Fx(R);
-    { const wt = P.canvasTex(64, 512, (g2) => { g2.clearRect(0, 0, 64, 512); const gr = g2.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, "rgba(255,255,255,0.95)"); gr.addColorStop(1, "rgba(255,255,255,0)"); g2.fillStyle = gr; g2.fillRect(26, 0, 12, 512); });
+    { const wt = P.canvasTex(64, 512, (g2) => {
+        g2.clearRect(0, 0, 64, 512); g2.lineCap = "round"; let sd = 5; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
+        for (let y = 4; y < 500;) { const L = 18 + 46 * rn() * (1 - y / 700), k = y / 512; // strokes thin out, shorten and fade along the trail
+          g2.strokeStyle = `rgba(255,255,255,${0.95 * (1 - k)})`; g2.lineWidth = 2 + 11 * (1 - k) * (0.7 + 0.3 * rn());
+          const x = 32 + (rn() - 0.5) * 10 * k; g2.beginPath(); g2.moveTo(x, y); g2.lineTo(x + (rn() - 0.5) * 4, y + L); g2.stroke();
+          y += L + 6 + 30 * rn() * (0.3 + k); }
+      }, false);
       const wm = new THREE.MeshBasicMaterial({ map: wt, transparent: true, depthWrite: false, opacity: 0.6 });
-      for (const sd of [-1, 1]) { const m = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 9).rotateX(-Math.PI / 2).translate(0, 0, 0), wm); m.layers.set(NOINK); m.visible = false; m.userData.side = sd; this.wake.push(m); R.add(m); } }
+      for (const [sd, ang, w] of [[-1, 0.17, 0.16], [1, 0.17, 0.16], [-1, 0.27, 0.11], [1, 0.27, 0.11]]) { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 9).rotateX(-Math.PI / 2), wm); m.layers.set(NOINK); m.visible = false; m.userData.side = sd; m.userData.ang = ang; this.wake.push(m); R.add(m); }
+      const cs = new THREE.Mesh(new THREE.CircleGeometry(0.13, 24).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: P.canvasTex(64, 64, (g2) => { const gr = g2.createRadialGradient(32, 32, 2, 32, 32, 32); gr.addColorStop(0, "rgba(0,40,58,0.6)"); gr.addColorStop(1, "rgba(0,40,58,0)"); g2.fillStyle = gr; g2.fillRect(0, 0, 64, 64); }, false), transparent: true, depthWrite: false }));
+      cs.layers.set(NOINK); cs.visible = false; cs.scale.set(1.6, 1, 1); this.contact = cs; R.add(cs); }
   }
 
   update(f: number, cam: THREE.PerspectiveCamera) {
@@ -383,16 +405,17 @@ class BtWorld {
     cam.position.copy(pos); cam.up.set(0, 1, 0); cam.lookAt(look); cam.fov = fov; cam.near = 0.05; cam.far = 2000; cam.updateProjectionMatrix(); cam.updateMatrixWorld();
     // --- ball + streaks
     this.ball.visible = shotB;
-    if (shotB) { const bx = ballX(t); this.ball.position.set(bx, -2.27 + 0.022 * Math.sin(t * 37), 0.07 * Math.sin(t * 6.5 + 0.4)); this.ball.rotation.z = -t * 40; }
+    if (shotB) { const bx = ballX(t); this.ball.position.set(bx, -2.335 + 0.01 * Math.sin(t * 37), 0.07 * Math.sin(t * 6.5 + 0.4)); this.ball.rotation.z = -t * 40; }
     // V wake trailing the skimming ball
     this.wake.forEach((m) => {
       m.visible = shotB; if (!shotB) return;
-      const sd = m.userData.side as number, ang = 0.2 * sd;
+      const sd = m.userData.side as number, ang = (m.userData.ang as number) * sd;
       m.rotation.set(0, -Math.PI / 2 + ang, 0); // plane length along the track, opaque end at the ball
       m.position.set(this.ball.position.x - 4.5 * Math.cos(ang) - 0.05, -2.39, this.ball.position.z + 4.5 * Math.sin(ang));
     });
+    this.contact.visible = shotB; if (shotB) this.contact.position.set(this.ball.position.x - 0.03, -2.396, this.ball.position.z);
     const scroll = shotB ? (t - CUT / FPS) * 6 : t * 0.02;
-    this.waterMat.uniforms.uWhite.value = shotB ? 0.45 : 0;
+    this.waterMat.uniforms.uWhite.value = 0; this.waterMat.uniforms.uDeep.value = shotB ? 1 : 0;
     this.waterMat.uniforms.uScroll.value.set(scroll * 0.0, -scroll * 0.4);
     for (const s of this.streaks) s.visible = shotB && s.position.x - pos.x > 7; // never right under the lens
     // --- characters (camera-facing cards)
@@ -472,8 +495,8 @@ class BtWorld {
       const st = Math.round(sB * 18) / 18;
       this.fxBlast.r = this.pool.req(`blast|${st}`, 600, 600, 1, (p) => blast(p, st));
       this.fxBlast.use(true);
-      this.fxBlast.mesh.position.copy(mz).add(V(0.55 + 0.75 * Math.min(1, sB * 1.6), 0.05 + 0.3 * Math.min(1, sB * 1.6), 0));
-      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 1.25; this.fxBlast.mesh.scale.set(sz, sz, 1);
+      this.fxBlast.mesh.position.copy(mz).add(V(0.55 + 0.95 * Math.min(1, sB * 1.6), 0.05 + 0.7 * Math.min(1, sB * 1.6), 0.35 * Math.min(1, sB * 1.6)));
+      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 1.55; this.fxBlast.mesh.scale.set(sz, sz, 1);
     }
     // flame tongue filling the gun port, so the blast reads as coming out of our gun
     this.fxJet.mesh.visible = !shotB && a >= 0 && sB < 0.95;
@@ -483,7 +506,7 @@ class BtWorld {
       this.fxJet.mesh.position.set(RUN1 + 1.36 + 0.55, 0.66, 0); this.fxJet.mesh.quaternion.copy(cam.quaternion); this.fxJet.mesh.scale.set(1.25, 1.25, 1);
     }
     this.fxSmoke.forEach((e, i) => {
-      const u = (a - 0.3 - 0.05 * i) / 1.5; e.mesh.visible = !shotB && u > 0 && u < 1;
+      const u = (a - 0.5 - 0.05 * i) / 1.5; e.mesh.visible = !shotB && u > 0 && u < 1;
       if (!e.mesh.visible) return;
       const st = Math.round(u * 20) / 20;
       e.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); e.use(false);
@@ -497,9 +520,9 @@ class BtWorld {
       const st = f % 3; this.fxSparks.r = this.pool.req(`sparks|${st}`, 300, 300, 1, (p) => sparks(p, st)); this.fxSparks.use(false);
       this.fxSparks.mesh.position.copy(br).add(V(0, 0.12, 0)); this.fxSparks.mesh.quaternion.copy(cam.quaternion); this.fxSparks.mesh.scale.set(0.42, 0.42, 1);
     }
-    const up = (f - (FIRE - 3)) / 12; this.fxPuff.mesh.visible = !shotB && up > 0 && up < 1;
+    const up = (f - (FIRE - 3)) / 9; this.fxPuff.mesh.visible = !shotB && up > 0 && up < 1;
     if (this.fxPuff.mesh.visible) {
-      const st = Math.round(up * 12) / 12; this.fxPuff.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); this.fxPuff.use(false);
+      const st = Math.round(up * 9) / 9; this.fxPuff.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); this.fxPuff.use(false);
       this.fxPuff.mesh.position.copy(br).add(V(-0.05 * up, 0.15 + 0.3 * up, 0)); this.fxPuff.mesh.quaternion.copy(cam.quaternion);
       const sz = 0.15 + 0.22 * Math.sqrt(up); this.fxPuff.mesh.scale.set(sz, sz, 1);
     }
