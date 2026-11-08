@@ -12,19 +12,19 @@ import * as LU from '../cast/v4/luqian.mjs';
 
 const takes = await loadTakes();
 const v2 = (s, hide = []) => { globalThis.HIDE_LAYERS = new Set(hide); const r = v2Frame(takes, s, { clean: true }); globalThis.HIDE_LAYERS = null; return r; };
-const sil = (id, col, rim, dx = 5, dy = -4) => `<filter id="${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feFlood flood-color="${col}"/><feComposite in2="SourceAlpha" operator="in" result="s"/>` +
+export const sil = (id, col, rim, dx = 5, dy = -4) => `<filter id="${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feFlood flood-color="${col}"/><feComposite in2="SourceAlpha" operator="in" result="s"/>` +
   (rim ? `<feFlood flood-color="${rim}"/><feComposite in2="SourceAlpha" operator="in" result="r"/><feOffset in="r" dx="${dx}" dy="${dy}" result="ro"/><feComposite in="ro" in2="SourceAlpha" operator="out" result="rim"/><feMerge><feMergeNode in="rim"/><feMergeNode in="s"/></feMerge>` : '') + `</filter>`;
-const silG = (fid, tf, inner, op = 1, extra = '') => `<g opacity="${op}" ${extra}><g filter="url(#${fid})" transform="${tf}">${inner}</g></g>`;
-const rays = (cx, cy, n, len, col, op, spread = 0.9, seed = 3) => {
+export const silG = (fid, tf, inner, op = 1, extra = '') => `<g opacity="${op}" ${extra}><g filter="url(#${fid})" transform="${tf}">${inner}</g></g>`;
+export const rays = (cx, cy, n, len, col, op, spread = 0.9, seed = 3) => {
   const R = rng(seed); let s = '';
   for (let i = 0; i < n; i++) { const a = -spread / 2 + (spread * (i + R() * 0.6)) / n, w = 0.012 + R() * 0.03; s += `<path d="M${cx},${cy} L${f2(cx + Math.cos(a - w) * len)},${f2(cy + Math.sin(a - w) * len)} L${f2(cx + Math.cos(a + w) * len)},${f2(cy + Math.sin(a + w) * len)}Z" fill="${col}" opacity="${f2(op * (0.4 + R() * 0.6))}"/>`; }
   return `<g style="mix-blend-mode:screen" filter="url(#${blurId(6)})">${s}</g>`;
 };
-const motes = (n, area, seed, col = '#FFF1C8') => { const R = rng(seed); let s = ''; for (let i = 0; i < n; i++) s += `<circle cx="${f2(area[0] + R() * (area[2] - area[0]))}" cy="${f2(area[1] + R() * (area[3] - area[1]))}" r="${f2(1 + R() * 2.6)}" fill="${col}" opacity="${f2(0.3 + R() * 0.6)}"/>`; return s; };
-const brush = (str, x, y, fs, col, o = {}) => vtext(str, x, y, fs, { fill: col, sp: fs * (o.sp || 1.02), font: o.font || 'Ma Shan Zheng' });
+export const motes = (n, area, seed, col = '#FFF1C8') => { const R = rng(seed); let s = ''; for (let i = 0; i < n; i++) s += `<circle cx="${f2(area[0] + R() * (area[2] - area[0]))}" cy="${f2(area[1] + R() * (area[3] - area[1]))}" r="${f2(1 + R() * 2.6)}" fill="${col}" opacity="${f2(0.3 + R() * 0.6)}"/>`; return s; };
+export const brush = (str, x, y, fs, col, o = {}) => vtext(str, x, y, fs, { fill: col, sp: fs * (o.sp || 1.02), font: o.font || 'Ma Shan Zheng' });
 
 // the raised-fist shadow figure (same construction as safe2: one simple shape for the arm, no fingers)
-function linGrabFist(h, grab = false) {
+export function linGrabFist(h, grab = false) {
   const info = {};
   const fig = lin({ view: 'side', costume: 'A', height: h, x: 0, y: 0, flip: false, info, pose: { shoulderL: grab ? 6 : -4, elbowL: grab ? 4 : 12, shoulderR: grab ? 88 : 6, elbowR: grab ? 4 : 10, torso: 8, legL: 20, kneeL: 25, legR: -15, kneeR: 5 } });
   const H = h / 7.5, S = info.shoulderNear;
@@ -35,7 +35,7 @@ function linGrabFist(h, grab = false) {
 }
 
 // I1 · W08 the fist: a giant shadow thrown across the whole temple wall by the low sun; the young lord shrinks under it
-function I1() {
+export function I1() {
   let s = `<defs>${lg('i1w', [[0, '#E2774E'], [0.55, '#B8432C'], [1, '#5E1C14']], 0, 0, 1, 0.3)}${rg('i1sun', [[0, '#FFF0C8', 0.85], [0.35, '#FFC27A', 0.35], [1, '#FFC27A', 0]], 0.08, 0.35, 0.7)}${sil('i1s', '#2A0D09')}<filter id="i1b"><feGaussianBlur stdDeviation="2.5"/></filter></defs>`;
   s += `<rect width="1920" height="1080" fill="url(#i1w)"/>`;
   for (let i = 0; i < 9; i++) s += `<rect x="${i * 230 + 60}" y="0" width="7" height="1080" fill="#6E2418" opacity="0.35"/>`;
@@ -49,7 +49,7 @@ function I1() {
   return s + motes(90, [150, 100, 1300, 900], 4);
 }
 // I2 · W09 who he is: the 高 lantern as an extreme close-up, light bleeding through the paper
-function I2() {
+export function I2() {
   let s = `<defs>${rg('i2g', [[0, '#FFE7A8'], [0.55, '#F2B65A'], [1, '#B86A24']], 0.45, 0.45, 0.6)}${rg('i2bg', [[0, '#5A1E14'], [1, '#160805']], 0.5, 0.5, 0.75)}${rg('i2h', [[0, '#FFF2C8', 0.7], [1, '#FFF2C8', 0]], 0.5, 0.5, 0.5)}</defs>`;
   s += `<rect width="1920" height="1080" fill="url(#i2bg)"/>`;
   s += `<ellipse cx="960" cy="560" rx="760" ry="720" fill="url(#i2g)"/>`;
@@ -60,7 +60,7 @@ function I2() {
   return s;
 }
 // I3 · W11 陆谦: his shadow towers over the screen, the two cups tiny and black in the foreground
-function I3() {
+export function I3() {
   let s = `<defs>${lg('i3sc', [[0, '#F6E2B4'], [1, '#D9B47A']])}${sil('i3s', '#2A1A10')}${sil('i3k', '#0E0805')}<filter id="i3b"><feGaussianBlur stdDeviation="3"/></filter></defs>`;
   s += `<rect width="1920" height="1080" fill="url(#i3sc)"/>`;
   for (let i = 1; i < 6; i++) s += `<rect x="${i * 320 - 6}" y="0" width="12" height="1080" fill="#5A3E2B"/>`;
@@ -73,7 +73,7 @@ function I3() {
   return s;
 }
 // I4 · W20–21 into the snow: a blizzard; 林冲 large in the foreground walking into the wind, the depot far behind
-function I4() {
+export function I4() {
   let s = `<defs>${lg('i4s', [[0, '#3C4A60'], [1, '#9AA8BA']])}${sil('i4f', '#121821', '#C9D6E6', -4, -3)}</defs>`;
   s += `<rect width="1920" height="1080" fill="url(#i4s)"/>`;
   s += `<path d="M0,760 C400,720 900,740 1920,700 L1920,1080 L0,1080Z" fill="#C7D0DC"/><path d="M0,820 C600,790 1200,800 1920,770 L1920,1080 L0,1080Z" fill="#DCE3EC"/>`;
@@ -87,7 +87,7 @@ function I4() {
   return s;
 }
 // I5 · W27 the thrust, low and wide: 林冲 lunging from the left, the spear crossing the gap, 差拨 knocked back off his feet
-function I5() {
+export function I5() {
   let s = `<defs>${lg('i5s', [[0, '#1A0705'], [0.55, '#6E200E'], [1, '#E2662A']])}${sil('i5f', '#0B0605', '#FFB060', 6, -5)}${sil('i5g', '#0B0605', '#FFB060', -6, -5)}</defs>`;
   s += `<rect width="1920" height="1080" fill="url(#i5s)"/>` + flames(0.7, { x0: -100, x1: 2020, y: 940, h: 560, n: 22, seed: 5 });
   s += `<rect width="1920" height="1080" fill="#1a0704" opacity="0.3"/>`;
@@ -104,7 +104,7 @@ function I5() {
   return s + sk + embers(1.3, { n: 70, area: [0, 0, 1920, 1080], seed: 5, rmax: 4, speed: 220 });
 }
 // I6 · W29 the line as the picture: 杀人可恕 情理难容 brushed huge over the fire, his silhouette small below
-function I6() {
+export function I6() {
   let s = `<defs>${lg('i6s', [[0, '#120504'], [0.6, '#4E160A'], [1, '#B4441C']])}${sil('i6f', '#090403', '#FF9A4A')}</defs>`;
   s += `<rect width="1920" height="1080" fill="url(#i6s)"/>` + flames(1.1, { x0: -100, x1: 2020, y: 1000, h: 300, n: 20, seed: 8 });
   s += brush('杀人可恕', 1240, 90, 205, '#F6E6C8', { sp: 1.05 }) + brush('情理难容', 860, 210, 205, '#F6E6C8', { sp: 1.05 });
@@ -112,13 +112,13 @@ function I6() {
   return s + embers(2.0, { n: 60, area: [0, 200, 1920, 1080], seed: 9, rmax: 3.5 });
 }
 // I7 · W30 the blow: a huge 忍 brushed, then the ink slash cuts straight through it
-function I7() {
+export function I7() {
   let s = KEYS.K31();
   s = s.replace('<path d="M-50,880 Q620,830 1220,872 T1980,860 L1980,1100 L-50,1100Z" fill="#BAC6D2" opacity="0.5"/>', '<path d="M-50,880 Q620,830 1220,872 T1980,860 L1980,1100 L-50,1100Z" fill="#BAC6D2" opacity="0.5"/><text x="980" y="560" font-family="Ma Shan Zheng" font-size="820" fill="#8E1F17" text-anchor="middle" dominant-baseline="middle" opacity="0.88">忍</text>');
   return s;
 }
 // I8 · W13 the cangue slams shut: the board itself as a macro shot (no face), iron, rivets, the 开封府 seal, dust
-function I8() {
+export function I8() {
   let s = `<defs>${lg('i8w', [[0, '#8A5A34'], [0.5, '#6E4426'], [1, '#4A2C18']], 0, 0, 0, 1)}${rg('i8v', [[0.45, '#000', 0], [1, '#000', 0.78]], 0.5, 0.5, 0.72)}${rg('i8k', [[0, '#FFD9A0', 0.5], [1, '#FFD9A0', 0]], 0.3, 0.2, 0.6)}<filter id="i8g"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.09" numOctaves="3" seed="6"/><feColorMatrix values="0 0 0 0 0.18  0 0 0 0 0.1  0 0 0 0 0.05  0 0 0 0.55 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>`;
   s += `<rect width="1920" height="1080" fill="#0C0907"/>`;
   // the board, tilted, filling the frame; the neck hole's curve cut at the bottom edge (only a dark robe shoulder in it)
