@@ -51,11 +51,10 @@ const S30_WALL = bake('t12_s30wall', 2200, 1300, `
   <defs><radialGradient id="t12wl" cx="0.56" cy="0.42" r="0.7"><stop offset="0" stop-color="#2E3646"/><stop offset="1" stop-color="#161A23"/></radialGradient></defs>
   <rect width="2200" height="1300" fill="url(#t12wl)"/>
   <rect y="1020" width="2200" height="280" fill="#141820"/>
-  <path d="M1500,140 C1560,220 1640,260 1720,250 M1600,200 C1620,260 1660,300 1700,320" stroke="#10131A" stroke-width="10" fill="none" opacity="0.6" stroke-linecap="round"/>
 `);
 // his profile, soft (d 1.3), baked blurred once
 const PROFILE = bake('t12_s30prof', 1100, 1200, `<g filter="url(#t12pb)"><g transform="translate(120 60)">${lin({ view: 'side', costume: 'A', flip: true, x: 254, y: 3770, height: 3600, col: LS_COL, headCloth: 'plain', expr: { ...EX.悲, tear: 0, eye: 0.75, look: [0.6, -0.2] } })}</g></g>`,
-  { defs: `<filter id="t12pb" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="11"/></filter>` });
+  { defs: `<filter id="t12pb" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="11"/><feColorMatrix type="matrix" values="0.42 0.06 0.06 0 0.02  0.05 0.44 0.07 0 0.03  0.06 0.08 0.55 0 0.06  0 0 0 1 0"/></filter>` });
 function s30(t) {
   const z = lerp(1, 1.1, ramp(t, T30, 125.6, E.sine));
   const wc = [WX + WW / 2, WY + WH / 2];
@@ -74,7 +73,6 @@ function s30(t) {
   if (bloom > 0.01) s += L(c, 0.8, winGlow(wc[0], wc[1], 620, 0.42 * bloom, '#E8A04A', 't12glow'), { id: 't12halo', bleed: 'all' });
   s += L(c, 0.8, `<g transform="translate(${WX} ${WY})">${win}</g>`, { id: 't12window' });
   // lattice light on the floor/wall below when the lanterns glow
-  if (bloom > 0.01) s += L(c, 0.8, `<path d="M${WX - 40},1020 L${WX + WW + 40},1020 L${WX + WW + 200},1120 L${WX - 200},1120Z" fill="#E8A04A" opacity="${f2(0.14 * bloom)}"/>`, { id: 't12spill', bleed: 'all' });
   s += L(c, 1.3, `<g transform="translate(-120 -60)">${PROFILE}</g>`, { id: 't12prof', bleed: 'lb' });
   return s;
 }

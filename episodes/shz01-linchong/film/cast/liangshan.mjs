@@ -195,12 +195,14 @@ export function banquetShadows({ bow = 0, toast = 0, fade = 1, w = 480, h = 576 
   s += `<ellipse cx="${X(gx + 2)}" cy="${Y(gy - 98)}" rx="${X(22)}" ry="${Y(26)}"/>`; // head
   s += `<rect x="${X(gx - 18)}" y="${Y(gy - 132)}" width="${X(40)}" height="${Y(20)}" rx="${X(4)}"/>`; // 幞头 cap
   s += `<rect x="${X(gx - 92)}" y="${Y(gy - 126)}" width="${X(186)}" height="${Y(5)}" rx="${X(2)}"/>`; // long wings
-  // 宋江 bowing low before him (left), torso from upright to horizontal
-  const sx = 190, sy = 520, a = -bow * 78; // degrees: torso rotates toward 高俅 (right)
-  s += `<path d="M${X(sx - 22)},${Y(sy)} L${X(sx - 14)},${Y(sy - 120)} L${X(sx + 16)},${Y(sy - 120)} L${X(sx + 26)},${Y(sy)}Z"/>`; // legs/robe skirt
-  s += `<g transform="rotate(${f2(-a)} ${X(sx)} ${Y(sy - 118)})"><path d="M${X(sx - 26)},${Y(sy - 112)} C${X(sx - 30)},${Y(sy - 170)} ${X(sx - 20)},${Y(sy - 205)} ${X(sx)},${Y(sy - 210)} C${X(sx + 20)},${Y(sy - 205)} ${X(sx + 30)},${Y(sy - 170)} ${X(sx + 26)},${Y(sy - 112)}Z"/>` +
-    `<ellipse cx="${X(sx + 2)}" cy="${Y(sy - 232)}" rx="${X(18)}" ry="${Y(22)}"/><rect x="${X(sx - 14)}" y="${Y(sy - 262)}" width="${X(32)}" height="${Y(16)}" rx="${X(4)}"/>` +
-    `<path d="M${X(sx + 14)},${Y(sy - 196)} C${X(sx + 44)},${Y(sy - 180)} ${X(sx + 52)},${Y(sy - 160)} ${X(sx + 48)},${Y(sy - 150)} L${X(sx + 36)},${Y(sy - 148)} C${X(sx + 36)},${Y(sy - 162)} ${X(sx + 24)},${Y(sy - 172)} ${X(sx + 10)},${Y(sy - 178)}Z"/></g>`; // clasped hands
+  // 宋江 kneeling, bowing low before him (纳头便拜): torso pivots at the hip down toward the floor
+  const sx = 175, sy = 560, a = bow * 72;
+  s += `<path d="M${X(sx - 48)},${Y(sy)} C${X(sx - 50)},${Y(sy - 40)} ${X(sx - 30)},${Y(sy - 70)} ${X(sx)},${Y(sy - 74)} C${X(sx + 30)},${Y(sy - 72)} ${X(sx + 52)},${Y(sy - 40)} ${X(sx + 58)},${Y(sy)}Z"/>`; // kneeling legs + robe
+  s += `<g transform="rotate(${f2(a)} ${X(sx + 6)} ${Y(sy - 66)})">` +
+    `<path d="M${X(sx - 22)},${Y(sy - 60)} C${X(sx - 28)},${Y(sy - 120)} ${X(sx - 18)},${Y(sy - 160)} ${X(sx + 4)},${Y(sy - 166)} C${X(sx + 26)},${Y(sy - 160)} ${X(sx + 34)},${Y(sy - 120)} ${X(sx + 30)},${Y(sy - 60)}Z"/>` +
+    `<ellipse cx="${X(sx + 8)}" cy="${Y(sy - 186)}" rx="${X(17)}" ry="${Y(21)}"/><rect x="${X(sx - 7)}" y="${Y(sy - 216)}" width="${X(30)}" height="${Y(15)}" rx="${X(4)}"/>` +
+    `<path d="M${X(sx + 22)},${Y(sy - 150)} C${X(sx + 50)},${Y(sy - 140)} ${X(sx + 62)},${Y(sy - 128)} ${X(sx + 66)},${Y(sy - 112)} L${X(sx + 50)},${Y(sy - 104)} C${X(sx + 44)},${Y(sy - 118)} ${X(sx + 34)},${Y(sy - 126)} ${X(sx + 18)},${Y(sy - 130)}Z"/>` +
+    `<path d="M${X(sx + 52)},${Y(sy - 112)} C${X(sx + 58)},${Y(sy - 90)} ${X(sx + 56)},${Y(sy - 74)} ${X(sx + 48)},${Y(sy - 66)} L${X(sx + 40)},${Y(sy - 80)}Z" opacity="0.9"/></g>`; // sleeves hanging from the clasped hands
   // toasting figures, far back (smaller, lighter), cups raised
   for (const [tx, ty, sc] of [[70, 470, 0.72], [440, 480, 0.68]]) {
     const ar = toast;
@@ -217,10 +219,11 @@ export function lanternBoatShadow(x, { w = 480 } = {}) {
   const k = w / 480, X = (v) => f2(v * k);
   const y = 470;
   let s = `<g transform="translate(${X(x)} 0)">`;
-  s += `<path d="M${X(-170)},${X(y)} C${X(-120)},${X(y + 40)} ${X(120)},${X(y + 40)} ${X(190)},${X(y - 6)} L${X(170)},${X(y + 10)} C${X(100)},${X(y + 24)} ${X(-110)},${X(y + 24)} ${X(-170)},${X(y)}Z"/>`; // hull
-  s += `<path d="M${X(-80)},${X(y + 4)} L${X(-80)},${X(y - 70)} C${X(-40)},${X(y - 92)} ${X(40)},${X(y - 92)} ${X(80)},${X(y - 70)} L${X(80)},${X(y + 4)}Z"/>`; // cabin
-  s += `<rect x="${X(-6)}" y="${X(y - 210)}" width="${X(8)}" height="${X(150)}"/>`; // mast
-  for (const lx of [-120, 110, 0]) s += `<line x1="${X(lx)}" y1="${X(lx === 0 ? y - 190 : y - 70)}" x2="${X(lx)}" y2="${X(lx === 0 ? y - 160 : y - 40)}" stroke="#000" stroke-width="${X(2)}"/><ellipse cx="${X(lx)}" cy="${X(lx === 0 ? y - 146 : y - 26)}" rx="${X(13)}" ry="${X(16)}"/>`;
+  s += `<path d="M${X(-215)},${X(y - 34)} C${X(-180)},${X(y + 6)} ${X(-120)},${X(y + 34)} ${X(0)},${X(y + 34)} C${X(120)},${X(y + 34)} ${X(190)},${X(y + 8)} ${X(230)},${X(y - 40)} L${X(200)},${X(y + 2)} C${X(120)},${X(y + 14)} ${X(-110)},${X(y + 14)} ${X(-190)},${X(y)}Z"/>`; // hull, high bow and stern
+  s += `<rect x="${X(-90)}" y="${X(y - 62)}" width="${X(170)}" height="${X(66)}"/>`; // cabin walls
+  s += `<path d="M${X(-122)},${X(y - 58)} C${X(-100)},${X(y - 66)} ${X(-60)},${X(y - 90)} ${X(-5)},${X(y - 92)} C${X(50)},${X(y - 90)} ${X(90)},${X(y - 66)} ${X(112)},${X(y - 58)} C${X(80)},${X(y - 66)} ${X(40)},${X(y - 70)} ${X(-5)},${X(y - 70)} C${X(-50)},${X(y - 70)} ${X(-90)},${X(y - 66)} ${X(-122)},${X(y - 58)}Z"/><rect x="${X(-95)}" y="${X(y - 72)}" width="${X(180)}" height="${X(14)}"/>`; // upturned roof
+  s += `<rect x="${X(-12)}" y="${X(y - 250)}" width="${X(7)}" height="${X(160)}"/><path d="M${X(-5)},${X(y - 250)} L${X(70)},${X(y - 236)} L${X(-5)},${X(y - 222)}Z"/>`; // mast + pennant
+  for (const lx of [-110, 100]) s += `<line x1="${X(lx)}" y1="${X(y - 60)}" x2="${X(lx)}" y2="${X(y - 40)}" stroke="#000" stroke-width="${X(2)}"/><ellipse cx="${X(lx)}" cy="${X(y - 26)}" rx="${X(12)}" ry="${X(15)}"/>`;
   s += `</g>`;
   return s;
 }
