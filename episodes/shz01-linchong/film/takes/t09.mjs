@@ -234,14 +234,19 @@ function lc(t) {
   // the turn: a quick squash through the profile (4 frames)
   const tk = (t - TURN) / 0.13;
   const sx = tk > 0 && tk < 1 ? Math.max(0.32, Math.abs(Math.cos(tk * Math.PI))) : 1;
-  const dist = Math.abs(x - 700) + (t > TURN ? 200 : 0);
-  const bob = walking(t) ? -Math.abs(Math.sin((dist / 120) * Math.PI)) * 5 : 0;
+  // stride: one step per ~2 beats (0.836 s) while trudging; small steps on the slow approach to the hut
+  const w0 = t < COLLAPSE ? T0 - 0.65 : TURN + 0.15, w1 = t < COLLAPSE ? COLLAPSE - 0.05 : PULL - 0.12;
+  const ph = (t - w0) / 0.836;
+  const env = walking(t) ? Math.sin(clamp((t - w0) / (w1 - w0)) * Math.PI) ** 0.35 : 0;
+  const amp = (t < COLLAPSE ? 11 : 26) * env;
+  const legR = amp * Math.sin(ph * Math.PI), legL = -legR;
+  const bob = walking(t) ? -Math.abs(Math.sin(ph * Math.PI)) * 6 * env : 0;
   // stop dead: a small recoil at the collapse; gourd swing comes from the spear angle wobble
   const recoil = t > COLLAPSE && t < COLLAPSE + 0.5 ? -Math.sin(((t - COLLAPSE) / 0.5) * Math.PI) * 6 : 0;
   const swing = t > COLLAPSE ? Math.sin((t - COLLAPSE) * 9) * 6 * Math.exp(-(t - COLLAPSE) * 2.4) : 0;
   const reach = ramp(t, PULL - 0.32, PULL, E.out);
   const expr = t < COLLAPSE ? { ...EX.隐忍, jaw: 0.4, eye: 0.85, brow: -0.4 } : t < TURN ? { ...EX.隐忍, eye: 1.12, brow: 0.1, jaw: 0, mouth: -0.2 } : { ...EX.隐忍 };
-  const pose = { headTilt: t < COLLAPSE ? 4 : 0, shoulderR: lerp(0, 58, reach), elbowR: lerp(0, 6, reach) };
+  const pose = { headTilt: t < COLLAPSE ? 4 : 0, shoulderR: lerp(0, 58, reach), elbowR: lerp(0, 6, reach), legR, legL };
   const spearHand = reach > 0.05 ? 'L' : 'R';
   const body = lin({ view: 'side', costume: 'C', expr, pose, flip: facingRight, height: HFIG, x: 0, y: 0, tattoo: 1,
     props: { spear: { hand: spearHand, angle: -42 + swing, gourd: true, grip: 0.3 } } });

@@ -335,12 +335,12 @@ function s24(t) {
     `<g filter="url(#${blurId(12)})" fill="#07070B" opacity="0.9"><ellipse cx="${X(-160)}" cy="${Y(160)}" rx="40" ry="165"/><ellipse cx="${X(156)}" cy="${Y(160)}" rx="40" ry="165"/></g>`;
   const fk = fireK(t);
   const bandY = ey - 8, bandH = 78;
-  let s = `<rect x="-20" y="-20" width="1960" height="1120" fill="#120E0C"/>`;
+  let s = `<rect x="-20" y="-20" width="1960" height="1120" fill="#2A221E"/>`;
   s += `<g transform="translate(${ex} ${ey}) scale(${f2(z)}) translate(${-ex} ${-ey})">${face}${temples}`;
   // fire tint across the slit, darkness elsewhere (luma ~25–30), a cold rim on the hat brim
   s += `<rect x="-200" y="${bandY - bandH * 1.2}" width="2400" height="${bandH * 2.4}" fill="#FF8A3D" opacity="${f2(0.32 * fk)}" style="mix-blend-mode:multiply"/>`;
-  s += `<rect x="-400" y="-400" width="2800" height="2000" fill="#07070B" opacity="0.70" mask="url(#t10band)"/>`;
-  s += `<rect x="-400" y="${bandY - bandH * 0.5}" width="2800" height="${bandH}" fill="#FFB070" opacity="${f2(0.12 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(10)})"/>`;
+  s += `<rect x="-400" y="-400" width="2800" height="2000" fill="#07070B" opacity="0.76" mask="url(#t10band)"/>`;
+  s += `<rect x="-400" y="${bandY - bandH * 0.5}" width="2800" height="${bandH}" fill="#FFB070" opacity="${f2(0.17 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(10)})"/>`;
   // faint warm bounce under the slit (cheeks, moustache) and the cold rim over the darkness
   s += `<ellipse cx="${ex}" cy="${ey + 120}" rx="150" ry="90" fill="#C8642E" opacity="${f2(0.22 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(30)})"/>`;
   s += rim;
