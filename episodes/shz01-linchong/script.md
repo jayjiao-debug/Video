@@ -44,25 +44,25 @@ Voice: **narrator only** (owner, 2026-11-08: 只要旁白，不用人物说话).
 | V16 | 57.4 | 被诬陷，脸上刺字，发配沧州， | 白虎节堂 plaque; the tattoo pressed onto his cheek. | L6, L7 |
 | V17 | 60.3 | 你还是忍了。 | 隐忍 3: head bowed in the cangue. |  |
 | V18 | 62.4 | 你总觉得，忍一忍，就能回去。 | The road out of 东京; he looks back. | (narration) |
-| V19 | 68.9 | 岳父也说：放你回来时，依旧夫妻完聚。 | Father-in-law's hand on his shoulder; she stands at the gate. | L11 |
-| V20 | 72.8 | 到了沧州，你守着一座草料场。 | Grey depot, first snow. | L14 |
-| V21 | 75.9 | 那年冬天，雪下得特别大。 | Wide: snow over everything. | L14 |
-| V22 | 78.7 | 雪压塌了草屋，你躲进山神庙，搬石头抵住了门。 | Collapsed hut; he pushes a stone against the temple door. | L14 |
-| V23 | 83.4 | 半夜，草料场烧起来了。 | Fire through the door crack, red on his face. | L15 |
-| V24 | 85.9 | 门外有人说：烧死了，拾他几块骨头回去交差。 | Three silhouettes against the fire. | L15 |
-| V25 | 90.5 | 那个声音，你认得。 | Close: his eyes in the dark. | L15 (陆谦) |
-| V26 | 92.5 | 你终于明白， | Extreme close on the eyes. | (narration) |
-| V27 | 91.0 | 忍，是回不去的。 | Hold. The music almost stops. | (narration) |
-| V28 | 92.8 | 你推开了门。 | On the drop: the stone scrapes, the door opens on the fire, cut to white. | L16 |
-| V29 | 94.0 | 那一夜雪越下越大，你一个人，上了梁山。 | Lone figure in the snow: hat, spear, gourd (the signature silhouette). | L16, L18 |
-| V30 | 98.7 | 你想把娘子接上山，可这件事，一拖再拖。 | 梁山泊 water and reeds through the seasons. | L19 |
-| V31 | 103.5 | 等派去的人回来，只带回一句话： | A small boat returning. | L20 |
-| V32 | 107.5 | 娘子被逼，自缢身死，已故半载。 | Large calligraphy 「已故半载」; 2 s of music alone. | L20 |
-| V33 | 111.4 | 你哭了。 | His face, 悲: one tear. | L21 |
-| V34 | 113.1 | 从此，心里再没有可挂念的人。 | He looks at an empty window. | L21 |
-| V35 | 117.0 | 后来，仇人高俅被捉上山，又被好酒好肉送了回去。 | Banquet silhouettes; 高俅 leaving by boat. | L22 |
-| V36 | 122.6 | 再后来，你病倒在杭州六和寺，再没起来。 | Empty temple room; the hat and spear by the door. | L25 |
-| V37 | 127.3 | 你这一辈子，都在等那句：依旧夫妻完聚。 | Callback: the 休书 from the opening; the thumbprint fades. | L11 (narration) |
+| V19 | 65.3 | 岳父也说：放你回来时，依旧夫妻完聚。 | Father-in-law's hand on his shoulder; she stands at the gate. | L11 |
+| V20 | 69.2 | 到了沧州，你守着一座草料场。 | Grey depot, first snow. | L14 |
+| V21 | 72.4 | 那年冬天，雪下得特别大。 | Wide: snow over everything. | L14 |
+| V22 | 75.1 | 雪压塌了草屋，你躲进山神庙，搬石头抵住了门。 | Collapsed hut; he pushes a stone against the temple door. | L14 |
+| V23 | 79.9 | 半夜，草料场烧起来了。 | Fire through the door crack, red on his face. | L15 |
+| V24 | 82.4 | 门外有人说：烧死了，拾他几块骨头回去交差。 | Three silhouettes against the fire. | L15 |
+| V25 | 86.9 | 那个声音，你认得。 | Close: his eyes in the dark. | L15 (陆谦) |
+| V26 | 91.0 | 你终于明白， | Extreme close on the eyes. | (narration) |
+| V27 | 92.6 | 忍，是回不去的。 | Hold. The music almost stops. | (narration) |
+| V28 | 94.0 | 你推开了门。 | On the drop: the stone scrapes, the door opens on the fire, cut to white. | L16 |
+| V29 | 96.2 | 那一夜雪越下越大，你一个人，上了梁山。 | Lone figure in the snow: hat, spear, gourd (the signature silhouette). | L16, L18 |
+| V30 | 101.0 | 你想把娘子接上山，可这件事，一拖再拖。 | 梁山泊 water and reeds through the seasons. | L19 |
+| V31 | 105.7 | 等派去的人回来，只带回一句话： | A small boat returning. | L20 |
+| V32 | 109.8 | 娘子被逼，自缢身死，已故半载。 | Large calligraphy 「已故半载」; 2 s of music alone. | L20 |
+| V33 | 113.6 | 你哭了。 | His face, 悲: one tear. | L21 |
+| V34 | 115.4 | 从此，心里再没有可挂念的人。 | He looks at an empty window. | L21 |
+| V35 | 119.2 | 后来，仇人高俅被捉上山，又被好酒好肉送了回去。 | Banquet silhouettes; 高俅 leaving by boat. | L22 |
+| V36 | 124.8 | 再后来，你病倒在杭州六和寺，再没起来。 | Empty temple room; the hat and spear by the door. | L25 |
+| V37 | 129.6 | 你这一辈子，都在等那句：依旧夫妻完聚。 | Callback: the 休书 from the opening; the thumbprint fades. | L11 (narration) |
 | V38 | 138.8 | 如果重来一次，岳庙那一拳，你打不打？ | (centred question) The fist from the temple courtyard. |  |
 | End | 142–148.5 | *(end card)* | Dim, J seal, title, the question, 关注 pill, 下回：鲁智深, sources. | |
 
