@@ -1,0 +1,134 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<style>html,body{margin:0;background:#000;overflow:hidden}#bg,#gl{position:absolute;left:0;top:0;width:1920px;height:1080px}</style></head>
+<body><div id="bg"></div><canvas id="gl" width="1920" height="1080"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+const V = (a) => new THREE.Vector3(...a);
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(1920, 1080, false); renderer.setClearColor(0x000000, 0);
+const scene = new THREE.Scene();
+// orthographic camera in pixels: x right, y up (gl), z toward viewer
+const cam = new THREE.OrthographicCamera(0, 1920, 1080, 0, -5000, 5000); cam.position.set(0, 0, 2000);
+const light = new THREE.DirectionalLight(0xffffff, Math.PI); scene.add(light);
+const grad = new THREE.DataTexture(new Uint8Array([180, 180, 180, 255, 255, 255, 255, 255]), 2, 1, THREE.RGBAFormat);
+grad.minFilter = grad.magFilter = THREE.NearestFilter; grad.needsUpdate = true;
+const toon = (hex, g = grad) => new THREE.MeshToonMaterial({ color: new THREE.Color(hex), gradientMap: g });
+const OUT = { value: 0.0011 };
+function outlineMat(hex) {
+  const m = new THREE.MeshBasicMaterial({ color: new THREE.Color(hex), side: THREE.BackSide });
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uOut = OUT;
+    sh.vertexShader = 'uniform float uOut;\n' + sh.vertexShader
+      .replace('#include <skinning_vertex>', '#include <skinning_vertex>\n#ifdef USE_SKINNING\ntransformed += normalize(objectNormal) * uOut;\n#else\ntransformed += normalize(normal) * uOut;\n#endif');
+    if (!sh.vertexShader.includes('USE_SKINNING\ntransformed')) sh.vertexShader = sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed += normalize(normal) * uOut;');
+  };
+  return m;
+}
+const root = new THREE.Group(); scene.add(root);   // hand placement (px), rotation, scale px/m
+const g = await new GLTFLoader().loadAsync('./right.glb');
+const arm = g.scene; root.add(arm);
+let mesh; arm.traverse((o) => { if (o.isSkinnedMesh) mesh = o; });
+mesh.material = toon('#efb58e');
+mesh.geometry.computeVertexNormals();
+const outline = new THREE.SkinnedMesh(mesh.geometry, outlineMat('#2A1C17'));
+outline.bind(mesh.skeleton, mesh.bindMatrix); mesh.parent.add(outline);
+outline.frustumCulled = mesh.frustumCulled = false;
+const bones = {}; arm.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+const rest = {}; for (const [n, b] of Object.entries(bones)) rest[n] = { p: b.position.clone(), q: b.quaternion.clone() };
+const F = ['index', 'middle', 'ring', 'pinky'];
+const chain = (f) => [`${f}-finger-metacarpal`, `${f}-finger-phalanx-proximal`, `${f}-finger-phalanx-intermediate`, `${f}-finger-phalanx-distal`, `${f}-finger-tip`];
+const TH = ['thumb-metacarpal', 'thumb-phalanx-proximal', 'thumb-phalanx-distal', 'thumb-tip'];
+// hand frame from the rest pose
+const P = (n) => rest[n].p;
+const wrist = P('wrist').clone();
+const along = P('middle-finger-phalanx-proximal').clone().sub(wrist).normalize();         // wrist -> knuckles
+const across = P('pinky-finger-phalanx-proximal').clone().sub(P('index-finger-phalanx-proximal')).normalize(); // index -> pinky
+let nPalm = new THREE.Vector3().crossVectors(along, across).normalize();
+if (nPalm.dot(P('thumb-tip').clone().sub(P('middle-finger-phalanx-proximal'))) < 0) nPalm.negate();
+const acrossO = new THREE.Vector3().crossVectors(nPalm, along).normalize(); // orthogonal width axis
+window.__frame = { along: along.toArray(), nPalm: nPalm.toArray() };
+// sleeve (forearm cuff), in model space along -along from the wrist
+const sleeveG = new THREE.CylinderGeometry(0.03, 0.037, 0.16, 28, 1, false);
+sleeveG.translate(0, -0.08 - 0.012, 0);  // top of the cuff just past the wrist
+const sleeve = new THREE.Group();
+const sMesh = new THREE.Mesh(sleeveG, toon('#3B4356')); const sOut = new THREE.Mesh(sleeveG, outlineMat('#2A1C17'));
+sleeve.add(sMesh, sOut);
+const cuffG = new THREE.TorusGeometry(0.032, 0.004, 8, 32); cuffG.rotateX(Math.PI / 2); cuffG.translate(0, -0.014, 0);
+sleeve.add(new THREE.Mesh(cuffG, toon('#2E3446')));
+arm.add(sleeve);
+{ // orient the sleeve: local +y -> along
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), along);
+  sleeve.quaternion.copy(q); sleeve.position.copy(wrist).addScaledVector(along, 0.0);
+  sleeve.scale.set(1, 1, 0.78); // flatter forearm (wider across the palm than thick)
+}
+function rot(points, quats, from, pivot, axis, ang) {
+  if (!ang) return;
+  const R = new THREE.Quaternion().setFromAxisAngle(axis, ang);
+  for (let k = from; k < points.length; k++) {
+    points[k].sub(pivot).applyQuaternion(R).add(pivot);
+    quats[k].premultiply(R);
+  }
+}
+// pose: { fingers: {index:[mcp,pip,dip], ...}, spread: {index: deg...}, thumb: {opp, flex1, flex2, roll}, ... } angles in degrees
+window.pose = (ps) => {
+  const d = Math.PI / 180;
+  for (const f of F) {
+    const c = chain(f), pts = c.map((n) => P(n).clone()), qs = c.map((n) => rest[n].q.clone());
+    const dir = P(c[4]).clone().sub(P(c[1])).normalize();
+    const axis = new THREE.Vector3().crossVectors(dir, nPalm).normalize();
+    const a = (ps.fingers && ps.fingers[f]) || [0, 0, 0];
+    // converge fingers in a fist (spread about the palm normal at the MCP)
+    const sp = ((ps.spread && ps.spread[f]) || 0) * d;
+    if (sp) rot(pts, qs, 1, pts[1].clone(), nPalm, sp);
+    const ax = axis.clone();
+    if (sp) ax.applyAxisAngle(nPalm, sp);
+    rot(pts, qs, 1, pts[1].clone(), ax, a[0] * d);
+    rot(pts, qs, 2, pts[2].clone(), ax, a[1] * d);
+    rot(pts, qs, 3, pts[3].clone(), ax, a[2] * d);
+    c.forEach((n, i) => { bones[n].position.copy(pts[i]); bones[n].quaternion.copy(qs[i]); });
+  }
+  { // thumb
+    const t = ps.thumb || {};
+    const pts = TH.map((n) => P(n).clone()), qs = TH.map((n) => rest[n].q.clone());
+    const base = pts[0].clone();
+    // opposition: swing across the palm about an axis along the hand
+    rot(pts, qs, 0, base, along, (t.opp || 0) * d);
+    // abduct/adduct toward the palm about the width axis
+    rot(pts, qs, 0, base, acrossO, (t.abd || 0) * d);
+    const tdir = pts[3].clone().sub(pts[1]).normalize();
+    let tax = new THREE.Vector3().crossVectors(tdir, nPalm).normalize();
+    if (t.roll) tax.applyAxisAngle(tdir, t.roll * d);
+    rot(pts, qs, 1, pts[1].clone(), tax, (t.flex1 || 0) * d);
+    rot(pts, qs, 2, pts[2].clone(), tax, (t.flex2 || 0) * d);
+    TH.forEach((n, i) => { bones[n].position.copy(pts[i]); bones[n].quaternion.copy(qs[i]); });
+  }
+};
+// place the hand: orientation from target directions (world): A = along (wrist->knuckles), N = palm normal
+window.place = (o) => {
+  const m1 = new THREE.Matrix4().makeBasis(along, nPalm, acrossO);
+  const A = V(o.A).normalize(); let N = V(o.N); N.sub(A.clone().multiplyScalar(N.dot(A))).normalize();
+  const W = new THREE.Vector3().crossVectors(N, A).normalize(); // matches acrossO = nPalm x along
+  const m2 = new THREE.Matrix4().makeBasis(A, N, W);
+  const q = new THREE.Quaternion().setFromRotationMatrix(m2.multiply(m1.clone().transpose()));
+  root.quaternion.copy(q);
+  root.scale.setScalar(o.s);
+  // position so the wrist lands on (x, y) in gl px
+  root.position.set(0, 0, 0); root.updateMatrixWorld(true);
+  const w = wrist.clone().applyMatrix4(root.matrixWorld);
+  root.position.set(o.x - w.x, o.y - w.y, 0);
+  if (o.squash) root.scale.set(o.s, o.s, o.s * (1 - o.squash));
+  light.position.set(...(o.light || [-0.6, 0.7, 0.9]));
+  OUT.value = (o.outline || 3.2) / o.s;
+};
+window.screenOf = (name) => { root.updateMatrixWorld(true); const v = bones[name].getWorldPosition(new THREE.Vector3()); return [v.x, 1080 - v.y]; };
+window.frame = async (bgSvg, ps, pl) => {
+  document.getElementById('bg').innerHTML = bgSvg;
+  window.pose(ps); window.place(pl);
+  renderer.render(scene, cam);
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+};
+window.__ready = true;
+</script></body></html>

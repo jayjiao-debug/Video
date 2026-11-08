@@ -1,0 +1,7 @@
+# hand3d — toon-shaded 3D hand for close-ups (test, 2026-11-08)
+
+- Model: WebXR generic hand (`right.glb`, immersive-web/webxr-input-profiles, W3C Software and Document License), fetched by `setup.sh` (not committed).
+- `hand.html`: three.js r160 scene with an orthographic pixel camera. MeshToonMaterial (2 tones from the rig palette: skin #efb58e, shade ≈ #d29a76), inverted-hull outline #2A1C17 (skinned), slate sleeve with cuff. The skeleton is flat (every bone is a child of the armature), so `pose()` does its own finger FK: per finger MCP/PIP/DIP curl about an axis ⟂ to the finger and the palm normal, spread about the palm normal; the thumb gets opposition / abduction / two flexions. `place({A, N, x, y, s, squash, light, outline})` orients the hand by its wrist→knuckle direction A and palm normal N (world, y up), puts the wrist at (x, y) gl px with s px per metre. `screenOf(bone)` gives screen px (y down) for alignment (e.g. the palm print).
+- `clip.mjs`: the 5 s test (fist → fingers go soft → roll palm-down → press → print). `still.mjs`: single poses for tuning.
+- Cost: ~0.18 s/frame at 1920×1080 with SwiftShader (whole frame incl. the SVG background).
+- Plugging into the film engine: render the hand page as a transparent layer (omitBackground) per frame, or add the three.js canvas under/over the engine's SVG root in render.mjs's page; takes would pass `{pose, place}` per frame and get back bone screen points for contact (paper, shoulder, stone).
