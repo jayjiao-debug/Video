@@ -429,7 +429,7 @@ function zhangHand(x, y, k, squeeze) {
   s += '</g>';
   return s;
 }
-function linBack(t, snowK) {
+function linBack(t) {
   // 林冲 from behind his left shoulder (foreground, soft): back of the head (plain dark head cloth, bun), the left
   // shoulder in the slate robe, the cangue board's short end behind the neck.
   const LN = '#1E1714';
@@ -451,11 +451,13 @@ function linBack(t, snowK) {
   s += `<path d="M190,330 C240,300 380,300 440,332" fill="none" stroke="#323845" stroke-width="8"/>`;
   // ear edge (his left ear, seen from behind)
   s += `<path d="M452,380 C476,374 488,400 480,428 C474,446 462,452 452,448" fill="#B98063" stroke="${LN}" stroke-width="3"/>`;
-  // snow settling on the shoulder top (72.95 →)
-  if (snowK > 0) {
-    s += `<path d="M${f2(470)},${f2(626 - 4 * snowK)} C${f2(560)},${f2(618 - 18 * snowK)} ${f2(700)},${f2(640 - 20 * snowK)} ${f2(800)},${f2(700 - 14 * snowK)} C${f2(780)},${f2(712)} ${f2(640)},${f2(660)} ${f2(470)},${f2(640)}Z" fill="#FFFFFF" opacity="${f2(Math.min(1, snowK * 1.2))}"/>`;
-  }
   return s;
+}
+
+function shoulderSnow(k) {
+  // snow settling on his shoulder top where the hand was (72.55 →)
+  return `<path d="M470,${f2(628 - 4 * k)} C560,${f2(616 - 18 * k)} 700,${f2(638 - 20 * k)} 800,${f2(700 - 14 * k)} C780,712 640,662 470,642Z" fill="#FFFFFF" opacity="${f2(Math.min(1, k * 1.2))}"/>` +
+    `<path d="M560,${f2(622 - 14 * k)} C600,${f2(612 - 20 * k)} 650,${f2(616 - 22 * k)} 690,${f2(630 - 18 * k)}" fill="none" stroke="#E6EEF5" stroke-width="5" opacity="${f2(k)}"/>`;
 }
 
 function camC(t) {
@@ -498,9 +500,9 @@ function sceneC(t) {
   s += L(c, 1.0, `<ellipse cx="640" cy="610" rx="300" ry="190" fill="url(#t08pool)" style="mix-blend-mode:screen"/>`, { id: 'fx-pool' });
   // 林冲's back in the foreground (soft), then the arm and hand on his shoulder (sharp)
   const snowK = ramp(t, 72.55, 73.6, E.inOut);
-  s += L(c, 1.25, linBack(t, 0), { id: 't08linback', blur: 5, bleed: 'lb' });
+  s += L(c, 1.25, linBack(t), { id: 't08linback', blur: 5, bleed: 'lb' });
   if (handOp > 0) s += L(c, 1.25, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1.1)}${zhangHand(hp[0], hp[1], 1.15, sqz)}</g>`, { id: 't08hand', bleed: 'r' });
-  if (snowK > 0) s += L(c, 1.25, `<g>${linBack(t, snowK).split('<path d="M470').slice(1).map((x) => '<path d="M470' + x).join('')}</g>`, { id: 't08shsnow', blur: 1.5 });
+  if (snowK > 0) s += L(c, 1.25, shoulderSnow(snowK), { id: 't08shsnow', blur: 1.5 });
   // sepia memory grade + vignette
   s += `<g data-layer="fx-sepia" data-z="770" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#C9A27A" style="mix-blend-mode:multiply" opacity="0.4"/><rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08cv)"/></g>`;
   // the first snow falls into the summer memory (white, ungraded)

@@ -189,12 +189,12 @@ function hut(sag, c) {
   if (c > 0.3) {
     // broken beams poking out and a snow heap over the wreck
     const k = clamp((c - 0.3) / 0.7);
-    s += `<path d="M${f2(midX - 160)},${f2(B - 40)} L${f2(midX - 40)},${f2(ridgeY - 70 * k)} L${f2(midX - 28)},${f2(ridgeY - 66 * k)} L${f2(midX - 146)},${f2(B - 36)}Z" fill="#4A3B2C"/>`;
-    s += `<path d="M${f2(midX + 190)},${f2(B - 30)} L${f2(midX + 60)},${f2(ridgeY - 50 * k)} L${f2(midX + 72)},${f2(ridgeY - 44 * k)} L${f2(midX + 202)},${f2(B - 26)}Z" fill="#4A3B2C"/>`;
-    for (let i = 0; i < 9; i++) { const R2 = rng(70 + i); const x = X0 + 30 + i * 60 + R2() * 20, y = B - 60 * k - R2() * 50 * k; s += `<path d="M${f2(x)},${f2(y)} l${f2(-20 + R2() * 40)},${f2(-26 - R2() * 20)} l${f2(8)},${f2(4)}Z" fill="#8F7A55" opacity="${f2(k)}"/>`; }
-    s += `<path d="M${f2(X1 - 10)},${B} L${f2(X1 + 40 * k)},${f2(B - 150)} L${f2(X1 + 54 * k)},${f2(B - 146)} L${f2(X1 + 10)},${B}Z" fill="#4A3B2C"/>`;
     s += `<path d="M${f2(X0 - 90)},${B + 6} Q${f2(X0 + 40)},${f2(B - 120 * k)} ${f2(midX)},${f2(B - 150 * k)} Q${f2(X1 - 40)},${f2(B - 120 * k)} ${f2(X1 + 90)},${B + 6}Z" fill="#EEF2F5" opacity="${f2(k)}"/>`;
     s += `<path d="M${f2(midX - 40)},${f2(B - 140 * k)} Q${f2(X1 - 40)},${f2(B - 110 * k)} ${f2(X1 + 90)},${B + 6} L${f2(X1 - 20)},${B + 6}Z" fill="#C9D3DD" opacity="${f2(k * 0.8)}"/>`;
+    s += `<path d="M${f2(midX - 160)},${f2(B - 40)} L${f2(midX - 40)},${f2(B - 230 * k)} L${f2(midX - 28)},${f2(B - 226 * k)} L${f2(midX - 146)},${f2(B - 36)}Z" fill="#4A3B2C"/>`;
+    s += `<path d="M${f2(midX + 190)},${f2(B - 30)} L${f2(midX + 60)},${f2(B - 200 * k)} L${f2(midX + 72)},${f2(B - 194 * k)} L${f2(midX + 202)},${f2(B - 26)}Z" fill="#4A3B2C"/>`;
+    for (let i = 0; i < 9; i++) { const R2 = rng(70 + i); const x = X0 + 30 + i * 60 + R2() * 20, y = B - 60 * k - R2() * 50 * k; s += `<path d="M${f2(x)},${f2(y)} l${f2(-20 + R2() * 40)},${f2(-26 - R2() * 20)} l${f2(8)},${f2(4)}Z" fill="#8F7A55" opacity="${f2(k)}"/>`; }
+    s += `<path d="M${f2(X1 - 10)},${B} L${f2(X1 + 40 * k)},${f2(B - 150)} L${f2(X1 + 54 * k)},${f2(B - 146)} L${f2(X1 + 10)},${B}Z" fill="#4A3B2C"/>`;
   }
   // snow drift along the base
   s += `<path d="M${X0 - 120},${B + 8} Q${X0 - 30},${B - 24} ${X0 + 60},${B - 6} Q${(X0 + X1) / 2},${B - 18} ${X1 - 40},${B - 8} Q${X1 + 40},${B - 26} ${X1 + 140},${B + 8}Z" fill="#E3E9EF"/>`;
