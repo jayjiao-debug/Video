@@ -1,0 +1,70 @@
+plan: {'tier': 'starter', 'character_count': 20625, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "V03b", "lang": "zh", "text": "你只说：我是好意。怕自己回不来，误了她一辈子。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V03b.mp3", "bytes": 91994}
+{"name": "V03c", "lang": "zh", "text": "你只说：我是好意。怕自己回不来，误了她一辈子。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V03c.mp3", "bytes": 88232}
+{"name": "V29b", "lang": "zh", "text": "又一个雪夜，你一个人，上了梁山。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V29b.mp3", "bytes": 63990}
+{"name": "V29c", "lang": "zh", "text": "又一个雪夜，你一个人，上了梁山。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "V29c.mp3", "bytes": 63990}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "V03b",
+  "lang": "zh",
+  "text": "你只说：我是好意。怕自己回不来，误了她一辈子。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V03b.mp3",
+  "bytes": 91994,
+  "heard": "你只說我是好意,怕自己回不來,誤了他一輩子。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.68
+ },
+ {
+  "name": "V03c",
+  "lang": "zh",
+  "text": "你只说：我是好意。怕自己回不来，误了她一辈子。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V03c.mp3",
+  "bytes": 88232,
+  "heard": "你只說我是好意,怕自己回不來誤了他一輩子。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.44
+ },
+ {
+  "name": "V29b",
+  "lang": "zh",
+  "text": "又一个雪夜，你一个人，上了梁山。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V29b.mp3",
+  "bytes": 63990,
+  "heard": "又一個雪葉,你一個人上了梁山",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.92
+ },
+ {
+  "name": "V29c",
+  "lang": "zh",
+  "text": "又一个雪夜，你一个人，上了梁山。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "V29c.mp3",
+  "bytes": 63990,
+  "heard": "又一個雪葉,你一個人上了梁山",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.92
+ }
+]
