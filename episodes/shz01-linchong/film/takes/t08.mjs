@@ -242,7 +242,7 @@ function linWalk(t, x, y) {
   if (!ln || !lf) return s;
   const legs = `<g transform="${root}"><g transform="rotate(${f2(-a)} 428 842)">${lf}</g><g transform="rotate(${f2(a)} 436 842)">${ln}</g></g>`;
   // legs must sit behind the robe: insert them before the rest of the body; hide the 东京 sleeve roundel
-  return legs + r2 + `<g transform="${root}"><circle cx="514" cy="494" r="21" fill="#3E465A"/></g>`;
+  return legs + r2 + `<g transform="${root}"><circle cx="532" cy="485" r="26" fill="#3B4356"/></g>`;
 }
 function linLookBack(t, x, y) {
   // front view, head turned to screen-left (toward the gate), body turned 20°: reads as a look over the shoulder

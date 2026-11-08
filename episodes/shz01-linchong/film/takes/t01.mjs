@@ -72,10 +72,16 @@ function hisHand(mode, o = {}) {
     s += `<path d="M-20,-16 C-30,-26 -40,-40 -46,-54 C-49,-61 -42,-66 -37,-60 C-30,-50 -22,-40 -12,-30Z" fill="${SK.skin}" ${L_}/>`;
     s += `<path d="M-41,-52 Q-37,-50 -34,-54" fill="none" stroke="${SK.skinS}" stroke-width="0.9"/>`;
   } else {
-    // writing grip: fingers curled over the shaft (foreshortened), thumb on the left against it
-    const F = [[-17, -50, -12, -66, 12], [-5.5, -52, -3, -66, 12.5], [6, -51, 7, -61, 12], [16.5, -46, 16, -55, 10.5]];
-    for (const [x0, y0, x1, y1, w] of F) s += `<path d="M${P(x0 - w / 2, y0 + 2)} L${P(x1 - w / 2, y1 + w / 2)} A${f2(w / 2)},${f2(w / 2)} 0 0 1 ${P(x1 + w / 2, y1 + w / 2)} L${P(x0 + w / 2, y0 + 2)}Z" fill="${SK.skinS}" ${L_}/>`;
-    s += `<path d="M-20,-16 C-28,-30 -30,-46 -26,-60 C-24,-66 -17,-66 -16,-60 C-15,-48 -13,-36 -10,-28Z" fill="${SK.skin}" ${L_}/>`;
+    // writing grip: index and middle hook round the front of the shaft (x ≈ -8), ring and little tucked, thumb on the left
+    const tube = (d, w) => `<path d="${d}" fill="none" stroke="${LN}" stroke-width="${f2(w + 2.4)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${SK.skin}" stroke-width="${f2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    const tubeS = (d, w) => `<path d="${d}" fill="none" stroke="${LN}" stroke-width="${f2(w + 2.4)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${SK.skinS}" stroke-width="${f2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    s += tubeS('M17,-46 C18,-54 17,-58 12,-60', 9.5);
+    s += tubeS('M7,-51 C8,-60 7,-66 1,-68', 10.5);
+    s += tube('M-4,-53 C-3,-64 -2,-72 -9,-76', 11);
+    s += tube('M-15,-52 C-15,-66 -12,-80 -18,-86 C-21,-88 -24,-86 -23,-82', 11.5);
+    s += `<path d="M-20,-62 C-16,-64 -13,-64 -10,-62" fill="none" stroke="${SK.skinS}" stroke-width="1"/>`;
+    s += tube('M-22,-22 C-27,-36 -26,-52 -14,-64', 12.5);
+    s += `<path d="M-19,-56 C-16,-58 -13,-58 -11,-57" fill="none" stroke="${SK.skinS}" stroke-width="1"/>`;
   }
   // hand back
   s += `<path d="M-19,4 C-24,-6 -27,-22 -24,-36 C-22,-46 -21,-50 -20,-53 C-10,-57 8,-56 22,-48 C24,-36 24,-20 20,-6 C18,0 18,3 18,5Z" fill="${SK.skin}" ${L_}/>`;
