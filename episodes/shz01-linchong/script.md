@@ -1,81 +1,75 @@
-# 水浒人物志 · 壹 · 林冲 — script v1
+# 水浒人物志 · 壹 · 林冲 — script v2 (emotion first)
 
-- **Format:** 9:16 vertical (1080×1920), 30 fps, about 2:50. 2D ink-wash (水墨). Voice-over storyteller (说书), a few character lines, burned-in subtitles (≤ 16 字 per line, questions centred).
-- **Angle (owner's brief):** 人物形象 → 遗憾 → 情感共鸣. 林冲 is the man who kept enduring (忍), hoping life would go back to how it was, and lost everything he was enduring for.
-- **Spine:** three times he endures (the fist at the 岳庙, the 休书, 「要缚便缚」); once he stops (山神庙); then the regret (he put off fetching his wife; she was already dead) and the ending nobody remembers (his enemy feasted and freed; he dies paralysed in 六和寺).
-- **Facts:** every line maps to facts.md (L1–L25, the 120-chapter text). L26 (the "怒目而视" line) is not in this edition and is not used.
-- **Care:** the killing in the temple is not shown (cut away when he opens the door). The wife's death is said once, plainly, in the novel's own words; nothing is depicted.
+- **Owner notes (2026-11-08):** emotion-driven, not plot-driven. 2D vector 国风漫画 characters. BGM: the owner's 《笛子戏》 (148.5 s, not committed). Voice-over storyteller with a few character lines, subtitles.
+- **Length:** 2:28 = the whole track. Speech 449 字 ≈ 102 s; the rest is music breathing room.
+- **Emotional spine:** a man who keeps swallowing it (忍), because he believes he can still go home. The promise 「放你回来时，依旧夫妻完聚」 (his father-in-law, 第八回) is the thread: said in the middle, broken at the end.
+- **Shape:** love → humiliation (三次「他忍了」, each harder) → the snow night: 「忍，是回不去的」 on the music's break → release on the drop → the regret (he delayed; she was already gone) → the promise that never came true → the question to the viewer.
+- **Facts:** each line maps to facts.md. Lines marked *(narration)* are the narrator's reading of him, worded as such (「大概」「他总觉得」), not claims from the novel.
+- **Care:** the killing is not shown (door opens → white). The wife's death is said once, in the novel's words; nothing depicted.
 
-Speakers: **N** narrator (male, 说书 storyteller, standard Mandarin) · **L** 林冲 (low, restrained male) · **W** 娘子 (young woman, crying) · **X** one of the three men at the fire (sneering male).
+Speakers: **N** narrator (male 说书, standard Mandarin, warm and low) · **L** 林冲 (restrained) · **W** 娘子 (young, crying) · **X** a man outside the temple (sneering).
 
-## Beats and lines
+## Music map (《笛子戏》, measured)
 
-| # | Beat | Spk | Line | Picture |
-|---|---|---|---|---|
-| 01 | S0 Hook | N | 这是一张休书。 | Dark table; the 休书 sheet, its columns of 楷书 (the real text, 第八回). |
-| 02 | | N | 按下手印的人，叫林冲。 | The red thumbprint blooms onto the paper (the only red so far). |
-| 03 | | N | 他休妻，不是不爱她，是怕连累她。 | Slow push on 「情愿立此休书，任从改嫁」, the other columns fade. |
-| 04 | | N | 可最后，这张纸，谁也没护住。 | Ink bleeds across the sheet → **title card** 「林冲 · 豹子头」, seals 水浒人物 / 壹 (hold 2.5 s). |
-| 05 | S1 Image | N | 话说北宋东京，有这么一位人物： | 东京 roofs in mist, a pagoda. |
-| 06 | | N | 豹头环眼，燕颔虎须，三十四五年纪， | 林冲 on the city wall (from behind / profile); the words written as an inscription beside him. |
-| 07 | | N | 八十万禁军枪棒教头——林冲。 | Inscription 「八十万禁军枪棒教头」, seal 豹子头. |
-| 08 | | N | 有官职，有本事，有朋友， | Three quick vignettes: drilling soldiers with the spear; a cup raised with 陆谦; |
-| 09 | | N | 家里还有成亲三年、从没红过脸的娘子。 | his wife at a window (back view). |
-| 10 | | N | 这样的日子，谁舍得丢？ | Hold on the warm window. |
-| 11 | S2 First 忍 | N | 偏偏那天在岳庙，有人拦住他娘子调戏。 | Temple courtyard, incense; a nobleman blocks her way. |
-| 12 | | N | 林冲一把扳过那人，拳头举了起来—— | 林冲 pulls him round; fist up. |
-| 13 | | N | 认出来了：是顶头上司高太尉的干儿子。 | Close on the sneering face. |
-| 14 | | N | 书里只写了五个字：先自手软了。 | The raised fist; 「先自手软了」 written beside it. |
-| 15 | | N | 这一拳，没有落下去。 | The fist opens; the ink of the hand softens and spreads. |
-| 16 | S3 The trap | N | 他忍了，人家却没打算放过他。 | 高 family hall in shadow. |
-| 17 | | N | 最好的朋友陆谦，帮着高家设下圈套， | 陆谦's face half in darkness. |
-| 18 | | N | 骗他带着刀，误入白虎节堂。 | The plaque 「白虎节堂」; 林冲 under it with the blade. |
-| 19 | | N | 脊杖二十，脸上刺字，发配沧州。 | Characters pressed onto a cheek (ink stamp); the cangue (枷). |
-| 20 | S4 Second 忍 | N | 临走那天，他请人写下一纸休书： | Back to the 休书 from the hook, now we see the tavern. |
-| 21 | | L | 情愿立此休书，任从改嫁，永无争执。 | His hand presses the print (match cut to the hook). |
-| 22 | | N | 娘子哭着赶来： | She runs in, 锦儿 behind with a bundle. |
-| 23 | | W | 我不曾有半些儿点污，如何把我休了？ | Her face hidden; the sheet between them. |
-| 24 | | L | 娘子，我是好意。 | He looks away. |
-| 25 | S5 Third 忍 | N | 路上，公差说要绑他，好睡个安稳觉。 | Pine forest (野猪林), two guards. |
-| 26 | | L | 上下要缚便缚。 | He offers his wrists. |
-| 27 | | N | 人刚绑上树，水火棍就举了起来—— | Bound to a pine; the club rises. |
-| 28 | | N | 松树背后，一条禅杖飞来。是鲁智深。 | A 禅杖 flies in (one ink streak); a huge monk's silhouette. (Sets up ep 2.) |
-| 29 | S6 The snow | N | 到了沧州，他被派去看守草料场。 | Fodder depot, grey day, first flakes. |
-| 30 | | N | 那一夜大雪，草屋被雪压塌了。 | The hut sags under snow. |
-| 31 | | N | 他去山神庙过夜，搬一块大石头，靠住了门。 | Master shot: temple in the storm; the stone against the door. |
-| 32 | | N | 半夜，草料场烧起了大火。 | Fire far off in cinnabar; smoke into the black sky. |
-| 33 | | N | 门外三个人望着火光说笑： | Three silhouettes against the fire. |
-| 34 | | X | 拾得他一两块骨头回京…… | |
-| 35 | | N | 说话的人里，就有陆谦。 | Inside: 林冲's eyes in the dark, listening. |
-| 36 | | N | 林冲，轻轻把石头挪开了。 | The stone scrapes. |
-| 37 | | N | 这一回，他没有再忍。 | The door opens on the fire → cut to white (nothing shown). |
-| 38 | S7 The poem | N | 那雪越下越大。他提着枪，一路往东。 | A lone figure in the white, spear and hat. |
-| 39 | | N | 到了梁山泊边，他在酒店墙上题诗， | Tavern wall by the reeds; brush on whitewash. |
-| 40 | | N | 说自己身世像水上的断梗，功名像风里的飞蓬。 | 「身世悲浮梗，功名类转蓬」 written on the wall. |
-| 41 | S8 The regret | N | 上了梁山，他一直想把娘子接来。 | 梁山泊: water, reeds, mist. |
-| 42 | | N | 可山寨不太平，这事，一拖再拖。 | Seasons pass on the same reeds. |
-| 43 | | N | 等他终于派人回到东京—— | A small boat leaves and comes back. |
-| 44 | | N | 娘子被高太尉逼婚，自缢身死，已故半载。 | 「已故半载」 in large pale script over the water. |
-| 45 | | N | 林冲潸然泪下。从此，心里再没有挂念的人。 | One drop of ink falls into the water; rings spread. |
-| 46 | S9 After | N | 后来，高俅被梁山活捉。 | 忠义堂, lanterns. |
-| 47 | | N | 宋江给他换上新衣，纳头便拜， | 宋江 bowing to the seated 高俅 (silhouettes). |
-| 48 | | N | 好酒好肉三天，又送他下了山。 | Banquet, then a departing boat. |
-| 49 | | N | 那天，梁山大小头领都来相见。 | A row of chieftains. |
-| 50 | | N | 林冲，也在其中。 | One of them, still, at the end of the row. |
-| 51 | | N | 再后来，招安，征方腊。 | Banners in the south; 六和塔 by the river. |
-| 52 | | N | 林冲中风瘫了，留在杭州六和寺， | An empty temple room; the spear leaning by the door. |
-| 53 | | N | 半年后，死在那里。 | Autumn leaves cross the doorway. |
-| 54 | S10 Close | N | 林冲这辈子，忍了一次又一次。 | The three moments flash as ink: fist, 休书, rope. |
-| 55 | | N | 他总以为，忍一忍，日子就能回到从前。 | The warm window from beat 09, fading. |
-| 56 | | N | 如果是你，岳庙那一拳，打不打？ | (centred question) The raised fist again. |
-| 57 | End | N | 下回，咱们说鲁智深。 | End card: dim, J seal, title, the question, 关注 pill, sources; a 禅杖 shadow. |
+| Time | Music | Story |
+|---|---|---|
+| 0–18.3 | intro, flute theme | hook: the 休书 |
+| 18.3–27.1 | turn, dip at 24.8–27.1 | title 「林冲」 lands ~19 s, holds through the dip |
+| 27.1–67.1 | main theme (40 s) | who he was, what he loved, 三次「他忍了」 |
+| 67.1–84.9 | second theme | exile, the snow, the temple |
+| 84.9–93.7 | build, near-silence ~92–94 | 「忍，是回不去的」 then silence |
+| 93.7–142 | final section (loudest 128–142) | he opens the door → 梁山 → 已故半载 → the end |
+| 142–148.5 | outro | end card (6.5 s) |
 
-Spoken length: 670 characters ≈ 140 s at 4.8 字/s, plus pauses and the title/end cards ≈ **2:50**. Measured again once the voices are made.
+## Lines
 
-## Title options (Douyin 标题 decided at publish time)
-1. 林冲这辈子，最后悔的是哪件事？ (recommended: matches the 遗憾 angle and "林冲结局" searches)
-2. 林冲是怎么一步步被逼上梁山的？
-3. 林冲的娘子，后来怎么样了？
+| # | ~Time | Spk | Line | Picture (国风漫画) | Fact |
+|---|---|---|---|---|---|
+| V01 | 0.6 | N | 东京城里，有个男人，亲手写了一封休书。 | Close on paper: columns of the real 休书 text; a hand presses down; the red thumbprint. | L8 |
+| V02 | 4.8 | N | 妻子哭着问他： | Her back, shoulders shaking (face never shown). | L10 |
+| V03 | 6.5 | W | 我不曾有半些儿点污，如何把我休了？ | The paper between them. | L10 |
+| V04 | 10.6 | L | 娘子，我是好意。 | His face, 隐忍: eyes down. | L10 |
+| V05 | 12.8 | N | 他休她，是怕自己回不来，误了她一辈子。 | He turns away; the cangue on his neck. | L9 |
+| — | 19–26.5 | — | *(title)* 林冲 · 豹子头 | Calligraphy title, seal 水浒人物志 · 壹; snow begins. | |
+| V06 | 27.4 | N | 他叫林冲，八十万禁军枪棒教头。 | Training ground, spear drill, green robe and headscarf (东京 look). | L2 |
+| V07 | 31.0 | N | 一身本事，一个好家。成亲三年，没红过一次脸。 | Warm window at home; the wife's silhouette. | L3 |
+| V08 | 35.6 | N | 他最大的心愿，大概就是日子这样过下去。 *(narration)* | Two cups on a table. | |
+| V09 | 39.2 | N | 所以那天在岳庙，有人调戏他的娘子， | Temple courtyard, incense; a nobleman blocking her. | L4 |
+| V10 | 42.6 | N | 他举起拳头，看清那是上司的干儿子—— | Fist raised; the sneering face. | L4 |
+| V11 | 46.4 | N | 拳头，软了。 | Close on the fist slowly opening. | L4 先自手软了 |
+| V12 | 48.4 | N | 他忍了。 | His jaw clenched (隐忍 1). | |
+| V13 | 50.0 | N | 最好的朋友陆谦骗了他， | 陆谦 pouring wine, smiling; half his face in shadow. | L5 |
+| V14 | 52.6 | N | 他忍了。 | 隐忍 2: eyes shut. | |
+| V15 | 54.0 | N | 被诬陷，脸上刺字，发配沧州， | 白虎节堂 plaque; the tattoo pressed onto his cheek. | L6, L7 |
+| V16 | 57.6 | N | 他还是忍了。 | 隐忍 3: he bows his head in the cangue. | |
+| V17 | 59.4 | N | 他总觉得，忍一忍，就能回去。 *(narration)* | The road out of 东京; he looks back. | |
+| V18 | 62.6 | N | 岳父也这么说：放你回来时，依旧夫妻完聚。 | Father-in-law's hand on his shoulder; the wife at the gate. | L11 |
+| V19 | 67.4 | N | 路上，公差要把他绑在树上。 | Pine forest, guards with a rope. | L12 |
+| V20 | 70.2 | L | 上下要缚便缚。 | He holds out his wrists. | L12 |
+| V21 | 72.0 | N | 到了沧州，他守着一座草料场。 | Grey depot, first snow. | L14 |
+| V22 | 74.9 | N | 那年冬天，下了一场很大的雪。 | Wide: snow over everything. | L14 |
+| V23 | 78.0 | N | 雪压塌了草屋，他躲进山神庙。 | Collapsed hut; he pushes a stone against the temple door. | L14 |
+| V24 | 80.9 | N | 半夜，草料场烧起来了。 | Fire through the door crack, red on his face. | L15 |
+| V25 | 83.3 | N | 庙门外，有人在说话： | Three silhouettes against the fire. | L15 |
+| V26 | 85.4 | X | 拾得他一两块骨头回京…… | | L15 |
+| V27 | 88.0 | N | 说话的人里，有他最好的朋友。 | Close: his eyes in the dark. | L15 (陆谦) |
+| V28 | 91.0 | N | 他终于明白， *(narration)* | Extreme close on the eyes. | |
+| V29 | 92.3 | N | 忍，是回不去的。 | Hold. Music almost silent. | |
+| V30 | 94.0 | N | 他推开了门。 | On the drop: the stone scrapes, the door opens on the fire → white. | L16 |
+| V31 | 96.4 | N | 那一夜雪越下越大，他一个人，上了梁山。 | Lone figure in the snow: hat, spear, gourd (the signature silhouette). | L16, L18 |
+| V32 | 101.6 | N | 上了山，他想把娘子接来。 | 梁山泊 water and reeds. | L19 |
+| V33 | 104.6 | N | 可这件事，他一拖再拖。 | The same reeds through seasons. | L19 |
+| V34 | 107.6 | N | 等派去的人回来，只带回一句话： | A small boat returning. | L20 |
+| V35 | 111.0 | N | 娘子被逼，自缢身死，已故半载。 | Large calligraphy 「已故半载」; hold 2 s of music. | L20 |
+| V36 | 117.0 | N | 林冲哭了。 | His face, 悲: one tear. | L21 |
+| V37 | 119.0 | N | 从此，他心里再没有可挂念的人。 | He looks at an empty window. | L21 |
+| V38 | 123.0 | N | 后来，仇人高俅被捉上山，又被好酒好肉送了回去。 | Banquet silhouettes; 高俅 leaving by boat. | L22 |
+| V39 | 128.8 | N | 再后来，他病倒在杭州六和寺，再没起来。 | Empty temple room; the hat and spear by the door. | L25 |
+| V40 | 133.2 | N | 他一辈子，都在等那句：依旧夫妻完聚。 *(narration)* | Callback: the 休书 from the opening, the thumbprint fading. | L11 |
+| V41 | 138.6 | N | 如果是你，岳庙那一拳，打不打？ | (centred question) The fist from V10. | |
+| End | 142–148.5 | — | *(end card)* | Dim, J seal, title, the question, 关注 pill, 下回：鲁智深, sources. | |
+
+Times are planned positions; they are re-set to the measured voice clips and the beat grid.
 
 ## Sources line (end card)
 资料：《水浒传》一百二十回本 第七—十一、二十、八十、一百一十九回
