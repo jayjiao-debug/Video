@@ -248,14 +248,14 @@ function s31(t) {
     const ps = toScreen(c, 1, pc);
     s += `<rect x="-10" y="-10" width="1940" height="1100" fill="#2A2E38" opacity="${f2(0.78 * dk)}" data-layer="t13dim" data-z="40"/>`;
     const b = ramp(t, 128.2, T32 + 0.35, E.in);
-    s += `<ellipse cx="${f2(ps[0])}" cy="${f2(ps[1])}" rx="${f2(240 + 900 * b)}" ry="${f2(70 + 520 * b)}" fill="url(#t13bloom)" opacity="${f2(0.6 * dk + 0.4 * b)}"/>`;
+    s += `<ellipse cx="${f2(ps[0])}" cy="${f2(ps[1] - 120 * b)}" rx="${f2(240 + 1100 * b)}" ry="${f2(70 + 700 * b)}" fill="url(#t13bloom)" opacity="${f2(clamp(0.5 * dk + 0.6 * b))}"/>`;
   }
   return s;
 }
 
 // ======================================================================= S32 / S33 · the 休书 overhead
 // S01's position and tilt (storyboard: sheet x 760–1440, tilted −4°, ≈ 70 % of the frame height).
-const SH = { x: 760, y: 156, w: 680, h: 760, rot: -4 };
+const SH = { x: 760, y: 70, w: 680, h: 760, rot: -4 };   // S01's x and tilt; lifted 86 px so the print clears the subtitle band
 const SHC = [SH.x + SH.w / 2, SH.y + SH.h / 2];
 const sheetTf = `rotate(${SH.rot} ${SHC[0]} ${SHC[1]}) translate(${SH.x} ${SH.y})`;
 const rotP = (p) => { // sheet-local -> world
@@ -265,7 +265,7 @@ const rotP = (p) => { // sheet-local -> world
 const PRINT_L = XS.anchor('print', SH.w, SH.h);   // palm-print centre (cast/xiushu.mjs draws it 330 px high, rot −6°)
 const PRINT_W = rotP(PRINT_L);
 // promise row (sheet-local): ≈ 150 px glyphs, advance 172, centred on the sheet, screen y ≈ 430
-const PFS = 156, PADV = 172, PROW_Y = 200;
+const PFS = 156, PADV = 172, PROW_Y = 360;
 const PX = (i) => SH.w / 2 + (i - 2.5) * PADV;
 
 // L8 text glyph boxes, mirroring cast/xiushu.mjs (used only to seed the release particles)
@@ -554,11 +554,11 @@ export default {
     let s = '';
     if (t < T32 + 0.5) {
       // light bloom hand-over: the room (dimmed, glowing pool) under the arriving 休书 night
-      const k = ramp(t, T32 - 0.08, T32 + 0.45, E.inOut);
+      const k = ramp(t, T32 + 0.05, T32 + 0.45, E.inOut);
       s += s31(Math.min(t, T32 + 0.45));
       s += `<g opacity="${f2(k)}">${s32(t)}</g>`;
       const g = 1 - ramp(t, T32 + 0.1, T32 + 0.5, E.out);
-      s += `<rect width="1920" height="1080" fill="#FFF3D6" opacity="${f2(0.22 * g)}"/>`;
+      s += `<rect width="1920" height="1080" fill="#FFF3D6" opacity="${f2(0.3 * g * ramp(t, T32 - 0.1, T32 + 0.1))}"/>`;
       return s;
     }
     if (t < 141.45) return s32(t);
