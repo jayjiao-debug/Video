@@ -43,24 +43,29 @@ export function front(E = NE, o = {}) {
   const add = (s) => (d += s + '\n');
   const id = 'm' + Math.random().toString(36).slice(2, 8);
 
-  // --- body: coat, white collar, scarf, cloak over the shoulders
-  if (!o.headOnly) add(`<path d="M40,800 C60,700 120,660 200,640 L300,668 L400,640 C480,660 540,700 560,800Z" fill="${C.cloak}" ${L()}/>`);
-  if (!o.headOnly) add(`<path d="M400,640 C480,660 540,700 560,800 L470,800 C470,740 450,690 400,662Z" fill="${C.cloakS}"/>`);
-  if (!o.headOnly) add(`<path d="M150,800 C160,720 200,680 250,660 L300,700 L350,660 C400,680 440,720 450,800Z" fill="${C.coat}" ${L()}/>`);
-  if (!o.headOnly) add(`<path d="M244,640 L300,742 L356,640 L372,660 L300,790 L228,660Z" fill="${C.shirt}" ${L(2.6)}/>`);
-  if (!o.headOnly) add(`<path d="M300,742 L356,640 L372,660 L300,790Z" fill="${C.shirtS}"/>`);
-  // wrapped scarf around the neck
+  // --- neck first (behind the clothes): ≥0.6 face width, flaring into the shoulders; no bottom edge
+  const neckD = 'M240,540 C244,574 236,612 210,652 L390,652 C364,612 356,574 360,540Z';
+  add(`<path d="${neckD}" fill="${C.skin}"/><path d="M240,540 C244,574 236,612 210,652 M360,540 C356,574 364,612 390,652" fill="none" ${L()}/>`);
+  add(`<path d="M240,548 C280,590 320,590 360,548 L362,598 C320,616 280,616 238,598Z" fill="${C.skinS}"/>`);
+  // --- body: cloak over the shoulders, coat, white collar (runs to y 1160 so busts always reach the frame edge)
+  if (!o.headOnly) {
+    add(`<path d="M-90,1160 C-90,880 -40,742 70,702 C140,678 190,654 212,652 L300,672 L388,652 C410,654 460,678 530,702 C640,742 690,880 690,1160Z" fill="${C.cloak}" ${L()}/>`);
+    add(`<path d="M530,702 C640,742 690,880 690,1160 L590,1160 C590,950 570,810 500,740Z" fill="${C.cloakS}"/>`);
+    add(`<path d="M80,1160 C92,940 150,780 214,682 L300,714 L386,682 C450,780 508,940 520,1160Z" fill="${C.coat}" ${L()}/>`);
+    add(`<path d="M300,714 L386,682 C450,780 508,940 520,1160 L430,1160 C420,970 380,830 320,740Z" fill="${C.coatS}" opacity="0.6"/>`);
+    add(`<path d="M220,654 L300,772 L380,654 L398,674 L300,822 L202,674Z" fill="${C.shirt}" ${L(2.6)}/>`);
+    add(`<path d="M300,772 L380,654 L398,674 L300,822Z" fill="${C.shirtS}"/>`);
+  }
+  // wrapped scarf around the neck base
   const scarfF = 'M206,596 C230,572 268,582 300,588 C332,582 370,572 394,596 C414,628 402,668 368,680 C332,672 314,694 300,706 C286,694 268,672 232,680 C198,668 186,628 206,596Z';
   if (!o.noScarf) add(`<path d="${scarfF}" fill="${C.scarf}" ${L()}/>`);
   if (!o.noScarf) add(`<path d="M224,632 C256,644 282,650 300,666 M300,666 C318,650 344,644 376,632 M216,604 C250,612 280,616 300,622 C320,616 350,612 384,604" fill="none" stroke="${C.scarfS}" stroke-width="5" stroke-linecap="round"/>`);
-  // --- neck
-  add(`<path d="M258,548 C260,580 256,600 252,618 L348,618 C344,600 340,580 342,548Z" fill="${C.skin}" ${L()}/>`);
-  add(`<path d="M258,560 C290,590 320,592 342,560 L344,600 C320,612 280,612 256,600Z" fill="${C.skinS}"/>`);
   if (o.cangue) {
-    add(`<path d="M96,604 L504,604 L516,712 L84,712Z" fill="#8a6440" ${L()}/>`);
-    add(`<path d="M96,604 L504,604 L508,628 L92,628Z" fill="#a47a50"/>`);
-    add(`<path d="M150,640 L176,640 L172,706 L146,706Z M424,640 L450,640 L454,706 L428,706Z" fill="#6b4a2c"/>`);
-    add(`<path d="M330,616 L380,616 L384,708 L334,708Z" fill="#efe9dc" ${L(2)}/><path d="M344,632 h26 M346,652 h22 M344,672 h26 M346,692 h22" stroke="${C.red}" stroke-width="3" stroke-linecap="round"/>`);
+    // 七斤半团头铁叶护身枷: a long board with rounded ends, iron straps, a paper seal (第八回)
+    add(`<path d="M-30,612 L630,612 C668,612 680,660 650,676 L-50,676 C-80,660 -68,612 -30,612Z" fill="#9a7048" ${L()}/>`);
+    add(`<path d="M-50,676 L650,676 C660,694 650,712 630,714 L-30,714 C-50,712 -60,694 -50,676Z" fill="#6f4d2e" ${L()}/>`);
+    add(`<path d="M70,614 L96,614 L92,714 L66,714Z M504,614 L530,614 L534,714 L508,714Z" fill="#4a4a50" ${L(2)}/><path d="M-20,632 L620,632" stroke="#4a4a50" stroke-width="6" opacity="0.6"/>`);
+    add(`<path d="M392,620 L446,620 L448,670 L394,670Z" fill="#efe9dc" ${L(2)}/><rect x="404" y="630" width="30" height="30" fill="none" stroke="${C.red}" stroke-width="3"/>`);
   }
   // --- hair behind (side locks fall in front later)
   // hat cords run behind the face and tie under the chin
@@ -189,24 +194,24 @@ export function side(E = NE, o = {}) {
   let d = '';
   const add = (s) => (d += s + '\n');
   const id = 'p' + Math.random().toString(36).slice(2, 8);
-  // body: cloak, coat, collar, scarf
-  add(`<path d="M60,800 C70,700 120,640 220,620 L330,640 C400,660 440,720 450,800Z" fill="${C.cloak}" ${L()}/>`);
-  add(`<path d="M60,800 C70,700 120,640 220,620 L230,660 C170,690 140,740 140,800Z" fill="${C.cloakS}"/>`);
-  add(`<path d="M250,800 C250,720 270,670 320,650 C370,660 400,710 410,800Z" fill="${C.coat}" ${L()}/>`);
-  add(`<path d="M318,600 L352,640 L330,760 L306,650Z" fill="${C.shirt}" ${L(2.6)}/>`);
-  add(`<path d="M226,580 C258,560 316,566 356,586 C374,610 366,650 338,660 C300,668 258,664 230,648 C206,630 206,598 226,580Z" fill="${C.scarf}" ${L()}/>`);
-  add(`<path d="M248,628 C280,640 312,642 346,630" fill="none" stroke="${C.scarfS}" stroke-width="5" stroke-linecap="round"/>`);
-  // neck
-  add(`<path d="M262,520 C266,560 262,590 256,610 L338,612 C330,584 326,560 330,532Z" fill="${C.skin}" ${L()}/>`);
-  add(`<path d="M262,530 C290,560 312,560 330,540 L332,590 C300,600 276,598 258,590Z" fill="${C.skinS}"/>`);
+  // neck first: deep, tilted forward, back line from the occiput into the trapezius
+  add(`<path d="M228,500 C222,526 204,578 176,620 L386,622 C366,574 352,534 344,532Z" fill="${C.skin}"/><path d="M228,500 C222,526 204,578 176,620 M344,532 C352,534 366,574 386,622" fill="none" ${L()}/>`);
+  add(`<path d="M234,520 C280,556 320,556 344,540 L350,556 C300,570 260,566 226,552Z" fill="${C.skinS}"/>`);
+  // body: cloak, coat, collar (to y 1160)
+  add(`<path d="M-60,1160 C-60,846 0,708 120,660 C160,636 190,624 210,622 L372,624 C432,634 500,688 540,786 C570,886 580,1006 580,1160Z" fill="${C.cloak}" ${L()}/>`);
+  add(`<path d="M-60,1160 C-60,846 0,708 120,660 L150,716 C80,786 40,936 40,1160Z" fill="${C.cloakS}"/>`);
+  add(`<path d="M300,1160 C300,926 320,766 386,656 C446,696 486,826 500,1160Z" fill="${C.coat}" ${L()}/>`);
+  add(`<path d="M356,622 L394,658 L364,806 L332,680Z" fill="${C.shirt}" ${L(2.6)}/>`);
+  add(`<path d="M190,606 C236,578 330,582 388,606 C408,630 400,672 366,682 C310,690 246,686 206,668 C180,650 172,622 190,606Z" fill="${C.scarf}" ${L()}/>`);
+  add(`<path d="M206,642 C250,656 320,658 380,644" fill="none" stroke="${C.scarfS}" stroke-width="5" stroke-linecap="round"/>`);
   if (o.hat !== false) add(`<path d="M268,246 C258,330 262,420 296,494 C320,528 352,540 372,532" fill="none" stroke="${C.red}" stroke-width="4.5" stroke-linecap="round"/>`);
   // head: true profile. Brow ridge, small straight nose, lips, chin, jaw to the ear
-  const head = `M300,210 C344,212 368,248 374,292 C377,310 378,322 384,334 C386,342 383,350 386,360 C392,382 404,400 410,416 C412,422 406,426 398,428 C392,430 392,436 394,442 C396,448 392,452 390,456 C394,462 394,468 388,474 C392,486 390,500 380,508 C366,520 340,530 318,532 C300,534 284,528 270,520 L232,500 C214,470 206,420 208,370 C210,300 236,212 300,210Z`;
+  const head = `M300,210 C344,212 368,248 374,292 C377,310 378,322 384,334 C386,342 383,350 386,360 C392,382 404,400 410,416 C412,422 406,426 398,428 C392,430 392,436 394,442 C396,448 392,452 390,456 C394,462 394,468 388,474 C392,486 390,500 380,508 C366,520 340,530 318,532 C300,534 284,528 270,520 L240,508 C196,494 148,446 136,372 C126,292 194,212 300,210Z`;
   add(`<path d="${head}" fill="${C.skin}"/>`);
   add(`<clipPath id="${id}hc"><path d="${head}"/></clipPath>`);
   add(`<g clip-path="url(#${id}hc)">
-<path d="M200,200 L300,200 C276,260 266,330 276,400 C286,450 300,490 330,540 L200,540Z" fill="${C.skinS}"/>
-<path d="M200,200 L420,200 L420,262 C360,274 320,268 280,270 L200,272Z" fill="${C.skinS}"/>
+<path d="M110,200 L300,200 C276,260 266,330 276,400 C286,450 300,490 330,540 L110,540Z" fill="${C.skinS}"/>
+<path d="M110,200 L420,200 L420,262 C360,274 320,268 280,270 L110,272Z" fill="${C.skinS}"/>
 <path d="M386,430 C380,440 382,450 388,456 L380,460 C374,450 374,438 380,430Z" fill="${C.skinS}"/>
 </g>`);
   add(`<path d="${head}" fill="none" ${L()}/>`);
@@ -242,8 +247,8 @@ export function side(E = NE, o = {}) {
   add(`<path d="M312,${f(oy2 + 2)} C330,${f(oy2 - 6)} 352,${f(iy2 - 8)} 376,${f(iy2 - 2)} C352,${f(iy2 + 2)} 330,${f(oy2 + 4)} 312,${f(oy2 + 8)}Z" fill="${C.hair}" ${L(1.4)}/>`);
   // hair: side lock in front of the ear, back hair to the nape, hairline under the hat
   add(`<path d="M276,262 C262,320 262,380 274,436 C282,390 284,330 294,280Z" fill="${C.hair}" ${L(1.6)}/>`);
-  add(`<path d="M236,250 C210,284 202,340 208,400 C212,430 222,452 236,462 C234,430 236,390 244,350 C252,312 266,280 290,262Z" fill="${C.hair}" ${L(1.6)}/>`);
-  add(`<path d="M228,300 C220,330 218,370 224,410" fill="none" stroke="${C.hairHi}" stroke-width="4" stroke-linecap="round"/>`);
+  add(`<path d="M240,248 C176,262 132,320 136,396 C140,448 168,488 214,506 C204,466 206,420 216,372 C228,322 252,284 290,262Z" fill="${C.hair}" ${L(1.6)}/>`);
+  add(`<path d="M170,310 C160,350 160,400 170,440" fill="none" stroke="${C.hairHi}" stroke-width="4" stroke-linecap="round"/>`);
   add(`<path d="M250,262 C290,250 330,246 372,262 L376,236 L246,236Z" fill="${C.hair}"/>`);
   // hat in profile: long brim tilted forward, rounded crown, red cord to under the chin
   if (o.hat !== false) {
@@ -255,15 +260,15 @@ export function side(E = NE, o = {}) {
     add(`<path d="M300,224 C380,220 460,218 512,218" fill="none" stroke="${C.snow}" stroke-width="5" stroke-linecap="round"/>`);
   }
   if (o.hat === false && o.headscarf === 'tokyo') {
-    add(`<path d="M226,196 L156,150 L166,138 L240,176Z" fill="#20252d" ${L(2.4)}/>`);
-    add(`<path d="M374,264 C378,202 342,154 290,152 C238,152 204,190 200,252 C198,304 206,354 222,404 L246,408 C238,362 238,312 252,282 C282,266 332,258 374,264Z" fill="#22272f" ${L()}/>`);
+    add(`<path d="M176,206 L104,166 L114,152 L190,186Z" fill="#20252d" ${L(2.4)}/>`);
+    add(`<path d="M374,264 C378,202 342,152 282,150 C200,150 138,198 130,262 C126,318 140,368 172,412 L208,416 C190,366 198,314 224,286 C264,266 330,258 374,264Z" fill="#22272f" ${L()}/>`);
     add(`<path d="M250,176 C270,162 296,158 318,162" fill="none" stroke="#3c4452" stroke-width="7" stroke-linecap="round"/>`);
-    add(`<circle cx="238" cy="304" r="12" fill="none" stroke="${C.line}" stroke-width="9"/><circle cx="238" cy="304" r="12" fill="none" stroke="#f4f1e8" stroke-width="5"/>`);
+    add(`<circle cx="196" cy="310" r="12" fill="none" stroke="${C.line}" stroke-width="9"/><circle cx="196" cy="310" r="12" fill="none" stroke="#f4f1e8" stroke-width="5"/>`);
   }
   if (o.hat === false && o.cap === 'gao') {
-    add(`<path d="M200,262 C196,190 240,146 300,146 C356,146 386,190 384,262 C330,250 250,252 200,262Z" fill="#1a1a20" ${L()}/>`);
+    add(`<path d="M136,284 C124,196 208,142 300,146 C356,146 386,190 384,262 C320,250 224,256 136,284Z" fill="#1a1a20" ${L()}/>`);
     add(`<path d="M250,150 C254,110 330,104 344,150Z" fill="#1a1a20" ${L()}/>`);
-    add(`<circle cx="214" cy="196" r="20" fill="#e88aa8" ${L(2.4)}/><circle cx="214" cy="196" r="8" fill="#f6d36b"/><circle cx="232" cy="178" r="12" fill="#f0a6bf" ${L(2)}/>`);
+    add(`<circle cx="168" cy="206" r="20" fill="#e88aa8" ${L(2.4)}/><circle cx="168" cy="206" r="8" fill="#f6d36b"/><circle cx="186" cy="186" r="12" fill="#f0a6bf" ${L(2)}/>`);
   }
   return { defs: '', body: d };
 }
