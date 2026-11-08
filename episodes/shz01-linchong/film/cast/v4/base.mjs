@@ -36,7 +36,7 @@ function faceFront(spec, e, sw) {
   s.push(line(`M${-ex - 0.09},${ey - 0.15 - bt * 0.02} Q${-ex},${ey - 0.19 - bt * 0.03} ${-ex + 0.08},${ey - 0.14 + bt * 0.03}`, sw * 1.15));
   s.push(line(`M${ex + 0.09},${ey - 0.15 - bt * 0.02} Q${ex},${ey - 0.19 - bt * 0.03} ${ex - 0.08},${ey - 0.14 + bt * 0.03}`, sw * 1.15));
   // eyes: short dark strokes (narrow) or small dots — no whites, no highlights
-  const open = e.eye ?? 0.6;
+  const open = e.eye ?? 0.7;
   if (open > 0.45) {
     s.push(`<ellipse cx="${-ex}" cy="${ey}" rx="0.045" ry="${f(0.02 + 0.022 * open)}" fill="${LINE}"/>`, `<ellipse cx="${ex}" cy="${ey}" rx="0.045" ry="${f(0.02 + 0.022 * open)}" fill="${LINE}"/>`);
   } else {
@@ -77,7 +77,8 @@ export function figure(spec, opts = {}) {
   const pose = opts.pose || {};
   const sw = 0.022; // feature line, head units (≈ 1.7 px at H 78)
   const sil = opts.sil || null;
-  const R = spec.robe, top = -n;
+  const R = { ...spec.robe, ...(opts.col || {}) }, top = -n; // opts.col overrides {base, shade, fold}
+  const SW = spec.sleeveW || 1; // sleeve width factor (高衙内's extra-wide sleeves)
   const k = (yy) => yy + (n - 7.2) * 0; // all body y's are authored for 7.2 heads; head block is shifted by (7.2 - n)
   const dy = 7.2 - n; // shift of the head/shoulders for shorter figures
   let body = '';
@@ -94,50 +95,61 @@ export function figure(spec, opts = {}) {
     body += path(blob([[0.15, -0.42], [0.52, -0.42], [0.6, 0.02], [0.13, 0]], 0.3), spec.boots || '#2b2826');
     body += path(P([[-0.62, -0.02], [-0.12, -0.02], [-0.12, 0.04], [-0.64, 0.04]]), '#8f8a84');
     body += path(P([[0.12, -0.02], [0.62, -0.02], [0.64, 0.04], [0.12, 0.04]]), '#8f8a84');
-    // robe body
-    const sh = -5.86 + dy;
-    const robe = blob([[-0.22, sh - 0.1], [-0.92, sh + 0.04], [-0.86, sh + 0.7], [-0.76, -4.3], [-0.98, hem + 0.6], [-1.04, hem], [0, hem + 0.05], [1.04, hem], [0.98, hem + 0.6], [0.76, -4.3], [0.86, sh + 0.7], [0.92, sh + 0.04], [0.22, sh - 0.1]], 0.35);
+    // robe body — collar reaches the jaw like the rig (short neck), broad sloped shoulders, explicit hem (no spline overshoot)
+    const sh = -6.08 + dy;
+    const robe = `M-0.2,${f(sh)} C-0.42,${f(sh + 0.02)} -0.7,${f(sh + 0.12)} -0.92,${f(sh + 0.4)} C-0.9,${f(sh + 0.9)} -0.8,-4.9 -0.76,-4.3 ` +
+      `Q-0.86,${f((hem - 4.3) / 2 - 0.2)} -1.0,${f(hem)} Q0,${f(hem + 0.06)} 1.0,${f(hem)} Q0.86,${f((hem - 4.3) / 2 - 0.2)} 0.76,-4.3 ` +
+      `C0.8,-4.9 0.9,${f(sh + 0.9)} 0.92,${f(sh + 0.4)} C0.7,${f(sh + 0.12)} 0.42,${f(sh + 0.02)} 0.2,${f(sh)} Z`;
     body += path(robe, R.base);
     // hard cel shadow: right third of the robe
     body += `<clipPath id="${opts.id || 'v4'}rc"><path d="${robe}"/></clipPath>`;
-    body += `<g clip-path="url(#${opts.id || 'v4'}rc)">${path(P([[0.38, sh - 0.2], [1.2, sh - 0.2], [1.2, hem + 0.2], [0.55, hem + 0.2], [0.42, -2.6], [0.5, -4.4]]), R.shade)}</g>`;
+    body += `<g clip-path="url(#${opts.id || 'v4'}rc)">${path(P([[0.36, sh - 0.2], [1.2, sh - 0.2], [1.2, hem + 0.2], [0.55, hem + 0.2], [0.42, -2.6], [0.48, -4.4]]), R.shade)}</g>`;
     // folds
     body += line(`M-0.35,-4.0 Q-0.42,${(hem - 4) / 2} -0.48,${hem + 0.15}`, sw * 0.8, R.fold || R.shade);
     body += line(`M0.2,-4.0 Q0.25,${(hem - 4) / 2} 0.3,${hem + 0.15}`, sw * 0.8, R.fold || R.shade);
     if (!back) {
-      // cross collar (交领) + short neck
-      body += path(P([[-0.17, sh - 0.42], [0.17, sh - 0.42], [0.15, sh - 0.02], [-0.15, sh - 0.02]]), SKIN.shade);
-      body += path(P([[-0.24, sh - 0.12], [0.24, sh - 0.12], [0.03, sh + 0.72]]), spec.inner || '#e9e4d8');
-      body += line(`M-0.24,${sh - 0.12} L0.12,${sh + 0.6}`, 0.07, R.shade);
-      body += line(`M0.24,${sh - 0.12} L-0.02,${sh + 0.36}`, 0.07, R.shade);
+      // cross collar (交领): white inner V tucked right under the jaw, darker collar bands
+      body += path(P([[-0.16, sh - 0.16], [0.16, sh - 0.16], [0.18, sh + 0.04], [-0.18, sh + 0.04]]), SKIN.shade);
+      body += path(P([[-0.22, sh - 0.02], [0.22, sh - 0.02], [0.03, sh + 0.62]]), spec.inner || '#e9e4d8');
+      body += line(`M-0.24,${sh - 0.02} L0.12,${sh + 0.52}`, 0.075, R.shade);
+      body += line(`M0.24,${sh - 0.02} L-0.02,${sh + 0.3}`, 0.075, R.shade);
     } else {
-      body += path(P([[-0.15, sh - 0.42], [0.15, sh - 0.42], [0.16, sh - 0.02], [-0.16, sh - 0.02]]), SKIN.shade);
-      body += path(blob([[-0.26, sh - 0.12], [0.26, sh - 0.12], [0.2, sh + 0.08], [-0.2, sh + 0.08]], 0.4), spec.inner || '#e9e4d8');
+      body += path(blob([[-0.24, sh - 0.04], [0.24, sh - 0.04], [0.2, sh + 0.12], [-0.2, sh + 0.12]], 0.4), spec.inner || '#e9e4d8');
     }
     // sash
     if (spec.sash) {
       body += path(P([[-0.78, -4.5], [0.78, -4.5], [0.77, -4.22], [-0.77, -4.22]]), spec.sash.col);
       if (spec.sash.tails && !back) body += path(P([[0.12, -4.25], [0.28, -4.25], [0.3, -3.2], [0.16, -3.25]]), spec.sash.col);
     }
-    // sleeves
+    // sleeves: 'tuck' (袖手: both sleeves meet in front at the waist, hands hidden) or hanging with a closed fist (guards)
     const wide = spec.sleeve !== 'narrow';
-    const cuffY = wide ? -3.25 : -3.55;
+    const cuffY = wide ? -3.35 : -3.6;
+    const tuck = spec.hands !== 'fist';
     for (const sgn of [-1, 1]) {
-      const sl = blob([[sgn * 0.9, sh + 0.02], [sgn * (wide ? 1.32 : 1.08), sh + 1.2], [sgn * (wide ? 1.46 : 1.12), cuffY], [sgn * (wide ? 0.92 : 0.86), cuffY + 0.05], [sgn * 0.8, sh + 0.9]], 0.4);
-      body += path(sl, sgn > 0 ? R.shade : R.base);
-      body += line(`M${sgn * 1.0},${sh + 0.9} Q${sgn * 1.12},${(sh + cuffY) / 2 + 0.6} ${sgn * 1.18},${cuffY - 0.1}`, sw * 0.7, R.fold || R.shade);
-      // hands: hidden (cuff opening dark) or closed fist below the cuff
-      if (spec.hands === 'fist' && !back) {
-        const hx = sgn * (wide ? 1.19 : 0.99), hy = cuffY + 0.18;
-        body += path(blob([[hx - 0.13, hy - 0.12], [hx + 0.13, hy - 0.12], [hx + 0.14, hy + 0.1], [hx, hy + 0.17], [hx - 0.14, hy + 0.1]], 0.5), SKIN.base);
-        body += line(`M${hx - 0.09},${hy + 0.0} L${hx + 0.09},${hy + 0.0}`, sw * 0.6, SKIN.line);
+      const col = sgn > 0 ? R.shade : R.base;
+      if (tuck && !back) {
+        // upper arm down the side, forearm across the front; the two cuffs overlap at the centre
+        const sl = `M${sgn * 0.62},${f(sh + 0.1)} C${f(sgn * 0.98 * SW)},${f(sh + 0.3)} ${f(sgn * 1.22 * SW)},${f(sh + 1.0)} ${f(sgn * 1.22 * SW)},-4.5 ` +
+          `C${f(sgn * 1.22 * SW)},-4.0 ${f(sgn * 1.05 * SW)},${f(-3.55 + (SW - 1) * 0.5)} ${sgn * 0.75},${f(-3.45 + (SW - 1) * 0.6)} L${sgn * -0.12},-3.62 C${sgn * 0.0},-3.95 ${sgn * 0.3},-4.12 ${sgn * 0.6},-4.18 ` +
+          `C${sgn * 0.78},-4.5 ${sgn * 0.8},${f(sh + 1.0)} ${sgn * 0.62},${f(sh + 0.1)} Z`;
+        body += path(sl, col);
+        body += line(`M${sgn * 1.02},${f(sh + 1.0)} Q${sgn * 1.12},-4.6 ${sgn * 1.0},-3.75`, sw * 0.7, R.fold || R.shade);
+        body += line(`M${sgn * 0.55},-3.92 L${sgn * 0.02},-3.72`, sw * 0.7, R.fold || R.shade);
+      } else if (back) {
+        const sl = blob([[sgn * 0.7, sh + 0.08], [sgn * (wide ? 1.3 : 1.06), sh + 1.2], [sgn * (wide ? 1.42 : 1.1), cuffY], [sgn * (wide ? 0.92 : 0.86), cuffY + 0.05], [sgn * 0.8, sh + 0.95]], 0.4);
+        body += path(sl, col);
       } else {
-        body += path(blob([[sgn * (wide ? 0.95 : 0.88), cuffY + 0.02], [sgn * (wide ? 1.42 : 1.1), cuffY - 0.02], [sgn * (wide ? 1.2 : 1.0), cuffY + 0.07]], 0.5), R.fold || R.shade);
+        // narrow hanging sleeve + closed fist (guards)
+        const sl = `M${sgn * 0.62},${f(sh + 0.1)} C${sgn * 0.98},${f(sh + 0.3)} ${sgn * 1.08},${f(sh + 1.0)} ${sgn * 1.1},${f(cuffY)} L${sgn * 0.84},${f(cuffY + 0.04)} C${sgn * 0.82},${f(sh + 1.2)} ${sgn * 0.78},${f(sh + 0.6)} ${sgn * 0.62},${f(sh + 0.1)} Z`;
+        body += path(sl, col);
+        const hx = sgn * 0.97, hy = cuffY + 0.17;
+        body += path(blob([[hx - 0.13, hy - 0.13], [hx + 0.13, hy - 0.13], [hx + 0.14, hy + 0.08], [hx + 0.02, hy + 0.17], [hx - 0.13, hy + 0.09]], 0.5), SKIN.base);
+        body += line(`M${hx - 0.1},${hy - 0.02} Q${hx},${hy + 0.01} ${hx + 0.1},${hy - 0.02}`, sw * 0.6, SKIN.line);
       }
     }
     // staff (guards): held in the right hand, vertical
     if (pose.staff && !back) {
-      const hx = (wide ? 1.19 : 0.99), top2 = -7.6, bot = 0;
+      const hx = 0.97, top2 = -7.6, bot = 0;
       body = path(P([[hx - 0.05, top2], [hx + 0.05, top2], [hx + 0.05, (top2 + bot) / 2], [hx - 0.05, (top2 + bot) / 2]]), pose.staff.col1 || '#8e3a30') +
         path(P([[hx - 0.05, (top2 + bot) / 2], [hx + 0.05, (top2 + bot) / 2], [hx + 0.05, bot], [hx - 0.05, bot]]), pose.staff.col2 || '#1e1b1a') + body;
     }
@@ -149,6 +161,8 @@ export function figure(spec, opts = {}) {
       head += path(blob([[0.12, hd - 0.38], [0.3, hd - 0.38], [0.37, hd - 0.12], [0.33, hd + 0.18], [0.18, hd + 0.36], [0.06, hd + 0.4], [0.2, hd + 0.1], [0.2, hd - 0.2]], 0.45), SKIN.shade, 'opacity="0.55"');
       head += path(blob([[-0.38, hd - 0.08], [-0.44, hd - 0.02], [-0.42, hd + 0.1], [-0.35, hd + 0.12]], 0.5), SKIN.base);
       head += path(blob([[0.38, hd - 0.08], [0.44, hd - 0.02], [0.42, hd + 0.1], [0.35, hd + 0.12]], 0.5), SKIN.shade);
+      head += path(blob([[-0.38, hd - 0.26], [-0.3, hd - 0.36], [-0.3, hd - 0.05], [-0.37, hd + 0.04]], 0.5), spec.hair || '#1e1b1a');
+      head += path(blob([[0.38, hd - 0.26], [0.3, hd - 0.36], [0.3, hd - 0.05], [0.37, hd + 0.04]], 0.5), spec.hair || '#1e1b1a');
       head += `<g transform="translate(0 ${f(dy)})">${faceFront(spec, e, sw)}</g>`;
       if (spec.beard) head += `<g transform="translate(0 ${f(dy)})">${spec.beard('front', sw)}</g>`;
       head += `<rect data-face="1" x="-0.42" y="${f(hd - 0.45)}" width="0.84" height="0.9" fill="none"/>`;
@@ -162,7 +176,7 @@ export function figure(spec, opts = {}) {
   } else if (view === 'side') {
     const st = pose.step || 0; // -1..1 walk phase
     const hem = spec.hemY ?? -0.45;
-    const sh = -5.86 + dy;
+    const sh = -6.08 + dy;
     const lean = pose.lean || 0;
     // legs (long robe: boots only peeking; tunic: trousered legs)
     const legA = st * 22, legB = -st * 22;
@@ -177,24 +191,33 @@ export function figure(spec, opts = {}) {
     body += leg(legB, '#000', false);
     body += leg(legA, '#000', true);
     // robe profile
-    const fw = 0.42, bw = 0.38;
+    const fw = 0.6, bw = 0.62;
     const sp = st * 0.18;
-    const robe = blob([[-0.18, sh - 0.12], [-fw, sh + 0.25], [-fw - 0.04, -4.3], [-0.62 - Math.max(0, sp), hem + 0.5], [-0.72 - Math.max(0, sp), hem], [0, hem + 0.06], [0.64 + Math.max(0, -sp), hem], [0.58, hem + 0.5], [bw, -4.3], [bw + 0.04, sh + 0.25], [0.18, sh - 0.18]], 0.35);
+    const robe = `M-0.22,${f(sh)} C-0.42,${f(sh + 0.1)} ${f(-fw)},${f(sh + 0.4)} ${f(-fw)},${f(sh + 1.0)} C${f(-fw - 0.04)},-4.6 ${f(-fw - 0.02)},-4.4 ${f(-fw)},-4.3 ` +
+      `Q${f(-fw - 0.12)},${f((hem - 4.3) / 2)} ${f(-0.72 - Math.max(0, sp))},${f(hem)} L${f(0.66 + Math.max(0, -sp))},${f(hem)} Q${f(bw + 0.08)},${f((hem - 4.3) / 2)} ${f(bw)},-4.3 ` +
+      `C${f(bw + 0.06)},-4.8 ${f(bw + 0.08)},${f(sh + 0.6)} ${f(bw - 0.06)},${f(sh + 0.25)} C0.4,${f(sh + 0.02)} 0.2,${f(sh - 0.06)} 0.12,${f(sh - 0.06)} Z`;
     body += path(robe, R.base);
     body += `<clipPath id="${opts.id || 'v4'}rs"><path d="${robe}"/></clipPath><g clip-path="url(#${opts.id || 'v4'}rs)">${path(P([[0.12, sh - 0.3], [1.0, sh - 0.3], [1.0, hem + 0.2], [0.2, hem + 0.2]]), R.shade)}</g>`;
     body += line(`M-0.1,-4.0 Q-0.2,${(hem - 4) / 2} -0.3,${hem + 0.15}`, sw * 0.8, R.fold || R.shade);
     // collar edge + neck
-    body += path(P([[-0.14, sh - 0.45], [0.12, sh - 0.45], [0.16, sh - 0.05], [-0.2, sh - 0.05]]), SKIN.shade);
-    body += path(P([[-0.24, sh - 0.12], [0.06, sh - 0.14], [-0.12, sh + 0.42]]), spec.inner || '#e9e4d8');
+    body += path(P([[-0.16, sh - 0.2], [0.1, sh - 0.2], [0.14, sh + 0.02], [-0.2, sh + 0.02]]), SKIN.shade);
+    body += path(P([[-0.26, sh - 0.02], [0.04, sh - 0.06], [-0.14, sh + 0.42]]), spec.inner || '#e9e4d8');
     if (spec.sash) body += path(P([[-fw - 0.05, -4.5], [bw + 0.05, -4.5], [bw + 0.05, -4.22], [-fw - 0.06, -4.22]]), spec.sash.col);
     // sleeve (near arm) hanging in front, hand hidden or fist
     const wide = spec.sleeve !== 'narrow';
     const swing = st * 10;
     const cuffY = wide ? -3.25 : -3.55;
-    let arm = path(blob([[-0.12, sh + 0.02], [0.18, sh + 0.08], [wide ? 0.32 : 0.2, cuffY], [wide ? -0.3 : -0.12, cuffY + 0.05], [-0.22, sh + 0.9]], 0.4), R.base) +
+    let arm = (spec.hands !== 'fist' && !pose.brush && !pose.staff
+      ? path(`M-0.24,${f(sh + 0.08)} C0.22,${f(sh + 0.02)} 0.46,${f(sh + 0.7)} 0.44,-4.6 C0.42,-4.0 0.14,-3.62 -0.3,-3.52 L-0.72,-3.62 C-0.6,-3.95 -0.38,-4.1 -0.16,-4.2 C-0.18,-4.7 -0.38,${f(sh + 0.9)} -0.24,${f(sh + 0.08)} Z`, R.base)
+      : path(blob([[-0.16, sh + 0.06], [0.2, sh + 0.1], [wide ? 0.34 : 0.22, cuffY], [wide ? -0.32 : -0.12, cuffY + 0.05], [-0.26, sh + 0.9]], 0.4), R.base)) +
       line(`M0.05,${sh + 0.6} Q0.12,${(sh + cuffY) / 2} 0.18,${cuffY - 0.1}`, sw * 0.7, R.fold || R.shade);
+    if (spec.hands !== 'fist' && !pose.brush && !pose.staff) {
+      // tucked sleeve: show its edge and the dark cuff opening where the hands hide
+      arm += line(`M0.16,${f(sh + 0.25)} C0.4,${f(sh + 0.9)} 0.45,-4.5 0.42,-4.4 C0.38,-3.95 0.1,-3.64 -0.3,-3.53`, sw * 1.1, R.fold || R.shade);
+      arm += path(blob([[-0.74, -3.63], [-0.6, -3.8], [-0.54, -3.58]], 0.5), R.fold || R.shade);
+    }
     if (spec.hands === 'fist') arm += path(blob([[-0.12, cuffY + 0.02], [0.12, cuffY + 0.02], [0.13, cuffY + 0.24], [-0.1, cuffY + 0.27]], 0.5), SKIN.base);
-    else arm += path(blob([[wide ? -0.28 : -0.1, cuffY + 0.03], [wide ? 0.3 : 0.18, cuffY - 0.01], [0.02, cuffY + 0.08]], 0.5), R.fold || R.shade);
+    else if (pose.brush || pose.staff) arm += path(blob([[wide ? -0.3 : -0.1, cuffY + 0.03], [wide ? 0.3 : 0.18, cuffY - 0.01], [0.02, cuffY + 0.08]], 0.5), R.fold || R.shade);
     if (pose.brush) arm += line(`M-0.05,${cuffY + 0.05} L-0.32,${cuffY + 0.42}`, 0.035, '#6b4a2e') + path(blob([[-0.34, cuffY + 0.4], [-0.29, cuffY + 0.44], [-0.38, cuffY + 0.56]], 0.4), '#17120E');
     if (pose.staff) arm = path(P([[-0.03, -7.5], [0.05, -7.5], [0.05, -3.4], [-0.03, -3.4]]), pose.staff.col1 || '#8e3a30') + path(P([[-0.03, -3.4], [0.05, -3.4], [0.05, 0], [-0.03, 0]]), pose.staff.col2 || '#1e1b1a') + arm;
     body += `<g transform="rotate(${f(swing)} 0 ${f(sh + 0.1)})">${arm}</g>`;
@@ -228,45 +251,55 @@ export function figure(spec, opts = {}) {
   return `<g data-cast="${spec.name || 'v4'}" transform="${tf}"><defs>${defs}</defs>${inner}</g>`;
 }
 
-/** Running / falling night silhouette (差拨, 富安): a simple jointed stick-volume figure in one fill. */
+/** Night silhouettes (差拨, 富安, 陆谦 at night): posed volumes in one fill with an optional rim light. pose: run|fall|stand|cower */
 export function silFigure(opts = {}) {
   const n = 7.0, H = (opts.height || 560) / n;
-  const pose = opts.pose || 'run'; // 'run' | 'fall' | 'stand' | 'cower'
+  const pose = opts.pose || 'run';
   const fill = opts.fill || '#120C0A', rim = opts.rim, flip = opts.flip ? -1 : 1;
-  const limb = (x1, y1, x2, y2, w) => `<path d="M${f(x1)},${f(y1)} L${f(x2)},${f(y2)}" stroke="${fill}" stroke-width="${f(w)}" stroke-linecap="round"/>`;
+  // tapered limb with round ends
+  const seg = (a, b, w1, w2) => {
+    const dx = b[0] - a[0], dy2 = b[1] - a[1], L = Math.hypot(dx, dy2) || 1, nx = -dy2 / L, ny = dx / L;
+    return `<path d="M${f(a[0] + nx * w1 / 2)},${f(a[1] + ny * w1 / 2)} L${f(b[0] + nx * w2 / 2)},${f(b[1] + ny * w2 / 2)} L${f(b[0] - nx * w2 / 2)},${f(b[1] - ny * w2 / 2)} L${f(a[0] - nx * w1 / 2)},${f(a[1] - ny * w1 / 2)} Z" fill="${fill}"/>` +
+      `<circle cx="${f(a[0])}" cy="${f(a[1])}" r="${f(w1 / 2)}" fill="${fill}"/><circle cx="${f(b[0])}" cy="${f(b[1])}" r="${f(w2 / 2)}" fill="${fill}"/>`;
+  };
+  const cap = (cx, cy, ang = 0) => {
+    const c = opts.cap === 'official'
+      ? `<path d="${blob([[-0.36, 0.05], [-0.3, -0.36], [0, -0.5], [0.3, -0.36], [0.36, 0.05]], 0.4)}" fill="${fill}"/><path d="M-0.62,-0.12 L0.62,-0.12" stroke="${fill}" stroke-width="0.09" stroke-linecap="round"/>`
+      : opts.cap === 'scarf' ? `<path d="${blob([[-0.4, 0.06], [-0.32, -0.34], [0.05, -0.48], [0.4, -0.25], [0.42, 0.06]], 0.4)}" fill="${fill}"/><path d="M0.36,-0.1 Q0.62,0.1 0.56,0.5 L0.46,0.48 Q0.5,0.15 0.3,0.0Z" fill="${fill}"/>` : '';
+    return `<g transform="translate(${f(cx)} ${f(cy)}) rotate(${f(ang)})"><circle cx="0" cy="0" r="0.41" fill="${fill}"/>${c}</g>`;
+  };
+  const coat = (pts) => `<path d="${blob(pts, 0.45)}" fill="${fill}"/>`;
+  const fat = opts.fat || 0;
   let s = '';
-  const torso = (cx, cy, ang, w = 0.95, h = 2.4, fat = 0) => `<g transform="translate(${f(cx)} ${f(cy)}) rotate(${f(ang)})"><path d="${blob([[-w / 2 - fat, -h / 2], [w / 2 + fat, -h / 2], [w / 2 + fat * 1.4, 0], [w / 2 + 0.1, h / 2], [-w / 2 - 0.1, h / 2], [-w / 2 - fat * 1.4, 0]], 0.4)}" fill="${fill}"/></g>`;
-  const head = (cx, cy, cap) => `<circle cx="${f(cx)}" cy="${f(cy)}" r="0.42" fill="${fill}"/>` + (cap === 'official' ? `<path d="M${f(cx - 0.45)},${f(cy - 0.18)} L${f(cx + 0.45)},${f(cy - 0.18)} L${f(cx + 0.32)},${f(cy - 0.62)} L${f(cx - 0.32)},${f(cy - 0.62)} Z" fill="${fill}"/><path d="M${f(cx - 0.9)},${f(cy - 0.3)} L${f(cx + 0.9)},${f(cy - 0.3)}" stroke="${fill}" stroke-width="0.07"/>` : cap === 'scarf' ? `<path d="M${f(cx - 0.42)},${f(cy - 0.05)} Q${f(cx)},${f(cy - 0.75)} ${f(cx + 0.42)},${f(cy - 0.05)} Z" fill="${fill}"/>` : '');
   if (pose === 'run') {
-    s += torso(0.15, -4.4, 18, 0.9, 2.3, opts.fat || 0);
-    s += head(0.62, -6.05, opts.cap);
-    s += limb(0.0, -3.3, 0.85, -1.9, 0.36) + limb(0.85, -1.9, 0.75, -0.25, 0.3) + limb(0.75, -0.25, 1.15, -0.15, 0.2); // front leg
-    s += limb(-0.05, -3.3, -0.85, -2.2, 0.36) + limb(-0.85, -2.2, -1.55, -1.3, 0.3) + limb(-1.55, -1.3, -1.75, -1.55, 0.2); // back leg
-    s += limb(0.35, -5.2, -0.4, -4.4, 0.3) + limb(-0.4, -4.4, -0.75, -3.6, 0.26); // arm back
-    s += limb(0.45, -5.2, 1.1, -4.6, 0.3) + limb(1.1, -4.6, 1.5, -5.1, 0.26); // arm forward
-    s += `<path d="${blob([[-0.45, -3.6], [0.55, -3.5], [0.9, -2.5], [-0.75, -2.6]], 0.4)}" fill="${fill}"/>`; // coat skirt
+    // leaning forward, long stride, arms pumping, coat flying back
+    s += coat([[-0.35, -5.75], [0.45, -5.6], [0.8 + fat, -4.3], [0.55, -3.2], [-0.2, -2.9], [-0.95, -3.1], [-0.6, -4.5]]);
+    s += coat([[-0.5, -3.4], [0.5, -3.3], [0.7, -2.4], [-1.25, -2.2]]);
+    s += seg([0.3, -3.2], [1.1, -1.9], 0.5, 0.38) + seg([1.1, -1.9], [0.95, -0.25], 0.38, 0.28) + seg([0.95, -0.2], [1.38, -0.12], 0.22, 0.2);
+    s += seg([-0.2, -3.1], [-1.0, -2.0], 0.5, 0.38) + seg([-1.0, -2.0], [-1.75, -1.2], 0.38, 0.28) + seg([-1.75, -1.2], [-1.95, -1.45], 0.22, 0.2);
+    s += seg([0.25, -5.35], [-0.45, -4.55], 0.36, 0.3) + seg([-0.45, -4.55], [-0.9, -3.95], 0.3, 0.26);
+    s += seg([0.45, -5.35], [1.15, -4.75], 0.36, 0.3) + seg([1.15, -4.75], [1.55, -5.2], 0.3, 0.26);
+    s += seg([0.35, -5.8], [0.55, -6.05], 0.3, 0.3) + cap(0.7, -6.35, 15);
   } else if (pose === 'fall') {
-    // knocked backwards, off his feet
-    s += torso(-0.4, -3.4, -58, 1.05, 2.4, opts.fat || 0.12);
-    s += head(-1.55, -4.5, opts.cap);
-    s += limb(0.3, -2.7, 1.2, -3.6, 0.38) + limb(1.2, -3.6, 1.9, -3.2, 0.32);
-    s += limb(0.25, -2.5, 0.9, -1.4, 0.38) + limb(0.9, -1.4, 1.4, -0.9, 0.32);
-    s += limb(-0.9, -4.1, -0.6, -5.5, 0.3) + limb(-0.6, -5.5, -0.2, -6.2, 0.26);
-    s += limb(-1.0, -3.9, -1.8, -3.2, 0.3) + limb(-1.8, -3.2, -2.3, -3.5, 0.26);
+    // thrown backwards off his feet, arms flung
+    s += `<g transform="translate(-0.3 -3.6) rotate(-62)">${coat([[-0.55 - fat, -1.25], [0.55 + fat, -1.25], [0.75 + fat, 0.2], [0.7, 1.25], [-0.7, 1.25], [-0.75 - fat, 0.2]])}</g>`;
+    s += seg([0.45, -2.8], [1.3, -3.7], 0.5, 0.38) + seg([1.3, -3.7], [2.0, -3.25], 0.38, 0.28);
+    s += seg([0.4, -2.55], [1.05, -1.5], 0.5, 0.38) + seg([1.05, -1.5], [1.55, -0.95], 0.38, 0.28);
+    s += seg([-0.85, -4.35], [-0.55, -5.55], 0.36, 0.3) + seg([-0.55, -5.55], [-0.15, -6.15], 0.3, 0.26);
+    s += seg([-1.05, -4.05], [-1.85, -3.4], 0.36, 0.3) + seg([-1.85, -3.4], [-2.35, -3.7], 0.3, 0.26);
+    s += cap(-1.6, -4.65, -60);
   } else if (pose === 'cower') {
-    // on his back in the snow, hands up pleading
-    s += `<g transform="translate(0 -0.55) rotate(-90)">${torso(0, 0, 0, 1.0, 2.4, 0)}</g>`;
-    s += head(-1.75, -0.75, opts.cap);
-    s += limb(1.0, -0.5, 1.9, -1.3, 0.36) + limb(1.9, -1.3, 2.7, -0.4, 0.3);
-    s += limb(1.0, -0.4, 2.0, -0.3, 0.36) + limb(2.0, -0.3, 2.9, -0.15, 0.3);
-    s += limb(-0.9, -0.9, -0.9, -2.0, 0.28) + limb(-0.9, -2.0, -0.6, -2.7, 0.24);
-    s += limb(-1.2, -0.9, -1.4, -2.1, 0.28) + limb(-1.4, -2.1, -1.1, -2.8, 0.24);
+    // on his back in the snow, knees up, both hands raised pleading
+    s += coat([[-1.3, -0.95], [0.9, -0.85], [1.1, -0.1], [-1.4, -0.1]]);
+    s += seg([0.8, -0.6], [1.6, -1.55], 0.5, 0.38) + seg([1.6, -1.55], [2.45, -0.45], 0.38, 0.28) + seg([0.85, -0.35], [1.85, -1.2], 0.48, 0.36) + seg([1.85, -1.2], [2.75, -0.2], 0.36, 0.26);
+    s += seg([-0.8, -0.9], [-0.75, -2.0], 0.34, 0.28) + seg([-0.75, -2.0], [-0.45, -2.65], 0.28, 0.24);
+    s += seg([-1.05, -0.95], [-1.25, -2.05], 0.34, 0.28) + seg([-1.25, -2.05], [-1.0, -2.75], 0.28, 0.24);
+    s += cap(-1.75, -0.75, -85);
   } else {
-    s += torso(0, -4.4, 0, 1.0, 2.4, opts.fat || 0);
-    s += head(0, -6.2, opts.cap);
-    s += `<path d="${blob([[-0.6, -3.5], [0.6, -3.5], [0.75, -0.4], [-0.75, -0.4]], 0.3)}" fill="${fill}"/>`;
-    s += limb(-0.25, -0.5, -0.3, 0, 0.3) + limb(0.25, -0.5, 0.3, 0, 0.3);
-    s += limb(-0.55, -5.4, -0.75, -3.6, 0.3) + limb(0.55, -5.4, 0.75, -3.6, 0.3);
+    s += coat([[-0.5 - fat, -5.75], [0.5 + fat, -5.75], [0.62 + fat * 1.3, -4.3], [0.75, -0.45], [-0.75, -0.45], [-0.62 - fat * 1.3, -4.3]]);
+    s += seg([-0.62, -5.55], [-0.82, -3.7], 0.36, 0.3) + seg([0.62, -5.55], [0.82, -3.7], 0.36, 0.3);
+    s += seg([-0.25, -0.6], [-0.3, -0.02], 0.3, 0.3) + seg([0.25, -0.6], [0.3, -0.02], 0.3, 0.3);
+    s += seg([0, -5.7], [0, -6.0], 0.32, 0.32) + cap(0, -6.3, 0);
   }
   const id = opts.id || 'sil';
   const filt = rim ? `<defs><filter id="${id}rim" x="-30%" y="-30%" width="160%" height="160%"><feMorphology in="SourceAlpha" operator="dilate" radius="${f((opts.rimW || 2.2) / H)}" result="d"/><feFlood flood-color="${rim}"/><feComposite in2="d" operator="in" result="r"/><feOffset in="r" dx="${f((opts.rimDx ?? -1.8) / H)}" dy="${f(-0.6 / H)}" result="ro"/><feMerge><feMergeNode in="ro"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` : '';
