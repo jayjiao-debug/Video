@@ -327,12 +327,11 @@ function s24(t) {
   const face = lin({ view: 'front', costume: 'C', expr, height: hgt, x: fx, y: fy, tattoo: 1, hat: false });
   // cold rim on the hair cap and the cheek edges (light from the cracks behind), relative to the eye line
   const X = (dx) => f2(ex + dx), Y = (dy) => f2(ey + dy);
-  const rim = `<g fill="none" stroke="#3B4F73" stroke-linecap="round" filter="url(#${blurId(3)})" opacity="0.85">` +
-    `<path d="M${X(-176)},${Y(-60)} C${X(-176)},${Y(-170)} ${X(-120)},${Y(-262)} ${X(-10)},${Y(-282)}" stroke-width="9"/>` +
-    `<path d="M${X(186)},${Y(-60)} C${X(186)},${Y(-170)} ${X(130)},${Y(-262)} ${X(20)},${Y(-282)}" stroke-width="9"/>` +
-    `<path d="M${X(-38)},${Y(-318)} q38,-26 76,0" stroke-width="7"/>` +
-    `<path d="M${X(-190)},${Y(-10)} C${X(-196)},${Y(70)} ${X(-170)},${Y(150)} ${X(-110)},${Y(222)}" stroke-width="7"/>` +
-    `<path d="M${X(200)},${Y(-10)} C${X(206)},${Y(70)} ${X(180)},${Y(150)} ${X(120)},${Y(222)}" stroke-width="7"/></g>`;
+  const rim = `<g fill="none" stroke="#3B4F73" stroke-linecap="round" filter="url(#${blurId(2)})" opacity="0.6">` +
+    `<path d="M${X(-170)},${Y(-70)} C${X(-168)},${Y(-150)} ${X(-130)},${Y(-222)} ${X(-70)},${Y(-262)}" stroke-width="4.5"/>` +
+    `<path d="M${X(180)},${Y(-70)} C${X(178)},${Y(-150)} ${X(140)},${Y(-222)} ${X(80)},${Y(-262)}" stroke-width="4.5"/>` +
+    `<path d="M${X(-186)},${Y(20)} C${X(-190)},${Y(80)} ${X(-172)},${Y(140)} ${X(-130)},${Y(196)}" stroke-width="3.5"/>` +
+    `<path d="M${X(196)},${Y(20)} C${X(200)},${Y(80)} ${X(182)},${Y(140)} ${X(140)},${Y(196)}" stroke-width="3.5"/></g>`;
   // the hat-band remnants at the temples (rig) hidden under hair
   const temples = `<rect x="${X(-200)}" y="${Y(-118)}" width="44" height="80" fill="#141110"/><rect x="${X(156)}" y="${Y(-118)}" width="46" height="80" fill="#141110"/>`;
   const fk = fireK(t);
@@ -341,10 +340,10 @@ function s24(t) {
   s += `<g transform="translate(${ex} ${ey}) scale(${f2(z)}) translate(${-ex} ${-ey})">${face}${temples}`;
   // fire tint across the slit, darkness elsewhere (luma ~25–30), a cold rim on the hat brim
   s += `<rect x="-200" y="${bandY - bandH * 1.2}" width="2400" height="${bandH * 2.4}" fill="#FF8A3D" opacity="${f2(0.32 * fk)}" style="mix-blend-mode:multiply"/>`;
-  s += `<rect x="-400" y="-400" width="2800" height="2000" fill="#07070B" opacity="0.86" mask="url(#t10band)"/>`;
+  s += `<rect x="-400" y="-400" width="2800" height="2000" fill="#07070B" opacity="0.76" mask="url(#t10band)"/>`;
   s += `<rect x="-400" y="${bandY - bandH * 0.5}" width="2800" height="${bandH}" fill="#FFB070" opacity="${f2(0.12 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(10)})"/>`;
   // faint warm bounce under the slit (cheeks, moustache) and the cold rim over the darkness
-  s += `<ellipse cx="${ex}" cy="${ey + 120}" rx="230" ry="110" fill="#C8642E" opacity="${f2(0.16 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(30)})"/>`;
+  s += `<ellipse cx="${ex}" cy="${ey + 120}" rx="230" ry="110" fill="#C8642E" opacity="${f2(0.22 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(30)})"/>`;
   s += rim;
   s += `</g>`;
   const defs = `<defs><linearGradient id="t10bg" x1="0" y1="0" x2="0" y2="1">` +

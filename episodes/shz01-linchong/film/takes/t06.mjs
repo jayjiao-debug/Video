@@ -5,7 +5,7 @@ import { luqian, luPt, LU_COL } from '../cast/luqian.mjs';
 import { silMask } from '../cast/c_util.mjs';
 
 const LN = '#2A1C17';
-const LU = { x: 1240, y: 400, k: 2.5 };
+const LU = { x: 1240, y: 450, k: 2.35 };
 const TABLE_Y = 790;
 const CUP_L = [720, TABLE_Y - 6]; // 林冲's cup on the near edge
 const EWER0 = [990, TABLE_Y - 4];
@@ -95,11 +95,11 @@ function hand(x, y, s, rot, cupping = true) {
 function cam(t) {
   // push toward 陆谦 keeping his face at (1240, 400); the entry truck from T05 settles; then the dive into the cup
   const z = lerp(1.0, 1.08, ramp(t, 53.21, 56.2, E.sine));
-  let c = camAt([1240, 400], [1240, 400], z);
+  let c = camAt([1240, 450], [1240, 450], z);
   c.x += -60 * (1 - ramp(t, 52.8, 54.2, E.out));
   const dv = ramp(t, 56.4, 56.93, E.in);
   if (dv > 0) {
-    const tgt = camAt([780, 560], [960, 540], z * Math.pow(6 / z, dv));
+    const tgt = camAt([760, 557], [960, 540], z * Math.pow(11 / z, dv));
     c = { x: lerp(c.x, tgt.x, ramp(t, 56.4, 56.7, E.inOut)), y: lerp(c.y, tgt.y, ramp(t, 56.4, 56.7, E.inOut)), zoom: tgt.zoom };
   }
   return c;
@@ -156,17 +156,17 @@ function frame(t) {
   const sh = ramp(t, 53.626, 53.626 + 16 / 30, E.inOut);
   const face = luPt(LU, [457, 378]);
   const shadow = `<rect x="${f2(face[0] - 900)}" y="${f2(face[1] - 400)}" width="${f2(900 - 230 + 230 * sh)}" height="900" fill="#2B2236" opacity="0.65" filter="url(#${blurId(22)})"/>`;
-  const lu = `<defs>${silMask('t06lum', luSvg)}</defs>${luSvg}<g mask="url(#t06lum)">${shadow}</g>`;
+  const lu = `<g${t > 56.4 ? ' data-allowcut="1"' : ''}><defs>${silMask('t06lum', luSvg)}</defs>${luSvg}<g mask="url(#t06lum)">${shadow}</g></g>`;
   // lantern key (from his upper left = screen right)
   const key = `<rect x="0" y="0" width="2400" height="1300" fill="url(#t06key)" style="mix-blend-mode:soft-light"/><defs>${rg('t06key', [[0, '#FFC27A', 0.7], [1, '#FFC27A', 0]], 0.78, 0.15, 0.7)}</defs>`;
   s += L(c, 1.0, lu + arms + table() + props + key, { id: 't06lu' });
-  s += L(c, 1.12, near, { id: 't06cup', bleed: 'all' });
+  s += L(c, 1.0, near, { id: 't06cup', bleed: 'all' });
   // 林冲 over the shoulder (back of head: dark headscarf, two jade rings, the tails; green robe), d 1.45
   const fgOTS = `<path d="M-120,1200 C-100,860 100,700 360,680 C560,670 720,760 800,980 L840,1200Z" fill="#2F6B52"/>` +
     `<path d="M120,760 C200,720 300,700 400,700" stroke="#22513E" stroke-width="30" fill="none"/>` +
     `<path d="M250,690 C230,600 236,560 250,520 L400,520 C410,560 410,620 390,690Z" fill="#E5AD86"/>` +
     `<ellipse cx="320" cy="430" rx="190" ry="210" fill="#22272F"/><path d="M200,330 C230,250 410,250 440,330 L430,300 C400,220 240,220 210,300Z" fill="#2B313A"/>` +
-    `<circle cx="262" cy="512" r="20" fill="none" stroke="#E8ECE4" stroke-width="9"/><circle cx="378" cy="512" r="20" fill="none" stroke="#E8ECE4" stroke-width="9"/>` +
+    `<path d="M270,500 C300,488 340,488 370,500 L360,530 C334,520 306,520 280,530Z" fill="#14181E"/>` +
     `<path d="M260,560 C250,660 240,760 220,860 L250,860 C270,760 284,660 290,560Z M370,560 C380,660 392,760 412,860 L440,860 C420,760 400,660 396,560Z" fill="#22272F"/>`;
   s += L(c, 1.45, bake('t06ots', 1200, 1500, `<g transform="translate(200 120)">${fgOTS}</g>`, { x: -200, y: -120 }), { id: 't06ots', bleed: 'all', blur: 14 });
   s += motes(t, { seed: 8, n: 18, area: [900, 0, 1920, 700], color: '#FFD9A0', op: 0.35 });
