@@ -3,7 +3,7 @@
 - **Owner notes (2026-11-08):** emotion-driven, not plot-driven. 2D vector 国风漫画 characters. BGM: the owner's 《笛子戏》 (148.5 s, not committed). Voice-over storyteller with a few character lines, subtitles.
 - **Length:** 2:28 = the whole track. Speech 467 字 ≈ 106 s; the rest is music breathing room.
 - **Emotional spine:** a man who keeps swallowing it (忍), because he believes he can still go home. The promise 「放你回来时，依旧夫妻完聚」 (his father-in-law, 第八回) is the thread: said in the middle, broken at the end.
-- **Opening:** 「如果有一天，你要亲手写一封休书，给你最爱的人。」 The viewer is put in his place before knowing who he is; the reveal 「这一别，就是一辈子」 lands on the music's turn, then 「这个人，叫林冲」 over the title.
+- **Opening:** 「如果有一天，你要亲手签下一封休书，给你最爱的人。」 The viewer is put in his place before knowing who he is; the reveal 「这一别，就是一辈子」 lands on the music's turn, then 「这个人，叫林冲」 over the title.
 - **Shape:** love → humiliation (三次「他忍了」, each harder) → the snow night: 「忍，是回不去的」 on the music's break → release on the drop → the regret (he delayed; she was already gone) → the promise that never came true → the question to the viewer.
 - **Facts:** each line maps to facts.md. Lines marked *(narration)* are the narrator's reading of him, worded as such (「大概」「他总觉得」), not claims from the novel.
 - **Care:** the killing is not shown (door opens → white). The wife's death is said once, in the novel's words; nothing depicted.
@@ -26,7 +26,7 @@ Voice: **narrator only** (owner, 2026-11-08: 只要旁白，不用人物说话).
 
 | # | ~Time | Line | Picture (国风漫画) | Fact |
 |---|---|---|---|---|
-| V01 | 0.5 | 如果有一天，你要亲手写一封休书，给你最爱的人。 | Black. Ink brush on paper: columns of the real 休书 text appear stroke by stroke (第八回). | L8 |
+| V01 | 0.5 | 如果有一天，你要亲手签下一封休书，给你最爱的人。 | Black. Ink brush on paper: columns of the real 休书 text appear stroke by stroke (第八回). | L8 |
 | V02 | 5.5 | 她哭着问你：我清清白白，你为什么不要我？ | Her hands grip the paper; a tear falls on the ink and it bleeds. Her face stays out of frame. | L10 |
 | V03 | 9.8 | 你说不出口——你是怕自己回不来，误了她一辈子。 | His face, eyes wet, jaw clenched (隐忍); the cangue on his neck; his thumb presses the red print. | L9 |
 | V04 | 14.6 | 可这一别，就是一辈子。 | Wide: guards lead him away down the snowy street; she sinks at the door. Music swells. | L28 |
@@ -49,7 +49,7 @@ Voice: **narrator only** (owner, 2026-11-08: 只要旁白，不用人物说话).
 | V21 | 72.4 | 那年冬天，雪下得特别大。 | Wide: snow over everything. | L14 |
 | V22 | 75.1 | 雪压塌了草屋，你躲进山神庙，搬石头抵住了门。 | Collapsed hut; he pushes a stone against the temple door. | L14 |
 | V23 | 79.9 | 半夜，草料场烧起来了。 | Fire through the door crack, red on his face. | L15 |
-| V24 | 82.4 | 门外有人说：烧死了，拾他几块骨头回去交差。 | Three silhouettes against the fire. | L15 |
+| V24 | 82.4 | 门外有人说：烧死了，拾他一两块骨头回去交差。 | Three silhouettes against the fire. | L15 |
 | V25 | 86.9 | 那个声音，你认得。 | Close: his eyes in the dark. | L15 (陆谦) |
 | V26 | 91.0 | 你终于明白， | Extreme close on the eyes. | (narration) |
 | V27 | 92.6 | 忍，是回不去的。 | Hold. The music almost stops. | (narration) |

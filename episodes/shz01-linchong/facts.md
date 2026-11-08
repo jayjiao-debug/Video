@@ -31,6 +31,9 @@ Checked 2026-11-08 against the text of 《水浒传》 (the 120-chapter edition,
 | L25 | After the 方腊 campaign, at 杭州: 「**林冲染患风病瘫了**」…「林冲风瘫，又不能痊，**就留在六和寺中，教武松看视，后半载而亡**」. | 第一百一十九回 | ✓ |
 | L26 | The "林冲、杨志怒目而视" line some retellings quote at 高俅's release is **not in this edition's text**. | 第八十回 (searched) | ✗ do not use |
 | L28 | The 休书 farewell (第八回) is the last time he sees his wife: he never returns to 东京 while she lives; she dies while he is on 梁山 (L20). | 第八回–第二十回 (no later meeting in the text) | ✓ |
+| L29 | The journey to 沧州 starts in **summer**: 「时遇六月天气，炎暑正热」. The farewell is not in snow; snow comes in 沧州 that winter (第十回). | 第八回 | ✓ |
+| L30 | The cangue: 「七斤半团头铁叶护身枷」 (7.5 斤, rounded ends, bound with iron plates), 「贴了封皮」 (a paper seal on it). Face tattooed by a 文笔匠: 「刺了面颊」. | 第八回 | ✓ |
+| L31 | The 休书 was written by a hired scribe (「那人写，林冲说」); he signed it (押个花字) and pressed a **handprint** (打个手模). | 第八回 | ✓ |
 | L27 | The 70-chapter (金圣叹) edition ends before 招安; 林冲's death is only in the 100/120-chapter editions. | edition note | ✓ (say 「一百二十回本」 in the sources line) |
 
 Sources line for the end card: 资料：《水浒传》一百二十回本 第七—十一、二十、八十、一百一十九回
