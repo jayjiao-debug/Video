@@ -450,6 +450,9 @@ function paperLayer(t, c, opts = {}) {
   s += `<rect x="-60" y="-60" width="${SH.w + 120}" height="${SH.h + 120}" rx="60" fill="url(#t13halo)"/>`;
   s += xiushu({ w: SH.w, h: SH.h, id: 't13xs', ink: opts.blank ? 0 : inkL8, sign: opts.blank ? 0 : 1, print: 1, printOp: opts.printOp ?? 1, glow: Math.min(1, glow) });
   if (!opts.blank) s += absorbStain(t);
+  // a clean band of paper under the promise row: the old columns are washed back where the promise is written
+  const cb = opts.blank ? 0 : (t < REL ? ramp(t, 133.55, 134.15) : 1 - ramp(t, REL, REL + 0.3));
+  if (cb > 0) s += `<defs>${lg('t13cb', [[0, '#EFE2C4', 0], [0.3, '#EFE2C4', 0.85], [0.7, '#EFE2C4', 0.85], [1, '#EFE2C4', 0]])}</defs><rect x="238" y="${PROW_Y - 118}" width="${SH.w - 244}" height="236" fill="url(#t13cb)" opacity="${f2(cb)}"/>`;
   // print bloom after the release
   const pb = ramp(t, REL, REL + 0.6, E.out) * (opts.printOp ?? 1);
   if (pb > 0) s += `<ellipse cx="${f2(PRINT_L[0])}" cy="${f2(PRINT_L[1])}" rx="200" ry="230" fill="url(#t13pb)" opacity="${f2(pb * (0.85 + 0.15 * Math.sin(t * 2.4)))}"/>`;
