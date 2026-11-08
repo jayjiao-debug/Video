@@ -69,8 +69,10 @@ def build(view, debug=None):
         near_bg = cv2.morphologyEx(near_bg, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
         near_bg = cv2.GaussianBlur(near_bg.astype(np.float32), (0, 0), 2.2) > 0.5
         # take the anti-aliased rim as well (pixels still close to the paper colour)
-        rim = np.abs(R.astype(int) - ref[None, None]).max(axis=2) < 46
-        near_bg = near_bg | (cv2.dilate(near_bg.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(bool) & rim)
+        lum_ref = float(ref.mean())
+        rim = (np.abs(R.astype(int) - ref[None, None]).max(axis=2) < 30) & (R.astype(int).mean(axis=2) <= lum_ref + 2)
+        grow = cv2.dilate(near_bg.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))).astype(bool) & rim
+        near_bg = cv2.GaussianBlur((near_bg | grow).astype(np.float32), (0, 0), 1.4) > 0.5
         FG &= ~(polymask(hp, shp) & near_bg)
     FG = soft_mask(FG, 1.0)
     INK = ink_mask(R, FG, **S.get('ink', {}))

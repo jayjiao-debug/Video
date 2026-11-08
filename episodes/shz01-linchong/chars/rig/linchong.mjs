@@ -514,44 +514,80 @@ function gourdSVG(u, H) {
 }
 
 // ------------------------------------------------------------------ cangue (团头铁叶护身枷, model_sheet §6)
-function cangueSVG(D, view, Href, u) {
-  const C = { wood: '#9a7048', woodS: '#6f4d2e', woodE: '#5a3d24', iron: '#45474d', ironS: '#2c2d31', paper: '#efe9dc', red: '#c4372f' };
-  const cm = Href / 24, M = D.meta, F = M.face;
-  const L = (w) => `stroke="#1e1612" stroke-width="${f(w * u)}" stroke-linejoin="round" stroke-linecap="round"`;
-  const neck = view === 'front' ? [F.chin[0], F.chin[1] + 0.33 * Href] : [F.jaw[0][0] + 6 * u, F.chin[1] + 0.36 * Href];
-  let s = '';
-  if (view === 'front') {
-    // 42 cm wide board seen from the front: top face in perspective, the long end comes toward us
-    const hw = 21 * cm, back = neck[1] - 4 * cm, front = neck[1] + 13 * cm, th = 3 * cm;
-    const top = `M${f(neck[0] - hw)},${f(back)} L${f(neck[0] + hw)},${f(back)} L${f(neck[0] + hw * 1.08)},${f(front - 3 * cm)} C${f(neck[0] + hw * 1.06)},${f(front + 1 * cm)} ${f(neck[0] + hw * 0.5)},${f(front + 2 * cm)} ${f(neck[0])},${f(front + 2 * cm)} C${f(neck[0] - hw * 0.5)},${f(front + 2 * cm)} ${f(neck[0] - hw * 1.06)},${f(front + 1 * cm)} ${f(neck[0] - hw * 1.08)},${f(front - 3 * cm)}Z`;
-    s += `<path d="M${f(neck[0] - hw * 1.08)},${f(front - 3 * cm)} C${f(neck[0] - hw * 1.06)},${f(front + 1 * cm)} ${f(neck[0] - hw * 0.5)},${f(front + 2 * cm)} ${f(neck[0])},${f(front + 2 * cm)} C${f(neck[0] + hw * 0.5)},${f(front + 2 * cm)} ${f(neck[0] + hw * 1.06)},${f(front + 1 * cm)} ${f(neck[0] + hw * 1.08)},${f(front - 3 * cm)} L${f(neck[0] + hw * 1.08)},${f(front - 3 * cm + th)} C${f(neck[0] + hw * 1.06)},${f(front + 1 * cm + th)} ${f(neck[0] + hw * 0.5)},${f(front + 2 * cm + th)} ${f(neck[0])},${f(front + 2 * cm + th)} C${f(neck[0] - hw * 0.5)},${f(front + 2 * cm + th)} ${f(neck[0] - hw * 1.06)},${f(front + 1 * cm + th)} ${f(neck[0] - hw * 1.08)},${f(front - 3 * cm + th)}Z" fill="${C.woodE}" ${L(1)}/>`;
-    s += `<path d="${top}" fill="${C.wood}" ${L(1.1)}/>`;
-    s += `<path d="M${f(neck[0] - hw * 0.9)},${f(back + 3 * cm)} C${f(neck[0] - hw * 0.3)},${f(back + 4 * cm)} ${f(neck[0] + hw * 0.3)},${f(back + 2.4 * cm)} ${f(neck[0] + hw * 0.9)},${f(back + 3.4 * cm)} M${f(neck[0] - hw * 0.8)},${f(front - 2 * cm)} C${f(neck[0] - hw * 0.2)},${f(front - 1 * cm)} ${f(neck[0] + hw * 0.4)},${f(front - 2.6 * cm)} ${f(neck[0] + hw * 0.85)},${f(front - 1.6 * cm)}" fill="none" stroke="${C.woodS}" stroke-width="${f(0.8 * u)}" opacity="0.7"/>`;
-    // iron plates across both sides, iron leaves on the front edge
-    for (const sg of [-1, 1]) {
-      const x0 = neck[0] + sg * hw * 0.72, x1 = neck[0] + sg * hw * 0.86;
-      s += `<path d="M${f(x0)},${f(back)} L${f(x1)},${f(back)} L${f(x1 + sg * 0.6 * cm)},${f(front)} L${f(x0 + sg * 0.5 * cm)},${f(front + 1 * cm)}Z" fill="${C.iron}" ${L(0.8)}/>`;
-      s += `<circle cx="${f((x0 + x1) / 2)}" cy="${f(back + 3 * cm)}" r="${f(0.5 * cm)}" fill="${C.ironS}"/><circle cx="${f((x0 + x1) / 2 + sg * 0.3 * cm)}" cy="${f(front - 2 * cm)}" r="${f(0.5 * cm)}" fill="${C.ironS}"/>`;
-    }
-    s += `<path d="M${f(neck[0] - hw * 0.4)},${f(front + 2 * cm)} L${f(neck[0] - hw * 0.4)},${f(front + 2 * cm + th)} M${f(neck[0] + hw * 0.4)},${f(front + 2 * cm)} L${f(neck[0] + hw * 0.4)},${f(front + 2 * cm + th)}" stroke="${C.iron}" stroke-width="${f(3 * cm)}"/>`;
-    // the join runs front-back through the neck hole; the paper seal strip lies across it
-    s += `<path d="M${f(neck[0])},${f(neck[1] + 3.5 * cm)} L${f(neck[0])},${f(front + 2 * cm)}" stroke="${C.woodE}" stroke-width="${f(0.9 * u)}"/>`;
-    s += `<ellipse cx="${f(neck[0])}" cy="${f(neck[1] - 0.5 * cm)}" rx="${f(6.5 * cm)}" ry="${f(4 * cm)}" fill="${C.woodE}" ${L(1)}/>`;
-    s += `<path d="M${f(neck[0] - 16 * cm)},${f(neck[1] + 6 * cm)} L${f(neck[0] + 16 * cm)},${f(neck[1] + 5.4 * cm)} L${f(neck[0] + 16.2 * cm)},${f(neck[1] + 10.4 * cm)} L${f(neck[0] - 15.8 * cm)},${f(neck[1] + 11 * cm)}Z" fill="${C.paper}" ${L(0.7)}/>`;
-    s += `<rect x="${f(neck[0] + 4 * cm)}" y="${f(neck[1] + 6.6 * cm)}" width="${f(3 * cm)}" height="${f(3 * cm)}" fill="none" stroke="${C.red}" stroke-width="${f(0.9 * u)}"/><path d="M${f(neck[0] - 10 * cm)},${f(neck[1] + 8.2 * cm)} h${f(8 * cm)} M${f(neck[0] - 10 * cm)},${f(neck[1] + 9.6 * cm)} h${f(6 * cm)}" stroke="#3a3530" stroke-width="${f(0.6 * u)}" opacity="0.5"/>`;
-  } else {
-    // profile: 90 cm board, neck hole 28 cm from the back end, long end forward and 30° down
-    const a = (30 * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a), th = 3 * cm;
-    const P2 = (d, o) => [neck[0] - d * cm * ca + o * sa, neck[1] + d * cm * sa + o * ca]; // d forward (data faces left), o down
-    const pts = [P2(-28, 0), P2(62, 0), P2(62, th / 1), P2(-28, th)];
-    const end = (d, o) => P2(d, o);
-    s += `<path d="M${P(end(-28, 0))} L${P(end(58, 0))} C${P(end(62, 0))} ${P(end(63, th / 2))} ${P(end(62, th))} L${P(end(-24, th))} C${P(end(-28, th))} ${P(end(-29, th / 2))} ${P(end(-28, 0))}Z" fill="${C.wood}" ${L(1.1)}/>`;
-    s += `<path d="M${P(end(-27, 0))} L${P(end(58, 0))} C${P(end(61, 0))} ${P(end(62, -1.6 * cm))} ${P(end(60, -2.6 * cm))} L${P(end(-26, -2.6 * cm))}Z" fill="${C.wood}" opacity="0.9" ${L(0.8)}/>`;
-    for (const d of [-22, 50]) s += `<path d="M${P(end(d, -2.6 * cm))} L${P(end(d + 5, -2.6 * cm))} L${P(end(d + 5, th))} L${P(end(d, th))}Z" fill="${C.iron}" ${L(0.8)}/>`;
-    s += `<path d="M${P(end(14, -2.6 * cm))} L${P(end(30, -2.6 * cm))} L${P(end(30, -0.6 * cm))} L${P(end(14, -0.6 * cm))}Z" fill="${C.paper}" ${L(0.6)}/>`;
-    void pts;
+// One board 90 × 42 × 3 cm, neck hole Ø13 cm 28 cm from the back end, iron plates at both ends,
+// a paper seal across the join. The board is split at the hole: the board (with the hole cut out),
+// then the neck coming up through the hole, then the head (beard in front). Returns { board, neck }.
+function neckColour(D) {
+  if (!D._neckc) {
+    const p = D.parts.neck, cnt = {};
+    if (p) for (const [c, d] of p.fills) cnt[c] = (cnt[c] || 0) + d.length;
+    const best = Object.entries(cnt).sort((x, y) => y[1] - x[1])[0];
+    D._neckc = best ? D.palette[best[0]] : COL.skinS;
   }
-  return s;
+  return D._neckc;
+}
+
+function cangueSVG(D, view, Href, u) {
+  const C = { wood: '#9a7048', woodT: '#a97c51', woodS: '#7a5534', woodE: '#5a3d24', iron: '#45474d', ironS: '#2c2d31', paper: '#efe9dc', red: '#c4372f', dark: '#2a1c14' };
+  const cm = Href / 24, F = D.meta.face;
+  const lw = Math.max(1 * u, 0.14 * cm);
+  const L = (w = 1) => `stroke="#1e1612" stroke-width="${f(lw * w)}" stroke-linejoin="round" stroke-linecap="round"`;
+  const skin = neckColour(D), id = uid('cg');
+  let board = '', neck = '';
+  if (view === 'front') {
+    // seen from slightly above; the long end (62 cm) comes toward us and down
+    const nx = F.chin[0], ny = F.chin[1] + 0.27 * Href;               // hole centre, at the neck base
+    const hw = 21 * cm, far = ny - 4.6 * cm, near = ny + 10 * cm, th = 3 * cm;
+    const hx = 6.6 * cm, hy = 2.0 * cm;                                 // hole ellipse
+    const nw = 5.6 * cm;                                                // half neck width in the hole
+    const top = `M${f(nx - hw)},${f(far)} C${f(nx - hw * 0.5)},${f(far - 1.2 * cm)} ${f(nx + hw * 0.5)},${f(far - 1.2 * cm)} ${f(nx + hw)},${f(far)} L${f(nx + hw * 1.07)},${f(near - 4 * cm)} C${f(nx + hw * 1.05)},${f(near + 1 * cm)} ${f(nx + hw * 0.5)},${f(near + 2 * cm)} ${f(nx)},${f(near + 2 * cm)} C${f(nx - hw * 0.5)},${f(near + 2 * cm)} ${f(nx - hw * 1.05)},${f(near + 1 * cm)} ${f(nx - hw * 1.07)},${f(near - 4 * cm)}Z`;
+    const hole = `M${f(nx - hx)},${f(ny)} A${f(hx)},${f(hy)} 0 1 0 ${f(nx + hx)},${f(ny)} A${f(hx)},${f(hy)} 0 1 0 ${f(nx - hx)},${f(ny)}Z`;
+    // front face (thickness) of the near end
+    board += `<path d="M${f(nx - hw * 1.07)},${f(near - 4 * cm)} C${f(nx - hw * 1.05)},${f(near + 1 * cm)} ${f(nx - hw * 0.5)},${f(near + 2 * cm)} ${f(nx)},${f(near + 2 * cm)} C${f(nx + hw * 0.5)},${f(near + 2 * cm)} ${f(nx + hw * 1.05)},${f(near + 1 * cm)} ${f(nx + hw * 1.07)},${f(near - 4 * cm)} L${f(nx + hw * 1.07)},${f(near - 4 * cm + th)} C${f(nx + hw * 1.05)},${f(near + 1 * cm + th)} ${f(nx + hw * 0.5)},${f(near + 2 * cm + th)} ${f(nx)},${f(near + 2 * cm + th)} C${f(nx - hw * 0.5)},${f(near + 2 * cm + th)} ${f(nx - hw * 1.05)},${f(near + 1 * cm + th)} ${f(nx - hw * 1.07)},${f(near - 4 * cm + th)}Z" fill="${C.woodE}" ${L()}/>`;
+    // top face with the hole cut out, a light grain, the join through the hole
+    board += `<path fill-rule="evenodd" d="${top} ${hole}" fill="${C.wood}" ${L(1.1)}/>`;
+    board += `<path d="M${f(nx - hw * 0.85)},${f(far + 3 * cm)} C${f(nx - hw * 0.4)},${f(far + 3.8 * cm)} ${f(nx - hw * 0.2)},${f(far + 2.6 * cm)} ${f(nx - hx * 1.4)},${f(far + 3.4 * cm)} M${f(nx + hx * 1.4)},${f(far + 3 * cm)} C${f(nx + hw * 0.3)},${f(far + 2.4 * cm)} ${f(nx + hw * 0.6)},${f(far + 3.6 * cm)} ${f(nx + hw * 0.88)},${f(far + 3 * cm)} M${f(nx - hw * 0.8)},${f(near - 6 * cm)} C${f(nx - hw * 0.3)},${f(near - 5 * cm)} ${f(nx + hw * 0.3)},${f(near - 6.6 * cm)} ${f(nx + hw * 0.85)},${f(near - 5.4 * cm)}" fill="none" stroke="${C.woodS}" stroke-width="${f(lw * 0.8)}" opacity="0.7"/>`;
+    board += `<path d="M${f(nx)},${f(ny + hy)} L${f(nx)},${f(near + 2 * cm)} M${f(nx)},${f(ny - hy)} L${f(nx)},${f(far - 1 * cm)}" stroke="${C.woodE}" stroke-width="${f(lw)}"/>`;
+    // iron plates across both ends, iron leaves on the side edges
+    board += `<path d="M${f(nx - hw * 0.995)},${f(far + 0.4 * cm)} C${f(nx - hw * 0.5)},${f(far - 0.8 * cm)} ${f(nx + hw * 0.5)},${f(far - 0.8 * cm)} ${f(nx + hw * 0.995)},${f(far + 0.4 * cm)} L${f(nx + hw * 1.0)},${f(far + 2.4 * cm)} C${f(nx + hw * 0.5)},${f(far + 1.2 * cm)} ${f(nx - hw * 0.5)},${f(far + 1.2 * cm)} ${f(nx - hw * 1.0)},${f(far + 2.4 * cm)}Z" fill="${C.iron}" ${L(0.8)}/>`;
+    // near-end iron plate: a narrow band along the rounded near edge, then down over the end face
+    board += `<path d="M${f(nx - hw * 1.07)},${f(near - 4 * cm)} C${f(nx - hw * 1.06)},${f(near - 0.6 * cm)} ${f(nx - hw * 0.5)},${f(near + 0.3 * cm)} ${f(nx)},${f(near + 0.3 * cm)} C${f(nx + hw * 0.5)},${f(near + 0.3 * cm)} ${f(nx + hw * 1.06)},${f(near - 0.6 * cm)} ${f(nx + hw * 1.07)},${f(near - 4 * cm)} C${f(nx + hw * 1.05)},${f(near + 1 * cm)} ${f(nx + hw * 0.5)},${f(near + 2 * cm)} ${f(nx)},${f(near + 2 * cm)} C${f(nx - hw * 0.5)},${f(near + 2 * cm)} ${f(nx - hw * 1.05)},${f(near + 1 * cm)} ${f(nx - hw * 1.07)},${f(near - 4 * cm)}Z" fill="${C.iron}" ${L(0.7)}/>`;
+    for (const sg of [-1, 1]) for (const t of [0.25, 0.55]) board += `<circle cx="${f(nx + sg * hw * (1.0 + 0.06 * t) - sg * 1.2 * cm)}" cy="${f(far + (near - far) * t)}" r="${f(0.55 * cm)}" fill="${C.ironS}"/>`;
+    board += `<path d="M${f(nx - hw * 0.4)},${f(near + 2 * cm)} L${f(nx - hw * 0.4)},${f(near + 2 * cm + th)} M${f(nx + hw * 0.4)},${f(near + 2 * cm)} L${f(nx + hw * 0.4)},${f(near + 2 * cm + th)}" stroke="${C.ironS}" stroke-width="${f(1.6 * cm)}"/>`;
+    // 封皮: paper seal across the join on the near half
+    const sy = ny + 2.6 * cm;
+    board += `<path d="M${f(nx - 16 * cm)},${f(sy)} L${f(nx + 16 * cm)},${f(sy - 0.4 * cm)} L${f(nx + 16.3 * cm)},${f(sy + 2.6 * cm)} L${f(nx - 15.7 * cm)},${f(sy + 3 * cm)}Z" fill="${C.paper}" ${L(0.7)}/>`;
+    board += `<rect x="${f(nx + 6 * cm)}" y="${f(sy + 0.5 * cm)}" width="${f(2.4 * cm)}" height="${f(1.8 * cm)}" fill="none" stroke="${C.red}" stroke-width="${f(lw * 0.9)}"/><path d="M${f(nx - 12 * cm)},${f(sy + 1.1 * cm)} h${f(9 * cm)} M${f(nx - 12 * cm)},${f(sy + 2 * cm)} h${f(6 * cm)}" stroke="#3a3530" stroke-width="${f(lw * 0.6)}" opacity="0.5"/>`;
+    // the neck rising through the hole: dark gap around it, skin column up to the chin
+    board += `<path d="${hole}" fill="${C.dark}"/>`;
+    neck += `<clipPath id="${id}n"><path d="M${f(nx - hw)},${f(F.chin[1] - 0.3 * Href)} L${f(nx + hw)},${f(F.chin[1] - 0.3 * Href)} L${f(nx + hw)},${f(ny)} L${f(nx - hw)},${f(ny)}Z ${hole}"/></clipPath>`;
+    const nt = F.chin[1] - 0.05 * Href, nb = ny + hy;
+    neck += `<g clip-path="url(#${id}n)"><path d="M${f(nx - nw * 0.82)},${f(nt)} C${f(nx - nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx - nw * 0.95)},${f(nb - 2 * cm)} ${f(nx - nw)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}Z" fill="${skin}"/>` +
+      `<path d="M${f(nx + nw * 0.25)},${f(nt)} C${f(nx + nw * 0.35)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.5)},${f(nb - 2 * cm)} ${f(nx + nw * 0.55)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}Z" fill="#000" opacity="0.12"/>` +
+      `<path d="M${f(nx - nw * 0.82)},${f(nt)} C${f(nx - nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx - nw * 0.95)},${f(nb - 2 * cm)} ${f(nx - nw)},${f(nb)} M${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>`;
+  } else {
+    // profile (data faces left): 90 cm board, long end forward and 30° down, top face seen from a bit above
+    const a = (30 * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a);
+    const nx = F.ear[0] - 8 * u, ny = F.chin[1] + 0.29 * Href;          // neck centre at the collar
+    const Q = (d, o) => [nx - d * cm * ca + o * cm * sa, ny + d * cm * sa + o * cm * ca]; // d forward, o down (cm)
+    const W = 10, T = 3.2;                                               // projected top-face width, thickness
+    const pth = (pts) => 'M' + pts.map(P).join(' L') + 'Z';
+    const topF = `M${P(Q(-27, -W))} L${P(Q(60, -W))} C${P(Q(63, -W))} ${P(Q(63.5, 0))} ${P(Q(61, 0))} L${P(Q(-26, 0))} C${P(Q(-29, 0))} ${P(Q(-29.5, -W))} ${P(Q(-27, -W))}Z`;
+    const hole = (() => { const c = Q(0, -W / 2); return `M${f(c[0] - 6.4 * cm)},${f(c[1])} A${f(6.4 * cm)},${f(3.4 * cm)} 0 1 0 ${f(c[0] + 6.4 * cm)},${f(c[1])} A${f(6.4 * cm)},${f(3.4 * cm)} 0 1 0 ${f(c[0] - 6.4 * cm)},${f(c[1])}Z`; })();
+    board += `<path d="M${P(Q(-26, 0))} L${P(Q(61, 0))} C${P(Q(63.5, 0))} ${P(Q(63.5, T))} ${P(Q(61, T))} L${P(Q(-26, T))} C${P(Q(-29, T))} ${P(Q(-29, 0))} ${P(Q(-26, 0))}Z" fill="${C.woodE}" ${L()}/>`;
+    board += `<g transform="rotate(${f(-30)} ${f(Q(0, -W / 2)[0])} ${f(Q(0, -W / 2)[1])})"></g>`;
+    board += `<path fill-rule="evenodd" d="${topF} ${hole}" fill="${C.wood}" ${L(1.1)}/>`;
+    board += `<path d="${pth([Q(-24, -W * 0.7), Q(-8, -W * 0.72)])} M${P(Q(8, -W * 0.3))} L${P(Q(52, -W * 0.28))}" fill="none" stroke="${C.woodS}" stroke-width="${f(lw * 0.8)}" opacity="0.7"/>`;
+    for (const [d0, d1] of [[-26.5, -21.5], [55, 60.5]]) board += `<path d="${pth([Q(d0, -W), Q(d1, -W), Q(d1, T), Q(d0, T)])}" fill="${C.iron}" ${L(0.8)}/>` + `<circle cx="${f(Q((d0 + d1) / 2, -W / 2)[0])}" cy="${f(Q((d0 + d1) / 2, -W / 2)[1])}" r="${f(0.6 * cm)}" fill="${C.ironS}"/>`;
+    board += `<path d="${pth([Q(14, -W * 0.85), Q(30, -W * 0.85), Q(30, -W * 0.2), Q(14, -W * 0.2)])}" fill="${C.paper}" ${L(0.6)}/><path d="${pth([Q(24, -W * 0.7), Q(27, -W * 0.7), Q(27, -W * 0.38), Q(24, -W * 0.38)])}" fill="none" stroke="${C.red}" stroke-width="${f(lw * 0.8)}"/>`;
+    board += `<path d="${hole}" fill="${C.dark}"/>`;
+    const hc = Q(0, -W / 2), nw = 6 * cm;
+    neck += `<clipPath id="${id}n"><path d="M${f(hc[0] - 12 * cm)},${f(F.chin[1] - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(F.chin[1] - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(hc[1])} L${f(hc[0] - 12 * cm)},${f(hc[1])}Z ${hole}"/></clipPath>`;
+    const nt = F.chin[1] + 0.02 * Href, nb = hc[1] + 3.4 * cm;
+    neck += `<g clip-path="url(#${id}n)"><path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)} L${f(hc[0] + nw)},${f(nb)} C${f(hc[0] + nw)},${f(nb - 2 * cm)} ${f(hc[0] + nw * 0.9)},${f((nt + nb) / 2)} ${f(hc[0] + nw * 0.8)},${f(nt)}Z" fill="${skin}"/>` +
+      `<path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>`;
+  }
+  return { board, neck };
 }
 
 // ------------------------------------------------------------------ wide sleeve (costume A) on a raised forearm
@@ -710,7 +746,13 @@ export function lin(opt = {}) {
     if (/^hand/.test(n)) handItems[n] = [z, g];
     else items.push([z, g]);
   }
-  if (O.cangue) items.push([25, `<g data-part="cangue" transform="${mstr(wm(D.parts.torso ? 'torso' : 'neck'))}">${cangueSVG(D, view, Href, u)}</g>`]);
+  if (O.cangue) {
+    // board (hole cut out) over the shoulders and arms, then the neck rising through the hole,
+    // then the head and beard (raised to z 26 above both)
+    const cg = cangueSVG(D, view, Href, u), mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
+    items.push([25, `<g data-part="cangue" transform="${mt}">${cg.board}</g>`]);
+    items.push([25.5, `<g data-part="cangueNeck" transform="${mt}">${cg.neck}</g>`]);
+  }
   for (const [hn, it] of Object.entries(handItems)) items.push(draped[hn] ? [D.parts['arm' + hn.slice(-1) + '_lo'].z + 0.5, it[1]] : it);
   if (M.arm_clip) defs += `<clipPath id="${id}ac"><path clip-rule="evenodd" d="M-2000,-2000H3000V4000H-2000Z ${M.arm_clip.join(' ')}"/></clipPath>`;
   // far arm in the side view: the near arm's drawing hung from the far shoulder, darker
