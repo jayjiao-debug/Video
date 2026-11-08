@@ -9,6 +9,8 @@
 //                    eyes widen 86.912, brows flatten 88.573, eyes narrow 91.070, dead still from 92.05; hard cut.
 import { L, E, ramp, zexp, bake, lg, rg, f2, clamp, rng, noise1, lerp, toScreen, shake, flames, embers, blurId, camAt, kf } from '../lib.mjs';
 import { lin, EX } from '../../chars/rig/linchong.mjs';
+import { pushFigure } from '../../chars/rig/push.mjs';
+import fs from 'fs';
 
 const revealX = (t) => lerp(-150, 2000, ramp(t, 77.38, 77.748, E.inOut));
 const T0 = 77.748, CONTACT = 78.588, FLARE = 79.83, S24 = 86.912, STILL = 92.05;
@@ -74,15 +76,18 @@ function door(sk) {
   return s;
 }
 function stone(x, sk = [0, 0]) {
-  const y = FL, w = STONE_W, h = STONE_H;
-  const X = x + sk[0], Y = y + sk[1];
-  const outline = `M${X + 20},${Y} Q${X - 10},${Y - h * 0.5} ${X + 30},${Y - h * 0.86} Q${X + w * 0.3},${Y - h - 14} ${X + w * 0.62},${Y - h + 4} Q${X + w + 6},${Y - h * 0.8} ${X + w},${Y - h * 0.3} L${X + w},${Y}Z`;
-  let s = `<path d="${outline}" fill="#4E4943" opacity="1"/>`;
+  // back face at x, top at STONE_TOP with a rounded top-back corner (radius STONE_R) where his palms sit
+  const y = FL, w = STONE_W, h = FL - STONE_TOP, r = STONE_R;
+  const X = x + sk[0], Y = y + sk[1], tp = Y - h;
+  const outline = `M${f2(X + 6)},${f2(Y)} C${f2(X - 8)},${f2(Y - h * 0.4)} ${f2(X - 3)},${f2(tp + r * 1.7)} ${f2(X)},${f2(tp + r)} A${f2(r)},${f2(r)} 0 0 1 ${f2(X + r)},${f2(tp)} Q${f2(X + w * 0.62)},${f2(tp - 12)} ${f2(X + w * 0.86)},${f2(tp + h * 0.12)} Q${f2(X + w + 6)},${f2(tp + h * 0.3)} ${f2(X + w)},${f2(Y - h * 0.3)} L${f2(X + w)},${f2(Y)}Z`;
+  let s = `<path d="${outline}" fill="#4E4943" opacity="1"/><clipPath id="t10stc"><path d="${outline}"/></clipPath><g clip-path="url(#t10stc)">`;
   // lit top cap and a darker base, both following the contour (top-lit, no vertical split)
-  s += `<path d="M${X + 4},${Y - h * 0.62} Q${X + 6},${Y - h * 0.86} ${X + 30},${Y - h * 0.9} Q${X + w * 0.3},${Y - h - 12} ${X + w * 0.62},${Y - h + 6} Q${X + w * 0.95},${Y - h * 0.82} ${X + w - 2},${Y - h * 0.55} Q${X + w * 0.6},${Y - h * 0.66} ${X + w * 0.3},${Y - h * 0.6} Q${X + w * 0.12},${Y - h * 0.58} ${X + 4},${Y - h * 0.62}Z" fill="#6A645C"/>`;
-  s += `<path d="M${X + 14},${Y} Q${X + 2},${Y - h * 0.22} ${X + 8},${Y - h * 0.3} Q${X + w * 0.5},${Y - h * 0.2} ${X + w},${Y - h * 0.26} L${X + w},${Y}Z" fill="#38332E"/>`;
-  s += `<path d="M${X + 60},${Y - h * 0.86} Q${X + w * 0.3},${Y - h - 2} ${X + w * 0.56},${Y - h + 12}" stroke="#8A837A" stroke-width="5" fill="none" opacity="0.6"/>`;
-  s += `<path d="M${X + 70},${Y - h * 0.46} l50,14 l36,-10 M${X + 200},${Y - h * 0.38} l60,8 M${X + 150},${Y - h * 0.7} l40,10" stroke="#2E2A26" stroke-width="3" fill="none" opacity="0.6"/>`;
+  s += `<path d="M${f2(X - 10)},${f2(tp + h * 0.34)} Q${f2(X + w * 0.3)},${f2(tp + h * 0.26)} ${f2(X + w * 0.62)},${f2(tp + h * 0.3)} Q${f2(X + w * 0.9)},${f2(tp + h * 0.36)} ${f2(X + w + 10)},${f2(tp + h * 0.5)} L${f2(X + w + 10)},${f2(tp - 30)} L${f2(X - 10)},${f2(tp - 30)}Z" fill="#6A645C"/>`;
+  s += `<path d="M${f2(X - 10)},${f2(Y - h * 0.3)} Q${f2(X + w * 0.5)},${f2(Y - h * 0.2)} ${f2(X + w + 10)},${f2(Y - h * 0.26)} L${f2(X + w + 10)},${f2(Y + 10)} L${f2(X - 10)},${f2(Y + 10)}Z" fill="#38332E"/>`;
+  s += `<path d="M${f2(X + r * 0.5)},${f2(tp + r * 0.4)} Q${f2(X + w * 0.35)},${f2(tp + 4)} ${f2(X + w * 0.6)},${f2(tp + 10)}" stroke="#8A837A" stroke-width="5" fill="none" opacity="0.6"/>`;
+  s += `<path d="M${X + 70},${f2(Y - h * 0.46)} l50,14 l36,-10 M${X + 200},${f2(Y - h * 0.38)} l60,8 M${X + 150},${f2(Y - h * 0.7)} l40,10" stroke="#2E2A26" stroke-width="3" fill="none" opacity="0.6"/>`;
+  // where the palms rub: a slightly polished patch on the corner
+  s += `<ellipse cx="${f2(X + r * 0.45)}" cy="${f2(tp + r * 0.45)}" rx="${f2(r * 0.9)}" ry="${f2(r * 0.5)}" transform="rotate(-45 ${f2(X + r * 0.45)} ${f2(tp + r * 0.45)})" fill="#7A746B" opacity="0.35"/></g>`;
   s += `<path d="${outline}" fill="none" stroke="#2A1C17" stroke-width="3"/>`;
   return s;
 }
@@ -105,34 +110,63 @@ const SPEAR_LEAN = (() => {
 })();
 // 林冲's straw hat would go here if he took it off; he keeps it on (iconic look).
 
+// ------------------------------------------------------------------ the push, from real motion capture
+// Owner: the push looked too still — one foot forward, back bent, from real human movement. Legs, hips and spine follow
+// CMU mocap 82_06 (pushing a heavy object, film/mocap/clips/push_heavy.json), frames 428 -> 508: the front foot stays
+// planted while the body drives and the back leg starts its next step. Its real pelvis speed (≈ 16 cm per 0.66 s at our
+// scale ≈ 160 px) is the stone's speed here. The capture is mirrored so the front leg is the far one (it shows in the
+// cloak's opening); the arms reach the stone (IK) and the 2D hands sit on its rounded top edge.
+const PUSH = JSON.parse(fs.readFileSync(new URL('../mocap/clips/push_heavy.json', import.meta.url), 'utf8'));
+const PF0 = 428, PF1 = 508, PUSH_A = T0 + 0.18;
+const PUSH_EXPR = { ...EX.隐忍, jaw: 1, eye: 0.6, brow: -0.9, mouth: -0.5 };
+function pushPoseAt(fr) {
+  const F = PUSH.frames, i = Math.max(0, Math.min(F.length - 2, F.findIndex((r) => r.frame > fr) - 1));
+  const a = F[i], b = F[i + 1], u = Math.max(0, Math.min(1, (fr - a.frame) / (b.frame - a.frame)));
+  const m = (k) => a[k] + (b[k] - a[k]) * u;
+  // mirrored: the capture's right (front, planted) leg is the rig's far leg L when he faces right
+  return { torso: m('torso'), spine: 0.4, legL: m('thighR'), kneeL: Math.max(0, m('kneeR')), legR: m('thighL'), kneeR: Math.max(0, m('kneeL')), headWorld: 40, cloakFront: 0.1 };
+}
+const pushRun = (pose, target) => pushFigure({ costume: 'C', HF, height: HF, x: 0, y: 0, flip: true, expr: PUSH_EXPR, pose, tattoo: 1, hat: true, target });
+// placement solved once from the last frame: the stone's right side meets the door (x CRACK) at contact
+const PUSH_END = (() => {
+  const r = pushRun(pushPoseAt(PF1));
+  const toe = r.info.legFar.toe[0];
+  const plant = CRACK - STONE_W - (r.stone.x - toe);   // world x of the planted front toe
+  return { plant, top: FL + r.stone.top, r: r.stone.r, hip: plant - toe + r.info.hip[0], pose: r.pose };
+})();
+const STONE_TOP = PUSH_END.top, STONE_R = PUSH_END.r;
+function pushAt(t) {
+  const fr = lerp(PF0, PF1, ramp(t, PUSH_A, CONTACT, E.lin));
+  const pose = pushPoseAt(fr);
+  const nat = pushRun(pose);                               // natural reach: where the hands go this frame
+  const tx = PUSH_END.plant - nat.info.legFar.toe[0];       // planted foot stays put
+  const target = [nat.contact[0], nat.contact[1] + (STONE_TOP - FL) - nat.stone.top];
+  const r = pushRun(pose, target);                          // arms onto the (fixed-height) stone
+  return { svg: r.svg, tx, stoneX: tx + nat.stone.x, pose: r.pose };
+}
+
 // ------------------------------------------------------------------ 林冲 blocking, S22–S23 (side view, facing right)
 // Timeline after the stone meets the door (第十回): he straightens, turns to the 供桌, takes the 毡笠 off and sets it on
 // the altar (it stays there), sits down under the quilt facing the altar; the fire flares behind him, he turns to the
 // crack, throws the quilt off and scrambles to the door. Bare-headed from 79.25 to the end of T10.
-const STAND_X = CRACK - STONE_W - 520 - 30;          // where he ends the push (feet)
+const STAND_X = Math.round(PUSH_END.hip);             // he stands up over his hips where the push ended
 const HAT_ON_ALTAR = [300, 570];                      // brim centre resting on the altar top (world)
 const HAT_OFF = 79.25, HAT_DOWN = 79.48;
 function blocking(t) {
-  const pushA = T0 + 0.18;
-  const stoneX = lerp(900, CRACK - STONE_W, ramp(t, pushA, CONTACT, (u) => u * u * (3 - 2 * u)));
   let x, dy = 0, lean = 0, sh = 0, el = 0, tilt = 0, expr = { ...EX.隐忍 }, quilt = 0, b_fallen = null;
-  let right = true, sx = 1, hat = true, legR = 0, legL = 0;
-  const HANDX = 520; // hands reach ≈ 520 px ahead of the feet at lean 38
+  let right = true, sx = 1, hat = true, legR = 0, legL = 0, push = null, bodyPose = null;
+  let stoneX = CRACK - STONE_W;
   const turnSq = (t0) => { const k = (t - t0) / 0.13; return k > 0 && k < 1 ? Math.max(0.78, Math.abs(Math.cos(k * Math.PI))) : 1; };
-  if (t < CONTACT + 0.06) {
-    lean = lerp(18, 38, ramp(t, T0 - 0.2, pushA, E.out));
-    sh = lerp(60, 84, ramp(t, T0 - 0.2, pushA, E.out)); el = 6;
-    x = stoneX - HANDX;
-    // short driving steps while the stone slides
-    const ph = (x - (900 - HANDX)) / 70;
-    legR = 14 + 10 * Math.sin(ph * Math.PI); legL = -18 - 8 * Math.sin(ph * Math.PI);
-    expr = { ...EX.隐忍, jaw: 1, eye: 0.6, brow: -0.9, mouth: -0.5 };
-    tilt = -4;
+  if (t < CONTACT) {
+    push = pushAt(t);
+    stoneX = push.stoneX; x = push.tx;
   } else if (t < 78.95) {
-    const k = ramp(t, CONTACT + 0.06, 78.95, E.inOut);
-    lean = lerp(38, 0, k); sh = lerp(78, 0, k); el = lerp(10, 0, k);
-    legR = lerp(14, 0, k); legL = lerp(-18, 0, k);
-    x = STAND_X + 30 - 30 * k;
+    // he lets go and stands up out of the lunge, over his hips; the pose eases back to standing
+    const k = ramp(t, CONTACT + 0.04, 78.95, E.inOut);
+    const P = PUSH_END.pose, z = (v) => (v === undefined ? 0 : v * (1 - k));
+    bodyPose = { torso: z(P.torso), spine: 0.4, legL: z(P.legL), kneeL: z(P.kneeL), legR: z(P.legR), kneeR: z(P.kneeR), cloakFront: 0.1,
+      armsWorld: true, shoulderR: z(P.shoulderR), elbowR: z(P.elbowR), shoulderL: z(P.shoulderL), elbowL: z(P.elbowL), headWorld: lerp(40, 0, k) };
+    x = lerp(PUSH_END.plant - pushRun(pushPoseAt(PF1)).info.legFar.toe[0], STAND_X, k);
     expr = { ...EX.隐忍, eye: 0.75, brow: -0.6 };
   } else if (t < HAT_DOWN + 0.02) {
     // turn to the altar, lift the hat off, set it down
@@ -172,7 +206,7 @@ function blocking(t) {
     sh = 18 * Math.sin(ph * Math.PI + Math.PI) * Math.sin(k * Math.PI); el = 30 * Math.sin(k * Math.PI);
     expr = { ...EX.隐忍, eye: 1.1, brow: 0.05, jaw: 0.5, mouth: -0.3, look: [0.4, 0] };
   }
-  return { x, dy, lean, sh, el, tilt, expr, quilt, stoneX, fallen: b_fallen, right, sx, hat, legR, legL };
+  return { x, dy, lean, sh, el, tilt, expr, quilt, stoneX, fallen: b_fallen, right, sx, hat, legR, legL, push, bodyPose };
 }
 /** The 毡笠 as a loose prop, side view: brim centre at (x, y). */
 function hatProp(x, y, rot = 0) {
@@ -194,6 +228,8 @@ function hatLoose(t, b) {
   return hatProp(p[0], p[1], lerp(-8, 0, k));
 }
 function lcSide(t, b) {
+  if (b.push) return `<g transform="translate(${f2(b.x)} ${f2(FL)})">${b.push.svg}</g>`;
+  if (b.bodyPose) return `<g transform="translate(${f2(b.x)} ${f2(FL)})">${lin({ view: 'side', costume: 'C', expr: b.expr, pose: b.bodyPose, flip: true, height: HF, x: 0, y: 0, tattoo: 1, hat: b.hat })}</g>`;
   const pose = { headTilt: b.tilt, shoulderR: b.sh, elbowR: b.el, shoulderL: b.sh * 0.92, elbowL: b.el, legR: b.legR, legL: b.legL };
   const fig = lin({ view: 'side', costume: 'C', expr: b.expr, pose, flip: b.right, height: HF, x: 0, y: 0, tattoo: 1, hat: b.hat });
   return `<g transform="translate(${f2(b.x)} ${f2(FL + b.dy)}) scale(${f2(b.sx)} 1) rotate(${f2(b.lean)} -40 0)">${fig}</g>`;
@@ -362,7 +398,9 @@ function s24(t) {
 // ------------------------------------------------------------------ camera for S22–S23 (world)
 function cam(t) {
   const eye = [1352 + 0.053 * HF, FL + 180 - 0.935 * HF];
-  if (t < 80.26) return { x: lerp(40, -20, ramp(t, T0 - 0.4, 80.26, E.inOut)), y: -40, zoom: lerp(1.1, 1.13, ramp(t, T0 - 0.4, 80.26, E.inOut)) };
+  // during the push the frame sits lower so both feet and the floor are in (owner: one foot forward must read), then
+  // eases up to the standing framing as he straightens
+  if (t < 80.26) return { x: lerp(40, -20, ramp(t, T0 - 0.4, 80.26, E.inOut)), y: lerp(36, -40, ramp(t, CONTACT + 0.15, 79.7, E.inOut)), zoom: lerp(1.1, 1.13, ramp(t, T0 - 0.4, 80.26, E.inOut)) };
   const c0 = { x: -20, y: -40, zoom: 1.13 };
   const cr = [CRACK, eye[1] + 10];
   if (t < 81.5) {

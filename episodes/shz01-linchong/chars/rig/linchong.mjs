@@ -579,7 +579,7 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 5) {
   let neckCol = '';
   if (view === 'front') {
     // seen from slightly above; the long end (62 cm) comes toward us and down; far edge under the jaw
-    const far = F.chin[1] + drop + 0.02 * Href, ny = far + 2.0 * cm, nx = F.chin[0];  // far edge just under the chin; neck enters ~0.15 H under it
+    const far = F.chin[1] + drop - 0.08 * Href, ny = far + 2.0 * cm, nx = F.chin[0];  // far edge up at the jaw (owner: higher on the neck); the chin and beard lie over it
     const hw = 21 * cm, near = ny + 10 * cm, th = 3 * cm;
     const nw = 5.6 * cm, hy = 1.1 * cm;                                 // neck half width, entry-ellipse half height
     below = [[-1e4, far + 0.3 * cm], [1e4, far + 0.3 * cm], [1e4, 1e5], [-1e4, 1e5]];
@@ -642,7 +642,7 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 5) {
     // 62 cm forward in front of the chest, 28 cm behind the nape; seen a little from above
     const a = (tilt * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a);
     const W = 4, T = 3;
-    const nx = F.ear[0] - 6 * u, ny = F.chin[1] + drop + 0.1 * Href + (W / 2) * cm * ca;  // neck enters ~0.15 H below the chin
+    const nx = F.ear[0] - 6 * u, ny = F.chin[1] + drop + 0.0 * Href + (W / 2) * cm * ca;  // board right under the jaw (owner: higher on the neck)
     const Q = (d, o) => [nx - d * cm * ca + o * cm * sa, ny + d * cm * sa + o * cm * ca]; // d forward, o down (cm)
     const pth = (pts) => 'M' + pts.map(P).join(' L') + 'Z';
     below = [Q(-400, -W + 0.3), Q(400, -W + 0.3), [Q(400, 0)[0], 1e5], [Q(-400, 0)[0], 1e5]];
@@ -765,6 +765,187 @@ function sleeveUpper(S, E, H, u, RC) {
   return s;
 }
 
+// ------------------------------------------------------------------ side-view body pose: spine bend, knees, ankles
+// Angles come from real motion capture (film/mocap/bvh2d.py, CMU mocap projected onto the side plane), so the rig takes
+// the same quantities: torso = lean of hips->neck from vertical (+ forward), knee = flexion (0 straight), foot = heel lift
+// (world, + heel up, 0 flat). The upper body bends smoothly (linear blend skinning of the traced garment paths over a
+// wide zone, so the cloth never folds through itself); the legs are cut at knee and ankle and turned like a puppet's,
+// with a cap under the joint filling the outer wedge; the cloak / robe below the waist is pushed by the thighs.
+const _parsed = new Map();
+function parsePath(d) {
+  const out = [];
+  d.replace(/([MCLZ])([^MCLZ]*)/g, (m, c, body) => {
+    const nums = c === 'Z' ? [] : (body.match(/-?\d*\.?\d+(?:e[-+]?\d+)?/g) || []).map(Number);
+    out.push([c, nums]);
+    return m;
+  });
+  return out;
+}
+function mapPath(d, fn) {
+  let segs = _parsed.get(d);
+  if (!segs) { segs = parsePath(d); _parsed.set(d, segs); }
+  let s = '';
+  for (const [c, n] of segs) {
+    s += c;
+    for (let i = 0; i + 1 < n.length; i += 2) { const q = fn(n[i], n[i + 1]); s += (i ? ' ' : '') + f(q[0]) + ' ' + f(q[1]); }
+  }
+  return s;
+}
+// all points of a part (control polygon), cached
+function partPoints(D, n) {
+  D._pts = D._pts || {};
+  if (!D._pts[n]) {
+    const subs = [];
+    for (const [c, d] of D.parts[n].fills) {
+      let cur = null;
+      for (const [cmd, nums] of parsePath(d)) {
+        if (cmd === 'M') { cur = { c, pts: [] }; subs.push(cur); }
+        if (cur) for (let i = 0; i + 1 < nums.length; i += 2) cur.pts.push([nums[i], nums[i + 1]]);
+      }
+    }
+    D._pts[n] = subs;
+  }
+  return D._pts[n];
+}
+function inPoly(p, pts) {
+  let c = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const a = pts[i], b = pts[j];
+    if ((a[1] > p[1]) !== (b[1] > p[1]) && p[0] < ((b[0] - a[0]) * (p[1] - a[1])) / (b[1] - a[1] || 1e-9) + a[0]) c = !c;
+  }
+  return c;
+}
+// knee / ankle / sole points of a traced leg, in rest coordinates (legs hang straight down in the drawing)
+function legGeo(D, n, Href) {
+  D._leg = D._leg || {};
+  if (D._leg[n]) return D._leg[n];
+  // joints at anatomical heights (fractions of stature, 7.5 H): hip joint 0.515, knee 0.285, ankle 0.06 (in the boot
+  // shaft, above the foot). The drawing's own leg pivot sits lower, at the crotch.
+  const M = D.meta, st = 7.5 * Href, sole = M.sole;
+  const hip = [D.parts[n].pivot[0], sole - 0.515 * st], Lg = sole - hip[1];
+  const subs = partPoints(D, n), all = subs.flatMap((s) => s.pts);
+  const band = (y) => {
+    // scanline through the control polygons
+    const xs = [];
+    for (const sp of subs) for (let i = 0, j = sp.pts.length - 1; i < sp.pts.length; j = i++) {
+      const a = sp.pts[i], b = sp.pts[j];
+      if ((a[1] > y) !== (b[1] > y)) xs.push(a[0] + ((y - a[1]) * (b[0] - a[0])) / (b[1] - a[1]));
+    }
+    return xs.length ? [Math.min(...xs), Math.max(...xs)] : [hip[0] - 0.2 * Href, hip[0] + 0.2 * Href];
+  };
+  const visible = (p) => { let col = null; for (const s of subs) if (s.pts.length > 2 && inPoly(p, s.pts)) col = s.c; return col; };
+  const yK = sole - 0.285 * st, yA = sole - 0.06 * st;
+  const [k0, k1] = band(yK), [a0, a1] = band(yA);
+  const K = [(k0 + k1) / 2, yK], A = [(a0 + a1) / 2, yA];
+  const low = all.filter((p) => p[1] > sole - 0.03 * Lg);
+  const toe = low.reduce((a, b) => (b[0] < a[0] ? b : a)), heel = low.reduce((a, b) => (b[0] > a[0] ? b : a));
+  const g = { hip, K, A, rK: (k1 - k0) / 2, rA: (a1 - a0) / 2, toe: [toe[0], sole], heel: [heel[0], sole], ball: [toe[0] + 0.28 * (heel[0] - toe[0]), sole],
+    kneeCol: visible(K) ?? subs[0].c, ankleCol: visible(A) ?? subs[0].c, Lg };
+  D._leg[n] = g;
+  return g;
+}
+const sstep = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const lerpM = (A, B, t) => A.map((v, i) => v + (B[i] - v) * t);
+function bodyPose(D, view, pose, Href, flip) {
+  const keys = ['torso', 'kneeR', 'kneeL', 'footR', 'footL'];
+  if (view !== 'side' || !keys.some((k) => pose[k] !== undefined)) return null;
+  const M = D.meta, ns = flip ? 'R' : 'L', fs = flip ? 'L' : 'R';
+  const legs = {};
+  for (const [n, s] of [['legNear', ns], ['legFar', fs]]) {
+    const g = legGeo(D, n, Href), th = pose[`leg${s}`] || 0, kn = pose[`knee${s}`] || 0, ft = pose[`foot${s}`] ?? 0;
+    const Mt = rot(th, g.hip[0], g.hip[1]);
+    const Ms = mul(Mt, rot(-kn, g.K[0], g.K[1]));
+    const footM = (h) => mul(Ms, rot(-(th - kn) - h, g.A[0], g.A[1])); // h = heel lift in the world, 0 = flat
+    legs[n] = { g, th, kn, Mt, Ms, Mf: footM(ft), footM, ft, side: s };
+  }
+  // both feet on the floor: the lower foot sets the ground; a foot left in the air raises its heel until the toes
+  // touch (up to 70°), as a real back foot does in a push or a lunge
+  const lowest = (l) => Math.max(...[l.g.toe, l.g.ball, l.g.heel].map((p) => ap(l.Mf, p)[1]));
+  if (pose.ground !== false && pose.footAuto !== false) {
+    const [la, lb] = Object.values(legs);
+    const gY = Math.max(lowest(la), lowest(lb));
+    for (const l of [la, lb]) {
+      if (gY - lowest(l) < 1 || pose[`foot${l.side}`] !== undefined && pose.footAuto !== true) continue;
+      let lo = l.ft, hi = l.ft + 70;
+      const toeY = (h) => ap(l.footM(h), l.g.toe)[1];
+      if (toeY(hi) < gY) { l.ft = hi; l.Mf = l.footM(hi); continue; }
+      for (let i = 0; i < 18; i++) { const m = (lo + hi) / 2; if (toeY(m) < gY) lo = m; else hi = m; }
+      l.ft = (lo + hi) / 2; l.Mf = l.footM(l.ft);
+    }
+  }
+  // spine: the bend shared between the lumbar (about the hips) and the upper back
+  const hipC = [(legs.legNear.g.hip[0] + legs.legFar.g.hip[0]) / 2, legs.legNear.g.hip[1]];
+  const up = pose.spine ?? 0.4;
+  const P1 = [hipC[0] + 0.1 * Href, hipC[1] - 0.15 * Href], P2 = [hipC[0] + 0.15 * Href, hipC[1] - 1.45 * Href];
+  const chain = (l) => { const lo = rot(-l * (1 - up), P1[0], P1[1]); return [lo, mul(lo, rot(-l * up, P2[0], P2[1]))]; };
+  // `torso` is measured like the capture: the line hips -> base of the neck, from vertical. The curved back makes
+  // that line turn less than the chest, so solve for the bend that gives the asked angle (secant, 4 steps).
+  const neckB = D.parts.neck ? D.parts.neck.pivot : [hipC[0], hipC[1] - 2.9 * Href];
+  const angFor = (l) => { const q = ap(chain(l)[1], neckB); return (Math.atan2(hipC[0] - q[0], hipC[1] - q[1]) * 180) / Math.PI; };
+  const target = (pose.torso || 0) + angFor(0);
+  let l0 = 0, l1 = pose.torso || 0, a0 = angFor(l0) - target, a1 = angFor(l1) - target;
+  for (let i = 0; i < 4 && Math.abs(a1) > 0.05 && a1 !== a0; i++) { const l2 = l1 - (a1 * (l1 - l0)) / (a1 - a0); l0 = l1; a0 = a1; l1 = l2; a1 = angFor(l1) - target; }
+  const lean = l1;
+  const [Lo, CH] = chain(lean);
+  const y1a = hipC[1] + 0.25 * Href, y1b = hipC[1] - 0.8 * Href, y2a = hipC[1] - 1.0 * Href, y2b = hipC[1] - 1.9 * Href;
+  // garment pushed by the thighs: front panel follows the forward knee (partly: the cloak opens), back panel the back knee
+  const K0 = [(legs.legNear.g.K[0] + legs.legFar.g.K[0]) / 2, legs.legNear.g.K[1]];
+  const kp = Object.values(legs).map((l) => ap(l.Mt, l.g.K));
+  const kf = kp.reduce((a, b) => (b[0] < a[0] ? b : a)), kb = kp.reduce((a, b) => (b[0] > a[0] ? b : a));
+  const dxF = Math.min(0, kf[0] - K0[0]) * (pose.cloakFront ?? 0.45), dxB = Math.max(0, kb[0] - K0[0]) * (pose.cloakBack ?? 0.8);
+  const liftF = Math.max(0, K0[1] - kf[1]) * 0.45, liftB = Math.max(0, K0[1] - kb[1]) * 0.3;
+  const gTop = hipC[1] - 0.35 * Href;
+  const garment = (x, y) => {
+    let X = x, Y = y;
+    if (y > gTop) {
+      const pr = sstep(gTop, K0[1], y), s = sstep(hipC[0] + 0.7 * Href, hipC[0] - 0.7 * Href, x);
+      X += pr * (s * dxF + (1 - s) * dxB);
+      Y -= pr * pr * (s * liftF + (1 - s) * liftB);
+    }
+    const t1 = sstep(y1a, y1b, y), t2 = sstep(y2a, y2b, y);
+    if (t1 <= 0) return [X, Y];
+    const m = lerpM(I, t2 > 0 ? lerpM(Lo, CH, t2) : Lo, t1);
+    return ap(m, [X, Y]);
+  };
+  // ground: lowest point of either sole on the floor; anchor keeps the hips (default) or one foot's toe in place
+  const soleY = [], toes = {};
+  for (const l of Object.values(legs)) {
+    for (const p of [l.g.toe, l.g.ball, l.g.heel]) soleY.push(ap(l.Mf, p)[1]);
+    toes[l.side] = ap(l.Mf, l.g.toe)[0] - l.g.toe[0];
+  }
+  const dy = pose.ground === false ? 0 : M.sole - Math.max(...soleY);
+  const dx = pose.anchor === 'R' || pose.anchor === 'L' ? -toes[pose.anchor] : 0;
+  return { legs, CH, garment, G: tr(dx, dy), hipC, rot: lean };
+}
+// a leg cut at knee and ankle: thigh, shin, foot each turned by its own matrix; caps fill the outer wedges
+function legPieces(D, n, L, PAL, u) {
+  const g = L.g, id = uid('lg'), inner = partSVG(D, n, '', PAL), BIG = 4000;
+  const clip = (y0, y1) => `<rect x="${-BIG}" y="${f(y0)}" width="${2 * BIG}" height="${f(y1 - y0)}"/>`;
+  const cap = (c, r, col, m) => `<circle transform="${mstr(m)}" cx="${f(c[0])}" cy="${f(c[1])}" r="${f(r * 0.97)}" fill="${PAL[col]}" stroke="${COL.line}" stroke-width="${f(1.1 * u)}"/>`;
+  let s = `<clipPath id="${id}t">${clip(-BIG, g.K[1] + 1.5)}</clipPath><clipPath id="${id}s">${clip(g.K[1] - 1.5, g.A[1] + 1.5)}</clipPath><clipPath id="${id}f">${clip(g.A[1] - 1.5, BIG)}</clipPath>`;
+  if (Math.abs(L.kn) > 0.5) s += cap(g.K, g.rK, g.kneeCol, L.Ms);
+  s += `<g transform="${mstr(L.Mt)}"><g clip-path="url(#${id}t)">${inner}</g></g>`;
+  if (L.Mf !== L.Ms) s += cap(g.A, g.rA, g.ankleCol, L.Mf);
+  s += `<g transform="${mstr(L.Ms)}"><g clip-path="url(#${id}s)">${inner}</g></g>`;
+  s += `<g transform="${mstr(L.Mf)}"><g clip-path="url(#${id}f)">${inner}</g></g>`;
+  return s;
+}
+function skinPart(D, n, PAL, fn) {
+  const p = D.parts[n];
+  let s = '';
+  for (const [c, d] of p.fills) s += `<path d="${mapPath(d, fn)}" fill="${PAL[c]}"/>`;
+  if (p.inks.length) {
+    s += '<g fill="none" stroke-linecap="round" stroke-linejoin="round">';
+    for (const [c, w, d] of p.inks) s += `<path d="${mapPath(d, fn)}" stroke="${PAL[c]}" stroke-width="${w}"/>`;
+    s += '</g>';
+  }
+  if (p.holes && p.holes.length) {
+    const hid = uid('h');
+    s = `<clipPath id="${hid}"><path clip-rule="evenodd" d="M-3000,-3000H4000V5000H-3000Z ${p.holes.map((h) => mapPath(h, fn)).join(' ')}"/></clipPath><g clip-path="url(#${hid})">${s}</g>`;
+  }
+  return s;
+}
+
 // ------------------------------------------------------------------ assembly
 export function lin(opt = {}) {
   const view = opt.view === 'side' ? 'side' : 'front', costume = opt.costume === 'C' ? 'C' : 'A';
@@ -790,6 +971,15 @@ export function lin(opt = {}) {
   }
   const O = { hat: opt.hat !== false, tattoo: opt.tattoo ?? (costume === 'C' ? 1 : 0), rings: opt.headCloth !== 'plain', cangue: !!opt.cangue };
   const ang = jointAngles(D, view, pose, flip);
+  const BP = bodyPose(D, view, pose, Href, flip);
+  const rootM = BP ? mul(root, BP.G) : root;
+  if (BP && pose.armsWorld) {
+    // shoulder angles given in the world (as captured): add back the chest's turn
+    ang.armL_up = (ang.armL_up || 0) + BP.rot;
+    const fs_ = flip ? 'L' : 'R';
+    pose[`shoulder${fs_}`] = (pose[`shoulder${fs_}`] ?? M.far.rest.shoulder) + BP.rot;
+  }
+  if (BP && pose.headWorld !== undefined) ang.head = BP.rot - pose.headWorld; // head pitch from upright (+ = face down)
   let SF = null;
   if (view === 'side') {
     const jp = D.parts.jaw, theta = jp ? -14 * Math.max(0, E.open) : 0;
@@ -802,7 +992,9 @@ export function lin(opt = {}) {
   const wm = (n) => {
     if (W[n]) return W[n];
     const p = D.parts[n];
-    const par = p.parent && D.parts[p.parent] ? wm(p.parent) : I;
+    let par = p.parent && D.parts[p.parent] ? wm(p.parent) : I;
+    // bent spine: the neck and everything jointed to the torso ride on the chest
+    if (BP && (n === 'neck' || (p.parent === 'torso' && p.pivot))) par = mul(par, BP.CH);
     const a = ang[n] || 0;
     const own = a && p.pivot ? rot(a, p.pivot[0], p.pivot[1]) : I;
     W[n] = n === 'head' ? mul(par, mul(tr(0, drop), own)) : a && p.pivot ? mul(par, own) : par;
@@ -820,7 +1012,9 @@ export function lin(opt = {}) {
   const partOrder = Object.keys(D.parts).sort((a, b) => (/^hand/.test(a) ? 1 : 0) - (/^hand/.test(b) ? 1 : 0));
   for (const n of partOrder) {
     const p = D.parts[n];
-    let inner = partSVG(D, n, '', PAL);
+    const skinned = BP && (n === 'torso' || (p.parent === 'torso' && !p.pivot));
+    if (BP && BP.legs[n]) { items.push([zc(p.z), `<g data-part="${n}">${legPieces(D, n, BP.legs[n], PAL, u)}</g>`]); continue; }
+    let inner = skinned ? skinPart(D, n, PAL, BP.garment) : partSVG(D, n, '', PAL);
     const side = /^(arm|hand)/.test(n) ? (view === 'side' ? nearSide : n.slice(-1)) : null;
     if (n === 'head') inner = headBack(D, view, costume, E, pose, O) + inner + headExtras(D, view, costume, E, pose, O);
     if (n === 'jaw' && SF) {
@@ -833,12 +1027,14 @@ export function lin(opt = {}) {
     if (pclip) {
       // the part's true silhouette where a higher part (scarf tails, hair) covered it in the painting
       const cid = uid('tc');
-      inner = `<clipPath id="${cid}"><path d="M${pclip.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
+      const pc = skinned ? pclip.map((q) => BP.garment(q[0], q[1])) : pclip;
+      inner = `<clipPath id="${cid}"><path d="M${pc.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
     }
     if (CG && CG.below && (n === 'torso' || (n === 'neck' && view === 'side') || n === 'capelet' || n === 'cloak')) {
       // the board rests on the collarbones: no collar or robe shows above its far edge
       const cid = uid('cb');
-      inner = `<clipPath id="${cid}"><path d="M${CG.below.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
+      const bl = skinned ? CG.below.map((q) => ap(BP.CH, q)) : CG.below;
+      inner = `<clipPath id="${cid}"><path d="M${bl.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
     }
     let g = `<g data-part="${n}" transform="${mstr(wm(n))}">${inner}</g>`;
     let z = zc(p.z);
@@ -855,13 +1051,14 @@ export function lin(opt = {}) {
       if (down > 55) { g = `<g data-part="${n}" data-sleeve="draped">${wideSleeve(Sw, Ew, Ww, Href, u, robeColours(D, PAL))}</g>`; draped[hn] = true; }
     }
     if (M.arm_clip && /^(arm|hand)/.test(n)) g = `<g clip-path="url(#${id}ac)">${g}</g>`;
+    if (/^hand/.test(n) && opt.hands === false) continue; // the take draws its own 2D hands (film/hand2d) at info.wrist*
     if (/^hand/.test(n)) handItems[n] = [z, g];
     else items.push([z, g]);
   }
   if (O.cangue) {
     // board (hole cut out) over the shoulders and arms, then the neck rising through the hole,
     // then the head and beard (raised to z 26 above both)
-    const cg = CG, mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
+    const cg = CG, mt = mstr(BP ? BP.CH : wm(D.parts.torso ? 'torso' : 'neck'));
     items.push([25, `<g data-part="cangue" transform="${mt}">${cg.board}</g>`]);
     items.push([25.5, `<g data-part="cangueNeck" transform="${mt}">${cg.under}</g>`]);
   }
@@ -872,13 +1069,14 @@ export function lin(opt = {}) {
     const fs_ = flip ? 'L' : 'R';
     const sh = pose[`shoulder${fs_}`] ?? M.far.rest.shoulder, el = pose[`elbow${fs_}`] ?? M.far.rest.elbow;
     const up = D.parts.armL_up, lo = D.parts.armL_lo;
-    const base = tr(M.far.shoulder[0] - up.pivot[0], M.far.shoulder[1] - up.pivot[1]);
+    const base = mul(BP ? BP.CH : I, tr(M.far.shoulder[0] - up.pivot[0], M.far.shoulder[1] - up.pivot[1]));
     const mUp = mul(base, rot(sh, up.pivot[0], up.pivot[1]));
     const mLo = mul(mUp, rot(el, lo.pivot[0], lo.pivot[1]));
     const handInner = pose[`fist${fs_}`] ? fistFor(D, 'handL', view, Href) : partSVG(D, 'handL', '', PAL);
     const mHand = mul(mLo, rot(pose[`wrist${fs_}`] || 0, D.parts.handL.pivot[0], D.parts.handL.pivot[1]));
     defs += `<filter id="${id}dk" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="0.8"/><feFuncG type="linear" slope="0.8"/><feFuncB type="linear" slope="0.84"/></feComponentTransfer></filter>`;
-    items.push([0.5, `<g data-part="farArm" filter="url(#${id}dk)"><g transform="${mstr(mUp)}">${partSVG(D, 'armL_up', '', PAL)}</g><g transform="${mstr(mLo)}">${partSVG(D, 'armL_lo', '', PAL)}</g><g transform="${mstr(mHand)}">${handInner}</g></g>`]);
+    items.push([0.5, `<g data-part="farArm" filter="url(#${id}dk)"><g transform="${mstr(mUp)}">${partSVG(D, 'armL_up', '', PAL)}</g><g transform="${mstr(mLo)}">${partSVG(D, 'armL_lo', '', PAL)}</g>${opt.hands === false ? '' : `<g transform="${mstr(mHand)}">${handInner}</g>`}</g>`]);
+    W.__farLo = mLo; W.__farUp = mUp;
     W.__farHand = mHand;
   }
   // props: spear (+ gourd) in a hand
@@ -887,7 +1085,24 @@ export function lin(opt = {}) {
     items.push(...spearItems(D, view, pose, W, wm, Href, u, flip, nearSide, hm.replace(/fill="[^"]*"/g, 'fill="#000"').replace(/stroke="[^"]*"/g, 'stroke="#000"')));
   }
   items.sort((a, b) => a[0] - b[0]);
-  return `<g data-rig="linchong" data-view="${view}" data-costume="${costume}" transform="${mstr(root)}"><defs>${defs}</defs>${items.map((x) => x[1]).join('')}</g>`;
+  if (opt.info) {
+    // world positions for placing props and checking contacts (after the root transform)
+    const Wp = (m, p) => ap(rootM, ap(m, p));
+    const nh = D.parts.handL || D.parts.handR, nhn = D.parts.handL ? 'handL' : 'handR';
+    Object.assign(opt.info, { root: rootM, head: Wp(wm('head'), D.parts.head.pivot) });
+    if (view === 'side') {
+      const ax = handAxis(D, nhn), tip = [ax.p[0] + ax.dir[0] * 0.55 * Href, ax.p[1] + ax.dir[1] * 0.55 * Href];
+      opt.info.wristNear = Wp(wm(nhn), nh.pivot); opt.info.handNear = Wp(wm(nhn), tip);
+      opt.info.elbowNear = Wp(wm('armL_lo'), D.parts.armL_lo.pivot); opt.info.shoulderNear = Wp(wm('armL_up'), D.parts.armL_up.pivot);
+      if (W.__farHand) { opt.info.wristFar = Wp(W.__farHand, nh.pivot); opt.info.handFar = Wp(W.__farHand, tip); opt.info.elbowFar = Wp(W.__farLo, D.parts.armL_lo.pivot); opt.info.shoulderFar = Wp(W.__farUp, D.parts.armL_up.pivot); }
+      opt.info.handAngNear = angOf(mul(rootM, wm(nhn)));
+      if (BP) {
+        for (const [n, Lg] of Object.entries(BP.legs)) opt.info[n] = { hip: Wp(I, Lg.g.hip), knee: Wp(Lg.Mt, Lg.g.K), ankle: Wp(Lg.Ms, Lg.g.A), toe: Wp(Lg.Mf, Lg.g.toe), heel: Wp(Lg.Mf, Lg.g.heel), side: Lg.side };
+        opt.info.hip = Wp(I, BP.hipC);
+      }
+    }
+  }
+  return `<g data-rig="linchong" data-view="${view}" data-costume="${costume}" transform="${mstr(rootM)}"><defs>${defs}</defs>${items.map((x) => x[1]).join('')}</g>`;
 }
 
 function jointAngles(D, view, pose, flip) {
