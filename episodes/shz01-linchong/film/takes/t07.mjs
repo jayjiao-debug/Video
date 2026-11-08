@@ -83,7 +83,7 @@ function dais() {
 function gaoqiu(t) {
   // 高俅 silhouette standing on the dais (upper right), 展脚幞头 wings; the arm sweeps down 59.50–59.87
   const k = ramp(t, 59.5, 59.87, E.in);
-  const x = 1480, y = 452, h = 330, S = h / 100;
+  const x = 1480, y = 452, h = 255, S = h / 100;
   const sil = '#0E1116';
   let s = `<g transform="translate(${x} ${y}) scale(${f2(S)})">`;
   s += `<path d="M-16,0 C-18,-30 -16,-60 -12,-74 C-6,-80 6,-80 12,-74 C16,-60 18,-30 16,0Z" fill="${sil}"/>`;
