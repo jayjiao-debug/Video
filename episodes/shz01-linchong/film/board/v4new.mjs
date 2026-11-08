@@ -241,40 +241,37 @@ function K29() {
 function K26() {
   const id = 'k26';
   let s = `<defs>${lg(id + 'wall', [[0, '#2E2622'], [1, '#1C1714']], 0, 0, 1, 0)}${fireSkyDefs(id + 'sky')}${lg(id + 'gnd', [[0, '#C8693A'], [1, '#3A1A10']])}` +
-    `${lg(id + 'spill', [[0, '#FFB15E', 0.5], [1, '#FFB15E', 0]], 1, 0, 0, 0.5)}${silFilters(id + 'a', '#FFB15E', 4, 0)}${silFilters(id + 'm', '#FF8A3D', 2, -1)}</defs>`;
+    `${lg(id + 'spill', [[0, '#FFB15E', 0.55], [1, '#FFB15E', 0]], 0.5, 0, 0.5, 1)}${silFilters(id + 'a', '#FFB15E', 0, -3)}${silFilters(id + 'm', '#FF8A3D', 2, -1)}</defs>`;
   s += `<rect width="1920" height="1080" fill="url(#${id}wall)"/>`;
-  s += `<rect x="0" y="0" width="1920" height="40" fill="#140F0C"/>`;
-  // altar at the left with the 毡笠 resting on it
-  s += `<rect x="40" y="640" width="440" height="440" fill="#241C18"/><rect x="20" y="620" width="480" height="28" fill="#33281F"/>`;
-  s += `<ellipse cx="260" cy="616" rx="112" ry="15" fill="#B3A998"/><path d="M196,616 Q260,572 324,616Z" fill="#D9D1C3"/><path d="M148,616 Q260,632 372,616" stroke="#857A69" stroke-width="4" fill="none"/>`;
-  s += `<path d="M260,592 C290,630 300,670 280,720" stroke="#B8322A" stroke-width="4" fill="none"/>`;
-  // 林冲 first (to know where his left hand is), bare-headed, facing right toward the door
-  const hgt = 940, fx = 760, fy = 1130;
-  const lc = lin({ view: 'side', costume: 'C', hat: false, flip: true, height: hgt, x: fx, y: fy, expr: EX.怒,
-    pose: { shoulderL: 62, elbowL: 8, fistL: true, shoulderR: 52, elbowR: 28, legL: 16, legR: -14 }, props: { spear: { hand: 'R', angle: 90, grip: 0.3, gourd: false } } });
-  const hand = rigPt(lc, 'handL', FIST);
-  // the doorway: left jamb at dx0; the near leaf hinged on the right jamb swings in toward camera, its free edge in his fist
-  const dx0 = 1040, dx1 = 1800, dy0 = 70, dy1 = 1000, ex = hand[0] + 18;
+  // altar at the left with the 毡笠 left on it (第十回 「和毡笠放在供桌上」)
+  s += `<rect x="60" y="660" width="360" height="420" fill="#241C18"/><rect x="40" y="640" width="400" height="26" fill="#33281F"/>`;
+  s += `<ellipse cx="240" cy="636" rx="104" ry="14" fill="#B3A998"/><path d="M182,636 Q240,596 298,636Z" fill="#D9D1C3"/><path d="M136,636 Q240,650 344,636" stroke="#857A69" stroke-width="4" fill="none"/>`;
+  s += `<path d="M240,612 C268,650 276,690 258,736" stroke="#B8322A" stroke-width="4" fill="none"/>`;
+  // the doorway, both leaves flung open (swung in against the jambs), fire and blizzard beyond
+  const dx0 = 640, dx1 = 1500, dy0 = 90, dy1 = 980;
   s += `<rect x="${dx0}" y="${dy0}" width="${dx1 - dx0}" height="${dy1 - dy0}" fill="url(#${id}sky)"/>`;
-  s += `<defs><clipPath id="${id}open"><rect x="${dx0}" y="${dy0}" width="${f2(Math.max(60, ex - dx0))}" height="${dy1 - dy0}"/></clipPath></defs><g clip-path="url(#${id}open)">`;
-  s += burningDepot(id, dx0 - 40, ex + 40, 760, 330, 3.1);
-  s += `<rect x="${dx0}" y="760" width="${f2(ex - dx0)}" height="240" fill="url(#${id}gnd)"/>`;
-  const mx = dx0 + (ex - dx0) * 0.5;
-  s += silhouette(id + 'm', figure({ x: mx - 110, y: 805, h: 200, torso: -10, head: 'cap', robe: 1, armN: [-40, -70], armF: [20, 10], legN: [8, 0], legF: [-8, 0] }) +
-    figure({ x: mx, y: 800, h: 215, torso: -16, head: 'futou', robe: 1, armN: [-80, -130], armF: [40, 20], legN: [10, 0], legF: [-10, 0] }) +
-    figure({ x: mx + 110, y: 806, h: 200, torso: 12, head: 'cloth', robe: 1, armN: [40, 10], armF: [-20, -40], legN: [14, 0], legF: [-6, 0] }));
-  s += snowStreaks(23, 110, [dx0 - 200, dy0, ex + 60, dy1], '#FFE3C2', 0.9, [40, 120], 0.75);
+  s += `<defs><clipPath id="${id}open"><rect x="${dx0}" y="${dy0}" width="${dx1 - dx0}" height="${dy1 - dy0}"/></clipPath></defs><g clip-path="url(#${id}open)">`;
+  s += burningDepot(id, dx0 + 60, dx1 - 40, 760, 330, 3.1);
+  s += `<rect x="${dx0}" y="760" width="${dx1 - dx0}" height="240" fill="url(#${id}gnd)"/>`;
+  s += silhouette(id + 'm', figure({ x: 820, y: 808, h: 190, torso: -12, head: 'cap', robe: 1, armN: [-40, -80], armF: [20, 10], legN: [8, 0], legF: [-8, 0] }) +
+    figure({ x: 1290, y: 802, h: 205, torso: -18, head: 'futou', robe: 1, armN: [-90, -140], armF: [40, 20], legN: [10, 0], legF: [-10, 0] }) +
+    figure({ x: 1400, y: 808, h: 190, torso: 14, head: 'cloth', robe: 1, armN: [40, 10], armF: [-20, -40], legN: [14, 0], legF: [-6, 0] }));
+  s += snowStreaks(23, 130, [dx0 - 200, dy0, dx1 + 100, dy1], '#FFE3C2', 0.9, [40, 120], 0.75);
   s += `</g>`;
-  // the leaf: from its hinge on the right jamb, swung in, free edge at ex (taller toward camera)
-  s += `<path d="M${dx1},${dy0} L${f2(ex)},${dy0 - 70} L${f2(ex)},${dy1 + 70} L${dx1},${dy1}Z" fill="#3A2E26" stroke="#211913" stroke-width="4"/>`;
-  for (let i = 1; i < 4; i++) { const x = lerp(dx1, ex, i / 4); s += `<path d="M${f2(x)},${f2(dy0 - 70 * i / 4)} L${f2(x)},${f2(dy1 + 70 * i / 4)}" stroke="#211913" stroke-width="4"/>`; }
-  s += `<path d="M${dx1},${dy0 + 170} L${f2(ex)},${dy0 + 130} M${dx1},${dy1 - 170} L${f2(ex)},${dy1 - 140}" stroke="#4A3B31" stroke-width="18"/>`;
-  s += `<path d="M${f2(ex)},${dy0 - 70} L${f2(ex)},${dy1 + 70}" stroke="#FFB15E" stroke-width="5" opacity="0.6"/>`;
-  s += `<rect x="${dx0 - 26}" y="${dy0 - 40}" width="26" height="${dy1 - dy0 + 60}" fill="#2A221D"/>`;
-  // fire light spilling in across the floor
-  s += `<path d="M${dx0},${dy1} L${f2(ex)},${dy1} L${f2(ex - 160)},1090 L${dx0 - 620},1090Z" fill="url(#${id}spill)"/>`;
-  // the stone, shoved aside, by the jamb
-  s += `<path d="M560,1010 Q540,910 600,872 Q680,840 780,862 Q850,892 850,1010Z" fill="#4E4943" stroke="${LINE}" stroke-width="3"/><path d="M580,912 Q620,872 700,862 Q780,862 820,890" stroke="#8A837A" stroke-width="5" fill="none" opacity="0.5"/>`;
+  // the two leaves, swung back into the room (foreshortened panels at the jambs, taller toward camera)
+  s += `<path d="M${dx0},${dy0} L${dx0 - 230},${dy0 - 80} L${dx0 - 230},${dy1 + 80} L${dx0},${dy1}Z" fill="#3A2E26" stroke="#211913" stroke-width="4"/>`;
+  s += `<path d="M${dx1},${dy0} L${dx1 + 230},${dy0 - 80} L${dx1 + 230},${dy1 + 80} L${dx1},${dy1}Z" fill="#3A2E26" stroke="#211913" stroke-width="4"/>`;
+  for (let i = 1; i < 3; i++) { s += `<path d="M${dx0 - i * 77},${f2(dy0 - i * 27)} L${dx0 - i * 77},${f2(dy1 + i * 27)} M${dx1 + i * 77},${f2(dy0 - i * 27)} L${dx1 + i * 77},${f2(dy1 + i * 27)}" stroke="#211913" stroke-width="4"/>`; }
+  s += `<path d="M${dx0},${dy0 + 170} L${dx0 - 230},${dy0 + 130} M${dx1},${dy0 + 170} L${dx1 + 230},${dy0 + 130} M${dx0},${dy1 - 170} L${dx0 - 230},${dy1 - 150} M${dx1},${dy1 - 170} L${dx1 + 230},${dy1 - 150}" stroke="#4A3B31" stroke-width="16"/>`;
+  s += `<path d="M${dx0 - 230},${dy0 - 80} L${dx0 - 230},${dy1 + 80} M${dx1 + 230},${dy0 - 80} L${dx1 + 230},${dy1 + 80}" stroke="#FFB15E" stroke-width="5" opacity="0.5"/>`;
+  // fire light flooding in across the floor
+  s += `<path d="M${dx0},${dy1} L${dx1},${dy1} L${dx1 + 260},1090 L${dx0 - 260},1090Z" fill="url(#${id}spill)"/>`;
+  // the stone, shoved aside by the left jamb
+  s += `<path d="M300,1040 Q280,940 340,900 Q420,866 520,890 Q590,920 590,1040Z" fill="#4E4943" stroke="${LINE}" stroke-width="3"/><path d="M320,942 Q360,902 440,892 Q520,892 560,920" stroke="#8A837A" stroke-width="5" fill="none" opacity="0.5"/>`;
+  // 林冲 in the doorway, from behind-side, striding out, spear level: the largest figure, rim-lit by the fire
+  const hgt = 900, fx = 1010, fy = 1060;
+  const lc = lin({ view: 'side', costume: 'C', hat: false, flip: true, height: hgt, x: fx, y: fy, expr: EX.怒,
+    pose: { shoulderL: 58, elbowL: 26, shoulderR: 40, elbowR: 30, legL: 24, legR: -20 }, props: { spear: { hand: 'L', angle: 92, grip: 0.3, gourd: false } } });
   s += silhouette(id + 'a', lc);
   return s;
 }
@@ -292,26 +289,30 @@ function K16() {
   for (let j = 1; j < 5; j++) s += `<rect x="${wx}" y="${wy + (j * wh) / 5 - 4}" width="${ww}" height="8" fill="#5A3E2B"/>`;
   s += `<rect x="${wx - 14}" y="${wy - 14}" width="${ww + 28}" height="${wh + 28}" fill="none" stroke="#3A281C" stroke-width="16"/>`;
   // 张教头 at the left, soft, watching 林冲
-  s += `<g filter="url(#${blurId(3)})">${zhang({ x: 430, y: 560, H: 220, e: { brow: 0.8, eye: 0.6, smile: 0, look: [0.8, 0.1] } }).replace('data-face', 'data-x')}</g>`;
+  s += `<g filter="url(#${blurId(3.5)})">${zhang({ x: 330, y: 580, H: 210, e: { brow: 0.8, eye: 0.6, smile: 0, look: [0.8, 0.1] } }).replace('data-face', 'data-x')}</g>`.replace('<g filter=', '<g opacity="0.78" filter=');
   // 林冲 across the table, convict robe, cangue, tattoo: dictating, eyes down on the letter
   const lc = lin({ view: 'front', costume: 'A', col: { robe: '#3B4356', sash: '#2A2E3A' }, headCloth: 'plain', cangue: true, tattoo: 1,
     expr: { ...EX.隐忍, open: 0.16, look: [0.1, 0.85], eye: 0.62 }, height: 1500, x: 1000, y: 120 + 1500 });
-  s += `<path d="M${wx},${wy + wh} L${wx + ww},${wy + wh} L1500,760 L640,760Z" fill="url(#${id}shaft)"/>`;
+  s += `<path d="M${wx + ww * 0.35},${wy + wh} L${wx + ww},${wy + wh} L1500,760 L820,760Z" fill="url(#${id}shaft)"/>`;
   s += lc;
+  // hide the 东京 sleeve roundels on the convict robe (robe-coloured patches)
+  s += [[818, 478], [1190, 478]].map(([rx, ry]) => `<ellipse cx="${rx}" cy="${ry}" rx="22" ry="40" fill="#4A5269"/>`).join('');
   // table, the letter in the light pool, the inkstone
   s += `<path d="M-40,690 L1960,668 L1960,1100 L-40,1100Z" fill="url(#${id}table)"/><path d="M-40,690 L1960,668" stroke="#2A1C17" stroke-width="5"/>`;
   s += `<ellipse cx="900" cy="830" rx="440" ry="140" fill="url(#${id}pool)"/>`;
   const px = 690, py = 740;
   s += `<g transform="translate(${px} ${py}) rotate(-4) scale(1 0.5)">${xiushu({ w: 440, h: 460, id: id + 'xs', ink: 1, sign: 0, print: 0 })}</g>`;
-  s += `<rect x="${px + 8}" y="${py + 6}" width="150" height="214" fill="#EADBB9" opacity="0.94" transform="rotate(-4 ${px} ${py}) scale(1 0.5) translate(0 ${py})"/>`;
   s += `<rect x="1180" y="770" width="150" height="74" rx="14" fill="#2E2C2A" stroke="${LINE}" stroke-width="3"/><rect x="1198" y="782" width="114" height="40" rx="10" fill="#141210"/>`;
   // the hired scribe in the right foreground, over his shoulder: head cloth, grey-blue robe, his writing arm across the table
   let fg = `<path d="M1460,1100 C1440,900 1500,780 1640,740 C1760,710 1900,720 1990,760 L1990,1100Z" fill="#5C6670"/>`;
-  fg += `<path d="M1620,740 C1600,640 1640,560 1720,544 C1800,534 1850,600 1846,690 C1842,740 1800,770 1740,772Z" fill="#E2AC85"/>`;
-  fg += `<path d="M1606,676 C1590,560 1650,492 1730,488 C1820,486 1872,560 1862,664 C1830,600 1780,566 1720,568 C1670,570 1630,610 1606,676Z" fill="#1E1A18"/>`;
+  // seen from behind: the back of the head is hair under a dark head cloth, only the ear and nape show skin
+  fg += `<path d="M1620,740 C1600,640 1640,560 1720,544 C1800,534 1850,600 1846,690 C1842,740 1800,770 1740,772Z" fill="#1E1A18"/>`;
+  fg += `<path d="M1612,690 C1596,580 1650,508 1730,500 C1812,496 1866,566 1856,668 L1846,700 C1800,660 1690,650 1612,690Z" fill="#2E2B33"/>`;
+  fg += `<path d="M1700,760 C1700,740 1760,736 1790,752 L1800,790 L1700,790Z" fill="#C99872"/><path d="M1612,660 q-18,8 -10,30 q12,8 20,-6Z" fill="#D29A76"/>`;
   s += `<g filter="url(#${blurId(6)})">${fg}</g>`;
   // his arm and sleeve reaching to the letter, brush pinched at the end of a column
-  s += `<path d="M1520,830 C1380,840 1200,860 1040,880 L1030,930 C1200,914 1390,900 1540,900Z" fill="#5C6670" stroke="${LINE}" stroke-width="3"/>`;
+  s += `<path d="M1560,816 C1420,818 1240,846 1080,872 C1060,876 1046,890 1046,906 C1048,922 1064,930 1084,928 C1250,914 1420,906 1580,906Z" fill="#5C6670" stroke="${LINE}" stroke-width="3"/>`;
+  s += `<path d="M1300,846 C1360,852 1420,850 1480,840 M1200,880 C1260,884 1320,882 1380,874" stroke="#48515A" stroke-width="4" fill="none"/>`;
   s += `<path d="M1046,876 C1020,872 1000,884 1000,902 C1000,918 1018,930 1040,928Z" fill="#E2AC85" stroke="${LINE}" stroke-width="2.6"/>`;
   s += `<path d="M1010,892 L972,840" stroke="#6B4A2E" stroke-width="7" stroke-linecap="round"/><path d="M1006,887 l-8,22 l10,-6Z" fill="${INK}"/>`;
   return s;
@@ -333,7 +334,7 @@ function K36() {
   s += `<path d="M1600,110 L1600,150" stroke="#2A1C17" stroke-width="4"/><ellipse cx="1600" cy="230" rx="62" ry="80" fill="#D8432F"/><ellipse cx="1600" cy="230" rx="40" ry="66" fill="#F2A65A" opacity="0.7"/><rect x="1572" y="146" width="56" height="10" fill="#2A1C17"/><rect x="1572" y="306" width="56" height="10" fill="#2A1C17"/>`;
   // 林冲 (梁山 indigo), head bowed, soft behind the paper
   const face = lin({ view: 'front', costume: 'A', col: { robe: '#2E3446', sash: '#5A4A3A' }, headCloth: 'plain', tattoo: 1, expr: { ...EX.悲, tear: 0, look: [0, 0.9], eye: 0.55 }, height: 2300, x: 1000, y: 160 + 2300 * 0.97, pose: { headTilt: 6 } });
-  s += `<g filter="url(#${blurId(4)})">${face}</g>`;
+  s += `<g filter="url(#${blurId(2)})">${face}</g>`;
   s += `<rect width="1920" height="1080" fill="url(#${id}warm)" style="mix-blend-mode:screen"/>`;
   // the old letter held up in both hands, creased from folding, lantern-lit
   const px = 640, py = 470, pw = 620, ph = 560;
