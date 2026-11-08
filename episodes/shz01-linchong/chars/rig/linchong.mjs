@@ -566,7 +566,8 @@ function robeColours(D, PAL) {
     const byL = mem.slice().sort((a, b) => lum(D.palette[a]) - lum(D.palette[b]));
     const lb = lum(D.palette[base]);
     const shade = byL.filter((i) => lum(D.palette[i]) < lb * 0.93 && lum(D.palette[i]) > lb * 0.7).reduce((a, b) => (freq[b] > freq[a] ? b : a), byL[0]);
-    D._robe = { base, shade, line: byL[0] };
+    const line = byL.find((i) => { const h = hsl(D.palette[i]); return h[1] > 0.15 && h[0] > 115 && h[0] < 175; }) ?? byL[0];
+    D._robe = { base, shade, line };
   }
   const r = D._robe;
   return { base: PAL[r.base], shade: PAL[r.shade], line: PAL[r.line] };
@@ -592,7 +593,7 @@ function wideSleeve(S, E, W, H, u, RC) {
   const lean = (Mc[0] - E[0]) * 0.25;
   const bot = [(xl + xr) / 2 + lean, ymax + 0.82 * H];
   const wdt = xr - xl;
-  const drape = `M${P(left)} C${f(left[0] - 0.06 * H)},${f(left[1] + 0.35 * H)} ${f(bot[0] - wdt * 0.55)},${f(bot[1] - 0.08 * H)} ${P(bot)} C${f(bot[0] + wdt * 0.45)},${f(bot[1] - 0.18 * H)} ${f(right[0] + 0.04 * H)},${f(right[1] + 0.3 * H)} ${P(right)} L${P(Mc)}Z`;
+  const drape = `M${P(left)} C${f(left[0] - 0.06 * H)},${f(left[1] + 0.35 * H)} ${f(bot[0] - wdt * 0.55)},${f(bot[1] - 0.08 * H)} ${P(bot)} C${f(bot[0] + wdt * 0.45)},${f(bot[1] - 0.18 * H)} ${f(right[0] + 0.04 * H)},${f(right[1] + 0.3 * H)} ${P(right)} L${P(rimA)} L${P(rimB)} L${P(eA)} L${P(eB)} L${P(bA)} L${P(bB)}Z`;
   s += `<path d="${drape}" fill="${RC.base}" ${L}/>`;
   // inner side of the drape (shade) and the darker hem band
   s += `<path d="M${f(left[0] + wdt * 0.18)},${f(left[1] + 0.1 * H)} C${f(left[0] + wdt * 0.12)},${f(left[1] + 0.4 * H)} ${f(bot[0] - wdt * 0.3)},${f(bot[1] - 0.12 * H)} ${f(bot[0] - wdt * 0.05)},${f(bot[1] - 0.02 * H)} C${f(bot[0] - wdt * 0.15)},${f(bot[1] - 0.2 * H)} ${f(left[0] + wdt * 0.32)},${f(left[1] + 0.35 * H)} ${f(left[0] + wdt * 0.36)},${f(left[1] + 0.12 * H)}Z" fill="${RC.shade}" opacity="0.9"/>`;
