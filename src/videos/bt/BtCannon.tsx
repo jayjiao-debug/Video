@@ -9,7 +9,7 @@ import * as THREE from "three";
 import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame, getInputProps } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
-import { EffectComposer } from "@react-three/postprocessing";
+import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import { BlendFunction, BloomEffect, ToneMappingEffect, ToneMappingMode } from "postprocessing";
 import { InkPass, NOINK, noInkFallback } from "../vasa/ink";
 import { Kick } from "../vasa/Kick";
@@ -20,6 +20,9 @@ import { LIGHTS } from "../vasa/lights";
 import { Pool, Actor, Fx, SU } from "../vasa/cast";
 import { bodyFront, frontHand, Pen, Outfit, Expr, INK, fxContact } from "../vasa/toon";
 import * as P from "./props";
+import { makeEnv, ENV_FILL, mats, makeSun, LIGHTS as PBR, ALBEDO } from "./pbr";
+import * as W from "./woodtex";
+import * as S from "./scenery";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
 
 export const BT_FRAMES = 66;
@@ -37,44 +40,11 @@ const OFF_AT: [number, number] = [0.9, 0.8], GUN_AT: [number, number] = [-0.45, 
 const VENT = V(-0.716, 0.885, 0);
 
 // ---------------- assets ----------------
-type Tex = { deck: THREE.Texture; enemy: THREE.Texture; isl: THREE.Texture; clouds: THREE.Texture[] };
-// one flat-bottomed cartoon cumulus: white top, thin pink-lavender underside, soft 2px edge
-const cloudTex = (seed: number) => {
-  const W = 512, H = 256, sh = document.createElement("canvas"); sh.width = W; sh.height = H;
-  const g = sh.getContext("2d")!, rnd = (k: number) => { const h = Math.sin(seed * 91.7 + k * 12.9898) * 43758.5453; return h - Math.floor(h); };
-  const base = 214, x0 = 92 + 26 * rnd(1), x1 = 420 - 26 * rnd(2);
-  g.beginPath(); g.rect(0, 0, W, base); g.clip(); g.fillStyle = "#fff";
-  g.beginPath(); g.moveTo(x0, base); g.lineTo(x1, base); g.arc(x1, base - 24, 24, Math.PI / 2, -Math.PI / 2, true); g.lineTo(x0, base - 48); g.arc(x0, base - 24, 24, -Math.PI / 2, Math.PI / 2, true); g.fill();
-  const n = 4 + Math.floor(rnd(3) * 3);
-  for (let i = 0; i < n; i++) {
-    const u = i / (n - 1), cx = x0 + 6 + (x1 - x0 - 12) * u + (i > 0 && i < n - 1 ? (rnd(10 + i) - 0.5) * 24 : 0);
-    const mid = 1 - Math.abs(u - 0.42) * 1.6, r = 30 + 64 * Math.max(0.12, mid) * (0.8 + 0.3 * rnd(20 + i));
-    g.beginPath(); g.arc(cx, base - 26 - r * 0.6, r, 0, Math.PI * 2); g.fill();
-  }
-  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
-  const c = cv.getContext("2d")!; c.filter = "blur(1.4px)"; c.drawImage(sh, 0, 0); c.filter = "none"; c.globalCompositeOperation = "source-atop";
-  const gr = c.createLinearGradient(0, 20, 0, base);
-  gr.addColorStop(0, "#fffdf8"); gr.addColorStop(0.62, "#fbf8f2"); gr.addColorStop(0.8, "#f6ecef"); gr.addColorStop(0.93, "#e9e2f1"); gr.addColorStop(1, "#dcdcf5");
-  c.fillStyle = gr; c.fillRect(0, 0, W, H);
-  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
-};
+type Tex = { ok: true };
 const loadTex = async (): Promise<Tex> => {
-  const L = new THREE.TextureLoader();
-  const [deck, enemy, islImg] = await Promise.all(["bt/deck_planks.jpg", "bt/enemy_ship.png", "bt/islands_key.png"].map((u) => L.loadAsync(staticFile(u))));
-  // island plate (sky already keyed out): soft alpha fade on the left/right edges
-  const im = islImg.image as HTMLImageElement, cv = document.createElement("canvas"); cv.width = im.width; cv.height = im.height;
-  const g2 = cv.getContext("2d")!; g2.drawImage(im, 0, 0);
-  g2.globalCompositeOperation = "destination-in";
-  const gr = g2.createLinearGradient(0, 0, cv.width, 0);
-  gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(0.3, "rgba(0,0,0,1)"); gr.addColorStop(0.9, "rgba(0,0,0,1)"); gr.addColorStop(1, "rgba(0,0,0,0)");
-  g2.fillStyle = gr; g2.fillRect(0, 0, cv.width, cv.height);
-  const isl = new THREE.CanvasTexture(cv);
-  for (const t of [deck, enemy, isl]) { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; }
-  deck.wrapS = deck.wrapT = THREE.RepeatWrapping;
-  const clouds = [1, 2, 3, 4].map(cloudTex);
   const font = new FontFace("BtCap", `url(${staticFile("bt/nunito900.ttf")})`);
   await font.load(); (document.fonts as any).add(font);
-  return { deck, enemy, isl, clouds };
+  return { ok: true };
 };
 
 // ---------------- characters ----------------
@@ -199,31 +169,36 @@ const ballX = (t: number) => 8 + 70 * (t - CUT / FPS);
 class BtWorld {
   root = new THREE.Group(); pool = new Pool();
   cannons: P.Cannon[] = []; officer: Actor; gunner: Actor; fxBlast: Fx; fxJet: Fx; fxSmoke: Fx[] = [];
-  fxPuff: Fx; fxSpray: Fx; fxSparks: Fx; linstock: THREE.Mesh; match: THREE.Mesh; arms: THREE.Mesh[] = []; hands: THREE.Mesh[] = []; dropped: THREE.Mesh; blobs: Fx[] = []; wake: THREE.Mesh[] = []; sun: THREE.DirectionalLight; ball: THREE.Mesh; streaks: THREE.Mesh[] = []; waterMat: THREE.ShaderMaterial; enemy: THREE.Mesh;
+  fxPuff: Fx; fxSpray: Fx; fxSparks: Fx; linstock: THREE.Mesh; match: THREE.Mesh; arms: THREE.Mesh[] = []; hands: THREE.Mesh[] = []; dropped: THREE.Mesh; blobs: Fx[] = []; wake: THREE.Mesh[] = []; sun: THREE.DirectionalLight; ball: THREE.Mesh; streaks: THREE.Mesh[] = []; waterMat: THREE.ShaderMaterial; enemy: THREE.Object3D;
   breech: THREE.Mesh[] = []; contact!: THREE.Mesh; ropeMat!: THREE.Material; flagWave: (t: number) => void = () => {}; wisp!: Fx;
-  constructor(T: Tex) {
+  constructor(_T: Tex, gl: THREE.WebGLRenderer) {
     const R = this.root;
     // materials
-    const deckT = T.deck.clone(); deckT.needsUpdate = true; deckT.repeat.set(7.7 / 2.0, 28 / 2.0);
-    const deck = P.lam({ map: deckT });
-    const red = P.lam({ map: P.paintedPlanks("#c4462e", 6, 0) });
-    const railM = P.lam({ map: P.staves("#9b5a2e", 4, "rgba(50,20,5,0.6)") });
-    const dark = P.lam({ color: "#5a2a1c" });
-    const woodCar = P.lam({ map: P.staves("#d66a32", 3, "rgba(90,30,8,0.45)", 256, 256) });
-    const iron = P.lam({ color: "#50535c" });
-    const metal = new THREE.MeshMatcapMaterial({ matcap: P.gunMatcap(), color: "#ffffff" });
-    const bore = new THREE.MeshBasicMaterial({ color: "#111216" });
-    const bucketW = P.lam({ map: P.staves("#a8743f", 10, "rgba(60,30,10,0.5)", 256, 256) });
+    // rendered game-asset look: physically lit wood/paint/steel (pbr.ts) with code-drawn textures + bump (woodtex.ts)
+    const M = mats(makeEnv(gl), makeEnv(gl, ENV_FILL));
+    const dt = W.deckPlanks();
+    const deck = M.wood(W.woodMaps(dt, [7.7 * dt.repeatPerMetre.x, 28 * dt.repeatPerMetre.y]));
+    const red = M.paint(W.woodMaps(W.bulwarkPlanks()));
+    const railM = M.wood(W.woodMaps(W.railCap()));
+    const dark = M.paint(W.woodMaps(W.carriageWood({ color: [196, 84, 54], seed: 5 })));
+    const woodCar = M.wood(W.woodMaps(W.carriageWood()));
+    const wheelM = M.wood(W.woodMaps(W.wheelWood()));
+    const iron = M.iron;
+    const metal = M.metal, farMetal = M.metalWith({ envMapIntensity: 0.75 }), farIron = M.ironWith({ envMapIntensity: 0.75 });
+    const bore = M.bore;
+    const bucketW = M.wood(W.woodMaps(W.bucketStaves({ plain: true }), [1, 1]));
     const water = new THREE.MeshBasicMaterial({ color: "#5fc4dd" });
-    const sponge = P.lam({ color: "#f2c94c" });
-    const ropeM = P.lam({ map: (() => { const t = P.ropeTex(); t.repeat.set(30, 1); return t; })() });
-    const rigM = P.lam({ color: "#4a3426" });
-    const mastM = P.lam({ map: P.staves("#9a6236", 2, "rgba(60,30,10,0.3)", 128, 512) });
-    const cloth = P.lam({ map: P.clothTex(), side: THREE.DoubleSide });
-    const barrelW = P.lam({ map: P.staves("#a9703c", 12, "rgba(60,30,10,0.55)", 256, 256) });
-    const ballM = new THREE.MeshMatcapMaterial({ matcap: P.metalMatcap(), color: "#4a4e57" });
-    const poleM = P.lam({ map: P.staves("#b98a55", 2, "rgba(60,30,10,0.3)", 64, 256) });
-    const headM = P.lam({ color: "#7a4a28" }), fleeceM = P.lam({ color: "#efe3c6" });
+    const sponge = M.paint({ color: "#f2c94c", roughness: 0.95 });
+    const ropeM = M.wood(W.woodMaps(W.rope()));
+    const rigM = M.wood({ color: "#4a3426", roughness: 0.9 });
+    const mastM = M.wood(W.woodMaps(W.poleWood({ color: [176, 116, 70], seed: 3 }), [6, 14]));
+    const cloth = M.wood({ map: P.clothTex(), side: THREE.DoubleSide, roughness: 0.95 });
+    const barrelW = M.wood(W.woodMaps(W.barrelStaves(), [1, 1]));
+    const ballM = M.ball;
+    const poleM = M.wood(W.woodMaps(W.poleWood(), [1, 2.5]));
+    const headM = M.wood({ color: "#7a4a28" }), fleeceM = M.paint({ color: "#efe3c6", roughness: 0.95 });
+    W.edgeWear(woodCar, { k: 0.1, w: 0.012 }); W.edgeWear(railM, { k: 0.08, w: 0.01 });
+    void ALBEDO;
     const markM = new THREE.MeshBasicMaterial({ map: P.yearTex("1628"), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 });
     this.ropeMat = ropeM;
     // deck, bulwarks, rig
@@ -238,31 +213,33 @@ class BtWorld {
     for (const sl of [P.sail(-0.25, 8.6, -4.0, 6.5, 4.6, cloth, mastM), P.sail(-0.25, 12.6, -4.05, 5.2, 3.0, cloth, mastM)]) { sl.traverse((o) => { o.castShadow = false; }); R.add(sl); }
     // the two guns
     for (const z of [0, 3.1, -3.3]) {
-      const c = P.cannon(metal, woodCar, bore, iron, markM); c.group.position.set(RUN1, 0, z); R.add(c.group); this.cannons.push(c);
+      const c = P.cannon(metal, woodCar, bore, iron, markM); c.group.position.set(RUN1, 0, z); R.add(c.group); this.cannons.push(c); W.swapWheels(c.carriage, woodCar, wheelM);
       c.group.traverse((o) => { if ((o as THREE.Mesh).material === markM) o.layers.set(NOINK); });
       // ring bolts + tackle blocks either side of the port, breeching rope to the cheeks and round the cascabel
       for (const s of [1, -1]) { const rb = P.ringBlock(iron, headM); rb.position.set(1.63, 0.5, z + s * 0.72); R.add(rb); }
       for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.BufferGeometry(), ropeM); m.castShadow = true; m.receiveShadow = true; m.userData.z = z; R.add(m); this.breech.push(m); }
     }
     // far-side guns (port battery), pointing -x
-    for (const z of [-3.0, 3.4]) { const c = P.cannon(metal, woodCar, bore, iron); c.group.rotation.y = Math.PI; c.group.position.set(-4.3, 0, z); R.add(c.group); }
+    for (const z of [-3.0, 3.4]) { const c = P.cannon(farMetal, woodCar, bore, farIron); c.group.rotation.y = Math.PI; c.group.position.set(-4.3, 0, z); R.add(c.group); W.swapWheels(c.carriage, woodCar, wheelM); }
     const bk = P.bucket(bucketW, iron, water, sponge); bk.position.set(-0.7, 0, -0.95); R.add(bk);
-    const rc = P.ropeCoil(ropeM); rc.position.set(-1.65, 0, -1.4); rc.rotation.y = 0.6; R.add(rc);
+    const rc = P.ropeCoil(ropeM); rc.position.set(-1.65, 0, -1.4); rc.rotation.y = 0.6; R.add(rc); rc.traverse((o) => { if ((o as THREE.Mesh).isMesh) W.tubeUV((o as THREE.Mesh).geometry); });
     const bp = P.ballPile(ballM, woodCar); bp.position.set(-2.6, 0, 1.7); R.add(bp);
     // second pass set dressing: rammer/sponge pairs on the rail, shot garlands, a second rope coil, the ensign
     for (const z of [-1.5, 2.35]) { const rp = P.rammerPair(poleM, headM, fleeceM); rp.position.set(1.3, 0, z); rp.rotation.y = z < 0 ? -0.69 : 0.45; rp.scale.setScalar(0.85); R.add(rp); }
     for (const z of [1.55, 4.6]) { const sr = P.shotRack(woodCar, ballM); sr.position.set(1.47, 0, z); R.add(sr); }
-    const rc2 = P.ropeCoil(ropeM); rc2.position.set(0.55, 0, -1.05); rc2.rotation.y = 2.4; R.add(rc2);
+    const rc2 = P.ropeCoil(ropeM); rc2.position.set(0.55, 0, -1.05); rc2.rotation.y = 2.4; R.add(rc2); rc2.traverse((o) => { if ((o as THREE.Mesh).isMesh) W.tubeUV((o as THREE.Mesh).geometry); });
     { const fl = P.flag(P.swedishFlag(), poleM, 3.4); fl.group.position.set(1.42, 0, 3.75); fl.group.rotation.y = -0.4; R.add(fl.group); this.flagWave = fl.wave; }
     for (const [x, z, s] of [[-3.3, -1.6, 1], [-3.0, -2.3, 0.9], [-3.8, -2.0, 1.05]]) { const b = P.barrel(barrelW, iron, 0.85 * s, 0.3 * s); b.position.set(x, 0, z); b.rotation.y = x; R.add(b); }
+    // texture coordinates in metres on the boxy wooden parts, so plank and grain scale match everywhere
+    W.metricUV(R, (m) => m.material === red || m.material === railM || m.material === dark || m.material === woodCar || m.material === wheelM);
     // sea: big disk below the deck, painted colours by distance, fading into the backdrop plate
     this.waterMat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, fog: false,
       uniforms: { uT: { value: 0 }, uWhite: { value: 0 }, uDeep: { value: 0 }, uDash: { value: P.canvasTex(512, 512, (g) => {
         g.fillStyle = "#000"; g.fillRect(0, 0, 512, 512); g.lineCap = "round";
         let sd = 29; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
-        for (let i = 0; i < 170; i++) { // red = light dash, green = dark dash, long along canvas x (= world z, screen horizontal)
-          const x = rn() * 512, y = rn() * 512, L = 26 + 70 * rn(), th = 4 + 5 * rn(), light = rn() < 0.6;
+        for (let i = 0; i < 280; i++) { // red = light dash, green = dark dash, long along canvas x (= world z, screen horizontal)
+          const x = rn() * 512, y = rn() * 512, L = 18 + 46 * rn(), th = 2.2 + 3 * rn(), light = rn() < 0.6;
           g.strokeStyle = light ? `rgba(255,0,0,${0.6 + 0.4 * rn()})` : `rgba(0,255,0,${0.5 + 0.4 * rn()})`; g.lineWidth = th;
           g.globalCompositeOperation = "lighter";
           for (const ox of [0, -512, 512]) for (const oy of [0, -512, 512]) { g.beginPath(); g.moveTo(x + ox, y + oy); g.lineTo(x + ox + L, y + oy + (rn() - 0.5) * 3); g.stroke(); }
@@ -284,8 +261,8 @@ class BtWorld {
           vec3 c = mix(nearC, farC, smoothstep(mix(6.0, 1.5, uDeep), mix(200.0, 110.0, uDeep), d)); c = mix(c, vec3(0.09, 0.55, 0.66), 0.5 * uWhite);
           float s = texture2D(uStreak, vW.xz / 6.0 + uScroll).a * (1.0 - smoothstep(12.0, 70.0, d)) * (1.0 - uDeep);
           float s2 = texture2D(uStreak, vW.xz / 17.0 + uScroll * 0.5 + 0.37).a * (1.0 - smoothstep(40.0, 190.0, d)) * 0.65 * (1.0 - uDeep);
-          vec4 dsh = texture2D(uDash, vec2(vW.z / 3.0, vW.x / 34.0)) * uDeep * (1.0 - smoothstep(30.0, 110.0, d)) * smoothstep(1.4, 4.0, d);
-          c = mix(c, vec3(0.62, 0.88, 0.92), dsh.r * 0.75); c = mix(c, vec3(0.02, 0.22, 0.33), dsh.g * 0.55);
+          vec4 dsh = texture2D(uDash, vec2(vW.z / 3.4, vW.x / 26.0)) * uDeep * (1.0 - smoothstep(30.0, 110.0, d)) * smoothstep(1.4, 4.0, d);
+          c = mix(c, vec3(0.62, 0.88, 0.92), dsh.r * 0.6); c = mix(c, vec3(0.02, 0.22, 0.33), dsh.g * 0.45);
           c = mix(c, vec3(0.86,0.97,1.0), clamp(s + s2, 0.0, 1.0) * 0.72);
           c = mix(c, vec3(0.72,0.9,0.88), smoothstep(140.0, 420.0, d) * 0.55);
           float a = 1.0 - smoothstep(170.0, 420.0, d);
@@ -313,26 +290,11 @@ class BtWorld {
             gl_FragColor = vec4(pow(c, vec3(2.2)), 1.0); }`,
       }));
       dome.position.copy(C); dome.layers.set(NOINK); dome.renderOrder = -2; R.add(dome);
-      // separate cel clouds on camera-facing cards; low, far ones fade into the haze
-      const CL: [number, number, number][] = [ // azimuth deg (0 = +x, toward the enemy), elevation deg, width deg
-        [32, 16, 11], [-34, 9, 7], [-14, 4.5, 5], [70, 11, 9], [108, 18, 12], [150, 8, 7], [190, 14, 10],
-        [228, 6, 6], [262, 19, 12], [300, 10, 8], [335, 15, 9], [12, 22, 8], [-62, 21, 10], [128, 5, 5]];
-      CL.forEach(([az, el, w], i) => {
-        const D = 560, a = (az * Math.PI) / 180, e = (el * Math.PI) / 180, wd = 2 * D * Math.tan((w * Math.PI) / 360);
-        const m = new THREE.Mesh(new THREE.PlaneGeometry(wd, wd / 2), new THREE.MeshBasicMaterial({
-          map: T.clouds[i % 4], transparent: true, depthWrite: false, fog: false, opacity: 0.55 + 0.45 * Math.min(1, (el - 3) / 10) }));
-        m.position.set(C.x + D * Math.cos(e) * Math.cos(a), C.y + D * Math.sin(e) + wd * 0.18, C.z + D * Math.cos(e) * Math.sin(a));
-        m.lookAt(C); m.layers.set(NOINK); m.renderOrder = -1.8; R.add(m);
-      }); }
-    // sea-stack islands: a 70-degree arc of painted plate dead ahead (+x), behind the enemy ship
-    { const Ri = 600, arc = (50 * Math.PI) / 180, Hi = (Ri * arc) / (2016 / 864), hzi = 0.30;
-      const ig = new THREE.CylinderGeometry(Ri, Ri, Hi, 64, 1, true, Math.PI / 2 - arc / 2, arc);
-      const iu = ig.attributes.uv; for (let i = 0; i < iu.count; i++) iu.setX(i, 1 - iu.getX(i));
-      const ip = new THREE.Mesh(ig, new THREE.MeshBasicMaterial({ map: T.isl, side: THREE.BackSide, fog: false, depthWrite: false, transparent: true }));
-      ip.position.y = 1.5 - hzi * Hi + Hi / 2; ip.layers.set(NOINK); ip.renderOrder = -1.5; R.add(ip); }
-    // enemy ship (painted card) far out to starboard
-    this.enemy = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: T.enemy, alphaTest: 0.5, fog: false }));
-    this.enemy.scale.set(11.2 * (770 / 835), 11.2, 1); this.enemy.position.set(100, -2.4 + 11.2 * 0.45, 0.5); this.enemy.layers.set(NOINK); R.add(this.enemy);
+      R.add(S.cloudField(C)); }
+    // code-built 3D sea stacks (arch, waterfall, mist) dead ahead and the enemy galleon broadside
+    S.SCENERY.uLight.value.set(-0.3, 0.5, 0.81).normalize();
+    { const stacks = S.seaStacks(); stacks.position.set(0, -2.4, 0); R.add(stacks); }
+    { const ship = S.galleon(); ship.position.set(108, -2.4, -3.5); R.add(ship); this.enemy = ship; }
     // ball + water streaks for shot B
     this.ball = new THREE.Mesh(new THREE.SphereGeometry(0.075, 24, 16), new THREE.MeshMatcapMaterial({ matcap: P.ballMatcap(), color: "#ffffff" })); R.add(this.ball);
     const sm = new THREE.MeshBasicMaterial({ color: "#eafcff", transparent: true, opacity: 0.85, depthWrite: false });
@@ -344,11 +306,7 @@ class BtWorld {
     }
     // light: one shadow-casting sun, the film's two-tone constants (day preset)
     const L = LIGHTS.day;
-    this.sun = new THREE.DirectionalLight("#fff1dc", 3.0); this.sun.position.set(-5, 7.5, 4.5); this.sun.target.position.set(0, 0, -1);
-    this.sun.castShadow = true; this.sun.shadow.mapSize.set(4096, 4096);
-    const sc = this.sun.shadow.camera; sc.left = -7; sc.right = 7; sc.top = 7; sc.bottom = -7; sc.near = 0.5; sc.far = 30;
-    this.sun.shadow.bias = -0.0004; this.sun.shadow.normalBias = 0.02;
-    R.add(this.sun, this.sun.target, new THREE.HemisphereLight("#dcecff", "#b49a78", 0.5));
+    this.sun = makeSun(); R.add(this.sun, this.sun.target);
     TONE.uLitCol.value.set(1.55, 1.42, 1.2); TONE.uShadeCol.value.set(0.6, 0.53, 0.5); TONE.uShadeLift.value.set(0.012, 0.01, 0.014);
     TONE.uLambert.value = 0.45; TONE.uSideK.value = L.sideK; TONE.uTerm.value = 0.25; TONE.uSat.value = 0.88;
     CHAR.uCharTint.value.set(1.0, 1.0, 1.0); CHAR.uCharShade.value = 0.95; CHAR.uGrad.value = L.charGrad; CHAR.uBodyGrad.value = L.bodyGrad; CHAR.uSideTint.value.set(0.97, 0.97, 1.0);
@@ -356,7 +314,7 @@ class BtWorld {
     this.fxBlast = new Fx(R); this.fxJet = new Fx(R);
     for (let i = 0; i < 3; i++) this.fxSmoke.push(new Fx(R));
     this.fxPuff = new Fx(R); this.fxSpray = new Fx(R); this.fxSparks = new Fx(R);
-    this.linstock = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 1, 8), P.lam({ color: "#8a5a32" })); R.add(this.linstock);
+    this.linstock = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 1, 8), M.wood({ color: "#8a5a32" })); R.add(this.linstock);
     this.match = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 8), new THREE.MeshBasicMaterial({ color: "#ffb03a" })); R.add(this.match);
     { const am = new THREE.MeshBasicMaterial({ color: "#3b3737" }), hm = new THREE.MeshBasicMaterial({ color: "#1d1b1b" });
       for (let i = 0; i < 2; i++) { const a = new THREE.Mesh(new THREE.BufferGeometry(), am); R.add(a); this.arms.push(a); const h = new THREE.Mesh(new THREE.SphereGeometry(0.045, 14, 10), hm); R.add(h); this.hands.push(h); } }
@@ -387,7 +345,7 @@ class BtWorld {
       const m = this.breech[i], z = m.userData.z as number, ci = Math.floor(i / 4), j = i % 4, sd = j < 2 ? 1 : -1;
       const gx = this.cannons[ci].group.position.x, rk = ci === 0 ? rec / 0.6 : 0;
       const bolt = V(1.6, 0.47, z + sd * 0.72), cheek = V(gx - 0.1, 0.4, z + sd * 0.305), casc = V(gx - 1.06, 0.68, z + sd * 0.05);
-      m.geometry.dispose(); m.geometry = j % 2 === 0 ? P.ropeSpan(bolt, cheek, 0.22 * (1 - rk) + 0.02) : P.ropeSpan(cheek, casc, 0.03);
+      m.geometry.dispose(); m.geometry = j % 2 === 0 ? P.ropeSpan(bolt, cheek, 0.22 * (1 - rk) + 0.02) : P.ropeSpan(cheek, casc, 0.03); W.tubeUV(m.geometry);
       m.visible = !shotB;
     }
     this.flagWave(t);
@@ -534,7 +492,8 @@ class BtWorld {
     }
     this.pool.flush();
     this.officer.bind(); this.gunner.bind(); this.fxBlast.bind(); this.fxJet.bind(); for (const e of this.fxSmoke) e.bind(); this.fxPuff.bind(); this.fxSpray.bind(); this.fxSparks.bind(); for (const b of this.blobs) b.bind(); this.wisp.bind();
-    this.enemy.lookAt(pos.x, this.enemy.position.y, pos.z);
+    this.enemy.position.z = shotB ? -0.4 : -3.5;
+    S.animate(t);
     return focus;
   }
 }
@@ -567,8 +526,8 @@ const GlbExport: React.FC<{ world: BtWorld; cam: THREE.PerspectiveCamera; f: num
 const GRADE_BT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.97, 0.98, 0.96], tintS: [0.006, 0.006], tintM: [-0.01, 0.008], tintH: [-0.016, 0.01], vig: [0.16, 0.42] };
 const Inner: React.FC<{ T: Tex }> = ({ T }) => {
   const f = useCurrentFrame();
-  const { camera, scene } = useThree();
-  const world = useMemo(() => new BtWorld(T), [T]);
+  const { camera, scene, gl } = useThree();
+  const world = useMemo(() => new BtWorld(T, gl), [T, gl]);
   const fx = useMemo(() => ({
     ink: new InkPass(scene, camera as THREE.PerspectiveCamera),
     lens: new LensBlur({ maxCoC: 20, nearScale: 1.0 }),
@@ -578,6 +537,7 @@ const Inner: React.FC<{ T: Tex }> = ({ T }) => {
   }), [camera, scene]);
   const post = useMemo(() => (
     <EffectComposer multisampling={4}>
+      <N8AO aoRadius={PBR.ao.aoRadius} distanceFalloff={PBR.ao.distanceFalloff} intensity={PBR.ao.intensity} color={PBR.ao.color} quality="high" halfRes={false} />
       <primitive object={fx.ink} dispose={null} />
       <primitive object={fx.lens.pre} dispose={null} />
       <primitive object={fx.lens.main} dispose={null} />
@@ -624,7 +584,7 @@ export const BtCannon: React.FC = () => {
   if (!T) return null;
   return (
     <AbsoluteFill style={{ background: "#8cc4ee" }}>
-      <ThreeCanvas width={1080} height={1920} shadows gl={{ antialias: false, stencil: false, powerPreference: "high-performance" }} camera={{ fov: 46, near: 0.05, far: 2000 }}>
+      <ThreeCanvas width={1080} height={1920} shadows="percentage" gl={{ antialias: false, stencil: false, powerPreference: "high-performance" }} camera={{ fov: 46, near: 0.05, far: 2000 }}>
         <Inner T={T} />
       </ThreeCanvas>
       <SpeedLines f={f} />

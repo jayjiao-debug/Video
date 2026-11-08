@@ -1,1 +1,1 @@
-{ "id": "bt-cannon-v12a", "composition": "BtCannon", "start": 0, "end": 65, "chunks": 6, "output": "bt_cannon_v12a", "flags": "--crf=16" }
+{ "id": "bt-cannon-v12", "composition": "BtCannon", "start": 0, "end": 65, "chunks": 12, "output": "bt_cannon_v12", "flags": "--crf=16" }
