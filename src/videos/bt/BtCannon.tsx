@@ -32,7 +32,7 @@ const FIRE = 36, CUT = 53;
 const RUN1 = 0.4;
 const runX = (_f: number) => RUN1;
 /** crew marks on deck: gunner at the breech, officer forward by the rail */
-const OFF_AT: [number, number] = [0.9, 0.8], GUN_AT: [number, number] = [-0.45, 0.7];
+const OFF_AT: [number, number] = [0.9, 0.8], GUN_AT: [number, number] = [-0.45, 0.6];
 /** touch hole on the gun, behind the trunnions (gun-local) */
 const VENT = V(-0.716, 0.885, 0);
 
@@ -174,11 +174,13 @@ const SHOT_A: CamK[] = [
   { t: 0 / 30, pos: [1.45, 1.75, -2.6], look: [-0.5, 0.85, 2.2], fov: 64 },
   { t: 10 / 30, pos: [-0.3, 1.75, -2.95], look: [-0.2, 1.0, 1.2], fov: 65 },
   { t: 20 / 30, pos: [-2.23, 2.28, -3.15], look: [0.09, 1.15, 0.27], fov: 64 },
-  { t: 28 / 30, pos: [-2.8, 2.15, -1.35], look: [2.6, 0.8, 1.1], fov: 72 },
+  { t: 28 / 30, pos: [-2.8, 2.15, -1.35], look: [2.4, 0.8, 1.5], fov: 72 },
   // behind the gun, just left of it, on a wide lens: barrel runs up to the port, officer and gunner beside it on the right
   { t: 36 / 30, pos: [-2.65, 2.05, -0.55], look: [4.4, 0.62, 1.3], fov: 76 },
-  { t: 44 / 30, pos: [-2.5, 1.92, -0.5], look: [4.5, 0.82, 1.28], fov: 76 },
-  { t: 53 / 30, pos: [-2.38, 1.82, -0.46], look: [4.62, 0.9, 1.25], fov: 76 },
+  { t: 41 / 30, pos: [-2.55, 1.97, -0.52], look: [4.45, 0.75, 1.25], fov: 75 },
+  // then a quick push in past the recoiled breech, low over the barrel, out through the port to the target
+  { t: 47 / 30, pos: [-1.6, 1.8, -0.4], look: [6.0, 0.9, 0.7], fov: 68 },
+  { t: 53 / 30, pos: [-0.95, 1.72, -0.3], look: [8.0, 0.95, 0.25], fov: 62 },
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
@@ -421,7 +423,7 @@ class BtWorld {
     place(this.gunner, `gun|${ge}|${blink(31)}|na`, GUNNER, GUN_AT[0], GUN_AT[1], gOpts);
     { const fk = ease((f - (FIRE - 3)) / 3) * (1 - ease((f - (FIRE + 10)) / 10));
       const vc = VENT.clone().add(g.group.position).applyMatrix4(cam.matrixWorldInverse), gc = V(GUN_AT[0], 1.0, GUN_AT[1]).applyMatrix4(cam.matrixWorldInverse);
-      this.gunner.mesh.rotation.z = (vc.x > gc.x ? 1 : -1) * 0.22 * fk; // top away from the vent
+      this.gunner.mesh.rotation.z = (vc.x > gc.x ? 1 : -1) * 0.1 * fk; // top away from the vent
       this.gunner.mesh.scale.set(1 + 0.03 * fk, 1 - 0.045 * fk, 1); }
     {
       this.gunner.mesh.updateMatrixWorld(true); g.group.updateMatrixWorld(true);
@@ -495,9 +497,9 @@ class BtWorld {
       const st = f % 3; this.fxSparks.r = this.pool.req(`sparks|${st}`, 300, 300, 1, (p) => sparks(p, st)); this.fxSparks.use(false);
       this.fxSparks.mesh.position.copy(br).add(V(0, 0.12, 0)); this.fxSparks.mesh.quaternion.copy(cam.quaternion); this.fxSparks.mesh.scale.set(0.42, 0.42, 1);
     }
-    const up = (f - (FIRE - 3)) / 16; this.fxPuff.mesh.visible = !shotB && up > 0 && up < 1;
+    const up = (f - (FIRE - 3)) / 12; this.fxPuff.mesh.visible = !shotB && up > 0 && up < 1;
     if (this.fxPuff.mesh.visible) {
-      const st = Math.round(up * 16) / 16; this.fxPuff.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); this.fxPuff.use(false);
+      const st = Math.round(up * 12) / 12; this.fxPuff.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); this.fxPuff.use(false);
       this.fxPuff.mesh.position.copy(br).add(V(-0.05 * up, 0.15 + 0.3 * up, 0)); this.fxPuff.mesh.quaternion.copy(cam.quaternion);
       const sz = 0.15 + 0.22 * Math.sqrt(up); this.fxPuff.mesh.scale.set(sz, sz, 1);
     }
