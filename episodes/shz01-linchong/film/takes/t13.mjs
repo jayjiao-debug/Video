@@ -333,13 +333,16 @@ function vigBowls(t) {
     const pts = [];
     for (let i = 0; i <= 12; i++) {
       const v = i / 12, y = 4 - v * 200;
-      const twist = Math.sin(v * 7 + t * 2.2 + ph) * 22 * v;
-      pts.push([lerp(x0, 0, Math.min(1, v * 1.6)) + twist * dir, y]);
+      const twist = Math.sin(v * 9 + t * 2.2 + ph) * (10 + 26 * v);
+      const k = clamp((v - 0.25) / 0.45), sm = k * k * (3 - 2 * k);
+      pts.push([lerp(x0, 0, sm) + twist * dir, y]);
     }
     return smooth(pts, false);
   };
-  s += `<path d="${rib(-62, 1, 0)}" stroke="#d6ccb8" stroke-width="9" fill="none" opacity="0.65" stroke-linecap="round"/>`;
-  s += `<path d="${rib(62, -1, 0)}" stroke="#bdb3a0" stroke-width="7" fill="none" opacity="0.65" stroke-linecap="round"/>`;
+  for (const [x0, dir, col] of [[-62, 1, '#d6ccb8'], [62, -1, '#c4baa6']]) {
+    const d = rib(x0, dir, 0);
+    s += `<path d="${d}" stroke="${col}" stroke-width="22" fill="none" opacity="0.18" stroke-linecap="round"/><path d="${d}" stroke="${col}" stroke-width="7" fill="none" opacity="0.7" stroke-linecap="round"/>`;
+  }
   return s;
 }
 function fistDraw(x, y, size, open = 0, rot = 0, opts = {}) {
