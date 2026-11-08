@@ -39,6 +39,8 @@ def pred_mask(pred, L, pal_lab):
         ok = (bc < 128) & (Lc < 130)
     elif pred == 'notdark':
         ok = Lc >= 92
+    elif pred == 'notred':
+        ok = ~((ac > 146) & (Lc < 170))
     elif pred == 'none':
         ok = np.zeros(len(Lc), bool)
     elif pred == 'notgreen':
@@ -138,11 +140,22 @@ def build(view, debug=None):
                 cover |= owned[q]
         visible = region & ~cover
         hidden = region & cover
+        if P.get('extend'):  # area to own and repaint (hidden behind a part that sits higher)
+            ext = polymask(P['extend'], shp) & FG & ~region
+            region = region | ext
+            hidden = hidden | ext
         if P.get('region_extra'):
             ext = polymask(P['region_extra'], shp) & ~FG
             region = region | ext
             hidden = hidden | ext
-        Lp = _fill_from(L, hidden, visible) if hidden.any() and visible.any() else L
+        src = visible
+        if hidden.sum() > max(4000, 0.02 * region.sum()) and not P.get('fill_any'):
+            # large hidden areas are refilled from the part's own main colours only
+            # (not from small coloured details such as a belt edge or a hand)
+            labs, cnt = np.unique(L[visible], return_counts=True)
+            top = labs[np.argsort(cnt)[::-1][:P.get('fill_top', 2)]]
+            src = visible & np.isin(L, top)
+        Lp = _fill_from(L, hidden, src) if hidden.any() and src.any() else L
         for pp in P.get('paint', []):
             mm = polymask(pp['poly'], shp) & ~(visible & owned[k])
             region = region | mm

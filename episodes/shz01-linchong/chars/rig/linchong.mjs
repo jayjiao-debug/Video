@@ -13,7 +13,14 @@
 //            elbow + keeps turning the forearm the same way (out and up: a fist by the ear is
 //            shoulder 80 / elbow 100), elbow − folds it in across the body. Side view: + swings
 //            forward and up (flexion) for shoulder and elbow alike.
-//            fistR, fistL (bool), spear: { hand:'R'|'L', angle deg (0 = pointing up), grip 0..1 } }
+//            fistR, fistL (bool), legR, legL (side view stride, deg, + = forward) }
+//   props: { spear: { hand:'R'|'L', angle, grip 0..1 (fraction of the shaft below the hand),
+//            gourd: true } }  angle in degrees from vertical; side view + = tip forward (90 = level
+//            thrust, −40 = carried over the shoulder, tip and gourd behind); front view + = tip to
+//            the viewer's right. The holding hand closes into a fist automatically.
+//   hat (C, default true), tattoo 0..1, headCloth:'plain' (no jade rings), cangue (bool),
+//   col: { robe, sash, cloak, coat, headscarf } recolour families, sleeve:'rigid' to disable the
+//   draped wide sleeve of costume A.
 //   flip : mirror (side views face left by default; flip makes them face right).
 //
 // Every face carries an invisible <rect data-face> for the frame checker (render6.mjs).
@@ -430,29 +437,32 @@ function fistShape(w, mirror = false) {
   return s + '</g>';
 }
 
-function spearSVG(Lr, u) {
-  // local: butt at (0,0), shaft along -y (pointing up), length Lr; returns { body, tip, gourdAt }
-  const C = COL, d = 3.4 * u, head = 0.11 * Lr;
-  const L = (w) => `stroke="${C.line}" stroke-width="${f(w * u)}" stroke-linejoin="round" stroke-linecap="round"`;
-  const yb = -(Lr - head);
-  let s = `<path d="M${f(-d / 2)},0 L${f(-d / 2)},${f(yb)} L${f(d / 2)},${f(yb)} L${f(d / 2)},0Z" fill="${C.shaft}" ${L(0.8)}/>`;
-  s += `<path d="M${f(d * 0.1)},${f(-2 * u)} L${f(d * 0.1)},${f(yb + 2 * u)}" stroke="${C.shaftS}" stroke-width="${f(d * 0.45)}"/>`;
-  s += `<rect x="${f(-d * 0.75)}" y="${f(-3 * u)}" width="${f(d * 1.5)}" height="${f(3 * u)}" rx="${f(0.8 * u)}" fill="${C.steelS}" ${L(0.6)}/>`;
-  // red tassel at the base of the head, hanging
+function spearSVG(Lr, u, H) {
+  // local: butt at (0,0), shaft along -y (pointing up), length Lr (2.30 m); sizes in cm (model_sheet §6)
+  const C = COL, cm = H / 24, d = 2.6 * cm, head = 25 * cm, blade = 20 * cm, bw = 2.4 * cm;
+  const lw = Math.max(0.9 * u, 0.12 * cm);
+  const L = (w = 1) => `stroke="${C.line}" stroke-width="${f(lw * w)}" stroke-linejoin="round" stroke-linecap="round"`;
+  const yb = -(Lr - head); // top of the shaft (base of the socket)
+  let s = `<path d="M${f(-d / 2)},${f(-3 * cm)} L${f(-d / 2)},${f(yb)} L${f(d / 2)},${f(yb)} L${f(d / 2)},${f(-3 * cm)}Z" fill="${C.shaft}" ${L()}/>`;
+  s += `<path d="M${f(d * 0.18)},${f(-4 * cm)} L${f(d * 0.18)},${f(yb + 1 * cm)}" stroke="${C.shaftS}" stroke-width="${f(d * 0.32)}"/>`;
+  s += `<path d="M${f(-d * 0.3)},${f(-4 * cm)} L${f(-d * 0.3)},${f(yb + 1 * cm)}" stroke="#9a6a44" stroke-width="${f(d * 0.14)}" opacity="0.8"/>`;
+  s += `<path d="M${f(-d * 0.62)},0 L${f(-d * 0.56)},${f(-4 * cm)} L${f(d * 0.56)},${f(-4 * cm)} L${f(d * 0.62)},0Z" fill="${C.steelS}" ${L()}/>`;
+  // socket, then the red tassel hanging from its base
+  const ys = yb - 5 * cm;
   let t = '';
-  for (let i = 0; i < 9; i++) {
-    const a = -0.9 + (i / 8) * 1.8;
-    t += `M${f(a * d * 0.4)},${f(yb + 3 * u)} C${f(a * d * 1.6)},${f(yb + 10 * u)} ${f(a * d * 2.6)},${f(yb + 18 * u)} ${f(a * d * 2.2 + (i % 2 ? 1.4 : -1) * u)},${f(yb + 27 * u)} `;
+  for (let i = 0; i < 11; i++) {
+    const a = -1 + (i / 10) * 2;
+    t += `M${f(a * d * 0.45)},${f(yb + 0.5 * cm)} C${f(a * 3 * cm)},${f(yb + 7 * cm)} ${f(a * 5 * cm)},${f(yb + 13 * cm)} ${f(a * 4.4 * cm + (i % 2 ? 0.8 : -0.6) * cm)},${f(yb + 20 * cm + (i % 3) * 1.2 * cm)} `;
   }
-  s += `<path d="${t}" fill="none" stroke="${C.tassel}" stroke-width="${f(1.6 * u)}" stroke-linecap="round"/>`;
-  s += `<path d="M${f(-d * 1.3)},${f(yb + 2 * u)} C${f(-d * 3.2)},${f(yb + 14 * u)} ${f(-d * 2.6)},${f(yb + 24 * u)} ${f(-d * 1.6)},${f(yb + 26 * u)} L${f(d * 1.6)},${f(yb + 26 * u)} C${f(d * 2.6)},${f(yb + 24 * u)} ${f(d * 3.2)},${f(yb + 14 * u)} ${f(d * 1.3)},${f(yb + 2 * u)}Z" fill="${C.tassel}" ${L(0.7)}/>`;
-  s += `<path d="M${f(d * 0.4)},${f(yb + 4 * u)} C${f(d * 1.8)},${f(yb + 13 * u)} ${f(d * 1.8)},${f(yb + 21 * u)} ${f(d * 1.2)},${f(yb + 25 * u)}" fill="none" stroke="${C.tasselS}" stroke-width="${f(1.4 * u)}"/>`;
-  // collar and leaf-shaped steel head
-  s += `<rect x="${f(-d * 0.95)}" y="${f(yb - 3 * u)}" width="${f(d * 1.9)}" height="${f(6 * u)}" rx="${f(1 * u)}" fill="${C.steelS}" ${L(0.7)}/>`;
-  const hw = 4.6 * u, ht = -Lr;
-  s += `<path d="M0,${f(yb - 3 * u)} C${f(hw * 1.1)},${f(yb - head * 0.3)} ${f(hw)},${f(yb - head * 0.62)} 0,${f(ht)} C${f(-hw)},${f(yb - head * 0.62)} ${f(-hw * 1.1)},${f(yb - head * 0.3)} 0,${f(yb - 3 * u)}Z" fill="${C.steel}" ${L(0.9)}/>`;
-  s += `<path d="M0,${f(yb - 5 * u)} L0,${f(ht + 4 * u)}" stroke="${C.steelS}" stroke-width="${f(0.9 * u)}"/>`;
-  s += `<path d="M0,${f(yb - 4 * u)} C${f(hw * 0.95)},${f(yb - head * 0.3)} ${f(hw * 0.85)},${f(yb - head * 0.62)} 0,${f(ht + 1 * u)}Z" fill="${C.steelS}" opacity="0.35"/>`;
+  s += `<path d="M${f(-d * 0.7)},${f(yb + 0.5 * cm)} C${f(-4 * cm)},${f(yb + 8 * cm)} ${f(-5.4 * cm)},${f(yb + 15 * cm)} ${f(-4.4 * cm)},${f(yb + 19 * cm)} C${f(-2 * cm)},${f(yb + 21 * cm)} ${f(2 * cm)},${f(yb + 21 * cm)} ${f(4.4 * cm)},${f(yb + 19 * cm)} C${f(5.4 * cm)},${f(yb + 15 * cm)} ${f(4 * cm)},${f(yb + 8 * cm)} ${f(d * 0.7)},${f(yb + 0.5 * cm)}Z" fill="${C.tassel}" ${L(0.9)}/>`;
+  s += `<path d="${t}" fill="none" stroke="${C.tasselS}" stroke-width="${f(Math.max(0.5 * u, 0.22 * cm))}" stroke-linecap="round" opacity="0.8"/>`;
+  s += `<path d="M${f(-d * 0.75)},${f(yb + 1.5 * cm)} L${f(-d * 0.62)},${f(ys)} L${f(d * 0.62)},${f(ys)} L${f(d * 0.75)},${f(yb + 1.5 * cm)}Z" fill="${C.steelS}" ${L()}/>`;
+  s += `<path d="M${f(-d * 0.8)},${f(yb + 0.5 * cm)} L${f(d * 0.8)},${f(yb + 0.5 * cm)} L${f(d * 0.8)},${f(yb - 1.2 * cm)} L${f(-d * 0.8)},${f(yb - 1.2 * cm)}Z" fill="#6c7378" ${L(0.8)}/>`;
+  // leaf-shaped steel blade with a central ridge
+  const ht = -Lr;
+  s += `<path d="M${f(-d * 0.45)},${f(ys)} C${f(-bw * 1.1)},${f(ys - blade * 0.18)} ${f(-bw)},${f(ys - blade * 0.55)} 0,${f(ht)} C${f(bw)},${f(ys - blade * 0.55)} ${f(bw * 1.1)},${f(ys - blade * 0.18)} ${f(d * 0.45)},${f(ys)}Z" fill="${C.steel}" ${L()}/>`;
+  s += `<path d="M0,${f(ys)} C${f(bw * 0.9)},${f(ys - blade * 0.18)} ${f(bw * 0.85)},${f(ys - blade * 0.55)} 0,${f(ht + 0.5 * cm)}Z" fill="${C.steelS}" opacity="0.45"/>`;
+  s += `<path d="M0,${f(ys - 0.5 * cm)} L0,${f(ht + 2 * cm)}" stroke="#6c7378" stroke-width="${f(Math.max(0.6 * u, 0.25 * cm))}" stroke-linecap="round"/>`;
   return s;
 }
 
@@ -513,6 +523,88 @@ function cangueSVG(D, view, Href, u) {
   return s;
 }
 
+// ------------------------------------------------------------------ wide sleeve (costume A) on a raised forearm
+// A rigid wide sleeve would point at the sky; instead the sleeve slides back to the elbow and its
+// fabric hangs under gravity. Drawn in world coordinates in the traced robe colours.
+function robeColours(D, PAL) {
+  if (!D._robe) {
+    const freq = new Array(D.palette.length).fill(0);
+    for (const p of Object.values(D.parts)) for (const [c, d] of p.fills) freq[c] += d.length;
+    const mem = D.palette.map((c, i) => [i, hsl(c)]).filter(([, h]) => FAM.robe(...h)).map(([i]) => i);
+    const base = mem.reduce((a, b) => (freq[b] > freq[a] ? b : a));
+    const byL = mem.slice().sort((a, b) => lum(D.palette[a]) - lum(D.palette[b]));
+    const lb = lum(D.palette[base]);
+    const shade = byL.filter((i) => lum(D.palette[i]) < lb * 0.93 && lum(D.palette[i]) > lb * 0.7).reduce((a, b) => (freq[b] > freq[a] ? b : a), byL[0]);
+    D._robe = { base, shade, line: byL[0] };
+  }
+  const r = D._robe;
+  return { base: PAL[r.base], shade: PAL[r.shade], line: PAL[r.line] };
+}
+
+function wideSleeve(S, E, W, H, u, RC) {
+  const norm = (v) => { const l = Math.hypot(v[0], v[1]) || 1; return [v[0] / l, v[1] / l]; };
+  const add2 = (a, b, k = 1) => [a[0] + b[0] * k, a[1] + b[1] * k];
+  const fv = norm([W[0] - E[0], W[1] - E[1]]), nv = [-fv[1], fv[0]];
+  const uv = norm([E[0] - S[0], E[1] - S[1]]), un = [-uv[1], uv[0]];
+  const Lf = Math.hypot(W[0] - E[0], W[1] - E[1]);
+  const Mc = add2(E, fv, 0.34 * Lf), mw = 0.2 * H, r0 = 0.19 * H;
+  const rimA = add2(Mc, nv, mw), rimB = add2(Mc, nv, -mw);
+  const eA = add2(E, un, r0), eB = add2(E, un, -r0);
+  const back = add2(E, uv, -0.32 * H), bA = add2(back, un, r0 * 0.95), bB = add2(back, un, -r0 * 0.95);
+  const L = `stroke="${RC.line}" stroke-width="${f(1.1 * u)}" stroke-linejoin="round" stroke-linecap="round"`;
+  let s = '';
+  // hanging drape: between the lowest anchors, down under gravity
+  const anchors = [rimA, rimB, eA, eB, bA, bB].sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const xl = Math.min(...anchors.map((p) => p[0])), xr = Math.max(...anchors.map((p) => p[0]));
+  const left = anchors.reduce((a, b) => (b[0] < a[0] ? b : a)), right = anchors.reduce((a, b) => (b[0] > a[0] ? b : a));
+  const ymax = Math.max(left[1], right[1]);
+  const lean = (Mc[0] - E[0]) * 0.25;
+  const bot = [(xl + xr) / 2 + lean, ymax + 0.82 * H];
+  const wdt = xr - xl;
+  const drape = `M${P(left)} C${f(left[0] - 0.06 * H)},${f(left[1] + 0.35 * H)} ${f(bot[0] - wdt * 0.55)},${f(bot[1] - 0.08 * H)} ${P(bot)} C${f(bot[0] + wdt * 0.45)},${f(bot[1] - 0.18 * H)} ${f(right[0] + 0.04 * H)},${f(right[1] + 0.3 * H)} ${P(right)} L${P(Mc)}Z`;
+  s += `<path d="${drape}" fill="${RC.base}" ${L}/>`;
+  // inner side of the drape (shade) and the darker hem band
+  s += `<path d="M${f(left[0] + wdt * 0.18)},${f(left[1] + 0.1 * H)} C${f(left[0] + wdt * 0.12)},${f(left[1] + 0.4 * H)} ${f(bot[0] - wdt * 0.3)},${f(bot[1] - 0.12 * H)} ${f(bot[0] - wdt * 0.05)},${f(bot[1] - 0.02 * H)} C${f(bot[0] - wdt * 0.15)},${f(bot[1] - 0.2 * H)} ${f(left[0] + wdt * 0.32)},${f(left[1] + 0.35 * H)} ${f(left[0] + wdt * 0.36)},${f(left[1] + 0.12 * H)}Z" fill="${RC.shade}" opacity="0.9"/>`;
+  s += `<path d="M${f(bot[0] - wdt * 0.42)},${f(bot[1] - 0.1 * H)} C${f(bot[0] - wdt * 0.3)},${f(bot[1] - 0.01 * H)} ${f(bot[0] - wdt * 0.12)},${f(bot[1] + 0.01 * H)} ${P(bot)} C${f(bot[0] + wdt * 0.2)},${f(bot[1] - 0.06 * H)} ${f(bot[0] + wdt * 0.35)},${f(bot[1] - 0.12 * H)} ${f(bot[0] + wdt * 0.42)},${f(bot[1] - 0.2 * H)} L${f(bot[0] + wdt * 0.38)},${f(bot[1] - 0.26 * H)} C${f(bot[0] + wdt * 0.2)},${f(bot[1] - 0.14 * H)} ${f(bot[0])},${f(bot[1] - 0.08 * H)} ${f(bot[0] - wdt * 0.38)},${f(bot[1] - 0.16 * H)}Z" fill="${RC.line}" opacity="0.85"/>`;
+  s += `<path d="M${f(left[0] + wdt * 0.5)},${f(left[1] + 0.12 * H)} C${f(left[0] + wdt * 0.48)},${f(left[1] + 0.4 * H)} ${f(bot[0] + wdt * 0.05)},${f(bot[1] - 0.3 * H)} ${f(bot[0] + wdt * 0.1)},${f(bot[1] - 0.12 * H)}" fill="none" stroke="${RC.line}" stroke-width="${f(0.9 * u)}" stroke-linecap="round" opacity="0.8"/>`;
+  // sleeve over the elbow, from the upper arm end to the mouth
+  const tube = `M${P(bA)} L${P(eA)} C${P(add2(eA, fv, 0.12 * H))} ${P(add2(rimA, fv, -0.1 * H))} ${P(rimA)} L${P(rimB)} C${P(add2(rimB, fv, -0.1 * H))} ${P(add2(eB, fv, 0.12 * H))} ${P(eB)} L${P(bB)}Z`;
+  s += `<path d="${tube}" fill="${RC.base}" ${L}/>`;
+  s += `<path d="M${P(add2(eB, un, 0.05 * H))} C${P(add2(add2(eB, un, 0.05 * H), fv, 0.12 * H))} ${P(add2(add2(rimB, nv, 0.05 * H), fv, -0.1 * H))} ${P(add2(rimB, nv, 0.05 * H))}" fill="none" stroke="${RC.shade}" stroke-width="${f(0.06 * H)}" stroke-linecap="round" opacity="0.8"/>`;
+  s += `<path d="M${P(add2(E, un, 0.04 * H))} C${P(add2(E, fv, 0.1 * H))} ${P(add2(Mc, fv, -0.12 * H))} ${P(add2(add2(Mc, nv, 0.05 * H), fv, -0.04 * H))}" fill="none" stroke="${RC.line}" stroke-width="${f(0.8 * u)}" stroke-linecap="round" opacity="0.7"/>`;
+  // mouth: dark lining, the bare forearm out of it, then the near rim
+  const ang = (Math.atan2(nv[1], nv[0]) * 180) / Math.PI;
+  s += `<ellipse cx="${f(Mc[0])}" cy="${f(Mc[1])}" rx="${f(mw)}" ry="${f(0.065 * H)}" transform="rotate(${f(ang)} ${f(Mc[0])} ${f(Mc[1])})" fill="${RC.line}" ${L}/>`;
+  const a0 = add2(Mc, fv, -0.02 * H), w0 = 0.075 * H, w1 = 0.062 * H;
+  const fa = `M${P(add2(a0, nv, w0))} L${P(add2(W, nv, w1))} C${P(add2(add2(W, nv, w1), fv, 0.04 * H))} ${P(add2(add2(W, nv, -w1), fv, 0.04 * H))} ${P(add2(W, nv, -w1))} L${P(add2(a0, nv, -w0))}Z`;
+  s += `<path d="${fa}" fill="${HANDCOL.skin}" stroke="${HANDCOL.line}" stroke-width="${f(1 * u)}" stroke-linejoin="round"/>`;
+  s += `<path d="M${P(add2(add2(a0, nv, -w0 * 0.55), fv, 0.03 * H))} L${P(add2(W, nv, -w1 * 0.55))}" stroke="${HANDCOL.skinS}" stroke-width="${f(0.035 * H)}" stroke-linecap="round" opacity="0.8"/>`;
+  s += `<path d="M${P(rimA)} C${P(add2(add2(Mc, nv, mw * 0.55), fv, 0.075 * H))} ${P(add2(add2(Mc, nv, -mw * 0.55), fv, 0.075 * H))} ${P(rimB)} C${P(add2(add2(Mc, nv, -mw * 0.55), fv, 0.03 * H))} ${P(add2(add2(Mc, nv, mw * 0.55), fv, 0.03 * H))} ${P(rimA)}Z" fill="${RC.base}" ${L}/>`;
+  return s;
+}
+
+function sleeveUpper(S, E, H, u, RC) {
+  // a raised upper arm in a wide sleeve: tube from shoulder to elbow, the cloth sagging below it
+  const norm = (v) => { const l = Math.hypot(v[0], v[1]) || 1; return [v[0] / l, v[1] / l]; };
+  const add2 = (a, b, k = 1) => [a[0] + b[0] * k, a[1] + b[1] * k];
+  const lerp = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  const uv = norm([E[0] - S[0], E[1] - S[1]]);
+  let un = [-uv[1], uv[0]];
+  if (un[1] < 0) un = [-un[0], -un[1]]; // un points down (the side the cloth hangs on)
+  const rs = 0.16 * H, re = 0.2 * H;
+  const sU = add2(S, un, -rs), sD = add2(S, un, rs), eU = add2(E, un, -re), eD = add2(E, un, re);
+  const sag = 0.24 * H * Math.min(1, Math.abs(uv[0]) * 1.3 + 0.2);
+  const mid = add2(lerp(sD, eD, 0.62), [0, 1], sag);
+  const L = `stroke="${RC.line}" stroke-width="${f(1.1 * u)}" stroke-linejoin="round" stroke-linecap="round"`;
+  const a0 = (Math.atan2(uv[1], uv[0]) * 180) / Math.PI;
+  let s = `<path d="M${P(sD)} A${f(rs)},${f(rs)} 0 0 1 ${P(sU)} L${P(eU)} L${P(eD)} C${P(add2(eD, [0, 1], sag * 0.5))} ${P(add2(mid, uv, 0.25 * H))} ${P(mid)} C${P(add2(mid, uv, -0.3 * H))} ${P(add2(sD, [0, 1], sag * 0.4))} ${P(sD)}Z" fill="${RC.base}"/>`;
+  s += `<path d="M${P(lerp(sD, eD, 0.25))} C${P(add2(lerp(sD, eD, 0.4), [0, 1], sag * 0.7))} ${P(add2(mid, uv, -0.1 * H))} ${P(add2(mid, [0, -1], 0.04 * H))} C${P(add2(mid, uv, 0.12 * H))} ${P(add2(eD, [0, 1], sag * 0.2))} ${P(lerp(eD, eU, 0.3))}" fill="${RC.shade}" opacity="0.9"/>`;
+  s += `<path d="M${P(lerp(sU, eU, 0.35))} L${P(eU)} M${P(eD)} C${P(add2(eD, [0, 1], sag * 0.5))} ${P(add2(mid, uv, 0.25 * H))} ${P(mid)} C${P(add2(mid, uv, -0.3 * H))} ${P(add2(sD, [0, 1], sag * 0.4))} ${P(lerp(sD, S, 0.3))}" fill="none" ${L}/>`;
+  s += `<path d="M${P(lerp(sD, eD, 0.45))} C${P(add2(lerp(sD, eD, 0.5), [0, 1], sag * 0.5))} ${P(add2(mid, uv, 0.05 * H))} ${P(add2(mid, [0, -1], 0.02 * H))} M${P(lerp(S, E, 0.55))} C${P(lerp(S, E, 0.7))} ${P(add2(lerp(S, E, 0.8), un, 0.06 * H))} ${P(add2(lerp(S, E, 0.92), un, 0.1 * H))}" fill="none" stroke="${RC.line}" stroke-width="${f(0.8 * u)}" stroke-linecap="round" opacity="0.75"/>`;
+  void a0;
+  return s;
+}
+
 // ------------------------------------------------------------------ assembly
 export function lin(opt = {}) {
   const view = opt.view === 'side' ? 'side' : 'front', costume = opt.costume === 'C' ? 'C' : 'A';
@@ -528,6 +620,10 @@ export function lin(opt = {}) {
   const u = M.face.fw / 105;
   const PAL = recolour(D, opt.col);
   if (opt.props && opt.props.spear && !pose.spear) pose.spear = opt.props.spear;
+  if (pose.spear) {
+    const hs = pose.spear.hand || (view === 'side' ? (flip ? 'R' : 'L') : 'R');
+    if (pose[`fist${hs}`] === undefined) pose[`fist${hs}`] = true;
+  }
   const O = { hat: opt.hat !== false, tattoo: opt.tattoo ?? (costume === 'C' ? 1 : 0), rings: opt.headCloth !== 'plain', cangue: !!opt.cangue };
   const ang = jointAngles(D, view, pose, flip);
   const W = {};
@@ -543,17 +639,34 @@ export function lin(opt = {}) {
   let defs = '';
   const items = []; // [z, svg]
   const nearSide = view === 'side' ? (flip ? 'R' : 'L') : null;
-  for (const n of Object.keys(D.parts)) {
+  const draped = {}, handItems = {};
+  const partOrder = Object.keys(D.parts).sort((a, b) => (/^hand/.test(a) ? 1 : 0) - (/^hand/.test(b) ? 1 : 0));
+  for (const n of partOrder) {
     const p = D.parts[n];
     let inner = partSVG(D, n, '', PAL);
     const side = /^(arm|hand)/.test(n) ? (view === 'side' ? nearSide : n.slice(-1)) : null;
     if (n === 'head') inner = headBack(D, view, costume, E, pose, O) + inner + headExtras(D, view, costume, E, pose, O);
     if (/^hand/.test(n) && pose[`fist${side}`]) inner = fistFor(D, n, view, Href);
     let g = `<g data-part="${n}" transform="${mstr(wm(n))}">${inner}</g>`;
+    let z = n === 'head' && O.cangue ? 26 : p.z;
+    if (costume === 'A' && /^arm._up$/.test(n) && opt.sleeve !== 'rigid' && p.pivot) {
+      const lo = D.parts[n.replace('_up', '_lo')];
+      const Sw = ap(wm(n), p.pivot), Ew = ap(wm(n), lo.pivot);
+      const down = (Math.acos(Math.max(-1, Math.min(1, (Ew[1] - Sw[1]) / Math.hypot(Ew[0] - Sw[0], Ew[1] - Sw[1])))) * 180) / Math.PI;
+      if (down > 50) g = `<g data-part="${n}" data-sleeve="draped">${sleeveUpper(Sw, Ew, Href, u, robeColours(D, PAL))}</g>`;
+    }
+    if (costume === 'A' && /^arm._lo$/.test(n) && opt.sleeve !== 'rigid') {
+      const hn = 'hand' + n[3];
+      const Ew = ap(wm(n), p.pivot), Ww = ap(wm(n), D.parts[hn].pivot), Sw = ap(wm(D.parts[n].parent), D.parts[p.parent].pivot);
+      const down = (Math.acos(Math.max(-1, Math.min(1, (Ww[1] - Ew[1]) / Math.hypot(Ww[0] - Ew[0], Ww[1] - Ew[1])))) * 180) / Math.PI;
+      if (down > 55) { g = `<g data-part="${n}" data-sleeve="draped">${wideSleeve(Sw, Ew, Ww, Href, u, robeColours(D, PAL))}</g>`; draped[hn] = true; }
+    }
     if (M.arm_clip && /^(arm|hand)/.test(n)) g = `<g clip-path="url(#${id}ac)">${g}</g>`;
-    items.push([n === 'head' && O.cangue ? 26 : p.z, g]);
+    if (/^hand/.test(n)) handItems[n] = [z, g];
+    else items.push([z, g]);
   }
   if (O.cangue) items.push([25, `<g data-part="cangue" transform="${mstr(wm(D.parts.torso ? 'torso' : 'neck'))}">${cangueSVG(D, view, Href, u)}</g>`]);
+  for (const [hn, it] of Object.entries(handItems)) items.push(draped[hn] ? [D.parts['arm' + hn.slice(-1) + '_lo'].z + 0.5, it[1]] : it);
   if (M.arm_clip) defs += `<clipPath id="${id}ac"><path clip-rule="evenodd" d="M-2000,-2000H3000V4000H-2000Z ${M.arm_clip.join(' ')}"/></clipPath>`;
   // far arm in the side view: the near arm's drawing hung from the far shoulder, darker
   if (view === 'side' && M.far) {
@@ -590,7 +703,11 @@ function jointAngles(D, view, pose, flip) {
     a.armL_up = pose[`shoulder${ns}`] || 0;
     a.armL_lo = pose[`elbow${ns}`] || 0;
     a.handL = pose[`wrist${ns}`] || 0;
+    const fs_ = flip ? 'L' : 'R';
+    a.legNear = pose[`leg${ns}`] || 0;
+    a.legFar = pose[`leg${fs_}`] || 0;
   }
+  if (view === 'front') { a.legR = pose.legR || 0; a.legL = -(pose.legL || 0); }
   a.head = pose.headTilt || 0;
   return a;
 }
@@ -648,11 +765,13 @@ function spearItems(D, view, pose, W, wm, Href, u, flip, nearSide) {
   const g = ap(hm, gripLocal);
   const Lr = (2.3 / 1.8) * 7.5 * Href; // 2.30 m
   const gr = sp.grip ?? 0.42;
-  const angle = sp.angle ?? 0; // degrees from vertical, clockwise on screen (data frame)
+  // degrees from vertical. Side view: + tips the spear forward (toward the face), 90 = level
+  // thrust, negative = tip back over the shoulder. Front view: + leans the tip to the viewer's right.
+  const angle = view === 'side' ? -(sp.angle ?? 0) : sp.angle ?? 0;
   const m = mul(tr(g[0], g[1]), mul(rot(angle), tr(0, gr * Lr)));
-  let s = `<g data-part="spear" transform="${mstr(m)}">${spearSVG(Lr, u)}</g>`;
+  let s = `<g data-part="spear" transform="${mstr(m)}">${spearSVG(Lr, u, Href)}</g>`;
   if (sp.gourd !== false) {
-    const hang = ap(m, [0, -(Lr * 0.86)]);
+    const hang = ap(m, [0, -(Lr - 31 * (Href / 24))]);
     s += `<g data-part="gourd" transform="translate(${f(hang[0])},${f(hang[1])})">${gourdSVG(u, Href)}</g>`;
   }
   const zHand = view === 'side' && side !== nearSide ? 0.45 : D.parts[hn].z;
