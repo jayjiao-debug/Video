@@ -39,7 +39,7 @@ const CONV = { col: { robe: '#3B4356' }, headCloth: 'plain' };
 const FA = { x: 960, y: 1740, height: 1600 };
 const KA = FA.height / 7.5 / ((1468 - 331) / 6.5);                      // rig data px -> world px
 const dA = (p) => [FA.x + KA * (p[0] - 428), FA.y + KA * (p[1] - 1468)];
-const TAT = [474, 290];                                                   // tattoo centre, rig data (front, left cheek)
+const TAT = [458, 293];                                                   // tattoo centre, rig data (front, left cheek)
 const TATW = dA(TAT);
 const ZA = 6.0;                                                           // ECU zoom
 
@@ -66,9 +66,9 @@ function camA(t) {
 
 // abstract tattoo marks (rig data coords around TAT), three groups bloom in turn
 const MARKS = [
-  [[-13, -9, 5, 5], [-6, -10, 4, 6], [-12, -2, 6, 3]],
-  [[1, -9, 5, 4], [2, -3, 4, 5], [8, -7, 3, 7]],
-  [[-10, 4, 7, 3], [-1, 4, 5, 4], [6, 3, 4, 5]],
+  [[-12, -8, 4.5, 4], [-6.5, -9, 3, 5.5], [-11, -2.5, 6, 2.5]],
+  [[0, -8.5, 4, 3.5], [1.5, -3.5, 3, 4.5], [6.5, -7, 2.5, 6]],
+  [[-9, 3, 6, 2.5], [-1.5, 3.5, 4, 3.5], [4.5, 2.5, 3.5, 4.5]],
 ];
 function marks(t) {
   const times = [T.a, T.m2, T.m3];
@@ -80,7 +80,7 @@ function marks(t) {
       const cx = TAT[0] + x + w / 2, cy = TAT[1] + y + h / 2;
       const hw = (w / 2) * (0.35 + 0.65 * k), hh = (h / 2) * (0.35 + 0.65 * k);
       s += `<rect x="${f2(cx - hw * 1.7)}" y="${f2(cy - hh * 1.7)}" width="${f2(hw * 3.4)}" height="${f2(hh * 3.4)}" rx="${f2(hw)}" fill="#2A3A55" opacity="${f2(0.16 * k)}"/>`;
-      s += `<rect x="${f2(cx - hw)}" y="${f2(cy - hh)}" width="${f2(hw * 2)}" height="${f2(hh * 2)}" rx="0.6" fill="#2A3A55" opacity="${f2(0.88 * k)}"/>`;
+      s += `<rect x="${f2(cx - hw)}" y="${f2(cy - hh)}" width="${f2(hw * 2)}" height="${f2(hh * 2)}" rx="${f2(Math.min(hw, hh) * 0.45)}" fill="#2A3A55" opacity="${f2(0.8 * k)}"/>`;
     }
   });
   return s;
@@ -89,7 +89,7 @@ function marks(t) {
 // the 文笔匠's hand and slim tool, in rig data coords; tip at the active mark
 function tattooHand(t) {
   if (t > 61.1) return '';
-  const tips = [[TAT[0] - 8, TAT[1] - 6], [TAT[0] + 4, TAT[1] - 4], [TAT[0] - 2, TAT[1] + 6]];
+  const tips = [[TAT[0] - 8, TAT[1] - 5], [TAT[0] + 3, TAT[1] - 4], [TAT[0] - 2, TAT[1] + 5]];
   const times = [T.a, T.m2, T.m3];
   let gi = 0;
   for (let i = 0; i < 3; i++) if (t >= times[i] - 0.18) gi = i;
