@@ -235,6 +235,12 @@ def build(view, debug=None):
         if debug:
             cv2.imwrite(f'{debug}/{view}_{k}.png', cv2.cvtColor(rgba, cv2.COLOR_RGBA2BGRA))
         print(f'  {k}: {len(fills)} fills, {len(inks)} inks', flush=True)
+    if S.get('collar_patch'):  # restore a collar piece the background cut removed
+        tf = out_parts['torso']['fills']
+        cols0 = {c for c, _ in tf}
+        ref = np.array([227, 230, 213])
+        best = min(cols0, key=lambda c: ((np.array(hex_rgb(c)) - ref) ** 2).sum())
+        tf.append([best, S['collar_patch']])
     # palette compaction
     cols = {}
     def ci(c):
@@ -244,7 +250,7 @@ def build(view, debug=None):
     for k, v in out_parts.items():
         v['fills'] = [[ci(c), d] for c, d in v['fills']]
         v['inks'] = [[ci(c), w, d] for c, w, d in v['inks']]
-    meta = {kk: S[kk] for kk in ('chin', 'sole', 'origin_x', 'far', 'torso_clip') if kk in S}
+    meta = {kk: S[kk] for kk in ('chin', 'sole', 'origin_x', 'far', 'torso_clip', 'neck_clip') if kk in S}
     if S.get('arm_clip'):
         ac = S['arm_clip']
         cm = np.zeros(shp, bool)

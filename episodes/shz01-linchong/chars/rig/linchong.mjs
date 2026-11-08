@@ -19,6 +19,7 @@
 //            thrust, −40 = carried over the shoulder, tip and gourd behind); front view + = tip to
 //            the viewer's right. The holding hand closes into a fist automatically.
 //   hat (C, default true), tattoo 0..1, headCloth:'plain' (no jade rings), cangue (bool),
+//   cangueTilt (profile board angle below horizontal, default 20; model sheet range 25–35),
 //   col: { robe, sash, cloak, coat, headscarf } recolour families, sleeve:'rigid' to disable the
 //   draped wide sleeve of costume A.
 //   flip : mirror (side views face left by default; flip makes them face right).
@@ -530,7 +531,7 @@ function neckColour(D) {
   return D._neckc;
 }
 
-function cangueSVG(D, view, Href, u, drop = 0) {
+function cangueSVG(D, view, Href, u, drop = 0, tilt = 20) {
   const C = { wood: '#9a7048', woodT: '#a97c51', woodS: '#7a5534', woodE: '#5a3d24', iron: '#45474d', ironS: '#2c2d31', paper: '#efe9dc', red: '#c4372f', dark: '#2a1c14' };
   const cm = Href / 24, F = D.meta.face;
   const lw = Math.max(1 * u, 0.14 * cm);
@@ -570,23 +571,24 @@ function cangueSVG(D, view, Href, u, drop = 0) {
       `<path d="M${f(nx - nw * 0.82)},${f(nt)} C${f(nx - nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx - nw * 0.95)},${f(nb - 2 * cm)} ${f(nx - nw)},${f(nb)} M${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>`;
   } else {
     // profile (data faces left): 90 cm board, long end forward and 30° down, top face seen from a bit above
-    const a = (30 * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a);
-    const nx = F.ear[0] - 8 * u, ny = F.chin[1] + drop + 0.2 * Href;    // neck centre, right under the jaw
+    // locked round the neck at the collarbones: short end behind the neck, long end forward and
+    // down in front of the chest; seen nearly edge-on, so the top face is a thin sliver
+    const a = (tilt * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a);
+    const nx = F.ear[0] - 6 * u, ny = F.chin[1] + drop + 0.27 * Href;   // neck centre, board right under the jaw
     const Q = (d, o) => [nx - d * cm * ca + o * cm * sa, ny + d * cm * sa + o * cm * ca]; // d forward, o down (cm)
-    const W = 10, T = 3.2;                                               // projected top-face width, thickness
+    const W = 12, T = 3.2;                                               // projected top-face width (seen a little from above), thickness
     const pth = (pts) => 'M' + pts.map(P).join(' L') + 'Z';
     const topF = `M${P(Q(-27, -W))} L${P(Q(60, -W))} C${P(Q(63, -W))} ${P(Q(63.5, 0))} ${P(Q(61, 0))} L${P(Q(-26, 0))} C${P(Q(-29, 0))} ${P(Q(-29.5, -W))} ${P(Q(-27, -W))}Z`;
-    const hole = (() => { const c = Q(0, -W / 2); return `M${f(c[0] - 6.4 * cm)},${f(c[1])} A${f(6.4 * cm)},${f(3.4 * cm)} 0 1 0 ${f(c[0] + 6.4 * cm)},${f(c[1])} A${f(6.4 * cm)},${f(3.4 * cm)} 0 1 0 ${f(c[0] - 6.4 * cm)},${f(c[1])}Z`; })();
+    const hole = (() => { const c = Q(0, -W / 2); return `M${f(c[0] - 6.4 * cm * ca)},${f(c[1] + 6.4 * cm * sa)} A${f(6.4 * cm)},${f(3.8 * cm)} ${f(-tilt)} 1 0 ${f(c[0] + 6.4 * cm * ca)},${f(c[1] - 6.4 * cm * sa)} A${f(6.4 * cm)},${f(3.8 * cm)} ${f(-tilt)} 1 0 ${f(c[0] - 6.4 * cm * ca)},${f(c[1] + 6.4 * cm * sa)}Z`; })();
     board += `<path d="M${P(Q(-26, 0))} L${P(Q(61, 0))} C${P(Q(63.5, 0))} ${P(Q(63.5, T))} ${P(Q(61, T))} L${P(Q(-26, T))} C${P(Q(-29, T))} ${P(Q(-29, 0))} ${P(Q(-26, 0))}Z" fill="${C.woodE}" ${L()}/>`;
-    board += `<g transform="rotate(${f(-30)} ${f(Q(0, -W / 2)[0])} ${f(Q(0, -W / 2)[1])})"></g>`;
-    board += `<path fill-rule="evenodd" d="${topF} ${hole}" fill="${C.wood}" ${L(1.1)}/>`;
+    board += `<path fill-rule="evenodd" d="${topF} ${hole}" fill="${C.woodT}" ${L(1.1)}/>`;
     board += `<path d="${pth([Q(-24, -W * 0.7), Q(-8, -W * 0.72)])} M${P(Q(8, -W * 0.3))} L${P(Q(52, -W * 0.28))}" fill="none" stroke="${C.woodS}" stroke-width="${f(lw * 0.8)}" opacity="0.7"/>`;
     for (const [d0, d1] of [[-26.5, -21.5], [55, 60.5]]) board += `<path d="${pth([Q(d0, -W), Q(d1, -W), Q(d1, T), Q(d0, T)])}" fill="${C.iron}" ${L(0.8)}/>` + `<circle cx="${f(Q((d0 + d1) / 2, -W / 2)[0])}" cy="${f(Q((d0 + d1) / 2, -W / 2)[1])}" r="${f(0.6 * cm)}" fill="${C.ironS}"/>`;
     board += `<path d="${pth([Q(14, -W * 0.85), Q(30, -W * 0.85), Q(30, -W * 0.2), Q(14, -W * 0.2)])}" fill="${C.paper}" ${L(0.6)}/><path d="${pth([Q(24, -W * 0.7), Q(27, -W * 0.7), Q(27, -W * 0.38), Q(24, -W * 0.38)])}" fill="none" stroke="${C.red}" stroke-width="${f(lw * 0.8)}"/>`;
     board += `<path d="${hole}" fill="${C.dark}"/>`;
-    const hc = Q(0, -W / 2), nw = 6 * cm;
+    const hc = Q(0, -W / 2), nw = 5.6 * cm;
     neck += `<clipPath id="${id}n"><path d="M${f(hc[0] - 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(hc[1])} L${f(hc[0] - 12 * cm)},${f(hc[1])}Z ${hole}"/></clipPath>`;
-    const nt = F.chin[1] + drop + 0.02 * Href, nb = hc[1] + 3.4 * cm;
+    const nt = hc[1] - 0.35 * Href, nb = hc[1] + 3.8 * cm;
     neck += `<g clip-path="url(#${id}n)"><path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)} L${f(hc[0] + nw)},${f(nb)} C${f(hc[0] + nw)},${f(nb - 2 * cm)} ${f(hc[0] + nw * 0.9)},${f((nt + nb) / 2)} ${f(hc[0] + nw * 0.8)},${f(nt)}Z" fill="${skin}"/>` +
       `<path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>`;
   }
@@ -724,6 +726,9 @@ export function lin(opt = {}) {
   const items = []; // [z, svg]
   const nearSide = view === 'side' ? (flip ? 'R' : 'L') : null;
   const draped = {}, handItems = {};
+  // with the cangue on, the head layer (head, jaw, mouth) is lifted above the board (z 25)
+  const headZ = D.parts.head ? D.parts.head.z : 15;
+  const zc = (z) => (O.cangue && z >= headZ && z < headZ + 1 ? z + 11 : z);
   const partOrder = Object.keys(D.parts).sort((a, b) => (/^hand/.test(a) ? 1 : 0) - (/^hand/.test(b) ? 1 : 0));
   for (const n of partOrder) {
     const p = D.parts[n];
@@ -732,16 +737,18 @@ export function lin(opt = {}) {
     if (n === 'head') inner = headBack(D, view, costume, E, pose, O) + inner + headExtras(D, view, costume, E, pose, O);
     if (n === 'jaw' && SF) {
       inner += SF.jaw;
-      if (SF.back) items.push([D.parts.head.z + 0.1, `<g data-part="mouth" transform="${mstr(wm('head'))}">${SF.back}</g>`]);
-      if (SF.front) items.push([p.z + 0.05, `<g data-part="mouthLine" transform="${mstr(wm('head'))}">${SF.front}</g>`]);
+      if (SF.back) items.push([zc(D.parts.head.z + 0.1), `<g data-part="mouth" transform="${mstr(wm('head'))}">${SF.back}</g>`]);
+      if (SF.front) items.push([zc(p.z + 0.05), `<g data-part="mouthLine" transform="${mstr(wm('head'))}">${SF.front}</g>`]);
     }
     if (/^hand/.test(n) && pose[`fist${side}`]) inner = fistFor(D, n, view, Href);
-    if (n === 'torso' && M.torso_clip) {
+    const pclip = n === 'torso' ? M.torso_clip : n === 'neck' ? M.neck_clip : null;
+    if (pclip) {
+      // the part's true silhouette where a higher part (scarf tails, hair) covered it in the painting
       const cid = uid('tc');
-      inner = `<clipPath id="${cid}"><path d="M${M.torso_clip.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
+      inner = `<clipPath id="${cid}"><path d="M${pclip.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
     }
     let g = `<g data-part="${n}" transform="${mstr(wm(n))}">${inner}</g>`;
-    let z = n === 'head' && O.cangue ? 26 : p.z;
+    let z = zc(p.z);
     if (costume === 'A' && /^arm._up$/.test(n) && opt.sleeve !== 'rigid' && p.pivot) {
       const lo = D.parts[n.replace('_up', '_lo')];
       const Sw = ap(wm(n), p.pivot), Ew = ap(wm(n), lo.pivot);
@@ -761,7 +768,7 @@ export function lin(opt = {}) {
   if (O.cangue) {
     // board (hole cut out) over the shoulders and arms, then the neck rising through the hole,
     // then the head and beard (raised to z 26 above both)
-    const cg = cangueSVG(D, view, Href, u, drop), mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
+    const cg = cangueSVG(D, view, Href, u, drop, opt.cangueTilt ?? 20), mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
     items.push([25, `<g data-part="cangue" transform="${mt}">${cg.board}</g>`]);
     items.push([25.5, `<g data-part="cangueNeck" transform="${mt}">${cg.neck}</g>`]);
   }
