@@ -286,6 +286,9 @@ const POSES = {
       return part(sh, { d: 1.4, w0: W * 0.85, light: L });
     };
     let back = part(palm, { d: 4.5, w0: W, light: L, skip: (i) => palm.pts[i][0] > 1 });
+    // the hollow inside the palm between the knuckles and the shaft (in shadow), so no background shows between the fingers
+    const hollow = blob([[-30, -13], [-40, -16], [-46, -10], [-46, 4], [-44, 14], [-38, 19], [-30, 14], [-27, 0]]);
+    back += `<path d="${pathOf(hollow.pts)}" fill="${SHADE}"/>`;
     for (const n of ['pinky', 'ring']) back += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.18 });
     for (const n of ['middle', 'index']) back += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.18 });
     let front = pad([SX - 4.2, -9.5], 4.6) + pad([SX - 4.4, 3.8], 4.4);

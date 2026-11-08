@@ -8,14 +8,14 @@ let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${CW * cols}" height="${
 const label = ['1 fist (3/4, knuckles on top)', '2 loosening', '3 open, relaxed (side)', '4 palm down (the press)', '5 执笔 brush — REDESIGNED', '6 paper-corner grip — REDESIGNED', '7 on a shoulder — REDESIGNED', '8 pushing the stone'];
 POSE_NAMES.forEach((p, i) => {
   const cx = (i % cols) * CW, cy = Math.floor(i / cols) * CH;
-  s += `<g transform="translate(${cx} ${cy})"><rect x="8" y="8" width="${CW - 16}" height="${CH - 16}" rx="10" fill="#f3ead9"/>`;
+  s += `<g transform="translate(${cx} ${cy})"><clipPath id="cell${i}"><rect x="8" y="8" width="${CW - 16}" height="${CH - 16}" rx="10"/></clipPath><rect x="8" y="8" width="${CW - 16}" height="${CH - 16}" rx="10" fill="#f3ead9"/><g clip-path="url(#cell${i})">`;
   const size = 420, x = CW / 2, y = CH - 150;
   if (p === 'grip') {
-    const k = size / 100, gx = x - 40, gy = y + 40;
+    const k = size / 100, gx = x + 60, gy = y + 60;
     s += hand(p, { x: gx, y: gy, size, layer: 'back' });
     // the sheet: its lower-right corner at local (24, -40)
     const cx = gx + 24 * k, cy = gy - 40 * k;
-    s += `<rect x="${cx - 560}" y="${cy - 520}" width="560" height="520" fill="#F1E4C6" stroke="#b9a37c" stroke-width="2"/><rect x="${cx - 560}" y="${cy - 520}" width="560" height="520" fill="#FFD9A0" opacity="0.12"/>`;
+    s += `<rect x="${cx - 470}" y="${cy - 400}" width="470" height="400" fill="#F1E4C6" stroke="#b9a37c" stroke-width="2"/><rect x="${cx - 470}" y="${cy - 400}" width="470" height="400" fill="#FFD9A0" opacity="0.12"/>`;
     s += hand(p, { x: gx, y: gy, size, layer: 'front', sleeve: false });
   } else if (p === 'shoulder') {
     const k = size / 100, hx = x + 10, hy = y - 300;
@@ -25,7 +25,7 @@ POSE_NAMES.forEach((p, i) => {
     s += `<path d="M30,${top + 170} C160,${top + 70} 420,${top + 40} ${CW - 30},${top + 90}" stroke="#2E3446" stroke-width="10" fill="none" opacity="0.7"/>`;
     s += hand(p, { x: hx, y: hy, size, rot: -8 });
   } else if (p === 'brush') {
-    const k = size / 100, bx = x + 120, by = y - 120;
+    const k = size / 100, bx = x + 150, by = y - 150;
     s += `<rect x="20" y="${by + 59 * k}" width="${CW - 40}" height="${CH - (by + 59 * k) - 20}" fill="#F1E4C6" stroke="#b9a37c" stroke-width="2"/>`;
     s += hand(p, { x: bx, y: by, size });
   } else if (p === 'stone') {
@@ -33,7 +33,7 @@ POSE_NAMES.forEach((p, i) => {
     s += `<path d="M${x + 15 * k},${y - 470} L${CW - 30},${y - 490} L${CW - 30},${y + 120} L${x + 15 * k},${y + 120}Z" fill="#8f8a80" stroke="#2A1C17" stroke-width="5"/>`;
     s += hand(p, { x, y, size });
   } else s += hand(p, { x, y, size });
-  s += `<text x="24" y="44" font-family="Noto Sans CJK SC" font-size="26" fill="#5a4a3a">${label[i]}</text></g>`;
+  s += `</g><rect x="14" y="14" width="${label[i].length * 15 + 30}" height="42" rx="8" fill="#f3ead9" opacity="0.92"/><text x="24" y="44" font-family="Noto Sans CJK SC" font-size="26" fill="${i >= 4 && i <= 6 ? '#B3302A' : '#5a4a3a'}">${label[i]}</text></g>`;
 });
 s += '</svg>';
 const b = await chromium.launch(); const pg = await b.newPage({ viewport: { width: CW * cols, height: CH * 2 } });
