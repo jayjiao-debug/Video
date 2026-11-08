@@ -394,11 +394,11 @@ function inkNight(t) {
     `<rect x="-200" y="-200" width="2320" height="1480" fill="url(#t13night)"/>` + CLOUDS.replace('<image ', `<image transform="translate(${f2(-160 + (t - T32) * 6)} -60)" `);
 }
 const CLOUDS = (() => {
-  // faint ink-wash clouds drifting in the night around the paper (baked)
+  // faint ink-wash clouds drifting in the night around the paper (baked; radial fades, no hard edges)
   const R = rng(41);
-  let s = `<filter id="t13cl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="38"/></filter><g filter="url(#t13cl)">`;
-  for (let i = 0; i < 16; i++) s += `<ellipse cx="${f2(R() * 2200)}" cy="${f2(R() * 1200)}" rx="${f2(160 + R() * 260)}" ry="${f2(60 + R() * 120)}" fill="${R() < 0.5 ? '#11131a' : '#3d4352'}" opacity="${f2(0.25 + R() * 0.3)}"/>`;
-  return bake('t13_clouds', 2200, 1200, s + '</g>');
+  let s = `<defs>${rg('t13cd', [[0, '#0d0f14', 0.55], [0.55, '#0d0f14', 0.25], [1, '#0d0f14', 0]])}${rg('t13cl2', [[0, '#4a5163', 0.4], [0.55, '#4a5163', 0.16], [1, '#4a5163', 0]])}</defs>`;
+  for (let i = 0; i < 18; i++) s += `<ellipse cx="${f2(R() * 2200)}" cy="${f2(R() * 1200)}" rx="${f2(220 + R() * 320)}" ry="${f2(90 + R() * 150)}" fill="url(#${R() < 0.55 ? 't13cd' : 't13cl2'})"/>`;
+  return bake('t13_clouds', 2200, 1200, s);
 })();
 function hazeBg(op) {
   if (op <= 0) return '';
