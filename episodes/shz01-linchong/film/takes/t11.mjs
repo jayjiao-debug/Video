@@ -1,6 +1,6 @@
 // T11 · 93.565–115.217 · S25 door → S26 雪夜上梁山 → S27 seasons → S28 the news (builder F)
 // storyboard_v3 TAKE 11, colour C9–C10, film/timing.md (retimed: 「已故半载」 brushed with the voice).
-import { L, kf, ramp, E, bake, snow, ridge, lerp, clamp, f2, rng, noise1, fbm1, wipeMask, shake, blurId, smooth } from '../lib.mjs';
+import { L, kf, ramp, E, bake, snow, ridge, lerp, clamp, f2, rng, noise1, fbm1, wipeMask, shake, blurId, smooth, toScreen, toWorld } from '../lib.mjs';
 import { lin } from '../../chars/rig/linchong.mjs';
 import { walker, rearDoorSil, spearLevel, rearBust, smallBoat, smallMan, geese } from '../cast/liangshan.mjs';
 
@@ -157,7 +157,8 @@ function seasonBg(key) {
   let s = `<defs><linearGradient id="t11sk${key}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sky}"/><stop offset="1" stop-color="${P.sky2}"/></linearGradient>` +
     `<linearGradient id="t11wa${key}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sky2}"/><stop offset="0.08" stop-color="${P.water}"/><stop offset="1" stop-color="${P.water}"/></linearGradient></defs>`;
   s += `<rect width="2200" height="1240" fill="url(#t11sk${key})"/>`;
-  s += `<path d="${ridge(71, 900, 2240, 520, 70, 600, 30)}" fill="${P.far}" opacity="0.55"/>`;
+  s += `<defs><linearGradient id="t11fs${key}" x1="0" y1="0" x2="1" y2="0"><stop offset="0.28" stop-color="#000"/><stop offset="0.6" stop-color="#fff"/></linearGradient><mask id="t11fm${key}" maskUnits="userSpaceOnUse" x="0" y="0" width="2200" height="700"><rect width="2200" height="700" fill="url(#t11fs${key})"/></mask></defs>`;
+  s += `<path d="${ridge(71, -100, 2240, 520, 70, 600, 30)}" fill="${P.far}" opacity="0.55" mask="url(#t11fm${key})"/>`;
   s += `<rect y="520" width="2200" height="40" fill="${P.sky2}" opacity="0.85"/>`;
   s += `<rect y="540" width="2200" height="700" fill="url(#t11wa${key})"/>`;
   const R = rng(17);
@@ -261,14 +262,22 @@ function s28(t) {
   const bow = ramp(t, 109.39, 109.9, E.out);
   let boat = `<g transform="translate(${f2(bx)} ${f2(by + Math.sin(t * 1.7) * 1.5)}) scale(${f2(bs)})">`;
   boat += `<g transform="translate(-110 -16)">${smallMan({ h: 118, kind: 'boatman', pole: Math.sin(t * 1.1) * 0.3 * (1 - b), coat: '#4A4E48' })}</g>`;
-  if (off < 1) boat += `<g transform="translate(${f2(40 + off * 70)} ${f2(-16 - off * 14)})">${smallMan({ h: 120, kind: 'messenger', coat: '#4E5A62' })}</g>`;
+  if (off <= 0) boat += `<g transform="translate(40 -16)">${smallMan({ h: 120, kind: 'messenger', coat: '#4E5A62' })}</g>`;
   boat += smallBoat(330);
   boat += `</g>`;
   // the pier (from under him toward the boat), d 0.8
   const pier = `<path d="M2100,1300 L1500,1300 L880,628 L940,622Z" fill="#6B5E4F"/><path d="M880,628 L940,622 L944,632 L884,640Z" fill="#4A3F34"/>` +
     Array.from({ length: 12 }, (_, i) => { const k = i / 12; return `<path d="M${f2(lerp(1500, 880, k))},${f2(lerp(1300, 628, k))} L${f2(lerp(2100, 940, k))},${f2(lerp(1300, 622, k))}" stroke="#4A3F34" stroke-width="${f2(lerp(6, 1.5, k))}"/>`; }).join('');
   // messenger on the pier, bowing
-  const mess = off >= 1 ? `<g transform="translate(${f2(bx + 124)} ${f2(by - 24)})">${smallMan({ h: 122, kind: 'messenger', bow, coat: '#4E5A62', facing: 1 })}</g>` : '';
+  let mess = '';
+  if (off > 0) {
+    // from his place on the boat (boat layer, d 0.5) onto the pier end (pier layer, d 0.8)
+    const onBoat = toWorld(c, 0.8, toScreen(c, 0.5, [bx + 40 * bs, by - 16 * bs]));
+    const stand = [958, 652];
+    const hop = Math.sin(off * Math.PI) * 18;
+    const mx = lerp(onBoat[0], stand[0], E.inOut(off)), my = lerp(onBoat[1], stand[1], E.inOut(off)) - hop;
+    mess = `<g transform="translate(${f2(mx)} ${f2(my)})">${smallMan({ h: lerp(120 * bs, 124, off), kind: 'messenger', bow, coat: '#4E5A62', facing: 1 })}</g>`;
+  }
   s += L(c, 0.5, `<g opacity="${f2(bop)}">${boat}</g>`, { id: 't11s28boat' });
   s += L(c, 0.8, pier + mess, { id: 't11s28pier', bleed: 'rb' });
   // his back, right third (shoulders y ≈ 520), sinks as the words land
