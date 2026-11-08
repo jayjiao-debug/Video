@@ -14,6 +14,7 @@ export function soldier(o) {
   const col = { tunic: '#8E3B2C', tunicS: '#6E2A20', trou: '#3C3A44', trouS: '#2E2C36', boot: '#1E1A1A', scarf: '#24201E', skin: '#E6A882', skinS: '#C98B68', belt: '#2E2420', shaft: '#6B4A2E', steel: '#C9CED2', tassel: '#C8372D', ...(o.col || {}) };
   const lean = o.lean || 0, step = o.step || 0;
   const arm = o.arm ?? 0.5, ang = o.spear ?? 0;
+  const build = o.build || 1, gear = o.gear || 'scarf';
   // body in local coords (feet at 0,0; facing left; up = -y), drawn at k
   let s = '';
   const fl = step * 30;
@@ -39,6 +40,9 @@ export function soldier(o) {
   up += `<path d="M-22,-330 C-22,-356 18,-360 24,-336 C27,-324 24,-306 18,-298 L12,-300 L10,-326 L-18,-324Z" fill="${col.scarf}"/>`;
   up += `<path d="M20,-334 C34,-328 42,-314 44,-298 L36,-298 C34,-310 28,-320 18,-326Z M18,-326 C30,-316 34,-300 32,-286 L26,-288 C26,-300 22,-310 14,-318Z" fill="${col.scarf}"/>`;
   up += `<circle cx="-14" cy="-316" r="2" fill="${LN}"/><path d="M-20,-322 l8,-2" stroke="${LN}" stroke-width="2"/><path d="M4,-312 c4,2 4,8 0,10" stroke="${col.skinS}" stroke-width="2" fill="none"/>`;
+  if (gear === 'band') up += `<path d="M-24,-330 C-10,-334 10,-334 24,-330 L24,-322 C10,-326 -10,-326 -24,-322Z" fill="#C8372D"/><path d="M22,-328 C34,-326 40,-316 42,-306 L36,-306 C34,-314 30,-320 20,-322Z" fill="#C8372D"/>`;
+  if (gear === 'cap') up += `<path d="M-30,-326 C-30,-362 30,-366 32,-328 L40,-324 L-38,-322Z" fill="#4A3A2A"/><path d="M-38,-324 L40,-326 L40,-320 L-38,-318Z" fill="#2E241A"/>`;
+  if (o.beard) up += `<path d="M-26,-298 C-22,-286 -12,-280 -4,-282 C-10,-288 -14,-294 -16,-300Z" fill="${col.scarf}"/>`;
   // arm with the spear
   const sh = [-6, -262];
   const hand = [lerp(-34, -122, arm), lerp(-206, -244, arm)];
@@ -56,23 +60,40 @@ export function soldier(o) {
   up += `<path d="M${sh[0]},${sh[1]} Q${f2(el[0])},${f2(el[1])} ${f2(hand[0] + 8)},${f2(hand[1])}" stroke="${col.tunic}" stroke-width="22" stroke-linecap="round" fill="none"/>`;
   up += `<ellipse cx="${f2(hand[0])}" cy="${f2(hand[1])}" rx="10" ry="9" fill="${col.skin}" stroke="${LN}" stroke-width="1.8"/>`;
   s += `<g transform="rotate(${f2(-lean)} 0 -170)">${up}</g>`;
-  return `<g transform="translate(${f2(x)} ${f2(y)}) scale(${f2(o.flip ? -k : k)} ${f2(k)})">${s}</g>`;
+  return `<g transform="translate(${f2(x)} ${f2(y)}) scale(${f2((o.flip ? -k : k) * build)} ${f2(k)})">${s}</g>`;
 }
 
 /** Two rows of ten soldiers (back row first). motion(t) gives the shared pose; each man lags slightly. */
 export function ranks(t, o = {}) {
   const R = rng(o.seed || 17);
   const rows = o.rows || [
-    { y: 652, h: 218, x0: 60, dx: 158, n: 12, lag: 0.17 },
-    { y: 690, h: 252, x0: -10, dx: 182, n: 11, lag: 0.13 },
+    { y: 628, h: 176, x0: 20, dx: 132, n: 15, lag: 0.2, haze: 0.42 },
+    { y: 652, h: 214, x0: 60, dx: 158, n: 12, lag: 0.16, haze: 0.22 },
+    { y: 690, h: 250, x0: -10, dx: 182, n: 11, lag: 0.12, haze: 0 },
   ];
+  const tones = [{}, { tunic: '#7E3428', tunicS: '#5E241C' }, { tunic: '#9A4630', tunicS: '#743222' }, { tunic: '#86372C', tunicS: '#622720', trou: '#45404A' }];
+  const skins = ['#E6A882', '#D99A72', '#EDB590', '#CF9068'];
   let s = '';
   for (const row of rows) {
+    let x = row.x0;
+    let g = '';
     for (let i = 0; i < row.n; i++) {
-      const jit = R(), hj = 1 + (R() - 0.5) * 0.08, lagi = row.lag + R() * 0.05;
+      const hj = 1 + (R() - 0.5) * 0.12;                 // ±6 % height
+      const lagi = row.lag + R() * 0.16;                  // up to ~5 frames apart
       const m = o.motion(t - lagi);
-      const tone = R() > 0.5 ? {} : { tunic: '#7E3428', tunicS: '#5E241C' };
-      s += soldier({ x: row.x0 + i * row.dx + (jit - 0.5) * 30, y: row.y, h: row.h * hj, ...m, col: tone });
+      const ds = (R() - 0.5) * 12, da = (R() - 0.5) * 0.16, dl = (R() - 0.5) * 4;
+      const gr = R(), gear = gr < 0.55 ? 'scarf' : gr < 0.8 ? 'band' : 'cap';
+      const col = { ...tones[Math.floor(R() * tones.length)], skin: skins[Math.floor(R() * skins.length)] };
+      const build = 0.9 + R() * 0.22;
+      g += soldier({ x, y: row.y + (R() - 0.5) * 8, h: row.h * hj, spear: m.spear + ds, arm: Math.max(0, Math.min(1, m.arm + da)), lean: m.lean + dl, step: m.step, col, gear, build, beard: R() > 0.6 });
+      x += row.dx * (0.78 + R() * 0.5) + (R() > 0.85 ? row.dx * 0.5 : 0); // uneven spacing, the odd gap
+    }
+    s += g;
+    // depth haze in front of the farther rows (spring haze #F3E2BE)
+    if (row.haze) {
+      const gid = `rkhz${Math.round(row.y)}`;
+      s += `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3E2BE" stop-opacity="0"/><stop offset="0.35" stop-color="#F3E2BE" stop-opacity="${row.haze}"/><stop offset="0.8" stop-color="#F3E2BE" stop-opacity="${row.haze}"/><stop offset="1" stop-color="#F3E2BE" stop-opacity="0"/></linearGradient></defs>` +
+        `<rect x="-600" y="${row.y - row.h * 1.3}" width="3200" height="${row.h * 1.42}" fill="url(#${gid})"/>`;
     }
   }
   return s;

@@ -123,6 +123,18 @@ const RACK = bake(`${ID}_rack`, 520, 1300, (() => {
   return s + '</g>';
 })());
 
+const DRUM = bake(`${ID}_drum`, 760, 760, (() => {
+  // a red war drum on a wooden stand, pre-blurred (foreground, d 1.5)
+  let s = `<defs><filter id="${ID}db" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="11"/></filter>` +
+    `<linearGradient id="${ID}dg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7A2A20"/><stop offset="0.45" stop-color="#B8392C"/><stop offset="1" stop-color="#6E241C"/></linearGradient></defs><g filter="url(#${ID}db)">`;
+  s += `<path d="M120,700 L210,330 M560,700 L470,330 M200,720 L340,420 M480,720 L340,420" stroke="#4A2E1A" stroke-width="26" stroke-linecap="round"/>`;
+  s += `<rect x="140" y="160" width="400" height="260" rx="40" fill="url(#${ID}dg)"/>`;
+  s += `<ellipse cx="340" cy="160" rx="200" ry="56" fill="#E8D2A6"/><ellipse cx="340" cy="160" rx="200" ry="56" fill="none" stroke="#3A2416" stroke-width="10"/>`;
+  for (let i = 0; i < 9; i++) s += `<circle cx="${160 + i * 45}" cy="${190 + Math.sin(i / 8 * Math.PI) * 18}" r="7" fill="#C9A45C"/>`;
+  s += `<ellipse cx="340" cy="420" rx="200" ry="40" fill="#5A1E16"/>`;
+  return s + '</g>';
+})());
+
 function flag(x, y, w, h, t, seed, col = '#C8372D') {
   // a flag on a pole top at (x, y): the cloth flies to the left (wind from the right), rippling
   const pts = [], pts2 = [];
@@ -181,6 +193,8 @@ export default {
     // his shadow (sun from the right, cast to the left) + him (d 1.0)
     s += L(c, 1, `<ellipse cx="${FEET[0] - 150}" cy="${FEET[1] + 6}" rx="260" ry="26" fill="url(#${ID}sh)"/>` + hero(t) +
       dust(t, FEET[0] - 30, FEET[1], T0, 1.1) + dust(t, FEET[0] - 200, FEET[1] + 4, 31.138, 1.0), { id: `${ID}hero` });
+    // blurred foreground war drum at the lower right (d 1.5): enters as the camera trucks
+    s += L(c, 1.5, `<g transform="translate(1820 560)">${DRUM}</g>`, { id: `${ID}drum`, bleed: 'rb' });
     // weapon rack, blurred foreground at the left edge (d 1.4)
     s += L(c, 1.4, `<g transform="translate(-420 -220)">${RACK}</g>`, { id: `${ID}rack`, bleed: 'lb' });
     // warm dusk grade over everything at the end

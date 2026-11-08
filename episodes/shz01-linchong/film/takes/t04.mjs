@@ -264,10 +264,10 @@ function hisHand(cx, cy, stroke) {
 function s08(t) {
   // camera: truck left 4 px/frame, then tilt up with the steam from 37.40
   const tx = (t - T_PUSH) * 120;
-  const ty = -260 * ramp(t, 37.4, 38.75, E.inOut);
+  const ty = -50 * ramp(t, 37.4, 38.75, E.inOut);
   const z = lerp(1.0, 1.04, ramp(t, T_PUSH, 38.64, E.sine));
   const c = { x: -tx + 200, y: ty, zoom: z };
-  const B1 = [840, 640], B2 = [1180, 640];
+  const B1 = [840, 556], B2 = [1180, 556]; // feet stay above the subtitle band (y < 800)
   let defs = BOWL_DEFS('t04b1') + BOWL_DEFS('t04b2') +
     `<linearGradient id="t04ew" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#A9C2B8"/><stop offset="0.4" stop-color="#DCEBE4"/><stop offset="1" stop-color="#8FA89E"/></linearGradient>` +
     `<radialGradient id="t04lamp" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFD58A" stop-opacity="0.9"/><stop offset="0.4" stop-color="#F2B05A" stop-opacity="0.45"/><stop offset="1" stop-color="#F2B05A" stop-opacity="0"/></radialGradient>` +
@@ -282,9 +282,9 @@ function s08(t) {
     `<rect x="1300" y="-600" width="700" height="980" fill="#2F1F17"/><rect x="1420" y="-420" width="300" height="640" fill="#4A3524" opacity="0.6"/><path d="M1460,-300 Q1520,-200 1500,-60 Q1560,40 1680,120" stroke="#2A1A12" stroke-width="6" fill="none" opacity="0.5"/>` +
     `<ellipse cx="1500" cy="40" rx="700" ry="520" fill="url(#t04key)"/>`, { id: 't04room', bleed: 'all' });
   // table top (d 0.9)
-  s += L(c, 0.9, `<path d="M-600,560 L2600,560 L2600,1500 L-600,1500Z" fill="url(#t04tab)"/>` +
-    Array.from({ length: 14 }, (_, i) => `<path d="M-600,${590 + i * 34 + i * i * 3} Q900,${584 + i * 34 + i * i * 3} 2600,${596 + i * 34 + i * i * 3}" stroke="#3A2618" stroke-width="2" fill="none" opacity="0.5"/>`).join('') +
-    `<path d="M-600,560 L2600,560" stroke="#8A6040" stroke-width="3" opacity="0.6"/>`, { id: 't04table', bleed: 'all' });
+  s += L(c, 0.9, `<path d="M-600,470 L2600,470 L2600,1500 L-600,1500Z" fill="url(#t04tab)"/>` +
+    Array.from({ length: 16 }, (_, i) => `<path d="M-600,${500 + i * 34 + i * i * 3} Q900,${494 + i * 34 + i * i * 3} 2600,${506 + i * 34 + i * i * 3}" stroke="#3A2618" stroke-width="2" fill="none" opacity="0.5"/>`).join('') +
+    `<path d="M-600,470 L2600,470" stroke="#8A6040" stroke-width="3" opacity="0.6"/>`, { id: 't04table', bleed: 'all' });
   // steam (behind the ewer, in front of the room), d 1.0
   const tw = ramp(t, 36.6, 37.5, E.inOut);
   const sA = steamRibbon(t, B1[0] - 10, B1[1] - 14, 3, tw, 1010, 1), sB = steamRibbon(t, B2[0] + 6, B2[1] - 14, 9, tw, 1010, -1);
@@ -296,7 +296,7 @@ function s08(t) {
   s += L(c, 1.0, bowl(B1[0], B1[1], 't04b1', fill1) + bowl(B2[0], B2[1], 't04b2', 1), { id: 't04bowls' });
   // ewer + her hand: in 35.31–35.72, tilt 35.72–36.56 pour, lift away 36.6–37.2
   const into = ramp(t, T_PUSH, 35.72, E.out), lift = ramp(t, 36.56, 37.3, E.inOut);
-  const ex = lerp(1280, 1010, into) + lift * 700, ey = lerp(240, 330, into) - lift * 620;
+  const ex = lerp(1280, 1010, into) + lift * 700, ey = lerp(160, 250, into) - lift * 620;
   const tilt = lerp(-6, -38, ramp(t, 35.6, 35.85, E.inOut)) * (1 - ramp(t, 36.5, 36.8, E.inOut)) - 6;
   const sp = rotp(SPOUT, tilt, ex, ey), hd = rotp(HANDLE, tilt, ex, ey);
   let pour = '';
