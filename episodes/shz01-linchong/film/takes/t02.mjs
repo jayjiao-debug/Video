@@ -154,7 +154,7 @@ const NEAR = bake(`${ID}_near`, 1300, 420, (() => {
     `<linearGradient id="${ID}nh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.3" stop-color="#fff" stop-opacity="1"/></linearGradient><mask id="${ID}nm"><rect width="1300" height="420" fill="url(#${ID}nh)"/></mask>` +
     `<filter id="${ID}nd" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.06 0.02" numOctaves="3" seed="2"/><feDisplacementMap in="SourceGraphic" scale="14"/></filter></defs>`;
   const pts = [];
-  for (let x = 0; x <= 1300; x += 20) pts.push([x, 150 - 70 * Math.exp(-((x - 560) / 330) ** 2) + noise1(x / 60, 4) * 10]);
+  for (let x = 0; x <= 1300; x += 20) pts.push([x, 150 - 70 * Math.exp(-(((x - 560) / 330) ** 2)) + noise1(x / 60, 4) * 10]);
   const d = `M0,420 L` + pts.map((p) => `${f2(p[0])},${f2(p[1])}`).join(' L') + ' L1300,420Z';
   s += `<g mask="url(#${ID}nm)" filter="url(#${ID}nd)"><path d="${d}" fill="url(#${ID}nv)"/></g>`;
   return s;

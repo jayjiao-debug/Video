@@ -281,22 +281,25 @@ function l8Glyphs() {
 const L8 = l8Glyphs();
 const PARTS = (() => {
   const R = rng(77), out = [];
-  for (const g of L8) for (const [u, v] of GLYPHS[g.ch] || []) out.push({ x: g.x + u * g.fs, y: g.y + v * g.fs, r: 1.4 + R() * 1.6, d: R() * 0.3, life: 1.3 + R() * 1.0, vy: 160 + R() * 260, ph: R() * 9, big: 0 });
-  [...PROMISE].forEach((ch, i) => { for (const [u, v] of GLYPHS[ch] || []) out.push({ x: PX(i) - PFS / 2 + u * PFS, y: PROW_Y - PFS / 2 + v * PFS * 0.95, r: 2.2 + R() * 2.6, d: R() * 0.22, life: 1.5 + R() * 1.1, vy: 200 + R() * 300, ph: R() * 9, big: 1 }); });
+  for (const g of L8) for (const [u, v] of (GLYPHS[g.ch] || []).slice(0, 9)) out.push({ x: g.x + u * g.fs, y: g.y + v * g.fs, r: 1.0 + R() * 1.5, d: R() * 0.35, life: 1.2 + R() * 1.2, vy: 110 + R() * 300, ph: R() * 9, big: 0, sx: (R() - 0.5) * 2 });
+  [...PROMISE].forEach((ch, i) => { for (const [u, v] of GLYPHS[ch] || []) out.push({ x: PX(i) - PFS / 2 + u * PFS, y: PROW_Y - PFS / 2 + v * PFS * 0.95, r: 1.6 + R() * 2.2, d: R() * 0.25, life: 1.4 + R() * 1.2, vy: 150 + R() * 330, ph: R() * 9, big: 1, sx: (R() - 0.5) * 2 }); });
   return out;
 })();
 
 function promiseGlyph(i) {
-  // ink with a gold edge and dry-brush texture, baked once per glyph (box 220 × 220, drawn at 1.5x)
+  // ink with a gold edge and a light dry-brush texture, baked once per glyph (box 220 × 220, drawn at 1.5x)
   const ch = PROMISE[i];
+  const T = (extra) => `<text x="110" y="112" text-anchor="middle" dominant-baseline="central" font-family="Ma Shan Zheng" font-size="${PFS}" ${extra}>${ch}</text>`;
   const inner = `<defs><filter id="t13dry${i}" x="-10%" y="-10%" width="120%" height="120%">` +
-    `<feTurbulence type="fractalNoise" baseFrequency="0.9 0.05" numOctaves="2" seed="${3 + i}" result="n"/>` +
-    `<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.45" result="holes"/>` +
+    `<feTurbulence type="fractalNoise" baseFrequency="0.55 0.035" numOctaves="2" seed="${3 + i}" result="n"/>` +
+    `<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.75" result="holes"/>` +
     `<feComposite in="SourceGraphic" in2="holes" operator="in" result="dry"/>` +
-    `<feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="${9 + i}" result="w"/>` +
-    `<feDisplacementMap in="dry" in2="w" scale="5"/></filter></defs>` +
-    `<g filter="url(#t13dry${i})"><text x="110" y="112" text-anchor="middle" dominant-baseline="central" font-family="Ma Shan Zheng" font-size="${PFS}" fill="#1A1410" stroke="#C9A45C" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${ch}</text>` +
-    `<text x="110" y="112" text-anchor="middle" dominant-baseline="central" font-family="Ma Shan Zheng" font-size="${PFS}" fill="#1A1410">${ch}</text></g>`;
+    `<feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="${9 + i}" result="w"/>` +
+    `<feDisplacementMap in="dry" in2="w" scale="4"/></filter>` +
+    `<filter id="t13gg${i}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>` +
+    `<g filter="url(#t13gg${i})" opacity="0.55">${T('fill="none" stroke="#F0C870" stroke-width="12" stroke-linejoin="round"')}</g>` +
+    T('fill="#D9B262" stroke="#D9B262" stroke-width="6.5" stroke-linejoin="round"') +
+    `<g filter="url(#t13dry${i})">${T('fill="#15100C"')}</g>`;
   return bake(`t13p${i}`, 330, 330, inner, { vb: '0 0 220 220' });
 }
 const PGLYPH = [...PROMISE].map((_, i) => promiseGlyph(i));
@@ -400,23 +403,24 @@ function hazeBg(op) {
 }
 
 function s32cam(t) {
-  // push toward the handprint during the gather, pull back for the promise, hold for the release;
-  // S33: the print slides to (640, 440) and the haze fills in
-  const ps0 = PRINT_W; // at zoom 1 / cam 0 the print sits at its world position on screen
-  let z = 1;
-  z = kf(t, [[T32, 0.94], [129.2, 1.0, E.out], [132.8, 1.12, E.inOut], [133.3, 1.12], [135.6, 1.0, E.inOut]]);
-  let q = ps0;
+  // push toward the handprint during the gather (the print drifts toward the centre so the sheet stays in frame),
+  // pull back for the promise, hold for the release; S33: the paper shrinks to the left third, print at (640, 440)
+  const ps0 = PRINT_W;
+  const z = kf(t, [[T32, 0.94], [129.2, 1.0, E.out], [132.8, 1.1, E.inOut], [133.3, 1.1], [135.6, 1.0, E.inOut]]);
+  const kp = Math.min(ramp(t, 129.2, 132.8, E.inOut), 1 - ramp(t, 133.3, 135.6, E.inOut));
+  let q = mix(ps0, [ps0[0] + 40, ps0[1] - 120], kp);
+  let zz = z;
   if (t > T33 - 0.01) {
-    const k = ramp(t, T33, 138.3, E.inOut);
+    const k = ramp(t, T33, 138.4, E.inOut);
     q = mix(ps0, [640, 440], k);
-    z = lerp(1.0, 1.04, ramp(t, T33, TEND, E.sine));
+    zz = lerp(1.0, 0.7, k) * (1 + 0.03 * ramp(t, 138.4, TEND, E.sine));
   }
-  return camAt(PRINT_W, q, z);
+  return camAt(PRINT_W, q, zz);
 }
 
 function paperLayer(t, c, opts = {}) {
   // ink of the L8 text: dims while the promise is written, lifts off at the release
-  const inkL8 = t < REL ? lerp(1, 0.5, ramp(t, 133.9, 134.4)) : 0.5 * (1 - ramp(t, REL, REL + 0.32, E.in));
+  const inkL8 = t < REL ? lerp(1, 0.3, ramp(t, 133.85, 134.35)) : 0.3 * (1 - ramp(t, REL, REL + 0.3, E.in));
   const glow = 0.55 + 0.45 * ramp(t, T32, 129.0) + 0.2 * ramp(t, REL, REL + 0.5);
   let s = `<g transform="${sheetTf}">`;
   s += `<rect x="-60" y="-60" width="${SH.w + 120}" height="${SH.h + 120}" rx="60" fill="url(#t13halo)"/>`;
@@ -436,13 +440,14 @@ function paperLayer(t, c, opts = {}) {
     for (const p of PARTS) {
       const a = (t - REL - p.d) / p.life;
       if (a < 0 || a > 1) continue;
-      const rise = p.vy * (t - REL - p.d) * (1 - a * 0.35);
-      const x = p.x + noise1(p.ph + (t - REL) * 1.7, 3) * 26 * a + (p.x - SH.w / 2) * 0.18 * a;
+      const tt = t - REL - p.d;
+      const rise = p.vy * tt * (1 - a * 0.3);
+      const x = p.x + noise1(p.ph + tt * 1.6, 3) * 34 * a + p.sx * 60 * a + (p.x - SH.w / 2) * 0.22 * a;
       const y = p.y - rise;
-      const w = ramp(a, 0.12, 0.55, E.inOut);
-      const col = w < 0.5 ? '#1A1410' : '#F1F3F5';
-      const op = (a < 0.12 ? a / 0.12 : 1) * (1 - ramp(a, 0.7, 1, E.in));
-      ps += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(p.r * (1 + a * 0.6))}" fill="${w < 0.25 ? '#1A1410' : w < 0.6 ? '#8a8378' : col}" opacity="${f2(op)}"/>`;
+      const w = ramp(a, 0.06, 0.42, E.inOut);
+      const col = w < 0.33 ? '#1A1410' : w < 0.66 ? '#77716a' : '#F1F3F5';
+      const op = (a < 0.08 ? a / 0.08 : 1) * (1 - ramp(a, 0.65, 1, E.in)) * (w < 0.33 ? 0.85 : 1);
+      ps += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(p.r * (0.8 + a * 1.1))}" fill="${col}" opacity="${f2(op)}"/>`;
     }
     s += `<g data-layer="fx-release" data-z="70">${ps}</g>`;
   }

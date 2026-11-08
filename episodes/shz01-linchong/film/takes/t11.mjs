@@ -1,6 +1,6 @@
 // T11 · 93.565–115.217 · S25 door → S26 雪夜上梁山 → S27 seasons → S28 the news (builder F)
 // storyboard_v3 TAKE 11, colour C9–C10, film/timing.md (retimed: 「已故半载」 brushed with the voice).
-import { L, kf, ramp, E, bake, snow, ridge, lerp, clamp, f2, rng, noise1, fbm1, wipeMask, shake, blurId } from '../lib.mjs';
+import { L, kf, ramp, E, bake, snow, ridge, lerp, clamp, f2, rng, noise1, fbm1, wipeMask, shake, blurId, smooth } from '../lib.mjs';
 import { lin } from '../../chars/rig/linchong.mjs';
 import { walker, rearDoorSil, spearLevel, rearBust, smallBoat, smallMan, geese } from '../cast/liangshan.mjs';
 
@@ -75,16 +75,17 @@ function s25(t) {
 // =============================================================== S26 · snow night, the walker (95.237–100.241)
 function cam26(t) {
   const cr = ramp(t, 98.569, 100.27, E.inOut);
-  return { x: WALK_V * (t - T26), y: -150 * cr, zoom: 1 - 0.07 * cr };
+  return { x: WALK_V * (t - T26), y: -100 * cr, zoom: 1 - 0.05 * cr };
 }
 const S26_FAR = bake('t11_s26far', 2600, 760, `
   <defs><linearGradient id="t11fog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FA3B8" stop-opacity="0"/><stop offset="1" stop-color="#8FA3B8" stop-opacity="0.85"/></linearGradient>
-  <radialGradient id="t11glow"><stop offset="0" stop-color="#E07A3A" stop-opacity="0.55"/><stop offset="1" stop-color="#E07A3A" stop-opacity="0"/></radialGradient></defs>
+  <radialGradient id="t11glow"><stop offset="0" stop-color="#E07A3A" stop-opacity="0.8"/><stop offset="1" stop-color="#E07A3A" stop-opacity="0"/></radialGradient></defs>
   <path d="${ridge(11, -40, 2640, 470, 230, 760, 20)}" fill="#3E4C60" opacity="0.55"/>
   <rect y="330" width="2600" height="200" fill="url(#t11fog)"/>
   <ellipse cx="140" cy="560" rx="360" ry="150" fill="url(#t11glow)"/>
-  <path d="M1500,600 L1560,520 L1600,540 L1650,430 L1700,470 L1745,405 L1800,480 L1850,460 L1930,560 L2010,600Z" fill="#2E3846" opacity="0.9"/>
-  <path d="M1650,430 L1672,452 L1690,445 L1700,470 L1745,405 L1760,425 L1745,430" fill="#8FA3B8" opacity="0.4"/>
+  <path d="${smooth([[1470, 610], [1540, 566], [1592, 522], [1628, 474], [1662, 436], [1694, 458], [1724, 414], [1752, 398], [1786, 442], [1822, 474], [1862, 458], [1904, 502], [1956, 548], [2010, 590], [2060, 612]], false, 0.35)} L2060,640 L1470,640Z" fill="#2E3846" opacity="0.92"/>
+  <path d="M1662,436 l14,26 l10,-4 M1752,398 l12,30 l14,6 M1724,414 l-8,22" stroke="#9FB2C4" stroke-width="5" fill="none" opacity="0.45" stroke-linecap="round"/>
+  <path d="M1500,600 C1600,585 1900,585 2040,604" stroke="#8FA3B8" stroke-width="18" opacity="0.35" fill="none"/>
   <path d="${ridge(23, -40, 2640, 560, 150, 760, 18)}" fill="#34404E" opacity="0.75"/>
   <rect y="470" width="2600" height="160" fill="url(#t11fog)" opacity="0.8"/>
   <path d="${ridge(37, -40, 2640, 610, 90, 760, 16)}" fill="#2E3846" opacity="0.85"/>
@@ -136,9 +137,9 @@ function s26(t) {
   s += L(c, 1, walker({ t, x: fx, y: fy, height: 160, id: 't11wk', gourdCol: true }), { id: 't11walker' });
   s += L(c, 1.4, `<g transform="translate(-600 750)">${S26_FG}</g>`, { id: 't11fg', bleed: 'all' });
   // blizzard: three bands, slanting left (wind against him)
-  s += snow(t, { seed: 261, n: 140, d: 0.5, r: [1, 2.2], fall: 170, slant: -28, sway: 10, cam: c, op: 0.75 });
-  s += snow(t, { seed: 262, n: 100, d: 1.0, r: [2, 3.6], fall: 230, slant: -30, sway: 14, cam: c, op: 0.85 });
-  s += snow(t, { seed: 263, n: 34, d: 1.6, r: [5, 9], fall: 320, slant: -32, sway: 18, cam: c, op: 0.7, blur: 3 });
+  s += snow(t, { seed: 261, n: 220, d: 0.5, r: [1, 2.2], fall: 170, slant: -28, sway: 10, cam: c, op: 0.75 });
+  s += snow(t, { seed: 262, n: 150, d: 1.0, r: [2, 3.6], fall: 230, slant: -30, sway: 14, cam: c, op: 0.85 });
+  s += snow(t, { seed: 263, n: 44, d: 1.6, r: [5, 9], fall: 320, slant: -32, sway: 18, cam: c, op: 0.7, blur: 3 });
   return s;
 }
 
@@ -179,11 +180,11 @@ function reedBand(t, key, seed, y0, h, x0 = -140, x1 = 2060, n = 140, op = 1) {
 }
 function pierSvg(key) {
   const P = SEASONS[key];
-  let s = `<path d="M-200,1160 L-200,880 L700,640 L760,656 L120,1160Z" fill="${P.pier}"/>`;
+  let s = '<g transform="translate(0 110)">' + `<path d="M-200,1160 L-200,880 L700,640 L760,656 L120,1160Z" fill="${P.pier}"/>`;
   for (let i = 0; i < 14; i++) { const k = i / 14; s += `<path d="M${f2(lerp(-200, 700, k))},${f2(lerp(880, 640, k))} L${f2(lerp(120, 760, k))},${f2(lerp(1160, 656, k))}" stroke="#4A3F34" stroke-width="${f2(lerp(5, 2, k))}"/>`; }
   for (const k of [0.25, 0.55, 0.85]) s += `<rect x="${f2(lerp(120, 760, k) - 6)}" y="${f2(lerp(1160, 656, k))}" width="${f2(lerp(14, 6, k))}" height="${f2(lerp(120, 50, k))}" fill="#3E342B"/>`;
   if (P.snow) s += `<path d="M-200,880 L700,640 L760,656 L120,1160 L60,1160 L690,652 L-200,890Z" fill="#F2F4F5" opacity="0.9"/>`;
-  return s;
+  return s + '</g>';
 }
 function seasonAt(t, x) {
   // season key for screen x at time t (sweeps left -> right)
@@ -191,10 +192,10 @@ function seasonAt(t, x) {
   for (const [tf, k, d] of FLIPS) { const front = -100 + ((t - tf) / d) * 2120; if (t >= tf && x <= front) key = k; }
   return key;
 }
-function s27scene(t, key) {
+function s27scene(t, key, rise = 1) {
   let s = `<g transform="translate(-140 -80)">${S27BG[key]}</g>`;
-  s += reedBand(t, key, 31, 600, 210, 900, 2100, 80);
-  s += reedBand(t, key, 32, 520, 120, -140, 2060, 70, 0.75);
+  s += reedBand(t, key, 31, 600, 210 * rise, 900, 2100, 80);
+  s += reedBand(t, key, 32, 520, 120 * rise, -140, 2060, 70, 0.75);
   s += pierSvg(key);
   return s;
 }
@@ -202,9 +203,9 @@ function s27scene(t, key) {
 const LS_COL = { robe: '#2E3446', sash: '#4A3A30' };
 function linPier(t, h = 300) {
   const br = Math.sin(t * 1.6) * 0.004;
-  return `<g transform="translate(620 650) scale(1 ${f2(1 + br)}) translate(-620 -650)">${lin({ view: 'side', costume: 'A', flip: true, x: 620, y: 650, height: h, col: LS_COL, headCloth: 'plain', expr: { brow: 0.2, eye: 0.85, look: [0.3, 0.1] }, pose: { shoulderR: 4, elbowR: 6 } })}</g>`;
+  return `<g transform="translate(637 786) scale(1 ${f2(1 + br)}) translate(-637 -786)">${lin({ view: 'side', costume: 'A', flip: true, x: 637, y: 786, height: h, col: LS_COL, headCloth: 'plain', expr: { brow: 0.2, eye: 0.85, look: [0.3, 0.1] }, pose: { shoulderR: 4, elbowR: 6 } })}</g>`;
 }
-function s27(t) {
+function s27(t, rise = 1) {
   const z = lerp(1, 1.06, ramp(t, T27, T28, E.sine));
   const drift = ramp(t, T28 - 0.25, T28 + 0.6, E.inOut);
   const c = { x: 20 + 60 * drift, y: 40 * drift, zoom: z + 0.18 * drift };
@@ -222,11 +223,11 @@ function s27(t) {
     s += `<g mask="url(#${id})">${L(c, 1, s27scene(t, key), { id: 't11s27b', bleed: 'all' })}</g>`;
     // the wind sweep: a pale streak riding the front
     s += `<rect x="${f2(front - 60)}" y="0" width="120" height="1080" fill="#FFFFFF" opacity="0.10"/>`;
-  } else s += L(c, 1, s27scene(t, key), { id: 't11s27b', bleed: 'all' });
+  } else s += L(c, 1, s27scene(t, key, rise), { id: 't11s27b', bleed: 'all' });
   cur = key;
   s += L(c, 1, linPier(t), { id: 't11s27lin' });
   // near reeds in front of the pier foot (left), sway
-  s += L(c, 1.2, reedBand(t, seasonAt(t, 200), 33, 1120, 260, -200, 380, 30), { id: 't11s27near', bleed: 'all' });
+  s += L(c, 1.2, reedBand(t, seasonAt(t, 200), 33, 1120, 260 * rise, -200, 380, 30), { id: 't11s27near', bleed: 'all' });
   s += geese(t, 102.25, 103.75, { x0: 2000, x1: -140, y0: 170, y1: 130 });
   // winter snow on the beat 103.561 (until spring)
   if (t >= 103.561 && t < 104.1) s += snow(t, { seed: 271, n: 90, r: [1.5, 3.5], fall: 120, slant: -8, op: 0.85 * (1 - ramp(t, 103.9, 104.1)) });
@@ -284,11 +285,11 @@ function s28(t) {
 // --- calligraphy: four characters in a column at x 640, dry brush, each brushed in ~0.35 s
 const CH = [['已', 112.10], ['故', 112.45], ['半', 112.80], ['载', 113.14]];
 const CFS = 140, CX = 640, CY0 = 112, CSP = 152;
-const DRY = `<filter id="t11dry" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.45" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.05" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="t"/><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" result="d"/><feDisplacementMap in="t" in2="d" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>` +
+const DRY = `<filter id="t11dry" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.09 0.22" numOctaves="3" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.75" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="t"/><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" result="d"/><feDisplacementMap in="t" in2="d" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>` +
   `<filter id="t11halo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>`;
 const GLYPH = CH.map(([ch], i) => bake(`t11_glyph${i}`, 200, 200,
   `<text x="100" y="104" font-family="Ma Shan Zheng" font-size="${CFS + 8}" text-anchor="middle" dominant-baseline="central" fill="#15110E" opacity="0.18" filter="url(#t11halo)">${ch}</text>` +
-  `<g filter="url(#t11dry)"><text x="100" y="100" font-family="Ma Shan Zheng" font-size="${CFS}" text-anchor="middle" dominant-baseline="central" fill="#15110E">${ch}</text></g>`, { defs: DRY }));
+  `<g filter="url(#t11dry)"><text x="100" y="100" font-family="Ma Shan Zheng" font-size="${CFS}" text-anchor="middle" dominant-baseline="central" fill="#15110E" stroke="#15110E" stroke-width="3.5" stroke-linejoin="round">${ch}</text></g>`, { defs: DRY }));
 function callig(t) {
   if (t < 112.0) return '';
   let s = '<g data-layer="text-callig" data-z="700">';
@@ -323,7 +324,7 @@ export default {
       if (t < 99.82) return s26(t);
       // time-lapse melt: the snow plain becomes water, reeds rise; the walker dissolves into him standing on the pier
       const k = ramp(t, 99.82, T27 + 0.05, E.inOut);
-      return s26(t) + `<g opacity="${f2(k)}">${s27(T27)}</g>`;
+      return s26(t) + `<g opacity="${f2(k)}">${s27(T27, lerp(0.25, 1, k))}</g>`;
     }
     if (t < T28 - 0.2) return s27(t);
     if (t < T28 + 0.6) {

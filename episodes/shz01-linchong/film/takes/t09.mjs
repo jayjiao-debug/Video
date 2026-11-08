@@ -301,7 +301,7 @@ export default {
   frame(t) {
     const c = cam(t);
     const sag = ramp(t, SAG, COLLAPSE, E.in);
-    const col = ramp(t, COLLAPSE, COLLAPSE + 0.36, E.in);
+    const col = ramp(t, COLLAPSE - 0.04, COLLAPSE + 0.24, E.in);
     const sk = shake(t, COLLAPSE, 4, 3, 2);
     let s = '';
     s += L(c, 0, `<g transform="translate(-240 -200)">${SKY}</g>`, { id: 't09sky', bleed: 'all' });
