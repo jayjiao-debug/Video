@@ -10,7 +10,7 @@ import { guard, guardHand } from '../cast/guard.mjs';
 const LN = '#2A1C17';
 const SK = { skin: '#E8AE88', skinS: '#C98F6C', skinD: '#A9714F', scar: '#F3CFB4' };
 const ROBE = '#3B4356', ROBES = '#2C3241';
-const CONVICT = { view: 'front', costume: 'A', col: { robe: ROBE }, headCloth: 'plain', cangue: false, tattoo: 1 };
+const CONVICT = { view: 'front', costume: 'A', col: { robe: ROBE }, headCloth: 'plain', cangue: true, tattoo: 1 }; // rig cangue (board under the jaw, neck through it, owner 2026-11-08)
 // The 团头铁叶 cangue seen from the front, a little above (CU/MCU): one board 42 cm wide around the neck, its long end
 // running toward the camera and off the frame bottom, iron leaves on the edges, a 封皮 paper seal (L30, model_sheet §6).
 // (cx, ny) = neck centre at the collar; H = head px.
@@ -342,7 +342,7 @@ function S02(t) {
   s += L(c, 0.4, `<g transform="translate(-340 -210)">${TAVERN}</g>`, { id: 't01tav', bleed: 'all', blur: 0 });
   // him behind the paper (d 0.7): convict, cangue; face hidden until the paper lowers
   const himE = { ...EX.隐忍, look: [-0.25, 0.25 - 0.3 * lower], eye: 0.8 };
-  s += L(c, 0.7, lin({ ...CONVICT, expr: himE, pose: { headTurn: -0.2, headTilt: -2 }, height: 1760, x: 1010, y: 1950 }) + boardFront(1010, 514, 234.7, 't01b2'), { id: 't01him2' });
+  s += L(c, 0.7, lin({ ...CONVICT, expr: himE, pose: { headTurn: -0.2, headTilt: -2 }, height: 1760, x: 1010, y: 1950 }), { id: 't01him2' });
   // the sheet, held by her hands; lowering = scaleY about the bottom edge
   const sy = 1 - 0.4 * lower;
   const kS = S.w / 680;
@@ -398,7 +398,7 @@ function S03(t) {
   s += L(c, 0.4, `<g transform="translate(-330 -230)">${TAVERN}</g>`, { id: 't01tav3', bleed: 'all' });
   // him: CU H = 540 -> height 4050; eyes ≈ (1240, 400)
   const blink = t > 13.95 && t < 14.05 ? 0.1 : 1;
-  s += L(c, 1, lin({ ...CONVICT, expr: { ...ex, eye: ex.eye * blink }, pose: { headTurn: -0.32, headTilt: -1.5 }, height: 4050, x: 1235 + walkOut, y: 4050 + 140 - rise }) + boardFront(1235 + walkOut, 922 - rise, 540, 't01b3'), { id: 't01him3', bleed: 'b' });
+  s += L(c, 1, lin({ ...CONVICT, expr: { ...ex, eye: ex.eye * blink }, pose: { headTurn: -0.32, headTilt: -1.5 }, height: 4050, x: 1235 + walkOut, y: 4050 + 140 - rise }), { id: 't01him3', bleed: 'b' });
   // the guard's rough hand on his shoulder (13.665)
   if (t >= T.guardHand - 0.35) {
     const k = ramp(t, T.guardHand - 0.35, T.guardHand, E.out);
