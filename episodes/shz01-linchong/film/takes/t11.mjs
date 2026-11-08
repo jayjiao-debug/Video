@@ -45,14 +45,15 @@ function s25(t) {
   // snow bursting in through the doorway (radial, growing toward the lens)
   let sn = '';
   const R = rng(25);
-  for (let i = 0; i < 90; i++) {
+  for (let i = 0; i < 110; i++) {
     const a = R() * Math.PI * 2, sp = 0.6 + R() * 0.8, ph = R();
-    const p = ((t - T25) * sp * 1.6 + ph) % 1;
-    if (t - T25 < ph * 0.2) continue;
-    const rr = 30 + 900 * p * p, x = cx + Math.cos(a) * rr * 1.2 - 180 * p, y = 560 + Math.sin(a) * rr * 0.8;
-    sn += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(1.5 + 9 * p * p)}" opacity="${f2(Math.min(1, p * 4) * 0.9)}"/>`;
+    const pos = (q) => { const rr = 20 + 1000 * q * q; return [cx + Math.cos(a) * rr * 1.15 - 160 * q, 540 + Math.sin(a) * rr * 0.75]; };
+    const p = ((t - T25) * sp * 1.5 + ph) % 1, p0 = Math.max(0, p - 0.06);
+    if (t - T25 < ph * 0.15) continue;
+    const [x, y] = pos(p), [x0, y0] = pos(p0);
+    sn += `<line x1="${f2(x0)}" y1="${f2(y0)}" x2="${f2(x)}" y2="${f2(y)}" stroke-width="${f2(1.5 + 8 * p * p)}" opacity="${f2(Math.min(1, p * 4) * 0.85)}"/>`;
   }
-  s += L(c, 1, `<g fill="#FFFFFF">${sn}</g>`, { id: 'snow-t11door', bleed: 'all' });
+  s += L(c, 1, `<g stroke="#FFFFFF" stroke-linecap="round">${sn}</g>`, { id: 'snow-t11door', bleed: 'all' });
   // door posts, lintel, threshold
   s += L(c, 1, `<rect x="730" y="30" width="60" height="980" fill="#3A2A20"/><rect x="1570" y="30" width="60" height="980" fill="#3A2A20"/><rect x="700" y="20" width="960" height="70" fill="#33251C"/><rect x="740" y="955" width="880" height="34" fill="#2A1E17"/>` +
     `<rect x="784" y="84" width="6" height="874" fill="#FFB15E" opacity="${f2(0.5 * open)}"/><rect x="1570" y="84" width="6" height="874" fill="#FFB15E" opacity="${f2(0.5 * open)}"/>`, { id: 't11s25frame' });
@@ -61,8 +62,8 @@ function s25(t) {
   // 林冲 from behind, braced, spear level into the doorway; steps into the white from 93.98
   const step = ramp(t, 93.98, 94.40, E.inOut);
   const fx = 1080 + step * 60, fy = 1210 - step * 120, fk = 1 - step * 0.18;
-  const sil = rearDoorSil({ height: 980, push: 1 }) ;
-  const spear = spearLevel(1400, 760, 1215, 560, 9, 4);
+  const sil = rearDoorSil({ height: 980 });
+  const spear = spearLevel(1150, 790, 1440, 548, 10, 4);
   const rimF = `<filter id="t11rimf" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="3" result="d"/><feFlood flood-color="#FFB15E"/><feComposite in2="d" operator="in" result="r"/><feGaussianBlur in="r" stdDeviation="1.5" result="rb"/><feMerge><feMergeNode in="rb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
   s += L(c, 1.05, `<defs>${rimF}</defs><g filter="url(#t11rimf)" opacity="${f2(1 - ramp(t, 94.1, 94.4))}"><g transform="translate(${f2(sh[0] * 0.6)} ${f2(sh[1] * 0.6)})"><g transform="translate(${f2(fx)} ${f2(fy)}) scale(${f2(fk)}) translate(${-1080} ${-1210})">${spear}<g transform="translate(1080 1210)">${sil}</g></g></g></g>`, { id: 't11s25lin', bleed: 'b' });
   // exposure: warm flood then white

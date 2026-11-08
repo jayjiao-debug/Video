@@ -1,7 +1,7 @@
 // Cast and props for T11–T12 (builder F): the snow-night walker (S26), the rear silhouette at the door (S25),
 // his back for the OTS (S28), the small boat with boatman and messenger (S28), the banquet shadow-play and the
 // lantern boat's shadow (S30), geese (S27).
-import { f2, clamp, lerp, rng, noise1, E } from '../lib.mjs';
+import { f2, clamp, lerp, rng, noise1, E, smooth } from '../lib.mjs';
 import { lin } from '../../chars/rig/linchong.mjs';
 
 const LN = '#2A1C17';
@@ -69,27 +69,27 @@ export function walker(o) {
 }
 
 // ------------------------------------------------------------------ S25: rear silhouette braced at the door
-/** Rear 3/4 silhouette in 毡笠 and cloak, spear level into the doorway, left hand pushing the left leaf.
- * Local coords: feet centre at (0,0), height = px for 1.80 m. push 0..1 (left arm reach). */
-export function rearDoorSil({ height = 980, push = 1, col = '#120D0B' } = {}) {
-  const H = height / 7.5, s = (v) => f2(v * H);
-  // head + hat (seen from behind, low angle: brim ellipse above the crown)
+/** Rear silhouette in 毡笠 and cloak at the door: left arm pushing forward-left, right hand low on the spear.
+ * Local coords: feet centre at (0,0), height = px for 1.80 m. */
+export function rearDoorSil({ height = 980, col = '#120D0B' } = {}) {
+  const H = height / 7.5, P = (pts) => smooth(pts.map(([x, y]) => [x * H, y * H]));
   let p = '';
-  p += `<ellipse cx="0" cy="${s(-7.0)}" rx="${s(0.42)}" ry="${s(0.5)}"/>`; // head
-  p += `<ellipse cx="0" cy="${s(-7.18)}" rx="${s(1.0)}" ry="${s(0.17)}"/>`; // brim
-  p += `<path d="M${s(-0.38)},${s(-7.2)} C${s(-0.36)},${s(-7.75)} ${s(0.36)},${s(-7.75)} ${s(0.38)},${s(-7.2)}Z"/>`; // crown
-  p += `<rect x="${s(-0.22)}" y="${s(-6.7)}" width="${s(0.44)}" height="${s(0.6)}"/>`; // neck
-  // cloak over the shoulders, widening, hem around the calves
-  p += `<path d="M${s(-0.5)},${s(-6.3)} C${s(-1.0)},${s(-6.2)} ${s(-1.1)},${s(-5.9)} ${s(-1.15)},${s(-5.5)} C${s(-1.35)},${s(-4.2)} ${s(-1.55)},${s(-2.6)} ${s(-1.7)},${s(-1.6)} L${s(1.75)},${s(-1.5)} C${s(1.6)},${s(-2.7)} ${s(1.4)},${s(-4.3)} ${s(1.2)},${s(-5.5)} C${s(1.15)},${s(-5.9)} ${s(1.0)},${s(-6.2)} ${s(0.5)},${s(-6.3)}Z"/>`;
-  // legs apart, braced
-  p += `<path d="M${s(-0.85)},${s(-1.7)} L${s(-1.25)},${s(0)} L${s(-0.7)},${s(0)} L${s(-0.3)},${s(-1.7)}Z"/>`;
-  p += `<path d="M${s(0.35)},${s(-1.7)} L${s(0.95)},${s(0)} L${s(1.45)},${s(0)} L${s(0.9)},${s(-1.7)}Z"/>`;
-  // left arm reaching forward-left to the door leaf (foreshortened, rising)
-  const hx = lerp(-1.3, -2.6, push), hy = lerp(-4.9, -5.3, push);
-  p += `<path d="M${s(-1.0)},${s(-5.8)} C${s(-1.6)},${s(-5.6)} ${s(hx + 0.3)},${s(hy - 0.1)} ${s(hx)},${s(hy - 0.25)} L${s(hx - 0.05)},${s(hy + 0.25)} C${s(hx + 0.4)},${s(hy + 0.3)} ${s(-1.4)},${s(-5.0)} ${s(-1.05)},${s(-5.1)}Z"/>`;
-  p += `<ellipse cx="${s(hx - 0.12)}" cy="${s(hy)}" rx="${s(0.2)}" ry="${s(0.26)}"/>`;
-  // right arm low and forward, holding the spear level (foreshortened toward the door)
-  p += `<path d="M${s(1.0)},${s(-5.7)} C${s(1.45)},${s(-5.2)} ${s(1.5)},${s(-4.3)} ${s(1.2)},${s(-3.9)} L${s(0.85)},${s(-4.05)} C${s(1.05)},${s(-4.5)} ${s(0.95)},${s(-5.0)} ${s(0.75)},${s(-5.3)}Z"/>`;
+  // cloak (shoulders to the calves, folds at the hem)
+  p += `<path d="${P([[-0.32, -6.5], [-0.7, -6.36], [-1.0, -6.12], [-1.13, -5.8], [-1.2, -5.3], [-1.32, -4.4], [-1.45, -3.3], [-1.58, -2.2], [-1.64, -1.55], [-1.1, -1.42], [-0.5, -1.52], [0.1, -1.4], [0.7, -1.5], [1.25, -1.4], [1.66, -1.54], [1.55, -2.4], [1.42, -3.4], [1.3, -4.5], [1.2, -5.4], [1.1, -5.86], [0.95, -6.13], [0.68, -6.37], [0.32, -6.5]])}"/>`;
+  // left arm reaching forward-left (sleeve sagging under it) and the hand
+  p += `<path d="${P([[-0.95, -6.02], [-1.6, -5.97], [-2.2, -5.78], [-2.62, -5.52], [-2.68, -5.12], [-2.2, -4.98], [-1.7, -4.9], [-1.22, -5.08]])}"/>`;
+  p += `<ellipse cx="${f2(-2.84 * H)}" cy="${f2(-5.32 * H)}" rx="${f2(0.2 * H)}" ry="${f2(0.26 * H)}"/>`;
+  // right arm down to the spear grip
+  p += `<path d="${P([[1.02, -5.92], [1.36, -5.3], [1.5, -4.6], [1.44, -4.0], [1.2, -3.84], [1.1, -4.3], [1.12, -5.0], [0.86, -5.5]])}"/>`;
+  p += `<ellipse cx="${f2(1.34 * H)}" cy="${f2(-3.86 * H)}" rx="${f2(0.2 * H)}" ry="${f2(0.24 * H)}"/>`;
+  // legs braced apart, boots
+  p += `<path d="${P([[-0.78, -1.62], [-1.0, -0.8], [-1.18, -0.2], [-1.3, 0.02], [-0.66, 0.02], [-0.6, -0.5], [-0.32, -1.6]])}"/>`;
+  p += `<path d="${P([[0.36, -1.6], [0.62, -0.5], [0.7, 0.02], [1.34, 0.02], [1.22, -0.2], [1.02, -0.8], [0.8, -1.62]])}"/>`;
+  // head (back), collar, hat brim and crown
+  p += `<ellipse cx="0" cy="${f2(-6.92 * H)}" rx="${f2(0.4 * H)}" ry="${f2(0.46 * H)}"/>`;
+  p += `<path d="${P([[-0.46, -6.62], [-0.2, -6.78], [0.2, -6.78], [0.46, -6.62], [0.4, -6.4], [-0.4, -6.4]])}"/>`;
+  p += `<ellipse cx="0" cy="${f2(-7.24 * H)}" rx="${f2(1.0 * H)}" ry="${f2(0.15 * H)}" transform="rotate(-3 0 ${f2(-7.24 * H)})"/>`;
+  p += `<path d="M${f2(-0.38 * H)},${f2(-7.26 * H)} C${f2(-0.4 * H)},${f2(-7.72 * H)} ${f2(0.4 * H)},${f2(-7.72 * H)} ${f2(0.38 * H)},${f2(-7.26 * H)}Z"/>`;
   return `<g fill="${col}">${p}</g>`;
 }
 /** The spear held level, pointing into the depth: butt near the camera (lower right) to the tip (vanishing). */

@@ -229,8 +229,9 @@ function s31(t) {
   // bed-foot patch on the mat around the hat
   light += `<ellipse cx="${f2(HAT.cx + 10 + slide * 0.6)}" cy="${BED.top - 12}" rx="150" ry="24" fill="url(#t13pool)" opacity="${f2(0.9 + 0.1 * glowUp)}"/>`;
   // light map: the room falls off into shadow away from the beam (pool, hat and spear foot stay the brightest)
-  const lm = `<defs>${rg('t13lm', [[0, '#2a241e', 0], [0.45, '#2a241e', 0.18], [1, '#1f1a16', 0.62]], 0.5, 0.5, 0.5)}</defs>` +
-    `<ellipse cx="${f2(760 + slide)}" cy="760" rx="1350" ry="900" fill="url(#t13lm)"/>`;
+  const lcx = 760 + slide, lcy = 760;
+  const lm = `<defs><radialGradient id="t13lm" gradientUnits="userSpaceOnUse" cx="${f2(lcx)}" cy="${lcy}" r="1100" gradientTransform="translate(${f2(lcx)} ${lcy}) scale(1.25 0.85) translate(${f2(-lcx)} ${-lcy})"><stop offset="0" stop-color="#2a241e" stop-opacity="0"/><stop offset="0.45" stop-color="#2a241e" stop-opacity="0.18"/><stop offset="1" stop-color="#1f1a16" stop-opacity="0.6"/></radialGradient></defs>` +
+    `<rect x="-600" y="-500" width="3200" height="2200" fill="url(#t13lm)"/>`;
   s += L(c, 1, lm, { id: 't13lmap', bleed: 'all', z: 11 });
   s += L(c, 1, light, { id: 't13light', bleed: 'all', z: 12 });
   s += L(c, 1, FURN, { id: 't13bed', z: 20 });

@@ -3,7 +3,7 @@
 // 草料场: the 草厅 sags (74.84) and caves in under the snow (75.256, 「雪压塌了草屋」). He stops dead, turns from the
 // ruin (76.077) and trudges to the 山神庙 door, pulls it (77.33); the door leaf swings to the lens (door-leaf wipe
 // into T10). Colour script C7: dusk #5C6B80, snow #DDE6EE / #EEF2F5, no fire. Top-right kept calm (engine stamp).
-import { L, kf, E, ramp, zexp, snow, ridge, lg, rg, f2, clamp, rng, noise1, fbm1, lerp, toScreen, shake } from '../lib.mjs';
+import { L, kf, E, ramp, zexp, snow, blurId, ridge, lg, rg, f2, clamp, rng, noise1, fbm1, lerp, toScreen, shake } from '../lib.mjs';
 import { lin, EX } from '../../chars/rig/linchong.mjs';
 
 const T0 = 73.6, COLLAPSE = 75.256, SAG = 74.84, TURN = 76.077, PULL = 77.33;
@@ -191,6 +191,8 @@ function hut(sag, c) {
     const k = clamp((c - 0.3) / 0.7);
     s += `<path d="M${f2(midX - 160)},${f2(B - 40)} L${f2(midX - 40)},${f2(ridgeY - 70 * k)} L${f2(midX - 28)},${f2(ridgeY - 66 * k)} L${f2(midX - 146)},${f2(B - 36)}Z" fill="#4A3B2C"/>`;
     s += `<path d="M${f2(midX + 190)},${f2(B - 30)} L${f2(midX + 60)},${f2(ridgeY - 50 * k)} L${f2(midX + 72)},${f2(ridgeY - 44 * k)} L${f2(midX + 202)},${f2(B - 26)}Z" fill="#4A3B2C"/>`;
+    for (let i = 0; i < 9; i++) { const R2 = rng(70 + i); const x = X0 + 30 + i * 60 + R2() * 20, y = B - 60 * k - R2() * 50 * k; s += `<path d="M${f2(x)},${f2(y)} l${f2(-20 + R2() * 40)},${f2(-26 - R2() * 20)} l${f2(8)},${f2(4)}Z" fill="#8F7A55" opacity="${f2(k)}"/>`; }
+    s += `<path d="M${f2(X1 - 10)},${B} L${f2(X1 + 40 * k)},${f2(B - 150)} L${f2(X1 + 54 * k)},${f2(B - 146)} L${f2(X1 + 10)},${B}Z" fill="#4A3B2C"/>`;
     s += `<path d="M${f2(X0 - 90)},${B + 6} Q${f2(X0 + 40)},${f2(B - 120 * k)} ${f2(midX)},${f2(B - 150 * k)} Q${f2(X1 - 40)},${f2(B - 120 * k)} ${f2(X1 + 90)},${B + 6}Z" fill="#EEF2F5" opacity="${f2(k)}"/>`;
     s += `<path d="M${f2(midX - 40)},${f2(B - 140 * k)} Q${f2(X1 - 40)},${f2(B - 110 * k)} ${f2(X1 + 90)},${B + 6} L${f2(X1 - 20)},${B + 6}Z" fill="#C9D3DD" opacity="${f2(k * 0.8)}"/>`;
   }
@@ -306,7 +308,7 @@ export default {
     s += L(c, 0.1, `<g transform="translate(-340 0)">${MOUNT_FAR}</g>`, { id: 't09mtnfar', bleed: 'all' });
     s += L(c, 0.16, `<g transform="translate(-340 20)">${MOUNT_MID}</g>`, { id: 't09mtnmid', bleed: 'all' });
     s += L(c, 0.35, `<g transform="translate(-340 -20)">${HILLS}</g>`, { id: 't09hills', bleed: 'all' });
-    s += L(c, 0.85, `<g transform="translate(-440 700)">${PLAIN}</g>` + FENCE + STACKS + `<g transform="translate(${f2(sk[0])} ${f2(sk[1])})">${hut(sag, col)}</g>` + puff(t), { id: 't09depot', bleed: 'all' });
+    s += L(c, 0.85, `<g transform="translate(-440 700)">${PLAIN}</g>` + FENCE + STACKS + `<g transform="translate(${f2(sk[0])} ${f2(sk[1])})">${hut(sag, col)}</g>` + `<g filter="url(#${blurId(7)})">${puff(t)}</g>`, { id: 't09depot', bleed: 'all' });
     // near ground at his depth
     s += L(c, 1, `<path d="M-400,880 Q400,860 900,872 Q1500,884 2400,866 L2400,1500 L-400,1500Z" fill="#E7EDF3"/>` + TEMPLE + closedLeaf(t) + lc(t) +
       // snow bank in front of his boots
