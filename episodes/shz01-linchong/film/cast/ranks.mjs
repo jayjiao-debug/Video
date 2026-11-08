@@ -11,44 +11,51 @@ const LN = '#2A1C17';
 export function soldier(o) {
   const { x, y, h } = o;
   const k = h / 340; // drawn at 340 px tall
-  const col = { tunic: '#8E3B2C', tunicS: '#6E2A20', trou: '#3C3A44', boot: '#1E1A1A', scarf: '#24201E', skin: '#E6A882', skinS: '#C98B68', belt: '#2E2420', shaft: '#6B4A2E', steel: '#C9CED2', tassel: '#C8372D', ...(o.col || {}) };
+  const col = { tunic: '#8E3B2C', tunicS: '#6E2A20', trou: '#3C3A44', trouS: '#2E2C36', boot: '#1E1A1A', scarf: '#24201E', skin: '#E6A882', skinS: '#C98B68', belt: '#2E2420', shaft: '#6B4A2E', steel: '#C9CED2', tassel: '#C8372D', ...(o.col || {}) };
   const lean = o.lean || 0, step = o.step || 0;
   const arm = o.arm ?? 0.5, ang = o.spear ?? 0;
   // body in local coords (feet at 0,0; facing left; up = -y), drawn at k
   let s = '';
-  // legs: back leg, front leg (front foot lifts on a stamp)
-  const fl = step * 26;
-  s += `<path d="M6,-150 L22,-150 L26,-14 L40,-12 L42,0 L6,0 L8,-14Z" fill="${col.trou}" stroke="${LN}" stroke-width="2"/>`;
-  s += `<path d="M6,-14 L44,-14 L48,0 L4,0Z" fill="${col.boot}"/>`;
-  s += `<g transform="translate(${f2(-step * 6)} ${f2(-fl)})"><path d="M-22,-150 L-6,-150 L-8,-14 L-34,-12 L-36,0 L-4,0 L-2,-150Z" fill="${col.trou}" stroke="${LN}" stroke-width="2"/><path d="M-38,-14 L-2,-14 L0,0 L-40,0Z" fill="${col.boot}"/></g>`;
-  // torso (tunic to the knee), lean about the hips
+  const fl = step * 30;
+  const leg = (dx, lift, back) => {
+    const c = back ? col.trouS : col.trou;
+    return `<g transform="translate(${f2(dx)} ${f2(-lift)})">` +
+      `<path d="M-16,-176 C-20,-140 -18,-104 -15,-92 L-13,-18 L11,-18 L13,-92 C17,-110 18,-146 16,-176Z" fill="${c}" stroke="${LN}" stroke-width="2"/>` +
+      `<path d="M-14,-92 L12,-92 L11,-18 L-13,-18Z" fill="${back ? '#B9AF9C' : '#D6CDB8'}" stroke="${LN}" stroke-width="1.6"/>` +
+      `<path d="M-13,-80 L11,-70 M-13,-62 L11,-52 M-13,-44 L11,-34" stroke="#9A907E" stroke-width="1.6"/>` +
+      `<path d="M-15,-20 L12,-20 L13,-6 C6,-2 -22,-1 -30,-4 C-34,-8 -26,-14 -15,-16Z" fill="${col.boot}"/></g>`;
+  };
+  s += leg(14, 0, true);           // back leg
+  s += leg(-10 - step * 6, fl, false); // front leg (lifts on the stamp)
   let up = '';
-  up += `<path d="M-34,-268 C-42,-230 -46,-180 -44,-120 L44,-120 C46,-180 40,-232 32,-268 C10,-280 -14,-280 -34,-268Z" fill="${col.tunic}" stroke="${LN}" stroke-width="2.4"/>`;
-  up += `<path d="M10,-270 C30,-240 40,-180 44,-122 L20,-122 C20,-170 14,-230 4,-268Z" fill="${col.tunicS}" opacity="0.9"/>`;
-  up += `<rect x="-44" y="-178" width="88" height="12" fill="${col.belt}"/>`;
-  // neck + head (profile left) + scarf
-  up += `<path d="M-12,-282 L8,-282 L10,-262 L-12,-262Z" fill="${col.skinS}"/>`;
-  up += `<path d="M-22,-330 C-26,-318 -30,-306 -32,-298 L-24,-296 C-24,-288 -20,-280 -8,-278 L10,-280 C18,-290 20,-306 18,-322Z" fill="${col.skin}" stroke="${LN}" stroke-width="2"/>`;
-  up += `<path d="M-26,-326 C-24,-350 16,-352 22,-330 C24,-318 22,-306 18,-300 L10,-302 L8,-322 L-20,-322Z" fill="${col.scarf}"/>`;
-  up += `<path d="M18,-326 C30,-318 36,-304 34,-290 L26,-292 C26,-304 22,-314 14,-320Z" fill="${col.scarf}"/>`;
-  up += `<circle cx="-14" cy="-310" r="2" fill="${LN}"/>`;
-  // arm with the spear: shoulder at (-6,-252); hand reach from chest (-30,-200) to extended (-120,-232)
-  const sh = [-6, -252];
-  const hand = [lerp(-34, -118, arm), lerp(-198, -236, arm)];
-  const el = [lerp(-4, -66, arm), lerp(-196, -246, arm)];
+  // tunic: shoulders to below the knee, flared, side slit
+  up += `<path d="M-30,-276 C-44,-262 -46,-220 -44,-190 C-50,-160 -58,-128 -62,-104 L-6,-100 L-2,-150 L4,-150 L8,-100 L56,-104 C52,-130 46,-160 42,-190 C44,-222 40,-262 30,-276 C12,-284 -12,-284 -30,-276Z" fill="${col.tunic}" stroke="${LN}" stroke-width="2.4"/>`;
+  up += `<path d="M14,-276 C34,-250 40,-214 42,-190 C46,-160 52,-130 56,-104 L22,-102 C22,-140 20,-200 6,-272Z" fill="${col.tunicS}" opacity="0.85"/>`;
+  up += `<path d="M-32,-272 C-20,-262 -6,-256 6,-254 L2,-244 C-12,-246 -26,-252 -36,-262Z" fill="#E9DFC9" stroke="${LN}" stroke-width="1.5"/>`; // inner collar
+  up += `<path d="M-46,-196 L44,-196 L46,-180 L-48,-180Z" fill="${col.belt}"/><path d="M-46,-188 l-10,22 l8,2 l8,-20Z" fill="${col.belt}"/>`;
+  // neck + head (profile, facing left) + 幞头 headscarf with two short tails
+  up += `<path d="M-10,-298 L10,-298 L12,-276 L-12,-276Z" fill="${col.skinS}"/>`;
+  up += `<path d="M-16,-336 C-22,-326 -26,-316 -27,-310 L-34,-302 L-27,-298 C-26,-290 -22,-284 -12,-282 C0,-280 10,-284 14,-292 L16,-318Z" fill="${col.skin}" stroke="${LN}" stroke-width="2"/>`;
+  up += `<path d="M-22,-330 C-22,-356 18,-360 24,-336 C27,-324 24,-306 18,-298 L12,-300 L10,-326 L-18,-324Z" fill="${col.scarf}"/>`;
+  up += `<path d="M20,-334 C34,-328 42,-314 44,-298 L36,-298 C34,-310 28,-320 18,-326Z M18,-326 C30,-316 34,-300 32,-286 L26,-288 C26,-300 22,-310 14,-318Z" fill="${col.scarf}"/>`;
+  up += `<circle cx="-14" cy="-316" r="2" fill="${LN}"/><path d="M-20,-322 l8,-2" stroke="${LN}" stroke-width="2"/><path d="M4,-312 c4,2 4,8 0,10" stroke="${col.skinS}" stroke-width="2" fill="none"/>`;
+  // arm with the spear
+  const sh = [-6, -262];
+  const hand = [lerp(-34, -122, arm), lerp(-206, -244, arm)];
+  const el = [lerp(-2, -64, arm), lerp(-200, -254, arm)];
   const r = (ang * Math.PI) / 180;
-  const dir = [-Math.sin(r), -Math.cos(r)]; // + angle tilts the tip toward the facing side (left)
-  const L1 = 300 * (2.3 / 1.7) * 340 / 340 * 0.95, back = L1 * 0.25;
+  const dir = [-Math.sin(r), -Math.cos(r)];
+  const L1 = 300 * (2.3 / 1.7) * 0.95, back = L1 * 0.25;
   const tip = [hand[0] + dir[0] * (L1 - back), hand[1] + dir[1] * (L1 - back)], butt = [hand[0] - dir[0] * back, hand[1] - dir[1] * back];
   let spear = `<line x1="${f2(butt[0])}" y1="${f2(butt[1])}" x2="${f2(tip[0])}" y2="${f2(tip[1])}" stroke="${col.shaft}" stroke-width="5" stroke-linecap="round"/>`;
-  const hx = tip[0] + dir[0] * 22, hy = tip[1] + dir[1] * 22, nx = -dir[1], ny = dir[0];
+  const hx = tip[0] + dir[0] * 24, hy = tip[1] + dir[1] * 24, nx = -dir[1], ny = dir[0];
   spear += `<path d="M${f2(tip[0] + nx * 5)},${f2(tip[1] + ny * 5)} L${f2(hx)},${f2(hy)} L${f2(tip[0] - nx * 5)},${f2(tip[1] - ny * 5)}Z" fill="${col.steel}" stroke="${LN}" stroke-width="1.2"/>`;
-  spear += `<path d="M${f2(tip[0])},${f2(tip[1])} l${f2(-dir[0] * 10 + nx * 7)},${f2(-dir[1] * 10 + ny * 7 + 8)} l${f2(-nx * 14)},${f2(-ny * 14)}Z" fill="${col.tassel}"/>`;
+  spear += `<path d="M${f2(tip[0] - dir[0] * 2)},${f2(tip[1] - dir[1] * 2)} l${f2(-dir[0] * 12 + nx * 6)},${f2(-dir[1] * 12 + ny * 6 + 7)} l${f2(-nx * 12)},${f2(-ny * 12)}Z" fill="${col.tassel}"/>`;
   up += spear;
-  up += `<path d="M${sh[0]},${sh[1]} Q${f2(el[0])},${f2(el[1])} ${f2(hand[0])},${f2(hand[1])}" stroke="${LN}" stroke-width="22" stroke-linecap="round" fill="none"/>`;
-  up += `<path d="M${sh[0]},${sh[1]} Q${f2(el[0])},${f2(el[1])} ${f2(hand[0])},${f2(hand[1])}" stroke="${col.tunic}" stroke-width="18" stroke-linecap="round" fill="none"/>`;
-  up += `<circle cx="${f2(hand[0])}" cy="${f2(hand[1])}" r="9" fill="${col.skin}" stroke="${LN}" stroke-width="1.8"/>`;
-  s += `<g transform="rotate(${f2(-lean)} 0 -150)">${up}</g>`;
+  up += `<path d="M${sh[0]},${sh[1]} Q${f2(el[0])},${f2(el[1])} ${f2(hand[0] + 8)},${f2(hand[1])}" stroke="${LN}" stroke-width="27" stroke-linecap="round" fill="none"/>`;
+  up += `<path d="M${sh[0]},${sh[1]} Q${f2(el[0])},${f2(el[1])} ${f2(hand[0] + 8)},${f2(hand[1])}" stroke="${col.tunic}" stroke-width="22" stroke-linecap="round" fill="none"/>`;
+  up += `<ellipse cx="${f2(hand[0])}" cy="${f2(hand[1])}" rx="10" ry="9" fill="${col.skin}" stroke="${LN}" stroke-width="1.8"/>`;
+  s += `<g transform="rotate(${f2(-lean)} 0 -170)">${up}</g>`;
   return `<g transform="translate(${f2(x)} ${f2(y)}) scale(${f2(o.flip ? -k : k)} ${f2(k)})">${s}</g>`;
 }
 
@@ -56,8 +63,8 @@ export function soldier(o) {
 export function ranks(t, o = {}) {
   const R = rng(o.seed || 17);
   const rows = o.rows || [
-    { y: 668, h: 262, x0: 120, dx: 168, n: 10, lag: 0.17 },
-    { y: 706, h: 300, x0: 40, dx: 186, n: 10, lag: 0.13 },
+    { y: 652, h: 218, x0: 60, dx: 158, n: 12, lag: 0.17 },
+    { y: 690, h: 252, x0: -10, dx: 182, n: 11, lag: 0.13 },
   ];
   let s = '';
   for (const row of rows) {

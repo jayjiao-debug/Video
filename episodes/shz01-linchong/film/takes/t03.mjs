@@ -10,13 +10,13 @@ import { TIP, tearPath } from './t02.mjs';
 const ID = 't03';
 const T0 = 26.97;
 const FEET = [1330, 905], HGT = 680;
-const TIP_THRUST = [358, 424]; // measured: spear tip at the thrust pose (lean 7°, angle 97, grip 0.2)
-const CAM_END = { x: -200, y: -90 };
+const TIP_THRUST = [358, 424]; // measured: spear tip at the thrust pose (lean 7°, angle 83, grip 0.2)
+const CAM_END = { x: -20, y: 0 };
 const easeOutQuad = (x) => 1 - (1 - x) * (1 - x);
 
 function cam(t) {
   const c0 = camAt(TIP_THRUST, TIP, 1.25);
-  const k = ramp(t, T0, 28.65, easeOutQuad);
+  const k = ramp(t, T0, 29.0, easeOutQuad);
   const z = lerp(1.25, 1.0, k);
   let x = lerp(c0.x, CAM_END.x, k), y = lerp(c0.y, CAM_END.y, k);
   // truck right 3 px/frame from 28.24 (8-frame ease-in), tilt up 120 px with the spear 31.14 → 31.97
@@ -31,7 +31,7 @@ function cam(t) {
 // ------------------------------------------------------------------ his timeline
 function pose(t) {
   // keys: thrust (26.97) → guard (28.24) → wind-up (28.65) → spin (28.653–29.49) → guard (29.95) → plant (31.138)
-  const thrust = { sh: 82, el: 2, ang: 97, grip: 0.2, lean: 7 };
+  const thrust = { sh: 82, el: 2, ang: 83, grip: 0.2, lean: 7 };
   const guard = { sh: 55, el: 55, ang: 92, grip: 0.25, lean: 0 };
   const up = { sh: 150, el: 25, ang: 90, grip: 0.5, lean: -2 };
   const guard2 = { sh: 50, el: 60, ang: 74, grip: 0.28, lean: 1 };
@@ -59,7 +59,7 @@ function hero(t) {
   // tassel trail during the spin: the tip's arc, fading
   let trail = '';
   if (t > 28.7 && t < 29.6) {
-    const hand = [FEET[0] - 40, FEET[1] - HGT * 1.02];
+    const hand = [FEET[0] - 50, FEET[1] - 749];
     const r = 0.5 * 869;
     const a1 = 90 + 360 * ramp(t, 28.653, 29.49, E.inOut), a0 = Math.max(90, a1 - 120);
     let d = '';
@@ -70,7 +70,7 @@ function hero(t) {
     const op = 0.35 * (1 - ramp(t, 29.4, 29.6));
     trail = `<path d="${d}" stroke="#C8372D" stroke-width="16" fill="none" stroke-linecap="round" opacity="${f2(op)}"/><path d="${d}" stroke="#F6E7D0" stroke-width="4" fill="none" opacity="${f2(op * 1.4)}"/>`;
   }
-  return `<g transform="rotate(${f2(-p.lean)} ${FEET[0]} ${FEET[1]})">${fig}</g>` + trail;
+  return `<g transform="rotate(${f2(-p.lean)} ${FEET[0]} ${FEET[1]})"${t < 27.6 ? ' data-allowcut="1"' : ''}>${fig}</g>` + trail;
 }
 
 // ranks mirror his moves (soldier spear angle: + toward the front, 90 = horizontal forward)
@@ -173,7 +173,7 @@ export default {
     }
     s += L(c, 0.8, sand, { id: `${ID}sand`, bleed: 'all' });
     // ranks (d 0.6) with their shadows
-    s += L(c, 0.6, ranks(t, { motion: rankMotion }) + (t > 30.0 && t < 31.2 ? Array.from({ length: 10 }, (_, i) => dust(t, 40 + i * 186, 706, 30.314 + 0.13, 0.7)).join('') : ''), { id: `${ID}ranks`, bleed: 'lr' });
+    s += L(c, 0.6, ranks(t, { motion: rankMotion }) + (t > 30.0 && t < 31.2 ? Array.from({ length: 11 }, (_, i) => dust(t, -10 + i * 182, 690, 30.314 + 0.13, 0.6)).join('') : ''), { id: `${ID}ranks`, bleed: 'lr' });
     // the nearest flag (d 0.8): lands at screen (520, 260) when the tilt ends (T04 dissolves it into the lantern)
     const cE = cam(31.974), d8 = 0.8;
     const fw = [520 + cE.x * d8, 260 + cE.y * d8 - 30];
