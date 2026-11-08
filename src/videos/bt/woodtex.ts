@@ -458,7 +458,8 @@ export function deckPlanks(o: { seed?: number; color?: RGB; nailsOnBeams?: boole
  *  v = up); tile 4 m x 1 m = 6 rows of 0.167 m, so rows sit at fixed heights from the deck (y = 0) to the rail (y = 1).
  *  Butt joints are random per row (0-2 per 4 m, mean 0.85, >= 1.6 m apart, >= 1 m clear of the row below, 0.45 m of the one under that), so the joints do not
  *  march in a regular staircase. */
-export function bulwarkPlanks(o: { seed?: number; color?: RGB; rows?: number } = {}): WoodTex {
+export function bulwarkPlanks(o: { seed?: number; color?: RGB; rows?: number; grain?: number } = {}): WoodTex {
+  const gk = o.grain ?? 1; // grain/accent contrast multiplier
   const W = 2048, H = 1024, TU = 4, TV = 1, NR = o.rows ?? 6, pu = W / TU, pv = H / TV, RH = H / NR;
   const R = rng(o.seed ?? 23), S = new Sheet(W, H), BASE = o.color ?? [242, 110, 80];
   const boards: Board[] = [], rows: number[][] = [];
@@ -474,8 +475,8 @@ export function bulwarkPlanks(o: { seed?: number; color?: RGB; rows?: number } =
   }
   paintBoards(S, boards, {
     along: "x", pxPerM: [pu, pv], seam: [72, 20, 12], seamW: 3.5, endW: 1.4, wobble: 1.2,
-    grainDark: [130, 40, 20], grainLight: [255, 170, 130], grainPerM: 5, grainW: 9, grainA: [0.03, 0.07], grainSoft: 1.5,
-    accents: 0.25, accentA: [0.08, 0.14], accentW: 2.2,
+    grainDark: [130, 40, 20], grainLight: [255, 170, 130], grainPerM: 5, grainW: 9, grainA: [0.03 * gk, 0.07 * gk], grainSoft: 1.5,
+    accents: 0.25 * gk, accentA: [Math.min(0.4, 0.08 * gk), Math.min(0.5, 0.14 * gk)], accentW: 2.2,
     knots: 0, knotCol: [120, 40, 20], checks: 0.15, wear: [255, 170, 120], wearA: 0.45, ao: 0.5, crossGrad: 0.12, blotch: 0.035,
   });
   // paint chips: small lighter flecks where the paint wore through to the primer, darker ones to bare wood
@@ -499,7 +500,8 @@ export function bulwarkPlanks(o: { seed?: number; color?: RGB; rows?: number } =
 // ---------------- rail cap ----------------
 /** pale tan cap-rail timber: continuous grain along u (no long seams, so any v window looks right), the odd scarf
  *  joint across it with two treenails. Metric UVs, tile 4 m x 1 m. */
-export function railCap(o: { seed?: number; color?: RGB } = {}): WoodTex {
+export function railCap(o: { seed?: number; color?: RGB; grain?: number } = {}): WoodTex {
+  const gk = o.grain ?? 1; // grain/accent contrast multiplier (close-ups want more)
   const W = 2048, H = 512, TU = 4, TV = 1, pu = W / TU, pv = H / TV;
   const R = rng(o.seed ?? 37), S = new Sheet(W, H), BASE = o.color ?? [240, 202, 148];
   const js = [0.1, 0.55].map((f) => (f + (R() - 0.5) * 0.1) * W);
@@ -509,8 +511,8 @@ export function railCap(o: { seed?: number; color?: RGB } = {}): WoodTex {
   });
   paintBoards(S, boards, {
     along: "x", pxPerM: [pu, pv], seam: [72, 42, 24], seamW: 0, endW: 2.2, long: false,
-    grainDark: [140, 92, 52], grainLight: [248, 220, 178], grainPerM: 5, grainW: 10, grainA: [0.04, 0.1],
-    accents: 1.2, accentA: [0.14, 0.24], accentW: 2.4,
+    grainDark: [140, 92, 52], grainLight: [248, 220, 178], grainPerM: 5, grainW: 10, grainA: [0.04 * gk, 0.1 * gk],
+    accents: 1.2, accentA: [Math.min(0.5, 0.14 * gk), Math.min(0.6, 0.24 * gk)], accentW: 2.4,
     knots: 0.15, knotCol: [124, 76, 42], checks: 0.3, wear: [240, 210, 168], wearA: 0.3, ao: 0.45, crossGrad: 0, blotch: 0.05,
   });
   for (const j of js) for (const sd of [-1, 1]) for (const v of [0.3, 0.7]) nail(S, j + sd * 0.05 * pu, v * H, 0.008 * pu, 0.008 * pv, [124, 80, 46], 0.5);

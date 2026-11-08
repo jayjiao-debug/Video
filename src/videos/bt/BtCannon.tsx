@@ -178,8 +178,8 @@ class BtWorld {
     const M = mats(makeEnv(gl), makeEnv(gl, ENV_FILL));
     const dt = W.deckPlanks();
     const deck = M.wood(W.woodMaps(dt, [7.7 * dt.repeatPerMetre.x, 28 * dt.repeatPerMetre.y]));
-    const red = M.paint(W.woodMaps(W.bulwarkPlanks()));
-    const railM = M.wood(W.woodMaps(W.railCap()));
+    const red = M.paint(W.woodMaps(W.bulwarkPlanks({ grain: 1.8 })));
+    const railM = M.wood(W.woodMaps(W.railCap({ grain: 2.2 })));
     const dark = M.paint(W.woodMaps(W.carriageWood({ color: [196, 84, 54], seed: 5 })));
     const woodCar = M.wood(W.woodMaps(W.carriageWood()));
     const wheelM = M.wood(W.woodMaps(W.wheelWood()));
@@ -274,8 +274,8 @@ class BtWorld {
           c = mix(c, bC, uDeep);
           float s = texture2D(uStreak, vW.xz / 6.0 + uScroll).a * (1.0 - smoothstep(12.0, 70.0, d)) * (1.0 - uDeep);
           float s2 = texture2D(uStreak, vW.xz / 17.0 + uScroll * 0.5 + 0.37).a * (1.0 - smoothstep(40.0, 190.0, d)) * 0.65 * (1.0 - uDeep);
-          vec4 dsh = texture2D(uDash, vec2(vW.z / 3.4, vW.x / 26.0)) * uDeep * (1.0 - smoothstep(12.0, 60.0, d)) * smoothstep(1.4, 4.0, d);
-          c = mix(c, vec3(0.45, 0.80, 0.86), dsh.r * 0.4); c = mix(c, vec3(0.02, 0.26, 0.38), dsh.g * 0.3);
+          vec4 dsh = texture2D(uDash, vec2(vW.z / 3.4, vW.x / 26.0)) * uDeep * (1.0 - smoothstep(25.0, 95.0, d)) * smoothstep(1.2, 3.0, d);
+          c = mix(c, vec3(0.45, 0.80, 0.86), dsh.r * 0.55); c = mix(c, vec3(0.02, 0.24, 0.36), dsh.g * 0.42);
           c = mix(c, vec3(0.86,0.97,1.0), clamp(s + s2, 0.0, 1.0) * 0.72);
           c = mix(c, vec3(0.72,0.9,0.88), smoothstep(140.0, 420.0, d) * 0.55);
           float a = 1.0 - smoothstep(170.0, 420.0, d);
@@ -306,15 +306,18 @@ class BtWorld {
       R.add(S.cloudField(C)); }
     // code-built 3D sea stacks (arch, waterfall, mist) dead ahead and the enemy galleon broadside
     S.SCENERY.uLight.value.set(-0.3, 0.5, 0.81).normalize();
-    { const stacks = S.seaStacks(); stacks.position.set(0, -2.4, 0); R.add(stacks); }
+    { const stacks = S.seaStacks(); stacks.position.set(0, -2.4, 0); R.add(stacks);
+      // its haze band, waterfall and foam sort after the sea but BEFORE every near transparent thing (blast, smoke, spray),
+      // otherwise the horizon mist draws over the fireball
+      stacks.traverse((o) => { if (o.renderOrder > 0) o.renderOrder = -1 + 0.05 * o.renderOrder; }); }
     { const ship = S.galleon(); ship.position.set(108, -2.4, -3.5); R.add(ship); this.enemy = ship; }
     // ball + water streaks for shot B
-    this.ball = new THREE.Mesh(new THREE.SphereGeometry(0.075, 24, 16), new THREE.MeshMatcapMaterial({ matcap: P.ballMatcap(), color: "#ffffff" })); R.add(this.ball);
+    this.ball = new THREE.Mesh(new THREE.SphereGeometry(0.075, 32, 20), ballM); R.add(this.ball); // same lit iron as the deck shot (the old matcap read as a logo)
     // speed streaks: soft pale-turquoise bands (feathered edges, tapered ends) like the reference, not hard white bars
-    const sm = new THREE.MeshBasicMaterial({ color: "#c8f3f7", transparent: true, opacity: 0.6, depthWrite: false, map: P.canvasTex(256, 32, (g) => {
+    const sm = new THREE.MeshBasicMaterial({ color: "#b3ecf3", transparent: true, opacity: 0.45, depthWrite: false, map: P.canvasTex(256, 32, (g) => {
       const im = g.createImageData(256, 32);
       for (let y = 0; y < 32; y++) for (let x = 0; x < 256; x++) {
-        const v = (y + 0.5) / 32 - 0.5, u = (x + 0.5) / 256, a = Math.exp(-v * v / 0.045) * Math.min(1, u / 0.25) * Math.min(1, (1 - u) / 0.12);
+        const v = (y + 0.5) / 32 - 0.5, u = (x + 0.5) / 256, a = Math.exp(-v * v / 0.045) * Math.min(1, u / 0.45) * Math.min(1, (1 - u) / 0.15);
         const i = (y * 256 + x) * 4; im.data[i] = im.data[i + 1] = im.data[i + 2] = 255; im.data[i + 3] = Math.round(255 * a);
       }
       g.putImageData(im, 0, 0);
@@ -322,7 +325,7 @@ class BtWorld {
     for (let i = 0; i < 46; i++) {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), sm);
       const h = Math.sin(i * 12.9898) * 43758.5453, r = h - Math.floor(h), h2 = Math.sin(i * 78.233) * 12345.678, r2 = h2 - Math.floor(h2);
-      const zz = (r2 - 0.5) * 7 * (1 + i / 30); m.position.set(4 + i * 2.6 + 2 * r, -2.38, zz + Math.sign(zz || 1) * 1.0); m.scale.set(2.5 + 4 * r, 1, 0.07 + 0.06 * r2);
+      const zz = (r2 - 0.5) * 7 * (1 + i / 30); m.position.set(4 + i * 2.6 + 2 * r, -2.38, zz + Math.sign(zz || 1) * 1.0); m.scale.set(2.5 + 4 * r, 1, 0.05 + 0.04 * r2);
       m.layers.set(NOINK); m.visible = false; this.streaks.push(m); R.add(m);
     }
     // light: one shadow-casting sun, the film's two-tone constants (day preset)
@@ -474,8 +477,9 @@ class BtWorld {
       const st = Math.round(sB * 18) / 18;
       this.fxBlast.r = this.pool.req(`blast|${st}`, 600, 600, 1, (p) => blast(p, st));
       this.fxBlast.use(true);
-      this.fxBlast.mesh.position.copy(mz).add(V(0.55 + 0.95 * Math.min(1, sB * 1.6), 0.05 + 0.7 * Math.min(1, sB * 1.6), 0.35 * Math.min(1, sB * 1.6)));
-      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 1.55; this.fxBlast.mesh.scale.set(sz, sz, 1);
+      const kb = Math.min(1, sB * 1.6); // one blast pressed against the outside of the port: it sits on the rail (rail hides its foot, the port shows it)
+      this.fxBlast.mesh.position.copy(mz).add(V(0.55 + 0.95 * kb, 0.05 + 0.32 * kb, 0.28 * kb));
+      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 1.55 + 0.25 * kb; this.fxBlast.mesh.scale.set(sz, sz, 1);
     }
     // flame tongue filling the gun port, so the blast reads as coming out of our gun
     this.fxJet.mesh.visible = !shotB && a >= 0 && sB < 0.95;
@@ -499,7 +503,7 @@ class BtWorld {
       const st = f % 3; this.fxSparks.r = this.pool.req(`sparks|${st}`, 300, 300, 1, (p) => sparks(p, st)); this.fxSparks.use(false);
       this.fxSparks.mesh.position.copy(br).add(V(0, 0.12, 0)); this.fxSparks.mesh.quaternion.copy(cam.quaternion); this.fxSparks.mesh.scale.set(0.42, 0.42, 1);
     }
-    const up = (f - (FIRE - 3)) / 9; this.fxPuff.mesh.visible = !shotB && up > 0 && up < 1;
+    const up = (f - (FIRE - 3)) / 14; this.fxPuff.mesh.visible = !shotB && up > 0 && up < 1;
     if (this.fxPuff.mesh.visible) {
       const st = Math.round(up * 9) / 9; this.fxPuff.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); this.fxPuff.use(false);
       this.fxPuff.mesh.position.copy(br).add(V(-0.05 * up, 0.15 + 0.3 * up, 0)); this.fxPuff.mesh.quaternion.copy(cam.quaternion);

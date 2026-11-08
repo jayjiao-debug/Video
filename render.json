@@ -1,9 +1,9 @@
 {
-  "id": "bt-cannon-v12b-r2",
+  "id": "bt-cannon-v12c",
   "composition": "BtCannon",
   "start": 0,
   "end": 65,
   "chunks": 12,
-  "output": "bt_cannon_v12b",
+  "output": "bt_cannon_v12c",
   "flags": "--crf=16"
 }
