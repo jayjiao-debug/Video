@@ -1,0 +1,57 @@
+{
+ "wall_s": 161.8,
+ "shots": [
+  {
+   "shot": "B5_TRIAL",
+   "frames": 405,
+   "of": 405,
+   "unpack_s": 0.4,
+   "render_s": 151.1,
+   "ms_per_frame": 373,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "B6_PRESS",
+   "frames": 282,
+   "of": 282,
+   "unpack_s": 0.4,
+   "render_s": 95.3,
+   "ms_per_frame": 338,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "B6_NOVELS",
+   "frames": 102,
+   "of": 102,
+   "unpack_s": 0.4,
+   "render_s": 35.2,
+   "ms_per_frame": 346,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  },
+  {
+   "shot": "B8_SALOON",
+   "frames": 330,
+   "of": 330,
+   "unpack_s": 0.4,
+   "render_s": 103.4,
+   "ms_per_frame": 313,
+   "nvenc": true,
+   "renderer": [
+    "Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - Tesla T4"
+   ],
+   "errors": []
+  }
+ ]
+}
