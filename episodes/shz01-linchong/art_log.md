@@ -192,3 +192,22 @@ Tracing notes: the model draws heads 11–39 % larger than 林冲's (by 林冲's
 `traced.mjs` scales the head through a graded neck (s ≥ 0.84) and lengthens the lower legs to 7.5 heads (张教头 and the
 wife 7.0). Painted eyes, brows, moustaches and chin tufts are inpainted; faces are drawn with 林冲's face construction
 (`film/cast/v4/face.mjs`). 张教头 keeps the traced grey beard, moustache and brow tails.
+
+## Background plates for the texture test, route B (2026-11-08)
+
+The owner asked for clearly more texture and detail in sets and props. Route B tests AI-painted empty-set plates traced into flat
+vector layers (`film/tex_demo/trace_plates.py`, the rig's `tracelib`), placed by `film/tex_demo/hooksB.mjs`. HF Z-Image-Turbo,
+2048x1152 (16:9), steps 9, shift 3, `random_seed: false`. Saved as `/dev/shm/shz01/art/bg/<name>.png` (not committed).
+Style suffix = the reference-sheet style prompt above, word for word, **without "handsome"** (it is a character word and
+could pull a person into an empty set).
+
+| file | seed | prompt (before the style suffix) | notes |
+| --- | --- | --- | --- |
+| bg_tavern | 8101 | "Background plate for a 2D animated film, the empty interior of a small Song dynasty tavern by the city gate on a summer day, no people, eye-level straight-on view of the back wall: dark warm brown wooden plank walls, a bright open doorway on the right half with a short indigo cloth door curtain hanging from the lintel and white sunlit street glare outside, wooden wall shelves on the left with round clay wine jars sealed with red cloth and stacked ceramic bowls, a hanging wooden sign board beside the door, a heavy roof beam with simple wooden brackets across the top, a small clay oil lamp on the shelf, a low wooden counter in the lower left. Clear foreground, midground and background depth." | pseudo-text on the hanging sign (flattened, 酒 drawn in code); a modern hurricane lantern (inpainted, dish lamp drawn in code); 福 on the jars (flattened to red diamonds); roof tiles at the top cropped |
+| bg_table | 8102 | "Background plate for a 2D animated film, top-down view looking straight down at an old dark brown wooden tavern table top made of wide horizontal planks, visible wood grain, knots, scratches, worn edges and two faint cup-ring stains, diagonal stripes of warm summer daylight and lattice-window shadow bars falling across it from the top left, the table is empty, nothing on it, no people, no paper, no objects." | the lattice light fell on the floor, not the table; cropped to the boards |
+| bg_temple | 8103 | "Background plate for a 2D animated film, the empty interior of a small ruined mountain-god temple on a snowy winter night, no people, eye-level side view of the back wall: cracked old lime plaster walls with water stains and a broken carved cloud relief, a dim seated clay deity statue on an altar at the left with a faded red altar cloth, two red candles and a bronze incense pot full of ash on the altar, cobwebs under a heavy dark roof beam, a fallen wooden beam leaning against the wall, heaps of straw on the packed earth floor, a closed wooden plank door on the right with a thin vertical crack of cold blue moonlight and a little snow blown in at its foot. Dark, cold, moody, low light." | the statue came out Buddha/Guanyin-like, not a 山神; its door competes with the take's door prop |
+| bg_courtyard | 8104 | "Background plate for a 2D animated film, high-angle view from above of the empty stone-paved front courtyard of a large Song dynasty temple on a sunny spring day, no people: the main hall across the top of the frame with red columns and lattice doors, a grey tiled double-eave roof with curling ridge ornaments and round tile ends along the eaves, a raised stone platform with carved stone balustrades and wide stone steps in the middle, tall red and yellow cloth banners on poles beside the steps, a big bronze tripod incense burner with grey ash on the left side of the courtyard, large square grey-beige paving stones filling the lower two thirds of the frame." | the plate's burner replaced by copied paving (the take keeps its 鼎); paving mirrored 420 px at the bottom; cooler grey than the colour script |
+
+Tracing: mean-shift flattening, k-means palette (12–28 colours), mode filter, small-region merge, vtracer stacked splines,
+centre-line ink. Far / mid / near split by polygons; each deeper layer is filled under the nearer ones so they can slide.
+Big painted surfaces (walls, paving, the table top) posterise into blotches; fine plank and joint lines are mostly lost.
