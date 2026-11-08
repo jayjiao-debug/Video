@@ -119,6 +119,11 @@ def build(view, debug=None):
 
     ero = cv2.erode(Sm, np.ones((3, 3), np.uint8))
     ik = merge_close(kmeans_palette(ero, INK, 8), 9)
+    # no olive/yellow ink (anti-alias mixes of skin and hair): snap those to the skin outline brown
+    for i, c in enumerate(rgb_of(ik)):
+        hh = cv2.cvtColor(np.uint8([[c]]), cv2.COLOR_RGB2HSV)[0, 0]
+        if 20 <= hh[0] <= 45 and hh[1] > 60:
+            ik[i] = lab_of(['#8a5a44'])[0]
 
     parts = S['parts']
     names = sorted(parts, key=lambda k: parts[k]['z'])

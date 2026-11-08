@@ -160,8 +160,8 @@ function faceFront(F, E, o = {}) {
   // ---- mouth
   const m = sh(F.mouth, 1.15), mw = 11.5 * u, op = Math.max(0, E.open), jaw = Math.max(0, E.jaw);
   const cy = m[1] - E.mouth * 2.6 * u;
-  const cl = [m[0] - mw * (1 + 0.08 * jaw), cy], cr = [m[0] + mw * (1 + 0.08 * jaw), cy];
-  const drop = op * 13 * u; // lower lip / chin travel
+  const cl = [m[0] - mw * (1 + 0.08 * jaw + 0.18 * op), cy], cr = [m[0] + mw * (1 + 0.08 * jaw + 0.18 * op), cy];
+  const drop = op * 17 * u; // lower lip / chin travel
   if (op > 0.04) {
     const up = m[1] - op * 2.2 * u, lo = m[1] + 2 + drop;
     const shape = `M${P(cl)} C${f(m[0] - mw * 0.5)},${f(up - 1 * u)} ${f(m[0] + mw * 0.5)},${f(up - 1 * u)} ${P(cr)} C${f(m[0] + mw * 0.7)},${f(lo)} ${f(m[0] - mw * 0.7)},${f(lo)} ${P(cl)}Z`;
@@ -402,6 +402,22 @@ function cordSide(F, u, E) {
   return `<path d="M${P(top)} C${f(top[0] - 2 * u)},${f(top[1] + 40 * u)} ${f(knot[0] + 6 * u)},${f(knot[1] - 40 * u)} ${P(knot)}" fill="none" stroke="${C.cord}" stroke-width="${f(1.6 * u)}" stroke-linecap="round"/>` +
     `<path d="M${P(knot)} c${f(-2 * u)},${f(8 * u)} ${f(1 * u)},${f(14 * u)} ${f(-1 * u)},${f(22 * u)} M${P(knot)} c${f(2 * u)},${f(7 * u)} ${f(4 * u)},${f(12 * u)} ${f(4 * u)},${f(19 * u)}" fill="none" stroke="${C.cord}" stroke-width="${f(1.4 * u)}" stroke-linecap="round"/>` +
     `<ellipse cx="${f(knot[0])}" cy="${f(knot[1])}" rx="${f(3 * u)}" ry="${f(2.2 * u)}" fill="${C.cord}" stroke="${C.cordS}" stroke-width="${f(0.7 * u)}"/>`;
+}
+
+function hairCap(F, view, u) {
+  // skull top and topknot, drawn when the hat is off (the traced reference only shows the hat)
+  const C = COL, H = F.hat;
+  const L = `stroke="${C.line}" stroke-width="${f(1.1 * u)}" stroke-linejoin="round"`;
+  if (view === 'front') {
+    const cx = H.cx, y0 = H.y + 16 * u, hw = 60 * u, top = H.y - 58 * u;
+    return `<path d="M${f(cx - hw)},${f(y0)} C${f(cx - hw)},${f(top + 20 * u)} ${f(cx - hw * 0.55)},${f(top)} ${f(cx)},${f(top)} C${f(cx + hw * 0.55)},${f(top)} ${f(cx + hw)},${f(top + 20 * u)} ${f(cx + hw)},${f(y0)}Z" fill="${C.hair}" ${L}/>` +
+      `<path d="M${f(cx - 14 * u)},${f(top + 4 * u)} C${f(cx - 15 * u)},${f(top - 18 * u)} ${f(cx + 15 * u)},${f(top - 18 * u)} ${f(cx + 14 * u)},${f(top + 4 * u)}Z" fill="${C.hair}" ${L}/>` +
+      `<path d="M${f(cx - 30 * u)},${f(top + 12 * u)} C${f(cx - 18 * u)},${f(top + 5 * u)} ${f(cx - 6 * u)},${f(top + 3 * u)} ${f(cx + 4 * u)},${f(top + 3 * u)}" fill="none" stroke="#3e3a48" stroke-width="${f(3 * u)}" stroke-linecap="round"/>`;
+  }
+  const x0 = F.brow[0][0] - 8 * u, x1 = F.ear[0] + 52 * u, y0 = H.y + 12 * u, top = H.y - 60 * u, cx = (x0 + x1) / 2 + 8 * u;
+  return `<path d="M${f(x0)},${f(y0)} C${f(x0 - 2 * u)},${f(top + 24 * u)} ${f(cx - 50 * u)},${f(top)} ${f(cx)},${f(top)} C${f(cx + 50 * u)},${f(top)} ${f(x1 + 4 * u)},${f(top + 30 * u)} ${f(x1)},${f(y0 + 30 * u)} L${f(x1 - 30 * u)},${f(y0 + 30 * u)}Z" fill="${C.hair}" ${L}/>` +
+    `<path d="M${f(cx + 6 * u)},${f(top + 4 * u)} C${f(cx + 4 * u)},${f(top - 20 * u)} ${f(cx + 34 * u)},${f(top - 20 * u)} ${f(cx + 32 * u)},${f(top + 6 * u)}Z" fill="${C.hair}" ${L}/>` +
+    `<path d="M${f(cx - 40 * u)},${f(top + 16 * u)} C${f(cx - 24 * u)},${f(top + 6 * u)} ${f(cx)},${f(top + 4 * u)} ${f(cx + 14 * u)},${f(top + 6 * u)}" fill="none" stroke="#3e3a48" stroke-width="${f(3 * u)}" stroke-linecap="round"/>`;
 }
 
 function tattoo(p, u) {
@@ -721,6 +737,7 @@ function headBack(D, view, costume, E, pose, O) {
   let s = '';
   if (costume === 'A' && F.rings && view === 'front' && O.rings) s += F.rings.map((c) => jadeRing(c, u, 3.6)).join('');
   if (costume === 'C' && F.hat && view === 'front' && O.hat) s += hatFront(F.hat, u, true);
+  if (costume === 'C' && F.hat && !O.hat) s += hairCap(F, view, u);
   return s;
 }
 

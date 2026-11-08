@@ -17,6 +17,7 @@ function farLane() {
   s += roof(-260, 470, 420, 260, '#5A4660') + roof(120, 520, 360, 240, '#4E3D57') + roof(-120, 600, 380, 300, '#3F3149');
   // warm windows in the far houses
   for (const [x, y] of [[-40, 760], [210, 700], [330, 780], [40, 840]]) s += `<rect x="${x}" y="${y}" width="34" height="40" fill="#F2B05A" opacity="0.75"/>`;
+  s += `<path d="M-300,905 L800,890 L800,1500 L-300,1500Z" fill="#3A3036"/><path d="M-300,905 L800,890" stroke="#5A4A50" stroke-width="3"/>`;
   // a willow silhouette
   let wl = '';
   const R = rng(4);
@@ -83,26 +84,25 @@ function shadows(t) {
   for (const b of beats) up = Math.max(up, Math.max(0, 1 - Math.abs(t - b) / 0.36));
   up = E.sine(up);
   const lean = ramp(t, 34.472, 34.9, E.out); // she leans her head against his hand
-  const hx = 170, hy = 300; // her head centre
+  const hx = 160, hy = 318; // her head centre
   const tilt = lean * 13;
   let her = `<g transform="rotate(${f2(tilt)} ${hx} ${hy + 60})">` +
-    `<ellipse cx="${hx}" cy="${hy}" rx="44" ry="52"/>` +
-    `<ellipse cx="${hx + 4}" cy="${hy - 58}" rx="34" ry="28"/>` + // 高髻 bun
-    `<ellipse cx="${hx - 2}" cy="${hy - 80}" rx="20" ry="16"/>` +
-    `<path d="M${hx + 22},${hy - 70} L${hx + 78},${hy - 96}" stroke="#5A2E14" stroke-width="6" stroke-linecap="round"/>` + // hairpin
-    `<circle cx="${hx + 80}" cy="${hy - 97}" r="7"/></g>`;
+    `<ellipse cx="${hx}" cy="${hy}" rx="40" ry="48"/>` +
+    `<path d="M${hx - 14},${hy - 40} C${hx - 30},${hy - 80} ${hx - 6},${hy - 118} ${hx + 16},${hy - 112} C${hx + 38},${hy - 104} ${hx + 34},${hy - 66} ${hx + 18},${hy - 40}Z"/>` + // 高髻 (tall bun)
+    `<path d="M${hx - 34},${hy - 96} L${hx + 70},${hy - 70}" stroke="#5A2E14" stroke-width="5" stroke-linecap="round"/>` + // hairpin through the bun
+    `<path d="M${hx + 68},${hy - 70} l4,26 M${hx + 60},${hy - 72} l2,22" stroke="#5A2E14" stroke-width="2.5"/><circle cx="${hx + 72}" cy="${hy - 42}" r="4"/><circle cx="${hx + 62}" cy="${hy - 48}" r="3.5"/></g>`;
   her += `<path d="M${hx - 26},${hy + 40} C${hx - 30},${hy + 70} ${hx - 110},${hy + 80} ${hx - 130},${hy + 140} L${hx - 150},600 L${hx + 160},600 L${hx + 130},${hy + 140} C${hx + 110},${hy + 82} ${hx + 30},${hy + 70} ${hx + 26},${hy + 40}Z"/>`;
   // sewing arm: from her right shoulder to the needle hand
   const sh = [hx + 100, hy + 120];
-  const hand = [lerp(hx + 150, hx + 186, up), lerp(hy + 230, hy + 120, up)];
-  const elbow = [lerp(hx + 170, hx + 200, up), lerp(hy + 220, hy + 200, up)];
-  her += `<path d="M${sh[0]},${sh[1]} Q${f2(elbow[0] + 20)},${f2(elbow[1])} ${f2(hand[0])},${f2(hand[1])}" stroke="#5A2E14" stroke-width="30" stroke-linecap="round" fill="none"/>`;
-  her += `<circle cx="${f2(hand[0])}" cy="${f2(hand[1])}" r="17"/>`;
+  const hand = [lerp(hx + 140, hx + 214, up), lerp(hy + 236, hy + 96, up)];
+  const elbow = [lerp(hx + 170, hx + 214, up), lerp(hy + 220, hy + 196, up)];
+  her += `<path d="M${sh[0]},${sh[1]} Q${f2(elbow[0] + 20)},${f2(elbow[1])} ${f2(hand[0])},${f2(hand[1])}" stroke="#5A2E14" stroke-width="24" stroke-linecap="round" fill="none"/>`;
+  her += `<ellipse cx="${f2(hand[0])}" cy="${f2(hand[1] - 4)}" rx="10" ry="14"/><path d="M${f2(hand[0])},${f2(hand[1] - 16)} l4,-22" stroke="#5A2E14" stroke-width="2.5"/>`;
   // the thread drawn up from the cloth in her lap
   her += `<path d="M${f2(hand[0])},${f2(hand[1])} L${f2(hx + 120)},${hy + 250}" stroke="#5A2E14" stroke-width="2" opacity="${f2(0.4 + up * 0.5)}"/>`;
   // him: enters from the right at 32.81, standing behind her (headscarf with two hanging tails)
   const enter = ramp(t, 32.81, 33.5, E.out);
-  const gx = lerp(620, 330, enter), gy = 150;
+  const gx = lerp(640, 350, enter), gy = 150;
   const reach = ramp(t, 33.30, 33.646, E.inOut); // hand lands on her shoulder at 33.646
   let him = `<g transform="translate(${f2(gx)} 0)">` +
     `<ellipse cx="0" cy="${gy}" rx="50" ry="58"/>` +
@@ -112,14 +112,17 @@ function shadows(t) {
     `<path d="M-28,${gy + 50} C-34,${gy + 80} -120,${gy + 96} -140,${gy + 170} L-160,600 L160,600 L140,${gy + 170} C120,${gy + 96} 34,${gy + 80} 28,${gy + 50}Z"/></g>`;
   // his arm to her shoulder
   const hs = [gx - 110, gy + 150];
-  const target = [hx + 70 + lean * 6, hy + 92];
+  const target = [hx + 66 + lean * 4, hy + 70];
   const hand2 = [lerp(gx - 120, target[0], reach), lerp(gy + 300, target[1], reach)];
   const el2 = [lerp(gx - 150, (hs[0] + hand2[0]) / 2 - 10, reach), lerp(gy + 260, (hs[1] + hand2[1]) / 2 + 40, reach)];
   if (enter > 0.05) {
     him += `<path d="M${f2(hs[0])},${f2(hs[1])} Q${f2(el2[0])},${f2(el2[1])} ${f2(hand2[0])},${f2(hand2[1])}" stroke="#5A2E14" stroke-width="34" stroke-linecap="round" fill="none"/>`;
     him += `<ellipse cx="${f2(hand2[0])}" cy="${f2(hand2[1] + 4)}" rx="26" ry="16" transform="rotate(-12 ${f2(hand2[0])} ${f2(hand2[1])})"/>`;
   }
-  return her + him;
+  return `<defs><filter id="t04sh1" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter>` +
+    `<filter id="t04sh2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter></defs>` +
+    `<g filter="url(#t04sh2)" opacity="0.56" fill="#4A2410">${him.replace(/#5A2E14/g, '#4A2410')}</g>` +
+    `<g filter="url(#t04sh1)" opacity="0.78" fill="#3E1E0C">${her.replace(/#5A2E14/g, '#3E1E0C')}</g>`;
 }
 
 function lantern(t, x, y) {
@@ -146,7 +149,7 @@ function s07(t) {
   s += L(c, 0.25, SET_FAR, { id: 't04far', bleed: 'all' });
   s += L(c, 1, SET_WALL +
     winGlow(WC[0], WC[1], 520, 0.55, '#FFC56E', 't04wg') + winGlow(520, 260, 260, 0.35, '#E8573A', 't04lg') +
-    `<g transform="translate(${WX} ${WY})">${latticeWindow({ id: 't04w', glow: 1, shadows: shadows(t), shadowBlur: 3.5 })}</g>`, { id: 't04wall', bleed: 'all' });
+    `<g transform="translate(${WX} ${WY})">${latticeWindow({ id: 't04w', glow: 1, shadows: shadows(t), shadowBlur: 0.01, shadowOp: 1 })}</g>`, { id: 't04wall', bleed: 'all' });
   s += L(c, 1.1, lantern(t, 520, 262), { id: 't04lantern' });
   s += L(c, 1.15, SET_EAVE, { id: 't04eave', bleed: 'lrt' });
   return s;
@@ -214,18 +217,27 @@ function herHand(x, y, rot = 0) {
 }
 
 function ewer(x, y, tilt) {
-  // Song 注子 (qingbai porcelain): body centre (x, y), tilted by `tilt` degrees (spout to the left)
+  // Song 注子 (qingbai porcelain, melon-ribbed pear body), body centre (x, y), tilted by `tilt` deg (spout left)
+  const ln = '#2A1C17';
   return `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${f2(tilt)})">` +
-    `<path d="M-30,-150 C-34,-130 -40,-118 -36,-104 C-80,-90 -96,-30 -92,20 C-88,80 -50,118 0,120 C50,118 88,80 92,20 C96,-30 80,-90 36,-104 C40,-118 34,-130 30,-150Z" fill="url(#t04ew)" stroke="#2A1C17" stroke-width="2.5"/>` +
-    `<ellipse cx="0" cy="-152" rx="34" ry="9" fill="#BFD3CB" stroke="#2A1C17" stroke-width="2"/><ellipse cx="0" cy="-166" rx="20" ry="12" fill="#CFE0D8" stroke="#2A1C17" stroke-width="2"/>` +
-    `<path d="M-78,-30 C-130,-60 -170,-110 -196,-170 L-182,-176 C-160,-124 -122,-80 -70,-52Z" fill="#CFE0D8" stroke="#2A1C17" stroke-width="2.5"/>` + // spout
-    `<path d="M80,-80 C150,-90 160,10 86,40" fill="none" stroke="#2A1C17" stroke-width="20" stroke-linecap="round"/><path d="M80,-80 C150,-90 160,10 86,40" fill="none" stroke="#CFE0D8" stroke-width="14" stroke-linecap="round"/>` + // handle
-    `<path d="M-60,-40 C-66,10 -50,60 -20,90" stroke="#fff" stroke-width="8" opacity="0.4" fill="none" stroke-linecap="round"/>` +
-    [-50, -20, 10, 40].map((dx) => `<path d="M${dx},-96 C${dx - 6},-20 ${dx - 2},60 ${dx + 4},112" stroke="#9FB8AE" stroke-width="2" fill="none" opacity="0.5"/>`).join('') +
+    // spout (behind the body edge)
+    `<path d="M-70,-10 C-120,-20 -150,-70 -170,-130 C-176,-148 -186,-160 -200,-166 L-190,-178 C-172,-170 -160,-156 -152,-136 C-134,-84 -110,-52 -64,-44Z" fill="url(#t04ew)" stroke="${ln}" stroke-width="2.5"/>` +
+    // handle: strap from the neck to the shoulder
+    `<path d="M24,-150 C110,-170 150,-110 132,-50 C122,-16 104,0 86,6" fill="none" stroke="${ln}" stroke-width="22" stroke-linecap="round"/>` +
+    `<path d="M24,-150 C110,-170 150,-110 132,-50 C122,-16 104,0 86,6" fill="none" stroke="#CFE0D8" stroke-width="15" stroke-linecap="round"/>` +
+    // body
+    `<path d="M-24,-126 C-30,-100 -88,-78 -98,-20 C-108,40 -86,104 -58,124 L58,124 C86,104 108,40 98,-20 C88,-78 30,-100 24,-126Z" fill="url(#t04ew)" stroke="${ln}" stroke-width="2.5"/>` +
+    [-62, -30, 0, 30, 62].map((dx) => `<path d="M${dx * 0.3},-112 C${dx * 1.25},-70 ${dx * 1.3},60 ${dx * 0.75},122" stroke="#93ADA3" stroke-width="2" fill="none" opacity="0.7"/>`).join('') +
+    `<path d="M-70,-40 C-80,10 -70,70 -44,104" stroke="#fff" stroke-width="9" opacity="0.38" fill="none" stroke-linecap="round"/>` +
+    `<rect x="-56" y="118" width="112" height="14" rx="4" fill="#B9CEC5" stroke="${ln}" stroke-width="2"/>` +
+    // neck, lip and lid
+    `<path d="M-22,-126 L-20,-176 L20,-176 L22,-126Z" fill="#D8E8E1" stroke="${ln}" stroke-width="2.2"/>` +
+    `<ellipse cx="0" cy="-178" rx="30" ry="8" fill="#C6DAD2" stroke="${ln}" stroke-width="2"/>` +
+    `<path d="M-24,-180 C-22,-206 22,-206 24,-180Z" fill="#D2E4DC" stroke="${ln}" stroke-width="2"/><circle cx="0" cy="-206" r="7" fill="#C6DAD2" stroke="${ln}" stroke-width="2"/>` +
     `</g>`;
 }
 // spout tip and handle grip in ewer-local coords
-const SPOUT = [-189, -173], HANDLE = [140, -20];
+const SPOUT = [-196, -172], HANDLE = [136, -86];
 const rotp = (p, deg, x, y) => { const r = (deg * Math.PI) / 180; return [x + p[0] * Math.cos(r) - p[1] * Math.sin(r), y + p[0] * Math.sin(r) + p[1] * Math.cos(r)]; };
 
 function hisHand(cx, cy, stroke) {

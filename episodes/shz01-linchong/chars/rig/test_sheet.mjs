@@ -30,8 +30,8 @@ const kRef = FH / 7.5 / ((1468 - 331) / 6.5);
 if (r1) {
   const iw = 864 * kRef, ih = 1536 * kRef;
   const feetX = 360, feetY = y + 60 + FH;
-  b += `<image href="${r1}" x="${feetX - 428 * kRef}" y="${feetY - 1468 * kRef}" width="${iw}" height="${ih}"/>`;
-  b += `<rect x="${feetX - 428 * kRef}" y="${feetY - 1468 * kRef}" width="${iw}" height="${ih}" fill="none" stroke="#b9ab98" stroke-width="2"/>`;
+  b += `<clipPath id="refc"><rect x="${feetX - 300}" y="${y + 20}" width="600" height="${FH + 90}" rx="10"/></clipPath>`;
+  b += `<image clip-path="url(#refc)" href="${r1}" x="${feetX - 428 * kRef}" y="${feetY - 1468 * kRef}" width="${iw}" height="${ih}"/>`;
 }
 b += T(80, y + 50, '参考 A 正面 (painting)', 30);
 const views = [['front', 'A', 1060, '代码 A 正面'], ['side', 'A', 1760, 'A 侧面'], ['front', 'C', 2560, 'C 正面 (毡笠代码绘制)'], ['side', 'C', 3460, 'C 侧面']];
@@ -54,8 +54,9 @@ for (const [v, title] of [['front', '正面特写 (A)'], ['side', '侧面特写 
     const x0 = 70 + i * (cw + 30), y0 = y + 80;
     // render at a CU scale: head ~ 560 px
     const Hh = 4200; // px per 1.80 m -> H = 560
-    const vb = v === 'front' ? [-300, -Hh * 1.02, 600, 660] : [-340, -Hh * 1.02, 640, 690];
-    b += `<svg x="${x0}" y="${y0}" width="${cw}" height="${ch}" viewBox="${vb.join(' ')}" preserveAspectRatio="xMidYMid slice"><rect x="-2000" y="-6000" width="4000" height="8000" fill="#f2ede4"/>${lin({ view: v, costume: 'A', height: Hh, x: v === 'front' ? 0 : 60, y: 0, expr: e })}</svg>`;
+    const Hp = Hh / 7.5, vh = 1.86 * Hp, vw = (vh * cw) / ch;
+    const vb = v === 'front' ? [-vw / 2, -7.62 * Hp, vw, vh] : [-vw / 2 - 40, -7.62 * Hp, vw, vh];
+    b += `<svg x="${x0}" y="${y0}" width="${cw}" height="${ch}" viewBox="${vb.join(' ')}" preserveAspectRatio="xMidYMid slice"><rect x="-2000" y="-6000" width="4000" height="8000" fill="#f2ede4"/>${lin({ view: v, costume: 'A', height: Hh, x: 0, y: 0, expr: e })}</svg>`;
     b += `<rect x="${x0}" y="${y0}" width="${cw}" height="${ch}" fill="none" stroke="#c9bcaa" stroke-width="2"/>`;
     b += T(x0 + 20, y0 + ch - 24, name, 34, 700, '#3a2e26');
   });
@@ -74,10 +75,12 @@ const poses = [
   [{ view: 'side', costume: 'C', expr: EX['隐忍'], pose: { shoulderL: 25, elbowL: 100, legL: 13, legR: -11 }, props: { spear: { hand: 'L', angle: -50, grip: 0.15 } } }, 2650, 'C 侧面 · 扛枪行走'],
   [{ view: 'side', costume: 'C', flip: true, expr: EX['怒'], pose: { shoulderR: 80, elbowR: 10 }, props: { spear: { hand: 'R', angle: 90, grip: 0.3, gourd: false } } }, 3300, 'C 侧面 · 平刺'],
 ];
+b += `<clipPath id="poseclip"><rect x="40" y="${y}" width="${W - 80}" height="${prow}" rx="14"/></clipPath><g clip-path="url(#poseclip)">`;
 for (const [o, x, lab] of poses) {
   b += lin({ ...o, height: PH, x, y: fy });
   b += T(x - 200, fy + 80, lab, 30);
 }
+b += '</g>';
 y += prow + 40;
 
 // ---- row 5: options
