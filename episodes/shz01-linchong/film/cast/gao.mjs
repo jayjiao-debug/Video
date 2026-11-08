@@ -24,13 +24,16 @@ function recol(c, [h, s, l]) {
 const FACE_SRC = [306, 214, 420, 342];
 
 function sleeveRaised() {
-  // in source px, facing right: forearm across the face, the wide sleeve hanging like a curtain
+  // in source px, facing right: the near arm comes up from the shoulder (262,430); the forearm crosses in front of
+  // his face at eye level and the wide sleeve hangs below it like a curtain. The flower cap and the ear stay clear.
   let s = '';
-  s += `<path d="M238,404 C300,360 380,300 452,268 C470,262 484,276 480,296 C470,330 420,360 300,470 C270,470 246,440 238,404Z" fill="${PLUM}" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>`;
-  s += `<path d="M300,166 C350,186 410,226 466,262 C486,276 488,300 476,318 C470,360 462,410 446,440 C410,452 350,452 300,440 C288,400 282,330 278,262 C276,220 280,186 300,166Z" fill="${PLUM}" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>`;
-  s += `<path d="M300,166 C290,190 286,226 290,250 C300,244 312,238 318,226 C318,206 312,184 300,166Z" fill="${PLUM_D}"/>`;
-  s += `<path d="M330,250 C334,320 336,390 330,440 M380,262 C388,330 392,396 386,446 M430,280 C440,340 440,396 430,446" fill="none" stroke="${PLUM_S}" stroke-width="7" stroke-linecap="round"/>`;
-  s += `<path d="M300,166 C350,186 410,226 466,262" fill="none" stroke="${PLUM_L}" stroke-width="6" stroke-linecap="round" opacity="0.7"/>`;
+  // upper arm (shoulder → elbow in front of the cheek, below the ear)
+  s += `<path d="M232,420 C250,380 288,340 326,318 L352,344 C326,370 300,410 290,452 C270,456 244,446 232,420Z" fill="${PLUM}" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>`;
+  // forearm + sleeve fabric over it (top edge just under the cap brim) and the hanging curtain
+  s += `<path d="M322,300 C360,262 420,228 470,214 C486,212 496,222 492,236 C494,280 488,350 470,420 C436,440 380,446 336,432 C330,390 330,344 322,300Z" fill="${PLUM}" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>`;
+  s += `<path d="M470,214 C486,212 496,222 492,236 C482,240 470,238 462,230Z" fill="${PLUM_D}"/>`;
+  s += `<path d="M360,300 C364,350 366,396 360,436 M410,272 C418,330 420,388 414,442 M456,252 C464,310 464,370 456,428" fill="none" stroke="${PLUM_S}" stroke-width="6" stroke-linecap="round"/>`;
+  s += `<path d="M322,300 C360,262 420,228 470,214" fill="none" stroke="${PLUM_L}" stroke-width="6" stroke-linecap="round" opacity="0.7"/>`;
   return s;
 }
 

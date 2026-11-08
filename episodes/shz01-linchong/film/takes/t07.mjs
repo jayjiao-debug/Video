@@ -8,24 +8,24 @@ import { rigPoint } from '../cast/c_util.mjs';
 const LN = '#2A1C17';
 
 // ------------------------------------------------------------ S14: ECU eyes (front view, very large)
-const KF = 12.6, EYEC = [426.5, 253.5];
-const LCF = { x: 960 + (428 - EYEC[0]) * KF, y: 650 + (1468 - EYEC[1]) * KF, height: KF * 7.5 * ((1468 - 331) / 6.5) };
+const KF = 2.8, EYEC = [426.5, 253.5];
+const LCF = { x: 960 + (428 - EYEC[0]) * KF, y: 525 + (1468 - EYEC[1]) * KF, height: KF * 7.5 * ((1468 - 331) / 6.5) };
 const fp = (p) => rigPoint('front', 'A', LCF, p);
 
 function s14(t) {
-  const z = lerp(1.0, 1.03, ramp(t, 56.93, 58.4, E.lin));
-  const c = camAt([960, 500], [960, 500], z);
+  const z = lerp(1.0, 1.04, ramp(t, 56.93, 58.4, E.lin));
+  const c = camAt([960, 520], [960, 520], z);
   const exhale = ramp(t, 57.8, 58.15, E.inOut);
-  const open = ramp(t, 58.33, 58.5, E.inOut) * 0.22;
+  const open = 0;
   const expr = { ...NE, brow: -0.5 + 0.05 * exhale, eye: open, mouth: -0.4, jaw: 1, look: [0, 0] };
   let s = `<rect x="-10" y="-10" width="1940" height="1100" fill="#0F0D10"/>`;
   let face = lin({ view: 'front', costume: 'A', ...LCF, expr });
   // the temple vein rises at 57.38 (his right temple, viewer's left)
-  const v = ramp(t, 57.38, 57.58, E.out), tp = fp([371, 232]);
-  const vein = `<path d="M${f2(tp[0])},${f2(tp[1] - 120)} C${f2(tp[0] + 30)},${f2(tp[1] - 60)} ${f2(tp[0] - 20)},${f2(tp[1])} ${f2(tp[0] + 16)},${f2(tp[1] + 70)} M${f2(tp[0] + 4)},${f2(tp[1] - 30)} l${f2(40)},${f2(-26)}" fill="none" stroke="#8A4E3C" stroke-width="${f2(6 + 8 * v)}" stroke-linecap="round" stroke-dasharray="400" stroke-dashoffset="${f2(400 * (1 - v))}" opacity="${f2(0.95 * v)}"/>`;
-  s += L(c, 1.0, `<g data-allowcut="1">${face}${vein}</g>`, { id: 't07face', bleed: 'all' });
+  const v = ramp(t, 57.38, 57.58, E.out), tp = fp([382, 236]), q = KF / 12.6;
+  const vein = `<path d="M${f2(tp[0])},${f2(tp[1] - 120 * q)} C${f2(tp[0] + 30 * q)},${f2(tp[1] - 60 * q)} ${f2(tp[0] - 20 * q)},${f2(tp[1])} ${f2(tp[0] + 16 * q)},${f2(tp[1] + 70 * q)}" fill="none" stroke="#8A4E3C" stroke-width="${f2((2 + 2.5 * v))}" stroke-linecap="round" stroke-dasharray="200" stroke-dashoffset="${f2(200 * (1 - v))}" opacity="${f2(0.95 * v)}"/>`;
+  s += L(c, 1.0, `<g>${face}${vein}</g>`, { id: 't07face', bleed: 'all' });
   // cool low key from the lower left, the rest falls into ink-dark (luma ≈ 55)
-  s += `<rect width="1920" height="1080" fill="#3A4252" style="mix-blend-mode:multiply" opacity="0.72"/>`;
+  s += `<rect width="1920" height="1080" fill="#3A4252" style="mix-blend-mode:multiply" opacity="0.6"/>`;
   s += `<rect width="1920" height="1080" fill="url(#t07key)" style="mix-blend-mode:screen"/>`;
   s += `<rect width="1920" height="1080" fill="url(#t07vig)"/>`;
   s += `<defs>${rg('t07key', [[0, '#6F7A8C', 0.55], [1, '#6F7A8C', 0]], 0.1, 1.0, 0.9)}${rg('t07vig', [[0.55, '#0F0D10', 0], [1, '#0F0D10', 0.75]], 0.5, 0.5, 0.75)}</defs>`;
@@ -72,10 +72,9 @@ function dais() {
   let s = `<path d="M1240,250 L1720,250 L1760,470 L1210,470Z" fill="#3D4A5C"/><path d="M1210,470 L1760,470 L1760,500 L1210,500Z" fill="#232B36"/>`;
   s += `<rect x="1280" y="20" width="420" height="250" fill="#D8DCE0"/>`;
   for (let i = 1; i < 4; i++) s += `<rect x="${1280 + i * 105 - 3}" y="20" width="6" height="250" fill="#9AA3AD"/>`;
-  // an abstract ink tiger: one crouching body stroke, a head, a few stripes
-  s += `<path d="M1330,210 C1380,170 1450,176 1520,160 C1580,146 1620,150 1650,130" fill="none" stroke="#2A2E35" stroke-width="22" stroke-linecap="round"/>`;
-  s += `<circle cx="1655" cy="124" r="22" fill="#2A2E35"/><path d="M1340,206 C1316,226 1312,246 1322,262 M1500,166 C1496,196 1500,226 1512,250" fill="none" stroke="#2A2E35" stroke-width="12" stroke-linecap="round"/>`;
-  s += `<path d="M1420,172 q8,-18 2,-34 M1470,166 q8,-18 2,-34 M1560,150 q8,-16 2,-30" fill="none" stroke="#D8DCE0" stroke-width="7" stroke-linecap="round"/>`;
+  // a plain screen with a faint ink-wash landscape (no tiger drawing)
+  s += `<path d="M1280,210 L1340,150 L1390,184 L1460,110 L1530,176 L1580,140 L1700,214 L1700,270 L1280,270Z" fill="#A9B0B8" opacity="0.55"/>`;
+  s += `<path d="M1280,236 L1360,196 L1430,226 L1520,186 L1610,230 L1700,206 L1700,270 L1280,270Z" fill="#8E969F" opacity="0.5"/>`;
   s += `<rect x="1280" y="20" width="420" height="250" fill="none" stroke="#5A4A2A" stroke-width="12"/>`;
   return s;
 }
@@ -141,19 +140,28 @@ function s15(t) {
 
 // ------------------------------------------------------------ the eyelid slit (58.40–58.619)
 function slitMask(t) {
-  const k = ramp(t, 58.42, 58.619, E.in);
-  const hh = lerp(4, 760, k), ww = lerp(500, 1500, Math.sqrt(k));
+  const k = ramp(t, 58.40, 58.733, E.inOut);
+  const hh = lerp(3, 760, k), ww = lerp(560, 1500, Math.sqrt(k));
   return `<path d="M${f2(960 - ww)},540 Q960,${f2(540 - hh * 1.3)} ${f2(960 + ww)},540 Q960,${f2(540 + hh * 1.3)} ${f2(960 - ww)},540Z" fill="#fff" filter="url(#${blurId(6)})"/>`;
+}
+function lids(t) {
+  // POV eyelids closing over the picture (58.10–58.40): curved dark shapes from top and bottom meeting at the centre
+  const k = ramp(t, 58.10, 58.40, E.inOut);
+  if (k <= 0) return '';
+  const top = lerp(-120, 548, k), bot = lerp(1200, 532, k);
+  return `<path d="M-40,-40 L1960,-40 L1960,${f2(top - 80 * (1 - k))} Q960,${f2(top + 120 * (1 - k))} -40,${f2(top - 80 * (1 - k))}Z" fill="#07060A" filter="url(#${blurId(5)})"/>` +
+    `<path d="M-40,1120 L1960,1120 L1960,${f2(bot + 80 * (1 - k))} Q960,${f2(bot - 120 * (1 - k))} -40,${f2(bot + 80 * (1 - k))}Z" fill="#07060A" filter="url(#${blurId(5)})"/>`;
 }
 
 export default {
   enter: { a: 56.6, b: 56.93, type: 'dissolve', ease: E.inOut },
+  subYc: (t) => (t < 58.75 ? 1000 : 890),
   frame(t) {
-    if (t < 58.40) return s14(t);
-    if (t >= 58.619) return s15(t);
-    // the lids part on the hall: S14 sinks into the dark of his closed eyes; the slit shows the hall
-    const dark = ramp(t, 58.36, 58.46, E.in);
-    let s = s14(t) + `<rect width="1920" height="1080" fill="#07060A" opacity="${f2(0.6 + 0.4 * dark)}"/>`;
+    if (t < 58.10) return s14(t);
+    if (t < 58.40) return s14(t) + lids(t);
+    if (t >= 58.733) return s15(t);
+    // the lids part on the hall: the slit opens over 10 frames
+    let s = `<rect width="1920" height="1080" fill="#07060A"/>`;
     s += `<defs><mask id="t07slit" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><rect width="1920" height="1080" fill="#000"/>${slitMask(t)}</mask></defs>`;
     s += `<g mask="url(#t07slit)">${s15(t)}</g>`;
     return s;

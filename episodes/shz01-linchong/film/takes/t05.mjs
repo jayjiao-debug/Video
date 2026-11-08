@@ -145,8 +145,8 @@ const PEOPLE = (() => {
   for (let i = 0; i < 20; i++) {
     const a = ((194 + (i / 19) * 152) * Math.PI) / 180;
     const rr = 1 + (R() - 0.5) * 0.22;
-    const x = c[0] + Math.cos(a) * 650 * rr + (R() - 0.5) * 50, y = c[1] + Math.sin(a) * 240 * rr + (R() - 0.5) * 24;
-    out.push({ x, y, P: 1.55 + R() * 0.23, seed: 100 + i, turn0: (R() - 0.5) * 1.4, turnTo: x < 1790 ? 0.75 : -0.75, turnAt: 40.73 + R() * 0.42, back: false });
+    const x = c[0] + Math.cos(a) * 650 * rr + (R() - 0.5) * 110, y = c[1] + Math.sin(a) * 240 * rr + (R() - 0.5) * 60;
+    out.push({ x, y, P: 1.5 + R() * 0.32, seed: 100 + i, turn0: (R() - 0.5) * 1.4, turnTo: x < 1790 ? 0.75 : -0.75, turnAt: 40.73 + R() * 0.42, back: false });
   }
   // a few nearer onlookers at the sides (seen from behind / 3/4)
   [[1180, 1330, 0.6], [1290, 1390, 0.9], [2420, 1340, -0.7], [2540, 1290, -0.8], [2300, 1420, -0.6]].forEach(([x, y, tt], i) => out.push({ x, y, P: 1.62 + i * 0.03, seed: 200 + i, back: true, turnAt: 40.8 + i * 0.07, turnTo: tt }));
@@ -202,15 +202,6 @@ function setA(t) {
   s += L(c, 1.0, pool + items.map((x) => x[1]).join(''), { id: 't05people' });
   // incense smoke from the 鼎 (in front of the crowd behind it, d ~1.0)
   s += L(c, 1.0, `<g filter="url(#${blurId(5)})">${smokeRibbons(t, [DING[0], DING[1] - 300], 2, 2, 1.25)}${smokeRibbons(t + 3, [DING[0] + 20, DING[1] - 300], 1, 7, 0.9)}</g>`, { id: 't05smoke', bleed: 'all' });
-  // foreground: a blurred bundle of incense sticks in a sand bowl, bottom-left, arrives with the push to K3 (d 1.4)
-  const fgk = ramp(t, 41.5, 42.0, E.inOut);
-  if (fgk > 0) {
-    const R2 = rng(12);
-    let fg = `<ellipse cx="0" cy="40" rx="230" ry="70" fill="#5E4A3A"/><ellipse cx="0" cy="20" rx="210" ry="50" fill="#9A8A70"/>`;
-    for (let i = 0; i < 16; i++) { const x = -150 + i * 20 + R2() * 8, a = (R2() - 0.5) * 18, h = 260 + R2() * 90; fg += `<g transform="translate(${f2(x)} 20) rotate(${f2(a)})"><rect x="-4" y="${-h}" width="8" height="${h}" fill="#8E3B2A"/><circle cx="0" cy="${-h}" r="8" fill="#FF8A3D"/></g>`; }
-    const fgPos = toWorld(camAt([1770, 1000], [940, 520], 1.25), 1.4, [150, 1010]);
-    s += L(c, 1.4, `<g transform="translate(${f2(fgPos[0])} ${f2(fgPos[1])})" opacity="${f2(fgk)}">${bake('t05incense', 560, 520, `<g transform="translate(280 400)">${fg}</g>`, { x: -280, y: -400 })}</g>`, { id: 't05incense', bleed: 'all', blur: 7 });
-  }
   s += motes(t, { seed: 5, n: 26, area: [200, 0, 1920, 900], color: '#FFF4DC', op: 0.45 });
   return s;
 }
@@ -224,7 +215,6 @@ const EYE = LCP([368, 222]), SHO = LCP([470, 410]), CHIN = LCP([362, 305]);
 const G = { x: 1290, y: 2100, h: 1600 * (1.79 / 1.8), flip: true };
 const GFACE = gaoPt(G, [362, 282]);
 const GSHO = gaoPt(G, [455, 410]); // his shoulder nearest 林冲
-const FIST_UP = [885, 430]; // raised fist (world)
 const HB = LCk * 179.4; // head unit in world px (= 213)
 
 function bgB() {
@@ -250,6 +240,7 @@ function camB(t) {
   const A1 = camAt([EYE[0] + 200, EYE[1] - 20], [940, 470], 1.6);
   const A2 = { ...A1, zoom: 1.66, x: A1.x + 8 };
   const B1 = camAt(GFACE, [1400, 600], 1.8);
+  const FIST_UP = fistUp();
   const fistB1 = toScreen(B1, 1, FIST_UP);
   const S0 = camAt([EYE[0] - 30, EYE[1] + 40], [700, 420], 3.4);
   const mixc = (a, b, k) => ({ x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), zoom: a.zoom * Math.pow(b.zoom / a.zoom, k) });
@@ -264,7 +255,7 @@ function camB(t) {
     const q = [lerp(fistB1[0], 780, k), lerp(fistB1[1], 400, k)];
     c = camAt(FIST_UP, q, z);
   } else {
-    const F1 = camAt(FIST_UP, [780, 400], 3.1);
+    const F1 = camAt(fistUp(), [780, 400], 3.1);
     // follow the sinking hand, then settle on the jaw
     c = mixc(F1, S0, ramp(t, 50.29, 51.75, E.sine));
   }
@@ -273,41 +264,57 @@ function camB(t) {
   return c;
 }
 
+function ik2(S, W, l1, l2, back = true) {
+  // two-bone IK: elbow for shoulder S, wrist W; back = elbow on the back side (smaller x: he faces right)
+  const dx = W[0] - S[0], dy = W[1] - S[1];
+  let d = Math.hypot(dx, dy);
+  d = clamp(d, Math.abs(l1 - l2) + 1, l1 + l2 - 0.5);
+  const th = Math.atan2(dy, dx), a = Math.acos(clamp((l1 * l1 + d * d - l2 * l2) / (2 * l1 * d), -1, 1));
+  const e1 = [S[0] + Math.cos(th + a) * l1, S[1] + Math.sin(th + a) * l1], e2 = [S[0] + Math.cos(th - a) * l1, S[1] + Math.sin(th - a) * l1];
+  return back ? (e1[0] < e2[0] ? e1 : e2) : (e1[0] < e2[0] ? e2 : e1);
+}
+const tubeD = (a, b, w1, w2) => {
+  const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l;
+  return `M${f2(a[0] + nx * w1)},${f2(a[1] + ny * w1)} L${f2(b[0] + nx * w2)},${f2(b[1] + ny * w2)} L${f2(b[0] - nx * w2)},${f2(b[1] - ny * w2)} L${f2(a[0] - nx * w1)},${f2(a[1] - ny * w1)}Z`;
+};
+
 function nearArm(t) {
-  // 林冲's near arm, code-drawn: hanging → (43.63–45.30, slow → fast) raised fist above-in-front of the head;
-  // the grip gives 49.457 (index+middle) / 49.88 (ring+little); 50.29 the half-open hand sinks.
-  const up = ramp(t, 43.63, 45.302, E.in);
+  // 林冲's near arm, two-bone IK from the shoulder: hanging → (43.63–45.30, slow → fast) the fist cocked just above
+  // and behind the ear, forearm in the green sleeve; the grip gives 49.457 (index + middle) / 49.88 (ring + little)
+  // by moving the fingers; 50.29 the half-open hand sinks.
+  const Lu = 1.36 * HB, Lf = 1.05 * HB, S = SHO;
+  const W0 = [S[0] + 14, S[1] + Lu + Lf - 24];
+  const WM = [S[0] - 70, S[1] - 0.1 * HB];
+  const W1 = [S[0] - 160, S[1] - 1.05 * HB]; // fist just above and behind the ear, clear of the head
+  const WS = [S[0] - 140, S[1] + 0.5 * HB];   // the soft hand sinks behind his shoulder
+  let W = kf(t, [[43.63, W0], [44.55, WM, E.in], [45.302, W1, E.in]], E.inOut);
   const sink = ramp(t, 50.29, 51.6, E.out);
-  // angles (screen, y down): upper arm, forearm — the hand rises close to his own chest, then up (no swing
-  // through 高衙内)
-  const wind = [[43.63, [96, 104]], [44.55, [62, -62], E.in], [45.302, [-32, -108], E.in]];
-  const [au0, af0] = kf(t, wind, E.inOut);
-  const au = lerp(au0, 60, sink), af = lerp(af0, -20 + 30 * sink, sink);
-  const Lu = 1.36 * HB, Lf = 1.05 * HB;
-  const S = SHO, El = [S[0] + Math.cos((au * Math.PI) / 180) * Lu, S[1] + Math.sin((au * Math.PI) / 180) * Lu];
-  const Wr = [El[0] + Math.cos((af * Math.PI) / 180) * Lf, El[1] + Math.sin((af * Math.PI) / 180) * Lf];
-  const size = 0.46 * HB;
+  W = [lerp(W[0], WS[0], sink), lerp(W[1], WS[1], sink)];
+  const El = ik2(S, W, Lu, Lf, true);
+  const size = 0.44 * HB;
   const open = clamp(ramp(t, 49.457, 49.78, E.out) * 0.5 + ramp(t, 49.88, 50.25, E.out) * 0.5);
-  // fist local: wrist ≈ (-26, 46), forearm axis toward local angle 104.6°
-  const rot = af + 180 - 104.6;
-  const r = (rot * Math.PI) / 180, k = size / 100;
-  const wl = [-26 * k, 46 * k];
-  const ctr = [Wr[0] - (wl[0] * Math.cos(r) - wl[1] * Math.sin(r)), Wr[1] - (wl[0] * Math.sin(r) + wl[1] * Math.cos(r))];
+  // fist: local wrist ≈ (-8, 52); local forearm axis (wrist → elbow) ≈ 95.7°
+  const ang = (Math.atan2(El[1] - W[1], El[0] - W[0]) * 180) / Math.PI;
+  const rot = ang - 95.7, r = (rot * Math.PI) / 180, k = size / 100;
+  const wl = [-8 * k, 52 * k];
+  const ctr = [W[0] - (wl[0] * Math.cos(r) - wl[1] * Math.sin(r)), W[1] - (wl[0] * Math.sin(r) + wl[1] * Math.cos(r))];
   const tremble = t > 45.1 && t < 49.04 ? 1.5 / 1.66 : 0;
-  // upper arm: wide green sleeve, hanging fold below the arm
-  const n = [-(El[1] - S[1]), El[0] - S[0]], nl = Math.hypot(n[0], n[1]), nu = [n[0] / nl, n[1] / nl];
-  const w0 = 0.44 * HB, w1 = 0.27 * HB, drape = 0.32 * HB * up;
-  const P1 = [S[0] + nu[0] * w0 * 0.5, S[1] + nu[1] * w0 * 0.5], P2 = [El[0] + nu[0] * w1 * 0.5, El[1] + nu[1] * w1 * 0.5];
-  const P3 = [El[0] - nu[0] * w1 * 0.5, El[1] - nu[1] * w1 * 0.5], P4 = [S[0] - nu[0] * w0 * 0.5, S[1] - nu[1] * w0 * 0.5];
-  const low = (p) => [p[0], p[1] + drape];
-  const lowSide = nu[1] > 0 ? [P1, P2] : [P4, P3];
+  const up = ramp(t, 43.63, 45.302, E.in) * (1 - sink);
   let s = '';
-  s += `<path d="M${f2(lowSide[0][0])},${f2(lowSide[0][1])} L${f2(lowSide[1][0])},${f2(lowSide[1][1])} C${f2(low(lowSide[1])[0])},${f2(low(lowSide[1])[1])} ${f2(low(lowSide[0])[0])},${f2(low(lowSide[0])[1])} ${f2(lowSide[0][0])},${f2(lowSide[0][1])}Z" fill="${ROBE_S}" stroke="${LN}" stroke-width="3"/>`;
-  s += `<path d="M${f2(P1[0])},${f2(P1[1])} L${f2(P2[0])},${f2(P2[1])} L${f2(P3[0])},${f2(P3[1])} L${f2(P4[0])},${f2(P4[1])}Z" fill="${ROBE}" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>`;
-  s += `<circle cx="${f2(S[0])}" cy="${f2(S[1])}" r="${f2(w0 * 0.55)}" fill="${ROBE}"/>`;
-  s += fist(ctr[0], ctr[1], size, { open, rot, sleeve: ROBE, sleeveS: ROBE_S, tremble, t, light: up * 0.6 });
+  // hanging drape of the wide sleeve under the raised upper arm
+  if (up > 0.05) s += `<path d="M${f2(S[0])},${f2(S[1] + 0.18 * HB)} L${f2(El[0])},${f2(El[1] + 0.14 * HB)} C${f2(El[0] + 10)},${f2(El[1] + 0.14 * HB + 0.45 * HB * up)} ${f2(S[0] - 10)},${f2(S[1] + 0.2 * HB + 0.5 * HB * up)} ${f2(S[0])},${f2(S[1] + 0.18 * HB)}Z" fill="${ROBE_S}" stroke="${LN}" stroke-width="2.5"/>`;
+  s += `<path d="${tubeD(S, El, 0.25 * HB, 0.2 * HB)}" fill="${ROBE}" stroke="${LN}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  s += `<circle cx="${f2(S[0])}" cy="${f2(S[1])}" r="${f2(0.25 * HB)}" fill="${ROBE}"/>`;
+  s += fist(ctr[0], ctr[1], size, { open, rot, tremble, t, light: up * 0.6, arm: false });
+  // forearm in the sleeve, the cuff ends at the wrist
+  s += `<path d="${tubeD(El, W, 0.19 * HB, 0.17 * HB)}" fill="${ROBE}" stroke="${LN}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  s += `<circle cx="${f2(El[0])}" cy="${f2(El[1])}" r="${f2(0.2 * HB)}" fill="${ROBE}" stroke="${LN}" stroke-width="2.5"/>`;
+  s += `<path d="${tubeD(El, W, 0.17 * HB, 0.15 * HB)}" fill="${ROBE}"/>`;
+  s += `<path d="M${f2(lerp(El[0], W[0], 0.2))},${f2(lerp(El[1], W[1], 0.2))} L${f2(lerp(El[0], W[0], 0.85))},${f2(lerp(El[1], W[1], 0.85))}" stroke="${ROBE_S}" stroke-width="5" stroke-linecap="round"/>`;
   return { svg: s, fist: ctr };
 }
+let FIST_UP_C = null;
+const fistUp = () => (FIST_UP_C ||= nearArm(45.31).fist);
 
 function farArm(t) {
   // the far hand grabs 高衙内's shoulder at 42.39 and holds it (contact); the arm comes from behind his chest
@@ -391,14 +398,14 @@ function setB(t) {
   // swallow (Adam's apple) at 52.79
   const sw = Math.sin(ramp(t, 52.79, 53.15, E.inOut) * Math.PI);
   const apple = `<path d="M${f2(CHIN[0] - 18)},${f2(CHIN[1] + 0.32 * HB - 20 * sw)} q10,6 2,16" fill="none" stroke="#B9785A" stroke-width="5" stroke-linecap="round" opacity="${f2(0.4 + 0.5 * sw)}"/>`;
-  s += L(c, 1.0, `<g${blurGao > 0.4 ? ` filter="url(#${blurId(blurGao)})"` : ''}>${gao}</g>`, { id: 't05gao' });
-  s += L(c, 1.0, `<g data-allowcut="1"${blurLc > 0.4 ? ` filter="url(#${blurId(blurLc)})"` : ''}>${farArm(t)}${lcSvg}${apple}${na.svg}</g>`, { id: 't05lc' });
   // 高衙内's back, receding in the distance in S12 (laughing), d 0.6
   if (t > 50.4) {
     const k = ramp(t, 50.4, 53.4, E.lin), laugh = Math.sin(t * 22) * 3 * ramp(t, 50.8, 51.2);
     const gp = toWorld(camAt([EYE[0] - 30, EYE[1] + 40], [700, 420], 3.4), 0.6, [1360 + 120 * k, 560 + laugh]);
     s += L(c, 0.6, gaoBack({ x: gp[0], y: gp[1] + 150, h: 260 - 40 * k, step: Math.sin(k * 14) * 2 }), { id: 't05gaoback', blur: 9 });
   }
+  s += L(c, 1.0, `<g${t > 48.5 ? ' data-allowcut="1"' : ''}${blurGao > 0.4 ? ` filter="url(#${blurId(blurGao)})"` : ''}>${gao}</g>`, { id: 't05gao' });
+  s += L(c, 1.0, `<g data-allowcut="1"${blurLc > 0.4 ? ` filter="url(#${blurId(blurLc)})"` : ''}>${farArm(t)}${lcSvg}${apple}${na.svg}</g>`, { id: 't05lc' });
   // light: warm key from the left; 45.712 the grade drains (sat −35 %, haze) and a cold edge creeps from the right
   const dr = ramp(t, 45.712, 47.0, E.inOut);
   s += `<rect width="1920" height="1080" fill="url(#t05warm)" opacity="${f2(0.35 * (1 - dr))}"/>`;
@@ -416,7 +423,7 @@ function setB(t) {
 
 // ======================================================================= smoke wipe A → B (42.12–42.46)
 function smokeWipe(t) {
-  const k = ramp(t, 42.04, 42.56, E.lin);
+  const k = ramp(t, 41.98, 42.78, E.lin);
   if (k <= 0 || k >= 1) return '';
   const dens = Math.sin(k * Math.PI);
   const R = rng(77);
@@ -425,17 +432,21 @@ function smokeWipe(t) {
     const y = R() * 1240 - 80, r = 220 + R() * 240, x = lerp(-900, 2800, k) + (R() - 0.5) * 1700 - y * 0.25;
     s += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r * 1.6)}" ry="${f2(r)}" fill="${R() < 0.5 ? '#F3EADA' : '#E6DAC4'}"/>`;
   }
-  return `<g data-layer="fx-smoke" data-z="700" data-bleed="all" opacity="${f2(Math.min(0.97, dens * 1.4))}" filter="url(#${blurId(36)})">${s}<rect width="1920" height="1080" fill="#EDE3D0" opacity="${f2(clamp(dens * 1.4 - 0.55) * 0.85)}"/></g>`;
+  // a soft even haze holds for ~10 frames around the hand-over
+  const haze = clamp((dens - 0.55) / 0.3) * 0.8;
+  return `<g data-layer="fx-smoke" data-z="700" data-bleed="all" opacity="${f2(Math.min(0.95, dens * 1.3))}" filter="url(#${blurId(36)})">${s}<rect width="1920" height="1080" fill="#EDE3D0" opacity="${f2(haze)}"/></g>`;
 }
 
 export default {
   enter: { a: 38.22, b: 38.638, type: 'dissolve', ease: E.inOut },
+  // 「拳头，软了。」 sits at the top while the camera travels from the fist to his face (his mouth is in the low band)
+  subYc: (t) => (t >= 49.05 && t < 51.45 ? 160 : 890),
   frame(t) {
     let s;
     // A → B under the densest smoke, cross-faded over 3 frames
-    if (t < 42.25) s = setA(t);
-    else if (t < 42.35) s = setA(t) + `<g opacity="${f2(ramp(t, 42.25, 42.35, E.inOut))}">${setB(42.39)}</g>`;
-    else s = setB(Math.max(t, 42.39));
+    if (t < 42.28) s = setA(t);
+    else if (t < 42.46) s = setA(t) + `<g opacity="${f2(ramp(t, 42.28, 42.46, E.inOut))}">${setB(Math.max(t, 42.39))}</g>`;
+    else s = setB(t);
     s += smokeWipe(t);
     return s;
   },
