@@ -1,7 +1,7 @@
 # python3 build_view.py <view> [--debug DIR]
 # Trace one 林冲 reference into rig parts and write chars/rig/data/lc_<view>.json.
 # References are read from /dev/shm/shz01/art (never committed); only the vector output is kept.
-import sys, os, json, time
+import sys, os, json, time, re
 import numpy as np, cv2
 sys.path.insert(0, os.path.dirname(__file__))
 from tracelib import *
@@ -178,14 +178,43 @@ def build(view, debug=None):
         Lp = soft_labels(Lp, region, n, 1.2) if hidden.any() else Lp
         alpha = soft_mask(region, 0.8)
         rgba = np.dstack([pal[Lp], (alpha * 255).astype(np.uint8)])
+        # enclosed transparent holes: vtracer's stacked shapes would paint over them, so they are
+        # stored as contours and cut out with an even-odd clip at render time
+        holes = []
+        inv = (~alpha).astype(np.uint8)
+        nh, hl, hs, _ = cv2.connectedComponentsWithStats(inv, connectivity=4)
+        ys0, xs0 = np.nonzero(alpha)
+        if len(ys0):
+            for i in range(1, nh):
+                x, y_, w_, h_, a_ = hs[i]
+                if a_ < 60 or x == 0 or y_ == 0 or x + w_ >= shp[1] or y_ + h_ >= shp[0]:
+                    continue
+                if not (alpha[y_:y_ + h_, x:x + w_].any()):
+                    continue
+                # inside the part's bounding box and not connected to the outside
+                hm = (hl == i).astype(np.uint8)
+                cs, _ = cv2.findContours(hm, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+                for c in cs:
+                    c = cv2.approxPolyDP(c, 1.2, True).reshape(-1, 2)
+                    if len(c) >= 3:
+                        holes.append(_catmull_pts([(x0 / UP, y0 / UP) for x0, y0 in c]) + 'Z')
         fills = trace_layer(rgba, filter_speckle=S.get('speckle', 10), length_threshold=6, corner_threshold=70)
         fills = [[snap(c), d] for c, d in fills]
         inkm = INK & visible
         inks = centre_lines(inkm, ero, ik, min_len=S.get('ink_min_len', 9)) if inkm.any() else []
+        for rc in S.get('ink_recolour', []):  # soften strokes in an area (colour, max width)
+            pl = np.array(rc['poly'], np.float32)
+            for st in inks:
+                x0, y0 = map(float, re.findall(r'-?\d+(?:\.\d+)?', st[2])[:2])
+                if cv2.pointPolygonTest(pl, (x0, y0), False) >= 0:
+                    st[0] = rc['colour']
+                    st[1] = min(st[1], rc.get('maxw', 1.0))
         # synthetic outline for silhouette edges that were covered at rest
         for he in P.get('hidden_edges', []):
             inks.append([P.get('edge_colour', '#2f4a3b'), P.get('edge_width', 1.1), _catmull_pts(he)])
         out_parts[k] = dict(z=z, parent=P.get('parent'), pivot=P.get('pivot'), fills=fills, inks=inks)
+        if holes:
+            out_parts[k]['holes'] = holes
         if debug:
             cv2.imwrite(f'{debug}/{view}_{k}.png', cv2.cvtColor(rgba, cv2.COLOR_RGBA2BGRA))
         print(f'  {k}: {len(fills)} fills, {len(inks)} inks', flush=True)

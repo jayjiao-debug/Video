@@ -122,6 +122,10 @@ function partSVG(D, name, extra = '', pal = D.palette) {
     for (const [c, w, d] of p.inks) s += `<path d="${d}" stroke="${pal[c]}" stroke-width="${w}"/>`;
     s += '</g>';
   }
+  if (p.holes && p.holes.length) {
+    const hid = uid('h');
+    s = `<clipPath id="${hid}"><path clip-rule="evenodd" d="M-3000,-3000H4000V5000H-3000Z ${p.holes.join(' ')}"/></clipPath><g clip-path="url(#${hid})">${s}</g>`;
+  }
   return s + extra;
 }
 

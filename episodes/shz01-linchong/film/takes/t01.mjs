@@ -173,11 +173,11 @@ function S01(t) {
   s += L(c, 1, `<g transform="translate(-240 ${f2(-200 + slide)})">${S01_TABLE}</g>`, { id: 't01table', bleed: 'all' });
   // props on the table: inkstone (upper right), paste dish (right), the brush on the stone after 1.0 s
   let props = `<g transform="translate(0 ${f2(slide)})">`;
-  props += `<g filter="url(#t01sh)" opacity="0.5"><rect x="1500" y="190" width="372" height="250" rx="34" fill="#000"/></g>`;
-  props += inkstone(1490, 170, 372);
-  props += pasteDish(1660, 640, 120);
+  props += `<g filter="url(#t01sh)" opacity="0.5"><rect x="1490" y="170" width="340" height="230" rx="34" fill="#000"/></g>`;
+  props += inkstone(1478, 150, 340);
+  props += pasteDish(1590, 640, 112);
   const brushLaid = t >= 1.05;
-  if (brushLaid) props += brushSVG([1560, 392], [1880, 250], 14);
+  if (brushLaid) props += brushSVG([1530, 362], [1850, 226], 14);
   props += '</g>';
   s += L(c, 1, `<defs><filter id="t01sh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter></defs>` + props, { id: 't01props', bleed: 'r' });
   // the sheet
@@ -203,18 +203,18 @@ function S01(t) {
       const flick = ramp(t, T.brush - 0.04, T.brush + 0.14, E.out);
       const toStone = ramp(t, 0.42, 1.0, E.inOut);
       let tip = mix(tipW, [tipW[0] + 50, tipW[1] - 40], flick);
-      tip = mix(tip, [1520, 300], toStone);
+      tip = mix(tip, [1490, 280], toStone);
       let top = [tip[0] + 150, tip[1] + 300];
       const lay = ramp(t, 0.82, 1.05, E.inOut);
-      tip = mix(tip, [1560, 392], lay); top = mix(top, [1880, 250], lay);
+      tip = mix(tip, [1530, 362], lay); top = mix(top, [1850, 226], lay);
       hand += brushSVG(tip, top, 14);
       const wrist = [tip[0] + 118 + 40 * toStone, tip[1] + 252 - 20 * toStone];
       hand += handAt('brush', wrist[0], wrist[1], 300, -24 + 10 * toStone);
     } else {
       // flat hand: to the dish, press into the paste, to the print spot, hover, press, hold, lift away
-      const dishP = [1660, 690], hover = [printP[0] + 20, printP[1] - 40];
+      const dishP = [1590, 690], hover = [printP[0] + 20, printP[1] - 40];
       let p, lift = 0;
-      if (t < 1.6) { p = mix([1600, 480], dishP, ramp(t, 1.05, 1.6)); lift = 0.4 * (1 - ramp(t, 1.05, 1.6)); }
+      if (t < 1.6) { p = mix([1560, 470], dishP, ramp(t, 1.05, 1.6)); lift = 0.4 * (1 - ramp(t, 1.05, 1.6)); }
       else if (t < 2.0) { p = dishP; lift = -0.05 * pulse(t, 1.65, 0.3); }
       else if (t < 2.43) { p = mix(dishP, hover, ramp(t, 2.0, 2.43)); lift = 0.5 * Math.sin(ramp(t, 2.0, 2.43, E.lin) * Math.PI); }
       else if (t < T.press) { const tr = noise1(t * 14, 3) * 3; p = [hover[0] + tr, hover[1] - 20 * ramp(t, 2.43, 2.75) + 20 * ramp(t, 2.75, T.press, E.in) + noise1(t * 13, 7) * 2.5]; lift = 0.22 * (1 - ramp(t, 2.43, T.press, E.in)); }
@@ -281,10 +281,10 @@ function S02(t) {
   const kin = ramp(t, 4.95, 5.7, E.inOut);
   let c = { x: lerp(c1.x, c2.x, kin), y: lerp(c1.y, c2.y, kin), zoom: lerp(c1.zoom, c2.zoom, kin) };
   // then push in on his face, ending where S03 begins (eyes on the right third)
-  const kp = ramp(t, 9.35, 10.15, E.inOut);
+  const kp = ramp(t, 9.2, 10.15, E.inOut);
   if (kp > 0) {
-    const z = c.zoom * Math.pow(2.27 / c.zoom, kp);
-    c = { x: lerp(c.x, -99, E.inOut(kp)), y: lerp(c.y, -252, E.inOut(kp)), zoom: z };
+    const z = c.zoom * Math.pow(1.7 / c.zoom, kp);
+    c = { x: lerp(c.x, -107, E.inOut(kp)), y: lerp(c.y, -245, E.inOut(kp)), zoom: z };
   }
   c.blurK = 8; c.focusD = 1 - 0.3 * focus;
   const S = sheetTf(t);
@@ -335,10 +335,10 @@ function S02(t) {
 // ============================================================== S03 · his close-up, holding back tears
 function S03(t) {
   const push = ramp(t, 10.6, T.s4, E.inOut);
-  const settle = ramp(t, 9.95, 11.2, E.inOut);
+  const settle = ramp(t, 9.95, 11.4, E.inOut);
   const out = ramp(t, 14.05, 14.75, E.in); // dolly-out start (he rises)
   const pan = ramp(t, 14.05, 14.7, E.inOut) * 330;
-  const c = { x: 40 * push - pan, y: 0, zoom: (0.8 + 0.2 * settle) * (1 + 0.05 * push) * (1 - 0.2 * out), blurK: 6, focusD: 1 };
+  const c = { x: 40 * push - pan, y: 0, zoom: (0.65 + 0.35 * settle) * (1 + 0.05 * push) * (1 - 0.2 * out), blurK: 6, focusD: 1 };
   // expression timeline
   let open = 0, look = [-0.35, 0.15], jaw = 0.4, tear = 0;
   if (t < 10.33) open = 0.1 * (1 - ramp(t, 10.1, 10.33));
@@ -410,6 +410,17 @@ const STREET = bake('t01street', 2400, 1300, (() => {
     return g;
   };
   s += willow(1560, 520, 230) + willow(820, 470, 120) + willow(1320, 452, 70);
+  // onlookers under the eaves, watching the convoy (small, muted, varied)
+  const person = (x, y, h, col, cap, face) => {
+    const u = h / 7;
+    return `<g transform="translate(${X(x)} ${Y(y)})"><path d="M${-0.8 * u},${-5.6 * u} C${-1.0 * u},${-3 * u} ${-1.0 * u},${-1.2 * u} ${-0.9 * u},0 L${0.9 * u},0 C${1.0 * u},${-1.2 * u} ${1.0 * u},${-3 * u} ${0.8 * u},${-5.6 * u} C${0.4 * u},${-5.9 * u} ${-0.4 * u},${-5.9 * u} ${-0.8 * u},${-5.6 * u}Z" fill="${col}" stroke="#4a3e30" stroke-width="1.5"/>` +
+      `<ellipse cx="0" cy="${-6.4 * u}" rx="${0.42 * u}" ry="${0.52 * u}" fill="${face}" stroke="#4a3e30" stroke-width="1.5"/>` +
+      `<path d="M${-0.46 * u},${-6.55 * u} C${-0.46 * u},${-7.2 * u} ${0.46 * u},${-7.2 * u} ${0.46 * u},${-6.55 * u}Z" fill="${cap}"/></g>`;
+  };
+  s += person(560, 640, 150, '#8A7A64', '#2F2724', '#D9A88A') + person(610, 620, 132, '#6E7A80', '#2a2522', '#D7A585') + person(940, 520, 64, '#9C8A70', '#3a302a', '#D0A080');
+  s += person(1700, 650, 160, '#7A6A88', '#2F2724', '#D6A283') + person(1376, 520, 62, '#8E7C62', '#2a2522', '#D0A080');
+  // hanging lanterns along the eaves
+  for (const [lx, ly, lr] of [[700, 300, 18], [860, 352, 11], [1520, 330, 16], [1400, 372, 10]]) s += `<path d="M${X(lx)},${Y(ly - lr * 2.5)} L${X(lx)},${Y(ly - lr)}" stroke="#3a2a20" stroke-width="2"/><ellipse cx="${X(lx)}" cy="${Y(ly)}" rx="${lr}" ry="${lr * 1.2}" fill="#C8372D" stroke="#7a1f19" stroke-width="1.5"/>`;
   // red 酒旆 (wine banner) at x 1460
   s += `<path d="M${X(1460)},${Y(150)} L${X(1460)},${Y(420)}" stroke="#4A3626" stroke-width="7"/><path d="M${X(1462)},${Y(170)} L${X(1546)},${Y(176)} L${X(1540)},${Y(340)} L${X(1500)},${Y(322)} L${X(1462)},${Y(344)}Z" fill="#C8372D" stroke="#7a1f19" stroke-width="2"/><text x="${X(1503)}" y="${Y(262)}" font-family="Ma Shan Zheng" font-size="64" fill="#F6E7C8" text-anchor="middle" dominant-baseline="central">酒</text>`;
   return s;
