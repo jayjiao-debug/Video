@@ -18,11 +18,11 @@ const sil = (id, col, rim) => `<filter id="${id}" x="-30%" y="-30%" width="160%"
 const silG = (fid, tf, inner, op = 1, blur = null) => `<g opacity="${op}"${blur ? ` filter="url(#${blur})"` : ''}><g filter="url(#${fid})" transform="${tf}">${inner}</g></g>`;
 
 // ---------------------------------------------------------------- the letter on the table (T01 S01 table, no hand)
-const SH = { x: 760, y: 112, w: 680, h: 760, rot: -4, sy: 0.92 };
-const sheet = (inner) => `<g transform="translate(${SH.x + SH.w / 2} ${SH.y + (SH.h * SH.sy) / 2}) rotate(${SH.rot}) scale(1 ${SH.sy}) translate(${-SH.w / 2} ${-SH.h / 2})">${inner}</g>`;
-const table = () => v2(4.9, ['t01hand', 't01herfingers', 't01sheet']);
-const drop = (x, y, r = 9) => `<path d="M${x},${y - r * 2.2} C${x + r * 0.9},${y - r * 0.6} ${x + r},${y + r * 0.6} ${x},${y + r} C${x - r},${y + r * 0.6} ${x - r * 0.9},${y - r * 0.6} ${x},${y - r * 2.2}Z" fill="#DDF0FA" opacity="0.9"/><circle cx="${x - r * 0.3}" cy="${y}" r="${r * 0.3}" fill="#fff"/>`;
-function letter(o = {}) {
+export const SH = { x: 760, y: 112, w: 680, h: 760, rot: -4, sy: 0.92 };
+export const sheet = (inner) => `<g transform="translate(${SH.x + SH.w / 2} ${SH.y + (SH.h * SH.sy) / 2}) rotate(${SH.rot}) scale(1 ${SH.sy}) translate(${-SH.w / 2} ${-SH.h / 2})">${inner}</g>`;
+export const table = () => v2(4.9, ['t01hand', 't01herfingers', 't01sheet']);
+export const drop = (x, y, r = 9) => `<path d="M${x},${y - r * 2.2} C${x + r * 0.9},${y - r * 0.6} ${x + r},${y + r * 0.6} ${x},${y + r} C${x - r},${y + r * 0.6} ${x - r * 0.9},${y - r * 0.6} ${x},${y - r * 2.2}Z" fill="#DDF0FA" opacity="0.9"/><circle cx="${x - r * 0.3}" cy="${y}" r="${r * 0.3}" fill="#fff"/>`;
+export function letter(o = {}) {
   let inner = xiushu({ w: SH.w, h: SH.h, id: 'sb' + (o.id || 'x'), sign: o.sign ?? 1, print: o.print ?? 1, bloom: o.bloom || 0 });
   if (o.writeTo != null) {
     // being written: only the heading and the first columns have ink; the column in progress is still wet
@@ -31,12 +31,12 @@ function letter(o = {}) {
   }
   return sheet(inner);
 }
-const darken = (op, light = true) => `<rect width="1920" height="1080" fill="#0b0705" opacity="${op}"/>` + (light ? `<defs>${rg('sbl', [[0, '#FFC46A', 0.45], [1, '#FFC46A', 0]], 0.5, 0.5, 0.5)}</defs><ellipse cx="1100" cy="440" rx="760" ry="560" fill="url(#sbl)" style="mix-blend-mode:screen"/>` : '');
+export const darken = (op, light = true) => `<rect width="1920" height="1080" fill="#0b0705" opacity="${op}"/>` + (light ? `<defs>${rg('sbl', [[0, '#FFC46A', 0.45], [1, '#FFC46A', 0]], 0.5, 0.5, 0.5)}</defs><ellipse cx="1100" cy="440" rx="760" ry="560" fill="url(#sbl)" style="mix-blend-mode:screen"/>` : '');
 
-const N_letter = () => table() + letter({ id: 'a' });
-const N_tear = (n = 1) => table() + letter({ id: 'b', bloom: 0.75 }) + drop(1388, 40, 11) + (n > 1 ? drop(1240, 260, 9) + drop(1460, 520, 8) : '');
-const N_write = () => table() + letter({ id: 'c', writeTo: 0.6, print: 0, sign: 0 });
-function N_lantern() {
+export const N_letter = () => table() + letter({ id: 'a' });
+export const N_tear = (n = 1) => table() + letter({ id: 'b', bloom: 0.75 }) + drop(1388, 40, 11) + (n > 1 ? drop(1240, 260, 9) + drop(1460, 520, 8) : '');
+export const N_write = () => table() + letter({ id: 'c', writeTo: 0.6, print: 0, sign: 0 });
+export function N_lantern() {
   // night: the same letter on the table in one lantern's light; a tear has fallen on 休
   let s = table() + letter({ id: 'd', bloom: 0.6 }) + darken(0.62);
   s += `<g transform="translate(300 120)"><line x1="0" y1="-200" x2="0" y2="0" stroke="#1a120c" stroke-width="5"/><rect x="-70" y="0" width="140" height="190" rx="18" fill="#F2B45C"/><rect x="-70" y="0" width="140" height="190" rx="18" fill="none" stroke="#3a2416" stroke-width="5"/>` +
@@ -55,7 +55,7 @@ function wall(lantern = true) {
   if (lantern) s += gaoLantern(260, 250, 1);
   return s;
 }
-function gaoLantern(x, y, k) {
+export function gaoLantern(x, y, k) {
   return `<g transform="translate(${x} ${y}) scale(${k})"><line x1="0" y1="-260" x2="0" y2="0" stroke="#2A1C17" stroke-width="6"/><ellipse cx="0" cy="90" rx="110" ry="130" fill="#E9C27A"/><ellipse cx="0" cy="90" rx="110" ry="130" fill="none" stroke="#7A3A22" stroke-width="6"/>` +
     `<rect x="-60" y="-50" width="120" height="16" fill="#3A2216"/><rect x="-60" y="214" width="120" height="16" fill="#3A2216"/><text x="0" y="96" font-family="Ma Shan Zheng" font-size="110" fill="#8E1F17" text-anchor="middle" dominant-baseline="middle">高</text></g>`;
 }
@@ -144,7 +144,7 @@ function N_thrust() {
 }
 
 // ---------------------------------------------------------------- 林冲 listening, the promise brushed beside him
-const N_listen = (brush) => {
+export const N_listen = (brush) => {
   let s = v2(11.6, ['t01gh', 't01her3']);
   if (brush) s += `<rect x="0" y="0" width="760" height="1080" fill="#120D0A" opacity="0.35"/>` + vtext('依旧夫妻完聚', 300, 150, 120, { fill: '#F2E4C4', sp: 128 });
   return s;

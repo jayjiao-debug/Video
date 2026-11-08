@@ -19,7 +19,7 @@ const v2 = (s, hide = []) => { globalThis.HIDE_LAYERS = new Set(hide); const r =
 
 // ---------------------------------------------------------------- the recurring silhouettes
 // 高太尉: a big official. The 展脚幞头 (the cap with long straight wings) says "high official" at a glance.
-function official(h) {
+export function official(h) {
   const hb = SCRIBE.head({ view: 'front', height: h, x: 0, y: 0 }), hh = hb.head, top = hb.top;
   let s = SCRIBE.draw({ view: 'front', height: h, x: 0, y: 0 });
   s += `<rect x="${f2(-0.62 * hh)}" y="${f2(top - 0.28 * hh)}" width="${f2(1.24 * hh)}" height="${f2(0.8 * hh)}" rx="${f2(0.32 * hh)}" fill="#000"/>`;
@@ -27,7 +27,7 @@ function official(h) {
   return s;
 }
 // 林冲's shadow with one arm raised: the arm is one simple shape (sleeve, forearm, fist); optional knife upright in it
-function linRaise(h, o = {}) {
+export function linRaise(h, o = {}) {
   const info = {};
   const fig = lin({ view: 'side', costume: o.costume || 'A', hat: o.hat, height: h, x: 0, y: 0, flip: false, info, pose: { shoulderL: -4, elbowL: 12, shoulderR: 6, elbowR: 10, torso: 8, legL: 20, kneeL: 25, legR: -15, kneeR: 5 } });
   const H = h / 7.5, S = info.shoulderNear;
@@ -41,10 +41,10 @@ function linRaise(h, o = {}) {
   }
   return s;
 }
-const linStand = (h, pose = {}, o = {}) => lin({ view: 'side', costume: o.costume || 'A', height: h, x: 0, y: 0, flip: o.flip ?? false, cangue: o.cangue, col: o.col, headCloth: o.headCloth, pose, props: o.props });
+export const linStand = (h, pose = {}, o = {}) => lin({ view: 'side', costume: o.costume || 'A', height: h, x: 0, y: 0, flip: o.flip ?? false, cangue: o.cangue, col: o.col, headCloth: o.headCloth, pose, props: o.props });
 
 // ---------------------------------------------------------------- the temple wall (W07–W10): one look, low sun
-function sunWall(id, shadows, o = {}) {
+export function sunWall(id, shadows, o = {}) {
   let s = `<defs>${lg(id + 'w', o.cold ? [[0, '#B7604A'], [0.55, '#8E3A2C'], [1, '#3E1712']] : [[0, '#E2774E'], [0.55, '#B8432C'], [1, '#5E1C14']], 0, 0, 1, 0.3)}${rg(id + 'sun', [[0, '#FFF0C8', 0.85], [0.35, '#FFC27A', 0.35], [1, '#FFC27A', 0]], 0.08, 0.35, 0.7)}${sil(id + 's', '#2A0D09')}<filter id="${id}b"><feGaussianBlur stdDeviation="2.5"/></filter></defs>`;
   s += `<rect width="1920" height="1080" fill="url(#${id}w)"/>`;
   for (let i = 0; i < 9; i++) s += `<rect x="${i * 230 + 60}" y="0" width="7" height="1080" fill="#6E2418" opacity="0.35"/>`;
