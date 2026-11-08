@@ -117,7 +117,7 @@ export function camAt(p, q = [960, 540], z = 1, extra = {}) {
 export const BAKES = new Map();
 export function bake(name, w, h, inner, opts = {}) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${opts.vb || `0 0 ${w} ${h}`}"><defs>${opts.defs || ''}</defs>${inner}</svg>`;
-  const hash = crypto.createHash('md5').update('bake-v2' + svg).digest('hex').slice(0, 10); // v2: root sized to the bake
+  const hash = crypto.createHash('md5').update('bake-v3' + svg).digest('hex').slice(0, 10); // v3: root sized to the bake, transparent html
   const file = `${BAKE_DIR}/${name}_${hash}.png`;
   if (!fs.existsSync(file)) BAKES.set(file, { svg, w, h, scale: opts.scale || 1 });
   const x = opts.x || 0, y = opts.y || 0;

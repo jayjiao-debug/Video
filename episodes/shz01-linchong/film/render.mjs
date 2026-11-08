@@ -40,7 +40,7 @@ async function flushBakes() {
     if (!fs.existsSync(file)) {
       await bpage.setViewportSize({ width: Math.ceil(b.w), height: Math.ceil(b.h) });
       await bpage.evaluate(([s, w, h]) => {
-        document.body.style.background = 'transparent';
+        document.documentElement.style.background = 'transparent'; document.body.style.background = 'transparent';
         const r = document.getElementById('root');
         r.style.width = w + 'px'; r.style.height = h + 'px';
         r.innerHTML = s;
