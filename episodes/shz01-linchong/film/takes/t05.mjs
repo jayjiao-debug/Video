@@ -154,17 +154,19 @@ const PEOPLE = (() => {
 })();
 
 function camA(t) {
-  const K1 = { p: [1150, 330], q: [1190, 560], z: 1.4 };
-  const K2 = { p: [1650, 1000], q: [960, 560], z: 0.7 };
-  const K3 = { p: [1770, 1000], q: [940, 520], z: 1.25 };
-  const drift = [0, -40 * ramp(t, 38.0, 38.9, E.lin)];
-  if (t < 38.64) return camAt([K1.p[0], K1.p[1] + 40 + drift[1]], [K1.q[0] - 30 + 30 * ramp(t, 38.0, 38.64, E.lin), K1.q[1]], K1.z);
-  if (t < 40.73) {
-    const k = ramp(t, 38.64, 40.73, E.inOut);
-    return camAt([lerp(K1.p[0], K2.p[0], k), lerp(K1.p[1], K2.p[1], k)], [lerp(K1.q[0], K2.q[0], k), lerp(K1.q[1], K2.q[1], k)], zexp(t, 38.64, 40.73, K1.z, K2.z));
+  // K1 high on the smoke (the tea steam's screen x) → K2 high-angle WS → K3 on the incident; sine easing keeps
+  // every layer under ~25 px/frame (checked with c/speed2.mjs)
+  const K1 = { p: [1150, 520], q: [1190, 560], z: 1.2 };
+  const K2 = { p: [1650, 1000], q: [960, 560], z: 0.75 };
+  const K3 = { p: [1760, 1000], q: [940, 520], z: 1.1 };
+  const TK2 = 40.85;
+  if (t < 38.64) return camAt([K1.p[0], K1.p[1] + 30 * (1 - ramp(t, 38.0, 38.64, E.lin))], [K1.q[0] - 20 + 20 * ramp(t, 38.0, 38.64, E.lin), K1.q[1]], K1.z);
+  if (t < TK2) {
+    const k = ramp(t, 38.64, TK2, E.sine);
+    return camAt([lerp(K1.p[0], K2.p[0], k), lerp(K1.p[1], K2.p[1], k)], [lerp(K1.q[0], K2.q[0], k), lerp(K1.q[1], K2.q[1], k)], zexp(t, 38.64, TK2, K1.z, K2.z, E.sine));
   }
-  const k = ramp(t, 40.73, 42.39, E.inOut);
-  const z = zexp(t, 40.73, 42.39, K2.z, K3.z) * (1 + 0.04 * ramp(t, 42.39, 42.6, E.lin));
+  const k = ramp(t, TK2, 42.39, E.sine);
+  const z = zexp(t, TK2, 42.39, K2.z, K3.z, E.sine) * (1 + 0.03 * ramp(t, 42.39, 42.6, E.lin));
   return camAt([lerp(K2.p[0], K3.p[0], k), lerp(K2.p[1], K3.p[1], k)], [lerp(K2.q[0], K3.q[0], k), lerp(K2.q[1], K3.q[1], k)], z);
 }
 
@@ -241,23 +243,33 @@ function bgB() {
 const BG_DEFS = lg('t05bhz', [[0, '#F7EED8'], [0.55, '#EADBB8'], [1, '#D9C7A2']]);
 
 function camB(t) {
-  // 42.39 MS two-shot; push to 1.6 toward the raised fist; 45.712 onto 高衙内's face (1.9);
-  // 48.634 to the fist, push to 4.0; 50.29 follow the sinking hand to the jaw CU (3.4); 52.8 truck right
+  // 42.39 MS two-shot; push to 1.6 toward the raised fist; 45.712 onto 高衙内's face (1.8, the fist soft upper left);
+  // 48.634 rack to the fist and push in on it (fist-centred zoom); 50.29 follow the sinking hand to the jaw CU (3.4);
+  // 52.8 a slow truck right into the pillar wipe
   const A0 = camAt([EYE[0] + 120, EYE[1] + 40], [880, 470], 1.25);
   const A1 = camAt([EYE[0] + 200, EYE[1] - 20], [940, 470], 1.6);
-  const B1 = camAt(GFACE, [1380, 560], 1.9);
-  const F0 = camAt(FIST_UP, [760, 400], 3.0), F1 = camAt([FIST_UP[0] + 6, FIST_UP[1] + 10], [760, 420], 4.0);
+  const A2 = { ...A1, zoom: 1.66, x: A1.x + 8 };
+  const B1 = camAt(GFACE, [1400, 600], 1.8);
+  const fistB1 = toScreen(B1, 1, FIST_UP);
   const S0 = camAt([EYE[0] - 30, EYE[1] + 40], [700, 420], 3.4);
   const mixc = (a, b, k) => ({ x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), zoom: a.zoom * Math.pow(b.zoom / a.zoom, k) });
   let c;
-  if (t < 43.63) c = mixc(A0, A1, ramp(t, 42.39, 43.63, E.out));
-  else if (t < 45.712) c = mixc(A1, { ...A1, zoom: 1.66, x: A1.x + 8 }, ramp(t, 43.63, 45.712, E.inOut));
-  else if (t < 48.634) c = mixc({ ...A1, zoom: 1.66, x: A1.x + 8 }, B1, ramp(t, 45.712, 47.0, E.out));
-  else if (t < 50.29) c = t < 49.3 ? mixc(B1, F0, ramp(t, 48.634, 49.3, E.inOut)) : mixc(F0, F1, ramp(t, 49.3, 49.95, E.out));
-  else c = mixc(F1, S0, ramp(t, 50.29, 51.35, E.inOut));
-  if (t >= 51.35) c = mixc(S0, { ...S0, zoom: 3.47 }, ramp(t, 51.35, 52.8, E.lin));
-  // truck right into the pillar wipe
-  if (t > 52.8) c = { ...c, x: c.x + 260 * ramp(t, 52.8, 53.6, E.in) };
+  if (t < 43.63) c = mixc(A0, A1, ramp(t, 42.39, 43.63, E.sine));
+  else if (t < 45.712) c = mixc(A1, A2, ramp(t, 43.63, 45.712, E.inOut));
+  else if (t < 48.634) c = mixc(A2, B1, ramp(t, 45.712, 47.1, E.sine));
+  else if (t < 50.29) {
+    // keep the fist's screen point moving smoothly while zooming about it
+    const k = ramp(t, 48.634, 50.29, E.sine);
+    const z = 1.8 * Math.pow(3.4 / 1.8, k);
+    const q = [lerp(fistB1[0], 780, k), lerp(fistB1[1], 400, k)];
+    c = camAt(FIST_UP, q, z);
+  } else {
+    const F1 = camAt(FIST_UP, [780, 400], 3.4);
+    // follow the sinking hand, then settle on the jaw
+    c = mixc(F1, S0, ramp(t, 50.29, 51.75, E.sine));
+  }
+  if (t >= 51.75) c = mixc(S0, { ...S0, zoom: 3.47 }, ramp(t, 51.75, 52.8, E.lin));
+  if (t > 52.8) c = { ...c, x: c.x + 80 * clamp((t - 52.8) / 0.8) };
   return c;
 }
 

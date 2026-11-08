@@ -36,7 +36,7 @@ function boardFront(cx, ny, H, id) {
   for (const k of [0.35, 0.8]) for (const sd of [-1, 1]) { const x = cx + sd * lerp(w0 / 2 - 0.055 * H, w1 / 2 - 0.08 * H, k), y = lerp(ny, yb, k); g += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(0.022 * H)}" fill="#2a2d31"/>`; }
   g += `<path d="M${P(cx - w1 / 2 - 0.05 * H, yb)} L${P(cx + w1 / 2 + 0.05 * H, yb)} L${P(cx + w1 / 2 + 0.05 * H, yb + 0.14 * H)} L${P(cx - w1 / 2 - 0.05 * H, yb + 0.14 * H)}Z" fill="#5A4029" ${ln(lw)}/>`;
   g += `<path d="M${P(cx - w1 / 2 - 0.05 * H, yb + 0.02 * H)} L${P(cx - w1 / 2 + 0.2 * H, yb + 0.02 * H)} L${P(cx - w1 / 2 + 0.2 * H, yb + 0.14 * H)} L${P(cx - w1 / 2 - 0.05 * H, yb + 0.14 * H)}Z M${P(cx + w1 / 2 + 0.05 * H, yb + 0.02 * H)} L${P(cx + w1 / 2 - 0.2 * H, yb + 0.02 * H)} L${P(cx + w1 / 2 - 0.2 * H, yb + 0.14 * H)} L${P(cx + w1 / 2 + 0.05 * H, yb + 0.14 * H)}Z" fill="#4B4F55"/>`;
-  g += `<rect x="${f2(cx - w1)}" y="${f2(yb + 0.14 * H)}" width="${f2(2 * w1)}" height="${f2(1.2 * H)}" fill="${ROBES}"/>`;
+
   // the gap in front of the neck (dark crescent)
   g += `<path d="M${P(cx - rx, ny)} A${f2(rx)},${f2(ry)} 0 0 0 ${P(cx + rx, ny)} A${f2(rx * 0.92)},${f2(ry * 0.55)} 0 0 1 ${P(cx - rx, ny)}Z" fill="#2A1C14"/>`;
   // 封皮: the paper seal across the board, red stamps, faint writing
@@ -497,14 +497,14 @@ function S04(t) {
     `<rect x="290" y="20" width="14" height="1480" fill="#5E4330"/><rect x="1690" y="20" width="14" height="1480" fill="#5E4330"/>` +
     `<rect x="250" y="40" width="1460" height="20" fill="#24180F" opacity="0.6"/>`;
   s += L(c, 1.3, frame, { id: 't01doorframe', bleed: 'all' });
-  // her: back view in the foreground left, hand on the door post; slides down to kneel at 16.161
+  // her: back view in the foreground left, leaning on the door post; slides down it to kneel at 16.161
   const sl = ramp(t, T.slide, T.slide + 0.84, (x) => (x < 0.7 ? E.in(x / 0.7) * 0.85 : 0.85 + 0.15 * E.out((x - 0.7) / 0.3)));
-  const wy = 324 + sl * 230, wx = 440 - sl * 18;
-  const handY = 640 + sl * 200;
-  s += L(c, 1.3, wifeBack({ x: wx, y: wy, head: 179, tilt: -7 - 6 * sl, bow: 0.1 + 0.55 * sl, slump: 0.6 * sl, armL: { to: [298, handY], bend: 1 } }) +
-    // her fingers wrap the post's edge
-    // her fingers curl round the post's front face (drawn over the post)
-    [0, 1, 2, 3].map((i) => `<rect x="${f2(262 - i * 1.5)}" y="${f2(handY - 20 + i * 11)}" width="44" height="10" rx="5" fill="${COLW.skin}" stroke="${LN}" stroke-width="1.6"/>`).join(''), { id: 't01her4', bleed: 'b' });
+  const wy = 324 + sl * 230, wx = 404 - sl * 14;
+  const handY = wy + 330 - sl * 40;
+  s += L(c, 1.3, wifeBack({ x: wx, y: wy, head: 179, tilt: -9 - 6 * sl, bow: 0.1 + 0.55 * sl, slump: 0.6 * sl }) +
+    // her left hand grips the post's front face (the arm is hidden behind her body)
+    [0, 1, 2, 3].map((i) => `<rect x="${f2(258 - i * 1.2)}" y="${f2(handY + i * 12)}" width="${f2(40 - i * 3)}" height="11" rx="5.5" fill="${COLW.skin}" stroke="${LN}" stroke-width="1.6"/>`).join('') +
+    `<path d="M${P(296, handY - 6)} C${P(282, handY - 12)} ${P(266, handY - 2)} ${P(262, handY + 10)} L${P(296, handY + 14)}Z" fill="${COLW.skinS}" stroke="${LN}" stroke-width="1.6"/>`, { id: 't01her4', bleed: 'b' });
   // warm rim on her back from the street glare (a light wash on the right edge)
   return s;
 }
