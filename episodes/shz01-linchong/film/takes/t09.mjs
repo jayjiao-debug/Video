@@ -6,7 +6,8 @@
 import { L, kf, E, ramp, zexp, snow, blurId, ridge, lg, rg, f2, clamp, rng, noise1, fbm1, lerp, toScreen, shake } from '../lib.mjs';
 import { lin, EX } from '../../chars/rig/linchong.mjs';
 
-const T0 = 73.6, COLLAPSE = 75.256, SAG = 74.84, TURN = 76.077, PULL = 77.33;
+const T0 = 73.6, COLLAPSE = 75.256, SAG = 74.84, TURN = 76.077, PULL = 77.02;
+const LEAF_A = 77.02, LEAF_FULL = 77.47;   // the door leaf swings to the lens over 10 frames (ease-in), then is wiped off by T10
 const HFIG = 430;           // FS scale: 1.80 m = 430 px at zoom 1
 const GY = 905;             // his ground line (world, d 1)
 
@@ -226,17 +227,17 @@ function puff(t) {
 
 // ------------------------------------------------------------------ 林冲 blocking
 // x(t): walks right toward the hut, stops dead at the collapse, turns at 76.077 and trudges to the temple door.
-const xAt = (t) => (t < COLLAPSE ? lerp(700, 790, ramp(t, T0 - 0.65, COLLAPSE, E.lin)) : t < TURN + 0.12 ? 790 : lerp(790, 548, ramp(t, TURN + 0.12, PULL - 0.08, E.inOut)));
+const xAt = (t) => (t < COLLAPSE ? lerp(700, 760, ramp(t, T0 - 0.65, COLLAPSE, E.lin)) : t < TURN + 0.12 ? 760 : lerp(760, 548, ramp(t, TURN + 0.12, PULL - 0.08, E.inOut)));
 function walking(t) { return (t > T0 - 0.65 && t < COLLAPSE - 0.05) || (t > TURN + 0.15 && t < PULL - 0.12); }
 function lc(t) {
   const x = xAt(t);
   const facingRight = t < TURN + 0.04;
   // the turn: a quick squash through the profile (4 frames)
   const tk = (t - TURN) / 0.13;
-  const sx = tk > 0 && tk < 1 ? Math.max(0.32, Math.abs(Math.cos(tk * Math.PI))) : 1;
+  const sx = tk > 0 && tk < 1 ? Math.max(0.78, Math.abs(Math.cos(tk * Math.PI))) : 1;
   // stride: one step per ~2 beats (0.836 s) while trudging; small steps on the slow approach to the hut
   const w0 = t < COLLAPSE ? T0 - 0.65 : TURN + 0.15, w1 = t < COLLAPSE ? COLLAPSE - 0.05 : PULL - 0.12;
-  const ph = (t - w0) / 0.836;
+  const ph = (t - w0) / (t < COLLAPSE ? 0.836 : 0.62);
   const env = walking(t) ? Math.sin(clamp((t - w0) / (w1 - w0)) * Math.PI) ** 0.35 : 0;
   const amp = (t < COLLAPSE ? 11 : 26) * env;
   const legR = amp * Math.sin(ph * Math.PI), legL = -legR;
@@ -258,12 +259,12 @@ function lc(t) {
 }
 
 // ------------------------------------------------------------------ camera
-const SHOULDER = () => [xAt(72.95) + 0.02 * HFIG, GY - 0.9 * HFIG];
+const SHOULDER = () => [xAt(73.15) - 0.05 * HFIG, GY - 0.865 * HFIG];   // his snow-dusted shoulder top
 function cam(t) {
-  const z0 = 3.0, PA = 72.95;
+  const z0 = 2.3, PA = 73.6;
   const z = t < PA ? z0 : t < 75.25 ? zexp(t, PA, 75.25, z0, 1, E.sine) : t < 76.0 ? 1 : 1 + 0.05 * ramp(t, 76.0, PULL, E.inOut);
   const [sx, sy] = SHOULDER();
-  const q = [380, 400];
+  const q = [650, 650];   // = T08's exported SHOULDER at 73.6
   const startX = sx - 960 - (q[0] - 960) / z0, startY = sy - 540 - (q[1] - 540) / z0;
   const endX = -10, endY = -18;
   const k = t < PA ? 0 : Math.log(z0 / Math.min(z0, Math.max(1, t < 75.25 ? z : 1))) / Math.log(z0);
@@ -274,7 +275,7 @@ function cam(t) {
 }
 
 function closedLeaf(t) {
-  if (t >= PULL) return '';
+  if (t >= LEAF_A) return '';
   let s = `<rect x="228" y="410" width="214" height="498" fill="#4A3B31"/>`;
   for (let i = 1; i < 5; i++) s += `<rect x="${228 + i * 43}" y="410" width="4" height="498" fill="#2A211B" opacity="0.8"/>`;
   s += `<rect x="228" y="470" width="214" height="12" fill="#3A2E26"/><rect x="228" y="820" width="214" height="12" fill="#3A2E26"/>`;
@@ -284,11 +285,11 @@ function closedLeaf(t) {
 
 // ------------------------------------------------------------------ the door leaf swinging to the lens (screen space)
 function leaf(t, c) {
-  const p = ramp(t, PULL, PULL + 0.29, E.in);
+  const p = ramp(t, LEAF_A, LEAF_FULL, (u) => Math.pow(u, 1.6));
   if (p <= 0) return '';
   const h0 = toScreen(c, 1, [232, 410]), h1 = toScreen(c, 1, [232, 908]);
   const f0 = toScreen(c, 1, [440, 410]), f1 = toScreen(c, 1, [440, 908]);
-  const fx = lerp(f0[0], 2900, Math.pow(p, 1.25)), ft = lerp(f0[1], -900, Math.pow(p, 1.6)), fb = lerp(f1[1], 2100, Math.pow(p, 1.6));
+  const fx = lerp(f0[0], 2250, Math.pow(p, 1.15)), ft = lerp(f0[1], -600, Math.pow(p, 1.4)), fb = lerp(f1[1], 1750, Math.pow(p, 1.4));
   const hx0 = lerp(h0[0], -300, Math.pow(p, 2.2)), ht = lerp(h0[1], -200, Math.pow(p, 2)), hb = lerp(h1[1], 1300, Math.pow(p, 2));
   const pts = `${f2(hx0)},${f2(ht)} ${f2(fx)},${f2(ft)} ${f2(fx)},${f2(fb)} ${f2(hx0)},${f2(hb)}`;
   // planks
@@ -302,7 +303,7 @@ function leaf(t, c) {
 }
 
 export default {
-  enter: { a: 72.95, b: 73.6, type: 'dissolve', ease: E.inOut },
+  enter: { a: 73.2, b: 73.6, type: 'dissolve', ease: E.inOut },
   frame(t) {
     const c = cam(t);
     const sag = ramp(t, SAG, COLLAPSE, E.in);

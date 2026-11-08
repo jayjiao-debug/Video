@@ -10,6 +10,7 @@
 import { L, E, ramp, zexp, bake, lg, rg, f2, clamp, rng, noise1, lerp, toScreen, shake, flames, embers, blurId, camAt, kf } from '../lib.mjs';
 import { lin, EX } from '../../chars/rig/linchong.mjs';
 
+const revealX = (t) => lerp(-150, 2000, ramp(t, 77.38, 77.748, E.inOut));
 const T0 = 77.748, CONTACT = 78.588, FLARE = 79.83, S24 = 86.912, STILL = 92.05;
 const FL = 1010;          // floor line (world)
 const HF = 860;           // his height (1.80 m) in S22–S23
@@ -75,10 +76,14 @@ function door(sk) {
 function stone(x, sk = [0, 0]) {
   const y = FL, w = STONE_W, h = STONE_H;
   const X = x + sk[0], Y = y + sk[1];
-  let s = `<path d="M${X + 20},${Y} Q${X - 10},${Y - h * 0.5} ${X + 30},${Y - h * 0.86} Q${X + w * 0.3},${Y - h - 14} ${X + w * 0.62},${Y - h + 4} Q${X + w + 6},${Y - h * 0.8} ${X + w},${Y - h * 0.3} L${X + w},${Y}Z" fill="#5C5650"/>`;
-  s += `<path d="M${X + w * 0.55},${Y - h + 6} Q${X + w + 6},${Y - h * 0.8} ${X + w},${Y - h * 0.3} L${X + w},${Y} L${X + w * 0.62},${Y} Q${X + w * 0.7},${Y - h * 0.5} ${X + w * 0.55},${Y - h + 6}Z" fill="#3E3934"/>`;
-  s += `<path d="M${X + 40},${Y - h * 0.82} Q${X + w * 0.3},${Y - h - 6} ${X + w * 0.58},${Y - h + 8}" stroke="#7A736A" stroke-width="6" fill="none" opacity="0.5"/>`;
-  s += `<path d="M${X + 60},${Y - h * 0.45} l40,20 l30,-12 M${X + 160},${Y - h * 0.7} l26,30" stroke="#3A3530" stroke-width="3" fill="none" opacity="0.7"/>`;
+  const outline = `M${X + 20},${Y} Q${X - 10},${Y - h * 0.5} ${X + 30},${Y - h * 0.86} Q${X + w * 0.3},${Y - h - 14} ${X + w * 0.62},${Y - h + 4} Q${X + w + 6},${Y - h * 0.8} ${X + w},${Y - h * 0.3} L${X + w},${Y}Z`;
+  let s = `<path d="${outline}" fill="#4E4943" opacity="1"/>`;
+  // lit top cap and a darker base, both following the contour (top-lit, no vertical split)
+  s += `<path d="M${X + 4},${Y - h * 0.62} Q${X + 6},${Y - h * 0.86} ${X + 30},${Y - h * 0.9} Q${X + w * 0.3},${Y - h - 12} ${X + w * 0.62},${Y - h + 6} Q${X + w * 0.95},${Y - h * 0.82} ${X + w - 2},${Y - h * 0.55} Q${X + w * 0.6},${Y - h * 0.66} ${X + w * 0.3},${Y - h * 0.6} Q${X + w * 0.12},${Y - h * 0.58} ${X + 4},${Y - h * 0.62}Z" fill="#6A645C"/>`;
+  s += `<path d="M${X + 14},${Y} Q${X + 2},${Y - h * 0.22} ${X + 8},${Y - h * 0.3} Q${X + w * 0.5},${Y - h * 0.2} ${X + w},${Y - h * 0.26} L${X + w},${Y}Z" fill="#38332E"/>`;
+  s += `<path d="M${X + 60},${Y - h * 0.86} Q${X + w * 0.3},${Y - h - 2} ${X + w * 0.56},${Y - h + 12}" stroke="#8A837A" stroke-width="5" fill="none" opacity="0.6"/>`;
+  s += `<path d="M${X + 70},${Y - h * 0.46} l50,14 l36,-10 M${X + 200},${Y - h * 0.38} l60,8 M${X + 150},${Y - h * 0.7} l40,10" stroke="#2E2A26" stroke-width="3" fill="none" opacity="0.6"/>`;
+  s += `<path d="${outline}" fill="none" stroke="#2A1C17" stroke-width="3"/>`;
   return s;
 }
 const SPEAR_LEAN = (() => {
@@ -113,7 +118,7 @@ function blocking(t) {
   let x, dy = 0, lean = 0, sh = 0, el = 0, tilt = 0, expr = { ...EX.隐忍 }, quilt = 0, b_fallen = null;
   let right = true, sx = 1, hat = true, legR = 0, legL = 0;
   const HANDX = 520; // hands reach ≈ 520 px ahead of the feet at lean 38
-  const turnSq = (t0) => { const k = (t - t0) / 0.13; return k > 0 && k < 1 ? Math.max(0.32, Math.abs(Math.cos(k * Math.PI))) : 1; };
+  const turnSq = (t0) => { const k = (t - t0) / 0.13; return k > 0 && k < 1 ? Math.max(0.78, Math.abs(Math.cos(k * Math.PI))) : 1; };
   if (t < CONTACT + 0.06) {
     lean = lerp(18, 38, ramp(t, T0 - 0.2, pushA, E.out));
     sh = lerp(60, 84, ramp(t, T0 - 0.2, pushA, E.out)); el = 6;
@@ -372,12 +377,11 @@ function cam(t) {
 
 export default {
   enter: {
-    a: 77.33, b: 77.748, type: 'mask',
-    // after the outside leaf has filled the frame, the inside is revealed by a vertical edge sweeping right → left
+    a: 77.3, b: 77.748, type: 'mask',
+    // the outside leaf covers the frame at 77.53 (T09); as it passes the lens the inside is revealed left → right
     mask: (t) => {
-      const p = ramp(t, 77.56, 77.748, E.inOut);
-      const x = lerp(1960, -60, p);
-      return `<defs><linearGradient id="t10wm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient></defs><rect x="${f2(x - 90)}" y="0" width="90" height="1080" fill="url(#t10wm)"/><rect x="${f2(x)}" y="0" width="${f2(2000)}" height="1080" fill="#fff"/>`;
+      const x = revealX(t);
+      return `<defs><linearGradient id="t10wm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient></defs><rect x="-60" y="0" width="${f2(Math.max(0, x + 60))}" height="1080" fill="#fff"/><rect x="${f2(x)}" y="0" width="140" height="1080" fill="url(#t10wm)"/>`;
     },
   },
   subYc: (t) => (t >= 86.35 ? 992 : 890),
@@ -407,6 +411,7 @@ export default {
       const op = ramp(t, 86.62, 86.95, E.inOut);
       s += `<g data-layer="t10s24" data-z="100" data-bleed="all" opacity="${f2(op)}">${s24(t)}</g>`;
     }
+    if (t < 77.75) { const x = revealX(t); s += `<defs><linearGradient id="t10le" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#120D0A" stop-opacity="0"/><stop offset="1" stop-color="#120D0A" stop-opacity="0.85"/></linearGradient></defs><rect x="${f2(x - 220)}" y="-10" width="230" height="1100" fill="url(#t10le)"/>`; }
     // letterbox 2.39:1 (138 px) slides in 86.60–87.60
     const lb = ramp(t, 86.6, 87.6, E.inOut) * 138;
     if (lb > 0) s += `<g data-layer="bars" data-z="860" data-bleed="all"><rect x="-10" y="-10" width="1940" height="${f2(lb + 10)}" fill="#000"/><rect x="-10" y="${f2(1080 - lb)}" width="1940" height="${f2(lb + 10)}" fill="#000"/></g>`;
