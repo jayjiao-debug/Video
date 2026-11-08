@@ -61,6 +61,11 @@ def build(view, debug=None):
     R = upscale(rgb)
     shp = R.shape[:2]
     FG = fg_mask_hi(R)
+    for hp in S.get('holes', []):  # enclosed background (e.g. between the legs)
+        ref = np.median(np.concatenate([R[:8].reshape(-1, 3), R[-8:].reshape(-1, 3)]), axis=0)
+        near_bg = np.abs(R.astype(int) - ref[None, None]).max(axis=2) < 16
+        FG &= ~(polymask(hp, shp) & near_bg)
+    FG = soft_mask(FG, 1.0)
     INK = ink_mask(R, FG, **S.get('ink', {}))
     Sm = smooth(R)
     cen = merge_close(kmeans_palette(Sm, FG & ~INK, S.get('K', 30)), S.get('merge', 7.5))

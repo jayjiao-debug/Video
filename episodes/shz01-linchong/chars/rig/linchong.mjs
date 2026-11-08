@@ -190,10 +190,11 @@ function faceFront(F, E, o = {}) {
   add(`<path d="M${f(gx - 3.6 * u)},${f(g0)} C${f(gx - 5.8 * u)},${f(gc - 10 * u)} ${f(gx - 7.2 * u)},${f(gc + 2 * u)} ${f(gx - 5.2 * u)},${f(gc + 12 * u)} C${f(gx - 3.4 * u)},${f(gc + 24 * u)} ${f(gx - 1.2 * u)},${f(gt - 10 * u)} ${f(gx + 0.6 * u)},${f(gt)} C${f(gx + 1.6 * u)},${f(gt - 10 * u)} ${f(gx + 3.6 * u)},${f(gc + 24 * u)} ${f(gx + 5.4 * u)},${f(gc + 12 * u)} C${f(gx + 7.4 * u)},${f(gc + 2 * u)} ${f(gx + 6 * u)},${f(gc - 10 * u)} ${f(gx + 3.6 * u)},${f(g0)} C${f(gx + 1.2 * u)},${f(g0 + 1.4 * u)} ${f(gx - 1.2 * u)},${f(g0 + 1.4 * u)} ${f(gx - 3.6 * u)},${f(g0)}Z" fill="${C.hair}"/>`);
   add(`<path d="M${f(gx - 1.2 * u)},${f(gc + 2 * u)} C${f(gx - 0.6 * u)},${f(gc + 16 * u)} ${f(gx)},${f(gt - 12 * u)} ${f(gx + 0.4 * u)},${f(gt - 6 * u)}" stroke="#3a3530" stroke-width="${f(0.7 * u)}" fill="none" opacity="0.7"/>`);
   for (const sgn of [-1, 1]) {
-    const root = [n[0] + sgn * 1.4 * u, n[1] + 4.2 * u];
-    const end = [m[0] + sgn * (mw + 3.4 * u), cy + 7.5 * u - E.mouth * 1.5 * u];
-    const mid1 = [n[0] + sgn * 7 * u, n[1] + 4.6 * u], mid2 = [end[0] - sgn * 1 * u, end[1] - 7 * u];
-    add(`<path d="M${P(root)} C${P(mid1)} ${P([mid2[0] + sgn * 0.6 * u, mid2[1] - 1.2 * u])} ${P(end)} C${P([mid2[0] - sgn * 1.0 * u, mid2[1] + 0.4 * u])} ${P([mid1[0] - sgn * 0.6 * u, mid1[1] + 1.9 * u])} ${P([root[0], root[1] + 1.7 * u])}Z" fill="${C.hair}"/>`);
+    // thin strand from under the nose, out along the lip and then down past the mouth corner
+    const root = [n[0] + sgn * 1.6 * u, n[1] + 4.8 * u];
+    const end = [m[0] + sgn * (mw + 2.4 * u), cy + 9.5 * u - E.mouth * 1.6 * u];
+    const th = 2.5 * u;
+    add(`<path d="M${P(root)} C${P([root[0] + sgn * 9.5 * u, root[1] - 0.4 * u])} ${P([end[0] + sgn * 0.4 * u, end[1] - 8 * u])} ${P(end)} C${P([end[0] - sgn * 1.8 * u, end[1] - 6 * u])} ${P([root[0] + sgn * 8 * u, root[1] + th * 1.1])} ${P([root[0] - sgn * 0.3 * u, root[1] + th])}Z" fill="${C.hair}"/>`);
   }
   // ---- eyes
   for (const sgn of [-1, 1]) {
@@ -397,8 +398,8 @@ function cordFront(F, u, E) {
 
 function cordSide(F, u, E) {
   const C = COL, H = F.hat, drop = Math.max(0, E.open) * 10 * u;
-  const top = [F.ear[0] - 12 * u, H.y + 2 * u], knot = [F.chin[0] + 18 * u, F.chin[1] + 4 * u + drop * 0.5];
-  return `<path d="M${P(top)} C${f(top[0] - 1 * u)},${f(top[1] + 30 * u)} ${f(knot[0] + 8 * u)},${f(knot[1] - 30 * u)} ${P(knot)}" fill="none" stroke="${C.cord}" stroke-width="${f(1.6 * u)}" stroke-linecap="round"/>` +
+  const top = [F.ear[0] - 13 * u, H.y + 3 * u], knot = [F.ear[0] - 30 * u, F.chin[1] + 10 * u + drop * 0.3];
+  return `<path d="M${P(top)} C${f(top[0] - 2 * u)},${f(top[1] + 40 * u)} ${f(knot[0] + 6 * u)},${f(knot[1] - 40 * u)} ${P(knot)}" fill="none" stroke="${C.cord}" stroke-width="${f(1.6 * u)}" stroke-linecap="round"/>` +
     `<path d="M${P(knot)} c${f(-2 * u)},${f(8 * u)} ${f(1 * u)},${f(14 * u)} ${f(-1 * u)},${f(22 * u)} M${P(knot)} c${f(2 * u)},${f(7 * u)} ${f(4 * u)},${f(12 * u)} ${f(4 * u)},${f(19 * u)}" fill="none" stroke="${C.cord}" stroke-width="${f(1.4 * u)}" stroke-linecap="round"/>` +
     `<ellipse cx="${f(knot[0])}" cy="${f(knot[1])}" rx="${f(3 * u)}" ry="${f(2.2 * u)}" fill="${C.cord}" stroke="${C.cordS}" stroke-width="${f(0.7 * u)}"/>`;
 }
@@ -683,7 +684,10 @@ export function lin(opt = {}) {
     W.__farHand = mHand;
   }
   // props: spear (+ gourd) in a hand
-  if (pose.spear) items.push(...spearItems(D, view, pose, W, wm, Href, u, flip, nearSide));
+  if (pose.spear) {
+    const F = M.face, hm = costume === 'C' && F.hat && O.hat ? (view === 'front' ? hatFront(F.hat, u, false) : hatSide(F.hat, u, false)) : '';
+    items.push(...spearItems(D, view, pose, W, wm, Href, u, flip, nearSide, hm.replace(/fill="[^"]*"/g, 'fill="#000"').replace(/stroke="[^"]*"/g, 'stroke="#000"')));
+  }
   items.sort((a, b) => a[0] - b[0]);
   return `<g data-rig="linchong" data-view="${view}" data-costume="${costume}" transform="${mstr(root)}"><defs>${defs}</defs>${items.map((x) => x[1]).join('')}</g>`;
 }
@@ -755,7 +759,7 @@ function fistFor(D, n, view, Href) {
   return `<g transform="translate(${f(ax.p[0])},${f(ax.p[1])}) rotate(${f(ax.ang)})">${fistShape(w, mirror)}</g>`;
 }
 
-function spearItems(D, view, pose, W, wm, Href, u, flip, nearSide) {
+function spearItems(D, view, pose, W, wm, Href, u, flip, nearSide, headMaskExtra = '') {
   const sp = pose.spear, side = sp.hand || (view === 'side' ? nearSide : 'R');
   let hn = view === 'side' ? 'handL' : `hand${side}`;
   let hm = view === 'side' && side !== nearSide ? W.__farHand : wm(hn);
@@ -770,6 +774,12 @@ function spearItems(D, view, pose, W, wm, Href, u, flip, nearSide) {
   const angle = view === 'side' ? -(sp.angle ?? 0) : sp.angle ?? 0;
   const m = mul(tr(g[0], g[1]), mul(rot(angle), tr(0, gr * Lr)));
   let s = `<g data-part="spear" transform="${mstr(m)}">${spearSVG(Lr, u, Href)}</g>`;
+  const behind = sp.behindHead ?? (view === 'front' ? true : (sp.angle ?? 0) < 0);
+  if (behind && D.parts.head) {
+    const mid = uid('m'), hp = D.parts.head;
+    const sil = hp.fills.map(([, d]) => `<path d="${d}"/>`).join('');
+    s = `<mask id="${mid}" maskUnits="userSpaceOnUse" x="-3000" y="-3000" width="9000" height="9000"><rect x="-3000" y="-3000" width="9000" height="9000" fill="#fff"/><g fill="#000" transform="${mstr(W.head || wm('head'))}">${sil}${headMaskExtra}</g></mask><g mask="url(#${mid})">${s}</g>`;
+  }
   if (sp.gourd !== false) {
     const hang = ap(m, [0, -(Lr - 31 * (Href / 24))]);
     s += `<g data-part="gourd" transform="translate(${f(hang[0])},${f(hang[1])})">${gourdSVG(u, Href)}</g>`;

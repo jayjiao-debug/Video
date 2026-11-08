@@ -43,8 +43,8 @@ function sideGuard(u, C, ph, staff, staffAng, armR) {
   let s = '';
   // legs: far leg first (darker)
   const leg = (sw, far) => {
-    const a = sw * 24, knee = rot([hip[0], hip[1] + 1.75 * u], a, hip);
-    const kb = sw < 0 ? -sw * 30 : 4; // back leg bends
+    const a = sw * 17, knee = rot([hip[0], hip[1] + 1.75 * u], a, hip);
+    const kb = sw < 0 ? -sw * 14 : 3 + Math.max(0, sw - 0.6) * 10; // back leg bends a little
     const ank = rot([knee[0], knee[1] + 1.65 * u], a - kb, knee);
     const toe = [ank[0] + 0.55 * u, ank[1] + 0.12 * u];
     const tc = far ? C.trou : C.trou, wc = far ? C.wrapS : C.wrap;
@@ -53,7 +53,7 @@ function sideGuard(u, C, ph, staff, staffAng, armR) {
     // wrap bands
     for (let i = 1; i < 4; i++) { const p = [knee[0] + (ank[0] - knee[0]) * i / 4, knee[1] + (ank[1] - knee[1]) * i / 4]; s; g += `<path d="M${P(p[0] - 0.2 * u, p[1] - 0.05 * u)} L${P(p[0] + 0.2 * u, p[1] + 0.05 * u)}" stroke="${C.wrapS}" stroke-width="${f2(lw * 0.8)}"/>`; }
     g += `<path d="M${P(ank[0] - 0.2 * u, ank[1] - 0.12 * u)} C${P(ank[0] - 0.22 * u, ank[1] + 0.16 * u)} ${P(toe[0] - 0.1 * u, toe[1] + 0.12 * u)} ${P(toe[0] + 0.08 * u, toe[1] + 0.02 * u)} C${P(toe[0] + 0.08 * u, toe[1] - 0.14 * u)} ${P(ank[0] + 0.25 * u, ank[1] - 0.18 * u)} ${P(ank[0] + 0.1 * u, ank[1] - 0.2 * u)}Z" fill="#1E1A18" ${ln}/>`;
-    return far ? `<g opacity="1" filter="brightness(0.85)">${g}</g>` : g;
+    return far ? `<g style="filter:brightness(0.82)">${g}</g>` : g;
   };
   s += leg(-walk, true);
   // far arm (swings opposite to the near arm)
@@ -84,7 +84,7 @@ function sideGuard(u, C, ph, staff, staffAng, armR) {
   const nA = armR != null ? armR : (staff === 'shoulder' ? 0 : -walk * 18);
   let el, wr;
   if (staff === 'shoulder') {
-    el = rot([sh[0], sh[1] + 1.45 * u], 35, sh); wr = rot([el[0], el[1] + 1.15 * u], 160, el);
+    el = rot([sh[0], sh[1] + 1.45 * u], -28, sh); wr = rot([el[0], el[1] + 1.15 * u], -150, el);
   } else if (staff === 'hand') {
     el = rot([sh[0], sh[1] + 1.45 * u], -(nA + 20), sh); wr = rot([el[0], el[1] + 1.15 * u], -(nA + 70), el);
   } else {
@@ -93,7 +93,7 @@ function sideGuard(u, C, ph, staff, staffAng, armR) {
   let st = '';
   if (staff === 'shoulder') {
     // over the shoulder, butt forward-down at the hand, tip up behind
-    const a = [wr[0] + 0.25 * u, wr[1] + 0.35 * u], dir = [-0.62, -0.78], L = 6.7 * u;
+    const a = [wr[0] + 0.55 * u, wr[1] + 0.45 * u], dir = [-0.8, -0.6], L = 6.7 * u;
     st = staffSVG(a, [a[0] + dir[0] * L, a[1] + dir[1] * L], 0.16 * u);
     s = st + s;
   } else if (staff === 'hand') {
@@ -143,7 +143,7 @@ function backGuard(u, C, ph, staff) {
   s += `<ellipse cx="${f2(-0.4 * u)}" cy="${f2(-6.45 * u + bob)}" rx="${f2(0.08 * u)}" ry="${f2(0.14 * u)}" fill="${C.skinS}" ${ln}/><ellipse cx="${f2(0.4 * u)}" cy="${f2(-6.45 * u + bob)}" rx="${f2(0.08 * u)}" ry="${f2(0.14 * u)}" fill="${C.skinS}" ${ln}/>`;
   s += `<path d="M${P(-0.47 * u, -6.62 * u + bob)} C${P(-0.5 * u, -7.25 * u + bob)} ${P(0.5 * u, -7.25 * u + bob)} ${P(0.47 * u, -6.62 * u + bob)}Z" fill="${C.cap}" ${ln}/>`;
   s += `<path d="M${P(-0.53 * u, -6.58 * u + bob)} L${P(0.53 * u, -6.58 * u + bob)} L${P(0.5 * u, -6.74 * u + bob)} L${P(-0.5 * u, -6.74 * u + bob)}Z" fill="${C.capS}" ${ln}/>`;
-  if (staff === 'shoulder') s += staffSVG([1.05 * u, -4.2 * u + bob], [-1.3 * u, -9.6 * u + bob], 0.17 * u);
+  if (staff === 'shoulder') s += staffSVG([0.95 * u, -4.1 * u + bob], [2.3 * u, -9.4 * u + bob], 0.17 * u);
   else if (staff === 'hand') s = staffSVG([1.0 * u, -0.1 * u], [1.15 * u, -6.6 * u + bob], 0.17 * u) + s;
   return s;
 }
