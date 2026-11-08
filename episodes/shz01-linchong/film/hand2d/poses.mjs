@@ -160,16 +160,27 @@ const TW = [8.4, 7.0, 6.0, 5.2];
 const ORDER3 = ['pinky', 'ring', 'middle', 'index'];   // back -> front for the side views (thumb side faces camera)
 
 // 1 / 2 / 3 share one structure (palm control points, four chains, thumb chain) so they interpolate.
-const P1 = { // fist, 3/4 side from the thumb side: knuckle row on top, the four middle phalanges as bars on the front, thumb across them
-  palm: [[-13, 2], [12, 2], [17, -12], [19, -26], [15, -38], [6, -44], [-4, -45], [-12, -40], [-16, -26], [-15, -10]],
+const P1 = { // fist, 3/4 from the thumb side: knuckle row on top, the four middle phalanges as separate bars on the front, thumb across them
+  palm: [[-13, 2], [13, 2], [22, -10], [27, -22], [26, -34], [16, -42], [4, -45], [-8, -44], [-15, -32], [-15, -12]],
   f: {
-    index: [[-5, -40], [5, -46], [7, -28], [1, -24]],
-    middle: [[1, -42], [11, -46.5], [13, -28], [7, -24]],
-    ring: [[6, -41], [16, -44.5], [18, -29], [12, -25]],
-    pinky: [[10, -38], [20, -40], [21.5, -28], [16, -25]],
+    index: [[-4, -40], [5, -47], [6, -26], [0, -22]],
+    middle: [[3, -42], [13, -48], [14, -27], [8, -23]],
+    ring: [[10, -41], [21, -46], [22, -28], [16, -24]],
+    pinky: [[16, -38], [27, -42], [28, -29], [22, -25]],
   },
-  w: { index: [6.2, 6.0, 5.6, 5.0], middle: [6.2, 5.9, 5.5, 4.9], ring: [5.8, 5.6, 5.2, 4.6], pinky: [5.2, 5.0, 4.6, 4.2] },
-  thumb: [[-8, -10], [-6, -22], [3, -29], [13, -31]],
+  w: { index: [6.2, 6.0, 5.7, 5.0], middle: [6.2, 6.0, 5.6, 4.9], ring: [5.8, 5.6, 5.3, 4.6], pinky: [5.2, 5.0, 4.7, 4.2] },
+  thumb: [[-8, -10], [-5, -21], [5, -27], [16, -29]],
+};
+const P1b = { // releasing: the grip has just let go — fingers swing forward, tips still curled (a designed in-between)
+  palm: [[-13, 2], [12.5, 2], [20, -12], [23, -25], [20, -36], [11, -43], [0, -45], [-10, -42], [-15, -29], [-15, -11]],
+  f: {
+    index: [[-4, -40], [4, -52], [12, -44], [13, -36]],
+    middle: [[2, -42], [11, -54], [19, -45], [20, -37]],
+    ring: [[8, -41], [17, -51], [24, -43], [24, -36]],
+    pinky: [[13, -38], [22, -46], [27, -39], [27, -33]],
+  },
+  w: { index: [6.1, 5.6, 5.1, 4.6], middle: [6.2, 5.7, 5.2, 4.7], ring: [5.8, 5.4, 4.9, 4.4], pinky: [5.1, 4.8, 4.3, 4.0] },
+  thumb: [[-8, -10], [-8, -24], [-2, -33], [6, -39]],
 };
 const P2 = { // loosening: fingers half open with a gentle curl, thumb lifted clear and upright
   palm: [[-13, 2], [12, 2], [17, -14], [18, -28], [14, -39], [6, -44], [-4, -45], [-12, -40], [-16, -26], [-15, -10]],
@@ -215,7 +226,7 @@ function drawSide(P, o) {
   for (const n of ORDER3) s += cast(th, fingers[n], 2.2, L);
   s += part(th, { d: 2.6, w0: W, light: L, skip: (i, S) => S.s[i] < 0.22 });
   // knuckle creases on bent fingers (one per finger at the PIP, graphic)
-  for (const n of ['index', 'middle']) {
+  for (const n of []) {
     const c = P.f[n], d1 = V.norm(V.sub(c[1], c[0])), d2 = V.norm(V.sub(c[2], c[1]));
     const bend = Math.acos(Math.max(-1, Math.min(1, d1[0] * d2[0] + d1[1] * d2[1])));
     if (bend > 0.5) {
@@ -258,7 +269,7 @@ const POSES = {
       middle: [[6, -44], [-3, -56], [-13, -53], [-16, -47]], index: [[0, -45], [-8, -63], [-18, -62], [-21, -55]],
     };
     const shaft = (layerTop) => {
-      const x0 = -10.5, top = -112, bot = 2;
+      const x0 = -11.5, top = -96, bot = 22;
       let s = `<rect x="${f(x0 - 2.4)}" y="${f(top)}" width="4.8" height="${f(bot - top)}" rx="2.2" fill="#a07a48"/>` +
         `<rect x="${f(x0 + 0.4)}" y="${f(top)}" width="1.6" height="${f(bot - top)}" fill="#7a5a32" opacity="0.7"/>`;
       for (const yy of [-96, -70, -18]) s += `<rect x="${f(x0 - 2.4)}" y="${f(yy)}" width="4.8" height="1.4" fill="#6b4c28"/>`;
@@ -271,7 +282,7 @@ const POSES = {
     for (const n of ['pinky', 'ring']) back += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.2 });
     let front = '';
     for (const n of ['middle', 'index']) front += part(chain(F[n], FW[n]), { d: 2.2, w0: W * 0.9, light: L, skip: (i, S) => S.s[i] < 0.2 });
-    const th = chain([[5, -8], [-3, -24], [-7, -35], [-7, -43]], TW);
+    const th = chain([[6, -6], [-2, -19], [-8, -28], [-10, -36]], TW);  // thumb pad presses the shaft from the near side, below the index
     front += part(th, { d: 2.6, w0: W, light: L, skip: (i, S) => S.s[i] < 0.24 });
     return o.layer === 'back' ? back + shaft() : o.layer === 'front' ? front : back + shaft() + front;
   },
@@ -356,11 +367,12 @@ export function hand(pose, o = {}) {
   const ctx = { light: Ll, w0: (o.ink || Math.max(2.6, size * 0.0105)) / k, k, layer: o.layer || 'all', sleeveCol: o.sleeveCol };
   let body = '';
   if (pose === 'fist>open' || pose === 'fist' || pose === 'loose' || pose === 'open') {
-    const t = pose === 'fist' ? 0 : pose === 'loose' ? 1 : pose === 'open' ? 2 : Math.max(0, Math.min(2, o.t || 0));
-    const P = t <= 1 ? lerpPose(P1, P2, t) : lerpPose(P2, P3, t - 1);
+    // t: 0 fist, 0.35 release (designed in-between), 1 loose, 2 open; slight overshoot past 2 extrapolates
+    const t = pose === 'fist' ? 0 : pose === 'loose' ? 1 : pose === 'open' ? 2 : Math.max(0, Math.min(2.15, o.t || 0));
+    const P = t <= 0.35 ? lerpPose(P1, P1b, t / 0.35) : t <= 1 ? lerpPose(P1b, P2, (t - 0.35) / 0.65) : lerpPose(P2, P3, t - 1);
     body = drawSide(P, ctx);
   } else body = POSES[pose](ctx);
   const showSleeve = o.sleeve !== false && ctx.layer !== 'front';
-  const sl = showSleeve ? sleeveSVG(ctx, pose === 'stone' ? 38 : 0) : '';
+  const sl = showSleeve ? sleeveSVG(ctx, pose === 'stone' ? 38 : pose === 'brush' ? -55 : 0) : '';
   return `<g data-hand="${pose}" transform="translate(${f(o.x || 0)} ${f(o.y || 0)}) rotate(${f(rot)}) scale(${f(flip ? -k : k)} ${f(k)})">${body}${sl}</g>`;  // cuff over the wrist
 }

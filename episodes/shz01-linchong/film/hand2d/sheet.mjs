@@ -12,14 +12,13 @@ POSE_NAMES.forEach((p, i) => {
   const size = 420, x = CW / 2, y = CH - 150;
   if (p === 'grip') {
     s += hand(p, { x, y, size, layer: 'back' });
-    s += `<rect x="60" y="${y - size * 0.5 - 520}" width="${CW - 120}" height="520" fill="#F1E4C6" stroke="#b9a37c" stroke-width="2"/>`;
+    s += `<rect x="60" y="${y - size * 0.5 - 470}" width="${CW - 120}" height="470" fill="#F1E4C6" stroke="#b9a37c" stroke-width="2"/>`;
     s += hand(p, { x, y, size, layer: 'front', sleeve: false });
   } else if (p === 'shoulder') {
-    const k = size / 100;
-    s += `<path d="M40,${y - 330} C200,${y - 360} 520,${y - 360} ${CW - 40},${y - 330} L${CW - 40},${y + 140} L40,${y + 140}Z" fill="#5b5f6e"/>`;
-    s += hand(p, { x, y, size, layer: 'back', sleeve: false });
-    s += `<path d="M40,${y - 70 * k + 10} C220,${y - 66 * k - 40} 520,${y - 66 * k - 40} ${CW - 40},${y - 70 * k + 10} L${CW - 40},${y - 70 * k - 120} L40,${y - 70 * k - 120}Z" fill="#e9dfcc"/>`;
-    s += `<path d="M40,${y - 70 * k + 10} C220,${y - 66 * k - 40} 520,${y - 66 * k - 40} ${CW - 40},${y - 70 * k + 10}" stroke="#2A1C17" stroke-width="5" fill="none"/>`;
+    const k = size / 100, top = y - 64 * k;
+    const robe = `M40,${top + 40} C200,${top - 10} 520,${top - 10} ${CW - 40},${top + 40} L${CW - 40},${y + 160} L40,${y + 160}Z`;
+    s += `<path d="${robe}" fill="#5b5f6e" stroke="#2A1C17" stroke-width="5"/><clipPath id="robeclip"><path d="${robe}"/></clipPath>`;
+    s += `<g clip-path="url(#robeclip)">${hand(p, { x, y, size, layer: 'back', sleeve: false })}</g>`;
     s += hand(p, { x, y, size, layer: 'front' });
   } else if (p === 'stone') {
     const k = size / 100;
