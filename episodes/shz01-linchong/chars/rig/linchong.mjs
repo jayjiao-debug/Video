@@ -151,7 +151,8 @@ function faceFront(F, E, o = {}) {
   const C = COL, u = F.fw / 105;
   const L = (w) => `stroke="${C.line}" stroke-width="${f(w * u)}" stroke-linecap="round" stroke-linejoin="round"`;
   const turn = o.turn || 0; // features slide toward the turn side
-  const sh = (p, k = 1) => [p[0] + turn * 7 * u * k, p[1]];
+  const sh = (p, k = 1) => [p[0] + turn * 10 * u * k, p[1]];
+  const fore = (sgn) => 1 - (sgn * turn > 0 ? 0.34 : -0.05) * Math.min(1, Math.abs(turn)); // far side narrower
   let s = '';
   const add = (x) => (s += x);
   const id = uid('f');
@@ -205,7 +206,7 @@ function faceFront(F, E, o = {}) {
     const c0 = sgn < 0 ? F.eyeR : F.eyeL;
     const c = sh(c0, 1);
     const inw = -sgn; // direction toward the nose
-    const ew = 14.5 * u, eo = Math.max(0, E.eye);
+    const ew = 14.5 * u * fore(sgn), eo = Math.max(0, E.eye);
     const ci = [c[0] + inw * ew * 0.92, c[1] + 1.6 * u], co = [c[0] - inw * ew, c[1] - 1.2 * u];
     const lidH = 7.6 * u * Math.min(eo, 1.3), lowH = 5.2 * u * (eo > 0.05 ? 1 : 0.2) * (1 + Math.max(0, eo - 1) * 0.6);
     const u1 = [c[0] + inw * ew * 0.45, c[1] - lidH * 1.05], u2 = [c[0] - inw * ew * 0.45, c[1] - lidH * 1.1];
@@ -239,6 +240,7 @@ function faceFront(F, E, o = {}) {
     const b = sgn < 0 ? F.browR : F.browL;
     const inw = -sgn;
     let bi = sh(b[0], 0.95), bo = sh(b[1], 0.9);
+    bo = [bi[0] + (bo[0] - bi[0]) * fore(sgn), bo[1]];
     bi = [bi[0] + inw * (k < 0 ? -k * 2.2 : k * 0.8) * u, bi[1] + (k < 0 ? -k * 3.6 : -k * 8.5) * u];
     bo = [bo[0], bo[1] + (k < 0 ? k * 1.4 : k * 2.6) * u];
     const th = 5.4 * u;
@@ -734,6 +736,10 @@ export function lin(opt = {}) {
       if (SF.front) items.push([p.z + 0.05, `<g data-part="mouthLine" transform="${mstr(wm('head'))}">${SF.front}</g>`]);
     }
     if (/^hand/.test(n) && pose[`fist${side}`]) inner = fistFor(D, n, view, Href);
+    if (n === 'torso' && M.torso_clip) {
+      const cid = uid('tc');
+      inner = `<clipPath id="${cid}"><path d="M${M.torso_clip.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
+    }
     let g = `<g data-part="${n}" transform="${mstr(wm(n))}">${inner}</g>`;
     let z = n === 'head' && O.cangue ? 26 : p.z;
     if (costume === 'A' && /^arm._up$/.test(n) && opt.sleeve !== 'rigid' && p.pivot) {
@@ -811,14 +817,6 @@ function jointAngles(D, view, pose, flip) {
 function headBack(D, view, costume, E, pose, O) {
   const F = D.meta.face, u = F.fw / 105;
   let s = '';
-  if (view === 'front' && F.jaw && !(costume === 'C' && O.hat)) {
-    // hair gathered behind the ears, the same mass the profile shows behind the ear
-    for (const sg of [-1, 1]) {
-      const j = sg < 0 ? F.jaw[0] : F.jaw[F.jaw.length - 1];
-      const x0 = j[0] - sg * 2 * u, top = F.browR[1][1] - 6 * u, bot = j[1] + 12 * u;
-      s += `<path d="M${f(x0 + sg * 2 * u)},${f(top)} C${f(x0 + sg * 13 * u)},${f(top + 8 * u)} ${f(x0 + sg * 15 * u)},${f(bot - 22 * u)} ${f(x0 + sg * 9 * u)},${f(bot)} C${f(x0 + sg * 4 * u)},${f(bot + 3 * u)} ${f(x0)},${f(bot - 4 * u)} ${f(x0 - sg * 2 * u)},${f(bot - 10 * u)}Z" fill="${COL.hair}"/>`;
-    }
-  }
   if (costume === 'A' && F.rings && view === 'front' && O.rings) s += F.rings.map((c) => jadeRing(c, u, 3.6)).join('');
   if (costume === 'C' && F.hat && view === 'front' && O.hat) s += hatFront(F.hat, u, true);
 
@@ -831,7 +829,7 @@ function headExtras(D, view, costume, E, pose, O) {
   const tat = F.tattoo || (view === 'front' ? [F.eyeL[0] + 6 * u, F.eyeL[1] + 22 * u] : [F.ear[0] - 40 * u, F.ear[1] + 38 * u]);
   if (view === 'front') {
     s += faceFront(F, E, { turn: pose.headTurn || 0 });
-    if (O.tattoo > 0) s += `<g opacity="${f(Math.min(1, O.tattoo))}">${tattoo(tat, u)}</g>`;
+    if (O.tattoo > 0) s += `<g opacity="${f(Math.min(1, O.tattoo))}">${tattoo([tat[0] + (pose.headTurn || 0) * 8 * u, tat[1]], u)}</g>`;
     if (costume === 'C' && F.hat && O.hat) s += cordFront(F, u, E) + hatFront(F.hat, u, false);
     if (costume === 'C' && F.hat && !O.hat) s += hairCap(F, view, u);
   } else {

@@ -244,7 +244,7 @@ def build(view, debug=None):
     for k, v in out_parts.items():
         v['fills'] = [[ci(c), d] for c, d in v['fills']]
         v['inks'] = [[ci(c), w, d] for c, w, d in v['inks']]
-    meta = {kk: S[kk] for kk in ('chin', 'sole', 'origin_x', 'far') if kk in S}
+    meta = {kk: S[kk] for kk in ('chin', 'sole', 'origin_x', 'far', 'torso_clip') if kk in S}
     if S.get('arm_clip'):
         ac = S['arm_clip']
         cm = np.zeros(shp, bool)
