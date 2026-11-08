@@ -51,7 +51,7 @@ export async function loadTakes() {
 }
 
 // 沧州 location stamp (replaces the cut lines V20/V21): top-right, two lines, ≥ 120 px from the edge.
-function stamp(t) {
+export function stamp(t) {
   const a = 73.85, b = 77.2;
   if (t < a - 0.1 || t > b + 0.1) return '';
   const op = Math.min(ramp(t, a, a + 0.45), 1 - ramp(t, b - 0.4, b));

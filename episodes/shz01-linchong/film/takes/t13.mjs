@@ -542,7 +542,7 @@ function endCard(t) {
     return `<text x="${f2(960 + dx)}" y="${f2(y + 14 * (1 - k))}" text-anchor="middle" dominant-baseline="central" font-family="${font}" font-weight="700" font-size="${fs}" fill="${fill}" opacity="${f2(k)}" ${extra}>${str}</text>`;
   };
   s += `<g data-layer="text-end" data-z="90">`;
-  s += txt(142.27, 430, '《水浒人物志 · 壹 · 林冲》', 74, '#E2B865', 'LXGW WenKai', 'letter-spacing="3"');
+  s += txt(142.27, 430, '《林冲为什么要休妻？》', 74, '#E2B865', 'LXGW WenKai', 'letter-spacing="3"');   // v4 title (the searched question)
   // owner 2026-11-08: no closing question on the end card
   // follow pill
   const kp = fin(143.523);
@@ -552,7 +552,7 @@ function endCard(t) {
       `<text x="960" y="600" text-anchor="middle" dominant-baseline="central" font-family="Noto Sans CJK SC" font-weight="700" font-size="38" fill="#F2DDA6" letter-spacing="2">关注 Juno · 一起看懂世界</text></g>`;
   }
   s += txt(144.35, 735, '下回：鲁智深', 40, '#E9E1D0', 'LXGW WenKai', 'letter-spacing="4"');
-  s += txt(144.76, 940, '资料：《水浒传》一百二十回本 第七—十一、二十、八十、一百一十九回', 28, '#A99F8E', 'Noto Sans CJK SC', 'font-weight="400" letter-spacing="1"');
+  s += txt(144.76, 940, '资料：《水浒传》一百二十回本 第七—十一、二十回', 28, '#A99F8E', 'Noto Sans CJK SC', 'font-weight="400" letter-spacing="1"');
   s += '</g>';
   return s;
 }

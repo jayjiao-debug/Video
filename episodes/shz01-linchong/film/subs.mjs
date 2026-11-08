@@ -60,6 +60,20 @@ function rowSVG(row, y, gold, fs = 64) {
 export const SUB_DEFS = `<radialGradient id="subshade" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#0B0806" stop-opacity="0.42"/><stop offset="0.6" stop-color="#0B0806" stop-opacity="0.22"/><stop offset="1" stop-color="#0B0806" stop-opacity="0"/></radialGradient>` +
   `<filter id="subsoft" x="-10%" y="-40%" width="120%" height="180%"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#000" flood-opacity="0.55"/></filter>`;
 
+/** Subtitle for a line {id, text, a, b} of any timeline (the v4 cut builds its own list); gold = key words. */
+export function subtitleLine(l, t, opts = {}) {
+  if (!l || t < l.a || t >= l.b) return '';
+  const fin = l.a <= 0 ? 1 : clamp((t - l.a) / (4 / 30)), fout = clamp((l.b - t) / (5 / 30));
+  const op = Math.min(fin, fout);
+  const R = rows(l.text);
+  const yc = opts.yc ?? 890, lh = 80;
+  const y0 = yc - ((R.length - 1) * lh) / 2;
+  const wmax = Math.max(...R.map((r) => [...r].length)) * 66 + 120;
+  let s = `<ellipse cx="960" cy="${yc}" rx="${f2(wmax / 2 + 60)}" ry="${f2(R.length * 52 + 34)}" fill="url(#subshade)"/>`;
+  s += `<g filter="url(#subsoft)">${R.map((r, i) => rowSVG(r, y0 + i * lh, opts.gold || [])).join('')}</g>`;
+  return `<g data-layer="text-sub" data-z="900" data-sub="${l.id}" opacity="${f2(op)}">${s}</g>`;
+}
+
 /** Subtitle overlay for global time t ('' when none). opts.yc moves the band centre (default 890). */
 export function subtitle(t, opts = {}) {
   const l = LINES.find((x) => t >= x.a && t < x.b);

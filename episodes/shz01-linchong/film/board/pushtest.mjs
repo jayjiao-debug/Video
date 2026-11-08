@@ -191,3 +191,4 @@ export function probe(i) {
   const w = (p) => [p[0] + e.tx, p[1] + e.ty];
   return { head: w(info.head), wrist: w(info.wristNear), hip: w(info.hip), stone: e.stoneX, ankN: w(info.legNear.ankle), ankF: w(info.legFar.ankle), toeN: w(info.legNear.toe), toeF: w(info.legFar.toe) };
 }
+export { CONTACT_T };
