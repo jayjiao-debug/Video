@@ -208,6 +208,11 @@ function s31Cam(t) {
   return camAt(p, q, z);
 }
 
+function poolScreen(t) {
+  const slide = 30 * ramp(t, T31, T32, E.lin);
+  return toScreen(s31Cam(t), 1, [665 + slide, 945]);
+}
+
 function s31(t) {
   const c = s31Cam(t);
   let s = `<defs>${lg('t13sh', [[0, '#FFF2D6', 0], [0.5, '#FFF2D6', 1], [1, '#FFF2D6', 0]], 0, 0, 1, 0)}` +
@@ -236,20 +241,20 @@ function s31(t) {
   s += L(c, 1, lm, { id: 't13lmap', bleed: 'all', z: 11 });
   s += L(c, 1, light, { id: 't13light', bleed: 'all', z: 12 });
   s += L(c, 1, FURN, { id: 't13bed', z: 20 });
-  s += L(c, 1, SPEARSVG, { id: 't13spear', z: 22 });
+  s += L(c, 1, SPEARSVG, { id: 't13spear', z: 22, op: ramp(t, 125.4, 125.75, E.inOut) });
   // hat highlight in the light (on top of the bed layer)
   s += L(c, 1, `<ellipse cx="${HAT.cx - 8}" cy="${HAT.y - 24}" rx="34" ry="16" fill="#FFF4DC" opacity="${f2(0.18 + 0.2 * glowUp)}"/>`, { id: 't13hl', z: 23 });
   // dust motes in the beam (screen space, clipped to the shaft)
   const sp = P1.map((p) => toScreen(c, 1, p));
   s += `<defs><clipPath id="t13shc"><path d="M${sp.map((p) => p.map(f2).join(',')).join(' L')}Z"/></clipPath></defs>`;
   s += `<g clip-path="url(#t13shc)">${motes(t, { seed: 31, n: 46, area: [300, 0, 1700, 1080], color: '#FFF4DC', op: 0.8, vx: -6, vy: 2 })}</g>`;
-  // light bloom into the 休书 (T21): the pool swells to a glow while the room falls to blue-grey
+  // light bloom into the 休书 (T21): the room falls to blue-grey while the pool brightens (the morph is in frame())
   if (t > 127.9) {
     const dk = ramp(t, 127.9, T32 + 0.3, E.inOut);
     const ps = toScreen(c, 1, pc);
-    s += `<rect x="-10" y="-10" width="1940" height="1100" fill="#2A2E38" opacity="${f2(0.78 * dk)}" data-layer="t13dim" data-z="40"/>`;
-    const b = ramp(t, 128.2, T32 + 0.35, E.in);
-    s += `<ellipse cx="${f2(ps[0])}" cy="${f2(ps[1] - 120 * b)}" rx="${f2(240 + 1100 * b)}" ry="${f2(70 + 700 * b)}" fill="url(#t13bloom)" opacity="${f2(clamp(0.5 * dk + 0.6 * b))}"/>`;
+    s += `<rect x="-10" y="-10" width="1940" height="1100" fill="#2A2E38" opacity="${f2(0.72 * dk)}" data-layer="t13dim" data-z="40"/>`;
+    const b = ramp(t, 128.0, 128.5, E.in);
+    s += `<ellipse cx="${f2(ps[0])}" cy="${f2(ps[1])}" rx="${f2(240 + 120 * b)}" ry="${f2(70 + 40 * b)}" fill="url(#t13bloom)" opacity="${f2(0.45 * dk + 0.5 * b)}"/>`;
   }
   return s;
 }
@@ -439,7 +444,7 @@ function s32cam(t) {
 
 function paperLayer(t, c, opts = {}) {
   // ink of the L8 text: dims while the promise is written, lifts off at the release
-  const inkL8 = t < REL ? lerp(1, 0.3, ramp(t, 133.85, 134.35)) : 0.3 * (1 - ramp(t, REL, REL + 0.3, E.in));
+  const inkL8 = t < REL ? lerp(1, 0.2, ramp(t, 133.55, 134.15)) : 0.2 * (1 - ramp(t, REL, REL + 0.3, E.in));
   const glow = 0.55 + 0.45 * ramp(t, T32, 129.0) + 0.2 * ramp(t, REL, REL + 0.5);
   let s = `<g transform="${sheetTf}">`;
   s += `<rect x="-60" y="-60" width="${SH.w + 120}" height="${SH.h + 120}" rx="60" fill="url(#t13halo)"/>`;
@@ -499,13 +504,16 @@ function s32(t) {
   return s;
 }
 
+const FISTC = [1470, 384], FISTS = 330, FISTR = -14;   // right of the subtitle block: forearm and sleeve angle to the lower right
 function fistLayer(t, still = false) {
   const k = ramp(t, 137.2, 138.45, (x) => 1 - Math.pow(1 - x, 2.4));
-  const y = lerp(1500, 420, k);
+  const y = lerp(1560, FISTC[1], k);
   const tr = still ? [0, 0] : [noise1(t * 8, 4) * 1.5, noise1(t * 8 + 11, 5) * 1.5];
   const tight = ramp(t, 141.03, 141.3, E.out);
   const sc = 1 - 0.025 * tight;
-  return `<g data-layer="t13fist" data-z="30" transform="translate(${f2(tr[0])} ${f2(tr[1])})">${fistDraw(1290, y, 360 * sc, 0, -4, { id: 't13fs' })}</g>`;
+  // warm backlight behind the fist so it reads as one strong shape against the haze
+  const bl = `<defs>${rg('t13fbl', [[0, '#FFF1D2', 0.8], [0.45, '#F6DFB4', 0.42], [1, '#E3D3B5', 0]])}</defs><ellipse cx="${FISTC[0] - 10}" cy="${f2(y + 10)}" rx="430" ry="400" fill="url(#t13fbl)" opacity="${f2(k)}"/>`;
+  return `<g data-layer="t13fist" data-z="30">${bl}<g transform="translate(${f2(tr[0])} ${f2(tr[1])})">${fistDraw(FISTC[0], y, FISTS * sc, 0, FISTR, { id: 't13fs', light: 0.6 })}</g></g>`;
 }
 
 // ======================================================================= END card
@@ -573,18 +581,36 @@ function sealStamp(t) {
 }
 
 export default {
-  enter: { a: 124.78, b: 125.62, type: 'dissolve', ease: E.inOut },
+  // window-frame dissolve from T12: the window rectangle (≈ 982–1500 × 168–791, T12 at 124.8) changes first and
+  // holds its place; the rest of the room follows, the left side (his profile) last, so nothing crosses his face.
+  enter: {
+    a: 124.78, b: 125.62, type: 'mask',
+    mask(t) {
+      const p = E.inOut(clamp((t - 124.78) / 0.84));
+      const g = (v) => { const c = Math.round(255 * clamp(v)); return `rgb(${c},${c},${c})`; };
+      const pw = clamp(p * 1.8), pr = p, pl = clamp((p - 0.72) / 0.28);
+      return `<linearGradient id="t13dm" gradientUnits="userSpaceOnUse" x1="300" y1="0" x2="1150" y2="0"><stop offset="0" stop-color="${g(pl)}"/><stop offset="1" stop-color="${g(pr)}"/></linearGradient>` +
+        `<rect x="-10" y="-10" width="1940" height="1100" fill="url(#t13dm)"/><rect x="976" y="162" width="530" height="636" fill="${g(pw)}"/>`;
+    },
+  },
   noBrand: (t) => t >= 141.8,
   frame(t) {
-    if (t < T32) return s31(t);
+    if (t < 128.3) return s31(t);
     let s = '';
-    if (t < T32 + 0.55) {
-      // light bloom hand-over: the pool's glow swells over everything, the 休书 night emerges from inside it
-      const k = ramp(t, T32 - 0.05, T32 + 0.22, E.inOut);
-      if (k < 1) s += s31(Math.min(t, T32 + 0.3));
-      s += k < 1 ? `<g opacity="${f2(k)}">${s32(t)}</g>` : s32(t);
-      const g = t < T32 + 0.08 ? ramp(t, T32 - 0.2, T32 + 0.08, E.in) : 1 - ramp(t, T32 + 0.08, T32 + 0.55, E.out);
-      s += `<defs>${rg('t13bl2', [[0, '#FFF6E2', 1], [0.6, '#FFEFD0', 0.85], [1, '#F2DDB4', 0.55]], 0.42, 0.62, 0.8)}</defs><rect width="1920" height="1080" fill="url(#t13bl2)" opacity="${f2(0.82 * g)}"/>`;
+    if (t < 128.95) {
+      // light bloom (T21): the floor light pool grows into the glowing 休书 over 15 frames (128.40–128.90)
+      const r = ramp(t, 128.36, 128.92, E.sine);
+      const p0 = poolScreen(Math.min(t, 128.9));
+      const cc = mix(p0, [1080, 470], r);
+      const rx = lerp(180, 1750, Math.pow(r, 1.15)), ry = lerp(55, 1300, Math.pow(r, 1.15));
+      s += s31(t);
+      const op32 = ramp(t, 128.32, 128.52, E.inOut);
+      s += `<defs><radialGradient id="t13mg" gradientUnits="userSpaceOnUse" cx="${f2(cc[0])}" cy="${f2(cc[1])}" r="${f2(rx)}" gradientTransform="translate(${f2(cc[0])} ${f2(cc[1])}) scale(1 ${f2(ry / rx)}) translate(${f2(-cc[0])} ${f2(-cc[1])})">` +
+        `<stop offset="0" stop-color="#fff"/><stop offset="0.62" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>` +
+        `<mask id="t13morph" maskUnits="userSpaceOnUse" x="-10" y="-10" width="1940" height="1100"><rect x="-10" y="-10" width="1940" height="1100" fill="url(#t13mg)"/></mask></defs>`;
+      s += `<g mask="url(#t13morph)" opacity="${f2(op32)}">${s32(t)}</g>`;
+      const g = Math.sin(Math.PI * clamp((t - 128.3) / 0.65));
+      s += `<defs>${rg('t13bl2', [[0, '#FFF6E2', 0.9], [0.5, '#FFEFD0', 0.45], [1, '#F2DDB4', 0]])}</defs><ellipse cx="${f2(cc[0])}" cy="${f2(cc[1])}" rx="${f2(rx * 0.9 + 120)}" ry="${f2(ry * 0.9 + 60)}" fill="url(#t13bl2)" opacity="${f2(0.6 * g)}"/>`;
       return s;
     }
     if (t < 141.45) return s32(t) + (t >= 140.95 ? sealStamp(t) : '');
