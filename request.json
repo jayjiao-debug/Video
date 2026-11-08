@@ -1,11 +1,11 @@
 {
- "id": "shz01-vo-02",
+ "id": "shz01-vo-03",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "V03b",
+   "name": "W01",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -13,10 +13,10 @@
     "similarity_boost": 0.8,
     "style": 0.35
    },
-   "text": "你只说：我是好意。怕自己回不来，误了她一辈子。"
+   "text": "东京八十万禁军教头林冲，为因身犯重罪，断配沧州，"
   },
   {
-   "name": "V03c",
+   "name": "W02",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -24,10 +24,10 @@
     "similarity_boost": 0.8,
     "style": 0.35
    },
-   "text": "你只说：我是好意。怕自己回不来，误了她一辈子。"
+   "text": "情愿立此休书，任从改嫁。"
   },
   {
-   "name": "V29b",
+   "name": "W03",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -35,10 +35,10 @@
     "similarity_boost": 0.8,
     "style": 0.35
    },
-   "text": "又一个雪夜，你一个人，上了梁山。"
+   "text": "这是林冲留给妻子的休书。"
   },
   {
-   "name": "V29c",
+   "name": "W04",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -46,7 +46,392 @@
     "similarity_boost": 0.8,
     "style": 0.35
    },
-   "text": "又一个雪夜，你一个人，上了梁山。"
+   "text": "成亲三年，两人没红过一次脸。"
+  },
+  {
+   "name": "W05",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他为什么要休了她？"
+  },
+  {
+   "name": "W06",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "那时候，他有一身本事，有一个家。"
+  },
+  {
+   "name": "W07",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "直到那天在岳庙，有人调戏他的娘子。"
+  },
+  {
+   "name": "W08",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他一把扳过那人，拳头举起来——"
+  },
+  {
+   "name": "W09",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "却认出，那是上司高太尉的干儿子。"
+  },
+  {
+   "name": "W10",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "拳头，软了。"
+  },
+  {
+   "name": "W11",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "连最好的朋友陆谦，也站到了他们那边。"
+  },
+  {
+   "name": "W12",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "一把宝刀，把他引进了白虎节堂。"
+  },
+  {
+   "name": "W13",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "刺了面，押往沧州。"
+  },
+  {
+   "name": "W14",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "临走前，他请人写了这封休书。"
+  },
+  {
+   "name": "W15",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他怕自己死在路上，"
+  },
+  {
+   "name": "W16",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "更怕高衙内逼她，误了她一辈子。"
+  },
+  {
+   "name": "W17",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "她哭着问：我清清白白，你为什么不要我？"
+  },
+  {
+   "name": "W18",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他只说：我是好意。"
+  },
+  {
+   "name": "W19",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "岳父说：放你回来时，依旧夫妻完聚。"
+  },
+  {
+   "name": "W20",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "为了这句话，他忍着活下去。"
+  },
+  {
+   "name": "W21",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "沧州下了大雪，压塌了他的草屋。"
+  },
+  {
+   "name": "W22",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他躲进山神庙，草料场却烧了起来。"
+  },
+  {
+   "name": "W23",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "门外是陆谦的声音："
+  },
+  {
+   "name": "W24",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "烧死了，拾他一两块骨头回去交差。"
+  },
+  {
+   "name": "W25",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "回不去了。"
+  },
+  {
+   "name": "W26",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他一把拽开庙门。"
+  },
+  {
+   "name": "W27",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "一枪戳倒差拨，再一枪，追倒了逃跑的富安。"
+  },
+  {
+   "name": "W28",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "陆谦被他掀翻在雪里，刀，就搁在脸上。"
+  },
+  {
+   "name": "W29",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "杀人可恕，情理难容！"
+  },
+  {
+   "name": "W30",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "这一回，他没有再忍。"
+  },
+  {
+   "name": "W31",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "再后来，他落草梁山。"
+  },
+  {
+   "name": "W32",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他想接娘子上山，却一拖再拖。"
+  },
+  {
+   "name": "W33",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "派去的人回来说：娘子被逼自尽，已故半载。"
+  },
+  {
+   "name": "W34",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他哭了。"
+  },
+  {
+   "name": "W35",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "那封休书，没能护住她。"
+  },
+  {
+   "name": "W36",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "他立下它，只是想让她好好活着。"
+  },
+  {
+   "name": "W37",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "从此，他心里再没有可挂念的人。"
+  },
+  {
+   "name": "W38",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "依旧夫妻完聚——"
+  },
+  {
+   "name": "W39",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "text": "这句话，他终究没能等到。"
   }
  ]
 }
