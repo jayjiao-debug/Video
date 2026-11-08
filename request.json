@@ -1,14 +1,57 @@
 {
- "id": "vasa-vo-test-04",
+ "id": "vasa-vo-test-05",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01_female_a",
+   "name": "07_female_c",
    "lang": "zh",
    "gender": "female",
    "accent": "standard",
+   "pick": 2,
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4,
+    "speed": 1.1
+   },
+   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
+  },
+  {
+   "name": "08_female_d",
+   "lang": "zh",
+   "gender": "female",
+   "accent": "standard",
+   "pick": 3,
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4,
+    "speed": 1.1
+   },
+   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
+  },
+  {
+   "name": "09_female_e",
+   "lang": "zh",
+   "gender": "female",
+   "accent": "standard",
+   "pick": 4,
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4,
+    "speed": 1.1
+   },
+   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
+  },
+  {
+   "name": "10_documentary",
+   "lang": "zh",
+   "gender": "male",
+   "accent": "standard",
+   "search": "documentary",
    "pick": 0,
    "settings": {
     "stability": 0.45,
@@ -19,70 +62,11 @@
    "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
   },
   {
-   "name": "02_female_b",
-   "lang": "zh",
-   "gender": "female",
-   "accent": "standard",
-   "pick": 1,
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4,
-    "speed": 1.1
-   },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
-  },
-  {
-   "name": "03_male_f",
+   "name": "11_old",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
-   "pick": 5,
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4,
-    "speed": 1.1
-   },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
-  },
-  {
-   "name": "04_male_g",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "pick": 6,
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4,
-    "speed": 1.1
-   },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
-  },
-  {
-   "name": "05_story",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "use_case": "narrative_story",
-   "age": "middle_aged",
-   "pick": 0,
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4,
-    "speed": 1.1
-   },
-   "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。"
-  },
-  {
-   "name": "06_young",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "use_case": "social_media",
-   "age": "young",
+   "age": "old",
    "pick": 0,
    "settings": {
     "stability": 0.45,
