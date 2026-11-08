@@ -136,6 +136,7 @@ C_FRONT = dict(
         handL=dict(z=22, parent='armL_lo', pivot=(662, 806), keep=[dict(pred='skin')], poly=[(626, 790), (730, 790), (732, 930), (626, 930)]),
     ),
     # arms are drawn in front of the cloak, but hidden where the cloak's side drapes cover them
+    ink_recolour=[dict(poly=[(356, 240), (384, 240), (384, 298), (356, 298)], colour='#a36c49', maxw=0.9), dict(poly=[(473, 240), (501, 240), (501, 298), (473, 298)], colour='#a36c49', maxw=0.9)],
     arm_clip=dict(part='cloak', polys=[[(140, 330), (372, 330), (346, 420), (300, 700), (250, 760), (236, 960), (140, 960)], [(716, 330), (486, 330), (512, 420), (556, 700), (606, 760), (620, 960), (716, 960)]]),
     erase=[
         dict(poly=[(160, 40), (700, 40), (700, 214), (160, 214)], mode='bg'),  # reference hat (peaked) -> code hat
@@ -185,6 +186,7 @@ C_SIDE = dict(
     ),
     far=dict(shoulder=(456, 420), rest=dict(shoulder=13, elbow=3)),
     holes=[[(420, 1270), (476, 1270), (470, 1440), (430, 1440)]],  # background seen between the boots
+    ink_recolour=[dict(poly=[(392, 208), (430, 208), (430, 270), (392, 270)], colour='#a36c49', maxw=0.9)],
     erase=[
         dict(poly=[(200, 30), (700, 30), (700, 196), (200, 196)], mode='bg'),  # reference hat -> code hat
         dict(poly=[(200, 180), (330, 180), (330, 240), (200, 240)], mode='bg', pred='notskin'),
