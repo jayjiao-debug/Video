@@ -1,6 +1,6 @@
 # Vasa (1628): render farm
 
-Render farm for the Vasa warship short (the whole film, 73 s, 2196 frames at 1080x1920). Same flow as the other `render-farm-*` branches:
+Render farm for the Vasa warship short (the whole film, v3: 75.1 s, 2254 frames at 1080x1920). Same flow as the other `render-farm-*` branches:
 
 - Edit `render.json` and push to `render-farm-vasa` to start a render.
 - Frames are split into chunks, each rendered on its own GitHub Actions runner (`--gl=swangle`).

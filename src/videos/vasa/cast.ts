@@ -8,7 +8,7 @@ import {
   Pen, bodyFront, bodySide, fxNote, fxBurst, fxCreak, fxShadow, fxContact, fxPuff, fxSplash, fxRing, fxPlank, Outfit, Expr, FrontOpts, SideOpts, SKINS,
 } from "./toon";
 import { FPS, D0, SHOTS, V3, smooth, clamp01, crowdC, deckY, WHISTLE, STOP, ZS, HALF_BEAM, halfW, shipToWorld, lin, Pose, AT_QUAY, storyT, GUST1, GUST2, HAT } from "./story";
-import { NICHE, DESIGNER_CHAIR } from "./sets";
+import { NICHE, DESIGNER_CHAIR, toyLandT } from "./sets";
 import { LIGHTS } from "./lights";
 import { NOINK } from "./ink";
 import { cardShade, blobMaterial, CARD_K } from "./cardshade";
@@ -184,7 +184,7 @@ const lidAt = (t: number, i: number, swaps: number[] = []) => {
   for (let n = 0; s <= f && n < 400; n++) {
     const k = f - s;
     if (k >= 0 && k < 4) return LID[k];
-    s += Math.round(15 + 54 * hh(i * 31 + n, 13)); // next blink 0.5-2.3 s later
+    s += Math.round(66 + 66 * hh(i * 31 + n, 13)); // v3: next blink 2.2-4.4 s later (v2's 0.5-2.3 s made a busy frame twitch)
   }
   return 0;
 };
@@ -394,7 +394,7 @@ const fxLetter = (p: Pen, u: number) => {
   if (u > 0.6) {
     g.save(); g.beginPath(); g.rect(64, y0 + 30, 672, h - 60); g.clip();
     g.fillStyle = INKC; g.textAlign = "center"; g.textBaseline = "middle";
-    g.font = `700 70px ${FONT}`; g.fillText("国 王 令", 400, 190);
+    g.font = `900 104px ${FONT}`; g.fillText("国王令", 400, 165);
     g.fillRect(180, 250, 440, 6);
     g.font = `900 260px ${FONT}`; g.fillText("严", 400, 450); g.fillText("查", 400, 720);
     g.restore();
@@ -490,11 +490,24 @@ const fxSwoosh = (p: Pen, t: number) => {
   g.lineCap = "round";
   for (let k = 0; k < 3; k++) { g.strokeStyle = `rgba(255,250,235,${a.toFixed(3)})`; g.lineWidth = 14 - k * 3; g.beginPath(); g.arc(60, 150, 120 + k * 40, -0.6, 0.6); g.stroke(); }
 };
-/** a wide felt hat seen from above, floating, on a 400 x 400 canvas */
+/** v3 (owner: "topside up for better recognition"): an officer's wide felt hat floating crown up, seen from the
+ *  shot's high three-quarter angle, on a 500 x 400 canvas; the brim's centre line is at y = 285 (the waterline) */
 const fxHat = (p: Pen) => {
-  p.ell(200, 210, 170, 150, "#5a4030", 9);
-  p.ell(200, 200, 92, 82, "#3a2a22", 8);
-  p.band([[120, 150], [250, 110], [340, 175]], "#c0353a", 34, 7, "round");
+  const felt = "#2a2220", rim = "#3b302a";
+  // plume first (behind the crown), sweeping back to the left
+  const pl: [number, number][] = [];
+  for (let i = 0; i <= 14; i++) { const u = i / 14; pl.push([300 - 250 * u, 150 - 110 * Math.sin(Math.PI * u * 0.8) + 40 * u * u]); }
+  for (let i = 14; i >= 0; i--) { const u = i / 14; pl.push([300 - 230 * u, 180 - 70 * Math.sin(Math.PI * u * 0.8) + 45 * u * u]); }
+  p.poly(pl, "#f1ece0", 7);
+  for (let k = 1; k <= 4; k++) p.stroke([[290 - 40 * k, 160 - 14 * k], [270 - 40 * k, 120 - 4 * k]], 4, "#cfc6b4");
+  p.ell(250, 285, 228, 80, rim, 9); // brim
+  p.ell(250, 278, 200, 62, "#241c19", 0); // its shadowed top round the crown
+  const dome: [number, number][] = [];
+  for (let i = 0; i <= 24; i++) { const th = (Math.PI * i) / 24; dome.push([250 + 112 * Math.cos(th) * (1 - 0.12 * Math.sin(th)), 282 - 170 * Math.sin(th) ** 0.7]); }
+  for (let i = 0; i <= 12; i++) { const th = Math.PI + (Math.PI * i) / 12; dome.push([250 + 112 * Math.cos(th), 282 - 22 * Math.sin(th)]); }
+  p.poly(dome, felt, 9);
+  p.clip(dome, () => { p.band([[120, 252], [380, 252]], "#d9a93a", 26, 4); p.ell(205, 170, 30, 70, "rgba(255,255,255,0.10)", 0); });
+  p.poly(dome, null, 9);
 };
 
 /** launch day under way: crew and families on deck waving (hidden once she heels far) */
@@ -567,7 +580,8 @@ const kingShot = (cam: CamInfo, t: number, out: Stage) => {
 /** still water after the sink: one floating hat, rings, a few planks */
 const afterSink = (t: number, out: Stage) => {
   const [hx, , hz] = HAT, bob = 0.02 * Math.sin(t * 2.2);
-  out.fx.push({ key: "hatTop", cw: 400, ch: 400, draw: fxHat, x: hx, y: 0.05 + bob, z: hz, w: 0.75, h: 0.75, flat: true, rot: 0.3 + 0.05 * t });
+  // a billboard tilted with the camera: the brim's centre sits on the water, the rest of the brim below it is hidden by the water
+  out.fx.push({ key: "hat34", cw: 500, ch: 400, draw: fxHat, x: hx, y: 0.13 + bob, z: hz, w: 0.85, h: 0.68, rot: 0.06 * Math.sin(t * 1.3) });
   for (let k = 0; k < 2; k++) {
     const u = q(((t * 0.35 + k * 0.5) % 1), 30);
     out.fx.push({ key: `ring${u}`, cw: 600, ch: 600, draw: (p) => fxRing(p, u), x: hx, y: 0.03, z: hz, w: 2.6, h: 2.6, flat: true });
@@ -586,7 +600,7 @@ const toyFx = (key: string, t: number, out: Stage) => {
     const a = clamp01((t - 48.85) / 0.4), b = clamp01((t - 50.25) / 0.4);
     out.fx.push({ key: `cut${q(a, 10)}|${q(b, 10)}`, cw: 1200, ch: 1900, draw: (p) => fxCutaway(p, q(a, 10), q(b, 10)), x: 0.55, y: 0.135, z: 0.0, w: 0.146, h: 0.231 });
   } else if (key === "s5_flip") {
-    const land = 52.55 + Math.acosh(1.42 / 0.03) / 3.2, u = (t - land) / 0.3;
+    const land = toyLandT(), u = (t - land) / 0.3;
     if (u > 0 && u < 1) out.fx.push({ key: `burst${q(u, 30)}`, cw: 500, ch: 500, draw: (p) => fxBurst(p, q(u, 30)), x: 0.13, y: 0.02, z: 0.03, w: 0.12, h: 0.12 });
   }
 };
@@ -605,7 +619,8 @@ const inquiry = (cam: CamInfo, key: string, t: number, out: Stage) => {
     { mode: "stand", expr: kingExpr, blink: 0 }, {}));
   if (key === "s6_letter") {
     const u = smooth((t - 54.65) / 0.4);
-    out.fx.push({ key: `letter${q(u, 20)}`, cw: 800, ch: 1060, draw: (p) => fxLetter(p, q(u, 20)), x: 0, y: 1.08, z: -1.0, w: 0.66, h: 0.875 });
+    // v3: the order beside the king in his niche (both readable, clear of the subtitles)
+    out.fx.push({ key: `letter${q(u, 20)}`, cw: 800, ch: 1060, draw: (p) => fxLetter(p, q(u, 20)), x: -0.26, y: 1.75, z: -1.1, w: 0.453, h: 0.6 });
     return;
   }
   if (key === "s6_chair") {

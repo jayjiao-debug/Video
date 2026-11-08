@@ -3,11 +3,23 @@
 // Camera grammar is the bridge short's: smootherstep glides, creeping push-ins on holds, flip kicks on impacts.
 export const FPS = 30;
 export const T0 = 0; // voice time of frame 0
-export const TOTAL = 2196; // 73.2 s
+// v3: line 9 is 0.3 s longer, so the film runs on its own clock: voice 26.9-29.0 (the quay crowd, s3_e) is played over
+// 2.4 s of film and everything after it comes 0.3 s later. The story code below stays in voice time; Bridge.tsx turns
+// each film frame into a (fractional) voice frame with storyFrame().
+export const W_A = 26.9, W_B = 29.0, W_D = 0.3;
+export const voiceOfFilm = (T: number) => (T < W_A ? T : T < W_B + W_D ? W_A + ((T - W_A) * (W_B - W_A)) / (W_B - W_A + W_D) : T - W_D);
+export const filmOfVoice = (t: number) => (t < W_A ? t : t < W_B ? W_A + ((t - W_A) * (W_B - W_A + W_D)) / (W_B - W_A) : t + W_D);
+/** v3 ending: the last line over the crew running on deck, then the opening shot again, cut just before the first gun
+ *  fires, so the end leads straight back into frame 0 when the video loops */
+export const ECHO_T = 72.85, ECHO_END = 74.85;
+export const TOTAL = Math.round(ECHO_END * 30); // voice frames (the story's own length)
+export const FILM_FRAMES = Math.round(filmOfVoice(ECHO_END) * 30); // 2255 film frames, 75.17 s
 export const D0 = 6.0; // quay top (m); water at y = 0
 export type V3 = [number, number, number];
 export const tv = (f: number) => T0 + f / FPS; // frame -> voice time
 export const fv = (t: number) => Math.round((t - T0) * FPS); // voice time -> frame
+/** film frame -> voice frame (fractional) */
+export const storyFrame = (filmF: number) => voiceOfFilm(filmF / FPS) * FPS;
 
 export const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 export const smooth = (x: number) => { const u = clamp01(x); return u * u * (3 - 2 * u); };
@@ -30,7 +42,7 @@ export const deckY = (x: number) => (x < -15 ? 10.5 : x < -8 ? 8.0 : x < 10 ? 5.
 /** top of the bulwark (sheer line) */
 export const sheerY = (x: number) => lin([[-20, 13.2], [-15.2, 12.2], [-14.8, 11.6], [-8.2, 10.0], [-7.8, 6.7], [9.8, 6.7], [10.2, 8.1], [17, 8.4], [20, 9.2]], x);
 const SEC: [number, number][] = [[-4.6, 0.12], [-3.2, 0.58], [-1.6, 0.87], [0, 0.97], [1.6, 1.0], [3.2, 0.97], [5.2, 0.9], [8, 0.84], [14, 0.8]];
-const plan = (x: number) => (x < -17 ? 0.9 + 0.1 * smooth((x + 20) / 3) : x <= 7 ? 1 : Math.sqrt(Math.max(0, 1 - ((x - 7) / 13.2) ** 2)));
+const plan = (x: number) => (x < -17 ? 0.9 + 0.1 * smooth((x + 20) / 3) : x <= 7 ? 1 : Math.sqrt(Math.max(0, 1 - ((x - 7) / 13.0) ** 2))); // v3: closes to the stem at x = 20 (v2 left the bow open)
 /** half-width of the hull at (x, y) */
 export const halfW = (x: number, y: number) => HALF_BEAM * plan(x) * lin(SEC, y);
 /** where the ship is: roll about x through ROLL_Y, then moved to (x, y, z) (z = centreline) */
@@ -115,7 +127,8 @@ const ROWS: Row[] = [
   ["s6_chair", 59.15, "inquiry", "hall", "day"],    // 20
   ["s6_up", 61.64, "inquiry", "hall", "day"],       // 21
   ["s6_promo", 65.02, "inquiry", "hall", "day"],    // 22
-  ["s7_end", 69.5, "freeze", "harbour", "day"],        // 23
+  ["s7_end", 69.5, "freeze", "harbour", "day"],        // 23: v3 the crew keeps running (owner: not a freeze)
+  ["s1_echo", ECHO_T, "sail", "harbour", "day"],       // bookend: the opening shot again, up to the first gun
 ];
 export const SHOTS: ShotDef[] = ROWS.map(([key, t0, crowd, set, light, local], i) => ({
   id: i + 1, key, a: fv(t0), b: i + 1 < ROWS.length ? fv(ROWS[i + 1][1]) : TOTAL, light, crowd, set, local,
@@ -124,7 +137,7 @@ export const SHOTS: ShotDef[] = ROWS.map(([key, t0, crowd, set, light, local], i
 export const SH = Object.fromEntries(SHOTS.map((s) => [s.key, s])) as Record<string, ShotDef>;
 export const XFADE: Record<number, number> = {};
 export const FLASH_AT = -100;
-export const BLACK_AT = 72.85; // cut to black after the last word
+export const BLACK_AT = 999; // v3: no black at the end, the last shot leads back into the first
 export const shotAt = (f: number) => SHOTS.find((s) => f >= s.a && f < s.b) ?? SHOTS[SHOTS.length - 1];
 export const layersAt = (f: number): { id: number; alpha: number }[] => [{ id: shotAt(f).id, alpha: 1 }];
 
@@ -148,10 +161,11 @@ const s4Pose = (t: number): Pose => ({
   y: spl([[34.0, 0], [36.2, -0.5], [37.2, -1.4], [38.2, -4], [39.4, -14], [40.0, -22]], t),
 });
 export const GUST1 = 29.25, GUST2 = 32.35;
-/** the frozen moment for the last shot: mid-run on the second lap */
-export const FREEZE_T = 17.25;
-/** voice time the ship and crowd are posed at in shot s (rewind and freeze remap it) */
-export const storyT = (s: ShotDef, t: number) => (s.key === "s1_rewind" ? rewindT(t) : s.key === "s7_end" ? FREEZE_T : t);
+/** the last line replays the running test from the first lap, live (v2 froze it) */
+export const END_RUN0 = 16.0;
+/** voice time the ship and crowd are posed at in shot s (rewind, the replayed run and the bookend remap it) */
+export const storyT = (s: ShotDef, t: number) =>
+  s.key === "s1_rewind" ? rewindT(t) : s.key === "s7_end" ? END_RUN0 + (t - 69.5) : s.key === "s1_echo" ? t - ECHO_END : t;
 export const poseAt = (s: ShotDef, t: number): Pose => {
   const k = s.key, tt = storyT(s, t);
   if (k.startsWith("s1_") && k !== "s1_officers") return s1Pose(tt);
@@ -228,15 +242,21 @@ const S5T = (f: number) => dolly([0.08, 0.125, 0.62], [0.01, 0.075, 0], pushK(f,
 const S5C = (f: number) => dolly([0.55, 0.42, 0.44], [0.55, 0.13, 0], pushK(f, F(47.36), 0.0012), { fov: 34 });
 const S5F = (f: number) => dolly([0.1, 0.12, 0.66], [0.05, 0.07, 0], pushK(f, F(52.41), 0.0015), { fov: 30 });
 // ---- S6 ---- (hall: long table along x at z = -2.5)
-const S6L = (f: number) => dolly([0, 1.6, 0.9], [0, 1.05, -1.0], pushK(f, F(54.6), 0.003), { fov: 34 });
+const DCH: V3 = [-4.4, 0, -1.6]; // the designer's chair (sets.ts DESIGNER_CHAIR)
+// v3: the order and the king in one frame (owner: "no idea what I'm looking at"): the king glares from his niche,
+// his order drops onto the table in front of him
+const S6L = (f: number) => dolly([0.25, 1.65, 1.9], [-0.1, 2.1, -3.2], pushK(f, F(54.6), 0.0025), { fov: 44 });
 const S6B0 = (f: number) => dolly([2.9, 1.65, 3.2], [1.5, 1.45, -1.0], pushK(f, F(56.28), 0.002), { fov: 38 });
 const S6B1 = (f: number) => dolly([1.4, 2.45, -1.0], [0, 2.85, -6.3], pushK(f, F(57.7), 0.002), { fov: 30 });
-const S6C = (f: number) => dolly([-2.0, 1.35, -0.6], [-3.1, 0.85, -3.6], pushK(f, F(59.15), 0.0035), { fov: 36 });
+// v3: square on to the designer's portrait on his empty chair, a candle beside it (v2 had a table corner across the frame)
+const S6C = (f: number) => dolly([DCH[0] + 0.2, 0.98, DCH[2] + 2.4], [DCH[0] + 0.12, 0.86, DCH[2]], pushK(f, F(59.15), 0.003), { fov: 34 });
 const S6U0 = (f: number) => dolly([0.3, 1.6, 4.6], [0, 1.5, -2.0], pushK(f, F(61.64), 0.0015), { fov: 46 });
 const S6U1 = (f: number) => dolly([0.3, 1.5, 4.4], [0, 5.6, -2.6], 1, { fov: 46 });
 const S6P = (f: number) => dolly([0, 1.6, 6.3], [0, 1.3, -1.4], pushK(f, F(65.02), 0.0018), { fov: 40 });
 // ---- S7 ---- the frozen run, pushing in
-const S7 = (f: number) => dolly(W(-15, 15, 15), W(1.0, 6.2, -0.4), pushK(f, F(69.5), 0.0045), { fov: 38 });
+const S7 = (f: number) => dolly(W(-15, 15, 15), W(1.0, 6.2, -0.4), pushK(f, F(69.5), 0.0035), { fov: 38 });
+// bookend: the salute camera at the bookend's own clock (it ends on exactly frame 0's picture)
+const S1E = (f: number) => S1S(f - F(ECHO_END));
 
 const CAMS: Record<string, Key[]> = {
   s1_salute: [{ f: 0, s: S1S }],
@@ -264,6 +284,7 @@ const CAMS: Record<string, Key[]> = {
   s6_up: [{ f: SH.s6_up.a, s: S6U0 }, { f: F(63.1), dur: 40, s: S6U1 }],
   s6_promo: [{ f: SH.s6_promo.a, s: S6P }],
   s7_end: [{ f: SH.s7_end.a, s: S7 }],
+  s1_echo: [{ f: SH.s1_echo.a, s: S1E }],
 };
 
 // impact kicks: the worst roll and the cannon that slides into the rail
@@ -293,9 +314,9 @@ export const keyEnd = (id: number, f: number) => {
 // ---------------- lens ----------------
 export type Dof = { cInf: number; focus?: (f: number) => V3 };
 const DOFS: Record<string, Dof> = {
-  s1_salute: { cInf: 3 }, s1_officers: { cInf: 12 }, s2_king: { cInf: 10 }, s2_ports: { cInf: 3 }, s3_b: { cInf: 2 }, s3_c: { cInf: 13 }, s3_e: { cInf: 2.5 },
+  s1_salute: { cInf: 3 }, s1_echo: { cInf: 3 }, s1_officers: { cInf: 12 }, s2_king: { cInf: 10 }, s2_ports: { cInf: 3 }, s3_b: { cInf: 2 }, s3_c: { cInf: 13 }, s3_e: { cInf: 2.5 },
   s4_ports: { cInf: 4 }, s4_hat: { cInf: 8 }, s5_toy: { cInf: 16 }, s5_cut: { cInf: 6 }, s5_flip: { cInf: 16 },
-  s6_letter: { cInf: 12 }, s6_builder: { cInf: 6 }, s6_chair: { cInf: 12 }, s6_up: { cInf: 3 }, s6_promo: { cInf: 6 }, s7_end: { cInf: 2 },
+  s6_letter: { cInf: 3 }, s6_builder: { cInf: 6 }, s6_chair: { cInf: 12 }, s6_up: { cInf: 3 }, s6_promo: { cInf: 6 }, s7_end: { cInf: 2 },
 };
 export const dofAt = (f: number) => DOFS[shotAt(f).key] ?? { cInf: 0 };
 export type Fg = { a: number; b: number; kit: string; pos: V3; s?: number; yaw?: number };

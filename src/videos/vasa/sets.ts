@@ -116,7 +116,7 @@ const tableTop = () => ctex("deskTop", 2048, 1024, (g, r) => {
 
 // ---------------- the hall ----------------
 export const NICHE = { x0: -0.72, x1: 0.72, y0: 2.2, y1: 3.65, z: -6, back: -6.9 };
-export const DESIGNER_CHAIR: [number, number, number] = [-3.1, 0, -3.6];
+export const DESIGNER_CHAIR: [number, number, number] = [-4.4, 0, -1.6]; // v3: out in the open beside the table end (story.ts DCH)
 export const buildHall = () => {
   const G = new THREE.Group(), b = new Batch();
   const floor = lam("planksHD", () => ({ map: planksHD() }));
@@ -125,13 +125,20 @@ export const buildHall = () => {
   const wood = lam("wood", () => ({ map: beam() }));
   const baize = lam("baize", () => ({ color: "#2f5a3c" }));
   const W0 = -7, W1 = 7, Z0 = -6, Z1 = 7, H = 5.6;
-  b.add(quad(V(W0, 0, Z1), V(W1, 0, Z1), V(W1, 0, Z0), V(W0, 0, Z0), 4, 4), floor);
-  // back wall around the niche (damask above the wainscot)
+  // v3: floor, walls and ceiling overlap 5 cm at every corner and the back wall is a grid with shared corners (no edge
+  // ends in the middle of another): v2's T-junctions let single pixels of the empty background through the seams above
+  // the niche, and the ink pass outlined each one as a flickering black dot
+  const E = 0.05;
+  b.add(quad(V(W0 - E, 0, Z1 + E), V(W1 + E, 0, Z1 + E), V(W1 + E, 0, Z0 - E), V(W0 - E, 0, Z0 - E), 4, 4), floor);
+  // back wall around the niche (damask above the wainscot); uv from world position so the pattern runs on across cells
   const { x0, x1, y0, y1, back } = NICHE;
-  const wq = (xa: number, xb: number, ya: number, yb: number, z: number, m: THREE.Material, tu = (xb - xa) / 2.2, tv = (yb - ya) / 2.2) =>
-    b.add(quad(V(xa, ya, z), V(xb, ya, z), V(xb, yb, z), V(xa, yb, z), tu, tv), m);
-  wq(W0, W1, 0, 1.2, Z0, wainM, 14 / 3.4, 1);
-  wq(W0, x0, 1.2, H, Z0, wallM); wq(x1, W1, 1.2, H, Z0, wallM); wq(x0, x1, 1.2, y0, Z0, wallM); wq(x0, x1, y1, H, Z0, wallM);
+  const XS = [W0 - E, x0, x1, W1 + E], YS = [-E, 1.2, y0, y1, H + E];
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 4; j++) {
+    if (i === 1 && j === 2) continue; // the niche opening
+    const xa = XS[i], xb = XS[i + 1], ya = YS[j], yb = YS[j + 1], wain = j === 0;
+    const U = (x: number) => (wain ? (x - W0) / 3.4 : (x - W0) / 2.2), Vv = (y: number) => (wain ? y / 1.2 : (y - 1.2) / 2.2);
+    b.add(quad(V(xa, ya, Z0), V(xb, ya, Z0), V(xb, yb, Z0), V(xa, yb, Z0), U(xb), Vv(yb), U(xa), Vv(ya)), wain ? wainM : wallM);
+  }
   // the niche: dark green backdrop and side faces
   const nicheM = lam("nicheM", () => ({ map: curtain() }));
   b.add(quad(V(x0, y0 - 1.6, back), V(x1, y0 - 1.6, back), V(x1, y1, back), V(x0, y1, back)), nicheM);
@@ -150,16 +157,18 @@ export const buildHall = () => {
   for (const x of [W0, W1]) {
     const s = x < 0 ? 1 : -1;
     const q = (ya: number, yb: number, m: THREE.Material, tv: number) => b.add(s > 0
-      ? quad(V(x, ya, Z1), V(x, ya, Z0), V(x, yb, Z0), V(x, yb, Z1), (Z1 - Z0) / 2.2, tv)
-      : quad(V(x, ya, Z0), V(x, ya, Z1), V(x, yb, Z1), V(x, yb, Z0), (Z1 - Z0) / 2.2, tv), m);
-    q(0, 1.2, wainM, 1); q(1.2, H, wallM, (H - 1.2) / 2.2);
+      ? quad(V(x, ya, Z1 + E), V(x, ya, Z0 - E), V(x, yb, Z0 - E), V(x, yb, Z1 + E), (Z1 - Z0) / 2.2, tv)
+      : quad(V(x, ya, Z0 - E), V(x, ya, Z1 + E), V(x, yb, Z1 + E), V(x, yb, Z0 - E), (Z1 - Z0) / 2.2, tv), m);
+    q(-E, 1.2, wainM, 1); q(1.2, H + E, wallM, (H - 1.2) / 2.2);
   }
   // ceiling: beams around a painted heaven
   const fres = lam("frescoM", () => ({ map: fresco() }));
-  b.add(quad(V(-2.4, H, -5.0), V(2.4, H, -5.0), V(2.4, H, -0.2), V(-2.4, H, -0.2)), fres);
   const ceil = lam("ceilM", () => ({ color: "#e8dcc4" }));
-  for (const [xa, xb, za, zb] of [[W0, W1, Z0, -5.0], [W0, W1, -0.2, Z1], [W0, -2.4, -5.0, -0.2], [2.4, W1, -5.0, -0.2]] as const)
-    b.add(quad(V(xa, H, za), V(xb, H, za), V(xb, H, zb), V(xa, H, zb)), ceil);
+  const CX = [W0 - E, -2.4, 2.4, W1 + E], CZ = [Z0 - E, -5.0, -0.2, Z1 + E];
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+    const xa = CX[i], xb = CX[i + 1], za = CZ[j], zb = CZ[j + 1], mid = i === 1 && j === 1;
+    b.add(quad(V(xa, H, za), V(xb, H, za), V(xb, H, zb), V(xa, H, zb)), mid ? fres : ceil);
+  }
   for (let z = Z0 + 0.5; z < Z1; z += 1.6) if (z < -5.2 || z > -0.1) b.add(boxGeo(V(W0, H - 0.3, z), V(W1, H, z + 0.3)), wood);
   b.add(boxGeo(V(-2.55, H - 0.25, -5.15), V(2.55, H, -5.0)), gold); b.add(boxGeo(V(-2.55, H - 0.25, -0.2), V(2.55, H, -0.05)), gold);
   b.add(boxGeo(V(-2.55, H - 0.25, -5.15), V(-2.4, H, -0.05)), gold); b.add(boxGeo(V(2.4, H - 0.25, -5.15), V(2.55, H, -0.05)), gold);
@@ -207,7 +216,7 @@ export const buildHall = () => {
     cb.add(cyl(V(x, y - 0.02, z), V(x, y + 0.02, z), 0.06), gold);
   };
   for (const x of [-2.2, -0.6, 0.6, 2.2]) candle(x, 0.8, -2.5);
-  candle(DESIGNER_CHAIR[0] + 0.5, 0, DESIGNER_CHAIR[2] + 0.4, 0.9);
+  candle(DESIGNER_CHAIR[0] + 0.36, 0, DESIGNER_CHAIR[2] + 0.18, 0.9);
   const ring = new THREE.TorusGeometry(0.9, 0.05, 8, 32).rotateX(Math.PI / 2).translate(0, 4.4, -2.6);
   cb.add(ring, gold);
   cb.add(cyl(V(0, 4.4, -2.6), V(0, H, -2.6), 0.03), gold);
@@ -215,7 +224,7 @@ export const buildHall = () => {
   cb.build(G);
   const flames: [number, number, number][] = [];
   for (const x of [-2.2, -0.6, 0.6, 2.2]) flames.push([x, 0.8 + 0.22, -2.5]);
-  flames.push([DESIGNER_CHAIR[0] + 0.5, 0.9, DESIGNER_CHAIR[2] + 0.4]);
+  flames.push([DESIGNER_CHAIR[0] + 0.36, 0.9, DESIGNER_CHAIR[2] + 0.18]);
   for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2; flames.push([Math.cos(a) * 0.9, 4.45 + 0.16, -2.6 + Math.sin(a) * 0.9]); }
   const fg = new THREE.ConeGeometry(0.022, 0.08, 8).translate(0, 0.05, 0);
   const haloM = new THREE.SpriteMaterial({ map: haloTex(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
@@ -245,6 +254,10 @@ const toyTex = () => ctex("budaoweng", 1024, 512, (g) => {
   g.fillStyle = "rgba(230,90,90,0.55)"; for (const s of [-1, 1]) { g.beginPath(); g.ellipse(512 + s * 95, Y(0.68), 22, 12, 0, 0, 7); g.fill(); }
 });
 export const TOY = { R: 0.05, H: 0.15 };
+/** v3: upside down it rolls on its round head (radius 0.033) and comes to rest on its side with body and head both on
+ *  the table: tilt 1.298 rad from upright (v2 pivoted on the crown point, so the body sank into the table) */
+export const TOY_FALL = { th: Math.acos(0.017 / 0.063), t0: 52.55, k: 0.03, w: 3.2, r: 0.033, top: 0.146 };
+export const toyLandT = () => TOY_FALL.t0 + Math.acosh(TOY_FALL.th / TOY_FALL.k) / TOY_FALL.w;
 export type Toy = { group: THREE.Group; body: THREE.Mesh; mat: THREE.MeshLambertMaterial; weight: THREE.Mesh; inner: THREE.Group };
 const toyProfile = () => {
   const pts: THREE.Vector2[] = [], R = TOY.R, r = 0.033, hc = 0.113;

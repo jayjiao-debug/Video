@@ -12,7 +12,7 @@ import { NOINK } from "./ink";
 import { Pool, Actor, Fx, stage } from "./cast";
 import { Ship } from "./ship";
 import { D0, SHOTS, camAt, V3, FOREGROUND, ShotDef, ZS, ROLL_Y, tv, shipToWorld, poseAt, storyT, GUST1, GUST2, spl, clamp01, s1Pose, SALUTE_DT, halfW } from "./story";
-import { buildHall, buildTable, Toy, TOY } from "./sets";
+import { buildHall, buildTable, Toy, TOY, TOY_FALL, toyLandT } from "./sets";
 
 // ---------------- assets ----------------
 const KENNEY = ["tree_oak", "tree_default", "tree_detailed", "tree_fat", "tree_cone", "tree-high-round", "tree", "plant_bushLarge", "plant_bushDetailed",
@@ -50,7 +50,7 @@ const haloTex = () => ctex("sunHalo", 256, 256, (g) => {
 });
 /** per-shot sun override (lighting.md 9.1 notes: front-light the town wide); story.ts ShotDef sunAz/sunEl win if present */
 // shot 12: the park is ringed by trees and houses, so a low sun ahead-right puts the whole lawn in their shadow
-const SUN_SHOT: Record<string, { az?: number; el?: number }> = { s1_salute: { az: 150, el: 32 }, s3_c: { az: 110 }, s1_officers: { az: 110 },
+const SUN_SHOT: Record<string, { az?: number; el?: number }> = { s1_salute: { az: 150, el: 32 }, s1_echo: { az: 150, el: 32 }, s3_c: { az: 110 }, s1_officers: { az: 110 },
   s2_king: { az: 150, el: 35 }, s5_toy: { az: 130, el: 34 }, s5_cut: { az: 140, el: 45 }, s5_flip: { az: 130, el: 34 },
   s6_letter: { az: 150, el: 40 }, s6_builder: { az: 145, el: 36 }, s6_chair: { az: 140, el: 35 }, s6_up: { az: 155, el: 38 }, s6_promo: { az: 160, el: 36 } };
 const smokeTex = () => ctex("smoke", 256, 256, (g) => {
@@ -163,10 +163,12 @@ export class World {
     for (const s of [-1, 1]) {
       const zn = s * 30, zf = s * 900;
       b.add(s < 0 ? quadUp(-900, 900, zf, zn, 450, 217.5) : quadUp(-900, 900, zn, zf, 450, 217.5), M.grass);
-      b.add(s < 0 ? quadUp(-160, 160, -36.5, -30, 80, 1.625, 0.012) : quadUp(-160, 160, 30, 36.5, 80, 1.625, 0.012), M.cobble);
+      // v3: the cobbles stop at the coping instead of running 0.6 m under it, and the coping's top is flush with them
+      // (v2's coping stood 8 mm proud: a sub-pixel step whose crease line flickered along the quay edge)
+      b.add(s < 0 ? quadUp(-160, 160, -36.5, -30.6, 80, 1.475, 0.012) : quadUp(-160, 160, 30.6, 36.5, 80, 1.475, 0.012), M.cobble);
       b.add(s < 0 ? quadUp(-6, 6, -170, -36.5, 3, 33.375, 0.012) : quadUp(-6, 6, 36.5, 170, 3, 33.375, 0.012), M.cobble);
       b.add(s < 0 ? wallQuad(-900, 900, -30, 1) : wallQuad(900, -900, 30, -1), M.wall);
-      b.add(boxGeo(V(-600, D0 - 0.05, s < 0 ? -30.6 : 29.4), V(600, D0 + 0.02, s < 0 ? -29.4 : 30.6), 2), M.cope);
+      b.add(boxGeo(V(-600, D0 - 0.12, s < 0 ? -30.6 : 29.4), V(600, D0 + 0.012, s < 0 ? -29.4 : 30.6), 2), M.cope);
       // mooring bollards along the quay edge
       for (let x = -40; x <= 40; x += 8) { const g = new THREE.CylinderGeometry(0.22, 0.28, 0.7, 10); b.add(g, M.wood, new THREE.Matrix4().makeTranslation(x, D0 + 0.35, s * 30.9)); }
     }
@@ -280,13 +282,14 @@ export class World {
     const T = this.toy, R = TOY.R;
     let th = 0;
     if (k === "s5_flip") {
-      // standing on its head: an inverted pendulum that tips over and lands with a clack (~53.98)
-      const u = Math.max(0, t - 52.55);
-      th = Math.min(1.42, 0.03 * Math.cosh(3.2 * u));
-      const land = 52.55 + Math.acosh(1.42 / 0.03) / 3.2;
-      if (t > land) th = 1.42 - 0.12 * Math.exp(-(t - land) * 7) * Math.abs(Math.sin((t - land) * 22));
-      T.inner.rotation.set(0, 0, Math.PI); T.inner.position.set(0, TOY.H + 0.0, 0); // head down, its crown on the table
-      T.group.position.set(0, 0, 0); T.group.rotation.set(0, 0, -th);
+      // standing on its head: an inverted pendulum that tips over and lands with a clack (~53.9)
+      const F = TOY_FALL, u = Math.max(0, t - F.t0), land = toyLandT();
+      th = Math.min(F.th, F.k * Math.cosh(F.w * u));
+      if (t > land) th = F.th - 0.12 * Math.exp(-(t - land) * 7) * Math.abs(Math.sin((t - land) * 22));
+      T.inner.rotation.set(0, 0, Math.PI); T.inner.position.set(0, F.top, 0); // head down, resting on its crown
+      // rolls on its round head: the head's centre stays r above the table and moves r * theta
+      T.group.rotation.set(0, 0, -th);
+      T.group.position.set(F.r * th - F.r * Math.sin(th), F.r - F.r * Math.cos(th), 0);
       T.mat.opacity = 1; T.weight.visible = false;
       return;
     }

@@ -217,20 +217,22 @@ export const blobPts = (cx: number, cy: number, B: Blob, n = 72): P2[] => {
 /** measured head: H/W 0.94, slightly pointed crown (1.75), fuller jaw (2.3), chin taper -0.12, 8 % bulge to the facing side */
 // v2 (owner: "not perfect round heads"): wider spread per seed: squat to tall, pointed to flat crowns, big chin taper,
 // 8-16 % one-side bulge, up to +-7 deg tilt, and low-order lumps of about +-4 %, so no two heads are the same circle.
+// v3 (owner: the king's head "too extreme, aim for more normal proportions"): about half the v2 spread. Still no two
+// heads alike (a little squat or tall, a softer or fuller jaw, a 3-7 % bulge, +-3 deg tilt, +-1.5 % lumps).
 export const headBlob = (seed: number, a = 118, facing = 0): Blob => {
-  const k = 0.95 + 0.12 * rnd(seed, 21);
+  const k = 0.97 + 0.06 * rnd(seed, 21);
   return {
-    a: a * k, b: a * k * (0.84 + 0.28 * rnd(seed, 1)),
-    nTop: 1.4 + 0.8 * rnd(seed, 2), nBot: 2.0 + 0.8 * rnd(seed, 3),
-    egg: -0.26 + 0.3 * rnd(seed, 4),
-    asym: (0.1 + 0.08 * rnd(seed, 5)) * (facing || (rnd(seed, 6) < 0.5 ? -1 : 1)),
-    rot: rad(16 * (rnd(seed, 7) - 0.5)), noise: 0.02 + 0.012 * rnd(seed, 8), seed,
+    a: a * k, b: a * k * (0.9 + 0.1 * rnd(seed, 1)),
+    nTop: 1.65 + 0.4 * rnd(seed, 2), nBot: 2.15 + 0.4 * rnd(seed, 3),
+    egg: -0.18 + 0.14 * rnd(seed, 4),
+    asym: (0.03 + 0.04 * rnd(seed, 5)) * (facing || (rnd(seed, 6) < 0.5 ? -1 : 1)),
+    rot: rad(6 * (rnd(seed, 7) - 0.5)), noise: 0.01 + 0.006 * rnd(seed, 8), seed,
   };
 };
 /** per-character build quirks: leg length, torso width / shape, a lean, a head tilt, uneven knees and feet */
 export const quirk = (seed: number) => ({
   legs: 0.9 + 0.2 * rnd(seed, 22), tw: 0.86 + 0.32 * rnd(seed, 23), torso: 0.94 + 0.12 * rnd(seed, 24),
-  egg: 0.22 * (rnd(seed, 25) - 0.35), lean: 5 * (rnd(seed, 26) - 0.5), headTilt: 10 * (rnd(seed, 27) - 0.5),
+  egg: 0.22 * (rnd(seed, 25) - 0.35), lean: 4 * (rnd(seed, 26) - 0.5), headTilt: 6 * (rnd(seed, 27) - 0.5),
   knee: [rnd(seed, 28) - 0.5, rnd(seed, 29) - 0.5], foot: [rnd(seed, 30) - 0.5, rnd(seed, 31) - 0.5],
   arm: [rnd(seed, 32) - 0.5, rnd(seed, 33) - 0.5],
 });
@@ -379,10 +381,23 @@ const hatBehind = (p: Pen, o: Outfit, H: Blob, cx: number, hc: number, light: nu
   p.inkRing(bb, ow * 0.85, thick);
 };
 
-const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, light: number, seed: number, facing: number, side: boolean) => {
+/** v3: the part of the head above a hat's base line, in the hat's own (unrotated) frame: x span and the top */
+const headAbove = (hp: P2[], a: number, cx: number, hc: number, yb: number) => {
+  const c = Math.cos(-a), s = Math.sin(-a);
+  let x0 = Infinity, x1 = -Infinity, top = Infinity;
+  const pts: P2[] = [];
+  for (const [x, y] of hp) {
+    const X = cx + (x - cx) * c - (y - hc) * s, Y = hc + (x - cx) * s + (y - hc) * c;
+    if (Y > yb) continue;
+    pts.push([X, Y]); x0 = Math.min(x0, X); x1 = Math.max(x1, X); top = Math.min(top, Y);
+  }
+  return { x0, x1, top, pts };
+};
+const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx0: number, hc: number, light: number, seed: number, facing: number, side: boolean) => {
   const W = 2 * H.a, HH = 2 * H.b, u = W / 100, crown = hc - H.b, ow = 0.85 * 5 * u;
-  const a = H.rot + rad(4 * (rnd(seed, 20) - 0.5)); // tilt with the head, +-2 deg extra
-  const R = (pts: P2[]) => rotPts(pts, a, cx, hc);
+  const a = H.rot + rad(2 * (rnd(seed, 20) - 0.5)); // tilt with the head, +-1 deg extra
+  const R = (pts: P2[]) => rotPts(pts, a, cx0, hc);
+  let cx = cx0;
   const sag = (yb: number, wb: number): P2[] => {
     const base: P2[] = [];
     for (let i = 0; i <= 12; i++) { const t = i / 12; base.push([cx + wb * (2 * t - 1), yb + 3 * u * (1 - (2 * t - 1) ** 2)]); }
@@ -445,8 +460,18 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     p.ell(bx, by, 0.45 * W, 0.05 * HH, "#1d1b22", ow, 0, 360, (a * 180) / Math.PI);
   } else if (o.hat === "wide") {
     // 1620s wide felt hat: broad brim, low rounded crown, coloured band, optional plume sweeping back
-    const K = o.hatK ?? 1, col = o.cap ?? "#2a2220", yb = crown + 0.24 * HH, ht = 0.4 * HH * K, wb = 0.3 * W * K, wt = 0.26 * W * K, deg = (a * 180) / Math.PI;
+    const K = o.hatK ?? 1, col = o.cap ?? "#2a2220", yb = crown + 0.24 * HH, deg = (a * 180) / Math.PI;
     const dx = side ? 5 * u : 0;
+    // the crown must cover every bit of head above the brim (v2 let bulging heads poke out beside the crown)
+    const ha = headAbove(hp, a, cx0, hc, yb + 1.5 * u);
+    if (!side && ha.pts.length) cx = 0.5 * (ha.x0 + ha.x1);
+    const ht = Math.max(0.4 * HH * K, ha.pts.length ? (yb - ha.top) / 0.8 + 2 * u : 0);
+    let wb = 0.3 * W * K;
+    for (const [x, y] of ha.pts) {
+      const sn = Math.min(0.97, (Math.max(0, yb - y) / ht) ** (1 / 0.7)), cs = Math.sqrt(1 - sn * sn);
+      wb = Math.max(wb, (Math.abs(x - cx - dx) + 3 * u) / (cs * (1 - 0.15 * sn)));
+    }
+    const wt = 0.26 * W * K;
     if (o.plume) {
       const s = side ? -1 : (facing || 1) * -1;
       // ostrich plume: rooted on the crown, arching up and back, the tip drooping past the brim
@@ -464,17 +489,20 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     p.clip(crownPts, () => p.band(R([[cx - wb - 4 * u, yb - 0.12 * HH], [cx + wb + 4 * u, yb - 0.12 * HH]]), o.plume ? "#d9a93a" : shade(col, 1.6), 0.09 * HH, 0.8 * u));
     p.poly(crownPts, null, ow);
     const [bx, by] = R([[cx + dx * 1.6, yb + 1 * u]])[0];
-    p.ell(bx, by, 0.66 * W * K, 0.075 * HH * Math.sqrt(K), shade(col, 0.85), ow, 0, 360, deg);
+    p.ell(bx, by, Math.max(0.66 * W * K, wb + 0.2 * W * K), 0.075 * HH * Math.sqrt(K), shade(col, 0.85), ow, 0, 360, deg);
   } else if (o.hat === "crown") {
     // royal crown: gold band, five points with pearls, red stones
-    const yb = crown + 0.16 * HH, hb = 0.1 * HH, hp = 0.2 * HH, wb = 0.36 * W, gold = o.cap ?? "#e3b84a";
+    const yb = crown + 0.16 * HH, hb = 0.1 * HH, hpk = 0.2 * HH, gold = o.cap ?? "#e3b84a";
+    const ha = headAbove(hp, a, cx0, hc, yb);
+    if (!side && ha.pts.length) cx = 0.5 * (ha.x0 + ha.x1);
+    const wb = Math.max(0.36 * W, ha.pts.length ? 0.5 * (ha.x1 - ha.x0) + 3 * u : 0);
     const pts: P2[] = [[cx - wb, yb]];
-    for (let i = 0; i <= 8; i++) { const x = cx - wb + (2 * wb * i) / 8; pts.push([x, yb - hb - (i % 2 ? 0 : hp)]); }
+    for (let i = 0; i <= 8; i++) { const x = cx - wb + (2 * wb * i) / 8; pts.push([x, yb - hb - (i % 2 ? 0 : hpk)]); }
     pts.push([cx + wb, yb]);
     const cr = R(pts);
     p.shadedFill(cr, gold, mul(gold, SH_CLOTH), light, wb, 0.4);
     p.poly(cr, null, ow);
-    for (let i = 0; i <= 8; i += 2) { const [qx, qy] = R([[cx - wb + (2 * wb * i) / 8, yb - hb - hp - 2 * u]])[0]; p.ell(qx, qy, 3.2 * u, 3.2 * u, "#fbf4e2", 1.6 * u); }
+    for (let i = 0; i <= 8; i += 2) { const [qx, qy] = R([[cx - wb + (2 * wb * i) / 8, yb - hb - hpk - 2 * u]])[0]; p.ell(qx, qy, 3.2 * u, 3.2 * u, "#fbf4e2", 1.6 * u); }
     for (const k of [-0.5, 0, 0.5]) { const [qx, qy] = R([[cx + k * wb, yb - hb * 0.5]])[0]; p.ell(qx, qy, 3.6 * u, 3 * u, "#c0262c", 1.4 * u); }
   } else if (o.hat === "bonnet") {
     const [bx, by] = R([[cx + (side ? 6 * u : 0), crown + 0.16 * HH]])[0];
@@ -631,13 +659,13 @@ const bodyFrontRaw = (p: Pen, o: Outfit, opts: FrontOpts) => {
         p.poly([[xc - 3.5 * u, yc - 3.5 * u], [xc + 3.5 * u, yc - 3.5 * u], [xc + 3.5 * u, yc + 3.5 * u], [xc - 3.5 * u, yc + 3.5 * u]], "#d9dde0", 1.5 * u);
       }
       if (o.sash) p.band([[tcx - 1.3 * T.a, torsoBot - 0.32 * HH], [tcx + 1.3 * T.a, torsoBot - 0.32 * HH]], o.sash, 0.13 * HH, 1.8 * u);
+      if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.32 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.48 * T.a, torsoBot - 0.06 * HH], [tcx + s * 0.22 * T.a, torsoBot - 0.09 * HH]], o.sash, 1.6 * u); }
       for (let i = 0; i < 4; i++) {
         const y = chin + 0.12 * HH + i * 0.2 * HH;
         if (o.sash && Math.abs(y - (torsoBot - 0.32 * HH)) < 0.08 * HH) continue;
         p.dot(tcx + 2 * u * facing, y, 2.2 * u + 0.8 * u, INK); p.dot(tcx + 2 * u * facing, y, 2.2 * u, o.buttons ?? shade(o.jacket, 0.7));
       }
     });
-    if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
     p.inkRing(tp, ow, thick);
     if (o.medal) {
       const mx = tcx - 0.42 * T.a, my = chin + 0.3 * HH;

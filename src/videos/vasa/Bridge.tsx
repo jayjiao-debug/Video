@@ -19,9 +19,10 @@ import { LensBlur, GrainEffect } from "./lensblur";
 import { GradeEffect, GRADES, GRADE_STRENGTH, gradeFor } from "./grade";
 import { Kit } from "./build";
 import { Kick } from "./Kick";
-import { TOTAL, FLASH_AT, SHOTS, layersAt, dofAt, shotAt, tv, BLACK_AT } from "./story";
+import { FILM_FRAMES, FLASH_AT, SHOTS, layersAt, dofAt, shotAt, tv, BLACK_AT, storyFrame } from "./story";
 
-export const VASA_FRAMES = TOTAL;
+/** v3: the composition runs on film frames; everything inside is posed at the matching voice frame (story.ts) */
+export const VASA_FRAMES = FILM_FRAMES;
 
 /** A/B switches for test stills only (Remotion inputProps `{ post: { ink: false, ... } }`); everything is on by default. */
 type PostToggles = { ink: boolean; lens: boolean; pre: boolean; bloom: boolean; grade: boolean; grain: boolean };
@@ -48,7 +49,7 @@ const useKit = () => {
 };
 
 const Inner: React.FC<{ id: number; kit: Kit }> = ({ id, kit }) => {
-  const f = useCurrentFrame();
+  const f = storyFrame(useCurrentFrame());
   const { camera, scene } = useThree();
   const world = useMemo(() => new World(kit), [kit]);
   const target = useMemo(() => new THREE.Vector3(), []);
@@ -116,10 +117,10 @@ const Rewind: React.FC<{ f: number }> = ({ f }) => (
 );
 
 export const VasaTest: React.FC = () => {
-  const f = useCurrentFrame();
+  const f = storyFrame(useCurrentFrame());
   const kit = useKit();
   if (!kit) return null;
-  const flash = f >= FLASH_AT && f < FLASH_AT + 4 ? [1, 0.75, 0.45, 0.2][f - FLASH_AT] : 0;
+  const flash = 0; // (no white flash in this film; FLASH_AT is off)
   return (
     <AbsoluteFill style={{ background: "#cfe3f2" }}>
       {layersAt(f).map((l, i) => <ShotView key={i ? "over" : "base"} id={l.id} kit={kit} alpha={l.alpha} />)}

@@ -146,6 +146,50 @@ const bulwarkInner = (side: 1 | -1) => {
   g.setIndex(idx); g.computeVertexNormals();
   return g;
 };
+/** v3: a flat end face that follows the hull section at x from y0 to y1, facing -x (dir -1, the stern) or +x;
+ *  uv: u across (0 at +z), v up */
+const endFace = (x: number, y0: number, y1: number, dir: 1 | -1, n = 24) => {
+  const pos: number[] = [], uv: number[] = [], nrm: number[] = [];
+  const at = (j: number) => { const y = y0 + ((y1 - y0) * j) / n; return { y, w: halfW(x, Math.min(y, 14)), v: j / n }; };
+  for (let j = 0; j < n; j++) {
+    const A = at(j), B = at(j + 1);
+    const p = [[x, A.y, A.w], [x, A.y, -A.w], [x, B.y, -B.w], [x, A.y, A.w], [x, B.y, -B.w], [x, B.y, B.w]];
+    const t = [[0, A.v], [1, A.v], [1, B.v], [0, A.v], [1, B.v], [0, B.v]];
+    const order = dir < 0 ? [0, 2, 1, 3, 5, 4] : [0, 1, 2, 3, 4, 5];
+    for (const k of order) { pos.push(...p[k]); uv.push(...t[k]); nrm.push(dir, 0, 0); }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.Float32BufferAttribute(nrm, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  return g;
+};
+/** v3: the cap along the top of the bulwark (outer skin to inner face), so the rail reads solid from above */
+const railCap = (side: 1 | -1) => {
+  const NX = 160, pos: number[] = [], uv: number[] = [], idx: number[] = [];
+  for (let i = 0; i <= NX; i++) {
+    const x = X0 + ((X1 - X0) * i) / NX, y = sheerY(x), wo = halfW(x, Math.min(y, 14)), wi = Math.max(0, wo - 0.2);
+    pos.push(x, y, side * wo, x, y, side * wi);
+    uv.push(x / 3, 0, x / 3, 0.1);
+  }
+  for (let i = 0; i < NX; i++) { const a = i * 2, b = a + 2, c = a + 3, d = a + 1; if (side > 0) idx.push(a, b, c, a, c, d); else idx.push(a, c, b, a, d, c); }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx); g.computeVertexNormals();
+  return g;
+};
+/** v3: the flat bottom along the keel (the two sides stop 0.7 m apart there) */
+const keelStrip = () => {
+  const NX = 96, pos: number[] = [], uv: number[] = [], idx: number[] = [];
+  for (let i = 0; i <= NX; i++) { const x = X0 + ((X1 - X0) * i) / NX, w = halfW(x, KEEL); pos.push(x, KEEL, -w, x, KEEL, w); uv.push(i / NX, 0, i / NX, 0.02); }
+  for (let i = 0; i < NX; i++) { const a = i * 2, b = a + 2, c = a + 3, d = a + 1; idx.push(a, b, c, a, c, d); }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx); g.computeVertexNormals();
+  return g;
+};
 /** flat deck at height y between x0 and x1 */
 const deck = (x0: number, x1: number, y: number) => {
   const NX = 40, pos: number[] = [], uv: number[] = [], idx: number[] = [];
@@ -195,7 +239,7 @@ export class Ship {
     const red = lam("vasaRed", () => ({ color: "#a8322a" })), gold = lam("vasaGold", () => ({ color: "#d9a93a" })), dark = lam("vasaDark", () => ({ color: "#4a3020" }));
     const wood = lam("wood", () => ({ map: beam() }));
     const deckM = lam("planksHD", () => ({ map: planksHD() }));
-    for (const s of [1, -1] as const) b.add(bulwarkInner(s), red);
+    for (const s of [1, -1] as const) { b.add(bulwarkInner(s), red); b.add(railCap(s), red); }
     // decks
     b.add(deck(-19.6, -15, 10.5), deckM); b.add(deck(-15, -8, 8.0), deckM); b.add(deck(-8, 10, 5.5), deckM); b.add(deck(10, 19.3, 7.0), deckM);
     // bulkheads (deck steps), painted with doors
@@ -206,18 +250,13 @@ export class Ship {
       // rail along the step edge
       b.add(boxGeo(V(x - 0.12, y1, -w), V(x + 0.12, y1 + 0.9, w)), gold);
     }
-    // the transom (stern face)
-    const sx = X0 + 0.02, ys0 = 2.0, ys1 = sheerY(X0);
-    const tw0 = halfW(X0, ys0), tw1 = halfW(X0, ys1);
-    const stern = new THREE.BufferGeometry();
-    stern.setAttribute("position", new THREE.Float32BufferAttribute([sx, ys0, tw0, sx, ys0, -tw0, sx, ys1, -tw1, sx, ys0, tw0, sx, ys1, -tw1, sx, ys1, tw1], 3));
-    stern.setAttribute("uv", new THREE.Float32BufferAttribute([0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1], 2));
-    stern.computeVertexNormals();
-    b.add(stern, lam("vasaStern", () => ({ map: sternTex() })));
-    const lowStern = new THREE.BufferGeometry(), tk = halfW(X0, KEEL + 1.2);
-    lowStern.setAttribute("position", new THREE.Float32BufferAttribute([sx, KEEL + 1.2, tk, sx, KEEL + 1.2, -tk, sx, ys0, -tw0, sx, KEEL + 1.2, tk, sx, ys0, -tw0, sx, ys0, tw0], 3));
-    lowStern.computeVertexNormals();
-    b.add(lowStern, dark);
+    // the transom (stern face): v3 follows the hull section all the way down and faces aft (v2's faced the bow, so
+    // from astern it was culled and the stern looked open)
+    const ys0 = 2.0, ys1 = sheerY(X0);
+    b.add(endFace(X0, ys0, ys1, -1), lam("vasaStern", () => ({ map: sternTex() })));
+    b.add(endFace(X0, KEEL, ys0, -1), dark);
+    b.add(keelStrip(), dark);
+    const tw1 = halfW(X0, ys1);
     // stern top cresting + lanterns
     b.add(boxGeo(V(X0 - 0.2, ys1, -tw1 * 0.85), V(X0 + 0.6, ys1 + 0.9, tw1 * 0.85)), gold);
     for (const z of [-2.6, 0, 2.6]) { b.add(cyl(V(X0 + 0.3, ys1 + 0.9, z), V(X0 + 0.3, ys1 + 2.2, z), 0.32, 0.18), gold); }
