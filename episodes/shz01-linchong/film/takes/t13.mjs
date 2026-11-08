@@ -326,11 +326,20 @@ function vigWindow() {
   return s;
 }
 function vigBowls(t) {
-  let s = '';
-  for (const x of [-70, 70]) s += `<path d="M${x - 52},10 C${x - 50},50 ${x - 26},66 ${x},66 C${x + 26},66 ${x + 50},50 ${x + 52},10Z" fill="#2a2622"/><ellipse cx="${x}" cy="10" rx="52" ry="12" fill="#4a453e"/><ellipse cx="${x}" cy="10" rx="44" ry="8" fill="#6b645a"/>`;
-  const w = Math.sin(t * 2) * 6;
-  s += `<path d="M-70,-4 C-80,-40 -50,-60 -20,-80 C10,-100 ${10 + w},-120 0,-150" stroke="#bdb3a0" stroke-width="10" fill="none" opacity="0.6" stroke-linecap="round"/>`;
-  s += `<path d="M70,-4 C80,-40 50,-60 20,-80 C-10,-100 ${-10 - w},-120 0,-150" stroke="#d6ccb8" stroke-width="8" fill="none" opacity="0.6" stroke-linecap="round"/>`;
+  // two black-glazed bowls on the table edge; two steam ribbons rising and twining into one
+  let s = `<path d="M-190,62 L190,62 L190,120 L-190,120Z" fill="#3b3833"/>`;
+  for (const x of [-62, 62]) s += `<path d="M${x - 48},14 C${x - 46},48 ${x - 24},62 ${x},62 C${x + 24},62 ${x + 46},48 ${x + 48},14Z" fill="#1f1c19"/><ellipse cx="${x}" cy="14" rx="48" ry="11" fill="#4a453e"/><ellipse cx="${x}" cy="14" rx="40" ry="7" fill="#6b645a"/>`;
+  const rib = (x0, dir, ph) => {
+    const pts = [];
+    for (let i = 0; i <= 12; i++) {
+      const v = i / 12, y = 4 - v * 200;
+      const twist = Math.sin(v * 7 + t * 2.2 + ph) * 22 * v;
+      pts.push([lerp(x0, 0, Math.min(1, v * 1.6)) + twist * dir, y]);
+    }
+    return smooth(pts, false);
+  };
+  s += `<path d="${rib(-62, 1, 0)}" stroke="#d6ccb8" stroke-width="9" fill="none" opacity="0.65" stroke-linecap="round"/>`;
+  s += `<path d="${rib(62, -1, 0)}" stroke="#bdb3a0" stroke-width="7" fill="none" opacity="0.65" stroke-linecap="round"/>`;
   return s;
 }
 function fistDraw(x, y, size, open = 0, rot = 0, opts = {}) {
