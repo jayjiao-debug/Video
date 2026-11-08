@@ -176,7 +176,7 @@ export default {
     s += L(c, 0.6, ranks(t, { motion: rankMotion }) + (t > 30.0 && t < 31.2 ? Array.from({ length: 11 }, (_, i) => dust(t, -10 + i * 182, 690, 30.314 + 0.13, 0.6)).join('') : ''), { id: `${ID}ranks`, bleed: 'lr' });
     // the nearest flag (d 0.8): lands at screen (520, 260) when the tilt ends (T04 dissolves it into the lantern)
     const cE = cam(31.974), d8 = 0.8;
-    const fw = [520 + cE.x * d8, 260 + cE.y * d8 - 30];
+    const fw = [579 + cE.x * d8, 241 + cE.y * d8]; // flag cloth centre lands on the T04 lantern (564, 284)
     s += L(c, d8, flag(fw[0] + 60, fw[1], 150, 86, t, 5.3), { id: `${ID}nearflag`, bleed: 'b' });
     // his shadow (sun from the right, cast to the left) + him (d 1.0)
     s += L(c, 1, `<ellipse cx="${FEET[0] - 150}" cy="${FEET[1] + 6}" rx="260" ry="26" fill="url(#${ID}sh)"/>` + hero(t) +

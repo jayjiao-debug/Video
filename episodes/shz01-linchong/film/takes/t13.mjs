@@ -193,11 +193,12 @@ const FURN = (() => {
 const SPEARSVG = spearProp(SPEAR.foot, SPEAR.top);
 
 function s31Cam(t) {
-  // start: window at the S30 screen rect (980–1460 × 222–799) at zoom 1.27; pull to the WS, then a slow dolly + push
+  // start: window exactly where T12 leaves it (≈ 982–1500 × 168–791 at 125.2) so the frame holds through the dissolve;
+  // pull to the WS, then a slow dolly + push
   const p = WC;
   const k = ramp(t, T31, 127.3, E.inOut);
-  const z1 = zexp(t, T31, 127.3, 1.27, 1.0);
-  const qa = [1220, 510], qb = [WC[0] + 40, WC[1]];
+  const z1 = zexp(t, T31, 127.3, 1.37, 1.0);
+  const qa = [1241, 480], qb = [WC[0] + 40, WC[1]];
   let q = mix(qa, qb, k), z = z1;
   if (t > 127.3) {
     const k2 = ramp(t, 127.3, 128.8, E.sine);
@@ -414,11 +415,10 @@ const CLOUDS = (() => {
 })();
 function hazeBg(op) {
   if (op <= 0) return '';
-  return `<defs>${lg('t13hz', [[0, '#E9DCC2'], [0.5, '#E3D3B5'], [1, '#CDBB98']])}${rg('t13hzs', [[0, '#FFF6E2', 0.7], [1, '#FFF6E2', 0]])}</defs><g opacity="${f2(op)}"><rect x="-200" y="-200" width="2320" height="1480" fill="url(#t13hz)"/>` +
-    `<ellipse cx="1300" cy="300" rx="700" ry="420" fill="url(#t13hzs)"/>` +
-    // faint temple eaves far off in the haze (the 岳庙 sky), low right
-    `<path d="M1380,980 L1440,930 C1500,915 1560,905 1620,902 L1820,902 C1880,905 1940,915 2000,930 L2060,980Z" fill="#B8A98C" opacity="0.35"/>` +
-    `<path d="M-100,1000 C200,960 500,975 900,990 L900,1200 L-100,1200Z" fill="#C2B293" opacity="0.25"/></g>`;
+  return `<defs>${lg('t13hz', [[0, '#CDBB9A'], [0.45, '#B8A684'], [1, '#7E6F58']])}${rg('t13hzs', [[0, '#F3E4C6', 0.75], [0.6, '#E3D3B5', 0.3], [1, '#E3D3B5', 0]])}` +
+    `${rg('t13hzv', [[0.55, '#2a2118', 0], [1, '#2a2118', 0.55]], 0.5, 0.45, 0.75)}</defs><g opacity="${f2(op)}"><rect x="-200" y="-200" width="2320" height="1480" fill="url(#t13hz)"/>` +
+    `<ellipse cx="1290" cy="380" rx="620" ry="460" fill="url(#t13hzs)"/>` +
+    `<rect x="-200" y="-200" width="2320" height="1480" fill="url(#t13hzv)"/></g>`;
 }
 
 function s32cam(t) {
@@ -430,7 +430,7 @@ function s32cam(t) {
   let q = mix(ps0, [ps0[0] + 30, ps0[1] - 10], kp);
   let zz = z;
   if (t > T33 - 0.01) {
-    const k = ramp(t, T33, 138.4, E.inOut);
+    const k = ramp(t, T33, 138.4, E.sine);
     q = mix(ps0, [640, 470], k);
     zz = lerp(1.0, 0.7, k) * (1 + 0.03 * ramp(t, 138.4, TEND, E.sine));
   }
@@ -466,7 +466,7 @@ function paperLayer(t, c, opts = {}) {
       const y = p.y - rise;
       const w = ramp(a, 0.06, 0.42, E.inOut);
       const col = w < 0.33 ? '#1A1410' : w < 0.66 ? '#77716a' : '#F1F3F5';
-      const op = (a < 0.08 ? a / 0.08 : 1) * (1 - ramp(a, 0.65, 1, E.in)) * (w < 0.33 ? 0.85 : 1);
+      const op = (a < 0.08 ? a / 0.08 : 1) * (1 - ramp(a, 0.65, 1, E.in)) * (w < 0.33 ? 0.85 : 1) * (1 - ramp(t, T33, 137.9));
       ps += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(p.r * (0.8 + a * 1.1))}" fill="${col}" opacity="${f2(op)}"/>`;
     }
     s += `<g data-layer="fx-release" data-z="70">${ps}</g>`;
@@ -482,7 +482,7 @@ function s32(t) {
   if (hz > 0) s += L(c, 0, hazeBg(hz), { id: 't13haze', bleed: 'all', z: 2 });
   // memories drifting in (behind the paper's edge, they fade into it)
   if (t < 133.2) s += L(c, 1, VIGS.map((v, i) => vignette(v, t, `t13v${i}`)).join(''), { id: 't13vig', bleed: 'all', z: 8 });
-  const printOp = t < 141.45 ? 1 : 1 - ramp(t, 141.45, 141.6);
+  const printOp = t < 140.95 ? 1 : 0;
   s += L(c, 1, paperLayer(t, c, { printOp }), { id: 't13paper', bleed: 'all', z: 10 });
   // snow, the fifth memory: falls from the top onto the paper and melts (131.87)
   if (t > 131.6 && t < 133.9) {
@@ -495,17 +495,17 @@ function s32(t) {
     s += `<g opacity="${f2(k * 0.6)}">${snow(t, { seed: 133, n: 26, r: [1.5, 3.5], fall: -60, sway: 20, area: [700, -60, 1600, 900], color: '#F1F3F5', op: 0.8, cam: c, d: 1 })}</g>`;
   }
   // S33: the fist rises into the right third (slow, then holds; trembles; tightens at 141.03)
-  if (t > T33 - 0.05) s += fistLayer(t);
+  if (t > 137.15) s += fistLayer(t);
   return s;
 }
 
 function fistLayer(t, still = false) {
-  const k = ramp(t, T33, 138.11, (x) => 1 - Math.pow(1 - x, 2.4));
+  const k = ramp(t, 137.2, 138.45, (x) => 1 - Math.pow(1 - x, 2.4));
   const y = lerp(1500, 420, k);
   const tr = still ? [0, 0] : [noise1(t * 8, 4) * 1.5, noise1(t * 8 + 11, 5) * 1.5];
   const tight = ramp(t, 141.03, 141.3, E.out);
   const sc = 1 - 0.025 * tight;
-  return `<g data-layer="t13fist" data-z="30" transform="translate(${f2(tr[0])} ${f2(tr[1])})">${fistDraw(1290, y, 360 * sc, 0, -6, { light: 0.4, id: 't13fs' })}</g>`;
+  return `<g data-layer="t13fist" data-z="30" transform="translate(${f2(tr[0])} ${f2(tr[1])})">${fistDraw(1290, y, 360 * sc, 0, -4, { id: 't13fs' })}</g>`;
 }
 
 // ======================================================================= END card
@@ -549,8 +549,8 @@ function endCard(t) {
 function sealStamp(t) {
   // the red palm print contracts into the J seal and stamps on 141.862
   let s = '';
-  if (t >= 141.4 && t < TEND + 0.05) {
-    const k = ramp(t, 141.4, 141.82, E.in);
+  if (t >= 140.95 && t < TEND + 0.05) {
+    const k = ramp(t, 140.95, 141.8, E.sine);
     const c = s32cam(t);
     const p0 = toScreen(c, 1, PRINT_W);
     const p = mix(p0, SEALC, k);

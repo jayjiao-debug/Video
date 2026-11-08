@@ -246,7 +246,9 @@ function hisHand(cx, cy, stroke) {
   const th = stroke * 26;
   return `<g transform="translate(${cx} ${cy})">` +
     `<path d="M-700,40 C-520,10 -330,-10 -210,10 L-190,150 C-330,170 -520,190 -700,220Z" fill="#2F6B52" stroke="${ln}" stroke-width="2.5"/>` +
-    `<path d="M-640,70 C-480,50 -360,40 -240,46" stroke="#22513E" stroke-width="4" fill="none"/>` +
+    `<path d="M-700,170 C-520,156 -350,140 -204,132 L-190,150 C-330,170 -520,190 -700,220Z" fill="#22513E"/>` +
+    `<path d="M-660,64 C-520,50 -380,44 -250,52 M-600,118 C-470,104 -360,98 -236,104 M-520,170 C-440,150 -380,130 -330,96" stroke="#22513E" stroke-width="3.5" fill="none" stroke-linecap="round"/>` +
+    `<path d="M-690,44 C-520,16 -340,-4 -214,12" stroke="#4E8A6E" stroke-width="5" fill="none" opacity="0.6"/>` +
     `<path d="M-214,8 C-226,40 -226,120 -200,152 L-176,146 C-196,110 -196,46 -186,14Z" fill="#E9E2D2" stroke="${ln}" stroke-width="2"/>` + // inner cuff
     // palm / back of hand wrapping the bowl's left flank
     `<path d="M-190,30 C-170,6 -138,0 -116,14 C-98,26 -96,60 -100,96 C-104,126 -120,150 -150,156 C-176,160 -192,140 -194,110Z" fill="${sk}" stroke="${ln}" stroke-width="2.4"/>` +
@@ -273,7 +275,11 @@ function s08(t) {
     `<radialGradient id="t04key" cx="0.72" cy="0.2" r="0.8"><stop offset="0" stop-color="#F2B05A" stop-opacity="0.28"/><stop offset="1" stop-color="#F2B05A" stop-opacity="0"/></radialGradient>`;
   let s = `<defs>${defs}</defs>`;
   // room (d 0.2): dark warm, a hint of a screen and the lamp glow
-  s += L(c, 0.2, `<rect x="-400" y="-900" width="2900" height="2400" fill="#2A1A12"/><rect x="200" y="-500" width="560" height="880" fill="#33221A"/><rect x="1300" y="-600" width="700" height="980" fill="#2F1F17"/>` +
+  let lat = '';
+  for (let i = 0; i <= 10; i++) lat += `<rect x="${200 + i * 56}" y="-500" width="5" height="880" fill="#24160F"/>`;
+  for (let j = 0; j <= 14; j++) lat += `<rect x="200" y="${-500 + j * 62}" width="560" height="5" fill="#24160F"/>`;
+  s += L(c, 0.2, `<rect x="-400" y="-900" width="2900" height="2400" fill="#2A1A12"/><rect x="200" y="-500" width="560" height="880" fill="#3A2619"/>${lat}<rect x="190" y="-500" width="16" height="880" fill="#1E120C"/><rect x="756" y="-500" width="16" height="880" fill="#1E120C"/>` +
+    `<rect x="1300" y="-600" width="700" height="980" fill="#2F1F17"/><rect x="1420" y="-420" width="300" height="640" fill="#4A3524" opacity="0.6"/><path d="M1460,-300 Q1520,-200 1500,-60 Q1560,40 1680,120" stroke="#2A1A12" stroke-width="6" fill="none" opacity="0.5"/>` +
     `<ellipse cx="1500" cy="40" rx="700" ry="520" fill="url(#t04key)"/>`, { id: 't04room', bleed: 'all' });
   // table top (d 0.9)
   s += L(c, 0.9, `<path d="M-600,560 L2600,560 L2600,1500 L-600,1500Z" fill="url(#t04tab)"/>` +
@@ -290,7 +296,7 @@ function s08(t) {
   s += L(c, 1.0, bowl(B1[0], B1[1], 't04b1', fill1) + bowl(B2[0], B2[1], 't04b2', 1), { id: 't04bowls' });
   // ewer + her hand: in 35.31–35.72, tilt 35.72–36.56 pour, lift away 36.6–37.2
   const into = ramp(t, T_PUSH, 35.72, E.out), lift = ramp(t, 36.56, 37.3, E.inOut);
-  const ex = lerp(1280, 1010, into) + lift * 300, ey = lerp(240, 330, into) - lift * 260;
+  const ex = lerp(1280, 1010, into) + lift * 700, ey = lerp(240, 330, into) - lift * 620;
   const tilt = lerp(-6, -38, ramp(t, 35.6, 35.85, E.inOut)) * (1 - ramp(t, 36.5, 36.8, E.inOut)) - 6;
   const sp = rotp(SPOUT, tilt, ex, ey), hd = rotp(HANDLE, tilt, ex, ey);
   let pour = '';

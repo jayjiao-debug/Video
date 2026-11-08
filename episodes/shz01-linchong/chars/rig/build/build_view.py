@@ -63,7 +63,9 @@ def build(view, debug=None):
     FG = fg_mask_hi(R)
     for hp in S.get('holes', []):  # enclosed background (e.g. between the legs)
         ref = np.median(np.concatenate([R[:8].reshape(-1, 3), R[-8:].reshape(-1, 3)]), axis=0)
-        near_bg = np.abs(R.astype(int) - ref[None, None]).max(axis=2) < 16
+        near_bg = (np.abs(R.astype(int) - ref[None, None]).max(axis=2) < 16).astype(np.uint8)
+        near_bg = cv2.morphologyEx(near_bg, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+        near_bg = cv2.GaussianBlur(near_bg.astype(np.float32), (0, 0), 2.2) > 0.5
         FG &= ~(polymask(hp, shp) & near_bg)
     FG = soft_mask(FG, 1.0)
     INK = ink_mask(R, FG, **S.get('ink', {}))
@@ -107,6 +109,8 @@ def build(view, debug=None):
             small = np.zeros(nn, bool)
             small[1:] = st[1:, cv2.CC_STAT_AREA] < 90
             INK &= ~small[cc]
+        elif e.get('ink_all'):
+            INK &= ~polymask(e['poly'], shp)
         elif e.get('ink', True):
             INK &= ~(m if not e.get('pred') else cv2.dilate(m.astype(np.uint8), np.ones((5, 5), np.uint8)) > 0)
     for p in S.get('paint', []):  # add shapes (e.g. hat removal fills the head top)

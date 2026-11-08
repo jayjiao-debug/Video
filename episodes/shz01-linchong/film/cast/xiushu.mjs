@@ -31,7 +31,7 @@ export function xiushu(o = {}) {
   const ink = o.ink ?? 1;
   let s = `<defs><clipPath id="${id}c"><path d="M${f2(4 * k)},${f2(2 * k)} L${f2(w - 3 * k)},0 L${w},${f2(h - 4 * k)} L${f2(3 * k)},${h} Z"/></clipPath>` +
     `<radialGradient id="${id}e" cx="0.5" cy="0.5" r="0.72"><stop offset="0.6" stop-color="#7a5a32" stop-opacity="0"/><stop offset="1" stop-color="#7a5a32" stop-opacity="0.28"/></radialGradient>` +
-    `<radialGradient id="${id}b" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#17120E" stop-opacity="0.6"/><stop offset="0.5" stop-color="#2a2018" stop-opacity="0.34"/><stop offset="1" stop-color="#2a2018" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="${id}b" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#17120E" stop-opacity="0.78"/><stop offset="0.5" stop-color="#2a2018" stop-opacity="0.5"/><stop offset="1" stop-color="#2a2018" stop-opacity="0"/></radialGradient>` +
     `<filter id="${id}r" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="${f2(22 * k)}"/></filter></defs>`;
   s += `<g clip-path="url(#${id}c)" data-container="1">`;
   s += `<rect data-box="1" x="0" y="0" width="${w}" height="${h}" fill="#F1E4C6"/>`;

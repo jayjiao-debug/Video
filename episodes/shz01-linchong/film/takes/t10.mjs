@@ -38,10 +38,16 @@ const ROOM = (() => {
   s += `<rect x="${X(40)}" y="${Y(590)}" width="560" height="${FL - 590}" fill="#2C231E"/><rect x="${X(20)}" y="${Y(570)}" width="600" height="30" fill="#3A2E26"/>`;
   s += `<path d="M${X(70)},${Y(600)} L${X(570)},${Y(600)} L${X(560)},${Y(860)} Q${X(320)},${Y(890)} ${X(80)},${Y(860)}Z" fill="#5A2A24" opacity="0.75"/>`;
   s += `<path d="M${X(70)},${Y(640)} L${X(570)},${Y(640)}" stroke="#7A4A2A" stroke-width="6" opacity="0.5"/>`;
-  // the seated 山神 statue: a dim silhouette, crown, broad sleeves, no face detail
-  s += `<path d="M${X(170)},${Y(570)} Q${X(150)},${Y(420)} ${X(210)},${Y(330)} Q${X(250)},${Y(280)} ${X(270)},${Y(230)} L${X(370)},${Y(230)} Q${X(390)},${Y(280)} ${X(430)},${Y(330)} Q${X(490)},${Y(420)} ${X(470)},${Y(570)}Z" fill="#231C18"/>`;
-  s += `<ellipse cx="${X(320)}" cy="${Y(190)}" rx="56" ry="66" fill="#231C18"/><path d="M${X(256)},${Y(140)} L${X(272)},${Y(96)} L${X(300)},${Y(124)} L${X(320)},${Y(84)} L${X(340)},${Y(124)} L${X(368)},${Y(96)} L${X(384)},${Y(140)}Z" fill="#231C18"/>`;
-  s += `<path d="M${X(375)},${Y(150)} Q${X(392)},${Y(200)} ${X(372)},${Y(250)} M${X(432)},${Y(335)} Q${X(486)},${Y(420)} ${X(468)},${Y(566)}" stroke="#55657E" stroke-width="3" fill="none" opacity="0.45"/>`;
+  // the seated 山神 statue: a dim figure, crown, broad sleeves, hands in the lap, no face detail
+  s += `<g transform="translate(${X(320)} ${Y(572)}) scale(0.74) translate(${-X(320)} ${-Y(572)})" opacity="0.9">`;
+  s += `<path d="M${X(130)},${Y(572)} L${X(510)},${Y(572)} Q${X(500)},${Y(470)} ${X(450)},${Y(440)} Q${X(470)},${Y(380)} ${X(430)},${Y(300)} Q${X(400)},${Y(262)} ${X(360)},${Y(250)} L${X(280)},${Y(250)} Q${X(240)},${Y(262)} ${X(210)},${Y(300)} Q${X(170)},${Y(380)} ${X(190)},${Y(440)} Q${X(140)},${Y(470)} ${X(130)},${Y(572)}Z" fill="#3A302A"/>`;
+  s += `<path d="M${X(190)},${Y(440)} Q${X(320)},${Y(480)} ${X(450)},${Y(440)} Q${X(420)},${Y(500)} ${X(320)},${Y(505)} Q${X(220)},${Y(500)} ${X(190)},${Y(440)}Z" fill="#463A33"/>`;
+  s += `<rect x="${X(296)}" y="${Y(222)}" width="48" height="34" fill="#3A302A"/><ellipse cx="${X(320)}" cy="${Y(186)}" rx="44" ry="52" fill="#3A302A"/>`;
+  s += `<path d="M${X(270)},${Y(150)} L${X(370)},${Y(150)} L${X(362)},${Y(112)} L${X(278)},${Y(112)}Z M${X(262)},${Y(146)} L${X(378)},${Y(146)} L${X(378)},${Y(154)} L${X(262)},${Y(154)}Z" fill="#3A302A"/>`;
+  s += `<path d="M${X(362)},${Y(140)} Q${X(372)},${Y(190)} ${X(352)},${Y(230)} M${X(430)},${Y(302)} Q${X(470)},${Y(380)} ${X(452)},${Y(440)} Q${X(500)},${Y(470)} ${X(508)},${Y(568)}" stroke="#5E6E88" stroke-width="3" fill="none" opacity="0.5"/>`;
+  s += '</g>';
+  // a faded hanging banner behind the statue
+  s += `<rect x="${X(250)}" y="${Y(20)}" width="140" height="110" fill="#4A2622" opacity="0.5"/>`;
   // incense burner and candle stubs on the altar
   s += `<path d="M${X(450)},${Y(570)} l10,-40 l50,0 l10,40Z" fill="#3E3530"/><rect x="${X(120)}" y="${Y(540)}" width="14" height="30" fill="#6A5A4A"/>`;
   // straw heap on the floor
@@ -102,14 +108,14 @@ function blocking(t) {
   let x, dy = 0, lean = 0, sh = 0, el = 0, tilt = 0, expr = { ...EX.隐忍 }, quilt = 0;
   const HANDX = 520; // hands reach ≈ 520 px ahead of the feet at lean 34
   if (t < CONTACT + 0.06) {
-    lean = lerp(16, 34, ramp(t, T0 - 0.2, pushA, E.out));
-    sh = lerp(55, 78, ramp(t, T0 - 0.2, pushA, E.out)); el = 10;
+    lean = lerp(18, 38, ramp(t, T0 - 0.2, pushA, E.out));
+    sh = lerp(60, 84, ramp(t, T0 - 0.2, pushA, E.out)); el = 6;
     x = stoneX - HANDX;
     expr = { ...EX.隐忍, jaw: 1, eye: 0.6, brow: -0.9, mouth: -0.5 };
     tilt = -4;
   } else if (t < 79.05) {
     const k = ramp(t, CONTACT + 0.06, 79.05, E.inOut);
-    lean = lerp(34, 0, k); sh = lerp(78, 0, k); el = lerp(10, 0, k);
+    lean = lerp(38, 0, k); sh = lerp(78, 0, k); el = lerp(10, 0, k);
     x = CRACK - STONE_W - HANDX - 30 * k;
     expr = { ...EX.隐忍, eye: 0.75, brow: -0.6 };
   } else if (t < 80.26) {
@@ -146,9 +152,9 @@ function lcSide(t, b) {
 function quiltSVG(b) {
   if (b.quilt <= 0.01) return '';
   const x = b.x, k = b.quilt, top = FL - 0.30 * HF * k + 30;
-  return `<path d="M${f2(x - 0.2 * HF)},${FL + 80} Q${f2(x - 0.24 * HF)},${f2(top + 40)} ${f2(x - 0.08 * HF)},${f2(top)} Q${f2(x + 0.12 * HF)},${f2(top - 10)} ${f2(x + 0.3 * HF)},${f2(top + 30)} Q${f2(x + 0.42 * HF)},${f2(FL - 60)} ${f2(x + 0.46 * HF)},${FL + 80}Z" fill="#4A5262"/>` +
-    `<path d="M${f2(x - 0.05 * HF)},${f2(top + 20)} q40,60 20,160 M${f2(x + 0.18 * HF)},${f2(top + 10)} q-20,80 10,180" stroke="#3A4150" stroke-width="5" fill="none"/>` +
-    `<rect x="${f2(x + 0.05 * HF)}" y="${f2(top + 60)}" width="60" height="44" fill="#5A6273" transform="rotate(8 ${f2(x)} ${f2(top)})"/>`;
+  return `<path d="M${f2(x - 0.16 * HF)},${FL + 80} Q${f2(x - 0.2 * HF)},${f2(top + 60)} ${f2(x - 0.06 * HF)},${f2(top + 6)} Q${f2(x + 0.02 * HF)},${f2(top - 8)} ${f2(x + 0.1 * HF)},${f2(top + 4)} Q${f2(x + 0.2 * HF)},${f2(top + 30)} ${f2(x + 0.3 * HF)},${f2(FL - 120)} Q${f2(x + 0.4 * HF)},${f2(FL - 40)} ${f2(x + 0.5 * HF)},${FL + 80}Z" fill="#5B5A5E"/>` +
+    `<path d="M${f2(x - 0.05 * HF)},${f2(top + 20)} q40,60 20,160 M${f2(x + 0.18 * HF)},${f2(top + 10)} q-20,80 10,180" stroke="#424147" stroke-width="5" fill="none"/>` +
+    `<rect x="${f2(x + 0.05 * HF)}" y="${f2(top + 60)}" width="60" height="44" fill="#6A6460" transform="rotate(8 ${f2(x)} ${f2(top)})"/>`;
 }
 function breath(t, b) {
   if (b.quilt < 0.6 || t > 80.4) return '';
@@ -228,23 +234,25 @@ function pov(t, open) {
     scene += `<ellipse cx="${f2(sx + noise1(t * 0.6 + ph, 9) * 40)}" cy="${f2(380 - ((t * 60 + i * 70) % 300))}" rx="${f2(120 + i * 10)}" ry="90" fill="#2A1A16" opacity="0.5"/>`;
   }
   // the burning 草厅 (silhouette frame inside flames), far
-  scene += flames(t, { x0: cx - 520, x1: cx + 520, y: 760, h: 300, n: 16, seed: 21, cols: ['#B8361A', '#E04A1F', '#FF7A2E', '#FFB15E'] });
-  scene += `<path d="M${cx - 300},760 L${cx - 290},560 L${cx - 120},470 L${cx + 60},470 L${cx + 260},560 L${cx + 270},760" stroke="#120C0A" stroke-width="14" fill="none"/><path d="M${cx - 130},470 L${cx - 40},620 M${cx + 40},470 L${cx + 120},640" stroke="#120C0A" stroke-width="10"/>`;
-  scene += flames(t, { x0: cx - 420, x1: cx + 420, y: 770, h: 190, n: 12, seed: 33, cols: ['#FF7A2E', '#FFB15E', '#FFE3A3'] });
-  scene += `<rect x="0" y="760" width="1920" height="400" fill="url(#t10fground)"/>`;
-  scene += embers(t, { seed: 5, n: 70, area: [cx - 300, 100, cx + 300, 820], speed: 150, life: 2.4 });
+  scene += flames(t, { x0: cx - 520, x1: cx + 520, y: 700, h: 300, n: 16, seed: 21, cols: ['#B8361A', '#E04A1F', '#FF7A2E', '#FFB15E'] });
+  scene += `<path d="M${cx - 300},700 L${cx - 290},500 L${cx - 120},410 L${cx + 60},410 L${cx + 260},500 L${cx + 270},700" stroke="#120C0A" stroke-width="14" fill="none"/><path d="M${cx - 130},410 L${cx - 40},560 M${cx + 40},410 L${cx + 120},580" stroke="#120C0A" stroke-width="10"/>`;
+  scene += flames(t, { x0: cx - 420, x1: cx + 420, y: 710, h: 190, n: 12, seed: 33, cols: ['#FF7A2E', '#FFB15E', '#FFE3A3'] });
+  scene += `<rect x="0" y="700" width="1920" height="460" fill="url(#t10fground)"/>`;
+  scene += embers(t, { seed: 5, n: 70, area: [cx - 300, 60, cx + 300, 720], speed: 150, life: 2.4 });
   // falling snow lit by the fire
   const R2 = rng(8);
   for (let i = 0; i < 50; i++) { const x = cx - 260 + R2() * 520, y = ((R2() * 1080 + t * (90 + R2() * 60)) % 1100) - 10, r = 1.5 + R2() * 3; scene += `<circle cx="${f2(x + Math.sin(t + i) * 10)}" cy="${f2(y)}" r="${f2(r)}" fill="#FFD0A8" opacity="0.7"/>`; }
   // three faceless men in front of the fire, rim-lit
-  const men = [[cx - 120, 1060, 470, 0], [cx + 10, 1080, 520, 1], [cx + 135, 1070, 480, 2]];
+  const men = [[cx - 112, 842, 360, 0], [cx + 6, 850, 390, 1], [cx + 118, 846, 365, 2]];
   let rim = '', blk = '';
   for (const [x, b, hgt, k] of men) { rim += silhouette(k, x, b, hgt, t); blk += silhouette(k, x, b, hgt, t); }
   scene += `<g fill="#FF8A3D" opacity="${f2(0.8 * Math.min(1, fk))}" filter="url(#${blurId(3)})" transform="translate(0 -3)">${rim}</g><g fill="#120C0A">${blk}</g>`;
   // heat haze shimmer (subtle) is skipped; vignette inside the slit
   let s = `<defs>${lg('t10fsky', [[0, '#1E0E0B'], [0.45, '#5A2414'], [0.75, '#B34A1E'], [1, '#E07A3A']])}${lg('t10fground', [[0, '#C86A3A'], [1, '#3A1A10']])}` +
     `<clipPath id="t10slit"><path d="${slit}"/></clipPath></defs>`;
-  s += `<rect x="-20" y="-20" width="1960" height="1120" fill="#0B0807"/>`;
+  s += `<rect x="-20" y="-20" width="1960" height="1120" fill="#160F0C"/>`;
+  // warm light leaking onto the inner face of the planks around the slit
+  s += `<defs>${lg('t10leak', [[0, '#FF7A2E', 0], [0.5, '#FF7A2E', 0.32], [1, '#FF7A2E', 0]], 0, 0, 1, 0)}</defs><rect x="${f2(cx - hw - 320)}" y="-20" width="${f2(2 * hw + 640)}" height="1120" fill="url(#t10leak)" opacity="${f2(Math.min(1, fk))}"/>`;
   // door planks: faint grain, fire-lit slit edges
   for (let i = 0; i < 14; i++) s += `<path d="M${f2(cx - hw - 40 - i * 60)},-20 l${f2((i % 3) - 1)},1120 M${f2(cx + hw + 40 + i * 60)},-20 l${f2((i % 2) * 2 - 1)},1120" stroke="#1A120E" stroke-width="3"/>`;
   s += `<g clip-path="url(#t10slit)">${scene}</g>`;
@@ -272,7 +280,7 @@ function s24(t) {
   s += `<g transform="translate(${ex} ${ey}) scale(${f2(z)}) translate(${-ex} ${-ey})">${face}`;
   // fire tint across the slit, darkness elsewhere (luma ~25–30), a cold rim on the hat brim
   s += `<rect x="-200" y="${bandY - bandH * 1.2}" width="2400" height="${bandH * 2.4}" fill="#FF8A3D" opacity="${f2(0.32 * fk)}" style="mix-blend-mode:multiply"/>`;
-  s += `<rect x="-400" y="-400" width="2800" height="2000" fill="#07070B" opacity="0.93" mask="url(#t10band)"/>`;
+  s += `<rect x="-400" y="-400" width="2800" height="2000" fill="#07070B" opacity="0.86" mask="url(#t10band)"/>`;
   s += `<rect x="-400" y="${bandY - bandH * 0.5}" width="2800" height="${bandH}" fill="#FFB070" opacity="${f2(0.12 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(10)})"/>`;
   s += `</g>`;
   const defs = `<defs><linearGradient id="t10bg" x1="0" y1="0" x2="0" y2="1">` +
@@ -287,12 +295,12 @@ function s24(t) {
 // ------------------------------------------------------------------ camera for S22–S23 (world)
 function cam(t) {
   const eye = [1352 + 0.053 * HF, FL + 180 - 0.935 * HF];
-  if (t < 80.26) return { x: lerp(30, -10, ramp(t, T0 - 0.4, 80.26, E.inOut)), y: 0, zoom: lerp(1.0, 1.03, ramp(t, T0 - 0.4, 80.26, E.inOut)) };
-  const c0 = { x: -10, y: 0, zoom: 1.03 };
+  if (t < 80.26) return { x: lerp(40, -20, ramp(t, T0 - 0.4, 80.26, E.inOut)), y: -40, zoom: lerp(1.1, 1.13, ramp(t, T0 - 0.4, 80.26, E.inOut)) };
+  const c0 = { x: -20, y: -40, zoom: 1.13 };
   const cr = [CRACK, eye[1] + 10];
   if (t < 81.5) {
-    const k = ramp(t, 80.26, 81.5, E.inOut), z = lerp(1.03, 1.3, k);
-    const target = camAt([lerp(960 + c0.x, cr[0] - 120, k), lerp(540, cr[1] + 60, k)], [960, 540], z);
+    const k = ramp(t, 80.26, 81.5, E.inOut), z = lerp(1.13, 1.3, k);
+    const target = camAt([lerp(960 + c0.x, cr[0] - 120, k), lerp(540 + c0.y, cr[1] + 60, k)], [960, 540], z);
     return target;
   }
   const z = t < 82.34 ? zexp(t, 81.5, 82.34, 1.3, 2.5, E.in) : zexp(t, 82.34, 82.74, 2.5, 4.6, E.in);
@@ -313,7 +321,7 @@ export default {
   subYc: (t) => (t >= 86.35 ? 992 : 890),
   frame(t) {
     let s = '';
-    if (t < 82.42 || (t >= 86.5 && t < S24 && false)) {
+    if (t < 82.7) {
       // interior world
       const c = cam(t);
       const b = blocking(t);
@@ -325,7 +333,7 @@ export default {
       const fk = fireK(t);
       if (fk > 0) s += L(c, 1, `<g style="mix-blend-mode:screen" filter="url(#${blurId(40)})"><ellipse cx="${CRACK - 200}" cy="${FL - 560}" rx="420" ry="520" fill="#FF7A2E" opacity="${f2(0.22 * fk)}"/></g>`, { id: 't10warm', bleed: 'all' });
       // cold ambient fill and vignette (screen space)
-      s += `<rect width="1920" height="1080" fill="#1B2A44" opacity="0.18" style="mix-blend-mode:screen"/>`;
+      s += `<rect width="1920" height="1080" fill="#1B2A44" opacity="0.08" style="mix-blend-mode:screen"/>`;
     }
     if (t >= 82.34 && t < S24 + 0.02) {
       const open = t < 86.5 ? ramp(t, 82.38, 82.74, E.out) : 1 - ramp(t, 86.5, 86.85, E.inOut);

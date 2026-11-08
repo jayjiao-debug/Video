@@ -41,26 +41,27 @@ const KA = FA.height / 7.5 / ((1468 - 331) / 6.5);                      // rig d
 const dA = (p) => [FA.x + KA * (p[0] - 428), FA.y + KA * (p[1] - 1468)];
 const TAT = [474, 290];                                                   // tattoo centre, rig data (front, left cheek)
 const TATW = dA(TAT);
-const ZA = 7.0;                                                           // ECU zoom
+const ZA = 6.0;                                                           // ECU zoom
 
 function zoomA(t) {
   if (t < 60.12) return lerp(ZA, ZA * 0.985, ramp(t, T.a, 60.12, E.lin));
-  // constant-ratio pull-back with 8-frame eased ends (≈ 2.1 %/frame)
-  const z0 = ZA * 0.985, a = 60.12, b = 63.4;
+  // constant-ratio pull-back with 8-frame eased ends (≈ 1.9 %/frame), then a slow settle
+  const z0 = ZA * 0.985, a = 60.12, b = 63.5;
   const u = clamp((t - a) / (b - a)), e = 8 / FPS / (b - a);
-  // smoothstep-ish ends on a linear core
   let k;
   if (u < e) k = (u * u) / (2 * e * (1 - e));
   else if (u > 1 - e) k = 1 - ((1 - u) * (1 - u)) / (2 * e * (1 - e));
   else k = (u - e / 2) / (1 - e);
-  return z0 * Math.pow(1 / z0, k) * (t > b ? lerp(1, 0.985, ramp(t, b, T.b, E.inOut)) : 1);
+  return z0 * Math.pow(1 / z0, k) * (t > b ? lerp(1, 0.99, ramp(t, b, T.b, E.inOut)) : 1);
 }
+// zoom about the screen centre; the world point under the centre drifts from the cheek (ECU) to the figure (MS)
+// in proportion to 1/zoom, so its screen speed stays constant (≈ 4 px/frame).
+const W_ECU = [TATW[0] - 290 / ZA, TATW[1] - 50 / ZA];
+const W_MS = [960, 480];
 function camA(t) {
   const z = zoomA(t);
-  const m = clamp(Math.log(Math.max(z, 1)) / Math.log(ZA));
-  const p = [lerp(960, TATW[0], m), lerp(560, TATW[1], m)];
-  const q = [lerp(960, 1250, m), lerp(540, 590, m)];
-  return camAt(p, q, z);
+  const m = clamp((1 / z - 1) / (1 / ZA - 1));
+  return camAt([lerp(W_MS[0], W_ECU[0], m), lerp(W_MS[1], W_ECU[1], m)], [960, 540], z);
 }
 
 // abstract tattoo marks (rig data coords around TAT), three groups bloom in turn
@@ -139,17 +140,19 @@ function figA(t) {
   const [head, r1] = cut(s, 'head');
   const [cang, body] = cut(r1, 'cangue');
   // cangue swings in from the lower right and clamps on 61.125 (impact: 3-frame shake on the board only)
-  const sw = 1 - ramp(t, 60.79, T.clamp, E.in);
+  const sw = 1 - ramp(t, 60.62, T.clamp, (x) => x * x);
   const [shx, shy] = shake(t, T.clamp, 3, 0.9, 3);
   const bounce = Math.sin(clamp((t - T.clamp) / 0.2) * Math.PI) * 3 * (t > T.clamp ? 1 : 0);
-  const cTf = `translate(${f2(300 * sw + shx)} ${f2(560 * sw + shy + bounce)}) rotate(${f2(40 * sw)} 428 372)`;
+  const cTf = `translate(${f2(110 * sw + shx)} ${f2(240 * sw + shy + bounce)}) rotate(${f2(28 * sw)} 428 372)`;
   // head drops with the clamp (chin toward the chest; 10 frames), then a small settle
   const hd = ramp(t, T.clamp + 0.02, T.clamp + 0.36, E.out);
-  const hTf = `translate(${f2(1.5 * hd)} ${f2(13 * hd)}) rotate(${f2(4 * hd)} 428 332)`;
+  const hTf = `translate(0 ${f2(2.5 * hd)})`;
   // shoulders sag on 61.95 (whole figure settles)
   const sag = 9 * ramp(t, T.sag, T.sag + 0.5, E.inOut);
   let out = `<g transform="translate(0 ${f2(sag * KA)})">` + body;
   out += `<g transform="${root}">`;
+  // hide the 东京 sleeve roundels that peek out beside the board (status gone: convict robe)
+  out += `<ellipse cx="263" cy="493" rx="13" ry="26" fill="#454C61"/><ellipse cx="611" cy="489" rx="13" ry="26" fill="#454C61"/>`;
   if (sw < 1) out += `<g transform="${cTf}">${cang}</g>`;
   out += `<g transform="${hTf}">${head}<g>${marks(t)}</g></g>`;
   out += tattooHand(t);
@@ -182,13 +185,13 @@ function sceneA(t) {
   let s = `<rect width="1920" height="1080" fill="#1D232D"/>`;
   s += L(c, 0.94, hallBG(), { id: 't08hall', bleed: 'all' });
   // the 白虎 screen's pale edge far behind (only seen at MS)
-  s += L(c, 1, figA(t), { id: 't08lin' });
+  s += L(c, 1, `<g data-allowcut="1">${figA(t)}</g>`, { id: 't08lin' });
   // cold grade: multiply blue; one cold shaft from above (screen)
   const sh = ramp(t, 61.3, 62.6, E.inOut);
   s += `<g data-layer="fx-grade" data-z="700" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#8C9DB5" style="mix-blend-mode:multiply" opacity="0.62"/>`;
   // S16: a cold key from the top left; S17: one cold shaft from above (soft-edged)
   s += `<rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08key)" style="mix-blend-mode:screen" opacity="${f2(0.5 * (1 - sh))}"/>`;
-  if (sh > 0) s += `<path d="M${f2(700 - 60 * sh)},-20 L${f2(1220 + 60 * sh)},-20 L${f2(1480 + 120 * sh)},1100 L${f2(440 - 120 * sh)},1100Z" fill="url(#t08sh)" mask="url(#t08shm)" style="mix-blend-mode:screen" opacity="${f2(0.9 * sh)}"/>`;
+  if (sh > 0) s += `<path d="M${f2(760 - 40 * sh)},-20 L${f2(1160 + 40 * sh)},-20 L${f2(1400 + 80 * sh)},1100 L${f2(520 - 80 * sh)},1100Z" fill="url(#t08sh)" mask="url(#t08shm)" style="mix-blend-mode:screen" opacity="${f2(0.55 * sh)}"/>`;
   s += `<rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08vg)"/></g>`;
   // world slide: the shaft widens into white summer glare
   const wk = ramp(t, T.slide, 64.15, E.in);
@@ -216,7 +219,7 @@ function camBx(t) {
   };
   let x = seg(63.9, 65.52, 0.01, 0.22) + seg(66.56, 67.3, 0.2, 0.01);
   // pan left along his eye-line (accelerates to ~22 px/frame)
-  if (t > T.pan) { const u = t - T.pan; x -= 0.5 * 760 * Math.min(u, 0.85) ** 2 + (u > 0.85 ? 0 : 0); }
+  if (t > T.pan) { const u = t - T.pan; x -= 0.5 * 640 * Math.min(u, 0.85) ** 2 + (u > 0.85 ? 0 : 0); }
   return x;
 }
 function walkPhase(t) {
@@ -505,8 +508,8 @@ function sceneC(t) {
   // his arm reaches to 林冲's shoulder: lands 68.592
   const sh = ZH.anchor('shoulderR', zo);
   const land = ramp(t, 68.1, T.hand, E.out);
-  const handRest = [770, 600];       // wrist; the fingers drape over the shoulder cap at ≈ (620, 660)
-  const handFrom = [930, 500];
+  const handRest = [812, 566];       // wrist; the fingers drape over the shoulder cap at ≈ (680, 690)
+  const handFrom = [960, 470];
   const sqz = Math.sin(clamp((t - T.sq) / 0.3) * Math.PI) * (t > T.sq ? 1 : 0);
   const hp = [lerp(handFrom[0], handRest[0], land), lerp(handFrom[1], handRest[1], land) + 3 * sqz];
   const handOp = 1 - ramp(t, T.dis, 73.4, E.inOut);
@@ -527,7 +530,7 @@ function sceneC(t) {
   // 林冲's back in the foreground (soft), then the arm and hand on his shoulder (sharp)
   const snowK = ramp(t, 72.55, 73.6, E.inOut);
   s += L(c, 1.25, linBack(t), { id: 't08linback', blur: 5, bleed: 'lb' });
-  if (handOp > 0) s += L(c, 1.25, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1 - land)}${zhangHand(hp[0], hp[1], 1.2, sqz, lerp(5, 28, land))}</g>`, { id: 't08hand', bleed: 'r' });
+  if (handOp > 0) s += L(c, 1.25, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1 - land)}${zhangHand(hp[0], hp[1], 1.2, sqz, lerp(-5, -30, land))}</g>`, { id: 't08hand', bleed: 'r' });
   if (snowK > 0) s += L(c, 1.25, shoulderSnow(snowK), { id: 't08shsnow', blur: 1.5 });
   // sepia memory grade + vignette
   s += `<g data-layer="fx-sepia" data-z="770" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#C9A27A" style="mix-blend-mode:multiply" opacity="0.4"/><rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08cv)"/></g>`;
@@ -563,3 +566,5 @@ export default {
     return sceneC(t);
   },
 };
+// for speed checks (tools only)
+export const __cams = { camA, camBx, camC };
