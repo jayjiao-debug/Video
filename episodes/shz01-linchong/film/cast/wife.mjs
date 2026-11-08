@@ -101,20 +101,17 @@ export function wifeBack(o = {}) {
       g += `<path d="M${P(top[0], top[1])} C${P(top[0] + side * 0.36 * u, top[1] + 0.2 * u)} ${P(wr[0] + side * 0.24 * u, wr[1] - 0.6 * u)} ${P(wr[0] + side * 0.22 * u + sway, bot)} L${P(wr[0] - side * 0.3 * u + sway, bot + 0.04 * u)} C${P(wr[0] - side * 0.34 * u, wr[1] - 0.4 * u)} ${P(top[0] - side * 0.1 * u, top[1] + 0.8 * u)} ${P(top[0], top[1])}Z" fill="${C.coat}" ${ln}/>`;
       g += `<path d="M${P(wr[0] + side * 0.22 * u + sway, bot)} L${P(wr[0] - side * 0.3 * u + sway, bot + 0.04 * u)}" stroke="${C.trim}" stroke-width="${f2(0.05 * u)}" stroke-linecap="round"/>`;
     } else {
-      // raised arm: a tube along the forearm flaring to the cuff, loose cloth hanging below it
+      // raised arm (hand up on a post): the wide sleeve slides down the forearm and bunches at the elbow,
+      // hanging below it; the forearm shows bare near the wrist.
       const fx = wr[0] - el[0], fy = wr[1] - el[1], fl = Math.hypot(fx, fy) || 1, nx = -fy / fl, ny = fx / fl;
-      const cuff = [el[0] + fx * 0.82, el[1] + fy * 0.82];
-      const w0 = 0.24 * u, w1 = 0.34 * u;
-      const A = [el[0] + nx * w0, el[1] + ny * w0], B = [cuff[0] + nx * w1, cuff[1] + ny * w1];
-      const Cc = [cuff[0] - nx * w1, cuff[1] - ny * w1], D = [el[0] - nx * w0, el[1] - ny * w0];
-      const lowSide = (A[1] + B[1]) > (Cc[1] + D[1]);
-      const [E1, E2] = lowSide ? [A, B] : [D, Cc];
-      const hang = 0.45 * u * Math.abs(fx / fl) + 0.15 * u;
-      const mid = [(E1[0] + E2[0]) / 2 + sway, Math.max(E1[1], E2[1]) + hang];
-      g += `<path d="${limb(cuff, wr, 0.09 * u, 0.08 * u)}" fill="${C.skin}" ${ln}/>`;
-      g += `<path d="M${P(A[0], A[1])} L${P(B[0], B[1])} L${P(Cc[0], Cc[1])} L${P(D[0], D[1])}Z" fill="${C.coat}" ${ln}/>`;
-      g += `<path d="M${P(E1[0], E1[1])} Q${P(mid[0], mid[1] + hang * 0.3)} ${P(E2[0], E2[1])}" fill="${C.coatS}" ${ln}/>`;
-      g += `<path d="M${P(B[0], B[1])} L${P(Cc[0], Cc[1])}" stroke="${C.trim}" stroke-width="${f2(0.05 * u)}" stroke-linecap="round"/>`;
+      const cuff = [el[0] + fx * 0.5, el[1] + fy * 0.5];
+      g += `<path d="${limb(cuff, wr, 0.1 * u, 0.08 * u)}" fill="${C.skin}" ${ln}/>`;
+      const bw = 0.5 * u, by = Math.max(el[1], cuff[1]) + 0.7 * u;
+      const c1 = [cuff[0] + nx * 0.2 * u, cuff[1] + ny * 0.2 * u], c2 = [cuff[0] - nx * 0.2 * u, cuff[1] - ny * 0.2 * u];
+      const L1 = c1[0] < c2[0] ? c1 : c2, R1 = c1[0] < c2[0] ? c2 : c1;
+      g += `<path d="M${P(L1[0], L1[1])} C${P(el[0] - bw * 0.7, el[1] - 0.1 * u)} ${P(el[0] - bw * 0.75 + sway, by - 0.2 * u)} ${P(el[0] - bw * 0.35 + sway, by)} C${P(el[0] + sway, by + 0.06 * u)} ${P(el[0] + bw * 0.45 + sway, by - 0.02 * u)} ${P(el[0] + bw * 0.55 + sway, by - 0.22 * u)} C${P(el[0] + bw * 0.6, el[1] + 0.1 * u)} ${P(R1[0] + 0.06 * u, R1[1] + 0.2 * u)} ${P(R1[0], R1[1])}Z" fill="${C.coat}" ${ln}/>`;
+      g += `<path d="M${P(L1[0], L1[1])} L${P(R1[0], R1[1])}" stroke="${C.trim}" stroke-width="${f2(0.05 * u)}" stroke-linecap="round"/>`;
+      g += `<path d="M${P(el[0] - bw * 0.2, el[1] + 0.1 * u)} C${P(el[0] - bw * 0.25, by - 0.3 * u)} ${P(el[0] - bw * 0.1, by - 0.1 * u)} ${P(el[0] - bw * 0.05, by - 0.02 * u)}" fill="none" stroke="${C.coatS}" stroke-width="${f2(lw * 1.5)}"/>`;
     }
     // hand (back of the hand, fingers curled around a post when raised)
     const hx = wr[0] + (spec ? 0 : side * 0.02 * u), hy = wr[1] + (spec ? -0.02 * u : 0.16 * u);
