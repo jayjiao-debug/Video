@@ -112,8 +112,15 @@ def kmeans_palette(rgb, mask, K, seed=1, extra=None):
     return cen
 
 
+def hex_rgb(c):
+    if isinstance(c, str):
+        c = c.lstrip('#')
+        return [int(c[i:i + 2], 16) for i in (0, 2, 4)]
+    return list(c)
+
+
 def lab_of(rgb_list):
-    a = np.array(rgb_list, np.uint8).reshape(-1, 1, 3)
+    a = np.array([hex_rgb(c) for c in rgb_list], np.uint8).reshape(-1, 1, 3)
     return cv2.cvtColor(a, cv2.COLOR_RGB2LAB).reshape(-1, 3).astype(np.float32)
 
 
