@@ -117,6 +117,7 @@ const S26_FG = bake('t11_s26fg', 4600, 420, (() => {
 })());
 function s26(t) {
   const c = cam26(t);
+  const wop = 1 - ramp(t, 99.25, 99.8, E.inOut); // he walks on into the snow before the pier appears
   let s = '';
   s += `<defs><linearGradient id="t11sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E4C60"/><stop offset="0.55" stop-color="#6F8399"/><stop offset="1" stop-color="#8FA3B8"/></linearGradient></defs>`;
   s += `<rect x="-100" y="-300" width="2120" height="1500" fill="url(#t11sky)" data-layer="t11sky" data-z="0"/>`;
@@ -134,7 +135,7 @@ function s26(t) {
   }
   s += L(c, 1, fp, { id: 't11prints', bleed: 'l' });
   // the walker (iconic silhouette: hat, spear on the shoulder, gourd at the tip)
-  s += L(c, 1, walker({ t, x: fx, y: fy, height: 160, id: 't11wk', gourdCol: true }), { id: 't11walker' });
+  if (wop > 0) s += L(c, 1, walker({ t, x: fx, y: fy, height: 160, id: 't11wk', gourdCol: true }), { id: 't11walker', op: wop });
   s += L(c, 1.4, `<g transform="translate(-600 750)">${S26_FG}</g>`, { id: 't11fg', bleed: 'all' });
   // blizzard: three bands, slanting left (wind against him)
   s += snow(t, { seed: 261, n: 220, d: 0.5, r: [1, 2.2], fall: 170, slant: -28, sway: 10, cam: c, op: 0.75 });
@@ -198,6 +199,7 @@ function s27scene(t, key, rise = 1) {
   s += reedBand(t, key, 31, 600, 210 * rise, 900, 2100, 80);
   s += reedBand(t, key, 32, 520, 120 * rise, -140, 2060, 70, 0.75);
   s += pierSvg(key);
+  s += reedBand(t, key, 33, 1120, 260 * rise, -200, 380, 30);
   return s;
 }
 // 林冲 on the pier: 梁山 look (costume A, dark indigo robe, plain head cloth), side view facing right
@@ -216,19 +218,16 @@ function s27(t, rise = 1) {
   const last = active[active.length - 1];
   const prev = active.length > 1 ? active[active.length - 2][1] : last[1];
   const [tf, key, d] = last;
-  const front = -100 + ((t - tf) / d) * 2120;
-  if (front < 2100 && prev !== key) {
+  const front = -420 + ((t - tf) / d) * 2760;
+  if (front < 2340 && prev !== key) {
     s += L(c, 1, s27scene(t, prev), { id: 't11s27a', bleed: 'all' });
     const id = `t11sw${Math.round(tf * 10)}`;
-    s += `<defs><linearGradient id="${id}g" gradientUnits="userSpaceOnUse" x1="${f2(front - 120)}" y1="0" x2="${f2(front + 120)}" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="${id}" maskUnits="userSpaceOnUse" x="-400" y="-400" width="2800" height="1900"><rect x="-400" y="-400" width="2800" height="1900" fill="url(#${id}g)"/></mask></defs>`;
+    s += `<defs><linearGradient id="${id}g" gradientUnits="userSpaceOnUse" x1="${f2(front - 420)}" y1="0" x2="${f2(front + 420)}" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="${id}" maskUnits="userSpaceOnUse" x="-400" y="-400" width="2800" height="1900"><rect x="-400" y="-400" width="2800" height="1900" fill="url(#${id}g)"/></mask></defs>`;
     s += `<g mask="url(#${id})">${L(c, 1, s27scene(t, key), { id: 't11s27b', bleed: 'all' })}</g>`;
-    // the wind sweep: a pale streak riding the front
-    s += `<rect x="${f2(front - 60)}" y="0" width="120" height="1080" fill="#FFFFFF" opacity="0.10"/>`;
   } else s += L(c, 1, s27scene(t, key, rise), { id: 't11s27b', bleed: 'all' });
   cur = key;
   s += L(c, 1, linPier(t), { id: 't11s27lin' });
   // near reeds in front of the pier foot (left), sway
-  s += L(c, 1.2, reedBand(t, seasonAt(t, 200), 33, 1120, 260 * rise, -200, 380, 30), { id: 't11s27near', bleed: 'all' });
   s += geese(t, 102.25, 103.75, { x0: 2000, x1: -140, y0: 170, y1: 130 });
   // winter snow on the beat 103.561 (until spring)
   if (t >= 103.561 && t < 104.1) s += snow(t, { seed: 271, n: 90, r: [1.5, 3.5], fall: 120, slant: -8, op: 0.85 * (1 - ramp(t, 103.9, 104.1)) });
@@ -290,13 +289,19 @@ function s28(t) {
   const des = ramp(t, 110.6, 112.2, E.inOut);
   s += `<rect width="1920" height="1080" fill="#888888" opacity="${f2(0.78 * des)}" style="mix-blend-mode:saturation"/>`;
   s += `<rect width="1920" height="1080" fill="#C9CCCA" opacity="${f2(0.16 * des)}"/>`;
+  // the light drains with the drip (softens the jump into T12's night interior)
+  const dk = ramp(t, 114.3, 115.217, E.in);
+  if (dk > 0) s += `<rect width="1920" height="1080" fill="#2A3242" opacity="${f2(0.5 * dk)}"/>`;
   // 「已故半载」 brushed with the voice, then the drip
   s += callig(t);
   return s;
 }
-// --- calligraphy: four characters in a column at x 640, dry brush, each brushed in ~0.35 s
-const CH = [['已', 112.10], ['故', 112.45], ['半', 112.80], ['载', 113.14]];
-const CFS = 140, CX = 640, CY0 = 112, CSP = 152;
+// --- calligraphy: 已故 (right column) / 半载 (left column, x 640), dry brush, each brushed in ~0.35 s with the voice.
+// Two columns so the drip from 载 can end where T12's tear is at the cut (MC3: x ≈ 642, y ≈ 470).
+const CH = [['已', 112.10, 790, 160], ['故', 112.45, 790, 296], ['半', 112.80, 640, 160], ['载', 113.14, 640, 296]];
+const CFS = 128;
+export const DRIP = { x: 642, y0: 352, y1: 470, t0: 114.38, t1: 115.217 };
+export const dripHead = (t) => DRIP.y0 + (DRIP.y1 - DRIP.y0) * Math.pow(clamp((t - DRIP.t0) / (DRIP.t1 - DRIP.t0)), 2);
 const DRY = `<filter id="t11dry" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.09 0.22" numOctaves="3" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.75" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="t"/><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" result="d"/><feDisplacementMap in="t" in2="d" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>` +
   `<filter id="t11halo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>`;
 const GLYPH = CH.map(([ch], i) => bake(`t11_glyph${i}`, 200, 200,
@@ -305,18 +310,17 @@ const GLYPH = CH.map(([ch], i) => bake(`t11_glyph${i}`, 200, 200,
 function callig(t) {
   if (t < 112.0) return '';
   let s = '<g data-layer="text-callig" data-z="700">';
-  CH.forEach(([ch, t0], i) => {
+  CH.forEach(([ch, t0, cx, cy], i) => {
     const p = ramp(t, t0, t0 + 0.38, E.inOut);
     if (p <= 0) return;
-    const x = CX - 100, y = CY0 + i * CSP - 100 + 70;
+    const x = cx - 100, y = cy - 100;
     const m = wipeMask(x, y, 200, 200, p, 'down', 0.3);
     const sc = 1 + 0.03 * (1 - ramp(t, t0, t0 + 0.5, E.out));
-    s += `<defs>${m.defs}</defs><g ${m.attr}><g transform="translate(${CX} ${y + 100}) scale(${f2(sc)}) translate(${-CX} ${-(y + 100)})"><g transform="translate(${x} ${y})">${GLYPH[i]}</g></g></g>`;
+    s += `<defs>${m.defs}</defs><g ${m.attr}><g transform="translate(${cx} ${cy}) scale(${f2(sc)}) translate(${-cx} ${-cy})"><g transform="translate(${x} ${y})">${GLYPH[i]}</g></g></g>`;
   });
-  // the drip from the last stroke of 载, sliding down at x ≈ 640 (→ the tear in T12)
-  const d = ramp(t, 114.38, 115.217, (x) => x * x);
-  if (d > 0) {
-    const y0 = CY0 + 3 * CSP + 70 + 52, y1 = y0 + 300 * d, dx = CX + 2;
+  // the drip from the last stroke of 载, sliding down at x 642 (→ the tear in T12, same point at the cut)
+  if (t >= DRIP.t0) {
+    const y0 = DRIP.y0, y1 = dripHead(t), dx = DRIP.x;
     s += `<path d="M${f2(dx - 4)},${f2(y0 - 10)} C${f2(dx - 3)},${f2(lerp(y0, y1, 0.5))} ${f2(dx - 2)},${f2(y1 - 8)} ${f2(dx)},${f2(y1)} C${f2(dx + 2)},${f2(y1 - 8)} ${f2(dx + 3)},${f2(lerp(y0, y1, 0.5))} ${f2(dx + 4)},${f2(y0 - 10)}Z" fill="#15110E" opacity="0.85"/>`;
     s += `<ellipse cx="${f2(dx)}" cy="${f2(y1 + 4)}" rx="6" ry="8.5" fill="#15110E"/>`;
   }
