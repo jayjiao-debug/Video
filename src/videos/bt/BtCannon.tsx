@@ -3,7 +3,7 @@
 // lens), ending behind the gun looking out to sea; the gun fires at 1.47 s (blast, recoil, smoke, camera kick).
 // Shot B (1.7-2.2 s): the ball skims over the sea toward an enemy ship, speed streaks on the water.
 // Word-by-word captions on top. Characters are the film's 2D cards; props are new detailed meshes; the sea and the
-// distance are a painted backdrop plate.
+// distance is a cartoon gradient sky dome with separate cel clouds and a keyed painted island plate.
 import React, { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame, getInputProps } from "remotion";
@@ -40,21 +40,22 @@ const VENT = V(-0.716, 0.885, 0);
 type Tex = { deck: THREE.Texture; enemy: THREE.Texture; isl: THREE.Texture; clouds: THREE.Texture[] };
 // one flat-bottomed cartoon cumulus: white top, thin pink-lavender underside, soft 2px edge
 const cloudTex = (seed: number) => {
-  const W = 512, H = 256, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
-  const g = cv.getContext("2d")!, rnd = (k: number) => { const h = Math.sin(seed * 91.7 + k * 12.9898) * 43758.5453; return h - Math.floor(h); };
-  const base = 214, x0 = 70 + 30 * rnd(1), x1 = 442 - 30 * rnd(2);
-  g.filter = "blur(1.6px)"; g.fillStyle = "#fff";
-  g.beginPath(); g.moveTo(x0, base); g.lineTo(x1, base); g.arc(x1, base - 26, 26, Math.PI / 2, -Math.PI / 2, true); g.lineTo(x0, base - 52); g.arc(x0, base - 26, 26, -Math.PI / 2, Math.PI / 2, true); g.fill();
+  const W = 512, H = 256, sh = document.createElement("canvas"); sh.width = W; sh.height = H;
+  const g = sh.getContext("2d")!, rnd = (k: number) => { const h = Math.sin(seed * 91.7 + k * 12.9898) * 43758.5453; return h - Math.floor(h); };
+  const base = 214, x0 = 92 + 26 * rnd(1), x1 = 420 - 26 * rnd(2);
+  g.beginPath(); g.rect(0, 0, W, base); g.clip(); g.fillStyle = "#fff";
+  g.beginPath(); g.moveTo(x0, base); g.lineTo(x1, base); g.arc(x1, base - 24, 24, Math.PI / 2, -Math.PI / 2, true); g.lineTo(x0, base - 48); g.arc(x0, base - 24, 24, -Math.PI / 2, Math.PI / 2, true); g.fill();
   const n = 4 + Math.floor(rnd(3) * 3);
   for (let i = 0; i < n; i++) {
-    const u = (i + 0.5) / n, cx = x0 + 20 + (x1 - x0 - 40) * u + (rnd(10 + i) - 0.5) * 24;
-    const mid = 1 - Math.abs(u - 0.45) * 1.7, r = 34 + 62 * Math.max(0.15, mid) * (0.75 + 0.35 * rnd(20 + i));
-    g.beginPath(); g.arc(cx, base - 30 - r * 0.62, r, 0, Math.PI * 2); g.fill();
+    const u = i / (n - 1), cx = x0 + 6 + (x1 - x0 - 12) * u + (i > 0 && i < n - 1 ? (rnd(10 + i) - 0.5) * 24 : 0);
+    const mid = 1 - Math.abs(u - 0.42) * 1.6, r = 30 + 64 * Math.max(0.12, mid) * (0.8 + 0.3 * rnd(20 + i));
+    g.beginPath(); g.arc(cx, base - 26 - r * 0.6, r, 0, Math.PI * 2); g.fill();
   }
-  g.filter = "none"; g.globalCompositeOperation = "source-atop";
-  const gr = g.createLinearGradient(0, 20, 0, base);
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const c = cv.getContext("2d")!; c.filter = "blur(1.4px)"; c.drawImage(sh, 0, 0); c.filter = "none"; c.globalCompositeOperation = "source-atop";
+  const gr = c.createLinearGradient(0, 20, 0, base);
   gr.addColorStop(0, "#fffdf8"); gr.addColorStop(0.62, "#fbf8f2"); gr.addColorStop(0.8, "#f6ecef"); gr.addColorStop(0.93, "#e9e2f1"); gr.addColorStop(1, "#dcdcf5");
-  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  c.fillStyle = gr; c.fillRect(0, 0, W, H);
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 };
 const loadTex = async (): Promise<Tex> => {
@@ -173,12 +174,11 @@ const SHOT_A: CamK[] = [
   { t: 0 / 30, pos: [1.45, 1.75, -2.6], look: [-0.5, 0.85, 2.2], fov: 64 },
   { t: 10 / 30, pos: [-0.3, 1.75, -2.95], look: [-0.2, 1.0, 1.2], fov: 65 },
   { t: 20 / 30, pos: [-2.23, 2.28, -3.15], look: [0.09, 1.15, 0.27], fov: 64 },
-  { t: 28 / 30, pos: [-2.7, 1.9, -1.3], look: [-0.1, 1.1, 0.4], fov: 66 },
-  { t: 36 / 30, pos: [-1.85, 1.5, -0.1], look: [2.05, 0.85, 0.87], fov: 70 },
-  { t: 40 / 30, pos: [-1.62, 1.52, -0.08], look: [2.6, 0.88, 0.8], fov: 69 },
-  { t: 44 / 30, pos: [-0.85, 1.58, -0.03], look: [4.2, 0.95, 0.7], fov: 66 },
-  { t: 48 / 30, pos: [-0.1, 1.68, -0.08], look: [6.5, 0.95, 0.85], fov: 64 },
-  { t: 53 / 30, pos: [0.3, 1.75, -0.2], look: [9.0, 0.9, 1.0], fov: 62 },
+  { t: 28 / 30, pos: [-2.8, 2.15, -1.35], look: [2.6, 0.8, 1.1], fov: 72 },
+  // behind the gun, just left of it, on a wide lens: barrel runs up to the port, officer and gunner beside it on the right
+  { t: 36 / 30, pos: [-2.65, 2.05, -0.55], look: [4.4, 0.62, 1.3], fov: 76 },
+  { t: 44 / 30, pos: [-2.5, 1.92, -0.5], look: [4.5, 0.82, 1.28], fov: 76 },
+  { t: 53 / 30, pos: [-2.38, 1.82, -0.46], look: [4.62, 0.9, 1.25], fov: 76 },
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
@@ -471,7 +471,7 @@ class BtWorld {
       this.fxBlast.r = this.pool.req(`blast|${st}`, 600, 600, 1, (p) => blast(p, st));
       this.fxBlast.use(true);
       this.fxBlast.mesh.position.copy(mz).add(V(0.55 + 0.75 * Math.min(1, sB * 1.6), 0.05 + 0.3 * Math.min(1, sB * 1.6), 0));
-      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 1.5; this.fxBlast.mesh.scale.set(sz, sz, 1);
+      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 1.25; this.fxBlast.mesh.scale.set(sz, sz, 1);
     }
     // flame tongue filling the gun port, so the blast reads as coming out of our gun
     this.fxJet.mesh.visible = !shotB && a >= 0 && sB < 0.95;
@@ -486,7 +486,7 @@ class BtWorld {
       const st = Math.round(u * 20) / 20;
       e.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); e.use(false);
       e.mesh.position.copy(mz).add(V(2.5 + 2.4 * u + 0.45 * i, 0.45 + 0.9 * u + 0.25 * i, (i - 1) * 0.5));
-      e.mesh.quaternion.copy(cam.quaternion); const sz = 1.1 + 1.3 * Math.sqrt(u) + 0.2 * i; e.mesh.scale.set(sz, sz, 1);
+      e.mesh.quaternion.copy(cam.quaternion); const sz = 0.9 + 1.0 * Math.sqrt(u) + 0.2 * i; e.mesh.scale.set(sz, sz, 1);
     });
     // touch hole: sparks then a white wisp just before the shot
     const br = g.group.localToWorld(VENT.clone());
@@ -498,8 +498,8 @@ class BtWorld {
     const up = (f - (FIRE - 3)) / 16; this.fxPuff.mesh.visible = !shotB && up > 0 && up < 1;
     if (this.fxPuff.mesh.visible) {
       const st = Math.round(up * 16) / 16; this.fxPuff.r = this.pool.req(`smoke|${st}`, 400, 400, 1, (p) => smoke(p, st)); this.fxPuff.use(false);
-      this.fxPuff.mesh.position.copy(br).add(V(-0.05 * up, 0.2 + 0.4 * up, 0)); this.fxPuff.mesh.quaternion.copy(cam.quaternion);
-      const sz = 0.2 + 0.3 * Math.sqrt(up); this.fxPuff.mesh.scale.set(sz, sz, 1);
+      this.fxPuff.mesh.position.copy(br).add(V(-0.05 * up, 0.15 + 0.3 * up, 0)); this.fxPuff.mesh.quaternion.copy(cam.quaternion);
+      const sz = 0.15 + 0.22 * Math.sqrt(up); this.fxPuff.mesh.scale.set(sz, sz, 1);
     }
     // spray V behind the skimming ball
     this.fxSpray.mesh.visible = shotB;
