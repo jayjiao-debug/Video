@@ -233,7 +233,7 @@ function lc(t) {
   const facingRight = t < TURN + 0.04;
   // the turn: a quick squash through the profile (4 frames)
   const tk = (t - TURN) / 0.13;
-  const sx = tk > 0 && tk < 1 ? Math.max(0.15, Math.abs(Math.cos(tk * Math.PI))) : 1;
+  const sx = tk > 0 && tk < 1 ? Math.max(0.32, Math.abs(Math.cos(tk * Math.PI))) : 1;
   const dist = Math.abs(x - 700) + (t > TURN ? 200 : 0);
   const bob = walking(t) ? -Math.abs(Math.sin((dist / 120) * Math.PI)) * 5 : 0;
   // stop dead: a small recoil at the collapse; gourd swing comes from the spear angle wobble
@@ -253,12 +253,12 @@ function lc(t) {
 }
 
 // ------------------------------------------------------------------ camera
-const SHOULDER = () => [xAt(T0) - 0.07 * HFIG, GY - 0.84 * HFIG];
+const SHOULDER = () => [xAt(72.95) + 0.02 * HFIG, GY - 0.9 * HFIG];
 function cam(t) {
   const z0 = 3.0, PA = 72.95;
   const z = t < PA ? z0 : t < 75.25 ? zexp(t, PA, 75.25, z0, 1, E.sine) : t < 76.0 ? 1 : 1 + 0.05 * ramp(t, 76.0, PULL, E.inOut);
   const [sx, sy] = SHOULDER();
-  const q = [300, 860];
+  const q = [380, 400];
   const startX = sx - 960 - (q[0] - 960) / z0, startY = sy - 540 - (q[1] - 540) / z0;
   const endX = -10, endY = -18;
   const k = t < PA ? 0 : Math.log(z0 / Math.min(z0, Math.max(1, t < 75.25 ? z : 1))) / Math.log(z0);
