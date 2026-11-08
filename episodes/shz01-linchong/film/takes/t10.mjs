@@ -101,54 +101,97 @@ const SPEAR_LEAN = (() => {
 // 林冲's straw hat would go here if he took it off; he keeps it on (iconic look).
 
 // ------------------------------------------------------------------ 林冲 blocking, S22–S23 (side view, facing right)
+// Timeline after the stone meets the door (第十回): he straightens, turns to the 供桌, takes the 毡笠 off and sets it on
+// the altar (it stays there), sits down under the quilt facing the altar; the fire flares behind him, he turns to the
+// crack, throws the quilt off and scrambles to the door. Bare-headed from 79.25 to the end of T10.
+const STAND_X = CRACK - STONE_W - 520 - 30;          // where he ends the push (feet)
+const HAT_ON_ALTAR = [300, 570];                      // brim centre resting on the altar top (world)
+const HAT_OFF = 79.25, HAT_DOWN = 79.48;
 function blocking(t) {
-  // returns {x, dy, lean, sh, el, tilt, expr, quilt}
   const pushA = T0 + 0.18;
   const stoneX = lerp(900, CRACK - STONE_W, ramp(t, pushA, CONTACT, (u) => u * u * (3 - 2 * u)));
   let x, dy = 0, lean = 0, sh = 0, el = 0, tilt = 0, expr = { ...EX.隐忍 }, quilt = 0, b_fallen = null;
-  const HANDX = 520; // hands reach ≈ 520 px ahead of the feet at lean 34
+  let right = true, sx = 1, hat = true, legR = 0, legL = 0;
+  const HANDX = 520; // hands reach ≈ 520 px ahead of the feet at lean 38
+  const turnSq = (t0) => { const k = (t - t0) / 0.13; return k > 0 && k < 1 ? Math.max(0.32, Math.abs(Math.cos(k * Math.PI))) : 1; };
   if (t < CONTACT + 0.06) {
     lean = lerp(18, 38, ramp(t, T0 - 0.2, pushA, E.out));
     sh = lerp(60, 84, ramp(t, T0 - 0.2, pushA, E.out)); el = 6;
     x = stoneX - HANDX;
+    // short driving steps while the stone slides
+    const ph = (x - (900 - HANDX)) / 70;
+    legR = 14 + 10 * Math.sin(ph * Math.PI); legL = -18 - 8 * Math.sin(ph * Math.PI);
     expr = { ...EX.隐忍, jaw: 1, eye: 0.6, brow: -0.9, mouth: -0.5 };
     tilt = -4;
-  } else if (t < 79.05) {
-    const k = ramp(t, CONTACT + 0.06, 79.05, E.inOut);
+  } else if (t < 78.95) {
+    const k = ramp(t, CONTACT + 0.06, 78.95, E.inOut);
     lean = lerp(38, 0, k); sh = lerp(78, 0, k); el = lerp(10, 0, k);
-    x = CRACK - STONE_W - HANDX - 30 * k;
+    legR = lerp(14, 0, k); legL = lerp(-18, 0, k);
+    x = STAND_X + 30 - 30 * k;
     expr = { ...EX.隐忍, eye: 0.75, brow: -0.6 };
+  } else if (t < HAT_DOWN + 0.02) {
+    // turn to the altar, lift the hat off, set it down
+    x = STAND_X;
+    right = t < 79.015; sx = turnSq(78.95);
+    const up = ramp(t, 79.07, HAT_OFF, E.inOut), down = ramp(t, HAT_OFF, HAT_DOWN, E.inOut);
+    sh = lerp(lerp(0, 128, up), 62, down); el = lerp(lerp(0, 58, up), 12, down);
+    hat = t < HAT_OFF;
+    expr = { ...EX.隐忍, eye: 0.7, brow: -0.5 };
   } else if (t < 80.26) {
-    // sinks down by the straw, pulls the quilt over his legs
-    const k = ramp(t, 79.05, 79.62, E.inOut);
-    x = CRACK - STONE_W - HANDX - 30;
+    // sits down facing the altar, quilt over the legs; the fire flares behind him, he turns to the crack
+    x = STAND_X; hat = false;
+    const k = ramp(t, HAT_DOWN, 79.86, E.inOut);
+    sh = lerp(62, 0, ramp(t, HAT_DOWN, 79.7, E.inOut)); el = lerp(12, 0, k);
     dy = 0.43 * HF * k; quilt = k;
-    tilt = lerp(0, 16, ramp(t, 79.2, 79.7, E.inOut));
-    expr = { ...EX.隐忍, eye: lerp(0.75, 0.35, k), brow: -0.4, jaw: 0.3 };
+    tilt = lerp(0, 12, k);
+    right = t >= FLARE + 0.08; sx = turnSq(FLARE + 0.015);
+    expr = { ...EX.隐忍, eye: lerp(0.7, 0.4, k), brow: -0.4, jaw: 0.3 };
     if (t >= FLARE) {
-      const s = ramp(t, FLARE, FLARE + 0.2, E.out);
-      tilt = lerp(16, -6, s);
-      expr = { ...EX.隐忍, eye: lerp(0.35, 1.2, s), brow: lerp(-0.4, 0.2, s), jaw: 0, mouth: -0.2 };
+      const s2 = ramp(t, FLARE, FLARE + 0.2, E.out);
+      tilt = lerp(12, -6, s2);
+      expr = { ...EX.隐忍, eye: lerp(0.4, 1.2, s2), brow: lerp(-0.4, 0.2, s2), jaw: 0, mouth: -0.2 };
     }
   } else {
-    // up and to the crack: crouch-run, ends kneeling behind the stone with his eye at the crack
+    // up and to the crack: a scrambling run, ends kneeling behind the stone with his eye at the crack
+    hat = false;
     const k = ramp(t, 80.26, 81.45, E.inOut);
-    const x0 = CRACK - STONE_W - HANDX - 30, x1 = 1352;
+    const x0 = STAND_X, x1 = 1352;
     x = lerp(x0, x1, k);
-    dy = 0.43 * HF * (1 - k) + Math.sin(k * Math.PI) * -0.25 * HF * 0 + lerp(0, 180, k) * (k > 0.5 ? 1 : k * 2) - (k < 1 ? Math.sin(k * Math.PI) * 120 : 0);
+    dy = 0.43 * HF * (1 - k) + lerp(0, 180, k) * (k > 0.5 ? 1 : k * 2) - (k < 1 ? Math.sin(k * Math.PI) * 120 : 0);
     dy = Math.max(dy, 60);
-    quilt = 0;
     b_fallen = { x: x0, k: ramp(t, 80.26, 80.6, E.out) };
     lean = Math.sin(k * Math.PI) * 12;
     tilt = lerp(-6, 6, k);
+    const ph = (x - x0) / 300, amp = Math.sin(Math.min(1, k * 1.15) * Math.PI) * 32;
+    legR = amp * Math.sin(ph * Math.PI); legL = -legR;
+    sh = 18 * Math.sin(ph * Math.PI + Math.PI) * Math.sin(k * Math.PI); el = 30 * Math.sin(k * Math.PI);
     expr = { ...EX.隐忍, eye: 1.1, brow: 0.05, jaw: 0.5, mouth: -0.3, look: [0.4, 0] };
   }
-  return { x, dy, lean, sh, el, tilt, expr, quilt, stoneX, fallen: b_fallen };
+  return { x, dy, lean, sh, el, tilt, expr, quilt, stoneX, fallen: b_fallen, right, sx, hat, legR, legL };
+}
+/** The 毡笠 as a loose prop, side view: brim centre at (x, y). */
+function hatProp(x, y, rot = 0) {
+  const w = 0.215 * HF, dh = 0.062 * HF, dw = 0.092 * HF;
+  return `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${f2(rot)})">` +
+    `<path d="M${f2(-dw / 2)},-4 Q${f2(-dw / 2)},${f2(-dh * 1.05)} 0,${f2(-dh * 1.08)} Q${f2(dw / 2)},${f2(-dh * 1.05)} ${f2(dw / 2)},-4Z" fill="#d9d1c3" stroke="#1e1612" stroke-width="2"/>` +
+    `<path d="M${f2(dw * 0.12)},${f2(-dh * 1.05)} Q${f2(dw / 2)},${f2(-dh)} ${f2(dw / 2)},-4 L${f2(dw * 0.2)},-4Z" fill="#b3a998"/>` +
+    `<rect x="${f2(-dw / 2)}" y="${f2(-dh * 0.32)}" width="${f2(dw)}" height="${f2(dh * 0.22)}" fill="#857a69"/>` +
+    `<path d="M${f2(-w / 2)},0 Q0,${f2(-9)} ${f2(w / 2)},0 Q0,${f2(9)} ${f2(-w / 2)},0Z" fill="#d9d1c3" stroke="#1e1612" stroke-width="2"/>` +
+    `<path d="M${f2(-dw * 0.3)},6 q-6,40 14,58 q14,-10 10,-56" stroke="#b8322a" stroke-width="2.4" fill="none"/>` +
+    `<path d="M${f2(-dw * 0.45)},${f2(-dh * 1.0)} q${f2(dw * 0.3)},-6 ${f2(dw * 0.6)},-3" stroke="#ffffff" stroke-width="3" opacity="0.7" fill="none"/></g>`;
+}
+function hatLoose(t, b) {
+  if (t < HAT_OFF) return '';
+  const k = ramp(t, HAT_OFF, HAT_DOWN, E.inOut);
+  // from his head (he faces left now) to the altar top
+  const head = [STAND_X - 0.05 * HF, FL - 0.975 * HF];
+  const p = [lerp(head[0] - 0.06 * HF, HAT_ON_ALTAR[0], k), lerp(head[1] - 0.04 * HF, HAT_ON_ALTAR[1], k) - Math.sin(k * Math.PI) * 40];
+  return hatProp(p[0], p[1], lerp(-8, 0, k));
 }
 function lcSide(t, b) {
-  const pose = { headTilt: b.tilt, shoulderR: b.sh, elbowR: b.el, shoulderL: b.sh * 0.92, elbowL: b.el };
-  const fig = lin({ view: 'side', costume: 'C', expr: b.expr, pose, flip: true, height: HF, x: 0, y: 0, tattoo: 1 });
-  return `<g transform="translate(${f2(b.x)} ${f2(FL + b.dy)}) rotate(${f2(b.lean)} -40 0)">${fig}</g>`;
+  const pose = { headTilt: b.tilt, shoulderR: b.sh, elbowR: b.el, shoulderL: b.sh * 0.92, elbowL: b.el, legR: b.legR, legL: b.legL };
+  const fig = lin({ view: 'side', costume: 'C', expr: b.expr, pose, flip: b.right, height: HF, x: 0, y: 0, tattoo: 1, hat: b.hat });
+  return `<g transform="translate(${f2(b.x)} ${f2(FL + b.dy)}) scale(${f2(b.sx)} 1) rotate(${f2(b.lean)} -40 0)">${fig}</g>`;
 }
 function quiltSVG(b) {
   if (b.fallen) {
@@ -159,17 +202,18 @@ function quiltSVG(b) {
   }
   if (b.quilt <= 0.01) return '';
   const x = b.x, k = b.quilt, top = FL - 0.30 * HF * k + 30;
-  return `<path d="M${f2(x - 0.16 * HF)},${FL + 80} Q${f2(x - 0.2 * HF)},${f2(top + 60)} ${f2(x - 0.06 * HF)},${f2(top + 6)} Q${f2(x + 0.02 * HF)},${f2(top - 8)} ${f2(x + 0.1 * HF)},${f2(top + 4)} Q${f2(x + 0.2 * HF)},${f2(top + 30)} ${f2(x + 0.3 * HF)},${f2(FL - 120)} Q${f2(x + 0.4 * HF)},${f2(FL - 40)} ${f2(x + 0.5 * HF)},${FL + 80}Z" fill="#5B5A5E"/>` +
+  return `<g transform="translate(${f2(x)} 0) scale(${b.right ? 1 : -1} 1) translate(${f2(-x)} 0)">` + `<path d="M${f2(x - 0.16 * HF)},${FL + 80} Q${f2(x - 0.2 * HF)},${f2(top + 60)} ${f2(x - 0.06 * HF)},${f2(top + 6)} Q${f2(x + 0.02 * HF)},${f2(top - 8)} ${f2(x + 0.1 * HF)},${f2(top + 4)} Q${f2(x + 0.2 * HF)},${f2(top + 30)} ${f2(x + 0.3 * HF)},${f2(FL - 120)} Q${f2(x + 0.4 * HF)},${f2(FL - 40)} ${f2(x + 0.5 * HF)},${FL + 80}Z" fill="#5B5A5E"/>` +
     `<path d="M${f2(x - 0.05 * HF)},${f2(top + 20)} q40,60 20,160 M${f2(x + 0.18 * HF)},${f2(top + 10)} q-20,80 10,180" stroke="#424147" stroke-width="5" fill="none"/>` +
-    `<rect x="${f2(x + 0.05 * HF)}" y="${f2(top + 60)}" width="60" height="44" fill="#6A6460" transform="rotate(8 ${f2(x)} ${f2(top)})"/>`;
+    `<rect x="${f2(x + 0.05 * HF)}" y="${f2(top + 60)}" width="60" height="44" fill="#6A6460" transform="rotate(8 ${f2(x)} ${f2(top)})"/></g>`;
 }
 function breath(t, b) {
-  if (b.quilt < 0.6 || t > 80.4) return '';
+  if (b.quilt < 0.2 || t > 80.4) return '';
   let s = '';
-  for (const t0 of [79.25, 80.15]) {
+  const dir = b.right ? 1 : -1;
+  for (const t0 of [79.62, 80.15]) {
     const a = (t - t0) / 1.1;
     if (a < 0 || a > 1) continue;
-    const mx = b.x + 0.085 * HF + a * 50, my = FL + b.dy - 0.88 * HF - a * 40;
+    const mx = b.x + dir * (0.085 * HF + a * 50), my = FL + b.dy - 0.88 * HF - a * 40;
     s += `<ellipse cx="${f2(mx)}" cy="${f2(my)}" rx="${f2(10 + a * 34)}" ry="${f2(7 + a * 20)}" fill="#D8E2EE" opacity="${f2(0.45 * (1 - a))}"/>`;
   }
   return `<g filter="url(#${blurId(5)})">${s}</g>`;
@@ -280,15 +324,28 @@ function s24(t) {
   expr = { ...expr, eye: lerp(0.95, 1.18, wid), brow: lerp(-0.5, 0.15, wid) };
   if (fl > 0) expr = { ...expr, brow: lerp(0.15, -0.85, fl), eye: lerp(1.18, 1.0, fl), mouth: lerp(-0.2, -0.5, fl), jaw: lerp(0.4, 1, fl) };
   if (nar > 0) expr = { ...expr, eye: lerp(1.0, 0.8, nar) };
-  const face = lin({ view: 'front', costume: 'C', expr, height: hgt, x: fx, y: fy, tattoo: 1 });
+  const face = lin({ view: 'front', costume: 'C', expr, height: hgt, x: fx, y: fy, tattoo: 1, hat: false });
+  // cold rim on the hair cap and the cheek edges (light from the cracks behind), relative to the eye line
+  const X = (dx) => f2(ex + dx), Y = (dy) => f2(ey + dy);
+  const rim = `<g fill="none" stroke="#3B4F73" stroke-linecap="round" filter="url(#${blurId(3)})" opacity="0.85">` +
+    `<path d="M${X(-176)},${Y(-60)} C${X(-176)},${Y(-170)} ${X(-120)},${Y(-262)} ${X(-10)},${Y(-282)}" stroke-width="9"/>` +
+    `<path d="M${X(186)},${Y(-60)} C${X(186)},${Y(-170)} ${X(130)},${Y(-262)} ${X(20)},${Y(-282)}" stroke-width="9"/>` +
+    `<path d="M${X(-38)},${Y(-318)} q38,-26 76,0" stroke-width="7"/>` +
+    `<path d="M${X(-190)},${Y(-10)} C${X(-196)},${Y(70)} ${X(-170)},${Y(150)} ${X(-110)},${Y(222)}" stroke-width="7"/>` +
+    `<path d="M${X(200)},${Y(-10)} C${X(206)},${Y(70)} ${X(180)},${Y(150)} ${X(120)},${Y(222)}" stroke-width="7"/></g>`;
+  // the hat-band remnants at the temples (rig) hidden under hair
+  const temples = `<rect x="${X(-200)}" y="${Y(-118)}" width="44" height="80" fill="#141110"/><rect x="${X(156)}" y="${Y(-118)}" width="46" height="80" fill="#141110"/>`;
   const fk = fireK(t);
   const bandY = ey - 8, bandH = 78;
   let s = `<rect x="-20" y="-20" width="1960" height="1120" fill="#120E0C"/>`;
-  s += `<g transform="translate(${ex} ${ey}) scale(${f2(z)}) translate(${-ex} ${-ey})">${face}`;
+  s += `<g transform="translate(${ex} ${ey}) scale(${f2(z)}) translate(${-ex} ${-ey})">${face}${temples}`;
   // fire tint across the slit, darkness elsewhere (luma ~25–30), a cold rim on the hat brim
   s += `<rect x="-200" y="${bandY - bandH * 1.2}" width="2400" height="${bandH * 2.4}" fill="#FF8A3D" opacity="${f2(0.32 * fk)}" style="mix-blend-mode:multiply"/>`;
   s += `<rect x="-400" y="-400" width="2800" height="2000" fill="#07070B" opacity="0.86" mask="url(#t10band)"/>`;
   s += `<rect x="-400" y="${bandY - bandH * 0.5}" width="2800" height="${bandH}" fill="#FFB070" opacity="${f2(0.12 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(10)})"/>`;
+  // faint warm bounce under the slit (cheeks, moustache) and the cold rim over the darkness
+  s += `<ellipse cx="${ex}" cy="${ey + 120}" rx="230" ry="110" fill="#C8642E" opacity="${f2(0.16 * fk)}" style="mix-blend-mode:screen" filter="url(#${blurId(30)})"/>`;
+  s += rim;
   s += `</g>`;
   const defs = `<defs><linearGradient id="t10bg" x1="0" y1="0" x2="0" y2="1">` +
     `<stop offset="0" stop-color="#fff"/><stop offset="${f2((bandY - bandH * 1.25) / 1080)}" stop-color="#fff"/>` +
@@ -335,7 +392,7 @@ export default {
       const skC = shake(t, CONTACT, 3, 3.5, 4);
       const skD = t < T0 + 0.15 ? shake(t, T0 - 0.02, 5, 3, 7) : skC;
       s += L(c, 1, ROOM, { id: 't10room', bleed: 'all' });
-      s += L(c, 1, SPEAR_LEAN + door(skD) + crackLight(t, c) + lcSide(t, b) + quiltSVG(b) + breath(t, b) + stone(b.stoneX, skC) + dustPuff(t, b), { id: 't10set', bleed: 'all' });
+      s += L(c, 1, SPEAR_LEAN + door(skD) + crackLight(t, c) + lcSide(t, b) + hatLoose(t, b) + quiltSVG(b) + breath(t, b) + stone(b.stoneX, skC) + dustPuff(t, b), { id: 't10set', bleed: 'all' });
       // the flare lights his face from the front when the fire comes (screen-blended warm wash near the crack)
       const fk = fireK(t);
       if (fk > 0) s += L(c, 1, `<g style="mix-blend-mode:screen" filter="url(#${blurId(40)})"><ellipse cx="${CRACK - 200}" cy="${FL - 560}" rx="420" ry="520" fill="#FF7A2E" opacity="${f2(0.22 * fk)}"/></g>`, { id: 't10warm', bleed: 'all' });

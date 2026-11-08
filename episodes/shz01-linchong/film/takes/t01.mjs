@@ -151,7 +151,7 @@ function s01Light(c) {
 const SHEET1 = { x: 760, y: 112, w: 680, rot: -4, sy: 0.92 };
 const SHEET2 = { x: 650, y: 104, w: 620, rot: 0, sy: 1 };
 function sheetTf(t) {
-  const k = ramp(t, 4.95, 5.5, E.inOut);
+  const k = ramp(t, 4.92, 5.6, E.inOut);
   const a = SHEET1, b = SHEET2;
   const w = lerp(a.w, b.w, k), x = lerp(a.x, b.x, k), y = lerp(a.y, b.y, k) - Math.sin(k * Math.PI) * 40, rot = lerp(a.rot, b.rot, k), sy = lerp(a.sy, b.sy, k);
   const h = (w * 760) / 680;
@@ -168,7 +168,7 @@ function S01(t) {
   const kin = ramp(t, 4.95, 5.7, E.inOut); // the paper lift: same camera as S02's opening so the sheet matches
   const c = { x: lerp(-40 * r, 0, kin), y: lerp(30 * r, 0, kin), zoom: lerp(1 + 0.1 * r, 1, kin) };
   const S = sheetTf(t);
-  const slide = ramp(t, 4.95, 5.5, E.inOut) * 300;
+  const slide = ramp(t, 4.92, 5.6, E.inOut) * 300;
   // press dynamics
   const sq = pulse(t, T.press, 0.1);
   const [shx, shy] = shake(t, T.press, 2, 3, 2);
@@ -528,14 +528,14 @@ function S04(t) {
 }
 
 // ============================================================== the take
-const X1 = [4.95, 5.5], X2 = [9.95, 10.25], X3 = [14.5, 14.85];
+const X1 = [4.92, 5.6], X2 = [9.95, 10.25], X3 = [14.5, 14.85];
 const blend = (A, B, k) => `<g>${A}</g><g opacity="${f2(k)}">${B}</g>`;
 
 export { S01, S02, S03, S04 };
 export default {
   frame(t) {
     if (t < X1[0]) return S01(t);
-    if (t < X1[1]) return blend(S01(t), S02(t), ramp(t, X1[0] + 0.1, X1[1], E.inOut));
+    if (t < X1[1]) return blend(S01(t), S02(t), ramp(t, X1[0] + 0.08, X1[1], E.inOut));
     if (t < X2[0]) return S02(t);
     if (t < X2[1]) return blend(S02(t), S03(t), ramp(t, X2[0], X2[1], E.inOut));
     if (t < X3[0]) return S03(t);
