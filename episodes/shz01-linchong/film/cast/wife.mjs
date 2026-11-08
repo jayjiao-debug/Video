@@ -8,7 +8,7 @@
 //     tilt: head roll deg (+ = toward viewer's right). bow: 0..1 head pitched down (nape shows more, bun tips forward).
 //     slump: 0..1 shoulders drop/round (grief).
 //     armL / armR: null = hanging; or {to:[x,y]} a point in the same space the hand reaches (gripping a door post):
-//     two-bone IK from the shoulder, sleeve hangs from the forearm.
+//     two-bone IK from the shoulder, sleeve hangs from the forearm; {to, bend: ±1} picks the elbow side.
 //   wifeFull({ x, y, height=263, view:'back'|'backThreeQuarter', phase, ... }) small full figure (WS), feet at (x, y).
 //   wifeHandGrip({ x, y, size=315, side:'L'|'R', squeeze=0, rot=0 }) -> her hand pinching a sheet's lower corner:
 //     thumb on the near face, the hand below the paper edge, sleeve going down; (x, y) = thumb pad; draw it ABOVE the
@@ -88,7 +88,7 @@ export function wifeBack(o = {}) {
     let el, wr;
     if (spec && spec.to) {
       const t = [spec.to[0] - x, spec.to[1] - y];
-      ({ el, wr } = ik2(sh, t, 1.25 * u, 1.05 * u, side > 0 ? 1 : -1));
+      ({ el, wr } = ik2(sh, t, 1.25 * u, 1.05 * u, spec.bend ?? (side > 0 ? 1 : -1)));
     } else {
       el = [sh[0] + side * 0.12 * u, sh[1] + 1.25 * u];
       wr = [el[0] + side * 0.02 * u, el[1] + 1.05 * u];

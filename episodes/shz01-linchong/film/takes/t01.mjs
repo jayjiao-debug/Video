@@ -15,7 +15,7 @@ const CONVICT = { view: 'front', costume: 'A', col: { robe: ROBE }, headCloth: '
 // running toward the camera and off the frame bottom, iron leaves on the edges, a 封皮 paper seal (L30, model_sheet §6).
 // (cx, ny) = neck centre at the collar; H = head px.
 function boardFront(cx, ny, H, id) {
-  const w0 = 1.75 * H, w1 = 2.7 * H, yb = ny + 2.2 * H, yf = ny - 0.14 * H;
+  const w0 = 1.75 * H, w1 = 2.05 * H, yb = ny + 0.5 * H, yf = ny - 0.1 * H;
   const lw = Math.max(1.5, H * 0.008);
   const rx = 0.27 * H, ry = 0.06 * H;
   const outline = `M${P(cx - w0 / 2, ny - 0.05 * H)} C${P(cx - w0 / 2, yf - 0.05 * H)} ${P(cx + w0 / 2, yf - 0.05 * H)} ${P(cx + w0 / 2, ny - 0.05 * H)} L${P(cx + w1 / 2, yb)} L${P(cx - w1 / 2, yb)}Z`;
@@ -33,13 +33,15 @@ function boardFront(cx, ny, H, id) {
   // iron leaves on both edges and the iron band across the far (rounded) end
   g += `<path d="M${P(cx - w0 / 2, ny - 0.05 * H)} L${P(cx - w1 / 2, yb)} L${P(cx - w1 / 2 + 0.16 * H, yb)} L${P(cx - w0 / 2 + 0.11 * H, ny - 0.05 * H)}Z" fill="#4B4F55" ${ln(lw)}/>`;
   g += `<path d="M${P(cx + w0 / 2, ny - 0.05 * H)} L${P(cx + w1 / 2, yb)} L${P(cx + w1 / 2 - 0.16 * H, yb)} L${P(cx + w0 / 2 - 0.11 * H, ny - 0.05 * H)}Z" fill="#43474D" ${ln(lw)}/>`;
-  for (const k of [0.25, 0.6, 0.95]) for (const sd of [-1, 1]) { const x = cx + sd * lerp(w0 / 2 - 0.055 * H, w1 / 2 - 0.08 * H, k), y = lerp(ny, yb, k); g += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(0.022 * H)}" fill="#2a2d31"/>`; }
-  g += `<path d="M${P(cx - w0 / 2 + 0.02 * H, ny - 0.12 * H)} C${P(cx - w0 / 2 + 0.05 * H, yf + 0.02 * H)} ${P(cx + w0 / 2 - 0.05 * H, yf + 0.02 * H)} ${P(cx + w0 / 2 - 0.02 * H, ny - 0.12 * H)}" fill="none" stroke="#4B4F55" stroke-width="${f2(0.09 * H)}"/>`;
+  for (const k of [0.35, 0.8]) for (const sd of [-1, 1]) { const x = cx + sd * lerp(w0 / 2 - 0.055 * H, w1 / 2 - 0.08 * H, k), y = lerp(ny, yb, k); g += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(0.022 * H)}" fill="#2a2d31"/>`; }
+  g += `<path d="M${P(cx - w1 / 2 - 0.05 * H, yb)} L${P(cx + w1 / 2 + 0.05 * H, yb)} L${P(cx + w1 / 2 + 0.05 * H, yb + 0.14 * H)} L${P(cx - w1 / 2 - 0.05 * H, yb + 0.14 * H)}Z" fill="#5A4029" ${ln(lw)}/>`;
+  g += `<path d="M${P(cx - w1 / 2 - 0.05 * H, yb + 0.02 * H)} L${P(cx - w1 / 2 + 0.2 * H, yb + 0.02 * H)} L${P(cx - w1 / 2 + 0.2 * H, yb + 0.14 * H)} L${P(cx - w1 / 2 - 0.05 * H, yb + 0.14 * H)}Z M${P(cx + w1 / 2 + 0.05 * H, yb + 0.02 * H)} L${P(cx + w1 / 2 - 0.2 * H, yb + 0.02 * H)} L${P(cx + w1 / 2 - 0.2 * H, yb + 0.14 * H)} L${P(cx + w1 / 2 + 0.05 * H, yb + 0.14 * H)}Z" fill="#4B4F55"/>`;
+  g += `<rect x="${f2(cx - w1)}" y="${f2(yb + 0.14 * H)}" width="${f2(2 * w1)}" height="${f2(1.2 * H)}" fill="${ROBES}"/>`;
   // the gap in front of the neck (dark crescent)
   g += `<path d="M${P(cx - rx, ny)} A${f2(rx)},${f2(ry)} 0 0 0 ${P(cx + rx, ny)} A${f2(rx * 0.92)},${f2(ry * 0.55)} 0 0 1 ${P(cx - rx, ny)}Z" fill="#2A1C14"/>`;
   // 封皮: the paper seal across the board, red stamps, faint writing
-  const sx = cx + 0.1 * H, sy = ny + 0.62 * H, sw = 1.35 * H, sh = 0.3 * H;
-  g += `<g transform="rotate(-6 ${f2(sx)} ${f2(sy)})"><rect x="${f2(sx - sw / 2)}" y="${f2(sy - sh / 2)}" width="${f2(sw)}" height="${f2(sh)}" fill="#EFE9DC" ${ln(lw * 0.8)}/>` +
+  const sx = cx + 0.12 * H, sy = ny + 0.3 * H, sw = 1.3 * H, sh = 0.3 * H;
+  g += `<g transform="translate(${f2(sx)} ${f2(sy)}) scale(1 0.5) rotate(-6) translate(${f2(-sx)} ${f2(-sy)})"><rect x="${f2(sx - sw / 2)}" y="${f2(sy - sh / 2)}" width="${f2(sw)}" height="${f2(sh)}" fill="#EFE9DC" ${ln(lw * 0.8)}/>` +
     `<rect x="${f2(sx - sw * 0.36)}" y="${f2(sy - sh * 0.32)}" width="${f2(sh * 0.64)}" height="${f2(sh * 0.64)}" fill="none" stroke="#B3302A" stroke-width="${f2(lw * 1.6)}" opacity="0.85"/>` +
     `<rect x="${f2(sx + sw * 0.2)}" y="${f2(sy - sh * 0.32)}" width="${f2(sh * 0.64)}" height="${f2(sh * 0.64)}" fill="#B3302A" opacity="0.7"/>` +
     [-0.12, -0.02, 0.08].map((u) => `<path d="M${P(sx + u * sw, sy - sh * 0.25)} l${f2(sh * 0.12)},${f2(sh * 0.5)}" stroke="#2a221c" stroke-width="${f2(lw)}" opacity="0.5"/>`).join('') + `</g>`;
@@ -335,7 +337,8 @@ function S03(t) {
   const push = ramp(t, 10.6, T.s4, E.inOut);
   const settle = ramp(t, 9.95, 11.2, E.inOut);
   const out = ramp(t, 14.05, 14.75, E.in); // dolly-out start (he rises)
-  const c = { x: 40 * push, y: 0, zoom: (0.8 + 0.2 * settle) * (1 + 0.05 * push) * (1 - 0.32 * out), blurK: 6, focusD: 1 };
+  const pan = ramp(t, 14.05, 14.7, E.inOut) * 330;
+  const c = { x: 40 * push - pan, y: 0, zoom: (0.8 + 0.2 * settle) * (1 + 0.05 * push) * (1 - 0.2 * out), blurK: 6, focusD: 1 };
   // expression timeline
   let open = 0, look = [-0.35, 0.15], jaw = 0.4, tear = 0;
   if (t < 10.33) open = 0.1 * (1 - ramp(t, 10.1, 10.33));
@@ -343,7 +346,7 @@ function S03(t) {
   jaw = mix(0.4, 1, ramp(t, 12.41, 12.6));
   tear = ramp(t, T.spill, 13.66, E.in);
   const ex = { ...EX.隐忍, brow: 0.3 - 0.25 * ramp(t, 12.41, 12.7), eye: 0.76 - 0.08 * ramp(t, 11.162, 11.5), look, open, jaw, tear, mouth: -0.45 };
-  const rise = ramp(t, 13.95, 14.5, E.inOut) * 560, walkOut = ramp(t, 14.1, 14.7, E.in) * 700;
+  const rise = ramp(t, 13.95, 14.5, E.inOut) * 620, walkOut = ramp(t, 14.05, 14.6, E.in) * 640;
   let s = full('#3E2B1F');
   s += L(c, 0.4, `<g transform="translate(-330 -230)">${TAVERN}</g>`, { id: 't01tav3', bleed: 'all' });
   // him: CU H = 540 -> height 4050; eyes ≈ (1240, 400)
@@ -496,9 +499,9 @@ function S04(t) {
   s += L(c, 1.3, frame, { id: 't01doorframe', bleed: 'all' });
   // her: back view in the foreground left, hand on the door post; slides down to kneel at 16.161
   const sl = ramp(t, T.slide, T.slide + 0.84, (x) => (x < 0.7 ? E.in(x / 0.7) * 0.85 : 0.85 + 0.15 * E.out((x - 0.7) / 0.3)));
-  const wy = 324 + sl * 230, wx = 432 - sl * 18;
-  const handY = 560 + sl * 230;
-  s += L(c, 1.3, wifeBack({ x: wx, y: wy, head: 179, tilt: -7 - 6 * sl, bow: 0.1 + 0.55 * sl, slump: 0.6 * sl, armL: { to: [300, handY] } }) +
+  const wy = 324 + sl * 230, wx = 440 - sl * 18;
+  const handY = 640 + sl * 200;
+  s += L(c, 1.3, wifeBack({ x: wx, y: wy, head: 179, tilt: -7 - 6 * sl, bow: 0.1 + 0.55 * sl, slump: 0.6 * sl, armL: { to: [298, handY], bend: 1 } }) +
     // her fingers wrap the post's edge
     // her fingers curl round the post's front face (drawn over the post)
     [0, 1, 2, 3].map((i) => `<rect x="${f2(262 - i * 1.5)}" y="${f2(handY - 20 + i * 11)}" width="44" height="10" rx="5" fill="${COLW.skin}" stroke="${LN}" stroke-width="1.6"/>`).join(''), { id: 't01her4', bleed: 'b' });
@@ -507,7 +510,7 @@ function S04(t) {
 }
 
 // ============================================================== the take
-const X1 = [4.95, 5.5], X2 = [9.95, 10.25], X3 = [14.4, 14.8];
+const X1 = [4.95, 5.5], X2 = [9.95, 10.25], X3 = [14.5, 14.85];
 const blend = (A, B, k) => `<g>${A}</g><g opacity="${f2(k)}">${B}</g>`;
 
 export { S01, S02, S03, S04 };

@@ -483,9 +483,14 @@ function linBack(t) {
 }
 
 function shoulderSnow(k) {
-  // snow settling on his shoulder cap where the hand was (72.55 →)
-  return `<path d="M470,${f2(642 - 4 * k)} C560,${f2(632 - 18 * k)} 690,${f2(652 - 22 * k)} 790,${f2(706 - 16 * k)} C770,718 640,676 470,656Z" fill="#FFFFFF" opacity="${f2(Math.min(1, k * 1.2))}"/>` +
-    `<path d="M560,${f2(638 - 14 * k)} C600,${f2(628 - 20 * k)} 650,${f2(632 - 22 * k)} 690,${f2(646 - 18 * k)}" fill="none" stroke="#E6EEF5" stroke-width="5" opacity="${f2(k)}"/>`;
+  // a soft mound of snow on his shoulder cap where the hand was (72.55 →), growing; bumpy top
+  const h = 6 + 30 * k;
+  const top = (x, y0) => `${f2(x)},${f2(y0 - h * (0.75 + 0.25 * Math.sin(x * 0.05)))}`;
+  const line = (x) => 624 + (x - 440) * 0.2 + Math.max(0, x - 640) * 0.18;   // the shoulder contour
+  let d = `M450,${f2(line(450) + 4)}`;
+  for (let x = 450; x <= 800; x += 25) d += ` L${top(x, line(x))}`;
+  d += ` L800,${f2(line(800) + 8)} L450,${f2(line(450) + 8)}Z`;
+  return `<path d="${d}" fill="#FFFFFF" stroke="#DCE6EF" stroke-width="3" stroke-linejoin="round" opacity="${f2(Math.min(1, k * 1.4))}"/>`;
 }
 
 function camC(t) {
@@ -539,7 +544,7 @@ function sceneC(t) {
   // the first snow falls into the summer memory (white, ungraded)
   const n = Math.round(lerp(0, 10, ramp(t, T.s1, T.s1 + 0.2, E.lin)) + lerp(0, 46, ramp(t, T.s2, 73.6, E.in)));
   if (n > 0) {
-    s += snow(t, { seed: 81, n: Math.min(n, 12), r: [3.5, 6], fall: 60, sway: 18, op: 0.95, cam: c, d: 1, area: [200, -40, 1800, 1100] });
+    s += snow(t, { seed: 81, n: Math.min(n, 12), r: [5, 8], fall: 55, sway: 18, op: 0.95, cam: c, d: 1, area: [200, -40, 1800, 1100] });
     if (n > 12) s += snow(t, { seed: 82, n: n - 12, r: [2, 4], fall: 45, sway: 12, op: 0.85, cam: c, d: 0.7, area: [-40, -40, 1960, 1100] });
   }
   const defs = rg('t08pool', [[0, '#F6D9A6', 0.55], [1, '#F6D9A6', 0]]) + rg('t08cv', [[0.5, '#1A0F08', 0], [1, '#1A0F08', 0.55]], 0.52, 0.48, 0.8);
