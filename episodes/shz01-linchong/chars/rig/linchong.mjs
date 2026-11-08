@@ -408,21 +408,23 @@ function cordSide(F, u, E) {
 }
 
 function hairCap(F, view, u) {
-  // skull top, hairline and topknot when the hat is off (the reference only shows the hat)
+  // skull top, hairline and topknot when the hat is off (the reference only shows the hat).
+  // Filled without a stroke on the lower edge, so it merges with the traced hair below it.
   const C = COL, H = F.hat;
-  const L = `stroke="${C.line}" stroke-width="${f(1.1 * u)}" stroke-linejoin="round"`;
+  const st = `fill="none" stroke="${C.line}" stroke-width="${f(1.1 * u)}" stroke-linecap="round"`;
   const hi = (d) => `<path d="${d}" fill="none" stroke="#3e3a48" stroke-width="${f(3 * u)}" stroke-linecap="round"/>`;
+  const knot = (x, y) => `<path d="M${f(x - 14 * u)},${f(y + 4 * u)} C${f(x - 15 * u)},${f(y - 18 * u)} ${f(x + 15 * u)},${f(y - 18 * u)} ${f(x + 14 * u)},${f(y + 4 * u)}Z" fill="${C.hair}" ${st.replace('fill="none" ', '')}/>`;
   if (view === 'front') {
-    const cx = H.cx, hw = 59 * u, top = H.y - 56 * u, side = H.y + 18 * u, hl = H.y + 4 * u;
-    return `<path d="M${f(cx - hw)},${f(side)} C${f(cx - hw - 1 * u)},${f(top + 22 * u)} ${f(cx - hw * 0.55)},${f(top)} ${f(cx)},${f(top)} C${f(cx + hw * 0.55)},${f(top)} ${f(cx + hw + 1 * u)},${f(top + 22 * u)} ${f(cx + hw)},${f(side)} L${f(cx + hw - 6 * u)},${f(side)} C${f(cx + hw * 0.7)},${f(hl + 4 * u)} ${f(cx + hw * 0.35)},${f(hl)} ${f(cx)},${f(hl)} C${f(cx - hw * 0.35)},${f(hl)} ${f(cx - hw * 0.7)},${f(hl + 4 * u)} ${f(cx - hw + 6 * u)},${f(side)}Z" fill="${C.hair}" ${L}/>` +
-      `<path d="M${f(cx - 14 * u)},${f(top + 4 * u)} C${f(cx - 15 * u)},${f(top - 18 * u)} ${f(cx + 15 * u)},${f(top - 18 * u)} ${f(cx + 14 * u)},${f(top + 4 * u)}Z" fill="${C.hair}" ${L}/>` +
-      hi(`M${f(cx - 32 * u)},${f(top + 12 * u)} C${f(cx - 18 * u)},${f(top + 5 * u)} ${f(cx - 6 * u)},${f(top + 3 * u)} ${f(cx + 4 * u)},${f(top + 3 * u)}`);
+    const cx = H.cx, hw = 57 * u, top = H.y - 56 * u, side = H.y + 20 * u, hl = H.y + 5 * u;
+    const outer = `M${f(cx - hw)},${f(side)} C${f(cx - hw - 1 * u)},${f(top + 22 * u)} ${f(cx - hw * 0.55)},${f(top)} ${f(cx)},${f(top)} C${f(cx + hw * 0.55)},${f(top)} ${f(cx + hw + 1 * u)},${f(top + 22 * u)} ${f(cx + hw)},${f(side)}`;
+    return knot(cx, top) + `<path d="${outer} C${f(cx + hw * 0.8)},${f(hl + 6 * u)} ${f(cx + hw * 0.4)},${f(hl)} ${f(cx)},${f(hl)} C${f(cx - hw * 0.4)},${f(hl)} ${f(cx - hw * 0.8)},${f(hl + 6 * u)} ${f(cx - hw)},${f(side)}Z" fill="${C.hair}"/>` +
+      `<path d="${outer}" ${st}/>` + hi(`M${f(cx - 32 * u)},${f(top + 12 * u)} C${f(cx - 18 * u)},${f(top + 5 * u)} ${f(cx - 6 * u)},${f(top + 3 * u)} ${f(cx + 4 * u)},${f(top + 3 * u)}`);
   }
-  const fx = F.brow[0][0] - 6 * u, fy = F.brow[0][1] - 8 * u, bx = F.ear[0] + 58 * u, by = F.ear[1] - 2 * u;
-  const top = H.y - 58 * u, cx = (fx + bx) / 2 + 6 * u;
-  return `<path d="M${f(fx)},${f(fy)} C${f(fx - 4 * u)},${f(top + 26 * u)} ${f(cx - 52 * u)},${f(top)} ${f(cx)},${f(top)} C${f(cx + 52 * u)},${f(top)} ${f(bx + 6 * u)},${f(top + 34 * u)} ${f(bx)},${f(by)} L${f(F.ear[0] + 8 * u)},${f(F.ear[1] - 22 * u)} C${f(F.ear[0] - 8 * u)},${f(fy - 6 * u)} ${f(fx + 30 * u)},${f(fy - 6 * u)} ${f(fx)},${f(fy)}Z" fill="${C.hair}" ${L}/>` +
-    `<path d="M${f(cx + 6 * u)},${f(top + 4 * u)} C${f(cx + 4 * u)},${f(top - 20 * u)} ${f(cx + 34 * u)},${f(top - 20 * u)} ${f(cx + 32 * u)},${f(top + 6 * u)}Z" fill="${C.hair}" ${L}/>` +
-    hi(`M${f(cx - 40 * u)},${f(top + 16 * u)} C${f(cx - 24 * u)},${f(top + 6 * u)} ${f(cx)},${f(top + 4 * u)} ${f(cx + 14 * u)},${f(top + 6 * u)}`);
+  const fx = F.brow[0][0] - 6 * u, fy = F.brow[0][1] - 8 * u, bx = F.ear[0] + 94 * u, by = F.ear[1] + 6 * u;
+  const top = H.y - 58 * u, cx = (fx + bx) / 2 - 6 * u;
+  const outer = `M${f(fx)},${f(fy)} C${f(fx - 4 * u)},${f(top + 26 * u)} ${f(cx - 56 * u)},${f(top)} ${f(cx)},${f(top)} C${f(cx + 60 * u)},${f(top)} ${f(bx + 4 * u)},${f(top + 40 * u)} ${f(bx)},${f(by)}`;
+  return knot(cx + 18 * u, top + 2 * u) + `<path d="${outer} L${f(F.ear[0] + 6 * u)},${f(F.ear[1] - 20 * u)} C${f(F.ear[0] - 10 * u)},${f(fy - 4 * u)} ${f(fx + 30 * u)},${f(fy - 6 * u)} ${f(fx)},${f(fy)}Z" fill="${C.hair}"/>` +
+    `<path d="${outer}" ${st}/>` + hi(`M${f(cx - 40 * u)},${f(top + 16 * u)} C${f(cx - 24 * u)},${f(top + 6 * u)} ${f(cx)},${f(top + 4 * u)} ${f(cx + 14 * u)},${f(top + 6 * u)}`);
 }
 
 function tattoo(p, u) {

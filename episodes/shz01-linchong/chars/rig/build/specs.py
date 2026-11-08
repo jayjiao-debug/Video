@@ -58,8 +58,8 @@ A_FRONT = dict(
         dict(poly=[(409, 350), (447, 350), (446, 384), (410, 384)], mode='near'),  # goatee over the collar
         dict(poly=[(410, 146), (444, 146), (444, 166), (410, 166)], mode='near', within=[(380, 120), (480, 120), (480, 200), (380, 200)]),  # ring on the topknot
         dict(poly=[(392, 129), (462, 129), (470, 172), (489, 194), (489, 223), (367, 223), (367, 194), (386, 172)], mode='#343536', pred='dark', ink_all=True),  # flat head cloth
-        dict(poly=[(361, 231), (387, 231), (387, 302), (361, 302)], mode='near', pred='dark', within=[(352, 226), (396, 226), (396, 306), (352, 306)]),  # hard side lock (left)
-        dict(poly=[(467, 231), (495, 231), (495, 302), (467, 302)], mode='near', pred='dark', within=[(458, 226), (504, 226), (504, 306), (458, 306)]),  # hard side lock (right)
+        dict(poly=[(366, 232), (385, 232), (385, 280), (368, 280)], mode='near', pred='dark', within=[(352, 226), (396, 226), (396, 290), (352, 290)]),  # hard side lock (left)
+        dict(poly=[(469, 232), (488, 232), (486, 280), (469, 280)], mode='near', pred='dark', within=[(458, 226), (504, 226), (504, 290), (458, 290)]),  # hard side lock (right)
     ],
     face=dict(eyeR=(397, 253.5), eyeL=(456, 253.5), browR=[(418, 244), (377, 231)], browL=[(436, 244), (477, 230)],
               nose=(425, 291), mouth=(426, 306), chin=(428, 336), jaw=[(379, 280), (386, 300), (400, 321), (428, 337), (456, 321), (470, 300), (476, 280)],
@@ -140,11 +140,11 @@ C_FRONT = dict(
         dict(poly=[(160, 40), (700, 40), (700, 214), (160, 214)], mode='bg'),  # reference hat (peaked) -> code hat
         dict(poly=[(150, 200), (360, 200), (360, 250), (150, 250)], mode='bg', pred='notskin'),  # brim edges left
         dict(poly=[(496, 200), (710, 200), (710, 250), (496, 250)], mode='bg', pred='notskin'),
-        dict(poly=[(364, 206), (492, 206), (492, 228), (364, 228)], mode='#16171b'),  # hair under the brim
-        dict(poly=[(370, 226), (486, 226), (482, 264), (470, 270), (466, 300), (458, 324), (444, 336), (428, 339), (412, 336), (398, 324), (390, 300), (386, 270), (372, 264)], mode='skin'),
-        dict(poly=[(360, 226), (500, 226), (500, 350), (360, 350)], mode='near', pred='cord', ink_pred='cord'),  # red hat cord over the face
         dict(poly=[(336, 204), (373, 204), (373, 242), (336, 242)], mode='bg', pred='hat'),  # brim remnants at the temples
         dict(poly=[(483, 204), (520, 204), (520, 242), (483, 242)], mode='bg', pred='hat'),
+        dict(poly=[(373, 206), (483, 206), (485, 228), (371, 228)], mode='#16171b'),  # hair under the brim
+        dict(poly=[(370, 226), (486, 226), (482, 264), (470, 270), (466, 300), (458, 324), (444, 336), (428, 339), (412, 336), (398, 324), (390, 300), (386, 270), (372, 264)], mode='skin'),
+        dict(poly=[(360, 226), (500, 226), (500, 350), (360, 350)], mode='near', pred='cord', ink_pred='cord'),  # red hat cord over the face
         dict(poly=[(404, 330), (452, 330), (452, 470), (404, 470)], mode='near'),  # goatee + hanging cord ends
     ],
     face=dict(eyeR=(396, 253.5), eyeL=(456, 253.5), browR=[(418, 246), (375, 233)], browL=[(437, 245), (480, 232)],

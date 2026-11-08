@@ -9,7 +9,7 @@ const LN = '#2A1C17';
 
 // ------------------------------------------------------------ S14: ECU eyes (front view, very large)
 const KF = 12.6, EYEC = [426.5, 253.5];
-const LCF = { x: 960 + (428 - EYEC[0]) * KF, y: 470 + (1468 - EYEC[1]) * KF, height: KF * 7.5 * ((1468 - 331) / 6.5) };
+const LCF = { x: 960 + (428 - EYEC[0]) * KF, y: 650 + (1468 - EYEC[1]) * KF, height: KF * 7.5 * ((1468 - 331) / 6.5) };
 const fp = (p) => rigPoint('front', 'A', LCF, p);
 
 function s14(t) {
@@ -22,7 +22,7 @@ function s14(t) {
   let face = lin({ view: 'front', costume: 'A', ...LCF, expr });
   // the temple vein rises at 57.38 (his right temple, viewer's left)
   const v = ramp(t, 57.38, 57.58, E.out), tp = fp([371, 232]);
-  const vein = `<path d="M${f2(tp[0])},${f2(tp[1] - 120)} C${f2(tp[0] + 30)},${f2(tp[1] - 60)} ${f2(tp[0] - 20)},${f2(tp[1])} ${f2(tp[0] + 16)},${f2(tp[1] + 70)} M${f2(tp[0] + 4)},${f2(tp[1] - 30)} l${f2(40)},${f2(-26)}" fill="none" stroke="#9C5E48" stroke-width="${f2(5 + 7 * v)}" stroke-linecap="round" stroke-dasharray="400" stroke-dashoffset="${f2(400 * (1 - v))}" opacity="${f2(0.75 * v)}"/>`;
+  const vein = `<path d="M${f2(tp[0])},${f2(tp[1] - 120)} C${f2(tp[0] + 30)},${f2(tp[1] - 60)} ${f2(tp[0] - 20)},${f2(tp[1])} ${f2(tp[0] + 16)},${f2(tp[1] + 70)} M${f2(tp[0] + 4)},${f2(tp[1] - 30)} l${f2(40)},${f2(-26)}" fill="none" stroke="#8A4E3C" stroke-width="${f2(6 + 8 * v)}" stroke-linecap="round" stroke-dasharray="400" stroke-dashoffset="${f2(400 * (1 - v))}" opacity="${f2(0.95 * v)}"/>`;
   s += L(c, 1.0, `<g data-allowcut="1">${face}${vein}</g>`, { id: 't07face', bleed: 'all' });
   // cool low key from the lower left, the rest falls into ink-dark (luma ≈ 55)
   s += `<rect width="1920" height="1080" fill="#3A4252" style="mix-blend-mode:multiply" opacity="0.72"/>`;
@@ -72,9 +72,10 @@ function dais() {
   let s = `<path d="M1240,250 L1720,250 L1760,470 L1210,470Z" fill="#3D4A5C"/><path d="M1210,470 L1760,470 L1760,500 L1210,500Z" fill="#232B36"/>`;
   s += `<rect x="1280" y="20" width="420" height="250" fill="#D8DCE0"/>`;
   for (let i = 1; i < 4; i++) s += `<rect x="${1280 + i * 105 - 3}" y="20" width="6" height="250" fill="#9AA3AD"/>`;
-  s += `<path d="M1320,200 C1380,150 1440,170 1500,140 C1560,110 1620,130 1660,100" fill="none" stroke="#2A2E35" stroke-width="18" stroke-linecap="round"/>`;
-  s += `<path d="M1360,180 l20,-40 M1420,170 l18,-44 M1480,150 l16,-42 M1540,128 l14,-40 M1600,124 l12,-36" stroke="#2A2E35" stroke-width="10" stroke-linecap="round"/>`;
-  s += `<circle cx="1650" cy="96" r="16" fill="#2A2E35"/><path d="M1320,200 C1300,230 1290,250 1300,262" fill="none" stroke="#2A2E35" stroke-width="10"/>`;
+  // an abstract ink tiger: one crouching body stroke, a head, a few stripes
+  s += `<path d="M1330,210 C1380,170 1450,176 1520,160 C1580,146 1620,150 1650,130" fill="none" stroke="#2A2E35" stroke-width="22" stroke-linecap="round"/>`;
+  s += `<circle cx="1655" cy="124" r="22" fill="#2A2E35"/><path d="M1340,206 C1316,226 1312,246 1322,262 M1500,166 C1496,196 1500,226 1512,250" fill="none" stroke="#2A2E35" stroke-width="12" stroke-linecap="round"/>`;
+  s += `<path d="M1420,172 q8,-18 2,-34 M1470,166 q8,-18 2,-34 M1560,150 q8,-16 2,-30" fill="none" stroke="#D8DCE0" stroke-width="7" stroke-linecap="round"/>`;
   s += `<rect x="1280" y="20" width="420" height="250" fill="none" stroke="#5A4A2A" stroke-width="12"/>`;
   return s;
 }
@@ -82,7 +83,7 @@ function dais() {
 function gaoqiu(t) {
   // 高俅 silhouette standing on the dais (upper right), 展脚幞头 wings; the arm sweeps down 59.50–59.87
   const k = ramp(t, 59.5, 59.87, E.in);
-  const x = 1480, y = 440, h = 260, S = h / 100;
+  const x = 1480, y = 452, h = 330, S = h / 100;
   const sil = '#0E1116';
   let s = `<g transform="translate(${x} ${y}) scale(${f2(S)})">`;
   s += `<path d="M-16,0 C-18,-30 -16,-60 -12,-74 C-6,-80 6,-80 12,-74 C16,-60 18,-30 16,0Z" fill="${sil}"/>`;
@@ -90,16 +91,16 @@ function gaoqiu(t) {
   s += `<rect x="-44" y="-93" width="88" height="3.2" rx="1.6" fill="${sil}"/>`;
   s += `<path d="M10,-72 C26,-66 30,-50 24,-34 L14,-40Z" fill="${sil}"/>`;
   // accusing arm: from raised (up-left of him, toward the plaque) to pointing down-left at 林冲
-  const a = lerp(-150, 158, k); // degrees, screen (from +x, clockwise)
-  const r = (a * Math.PI) / 180, L1 = 30;
+  const a = lerp(-100, -212, k); // degrees, screen: raised (up) → over the left → pointing down-left at 林冲
+  const r = (a * Math.PI) / 180, L1 = 36;
   const sh = [-10, -70], hd = [sh[0] + Math.cos(r) * L1, sh[1] + Math.sin(r) * L1];
-  s += `<path d="M${sh[0]},${sh[1]} L${f2(hd[0])},${f2(hd[1])}" stroke="${sil}" stroke-width="9" stroke-linecap="round"/>`;
+  s += `<path d="M${sh[0]},${sh[1]} L${f2(hd[0])},${f2(hd[1])}" stroke="${sil}" stroke-width="11" stroke-linecap="round"/>`;
   s += `<path d="M${sh[0]},${sh[1] + 4} Q${f2((sh[0] + hd[0]) / 2)},${f2((sh[1] + hd[1]) / 2 + 12)} ${f2(hd[0])},${f2(hd[1])}" fill="none" stroke="${sil}" stroke-width="12" opacity="0.8"/>`;
   s += `</g>`;
   // motion smear of the sweep
   if (k > 0.05 && k < 1) {
-    const r0 = (lerp(-150, 158, Math.max(0, k - 0.3)) * Math.PI) / 180;
-    s += `<path d="M${f2(x - 10 * S + Math.cos(r0) * 30 * S)},${f2(y - 70 * S + Math.sin(r0) * 30 * S)} A${f2(30 * S)},${f2(30 * S)} 0 0 1 ${f2(x - 10 * S + Math.cos(r) * 30 * S)},${f2(y - 70 * S + Math.sin(r) * 30 * S)}" fill="none" stroke="${sil}" stroke-width="${f2(14 * S)}" opacity="0.18"/>`;
+    const r0 = (lerp(-100, -212, Math.max(0, k - 0.3)) * Math.PI) / 180;
+    s += `<path d="M${f2(x - 10 * S + Math.cos(r0) * 30 * S)},${f2(y - 70 * S + Math.sin(r0) * 30 * S)} A${f2(30 * S)},${f2(30 * S)} 0 0 0 ${f2(x - 10 * S + Math.cos(r) * 30 * S)},${f2(y - 70 * S + Math.sin(r) * 30 * S)}" fill="none" stroke="${sil}" stroke-width="${f2(14 * S)}" opacity="0.18"/>`;
   }
   return s;
 }

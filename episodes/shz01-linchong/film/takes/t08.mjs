@@ -416,80 +416,102 @@ function tavernBG() {
   return bake('t08tavern', w, h, g);
 }
 
+// 林冲's near shoulder contour (d 1.4 layer coords): top edge passes under (620–700, 580)
+const SH_TOP = 'M-200,760 C-100,690 80,650 280,630 C400,618 500,598 600,588 C680,580 760,588 840,620 C920,660 960,740 985,860';
+const shY = (x) => {
+  // approximate contour height at x (for placing the hand and the snow)
+  const k = [[-200, 760], [80, 662], [280, 630], [400, 615], [500, 600], [600, 588], [680, 582], [720, 583], [760, 588], [840, 620], [920, 670], [960, 740], [985, 860]];
+  for (let i = 1; i < k.length; i++) if (x <= k[i][0]) return lerp(k[i - 1][1], k[i][1], (x - k[i - 1][0]) / (k[i][0] - k[i - 1][0]));
+  return 900;
+};
 function zhangArm(w, sh, lift) {
-  // his right sleeve from the shoulder down across the table to the wrist w; the wide sleeve sags below the forearm
+  // his right forearm across the table in the brown wide sleeve, tapering to a soft, loose cuff at the wrist
   const LN = '#2A1C17';
   const [x0, y0] = sh, [x1, y1] = w;
   const p = (x, y) => `${f2(x)},${f2(y)}`;
-  const mx = lerp(x0, x1, 0.5), my = lerp(y0, y1, 0.5);
-  const sag = 120 - 40 * lift;
-  let s = `<path d="M${p(x0 + 10, y0 - 46)} C${p(mx + 40, my - 64)} ${p(x1 + 70, y1 - 60)} ${p(x1 + 18, y1 - 44)} L${p(x1 - 4, y1 + 40)} C${p(x1 + 40, y1 + sag * 0.7)} ${p(mx + 30, my + sag)} ${p(x0 - 10, y0 + 70)}Z" fill="#6B5240" stroke="${LN}" stroke-width="3"/>`;
-  s += `<path d="M${p(x1 + 30, y1 + 30)} C${p(x1 + 60, y1 + sag * 0.6)} ${p(mx + 20, my + sag * 0.9)} ${p(x0 - 6, y0 + 60)}" fill="none" stroke="#54402F" stroke-width="30" opacity="0.55"/>`;
-  s += `<path d="M${p(mx + 60, my - 50)} C${p(mx + 20, my - 30)} ${p(x1 + 60, y1 - 30)} ${p(x1 + 30, y1 - 20)}" fill="none" stroke="#7E6450" stroke-width="10" opacity="0.6"/>`;
-  // cuff with the white inner sleeve edge
-  s += `<path d="M${p(x1 + 18, y1 - 44)} C${p(x1 + 4, y1 - 40)} ${p(x1 - 12, y1 + 10)} ${p(x1 - 4, y1 + 40)} C${p(x1 + 6, y1 + 30)} ${p(x1 + 22, y1 - 10)} ${p(x1 + 18, y1 - 44)}Z" fill="#C8BFAE" stroke="${LN}" stroke-width="2.4"/>`;
+  const dx = x1 - x0, dy = y1 - y0, L0 = Math.hypot(dx, dy), ux = dx / L0, uy = dy / L0, nx = -uy, ny = ux;
+  const at = (k, off) => [x0 + dx * k + nx * off, y0 + dy * k + ny * off];
+  const sag = 70 - 30 * lift;
+  // sleeve body: upper edge straight-ish, lower edge sagging (the wide sleeve hangs under the forearm)
+  const up0 = at(0, -60), up1 = at(0.55, -48), up2 = at(0.93, -34);
+  const lo2 = at(0.95, 30), lo1 = at(0.6, 40 + sag), lo0 = at(0.05, 64);
+  let s = `<path d="M${p(...up0)} C${p(...up1)} ${p(...at(0.8, -40))} ${p(...up2)} C${p(...at(0.97, -20))} ${p(...at(0.985, 8))} ${p(...lo2)} C${p(...at(0.8, 46 + sag * 0.6))} ${p(...lo1)} ${p(...at(0.3, 60 + sag * 0.8))} L${p(...lo0)}Z" fill="#6B5240" stroke="${LN}" stroke-width="2.4" stroke-linejoin="round"/>`;
+  s += `<path d="M${p(...at(0.3, 30 + sag * 0.6))} C${p(...at(0.6, 30 + sag * 0.7))} ${p(...at(0.85, 30 + sag * 0.3))} ${p(...at(0.94, 22))}" fill="none" stroke="#54402F" stroke-width="22" stroke-linecap="round" opacity="0.6"/>`;
+  s += `<path d="M${p(...at(0.25, -40))} C${p(...at(0.5, -36))} ${p(...at(0.7, -30))} ${p(...at(0.86, -24))}" fill="none" stroke="#86694F" stroke-width="6" stroke-linecap="round" opacity="0.6"/>`;
+  // soft cuff: the white inner sleeve shows as a thin curved band inside the opening, no cut cylinder
+  s += `<path d="M${p(...at(0.93, -30))} C${p(...at(0.955, -12))} ${p(...at(0.96, 10))} ${p(...at(0.94, 26))}" fill="none" stroke="#D9D0BF" stroke-width="7" stroke-linecap="round" opacity="0.9"/>`;
   return s;
 }
-function zhangHand(x, y, k, squeeze, rot = 28) {
-  // an old man's hand resting on the shoulder, seen from behind 林冲: back of the hand up, fingers pointing toward
-  // the camera and curling down over the back of the shoulder. Origin = wrist; the hand points along -x, rotated.
-  const LN = '#2A1C17', sk = '#E0A982', skS = '#BF8763', skD = '#A06C4C';
-  const sq = 1 - 0.1 * squeeze;
-  let s = `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${f2(rot)}) scale(${f2(k)})">`;
-  // thumb (near side, below)
-  s += `<path d="M-20,24 C-36,40 -60,56 -84,62 C-94,60 -94,50 -86,44 C-70,36 -52,26 -40,12Z" fill="${sk}" stroke="${LN}" stroke-width="2.4"/>`;
-  // fingers: proximal part along the hand, distal part bending down (toward +y), foreshortened
-  const F = [[-36, 22], [-14, 23], [8, 22], [28, 19]];
-  F.forEach(([yy, w], i) => {
-    const kx = -92 - (i === 1 || i === 2 ? 6 : 0), len = (52 - i * 4) * sq, bend = (40 - i * 3) * sq;
-    const x2 = kx - len, yy2 = yy + 4;
-    s += `<path d="M${f2(kx + 6)},${f2(yy - w / 2)} L${f2(x2 + 6)},${f2(yy2 - w / 2)} C${f2(x2 - 10)},${f2(yy2 - w / 2)} ${f2(x2 - 14)},${f2(yy2 + bend * 0.5)} ${f2(x2 - 8)},${f2(yy2 + bend)} C${f2(x2 - 4)},${f2(yy2 + bend + 8)} ${f2(x2 + 12)},${f2(yy2 + bend + 6)} ${f2(x2 + 12)},${f2(yy2 + bend * 0.5)} L${f2(x2 + 14)},${f2(yy2 + w / 2)} L${f2(kx + 6)},${f2(yy + w / 2)}Z" fill="${sk}" stroke="${LN}" stroke-width="2.2"/>`;
-    s += `<path d="M${f2(x2 + 2)},${f2(yy2 - w / 2 + 3)} C${f2(x2 - 6)},${f2(yy2)} ${f2(x2 - 6)},${f2(yy2 + w / 2 - 2)} ${f2(x2 + 2)},${f2(yy2 + w / 2)}" fill="none" stroke="${skD}" stroke-width="1.6"/>`;
+function zhangHand(x, y, sc, squeeze, curl) {
+  // An old man's right hand resting ON 林冲's shoulder, back of the hand toward the camera. Origin = wrist (x, y);
+  // the hand lies along the shoulder top pointing left; the fingers curl over the front of the shoulder (their tips go
+  // behind the shoulder's top contour, so they are clipped there); the thumb hangs on our side, on the shoulder blade.
+  // ~0.78 H long at 张教头's head size (H 250 → ~195 px wrist to fingertip).
+  const LN = '#2A1C17', sk = '#E3AE88', skS = '#C38D69', skD = '#A9754F';
+  const press = 2.5 * squeeze;
+  const k = sc;
+  const P = (px, py) => `${f2(x + px * k)},${f2(y + py * k)}`;
+  // the shoulder clip (keep only what is above the contour + 2 px), in layer coords
+  let clip = `M-400,-400 L1600,-400 L1600,${f2(shY(1600))} `;
+  for (let xx = 1000; xx >= -200; xx -= 20) clip += `L${xx},${f2(shY(xx) + 2)} `;
+  clip += 'L-400,900Z';
+  let s = `<clipPath id="t08shc"><path d="${clip}"/></clipPath>`;
+  // fingers (index on top .. little at the bottom): proximal part to the left, then curling down over the front
+  let fing = '';
+  const F = [[-14, 15.5, 44], [1, 15, 47], [15, 14.5, 44], [27.5, 13, 36]];
+  F.forEach(([fy, w, len], i) => {
+    const kx = -100 + i * 3, c = clamp(curl);
+    const ex = kx - len * (1 - 0.35 * c), ey = fy + press + len * 0.9 * c;   // the fingertip drops behind the shoulder
+    const mx = kx - len * 0.6, my = fy + press + len * 0.15 * c;
+    fing += `<path d="M${P(kx + 4, fy - w / 2)} C${P(mx, my - w / 2)} ${P(ex - w * 0.3, ey - w * 0.9)} ${P(ex - w * 0.5, ey)} C${P(ex - w * 0.4, ey + w * 0.6)} ${P(ex + w * 0.5, ey + w * 0.4)} ${P(ex + w * 0.5, ey)} C${P(mx + 4, my + w / 2)} ${P(kx + 4, fy + w / 2)} ${P(kx + 4, fy + w / 2)}Z" fill="${sk}" stroke="${LN}" stroke-width="1.8" stroke-linejoin="round"/>`;
+    // middle-joint crease (age)
+    fing += `<path d="M${P(mx + 2, my - w * 0.42)} C${P(mx - 1, my - w * 0.1)} ${P(mx - 1, my + w * 0.1)} ${P(mx + 2, my + w * 0.42)}" fill="none" stroke="${skD}" stroke-width="1.3" opacity="0.8"/>`;
   });
-  // back of the hand
-  s += `<path d="M6,-40 C-30,-48 -76,-50 -100,-42 C-108,-20 -108,20 -100,40 C-70,46 -30,44 4,36 C16,16 18,-20 6,-40Z" fill="${sk}" stroke="${LN}" stroke-width="2.6"/>`;
-  s += `<path d="M6,-40 C18,-20 16,16 4,36 C-8,30 -12,10 -10,-6 C-8,-22 -2,-34 6,-40Z" fill="${skS}"/>`;
-  // knuckles and veins (age)
-  s += `<path d="M-98,-30 C-92,-36 -86,-36 -82,-30 M-100,-8 C-94,-14 -88,-14 -84,-8 M-100,14 C-94,8 -88,8 -84,14 M-98,34 C-92,28 -86,28 -82,32" fill="none" stroke="${skD}" stroke-width="2" stroke-linecap="round"/>`;
-  s += `<path d="M-14,-12 C-36,-14 -58,-20 -80,-24 M-10,6 C-34,6 -58,4 -82,0" fill="none" stroke="${skD}" stroke-width="1.6" opacity="0.6"/>`;
-  s += '</g>';
+  s += `<g clip-path="url(#t08shc)">${fing}</g>`;
+  // back of the hand (wrist at 0,0 → knuckles at x ≈ -100), slight cel shadow along the lower edge
+  s += `<path d="M${P(4, -24)} C${P(-30, -30 + press * 0.3)} ${P(-70, -26 + press * 0.5)} ${P(-98, -22 + press * 0.6)} C${P(-106, -10 + press)} ${P(-108, 18 + press)} ${P(-100, 36 + press)} C${P(-70, 40 + press * 0.5)} ${P(-30, 36)} ${P(2, 26)} C${P(10, 10)} ${P(10, -12)} ${P(4, -24)}Z" fill="${sk}" stroke="${LN}" stroke-width="2" stroke-linejoin="round"/>`;
+  s += `<path d="M${P(-100, 34 + press)} C${P(-70, 38 + press * 0.5)} ${P(-30, 34)} ${P(2, 26)} C${P(-10, 20)} ${P(-50, 24 + press * 0.4)} ${P(-96, 22 + press)}Z" fill="${skS}"/>`;
+  // knuckle line (four bumps) and a few tendons/veins (an old man's hand)
+  s += `<path d="M${P(-97, -20 + press * 0.6)} C${P(-92, -24 + press * 0.6)} ${P(-88, -18 + press * 0.6)} ${P(-94, -8 + press)} C${P(-90, -10 + press)} ${P(-86, -2 + press)} ${P(-92, 6 + press)} C${P(-88, 6 + press)} ${P(-86, 14 + press)} ${P(-91, 20 + press)} C${P(-88, 22 + press)} ${P(-88, 28 + press)} ${P(-94, 32 + press)}" fill="none" stroke="${skD}" stroke-width="1.6" stroke-linecap="round"/>`;
+  s += `<path d="M${P(-6, -14)} C${P(-34, -16)} ${P(-60, -16)} ${P(-86, -14 + press * 0.6)} M${P(-4, 2)} C${P(-34, 2)} ${P(-60, 2)} ${P(-84, 2 + press)} M${P(-6, 16)} C${P(-32, 18)} ${P(-56, 20)} ${P(-82, 18 + press)}" fill="none" stroke="${skD}" stroke-width="1.2" opacity="0.55"/>`;
+  s += `<path d="M${P(-20, -10)} C${P(-34, -4)} ${P(-40, 6)} ${P(-54, 10)}" fill="none" stroke="#B9806A" stroke-width="1.4" opacity="0.5"/>`;
+  // thumb: on our side, hanging down over the shoulder blade
+  s += `<path d="M${P(-14, 24)} C${P(-22, 40 + press)} ${P(-34, 56 + press)} ${P(-48, 64 + press)} C${P(-56, 66 + press)} ${P(-60, 60 + press)} ${P(-54, 54 + press)} C${P(-44, 46 + press)} ${P(-38, 36)} ${P(-36, 26)}Z" fill="${sk}" stroke="${LN}" stroke-width="1.8" stroke-linejoin="round"/>`;
+  s += `<path d="M${P(-40, 50 + press)} C${P(-44, 54 + press)} ${P(-46, 58 + press)} ${P(-46, 62 + press)}" fill="none" stroke="${skD}" stroke-width="1.2"/>`;
   return s;
 }
 function linBack(t) {
-  // 林冲 from behind (foreground, soft): back of the head (plain dark head cloth, bun), the shoulder cap in the slate
-  // robe, the cangue board's short end behind the neck; rim light from the window on the left.
+  // 林冲 from behind (soft foreground, d 1.4): back of the head (plain dark head cloth, bun), the near shoulder reaching
+  // into the frame (top edge under (620–700, 580)), the cangue board's short end behind the neck; window rim light.
   const LN = '#1E1714';
   let s = '';
-  s += `<path d="M-160,1180 L-160,720 C-60,660 120,630 300,626 C440,624 580,630 690,664 C790,694 860,760 900,870 C930,960 940,1080 950,1180Z" fill="#3B4356" stroke="${LN}" stroke-width="4"/>`;
-  s += `<path d="M600,646 C730,676 820,736 864,830 C890,900 904,1000 912,1180 L770,1180 C764,990 730,870 650,770 C610,722 570,680 530,656Z" fill="#2E3445"/>`;
-  s += `<path d="M640,668 C700,690 740,720 770,760" fill="none" stroke="#4E5870" stroke-width="12" opacity="0.6"/>`;
+  s += `<path d="${SH_TOP} L1010,1180 L-200,1180Z" fill="#3B4356" stroke="${LN}" stroke-width="4"/>`;
+  s += `<path d="M700,584 C790,596 870,640 920,700 C955,760 975,860 990,1180 L840,1180 C830,960 800,820 740,720 C700,660 650,620 600,600Z" fill="#2E3445"/>`;
+  s += `<path d="M640,610 C700,630 740,660 770,700" fill="none" stroke="#4E5870" stroke-width="12" opacity="0.6"/>`;
   // the cangue board's short end behind the neck (rounded end, iron plate, 封皮 strip)
-  s += `<path d="M30,700 C30,656 100,640 220,642 L440,646 C500,648 520,700 500,734 L470,770 C360,764 180,772 70,764 C42,754 30,726 30,700Z" fill="#8A6440" stroke="${LN}" stroke-width="4"/>`;
-  s += `<path d="M50,708 C60,672 106,660 176,660 L184,766 C120,768 80,764 62,756Z" fill="#4B4F55"/>`;
-  s += `<path d="M380,648 L440,650 C490,652 506,692 496,724 L470,756 L388,758Z" fill="#4B4F55" opacity="0.9"/>`;
-  s += `<rect x="210" y="676" width="150" height="36" fill="#EFE9DC" opacity="0.9"/><path d="M228,690 h56 M228,700 h36" stroke="#B3302A" stroke-width="4"/>`;
+  s += `<path d="M30,690 C30,646 100,630 220,632 L440,636 C500,638 520,690 500,724 L470,760 C360,754 180,762 70,754 C42,744 30,716 30,690Z" fill="#8A6440" stroke="${LN}" stroke-width="4"/>`;
+  s += `<path d="M50,698 C60,662 106,650 176,650 L184,756 C120,758 80,754 62,746Z" fill="#4B4F55"/>`;
+  s += `<path d="M380,638 L440,640 C490,642 506,682 496,714 L470,746 L388,748Z" fill="#4B4F55" opacity="0.9"/>`;
+  s += `<rect x="210" y="666" width="150" height="36" fill="#EFE9DC" opacity="0.9"/><path d="M228,680 h56 M228,690 h36" stroke="#B3302A" stroke-width="4"/>`;
   // neck and the back of the head
-  s += `<path d="M190,664 C186,580 196,520 220,490 L370,490 C390,540 394,600 386,664Z" fill="#B98063" stroke="${LN}" stroke-width="4"/>`;
-  const head = 'M150,440 C140,310 220,220 304,218 C404,216 462,300 452,430 C446,500 414,540 374,560 C326,580 248,576 210,550 C172,524 156,490 150,440Z';
+  s += `<path d="M190,654 C186,570 196,510 220,480 L370,480 C390,530 394,590 386,654Z" fill="#B98063" stroke="${LN}" stroke-width="4"/>`;
+  const head = 'M150,430 C140,300 220,210 304,208 C404,206 462,290 452,420 C446,490 414,530 374,550 C326,570 248,566 210,540 C172,514 156,480 150,430Z';
   s += `<path d="${head}" fill="#22272F" stroke="${LN}" stroke-width="4"/>`;
-  s += `<path d="M248,260 C238,200 278,160 316,162 C358,164 378,206 366,258 C336,246 288,246 248,260Z" fill="#1A1E25" stroke="${LN}" stroke-width="4"/>`;
-  s += `<path d="M186,350 C236,322 372,322 432,352" fill="none" stroke="#353C4A" stroke-width="9"/>`;
-  s += `<path d="M200,300 C230,286 270,280 300,282 M190,410 C240,392 360,394 440,414" fill="none" stroke="#2E3440" stroke-width="5"/>`;
-  // rim light from the window (upper left)
-  s += `<clipPath id="t08rim"><rect x="-200" y="0" width="420" height="1200"/></clipPath><g clip-path="url(#t08rim)"><path d="${head}" fill="none" stroke="#B89A78" stroke-width="12" opacity="0.75"/><path d="M-160,720 C-60,660 120,630 300,626" fill="none" stroke="#B89A78" stroke-width="10" opacity="0.5"/></g>`;
-  // ear edge
-  s += `<path d="M444,400 C468,394 480,420 472,448 C466,466 454,472 444,468" fill="#B98063" stroke="${LN}" stroke-width="3"/>`;
+  s += `<path d="M248,250 C238,190 278,150 316,152 C358,154 378,196 366,248 C336,236 288,236 248,250Z" fill="#1A1E25" stroke="${LN}" stroke-width="4"/>`;
+  s += `<path d="M186,340 C236,312 372,312 432,342" fill="none" stroke="#353C4A" stroke-width="9"/>`;
+  s += `<path d="M200,290 C230,276 270,270 300,272 M190,400 C240,382 360,384 440,404" fill="none" stroke="#2E3440" stroke-width="5"/>`;
+  s += `<clipPath id="t08rim"><rect x="-200" y="0" width="420" height="1200"/></clipPath><g clip-path="url(#t08rim)"><path d="${head}" fill="none" stroke="#B89A78" stroke-width="12" opacity="0.75"/><path d="M-200,760 C-100,690 80,650 280,630" fill="none" stroke="#B89A78" stroke-width="10" opacity="0.5"/></g>`;
+  // the shoulder top catches the window light
+  s += `<path d="M420,616 C500,598 600,586 680,582 C740,582 790,592 830,612" fill="none" stroke="#6A7590" stroke-width="8" opacity="0.7"/>`;
+  s += `<path d="M444,390 C468,384 480,410 472,438 C466,456 454,462 444,458" fill="#B98063" stroke="${LN}" stroke-width="3"/>`;
   return s;
 }
-
 function shoulderSnow(k) {
-  // a soft mound of snow on his shoulder cap where the hand was (72.55 →), growing; bumpy top
+  // a soft mound of snow on the shoulder top where the hand was (72.55 →), growing; tapered ends
   const h = 6 + 30 * k;
-  const top = (x, y0) => `${f2(x)},${f2(y0 - h * Math.pow(Math.sin(Math.PI * clamp((x - 450) / 350)), 0.6) * (0.8 + 0.2 * Math.sin(x * 0.05)))}`;
-  const line = (x) => 624 + (x - 440) * 0.2 + Math.max(0, x - 640) * 0.18;   // the shoulder contour
-  let d = `M450,${f2(line(450) + 4)}`;
-  for (let x = 450; x <= 800; x += 25) d += ` L${top(x, line(x))}`;
-  d += ` L800,${f2(line(800) + 8)} L450,${f2(line(450) + 8)}Z`;
+  let d = `M460,${f2(shY(460) + 4)}`;
+  for (let x = 460; x <= 860; x += 20) d += ` L${f2(x)},${f2(shY(x) - h * Math.pow(Math.sin(Math.PI * clamp((x - 460) / 400)), 0.6) * (0.8 + 0.2 * Math.sin(x * 0.05)))}`;
+  d += ` L860,${f2(shY(860) + 8)} L460,${f2(shY(460) + 8)}Z`;
   return `<path d="${d}" fill="#FFFFFF" stroke="#DCE6EF" stroke-width="3" stroke-linejoin="round" opacity="${f2(Math.min(1, k * 1.4))}"/>`;
 }
 
@@ -515,10 +537,10 @@ function sceneC(t) {
   // his arm reaches to 林冲's shoulder: lands 68.592
   const sh = ZH.anchor('shoulderR', zo);
   const land = ramp(t, 67.95, T.hand, E.inOut);
-  const handRest = [812, 566];       // wrist; the fingers drape over the shoulder cap at ≈ (680, 690)
-  const handFrom = [1010, 640];      // his hand rests on the table edge before he reaches
+  const handRest = [796, 552];       // wrist; knuckles at ≈ (690, 560), fingers curl over the shoulder top
+  const handFrom = [1040, 610];      // his hand rests on the table edge before he reaches
   const sqz = Math.sin(clamp((t - T.sq) / 0.3) * Math.PI) * (t > T.sq ? 1 : 0);
-  const hp = [lerp(handFrom[0], handRest[0], land), lerp(handFrom[1], handRest[1], land) + 3 * sqz];
+  const hp = [lerp(handFrom[0], handRest[0], land), lerp(handFrom[1], handRest[1], land) - 26 * Math.sin(land * Math.PI)];
   const handOp = 1 - ramp(t, T.dis, 73.4, E.inOut);
   // table (top surface in perspective), the 休书 lying between them, cups
   let tab = `<path d="M-200,690 L2200,690 L2200,1300 L-200,1300Z" fill="#7A5536"/>`;
@@ -533,12 +555,12 @@ function sceneC(t) {
   s += L(c, 0.9, z, { id: 't08zhang' });
   s += L(c, 0.95, tab, { id: 't08table', bleed: 'lrb' });
   // light pool on the hand
-  s += L(c, 1.0, `<ellipse cx="640" cy="610" rx="300" ry="190" fill="url(#t08pool)" style="mix-blend-mode:screen"/>`, { id: 'fx-pool' });
+  s += L(c, 1.4, `<ellipse cx="720" cy="575" rx="260" ry="170" fill="url(#t08pool)" style="mix-blend-mode:screen"/>`, { id: 'fx-pool' });
   // 林冲's back in the foreground (soft), then the arm and hand on his shoulder (sharp)
   const snowK = ramp(t, 72.55, 73.6, E.inOut);
-  s += L(c, 1.25, linBack(t), { id: 't08linback', blur: 5, bleed: 'lb' });
-  if (handOp > 0) s += L(c, 1.25, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1 - land)}${zhangHand(hp[0], hp[1], 1.2, sqz, lerp(-5, -30, land))}</g>`, { id: 't08hand', bleed: 'r' });
-  if (snowK > 0) s += L(c, 1.25, shoulderSnow(snowK), { id: 't08shsnow', blur: 1.5 });
+  s += L(c, 1.4, linBack(t), { id: 't08linback', blur: 6, bleed: 'lb' });
+  if (handOp > 0) s += L(c, 1.4, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1 - land)}${zhangHand(hp[0], hp[1], 1.0, sqz, ramp(t, 68.35, T.hand, E.out))}</g>`, { id: 't08hand', bleed: 'r' });
+  if (snowK > 0) s += L(c, 1.4, shoulderSnow(snowK), { id: 't08shsnow', blur: 1.5 });
   // sepia memory grade + vignette
   s += `<g data-layer="fx-sepia" data-z="770" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#C9A27A" style="mix-blend-mode:multiply" opacity="0.4"/><rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08cv)"/></g>`;
   // the first snow falls into the summer memory (white, ungraded)
@@ -550,11 +572,11 @@ function sceneC(t) {
   const defs = rg('t08pool', [[0, '#F6D9A6', 0.55], [1, '#F6D9A6', 0]]) + rg('t08cv', [[0.5, '#1A0F08', 0], [1, '#1A0F08', 0.55]], 0.52, 0.48, 0.8);
   return `<defs>${defs}</defs>` + s;
 }
-// the shoulder anchor of 张教头 is in the d 0.9 layer; the arm is drawn in the d 1.25 layer: convert
+// the shoulder anchor of 张教头 is in the d 0.9 layer; the arm is drawn in the d 1.4 layer: convert
 function toFore(c, p) {
   const sp = toScreen(c, 0.9, p);
-  const s = 1 + ((c.zoom || 1) - 1) * 1.25;
-  return [(sp[0] - 960) / s + 960 + c.x * 1.25, (sp[1] - 540) / s + 540 + c.y * 1.25];
+  const s = 1 + ((c.zoom || 1) - 1) * 1.4;
+  return [(sp[0] - 960) / s + 960 + c.x * 1.4, (sp[1] - 540) / s + 540 + c.y * 1.4];
 }
 
 // ================================================================== the take
