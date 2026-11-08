@@ -5,13 +5,15 @@ protagonist isn't clear from the start, the closing question goes. Our v4 outlin
 reference (same opening formula, the same 忍 escalation ladder, the same ending at the snow night, the same music), so v4 takes a
 different spine.
 
+**Owner note (17:28): tell what he did to the three men — viewers like action.** The snow night now plays the fight (in silhouette, no blood; the final blow is a cut), from the novel's own account (第十回), with 林冲's line 「杀人可恕，情理难容」. The reference used 「我与你自幼相交」 and 「把葫芦里的冷酒…往东去了」; we don't.
+
 **Spine.** One object, one question: the 休书. *A man writes a divorce letter out of love, to set his wife free; it doesn't save
 her.* Third person (他). The protagonist and the question are on screen in the first seconds; the answer comes in order; the second
 half is the part the reference doesn't tell (the promise, the news, the tear). No closing question.
 
 **Differences from the reference (checked against its subtitles):** we open by reading the letter itself (L8), not with "他叫林冲 /
 最…的是忍"; we ask 「他为什么要休了她」, not "why did he finally fight back"; no 野猪林, no hut-repair detail, no 「他终于明白」,
-no 「骗他带刀进白虎节堂」 / 「脸上刺了字」 wording; half the film is after the temple (梁山, 已故半载, the promise).
+no 「骗他带刀进白虎节堂」 / 「脸上刺了字」 wording; the second half is after the temple (梁山, 已故半载, the promise).
 
 **Music:** timed to the owner's 《笛子戏》 (same grid as v3). The reference uses the same track — the owner may want another one;
 if so the lines stay and only the timing moves.
@@ -46,17 +48,20 @@ if so the lines stay and only the timing moves.
 | W23 | 86.5 | 门外是陆谦的声音： | Push into the crack. | L15 |
 | W24 | 88.7 | 烧死了，拾他一两块骨头回去交差。 | POV through the crack: three silhouettes against the fire. | L15 |
 | W25 | 92.3 | 回不去了。 | His eyes in the slit of fire light; alone in the music's silence. | *(narration)* |
-| W26 | 93.65 | 他推开了门。 | On the drop: the doors burst open → whiteout (S25). | L16 |
-| W27 | 96.0 | 再后来，他落草梁山。 | The iconic lone figure in the snow night (S26) → 梁山泊. | L18 |
-| W28 | 100.2 | 他想把娘子接上山，可这件事，一拖再拖。 | The pier; the seasons turn (S27). | L19 |
-| W29 | 105.4 | 等派去的人回来，只带回一句话： | The boat out of the mist (S28). | L20 |
-| W30 | 109.4 | 娘子被逼，自缢身死，已故半载。 | 「已故半载」 brushed with the voice; the drip becomes his tear. | L20 |
-| W31 | 115.3 | 他哭了。 | CU, one tear (S29). | L21 |
-| W32 | 120.3 | 那封休书，没能护住她。 | The letter again, in his hands, in lantern light. | L20 *(narration)* |
-| W33 | 123.4 | 他立下它，只是想让她好好活着。 | The red palm print, close. | L9 *(narration)* |
-| W34 | 128.0 | 从此，他心里再没有可挂念的人。 | The dark empty window (S30). | L21 |
-| W35 | 134.2 | 依旧夫妻完聚—— | Brushed huge over the letter with the voice; the ink lifts away as snow (S32). | L11 |
-| W36 | 137.4 | 这句话，他终究没能等到。 | Only the red palm print remains. | L28 |
+| W26 | 93.65 | 他一把拽开庙门。 | On the drop: the doors fly open on fire and blizzard (S25, no whiteout now). | L16 拽开庙门 |
+| W27 | 95.5 | 一枪戳倒差拨，再一枪，追倒了逃跑的富安。 | Action in silhouette against the fire: the thrust on the beat, 差拨 drops out of frame; 富安 runs, 林冲 overtakes him, second thrust on the beat. No blood, no wounds. | 第十回 「先戳倒差拨」「富安走不到十来步，被林冲赶上，后心只一枪」 |
+| W28 | 100.0 | 陆谦被他掀翻在雪里，刀，就搁在脸上。 | 陆谦 thrown into the snow, a boot on his chest, the blade at his face (silhouette, snow falling). | 「批胸只一提，丢翻在雪地上……便去陆谦脸上阁着」 |
+| W29 | 104.2 | 杀人可恕，情理难容！ | 林冲's face in fire light, the 怒 expression; the blade rises. | 林冲: 「正是杀人可恕，情理难容」 |
+| W30 | 106.9 | 这一回，他没有再忍。 | Cut on the blow to snow and ink splash (the killing itself never shown). | *(narration)* |
+| W31 | 109.4 | 再后来，他落草梁山。 | The iconic lone figure in the snow night (S26) → 梁山泊. | L18 |
+| W32 | 111.8 | 他想接娘子上山，却一拖再拖。 | The pier, a season turning behind him. | L19 |
+| W33 | 115.2 | 派去的人回来说：娘子被逼自尽，已故半载。 | The boat; 「已故半载」 brushed with the voice; the drip becomes his tear. | L20 |
+| W34 | 119.2 | 他哭了。 | CU, one tear (S29). | L21 |
+| W35 | 120.6 | 那封休书，没能护住她。 | The letter again, in his hands, in lantern light. | L20 *(narration)* |
+| W36 | 123.3 | 他立下它，只是想让她好好活着。 | The red palm print, close. | L9 *(narration)* |
+| W37 | 127.0 | 从此，他心里再没有可挂念的人。 | The dark empty window (S30). | L21 |
+| W38 | 134.2 | 依旧夫妻完聚—— | Brushed huge over the letter with the voice; the ink lifts away as snow (S32). | L11 |
+| W39 | 137.4 | 这句话，他终究没能等到。 | Only the red palm print remains. | L28 |
 | End | 141.86 | *(end card, no question)* | J seal from the print, title, 关注 pill, 下回：鲁智深, sources | |
 
 Cut from v3: the training-ground boast line, the tea bowls, the road look-back, 高俅's banquet, 六和寺, the fist-vs-print question.
