@@ -142,7 +142,9 @@ C_FRONT = dict(
         dict(poly=[(496, 200), (710, 200), (710, 250), (496, 250)], mode='bg', pred='notskin'),
         dict(poly=[(364, 206), (492, 206), (492, 228), (364, 228)], mode='#16171b'),  # hair under the brim
         dict(poly=[(370, 226), (486, 226), (482, 264), (470, 270), (466, 300), (458, 324), (444, 336), (428, 339), (412, 336), (398, 324), (390, 300), (386, 270), (372, 264)], mode='skin'),
-        dict(poly=[(360, 226), (500, 226), (500, 350), (360, 350)], mode='near', pred='cord'),  # red hat cord over the face
+        dict(poly=[(360, 226), (500, 226), (500, 350), (360, 350)], mode='near', pred='cord', ink_pred='cord'),  # red hat cord over the face
+        dict(poly=[(336, 204), (373, 204), (373, 242), (336, 242)], mode='bg', pred='hat'),  # brim remnants at the temples
+        dict(poly=[(483, 204), (520, 204), (520, 242), (483, 242)], mode='bg', pred='hat'),
         dict(poly=[(404, 330), (452, 330), (452, 470), (404, 470)], mode='near'),  # goatee + hanging cord ends
     ],
     face=dict(eyeR=(396, 253.5), eyeL=(456, 253.5), browR=[(418, 246), (375, 233)], browL=[(437, 245), (480, 232)],
@@ -187,7 +189,8 @@ C_SIDE = dict(
         dict(poly=[(338, 270), (370, 270), (372, 300), (356, 300), (338, 292)], mode='skin'),
         dict(poly=[(320, 268), (340, 268), (340, 296), (320, 296)], mode='near', within=[(310, 240), (342, 240), (342, 300), (310, 300)], pred='dark'),
         dict(poly=[(352, 250), (420, 250), (420, 322), (352, 322)], mode='skin', pred='notskin_soft'),  # tattoo dots, stubble
-        dict(poly=[(380, 160), (440, 160), (440, 380), (380, 380)], mode='near', pred='cord'),  # hat cord
+        dict(poly=[(380, 160), (440, 160), (440, 380), (380, 380)], mode='near', pred='cord', ink_pred='cord'),  # hat cord
+        dict(poly=[(503, 150), (720, 150), (720, 245), (503, 245)], mode='bg'),  # brim underside behind the head
         dict(poly=[(370, 294), (400, 294), (400, 324), (370, 324)], mode='near', pred='dark', ink_all=True),  # cord knot remains under the jaw
         dict(poly=[(330, 314), (378, 312), (378, 362), (330, 362)], mode='bg'),  # goatee
     ],

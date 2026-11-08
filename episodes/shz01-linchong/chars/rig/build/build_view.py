@@ -41,6 +41,8 @@ def pred_mask(pred, L, pal_lab):
         ok = Lc >= 92
     elif pred == 'notred':
         ok = ~((ac > 146) & (Lc < 170))
+    elif pred == 'hat':
+        ok = (ac < 140) & (bc > 128) & (bc < 156) & (Lc > 105) & (Lc < 222)
     elif pred == 'none':
         ok = np.zeros(len(Lc), bool)
     elif pred == 'notgreen':
@@ -114,6 +116,14 @@ def build(view, debug=None):
             INK &= ~small[cc]
         elif e.get('ink_all'):
             INK &= ~polymask(e['poly'], shp)
+        if e.get('ink_pred') == 'cord':  # thin red cord lines live in the ink layer: find them by colour
+            labi = cv2.cvtColor(Sm, cv2.COLOR_RGB2LAB).astype(int)
+            red = ((labi[..., 1] > 151) & (labi[..., 0] < 170)).astype(np.uint8)
+            red = cv2.dilate(red, np.ones((5, 5), np.uint8)) > 0
+            INK &= ~(polymask(e['poly'], shp) & red)
+            Lr = red & polymask(e['poly'], shp) & FG
+            if Lr.any():
+                L = _fill_from(L, Lr, FG & ~Lr & polymask(e.get('within', e['poly']), shp))
         elif e.get('ink', True):
             INK &= ~(m if not e.get('pred') else cv2.dilate(m.astype(np.uint8), np.ones((5, 5), np.uint8)) > 0)
     for p in S.get('paint', []):  # add shapes (e.g. hat removal fills the head top)
