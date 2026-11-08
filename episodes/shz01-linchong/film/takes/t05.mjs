@@ -278,8 +278,11 @@ function nearArm(t) {
   // the grip gives 49.457 (index+middle) / 49.88 (ring+little); 50.29 the half-open hand sinks.
   const up = ramp(t, 43.63, 45.302, E.in);
   const sink = ramp(t, 50.29, 51.6, E.out);
-  // angles (screen, y down): upper arm, forearm
-  const au = lerp(lerp(96, -32, up), 60, sink), af = lerp(lerp(104, -108, up), -20 + 30 * sink, sink);
+  // angles (screen, y down): upper arm, forearm — the hand rises close to his own chest, then up (no swing
+  // through 高衙内)
+  const wind = [[43.63, [96, 104]], [44.55, [62, -62], E.in], [45.302, [-32, -108], E.in]];
+  const [au0, af0] = kf(t, wind, E.inOut);
+  const au = lerp(au0, 60, sink), af = lerp(af0, -20 + 30 * sink, sink);
   const Lu = 1.36 * HB, Lf = 1.05 * HB;
   const S = SHO, El = [S[0] + Math.cos((au * Math.PI) / 180) * Lu, S[1] + Math.sin((au * Math.PI) / 180) * Lu];
   const Wr = [El[0] + Math.cos((af * Math.PI) / 180) * Lf, El[1] + Math.sin((af * Math.PI) / 180) * Lf];

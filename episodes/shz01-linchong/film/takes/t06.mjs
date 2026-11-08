@@ -5,8 +5,8 @@ import { luqian, luPt, LU_COL } from '../cast/luqian.mjs';
 import { silMask } from '../cast/c_util.mjs';
 
 const LN = '#2A1C17';
-const LU = { x: 1240, y: 450, k: 2.35 };
-const TABLE_Y = 790;
+const LU = { x: 1240, y: 490, k: 2.35 };
+const TABLE_Y = 812;
 const CUP_L = [720, TABLE_Y - 6]; // 林冲's cup on the near edge
 const EWER0 = [990, TABLE_Y - 4];
 
@@ -95,7 +95,7 @@ function hand(x, y, s, rot, cupping = true) {
 function cam(t) {
   // push toward 陆谦 keeping his face at (1240, 400); the entry truck from T05 settles; then the dive into the cup
   const z = lerp(1.0, 1.08, ramp(t, 53.21, 56.2, E.sine));
-  let c = camAt([1240, 450], [1240, 450], z);
+  let c = camAt([1240, 490], [1240, 490], z);
   c.x += -60 * (1 - ramp(t, 52.8, 54.2, E.out));
   const dv = ramp(t, 56.4, 56.93, E.in);
   if (dv > 0) {
