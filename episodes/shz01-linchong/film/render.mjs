@@ -39,7 +39,12 @@ async function flushBakes() {
   for (const [file, b] of BAKES) {
     if (!fs.existsSync(file)) {
       await bpage.setViewportSize({ width: Math.ceil(b.w), height: Math.ceil(b.h) });
-      await bpage.evaluate((s) => { document.body.style.background = 'transparent'; document.getElementById('root').innerHTML = s; }, b.svg);
+      await bpage.evaluate(([s, w, h]) => {
+        document.body.style.background = 'transparent';
+        const r = document.getElementById('root');
+        r.style.width = w + 'px'; r.style.height = h + 'px';
+        r.innerHTML = s;
+      }, [b.svg, Math.ceil(b.w), Math.ceil(b.h)]);
       await bpage.evaluate(() => document.fonts.ready);
       await bpage.screenshot({ path: file, omitBackground: true, clip: { x: 0, y: 0, width: Math.ceil(b.w), height: Math.ceil(b.h) } });
     }
