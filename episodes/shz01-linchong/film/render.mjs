@@ -111,6 +111,8 @@ const takes = await loadTakes();
 
 if (mode === 'stills' || mode === 'sheet') {
   let times;
+  const SHEETDIR = `${out}.thumbs`;
+  if (mode === 'sheet') fs.mkdirSync(SHEETDIR, { recursive: true });
   if (mode === 'stills') { fs.mkdirSync(out, { recursive: true }); times = a3.split(',').map(Number); }
   else { times = []; for (let t = +a3; t < +a4 - 1e-6; t += +a5) times.push(+t.toFixed(3)); }
   const shots = [];
@@ -118,7 +120,7 @@ if (mode === 'stills' || mode === 'sheet') {
     const svg = frameSVG(takes, t, { clean: flags.includes('--clean') });
     await flushBakes();
     await show(svg);
-    const file = mode === 'stills' ? `${out}/t_${t.toFixed(2).padStart(6, '0')}.jpg` : `${BAKE_DIR}/../sheet_${shots.length}.jpg`;
+    const file = mode === 'stills' ? `${out}/t_${t.toFixed(2).padStart(6, '0')}.jpg` : `${SHEETDIR}/s_${shots.length}.jpg`;
     await page.screenshot({ path: file, type: 'jpeg', quality: 90 });
     shots.push([t, file]);
     if (flags.includes('--check') || mode === 'stills') {
@@ -131,8 +133,9 @@ if (mode === 'stills' || mode === 'sheet') {
     const html = `<div style="display:grid;grid-template-columns:repeat(${cols},${tw}px);gap:4px;background:#111;padding:4px;font:14px sans-serif;color:#ddd">` +
       shots.map(([t, f]) => `<div style="position:relative"><img src="file://${f}" width="${tw}" height="${th}"><span style="position:absolute;left:4px;top:2px;background:#000a;padding:0 4px">${t.toFixed(2)}</span></div>`).join('') + '</div>';
     const sp = await browser.newPage({ viewport: { width: cols * (tw + 4) + 4, height: rowsN * (th + 4) + 4 } });
-    await sp.setContent(html);
-    await sp.waitForTimeout(300);
+    fs.writeFileSync(`${SHEETDIR}/sheet.html`, `<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#111}</style></head><body>${html}</body></html>`);
+    await sp.goto('file://' + `${SHEETDIR}/sheet.html`);
+    await sp.evaluate(() => Promise.all([...document.images].map((i) => i.complete ? 1 : new Promise((r) => { i.onload = i.onerror = r; }))));
     await sp.screenshot({ path: out, type: 'jpeg', quality: 85, fullPage: true });
   }
 } else if (mode === 'video') {

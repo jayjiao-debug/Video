@@ -37,8 +37,14 @@ export async function loadTakes() {
   for (const [id, t0, t1, label] of SLOTS) {
     const file = new URL(`./takes/${id.toLowerCase()}.mjs`, import.meta.url);
     if (fs.existsSync(file)) {
-      const m = (await import(file.href + `?v=${fs.statSync(file).mtimeMs}`)).default;
-      takes.push({ ...m, id, t0, t1 });
+      try {
+        const m = (await import(file.href + `?v=${fs.statSync(file).mtimeMs}`)).default;
+        takes.push({ ...m, id, t0, t1 });
+      } catch (e) {
+        // a take being edited must not break everyone else's renders
+        console.error(`[film] ${id} failed to load (placeholder used): ${String(e.message).split('\n')[0]}`);
+        takes.push(placeholder(id, t0, t1, label + ' (load error)'));
+      }
     } else takes.push(placeholder(id, t0, t1, label));
   }
   return takes;
