@@ -11,6 +11,8 @@
 //   s += tex('tiles', { d: roofPath }, { op: 0.4, scale: 0.6 });                          // texture clipped to a path
 //   s += edgeWear([[x0, y0], [x1, y1]], { seed: 3 });                                     // chipped, highlighted top edge
 //   s += lightGrad(0, 0, 2400, 1500, { key: [700, 300], warm: '#FFE2B0', cool: '#26324A' });
+// Trying detail on an existing take without editing it: register a decorator in lib.BAKE_HOOKS[bakeName] that returns
+// {inner, defs} for that bake (same coordinates as the take), and render with --hooks=<module> (see tex_demo/hooks.mjs).
 // Keep texture contrast low (op 0.3–0.55) behind faces and in the subtitle band (y 820–960); characters stay sharpest.
 import { ASSET, furl, rng, f2, noise1, fbm1 } from './lib.mjs';
 
@@ -20,12 +22,13 @@ export const TEX_FILES = {
 };
 let UID = 0;
 const uid = (p) => `${p}${(UID++).toString(36)}`;
-const clipOf = (shape) => (shape.d ? `<path d="${shape.d}"/>` : `<rect x="${f2(shape.rect[0])}" y="${f2(shape.rect[1])}" width="${f2(shape.rect[2])}" height="${f2(shape.rect[3])}"/>`);
+const clipOf = (shape) => (shape.d ? `<path d="${shape.d}"${shape.rule ? ` clip-rule="${shape.rule}"` : ''}/>` : `<rect x="${f2(shape.rect[0])}" y="${f2(shape.rect[1])}" width="${f2(shape.rect[2])}" height="${f2(shape.rect[3])}"/>`);
 const bboxOf = (shape) => shape.bbox || shape.rect || [-4000, -4000, 12000, 12000];
 
 /**
  * A texture laid over whatever is already drawn, clipped to a shape.
- * shape: {rect:[x,y,w,h]} | {d:'path', bbox?:[x,y,w,h]}
+ * shape: {rect:[x,y,w,h]} | {d:'path', bbox?:[x,y,w,h], rule?:'evenodd'} (evenodd: a rect minus a hole, e.g. a table minus its cloth)
+ * Don't wrap the result in another clip-path/filter group: that isolates it and the blend paints flat grey. Clip with shape.
  * o: {op 0.45, scale 1, rot 0 (deg), mode 'overlay'|'soft-light'|'multiply'|'screen', ox, oy}
  */
 export function tex(name, shape, o = {}) {
@@ -34,7 +37,9 @@ export function tex(name, shape, o = {}) {
   const [bx, by, bw, bh] = bboxOf(shape);
   return `<defs><pattern id="${id}p" patternUnits="userSpaceOnUse" x="${f2(o.ox || 0)}" y="${f2(o.oy || 0)}" width="${f2(sz)}" height="${f2(sz)}"${tf}>` +
     `<image href="${furl(ASSET + '/' + TEX_FILES[name])}" width="${f2(sz)}" height="${f2(sz)}"/></pattern><clipPath id="${id}c">${clipOf(shape)}</clipPath></defs>` +
-    `<g clip-path="url(#${id}c)"><rect x="${f2(bx)}" y="${f2(by)}" width="${f2(bw)}" height="${f2(bh)}" fill="url(#${id}p)" style="mix-blend-mode:${o.mode || 'overlay'}" opacity="${f2(o.op ?? 0.45)}"/></g>`;
+    // the blend mode sits on the clipped group itself: a clip-path group is an isolated stacking context, so a blend
+    // mode on its child would only see the group's empty backdrop and paint flat grey
+    `<g clip-path="url(#${id}c)" style="mix-blend-mode:${o.mode || 'overlay'}" opacity="${f2(o.op ?? 0.45)}"><rect x="${f2(bx)}" y="${f2(by)}" width="${f2(bw)}" height="${f2(bh)}" fill="url(#${id}p)"/></g>`;
 }
 
 /** Wood grain lines inside a rect (dir 'h' grain runs along x, 'v' along y), with optional knots. */
@@ -97,13 +102,13 @@ export function planks(x, y, w, h, n, o = {}) {
   return s;
 }
 
-/** Soft stains (water marks, soot), darker toward the bottom by default. */
+/** Soft stains (water marks, soot), darker toward the bottom by default. o: {seed, n 8, blur 18, low (false = anywhere), col, op 1 (opacity multiplier)}. Blob size scales with w, so pass op/n down for very wide layers. */
 export function stains(x, y, w, h, o = {}) {
   const R = rng(o.seed ?? 21), id = uid('st'), n = o.n ?? 8;
   let s = `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${f2(o.blur ?? 18)}"/></filter></defs><g filter="url(#${id})" style="mix-blend-mode:multiply">`;
   for (let i = 0; i < n; i++) {
     const cx = x + R() * w, cy = y + h * (o.low === false ? R() : 0.35 + 0.65 * Math.sqrt(R())), rx = w * (0.03 + R() * 0.08), ry = rx * (0.6 + R() * 0.9);
-    s += `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="${f2(rx)}" ry="${f2(ry)}" fill="${o.col || '#5A4636'}" opacity="${f2(0.12 + R() * 0.18)}"/>`;
+    s += `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="${f2(rx)}" ry="${f2(ry)}" fill="${o.col || '#5A4636'}" opacity="${f2((0.12 + R() * 0.18) * (o.op ?? 1))}"/>`;
   }
   return s + '</g>';
 }
@@ -218,15 +223,17 @@ export function edgeWear(edge, o = {}) {
 }
 
 /** Fold strokes for cloth (a hanging cloth / curtain in a rect): soft vertical folds with light and dark sides. */
+/* o: {seed, n, dark, light, clip (path d of the cloth), texOp 0.3, texScale 0.6} */
 export function fabricFolds(x, y, w, h, o = {}) {
-  const R = rng(o.seed ?? 81), n = o.n ?? Math.max(3, Math.round(w / 60));
-  let s = '';
+  const R = rng(o.seed ?? 81), n = o.n ?? Math.max(3, Math.round(w / 60)), id = uid('ff');
+  let s = o.clip ? `<defs><clipPath id="${id}"><path d="${o.clip}"/></clipPath></defs><g clip-path="url(#${id})">` : '';
   for (let i = 0; i < n; i++) {
     const fx = x + ((i + 0.5 + (R() - 0.5) * 0.4) * w) / n, sw = (w / n) * 0.35, sway = (R() - 0.5) * sw;
     s += `<path d="M${f2(fx)},${f2(y + h * 0.05)} C${f2(fx + sway)},${f2(y + h * 0.4)} ${f2(fx - sway)},${f2(y + h * 0.7)} ${f2(fx + sway * 0.5)},${f2(y + h)}" stroke="${o.dark || '#1A1010'}" stroke-width="${f2(sw * 0.5)}" fill="none" opacity="0.18" stroke-linecap="round"/>`;
-    s += `<path d="M${f2(fx + sw * 0.45)},${f2(y + h * 0.08)} C${f2(fx + sw * 0.45 + sway)},${f2(y + h * 0.4)} ${f2(fx + sw * 0.45 - sway)},${f2(y + h * 0.7)} ${f2(fx + sw * 0.45 + sway * 0.5)},${f2(y + h)}" stroke="${o.light || '#FFE9D0'}" stroke-width="${f2(sw * 0.2)}" fill="none" opacity="0.12" stroke-linecap="round"/>`;
+    s += `<path d="M${f2(fx + sw * 0.45)},${f2(y + h * 0.08)} C${f2(fx + sw * 0.45 + sway)},${f2(y + h * 0.4)} ${f2(fx + sw * 0.45 - sway)},${f2(y + h * 0.7)} ${f2(fx + sw * 0.45 + sway * 0.5)},${f2(y + h)}" stroke="${o.light || '#FFE9D0'}" stroke-width="${f2(sw * 0.2)}" fill="none" opacity="0.07" stroke-linecap="round"/>`;
   }
-  return s + tex('fabric', { rect: [x, y, w, h] }, { op: 0.3, scale: 0.6 });
+  if (o.clip) s += '</g>';
+  return s + tex('fabric', o.clip ? { d: o.clip, bbox: [x, y, w, h] } : { rect: [x, y, w, h] }, { op: o.texOp ?? 0.3, scale: o.texScale ?? 0.6 });
 }
 
 /** Motivated light: a warm key pool (screen) and a cool shadow falloff (multiply) over a rect. */
