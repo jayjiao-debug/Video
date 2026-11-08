@@ -1098,7 +1098,7 @@ export function lin(opt = {}) {
       opt.info.handAngNear = angOf(mul(rootM, wm(nhn)));
       if (BP) {
         for (const [n, Lg] of Object.entries(BP.legs)) opt.info[n] = { hip: Wp(I, Lg.g.hip), knee: Wp(Lg.Mt, Lg.g.K), ankle: Wp(Lg.Ms, Lg.g.A), toe: Wp(Lg.Mf, Lg.g.toe), heel: Wp(Lg.Mf, Lg.g.heel), side: Lg.side };
-        opt.info.hip = Wp(I, BP.hipC);
+        opt.info.hip = Wp(I, BP.hipC); opt.info.groundDy = BP.G[5]; opt.info.hipLocal = BP.hipC;
       }
     }
   }

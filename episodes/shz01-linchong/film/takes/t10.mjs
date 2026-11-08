@@ -75,9 +75,9 @@ function door(sk) {
   s += `<rect x="${CRACK - 30 + sk[0]}" y="${-40 + y}" width="30" height="${FL + 40}" fill="#2A221D"/>`; // jamb post (left of the crack)
   return s;
 }
-function stone(x, sk = [0, 0]) {
+function stone(x, sk = [0, 0], top = STONE_TOP, r = STONE_R) {
   // back face at x, top at STONE_TOP with a rounded top-back corner (radius STONE_R) where his palms sit
-  const y = FL, w = STONE_W, h = FL - STONE_TOP, r = STONE_R;
+  const y = FL, w = STONE_W, h = FL - top;
   const X = x + sk[0], Y = y + sk[1], tp = Y - h;
   const outline = `M${f2(X + 6)},${f2(Y)} C${f2(X - 8)},${f2(Y - h * 0.4)} ${f2(X - 3)},${f2(tp + r * 1.7)} ${f2(X)},${f2(tp + r)} A${f2(r)},${f2(r)} 0 0 1 ${f2(X + r)},${f2(tp)} Q${f2(X + w * 0.62)},${f2(tp - 12)} ${f2(X + w * 0.86)},${f2(tp + h * 0.12)} Q${f2(X + w + 6)},${f2(tp + h * 0.3)} ${f2(X + w)},${f2(Y - h * 0.3)} L${f2(X + w)},${f2(Y)}Z`;
   let s = `<path d="${outline}" fill="#4E4943" opacity="1"/><clipPath id="t10stc"><path d="${outline}"/></clipPath><g clip-path="url(#t10stc)">`;
@@ -413,6 +413,9 @@ function cam(t) {
   return camAt([lerp(cr[0] - 120, cr[0], k), lerp(cr[1] + 60, cr[1], k)], [960, 540], Math.min(z, 4.6));
 }
 
+export const __debug = { pushAt: (t) => pushAt(t), blocking: (t) => blocking(t) };
+// the S22 set, for motion tests outside the film timeline (film/board/pushtest.mjs)
+export const parts = { ROOM, door, stone, SPEAR_LEAN, FL, HF, CRACK, STONE_W };
 export default {
   enter: {
     a: 77.3, b: 77.748, type: 'mask',

@@ -119,6 +119,10 @@ async function check(t) {
 // --hooks=<module path relative to film/>: register BAKE_HOOKS (or other experiment setup) before the takes load
 for (const fl of flags) if (fl.startsWith('--hooks=')) await import(new URL(fl.slice(8), import.meta.url).href);
 const takes = await loadTakes();
+// --comp=<module relative to film/>: render a standalone composition (exports frameSVG(t), DUR) instead of the film
+let COMP = null;
+for (const fl of flags) if (fl.startsWith('--comp=')) COMP = await import(new URL(fl.slice(7), import.meta.url).href);
+const frameOf = (t, o) => (COMP ? COMP.frameSVG(t) : frameSVG(takes, t, o));
 
 if (mode === 'stills' || mode === 'sheet') {
   let times;
@@ -128,7 +132,7 @@ if (mode === 'stills' || mode === 'sheet') {
   else { times = []; for (let t = +a3; t < +a4 - 1e-6; t += +a5) times.push(+t.toFixed(3)); }
   const shots = [];
   for (const t of times) {
-    const svg = frameSVG(takes, t, { clean: flags.includes('--clean') });
+    const svg = frameOf(t, { clean: flags.includes('--clean') });
     await flushBakes();
     await show(svg);
     const file = mode === 'stills' ? `${out}/t_${t.toFixed(2).padStart(6, '0')}.jpg` : `${SHEETDIR}/s_${shots.length}.jpg`;
@@ -157,7 +161,7 @@ if (mode === 'stills' || mode === 'sheet') {
   const t0 = Date.now();
   for (let f = f0; f < f1; f++) {
     const t = f / FPS;
-    const svg = frameSVG(takes, t);
+    const svg = frameOf(t);
     await flushBakes();
     await show(svg);
     const buf = await page.screenshot({ type: 'jpeg', quality: 93 });
