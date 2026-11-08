@@ -415,10 +415,11 @@ function hairCap(F, view, u) {
   const hi = (d) => `<path d="${d}" fill="none" stroke="#3e3a48" stroke-width="${f(3 * u)}" stroke-linecap="round"/>`;
   const knot = (x, y) => `<path d="M${f(x - 14 * u)},${f(y + 4 * u)} C${f(x - 15 * u)},${f(y - 18 * u)} ${f(x + 15 * u)},${f(y - 18 * u)} ${f(x + 14 * u)},${f(y + 4 * u)}Z" fill="${C.hair}" ${st.replace('fill="none" ', '')}/>`;
   if (view === 'front') {
-    const cx = H.cx, hw = 57 * u, top = H.y - 56 * u, side = H.y + 20 * u, hl = H.y + 5 * u;
-    const outer = `M${f(cx - hw)},${f(side)} C${f(cx - hw - 1 * u)},${f(top + 22 * u)} ${f(cx - hw * 0.55)},${f(top)} ${f(cx)},${f(top)} C${f(cx + hw * 0.55)},${f(top)} ${f(cx + hw + 1 * u)},${f(top + 22 * u)} ${f(cx + hw)},${f(side)}`;
-    return knot(cx, top) + `<path d="${outer} C${f(cx + hw * 0.8)},${f(hl + 6 * u)} ${f(cx + hw * 0.4)},${f(hl)} ${f(cx)},${f(hl)} C${f(cx - hw * 0.4)},${f(hl)} ${f(cx - hw * 0.8)},${f(hl + 6 * u)} ${f(cx - hw)},${f(side)}Z" fill="${C.hair}"/>` +
-      `<path d="${outer}" ${st}/>` + hi(`M${f(cx - 32 * u)},${f(top + 12 * u)} C${f(cx - 18 * u)},${f(top + 5 * u)} ${f(cx - 6 * u)},${f(top + 3 * u)} ${f(cx + 4 * u)},${f(top + 3 * u)}`);
+    // dome over the skull, coming down in a curve to the tops of the ears (covers the temple hair)
+    const cx = H.cx, hw = 70 * u, top = H.y - 56 * u, ear = H.y + 38 * u, hl = H.y + 6 * u;
+    const outer = `M${f(cx - hw + 4 * u)},${f(ear)} C${f(cx - hw - 3 * u)},${f(ear - 22 * u)} ${f(cx - hw)},${f(top + 24 * u)} ${f(cx - hw * 0.62)},${f(top + 6 * u)} C${f(cx - hw * 0.35)},${f(top - 1 * u)} ${f(cx + hw * 0.35)},${f(top - 1 * u)} ${f(cx + hw * 0.62)},${f(top + 6 * u)} C${f(cx + hw)},${f(top + 24 * u)} ${f(cx + hw + 3 * u)},${f(ear - 22 * u)} ${f(cx + hw - 4 * u)},${f(ear)}`;
+    return knot(cx, top + 1 * u) + `<path d="${outer} C${f(cx + hw - 12 * u)},${f(ear - 14 * u)} ${f(cx + hw * 0.55)},${f(hl + 2 * u)} ${f(cx)},${f(hl)} C${f(cx - hw * 0.55)},${f(hl + 2 * u)} ${f(cx - hw + 12 * u)},${f(ear - 14 * u)} ${f(cx - hw + 4 * u)},${f(ear)}Z" fill="${C.hair}"/>` +
+      `<path d="${outer}" ${st}/>` + hi(`M${f(cx - 34 * u)},${f(top + 12 * u)} C${f(cx - 20 * u)},${f(top + 5 * u)} ${f(cx - 6 * u)},${f(top + 3 * u)} ${f(cx + 4 * u)},${f(top + 3 * u)}`);
   }
   const fx = F.brow[0][0] - 6 * u, fy = F.brow[0][1] - 8 * u, bx = F.ear[0] + 94 * u, by = F.ear[1] + 6 * u;
   const top = H.y - 58 * u, cx = (fx + bx) / 2 - 6 * u;
@@ -428,11 +429,17 @@ function hairCap(F, view, u) {
 }
 
 function tattoo(p, u) {
-  // 金印: a small block of abstract square marks on the cheek (never readable characters)
-  let s = '';
-  const r = [[0, 0, 3, 3], [4, 0.4, 2.4, 2.4], [0.4, 4, 2.4, 3], [3.8, 3.6, 3, 3], [1.6, 7.8, 4, 1.4]];
-  for (const [x, y, w, h] of r) s += `<rect x="${f(p[0] + (x - 3.4) * u)}" y="${f(p[1] + (y - 4.6) * u)}" width="${f(w * u)}" height="${f(h * u)}" fill="none" stroke="#3a4560" stroke-width="${f(0.75 * u)}" opacity="0.75"/>`;
-  return s;
+  // 金印 (model_sheet §6): two short columns of small irregular squarish dabs, ink soaked into the
+  // skin (#2A3A55, feathered), never readable characters
+  const fid = uid('t');
+  const dabs = [[-1.9, -3.6, 1.9, 1.6, -8], [1.7, -3.9, 1.5, 1.7, 10], [-2.1, -0.9, 1.6, 1.9, 6], [1.9, -0.6, 1.9, 1.5, -12],
+    [-1.7, 2.0, 2.0, 1.5, 14], [1.6, 2.4, 1.5, 1.8, -5], [-2.0, 4.8, 1.4, 1.3, -10], [1.8, 5.0, 1.7, 1.2, 8]];
+  let s = `<filter id="${fid}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${f(0.32 * u)}"/></filter><g filter="url(#${fid})" fill="#2a3a55" opacity="0.85">`;
+  for (const [x, y, w, h, a] of dabs) {
+    const cx = p[0] + x * u * 0.9, cy = p[1] + y * u * 0.9, W = w * u, Hh = h * u;
+    s += `<path d="M${f(-W / 2)},${f(-Hh / 2 + 0.15 * u)} L${f(W / 2 - 0.1 * u)},${f(-Hh / 2)} L${f(W / 2)},${f(Hh / 2 - 0.2 * u)} L${f(-W / 2 + 0.2 * u)},${f(Hh / 2)}Z" transform="translate(${f(cx)},${f(cy)}) rotate(${a})"/>`;
+  }
+  return s + '</g>';
 }
 
 function jadeRing(c, u, r = 4.2) {

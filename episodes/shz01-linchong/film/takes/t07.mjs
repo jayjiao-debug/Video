@@ -92,15 +92,16 @@ function gaoqiu(t) {
   s += `<path d="M10,-72 C26,-66 30,-50 24,-34 L14,-40Z" fill="${sil}"/>`;
   // accusing arm: from raised (up-left of him, toward the plaque) to pointing down-left at 林冲
   const a = lerp(-100, -212, k); // degrees, screen: raised (up) → over the left → pointing down-left at 林冲
-  const r = (a * Math.PI) / 180, L1 = 36;
+  const r = (a * Math.PI) / 180, L1 = 50;
   const sh = [-10, -70], hd = [sh[0] + Math.cos(r) * L1, sh[1] + Math.sin(r) * L1];
-  s += `<path d="M${sh[0]},${sh[1]} L${f2(hd[0])},${f2(hd[1])}" stroke="${sil}" stroke-width="11" stroke-linecap="round"/>`;
+  s += `<path d="M${sh[0]},${sh[1]} L${f2(hd[0])},${f2(hd[1])}" stroke="${sil}" stroke-width="12" stroke-linecap="round"/>`;
+  s += `<path d="M${f2(hd[0])},${f2(hd[1])} l${f2(Math.cos(r) * 12)},${f2(Math.sin(r) * 12)}" stroke="${sil}" stroke-width="4.5" stroke-linecap="round"/>`;
   s += `<path d="M${sh[0]},${sh[1] + 4} Q${f2((sh[0] + hd[0]) / 2)},${f2((sh[1] + hd[1]) / 2 + 12)} ${f2(hd[0])},${f2(hd[1])}" fill="none" stroke="${sil}" stroke-width="12" opacity="0.8"/>`;
   s += `</g>`;
   // motion smear of the sweep
   if (k > 0.05 && k < 1) {
     const r0 = (lerp(-100, -212, Math.max(0, k - 0.3)) * Math.PI) / 180;
-    s += `<path d="M${f2(x - 10 * S + Math.cos(r0) * 30 * S)},${f2(y - 70 * S + Math.sin(r0) * 30 * S)} A${f2(30 * S)},${f2(30 * S)} 0 0 0 ${f2(x - 10 * S + Math.cos(r) * 30 * S)},${f2(y - 70 * S + Math.sin(r) * 30 * S)}" fill="none" stroke="${sil}" stroke-width="${f2(14 * S)}" opacity="0.18"/>`;
+    s += `<path d="M${f2(x - 10 * S + Math.cos(r0) * 50 * S)},${f2(y - 70 * S + Math.sin(r0) * 50 * S)} A${f2(50 * S)},${f2(50 * S)} 0 0 0 ${f2(x - 10 * S + Math.cos(r) * 50 * S)},${f2(y - 70 * S + Math.sin(r) * 50 * S)}" fill="none" stroke="${sil}" stroke-width="${f2(14 * S)}" opacity="0.18"/>`;
   }
   return s;
 }

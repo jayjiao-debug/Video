@@ -48,8 +48,11 @@ export function gaoTQ(o = {}) {
   const useTraceArm = raise < 0.15;
   const P = useTraceArm ? pal : paln;
   let inner = `<defs>${defs}</defs>`;
-  inner += `<g clip-path="url(#${id}bd)">${draw(P)}</g>`;
-  inner += `<g clip-path="url(#${id}hd)" transform="rotate(${f2(tilt)} ${neck[0]} ${neck[1]})">${draw(P)}`;
+  // split head/body only when the head tilts (the clip seam shows as a hairline otherwise)
+  if (tilt) {
+    inner += `<g clip-path="url(#${id}bd)">${draw(P)}</g>`;
+    inner += `<g clip-path="url(#${id}hd)" transform="rotate(${f2(tilt)} ${neck[0]} ${neck[1]})">${draw(P)}`;
+  } else inner += `<g>${draw(P)}`;
   if (o.smirk) {
     // a lifted near mouth corner (source px), the "you dare?" smirk
     const a = clamp(o.smirk);

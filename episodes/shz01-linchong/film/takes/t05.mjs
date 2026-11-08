@@ -349,24 +349,28 @@ function setB(t) {
   const c = camB(t);
   const focusGao = ramp(t, 45.712, 46.1, E.inOut) - ramp(t, 48.634, 49.0, E.inOut);
   let s = `<rect x="-10" y="-10" width="1940" height="1100" fill="#EFE0BE"/>`;
-  s += L(c, 0.3, bake('t05bgB', 3600, 2200, bgB(), { x: -1000, y: -700, defs: BG_DEFS }), { id: 't05bgB', bleed: 'all', blur: 3 });
+  s += L(c, 0.3, bake('t05bgB', 3600, 2200, `<g filter="url(#t05bb)">${bgB()}</g>`, { x: -1000, y: -700, defs: BG_DEFS + '<filter id="t05bb" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="3"/></filter>' }), { id: 't05bgB', bleed: 'all' });
   // background crowd silhouettes and the wife (soft), d 0.7
-  let bgp = '';
+  // background crowd (static, baked with its blur), the wife (soft, per frame), the retainers (baked, moving)
+  const BF = '<filter id="t05pb" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="7"/></filter>';
+  let crowdB = '';
   const R = rng(31);
   for (let i = 0; i < 9; i++) {
     const x = -200 + i * 330 + R() * 80, y = 1700 + R() * 60;
-    bgp += `<g opacity="0.55">${tracedG('lu_front', { x, y, h: 900 + R() * 120, mono: '#8E7E68' })}</g>`;
+    crowdB += `<g opacity="0.55">${tracedG('lu_front', { x: x + 600, y: y - 500, h: 900 + R() * 120, mono: '#8E7E68' })}</g>`;
   }
+  let bgp = bake('t05bgcrowd', 3600, 1400, `<g filter="url(#t05pb)">${crowdB}</g>`, { x: -600, y: 500, defs: BF });
   const wturn = ramp(t, 42.6, 43.4, E.inOut);
   const wp = toWorld(camAt([EYE[0] + 120, EYE[1] + 40], [880, 470], 1.25), 0.7, [1090, 560]);
-  bgp += wifeBack({ x: wp[0] + 30 * wturn, y: wp[1], head: 0.62 * HB, tilt: -8 * wturn, bow: 0.25 });
-  // retainers step in behind 高衙内 at 46.14
+  let wifeS = wifeBack({ x: wp[0] + 30 * wturn, y: wp[1], head: 0.62 * HB, tilt: -8 * wturn, bow: 0.25 });
+  bgp += `<g filter="url(#${blurId(7)})">${wifeS}</g>`;
   const rt = ramp(t, 46.14, 46.8, E.out);
   if (t > 45.9) {
-    bgp += tracedG('lu_front', { x: 1700 + 140 * (1 - rt), y: 1900, h: 1350, recol: (cc, [h, sat, l]) => (sat > 0.15 && l < 0.5 ? '#4A505A' : null) });
-    bgp += tracedG('lu_front', { x: 2060 + 160 * (1 - rt), y: 1880, h: 1330, recol: (cc, [h, sat, l]) => (sat > 0.15 && l < 0.5 ? '#5A4E46' : null) });
+    const ret = (col, h) => bake('t05ret' + col.slice(1), 900, 1500, `<g filter="url(#t05pb)">${tracedG('lu_front', { x: 450, y: 1450, h, recol: (cc, [hh, sat, l]) => (sat > 0.15 && l < 0.5 ? col : null) })}</g>`, { x: -450, y: -1450, defs: BF });
+    bgp += `<g transform="translate(${f2(1700 + 140 * (1 - rt))} 1900)">${ret('#4A505A', 1350)}</g>`;
+    bgp += `<g transform="translate(${f2(2060 + 160 * (1 - rt))} 1880)">${ret('#5A4E46', 1330)}</g>`;
   }
-  s += L(c, 0.7, bgp, { id: 't05bgp', bleed: 'all', blur: 7 });
+  s += L(c, 0.7, bgp, { id: 't05bgp', bleed: 'all' });
   // 高衙内: wrenched round at 42.793 (2-frame smear), sleeve over his face until the reveal at 45.712
   const spin = ramp(t, 42.39, 42.793, E.in);
   const raise = t < 45.55 ? 1 : 1 - ramp(t, 45.55, 45.75, E.inOut);
@@ -428,9 +432,10 @@ export default {
   enter: { a: 38.22, b: 38.638, type: 'dissolve', ease: E.inOut },
   frame(t) {
     let s;
-    if (t < 42.30) s = setA(t);
-    else s = setB(Math.max(t, 42.39 - 0.12) < 42.39 ? 42.39 : t);
-    if (t >= 42.30 && t < 42.39) s = setB(42.39);
+    // A → B under the densest smoke, cross-faded over 3 frames
+    if (t < 42.25) s = setA(t);
+    else if (t < 42.35) s = setA(t) + `<g opacity="${f2(ramp(t, 42.25, 42.35, E.inOut))}">${setB(42.39)}</g>`;
+    else s = setB(Math.max(t, 42.39));
     s += smokeWipe(t);
     return s;
   },
