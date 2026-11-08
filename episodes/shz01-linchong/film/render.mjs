@@ -18,6 +18,9 @@ fs.mkdirSync(ASSET, { recursive: true });
 if (!fs.existsSync(`${ASSET}/fibre.png`)) {
   await new Promise((res) => spawn('python3', [new URL('./tools/make_assets.py', import.meta.url).pathname, ASSET], { stdio: 'inherit' }).on('exit', res));
 }
+if (!fs.existsSync(`${ASSET}/tex_wood.png`)) {
+  await new Promise((res) => spawn('python3', [new URL('./tools/make_textures.py', import.meta.url).pathname, ASSET], { stdio: 'inherit' }).on('exit', res));
+}
 
 const WENKAI = '/home/claude/video/episodes/36-shanghuo/remotion/public/fonts/wenkai/wenkai-bold.css';
 const PAGE = `${BAKE_DIR}/../page.html`;
@@ -45,6 +48,12 @@ async function flushBakes() {
         r.style.width = w + 'px'; r.style.height = h + 'px';
         r.innerHTML = s;
       }, [b.svg, Math.ceil(b.w), Math.ceil(b.h)]);
+      // wait for textures/images referenced inside the bake before the screenshot
+      await bpage.evaluate(async () => {
+        const urls = [...new Set([...document.querySelectorAll('#root image')].map((im) => im.getAttribute('href') || im.getAttribute('xlink:href')))].filter(Boolean);
+        await Promise.all(urls.map((u) => new Promise((res) => { const im = new Image(); im.onload = im.onerror = res; im.src = u; })));
+        await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+      });
       await bpage.evaluate(() => document.fonts.ready);
       await bpage.screenshot({ path: file, omitBackground: true, clip: { x: 0, y: 0, width: Math.ceil(b.w), height: Math.ceil(b.h) } });
     }
@@ -107,6 +116,8 @@ async function check(t) {
   }, [W, H]);
 }
 
+// --hooks=<module path relative to film/>: register BAKE_HOOKS (or other experiment setup) before the takes load
+for (const fl of flags) if (fl.startsWith('--hooks=')) await import(new URL(fl.slice(8), import.meta.url).href);
 const takes = await loadTakes();
 
 if (mode === 'stills' || mode === 'sheet') {

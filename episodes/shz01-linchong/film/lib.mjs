@@ -115,7 +115,14 @@ export function camAt(p, q = [960, 540], z = 1, extra = {}) {
 // ---------------------------------------------------------------- baking static layers to PNG
 // bake(name, w, h, svgInner) -> <image> of a cached transparent PNG. The renderer collects BAKES in a dry pass.
 export const BAKES = new Map();
+// Optional decorators keyed by bake name: BAKE_HOOKS[name] = ({inner, defs, w, h}) => ({inner, defs}).
+// Empty by default (no effect, same hashes); render.mjs --hooks=<module> fills it for experiments (e.g. tex_demo).
+export const BAKE_HOOKS = {};
 export function bake(name, w, h, inner, opts = {}) {
+  if (BAKE_HOOKS[name]) {
+    const r = BAKE_HOOKS[name]({ inner, defs: opts.defs || '', w, h });
+    inner = r.inner; opts = { ...opts, defs: r.defs ?? opts.defs };
+  }
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${opts.vb || `0 0 ${w} ${h}`}"><defs>${opts.defs || ''}</defs>${inner}</svg>`;
   const hash = crypto.createHash('md5').update('bake-v3' + svg).digest('hex').slice(0, 10); // v3: root sized to the bake, transparent html
   const file = `${BAKE_DIR}/${name}_${hash}.png`;
