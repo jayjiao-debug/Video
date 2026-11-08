@@ -28,7 +28,7 @@ Voice: **narrator only** (owner, 2026-11-08: 只要旁白，不用人物说话).
 |---|---|---|---|---|
 | V01 | 0.5 | 如果有一天，你要亲手签下一封休书，给你最爱的人。 | Black. Ink brush on paper: columns of the real 休书 text appear stroke by stroke (第八回). | L8 |
 | V02 | 5.5 | 她哭着问你：我清清白白，你为什么不要我？ | Her hands grip the paper; a tear falls on the ink and it bleeds. Her face stays out of frame. | L10 |
-| V03 | 9.8 | 你说不出口——你是怕自己回不来，误了她一辈子。 | His face, eyes wet, jaw clenched (隐忍); the cangue on his neck; his thumb presses the red print. | L9 |
+| V03 | 9.8 | 你只说：我是好意。怕自己回不来，误了她一辈子。 *(gate 4 accuracy retake; was 「你说不出口——你是怕自己回不来…」, but in L10 he does say 「娘子，我是好意」)* | His face, eyes wet, jaw clenched (隐忍); the cangue on his neck; his thumb presses the red print. | L9 |
 | V04 | 14.6 | 可这一别，就是一辈子。 | Wide: guards lead him away down the snowy street; she sinks at the door. Music swells. | L28 |
 | V05 | 19.5 | 这个人，叫林冲。 | Title 「林冲 · 豹子头」, seal 水浒人物志 · 壹 (holds through the music's dip). |  |
 | V06 | 27.0 | 你本来什么都有：八十万禁军教头，一身本事。 | Training ground: spear drill, green robe and headscarf (东京 look). | L2 |
@@ -54,7 +54,7 @@ Voice: **narrator only** (owner, 2026-11-08: 只要旁白，不用人物说话).
 | V26 | 91.0 | 你终于明白， | Extreme close on the eyes. | (narration) |
 | V27 | 92.6 | 忍，是回不去的。 | Hold. The music almost stops. | (narration) |
 | V28 | 94.0 | 你推开了门。 | On the drop: the stone scrapes, the door opens on the fire, cut to white. | L16 |
-| V29 | 96.2 | 那一夜雪越下越大，你一个人，上了梁山。 | Lone figure in the snow: hat, spear, gourd (the signature silhouette). | L16, L18 |
+| V29 | 96.2 | 又一个雪夜，你一个人，上了梁山。 *(gate 4 accuracy retake; was 「那一夜雪越下越大…」, but 梁山 is reached on a later snowy night, L16/L18)* | Lone figure in the snow: hat, spear, gourd (the signature silhouette). | L16, L18 |
 | V30 | 101.0 | 你想把娘子接上山，可这件事，一拖再拖。 | 梁山泊 water and reeds through the seasons. | L19 |
 | V31 | 105.7 | 等派去的人回来，只带回一句话： | A small boat returning. | L20 |
 | V32 | 109.8 | 娘子被逼，自缢身死，已故半载。 | Large calligraphy 「已故半载」; 2 s of music alone. | L20 |

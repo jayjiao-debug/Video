@@ -10,10 +10,12 @@ work = os.path.dirname(out)
 dur = 148.506
 parts = []
 for ln in T['lines']:
-    dst = os.path.join(work, ln['id'] + '.wav')
+    src = ln.get('file', ln['id'])          # a retake can point at another clip
+    tp = ln.get('tempo', tempo)
+    dst = os.path.join(work, f"{src}_{tp}.wav")
     if not os.path.exists(dst):
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', os.path.join(vo, ln['id'] + '.mp3'), '-af',
-                        f'atempo={tempo},loudnorm=I=-17:TP=-3:LRA=7,aresample=48000', '-ac', '1', dst], check=True)
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', os.path.join(vo, src + '.mp3'), '-af',
+                        f'atempo={tp},loudnorm=I=-17:TP=-3:LRA=7,aresample=48000', '-ac', '1', dst], check=True)
     parts.append((dst, ln['start']))
 inputs, filt = [], []
 for k, (p, st) in enumerate(parts):

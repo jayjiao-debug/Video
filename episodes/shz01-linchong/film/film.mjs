@@ -57,10 +57,10 @@ function stamp(t) {
   const op = Math.min(ramp(t, a, a + 0.45), 1 - ramp(t, b - 0.4, b));
   if (op <= 0) return '';
   const x = 1920 - 150, y = 118;
-  return `<g data-layer="text-stamp" data-z="880" opacity="${f2(op)}">` +
+  return `<g data-layer="text-stamp" data-z="880" opacity="${f2(op)}"><ellipse cx="${x - 170}" cy="${y + 30}" rx="300" ry="110" fill="url(#subshade)"/>` +
     `<text x="${x}" y="${y}" text-anchor="end" font-family="LXGW WenKai" font-weight="700" font-size="50" fill="#F6F0E4" stroke="#1a2230" stroke-opacity="0.45" stroke-width="5" paint-order="stroke" letter-spacing="4">沧州 · 草料场</text>` +
-    `<rect x="${x - 300}" y="${y + 24}" width="300" height="2.5" fill="#C9A45C"/>` +
-    `<text x="${x}" y="${y + 70}" text-anchor="end" font-family="LXGW WenKai" font-weight="700" font-size="34" fill="#E9E3D6" stroke="#1a2230" stroke-opacity="0.4" stroke-width="4" paint-order="stroke" letter-spacing="3">那年冬天，大雪</text></g>`;
+    `<rect x="${x - 330}" y="${y + 26}" width="330" height="3" fill="#C9A45C"/>` +
+    `<text x="${x}" y="${y + 82}" text-anchor="end" font-family="LXGW WenKai" font-weight="700" font-size="44" fill="#F2EDE2" stroke="#1a2230" stroke-opacity="0.6" stroke-width="6" paint-order="stroke" letter-spacing="3">那年冬天，大雪</text></g>`;
 }
 
 /** Full SVG document for global time t. */

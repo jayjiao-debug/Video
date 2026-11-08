@@ -100,29 +100,30 @@ function tattooHand(t) {
   const lift = t < tPrev ? 1 - ramp(t, tPrev - 0.18, tPrev, E.in) : ramp(t, tPrev + 0.12, tPrev + 0.26, E.out) * (1 - ramp(t, nextT - 0.18, nextT, E.in));
   const u = [0.6, -0.8];
   let off = 5 * lift;
-  if (t > 60.84) off += 160 * ramp(t, 60.84, 61.08, E.in);               // exits to the upper right
+  if (t > 60.84) off += 200 * ramp(t, 60.84, 61.08, E.in);               // exits to the upper right
   const tx = tip[0] + u[0] * off, ty = tip[1] + u[1] * off;
   const ang = (Math.atan2(u[1], u[0]) * 180) / Math.PI;
-  const LN = '#2A1C17', sk = '#D8A27E', skS = '#B98463';
-  let s = `<g transform="translate(${f2(tx)} ${f2(ty)}) rotate(${f2(ang)}) scale(0.62)">`;
-  // the tool: slim dark wood with a dull metal tip, passing between thumb and index finger
-  s += `<path d="M0,0 L9,-1.6 L150,-2.8 L150,2.8 L9,1.6Z" fill="#4A3A2C" stroke="${LN}" stroke-width="0.7"/>`;
-  s += `<path d="M0,0 L9,-1.6 L9,1.6Z" fill="#A3A9AE"/>`;
-  // middle finger (behind, supporting from below)
-  s += `<path d="M52,6 C60,8 70,14 82,20 C96,26 120,30 160,30 L160,56 C120,54 92,46 74,36 C62,30 54,22 50,14 C48,10 49,7 52,6Z" fill="${skS}" stroke="${LN}" stroke-width="1.3"/>`;
-  // thumb (underside, pressing up), rounded tip, no nail
-  s += `<path d="M38,4 C46,2 58,4 70,8 C90,14 116,26 150,40 L140,64 C108,52 84,40 64,28 C52,22 42,16 37,11 C34,8 35,5 38,4Z" fill="${sk}" stroke="${LN}" stroke-width="1.4"/>`;
-  s += `<path d="M62,24 C78,32 96,40 118,48" fill="none" stroke="${skS}" stroke-width="2.2" opacity="0.7"/>`;
-  // index finger (on top), rounded tip, two crease lines
-  s += `<path d="M30,-3 C34,-8 44,-10 56,-11 C84,-13 120,-16 170,-26 L176,4 C130,6 90,6 60,6 C46,6 36,5 31,2 C28,0 28,-2 30,-3Z" fill="${sk}" stroke="${LN}" stroke-width="1.4"/>`;
-  s += `<path d="M62,-11 C64,-6 64,0 62,5 M98,-14 C101,-8 101,0 99,6" fill="none" stroke="${skS}" stroke-width="1.6" stroke-linecap="round"/>`;
-  s += `<path d="M40,-8 C60,-10 90,-12 130,-18" fill="none" stroke="#E9BC98" stroke-width="2.2" opacity="0.8"/>`;
-  // back of the hand and the wrist/sleeve, running off frame to the upper right (over the finger bases)
-  s += `<path d="M120,-40 C170,-52 230,-50 270,-36 L620,-70 L640,90 L280,74 C240,84 180,82 140,66 C110,50 104,-20 120,-40Z" fill="${skS}" stroke="${LN}" stroke-width="1.4"/>`;
-  s += `<path d="M270,-36 L620,-70 L640,90 L280,74 C292,40 292,-4 270,-36Z" fill="#5E4E3E" stroke="${LN}" stroke-width="1.4"/>`;
-  s += `<path d="M140,-34 C180,-42 220,-42 256,-32" fill="none" stroke="${sk}" stroke-width="8" stroke-linecap="round" opacity="0.7"/>`;
+  const LN = '#2A1C17', sk = '#C39472', skS = '#A0755A', skL = '#D8AE8C';
+  let s = `<g transform="translate(${f2(tx)} ${f2(ty)}) rotate(${f2(ang)})">`;
+  // middle finger tucked under
+  s += `<path d="M64,10 C80,14 100,22 118,30 L112,46 C94,40 76,30 64,22 C58,18 58,12 64,10Z" fill="${skS}" stroke="${LN}" stroke-width="1"/>`;
+  // the tool: dark wood, slim, with a bright metal tip, sticking out well past the fingertips
+  s += `<path d="M0,0 L9,-1.3 L110,-2.2 L110,2.2 L9,1.3Z" fill="#3A2A1E" stroke="#1A120C" stroke-width="0.6"/>`;
+  s += `<path d="M12,-0.6 L104,-1.2" stroke="#6B4F3A" stroke-width="0.8"/>`;
+  s += `<path d="M0,0 L9,-1.5 L9,1.5Z" fill="#D5DADF" stroke="#59606A" stroke-width="0.5"/>`;
+  // thumb (below) and index finger (on top) pinching the tool, rounded tips, no nails
+  s += `<path d="M50,3 C58,1 70,4 84,10 C98,16 112,22 124,28 L118,40 C102,34 86,26 72,20 C62,16 54,12 50,9 C47,7 47,4 50,3Z" fill="${sk}" stroke="${LN}" stroke-width="1.1"/>`;
+  s += `<path d="M46,-2 C50,-6 60,-8 72,-9 C90,-11 108,-14 124,-20 L128,-6 C110,-2 92,0 74,1 C62,2 52,2 47,1 C45,0 45,-1 46,-2Z" fill="${sk}" stroke="${LN}" stroke-width="1.1"/>`;
+  s += `<path d="M76,-9 C78,-5 78,-1 76,1 M100,-12 C102,-7 102,-2 100,0" fill="none" stroke="${skS}" stroke-width="1"/>`;
+  s += `<path d="M54,-6 C70,-8 90,-10 116,-15" fill="none" stroke="${skL}" stroke-width="1.6" opacity="0.8"/>`;
+  // the back of a small hand (≈ 0.78 H wrist to fingertip) and the grey-blue sleeve, over the finger bases, off frame
+  s += `<path d="M98,-24 C120,-32 150,-32 170,-26 C180,-8 180,28 172,48 C150,54 122,50 104,40 C94,28 92,-10 98,-24Z" fill="${sk}" stroke="${LN}" stroke-width="1.2"/>`;
+  s += `<path d="M104,34 C124,44 150,46 170,40 L172,48 C150,54 122,50 104,40Z" fill="${skS}"/>`;
+  s += `<path d="M100,-14 C97,-6 97,2 100,8 M101,10 C98,16 98,22 101,28" fill="none" stroke="${skS}" stroke-width="1.2"/>`;
+  s += `<path d="M166,-30 L420,-60 L430,80 L170,56 C180,28 180,-6 166,-30Z" fill="#5B6B80" stroke="${LN}" stroke-width="1.2"/>`;
+  s += `<path d="M178,-26 C184,-4 184,28 176,52" fill="none" stroke="#3F4C5E" stroke-width="5" opacity="0.7"/>`;
   // a faint motion trail on the first landing (continues T07's downward sweep)
-  if (t < T.a + 0.1) s += `<path d="M14,0 L150,0" stroke="#fff" stroke-width="12" opacity="${f2(0.16 * (1 - (t - T.a) / 0.1))}"/>`;
+  if (t < T.a + 0.1) s += `<path d="M14,0 L120,0" stroke="#fff" stroke-width="8" opacity="${f2(0.16 * (1 - (t - T.a) / 0.1))}"/>`;
   s += '</g>';
   return s;
 }
@@ -137,31 +138,89 @@ function exprA(t) {
   return { brow: lerp(-0.75, 0.2, k), eye: lerp(0.72, 0.58, k), look: [lerp(0.15, 0, k), lerp(0.35, 0.85, k)], mouth: lerp(-0.35, -0.3, k), jaw: lerp(1, 0.4, k), open: 0, tear: 0 };
 }
 
-function figA(t) {
-  const s = lin({ view: 'front', costume: 'A', ...CONV, cangue: true, tattoo: 0, expr: exprA(t), x: FA.x, y: FA.y, height: FA.height });
+// ---------- the cangue (团头铁叶护身枷), drawn here so the neck passes through the hole (model_sheet §6)
+// Front view (rig front data px; 1 cm = 7.29 px): 42 cm wide, hole Ø 13 cm under the chin, 28 cm behind the neck,
+// 62 cm forward, seen from slightly above (foreshortening 0.36). Split at the hole: far half before the neck, near after.
+const HOLE = [428, 376], HRX = 48, HRY = 19, FS = 0.36;
+const BY0 = HOLE[1] - 204 * FS, BY1 = HOLE[1] + 452 * FS, BX0 = 428 - 153, BX1 = 428 + 153;
+function boardFrontSVG() {
+  const LN = '#2A1C17', r = 26;
+  const top = `M${BX0},${BY0 + r} C${BX0},${BY0} ${BX0 + 60},${BY0 - 8} 428,${BY0 - 8} C${BX1 - 60},${BY0 - 8} ${BX1},${BY0} ${BX1},${BY0 + r} L${BX1},${BY1 - r} C${BX1},${BY1} ${BX1 - 60},${BY1 + 8} 428,${BY1 + 8} C${BX0 + 60},${BY1 + 8} ${BX0},${BY1} ${BX0},${BY1 - r}Z`;
+  const hole = `M${HOLE[0] - HRX},${HOLE[1]} a${HRX},${HRY} 0 1,0 ${2 * HRX},0 a${HRX},${HRY} 0 1,0 ${-2 * HRX},0Z`;
+  let g = '';
+  // thickness (3 cm) under the near edge
+  g += `<path d="M${BX0},${BY1 - r} C${BX0},${BY1} ${BX0 + 60},${BY1 + 8} 428,${BY1 + 8} C${BX1 - 60},${BY1 + 8} ${BX1},${BY1} ${BX1},${BY1 - r} L${BX1},${BY1 - r + 20} C${BX1},${BY1 + 20} ${BX1 - 60},${BY1 + 28} 428,${BY1 + 28} C${BX0 + 60},${BY1 + 28} ${BX0},${BY1 + 20} ${BX0},${BY1 - r + 20}Z" fill="#5E4128" stroke="${LN}" stroke-width="2.4"/>`;
+  g += `<path d="${top} ${hole}" fill="#8A6440" fill-rule="evenodd" stroke="${LN}" stroke-width="2.4"/>`;
+  // wood grain
+  g += `<path d="M${BX0 + 30},${BY0 + 30} L${BX0 + 34},${BY1 - 20} M${BX0 + 90},${BY0 + 20} L${BX0 + 96},${BY1 - 10} M${BX1 - 40},${BY0 + 26} L${BX1 - 46},${BY1 - 16}" stroke="#74522F" stroke-width="2" opacity="0.6"/>`;
+  // the join line across the board through the hole (two halves), iron plates at both ends, iron leaves on the edges
+  g += `<path d="M${BX0},${HOLE[1]} L${HOLE[0] - HRX},${HOLE[1]} M${HOLE[0] + HRX},${HOLE[1]} L${BX1},${HOLE[1]}" stroke="#4A3220" stroke-width="2.5"/>`;
+  g += `<path d="M${BX0 + 2},${BY0 + 22} C${BX0 + 60},${BY0 + 12} ${BX1 - 60},${BY0 + 12} ${BX1 - 2},${BY0 + 22} L${BX1 - 2},${BY0 + 36} C${BX1 - 60},${BY0 + 26} ${BX0 + 60},${BY0 + 26} ${BX0 + 2},${BY0 + 36}Z" fill="#4B4F55"/>`;
+  g += `<path d="M${BX0 + 2},${BY1 - 34} C${BX0 + 60},${BY1 - 26} ${BX1 - 60},${BY1 - 26} ${BX1 - 2},${BY1 - 34} L${BX1 - 2},${BY1 - 16} C${BX1 - 60},${BY1 - 8} ${BX0 + 60},${BY1 - 8} ${BX0 + 2},${BY1 - 16}Z" fill="#4B4F55"/>`;
+  g += `<rect x="${BX0}" y="${BY0 + 20}" width="9" height="${BY1 - BY0 - 40}" fill="#5A5F66"/><rect x="${BX1 - 9}" y="${BY0 + 20}" width="9" height="${BY1 - BY0 - 40}" fill="#5A5F66"/>`;
+  for (const x of [BX0 + 24, 428, BX1 - 24]) g += `<circle cx="${x}" cy="${BY1 - 24}" r="3.2" fill="#2E3034"/><circle cx="${x}" cy="${BY0 + 28}" r="3" fill="#2E3034"/>`;
+  // 封皮: the paper seal across the join in front of the neck, red marks
+  g += `<path d="M${428 - 118},${HOLE[1] + 30} L${428 + 118},${HOLE[1] + 26} L${428 + 120},${HOLE[1] + 50} L${428 - 116},${HOLE[1] + 54}Z" fill="#EFE9DC" stroke="#B8AE9C" stroke-width="1.5"/>`;
+  g += `<path d="M${428 - 96},${HOLE[1] + 38} h70 M${428 - 96},${HOLE[1] + 46} h44" stroke="#8A8070" stroke-width="2"/><rect x="${428 + 60}" y="${HOLE[1] + 32}" width="20" height="18" fill="none" stroke="#B3302A" stroke-width="2.4"/>`;
+  // the hole's inner wall (far side), in shadow
+  g += `<path d="M${HOLE[0] - HRX + 4},${HOLE[1] - 2} a${HRX - 4},${HRY - 4} 0 0,1 ${2 * HRX - 8},0" fill="none" stroke="#3E2A1A" stroke-width="5"/>`;
+  return g;
+}
+let BOARD_F = null;
+function boardFront(part) {
+  if (!BOARD_F) BOARD_F = boardFrontSVG();
+  const r = part === 'far' ? `M-100,-100 H1000 V${HOLE[1]} H-100Z` : `M-100,${HOLE[1]} H1000 V1200 H-100Z`;
+  return `<clipPath id="t08bc${part}"><path d="${r}"/></clipPath><g clip-path="url(#t08bc${part})">${BOARD_F}</g>`;
+}
+// the neck going down into the hole (only once the board is in place)
+const NECK_EXT = `<path d="M${HOLE[0] - 30},${HOLE[1] - 70} L${HOLE[0] + 30},${HOLE[1] - 70} C${HOLE[0] + 32},${HOLE[1] - 30} ${HOLE[0] + 36},${HOLE[1] - 4} ${HOLE[0] + 38},${HOLE[1] + 12} L${HOLE[0] - 38},${HOLE[1] + 12} C${HOLE[0] - 36},${HOLE[1] - 4} ${HOLE[0] - 32},${HOLE[1] - 30} ${HOLE[0] - 30},${HOLE[1] - 70}Z" fill="#D29A76"/>` +
+  `<path d="M${HOLE[0] - 30},${HOLE[1] - 70} L${HOLE[0] - 4},${HOLE[1] - 70} C${HOLE[0] - 6},${HOLE[1] - 30} ${HOLE[0] - 10},${HOLE[1] - 4} ${HOLE[0] - 12},${HOLE[1] + 12} L${HOLE[0] - 38},${HOLE[1] + 12} C${HOLE[0] - 36},${HOLE[1] - 4} ${HOLE[0] - 32},${HOLE[1] - 30} ${HOLE[0] - 30},${HOLE[1] - 70}Z" fill="#B9785A" opacity="0.7"/>` +
+  `<path d="M${HOLE[0] - 36},${HOLE[1] + 2} q36,12 72,0" fill="none" stroke="#8E553D" stroke-width="5" opacity="0.6"/>`;
+
+// Side view (rig side data px; faces left in data, forward = -x): 90 cm board through the neck, the long end forward
+// and 30° down, visible thickness and a strip of the top face; iron plates at both ends; the 封皮 on top.
+function boardSideSVG() {
+  const LN = '#2A1C17', N = [442, 342], ux = -0.866, uy = 0.5, nx = -uy, ny = ux;   // forward unit, normal (up-ish)
+  const P = (along, off) => `${f2(N[0] + ux * along + nx * off)},${f2(N[1] + uy * along + ny * off)}`;
+  const F = 452, B = -204, T = 52, D = 24;                                      // forward/back length, top strip, thickness
+  let g = `<path d="M${P(B + 14, T)} L${P(F - 14, T)} Q${P(F, T)} ${P(F, 0)} L${P(F, -D)} Q${P(F, -D - 6)} ${P(F - 14, -D)} L${P(B + 14, -D)} Q${P(B, -D - 6)} ${P(B, -D)} L${P(B, 0)} Q${P(B, T)} ${P(B + 14, T)}Z" fill="#7A5636" stroke="${LN}" stroke-width="3"/>`;
+  g += `<path d="M${P(B + 14, T)} L${P(F - 14, T)} Q${P(F, T)} ${P(F, 0)} L${P(B, 0)} Q${P(B, T)} ${P(B + 14, T)}Z" fill="#A0784E"/>`;
+  g += `<path d="M${P(B, 0)} L${P(F, 0)}" stroke="${LN}" stroke-width="2"/>`;
+  for (const a0 of [B + 6, F - 46]) g += `<path d="M${P(a0, T)} L${P(a0 + 40, T)} L${P(a0 + 40, -D)} L${P(a0, -D)}Z" fill="#4B4F55" stroke="${LN}" stroke-width="2"/>`;
+  g += `<path d="M${P(40, T + 1)} L${P(150, T + 1)} L${P(150, 2)} L${P(40, 2)}Z" fill="#EFE9DC"/><path d="M${P(120, T - 2)} L${P(138, T - 2)} L${P(138, 4)} L${P(120, 4)}Z" fill="none" stroke="#B3302A" stroke-width="2.5"/>`;
+  return g;
+}
+let BOARD_S = null;
+const boardSide = () => (BOARD_S || (BOARD_S = boardSideSVG()));
+
+/** Front-view 林冲 in the convict robe with our own cangue. o: {x, y, height, expr, board: 0..1 swing (0 = in place),
+ *  bshake [x,y], drop (head drop 0..1), sag (data px), marks (bool), extra (inside root, on top)} */
+function frontFig(t, o) {
+  const s = lin({ view: 'front', costume: 'A', ...CONV, cangue: false, tattoo: 0, expr: o.expr, x: o.x, y: o.y, height: o.height, pose: o.pose });
+  const k = o.height / 7.5 / ((1468 - 331) / 6.5);
   const root = rootOf(s);
   const [head, r1] = cut(s, 'head');
-  const [cang, body] = cut(r1, 'cangue');
-  // cangue swings in from the lower right and clamps on 61.125 (impact: 3-frame shake on the board only)
+  const [neck, body] = cut(r1, 'neck');
+  const sw = o.board ?? 0, [bx, by] = o.bshake || [0, 0];
+  const bTf = `translate(${f2(40 * sw + bx)} ${f2(250 * sw + by)}) rotate(${f2(12 * sw)} 428 372)`;
+  let out = `<g transform="translate(0 ${f2((o.sag || 0) * k)})">` + body + `<g transform="${root}">`;
+  out += `<circle cx="278" cy="478" r="33" fill="#4B546B"/><circle cx="596" cy="474" r="33" fill="#4B546B"/>`;
+  if (sw < 1) out += `<g transform="${bTf}">${boardFront('far')}</g>`;
+  out += neck;
+  if (sw < 0.02) out += `<ellipse cx="${HOLE[0]}" cy="${HOLE[1]}" rx="${HRX}" ry="${HRY}" fill="#2E1F14"/>` + NECK_EXT;
+  if (sw < 1) out += `<g transform="${bTf}">${boardFront('near')}</g>`;
+  out += `<defs><filter id="t08ink" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="0.45"/></filter></defs>`;
+  out += `<g transform="translate(0 ${f2(2.5 * (o.drop || 0))})">${head}${o.marks ? `<g>${marks(t)}</g>` : ''}</g>`;
+  out += (o.extra || '') + '</g></g>';
+  return out;
+}
+
+function figA(t) {
   const sw = 1 - ramp(t, 60.62, T.clamp, (x) => x * x);
   const [shx, shy] = shake(t, T.clamp, 3, 0.9, 3);
   const bounce = Math.sin(clamp((t - T.clamp) / 0.2) * Math.PI) * 3 * (t > T.clamp ? 1 : 0);
-  const cTf = `translate(${f2(40 * sw + shx)} ${f2(250 * sw + shy + bounce)}) rotate(${f2(12 * sw)} 428 372)`;
-  // head drops with the clamp (chin toward the chest; 10 frames), then a small settle
-  const hd = ramp(t, T.clamp + 0.02, T.clamp + 0.36, E.out);
-  const hTf = `translate(0 ${f2(2.5 * hd)})`;
-  // shoulders sag on 61.95 (whole figure settles)
-  const sag = 9 * ramp(t, T.sag, T.sag + 0.5, E.inOut);
-  let out = `<g transform="translate(0 ${f2(sag * KA)})">` + body;
-  out += `<g transform="${root}">`;
-  // hide the 东京 sleeve roundels that peek out beside the board (status gone: convict robe)
-  out += `<circle cx="278" cy="478" r="33" fill="#3B4356"/><circle cx="596" cy="474" r="33" fill="#3B4356"/>`;
-  if (sw < 1) out += `<g transform="${cTf}">${cang}</g>`;
-  out += `<defs><filter id="t08ink" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="0.45"/></filter></defs>`;
-  out += `<g transform="${hTf}">${head}<g>${marks(t)}</g></g>`;
-  out += tattooHand(t);
-  out += '</g></g>';
-  return out;
+  return frontFig(t, { x: FA.x, y: FA.y, height: FA.height, expr: exprA(t), board: sw, bshake: [shx, shy + bounce],
+    drop: ramp(t, T.clamp + 0.02, T.clamp + 0.36, E.out), sag: 9 * ramp(t, T.sag, T.sag + 0.5, E.inOut), marks: true, extra: tattooHand(t) });
 }
 
 function hallBG() {
@@ -186,8 +245,9 @@ function hallBG() {
 
 function sceneA(t) {
   const c = camA(t);
+  const ch = { ...c, x: c.x + 260 * ramp(t, T.slide, T.b, E.in) };       // the hall slides out to the left
   let s = `<rect width="1920" height="1080" fill="#1D232D"/>`;
-  s += L(c, 0.94, hallBG(), { id: 't08hall', bleed: 'all' });
+  s += L(ch, 0.94, hallBG(), { id: 't08hall', bleed: 'all' });
   // the 白虎 screen's pale edge far behind (only seen at MS)
   s += L(c, 1, `<g data-allowcut="1">${figA(t)}</g>`, { id: 't08lin' });
   // cold grade: multiply blue; one cold shaft from above (screen)
@@ -197,9 +257,6 @@ function sceneA(t) {
   s += `<rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08key)" style="mix-blend-mode:screen" opacity="${f2(0.5 * (1 - sh))}"/>`;
   if (sh > 0) s += `<path d="M${f2(760 - 40 * sh)},-20 L${f2(1160 + 40 * sh)},-20 L${f2(1400 + 80 * sh)},1100 L${f2(520 - 80 * sh)},1100Z" fill="url(#t08sh)" mask="url(#t08shm)" style="mix-blend-mode:screen" opacity="${f2(0.55 * sh)}"/>`;
   s += `<rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08vg)"/></g>`;
-  // world slide: the shaft widens into white summer glare
-  const wk = ramp(t, T.slide, 64.15, E.in);
-  if (wk > 0) s += `<g data-layer="fx-glare" data-z="760" data-bleed="all"><path d="M${f2(780 - 900 * wk)},-20 L${f2(1140 + 900 * wk)},-20 L${f2(1360 + 1400 * wk)},1100 L${f2(560 - 1400 * wk)},1100Z" fill="#FAF6EC" opacity="${f2(Math.min(1, wk * 1.15))}"/></g>`;
   const defs = lg('t08sh', [[0, '#C7D6E4', 0], [0.3, '#C7D6E4', 0.8], [0.5, '#C7D6E4', 0.95], [0.7, '#C7D6E4', 0.8], [1, '#C7D6E4', 0]], 0, 0, 1, 0) +
     lg('t08shv', [[0, '#fff', 1], [0.6, '#fff', 0.45], [1, '#fff', 0.1]]) +
     `<mask id="t08shm" maskUnits="userSpaceOnUse" x="-20" y="-20" width="1960" height="1120"><rect x="-20" y="-20" width="1960" height="1120" fill="url(#t08shv)"/></mask>` +
@@ -220,37 +277,61 @@ function walkCam(t) {
     const sm = x < e ? (x * x) / (2 * e) : x > 1 - e ? 1 - e - ((1 - x) * (1 - x)) / (2 * e) + e / 2 - e / 2 : x - e / 2;
     return v * D * Math.max(0, sm);
   };
-  return seg(63.9, 65.52, 0.22) + seg(66.56, 69.0, 0.2);
+  return seg(66.56, 69.0, 0.6);
 }
 function camBx(t) {
-  // the camera tracks the walk, then pans left along his eye-line (accelerating to ≈ 18 px/frame)
-  let x = walkCam(t);
-  if (t > T.pan) { const u = Math.min(t - T.pan, 0.85); x -= 0.5 * 640 * u * u + walkCam(t) - walkCam(T.pan); }
+  // the camera picks up the walk only gently while it is still widening, then pans left along his eye-line
+  let x = walkCam(t) * 0.3;
+  if (t > T.pan) { const u = Math.min(t - T.pan, 0.85); x -= 0.5 * 380 * u * u + 0.3 * (walkCam(t) - walkCam(T.pan)); }
   return x;
 }
 function walkPhase(t) {
-  // one step every 2 beats (0.836 s); cycle = 2 steps. Stops 65.52–66.56 (planted).
-  const walking = (t < 65.52) || (t > 66.56);
-  const tt = t < 65.52 ? t : t > 66.56 ? t - (66.56 - 65.52) : 65.52;
-  return { ph: ((tt - 64.45) / 1.672) % 1, walking };
+  // standing through the slide and the look back; after the guard's tug, one step every 2 beats (cycle = 2 steps)
+  const walking = t > 66.56;
+  return { ph: walking ? ((t - 66.56) / 1.672) % 1 : 0, walking };
+}
+// camera B: starts on exactly his S17 framing (same screen place and size), then settles wider (constant ratio).
+const ZS = 1600 * 0.99 / WS;                                              // 5.28: his 300 px road figure = the S17 MS
+const XL0 = 840;
+const ZEND = 1.25;                                                        // settles at a WS (375 px figure)
+const xlAt = (t) => XL0 + walkCam(t);
+function zoomB(t) {
+  const a = 64.5, b = 67.75, u = clamp((t - a) / (b - a)), e = 10 / FPS / (b - a);
+  let k;
+  if (u < e) k = (u * u) / (2 * e * (1 - e));
+  else if (u > 1 - e) k = 1 - ((1 - u) * (1 - u)) / (2 * e * (1 - e));
+  else k = (u - e / 2) / (1 - e);
+  return ZS * Math.pow(ZEND / ZS, k);
+}
+function camB(t, slideOff = 0) {
+  const z = zoomB(t);
+  const m = clamp((1 / z - 1 / ZEND) / (1 / ZS - 1 / ZEND));
+  const Wf = [XL0, 533.8], Ww = [960 + camBx(t), 540];
+  const c = camAt([lerp(Ww[0], Wf[0], m), lerp(Ww[1], Wf[1], m)], [960, 540], z);
+  c.x += slideOff;
+  return c;
 }
 function linWalk(t, x, y) {
   const { ph, walking } = walkPhase(t);
   const a = walking ? Math.sin(ph * Math.PI * 2) * 13 : 0;
   const bob = walking ? -Math.abs(Math.cos(ph * Math.PI * 2)) * 4 + 2 : 0;
-  const s = lin({ view: 'side', costume: 'A', ...CONV, cangue: true, tattoo: 1, expr: { brow: 0.1, eye: 0.7, look: [0.2, 0.3], mouth: -0.3, jaw: 0.3 }, x, y: y + bob, height: WS, flip: true, pose: { shoulderR: 4, elbowR: 6 } });
+  const s = lin({ view: 'side', costume: 'A', ...CONV, cangue: false, tattoo: 1, expr: { brow: 0.1, eye: 0.7, look: [0.2, 0.3], mouth: -0.3, jaw: 0.3 }, x, y: y + bob, height: WS, flip: true, pose: { shoulderR: 4, elbowR: 6 } });
   // legs: rotate the rig's legs about the hip to fake the stride
   const root = rootOf(s);
-  const [ln, r1] = cut(s, 'legNear');
+  const [head, r0] = cut(s, 'head');
+  const [ln, r1] = cut(r0, 'legNear');
   const [lf, r2] = cut(r1, 'legFar');
-  if (!ln || !lf) return s;
+  if (!ln || !lf || !head) return s;
   const legs = `<g transform="${root}"><g transform="rotate(${f2(-a)} 428 842)">${lf}</g><g transform="rotate(${f2(a)} 436 842)">${ln}</g></g>`;
-  // legs must sit behind the robe: insert them before the rest of the body; hide the 东京 sleeve roundel
-  return legs + r2 + `<g transform="${root}"><circle cx="532" cy="485" r="26" fill="#3B4356"/></g>`;
+  // legs behind the robe; hide the 东京 sleeve roundel; the cangue board (long end forward and down) under the head
+  return legs + r2 + `<g transform="${root}"><circle cx="532" cy="485" r="26" fill="#4B546B"/>${boardSide()}${head}</g>`;
 }
 function linLookBack(t, x, y) {
+  const k = ramp(t, 65.5, T.look, E.inOut);
+  const e0 = { brow: 0.2, eye: 0.58, look: [0, 0.85], mouth: -0.3, jaw: 0.4 }, e1 = { brow: 0.35, eye: 0.85, look: [-0.9, -0.1], mouth: -0.2, jaw: 0 };
+  const ex = { brow: lerp(e0.brow, e1.brow, k), eye: lerp(e0.eye, e1.eye, k), look: [lerp(0, -0.9, k), lerp(0.85, -0.1, k)], mouth: lerp(-0.3, -0.2, k), jaw: lerp(0.4, 0, k) };
+  return frontFig(t, { x, y, height: WS, expr: ex, pose: { headTurn: -0.75 * k, shoulderR: 0, shoulderL: 0 }, sag: 9, drop: 1, marks: true });
   // front view, head turned to screen-left (toward the gate), body turned 20°: reads as a look over the shoulder
-  return lin({ view: 'front', costume: 'A', ...CONV, cangue: true, tattoo: 1, expr: { brow: 0.35, eye: 0.85, look: [-0.9, -0.1], mouth: -0.2, jaw: 0 }, x, y, height: WS, pose: { headTurn: -0.75, shoulderR: -7, shoulderL: -7 } });
 }
 
 function roadLayers() {
@@ -358,40 +439,37 @@ function dustPuffs(t, xw, steps) {
 
 function sceneB(t) {
   if (!RL) RL = roadLayers();
-  const cx = camBx(t);
-  const c = { x: cx, y: 0, zoom: 1 };
+  const c = camB(t);
+  // during the world slide the road layers slide in from the right behind him (he stays)
+  const so = 115 * (1 - ramp(t, T.slide, T.b, E.out));
+  const cb = camB(t, so);
   let s = `<defs>${lg('t08sky', [[0, '#F1EBDC'], [0.65, '#F7F2E6'], [1, '#FBF8EF']])}${lg('t08haze', [[0, '#FFF8E8', 0], [0.5, '#FFF8E8', 0.45], [1, '#FFF8E8', 0]])}</defs>`;
   s += `<rect width="1920" height="1080" fill="url(#t08sky)"/>`;
-  s += L(c, 0.3, `<g transform="translate(-260 160)" opacity="0.72">${RL.gate}</g>`, { id: 't08gate' });
-  s += L(c, 0.45, `<g transform="translate(-600 120)" opacity="0.85">${RL.trees}</g>`, { id: 't08trees', bleed: 'lr' });
+  s += L(cb, 0.3, `<g transform="translate(-260 160)" opacity="0.72">${RL.gate}</g>`, { id: 't08gate' });
+  s += L(cb, 0.45, `<g transform="translate(-600 120)" opacity="0.85">${RL.trees}</g>`, { id: 't08trees', bleed: 'lr' });
   s += `<g data-layer="fx-heat" data-z="45" data-bleed="lr"><rect x="-10" y="540" width="1940" height="110" fill="url(#t08haze)"/></g>`;
-  s += L(c, 0.8, `<g transform="translate(-700 -20)">${RL.willows}</g>`, { id: 't08willow', bleed: 'lr' });
-  s += L(c, 1, `<g transform="translate(-800 640)">${RL.road}</g>`, { id: 't08road', bleed: 'lrb' });
+  s += L(cb, 0.8, `<g transform="translate(-700 -20)">${RL.willows}</g>`, { id: 't08willow', bleed: 'lr' });
+  s += L(cb, 1, `<g transform="translate(-800 640)">${RL.road}</g>`, { id: 't08road', bleed: 'lrb' });
   // figures walk with the camera (world x = screen x + camera at d 1 while walking)
-  const walkX = (x0) => x0 + walkCam(t);
-  const xl = walkX(840), xg1 = walkX(1150), xg2 = walkX(520);
+  const xl = xlAt(t), xg1 = xl + 310, xg2 = xl - 320;
   const { ph, walking } = walkPhase(t);
   let fig = '';
   // short hard shadows under everyone
   for (const x of [xg2, xl, xg1]) fig += `<ellipse cx="${f2(x)}" cy="${FEET + 4}" rx="70" ry="12" fill="#B39F78" opacity="0.55"/>`;
-  const steps = [64.45, 65.28, 66.98, 67.82].filter((x) => x <= t);
+  const steps = [66.62, 67.45].filter((x) => x <= t);
   fig += dustPuffs(t, xl, steps) + dustPuffs(t, xg1 + 8, steps.map((x) => x + 0.1)) + dustPuffs(t, xg2 - 6, steps.map((x) => x + 0.2));
   // rear guard (董超), staff on the shoulder
   const gph = walking ? (ph + 0.25) % 1 : null;
   fig += guard({ view: 'side', x: xg2, y: FEET, height: 287, phase: gph, staff: 'shoulder', tone: 0, id: 't08g2' });
-  // 林冲: walking side view, or the look back (front view, head to the gate), 4-frame cross-fade each way
-  const lb = ramp(t, T.look - 0.14, T.look, E.inOut) * (1 - ramp(t, T.tug + 0.04, T.tug + 0.18, E.inOut));
-  if (lb < 1) fig += `<g opacity="${f2(1 - lb)}">${linWalk(t, xl, FEET)}</g>`;
-  if (lb > 0) fig += `<g opacity="${f2(lb)}">${linLookBack(t, xl, FEET)}</g>`;
+  // 林冲: standing front view (as in S17) → looks back to the gate 65.55–65.70 → after the tug turns and walks
+  const fw = 1 - ramp(t, T.tug + 0.04, T.tug + 0.18, E.inOut);
+  if (fw < 1) fig += `<g opacity="${f2(1 - fw)}">${linWalk(t, xl, FEET)}</g>`;
+  if (fw > 0) fig += `<g opacity="${f2(fw)}">${linLookBack(t, xl, FEET)}</g>`;
   // front guard (薛霸): turns his head back at the stop and tugs with his staff hand on 66.537
   const tug = Math.sin(clamp((t - T.tug) / 0.45) * Math.PI) * (t > T.tug ? 1 : 0);
   fig += guard({ view: 'side', x: xg1, y: FEET, height: 287, phase: walking ? (ph + 0.5) % 1 : null, staff: 'hand', staffAng: 10 - 30 * tug, tone: 1, id: 't08g1', armR: -10 - 50 * tug });
   s += L(c, 1, fig, { id: 't08figs' });
-  s += L(c, 1.3, `<g transform="translate(-900 930)">${RL.fore}</g>`, { id: 't08fore', bleed: 'lrb' });
-  // heat haze on the far road, brightness
-  // glare from the world slide fades out
-  const gl = 1 - ramp(t, 64.1, 64.75, E.out);
-  if (gl > 0) s += `<g data-layer="fx-glare" data-z="760" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#FAF6EC" opacity="${f2(gl)}"/></g>`;
+  s += L(cb, 1.2, `<g transform="translate(-900 930)">${RL.fore}</g>`, { id: 't08fore', bleed: 'lrb' });
   // eye-line pan into memory: sepia multiply rises
   const sp = ramp(t, T.pan, 67.65, E.inOut);
   if (sp > 0) s += `<g data-layer="fx-sepia" data-z="770" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#C9A27A" style="mix-blend-mode:multiply" opacity="${f2(0.45 * sp)}"/></g>`;
@@ -548,7 +626,7 @@ function sceneC(t) {
   const handFrom = [1040, 610];      // his hand rests on the table edge before he reaches
   const sqz = Math.sin(clamp((t - T.sq) / 0.3) * Math.PI) * (t > T.sq ? 1 : 0);
   const hp = [lerp(handFrom[0], handRest[0], land), lerp(handFrom[1], handRest[1], land) - 26 * Math.sin(land * Math.PI)];
-  const handOp = 1 - ramp(t, T.dis, 73.4, E.inOut);
+  const handOp = 1 - ramp(t, 72.6, 73.05, E.inOut);
   // table (top surface in perspective), the 休书 lying between them, cups
   let tab = `<path d="M-200,690 L2200,690 L2200,1300 L-200,1300Z" fill="#7A5536"/>`;
   tab += `<path d="M-200,690 L2200,690" stroke="#9A7048" stroke-width="6"/>`;
@@ -564,14 +642,14 @@ function sceneC(t) {
   // light pool on the hand
   s += L(c, 1.4, `<ellipse cx="720" cy="575" rx="260" ry="170" fill="url(#t08pool)" style="mix-blend-mode:screen"/>`, { id: 'fx-pool' });
   // 林冲's back in the foreground (soft), then the arm and hand on his shoulder (sharp)
-  const snowK = ramp(t, 72.55, 73.6, E.inOut);
+  const snowK = ramp(t, 72.95, 73.6, E.inOut);
   s += L(c, 1.4, linBack(t), { id: 't08linback', blur: 6, bleed: 'lb' });
   if (handOp > 0) s += L(c, 1.4, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1 - land)}${zhangHand(hp[0], hp[1], 1.15, sqz, ramp(t, 68.35, T.hand, E.out))}</g>`, { id: 't08hand', bleed: 'r' });
   if (snowK > 0) s += L(c, 1.4, shoulderSnow(snowK), { id: 't08shsnow', blur: 1.5 });
   // sepia memory grade + vignette
   s += `<g data-layer="fx-sepia" data-z="770" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#C9A27A" style="mix-blend-mode:multiply" opacity="0.4"/><rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08cv)"/></g>`;
   // the first snow falls into the summer memory (white, ungraded)
-  const n = Math.round(lerp(0, 10, ramp(t, T.s1, T.s1 + 0.2, E.lin)) + lerp(0, 46, ramp(t, T.s2, 73.6, E.in)));
+  const n = Math.round(lerp(0, 40, ramp(t, T.dis, 73.6, E.in)));      // snow only as 沧州 dissolves in (L29: summer)
   if (n > 0) {
     s += snow(t, { seed: 81, n: Math.min(n, 12), r: [5, 8], fall: 55, sway: 18, op: 0.95, cam: c, d: 1, area: [200, -40, 1800, 1100] });
     if (n > 12) s += snow(t, { seed: 82, n: n - 12, r: [2, 4], fall: 45, sway: 12, op: 0.85, cam: c, d: 0.7, area: [-40, -40, 1960, 1100] });
@@ -589,10 +667,13 @@ function toFore(c, p) {
 // ================================================================== the take
 export default {
   frame(t) {
-    if (t < T.b - 0.4) return sceneA(t);
+    if (t < T.slide) return sceneA(t);
     if (t < T.b) {
-      // world slide: A fully glared out by 64.15, B emerges under the glare
-      return t < 64.15 ? sceneA(t) : sceneB(t);
+      // world slide: he stays (same place and size in both scenes); the hall slides out left, the road slides in
+      // from the right behind a soft vertical edge; the light on him changes as the edge passes
+      const xe = lerp(2140, -260, ramp(t, T.slide, T.b, E.inOut));
+      const m = `<defs>${lg('t08wg', [[0, '#fff'], [1, '#000']], 0, 0, 1, 0)}<mask id="t08wipe" maskUnits="userSpaceOnUse" x="-20" y="-20" width="1960" height="1120"><rect x="-20" y="-20" width="${f2(Math.max(0, xe + 20))}" height="1120" fill="#fff"/><rect x="${f2(xe)}" y="-20" width="240" height="1120" fill="url(#t08wg)"/></mask></defs>`;
+      return sceneB(t) + m + `<g mask="url(#t08wipe)">${sceneA(t)}</g>`;
     }
     if (t < 67.35) return sceneB(t);
     if (t < T.c) {
@@ -603,4 +684,4 @@ export default {
   },
 };
 // for speed checks (tools only)
-export const __cams = { camA, camBx, camC };
+export const __cams = { camA, camBx, camB, camC };
