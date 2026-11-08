@@ -626,11 +626,14 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 5) {
     board += `<path d="M${f(nx + 10 * cm)},${f(sy + 1.2 * cm)} h${f(4 * cm)} M${f(nx + 10.5 * cm)},${f(sy + 2 * cm)} h${f(3 * cm)}" stroke="${C.ink}" stroke-width="${f(0.35 * cm)}" stroke-linecap="round" opacity="0.55"/>`;
     // the neck going straight down into the wood: column clipped at the near rim of the entry
     const nt = F.chin[1] + drop - 0.12 * Href, nb = ny + hy + 0.3 * cm;
-    neckCol = `<clipPath id="${id}n"><path d="M${f(nx - 2 * nw)},${f(nt - 2 * cm)} L${f(nx + 2 * nw)},${f(nt - 2 * cm)} L${f(nx + 2 * nw)},${f(ny)} L${f(nx - 2 * nw)},${f(ny)}Z"/><path d="${ell(nx, ny, nw * 1.02, hy)}"/></clipPath>` +
-      `<g clip-path="url(#${id}n)"><path d="M${f(nx - nw * 0.84)},${f(nt)} C${f(nx - nw * 0.86)},${f(ny - 3 * cm)} ${f(nx - nw * 0.98)},${f(ny - 1 * cm)} ${f(nx - nw)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.98)},${f(ny - 1 * cm)} ${f(nx + nw * 0.86)},${f(ny - 3 * cm)} ${f(nx + nw * 0.84)},${f(nt)}Z" fill="${skin}"/>` +
+    // the column shows only under the jaw line (never beside the face) and down to the near rim
+    const jl = F.jaw.map((p) => [p[0], p[1] + drop + 0.5 * u]);
+    neckCol = `<clipPath id="${id}j"><path d="M${jl.map(P).join(' L')} L${f(jl[jl.length - 1][0])},${f(ny + 20 * cm)} L${f(jl[0][0])},${f(ny + 20 * cm)}Z"/></clipPath>` +
+      `<clipPath id="${id}n"><path d="M${f(nx - 2 * nw)},${f(nt - 2 * cm)} L${f(nx + 2 * nw)},${f(nt - 2 * cm)} L${f(nx + 2 * nw)},${f(ny)} L${f(nx - 2 * nw)},${f(ny)}Z"/><path d="${ell(nx, ny, nw * 1.02, hy)}"/></clipPath>` +
+      `<g clip-path="url(#${id}j)"><g clip-path="url(#${id}n)"><path d="M${f(nx - nw * 0.84)},${f(nt)} C${f(nx - nw * 0.86)},${f(ny - 3 * cm)} ${f(nx - nw * 0.98)},${f(ny - 1 * cm)} ${f(nx - nw)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.98)},${f(ny - 1 * cm)} ${f(nx + nw * 0.86)},${f(ny - 3 * cm)} ${f(nx + nw * 0.84)},${f(nt)}Z" fill="${skin}"/>` +
       `<path d="M${f(nx + nw * 0.3)},${f(nt)} C${f(nx + nw * 0.4)},${f(ny - 3 * cm)} ${f(nx + nw * 0.5)},${f(ny - 1 * cm)} ${f(nx + nw * 0.55)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.98)},${f(ny - 1 * cm)} ${f(nx + nw * 0.86)},${f(ny - 3 * cm)} ${f(nx + nw * 0.84)},${f(nt)}Z" fill="#000" opacity="0.12"/>` +
       `<path d="M${f(nx - nw)},${f(ny + hy * 0.2)} C${f(nx - nw * 0.4)},${f(ny + hy * 1.3)} ${f(nx + nw * 0.4)},${f(ny + hy * 1.3)} ${f(nx + nw)},${f(ny + hy * 0.2)} L${f(nx + nw)},${f(nb)} L${f(nx - nw)},${f(nb)}Z" fill="#1a120c" opacity="0.3" filter="url(#${id}s)"/>` +
-      `<path d="M${f(nx - nw * 0.84)},${f(nt)} C${f(nx - nw * 0.86)},${f(ny - 3 * cm)} ${f(nx - nw * 0.98)},${f(ny - 1 * cm)} ${f(nx - nw)},${f(nb)} M${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.98)},${f(ny - 1 * cm)} ${f(nx + nw * 0.86)},${f(ny - 3 * cm)} ${f(nx + nw * 0.84)},${f(nt)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>` +
+      `<path d="M${f(nx - nw * 0.84)},${f(nt)} C${f(nx - nw * 0.86)},${f(ny - 3 * cm)} ${f(nx - nw * 0.98)},${f(ny - 1 * cm)} ${f(nx - nw)},${f(nb)} M${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.98)},${f(ny - 1 * cm)} ${f(nx + nw * 0.86)},${f(ny - 3 * cm)} ${f(nx + nw * 0.84)},${f(nt)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g></g>` +
       // the front lip of the wood lapping a few px over the neck base
       `<path d="M${f(nx - nw * 1.02)},${f(ny + hy * 0.05)} C${f(nx - nw * 0.5)},${f(ny + hy * 1.05)} ${f(nx + nw * 0.5)},${f(ny + hy * 1.05)} ${f(nx + nw * 1.02)},${f(ny + hy * 0.05)}" fill="none" stroke="#6e4c31" stroke-width="${f(0.5 * cm)}" stroke-linecap="round"/>` +
       `<path d="M${f(nx - nw * 1.02)},${f(ny + hy * 0.05)} C${f(nx - nw * 0.5)},${f(ny + hy * 1.05)} ${f(nx + nw * 0.5)},${f(ny + hy * 1.05)} ${f(nx + nw * 1.02)},${f(ny + hy * 0.05)}" fill="none" stroke="${C.woodE}" stroke-width="${f(lw * 0.7)}" opacity="0.6" transform="translate(0,${f(-0.25 * cm)})"/>`;
@@ -832,7 +835,7 @@ export function lin(opt = {}) {
       const cid = uid('tc');
       inner = `<clipPath id="${cid}"><path d="M${pclip.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
     }
-    if (CG && CG.below && (n === 'torso' || n === 'neck' || n === 'capelet' || n === 'cloak')) {
+    if (CG && CG.below && (n === 'torso' || (n === 'neck' && view === 'side') || n === 'capelet' || n === 'cloak')) {
       // the board rests on the collarbones: no collar or robe shows above its far edge
       const cid = uid('cb');
       inner = `<clipPath id="${cid}"><path d="M${CG.below.map(P).join(' L')}Z"/></clipPath><g clip-path="url(#${cid})">${inner}</g>`;
