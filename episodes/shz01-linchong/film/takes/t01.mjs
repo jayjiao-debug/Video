@@ -165,7 +165,8 @@ const sheetPt = (S, p) => { // local sheet point -> world
 
 function S01(t) {
   const r = ramp(t, 0, 4.5, E.sine);
-  const c = { x: -40 * r, y: 30 * r, zoom: 1 + 0.1 * r };
+  const kin = ramp(t, 4.95, 5.7, E.inOut); // the paper lift: same camera as S02's opening so the sheet matches
+  const c = { x: lerp(-40 * r, 0, kin), y: lerp(30 * r, 0, kin), zoom: lerp(1 + 0.1 * r, 1, kin) };
   const S = sheetTf(t);
   const slide = ramp(t, 4.95, 5.5, E.inOut) * 300;
   // press dynamics

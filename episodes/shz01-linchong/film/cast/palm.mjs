@@ -26,8 +26,8 @@ export function palmSVG(o = {}) {
   for (const fg of fingers) {
     let y = fg.by;
     const parts = [];
-    fg.seg.forEach((L, i) => { const gap = i === 0 ? 0 : 2.6; y -= gap; parts.push([y - L, L]); y -= L; });
-    parts.forEach(([yy, L], i) => { ink += rr(fg.bx - fg.w / 2, yy, fg.w, L + (i ? 2 : 0), i === 2 ? fg.w * 0.48 : fg.w * 0.3, fg.a, fg.bx, fg.by); });
+    fg.seg.forEach((L, i) => { const gap = i === 0 ? 0 : 2.2; y -= gap; parts.push([y - L, L]); y -= L; });
+    parts.forEach(([yy, L], i) => { ink += rr(fg.bx - fg.w / 2, yy, fg.w, L + (i ? 2 : 0), i === 2 ? fg.w * 0.48 : fg.w * 0.16, fg.a, fg.bx, fg.by); });
   }
   // thumb: two pads angled out to the upper left from the thenar
   ink += `<g transform="rotate(-38 82 226)">${rr(66, 132, 38, 62, 18, 0)}${rr(64, 76, 36, 52, 18, 0)}</g>`;
