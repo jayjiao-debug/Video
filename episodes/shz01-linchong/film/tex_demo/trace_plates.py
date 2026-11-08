@@ -36,9 +36,9 @@ PLATES = {
                               'mid': None,
                               'near': P([(0, 822), (822, 822), (822, 1125), (0, 1125)])}),
     # S01 table top, seen from above: crop to the boards only.
-    'bg_table': dict(K=18, crop=(256, 100, 1874, 950), layers={'near': None}),
+    'bg_table': dict(K=12, sp=18, sr=34, crop=(256, 100, 1874, 950), layers={'near': None}),
     # S22/S23 山神庙 interior.
-    'bg_temple': dict(K=28, crop=(0, 0, 2048, 1152),
+    'bg_temple': dict(K=22, sp=18, sr=30, crop=(0, 0, 2048, 1152),
                       layers={'far': None,
                               'mid': P([(150, 410), (735, 410), (735, 1015), (150, 1015)]) + [None] +
                               P([(680, 360), (1000, 360), (1010, 930), (680, 930)]) + [None] +
@@ -47,7 +47,7 @@ PLATES = {
                               'near': P([(0, 895), (380, 950), (520, 1125), (0, 1125)])}),
     # S09 岳庙 courtyard, high angle. Fix: the plate's own incense burner is replaced by paving copied from the right
     # (the take keeps its 鼎). Bottom extended by mirroring the paving so the layer covers the frame when moved up.
-    'bg_courtyard': dict(K=28, crop=(0, 0, 2048, 1152), copy=[(P([(135, 660), (345, 660), (345, 905), (135, 905)]), 655)],
+    'bg_courtyard': dict(K=24, sp=16, sr=26, crop=(0, 0, 2048, 1152), copy=[(P([(135, 660), (345, 660), (345, 905), (135, 905)]), 655)],
                          extend=420,
                          layers={'far': P([(0, 0), (2000, 0), (2000, 150), (0, 150)]),
                                  'mid': P([(0, 0), (2000, 0), (2000, 470), (1920, 470), (1920, 655), (1370, 655), (1370, 735),
@@ -111,7 +111,7 @@ def trace(name):
     lab = T.assign(flat, pal)
     lab = T.fill_labels(lab, ink, valid)
     lab = T.mode_filter(lab, valid, len(pal), r=3, iters=2)
-    lab = T.remove_small_regions(lab, valid, len(pal), 260)
+    lab = T.remove_small_regions(lab, valid, len(pal), cfg.get('min_area', 500))
     lab = T.soft_labels(lab, valid, len(pal), 1.2)
     pal_rgb = T.rgb_of(pal)
     # ---- depth regions (polygons are in pre-crop plate px)
