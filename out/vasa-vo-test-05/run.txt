@@ -1,0 +1,86 @@
+plan: {'tier': 'starter', 'character_count': 20251, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "07_female_c", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Sage - Soothing & Gentle (standard, zh)", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "07_female_c.mp3", "bytes": 168898}
+{"name": "08_female_d", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Coco Li - Calm, Young and Trustworthy (standard, zh)", "voice_id": "Ca5bKgudqKJzq8YRFoAz", "model": "eleven_v4", "status": 200, "file": "08_female_d.mp3", "bytes": 170152}
+{"name": "09_female_e", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Julia - Young, Smooth and Neutral (standard, zh)", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "09_female_e.mp3", "bytes": 166390}
+{"name": "10_documentary", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)", "voice_id": "agczkAUlHLowaNnL72Cc", "model": "eleven_v4", "status": 200, "file": "10_documentary.mp3", "bytes": 162211}
+{"name": "11_old", "lang": "zh", "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。", "voice": "shared:Julian - Deep, Rich and Mature (british, en)", "voice_id": "7p1Ofvcwsv7UBPoFNcpI", "model": "eleven_v4", "status": 200, "file": "11_old.mp3", "bytes": 173914}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "07_female_c",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Sage - Soothing & Gentle (standard, zh)",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07_female_c.mp3",
+  "bytes": 168898,
+  "heard": "1628年,瑞典最猛的新战舰首航,开了一千多米就沉了。最离谱的是,出发前船上的人就知道他会翻。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 10.48
+ },
+ {
+  "name": "08_female_d",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Coco Li - Calm, Young and Trustworthy (standard, zh)",
+  "voice_id": "Ca5bKgudqKJzq8YRFoAz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "08_female_d.mp3",
+  "bytes": 170152,
+  "heard": "1628年,瑞典最猛的新战舰首航开了1000多米就沉了最离谱的是,出发前船上的人就知道他会翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 10.56
+ },
+ {
+  "name": "09_female_e",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Julia - Young, Smooth and Neutral (standard, zh)",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09_female_e.mp3",
+  "bytes": 166390,
+  "heard": "1628年瑞典最猛的新戰艦手航開了一千多米就沉了最離譜的是出發前船上的人就知道他會翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 10.32
+ },
+ {
+  "name": "10_documentary",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)",
+  "voice_id": "agczkAUlHLowaNnL72Cc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "10_documentary.mp3",
+  "bytes": 162211,
+  "heard": "1628年 瑞典最猛的新战舰首航开了一千多米就沉了最理朴的是 出发前 船上的人就知道他会翻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 10.08
+ },
+ {
+  "name": "11_old",
+  "lang": "zh",
+  "text": "一六二八年，瑞典最猛的新战舰首航，开了一千多米，就沉了。最离谱的是：出发前，船上的人就知道它会翻。",
+  "voice": "shared:Julian - Deep, Rich and Mature (british, en)",
+  "voice_id": "7p1Ofvcwsv7UBPoFNcpI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "11_old.mp3",
+  "bytes": 173914,
+  "heard": "1628年,瑞典最猛的新战舰首航,开了1000多米,就沉了。最离谱的是,出发前,船上的人就知道他会翻。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 10.8
+ }
+]
