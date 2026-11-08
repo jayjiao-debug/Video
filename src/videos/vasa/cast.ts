@@ -635,7 +635,7 @@ const inquiry = (cam: CamInfo, key: string, t: number, out: Stage) => {
       const k = u <= 0 ? 1 : u >= 1 ? 1.75 : 1 + 0.75 * (u * u * (3 - 2 * u)) + 0.25 * Math.sin(Math.PI * u);
       const relief = t > 66.55;
       const expr: Expr = u > 0 ? "grin" : relief ? "relief" : "nervous";
-      const o2: Outfit = u > 0 ? { ...o, hat: "wide", hatK: q(k, 20), medal: true } : { ...o, hat: "wide" };
+      const o2: Outfit = u > 0 ? { ...o, hat: "wide", hatK: q(k, 20), medal: true, hatMax: 1.85 } : { ...o, hat: "wide", hatMax: 1.85 };
       standAt(cam, out, i, o2, `${okey}${u > 0 ? "P" : ""}`, x, -1.4 - (n % 2) * 0.25, { mode: "stand", expr, blink: lidAt(t, i, [66.55, tp]) });
       if (u > 0 && u < 1) out.fx.push({ key: `burstG${q(u, 30)}`, cw: 500, ch: 500, draw: (p) => fxBurst(p, q(u, 30), "#ffe27a"), x, y: 2.05, z: -1.3, w: 0.9, h: 0.9 });
     });

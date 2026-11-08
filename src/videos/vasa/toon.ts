@@ -15,7 +15,7 @@ const SH_FELT: C3 = [0.62, 0.62, 0.7];
 
 export type Build = "adult" | "stout" | "kid";
 export type Outfit = {
-  jacket: string; pants: string; boots: string; hat?: string | null; belt?: string | null; buttons?: string; rifle?: boolean;
+  jacket: string; pants: string; boots: string; hat?: string | null; hatMax?: number; belt?: string | null; buttons?: string; rifle?: boolean;
   sash?: string; sword?: boolean; moustache?: string; skin?: string; head?: number; cap?: string; hair?: string; dress?: string; plume?: string;
   /** wide-hat size (promotion gag) and a medal on the chest */
   hatK?: number; medal?: boolean;
@@ -510,17 +510,18 @@ const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
   p.stroke([a, b], w, col);
 };
 
-export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
+const bodyFrontRaw = (p: Pen, o: Outfit, opts: FrontOpts) => {
   const { phase = 0, expr = "neutral", mode = "march", look = 0, blink = false, lift = 60, prop = null, tilt = 0, headTilt = 0, wave, point, lookUp = 0,
     light = DEF_LIGHT, facing = 0, seed = 1 } = opts;
   const Q = quirk(seed), B0 = BUILD[o.build ?? "adult"], skin = o.skin ?? SKIN, two = Math.PI * 2, lid = lidOf(blink);
   const Bd = { ...B0, legs: B0.legs * Q.legs, torso: B0.torso * Q.torso, tw: B0.tw * Q.tw };
   const H = headBlob(seed, Bd.a, facing), W = 2 * H.a, HH = 2 * H.b, u = W / 100;
-  const tall = (1 + Bd.torso + Bd.legs) * HH, sole = 975;
+  const HB = 2 * Bd.a * 0.94; // v2: torso and legs in a fixed body unit (head size varies on its own)
+  const tall = HH + (Bd.torso + Bd.legs) * HB, sole = 975;
   // body bob 5 % (march) / 3 % (stroll) of the height, lowest at contact (phase 0 and 0.5)
   const bob = mode === "march" ? 0.025 * tall * Math.cos(2 * two * phase) : mode === "stroll" ? 0.015 * tall * Math.cos(2 * two * phase) : 0;
-  const torsoBot = mode === "sit" ? sole - 0.2 * HH : sole - Bd.legs * HH + bob;
-  const chin = torsoBot - Bd.torso * HH, hc = chin - H.b, crown = hc - H.b, hipY = torsoBot - 0.12 * HH;
+  const torsoBot = mode === "sit" ? sole - 0.2 * HH : sole - Bd.legs * HB + bob;
+  const chin = torsoBot - Bd.torso * HB, hc = chin - H.b, crown = hc - H.b, hipY = torsoBot - 0.12 * HH;
   const thick = thickAngle(light), ow = 5 * u;
   const legCol = mix(o.pants, INK, 0.55), armCol = mix(o.jacket, INK, 0.5), footCol = o.boots;
   const legW = 5.8 * u, footW = 7.5 * u;
@@ -699,13 +700,14 @@ const SWING_HIP = 733;
 
 /** side view facing screen-right; march footfalls land at phase 0 (near foot) and 0.5 (far foot), like the front view.
  *  The stance foot is planted: it slides back at exactly the walking speed while the hip rises and falls over it. */
-export const bodySide = (p: Pen, o: Outfit, opts: SideOpts) => {
+const bodySideRaw = (p: Pen, o: Outfit, opts: SideOpts) => {
   const { phase = 0, expr = "neutral", mode = "march", blink = false, stomp = 1, pose = 0, stride = 1, light = DEF_LIGHT, seed = 1 } = opts;
   const Bd = BUILD[o.build ?? "adult"], skin = o.skin ?? SKIN, two = Math.PI * 2, lid = lidOf(blink);
   const H: Blob = { ...headBlob(seed, Bd.a, 1), asym: 0.12, rot: rad(3 + 3 * (rnd(seed, 7) - 0.5)) };
   const W = 2 * H.a, HH = 2 * H.b, u = W / 100, sole = 975, ankY = sole - 4 * u;
   const thick = thickAngle(light), ow = 5 * u;
-  const legLen = (Bd.legs + 0.12) * HH - 4 * u, l1 = legLen / 2, l2 = legLen / 2;
+  const HB = 2 * Bd.a * 0.94;
+  const legLen = (Bd.legs + 0.12) * HB - 4 * u, l1 = legLen / 2, l2 = legLen / 2;
   const nearCol = mix(o.pants, INK, 0.55), farCol = mix(o.pants, INK, 0.75), footCol = o.boots;
   type LegS = { ank: P2; pitch: number; near: boolean };
   const legs: LegS[] = [];
@@ -739,7 +741,7 @@ export const bodySide = (p: Pen, o: Outfit, opts: SideOpts) => {
   } else {
     legs.push({ ank: [300 - 4 * u, ankY], pitch: 0, near: false }, { ank: [300 + 4 * u, ankY], pitch: 0, near: true });
   }
-  const torsoBot = hipY + 0.12 * HH, chin = torsoBot - Bd.torso * HH, hc = chin - H.b, crown = hc - H.b, hip: P2 = [300, hipY];
+  const torsoBot = hipY + 0.12 * HH, chin = torsoBot - Bd.torso * HB, hc = chin - H.b, crown = hc - H.b, hip: P2 = [300, hipY];
   p.rot = null;
   for (const L of legs) {
     const knee = mode === "swing" ? ([300 + l1 * 0.98 + (L.near ? 0 : -6 * u), hipY + 6 * u] as P2) : ik(hip, L.ank, l1, l2);
@@ -804,6 +806,57 @@ export const bodySide = (p: Pen, o: Outfit, opts: SideOpts) => {
 };
 
 /** rope + seat + seated kid on a 700 x 2300 canvas; the pivot is design (350, 20); kid drawn at 0.92 scale */
+// ---------------- fit to the card ----------------
+// v2: head size, body build and hat now vary per character, so a tall hat or a waving arm could run past the card edge
+// and be cut off. Each character (outfit x seed x view) is measured once in its widest poses with a recording context,
+// and if it does not fit with a margin it is drawn scaled down about the sole point. hatMax: the biggest hatK the
+// character will reach (promotion hats grow), so its scale stays constant while the hat grows.
+class Bounds {
+  m = [1, 0, 0, 1, 0, 0]; st: number[][] = []; x0 = 1e9; y0 = 1e9; x1 = -1e9; y1 = -1e9; lineWidth = 1;
+  fillStyle: unknown; strokeStyle: unknown; lineCap = ""; lineJoin = ""; filter = ""; globalAlpha = 1; globalCompositeOperation = "";
+  pt(x: number, y: number) {
+    const [a, b, c, d, e, f] = this.m, X = a * x + c * y + e, Y = b * x + d * y + f, h = this.lineWidth / 2;
+    this.x0 = Math.min(this.x0, X - h); this.x1 = Math.max(this.x1, X + h); this.y0 = Math.min(this.y0, Y - h); this.y1 = Math.max(this.y1, Y + h);
+  }
+  save() { this.st.push([...this.m]); } restore() { this.m = this.st.pop() ?? [1, 0, 0, 1, 0, 0]; }
+  translate(x: number, y: number) { const [a, b, c, d, e, f] = this.m; this.m = [a, b, c, d, e + a * x + c * y, f + b * x + d * y]; }
+  scale(sx: number, sy: number) { const [a, b, c, d, e, f] = this.m; this.m = [a * sx, b * sx, c * sy, d * sy, e, f]; }
+  rotate(t: number) { const [a, b, c, d, e, f] = this.m, cs = Math.cos(t), sn = Math.sin(t); this.m = [a * cs + c * sn, b * cs + d * sn, -a * sn + c * cs, -b * sn + d * cs, e, f]; }
+  beginPath() {} closePath() {} fill() {} stroke() {} clip() {} setLineDash() {} fillText() {} drawImage() {}
+  moveTo(x: number, y: number) { this.pt(x, y); } lineTo(x: number, y: number) { this.pt(x, y); }
+  bezierCurveTo(_a: number, _b: number, _c: number, _d: number, x: number, y: number) { this.pt(x, y); }
+  quadraticCurveTo(_a: number, _b: number, x: number, y: number) { this.pt(x, y); }
+  arc(x: number, y: number, r: number) { this.pt(x - r, y - r); this.pt(x + r, y + r); }
+  ellipse(x: number, y: number, rx: number, ry: number) { this.pt(x - rx, y - ry); this.pt(x + rx, y + ry); }
+  fillRect(x: number, y: number, w: number, h: number) { this.pt(x, y); this.pt(x + w, y + h); }
+  strokeRect(x: number, y: number, w: number, h: number) { this.pt(x, y); this.pt(x + w, y + h); }
+  createLinearGradient() { return { addColorStop() {} }; } createRadialGradient() { return { addColorStop() {} }; }
+  measureText() { return { width: 0 }; }
+}
+const fitCache = new Map<string, number>();
+const MARGIN = 16;
+const fitOf = (o: Outfit, seed: number, side: boolean) => {
+  const key = `${side ? "s" : "f"}|${o.hat}|${o.build}|${o.dress ? 1 : 0}|${o.plume ? 1 : 0}|${o.rifle ? 1 : 0}|${o.sword ? 1 : 0}|${o.hatMax ?? o.hatK ?? 1}|${seed}`;
+  const hit = fitCache.get(key);
+  if (hit !== undefined) return hit;
+  const g = new Bounds(), p = new Pen(g as unknown as CanvasRenderingContext2D), oo: Outfit = { ...o, hatK: o.hatMax ?? o.hatK };
+  if (side) for (const phase of [0, 0.3, 0.55, 0.8]) bodySideRaw(p, oo, { mode: "march", phase, seed });
+  else {
+    bodyFrontRaw(p, oo, { mode: "stand", seed }); bodyFrontRaw(p, oo, { mode: "stand", wave: 1, seed });
+    bodyFrontRaw(p, oo, { mode: "stand", point: 60, seed }); bodyFrontRaw(p, oo, { mode: "march", phase: 0.25, seed });
+  }
+  const k = Math.min(1, (975 - MARGIN) / (975 - g.y0), (300 - MARGIN) / Math.max(1, 300 - g.x0), (300 - MARGIN) / Math.max(1, g.x1 - 300));
+  fitCache.set(key, k);
+  return k;
+};
+const fitted = (p: Pen, k: number, draw: () => void) => {
+  if (k >= 0.999) return draw();
+  const g = p.g; g.save(); g.translate(300, 975); g.scale(k, k); g.translate(-300, -975); draw(); g.restore();
+};
+export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => fitted(p, fitOf(o, opts.seed ?? 1, false), () => bodyFrontRaw(p, o, opts));
+/** side view; push mode aims the hand at a canvas point, so it is drawn unscaled */
+export const bodySide = (p: Pen, o: Outfit, opts: SideOpts) => fitted(p, opts.hand ? 1 : fitOf(o, opts.seed ?? 1, true), () => bodySideRaw(p, o, opts));
+
 export const swingKid = (p: Pen, o: Outfit, kick: number, expr: Expr, light = DEF_LIGHT, blink: number = 0) => {
   const rope = 1830, k = 1.1, HH = 2 * headBlob(5, BUILD[o.build ?? "adult"].a, 1).b;
   // two ropes from the pivot to the ends of a wide plank, the kid framed between them: a single rope behind the kid
