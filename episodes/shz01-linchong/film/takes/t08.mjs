@@ -10,7 +10,7 @@
 //                            squeeze 69.0, nod 71.5, the film's first snow 71.51 (more 71.92), the hand fades and snow
 //                            settles where it was 72.95–73.60 (T09 owns the dissolve to the depot).
 // Exported SHOULDER: screen point of 林冲's snow-covered left shoulder top at 73.6 (for T09's position match).
-import { L, kf, ramp, E, bake, snow, f2, clamp, lerp, rng, noise1, camAt, toScreen, shake, lg, rg, FPS } from '../lib.mjs';
+import { L, kf, ramp, E, bake, snow, f2, clamp, lerp, rng, noise1, camAt, toScreen, shake, lg, rg, smooth, FPS } from '../lib.mjs';
 import { lin } from '../../chars/rig/linchong.mjs';
 import { xiushu } from '../cast/xiushu.mjs';
 import { zhang, ZH } from '../cast/zhang.mjs';
@@ -77,7 +77,7 @@ function marks(t) {
   for (const [x, y, w, h, ang, g] of DABS) {
     const k = ramp(t, times[g], times[g] + 0.42, E.out);
     if (k <= 0) continue;
-    const cx = TAT[0] + x, cy = TAT[1] + y, sw = w * (0.4 + 0.6 * k), sh = h * (0.4 + 0.6 * k);
+    const cx = TAT[0] + x * 1.25, cy = TAT[1] + y * 1.25, sw = 1.35 * w * (0.4 + 0.6 * k), sh = 1.35 * h * (0.4 + 0.6 * k);
     const j = (v) => f2(v);
     // irregular quad (a squarish dab), soaked edge via the feather filter
     s += `<path d="M${j(cx - sw / 2)},${j(cy - sh / 2 + 0.2)} L${j(cx + sw / 2 - 0.2)},${j(cy - sh / 2)} L${j(cx + sw / 2)},${j(cy + sh / 2 - 0.3)} L${j(cx - sw / 2 + 0.3)},${j(cy + sh / 2)}Z" transform="rotate(${ang} ${j(cx)} ${j(cy)})" fill="#2A3A55" opacity="${f2(0.85 * k)}"/>`;
@@ -117,6 +117,10 @@ function tattooHand(t) {
   s += `<path d="M30,-3 C34,-8 44,-10 56,-11 C84,-13 120,-16 170,-26 L176,4 C130,6 90,6 60,6 C46,6 36,5 31,2 C28,0 28,-2 30,-3Z" fill="${sk}" stroke="${LN}" stroke-width="1.4"/>`;
   s += `<path d="M62,-11 C64,-6 64,0 62,5 M98,-14 C101,-8 101,0 99,6" fill="none" stroke="${skS}" stroke-width="1.6" stroke-linecap="round"/>`;
   s += `<path d="M40,-8 C60,-10 90,-12 130,-18" fill="none" stroke="#E9BC98" stroke-width="2.2" opacity="0.8"/>`;
+  // back of the hand and the wrist/sleeve, running off frame to the upper right (over the finger bases)
+  s += `<path d="M120,-40 C170,-52 230,-50 270,-36 L620,-70 L640,90 L280,74 C240,84 180,82 140,66 C110,50 104,-20 120,-40Z" fill="${skS}" stroke="${LN}" stroke-width="1.4"/>`;
+  s += `<path d="M270,-36 L620,-70 L640,90 L280,74 C292,40 292,-4 270,-36Z" fill="#5E4E3E" stroke="${LN}" stroke-width="1.4"/>`;
+  s += `<path d="M140,-34 C180,-42 220,-42 256,-32" fill="none" stroke="${sk}" stroke-width="8" stroke-linecap="round" opacity="0.7"/>`;
   // a faint motion trail on the first landing (continues T07's downward sweep)
   if (t < T.a + 0.1) s += `<path d="M14,0 L150,0" stroke="#fff" stroke-width="12" opacity="${f2(0.16 * (1 - (t - T.a) / 0.1))}"/>`;
   s += '</g>';
@@ -151,7 +155,7 @@ function figA(t) {
   let out = `<g transform="translate(0 ${f2(sag * KA)})">` + body;
   out += `<g transform="${root}">`;
   // hide the 东京 sleeve roundels that peek out beside the board (status gone: convict robe)
-  out += `<ellipse cx="263" cy="493" rx="13" ry="26" fill="#454C61"/><ellipse cx="611" cy="489" rx="13" ry="26" fill="#454C61"/>`;
+  out += `<circle cx="278" cy="478" r="33" fill="#3B4356"/><circle cx="596" cy="474" r="33" fill="#3B4356"/>`;
   if (sw < 1) out += `<g transform="${cTf}">${cang}</g>`;
   out += `<defs><filter id="t08ink" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="0.45"/></filter></defs>`;
   out += `<g transform="${hTf}">${head}<g>${marks(t)}</g></g>`;
@@ -431,53 +435,56 @@ function zhangArm(w, sh, lift) {
   const p = (x, y) => `${f2(x)},${f2(y)}`;
   const dx = x1 - x0, dy = y1 - y0, L0 = Math.hypot(dx, dy), ux = dx / L0, uy = dy / L0, nx = -uy, ny = ux;
   const at = (k, off) => [x0 + dx * k + nx * off, y0 + dy * k + ny * off];
-  const sag = 70 - 30 * lift;
-  // sleeve body: upper edge straight-ish, lower edge sagging (the wide sleeve hangs under the forearm)
-  const up0 = at(0, -60), up1 = at(0.55, -48), up2 = at(0.93, -34);
-  const lo2 = at(0.95, 30), lo1 = at(0.6, 40 + sag), lo0 = at(0.05, 64);
-  let s = `<path d="M${p(...up0)} C${p(...up1)} ${p(...at(0.8, -40))} ${p(...up2)} C${p(...at(0.97, -20))} ${p(...at(0.985, 8))} ${p(...lo2)} C${p(...at(0.8, 46 + sag * 0.6))} ${p(...lo1)} ${p(...at(0.3, 60 + sag * 0.8))} L${p(...lo0)}Z" fill="#6B5240" stroke="${LN}" stroke-width="2.4" stroke-linejoin="round"/>`;
-  s += `<path d="M${p(...at(0.3, 30 + sag * 0.6))} C${p(...at(0.6, 30 + sag * 0.7))} ${p(...at(0.85, 30 + sag * 0.3))} ${p(...at(0.94, 22))}" fill="none" stroke="#54402F" stroke-width="22" stroke-linecap="round" opacity="0.6"/>`;
-  s += `<path d="M${p(...at(0.25, -40))} C${p(...at(0.5, -36))} ${p(...at(0.7, -30))} ${p(...at(0.86, -24))}" fill="none" stroke="#86694F" stroke-width="6" stroke-linecap="round" opacity="0.6"/>`;
+  const sag = 24 - 10 * lift;
+  // a smooth tapered sleeve: straight upper edge, gentle sag below the forearm, rounded soft opening at the wrist
+  const pts = [at(0.02, -58), at(0.35, -50), at(0.7, -40), at(0.93, -32), at(0.985, -16), at(0.99, 8), at(0.965, 28), at(0.8, 36 + sag), at(0.5, 46 + sag), at(0.2, 56 + sag * 0.5), at(0.02, 62)];
+  let s = `<path d="${smooth(pts, true, 0.6)}" fill="#6B5240" stroke="${LN}" stroke-width="2.4" stroke-linejoin="round"/>`;
+  s += `<path d="${smooth([at(0.2, 34 + sag * 0.4), at(0.5, 30 + sag * 0.8), at(0.8, 24 + sag * 0.6), at(0.94, 18)], false, 0.6)}" fill="none" stroke="#54402F" stroke-width="20" stroke-linecap="round" opacity="0.55"/>`;
+  s += `<path d="${smooth([at(0.2, -40), at(0.5, -36), at(0.8, -28)], false, 0.6)}" fill="none" stroke="#86694F" stroke-width="6" stroke-linecap="round" opacity="0.55"/>`;
   // soft cuff: the white inner sleeve shows as a thin curved band inside the opening, no cut cylinder
-  s += `<path d="M${p(...at(0.93, -30))} C${p(...at(0.955, -12))} ${p(...at(0.96, 10))} ${p(...at(0.94, 26))}" fill="none" stroke="#D9D0BF" stroke-width="7" stroke-linecap="round" opacity="0.9"/>`;
+  s += `<path d="${smooth([at(0.95, -24), at(0.968, -6), at(0.968, 12), at(0.95, 24)], false, 0.6)}" fill="none" stroke="#D9D0BF" stroke-width="6" stroke-linecap="round" opacity="0.85"/>`;
   return s;
 }
 function zhangHand(x, y, sc, squeeze, curl) {
-  // An old man's right hand resting ON 林冲's shoulder, back of the hand toward the camera. Origin = wrist (x, y);
-  // the hand lies along the shoulder top pointing left; the fingers curl over the front of the shoulder (their tips go
-  // behind the shoulder's top contour, so they are clipped there); the thumb hangs on our side, on the shoulder blade.
-  // ~0.78 H long at 张教头's head size (H 250 → ~195 px wrist to fingertip).
-  const LN = '#2A1C17', sk = '#E3AE88', skS = '#C38D69', skD = '#A9754F';
-  const press = 2.5 * squeeze;
-  const k = sc;
-  const P = (px, py) => `${f2(x + px * k)},${f2(y + py * k)}`;
-  // the shoulder clip (keep only what is above the contour + 2 px), in layer coords
+  // An old man's right hand resting ON 林冲's shoulder, back of the hand toward the camera. Origin = wrist (x, y); the
+  // hand points left along the shoulder top (tilted with its slope). The fingers bend over the front of the shoulder:
+  // we see the finger bases and the bent middle knuckles, the rest goes behind the shoulder's top contour (clipped).
+  // The thumb hangs on our side, on the shoulder blade. ≈ 0.78 H long at 张教头's head size.
+  const LN = '#2A1C17', sk = '#E3AE88', skS = '#C38D69', skD = '#A9754F', skL = '#F0C7A5';
+  const press = 2.5 * squeeze, c = clamp(curl);
   let clip = `M-400,-400 L1600,-400 L1600,${f2(shY(1600))} `;
-  for (let xx = 1000; xx >= -200; xx -= 20) clip += `L${xx},${f2(shY(xx) + 2)} `;
+  for (let xx = 1000; xx >= -200; xx -= 20) clip += `L${xx},${f2(shY(xx) + 3)} `;
   clip += 'L-400,900Z';
-  let s = `<clipPath id="t08shc"><path d="${clip}"/></clipPath>`;
-  // fingers (index on top .. little at the bottom): proximal part to the left, then curling down over the front
+  const g = (inner) => `<g transform="translate(${f2(x)} ${f2(y)}) rotate(-8) scale(${f2(sc)})">${inner}</g>`;
   let fing = '';
-  const F = [[-14, 15.5, 44], [1, 15, 47], [15, 14.5, 44], [27.5, 13, 36]];
+  // fingers: [y at the knuckle, width, length of the visible base]
+  const F = [[-15, 16, 30], [-1, 16.5, 32], [13, 15.5, 30], [25, 13.5, 26]];
   F.forEach(([fy, w, len], i) => {
-    const kx = -100 + i * 3, c = clamp(curl);
-    const ex = kx - len * (1 - 0.35 * c), ey = fy + press + len * 0.9 * c;   // the fingertip drops behind the shoulder
-    const mx = kx - len * 0.6, my = fy + press + len * 0.15 * c;
-    fing += `<path d="M${P(kx + 4, fy - w / 2)} C${P(mx, my - w / 2)} ${P(ex - w * 0.3, ey - w * 0.9)} ${P(ex - w * 0.5, ey)} C${P(ex - w * 0.4, ey + w * 0.6)} ${P(ex + w * 0.5, ey + w * 0.4)} ${P(ex + w * 0.5, ey)} C${P(mx + 4, my + w / 2)} ${P(kx + 4, fy + w / 2)} ${P(kx + 4, fy + w / 2)}Z" fill="${sk}" stroke="${LN}" stroke-width="1.8" stroke-linejoin="round"/>`;
-    // middle-joint crease (age)
-    fing += `<path d="M${P(mx + 2, my - w * 0.42)} C${P(mx - 1, my - w * 0.1)} ${P(mx - 1, my + w * 0.1)} ${P(mx + 2, my + w * 0.42)}" fill="none" stroke="${skD}" stroke-width="1.3" opacity="0.8"/>`;
+    const kx = -96 + i * 2;
+    const ex = kx - len * (1 - 0.3 * c), ey = fy + press + len * 0.75 * c + (1 - c) * 2;
+    const l = `M${f2(kx)},${f2(fy + press * 0.6)} Q${f2(kx - len * 0.6)},${f2(fy + press)} ${f2(ex)},${f2(ey)}`;
+    fing += `<path d="${l}" fill="none" stroke="${LN}" stroke-width="${f2(w + 3.4)}" stroke-linecap="round"/>`;
+    fing += `<path d="${l}" fill="none" stroke="${sk}" stroke-width="${f2(w)}" stroke-linecap="round"/>`;
+    fing += `<path d="M${f2(kx - len * 0.55)},${f2(fy + press - w * 0.38)} q-2,${f2(w * 0.38)} 0,${f2(w * 0.76)}" fill="none" stroke="${skD}" stroke-width="1.3"/>`;
   });
-  s += `<g clip-path="url(#t08shc)">${fing}</g>`;
-  // back of the hand (wrist at 0,0 → knuckles at x ≈ -100), slight cel shadow along the lower edge
-  s += `<path d="M${P(4, -24)} C${P(-30, -30 + press * 0.3)} ${P(-70, -26 + press * 0.5)} ${P(-98, -22 + press * 0.6)} C${P(-106, -10 + press)} ${P(-108, 18 + press)} ${P(-100, 36 + press)} C${P(-70, 40 + press * 0.5)} ${P(-30, 36)} ${P(2, 26)} C${P(10, 10)} ${P(10, -12)} ${P(4, -24)}Z" fill="${sk}" stroke="${LN}" stroke-width="2" stroke-linejoin="round"/>`;
-  s += `<path d="M${P(-100, 34 + press)} C${P(-70, 38 + press * 0.5)} ${P(-30, 34)} ${P(2, 26)} C${P(-10, 20)} ${P(-50, 24 + press * 0.4)} ${P(-96, 22 + press)}Z" fill="${skS}"/>`;
-  // knuckle line (four bumps) and a few tendons/veins (an old man's hand)
-  s += `<path d="M${P(-97, -20 + press * 0.6)} C${P(-92, -24 + press * 0.6)} ${P(-88, -18 + press * 0.6)} ${P(-94, -8 + press)} C${P(-90, -10 + press)} ${P(-86, -2 + press)} ${P(-92, 6 + press)} C${P(-88, 6 + press)} ${P(-86, 14 + press)} ${P(-91, 20 + press)} C${P(-88, 22 + press)} ${P(-88, 28 + press)} ${P(-94, 32 + press)}" fill="none" stroke="${skD}" stroke-width="1.6" stroke-linecap="round"/>`;
-  s += `<path d="M${P(-6, -14)} C${P(-34, -16)} ${P(-60, -16)} ${P(-86, -14 + press * 0.6)} M${P(-4, 2)} C${P(-34, 2)} ${P(-60, 2)} ${P(-84, 2 + press)} M${P(-6, 16)} C${P(-32, 18)} ${P(-56, 20)} ${P(-82, 18 + press)}" fill="none" stroke="${skD}" stroke-width="1.2" opacity="0.55"/>`;
-  s += `<path d="M${P(-20, -10)} C${P(-34, -4)} ${P(-40, 6)} ${P(-54, 10)}" fill="none" stroke="#B9806A" stroke-width="1.4" opacity="0.5"/>`;
-  // thumb: on our side, hanging down over the shoulder blade
-  s += `<path d="M${P(-14, 24)} C${P(-22, 40 + press)} ${P(-34, 56 + press)} ${P(-48, 64 + press)} C${P(-56, 66 + press)} ${P(-60, 60 + press)} ${P(-54, 54 + press)} C${P(-44, 46 + press)} ${P(-38, 36)} ${P(-36, 26)}Z" fill="${sk}" stroke="${LN}" stroke-width="1.8" stroke-linejoin="round"/>`;
-  s += `<path d="M${P(-40, 50 + press)} C${P(-44, 54 + press)} ${P(-46, 58 + press)} ${P(-46, 62 + press)}" fill="none" stroke="${skD}" stroke-width="1.2"/>`;
+  let s = `<clipPath id="t08shc"><path d="${clip}"/></clipPath>`;
+  s += `<g clip-path="url(#t08shc)">${g(fing)}</g>`;
+  let h = '';
+  // back of the hand: tapers from the knuckles (≈ 62 tall) to the wrist (≈ 44), convex top, cel shadow below
+  h += `<path d="M6,-20 C-20,-26 -60,-28 -92,-24 C-102,-20 -106,-8 -105,6 C-104,20 -100,30 -92,36 C-60,40 -24,34 6,24 C12,10 12,-8 6,-20Z" fill="${sk}" stroke="${LN}" stroke-width="2" stroke-linejoin="round"/>`;
+  h += `<path d="M-92,34 C-60,38 -24,32 6,23 C-8,18 -50,22 -96,24Z" fill="${skS}"/>`;
+  h += `<path d="M-10,-17 C-40,-22 -70,-22 -90,-18" fill="none" stroke="${skL}" stroke-width="3" stroke-linecap="round" opacity="0.8"/>`;
+  // knuckle bumps along the end of the back of the hand
+  h += `<path d="M-96,-22 C-100,-18 -100,-12 -96,-8 M-97,-6 C-101,-2 -101,4 -97,8 M-96,10 C-100,14 -100,20 -96,24" fill="none" stroke="${skD}" stroke-width="1.6" stroke-linecap="round"/>`;
+  // tendons fanning from the wrist to the knuckles, and one vein (an old man's hand)
+  h += `<path d="M0,-4 C-30,-10 -60,-14 -88,-15 M0,2 C-30,0 -60,-1 -88,1 M2,8 C-28,10 -58,14 -86,17" fill="none" stroke="${skD}" stroke-width="1.1" opacity="0.5"/>`;
+  h += `<path d="M-14,-12 C-26,-6 -34,4 -48,8" fill="none" stroke="#B37C66" stroke-width="1.5" opacity="0.55"/>`;
+  // thumb on our side, hanging over the shoulder blade
+  h += `<path d="M-12,22 C-18,36 -28,52 -42,62 C-50,66 -56,60 -50,53 C-42,45 -36,34 -34,24Z" fill="${sk}" stroke="${LN}" stroke-width="1.8" stroke-linejoin="round"/>`;
+  h += `<path d="M-38,48 C-42,52 -44,56 -44,60" fill="none" stroke="${skD}" stroke-width="1.2"/>`;
+  s += g(h);
+  // the sleeve's soft opening lip falls over the wrist (no cut cylinder)
+  s += g(`<path d="M10,-30 C2,-18 -2,0 2,14 C4,22 8,30 14,34 L40,40 L40,-36Z" fill="#6B5240"/><path d="M10,-30 C2,-18 -2,0 2,14 C4,22 8,30 14,34" fill="none" stroke="${LN}" stroke-width="2"/><path d="M14,-26 C8,-14 6,2 9,14 C11,22 14,27 18,30" fill="none" stroke="#D9D0BF" stroke-width="4" stroke-linecap="round" opacity="0.8"/>`);
   return s;
 }
 function linBack(t) {
@@ -537,7 +544,7 @@ function sceneC(t) {
   // his arm reaches to 林冲's shoulder: lands 68.592
   const sh = ZH.anchor('shoulderR', zo);
   const land = ramp(t, 67.95, T.hand, E.inOut);
-  const handRest = [796, 552];       // wrist; knuckles at ≈ (690, 560), fingers curl over the shoulder top
+  const handRest = [818, 574];       // wrist; the back of the hand lies across the shoulder top, fingers curl over its front
   const handFrom = [1040, 610];      // his hand rests on the table edge before he reaches
   const sqz = Math.sin(clamp((t - T.sq) / 0.3) * Math.PI) * (t > T.sq ? 1 : 0);
   const hp = [lerp(handFrom[0], handRest[0], land), lerp(handFrom[1], handRest[1], land) - 26 * Math.sin(land * Math.PI)];
@@ -559,7 +566,7 @@ function sceneC(t) {
   // 林冲's back in the foreground (soft), then the arm and hand on his shoulder (sharp)
   const snowK = ramp(t, 72.55, 73.6, E.inOut);
   s += L(c, 1.4, linBack(t), { id: 't08linback', blur: 6, bleed: 'lb' });
-  if (handOp > 0) s += L(c, 1.4, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1 - land)}${zhangHand(hp[0], hp[1], 1.0, sqz, ramp(t, 68.35, T.hand, E.out))}</g>`, { id: 't08hand', bleed: 'r' });
+  if (handOp > 0) s += L(c, 1.4, `<g opacity="${f2(handOp)}">${zhangArm(hp, toFore(c, sh), 1 - land)}${zhangHand(hp[0], hp[1], 1.15, sqz, ramp(t, 68.35, T.hand, E.out))}</g>`, { id: 't08hand', bleed: 'r' });
   if (snowK > 0) s += L(c, 1.4, shoulderSnow(snowK), { id: 't08shsnow', blur: 1.5 });
   // sepia memory grade + vignette
   s += `<g data-layer="fx-sepia" data-z="770" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#C9A27A" style="mix-blend-mode:multiply" opacity="0.4"/><rect x="-10" y="-10" width="1940" height="1100" fill="url(#t08cv)"/></g>`;
