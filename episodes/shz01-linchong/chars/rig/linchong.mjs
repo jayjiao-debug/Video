@@ -564,7 +564,7 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 20) {
     board += `<rect x="${f(nx + 6 * cm)}" y="${f(sy + 0.5 * cm)}" width="${f(2.4 * cm)}" height="${f(1.8 * cm)}" fill="none" stroke="${C.red}" stroke-width="${f(lw * 0.9)}"/><path d="M${f(nx - 12 * cm)},${f(sy + 1.1 * cm)} h${f(9 * cm)} M${f(nx - 12 * cm)},${f(sy + 2 * cm)} h${f(6 * cm)}" stroke="#3a3530" stroke-width="${f(lw * 0.6)}" opacity="0.5"/>`;
     // the neck rising through the hole: dark gap around it, skin column up to the chin
     board += `<path d="${hole}" fill="${C.dark}"/>`;
-    neck += `<clipPath id="${id}n"><path d="M${f(nx - hw)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(nx + hw)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(nx + hw)},${f(ny)} L${f(nx - hw)},${f(ny)}Z ${hole}"/></clipPath>`;
+    neck += `<clipPath id="${id}n"><path d="M${f(nx - hw)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(nx + hw)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(nx + hw)},${f(ny)} L${f(nx - hw)},${f(ny)}Z"/><path d="${hole}"/></clipPath>`;
     const nt = F.chin[1] + drop - 0.05 * Href, nb = ny + hy;
     neck += `<g clip-path="url(#${id}n)"><path d="M${f(nx - nw * 0.82)},${f(nt)} C${f(nx - nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx - nw * 0.95)},${f(nb - 2 * cm)} ${f(nx - nw)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}Z" fill="${skin}"/>` +
       `<path d="M${f(nx + nw * 0.25)},${f(nt)} C${f(nx + nw * 0.35)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.5)},${f(nb - 2 * cm)} ${f(nx + nw * 0.55)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}Z" fill="#000" opacity="0.12"/>` +
@@ -587,7 +587,7 @@ function cangueSVG(D, view, Href, u, drop = 0, tilt = 20) {
     board += `<path d="${pth([Q(14, -W * 0.85), Q(30, -W * 0.85), Q(30, -W * 0.2), Q(14, -W * 0.2)])}" fill="${C.paper}" ${L(0.6)}/><path d="${pth([Q(24, -W * 0.7), Q(27, -W * 0.7), Q(27, -W * 0.38), Q(24, -W * 0.38)])}" fill="none" stroke="${C.red}" stroke-width="${f(lw * 0.8)}"/>`;
     board += `<path d="${hole}" fill="${C.dark}"/>`;
     const hc = Q(0, -W / 2), nw = 5.6 * cm;
-    neck += `<clipPath id="${id}n"><path d="M${f(hc[0] - 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(hc[1])} L${f(hc[0] - 12 * cm)},${f(hc[1])}Z ${hole}"/></clipPath>`;
+    neck += `<clipPath id="${id}n"><path d="M${f(hc[0] - 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(hc[1])} L${f(hc[0] - 12 * cm)},${f(hc[1])}Z"/><path d="${hole}"/></clipPath>`;
     const nt = hc[1] - 0.35 * Href, nb = hc[1] + 3.8 * cm;
     neck += `<g clip-path="url(#${id}n)"><path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)} L${f(hc[0] + nw)},${f(nb)} C${f(hc[0] + nw)},${f(nb - 2 * cm)} ${f(hc[0] + nw * 0.9)},${f((nt + nb) / 2)} ${f(hc[0] + nw * 0.8)},${f(nt)}Z" fill="${skin}"/>` +
       `<path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>`;
