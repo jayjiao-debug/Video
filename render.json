@@ -1,1 +1,1 @@
-{ "id": "vasa-full-v3-2", "composition": "VasaTest", "start": 0, "end": 2253, "chunks": 40, "output": "vasa_full_v3", "flags": "--crf=16 --props={\"kick\":1}" }
+{ "id": "bt-cannon-v8", "composition": "BtCannon", "start": 0, "end": 65, "chunks": 6, "output": "bt_cannon_v8", "flags": "--crf=16" }

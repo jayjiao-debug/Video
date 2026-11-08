@@ -1,0 +1,110 @@
+name: blender
+
+# Push a new blender.json to the render-farm branch to start a Blender (Cycles) render of a composition:
+# each chunk exports its frames' sets from the three.js scene as GLB, renders them with bpy on the CPU,
+# and the combine job joins the frames and pushes the picture to the `render-output-blender` branch.
+on:
+  push:
+    branches: [render-farm-vasa]
+    paths: ['blender.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: blender-vasa
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.p.outputs.matrix }}
+      name: ${{ steps.p.outputs.name }}
+      id: ${{ steps.p.outputs.id }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        run: node scripts/plan.mjs blender.json >> "$GITHUB_OUTPUT"
+      - run: echo "started=$(date -u +%s)" > started.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: started, path: started.txt, retention-days: 1 }
+
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        chunk: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: npm ci --no-audit --no-fund
+      - run: npx remotion browser ensure
+      - name: Blender as a Python module
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxrender1 libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q bpy==5.2.3
+      - name: Export the set for frames ${{ matrix.chunk.a }}-${{ matrix.chunk.b }}
+        env:
+          COMP: ${{ matrix.chunk.comp }}
+        run: node scripts/export_glb.mjs out/glb "$(seq -s, ${{ matrix.chunk.a }} ${{ matrix.chunk.b }})"
+      - name: Cycles render
+        env:
+          COMP: ${{ matrix.chunk.comp }}
+        run: |
+          export INK=$(node -p "require('./blender.json').ink || ''")
+          S=$(node -p "require('./blender.json').samples || 32")
+          mkdir -p out/frames
+          for f in $(seq ${{ matrix.chunk.a }} ${{ matrix.chunk.b }}); do
+            python scripts/bl_render.py -- "out/glb/${COMP}_f$f.glb" "$PWD/out/frames/$(printf 'f%03d.jpg' $f)" "$S" > out/r.log 2>&1 || { tail -30 out/r.log; exit 1; }
+            echo "frame $f $(grep RENDER_SECONDS out/r.log)"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.chunk.i }}
+          path: out/frames/*.jpg
+          retention-days: 1
+
+  combine:
+    needs: [plan, render]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: frames-*
+          path: frames
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with: { name: started, path: meta }
+      - name: Join frames
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+          A=$(node -p "require('./blender.json').start || 0")
+          ls frames | wc -l
+          ffmpeg -v error -framerate 30 -start_number $A -i frames/f%03d.jpg -c:v libx264 -crf 16 -pix_fmt yuv420p joined.mp4
+          ls -la joined.mp4
+      - name: Publish to the blender output branch
+        env:
+          NAME: ${{ needs.plan.outputs.name }}
+          ID: ${{ needs.plan.outputs.id }}
+        run: |
+          mkdir pub && cd pub
+          git init -q -b render-output-blender
+          git config user.name "render-bot"
+          git config user.email "render-bot@users.noreply.github.com"
+          split -b 95m -d -a 2 ../joined.mp4 "$NAME.mp4.part"
+          . ../meta/started.txt
+          echo "{\"id\":\"$ID\",\"name\":\"$NAME\",\"started\":$started,\"finished\":$(date -u +%s),\"sha\":\"$GITHUB_SHA\"}" > result.json
+          git add -A && git commit -qm "blender $NAME ($ID)"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" render-output-blender
