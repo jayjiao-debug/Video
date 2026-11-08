@@ -22,7 +22,6 @@ const hAt = (y, P) => ((y - YH) * P) / CAMH;
 
 function farRoofs() {
   let s = `<rect x="0" y="0" width="4400" height="1700" fill="#E7D3AE"/>`;
-  s += lg('t05fr', [[0, '#EFE2C4'], [1, '#D9C29A']]).replace('<linearGradient', '<linearGradient') ;
   const R = rng(5);
   for (let i = 0; i < 7; i++) {
     const cx = 300 + i * 640 + R() * 120, w = 520 + R() * 260, y = 560 + R() * 120, hgt = 120 + R() * 60;
@@ -143,10 +142,10 @@ function smokeRibbons(t, base, n, seed, scale = 1) {
 const PEOPLE = (() => {
   const R = rng(21), out = [];
   const c = [1800, 1110];
-  for (let i = 0; i < 24; i++) {
-    const a = ((196 + (i / 23) * 148) * Math.PI) / 180;
+  for (let i = 0; i < 20; i++) {
+    const a = ((194 + (i / 19) * 152) * Math.PI) / 180;
     const rr = 1 + (R() - 0.5) * 0.22;
-    const x = c[0] + Math.cos(a) * 560 * rr + (R() - 0.5) * 40, y = c[1] + Math.sin(a) * 190 * rr + (R() - 0.5) * 20;
+    const x = c[0] + Math.cos(a) * 650 * rr + (R() - 0.5) * 50, y = c[1] + Math.sin(a) * 240 * rr + (R() - 0.5) * 24;
     out.push({ x, y, P: 1.55 + R() * 0.23, seed: 100 + i, turn0: (R() - 0.5) * 1.4, turnTo: x < 1790 ? 0.75 : -0.75, turnAt: 40.73 + R() * 0.42, back: false });
   }
   // a few nearer onlookers at the sides (seen from behind / 3/4)
@@ -155,11 +154,11 @@ const PEOPLE = (() => {
 })();
 
 function camA(t) {
-  const K1 = { p: [1150, 520], q: [1000, 560], z: 1.4 };
+  const K1 = { p: [1150, 330], q: [1190, 560], z: 1.4 };
   const K2 = { p: [1650, 1000], q: [960, 560], z: 0.7 };
   const K3 = { p: [1770, 1000], q: [940, 520], z: 1.25 };
   const drift = [0, -40 * ramp(t, 38.0, 38.9, E.lin)];
-  if (t < 38.64) return camAt([K1.p[0], K1.p[1] + 40 + drift[1]], K1.q, K1.z);
+  if (t < 38.64) return camAt([K1.p[0], K1.p[1] + 40 + drift[1]], [K1.q[0] - 30 + 30 * ramp(t, 38.0, 38.64, E.lin), K1.q[1]], K1.z);
   if (t < 40.73) {
     const k = ramp(t, 38.64, 40.73, E.inOut);
     return camAt([lerp(K1.p[0], K2.p[0], k), lerp(K1.p[1], K2.p[1], k)], [lerp(K1.q[0], K2.q[0], k), lerp(K1.q[1], K2.q[1], k)], zexp(t, 38.64, 40.73, K1.z, K2.z));
@@ -200,13 +199,16 @@ function setA(t) {
   items.sort((a, b) => a[0] - b[0]);
   s += L(c, 1.0, pool + items.map((x) => x[1]).join(''), { id: 't05people' });
   // incense smoke from the 鼎 (in front of the crowd behind it, d ~1.0)
-  s += L(c, 1.0, `<g filter="url(#${blurId(5)})">${smokeRibbons(t, [DING[0], DING[1] - 300], 3, 2)}</g>`, { id: 't05smoke', bleed: 'all' });
-  // foreground: railing + incense sand box (d 1.4), arrives with the push to K3
-  const fg = `<rect x="-200" y="0" width="1500" height="46" rx="8" fill="#7E2A22"/><rect x="-200" y="10" width="1500" height="10" fill="#9C3C30"/>` +
-    `<rect x="40" y="60" width="38" height="380" fill="#6A231D"/><rect x="560" y="60" width="38" height="380" fill="#6A231D"/>` +
-    Array.from({ length: 14 }, (_, i) => `<rect x="${200 + i * 22}" y="${-180 + (i % 3) * 14}" width="7" height="200" fill="#8E3B2A"/><circle cx="${203 + i * 22}" cy="${-182 + (i % 3) * 14}" r="6" fill="#FF8A3D"/>`).join('');
-  const fgPos = toWorld(camAt([1770, 1000], [940, 520], 1.25), 1.4, [-40, 930]);
-  s += L(c, 1.4, `<g transform="translate(${f2(fgPos[0])} ${f2(fgPos[1])})">${bake('t05rail', 1700, 700, `<g transform="translate(200 220)">${fg}</g>`, { x: -200, y: -220, defs: '' })}</g>`, { id: 't05rail', bleed: 'all', blur: 7 });
+  s += L(c, 1.0, `<g filter="url(#${blurId(5)})">${smokeRibbons(t, [DING[0], DING[1] - 300], 2, 2, 1.25)}${smokeRibbons(t + 3, [DING[0] + 20, DING[1] - 300], 1, 7, 0.9)}</g>`, { id: 't05smoke', bleed: 'all' });
+  // foreground: a blurred bundle of incense sticks in a sand bowl, bottom-left, arrives with the push to K3 (d 1.4)
+  const fgk = ramp(t, 41.5, 42.0, E.inOut);
+  if (fgk > 0) {
+    const R2 = rng(12);
+    let fg = `<ellipse cx="0" cy="40" rx="230" ry="70" fill="#5E4A3A"/><ellipse cx="0" cy="20" rx="210" ry="50" fill="#9A8A70"/>`;
+    for (let i = 0; i < 16; i++) { const x = -150 + i * 20 + R2() * 8, a = (R2() - 0.5) * 18, h = 260 + R2() * 90; fg += `<g transform="translate(${f2(x)} 20) rotate(${f2(a)})"><rect x="-4" y="${-h}" width="8" height="${h}" fill="#8E3B2A"/><circle cx="0" cy="${-h}" r="8" fill="#FF8A3D"/></g>`; }
+    const fgPos = toWorld(camAt([1770, 1000], [940, 520], 1.25), 1.4, [150, 1010]);
+    s += L(c, 1.4, `<g transform="translate(${f2(fgPos[0])} ${f2(fgPos[1])})" opacity="${f2(fgk)}">${bake('t05incense', 560, 520, `<g transform="translate(280 400)">${fg}</g>`, { x: -280, y: -400 })}</g>`, { id: 't05incense', bleed: 'all', blur: 7 });
+  }
   s += motes(t, { seed: 5, n: 26, area: [200, 0, 1920, 900], color: '#FFF4DC', op: 0.45 });
   return s;
 }
@@ -217,7 +219,7 @@ const LC = { x: 760, y: 2100, height: 1600, flip: true };
 const LCk = 1600 / 7.5 / ((1470 - 304) / 6.5);
 const LCP = (p) => rigPoint('side', 'A', LC, p);
 const EYE = LCP([368, 222]), SHO = LCP([470, 410]), CHIN = LCP([362, 305]);
-const G = { x: 1350, y: 2100, h: 1600 * (1.79 / 1.8), flip: true };
+const G = { x: 1290, y: 2100, h: 1600 * (1.79 / 1.8), flip: true };
 const GFACE = gaoPt(G, [362, 282]);
 const GSHO = gaoPt(G, [455, 410]); // his shoulder nearest 林冲
 const FIST_UP = [885, 430]; // raised fist (world)
@@ -279,7 +281,7 @@ function nearArm(t) {
   const tremble = t > 45.1 && t < 49.04 ? 1.5 / 1.66 : 0;
   // upper arm: wide green sleeve, hanging fold below the arm
   const n = [-(El[1] - S[1]), El[0] - S[0]], nl = Math.hypot(n[0], n[1]), nu = [n[0] / nl, n[1] / nl];
-  const w0 = 0.5 * HB, w1 = 0.3 * HB, drape = 0.55 * HB * up;
+  const w0 = 0.44 * HB, w1 = 0.27 * HB, drape = 0.32 * HB * up;
   const P1 = [S[0] + nu[0] * w0 * 0.5, S[1] + nu[1] * w0 * 0.5], P2 = [El[0] + nu[0] * w1 * 0.5, El[1] + nu[1] * w1 * 0.5];
   const P3 = [El[0] - nu[0] * w1 * 0.5, El[1] - nu[1] * w1 * 0.5], P4 = [S[0] - nu[0] * w0 * 0.5, S[1] - nu[1] * w0 * 0.5];
   const low = (p) => [p[0], p[1] + drape];
@@ -293,16 +295,24 @@ function nearArm(t) {
 }
 
 function farArm(t) {
-  // the far hand grabs 高衙内's shoulder at 42.39 and holds it (contact)
-  const reach = ramp(t, 42.2, 42.42, E.out), rel = ramp(t, 47.2, 47.9, E.inOut);
-  const S = [SHO[0] + 40, SHO[1] + 10];
-  const target = [GSHO[0] + lerp(-90, 0, reach) - 60 * rel, GSHO[1] + 10 + 120 * rel];
-  const H = target;
-  const El = [lerp(S[0], H[0], 0.5), Math.max(S[1], H[1]) + 0.25 * HB];
-  let s = `<path d="M${f2(S[0])},${f2(S[1] - 0.2 * HB)} Q${f2(El[0])},${f2(El[1] - 0.25 * HB)} ${f2(H[0] - 0.12 * HB)},${f2(H[1] - 0.12 * HB)} L${f2(H[0] - 0.08 * HB)},${f2(H[1] + 0.14 * HB)} Q${f2(El[0])},${f2(El[1] + 0.2 * HB)} ${f2(S[0])},${f2(S[1] + 0.3 * HB)}Z" fill="${ROBE_D}" stroke="${LN}" stroke-width="3"/>`;
-  // hand gripping the shoulder: fingers over the top, darker (far side)
-  s += `<g transform="translate(${f2(H[0])} ${f2(H[1])})"><path d="M-30,-22 C-10,-40 26,-38 40,-18 C46,-6 40,10 30,14 L-24,20 C-34,8 -36,-10 -30,-22Z" fill="#C88E6C" stroke="${LN}" stroke-width="3"/>` +
-    `<path d="M0,-34 L4,10 M16,-32 L20,10 M30,-24 L32,10" stroke="#A9725A" stroke-width="2.4"/></g>`;
+  // the far hand grabs 高衙内's shoulder at 42.39 and holds it (contact); the arm comes from behind his chest
+  const reach = ramp(t, 42.2, 42.42, E.out), rel = ramp(t, 47.4, 48.2, E.inOut);
+  const H = [GSHO[0] - 10 + lerp(-120, 0, reach) - 40 * rel, GSHO[1] + 16 + 90 * rel];
+  const S = [SHO[0] + 0.55 * HB, SHO[1] + 0.25 * HB]; // emerges from in front of his chest
+  const El = [lerp(S[0], H[0], 0.45), lerp(S[1], H[1], 0.45) + 0.28 * HB];
+  const w = 0.26 * HB;
+  const tube = (a, b, w1, w2) => {
+    const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), nx = -dy / l, ny = dx / l;
+    return `M${f2(a[0] + nx * w1)},${f2(a[1] + ny * w1)} L${f2(b[0] + nx * w2)},${f2(b[1] + ny * w2)} L${f2(b[0] - nx * w2)},${f2(b[1] - ny * w2)} L${f2(a[0] - nx * w1)},${f2(a[1] - ny * w1)}Z`;
+  };
+  let s = `<path d="${tube(S, El, w * 0.75, w * 0.62)}" fill="${ROBE_S}" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>`;
+  s += `<circle cx="${f2(El[0])}" cy="${f2(El[1])}" r="${f2(w * 0.62)}" fill="${ROBE_S}" stroke="${LN}" stroke-width="3"/>`;
+  s += `<path d="${tube(El, [H[0] - 0.12 * HB, H[1] + 0.02 * HB], w * 0.6, w * 0.5)}" fill="${ROBE_S}" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>`;
+  s += `<circle cx="${f2(El[0])}" cy="${f2(El[1])}" r="${f2(w * 0.55)}" fill="${ROBE_S}"/>`;
+  // hand over the top of his shoulder: palm on top, four fingers curling down the front
+  const k = HB / 213;
+  s += `<g transform="translate(${f2(H[0])} ${f2(H[1])}) scale(${f2(k)})"><path d="M-44,-6 C-40,-30 -6,-40 22,-34 C42,-28 52,-10 50,6 L44,40 C36,44 28,42 26,34 L24,14 L16,40 C8,44 0,42 -2,34 L-4,12 L-12,30 C-20,34 -28,30 -28,22 L-30,10 C-40,10 -46,4 -44,-6Z" fill="#D9A07C" stroke="${LN}" stroke-width="3" stroke-linejoin="round"/>` +
+    `<path d="M-30,-14 C-14,-22 6,-24 26,-20" fill="none" stroke="#B9785A" stroke-width="3" stroke-linecap="round"/></g>`;
   return s;
 }
 
@@ -333,7 +343,8 @@ function setB(t) {
     bgp += `<g opacity="0.55">${tracedG('lu_front', { x, y, h: 900 + R() * 120, mono: '#8E7E68' })}</g>`;
   }
   const wturn = ramp(t, 42.6, 43.4, E.inOut);
-  bgp += wifeBack({ x: 1060 + 20 * wturn, y: 1080, head: 0.55 * HB, tilt: -8 * wturn, bow: 0.3 });
+  const wp = toWorld(camAt([EYE[0] + 120, EYE[1] + 40], [880, 470], 1.25), 0.7, [1090, 560]);
+  bgp += wifeBack({ x: wp[0] + 30 * wturn, y: wp[1], head: 0.62 * HB, tilt: -8 * wturn, bow: 0.25 });
   // retainers step in behind 高衙内 at 46.14
   const rt = ramp(t, 46.14, 46.8, E.out);
   if (t > 45.9) {
@@ -344,7 +355,7 @@ function setB(t) {
   // 高衙内: wrenched round at 42.793 (2-frame smear), sleeve over his face until the reveal at 45.712
   const spin = ramp(t, 42.39, 42.793, E.in);
   const raise = t < 45.55 ? 1 : 1 - ramp(t, 45.55, 45.75, E.inOut);
-  const smirk = ramp(t, 45.9, 46.4, E.out), tilt = -3.5 * (ramp(t, 46.56, 46.8, E.out) - ramp(t, 47.6, 48.0, E.inOut));
+  const smirk = ramp(t, 45.9, 46.4, E.out), tilt = 0;
   const away = ramp(t, 49.9, 51.0, E.inOut);
   let gao = '';
   if (away < 1) {
@@ -386,25 +397,25 @@ function setB(t) {
 
 // ======================================================================= smoke wipe A → B (42.12–42.46)
 function smokeWipe(t) {
-  const k = ramp(t, 42.06, 42.5, E.lin);
+  const k = ramp(t, 42.04, 42.56, E.lin);
   if (k <= 0 || k >= 1) return '';
   const dens = Math.sin(k * Math.PI);
   const R = rng(77);
   let s = '';
-  for (let i = 0; i < 16; i++) {
-    const y = R() * 1180 - 50, r = 260 + R() * 260, x = lerp(-700, 2600, k) + (R() - 0.5) * 1500 - y * 0.3;
-    s += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r * 1.5)}" ry="${f2(r)}" fill="#FBF6EC"/>`;
+  for (let i = 0; i < 22; i++) {
+    const y = R() * 1240 - 80, r = 220 + R() * 240, x = lerp(-900, 2800, k) + (R() - 0.5) * 1700 - y * 0.25;
+    s += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r * 1.6)}" ry="${f2(r)}" fill="${R() < 0.5 ? '#F3EADA' : '#E6DAC4'}"/>`;
   }
-  return `<g data-layer="fx-smoke" data-z="700" data-bleed="all" opacity="${f2(Math.min(1, dens * 1.35))}" filter="url(#${blurId(40)})">${s}<rect width="1920" height="1080" fill="#FBF6EC" opacity="${f2(clamp(dens * 1.5 - 0.5))}"/></g>`;
+  return `<g data-layer="fx-smoke" data-z="700" data-bleed="all" opacity="${f2(Math.min(0.97, dens * 1.4))}" filter="url(#${blurId(36)})">${s}<rect width="1920" height="1080" fill="#EDE3D0" opacity="${f2(clamp(dens * 1.4 - 0.55) * 0.85)}"/></g>`;
 }
 
 export default {
   enter: { a: 38.22, b: 38.638, type: 'dissolve', ease: E.inOut },
   frame(t) {
     let s;
-    if (t < 42.28) s = setA(t);
+    if (t < 42.30) s = setA(t);
     else s = setB(Math.max(t, 42.39 - 0.12) < 42.39 ? 42.39 : t);
-    if (t >= 42.28 && t < 42.39) s = setB(42.39);
+    if (t >= 42.30 && t < 42.39) s = setB(42.39);
     s += smokeWipe(t);
     return s;
   },

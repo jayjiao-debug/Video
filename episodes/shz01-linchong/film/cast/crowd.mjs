@@ -26,16 +26,20 @@ export function person(o = {}) {
   s += `<path d="M-10,-44 C-4,-42 4,-42 10,-44" fill="none" stroke="${cs}" stroke-width="2.2"/>`;
   // neck + head
   s += `<rect x="-3" y="-80" width="6" height="7" fill="${sk}"/>`;
-  const hx = turn * 1.2;
-  s += `<ellipse cx="${f2(hx)}" cy="-87" rx="7.2" ry="8.6" fill="${back ? '#1D1917' : sk}" stroke="${LN}" stroke-width="0.8"/>`;
-  if (!back) {
-    // hair mass on the back side of the head (shows the yaw), eyes as two dots
-    const side = turn;
-    s += `<path d="M${f2(hx - 7.2)},-88 C${f2(hx - 7)},-97 ${f2(hx + 7)},-97 ${f2(hx + 7.2)},-88 C${f2(hx + 4)},-92 ${f2(hx - 4)},-92 ${f2(hx - 7.2)},-88Z" fill="#1D1917"/>`;
-    if (Math.abs(side) > 0.2) s += `<path d="M${f2(hx - side * 7.2)},-90 C${f2(hx - side * 7.6)},-84 ${f2(hx - side * 6)},-80 ${f2(hx - side * 3)},-80 L${f2(hx - side * 4)},-90Z" fill="#1D1917"/>`;
-    const ex = hx + side * 3.2;
-    if (Math.abs(side) < 0.85) s += `<circle cx="${f2(ex - 2.6)}" cy="-87" r="0.9" fill="#1D1917"/>`;
-    s += `<circle cx="${f2(ex + 2.6 * (side < -0.85 ? -1 : 1))}" cy="-87" r="0.9" fill="#1D1917"/>`;
+  const hx = turn * 1.4;
+  if (back) {
+    s += `<ellipse cx="${f2(hx)}" cy="-87" rx="7.2" ry="8.6" fill="#1D1917" stroke="${LN}" stroke-width="0.8"/>`;
+  } else {
+    s += `<ellipse cx="${f2(hx)}" cy="-87" rx="7" ry="8.4" fill="${sk}" stroke="${LN}" stroke-width="0.8"/>`;
+    // hair cap on top, shifted to the back of the head when turned
+    s += `<path d="M${f2(hx - 7.2)},-88.5 C${f2(hx - 7.4 - turn * 1.5)},-98 ${f2(hx + 7.4 - turn * 1.5)},-98 ${f2(hx + 7.2)},-88.5 C${f2(hx + 3 - turn * 2)},-91.5 ${f2(hx - 3 - turn * 2)},-91.5 ${f2(hx - 7.2)},-88.5Z" fill="#1D1917"/>`;
+    if (Math.abs(turn) > 0.3) {
+      const ex = hx - Math.sign(turn) * 5.6;
+      s += `<ellipse cx="${f2(ex)}" cy="-86.5" rx="1.6" ry="2.4" fill="${sk}" stroke="${LN}" stroke-width="0.5"/>`;
+    }
+    const ec = hx + turn * 3.4;
+    if (Math.abs(turn) < 0.8) s += `<circle cx="${f2(ec - 2.5)}" cy="-86.5" r="0.85" fill="#1D1917"/>`;
+    s += `<circle cx="${f2(ec + (Math.abs(turn) < 0.8 ? 2.5 : 0))}" cy="-86.5" r="0.85" fill="#1D1917"/>`;
   }
   if (hat === 'bun') s += `<circle cx="${f2(hx - turn * 1.5)}" cy="-97" r="3.6" fill="#1D1917"/>`;
   else if (hat === 'cap') s += `<path d="M${f2(hx - 7.6)},-89 C${f2(hx - 8)},-100 ${f2(hx + 8)},-100 ${f2(hx + 7.6)},-89Z" fill="#2B2A2E"/><rect x="${f2(hx - 3)}" y="-102" width="6" height="5" rx="1.5" fill="#2B2A2E"/>`;

@@ -17,7 +17,7 @@ import { zhang, ZH } from '../cast/zhang.mjs';
 import { guard } from '../cast/guard.mjs';
 
 const T = { a: 59.87, m2: 60.291, m3: 60.708, clamp: 61.125, sag: 61.951, slide: 63.6, b: 64.45, look: 65.701, tug: 66.537, pan: 66.955, c: 67.8, hand: 68.592, sq: 69.01, nod: 71.506, s1: 71.506, s2: 71.924, dis: 72.95, end: 73.6 };
-export const SHOULDER = { x: 640, y: 655 };
+export const SHOULDER = { x: 650, y: 650 };   // screen, at 73.6 (camera push 1.10 included)
 
 // ------------------------------------------------------------------ rig utilities
 function cut(str, name) {
@@ -56,7 +56,7 @@ function zoomA(t) {
 }
 // zoom about the screen centre; the world point under the centre drifts from the cheek (ECU) to the figure (MS)
 // in proportion to 1/zoom, so its screen speed stays constant (≈ 4 px/frame).
-const W_ECU = [TATW[0] - 290 / ZA, TATW[1] - 50 / ZA];
+const W_ECU = [TATW[0] - 290 / ZA, 322];                                 // cheek on the right, chin in frame
 const W_MS = [960, 480];
 function camA(t) {
   const z = zoomA(t);
@@ -143,7 +143,7 @@ function figA(t) {
   const sw = 1 - ramp(t, 60.62, T.clamp, (x) => x * x);
   const [shx, shy] = shake(t, T.clamp, 3, 0.9, 3);
   const bounce = Math.sin(clamp((t - T.clamp) / 0.2) * Math.PI) * 3 * (t > T.clamp ? 1 : 0);
-  const cTf = `translate(${f2(110 * sw + shx)} ${f2(240 * sw + shy + bounce)}) rotate(${f2(28 * sw)} 428 372)`;
+  const cTf = `translate(${f2(40 * sw + shx)} ${f2(250 * sw + shy + bounce)}) rotate(${f2(12 * sw)} 428 372)`;
   // head drops with the clamp (chin toward the chest; 10 frames), then a small settle
   const hd = ramp(t, T.clamp + 0.02, T.clamp + 0.36, E.out);
   const hTf = `translate(0 ${f2(2.5 * hd)})`;
@@ -239,8 +239,8 @@ function linWalk(t, x, y) {
   const [lf, r2] = cut(r1, 'legFar');
   if (!ln || !lf) return s;
   const legs = `<g transform="${root}"><g transform="rotate(${f2(-a)} 428 842)">${lf}</g><g transform="rotate(${f2(a)} 436 842)">${ln}</g></g>`;
-  // legs must sit behind the robe: insert them before the rest of the body
-  return legs + r2;
+  // legs must sit behind the robe: insert them before the rest of the body; hide the 东京 sleeve roundel
+  return legs + r2 + `<g transform="${root}"><circle cx="520" cy="492" r="17" fill="#3E465A"/></g>`;
 }
 function linLookBack(t, x, y) {
   // front view, head turned to screen-left (toward the gate), body turned 20°: reads as a look over the shoulder
@@ -307,7 +307,7 @@ function roadLayers() {
     }
     return g;
   };
-  const willows = willow(260, 560, 3) + willow(1180, 600, 5) + willow(1980, 540, 7) + willow(2860, 580, 9);
+  const willows = willow(260, 560, 3) + willow(1600, 600, 5) + willow(2500, 540, 7) + willow(3200, 580, 9);
   const road = (() => {
     const R = rng(33);
     let g = `<rect x="0" y="0" width="3600" height="560" fill="#D8C7A0"/>`;
@@ -333,7 +333,7 @@ function roadLayers() {
   return {
     gate: bake('t08gate', 1300, 600, gate),
     trees: bake('t08trees', 3200, 600, trees),
-    willows: bake('t08willows', 3200, 720, willows),
+    willows: bake('t08willows', 3500, 720, willows),
     road: bake('t08road', 3600, 560, road),
     fore: bake('t08fore', 3600, 160, fore),
   };
@@ -354,10 +354,11 @@ function sceneB(t) {
   if (!RL) RL = roadLayers();
   const cx = camBx(t);
   const c = { x: cx, y: 0, zoom: 1 };
-  let s = `<defs>${lg('t08sky', [[0, '#F1EBDC'], [0.65, '#F7F2E6'], [1, '#FBF8EF']])}</defs>`;
+  let s = `<defs>${lg('t08sky', [[0, '#F1EBDC'], [0.65, '#F7F2E6'], [1, '#FBF8EF']])}${lg('t08haze', [[0, '#FFF8E8', 0], [0.5, '#FFF8E8', 0.45], [1, '#FFF8E8', 0]])}</defs>`;
   s += `<rect width="1920" height="1080" fill="url(#t08sky)"/>`;
   s += L(c, 0.3, `<g transform="translate(-260 160)" opacity="0.72">${RL.gate}</g>`, { id: 't08gate' });
   s += L(c, 0.45, `<g transform="translate(-600 120)" opacity="0.85">${RL.trees}</g>`, { id: 't08trees', bleed: 'lr' });
+  s += `<g data-layer="fx-heat" data-z="45" data-bleed="lr"><rect x="-10" y="540" width="1940" height="110" fill="url(#t08haze)"/></g>`;
   s += L(c, 0.8, `<g transform="translate(-700 -20)">${RL.willows}</g>`, { id: 't08willow', bleed: 'lr' });
   s += L(c, 1, `<g transform="translate(-800 640)">${RL.road}</g>`, { id: 't08road', bleed: 'lrb' });
   // figures walk with the camera (world x = screen x + camera at d 1 while walking)
@@ -382,7 +383,6 @@ function sceneB(t) {
   s += L(c, 1, fig, { id: 't08figs' });
   s += L(c, 1.3, `<g transform="translate(-900 930)">${RL.fore}</g>`, { id: 't08fore', bleed: 'lrb' });
   // heat haze on the far road, brightness
-  s += `<g data-layer="fx-heat" data-z="700" data-bleed="all"><rect x="-10" y="560" width="1940" height="90" fill="#FFF8E8" opacity="0.35"/></g>`;
   // glare from the world slide fades out
   const gl = 1 - ramp(t, 64.1, 64.75, E.out);
   if (gl > 0) s += `<g data-layer="fx-glare" data-z="760" data-bleed="all"><rect x="-10" y="-10" width="1940" height="1100" fill="#FAF6EC" opacity="${f2(gl)}"/></g>`;

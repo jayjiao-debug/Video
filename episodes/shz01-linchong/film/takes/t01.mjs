@@ -15,9 +15,9 @@ const CONVICT = { view: 'front', costume: 'A', col: { robe: ROBE }, headCloth: '
 // running toward the camera and off the frame bottom, iron leaves on the edges, a 封皮 paper seal (L30, model_sheet §6).
 // (cx, ny) = neck centre at the collar; H = head px.
 function boardFront(cx, ny, H, id) {
-  const w0 = 1.75 * H, w1 = 2.7 * H, yb = ny + 2.2 * H, yf = ny - 0.3 * H;
+  const w0 = 1.75 * H, w1 = 2.7 * H, yb = ny + 2.2 * H, yf = ny - 0.14 * H;
   const lw = Math.max(1.5, H * 0.008);
-  const rx = 0.3 * H, ry = 0.085 * H;
+  const rx = 0.27 * H, ry = 0.06 * H;
   const outline = `M${P(cx - w0 / 2, ny - 0.05 * H)} C${P(cx - w0 / 2, yf - 0.05 * H)} ${P(cx + w0 / 2, yf - 0.05 * H)} ${P(cx + w0 / 2, ny - 0.05 * H)} L${P(cx + w1 / 2, yb)} L${P(cx - w1 / 2, yb)}Z`;
   const hole = `M${P(cx - rx, ny)} A${f2(rx)},${f2(ry)} 0 1 0 ${P(cx + rx, ny)} A${f2(rx)},${f2(ry)} 0 1 0 ${P(cx - rx, ny)}Z`;
   let g = `<defs>${lg(id + 'w', [[0, '#9A7248'], [0.55, '#8A6440'], [1, '#6E4F33']], 0, 0, 1, 0)}</defs>`;
@@ -343,16 +343,16 @@ function S03(t) {
   jaw = mix(0.4, 1, ramp(t, 12.41, 12.6));
   tear = ramp(t, T.spill, 13.66, E.in);
   const ex = { ...EX.隐忍, brow: 0.3 - 0.25 * ramp(t, 12.41, 12.7), eye: 0.76 - 0.08 * ramp(t, 11.162, 11.5), look, open, jaw, tear, mouth: -0.45 };
-  const rise = ramp(t, 14.05, 14.7, E.in) * 520;
+  const rise = ramp(t, 13.95, 14.5, E.inOut) * 560, walkOut = ramp(t, 14.1, 14.7, E.in) * 700;
   let s = full('#3E2B1F');
   s += L(c, 0.4, `<g transform="translate(-330 -230)">${TAVERN}</g>`, { id: 't01tav3', bleed: 'all' });
   // him: CU H = 540 -> height 4050; eyes ≈ (1240, 400)
   const blink = t > 13.95 && t < 14.05 ? 0.1 : 1;
-  s += L(c, 1, lin({ ...CONVICT, expr: { ...ex, eye: ex.eye * blink }, pose: { headTurn: -0.32, headTilt: -1.5 }, height: 4050, x: 1235, y: 4050 + 140 - rise }) + boardFront(1235, 815 - rise, 540, 't01b3'), { id: 't01him3', bleed: 'b' });
+  s += L(c, 1, lin({ ...CONVICT, expr: { ...ex, eye: ex.eye * blink }, pose: { headTurn: -0.32, headTilt: -1.5 }, height: 4050, x: 1235 + walkOut, y: 4050 + 140 - rise }) + boardFront(1235 + walkOut, 815 - rise, 540, 't01b3'), { id: 't01him3', bleed: 'b' });
   // the guard's rough hand on his shoulder (13.665)
   if (t >= T.guardHand - 0.35) {
     const k = ramp(t, T.guardHand - 0.35, T.guardHand, E.out);
-    s += L(c, 1.05, guardHand(lerp(2200, 1660, k), 820 - rise + 8 * pulse(t, T.guardHand, 0.15), 300, 196, false, 0), { id: 't01gh', bleed: 'r' });
+    s += L(c, 1.05, guardHand(lerp(2200, 1660, k) + walkOut, 820 - rise + 8 * pulse(t, T.guardHand, 0.15), 300, 196, false, 0), { id: 't01gh', bleed: 'r' });
   }
   // her shoulder and 高髻 soft at the left edge
   s += L(c, 1.5, wifeBack({ x: 70, y: 160, head: 520, tilt: -10, bow: 0.3 }), { id: 't01her3', blur: 14, bleed: 'all' });
@@ -440,8 +440,13 @@ function linBack(u, ph, look = 0) {
   // head turn: a sliver of profile on the viewer's left
   const lk = clamp(look);
   if (lk > 0) {
-    s += `<path d="M${P(hx - 0.3 * u, hy - 0.1 * u)} C${P(hx - 0.42 * u - 0.12 * u * lk, hy - 0.05 * u)} ${P(hx - 0.5 * u - 0.16 * u * lk, hy + 0.18 * u)} ${P(hx - 0.44 * u - 0.1 * u * lk, hy + 0.36 * u)} L${P(hx - 0.36 * u - 0.12 * u * lk, hy + 0.66 * u)} L${P(hx - 0.1 * u, hy + 0.5 * u)}Z" fill="${SK.skin}" ${L_}/>`;
-    s += `<path d="M${P(hx - 0.36 * u - 0.12 * u * lk, hy + 0.5 * u)} L${P(hx - 0.42 * u - 0.12 * u * lk, hy + 0.86 * u)} L${P(hx - 0.28 * u - 0.08 * u * lk, hy + 0.55 * u)}Z" fill="#141010"/>`;
+    // head turned ~60° over the left shoulder: cheek, nose, moustache and the pointed goatee show past the skull
+    const q = lk;
+    const nx = hx - 0.36 * u - 0.22 * u * q;
+    s += `<path d="M${P(hx - 0.2 * u, hy - 0.3 * u)} C${P(hx - 0.36 * u - 0.1 * u * q, hy - 0.28 * u)} ${P(nx + 0.02 * u, hy - 0.08 * u)} ${P(nx - 0.04 * u, hy + 0.1 * u)} L${P(nx + 0.04 * u, hy + 0.16 * u)} C${P(nx + 0.02 * u, hy + 0.3 * u)} ${P(nx + 0.06 * u, hy + 0.42 * u)} ${P(nx + 0.12 * u, hy + 0.5 * u)} L${P(hx - 0.06 * u, hy + 0.56 * u)} L${P(hx - 0.04 * u, hy - 0.2 * u)}Z" fill="${SK.skin}" ${L_}/>`;
+    s += `<path d="M${P(nx + 0.04 * u, hy + 0.26 * u)} C${P(nx + 0.1 * u, hy + 0.22 * u)} ${P(nx + 0.16 * u, hy + 0.3 * u)} ${P(nx + 0.12 * u, hy + 0.36 * u)}" stroke="#141010" stroke-width="${f2(lw * 1.6)}" fill="none"/>`;
+    s += `<path d="M${P(nx + 0.1 * u, hy + 0.46 * u)} L${P(nx + 0.06 * u, hy + 0.98 * u)} L${P(nx + 0.2 * u, hy + 0.5 * u)}Z" fill="#141010"/>`;
+    s += `<path d="M${P(nx + 0.12 * u, hy - 0.02 * u)} L${P(nx + 0.24 * u, hy - 0.04 * u)}" stroke="#141010" stroke-width="${f2(lw * 1.4)}"/>`;
   }
   s += `<ellipse cx="${f2(hx + 0.04 * u * lk)}" cy="${f2(hy)}" rx="${f2(0.4 * u)}" ry="${f2(0.5 * u)}" fill="#22272F" ${L_}/>`;
   s += `<ellipse cx="${f2(hx + 0.42 * u - 0.1 * u * lk)}" cy="${f2(hy + 0.08 * u)}" rx="${f2(0.08 * u)}" ry="${f2(0.14 * u)}" fill="${SK.skinS}" ${L_}/>`;
@@ -491,9 +496,9 @@ function S04(t) {
   s += L(c, 1.3, frame, { id: 't01doorframe', bleed: 'all' });
   // her: back view in the foreground left, hand on the door post; slides down to kneel at 16.161
   const sl = ramp(t, T.slide, T.slide + 0.84, (x) => (x < 0.7 ? E.in(x / 0.7) * 0.85 : 0.85 + 0.15 * E.out((x - 0.7) / 0.3)));
-  const wy = 324 + sl * 230, wx = 470 - sl * 24;
-  const handY = 500 + sl * 230;
-  s += L(c, 1.5, wifeBack({ x: wx, y: wy, head: 179, tilt: -7 - 6 * sl, bow: 0.1 + 0.55 * sl, slump: 0.6 * sl, armL: { to: [300, handY] } }) +
+  const wy = 324 + sl * 230, wx = 432 - sl * 18;
+  const handY = 560 + sl * 230;
+  s += L(c, 1.3, wifeBack({ x: wx, y: wy, head: 179, tilt: -7 - 6 * sl, bow: 0.1 + 0.55 * sl, slump: 0.6 * sl, armL: { to: [300, handY] } }) +
     // her fingers wrap the post's edge
     // her fingers curl round the post's front face (drawn over the post)
     [0, 1, 2, 3].map((i) => `<rect x="${f2(262 - i * 1.5)}" y="${f2(handY - 20 + i * 11)}" width="44" height="10" rx="5" fill="${COLW.skin}" stroke="${LN}" stroke-width="1.6"/>`).join(''), { id: 't01her4', bleed: 'b' });
@@ -502,7 +507,7 @@ function S04(t) {
 }
 
 // ============================================================== the take
-const X1 = [4.95, 5.5], X2 = [9.95, 10.25], X3 = [14.3, 14.72];
+const X1 = [4.95, 5.5], X2 = [9.95, 10.25], X3 = [14.4, 14.8];
 const blend = (A, B, k) => `<g>${A}</g><g opacity="${f2(k)}">${B}</g>`;
 
 export { S01, S02, S03, S04 };

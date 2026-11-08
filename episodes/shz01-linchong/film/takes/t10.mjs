@@ -303,7 +303,7 @@ function cam(t) {
     const target = camAt([lerp(960 + c0.x, cr[0] - 120, k), lerp(540 + c0.y, cr[1] + 60, k)], [960, 540], z);
     return target;
   }
-  const z = t < 82.34 ? zexp(t, 81.5, 82.34, 1.3, 2.5, E.in) : zexp(t, 82.34, 82.74, 2.5, 4.6, E.in);
+  const z = t < 82.34 ? zexp(t, 81.5, 82.34, 1.3, 2.5, E.inOut) : zexp(t, 82.34, 82.74, 2.5, 4.6, E.in);
   const k = ramp(t, 81.5, 82.2, E.inOut);
   return camAt([lerp(cr[0] - 120, cr[0], k), lerp(cr[1] + 60, cr[1], k)], [960, 540], Math.min(z, 4.6));
 }
