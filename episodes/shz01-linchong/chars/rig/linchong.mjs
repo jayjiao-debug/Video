@@ -303,9 +303,10 @@ function faceSide(F, E, o = {}) {
   // ---- facial hair: jaw stubble, long goatee from the chin, thin moustache drooping past the corner
   jw += stubble(F.jaw.map((p) => [p[0], p[1] - 1 * u]), u, C.hair, 13, 1.2);
   const ch = [F.chin[0], F.chin[1]];
-  const gt = [ch[0] - 3.5 * u, ch[1] + 46 * u];
-  jw += (`<path d="M${f(ch[0] - 7 * u)},${f(ch[1] - 6 * u)} C${f(ch[0] - 9 * u)},${f(ch[1] + 4 * u)} ${f(gt[0] - 4 * u)},${f(gt[1] - 22 * u)} ${P(gt)} C${f(gt[0] + 4.5 * u)},${f(gt[1] - 18 * u)} ${f(ch[0] + 8 * u)},${f(ch[1] + 6 * u)} ${f(ch[0] + 9 * u)},${f(ch[1] - 2 * u)} C${f(ch[0] + 4 * u)},${f(ch[1] - 3.5 * u)} ${f(ch[0] - 2 * u)},${f(ch[1] - 6 * u)} ${f(ch[0] - 7 * u)},${f(ch[1] - 6 * u)}Z" fill="${C.hair}"/>`);
-  jw += (`<path d="M${f(ch[0] - 1 * u)},${f(ch[1] + 4 * u)} C${f(ch[0] - 1.5 * u)},${f(ch[1] + 18 * u)} ${f(gt[0] + 1 * u)},${f(gt[1] - 14 * u)} ${f(gt[0] + 0.6 * u)},${f(gt[1] - 6 * u)}" stroke="#3a3530" stroke-width="${f(0.7 * u)}" fill="none" opacity="0.7"/>`);
+  const g0 = [m[0] + 3.5 * u, m[1] + 7 * u];                 // under the lower lip
+  const gt = [ch[0] - 3 * u, ch[1] + 44 * u];                // point, as long as the front goatee
+  jw += `<path d="M${f(g0[0] - 2.4 * u)},${f(g0[1])} C${f(ch[0] - 7.4 * u)},${f(ch[1] - 8 * u)} ${f(ch[0] - 8 * u)},${f(ch[1] + 6 * u)} ${f(ch[0] - 6 * u)},${f(ch[1] + 14 * u)} C${f(ch[0] - 4.6 * u)},${f(ch[1] + 26 * u)} ${f(gt[0] - 1.4 * u)},${f(gt[1] - 10 * u)} ${P(gt)} C${f(gt[0] + 1.8 * u)},${f(gt[1] - 10 * u)} ${f(ch[0] + 2.6 * u)},${f(ch[1] + 24 * u)} ${f(ch[0] + 3.4 * u)},${f(ch[1] + 12 * u)} C${f(ch[0] + 4 * u)},${f(ch[1] + 4 * u)} ${f(ch[0] + 2 * u)},${f(ch[1] - 4 * u)} ${f(g0[0] + 2.6 * u)},${f(g0[1] + 0.6 * u)} C${f(g0[0] + 1 * u)},${f(g0[1] + 1.4 * u)} ${f(g0[0] - 1 * u)},${f(g0[1] + 1.2 * u)} ${f(g0[0] - 2.4 * u)},${f(g0[1])}Z" fill="${C.hair}"/>`;
+  jw += `<path d="M${f(ch[0] - 2 * u)},${f(ch[1] + 2 * u)} C${f(ch[0] - 2 * u)},${f(ch[1] + 16 * u)} ${f(gt[0] + 0.4 * u)},${f(gt[1] - 14 * u)} ${f(gt[0] + 0.2 * u)},${f(gt[1] - 6 * u)}" stroke="#3a3530" stroke-width="${f(0.7 * u)}" fill="none" opacity="0.7"/>`;
   {
     const root = [F.nostril[0] - 2 * u, F.nostril[1] + 5 * u];
     const end = [cn[0] + 3.5 * u, cn[1] + 9 * u];
@@ -527,7 +528,7 @@ function neckColour(D) {
   return D._neckc;
 }
 
-function cangueSVG(D, view, Href, u) {
+function cangueSVG(D, view, Href, u, drop = 0) {
   const C = { wood: '#9a7048', woodT: '#a97c51', woodS: '#7a5534', woodE: '#5a3d24', iron: '#45474d', ironS: '#2c2d31', paper: '#efe9dc', red: '#c4372f', dark: '#2a1c14' };
   const cm = Href / 24, F = D.meta.face;
   const lw = Math.max(1 * u, 0.14 * cm);
@@ -536,7 +537,7 @@ function cangueSVG(D, view, Href, u) {
   let board = '', neck = '';
   if (view === 'front') {
     // seen from slightly above; the long end (62 cm) comes toward us and down
-    const nx = F.chin[0], ny = F.chin[1] + 0.27 * Href;               // hole centre, at the neck base
+    const nx = F.chin[0], ny = F.chin[1] + drop + 0.17 * Href;        // hole centre, right under the jaw
     const hw = 21 * cm, far = ny - 4.6 * cm, near = ny + 10 * cm, th = 3 * cm;
     const hx = 6.6 * cm, hy = 2.0 * cm;                                 // hole ellipse
     const nw = 5.6 * cm;                                                // half neck width in the hole
@@ -560,15 +561,15 @@ function cangueSVG(D, view, Href, u) {
     board += `<rect x="${f(nx + 6 * cm)}" y="${f(sy + 0.5 * cm)}" width="${f(2.4 * cm)}" height="${f(1.8 * cm)}" fill="none" stroke="${C.red}" stroke-width="${f(lw * 0.9)}"/><path d="M${f(nx - 12 * cm)},${f(sy + 1.1 * cm)} h${f(9 * cm)} M${f(nx - 12 * cm)},${f(sy + 2 * cm)} h${f(6 * cm)}" stroke="#3a3530" stroke-width="${f(lw * 0.6)}" opacity="0.5"/>`;
     // the neck rising through the hole: dark gap around it, skin column up to the chin
     board += `<path d="${hole}" fill="${C.dark}"/>`;
-    neck += `<clipPath id="${id}n"><path d="M${f(nx - hw)},${f(F.chin[1] - 0.3 * Href)} L${f(nx + hw)},${f(F.chin[1] - 0.3 * Href)} L${f(nx + hw)},${f(ny)} L${f(nx - hw)},${f(ny)}Z ${hole}"/></clipPath>`;
-    const nt = F.chin[1] - 0.05 * Href, nb = ny + hy;
+    neck += `<clipPath id="${id}n"><path d="M${f(nx - hw)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(nx + hw)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(nx + hw)},${f(ny)} L${f(nx - hw)},${f(ny)}Z ${hole}"/></clipPath>`;
+    const nt = F.chin[1] + drop - 0.05 * Href, nb = ny + hy;
     neck += `<g clip-path="url(#${id}n)"><path d="M${f(nx - nw * 0.82)},${f(nt)} C${f(nx - nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx - nw * 0.95)},${f(nb - 2 * cm)} ${f(nx - nw)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}Z" fill="${skin}"/>` +
       `<path d="M${f(nx + nw * 0.25)},${f(nt)} C${f(nx + nw * 0.35)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.5)},${f(nb - 2 * cm)} ${f(nx + nw * 0.55)},${f(nb)} L${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}Z" fill="#000" opacity="0.12"/>` +
       `<path d="M${f(nx - nw * 0.82)},${f(nt)} C${f(nx - nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx - nw * 0.95)},${f(nb - 2 * cm)} ${f(nx - nw)},${f(nb)} M${f(nx + nw)},${f(nb)} C${f(nx + nw * 0.95)},${f(nb - 2 * cm)} ${f(nx + nw * 0.84)},${f(nt + (nb - nt) * 0.5)} ${f(nx + nw * 0.82)},${f(nt)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>`;
   } else {
     // profile (data faces left): 90 cm board, long end forward and 30° down, top face seen from a bit above
     const a = (30 * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a);
-    const nx = F.ear[0] - 8 * u, ny = F.chin[1] + 0.29 * Href;          // neck centre at the collar
+    const nx = F.ear[0] - 8 * u, ny = F.chin[1] + drop + 0.2 * Href;    // neck centre, right under the jaw
     const Q = (d, o) => [nx - d * cm * ca + o * cm * sa, ny + d * cm * sa + o * cm * ca]; // d forward, o down (cm)
     const W = 10, T = 3.2;                                               // projected top-face width, thickness
     const pth = (pts) => 'M' + pts.map(P).join(' L') + 'Z';
@@ -582,8 +583,8 @@ function cangueSVG(D, view, Href, u) {
     board += `<path d="${pth([Q(14, -W * 0.85), Q(30, -W * 0.85), Q(30, -W * 0.2), Q(14, -W * 0.2)])}" fill="${C.paper}" ${L(0.6)}/><path d="${pth([Q(24, -W * 0.7), Q(27, -W * 0.7), Q(27, -W * 0.38), Q(24, -W * 0.38)])}" fill="none" stroke="${C.red}" stroke-width="${f(lw * 0.8)}"/>`;
     board += `<path d="${hole}" fill="${C.dark}"/>`;
     const hc = Q(0, -W / 2), nw = 6 * cm;
-    neck += `<clipPath id="${id}n"><path d="M${f(hc[0] - 12 * cm)},${f(F.chin[1] - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(F.chin[1] - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(hc[1])} L${f(hc[0] - 12 * cm)},${f(hc[1])}Z ${hole}"/></clipPath>`;
-    const nt = F.chin[1] + 0.02 * Href, nb = hc[1] + 3.4 * cm;
+    neck += `<clipPath id="${id}n"><path d="M${f(hc[0] - 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(F.chin[1] + drop - 0.3 * Href)} L${f(hc[0] + 12 * cm)},${f(hc[1])} L${f(hc[0] - 12 * cm)},${f(hc[1])}Z ${hole}"/></clipPath>`;
+    const nt = F.chin[1] + drop + 0.02 * Href, nb = hc[1] + 3.4 * cm;
     neck += `<g clip-path="url(#${id}n)"><path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)} L${f(hc[0] + nw)},${f(nb)} C${f(hc[0] + nw)},${f(nb - 2 * cm)} ${f(hc[0] + nw * 0.9)},${f((nt + nb) / 2)} ${f(hc[0] + nw * 0.8)},${f(nt)}Z" fill="${skin}"/>` +
       `<path d="M${f(hc[0] - nw * 0.7)},${f(nt)} C${f(hc[0] - nw * 0.85)},${f((nt + nb) / 2)} ${f(hc[0] - nw)},${f(nb - 2 * cm)} ${f(hc[0] - nw)},${f(nb)}" fill="none" stroke="#a36c49" stroke-width="${f(lw * 0.9)}"/></g>`;
   }
@@ -681,7 +682,11 @@ export function lin(opt = {}) {
   const pose = { ...(opt.pose || {}) };
   const M = D.meta;
   const height = opt.height || 680;
-  const Href = (M.sole - M.chin[1]) / 6.5; // reference px per head
+  // the head sits a little lower than in the painting (owner: shorter neck); the figure is then
+  // normalised so that skull to sole is still 7.5 H
+  const H0 = (M.sole - M.chin[1]) / 6.5;
+  const drop = (view === 'front' ? 0.075 : 0.05) * H0;
+  const Href = (M.sole - M.chin[1] - drop) / 6.5; // reference px per head
   const k = height / 7.5 / Href;
   const flip = !!opt.flip;
   const root = mul(tr(opt.x || 0, opt.y || 0), mul(sc(flip ? -k : k, k), tr(-M.origin_x, -M.sole)));
@@ -708,7 +713,8 @@ export function lin(opt = {}) {
     const p = D.parts[n];
     const par = p.parent && D.parts[p.parent] ? wm(p.parent) : I;
     const a = ang[n] || 0;
-    W[n] = a && p.pivot ? mul(par, rot(a, p.pivot[0], p.pivot[1])) : par;
+    const own = a && p.pivot ? rot(a, p.pivot[0], p.pivot[1]) : I;
+    W[n] = n === 'head' ? mul(par, mul(tr(0, drop), own)) : a && p.pivot ? mul(par, own) : par;
     return W[n];
   };
   const id = uid('r');
@@ -749,7 +755,7 @@ export function lin(opt = {}) {
   if (O.cangue) {
     // board (hole cut out) over the shoulders and arms, then the neck rising through the hole,
     // then the head and beard (raised to z 26 above both)
-    const cg = cangueSVG(D, view, Href, u), mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
+    const cg = cangueSVG(D, view, Href, u, drop), mt = mstr(wm(D.parts.torso ? 'torso' : 'neck'));
     items.push([25, `<g data-part="cangue" transform="${mt}">${cg.board}</g>`]);
     items.push([25.5, `<g data-part="cangueNeck" transform="${mt}">${cg.neck}</g>`]);
   }
@@ -805,6 +811,14 @@ function jointAngles(D, view, pose, flip) {
 function headBack(D, view, costume, E, pose, O) {
   const F = D.meta.face, u = F.fw / 105;
   let s = '';
+  if (view === 'front' && F.jaw && !(costume === 'C' && O.hat)) {
+    // hair gathered behind the ears, the same mass the profile shows behind the ear
+    for (const sg of [-1, 1]) {
+      const j = sg < 0 ? F.jaw[0] : F.jaw[F.jaw.length - 1];
+      const x0 = j[0] - sg * 2 * u, top = F.browR[1][1] - 6 * u, bot = j[1] + 12 * u;
+      s += `<path d="M${f(x0 + sg * 2 * u)},${f(top)} C${f(x0 + sg * 13 * u)},${f(top + 8 * u)} ${f(x0 + sg * 15 * u)},${f(bot - 22 * u)} ${f(x0 + sg * 9 * u)},${f(bot)} C${f(x0 + sg * 4 * u)},${f(bot + 3 * u)} ${f(x0)},${f(bot - 4 * u)} ${f(x0 - sg * 2 * u)},${f(bot - 10 * u)}Z" fill="${COL.hair}"/>`;
+    }
+  }
   if (costume === 'A' && F.rings && view === 'front' && O.rings) s += F.rings.map((c) => jadeRing(c, u, 3.6)).join('');
   if (costume === 'C' && F.hat && view === 'front' && O.hat) s += hatFront(F.hat, u, true);
 

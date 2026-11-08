@@ -43,6 +43,8 @@ def pred_mask(pred, L, pal_lab):
         ok = ~((ac > 146) & (Lc < 170))
     elif pred == 'hat':
         ok = (ac < 140) & (bc > 128) & (bc < 156) & (Lc > 105) & (Lc < 222)
+    elif pred == 'collar':  # neither skin nor dark hair/cloth
+        ok = ~((ac > 136) & (bc > 145) & (Lc > 120)) & (Lc >= 92)
     elif pred == 'none':
         ok = np.zeros(len(Lc), bool)
     elif pred == 'notgreen':
