@@ -216,6 +216,13 @@ function faceFront(F, E, o = {}) {
   {
     // cel shadow under the jaw onto the neck (neck only), the jaw contour, stubble inside the line
     const nl = F.neckX || [F.jaw[1][0] + 8 * u, F.jaw[5][0] - 8 * u];
+    if (o.headClip) {
+      // owner: the face looked thin, its lines detached — the painted skin ran on past the jaw line. Everything of the
+      // head outside the jaw line (below the jaw corners) is turned to the side-of-neck shade, so the line IS the edge.
+      const J = F.jaw, a0 = J[0], a1 = J[J.length - 1];
+      const out = [...J, [a1[0] + 90 * u, a1[1] - 4 * u], [a1[0] + 90 * u, a1[1] + 160 * u], [a0[0] - 90 * u, a0[1] + 160 * u], [a0[0] - 90 * u, a0[1] - 4 * u]];
+      add(`<path d="M${out.map(P).join(' L')}Z" fill="#d29a76" mask="url(#${o.headClip})"/>`);
+    }
     add(jawShadow(F.jaw, u, 9, nl[0], nl[1]));
     add(jawContour(F.jaw, u, 1, 5));
     const cx = F.chin[0], cyc = (F.jaw[0][1] + F.chin[1]) / 2;
@@ -1164,7 +1171,11 @@ function headExtras(D, view, costume, E, pose, O) {
   let s = '';
   const tat = F.tattoo || (view === 'front' ? [F.eyeL[0] + 6 * u, F.eyeL[1] + 22 * u] : [F.ear[0] - 40 * u, F.ear[1] + 38 * u]);
   if (view === 'front') {
-    s += faceFront(F, E, { turn: pose.headTurn || 0 });
+    // the head's skin only (hair, hat and its streamers are cut back out), as a mask for the outside-the-jaw shade
+    const hc = uid('hc');
+    const dark = (c) => lum(D.palette[c]) < 90;
+    s += `<mask id="${hc}" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000">${D.parts.head.fills.map(([c, d]) => `<path d="${d}" fill="${dark(c) ? '#000' : '#fff'}"/>`).join('')}</mask>`;
+    s += faceFront(F, E, { turn: pose.headTurn || 0, headClip: hc });
     if (O.tattoo > 0) s += `<g opacity="${f(Math.min(1, O.tattoo))}">${tattoo([tat[0] + (pose.headTurn || 0) * 8 * u, tat[1]], u)}</g>`;
     if (costume === 'C' && F.hat && O.hat) s += cordFront(F, u, E) + hatFront(F.hat, u, false);
     if (costume === 'C' && F.hat && !O.hat) s += hairCap(F, view, u);

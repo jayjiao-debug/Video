@@ -503,7 +503,7 @@ function s32(t) {
     s += `<g opacity="${f2(k * 0.6)}">${snow(t, { seed: 133, n: 26, r: [1.5, 3.5], fall: -60, sway: 20, area: [700, -60, 1600, 900], color: '#F1F3F5', op: 0.8, cam: c, d: 1 })}</g>`;
   }
   // S33: the fist rises into the right third (slow, then holds; trembles; tightens at 141.03)
-  if (t > 137.15) s += fistLayer(t);
+  // (owner 2026-11-08: no fist — the ending is carried by the print alone)
   return s;
 }
 
@@ -526,7 +526,7 @@ const ENDBG = (() => {
   const c = s32cam(t);
   const inner = `<defs><filter id="t13eb" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="12"/></filter></defs>` +
     `<rect width="1920" height="1080" fill="#14110E"/>` +
-    `<g filter="url(#t13eb)" opacity="0.24">${L(c, 0, hazeBg(1), { id: 'eb1' })}${L(c, 1, paperLayer(t, c, { blank: true, printOp: 0 }), { id: 'eb2' })}${fistLayer(t, true)}</g>` +
+    `<g filter="url(#t13eb)" opacity="0.24">${L(c, 0, hazeBg(1), { id: 'eb1' })}${L(c, 1, paperLayer(t, c, { blank: true, printOp: 0 }), { id: 'eb2' })}</g>` +
     `<image href="${furl(ASSET + '/paper.png')}" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice" opacity="0.06" style="mix-blend-mode:screen"/>` +
     `<radialGradient id="t13ev" cx="0.5" cy="0.45" r="0.75"><stop offset="0.5" stop-color="#0c0a08" stop-opacity="0"/><stop offset="1" stop-color="#0c0a08" stop-opacity="0.6"/></radialGradient><rect width="1920" height="1080" fill="url(#t13ev)"/>`;
   return bake('t13_endbg', 1920, 1080, inner);
