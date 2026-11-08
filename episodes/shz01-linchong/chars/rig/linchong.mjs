@@ -265,31 +265,30 @@ function tearFront(ci, inw, u, t) {
 
 // ------------------------------------------------------------------ face, side view (data faces left)
 function faceSide(F, E, o = {}) {
+  // returns { head, back, jaw, front }: head-frame features, the mouth interior (between head and
+  // jaw), the parts that ride on the lower jaw (lower lip, stubble, goatee), and the closed-mouth line
   const C = COL, u = F.fw / 105;
   const L = (w) => `stroke="${C.line}" stroke-width="${f(w * u)}" stroke-linecap="round" stroke-linejoin="round"`;
-  let s = '';
+  let s = '', back = '', jw = '', front = '';
   const add = (x) => (s += x);
   const id = uid('s');
   const k = E.brow, op = Math.max(0, E.open), jaw = Math.max(0, E.jaw);
-  const drop = op * 11 * u;
-  // ---- mouth: line from the lip junction back to the corner; open = dark wedge + lowered jaw
+  const tmj = o.tmj || F.ear, th = o.theta || 0;
+  const R = (p) => ap(rot(th, tmj[0], tmj[1]), p);
   const m = F.mouth, cn = [F.corner[0], F.corner[1] - E.mouth * 2.4 * u];
   if (op > 0.04) {
-    const lipLo = [m[0] + 1.5 * u, m[1] + 4 * u + drop];
-    const chin = [F.chin[0] + 0.5 * u, F.chin[1] + drop];
-    const jawBack = F.jaw[2];
-    // lowered jaw: skin shape over the old chin, outlined on its front edge
-    add(`<path d="M${P(cn)} L${f(m[0] - 1.5 * u)},${f(m[1] + 0.5 * u)} C${f(m[0] - 3.5 * u)},${f(m[1] + 2 * u)} ${f(lipLo[0] - 4 * u)},${f(lipLo[1] - 1 * u)} ${P(lipLo)} C${f(lipLo[0] + 2 * u)},${f(lipLo[1] + 4 * u)} ${f(chin[0] - 6 * u)},${f(chin[1] - 6 * u)} ${f(chin[0] - 4.5 * u)},${f(chin[1] - 2 * u)} C${f(chin[0] - 3 * u)},${f(chin[1] + 1 * u)} ${f(chin[0] + 3 * u)},${f(chin[1] + 1 * u)} ${P(chin)} L${P(jawBack)} L${f(jawBack[0])},${f(cn[1] - 4 * u)}Z" fill="${C.skin}"/>`);
-    const wedge = `M${f(m[0] - 2.4 * u)},${f(m[1] - 0.6 * u)} L${P(cn)} L${f(lipLo[0] - 1.5 * u)},${f(lipLo[1] - 0.8 * u)} C${f(m[0] - 3.4 * u)},${f(lipLo[1] - 3 * u)} ${f(m[0] - 3.6 * u)},${f(m[1] + 2 * u)} ${f(m[0] - 2.4 * u)},${f(m[1] - 0.6 * u)}Z`;
-    add(`<clipPath id="${id}w"><path d="${wedge}"/></clipPath><path d="${wedge}" fill="${C.mouth}"/>`);
-    add(`<g clip-path="url(#${id}w)"><path d="M${f(m[0] - 6 * u)},${f(m[1] - 3 * u)} L${f(cn[0] - 4 * u)},${f(cn[1] - 3 * u)} L${f(cn[0] - 6 * u)},${f(m[1] + 3.2 * u)} L${f(m[0] - 6 * u)},${f(m[1] + 3.2 * u)}Z" fill="${C.teeth}"/>` +
-      (op > 0.35 ? `<path d="M${f(m[0] - 6 * u)},${f(lipLo[1] + 3 * u)} L${f(cn[0] - 6 * u)},${f(lipLo[1] + 3 * u)} L${f(cn[0] - 8 * u)},${f(lipLo[1] - 2.6 * u)} L${f(m[0] - 6 * u)},${f(lipLo[1] - 2.6 * u)}Z" fill="${C.teeth}"/>` : '') + '</g>');
-    add(`<path d="M${f(m[0] - 1.5 * u)},${f(m[1] + 0.5 * u)} C${f(m[0] - 3.5 * u)},${f(m[1] + 2 * u)} ${f(lipLo[0] - 4 * u)},${f(lipLo[1] - 1 * u)} ${P(lipLo)} C${f(lipLo[0] + 2 * u)},${f(lipLo[1] + 4 * u)} ${f(chin[0] - 6 * u)},${f(chin[1] - 6 * u)} ${f(chin[0] - 4.5 * u)},${f(chin[1] - 2 * u)} C${f(chin[0] - 3 * u)},${f(chin[1] + 1 * u)} ${f(chin[0] + 3 * u)},${f(chin[1] + 1 * u)} ${P(chin)}" fill="none" stroke="#a36c49" stroke-width="${f(1 * u)}" stroke-linecap="round"/>`);
-    add(`<path d="${wedge}" fill="none" ${L(0.9)}/>`);
+    const Uf = [m[0] - 2.2 * u, m[1] - 0.4 * u];
+    const Lf = R([m[0] - 1.2 * u, m[1] + 1.2 * u]), Lc = R([cn[0] - 1.5 * u, cn[1] + 0.8 * u]);
+    const wedge = `M${P(Uf)} C${f(m[0] + 4 * u)},${f(m[1] + 0.4 * u)} ${f(cn[0] - 5 * u)},${f(cn[1])} ${P(cn)} L${P(Lc)} C${P([Lc[0] - 6 * u, Lc[1] + 1 * u])} ${P([Lf[0] + 4 * u, Lf[1] + 1.2 * u])} ${P(Lf)} C${P([Lf[0] - 2.2 * u, Lf[1] - 2 * u])} ${P([Uf[0] - 1.6 * u, Uf[1] + 2 * u])} ${P(Uf)}Z`;
+    back += `<clipPath id="${id}w"><path d="${wedge}"/></clipPath><path d="${wedge}" fill="${C.mouth}"/>`;
+    back += `<g clip-path="url(#${id}w)"><path d="M${f(Uf[0] - 4 * u)},${f(m[1] - 3 * u)} L${f(cn[0] + 2 * u)},${f(cn[1] - 3 * u)} L${f(cn[0] - 3 * u)},${f(cn[1] + 2.4 * u)} L${f(Uf[0] - 4 * u)},${f(m[1] + 2.8 * u)}Z" fill="${C.teeth}"/>` +
+      (op > 0.3 ? `<path d="M${P([Lf[0] - 4 * u, Lf[1] + 3 * u])} L${P([Lc[0] + 2 * u, Lc[1] + 3 * u])} L${P([Lc[0] - 2 * u, Lc[1] - 2.2 * u])} L${P([Lf[0] - 4 * u, Lf[1] - 2.4 * u])}Z" fill="${C.teeth}"/>` : '') +
+      `<path d="M${P([Uf[0] + 3 * u, m[1] + 2.6 * u])} v${f(-1.2 * u)} M${P([Uf[0] + 7 * u, m[1] + 2.8 * u])} v${f(-1.2 * u)}" stroke="#d8d0c2" stroke-width="${f(0.5 * u)}"/></g>`;
+    back += `<path d="${wedge}" fill="none" ${L(0.9)}/>`;
   } else {
-    add(`<path d="M${f(m[0] - 0.5 * u)},${f(m[1])} C${f(m[0] + 6 * u)},${f(m[1] + (1.5 - jaw) * u)} ${f(cn[0] - 6 * u)},${f(cn[1] - 0.5 * u)} ${P(cn)}" fill="none" ${L(1 + 0.2 * jaw)}/>`);
-    add(`<path d="M${f(m[0] + 2 * u)},${f(m[1] + 5 * u)} C${f(m[0] + 5 * u)},${f(m[1] + 6.4 * u)} ${f(m[0] + 9 * u)},${f(m[1] + 6 * u)} ${f(m[0] + 11 * u)},${f(m[1] + 4.6 * u)}" fill="none" stroke="${C.skinS}" stroke-width="${f(1.4 * u)}" stroke-linecap="round"/>`);
+    front += `<path d="M${f(m[0] - 0.5 * u)},${f(m[1])} C${f(m[0] + 6 * u)},${f(m[1] + (1.5 - jaw) * u)} ${f(cn[0] - 6 * u)},${f(cn[1] - 0.5 * u)} ${P(cn)}" fill="none" ${L(1 + 0.2 * jaw)}/>`;
   }
+  jw += `<path d="M${f(m[0] + 2 * u)},${f(m[1] + 5 * u)} C${f(m[0] + 5 * u)},${f(m[1] + 6.4 * u)} ${f(m[0] + 9 * u)},${f(m[1] + 6 * u)} ${f(m[0] + 11 * u)},${f(m[1] + 4.6 * u)}" fill="none" stroke="${C.skinS}" stroke-width="${f(1.4 * u)}" stroke-linecap="round"/>`;
   if (jaw > 0.15) {
     const j = F.jaw[1];
     add(`<path d="M${f(j[0] - 4 * u)},${f(j[1] - 12 * u)} C${f(j[0] - 6 * u)},${f(j[1] - 6 * u)} ${f(j[0] - 7 * u)},${f(j[1] - 2 * u)} ${f(j[0] - 10 * u)},${f(j[1] + 2 * u)}" fill="none" stroke="${C.skinD}" stroke-width="${f(0.9 * u)}" stroke-linecap="round" opacity="${f(0.75 * jaw)}"/>`);
@@ -298,11 +297,11 @@ function faceSide(F, E, o = {}) {
   const ns = F.nostril;
   add(`<path d="M${f(ns[0] - 4 * u)},${f(ns[1] + 0.5 * u)} C${f(ns[0] - 2 * u)},${f(ns[1] - 2.6 * u)} ${f(ns[0] + 2.2 * u)},${f(ns[1] - 2.4 * u)} ${f(ns[0] + 2.4 * u)},${f(ns[1] + 0.6 * u)}" fill="none" stroke="${C.skinD}" stroke-width="${f(1.1 * u)}" stroke-linecap="round"/>`);
   // ---- facial hair: jaw stubble, long goatee from the chin, thin moustache drooping past the corner
-  add(stubble(F.jaw.map((p) => [p[0], p[1] - 1 * u]), u, C.hair, 13, 1.2));
-  const ch = [F.chin[0], F.chin[1] + drop * 0.95];
+  jw += stubble(F.jaw.map((p) => [p[0], p[1] - 1 * u]), u, C.hair, 13, 1.2);
+  const ch = [F.chin[0], F.chin[1]];
   const gt = [ch[0] - 3.5 * u, ch[1] + 46 * u];
-  add(`<path d="M${f(ch[0] - 7 * u)},${f(ch[1] - 6 * u)} C${f(ch[0] - 9 * u)},${f(ch[1] + 4 * u)} ${f(gt[0] - 4 * u)},${f(gt[1] - 22 * u)} ${P(gt)} C${f(gt[0] + 4.5 * u)},${f(gt[1] - 18 * u)} ${f(ch[0] + 8 * u)},${f(ch[1] + 6 * u)} ${f(ch[0] + 9 * u)},${f(ch[1] - 2 * u)} C${f(ch[0] + 4 * u)},${f(ch[1] - 3.5 * u)} ${f(ch[0] - 2 * u)},${f(ch[1] - 6 * u)} ${f(ch[0] - 7 * u)},${f(ch[1] - 6 * u)}Z" fill="${C.hair}"/>`);
-  add(`<path d="M${f(ch[0] - 1 * u)},${f(ch[1] + 4 * u)} C${f(ch[0] - 1.5 * u)},${f(ch[1] + 18 * u)} ${f(gt[0] + 1 * u)},${f(gt[1] - 14 * u)} ${f(gt[0] + 0.6 * u)},${f(gt[1] - 6 * u)}" stroke="#3a3530" stroke-width="${f(0.7 * u)}" fill="none" opacity="0.7"/>`);
+  jw += (`<path d="M${f(ch[0] - 7 * u)},${f(ch[1] - 6 * u)} C${f(ch[0] - 9 * u)},${f(ch[1] + 4 * u)} ${f(gt[0] - 4 * u)},${f(gt[1] - 22 * u)} ${P(gt)} C${f(gt[0] + 4.5 * u)},${f(gt[1] - 18 * u)} ${f(ch[0] + 8 * u)},${f(ch[1] + 6 * u)} ${f(ch[0] + 9 * u)},${f(ch[1] - 2 * u)} C${f(ch[0] + 4 * u)},${f(ch[1] - 3.5 * u)} ${f(ch[0] - 2 * u)},${f(ch[1] - 6 * u)} ${f(ch[0] - 7 * u)},${f(ch[1] - 6 * u)}Z" fill="${C.hair}"/>`);
+  jw += (`<path d="M${f(ch[0] - 1 * u)},${f(ch[1] + 4 * u)} C${f(ch[0] - 1.5 * u)},${f(ch[1] + 18 * u)} ${f(gt[0] + 1 * u)},${f(gt[1] - 14 * u)} ${f(gt[0] + 0.6 * u)},${f(gt[1] - 6 * u)}" stroke="#3a3530" stroke-width="${f(0.7 * u)}" fill="none" opacity="0.7"/>`);
   {
     const root = [F.nostril[0] - 2 * u, F.nostril[1] + 5 * u];
     const end = [cn[0] + 3.5 * u, cn[1] + 9 * u];
@@ -339,7 +338,7 @@ function faceSide(F, E, o = {}) {
     const th = 5.2 * u;
     add(`<path d="M${f(bf[0])},${f(bf[1] + th * 0.4)} L${f(bf[0] - 0.6 * u)},${f(bf[1] - th * 0.6)} C${f(bf[0] + 12 * u)},${f(bf[1] - th - 2.6 * u - k * 1.5 * u)} ${f(bb[0] - 14 * u)},${f(bb[1] - 3 * u)} ${P(bb)} C${f(bb[0] - 14 * u)},${f(bb[1] + 0.4 * u)} ${f(bf[0] + 12 * u)},${f(bf[1] + 0.2 * u)} ${f(bf[0])},${f(bf[1] + th * 0.4)}Z" fill="${C.hair}"/>`);
   }
-  return s;
+  return o.split ? { head: s, back, jaw: jw, front } : s + back + jw + front;
 }
 
 // ------------------------------------------------------------------ hat (毡笠), rings, tattoo
@@ -643,6 +642,14 @@ export function lin(opt = {}) {
   }
   const O = { hat: opt.hat !== false, tattoo: opt.tattoo ?? (costume === 'C' ? 1 : 0), rings: opt.headCloth !== 'plain', cangue: !!opt.cangue };
   const ang = jointAngles(D, view, pose, flip);
+  let SF = null;
+  if (view === 'side') {
+    const jp = D.parts.jaw, theta = jp ? -14 * Math.max(0, E.open) : 0;
+    if (jp) ang.jaw = theta;
+    SF = faceSide(M.face, E, { split: true, tmj: jp ? jp.pivot : null, theta });
+    if (!jp) { SF.head += SF.back + SF.jaw + SF.front; SF.back = SF.jaw = SF.front = ''; }
+    O.sideFace = SF;
+  }
   const W = {};
   const wm = (n) => {
     if (W[n]) return W[n];
@@ -663,6 +670,11 @@ export function lin(opt = {}) {
     let inner = partSVG(D, n, '', PAL);
     const side = /^(arm|hand)/.test(n) ? (view === 'side' ? nearSide : n.slice(-1)) : null;
     if (n === 'head') inner = headBack(D, view, costume, E, pose, O) + inner + headExtras(D, view, costume, E, pose, O);
+    if (n === 'jaw' && SF) {
+      inner += SF.jaw;
+      if (SF.back) items.push([D.parts.head.z + 0.1, `<g data-part="mouth" transform="${mstr(wm('head'))}">${SF.back}</g>`]);
+      if (SF.front) items.push([p.z + 0.05, `<g data-part="mouthLine" transform="${mstr(wm('head'))}">${SF.front}</g>`]);
+    }
     if (/^hand/.test(n) && pose[`fist${side}`]) inner = fistFor(D, n, view, Href);
     let g = `<g data-part="${n}" transform="${mstr(wm(n))}">${inner}</g>`;
     let z = n === 'head' && O.cangue ? 26 : p.z;
@@ -750,7 +762,7 @@ function headExtras(D, view, costume, E, pose, O) {
     if (O.tattoo > 0) s += `<g opacity="${f(Math.min(1, O.tattoo))}">${tattoo(tat, u)}</g>`;
     if (costume === 'C' && F.hat && O.hat) s += cordFront(F, u, E) + hatFront(F.hat, u, false);
   } else {
-    s += faceSide(F, E, {});
+    s += O.sideFace ? O.sideFace.head : faceSide(F, E, {});
     if (costume === 'A' && F.rings && O.rings) s += F.rings.map((c) => jadeRing(c, u, 3.8)).join('');
     if (O.tattoo > 0) s += `<g opacity="${f(Math.min(1, O.tattoo))}">${tattoo(tat, u)}</g>`;
     if (costume === 'C' && F.hat && O.hat) s += cordSide(F, u, E) + hatSide(F.hat, u, false);

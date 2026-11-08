@@ -53,7 +53,7 @@ const STROKES = [
   [19.615, 19.70, 'M262,262 L320,330 L382,388', 84],
   // 冲: 冫 dots arrive as tears (handled below); 口 then the long vertical of 中
   [20.13, 20.20, 'M528,186 L544,300', 52],
-  [20.17, 20.25, 'M528,190 L690,196 L668,282', 56],
+  [20.17, 20.25, 'M530,198 L690,198 L668,282', 42],
   [20.22, 20.30, 'M546,286 L676,282', 48],
   [20.329, 20.43, 'M590,122 L592,466', 76],
 ];
@@ -165,7 +165,7 @@ function emblem(t) {
   const k = ramp(t, T_LOWER, 26.90, E.in);
   const pose = {
     shoulderL: lerp(26, 75, k), elbowL: lerp(122, 5, k), headTilt: lerp(0, -3, k),
-    spear: { hand: 'L', angle: lerp(-52, 90, k), grip: lerp(0.12, 0.2, k), gourd: true },
+    spear: { hand: 'L', angle: lerp(-40, 90, k), grip: lerp(0.12, 0.2, k), gourd: true },
   };
   const fig = lin({ view: 'side', costume: 'C', x: EM.x, y: EM.y, height: EM.h, pose });
   return `<defs><filter id="${ID}sil" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feFlood flood-color="#15110E"/><feComposite in2="SourceAlpha" operator="in"/><feGaussianBlur stdDeviation="0.6"/></filter></defs>` +

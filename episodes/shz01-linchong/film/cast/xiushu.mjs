@@ -11,7 +11,7 @@
 // Layout (model_sheet §6): 36 × 40 cm portrait; heading 「休书」 + six text columns on the right two-thirds;
 // 花押 and the red 手模 in the left third. XS.anchor(name, w, h) gives the local point of '休' (heading),
 // 'sign' (花押 centre) and 'print' (palm-print centre).
-import { ASSET, furl, f2, clamp, rng, INK } from '../lib.mjs';
+import { ASSET, furl, f2, clamp, rng, INK, wipeMask } from '../lib.mjs';
 import { palm } from './palm.mjs';
 
 const TEXT = ['东京八十万禁军教头林冲', '为因身犯重罪断配沧州', '去后存亡不保有妻张氏', '年少情愿立此休书任从', '改嫁永无争执委是自行', '情愿即非相逼'];
@@ -20,8 +20,8 @@ export const XS = {
   anchor(name, w = 680, h = 760) {
     const k = w / 680;
     if (name === '休') return [632 * k, 112 * k];
-    if (name === 'sign') return [118 * k, h - 300 * k];
-    if (name === 'print') return [124 * k, h - 190 * k];
+    if (name === 'sign') return [116 * k, h - 540 * k];
+    if (name === 'print') return [128 * k, h - 230 * k];
     return [w / 2, h / 2];
   },
 };
@@ -62,9 +62,11 @@ export function xiushu(o = {}) {
   // 花押 (signature flourish)
   const [sx, sy] = XS.anchor('sign', w, h);
   if (o.sign) {
-    const len = 1000;
-    const d = `M${f2(sx - 52 * k)},${f2(sy - 28 * k)} C${f2(sx - 20 * k)},${f2(sy - 70 * k)} ${f2(sx + 44 * k)},${f2(sy - 52 * k)} ${f2(sx + 8 * k)},${f2(sy - 12 * k)} C${f2(sx - 28 * k)},${f2(sy + 24 * k)} ${f2(sx - 46 * k)},${f2(sy + 30 * k)} ${f2(sx - 10 * k)},${f2(sy + 18 * k)} C${f2(sx + 30 * k)},${f2(sy + 4 * k)} ${f2(sx + 56 * k)},${f2(sy + 2 * k)} ${f2(sx + 50 * k)},${f2(sy + 26 * k)} M${f2(sx - 58 * k)},${f2(sy + 40 * k)} L${f2(sx + 60 * k)},${f2(sy + 36 * k)}`;
-    s += `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${f2(6.5 * k)}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${len}" stroke-dashoffset="${f2(len * (1 - clamp(o.sign)))}" opacity="${f2(ink)}"/>`;
+    // a cursive 冲 (his name) as the mark, with a long tapering brush tail: never a digit-like stroke
+    const bx = sx - 70 * k, by = sy - 70 * k, bw = 150 * k, bh = 150 * k;
+    const m = wipeMask(bx, by, bw, bh, clamp(o.sign), 'right', 0.25);
+    const tail = `M${f2(sx - 64 * k)},${f2(sy + 50 * k)} C${f2(sx - 30 * k)},${f2(sy + 40 * k)} ${f2(sx + 30 * k)},${f2(sy + 42 * k)} ${f2(sx + 74 * k)},${f2(sy + 38 * k)} C${f2(sx + 34 * k)},${f2(sy + 48 * k)} ${f2(sx - 24 * k)},${f2(sy + 54 * k)} ${f2(sx - 60 * k)},${f2(sy + 60 * k)} C${f2(sx - 70 * k)},${f2(sy + 60 * k)} ${f2(sx - 70 * k)},${f2(sy + 52 * k)} ${f2(sx - 64 * k)},${f2(sy + 50 * k)}Z`;
+    s += `<defs>${m.defs}</defs><g ${m.attr} opacity="${f2(ink)}"><text x="${f2(sx)}" y="${f2(sy + 4 * k)}" font-family="Zhi Mang Xing" font-size="${f2(104 * k)}" fill="${INK}" text-anchor="middle" dominant-baseline="central" transform="rotate(-8 ${f2(sx)} ${f2(sy)})">冲</text><path d="${tail}" fill="${INK}"/></g>`;
   }
   // palm print (手模) in the left third
   if (o.print) {

@@ -12,10 +12,10 @@ export function palmSVG(o = {}) {
   const col = o.col || SEAL;
   // finger: base (bx, by), angle, width, segment lengths (proximal, middle, distal), gaps at the joints
   const fingers = [
-    { bx: 112, by: 168, a: -9, w: 33, seg: [52, 34, 34] },  // index
-    { bx: 150, by: 160, a: -2, w: 35, seg: [58, 38, 36] },  // middle
-    { bx: 187, by: 166, a: 6, w: 33, seg: [54, 36, 33] },   // ring
-    { bx: 220, by: 182, a: 15, w: 29, seg: [42, 28, 28] },  // little
+    { bx: 112, by: 172, a: -9, w: 34, seg: [56, 36, 36] },  // index
+    { bx: 150, by: 166, a: -2, w: 36, seg: [62, 40, 38] },  // middle
+    { bx: 187, by: 170, a: 6, w: 34, seg: [58, 38, 35] },   // ring
+    { bx: 220, by: 184, a: 15, w: 30, seg: [46, 30, 29] },  // little
   ];
   let ink = '';
   // palm pad
@@ -26,7 +26,7 @@ export function palmSVG(o = {}) {
   for (const fg of fingers) {
     let y = fg.by;
     const parts = [];
-    fg.seg.forEach((L, i) => { const gap = i === 0 ? 0 : 5; y -= gap; parts.push([y - L, L]); y -= L; });
+    fg.seg.forEach((L, i) => { const gap = i === 0 ? 0 : 3.5; y -= gap; parts.push([y - L, L]); y -= L; });
     for (const [yy, L] of parts) ink += rr(fg.bx - fg.w / 2, yy, fg.w, L, fg.w * 0.48, fg.a, fg.bx, fg.by);
   }
   // thumb: two pads angled out to the upper left from the thenar
@@ -43,16 +43,16 @@ export function palmSVG(o = {}) {
   let ridges = '';
   for (let i = 0; i < 46; i++) {
     const y = 120 + i * 6 + R() * 3, x0 = 60 + R() * 30, x1 = 250 - R() * 30, a = 4 + R() * 6;
-    ridges += `<path d="M${f2(x0)},${f2(y)} Q${f2((x0 + x1) / 2)},${f2(y + a)} ${f2(x1)},${f2(y + R() * 4 - 2)}" fill="none" stroke="#F1E4C6" stroke-width="1.3" opacity="0.32"/>`;
+    ridges += `<path d="M${f2(x0)},${f2(y)} Q${f2((x0 + x1) / 2)},${f2(y + a)} ${f2(x1)},${f2(y + R() * 4 - 2)}" fill="none" stroke="#F1E4C6" stroke-width="1.1" opacity="0.22"/>`;
   }
   for (const fg of fingers) for (let j = 0; j < 9; j++) {
     const yy = fg.by - 20 - j * 13;
-    ridges += `<path d="M${f2(fg.bx - fg.w * 0.4)},${f2(yy)} Q${f2(fg.bx)},${f2(yy - 5)} ${f2(fg.bx + fg.w * 0.4)},${f2(yy)}" fill="none" stroke="#F1E4C6" stroke-width="1.2" opacity="0.3" transform="rotate(${fg.a} ${fg.bx} ${fg.by})"/>`;
+    ridges += `<path d="M${f2(fg.bx - fg.w * 0.4)},${f2(yy)} Q${f2(fg.bx)},${f2(yy - 5)} ${f2(fg.bx + fg.w * 0.4)},${f2(yy)}" fill="none" stroke="#F1E4C6" stroke-width="1.0" opacity="0.2" transform="rotate(${fg.a} ${fg.bx} ${fg.by})"/>`;
   }
   const defs = `<filter id="pmrough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="3" result="n"/>` +
     `<feDisplacementMap in="SourceGraphic" in2="n" scale="5" result="d"/>` +
     `<feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="1" seed="8" result="sp"/>` +
-    `<feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75" result="spm"/>` +
+    `<feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.9" result="spm"/>` +
     `<feComposite in="d" in2="spm" operator="in" result="speck"/>` +
     `<feGaussianBlur in="speck" stdDeviation="${f2(0.4 + (o.soak || 0) * 1.2)}"/></filter>`;
   let s = `<defs>${defs}</defs><g filter="url(#pmrough)"><g fill="${col}">${ink}</g>${creases}${ridges}</g>`;

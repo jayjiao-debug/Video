@@ -265,7 +265,7 @@ const rotP = (p) => { // sheet-local -> world
 const PRINT_L = XS.anchor('print', SH.w, SH.h);   // palm-print centre (cast/xiushu.mjs draws it 330 px high, rot −6°)
 const PRINT_W = rotP(PRINT_L);
 // promise row (sheet-local): ≈ 150 px glyphs, advance 172, centred on the sheet, screen y ≈ 430
-const PFS = 156, PADV = 172, PROW_Y = 360;
+const PFS = 168, PADV = 184, PROW_Y = 322;
 const PX = (i) => SH.w / 2 + (i - 2.5) * PADV;
 
 // L8 text glyph boxes, mirroring cast/xiushu.mjs (used only to seed the release particles)
@@ -369,11 +369,11 @@ function vignette(v, t, id) {
   if (t < a || t > a + life + 0.6) return '';
   const k = ramp(t, a, a + life, E.inOut);
   const pos = [SHC[0] + v.from[0] * (1 - k), SHC[1] + v.from[1] * (1 - k)];
-  const sc = lerp(1.15, 0.45, k);
+  const sc = lerp(1.45, 0.5, k);
   const op = Math.min(ramp(t, a, a + 0.35, E.out), 1 - ramp(t, a + life * 0.72, a + life, E.in));
   if (op <= 0.01) return '';
   return `<defs>${rg(id + 'm', [[0, '#fff'], [0.62, '#fff'], [1, '#000']], 0.5, 0.5, 0.5)}<mask id="${id}" maskUnits="userSpaceOnUse" x="-200" y="-200" width="400" height="400"><ellipse cx="0" cy="0" rx="190" ry="190" fill="url(#${id}m)"/></mask></defs>` +
-    `<g transform="translate(${f2(pos[0])} ${f2(pos[1])}) scale(${f2(sc)})" opacity="${f2(op * 0.85)}"><g mask="url(#${id})"><rect x="-200" y="-200" width="400" height="400" fill="#8a8274" opacity="0.35"/>${v.draw(t)}</g></g>`;
+    `<g transform="translate(${f2(pos[0])} ${f2(pos[1])}) scale(${f2(sc)})" opacity="${f2(op * 0.95)}"><g mask="url(#${id})"><rect x="-200" y="-200" width="400" height="400" fill="#b3aa98" opacity="0.42"/>${v.draw(t)}</g></g>`;
 }
 function absorbStain(t) {
   // each arriving memory soaks into the paper: a soft ink stain that blooms and fades (sheet-local)
@@ -391,8 +391,15 @@ function absorbStain(t) {
 function inkNight(t) {
   return `<defs>${rg('t13night', [[0, '#343946'], [0.55, '#2A2E38'], [1, '#14161C']], 0.55, 0.48, 0.75)}${rg('t13halo', [[0, '#E8D6AE', 0.32], [1, '#E8D6AE', 0]])}${rg('t13stain', [[0, '#2a2018', 0.6], [0.6, '#2a2018', 0.25], [1, '#2a2018', 0]])}${rg('t13pb', [[0, '#E0503E', 0.55], [0.5, '#E0503E', 0.22], [1, '#E0503E', 0]])}` +
     `<filter id="t13inkf" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.25 0.35 0.1 0 0.02  0.24 0.34 0.1 0 0.02  0.22 0.3 0.1 0 0.02  0 0 0 1 0"/></filter></defs>` +
-    `<rect x="-200" y="-200" width="2320" height="1480" fill="url(#t13night)"/>`;
+    `<rect x="-200" y="-200" width="2320" height="1480" fill="url(#t13night)"/>` + CLOUDS.replace('<image ', `<image transform="translate(${f2(-160 + (t - T32) * 6)} -60)" `);
 }
+const CLOUDS = (() => {
+  // faint ink-wash clouds drifting in the night around the paper (baked)
+  const R = rng(41);
+  let s = `<filter id="t13cl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="38"/></filter><g filter="url(#t13cl)">`;
+  for (let i = 0; i < 16; i++) s += `<ellipse cx="${f2(R() * 2200)}" cy="${f2(R() * 1200)}" rx="${f2(160 + R() * 260)}" ry="${f2(60 + R() * 120)}" fill="${R() < 0.5 ? '#11131a' : '#3d4352'}" opacity="${f2(0.25 + R() * 0.3)}"/>`;
+  return bake('t13_clouds', 2200, 1200, s + '</g>');
+})();
 function hazeBg(op) {
   if (op <= 0) return '';
   return `<defs>${lg('t13hz', [[0, '#E9DCC2'], [0.5, '#E3D3B5'], [1, '#CDBB98']])}${rg('t13hzs', [[0, '#FFF6E2', 0.7], [1, '#FFF6E2', 0]])}</defs><g opacity="${f2(op)}"><rect x="-200" y="-200" width="2320" height="1480" fill="url(#t13hz)"/>` +
@@ -406,13 +413,13 @@ function s32cam(t) {
   // push toward the handprint during the gather (the print drifts toward the centre so the sheet stays in frame),
   // pull back for the promise, hold for the release; S33: the paper shrinks to the left third, print at (640, 440)
   const ps0 = PRINT_W;
-  const z = kf(t, [[T32, 0.94], [129.2, 1.0, E.out], [132.8, 1.1, E.inOut], [133.3, 1.1], [135.6, 1.0, E.inOut]]);
+  const z = kf(t, [[T32, 0.94], [129.2, 1.0, E.out], [132.8, 1.06, E.inOut], [133.3, 1.06], [135.6, 1.0, E.inOut]]);
   const kp = Math.min(ramp(t, 129.2, 132.8, E.inOut), 1 - ramp(t, 133.3, 135.6, E.inOut));
-  let q = mix(ps0, [ps0[0] + 40, ps0[1] - 120], kp);
+  let q = mix(ps0, [ps0[0] + 30, ps0[1] - 10], kp);
   let zz = z;
   if (t > T33 - 0.01) {
     const k = ramp(t, T33, 138.4, E.inOut);
-    q = mix(ps0, [640, 440], k);
+    q = mix(ps0, [640, 470], k);
     zz = lerp(1.0, 0.7, k) * (1 + 0.03 * ramp(t, 138.4, TEND, E.sine));
   }
   return camAt(PRINT_W, q, zz);
@@ -441,8 +448,9 @@ function paperLayer(t, c, opts = {}) {
       const a = (t - REL - p.d) / p.life;
       if (a < 0 || a > 1) continue;
       const tt = t - REL - p.d;
-      const rise = p.vy * tt * (1 - a * 0.3);
-      const x = p.x + noise1(p.ph + tt * 1.6, 3) * 34 * a + p.sx * 60 * a + (p.x - SH.w / 2) * 0.22 * a;
+      const rise = 150 * Math.min(tt, 0.28) + p.vy * Math.max(0, tt - 0.14) * (1 - a * 0.3);
+      const dsp = ramp(tt, 0.12, 0.6, E.in);
+      const x = p.x + (noise1(p.ph + tt * 1.6, 3) * 34 * a + p.sx * 60 * a + (p.x - SH.w / 2) * 0.22 * a) * dsp;
       const y = p.y - rise;
       const w = ramp(a, 0.06, 0.42, E.inOut);
       const col = w < 0.33 ? '#1A1410' : w < 0.66 ? '#77716a' : '#F1F3F5';
@@ -495,8 +503,9 @@ const ENDBG = (() => {
   const c = s32cam(t);
   const inner = `<defs><filter id="t13eb" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="12"/></filter></defs>` +
     `<rect width="1920" height="1080" fill="#14110E"/>` +
-    `<g filter="url(#t13eb)" opacity="0.35">${L(c, 0, hazeBg(1), { id: 'eb1' })}${L(c, 1, paperLayer(t, c, { blank: true, printOp: 0 }), { id: 'eb2' })}${fistLayer(t, true)}</g>` +
-    `<image href="${furl(ASSET + '/paper.png')}" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice" opacity="0.07" style="mix-blend-mode:screen"/>`;
+    `<g filter="url(#t13eb)" opacity="0.24">${L(c, 0, hazeBg(1), { id: 'eb1' })}${L(c, 1, paperLayer(t, c, { blank: true, printOp: 0 }), { id: 'eb2' })}${fistLayer(t, true)}</g>` +
+    `<image href="${furl(ASSET + '/paper.png')}" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice" opacity="0.06" style="mix-blend-mode:screen"/>` +
+    `<radialGradient id="t13ev" cx="0.5" cy="0.45" r="0.75"><stop offset="0.5" stop-color="#0c0a08" stop-opacity="0"/><stop offset="1" stop-color="#0c0a08" stop-opacity="0.6"/></radialGradient><rect width="1920" height="1080" fill="url(#t13ev)"/>`;
   return bake('t13_endbg', 1920, 1080, inner);
 })();
 
@@ -557,13 +566,13 @@ export default {
   frame(t) {
     if (t < T32) return s31(t);
     let s = '';
-    if (t < T32 + 0.5) {
-      // light bloom hand-over: the room (dimmed, glowing pool) under the arriving 休书 night
-      const k = ramp(t, T32 + 0.05, T32 + 0.45, E.inOut);
-      s += s31(Math.min(t, T32 + 0.45));
-      s += `<g opacity="${f2(k)}">${s32(t)}</g>`;
-      const g = 1 - ramp(t, T32 + 0.1, T32 + 0.5, E.out);
-      s += `<rect width="1920" height="1080" fill="#FFF3D6" opacity="${f2(0.3 * g * ramp(t, T32 - 0.1, T32 + 0.1))}"/>`;
+    if (t < T32 + 0.55) {
+      // light bloom hand-over: the pool's glow swells over everything, the 休书 night emerges from inside it
+      const k = ramp(t, T32 - 0.05, T32 + 0.22, E.inOut);
+      if (k < 1) s += s31(Math.min(t, T32 + 0.3));
+      s += k < 1 ? `<g opacity="${f2(k)}">${s32(t)}</g>` : s32(t);
+      const g = t < T32 + 0.08 ? ramp(t, T32 - 0.2, T32 + 0.08, E.in) : 1 - ramp(t, T32 + 0.08, T32 + 0.55, E.out);
+      s += `<defs>${rg('t13bl2', [[0, '#FFF6E2', 1], [0.6, '#FFEFD0', 0.85], [1, '#F2DDB4', 0.55]], 0.42, 0.62, 0.8)}</defs><rect width="1920" height="1080" fill="url(#t13bl2)" opacity="${f2(0.82 * g)}"/>`;
       return s;
     }
     if (t < 141.45) return s32(t);

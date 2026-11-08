@@ -58,9 +58,12 @@ const handAt = (mode, x, y, len, rot = 0, sx = 1, sy = 1, extra = '') =>
 function inkstone(x, y, w) {
   const k = w / 380;
   return `<g transform="translate(${f2(x)} ${f2(y)}) scale(${f2(k)})">` +
-    `<rect x="0" y="0" width="380" height="250" rx="34" fill="#2B2826" ${ln(3)}/><rect x="4" y="232" width="372" height="26" rx="12" fill="#1A1817"/>` +
-    `<rect x="24" y="22" width="332" height="206" rx="26" fill="#3A3633"/><ellipse cx="190" cy="74" rx="120" ry="34" fill="#141210"/>` +
-    `<ellipse cx="170" cy="66" rx="60" ry="10" fill="#4a4642" opacity="0.6"/><path d="M60,150 C140,140 260,140 330,160" stroke="#4a4642" stroke-width="3" fill="none" opacity="0.5"/></g>`;
+    `<path d="M20,40 C40,8 330,0 360,30 C384,70 384,200 356,234 C320,262 50,262 22,232 C0,190 2,80 20,40Z" fill="#3E3B38" ${ln(3)}/>` +
+    `<path d="M22,232 C50,262 320,262 356,234 L352,250 C318,276 50,276 20,248Z" fill="#232120"/>` +
+    `<path d="M50,58 C80,36 300,32 330,56 C348,90 346,190 326,212 C290,232 84,232 54,212 C34,180 34,92 50,58Z" fill="#4F4B47"/>` +
+    `<path d="M90,62 C120,44 270,44 300,64 C316,84 300,118 270,124 C220,132 140,132 110,124 C80,116 74,82 90,62Z" fill="#141210"/>` +
+    `<path d="M120,72 C160,62 230,62 262,74" stroke="#5a5550" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7"/>` +
+    `<path d="M70,170 C140,158 250,158 320,176" stroke="#5f5a55" stroke-width="2.5" fill="none" opacity="0.6"/></g>`;
 }
 function brushSVG(tip, top, w = 13) {
   // shaft from tip (wet, dark) to top (bamboo, with a cap and loop)
@@ -91,11 +94,15 @@ const S01_TABLE = bake('t01table', 2400, 1500, (() => {
 })());
 // the summer daylight shaft through the lattice (top-left) and the warm-shadow room around it
 function s01Light(c) {
-  const shaft = `<path d="M-300,-200 L900,-200 L1980,1300 L560,1300Z" fill="url(#t01shaft)"/>`;
+  // warm daylight pool on the sheet (lattice window, top left); faint lattice bars inside it; the room falls into warm shadow
   let bars = '';
-  for (let i = 0; i < 6; i++) { const o = -240 + i * 220; bars += `<path d="M${o},-200 L${o + 70},-200 L${o + 70 + 1080},1300 L${o + 1080},1300Z" fill="#2A1E17" opacity="0.18"/>`; }
-  return L(c, 1, `<defs>${lg('t01shaft', [[0, '#FFF4DC', 0.42], [0.6, '#FFE7B8', 0.22], [1, '#FFE7B8', 0]], 0, 0, 1, 1)}${rg('t01room', [[0.35, '#000', 0], [1, '#1A120D', 0.72]], 0.62, 0.42, 0.75)}</defs>` +
-    `<g style="mix-blend-mode:screen">${shaft}</g><g>${bars}</g><rect x="-400" y="-300" width="2700" height="1700" fill="url(#t01room)"/>`, { id: 't01light', bleed: 'all' });
+  for (let i = 0; i < 6; i++) { const o = 380 + i * 170; bars += `<path d="M${o},-200 L${o + 46},-200 L${o + 46 + 760},1300 L${o + 760},1300Z" fill="#2A1E17"/>`; }
+  return L(c, 1, `<defs>${rg('t01pool', [[0, '#FFF4DC', 0.5], [0.55, '#FFE7B8', 0.2], [1, '#FFE7B8', 0]], 0.5, 0.5, 0.5)}` +
+    `${rg('t01room', [[0.3, '#000', 0], [0.75, '#160E0A', 0.45], [1, '#120B08', 0.82]], 0.58, 0.42, 0.72)}` +
+    `<clipPath id="t01poolc"><ellipse cx="1130" cy="400" rx="760" ry="560"/></clipPath></defs>` +
+    `<ellipse cx="1130" cy="400" rx="760" ry="560" fill="url(#t01pool)" style="mix-blend-mode:screen"/>` +
+    `<g clip-path="url(#t01poolc)" opacity="0.07">${bars}</g>` +
+    `<rect x="-400" y="-300" width="2700" height="1700" fill="url(#t01room)"/>`, { id: 't01light', bleed: 'all' });
 }
 
 // sheet placement on the table (S01) and frontal in her hands (S02); lift interpolates
@@ -153,16 +160,20 @@ function S01(t) {
   let hand = '';
   if (t < 4.6) {
     if (t < 1.05) {
-      // writing grip: brush tip finishing the flourish, flick at 0.337, then to the inkstone
-      const flick = ramp(t, T.brush - 0.05, T.brush + 0.12, E.out);
-      const toStone = ramp(t, 0.45, 1.0, E.inOut);
-      const tipEnd = [signP[0] + 50, signP[1] + 26];
-      const tip0 = mix([signP[0] + 10 + 40 * ramp(t, 0, T.brush, E.lin), signP[1] - 10 + 30 * ramp(t, 0, T.brush, E.lin)], [tipEnd[0] + 20, tipEnd[1] - 50], flick);
-      const tip = mix(tip0, [1560, 392], toStone);
-      const top = [tip[0] + 70 + 250 * toStone, tip[1] - 270 + 130 * toStone];
-      const hp = [tip[0] + 60, tip[1] + 30];
+      // writing grip: the tip finishes the flourish, flicks off at 0.337, then carries the brush to the inkstone
+      const kS2 = S.w / 680;
+      const sg = 0.6 + 0.4 * ramp(t, -0.6, T.brush - 0.02, E.lin);
+      const tipW = [signP[0] - 70 * kS2 + 150 * kS2 * sg, signP[1] + 30 * kS2];
+      const flick = ramp(t, T.brush - 0.04, T.brush + 0.14, E.out);
+      const toStone = ramp(t, 0.42, 1.0, E.inOut);
+      let tip = mix(tipW, [tipW[0] + 50, tipW[1] - 40], flick);
+      tip = mix(tip, [1520, 300], toStone);
+      let top = [tip[0] + 150, tip[1] + 300];
+      const lay = ramp(t, 0.82, 1.05, E.inOut);
+      tip = mix(tip, [1560, 392], lay); top = mix(top, [1880, 250], lay);
       hand += brushSVG(tip, top, 14);
-      hand += handAt('brush', hp[0] + 40, hp[1] + 90, 330, -28 + 30 * toStone);
+      const wrist = [tip[0] + 118 + 40 * toStone, tip[1] + 252 - 20 * toStone];
+      hand += handAt('brush', wrist[0], wrist[1], 300, -24 + 10 * toStone);
     } else {
       // flat hand: to the dish, press into the paste, to the print spot, hover, press, hold, lift away
       const dishP = [1660, 690], hover = [printP[0] + 20, printP[1] - 40];
@@ -172,7 +183,7 @@ function S01(t) {
       else if (t < 2.43) { p = mix(dishP, hover, ramp(t, 2.0, 2.43)); lift = 0.5 * Math.sin(ramp(t, 2.0, 2.43, E.lin) * Math.PI); }
       else if (t < T.press) { const tr = noise1(t * 14, 3) * 3; p = [hover[0] + tr, hover[1] - 20 * ramp(t, 2.43, 2.75) + 20 * ramp(t, 2.75, T.press, E.in) + noise1(t * 13, 7) * 2.5]; lift = 0.22 * (1 - ramp(t, 2.43, T.press, E.in)); }
       else if (t < T.lift) { p = [hover[0], hover[1]]; lift = 0; }
-      else { const k = ramp(t, T.lift, 4.4, E.in); p = mix(hover, [1500, 1350], k); lift = 0.5 * Math.min(1, k * 3); }
+      else { const k = ramp(t, T.lift, 4.12, E.inOut); p = mix(hover, [1700, 1300], k); lift = Math.min(1, k * 2.5); }
       const sc = 1 + lift * 0.12;
       const sqx = 1 + sq * 0.04, sqy = 1 - sq * 0.05;
       // wrist below the palm centre; palm centre ~ 45 units above the wrist
@@ -188,11 +199,13 @@ function S01(t) {
     const k = ramp(t, T.her - 0.3, T.her + 0.25, E.out);
     const edge = sheetPt(S, [150 * kS, 0]), edge2 = sheetPt(S, [S.w - 150 * kS, 0]);
     const fin = (pt, flip) => {
-      const y = pt[1] - 120 * (1 - k);
-      return `<g transform="translate(${f2(pt[0])} ${f2(y)}) rotate(${f2(180 + S.rot)}) scale(${flip ? -1 : 1} 1)">` +
-        `<path d="M-60,-260 C-58,-180 -50,-100 -40,-40 L40,-40 C46,-100 52,-180 60,-260Z" fill="${COLW.coat}" ${ln(2.4)}/>` +
-        [-26, -9, 8, 24].map((x, i) => `<rect x="${x - 8}" y="${-46 + (i % 2) * 4}" width="16" height="${40 - Math.abs(i - 1.5) * 4}" rx="8" fill="${COLW.skin}" ${ln(2)}/>`).join('') +
-        `<path d="M-36,-46 C-36,-70 36,-70 36,-46Z" fill="${COLW.skin}" ${ln(2)}/></g>`;
+      const y = pt[1] - 140 * (1 - k);
+      return `<g transform="translate(${f2(pt[0])} ${f2(y)}) rotate(${f2(S.rot)}) scale(${flip ? -1 : 1} 1)">` +
+        `<path d="M-80,-420 L80,-420 L66,-70 L-62,-70Z" fill="${COLW.coat}" ${ln(2.4)}/><path d="M-64,-86 L66,-86 L66,-66 L-62,-66Z" fill="${COLW.trim}" ${ln(2)}/>` +
+        `<path d="M-56,-72 C-60,-40 -50,-8 -30,4 C-6,16 30,12 46,-6 C58,-24 58,-52 52,-72Z" fill="${COLW.skin}" ${ln(2.2)}/>` +
+        `<path d="M-40,-14 C-44,10 -38,40 -24,58 C-14,68 2,64 4,50 C4,30 -2,6 -10,-10Z" fill="${COLW.skin}" ${ln(2.2)}/>` +
+        `<path d="M-30,30 C-24,34 -14,34 -8,30" fill="none" stroke="${COLW.skinS}" stroke-width="1.8"/>` +
+        `<path d="M-16,-40 C0,-46 20,-46 36,-40" fill="none" stroke="${COLW.skinS}" stroke-width="1.8"/></g>`;
     };
     s += L(c, 1.1, fin(edge, false) + fin(edge2, true), { id: 't01herfingers', bleed: 't' });
   }

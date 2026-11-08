@@ -90,7 +90,7 @@ def build(view, debug=None):
     for e in S.get('erase', []):
         m = polymask(e['poly'], shp)
         if e.get('pred'):
-            m &= pred_mask(e['pred'], L, cen) if e['pred'] != 'notskin_soft' else (L != nearest_label('#efb58e'))
+            m &= pred_mask(e['pred'], L, cen) if e['pred'] != 'notskin_soft' else (L != nearest_label(S.get('skin', '#efb58e')))
         mode = e.get('mode', 'near')
         if mode == 'bg':
             FG &= ~m
@@ -99,8 +99,8 @@ def build(view, debug=None):
             if 'within' in e:
                 src &= polymask(e['within'], shp)
             L = _fill_from(L, m & FG, src)
-        else:  # explicit colour
-            L[m & FG] = nearest_label(mode)
+        else:  # explicit colour ('skin' = this view's skin tone)
+            L[m & FG] = nearest_label(S.get('skin', '#efb58e') if mode == 'skin' else mode)
         if e.get('pred') == 'notskin_soft':  # only small specks of ink (stubble, tattoo dots)
             mm = polymask(e['poly'], shp)
             nn, cc, st, _ = cv2.connectedComponentsWithStats((INK & mm).astype(np.uint8), connectivity=8)
