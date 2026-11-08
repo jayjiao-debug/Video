@@ -207,19 +207,21 @@ function sceneA(t) {
 const WS = 300;                    // 林冲 1.80 m = 300 px
 const FEET = 770;
 // camera x (world px at d 1): walk 4.6 px/frame, stop for the look back, resume, then the eye-line pan left
-function camBx(t) {
-  const v = 4.6 * FPS;              // px/s
-  const seg = (a, b, ea = 0.15, eb = 0.15) => {
-    // distance travelled at speed v between a and b with eased ends, evaluated at t
+function walkCam(t) {
+  // distance walked (world px at d 1): 4.6 px/frame, stop for the look back, resume
+  const v = 4.6 * FPS;
+  const seg = (a, b, ea) => {
     if (t <= a) return 0;
-    const tt = Math.min(t, b), D = b - a;
-    const x = (tt - a) / D;
-    const sm = x < ea / D ? (x * x) / (2 * (ea / D)) : x > 1 - eb / D ? 1 - eb / D / 2 - ((1 - x) * (1 - x)) / (2 * (eb / D)) - (1 - eb / D - ea / D / 2) * 0 : x - ea / D / 2;
+    const tt = Math.min(t, b), D = b - a, x = (tt - a) / D, e = ea / D;
+    const sm = x < e ? (x * x) / (2 * e) : x > 1 - e ? 1 - e - ((1 - x) * (1 - x)) / (2 * e) + e / 2 - e / 2 : x - e / 2;
     return v * D * Math.max(0, sm);
   };
-  let x = seg(63.9, 65.52, 0.01, 0.22) + seg(66.56, 67.3, 0.2, 0.01);
-  // pan left along his eye-line (accelerates to ~22 px/frame)
-  if (t > T.pan) { const u = t - T.pan; x -= 0.5 * 640 * Math.min(u, 0.85) ** 2 + (u > 0.85 ? 0 : 0); }
+  return seg(63.9, 65.52, 0.22) + seg(66.56, 69.0, 0.2);
+}
+function camBx(t) {
+  // the camera tracks the walk, then pans left along his eye-line (accelerating to ≈ 18 px/frame)
+  let x = walkCam(t);
+  if (t > T.pan) { const u = Math.min(t - T.pan, 0.85); x -= 0.5 * 640 * u * u + walkCam(t) - walkCam(T.pan); }
   return x;
 }
 function walkPhase(t) {
@@ -240,11 +242,11 @@ function linWalk(t, x, y) {
   if (!ln || !lf) return s;
   const legs = `<g transform="${root}"><g transform="rotate(${f2(-a)} 428 842)">${lf}</g><g transform="rotate(${f2(a)} 436 842)">${ln}</g></g>`;
   // legs must sit behind the robe: insert them before the rest of the body; hide the 东京 sleeve roundel
-  return legs + r2 + `<g transform="${root}"><circle cx="520" cy="492" r="17" fill="#3E465A"/></g>`;
+  return legs + r2 + `<g transform="${root}"><circle cx="514" cy="494" r="21" fill="#3E465A"/></g>`;
 }
 function linLookBack(t, x, y) {
   // front view, head turned to screen-left (toward the gate), body turned 20°: reads as a look over the shoulder
-  return lin({ view: 'front', costume: 'A', ...CONV, cangue: true, tattoo: 1, expr: { brow: 0.35, eye: 0.85, look: [-0.9, -0.1], mouth: -0.2, jaw: 0 }, x, y, height: WS, pose: { headTurn: -0.75, shoulderR: 3, shoulderL: 3 } });
+  return lin({ view: 'front', costume: 'A', ...CONV, cangue: true, tattoo: 1, expr: { brow: 0.35, eye: 0.85, look: [-0.9, -0.1], mouth: -0.2, jaw: 0 }, x, y, height: WS, pose: { headTurn: -0.75, shoulderR: -7, shoulderL: -7 } });
 }
 
 function roadLayers() {
@@ -362,7 +364,7 @@ function sceneB(t) {
   s += L(c, 0.8, `<g transform="translate(-700 -20)">${RL.willows}</g>`, { id: 't08willow', bleed: 'lr' });
   s += L(c, 1, `<g transform="translate(-800 640)">${RL.road}</g>`, { id: 't08road', bleed: 'lrb' });
   // figures walk with the camera (world x = screen x + camera at d 1 while walking)
-  const walkX = (x0) => x0 + Math.min(cx, camBx(Math.min(t, T.pan)));
+  const walkX = (x0) => x0 + walkCam(t);
   const xl = walkX(840), xg1 = walkX(1150), xg2 = walkX(520);
   const { ph, walking } = walkPhase(t);
   let fig = '';

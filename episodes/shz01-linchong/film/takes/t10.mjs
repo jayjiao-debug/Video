@@ -105,7 +105,7 @@ function blocking(t) {
   // returns {x, dy, lean, sh, el, tilt, expr, quilt}
   const pushA = T0 + 0.18;
   const stoneX = lerp(900, CRACK - STONE_W, ramp(t, pushA, CONTACT, (u) => u * u * (3 - 2 * u)));
-  let x, dy = 0, lean = 0, sh = 0, el = 0, tilt = 0, expr = { ...EX.隐忍 }, quilt = 0;
+  let x, dy = 0, lean = 0, sh = 0, el = 0, tilt = 0, expr = { ...EX.隐忍 }, quilt = 0, b_fallen = null;
   const HANDX = 520; // hands reach ≈ 520 px ahead of the feet at lean 34
   if (t < CONTACT + 0.06) {
     lean = lerp(18, 38, ramp(t, T0 - 0.2, pushA, E.out));
@@ -138,11 +138,12 @@ function blocking(t) {
     dy = 0.43 * HF * (1 - k) + Math.sin(k * Math.PI) * -0.25 * HF * 0 + lerp(0, 180, k) * (k > 0.5 ? 1 : k * 2) - (k < 1 ? Math.sin(k * Math.PI) * 120 : 0);
     dy = Math.max(dy, 60);
     quilt = 0;
+    b_fallen = { x: x0, k: ramp(t, 80.26, 80.6, E.out) };
     lean = Math.sin(k * Math.PI) * 12;
     tilt = lerp(-6, 6, k);
     expr = { ...EX.隐忍, eye: 1.1, brow: 0.05, jaw: 0.5, mouth: -0.3, look: [0.4, 0] };
   }
-  return { x, dy, lean, sh, el, tilt, expr, quilt, stoneX };
+  return { x, dy, lean, sh, el, tilt, expr, quilt, stoneX, fallen: b_fallen };
 }
 function lcSide(t, b) {
   const pose = { headTilt: b.tilt, shoulderR: b.sh, elbowR: b.el, shoulderL: b.sh * 0.92, elbowL: b.el };
@@ -150,6 +151,12 @@ function lcSide(t, b) {
   return `<g transform="translate(${f2(b.x)} ${f2(FL + b.dy)}) rotate(${f2(b.lean)} -40 0)">${fig}</g>`;
 }
 function quiltSVG(b) {
+  if (b.fallen) {
+    // the quilt slides off as he jumps up and stays crumpled on the straw
+    const x = b.fallen.x, k = b.fallen.k, top = lerp(FL - 0.3 * HF + 30, FL - 70, k);
+    return `<path d="M${f2(x - 0.18 * HF)},${FL + 80} Q${f2(x - 0.2 * HF)},${f2(top + 30)} ${f2(x - 0.02 * HF)},${f2(top)} Q${f2(x + 0.18 * HF)},${f2(top + 10)} ${f2(x + 0.3 * HF)},${f2(top + 40)} Q${f2(x + 0.46 * HF)},${f2(FL - 10)} ${f2(x + 0.52 * HF)},${FL + 80}Z" fill="#5B5A5E"/>` +
+      `<path d="M${f2(x)},${f2(top + 14)} q40,30 90,24 M${f2(x + 0.2 * HF)},${f2(top + 30)} q10,40 50,50" stroke="#424147" stroke-width="5" fill="none"/>`;
+  }
   if (b.quilt <= 0.01) return '';
   const x = b.x, k = b.quilt, top = FL - 0.30 * HF * k + 30;
   return `<path d="M${f2(x - 0.16 * HF)},${FL + 80} Q${f2(x - 0.2 * HF)},${f2(top + 60)} ${f2(x - 0.06 * HF)},${f2(top + 6)} Q${f2(x + 0.02 * HF)},${f2(top - 8)} ${f2(x + 0.1 * HF)},${f2(top + 4)} Q${f2(x + 0.2 * HF)},${f2(top + 30)} ${f2(x + 0.3 * HF)},${f2(FL - 120)} Q${f2(x + 0.4 * HF)},${f2(FL - 40)} ${f2(x + 0.5 * HF)},${FL + 80}Z" fill="#5B5A5E"/>` +

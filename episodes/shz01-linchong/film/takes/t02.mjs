@@ -165,7 +165,7 @@ function emblem(t) {
   const k = ramp(t, T_LOWER, 26.90, E.in);
   const pose = {
     shoulderL: lerp(26, 75, k), elbowL: lerp(122, 5, k), headTilt: lerp(0, -3, k),
-    spear: { hand: 'L', angle: lerp(-40, 90, k), grip: lerp(0.12, 0.2, k), gourd: true },
+    spear: { hand: 'L', angle: lerp(-30, 90, k), grip: lerp(0.12, 0.2, k), gourd: true },
   };
   const fig = lin({ view: 'side', costume: 'C', x: EM.x, y: EM.y, height: EM.h, pose });
   return `<defs><filter id="${ID}sil" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feFlood flood-color="#15110E"/><feComposite in2="SourceAlpha" operator="in"/><feGaussianBlur stdDeviation="0.6"/></filter></defs>` +

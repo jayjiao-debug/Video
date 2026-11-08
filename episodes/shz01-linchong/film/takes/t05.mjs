@@ -420,3 +420,4 @@ export default {
     return s;
   },
 };
+export const __cam = (t) => (t < 42.3 ? camA(t) : camB(t));
