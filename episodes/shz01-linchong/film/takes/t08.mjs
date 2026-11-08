@@ -324,7 +324,7 @@ function linWalk(t, x, y) {
   if (!ln || !lf || !head) return s;
   const legs = `<g transform="${root}"><g transform="rotate(${f2(-a)} 428 842)">${lf}</g><g transform="rotate(${f2(a)} 436 842)">${ln}</g></g>`;
   // legs behind the robe; hide the 东京 sleeve roundel; the cangue board (long end forward and down) under the head
-  return legs + r2 + `<g transform="${root}"><circle cx="532" cy="485" r="26" fill="#4B546B"/>${boardSide()}${head}</g>`;
+  return legs + r2 + `<g transform="${root}"><circle cx="532" cy="485" r="26" fill="#3E4559"/>${boardSide()}${head}</g>`;
 }
 function linLookBack(t, x, y) {
   const k = ramp(t, 65.5, T.look, E.inOut);
