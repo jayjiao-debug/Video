@@ -29,47 +29,51 @@ const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 const ease = (x: number) => { const t = clamp01(x); return t * t * (3 - 2 * t); };
 const FIRE = 36, CUT = 53;
 /** the hero gun sits run out at its port */
-const RUN1 = 0.05;
+const RUN1 = 0.4;
 const runX = (_f: number) => RUN1;
 /** crew marks on deck: gunner at the breech, officer forward by the rail */
-const OFF_AT: [number, number] = [0.9, 0.8], GUN_AT: [number, number] = [-1.05, 0.72];
+const OFF_AT: [number, number] = [0.9, 0.8], GUN_AT: [number, number] = [-0.45, 0.7];
 /** touch hole on the gun, behind the trunnions (gun-local) */
 const VENT = V(-0.716, 0.885, 0);
 
 // ---------------- assets ----------------
-type Tex = { deck: THREE.Texture; pano: THREE.Texture; enemy: THREE.Texture; isl: THREE.Texture };
+type Tex = { deck: THREE.Texture; enemy: THREE.Texture; isl: THREE.Texture; clouds: THREE.Texture[] };
+// one flat-bottomed cartoon cumulus: white top, thin pink-lavender underside, soft 2px edge
+const cloudTex = (seed: number) => {
+  const W = 512, H = 256, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const g = cv.getContext("2d")!, rnd = (k: number) => { const h = Math.sin(seed * 91.7 + k * 12.9898) * 43758.5453; return h - Math.floor(h); };
+  const base = 214, x0 = 70 + 30 * rnd(1), x1 = 442 - 30 * rnd(2);
+  g.filter = "blur(1.6px)"; g.fillStyle = "#fff";
+  g.beginPath(); g.moveTo(x0, base); g.lineTo(x1, base); g.arc(x1, base - 26, 26, Math.PI / 2, -Math.PI / 2, true); g.lineTo(x0, base - 52); g.arc(x0, base - 26, 26, -Math.PI / 2, Math.PI / 2, true); g.fill();
+  const n = 4 + Math.floor(rnd(3) * 3);
+  for (let i = 0; i < n; i++) {
+    const u = (i + 0.5) / n, cx = x0 + 20 + (x1 - x0 - 40) * u + (rnd(10 + i) - 0.5) * 24;
+    const mid = 1 - Math.abs(u - 0.45) * 1.7, r = 34 + 62 * Math.max(0.15, mid) * (0.75 + 0.35 * rnd(20 + i));
+    g.beginPath(); g.arc(cx, base - 30 - r * 0.62, r, 0, Math.PI * 2); g.fill();
+  }
+  g.filter = "none"; g.globalCompositeOperation = "source-atop";
+  const gr = g.createLinearGradient(0, 20, 0, base);
+  gr.addColorStop(0, "#fffdf8"); gr.addColorStop(0.62, "#fbf8f2"); gr.addColorStop(0.8, "#f6ecef"); gr.addColorStop(0.93, "#e9e2f1"); gr.addColorStop(1, "#dcdcf5");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+};
 const loadTex = async (): Promise<Tex> => {
   const L = new THREE.TextureLoader();
-  const [deck, panoImg, enemy, islImg] = await Promise.all(["bt/deck_planks.jpg", "bt/sea_pano.jpg", "bt/enemy_ship.png", "bt/islands_pano.jpg"].map((u) => L.loadAsync(staticFile(u))));
-  // island plate: soft alpha fade on the left/right edges so it melts into the sea panorama behind it
+  const [deck, enemy, islImg] = await Promise.all(["bt/deck_planks.jpg", "bt/enemy_ship.png", "bt/islands_key.png"].map((u) => L.loadAsync(staticFile(u))));
+  // island plate (sky already keyed out): soft alpha fade on the left/right edges
   const im = islImg.image as HTMLImageElement, cv = document.createElement("canvas"); cv.width = im.width; cv.height = im.height;
   const g2 = cv.getContext("2d")!; g2.drawImage(im, 0, 0);
   g2.globalCompositeOperation = "destination-in";
   const gr = g2.createLinearGradient(0, 0, cv.width, 0);
   gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(0.3, "rgba(0,0,0,1)"); gr.addColorStop(0.9, "rgba(0,0,0,1)"); gr.addColorStop(1, "rgba(0,0,0,0)");
   g2.fillStyle = gr; g2.fillRect(0, 0, cv.width, cv.height);
-  const gv = g2.createLinearGradient(0, 0, 0, cv.height); gv.addColorStop(0, "rgba(0,0,0,0)"); gv.addColorStop(0.3, "rgba(0,0,0,1)"); gv.addColorStop(1, "rgba(0,0,0,1)");
-  g2.fillStyle = gv; g2.fillRect(0, 0, cv.width, cv.height);
   const isl = new THREE.CanvasTexture(cv);
-  const pim = panoImg.image as HTMLImageElement, pc = document.createElement("canvas"); pc.width = pim.width; pc.height = pim.height;
-  const pg = pc.getContext("2d")!, hw = pim.width / 2;
-  pg.drawImage(pim, 0, 0, hw, pim.height, 0, 0, hw, pim.height);
-  pg.save(); pg.translate(pim.width, 0); pg.scale(-1, 1); pg.drawImage(pim, 0, 0, hw, pim.height, 0, 0, hw, pim.height); pg.restore();
-  { const H = pim.height, hy = (1 - 0.323) * H;
-    pg.globalCompositeOperation = "multiply";
-    const top = pg.createLinearGradient(0, 0, 0, hy); top.addColorStop(0, "rgba(90,150,230,0.8)"); top.addColorStop(0.55, "rgba(150,195,245,0.4)"); top.addColorStop(1, "rgba(255,255,255,0)");
-    pg.fillStyle = top; pg.fillRect(0, 0, pim.width, hy);
-    pg.globalCompositeOperation = "screen";
-    const glow = pg.createLinearGradient(0, hy - 0.22 * H, 0, hy + 0.01 * H); glow.addColorStop(0, "rgba(255,190,140,0)"); glow.addColorStop(0.75, "rgba(255,190,140,0.5)"); glow.addColorStop(1, "rgba(255,205,165,0.2)");
-    pg.fillStyle = glow; pg.fillRect(0, hy - 0.22 * H, pim.width, 0.23 * H);
-    pg.globalCompositeOperation = "source-over"; }
-  const pano = new THREE.CanvasTexture(pc);
-  for (const t of [deck, pano, enemy, isl]) { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; }
+  for (const t of [deck, enemy, isl]) { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; }
   deck.wrapS = deck.wrapT = THREE.RepeatWrapping;
-  pano.wrapS = THREE.MirroredRepeatWrapping;
+  const clouds = [1, 2, 3, 4].map(cloudTex);
   const font = new FontFace("BtCap", `url(${staticFile("bt/nunito900.ttf")})`);
   await font.load(); (document.fonts as any).add(font);
-  return { deck, pano, enemy, isl };
+  return { deck, enemy, isl, clouds };
 };
 
 // ---------------- characters ----------------
@@ -114,12 +118,13 @@ const blast = (p: Pen, s: number) => {
   const puffs: [number, number, number][] = [[0, 0, 1], [-0.62, 0.18, 0.66], [0.6, 0.22, 0.62], [-0.25, -0.55, 0.62], [0.38, -0.5, 0.58], [0.05, 0.58, 0.56], [-0.66, -0.34, 0.48], [0.7, -0.15, 0.45]];
   const jit = (i: number) => 0.08 * Math.sin(i * 4.7 + s * 6);
   const lobes = (k: number, ox: number, oy: number, pad: number) => { g.beginPath(); puffs.forEach(([dx, dy, kk], i) => { const x = c + (dx + jit(i)) * R * 0.92 + ox, y = c + (dy + jit(i + 3)) * R * 0.92 + oy, r = R * kk * 0.78 * k + pad; if (r <= 0) return; g.moveTo(x + r, y); g.arc(x, y, r, 0, Math.PI * 2); }); };
-  const ball = (x: number, y: number, r: number) => { // small detached fire ball, three tones
-    g.fillStyle = "#d9481a"; g.beginPath(); g.arc(x, y, r + 5, 0, Math.PI * 2); g.fill();
-    g.fillStyle = "#f2702a"; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
-    g.fillStyle = "#ffc83a"; g.beginPath(); g.arc(x - r * 0.2, y - r * 0.22, r * 0.62, 0, Math.PI * 2); g.fill();
+  const ball = (x: number, y: number, r: number) => { // small detached fire blob: two lumps, highlight off to one side
+    const lump = (pad: number) => { g.beginPath(); g.arc(x, y, r + pad, 0, Math.PI * 2); g.moveTo(x + r * 0.55 + r * 0.7 + pad, y + r * 0.35); g.arc(x + r * 0.55, y + r * 0.35, r * 0.7 + pad, 0, Math.PI * 2); };
+    g.fillStyle = "#d9481a"; lump(5); g.fill();
+    g.fillStyle = "#f0862a"; lump(0); g.fill();
+    g.fillStyle = "#ffb43a"; g.beginPath(); g.arc(x - r * 0.25, y - r * 0.3, r * 0.45, 0, Math.PI * 2); g.fill();
   };
-  if (s > 0.12) for (const [ang, dist, kk] of [[-2.3, 1.25, 0.2], [0.5, 1.35, 0.16], [2.6, 1.2, 0.14]] as const) { const d = R * (dist + 0.35 * s); ball(c + d * Math.cos(ang), c + d * Math.sin(ang), R * kk); }
+  if (s > 0.12) { const d = R * (1.35 + 0.35 * s); ball(c + d * Math.cos(0.5), c + d * Math.sin(0.5), R * 0.16); }
   g.fillStyle = "#d9481a"; lobes(1, 0, 0, 7); g.fill();               // ink-ish rim
   g.fillStyle = "#f0862a"; lobes(1, 0, 0, 0); g.fill();               // outer tone
   g.fillStyle = "#ffa22e"; lobes(0.84, -0.08 * R, -0.08 * R, 0); g.fill(); // mid tone
@@ -168,11 +173,12 @@ const SHOT_A: CamK[] = [
   { t: 0 / 30, pos: [1.45, 1.75, -2.6], look: [-0.5, 0.85, 2.2], fov: 64 },
   { t: 10 / 30, pos: [-0.3, 1.75, -2.95], look: [-0.2, 1.0, 1.2], fov: 65 },
   { t: 20 / 30, pos: [-2.23, 2.28, -3.15], look: [0.09, 1.15, 0.27], fov: 64 },
-  { t: 28 / 30, pos: [-4.3, 2.45, -2.2], look: [-0.6, 1.35, 0.25], fov: 62 },
-  { t: 36 / 30, pos: [-3.3, 2.25, -0.95], look: [-0.2, 1.3, 0.35], fov: 60 },
-  { t: 42 / 30, pos: [-2.2, 1.9, -0.5], look: [1.8, 1.1, 0.3], fov: 62 },
-  { t: 47 / 30, pos: [-0.75, 1.74, -0.3], look: [5.0, 1.0, 0.45], fov: 64 },
-  { t: 53 / 30, pos: [0.2, 2.3, -0.32], look: [9.0, -0.6, 1.5], fov: 64 },
+  { t: 28 / 30, pos: [-2.7, 1.9, -1.3], look: [-0.1, 1.1, 0.4], fov: 66 },
+  { t: 36 / 30, pos: [-1.85, 1.5, -0.1], look: [2.05, 0.85, 0.87], fov: 70 },
+  { t: 40 / 30, pos: [-1.62, 1.52, -0.08], look: [2.6, 0.88, 0.8], fov: 69 },
+  { t: 44 / 30, pos: [-0.85, 1.58, -0.03], look: [4.2, 0.95, 0.7], fov: 66 },
+  { t: 48 / 30, pos: [-0.1, 1.68, -0.08], look: [6.5, 0.95, 0.85], fov: 64 },
+  { t: 53 / 30, pos: [0.3, 1.75, -0.2], look: [9.0, 0.9, 1.0], fov: 62 },
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
@@ -229,7 +235,7 @@ class BtWorld {
     for (const sl of [P.sail(-0.25, 8.6, -4.0, 6.5, 4.6, cloth, mastM), P.sail(-0.25, 12.6, -4.05, 5.2, 3.0, cloth, mastM)]) { sl.traverse((o) => { o.castShadow = false; }); R.add(sl); }
     // the two guns
     for (const z of [0, 3.1, -3.3]) {
-      const c = P.cannon(metal, woodCar, bore, iron, markM); c.group.position.set(0.05, 0, z); R.add(c.group); this.cannons.push(c);
+      const c = P.cannon(metal, woodCar, bore, iron, markM); c.group.position.set(RUN1, 0, z); R.add(c.group); this.cannons.push(c);
       c.group.traverse((o) => { if ((o as THREE.Mesh).material === markM) o.layers.set(NOINK); });
       // ring bolts + tackle blocks either side of the port, breeching rope to the cheeks and round the cascabel
       for (const s of [1, -1]) { const rb = P.ringBlock(iron, headM); rb.position.set(1.63, 0.5, z + s * 0.72); R.add(rb); }
@@ -250,28 +256,58 @@ class BtWorld {
     this.waterMat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, fog: false,
       uniforms: { uT: { value: 0 }, uWhite: { value: 0 }, uScroll: { value: new THREE.Vector2() }, uStreak: { value: P.canvasTex(512, 512, (g) => {
-        g.clearRect(0, 0, 512, 512);
-        for (let i = 0; i < 70; i++) { const x = Math.random() * 512, y = Math.random() * 512, w = 20 + 50 * Math.random(); g.fillStyle = `rgba(255,255,255,${0.35 + 0.4 * Math.random()})`; g.beginPath(); g.ellipse(x, y, w, 2.2, 0, 0, Math.PI * 2); g.fill(); }
+        g.clearRect(0, 0, 512, 512); g.lineCap = "round";
+        let sd = 11; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
+        for (let i = 0; i < 110; i++) {
+          const x = rn() * 512, y = rn() * 512, w = 9 + 16 * rn();
+          g.strokeStyle = `rgba(255,255,255,${0.55 + 0.4 * rn()})`; g.lineWidth = 2.6 + 1.6 * rn();
+          for (const ox of [0, -512, 512]) for (const oy of [0, -512, 512]) { g.beginPath(); g.arc(x + ox, y + oy + w * 0.7, w, -Math.PI * 0.78, -Math.PI * 0.22); g.stroke(); }
+        }
       }) } },
       vertexShader: "varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position,1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }",
       fragmentShader: `uniform float uT; uniform float uWhite; uniform vec2 uScroll; uniform sampler2D uStreak; varying vec3 vW;
         void main(){ float d = length(vW.xz - cameraPosition.xz);
-          vec3 nearC = vec3(0.13,0.62,0.72), farC = vec3(0.10,0.50,0.70);
-          vec3 c = mix(nearC, farC, smoothstep(10.0, 160.0, d)); c = mix(c, vec3(0.08, 0.52, 0.66), 1.2 * uWhite);
-          float s = texture2D(uStreak, vW.xz / 9.0 + uScroll).a * (1.0 - smoothstep(20.0, 90.0, d));
-          float s2 = texture2D(uStreak, vW.zx / 23.0 + uScroll * 0.5 + 0.37).a * (1.0 - smoothstep(60.0, 220.0, d)) * 0.6;
-          c = mix(c, mix(vec3(0.05,0.36,0.52), vec3(0.85,0.97,1.0), uWhite), clamp(s + s2, 0.0, 1.0) * mix(0.45, 0.7, uWhite));
+          vec3 nearC = vec3(0.10,0.58,0.66), farC = vec3(0.36,0.78,0.78);
+          vec3 c = mix(nearC, farC, smoothstep(6.0, 200.0, d)); c = mix(c, vec3(0.09, 0.55, 0.66), 0.5 * uWhite);
+          float s = texture2D(uStreak, vW.xz / 6.0 + uScroll).a * (1.0 - smoothstep(12.0, 70.0, d));
+          float s2 = texture2D(uStreak, vW.xz / 17.0 + uScroll * 0.5 + 0.37).a * (1.0 - smoothstep(40.0, 190.0, d)) * 0.65;
+          c = mix(c, vec3(0.86,0.97,1.0), clamp(s + s2, 0.0, 1.0) * 0.72);
+          c = mix(c, vec3(0.72,0.9,0.88), smoothstep(140.0, 420.0, d) * 0.55);
           float a = 1.0 - smoothstep(170.0, 420.0, d);
           gl_FragColor = vec4(pow(c, vec3(2.2)), a); }`,
     });
     const sea = new THREE.Mesh(new THREE.CircleGeometry(600, 96).rotateX(-Math.PI / 2), this.waterMat);
     sea.position.y = -2.4; sea.layers.set(NOINK); sea.renderOrder = -1; R.add(sea);
-    // painted backdrop plate on a cylinder (mirrored repeat twice round), horizon at eye level
-    const Rc = 650, Hc = (Math.PI * Rc) / (2016 / 864), hz = 0.323;
-    const cyl = new THREE.CylinderGeometry(Rc, Rc, Hc, 128, 1, true);
-    const uv = cyl.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setX(i, uv.getX(i) * 2);
-    const plate = new THREE.Mesh(cyl, new THREE.MeshBasicMaterial({ map: T.pano, side: THREE.BackSide, fog: false, depthWrite: false }));
-    plate.position.y = 1.5 - hz * Hc + Hc / 2; plate.rotation.y = Math.PI * 0.62; plate.layers.set(NOINK); plate.renderOrder = -2; R.add(plate);
+    // sky dome: clean cartoon gradient (deep blue overhead, pale blue, cream haze at the horizon)
+    { const C = V(0, 1.5, 0);
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(640, 64, 32), new THREE.ShaderMaterial({
+        side: THREE.BackSide, depthWrite: false, fog: false,
+        vertexShader: `varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+        fragmentShader: `varying vec3 vW;
+          vec3 s(float r, float g, float b){ return vec3(r, g, b) / 255.0; }
+          void main(){
+            vec3 d = normalize(vW - cameraPosition); float e = degrees(asin(clamp(d.y, -1.0, 1.0)));
+            vec3 c = mix(s(150.,214.,214.), s(236.,242.,232.), smoothstep(-1.6, 0.0, e));
+            if (e > 0.0) {
+              c = mix(s(250.,244.,226.), s(236.,242.,244.), smoothstep(0.0, 2.0, e));
+              c = mix(c, s(200.,228.,250.), smoothstep(2.0, 6.0, e));
+              c = mix(c, s(160.,204.,246.), smoothstep(6.0, 14.0, e));
+              c = mix(c, s(112.,168.,226.), smoothstep(14.0, 26.0, e));
+              c = mix(c, s(78.,138.,208.), smoothstep(26.0, 50.0, e)); }
+            gl_FragColor = vec4(pow(c, vec3(2.2)), 1.0); }`,
+      }));
+      dome.position.copy(C); dome.layers.set(NOINK); dome.renderOrder = -2; R.add(dome);
+      // separate cel clouds on camera-facing cards; low, far ones fade into the haze
+      const CL: [number, number, number][] = [ // azimuth deg (0 = +x, toward the enemy), elevation deg, width deg
+        [32, 16, 11], [-34, 9, 7], [-14, 4.5, 5], [70, 11, 9], [108, 18, 12], [150, 8, 7], [190, 14, 10],
+        [228, 6, 6], [262, 19, 12], [300, 10, 8], [335, 15, 9], [12, 22, 8], [-62, 21, 10], [128, 5, 5]];
+      CL.forEach(([az, el, w], i) => {
+        const D = 560, a = (az * Math.PI) / 180, e = (el * Math.PI) / 180, wd = 2 * D * Math.tan((w * Math.PI) / 360);
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(wd, wd / 2), new THREE.MeshBasicMaterial({
+          map: T.clouds[i % 4], transparent: true, depthWrite: false, fog: false, opacity: 0.55 + 0.45 * Math.min(1, (el - 3) / 10) }));
+        m.position.set(C.x + D * Math.cos(e) * Math.cos(a), C.y + D * Math.sin(e) + wd * 0.18, C.z + D * Math.cos(e) * Math.sin(a));
+        m.lookAt(C); m.layers.set(NOINK); m.renderOrder = -1.8; R.add(m);
+      }); }
     // sea-stack islands: a 70-degree arc of painted plate dead ahead (+x), behind the enemy ship
     { const Ri = 600, arc = (50 * Math.PI) / 180, Hi = (Ri * arc) / (2016 / 864), hzi = 0.30;
       const ig = new THREE.CylinderGeometry(Ri, Ri, Hi, 64, 1, true, Math.PI / 2 - arc / 2, arc);
@@ -374,7 +410,11 @@ class BtWorld {
     place(this.officer, `off|${oe}|${blink(0)}|${bob}|${oEars}|${oBall}|${oLook}`, OFFICER, OFF_AT[0], OFF_AT[1],
       { mode: "stand", expr: oe, blink: oEars ? 0 : blink(0), look: oLook, seed: 4, phase: bob, ears: oEars, hold: oBall, ball: oBall });
     this.dropped.visible = !shotB && oEars;
-    if (oEars) { const dt = Math.min(1, (f - (FIRE - 6)) / 5); this.dropped.position.set(OFF_AT[0] + 0.12, 0.11 + 0.75 * (1 - dt * dt), OFF_AT[1] - 0.22); }
+    if (oEars) {
+      this.officer.mesh.updateMatrixWorld(true);
+      const p0 = this.officer.mesh.localToWorld(V(0, 0.74, 0.06)), dt = Math.min(1, (f - (FIRE - 6) + 1) / 4);
+      this.dropped.position.set(p0.x, 0.11 + (p0.y - 0.11) * (1 - dt * dt), p0.z);
+    }
     // gunner: arm out toward the gun holding a 3D linstock; he lowers its lit tip onto the vent to fire, then lifts it
     const ge: Expr = shock || f >= FIRE - 3 ? "wince" : f < FIRE - 12 ? "stern" : "nervous"; // flinches as the vent catches
     const gOpts = { mode: "stand" as const, expr: ge, blink: shock ? 0 : blink(31), look: -0.3, seed: 9, noArms: true, phase: -bob };
@@ -431,7 +471,7 @@ class BtWorld {
       this.fxBlast.r = this.pool.req(`blast|${st}`, 600, 600, 1, (p) => blast(p, st));
       this.fxBlast.use(true);
       this.fxBlast.mesh.position.copy(mz).add(V(0.55 + 0.75 * Math.min(1, sB * 1.6), 0.05 + 0.3 * Math.min(1, sB * 1.6), 0));
-      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 2.0; this.fxBlast.mesh.scale.set(sz, sz, 1);
+      this.fxBlast.mesh.quaternion.copy(cam.quaternion); const sz = 1.5; this.fxBlast.mesh.scale.set(sz, sz, 1);
     }
     // flame tongue filling the gun port, so the blast reads as coming out of our gun
     this.fxJet.mesh.visible = !shotB && a >= 0 && sB < 0.95;
