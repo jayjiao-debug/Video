@@ -240,14 +240,16 @@ class BtWorld {
       uniforms: { uT: { value: 0 }, uWhite: { value: 0 }, uDeep: { value: 0 }, uDash: { value: P.canvasTex(512, 512, (g) => {
         g.fillStyle = "#000"; g.fillRect(0, 0, 512, 512); g.lineCap = "round";
         let sd = 29; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
-        g.filter = "blur(2.5px)"; // soft ripples, not hard-edged blocks
         for (let i = 0; i < 220; i++) { // red = light dash, green = dark dash, long along canvas x (= world z, screen horizontal)
           const x = rn() * 512, y = rn() * 512, L = 22 + 50 * rn(), th = 1.6 + 2.2 * rn(), light = rn() < 0.65;
           g.strokeStyle = light ? `rgba(255,0,0,${0.45 + 0.35 * rn()})` : `rgba(0,255,0,${0.35 + 0.35 * rn()})`; g.lineWidth = th;
           g.globalCompositeOperation = "lighter";
           for (const ox of [0, -512, 512]) for (const oy of [0, -512, 512]) { g.beginPath(); g.moveTo(x + ox, y + oy); g.lineTo(x + ox + L, y + oy + (rn() - 0.5) * 3); g.stroke(); }
         }
-        g.globalCompositeOperation = "source-over"; g.filter = "none";
+        g.globalCompositeOperation = "source-over";
+        // soften into ripples with ONE blur pass (a per-stroke canvas filter takes minutes on the farm's software GL)
+        const sharp = document.createElement("canvas"); sharp.width = sharp.height = 512; sharp.getContext("2d")!.drawImage(g.canvas, 0, 0);
+        g.fillStyle = "#000"; g.fillRect(0, 0, 512, 512); g.filter = "blur(2.5px)"; g.drawImage(sharp, 0, 0); g.filter = "none";
       }) }, uScroll: { value: new THREE.Vector2() }, uStreak: { value: P.canvasTex(512, 512, (g) => {
         g.clearRect(0, 0, 512, 512); g.lineCap = "round";
         let sd = 11; const rn = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
