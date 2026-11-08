@@ -587,7 +587,7 @@ export default {
       s += `<defs>${rg('t13bl2', [[0, '#FFF6E2', 1], [0.6, '#FFEFD0', 0.85], [1, '#F2DDB4', 0.55]], 0.42, 0.62, 0.8)}</defs><rect width="1920" height="1080" fill="url(#t13bl2)" opacity="${f2(0.82 * g)}"/>`;
       return s;
     }
-    if (t < 141.45) return s32(t);
+    if (t < 141.45) return s32(t) + (t >= 140.95 ? sealStamp(t) : '');
     // into the end card: live S33 crossfades to the dimmed, blurred card ground; the print becomes the seal
     if (t < TEND + 0.4) s += s32(Math.min(t, TEND + 0.4));
     const kb = ramp(t, 141.5, TEND + 0.25, E.inOut);
