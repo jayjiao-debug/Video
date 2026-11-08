@@ -37,10 +37,20 @@ function boardFront(cx, ny, H, id) {
   g += `<path d="M${P(cx - w1 / 2 - 0.05 * H, yb)} L${P(cx + w1 / 2 + 0.05 * H, yb)} L${P(cx + w1 / 2 + 0.05 * H, yb + 0.14 * H)} L${P(cx - w1 / 2 - 0.05 * H, yb + 0.14 * H)}Z" fill="#5A4029" ${ln(lw)}/>`;
   g += `<path d="M${P(cx - w1 / 2 - 0.05 * H, yb + 0.02 * H)} L${P(cx - w1 / 2 + 0.2 * H, yb + 0.02 * H)} L${P(cx - w1 / 2 + 0.2 * H, yb + 0.14 * H)} L${P(cx - w1 / 2 - 0.05 * H, yb + 0.14 * H)}Z M${P(cx + w1 / 2 + 0.05 * H, yb + 0.02 * H)} L${P(cx + w1 / 2 - 0.2 * H, yb + 0.02 * H)} L${P(cx + w1 / 2 - 0.2 * H, yb + 0.14 * H)} L${P(cx + w1 / 2 + 0.05 * H, yb + 0.14 * H)}Z" fill="#4B4F55"/>`;
 
-  // the gap in front of the neck (dark crescent)
-  g += `<path d="M${P(cx - rx, ny)} A${f2(rx)},${f2(ry)} 0 0 0 ${P(cx + rx, ny)} A${f2(rx * 0.92)},${f2(ry * 0.55)} 0 0 1 ${P(cx - rx, ny)}Z" fill="#2A1C14"/>`;
+  // the neck passes through: inside the hole we see the collar column (slate robe, white inner collar V) going down,
+  // dark gaps either side of it, and the board's near lip cutting across its base
+  const cw = rx * 0.78;
+  g += `<defs><clipPath id="${id}hc"><path d="${hole}"/></clipPath></defs><g clip-path="url(#${id}hc)">` +
+    `<rect x="${f2(cx - rx)}" y="${f2(ny - ry)}" width="${f2(2 * rx)}" height="${f2(2 * ry)}" fill="#1E140E"/>` +
+    `<path d="M${P(cx - cw, ny - ry - 2)} L${P(cx + cw, ny - ry - 2)} L${P(cx + cw * 0.92, ny + ry + 2)} L${P(cx - cw * 0.92, ny + ry + 2)}Z" fill="${ROBE}"/>` +
+    `<path d="M${P(cx - cw * 0.42, ny - ry - 2)} L${P(cx + cw * 0.42, ny - ry - 2)} L${P(cx + cw * 0.12, ny + ry + 2)} L${P(cx - cw * 0.12, ny + ry + 2)}Z" fill="#EAE6DC"/>` +
+    `<path d="M${P(cx - cw * 0.42, ny - ry - 2)} L${P(cx - cw * 0.12, ny + ry + 2)} M${P(cx + cw * 0.42, ny - ry - 2)} L${P(cx + cw * 0.12, ny + ry + 2)}" stroke="${LN}" stroke-width="${f2(lw)}"/>` +
+    `<rect x="${f2(cx - rx)}" y="${f2(ny + ry * 0.2)}" width="${f2(2 * rx)}" height="${f2(ry)}" fill="#000" opacity="0.35"/></g>`;
+  // near lip: the board's thickness under the hole's near edge
+  g += `<path d="M${P(cx - rx, ny)} A${f2(rx)},${f2(ry)} 0 0 0 ${P(cx + rx, ny)}" fill="none" stroke="#5A4029" stroke-width="${f2(0.035 * H)}"/>`;
+  g += `<path d="M${P(cx - rx, ny)} A${f2(rx)},${f2(ry)} 0 0 0 ${P(cx + rx, ny)}" fill="none" stroke="${LN}" stroke-width="${f2(lw)}"/>`;
   // 封皮: the paper seal across the board, red stamps, faint writing
-  const sx = cx + 0.12 * H, sy = ny + 0.3 * H, sw = 1.3 * H, sh = 0.3 * H;
+  const sx = cx + 0.1 * H, sy = ny + 0.17 * H, sw = 1.25 * H, sh = 0.28 * H;
   g += `<g transform="translate(${f2(sx)} ${f2(sy)}) scale(1 0.5) rotate(-6) translate(${f2(-sx)} ${f2(-sy)})"><rect x="${f2(sx - sw / 2)}" y="${f2(sy - sh / 2)}" width="${f2(sw)}" height="${f2(sh)}" fill="#EFE9DC" ${ln(lw * 0.8)}/>` +
     `<rect x="${f2(sx - sw * 0.36)}" y="${f2(sy - sh * 0.32)}" width="${f2(sh * 0.64)}" height="${f2(sh * 0.64)}" fill="none" stroke="#B3302A" stroke-width="${f2(lw * 1.6)}" opacity="0.85"/>` +
     `<rect x="${f2(sx + sw * 0.2)}" y="${f2(sy - sh * 0.32)}" width="${f2(sh * 0.64)}" height="${f2(sh * 0.64)}" fill="#B3302A" opacity="0.7"/>` +
@@ -92,6 +102,37 @@ function hisHand(mode, o = {}) {
   for (const x of [-12, -3, 6, 13]) s += `<path d="M${P(x * 0.5, -6)} L${P(x, -44)}" stroke="${SK.skinS}" stroke-width="0.8" opacity="0.6"/>`;
   s += `<path d="M-8,-47 L-1,-44 M9,-45 L13,-41" stroke="${SK.scar}" stroke-width="1.2" stroke-linecap="round"/>`;
   return s;
+}
+// The signing hand, seen from above: the whole brush (≈ 23 cm) held between thumb and index, its tip on the paper,
+// the shaft rising past the knuckles. Local frame: brush tip at (0, 0), shaft straight up (-y); k scales, rot leans
+// the shaft (deg, + = top to the right).
+function writingHand(x, y, k, rot, op = 1) {
+  const L_ = ln(2.2 / k);
+  const tube = (d, w, col = SK.skin) => `<path d="${d}" fill="none" stroke="${LN}" stroke-width="${f2(w + 4.4 / k)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${f2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  let s = '';
+  // forearm and the slate convict sleeve, off to the lower right (counter-rotated about the wrist so the arm stays diagonal)
+  s += `<g transform="rotate(${f2(-rot * 0.9)} 110 40)"><path d="M84,30 C150,120 230,250 300,420 L420,380 C350,220 250,90 136,4Z" fill="${SK.skinS}" ${L_}/>` +
+    `<path d="M232,230 C280,214 330,196 372,170 L520,420 L330,520Z" fill="${ROBE}" ${L_}/><path d="M232,230 C280,214 330,196 372,170 L384,192 C342,218 292,236 244,252Z" fill="${ROBES}" ${L_}/></g>`;
+  // ring, little and middle fingers curled under the hand (only their tips show past the knuckles)
+  s += tube('M64,-48 C50,-52 38,-50 30,-44', 17, SK.skinS);
+  s += tube('M70,-72 C54,-78 40,-76 28,-70', 19, SK.skinS);
+  s += tube('M70,-98 C52,-106 30,-104 12,-96', 21);
+  // back of the hand (one shape, its own cel shade toward the lower right; no separate knuckle cap)
+  const back = `M-34,-44 C-44,-8 -14,34 30,56 C56,70 80,74 100,70 C122,52 136,30 136,8 C112,-24 90,-70 72,-104 C66,-114 58,-120 48,-118 C36,-96 -10,-78 -34,-44Z`;
+  s += `<path d="${back}" fill="${SK.skin}" ${L_}/>`;
+  s += `<defs><clipPath id="t01whc"><path d="${back}"/></clipPath></defs><g clip-path="url(#t01whc)"><path d="M30,60 C70,20 96,-30 110,-80 L200,-60 L200,120 L0,120Z" fill="${SK.skinS}" opacity="0.75"/></g>`;
+  s += `<path d="M44,-110 C56,-90 66,-68 74,-44 M60,-92 C70,-74 80,-56 90,-34" fill="none" stroke="${SK.skinS}" stroke-width="${f2(2.2 / k)}" opacity="0.8"/>`;
+  // the brush: hairs (wet, dark), ferrule, bamboo shaft rising past the knuckles, hanging loop at the top
+  s += `<path d="M0,0 C-9,-12 -10,-30 -8,-44 L8,-44 C10,-30 9,-12 0,0Z" fill="#141010" ${L_}/>`;
+  s += `<rect x="-8.5" y="-60" width="17" height="18" rx="3" fill="#7A5A32" ${L_}/>`;
+  s += `<rect x="-7" y="-330" width="14" height="272" rx="6" fill="#C9A86A" ${L_}/><rect x="-6" y="-330" width="5" height="270" rx="2.5" fill="#E2C68E" opacity="0.85"/>`;
+  s += `<rect x="-8" y="-338" width="16" height="12" rx="4" fill="#7A5A32" ${L_}/><circle cx="0" cy="-350" r="10" fill="none" stroke="#7A5A32" stroke-width="${f2(4 / k)}"/>`;
+  // index finger hooks over the front of the shaft; thumb presses it from the left
+  s += tube('M44,-126 C30,-146 10,-146 -4,-134 C-12,-128 -14,-120 -12,-114', 22);
+  s += `<path d="M20,-141 C14,-136 10,-132 8,-126" fill="none" stroke="${SK.skinS}" stroke-width="${f2(2 / k)}"/>`;
+  s += tube('M-30,-44 C-38,-70 -34,-98 -16,-118', 25);
+  s += `<path d="M-30,-92 C-26,-96 -20,-98 -14,-98" fill="none" stroke="${SK.skinS}" stroke-width="${f2(2 / k)}"/>`;
+  return `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${f2(rot)}) scale(${f2(k)})" opacity="${f2(op)}">${s}</g>`;
 }
 const handAt = (mode, x, y, len, rot = 0, sx = 1, sy = 1, extra = '') =>
   `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${f2(rot)}) scale(${f2((len / 100) * sx)} ${f2((len / 100) * sy)})">${hisHand(mode)}${extra}</g>`;
@@ -173,7 +214,7 @@ function S01(t) {
   const sq = pulse(t, T.press, 0.1);
   const [shx, shy] = shake(t, T.press, 2, 3, 2);
   const kS = S.w / 680;
-  const sign = ramp(t, -0.6, T.brush - 0.02, E.lin) * 0.4 + 0.6;
+  const sign = 0.9 + 0.1 * ramp(t, 0, T.brush - 0.02, E.lin);
   const printOn = t >= T.lift - 0.02;
   const wet = printOn ? 1 - ramp(t, T.lift, T.lift + 1.2) * 0.6 : 0;
   let s = full('#2A1E17');
@@ -183,8 +224,9 @@ function S01(t) {
   props += `<g filter="url(#t01sh)" opacity="0.5"><rect x="1490" y="170" width="340" height="230" rx="34" fill="#000"/></g>`;
   props += inkstone(1478, 150, 340);
   props += pasteDish(1590, 640, 112);
-  const brushLaid = t >= 1.05;
-  if (brushLaid) props += brushSVG([1530, 362], [1850, 226], 14);
+  if (t >= 0.98) props += `<g transform="translate(1530 362) rotate(67) scale(1.25)">` +
+    `<path d="M0,0 C-9,-12 -10,-30 -8,-44 L8,-44 C10,-30 9,-12 0,0Z" fill="#141010" ${ln(1.8)}/><rect x="-8.5" y="-60" width="17" height="18" rx="3" fill="#7A5A32" ${ln(1.8)}/>` +
+    `<rect x="-7" y="-330" width="14" height="272" rx="6" fill="#C9A86A" ${ln(1.8)}/><rect x="-6" y="-330" width="5" height="270" rx="2.5" fill="#E2C68E" opacity="0.85"/><rect x="-8" y="-338" width="16" height="12" rx="4" fill="#7A5A32" ${ln(1.8)}/><circle cx="0" cy="-350" r="10" fill="none" stroke="#7A5A32" stroke-width="3.2"/></g>`;
   props += '</g>';
   s += L(c, 1, `<defs><filter id="t01sh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter></defs>` + props, { id: 't01props', bleed: 'r' });
   // the sheet
@@ -202,26 +244,24 @@ function S01(t) {
   const signP = sheetPt(S, XS.anchor('sign', S.w, S.h)), printP = sheetPt(S, XS.anchor('print', S.w, S.h));
   let hand = '';
   if (t < 4.6) {
-    if (t < 1.05) {
-      // writing grip: the tip finishes the flourish, flicks off at 0.337, then carries the brush to the inkstone
+    if (t < 1.08) {
+      // the whole brush in the hand: finish the stroke, flick off at 0.337, carry it to the inkstone and lay it down
       const kS2 = S.w / 680;
-      const sg = 0.6 + 0.4 * ramp(t, -0.6, T.brush - 0.02, E.lin);
-      const tipW = [signP[0] - 70 * kS2 + 150 * kS2 * sg, signP[1] + 30 * kS2];
+      const sg = 0.9 + 0.1 * ramp(t, 0, T.brush - 0.02, E.lin);
+      const sa = XS.anchor('sign', S.w, S.h);
+      const tipW = sheetPt(S, [sa[0] - 64 * kS2 + 104 * kS2 * sg, sa[1] + 58 * kS2]);
       const flick = ramp(t, T.brush - 0.04, T.brush + 0.14, E.out);
-      const toStone = ramp(t, 0.42, 1.0, E.inOut);
-      let tip = mix(tipW, [tipW[0] + 50, tipW[1] - 40], flick);
-      tip = mix(tip, [1490, 280], toStone);
-      let top = [tip[0] + 150, tip[1] + 300];
-      const lay = ramp(t, 0.82, 1.05, E.inOut);
-      tip = mix(tip, [1530, 362], lay); top = mix(top, [1850, 226], lay);
-      hand += brushSVG(tip, top, 14);
-      const wrist = [tip[0] + 118 + 40 * toStone, tip[1] + 252 - 20 * toStone];
-      hand += handAt('brush', wrist[0], wrist[1], 300, -24 + 10 * toStone);
-    } else {
+      const toStone = ramp(t, 0.42, 0.98, E.inOut);
+      let tip = mix(tipW, [tipW[0] + 40, tipW[1] - 30], flick);
+      tip = mix(tip, [1530, 362], toStone);
+      const rot = lerp(30 + 6 * flick, 67, toStone);
+      hand += writingHand(tip[0], tip[1], 1.25, rot, 1 - ramp(t, 0.98, 1.08));
+    }
+    if (t >= 0.98) {
       // flat hand: to the dish, press into the paste, to the print spot, hover, press, hold, lift away
       const dishP = [1590, 690], hover = [printP[0] + 20, printP[1] - 40];
       let p, lift = 0;
-      if (t < 1.6) { p = mix([1560, 470], dishP, ramp(t, 1.05, 1.6)); lift = 0.4 * (1 - ramp(t, 1.05, 1.6)); }
+      if (t < 1.6) { p = mix([1640, 430], dishP, ramp(t, 1.05, 1.6)); lift = 0.4 * (1 - ramp(t, 1.05, 1.6)); }
       else if (t < 2.0) { p = dishP; lift = -0.05 * pulse(t, 1.65, 0.3); }
       else if (t < 2.43) { p = mix(dishP, hover, ramp(t, 2.0, 2.43)); lift = 0.5 * Math.sin(ramp(t, 2.0, 2.43, E.lin) * Math.PI); }
       else if (t < T.press) { const tr = noise1(t * 14, 3) * 3; p = [hover[0] + tr, hover[1] - 20 * ramp(t, 2.43, 2.75) + 20 * ramp(t, 2.75, T.press, E.in) + noise1(t * 13, 7) * 2.5]; lift = 0.22 * (1 - ramp(t, 2.43, T.press, E.in)); }
@@ -233,7 +273,7 @@ function S01(t) {
       const len = 360 * sc;
       hand += `<g filter="url(#t01sh)" opacity="${f2(0.35 * (1 - lift))}" transform="translate(${f2(18 + lift * 60)} ${f2(26 + lift * 80)})">${handAt('flat', p[0], p[1] + len * 0.48, len, -6, sqx, sqy).replace(/fill="[^"]*"/g, 'fill="#000"')}</g>`;
       // red palm when it has been in the dish: tint the fingertips' edge (seen from above only a rim)
-      hand += handAt('flat', p[0], p[1] + len * 0.48, len, -6, sqx, sqy);
+      hand += `<g opacity="${f2(ramp(t, 0.98, 1.08))}">${handAt('flat', p[0], p[1] + len * 0.48, len, -6, sqx, sqy)}</g>`;
     }
   }
   s += L(c, 1.12, `<g transform="translate(${f2(t < T.press + 0.1 ? shx : 0)} ${f2(t < T.press + 0.1 ? shy : 0)})">${hand}</g>`, { id: 't01hand', bleed: 'b' });
@@ -302,7 +342,7 @@ function S02(t) {
   s += L(c, 0.4, `<g transform="translate(-340 -210)">${TAVERN}</g>`, { id: 't01tav', bleed: 'all', blur: 0 });
   // him behind the paper (d 0.7): convict, cangue; face hidden until the paper lowers
   const himE = { ...EX.隐忍, look: [-0.25, 0.25 - 0.3 * lower], eye: 0.8 };
-  s += L(c, 0.7, lin({ ...CONVICT, expr: himE, pose: { headTurn: -0.2, headTilt: -2 }, height: 1760, x: 1010, y: 1950 }) + boardFront(1010, 486, 234.7, 't01b2'), { id: 't01him2' });
+  s += L(c, 0.7, lin({ ...CONVICT, expr: himE, pose: { headTurn: -0.2, headTilt: -2 }, height: 1760, x: 1010, y: 1950 }) + boardFront(1010, 514, 234.7, 't01b2'), { id: 't01him2' });
   // the sheet, held by her hands; lowering = scaleY about the bottom edge
   const sy = 1 - 0.4 * lower;
   const kS = S.w / 680;
@@ -358,11 +398,11 @@ function S03(t) {
   s += L(c, 0.4, `<g transform="translate(-330 -230)">${TAVERN}</g>`, { id: 't01tav3', bleed: 'all' });
   // him: CU H = 540 -> height 4050; eyes ≈ (1240, 400)
   const blink = t > 13.95 && t < 14.05 ? 0.1 : 1;
-  s += L(c, 1, lin({ ...CONVICT, expr: { ...ex, eye: ex.eye * blink }, pose: { headTurn: -0.32, headTilt: -1.5 }, height: 4050, x: 1235 + walkOut, y: 4050 + 140 - rise }) + boardFront(1235 + walkOut, 815 - rise, 540, 't01b3'), { id: 't01him3', bleed: 'b' });
+  s += L(c, 1, lin({ ...CONVICT, expr: { ...ex, eye: ex.eye * blink }, pose: { headTurn: -0.32, headTilt: -1.5 }, height: 4050, x: 1235 + walkOut, y: 4050 + 140 - rise }) + boardFront(1235 + walkOut, 922 - rise, 540, 't01b3'), { id: 't01him3', bleed: 'b' });
   // the guard's rough hand on his shoulder (13.665)
   if (t >= T.guardHand - 0.35) {
     const k = ramp(t, T.guardHand - 0.35, T.guardHand, E.out);
-    s += L(c, 1.05, guardHand(lerp(2200, 1660, k) + walkOut, 820 - rise + 8 * pulse(t, T.guardHand, 0.15), 300, 196, false, 0), { id: 't01gh', bleed: 'r' });
+    s += L(c, 1.05, guardHand(lerp(2200, 1700, k) + walkOut, 880 - rise + 8 * pulse(t, T.guardHand, 0.15), 300, 196, false, 0), { id: 't01gh', bleed: 'r' });
   }
   // her shoulder and 高髻 soft at the left edge
   s += L(c, 1.5, wifeBack({ x: 70, y: 160, head: 520, tilt: -10, bow: 0.3 }), { id: 't01her3', blur: 14, bleed: 'all' });
@@ -392,6 +432,12 @@ const STREET = bake('t01street', 2400, 1300, (() => {
       const ta = 430 - 520 * d0, tb = 430 - 520 * d1, ba = 430 + 330 * d0, bb = 430 + 330 * d1;
       const wall = ['#D9CDB4', '#CFC2A6', '#DED3BC'][i % 3];
       g += `<path d="M${X(xa)},${Y(ta + 60 * d0)} L${X(xb)},${Y(tb + 60 * d1)} L${X(xb)},${Y(bb)} L${X(xa)},${Y(ba)}Z" fill="${wall}" stroke="#8a7a62" stroke-width="2"/>`;
+      // the shadow cast by the deep eave across the upper facade
+      const sha = ta + 70 * d0 + (ba - ta) * 0.24, shb = tb + 70 * d1 + (bb - tb) * 0.24;
+      g += `<path d="M${X(xa)},${Y(ta + 60 * d0)} L${X(xb)},${Y(tb + 60 * d1)} L${X(xb)},${Y(shb)} L${X(xa)},${Y(sha)}Z" fill="#3a2e24" opacity="0.32"/>`;
+      // the side face of the next block (the alley gap) and a timber post at the block's near corner
+      g += `<path d="M${X(xa)},${Y(ta + 60 * d0)} L${X(xa - sgn * 14 * d0)},${Y(ta + 66 * d0)} L${X(xa - sgn * 14 * d0)},${Y(ba + 4 * d0)} L${X(xa)},${Y(ba)}Z" fill="#8a7860"/>`;
+      g += `<path d="M${X(xa + sgn * 6 * d0)},${Y(ta + 70 * d0)} L${X(xa + sgn * 6 * d0)},${Y(ba)}" stroke="#5a4632" stroke-width="${f2(10 * d0)}"/>`;
       // shopfront lattice
       const lx0 = lerp(xa, xb, 0.12), lx1 = lerp(xa, xb, 0.88);
       const y0a = lerp(ta + 60 * d0, ba, 0.35), y1a = lerp(ta + 60 * d0, ba, 0.95);
@@ -400,6 +446,8 @@ const STREET = bake('t01street', 2400, 1300, (() => {
       for (let j = 1; j < 5; j++) { const xx = lerp(lx0, lx1, j / 5), kk = lerp(0.12, 0.88, j / 5); g += `<path d="M${X(xx)},${Y(lerp(y0a, y0b, kk))} L${X(xx)},${Y(lerp(y1a, y1b, kk))}" stroke="#E8DCC2" stroke-width="${f2(3 * d0)}"/>`; }
       // tiled eave (dark grey, upturned)
       g += `<path d="M${X(xa + sgn * 40 * d0)},${Y(ta + 70 * d0)} L${X(xb + sgn * 40 * d1)},${Y(tb + 70 * d1)} L${X(xb - sgn * 10 * d1)},${Y(tb + 20 * d1)} L${X(xa - sgn * 10 * d0)},${Y(ta + 10 * d0)}Z" fill="#4F5A63" stroke="#2F363C" stroke-width="2"/>`;
+      // eave underside (rafters in shadow)
+      g += `<path d="M${X(xa + sgn * 40 * d0)},${Y(ta + 70 * d0)} L${X(xb + sgn * 40 * d1)},${Y(tb + 70 * d1)} L${X(xb)},${Y(tb + 62 * d1)} L${X(xa)},${Y(ta + 62 * d0)}Z" fill="#2E2620"/>`;
       g += `<path d="M${X(xa + sgn * 40 * d0)},${Y(ta + 70 * d0)} q${f2(sgn * 18 * d0)},${f2(-14 * d0)} ${f2(sgn * 30 * d0)},${f2(-30 * d0)}" stroke="#2F363C" stroke-width="${f2(5 * d0)}" fill="none"/>`;
       // a roof above
       g += `<path d="M${X(xa - sgn * 10 * d0)},${Y(ta + 10 * d0)} L${X(xb - sgn * 10 * d1)},${Y(tb + 20 * d1)} L${X(xb - sgn * 120 * d1)},${Y(tb - 40 * d1)} L${X(xa - sgn * 120 * d0)},${Y(ta - 60 * d0)}Z" fill="#5C6770" stroke="#2F363C" stroke-width="2"/>`;
@@ -463,7 +511,7 @@ function linBack(u, ph, look = 0) {
   if (lk > 0) {
     // head turned ~60° over the left shoulder: cheek, nose, moustache and the pointed goatee show past the skull
     const q = lk;
-    const nx = hx - 0.36 * u - 0.22 * u * q;
+    const nx = hx - 0.36 * u - 0.3 * u * q;
     s += `<path d="M${P(hx - 0.2 * u, hy - 0.3 * u)} C${P(hx - 0.36 * u - 0.1 * u * q, hy - 0.28 * u)} ${P(nx + 0.02 * u, hy - 0.08 * u)} ${P(nx - 0.04 * u, hy + 0.1 * u)} L${P(nx + 0.04 * u, hy + 0.16 * u)} C${P(nx + 0.02 * u, hy + 0.3 * u)} ${P(nx + 0.06 * u, hy + 0.42 * u)} ${P(nx + 0.12 * u, hy + 0.5 * u)} L${P(hx - 0.06 * u, hy + 0.56 * u)} L${P(hx - 0.04 * u, hy - 0.2 * u)}Z" fill="${SK.skin}" ${L_}/>`;
     s += `<path d="M${P(nx + 0.04 * u, hy + 0.26 * u)} C${P(nx + 0.1 * u, hy + 0.22 * u)} ${P(nx + 0.16 * u, hy + 0.3 * u)} ${P(nx + 0.12 * u, hy + 0.36 * u)}" stroke="#141010" stroke-width="${f2(lw * 1.6)}" fill="none"/>`;
     s += `<path d="M${P(nx + 0.1 * u, hy + 0.46 * u)} L${P(nx + 0.06 * u, hy + 0.98 * u)} L${P(nx + 0.2 * u, hy + 0.5 * u)}Z" fill="#141010"/>`;
@@ -472,11 +520,15 @@ function linBack(u, ph, look = 0) {
   s += `<ellipse cx="${f2(hx + 0.04 * u * lk)}" cy="${f2(hy)}" rx="${f2(0.4 * u)}" ry="${f2(0.5 * u)}" fill="#22272F" ${L_}/>`;
   s += `<ellipse cx="${f2(hx + 0.42 * u - 0.1 * u * lk)}" cy="${f2(hy + 0.08 * u)}" rx="${f2(0.08 * u)}" ry="${f2(0.14 * u)}" fill="${SK.skinS}" ${L_}/>`;
   s += `<path d="M${P(hx - 0.14 * u, hy + 0.2 * u)} L${P(hx - 0.1 * u, hy + 0.62 * u)} L${P(hx + 0.02 * u, hy + 0.28 * u)} L${P(hx + 0.14 * u, hy + 0.66 * u)} L${P(hx + 0.16 * u, hy + 0.22 * u)}Z" fill="#22272F" ${L_}/>`;
-  // the cangue from behind: the board's rounded back end over the shoulders (tilted down forward)
-  const cy = -5.95 * u + bob;
-  s += `<path d="M${P(-0.9 * u, cy)} C${P(-0.9 * u, cy - 0.42 * u)} ${P(0.9 * u, cy - 0.42 * u)} ${P(0.9 * u, cy)} L${P(0.9 * u, cy + 0.14 * u)} C${P(0.9 * u, cy - 0.26 * u)} ${P(-0.9 * u, cy - 0.26 * u)} ${P(-0.9 * u, cy + 0.14 * u)}Z" fill="#8A6440" ${L_}/>`;
-  s += `<path d="M${P(-0.9 * u, cy + 0.14 * u)} C${P(-0.9 * u, cy - 0.26 * u)} ${P(0.9 * u, cy - 0.26 * u)} ${P(0.9 * u, cy + 0.14 * u)} L${P(0.9 * u, cy + 0.26 * u)} C${P(0.9 * u, cy - 0.14 * u)} ${P(-0.9 * u, cy - 0.14 * u)} ${P(-0.9 * u, cy + 0.26 * u)}Z" fill="#5E432A" ${L_}/>`;
-  s += `<path d="M${P(-0.62 * u, cy - 0.22 * u)} L${P(-0.5 * u, cy + 0.16 * u)} M${P(0.62 * u, cy - 0.22 * u)} L${P(0.5 * u, cy + 0.16 * u)}" stroke="#4B4F55" stroke-width="${f2(0.12 * u)}"/>`;
+  // the cangue from behind: one board 42 cm wide around his neck, the long end forward and down, so the short back end
+  // rises behind his neck and we see its underside; iron band across the end, iron leaves on the edges
+  const cy = -6.05 * u + bob;
+  const bw = 0.9 * u;
+  s += `<path d="M${P(-bw, cy)} C${P(-bw, cy - 0.3 * u)} ${P(bw, cy - 0.3 * u)} ${P(bw, cy)} L${P(bw * 0.9, cy + 0.42 * u)} C${P(bw * 0.5, cy + 0.5 * u)} ${P(-bw * 0.5, cy + 0.5 * u)} ${P(-bw * 0.9, cy + 0.42 * u)}Z" fill="#5E432A" ${L_}/>`;
+  s += `<path d="M${P(-bw * 0.94, cy + 0.2 * u)} C${P(-bw * 0.5, cy + 0.27 * u)} ${P(bw * 0.5, cy + 0.27 * u)} ${P(bw * 0.94, cy + 0.2 * u)}" fill="none" stroke="#4A3420" stroke-width="${f2(lw)}"/>`;
+  s += `<path d="M${P(-bw, cy)} C${P(-bw, cy - 0.3 * u)} ${P(bw, cy - 0.3 * u)} ${P(bw, cy)} C${P(bw, cy - 0.14 * u)} ${P(-bw, cy - 0.14 * u)} ${P(-bw, cy)}Z" fill="#8A6440" ${L_}/>`;
+  s += `<path d="M${P(-bw * 0.98, cy - 0.06 * u)} C${P(-bw * 0.9, cy - 0.27 * u)} ${P(bw * 0.9, cy - 0.27 * u)} ${P(bw * 0.98, cy - 0.06 * u)}" fill="none" stroke="#4B4F55" stroke-width="${f2(0.1 * u)}"/>`;
+  s += `<path d="M${P(-bw, cy)} L${P(-bw * 0.9, cy + 0.42 * u)} M${P(bw, cy)} L${P(bw * 0.9, cy + 0.42 * u)}" stroke="#4B4F55" stroke-width="${f2(0.09 * u)}"/>`;
   return s;
 }
 
@@ -488,9 +540,9 @@ function S04(t) {
   // heat shimmer band over the road (subtle)
   // the three men walk away toward the vanishing point
   const k = ramp(t, T.s4 - 0.3, 18.66, E.lin);
-  const yf = lerp(684, 655, k);
-  const sc = (yf - 430) / 254; // relative to start
-  const H = (base) => base * (yf - 430) / 250 * (250 / 254);
+  const yf = lerp(762, 726, k);
+  const sc = (yf - 430) / 254; // relative to the old start line
+  const H = (base) => base * (yf - 430) / 254;
   const X = (x0) => VP[0] + (x0 - VP[0]) * sc;
   const step = (t - 14.92) / (2 * 0.4176);
   const ph = step / 2;
