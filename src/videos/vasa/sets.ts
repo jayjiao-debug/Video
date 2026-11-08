@@ -141,18 +141,33 @@ export const buildHall = () => {
   }
   // the niche: dark green backdrop and side faces
   const nicheM = lam("nicheM", () => ({ map: curtain() }));
-  b.add(quad(V(x0, y0 - 1.6, back), V(x1, y0 - 1.6, back), V(x1, y1, back), V(x0, y1, back)), nicheM);
+  // v3: the backdrop spans exactly the side faces (it used to run 1.6 m lower, so the side faces ended mid-edge and
+  // the seam cracked open into single black dots)
+  b.add(quad(V(x0, y0, back), V(x1, y0, back), V(x1, y1, back), V(x0, y1, back)), nicheM);
   b.add(quad(V(x0, y0, Z0), V(x0, y0, back), V(x0, y1, back), V(x0, y1, Z0)), nicheM);
   b.add(quad(V(x1, y0, back), V(x1, y0, Z0), V(x1, y1, Z0), V(x1, y1, back)), nicheM);
   b.add(quad(V(x0, y1, Z0), V(x0, y1, back), V(x1, y1, back), V(x1, y1, Z0)), nicheM);
   b.add(quad(V(x0, y0, back), V(x0, y0, Z0), V(x1, y0, Z0), V(x1, y0, back)), dark); // sill
   // gilded frame
-  const fw = 0.16, fz = 0.12;
-  b.add(boxGeo(V(x0 - fw, y0 - fw, Z0), V(x1 + fw, y0, Z0 + fz)), gold);
-  b.add(boxGeo(V(x0 - fw, y1, Z0), V(x1 + fw, y1 + fw, Z0 + fz)), gold);
-  b.add(boxGeo(V(x0 - fw, y0, Z0), V(x0, y1, Z0 + fz)), gold);
-  b.add(boxGeo(V(x1, y0, Z0), V(x1 + fw, y1, Z0 + fz)), gold);
-  b.add(new THREE.SphereGeometry(0.16, 12, 8), gold, new THREE.Matrix4().makeTranslation(0, y1 + fw + 0.12, Z0 + 0.06));
+  // v3: deep (0.35 m; at 0.12 m its depth step sat right on the ink threshold and the outline flickered) and built as
+  // one closed ring: a 3x3 front grid minus the opening, sides split at the same vertices. v2 used four boxes whose
+  // edges ended in the middle of each other's edges; the cracks showed the hidden faces inside as flickering dots
+  const fw = 0.16, fz = 0.35, zf = Z0 + fz;
+  const FX = [x0 - fw, x0, x1, x1 + fw], FY = [y0 - fw, y0, y1, y1 + fw];
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) if (i !== 1 || j !== 1)
+    b.add(quad(V(FX[i], FY[j], zf), V(FX[i + 1], FY[j], zf), V(FX[i + 1], FY[j + 1], zf), V(FX[i], FY[j + 1], zf)), gold);
+  for (let k = 0; k < 3; k++) {
+    const ya = FY[k], yb = FY[k + 1], xa = FX[k], xb = FX[k + 1];
+    b.add(quad(V(FX[0], ya, Z0), V(FX[0], ya, zf), V(FX[0], yb, zf), V(FX[0], yb, Z0)), gold); // outer left
+    b.add(quad(V(FX[3], ya, zf), V(FX[3], ya, Z0), V(FX[3], yb, Z0), V(FX[3], yb, zf)), gold); // outer right
+    b.add(quad(V(xa, FY[3], zf), V(xb, FY[3], zf), V(xb, FY[3], Z0), V(xa, FY[3], Z0)), gold); // outer top
+    b.add(quad(V(xa, FY[0], Z0), V(xb, FY[0], Z0), V(xb, FY[0], zf), V(xa, FY[0], zf)), gold); // outer bottom
+  }
+  b.add(quad(V(x0, y0, zf), V(x0, y0, Z0), V(x0, y1, Z0), V(x0, y1, zf)), gold); // inner left
+  b.add(quad(V(x1, y0, Z0), V(x1, y0, zf), V(x1, y1, zf), V(x1, y1, Z0)), gold); // inner right
+  b.add(quad(V(x0, y1, Z0), V(x1, y1, Z0), V(x1, y1, zf), V(x0, y1, zf)), gold); // inner top
+  b.add(quad(V(x0, y0, zf), V(x1, y0, zf), V(x1, y0, Z0), V(x0, y0, Z0)), gold); // inner bottom
+  b.add(new THREE.SphereGeometry(0.16, 12, 8), gold, new THREE.Matrix4().makeTranslation(0, y1 + fw + 0.12, Z0 + fz / 2));
   // side walls
   for (const x of [W0, W1]) {
     const s = x < 0 ? 1 : -1;

@@ -574,7 +574,7 @@ const kingShot = (cam: CamInfo, t: number, out: Stage) => {
     { mode: "stand", expr, blink: lidAt(t, 95, [10.9]), wave: slap ? q(Math.sin((t - 10.4) * 30), 10) : undefined, headTilt: -6 * lean }, {}, 1 + 0.05 * lean);
   out.places.push(pl);
   const u = smooth((t - 10.45) / 0.35);
-  if (u > 0) out.fx.push({ key: `order${q(u, 20)}`, cw: 1000, ch: 700, draw: (p) => fxOrder(p, q(u, 20)), x: 0.05, y: NICHE.y0 - 0.12, z: NICHE.z + 0.35, w: 1.2, h: 0.84, rot: -0.04 });
+  if (u > 0) out.fx.push({ key: `order${q(u, 20)}`, cw: 1000, ch: 700, draw: (p) => fxOrder(p, q(u, 20)), x: 0.05, y: NICHE.y0 - 0.12, z: NICHE.z + 0.5, w: 1.2, h: 0.84, rot: -0.04 });
 };
 
 /** still water after the sink: one floating hat, rings, a few planks */

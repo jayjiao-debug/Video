@@ -1,1 +1,1 @@
-{ "id": "vasa-full-v3-1", "composition": "VasaTest", "start": 0, "end": 2253, "chunks": 40, "output": "vasa_full_v3", "flags": "--crf=16 --props={\"kick\":1}" }
+{ "id": "vasa-full-v3-2", "composition": "VasaTest", "start": 0, "end": 2253, "chunks": 40, "output": "vasa_full_v3", "flags": "--crf=16 --props={\"kick\":1}" }

@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { staticFile } from "remotion";
-import { Batch, boxGeo, V, lam, buildTown, Kit, Ray, kitClone } from "./build";
+import { Batch, boxGeo, V, lam, quad, buildTown, Kit, Ray, kitClone } from "./build";
 import { beam, bed, ctex, stoneHD, cobbleHD, grassHD, waterNear, waterFar, cloudHD } from "./paint";
 import { Pen } from "./toon";
 import { LIGHTS, LOOK, LightPreset } from "./lights";
@@ -168,7 +168,18 @@ export class World {
       b.add(s < 0 ? quadUp(-160, 160, -36.5, -30.6, 80, 1.475, 0.012) : quadUp(-160, 160, 30.6, 36.5, 80, 1.475, 0.012), M.cobble);
       b.add(s < 0 ? quadUp(-6, 6, -170, -36.5, 3, 33.375, 0.012) : quadUp(-6, 6, 36.5, 170, 3, 33.375, 0.012), M.cobble);
       b.add(s < 0 ? wallQuad(-900, 900, -30, 1) : wallQuad(900, -900, 30, -1), M.wall);
-      b.add(boxGeo(V(-600, D0 - 0.12, s < 0 ? -30.6 : 29.4), V(600, D0 + 0.012, s < 0 ? -29.4 : 30.6), 2), M.cope);
+      // the coping: only its top and its river face (the ink pre-pass draws both sides of every face, and a box's back
+      // face, flush with the cobbles' edge, read there as a dotted crease line)
+      {
+        const y0 = D0 - 0.12, y1 = D0 + 0.012, zr = s < 0 ? -29.4 : 29.4, zb = s < 0 ? -30.6 : 30.6;
+        b.add(s < 0 ? quad(V(-600, y0, zr), V(600, y0, zr), V(600, y1, zr), V(-600, y1, zr), 600, 0.066)
+          : quad(V(600, y0, zr), V(-600, y0, zr), V(-600, y1, zr), V(600, y1, zr), 600, 0.066), M.cope);
+        b.add(s < 0 ? quad(V(-600, y1, zr), V(600, y1, zr), V(600, y1, zb), V(-600, y1, zb), 600, 0.6)
+          : quad(V(-600, y1, zb), V(600, y1, zb), V(600, y1, zr), V(-600, y1, zr), 600, 0.6), M.cope);
+        const zw = s < 0 ? -30 : 30; // underside of the lip, back to the wall face
+        b.add(s < 0 ? quad(V(-600, y0, zw), V(600, y0, zw), V(600, y0, zr), V(-600, y0, zr), 600, 0.3)
+          : quad(V(-600, y0, zr), V(600, y0, zr), V(600, y0, zw), V(-600, y0, zw), 600, 0.3), M.cope);
+      }
       // mooring bollards along the quay edge
       for (let x = -40; x <= 40; x += 8) { const g = new THREE.CylinderGeometry(0.22, 0.28, 0.7, 10); b.add(g, M.wood, new THREE.Matrix4().makeTranslation(x, D0 + 0.35, s * 30.9)); }
     }
