@@ -755,8 +755,8 @@ func build_saloon() -> void:
 	var door := SpotLight3D.new(); door.position = T0 + Vector3(1.4, 2.1, 6.5); door.look_at_from_position(door.position, T0 + Vector3(0, 0.7, 0.4)); door.light_color = Color(1.0, 0.86, 0.66)
 	door.light_energy = 0.0; door.spot_range = 12; door.spot_angle = 22; door.shadow_enabled = true; door.light_volumetric_fog_energy = 3.0; add_child(door)
 	var K := [
-		[0.0, T0 + Vector3(-3.6, 3.2, -3.4), T0 + Vector3(0, 1.0, 0), 42.0],
-		[4.0, T0 + Vector3(-2.4, 1.8, -1.6), T0 + Vector3(0, 1.1, 0.5), 38.0],
+		[0.0, T0 + Vector3(0.5, 2.3, -2.9), T0 + Vector3(0, 0.95, 0), 44.0],
+		[4.0, T0 + Vector3(0.55, 1.7, -1.9), T0 + Vector3(0.05, 1.1, 0.4), 38.0],
 		[7.4, T0 + Vector3(0.35, 1.38, -1.1), T0 + Vector3(0.15, 1.25, 1.3), 34.0],
 		[11.0, T0 + Vector3(0.3, 1.35, -0.85), T0 + Vector3(0.2, 1.3, 1.5), 30.0]]
 	upd = func():
