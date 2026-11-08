@@ -236,7 +236,7 @@ function s27(t, rise = 1) {
 }
 
 // =============================================================== S28 · the boat and the news (105.221–115.217)
-const S28_BG = bake('t11_s28bg', 2160, 1240, (() => {
+const S28_INNER = (() => {
   let s = `<defs><linearGradient id="t11m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DDE2DE"/><stop offset="0.42" stop-color="#E3E7E2"/><stop offset="0.48" stop-color="#C9D3D0"/><stop offset="1" stop-color="#7E9A9A"/></linearGradient></defs><rect width="2160" height="1240" fill="url(#t11m)"/>`;
   s += `<path d="${ridge(91, 1300, 2200, 560, 60, 620, 30)}" fill="#AEBCB8" opacity="0.45"/>`;
   const R = rng(41);
@@ -248,13 +248,16 @@ const S28_BG = bake('t11_s28bg', 2160, 1240, (() => {
   }
   s += `<rect y="430" width="2160" height="180" fill="#E3E7E2" opacity="0.35"/>`;
   return s;
-})());
+})();
+const S28_BG = bake('t11_s28bg', 2160, 1240, S28_INNER);
+const S28_BGB = bake('t11_s28bgb', 2160, 1240, `<g filter="url(#t11bb)">${S28_INNER}</g>`, { defs: `<filter id="t11bb" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="6"/></filter>` });
 function s28(t) {
   const push = ramp(t, T28, 108.553, E.inOut);
   const rack = ramp(t, 109.813, 109.813 + 14 / 30, E.inOut);
   const c = { x: 0, y: 0, zoom: lerp(1, 1.1, push), blurK: 7, focusD: lerp(0.5, 1.3, rack) };
   let s = '';
-  s += L(c, 0.4, `<g transform="translate(-120 -80)">${S28_BG}</g>`, { id: 't11s28bg', bleed: 'all' });
+  s += L(c, 0.4, `<g transform="translate(-120 -80)">${S28_BG}</g>`, { id: 't11s28bg', bleed: 'all', blur: 0 });
+  if (rack > 0) s += L(c, 0.4, `<g transform="translate(-120 -80)" opacity="${f2(rack)}">${S28_BGB}</g>`, { id: 't11s28bgb', bleed: 'all', blur: 0 });
   // the boat: out of the mist (105.64) to the pier end (108.553)
   const b = ramp(t, 105.64, 108.553, E.out);
   const bx = lerp(520, 790, b), by = lerp(585, 612, b), bs = lerp(0.8, 1, b), bop = ramp(t, 105.4, 106.8);
