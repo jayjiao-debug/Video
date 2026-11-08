@@ -1,16 +1,13 @@
-// 林冲's wife 张氏 (1.58 m): NEVER her face — back view and 3/4 rear only. 高髻 with a hairpin, muted pink 褙子 over a long skirt.
-// draw({view:'back'|'back34', x, y, height (px for 1.58 m), flip}) — 'front'/'side' fall back to 'back34'.
-import { figure, blob } from './base.mjs';
-export const SPEC = {
-  name: 'wife', heads: 7.0,
-  robe: { base: '#cba7ab', shade: '#b08d92', fold: '#9c7c81' }, inner: '#eee6dc', hair: '#1c1918',
-  sash: { col: '#9c7c81', tails: false }, sleeve: 'wide', hands: 'hidden',
-  head(view) {
-    const h = '#1c1918', pin = '#b39a62';
-    const bun = `<path d="${blob([[-0.26, -7.12], [-0.2, -7.52], [0, -7.66], [0.2, -7.52], [0.26, -7.12], [0, -7.04]], 0.45)}" fill="${h}"/>`;
-    const pinS = `<path d="M-0.34,-7.38 L0.36,-7.5" stroke="${pin}" stroke-width="0.04" stroke-linecap="round"/><circle cx="0.37" cy="-7.5" r="0.05" fill="${pin}"/>`;
-    const side = view === 'back34' ? `<path d="${blob([[-0.4, -6.95], [-0.44, -6.62], [-0.38, -6.4], [-0.32, -6.7]], 0.5)}" fill="${h}"/>` : '';
-    return bun + pinS + side;
-  },
+// 林娘子 (1.58 m) — traced like 林冲 (seeds 7103 back / 7105 3/4 back, art_log.md). Pink jacket, white skirt,
+// high bun with a gold pin. Her face is never shown: only the back and the 3/4 back (face turned away) exist.
+// draw({ view: 'back' | 'back34', x, y, height (px for 1.58 m), flip, pose, col: { jacket } })
+import { render, headBox } from './traced.mjs';
+export const P = {
+  stature: 1.58, heads: 7.0, noFace: true,
+  fam: { jacket: (h, s, l) => (h > 340 || h < 10) && s > 0.4 && l > 0.6 && l < 0.95 },
 };
-export const draw = (o = {}) => figure(SPEC, { id: 'wf', ...o, view: o.view === 'back' ? 'back' : 'back34' });
+const GEO = { back: { chin: 320, head: 192, skull: 128, px: 390, s: 1 }, back34: { chin: 325, head: 193, skull: 132, px: 395, s: 1 } };
+const V = { back: 'wife_back', back34: 'wife_back34' };
+const PV = (v) => ({ ...P, geo: GEO[v] });
+export const draw = (o = {}) => { const v = V[o.view] ? o.view : 'back'; return render(V[v], PV(v), o); };
+export const head = (o = {}) => { const v = V[o.view] ? o.view : 'back'; return headBox(V[v], PV(v), o); };

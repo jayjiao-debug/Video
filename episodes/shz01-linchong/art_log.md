@@ -165,3 +165,30 @@ not 3D, not photorealistic, not chibi."
 - **Content filter:** the HF space returned a "maybe not safe" placeholder for about 20 harmless prompts (full-body
   characters especially; seemingly random, sometimes on the same text that passed at another aspect ratio). Rewording
   or changing the seed got past it; nothing kept was affected.
+
+## Side cast in 林冲's style (cast v4, 2026-11-08)
+
+The owner asked for the side cast in the same style and quality as 林冲 ("just make them really relevant"): they stay
+subordinate through staging only. References regenerated with HF Z-Image-Turbo, 864x1536 (9:16), steps 9, shift 3,
+saved as `/dev/shm/shz01/art/ref_<name>.png` (not committed). Each prompt = the art_log opening + description + the
+style prompt above, word for word. Traced by `film/cast/v4/build/trace_cast.py` → `film/cast/v4/data/*.json`.
+
+| file | seed | prompt (opening + description) | notes |
+| --- | --- | --- | --- |
+| ref_gao_front | 7201 | art_log 高衙内 front prompt | as logged above |
+| ref_gao_tq | 7202 | art_log 高衙内 Chinese side template | 3/4 facing right, hands in sleeves |
+| ref_lu_front | 7301 | art_log 陆谦 front prompt | thin painted frame, erased before tracing; chin tuft inpainted (moustache drawn in code) |
+| ref_lu_tq | 7303 | English side opening with "one man of medium build" + 陆谦 description | the Chinese side template hit the safety placeholder on seeds 7202 and 7302; came out 3/4 facing right with a frame |
+| ref_wife_back | 7103 | "full body back view of one young woman seen from directly behind … her face not visible at all, we see the back of her head with a high bun and one gold hairpin … about 7 heads tall … graceful and delicate" + 娘子 hair/clothes + style ("beautiful") | her face is never shown, so the 7101 front / 3/4 plates were not used |
+| ref_wife_back34 | 7105 | "seen from behind and slightly from her left side, her head turned away from us so that her face is completely hidden, we see only the back of her head, her hair bun and the edge of her ear" + same | 7104 showed her face (rejected) |
+| ref_zhang_front | 7401 | front opening with "one old man … about 7 heads tall like a classical figure drawing, small head, slightly stooped." + "Zhang Jiaotou, Lin Chong's father-in-law, a kind retired Song dynasty arms instructor about 60, a lined gentle face, kind narrow eyes with crow's feet, grey eyebrows, a long grey beard and a grey moustache, grey hair in a topknot under a plain dark brown cloth head wrap. He wears a plain brown round-collar cotton robe with wide sleeves reaching to the ankles, a dark sash, black cloth shoes." | slight 3/4 |
+| ref_zhang_tq | 7402 | Chinese template: 动画服装设定图，全身正侧面（身体和脸完全转向画面右侧，纯侧面，只露一只眼睛），一名老人自然站立，手臂自然下垂，全身完整在画面内，四周留白，纯色浅米色背景，无道具。成年男子比例约七头身，背微驼。张教头，林冲的岳父，北宋退休的教头，约六十岁，慈祥的脸上有皱纹，眼角有鱼尾纹，细长温和的眼睛，灰白的眉毛，留灰白长须和灰白胡子，灰白头发束髻，裹素色深棕布巾。穿朴素的棕色圆领布袍，宽袖，长及脚踝，系深色腰带，黑布鞋。+ 扁平二维矢量插画，国风漫画风格，干净利落的深棕色线条，平涂色块加简单两层赛璐璐阴影，雅致的色调。没有文字，没有水印。 | 3/4 facing right; grey topknot shows |
+| ref_scribe_front | 7501 | front opening with "one thin man … about 7 heads tall … small head, long legs." + "A hired letter-writer of the Song dynasty, a modest thin man about 45, a plain narrow face, calm small eyes, thin eyebrows, a small neat moustache, black hair under a small round black cap. He wears a plain grey cotton robe with wide sleeves reaching to the ankles, a grey sash, black cloth shoes." | |
+| ref_scribe_tq | 7502 | English side opening with "one thin man" + same description | 3/4 facing left, frame erased |
+| ref_guard_front | 7601 | "Costume design plate for an animated film, full body front view of one strong man standing in a neutral relaxed pose, his left arm held slightly away from his side with the hand open, his right hand holding one long wooden staff upright beside him, feet slightly apart, the whole figure and the whole staff inside the frame with clear margin, on a plain flat light background #F4EFE6. Realistic adult anatomy, 7.5 heads tall like a classical figure drawing, small head, long legs, broad square shoulders. A Song dynasty prisoner-escort guard about 30, a hard square face, narrow suspicious eyes, thick short eyebrows, dark stubble, black hair under a black cap with a small red knob on top. He wears a black-grey knee-length tunic with narrow sleeves, a red cloth belt, dark trousers with leg wrappings and black boots; the staff is painted half red and half black." | staff came out all dark red; the lower half is recoloured black in code (水火棍) |
+| ref_guard_tq | 7602 | English side opening, "walking forward with a long stride, his near hand holding one long wooden staff upright" + same description | 3/4 walking facing right |
+
+Tracing notes: the model draws heads 11–39 % larger than 林冲's (by 林冲's own ratio, eye line → chin = 0.443 head), so
+`traced.mjs` scales the head through a graded neck (s ≥ 0.84) and lengthens the lower legs to 7.5 heads (张教头 and the
+wife 7.0). Painted eyes, brows, moustaches and chin tufts are inpainted; faces are drawn with 林冲's face construction
+(`film/cast/v4/face.mjs`). 张教头 keeps the traced grey beard, moustache and brow tails.

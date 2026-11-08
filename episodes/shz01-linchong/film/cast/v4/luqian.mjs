@@ -1,20 +1,13 @@
-// 陆谦 (1.70 m): purple-grey robe, low dark cap with short hanging tails, thin moustache, thin smile (笑里藏刀).
-import { figure, blob, LINE } from './base.mjs';
-export const SPEC = {
-  name: 'luqian', heads: 7.2,
-  robe: { base: '#6d6876', shade: '#575363', fold: '#4a4655' }, inner: '#e2ded6',
-  sash: { col: '#3e3a45', tails: true }, sleeve: 'wide', hands: 'hidden',
-  expr: { mouth: 0.45, eye: 0.35 },
-  head(view) {
-    const cap = '#22201f';
-    if (view === 'side') return `<path d="${blob([[-0.37, -6.8], [-0.28, -7.14], [0.06, -7.34], [0.38, -7.1], [0.42, -6.8], [0.1, -6.76]], 0.4)}" fill="${cap}"/>` +
-      `<path d="M0.36,-6.85 Q0.5,-6.55 0.46,-6.2 L0.54,-6.2 Q0.6,-6.6 0.44,-6.9 Z" fill="${cap}"/>`;
-    return `<path d="${blob([[-0.39, -6.76], [-0.34, -7.1], [0, -7.34], [0.34, -7.1], [0.39, -6.76], [0, -6.86]], 0.4)}" fill="${cap}"/>` +
-      `<path d="M-0.4,-6.8 Q-0.5,-6.5 -0.47,-6.2 L-0.41,-6.2 Q-0.44,-6.5 -0.36,-6.78 Z" fill="${cap}"/><path d="M0.4,-6.8 Q0.5,-6.5 0.47,-6.2 L0.41,-6.2 Q0.44,-6.5 0.36,-6.78 Z" fill="${cap}"/>`;
-  },
-  beard(view, sw) {
-    if (view === 'side') return `<path d="M-0.41,-6.37 Q-0.36,-6.38 -0.3,-6.34" fill="none" stroke="${LINE}" stroke-width="${sw * 1.1}" stroke-linecap="round"/>`;
-    return `<path d="M-0.02,-6.37 Q-0.08,-6.39 -0.13,-6.33 M0.02,-6.37 Q0.08,-6.39 0.13,-6.33" fill="none" stroke="${LINE}" stroke-width="${sw * 1.1}" stroke-linecap="round"/>`;
-  },
+// 陆谦 (1.70 m) — traced like 林冲 (seeds 7301 front / 7303 3/4, art_log.md). Purple-grey robe, black cap.
+// Face: 林冲's construction with a thin moustache and smiling eyes (the friendly face of the betrayer).
+// draw({ view: 'front' | 'side' (3/4), x, y, height (px for 1.70 m), flip, expr, pose, col: { robe } })
+import { render, headBox } from './traced.mjs';
+export const P = {
+  stature: 1.70, heads: 7.5,
+  fam: { robe: (h, s, l) => h >= 265 && h <= 335 && s > 0.1 && s < 0.4 && l > 0.15 && l < 0.45 },
+  face: { hair: 'thin', smile: 0.8 },
+  expr: { brow: 0.2, eye: 0.92, look: [0, 0.05], mouth: 0.35 },
 };
-export const draw = (o = {}) => figure(SPEC, { id: 'lu', ...o });
+const V = { front: 'lu_front', side: 'lu_tq', tq: 'lu_tq' };
+export const draw = (o = {}) => render(V[o.view || 'front'], P, o);
+export const head = (o = {}) => headBox(V[o.view || 'front'], P, o);

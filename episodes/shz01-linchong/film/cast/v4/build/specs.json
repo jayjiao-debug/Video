@@ -1,0 +1,15 @@
+{
+  "_doc": "Per-reference trace specs (source px of the 864x1536 refs). facing: 0 front, 1 = 3/4 facing right, -1 = 3/4 facing left. erase: [y,x] centroids of painted feature blobs (eyes, brows, moustache, goatee) that are inpainted before tracing; the face is redrawn in code with the 林冲 face construction at the anchors below (eyes = [x,y] of the image-left and image-right eye, mouth, chin). keepBeard: traced beard stays (张教头).",
+  "gao_front":    {"facing": 0,  "eyes": [[396, 280], [463, 279]], "mouth": [430, 330], "chin": [432, 363], "erase": [[261, 462], [263, 396], [279, 463], [280, 396]]},
+  "gao_tq":       {"facing": 1,  "eyes": [[450, 271], [502, 272]], "mouth": [470, 323], "chin": [478, 356], "erase": [[255, 448], [271, 450], [272, 502]]},
+  "lu_front":     {"facing": 0, "border": true, "eyes": [[430, 346], [487, 345]], "mouth": [458, 397], "chin": [458, 426], "erase": [[324, 490], [325, 424], [345, 487], [346, 430], [390, 394], [390, 476], [391, 444], [436, 461]]},
+  "lu_tq":        {"facing": 1, "border": true, "eyes": [[496, 284], [541, 285]], "mouth": [512, 341], "chin": [515, 378], "erase": [[259, 488], [262, 544], [284, 496], [285, 541], [334, 506], [406, 510]]},
+  "zhang_front":  {"facing": 0, "turn": 0.25, "keepBeard": true, "eyes": [[431, 347], [505, 343]], "mouth": [468, 404], "chin": [468, 440], "erase": [[343, 505], [347, 431]]},
+  "zhang_tq":     {"facing": 1, "keepBeard": true, "eyes": [[510, 247], [566, 246]], "mouth": [541, 300], "chin": [545, 332], "erase": [[246, 566], [247, 510]]},
+  "scribe_front": {"facing": 0,  "eyes": [[402, 307], [467, 306]], "mouth": [434, 366], "chin": [435, 398], "erase": [[281, 469], [282, 397], [306, 467], [307, 402], [357, 447], [358, 420]]},
+  "scribe_tq":    {"facing": -1, "border": true, "eyes": [[332, 274], [386, 273]], "mouth": [357, 342], "chin": [352, 378], "erase": [[246, 396], [248, 330], [273, 386], [274, 332], [333, 340], [333, 369]]},
+  "guard_front":  {"facing": 0,  "eyes": [[404, 270], [464, 270]], "mouth": [433, 327], "chin": [433, 362], "erase": [[252, 465], [253, 400], [270, 404], [270, 464], [318, 419], [318, 448], [353, 433]]},
+  "guard_tq":     {"facing": 1,  "eyes": [[526, 294], [561, 296]], "mouth": [545, 357], "chin": [548, 392], "erase": [[272, 516], [279, 564], [294, 526], [296, 561], [348, 562], [350, 537], [393, 545]]},
+  "wife_back":    {"facing": 0, "noface": true},
+  "wife_back34":  {"facing": -1, "noface": true}
+}

@@ -1,12 +1,6 @@
-// v4 side cast — one construction language for every non-protagonist character.
-// Design rules (owner 2026-11-08: "side characters should not steal the show of the protag"):
-//  * flat fills + ONE hard cel shadow shape (light from upper left), no gradients, no rim light (except night silhouettes);
-//  * no dark outline around the clothes (like the traced 林冲 rig); thin #2A1C17 line only for face features and a few folds;
-//  * simpler than 林冲: dot/stroke eyes with no whites or highlights, tiny nose, single-line mouth, flat face;
-//  * muted, low-chroma palettes (林冲's green / slate and the seal red stay the strongest colours in any frame);
-//  * same proportion system as the rig (model_sheet.md): height in metres → px via pxPerM, 7.0–7.3 heads, short neck;
-//  * hands hidden in sleeves (袖手) or simple closed silhouettes — never open fingers.
-// Local units: 1 = one head height (H px). Origin at the feet centre, y up is negative. Side views face LEFT unless flip.
+// Night silhouettes only (night.mjs: 差拨 / 富安 / 陆谦 in the snow, shapes with a rim light in the dark).
+// The lit side cast is no longer code-drawn: see traced.mjs (traced like the 林冲 rig, 林冲's face construction).
+// figure() below is the first-pass code-drawn construction, kept because silFigure() shares its helpers.
 export const LINE = '#2A1C17';
 const f = (n) => (Math.round(n * 1000) / 1000).toString();
 const P = (pts) => pts.map((p, i) => `${i ? 'L' : 'M'}${f(p[0])},${f(p[1])}`).join(' ') + 'Z';
