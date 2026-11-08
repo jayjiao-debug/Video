@@ -3,6 +3,7 @@
 - **Owner notes (2026-11-08):** emotion-driven, not plot-driven. 2D vector 国风漫画 characters. BGM: the owner's 《笛子戏》 (148.5 s, not committed). Voice-over storyteller with a few character lines, subtitles.
 - **Length:** 2:28 = the whole track. Speech 449 字 ≈ 102 s; the rest is music breathing room.
 - **Emotional spine:** a man who keeps swallowing it (忍), because he believes he can still go home. The promise 「放你回来时，依旧夫妻完聚」 (his father-in-law, 第八回) is the thread: said in the middle, broken at the end.
+- **Opening:** start on her cry, then his restrained reply, then the reveal that this parting is forever. The viewer knows what the two of them don't.
 - **Shape:** love → humiliation (三次「他忍了」, each harder) → the snow night: 「忍，是回不去的」 on the music's break → release on the drop → the regret (he delayed; she was already gone) → the promise that never came true → the question to the viewer.
 - **Facts:** each line maps to facts.md. Lines marked *(narration)* are the narrator's reading of him, worded as such (「大概」「他总觉得」), not claims from the novel.
 - **Care:** the killing is not shown (door opens → white). The wife's death is said once, in the novel's words; nothing depicted.
@@ -25,11 +26,11 @@ Speakers: **N** narrator (male 说书, standard Mandarin, warm and low) · **L**
 
 | # | ~Time | Spk | Line | Picture (国风漫画) | Fact |
 |---|---|---|---|---|---|
-| V01 | 0.6 | N | 东京城里，有个男人，亲手写了一封休书。 | Close on paper: columns of the real 休书 text; a hand presses down; the red thumbprint. | L8 |
-| V02 | 4.8 | N | 妻子哭着问他： | Her back, shoulders shaking (face never shown). | L10 |
-| V03 | 6.5 | W | 我不曾有半些儿点污，如何把我休了？ | The paper between them. | L10 |
-| V04 | 10.6 | L | 娘子，我是好意。 | His face, 隐忍: eyes down. | L10 |
-| V05 | 12.8 | N | 他休她，是怕自己回不来，误了她一辈子。 | He turns away; the cangue on his neck. | L9 |
+| V01 | 0.4 | W | 我不曾有半些儿点污，如何把我休了？ | Black, then her crying. Close on her hands gripping the 休书; a tear falls on the ink and it bleeds. | L10 |
+| V02 | 4.8 | L | 娘子……我是好意。 | His face, eyes wet, jaw clenched (隐忍); he does not look at her. | L10 |
+| V03 | 7.4 | N | 他休她，是怕自己回不来，误了她一辈子。 | His thumb presses the red print onto the paper; the cangue on his neck. | L9 |
+| V04 | 11.4 | N | 可他们谁都没想到—— | She reaches for his sleeve; it slips out of her fingers. | |
+| V05 | 13.4 | N | 这一别，就是一辈子。 | Wide: guards lead him away down the street; she sinks at the door; first snowflakes. Music swells into the title. | L28 |
 | — | 19–26.5 | — | *(title)* 林冲 · 豹子头 | Calligraphy title, seal 水浒人物志 · 壹; snow begins. | |
 | V06 | 27.4 | N | 他叫林冲，八十万禁军枪棒教头。 | Training ground, spear drill, green robe and headscarf (东京 look). | L2 |
 | V07 | 31.0 | N | 一身本事，一个好家。成亲三年，没红过一次脸。 | Warm window at home; the wife's silhouette. | L3 |
