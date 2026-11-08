@@ -62,7 +62,7 @@ function s25(t) {
   // 林冲 from behind, braced, spear level into the doorway; steps into the white from 93.98
   const step = ramp(t, 93.98, 94.40, E.inOut);
   const fx = 1080 + step * 60, fy = 1210 - step * 120, fk = 1 - step * 0.18;
-  const sil = rearDoorSil({ height: 980 });
+  const sil = rearDoorSil({ height: 980, hat: false }); // 毡笠 left on the 供桌 (第十回); back on only after
   const spear = spearLevel(1150, 790, 1440, 548, 10, 4);
   const rimF = `<filter id="t11rimf" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="3" result="d"/><feFlood flood-color="#FFB15E"/><feComposite in2="d" operator="in" result="r"/><feGaussianBlur in="r" stdDeviation="1.5" result="rb"/><feMerge><feMergeNode in="rb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
   s += L(c, 1.05, `<defs>${rimF}</defs><g filter="url(#t11rimf)" opacity="${f2(1 - ramp(t, 94.1, 94.4))}"><g transform="translate(${f2(sh[0] * 0.6)} ${f2(sh[1] * 0.6)})"><g transform="translate(${f2(fx)} ${f2(fy)}) scale(${f2(fk)}) translate(${-1080} ${-1210})">${spear}<g transform="translate(1080 1210)">${sil}</g></g></g></g>`, { id: 't11s25lin', bleed: 'b' });

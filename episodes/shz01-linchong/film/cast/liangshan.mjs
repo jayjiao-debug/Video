@@ -71,7 +71,7 @@ export function walker(o) {
 // ------------------------------------------------------------------ S25: rear silhouette braced at the door
 /** Rear silhouette in 毡笠 and cloak at the door: left arm pushing forward-left, right hand low on the spear.
  * Local coords: feet centre at (0,0), height = px for 1.80 m. */
-export function rearDoorSil({ height = 980, col = '#120D0B' } = {}) {
+export function rearDoorSil({ height = 980, col = '#120D0B', hat = true } = {}) {
   const H = height / 7.5, P = (pts) => smooth(pts.map(([x, y]) => [x * H, y * H]));
   let p = '';
   // cloak (shoulders to the calves, folds at the hem)
@@ -85,11 +85,19 @@ export function rearDoorSil({ height = 980, col = '#120D0B' } = {}) {
   // legs braced apart, boots
   p += `<path d="${P([[-0.78, -1.62], [-1.0, -0.8], [-1.18, -0.2], [-1.3, 0.02], [-0.66, 0.02], [-0.6, -0.5], [-0.32, -1.6]])}"/>`;
   p += `<path d="${P([[0.36, -1.6], [0.62, -0.5], [0.7, 0.02], [1.34, 0.02], [1.22, -0.2], [1.02, -0.8], [0.8, -1.62]])}"/>`;
-  // head (back), collar, hat brim and crown
+  // head (back), collar; hat brim + crown, or bare-headed: head cloth with the topknot (第十回: the 毡笠 is on the 供桌)
   p += `<ellipse cx="0" cy="${f2(-6.92 * H)}" rx="${f2(0.4 * H)}" ry="${f2(0.46 * H)}"/>`;
   p += `<path d="${P([[-0.46, -6.62], [-0.2, -6.78], [0.2, -6.78], [0.46, -6.62], [0.4, -6.4], [-0.4, -6.4]])}"/>`;
-  p += `<ellipse cx="0" cy="${f2(-7.24 * H)}" rx="${f2(1.0 * H)}" ry="${f2(0.15 * H)}" transform="rotate(-3 0 ${f2(-7.24 * H)})"/>`;
-  p += `<path d="M${f2(-0.38 * H)},${f2(-7.26 * H)} C${f2(-0.4 * H)},${f2(-7.72 * H)} ${f2(0.4 * H)},${f2(-7.72 * H)} ${f2(0.38 * H)},${f2(-7.26 * H)}Z"/>`;
+  if (hat) {
+    p += `<ellipse cx="0" cy="${f2(-7.24 * H)}" rx="${f2(1.0 * H)}" ry="${f2(0.15 * H)}" transform="rotate(-3 0 ${f2(-7.24 * H)})"/>`;
+    p += `<path d="M${f2(-0.38 * H)},${f2(-7.26 * H)} C${f2(-0.4 * H)},${f2(-7.72 * H)} ${f2(0.4 * H)},${f2(-7.72 * H)} ${f2(0.38 * H)},${f2(-7.26 * H)}Z"/>`;
+  } else {
+    p += `<ellipse cx="0" cy="${f2(-7.12 * H)}" rx="${f2(0.41 * H)}" ry="${f2(0.36 * H)}"/>`; // cloth over the crown
+    p += `<ellipse cx="0" cy="${f2(-7.5 * H)}" rx="${f2(0.17 * H)}" ry="${f2(0.15 * H)}"/>`; // topknot
+    p += `<path d="${P([[-0.05, -7.0], [-0.1, -6.62], [-0.16, -6.36], [-0.08, -6.34], [-0.01, -6.62], [0.03, -7.0]])}"/>`; // cloth ties
+    p += `<path d="${P([[0.06, -7.0], [0.11, -6.64], [0.17, -6.4], [0.25, -6.42], [0.16, -6.66], [0.12, -7.0]])}"/>`;
+    p += `<ellipse cx="${f2(-0.42 * H)}" cy="${f2(-6.92 * H)}" rx="${f2(0.07 * H)}" ry="${f2(0.12 * H)}"/><ellipse cx="${f2(0.42 * H)}" cy="${f2(-6.92 * H)}" rx="${f2(0.07 * H)}" ry="${f2(0.12 * H)}"/>`; // ears
+  }
   return `<g fill="${col}">${p}</g>`;
 }
 /** The spear held level, pointing into the depth: butt near the camera (lower right) to the tip (vanishing). */
