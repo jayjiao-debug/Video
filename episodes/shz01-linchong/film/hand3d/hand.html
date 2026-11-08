@@ -123,6 +123,43 @@ window.place = (o) => {
   light.position.set(...(o.light || [-0.6, 0.7, 0.9]));
   OUT.value = (o.outline || 3.2) / o.s;
 };
+const PART = (n) => n.startsWith('thumb') ? (n === 'thumb-metacarpal' ? 1 : 2) : n.startsWith('index') ? (n.includes('metacarpal') ? 1 : 3) : n.startsWith('middle') ? (n.includes('metacarpal') ? 1 : 4) : n.startsWith('ring') ? (n.includes('metacarpal') ? 1 : 5) : n.startsWith('pinky') ? (n.includes('metacarpal') ? 1 : 6) : 1;
+const PCOL = [[0, 0, 0], [255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0], [255, 0, 255], [0, 255, 255]];
+let idMat = null, normalMats = null;
+function buildIdMat() {
+  const geo = mesh.geometry, si = geo.attributes.skinIndex, sw = geo.attributes.skinWeight, n = si.count;
+  const col = new Float32Array(n * 3);
+  const names = mesh.skeleton.bones.map((b) => b.name);
+  for (let i = 0; i < n; i++) {
+    let best = 0, bw = -1;
+    for (let k = 0; k < 4; k++) { const w = sw.getComponent(i, k); if (w > bw) { bw = w; best = si.getComponent(i, k); } }
+    const c = PCOL[PART(names[best])];
+    col[i * 3] = c[0] / 255; col[i * 3 + 1] = c[1] / 255; col[i * 3 + 2] = c[2] / 255;
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  idMat = new THREE.MeshBasicMaterial({ vertexColors: true });
+}
+window.idMode = (on) => {
+  if (!idMat) buildIdMat();
+  if (on) {
+    normalMats = [mesh.material, sMesh.material];
+    mesh.material = idMat; outline.visible = false; sOut.visible = false;
+    sMesh.material = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(0.25, 0.75, 0.25, THREE.LinearSRGBColorSpace) });
+    sleeve.children[2].visible = false;
+    renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  } else if (normalMats) {
+    mesh.material = normalMats[0]; sMesh.material = normalMats[1]; outline.visible = true; sOut.visible = true; sleeve.children[2].visible = true;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+  }
+};
+window.idPass = (ps, pl) => {
+  window.idMode(true); renderer.setPixelRatio(2); renderer.setSize(1920, 1080, false);
+  window.pose(ps); window.place(pl); renderer.render(scene, cam);
+  const url = canvas.toDataURL('image/png');
+  renderer.setPixelRatio(1); renderer.setSize(1920, 1080, false); window.idMode(false);
+  const pts = {}; for (const n of Object.keys(bones)) pts[n] = window.screenOf(n);
+  return { url, pts };
+};
 window.screenOf = (name) => { root.updateMatrixWorld(true); const v = bones[name].getWorldPosition(new THREE.Vector3()); return [v.x, 1080 - v.y]; };
 window.frame = async (bgSvg, ps, pl) => {
   document.getElementById('bg').innerHTML = bgSvg;
