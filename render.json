@@ -1,11 +1,11 @@
 {
-  "id": "friends-v1-ab-r2",
-  "composition": "FriendsFilm",
+  "id": "group-smoke-1",
+  "composition": "GroupFilm",
   "start": 0,
-  "end": 1012,
-  "chunks": 20,
+  "end": 149,
+  "chunks": 5,
   "concurrency": 1,
   "timeout": 600000,
-  "output": "friends_v1_ab",
+  "output": "group_smoke1",
   "flags": "--crf=16"
 }
