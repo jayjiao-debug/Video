@@ -46,10 +46,11 @@
 //
 //   Light: cast.light = LIGHT_DORM / LIGHT_DORM_NIGHT / LIGHT_CLASS or your own CastLight { key (world dir TOWARD the
 //   key light: the set's real sun / lamp), tint, tintK, gain, grad, bodyGrad, sideTint, and optional shade, shadeK,
-//   bodyShadeK, wrap, soft, broad, bodySat, sheen, lift }: lit-sphere crescent on the head and a far-side band on the
-//   torso from the key in the card frame, per pixel and per frame (no canvas redraw); shadow = part x (1 - shadeK) x
-//   shade (room tint), lit = part x key tint; ink never shaded; the drawing's painted crescents are taken back out in
-//   the shader (see "light + card shading").
+//   bodyShadeK, wrap, edge, broad, bodySat, sheen, lift, bleach, contact, contactLen }: lit-sphere crescent on the head
+//   and a far-side band on the torso from the key in the card frame, per pixel and per frame (no canvas redraw);
+//   shadow = part x (1 - shadeK) x shade (room tint), lit = part x key tint, a day key bleaches light skin toward white;
+//   ink never shaded. The drawings are painted with flat fills (FlatPen: toon.ts's painted ramps are not drawn), so the
+//   shader's crescent is the only shading. Contact blob colour / directional tail per light (see "light + card shading").
 //
 //   Crowd (84 seated classmates, cheap):
 //     const crowd = cast.crowd(seats, looks, { near: 3.2 });   seats: CrowdSeat[] { top, facing, deskEdge?, deskTop?, back? }
@@ -91,7 +92,8 @@
 //     Avoid: the set's desk4Chair perch (it faces the aisle = into the office chair's backrest) and lying cards seen along
 //     the bunk's length (end-on cams flatten them; the card turns at most clampYaw toward the camera).
 //
-// Determinism: nothing reads wall time; the pool redraws a canvas only from (look, solved pose, face, light) keys.
+// Determinism: nothing reads wall time; the pool redraws a canvas only from (look, solved pose, face, light) keys (the
+// light only picks the thick side of the ink ring: the drawings carry no painted shading, see FlatPen).
 // Layers: cards, blobs and fx are on NOINK (the world ink pass does not outline them); enable NOINK on the camera.
 import * as THREE from "three";
 import {
@@ -152,36 +154,43 @@ export class Pool {
 //  - head: a soft crescent shaped like a lit sphere on the side away from the key. Sphere normal from the head disc,
 //    n = (p, sqrt(1 - p.p)), lit by lEff = (dir2 sin th, cos th), dir2 = the key's direction in the card plane,
 //    th = mix(wrap0, wrap1, |key in the card plane|): the 50 % line sits 1 - cos th in from the rim (0.1-0.3 r), the
-//    crescent tapers to nothing about 90 deg round, the 10-90 % edge is ~0.13 r (never a seam).
+//    crescent tapers to nothing about 90 deg round. The terminator's 10-90 % edge is `edge` r wide for any th
+//    (d(n.l)/dr = 1 / sin th at the terminator), reference 0.12-0.15 r: a crescent, not a vignette, never a seam.
 //  - body: the bean torso lit as a capsule along its own axis (so a leaning or lying torso keeps its shading) by the
 //    same key with a broader angle: a lateral key gives a band down the far side (dark plateau on the outer ~12 %,
 //    50 % point a third of the width in, 10-90 % over a quarter of it), a key along the torso darkens the far end cap;
-//    deeper than the head (cloth shadow/lit ~0.5) and a little more saturated, an optional thin sheen on the lit edge.
+//    past the torso's ends (legs, skirt, raised arms) the capsule turns back into a cylinder (side band only).
+//    Deeper than the head (cloth shadow/lit ~0.5), a little more saturated, an optional thin sheen on the lit edge.
 //  - shadow colour = part colour x (1 - shadeK) x shade: the room's shade tint (lavender / rose, never green).
-//  - lit side = part colour x key tint (normalised to keep the face value), flat, a small lift toward white on skin.
+//  - lit side = part colour x key tint (normalised to keep the face value), flat. A bright day key bleaches light skin
+//    toward white (`bleach`: the reference day faces are near-white, #e2dfe6 / #ebebed, so the lavender crescent
+//    shows; under a warm lamp the same face goes cream: keep bleach low there).
 //  - ink (outlines, eyes, mouth lines) is never shaded or tinted.
-//  - the painted crescents / gradients of the drawing (toon.ts shadedFill / gradFill: SH_SKIN, SH_FELT, SH_CLOTH,
-//    quantised to 45 deg per card) are taken back out per pixel ("unpaint"): a texel that lies on the painted ramp
-//    base -> base x SH of the skin, hair, top or bottom colour is moved back to the flat base, so only the shader's
-//    continuous crescent remains and it follows the world key per frame with no canvas redraw.
+//  - the drawings are painted by FlatPen: toon.ts's shadedFill / gradFill ramps (SH_SKIN, SH_FELT, SH_CLOTH, quantised
+//    to 45 deg per card) are drawn as their flat base colour, so the shader's continuous crescent is the only shading
+//    and it follows the world key per frame with no canvas redraw; every drawn line and detail stays as drawn.
 export type CastLight = {
   /** world direction TOWARD the key light (crescent + body band side; use the set's real sun / lamp direction) */
   key: [number, number, number];
   /** key light colour on the lit side (mixed by tintK, normalised to keep the face value), overall gain */
   tint: [number, number, number]; tintK: number; gain: number;
-  /** legacy: head / body shading strength (the defaults of shadeK = 1.4 grad, bodyShadeK = 3 bodyGrad) and the old
-   *  far-side tint (unused when `shade` is given) */
+  /** legacy: head / body shading strength (the defaults of shadeK = 1.4 grad, bodyShadeK = 2.5 bodyGrad) and the old
+   *  far-side tint (unused) */
   grad: number; bodyGrad: number; sideTint: [number, number, number];
   /** shadow tint, linear (normalised to luminance 1): day / neutral rooms lavender [1.04, .95, 1.34], warm rooms rose
    *  [1.08, .96, 1.16], night blue-violet [1.05, .9, 1.8]. Default lavender. */
   shade?: [number, number, number];
-  /** shadow depth 1 - shadow/lit (linear, before tone mapping) at the full head crescent / the body's dark plateau */
+  /** shadow depth 1 - shadow/lit (linear, before tone mapping) at the full head crescent / the body's dark plateau
+   *  (reference head shadow/lit 0.54-0.86, median 0.73; cloth 0.46-0.54) */
   shadeK?: number; bodyShadeK?: number;
   /** crescent angle th (degrees) for a key straight in front of the card (thin crescent) .. fully to the side or
-   *  behind. 50 % line at 1 - cos th in from the disc rim: [26, 54] = 0.10 .. 0.41 r, i.e. ~0.3 r in from the skin edge
-   *  after the thick far-side ink (reference 0.19-0.31 r). A hard low side sun may go to 75-90. Default [26, 54]. */
+   *  behind. 50 % line at 1 - cos th in from the disc rim: [26, 54] = 0.10 .. 0.41 r, i.e. ~0.25 r in from the skin
+   *  edge after the thick far-side ink (reference 0.19-0.31 r). A hard low side sun may go to 75-90. Default [26, 54]. */
   wrap?: [number, number];
-  /** terminator softness in n.l (0.2: 10-90 % edge ~0.2 r; keep >= 0.12 so it reads as form, never a seam) */
+  /** 10-90 % width of the head terminator in head radii (default 0.13; reference 0.10-0.17 r as rendered; keep
+   *  >= 0.09 so it reads as form, never a seam) */
+  edge?: number;
+  /** legacy (r1): terminator softness in n.l; used as edge = 0.6 soft when `edge` is not given */
   soft?: number;
   /** broad second falloff across the face toward the shadow side, as a share of the full shadow (warm lamps / night 0.3) */
   broad?: number;
@@ -189,33 +198,43 @@ export type CastLight = {
    *  the torso width in from the far edge) and its terminator softness in n.l (default 0.38: 10-90 % over ~25 % of
    *  the width) */
   bodyWrap?: [number, number]; bodySoft?: number;
-  /** extra chroma in the body shadow (0.2 = +20 % at the dark plateau) */
+  /** extra chroma in the body shadow (0.12 = +12 % at the dark plateau) */
   bodySat?: number;
   /** lit-edge sheen on the torso, + linear (0 = none; reference 0.1 day .. 0.4 warm) */
   sheen?: number;
   /** lit side of the head lifted toward white (0 .. 0.04) */
   lift?: number;
+  /** a bright day key bleaches light skin toward white: 0 = the look's skin colour, 1 = white (light skins only,
+   *  luma >= .76; darker skins keep their colour). Day interiors 0.5-0.7, warm lamps 0-0.2. Default 0. */
+  bleach?: number;
+  /** contact blob: sRGB multiply colour at its core (flat interiors: light lavender #e0dae8, about x0.72; sunlit sets:
+   *  a dark blue-violet, reference cast shadows x0.12-0.25 of the sunlit ground). Default "#e0dae8". */
+  contact?: string;
+  /** contact blob tail (m) away from the key along the ground: 0 = a round blob under the feet; sunlit sets ~0.5 (the
+   *  reference sun shadow is darkest at the feet and fades over ~1.5 body widths). Default 0. */
+  contactLen?: number;
 };
 /** dorm, ceiling battens on (evening): warm overhead key slightly from the door end */
 export const LIGHT_DORM: CastLight = { key: [0.35, 1, 0.55], tint: [1, 0.9, 0.78], tintK: 0.55, gain: 0.97, grad: 0.2, bodyGrad: 0.16, sideTint: [0.93, 0.9, 0.98], shade: [1.08, 0.95, 1.12] };
 /** dorm, lamps only (night): warmer, dimmer, more side modelling from the desk lamps */
 export const LIGHT_DORM_NIGHT: CastLight = { key: [0.8, 0.6, 0.2], tint: [1, 0.82, 0.62], tintK: 0.6, gain: 0.78, grad: 0.3, bodyGrad: 0.22, sideTint: [0.85, 0.85, 1.0], shade: [1.05, 0.9, 1.6], broad: 0.3 };
 /** classroom: low afternoon sun from the window wall (sets/classroom CLASSROOM_SUN.dir), cream walls and cork board:
- *  a bright day interior. Lit side near neutral with a touch of sun, shadow rose-lavender (30 % toward the warm room),
- *  head shadow/lit ~0.75 and cloth ~0.5 as displayed (shadeK is a little deeper than the lab's: the Film's brighter
- *  exposure puts more of the lit skin into the tone-mapping shoulder). */
+ *  a bright day interior. Lit skin bleached near white (Lab chroma ~5, reference day faces 1-5) with a touch of sun,
+ *  shadow lavender with a little rose from the warm room (reference shadow chroma 10-18, hue -50..-67 deg), head
+ *  shadow/lit ~0.7 and cloth ~0.5 as displayed, crescent edge ~0.13 r; a light, soft contact blob. */
 export const LIGHT_CLASS: CastLight = {
-  key: [-0.803, 0.375, 0.464], tint: [1.03, 1.0, 0.95], tintK: 1, gain: 1.0, grad: 0.22, bodyGrad: 0.16, sideTint: [0.93, 0.92, 0.99],
-  shade: [1.07, 0.95, 1.22], shadeK: 0.35, bodyShadeK: 0.48, wrap: [26, 54], soft: 0.2, broad: 0, bodySat: 0.2, sheen: 0.1, lift: 0.03,
+  key: [-0.803, 0.375, 0.464], tint: [1.01, 1.0, 0.985], tintK: 1, gain: 1.0, grad: 0.22, bodyGrad: 0.16, sideTint: [0.93, 0.92, 0.99],
+  shade: [1.06, 0.94, 1.36], shadeK: 0.4, bodyShadeK: 0.42, wrap: [26, 52], edge: 0.13, broad: 0, bodySat: 0.12, sheen: 0.1, lift: 0,
+  bleach: 0.8, contact: "#e0dae8", contactLen: 0,
 };
 
 const SHADE_DEF: [number, number, number] = [1.04, 0.95, 1.34];
 const U = {
   uKey: { value: new THREE.Vector3(0, 1, 0) }, uTint: { value: new THREE.Vector3(1, 1, 1) }, uGain: { value: 1 },
-  uShade: { value: new THREE.Vector3(...SHADE_DEF) }, uShadeK: { value: new THREE.Vector2(0.31, 0.48) },
-  uWrap: { value: new THREE.Vector2(rad0(26), rad0(54)) }, uSoft: { value: 0.2 }, uBroad: { value: 0 },
+  uShade: { value: new THREE.Vector3(...SHADE_DEF) }, uShadeK: { value: new THREE.Vector2(0.31, 0.4) },
+  uWrap: { value: new THREE.Vector2(rad0(26), rad0(54)) }, uEdge: { value: 0.13 }, uBroad: { value: 0 },
   uWrapB: { value: new THREE.Vector2(rad0(40), rad0(70)) }, uSoftB: { value: 0.38 },
-  uBodySat: { value: 0.2 }, uSheen: { value: 0 }, uLift: { value: 0 }, uUnpaint: { value: 1 },
+  uBodySat: { value: 0.12 }, uSheen: { value: 0 }, uLift: { value: 0 }, uBleach: { value: 0 },
 };
 function rad0(d: number) { return (d * Math.PI) / 180; }
 const LUMA3 = (v: THREE.Vector3) => 0.2126 * v.x + 0.7152 * v.y + 0.0722 * v.z;
@@ -225,29 +244,29 @@ const setLight = (L: CastLight) => {
   t.multiplyScalar(1 / Math.max(LUMA3(t), 0.05));
   U.uGain.value = L.gain;
   const s = U.uShade.value.set(...(L.shade ?? SHADE_DEF)); s.multiplyScalar(1 / Math.max(LUMA3(s), 0.05));
-  U.uShadeK.value.set(L.shadeK ?? Math.min(0.6, 1.4 * L.grad), L.bodyShadeK ?? Math.min(0.7, 3 * L.bodyGrad));
+  U.uShadeK.value.set(L.shadeK ?? Math.min(0.6, 1.4 * L.grad), L.bodyShadeK ?? Math.min(0.52, 2.5 * L.bodyGrad));
   const w = L.wrap ?? [26, 54]; U.uWrap.value.set(rad0(w[0]), rad0(w[1]));
-  U.uSoft.value = Math.max(0.05, L.soft ?? 0.2); U.uBroad.value = L.broad ?? 0;
+  U.uEdge.value = Math.max(0.04, L.edge ?? (L.soft !== undefined ? 0.6 * L.soft : 0.13)); U.uBroad.value = L.broad ?? 0;
   const wb = L.bodyWrap ?? [40, 70]; U.uWrapB.value.set(rad0(wb[0]), rad0(wb[1])); U.uSoftB.value = Math.max(0.05, L.bodySoft ?? 0.38);
-  U.uBodySat.value = L.bodySat ?? 0.2; U.uSheen.value = L.sheen ?? 0; U.uLift.value = L.lift ?? 0;
+  U.uBodySat.value = L.bodySat ?? 0.12; U.uSheen.value = L.sheen ?? 0; U.uLift.value = L.lift ?? 0;
+  U.uBleach.value = Math.min(1, Math.max(0, L.bleach ?? 0));
 };
-/** painted shadow multipliers of toon.ts (SH_SKIN, SH_FELT, SH_CLOTH): what "unpaint" takes back out */
+type P2 = [number, number];
+/** the drawing with toon.ts's painted light ramps flattened: shadedFill / gradFill fill the flat base colour. The card
+ *  shader owns all shading, so nothing painted doubles or fights its crescent, and every drawn line, part line and
+ *  detail (also the ones close to a ramp colour) stays exactly as drawn. */
+class FlatPen extends Pen {
+  shadedFill(pts: P2[], base: string) { this.path(pts, true); this.g.fillStyle = base; this.g.fill(); }
+  gradFill(pts: P2[], base: string) { this.path(pts, true); this.g.fillStyle = base; this.g.fill(); }
+}
 const CARD_DECL = /* glsl */ `
 uniform vec3 uKey; uniform vec3 uTint; uniform float uGain; uniform vec3 uShade; uniform vec2 uShadeK; uniform vec2 uWrap;
-uniform float uSoft; uniform float uBroad; uniform float uBodySat; uniform float uSheen; uniform float uLift; uniform float uUnpaint;
+uniform float uEdge; uniform float uBroad; uniform float uBodySat; uniform float uSheen; uniform float uLift; uniform float uBleach;
 uniform vec2 uWrapB; uniform float uSoftB;
 varying vec2 vCard; varying vec4 vHead; varying vec4 vBody; varying float vDim; varying float vAspect; varying vec3 vKc;
-varying vec3 vSkin; varying vec3 vTop; varying vec3 vHair; varying vec3 vBot;
+varying vec3 vSkin;
 vec3 cardToSrgb( vec3 c ) { c = max( c, vec3( 0.0 ) ); return mix( c * 12.92, 1.055 * pow( c, vec3( 0.4166667 ) ) - 0.055, step( vec3( 0.0031308 ), c ) ); }
-vec3 cardToLin( vec3 c ) { return mix( c / 12.92, pow( ( c + 0.055 ) / 1.055, vec3( 2.4 ) ), step( vec3( 0.04045 ), c ) ); }
-// a texel on the painted ramp base -> base * sh (canvas gradients mix in sRGB) goes back to base
-vec3 cardUnpaint( vec3 x, vec3 base, vec3 sh ) {
-  vec3 seg = base * ( sh - 1.0 ); float l2 = dot( seg, seg );
-  if ( base.r < 0.0 || l2 < 1e-5 ) return x;
-  float t = clamp( dot( x - base, seg ) / l2, 0.0, 1.0 );
-  float w = 1.0 - smoothstep( 0.011, 0.024, length( x - base - seg * t ) );
-  return x - seg * ( t * w );
-}
+vec3 cardToLin( vec3 c ) { c = max( c, vec3( 0.0 ) ); return mix( c / 12.92, pow( ( c + 0.055 ) / 1.055, vec3( 2.4 ) ), step( vec3( 0.04045 ), c ) ); }
 `;
 /** vertex: the key in the card's own frame (x = card +u, y = card up, z = toward the camera side of the card) */
 const CARD_VERT = (inst: boolean) => /* glsl */ `
@@ -261,18 +280,10 @@ const CARD_VERT = (inst: boolean) => /* glsl */ `
 }
 `;
 /** card shading in the fragment shader. vCard = card uv (0..1), vHead = (u, v, r in v units, torso half length in v
- *  units), vBody = torso centre (x in v units, v), half width (v units), axis angle (rad, canvas sense), vKc = key in the card frame, vDim =
- *  brightness, vSkin / vHair / vTop / vBot = the look's sRGB colours (unpaint). */
+ *  units), vBody = torso centre (x in v units, v), half width (v units), axis angle (rad, canvas sense), vKc = key in
+ *  the card frame, vDim = brightness, vSkin = the look's skin colour (sRGB 0..1, for the day bleach). */
 const CARD_GLSL = /* glsl */ `
 vec3 cB = diffuseColor.rgb;
-if ( uUnpaint > 0.5 ) {
-  vec3 xs = cardToSrgb( cB );
-  xs = cardUnpaint( xs, vSkin, vec3( 0.96, 0.86, 0.84 ) );
-  xs = cardUnpaint( xs, vHair, vec3( 0.62, 0.62, 0.70 ) );
-  xs = cardUnpaint( xs, vTop, vec3( 0.64, 0.66, 0.74 ) );
-  xs = cardUnpaint( xs, vBot, vec3( 0.64, 0.66, 0.74 ) );
-  cB = cardToLin( xs );
-}
 vec3 outgoingLight;
 {
   const vec3 LW = vec3( 0.2126, 0.7152, 0.0722 );
@@ -285,28 +296,52 @@ vec3 outgoingLight;
   float latE = kc.z > 0.0 ? clamp( lat, 0.0, 1.0 ) : 1.0;
   float th = mix( uWrap.x, uWrap.y, latE );
   vec3 lEff = vec3( dir2 * sin( th ), cos( th ) );
+  // the terminator's 10-90 % edge is uEdge head radii for any th: n.l changes by 1 / sin th per radius there, and
+  // smoothstep's 10-90 % spans 0.608 of its window
+  float soft = uEdge / ( 1.216 * max( sin( th ), 0.25 ) );
   // head: lit sphere from the head disc
   vec2 pc = vec2( vCard.x * vAspect, vCard.y );
   vec2 P = ( pc - vec2( vHead.x * vAspect, vHead.y ) ) / vHead.z;
   float pr = length( P );
   float ndl = dot( vec3( P, sqrt( max( 1.0 - pr * pr, 0.0 ) ) ), lEff );
-  float sHead = 1.0 - smoothstep( -uSoft, uSoft, ndl );
+  float sHead = 1.0 - smoothstep( -soft, soft, ndl );
   sHead = max( sHead, uBroad * ( 1.0 - smoothstep( -0.6, 0.4, ndl ) ) );
-  // body: a capsule along the torso's own axis (radius = half width, caps from +-(half length - half width))
+  // body: a capsule along the torso's own axis (radius = half width, caps from +-(half length - half width)); past the
+  // torso's ends (legs, skirt, a raised arm) it turns back into a cylinder, so those keep the side band only
   vec2 ax = vec2( cos( vBody.w ), -sin( vBody.w ) ), ay = vec2( -ax.y, ax.x );
   vec2 dB = pc - vBody.xy;
   float bu = dot( dB, ax ) / vBody.z, bw = dot( dB, ay ) / vBody.z;
-  float bt = sign( bw ) * max( abs( bw ) - max( vHead.w / vBody.z - 1.0, 0.0 ), 0.0 );
+  float capE = max( abs( bw ) - max( vHead.w / vBody.z - 1.0, 0.0 ), 0.0 );
+  float bt = sign( bw ) * min( capE, 1.0 ) * ( 1.0 - smoothstep( 1.0, 1.6, capE ) );
   vec3 nB = normalize( vec3( bu, bt, sqrt( max( 1.0 - bu * bu - bt * bt, 0.0 ) ) + 1e-4 ) );
   float thB = mix( uWrapB.x, uWrapB.y, latE );
   vec3 lB = vec3( dir2 * sin( thB ), cos( thB ) );
   float ndlB = nB.x * dot( ax, lB.xy ) + nB.y * dot( ay, lB.xy ) + nB.z * lB.z;
   float sBody = 1.0 - smoothstep( -uSoftB, uSoftB, ndlB );
-  float sheen = uSheen * smoothstep( 0.72, 0.9, abs( bu ) ) * ( 1.0 - smoothstep( 0.98, 1.1, abs( bu ) ) ) * smoothstep( 0.15, 0.45, ndlB ) * step( abs( bt ), 0.5 );
+  // only the torso (and a little past its outline) takes the band: legs, shoes, hands and arms held away from it stay
+  // unshaded (thin dark limbs show no band anyway; white shoes would turn lavender)
+  float outT = length( vec2( max( capE - 1.0, 0.0 ), max( abs( bu ) - 1.0, 0.0 ) ) );
+  sBody *= 1.0 - smoothstep( 0.12, 0.5, outT );
+  float sheen = uSheen * smoothstep( 0.72, 0.9, abs( bu ) ) * ( 1.0 - smoothstep( 0.98, 1.1, abs( bu ) ) ) * smoothstep( 0.15, 0.45, ndlB ) * ( 1.0 - smoothstep( 0.4, 0.6, abs( bt ) ) );
   float hz = 1.0 - smoothstep( 0.9, 1.1, pr );
   float notInk = smoothstep( 0.012, 0.045, dot( cB, LW ) );
   float s = mix( sBody, sHead, hz ) * notInk;
   float K = mix( uShadeK.y, uShadeK.x, hz );
+  // day bleach (light skins only): the look's skin moves toward white. The canvas mixes its anti-aliased edges in sRGB,
+  // so a skin / ink edge texel lies on the sRGB line INK -> skin: it is moved to INK -> bleached skin with the same ink
+  // share. The bleach follows coverage continuously (no warm fringe on the ink, no crawl when a card moves); colours
+  // off that line (hair, cloth, eyes, teeth, cream shirts) and the dark stick limbs (ink share > 1/2) keep their colour.
+  float wB = uBleach * smoothstep( 0.62, 0.76, dot( vSkin, LW ) );
+  if ( wB > 0.0 ) {
+    const vec3 INKS = vec3( 0.1412, 0.0902, 0.149 );   // toon.ts INK #241726
+    vec3 xs = cardToSrgb( cB ), sg = vSkin - INKS;
+    float a = clamp( dot( xs - INKS, sg ) / max( dot( sg, sg ), 1e-4 ), 0.0, 1.0 );
+    float res = length( xs - INKS - sg * a );
+    vec3 skL = cardToLin( vSkin );
+    skL = mix( skL, vec3( max( max( skL.r, skL.g ), skL.b ) ), wB );
+    vec3 tgt = cardToLin( INKS + ( cardToSrgb( skL ) - INKS ) * a );
+    cB = mix( cB, tgt, ( 1.0 - smoothstep( 0.012, 0.035, res ) ) * smoothstep( 0.5, 0.75, a ) );
+  }
   vec3 col = cB * uTint;
   float sat = uBodySat * s * ( 1.0 - hz );
   col = max( mix( vec3( dot( col, LW ) ), col, 1.0 + sat ), vec3( 0.0 ) );
@@ -318,49 +353,45 @@ vec3 outgoingLight;
 }
 `;
 const DECL_F = "#include <common>\n" + CARD_DECL;
-const VDECL = "varying vec2 vCard; varying vec4 vHead; varying vec4 vBody; varying float vDim; varying float vAspect; varying vec3 vKc;\nvarying vec3 vSkin; varying vec3 vTop; varying vec3 vHair; varying vec3 vBot;\nuniform vec3 uKey;";
-type Zone = {
-  uHead: { value: THREE.Vector4 }; uBody: { value: THREE.Vector4 }; uDim: { value: number }; uAspect: { value: number };
-  uSkin: { value: THREE.Vector3 }; uTop: { value: THREE.Vector3 }; uHair: { value: THREE.Vector3 }; uBot: { value: THREE.Vector3 };
-};
+const VDECL = "varying vec2 vCard; varying vec4 vHead; varying vec4 vBody; varying float vDim; varying float vAspect; varying vec3 vKc;\nvarying vec3 vSkin;\nuniform vec3 uKey;";
+type Zone = { uHead: { value: THREE.Vector4 }; uBody: { value: THREE.Vector4 }; uDim: { value: number }; uAspect: { value: number }; uSkin: { value: THREE.Vector3 } };
 /** single card: zones as uniforms */
 const figMaterial = () => {
   const m = new THREE.MeshBasicMaterial({ map: blank, alphaTest: 0.5, side: THREE.DoubleSide });
   const zone: Zone = {
     uHead: { value: new THREE.Vector4(0.5, 0.7, 0.12, 0.2) }, uBody: { value: new THREE.Vector4(0.38, 0.4, 0.1, 0) }, uDim: { value: 1 }, uAspect: { value: 0.76 },
-    uSkin: { value: new THREE.Vector3(1, 0.886, 0.761) }, uTop: { value: new THREE.Vector3(-1, -1, -1) }, uHair: { value: new THREE.Vector3(-1, -1, -1) }, uBot: { value: new THREE.Vector3(-1, -1, -1) },
+    uSkin: { value: new THREE.Vector3(1, 0.886, 0.761) },
   };
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U, zone);
-    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nuniform vec4 uHead; uniform vec4 uBody; uniform float uDim; uniform float uAspect; uniform vec3 uSkin; uniform vec3 uTop; uniform vec3 uHair; uniform vec3 uBot;\n" + VDECL)
-      .replace("#include <uv_vertex>", "#include <uv_vertex>\nvCard = uv; vHead = uHead; vBody = uBody; vDim = uDim; vAspect = uAspect; vSkin = uSkin; vTop = uTop; vHair = uHair; vBot = uBot;\n" + CARD_VERT(false));
+    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nuniform vec4 uHead; uniform vec4 uBody; uniform float uDim; uniform float uAspect; uniform vec3 uSkin;\n" + VDECL)
+      .replace("#include <uv_vertex>", "#include <uv_vertex>\nvCard = uv; vHead = uHead; vBody = uBody; vDim = uDim; vAspect = uAspect; vSkin = uSkin;\n" + CARD_VERT(false));
     sh.fragmentShader = sh.fragmentShader.replace("#include <common>", DECL_F).replace("vec3 outgoingLight = reflectedLight.indirectDiffuse;", CARD_GLSL);
   };
-  m.customProgramCacheKey = () => "figcard3";
+  m.customProgramCacheKey = () => "figcard5";
   return { m, zone };
 };
-/** instanced atlas card: per-instance cell rect + zones + look colours (aColA = skin.rgb, hair.r; aColB = top.rgb,
- *  hair.g; aColC = bottom.rgb, hair.b) */
+/** instanced atlas card: per-instance cell rect + zones + the look's skin colour (aColA.rgb) */
 const crowdMaterial = (map: THREE.Texture) => {
   const m = new THREE.MeshBasicMaterial({ map, alphaTest: 0.5, side: THREE.DoubleSide });
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
-    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nattribute vec4 aCell; attribute vec4 aHead; attribute vec4 aBody; attribute float aDim; attribute vec4 aColA; attribute vec4 aColB; attribute vec4 aColC;\n" + VDECL)
-      .replace("#include <uv_vertex>", "#include <uv_vertex>\nvCard = uv; vHead = aHead; vBody = aBody; vDim = aDim; vAspect = " + (760 / 1000).toFixed(4) + "; vSkin = aColA.rgb; vTop = aColB.rgb; vBot = aColC.rgb; vHair = vec3( aColA.a, aColB.a, aColC.a );\n#ifdef USE_MAP\nvMapUv = aCell.xy + uv * aCell.zw;\n#endif\n" + CARD_VERT(true));
+    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nattribute vec4 aCell; attribute vec4 aHead; attribute vec4 aBody; attribute float aDim; attribute vec4 aColA;\n" + VDECL)
+      .replace("#include <uv_vertex>", "#include <uv_vertex>\nvCard = uv; vHead = aHead; vBody = aBody; vDim = aDim; vAspect = " + (760 / 1000).toFixed(4) + "; vSkin = aColA.rgb;\n#ifdef USE_MAP\nvMapUv = aCell.xy + uv * aCell.zw;\n#endif\n" + CARD_VERT(true));
     sh.fragmentShader = sh.fragmentShader.replace("#include <common>", DECL_F).replace("vec3 outgoingLight = reflectedLight.indirectDiffuse;", CARD_GLSL);
   };
-  m.customProgramCacheKey = () => "figcrowd3";
+  m.customProgramCacheKey = () => "figcrowd5";
   return m;
 };
-/** a look's colours as sRGB 0..1 for unpaint (-1 = no such part: the ramp test never matches) */
-const LOOK_COLS = new WeakMap<Look, number[][]>();
+/** a look's skin colour as sRGB 0..1 (the day bleach finds the skin texels by it; -1 = none) */
+const SKIN_COL = new WeakMap<Look, number[]>();
 const hex01 = (h: string | undefined) => {
   if (!h || h[0] !== "#" || h.length < 7) return [-1, -1, -1];
   const n = parseInt(h.slice(1, 7), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
 };
-const lookCols = (L: Look) => {
-  let c = LOOK_COLS.get(L);
-  if (!c) { c = [hex01(L.skin), hex01(L.topCol), hex01(L.hairCol), hex01(L.botCol)]; LOOK_COLS.set(L, c); }
+const skinCol = (L: Look) => {
+  let c = SKIN_COL.get(L);
+  if (!c) { c = hex01(L.skin); SKIN_COL.set(L, c); }
   return c;
 };
 /** torso zone of a solved pose (toon.ts paintFig's torso blob T): centre (x / f.h, 1 - y / f.h), half width / f.h,
@@ -382,13 +413,51 @@ const blobMaterial = (map: THREE.Texture) => new THREE.MeshBasicMaterial({
   polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, side: THREE.DoubleSide,
 });
 const blank = (() => { const c = document.createElement("canvas"); c.width = c.height = 2; return new THREE.CanvasTexture(c); })();
-/** contact blob texture: a soft lavender multiply, x0.72 linear at the core (reference flat interiors: x0.65-0.85
- *  within ~50-60 px of the feet, no hard rim; the old #6f6070 was x0.16 and read ink-black with N8AO on top) */
-const BLOB_TEX = (() => {
-  const c = document.createElement("canvas"); c.width = c.height = 128;
-  fxContact(new Pen(c.getContext("2d")!), "#e0dae8");
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; return t;
-})();
+/** contact blob textures per (colour, round / tail). Round (128 x 128): toon.ts fxContact, the colour at the core,
+ *  soft fall-off, no hard rim (flat interiors: reference x0.65-0.85 within ~50-60 px of the feet). Tail (128 x 256):
+ *  the same round core with its centre a quarter down the canvas (the feet) and a tail toward the canvas bottom,
+ *  tapering and fading out (sunlit sets: the reference sun shadow is darkest at the feet and fades over ~1.5 body
+ *  widths). */
+const BLOB_TEX = new Map<string, THREE.CanvasTexture>();
+const CONTACT_PROFILE: [number, number][] = [[0, 0], [0.32, 0.02], [0.5, 0.22], [0.66, 0.58], [0.82, 0.88], [1, 1]];
+const blobTex = (col: string, tail: boolean) => {
+  const key = `${col}|${tail ? 1 : 0}`;
+  let t = BLOB_TEX.get(key);
+  if (t) return t;
+  const c = document.createElement("canvas"); c.width = 128; c.height = tail ? 256 : 128;
+  const g = c.getContext("2d")!;
+  if (!tail) fxContact(new Pen(g), col);
+  else {
+    const k = hex01(col), im = g.createImageData(128, 256), d = im.data;
+    // white -> colour by density (sRGB mix, like fxContact's gradient stops)
+    const prof = (r: number) => {
+      if (r >= 1) return 0;
+      for (let i = 1; i < CONTACT_PROFILE.length; i++) {
+        const [r1, k1] = CONTACT_PROFILE[i], [r0, k0] = CONTACT_PROFILE[i - 1];
+        if (r <= r1) return 1 - (k0 + ((k1 - k0) * (r - r0)) / (r1 - r0));
+      }
+      return 0;
+    };
+    for (let y = 0; y < 256; y++) for (let x = 0; x < 128; x++) {
+      const dx = (x + 0.5 - 64) / 64, dy = (y + 0.5 - 64) / 64;
+      let dens: number;
+      if (dy <= 0) dens = prof(Math.hypot(dx, dy));
+      else {
+        const al = Math.min(1, dy / 3), hw = 1 - 0.4 * al;   // along the tail 0..1, half width tapering to .6
+        const fade = 1 - al * al * (3 - 2 * al);              // darkest at the feet, gone at the far end
+        dens = Math.max(prof(Math.hypot(dx, dy)), prof(Math.abs(dx) / hw) * (0.55 + 0.45 * (1 - al)) * fade);
+      }
+      const o = (y * 128 + x) * 4;
+      for (let ch = 0; ch < 3; ch++) d[o + ch] = Math.round(255 * (1 + (k[ch] - 1) * dens));
+      d[o + 3] = 255;
+    }
+    g.putImageData(im, 0, 0);
+  }
+  t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter;
+  BLOB_TEX.set(key, t);
+  return t;
+};
+const CONTACT_DEF = "#e0dae8";
 const FLAT = (() => { const g = new THREE.PlaneGeometry(1, 1); g.rotateX(-Math.PI / 2); return g; })();
 const QUAD = new THREE.PlaneGeometry(1, 1);
 const GEO = new Map<string, THREE.BufferGeometry>();
@@ -486,7 +555,7 @@ export class Figure {
     this.mesh = new THREE.Mesh(frameGeo(FRAMES.stand), m);
     this.mesh.renderOrder = 1; this.mesh.layers.set(NOINK); this.mesh.visible = false; this.mesh.frustumCulled = false;
     this.mesh.onBeforeRender = () => {};
-    this.blob = new THREE.Mesh(FLAT, blobMaterial(BLOB_TEX)); this.blob.renderOrder = 0.5; this.blob.layers.set(NOINK); this.blob.visible = false;
+    this.blob = new THREE.Mesh(FLAT, blobMaterial(blobTex(CONTACT_DEF, false))); this.blob.renderOrder = 0.5; this.blob.layers.set(NOINK); this.blob.visible = false;
     parent.add(this.mesh, this.blob);
   }
   set(s: FigState) { this.st = s; return this; }
@@ -588,24 +657,33 @@ export class Figure {
     k = Math.min(k, kMax);
     const w = Math.round(f.w * k), h = Math.round(f.h * k);
     const keyStr = `${keyOfLook(L)}|${solvedKey(sv)}|${JSON.stringify(fo)}`;
-    this.r = pool.req(keyStr, w, h, k, (p) => paintFig(p, L, sv, fo));
+    this.r = pool.req(keyStr, w, h, k, (p) => paintFig(new FlatPen(p.g), L, sv, fo));
     if (m.geometry !== frameGeo(f)) m.geometry = frameGeo(f);
     // shading zones
     const bz = bodyZone(L, sv);
     this.zone.uHead.value.set(sv.out.head[0] / f.w, 1 - sv.out.head[1] / f.h, (sv.out.headR * 1.02) / f.h, bz[4]);
     this.zone.uBody.value.set(bz[0], bz[1], bz[2], bz[3]);
     this.zone.uDim.value = s.dim ?? 1; this.zone.uAspect.value = f.w / f.h;
-    const lc = lookCols(L);
-    this.zone.uSkin.value.set(lc[0][0], lc[0][1], lc[0][2]); this.zone.uTop.value.set(lc[1][0], lc[1][1], lc[1][2]);
-    this.zone.uHair.value.set(lc[2][0], lc[2][1], lc[2][2]); this.zone.uBot.value.set(lc[3][0], lc[3][1], lc[3][2]);
+    const skc = skinCol(L); this.zone.uSkin.value.set(skc[0], skc[1], skc[2]);
     m.visible = true;
     // contact blob: under the feet (standing / seated), along the body (lying)
     this.blob.visible = s.blob !== false && pick.view !== undefined;
     if (this.blob.visible) {
+      // tail away from the key along the ground (sunlit sets); none for a key near the zenith or a lying body
+      const kx = -light.key[0], kz = -light.key[2], kg = Math.hypot(kx, kz), tailLen = lying || kg < 0.15 ? 0 : (light.contactLen ?? 0);
+      const bm = this.blob.material as THREE.MeshBasicMaterial, bt = blobTex(light.contact ?? CONTACT_DEF, tailLen > 0);
+      if (bm.map !== bt) { bm.map = bt; bm.needsUpdate = true; }
       if (lying) {
         const hip = this.hipWorld(), head = this.headWorld(), c = hip.clone().lerp(head, 0.15);
         const len = Math.max(0.6, hip.distanceTo(head) * 2.2);
         this.blob.position.set(c.x, at.y + 0.006, c.z); this.blob.rotation.set(0, facing, 0); this.blob.scale.set(0.55, 1, len);
+      } else if (tailLen > 0) {
+        // tail texture: the feet a quarter down the canvas (local -z end), the tail toward local +z = the ground
+        // direction away from the key; width across that direction from the ankle spread
+        const gx = kx / kg, gz = kz / kg, a0 = this.ankleWorld(0), a1 = this.ankleWorld(1), c = a0.clone().add(a1).multiplyScalar(0.5);
+        const span = Math.max(0.36, Math.abs((a0.x - a1.x) * gz - (a0.z - a1.z) * gx) + 0.3), lz = (tailLen + 0.16) / 0.75;
+        this.blob.position.set(c.x + gx * 0.25 * lz * sc, floor + 0.004, c.z + gz * 0.25 * lz * sc);
+        this.blob.rotation.set(0, Math.atan2(gx, gz), 0); this.blob.scale.set(span * sc, 1, lz * sc);
       } else {
         const a0 = this.ankleWorld(0), a1 = this.ankleWorld(1), c = a0.clone().add(a1).multiplyScalar(0.5);
         const span = Math.max(0.36, Math.hypot(a0.x - a1.x, a0.z - a1.z) + 0.3);
@@ -669,14 +747,11 @@ export class Crowd {
       const ig = new THREE.InstancedBufferGeometry(); ig.index = geo.index; for (const k of Object.keys(geo.attributes)) ig.setAttribute(k, geo.attributes[k]);
       const cell = new THREE.InstancedBufferAttribute(new Float32Array(cnt * 4), 4), head = new THREE.InstancedBufferAttribute(new Float32Array(cnt * 4), 4);
       const body = new THREE.InstancedBufferAttribute(new Float32Array(cnt * 4), 4), dim = new THREE.InstancedBufferAttribute(new Float32Array(cnt).fill(1), 1);
-      // look colours for unpaint: A = skin.rgb + hair.r, B = top.rgb + hair.g, C = bottom.rgb + hair.b (looks are fixed per seat)
-      const colA = new THREE.InstancedBufferAttribute(new Float32Array(cnt * 4), 4), colB = new THREE.InstancedBufferAttribute(new Float32Array(cnt * 4), 4), colC = new THREE.InstancedBufferAttribute(new Float32Array(cnt * 4), 4);
-      for (let j = 0; j < cnt; j++) {
-        const c = lookCols(looks[pi * PER + j]);
-        colA.setXYZW(j, c[0][0], c[0][1], c[0][2], c[2][0]); colB.setXYZW(j, c[1][0], c[1][1], c[1][2], c[2][1]); colC.setXYZW(j, c[3][0], c[3][1], c[3][2], c[2][2]);
-      }
+      // the look's skin colour for the day bleach (looks are fixed per seat)
+      const colA = new THREE.InstancedBufferAttribute(new Float32Array(cnt * 4), 4);
+      for (let j = 0; j < cnt; j++) { const c = skinCol(looks[pi * PER + j]); colA.setXYZW(j, c[0], c[1], c[2], 1); }
       ig.setAttribute("aCell", cell); ig.setAttribute("aHead", head); ig.setAttribute("aBody", body); ig.setAttribute("aDim", dim);
-      ig.setAttribute("aColA", colA); ig.setAttribute("aColB", colB); ig.setAttribute("aColC", colC);
+      ig.setAttribute("aColA", colA);
       const mesh = new THREE.InstancedMesh(ig, crowdMaterial(tex), cnt);
       mesh.layers.set(NOINK); mesh.renderOrder = 1; mesh.frustumCulled = false;
       for (let j = 0; j < cnt; j++) {
@@ -732,7 +807,7 @@ export class Crowd {
         g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(c * CW, r * CH, CW, CH);
         g.save(); g.beginPath(); g.rect(c * CW + 1, r * CH + 1, CW - 2, CH - 2); g.clip();
         g.setTransform(k, 0, 0, k, c * CW, r * CH);
-        paintFig(new Pen(g), this.looks[i], sv, fo);
+        paintFig(new FlatPen(g), this.looks[i], sv, fo);
         g.restore();
         this.cellKey[i] = ck; pg.dirty = true; this.redrawn++;
         const fr = sv.frame;

@@ -91,7 +91,8 @@ export function crewPose(w: World, c: Crew, f: number, s: { pullers: PullerState
   const tie = { kind: "knot" as const, axis: A.hookTie.axis, postR: A.hookTie.postR };
   const hands = onRope.map((i) => [c.pullers[i].handWorld(1), c.pullers[i].handWorld(0)]);
   const pretenders = onRope.filter((i) => s.pullers[i].mode === "pretend");
-  const hide = (rp: Rope) => rp.update({ a: V(0, -40, 0), b: V(0, -40, 0.02) });
+  // park + hide (Rope.update would clamp the parked rope to the floor and show a stub; the next real update shows it again)
+  const hide = (rp: Rope) => { rp.update({ a: V(0, -40, 0), b: V(0, -40, 0.02) }); rp.mesh.visible = false; };
   if (!hands.length) {
     // nobody on the rope: it lies on the floor along the line from the hook
     const end = V(A.positions[2].x, 0, A.ropeZ);

@@ -104,11 +104,14 @@ export const LAB_AO = { aoRadius: 0.4, distanceFalloff: 1.0, intensity: 2.0, col
 export const LAB_SUN = { dir: [-0.55, 0.38, -0.74] as V3, intensity: 13, color: "#ffe6c4" };
 /** cast.ts CastLight for the cards in this room (structural copy, so the set does not import the cast kit). Key =
  *  LAB_SUN.dir (the crescent sits on the side away from the windows, like the set's cast shadows). A bright daylight
- *  lab (blinds + fluorescent tubes): lit side near neutral, a touch cool; shadow lavender (reference store / office:
- *  head shadow/lit ~0.75, cloth ~0.5, never green); thin lit-edge sheen on the torsos. */
+ *  lab (blinds + fluorescent tubes): lit side near neutral, a touch cool, light skin bleached near white; shadow
+ *  lavender (reference store / office: head shadow/lit ~0.7-0.75, cloth ~0.5, never green), crescent edge ~0.12 r;
+ *  thin lit-edge sheen on the torsos. Sunlit floor: a dark blue-violet contact shadow with a short tail away from the
+ *  windows (reference sun shadows x0.12-0.25 of the ground, darkest at the feet), not the light interior blob. */
 export const LAB_CAST_LIGHT = {
   key: [-0.55, 0.38, -0.74] as V3, tint: [0.99, 1.0, 1.04] as V3, tintK: 1, gain: 1.0, grad: 0.22, bodyGrad: 0.16, sideTint: [0.93, 0.94, 0.98] as V3,
-  shade: [1.04, 0.95, 1.34] as V3, shadeK: 0.31, bodyShadeK: 0.48, wrap: [26, 54] as [number, number], soft: 0.2, broad: 0, bodySat: 0.2, sheen: 0.1, lift: 0.03,
+  shade: [1.04, 0.95, 1.3] as V3, shadeK: 0.32, bodyShadeK: 0.42, wrap: [26, 52] as [number, number], edge: 0.13, broad: 0, bodySat: 0.12, sheen: 0.1, lift: 0,
+  bleach: 0.75, contact: "#8a8fb2", contactLen: 0.5,
 };
 
 // =====================================================================================================================

@@ -1,11 +1,11 @@
 {
-  "id": "group-smoke-1",
+  "id": "group-v1-full",
   "composition": "GroupFilm",
   "start": 0,
-  "end": 149,
-  "chunks": 5,
+  "end": 2002,
+  "chunks": 20,
   "concurrency": 1,
   "timeout": 600000,
-  "output": "group_smoke1",
+  "output": "group_v1",
   "flags": "--crf=16"
 }

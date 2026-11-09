@@ -1,20 +1,21 @@
 // segment B, frames 266-770 (lines 03-06): the 1974 rope experiment (Ingham et al.), literal and at eye level.
 // f266 (segA's phone thumbnail, rendered without captions, is this frame): a framing on the side camera's side of
 // the room, tighter on the gauge: the dial upper left, puller 1 on square 1 already hauling on the rope from the
-// shackle, the researcher with her clipboard at anchors.researcher. One slow eased pull-back (f266 -> f598) widens it
+// shackle, the researcher with her clipboard by window 1 (R0, clear to the right of puller 1). One slow eased pull-back
+// (f266 -> f598) widens it
 // to exactly cams.side while the others join; the camera then holds to the H2 hand-off.
 // Line 03: puller 1 hauls hard (huff), the needle trembles at 16 (one person's full pull = 16 dial units); the
 //   researcher reads the dial and writes. 测力气 (f371): the label card 每人出力 enters with 1人 100%.
 // Line 04: puller 2 walks in from the camera side, turns, bends, picks the spare rope off the floor at square 2, lifts
 //   it, hauls; the needle eases to 29 (2 x 16 x 0.91). 每人只出【91%】 (f434): 2人 91%.
-// Line 05: puller 3 joins (needle 39 = 3 x 16 x 0.82, bar 3人 82% as he hauls), pullers 4, 5, 6 join staggered
+// Line 05: puller 3 joins (needle 39 = 3 x 16 x 0.82, bar 3人 82% as he hauls), pullers 4, 5, 6 join one by one
 //   (needle up to 75 = 6 x 16 x 0.78 as each grips), 只剩【78%】 (f590): 6人 78%. The card leaves f636-644.
 //   Each puller's lean eases down a little as the group grows (each pulls less), while the total rises.
 // Line 06: the objection "they are just out of step": the six heave clearly out of step (each on their own rhythm:
 //   one leans back while the next relaxes), the needle wobbles irregularly round 70. 大家使劲【不同步】 (f706): a
 //   small "?" pops over the researcher (she watches from S2, behind squares 5-6, where her face shows between the
 //   heads of pullers 5 and 6), she tilts her head, puzzled, then walks off along the window side toward puller 1 to
-//   look into it (the "?" leaves f738-744; from about f750 she is behind puller 2's head, as in H2). All relax to the
+//   look into it (the "?" leaves f726-732 as she sets off; from about f750 she is behind puller 2's head, as in H2). All relax to the
 //   H2 state (stand, dial 20) over f735-762; f770 = labcommon's H2 exactly (crewPose itself).
 // Everything is a pure function of f. Checks (IP='{"dbg":true}'): framing (heads, dial, card), rope clearance against
 // the set's colliders and the bodies, feet on the floor, walk paths against the rope and the other figures, camera
@@ -41,8 +42,9 @@ const F0 = S.from, F1 = S.to;
 // ---------------------------------------------------------------------------------------------------- beats (frames)
 /** card: enters on 测力气, rows on the narration, leaves before the heave */
 const CARD_IN = 371, CARD_OUT = 636;
-/** arrival frame at the square for pullers 2..6 (index 1..5); pull starts ARR + 13 (turn 2 f, bend 6 f, lift 5 f) */
-const ARR = [0, 420, 523, 562, 569, 576];
+/** arrival frame at the square for pullers 2..6 (index 1..5), one by one (4-6 every 14 f, so they do not bunch at the
+ *  frame edge); pull starts ARR + 13 (turn 2 f, bend 6 f, lift 5 f) */
+const ARR = [0, 420, 523, 548, 562, 576];
 const pullStart = (i: number) => (i === 0 ? F0 - 60 : ARR[i] + 13);
 const ROWS = [
   { label: "1人", value: 100, at: CARD_IN },
@@ -53,12 +55,12 @@ const ROWS = [
 /** heave (line 06) and the relax into H2 */
 const HEAVE0 = 645, HEAVE_FULL = 662, RELAX0 = 735, RELAX1 = 758;
 /** the "?" over the researcher on 不同步 */
-const Q_IN = 706, Q_OUT = 738;
+const Q_IN = 706, Q_OUT = 726;
 
 // ---------------------------------------------------------------------------------------------------- camera
 /** the opening framing: from the door end on the camera side (the side camera's side of the room), closer in and a
  *  little tighter, aimed between the dial and square 1. Eye level, untilted. */
-const OPEN_B: CamPose = { pos: [1.15, 1.38, 0.36], look: [-2.45, 1.08, -0.86], fov: 60 };
+const OPEN_B: CamPose = { pos: [1.15, 1.38, 0.36], look: [-2.45, 1.08, -1.1], fov: 62 };
 const CAM_END = 598;
 /** trapezoid-velocity progress 0..1 over [f0, f1]: smooth ramps of `a` frames in and `d` frames out */
 const trap = (f: number, f0: number, f1: number, a: number, d: number) => {
@@ -208,17 +210,19 @@ function pullerState(w: World, i: number, f: number): BPuller {
 }
 
 // ---------------------------------------------------------------------------------------------------- the researcher
-// She starts at anchors.researcher (f266, required) reading the dial and writing. Seen from the door end, that spot is
-// right behind squares 1-2, so once puller 2 holds the rope she would be hidden; after the 91 % she steps back along
-// the window side to S2 (behind squares 4-5, near the window), the one place where the side camera sees her face
+// She starts at R0, by window 1 between the gauge and square 1, 1.3 m back from the rope (from the opening camera her
+// head sits clear to the right of puller 1's: at anchors.researcher, 0.38 m behind square 1, his leaning head covered
+// hers from every camera-side view), reading the dial and writing. As the group grows she steps back along the window
+// (never near the rope) to S2 (behind squares 4-5, near the window), the one place where the side camera sees her face
 // between the heads of pullers 5 and 6, and watches the group from there (dial, notes, the out-of-step heave, the
 // "?"). On the "?" she walks back to puller 1's side (anchors.researcher, the H2 spot: segC blindfolds puller 1 next)
 // and stands there relaxed, facing square 1, by f766 (hidden behind puller 2's head from about f750, as in H2).
+const R0: Vec3 = [-2.6, 0, -1.95];
 const S2: Vec3 = [0.6, 0, -1.95];
-/** her walks: anchor -> S2 and back (frames) */
-const W1: [number, number] = [452, 507], W2: [number, number] = [721, 766];
+/** her walks: R0 -> S2 (3.2 m along the window, ~1.3 m/s) and S2 -> anchor (frames) */
+const W1: [number, number] = [446, 520], W2: [number, number] = [726, 768];
 /** front drawing (clipboard and face read) facing the camera side at each spot */
-const FACE_A = 0.73, FACE_S2 = 0.72;
+const FACE_R0 = 1.0, FACE_S2 = 0.72;
 type Gaze = "dial" | "write" | "left" | "crew" | "line" | "think";
 const GAZE: [number, Gaze][] = [
   [0, "dial"], [300, "write"], [338, "dial"], [371, "write"], [400, "left"], [433, "dial"], [441, "write"],
@@ -229,18 +233,18 @@ const GZ: Record<Gaze, { turn: -1 | 0 | 1; look: number; up: number }> = {
   crew: { turn: -1, look: -0.9, up: -0.05 }, line: { turn: -1, look: -0.45, up: -0.15 }, think: { turn: 0, look: 0.35, up: 0.45 },
 };
 const RES_EX: [number, Expr][] = [[0, "neutral"], [300, "stern"], [338, "neutral"], [371, "stern"], [400, "neutral"], [441, "stern"], [W1[0], "neutral"],
-  [546, "stern"], [562, "neutral"], [598, "stern"], [622, "neutral"], [662, "stern"], [Q_IN, "nervous"], [744, "neutral"]];
+  [546, "stern"], [562, "neutral"], [598, "stern"], [622, "neutral"], [662, "stern"], [Q_IN, "nervous"], [W2[0] + 14, "neutral"]];
 /** view swaps (front <-> walk) also get a blink */
 const RES_SWAPS = [...RES_EX.slice(1).map(([k]) => k), W1[1], W2[0]];
 const gazeAt = (f: number) => { let g: Gaze = "dial", k0 = 0; for (const [k, x] of GAZE) if (f >= k) { g = x; k0 = k; } return { g, k0 }; };
 
 function researcherState(w: World, f: number): FigState {
-  const A = w.lab.A, t = f / FPS, anchor = A.researcher.clone(), s2 = new THREE.Vector3(...S2);
+  const A = w.lab.A, t = f / FPS, anchor = A.researcher.clone(), s2 = new THREE.Vector3(...S2), r0 = new THREE.Vector3(...R0);
   const blink = lidAt(t + 30, 109, RES_SWAPS.filter((k) => k <= 760).map((k) => k / FPS + 30));
   const expr = exprAt(f, RES_EX);
-  const think = spl([[Q_IN, 0], [Q_IN + 4, 15], [Q_IN + 8, 11], [W2[0] + 10, 9], [744, 0]], f) * (f >= Q_IN ? 1 : 0);
-  const walk = (from: THREE.Vector3, to: THREE.Vector3, w0: number, w1: number): FigState => {
-    const T = w1 - w0, k = trap(f, w0, w1, Math.round(T * 0.25), Math.round(T * 0.32)), at = from.clone().lerp(to, k), dir = to.clone().sub(from), len = dir.length();
+  const think = spl([[Q_IN, 0], [Q_IN + 4, 15], [Q_IN + 8, 11], [W2[0] + 4, 9], [W2[0] + 14, 0]], f) * (f >= Q_IN ? 1 : 0);
+  const walk = (from: THREE.Vector3, to: THREE.Vector3, w0: number, w1: number, ra = 0.25, rd = 0.32): FigState => {
+    const T = w1 - w0, k = trap(f, w0, w1, Math.round(T * ra), Math.round(T * rd)), at = from.clone().lerp(to, k), dir = to.clone().sub(from), len = dir.length();
     dir.normalize();
     const cp = new THREE.Vector3().setFromMatrixPosition(w.camera.matrixWorld), toCam = Math.atan2(cp.x - at.x, cp.z - at.z);
     const cosA = Math.max(0.35, Math.abs(Math.cos(toCam) * dir.x - Math.sin(toCam) * dir.z));
@@ -251,9 +255,9 @@ function researcherState(w: World, f: number): FigState {
     // H2: idle side drawing facing square 1, the clipboard at her side; the idle clock lands on t = 0 at f770
     return { at: anchor, facing: Math.atan2(A.positions[0].x - anchor.x, A.positions[0].z - anchor.z), pose: { kind: "idle", t: (f - F1) / FPS, props: [null, "clipboard"] }, expr, blink, visible: true };
   }
-  if (f >= W2[0]) return walk(s2, anchor, W2[0], W2[1]);
-  if (f >= W1[0] && f < W1[1]) return walk(anchor, s2, W1[0], W1[1]);
-  const atS2 = f >= W1[1], at = atS2 ? s2 : anchor;
+  if (f >= W2[0]) return walk(s2, anchor, W2[0], W2[1], 0.15, 0.2);
+  if (f >= W1[0] && f < W1[1]) return walk(r0, s2, W1[0], W1[1]);
+  const atS2 = f >= W1[1], at = atS2 ? s2 : r0;
   const { g, k0 } = gazeAt(f), G = GZ[g];
   // gaze eases over 5 frames from the previous key's values (pupils), the face turn switches at the key
   const prev = GAZE.filter(([k]) => k < k0).pop(), Gp = prev ? GZ[prev[1]] : G, e = smooth((f - k0) / 5);
@@ -268,7 +272,7 @@ function researcherState(w: World, f: number): FigState {
   const penReach = lerp(0.5, 0.74, sc) + sc * 0.03 * Math.sin(2 * Math.PI * 1.9 * t + 1);
   const clipDir = -128 + 4 * sc + 2 * Math.sin(t * 1.7), clipReach = 0.62;
   return {
-    at, facing: atS2 ? FACE_S2 : FACE_A, view: "front",
+    at, facing: atS2 ? FACE_S2 : FACE_R0, view: "front",
     pose: { kind: "hold", t, aim: [{ dir: penDir, reach: penReach }, { dir: clipDir, reach: clipReach }], props: ["pen", "clipboard"], headTilt: sway - nod + think },
     expr, blink, look, lookUp, faceTurn: G.turn, visible: true,
   };
@@ -372,5 +376,8 @@ function debug(w: World, f: number, cam: CamPose, info: ReturnType<typeof crewB>
   console.log(`[segB3] f${f} handZ ${handZ.join(" ")} | ${walk.join("; ")}${info && info.picker >= 0 ? ` | pick p${info.picker + 1} gap ${info.pickGap.toFixed(3)} at ${info.pickPoint ? pc(info.pickPoint) + " y" + info.pickPoint.y.toFixed(2) : "-"}` : ""}`
     + ` | E ${pc(ropeEnd(w))}`);
   if (f < 300) console.log(`[segB4] plans ${walkPlans(w).slice(1).map((P, i) => `p${i + 2} z ${P.from.z.toFixed(2)} f${P.f0}-${P.f1}`).join("; ")}`);
-  console.log(`[segB5] f${f} res at ${ra.x.toFixed(2)},${ra.z.toFixed(2)} faceGap ${resGap.toFixed(0)}px dSq ${resSq.toFixed(2)} dRope ${resRp.toFixed(2)}`);
+  // every visible card against the set's solid boxes (穿模), and the researcher's head in world space
+  const cardHits = figs.map(([n, F]) => { const k = cardClearance(F, cols, 32); return k.hits ? `${n}:${k.hits}(${k.worst.toFixed(3)})` : ""; }).filter(Boolean);
+  const rhw = c.res.headWorld();
+  console.log(`[segB5] f${f} res at ${ra.x.toFixed(2)},${ra.z.toFixed(2)} head (${rhw.x.toFixed(2)},${rhw.y.toFixed(2)},${rhw.z.toFixed(2)}) faceGap ${resGap.toFixed(0)}px dSq ${resSq.toFixed(2)} dRope ${resRp.toFixed(2)} cardHits [${cardHits.join(" ")}]`);
 }

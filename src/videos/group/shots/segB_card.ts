@@ -2,8 +2,9 @@
 //   PctCard  the label card of the lab (segments B and C share the design; import it from here): a white card with an
 //            ink outline in the top band (y 6-30 %), a title, then one horizontal bar per group as the narration says
 //            it: label (1人 / 2人 ...), a bar growing from 0 with a short eased pop, the value counting up with it. The
-//            newest bar is gold, older bars turn neutral. The card grows downward by one row just before each pop (the
-//            row's slot and label are in place when its bar starts), so it is never shown half-built. It leaves (8 f: fade, rise, shrink) from `out`.
+//            newest bar is gold, older bars turn neutral. The card grows downward by one (empty) row just before each
+//            pop; the row's label fades in with its bar and value, so no label ever waits without its bar and the card
+//            is never shown half-built. It leaves (8 f: fade, rise, shrink) from `out`.
 //   Puzzle   a small "?" popping over a head (screen point), with a little wobble; leaves from `out`.
 import React from "react";
 import { COL, FONT_STACK, useOverlayFont, ts } from "../kit/overlay";
@@ -45,7 +46,9 @@ export const PctCard: React.FC<PctCardProps> = ({ f, at, out, title, rows, top =
     const fill = mixHex(COL.gold, NEUTRAL, old);
     const barW = Math.max(0, C.barMax * (r.value / 100) * g);
     const rowOp = clamp01((open[i] - 0.4) / 0.6);
-    const lab = h("div", { key: "l", style: { position: "absolute", left: 0, top: (C.barH - 50) / 2 - 2, width: C.labelW, textAlign: "left", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 50, lineHeight: 1, color: INK, whiteSpace: "nowrap" } }, r.label);
+    // the label arrives with its bar and value (all three from at + 1): the empty slot opens first
+    const labOp = clamp01((f - r.at) / 3);
+    const lab = h("div", { key: "l", style: { position: "absolute", left: 0, top: (C.barH - 50) / 2 - 2, width: C.labelW, textAlign: "left", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 50, lineHeight: 1, color: INK, whiteSpace: "nowrap", opacity: labOp } }, r.label);
     const bar = barW > 0.5 ? h("div", { key: "b", style: { position: "absolute", left: C.labelW, top: 0, width: barW, height: C.barH, borderRadius: C.barH / 2, background: fill, boxShadow: `0 0 0 4px ${INK}` } }) : null;
     const val = h("div", { key: "v", style: { position: "absolute", left: C.labelW + barW + 22, top: (C.barH - 50) / 2 - 2, fontFamily: FONT_STACK, fontWeight: 700, fontSize: 50, lineHeight: 1, color: INK, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", opacity: f < r.at ? 0 : clamp01((f - r.at) / 3) } },
       `${Math.min(r.value, Math.round(r.value * gv))}%`);
