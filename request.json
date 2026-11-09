@@ -1,437 +1,272 @@
 {
- "id": "shz01-vo-03",
+ "id": "friends-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "W01",
+   "name": "01",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "东京八十万禁军教头林冲，为因身犯重罪，断配沧州，"
+   "text": "你当朋友的十个人里，大约三个，没把你当朋友。"
   },
   {
-   "name": "W02",
+   "name": "01b",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "情愿立此休书，任从改嫁。"
+   "text": "你当朋友的十个人里，大约三个，没把你当朋友。"
   },
   {
-   "name": "W03",
+   "name": "02",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "这是林冲留给妻子的休书。"
+   "text": "你肯定在想：我的朋友不会。"
   },
   {
-   "name": "W04",
+   "name": "03",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "成亲三年，两人没红过一次脸。"
+   "text": "研究者真测过：一门大学课，八十四个人，互相打分。"
   },
   {
-   "name": "W05",
+   "name": "04",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "他为什么要休了她？"
+   "text": "零到五分，三分以上算朋友。再猜：对方会给我几分？"
   },
   {
-   "name": "W06",
+   "name": "05",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "那时候，他有一身本事，有一个家。"
+   "text": "他们当朋友的人里，百分之九十四，都以为是双向的。"
   },
   {
-   "name": "W07",
+   "name": "06",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "直到那天在岳庙，有人调戏他的娘子。"
+   "text": "实际上，真双向的，大约只有七成。"
   },
   {
-   "name": "W08",
+   "name": "07",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "他一把扳过那人，拳头举起来——"
+   "text": "友谊是根绳，你只握得到自己这头。"
   },
   {
-   "name": "W09",
+   "name": "08",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "却认出，那是上司高太尉的干儿子。"
+   "text": "先别委屈：也有人把你当朋友，你没接。"
   },
   {
-   "name": "W10",
+   "name": "09",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "拳头，软了。"
+   "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。"
   },
   {
-   "name": "W11",
+   "name": "09b",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "连最好的朋友陆谦，也站到了他们那边。"
+   "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。"
   },
   {
-   "name": "W12",
+   "name": "10",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "一把宝刀，把他引进了白虎节堂。"
+   "text": "研究者推测：很多单向的友谊，其实是仰望。"
   },
   {
-   "name": "W13",
+   "name": "11",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "刺了面，押往沧州。"
+   "text": "单向还是双向，还关系到谁带得动你。"
   },
   {
-   "name": "W14",
+   "name": "12",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "临走前，他请人写了这封休书。"
+   "text": "健身实验里，每人配了搭子："
   },
   {
-   "name": "W15",
+   "name": "13",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "他怕自己死在路上，"
+   "text": "双向的搭子，最能带动你；"
   },
   {
-   "name": "W16",
+   "name": "14",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "更怕高衙内逼她，误了她一辈子。"
+   "text": "他把你当朋友，你没有：也有用；"
   },
   {
-   "name": "W17",
+   "name": "15",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "她哭着问：我清清白白，你为什么不要我？"
+   "text": "你把他当朋友，他没有：测不出效果。"
   },
   {
-   "name": "W18",
+   "name": "16",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "他只说：我是好意。"
+   "text": "所以，别人抛给你的绳，接住。"
   },
   {
-   "name": "W19",
+   "name": "17",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "岳父说：放你回来时，依旧夫妻完聚。"
+   "text": "自己抛出去的，别猜，去问。"
   },
   {
-   "name": "W20",
+   "name": "18",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "为了这句话，他忍着活下去。"
+   "text": "把这条发给你会打五分的那个人，问他：你给我打几分？"
   },
   {
-   "name": "W21",
+   "name": "18b",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "沧州下了大雪，压塌了他的草屋。"
+   "text": "把这条发给你会打五分的那个人，问他：你给我打几分？"
   },
   {
-   "name": "W22",
+   "name": "19",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3,
+    "speed": 1.12
    },
-   "text": "他躲进山神庙，草料场却烧了起来。"
-  },
-  {
-   "name": "W23",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "门外是陆谦的声音："
-  },
-  {
-   "name": "W24",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "烧死了，拾他一两块骨头回去交差。"
-  },
-  {
-   "name": "W25",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "回不去了。"
-  },
-  {
-   "name": "W26",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "他一把拽开庙门。"
-  },
-  {
-   "name": "W27",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "一枪戳倒差拨，再一枪，追倒了逃跑的富安。"
-  },
-  {
-   "name": "W28",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "陆谦被他掀翻在雪里，刀，就搁在脸上。"
-  },
-  {
-   "name": "W29",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "杀人可恕，情理难容！"
-  },
-  {
-   "name": "W30",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "这一回，他没有再忍。"
-  },
-  {
-   "name": "W31",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "再后来，他落草梁山。"
-  },
-  {
-   "name": "W32",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "他想接娘子上山，却一拖再拖。"
-  },
-  {
-   "name": "W33",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "派去的人回来说：娘子被逼自尽，已故半载。"
-  },
-  {
-   "name": "W34",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "他哭了。"
-  },
-  {
-   "name": "W35",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "那封休书，没能护住她。"
-  },
-  {
-   "name": "W36",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "他立下它，只是想让她好好活着。"
-  },
-  {
-   "name": "W37",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "从此，他心里再没有可挂念的人。"
-  },
-  {
-   "name": "W38",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "依旧夫妻完聚——"
-  },
-  {
-   "name": "W39",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.35
-   },
-   "text": "这句话，他终究没能等到。"
+   "text": "只要他回三分以上，这根绳就是双向的。"
   }
  ]
 }
