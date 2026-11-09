@@ -1,95 +1,11 @@
 {
- "id": "friends-vo-01",
+ "id": "friends-vo-02-retakes",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "你当朋友的十个人里，大约三个，没把你当朋友。"
-  },
-  {
-   "name": "01b",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "你当朋友的十个人里，大约三个，没把你当朋友。"
-  },
-  {
-   "name": "02",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "你肯定在想：我的朋友不会。"
-  },
-  {
-   "name": "03",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "研究者真测过：一门大学课，八十四个人，互相打分。"
-  },
-  {
-   "name": "04",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "零到五分，三分以上算朋友。再猜：对方会给我几分？"
-  },
-  {
-   "name": "05",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "他们当朋友的人里，百分之九十四，都以为是双向的。"
-  },
-  {
-   "name": "06",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "实际上，真双向的，大约只有七成。"
-  },
-  {
-   "name": "07",
+   "name": "07c",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -101,127 +17,31 @@
    "text": "友谊是根绳，你只握得到自己这头。"
   },
   {
-   "name": "08",
+   "name": "07d",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.65,
     "similarity_boost": 0.8,
-    "style": 0.3,
+    "style": 0.2,
     "speed": 1.12
    },
-   "text": "先别委屈：也有人把你当朋友，你没接。"
+   "text": "友谊是根绳，你只握得到自己这头。"
   },
   {
-   "name": "09",
+   "name": "07e",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.65,
     "similarity_boost": 0.8,
-    "style": 0.3,
+    "style": 0.2,
     "speed": 1.12
    },
-   "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。"
+   "text": "友谊，是根绳。你只握得到自己这头。"
   },
   {
-   "name": "09b",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。"
-  },
-  {
-   "name": "10",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "研究者推测：很多单向的友谊，其实是仰望。"
-  },
-  {
-   "name": "11",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "单向还是双向，还关系到谁带得动你。"
-  },
-  {
-   "name": "12",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "健身实验里，每人配了搭子："
-  },
-  {
-   "name": "13",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "双向的搭子，最能带动你；"
-  },
-  {
-   "name": "14",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "他把你当朋友，你没有：也有用；"
-  },
-  {
-   "name": "15",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "你把他当朋友，他没有：测不出效果。"
-  },
-  {
-   "name": "16",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "所以，别人抛给你的绳，接住。"
-  },
-  {
-   "name": "17",
+   "name": "17c",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -233,40 +53,28 @@
    "text": "自己抛出去的，别猜，去问。"
   },
   {
-   "name": "18",
+   "name": "17d",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.65,
     "similarity_boost": 0.8,
-    "style": 0.3,
+    "style": 0.2,
     "speed": 1.12
    },
-   "text": "把这条发给你会打五分的那个人，问他：你给我打几分？"
+   "text": "自己抛出去的，别猜，去问。"
   },
   {
-   "name": "18b",
+   "name": "17e",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.65,
     "similarity_boost": 0.8,
-    "style": 0.3,
+    "style": 0.2,
     "speed": 1.12
    },
-   "text": "把这条发给你会打五分的那个人，问他：你给我打几分？"
-  },
-  {
-   "name": "19",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "只要他回三分以上，这根绳就是双向的。"
+   "text": "自己抛出去的：别猜。去问。"
   }
  ]
 }
