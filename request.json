@@ -1,11 +1,11 @@
 {
- "id": "group-vo-02-retakes",
+ "id": "group-vo-03-loop",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "02b",
+   "name": "14b",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -14,10 +14,10 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。"
+   "text": "可我们分工时，最爱写的偏偏是“大家一起做”。"
   },
   {
-   "name": "02c",
+   "name": "15b",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -26,10 +26,10 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。"
+   "text": "谁出了多少力，谁也看不见，所以——"
   },
   {
-   "name": "06b",
+   "name": "15c",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -38,19 +38,7 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "你可能会说：人一多，大家使劲不同步嘛。"
-  },
-  {
-   "name": "10b",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "这回没有同步的问题，少的这百分之十五，是你自己松的劲。"
+   "text": "谁出了多少力，谁也看不见。所以……"
   }
  ]
 }
