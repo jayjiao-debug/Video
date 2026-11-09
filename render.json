@@ -1,9 +1,9 @@
 {
-  "id": "bt-cannon-v12c",
-  "composition": "BtCannon",
+  "id": "friends-v1-ab",
+  "composition": "FriendsFilm",
   "start": 0,
-  "end": 65,
-  "chunks": 12,
-  "output": "bt_cannon_v12c",
+  "end": 1012,
+  "chunks": 20,
+  "output": "friends_v1_ab",
   "flags": "--crf=16"
 }
