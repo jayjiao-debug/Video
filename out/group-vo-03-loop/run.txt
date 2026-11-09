@@ -1,0 +1,54 @@
+plan: {'tier': 'starter', 'character_count': 21232, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "14b", "lang": "zh", "text": "可我们分工时，最爱写的偏偏是“大家一起做”。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "14b.mp3", "bytes": 74021}
+{"name": "15b", "lang": "zh", "text": "谁出了多少力，谁也看不见，所以——", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15b.mp3", "bytes": 61065}
+{"name": "15c", "lang": "zh", "text": "谁出了多少力，谁也看不见。所以……", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15c.mp3", "bytes": 62318}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "14b",
+  "lang": "zh",
+  "text": "可我们分工时，最爱写的偏偏是“大家一起做”。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "14b.mp3",
+  "bytes": 74021,
+  "heard": "可我們分工時,最愛寫的偏偏是大家一起做",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "15b",
+  "lang": "zh",
+  "text": "谁出了多少力，谁也看不见，所以——",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15b.mp3",
+  "bytes": 61065,
+  "heard": "誰出了多少粒誰也看不見所以",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.76
+ },
+ {
+  "name": "15c",
+  "lang": "zh",
+  "text": "谁出了多少力，谁也看不见。所以……",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15c.mp3",
+  "bytes": 62318,
+  "heard": "誰出了多少粒誰也看不見所以",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.84
+ }
+]
