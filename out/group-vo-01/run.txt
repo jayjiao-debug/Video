@@ -1,0 +1,246 @@
+plan: {'tier': 'starter', 'character_count': 21067, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01", "lang": "zh", "text": "小组作业总有人划水，可能也包括你。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01.mp3", "bytes": 58557}
+{"name": "02", "lang": "zh", "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "02.mp3", "bytes": 79037}
+{"name": "03", "lang": "zh", "text": "一九七四年，心理学家让人拉绳子测力气。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "03.mp3", "bytes": 69006}
+{"name": "04", "lang": "zh", "text": "两个人一起拉，每人只出百分之九十一；", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "04.mp3", "bytes": 58557}
+{"name": "05", "lang": "zh", "text": "三个人，百分之八十二；六个人，只剩百分之七十八。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "05.mp3", "bytes": 76529}
+{"name": "06", "lang": "zh", "text": "你可能会说：人一多，节奏对不齐嘛。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "06.mp3", "bytes": 63990}
+{"name": "07", "lang": "zh", "text": "于是他们蒙上你的眼睛，告诉你身后还有人一起拉。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07.mp3", "bytes": 76529}
+{"name": "08", "lang": "zh", "text": "其实绳子上，只有你一个人在用力。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "08.mp3", "bytes": 49780}
+{"name": "09", "lang": "zh", "text": "以为有一个帮手，你出百分之九十；以为有两到六个，只剩百分之八十五。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "09.mp3", "bytes": 102025}
+{"name": "10", "lang": "zh", "text": "没人跟你抢节奏，少的这百分之十五，是你自己松的劲。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "10.mp3", "bytes": 77783}
+{"name": "11", "lang": "zh", "text": "因为人一多，就没人看得见你出了多少力。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "11.mp3", "bytes": 58557}
+{"name": "12", "lang": "zh", "text": "七十八项研究放在一起看，结论都一样：", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "12.mp3", "bytes": 59811}
+{"name": "13", "lang": "zh", "text": "只要每个人那份能被单独看见，划水几乎就消失了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13.mp3", "bytes": 80291}
+{"name": "14", "lang": "zh", "text": "所以分工别写“大家一起做”，写清楚谁做哪一块。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "14.mp3", "bytes": 76529}
+{"name": "15", "lang": "zh", "text": "发到你的小组作业群，看看谁先回。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15.mp3", "bytes": 47272}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01",
+  "lang": "zh",
+  "text": "小组作业总有人划水，可能也包括你。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01.mp3",
+  "bytes": 58557,
+  "heard": "小组作业总有人滑水可能也包括你",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.6
+ },
+ {
+  "name": "02",
+  "lang": "zh",
+  "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02.mp3",
+  "bytes": 79037,
+  "heard": "只要以為身後有幾個人幫你你就會賞出15%的利",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.88
+ },
+ {
+  "name": "03",
+  "lang": "zh",
+  "text": "一九七四年，心理学家让人拉绳子测力气。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "03.mp3",
+  "bytes": 69006,
+  "heard": "1974年 心理學家讓人拉繩子測歷期",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.24
+ },
+ {
+  "name": "04",
+  "lang": "zh",
+  "text": "两个人一起拉，每人只出百分之九十一；",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04.mp3",
+  "bytes": 58557,
+  "heard": "两个人一起拉,每人只出91%",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.6
+ },
+ {
+  "name": "05",
+  "lang": "zh",
+  "text": "三个人，百分之八十二；六个人，只剩百分之七十八。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05.mp3",
+  "bytes": 76529,
+  "heard": "3個人 82% 6個人只剩 78%",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 4.72
+ },
+ {
+  "name": "06",
+  "lang": "zh",
+  "text": "你可能会说：人一多，节奏对不齐嘛。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "06.mp3",
+  "bytes": 63990,
+  "heard": "你可能會說人一多節奏對不起嘛",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.92
+ },
+ {
+  "name": "07",
+  "lang": "zh",
+  "text": "于是他们蒙上你的眼睛，告诉你身后还有人一起拉。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07.mp3",
+  "bytes": 76529,
+  "heard": "於是他們蒙上你的眼睛告訴你身後還有人一起啦",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.72
+ },
+ {
+  "name": "08",
+  "lang": "zh",
+  "text": "其实绳子上，只有你一个人在用力。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "08.mp3",
+  "bytes": 49780,
+  "heard": "其实绳子上只有你一个人在用力",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.04
+ },
+ {
+  "name": "09",
+  "lang": "zh",
+  "text": "以为有一个帮手，你出百分之九十；以为有两到六个，只剩百分之八十五。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09.mp3",
+  "bytes": 102025,
+  "heard": "以為有一個幫手,你出90%以為有2到6個,只剩85%",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 6.32
+ },
+ {
+  "name": "10",
+  "lang": "zh",
+  "text": "没人跟你抢节奏，少的这百分之十五，是你自己松的劲。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "10.mp3",
+  "bytes": 77783,
+  "heard": "沒人給你搶節奏少著這15%是你自己鬆得盡",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.8
+ },
+ {
+  "name": "11",
+  "lang": "zh",
+  "text": "因为人一多，就没人看得见你出了多少力。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "11.mp3",
+  "bytes": 58557,
+  "heard": "因为人一多就没人看得见你出了多少例",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.6
+ },
+ {
+  "name": "12",
+  "lang": "zh",
+  "text": "七十八项研究放在一起看，结论都一样：",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "12.mp3",
+  "bytes": 59811,
+  "heard": "78項研究放在一起看,結論都一樣",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.68
+ },
+ {
+  "name": "13",
+  "lang": "zh",
+  "text": "只要每个人那份能被单独看见，划水几乎就消失了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13.mp3",
+  "bytes": 80291,
+  "heard": "只要每个人那份能被单独看见滑水几乎就消失了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.96
+ },
+ {
+  "name": "14",
+  "lang": "zh",
+  "text": "所以分工别写“大家一起做”，写清楚谁做哪一块。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "14.mp3",
+  "bytes": 76529,
+  "heard": "所以分工別寫大家一起做寫清楚誰做哪一塊",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ },
+ {
+  "name": "15",
+  "lang": "zh",
+  "text": "发到你的小组作业群，看看谁先回。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15.mp3",
+  "bytes": 47272,
+  "heard": "發到你的小組作業群看看誰先回",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.88
+ }
+]
