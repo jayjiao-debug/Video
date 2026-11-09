@@ -1,0 +1,358 @@
+plan: {'tier': 'starter', 'character_count': 20863, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01", "lang": "zh", "text": "你当朋友的十个人里，大约三个，没把你当朋友。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01.mp3", "bytes": 70260}
+{"name": "01b", "lang": "zh", "text": "你当朋友的十个人里，大约三个，没把你当朋友。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01b.mp3", "bytes": 69006}
+{"name": "02", "lang": "zh", "text": "你肯定在想：我的朋友不会。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "02.mp3", "bytes": 49780}
+{"name": "03", "lang": "zh", "text": "研究者真测过：一门大学课，八十四个人，互相打分。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "03.mp3", "bytes": 82798}
+{"name": "04", "lang": "zh", "text": "零到五分，三分以上算朋友。再猜：对方会给我几分？", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "04.mp3", "bytes": 86978}
+{"name": "05", "lang": "zh", "text": "他们当朋友的人里，百分之九十四，都以为是双向的。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "05.mp3", "bytes": 74021}
+{"name": "06", "lang": "zh", "text": "实际上，真双向的，大约只有七成。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "06.mp3", "bytes": 57303}
+{"name": "07", "lang": "zh", "text": "友谊是根绳，你只握得到自己这头。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07.mp3", "bytes": 59811}
+{"name": "08", "lang": "zh", "text": "先别委屈：也有人把你当朋友，你没接。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "08.mp3", "bytes": 70260}
+{"name": "09", "lang": "zh", "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "09.mp3", "bytes": 90740}
+{"name": "09b", "lang": "zh", "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "09b.mp3", "bytes": 90740}
+{"name": "10", "lang": "zh", "text": "研究者推测：很多单向的友谊，其实是仰望。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "10.mp3", "bytes": 70260}
+{"name": "11", "lang": "zh", "text": "单向还是双向，还关系到谁带得动你。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "11.mp3", "bytes": 65244}
+{"name": "12", "lang": "zh", "text": "健身实验里，每人配了搭子：", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "12.mp3", "bytes": 43510}
+{"name": "13", "lang": "zh", "text": "双向的搭子，最能带动你；", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13.mp3", "bytes": 41838}
+{"name": "14", "lang": "zh", "text": "他把你当朋友，你没有：也有用；", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "14.mp3", "bytes": 56049}
+{"name": "15", "lang": "zh", "text": "你把他当朋友，他没有：测不出效果。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15.mp3", "bytes": 62318}
+{"name": "16", "lang": "zh", "text": "所以，别人抛给你的绳，接住。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "16.mp3", "bytes": 48526}
+{"name": "17", "lang": "zh", "text": "自己抛出去的，别猜，去问。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "17.mp3", "bytes": 46018}
+{"name": "18", "lang": "zh", "text": "把这条发给你会打五分的那个人，问他：你给我打几分？", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "18.mp3", "bytes": 75275}
+{"name": "18b", "lang": "zh", "text": "把这条发给你会打五分的那个人，问他：你给我打几分？", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "18b.mp3", "bytes": 76529}
+{"name": "19", "lang": "zh", "text": "只要他回三分以上，这根绳就是双向的。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "19.mp3", "bytes": 59811}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01",
+  "lang": "zh",
+  "text": "你当朋友的十个人里，大约三个，没把你当朋友。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01.mp3",
+  "bytes": 70260,
+  "heard": "你当朋友的十个人里大约三个没把你当朋友",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.32
+ },
+ {
+  "name": "01b",
+  "lang": "zh",
+  "text": "你当朋友的十个人里，大约三个，没把你当朋友。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01b.mp3",
+  "bytes": 69006,
+  "heard": "你当朋友的十个人里大约三个没把你当朋友",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.24
+ },
+ {
+  "name": "02",
+  "lang": "zh",
+  "text": "你肯定在想：我的朋友不会。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02.mp3",
+  "bytes": 49780,
+  "heard": "你肯定在想我的朋友不會",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.04
+ },
+ {
+  "name": "03",
+  "lang": "zh",
+  "text": "研究者真测过：一门大学课，八十四个人，互相打分。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "03.mp3",
+  "bytes": 82798,
+  "heard": "研究者偵測过一门大学课84个人互相打分",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.12
+ },
+ {
+  "name": "04",
+  "lang": "zh",
+  "text": "零到五分，三分以上算朋友。再猜：对方会给我几分？",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04.mp3",
+  "bytes": 86978,
+  "heard": "0-5分,3分以上算朋友再猜,對方會給我幾分",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 5.36
+ },
+ {
+  "name": "05",
+  "lang": "zh",
+  "text": "他们当朋友的人里，百分之九十四，都以为是双向的。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05.mp3",
+  "bytes": 74021,
+  "heard": "他们当朋友的人里,94%都以为是双相的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "06",
+  "lang": "zh",
+  "text": "实际上，真双向的，大约只有七成。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "06.mp3",
+  "bytes": 57303,
+  "heard": "實際上真雙向的大約只有七成",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.52
+ },
+ {
+  "name": "07",
+  "lang": "zh",
+  "text": "友谊是根绳，你只握得到自己这头。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07.mp3",
+  "bytes": 59811,
+  "heard": "有疑是根神你只握得到自己这头",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.68
+ },
+ {
+  "name": "08",
+  "lang": "zh",
+  "text": "先别委屈：也有人把你当朋友，你没接。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "08.mp3",
+  "bytes": 70260,
+  "heard": "先别委屈也有人把你当朋友你没接",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.32
+ },
+ {
+  "name": "09",
+  "lang": "zh",
+  "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09.mp3",
+  "bytes": 90740,
+  "heard": "算上你沒接的全班的繩子兩頭都握住的才53%",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.6
+ },
+ {
+  "name": "09b",
+  "lang": "zh",
+  "text": "算上你没接的，全班的绳子，两头都握住的，才百分之五十三。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09b.mp3",
+  "bytes": 90740,
+  "heard": "算上你沒接的全班的繩子兩頭都握住的才53%",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.6
+ },
+ {
+  "name": "10",
+  "lang": "zh",
+  "text": "研究者推测：很多单向的友谊，其实是仰望。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "10.mp3",
+  "bytes": 70260,
+  "heard": "研究者推測很多丹相的友谊其实是仰望",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.32
+ },
+ {
+  "name": "11",
+  "lang": "zh",
+  "text": "单向还是双向，还关系到谁带得动你。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "11.mp3",
+  "bytes": 65244,
+  "heard": "單相還是雙相還關係到誰帶的動你",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.0
+ },
+ {
+  "name": "12",
+  "lang": "zh",
+  "text": "健身实验里，每人配了搭子：",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "12.mp3",
+  "bytes": 43510,
+  "heard": "健身實驗裡每人配了搭子",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.64
+ },
+ {
+  "name": "13",
+  "lang": "zh",
+  "text": "双向的搭子，最能带动你；",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13.mp3",
+  "bytes": 41838,
+  "heard": "雙向的搭子最能帶動你",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.56
+ },
+ {
+  "name": "14",
+  "lang": "zh",
+  "text": "他把你当朋友，你没有：也有用；",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "14.mp3",
+  "bytes": 56049,
+  "heard": "他把你當朋友,你沒有也有用",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 3.44
+ },
+ {
+  "name": "15",
+  "lang": "zh",
+  "text": "你把他当朋友，他没有：测不出效果。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15.mp3",
+  "bytes": 62318,
+  "heard": "你把他當朋友他沒有測不出效果",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.84
+ },
+ {
+  "name": "16",
+  "lang": "zh",
+  "text": "所以，别人抛给你的绳，接住。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "16.mp3",
+  "bytes": 48526,
+  "heard": "所以别人抛给你的绳接住",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.96
+ },
+ {
+  "name": "17",
+  "lang": "zh",
+  "text": "自己抛出去的，别猜，去问。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "17.mp3",
+  "bytes": 46018,
+  "heard": "自己拋出去的也猜去問",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.8
+ },
+ {
+  "name": "18",
+  "lang": "zh",
+  "text": "把这条发给你会打五分的那个人，问他：你给我打几分？",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "18.mp3",
+  "bytes": 75275,
+  "heard": "把這條發給你會打五分的那個人問他你給我打幾分",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.64
+ },
+ {
+  "name": "18b",
+  "lang": "zh",
+  "text": "把这条发给你会打五分的那个人，问他：你给我打几分？",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "18b.mp3",
+  "bytes": 76529,
+  "heard": "把這條發給你會打五分的那個人問他你給我打幾分",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ },
+ {
+  "name": "19",
+  "lang": "zh",
+  "text": "只要他回三分以上，这根绳就是双向的。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "19.mp3",
+  "bytes": 59811,
+  "heard": "只要它回三分以上這根繩就是雙向的",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.68
+ }
+]
