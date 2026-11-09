@@ -1,11 +1,11 @@
 {
- "id": "friends-vo-02-retakes",
+ "id": "group-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "07c",
+   "name": "01",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -14,34 +14,10 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "友谊是根绳，你只握得到自己这头。"
+   "text": "小组作业总有人划水，可能也包括你。"
   },
   {
-   "name": "07d",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.65,
-    "similarity_boost": 0.8,
-    "style": 0.2,
-    "speed": 1.12
-   },
-   "text": "友谊是根绳，你只握得到自己这头。"
-  },
-  {
-   "name": "07e",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.65,
-    "similarity_boost": 0.8,
-    "style": 0.2,
-    "speed": 1.12
-   },
-   "text": "友谊，是根绳。你只握得到自己这头。"
-  },
-  {
-   "name": "17c",
+   "name": "02",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -50,31 +26,163 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "自己抛出去的，别猜，去问。"
+   "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。"
   },
   {
-   "name": "17d",
+   "name": "03",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.65,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.2,
+    "style": 0.3,
     "speed": 1.12
    },
-   "text": "自己抛出去的，别猜，去问。"
+   "text": "一九七四年，心理学家让人拉绳子测力气。"
   },
   {
-   "name": "17e",
+   "name": "04",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.65,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.2,
+    "style": 0.3,
     "speed": 1.12
    },
-   "text": "自己抛出去的：别猜。去问。"
+   "text": "两个人一起拉，每人只出百分之九十一；"
+  },
+  {
+   "name": "05",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "三个人，百分之八十二；六个人，只剩百分之七十八。"
+  },
+  {
+   "name": "06",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "你可能会说：人一多，节奏对不齐嘛。"
+  },
+  {
+   "name": "07",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "于是他们蒙上你的眼睛，告诉你身后还有人一起拉。"
+  },
+  {
+   "name": "08",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "其实绳子上，只有你一个人在用力。"
+  },
+  {
+   "name": "09",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "以为有一个帮手，你出百分之九十；以为有两到六个，只剩百分之八十五。"
+  },
+  {
+   "name": "10",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "没人跟你抢节奏，少的这百分之十五，是你自己松的劲。"
+  },
+  {
+   "name": "11",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "因为人一多，就没人看得见你出了多少力。"
+  },
+  {
+   "name": "12",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "七十八项研究放在一起看，结论都一样："
+  },
+  {
+   "name": "13",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "只要每个人那份能被单独看见，划水几乎就消失了。"
+  },
+  {
+   "name": "14",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "所以分工别写“大家一起做”，写清楚谁做哪一块。"
+  },
+  {
+   "name": "15",
+   "lang": "zh",
+   "voice_id": "vZZLclMx4wouUtKBRfZn",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.12
+   },
+   "text": "发到你的小组作业群，看看谁先回。"
   }
  ]
 }
