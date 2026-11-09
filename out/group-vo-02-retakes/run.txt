@@ -1,0 +1,70 @@
+plan: {'tier': 'starter', 'character_count': 21193, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "02b", "lang": "zh", "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "02b.mp3", "bytes": 80291}
+{"name": "02c", "lang": "zh", "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "02c.mp3", "bytes": 79037}
+{"name": "06b", "lang": "zh", "text": "你可能会说：人一多，大家使劲不同步嘛。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "06b.mp3", "bytes": 66498}
+{"name": "10b", "lang": "zh", "text": "这回没有同步的问题，少的这百分之十五，是你自己松的劲。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "10b.mp3", "bytes": 86978}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "02b",
+  "lang": "zh",
+  "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02b.mp3",
+  "bytes": 80291,
+  "heard": "只要以為身後有幾個人幫你你就會少出15%的力",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.96
+ },
+ {
+  "name": "02c",
+  "lang": "zh",
+  "text": "只要以为身后有几个人帮你，你就会少出百分之十五的力。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02c.mp3",
+  "bytes": 79037,
+  "heard": "只要以為身後有幾個人幫你你就會少出15%的力",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.88
+ },
+ {
+  "name": "06b",
+  "lang": "zh",
+  "text": "你可能会说：人一多，大家使劲不同步嘛。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "06b.mp3",
+  "bytes": 66498,
+  "heard": "你可能會說人一多大家使勁不同步嘛",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.991,
+  "seconds": 4.08
+ },
+ {
+  "name": "10b",
+  "lang": "zh",
+  "text": "这回没有同步的问题，少的这百分之十五，是你自己松的劲。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "10b.mp3",
+  "bytes": 86978,
+  "heard": "这回没有同步的问题少的这15%是你自己松的劲",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.36
+ }
+]
