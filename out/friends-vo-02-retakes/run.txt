@@ -1,0 +1,102 @@
+plan: {'tier': 'starter', 'character_count': 21033, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "07c", "lang": "zh", "text": "友谊是根绳，你只握得到自己这头。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07c.mp3", "bytes": 59811}
+{"name": "07d", "lang": "zh", "text": "友谊是根绳，你只握得到自己这头。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07d.mp3", "bytes": 58557}
+{"name": "07e", "lang": "zh", "text": "友谊，是根绳。你只握得到自己这头。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07e.mp3", "bytes": 67752}
+{"name": "17c", "lang": "zh", "text": "自己抛出去的，别猜，去问。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "17c.mp3", "bytes": 44764}
+{"name": "17d", "lang": "zh", "text": "自己抛出去的，别猜，去问。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "17d.mp3", "bytes": 43510}
+{"name": "17e", "lang": "zh", "text": "自己抛出去的：别猜。去问。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "17e.mp3", "bytes": 48526}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "07c",
+  "lang": "zh",
+  "text": "友谊是根绳，你只握得到自己这头。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07c.mp3",
+  "bytes": 59811,
+  "heard": "有疑是根神你只握得到自己这头",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.68
+ },
+ {
+  "name": "07d",
+  "lang": "zh",
+  "text": "友谊是根绳，你只握得到自己这头。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07d.mp3",
+  "bytes": 58557,
+  "heard": "有疑是根神你只握得到自己这头",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.6
+ },
+ {
+  "name": "07e",
+  "lang": "zh",
+  "text": "友谊，是根绳。你只握得到自己这头。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07e.mp3",
+  "bytes": 67752,
+  "heard": "有疑是根神你只握得到自己這頭",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.16
+ },
+ {
+  "name": "17c",
+  "lang": "zh",
+  "text": "自己抛出去的，别猜，去问。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "17c.mp3",
+  "bytes": 44764,
+  "heard": "自己拋出去的別猜去問",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.72
+ },
+ {
+  "name": "17d",
+  "lang": "zh",
+  "text": "自己抛出去的，别猜，去问。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "17d.mp3",
+  "bytes": 43510,
+  "heard": "自己拋出去的 別猜 去問",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.64
+ },
+ {
+  "name": "17e",
+  "lang": "zh",
+  "text": "自己抛出去的：别猜。去问。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "17e.mp3",
+  "bytes": 48526,
+  "heard": "自己拋出去的也猜去问",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.96
+ }
+]
