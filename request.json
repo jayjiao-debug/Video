@@ -1,76 +1,665 @@
 {
- "id": "arthur-emotion-test-01",
+ "id": "arthur-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "karo_A_settings",
+   "name": "k01",
    "lang": "zh",
    "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "settings": {
-    "stability": 0.25,
+    "stability": 0.2,
     "similarity_boost": 0.8,
-    "style": 0.7,
-    "speed": 1.15
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
    },
-   "text": "全英格兰的骑士都拔不动那把剑！可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。贵族们当场炸了：“让一个毛头小子来管我们？！”"
+   "text": "他把刚拔出来的石中剑，又插了回去。"
   },
   {
-   "name": "karo_B_tags",
+   "name": "k02",
    "lang": "zh",
    "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "settings": {
-    "stability": 0.25,
+    "stability": 0.2,
     "similarity_boost": 0.8,
-    "style": 0.7,
-    "speed": 1.15
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
    },
-   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
+   "text": "等等，拔出来不就是国王吗？"
   },
   {
-   "name": "karo_C_v3tags",
+   "name": "k03",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "名著《亚瑟王之死》里，伦敦教堂院子里多了块大石头，插着把剑。"
+  },
+  {
+   "name": "k04",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "金字写着：谁拔出来，谁就是国王。"
+  },
+  {
+   "name": "k05",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "贵族排队来拔，脸都憋红了，剑一动不动。"
+  },
+  {
+   "name": "k06",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。"
+  },
+  {
+   "name": "k07",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "亚瑟回去拿，家里没人，全看比武去了。"
+  },
+  {
+   "name": "k08",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "他想起石头上还插着一把。"
+  },
+  {
+   "name": "k09",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "连十个守卫都看比武去了，他一拔就出来，第一次。"
+  },
+  {
+   "name": "k10",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”"
+  },
+  {
+   "name": "k11",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "爸爸让他发誓，凯才承认是弟弟拿的。"
+  },
+  {
+   "name": "k12",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "爸爸让亚瑟插回去再拔一次，他说：“这有什么难的。”"
+  },
+  {
+   "name": "k13",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "爸爸先拔，不动；凯使出吃奶的劲，不动；亚瑟一伸手，第二次。"
+  },
+  {
+   "name": "k14",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "几天后贵族全来试，只有他拔得出，第三次。"
+  },
+  {
+   "name": "k15",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。"
+  },
+  {
+   "name": "k16",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "二月，雪还没化，第四次，又拖。"
+  },
+  {
+   "name": "k17",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "春天，花都开了，第五次，还拖。"
+  },
+  {
+   "name": "k18",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "初夏，当着所有人的面，第六次。"
+  },
+  {
+   "name": "k19",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”"
+  },
+  {
+   "name": "k20",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "所有人齐刷刷跪下。"
+  },
+  {
+   "name": "k21",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。"
+  },
+  {
+   "name": "k01b",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "他把刚拔出来的石中剑，又插了回去。"
+  },
+  {
+   "name": "k02b",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "等等，拔出来不就是国王吗？"
+  },
+  {
+   "name": "k10b",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”"
+  },
+  {
+   "name": "k15b",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。"
+  },
+  {
+   "name": "k19b",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”"
+  },
+  {
+   "name": "k21b",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。"
+  },
+  {
+   "name": "j01",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "他把刚拔出来的石中剑，又插了回去。"
+  },
+  {
+   "name": "j02",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "等等，拔出来不就是国王吗？"
+  },
+  {
+   "name": "j03",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "名著《亚瑟王之死》里，伦敦教堂院子里多了块大石头，插着把剑。"
+  },
+  {
+   "name": "j04",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "金字写着：谁拔出来，谁就是国王。"
+  },
+  {
+   "name": "j05",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "贵族排队来拔，脸都憋红了，剑一动不动。"
+  },
+  {
+   "name": "j06",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。"
+  },
+  {
+   "name": "j07",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "亚瑟回去拿，家里没人，全看比武去了。"
+  },
+  {
+   "name": "j08",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "他想起石头上还插着一把。"
+  },
+  {
+   "name": "j09",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "连十个守卫都看比武去了，他一拔就出来，第一次。"
+  },
+  {
+   "name": "j10",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”"
+  },
+  {
+   "name": "j11",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "爸爸让他发誓，凯才承认是弟弟拿的。"
+  },
+  {
+   "name": "j12",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "爸爸让亚瑟插回去再拔一次，他说：“这有什么难的。”"
+  },
+  {
+   "name": "j13",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "爸爸先拔，不动；凯使出吃奶的劲，不动；亚瑟一伸手，第二次。"
+  },
+  {
+   "name": "j14",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "几天后贵族全来试，只有他拔得出，第三次。"
+  },
+  {
+   "name": "j15",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。"
+  },
+  {
+   "name": "j16",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "二月，雪还没化，第四次，又拖。"
+  },
+  {
+   "name": "j17",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "春天，花都开了，第五次，还拖。"
+  },
+  {
+   "name": "j18",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "初夏，当着所有人的面，第六次。"
+  },
+  {
+   "name": "j19",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”"
+  },
+  {
+   "name": "j20",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "所有人齐刷刷跪下。"
+  },
+  {
+   "name": "j21",
+   "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。"
+  },
+  {
+   "name": "k3_01",
    "lang": "zh",
    "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "model": "eleven_v3",
    "settings": {
-    "stability": 0.0
+    "stability": 0.0,
+    "speed": 1.2
    },
-   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
+   "text": "[playful] 他把刚拔出来的石中剑，又插了回去。"
   },
   {
-   "name": "julia_A_settings",
+   "name": "k3_10",
    "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.25,
-    "similarity_boost": 0.8,
-    "style": 0.7,
-    "speed": 1.15
-   },
-   "text": "全英格兰的骑士都拔不动那把剑！可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。贵族们当场炸了：“让一个毛头小子来管我们？！”"
-  },
-  {
-   "name": "julia_B_tags",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.25,
-    "similarity_boost": 0.8,
-    "style": 0.7,
-    "speed": 1.15
-   },
-   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
-  },
-  {
-   "name": "julia_C_v3tags",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "model": "eleven_v3",
    "settings": {
-    "stability": 0.0
+    "stability": 0.0,
+    "speed": 1.2
    },
-   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
+   "text": "[excited] 凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”"
+  },
+  {
+   "name": "k3_15",
+   "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.0,
+    "speed": 1.2
+   },
+   "text": "[outraged] 他们气炸了：“让个出身不高的小子管我们？”说改天再拔。"
   }
  ]
 }
