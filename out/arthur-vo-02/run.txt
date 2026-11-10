@@ -1,0 +1,198 @@
+plan: {'tier': 'starter', 'character_count': 22189, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "j01b", "lang": "zh", "text": "他把刚拔出来的石中剑，又插了回去。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j01b.mp3", "bytes": 54795}
+{"name": "j02b", "lang": "zh", "text": "等等，拔出来不就是国王吗？", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j02b.mp3", "bytes": 47272}
+{"name": "j05b", "lang": "zh", "text": "贵族排队来拔，脸都憋红了，剑一动不动。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j05b.mp3", "bytes": 74021}
+{"name": "j05c", "lang": "zh", "text": "贵族排队来拔，脸都憋红了，剑一动不动。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j05c.mp3", "bytes": 72767}
+{"name": "j10b", "lang": "zh", "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j10b.mp3", "bytes": 79037}
+{"name": "j15b", "lang": "zh", "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j15b.mp3", "bytes": 93247}
+{"name": "j16b", "lang": "zh", "text": "二月，雪还没化，第四次，又拖。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j16b.mp3", "bytes": 69006}
+{"name": "j16c", "lang": "zh", "text": "二月，雪还没化，第四次，又拖。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j16c.mp3", "bytes": 70260}
+{"name": "j18b", "lang": "zh", "text": "初夏，当着所有人的面，第六次。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j18b.mp3", "bytes": 58557}
+{"name": "j18c", "lang": "zh", "text": "初夏，当着所有人的面，第六次。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j18c.mp3", "bytes": 58557}
+{"name": "j19b", "lang": "zh", "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j19b.mp3", "bytes": 67752}
+{"name": "j21b", "lang": "zh", "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j21b.mp3", "bytes": 91994}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "j01b",
+  "lang": "zh",
+  "text": "他把刚拔出来的石中剑，又插了回去。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j01b.mp3",
+  "bytes": 54795,
+  "heard": "他把剛拔出來的時鐘鍵又插了回去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "j02b",
+  "lang": "zh",
+  "text": "等等，拔出来不就是国王吗？",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j02b.mp3",
+  "bytes": 47272,
+  "heard": "等等,拔出來不就是國王嗎?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.88
+ },
+ {
+  "name": "j05b",
+  "lang": "zh",
+  "text": "贵族排队来拔，脸都憋红了，剑一动不动。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j05b.mp3",
+  "bytes": 74021,
+  "heard": "貴族排隊來拔,臉都憋紅了,劍移動不動。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.56
+ },
+ {
+  "name": "j05c",
+  "lang": "zh",
+  "text": "贵族排队来拔，脸都憋红了，剑一动不动。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j05c.mp3",
+  "bytes": 72767,
+  "heard": "貴族排隊來拔,臉都憋紅了,見一動不動。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.48
+ },
+ {
+  "name": "j10b",
+  "lang": "zh",
+  "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j10b.mp3",
+  "bytes": 79037,
+  "heard": "凯拿到剑就找爸爸爸 十中剑我要当国王了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.88
+ },
+ {
+  "name": "j15b",
+  "lang": "zh",
+  "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j15b.mp3",
+  "bytes": 93247,
+  "heard": "他们气炸了,让个出身不高的小子管我们,说,改天再拔。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 5.76
+ },
+ {
+  "name": "j16b",
+  "lang": "zh",
+  "text": "二月，雪还没化，第四次，又拖。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j16b.mp3",
+  "bytes": 69006,
+  "heard": "2月,雪還沒化,第四次又拖",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.953,
+  "seconds": 4.24
+ },
+ {
+  "name": "j16c",
+  "lang": "zh",
+  "text": "二月，雪还没化，第四次，又拖。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j16c.mp3",
+  "bytes": 70260,
+  "heard": "2月雪還沒化,第四次又拖",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.964,
+  "seconds": 4.32
+ },
+ {
+  "name": "j18b",
+  "lang": "zh",
+  "text": "初夏，当着所有人的面，第六次。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j18b.mp3",
+  "bytes": 58557,
+  "heard": "出下當著所有人的面第六次",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.6
+ },
+ {
+  "name": "j18c",
+  "lang": "zh",
+  "text": "初夏，当着所有人的面，第六次。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j18c.mp3",
+  "bytes": 58557,
+  "heard": "当着所有人的面第六次",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 3.6
+ },
+ {
+  "name": "j19b",
+  "lang": "zh",
+  "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j19b.mp3",
+  "bytes": 67752,
+  "heard": "老百姓急了,就要亞瑟當國王,別再拖了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.16
+ },
+ {
+  "name": "j21b",
+  "lang": "zh",
+  "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j21b.mp3",
+  "bytes": 91994,
+  "heard": "整整六次他才當上國王而第一次只因為哥哥忘了帶劍",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.68
+ }
+]
