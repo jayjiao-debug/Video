@@ -39,6 +39,11 @@
 //     line;
 //   - colour is flat and the shading is drawn: the head gets one soft band along its far rim; cloth gets a pale band
 //     on the lit edge, a flat middle and a darker far third; limbs get one flat stripe. No lambert falloff anywhere.
+//     Hats and props (PART.prop) get a lit band and a far third that goes clearly darker; hair gets a lighter lit
+//     side, a darker far side and five comb streaks (curls take the head's light, not one each: rigMat's form);
+//     a brim throws a band of shadow on the head under it (PartKit.brim
+//     does it on its own, a hand-built hat says PartKit.shadow); the head carries a thin warm arc inside its outline
+//     on the lit side (RIM). The scene's own light does not reach the figures yet (they cast shadows, take none).
 //   All of it is seeded per character and fixed to the part: nothing changes from frame to frame (no line boil).
 //
 // API (metres, floor y 0, yaw 0 = +z, PI/2 = +x: same conventions as kit/cast.ts):
@@ -57,6 +62,16 @@
 //   state.gaze: -1 (screen left) .. 1 (screen right) slides the pupils, in steps of 0.5. state.blink: 0 open, 0.5
 //   half, 1 shut (two drawn steps, no in-betweens).
 //   rigFaceCanvas(look, expr, { lid, gaze, brim }) = one face drawing as a canvas (sheets, QA); RIG_EXPRS = the names.
+//   Talking: Object.assign(state, rigSpeak(t, lines, id)) gives state.mouth (one of the eight talking mouths,
+//   RIG_MOUTHS: one open-and-close per syllable, the widest on a stressed one), state.head and the blinks at the
+//   lines' joints. rigSay = the mouth alone, rigSayEnv = the mouth from a voice track's loudness. Only while the
+//   character speaks its own line: never under a narrator (the reference's rule).
+//   state.head (RigHead: dx, dy, tilt, scale, squash) = the head as a layer of its own on top of the pose; the face,
+//   the hair and everything worn on the head go with it. rigHeadAccent("pop" | "squash" | "nod" | "jolt" | "shake" |
+//   "laugh" | "lean", seconds since it began) = the reference's accents; rigHeadAdd joins several.
+//   Walking: pose: rigWalk(distance walked in metres, speed in m/s): the step's length follows the speed, the feet
+//   stay planted, the body bounces (a sharp low after each landing, a rounded high as the legs pass) and the head
+//   and hat nod a beat late.
 //   a.qa after update: clear = the smallest gap between an arm and the own body / head in metres (< 0 = clipping),
 //   reach = how far a hand target is beyond the arm (> 0 = cannot reach).
 // Accessories (role props: glasses, a moustache, hats, headphones, a tie, a backpack, a briefcase ...) plug in:
@@ -106,9 +121,35 @@ const lumps = (seed: number) => {
 
 export const BODY_MAX = rad(45);
 export const FACE_MAX = rad(12);
+/** The part of the head that belongs to the face drawing, for 3D parts: az = degrees from the face side, top = height
+ *  in head units. The face turns to the camera on its own (FACE_MAX) while hair and hats turn with the body
+ *  (BODY_MAX), so the drawn eyes and mouth slide up to 33 degrees round the head, and their outer ends lie another
+ *  24 degrees out. A 3D part that is within `az` of the front, below `top` (the brows) and outside the skin will, at
+ *  some camera angle a film uses, lie over an eye or the mouth, or drift away from the mouth it was meant to sit at.
+ *  What belongs there is drawn on the face (Acc.face). Rig.accRules reports parts that break this. */
+export const FACE_ZONE = { az: 62, top: 0.2 };
 /** walk: half stride (m) and stance share; metres per full cycle (two steps) for planted feet */
-const STRIDE = 0.15, STANCE = 0.6;
+const STRIDE = 0.2, STANCE = 0.6;
 export const RIG_WALK_CYCLE_M = (2 * STRIDE) / STANCE;
+/** The walk pose of someone who has walked `dist` metres at a steady `speed` (m/s): the feet stay planted on the
+ *  ground, and the steps are as long as that speed needs for the reference's cadence (a step every 11 frames or so:
+ *  short quick steps when slow, long ones when fast), never shorter than 0.1 m or longer than 0.27 m a half step.
+ *  For a speed that changes during the shot, give RigPose a phase of your own (the distance in step cycles). */
+export const rigWalk = (dist: number, speed: number, amount = 1): RigPose => {
+  const stride = clamp(0.225 * Math.abs(speed), 0.1, 0.27), cycle = (2 * stride) / STANCE;
+  return { kind: "walk", phase: (((Math.abs(dist) / cycle) % 1) + 1) % 1, stride, amount };
+};
+/** the walk's bounce (measured on the reference's walks: Second Draw 21.67 to 23.0 s, a step every 10.5 frames). The
+ *  whole figure drops quickly into a sharp low point 0 to 1 frames after a foot lands and rises slowly to a rounded
+ *  high point as the legs pass: 7 to 9 % of its height. The head and hat tip forward 11 to 15 degrees, most 1 to 2
+ *  frames after the low point, and are level again by the passing pose; the body rocks forward with each landing.
+ *  lift = how far above its standing height the hip is at the high point (m; the leg under the body is then straight:
+ *  a standing figure's legs are a little slack); bob = the drop from there to the low point (m; 0.09 = 6 % of the
+ *  height: with this stride the knees give without squatting); low = where the low point is in a step (0 = as the
+ *  foot lands); top = where the high point is, from the low point; nod = the head's tip (degrees of headPitch; the
+ *  head group turns by 0.6 of it), over nodLen of the step; rock = degrees the body pitches forward at the low point.
+ *  RigPose.amount scales all of it (0 = a glide). */
+const WALK = { lift: 0.03, bob: 0.09, low: 0.06, top: 0.58, nod: 18, nodLen: 0.5, rock: 4 };
 /** limbs are near-ink (reference: (33, 25, 46) with a lighter band); the outline ink is lifted so the film's NEUTRAL
  *  tone mapping lands it on the reference's (31, 23, 40) instead of crushing it to black */
 export const LIMB_COL = "#3f3b4b";
@@ -132,18 +173,35 @@ const applyLight = (U: LightU, L: CastLight) => {
 /** how a part is painted: a flat colour plus an "inner shadow" that hugs the outline on the side away from the key (the
  *  reference's shading: drawn, not lit). wrap = the largest angle (deg) of the key from the view; band = [full, none]
  *  in n.v (0 = the outline, 1 = facing the camera); k = shadow depth; sat 0 = the light's lavender shade, 1 = the
- *  part's own colour, darker and richer (cloth); stripe = a flat highlight (rgb gain, w = cos of its half width, 2 = none) */
-type Part = { wrap: number; k: number; band: [number, number]; sat: number; stripe?: [number, number, number, number]; grad?: [number, number, number, number] };
+ *  part's own colour, darker and richer (cloth); stripe = a flat highlight (rgb gain, w = cos of its half width, 2 = none);
+ *  grad = shaded across the form instead (see PART); pale = light colours take the light's own shade colour, half as
+ *  deep (a white hat's dark side is pale lavender, not grey); lit = the lit band multiplies the colour (gain, plus a
+ *  little added) instead of mixing it toward white: matt things, hair */
+type Part = { wrap: number; k: number; band: [number, number]; sat: number; far?: number; stripe?: [number, number, number, number]; grad?: [number, number, number, number]; gradOn?: number; pale?: number; lit?: [number, number] };
 type Kind = "plain" | "face" | "tube";
 const HAIR_N = 256;
+/** The rasteriser's depth for a triangle seen nearly edge-on is not reliable: it snaps the corners to a sixteenth of
+ *  a pixel, and across a sliver that is centimetres of depth. Single samples of it then come out nearer than the
+ *  surface and land, as single pixels that flicker while the figure turns, on whatever stands just in front of this
+ *  part's outline (a headphone cup at the head's edge, a case in front of a leg, a clasp on a case).
+ *  Two cures, both for every rig material (fills, ink hulls, accessories):
+ *  SLOPE_BIAS: each triangle is drawn that many pixels' worth of its own depth slope further away (polygon offset
+ *  factor). A surface facing the camera does not move; a sliver moves back by about what its depth can be wrong by,
+ *  so it only shows where it is in front by more than that. Nothing is dropped, so outlines do not change.
+ *  EDGE_ON: a triangle whose plane is within asin(EDGE_ON) of edge-on is not drawn at all (0 = off). It removes
+ *  specks too, but whole triangles go, so the outline's edges move by a fraction of a pixel as the figure turns. */
+const SLOPE_BIAS: number = 1, EDGE_ON: number = 0;
+const EDGE_ON_GLSL = (P: string, V: string) => EDGE_ON > 0 ? `{ vec3 eN = cross( dFdx( ${P} ), dFdy( ${P} ) ); float eL = length( eN ); if ( eL > 0.0 && abs( dot( eN, ${V} ) ) < ${EDGE_ON.toFixed(4)} * eL ) discard; }` : "";
+const slopeBias = <M extends THREE.Material>(m: M): M => { if (SLOPE_BIAS > 0) { m.polygonOffset = true; m.polygonOffsetFactor = SLOPE_BIAS; m.polygonOffsetUnits = 0; } return m; };
 const FRAG_DECL = (kind: Kind) => /* glsl */ `
 uniform vec3 uKey; uniform vec3 uTint; uniform float uGain; uniform vec3 uShade;
-uniform float uWrap; uniform float uK; uniform vec2 uBand; uniform float uSat; uniform vec4 uStripe; uniform vec4 uGrad; uniform float uGradOn;
+uniform float uWrap; uniform float uK; uniform vec2 uBand; uniform float uSat; uniform vec4 uStripe; uniform vec4 uGrad; uniform float uGradOn; uniform float uPale; uniform vec2 uLit; uniform float uFar; uniform vec4 uForm;
 varying vec3 vWN; varying vec3 vWP;
 ${kind === "face" ? /* glsl */ `
 uniform sampler2D uFace; uniform vec3 uFF; uniform vec3 uFR; uniform vec3 uFU; uniform float uFaceOn; uniform vec3 uInkLift;
 uniform vec4 uHead; uniform vec3 uInk;
 uniform sampler2D uHair; uniform vec3 uHairCol; uniform vec4 uHeadband; uniform vec4 uHairPart; uniform float uHairInk;
+uniform vec4 uBrim; uniform vec2 uBrimAz; uniform vec3 uKeyH; uniform vec4 uRim;
 varying vec3 vON;
 float hairTexel( float i ) { vec4 t = texture2D( uHair, vec2( ( i + 0.5 ) / ${HAIR_N}.0, 0.5 ) ); return ( t.r * 65280.0 + t.g * 255.0 ) / 65535.0 * 3.14159265; }
 float hairLineAt( float az ) {
@@ -159,6 +217,7 @@ vec3 outgoingLight;
   if ( !gl_FrontFacing ) n = -n;
   vec3 base = diffuseColor.rgb;
   vec3 Vd = normalize( cameraPosition - vWP );
+  ${EDGE_ON_GLSL("vWP", "Vd")}
   vec3 L = normalize( uKey );
   float a = acos( clamp( dot( L, Vd ), -1.0, 1.0 ) );
   if ( a > uWrap ) {
@@ -197,11 +256,12 @@ ${kind === "face" ? /* glsl */ `
   dz = atan( sin( dz ), cos( dz ) );
   float sdz = uHairPart.y == 0.0 ? abs( dz ) : dz * uHairPart.y;
   float st = 0.0;
-  for ( int i = 0; i < 3; i ++ ) {
-    float fi = float( i );
-    float span = smoothstep( 0.16, 0.5, sdz ) * ( 1.0 - smoothstep( 1.15 - 0.22 * fi, 1.65 - 0.22 * fi, sdz ) );
-    float w = 0.027 * span;
-    st = max( st, span * ( 1.0 - smoothstep( w - 0.5 * fw, w + 0.5 * fw, abs( rel - 0.6 - 0.125 * fi ) * hl ) ) );
+  for ( int i = 0; i < 5; i ++ ) {
+    // (five comb lines, as on the reference's heads; they start a little apart and the lower ones are shorter)
+    float fi = float( i ), odd = mod( fi, 2.0 );
+    float span = smoothstep( 0.14 + 0.07 * odd, 0.46 + 0.07 * odd, sdz ) * ( 1.0 - smoothstep( 1.3 - 0.16 * fi, 1.75 - 0.16 * fi, sdz ) );
+    float w = 0.023 * span;
+    st = max( st, span * ( 1.0 - smoothstep( w - 0.5 * fw, w + 0.5 * fw, abs( rel - 0.47 - 0.105 * fi ) * hl ) ) );
   }
   st *= clamp( 0.054 / fw - 0.6, 0.0, 1.0 ) * uHairPart.z;
   vec3 hairC = mix( uHairCol, uHairCol * 1.7 + vec3( 0.07, 0.07, 0.085 ), st );
@@ -213,10 +273,17 @@ ${kind === "face" ? /* glsl */ `
   // the face goes on last: a raised brow is drawn over the fringe, as in the reference (a hat still covers it)
   base = mix( base, fc, f.a * fm );
   float cov = max( hm, bm ) * ( 1.0 - f.a * fm );
-  kk = mix( uK, 0.26, cov ); sat = mix( uSat, 0.8, cov );
+  kk = mix( uK, ${HAIR_K.toFixed(2)}, cov ); sat = mix( uSat, 0.8, cov );
 ` : ""}
+  // light colours shade toward the light's own shade colour and half as deep (uPale)
+  float pale = uPale * smoothstep( 0.45, 0.9, dot( base, vec3( 0.2126, 0.7152, 0.0722 ) ) );
+  kk *= 1.0 - 0.5 * pale; sat *= 1.0 - pale;
+  // a lump that is part of a larger form (uForm = that form's middle, w > 0: the curls on a head) is shaded across
+  // that form, not across itself: it takes the light the form has at that place, so the two read as one mass and
+  // not as small balls stuck on a ball, each with a lit and a dark side of its own
+  vec3 nf = uForm.w > 0.0 ? normalize( vWP - uForm.xyz ) : n;
   // the inner shadow: strongest at the outline, only on the side away from the key
-  float s = ( 1.0 - smoothstep( uBand.x, uBand.y, ndv ) ) * smoothstep( -0.25, 0.5, -ndl );
+  float s = ( 1.0 - smoothstep( uBand.x, uBand.y, dot( nf, Vd ) ) ) * smoothstep( -0.25, 0.5, -dot( nf, L ) );
   // cloth (grad): a drawn gradient across the form instead: a pale band along the lit edge, flat in the middle, darker
   // over the far third. It runs along the key as seen on screen, mostly sideways, and fades out when the key is
   // straight behind the camera (so it never jumps from one side to the other)
@@ -225,15 +292,47 @@ ${kind === "face" ? /* glsl */ `
   upv = upl > 1e-3 ? upv / upl : vec3( 0.0, 0.0, 1.0 );
   vec3 Gp = L - Vd * dot( L, Vd );
   Gp -= upv * dot( Gp, upv ) * 0.65;
-  float gLen = length( Gp ), gk = smoothstep( 0.06, 0.4, gLen ) * uGradOn;
-  float gu = dot( n, Gp / max( gLen, 1e-4 ) );
-  s = mix( s, max( smoothstep( uGrad.x, 1.0, -gu ), 0.4 * smoothstep( 0.25, 0.95, -dot( n, upv ) ) ), gk );
+  float gLen = length( Gp ), gAll = smoothstep( 0.06, 0.4, gLen ), gk = gAll * uGradOn;
+  float gu = dot( nf, Gp / max( gLen, 1e-4 ) );
+  ${kind === "face" ? "gk = max( gk, gAll * cov );     // hair painted on the head is shaded across the form, the skin is not" : ""}
+  s = mix( s, max( smoothstep( uGrad.x, uFar, -gu ), 0.4 * smoothstep( 0.25, 0.95, -dot( nf, upv ) ) ), gk );
   vec3 bn = base / max( max( base.r, max( base.g, base.b ) ), 1e-4 );
   vec3 col = base * uTint;
   col *= mix( vec3( 1.0 ), ( 1.0 - kk ) * mix( uShade, pow( bn, vec3( 0.25 ) ), sat ), s );
   // the pale band is weaker on dark cloth (on the reference's mint it lifts the luma by about a quarter)
   float hk = uGrad.w * clamp( dot( base, vec3( 0.2126, 0.7152, 0.0722 ) ) / 0.55, 0.35, 1.0 );
   col = mix( col, vec3( 0.9, 1.0, 1.14 ) * uTint, hk * gk * smoothstep( uGrad.y, uGrad.z, gu ) );
+  // matt things (hair): the lit band multiplies the colour instead
+  col = mix( col, col * uLit.x + vec3( uLit.y ) * uTint, step( 1e-3, uLit.x ) * gk * smoothstep( uGrad.y, uGrad.z, gu ) );
+${kind === "face" ? /* glsl */ `
+  // the rim arc (the reference): a thin warm line just inside the head's outline, on the side the light comes from,
+  // over skin and hair alike. It runs where the ball faces the camera by uRim.w (a ring a little inside the outline),
+  // for about a third of the way round, and is gone before it is thinner than a pixel.
+  {
+    float rw = max( fwidth( ndv ), 1e-4 ), rd = 0.03;
+    vec3 np = n - Vd * ndv;
+    float rs = dot( np / max( length( np ), 1e-4 ), Gp / max( gLen, 1e-4 ) );
+    float rl = ( 1.0 - smoothstep( rd - 0.5 * rw, rd + 0.5 * rw, abs( ndv - uRim.w ) ) ) * clamp( 2.0 * rd / rw - 0.6, 0.0, 1.0 );
+    col = mix( col, uRim.rgb * uTint, 0.7 * rl * gAll * smoothstep( 0.2, 0.62, rs ) * step( 1e-3, uRim.w ) );
+  }
+  // a brim's shadow on the head: a cast shadow worked out on the ball, under a drawn light. From this point toward the
+  // light, does the ray pass under the brim's edge (uBrim: its height, its reach at the front and at the sides, in
+  // head radii; uBrimAz: the middle and half the width of a peak)? The light stands straight out from the head at
+  // every point, uKeyH.y = the sine of its height, and leans toward the key by uKeyH.xz (head axes): so the shadow
+  // is a band under the brim, as deep as the brim reaches out there and a little deeper on the side away from the
+  // key. It does not depend on the camera, so it does not swim as the camera goes round.
+  if ( uBrim.w > 0.0 ) {
+    vec2 oB = on.xz / max( length( on.xz ), 1e-3 );
+    vec3 LB = normalize( vec3( oB.x * sqrt( 1.0 - uKeyH.y * uKeyH.y ) + uKeyH.x, uKeyH.y, oB.y * sqrt( 1.0 - uKeyH.y * uKeyH.y ) + uKeyH.z ) );
+    float tB = ( uBrim.x - on.y ) / max( LB.y, 0.05 );
+    vec2 hB = on.xz + tB * LB.xz;
+    float rB = mix( uBrim.y, uBrim.z, hB.x * hB.x / max( dot( hB, hB ), 1e-4 ) );
+    float dAz = atan( hB.x, hB.y ) - uBrimAz.x;
+    dAz = abs( atan( sin( dAz ), cos( dAz ) ) );
+    float shB = step( 0.0, tB ) * ( 1.0 - smoothstep( uBrimAz.y - 0.1, uBrimAz.y + 0.04, dAz ) ) * ( 1.0 - smoothstep( rB - 0.14, rB + 0.03, length( hB ) ) );
+    col *= mix( vec3( 1.0 ), uShade * 0.7, uBrim.w * shB );
+  }
+` : ""}
 ${kind === "tube" ? /* glsl */ `
   // the highlight is a flat stripe along the limb on the lit side (drawn, not a specular falloff)
   vec3 T = normalize( vWT );
@@ -248,12 +347,15 @@ ${kind === "tube" ? /* glsl */ `
 `;
 type NumU = { value: number };
 type FaceU = { uFace: { value: THREE.Texture }; uFF: { value: V3 }; uFR: { value: V3 }; uFU: { value: V3 }; uFaceOn: NumU; uHead: { value: THREE.Vector4 }; uInk: { value: THREE.Color };
-  uHair: { value: THREE.Texture }; uHairCol: { value: THREE.Color }; uHeadband: { value: THREE.Vector4 }; uHairPart: { value: THREE.Vector4 }; uHairInk: NumU };
+  uHair: { value: THREE.Texture }; uHairCol: { value: THREE.Color }; uHeadband: { value: THREE.Vector4 }; uHairPart: { value: THREE.Vector4 }; uHairInk: NumU;
+  uBrim: { value: THREE.Vector4 }; uBrimAz: { value: THREE.Vector2 }; uKeyH: { value: V3 }; uRim: { value: THREE.Vector4 } };
 /** pull: the mesh is drawn that many metres nearer the camera along the view ray (depth only; its place on screen and
- *  its shading do not change): the head group uses it to sit in front of its own body */
-const rigMat = (U: LightU, part: Part, o: THREE.MeshBasicMaterialParameters = {}, kind: Kind = "plain", face?: FaceU, pull?: NumU) => {
-  const m = new THREE.MeshBasicMaterial(o);
-  const P = { uWrap: { value: rad(part.wrap) }, uK: { value: part.k }, uBand: { value: new THREE.Vector2(part.band[0], part.band[1]) }, uSat: { value: part.sat }, uStripe: { value: new THREE.Vector4(...(part.stripe ?? [1, 1, 1, 2])) }, uGrad: { value: new THREE.Vector4(...(part.grad ?? [0, 2, 3, 0])) }, uGradOn: { value: part.grad ? 1 : 0 }, uPull: pull ?? { value: 0 } };
+ *  its shading do not change): the head group uses it to sit in front of its own body.
+ *  form: the mesh is a lump on a larger round form (the curls on a head): the middle of that form in the world, w > 0
+ *  (the head's own uHead, so it follows the head). The lump is then shaded across the form (see the shader). */
+const rigMat = (U: LightU, part: Part, o: THREE.MeshBasicMaterialParameters = {}, kind: Kind = "plain", face?: FaceU, pull?: NumU, form?: { value: THREE.Vector4 }) => {
+  const m = slopeBias(new THREE.MeshBasicMaterial(o));
+  const P = { uWrap: { value: rad(part.wrap) }, uK: { value: part.k }, uBand: { value: new THREE.Vector2(part.band[0], part.band[1]) }, uSat: { value: part.sat }, uStripe: { value: new THREE.Vector4(...(part.stripe ?? [1, 1, 1, 2])) }, uGrad: { value: new THREE.Vector4(...(part.grad ?? [0, 2, 3, 0])) }, uGradOn: { value: part.gradOn ?? (part.grad ? 1 : 0) }, uPale: { value: part.pale ?? 0 }, uLit: { value: new THREE.Vector2(...(part.lit ?? [0, 0])) }, uFar: { value: part.far ?? 1 }, uPull: pull ?? { value: 0 }, uForm: form ?? { value: new THREE.Vector4(0, 0, 0, 0) } };
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U, P, face ?? {});
     sh.vertexShader = sh.vertexShader
@@ -271,13 +373,28 @@ const rigMat = (U: LightU, part: Part, o: THREE.MeshBasicMaterialParameters = {}
  *  to x (0.69, 0.74, 0.78) at the edge (grad = [where the dark starts, lit band from, lit band full, lit strength], in
  *  units of the half width from the middle); limbs are flat near-ink with one lighter stripe (x 2.3 in luma on
  *  screen) just inside the lit edge */
+/** hats, hair and props (measured on the reference's bowler through a camera orbit, and on seven heads of hair): they
+ *  are shaded across the form like the cloth, and that is what makes them read as solid while the camera moves.
+ *  The bowler, in sRGB luma across its crown: a lit band of 112 over the 20 to 29 % nearest the light, a quick step
+ *  down to 62 across the middle, then down to 38 over the far third; the band stays on the light's side as the
+ *  camera goes round. Hair is matt: its lit side is 1.2 x the middle and its far side 0.75 x (in sRGB).
+ *  HAIR_K = how deep hair's far side goes; the head's own grad only applies where hair is painted on it.
+ *  far (hats and props) = where the far side's dark is full, in half widths from the middle (1 = only at the outline,
+ *  as on cloth; 0.72 = the whole far third is dark, as on the bowler).
+ *  RIM = the rim arc on the head: its colour (linear) and how far inside the outline it runs (the facing there; 0 =
+ *  no arc). The reference draws it on every head: a thin warm line inside the outline on the lit side. */
+const HAIR_K = 0.4, HAIR_GRAD: [number, number, number, number] = [0.3, 0.5, 0.66, 0], HAIR_LIT: [number, number] = [1.5, 0.045];
+const RIM: [number, number, number, number] = [0.87, 0.4, 0.08, 0.3];
+/** the light that throws a brim's shadow on the head: its height above the horizon is the key's, kept within
+ *  BRIM_ELEV degrees; BRIM_SIDE = how far it leans toward the key (0 = the same band all round) */
+const BRIM_ELEV: [number, number] = [42, 60], BRIM_SIDE = 0.3;
 const PART = {
-  head: { wrap: 60, k: 0.22, band: [0.5, 0.68], sat: 0 } as Part,
+  head: { wrap: 60, k: 0.22, band: [0.5, 0.68], sat: 0, grad: HAIR_GRAD, gradOn: 0, lit: HAIR_LIT } as Part,
   body: { wrap: 62, k: 0.47, band: [0, 0.8], sat: 0.75, grad: [0.35, 0.58, 0.88, 0.42] } as Part,
-  hair: { wrap: 60, k: 0.26, band: [0.2, 0.75], sat: 0.8 } as Part,
+  hair: { wrap: 60, k: HAIR_K, band: [0.2, 0.75], sat: 0.8, grad: HAIR_GRAD, lit: HAIR_LIT } as Part,
   limb: { wrap: 75, k: 0, band: [0, 0.01], sat: 0, stripe: [1.86, 1.86, 1.71, 0.925] } as Part,
   ball: { wrap: 75, k: 0, band: [0, 0.01], sat: 0, stripe: [1.86, 1.86, 1.71, 0.965] } as Part,
-  prop: { wrap: 60, k: 0.3, band: [0.15, 0.75], sat: 1 } as Part,
+  prop: { wrap: 60, k: 0.5, band: [0.15, 0.75], sat: 1, grad: [0.3, 0.5, 0.66, 0.36], pale: 1, far: 0.72 } as Part,
 };
 /** ink hull: the mesh's own geometry drawn back-side-only, pushed out along the view-space normal by w metres, at
  *  least minPx pixels. The line has weight, like a brush line: x (1 +- thick) on the side away from / toward the key
@@ -297,19 +414,21 @@ vec4 mvPosition = modelViewMatrix * vec4( transformed, 1.0 );
   mvPosition.xyz += nv * w;
   mvPosition.xyz -= normalize( mvPosition.xyz ) * uPull;
 }
+vHP = mvPosition.xyz;
 gl_Position = projectionMatrix * mvPosition;
 `;
 type HullO = { minPx?: number; down?: number; pull?: NumU; brush?: number; seed?: number; freq?: number };
 const hullMat = (U: LightU, w: number, thick = 0.4, o: HullO = {}) => {
-  const m = new THREE.MeshBasicMaterial({ color: RIG_INK, side: THREE.BackSide });
+  const m = slopeBias(new THREE.MeshBasicMaterial({ color: RIG_INK, side: THREE.BackSide }));
   const sd = o.seed ?? 1, fr = o.freq ?? 14;
   const bv = (k: number, f: number) => { const u = 2 * rnd(sd, k) - 1, a = rnd(sd, k + 1) * 6.283, q = Math.sqrt(1 - u * u); return new THREE.Vector4(q * Math.cos(a) * f, u * f, q * Math.sin(a) * f, rnd(sd, k + 2) * 6.283); };
   const P = { uW: { value: w }, uThick: { value: thick }, uMinPx: { value: o.minPx ?? 1.6 }, uDown: { value: o.down ?? 0 }, uPull: o.pull ?? { value: 0 }, uBrush: { value: o.brush ?? 0 }, uB1: { value: bv(90, fr) }, uB2: { value: bv(94, fr * 1.7) } };
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, { uKey: U.uKey, uResH: U.uResH }, P);
     sh.vertexShader = sh.vertexShader
-      .replace("#include <common>", "#include <common>\nuniform vec3 uKey; uniform float uResH; uniform float uW; uniform float uThick; uniform float uMinPx; uniform float uDown; uniform float uPull; uniform float uBrush; uniform vec4 uB1; uniform vec4 uB2;")
+      .replace("#include <common>", "#include <common>\nvarying vec3 vHP;\nuniform vec3 uKey; uniform float uResH; uniform float uW; uniform float uThick; uniform float uMinPx; uniform float uDown; uniform float uPull; uniform float uBrush; uniform vec4 uB1; uniform vec4 uB2;")
       .replace("#include <project_vertex>", HULL_VERT);
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 vHP;").replace("#include <clipping_planes_fragment>", EDGE_ON_GLSL("vHP", "normalize( vHP )") + "\n#include <clipping_planes_fragment>");
   };
   m.customProgramCacheKey = () => "rig3-hull";
   return m;
@@ -325,8 +444,13 @@ const hullMat = (U: LightU, w: number, thick = 0.4, o: HullO = {}) => {
 const layerMat = (m: THREE.Material, sid: number, kind: "head" | "under" | "depth") => {
   m.stencilWrite = true; m.stencilRef = sid;
   if (kind === "head") { m.stencilFunc = THREE.AlwaysStencilFunc; m.stencilZPass = THREE.ReplaceStencilOp; }
-  else m.stencilFunc = kind === "under" ? THREE.NotEqualStencilFunc : THREE.EqualStencilFunc;
+  else { m.stencilFunc = kind === "under" ? THREE.NotEqualStencilFunc : THREE.EqualStencilFunc; m.stencilFuncMask = ID_BITS; }
 };
+/** The stencil's low seven bits hold the figure's id; the top bit marks the pixels the head's skin drew. The skin's
+ *  own ink hull skips those: it is always behind the skin, and with SLOPE_BIAS the depth test cannot say so at the
+ *  skin's outline (the last sliver of skin is moved back, behind its hull, and the outline would grow and shrink by
+ *  a fraction of a pixel as the head turns). Everything else that is drawn over the skin clears the bit again. */
+const ID_BITS = 0x7f, SKIN_BIT = 0x80;
 /** clears the stencil at the start of every pass that draws the figures (a full-screen triangle drawn first), so the
  *  layering does not depend on how the pipeline clears its buffers */
 const stencilClear = () => {
@@ -403,6 +527,17 @@ const blobMat = (col: string) => {
 // Each character strays a little from the pattern (spacing, sizes, tilts), the same way in every expression (seeded).
 type EyeK = "lid" | "slit" | "down" | "dot" | "happy" | "closed" | "dash" | "squeeze" | "ring" | "ringHalf" | "spiral";
 type MouthK = "tiny" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
+/** The mouths of a character who is speaking (RigState.mouth; rigSay gives the sequence for a line). The reference's
+ *  talk kit, measured on five characters (width x height in u): mouths two to four times the size of the resting
+ *  one, dark boxes with round corners, white teeth, a pink tongue. They hang from the upper lip: the top edge rises a
+ *  few u, the bottom drops to about 6 u above the chin. They bend with the mood (corners up on a smiling face, down
+ *  on a stern one). They replace the expression's own mouth for a frame; eyes and brows stay.
+ *    line   26 x 4.6  closed, between words            pill   38 x 9   closed and pressed (m, b, p)
+ *    strip  40 x 13   the teeth together (s, z, t, i)  small  28 x 13  a little open, the tongue shows (e)
+ *    half   36 x 19   open, both rows of teeth (a)     wide   36 x 26  wide open, top teeth and tongue (a stressed a)
+ *    round  24 x 22   an O without teeth (o, u, w)     tongue 40 x 14  the tongue between the teeth (l, th) */
+export type RigMouth = "line" | "pill" | "strip" | "small" | "half" | "wide" | "round" | "tongue";
+export const RIG_MOUTHS: RigMouth[] = ["line", "pill", "strip", "small", "half", "wide", "round", "tongue"];
 /** eye = [screen left, screen right]; brow = [inner, outer] end offsets (u, + = down); tilt = the lid bar's slope (deg,
  *  + = inner end lower); bar = heavy straight brows sitting on the lids; raise = brows higher by that many u; skew =
  *  how much higher one brow rides than the other; pupil = a ring eye's pupil radius */
@@ -453,8 +588,9 @@ const PEN = 3.3;
 /** design u -> canvas u (the head's outline is about 1 % wider than the ball's diameter the canvas spans) */
 const FACE_FS = 0.99;
 /** the face, front on, on a canvas that spans the head ball's diameter (W px). gaze -1..1 slides the pupils. */
-const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boolean, gaze: number, hand: number, fa: FaceAcc = faceAccOf(L, [])) => {
+const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boolean, gaze: number, hand: number, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth) => {
   const F = FACES[expr], sd = L.seed, u = (W / 100) * FACE_FS, g = p.g;
+  if (!F) throw new Error(`rig3d: there is no expression "${expr}" (there are: ${Object.keys(FACES).join(", ")})`);
   const jit = (k: number, a: number) => (2 * rnd(sd, 60 + k) - 1) * a * hand;
   const cx = W / 2 + jit(0, 0.7) * u, E = W / 2 - (brim ? 0 : 1.5) * u;        // the eye line (lower under a hat brim)
   const strong = rnd(sd, 71) < 0.5 ? -1 : 1;                                   // the side of the higher brow and the smirk
@@ -463,9 +599,11 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
   const fill = (a: P2[], col: string | null, ol = 0) => p.poly(pts(a), col, ol * u);
   const turned = (x: number, y: number, deg: number, fn: () => void) => { p.rot = [rad(deg), cx + x * u, E + y * u]; fn(); p.rot = null; };
   const sp = fa.lens ? 14.3 : 14 + jit(1, 0.6);
+  // a moustache sits on the upper lip, below a pair of glasses' rims; the mouth makes room under it
+  const lipY = fa.lens ? 15 : 12.4, mouthY = fa.lip ? lipY + 9.5 : 18.7;
   // accessories drawn on the face (see Acc): under = before the eyes, brows and mouth; over = after everything
   const kit: FaceKit = {
-    look: L, expr, hand, sp, mouth: [jit(20, 1.1), 18.7], strong, shade: brim, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
+    look: L, expr, hand, sp, mouth: [jit(20, 1.1), mouthY], lip: lipY, lens: fa.lens, strong, shade: brim, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
     line, fill, turned, arc: arcPts, quad: quadPts, g, u, px: (x, y) => [cx + x * u, E + y * u],
   };
   const hook = (fn: (f: FaceKit) => void) => { g.save(); fn(kit); g.restore(); p.rot = null; };
@@ -508,7 +646,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
     line(quadPts(a, [x0 + jit(16 + i, 1.2), (a[1] + b[1]) / 2 - 2 * arch], b), F.bar ? PEN + 0.9 : PEN);
   }
   // mouth
-  const mx = jit(20, 1.1), my = 18.7, ms = 1 + jit(21, 0.05);
+  const mx = jit(20, 1.1), my = mouthY, ms = 1 + jit(21, 0.05);
   const openMouth = (hw: number, yc: number, sag: number, depth: number, tongue: boolean) => {
     // corners at (mx -+ hw, yc); the top edge dips `sag` in the middle (a smile), the bottom reaches yc + depth
     const A: P2 = [mx - hw, yc], B: P2 = [mx + hw, yc], top = quadPts(A, [mx, yc + 2 * sag], B, 26), bot = quadPts(B, [mx, yc + 2 * depth], A, 26);
@@ -523,7 +661,49 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       }
     });
   };
+  // a speaking mouth: a dark box with round corners, hw wide each way and h high, its top edge `rise` above the
+  // resting mouth's (it hangs from the upper lip and never reaches the chin); teeth = [top, bottom] rows (u high,
+  // 0 = none; "all" = the teeth fill it, one dark line between the rows); tongue = [half width, half height, its
+  // middle above the box's bottom edge]. The whole mouth bends with the mood.
+  const mood = F.mouth === "smile" || F.mouth === "smileWide" || F.mouth === "grin" || F.mouth === "laugh" || F.mouth === "lick" ? 1 : F.mouth === "frown" || F.mouth === "teeth" ? -0.75 : 0;
+  const talkMouth = (hw0: number, h0: number, r0: number, rise: number, teeth: [number, number] | "all", tongue: [number, number, number] | null) => {
+    const hw = hw0 * ms, top = my - 2.3 - rise, h = Math.max(Math.min(h0, 40.6 - top), 0.62 * h0), k = h / h0, r = Math.min(r0 * k, h / 2, hw), rim = 2.6;
+    const bend = (x: number) => -mood * 2.4 * ((x - mx) / hw) ** 2;                       // corners up on a smiling face
+    const rbox = (ins: number): P2[] => {
+      const a: P2[] = [], w = hw - ins, rr = Math.max(r - ins, 0.3), y0 = top + ins, y1 = top + h - ins;
+      for (const [qx, qy, a0] of [[1, -1, -90], [1, 1, 0], [-1, 1, 90], [-1, -1, 180]]) a.push(...arcPts(mx + qx * (w - rr), (qy > 0 ? y1 : y0) - qy * rr, rr, rr, a0, a0 + 90, 8));
+      return a.map(([x, y]) => [x, y + bend(x)] as P2);
+    };
+    fill(rbox(0), INK);
+    if (h < 2 * rim + 1.5) return;                                                        // a closed mouth: a bar of ink
+    const band = (y0: number, y1: number, col: string) => {                               // a strip right across, bent with the mouth
+      const a: P2[] = [], b: P2[] = [];
+      for (let i = 0; i <= 16; i++) { const x = mx - hw + (2 * hw * i) / 16; a.push([x, y0 + bend(x)]); b.push([x, y1 + bend(x)]); }
+      fill([...a, ...b.reverse()], col);
+    };
+    p.clip(pts(rbox(rim)), () => {
+      if (teeth === "all") { band(top, top + h, TEETH); band(top + h / 2 - 0.65, top + h / 2 + 0.65, INK); }
+      if (tongue) fill(arcPts(mx + 0.6 * strong, top + h - rim - tongue[2] * k, tongue[0] * ms, tongue[1] * k), TONGUE);
+      if (teeth !== "all") {
+        if (teeth[0]) band(top, top + rim + teeth[0] * k, TEETH);
+        if (teeth[1]) band(top + h - rim - teeth[1] * k, top + h, TEETH);
+      }
+    });
+  };
   turned(mx, my, jit(22, 2.5), () => {
+    if (talk) {
+      switch (talk) {
+        case "line": talkMouth(13, 4.6, 2.3, 0, [0, 0], null); break;
+        case "pill": talkMouth(19, 9, 4.5, 1.3, [0, 0], null); break;
+        case "strip": talkMouth(20, 13, 6, 2.3, "all", null); break;
+        case "small": talkMouth(14, 13, 6, 1.5, [2.2, 0], [8.2, 4.6, 1.2]); break;
+        case "half": talkMouth(18, 19, 8, 2.9, [3.9, 2.8], [9.5, 3.6, 5.4]); break;
+        case "wide": talkMouth(18, 26, 9.5, 4.5, [3.6, 0], [11, 7.4, 3.2]); break;
+        case "round": talkMouth(12, 22, 11, 3.2, [0, 0], [6.4, 3.8, 1]); break;
+        case "tongue": talkMouth(20, 14, 6, 2.3, [3.2, 0], [7.6, 4.4, 4.4]); break;
+      }
+      return;
+    }
     switch (F.mouth) {
       case "tiny": fill([...quadPts([mx - 4.6, my + 0.2], [mx - 0.4, my - 3.9], [mx + 4.6, my - 0.3], 12), ...quadPts([mx + 4.6, my - 0.3], [mx + 0.6, my + 4.3], [mx - 4.6, my + 0.2], 12).slice(1, -1)], INK, 0.7); break;
       case "frown": line(quadPts([mx - 6.5 * ms, my + 1.8], [mx, my - 5], [mx + 6.5 * ms, my + 1.8])); break;
@@ -571,12 +751,13 @@ const FACE_PX = 1024, FACE_CACHE_MAX = 160;
 const faceCache = new Map<string, THREE.CanvasTexture>();
 /** the face drawing for one look / expression / lid state / gaze step: a canvas that spans the head ball's diameter.
  *  True LRU; three lid states and five gaze steps only. */
-const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze = 0, fa: FaceAcc = faceAccOf(L, [])) => {
+const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze = 0, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth) => {
   const lq = lid >= 1 ? 1 : lid > 0 ? 0.5 : 0, gq = Math.round(clamp(gaze, -1, 1) * 2) / 2;
-  const key = `${L.seed}|${expr}|${lq}|${gq}|${brim ? 1 : 0}|${L.glasses ?? ""}|${L.glassCol ?? ""}|${hand}|${fa.own ? 1 : 0}|${fa.key}`;
+  // (accessories that draw on the face are handed the whole look: two looks that share a seed may differ in what they read)
+  const key = `${L.seed}|${expr}|${lq}|${gq}|${brim ? 1 : 0}|${L.glasses ?? ""}|${L.glassCol ?? ""}|${hand}|${fa.own ? 1 : 0}|${fa.key}${fa.under.length || fa.over.length ? "|" + JSON.stringify(L) : ""}${talk ? "|say:" + talk : ""}`;
   let t = faceCache.get(key);
   if (t) { faceCache.delete(key); faceCache.set(key, t); return t; }
-  t = canvasTex(FACE_PX, FACE_PX, (g) => drawFace(new Pen(g), FACE_PX, L, expr, lq, brim, gq, hand, fa), { amp: FACE_PX * 0.0045 * hand, seed: L.seed });
+  t = canvasTex(FACE_PX, FACE_PX, (g) => drawFace(new Pen(g), FACE_PX, L, expr, lq, brim, gq, hand, fa, talk), { amp: FACE_PX * 0.0045 * hand, seed: L.seed });
   t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter;
   faceCache.set(key, t);
   while (faceCache.size > FACE_CACHE_MAX) { const k0 = faceCache.keys().next().value!; faceCache.get(k0)!.dispose(); faceCache.delete(k0); }
@@ -584,8 +765,115 @@ const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze
 };
 
 /** the face drawing as a canvas (expression sheets, QA); acc = accessories drawn on the face */
-export const rigFaceCanvas = (L: Look, expr: Expr, o: { lid?: number; brim?: boolean; hand?: number; gaze?: number; acc?: Acc[] } = {}) =>
-  faceTex(L, expr, o.lid ?? 0, !!o.brim, o.hand ?? 1, o.gaze ?? 0, faceAccOf(L, o.acc ?? [])).image as HTMLCanvasElement;
+export const rigFaceCanvas = (L: Look, expr: Expr, o: { lid?: number; brim?: boolean; hand?: number; gaze?: number; acc?: Acc[]; mouth?: RigMouth } = {}) =>
+  faceTex(L, expr, o.lid ?? 0, !!o.brim, o.hand ?? 1, o.gaze ?? 0, faceAccOf(L, o.acc ?? []), o.mouth).image as HTMLCanvasElement;
+/** One spoken line: from .. to in seconds; syl = its syllables (Chinese: one a character; default: 5.5 a second);
+ *  stress = the syllables said loudest (0 = the first): their mouth is the widest; seed = which mouths it picks (give
+ *  each character its own). */
+export type RigLine = { from: number; to: number; syl?: number; stress?: number[]; seed?: number };
+const NARROWER: Record<RigMouth, RigMouth> = { wide: "half", half: "small", round: "small", tongue: "strip", small: "strip", strip: "pill", pill: "line", line: "line" };
+/** the mouths of syllable k of a line: [open, a little less, closing, closed] */
+const sylMouths = (seed: number, k: number, stressed: boolean): [RigMouth, RigMouth, RigMouth, RigMouth] => {
+  const pick = (j: number): RigMouth => { const x = rnd(seed + 0.731 * j, 311); return x < 0.3 ? "half" : x < 0.5 ? "small" : x < 0.66 ? "round" : x < 0.84 ? "strip" : x < 0.93 ? "wide" : "tongue"; };
+  let a = stressed ? "wide" : pick(k);
+  if (!stressed && k > 0 && a === pick(k - 1)) a = a === "half" ? "round" : "half";      // two syllables in a row never open the same way
+  const b = NARROWER[a], c = b === "strip" || b === "pill" ? "pill" : "strip";
+  return [a, b, c, rnd(seed + 0.731 * k, 312) < 0.28 ? "pill" : "line"];
+};
+/** The mouth at time t (seconds) of a character who speaks the given lines; undefined outside them (the expression's
+ *  own mouth shows). Timed as the reference does it, measured at 30 frames a second: the mouth opens 2 frames before
+ *  the sound; every syllable is one open-and-close of 5 to 6 frames (open, a little less, closing, closed: a new
+ *  drawing about every frame and a half, none held longer than 3 frames); after the last syllable it settles for 8
+ *  frames (a small mouth, then the closed line) and gives way to the expression's own mouth.
+ *  Only for lines a character says. The reference never moves a mouth under the narrator. */
+export const rigSay = (t: number, lines: RigLine | RigLine[], fps = 30): RigMouth | undefined => {
+  const f = t * fps + 1e-6;
+  for (const ln of Array.isArray(lines) ? lines : [lines]) {
+    const n = Math.max(1, Math.round(ln.syl ?? (ln.to - ln.from) * 5.5)), fd = Math.max(((ln.to - ln.from) * fps) / n, 2);
+    const tf = Math.floor(f) + 2 - ln.from * fps;                                         // 2 frames ahead of the sound
+    if (tf < 0 || tf >= n * fd + 8) continue;
+    const k = Math.floor(tf / fd);
+    if (k >= n) return tf - n * fd < 3 ? "small" : "line";
+    const u = (tf - k * fd) / fd, m = sylMouths(ln.seed ?? 0, k, !!ln.stress?.includes(k));
+    // a fast talker (under 4.5 frames a syllable) has no time for the closing mouth
+    return fd < 4.5 ? (u < 0.5 ? m[0] : u < 0.78 ? m[1] : m[3]) : u < 0.42 ? m[0] : u < 0.68 ? m[1] : u < 0.86 ? m[2] : m[3];
+  }
+  return undefined;
+};
+/** A mouth that keeps talking (no line timing): rigSay with an endless line of 5.5 syllables a second. */
+export const rigTalk = (t: number, seed = 0, fps = 30): RigMouth => rigSay(t, { from: 0, to: Math.max(t, 0) + 2, syl: Math.round((Math.max(t, 0) + 2) * 5.5), seed }, fps) ?? "line";
+/** The mouth in frame f from the voice itself: env[i] = how loud the voice is in frame i, 0..1 of the line's loudest.
+ *  The reference's rule of thumb: read the sound 2 frames ahead; under 0.15 the mouth is closed, to 0.35 the teeth are
+ *  together, to 0.55 a little open, to 0.8 open, above that wide open; an open mouth is never held longer than 3
+ *  frames (the fourth is one step narrower). undefined = the voice has been silent for 8 frames. */
+export const rigSayEnv = (f: number, env: ArrayLike<number>): RigMouth | undefined => {
+  const at = (i: number) => { const e = i + 2 >= 0 && i + 2 < env.length ? env[i + 2] : 0; return e < 0.15 ? 0 : e < 0.35 ? 1 : e < 0.55 ? 2 : e < 0.8 ? 3 : 4; };
+  const lvl = at(f);
+  if (!lvl) { for (let i = 1; i <= 8; i++) if (at(f - i)) return i <= 3 ? "pill" : "line"; return undefined; }
+  let run = 0;
+  while (run < 12 && at(f - run - 1) === lvl) run++;
+  const m = (["line", "strip", "small", "half", "wide"] as RigMouth[])[lvl];
+  return run % 4 === 3 ? NARROWER[m] : m;
+};
+/** head layers together: shifts, tilts and squashes add, scales multiply */
+export const rigHeadAdd = (...hs: (RigHead | undefined)[]): RigHead | undefined => {
+  const o = { dx: 0, dy: 0, tilt: 0, scale: 1, squash: 0 };
+  let any = false;
+  for (const h of hs) if (h) { any = true; o.dx += h.dx ?? 0; o.dy += h.dy ?? 0; o.tilt += h.tilt ?? 0; o.scale *= h.scale ?? 1; o.squash += h.squash ?? 0; }
+  return any ? o : undefined;
+};
+const keyed = (f: number, keys: [number, number][]) => {                                 // straight lines between [frame, value] keys
+  if (f <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) if (f <= keys[i][0]) { const [f0, v0] = keys[i - 1], [f1, v1] = keys[i]; return v0 + ((v1 - v0) * (f - f0)) / (f1 - f0); }
+  return keys[keys.length - 1][1];
+};
+export type RigAccent = "pop" | "squash" | "nod" | "jolt" | "shake" | "laugh" | "lean";
+/** A head accent, timed as the reference times them at 30 frames a second. t = seconds since it began; the answer is
+ *  the head layer for that moment (RigState.head), undefined once it is over.
+ *    pop     a stressed word: 7 % larger within a frame, held 2 frames, back over 3
+ *    squash  a landing, a blow, a hard word: a tenth flatter for 2 frames, a twentieth taller for 2, settled by frame 8
+ *    nod     "yes", or the first word of a line: dips a tenth of its radius, back by frame 7
+ *    jolt    a start: up a fifth of its radius in 2 frames and a little taller, back by frame 8
+ *    shake   "no": leans right, left, right over 12 frames (5 degrees)
+ *    laugh   rocks for as long as it lasts (dur seconds): 2 degrees and 0.056 radii each way, once every 6.5 frames
+ *    lean    leans to one side (dir 1 = screen right) for as long as it lasts (dur seconds): 4 degrees, 5 frames in and out
+ *  amp scales it (1). */
+export const rigHeadAccent = (kind: RigAccent, t: number, o: { dur?: number; dir?: 1 | -1; amp?: number } = {}, fps = 30): RigHead | undefined => {
+  const f = Math.floor(t * fps + 1e-6), a = o.amp ?? 1, n = Math.round((o.dur ?? 1) * fps), dir = o.dir ?? 1;
+  if (f < 0) return undefined;
+  switch (kind) {
+    case "pop": return f >= 6 ? undefined : { scale: 1 + 0.07 * a * keyed(f, [[0, 0.6], [1, 1], [3, 1], [6, 0]]) };
+    case "squash": return f >= 8 ? undefined : { squash: a * keyed(f, [[0, 0.06], [1, 0.1], [2, 0.1], [3, -0.05], [4, -0.05], [6, 0.015], [8, 0]]) };
+    case "nod": return f >= 7 ? undefined : { dy: -0.1 * a * keyed(f, [[0, 0.5], [1, 1], [3, 1], [7, 0]]) };
+    case "jolt": return f >= 8 ? undefined : { dy: 0.2 * a * keyed(f, [[0, 0.55], [1, 1], [3, 1], [8, 0]]), squash: -0.04 * a * keyed(f, [[0, 1], [2, 1], [5, 0]]) };
+    case "shake": return f >= 12 ? undefined : { tilt: 5 * a * dir * Math.sin((f / 12) * Math.PI * 3) * keyed(f, [[0, 1], [8, 1], [12, 0]]) };
+    case "laugh": return f >= n ? undefined : { tilt: 2 * a * Math.sin((f / 6.5) * Math.PI * 2 + 1.2), dy: 0.056 * a * Math.sin((f / 6.5) * Math.PI * 2) };
+    case "lean": return f >= n ? undefined : { tilt: 4 * a * dir * Math.min(keyed(f, [[0, 0.2], [5, 1]]), keyed(n - f, [[0, 0], [5, 1]])) };
+  }
+};
+/** A spoken line acted out the way the reference does it: the mouth, the head and the eyelids together. Put the
+ *  answer into the state: Object.assign(state, rigSpeak(t, lines, id)); blink is only given at the moments it blinks
+ *  (use it before your own: blink: sp.blink ?? ownBlink).
+ *    mouth  rigSay.
+ *    head   a small nod on the first syllable, a pop on every stressed syllable (2 frames ahead of the sound, with the
+ *           mouth), and a lean of a few degrees held through the line, to the other side on the next line.
+ *    blink  shut for a frame, half shut on either side, just before the mouth opens and again as the line ends: the
+ *           reference blinks at the joints of a line, never inside it.
+ *  id = the character (which mouths it picks, which way it leans first). */
+export const rigSpeak = (t: number, lines: RigLine | RigLine[], id = 0, fps = 30): { mouth?: RigMouth; head?: RigHead; blink?: number } => {
+  const ls = (Array.isArray(lines) ? lines : [lines]).map((l, i) => ({ ...l, seed: l.seed ?? id + 0.37 * i })), f = Math.floor(t * fps + 1e-6);
+  const out: { mouth?: RigMouth; head?: RigHead; blink?: number } = { mouth: rigSay(t, ls, fps) };
+  const hs: (RigHead | undefined)[] = [];
+  ls.forEach((ln, i) => {
+    const f0 = Math.round(ln.from * fps) - 2, f1 = Math.round(ln.to * fps), n = Math.max(1, Math.round(ln.syl ?? (ln.to - ln.from) * 5.5)), fd = (f1 - f0 - 2) / n;
+    const dir = (Math.floor(rnd(id, 331) * 2) + i) % 2 ? 1 : -1;
+    hs.push(rigHeadAccent("lean", (f - f0) / fps, { dur: (f1 - f0 + 6) / fps, dir, amp: 0.75 }, fps), rigHeadAccent("nod", (f - f0) / fps, { amp: 0.6 }, fps));
+    for (const k of ln.stress ?? []) hs.push(rigHeadAccent("pop", (f - (f0 + Math.round(k * fd))) / fps, {}, fps));
+    for (const fb of [f0 - 3, f1 + 2]) if (f >= fb && f < fb + 3) out.blink = f === fb + 1 ? 1 : 0.5;
+  });
+  out.head = rigHeadAdd(...hs);
+  return out;
+};
 export const RIG_EXPRS = Object.keys(FACES) as Expr[];
 
 const shadeHex = (c: string, k: number) => { const x = new THREE.Color(c); x.multiplyScalar(k); return "#" + x.getHexString(); };
@@ -605,6 +893,20 @@ const outfitTex = (L: Look, hand: number, accs: Acc[], d: Dim) => canvasTex(OUT_
   };
   const button = (x: number, y: number, col: string) => { g.beginPath(); g.arc(x, y, 8, 0, 7); g.fillStyle = col; g.fill(); g.strokeStyle = seam; g.lineWidth = 4; g.stroke(); };
   const collar = (col: string, h = 0.055) => { g.fillStyle = col; g.fillRect(0, 0, W, h * H); line([[0, h * H], [W, h * H]], seam, LW - 2); };
+  // accessories: what is worn under a coat (a tie) is drawn right after the look's own top, inside the opening of an
+  // open top (a cardigan, a jacket); the rest is drawn over the top and the trousers, in the order given, and under
+  // the look's own lanyard and tag (which give way to an accessory that takes their slot)
+  const drawn = accs.filter((a) => a.outfit || a.outfitUnder), has = (sl: AccSlot) => accs.some((a) => a.slots.includes(sl));
+  const kit = drawn.length ? outfitKit(g, L, hand, d, top, seam, LW) : null;
+  let underDone = false;
+  const under = (clip?: [number, number][]) => {
+    underDone = true;
+    if (kit) for (const a of drawn) if (a.outfitUnder) {
+      g.save();
+      if (clip) { g.beginPath(); clip.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); g.clip(); }
+      a.outfitUnder(kit); g.restore();
+    }
+  };
   switch (L.top) {
     case "hoodie": {
       collar(L.inner ?? shadeHex(top, 0.7), 0.06);
@@ -622,8 +924,9 @@ const outfitTex = (L: Look, hand: number, accs: Acc[], d: Dim) => canvasTex(OUT_
       break;
     }
     case "cardigan": case "jacket": {
-      const inner = L.inner ?? "#f6f4ee", open = L.top === "jacket" ? 0.07 : 0.05;
-      fillPoly([[cx - open * W, 0], [cx + open * W, 0], [cx + 0.03 * W, pantsY], [cx - 0.03 * W, pantsY]], inner);
+      const inner = L.inner ?? "#f6f4ee", open = L.top === "jacket" ? 0.07 : 0.05, front: [number, number][] = [[cx - open * W, 0], [cx + open * W, 0], [cx + 0.03 * W, pantsY], [cx - 0.03 * W, pantsY]];
+      fillPoly(front, inner);
+      under(front);
       line([[cx - open * W, 0], [cx - 0.03 * W, pantsY]], seam, LW); line([[cx + open * W, 0], [cx + 0.03 * W, pantsY]], seam, LW);
       if (L.top === "jacket") for (const s of [-1, 1]) fillPoly([[cx + s * open * W, 0], [cx + s * (open + 0.06) * W, 0], [cx + s * 0.05 * W, 0.3 * H]], shadeHex(top, 0.82), seam, LW - 2);
       else for (let i = 0; i < 4; i++) button(cx + 0.047 * W, (0.18 + i * 0.15) * H, shadeHex(top, 0.62));
@@ -641,13 +944,11 @@ const outfitTex = (L: Look, hand: number, accs: Acc[], d: Dim) => canvasTex(OUT_
     line([[0, pantsY], [W, pantsY]], shadeHex(L.botCol, 0.45), LW - 2);
     if (L.bottom === "skirt") for (let x = 0; x < W; x += W / 24) line([[x, pantsY + 0.03 * H], [x, H]], shadeHex(L.botCol, 0.7), 4);
   };
-  // accessories draw over the top and the trousers, in the order given, and under the look's own lanyard and tag
-  // (which give way to an accessory that takes their slot)
-  const drawn = accs.filter((a) => a.outfit), has = (sl: AccSlot) => accs.some((a) => a.slots.includes(sl));
-  if (drawn.length) {
+  if (!underDone) under();
+  if (kit) {
     trousers();
-    const kit = outfitKit(g, L, hand, d, top, seam, LW);
-    for (const a of drawn) { g.save(); a.outfit!(kit); g.restore(); }
+    // a coat goes on first, whatever the order in the list: what is worn over it (straps, a badge) stays on top
+    for (const a of [...drawn.filter((x) => x.slots.includes("coat")), ...drawn.filter((x) => !x.slots.includes("coat"))]) if (a.outfit) { g.save(); a.outfit(kit); g.restore(); }
   }
   if (L.lanyard && !has("neck")) {
     const by = 0.42 * H;
@@ -686,11 +987,11 @@ const hairLineHat = (L: Look, az: number, rim: number): number =>
  *  (uv.y = 1 at the front edge, falling by 1 per PEAK_OUT head units toward the back; see peakTex). */
 const PEAK_OUT = 0.24;
 const peakGeo = (rimR: number, rimY: number, toM: (v: V3) => V3) => {
-  const NA = 28, NT = 6, A0 = rad(52), TH = 0.05, FRONT = 0.42, DROOP = 0.16, rIn = rimR - 0.028, yTop = rimY + 0.012, W = 2 * (NT + 1);
+  const NA = 28, NT = 6, A0 = rad(52), TH = 0.05, FRONT = 0.42, DROOP = 0.3, LEN = 0.42, rIn = rimR - 0.028, yTop = rimY + 0.012, W = 2 * (NT + 1);
   const pos: number[] = [], uv: number[] = [], idx: number[] = [], v = V();
   for (let i = 0; i <= NA; i++) {
     const a = -A0 + (2 * A0 * i) / NA, sh = Math.sqrt(Math.max(1 - (a / A0) ** 2, 0.0025));
-    const rOut = rIn + PEAK_OUT * sh, yOut = yTop - 0.012 - DROOP * (rOut - rIn);
+    const rOut = rIn + LEN * sh, yOut = yTop - 0.012 - DROOP * (rOut - rIn);
     for (let k = 0; k < W; k++) {                                              // top rings 0..NT (back -> front), then bottom rings 0..NT
       const top = k <= NT, t = (top ? k : k - NT - 1) / NT, r = lerp(rIn, rOut, t), y = lerp(yTop, yOut, t) - (top ? 0 : TH * sh * lerp(1, FRONT, t));
       toM(v.set(r * Math.sin(a), y, r * Math.cos(a)));
@@ -916,11 +1217,28 @@ const ikFrame = (a: V3, t: V3, l1: number, l2: number, pole: V3, pole2: V3) => {
 
 // ===== poses =====
 export type RigPoseKind = "idle" | "walk" | "wave" | "point" | "haul" | "hold" | "cheer";
-export type RigPose = { kind: RigPoseKind; t?: number; phase?: number; amount?: number; arm?: 0 | 1 };
+/** walk: phase = where in the cycle of two steps (0..1; from the distance walked, so that the feet stay planted:
+ *  rigWalk gives it), stride = half a step's length in metres (default 0.2), amount = how much it bounces (1) */
+export type RigPose = { kind: RigPoseKind; t?: number; phase?: number; amount?: number; arm?: 0 | 1; stride?: number };
+/** The head as a layer of its own. The reference moves the head against a still body, in short accents on stressed
+ *  words and reactions (never a steady wobble): it pops 6 to 7 % larger for 3 frames, squashes a tenth and stretches
+ *  a twentieth, nods, tilts a few degrees across a line, rocks while laughing.
+ *  dx, dy = a shift toward screen right / up, in head radii (dy is kept within reach of the neck: -0.25 .. 0.25; a
+ *  real jump moves the whole figure); tilt = degrees, + = the top of the head toward screen right, about the chin;
+ *  scale = its size (1 = as built), growing from the chin; squash = that share flatter and half that share wider
+ *  (negative = taller and thinner), also from the chin. The face, the hair and everything worn on the head go along. */
+export type RigHead = { dx?: number; dy?: number; tilt?: number; scale?: number; squash?: number };
 export type RigState = {
   at: V3; facing: number; pose: RigPose;
   hands?: [V3 | null, V3 | null];
   expr?: Expr; blink?: number; visible?: boolean;
+  /** a speaking mouth for this frame, instead of the expression's own (see RigMouth; rigSay(t, lines) gives the
+   *  sequence for a spoken line, rigSpeak the mouth, the head and the blinks together). Only while the character
+   *  itself speaks: the reference never moves a mouth under the narrator. */
+  mouth?: RigMouth;
+  /** the head as a layer of its own, on top of the pose (see RigHead; rigHeadAccent gives the reference's accents,
+   *  rigSpeak ties them to a spoken line) */
+  head?: RigHead;
   /** where the pupils look, -1 (screen left) .. 1 (screen right); 0 = straight ahead. Five steps. */
   gaze?: number;
   maxBody?: number;
@@ -996,16 +1314,25 @@ export type Acc = {
   faceUnder?: (f: FaceKit) => void;
   /** drawn on the clothes, over the look's top and trousers and under its own lanyard and 你 tag */
   outfit?: (o: OutfitKit) => void;
+  /** drawn on the clothes before any accessory's outfit: something worn under a coat (a tie, a collar). A coat
+   *  drawn after it covers it, except in the opening the coat leaves at the neck; on a look whose own top is open
+   *  (a cardigan, a jacket) it shows only inside that opening. */
+  outfitUnder?: (o: OutfitKit) => void;
   /** 3D parts: on the head, on the body, in a hand */
   build?: (b: PartKit) => void;
 };
 /** Drawing on the face. Units are u = 1 % of the head's width, from the middle of the eye line: x = screen right,
  *  y = down. The eyes are at x = -sp and +sp (sp = 14), about 10u tall; the brows 13 to 21u above; the mouth's
  *  middle is at `mouth` (y = 18.7; a grin spans x +-20 and y 12 to 26); the chin's outline is near y = 44, the head's
- *  sides near x = +-50. What is drawn beyond the head's outline simply does not show. */
+ *  sides near x = +-50. What is drawn beyond the head's outline simply does not show.
+ *  A moustache goes at y = `lip`, the middle of the upper lip (12.4; behind glasses 15, because their rims come
+ *  down to y = 11). An accessory that takes the "lip" slot moves the mouth down to make room: its middle is then at
+ *  lip + 9.5. */
 export type FaceKit = {
   look: Look; expr: Expr; hand: number;
-  sp: number; mouth: P2;
+  sp: number; mouth: P2; lip: number;
+  /** true when the eyes sit behind lenses (an accessory's or the look's own glasses): keep clear of y < 11 */
+  lens: boolean;
   /** +1 / -1: the side of the higher brow and of a smirk */
   strong: number;
   /** true under a hat that shades the eyes */
@@ -1053,7 +1380,7 @@ export type AccMount = "head" | "body" | THREE.Group;
  *  is on the side away from the light (0.4) */
 export type PartO = { col?: string; map?: THREE.Texture; paint?: "prop" | "cloth" | "hair" | "skin"; mat?: THREE.Material; ink?: number; thick?: number };
 /** a brim or a peak: see PartKit.brim */
-export type BrimO = { rIn: number; y: number; out: number | ((azDeg: number) => number); from?: number; to?: number; droop?: number; thick?: number; taper?: number; seg?: number };
+export type BrimO = { rIn: number; y: number; out: number | ((azDeg: number) => number); from?: number; to?: number; droop?: number; thick?: number | ((azDeg: number) => number); taper?: number; join?: number; seg?: number };
 /** Building 3D parts. Lengths are metres unless they are "head units" (the head's radius = 1).
  *  Head: x = the person's left, y = up, z = the face side, from the head's centre. Body: the same axes from the
  *  bottom of the body on its axis (y = Ht at its top). */
@@ -1080,8 +1407,12 @@ export type PartKit = {
    *  degrees from the crown, pushed through the head's shape (squash = its height factor); or geo = your own patch
    *  round the unit ball (see band). Drawn before the skin, which skips its pixels. rimInk = an ink line painted along
    *  its lower edge, in metres (a shell's hull only draws its outer outline). A map's v runs 1 at the top to 0 at the
-   *  lower edge, u round the head. */
-  shell: (o: PartO & { r?: number; from?: number; to?: number; squash?: number; rings?: number; geo?: THREE.BufferGeometry; rimInk?: number }) => THREE.Mesh;
+   *  lower edge, u round the head.
+   *  tuck = the lower edge turns in to the skin over its last `tuck` degrees (about 9). Give it to every shell whose
+   *  lower edge ends on the bare head or the hair with nothing in front of it (a band, a skull cap, a cuff): an edge
+   *  that just stops stands off the head and shows as a forked spike at each side of the head. tuckTop = the same at
+   *  the upper edge, in to the radius onR (the r of the shell it lies on; default 1, the skin). */
+  shell: (o: PartO & { r?: number; from?: number; to?: number; squash?: number; rings?: number; geo?: THREE.BufferGeometry; rimInk?: number; tuck?: number; tuckTop?: number; onR?: number }) => THREE.Mesh;
   /** a rounded solid with an ink hull (hard edges are fine: the hull is closed over them). Geometry in metres round
    *  its own origin; then place it: put() on the head, position.set() on the body or in a held group. Keep it at
    *  least two ink widths thick; anything thinner is a plate. */
@@ -1092,31 +1423,47 @@ export type PartKit = {
   /** the geometry of a brim or peak round the head, in metres, placed (use it at the head's origin). In head units:
    *  it grows out of the circle of radius rIn at height y, `out` far (a number, or a function of the azimuth in
    *  degrees from the face side, + = the person's left; 0 = nothing there), between azimuths from..to (default: all
-   *  the way round), dropping `droop` per unit out (0.1; negative turns it up), `thick` at the root (0.07) and
-   *  thick * taper at the rounded free edge (0.6). Thick (0.08 and up): solid(). Thin: plate(). */
+   *  the way round), dropping `droop` per unit out (0.1; negative turns it up), `thick` at the root (0.07; a number
+   *  or a function of the azimuth) and thick * taper at the rounded free edge (0.6). Thick (0.08 and up): solid().
+   *  Thin: plate().
+   *  Start it inside the head or the crown (rIn well below their radius there) and say where it comes out: join =
+   *  that radius (the crown's or the shell's radius at the brim). A solid brim's outline is anchored there: it then
+   *  stays on the brim from every camera height, also when the brim is seen edge-on. */
   brim: (o: BrimO) => THREE.BufferGeometry;
+  /** says that this accessory has an edge that throws a shadow on the head (the rig draws it: a soft band under the
+   *  edge, on the skin and the hair, that moves with the light and with the head's turn). brim() says it by itself;
+   *  call this for an edge built another way. In head units: y = the edge's height, r = how far out it reaches at
+   *  the middle of its span, rSide = a quarter turn from there (default r), from..to = its span in degrees from the
+   *  face side (default: all the way round). The widest edge on the head wins. */
+  shadow: (o: { y: number; r: number; rSide?: number; from?: number; to?: number }) => void;
   /** a strip of the ball of radius r for shell({ geo }): from a0 to a1 degrees from the crown along the great circle
    *  that runs ear to ear (yaw 0; - = the person's right; yaw 90 = from the back of the head over the crown to the
-   *  face), `half` head units wide on each side */
-  band: (o: { r: number; a0: number; a1: number; half: number; yaw?: number }) => THREE.BufferGeometry;
+   *  face), `half` head units wide on each side. edge = the radius its two long edges come down to (default r: a
+   *  flat strip). A strip that lies outside another shell needs it: give the edges a radius inside that shell, or
+   *  the strip floats, and from the side the background shows through the gap under it. */
+  band: (o: { r: number; a0: number; a1: number; half: number; yaw?: number; edge?: number }) => THREE.BufferGeometry;
   /** IN A HAND: a group that follows hand i (0 = the person's right). offset = metres from the hand's centre in the
    *  body's frame (x = the person's left, y = up, z = forward); rot = [pitch, yaw, roll] in radians on top of the
    *  body's facing. layer "limb" (the default) = hidden behind the figure's own head, like the hand; "free" = plain
-   *  depth (something held up over the head). Add parts to it with solid(group, ...) / plate(group, ...). */
-  held: (i: 0 | 1, o?: { offset?: [number, number, number]; rot?: [number, number, number]; layer?: "limb" | "free" }) => THREE.Group;
+   *  depth (something held up over the head). Add parts to it with solid(group, ...) / plate(group, ...).
+   *  hang: true = the thing hangs from the hand (a case, a bag, a bucket): that arm then stays down in wave, point
+   *  and cheer, as a person carrying a case would keep it; a wave or a point asked of that arm goes to the other arm
+   *  when that one is free. Leave it out for what is raised with the hand (a cup, a phone, a flag). Either way
+   *  Rig.qa.held tells whether the thing passes through the figure's own body or head in a pose. */
+  held: (i: 0 | 1, o?: { offset?: [number, number, number]; rot?: [number, number, number]; layer?: "limb" | "free"; hang?: boolean }) => THREE.Group;
   /** ON THE BODY: the arms stay clear of this ball (centre in body metres). Head parts need none: the head is drawn
    *  over the arms. */
   keepOut: (c: V3, r: number) => void;
   /** a canvas texture (it multiplies the part's colour); key = share it between figures under that name */
   tex: (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, key?: string) => THREE.Texture;
 };
-type FaceAcc = { key: string; lens: boolean; own: boolean; under: ((f: FaceKit) => void)[]; over: ((f: FaceKit) => void)[] };
+type FaceAcc = { key: string; lens: boolean; lip: boolean; own: boolean; under: ((f: FaceKit) => void)[]; over: ((f: FaceKit) => void)[] };
 /** what a figure's accessories do to its face drawing; own = the look's own glasses are drawn */
 const faceAccOf = (L: Look, accs: Acc[]): FaceAcc => {
   const eyes = accs.some((a) => a.slots.includes("eyes"));
   return {
     key: accs.filter((a) => a.face || a.faceUnder || a.lens).map((a) => a.name + ":" + a.key).join(","),
-    own: !!L.glasses && !eyes, lens: (!!L.glasses && !eyes) || accs.some((a) => a.lens),
+    own: !!L.glasses && !eyes, lens: (!!L.glasses && !eyes) || accs.some((a) => a.lens), lip: accs.some((a) => a.slots.includes("lip")),
     under: accs.filter((a) => a.faceUnder).map((a) => a.faceUnder!), over: accs.filter((a) => a.face).map((a) => a.face!),
   };
 };
@@ -1162,20 +1509,52 @@ const hullGeo = (g: THREE.BufferGeometry) => {
   for (let i = 0; i < P.count; i++) { const a = sum.get(posKey(P, i))!, l = Math.hypot(a[0], a[1], a[2]) || 1; M.setXYZ(i, a[0] / l, a[1] / l, a[2] / l); }
   return out;
 };
+/** For a part with large flat faces (a brim): sets geo.userData.hull, the geometry PartKit.solid draws as the part's
+ *  ink hull instead of the part's own surface. It is the same surface with point i moved into the part by
+ *  (1 - sin(90 deg x up[i])) x 1.8 line widths (more than the widest line: the hull's shader pushes every point out
+ *  again by the line's width, which changes with the light). up = 1: the outline is drawn there; 0: it is not.
+ *  Why: a flat face that is pushed out whole floats one line width over the part, and a camera that sees the part
+ *  nearly edge-on sees that face edge-on too, as the line along the part's edge. SLOPE_BIAS moves a face seen
+ *  edge-on far back, by an amount that jumps from triangle to triangle, and the line falls behind whatever stands
+ *  behind it (a brim's line: the crown) in single pixels, a dotted row that comes and goes as the head nods.
+ *  With the flat faces sunk and only the rim at the edge left up, the line along the edge is made of the rim's short
+ *  steep faces, which no camera sees edge-on over any length. */
+export const sunkHull = (g: THREE.BufferGeometry, up: ArrayLike<number>) => {
+  g.userData.hull = (ink: number) => {
+    const h = g.clone(), P = h.attributes.position, N = g.attributes.normal;
+    for (let i = 0; i < P.count; i++) {
+      const sink = (1 - Math.sin((Math.PI / 2) * up[i])) * 1.8 * ink;
+      if (sink > 0) P.setXYZ(i, P.getX(i) - N.getX(i) * sink, P.getY(i) - N.getY(i) * sink, P.getZ(i) - N.getZ(i) * sink);
+    }
+    return h;
+  };
+  return g;
+};
 /** see PartKit.brim: one closed, smooth surface (the cross-section is a loop: top, the rounded free edge, bottom, the
- *  root wall); uv.y = 1 on the free edge, falling by 1 per PEAK_OUT head units toward the root (what peakTex paints) */
+ *  root wall); uv.y = 1 on the free edge, falling by 1 per PEAK_OUT head units toward the root (what peakTex paints).
+ *  Its ink hull (see sunkHull) keeps the outline at the free edge only: the top and the bottom lie inside the brim
+ *  and come out between the last ring and the edge. At the two ends of a brim that does not go all round they come
+ *  out earlier, over BRIM_RAMP head units from `join` (where the brim leaves the crown), to outline the ends. */
+const BRIM_RAMP = 0.075;
 const brimGeo = (o: BrimO, toM: (v: V3) => V3) => {
   const full = o.from === undefined && o.to === undefined, a0 = rad(o.from ?? -180), a1 = rad(o.to ?? 180);
-  const NA = o.seg ?? (full ? 72 : 36), NT = 5, NE = 6, T0 = o.thick ?? 0.07, tp = o.taper ?? 0.6, dr = o.droop ?? 0.1;
+  const NA = o.seg ?? (full ? 72 : 36), NT = 5, NE = 6, tp = o.taper ?? 0.6, dr = o.droop ?? 0.1;
   const M = 2 * (NT + 1) + NE - 1, cols = full ? NA : NA + 1;
-  const pos: number[] = [], uv: number[] = [], idx: number[] = [], v = V();
+  const pos: number[] = [], uv: number[] = [], idx: number[] = [], ramp: number[] = [], v = V();
   for (let i = 0; i < cols; i++) {
     const a = a0 + ((a1 - a0) * i) / NA, L = Math.max(typeof o.out === "number" ? o.out : o.out((a * 180) / Math.PI), 1e-3);
+    const T0 = Math.max(typeof o.thick === "function" ? o.thick((a * 180) / Math.PI) : o.thick ?? 0.07, 1e-4);
     const T = T0 * smooth(L / (2 * T0)), Te = T * tp, sn = Math.sin(a), cs = Math.cos(a);
-    const push = (r: number, y: number, l: number) => { toM(v.set(r * sn, y, r * cs)); pos.push(v.x, v.y, v.z); uv.push(i / NA, 1 - (L - l) / PEAK_OUT); };
-    for (let k = 0; k <= NT; k++) { const t = k / NT; push(o.rIn + L * t, o.y - dr * L * t, L * t); }                       // top, root -> edge
-    for (let j = 1; j < NE; j++) { const an = Math.PI / 2 - (Math.PI * j) / NE; push(o.rIn + L + (Te / 2) * Math.cos(an), o.y - dr * L - Te / 2 + (Te / 2) * Math.sin(an), L); }
-    for (let k = NT; k >= 0; k--) { const t = k / NT; push(o.rIn + L * t, o.y - dr * L * t - lerp(T, Te, t), L * t); }      // bottom, edge -> root
+    // rings along the top and the bottom: one on the join, one where the hull's ramp ends, the rest evenly to the edge
+    const lj = clamp((o.join ?? o.rIn) - o.rIn, 0, L), D = Math.max(Math.min(BRIM_RAMP, 0.6 * (L - lj)), 1e-4), ls = lj > 1e-4 ? [0, lj, Math.min(lj + D, L)] : [0, Math.min(D, L)];
+    for (let k = 1, n = NT + 1 - ls.length, l0 = ls[ls.length - 1]; k <= n; k++) ls.push(l0 + ((L - l0) * k) / n);
+    // (l = how far out along the brim; up = how far the hull is out of the brim there, 0 .. 1: see sunkHull)
+    const push = (r: number, y: number, l: number, up: number) => { toM(v.set(r * sn, y, r * cs)); pos.push(v.x, v.y, v.z); uv.push(i / NA, 1 - (L - l) / PEAK_OUT); ramp.push(up); };
+    const end = !full && (i === 0 || i === NA);
+    const upAt = (k: number) => (L - lj < 1e-3 ? 0 : end ? clamp((ls[k] - lj) / D, 0, 1) : k === NT ? 1 : 0);
+    for (let k = 0; k <= NT; k++) { const l = ls[k]; push(o.rIn + l, o.y - dr * l, l, upAt(k)); }                                      // top, root -> edge
+    for (let j = 1; j < NE; j++) { const an = Math.PI / 2 - (Math.PI * j) / NE; push(o.rIn + L + (Te / 2) * Math.cos(an), o.y - dr * L - Te / 2 + (Te / 2) * Math.sin(an), L, 1); }
+    for (let k = NT; k >= 0; k--) { const l = ls[k]; push(o.rIn + l, o.y - dr * l - lerp(T, Te, l / L), l, upAt(k)); }                // bottom, edge -> root
   }
   for (let i = 0; i < NA; i++) {
     const i1 = full ? (i + 1) % NA : i + 1;
@@ -1186,15 +1565,56 @@ const brimGeo = (o: BrimO, toM: (v: V3) => V3) => {
   g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
   g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
   g.setIndex(idx); g.computeVertexNormals(); g.computeBoundingSphere();
+  return sunkHull(g, ramp);
+};
+/** see PartKit.shell: the band of the ball of radius r between `from` and `to` degrees from the crown whose lower
+ *  edge (and upper edge) turns in over the last `tuck` (`tuckTop`) degrees: down to the head's skin (to the radius
+ *  `onR`). sq = the height factor the shell is squashed by afterwards (the lower edge still lands on the skin). Same
+ *  layout as THREE.SphereGeometry: u round the head, v = 1 at `from` .. 0 at `to`. */
+const tuckedBand = (r: number, from: number, to: number, rings: number, sq: number, tuck: number, tuckTop: number, onR: number) => {
+  const NS = 48, LIP = 6, tb = Math.min(tuck, (to - from) * 0.45), tt = Math.min(tuckTop, (to - from) * 0.45);
+  const th: number[] = [];
+  if (tt > 0) for (let i = 0; i < LIP; i++) th.push(from + (tt * i) / LIP);
+  for (let i = 0; i <= rings; i++) th.push(lerp(from + tt, to - tb, i / rings));
+  if (tb > 0) for (let i = 1; i <= LIP; i++) th.push(to - tb + (tb * i) / LIP);
+  // rho(theta) and its slope per radian: a smooth step from r to the edge's own radius
+  const skin = (a: number) => 0.995 / Math.hypot(Math.sin(a), sq * Math.cos(a));
+  const prof = (deg: number): [number, number] => {
+    const a = rad(deg);
+    if (tb > 0 && deg > to - tb) { const t = (deg - (to - tb)) / tb, e = skin(a); return [lerp(r, e, smooth(t)), ((e - r) * 6 * t * (1 - t)) / rad(tb)]; }
+    if (tt > 0 && deg < from + tt) { const t = (from + tt - deg) / tt, e = onR * 0.99; return [lerp(r, e, smooth(t)), (-(e - r) * 6 * t * (1 - t)) / rad(tt)]; }
+    return [r, 0];
+  };
+  const pos: number[] = [], nor: number[] = [], uv: number[] = [], idx: number[] = [], NR = th.length - 1;
+  for (let j = 0; j <= NR; j++) {
+    const a = rad(th[j]), sa = Math.sin(a), ca = Math.cos(a), [rho, d] = prof(th[j]);
+    for (let i = 0; i <= NS; i++) {
+      const ph = (i / NS) * Math.PI * 2, ux = -Math.cos(ph), uz = Math.sin(ph);
+      pos.push(rho * sa * ux, rho * ca, rho * sa * uz);
+      // the normal of a surface of revolution rho(theta): rho * e_r - rho' * e_theta
+      const nx = rho * sa * ux - d * ca * ux, ny = rho * ca + d * sa, nz = rho * sa * uz - d * ca * uz, l = Math.hypot(nx, ny, nz) || 1;
+      nor.push(nx / l, ny / l, nz / l); uv.push(i / NS, 1 - (th[j] - from) / (to - from));
+    }
+  }
+  for (let j = 0; j < NR; j++) for (let i = 0; i < NS; i++) {
+    const A = j * (NS + 1) + i + 1, B = j * (NS + 1) + i, C = (j + 1) * (NS + 1) + i, D = (j + 1) * (NS + 1) + i + 1;
+    if (j !== 0 || from > 0) idx.push(A, B, D);
+    idx.push(B, C, D);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx); g.computeBoundingSphere();
   return g;
 };
 /** see PartKit.band: a patch of the ball of radius r, its normals the ball's */
-const bandGeo = (r: number, a0: number, a1: number, half: number, yaw = 0) => {
+const bandGeo = (r: number, a0: number, a1: number, half: number, yaw = 0, edge = r) => {
   const NA = 44, NW = 4, cy = Math.cos(rad(yaw)), sy = Math.sin(rad(yaw)), pos: number[] = [], nor: number[] = [], uv: number[] = [], idx: number[] = [];
   for (let i = 0; i <= NA; i++) for (let j = 0; j <= NW; j++) {
     const a = rad(lerp(a0, a1, i / NA)), w = lerp(-half, half, j / NW) / r, sa = Math.sin(a);
-    const x = sa * cy - w * sy, y = Math.cos(a), z = sa * sy + w * cy, l = Math.hypot(x, y, z);
-    pos.push((x / l) * r, (y / l) * r, (z / l) * r); nor.push(x / l, y / l, z / l); uv.push(i / NA, j / NW);
+    const x = sa * cy - w * sy, y = Math.cos(a), z = sa * sy + w * cy, l = Math.hypot(x, y, z), rj = lerp(r, edge, (2 * j / NW - 1) ** 2);
+    pos.push((x / l) * rj, (y / l) * rj, (z / l) * rj); nor.push(x / l, y / l, z / l); uv.push(i / NA, j / NW);
   }
   for (let i = 0; i < NA; i++) for (let j = 0; j < NW; j++) { const A = i * (NW + 1) + j, B = A + 1, C = A + NW + 1, D = C + 1; idx.push(A, B, C, C, B, D); }
   const g = new THREE.BufferGeometry();
@@ -1219,13 +1639,14 @@ export const hatAcc = (h: Hat): Acc => ({
     const trim = h.trim ?? shadeHex(h.col, 0.7), hm = b.paint("head", { col: h.col, map: hatTex(h.kind) }), tm = b.paint("head", { col: trim });
     if (h.kind === "cap") {
       const ySq = 0.95, rimR = 1.075 * Math.sin(rad(63)), rimY = 1.075 * Math.cos(rad(63)) * ySq;
-      b.shell({ r: 1.075, to: 63, squash: ySq, mat: hm });
+      b.shell({ r: 1.075, to: 63, squash: ySq, mat: hm, tuck: 9 });
       // the peak: a wedge out of the gap under the rim, with its ink edge painted on it and no hull (see peakGeo)
       b.plate("head", peakGeo(rimR, rimY, b.toM), { col: trim, map: peakTex() });
+      b.shadow({ y: rimY - 0.12, r: rimR + 0.39, from: -52, to: 52 });
       b.solid("head", new THREE.SphereGeometry(b.R * 0.085, 12, 8), { mat: tm, ink: HULL.prop * 0.6 }).position.copy(b.at(0, 1.075 * ySq, 0));
     } else {
       b.shell({ r: 1.07, to: 60, squash: 1.04, mat: hm });
-      b.shell({ r: 1.115, from: 50, to: 68, rings: 5, mat: tm, ink: HULL.prop, thick: 0.4 });
+      b.shell({ r: 1.125, from: 49, to: 69, rings: 5, mat: tm, ink: HULL.prop, thick: 0.4, tuck: 8, tuckTop: 7, onR: 1.07 });   // the cuff: a roll
       b.solid("head", new THREE.SphereGeometry(b.R * 0.17, 14, 10), { mat: tm }).position.copy(b.at(0, 1.07 * 1.04, 0)).add(V(0, b.R * 0.1, 0));
     }
   },
@@ -1254,22 +1675,24 @@ const dimOf = (L: Look, hand: number): Dim => {
   return { R, ys, Ht, rb, rt, hipY, thigh: leg * 0.5, shin: leg * 0.5, upper: arm * 0.5, fore: arm * 0.5, limbR, legR, handR: 0.0232, ankleY, sh: [shAt(-1), shAt(1)], bw, H: D.H };
 };
 
-const _q1 = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _q3 = new THREE.Quaternion(), _s = V(), _w = V();
+const _q1 = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _q3 = new THREE.Quaternion(), _s = V(), _w = V(), _bq = new THREE.Quaternion(), _bq2 = new THREE.Quaternion(), _bv = V();
 
 export class Rig {
   readonly group = new THREE.Group();
   look: Look;
   state: RigState = { at: V(), facing: 0, pose: { kind: "idle" } };
   readonly dim: Dim;
-  /** QA after update: worst hand reach error (m) and the smallest arm clearance to the body / head (m, < 0 = inside) */
-  qa = { reach: 0, clear: 1, swivel: [0, 0] as [number, number] };
+  /** QA after update: worst hand reach error (m), the smallest arm clearance to the body / head (m, < 0 = inside) and
+   *  the smallest gap between a held thing and the figure's own body and head (m, < 0 = it passes through; 1 = no
+   *  held thing) */
+  qa = { reach: 0, clear: 1, swivel: [0, 0] as [number, number], held: 1 };
   private torsoG = new THREE.Group(); private headG = new THREE.Group();
   private faceU: FaceU; private hatLine: number;
   /** this figure's accessories (the hat option comes first), what they do to the face drawing, and whether a hat
    *  shades the eyes */
   readonly acc: Acc[]; private fa: FaceAcc; private shade: boolean;
   /** held things (they follow a hand) and the balls the arms stay clear of (body frame; w = in the world, per frame) */
-  private held: { g: THREE.Group; i: 0 | 1; off: V3; rot: [number, number, number] }[] = [];
+  private held: { g: THREE.Group; i: 0 | 1; off: V3; rot: [number, number, number]; hang: boolean }[] = [];
   /** each accessory's 3D parts (state.hide switches them off by the accessory's name) */
   private accParts: { name: string; o: THREE.Object3D }[] = [];
   private keep: { c: V3; r: number; w: V3 }[] = [];
@@ -1293,7 +1716,8 @@ export class Rig {
     const accs = (this.acc = [...(o.hat ? [hatAcc(o.hat)] : []), ...(o.acc ?? [])]), slotOf = new Map<string, string>();
     for (const a of accs) {
       if (a.hat && !a.slots.includes("hat")) throw new Error(`rig3d: accessory "${a.name}" is a hat and must take the "hat" slot`);
-      for (const sl of a.slots) {
+      // (a hat covers the crown whether it says so or not: nothing else can sit there)
+      for (const sl of a.hat && !a.slots.includes("crown") ? [...a.slots, "crown" as AccSlot] : a.slots) {
         if (slotOf.has(sl)) throw new Error(`rig3d: accessories "${slotOf.get(sl)}" and "${a.name}" both take the "${sl}" slot`);
         slotOf.set(sl, a.name);
       }
@@ -1340,10 +1764,14 @@ export class Rig {
       uHead: { value: new THREE.Vector4(0, 0, 0, d.R) }, uInk: { value: new THREE.Color(RIG_INK) },
       uHair: { value: hairTex(L, cut ? rimDeg : 0) }, uHairCol: { value: new THREE.Color(L.hairCol) }, uHeadband: { value: new THREE.Vector4(bandC.r, bandC.g, bandC.b, L.headband && !hatA && !slotOf.has("crown") ? 1 : 0) },
       uHairPart: { value: hairDraw(L, hand, cut) }, uHairInk: { value: 0.03 * hand },
+      uBrim: { value: new THREE.Vector4(0, 0, 0, 0) }, uBrimAz: { value: new THREE.Vector2(0, 4) }, uKeyH: { value: V(0, 1, 0) }, uRim: { value: new THREE.Vector4(...RIM) },
     };
     const skinM = inked(this.headG, warpGeo(new THREE.SphereGeometry(1, 72, 48), warp, d.R), rigMat(U, PART.head, { color: skin }, "face", this.faceU, pullU), HULL.head, 0.63, { down: 0.5, ...HP });
     const shells: THREE.Mesh[] = [];                                            // a hat's parts that enclose the head
     const hairSolid = () => onHead(PART.hair, { color: L.hairCol });
+    // the curls are lumps on the head's hair: they take the head's light, not one each (a bun or a ponytail stands
+    // clear of the head and keeps its own)
+    const curlM = () => rigMat(U, PART.hair, { color: L.hairCol }, "plain", undefined, pullU, this.faceU.uHead);
     if (L.hair === "bun" && hairProps) {
       const bun = inked(this.headG, new THREE.SphereGeometry(d.R * 0.36, 24, 16), hairSolid(), HULL.prop * 0.8, 0.4, HP);
       bun.position.copy(at(0, 0.78, -0.52));
@@ -1351,7 +1779,7 @@ export class Rig {
     if (L.hair === "curly" && hairProps) {
       const spots: [number, number][] = [[0, 22], [70, 40], [-70, 40], [140, 55], [-140, 55], [180, 20], [180, 78], [105, 80], [-105, 80]];
       for (const [azD, thD] of spots) {
-        const az = rad(azD), th = rad(thD), c = inked(this.headG, new THREE.SphereGeometry(d.R * 0.2, 16, 12), hairSolid(), HULL.prop * 0.7, 0.4, { pull: this.curlPullU });
+        const az = rad(azD), th = rad(thD), c = inked(this.headG, new THREE.SphereGeometry(d.R * 0.2, 16, 12), curlM(), HULL.prop * 0.7, 0.4, { pull: this.curlPullU });
         c.position.copy(at(Math.sin(th) * Math.sin(az) * 0.93, Math.cos(th) * 0.93, Math.sin(th) * Math.cos(az) * 0.93));
       }
     }
@@ -1363,6 +1791,13 @@ export class Rig {
       else { tail.position.copy(at(0, 0.1, -1)).add(V(0, 0, -rr * 0.9)); tail.rotation.x = 0.42; }
     }
     this.hatLine = cut ? rimDeg : 0;
+    // an edge that throws a shadow on the head (PartKit.shadow): the widest one is kept
+    const castShadow = (o: { y: number; r: number; rSide?: number; from?: number; to?: number }) => {
+      const B = this.faceU.uBrim.value;
+      if (o.r <= 1.02 || (B.w > 0 && o.r <= B.y)) return;                       // (an edge that does not clear the head shades nothing)
+      B.set(o.y, o.r, o.rSide ?? o.r, 1);
+      this.faceU.uBrimAz.value.set(o.from !== undefined && o.to !== undefined ? rad((o.from + o.to) / 2) : 0, o.from !== undefined && o.to !== undefined ? rad((o.to - o.from) / 2) : 4);
+    };
     // accessories' 3D parts, through a kit that knows the layering rules (see PartKit)
     for (const a of accs) {
       if (!a.build) continue;
@@ -1385,15 +1820,20 @@ export class Rig {
         put: (m, x, y, z) => { m.position.copy(toM(V(x, y, z))); if (tq) m.quaternion.copy(tq); return m; },
         paint,
         shell: (so) => {
+          if (so.geo && so.rimInk) throw new Error(`rig3d: accessory "${a.name}": shell({ geo, rimInk }) cannot work, the kit does not know where a patch's lower edge is. Paint the line on a map of your own (PartKit.tex)`);
           const from = so.from ?? 0, to = so.to ?? 60, r = so.r ?? 1.08, sq = so.squash ?? 1, tl = tq;
-          const g0 = so.geo ?? new THREE.SphereGeometry(r, 48, so.rings ?? 14, 0, Math.PI * 2, rad(from), rad(to - from));
+          const g0 = so.geo ?? (so.tuck || so.tuckTop ? tuckedBand(r, from, to, so.rings ?? 14, sq, so.tuck ?? 0, so.tuckTop ?? 0, so.onR ?? 1)
+            : new THREE.SphereGeometry(r, 48, so.rings ?? 14, 0, Math.PI * 2, rad(from), rad(to - from)));
           const pre = sq !== 1 || tl ? (v: V3) => { v.y *= sq; if (tl) v.applyQuaternion(tl); } : undefined;
           const po: PartO = so.rimInk && !so.map && !so.mat ? { ...so, map: rimInkTex(so.rimInk / (r * d.R * rad(to - from))) } : so;
           const m = part(inked(this.headG, warpGeo(g0, warp, d.R, pre), paint("head", po), so.ink ?? HULL.prop * 1.2, so.thick ?? 0.45, HP));
           shells.push(m);
           return m;
         },
-        solid: (on, geo, po = {}) => part(inked(parentOf(on), geo, paint(on, po), po.ink ?? HULL.prop * 0.8, po.thick ?? 0.4, on === "head" ? HP : {}, hardEdges(geo) ? hullGeo(geo) : geo)),
+        solid: (on, geo, po = {}) => {
+          const w = po.ink ?? HULL.prop * 0.8, own = geo.userData.hull as ((ink: number) => THREE.BufferGeometry) | undefined;
+          return part(inked(parentOf(on), geo, paint(on, po), w, po.thick ?? 0.4, on === "head" ? HP : {}, own ? own(w) : hardEdges(geo) ? hullGeo(geo) : geo));
+        },
         plate: (on, geo, po = {}) => {
           const m = part(add(parentOf(on), new THREE.Mesh(geo, paint(on, po.map || po.mat || po.edge === false ? po : { ...po, map: peakTex() }))));
           if (on === "head") {
@@ -1402,18 +1842,25 @@ export class Rig {
           }
           return m;
         },
-        brim: (bo) => brimGeo(bo, toM),
-        band: (bo) => bandGeo(bo.r, bo.a0, bo.a1, bo.half, bo.yaw),
+        brim: (bo) => {
+          const mid = bo.from !== undefined && bo.to !== undefined ? (bo.from + bo.to) / 2 : 0, outAt = (az: number) => (typeof bo.out === "number" ? bo.out : bo.out(az));
+          const full = bo.from === undefined || bo.to === undefined, oF = outAt(mid), oS = full ? (outAt(mid + 90) + outAt(mid - 90)) / 2 : oF;
+          castShadow({ y: bo.y - (bo.droop ?? 0.1) * oF, r: bo.rIn + oF, rSide: bo.rIn + oS, from: bo.from, to: bo.to });
+          return brimGeo(bo, toM);
+        },
+        shadow: castShadow,
+        band: (bo) => bandGeo(bo.r, bo.a0, bo.a1, bo.half, bo.yaw, bo.edge),
         held: (i, ho = {}) => {
           const g = new THREE.Group();
           if (ho.layer === "free") g.userData.free = true;
-          this.group.add(g); this.held.push({ g, i, off: V(...(ho.offset ?? [0, 0, 0])), rot: ho.rot ?? [0, 0, 0] });
+          this.group.add(g); this.held.push({ g, i, off: V(...(ho.offset ?? [0, 0, 0])), rot: ho.rot ?? [0, 0, 0], hang: !!ho.hang });
           return g;
         },
         keepOut: (c, r) => { this.keep.push({ c: c.clone(), r, w: V() }); },
         tex: (w, h, draw, key) => {
-          let t = key ? accTexCache.get(key) : undefined;
-          if (!t) { t = canvasTex(w, h, draw); if (key) accTexCache.set(key, t); }
+          const k = key ? "acc:" + a.name + ":" + key : undefined;       // (its own name space: two accessories may use the same key)
+          let t = k ? accTexCache.get(k) : undefined;
+          if (!t) { t = canvasTex(w, h, draw); if (k) accTexCache.set(k, t); }
           return t;
         },
       };
@@ -1430,6 +1877,10 @@ export class Rig {
     const handGeo = new THREE.SphereGeometry(d.handR, 24, 16), capGeo = new THREE.SphereGeometry(d.limbR, 12, 8);
     // L foot: the leg bent forward at the ankle: the same thickness, heel on the ankle
     const footLen = 0.055, footGeo = new THREE.CapsuleGeometry(d.legR, footLen, 5, 12);
+    // (the feet keep their true depth, without SLOPE_BIAS: they lie on the floor, which is not a rig material and is
+    //  not moved back, so the floor would show through a foot's lowest edge, a pixel here and there)
+    const footMat = rigMat(U, PART.ball, { color: LIMB_COL }), footHull = hullMat(U, HULL.limb, 0.3);
+    footMat.polygonOffset = footHull.polygonOffset = false;
     for (let i = 0; i < 2; i++) {
       const h = add(this.group, new THREE.Mesh(handGeo, ballMat));
       add(h, new THREE.Mesh(handGeo, ballHull), false).frustumCulled = false;
@@ -1438,9 +1889,9 @@ export class Rig {
       add(cap, new THREE.Mesh(capGeo, limbHull), false).frustumCulled = false;
       this.caps.push(cap);
       const fg = new THREE.Group(); this.group.add(fg);
-      const foot = add(fg, new THREE.Mesh(footGeo, ballMat));
+      const foot = add(fg, new THREE.Mesh(footGeo, footMat));
       foot.rotation.x = Math.PI / 2; foot.position.set(0, 0, footLen / 2);
-      add(foot, new THREE.Mesh(footGeo, limbHull), false).frustumCulled = false;
+      add(foot, new THREE.Mesh(footGeo, footHull), false).frustumCulled = false;
       this.feet.push(fg);
     }
     this.blob = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), blobMat(rc.light.contact ?? "#e0dae8"));
@@ -1471,10 +1922,15 @@ export class Rig {
     // nearer than the head inside it, and this does not rest on the depth test. (At the head's own outline, under a
     // hat, the rasteriser can give one sample of an edge-on triangle a depth in front of the hat: a one-pixel speck
     // of skin on the hat, here and there, for one frame.)
+    const skinMat = skinM.material as THREE.Material, skinHull = skinM.children.find((c) => !c.userData.depthOnly) as THREE.Mesh;
     if (shells.length) {
       for (const sh of shells) sh.renderOrder = -0.2;
-      skinM.renderOrder = -0.1; (skinM.material as THREE.Material).stencilFunc = THREE.NotEqualStencilFunc;
+      skinM.renderOrder = -0.1; skinMat.stencilFunc = THREE.NotEqualStencilFunc; skinMat.stencilFuncMask = ID_BITS;
     }
+    // the skin marks its pixels (SKIN_BIT) and its own ink hull, drawn right after it, leaves them alone
+    skinMat.stencilRef = sid | SKIN_BIT;
+    const hm = skinHull.material as THREE.Material;
+    hm.stencilRef = sid | SKIN_BIT; hm.stencilFunc = THREE.NotEqualStencilFunc; skinHull.renderOrder = skinM.renderOrder + 0.05;
   }
 
   set(s: Partial<RigState>) { Object.assign(this.state, s); return this; }
@@ -1483,6 +1939,31 @@ export class Rig {
   footWorld(i: 0 | 1) { return this.out.foot[i].clone(); }
   get bodyYaw() { return this.out.bodyYaw; }
   get faceYaw() { return this.out.faceYaw; }
+  /** QA (scripts/rig3d/acc_check.py, step "rules"): which of the rules every accessory has to keep (RIG3D.md) this
+   *  figure's accessories break, found from their geometry alone; nothing is drawn. One entry per accessory and rule.
+   *    face: a 3D part on the head lies in front of the face (FACE_ZONE) */
+  accRules(): { acc: string; rule: string; msg: string }[] {
+    const out: { acc: string; rule: string; msg: string }[] = [], d = this.dim, v = V();
+    const rel = (o: THREE.Object3D, root: THREE.Object3D) => { const m = new THREE.Matrix4(); for (let p: THREE.Object3D | null = o; p && p !== root; p = p.parent) { p.updateMatrix(); m.premultiply(p.matrix); } return m; };
+    const under = (o: THREE.Object3D, root: THREE.Object3D) => { for (let p: THREE.Object3D | null = o; p; p = p.parent) if (p === root) return true; return false; };
+    const face = new Map<string, { n: number; az: number; y: number }>();
+    for (const ap of this.accParts) {
+      const o = ap.o as THREE.Mesh;
+      if (!o.isMesh || !under(o, this.headG)) continue;
+      const P = o.geometry.attributes.position, m = rel(o, this.headG);
+      for (let i = 0; i < P.count; i++) {
+        v.fromBufferAttribute(P, i).applyMatrix4(m).divideScalar(d.R);
+        if (v.z <= 0 || v.y >= FACE_ZONE.top || v.y < -1.1 || v.length() < 0.97) continue;
+        const az = (Math.atan2(Math.abs(v.x), v.z) * 180) / Math.PI;
+        if (az >= FACE_ZONE.az) continue;
+        const f = face.get(ap.name) ?? { n: 0, az: 180, y: 0 };
+        f.n++; if (az < f.az) { f.az = az; f.y = v.y; }
+        face.set(ap.name, f);
+      }
+    }
+    for (const [acc, f] of face) if (f.n >= 4) out.push({ acc, rule: "face", msg: `${f.n} points of its 3D parts lie in front of the face (nearest: ${f.az.toFixed(0)} deg from the face side at height ${f.y.toFixed(2)}; the face zone is within ${FACE_ZONE.az} deg and below ${FACE_ZONE.top}). The face turns to the camera on its own, so such a part covers an eye or the mouth, or leaves the mouth, at some camera angle. Draw it on the face (Acc.face) or keep it beside or above the face` });
+    return out;
+  }
 
   /** the pose: hips and feet in the travel frame, hands torso-local (or travel / staged). Hand targets are set in arm
    *  lengths from the shoulders, so they stay within reach for any build. */
@@ -1499,6 +1980,9 @@ export class Rig {
       const s = i ? 1 : -1, hx = d.rb + 0.05, hz = 0.03 + dz, dx = hx - shx(i), dzz = hz - shz;
       return { p: V(s * hx, shy - Math.sqrt(Math.max(0.01, reach * reach - dx * dx - dzz * dzz)), hz), f: 0 };
     };
+    // a hand that carries a hanging thing (PartKit.held hang) stays down: a gesture goes to the other arm if it is free
+    const carries = (i: number) => this.held.some((h) => h.hang && h.i === i);
+    const free = (a: 0 | 1): 0 | 1 => (carries(a) && !carries(1 - a) ? ((1 - a) as 0 | 1) : a);
     switch (P.kind) {
       case "idle": {
         bp.roll = rad(1.2) * Math.sin(t * 2 * Math.PI * 0.21);
@@ -1506,22 +1990,29 @@ export class Rig {
         break;
       }
       case "walk": {
-        const ph = P.phase ?? (t * 1.6) % 1;
+        const ph = P.phase ?? (t * 1.6) % 1, S = clamp(P.stride ?? STRIDE, 0.05, 0.3);
         for (let k = 0; k < 2; k++) {
           const q = (((ph + 0.5 * k) % 1) + 1) % 1;
           let z: number, y = d.ankleY;
-          if (q < STANCE) z = STRIDE - (2 * STRIDE * q) / STANCE;
-          else { const u = (q - STANCE) / (1 - STANCE); z = -STRIDE + 2 * STRIDE * smooth(u); y += 0.07 * Math.sin(Math.PI * u); }
+          if (q < STANCE) z = S - (2 * S * q) / STANCE;
+          else { const u = (q - STANCE) / (1 - STANCE); z = -S + 2 * S * smooth(u); y += 0.07 * Math.sin(Math.PI * u); }
           bp.ankle[k].set((k ? 1 : -1) * 0.07, y, z);
           bp.hand[1 - k] = hang(1 - k, -z * 0.8);        // the opposite arm swings with this leg
         }
         bp.footYaw = [-0.12, 0.12];
-        bp.hip.y -= 0.01 * Math.abs(Math.cos(ph * 4 * Math.PI));
-        bp.pitch = rad(4);
+        // the bounce (WALK): u = 0 at a low point, just after a foot lands, .. 1 at the next; up = how high the body is
+        // (it rises quickly out of the low point, slows into a rounded high point as the legs pass, then drops);
+        // the head and what it wears tip forward right after each low point and are level again by the passing pose
+        const u = (((2 * ph - WALK.low) % 1) + 1) % 1, am = (P.amount ?? 1) * clamp(S / STRIDE, 0.5, 1.25);           // (short steps bounce less)
+        const up = u < WALK.top ? Math.sin((Math.PI / 2) * (u / WALK.top)) : Math.cos((Math.PI / 2) * ((u - WALK.top) / (1 - WALK.top)));
+        const x = Math.min(1, u / WALK.nodLen), nod = 6.75 * x * (1 - x) * (1 - x);
+        bp.hip.y += (WALK.lift - WALK.bob * (1 - up)) * am;
+        bp.headPitch += rad(WALK.nod) * am * nod;
+        bp.pitch = rad(4 + WALK.rock * am * (1 - up));
         break;
       }
       case "wave": {
-        const a = P.arm ?? 1, s = a ? 1 : -1, w = Math.sin(t * 2 * Math.PI * 1.6);
+        const a = free(P.arm ?? 1), s = a ? 1 : -1, w = Math.sin(t * 2 * Math.PI * 1.6);
         bp.hand[1 - a] = hang(1 - a);
         bp.hand[a] = { p: V(s * (shx(a) + A * (0.62 + 0.1 * w)), shy + 0.36 * A, shz + 0.2 * A), f: 2 };
         bp.elbowPole[a] = V(s, -1, 0.1);
@@ -1535,7 +2026,7 @@ export class Rig {
         break;
       }
       case "point": {
-        const a = P.arm ?? 1, s = a ? 1 : -1;
+        const a = free(P.arm ?? 1), s = a ? 1 : -1;
         bp.hand[1 - a] = hang(1 - a);
         bp.hand[a] = { p: V(s * (shx(a) + 0.12 * A), shy - 0.03, shz + 0.86 * A), f: 0 };      // replaced by the world target if given
         bp.elbowPole[a] = V(s, -1, 0.1);
@@ -1559,6 +2050,7 @@ export class Rig {
         break;
       }
     }
+    if (P.kind === "wave" || P.kind === "point" || P.kind === "cheer") for (let i = 0; i < 2; i++) if (carries(i)) { bp.hand[i] = hang(i); bp.elbowPole[i] = V(i ? 1 : -1, -0.1, -0.7); }
     return bp;
   }
 
@@ -1652,7 +2144,18 @@ export class Rig {
     this.torsoM.compose(travel(bp.hip, _w), tq, scl);
     this.torsoInv.copy(this.torsoM).invert();
     this.torsoG.matrix.copy(this.torsoM);
-    this.headG.rotation.set(bp.headPitch * 0.6, 0, 0);
+    // the head layer (RigState.head): scaled, squashed and tilted about the chin, shifted on screen. The tilt is a
+    // turn about the line to the camera, so it reads the same whichever way the body has turned.
+    const hl = st.head, hSc = clamp(hl?.scale ?? 1, 0.6, 1.6), hSq = clamp(hl?.squash ?? 0, -0.3, 0.4), hsy = hSc * (1 - hSq), hsx = hSc * (1 + 0.5 * hSq), hTilt = rad(clamp(hl?.tilt ?? 0, -35, 35));
+    const head0 = V(0, d.Ht + 0.72 * d.R, 0).applyMatrix4(this.torsoM), toCam0 = camPos.clone().sub(head0).normalize();
+    const hRight = V().crossVectors(UP, toCam0);
+    if (hRight.lengthSq() < 1e-6) hRight.set(1, 0, 0); else hRight.normalize();
+    head0.addScaledVector(hRight, (hl?.dx ?? 0) * d.R + Math.sin(hTilt) * d.R * hsy)
+      .addScaledVector(UP, clamp(hl?.dy ?? 0, -0.25, 0.25) * d.R + (hsy - 1) * d.R - (1 - Math.cos(hTilt)) * d.R * hsy);
+    this.headG.position.copy(head0.applyMatrix4(this.torsoInv));
+    this.headG.scale.set(hsx, hsy, hsx);
+    this.headG.quaternion.setFromAxisAngle(_s.set(1, 0, 0), bp.headPitch * 0.6);
+    if (hTilt) this.headG.quaternion.premultiply(tq).premultiply(_bq.setFromAxisAngle(toCam0, -hTilt)).premultiply(_bq2.copy(tq).invert());   // (scratch of its own: _q1 = the body's yaw is used further down)
     this.torsoG.updateMatrixWorld(true);
     const headC = V().setFromMatrixPosition(this.headG.matrixWorld);
     this.out.head.copy(headC);
@@ -1671,11 +2174,22 @@ export class Rig {
     fp = lerp(fp, 0, wB);
     const F = V(Math.sin(fy) * Math.cos(fp), Math.sin(fp), Math.cos(fy) * Math.cos(fp));
     const Rf = V().crossVectors(UP, F).normalize(), Uf = V().crossVectors(F, Rf);
-    const roll = bp.roll * 0.8;
+    const roll = bp.roll * 0.8 + hTilt;
     if (roll) { Rf.applyAxisAngle(F, -roll); Uf.applyAxisAngle(F, -roll); }
-    this.faceU.uFF.value.copy(F); this.faceU.uFR.value.copy(Rf); this.faceU.uFU.value.copy(Uf);
-    this.faceU.uFace.value = faceTex(L, st.expr ?? "neutral", clamp(st.blink ?? 0, 0, 1), this.shade, hand, st.gaze ?? 0, this.fa);
+    // the drawing grows, squashes and tilts with the head layer. And it narrows as it slides away from the middle,
+    // as a face drawn on a ball does: the reference's is 13 % narrower at its farthest (a ball of 0.43 R).
+    const fSlide = clamp(wrapA(fy - camYawH) / FACE_MAX, -1, 1), fNarrow = Math.sqrt(1 - (0.49 * fSlide) ** 2);
+    this.faceU.uFF.value.copy(F); this.faceU.uFR.value.copy(Rf).multiplyScalar(1 / (hsx * fNarrow)); this.faceU.uFU.value.copy(Uf).multiplyScalar(1 / hsy);
+    this.faceU.uFace.value = faceTex(L, st.expr ?? "neutral", clamp(st.blink ?? 0, 0, 1), this.shade, hand, st.gaze ?? 0, this.fa, st.mouth);
     this.faceU.uHead.value.set(headC.x, headC.y, headC.z, d.R);
+    if (this.faceU.uBrim.value.w > 0) {
+      // the light that throws a brim's shadow (see the shader): as high as the key, kept within BRIM_ELEV, leaning
+      // toward the key by BRIM_SIDE. A set's own key is often low or to one side, and then the true shadow is a wedge
+      // on one temple; the reference draws a band across the top of the face under every wide brim.
+      const kv = this.rc.U.uKey.value, kl = Math.hypot(kv.x, kv.z);
+      _bv.set(kv.x, 0, kv.z).multiplyScalar(kl > 1e-4 ? BRIM_SIDE / kl : 0).applyQuaternion(this.headG.getWorldQuaternion(_bq).invert());   // (scratch of its own: _s and _q1 are in use here)
+      this.faceU.uKeyH.value.set(_bv.x, Math.sin(clamp(Math.asin(clamp(kv.y, -1, 1)), rad(BRIM_ELEV[0]), rad(BRIM_ELEV[1]))), _bv.z);
+    }
     // turning away: the face goes round with the head and fades as it nears the edge of the ball (it is gone before it
     // could be a sliver of a profile); from overhead it simply stays on the front of the head
     this.faceU.uFaceOn.value = 1 - follow * smooth((Math.abs(wrapA(fy - camYawH)) - rad(46)) / rad(26));
@@ -1729,9 +2243,23 @@ export class Rig {
       this.blob.scale.set(wid, len, 1);
     }
     if (this.accParts.length) for (const ap of this.accParts) ap.o.visible = !st.hide || !st.hide.includes(ap.name);
+    this.qa.held = 1;
     for (const hd of this.held) {
       hd.g.position.copy(this.out.hand[hd.i]).add(showDir(hd.off));
       hd.g.rotation.set(hd.rot[0], bodyYaw + hd.rot[1], hd.rot[2], "YXZ");
+      // QA: the gap between the held thing and this figure's own body and head (its points against their surfaces)
+      hd.g.updateMatrixWorld(true);
+      for (const o of hd.g.children) {
+        const P = (o as THREE.Mesh).geometry?.attributes.position;
+        if (!P) continue;
+        for (let i = 0, step = Math.max(1, Math.floor(P.count / 240)); i < P.count; i += step) {
+          _w.fromBufferAttribute(P, i).applyMatrix4(o.matrixWorld);
+          this.qa.held = Math.min(this.qa.held, _w.distanceTo(headC) - d.R);
+          _s.copy(_w).applyMatrix4(this.torsoInv);
+          const r = bodyR(_s.y, d.Ht, d.rb, d.rt);
+          if (r > 0) this.qa.held = Math.min(this.qa.held, Math.hypot(_s.x, _s.z) - r * d.bw(_s.x, _s.y, _s.z));
+        }
+      }
     }
     const a = st.clipboard;
     this.clip.visible = a !== undefined;
@@ -1757,8 +2285,8 @@ export class RigCast {
     parent.add(stencilClear());
   }
   private ids = 0;
-  /** a figure's stencil id, 1..255 (more figures than that share ids; it only matters where two with the same id overlap) */
-  newId() { return 1 + (this.ids++ % 255); }
+  /** a figure's stencil id, 1..127 (more figures than that share ids; it only matters where two with the same id overlap) */
+  newId() { return 1 + (this.ids++ % ID_BITS); }
   /** hat = one of the two built-in hats; acc = accessories (see Acc; kit/rigacc/ has the standard ones) */
   add(look: Look, o: { hat?: Hat; acc?: Acc[] } = {}) { const r = new Rig(this, look, o); this.parent.add(r.group); this.figures.push(r); return r; }
   /** renderH = the height in pixels of the frame being rendered (the ink's minimum width is in pixels) */

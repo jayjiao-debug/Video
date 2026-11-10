@@ -22,8 +22,9 @@ export const labCoat = (o: { col?: string; stethoscope?: boolean; pens?: boolean
       c.poly([c.P(p0, pt), c.P(p1, pt), c.P(p1, pb), c.P(p0, pb)], col, ink, c.LW - 3);
       if (steth) {
         // two tubes down from the neck that join, one tube on to the chest piece
-        const tubeC = "#3c3a46", yj = 0.5, end: [number, number] = [-34, 0.36];
-        for (const w of [[tubeC, 15], ["#5b5967", 7]] as [string, number][]) {
+        // (a tube in the ink's own colour reads as a strap or an arm: a blue-grey one with an ink edge)
+        const tubeC = "#2c2a3a", yj = 0.5, end: [number, number] = [-34, 0.36];
+        for (const w of [[tubeC, 16], ["#6f8fae", 9]] as [string, number][]) {
           for (const s of [-1, 1]) c.line([c.P(s * 19, 1), c.P(s * 20, 0.74), c.P(s * 12, 0.58), c.P(0, yj)], w[0], w[1]);
           c.line([c.P(0, yj), c.P(-10, 0.42), c.P(-24, 0.36), c.P(end[0], end[1])], w[0], w[1]);
         }

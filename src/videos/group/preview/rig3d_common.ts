@@ -8,7 +8,7 @@ import { makeEnv, mats, LIGHTS } from "../../bt/pbr";
 import { NOINK } from "../../vasa/ink";
 import { buildLab, LAB_FILL, LAB_AO, LAB_CAST_LIGHT, type Cam } from "../sets/lab";
 import { Cast, YOU, RESEARCHER, classmate, friend, lidAt, walkPhase, type Figure } from "../kit/cast";
-import { RigCast, RIG_WALK_CYCLE_M, type Rig, type Hat, type Acc, type RigPoseKind } from "../kit/rig3d";
+import { RigCast, RIG_WALK_CYCLE_M, rigWalk, rigSpeak, rigHeadAccent, rigHeadAdd, type Rig, type Hat, type Acc, type RigPoseKind, type RigLine, type RigAccent, type RigMouth } from "../kit/rig3d";
 import { Rope, lieSlack } from "../kit/rope";
 import type { Expr, Look } from "../kit/toon";
 
@@ -16,13 +16,20 @@ const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export type Who = "rig" | "card";
 export type LookKey = "you" | "researcher" | "worker" | "mate" | `friend${number}` | `class${number}` | Look;
 /** one person of a lineup: the look (see lookOf), accessories, a pose and an expression, the facing in degrees from
- *  the camera (default 0; in frames mode the whole row sweeps `turn`) */
-export type LineupWho = { look?: LookKey; hat?: Hat; acc?: Acc[]; set?: string | string[]; pose?: RigPoseKind; expr?: Expr; facing?: number; hide?: string[]; label?: string };
+ *  the camera (default 0; in frames mode the whole row sweeps `turn`). With lineup.run (the poses' time runs):
+ *  go = walks along x at that many metres a second (+ = to +x; the pose is a walk in step with the ground, the facing
+ *  is the way it walks), from `at` [x, z] if given; talk = speaks (rigSpeak: mouth, head and blinks; true = three
+ *  stock lines, or the lines themselves, in seconds from the first frame); act = a head accent that repeats (laugh:
+ *  all the time; the others once a second); everyone blinks. mouth = one talking mouth held still (RIG_MOUTHS; for a
+ *  sheet of the kit). */
+export type LineupWho = { look?: LookKey; hat?: Hat; acc?: Acc[]; set?: string | string[]; pose?: RigPoseKind; expr?: Expr; facing?: number; hide?: string[]; label?: string; go?: number; at?: [number, number]; talk?: boolean | RigLine[]; act?: RigAccent; mouth?: RigMouth };
+const STOCK_LINES: RigLine[] = [{ from: 0.3, to: 1.5, syl: 6, stress: [1] }, { from: 2.0, to: 3.4, syl: 7, stress: [0, 4] }, { from: 3.9, to: 4.8, syl: 5, stress: [2] }];
 export type RigLabOpts = {
   who: Who; scene: "pullers" | "trio" | "turn" | "crowd" | "lineup";
   /** lineup scene (rig only): people in a row, `gap` metres apart (default 0.62), `rows` deep (default 1), the middle
-   *  of the row at `centre` [x, z]; sweep = [a0, a1] degrees: everyone turns together over the frames */
-  lineup?: { who: LineupWho[]; gap?: number; rows?: number; centre?: [number, number]; sweep?: [number, number] };
+   *  of the row at `centre` [x, z]; sweep = [a0, a1] degrees: everyone turns together over the frames; run = the
+   *  frames a second of the poses' own time (walk cycles, waves; default: time stands still) */
+  lineup?: { who: LineupWho[]; gap?: number; rows?: number; centre?: [number, number]; sweep?: [number, number]; run?: number };
   /** accessories by name, for `set` in a turn or a lineup: the name of a set (or several) instead of the objects, so
    *  that a case can be chosen on the command line (--opts '{"turn":{"set":"topHat"}}'); kit/rigacc/catalog.ts has
    *  the standard ones */
@@ -37,8 +44,14 @@ export type RigLabOpts = {
   w?: number; h?: number;
   /** a lab cam name, a Cam, or an orbit (frames mode) */
   cam?: "main" | "side" | "pos1" | Cam;
-  orbit?: { centre: [number, number, number]; r: number; y: number; a0: number; a1: number; look?: [number, number, number]; fov: number };
+  /** near = the camera's near plane (m): a camera further back than the room's wall looks through it; r1, y1, look1 =
+   *  the radius, the height, the look-at point and the near plane at the last frame (a push in or a pull back while
+   *  it orbits) */
+  orbit?: { centre: [number, number, number]; r: number; y: number; a0: number; a1: number; look?: [number, number, number]; fov: number; near?: number; r1?: number; y1?: number; look1?: [number, number, number]; near1?: number };
   frames?: number; t?: number;
+  /** the figures alone on flat magenta, with no set and no post-processing: the same frames as a mask, which says
+   *  where the figures are (scripts/rig3d/specks.py --mask counts only what is on them) */
+  mask?: boolean;
 };
 /** the worker / teammates from world.ts LOOK (copied: world.ts builds both sets on import) */
 const WORKER: Look = { ...classmate(42), top: "sweater", topCol: "#5d9b5a", trim: "#eef1e6", glasses: "round", glassCol: "#2a2430" };
@@ -61,11 +74,19 @@ export const lookOf = (k: LookKey | undefined): Look =>
   !k || k === "you" ? YOU : typeof k === "object" ? k : k === "researcher" ? RESEARCHER : k === "worker" ? WORKER : k === "mate" ? MATE1
     : k.startsWith("friend") ? friend(+k.slice(6)) : classmate(+k.slice(5));
 
+const MASK_BG = new THREE.Color("#ff00ff");
 export function rigLab(o0: RigLabOpts) {
   const o = withHash(o0);
   const w = o.w ?? 540, h = o.h ?? 960;
   const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
   renderer.setSize(w, h); renderer.setPixelRatio(1);
+  // a shader that does not compile draws nothing, and the picture still comes out (a head without its fill is a black
+  // ball inside its ink line): fail the frame instead, with the compiler's own message
+  renderer.debug.onShaderError = (gl, program, vs, fs) => {
+    const msg = [gl.getProgramInfoLog(program), gl.getShaderInfoLog(vs), gl.getShaderInfoLog(fs)].filter(Boolean).join(" | ").slice(0, 600);
+    console.error("RIGLAB SHADER ERROR: " + msg);
+    throw new Error("rigLab: a shader did not compile: " + msg);
+  };
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = LIGHTS.shadow.type;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.body.style.margin = "0"; document.body.appendChild(renderer.domElement);
@@ -86,11 +107,12 @@ export function rigLab(o0: RigLabOpts) {
   comp.addPass(n8);
   comp.addPass(new EffectPass(camera, new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL })));
 
-  const setCam = (k: Cam) => { camera.position.set(...k.pos); camera.lookAt(...k.look); camera.fov = k.fov; camera.near = 0.05; camera.updateProjectionMatrix(); camera.updateMatrixWorld(); };
+  const setCam = (k: Cam) => { camera.position.set(...k.pos); camera.lookAt(...k.look); camera.fov = k.fov; camera.near = (k as { near?: number }).near ?? 0.05; camera.updateProjectionMatrix(); camera.updateMatrixWorld(); };
   const camAt = (i: number): Cam => {
     if (o.orbit) {
       const n = Math.max(1, (o.frames ?? 1) - 1), u = i / n, e = u * u * (3 - 2 * u), a = o.orbit.a0 + (o.orbit.a1 - o.orbit.a0) * e, c = o.orbit.centre;
-      return { pos: [c[0] + Math.sin(a) * o.orbit.r, o.orbit.y, c[2] + Math.cos(a) * o.orbit.r], look: o.orbit.look ?? [c[0], 1.0, c[2]], fov: o.orbit.fov };
+      const mix = (x0: number, x1: number | undefined) => x0 + ((x1 ?? x0) - x0) * e, r = mix(o.orbit.r, o.orbit.r1), l0 = o.orbit.look ?? [c[0], 1.0, c[2]], l1 = o.orbit.look1 ?? l0;
+      return { pos: [c[0] + Math.sin(a) * r, mix(o.orbit.y, o.orbit.y1), c[2] + Math.cos(a) * r], look: [mix(l0[0], l1[0]), mix(l0[1], l1[1]), mix(l0[2], l1[2])], fov: o.orbit.fov, ...(o.orbit.near ? { near: mix(o.orbit.near, o.orbit.near1) } : {}) } as Cam;
     }
     const k = o.cam ?? "main";
     return typeof k === "string" ? lab.cams[k] : k;
@@ -183,10 +205,15 @@ export function rigLab(o0: RigLabOpts) {
       const n = Math.max(1, (o.frames ?? 1) - 1), sw = lu.sweep ? lu.sweep[0] + ((lu.sweep[1] - lu.sweep[0]) * i) / n : 0;
       ps.forEach((P, k) => {
         const wh = lu.who[k], row = Math.floor(k / per), col = k % per, inRow = Math.min(per, lu.who.length - row * per);
-        const at = V(c[0] + (col - (inRow - 1) / 2) * gap, 0, c[1] - row * 0.75);
-        const camYaw = Math.atan2(camera.position.x - at.x, camera.position.z - at.z), facing = camYaw + (((wh.facing ?? 0) + sw) * Math.PI) / 180;
-        const kind = wh.pose ?? "idle";
-        P.rig!.set({ at, facing, pose: (kind === "walk" ? { kind, t: T, phase: (T * 0.9 + k * 0.17) % 1 } : { kind, t: T + k * 0.31, arm: 1 }) as never, expr: wh.expr ?? "smile", blink: 0, ...(wh.hide ? { hide: wh.hide } : {}) });
+        const at = wh.at ? V(wh.at[0], 0, wh.at[1]) : V(c[0] + (col - (inRow - 1) / 2) * gap, 0, c[1] - row * 0.75);
+        const dist = wh.go ? wh.go * (T - (o.t ?? 1)) : 0;
+        at.x += dist;
+        const camYaw = Math.atan2(camera.position.x - at.x, camera.position.z - at.z), facing = wh.go ? (Math.sign(wh.go) * Math.PI) / 2 : camYaw + (((wh.facing ?? 0) + sw) * Math.PI) / 180;
+        const kind = wh.go ? "walk" : wh.pose ?? "idle";
+        const T0 = T - (o.t ?? 1), sp = wh.talk && lu.run ? rigSpeak(T0, wh.talk === true ? STOCK_LINES : wh.talk, k + 1) : {};
+        const act = wh.act && lu.run ? rigHeadAccent(wh.act, wh.act === "laugh" ? T0 : T0 % 1, { dur: 999 }) : undefined;
+        P.rig!.set({ at, facing, pose: (kind === "walk" ? (wh.go ? { ...rigWalk(dist, wh.go), t: T } : { kind, t: T, phase: (T * 0.9 + k * 0.17) % 1 }) : { kind, t: T + k * 0.31, arm: 1 }) as never,
+          expr: wh.expr ?? "smile", blink: sp.blink ?? (lu.run ? lidAt(T, k) : 0), mouth: sp.mouth ?? wh.mouth, head: rigHeadAdd(sp.head, act), ...(wh.hide ? { hide: wh.hide } : {}) });
       });
       rc!.update(camera, h);
     };
@@ -210,9 +237,10 @@ export function rigLab(o0: RigLabOpts) {
   }
   const render = (i: number) => {
     setCam(camAt(i));
-    frame((o.t ?? 1) + (o.scene === "turn" || o.scene === "lineup" ? 0 : i / 30), i);
+    frame((o.t ?? 1) + (o.scene === "lineup" ? (o.lineup?.run ? i / o.lineup.run : 0) : o.scene === "turn" ? 0 : i / 30), i);
     qa(i);
-    comp.render();
+    if (o.mask) { lab.group.visible = false; scene.background = MASK_BG; renderer.render(scene, camera); }
+    else comp.render();
   };
   if (o.frames) {
     (window as any).__frame = (i: number) => { render(i); return true; };

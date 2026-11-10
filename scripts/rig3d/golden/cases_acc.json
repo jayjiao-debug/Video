@@ -20,5 +20,9 @@
   {"name": "acc_peakedCap", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "peakedCap", "look": "friend3"}}},
   {"name": "acc_pilotCap", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "pilotCap", "look": "friend2"}}},
   {"name": "acc_labCoat", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "labCoat", "look": "researcher"}}},
-  {"name": "acc_doctorCoat", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "doctorCoat", "look": "friend4"}}}
+  {"name": "acc_doctorCoat", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "doctorCoat", "look": "friend4"}}},
+  {"name": "acc_cowboyHat", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "cowboyHat", "look": "friend0"}}},
+  {"name": "acc_apron", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "apron", "look": "you"}}},
+  {"name": "acc_faceMask", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "faceMask", "look": "you"}}},
+  {"name": "acc_coffeeCup", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "coffeeCup", "look": "class23"}}}
 ]

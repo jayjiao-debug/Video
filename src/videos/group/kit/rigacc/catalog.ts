@@ -2,7 +2,7 @@
 // scripts/rig3d/ go through this list, so an accessory that is listed here is checked with the rest.
 //   rc.add(look, { acc: accessories("suit", "glasses.square", "briefcase") })
 import type { Acc } from "../rig3d";
-import { glasses, moustache, topHat, headphones, tie, backpack, briefcase, hardHat, chefHat, gradCap, peakedCap, labCoat } from "./index";
+import { glasses, moustache, topHat, headphones, tie, backpack, briefcase, hardHat, chefHat, gradCap, peakedCap, labCoat, cowboyHat, apron, faceMask, coffeeCup } from "./index";
 
 export type AccEntry = { zh: string; role: string; make: () => Acc[] };
 export const ACCESSORIES: Record<string, AccEntry> = {
@@ -28,6 +28,10 @@ export const ACCESSORIES: Record<string, AccEntry> = {
   pilotCap: { zh: "白色大檐帽", role: "机长、船长", make: () => [peakedCap({ col: "#f4f2ec", band: "#22242e" })] },
   labCoat: { zh: "白大褂", role: "科学家、研究员", make: () => [labCoat()] },
   doctorCoat: { zh: "白大褂加听诊器", role: "医生", make: () => [labCoat({ stethoscope: true })] },
+  cowboyHat: { zh: "牛仔帽", role: "牛仔、冒险家", make: () => [cowboyHat()] },
+  apron: { zh: "围裙", role: "厨师、咖啡师、店员", make: () => [apron()] },
+  faceMask: { zh: "口罩", role: "医生、病人、不想被认出来的人", make: () => [faceMask()] },
+  coffeeCup: { zh: "咖啡杯", role: "上班族、熬夜的学生", make: () => [coffeeCup()] },
 };
 /** the accessories of the named catalogue entries, in order */
 export const accessories = (...names: string[]): Acc[] => names.flatMap((n) => {

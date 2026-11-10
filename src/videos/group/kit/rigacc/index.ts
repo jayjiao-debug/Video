@@ -12,3 +12,7 @@ export { chefHat } from "./chefhat";
 export { gradCap } from "./gradcap";
 export { peakedCap } from "./peakedcap";
 export { labCoat } from "./labcoat";
+export { cowboyHat } from "./cowboyhat";
+export { apron } from "./apron";
+export { faceMask } from "./facemask";
+export { coffeeCup } from "./coffeecup";

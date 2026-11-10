@@ -5,7 +5,9 @@ import * as THREE from "three";
 /** a box with rounded edges and corners, w x h x d round its centre: a superellipsoid. e = how round: 1 = an
  *  ellipsoid, 0.5 = a soft pillow (the default), 0.25 = nearly a box */
 export const roundBox = (w: number, h: number, d: number, e = 0.5, seg = 24) => {
-  const g = new THREE.SphereGeometry(1, seg, Math.round(seg * 0.7)), P = g.attributes.position, pw = (x: number) => Math.sign(x) * Math.abs(x) ** e;
+  // (a coordinate that should be 0 comes out of the sphere as 1e-16; raised to a small power that is a tenth of a
+  //  millimetre, and the seam and the bottom pole stand open: snap it to 0 first)
+  const g = new THREE.SphereGeometry(1, seg, Math.round(seg * 0.7)), P = g.attributes.position, pw = (x: number) => (Math.abs(x) < 1e-9 ? 0 : Math.sign(x) * Math.abs(x) ** e);
   for (let i = 0; i < P.count; i++) P.setXYZ(i, (pw(P.getX(i)) * w) / 2, (pw(P.getY(i)) * h) / 2, (pw(P.getZ(i)) * d) / 2);
   g.computeVertexNormals();
   // the sphere's seam and poles share positions: give them one normal each, or the hull opens along the seam
@@ -18,27 +20,32 @@ export const roundBox = (w: number, h: number, d: number, e = 0.5, seg = 24) => 
 
 /** a solid turned on a lathe round the y axis: profile = [radius, y] corners from the bottom up; each inner corner is
  *  rounded with a fillet of `fillet` (never more than 45 % of the shorter side). Start or end at radius 0 to close an
- *  end. uv: u = round, v = 0 at the first point .. 1 at the last, by length along the profile. */
+ *  end; an end left open has to be hidden well inside the head or another part (see RIG3D.md). uv: u = round, v = 0
+ *  at the first point .. 1 at the last, by length along the profile. To paint a map on it, ask the geometry where
+ *  things are: userData.v[i] = the v of profile corner i (the middle of its fillet), userData.len = the profile's
+ *  length in metres. */
 export const turned = (profile: [number, number][], fillet = 0.01, seg = 40) => {
-  const pts: THREE.Vector2[] = [], n = profile.length;
-  const V2 = (p: [number, number]) => new THREE.Vector2(Math.max(p[0], 0.0004), p[1]);
+  const pts: THREE.Vector2[] = [], n = profile.length, mark = [0];
+  const V2 = (p: [number, number]) => new THREE.Vector2(Math.max(p[0], 0), p[1]);
   pts.push(V2(profile[0]));
   for (let i = 1; i < n - 1; i++) {
     const a = V2(profile[i - 1]), b = V2(profile[i]), c = V2(profile[i + 1]);
     const f = Math.min(fillet, 0.45 * a.distanceTo(b), 0.45 * b.distanceTo(c));
     const p0 = b.clone().add(a.clone().sub(b).setLength(f)), p1 = b.clone().add(c.clone().sub(b).setLength(f));
+    mark.push(pts.length + 3);
     for (let k = 0; k <= 6; k++) { const t = k / 6, s = 1 - t; pts.push(new THREE.Vector2(s * s * p0.x + 2 * s * t * b.x + t * t * p1.x, s * s * p0.y + 2 * s * t * b.y + t * t * p1.y)); }
   }
-  pts.push(V2(profile[n - 1]));
+  pts.push(V2(profile[n - 1])); mark.push(pts.length - 1);
   const g = new THREE.LatheGeometry(pts, seg), len = [0];
   for (let i = 1; i < pts.length; i++) len.push(len[i - 1] + pts[i].distanceTo(pts[i - 1]));
-  const U = g.attributes.uv;
-  for (let i = 0; i <= seg; i++) for (let j = 0; j < pts.length; j++) U.setY(i * pts.length + j, len[j] / len[pts.length - 1]);
+  const U = g.attributes.uv, total = len[pts.length - 1];
+  for (let i = 0; i <= seg; i++) for (let j = 0; j < pts.length; j++) U.setY(i * pts.length + j, len[j] / total);
   // one normal per position (the lathe's seam, and the points on the axis)
   const P = g.attributes.position, N = g.attributes.normal, key = (i: number) => `${Math.round(P.getX(i) * 1e5)},${Math.round(P.getY(i) * 1e5)},${Math.round(P.getZ(i) * 1e5)}`, sum = new Map<string, number[]>();
   for (let i = 0; i < P.count; i++) { const a = sum.get(key(i)) ?? [0, 0, 0]; a[0] += N.getX(i); a[1] += N.getY(i); a[2] += N.getZ(i); sum.set(key(i), a); }
   for (let i = 0; i < P.count; i++) { const a = sum.get(key(i))!, l = Math.hypot(a[0], a[1], a[2]) || 1; N.setXYZ(i, a[0] / l, a[1] / l, a[2] / l); }
   g.computeBoundingSphere();
+  g.userData.v = mark.map((m) => len[m] / total); g.userData.len = total;
   return g;
 };
 
