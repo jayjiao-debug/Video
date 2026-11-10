@@ -1,56 +1,83 @@
 {
- "id": "yawn-vo-02-retakes",
+ "id": "yawn-vo-test-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01b",
+   "name": "1_karo",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.4,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.45,
+    "speed": 1.1
    },
-   "text": "看完这条，你有一半的概率，会打一个哈欠。"
+   "text": "一号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI"
   },
   {
-   "name": "01c",
+   "name": "2_qiaofeng",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.4,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.45,
+    "speed": 1.1
    },
-   "text": "看完这条，你有一半的概率，会打一个哈欠。"
+   "text": "二号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+   "voice_id": "ZJsn5HnrE3eUbep2ia8D"
   },
   {
-   "name": "15b",
+   "name": "3_xinghe",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.4,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.45,
+    "speed": 1.1
    },
-   "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。"
+   "text": "三号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+   "voice_id": "lt7GBaCoAHWbT7JSZ5Xs"
   },
   {
-   "name": "15c",
+   "name": "4_julia",
    "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.4,
     "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
+    "style": 0.45,
+    "speed": 1.1
    },
-   "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。"
+   "text": "四号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU"
+  },
+  {
+   "name": "5_stacy",
+   "lang": "zh",
+   "settings": {
+    "stability": 0.4,
+    "similarity_boost": 0.8,
+    "style": 0.45,
+    "speed": 1.1
+   },
+   "text": "五号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+   "voice_id": "hkfHEbBvdQFNX4uWHqRF"
+  },
+  {
+   "name": "6_shared_f",
+   "lang": "zh",
+   "settings": {
+    "stability": 0.4,
+    "similarity_boost": 0.8,
+    "style": 0.45,
+    "speed": 1.1
+   },
+   "text": "六号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+   "gender": "female",
+   "accent": "standard",
+   "age": "young",
+   "use_case": "social_media"
   }
  ]
 }
