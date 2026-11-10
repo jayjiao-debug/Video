@@ -56,6 +56,21 @@ const LIFT_TO = { fwd: 0.2, up: 0.86 };
  *  rope already rises toward the last hand (about a third of a metre up), so the reach is a bend at the hips, not a
  *  dive with the head below the hips (0.22 grabbed it near the floor) */
 const GRAB_FWD = 0.4;
+/** the lift's target rise (0..1 of floor -> LIFT_TO) over the lift time: off the floor quickly, then slowly through the
+ *  band where the reach pose unbends (hand ~0.2-0.55 m up: lean 80 -> 0 deg), then the arm brings the rope up. A monotone
+ *  cubic through (0,0) (.12,.2) (.75,.63) (1,1), flat at both ends: the unbend spreads over ~7 of the 11 lift frames
+ *  (smoothstep^1.5 crossed the band in 2 frames: the torso flipped upright) */
+const RISE: [number, number, number][] = [[0, 0, 0], [0.12, 0.2, 1.0], [0.75, 0.63, 0.9], [1, 1, 0]];
+const riseOf = (x: number) => {
+  const u = Math.max(0, Math.min(1, x));
+  for (let k = 0; k < RISE.length - 1; k++) {
+    const [x0, y0, m0] = RISE[k], [x1, y1, m1] = RISE[k + 1];
+    if (u > x1 && k < RISE.length - 2) continue;
+    const hgt = x1 - x0, t = (u - x0) / hgt, t2 = t * t, t3 = t2 * t;
+    return (2 * t3 - 3 * t2 + 1) * y0 + (t3 - 2 * t2 + t) * hgt * m0 + (-2 * t3 + 3 * t2) * y1 + (t3 - t2) * hgt * m1;
+  }
+  return 1;
+};
 const tmp = V(), tmpN = V();
 
 export type CrewCInfo = { holders: number[]; pretenders: number[]; picker: number; pickPoint: THREE.Vector3 | null; pickGap: number };
@@ -197,9 +212,8 @@ export function crewC(w: World, c: Crew, pick: Rope, f: number, s: CrewCState): 
       const P = c.tail.points[best].clone(), loc = m.worldToLocal(P.clone());
       const tgDown: [number, number] = [loc.x / SU, Math.max(8, loc.y / SU)];
       const tgUp: [number, number] = [LIFT_TO.fwd / SU, LIFT_TO.up / SU];
-      // the rise: smoothstep^1.5, slow off the floor: the reach pose is upright once the hand is ~0.55 m up, so the
-      // first part of the rise is where the torso unbends; a slow start spreads that over ~5 frames instead of 2
-      const sl = p.lift * p.lift * (3 - 2 * p.lift), e = sl * Math.sqrt(sl);
+      // the rise (riseOf): slow through the band where the reach pose unbends, so the torso straightens over ~7 frames
+      const e = riseOf(p.lift);
       targets.set(k, [tgDown[0] + (tgUp[0] - tgDown[0]) * e, tgDown[1] + (tgUp[1] - tgDown[1]) * e]);
       if (p.down >= 1 && gripped < 0) {
         gripped = k; pickLen = c.tail.s[best] ?? 0; info.pickPoint = P; info.pickGap = bestD; info.picker = k;

@@ -298,7 +298,9 @@ function pullerAt(w: World, i: number, f: number): CPuller {
   // the 2 frames between the walk and the reach: the bench walkers (walking -z, seen from behind) turn through the
   // idle drawing; the door walkers already walk toward the gauge in the side drawing, so they stay in it (the reach
   // pose at 0: standing, side view) instead of flashing the idle drawing's back view
-  if (f < arrive(i) + 2) return i <= 3 ? { mode: "turn", facing: turnFacing(i), expr: exprAt(f, PW_EX), at } : { mode: "pick", down: 0, lift: 0, expr: exprAt(f, PW_EX), at };
+  // (the bench walkers used to turn through the idle drawing here too: facing away from the lens it flashed the back of
+  // the head as a dark disk for 2 frames; all four now stand in the side reach pose at 0, like the door walkers)
+  if (f < arrive(i) + 2) return { mode: "pick", down: 0, lift: 0, expr: exprAt(f, PW_EX), at };
   if (f < g + lift) {
     const down = clamp01((f - (arrive(i) + 2) + 1) / B.downDur), up = clamp01((f - g) / lift);
     return { mode: "pick", down, lift: up, expr: exprAt(f, PW_EX), at };
