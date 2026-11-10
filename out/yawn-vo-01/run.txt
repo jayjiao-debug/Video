@@ -1,0 +1,294 @@
+plan: {'tier': 'starter', 'character_count': 21255, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01", "lang": "zh", "text": "看完这条，你有一半的概率，会打一个哈欠。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01.mp3", "bytes": 61065}
+{"name": "02", "lang": "zh", "text": "不信？先忍住。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "02.mp3", "bytes": 29300}
+{"name": "03", "lang": "zh", "text": "一九八六年的实验：录像里的人，十秒打一个哈欠，连放五分钟。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "03.mp3", "bytes": 98263}
+{"name": "04", "lang": "zh", "text": "结果，百分之五十五的人，跟着打了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "04.mp3", "bytes": 53541}
+{"name": "05", "lang": "zh", "text": "换成微笑的录像，只有百分之二十一。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "05.mp3", "bytes": 52287}
+{"name": "06", "lang": "zh", "text": "更怪的是：把录像里的嘴挡掉，照样传染。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "06.mp3", "bytes": 70260}
+{"name": "07", "lang": "zh", "text": "只留一张嘴，反而不太管用。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "07.mp3", "bytes": 46018}
+{"name": "08", "lang": "zh", "text": "传染你的不是那张嘴，是整张哈欠脸。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "08.mp3", "bytes": 67752}
+{"name": "09", "lang": "zh", "text": "甚至不用看：光读一篇讲哈欠的文章，就有四分之一以上的人真打了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "09.mp3", "bytes": 99517}
+{"name": "10", "lang": "zh", "text": "比如，你正在读的字幕。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "10.mp3", "bytes": 38077}
+{"name": "11", "lang": "zh", "text": "狗也会中招：二十九只狗看人打哈欠，二十一只跟着打了。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "11.mp3", "bytes": 93247}
+{"name": "12", "lang": "zh", "text": "四岁以下的小孩，反而基本不会。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "12.mp3", "bytes": 49780}
+{"name": "13", "lang": "zh", "text": "而且越亲越容易中招：家人最快，然后是朋友、熟人，最后才是陌生人。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "13.mp3", "bytes": 117489}
+{"name": "14", "lang": "zh", "text": "那没被传染，是不是冷血？不是。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "14.mp3", "bytes": 57303}
+{"name": "15", "lang": "zh", "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15.mp3", "bytes": 93247}
+{"name": "16", "lang": "zh", "text": "至于为什么会传染，科学家还没有定论。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "16.mp3", "bytes": 57303}
+{"name": "17", "lang": "zh", "text": "所以，把这条发给你最亲的人，看他撑到第几秒。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "17.mp3", "bytes": 74021}
+{"name": "18", "lang": "zh", "text": "你没打？那再看一遍。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "18.mp3", "bytes": 40585}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01",
+  "lang": "zh",
+  "text": "看完这条，你有一半的概率，会打一个哈欠。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01.mp3",
+  "bytes": 61065,
+  "heard": "看完这条,你有一半的概率会打得哈浅",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "02",
+  "lang": "zh",
+  "text": "不信？先忍住。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "02.mp3",
+  "bytes": 29300,
+  "heard": "不信 先忍住",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 1.76
+ },
+ {
+  "name": "03",
+  "lang": "zh",
+  "text": "一九八六年的实验：录像里的人，十秒打一个哈欠，连放五分钟。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "03.mp3",
+  "bytes": 98263,
+  "heard": "1986年的實驗錄像裡的人10秒打一個哈欠連放5分鐘",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 6.08
+ },
+ {
+  "name": "04",
+  "lang": "zh",
+  "text": "结果，百分之五十五的人，跟着打了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "04.mp3",
+  "bytes": 53541,
+  "heard": "結果55%的人跟著打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.28
+ },
+ {
+  "name": "05",
+  "lang": "zh",
+  "text": "换成微笑的录像，只有百分之二十一。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05.mp3",
+  "bytes": 52287,
+  "heard": "換成微笑的錄像,只有21%",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ },
+ {
+  "name": "06",
+  "lang": "zh",
+  "text": "更怪的是：把录像里的嘴挡掉，照样传染。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "06.mp3",
+  "bytes": 70260,
+  "heard": "更怪的是把錄像裡的嘴擋掉照樣傳染",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.32
+ },
+ {
+  "name": "07",
+  "lang": "zh",
+  "text": "只留一张嘴，反而不太管用。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "07.mp3",
+  "bytes": 46018,
+  "heard": "只留一張嘴反而不太管用",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "08",
+  "lang": "zh",
+  "text": "传染你的不是那张嘴，是整张哈欠脸。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "08.mp3",
+  "bytes": 67752,
+  "heard": "傳染你的不是那張嘴是整張哈欠臉",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.16
+ },
+ {
+  "name": "09",
+  "lang": "zh",
+  "text": "甚至不用看：光读一篇讲哈欠的文章，就有四分之一以上的人真打了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "09.mp3",
+  "bytes": 99517,
+  "heard": "甚至不用看光读一篇讲哈欠的文章就有四分之一以上的人真打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 6.16
+ },
+ {
+  "name": "10",
+  "lang": "zh",
+  "text": "比如，你正在读的字幕。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "10.mp3",
+  "bytes": 38077,
+  "heard": "比如你正在读的字幕",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.32
+ },
+ {
+  "name": "11",
+  "lang": "zh",
+  "text": "狗也会中招：二十九只狗看人打哈欠，二十一只跟着打了。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "11.mp3",
+  "bytes": 93247,
+  "heard": "狗也會中招29隻狗看人打哈欠21隻跟著打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.76
+ },
+ {
+  "name": "12",
+  "lang": "zh",
+  "text": "四岁以下的小孩，反而基本不会。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "12.mp3",
+  "bytes": 49780,
+  "heard": "四岁以下的小孩反而基本不会",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.04
+ },
+ {
+  "name": "13",
+  "lang": "zh",
+  "text": "而且越亲越容易中招：家人最快，然后是朋友、熟人，最后才是陌生人。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "13.mp3",
+  "bytes": 117489,
+  "heard": "而且越親越容易中招家人最快然後是朋友熟人最後才是陌生人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 7.28
+ },
+ {
+  "name": "14",
+  "lang": "zh",
+  "text": "那没被传染，是不是冷血？不是。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "14.mp3",
+  "bytes": 57303,
+  "heard": "那没被传染是不是冷血不是",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "15",
+  "lang": "zh",
+  "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15.mp3",
+  "bytes": 93247,
+  "heard": "328人的测试里三分之一的人一个没打和同理性分数无关",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 5.76
+ },
+ {
+  "name": "16",
+  "lang": "zh",
+  "text": "至于为什么会传染，科学家还没有定论。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "16.mp3",
+  "bytes": 57303,
+  "heard": "至於為什麼會傳染科學家還沒有定論",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "17",
+  "lang": "zh",
+  "text": "所以，把这条发给你最亲的人，看他撑到第几秒。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "17.mp3",
+  "bytes": 74021,
+  "heard": "所以把這條發給你最親的人看他撐到第幾秒",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "18",
+  "lang": "zh",
+  "text": "你没打？那再看一遍。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "18.mp3",
+  "bytes": 40585,
+  "heard": "你沒打?那再看一遍",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.48
+ }
+]
