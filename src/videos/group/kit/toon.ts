@@ -373,7 +373,7 @@ const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k = 1) =
 
 /** face v2 (front / 3-4). u = 1 % of the head path width W. Eyes 26u apart on the centre line, brows 20u up, mouth 20u
  *  down, everything slid toward the facing side. No blush, no catchlights. */
-const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr, facing: number, look: number, lid: number, brim: boolean,
+export const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr, facing: number, look: number, lid: number, brim: boolean,
   skin: string, moustache?: string, stout = false, lookUp = 0) => {
   const u = W / 100, F = FACE[expr], fx = cx + 7 * u * facing;
   const ex = (F.eye[0] === "shock" ? 12 : 13) * u, ey = cy - 3.5 * u * lookUp;
@@ -1745,7 +1745,7 @@ export const drawNi = (p: Pen, cx: number, cy: number, size: number, col = NI_IN
   for (const st of NI_STROKES) p.stroke(st.map(([x, y]) => [cx + (x - 50) * k, cy + (y - 50) * k] as P2), 11.5 * k, col);
 };
 /** the protagonist's chest tag: gold rounded plate, darker rim, 你 */
-const niTag = (p: Pen, cx: number, cy: number, w: number, h: number, u: number) => {
+export const niTag = (p: Pen, cx: number, cy: number, w: number, h: number, u: number) => {
   p.poly(rrect(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2, Math.min(w, h) * 0.22), GOLD, 1.6 * u);
   p.poly(rrect(cx - w / 2 + 1.6 * u, cy - h / 2 + 1.6 * u, cx + w / 2 - 1.6 * u, cy + h / 2 - 1.6 * u, Math.min(w, h) * 0.16), null, 0.9 * u);
   drawNi(p, cx, cy + 0.02 * h, Math.min(w, h) * 0.8);

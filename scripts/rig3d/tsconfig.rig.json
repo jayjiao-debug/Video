@@ -1,0 +1,1 @@
+{ "extends": "../../tsconfig.json", "compilerOptions": { "noEmit": true }, "include": ["../../src/videos/group/kit/rig3d.ts", "../../src/videos/group/preview/rig3d_*.ts"] }
