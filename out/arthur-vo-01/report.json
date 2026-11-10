@@ -1,0 +1,1945 @@
+{
+  "id": "arthur-vo-01",
+  "clips": [
+    {
+      "name": "k01",
+      "lang": "zh",
+      "text": "他把刚拔出来的石中剑，又插了回去。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k01.mp3",
+      "bytes": 54795,
+      "heard": "他把剛拔出來的時鐘鍵又插了回去",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 3.36
+    },
+    {
+      "name": "k02",
+      "lang": "zh",
+      "text": "等等，拔出来不就是国王吗？",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k02.mp3",
+      "bytes": 49780,
+      "heard": "等等,拔出來不就是國王嗎?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 3.04
+    },
+    {
+      "name": "k03",
+      "lang": "zh",
+      "text": "名著《亚瑟王之死》里，伦敦教堂院子里多了块大石头，插着把剑。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k03.mp3",
+      "bytes": 98263,
+      "heard": "名著雅瑟王之死裡,倫敦教堂院子裡多了塊大石頭,插著把劍。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 6.08
+    },
+    {
+      "name": "k04",
+      "lang": "zh",
+      "text": "金字写着：谁拔出来，谁就是国王。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k04.mp3",
+      "bytes": 61065,
+      "heard": "金字寫著,誰拔出來,誰就是國王。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.76
+    },
+    {
+      "name": "k05",
+      "lang": "zh",
+      "text": "贵族排队来拔，脸都憋红了，剑一动不动。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k05.mp3",
+      "bytes": 76529,
+      "heard": "貴族排隊來拔,臉都逼紅了,見一動不動",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 4.72
+    },
+    {
+      "name": "k06",
+      "lang": "zh",
+      "text": "新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k06.mp3",
+      "bytes": 117489,
+      "heard": "新年比武大会,雅瑟的哥哥叫凯,刚当上骑士,一摸腰,见妄待了。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 7.28
+    },
+    {
+      "name": "k07",
+      "lang": "zh",
+      "text": "亚瑟回去拿，家里没人，全看比武去了。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k07.mp3",
+      "bytes": 63990,
+      "heard": "雅瑟回去拿,家裡沒人,全看比武去了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.92
+    },
+    {
+      "name": "k08",
+      "lang": "zh",
+      "text": "他想起石头上还插着一把。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k08.mp3",
+      "bytes": 41838,
+      "heard": "他想起石頭上還插著一把",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.56
+    },
+    {
+      "name": "k09",
+      "lang": "zh",
+      "text": "连十个守卫都看比武去了，他一拔就出来，第一次。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k09.mp3",
+      "bytes": 75275,
+      "heard": "連十個守衛都看比武去了他一拔就出來第一次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 4.64
+    },
+    {
+      "name": "k10",
+      "lang": "zh",
+      "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k10.mp3",
+      "bytes": 79037,
+      "heard": "凱拿到箭就找爸爸爸!時鐘箭!我要當國王了!",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "seconds": 4.88
+    },
+    {
+      "name": "k11",
+      "lang": "zh",
+      "text": "爸爸让他发誓，凯才承认是弟弟拿的。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k11.mp3",
+      "bytes": 61065,
+      "heard": "爸爸讓他發誓,凱財承認是弟弟拿的",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 3.76
+    },
+    {
+      "name": "k12",
+      "lang": "zh",
+      "text": "爸爸让亚瑟插回去再拔一次，他说：“这有什么难的。”",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k12.mp3",
+      "bytes": 81545,
+      "heard": "爸爸讓亞瑟插回去再拔一次他說,這有什麼難的?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 5.04
+    },
+    {
+      "name": "k13",
+      "lang": "zh",
+      "text": "爸爸先拔，不动；凯使出吃奶的劲，不动；亚瑟一伸手，第二次。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k13.mp3",
+      "bytes": 114981,
+      "heard": "爸爸先拔,不動,開始出吃奶的鏡,不動,牙色一伸手,第二次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 7.12
+    },
+    {
+      "name": "k14",
+      "lang": "zh",
+      "text": "几天后贵族全来试，只有他拔得出，第三次。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k14.mp3",
+      "bytes": 82798,
+      "heard": "幾天後貴族全來世,只有他拔得出第三次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 5.12
+    },
+    {
+      "name": "k15",
+      "lang": "zh",
+      "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k15.mp3",
+      "bytes": 91994,
+      "heard": "他們氣炸了,讓個出身不高的小子管我們,說改天再拔!",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "seconds": 5.68
+    },
+    {
+      "name": "k16",
+      "lang": "zh",
+      "text": "二月，雪还没化，第四次，又拖。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k16.mp3",
+      "bytes": 71514,
+      "heard": "2月,雪還沒化,第四次,又脫",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 4.4
+    },
+    {
+      "name": "k17",
+      "lang": "zh",
+      "text": "春天，花都开了，第五次，还拖。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k17.mp3",
+      "bytes": 71514,
+      "heard": "春天花都開了,第五次還脫",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 4.4
+    },
+    {
+      "name": "k18",
+      "lang": "zh",
+      "text": "初夏，当着所有人的面，第六次。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k18.mp3",
+      "bytes": 57303,
+      "heard": "出下,當著所有人的面第六次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 3.52
+    },
+    {
+      "name": "k19",
+      "lang": "zh",
+      "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k19.mp3",
+      "bytes": 67752,
+      "heard": "老百姓急了,就要雅瑟當國王,別再拖了!",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 4.16
+    },
+    {
+      "name": "k20",
+      "lang": "zh",
+      "text": "所有人齐刷刷跪下。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k20.mp3",
+      "bytes": 36823,
+      "heard": "所有人齊刷刷跪下",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.24
+    },
+    {
+      "name": "k21",
+      "lang": "zh",
+      "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k21.mp3",
+      "bytes": 93247,
+      "heard": "整整六次他才當上國王而第一次只因為哥哥忘了代鑒",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 5.76
+    },
+    {
+      "name": "k01b",
+      "lang": "zh",
+      "text": "他把刚拔出来的石中剑，又插了回去。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k01b.mp3",
+      "bytes": 56049,
+      "heard": "他把剛拔出來的時鐘鍵又插了回去",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 3.44
+    },
+    {
+      "name": "k02b",
+      "lang": "zh",
+      "text": "等等，拔出来不就是国王吗？",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k02b.mp3",
+      "bytes": 49780,
+      "heard": "等等,拔出來不就是國王嗎?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 3.04
+    },
+    {
+      "name": "k10b",
+      "lang": "zh",
+      "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k10b.mp3",
+      "bytes": 79037,
+      "heard": "凱拿到箭就找爸爸爸 十中箭 我要当国王了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "seconds": 4.88
+    },
+    {
+      "name": "k15b",
+      "lang": "zh",
+      "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k15b.mp3",
+      "bytes": 93247,
+      "heard": "他們氣炸了,讓個出身不高的小子管我們,說改天再拔!",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 5.76
+    },
+    {
+      "name": "k19b",
+      "lang": "zh",
+      "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k19b.mp3",
+      "bytes": 69006,
+      "heard": "老百姓急了就要雅瑟當國王別再拖了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 4.24
+    },
+    {
+      "name": "k21b",
+      "lang": "zh",
+      "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "k21b.mp3",
+      "bytes": 91994,
+      "heard": "整整六次他才當上國王而第一次只因為哥哥忘了帶劍",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 5.68
+    },
+    {
+      "name": "j01",
+      "lang": "zh",
+      "text": "他把刚拔出来的石中剑，又插了回去。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j01.mp3",
+      "bytes": 54795,
+      "heard": "他把剛拔出來的時鐘鍵又插了回去",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.36
+    },
+    {
+      "name": "j02",
+      "lang": "zh",
+      "text": "等等，拔出来不就是国王吗？",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j02.mp3",
+      "bytes": 48526,
+      "heard": "等等,拔出來不就是國王嗎?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.96
+    },
+    {
+      "name": "j03",
+      "lang": "zh",
+      "text": "名著《亚瑟王之死》里，伦敦教堂院子里多了块大石头，插着把剑。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j03.mp3",
+      "bytes": 99517,
+      "heard": "明著亞瑟王之死裡倫敦教堂院子裡多了塊大石頭插著把劍",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 6.16
+    },
+    {
+      "name": "j04",
+      "lang": "zh",
+      "text": "金字写着：谁拔出来，谁就是国王。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j04.mp3",
+      "bytes": 62318,
+      "heard": "金字寫著 誰拔出來誰就是國王",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.84
+    },
+    {
+      "name": "j05",
+      "lang": "zh",
+      "text": "贵族排队来拔，脸都憋红了，剑一动不动。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j05.mp3",
+      "bytes": 75275,
+      "heard": "贵族排队来拔,脸都别红了,简一顿不动。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 4.64
+    },
+    {
+      "name": "j06",
+      "lang": "zh",
+      "text": "新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j06.mp3",
+      "bytes": 113727,
+      "heard": "新年比武大会,亚瑟的哥哥叫凯,刚当上骑士,以摸腰,见忘戴了。",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 7.04
+    },
+    {
+      "name": "j07",
+      "lang": "zh",
+      "text": "亚瑟回去拿，家里没人，全看比武去了。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j07.mp3",
+      "bytes": 61065,
+      "heard": "雅瑟回去拿家裡沒人全看比武去了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.76
+    },
+    {
+      "name": "j08",
+      "lang": "zh",
+      "text": "他想起石头上还插着一把。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j08.mp3",
+      "bytes": 41838,
+      "heard": "他想起石头上还插着一把",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "seconds": 2.56
+    },
+    {
+      "name": "j09",
+      "lang": "zh",
+      "text": "连十个守卫都看比武去了，他一拔就出来，第一次。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j09.mp3",
+      "bytes": 70260,
+      "heard": "連十個守衛都看比武去了他一拔就出來第一次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 4.32
+    },
+    {
+      "name": "j10",
+      "lang": "zh",
+      "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j10.mp3",
+      "bytes": 77783,
+      "heard": "凯拿到剑就找爸爸爸 十中剑我要当国王了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 4.8
+    },
+    {
+      "name": "j11",
+      "lang": "zh",
+      "text": "爸爸让他发誓，凯才承认是弟弟拿的。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j11.mp3",
+      "bytes": 58557,
+      "heard": "爸爸讓他發誓 凱材承認是弟弟拿的",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 3.6
+    },
+    {
+      "name": "j12",
+      "lang": "zh",
+      "text": "爸爸让亚瑟插回去再拔一次，他说：“这有什么难的。”",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j12.mp3",
+      "bytes": 77783,
+      "heard": "爸爸让雅瑟插回去再拔一次她说这有什么难的",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 4.8
+    },
+    {
+      "name": "j13",
+      "lang": "zh",
+      "text": "爸爸先拔，不动；凯使出吃奶的劲，不动；亚瑟一伸手，第二次。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j13.mp3",
+      "bytes": 112474,
+      "heard": "爸爸先拔不动,开始出吃奶的劲,不动,亚瑟一伸手,第二次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 6.96
+    },
+    {
+      "name": "j14",
+      "lang": "zh",
+      "text": "几天后贵族全来试，只有他拔得出，第三次。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j14.mp3",
+      "bytes": 77783,
+      "heard": "幾天後貴族全來世只有他拔得出第三次",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 4.8
+    },
+    {
+      "name": "j15",
+      "lang": "zh",
+      "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j15.mp3",
+      "bytes": 93247,
+      "heard": "他們氣炸了,任個出身不高的小子管我們,說,改天再拔。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 5.76
+    },
+    {
+      "name": "j16",
+      "lang": "zh",
+      "text": "二月，雪还没化，第四次，又拖。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j16.mp3",
+      "bytes": 72767,
+      "heard": "2月,雪寒雷化第四次,又拖",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.993,
+      "seconds": 4.48
+    },
+    {
+      "name": "j17",
+      "lang": "zh",
+      "text": "春天，花都开了，第五次，还拖。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j17.mp3",
+      "bytes": 69006,
+      "heard": "春天,花都开了,第五次,还拖",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 4.24
+    },
+    {
+      "name": "j18",
+      "lang": "zh",
+      "text": "初夏，当着所有人的面，第六次。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j18.mp3",
+      "bytes": 57303,
+      "heard": "他出下當著所有人的面第六次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "seconds": 3.52
+    },
+    {
+      "name": "j19",
+      "lang": "zh",
+      "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j19.mp3",
+      "bytes": 67752,
+      "heard": "老百姓急了就要亞瑟當國王別再拖了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 4.16
+    },
+    {
+      "name": "j20",
+      "lang": "zh",
+      "text": "所有人齐刷刷跪下。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j20.mp3",
+      "bytes": 35569,
+      "heard": "所有人齊刷刷跪下",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 2.16
+    },
+    {
+      "name": "j21",
+      "lang": "zh",
+      "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。",
+      "voice": "tOuLUAIdXShmWH7PEUrU",
+      "voice_id": "tOuLUAIdXShmWH7PEUrU",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "j21.mp3",
+      "bytes": 93247,
+      "heard": "整整六次他才當上國王而第一次只因為哥哥忘了帶劍",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 5.76
+    },
+    {
+      "name": "k3_01",
+      "lang": "zh",
+      "text": "[playful] 他把刚拔出来的石中剑，又插了回去。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "k3_01.mp3",
+      "bytes": 63990,
+      "heard": "他把剛拔出來的時鐘鍵又查了回去",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.92
+    },
+    {
+      "name": "k3_10",
+      "lang": "zh",
+      "text": "[excited] 凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "k3_10.mp3",
+      "bytes": 112474,
+      "heard": "凱拿刀剑就找爸爸爸 十中剑我要当国王了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 6.96
+    },
+    {
+      "name": "k3_15",
+      "lang": "zh",
+      "text": "[outraged] 他们气炸了：“让个出身不高的小子管我们？”说改天再拔。",
+      "voice": "5mZxJZhSmJTjL7GoYfYI",
+      "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "k3_15.mp3",
+      "bytes": 91994,
+      "heard": "他们气炸了,让个出身不高的小子管我们,说改天再拔。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "seconds": 5.68
+    }
+  ],
+  "plan": {
+    "tier": "starter",
+    "character_count": 21757,
+    "character_limit": 30001,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "standard",
+        "descriptive": "confident",
+        "gender": "female",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "chill",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "age": "young",
+        "use_case": "entertainment_tv",
+        "accent": "standard",
+        "descriptive": "casual",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "age": "young",
+        "use_case": "characters_animation",
+        "gender": "female",
+        "descriptive": "sassy",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "excited",
+        "accent": "standard",
+        "language": "ru"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "serious",
+        "accent": "british",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "professional",
+        "gender": "female",
+        "language": "hi"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "modern standard",
+        "gender": "female",
+        "language": "ar"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "confident",
+        "accent": "milanese",
+        "language": "it"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "calm",
+        "accent": "brazilian",
+        "language": "pt"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "latin american",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "accent": "mexican",
+        "descriptive": "cute",
+        "gender": "female",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "use_case": "conversational",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "accent": "latin american",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "calm",
+        "accent": "latin american",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "female",
+        "descriptive": "pleasant",
+        "accent": "standard",
+        "language": "hi"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "classy",
+        "gender": "female",
+        "language": "hi"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "calm",
+        "accent": "modern standard",
+        "language": "ar"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "professional",
+        "accent": "standard",
+        "language": "it"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "excited",
+        "accent": "brazilian",
+        "language": "pt"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "use_case": "conversational",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "accent": "peruvian",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "mexican",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "accent": "american",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "middle-aged",
+        "accent": "standard",
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "professional",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "casual",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "deep",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "confident",
+        "accent": "standard",
+        "language": "el"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "standard",
+        "language": "el"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "el"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "old",
+        "accent": "standard",
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "de"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "calm",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "pleasant",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "accent": "standard",
+        "descriptive": "formal",
+        "gender": "female",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "male",
+        "descriptive": "neutral",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "pleasant",
+        "gender": "female",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "female",
+        "descriptive": "crisp",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "crisp",
+        "accent": "scottish",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "use_case": "advertisement",
+        "gender": "male",
+        "descriptive": "professional",
+        "accent": "scottish",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "accent": "american",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "male",
+        "descriptive": "gentle",
+        "accent": "chinese",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "american",
+        "descriptive": "confident",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "intense",
+        "gender": "male",
+        "language": "it"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "scottish",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "gentle",
+        "accent": "beijing mandarin",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "singapore mandarin",
+        "descriptive": "deep",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "calm",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "chinese",
+        "descriptive": "chill",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "gender": "male",
+        "descriptive": "chill",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "italian",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "scottish",
+        "descriptive": "casual",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "gentle",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "age": "old",
+        "use_case": "narrative_story",
+        "accent": "british",
+        "descriptive": "mature",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "casual",
+        "accent": "standard",
+        "language": "fr"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "professional",
+        "accent": "parisian",
+        "language": "fr"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "accent": "standard",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "de"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "de"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "calm",
+        "accent": "standard",
+        "language": "ru"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "gender": "male",
+        "descriptive": "confident",
+        "accent": "standard",
+        "language": "ru"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "accent": "taiwan mandarin",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "serious",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "casual",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "language": "hi"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "classy",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "use_case": "entertainment_tv",
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "sassy",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "hyped",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "australian"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "mature",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "use_case": "characters_animation",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "gender": "neutral",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "use_case": "characters_animation",
+        "descriptive": "rough",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "confident",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "chill",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "cute",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "classy",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "classy",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "formal",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "confident",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "use_case": "social_media",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "use_case": "advertisement",
+        "descriptive": "crisp",
+        "gender": "male",
+        "age": "old",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "premade"
+    }
+  ]
+}
