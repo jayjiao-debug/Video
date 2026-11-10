@@ -1,11 +1,11 @@
 {
- "id": "yawn-vo-01",
+ "id": "yawn-vo-02-retakes",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01",
+   "name": "01b",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -17,7 +17,7 @@
    "text": "看完这条，你有一半的概率，会打一个哈欠。"
   },
   {
-   "name": "02",
+   "name": "01c",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -26,154 +26,10 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "不信？先忍住。"
+   "text": "看完这条，你有一半的概率，会打一个哈欠。"
   },
   {
-   "name": "03",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "一九八六年的实验：录像里的人，十秒打一个哈欠，连放五分钟。"
-  },
-  {
-   "name": "04",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "结果，百分之五十五的人，跟着打了。"
-  },
-  {
-   "name": "05",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "换成微笑的录像，只有百分之二十一。"
-  },
-  {
-   "name": "06",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "更怪的是：把录像里的嘴挡掉，照样传染。"
-  },
-  {
-   "name": "07",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "只留一张嘴，反而不太管用。"
-  },
-  {
-   "name": "08",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "传染你的不是那张嘴，是整张哈欠脸。"
-  },
-  {
-   "name": "09",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "甚至不用看：光读一篇讲哈欠的文章，就有四分之一以上的人真打了。"
-  },
-  {
-   "name": "10",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "比如，你正在读的字幕。"
-  },
-  {
-   "name": "11",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "狗也会中招：二十九只狗看人打哈欠，二十一只跟着打了。"
-  },
-  {
-   "name": "12",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "四岁以下的小孩，反而基本不会。"
-  },
-  {
-   "name": "13",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "而且越亲越容易中招：家人最快，然后是朋友、熟人，最后才是陌生人。"
-  },
-  {
-   "name": "14",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "那没被传染，是不是冷血？不是。"
-  },
-  {
-   "name": "15",
+   "name": "15b",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -185,7 +41,7 @@
    "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。"
   },
   {
-   "name": "16",
+   "name": "15c",
    "lang": "zh",
    "voice_id": "vZZLclMx4wouUtKBRfZn",
    "settings": {
@@ -194,31 +50,7 @@
     "style": 0.3,
     "speed": 1.12
    },
-   "text": "至于为什么会传染，科学家还没有定论。"
-  },
-  {
-   "name": "17",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "所以，把这条发给你最亲的人，看他撑到第几秒。"
-  },
-  {
-   "name": "18",
-   "lang": "zh",
-   "voice_id": "vZZLclMx4wouUtKBRfZn",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.12
-   },
-   "text": "你没打？那再看一遍。"
+   "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。"
   }
  ]
 }
