@@ -1,83 +1,76 @@
 {
- "id": "yawn-vo-test-02",
+ "id": "arthur-emotion-test-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "1_karo",
+   "name": "karo_A_settings",
    "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.45,
-    "speed": 1.1
+    "style": 0.7,
+    "speed": 1.15
    },
-   "text": "一号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
-   "voice_id": "5mZxJZhSmJTjL7GoYfYI"
+   "text": "全英格兰的骑士都拔不动那把剑！可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。贵族们当场炸了：“让一个毛头小子来管我们？！”"
   },
   {
-   "name": "2_qiaofeng",
+   "name": "karo_B_tags",
    "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.45,
-    "speed": 1.1
+    "style": 0.7,
+    "speed": 1.15
    },
-   "text": "二号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
-   "voice_id": "ZJsn5HnrE3eUbep2ia8D"
+   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
   },
   {
-   "name": "3_xinghe",
+   "name": "karo_C_v3tags",
    "lang": "zh",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+   "model": "eleven_v3",
    "settings": {
-    "stability": 0.4,
-    "similarity_boost": 0.8,
-    "style": 0.45,
-    "speed": 1.1
+    "stability": 0.0
    },
-   "text": "三号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
-   "voice_id": "lt7GBaCoAHWbT7JSZ5Xs"
+   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
   },
   {
-   "name": "4_julia",
+   "name": "julia_A_settings",
    "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.45,
-    "speed": 1.1
+    "style": 0.7,
+    "speed": 1.15
    },
-   "text": "四号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU"
+   "text": "全英格兰的骑士都拔不动那把剑！可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。贵族们当场炸了：“让一个毛头小子来管我们？！”"
   },
   {
-   "name": "5_stacy",
+   "name": "julia_B_tags",
    "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
    "settings": {
-    "stability": 0.4,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.45,
-    "speed": 1.1
+    "style": 0.7,
+    "speed": 1.15
    },
-   "text": "五号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
-   "voice_id": "hkfHEbBvdQFNX4uWHqRF"
+   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
   },
   {
-   "name": "6_shared_f",
+   "name": "julia_C_v3tags",
    "lang": "zh",
+   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "model": "eleven_v3",
    "settings": {
-    "stability": 0.4,
-    "similarity_boost": 0.8,
-    "style": 0.45,
-    "speed": 1.1
+    "stability": 0.0
    },
-   "text": "六号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
-   "gender": "female",
-   "accent": "standard",
-   "age": "young",
-   "use_case": "social_media"
+   "text": "[excited] 全英格兰的骑士都拔不动那把剑！[amused] 可一个给哥哥跑腿的小侍从，轻轻一拔，就出来了。[outraged, shouting] 贵族们当场炸了：“让一个毛头小子来管我们？！”"
   }
  ]
 }
