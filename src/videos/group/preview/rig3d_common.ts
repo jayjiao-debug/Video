@@ -7,21 +7,29 @@ import { N8AOPostPass } from "n8ao";
 import { makeEnv, mats, LIGHTS } from "../../bt/pbr";
 import { NOINK } from "../../vasa/ink";
 import { buildLab, LAB_FILL, LAB_AO, LAB_CAST_LIGHT, type Cam } from "../sets/lab";
-import { Cast, YOU, RESEARCHER, classmate, lidAt, walkPhase, type Figure } from "../kit/cast";
-import { RigCast, RIG_WALK_CYCLE_M, type Rig, type Hat } from "../kit/rig3d";
+import { Cast, YOU, RESEARCHER, classmate, friend, lidAt, walkPhase, type Figure } from "../kit/cast";
+import { RigCast, RIG_WALK_CYCLE_M, type Rig, type Hat, type Acc, type RigPoseKind } from "../kit/rig3d";
 import { Rope, lieSlack } from "../kit/rope";
 import type { Expr, Look } from "../kit/toon";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export type Who = "rig" | "card";
+export type LookKey = "you" | "researcher" | "worker" | "mate" | `friend${number}` | `class${number}` | Look;
+/** one person of a lineup: the look (see lookOf), accessories, a pose and an expression, the facing in degrees from
+ *  the camera (default 0; in frames mode the whole row sweeps `turn`) */
+export type LineupWho = { look?: LookKey; hat?: Hat; acc?: Acc[]; pose?: RigPoseKind; expr?: Expr; facing?: number; hide?: string[]; label?: string };
 export type RigLabOpts = {
-  who: Who; scene: "pullers" | "trio" | "turn" | "crowd";
+  who: Who; scene: "pullers" | "trio" | "turn" | "crowd" | "lineup";
+  /** lineup scene (rig only): people in a row, `gap` metres apart (default 0.62), `rows` deep (default 1), the middle
+   *  of the row at `centre` [x, z]; sweep = [a0, a1] degrees: everyone turns together over the frames */
+  lineup?: { who: LineupWho[]; gap?: number; rows?: number; centre?: [number, number]; sweep?: [number, number] };
   /** rig only: 0 = clean geometry, 1 (default) = hand-drawn */
   hand?: number;
   /** pullers (rig): the body's distance from the rope line and the two grips along the rope (m, + = behind the body) */
   haul?: { lat: number; g0: number; g1: number; amount?: number; twist?: number };
-  /** turn scene: the look (default YOU), a hat, the facing sweep in degrees (frames mode) or one facing */
-  turn?: { look?: "you" | "researcher" | "worker" | "mate"; hat?: Hat; a0: number; a1: number; pose?: "idle" | "walk" | "wave"; expr?: Expr; exprs?: Expr[]; blink?: number; gaze?: number };
+  /** turn scene: the look (default YOU; "friend0".."friend5" = the six named friends: ponytail, curly, bob, side,
+   *  long, buzz; "class<N>" = classmate(N); or a Look), a hat, the facing sweep in degrees (frames mode) or one facing */
+  turn?: { look?: LookKey; hat?: Hat; acc?: Acc[]; hide?: string[]; a0: number; a1: number; pose?: RigPoseKind; expr?: Expr; exprs?: Expr[]; blink?: number; gaze?: number };
   w?: number; h?: number;
   /** a lab cam name, a Cam, or an orbit (frames mode) */
   cam?: "main" | "side" | "pos1" | Cam;
@@ -32,7 +40,25 @@ export type RigLabOpts = {
 const WORKER: Look = { ...classmate(42), top: "sweater", topCol: "#5d9b5a", trim: "#eef1e6", glasses: "round", glassCol: "#2a2430" };
 const MATE1: Look = { ...classmate(75), top: "hoodie", topCol: "#f08a3c", trim: "#fbe9d6" };
 
-export function rigLab(o: RigLabOpts) {
+/** options given on the page's URL (#<json>; scripts/rig3d/render.mjs --size / --opts) go over the entry's own */
+const withHash = (o: RigLabOpts): RigLabOpts => {
+  const h = typeof location !== "undefined" ? decodeURIComponent(location.hash.slice(1)) : "";
+  if (!h) return o;
+  const merge = (a: any, b: any): any => {
+    if (!a || !b || typeof a !== "object" || typeof b !== "object" || Array.isArray(a) || Array.isArray(b)) return b;
+    const r = { ...a };
+    for (const k of Object.keys(b)) r[k] = merge(a[k], b[k]);
+    return r;
+  };
+  return merge(o, JSON.parse(h));
+};
+
+export const lookOf = (k: LookKey | undefined): Look =>
+  !k || k === "you" ? YOU : typeof k === "object" ? k : k === "researcher" ? RESEARCHER : k === "worker" ? WORKER : k === "mate" ? MATE1
+    : k.startsWith("friend") ? friend(+k.slice(6)) : classmate(+k.slice(5));
+
+export function rigLab(o0: RigLabOpts) {
+  const o = withHash(o0);
   const w = o.w ?? 540, h = o.h ?? 960;
   const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
   renderer.setSize(w, h); renderer.setPixelRatio(1);
@@ -70,7 +96,7 @@ export function rigLab(o: RigLabOpts) {
   const rc = o.who === "rig" ? new RigCast(scene, { light: LAB_CAST_LIGHT as never, hand: o.hand }) : null;
   const cast = o.who === "card" ? new Cast(scene, { renderHeight: h, light: LAB_CAST_LIGHT as never }) : null;
   type P = { rig?: Rig; card?: Figure };
-  const mk = (L: Look, hat?: Hat): P => (rc ? { rig: rc.add(L, { hat }) } : { card: cast!.add(L) });
+  const mk = (L: Look, hat?: Hat, acc?: Acc[]): P => (rc ? { rig: rc.add(L, { hat, acc }) } : { card: cast!.add(L) });
   const all: P[] = [];
   const qa = (i: number) => {
     if (!rc) return;
@@ -130,15 +156,30 @@ export function rigLab(o: RigLabOpts) {
   } else if (o.scene === "turn") {
     // one person turning on the spot in front of a fixed camera: the body stops at 45 deg, the face stays, the hair goes round
     const tn = o.turn ?? { a0: 0, a1: 0 };
-    const L = tn.look === "researcher" ? RESEARCHER : tn.look === "worker" ? WORKER : tn.look === "mate" ? MATE1 : YOU;
-    const P = mk(L, tn.hat), at = V(-1.2, 0, 0.2);
+    const L = lookOf(tn.look);
+    const P = mk(L, tn.hat, tn.acc), at = V(-1.2, 0, 0.2);
     frame = (T, i) => {
       const n = Math.max(1, (o.frames ?? 1) - 1), deg = tn.a0 + ((tn.a1 - tn.a0) * i) / n;
       const camYaw = Math.atan2(camera.position.x - at.x, camera.position.z - at.z), facing = camYaw + (deg * Math.PI) / 180;
       const kind = tn.pose ?? "idle";
-      if (P.rig) P.rig.set({ at, facing, pose: (kind === "walk" ? { kind, t: T, phase: (T * 0.9) % 1 } : { kind, t: T, arm: 1 }) as never, expr: tn.exprs ? tn.exprs[i % tn.exprs.length] : tn.expr ?? "smile", blink: tn.blink ?? 0, ...(tn.gaze !== undefined ? { gaze: tn.gaze } : {}) } as never);
+      if (P.rig) P.rig.set({ at, facing, pose: (kind === "walk" ? { kind, t: T, phase: (T * 0.9) % 1 } : { kind, t: T, arm: 1 }) as never, expr: tn.exprs ? tn.exprs[i % tn.exprs.length] : tn.expr ?? "smile", blink: tn.blink ?? 0, ...(tn.gaze !== undefined ? { gaze: tn.gaze } : {}), ...(tn.hide ? { hide: tn.hide } : {}) } as never);
       else P.card!.set({ at, facing, pose: (kind === "walk" ? { kind, t: T, phase: (T * 0.9) % 1 } : { kind, t: T, arm: 1 }) as never, expr: "smile", blink: 0 });
       if (rc) rc.update(camera, h); else cast!.update(camera, T);
+    };
+  } else if (o.scene === "lineup") {
+    // people side by side, each with their own look, accessories, pose and expression (accessory sheets)
+    const lu = o.lineup ?? { who: [{}] }, gap = lu.gap ?? 0.62, rows = lu.rows ?? 1, per = Math.ceil(lu.who.length / rows), c = lu.centre ?? [-1.2, 0.2];
+    const ps = lu.who.map((wh) => mk(lookOf(wh.look), wh.hat, wh.acc));
+    frame = (T, i) => {
+      const n = Math.max(1, (o.frames ?? 1) - 1), sw = lu.sweep ? lu.sweep[0] + ((lu.sweep[1] - lu.sweep[0]) * i) / n : 0;
+      ps.forEach((P, k) => {
+        const wh = lu.who[k], row = Math.floor(k / per), col = k % per, inRow = Math.min(per, lu.who.length - row * per);
+        const at = V(c[0] + (col - (inRow - 1) / 2) * gap, 0, c[1] - row * 0.75);
+        const camYaw = Math.atan2(camera.position.x - at.x, camera.position.z - at.z), facing = camYaw + (((wh.facing ?? 0) + sw) * Math.PI) / 180;
+        const kind = wh.pose ?? "idle";
+        P.rig!.set({ at, facing, pose: (kind === "walk" ? { kind, t: T, phase: (T * 0.9 + k * 0.17) % 1 } : { kind, t: T + k * 0.31, arm: 1 }) as never, expr: wh.expr ?? "smile", blink: 0, ...(wh.hide ? { hide: wh.hide } : {}) });
+      });
+      rc!.update(camera, h);
     };
   } else {
     // trio: you waving, the researcher with her clipboard, the worker idle; all "facing" the gauge end (-x) a little
@@ -160,7 +201,7 @@ export function rigLab(o: RigLabOpts) {
   }
   const render = (i: number) => {
     setCam(camAt(i));
-    frame((o.t ?? 1) + (o.scene === "turn" ? 0 : i / 30), i);
+    frame((o.t ?? 1) + (o.scene === "turn" || o.scene === "lineup" ? 0 : i / 30), i);
     qa(i);
     comp.render();
   };

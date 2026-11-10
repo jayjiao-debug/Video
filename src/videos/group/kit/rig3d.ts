@@ -425,7 +425,7 @@ const FACES: Record<Expr, FaceDef> = {
 const blinkEye = (k: EyeK, lid: number): EyeK =>
   lid >= 1 ? (k === "happy" || k === "squeeze" || k === "spiral" || k === "closed" ? k : "dash")
     : lid > 0 ? (k === "dot" ? "lid" : k === "lid" || k === "down" ? "slit" : k === "ring" ? "ringHalf" : k) : k;
-type P2 = [number, number];
+export type P2 = [number, number];
 const quadPts = (a: P2, c: P2, b: P2, n = 22): P2[] => {
   const o: P2[] = [];
   for (let i = 0; i <= n; i++) { const t = i / n, s = 1 - t; o.push([s * s * a[0] + 2 * s * t * c[0] + t * t * b[0], s * s * a[1] + 2 * s * t * c[1] + t * t * b[1]]); }
@@ -442,19 +442,26 @@ const PEN = 3.3;
 /** design u -> canvas u (the head's outline is about 1 % wider than the ball's diameter the canvas spans) */
 const FACE_FS = 0.99;
 /** the face, front on, on a canvas that spans the head ball's diameter (W px). gaze -1..1 slides the pupils. */
-const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boolean, gaze: number, hand: number) => {
+const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boolean, gaze: number, hand: number, fa: FaceAcc = faceAccOf(L, [])) => {
   const F = FACES[expr], sd = L.seed, u = (W / 100) * FACE_FS, g = p.g;
   const jit = (k: number, a: number) => (2 * rnd(sd, 60 + k) - 1) * a * hand;
   const cx = W / 2 + jit(0, 0.7) * u, E = W / 2 - (brim ? 0 : 1.5) * u;        // the eye line (lower under a hat brim)
   const strong = rnd(sd, 71) < 0.5 ? -1 : 1;                                   // the side of the higher brow and the smirk
   const pts = (a: P2[]): P2[] => a.map(([x, y]) => [cx + x * u, E + y * u] as P2);
   const line = (a: P2[], w = PEN, col = INK) => p.stroke(pts(a), w * u, col);
-  const fill = (a: P2[], col: string, ol = 0) => p.poly(pts(a), col, ol * u);
+  const fill = (a: P2[], col: string | null, ol = 0) => p.poly(pts(a), col, ol * u);
   const turned = (x: number, y: number, deg: number, fn: () => void) => { p.rot = [rad(deg), cx + x * u, E + y * u]; fn(); p.rot = null; };
-  const sp = L.glasses ? 14.3 : 14 + jit(1, 0.6);
+  const sp = fa.lens ? 14.3 : 14 + jit(1, 0.6);
+  // accessories drawn on the face (see Acc): under = before the eyes, brows and mouth; over = after everything
+  const kit: FaceKit = {
+    look: L, expr, hand, sp, mouth: [jit(20, 1.1), 18.7], strong, shade: brim, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
+    line, fill, turned, arc: arcPts, quad: quadPts, g, u, px: (x, y) => [cx + x * u, E + y * u],
+  };
+  const hook = (fn: (f: FaceKit) => void) => { g.save(); fn(kit); g.restore(); p.rot = null; };
+  fa.under.forEach(hook);
   for (const s of [-1, 1]) {
     const i = s < 0 ? 0 : 1, kind = blinkEye(F.eye[i], lid);
-    const x0 = s * sp, y0 = jit(2 + i, 0.5), sc = 1 + jit(4 + i, 0.045), gl = !!L.glasses;
+    const x0 = s * sp, y0 = jit(2 + i, 0.5), sc = 1 + jit(4 + i, 0.045), gl = fa.lens;
     const rot = -s * (F.tilt ?? 0) + jit(6 + i, 1.6);
     switch (kind) {
       case "lid": case "slit": case "down": {
@@ -538,7 +545,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
     g.save(); g.globalCompositeOperation = "destination-over"; g.translate(bx, by); g.scale(1, 0.6); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fill(); g.restore();
   }
   if (F.sweat) turned(-strong * 35, -11, -strong * 14, () => fill([[-strong * 35 + 0.6, -19], ...arcPts(-strong * 35, -11, 3.3, 3.7, -52, 232, 20)], SWEAT, 2.2));
-  if (L.glasses) {
+  if (L.glasses && fa.own) {
     const r = 12.2, gc = L.glassCol ?? "#2a2230";
     for (const s of [-1, 1]) {
       if (L.glasses === "round") p.poly(pts(arcPts(s * sp, -0.6, r, r * 0.94)), null, 2.4 * u);
@@ -547,33 +554,34 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
     }
     line([[-sp + r, -1.6], [sp - r, -1.6]], 2.1, gc);
   }
+  fa.over.forEach(hook);
 };
 const FACE_PX = 1024, FACE_CACHE_MAX = 160;
 const faceCache = new Map<string, THREE.CanvasTexture>();
 /** the face drawing for one look / expression / lid state / gaze step: a canvas that spans the head ball's diameter.
  *  True LRU; three lid states and five gaze steps only. */
-const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze = 0) => {
+const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze = 0, fa: FaceAcc = faceAccOf(L, [])) => {
   const lq = lid >= 1 ? 1 : lid > 0 ? 0.5 : 0, gq = Math.round(clamp(gaze, -1, 1) * 2) / 2;
-  const key = `${L.seed}|${expr}|${lq}|${gq}|${brim ? 1 : 0}|${L.glasses ?? ""}|${L.glassCol ?? ""}|${hand}`;
+  const key = `${L.seed}|${expr}|${lq}|${gq}|${brim ? 1 : 0}|${L.glasses ?? ""}|${L.glassCol ?? ""}|${hand}|${fa.own ? 1 : 0}|${fa.key}`;
   let t = faceCache.get(key);
   if (t) { faceCache.delete(key); faceCache.set(key, t); return t; }
-  t = canvasTex(FACE_PX, FACE_PX, (g) => drawFace(new Pen(g), FACE_PX, L, expr, lq, brim, gq, hand), { amp: FACE_PX * 0.0045 * hand, seed: L.seed });
+  t = canvasTex(FACE_PX, FACE_PX, (g) => drawFace(new Pen(g), FACE_PX, L, expr, lq, brim, gq, hand, fa), { amp: FACE_PX * 0.0045 * hand, seed: L.seed });
   t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter;
   faceCache.set(key, t);
   while (faceCache.size > FACE_CACHE_MAX) { const k0 = faceCache.keys().next().value!; faceCache.get(k0)!.dispose(); faceCache.delete(k0); }
   return t;
 };
 
-/** the face drawing as a canvas (expression sheets, QA) */
-export const rigFaceCanvas = (L: Look, expr: Expr, o: { lid?: number; brim?: boolean; hand?: number; gaze?: number } = {}) =>
-  faceTex(L, expr, o.lid ?? 0, !!o.brim, o.hand ?? 1, o.gaze ?? 0).image as HTMLCanvasElement;
+/** the face drawing as a canvas (expression sheets, QA); acc = accessories drawn on the face */
+export const rigFaceCanvas = (L: Look, expr: Expr, o: { lid?: number; brim?: boolean; hand?: number; gaze?: number; acc?: Acc[] } = {}) =>
+  faceTex(L, expr, o.lid ?? 0, !!o.brim, o.hand ?? 1, o.gaze ?? 0, faceAccOf(L, o.acc ?? [])).image as HTMLCanvasElement;
 export const RIG_EXPRS = Object.keys(FACES) as Expr[];
 
 const shadeHex = (c: string, k: number) => { const x = new THREE.Color(c); x.multiplyScalar(k); return "#" + x.getHexString(); };
 const OUT_W = 1024, OUT_H = 512;
 /** outfit wrapped round the body: x = around (front centre at 0.5, the person's left toward +x), y = top -> bottom.
  *  Details are flat fills with ink-weight lines (about half the silhouette line). */
-const outfitTex = (L: Look, hand = 1) => canvasTex(OUT_W, OUT_H, (g) => {
+const outfitTex = (L: Look, hand: number, accs: Acc[], d: Dim) => canvasTex(OUT_W, OUT_H, (g) => {
   const W = OUT_W, H = OUT_H, cx = W / 2, top = L.topCol, seam = shadeHex(top, 0.36), LW = 9, p = new Pen(g);
   g.fillStyle = top; g.fillRect(0, 0, W, H);
   const pantsY = 0.79 * H;
@@ -617,16 +625,27 @@ const outfitTex = (L: Look, hand = 1) => canvasTex(OUT_W, OUT_H, (g) => {
       break;
     }
   }
-  if (L.lanyard) {
+  const trousers = () => {
+    g.fillStyle = L.botCol; g.fillRect(0, pantsY, W, H - pantsY);
+    line([[0, pantsY], [W, pantsY]], shadeHex(L.botCol, 0.45), LW - 2);
+    if (L.bottom === "skirt") for (let x = 0; x < W; x += W / 24) line([[x, pantsY + 0.03 * H], [x, H]], shadeHex(L.botCol, 0.7), 4);
+  };
+  // accessories draw over the top and the trousers, in the order given, and under the look's own lanyard and tag
+  // (which give way to an accessory that takes their slot)
+  const drawn = accs.filter((a) => a.outfit), has = (sl: AccSlot) => accs.some((a) => a.slots.includes(sl));
+  if (drawn.length) {
+    trousers();
+    const kit = outfitKit(g, L, hand, d, top, seam, LW);
+    for (const a of drawn) { g.save(); a.outfit!(kit); g.restore(); }
+  }
+  if (L.lanyard && !has("neck")) {
     const by = 0.42 * H;
     line([[cx - 0.07 * W, 0], [cx, by - 0.06 * H], [cx + 0.07 * W, 0]], L.lanyard, 9);
     fillPoly([[cx - 0.035 * W, by - 0.06 * H], [cx + 0.035 * W, by - 0.06 * H], [cx + 0.035 * W, by + 0.1 * H], [cx - 0.035 * W, by + 0.1 * H]], "#f7f6f0", INK, 5);
     g.fillStyle = L.lanyard; g.fillRect(cx - 0.035 * W + 2, by - 0.06 * H + 2, 0.07 * W - 4, 0.04 * H);
   }
-  if (L.tag) niTag(p, cx + 0.085 * W, 0.27 * H, 0.06 * W, 0.12 * H, 3);
-  g.fillStyle = L.botCol; g.fillRect(0, pantsY, W, H - pantsY);
-  line([[0, pantsY], [W, pantsY]], shadeHex(L.botCol, 0.45), LW - 2);
-  if (L.bottom === "skirt") for (let x = 0; x < W; x += W / 24) line([[x, pantsY + 0.03 * H], [x, H]], shadeHex(L.botCol, 0.7), 4);
+  if (L.tag && !has("chest")) niTag(p, cx + 0.085 * W, 0.27 * H, 0.06 * W, 0.12 * H, 3);
+  if (!drawn.length) trousers();
 }, { amp: 7 * hand, seed: L.seed + 3, wrapX: true, opaque: true });
 
 /** hairline: degrees from the crown the hair reaches, by azimuth from the face side (+ toward the person's left).
@@ -655,7 +674,7 @@ const hairLineHat = (L: Look, az: number, rim: number): number =>
  *  whenever the plate is seen edge on, and wherever it meets the head. Its ink edge is painted on it instead
  *  (uv.y = 1 at the front edge, falling by 1 per PEAK_OUT head units toward the back; see peakTex). */
 const PEAK_OUT = 0.24;
-const peakGeo = (rimR: number, rimY: number, warp: (v: V3) => V3, R: number) => {
+const peakGeo = (rimR: number, rimY: number, toM: (v: V3) => V3) => {
   const NA = 28, NT = 6, A0 = rad(52), TH = 0.05, FRONT = 0.42, DROOP = 0.16, rIn = rimR - 0.028, yTop = rimY + 0.012, W = 2 * (NT + 1);
   const pos: number[] = [], uv: number[] = [], idx: number[] = [], v = V();
   for (let i = 0; i <= NA; i++) {
@@ -663,7 +682,7 @@ const peakGeo = (rimR: number, rimY: number, warp: (v: V3) => V3, R: number) => 
     const rOut = rIn + PEAK_OUT * sh, yOut = yTop - 0.012 - DROOP * (rOut - rIn);
     for (let k = 0; k < W; k++) {                                              // top rings 0..NT (back -> front), then bottom rings 0..NT
       const top = k <= NT, t = (top ? k : k - NT - 1) / NT, r = lerp(rIn, rOut, t), y = lerp(yTop, yOut, t) - (top ? 0 : TH * sh * lerp(1, FRONT, t));
-      warp(v.set(r * Math.sin(a), y, r * Math.cos(a))).multiplyScalar(R);
+      toM(v.set(r * Math.sin(a), y, r * Math.cos(a)));
       pos.push(v.x, v.y, v.z); uv.push(i / NA, 1 - (rOut - r) / PEAK_OUT);
     }
   }
@@ -904,6 +923,9 @@ export type RigState = {
   /** the torso's own turn from the feet's direction (rad, + = to the person's left), before it turns toward the
    *  camera: e.g. about 0.6 toward a rope held at the left side, so that both short arms reach it */
   twist?: number;
+  /** accessories (by name) whose 3D parts are not shown this frame: a phone that is still in the pocket. What an
+   *  accessory draws on the face or the clothes is part of those drawings and always shows. */
+  hide?: string[];
 };
 /** a hand target: f 0 = torso-local (origin = bottom of the body, follows its lean), 1 = travel frame (floor under
  *  `at`), 2 = staged for the camera (x = screen right, y up from the bottom of the body, z toward the camera): a wave
@@ -917,6 +939,286 @@ type BodyPose = {
   headPitch: number;
 };
 export type Hat = { kind: "cap" | "beanie"; col: string; trim?: string };
+
+// ===== accessories: role props (glasses, moustaches, hats, ties, headphones, packs, things in a hand) =====
+// An accessory is a plain object (Acc); a figure takes any number: rc.add(look, { acc: [topHat(), tie()] }).
+// Nothing in this file changes when one is added: write a function that returns an Acc (kit/rigacc/ holds the
+// standard ones, one file each) and pass it in. What keeps a new one from breaking a picture is built into the kits
+// it draws with:
+//   - slots: two accessories on one figure cannot take the same place (the figure refuses to build and names both);
+//   - face / faceUnder: drawn into the face drawing, so it turns with the face, is cached with it (key) and is gone
+//     in a back view, like the eyes;
+//   - outfit: drawn into the outfit wrapped round the body;
+//   - build: 3D parts. shell = wraps the head (drawn before the skin, which skips its pixels, so nothing can speckle
+//     through it); solid = a rounded thing with an ink hull (closed over hard edges); plate = a thin thing whose ink
+//     edge is painted (a thin plate's hull breaks up when seen edge on). Head parts are drawn over the figure's own
+//     body and arms and get their depth-only twins; body parts and held things sit under the head like the body does;
+//     held things follow the hand; keepOut = a ball the arms stay clear of.
+// A figure without accessories is built and drawn exactly as before: scripts/rig3d/regress.py checks that.
+/** What an accessory occupies. A Look's own extras give way to an accessory in their slot (glasses: eyes, lanyard:
+ *  neck, the 你 tag: chest, headband: crown).
+ *    drawn on the face:    eyes, lip, chin, mouth, cheek
+ *    on the head:          hat (covers the crown and sets a rim), crown (anything else on top), ears
+ *    drawn on the clothes: neck, coat, chest, waist
+ *    on the body:          back, shoulder
+ *    in a hand:            hand0 (the person's right), hand1 (the left) */
+export type AccSlot = "eyes" | "lip" | "chin" | "mouth" | "cheek" | "hat" | "crown" | "ears" | "neck" | "coat" | "chest" | "waist" | "back" | "shoulder" | "hand0" | "hand1";
+export type Acc = {
+  /** a short name (error messages, QA) */
+  name: string;
+  slots: AccSlot[];
+  /** everything that changes how it draws, as text (kind, colours, sizes): part of the face drawing's cache key */
+  key: string;
+  /** a hat. rim = where its lower edge sits, in degrees from the crown (pulled down like a cap: about 63; perched on
+   *  top: about 36). hair "cut" (the default) = pulled down: no fringe shows and the hair comes out from under the rim
+   *  from the temples back; "keep" = perched: the look's own hair stays as drawn. shade (default: true for "cut") =
+   *  it sits low over the brows: the eye line drops 1.5u and the brows stay under the rim. Any hat leaves out the
+   *  look's bun, curls and headband. A hat takes the "hat" slot. */
+  hat?: { rim: number; hair?: "cut" | "keep"; shade?: boolean };
+  /** true = the look's bun / curls are left out though this is no hat (they would stick through it) */
+  noHairProps?: boolean;
+  /** the eyes sit behind lenses: 0.3u further apart, and a ring eye leaves its own ring out (the lens is the ring) */
+  lens?: boolean;
+  /** drawn on the face after the eyes, brows and mouth (glasses, a moustache) */
+  face?: (f: FaceKit) => void;
+  /** drawn on the face before them (a beard the mouth is drawn on) */
+  faceUnder?: (f: FaceKit) => void;
+  /** drawn on the clothes, over the look's top and trousers and under its own lanyard and 你 tag */
+  outfit?: (o: OutfitKit) => void;
+  /** 3D parts: on the head, on the body, in a hand */
+  build?: (b: PartKit) => void;
+};
+/** Drawing on the face. Units are u = 1 % of the head's width, from the middle of the eye line: x = screen right,
+ *  y = down. The eyes are at x = -sp and +sp (sp = 14), about 10u tall; the brows 13 to 21u above; the mouth's
+ *  middle is at `mouth` (y = 18.7; a grin spans x +-20 and y 12 to 26); the chin's outline is near y = 44, the head's
+ *  sides near x = +-50. What is drawn beyond the head's outline simply does not show. */
+export type FaceKit = {
+  look: Look; expr: Expr; hand: number;
+  sp: number; mouth: P2;
+  /** +1 / -1: the side of the higher brow and of a smirk */
+  strong: number;
+  /** true under a hat that shades the eyes */
+  shade: boolean;
+  /** the pen every line of the face is drawn with (3.3u, round ends) and the ink colour */
+  PEN: number; INK: string;
+  /** a seeded offset within +-a, the same in every expression of this character (k: your own index, 100 and up) */
+  jit: (k: number, a: number) => number;
+  /** a round-capped line through the points (w in u, default PEN) */
+  line: (pts: P2[], w?: number, col?: string) => void;
+  /** a filled shape with an ink outline `outline` u wide (0 = none); col null = the outline only */
+  fill: (pts: P2[], col: string | null, outline?: number) => void;
+  /** draws what fn draws turned by deg about (x, y) */
+  turned: (x: number, y: number, deg: number, fn: () => void) => void;
+  /** points of an ellipse arc (degrees: 0 = +x, 90 = down) / of a curve from a to b bent toward c */
+  arc: (cx: number, cy: number, rx: number, ry: number, a0?: number, a1?: number, n?: number) => P2[];
+  quad: (a: P2, c: P2, b: P2, n?: number) => P2[];
+  /** for anything else: the canvas context; px(x, y) = a point in u as canvas pixels; u = one u in pixels */
+  g: CanvasRenderingContext2D; u: number; px: (x: number, y: number) => P2;
+};
+/** Drawing on the clothes: the canvas that is wrapped round the body. Give places as P(az, t): az = degrees round
+ *  the body (0 = the front centre, + = the person's left, +-180 = the back seam), t = height (0 = the body's bottom,
+ *  1 = its top). A front view shows about az -75..75. The head hides what is above t = chin (about 0.8), the trousers
+ *  start below t = waist (about 0.1). One canvas pixel is about half as wide as it is tall on the body, so a line
+ *  that runs round the body comes out about twice as heavy as one that runs up it: give it half the width. */
+export type OutfitKit = {
+  look: Look; hand: number;
+  g: CanvasRenderingContext2D; W: number; H: number;
+  P: (az: number, t: number) => P2;
+  chin: number; waist: number;
+  /** the degrees of az that m metres span at height t / canvas pixels per metre up the body at height t */
+  az: (m: number, t: number) => number; pxUp: (t: number) => number;
+  /** the top's colour, its seam colour (the detail lines of the clothes), the detail line width in px */
+  top: string; seam: string; LW: number;
+  /** a colour made darker (k < 1) or lighter */
+  shade: (col: string, k: number) => string;
+  /** a filled polygon (with an outline) / a round-capped line, through points from P(); shapes may cross the back seam */
+  poly: (pts: P2[], col: string, stroke?: string, lw?: number) => void;
+  line: (pts: P2[], col: string, lw: number) => void;
+};
+export type AccMount = "head" | "body" | THREE.Group;
+/** how a part is painted and inked: col = its colour (default white); map = a texture that multiplies it; paint =
+ *  the kind of drawn shading ("prop" by default; "cloth" = the clothes' gradient; "hair"; "skin"); mat = a paint made
+ *  with PartKit.paint, to share between parts; ink = the outline's width in metres; thick = how much heavier the line
+ *  is on the side away from the light (0.4) */
+export type PartO = { col?: string; map?: THREE.Texture; paint?: "prop" | "cloth" | "hair" | "skin"; mat?: THREE.Material; ink?: number; thick?: number };
+/** a brim or a peak: see PartKit.brim */
+export type BrimO = { rIn: number; y: number; out: number | ((azDeg: number) => number); from?: number; to?: number; droop?: number; thick?: number; taper?: number; seg?: number };
+/** Building 3D parts. Lengths are metres unless they are "head units" (the head's radius = 1).
+ *  Head: x = the person's left, y = up, z = the face side, from the head's centre. Body: the same axes from the
+ *  bottom of the body on its axis (y = Ht at its top). */
+export type PartKit = {
+  look: Look; hand: number;
+  /** R = the head's radius; Ht = the body's height; rb / rt = the body's radius low down / at the top; headY = the
+   *  head's centre above the body's bottom; handR = a hand's radius; INK = the usual ink width of a prop's outline */
+  R: number; Ht: number; rb: number; rt: number; headY: number; handR: number; INK: number;
+  /** this figure's hat rim in degrees from the crown (0 = no hat) */
+  rim: number;
+  /** the body's radius at height t (0 = bottom .. 1 = top) toward az (degrees, 0 = front, + = the person's left) */
+  bodyR: (t: number, az?: number) => number;
+  /** HEAD. A point in head units -> metres from the head's centre, through the head's own lumpy shape and this
+   *  accessory's tilt: 1 = on the skin, more = outside it. at() makes a new vector, toM() changes one in place. */
+  at: (x: number, y: number, z: number) => V3;
+  toM: (v: V3) => V3;
+  /** tilts what this accessory puts on the head from here on (degrees toward the person's left, toward the face) */
+  tilt: (left: number, forward?: number) => void;
+  /** puts a mesh on the head at a point in head units, turned with the tilt */
+  put: <T extends THREE.Object3D>(m: T, x: number, y: number, z: number) => T;
+  /** a paint to share between parts of one mount (see PartO) */
+  paint: (on: AccMount, o: PartO) => THREE.Material;
+  /** a part that wraps the head: the band of the ball of radius r (head units, more than 1) between `from` and `to`
+   *  degrees from the crown, pushed through the head's shape (squash = its height factor); or geo = your own patch
+   *  round the unit ball (see band). Drawn before the skin, which skips its pixels. rimInk = an ink line painted along
+   *  its lower edge, in metres (a shell's hull only draws its outer outline). A map's v runs 1 at the top to 0 at the
+   *  lower edge, u round the head. */
+  shell: (o: PartO & { r?: number; from?: number; to?: number; squash?: number; rings?: number; geo?: THREE.BufferGeometry; rimInk?: number }) => THREE.Mesh;
+  /** a rounded solid with an ink hull (hard edges are fine: the hull is closed over them). Geometry in metres round
+   *  its own origin; then place it: put() on the head, position.set() on the body or in a held group. Keep it at
+   *  least two ink widths thick; anything thinner is a plate. */
+  solid: (on: AccMount, geo: THREE.BufferGeometry, o?: PartO) => THREE.Mesh;
+  /** a thin plate: no hull. edge (the default) = its ink edge is painted where the geometry's uv.y is above 0.8
+   *  (brim() makes such geometry); edge false = no painted edge (give it a map of your own) */
+  plate: (on: AccMount, geo: THREE.BufferGeometry, o?: PartO & { edge?: boolean }) => THREE.Mesh;
+  /** the geometry of a brim or peak round the head, in metres, placed (use it at the head's origin). In head units:
+   *  it grows out of the circle of radius rIn at height y, `out` far (a number, or a function of the azimuth in
+   *  degrees from the face side, + = the person's left; 0 = nothing there), between azimuths from..to (default: all
+   *  the way round), dropping `droop` per unit out (0.1; negative turns it up), `thick` at the root (0.07) and
+   *  thick * taper at the rounded free edge (0.6). Thick (0.08 and up): solid(). Thin: plate(). */
+  brim: (o: BrimO) => THREE.BufferGeometry;
+  /** a strip of the ball of radius r for shell({ geo }): from a0 to a1 degrees from the crown along the great circle
+   *  that runs ear to ear (yaw 0; - = the person's right; yaw 90 = from the back of the head over the crown to the
+   *  face), `half` head units wide on each side */
+  band: (o: { r: number; a0: number; a1: number; half: number; yaw?: number }) => THREE.BufferGeometry;
+  /** IN A HAND: a group that follows hand i (0 = the person's right). offset = metres from the hand's centre in the
+   *  body's frame (x = the person's left, y = up, z = forward); rot = [pitch, yaw, roll] in radians on top of the
+   *  body's facing. layer "limb" (the default) = hidden behind the figure's own head, like the hand; "free" = plain
+   *  depth (something held up over the head). Add parts to it with solid(group, ...) / plate(group, ...). */
+  held: (i: 0 | 1, o?: { offset?: [number, number, number]; rot?: [number, number, number]; layer?: "limb" | "free" }) => THREE.Group;
+  /** ON THE BODY: the arms stay clear of this ball (centre in body metres). Head parts need none: the head is drawn
+   *  over the arms. */
+  keepOut: (c: V3, r: number) => void;
+  /** a canvas texture (it multiplies the part's colour); key = share it between figures under that name */
+  tex: (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, key?: string) => THREE.Texture;
+};
+type FaceAcc = { key: string; lens: boolean; own: boolean; under: ((f: FaceKit) => void)[]; over: ((f: FaceKit) => void)[] };
+/** what a figure's accessories do to its face drawing; own = the look's own glasses are drawn */
+const faceAccOf = (L: Look, accs: Acc[]): FaceAcc => {
+  const eyes = accs.some((a) => a.slots.includes("eyes"));
+  return {
+    key: accs.filter((a) => a.face || a.faceUnder || a.lens).map((a) => a.name + ":" + a.key).join(","),
+    own: !!L.glasses && !eyes, lens: (!!L.glasses && !eyes) || accs.some((a) => a.lens),
+    under: accs.filter((a) => a.faceUnder).map((a) => a.faceUnder!), over: accs.filter((a) => a.face).map((a) => a.face!),
+  };
+};
+const outfitKit = (g: CanvasRenderingContext2D, L: Look, hand: number, d: Dim, top: string, seam: string, LW: number): OutfitKit => {
+  const W = OUT_W, H = OUT_H;
+  const across = (pts: P2[], fn: (dx: number) => void) => {
+    let lo = Infinity, hi = -Infinity;
+    for (const [x] of pts) { lo = Math.min(lo, x); hi = Math.max(hi, x); }
+    fn(0); if (lo < 0) fn(W); if (hi > W) fn(-W);
+  };
+  const trace = (pts: P2[], dx: number, close: boolean) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x + dx, y) : g.moveTo(x + dx, y))); if (close) g.closePath(); };
+  return {
+    look: L, hand, g, W, H,
+    P: (az, t) => [W / 2 + (az / 360) * W, H * (1 - Math.acos(clamp(1 - 2 * t, -1, 1)) / Math.PI)],
+    chin: clamp((d.Ht + 0.72 * d.R - d.R * d.ys - 1.5 * HULL.head) / d.Ht, 0.5, 0.95), waist: 0.105,
+    az: (m, t) => ((m / Math.max(bodyR(clamp(t, 0.02, 0.98) * d.Ht, d.Ht, d.rb, d.rt), 1e-3)) * 180) / Math.PI,
+    pxUp: (t) => H / (Math.PI * Math.sqrt(Math.max(t * (1 - t), 1e-4)) * d.Ht),
+    top, seam, LW, shade: shadeHex,
+    poly: (pts, col, stroke, lw = LW) => across(pts, (dx) => { trace(pts, dx, true); g.fillStyle = col; g.fill(); if (stroke) { g.strokeStyle = stroke; g.lineWidth = lw; g.lineJoin = "round"; g.stroke(); } }),
+    line: (pts, col, lw) => across(pts, (dx) => { trace(pts, dx, false); g.strokeStyle = col; g.lineWidth = lw; g.lineCap = "round"; g.lineJoin = "round"; g.stroke(); }),
+  };
+};
+const posKey = (P: THREE.BufferAttribute | THREE.InterleavedBufferAttribute, i: number) => `${Math.round(P.getX(i) * 1e5)},${Math.round(P.getY(i) * 1e5)},${Math.round(P.getZ(i) * 1e5)}`;
+/** does the geometry have hard edges (one position carrying different normals)? */
+const hardEdges = (g: THREE.BufferGeometry) => {
+  const P = g.attributes.position, N = g.attributes.normal, seen = new Map<string, number>();
+  for (let i = 0; i < P.count; i++) {
+    const k = posKey(P, i), j = seen.get(k);
+    if (j === undefined) seen.set(k, i);
+    else if (N.getX(i) * N.getX(j) + N.getY(i) * N.getY(j) + N.getZ(i) * N.getZ(j) < 0.985) return true;
+  }
+  return false;
+};
+/** the same geometry with one normal per position (the mean of the faces that meet there): pushed out along those, an
+ *  ink hull stays closed over hard edges (a box's corners, a cylinder's rim) */
+const hullGeo = (g: THREE.BufferGeometry) => {
+  const P = g.attributes.position, N = g.attributes.normal, sum = new Map<string, [number, number, number]>();
+  for (let i = 0; i < P.count; i++) {
+    const k = posKey(P, i), a = sum.get(k) ?? [0, 0, 0];
+    a[0] += N.getX(i); a[1] += N.getY(i); a[2] += N.getZ(i); sum.set(k, a);
+  }
+  const out = g.clone(), M = out.attributes.normal;
+  for (let i = 0; i < P.count; i++) { const a = sum.get(posKey(P, i))!, l = Math.hypot(a[0], a[1], a[2]) || 1; M.setXYZ(i, a[0] / l, a[1] / l, a[2] / l); }
+  return out;
+};
+/** see PartKit.brim: one closed, smooth surface (the cross-section is a loop: top, the rounded free edge, bottom, the
+ *  root wall); uv.y = 1 on the free edge, falling by 1 per PEAK_OUT head units toward the root (what peakTex paints) */
+const brimGeo = (o: BrimO, toM: (v: V3) => V3) => {
+  const full = o.from === undefined && o.to === undefined, a0 = rad(o.from ?? -180), a1 = rad(o.to ?? 180);
+  const NA = o.seg ?? (full ? 72 : 36), NT = 5, NE = 6, T0 = o.thick ?? 0.07, tp = o.taper ?? 0.6, dr = o.droop ?? 0.1;
+  const M = 2 * (NT + 1) + NE - 1, cols = full ? NA : NA + 1;
+  const pos: number[] = [], uv: number[] = [], idx: number[] = [], v = V();
+  for (let i = 0; i < cols; i++) {
+    const a = a0 + ((a1 - a0) * i) / NA, L = Math.max(typeof o.out === "number" ? o.out : o.out((a * 180) / Math.PI), 1e-3);
+    const T = T0 * smooth(L / (2 * T0)), Te = T * tp, sn = Math.sin(a), cs = Math.cos(a);
+    const push = (r: number, y: number, l: number) => { toM(v.set(r * sn, y, r * cs)); pos.push(v.x, v.y, v.z); uv.push(i / NA, 1 - (L - l) / PEAK_OUT); };
+    for (let k = 0; k <= NT; k++) { const t = k / NT; push(o.rIn + L * t, o.y - dr * L * t, L * t); }                       // top, root -> edge
+    for (let j = 1; j < NE; j++) { const an = Math.PI / 2 - (Math.PI * j) / NE; push(o.rIn + L + (Te / 2) * Math.cos(an), o.y - dr * L - Te / 2 + (Te / 2) * Math.sin(an), L); }
+    for (let k = NT; k >= 0; k--) { const t = k / NT; push(o.rIn + L * t, o.y - dr * L * t - lerp(T, Te, t), L * t); }      // bottom, edge -> root
+  }
+  for (let i = 0; i < NA; i++) {
+    const i1 = full ? (i + 1) % NA : i + 1;
+    for (let m = 0; m < M; m++) { const m1 = (m + 1) % M, A = i * M + m, B = i * M + m1, C = i1 * M + m, D = i1 * M + m1; idx.push(A, B, C, C, B, D); }
+  }
+  if (!full) for (const [c, flip] of [[0, false], [NA, true]] as [number, boolean][]) for (let m = 1; m < M - 1; m++) idx.push(c * M, c * M + (flip ? m : m + 1), c * M + (flip ? m + 1 : m));
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx); g.computeVertexNormals(); g.computeBoundingSphere();
+  return g;
+};
+/** see PartKit.band: a patch of the ball of radius r, its normals the ball's */
+const bandGeo = (r: number, a0: number, a1: number, half: number, yaw = 0) => {
+  const NA = 44, NW = 4, cy = Math.cos(rad(yaw)), sy = Math.sin(rad(yaw)), pos: number[] = [], nor: number[] = [], uv: number[] = [], idx: number[] = [];
+  for (let i = 0; i <= NA; i++) for (let j = 0; j <= NW; j++) {
+    const a = rad(lerp(a0, a1, i / NA)), w = lerp(-half, half, j / NW) / r, sa = Math.sin(a);
+    const x = sa * cy - w * sy, y = Math.cos(a), z = sa * sy + w * cy, l = Math.hypot(x, y, z);
+    pos.push((x / l) * r, (y / l) * r, (z / l) * r); nor.push(x / l, y / l, z / l); uv.push(i / NA, j / NW);
+  }
+  for (let i = 0; i < NA; i++) for (let j = 0; j < NW; j++) { const A = i * (NW + 1) + j, B = A + 1, C = A + NW + 1, D = C + 1; idx.push(A, B, C, C, B, D); }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx); g.computeBoundingSphere();
+  return g;
+};
+const accTexCache = new Map<string, THREE.Texture>();
+/** an ink line painted along a shell's lower edge: a grey map that multiplies its colour, dark over the lowest `frac` */
+const rimInkTex = (frac: number) => {
+  const n = clamp(Math.round(frac * 256), 2, 128), key = "rimInk" + n;
+  let t = accTexCache.get(key);
+  if (!t) { t = canvasTex(8, 256, (g) => { g.fillStyle = "#ffffff"; g.fillRect(0, 0, 8, 256); g.fillStyle = "#3d3d3d"; g.fillRect(0, 256 - n, 8, n); }); accTexCache.set(key, t); }
+  return t;
+};
+/** the two built-in hats as accessories (worked examples: shells, a plate with a painted edge, small solids) */
+export const hatAcc = (h: Hat): Acc => ({
+  name: h.kind, slots: ["hat", "crown"], key: `${h.kind}|${h.col}|${h.trim ?? ""}`, hat: { rim: h.kind === "cap" ? 63 : 68 },
+  build(b) {
+    const trim = h.trim ?? shadeHex(h.col, 0.7), hm = b.paint("head", { col: h.col, map: hatTex(h.kind) }), tm = b.paint("head", { col: trim });
+    if (h.kind === "cap") {
+      const ySq = 0.95, rimR = 1.075 * Math.sin(rad(63)), rimY = 1.075 * Math.cos(rad(63)) * ySq;
+      b.shell({ r: 1.075, to: 63, squash: ySq, mat: hm });
+      // the peak: a wedge out of the gap under the rim, with its ink edge painted on it and no hull (see peakGeo)
+      b.plate("head", peakGeo(rimR, rimY, b.toM), { col: trim, map: peakTex() });
+      b.solid("head", new THREE.SphereGeometry(b.R * 0.085, 12, 8), { mat: tm, ink: HULL.prop * 0.6 }).position.copy(b.at(0, 1.075 * ySq, 0));
+    } else {
+      b.shell({ r: 1.07, to: 60, squash: 1.04, mat: hm });
+      b.shell({ r: 1.115, from: 50, to: 68, rings: 5, mat: tm, ink: HULL.prop, thick: 0.4 });
+      b.solid("head", new THREE.SphereGeometry(b.R * 0.17, 14, 10), { mat: tm }).position.copy(b.at(0, 1.07 * 1.04, 0)).add(V(0, b.R * 0.1, 0));
+    }
+  },
+});
 
 // ===== the figure =====
 type Dim = { R: number; ys: number; Ht: number; rb: number; rt: number; hipY: number; thigh: number; shin: number; upper: number; fore: number; limbR: number; legR: number; handR: number; ankleY: number; sh: [V3, V3]; bw: (x: number, y: number, z: number) => number; H: Blob };
@@ -951,7 +1253,15 @@ export class Rig {
   /** QA after update: worst hand reach error (m) and the smallest arm clearance to the body / head (m, < 0 = inside) */
   qa = { reach: 0, clear: 1, swivel: [0, 0] as [number, number] };
   private torsoG = new THREE.Group(); private headG = new THREE.Group();
-  private faceU: FaceU; private hat?: Hat; private hatLine: number;
+  private faceU: FaceU; private hatLine: number;
+  /** this figure's accessories (the hat option comes first), what they do to the face drawing, and whether a hat
+   *  shades the eyes */
+  readonly acc: Acc[]; private fa: FaceAcc; private shade: boolean;
+  /** held things (they follow a hand) and the balls the arms stay clear of (body frame; w = in the world, per frame) */
+  private held: { g: THREE.Group; i: 0 | 1; off: V3; rot: [number, number, number] }[] = [];
+  /** each accessory's 3D parts (state.hide switches them off by the accessory's name) */
+  private accParts: { name: string; o: THREE.Object3D }[] = [];
+  private keep: { c: V3; r: number; w: V3 }[] = [];
   private limbs: Tube[] = []; private hands: THREE.Mesh[] = []; private feet: THREE.Group[] = []; private caps: THREE.Mesh[] = [];
   private clip: THREE.Group; private blob: THREE.Mesh;
   private torsoM = new THREE.Matrix4(); private torsoInv = new THREE.Matrix4();
@@ -965,24 +1275,37 @@ export class Rig {
   private under: THREE.Material[] = [];
   /** per limb: the bones' sideways bends and the phase of the width wobble (fixed per character) */
   private bow: [number, number][]; private wobPh: number[];
-  constructor(private rc: RigCast, look: Look, o: { hat?: Hat } = {}) {
-    this.look = look; this.hat = o.hat;
+  constructor(private rc: RigCast, look: Look, o: { hat?: Hat; acc?: Acc[] } = {}) {
+    this.look = look;
     const L = look, hand = rc.hand, d = (this.dim = dimOf(L, hand)), U = rc.U, sd = L.seed;
+    // accessories: no two in one slot; at most one hat, which decides how the hair and the face are drawn
+    const accs = (this.acc = [...(o.hat ? [hatAcc(o.hat)] : []), ...(o.acc ?? [])]), slotOf = new Map<string, string>();
+    for (const a of accs) {
+      if (a.hat && !a.slots.includes("hat")) throw new Error(`rig3d: accessory "${a.name}" is a hat and must take the "hat" slot`);
+      for (const sl of a.slots) {
+        if (slotOf.has(sl)) throw new Error(`rig3d: accessories "${slotOf.get(sl)}" and "${a.name}" both take the "${sl}" slot`);
+        slotOf.set(sl, a.name);
+      }
+    }
+    const hatA = accs.find((a) => a.hat), rimDeg = hatA ? hatA.hat!.rim : 0;    // where the hat's rim sits, degrees from the crown
+    const cut = !!hatA && (hatA.hat!.hair ?? "cut") === "cut", hairProps = !hatA && !accs.some((a) => a.noHairProps);
+    this.shade = !!hatA && (hatA.hat!.shade ?? cut);
+    this.fa = faceAccOf(L, accs);
     this.bow = [0, 1, 2, 3].map((i) => { const k = (i < 2 ? 0.07 : 0.075) * hand; return [(rnd(sd, 40 + i) - 0.5) * k, (rnd(sd, 44 + i) - 0.5) * k] as [number, number]; });
     this.wobPh = [0, 1, 2, 3].map((i) => rnd(sd, 48 + i) * 6.283);
     const add = (parent: THREE.Object3D, m: THREE.Mesh, shadow = true) => { m.castShadow = shadow; m.layers.set(NOINK); parent.add(m); return m; };
     const pullU = this.pullU, HP: HullO = { pull: pullU };
     let hid = 0;
     /** a painted mesh plus its ink hull (same geometry) */
-    const inked = (parent: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, w: number, thick = 0.4, ho: HullO = {}) => {
+    const inked = (parent: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, w: number, thick = 0.4, ho: HullO = {}, hg: THREE.BufferGeometry = geo) => {
       const m = add(parent, new THREE.Mesh(geo, mat)), hs: HullO = { brush: 0.26 * hand, seed: sd + 0.37 * ++hid, ...ho };
-      const h = add(m, new THREE.Mesh(geo, hullMat(U, w, thick, hs)), false);
+      const h = add(m, new THREE.Mesh(hg, hullMat(U, w, thick, hs)), false);
       h.frustumCulled = false;
       if (ho.pull) {                                                     // a head part: its depth-only twins
         const dp = ho.pull === this.curlPullU ? this.curlDepthU : this.depthU, hm = hullMat(U, w, thick, { ...hs, pull: dp });
         hm.colorWrite = false;
         for (const tm of [rigMat(U, PART.head, { colorWrite: false }, "plain", undefined, dp), hm]) {
-          const t = add(m, new THREE.Mesh(geo, tm), false);
+          const t = add(m, new THREE.Mesh(tm === hm ? hg : geo, tm), false);
           t.frustumCulled = false; t.userData.depthOnly = true;
         }
       }
@@ -991,7 +1314,7 @@ export class Rig {
     this.group.add(this.torsoG);
     this.torsoG.matrixAutoUpdate = false;
     // body: lathe (u = 0 at the back, 0.5 at the front) with the outfit wrapped on it
-    inked(this.torsoG, bodyGeo(d.Ht, d.rb, d.rt, d.bw), rigMat(U, { ...PART.body, k: Math.min(PART.body.k, rc.light.bodyShadeK ?? 1) }, { map: outfitTex(L, hand) }), HULL.body, 0.5, { down: 0.3 });
+    inked(this.torsoG, bodyGeo(d.Ht, d.rb, d.rt, d.bw), rigMat(U, { ...PART.body, k: Math.min(PART.body.k, rc.light.bodyShadeK ?? 1) }, { map: outfitTex(L, hand, accs, d) }), HULL.body, 0.5, { down: 0.3 });
     // head: the look's blob with the face projected on it; hair and headband are painted on it by its shader
     this.headG.position.set(0, d.Ht + 0.72 * d.R, 0);
     this.torsoG.add(this.headG);
@@ -1001,21 +1324,20 @@ export class Rig {
     const bleach = rc.light.bleach ?? 0;
     if (bleach > 0 && LUMA(new THREE.Color(L.skin).convertLinearToSRGB()) >= 0.76) { const mx = Math.max(skin.r, skin.g, skin.b); skin.lerp(new THREE.Color(mx, mx, mx), bleach); }
     const bandC = new THREE.Color(L.headband ?? "#000000");
-    const rimDeg = o.hat ? (o.hat.kind === "cap" ? 63 : 68) : 0;                // where the hat's rim sits, degrees from the crown
     this.faceU = {
-      uFace: { value: faceTex(L, "neutral", 0, !!o.hat, hand) }, uFF: { value: V(0, 0, 1) }, uFR: { value: V(1, 0, 0) }, uFU: { value: V(0, 1, 0) }, uFaceOn: { value: 1 },
+      uFace: { value: faceTex(L, "neutral", 0, this.shade, hand, 0, this.fa) }, uFF: { value: V(0, 0, 1) }, uFR: { value: V(1, 0, 0) }, uFU: { value: V(0, 1, 0) }, uFaceOn: { value: 1 },
       uHead: { value: new THREE.Vector4(0, 0, 0, d.R) }, uInk: { value: new THREE.Color(RIG_INK) },
-      uHair: { value: hairTex(L, rimDeg) }, uHairCol: { value: new THREE.Color(L.hairCol) }, uHeadband: { value: new THREE.Vector4(bandC.r, bandC.g, bandC.b, L.headband && !o.hat ? 1 : 0) },
-      uHairPart: { value: hairDraw(L, hand, !!o.hat) }, uHairInk: { value: 0.03 * hand },
+      uHair: { value: hairTex(L, cut ? rimDeg : 0) }, uHairCol: { value: new THREE.Color(L.hairCol) }, uHeadband: { value: new THREE.Vector4(bandC.r, bandC.g, bandC.b, L.headband && !hatA && !slotOf.has("crown") ? 1 : 0) },
+      uHairPart: { value: hairDraw(L, hand, cut) }, uHairInk: { value: 0.03 * hand },
     };
     const skinM = inked(this.headG, warpGeo(new THREE.SphereGeometry(1, 72, 48), warp, d.R), rigMat(U, PART.head, { color: skin }, "face", this.faceU, pullU), HULL.head, 0.63, { down: 0.5, ...HP });
     const shells: THREE.Mesh[] = [];                                            // a hat's parts that enclose the head
     const hairSolid = () => onHead(PART.hair, { color: L.hairCol });
-    if (L.hair === "bun" && !o.hat) {
+    if (L.hair === "bun" && hairProps) {
       const bun = inked(this.headG, new THREE.SphereGeometry(d.R * 0.36, 24, 16), hairSolid(), HULL.prop * 0.8, 0.4, HP);
       bun.position.copy(at(0, 0.78, -0.52));
     }
-    if (L.hair === "curly" && !o.hat) {
+    if (L.hair === "curly" && hairProps) {
       const spots: [number, number][] = [[0, 22], [70, 40], [-70, 40], [140, 55], [-140, 55], [180, 20], [180, 78], [105, 80], [-105, 80]];
       for (const [azD, thD] of spots) {
         const az = rad(azD), th = rad(thD), c = inked(this.headG, new THREE.SphereGeometry(d.R * 0.2, 16, 12), hairSolid(), HULL.prop * 0.7, 0.4, { pull: this.curlPullU });
@@ -1029,26 +1351,62 @@ export class Rig {
       if (long) { tail.scale.z = 0.42; tail.position.set(0, -0.42 * d.R, -(d.rt + rr * 0.42 + 0.016)); tail.rotation.x = 0.05; tail.userData.under = true; }
       else { tail.position.copy(at(0, 0.1, -1)).add(V(0, 0, -rr * 0.9)); tail.rotation.x = 0.42; }
     }
-    this.hatLine = 0;
-    if (o.hat) {
-      const hm = onHead(PART.prop, { color: o.hat.col, map: hatTex(o.hat.kind) }), tm = onHead(PART.prop, { color: o.hat.trim ?? shadeHex(o.hat.col, 0.7) });
-      if (o.hat.kind === "cap") {
-        const ySq = 0.95, rimR = 1.075 * Math.sin(rad(rimDeg)), rimY = 1.075 * Math.cos(rad(rimDeg)) * ySq;
-        shells.push(inked(this.headG, warpGeo(new THREE.SphereGeometry(1.075, 48, 14, 0, Math.PI * 2, 0, rad(rimDeg)), warp, d.R, (v) => { v.y *= ySq; }), hm, HULL.prop * 1.2, 0.45, HP));
-        // the peak: a wedge out of the gap under the rim, with its ink edge painted on it and no hull (see peakGeo)
-        const peak = add(this.headG, new THREE.Mesh(peakGeo(rimR, rimY, warp, d.R), onHead(PART.prop, { color: o.hat.trim ?? shadeHex(o.hat.col, 0.7), map: peakTex() })));
-        const peakD = add(peak, new THREE.Mesh(peak.geometry, rigMat(U, PART.head, { colorWrite: false }, "plain", undefined, this.depthU)), false);
-        peakD.frustumCulled = false; peakD.userData.depthOnly = true;
-        const btn = inked(this.headG, new THREE.SphereGeometry(d.R * 0.085, 12, 8), tm, HULL.prop * 0.6, 0.4, HP);
-        btn.position.copy(at(0, 1.075 * ySq, 0));
-        this.hatLine = rimDeg;
-      } else {
-        shells.push(inked(this.headG, warpGeo(new THREE.SphereGeometry(1.07, 48, 14, 0, Math.PI * 2, 0, rad(60)), warp, d.R, (v) => { v.y *= 1.04; }), hm, HULL.prop * 1.2, 0.45, HP));
-        shells.push(inked(this.headG, warpGeo(new THREE.SphereGeometry(1.115, 48, 5, 0, Math.PI * 2, rad(50), rad(18)), warp, d.R), tm, HULL.prop, 0.4, HP));
-        const pom = inked(this.headG, new THREE.SphereGeometry(d.R * 0.17, 14, 10), tm, HULL.prop * 0.8, 0.4, HP);
-        pom.position.copy(at(0, 1.07 * 1.04, 0)).add(V(0, d.R * 0.1, 0));
-        this.hatLine = rimDeg;
-      }
+    this.hatLine = cut ? rimDeg : 0;
+    // accessories' 3D parts, through a kit that knows the layering rules (see PartKit)
+    for (const a of accs) {
+      if (!a.build) continue;
+      let tq: THREE.Quaternion | null = null;
+      const part = <T extends THREE.Object3D>(o3: T) => { this.accParts.push({ name: a.name, o: o3 }); return o3; };
+      const toM = (v: V3) => { if (tq) v.applyQuaternion(tq); return warp(v).multiplyScalar(d.R); };
+      const parentOf = (on: AccMount) => (on === "head" ? this.headG : on === "body" ? this.torsoG : on);
+      const paint = (on: AccMount, po: PartO): THREE.Material => {
+        if (po.mat) return po.mat;
+        const part = po.paint === "cloth" ? { ...PART.body, k: Math.min(PART.body.k, rc.light.bodyShadeK ?? 1) } : po.paint === "hair" ? PART.hair : po.paint === "skin" ? PART.head : PART.prop;
+        const mo: THREE.MeshBasicMaterialParameters = { color: po.col ?? "#ffffff" };
+        if (po.map) mo.map = po.map;
+        return on === "head" ? onHead(part, mo) : rigMat(U, part, mo);
+      };
+      const kit: PartKit = {
+        look: L, hand, R: d.R, Ht: d.Ht, rb: d.rb, rt: d.rt, headY: d.Ht + 0.72 * d.R, handR: d.handR, INK: HULL.prop, rim: rimDeg,
+        bodyR: (t, az = 0) => { const y = clamp(t, 0, 1) * d.Ht, x = Math.sin(rad(az)), z = Math.cos(rad(az)); return bodyR(y, d.Ht, d.rb, d.rt) * d.bw(x, y, z); },
+        toM, at: (x, y, z) => toM(V(x, y, z)),
+        tilt: (left, forward = 0) => { tq = new THREE.Quaternion().setFromEuler(new THREE.Euler(rad(forward), 0, rad(-left), "XYZ")); },
+        put: (m, x, y, z) => { m.position.copy(toM(V(x, y, z))); if (tq) m.quaternion.copy(tq); return m; },
+        paint,
+        shell: (so) => {
+          const from = so.from ?? 0, to = so.to ?? 60, r = so.r ?? 1.08, sq = so.squash ?? 1, tl = tq;
+          const g0 = so.geo ?? new THREE.SphereGeometry(r, 48, so.rings ?? 14, 0, Math.PI * 2, rad(from), rad(to - from));
+          const pre = sq !== 1 || tl ? (v: V3) => { v.y *= sq; if (tl) v.applyQuaternion(tl); } : undefined;
+          const po: PartO = so.rimInk && !so.map && !so.mat ? { ...so, map: rimInkTex(so.rimInk / (r * d.R * rad(to - from))) } : so;
+          const m = part(inked(this.headG, warpGeo(g0, warp, d.R, pre), paint("head", po), so.ink ?? HULL.prop * 1.2, so.thick ?? 0.45, HP));
+          shells.push(m);
+          return m;
+        },
+        solid: (on, geo, po = {}) => part(inked(parentOf(on), geo, paint(on, po), po.ink ?? HULL.prop * 0.8, po.thick ?? 0.4, on === "head" ? HP : {}, hardEdges(geo) ? hullGeo(geo) : geo)),
+        plate: (on, geo, po = {}) => {
+          const m = part(add(parentOf(on), new THREE.Mesh(geo, paint(on, po.map || po.mat || po.edge === false ? po : { ...po, map: peakTex() }))));
+          if (on === "head") {
+            const t = add(m, new THREE.Mesh(geo, rigMat(U, PART.head, { colorWrite: false }, "plain", undefined, this.depthU)), false);
+            t.frustumCulled = false; t.userData.depthOnly = true;
+          }
+          return m;
+        },
+        brim: (bo) => brimGeo(bo, toM),
+        band: (bo) => bandGeo(bo.r, bo.a0, bo.a1, bo.half, bo.yaw),
+        held: (i, ho = {}) => {
+          const g = new THREE.Group();
+          if (ho.layer === "free") g.userData.free = true;
+          this.group.add(g); this.held.push({ g, i, off: V(...(ho.offset ?? [0, 0, 0])), rot: ho.rot ?? [0, 0, 0] });
+          return g;
+        },
+        keepOut: (c, r) => { this.keep.push({ c: c.clone(), r, w: V() }); },
+        tex: (w, h, draw, key) => {
+          let t = key ? accTexCache.get(key) : undefined;
+          if (!t) { t = canvasTex(w, h, draw); if (key) accTexCache.set(key, t); }
+          return t;
+        },
+      };
+      a.build(kit);
     }
     // limbs: 0 right arm, 1 left arm, 2 right leg, 3 left leg (built in world space: the group stays at the origin)
     const limbMat = rigMat(U, PART.limb, { color: LIMB_COL }, "tube"), ballMat = rigMat(U, PART.ball, { color: LIMB_COL });
@@ -1092,7 +1450,7 @@ export class Rig {
     this.group.traverse((o3) => {
       const m = o3 as THREE.Mesh;
       if (!m.isMesh || m === this.blob) return;
-      for (let q: THREE.Object3D | null = m; q; q = q.parent) if (q === cb) return;       // props keep their true depth
+      for (let q: THREE.Object3D | null = m; q; q = q.parent) if (q === cb || q.userData.free) return;       // props keep their true depth
       const head = heads.has(m), mat = m.material as THREE.Material;
       if (m.userData.depthOnly) { layerMat(mat, sid, "depth"); m.renderOrder = 2; return; }
       layerMat(mat, sid, head ? "head" : "under");
@@ -1206,6 +1564,7 @@ export class Rig {
       _s.copy(_w).applyMatrix4(this.torsoInv);
       const r = bodyR(_s.y, d.Ht, d.rb, d.rt);
       if (r > 0) worst = Math.min(worst, Math.hypot(_s.x, _s.z) - r * d.bw(_s.x, _s.y, _s.z) - own - 0.002);
+      for (const k of this.keep) worst = Math.min(worst, _w.distanceTo(k.w) - k.r - own);
     }
     return worst;
   }
@@ -1286,6 +1645,7 @@ export class Rig {
     this.torsoG.updateMatrixWorld(true);
     const headC = V().setFromMatrixPosition(this.headG.matrixWorld);
     this.out.head.copy(headC);
+    for (const k of this.keep) k.w.copy(k.c).applyMatrix4(this.torsoM);
     // 3. face direction: toward the camera, nudged toward where the head points, at most FACE_MAX from the camera;
     //    it goes round with the head for a back view. Its upward slide stops under the hairline / hat brim.
     const toCam = camPos.clone().sub(headC), dist = toCam.length() || 1; toCam.divideScalar(dist);
@@ -1303,7 +1663,7 @@ export class Rig {
     const roll = bp.roll * 0.8;
     if (roll) { Rf.applyAxisAngle(F, -roll); Uf.applyAxisAngle(F, -roll); }
     this.faceU.uFF.value.copy(F); this.faceU.uFR.value.copy(Rf); this.faceU.uFU.value.copy(Uf);
-    this.faceU.uFace.value = faceTex(L, st.expr ?? "neutral", clamp(st.blink ?? 0, 0, 1), !!this.hat, hand, st.gaze ?? 0);
+    this.faceU.uFace.value = faceTex(L, st.expr ?? "neutral", clamp(st.blink ?? 0, 0, 1), this.shade, hand, st.gaze ?? 0, this.fa);
     this.faceU.uHead.value.set(headC.x, headC.y, headC.z, d.R);
     // turning away: the face goes round with the head and fades as it nears the edge of the ball (it is gone before it
     // could be a sliver of a profile); from overhead it simply stays on the front of the head
@@ -1357,6 +1717,11 @@ export class Rig {
       this.blob.rotation.set(-Math.PI / 2, 0, Math.atan2(dx, dz), "YXZ");
       this.blob.scale.set(wid, len, 1);
     }
+    if (this.accParts.length) for (const ap of this.accParts) ap.o.visible = !st.hide || !st.hide.includes(ap.name);
+    for (const hd of this.held) {
+      hd.g.position.copy(this.out.hand[hd.i]).add(showDir(hd.off));
+      hd.g.rotation.set(hd.rot[0], bodyYaw + hd.rot[1], hd.rot[2], "YXZ");
+    }
     const a = st.clipboard;
     this.clip.visible = a !== undefined;
     if (a !== undefined) {
@@ -1383,7 +1748,8 @@ export class RigCast {
   private ids = 0;
   /** a figure's stencil id, 1..255 (more figures than that share ids; it only matters where two with the same id overlap) */
   newId() { return 1 + (this.ids++ % 255); }
-  add(look: Look, o: { hat?: Hat } = {}) { const r = new Rig(this, look, o); this.parent.add(r.group); this.figures.push(r); return r; }
+  /** hat = one of the two built-in hats; acc = accessories (see Acc; kit/rigacc/ has the standard ones) */
+  add(look: Look, o: { hat?: Hat; acc?: Acc[] } = {}) { const r = new Rig(this, look, o); this.parent.add(r.group); this.figures.push(r); return r; }
   /** renderH = the height in pixels of the frame being rendered (the ink's minimum width is in pixels) */
   update(cam: THREE.Camera, renderH = 1920) {
     cam.updateMatrixWorld();
