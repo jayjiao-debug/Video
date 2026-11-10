@@ -1,0 +1,70 @@
+plan: {'tier': 'starter', 'character_count': 21395, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01b", "lang": "zh", "text": "看完这条，你有一半的概率，会打一个哈欠。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01b.mp3", "bytes": 61065}
+{"name": "01c", "lang": "zh", "text": "看完这条，你有一半的概率，会打一个哈欠。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "01c.mp3", "bytes": 61065}
+{"name": "15b", "lang": "zh", "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15b.mp3", "bytes": 95755}
+{"name": "15c", "lang": "zh", "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。", "voice": "vZZLclMx4wouUtKBRfZn", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "15c.mp3", "bytes": 94501}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01b",
+  "lang": "zh",
+  "text": "看完这条，你有一半的概率，会打一个哈欠。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01b.mp3",
+  "bytes": 61065,
+  "heard": "看完這條,你有一半的概率會打一個哈錢",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "01c",
+  "lang": "zh",
+  "text": "看完这条，你有一半的概率，会打一个哈欠。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01c.mp3",
+  "bytes": 61065,
+  "heard": "看完這條,你有一半的概率會打一個哈欠",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "15b",
+  "lang": "zh",
+  "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15b.mp3",
+  "bytes": 95755,
+  "heard": "328人的测试力三分之一的人一个没打和同理心分数无关",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 5.92
+ },
+ {
+  "name": "15c",
+  "lang": "zh",
+  "text": "三百二十八人的测试里，三分之一的人一个没打，和同理心分数无关。",
+  "voice": "vZZLclMx4wouUtKBRfZn",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "15c.mp3",
+  "bytes": 94501,
+  "heard": "328人的测试里三分之一的人一个没打和同理心分数无关",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.991,
+  "seconds": 5.84
+ }
+]
