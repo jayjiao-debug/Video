@@ -1,6 +1,6 @@
 // segment D camera: the match cut onto the back-wall clock, the pull-back to the four, the hold, the glide back to OPEN.
 // Pure functions of the frame (no THREE objects: the probe script imports this file in node).
-import { between, easeInOutCubic, easeInOutQuad, lerp, smooth, type CamPose, type Vec3 } from "../story";
+import { between, easeInOutCubic, easeInOutQuad, lerp, type CamPose, type Vec3 } from "../story";
 import { OPEN } from "./common";
 
 const W = 1080, H = 1920;
@@ -23,8 +23,10 @@ export const CAM_CLOCK: CamPose = {
 };
 /** end of the fast pull-back (~f1440): eye level, the four with the clock above them */
 export const CAM_A: CamPose = { pos: [-0.22, 1.52, 1.3], look: [-0.22, 1.0, 4.9], fov: 70 };
-/** the slow drift ends here (~f1650): a touch wider, all four heads clear of the frame edges for the slide card */
-export const CAM_B: CamPose = { pos: [-0.22, 1.5, 1.0], look: [-0.22, 1.0, 4.9], fov: 74 };
+/** the slow drift ends here (~f1650): a slow push-in (dolly 0.3 m, fov 70 -> 68 = OPEN's) so the acting of lines 12-15
+ *  reads larger (heads ~82 px radius at x ~153 / 418 / 695 / 954), all four heads clear of the frame edges; the glide
+ *  back to OPEN is then a short dolly in (OPEN also keeps all four heads in frame, with a slightly wider lens) */
+export const CAM_B: CamPose = { pos: [-0.22, 1.5, 1.0], look: [-0.22, 1.0, 4.9], fov: 68 };
 
 const lnTan = (fov: number) => Math.log(Math.tan((fov * Math.PI) / 360));
 const fovOf = (lt: number) => (2 * Math.atan(Math.exp(lt)) * 180) / Math.PI;
@@ -60,19 +62,25 @@ const addDelta = (base: CamPose, A: CamPose, B: CamPose, w: number): CamPose => 
 };
 
 /** frame schedule */
-export const CAMT = { pull0: 1367, pull1: 1440, zoom1: 1425, drift0: 1426, warp: 6, warp0: 1405, warp1: 1415, drift1: 1652, glide0: 1932, glide1: 1985 };
+export const CAMT = { pull0: 1367, pull1: 1440, zoom1: 1430, ease: 12, pw: 3, drift0: 1426, drift1: 1652, glide0: 1932, glide1: 1985 };
+/** front-loaded progress over [f0, f1]: a smooth ease-in over the first k frames (no jolt out of the match cut), then an
+ *  ease-out of power pw (3 = easeOutCubic); C1-continuous */
+const front = (f: number, f0: number, f1: number, k: number, pw: number) => {
+  const n = f1 - f0, u = Math.min(Math.max(f - f0, 0), n);
+  const w = u < k ? (u * u) / (2 * k) : u - k / 2;
+  return 1 - Math.pow(1 - w / (n - k / 2), pw);
+};
 
 export function camD(f: number): CamPose {
   const T = CAMT;
   if (f >= T.glide1) return { pos: [...v(OPEN.pos)] as Vec3, look: [...v(OPEN.look)] as Vec3, fov: OPEN.fov };
   if (f >= T.glide0) return addDelta(CAM_B, CAM_B, OPEN, between(f, T.glide0, T.glide1, easeInOutCubic));
-  // the pull-back out of the match (C ends on a push-in into the dial), overlapped by a slow drift wider
-  // zoom (log-tan fov) over 1367-1425 and descent over 1372-1440, both easeInOutQuad: the clock's peak shrink rate is
-  // 0.071 / frame (x2.4 per 0.4 s; the old cubic whip was 0.124). Both run 6 frames ahead around f1405-1415 (a smooth
-  // time warp), the moment the four rise through the caption band: their head centres cross y 62-78 % in 4 frames
-  // (f1408-1411), then they settle above it (y ~48 % by f1440)
-  const wf = f + T.warp * smooth((f - T.warp0) / (T.warp1 - T.warp0));
-  const a = between(wf, T.pull0 + 5, T.pull1, easeInOutQuad), az = between(wf, T.pull0, T.zoom1, easeInOutQuad);
+  // the pull-back out of the match (C ends on a push-in into the dial), overlapped by a slow drift wider.
+  // Descent and zoom (log-tan fov) are front-loaded (front(): a 12-frame ease-in, then an easeOutCubic settle), so the four
+  // rise into frame during 因为人一多 and are settled above the caption band before 就没人看得见 lands (f1405); their
+  // heads come in at the bottom edge ~f1389 and cross the band at <= 50 px / frame (the old easeInOutQuad + time warp whipped them through it
+  // at ~110 px / frame exactly on the caption swap)
+  const a = front(f, T.pull0, T.pull1, T.ease, T.pw), az = front(f, T.pull0, T.zoom1, T.ease, T.pw);
   const b = between(f, T.drift0, T.drift1, easeInOutQuad);
   return addDelta(pull(a, az), CAM_A, CAM_B, b);
 }

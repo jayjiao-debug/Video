@@ -2007,8 +2007,12 @@ export function classroom(M: Mats, opts: ClassroomOpts = {}): ClassroomSet {
   // ---------------- back wall: notice board, coat hooks, cupboard, bins, big plant ----------------
   {
     const nx = 0, ny = 1.75, nw = 2.4, nh = 1.2, z = Z1;
-    k.add(quad(nw, nh), mt.cork, T(nx, ny, z - 0.012, Math.PI));
+    // the cork sits 0.4 mm behind the frame's front face (it used to be 18 mm: that reveal's inner faces projected to
+    // <= 1 px, so the ink pass toggled the inner line on and off as the camera moved); the inner line is painted
+    // instead: a 7 mm dark strip just inside each bar, 0.1 mm in front of the frame face (it also hides the reveal)
+    k.add(quad(nw, nh), mt.cork, T(nx, ny, z - 0.0296, Math.PI));
     for (const s of [-1, 1]) { k.add(bx(nw + 0.09, 0.045, 0.03), mt.lamD, T(nx, ny + s * (nh / 2 + 0.022), z - 0.015)); k.add(bx(0.045, nh, 0.03), mt.lamD, T(nx + s * (nw / 2 + 0.022), ny, z - 0.015)); }
+    for (const s of [-1, 1]) { k.add(quad(nw, 0.008), mt.dark, T(nx, ny + s * (nh / 2 - 0.0035), z - 0.0301, Math.PI)); k.add(quad(0.008, nh), mt.dark, T(nx + s * (nw / 2 - 0.0035), ny, z - 0.0301, Math.PI)); }
     const pins = [mt.red, mt.binBlue, mt.bottles[4], mt.bottles[0]];
     const items: { x: number; y: number; w: number; h: number; m: THREE.Material; uv?: [number, number, number, number] }[] = [
       { x: -0.95, y: 0.24, w: 0.21, h: 0.297, m: mt.sheets[0] }, { x: -0.68, y: 0.22, w: 0.21, h: 0.297, m: mt.sheets[2] },
@@ -2020,7 +2024,7 @@ export function classroom(M: Mats, opts: ClassroomOpts = {}): ClassroomSet {
       { x: 0.52, y: -0.27, w: 0.18, h: 0.25, m: mt.print, uv: cellUV(2, 0.1) },
     ];
     items.forEach((it, i) => {
-      const mx = T(nx - it.x, ny + it.y, z - 0.014 - i * 0.0008, Math.PI, 0, (R() - 0.5) * 0.12);
+      const mx = T(nx - it.x, ny + it.y, z - 0.0306 - i * 0.0008, Math.PI, 0, (R() - 0.5) * 0.12);
       k.add(quad(it.w, it.h, it.uv), it.m, mx);
       const pin = new THREE.SphereGeometry(0.009, 8, 6); W.metricGeo(pin); k.add(pin, pins[i % 4], at(mx, T(0, it.h / 2 - 0.02, 0.008)));
     });
@@ -2068,7 +2072,8 @@ export function classroom(M: Mats, opts: ClassroomOpts = {}): ClassroomSet {
   const lanyardI = new Inst("lanyard", lanyardParts(mt), [mt.tRibbon]), toteI = new Inst("tote", toteParts(mt), [mt.tBag]);
   const jacketI = new Inst("jacket", jacketParts(mt), [mt.tJacket]), packI = new Inst("backpack", backpackParts(mt), [mt.tPack]);
   const PEN = ["#2e62d6", "#2b2e35", "#d8433a", "#2e62d6", "#2a9d8f"], LAP = ["#c9cdd3", "#c9cdd3", "#5c6068", "#d9c9b6"];
-  const BOT = ["#3fb0a8", "#f4f2ec", "#ef8fae", "#5b86e0", "#f2c14a", "#3a3d45"], COVER = ["#e2574a", "#4a86d8", "#56b07a", "#f0c040", "#2f3a56"];
+  // (BOT: no near-black bottle any more, it was the darkest, highest-contrast thing in the hook frame; same length, same seeded layout)
+  const BOT = ["#3fb0a8", "#f4f2ec", "#ef8fae", "#5b86e0", "#f2c14a", "#7d8a96"], COVER = ["#e2574a", "#4a86d8", "#56b07a", "#f0c040", "#2f3a56"];
   const RIB = ["#2a9d8f", "#2f4478", "#d8433a", "#f2be40"], BAG = ["#e8dcc4", "#d4503f", "#3d5a9e", "#4f9a62", "#2f3238", "#e9b43e", "#7a5cb4", "#f2efe6"];
   const JKT = ["#34508f", "#d9a43a", "#5d6b3a", "#8a3b3b"], PACK = ["#3d5a9e", "#3a3d45", "#4f9a62", "#d4503f", "#7b8794"];
   const pick = <X,>(a: X[]) => a[Math.floor(R() * a.length)];

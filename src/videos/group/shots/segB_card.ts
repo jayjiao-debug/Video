@@ -1,7 +1,7 @@
 // segment B overlays (pure functions of the frame; .ts, so React.createElement via h):
 //   PctCard  the label card of the lab (segments B and C share the design; import it from here): a white card with an
 //            ink outline in the top band (y 6-30 %), a title, then one horizontal bar per group as the narration says
-//            it: label (1人 / 2人 ...), a bar growing from 0 with a short eased pop, the value counting up with it. The
+//            it: label (1人 / 2人 ...), a bar growing from 0 with a short eased pop, the scripted value beside it. The
 //            newest bar is gold, older bars turn neutral. The card grows downward by one (empty) row just before each
 //            pop; the row's label fades in with its bar and value, so no label ever waits without its bar and the card
 //            is never shown half-built. It leaves (8 f: fade, rise, shrink) from `out`.
@@ -38,9 +38,9 @@ export const PctCard: React.FC<PctCardProps> = ({ f, at, out, title, rows, top =
   rows.forEach((r, i) => {
     if (open[i] <= 0) return;
     const y = C.pad + C.titleH + i * C.rowH + (C.rowH - C.barH) / 2;
-    // bar growth: 0 -> 1 with a small overshoot over 12 f; the value counts with it (never past the value)
+    // bar growth: 0 -> 1 with a small overshoot over 12 f; the value is the scripted one from the first frame (no
+    // unscripted in-between numbers while the bar grows)
     const g = f < r.at ? 0 : easeOutBack(clamp01((f - r.at) / 12), 1.4);
-    const gv = clamp01(g);
     const next = rows[i + 1];
     const old = next ? easeInOutCubic(clamp01((f - next.at) / 6)) : 0;
     const fill = mixHex(COL.gold, NEUTRAL, old);
@@ -51,7 +51,7 @@ export const PctCard: React.FC<PctCardProps> = ({ f, at, out, title, rows, top =
     const lab = h("div", { key: "l", style: { position: "absolute", left: 0, top: (C.barH - 50) / 2 - 2, width: C.labelW, textAlign: "left", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 50, lineHeight: 1, color: INK, whiteSpace: "nowrap", opacity: labOp } }, r.label);
     const bar = barW > 0.5 ? h("div", { key: "b", style: { position: "absolute", left: C.labelW, top: 0, width: barW, height: C.barH, borderRadius: C.barH / 2, background: fill, boxShadow: `0 0 0 4px ${INK}` } }) : null;
     const val = h("div", { key: "v", style: { position: "absolute", left: C.labelW + barW + 22, top: (C.barH - 50) / 2 - 2, fontFamily: FONT_STACK, fontWeight: 700, fontSize: 50, lineHeight: 1, color: INK, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", opacity: f < r.at ? 0 : clamp01((f - r.at) / 3) } },
-      `${Math.min(r.value, Math.round(r.value * gv))}%`);
+      `${r.value}%`);
     kids.push(h("div", { key: i, style: { position: "absolute", left: C.pad + 14, top: y, width: cw - 2 * C.pad, height: C.barH, opacity: rowOp } }, lab, bar, val));
   });
   return h("div", { style: { position: "absolute", inset: 0, opacity: op } },

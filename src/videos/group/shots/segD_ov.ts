@@ -70,7 +70,8 @@ export const Study78: React.FC<Study78Props> = ({ f, at, together, same, out, x,
   const frameInk = f >= together ? h("rect", { key: "frameInk", x: gx0 - 18, y: gy0 - 18, width: fw, height: fh, rx: 22, fill: "none", stroke: INK, strokeWidth: 13,
     strokeDasharray: `${per * fk} ${per}` }) : null;
   return h("div", { style: { position: "absolute", inset: 0, opacity: 1 - o, transformOrigin: `${x}px ${y + 120}px`, transform: `scale(${1 - 0.12 * o})` } },
-    scrim(x, y + 170, 1000, 720, 0.52 * clamp01((f - at) / 4)),
+    // centred on the grid (not above it): a focus pool on the wall and corkboard, not a cloud over the ceiling light
+    scrim(x, y + 230, 880, 560, 0.42 * clamp01((f - at) / 4)),
     svg([frameInk, frame, ...pages]),
     abs(x, y, centred(h("div", { style: { display: "flex", alignItems: "baseline", gap: 10 } },
       h("span", { style: ts(190, COL.gold, 18) }, "78"), h("span", { style: ts(72) }, "项研究")), s)));
@@ -154,9 +155,10 @@ export const SlidePlan: React.FC<SlidePlanProps> = ({ f, at, out, top, parts }) 
 const PH = { x: 130, y: 150, w: 820, h: 1640, r: 100 };
 const SC = { x: PH.x + 20, y: PH.y + 20, w: PH.w - 40, h: PH.h - 40, r: 82 };
 /** screen-local layout (frame y = SC.y + y): header 0-200, date chip, messages from msg0; with 56 px type the last
- *  reply ends at y 964 (frame 1134, above the caption band); the keyboard (kbH) pushes the input bar up to y 830-960
- *  (frame 1000-1130) */
-const LY = { head: 200, chip: 214, msg0: 266, name: 32, bub: 100, gap: 18, type: 56, av: 72, kbH: 640, ibH: 130 };
+ *  reply ends at y 964 (frame 1134, above the caption band); the keyboard (kbH, top at frame 1250) pushes the input bar
+ *  up to y 950-1080 (frame 1120-1250); its empty candidate strip (cand, frame 1250-1390) is what lies under the caption
+ *  band, and the key rows (keyH + keyGap) start below it (frame 1400-1750), so no key caps print through the captions */
+const LY = { head: 200, chip: 214, msg0: 266, name: 32, bub: 100, gap: 18, type: 56, av: 72, kbH: 520, ibH: 130, cand: 140, keyH: 80, keyGap: 10 };
 const UI = { bg0: "#151a3c", bg1: "#0d1130", card: "#262d60", text: "#f4f1ff", sub: "#9aa2cf", line: "#2a3168", mine: "#d9d4ff", key: "#232a5c", keyHi: "#4a54a0", kb: "#0e1230" };
 const HINK = "#241726";
 export type ChatMsg = { at: number; who: "worker" | "mate1" | "mate2" | "you"; text?: string; thumb?: boolean };
@@ -240,24 +242,24 @@ export const ChatInsert: React.FC<ChatInsertProps> = ({ f, in0, in1, out0, out1,
 
   // ---------------- keyboard + input bar ----------------
   const kbTop = SC.h - LY.kbH * kb, IB = kbTop - LY.ibH;
-  const keyW = (SC.w - 24 - 9 * 10) / 10, keyH = 104;
+  const keyW = (SC.w - 24 - 9 * 10) / 10, keyH = LY.keyH, row0 = LY.cand + 10;
   const keys: React.ReactNode[] = [];
   let ki = 0;
   KEYS.forEach((row, r) => {
     const x0 = (SC.w - (row.length * keyW + (row.length - 1) * 10)) / 2;
     [...row].forEach((ch, c) => {
       const lit = tapOn && (tapI * 7 + 3) % 26 === ki;
-      keys.push(box(x0 + c * (keyW + 10), 86 + r * (keyH + 16), keyW, keyH, { borderRadius: 14, background: lit ? UI.keyHi : UI.key, boxShadow: "0 3px 0 #070a20" },
-        text(keyW / 2, 33, 36, lit ? UI.text : "#8790c4", ch, { transform: "translateX(-50%)" }), `k${ki}`));
+      keys.push(box(x0 + c * (keyW + 10), row0 + r * (keyH + LY.keyGap), keyW, keyH, { borderRadius: 14, background: lit ? UI.keyHi : UI.key, boxShadow: "0 3px 0 #070a20" },
+        text(keyW / 2, (keyH - 36) / 2 + 2, 36, lit ? UI.text : "#8790c4", ch, { transform: "translateX(-50%)" }), `k${ki}`));
       ki++;
     });
   });
-  const bottomY = 86 + 3 * (keyH + 16);
-  keys.push(box(12, bottomY, 140, keyH, { borderRadius: 14, background: UI.key }, text(70, 34, 32, "#8790c4", "123", { transform: "translateX(-50%)" }), "k123"));
-  keys.push(box(164, bottomY, SC.w - 164 - 176, keyH, { borderRadius: 14, background: UI.key }, text((SC.w - 340) / 2, 34, 32, "#8790c4", "空格", { transform: "translateX(-50%)" }), "kspc"));
-  keys.push(box(SC.w - 164, bottomY, 152, keyH, { borderRadius: 14, background: UI.key }, text(76, 34, 32, "#8790c4", "换行", { transform: "translateX(-50%)" }), "kret"));
+  const bottomY = row0 + 3 * (keyH + LY.keyGap), bt = (keyH - 32) / 2 + 2;
+  keys.push(box(12, bottomY, 140, keyH, { borderRadius: 14, background: UI.key }, text(70, bt, 32, "#8790c4", "123", { transform: "translateX(-50%)" }), "k123"));
+  keys.push(box(164, bottomY, SC.w - 164 - 176, keyH, { borderRadius: 14, background: UI.key }, text((SC.w - 340) / 2, bt, 32, "#8790c4", "空格", { transform: "translateX(-50%)" }), "kspc"));
+  keys.push(box(SC.w - 164, bottomY, 152, keyH, { borderRadius: 14, background: UI.key }, text(76, bt, 32, "#8790c4", "换行", { transform: "translateX(-50%)" }), "kret"));
   const keyboard = kb > 0 ? box(0, kbTop, SC.w, LY.kbH, { background: UI.kb },
-    [box(0, 0, SC.w, 66, { borderBottom: `2px solid ${UI.line}` }, null, "cand"), ...keys], "kb") : null;
+    [box(0, 0, SC.w, LY.cand, { borderBottom: `2px solid ${UI.line}` }, null, "cand"), ...keys], "kb") : null;
   const input = box(0, IB, SC.w, LY.ibH, { background: UI.bg0, boxShadow: "0 -6px 16px rgba(5,8,25,0.45)" }, [
     box(26, 24, SC.w - 160, 84, { borderRadius: 42, background: UI.card }, n > 0
       ? text(32, 19, 46, UI.text, [h("span", { key: 0 }, typed), h("span", { key: 1, style: { color: COL.gold, opacity: Math.floor(f / 8) % 2 ? 0.2 : 1 } }, "|")])

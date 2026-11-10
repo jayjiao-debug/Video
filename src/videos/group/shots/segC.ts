@@ -2,7 +2,8 @@
 // then the push into the dial. The dial shows the TOTAL real force on the rope, one person's full solo pull = 16 units.
 //   771-776  H2 hold (segB's last frame): cams.side, all six standing on the rope, the researcher (hidden behind squares
 //            1-2) with her clipboard, dial 20.
-//   777      cut to line 07's camera: pos1's spot raised to standing eye height (1.5 m, ~11 deg down, fov 54, 2 deg to
+//   777      cut to line 07's camera (its look point and line 10's sit low enough that his grip on the rope stays above
+//            the caption band): pos1's spot raised to standing eye height (1.5 m, ~11 deg down, fov 54, 2 deg to
 //            the left) so the researcher's head (just behind square 1 on the window side, TIE) sits above-left of square
 //            1's head. She shakes a dark cloth out between her hands at her chest (left of his body, in view; puller 1
 //            glances at her, nervous), lifts it to his head: her near hand comes to the side of his head (just outside
@@ -18,7 +19,9 @@
 //            but the rope to him hangs to the floor and the rest lies along the empty squares; 你一个人: the taut rope
 //            glows a little, a 假装 chip pops over puller 2. The researcher by the window (clipboard back in hand)
 //            writes, then watches puller 1.
-//   1007     cut to line 09: exactly cams.side, still. She walks on along the windows (a curve clear of radiator 2)
+//   1007     cut to line 09: segB's opening framing (OPEN_B: squares 1-2 and the dial large, so the blindfolded "you"
+//            and the slack helper read on 1个 / 90%), held; on 2到6个 (f1099) a cut out on the same axis to exactly
+//            cams.side, still, for the walk-ins. She walks on along the windows (a curve clear of radiator 2)
 //            to RES_ASIDE, where her face sits in the gap between the heads of squares 5 and 6. The label card
 //            以为有几个帮手 (segC_card: segB's PctCard design, a wider label column): 独自 100% (the reference, with the
 //            card) ; 90% (f1050) 1个 90% (the needle already reads 14.4: nothing changed for him) ; 2到6个 (f1099):
@@ -27,8 +30,8 @@
 //            squares 1-2 and the dial), each bends for the spare rope a step in front of it (the rope rises off the
 //            floor in a long curve behind each lifted hand, so nobody folds over into the caption band), lifts it and
 //            pretends (slack through all of them) ;
-//            85% (f1143, as puller 3 lifts the rope) 2-6个 85%, needle -> 13.6 ; a 都在假装 chip over square 3 once
-//            all have the rope up (f1177). She reads the dial and writes after each reading. The card is gone by f1194.
+//            85% (f1143, as puller 3 lifts the rope) 2-6个 85%, needle -> 13.6 ; a 都在假装 chip over square 3 as the
+//            last of them lifts it (f1180). A gold 你 chip marks puller 1 (far left, by the dial) from the card to f1094. She reads the dial and writes after each reading. The card is gone by f1194.
 //   1199     cut to line 10: pos1's spot at eye level (1.22 m), fov 60, a slow push-in along pos1's axis (0.2 m, fov
 //            -> 50): puller 1 blindfolded, pulling in a relaxed, comfortable way, content; 15% (f1251) the gold −15%
 //            (segA_minus) upper left, gone by f1302. The researcher is behind puller 1 in this view (hidden).
@@ -81,24 +84,28 @@ const B = {
   /** 你一个人: glow + chip */
   one: 950, oneOut: 998,
   card: 1009, b90: 1050, b85: 1143, cardOut: 1186,
-  /** walkers 3-6: walk start and length (frames), then the turn (2 f), the reach down (downDur), the lift (liftDur).
+  /** walkers 3-6: walk start and length (frames), then the turn (2 f), the reach down (downDur), the lift (liftDur[i]).
    *  The first of them steps into the side view on 2到6个 (f1099). The grip + lift windows never overlap (the solver
-   *  carries one gripped picker at a time; a picker holds the rope from arrive + 7 to arrive + 15): 1137-1145 (puller 3
-   *  lifts on 85 %) / 1149-1157 / 1158-1166 / 1170-1178 (puller 6 bends only once puller 5 has the rope up) */
-  walk0: [0, 0, 1068, 1080, 1097, 1123], walkDur: [0, 0, 62, 62, 54, 40], downDur: 6, liftDur: 8,
-  /** the group chip 都在假装 (as the last of them has the rope up) */
-  group: 1177, groupOut: 1190,
+   *  carries one gripped picker at a time; a picker holds the rope from arrive + 11 to arrive + 11 + liftDur): 1141-1151
+   *  (puller 3 lifts on 85 %) / 1153-1163 / 1164-1174 / 1175-1186 (puller 6 bends only once puller 5 has the rope up) */
+  walk0: [0, 0, 1068, 1080, 1099, 1124], walkDur: [0, 0, 62, 62, 54, 40], downDur: 9, liftDur: [0, 0, 11, 11, 11, 12],
+  /** the group chip 都在假装 (as the last of them lifts the rope) */
+  group: 1180, groupOut: 1192,
   p1: 1199,
   pct: 1251, pctOut: 1296,
   dial: 1311, end: S.to,
 };
+/** the gold 你 chip over puller 1 in line 09 (from the card until puller 3 walks in on 2到6个) */
+const YOU_OUT = 1090;   // (its 8 f exit ends before the cut to the side view at 1099)
 /** grip frame of walker i (the turn takes 2 frames, the reach down B.down) */
 const arrive = (i: number) => B.walk0[i] + B.walkDur[i];
 const grip = (i: number) => arrive(i) + 2 + B.downDur;
 /** the spare rope's drape while the newcomers lift it in turn: from puller 3's lift (the rope comes up off the floor
  *  behind the last hand as a long shallow curve, so pullers 4-6 reach down less and their heads stay above the caption
  *  band) back to the lying drape over puller 6's lift */
-const drapeAt = (f: number) => 0.4 + 0.8 * (smooth((f - grip(2)) / B.liftDur) - smooth((f - grip(5)) / B.liftDur));
+// (the rise starts as puller 3 bends, so the rope comes up toward his hand and he grips it off the floor instead of
+// diving for it at floor level)
+const drapeAt = (f: number) => 0.4 + 0.8 * (smooth((f - (arrive(2) + 2)) / (B.downDur + B.liftDur[2])) - smooth((f - grip(5)) / B.liftDur[5]));
 
 // ---------------------------------------------------------------------------------------------------- places
 /** the researcher's spot by the windows for lines 09-10 (window side, 1.42 m off the rope line, in front of the right
@@ -129,17 +136,36 @@ const EXIT_07 = V(-1.75, 0, -2.25);
 const offSpot = (w: World, i: number) => (i <= 3 ? V(w.lab.A.positions[i].x, 0, 1.75) : i === 4 ? V(3.25, 0, -0.62) : V(3.4, 0, -0.12));
 const offVia = (w: World, i: number) => (i <= 3 ? undefined : V(w.lab.A.positions[i].x + 0.11, 0, -0.21));
 const turnFacing = (i: number) => (i <= 3 ? Math.PI * 1.25 : -Math.PI / 2);
+/** the returning pretenders stop this far in front of their square (camera side, +z): the spare rope lies along the
+ *  rope line through the empty squares, so arriving ON the square put their shoes on it; they settle onto the square
+ *  while they lift the rope (from the grip, when the rope in front of them is off the floor) */
+const ARRIVE_DZ = 0.24;
+/** puller 6's walk in (line 09) starts farther from the side camera than his line-07 exit ended (off-frame either way),
+ *  so he comes into frame at about the others' size instead of a giant half-face at the right edge */
+const inSpot = (w: World, i: number) => (i === 5 ? V(3.35, 0, -0.36) : offSpot(w, i));
+const inVia = (w: World, i: number) => (i === 5 ? V(w.lab.A.positions[i].x + 0.11, 0, -0.28) : offVia(w, i));
 
 // ---------------------------------------------------------------------------------------------------- cameras
 /** line 07: pos1's spot raised to standing eye height (1.5 m, ~11 deg down, like side / main) with a wider lens and
  *  2 deg to the left: the researcher's head (behind square 1, farther) sits above-left of square 1's head */
-const L07: CamPose = { pos: [-3.3, 1.5, 0.23], look: [-1.98, 1.15, -0.67], fov: 54 };
+// (look point 0.13 m lower than the first cut, ~4 deg more down-tilt: his grip on the rope sits above the caption band
+// (62-78 %) instead of under the words; the window headroom above his head absorbs it)
+const L07: CamPose = { pos: [-3.3, 1.5, 0.23], look: [-1.98, 1.02, -0.67], fov: 54 };
 /** line 08: cams.main (the faces camera beside the gauge: square 1 large at the left, the rope out of the left edge to
  *  the shackle, square 2 behind it) with a slow eased push along its axis */
 const L08_PUSH = 0.2, L08_FOV = 66, L08_PAN = 8.5;
 /** line 10: from pos1's spot, a wider lens (square 1 head to knees, the rope to the shackle at the left, square 2
  *  behind at the right), then a slow push-in along pos1's axis to a medium close-up (head and torso) */
 const L10_FOV0 = 60, L10_FOV1 = 50, L10_PUSH = 0.2;
+/** line 10's look point is lowered this much (m) from pos1's: the relaxed grip (the point of 松的劲 / 15%) lands above
+ *  the caption band, not under the words */
+const L10_LOOK_DY = -0.13;
+/** line 09 opens on segB's opening framing (squares 1-2 and the dial large: the blindfolded "you" and the slack helper
+ *  read while the card says 1个 90%) and holds it; on 以为有【2到6个】 (L09_WIDE) it cuts out on the same axis to exactly
+ *  cams.side for the walk-ins. (A pull-back there was tried: pullers 3-4 walk in from the bench right past the lens of
+ *  this framing, as giant figures over squares 1-2; in the side view they come in small from the left edge.) */
+const L09_OPEN: CamPose = { pos: [1.15, 1.38, 0.36], look: [-2.45, 1.08, -1.1], fov: 62 };
+const L09_WIDE = 1099;
 /** the dial push: square-on (axis -x), cams.dial's lens; the bezel's front rim lies 1 cm in front of the face plane */
 const DIAL_FOV = 74, TAN_V = Math.tan((DIAL_FOV * Math.PI) / 360);
 const MATCH = { d: 0.92 * 1080, y: 760 };
@@ -174,13 +200,13 @@ const camAt = (w: World, f: number): CamPose => {
     const pos = V(...ap).addScaledVector(dir, L08_PUSH * k), look = pos.clone().addScaledVector(dir, 5);
     return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(cams.main.fov, L08_FOV, k) };
   }
-  // line 09: exactly cams.side, still (the card is up, the walkers move)
-  if (f < B.p1) return cpose(cams.side);
+  // line 09: segB's opening framing (held), cut on 2到6个 to exactly cams.side (still)
+  if (f < B.p1) return f < L09_WIDE ? cpose(L09_OPEN) : cpose(cams.side);
   if (f < B.dial) {
     const k = trap(f, B.p1, B.dial + 24, 10, 40), a = cpose(cams.pos1);
     const d = V(...(a.look as Vec3)).sub(V(...(a.pos as Vec3))).normalize().multiplyScalar(L10_PUSH * k);
-    const ap = a.pos as Vec3;
-    return { pos: [ap[0] + d.x, ap[1] + d.y, ap[2] + d.z], look: a.look, fov: lerp(L10_FOV0, L10_FOV1, k) };
+    const ap = a.pos as Vec3, al = a.look as Vec3;
+    return { pos: [ap[0] + d.x, ap[1] + d.y, ap[2] + d.z], look: [al[0], al[1] + L10_LOOK_DY, al[2]], fov: lerp(L10_FOV0, L10_FOV1, k) };
   }
   const k = trap(f, B.dial - 3, B.end, 3, 40);
   return dialCam(w, lerp(D_START, D_END, k));
@@ -266,18 +292,19 @@ function pullerAt(w: World, i: number, f: number): CPuller {
   if (f < l0) return { mode: "stand", amount: 0.15, phase: standPhase(i, f), expr: "neutral" };
   if (f < l0 + B.leaveDur[i]) return { mode: "walk", from: sq, to: off, via: offVia(w, i), k: walkK(f, l0, B.leaveDur[i]), expr: "neutral" };
   if (f < w0) return { mode: "off" };
-  if (f < arrive(i)) return { mode: "walk", from: off, to: sq, via: offVia(w, i), k: walkK(f, w0, B.walkDur[i]), expr: exprAt(f, PW_EX), blink: blinkAt(f, 100 + i, PW_EX) };
-  const g = grip(i);
+  const sqIn = V(sq.x, 0, sq.z + ARRIVE_DZ), lift = B.liftDur[i];
+  if (f < arrive(i)) return { mode: "walk", from: inSpot(w, i), to: sqIn, via: inVia(w, i), k: walkK(f, w0, B.walkDur[i]), expr: exprAt(f, PW_EX), blink: blinkAt(f, 100 + i, PW_EX) };
+  const g = grip(i), at = sqIn.clone().lerp(sq, smooth((f - g) / (lift + 8)));
   // the 2 frames between the walk and the reach: the bench walkers (walking -z, seen from behind) turn through the
   // idle drawing; the door walkers already walk toward the gauge in the side drawing, so they stay in it (the reach
   // pose at 0: standing, side view) instead of flashing the idle drawing's back view
-  if (f < arrive(i) + 2) return i <= 3 ? { mode: "turn", facing: turnFacing(i), expr: exprAt(f, PW_EX) } : { mode: "pick", down: 0, lift: 0, expr: exprAt(f, PW_EX) };
-  if (f < g + B.liftDur) {
-    const down = clamp01((f - (arrive(i) + 2) + 1) / B.downDur), lift = clamp01((f - g) / B.liftDur);
-    return { mode: "pick", down, lift, expr: exprAt(f, PW_EX) };
+  if (f < arrive(i) + 2) return i <= 3 ? { mode: "turn", facing: turnFacing(i), expr: exprAt(f, PW_EX), at } : { mode: "pick", down: 0, lift: 0, expr: exprAt(f, PW_EX), at };
+  if (f < g + lift) {
+    const down = clamp01((f - (arrive(i) + 2) + 1) / B.downDur), up = clamp01((f - g) / lift);
+    return { mode: "pick", down, lift: up, expr: exprAt(f, PW_EX), at };
   }
-  const amount = 0.2 + 0.32 * smooth((f - (g + B.liftDur)) / 10) + 0.05 * Math.sin(f * 0.15 + i);
-  return { mode: "pretend", amount, phase: runPhase(i, f, g + B.liftDur, 0.55 + 0.05 * i), expr: exprAt(f, PW_EX), blink: blinkAt(f, 100 + i, PW_EX) };
+  const amount = 0.2 + 0.32 * smooth((f - (g + lift)) / 10) + 0.05 * Math.sin(f * 0.15 + i);
+  return { mode: "pretend", amount, phase: runPhase(i, f, g + lift, 0.55 + 0.05 * i), expr: exprAt(f, PW_EX), blink: blinkAt(f, 100 + i, PW_EX), at };
 }
 
 // ---------------------------------------------------------------------------------------------------- the researcher
@@ -384,7 +411,11 @@ function resPos1(w: World, f: number, hp: HeadPx | null, res: Figure): { st: Fig
     h0 = aimScreen(w, res, 0, p0); h1 = aimScreen(w, res, 1, p1);
     // the cloth: shaken out between her hands, then from her near hand across his head and down over his eyes; the kit
     // blindfold takes over on 眼睛
-    if (f >= B.raise && f < B.blind) cloth = { k: lift, a: endL, b: endR, open: unfold };
+    // on the head the strip ends on the head outline, as the kit band (clipped to the head x 1.04) does: the chord of
+    // the outline at the band's height, short enough that its square corners stay inside it (no strip overhanging the
+    // hair, nothing to change when the kit band takes over on 眼睛)
+    const Lc = Math.sqrt(Math.max(0, Lb * Lb - (raise + 0.15 * hp.r) ** 2));
+    if (f >= B.raise && f < B.blind) cloth = { k: lift, a: pxAdd(cB, hp.d, -Lc), b: pxAdd(cB, hp.d, Lc), open: unfold };
   }
   if (rest > 0) {
     h0.lerp(at.clone().addScaledVector(cr, -0.16).addScaledVector(up, 0.5), rest);
@@ -503,7 +534,7 @@ export const SEG: Segment = {
     if (f <= B.h2End) {
       c.rope.setGold(0.55, 0);
       crewPose(w, c, f, { pullers: h2Pullers(), researcher: H2_RESEARCHER(w) });
-      pickRope!.update({ a: V(0, -40, 0), b: V(0, -40, 0.02) });
+      pickRope!.update({ a: V(0, -40, 0), b: V(0, -40, 0.02) }); pickRope!.mesh.visible = false;   // parked: hide the 2 cm stub at the origin
       poseCloth(w, null);
     } else {
       const pullers = [0, 1, 2, 3, 4, 5].map((i) => pullerAt(w, i, f));
@@ -520,7 +551,8 @@ export const SEG: Segment = {
           // across his head (straight); thickness = the kit band's (0.3 x head radius), a little less while it hangs
           const n = w.project(c.res.handWorld(1)), fr = w.project(c.res.handWorld(0)), k = R.cloth.k;
           const N: Px = { x: n.x, y: n.y }, F: Px = { x: fr.x, y: fr.y };
-          const path = [N, pxLerp(pxLerp(N, F, 0.5), R.cloth.a, k), pxLerp(F, R.cloth.b, k)];
+          // (the strip's near end leaves her near hand for the head outline as it goes on, so her hand shows beside the band)
+          const path = [pxLerp(N, R.cloth.a, k), pxLerp(pxLerp(N, F, 0.5), R.cloth.a, k), pxLerp(F, R.cloth.b, k)];
           const thick = 0.3 * hp.r * lerp(0.82, 1, k), sag = lerp(lerp(8, 60, R.cloth.open), 0, smooth(k * 1.3));
           poseCloth(w, path, thick, sag, hp.z - 0.05);
           if (IP.dbg) console.log(`[segC] f${f} CLOTH ${path.map((q) => `${q.x.toFixed(0)},${q.y.toFixed(0)}`).join(" > ")} thick ${thick.toFixed(0)} sag ${sag.toFixed(0)} | band c ${hp.c.x.toFixed(0)},${hp.c.y.toFixed(0)} tilt ${(Math.atan2(hp.d.y, hp.d.x) * 180 / Math.PI).toFixed(1)}deg L ${hp.L.toFixed(0)}`);
@@ -563,6 +595,12 @@ export const SEG: Segment = {
     if (f >= B.one && f <= B.oneOut + 8 && f < B.p1) {
       const hd = c.pullers[1].headWorld(tv), top = proj(tw.copy(hd).setY(hd.y + c.pullers[1].headR));
       kids.push(h(RopeChip, { key: "fake", frame: f, at: B.one, out: B.oneOut, x: top.x, y: top.y - 8, dy: -92, text: "假装", tone: "grey", scale: 0.9 }));
+    }
+    if (f >= B.card + 4 && f <= YOU_OUT + 8 && f < B.p1) {
+      // line 09: who the numbers are about (puller 1 is small at the far end of the side view, by the dial): a gold 你
+      // over his head, the film's colour for "you", until the walkers come back in
+      const hd = c.pullers[0].headWorld(tv), top = proj(tw.copy(hd).setY(hd.y + c.pullers[0].headR));
+      kids.push(h(RopeChip, { key: "you", frame: f, at: B.card + 4, out: YOU_OUT, x: top.x, y: top.y - 6, dx: 34, dy: -84, text: "你", tone: "gold", scale: 0.9 }));
     }
     if (f >= B.card && f <= B.cardOut + 8) {
       // the reference row (alone = 100 %) comes with the card; then each row on its spoken number

@@ -1,5 +1,5 @@
 // segment C's label card: a copy of segB_card.ts's PctCard (that file is segB's; the design is the same: white card,
-// ink outline, title, one bar per row as the narration says it, value counting with the bar, newest bar gold, older
+// ink outline, title, one bar per row as the narration says it, the scripted value riding the bar, newest bar gold, older
 // rows neutral, 8 f exit) with one addition: `labelW`, a wider label column, so the label "2-6个" (about 125 px at 50 px)
 // does not run into its bar (segB's 118 px column fits 1人 / 2人 / 3人 / 6人 only). Pure function of the frame.
 import React from "react";
@@ -32,9 +32,9 @@ export const PctCardC: React.FC<PctCardProps> = ({ f, at, out, title, rows, top 
   rows.forEach((r, i) => {
     if (open[i] <= 0) return;
     const y = C.pad + C.titleH + i * C.rowH + (C.rowH - C.barH) / 2;
-    // bar growth: 0 -> 1 with a small overshoot over 12 f; the value counts with it (never past the value)
+    // bar growth: 0 -> 1 with a small overshoot over 12 f; the value is the scripted one from the first frame (no
+    // unscripted in-between numbers while the bar grows)
     const g = f < r.at ? 0 : easeOutBack(clamp01((f - r.at) / 12), 1.4);
-    const gv = clamp01(g);
     const next = rows[i + 1];
     const old = next ? easeInOutCubic(clamp01((f - next.at) / 6)) : 0;
     const fill = mixHex(COL.gold, NEUTRAL, old);
@@ -45,7 +45,7 @@ export const PctCardC: React.FC<PctCardProps> = ({ f, at, out, title, rows, top 
     const lab = h("div", { key: "l", style: { position: "absolute", left: 0, top: (C.barH - 50) / 2 - 2, width: C.labelW, textAlign: "left", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 50, lineHeight: 1, color: INK, whiteSpace: "nowrap", opacity: labOp } }, r.label);
     const bar = barW > 0.5 ? h("div", { key: "b", style: { position: "absolute", left: C.labelW, top: 0, width: barW, height: C.barH, borderRadius: C.barH / 2, background: fill, boxShadow: `0 0 0 4px ${INK}` } }) : null;
     const val = h("div", { key: "v", style: { position: "absolute", left: C.labelW + barW + 22, top: (C.barH - 50) / 2 - 2, fontFamily: FONT_STACK, fontWeight: 700, fontSize: 50, lineHeight: 1, color: INK, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", opacity: f < r.at ? 0 : clamp01((f - r.at) / 3) } },
-      `${Math.min(r.value, Math.round(r.value * gv))}%`);
+      `${r.value}%`);
     kids.push(h("div", { key: i, style: { position: "absolute", left: C.pad + 14, top: y, width: cw - 2 * C.pad, height: C.barH, opacity: rowOp } }, lab, bar, val));
   });
   return h("div", { style: { position: "absolute", inset: 0, opacity: op } },

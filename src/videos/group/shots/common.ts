@@ -10,8 +10,9 @@ import { FPS, TOTAL, type CamPose } from "../story";
  *  front of them looks +z at their faces, the back-wall clock (set.backClock) above their heads.
  *  Seat 77 has a laptop on the desk (the worker types on it); no dressing phones on 76-79 (they hold their own); x: 76 -1.20, 77 -0.56, 78 0.12, 79 0.76 */
 export const SEAT = { mate1: 76, worker: 77, you: 78, mate2: 79 } as const;
-/** frame 0 == the last frame: the four at eye level (standing height), the clock and notice board above them */
-export const OPEN: CamPose = { pos: [-0.22, 1.55, 1.55], look: [-0.22, 0.98, 4.9], fov: 68 };
+/** frame 0 == the last frame: the four at eye level (standing height), the clock and notice board above them. All four
+ *  heads clear the frame edges (~20 px): 0.13 m further back than the first cut and a slightly wider lens (72) */
+export const OPEN: CamPose = { pos: [-0.22, 1.55, 1.42], look: [-0.22, 0.98, 4.9], fov: 72 };
 
 export type Team = { mate1: Figure; worker: Figure; you: Figure; mate2: Figure };
 export const acquireTeam = (w: World): Team => {

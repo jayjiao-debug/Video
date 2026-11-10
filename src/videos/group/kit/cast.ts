@@ -40,7 +40,8 @@
 //     clampYaw  seated cards keep their yaw within this many radians of the view's axis (default .5) so a card never
 //               swings into the desk or the chair back; the drawing is chosen for the closest axis. Lying / bed cards:
 //               how far (default .45) the card may turn from the body's vertical plane toward the camera
-//     fx        [{ kind: "?" | "!" | "sweat" | "huff" | "dust" | "zzz", t: seconds since it popped }]
+//     fx        [{ kind: "?" | "!" | "sweat" | "huff" | "dust" | "zzz", t: seconds since it popped, s?: size factor
+//               (default 1), dy?: extra lift in head radii (default 0) }]
 //     scale     pop-in scale (1 = normal);  visible;  dim (0..1 card brightness, e.g. inside a dark bunk)
 //     blob      false = no contact blob
 //
@@ -529,7 +530,7 @@ export type FigState = {
   bed?: { top: THREE.Vector3 };
   aimAt?: [THREE.Vector3 | null, THREE.Vector3 | null];
   expr?: Expr; blink?: number; look?: number; lookUp?: number; faceTurn?: -1 | 0 | 1;
-  view?: View; clampYaw?: number; fx?: { kind: FxKind; t: number }[]; scale?: number; visible?: boolean; dim?: number; blob?: boolean;
+  view?: View; clampYaw?: number; fx?: { kind: FxKind; t: number; s?: number; dy?: number }[]; scale?: number; visible?: boolean; dim?: number; blob?: boolean;
   floor?: number;
 };
 type FxSlot = { mesh: THREE.Mesh; mat: THREE.MeshBasicMaterial; r: Req | null };
@@ -704,8 +705,8 @@ export class Figure {
       slot.r = pool.req(`fx|${e.kind}|${tt}`, 300, 300, 1, (p) => fxPop(p, e.kind, tt));
       const hw = this.headWorld(), R = this.headR, right = tmpW.set(Math.cos(pick.yaw), 0, -Math.sin(pick.yaw));
       const fwdSide = sv.view === "side" ? (pick.mirror ? -1 : 1) : 1;
-      const pos = hw.clone();
-      const size = (e.kind === "huff" || e.kind === "dust" ? 0.34 : 0.3) * (e.kind === "huff" || e.kind === "dust" ? 1 : popScale(e.t));
+      const pos = hw.clone(); pos.y += (e.dy ?? 0) * R;
+      const size = (e.kind === "huff" || e.kind === "dust" ? 0.34 : 0.3) * (e.kind === "huff" || e.kind === "dust" ? 1 : popScale(e.t)) * (e.s ?? 1);
       if (e.kind === "?" || e.kind === "!" || e.kind === "zzz") pos.addScaledVector(right, 0.55 * R * fwdSide).y += R + 0.17;
       else if (e.kind === "sweat") pos.addScaledVector(right, -1.05 * R * fwdSide).y += 0.35 * R;
       else if (e.kind === "huff") pos.addScaledVector(right, 1.25 * R * fwdSide).y -= 0.2 * R;

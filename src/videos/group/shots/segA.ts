@@ -1,6 +1,8 @@
 // segment A, frames 0-265 (lines 01-02). The classroom's back row: the worker types, the three scroll; one steady
 // eased push-in from OPEN to YOU (seat 78).
-//   总有人【划水】: YOU snickers at his phone (eyes open); the worker's eyes flick to YOU and back, annoyed.
+//   小组作业: mate1 (screen right) laughs at his phone (f8-28).
+//   总有人【划水】: YOU snickers at his phone (eyes open); the worker's head snaps to YOU (frown, eyes on him) and back
+//   with a huff.
 //   可能也包括【你】: YOU glances up at the camera, caught (dip, shock held open through 你, nervous, smug back to the phone).
 //   身后有几个人【帮你】: YOU blinks as he turns to the typing worker (who goes pained and sweats), a knowing smug on 帮你,
 //   blinks back to the phone: eyes open and on the phone for 你就会.
@@ -59,8 +61,8 @@ const trap = (f: number, f0: number, f1: number, a: number, d: number) => {
   const y = T - x;
   return 1 - vmax * (y * y) / (2 * d);
 };
-/** camera progress: eases in from the loop frame (30 f), then a steady glide that is still moving at the cut */
-const camP = (f: number) => trap(f, 0, CUT + 40, 30, 40);
+/** camera progress: eases in from the loop frame (20 f), then a steady glide that is still moving at the cut */
+const camP = (f: number) => trap(f, 0, CUT + 40, 20, 40);
 /** the path: a Catmull-Rom through the four keys (uniform in the key index u = 0..3), re-parameterised by arc length
  *  (metres of position + 0.01 x degrees of fov) so the speed along it is exactly camP's: no hitch at a key, no stall
  *  between close keys. The table is built once at module load (deterministic). */
@@ -103,8 +105,8 @@ const fxAt = (f: number, kind: FxKind, at: number, out: number): { kind: FxKind;
   if (f < out) return [{ kind, t: (f - at) / FPS }];
   return [{ kind, t: 0.2 * (1 - (f - out + 1) / 5) }];
 };
-/** 0 at f0, 1 after ~20 f: lets the idle offsets start from the exact loop state */
-const ramp = (f: number) => smooth(f / 20);
+/** 0 at f0, 1 after ~8 f: lets the idle offsets start from the exact loop state (and the scrolling / typing reads at once) */
+const ramp = (f: number) => smooth(f / 8);
 /** a smooth 0 -> 1 -> 0 window: up over [a, b], held, down over [c, d] */
 const win = (f: number, a: number, b: number, c: number, d: number) => smooth((f - a) / (b - a)) * (1 - smooth((f - c) / (d - c)));
 /** phone scrolling: the eyes hop up a touch every ~1.6 s (the next post) and drift back; the head sways slowly */
@@ -137,10 +139,12 @@ const YOU_EX: [number, Expr][] = [[0, "smug"], [SNK + 3, "grin"], [SNK + 9, "smu
 const YOU_POP = [SNK + 3, SNK + 9, UP + 4, HELP];
 /** blink as he turns back from the worker to the phone (hides the face-turn switch) */
 const YOU_BLINK = [SIDE + 29];
-// the worker: stern typing; huffs as his eyes flick to YOU on 划水; pained + sweat while YOU grins at him (帮你)
-const WORKER_EX: [number, Expr][] = [[0, "stern"], [SNK + 1, "huff"], [SNK + 14, "stern"], [HELP - 2, "pained"], [196, "stern"]];
-const WORKER_POP = [SNK + 1];
-const MATE1_EX: [number, Expr][] = [[0, "happy"], [38, "laugh"], [58, "happy"], [176, "grin"], [204, "happy"]];
+// the worker: stern typing; on 划水 his head snaps toward YOU (face turn, frown, eyes on YOU, f45-58), turns back in
+// the blink f58-61 with a huff (o mouth + a puff), stern again; pained + sweat while YOU grins at him (帮你)
+const WORKER_EX: [number, Expr][] = [[0, "stern"], [SNK + 17, "huff"], [SNK + 27, "stern"], [HELP - 2, "pained"], [196, "stern"]];
+const WORKER_POP = [SNK + 27];
+// mate1 laughs at his phone right away on 小组作业 (f8-28): the opening's first event
+const MATE1_LAUGH = 8, MATE1_EX: [number, Expr][] = [[0, "happy"], [MATE1_LAUGH, "laugh"], [MATE1_LAUGH + 20, "happy"], [176, "grin"], [204, "happy"]];
 const MATE2_EX: [number, Expr][] = [[0, "deadpan"], [118, "smile"], [152, "deadpan"]];
 
 function actYou(w: World, T: Team, f: number) {
@@ -171,7 +175,7 @@ function actYou(w: World, T: Team, f: number) {
     const flick = (() => { const x = ((t + 0.4) % 1.5) / 1.5; return x < 0.1 ? Math.sin((x / 0.1) * Math.PI) : 0; })();
     // ... and on the final look down he lifts it a little toward his face (the action we cut on)
     const lift = smooth((f - DOWN) / 5);
-    const dir = lerp(-171, -152, k) + 3 * flick + 6 * lift, reach = lerp(0.35, 0.52, k) - 0.02 * flick - 0.05 * lift;
+    const dir = lerp(-171, -152, k) + 3 * flick + 2 * lift, reach = lerp(0.35, 0.52, k) - 0.02 * flick - 0.05 * lift;
     pose = { kind: "hold", t, base: "seat", aim: [null, { dir, reach }], props: [null, "phone"], headTilt: tilt, lean } as typeof pose;
   }
   T.you.set({ ...base, pose, expr: exprAt(f, YOU_EX), blink: lid(f, SEAT.you, YOU_EX, YOU_POP, YOU_BLINK), lookUp, look, faceTurn: turned ? 1 : 0, fx: [] } as FigState);
@@ -181,20 +185,24 @@ function actWorker(w: World, T: Team, f: number) {
   // reading the screen while typing: the eyes run along a line, snap back to the next one
   const per = 1.25, x = (t % per) / per, run = x < 0.82 ? x / 0.82 : 1 - smooth((x - 0.82) / 0.18);
   // on 划水 his eyes flick to YOU (screen left = - look, up to YOU's face level) and back, with a huff
-  const gl = win(f, SNK + 1, SNK + 5, SNK + 10, SNK + 14);
+  const gl = win(f, SNK + 1, SNK + 4, SNK + 13, SNK + 16);
+  // the head turns with the glance: snaps toward YOU at f45, back on the closed lids of the blink f58-61
+  const turned = f >= SNK + 1 && f < SNK + 15;
   const look = lerp(r * (-0.35 + 0.7 * run), -1.25, gl);
   const lookUp0 = (base.lookUp ?? 0) + r * (-0.45 - (base.lookUp ?? 0)) - 0.4 * r * keysFlick(t);
   const lookUp = lerp(lookUp0, -0.1, gl);
   // typing: bursts of shoulder / head bob (faster and bigger while he is pained); a slow head drift under it
   const ty = typing(t), hard = 1 + 0.5 * win(f, HELP - 2, HELP + 2, 192, 198);
-  const tilt = r * (0.8 * Math.sin(t * 1.1) + 1.5 * hard * ty.env * ty.s * (1 - gl)) - 2 * gl;
+  const tilt = r * (0.8 * Math.sin(t * 1.1) + 1.5 * hard * ty.env * ty.s * (1 - gl)) - 6 * gl;
   const lean = r * 0.8 * hard * ty.env * Math.sin(t * Math.PI * 2 * 2.6 + 1.2) * (1 - gl);
-  const fx = fxAt(f, "sweat", HELP - 2, 206);
-  T.worker.set({ ...base, pose: { ...base.pose, headTilt: tilt, lean }, expr: exprAt(f, WORKER_EX), blink: lid(f, SEAT.worker, WORKER_EX, WORKER_POP), look, lookUp, fx } as FigState);
+  // the huff puff as he turns back (27 f, the kit's puff animation), then the (smaller, temple-high) sweat on 帮你
+  const HF = SNK + 16, huff = f >= HF && f < HF + 27 ? [{ kind: "huff" as FxKind, t: (f - HF) / FPS }] : [];
+  const fx = [...huff, ...fxAt(f, "sweat", HELP - 2, 206).map((e) => ({ ...e, s: 0.68, dy: 0.2 }))];
+  T.worker.set({ ...base, pose: { ...base.pose, headTilt: tilt, lean }, expr: exprAt(f, WORKER_EX), blink: lid(f, SEAT.worker, WORKER_EX, WORKER_POP), look, lookUp, faceTurn: turned ? -1 : 0, fx } as FigState);
 }
 function actMate(T: Team, who: "mate1" | "mate2", f: number, ex: [number, Expr][], seed: number) {
   const fig = T[who], t = loopT(f), r = ramp(f), base = fig.st;
-  const laugh = exprAt(f, ex) === "laugh" ? 2.6 * Math.sin((f - 38) * 0.9) : 0;
+  const laugh = exprAt(f, ex) === "laugh" ? 2.6 * Math.sin((f - MATE1_LAUGH) * 0.9) * (1 - smooth((f - MATE1_LAUGH - 15) / 5)) : 0;
   const lookUp = -0.85 + scrollEyes(t, seed) * r;
   fig.set({ ...base, pose: { ...base.pose, headTilt: r * sway(t, seed) + laugh }, expr: exprAt(f, ex), blink: lid(f, SEAT[who], ex), lookUp } as FigState);
 }
@@ -229,7 +237,7 @@ export const SEG: Segment = {
     // caption band)
     const hw = team.you.headWorld(hv), you = w.project(hw), top = w.project(hv.set(hw.x, hw.y + team.you.headR, hw.z));
     const px = Math.max(280, Math.min(800, you.x + 120)), py = Math.max(300, Math.min(900, top.y - 150));
-    const overlays = f >= PCT_IN && f <= PCT_OUT + 6 ? h(MinusPct, { f, at: PCT_IN, out: PCT_OUT, x: px, y: py, size: 210 }) : null;
+    const overlays = f >= PCT_IN && f <= PCT_OUT + 6 ? h(MinusPct, { f, at: PCT_IN, out: PCT_OUT, x: px, y: py, size: 210, exit: "pop" }) : null;
     if (IP.dbg) {
       const row = (n: string, F: typeof team.you) => { const p = F.headWorld(); const q = w.project(p); return `${n} head (${p.x.toFixed(2)},${p.y.toFixed(2)},${p.z.toFixed(2)}) -> ${(q.x / 10.8).toFixed(0)}% ${(q.y / 19.2).toFixed(0)}% r ${(F.headR / q.z * 1920 / (2 * Math.tan((cam.fov * Math.PI) / 360))).toFixed(0)}px view ${F.sv?.view}`; };
       console.log(`[segA] f${f} ${row("you", team.you)} | ${row("worker", team.worker)} | ${row("mate1", team.mate1)} | ${row("mate2", team.mate2)}`);

@@ -29,6 +29,10 @@ import type { Crew } from "./labcommon";
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export type Fx = { kind: FxKind; t: number };
 type Face = { expr?: Expr; fx?: Fx[]; blink?: number; look?: number; lookUp?: number; faceTurn?: -1 | 0 | 1 };
+/** root override for turn / pick / pull / stand / pretend (default: the puller's square). The returning pretenders stop a
+ *  step in front of the rope line (camera side, so their shoes never land on the spare rope lying through the squares)
+ *  and settle onto the square while they lift it */
+type At = { at?: THREE.Vector3 };
 
 export type CPuller =
   | { mode: "off" }
@@ -37,17 +41,19 @@ export type CPuller =
    *  the rope line); k is then the fraction of the path's arc length */
   | ({ mode: "walk"; from: THREE.Vector3; to: THREE.Vector3; via?: THREE.Vector3; k: number } & Face)
   /** the idle drawing at the square, facing `facing` (default: toward the camera) */
-  | ({ mode: "turn"; facing?: number } & Face)
+  | ({ mode: "turn"; facing?: number } & Face & At)
   /** down: 0..1 the reach toward the rope (grips at 1); lift: 0..1 the gripped rope rising to rope height */
-  | ({ mode: "pick"; down: number; lift: number } & Face)
-  | ({ mode: "pull" | "stand" | "pretend"; amount: number; phase: number; blind?: boolean; view?: "front" | "side"; headTilt?: number; lean?: number } & Face);
+  | ({ mode: "pick"; down: number; lift: number } & Face & At)
+  | ({ mode: "pull" | "stand" | "pretend"; amount: number; phase: number; blind?: boolean; view?: "front" | "side"; headTilt?: number; lean?: number } & Face & At);
 
 /** the fixed floor point where the rope's free end lies (crewPose's tail end with all six on the rope) */
 export const ropeEnd = (w: World) => V(w.lab.A.positions[5].x + 0.85, 0, w.lab.A.ropeZ - 0.12);
 /** where the lifted rope is carried to before the haul grip takes over: forward of the root and rope height (m) */
 const LIFT_TO = { fwd: 0.2, up: 0.86 };
-/** where along the lying rope a newcomer grips it: this far in front of its root (m, along its facing) */
-const GRAB_FWD = 0.22;
+/** where along the lying rope a newcomer grips it: this far in front of its root (m, along its facing). 0.4: where the
+ *  rope already rises toward the last hand (about a third of a metre up), so the reach is a bend at the hips, not a
+ *  dive with the head below the hips (0.22 grabbed it near the floor) */
+const GRAB_FWD = 0.4;
 const tmp = V(), tmpN = V();
 
 export type CrewCInfo = { holders: number[]; pretenders: number[]; picker: number; pickPoint: THREE.Vector3 | null; pickGap: number };
@@ -105,8 +111,10 @@ export function crewC(w: World, c: Crew, pick: Rope, f: number, s: CrewCState): 
   const camP = tmp.setFromMatrixPosition(w.camera.matrixWorld).clone();
   const targets = new Map<number, [number, number]>();
   const setAll = () => {
+    // (the reach amount eases in and tops out at 0.86 until the lift: the torso stops short of horizontal, the head never
+    // drops below the hips; it is back to 1 by the end of the lift, where the haul grip takes over)
     s.pullers.forEach((p, i) => {
-      const fig = c.pullers[i], sq = A.positions[i];
+      const fig = c.pullers[i], sq = ("at" in p && p.at) || A.positions[i];
       fig.look = i === 0 && "blind" in p && p.blind ? LOOK.puller0Blind : LOOK.puller(i);
       if (p.mode === "off") { fig.set({ at: sq, visible: false, pose: { kind: "idle", t } }); return; }
       const blink = p.blink ?? lidAt(t + 30, 100 + i);
@@ -126,7 +134,7 @@ export function crewC(w: World, c: Crew, pick: Rope, f: number, s: CrewCState): 
         return;
       }
       if (p.mode === "pick") {
-        fig.set({ at: sq, facing: A.facing, view: "side", pose: { kind: "reach", t, target: targets.get(i) ?? [60, 30], amount: Math.max(0.001, p.down) }, ...face, visible: true });
+        fig.set({ at: sq, facing: A.facing, view: "side", pose: { kind: "reach", t, target: targets.get(i) ?? [60, 30], amount: Math.max(0.001, p.down * p.down * (3 - 2 * p.down) * (0.86 + 0.14 * p.lift)) }, ...face, visible: true });
         return;
       }
       fig.set({
@@ -169,7 +177,7 @@ export function crewC(w: World, c: Crew, pick: Rope, f: number, s: CrewCState): 
     let lastP = drawFront();
     gripped = -1;
     for (const k of pickers) {
-      const p = s.pullers[k] as Extract<CPuller, { mode: "pick" }>, fig = c.pullers[k], root = A.positions[k];
+      const p = s.pullers[k] as Extract<CPuller, { mode: "pick" }>, fig = c.pullers[k], root = p.at ?? A.positions[k];
       // the rope as it lies before this picker grips it: the last attached point -> the floor end
       c.tail.update({ a: lastP, b: E, slack: lieSlack(lastP, E, 0, 0.016, drape), attachA: { kind: "hand", tail: 0 }, attachB: { kind: "end" } });
       // the grip point: the rope a short step in front of the picker (along its facing), where it is already rising
@@ -186,7 +194,9 @@ export function crewC(w: World, c: Crew, pick: Rope, f: number, s: CrewCState): 
       const P = c.tail.points[best].clone(), loc = m.worldToLocal(P.clone());
       const tgDown: [number, number] = [loc.x / SU, Math.max(8, loc.y / SU)];
       const tgUp: [number, number] = [LIFT_TO.fwd / SU, LIFT_TO.up / SU];
-      const e = p.lift * p.lift * (3 - 2 * p.lift);
+      // the rise: smoothstep^1.5, slow off the floor: the reach pose is upright once the hand is ~0.55 m up, so the
+      // first part of the rise is where the torso unbends; a slow start spreads that over ~5 frames instead of 2
+      const sl = p.lift * p.lift * (3 - 2 * p.lift), e = sl * Math.sqrt(sl);
       targets.set(k, [tgDown[0] + (tgUp[0] - tgDown[0]) * e, tgDown[1] + (tgUp[1] - tgDown[1]) * e]);
       if (p.down >= 1 && gripped < 0) {
         gripped = k; pickLen = c.tail.s[best] ?? 0; info.pickPoint = P; info.pickGap = bestD; info.picker = k;

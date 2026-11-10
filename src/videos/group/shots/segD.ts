@@ -27,7 +27,7 @@ import { SEAT, acquireTeam, releaseTeam, teamLoopState, loopT, type Team } from 
 import type { World } from "../world";
 import { EMPTY_CROWD } from "../world";
 import { lidAt, type Figure, type FigState, type FxKind } from "../kit/cast";
-import type { Expr, PoseReq } from "../kit/toon";
+import { dimsOf, SU, type Expr, type PoseReq } from "../kit/toon";
 import { camD, CLOCK_C, CLOCK_R } from "./segD_cam";
 import { Study78, SlidePlan, ChatInsert, chatUp, type PlanPart, type ChatMsg } from "./segD_ov";
 import { phonesEnter, phonesExit, phonesPose, dressingEnter, dressingHidden, dressingCount, type PhoneLie } from "./segD_props";
@@ -110,7 +110,9 @@ const mixAim = (a: Aim, b: Aim, k: number): Aim => ({ dir: lerp(a.dir, b.dir, k)
  *  -3 cos(dir) for hold: compensated), so the head never jumps sideways; it eases to 0 for the loop's phone pose */
 const LEAN = 2.6;
 
-type Act = { pose: PoseReq; lie: PhoneLie; phase: "scroll" | "put" | "work" | "pick" | "rise" };
+/** the phone on the desk as scrollerAct sees it (actScroller adds the sitter's scale; pose() the card's mirror) */
+type Lie0 = { x: number; tip: number; glow: number; hand: boolean } | null;
+type Act = { pose: PoseReq; lie: Lie0; phase: "scroll" | "put" | "work" | "pick" | "rise" };
 /** a scroller's body and phone at f. P: put-down start, Q: phone back in hand */
 function scrollerAct(who: Who, f: number, P: number, Q: number, t: number, r: number): Act {
   const A = AIMS[who];
@@ -126,18 +128,18 @@ function scrollerAct(who: Who, f: number, P: number, Q: number, t: number, r: nu
   if (f >= P && f < Q - 16) {
     if (f < P + 4) return { pose: hold(mixAim(A.REST, A.LIFT, smooth((f - P) / 4)), true), lie: null, phase: "put" };
     if (f < P + 7) return { pose: hold(mixAim(A.LIFT, A.REST, smooth((f - P - 4) / 3)), true), lie: null, phase: "put" };
-    if (f < P + 12) { const k = smooth((f - P - 7) / 5); return { pose: hold(mixAim(A.REST, A.LOW, k), false), lie: { x: A.x, tip: k, glow }, phase: "put" }; }
-    const lie = { x: A.x, tip: 1, glow };
+    if (f < P + 12) { const k = smooth((f - P - 7) / 5); return { pose: hold(mixAim(A.REST, A.LOW, k), false), lie: { x: A.x, tip: k, glow, hand: true }, phase: "put" }; }
+    const lie = { x: A.x, tip: 1, glow, hand: false };
     if (f < P + 14) return { pose: hold(mixAim(A.LOW, A.DESK, smooth((f - P - 12) / 2)), false), lie, phase: "put" };
     if (f < P + 18) return { pose: desk(), lie, phase: "put" };
     return { pose: write(smooth((f - P - 18) / 6)), lie, phase: "work" };
   }
   // ---- the pick-up: stop writing (Q-16), a look round (desk), the hand to the phone (Q-6), stand it up (Q-4), in hand
   if (f >= Q - 16 && f < Q + 6) {
-    const lie = { x: A.x, tip: 1, glow };
+    const lie = { x: A.x, tip: 1, glow, hand: false };
     if (f < Q - 6) return { pose: desk(), lie, phase: "pick" };
     if (f < Q - 4) return { pose: hold(mixAim(A.DESK, A.LOW, smooth((f - Q + 6) / 2)), false), lie, phase: "pick" };
-    if (f < Q) { const k = smooth((f - Q + 4) / 4); return { pose: hold(mixAim(A.LOW, A.REST, k), false), lie: { x: A.x, tip: 1 - k, glow }, phase: "pick" }; }
+    if (f < Q) { const k = smooth((f - Q + 4) / 4); return { pose: hold(mixAim(A.LOW, A.REST, k), false), lie: { x: A.x, tip: 1 - k, glow, hand: true }, phase: "pick" }; }
     if (f < Q + 3) return { pose: hold(mixAim(A.REST, A.LIFT, smooth((f - Q) / 3)), true), lie: null, phase: "pick" };
     return { pose: hold(mixAim(A.LIFT, A.REST, smooth((f - Q - 3) / 3)), true), lie: null, phase: "pick" };
   }
@@ -148,15 +150,17 @@ function scrollerAct(who: Who, f: number, P: number, Q: number, t: number, r: nu
 }
 
 // expressions (frames). The scrollers: key-word reactions while scrolling; "!" when their name lands; a nervous beat
-// while setting the phone down; focused (neutral / stern, eyes down) while writing; line 15: the sly look round
-const WORKER_EX: [number, Expr][] = [[0, "neutral"], [B.glance, "stern"], [B.glanceBack + 1, "sigh"], [B.glanceBack + 16, "neutral"], [1551, "sigh"], [1574, "neutral"],
-  [B.tags[2] + 5, "relief"], [B.tags[2] + 24, "neutral"], [B.gone, "relief"], [B.gone + 22, "neutral"], [B.off[2] + 2, "stern"], [B.glance2 + 1, "sad"], [B.glance2 + 19, "stern"]];
+// while setting the phone down; focused ("focus": lids down to the page, brows a little knit) while writing; line 15: the sly look round
+// the worker: on 看得见 a short huff (the "o" mouth reads at this size) settling into stern; on 看不见 sad, then a sigh
+// (closed eyes, "o" mouth) as he turns back, stern again for the loop (teamLoopState)
+const WORKER_EX: [number, Expr][] = [[0, "neutral"], [B.glance, "huff"], [B.glance + 9, "stern"], [B.glanceBack + 1, "sigh"], [B.glanceBack + 16, "neutral"], [1551, "sigh"], [1574, "neutral"],
+  [B.tags[2] + 5, "relief"], [B.tags[2] + 24, "neutral"], [B.gone, "relief"], [B.gone + 22, "neutral"], [B.off[2] + 2, "stern"], [B.glance2 + 1, "sad"], [B.glance2 + 12, "sigh"], [B.glance2 + 20, "stern"]];
 const youEx = (P: number, Q: number): [number, Expr][] => [[0, "smug"], [1442, "grin"], [1466, "smug"], [1530, "happy"], [1556, "smug"],
-  [P - 6, "shock"], [P + 2, "nervous"], [P + 12, "neutral"], [Q - 14, "smug"], [Q - 4, "smug"]];
+  [P - 6, "shock"], [P + 2, "nervous"], [P + 12, "focus"], [Q - 14, "smug"], [Q - 4, "smug"]];
 const mate1Ex = (P: number, Q: number): [number, Expr][] => [[0, "happy"], [1386, "laugh"], [1404, "happy"], [1494, "laugh"], [1511, "happy"],
-  [P - 6, "shock"], [P + 2, "nervous"], [P + 12, "stern"], [Q - 14, "whistle"], [Q + 2, "happy"]];
+  [P - 6, "shock"], [P + 2, "nervous"], [P + 12, "focus"], [Q - 14, "whistle"], [Q + 2, "happy"]];
 const mate2Ex = (P: number, Q: number): [number, Expr][] => [[0, "deadpan"], [1452, "grin"], [1480, "deadpan"], [1534, "smug"], [1558, "deadpan"],
-  [P - 6, "shock"], [P + 2, "nervous"], [P + 12, "neutral"], [Q - 14, "smug"], [Q + 2, "deadpan"]];
+  [P - 6, "shock"], [P + 2, "nervous"], [P + 12, "focus"], [Q - 14, "smug"], [Q + 2, "deadpan"]];
 const SEED: Record<Who, number> = { you: 0.3, mate1: 0.7, mate2: 1.3 };
 const OFF: Record<Who, number> = { you: 0, mate1: 0.7, mate2: 1.3 };
 /** the look round before the pick-up (toward the worker: + = screen right) */
@@ -184,7 +188,8 @@ function actScroller(w: World, fig: Figure, who: Who, f: number): PhoneLie {
   const fx = fxAt(f, "!", P - 6, P + 6);
   const C = w.classroom;
   fig.set({ ...C.seatOf(SEAT[who]), pose: { ...act.pose, headTilt: tilt }, expr, blink: lid(f, SEAT[who], ex), lookUp, look, fx, visible: true } as FigState);
-  return act.lie;
+  // the desk phone at the drawn phone's scale (the kit draws it in this sitter's head heights)
+  return act.lie ? { ...act.lie, hh: dimsOf(fig.look).HH * SU, mirror: false } : null;
 }
 
 function actWorker(w: World, fig: Figure, f: number) {
@@ -200,8 +205,9 @@ function actWorker(w: World, fig: Figure, f: number) {
   if (f >= G - 3 && f < GB + 8) {
     const g = ky(f, [[G - 3, 0], [G, 1], [GB, 1], [GB + 6, 0]]);
     const gl = ky(f, [[G - 3, 0], [G - 1, 0.35], [G + 2, -1], [G1 - 1, -1], [G1 + 3, 1], [GB, 1], [GB + 5, 0]]);
-    look = lerp(look, gl, g); lookUp = lerp(lookUp, 0.05, g);
-    tilt = lerp(tilt, ky(f, [[G - 3, 0], [G - 1, 1.5], [G + 3, -6], [G1 - 1, -6], [G1 + 3, 6], [GB, 6], [GB + 3, 2], [GB + 7, 0]]), g);
+    // the eyes come up to them (lookUp 0.2) and the head leans well into each look (10 deg, a 2-frame overshoot settle)
+    look = lerp(look, gl, g); lookUp = lerp(lookUp, 0.2, g);
+    tilt = lerp(tilt, ky(f, [[G - 3, 0], [G - 1, 1.5], [G + 3, -11.5], [G + 5, -10], [G1 - 1, -10], [G1 + 3, 11.5], [G1 + 5, 10], [GB, 10], [GB + 3, 3], [GB + 7, 0]]), g);
     faceTurn = f >= G + 1 && f < G1 + 1 ? -1 : f >= G1 + 1 && f < GB + 2 ? 1 : 0;
   }
   // his tag lands: he looks up at the plan, relieved
@@ -213,17 +219,19 @@ function actWorker(w: World, fig: Figure, f: number) {
   if (f >= G2 - 3 && f < G2 + 22) {
     const g = ky(f, [[G2 - 3, 0], [G2, 1], [G2 + 16, 1], [G2 + 21, 0]]);
     look = lerp(look, ky(f, [[G2 - 3, 0], [G2 - 1, 0.3], [G2 + 2, -1], [G2 + 21, -1]]), g); lookUp = lerp(lookUp, -0.1, g);
-    tilt = lerp(tilt, ky(f, [[G2 - 3, 0], [G2 - 1, 1.2], [G2 + 3, -6], [G2 + 16, -6], [G2 + 21, 0]]), g);
+    tilt = lerp(tilt, ky(f, [[G2 - 3, 0], [G2 - 1, 1.2], [G2 + 3, -11.5], [G2 + 5, -10], [G2 + 16, -10], [G2 + 21, 0]]), g);
     faceTurn = f >= G2 + 1 && f < G2 + 18 ? -1 : 0;
   }
-  const fx = fxAt(f, "sweat", 1553, 1578);
+  // a sweat drop with the sigh after the 78 studies, and with the sad look on 看不见 (it separates sad from stern)
+  const fx = [...fxAt(f, "sweat", 1553, 1578), ...fxAt(f, "sweat", G2 + 4, G2 + 18)].map((e) => ({ ...e, s: 0.68, dy: 0.2 }));   // (segA's sweat size: at the temple, not oversized)
   fig.set({ ...C.seatOf(SEAT.worker), pose: { kind: "desk", t, headTilt: tilt }, expr: exprAt(f, WORKER_EX), blink: lid(f, SEAT.worker, WORKER_EX),
     look, lookUp, faceTurn: faceTurn || undefined, fx, visible: true } as FigState);
 }
 
 // ---------------------------------------------------------------------------------------------------- the plan card
-/** the card's column centres = the four heads' x in the hold framing (CAM_B), screen left to right */
-const COL_X = [198, 432, 671, 912];
+/** the card's column centres: over the four heads in the hold framing (CAM_B: heads at x ~153 / 418 / 695 / 954), pulled
+ *  in where a box would leave the card (x 44..1036, boxes 212 wide); screen left to right */
+const COL_X = [160, 420, 690, 925];
 const PLAN: { who: keyof Team; label: string; name: string; col: string }[] = [
   { who: "mate2", label: "找资料", name: "小雨", col: "#d9a832" },
   { who: "you", label: "写讲稿", name: "你", col: "#3567b8" },
@@ -273,8 +281,10 @@ export const SEG: Segment = {
       actWorker(w, team.worker, f);
       lies[0] = actScroller(w, team.you, "you", f); lies[1] = actScroller(w, team.mate1, "mate1", f); lies[2] = actScroller(w, team.mate2, "mate2", f);
     }
-    phonesPose(lies);
     C.update(loopT(f));
+    // after the cast update (the cards are placed): a mirrored card draws the camera bump screen right
+    ([team.you, team.mate1, team.mate2] as Figure[]).forEach((F, i) => { const l = lies[i]; if (l) l.mirror = F.mesh.scale.x < 0; });
+    phonesPose(lies);
 
     // overlays
     const ov: React.ReactNode[] = [];

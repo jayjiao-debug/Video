@@ -3,9 +3,10 @@
 //    (planted feet: the cycle phase comes from the distance walked, foreshortened by the card's angle to the path);
 //  - "turn": the front idle drawing at the square for a frame or two (the walk faces -z, the haul faces the gauge: in
 //    profile the drawing flips, the front frame sells the turn);
-//  - "pick": the newcomer bends down (kit reach pose) to the spare rope where it lies, grips it (from that frame the rope
-//    runs through the hand, so it never pops from the floor to the hands) and lifts it to rope height, the slack between
-//    them running out as it rises;
+//  - "pick": the newcomer bends (kit reach pose, ~25-40 deg) to the spare rope where it hangs down from the last
+//    holder's rear hand (GRIP_Y), grips it (from that frame the rope runs through the hand, so it never pops to the
+//    hands) and lifts it to rope height, the slack between them running out as it rises; while fewer than six hold,
+//    the spare rope touches the floor just short of the next empty square (TOUCH) and lies flat from there;
 //  - the rope's free end lies at ONE fixed floor point the whole time (square 6 + 0.85 m, 0.12 m to the window side: the
 //    H2 tail end of crewPose), so the spare rope lies along the empty squares and each newcomer picks it up there
 //    (crewPose moves its tail end to the square after the last holder, which would jump with every newcomer);
@@ -41,6 +42,20 @@ export const ropeEnd = (w: World) => V(w.lab.A.positions[5].x + 0.85, 0, w.lab.A
 export const hideRope = (rp: Rope) => { rp.update({ a: V(0, -40, 0), b: V(0, -40, 0.02) }); rp.mesh.visible = false; };
 /** where the lifted rope is carried to before the haul grip takes over: forward of the root and rope height (m) */
 const LIFT_TO = { fwd: 0.2, up: 0.86 };
+/** the newcomer grips the spare rope where it comes down through this height (m) below the last holder's rear hand:
+ *  a bend at the waist and knees (lean ~25 deg), not a dive to the floor (the floor grip folded them ~80 deg flat) */
+const GRIP_Y = 0.32;
+/** while fewer than six hold, the spare rope hangs from the last holder's rear hand and touches the floor TOUCH m short
+ *  of the next empty square's centre, then lies flat along the rope line: a newcomer walking onto that square stands
+ *  over a rope on the floor, never inside one still at hip height (the default drape touched down past the square) */
+const TOUCH = 0.16;
+/** the drape (catenary parameter, m) at which a rope hanging from height h touches the floor dx (plan) from the hand:
+ *  dx = a acosh(1 + h / a) grows with a */
+const drapeFor = (h: number, dx: number) => {
+  let lo = 0.01, hi = 3;
+  for (let k = 0; k < 40; k++) { const m = Math.sqrt(lo * hi); if (m * Math.acosh(1 + h / m) > dx) hi = m; else lo = m; }
+  return Math.sqrt(lo * hi);
+};
 const tmp = V(), tmpN = V();
 
 export type CrewBInfo = { pickPoint: THREE.Vector3 | null; pickGap: number; holders: number[]; picker: number };
@@ -93,26 +108,32 @@ export function crewB(w: World, c: Crew, pick: Rope, f: number, s: { pullers: BP
   const tie = { kind: "knot" as const, axis: A.hookTie.axis, postR: A.hookTie.postR };
   const hide = (rp: Rope) => hideRope(rp);
   const info: CrewBInfo = { pickPoint: null, pickGap: 0, holders, picker };
+  // the spare rope from a hand to the floor end: with all six holding crewPose's drape (the H2 hand-off), otherwise
+  // touching down at touchX (plan x) and lying flat from there (see TOUCH)
+  const lieTail = (from: THREE.Vector3, touchX: number | null) => {
+    const slack = touchX === null ? lieSlack(from, E, 0, 0.016) : lieSlack(from, E, 0, 0.016, drapeFor(Math.max(0.02, from.y - 0.016), Math.max(0.06, touchX - from.x)));
+    c.tail.update({ a: from, b: E, slack, attachA: { kind: "hand", tail: 0 }, attachB: { kind: "end" } });
+  };
+  const nextTouch = holders.length < 6 ? A.positions[holders.length].x - TOUCH : null;
   let pickLen = 0;
   if (picker >= 0 && holders.length) {
-    const p = s.pullers[picker] as Extract<BPuller, { mode: "pick" }>, fig = c.pullers[picker], root = A.positions[picker];
-    // the rope as it lies before the grip: last holder's rear hand -> the floor end
+    const p = s.pullers[picker] as Extract<BPuller, { mode: "pick" }>, fig = c.pullers[picker];
+    // the rope as it lies before the grip: last holder's rear hand -> down just short of the picker's square -> the end
     const last0 = c.pullers[holders[holders.length - 1]].handWorld(0);
-    c.tail.update({ a: last0, b: E, slack: lieSlack(last0, E, 0, 0.016), attachA: { kind: "hand", tail: 0 }, attachB: { kind: "end" } });
-    // the grip point: where that rope crosses the picker's card plane (low, near the square)
-    const m = fig.mesh, n = V(Math.sin(m.rotation.y), 0, Math.cos(m.rotation.y));
-    let best = -1, bestD = Infinity;
-    c.tail.points.forEach((q, k) => {
-      if (q.y > 0.6 || Math.hypot(q.x - root.x, q.z - root.z) > 0.7) return;
-      const d = Math.abs(tmpN.copy(q).sub(root).dot(n));
-      if (d < bestD) { bestD = d; best = k; }
-    });
+    lieTail(last0, nextTouch);
+    // the grip point: where that rope comes down through GRIP_Y, carried along the view ray onto the picker's card
+    // plane (the hand is drawn on the card: on screen it lands exactly on the rope, so nothing jumps at the grip)
+    const m = fig.mesh, n = V(Math.sin(m.rotation.y), 0, Math.cos(m.rotation.y)), mp = V().setFromMatrixPosition(m.matrixWorld);
+    const best = c.tail.points.findIndex((q) => q.y <= GRIP_Y);
     if (best >= 0) {
-      const P = c.tail.points[best].clone(), loc = m.worldToLocal(P.clone());
-      info.pickPoint = P; info.pickGap = bestD;
+      const P = c.tail.points[best].clone(), ray = P.clone().sub(camP), den = n.dot(ray);
+      const Pc = Math.abs(den) > 1e-6 ? camP.clone().addScaledVector(ray, n.dot(mp.clone().sub(camP)) / den) : P.clone();
+      const loc = m.worldToLocal(Pc.clone());
+      info.pickPoint = P; info.pickGap = P.distanceTo(Pc);
       const tgDown: [number, number] = [loc.x / SU, Math.max(8, loc.y / SU)];
       const tgUp: [number, number] = [LIFT_TO.fwd / SU, LIFT_TO.up / SU];
-      const e = p.lift * p.lift * (3 - 2 * p.lift);
+      // (the caller already eases lift)
+      const e = p.lift;
       setAll([tgDown[0] + (tgUp[0] - tgDown[0]) * e, tgDown[1] + (tgUp[1] - tgDown[1]) * e]);
       L.update(t);
       pickLen = c.tail.s[best] ?? 0;
@@ -129,12 +150,14 @@ export function crewB(w: World, c: Crew, pick: Rope, f: number, s: { pullers: BP
   let last = via[via.length - 1];
   c.rope.update({ a: A.hook, b: last, via: via.slice(0, -1), attachA: tie, attachB: { kind: "hand", tail: 0 } });
   const pp = picker >= 0 ? (s.pullers[picker] as Extract<BPuller, { mode: "pick" }>) : null;
+  let touchX = nextTouch;
   if (pp && pp.down >= 1 && info.pickPoint) {
-    // gripped: last holder's rear hand -> the picker's hand (its slack runs out as the rope rises) -> the floor end
-    const ph = c.pullers[picker].handWorld(1), chord = last.distanceTo(ph) * (1 + TAUT), e = pp.lift * pp.lift * (3 - 2 * pp.lift);
+    // gripped: last holder's rear hand -> the picker's hand (its slack runs out as the rope rises) -> straight down in
+    // front of the picker's feet -> the floor end
+    const ph = c.pullers[picker].handWorld(1), chord = last.distanceTo(ph) * (1 + TAUT), e = pp.lift;
     pick.update({ a: last, b: ph, length: Math.max(chord, pickLen + (chord - pickLen) * e), attachA: { kind: "hand", tail: 0 }, attachB: { kind: "hand", tail: 0 } });
-    last = ph;
+    last = ph; touchX = ph.x;
   } else hide(pick);
-  c.tail.update({ a: last, b: E, slack: lieSlack(last, E, 0, 0.016), attachA: { kind: "hand", tail: 0 }, attachB: { kind: "end" } });
+  lieTail(last, touchX);
   return info;
 }

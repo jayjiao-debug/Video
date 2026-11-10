@@ -6,8 +6,8 @@
 // to exactly cams.side while the others join; the camera then holds to the H2 hand-off.
 // Line 03: puller 1 hauls hard (huff), the needle trembles at 16 (one person's full pull = 16 dial units); the
 //   researcher reads the dial and writes. 测力气 (f371): the label card 每人出力 enters with 1人 100%.
-// Line 04: puller 2 walks in from the camera side, turns, bends, picks the spare rope off the floor at square 2, lifts
-//   it, hauls; the needle eases to 29 (2 x 16 x 0.91). 每人只出【91%】 (f434): 2人 91%.
+// Line 04: puller 2 walks in from the camera side, turns, bends, grips the spare rope where it hangs down from puller
+//   1's rear hand (it lies flat on the floor from just short of square 2 on), lifts it over 10 f, hauls; the needle eases to 29 (2 x 16 x 0.91). 每人只出【91%】 (f434): 2人 91%.
 // Line 05: puller 3 joins (needle 39 = 3 x 16 x 0.82, bar 3人 82% as he hauls), pullers 4, 5, 6 join one by one
 //   (needle up to 75 = 6 x 16 x 0.78 as each grips), 只剩【78%】 (f590): 6人 78%. The card leaves f636-644.
 //   Each puller's lean eases down a little as the group grows (each pulls less), while the total rises.
@@ -15,7 +15,7 @@
 //   one leans back while the next relaxes), the needle wobbles irregularly round 70. 大家使劲【不同步】 (f706): a
 //   small "?" pops over the researcher (she watches from S2, behind squares 5-6, where her face shows between the
 //   heads of pullers 5 and 6), she tilts her head, puzzled, then walks off along the window side toward puller 1 to
-//   look into it (the "?" leaves f726-732 as she sets off; from about f750 she is behind puller 2's head, as in H2). All relax to the
+//   look into it (the "?" leaves f720-726, before she turns away; from about f750 she is behind puller 2's head, as in H2). All relax to the
 //   H2 state (stand, dial 20) over f735-762; f770 = labcommon's H2 exactly (crewPose itself).
 // Everything is a pure function of f. Checks (IP='{"dbg":true}'): framing (heads, dial, card), rope clearance against
 // the set's colliders and the bodies, feet on the floor, walk paths against the rope and the other figures, camera
@@ -42,10 +42,18 @@ const F0 = S.from, F1 = S.to;
 // ---------------------------------------------------------------------------------------------------- beats (frames)
 /** card: enters on 测力气, rows on the narration, leaves before the heave */
 const CARD_IN = 371, CARD_OUT = 636;
-/** arrival frame at the square for pullers 2..6 (index 1..5), one by one (4-6 every 14 f, so they do not bunch at the
- *  frame edge); pull starts ARR + 13 (turn 2 f, bend 6 f, lift 5 f) */
-const ARR = [0, 420, 523, 548, 562, 576];
-const pullStart = (i: number) => (i === 0 ? F0 - 60 : ARR[i] + 13);
+/** the pick-up after each arrival: the front "turn" drawing (TURN f), the bend to the rope (DOWN f, gripped at its
+ *  end), the lift to rope height (LIFT f, eased: no one-frame snap upright); the haul starts at arrival + the sum.
+ *  Pullers 4-6 (small in the wide framing, arriving one by one) a little quicker. */
+const PICKT = [0, 1, 2, 3, 4, 5].map((i) => (i < 3 ? { turn: 4, down: 6, lift: 10 } : { turn: 3, down: 4, lift: 7 }));
+/** pull start for pullers 2..6 (index 1..5): puller 2 as 两个人一起拉 ends (row 2 on 91%), puller 3 as row 3 pops in
+ *  三个人【82%】 (then ~14 f of a clear three-person pull before puller 4 walks in over the group), 4-6 one by one in
+ *  六个人, puller 6 on 只剩【78%】. Two picks never overlap (crewB drives one picker and one pick rope): each pull
+ *  start is at least down + lift after the previous one. */
+const PULL = [0, 433, 513, 568, 579, 590];
+/** arrival frame at the square */
+const ARR = PULL.map((p, i) => (i === 0 ? 0 : p - PICKT[i].turn - PICKT[i].down - PICKT[i].lift));
+const pullStart = (i: number) => (i === 0 ? F0 - 60 : PULL[i]);
 const ROWS = [
   { label: "1人", value: 100, at: CARD_IN },
   { label: "2人", value: 91, at: 434 },
@@ -55,7 +63,7 @@ const ROWS = [
 /** heave (line 06) and the relax into H2 */
 const HEAVE0 = 645, HEAVE_FULL = 662, RELAX0 = 735, RELAX1 = 758;
 /** the "?" over the researcher on 不同步 */
-const Q_IN = 706, Q_OUT = 726;
+const Q_IN = 706, Q_OUT = 720;
 
 // ---------------------------------------------------------------------------------------------------- camera
 /** the opening framing: from the door end on the camera side (the side camera's side of the room), closer in and a
@@ -86,8 +94,9 @@ const probeCam = (c: CamPose) => {
 const sx = (p: THREE.Vector3) => (p.clone().project(probe).x * 0.5 + 0.5) * 1080;
 
 // ---------------------------------------------------------------------------------------------------- walks
-/** walking pace (m/s average) and the arrival ease: constant speed, then a soft stop over the last 45 % */
-const PACE = 1.5;
+/** walking pace (m/s average; 4-6 brisker, so puller 4 enters only after the three-person pull has read) and the
+ *  arrival ease: constant speed, then a soft stop over the last 45 % */
+const PACE = [1.5, 1.5, 1.5, 1.7, 1.7, 1.7];
 const walkK = (s: number) => { const s1 = 0.55, A = s1 + (1 - s1) / 2, x = clamp01(s); if (x <= s1) return x / A; const y = x - s1; return (s1 + y - (y * y) / (2 * (1 - s1))) / A; };
 type WalkPlan = { from: THREE.Vector3; to: THREE.Vector3; f0: number; f1: number };
 let plans: WalkPlan[] | null = null;
@@ -103,7 +112,7 @@ const walkPlans = (w: World): WalkPlan[] => {
       probeCam(camAt(w, f0));
       z = A.ropeZ + 0.6;
       while (z < 2.3 && sx(new THREE.Vector3(sq.x, 0.75, z)) > -120) z += 0.02;
-      f0 = Math.round(ARR[i] - ((z - A.ropeZ) / PACE) * FPS);
+      f0 = Math.round(ARR[i] - ((z - A.ropeZ) / PACE[i]) * FPS);
     }
     return { from: new THREE.Vector3(sq.x, 0, z), to: sq.clone(), f0, f1: ARR[i] };
   });
@@ -116,11 +125,13 @@ const H2PH = [0, 1, 2, 3, 4, 5].map((i) => (0.15 + i * 0.23) % 1);
 /** haul cycle rate (cycles / s) while pulling; each person their own */
 const RATE = [0.62, 0.7, 0.57, 0.74, 0.66, 0.6];
 /** heave (line 06): each person's own rhythm and offset: neighbours roughly opposite */
-const HFQ = [0.6, 0.71, 0.53, 0.77, 0.64, 0.57], HPH = [0.0, 0.5, 0.2, 0.82, 0.28, 0.94];
-// (pullers 5 and 6 are timed so that around the "?" (f691-737) puller 5 is in a slack phase and puller 6 leans far
-// back: their heads then leave the gap where the researcher's face shows)
+const HFQ = [0.6, 0.71, 0.53, 0.77, 0.64, 0.45], HPH = [0.0, 0.5, 0.2, 0.82, 0.28, 0.17];
+// (pullers 5 and 6 are timed so that around the "?" puller 5 is in a slack phase and puller 6 leans far back (his
+// peak at f717, heaveSig >= .5 over f706-728): their heads then leave the gap where the researcher's face shows)
 const heaveW = (f: number) => smooth((f - HEAVE0) / (HEAVE_FULL - HEAVE0)) * (1 - smooth((f - (RELAX0 - 6)) / 14));
 const relaxW = (f: number) => smooth((f - RELAX0) / (RELAX1 - RELAX0));
+/** heave swing of each person's effort (the haul lean is 14 + 16 x effort deg) */
+const HEAVE_AMP = 0.68;
 const heaveSig = (i: number, f: number) => Math.sin(2 * Math.PI * (HFQ[i] * (f - HEAVE0) / FPS + HPH[i]));
 /** how many people really pull at f (for the per-person level) */
 const groupLevel = (f: number) => {
@@ -138,7 +149,9 @@ const phaseAt = (i: number, f: number) => {
 const amountAt = (i: number, f: number) => {
   const ps = pullStart(i), ramp = smooth((f - ps) / 8);
   const steady = (0.4 + (groupLevel(f) - 0.4) * ramp) + 0.03 * Math.sin(f * 0.21 + i * 1.7);
-  const heave = 0.55 + 0.42 * heaveSig(i, f);
+  // the heave reads at phone size: a wide swing (lean ~11-33 deg, +-11 deg round the mean) and a shaped wave that dwells
+  // near its ends (clearly forward or clearly back, quick through the middle), so neighbours read as out of step
+  const sg = heaveSig(i, f), heave = 0.5 + HEAVE_AMP * Math.sign(sg) * Math.pow(Math.abs(sg), 0.7);
   return lerp(lerp(steady, heave, heaveW(f)), 0.15, relaxW(f));
 };
 
@@ -193,9 +206,10 @@ function pullerState(w: World, i: number, f: number): BPuller {
       const k = walkK((f - P.f0) / (P.f1 - P.f0));
       return { mode: "walk", from: P.from, to: P.to, k, expr: "neutral", blink };
     }
-    if (f < P.f1 + 2) return { mode: "turn", expr: "stern", blink };
+    const { turn: TURN, down: DOWN, lift: LIFT } = PICKT[i];
+    if (f < P.f1 + TURN) return { mode: "turn", expr: "stern", blink };
     if (f < ps) {
-      const down = smooth((f - (P.f1 + 1)) / 6), lift = smooth((f - (P.f1 + 7)) / 5);
+      const down = smooth((f - (P.f1 + TURN - 1)) / DOWN), lift = smooth((f - (P.f1 + TURN + DOWN)) / LIFT);
       return { mode: "pick", down, lift, expr: "stern", blink };
     }
   }

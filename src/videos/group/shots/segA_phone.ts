@@ -1,7 +1,8 @@
 // segment A: the POV insert of YOUR phone (scene "phone2d"), frames CUT..265 of line 02.
 // Our own short-video feed (not WeChat, not Douyin: deep indigo ground like the film's chat app in kit/phone.ts, gold
-// accents, no logos). YOU's left hand (a stick arm in the hoodie's arm colour, a ball hand behind the phone's lower-left corner, the
-// thumb over the bezel) holds the phone, in the kit phone's pale case, over the desk.
+// accents, no logos). YOU's left hand (a stick arm in the hoodie's arm colour, an ink ball hand like the toon hands behind
+// the phone's lower-left corner, the ink thumb touching it over the left bezel) holds the phone, in the same hot-pink
+// case as the kit's held phone, over the desk, tilted a touch (handheld; the tilt is gone when the zoom lands).
 // Beats: the feed is still settling from a flick when we cut in (the post "1974年 拉绳实验" slides up into place),
 // then the view zooms into the post's 9:16 thumbnail until it fills the frame edge to edge at `end` (eased in-out).
 // The thumbnail is staticFile("group/lab_thumb.jpg") (segment B's first frame, rendered without captions); when it is
@@ -23,8 +24,8 @@ const HEAD_B = SC.y + 196;
 export const THUMB = { x: 190, y: 524, w: 700, h: 700 * (16 / 9), r: 26 };
 /** arm colour of YOU's hoodie (toon armColOf: topCol mixed 48 % toward ink) and the ink */
 const ARM = "#2d4172", INK = "#241726";
-/** the kit's held-phone case colour (kit/toon.ts drawProp phone, face "back") */
-const CASE = "#e4dfd6";
+/** the kit's held-phone case colour (kit/toon.ts drawProp phone, face "back": #d9467f) and its darker shade */
+const CASE = "#d9467f", CASE_D = "#b8376c";
 const UI = { bg0: "#151a3c", bg1: "#0d1130", card: "#1c2250", text: "#f4f1ff", sub: "#9aa2cf", chip: "#262d60", line: "#2a3168" };
 
 // ---------------------------------------------------------------------------------------------------- the thumbnail
@@ -92,6 +93,8 @@ export const PhonePOV: React.FC<PhonePOVProps> = ({ f, cut, end, zoomAt }) => {
   const tt = (f - cut) / 30;
   const jx = 4 * Math.sin(tt * 5.1) + 2 * Math.sin(tt * 8.3 + 1), jy = 5 * Math.sin(tt * 4.3 + 0.7);   // handheld drift (gone at e = 1)
   const win = windowAt(e, jx, jy), s = win.s;
+  // handheld tilt (deg, clockwise: the phone leans along the forearm), unwinding with the zoom: exactly 0 at e = 1
+  const rot = (2.5 + 0.5 * Math.sin(tt * 3.7 + 0.4)) * (1 - e);
   const X = (x: number) => (x - win.x) * s, Y = (y: number) => (y - win.y) * s;
   const tr = { x: THUMB.x, y: THUMB.y + scroll, w: THUMB.w, h: THUMB.h, r: THUMB.r * (1 - e) };
   const iconO = 1 - clamp01(lin(f, zoomAt + 1, zoomAt + 7));
@@ -127,8 +130,8 @@ export const PhonePOV: React.FC<PhonePOVProps> = ({ f, cut, end, zoomAt }) => {
       background: i % 2 ? "rgba(255,240,215,0.16)" : "rgba(110,70,30,0.12)", filter: "blur(6px)", transform: `rotate(${(i % 2 ? -1 : 1) * 0.8}deg)` } })));
 
   // phone body
-  // a pale plain case (the kit's held phone, kit/toon.ts drawProp) around a dark bezel
-  const body = box(PH.x, PH.y, PH.w, PH.h, { borderRadius: PH.r, background: `linear-gradient(160deg, ${CASE}, #cfc8bc)`, boxShadow: `0 0 0 6px ${INK}, 0 26px 50px rgba(40,20,0,0.35)` },
+  // the hot-pink case (the kit's held phone, kit/toon.ts drawProp) around a dark bezel
+  const body = box(PH.x, PH.y, PH.w, PH.h, { borderRadius: PH.r, background: `linear-gradient(160deg, ${CASE}, ${CASE_D})`, boxShadow: `0 0 0 6px ${INK}, 0 26px 50px rgba(40,20,0,0.35)` },
     box(12, 12, PH.w - 24, PH.h - 24, { borderRadius: PH.r - 12, background: "linear-gradient(160deg, #2b2e3d, #15161f)" }));
   // screen: header + feed (clipped)
   const chips = ["全部", "心理学", "实验", "校园"];
@@ -169,16 +172,17 @@ export const PhonePOV: React.FC<PhonePOVProps> = ({ f, cut, end, zoomAt }) => {
   // (drawn under the body) and the thumb (a small ball) rests over the left bezel (drawn over it). Everything stays
   // left of / below the thumbnail (x < THUMB.x), so it is gone from the frame when the zoom lands.
   const svg = (kids: React.ReactNode[]) => h("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, style: { position: "absolute", left: 0, top: 0, overflow: "visible" } }, ...kids);
-  const HAND = { x: PH.x + 22, y: PH.y + PH.h - 22 }, THB = { x: PH.x + 6, y: PH.y + PH.h - 130, r: 25 };
+  const HAND = { x: PH.x + 22, y: PH.y + PH.h - 22 }, THB = { x: PH.x + 8, y: PH.y + PH.h - 78, r: 26 };   // the thumb overlaps the hand ball
   const armD = `M${HAND.x - 150},${H + 160} Q${HAND.x - 120},${HAND.y + 150} ${HAND.x},${HAND.y}`;
   const handUnder = svg([
     h("path", { key: "ai", d: armD, stroke: INK, strokeWidth: 84, fill: "none", strokeLinecap: "round" }),
     h("path", { key: "a", d: armD, stroke: ARM, strokeWidth: 70, fill: "none", strokeLinecap: "round" }),
-    h("circle", { key: "h", cx: HAND.x, cy: HAND.y, r: 48, fill: ARM, stroke: INK, strokeWidth: 7 })]);
-  const thumb = svg([h("circle", { key: "t", cx: THB.x, cy: THB.y, r: THB.r, fill: ARM, stroke: INK, strokeWidth: 6 })]);
+    h("circle", { key: "h", cx: HAND.x, cy: HAND.y, r: 48, fill: INK })]);
+  const thumb = svg([h("circle", { key: "t", cx: THB.x, cy: THB.y, r: THB.r, fill: INK })]);
 
   return h("div", { style: { position: "absolute", inset: 0, overflow: "hidden", background: "#a87a48" } },
+    h("div", { style: { position: "absolute", inset: 0, transformOrigin: "50% 50%", transform: rot !== 0 ? `rotate(${rot.toFixed(3)}deg)` : undefined } },
     zoomed([h("div", { key: "d", style: { position: "absolute", inset: 0 } }, desk), h("div", { key: "hu" }, handUnder), h("div", { key: "b" }, body), h("div", { key: "s" }, feed)]),
     h("canvas", { ref: cv, width: W, height: H, style: { position: "absolute", left: 0, top: 0, width: W, height: H } }),
-    zoomed([h("div", { key: "p" }, play), h("div", { key: "t" }, thumb)]));
+    zoomed([h("div", { key: "p" }, play), h("div", { key: "t" }, thumb)])));
 };

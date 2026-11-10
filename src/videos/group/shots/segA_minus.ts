@@ -2,19 +2,22 @@
 // throws rope strands at the number: a metaphor the owner does not want here). Pure function of the frame.
 import React from "react";
 import { COL, FONT_STACK, useOverlayFont } from "../kit/overlay";
-import { pop, clamp01, easeInCubic, lerp, h } from "../story";
+import { pop, clamp01, easeInOutQuad, lerp, h } from "../story";
 
-export type MinusProps = { f: number; at: number; out: number; x: number; y: number; text?: string; size?: number };
+export type MinusProps = { f: number; at: number; out: number; x: number; y: number; text?: string; size?: number; exit?: "fade" | "pop" };
 
 /** gold number with an ink outline and a hard drop shadow, centred on (x, y). Pops in at `at` (0 -> 1.12 -> 1 over
- *  7 f, a small counter-turn), breathes very slightly while it holds, leaves over 6 f from `out` (shrinks + fades). */
-export const MinusPct: React.FC<MinusProps> = ({ f, at, out, x, y, text = "−15%", size = 236 }) => {
+ *  7 f, a small counter-turn), breathes very slightly while it holds, leaves over 6 f from `out`: exit "fade" (default,
+ *  segC) shrinks + fades; exit "pop" (segA) is a reverse pop: a solid shrink to nothing, only its last 2 f fade. */
+export const MinusPct: React.FC<MinusProps> = ({ f, at, out, x, y, text = "−15%", size = 236, exit = "fade" }) => {
   useOverlayFont();
   if (f < at || f > out + 6) return null;
   const s0 = pop(f, at, 7, 1.12);
-  const k = clamp01((f - out) / 6), gone = easeInCubic(k);
+  const k = clamp01((f - out) / 6), gone = easeInOutQuad(k);   // (in-out: an even fade, no 2-frame drop at the end)
   const breathe = 1 + 0.012 * Math.sin(((f - at) / 30) * Math.PI * 2 * 0.8);
-  const s = s0 * breathe * (1 - 0.3 * gone);
+  const popOut = exit === "pop", ks = popOut ? Math.max(0, 1 + 0.08 * Math.sin(Math.PI * k) - k) : 1;
+  const s = popOut ? s0 * breathe * ks : s0 * breathe * (1 - 0.3 * gone);
+  const op = popOut ? 1 - clamp01((k - 0.66) / 0.34) : 1 - gone;
   const rot = lerp(-14, -6, clamp01((f - at) / 7));
   const sw = Math.round(size * 0.085);
   const txt: React.CSSProperties = {
@@ -24,8 +27,8 @@ export const MinusPct: React.FC<MinusProps> = ({ f, at, out, x, y, text = "−15
   } as React.CSSProperties;
   // a feathered dark scrim (no box) so the number holds over the busy corkboard
   const sc = (a: number) => `rgba(${COL.scrim},${(0.36 * a).toFixed(3)})`;
-  const scrim = h("div", { style: { position: "absolute", left: -size * 1.5, top: -size * 0.85, width: size * 3, height: size * 1.7, transform: `scale(${Math.min(1, s0)})`,
+  const scrim = h("div", { style: { position: "absolute", left: -size * 1.5, top: -size * 0.85, width: size * 3, height: size * 1.7, transform: `scale(${Math.min(1, s0) * ks})`,
     background: `radial-gradient(closest-side, ${sc(1)} 0%, ${sc(1)} 50%, ${sc(0.6)} 70%, ${sc(0.2)} 88%, ${sc(0)} 100%)` } });
-  return h("div", { style: { position: "absolute", left: x, top: y, width: 0, height: 0, opacity: 1 - gone } }, scrim,
+  return h("div", { style: { position: "absolute", left: x, top: y, width: 0, height: 0, opacity: op } }, scrim,
     h("div", { style: { position: "absolute", left: 0, top: 0, transform: `translate(-50%,-50%) scale(${s}) rotate(${rot}deg)`, transformOrigin: "50% 50%", ...txt } }, text));
 };
