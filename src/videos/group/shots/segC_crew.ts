@@ -44,7 +44,9 @@ export type CPuller =
   | ({ mode: "turn"; facing?: number } & Face & At)
   /** down: 0..1 the reach toward the rope (grips at 1); lift: 0..1 the gripped rope rising to rope height */
   | ({ mode: "pick"; down: number; lift: number } & Face & At)
-  | ({ mode: "pull" | "stand" | "pretend"; amount: number; phase: number; blind?: boolean; view?: "front" | "side"; headTilt?: number; lean?: number } & Face & At);
+  | ({ mode: "pull" | "stand" | "pretend"; amount: number; phase: number; blind?: boolean; view?: "front" | "side"; headTilt?: number; lean?: number;
+      /** 0..1 easing from the pick's upright lift pose into the haul drawing (kit PoseReq.settle); undefined = settled */
+      settle?: number } & Face & At);
 
 /** the fixed floor point where the rope's free end lies (crewPose's tail end with all six on the rope) */
 export const ropeEnd = (w: World) => V(w.lab.A.positions[5].x + 0.85, 0, w.lab.A.ropeZ - 0.12);
@@ -139,7 +141,8 @@ export function crewC(w: World, c: Crew, pick: Rope, f: number, s: CrewCState): 
       }
       fig.set({
         at: sq, facing: A.facing, view: p.view ?? "side",
-        pose: { kind: "haul", t: t + i * 0.37, phase: p.phase, amount: p.amount, grip: true, headTilt: p.headTilt, lean: p.lean },
+        pose: { kind: "haul", t: t + i * 0.37, phase: p.phase, amount: p.amount, grip: true, headTilt: p.headTilt, lean: p.lean,
+          ...(p.settle !== undefined ? { settle: p.settle, target: [LIFT_TO.fwd / SU, LIFT_TO.up / SU] as [number, number] } : {}) },
         aimAt: [null, V(sq.x - 1.2, A.ropeY, A.ropeZ)],
         ...face, expr: p.expr ?? (p.mode === "pull" ? "huff" : p.mode === "pretend" ? "smug" : "neutral"), visible: true,
       });

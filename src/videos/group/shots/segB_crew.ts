@@ -33,7 +33,9 @@ export type BPuller =
   | { mode: "turn"; expr?: Expr; blink?: number }
   /** down: 0..1 the reach toward the rope (grips at 1); lift: 0..1 the gripped rope rising to rope height */
   | { mode: "pick"; down: number; lift: number; expr?: Expr; fx?: Fx[]; blink?: number }
-  | { mode: "pull" | "stand"; amount: number; phase: number; expr?: Expr; fx?: Fx[]; blink?: number };
+  /** settle: 0..1 a newcomer's first frames on the rope, easing from the pick's upright lift pose into the haul (kit
+   *  PoseReq.settle; undefined = settled). The spare rope's touch-down eases out from under the hands with it. */
+  | { mode: "pull" | "stand"; amount: number; phase: number; settle?: number; expr?: Expr; fx?: Fx[]; blink?: number };
 
 /** the fixed floor point where the rope's free end lies (crewPose's tail end with all six on the rope) */
 export const ropeEnd = (w: World) => V(w.lab.A.positions[5].x + 0.85, 0, w.lab.A.ropeZ - 0.12);
@@ -95,7 +97,8 @@ export function crewB(w: World, c: Crew, pick: Rope, f: number, s: { pullers: BP
       }
       fig.set({
         at: sq, facing: A.facing, view: "side",
-        pose: { kind: "haul", t: t + i * 0.37, phase: p.phase, amount: p.amount, grip: true },
+        pose: { kind: "haul", t: t + i * 0.37, phase: p.phase, amount: p.amount, grip: true,
+          ...(p.settle !== undefined ? { settle: p.settle, target: [LIFT_TO.fwd / SU, LIFT_TO.up / SU] as [number, number] } : {}) },
         aimAt: [null, V(sq.x - 1.2, A.ropeY, A.ropeZ)],
         expr: p.expr ?? (p.mode === "pull" ? "huff" : "neutral"), blink, fx: p.fx, visible: true,
       });
@@ -151,6 +154,15 @@ export function crewB(w: World, c: Crew, pick: Rope, f: number, s: { pullers: BP
   c.rope.update({ a: A.hook, b: last, via: via.slice(0, -1), attachA: tie, attachB: { kind: "hand", tail: 0 } });
   const pp = picker >= 0 ? (s.pullers[picker] as Extract<BPuller, { mode: "pick" }>) : null;
   let touchX = nextTouch;
+  // a newcomer still settling in: the spare rope starts straight down from the rear hand (as it hung from the lifted
+  // hand a frame earlier) and its touch-down slides out to its resting place (nextTouch, or crewPose's drape with six)
+  const newest = holders.length ? (s.pullers[holders[holders.length - 1]] as Extract<BPuller, { mode: "pull" | "stand" }>) : null;
+  let settleDrape: number | undefined;
+  if (newest && newest.settle !== undefined && newest.settle < 1) {
+    const h = Math.max(0.02, last.y - 0.016), e = newest.settle;
+    const dx1 = touchX !== null ? Math.max(0.06, touchX - last.x) : 0.4 * Math.acosh(1 + Math.max(0, last.y - 0.016) / 0.4);
+    settleDrape = drapeFor(h, 0.06 + (dx1 - 0.06) * e);
+  }
   if (pp && pp.down >= 1 && info.pickPoint) {
     // gripped: last holder's rear hand -> the picker's hand (its slack runs out as the rope rises) -> straight down in
     // front of the picker's feet -> the floor end
@@ -158,6 +170,7 @@ export function crewB(w: World, c: Crew, pick: Rope, f: number, s: { pullers: BP
     pick.update({ a: last, b: ph, length: Math.max(chord, pickLen + (chord - pickLen) * e), attachA: { kind: "hand", tail: 0 }, attachB: { kind: "hand", tail: 0 } });
     last = ph; touchX = ph.x;
   } else hide(pick);
-  lieTail(last, touchX);
+  if (settleDrape !== undefined && !(pp && pp.down >= 1 && info.pickPoint)) c.tail.update({ a: last, b: E, slack: lieSlack(last, E, 0, 0.016, settleDrape), attachA: { kind: "hand", tail: 0 }, attachB: { kind: "end" } });
+  else lieTail(last, touchX);
   return info;
 }

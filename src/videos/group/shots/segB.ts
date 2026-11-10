@@ -191,6 +191,7 @@ const HUFFS: number[][] = [0, 1, 2, 3, 4, 5].map((i) => {
   return out.sort((a, b) => a - b);
 });
 
+const SETTLE = 9;
 function pullerState(w: World, i: number, f: number): BPuller {
   const P = walkPlans(w)[i];
   const ps = pullStart(i);
@@ -220,7 +221,9 @@ function pullerState(w: World, i: number, f: number): BPuller {
   else if (heaveW(f) > 0.5) expr = amount > 0.62 ? "huff" : "stern";
   else if (i === 0) expr = exprAt(f, [[0, "huff"], [344, "pained"], [372, "huff"]]);
   else expr = "huff";
-  return { mode: relaxW(f) > 0.5 ? "stand" : "pull", amount, phase: phaseAt(i, f), expr, fx: relaxed ? [] : huffAt(f, HUFFS[i]), blink };
+  // a newcomer eases from the pick's upright lift into the haul lean over SETTLE frames (no one-frame snap)
+  const settle = i > 0 && f < ps + SETTLE ? smooth((f - ps + 1) / (SETTLE + 1)) : undefined;
+  return { mode: relaxW(f) > 0.5 ? "stand" : "pull", amount, phase: phaseAt(i, f), settle, expr, fx: relaxed ? [] : huffAt(f, HUFFS[i]), blink };
 }
 
 // ---------------------------------------------------------------------------------------------------- the researcher

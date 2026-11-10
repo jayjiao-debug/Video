@@ -304,7 +304,9 @@ function pullerAt(w: World, i: number, f: number): CPuller {
     return { mode: "pick", down, lift: up, expr: exprAt(f, PW_EX), at };
   }
   const amount = 0.2 + 0.32 * smooth((f - (g + lift)) / 10) + 0.05 * Math.sin(f * 0.15 + i);
-  return { mode: "pretend", amount, phase: runPhase(i, f, g + lift, 0.55 + 0.05 * i), expr: exprAt(f, PW_EX), blink: blinkAt(f, 100 + i, PW_EX), at };
+  // ease from the reach pose's upright lift into the haul drawing over 9 frames (no one-frame snap into the lean)
+  const settle = f < g + lift + 9 ? smooth((f - (g + lift) + 1) / 10) : undefined;
+  return { mode: "pretend", amount, phase: runPhase(i, f, g + lift, 0.55 + 0.05 * i), settle, expr: exprAt(f, PW_EX), blink: blinkAt(f, 100 + i, PW_EX), at };
 }
 
 // ---------------------------------------------------------------------------------------------------- the researcher

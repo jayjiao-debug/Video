@@ -1,11 +1,11 @@
 {
-  "id": "group-v2-full",
+  "id": "group-v3-full",
   "composition": "GroupFilm",
   "start": 0,
   "end": 2002,
   "chunks": 20,
   "concurrency": 1,
   "timeout": 600000,
-  "output": "group_v2",
+  "output": "group_v3",
   "flags": "--crf=16"
 }

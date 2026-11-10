@@ -1234,6 +1234,9 @@ export type PoseReq = {
   stride?: number;
   /** extra torso lean (deg, + = top toward canvas right) and head tilt (deg) */
   lean?: number; headTilt?: number;
+  /** haul (stand, grip): 0..1 the haul settling in from an upright stance with the lead hand at `target` (0) to the
+   *  full lean, split stance and hand-over-hand (1); undefined = 1. Lets a reach pose hand over to a haul without a snap */
+  settle?: number;
   /** curl / sitUp: draw a blanket of this colour over the body */
   blanket?: string;
 };
@@ -1553,12 +1556,14 @@ export function poseFig(L: Look, req: PoseReq, viewIn: View): Solved {
     arms = [restArm(B, 0), restArm(B, 1)];
   } else if (k === "hold" || k === "haul") {
     const haul = k === "haul", A = req.aim ?? [null, { dir: 0 }], grip = !!req.grip, eff = req.amount ?? 0.7;
+    const ez = haul && req.settle !== undefined ? clamp(req.settle, 0, 1) : 1;
     const lead = A[1] ?? A[0] ?? { dir: 0 }, dx = Math.cos(rad(lead.dir));
     const ph = phaseOf(req, 1.2);
     let B: Body;
     if (haul) {
-      const back = -(14 + 16 * eff) * Math.sign(dx || 1) - 4 * Math.sin(two * ph) * Math.sign(dx || 1);
-      B = base === "stand" ? standBody(back, 0.1 * legLen) : baseBody(back * 0.5);
+      let back = -(14 + 16 * eff) * Math.sign(dx || 1) - 4 * Math.sin(two * ph) * Math.sign(dx || 1);
+      if (ez < 1) back *= ez;
+      B = base === "stand" ? standBody(back, 0.1 * legLen * ez) : baseBody(back * 0.5);
       if (base === "stand") {
         const s = Math.sign(dx || 1), l = legLen / 2;
         const mk = (fwd: number, near: boolean, side: number): LegS => {
@@ -1566,7 +1571,7 @@ export function poseFig(L: Look, req: PoseReq, viewIn: View): Solved {
           const a: P2 = [B.hip[0] + (view === "side" ? s * fwd : side * 26 * u + s * fwd * 0.35), ankY];
           return { h, k: ik2(h, a, l, l, view === "side" ? (s > 0 ? -1 : 1) : side > 0 ? -1 : 1).j, a, pitch: view === "side" ? rad(-12 * (fwd > 0 ? 1 : 0)) : 0, front: near && view === "side" };
         };
-        legs = view === "side" ? [mk(-0.3 * legLen, false, -1), mk(0.36 * legLen, true, 1)] : [mk(s * -0.15 * legLen * s, false, -1), mk(0.2 * legLen, true, 1)];
+        legs = view === "side" ? [mk(-0.3 * legLen * ez, false, -1), mk(0.36 * legLen * ez, true, 1)] : [mk(s * -0.15 * legLen * s * ez, false, -1), mk(0.2 * legLen * ez, true, 1)];
       } else legs = baseLegs(B);
     } else {
       B = baseBody(-3 * dx);
@@ -1582,9 +1587,12 @@ export function poseFig(L: Look, req: PoseReq, viewIn: View): Solved {
     if (grip) {
       // both hands on one rope along the lead arm's line; hand-over-hand when hauling
       const d = dirV(lead.dir), fs = reachOf(lead), S1 = B.sh[1], S0 = B.sh[0];
-      const r1 = haul ? 0.55 + 0.4 * smooth01(1 - ((ph * 2) % 1) * 1.4) : 0.95;
-      const H1 = add2(S1, scl2(d, aLen * 0.97 * r1 * fs));
-      const along = haul ? 0.3 + 0.25 * Math.sin(two * ph) : 0.3;
+      let r1 = haul ? 0.55 + 0.4 * smooth01(1 - ((ph * 2) % 1) * 1.4) : 0.95;
+      let along = haul ? 0.3 + 0.25 * Math.sin(two * ph) : 0.3;
+      if (ez < 1) { r1 = 0.95 + (r1 - 0.95) * ez; along = 0.3 + (along - 0.3) * ez; }
+      let H1 = add2(S1, scl2(d, aLen * 0.97 * r1 * fs));
+      // settling in: the lead hand starts where the reach pose left it (target, root-relative) and slides onto the haul line
+      if (ez < 1 && req.target) H1 = lerp2([300 + req.target[0], SOLE - req.target[1]], H1, ez);
       const H0 = add2(H1, scl2(d, -aLen * along * fs));
       arms = [armTo(D, S0, H0, view !== "back" && view !== "side" ? !lead.behind : view === "back" ? !lead.behind : false, fs), armTo(D, S1, H1, view === "side" ? true : !lead.behind, fs)];
     } else {
