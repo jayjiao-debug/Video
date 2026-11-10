@@ -59,6 +59,17 @@
 //   rigFaceCanvas(look, expr, { lid, gaze, brim }) = one face drawing as a canvas (sheets, QA); RIG_EXPRS = the names.
 //   a.qa after update: clear = the smallest gap between an arm and the own body / head in metres (< 0 = clipping),
 //   reach = how far a hand target is beyond the arm (> 0 = cannot reach).
+// Accessories (role props: glasses, a moustache, hats, headphones, a tie, a backpack, a briefcase ...) plug in:
+//   rc.add(look, { acc: [glasses({ kind: "round" }), topHat()] })           // kit/rigacc/ has the standard ones
+//   An accessory is a plain object (see Acc) made by a function in its own file. It can draw on the face (face /
+//   faceUnder), draw on the clothes (outfit) and build 3D parts (build) through a kit that knows the layering rules
+//   (PartKit: shell, solid, plate, brim, band, held, keepOut). It names the slots it takes ("eyes", "lip", "hat",
+//   "crown", "ears", "neck", "back", "hand0" ...): two accessories in one slot stop with an error that names both,
+//   and a look's own extras (glasses, lanyard, tag, headband) give way to an accessory in their slot.
+//   Adding one never needs a change in this file: copy the nearest one in kit/rigacc/ (RIG3D.md, "Accessories").
+//   A figure without accessories is built and drawn exactly as before: scripts/rig3d/regress.py compares stills
+//   pixel by pixel with recorded ones, run it after every change to this file.
+//   state.hide = ["phone"] hides an accessory's 3D parts for a frame (a phone that is still in the pocket).
 // Staging: keep a facing out of 115-170 deg from the camera (the turn-away transition; use turn = 1 for a back view).
 //   A figure's own hand never shows in front of its own head (rule 4), so poses keep the hands beside or below it.
 // Pipeline: EffectComposer needs stencilBuffer: true (postprocessing: new EffectComposer(renderer, { stencilBuffer:
