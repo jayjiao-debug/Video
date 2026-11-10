@@ -17,19 +17,23 @@ export type Who = "rig" | "card";
 export type LookKey = "you" | "researcher" | "worker" | "mate" | `friend${number}` | `class${number}` | Look;
 /** one person of a lineup: the look (see lookOf), accessories, a pose and an expression, the facing in degrees from
  *  the camera (default 0; in frames mode the whole row sweeps `turn`) */
-export type LineupWho = { look?: LookKey; hat?: Hat; acc?: Acc[]; pose?: RigPoseKind; expr?: Expr; facing?: number; hide?: string[]; label?: string };
+export type LineupWho = { look?: LookKey; hat?: Hat; acc?: Acc[]; set?: string | string[]; pose?: RigPoseKind; expr?: Expr; facing?: number; hide?: string[]; label?: string };
 export type RigLabOpts = {
   who: Who; scene: "pullers" | "trio" | "turn" | "crowd" | "lineup";
   /** lineup scene (rig only): people in a row, `gap` metres apart (default 0.62), `rows` deep (default 1), the middle
    *  of the row at `centre` [x, z]; sweep = [a0, a1] degrees: everyone turns together over the frames */
   lineup?: { who: LineupWho[]; gap?: number; rows?: number; centre?: [number, number]; sweep?: [number, number] };
+  /** accessories by name, for `set` in a turn or a lineup: the name of a set (or several) instead of the objects, so
+   *  that a case can be chosen on the command line (--opts '{"turn":{"set":"topHat"}}'); kit/rigacc/catalog.ts has
+   *  the standard ones */
+  accSets?: Record<string, () => Acc[]>;
   /** rig only: 0 = clean geometry, 1 (default) = hand-drawn */
   hand?: number;
   /** pullers (rig): the body's distance from the rope line and the two grips along the rope (m, + = behind the body) */
   haul?: { lat: number; g0: number; g1: number; amount?: number; twist?: number };
   /** turn scene: the look (default YOU; "friend0".."friend5" = the six named friends: ponytail, curly, bob, side,
    *  long, buzz; "class<N>" = classmate(N); or a Look), a hat, the facing sweep in degrees (frames mode) or one facing */
-  turn?: { look?: LookKey; hat?: Hat; acc?: Acc[]; hide?: string[]; a0: number; a1: number; pose?: RigPoseKind; expr?: Expr; exprs?: Expr[]; blink?: number; gaze?: number };
+  turn?: { look?: LookKey; hat?: Hat; acc?: Acc[]; set?: string | string[]; hide?: string[]; a0: number; a1: number; pose?: RigPoseKind; expr?: Expr; exprs?: Expr[]; blink?: number; gaze?: number };
   w?: number; h?: number;
   /** a lab cam name, a Cam, or an orbit (frames mode) */
   cam?: "main" | "side" | "pos1" | Cam;
@@ -97,6 +101,11 @@ export function rigLab(o0: RigLabOpts) {
   const cast = o.who === "card" ? new Cast(scene, { renderHeight: h, light: LAB_CAST_LIGHT as never }) : null;
   type P = { rig?: Rig; card?: Figure };
   const mk = (L: Look, hat?: Hat, acc?: Acc[]): P => (rc ? { rig: rc.add(L, { hat, acc }) } : { card: cast!.add(L) });
+  /** the accessories given as objects plus the named sets */
+  const accOf = (acc?: Acc[], set?: string | string[]): Acc[] | undefined => {
+    const more = (!set ? [] : Array.isArray(set) ? set : [set]).flatMap((n) => { const f = o.accSets?.[n]; if (!f) throw new Error(`rigLab: no accessory set "${n}"`); return f(); });
+    return acc || more.length ? [...(acc ?? []), ...more] : undefined;
+  };
   const all: P[] = [];
   const qa = (i: number) => {
     if (!rc) return;
@@ -157,7 +166,7 @@ export function rigLab(o0: RigLabOpts) {
     // one person turning on the spot in front of a fixed camera: the body stops at 45 deg, the face stays, the hair goes round
     const tn = o.turn ?? { a0: 0, a1: 0 };
     const L = lookOf(tn.look);
-    const P = mk(L, tn.hat, tn.acc), at = V(-1.2, 0, 0.2);
+    const P = mk(L, tn.hat, accOf(tn.acc, tn.set)), at = V(-1.2, 0, 0.2);
     frame = (T, i) => {
       const n = Math.max(1, (o.frames ?? 1) - 1), deg = tn.a0 + ((tn.a1 - tn.a0) * i) / n;
       const camYaw = Math.atan2(camera.position.x - at.x, camera.position.z - at.z), facing = camYaw + (deg * Math.PI) / 180;
@@ -169,7 +178,7 @@ export function rigLab(o0: RigLabOpts) {
   } else if (o.scene === "lineup") {
     // people side by side, each with their own look, accessories, pose and expression (accessory sheets)
     const lu = o.lineup ?? { who: [{}] }, gap = lu.gap ?? 0.62, rows = lu.rows ?? 1, per = Math.ceil(lu.who.length / rows), c = lu.centre ?? [-1.2, 0.2];
-    const ps = lu.who.map((wh) => mk(lookOf(wh.look), wh.hat, wh.acc));
+    const ps = lu.who.map((wh) => mk(lookOf(wh.look), wh.hat, accOf(wh.acc, wh.set)));
     frame = (T, i) => {
       const n = Math.max(1, (o.frames ?? 1) - 1), sw = lu.sweep ? lu.sweep[0] + ((lu.sweep[1] - lu.sweep[0]) * i) / n : 0;
       ps.forEach((P, k) => {

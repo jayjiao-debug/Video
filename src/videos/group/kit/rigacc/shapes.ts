@@ -71,5 +71,8 @@ export const hoop = (toM: (v: THREE.Vector3) => THREE.Vector3, o: { r: number; a
 export const tube = (pts: [number, number, number][], r: number, seg = 24) =>
   new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))), seg, r, 10, false);
 
+/** degrees to radians */
+export const rad = (d: number) => (d * Math.PI) / 180;
+
 /** a colour made darker (k < 1) or lighter (k > 1) */
 export const shade = (col: string, k: number) => { const c = new THREE.Color(col); c.multiplyScalar(k); return "#" + c.getHexString(); };

@@ -7,3 +7,8 @@ export { headphones } from "./headphones";
 export { tie } from "./tie";
 export { backpack } from "./backpack";
 export { briefcase } from "./briefcase";
+export { hardHat } from "./hardhat";
+export { chefHat } from "./chefhat";
+export { gradCap } from "./gradcap";
+export { peakedCap } from "./peakedcap";
+export { labCoat } from "./labcoat";

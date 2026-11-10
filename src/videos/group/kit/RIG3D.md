@@ -6,7 +6,7 @@
 
 ## 这是什么
 
-参考博主的角色做法在我们自己管线里的实现：`src/videos/group/kit/rig3d.ts`，一个文件。
+参考博主的角色做法在我们自己管线里的实现：`src/videos/group/kit/rig3d.ts`（角色本体）和 `kit/rigacc/`（角色道具，见下面“角色道具”）。
 它和现在的纸片角色 `kit/cast.ts` 用同一套 Look（YOU、RESEARCHER、classmate(seed)）、同一个 CastLight（例如 LAB_CAST_LIGHT），接口也基本一样（`set` / `handWorld` / `update`），表情的名字和 `toon.ts` 的 `Expr` 一样，所以旧镜头里的表情可以直接换过来。
 
 全部是代码画的：头、五官、头发、帽子、描边、明暗都在这个文件里，每个角色的不规则按固定的种子算。同样的输入每次出来的画面一样，渲染时没有任何模型参与。以后的片子只要“用”这个文件，画风就不会变；要改画风才需要动它。
@@ -18,7 +18,8 @@
 | `src/videos/group/kit/rig3d.ts` | 角色本体 |
 | `src/videos/group/kit/toon.ts` | 只多导出了 `niTag`（胸牌）和 `faceFront`（旧的脸，只有新旧对比的表情表在用） |
 | `src/videos/group/preview/rig3d_common.ts`、`rig3d_*.ts` | 预览入口（实验室布景、和正片一样的灯光和环境光遮蔽） |
-| `scripts/rig3d/` | 出图脚本 `shot.sh`、`frames.sh`、`pick.sh`，检查脚本 `scan.py`、`sparkle.py`、`specks.py`，`tsconfig.rig.json` |
+| `src/videos/group/kit/rigacc/` | 角色道具，一个文件一个；`catalog.ts` 是清单，`shapes.ts` 是做形状的小工具 |
+| `scripts/rig3d/` | 出图 `render.mjs`（`shot.sh`、`frames.sh`、`pick.sh` 是它的简写），回归检查 `regress.py` 和 `golden/`，道具检查 `acc_check.py`，闪烁检查 `scan.py`、`sparkle.py`、`specks.py`，`tsconfig.rig.json` |
 
 ## 参考的五官是怎么画的（在 198 帧随机抽帧里放大 60 多个头量的）
 
@@ -89,6 +90,85 @@ rope.update({ a: a.handWorld(1), ... });                 // 绳子等在 update 
 - 人物自己的手不会画在自己的头前面，所以挥手、欢呼的手摆在头的旁边或下面。
 - 镜头规则：不要让人物朝向停在离镜头 115° 到 170° 之间（那是转身过渡区）；要背面就用 `turn = 1`；用后仰和前倾表现用力，不拉伸头。
 
+## 角色道具
+
+眼镜、胡子、帽子、耳机、领带、白大褂、书包、公文包这类一眼说明“这是谁”的东西。每个道具是 `src/videos/group/kit/rigacc/` 里的一个小文件，装到角色上只要一行，**加新道具不用改 `rig3d.ts`**。
+
+```ts
+import { accessories } from "../kit/rigacc/catalog";
+import { topHat, glasses } from "../kit/rigacc";
+
+const boss = rc.add(look, { acc: accessories("topHat", "moustache.handlebar", "suit", "briefcase") });   // 按名字取
+const prof = rc.add(look, { acc: [glasses({ kind: "square" }), topHat({ col: "#5a3b2a", tilt: 12 })] }); // 或者自己调颜色
+boss.set({ ..., hide: ["briefcase"] });      // 这一帧不显示公文包（立体的部分可以逐帧藏起来）
+```
+
+### 现在有的（`kit/rigacc/catalog.ts`）
+
+| 名字 | 是什么 | 代表的角色 | 怎么装上去的 |
+|---|---|---|---|
+| `glasses.round` / `glasses.square` / `glasses.shades` | 圆框眼镜、方框眼镜、墨镜 | 学霸、老师、酷的人 | 画在脸上 |
+| `moustache.curl` / `.handlebar` / `.walrus` / `.pencil` | 翘胡子、八字胡、大胡子、小胡子 | 老派绅士、老板、大叔、精明的人 | 画在脸上 |
+| `topHat` / `bowler` | 礼帽、圆顶礼帽 | 有钱人、魔术师、老派职员 | 顶在头上，头发照原样 |
+| `chefHat` | 厨师帽 | 厨师 | 顶在头上 |
+| `gradCap` | 学士帽（带流苏） | 毕业生、学霸 | 顶在头上 |
+| `hardHat` | 安全帽 | 工人、工程师 | 压低戴，头发只从鬓角往后露 |
+| `peakedCap` / `pilotCap` | 大檐帽（深色、白色） | 警察、保安、机长、船长 | 压低戴 |
+| `headphones` / `headset` | 耳机、带麦耳机 | 打游戏的、客服、主播 | 戴在头上 |
+| `tie` / `suit` | 领带、西装领带 | 上班族、老板、律师 | 画在衣服上 |
+| `labCoat` / `doctorCoat` | 白大褂、白大褂加听诊器 | 科学家、医生 | 画在衣服上 |
+| `backpack` | 书包 | 学生 | 背在身上（背带画在衣服上） |
+| `briefcase` | 公文包 | 上班族、推销员 | 拿在手里 |
+
+原来就有的棒球帽和毛线帽（`rc.add(look, { hat: { kind: "cap", col } })`）现在也走同一套接口，画面和以前逐像素一样。
+
+### 位置
+
+每个道具写明自己占哪些位置：`eyes`（眼睛）、`lip`（上唇）、`chin`、`mouth`、`cheek`、`hat`、`crown`（头顶）、`ears`、`neck`、`coat`（外套）、`chest`、`waist`、`back`、`shoulder`、`hand0`（右手）、`hand1`（左手）。
+
+- 两个道具抢同一个位置（比如礼帽加耳机，都占头顶），创建角色时直接报错，报错里写明是哪两个、抢的哪个位置。不会悄悄画出两样东西叠在一起。
+- 角色自带的东西遇到同位置的道具会让位：自带的眼镜让给 `eyes`，工牌挂绳让给 `neck`，胸牌让给 `chest`，发带让给 `crown`。
+- 任何帽子都会去掉自带的丸子头和卷发团（它们会从帽子里戳出来）。
+
+### 加一个新道具
+
+1. 在 `kit/rigacc/` 里复制最接近的那个文件来改：
+
+   | 要做的东西 | 抄哪个 |
+   |---|---|
+   | 画在脸上的（眼罩、口罩、伤疤、腮红） | `glasses.ts`、`moustache.ts` |
+   | 压低戴的帽子（头盔、头巾、渔夫帽） | `hardhat.ts`、`peakedcap.ts` |
+   | 顶在头上的帽子（牛仔帽、皇冠） | `tophat.ts`、`chefhat.ts`、`gradcap.ts` |
+   | 戴在头上的其他东西（发箍、护目镜） | `headphones.ts` |
+   | 画在衣服上的（围裙、制服、围巾、胸牌） | `tie.ts`、`labcoat.ts` |
+   | 背在身上的（翅膀、披风、吉他） | `backpack.ts` |
+   | 拿在手里的（书、杯子、手机） | `briefcase.ts` |
+
+2. 在 `kit/rigacc/index.ts` 加一行导出，在 `kit/rigacc/catalog.ts` 加一行（名字、中文名、代表的角色）。
+3. 跑 `python3 scripts/rig3d/acc_check.py`。它会依次查类型、手臂穿模、清单，再把所有旧画面重出一遍逐像素比对。第一次跑会提示新道具还缺一行基准，把它打印的那一行加进 `scripts/rig3d/golden/cases_acc.json`。
+4. 看图：`node scripts/rig3d/render.mjs src/videos/group/preview/rig3d_acc.ts out --pick 0,15,30,45,60 --opts '{"turn":{"set":"名字","look":"friend1"}}'`（正面转到背面的 5 帧；`look` 可以换成 `you`、`researcher`、`friend0` 到 `friend5`、`class7` 这类，多换几个头型和发型看）。
+5. 看着没问题，记下这个道具自己的基准：`python3 scripts/rig3d/regress.py --update acc_名字`。
+
+### 做道具时要守的几条
+
+写在 `rig3d.ts` 的 `Acc`、`FaceKit`、`OutfitKit`、`PartKit` 这几个类型的注释里，这里是大意：
+
+- **画在脸上**（`face`，或者要垫在五官下面的用 `faceUnder`）：和五官是同一张画，单位是头宽的 1%，表情怎么换都跟着。镜片会自动把眼距拉开一点。
+- **画在衣服上**（`outfit`）：画在包住身体的那张图上，用“绕身体多少度、多高”定位，镜头一转自己就有透视。
+- **包住头的**用 `shell`（一片开口的壳：先画，头让开它占的像素，所以不会和头打架）。**有厚度的**用 `solid`（自带描边）。**薄片**用 `plate`（描边画在片的边上；薄片如果用外壳描边，侧看会变成一条发丝线或一串点，会闪）。
+- **帽子**要写明帽圈的位置和头发怎么处理：`hair: "cut"` 是压低戴，刘海去掉，头发只从鬓角往后露；`hair: "keep"` 是顶在头上，头发不动。
+- **头上的东西不用管手臂**（头永远画在自己手臂前面）。**身上的东西**要用 `keepOut` 告诉手臂绕开哪里。**手里的东西**用 `held`，跟着那只手走。
+- 贴图的缓存名要包含所有会改变画面的参数（颜色、款式），不然两个颜色不同的会共用一张图。
+- 不用随机数，不逐帧变化。所有不规则都按角色的种子固定，这是不闪烁的前提。
+
+### 怎么保证加了新的不会弄坏旧的
+
+1. **没装道具的角色走的还是原来那条路。** `scripts/rig3d/regress.py` 把 43 张基准画面（16 组镜头、6 种发型、两种旧帽子）重出一遍，和记录下来的逐像素比对，差一个像素都会报。把接口改成可插拔的那次改动就是这么验证的：43 张全部相同。
+2. **每个道具有自己的基准画面**（正面、侧面、背面各一张）。新加一个道具只会多出它自己的三张；如果动到了别的道具或者角色本体，对应的画面会被点名，还会生成一张“原来 | 现在 | 差别”的对比图。
+3. **位置冲突直接报错**，不会悄悄叠在一起。
+4. **清单里的每个道具都会自动进穿模检查**：13 种体型、5 个姿势、32 个机位，共一万多种情况，逐个和不带道具的同一个人比，只要有一种情况因为道具而穿模就报。
+5. 一条命令 `python3 scripts/rig3d/acc_check.py` 把上面这些全跑一遍，几分钟。
+
 ## 怎么出图（在仓库根目录）
 
 需要：`npm ci` 装好依赖；带 Chromium 的 Playwright（Claude 的云端环境里自带）；`ffmpeg`；Python 的 numpy 和 Pillow。
@@ -101,6 +181,11 @@ rope.update({ a: a.handWorld(1), ... });                 // 绳子等在 update 
 6. 逐像素闪点：`python3 scripts/rig3d/sparkle.py <帧目录> [对照帧目录]`。单像素孤点：`python3 scripts/rig3d/specks.py <帧目录>`。
 7. 放大检查：`preview/rig3d_capbig_rig.ts` 是戴帽转身的 2160×3840 版本，配合 `pick.sh` 出单帧。
 
+8. 回归检查：`python3 scripts/rig3d/regress.py`。改了 `rig3d.ts`、`kit/rigacc/` 或预览之后跑，所有基准画面逐像素比对，约 3 分钟；只跑一部分：`python3 scripts/rig3d/regress.py trio turn_ acc_topHat`。画面是有意改的，先看图再 `--update` 记录新的基准。换了机器或浏览器版本，哈希可能全部不同：先在没改动的分支上 `--update` 一次，再改再比。
+9. 道具检查：`python3 scripts/rig3d/acc_check.py`（见“角色道具”）。
+
+`render.mjs` 可以从命令行改预览的参数，一个入口出很多种图：`node scripts/rig3d/render.mjs <入口.ts> <out.png 或目录> [--frames N | --pick 0,20,40] [--size 540x960] [--opts '{"turn":{"look":"friend3"}}']`。
+
 预览每帧会在控制台打印 `QA: frame N reach X clear Y`（第 0 帧，以及任何 reach 大于 0.012 或 clear 小于 -0.0005 的帧）。
 
 ## 随机抽帧复查：参考里有、我们还缺的
@@ -110,9 +195,9 @@ rope.update({ a: a.handWorld(1), ... });                 // 绳子等在 update 
 | 参考里有的 | 我们现在 |
 |---|---|
 | 人站进阴影里，整个人跟着变色；暗房间里台灯把头照成暖色 | 还没有。角色只投影、不受影，头在任何场景里都是同一种白 |
-| 衣服有画出来的细节：翻领、领带、扣子、口袋 | 有一部分。只有帽衫、条纹、工牌这类简单图案 |
-| 帽子是单独画的形状（渔夫帽、厨师帽、礼帽），还有胡子 | 有一部分。帽子只有鸭舌帽和毛线帽，都贴着头；没有胡子 |
-| 靠帽子和制服一眼分出谁是谁 | 有一部分。主要靠发型和衣服颜色 |
+| 衣服有画出来的细节：翻领、领带、扣子、口袋 | 这次加了：领带、西装翻领和扣子、白大褂的口袋和笔、听诊器 |
+| 帽子是单独画的形状（渔夫帽、厨师帽、礼帽），还有胡子 | 这次加了：礼帽、圆顶帽、厨师帽、学士帽、安全帽、大檐帽，四种胡子（见“角色道具”） |
+| 靠帽子和制服一眼分出谁是谁 | 这次加了：帽子、眼镜、胡子、耳机、西装、白大褂、书包、公文包可以随意组合 |
 | 坐着、躺着、腿垂下来、有鞋、手里拿东西 | 还没有 |
 | 情绪符号 | 这次加了汗滴和脸红；怒气符号和速度线还没有 |
 | 头发有描边和发丝，镜片就是眼眶 | 这次加了 |
