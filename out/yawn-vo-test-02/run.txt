@@ -1,0 +1,102 @@
+plan: {'tier': 'starter', 'character_count': 21435, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "1_karo", "lang": "zh", "text": "一号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。", "voice": "5mZxJZhSmJTjL7GoYfYI", "voice_id": "5mZxJZhSmJTjL7GoYfYI", "model": "eleven_v4", "status": 200, "file": "1_karo.mp3", "bytes": 159703}
+{"name": "2_qiaofeng", "lang": "zh", "text": "二号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。", "voice": "ZJsn5HnrE3eUbep2ia8D", "voice_id": "ZJsn5HnrE3eUbep2ia8D", "model": "eleven_v4", "status": 200, "file": "2_qiaofeng.mp3", "bytes": 154687}
+{"name": "3_xinghe", "lang": "zh", "text": "三号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。", "voice": "lt7GBaCoAHWbT7JSZ5Xs", "voice_id": "lt7GBaCoAHWbT7JSZ5Xs", "model": "eleven_v4", "status": 200, "file": "3_xinghe.mp3", "bytes": 164718}
+{"name": "4_julia", "lang": "zh", "text": "四号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "4_julia.mp3", "bytes": 158449}
+{"name": "5_stacy", "lang": "zh", "text": "五号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。", "voice": "hkfHEbBvdQFNX4uWHqRF", "voice_id": "hkfHEbBvdQFNX4uWHqRF", "model": "eleven_v4", "status": 200, "file": "5_stacy.mp3", "bytes": 157195}
+{"name": "6_shared_f", "lang": "zh", "text": "六号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "voice_id": "9lHjugDhwqoxA5MhX0az", "model": "eleven_v4", "status": 200, "file": "6_shared_f.mp3", "bytes": 159703}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "1_karo",
+  "lang": "zh",
+  "text": "一号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+  "voice": "5mZxJZhSmJTjL7GoYfYI",
+  "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "1_karo.mp3",
+  "bytes": 159703,
+  "heard": "1號,看完這條,你有一半的概率會打一個哈欠不行,先忍住結果,55%的人跟著打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 9.92
+ },
+ {
+  "name": "2_qiaofeng",
+  "lang": "zh",
+  "text": "二号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+  "voice": "ZJsn5HnrE3eUbep2ia8D",
+  "voice_id": "ZJsn5HnrE3eUbep2ia8D",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "2_qiaofeng.mp3",
+  "bytes": 154687,
+  "heard": "2.看完这条你有一半的概率会打一个哈浅不信?先忍住结果55%的人跟着打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 9.6
+ },
+ {
+  "name": "3_xinghe",
+  "lang": "zh",
+  "text": "三号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+  "voice": "lt7GBaCoAHWbT7JSZ5Xs",
+  "voice_id": "lt7GBaCoAHWbT7JSZ5Xs",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "3_xinghe.mp3",
+  "bytes": 164718,
+  "heard": "3号,看完这条你有一半的概率会打一的哈浅,不信,先忍住。结果,55%的人跟着打了。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 10.24
+ },
+ {
+  "name": "4_julia",
+  "lang": "zh",
+  "text": "四号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "4_julia.mp3",
+  "bytes": 158449,
+  "heard": "4号 看完这条你有一半的概率会打一个哈浅不信 先忍住结果 55%的人跟着打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 9.84
+ },
+ {
+  "name": "5_stacy",
+  "lang": "zh",
+  "text": "五号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+  "voice": "hkfHEbBvdQFNX4uWHqRF",
+  "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "5_stacy.mp3",
+  "bytes": 157195,
+  "heard": "5號 看完這條你有一半的概率會打一個哈欠不信 先忍住結果 55%的人跟著打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 9.76
+ },
+ {
+  "name": "6_shared_f",
+  "lang": "zh",
+  "text": "六号。看完这条，你有一半的概率，会打一个哈欠。不信？先忍住。结果，百分之五十五的人，跟着打了。",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "voice_id": "9lHjugDhwqoxA5MhX0az",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "6_shared_f.mp3",
+  "bytes": 159703,
+  "heard": "6.看完這條,你有一半的概率會打一個哈欠不行,先忍住結果,百分之五十五的人跟著打了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 9.92
+ }
+]
