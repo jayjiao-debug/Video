@@ -1,0 +1,3025 @@
+{
+  "id": "arthur-voices-01",
+  "clips": [
+    {
+      "name": "zh_f_std",
+      "type": "voices",
+      "status": 200,
+      "query": {
+        "page_size": 40,
+        "language": "zh",
+        "sort": "usage_character_count_1y",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "voices": [
+        {
+          "name": "Anna Su - Casual, Friendly and Bright",
+          "voice_id": "9lHjugDhwqoxA5MhX0az",
+          "public_owner_id": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A youthful and bright Chinese female voice with a soft, friendly tone — warm, conversational, and effortlessly engaging, like a friend catching up with you over coffee.",
+          "usage_character_count_1y": 166197394,
+          "cloned_by_count": 51387,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/iWxuY2XaYrWRf6GQxIUY2M0J0gJ3/voices/9lHjugDhwqoxA5MhX0az/55SoO0ERY953JPIuC271.mp3"
+        },
+        {
+          "name": "Stacy - Young, Sweet and Cute",
+          "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+          "public_owner_id": "2df33570a4561062869fd105107b8d8409306fbe12788c2e2b11693180596657",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "pleasant",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Young cute Taiwanese Mandarin female voice. Works well for Narrations & Storytelling.",
+          "usage_character_count_1y": 53048853,
+          "cloned_by_count": 51071,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/caa5a1882b534d379d7d1037f8cd2248/voices/hkfHEbBvdQFNX4uWHqRF/n5W0eNZRtazdqGAfoBDR.mp3"
+        },
+        {
+          "name": "Sage - Soothing & Gentle",
+          "voice_id": "APSIkVZudNbPAwyPoeVO",
+          "public_owner_id": "afc66099a72ea525a9d24fba23864a1fa9189915cd563c1dd2eebff3ec474f9d",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A warm, soothing female narrative voice. Calm, grounded, and gently intimate. Perfect for psychology, neuroscience, emotional wellness, meditation, self-help, feminist narratives, and romantic storytelling.",
+          "usage_character_count_1y": 21721598,
+          "cloned_by_count": 12665,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/APSIkVZudNbPAwyPoeVO/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJkOGM0ZThmYmZhM2U0ZTFkYTkwZGUwMzFmMmZmYzI0NCIsImZpbGVuYW1lIjoiYTBkM2JiMjMtNDM3My00MWUyLTk1YTctMzJjMzVjOGM3OGM4Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Coco Li - Calm, Young and Trustworthy",
+          "voice_id": "Ca5bKgudqKJzq8YRFoAz",
+          "public_owner_id": "2c572ce430114e243fe4f6bc3ad191c2e9dfe3d4986d87b86c65302f9a5f9922",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "chill",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A young Shanghainese female Chinese voice with a slight rasp in the voice. perfect for story narration and simple advertisement announcement.",
+          "usage_character_count_1y": 17182507,
+          "cloned_by_count": 15534,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/Ca5bKgudqKJzq8YRFoAz/K4ccfm1YkLq6T1VJrk2U.mp3"
+        },
+        {
+          "name": "Julia - Young, Smooth and Neutral",
+          "voice_id": "tOuLUAIdXShmWH7PEUrU",
+          "public_owner_id": "df4fc9cd53f951eac8a085953ac38dab0b5db5cd13e1bf51164bbfcc5f8e6c1e",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "Young at heart and thriving in the 30s club, this female voice brings a smooth, neutral accent that's perfect for a wide range of projects in both English and Chinese Whether you're tuning in to a podcast, learning from an online course, diving into an audiobook, or scrolling through social media, this voice delivers clarity, warmth, and just the right touch of charm. ",
+          "usage_character_count_1y": 15014537,
+          "cloned_by_count": 14235,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/lyCyP7PysDfJntM6nncwX4S69pn2/voices/tOuLUAIdXShmWH7PEUrU/cLRFoBrJT4slo9iXmsFk.mp3"
+        },
+        {
+          "name": "Susan - Clear and Calm Storyteller",
+          "voice_id": "kAIqZ7fZv234ClKXwzDx",
+          "public_owner_id": "8e3c8e4ea2c52fd76e01856e15393b1a5137ae62b1c16d0bbbba6fb421f1cc9a",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "neutral",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Can be used to generate English content. Sounds very clean and natural as well. A native Mandarin voice crafted for clarity, authenticity, and connection. Her tone is warm yet professional—perfect for narrations that need to sound both human and engaging. With balanced pacing and subtle emotional expression, this voice brings out the meaning and rhythm of every sentence, whether it’s a heartfelt story, a brand campaign, or an educational video.",
+          "usage_character_count_1y": 12368301,
+          "cloned_by_count": 8529,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/utycMEbn19cDZEwvaFQbhHC8cbk2/voices/kAIqZ7fZv234ClKXwzDx/77829702-c646-46ec-9776-222668375af8.mp3"
+        },
+        {
+          "name": "Xiaoxi - Neutral, Young and Friendly  ",
+          "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+          "public_owner_id": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "cute",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "Xiaoxi is a Chinese American with a friendly, approachable voice. Perfect for podcasts and voice-overs. ",
+          "usage_character_count_1y": 9031491,
+          "cloned_by_count": 8073,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/70c524fabc6a45dbab4e22f7c1a5c05d/voices/9DMBSOAnMDPiFAsz1ZGK/H7oKA2Xl2PJm2NVWyk14.mp3"
+        },
+        {
+          "name": "Helen Sun - Smooth, Clear and Mature",
+          "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+          "public_owner_id": "4877d28f5fd1f9399f1543777b7be1a4dd595da3c76d62c716be431835368389",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "formal",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "Middle-aged female voice. Great for Informative content.",
+          "usage_character_count_1y": 8936441,
+          "cloned_by_count": 5746,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/Iqi0ix5WGtiSXX9VDZB4/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiRzhIRnpzMXRJT2hFa3hJM0FqNDRUUzVEVWZyMSIsImZpbGVuYW1lIjoiZDA1ZGE0NWUtZWI0Zi00ZDk1LTlhODUtMWRlNzQzZTk0MzM4Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Yun - Elegant, Sweet and Gentle",
+          "voice_id": "YxbjaPemDJV2xlfvkiIG",
+          "public_owner_id": "ce30ef7cef1c7cb0e78bfb45dfabfb0c52f4c927f3d77274e39d85be35f9d425",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "An elegant Chinese woman, sweet, chill and gentle. ",
+          "usage_character_count_1y": 7712957,
+          "cloned_by_count": 7025,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/KID6bP63XXPAUsepL8rvencoBQ43/voices/YxbjaPemDJV2xlfvkiIG/eac85287-2f97-44c8-9c5c-928d15ecf30d.mp3"
+        },
+        {
+          "name": "Jill - Warm, Natural & Trustworthy",
+          "voice_id": "V3z1DARAbkkTVEx5lmEl",
+          "public_owner_id": "f50ffe09ca75e10acd23a49e8c34e7a13d4dbf3f806ce7bedcec0380f6eb5fb8",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "pleasant",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Warm and professional Mandarin Chinese female voice with a natural, trustworthy, and engaging delivery. Clear, calm, and easy to listen to, making it ideal for narration, explainers, social media content, documentaries, and professional voiceovers.",
+          "usage_character_count_1y": 5707559,
+          "cloned_by_count": 4083,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/1eee8a7f69dd49dcb4c0c853e14a519e/voices/V3z1DARAbkkTVEx5lmEl/rfDz7crFTvZNlkygW0Du.mp3"
+        },
+        {
+          "name": "Maya - Young, Calm and Smooth",
+          "voice_id": "GgmlugwQ4LYXBbEXENWm",
+          "public_owner_id": "201daba080556fd9c0f46c0287ca5fd78d74bae08ac753b949dc0cf3268f237d",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Young female with a calming tone, perfect for creating content and videos.",
+          "usage_character_count_1y": 5051142,
+          "cloned_by_count": 3809,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/14fd976ef500404fb08f6a9d18786c24/voices/GgmlugwQ4LYXBbEXENWm/AP0YhlW1zVxV5sXFTGF3.mp3"
+        },
+        {
+          "name": "Zi Yue - Pro Voice",
+          "voice_id": "5qr5FEpvZGzmVOPBS55W",
+          "public_owner_id": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "This is a gentle and delicate Chinese female voice with standard and natural pronunciation, a soft tone yet rich in subtle emotional layers. She excels particularly in narrative and dialogue scenarios, creating a warm, soothing, yet professional listening experience. It is ideal for various scenarios such as audiobooks, emotional radio programs, educational courses, corporate narration, meditation, and bedtime stories. \n\nHer clear enunciation and stable speaking speed prevent listener fatigue even after extended listening sessions, making her an ideal female voice choice that balances companionship and professionalism.",
+          "usage_character_count_1y": 4750129,
+          "cloned_by_count": 5272,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/2abed23fb05842d0a6255a15b78bf0eb/voices/5qr5FEpvZGzmVOPBS55W/811c9f6f-9083-4852-9e5f-378c592a32d5.mp3"
+        },
+        {
+          "name": "Macy - Calm, Warm and Clear",
+          "voice_id": "NchRhc5KPgHwZagz6MrZ",
+          "public_owner_id": "6f8a6719e1fedc9dd3b6da1571efa02331e58995c20c861ff07a5ae057a2cb1f",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "A youngl Chinese female voice with warth and grounding energy. Perfect for narrating stories and creating content for social media videos.",
+          "usage_character_count_1y": 2664481,
+          "cloned_by_count": 3251,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/d98f54779ecd45c1a0cb5a9a19708712/voices/NchRhc5KPgHwZagz6MrZ/i30u0gBW93TMPZehMMyW.mp3"
+        },
+        {
+          "name": "Ladaisy - Clear Mandarin Explainer",
+          "voice_id": "8RCmdqih4CKjJ7Bd3ZxT",
+          "public_owner_id": "2ddc67b10cd39a8a177a02efd0c8ecfde99500edfffd08ec3528bfdd827049bf",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "crisp",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "Native standard Mandarin female voice: clear, young, and confident, with natural energy and accurate, broadcast-standard pronunciation. Also speaks natural British English and French. Specialised in biomedical, technology, psychology, and popular-science explainers, with scientific and medical terms pronounced accurately. Perfect for e-learning, social media, corporate training, product tutorials, ads, and customer service. Ideal for English-to-Chinese localization and dubbing.",
+          "usage_character_count_1y": 2211221,
+          "cloned_by_count": 2053,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/60866a0b469f4d569c4e0a1e30fd4084/voices/8RCmdqih4CKjJ7Bd3ZxT/IjrjEBNXjdcFuTUz1TJY.mp3"
+        },
+        {
+          "name": "Bobo - Warm,  Friendly, Neutral",
+          "voice_id": "s2LjOZIlsH2Yu4p6MtAK",
+          "public_owner_id": "0e7347ce7c0fc4e1fcc28016e4649a3a850b07a6389c85f8a89d7e93cacf39ac",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "gentle",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A warm, neutral, and rich female voice, suitable for a variety of styles, including narration, dialogue, and news.\n",
+          "usage_character_count_1y": 809998,
+          "cloned_by_count": 686,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/s2LjOZIlsH2Yu4p6MtAK/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmZmI3MWU2MWYyMzk0YzM1ODE3YTMxMDBlOWZkODkyZCIsImZpbGVuYW1lIjoidWFiQ3Nxdk5PUnd1ajE3dzFmc04ubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "loven",
+          "voice_id": "OA58Um6I3pohjTobFFVk",
+          "public_owner_id": "d2d3c342394e0df5e74ea38d0db489e5832562d008ead87436898ca601d43f66",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "advertisement",
+          "category": "professional",
+          "description": "Clear, gentle, and bright.\n",
+          "usage_character_count_1y": 644110,
+          "cloned_by_count": 396,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/da721923b610439983aede3ab0144333/voices/OA58Um6I3pohjTobFFVk/d259ec02-c1c8-49ae-8bef-56585f42b098.mp3"
+        },
+        {
+          "name": "Linda - Articulate Business & Narrative",
+          "voice_id": "t5SIDRTVMdbNUqrSAycs",
+          "public_owner_id": "2cb0a2107fde10d5573e1a44344a172ad90968a01d65cd14eeb293907964cb6d",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Native Mandarin professional voice featuring a crisp, articulate, calm and natural delivery. Versatile range spanning business broadcasts, financial news, and economic commentary, alongside warm, reflective narrative prose, documentary narration, and podcast hosting. Perfect for seamless commercial and creative use.",
+          "usage_character_count_1y": 417345,
+          "cloned_by_count": 455,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/3db63eba1688469ca517834c681ebffe/voices/t5SIDRTVMdbNUqrSAycs/4a08169a-9d5f-4117-b73d-ff7e93d341f3.mp3"
+        },
+        {
+          "name": "Willow",
+          "voice_id": "SyNyPD84lTuHqi1HONfV",
+          "public_owner_id": "93e963ee7f1c0c3204cf204c4b6ee2630d1ecb1ebd83ba6d20ee3529e082ea2a",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "calm and natural female voice.",
+          "usage_character_count_1y": 361235,
+          "cloned_by_count": 291,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/b4de7fc039e449cc81f69ee5eaa3a27d/voices/SyNyPD84lTuHqi1HONfV/1beb955f-b8f9-4328-999d-25c2c9464877.mp3"
+        },
+        {
+          "name": "Lin - Gentle educational storyteller",
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "public_owner_id": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "crisp",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A warm, clear young female Mandarin voice with a soft, slightly breathy tone. Natural, expressive intonation and a calm, unhurried pace. Best for educational explainers, documentary narration and audiobooks.",
+          "usage_character_count_1y": 145916,
+          "cloned_by_count": 190,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/40e87ba97dd549e3b952f24d6e2a12e1/voices/I23uc91tu5zY2PA1tKEN/191c598f-3af6-4f04-bb5b-4c1b9e7c2746.mp3"
+        },
+        {
+          "name": "Layla - Mature",
+          "voice_id": "rJHzgsuoNk88I7S069lq",
+          "public_owner_id": "55d0fcdc0e78046ef975e802ef302f2516c2ae5edb7218aa9cdabdc61ab6bf94",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "mature",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Deep and magnetic.\n",
+          "usage_character_count_1y": 101033,
+          "cloned_by_count": 254,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/28c29357e91f48a1a97a1f2bc444c267/voices/rJHzgsuoNk88I7S069lq/D8iJP5QVULsq7ROrBCy1.mp3"
+        },
+        {
+          "name": "Amy - Friendly, Young and Natural",
+          "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+          "public_owner_id": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "Amy's voice sounds young and natural, with a relaxed and friendly tone—like she's chatting with a friend. Her delivery is soft and approachable, perfect for casual conversations, lifestyle content, or social media.",
+          "usage_character_count_1y": 24537,
+          "cloned_by_count": 39551,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/bhJUNIXWQQ94l8eI2VUf/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIxZGEwNmVhNjc5YTU0OTc1YWQ5NmEyMjIxZmU2NTMwZCIsImZpbGVuYW1lIjoiUVhrc0FsRTZOR1pPRlVRU2tNcHkubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Zara - The Warm, Real-World Conversationalist",
+          "voice_id": "jqcCZkN6Knx8BJ5TBdYR",
+          "public_owner_id": "14bf0419ccdd0281b4481d9e67e9ad96d1106953d3d66c7ba70a77cfb0245e40",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "Zara is a female voice, 20s–30s, blends warmth, clarity, and confident expression. Ideal for creators and brands who want their content to feel real, relatable, and human.\n\nTrained across multiple formats including storytelling, ads, social media, tutorials, and casual dialogue, Zara adapts seamlessly to your tone.\n\nWhether guiding, selling, or narrating, Zara builds trust, relatability, and connection from the very first word.\n\nFriendly, grounded, expressive - ready to elevate your content.",
+          "usage_character_count_1y": 8422534768,
+          "cloned_by_count": 344653,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/XKwEw9ihVRMYSZkGwKydUfpES0B3/voices/jqcCZkN6Knx8BJ5TBdYR/JKHbp9CMKBoqcDFfzWIf.mp3"
+        },
+        {
+          "name": "Ivanna - Young, Versatile and Casual",
+          "voice_id": "yM93hbw8Qtvdma2wCnJG",
+          "public_owner_id": "76fb06688ef565775843b4efa41dd61de204a6cf28aa7ba86536140378d39188",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "A dynamic and versatile voice, perfect for bringing your projects to life. With a youthful, fresh tone and a natural delivery, this voice captivates audiences effortlessly. Featuring a clear and neutral US English accent, it’s ideal for podcasts, narrations, e-learning, and more.",
+          "usage_character_count_1y": 3699295857,
+          "cloned_by_count": 100417,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/yM93hbw8Qtvdma2wCnJG/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiUGJLcTJpUjRPSWVoZXJBV2kyeEQzRUxLbGZlMiIsImZpbGVuYW1lIjoib01UbEJITUlPdURMd2NtN0kxdkoubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Jessica Anne Bogart - A VO Professional; now cloned!",
+          "voice_id": "lxYfHSkYm1EzQzGhdbfc",
+          "public_owner_id": "066125d0c3eac062cd6655ed319d2347c29d07eab96ee22c6ebe7ef1841c3b1a",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "A credited VoiceOver actor, now cloned. Confident, Conversational.",
+          "usage_character_count_1y": 3424915994,
+          "cloned_by_count": 967841,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/fb1bd18708014d8d80e770df5ea11bb7/voices/lxYfHSkYm1EzQzGhdbfc/JZDpsUoP3T2VAnEEmj4l.mp3"
+        },
+        {
+          "name": "Nichalia Schwartz - Bright and Friendly",
+          "voice_id": "XfNU2rGpBa01ckF309OY",
+          "public_owner_id": "2f06b94223212b276650562b935af0b0c3d45abc717f3fd23fa458016cf4130b",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "Friendly, intelligent, engaging 20s-30s female American. Ideal for audiobooks, long-form narration, eLearning / e-learning, YouTube channel narration, educational material, explainers, podcasts, and corporate training videos. My natural, conversational tone includes natural speech patterns and breathing, perfect for projects requiring a clear, articulate, and warm voice that can captivate and maintain the audience's attention",
+          "usage_character_count_1y": 3216835100,
+          "cloned_by_count": 296459,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/XfNU2rGpBa01ckF309OY/kuFJZI5s8GbgYm5f0hMo.mp3"
+        },
+        {
+          "name": "Arabella - Mysterious and Emotive",
+          "voice_id": "Z3R5wn05IrDiVCyEkUrK",
+          "public_owner_id": "9214c228369d78a4201c47897c5f0ae5a0a131cde4f51532060a37ea5d7ebd1a",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "gentle",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "A young, mature female narrator with a mysterious and emotive tone, perfect for fantasy, romance, urban fantasy, and wellness.",
+          "usage_character_count_1y": 3164597391,
+          "cloned_by_count": 1063896,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/Z3R5wn05IrDiVCyEkUrK/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2N2FkYWRiN2QyYTk0ZjZlYWQ2NGU5NWY0NWJlMjI1NCIsImZpbGVuYW1lIjoiQ0JZS2FmbzVvbkllNTIzNHJBR1MubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Alexandra - Conversational and Natural",
+          "voice_id": "kdmDKE6EkgrWrrykO9Qt",
+          "public_owner_id": "f995f689648bc413c1b7fb9ec8524f634e4d32f5030ee172ef6d847ba9dc5ee9",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "Youthful and authentic, with a conversational tone that's relatable and down-to-earth. ",
+          "usage_character_count_1y": 2739280091,
+          "cloned_by_count": 309188,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/1df4b21393b74964b03d3690a173eb80/voices/kdmDKE6EkgrWrrykO9Qt/yJT6XwhJHSWv3Pb05OIk.mp3"
+        },
+        {
+          "name": "Anika - Customer Care Agent",
+          "voice_id": "90ipbRoKi4CpHXvKVtl0",
+          "public_owner_id": "f87f057c2250691953ac2e6227859706764bd08c88a055a18c74261957885a51",
+          "accent": "indian",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "professional",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "Anika's voice is specially recorded with customer care scripts in mind. So, if you are looking for an AI customer care voice or any conversational use, this voice is the perfect fit for you. Give it a try, and your users won't even realize it's AI!",
+          "usage_character_count_1y": 1775605512,
+          "cloned_by_count": 56165,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/90ipbRoKi4CpHXvKVtl0/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI1MTRkOTRlOTI0MWM0OGU4Yjc5MDUzNzU3MjljNDM2ZiIsImZpbGVuYW1lIjoiUWlZejdjc0hWd1lsWjF0NTB0Ym8ubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Danielle - Gentle and Engaging Narrator",
+          "voice_id": "FVQMzxJGPUBtfz1Azdoy",
+          "public_owner_id": "d889c1cdba465a81fc8850d5bfee402977934f5613b9378af4c4e811b24092d0",
+          "accent": "canadian",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Canadian Female",
+          "usage_character_count_1y": 1693038205,
+          "cloned_by_count": 175280,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/FVQMzxJGPUBtfz1Azdoy/gKVnL9faq7ZIq960uZMm.mp3"
+        },
+        {
+          "name": "Lucie - Support Agent",
+          "voice_id": "YxrwjAKoUKULGd0g8K9Y",
+          "public_owner_id": "53d56d1e766535d6232a30f650da70c99c78955695b21e29a29241b73aed2723",
+          "accent": "standard",
+          "language": "fr",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "A realistic and empathetic Customer Care voice that will bring a natural and friendly tone to your customer relationships. Breathe life and a pleasant human touch to your business. Recorded by a professional Customer Care Representative.",
+          "usage_character_count_1y": 1649614347,
+          "cloned_by_count": 39140,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/gg1lMbn4pfMl9KEjHqq6YAz1IYZ2/voices/YxrwjAKoUKULGd0g8K9Y/WxJo9vU6cjx9EPdS9beN.mp3"
+        },
+        {
+          "name": "Lucy - Fresh & Casual",
+          "voice_id": "lcMyyd2HUfFzxdCaC4Ta",
+          "public_owner_id": "034ca2102998f015606215ff3002514bf4cb00e019ff9bb4b87d00bc5be91b5c",
+          "accent": "british",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "Energetic and youthful British voice, perfect for narrations and storytelling. Engaging, natural, and effortlessly conversational.",
+          "usage_character_count_1y": 1561193913,
+          "cloned_by_count": 89117,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/On0pjHuDnweq0BS7b0qVjhIq37i1/voices/lcMyyd2HUfFzxdCaC4Ta/iutd7IQOhAGGiTAJT0X8.mp3"
+        },
+        {
+          "name": "Jane - Professional Audiobook Reader",
+          "voice_id": "RILOU7YmBhvwJGDGjNmP",
+          "public_owner_id": "0c43a48b8798abacee29a02415d3170e32814497fc3cf96297cbe407a5194638",
+          "accent": "british",
+          "language": "en",
+          "gender": "female",
+          "age": "old",
+          "descriptive": "professional",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Professional English audiobook narrator in her 50s with a nice tone and cadence. Great for narration, storytelling, or general content creation, like YouTube.",
+          "usage_character_count_1y": 1475149533,
+          "cloned_by_count": 521360,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/20dd3b9a3ec14f77bc0f5688c9f44ff5/voices/RILOU7YmBhvwJGDGjNmP/rg0TiCrZRw0nfGOZiVoe.mp3"
+        },
+        {
+          "name": "Miranda - Sweet, Bubbly and Feminine",
+          "voice_id": "PoHUWWWMHFrA8z7Q88pu",
+          "public_owner_id": "afe74f90c04ae627fa4cd227d106b7050b6bead505f93e712d338fcf180f13e3",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "cute",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "A sweet and bubbly young woman's voice. Perfect for bright and fun commercials or projects.",
+          "usage_character_count_1y": 1077746761,
+          "cloned_by_count": 84923,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/ZXqeDajThsaYR96DSywtY94M8Dy1/voices/PoHUWWWMHFrA8z7Q88pu/403a094a-c4e4-431f-b96a-7c63ae76508d.mp3"
+        },
+        {
+          "name": "Lydia - Warm, Energetic and Confident",
+          "voice_id": "SDVJaMLoJa7wc3s2sn7d",
+          "public_owner_id": "477f8ac3289fdaa65af0e9aa6152efbf39e41ccf807a9f903eb1b33d86eda18e",
+          "accent": "peninsular",
+          "language": "es",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "gentle",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "Warm, dynamic, clear female voice.",
+          "usage_character_count_1y": 1027048421,
+          "cloned_by_count": 47645,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/xfUAh4PHDnPEpIVBn9V1eSD7mkG3/voices/SDVJaMLoJa7wc3s2sn7d/1atwAszwKf5JQPc4uggT.mp3"
+        },
+        {
+          "name": "Ivy - Spirited, Lively, Daring",
+          "voice_id": "i4CzbCVWoqvD0P1QJCUL",
+          "public_owner_id": "db90e9d28d86510262ed2a7235586923c68c9c8ae2e533739754741e8965a616",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Picture the radiant smile of a lovely girl, her eyes alive with the secrets of a thousand adventures.\nLet her confident voice be your guide, where every turn reveals a new treasure waiting to be discovered.\nIn the realm of her storytelling, happiness reigns supreme, and the joy of discovery knows no bounds.\nEvery word is a sparkling gem and every moment a cherished memory.",
+          "usage_character_count_1y": 841372391,
+          "cloned_by_count": 186599,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/i4CzbCVWoqvD0P1QJCUL/sn1oBYRT4QiAmOMgLkoi.mp3"
+        },
+        {
+          "name": "Eve - Authentic, Energetic and Happy",
+          "voice_id": "BZgkqPqms7Kj9ulSkVzn",
+          "public_owner_id": "cab0f4a4d83ff44919f93c5d01052405fa3c50c414d1ecab061b67b0bd8d536a",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "Great for V3, conversation, energetic, happy",
+          "usage_character_count_1y": 837722605,
+          "cloned_by_count": 195427,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/2fb5f7f22a174a62b41adac3b2c17856/voices/BZgkqPqms7Kj9ulSkVzn/XVC95XX3UKyM8DIfXORa.mp3"
+        },
+        {
+          "name": "Anna Kim - Tender, Calm and Clear",
+          "voice_id": "uyVNoMrnUku1dZyVEXwD",
+          "public_owner_id": "1a1e6c6599fb77c5a995deb7d336b4da47da6a1b2232c551d9290cb0d9770127",
+          "accent": "seoul",
+          "language": "ko",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "formal",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Young Korean female voice. Great for Narrations.",
+          "usage_character_count_1y": 825858888,
+          "cloned_by_count": 248249,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/uyVNoMrnUku1dZyVEXwD/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4ODI1YjIzN2U5MmI0YzBjOWFiZjEyMmI5ZDRhODg5NCIsImZpbGVuYW1lIjoiZEE4eFVhMVRERE10ZU1iZ1ZCODgubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Jane Doe - Intimate",
+          "voice_id": "SaqYcK3ZpDKBAImA8AdW",
+          "public_owner_id": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "soft",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Voice of a young, warm, smooth and friendly woman.Perfect for social media, audiobooks, stories.",
+          "usage_character_count_1y": 820086666,
+          "cloned_by_count": 70522,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/SaqYcK3ZpDKBAImA8AdW/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIzZTM2MTk3MTE5ZTE0MGIzOWZiYmE2MGZkZDRjZTgzZCIsImZpbGVuYW1lIjoiYjdqRUFaZ2k1bmJkak94dlNGNU0ubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Kanika - Soft, Smooth and Muffled",
+          "voice_id": "H6QPv2pQZDcGqLwDTIJQ",
+          "public_owner_id": "f87f057c2250691953ac2e6227859706764bd08c88a055a18c74261957885a51",
+          "accent": "standard",
+          "language": "hi",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "professional",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Kanika is the pen name of one of the best voice-over artists you will ever hear. Everyone who regularly consumes content has definitely heard her voice. Give this voice a try, and you will find it very professional and soothing. It's the perfect voice to use for social media, ads, bots, and audiobooks.",
+          "usage_character_count_1y": 768627183,
+          "cloned_by_count": 409763,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/514d94e9241c48e8b7905375729c436f/voices/H6QPv2pQZDcGqLwDTIJQ/h4cm7siflKaybWATajsy.mp3"
+        },
+        {
+          "name": "Roberta - Smooth and Confident",
+          "voice_id": "RGymW84CSmfVugnA5tvA",
+          "public_owner_id": "4a19cd68f5f2e5172b5eddbfaafdb226726e0b4035e27e952df6bbac94b8aada",
+          "accent": "brazilian",
+          "language": "pt",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "A young and friendly Brazilian Portuguese female voice, ideal for your conversation AI, social media, and podcasts, story narration, bringing warmth, a relaxed and explanatory vibe.",
+          "usage_character_count_1y": 757830571,
+          "cloned_by_count": 160347,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/d2d6d8fb79be40a2a3a1599d78da8346/voices/RGymW84CSmfVugnA5tvA/3vmILerGd3NQICCWM4Wa.mp3"
+        }
+      ]
+    },
+    {
+      "name": "zh_m_std",
+      "type": "voices",
+      "status": 200,
+      "query": {
+        "page_size": 30,
+        "language": "zh",
+        "sort": "usage_character_count_1y",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "voices": [
+        {
+          "name": "James Gao - Calm, Friendly and Warm",
+          "voice_id": "4VZIsMPtgggwNg7OXbPY",
+          "public_owner_id": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "A middle-aged Chinese voice in a calm, friendly tone. Perfect for narrative and storytelling. ",
+          "usage_character_count_1y": 107280109,
+          "cloned_by_count": 39815,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/qCmCyqVqIbevIuA9FVI25BpgadC2/voices/4VZIsMPtgggwNg7OXbPY/9fLlmDXPhO819IAIRK44.mp3"
+        },
+        {
+          "name": "Martin Li - Raspy, Serious and Deep",
+          "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+          "public_owner_id": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "deep",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Middle aged Male with a Serious and Intimate voice. Perfect for audiobooks.",
+          "usage_character_count_1y": 56451792,
+          "cloned_by_count": 39076,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/WuLq5z7nEcrhppO0ZQJw/VQoMkMi8aSXSAwz6NHzh.mp3"
+        },
+        {
+          "name": "Adrian - Chinese Mandarin Narration",
+          "voice_id": "agczkAUlHLowaNnL72Cc",
+          "public_owner_id": "b2c9ca34784432b033599d179ceb4b64d8f1ce591924b6b92baae31235f48bfc",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "neutral",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A calm and clear Mandarin Chinese male voice with a modern narration style.  Ideal for documentaries, explainer videos, corporate narration, and educational content. Natural pacing with a professional yet approachable tone.",
+          "usage_character_count_1y": 25127909,
+          "cloned_by_count": 13082,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/4e1145b6394747f1a2d2be588f152220/voices/agczkAUlHLowaNnL72Cc/fn0Cwgdgf7oZYQwJDbSB.mp3"
+        },
+        {
+          "name": "Jin - Clear, Warm and Casual",
+          "voice_id": "vZZLclMx4wouUtKBRfZn",
+          "public_owner_id": "64753ac05e15cb80c266adacebb3ac7b5e32c673f9867dd2bd5ff28ff0660c1f",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "casual",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A warm, casual male Chinese voice with a subtle Taiwanese and Singaporean influence, clear and approachable for global audiences. The accent is light, unplaceable, and versatile — making it ideal for natural conversations, Youtube Podcasts, storytelling, and friendly narration.",
+          "usage_character_count_1y": 15748925,
+          "cloned_by_count": 10110,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/3unCj929XjWjMS71AYlfn2pKKTd2/voices/vZZLclMx4wouUtKBRfZn/2c7992a3-7efd-45b6-99f5-973f9836b04e.mp3"
+        },
+        {
+          "name": "Karo Yang - Clear, Lively and Energetic",
+          "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+          "public_owner_id": "dd0f5bb9ac12aaca6570a8c8d9c32a6e97f7c05c673d9864fbccc662fb7b03d7",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "pleasant",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "A youthful Asian male voice with a slightly neutral tone and lively energy is suitable for narrating stories and creating content for social media videos.",
+          "usage_character_count_1y": 14945223,
+          "cloned_by_count": 10511,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/5mZxJZhSmJTjL7GoYfYI/AxKwa8mUXQbuKEt3jQTm.mp3"
+        },
+        {
+          "name": "Steven Gor - Low, Calm and Soothing",
+          "voice_id": "M0TrFmFeBJS9H4xzdk8Z",
+          "public_owner_id": "20b44f4877342894cc40f1df17e905bf4082a792ba30b5fa123e8c0789dcc85d",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A young-aged Singaporean Chinese voice in a low, calm, soothing tone. Perfect for narrative and storytelling.",
+          "usage_character_count_1y": 10073869,
+          "cloned_by_count": 6341,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/M0TrFmFeBJS9H4xzdk8Z/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiOXpId1JuQTc1ZVdEQW5BeHNNeVpJY3hwNGZyMSIsImZpbGVuYW1lIjoiMmcwS1NuaGVNb2ZzU2d1SkJKc2YubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Xinghe Jiang - Magnetic Conversational",
+          "voice_id": "lt7GBaCoAHWbT7JSZ5Xs",
+          "public_owner_id": "fd0ca8b2b02f48e9f96d93a5aa26ff5732c4b8c44d0461cdaf1921487d9b0821",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "My voice is warm, natural, and magnetic, perfect for relaxed conversations, podcasts, videos, and AI assistants.",
+          "usage_character_count_1y": 6401647,
+          "cloned_by_count": 4728,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/lt7GBaCoAHWbT7JSZ5Xs/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIyY2M1ZjVmMTFhYzY0M2U3ODJjNmVlY2ViMTNmMzUzZiIsImZpbGVuYW1lIjoiTzIwaVMwTlNkUlEyQnBoWFRYNG8ubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Jordan Li - Calm, Natural and Grounded",
+          "voice_id": "EttSxNTvxX50EUdRPQQl",
+          "public_owner_id": "0e6727b7d53597ce7629413dbe71eba6c1e077ca3309013a30a82e9d5230317b",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "formal",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A calm and natural voice with a grounded tone. Warm, steady, and easy to trust — ideal for everyday narration and clear communication.\n",
+          "usage_character_count_1y": 5190137,
+          "cloned_by_count": 2396,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/3faea699cc304ae18d4da92099aa0a78/voices/EttSxNTvxX50EUdRPQQl/WMq3COAjAKZMrvalwoBB.mp3"
+        },
+        {
+          "name": "Vincent - Clear, Brisk and Mature",
+          "voice_id": "WkcRFJo38X9XEP8kGExm",
+          "public_owner_id": "27bec9f8dcc405464adf698c56a5fdcd44a7acc37f09b1c826d1c492f29a12c4",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "professional",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "Hello! I am a professional voice actor. My AI voice was recorded in-studio with a neutral Chinese accent and in a \"no nonsense\" tone. I hope my clear, brisk and mature voice can cater to your multi-purpose needs!",
+          "usage_character_count_1y": 3914774,
+          "cloned_by_count": 5369,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/R3OxYUSwHubkshChzZpQeOV5MAV2/voices/WkcRFJo38X9XEP8kGExm/UwwDpPyzMkqWsF0KKb0t.mp3"
+        },
+        {
+          "name": "Lin - Warm, Friendly & Conversational ",
+          "voice_id": "UFDAUkGzdLAEJlINT3Fx",
+          "public_owner_id": "0c3b338bc63ba734c8ea5c8539d6a918764e3b4fc2d793abf626a1f5415f9348",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A warm, natural Mandarin Chinese male voice built for real-time conversational AI. Clean articulation, balanced pace, and a friendly professional tone that works equally well for customer support agents, sales assistants, and bilingual enterprise use cases. Also speaks English with a light, authentic accent.",
+          "usage_character_count_1y": 3844543,
+          "cloned_by_count": 3552,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/83345403a39e4067b8e88cba9eef6e2a/voices/UFDAUkGzdLAEJlINT3Fx/cdb4fd52-fbe3-4a50-a492-cfe16add24e6.mp3"
+        },
+        {
+          "name": "Pangge - Chinese Narrator",
+          "voice_id": "hFamrilbAE6WDMtWgKvu",
+          "public_owner_id": "ed03a3b4fe5cc749962096c746306193fddbeef286163ac3717bf3a8854f2311",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "professional",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Suitable for reading, background listening, documentaries, and storytelling.\n",
+          "usage_character_count_1y": 3797785,
+          "cloned_by_count": 1602,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/72dd51bdf27540c3bb1cd98c8e4d0250/voices/hFamrilbAE6WDMtWgKvu/BXfEb5aRSTQEHdVpGZhY.mp3"
+        },
+        {
+          "name": "Guan Tang Bao - Deep, Tender and Mature",
+          "voice_id": "MQkiCZS3mnl44caDtxkJ",
+          "public_owner_id": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Deep and tender Chinese male voice.",
+          "usage_character_count_1y": 3570259,
+          "cloned_by_count": 4374,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/MQkiCZS3mnl44caDtxkJ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoicGViVkIwNDZyWGNtSmJuME02dWhYVk0ydGZuMSIsImZpbGVuYW1lIjoiOWU0NjZiYjUtMmY5OS00ZTM4LWFjYmItNjY1ODQwNjhhNTkxLm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Wilson - Deep, Serious and Neutral",
+          "voice_id": "z1etx2H6NQWq1LH6oqJA",
+          "public_owner_id": "f9c44b76005be48e38ab60b85decedcdba161459bdb6d19e526679a9556a5672",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "casual",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "Deep and serious neutral Mandarin accent.",
+          "usage_character_count_1y": 1725181,
+          "cloned_by_count": 2732,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/ZAn3cNP5f7gqnDiuuDt5d4XOxux2/voices/z1etx2H6NQWq1LH6oqJA/BTfQdpNFL1tOoCnDeAcl.mp3"
+        },
+        {
+          "name": "Zicai - Expressive, Warm and Friendly",
+          "voice_id": "DVE92KG0Yd4X7RoMqy8J",
+          "public_owner_id": "41777fade59ab222538cb6d5262079b406c2241b0130c6203826ec213fd98812",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "crisp",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A lively and expressive voice perfect for sitcom-style characters, full of warmth and comedic timing, reminiscent of the cast in Friends and similar classic shows.",
+          "usage_character_count_1y": 1516069,
+          "cloned_by_count": 2483,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/ssL5P6ojLXgvi678UhnYc9nPC1h2/voices/DVE92KG0Yd4X7RoMqy8J/4a423170-c2d4-464b-ad0f-cf56c885ce2d.mp3"
+        },
+        {
+          "name": "Hayato - Zen, Soothing and Young",
+          "voice_id": "BZLsSg9fDGFYEEJQ4JU3",
+          "public_owner_id": "3c19b8083f5d660ce59af5bc4f91d119888e3e61985804392decd797b63762ac",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Hayato is a soothing young male voice with a futuristic neo-zen vibe, ideal for informative tech related content, guided meditations, ambient soundscapes, or relaxation apps. Perfect for creating tranquil atmospheres during yoga sessions, mindfulness practices, or even background music in modern spaces, the voice promotes calmness and clarity in any setting.",
+          "usage_character_count_1y": 1399581,
+          "cloned_by_count": 1319,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/757b83d8e27d4310bacd57a11e245973/voices/BZLsSg9fDGFYEEJQ4JU3/45104e47-c47a-4f0e-8da6-1db71a212fa0.mp3"
+        },
+        {
+          "name": "Jing - Natural, Bright and Conversational",
+          "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+          "public_owner_id": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A natural, clear Mandarin Chinese voice with a slightly fast pace and a direct conversational style. Suitable for outbound calls, customer support, product explanations, and voice assistant use cases.",
+          "usage_character_count_1y": 1206508,
+          "cloned_by_count": 1836,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/zYD0xJl1ponKr8TwFBmJ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3ZWU3MDFiZTFmMDQ0YTNjOTgwOTYwZjg1NTExM2MwOCIsImZpbGVuYW1lIjoiNmJQaDVKZ084NFp5bUpKSUhEZmkubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Gavin - Natural Mandarin Storyteller",
+          "voice_id": "YGeNjTKY1wBaKygyl4y8",
+          "public_owner_id": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "wise",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A warm, natural Mandarin voice with the feel of a thoughtful conversation. Clear and easy to follow, with expressive range for curious storytelling, calm narration, reassuring messages, confident announcements, and Chinese poetry. A versatile fit for podcasts, audiobooks, explainers, and conversational content.",
+          "usage_character_count_1y": 1050913,
+          "cloned_by_count": 512,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/d84ee7739bc84ab2ae1e5980b885b7bf/voices/YGeNjTKY1wBaKygyl4y8/5iBMuq0tQIb2IA67e73h.mp3"
+        },
+        {
+          "name": "Arthur - Chinese Male",
+          "voice_id": "xQsp9uyB3OResmXFYuFx",
+          "public_owner_id": "63d2922605db2bfb04f15808540e9bc0a1564a43e41fb5d86e8c0f8ab0aa6613",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "crisp",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A natural Mandarin Chinese voice with a clear, expressive delivery, ideal for dubbing and voiceover.\n",
+          "usage_character_count_1y": 1043140,
+          "cloned_by_count": 610,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/5bfafe87ee0a462cbbc1ed698e387879/voices/xQsp9uyB3OResmXFYuFx/lIER2QWfrCaa7jrlqql1.mp3"
+        },
+        {
+          "name": "Qiao Feng - Warm, Clear & Friendly",
+          "voice_id": "ZJsn5HnrE3eUbep2ia8D",
+          "public_owner_id": "bbda6ec5e1c07d1ce2e6c98c1a7c0312d59881690502537f9cf586d533aabf19",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "entertainment_tv",
+          "category": "professional",
+          "description": "A bright, warm, and clear native Chinese voice with a friendly, inviting tone. Natural pacing and crisp pronunciation make it ideal for narration, e-learning, commercials, podcasts, and casual storytelling.",
+          "usage_character_count_1y": 1028693,
+          "cloned_by_count": 1375,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/524bf394ae74446f95ea1f6a0dfa446d/voices/ZJsn5HnrE3eUbep2ia8D/EfRItzXMcCD3eVT4nCga.mp3"
+        },
+        {
+          "name": "BoHai - Pure, Clear, Upbeat & Friendly",
+          "voice_id": "AwQL7jPTLzD7hSLmirIM",
+          "public_owner_id": "51f194ff5bbf4c1ce458f8bf59fd166a08b3e4ce060528245c979fdaf3739adc",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "gentle",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "A clear, upbeat, and approachable voice with a polished, modern tone. Accent-free and perfectly suited for educational videos, audiobooks, commercials, social media content, and long-form storytelling. ",
+          "usage_character_count_1y": 918771,
+          "cloned_by_count": 1101,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/AwQL7jPTLzD7hSLmirIM/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmYWQyMzIwMGJkYzk0MWRkYjgyYTAxOTU1NGY3ZjcyNSIsImZpbGVuYW1lIjoiODJZTnZXa2gwTmtEanZhaXpFZTMubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Julian - Deep, Natural & Expressive",
+          "voice_id": "j2FxFb20sd3xlm2pRaM5",
+          "public_owner_id": "5951f90d074d19aecf1d409ba6aeb248ffef53fec80d28b85a9a080ccbc568f0",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "deep",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A professional, rich, and versatile male Mandarin (Chinese) voice. Features a deep, warm, and comforting tone ideal for storytelling, audiobooks, and emotional narrations. Also possesses a clear, articulate, and confident cadence perfect for educational content, podcasts, and commercial presentations. Capable of shifting from high-energy conversational styles to calm, reflective philosophical discourses.",
+          "usage_character_count_1y": 892118,
+          "cloned_by_count": 1450,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/j2FxFb20sd3xlm2pRaM5/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI5ODk5MThkZTBhMmM0ZDM0YTQwZGNiMjFiYjVlZjM2OCIsImZpbGVuYW1lIjoiNGlxUjduaHFMbzhiWE00bE5Yd2subXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Yichen Wang - Bright Clear Narrator",
+          "voice_id": "WLOnxmJlqAiX5zG0dLlu",
+          "public_owner_id": "ca08cc02f01ae53583f455e9f544d8c141e2319b206aa70b1e8a2b1af6f3ffe5",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "professional",
+          "use_case": "advertisement",
+          "category": "professional",
+          "description": "Hello, I’m Yichen Wang. My voice is clear, bright, and professional, with a distinctive tone and a modern presentation style. I’m ideal for narration, explainers, podcasts, commercials, educational content, and broadcast projects.",
+          "usage_character_count_1y": 866103,
+          "cloned_by_count": 1842,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/b71c8531bc454f8dad8f828ebbfbd56e/voices/WLOnxmJlqAiX5zG0dLlu/D6zd6XqDIQV2D12qsbKu.mp3"
+        },
+        {
+          "name": "Liu - Professional Audiobook Narrator",
+          "voice_id": "aKCHSFIIwPcohrgtKRE4",
+          "public_owner_id": "0846dd99d3dd1a963f480b582694c21379dbb97db3c728875ea630a547400804",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "confident",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Suitable for audiobook narration, as well as voiceovers for novels and general reading material.",
+          "usage_character_count_1y": 782056,
+          "cloned_by_count": 484,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/8995e148542744aba99d592af71cc05d/voices/aKCHSFIIwPcohrgtKRE4/f34fd0bc-1cec-419f-9c54-8cb5ba2b8b57.mp3"
+        },
+        {
+          "name": "Dennis - Warm & Clear",
+          "voice_id": "E3IuT6dcpXhUwXqAw9Or",
+          "public_owner_id": "a9abce139eeadcf66027acd2080edd53474a302b233b1dac3558eb9836189342",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "soft",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A warm, conversational male voice. Personal and relaxed, ideal for storytelling, narration, and thoughtful explainers.",
+          "usage_character_count_1y": 657394,
+          "cloned_by_count": 881,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/E3IuT6dcpXhUwXqAw9Or/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiMDczYmFiNjVhMTM0YTVjOTUwNTE5MjM0MDkyMzg5MCIsImZpbGVuYW1lIjoiZ2E0UTJHQ1VEWDk3REtQeVlwbncubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "DJ Allen - Rock style radio DJ",
+          "voice_id": "lcRaSg5QsH61bfHjo8qM",
+          "public_owner_id": "ed03a3b4fe5cc749962096c746306193fddbeef286163ac3717bf3a8854f2311",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle-aged",
+          "descriptive": "professional",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "I am a professional voice talent and broadcaster based in Shenzhen, China, with twenty years of experience. My voice is versatile, capable of conveying everything from passion and sensuality to deep resonance and powerful intensity. I have provided voiceovers for numerous international brands and served as the signature voice for various documentaries, radio stations, and television channels. I look forward to lending my voice to your projects and products here on ElevenLabs.\n",
+          "usage_character_count_1y": 655100,
+          "cloned_by_count": 580,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/lcRaSg5QsH61bfHjo8qM/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3MmRkNTFiZGYyNzU0MGMzYmIxY2Q5OGM4ZTRkMDI1MCIsImZpbGVuYW1lIjoibGJ3cXdIYmxkMHNWWVFzeGk1dGQubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Paul - Educational",
+          "voice_id": "kF39bkI2EAwLmrQg2Sdv",
+          "public_owner_id": "2b5514a3fb32d87503eabe55bf4050117e2202a6adb0f4d898c80aaabc0dac46",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "A natural bilingual voice that seamlessly blends Chinese and English, with a clear and engaging lecture-style delivery.",
+          "usage_character_count_1y": 653170,
+          "cloned_by_count": 435,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/kF39bkI2EAwLmrQg2Sdv/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3YzYwNTg1ZTMwOTY0NjQ0OGExZjhmM2IwNjJiNzRhYiIsImZpbGVuYW1lIjoiZTE1YmMwYzQtMjcxZC00NGZiLWJkMDYtYjcwNmM1MDc0NDY2Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Christopher - Calm & Narrative",
+          "voice_id": "eLM7m1DaELuvfnZxisv1",
+          "public_owner_id": "a94502f4a48250b38ee6c5bff8c53016e44a16d58c997da8094bbd7b7c7e6c7d",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "For steady passages and calm persuasion.",
+          "usage_character_count_1y": 573088,
+          "cloned_by_count": 537,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/eLM7m1DaELuvfnZxisv1/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4NWMwYWU5MjkwODU0YTNjOGE2ODk2Y2RjZmY5ZDFmMCIsImZpbGVuYW1lIjoiN2UxNDk2MWEtNWUzOS00MDNmLWE5OTgtZTFkOWQ5MmI4YjFlLm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Jay - Friendly",
+          "voice_id": "l5icoB95aaZ3xACjgmEb",
+          "public_owner_id": "d7cc1ead1ffd095dbb7fde17e55b81d042bf12a91579af15579b235940a33554",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "chill",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Calm and Friendly.",
+          "usage_character_count_1y": 401548,
+          "cloned_by_count": 292,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/98cd2dd4db864c60bc145d105e70c52c/voices/l5icoB95aaZ3xACjgmEb/8d603f6e-d019-4624-811e-14f9c60dc6ed.mp3"
+        },
+        {
+          "name": "HanBaba - Laidback, Sarcastic",
+          "voice_id": "mZc8T5doZrU7OCI71i3M",
+          "public_owner_id": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "A young male voice—laid-back, a bit roguish, and worldly-wise. He speaks at a moderate pace with noticeable emotional shifts. He has a Northeastern accent, a rather abrasive and short-tempered manner, and a habit of using a sarcastic, snide tone at key moments.\n",
+          "usage_character_count_1y": 325352,
+          "cloned_by_count": 615,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/eea7e63988884835a5929972d8088251/voices/mZc8T5doZrU7OCI71i3M/36919546-5e73-4fa4-8cf6-9bd0f0ddf0a1.mp3"
+        },
+        {
+          "name": "Mr David - Malaysian Chinese Education",
+          "voice_id": "76X7rrvQajZEHM3u9zcd",
+          "public_owner_id": "6cceb7a4f8b967910de471e13e67fde206a5641f0ab38b72670f07a2400e0c8a",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "casual",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "Malaysian Chinese Male Voice for Educational, Narrative content.",
+          "usage_character_count_1y": 302218,
+          "cloned_by_count": 385,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/76X7rrvQajZEHM3u9zcd/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIyMjhmNjU2YjMyYWQ0MDMyOTUwMTc4NGUzMmMyNmM4ZSIsImZpbGVuYW1lIjoiOTYwZjNmYzAtOWJjNC00NzI3LTliYjAtZGUxM2UyYThmNzg3Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        }
+      ]
+    },
+    {
+      "name": "zh_f_social",
+      "type": "voices",
+      "status": 200,
+      "query": {
+        "page_size": 20,
+        "language": "zh",
+        "sort": "usage_character_count_1y",
+        "gender": "female",
+        "use_cases": "social_media"
+      },
+      "voices": [
+        {
+          "name": "Anna Su - Casual, Friendly and Bright",
+          "voice_id": "9lHjugDhwqoxA5MhX0az",
+          "public_owner_id": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A youthful and bright Chinese female voice with a soft, friendly tone — warm, conversational, and effortlessly engaging, like a friend catching up with you over coffee.",
+          "usage_character_count_1y": 166197394,
+          "cloned_by_count": 51387,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/iWxuY2XaYrWRf6GQxIUY2M0J0gJ3/voices/9lHjugDhwqoxA5MhX0az/55SoO0ERY953JPIuC271.mp3"
+        },
+        {
+          "name": "Shan Shan - Young Energetic Female",
+          "voice_id": "ByhETIclHirOlWnWKhHc",
+          "public_owner_id": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "A youthful Chinese female voice with lively energy. Suitable for narrating stories and creating content for social media videos. ",
+          "usage_character_count_1y": 122605524,
+          "cloned_by_count": 23957,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/ByhETIclHirOlWnWKhHc/WueuyXkB5LAjxrfqv4nL.mp3"
+        },
+        {
+          "name": "Chen Mandarin Chinese",
+          "voice_id": "4NQthjVhIGGVfL3Si000",
+          "public_owner_id": "39d845c0359a1935ac0ba8ab60e695551a453bd4717d51c1a2fc3e088810920a",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "Native Mandarin Chinese voice with a gentle Taiwanese accent. Clear, warm, and natural delivery — perfect for daily dialogue, storytelling, audiobooks, narration, podcasts, and lifestyle content. My tone is conversational, friendly, and emotionally expressive while maintaining clarity and professionalism.",
+          "usage_character_count_1y": 12870231,
+          "cloned_by_count": 13626,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/2d6ac8c7f1724afc98e7baffe264d777/voices/4NQthjVhIGGVfL3Si000/831ad48d-692b-46bd-b96a-f0504030212d.mp3"
+        },
+        {
+          "name": "Macy - Calm, Warm and Clear",
+          "voice_id": "NchRhc5KPgHwZagz6MrZ",
+          "public_owner_id": "6f8a6719e1fedc9dd3b6da1571efa02331e58995c20c861ff07a5ae057a2cb1f",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "A youngl Chinese female voice with warth and grounding energy. Perfect for narrating stories and creating content for social media videos.",
+          "usage_character_count_1y": 2664481,
+          "cloned_by_count": 3251,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/d98f54779ecd45c1a0cb5a9a19708712/voices/NchRhc5KPgHwZagz6MrZ/i30u0gBW93TMPZehMMyW.mp3"
+        },
+        {
+          "name": "Vivian - Taiwanese Social Media ",
+          "voice_id": "xrDmUzhnE51Df8z38r1M",
+          "public_owner_id": "7595507f05cb66edfa22d2dc7fe095ea618c348c2d675ba445095780b70b9cf5",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "This voice is specifically designed for social media voiceovers that aim to generate a Taiwanese accent.\n",
+          "usage_character_count_1y": 967526,
+          "cloned_by_count": 662,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/d57ad49335f04f39a59830848351de48/voices/xrDmUzhnE51Df8z38r1M/09267564-4f0c-441a-8da6-7b0179c85889.mp3"
+        },
+        {
+          "name": "Yu-Ting - Sweet and Bubbly",
+          "voice_id": "W0geWfW9qmnEg7xuqNoN",
+          "public_owner_id": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A bright, young Mandarin Chinese female voice with a soft Taiwanese accent and a light, playful lilt. Her cheerful, approachable energy feels like chatting with a friend, perfect for vlogs, TikTok, Reels, and lifestyle content.",
+          "usage_character_count_1y": 0,
+          "cloned_by_count": 986,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/W0geWfW9qmnEg7xuqNoN/408af76d-71a4-43ea-bbfb-176bfa8e506e.mp3"
+        },
+        {
+          "name": "Hsin-Yi - Chic and Confident",
+          "voice_id": "sZB4Q3GDBENMlfIYbV8M",
+          "public_owner_id": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A polished, young Mandarin Chinese female voice with a gentle Taiwanese accent and a crisp, self-assured delivery. Her modern, stylish tone grabs attention quickly, perfect for beauty and fashion content, product reviews, and short-form ads.",
+          "usage_character_count_1y": 0,
+          "cloned_by_count": 538,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/sZB4Q3GDBENMlfIYbV8M/c2447815-936e-4537-8065-9604fdecb4ae.mp3"
+        },
+        {
+          "name": "Zara - The Warm, Real-World Conversationalist",
+          "voice_id": "jqcCZkN6Knx8BJ5TBdYR",
+          "public_owner_id": "14bf0419ccdd0281b4481d9e67e9ad96d1106953d3d66c7ba70a77cfb0245e40",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "Zara is a female voice, 20s–30s, blends warmth, clarity, and confident expression. Ideal for creators and brands who want their content to feel real, relatable, and human.\n\nTrained across multiple formats including storytelling, ads, social media, tutorials, and casual dialogue, Zara adapts seamlessly to your tone.\n\nWhether guiding, selling, or narrating, Zara builds trust, relatability, and connection from the very first word.\n\nFriendly, grounded, expressive - ready to elevate your content.",
+          "usage_character_count_1y": 8422534768,
+          "cloned_by_count": 344653,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/XKwEw9ihVRMYSZkGwKydUfpES0B3/voices/jqcCZkN6Knx8BJ5TBdYR/JKHbp9CMKBoqcDFfzWIf.mp3"
+        },
+        {
+          "name": "Vanessa - Beach Girl",
+          "voice_id": "8DzKSPdgEQPaK5vKG0Rs",
+          "public_owner_id": "08504f2f7adf4206260a2166458936bacc9385957f11cb0d69e6879efdec2349",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "cute",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A cute voice perfect for social media. ",
+          "usage_character_count_1y": 940251058,
+          "cloned_by_count": 161436,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/pJj966DxwEg3jXdcUkoTbMzkPsL2/voices/8DzKSPdgEQPaK5vKG0Rs/AeRt8yvbNanY84fSNvRc.mp3"
+        },
+        {
+          "name": "Mia Starset - Clear and Friendly",
+          "voice_id": "uNsWM1StCcpydKYOjKyu",
+          "public_owner_id": "3bf4c08299e6441b6aa586890a6b517944b453b4d3748fd13d690594323696be",
+          "accent": "oslo",
+          "language": "no",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A clear and bright Norwegian female voice with a standard Oslo accent. Perfect for social media such as podcasts, commercials and advertisement, but also E-learning, narration or other types of voiceovers.",
+          "usage_character_count_1y": 329184475,
+          "cloned_by_count": 29269,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/QKdDeznZ5rOjD7lKF6P6ID3jhJM2/voices/uNsWM1StCcpydKYOjKyu/868f87d5-7724-4786-a7fa-a48e01b2ba54.mp3"
+        },
+        {
+          "name": "Anika - Sweet and Lively",
+          "voice_id": "ecp3DWciuUyW7BYM7II1",
+          "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+          "accent": "indian",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A fun, expressive voice for social media content, reels, and upbeat storytelling.\r\n\r\nAnika’s voice is sweet, energetic, and instantly engaging—perfect for hooks, trends, and light-hearted narratives. Her cheerful tone and quick delivery make her ideal for platforms like Instagram Reels, YouTube Shorts, TikTok, and branded content. With natural charm and a bubbly personality, Anika brings a fresh and relatable vibe to any post. Perfect for creators looking to boost engagement.",
+          "usage_character_count_1y": 272976788,
+          "cloned_by_count": 258430,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/ecp3DWciuUyW7BYM7II1/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlZDliMDVlNjMyNGM0NTc2ODU0OTAzNTJlOWExZWM5MCIsImZpbGVuYW1lIjoia3JucUlTZlR0ZG9ESUw4ZkVFMUoubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Nila - Warm, Clear and Conversational",
+          "voice_id": "C2RGMrNBTZaNfddRPeRH",
+          "public_owner_id": "f87f057c2250691953ac2e6227859706764bd08c88a055a18c74261957885a51",
+          "accent": "standard",
+          "language": "ta",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "excited",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "Nila is the pen name of a highly energetic Tamil voice artist. Her voice has a warmth that will keep listeners engaged with the content. Use this voice for your social media content, ads, audiobooks, and more.",
+          "usage_character_count_1y": 93659065,
+          "cloned_by_count": 36832,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/514d94e9241c48e8b7905375729c436f/voices/C2RGMrNBTZaNfddRPeRH/GveMSRFYlxS564gOgcYX.mp3"
+        },
+        {
+          "name": "Marianne - Sweet, Calm and Clear",
+          "voice_id": "iScHbNW8K33gNo3lGgbo",
+          "public_owner_id": "7e00f51a98997e64678b137e43561da19244070bf4e947a44274e0948ff7673c",
+          "accent": "brazilian",
+          "language": "pt",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "classy",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A young Brazilian female with a sweet, calm voice and neutral accent.\nSpecialized on media (youtube, instagram, memes, tiktok, etc) and storytelling/narration (books, articles, news, dubbing, etc).",
+          "usage_character_count_1y": 91706477,
+          "cloned_by_count": 54040,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/iScHbNW8K33gNo3lGgbo/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiV2IwVzRnQXZWaWg4Sm5MMTRZeTB2ak9Ba1BNMiIsImZpbGVuYW1lIjoiZmdZUGwxR2FCWmJmaHdyVGo2WWcubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Crystal - Casual conversationalist.",
+          "voice_id": "zd1c6qDiwPV3b24VZtor",
+          "public_owner_id": "6780639948f1043efffc51c1bf25fd79d664416e57b8dfad6a0ab9761b6d9c75",
+          "accent": "south african",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A young female with a muted British accent. Perfect for stories and social media voice overs.",
+          "usage_character_count_1y": 77880543,
+          "cloned_by_count": 4447,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/QoAc4Ep0AAbyxnVCIAEwrwgsGh73/voices/zd1c6qDiwPV3b24VZtor/ec572129-3d2c-4002-bd7a-0510b7b42e2f.mp3"
+        },
+        {
+          "name": "Sofi - Engaging, Trustworthy and Rich",
+          "voice_id": "vqoh9orw2tmOS3mY7D2p",
+          "public_owner_id": "4c6b891fa1e84d470f05762a4a0750033c2acd31a6d803e314654603ee4226d6",
+          "accent": "latin american",
+          "language": "es",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A young Argentine woman with a great tone for Social Media, Storytelling and Education. ",
+          "usage_character_count_1y": 65741130,
+          "cloned_by_count": 18763,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/vqoh9orw2tmOS3mY7D2p/9dYl2KYi2o0EgriSM02n.mp3"
+        },
+        {
+          "name": "Anna - Natural and Conversational",
+          "voice_id": "nVPCtAFzgyMX3FZKNzH0",
+          "public_owner_id": "aca2e213c5a59a5d2804c3ab7f4dbfb041d5a64df3694b39dc1c74402c811bba",
+          "accent": "parisian",
+          "language": "fr",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "A soft, natural, and conversational voice, with precise intonations and a presence that can be both soothing and impactful. Ideal for advertising, narration, or digital media.",
+          "usage_character_count_1y": 40822482,
+          "cloned_by_count": 17556,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/th7JKfjoE1WCb2N9wkyX1sSkKyZ2/voices/nVPCtAFzgyMX3FZKNzH0/x1iaNIfvLiFijA0ZKOeQ.mp3"
+        },
+        {
+          "name": "Heena M – Influencer UGC Voice",
+          "voice_id": "7PoJrtDD6yvTa56HTDt1",
+          "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+          "accent": "standard",
+          "language": "hi",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "High energy, wildly expressive, and built for content that stops the scroll — Heena M brings the kind of personality that makes UGC campaigns feel genuinely organic. Her voice is loud in the best way, turning every reel, short, and brand clip into something worth sharing. Built for UGC content and social media campaigns. Ideal for D2C brands, beauty and lifestyle labels, & digital marketers building creator-style campaigns that need to feel real, not produced.\n",
+          "usage_character_count_1y": 35285455,
+          "cloned_by_count": 32036,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/7PoJrtDD6yvTa56HTDt1/iKmfEMExkyyZicGD4s0c.mp3"
+        },
+        {
+          "name": "Sia - Excited & Enthusiastic Creator",
+          "voice_id": "m8xuPUrPnV7Qel198nAA",
+          "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+          "accent": "standard",
+          "language": "hi",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "hyped",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "Sia is the voice of your most excited best friend — the one who can't wait to tell you everything. Her enthusiastic, expressive energy grabs attention instantly and keeps audiences hooked — perfect for gossip content, character account personas, hype-driven social videos, and BFF-style creator content. Built for the 2026 era of bold individuality and maximalist social expression — a natural fit for creators, brands, and social media agencies.",
+          "usage_character_count_1y": 33973564,
+          "cloned_by_count": 28169,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/m8xuPUrPnV7Qel198nAA/iU1c2eZaIHLdzEhhFt4I.mp3"
+        },
+        {
+          "name": "Ashley",
+          "voice_id": "bxiObU1YDrf7lrFAyV99",
+          "public_owner_id": "b4df6f67cc003f4121cb2753788be69dee1eebc1440cc5a4d699da316a1287be",
+          "accent": "american",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "cute",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A young, energetic, female voice that is perfect for YouTube, TikTok, and social media. I bring a fun, engaging vibe that connects with audiences and brings your content to life!\r\n",
+          "usage_character_count_1y": 29568131,
+          "cloned_by_count": 22391,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/15682eb6c1c24fbbafbaf263d560dcff/voices/bxiObU1YDrf7lrFAyV99/53MTM7dRlSHo8IsE5F9z.mp3"
+        },
+        {
+          "name": "Noor - Expressive, Sassy and Humoristic",
+          "voice_id": "m8ysB8KEJV5BeYQnOtWN",
+          "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+          "accent": "indian",
+          "language": "en",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "chill",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "An expressive voice that brings sass, humor, and familiarity—just like that one friend who always has something to say.\n\nNoor’s delivery is witty, chatty, and full of personality—perfect for daily vlogs, commentary reels, and meme-style content. She sounds like a modern Indian Gen Z girl who’s always in the know and not afraid to say it.\n\nGreat fit for YouTube Shorts, Instagram Reels, Chingari, Josh, Snapchat Discover, and conversational AI bots needing personality and flair.",
+          "usage_character_count_1y": 29175234,
+          "cloned_by_count": 29422,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/m8ysB8KEJV5BeYQnOtWN/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlZDliMDVlNjMyNGM0NTc2ODU0OTAzNTJlOWExZWM5MCIsImZpbGVuYW1lIjoiNDR3ajc0aDVlNDVkOGxVWnZuU0kubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        }
+      ]
+    },
+    {
+      "name": "zh_f_narr",
+      "type": "voices",
+      "status": 200,
+      "query": {
+        "page_size": 20,
+        "language": "zh",
+        "sort": "usage_character_count_1y",
+        "gender": "female",
+        "use_cases": "narrative_story"
+      },
+      "voices": [
+        {
+          "name": "Stacy - Young, Sweet and Cute",
+          "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+          "public_owner_id": "2df33570a4561062869fd105107b8d8409306fbe12788c2e2b11693180596657",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "pleasant",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Young cute Taiwanese Mandarin female voice. Works well for Narrations & Storytelling.",
+          "usage_character_count_1y": 53048853,
+          "cloned_by_count": 51071,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/caa5a1882b534d379d7d1037f8cd2248/voices/hkfHEbBvdQFNX4uWHqRF/n5W0eNZRtazdqGAfoBDR.mp3"
+        },
+        {
+          "name": "Anna Su - Trustworthy, Clear and Natural",
+          "voice_id": "r6qgCCGI7RWKXCagm158",
+          "public_owner_id": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "neutral",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Perfect for YouTube videos, documentaries, and informative projects that require a clear and natural delivery.",
+          "usage_character_count_1y": 26119269,
+          "cloned_by_count": 21349,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/r6qgCCGI7RWKXCagm158/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiaVd4dVkyWGFZcldSZjZHUXhJVVkyTTBKMGdKMyIsImZpbGVuYW1lIjoiajBTcDZUcTBOanAzOEh4Q0ZBbVkubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Sage - Soothing & Gentle",
+          "voice_id": "APSIkVZudNbPAwyPoeVO",
+          "public_owner_id": "afc66099a72ea525a9d24fba23864a1fa9189915cd563c1dd2eebff3ec474f9d",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A warm, soothing female narrative voice. Calm, grounded, and gently intimate. Perfect for psychology, neuroscience, emotional wellness, meditation, self-help, feminist narratives, and romantic storytelling.",
+          "usage_character_count_1y": 21721598,
+          "cloned_by_count": 12665,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/APSIkVZudNbPAwyPoeVO/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJkOGM0ZThmYmZhM2U0ZTFkYTkwZGUwMzFmMmZmYzI0NCIsImZpbGVuYW1lIjoiYTBkM2JiMjMtNDM3My00MWUyLTk1YTctMzJjMzVjOGM3OGM4Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Liang - Calm, Natural and Young",
+          "voice_id": "FjfxJryh105iTLL4ktHB",
+          "public_owner_id": "01477f5cc1b57546ca379fb0b2c4bbb8bcb3fbbac4fa05b56399bda42087877d",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A youthful Chinese female voice with a calm tone. Suitable for narrating stories and creating content for social media videos.",
+          "usage_character_count_1y": 19426981,
+          "cloned_by_count": 4967,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/lR7zG0SGCEdZiJWSCYHUCbDntpE3/voices/FjfxJryh105iTLL4ktHB/oFBl7C5OfnlqwKT3XRw9.mp3"
+        },
+        {
+          "name": "Mingyao Ye - Sad and Broken Hearted",
+          "voice_id": "JZLpE3AGwpKYZI2X65hN",
+          "public_owner_id": "c28f2a2e32fef86df4799f59c881359a47697ae13e78243a2d208211123d0cd7",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "mature",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "A deeply emotional female voice filled with endless sadness & a broken heart. Her tone is gentle, trembling, and beautifully sorrowful — like a whisper from a soul that has loved and lost. Perfect for emotional narration, tragic monologues, or heartfelt storytelling.",
+          "usage_character_count_1y": 18748503,
+          "cloned_by_count": 19968,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/JZLpE3AGwpKYZI2X65hN/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiYUhMd2o5WmtLb1dnUHluMERRbmhmZkF5ZXphMiIsImZpbGVuYW1lIjoiNDJ2ZkFFZmwxUEdoZVFXajBEZkMubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Coco Li - Calm, Young and Trustworthy",
+          "voice_id": "Ca5bKgudqKJzq8YRFoAz",
+          "public_owner_id": "2c572ce430114e243fe4f6bc3ad191c2e9dfe3d4986d87b86c65302f9a5f9922",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "chill",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A young Shanghainese female Chinese voice with a slight rasp in the voice. perfect for story narration and simple advertisement announcement.",
+          "usage_character_count_1y": 17182507,
+          "cloned_by_count": 15534,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/Ca5bKgudqKJzq8YRFoAz/K4ccfm1YkLq6T1VJrk2U.mp3"
+        },
+        {
+          "name": "Susan - Clear and Calm Storyteller",
+          "voice_id": "kAIqZ7fZv234ClKXwzDx",
+          "public_owner_id": "8e3c8e4ea2c52fd76e01856e15393b1a5137ae62b1c16d0bbbba6fb421f1cc9a",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "neutral",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Can be used to generate English content. Sounds very clean and natural as well. A native Mandarin voice crafted for clarity, authenticity, and connection. Her tone is warm yet professional—perfect for narrations that need to sound both human and engaging. With balanced pacing and subtle emotional expression, this voice brings out the meaning and rhythm of every sentence, whether it’s a heartfelt story, a brand campaign, or an educational video.",
+          "usage_character_count_1y": 12368301,
+          "cloned_by_count": 8529,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/utycMEbn19cDZEwvaFQbhHC8cbk2/voices/kAIqZ7fZv234ClKXwzDx/77829702-c646-46ec-9776-222668375af8.mp3"
+        },
+        {
+          "name": "Chihiro Yoko - Clear, Soothing and Sweet",
+          "voice_id": "NIqnuIdrAT3LLSSxN05L",
+          "public_owner_id": "3b0be75e02a108226547718c73784f0a848b7478a1aca10a19a861634cabb8a8",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A soothing and even voice, like the girl next door.\nSweet, clear and professioanl East Asian female voice.\nSmooth and expressive, ideal for storytelling, audiobooks and character voices.\nFriendly, polished and versatile – a voice that adapts easily from formal presentations to casual conversations.",
+          "usage_character_count_1y": 8418386,
+          "cloned_by_count": 7113,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/HuCnBtMSFaTypirYF938vsnGIBE3/voices/NIqnuIdrAT3LLSSxN05L/W5NCBxuDIPvmx0SCNvHb.mp3"
+        },
+        {
+          "name": "Yun - Elegant, Sweet and Gentle",
+          "voice_id": "YxbjaPemDJV2xlfvkiIG",
+          "public_owner_id": "ce30ef7cef1c7cb0e78bfb45dfabfb0c52f4c927f3d77274e39d85be35f9d425",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "An elegant Chinese woman, sweet, chill and gentle. ",
+          "usage_character_count_1y": 7712957,
+          "cloned_by_count": 7025,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/KID6bP63XXPAUsepL8rvencoBQ43/voices/YxbjaPemDJV2xlfvkiIG/eac85287-2f97-44c8-9c5c-928d15ecf30d.mp3"
+        },
+        {
+          "name": "Jill - Warm, Natural & Trustworthy",
+          "voice_id": "V3z1DARAbkkTVEx5lmEl",
+          "public_owner_id": "f50ffe09ca75e10acd23a49e8c34e7a13d4dbf3f806ce7bedcec0380f6eb5fb8",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "pleasant",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Warm and professional Mandarin Chinese female voice with a natural, trustworthy, and engaging delivery. Clear, calm, and easy to listen to, making it ideal for narration, explainers, social media content, documentaries, and professional voiceovers.",
+          "usage_character_count_1y": 5707559,
+          "cloned_by_count": 4083,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/1eee8a7f69dd49dcb4c0c853e14a519e/voices/V3z1DARAbkkTVEx5lmEl/rfDz7crFTvZNlkygW0Du.mp3"
+        },
+        {
+          "name": "Maya - Young, Calm and Smooth",
+          "voice_id": "GgmlugwQ4LYXBbEXENWm",
+          "public_owner_id": "201daba080556fd9c0f46c0287ca5fd78d74bae08ac753b949dc0cf3268f237d",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Young female with a calming tone, perfect for creating content and videos.",
+          "usage_character_count_1y": 5051142,
+          "cloned_by_count": 3809,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/14fd976ef500404fb08f6a9d18786c24/voices/GgmlugwQ4LYXBbEXENWm/AP0YhlW1zVxV5sXFTGF3.mp3"
+        },
+        {
+          "name": "Zi Yue - Pro Voice",
+          "voice_id": "5qr5FEpvZGzmVOPBS55W",
+          "public_owner_id": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+          "accent": "standard",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "This is a gentle and delicate Chinese female voice with standard and natural pronunciation, a soft tone yet rich in subtle emotional layers. She excels particularly in narrative and dialogue scenarios, creating a warm, soothing, yet professional listening experience. It is ideal for various scenarios such as audiobooks, emotional radio programs, educational courses, corporate narration, meditation, and bedtime stories. \n\nHer clear enunciation and stable speaking speed prevent listener fatigue even after extended listening sessions, making her an ideal female voice choice that balances companionship and professionalism.",
+          "usage_character_count_1y": 4750129,
+          "cloned_by_count": 5272,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/2abed23fb05842d0a6255a15b78bf0eb/voices/5qr5FEpvZGzmVOPBS55W/811c9f6f-9083-4852-9e5f-378c592a32d5.mp3"
+        },
+        {
+          "name": "Jackie - Calm Female Reflective Narration",
+          "voice_id": "ggacvEjbmpoSuEinfFWs",
+          "public_owner_id": "e907cd3cc58a8522ae43b533dfb971f356bfdd257d43c5245c6e413f37c1dd84",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A young calm, reflective female voice. Thoughtful and slightly nostalgic delivery, with a low-toned, restrained quality, perfect for audiobook narration, meditation, documentaries, reflective monologues, and brand storytelling.",
+          "usage_character_count_1y": 3773613,
+          "cloned_by_count": 1017,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/ggacvEjbmpoSuEinfFWs/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2M2E4ZWEyZTZhMmQ0NTZlOWYxM2E0YmM0NGQyODJhOCIsImZpbGVuYW1lIjoiZWpwcWdlWmVmSDBYc2ZQQjdQRWQubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Yun - Prime Mandarin Broadcast Anchor",
+          "voice_id": "4AfodMgwXps9oZFhHzoj",
+          "public_owner_id": "124da371b8bd533d5848b3061cfcfcf69d83208413b10cfb3cf3377ef71314be",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "professional",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Female Mandarin voice. Professionally trained broadcaster, two decades of daily on-air news. Certified Putonghua Proficiency Test Level I Grade A — China's highest Mandarin grade. Standard Putonghua, broadcast diction, natural pacing for news, e-learning, corporate video, audiobooks, documentary narration, short-form video, IVR, and conversational AI.",
+          "usage_character_count_1y": 3682953,
+          "cloned_by_count": 1465,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/9ed19418f10a472b8c8786915a78fb0a/voices/4AfodMgwXps9oZFhHzoj/R8xWDYjK88lFNTFqtaZq.mp3"
+        },
+        {
+          "name": "Jadestone - Podcast & Storytelling",
+          "voice_id": "MNwNcuqILoUHnUG7B9kO",
+          "public_owner_id": "bd702290c476d85b830564bb832e4e93a6be77bfe62b380cf65991eba3940e05",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "confident",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Ideal for social media or storytelling",
+          "usage_character_count_1y": 1835558,
+          "cloned_by_count": 721,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/7010f83c03284a40b00be0d3e93146bf/voices/MNwNcuqILoUHnUG7B9kO/6nIfynDxAyLUszPjeVTb.mp3"
+        },
+        {
+          "name": "Susan - Warm Narrator",
+          "voice_id": "0H4ruoQ81Ei2FCwjW5j1",
+          "public_owner_id": "c9b7ff8665c902d2103c543abe2c677147ef4afa6e370a9353496e835719049c",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Warm and natural female Mandarin voice, ideal for audiobooks, storytelling, documentaries, educational content, and narration. Clear pronunciation with a calm and expressive delivery.",
+          "usage_character_count_1y": 1510801,
+          "cloned_by_count": 898,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/0H4ruoQ81Ei2FCwjW5j1/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2MWNlYmE5Yzc5ODI0ZDZjYmQ1ODY5ZjMzNThlYjVhNyIsImZpbGVuYW1lIjoiakNVUHZpZWNyMGFYSjhmaTJjVHQubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Xiaoran - Tearful Serenity",
+          "voice_id": "m7QGIiNrWASyI5oJn4I8",
+          "public_owner_id": "c5a3816ac769f42605a16bd623d40279874af8956dc0cf29f4c937e0b634a754",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "sad",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A soft and emotionally expressive female voice with a fragile, tearful atmosphere. Calm, intimate, and deeply immersive — ideal for emotional storytelling, late-night narration, reflective dialogue, and cinematic content.\n",
+          "usage_character_count_1y": 1380984,
+          "cloned_by_count": 2437,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/m7QGIiNrWASyI5oJn4I8/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmMjAzNjExNjBmNWU0NmZmYmVjZGQ1YzEwZmJmZDI0NSIsImZpbGVuYW1lIjoiS2QweTBid2dJdWJ6Z01HZWZxekcubXAzIiwidGltZXN0YW1wIjoxNzk0MzgwNDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Door Chow",
+          "voice_id": "qDeYqHQrKRH839xMU4nb",
+          "public_owner_id": "796f0306eafb27008bdf9a813720783039909085ecc96b27dab3667e9734847e",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "professional",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Taiwanese Mandarin female voice with a broadcast news background. Clear articulation, measured pace, neutral warmth. Suited to documentary narration, audiobooks, literary and long-form reading, news delivery, and corporate voiceover.",
+          "usage_character_count_1y": 1242022,
+          "cloned_by_count": 1216,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/qDeYqHQrKRH839xMU4nb/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJhNDJiZGQxOWEzNTE0M2QxOTgyNzhlNTliZWZmMDhkOSIsImZpbGVuYW1lIjoiZDFiNjFjYTctMmNjMi00ODQyLWExNzQtOWVlNmU1OTJkNjYyLm1wMyIsInRpbWVzdGFtcCI6MTc5NDM4MDQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Anna ",
+          "voice_id": "PSvrh6w41Qm19oaaHLca",
+          "public_owner_id": "905feaaa37e51d6a0ff85498a8bafeed8bf6b45a0d92a966f2b6ec9ef5d03326",
+          "accent": "beijing mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "young",
+          "descriptive": "cute",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Warm, natural female voice.",
+          "usage_character_count_1y": 1139764,
+          "cloned_by_count": 516,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/b9b84e3cccb3428dbc49dfda0aaeef38/voices/PSvrh6w41Qm19oaaHLca/881e0979-daaf-40b3-8eff-de66470cb392.mp3"
+        },
+        {
+          "name": "Jui - Calm, Warm & Pleasing ",
+          "voice_id": "5ypmms5LDLZQ1fRMo16H",
+          "public_owner_id": "467bb015aa1ce114974bb1a7b6fd07ca95e96511bc0206792b39c84e8043ee43",
+          "accent": "taiwan mandarin",
+          "language": "zh",
+          "gender": "female",
+          "age": "middle_aged",
+          "descriptive": "crisp",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Clear, calm, and Comforting.",
+          "usage_character_count_1y": 1134096,
+          "cloned_by_count": 729,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/23bafb3675ac4aa6851ff4ef2c0a0392/voices/5ypmms5LDLZQ1fRMo16H/cf76dd96-b439-4d95-8a94-0e37f5c2e949.mp3"
+        }
+      ]
+    },
+    {
+      "name": "zh_search_jieshuo",
+      "type": "voices",
+      "status": 200,
+      "query": {
+        "page_size": 20,
+        "language": "zh",
+        "sort": "usage_character_count_1y",
+        "search": "解说"
+      },
+      "voices": [
+        {
+          "name": "Jiro - Polite, Clear Business Presenter",
+          "voice_id": "qrxCoXetZMROJh88P461",
+          "public_owner_id": "942aa316c536f112fc2a0cb845f6701a4732563412eb593f6e397c14e4f157d9",
+          "accent": "standard",
+          "language": "ja",
+          "gender": "male",
+          "age": "middle_aged",
+          "descriptive": "professional",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "Polite, clear Japanese male voice for business. Standard Japanese with natural keigo, a steady pace, and distinct numbers, dates and loanwords.\r\n\r\nBest for: corporate presentations, e-learning, training, explainer videos, product introductions, announcements, data reports, IVR and customer service. Male, 40s.\r\n\r\nビジネス向けの、丁寧で聞き取りやすい標準語の男性の声です。自然な敬語で、数字やカタカナ語もはっきり読みます。プレゼン、eラーニング・研修、解説動画、製品紹介、社内のお知らせ、業績の報告、電話の自動音声に。",
+          "usage_character_count_1y": 662300,
+          "cloned_by_count": 428,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/25f5fffc689b4e6d86b1e8fe3edadd6a/voices/qrxCoXetZMROJh88P461/E8fHaWxvPO49UF90jVUB.mp3"
+        }
+      ]
+    }
+  ],
+  "plan": {
+    "tier": "starter",
+    "character_count": 22741,
+    "character_limit": 30001,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "accent": "standard",
+        "use_case": "conversational",
+        "age": "young",
+        "descriptive": "confident",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "descriptive": "chill",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "young",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "calm",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "age": "young",
+        "use_case": "entertainment_tv",
+        "descriptive": "casual",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "age": "young",
+        "use_case": "characters_animation",
+        "descriptive": "sassy",
+        "accent": "american",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "accent": "standard",
+        "age": "young",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "descriptive": "excited",
+        "use_case": "characters_animation",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "ru",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "accent": "british",
+        "use_case": "characters_animation",
+        "descriptive": "serious",
+        "age": "middle_aged",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "hi",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "accent": "modern standard",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "ar",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "accent": "milanese",
+        "age": "young",
+        "language": "it",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "age": "young",
+        "accent": "brazilian",
+        "language": "pt",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "accent": "latin american",
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "accent": "mexican",
+        "use_case": "narrative_story",
+        "descriptive": "cute",
+        "age": "young",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "latin american",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "accent": "latin american",
+        "age": "middle_aged",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "descriptive": "pleasant",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "standard",
+        "language": "hi",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "accent": "standard",
+        "use_case": "conversational",
+        "descriptive": "classy",
+        "age": "young",
+        "language": "hi",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "accent": "modern standard",
+        "age": "young",
+        "language": "ar",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "it",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "descriptive": "excited",
+        "accent": "brazilian",
+        "language": "pt",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "peruvian",
+        "descriptive": "casual",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "mexican",
+        "descriptive": "casual",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "accent": "american",
+        "use_case": "social_media",
+        "age": "young",
+        "descriptive": "upbeat",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "accent": "standard",
+        "use_case": "characters_animation",
+        "descriptive": "professional",
+        "age": "middle-aged",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "descriptive": "deep",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "el",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "age": "old",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "calm",
+        "language": "el",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "accent": "standard",
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "language": "el",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "accent": "standard",
+        "use_case": "characters_animation",
+        "descriptive": "professional",
+        "age": "old",
+        "language": "de",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "age": "young",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "descriptive": "pleasant",
+        "use_case": "social_media",
+        "age": "young",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "accent": "standard",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "descriptive": "formal",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "descriptive": "neutral",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "young",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "accent": "standard",
+        "use_case": "narrative_story",
+        "descriptive": "pleasant",
+        "age": "young",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "accent": "american",
+        "use_case": "conversational",
+        "age": "young",
+        "descriptive": "crisp",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "descriptive": "crisp",
+        "use_case": "narrative_story",
+        "age": "old",
+        "accent": "scottish",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "advertisement",
+        "accent": "scottish",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "accent": "american",
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "accent": "chinese",
+        "age": "young",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "accent": "american",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "descriptive": "confident",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "descriptive": "intense",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "it",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "accent": "scottish",
+        "use_case": "narrative_story",
+        "age": "young",
+        "descriptive": "calm",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "beijing mandarin",
+        "descriptive": "gentle",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "descriptive": "deep",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "singapore mandarin",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "descriptive": "chill",
+        "use_case": "informative_educational",
+        "accent": "chinese",
+        "age": "middle_aged",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "descriptive": "chill",
+        "use_case": "social_media",
+        "accent": "american",
+        "age": "young",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "italian",
+        "descriptive": "calm",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "accent": "scottish",
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "age": "middle_aged",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "accent": "american",
+        "age": "old",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "descriptive": "mature",
+        "use_case": "narrative_story",
+        "age": "old",
+        "accent": "british",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "fr",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "parisian",
+        "descriptive": "professional",
+        "language": "fr",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "accent": "standard",
+        "descriptive": "calm",
+        "language": "de",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "accent": "standard",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "de",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "ru",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "descriptive": "confident",
+        "accent": "standard",
+        "language": "ru",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "age": "young",
+        "use_case": "social_media",
+        "descriptive": "casual",
+        "accent": "taiwan mandarin",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "accent": "standard",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "descriptive": "serious",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "accent": "american",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "american",
+        "descriptive": "casual",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "accent": "standard",
+        "use_case": "social_media",
+        "descriptive": "upbeat",
+        "age": "young",
+        "language": "hi",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "descriptive": "classy",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "accent": "american",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "entertainment_tv"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "descriptive": "sassy",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "social_media"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "australian",
+        "use_case": "conversational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "descriptive": "mature",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "use_case": "narrative_story"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "characters_animation"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "neutral",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "conversational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "descriptive": "rough",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "characters_animation"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "descriptive": "confident",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "social_media"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "use_case": "informative_educational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "descriptive": "upbeat",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "informative_educational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "descriptive": "chill",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "descriptive": "cute",
+        "language": "en",
+        "gender": "female",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "descriptive": "casual",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "descriptive": "formal",
+        "language": "en",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "informative_educational",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "descriptive": "crisp",
+        "language": "en",
+        "gender": "male",
+        "use_case": "advertisement",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "premade"
+    }
+  ]
+}
