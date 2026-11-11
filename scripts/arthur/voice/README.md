@@ -20,7 +20,6 @@ starts and ends drive the picture (`../gen_timing.py` reads the timing json).
 - `voice_timing_v1.json`: the timing the picture was rendered with (voice Julia, `rubberband`).
 - `voice_timing_v3.json`: the narration in use (voice Julia, `atempo`), fitted to the v1 slots: every line starts where
   it did and ends within 0.02 s of where it did.
-
 - `voice_timing_v4_xiaoxi.json`: the same slots with the voice Xiaoxi (request `arthur-vo-06`, two takes a line, the
   take whose transcript is right and that needs the smaller speed-up). She needs 1.19x on average against Julia's
   1.27x.
@@ -39,10 +38,11 @@ The narrations in use (Julia v3, Xiaoxi v4):
 
 ```
 python3 assemble_arthur.py j narration_v3.mp3 voice_timing_v3.json 2=b 5=c 15=b 16=b 18=b \
-  --fit voice_timing_v1.json --engine atempo --norm gainpython3 assemble_arthur.py x narration_v4_xiaoxi.mp3 voice_timing_v4_xiaoxi.json 1=b 2=b 3=b 4=b 7=b 9=b 15=b 16=b 20=b \
+  --fit voice_timing_v1.json --engine atempo --norm gain
+python3 assemble_arthur.py x narration_v4_xiaoxi.mp3 voice_timing_v4_xiaoxi.json 1=b 2=b 3=b 4=b 7=b 9=b 15=b 16=b 20=b \
   --fit voice_timing_v1.json --engine atempo --norm gain --src vx/proc
 ```
 
-Voices: ElevenLabs "Julia" and "Xiaoxi" (native Mandarin voices from the shared library) on the v4 model at speed 1.2, the fastest
-the API offers. At that setting Mandarin voices read about 4.0 to 4.6 characters a second once the pauses are trimmed;
+Voices: ElevenLabs "Julia" and "Xiaoxi" (native Mandarin voices from the shared library) on the v4 model at speed 1.2,
+the fastest the API offers. At that setting Mandarin voices read about 4.0 to 4.6 characters a second once the pauses are trimmed;
 the film needs 5.4, which is why every line is sped up afterwards.
