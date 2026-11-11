@@ -1,132 +1,48 @@
 {
- "id": "arthur-sfx-03",
- "tag": true,
+ "id": "arthur-en-voices-01",
  "items": [
   {
-   "type": "sfx",
-   "name": "field_1",
-   "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
-   "duration": 8,
-   "influence": 0.5
+   "type": "voices",
+   "name": "en_f_young_us",
+   "lang": "en",
+   "gender": "female",
+   "age": "young",
+   "accent": "american",
+   "n": 40
   },
   {
-   "type": "sfx",
-   "name": "field_2",
-   "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
-   "duration": 8,
-   "influence": 0.5
+   "type": "voices",
+   "name": "en_f_social",
+   "lang": "en",
+   "gender": "female",
+   "use_case": "social_media",
+   "n": 30
   },
   {
-   "type": "sfx",
-   "name": "field_3",
-   "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
-   "duration": 8,
-   "influence": 0.5
+   "type": "voices",
+   "name": "en_f_narr",
+   "lang": "en",
+   "gender": "female",
+   "age": "young",
+   "use_case": "narrative_story",
+   "n": 30
   },
   {
-   "type": "sfx",
-   "name": "angry_1",
-   "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
-   "duration": 5,
-   "influence": 0.5
+   "type": "voices",
+   "name": "en_m_young_us",
+   "lang": "en",
+   "gender": "male",
+   "age": "young",
+   "accent": "american",
+   "n": 40
   },
   {
-   "type": "sfx",
-   "name": "angry_2",
-   "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
-   "duration": 5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "angry_3",
-   "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
-   "duration": 5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "grumble_1",
-   "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.",
-   "duration": 4,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "grumble_2",
-   "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.",
-   "duration": 4,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "murmur_1",
-   "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.",
-   "duration": 5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "murmur_2",
-   "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.",
-   "duration": 5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "wind_1",
-   "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.",
-   "duration": 6,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "wind_2",
-   "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.",
-   "duration": 6,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "birds_1",
-   "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.",
-   "duration": 4,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "birds_2",
-   "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.",
-   "duration": 4,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "clap_1",
-   "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.",
-   "duration": 2,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "clap_2",
-   "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.",
-   "duration": 2,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "groan_1",
-   "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.",
-   "duration": 2,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "groan_2",
-   "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.",
-   "duration": 2,
-   "influence": 0.5
+   "type": "voices",
+   "name": "en_m_social",
+   "lang": "en",
+   "gender": "male",
+   "use_case": "social_media",
+   "n": 30
   }
  ]
 }
