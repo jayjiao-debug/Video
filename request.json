@@ -1,11 +1,11 @@
 {
- "id": "arthur-vo-02",
+ "id": "arthur-vo-03",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "j01b",
+   "name": "j21n",
    "lang": "zh",
    "voice_id": "tOuLUAIdXShmWH7PEUrU",
    "settings": {
@@ -15,10 +15,10 @@
     "speed": 1.2,
     "use_speaker_boost": true
    },
-   "text": "他把刚拔出来的石中剑，又插了回去。"
+   "text": "整整拔了六次。而他能当上国王，只是因为哥哥忘了带剑。"
   },
   {
-   "name": "j02b",
+   "name": "j21n2",
    "lang": "zh",
    "voice_id": "tOuLUAIdXShmWH7PEUrU",
    "settings": {
@@ -28,12 +28,12 @@
     "speed": 1.2,
     "use_speaker_boost": true
    },
-   "text": "等等，拔出来不就是国王吗？"
+   "text": "整整拔了六次，而他能当上国王，只是因为哥哥忘了带剑。"
   },
   {
-   "name": "j05b",
+   "name": "k21n",
    "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "settings": {
     "stability": 0.2,
     "similarity_boost": 0.8,
@@ -41,12 +41,12 @@
     "speed": 1.2,
     "use_speaker_boost": true
    },
-   "text": "贵族排队来拔，脸都憋红了，剑一动不动。"
+   "text": "整整拔了六次。而他能当上国王，只是因为哥哥忘了带剑。"
   },
   {
-   "name": "j05c",
+   "name": "k21n2",
    "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
+   "voice_id": "5mZxJZhSmJTjL7GoYfYI",
    "settings": {
     "stability": 0.2,
     "similarity_boost": 0.8,
@@ -54,111 +54,7 @@
     "speed": 1.2,
     "use_speaker_boost": true
    },
-   "text": "贵族排队来拔，脸都憋红了，剑一动不动。"
-  },
-  {
-   "name": "j10b",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”"
-  },
-  {
-   "name": "j15b",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。"
-  },
-  {
-   "name": "j16b",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "二月，雪还没化，第四次，又拖。"
-  },
-  {
-   "name": "j16c",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "二月，雪还没化，第四次，又拖。"
-  },
-  {
-   "name": "j18b",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "初夏，当着所有人的面，第六次。"
-  },
-  {
-   "name": "j18c",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "初夏，当着所有人的面，第六次。"
-  },
-  {
-   "name": "j19b",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”"
-  },
-  {
-   "name": "j21b",
-   "lang": "zh",
-   "voice_id": "tOuLUAIdXShmWH7PEUrU",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。"
+   "text": "整整拔了六次，而他能当上国王，只是因为哥哥忘了带剑。"
   }
  ]
 }
