@@ -557,7 +557,7 @@ const blobMat = (col: string) => {
 //   - extras: a sweat drop, a soft blush.
 // Each character strays a little from the pattern (spacing, sizes, tilts), the same way in every expression (seeded).
 type EyeK = "lid" | "slit" | "down" | "dot" | "happy" | "closed" | "dash" | "squeeze" | "ring" | "ringHalf" | "spiral";
-type MouthK = "tiny" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
+type MouthK = "tiny" | "frown" | "smirk" | "smirkWide" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
 /** The mouths of a character who is speaking (RigState.mouth; rigSay gives the sequence for a line). The reference's
  *  talk kit, measured on five characters (width x height in u): mouths two to four times the size of the resting
  *  one, dark boxes with round corners, white teeth, a pink tongue. They hang from the upper lip: the top edge rises a
@@ -573,8 +573,9 @@ export const RIG_MOUTHS: RigMouth[] = ["line", "pill", "strip", "small", "half",
  *  + = inner end lower); bar = heavy straight brows sitting on the lids; raise = brows higher by that many u; skew =
  *  how much higher one brow rides than the other; pupil = a ring eye's pupil radius */
 /** cock = one brow cocked (the one on the strong side): it goes up by that many u in a high arch, its inner end
- *  staying down by the nose; the other brow stays where it is */
-type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; cock?: number; pupil?: number; sweat?: boolean; blush?: boolean };
+ *  staying down by the nose; the other brow stays where it is. cheek = a cheekbone line on each side (cheekbone()):
+ *  it cuts the round face into a jaw, on any head */
+type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; cock?: number; cheek?: boolean; pupil?: number; sweat?: boolean; blush?: boolean };
 const FACES: Record<Expr, FaceDef> = {
   neutral: { eye: ["lid", "lid"], brow: [0, -0.5], mouth: "tiny" },
   stern: { eye: ["lid", "lid"], brow: [3.2, -2.2], mouth: "frown", tilt: 9, bar: true, skew: 0 },
@@ -601,9 +602,9 @@ const FACES: Record<Expr, FaceDef> = {
   focus: { eye: ["down", "down"], brow: [1, -0.4], mouth: "tiny", skew: 0.2 },
   // unbothered: narrowed eyes under heavy level brows that sit on the lids, the hint of a smile
   cool: { eye: ["slit", "slit"], brow: [1.0, -0.6], mouth: "smirk", tilt: 3, bar: true, skew: 0 },
-  // "not a word": narrowed eyes that slant up at the outside, heavy brows, one of them cocked high, the mouth shut
-  // small (for the "shh" pose: the finger stands in front of it)
-  hush: { eye: ["slit", "slit"], brow: [2.4, -1.2], mouth: "tiny", tilt: 8, bar: true, skew: 0, cock: 7.5 },
+  // "not a word" (for the "shh" pose): the face of "cool" with one brow cocked high and a cheekbone line on each
+  // side (a cut jaw); the finger stands in front of the hint of a smile
+  hush: { eye: ["slit", "slit"], brow: [1.0, -0.6], mouth: "smirkWide", tilt: 3, bar: true, skew: 0, cock: 7.5, cheek: true },
 };
 /** a blink in two steps: half (lid 0.5) and shut (lid 1) */
 const blinkEye = (k: EyeK, lid: number): EyeK =>
@@ -620,6 +621,10 @@ const arcPts = (cx: number, cy: number, rx: number, ry: number, a0 = 0, a1 = 360
   for (let i = 0; i <= n; i++) { const a = rad(a0 + ((a1 - a0) * i) / n); o.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]); }
   return o;
 };
+/** the cheekbone line of side s (-1 / +1), in u from the middle of the eye line: from under the outer end of the eye
+ *  in and down toward the corner of the mouth. Drawn CHEEK_PEN wide: lighter than the features, it is a contour. */
+export const cheekbone = (s: number): P2[] => quadPts([s * 36.5, 5.5], [s * 30.5, 9.5], [s * 27.5, 17], 8);
+export const CHEEK_PEN = 2.4;
 const TEETH = "#ffffff", TONGUE = "#e8697a", SWEAT = "#a9dcff";
 /** the pen: every line of a face is this wide (u), with round ends */
 const PEN = 3.3;
@@ -641,7 +646,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
   const lipY = fa.lens ? 15 : 12.4, mouthY = fa.lip ? lipY + 9.5 : 18.7;
   // accessories drawn on the face (see Acc): under = before the eyes, brows and mouth; over = after everything
   const kit: FaceKit = {
-    look: L, expr, hand, sp, mouth: [jit(20, 1.1), mouthY], lip: lipY, lens: fa.lens, strong, shade: brim, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
+    look: L, expr, hand, sp, mouth: [jit(20, 1.1), mouthY], lip: lipY, lens: fa.lens, strong, shade: brim, cheek: !!F.cheek, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
     line, fill, turned, arc: arcPts, quad: quadPts, g, u, px: (x, y) => [cx + x * u, E + y * u],
   };
   const hook = (fn: (f: FaceKit) => void) => { g.save(); fn(kit); g.restore(); p.rot = null; };
@@ -748,6 +753,8 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       case "tiny": fill([...quadPts([mx - 4.6, my + 0.2], [mx - 0.4, my - 3.9], [mx + 4.6, my - 0.3], 12), ...quadPts([mx + 4.6, my - 0.3], [mx + 0.6, my + 4.3], [mx - 4.6, my + 0.2], 12).slice(1, -1)], INK, 0.7); break;
       case "frown": line(quadPts([mx - 6.5 * ms, my + 1.8], [mx, my - 5], [mx + 6.5 * ms, my + 1.8])); break;
       case "smirk": line(quadPts([mx - strong * 5.6, my + 1.3], [mx + strong * 1, my + 4.6], [mx + strong * 5.9, my - 3.3])); break;
+      // the same smirk half as wide again: both of its ends show beside a finger held in front of it
+      case "smirkWide": line(quadPts([mx - strong * 8.8, my + 1.2], [mx + strong * 1.6, my + 5.6], [mx + strong * 9.4, my - 3.8])); break;
       case "smile": line(quadPts([mx - 6.9 * ms, my - 1.6], [mx + 0.5 * strong, my + 5.4], [mx + 6.9 * ms, my - 1.6])); break;
       case "smileWide": line(quadPts([mx - 12 * ms, my - 2.6], [mx, my + 9.4], [mx + 12 * ms, my - 2.6])); break;
       case "grin": openMouth(20 * ms, my - 6.5, 2.75, 13.5, false); break;
@@ -770,6 +777,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       case "lick": line(quadPts([mx - 6.9 * ms, my - 1.6], [mx, my + 5.4], [mx + 6.9 * ms, my - 1.6])); fill(arcPts(mx + strong * 6.3, my + 3.6, 3.3, 4.3), TONGUE, 2.2); break;
     }
   });
+  if (F.cheek) for (const s of [-1, 1]) line(cheekbone(s), CHEEK_PEN);
   if (F.blush) for (const s of [-1, 1]) {
     const bx = cx + s * 20.5 * u, by = E + 9.6 * u, r = 6.6 * u, gr = g.createRadialGradient(0, 0, 0, 0, 0, r);
     gr.addColorStop(0, "rgba(238,118,140,0.5)"); gr.addColorStop(0.55, "rgba(238,118,140,0.3)"); gr.addColorStop(1, "rgba(238,118,140,0)");
@@ -1453,6 +1461,8 @@ export type FaceKit = {
   strong: number;
   /** true under a hat that shades the eyes */
   shade: boolean;
+  /** true when the expression draws the cheekbone lines itself (do not draw them again) */
+  cheek: boolean;
   /** the pen every line of the face is drawn with (3.3u, round ends) and the ink colour */
   PEN: number; INK: string;
   /** a seeded offset within +-a, the same in every expression of this character (k: your own index, 100 and up) */

@@ -314,7 +314,7 @@ const FACE: Record<Expr, { eye: [EyeK, EyeK]; brow: [number, number]; mouth: Mou
   focus: { eye: ["down", "down"], brow: [1, -0.5], mouth: "dash" },
   // unbothered: narrowed eyes under heavy level brows, the hint of a smile (rig3d: the brows sit on the lids)
   cool: { eye: ["slit", "slit"], brow: [2, -2], mouth: "smirk" },
-  hush: { eye: ["slit", "slit"], brow: [3, -2], mouth: "o" },
+  hush: { eye: ["slit", "slit"], brow: [2, -2], mouth: "smirk" },
 };
 const halfLid = (k: EyeK): EyeK => (k === "dot" || k === "small" ? "lid" : k === "lid" ? "slit" : k === "shock" ? "shockHalf" : k);
 const eyeKind = (k: EyeK, lid: number): EyeK =>
