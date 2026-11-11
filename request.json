@@ -1,14 +1,14 @@
 {
- "id": "hongmen-vo-01",
+ "id": "hongmen-vo-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "words": true,
  "items": [
   {
-   "name": "x01",
+   "name": "y01",
    "lang": "zh",
-   "text": "他起身去上厕所，就再也没回来。",
+   "text": "他酒喝到一半，起身去上厕所，就再也没回来。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -25,9 +25,9 @@
    "keep": true
   },
   {
-   "name": "x02",
+   "name": "y02",
    "lang": "zh",
-   "text": "等等，鸿门宴不是有人拔剑要杀他吗？",
+   "text": "等等，一顿酒而已，他跑什么？",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -44,9 +44,9 @@
    "keep": true
   },
   {
-   "name": "x03",
+   "name": "y03",
    "lang": "zh",
-   "text": "项羽四十万人要打刘邦，刘邦十万，上门道歉。",
+   "text": "他叫刘邦。两千多年前，他抢先打下了秦朝的都城。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -63,9 +63,9 @@
    "keep": true
   },
   {
-   "name": "x04",
+   "name": "y04",
    "lang": "zh",
-   "text": "酒席上，项羽的谋士范增想杀刘邦，三次举玉佩，项羽没理。",
+   "text": "手握四十万大军的项羽气炸了：“明天就打他！”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -82,9 +82,9 @@
    "keep": true
   },
   {
-   "name": "x05",
+   "name": "y05",
    "lang": "zh",
-   "text": "范增出去找人：“大王心软，你去舞剑，杀了刘邦。”",
+   "text": "刘邦只有十万人，第二天一早，赶紧上门赔罪。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -101,9 +101,9 @@
    "keep": true
   },
   {
-   "name": "x06",
+   "name": "y06",
    "lang": "zh",
-   "text": "那人进来说：“军中没乐子，我舞个剑吧。”他拔剑，第一次。",
+   "text": "项羽留他喝酒。这顿酒，就叫鸿门宴。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -120,9 +120,9 @@
    "keep": true
   },
   {
-   "name": "x07",
+   "name": "y07",
    "lang": "zh",
-   "text": "项羽的叔叔也拔剑，护着刘邦，第二次。",
+   "text": "可项羽的谋士范增，一心想杀了刘邦。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -139,9 +139,9 @@
    "keep": true
   },
   {
-   "name": "x08",
+   "name": "y08",
    "lang": "zh",
-   "text": "头天晚上，刘邦刚和他约好做亲家。",
+   "text": "他三次举起玉佩给项羽看，项羽不理。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -158,9 +158,9 @@
    "keep": true
   },
   {
-   "name": "x09",
+   "name": "y09",
    "lang": "zh",
-   "text": "刘邦的部下樊哙，撞倒卫兵闯进来。",
+   "text": "范增就叫来一个手下：“你去舞剑，趁机杀了刘邦。”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -177,9 +177,9 @@
    "keep": true
   },
   {
-   "name": "x10",
+   "name": "y10",
    "lang": "zh",
-   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。生的。",
+   "text": "手下拔剑起舞，剑总往刘邦那边去。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -196,9 +196,9 @@
    "keep": true
   },
   {
-   "name": "x11",
+   "name": "y11",
    "lang": "zh",
-   "text": "壮士拿盾牌当案板，拔剑切着吃，第三次。",
+   "text": "项羽的叔叔也拔剑跳了起来，用身子护住刘邦。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -215,9 +215,9 @@
    "keep": true
   },
   {
-   "name": "x12",
+   "name": "y12",
    "lang": "zh",
-   "text": "吃完数落项羽，他答不上来，只说：“坐。”",
+   "text": "头天晚上，刘邦刚和这位叔叔约好做亲家。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -234,9 +234,9 @@
    "keep": true
   },
   {
-   "name": "x13",
+   "name": "y13",
    "lang": "zh",
-   "text": "没坐多久，刘邦起身去上厕所，叫上壮士。",
+   "text": "刘邦的部下樊哙撞倒卫兵冲进来，瞪着项羽。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -253,9 +253,9 @@
    "keep": true
   },
   {
-   "name": "x14",
+   "name": "y14",
    "lang": "zh",
-   "text": "出门刘邦问：“还没告辞，怎么办？”",
+   "text": "项羽说：“壮士！赏他一条猪腿。”端上来的是生的。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -272,9 +272,9 @@
    "keep": true
   },
   {
-   "name": "x15",
+   "name": "y15",
    "lang": "zh",
-   "text": "壮士说：“人家是刀和案板，咱们是鱼肉，告什么辞。”",
+   "text": "樊哙把盾牌扣在地上当案板，拔剑切着就吃。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -291,9 +291,9 @@
    "keep": true
   },
   {
-   "name": "x16",
+   "name": "y16",
    "lang": "zh",
-   "text": "刘邦连车都不要了，只骑一匹马，四个部下跟着跑。",
+   "text": "过了一会儿，刘邦起身去上厕所，把樊哙也叫了出去。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -310,9 +310,9 @@
    "keep": true
   },
   {
-   "name": "x17",
+   "name": "y17",
    "lang": "zh",
-   "text": "刘邦的谋士等他走远才去送礼，说他喝多了，没法告辞。",
+   "text": "出了门，樊哙说：“人家是刀和案板，咱们是鱼和肉，还告什么辞！”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -329,9 +329,9 @@
    "keep": true
   },
   {
-   "name": "x18",
+   "name": "y18",
    "lang": "zh",
-   "text": "项羽问：“人呢？”答：“已经回军营了。”",
+   "text": "刘邦丢下车马，抄小路逃回了军营。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -348,9 +348,9 @@
    "keep": true
   },
   {
-   "name": "x19",
+   "name": "y19",
    "lang": "zh",
-   "text": "范增收下一对玉酒杯，放地上，拔剑砸了，第四次。",
+   "text": "等他跑远了，留下的部下才进去送礼，说他喝多了。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -367,9 +367,9 @@
    "keep": true
   },
   {
-   "name": "x20",
+   "name": "y20",
    "lang": "zh",
-   "text": "四次拔剑，遭殃的只有一条猪腿、一对玉酒杯。",
+   "text": "范增拔剑把送他的玉杯砸得粉碎：“夺项羽天下的，一定是刘邦！”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -386,9 +386,9 @@
    "keep": true
   },
   {
-   "name": "x21",
+   "name": "y21",
    "lang": "zh",
-   "text": "刘邦呢？上厕所去了。",
+   "text": "四年后，刘邦果然打败项羽，当上了皇帝。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -405,9 +405,9 @@
    "keep": true
   },
   {
-   "name": "x01b",
+   "name": "y22",
    "lang": "zh",
-   "text": "他起身去上厕所，就再也没回来。",
+   "text": "而鸿门宴上，他只是去上了个厕所。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -424,9 +424,9 @@
    "keep": true
   },
   {
-   "name": "x02b",
+   "name": "y01b",
    "lang": "zh",
-   "text": "等等，鸿门宴不是有人拔剑要杀他吗？",
+   "text": "他酒喝到一半，起身去上厕所，就再也没回来。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -443,9 +443,9 @@
    "keep": true
   },
   {
-   "name": "x03b",
+   "name": "y02b",
    "lang": "zh",
-   "text": "项羽四十万人要打刘邦，刘邦十万，上门道歉。",
+   "text": "等等，一顿酒而已，他跑什么？",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -462,9 +462,9 @@
    "keep": true
   },
   {
-   "name": "x04b",
+   "name": "y03b",
    "lang": "zh",
-   "text": "酒席上，项羽的谋士范增想杀刘邦，三次举玉佩，项羽没理。",
+   "text": "他叫刘邦。两千多年前，他抢先打下了秦朝的都城。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -481,9 +481,9 @@
    "keep": true
   },
   {
-   "name": "x05b",
+   "name": "y04b",
    "lang": "zh",
-   "text": "范增出去找人：“大王心软，你去舞剑，杀了刘邦。”",
+   "text": "手握四十万大军的项羽气炸了：“明天就打他！”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -500,9 +500,9 @@
    "keep": true
   },
   {
-   "name": "x06b",
+   "name": "y05b",
    "lang": "zh",
-   "text": "那人进来说：“军中没乐子，我舞个剑吧。”他拔剑，第一次。",
+   "text": "刘邦只有十万人，第二天一早，赶紧上门赔罪。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -519,9 +519,9 @@
    "keep": true
   },
   {
-   "name": "x07b",
+   "name": "y06b",
    "lang": "zh",
-   "text": "项羽的叔叔也拔剑，护着刘邦，第二次。",
+   "text": "项羽留他喝酒。这顿酒，就叫鸿门宴。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -538,9 +538,9 @@
    "keep": true
   },
   {
-   "name": "x08b",
+   "name": "y07b",
    "lang": "zh",
-   "text": "头天晚上，刘邦刚和他约好做亲家。",
+   "text": "可项羽的谋士范增，一心想杀了刘邦。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -557,9 +557,9 @@
    "keep": true
   },
   {
-   "name": "x09b",
+   "name": "y08b",
    "lang": "zh",
-   "text": "刘邦的部下樊哙，撞倒卫兵闯进来。",
+   "text": "他三次举起玉佩给项羽看，项羽不理。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -576,9 +576,9 @@
    "keep": true
   },
   {
-   "name": "x10b",
+   "name": "y09b",
    "lang": "zh",
-   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。生的。",
+   "text": "范增就叫来一个手下：“你去舞剑，趁机杀了刘邦。”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -595,9 +595,9 @@
    "keep": true
   },
   {
-   "name": "x11b",
+   "name": "y10b",
    "lang": "zh",
-   "text": "壮士拿盾牌当案板，拔剑切着吃，第三次。",
+   "text": "手下拔剑起舞，剑总往刘邦那边去。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -614,9 +614,9 @@
    "keep": true
   },
   {
-   "name": "x12b",
+   "name": "y11b",
    "lang": "zh",
-   "text": "吃完数落项羽，他答不上来，只说：“坐。”",
+   "text": "项羽的叔叔也拔剑跳了起来，用身子护住刘邦。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -633,9 +633,9 @@
    "keep": true
   },
   {
-   "name": "x13b",
+   "name": "y12b",
    "lang": "zh",
-   "text": "没坐多久，刘邦起身去上厕所，叫上壮士。",
+   "text": "头天晚上，刘邦刚和这位叔叔约好做亲家。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -652,9 +652,9 @@
    "keep": true
   },
   {
-   "name": "x14b",
+   "name": "y13b",
    "lang": "zh",
-   "text": "出门刘邦问：“还没告辞，怎么办？”",
+   "text": "刘邦的部下樊哙撞倒卫兵冲进来，瞪着项羽。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -671,9 +671,9 @@
    "keep": true
   },
   {
-   "name": "x15b",
+   "name": "y14b",
    "lang": "zh",
-   "text": "壮士说：“人家是刀和案板，咱们是鱼肉，告什么辞。”",
+   "text": "项羽说：“壮士！赏他一条猪腿。”端上来的是生的。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -690,9 +690,9 @@
    "keep": true
   },
   {
-   "name": "x16b",
+   "name": "y15b",
    "lang": "zh",
-   "text": "刘邦连车都不要了，只骑一匹马，四个部下跟着跑。",
+   "text": "樊哙把盾牌扣在地上当案板，拔剑切着就吃。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -709,9 +709,9 @@
    "keep": true
   },
   {
-   "name": "x17b",
+   "name": "y16b",
    "lang": "zh",
-   "text": "刘邦的谋士等他走远才去送礼，说他喝多了，没法告辞。",
+   "text": "过了一会儿，刘邦起身去上厕所，把樊哙也叫了出去。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -728,9 +728,9 @@
    "keep": true
   },
   {
-   "name": "x18b",
+   "name": "y17b",
    "lang": "zh",
-   "text": "项羽问：“人呢？”答：“已经回军营了。”",
+   "text": "出了门，樊哙说：“人家是刀和案板，咱们是鱼和肉，还告什么辞！”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -747,9 +747,9 @@
    "keep": true
   },
   {
-   "name": "x19b",
+   "name": "y18b",
    "lang": "zh",
-   "text": "范增收下一对玉酒杯，放地上，拔剑砸了，第四次。",
+   "text": "刘邦丢下车马，抄小路逃回了军营。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -766,9 +766,9 @@
    "keep": true
   },
   {
-   "name": "x20b",
+   "name": "y19b",
    "lang": "zh",
-   "text": "四次拔剑，遭殃的只有一条猪腿、一对玉酒杯。",
+   "text": "等他跑远了，留下的部下才进去送礼，说他喝多了。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -785,9 +785,9 @@
    "keep": true
   },
   {
-   "name": "x21b",
+   "name": "y20b",
    "lang": "zh",
-   "text": "刘邦呢？上厕所去了。",
+   "text": "范增拔剑把送他的玉杯砸得粉碎：“夺项羽天下的，一定是刘邦！”",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -804,9 +804,9 @@
    "keep": true
   },
   {
-   "name": "x10p",
+   "name": "y21b",
    "lang": "zh",
-   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。",
+   "text": "四年后，刘邦果然打败项羽，当上了皇帝。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
@@ -823,161 +823,9 @@
    "keep": true
   },
   {
-   "name": "x10q",
+   "name": "y22b",
    "lang": "zh",
-   "text": "生的。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x10pb",
-   "lang": "zh",
-   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x10qb",
-   "lang": "zh",
-   "text": "生的。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x08alt",
-   "lang": "zh",
-   "text": "头天晚上，刘邦刚和他约好做庆家。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x08altb",
-   "lang": "zh",
-   "text": "头天晚上，刘邦刚和他约好做庆家。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x09alt",
-   "lang": "zh",
-   "text": "刘邦的部下樊快，撞倒卫兵闯进来。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x09altb",
-   "lang": "zh",
-   "text": "刘邦的部下樊快，撞倒卫兵闯进来。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x12alt",
-   "lang": "zh",
-   "text": "吃完属落项羽，他答不上来，只说：“坐。”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x12altb",
-   "lang": "zh",
-   "text": "吃完属落项羽，他答不上来，只说：“坐。”",
+   "text": "而鸿门宴上，他只是去上了个厕所。",
    "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
