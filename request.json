@@ -1,14 +1,14 @@
 {
- "id": "arthur-en-alex-02",
+ "id": "arthur-en-alex-03",
  "model_prefs": [
   "eleven_v4"
  ],
  "words": true,
  "items": [
   {
-   "name": "x04c",
+   "name": "x10e",
    "lang": "en",
-   "text": "In gold: pull it out, and you're king.",
+   "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
@@ -24,189 +24,9 @@
    }
   },
   {
-   "name": "x04d",
+   "name": "x10f",
    "lang": "en",
-   "text": "In gold: pull it out, and you're king.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x10c",
-   "lang": "en",
-   "text": "Kay runs to Dad: \"Dad! The sword! I get to be king!\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x10d",
-   "lang": "en",
-   "text": "Kay runs to Dad: \"Dad! The sword! I get to be king!\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x13d",
-   "lang": "en",
-   "text": "Dad pulls: stuck. Kay pulls harder: stuck. Arthur reaches out: pull two.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x13e",
-   "lang": "en",
-   "text": "Dad pulls: stuck. Kay pulls harder: stuck. Arthur reaches out: pull two.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x14d",
-   "lang": "en",
-   "text": "Days later, all the lords try. Only he can. Pull three.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x14e",
-   "lang": "en",
-   "text": "Days later, all the lords try. Only he can. Pull three.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x17c",
-   "lang": "en",
-   "text": "Spring, in full bloom: pull five. Again.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x17d",
-   "lang": "en",
-   "text": "Spring, in full bloom: pull five. Again.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x18d",
-   "lang": "en",
-   "text": "Early summer, in front of everyone: pull six.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x19d",
-   "lang": "en",
-   "text": "The people snap: \"Arthur for king! No more delays!\"",
+   "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
