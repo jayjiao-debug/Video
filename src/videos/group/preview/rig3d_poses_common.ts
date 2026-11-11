@@ -14,7 +14,8 @@ import { N8AOPostPass } from "n8ao";
 import { makeEnv, mats, LIGHTS } from "../../bt/pbr";
 import { NOINK } from "../../vasa/ink";
 import { buildLab, LAB_FILL, LAB_AO, LAB_CAST_LIGHT } from "../sets/lab";
-import { RigCast, type Rig, type Hat, type Acc, type RigPoseKind, type RigSeat, type RigHead } from "../kit/rig3d";
+import { RigCast, rigJawline, type Rig, type Hat, type Acc, type RigPoseKind, type RigSeat, type RigHead } from "../kit/rig3d";
+import { DAGE, dage } from "../kit/rigacc/dage";
 import { accessories } from "../kit/rigacc/catalog";
 import { phone } from "../kit/rigacc/phone";
 import { pen } from "../kit/rigacc/pen";
@@ -35,6 +36,14 @@ export type PoseWho = {
   armFront?: [boolean | null, boolean | null]; hide?: string[]; lookDown?: number; headFront?: number; clipboard?: 0 | 1;
   /** the head layer (RigState.head): an accent of talking held still, to see a pose with it */
   head?: RigHead;
+  /** 大哥 (kit/rigacc/dage.ts) in place of `look`, his finger on the pose's arm */
+  dage?: boolean;
+  /** "shh": the finger along the jaw (RigPose.jaw, 0..2), held still; twist = the torso's turn on its feet (degrees,
+   *  + = to the person's left); gaze = where the pupils look (-1..1) */
+  jaw?: number; twist?: number; gaze?: number;
+  /** frames mode: the whole gesture in time (rigJawline) from frame `start` on, with the pose's arm; pose, expr,
+   *  gaze, head and twist are then the gesture's */
+  jawline?: { start: number; turn?: number };
   /** a hand pinned in space: metres from the person's floor point in their own frame (x = their left, y = up, z =
    *  forward); null = the pose's own place */
   hands?: ([number, number, number] | null)[];
@@ -162,7 +171,7 @@ export function poseLab(o0: PoseLabOpts) {
       if (kind === "desk") g.add(desk());
       seat = { top: V(at.x, seatTop, at.z), front: SEAT_D / 2, backrest: BACKREST, backrestTop: seatTop + BACK_TOP, ...(o.back !== undefined ? { back: o.back } : {}), ...(kind === "desk" ? { deskEdge, deskTop } : {}) };
     }
-    return { wh, at, facing, seat, rig: rc.add(lookOf(wh.look), { hat: wh.hat, acc: accOf(wh) }) };
+    return { wh, at, facing, seat, rig: wh.dage ? rc.add(DAGE, { acc: [...dage({ hand: wh.arm ?? 1 }), ...accOf(wh)] }) : rc.add(lookOf(wh.look), { hat: wh.hat, acc: accOf(wh) }) };
   });
 
   const N = o.frames ?? 1;
@@ -188,13 +197,15 @@ export function poseLab(o0: PoseLabOpts) {
     const T = (o.t ?? 1) + (o.run ? i / 30 : 0);
     people.forEach((P, k) => {
       const wh = P.wh, kind = wh.pose ?? "idle", am = amountAt(i, wh);
+      const jl = wh.jawline ? rigJawline((i - wh.jawline.start) / 30, { arm: wh.arm, amount: am ?? 1, ...(wh.jawline.turn !== undefined ? { turn: wh.jawline.turn } : {}) }) : null;
       P.rig.set({
         at: P.at, facing: P.facing, ...(P.seat ? { seat: P.seat } : {}),
-        pose: { kind, t: T + k * 0.31, ...(wh.arm !== undefined ? { arm: wh.arm } : {}), ...(am !== undefined ? { amount: am } : {}), ...(kind === "walk" ? { phase: (T * 0.9) % 1 } : {}) },
-        expr: wh.expr ?? "smile", blink: 0,
+        pose: jl ? { ...jl.pose, t: T + k * 0.31 } : { kind, t: T + k * 0.31, ...(wh.arm !== undefined ? { arm: wh.arm } : {}), ...(am !== undefined ? { amount: am } : {}), ...(wh.jaw !== undefined ? { jaw: wh.jaw } : {}), ...(kind === "walk" ? { phase: (T * 0.9) % 1 } : {}) },
+        expr: jl ? jl.expr : wh.expr ?? "smile", blink: 0,
+        ...(jl ? { gaze: jl.gaze, twist: jl.twist } : { ...(wh.twist !== undefined ? { twist: rad(wh.twist) } : {}), ...(wh.gaze !== undefined ? { gaze: wh.gaze } : {}) }),
         ...(wh.armFront ? { armFront: [wh.armFront[0] ?? undefined, wh.armFront[1] ?? undefined] as [boolean | undefined, boolean | undefined] } : {}),
         ...(wh.hide ? { hide: wh.hide } : {}), ...(wh.lookDown !== undefined ? { lookDown: wh.lookDown } : {}), ...(wh.headFront !== undefined ? { headFront: wh.headFront } : {}),
-        ...(wh.clipboard !== undefined ? { clipboard: wh.clipboard } : {}), ...(wh.head ? { head: wh.head } : {}),
+        ...(wh.clipboard !== undefined ? { clipboard: wh.clipboard } : {}), ...(jl ? { head: jl.head } : wh.head ? { head: wh.head } : {}),
         ...(wh.hands ? { hands: [0, 1].map((j) => { const q = wh.hands![j]; return q ? V(P.at.x + q[0] * Math.cos(P.facing) + q[2] * Math.sin(P.facing), q[1], P.at.z - q[0] * Math.sin(P.facing) + q[2] * Math.cos(P.facing)) : null; }) as [THREE.Vector3 | null, THREE.Vector3 | null] } : {}),
       });
     });
