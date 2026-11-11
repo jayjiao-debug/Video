@@ -1,0 +1,3117 @@
+{
+  "id": "arthur-en-hope-02",
+  "clips": [
+    {
+      "name": "x01b",
+      "lang": "en",
+      "text": "He just pulled the sword from the stone, and put it back.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x01b.mp3",
+      "bytes": 54795,
+      "words": [
+        [
+          "He",
+          0.0,
+          0.16
+        ],
+        [
+          "just",
+          0.16,
+          0.5
+        ],
+        [
+          "pulled",
+          0.5,
+          0.8
+        ],
+        [
+          "the",
+          0.8,
+          0.98
+        ],
+        [
+          "sword",
+          0.98,
+          1.26
+        ],
+        [
+          "from",
+          1.26,
+          1.46
+        ],
+        [
+          "the",
+          1.46,
+          1.64
+        ],
+        [
+          "stone",
+          1.64,
+          1.98
+        ],
+        [
+          "and",
+          1.98,
+          2.48
+        ],
+        [
+          "put",
+          2.48,
+          2.68
+        ],
+        [
+          "it",
+          2.68,
+          2.78
+        ],
+        [
+          "back.",
+          2.78,
+          3.04
+        ]
+      ],
+      "heard": "He just pulled the sword from the stone and put it back.",
+      "heard_lang": "en",
+      "heard_lang_p": 1.0,
+      "seconds": 3.36
+    },
+    {
+      "name": "x02b",
+      "lang": "en",
+      "text": "Wait. Doesn't pulling it out make you king?",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x02b.mp3",
+      "bytes": 48526,
+      "words": [
+        [
+          "Wait,",
+          0.0,
+          0.3
+        ],
+        [
+          "doesn't",
+          0.66,
+          1.18
+        ],
+        [
+          "pulling",
+          1.18,
+          1.46
+        ],
+        [
+          "it",
+          1.46,
+          1.7
+        ],
+        [
+          "out",
+          1.7,
+          1.88
+        ],
+        [
+          "make",
+          1.88,
+          2.1
+        ],
+        [
+          "you",
+          2.1,
+          2.28
+        ],
+        [
+          "king?",
+          2.28,
+          2.56
+        ]
+      ],
+      "heard": "Wait, doesn't pulling it out make you king?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.995,
+      "seconds": 2.96
+    },
+    {
+      "name": "x03b",
+      "lang": "en",
+      "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x03b.mp3",
+      "bytes": 108712,
+      "words": [
+        [
+          "In",
+          0.0,
+          0.16
+        ],
+        [
+          "the",
+          0.16,
+          0.26
+        ],
+        [
+          "classic",
+          0.26,
+          0.64
+        ],
+        [
+          "Le",
+          0.64,
+          0.92
+        ],
+        [
+          "Morte",
+          0.92,
+          1.18
+        ],
+        [
+          "d",
+          1.18,
+          1.32
+        ],
+        [
+          "'Arture,",
+          1.32,
+          1.84
+        ],
+        [
+          "outside",
+          2.16,
+          2.44
+        ],
+        [
+          "a",
+          2.44,
+          2.7
+        ],
+        [
+          "London",
+          2.7,
+          2.92
+        ],
+        [
+          "church,",
+          2.92,
+          3.36
+        ],
+        [
+          "a",
+          3.74,
+          3.82
+        ],
+        [
+          "great",
+          3.82,
+          4.16
+        ],
+        [
+          "stone",
+          4.16,
+          4.62
+        ],
+        [
+          "appears,",
+          4.62,
+          5.1
+        ],
+        [
+          "a",
+          5.66,
+          5.76
+        ],
+        [
+          "sword",
+          5.76,
+          6.1
+        ],
+        [
+          "in",
+          6.1,
+          6.3
+        ],
+        [
+          "it.",
+          6.3,
+          6.48
+        ]
+      ],
+      "heard": "In the classic Le Morte d'Arture, outside a London church, a great stone appears, a sword in it.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.92,
+      "seconds": 6.72
+    },
+    {
+      "name": "x04b",
+      "lang": "en",
+      "text": "Gold letters say: pull it out, and you're king.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x04b.mp3",
+      "bytes": 59811,
+      "words": [
+        [
+          "Gold",
+          0.0,
+          0.24
+        ],
+        [
+          "letters",
+          0.24,
+          0.58
+        ],
+        [
+          "say,",
+          0.58,
+          1.06
+        ],
+        [
+          "pull",
+          1.42,
+          1.8
+        ],
+        [
+          "it",
+          1.8,
+          1.96
+        ],
+        [
+          "out",
+          1.96,
+          2.18
+        ],
+        [
+          "and",
+          2.18,
+          2.56
+        ],
+        [
+          "you're",
+          2.56,
+          2.92
+        ],
+        [
+          "king.",
+          2.92,
+          3.24
+        ]
+      ],
+      "heard": "Gold letters say, pull it out and you're king.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 3.68
+    },
+    {
+      "name": "x05b",
+      "lang": "en",
+      "text": "Lords line up to pull, faces turning red, it won't budge.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x05b.mp3",
+      "bytes": 79037,
+      "words": [
+        [
+          "Lords",
+          0.0,
+          0.34
+        ],
+        [
+          "line",
+          0.34,
+          0.82
+        ],
+        [
+          "up",
+          0.82,
+          1.0
+        ],
+        [
+          "to",
+          1.0,
+          1.16
+        ],
+        [
+          "pull.",
+          1.16,
+          1.46
+        ],
+        [
+          "Face",
+          1.84,
+          2.14
+        ],
+        [
+          "is",
+          2.14,
+          2.36
+        ],
+        [
+          "turning",
+          2.36,
+          2.62
+        ],
+        [
+          "red.",
+          2.62,
+          3.06
+        ],
+        [
+          "It",
+          3.52,
+          3.68
+        ],
+        [
+          "won't",
+          3.68,
+          4.1
+        ],
+        [
+          "budge.",
+          4.1,
+          4.66
+        ]
+      ],
+      "heard": "Lords line up to pull. Face is turning red. It won't budge.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.996,
+      "seconds": 4.88
+    },
+    {
+      "name": "x06b",
+      "lang": "en",
+      "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x06b.mp3",
+      "bytes": 116235,
+      "words": [
+        [
+          "New",
+          0.0,
+          0.22
+        ],
+        [
+          "Year's",
+          0.22,
+          0.6
+        ],
+        [
+          "Tournament.",
+          0.6,
+          1.08
+        ],
+        [
+          "Arthur's",
+          1.64,
+          2.18
+        ],
+        [
+          "big",
+          2.18,
+          2.4
+        ],
+        [
+          "brother",
+          2.4,
+          2.7
+        ],
+        [
+          "Kay,",
+          2.7,
+          3.1
+        ],
+        [
+          "a",
+          3.5,
+          3.56
+        ],
+        [
+          "brand",
+          3.56,
+          3.88
+        ],
+        [
+          "new",
+          3.88,
+          4.16
+        ],
+        [
+          "knight,",
+          4.16,
+          4.48
+        ],
+        [
+          "pats",
+          4.92,
+          5.18
+        ],
+        [
+          "his",
+          5.18,
+          5.3
+        ],
+        [
+          "belt.",
+          5.3,
+          5.56
+        ],
+        [
+          "No",
+          6.18,
+          6.48
+        ],
+        [
+          "sword.",
+          6.48,
+          6.78
+        ]
+      ],
+      "heard": "New Year's Tournament. Arthur's big brother Kay, a brand new knight, pats his belt. No sword.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.995,
+      "seconds": 7.2
+    },
+    {
+      "name": "x07b",
+      "lang": "en",
+      "text": "Arthur runs back. Nobody's home. All at the tournament.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x07b.mp3",
+      "bytes": 67752,
+      "words": [
+        [
+          "Arthur",
+          0.0,
+          0.26
+        ],
+        [
+          "runs",
+          0.26,
+          0.62
+        ],
+        [
+          "back.",
+          0.62,
+          0.96
+        ],
+        [
+          "Nobody's",
+          1.58,
+          2.1
+        ],
+        [
+          "home.",
+          2.1,
+          2.38
+        ],
+        [
+          "All",
+          2.8,
+          3.12
+        ],
+        [
+          "at",
+          3.12,
+          3.28
+        ],
+        [
+          "the",
+          3.28,
+          3.38
+        ],
+        [
+          "tournament.",
+          3.38,
+          3.68
+        ]
+      ],
+      "heard": "Arthur runs back. Nobody's home. All at the tournament.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.987,
+      "seconds": 4.16
+    },
+    {
+      "name": "x08b",
+      "lang": "en",
+      "text": "He thinks: there's a sword in that stone.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x08b.mp3",
+      "bytes": 49780,
+      "words": [
+        [
+          "He",
+          0.0,
+          0.22
+        ],
+        [
+          "thinks",
+          0.22,
+          0.58
+        ],
+        [
+          "there's",
+          0.58,
+          1.44
+        ],
+        [
+          "a",
+          1.44,
+          1.54
+        ],
+        [
+          "sword",
+          1.54,
+          1.96
+        ],
+        [
+          "in",
+          1.96,
+          2.16
+        ],
+        [
+          "that",
+          2.16,
+          2.32
+        ],
+        [
+          "stone.",
+          2.32,
+          2.6
+        ]
+      ],
+      "heard": "He thinks there's a sword in that stone.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 3.04
+    },
+    {
+      "name": "x09b",
+      "lang": "en",
+      "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x09b.mp3",
+      "bytes": 86978,
+      "words": [
+        [
+          "Even",
+          0.0,
+          0.24
+        ],
+        [
+          "the",
+          0.24,
+          0.44
+        ],
+        [
+          "10",
+          0.44,
+          0.74
+        ],
+        [
+          "guards",
+          0.74,
+          1.18
+        ],
+        [
+          "are",
+          1.18,
+          1.38
+        ],
+        [
+          "at",
+          1.38,
+          1.52
+        ],
+        [
+          "the",
+          1.52,
+          1.62
+        ],
+        [
+          "tournament.",
+          1.62,
+          2.0
+        ],
+        [
+          "One",
+          2.52,
+          2.86
+        ],
+        [
+          "tug",
+          2.86,
+          3.1
+        ],
+        [
+          "and",
+          3.1,
+          3.6
+        ],
+        [
+          "it's",
+          3.6,
+          3.8
+        ],
+        [
+          "out.",
+          3.8,
+          3.98
+        ],
+        [
+          "Pull",
+          4.44,
+          4.76
+        ],
+        [
+          "one.",
+          4.76,
+          5.02
+        ]
+      ],
+      "heard": "Even the 10 guards are at the tournament. One tug and it's out. Pull one.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.997,
+      "seconds": 5.36
+    },
+    {
+      "name": "x10b",
+      "lang": "en",
+      "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x10b.mp3",
+      "bytes": 79037,
+      "words": [
+        [
+          "Kay",
+          0.0,
+          0.22
+        ],
+        [
+          "takes",
+          0.22,
+          0.52
+        ],
+        [
+          "it",
+          0.52,
+          0.68
+        ],
+        [
+          "straight",
+          0.68,
+          1.04
+        ],
+        [
+          "to",
+          1.04,
+          1.28
+        ],
+        [
+          "dad.",
+          1.28,
+          1.5
+        ],
+        [
+          "Dad!",
+          1.9,
+          2.28
+        ],
+        [
+          "The",
+          2.58,
+          2.72
+        ],
+        [
+          "sword!",
+          2.72,
+          3.08
+        ],
+        [
+          "I",
+          3.46,
+          3.66
+        ],
+        [
+          "get",
+          3.66,
+          3.78
+        ],
+        [
+          "to",
+          3.78,
+          3.92
+        ],
+        [
+          "be",
+          3.92,
+          4.04
+        ],
+        [
+          "king!",
+          4.04,
+          4.36
+        ]
+      ],
+      "heard": "Kay takes it straight to dad. Dad! The sword! I get to be king!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.993,
+      "seconds": 4.88
+    },
+    {
+      "name": "x11b",
+      "lang": "en",
+      "text": "Dad makes him swear. Kay admits Arthur brought it.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x11b.mp3",
+      "bytes": 63990,
+      "words": [
+        [
+          "Dad",
+          0.0,
+          0.28
+        ],
+        [
+          "makes",
+          0.28,
+          0.62
+        ],
+        [
+          "him",
+          0.62,
+          0.82
+        ],
+        [
+          "swear.",
+          0.82,
+          1.24
+        ],
+        [
+          "Kay",
+          1.92,
+          2.2
+        ],
+        [
+          "admits",
+          2.2,
+          2.6
+        ],
+        [
+          "Arthur",
+          2.6,
+          3.0
+        ],
+        [
+          "brought",
+          3.0,
+          3.4
+        ],
+        [
+          "it.",
+          3.4,
+          3.58
+        ]
+      ],
+      "heard": "Dad makes him swear. Kay admits Arthur brought it.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 3.92
+    },
+    {
+      "name": "x12b",
+      "lang": "en",
+      "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x12b.mp3",
+      "bytes": 93247,
+      "words": [
+        [
+          "Dad",
+          0.0,
+          0.24
+        ],
+        [
+          "tells",
+          0.24,
+          0.6
+        ],
+        [
+          "Arthur,",
+          0.6,
+          1.0
+        ],
+        [
+          "put",
+          1.52,
+          1.7
+        ],
+        [
+          "it",
+          1.7,
+          1.84
+        ],
+        [
+          "back",
+          1.84,
+          2.08
+        ],
+        [
+          "and",
+          2.08,
+          2.36
+        ],
+        [
+          "pull",
+          2.36,
+          2.62
+        ],
+        [
+          "again.",
+          2.62,
+          2.94
+        ],
+        [
+          "He",
+          3.48,
+          3.6
+        ],
+        [
+          "says,",
+          3.6,
+          3.84
+        ],
+        [
+          "how",
+          4.24,
+          4.52
+        ],
+        [
+          "hard",
+          4.52,
+          4.82
+        ],
+        [
+          "can",
+          4.82,
+          5.04
+        ],
+        [
+          "it",
+          5.04,
+          5.16
+        ],
+        [
+          "be?",
+          5.16,
+          5.38
+        ]
+      ],
+      "heard": "Dad tells Arthur, put it back and pull again. He says, how hard can it be?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 5.76
+    },
+    {
+      "name": "x13b",
+      "lang": "en",
+      "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x13b.mp3",
+      "bytes": 137969,
+      "words": [
+        [
+          "Dad",
+          0.0,
+          0.3
+        ],
+        [
+          "pulls",
+          0.3,
+          0.58
+        ],
+        [
+          "first.",
+          0.58,
+          0.98
+        ],
+        [
+          "Stuck.",
+          1.52,
+          2.18
+        ],
+        [
+          "Kay",
+          2.56,
+          2.96
+        ],
+        [
+          "pulls",
+          2.96,
+          3.28
+        ],
+        [
+          "with",
+          3.28,
+          3.52
+        ],
+        [
+          "all",
+          3.52,
+          3.9
+        ],
+        [
+          "his",
+          3.9,
+          4.14
+        ],
+        [
+          "might.",
+          4.14,
+          4.38
+        ],
+        [
+          "Stuck!",
+          4.9,
+          5.62
+        ],
+        [
+          "Arthur",
+          6.18,
+          6.48
+        ],
+        [
+          "reaches",
+          6.48,
+          6.88
+        ],
+        [
+          "out.",
+          6.88,
+          7.2
+        ],
+        [
+          "Pull",
+          7.68,
+          7.9
+        ],
+        [
+          "two.",
+          7.9,
+          8.18
+        ]
+      ],
+      "heard": "Dad pulls first. Stuck. Kay pulls with all his might. Stuck! Arthur reaches out. Pull two.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.995,
+      "seconds": 8.56
+    },
+    {
+      "name": "x14b",
+      "lang": "en",
+      "text": "Days later, every lord tries. Only Arthur can. Pull three.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x14b.mp3",
+      "bytes": 90740,
+      "words": [
+        [
+          "Days",
+          0.0,
+          0.28
+        ],
+        [
+          "later,",
+          0.28,
+          0.68
+        ],
+        [
+          "every",
+          1.16,
+          1.48
+        ],
+        [
+          "Lord",
+          1.48,
+          1.78
+        ],
+        [
+          "tries.",
+          1.78,
+          2.16
+        ],
+        [
+          "Only",
+          2.8,
+          3.08
+        ],
+        [
+          "Arthur",
+          3.08,
+          3.52
+        ],
+        [
+          "can.",
+          3.52,
+          3.88
+        ],
+        [
+          "Pull",
+          4.58,
+          4.82
+        ],
+        [
+          "three.",
+          4.82,
+          5.16
+        ]
+      ],
+      "heard": "Days later, every Lord tries. Only Arthur can. Pull three.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 5.6
+    },
+    {
+      "name": "x15b",
+      "lang": "en",
+      "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x15b.mp3",
+      "bytes": 94501,
+      "words": [
+        [
+          "They're",
+          0.0,
+          0.28
+        ],
+        [
+          "furious.",
+          0.28,
+          0.9
+        ],
+        [
+          "A",
+          1.56,
+          1.74
+        ],
+        [
+          "boy",
+          1.74,
+          2.08
+        ],
+        [
+          "of",
+          2.08,
+          2.26
+        ],
+        [
+          "no",
+          2.26,
+          2.56
+        ],
+        [
+          "high",
+          2.56,
+          2.84
+        ],
+        [
+          "blood?",
+          2.84,
+          3.18
+        ],
+        [
+          "Rulous?",
+          3.58,
+          4.2
+        ],
+        [
+          "They",
+          4.56,
+          5.0
+        ],
+        [
+          "delay",
+          5.0,
+          5.28
+        ],
+        [
+          "it.",
+          5.28,
+          5.56
+        ]
+      ],
+      "heard": "They're furious. A boy of no high blood? Rulous? They delay it.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.997,
+      "seconds": 5.84
+    },
+    {
+      "name": "x16b",
+      "lang": "en",
+      "text": "Next month, snow on the ground: pull four. Delayed.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x16b.mp3",
+      "bytes": 74021,
+      "words": [
+        [
+          "Next",
+          0.0,
+          0.26
+        ],
+        [
+          "month,",
+          0.26,
+          0.6
+        ],
+        [
+          "snow",
+          1.08,
+          1.34
+        ],
+        [
+          "on",
+          1.34,
+          1.54
+        ],
+        [
+          "the",
+          1.54,
+          1.64
+        ],
+        [
+          "ground.",
+          1.64,
+          1.96
+        ],
+        [
+          "Pull",
+          2.42,
+          2.7
+        ],
+        [
+          "four.",
+          2.7,
+          3.12
+        ],
+        [
+          "Delayed.",
+          3.62,
+          4.2
+        ]
+      ],
+      "heard": "Next month, snow on the ground. Pull four. Delayed.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.996,
+      "seconds": 4.56
+    },
+    {
+      "name": "x17b",
+      "lang": "en",
+      "text": "Spring, flowers in full bloom: pull five. Again.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x17b.mp3",
+      "bytes": 80291,
+      "words": [
+        [
+          "Spring,",
+          0.0,
+          0.36
+        ],
+        [
+          "flowers",
+          0.86,
+          1.34
+        ],
+        [
+          "in",
+          1.34,
+          1.7
+        ],
+        [
+          "full",
+          1.7,
+          2.08
+        ],
+        [
+          "gloom,",
+          2.08,
+          2.68
+        ],
+        [
+          "pull",
+          3.0,
+          3.2
+        ],
+        [
+          "five,",
+          3.2,
+          3.66
+        ],
+        [
+          "again.",
+          4.26,
+          4.54
+        ]
+      ],
+      "heard": "Spring, flowers in full gloom, pull five, again.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.995,
+      "seconds": 4.96
+    },
+    {
+      "name": "x18b",
+      "lang": "en",
+      "text": "Summer, in front of everyone: pull six.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x18b.mp3",
+      "bytes": 56049,
+      "words": [
+        [
+          "Summer",
+          0.0,
+          0.36
+        ],
+        [
+          "in",
+          0.36,
+          0.94
+        ],
+        [
+          "front",
+          0.94,
+          1.22
+        ],
+        [
+          "of",
+          1.22,
+          1.4
+        ],
+        [
+          "everyone.",
+          1.4,
+          1.98
+        ],
+        [
+          "Pull",
+          2.3,
+          2.72
+        ],
+        [
+          "six.",
+          2.72,
+          3.04
+        ]
+      ],
+      "heard": "Summer in front of everyone. Pull six.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.997,
+      "seconds": 3.44
+    },
+    {
+      "name": "x19b",
+      "lang": "en",
+      "text": "The people snap: \"We want Arthur as king! No more delays!\"",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x19b.mp3",
+      "bytes": 77783,
+      "words": [
+        [
+          "The",
+          0.0,
+          0.18
+        ],
+        [
+          "people",
+          0.18,
+          0.46
+        ],
+        [
+          "snap.",
+          0.46,
+          0.94
+        ],
+        [
+          "We",
+          1.5,
+          1.82
+        ],
+        [
+          "want",
+          1.82,
+          2.08
+        ],
+        [
+          "Arthur",
+          2.08,
+          2.54
+        ],
+        [
+          "as",
+          2.54,
+          2.82
+        ],
+        [
+          "king.",
+          2.82,
+          3.06
+        ],
+        [
+          "No",
+          3.4,
+          3.7
+        ],
+        [
+          "more",
+          3.7,
+          3.92
+        ],
+        [
+          "delays.",
+          3.92,
+          4.28
+        ]
+      ],
+      "heard": "The people snap. We want Arthur as king. No more delays.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.993,
+      "seconds": 4.8
+    },
+    {
+      "name": "x20b",
+      "lang": "en",
+      "text": "Everyone drops to their knees.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x20b.mp3",
+      "bytes": 34315,
+      "words": [
+        [
+          "Everyone",
+          0.0,
+          0.4
+        ],
+        [
+          "drops",
+          0.4,
+          0.86
+        ],
+        [
+          "to",
+          0.86,
+          1.18
+        ],
+        [
+          "their",
+          1.18,
+          1.32
+        ],
+        [
+          "knees.",
+          1.32,
+          1.58
+        ]
+      ],
+      "heard": "Everyone drops to their knees.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.995,
+      "seconds": 2.08
+    },
+    {
+      "name": "x21b",
+      "lang": "en",
+      "text": "Six pulls to make him king. And the first? His brother just forgot his sword.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x21b.mp3",
+      "bytes": 93247,
+      "words": [
+        [
+          "six",
+          0.0,
+          0.34
+        ],
+        [
+          "pulls",
+          0.34,
+          0.76
+        ],
+        [
+          "to",
+          0.76,
+          1.04
+        ],
+        [
+          "make",
+          1.04,
+          1.34
+        ],
+        [
+          "him",
+          1.34,
+          1.5
+        ],
+        [
+          "king,",
+          1.5,
+          1.84
+        ],
+        [
+          "and",
+          2.42,
+          2.58
+        ],
+        [
+          "the",
+          2.58,
+          2.7
+        ],
+        [
+          "first,",
+          2.7,
+          3.08
+        ],
+        [
+          "his",
+          3.5,
+          3.76
+        ],
+        [
+          "brother",
+          3.76,
+          4.1
+        ],
+        [
+          "just",
+          4.1,
+          4.48
+        ],
+        [
+          "forgot",
+          4.48,
+          4.8
+        ],
+        [
+          "his",
+          4.8,
+          5.04
+        ],
+        [
+          "sword.",
+          5.04,
+          5.38
+        ]
+      ],
+      "heard": "six pulls to make him king, and the first, his brother just forgot his sword.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 5.76
+    },
+    {
+      "name": "x05c",
+      "lang": "en",
+      "text": "Lords line up to pull, red in the face: it won't budge.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x05c.mp3",
+      "bytes": 77783,
+      "words": [
+        [
+          "Lord's",
+          0.0,
+          0.48
+        ],
+        [
+          "lineup",
+          0.48,
+          0.82
+        ],
+        [
+          "to",
+          0.82,
+          1.08
+        ],
+        [
+          "pull,",
+          1.08,
+          1.44
+        ],
+        [
+          "red",
+          1.8,
+          2.26
+        ],
+        [
+          "in",
+          2.26,
+          2.4
+        ],
+        [
+          "the",
+          2.4,
+          2.5
+        ],
+        [
+          "face.",
+          2.5,
+          2.92
+        ],
+        [
+          "It",
+          3.4,
+          3.56
+        ],
+        [
+          "won't",
+          3.56,
+          4.02
+        ],
+        [
+          "budge.",
+          4.02,
+          4.58
+        ]
+      ],
+      "heard": "Lord's lineup to pull, red in the face. It won't budge.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.991,
+      "seconds": 4.8
+    },
+    {
+      "name": "x13c",
+      "lang": "en",
+      "text": "Dad pulls: stuck. Kay, with all his might: stuck. Arthur reaches out: pull two.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x13c.mp3",
+      "bytes": 129192,
+      "words": [
+        [
+          "Dad",
+          0.0,
+          0.28
+        ],
+        [
+          "pulls.",
+          0.28,
+          0.62
+        ],
+        [
+          "Stuck.",
+          1.26,
+          1.78
+        ],
+        [
+          "K,",
+          2.34,
+          2.56
+        ],
+        [
+          "with",
+          2.92,
+          3.06
+        ],
+        [
+          "all",
+          3.06,
+          3.42
+        ],
+        [
+          "his",
+          3.42,
+          3.64
+        ],
+        [
+          "might.",
+          3.64,
+          3.92
+        ],
+        [
+          "Stuck!",
+          4.38,
+          4.98
+        ],
+        [
+          "Arthur",
+          5.58,
+          5.84
+        ],
+        [
+          "reaches",
+          5.84,
+          6.24
+        ],
+        [
+          "out.",
+          6.24,
+          6.56
+        ],
+        [
+          "Pull",
+          7.04,
+          7.24
+        ],
+        [
+          "two.",
+          7.24,
+          7.56
+        ]
+      ],
+      "heard": "Dad pulls. Stuck. K, with all his might. Stuck! Arthur reaches out. Pull two.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.993,
+      "seconds": 8.0
+    },
+    {
+      "name": "x14c",
+      "lang": "en",
+      "text": "Days later, every lord tries. Only he can. Pull three.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x14c.mp3",
+      "bytes": 84470,
+      "words": [
+        [
+          "Days",
+          0.0,
+          0.26
+        ],
+        [
+          "later,",
+          0.26,
+          0.68
+        ],
+        [
+          "every",
+          1.14,
+          1.48
+        ],
+        [
+          "Lord",
+          1.48,
+          1.76
+        ],
+        [
+          "tries.",
+          1.76,
+          2.14
+        ],
+        [
+          "Only",
+          2.66,
+          2.98
+        ],
+        [
+          "He",
+          2.98,
+          3.34
+        ],
+        [
+          "can.",
+          3.34,
+          3.64
+        ],
+        [
+          "Pull",
+          4.26,
+          4.48
+        ],
+        [
+          "three.",
+          4.48,
+          4.82
+        ]
+      ],
+      "heard": "Days later, every Lord tries. Only He can. Pull three.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 5.2
+    },
+    {
+      "name": "x18c",
+      "lang": "en",
+      "text": "Early summer, in front of everyone: pull six.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x18c.mp3",
+      "bytes": 59811,
+      "words": [
+        [
+          "Early",
+          0.0,
+          0.24
+        ],
+        [
+          "summer",
+          0.24,
+          0.64
+        ],
+        [
+          "in",
+          0.64,
+          1.24
+        ],
+        [
+          "front",
+          1.24,
+          1.44
+        ],
+        [
+          "of",
+          1.44,
+          1.58
+        ],
+        [
+          "everyone,",
+          1.58,
+          2.1
+        ],
+        [
+          "pull",
+          2.5,
+          2.9
+        ],
+        [
+          "six.",
+          2.9,
+          3.22
+        ]
+      ],
+      "heard": "Early summer in front of everyone, pull six.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 3.68
+    },
+    {
+      "name": "x19c",
+      "lang": "en",
+      "text": "The people snap: \"Arthur for king! No more delays!\"",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x19c.mp3",
+      "bytes": 66498,
+      "words": [
+        [
+          "The",
+          0.0,
+          0.18
+        ],
+        [
+          "people",
+          0.18,
+          0.46
+        ],
+        [
+          "snap.",
+          0.46,
+          0.88
+        ],
+        [
+          "Arthur",
+          1.34,
+          1.76
+        ],
+        [
+          "for",
+          1.76,
+          2.04
+        ],
+        [
+          "King.",
+          2.04,
+          2.34
+        ],
+        [
+          "No",
+          2.68,
+          3.0
+        ],
+        [
+          "more",
+          3.0,
+          3.2
+        ],
+        [
+          "delays.",
+          3.2,
+          3.56
+        ]
+      ],
+      "heard": "The people snap. Arthur for King. No more delays.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.995,
+      "seconds": 4.08
+    },
+    {
+      "name": "x20c",
+      "lang": "en",
+      "text": "And everyone kneels.",
+      "voice": "shared:hope",
+      "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x20c.mp3",
+      "bytes": 28046,
+      "words": [
+        [
+          "and",
+          0.0,
+          0.2
+        ],
+        [
+          "everyone",
+          0.2,
+          0.68
+        ],
+        [
+          "kneels.",
+          0.68,
+          1.38
+        ]
+      ],
+      "heard": "and everyone kneels.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.994,
+      "seconds": 1.68
+    }
+  ],
+  "plan": {
+    "tier": "starter",
+    "character_count": 25015,
+    "character_limit": 30001,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "confident",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "chill",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "use_case": "entertainment_tv",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "use_case": "characters_animation",
+        "descriptive": "sassy",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "use_case": "characters_animation",
+        "descriptive": "excited",
+        "age": "middle_aged",
+        "language": "ru",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "use_case": "characters_animation",
+        "descriptive": "serious",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "language": "hi",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "ar",
+        "accent": "modern standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "confident",
+        "age": "young",
+        "language": "it",
+        "accent": "milanese",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "pt",
+        "accent": "brazilian",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "es",
+        "accent": "latin american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "cute",
+        "age": "young",
+        "language": "es",
+        "accent": "mexican",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "es",
+        "accent": "latin american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "es",
+        "accent": "latin american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "pleasant",
+        "age": "young",
+        "language": "hi",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "classy",
+        "age": "young",
+        "language": "hi",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "ar",
+        "accent": "modern standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "language": "it",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "excited",
+        "age": "young",
+        "language": "pt",
+        "accent": "brazilian",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "es",
+        "accent": "peruvian",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "es",
+        "accent": "mexican",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "upbeat",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "use_case": "characters_animation",
+        "descriptive": "professional",
+        "age": "middle-aged",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "deep",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "language": "el",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "old",
+        "language": "el",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "language": "el",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "use_case": "characters_animation",
+        "descriptive": "professional",
+        "age": "old",
+        "language": "de",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "pleasant",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "formal",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "neutral",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "pleasant",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "crisp",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "crisp",
+        "age": "old",
+        "language": "en",
+        "accent": "scottish",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "use_case": "advertisement",
+        "descriptive": "professional",
+        "language": "en",
+        "accent": "scottish",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "gentle",
+        "age": "young",
+        "language": "en",
+        "accent": "chinese",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "intense",
+        "age": "middle_aged",
+        "language": "it",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "en",
+        "accent": "scottish",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "gentle",
+        "age": "young",
+        "language": "zh",
+        "accent": "beijing mandarin",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "deep",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "singapore mandarin",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "chill",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "chinese",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "chill",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "en",
+        "accent": "italian",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "scottish",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "gentle",
+        "age": "old",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "mature",
+        "age": "old",
+        "language": "en",
+        "accent": "british",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "age": "middle_aged",
+        "language": "fr",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "language": "fr",
+        "accent": "parisian",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "de",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "de",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "ru",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "language": "ru",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "zh",
+        "accent": "taiwan mandarin",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "serious",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "upbeat",
+        "age": "young",
+        "language": "hi",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "descriptive": "classy",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "accent": "american",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "entertainment_tv"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "descriptive": "sassy",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "social_media"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "australian",
+        "use_case": "conversational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "descriptive": "mature",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "use_case": "narrative_story"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "characters_animation"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "neutral",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "conversational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "descriptive": "rough",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "characters_animation"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "descriptive": "confident",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "social_media"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "use_case": "informative_educational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "descriptive": "upbeat",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "informative_educational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "descriptive": "chill",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "descriptive": "cute",
+        "language": "en",
+        "gender": "female",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "descriptive": "casual",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "descriptive": "formal",
+        "language": "en",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "informative_educational",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "descriptive": "crisp",
+        "language": "en",
+        "gender": "male",
+        "use_case": "advertisement",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "premade"
+    }
+  ],
+  "removed": {
+    "tnSpp4vdxKPjI9w0GnoV": 200
+  }
+}
