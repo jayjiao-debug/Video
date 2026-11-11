@@ -282,7 +282,7 @@ const DEF_LIGHT = rad(-120);
 
 // ---------------- faces ----------------
 export type Expr = "neutral" | "stern" | "grin" | "laugh" | "whistle" | "nervous" | "shock" | "relief" | "relief_open" | "dazed"
-  | "pained" | "smile" | "smile_closed" | "lick" | "sigh" | "wince" | "smug" | "sad" | "deadpan" | "sleep" | "huff" | "happy" | "focus" | "cool";
+  | "pained" | "smile" | "smile_closed" | "lick" | "sigh" | "wince" | "smug" | "sad" | "deadpan" | "sleep" | "huff" | "happy" | "focus" | "cool" | "hush";
 type EyeK = "dot" | "small" | "lid" | "slit" | "happy" | "dash" | "squeeze" | "shock" | "shockHalf" | "spiral" | "closed" | "down";
 type MouthK = "dash" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
 /** eyes [back, front], brows [inner, outer] offsets in u (+ = down), mouth kind */
@@ -314,6 +314,7 @@ const FACE: Record<Expr, { eye: [EyeK, EyeK]; brow: [number, number]; mouth: Mou
   focus: { eye: ["down", "down"], brow: [1, -0.5], mouth: "dash" },
   // unbothered: narrowed eyes under heavy level brows, the hint of a smile (rig3d: the brows sit on the lids)
   cool: { eye: ["slit", "slit"], brow: [2, -2], mouth: "smirk" },
+  hush: { eye: ["slit", "slit"], brow: [3, -2], mouth: "o" },
 };
 const halfLid = (k: EyeK): EyeK => (k === "dot" || k === "small" ? "lid" : k === "lid" ? "slit" : k === "shock" ? "shockHalf" : k);
 const eyeKind = (k: EyeK, lid: number): EyeK =>

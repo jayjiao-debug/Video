@@ -18,3 +18,4 @@ export { faceMask } from "./facemask";
 export { coffeeCup } from "./coffeecup";
 export { phone } from "./phone";
 export { pen } from "./pen";
+export { finger } from "./finger";

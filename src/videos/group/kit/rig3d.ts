@@ -91,6 +91,9 @@
 //     the other forearm rests, the head tips down; driven by pose.t alone.
 //     "phone": pose.arm (default 1) holds a phone (phone()): amount 0 = looking at it in front of the chest, 1 = at
 //     the ear, in between a smooth raise (animate amount over 8-12 frames). Standing or seated.
+//     "shh": a finger to the lips. pose.arm (default 1) brings its hand up under the mouth, in front of the chin, and
+//     what it holds as `posed` (finger()) stands up across the lips: amount 1 (the default) = at the lips, 0 = in
+//     front of the chest. Its arm is drawn in front of the own head. The face for it: expr "hush".
 //   state.armFront = [right, left]: true = that arm, its hand and what it holds are drawn at their true depth against
 //   the figure's own head (rule 4 is off for that arm only), so they can show in front of the face, and they are kept
 //   strictly outside the head's real shape (hair and hat included). undefined = the pose decides ("phone" sets it for
@@ -147,6 +150,8 @@ const lumps = (seed: number) => {
 
 export const BODY_MAX = rad(45);
 export const FACE_MAX = rad(12);
+/** "shh": how far to the other side of the body's front a hand follows the face (see armPlan) */
+export const SHH_FAR = rad(30);
 /** The part of the head that belongs to the face drawing, for 3D parts: az = degrees from the face side, top = height
  *  in head units. The face turns to the camera on its own (FACE_MAX) while hair and hats turn with the body
  *  (BODY_MAX), so the drawn eyes and mouth slide up to 33 degrees round the head, and their outer ends lie another
@@ -567,7 +572,9 @@ export const RIG_MOUTHS: RigMouth[] = ["line", "pill", "strip", "small", "half",
 /** eye = [screen left, screen right]; brow = [inner, outer] end offsets (u, + = down); tilt = the lid bar's slope (deg,
  *  + = inner end lower); bar = heavy straight brows sitting on the lids; raise = brows higher by that many u; skew =
  *  how much higher one brow rides than the other; pupil = a ring eye's pupil radius */
-type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; pupil?: number; sweat?: boolean; blush?: boolean };
+/** cock = one brow cocked (the one on the strong side): it goes up by that many u in a high arch, its inner end
+ *  staying down by the nose; the other brow stays where it is */
+type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; cock?: number; pupil?: number; sweat?: boolean; blush?: boolean };
 const FACES: Record<Expr, FaceDef> = {
   neutral: { eye: ["lid", "lid"], brow: [0, -0.5], mouth: "tiny" },
   stern: { eye: ["lid", "lid"], brow: [3.2, -2.2], mouth: "frown", tilt: 9, bar: true, skew: 0 },
@@ -594,6 +601,9 @@ const FACES: Record<Expr, FaceDef> = {
   focus: { eye: ["down", "down"], brow: [1, -0.4], mouth: "tiny", skew: 0.2 },
   // unbothered: narrowed eyes under heavy level brows that sit on the lids, the hint of a smile
   cool: { eye: ["slit", "slit"], brow: [1.0, -0.6], mouth: "smirk", tilt: 3, bar: true, skew: 0 },
+  // "not a word": narrowed eyes that slant up at the outside, heavy brows, one of them cocked high, the mouth shut
+  // small (for the "shh" pose: the finger stands in front of it)
+  hush: { eye: ["slit", "slit"], brow: [2.4, -1.2], mouth: "tiny", tilt: 8, bar: true, skew: 0, cock: 7.5 },
 };
 /** a blink in two steps: half (lid 0.5) and shut (lid 1) */
 const blinkEye = (k: EyeK, lid: number): EyeK =>
@@ -671,7 +681,9 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
     if (brim) bh = Math.min(bh, 16.5);
     const [dI, dO] = F.brow, bl = 7.75 * (1 + jit(12 + i, 0.06)), by = y0 - bh, arch = F.bar ? 0.4 : 2 + jit(14 + i, 0.5);
     const a: P2 = [x0 - s * bl, by + dI], b: P2 = [x0 + s * bl, by + dO];
-    line(quadPts(a, [x0 + jit(16 + i, 1.2), (a[1] + b[1]) / 2 - 2 * arch], b), F.bar ? PEN + 0.9 : PEN);
+    const ck = s === strong && !brim ? F.cock ?? 0 : 0;
+    if (ck) line(quadPts(a, [x0 + s * 0.12 * bl, by - 1.9 * ck], [x0 + s * 1.06 * bl, by + dO - 0.35 * ck]), F.bar ? PEN + 0.9 : PEN);
+    else line(quadPts(a, [x0 + jit(16 + i, 1.2), (a[1] + b[1]) / 2 - 2 * arch], b), F.bar ? PEN + 0.9 : PEN);
   }
   // mouth
   const mx = jit(20, 1.1), my = mouthY, ms = 1 + jit(21, 0.05);
@@ -1244,7 +1256,7 @@ const ikFrame = (a: V3, t: V3, l1: number, l2: number, pole: V3, pole2: V3) => {
 };
 
 // ===== poses =====
-export type RigPoseKind = "idle" | "walk" | "wave" | "point" | "haul" | "hold" | "cheer" | "sit" | "desk" | "write" | "phone";
+export type RigPoseKind = "idle" | "walk" | "wave" | "point" | "haul" | "hold" | "cheer" | "sit" | "desk" | "write" | "phone" | "shh";
 /** t = seconds (breathing, waving, the writing strokes: every frame is a pure function of it); arm = which arm waves /
  *  points / writes (default 0, the right hand) / holds the phone (default 1); amount: haul = effort, phone = 0 looking
  *  at it .. 1 at the ear, walk = how much it bounces (1).
@@ -1282,7 +1294,7 @@ export type RigState = {
   /** per arm (0 = the right): true = the arm, its hand and what it holds are drawn at their true depth against the
    *  figure's own head, so they can show in front of it; they are then kept strictly outside the head's real shape.
    *  false = hidden behind the own head, as always. undefined (also per arm) = the pose decides: "phone" sets it for
-   *  the arm that holds the phone. */
+   *  the arm that holds the phone, "shh" for the arm at the lips. */
   armFront?: [boolean | undefined, boolean | undefined];
   hands?: [V3 | null, V3 | null];
   expr?: Expr; blink?: number; visible?: boolean;
@@ -1315,8 +1327,9 @@ export type RigState = {
  *  or a cheer stays beside the head on screen from any camera angle, it never crosses the face */
 type HandT = { p: V3; f: 0 | 1 | 2 };
 /** an arm whose place depends on where things are in this frame (the lap, the desk top, the head): solved once the
- *  body stands (see armPlan). lap / desk = the hand rests there; write = the pen hand; phone = the phone hand. */
-type ArmPlan = "lap" | "desk" | "write" | "phone" | null;
+ *  body stands (see armPlan). lap / desk = the hand rests there; write = the pen hand; phone = the phone hand; shh = the
+ *  hand at the lips. */
+type ArmPlan = "lap" | "desk" | "write" | "phone" | "shh" | null;
 type BodyPose = {
   hip: V3; ankle: [V3, V3]; footYaw: [number, number];     // TRAVEL frame: x = the person's left, y up, z = the story facing
   pitch: number; roll: number; breathe: number;
@@ -1844,6 +1857,8 @@ export class Rig {
   private frontArm: [boolean, boolean] = [false, false];
   private grip: [THREE.Quaternion | null, THREE.Quaternion | null] = [null, null];
   private gripQ = [new THREE.Quaternion(), new THREE.Quaternion()];
+  /** how far a plan had to leave a hand from its place this frame (m; "shh": off the lips), for qa.reach */
+  private planOff = [0, 0];
   /** sitting: this frame's seat (null = standing), the floor point under the hip, sin / cos of the facing, the legs
    *  in the world, and the fits worked out so far (one per seat) */
   private sit: Sit | null = null; private sitAt = V(); private sitF: [number, number] = [0, 1];
@@ -2176,6 +2191,12 @@ export class Rig {
         bp.hand[1 - a] = hang(1 - a);
         bp.plan[a] = "phone"; bp.front[a] = true;
         bp.headPitch += rad(17) * (1 - smooth(P.amount ?? 0));      // looking down at it; level again for a call
+        break;
+      }
+      case "shh": {
+        const a = P.arm ?? 1;
+        bp.hand[1 - a] = hang(1 - a);
+        bp.plan[a] = "shh"; bp.front[a] = true;
         break;
       }
       case "idle": {
@@ -2555,8 +2576,9 @@ export class Rig {
   /** The arms whose place depends on where things are this frame (see ArmPlan): the hand's place and the elbow's
    *  side, in the world, and the turn of a posed thing in that hand (this.grip; flat = the hand rests on the desk:
    *  the thing is laid under it once the forearm is known). sh = the shoulder. C = this frame's frames: q1 = the show
-   *  yaw, yawF = the face's yaw, t / am = the pose's time and amount, arm = the writing arm (-1: nobody writes). */
-  private armPlan(plan: Exclude<ArmPlan, null>, i: number, sh: V3, C: { at: V3; fwdT: V3; leftT: V3; headC: V3; q1: THREE.Quaternion; bodyYaw: number; yawF: number; lean: number; roll: number; t: number; am: number; arm: number; laid?: boolean }): { target: V3; pole: V3; flat: boolean } {
+   *  yaw, yawF = the face's yaw, t / am = the pose's time and amount, arm = the writing arm (-1: nobody writes),
+   *  face = the face drawing's frame (F = out of the face, U = up the face, r = one ball radius on the drawing, m). */
+  private armPlan(plan: Exclude<ArmPlan, null>, i: number, sh: V3, C: { at: V3; fwdT: V3; leftT: V3; headC: V3; q1: THREE.Quaternion; bodyYaw: number; yawF: number; lean: number; roll: number; t: number; am: number; arm: number; laid?: boolean; face?: { F: V3; U: V3; r: number } }): { target: V3; pole: V3; flat: boolean } {
     const d = this.dim, sit = this.sit, s = i ? 1 : -1, A = d.upper + d.fore, hand = d.handR + HULL.hand, limb = d.limbR * 1.08 + HULL.limb;
     const show = (x: number, y: number, z: number) => V(x, y, z).applyQuaternion(C.q1);
     if (plan === "lap" && sit) {
@@ -2747,6 +2769,52 @@ export class Rig {
       }
       const pole = show(s * 0.55, -1, -0.2).normalize().lerp(show(s, -0.5, 0.2).normalize(), e).normalize();
       return { target: H, pole, flat: false };
+    }
+    if (plan === "shh" && C.face) {
+      // A finger to the lips. The face is a drawing laid on the head along its own direction: its mouth is 0.34 r
+      // under the middle, wherever the drawing has slid to. The hand comes to rest just under the mouth, in front of
+      // the chin, and what it holds (a finger: its length along +y) stands up across the lips toward where a nose
+      // would be, leaning back as the head's surface does, its +z out of the face. Hand and finger are kept outside
+      // the head's real shape (hair and hat included) and off the body. amount 0 = in front of the chest.
+      // The arm of the far side cannot come round the head to a face that has turned away from it (the head is as
+      // wide as the arm is long): the hand follows the face up to SHH_FAR to that side of the body's front and
+      // then stays behind, beside the lips, softly (nothing jumps). Rig.qa.reach reports how far off the lips it is.
+      // For such a view give the pose the other arm (pose.arm, and finger({ hand })).
+      const e = smooth(C.am), r = C.face.r, hc = C.headC, shy = d.sh[0].y, GAP = 0.004, o = V();
+      const far = Math.max(0, -s * wrapA(C.yawF - C.bodyYaw)), back = far - softLim(far, SHH_FAR);
+      const F = back ? C.face.F.clone().applyAxisAngle(UP, s * back) : C.face.F, U = back ? C.face.U.clone().applyAxisAngle(UP, s * back) : C.face.U;
+      this.planOff[i] = e * back * d.R;
+      const hg = (p: V3) => this.headGap(p), bg = (p: V3) => this.bodyGap(p);
+      // the point y ball radii up the face that is `own` clear of the head, straight out of the face
+      const onFace = (y: number, own: number) => {
+        const p = hc.clone().addScaledVector(U, y * r).addScaledVector(F, d.R);
+        for (let n = 0; n < 10; n++) {
+          const g = hg(p) - own;
+          if (Math.abs(g) < 1e-4) break;
+          p.addScaledVector(F, -g / Math.max(0.35, o.copy(p).sub(hc).normalize().dot(F)));
+        }
+        return p;
+      };
+      const H1 = onFace(-0.4 - hand / r, hand + GAP), T1 = onFace(-0.14, 0.014 + GAP);
+      const y1 = T1.sub(H1).normalize(), z1 = F.clone().addScaledVector(y1, -F.dot(y1)).normalize(), q1 = basisQ(y1, z1, new THREE.Quaternion());
+      const P0 = V(s * 0.05, shy - 0.2 * A, d.rt + BODY_INK + 0.075).applyMatrix4(this.torsoM), q0 = basisQ(show(0, 1, 0), show(0, 0, 1), new THREE.Quaternion());
+      const H = P0.lerp(H1, e), q = (this.grip[i] = this.gripQ[i].copy(q0).slerp(q1, e));
+      for (let round = 0; round < 2; round++) {
+        for (let n = 0; n < 6; n++) {
+          const g = Math.min(hg(H) - hand, this.heldMin(i, H, q, hg)) - GAP;
+          if (g >= -2e-4) break;
+          H.addScaledVector(F, -g / Math.max(0.35, o.copy(H).sub(hc).normalize().dot(F)));
+        }
+        for (let n = 0; n < 4; n++) {
+          const g = Math.min(bg(H) - hand - 0.002, this.heldMin(i, H, q, bg) - BODY_INK * 0.5) - GAP;
+          if (g >= -2e-4) break;
+          o.copy(H).applyMatrix4(this.torsoInv).setY(0);
+          if (o.lengthSq() < 1e-8) o.set(0, 0, 1);
+          H.addScaledVector(o.normalize().transformDirection(this.torsoM), -g);
+        }
+      }
+      // the elbow low and forward: the forearm comes up to the mouth from in front, not from under the jaw
+      return { target: H, pole: show(s * 0.5, -0.85, 0.45).normalize(), flat: false };
     }
     // a plan without its furniture (a desk pose and no desk): the hand hangs in front of the hip
     return { target: sh.clone().add(show(s * 0.02, -0.3, 0.05)), pole: show(s, -0.3, -0.45), flat: false };
@@ -2946,7 +3014,8 @@ export class Rig {
       this.ring.lookAt(camPos);
       this.ring.scale.setScalar(4 * d.R);
     }
-    const P = st.pose, planC = { at, fwdT, leftT, headC, q1: _q1, bodyYaw, yawF: fy, lean: bp.pitch, roll: bp.roll - bp.sway, t: P.t ?? 0, am: clamp(P.amount ?? 0, 0, 1), arm: P.kind === "write" ? P.arm ?? 0 : -1,
+    const P = st.pose, planC = { at, fwdT, leftT, headC, q1: _q1, bodyYaw, yawF: fy, lean: bp.pitch, roll: bp.roll - bp.sway, t: P.t ?? 0, am: clamp(P.amount ?? (P.kind === "shh" ? 1 : 0), 0, 1), arm: P.kind === "write" ? P.arm ?? 0 : -1,
+      face: { F, U: Uf, r: d.R * hsy },
       laid: this.held.some((hd) => hd.posed && hd.g.visible && bp.plan[hd.i] === "desk" && !st.hands?.[hd.i]) };
     for (let i = 0; i < 2; i++) {
       const s = i ? 1 : -1, sh = d.sh[i].clone().applyMatrix4(this.torsoM);
@@ -2959,6 +3028,7 @@ export class Rig {
       if (st.pose.kind === "point" && wt && i === (st.pose.arm ?? 1)) target = sh.clone().addScaledVector(wt.clone().sub(sh).normalize(), (d.upper + d.fore) * 0.94);
       let pole = showDir(bp.elbowPole[i]), flat = false;
       const plan = wt ? null : bp.plan[i];
+      this.planOff[i] = 0;
       if (plan) { const g = this.armPlan(plan, i, sh, planC); target = g.target; pole = g.pole; flat = g.flat; }
       let k = this.solveArm(i, sh, target, pole, showDir(V(s, 0, 0)), headC);
       // an arm the swivel could not clear: the whole arm moves out (see armOut). Only for a free hand: one pinned to
@@ -2972,7 +3042,7 @@ export class Rig {
         target.addScaledVector(_w.copy(target).sub(headC).normalize(), Math.min(0.03, 0.002 - 1.5 * short));
         k = this.solveArm(i, sh, target, pole, showDir(V(s, 0, 0)), headC);
       }
-      this.qa.swivel[i as 0 | 1] = k.phi; this.qa.clear = Math.min(this.qa.clear, k.c); this.qa.reach = Math.max(this.qa.reach, k.reach);
+      this.qa.swivel[i as 0 | 1] = k.phi; this.qa.clear = Math.min(this.qa.clear, k.c); this.qa.reach = Math.max(this.qa.reach, k.reach, this.planOff[i]);
       const seed = V().copy(k.j).sub(sh).cross(V().copy(k.e).sub(k.j));
       if (seed.lengthSq() < 1e-10) seed.copy(showDir(V(1, 0, 0)));
       this.limbs[i].update(sh, k.j, k.e, d.limbR, seed.normalize(), this.bow[i], 0.07 * hand, this.wobPh[i]);

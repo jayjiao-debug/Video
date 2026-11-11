@@ -63,6 +63,8 @@ rc.update(camera, renderHeightPx);
 | `write` | 坐在桌前写字。`pose.arm`（默认 0，右手）拿笔在桌面上一小段一小段地写，另一条前臂放在桌上，头略低。由 `pose.t`（秒）驱动，同一个 `t` 永远是同一个画面。没有桌子时手放在腿上 |
 | `phone` | `pose.arm`（默认 1，左手）拿手机。`amount` 0：手机在胸前，屏幕朝脸，头低下去看；`amount` 1：手机贴在耳边，头抬平；中间是平滑的过渡。站着坐着都可以，另一只手垂着（坐着时放在腿上或桌上） |
 
+| `shh` | “嘘”：`pose.arm`（默认 1，左手）举到嘴的正下方、下巴前面，手里的食指（配件 `finger()`）竖在嘴唇上，指尖到鼻子的位置。`amount` 1（默认）：在嘴前；0：手在胸前；中间是平滑的过渡（8 到 12 帧）。配的表情是 `hush`（眯眼、粗眉、一边眉毛高高挑起、嘴闭着）。站着坐着都可以 |
+
 原来的上半身姿势坐着也都能用：`idle`（坐着时和 `sit` 一样）、`wave`、`cheer`、`point`、`hold`。本来会垂下来的那只手，坐着时改成放在腿上或桌上。`walk` 和 `haul` 是站着的姿势，坐着时按 `sit` 处理。
 
 ### `state.armFront`
@@ -71,7 +73,7 @@ rc.update(camera, renderHeightPx);
 
 - `true`：这条手臂、手、手里的东西按真实的前后关系画在自己的头上，所以可以出现在脸前面。这时它们被严格挡在头的真实形状外面（连头发、帽子的形状一起算），不会穿进头里。
 - `false`：和以前一样，被自己的头盖住。
-- 不写：由姿势决定。`phone` 会自动把拿手机的那条手臂设成 `true`，其他姿势都是 `false`。
+- 不写：由姿势决定。`phone` 会自动把拿手机的那条手臂设成 `true`，`shh` 会把举到嘴前的那条设成 `true`，其他姿势都是 `false`。
 
 只影响写了 `true` 的那条手臂，另一条手臂和以前完全一样。两条都不写时，画面和以前逐像素相同。
 
@@ -79,6 +81,7 @@ rc.update(camera, renderHeightPx);
 
 - `phone({ col?, hand?, screen? })`：手机，默认玫红色、左手（`hand: 1`）。
 - `pen({ col?, hand? })`：笔，默认蓝色、右手（`hand: 0`）。
+- `finger({ hand?, len?, col? })`：竖起的食指，默认左手（`hand: 1`），颜色和手一样。只有 `shh` 姿势会把它摆正；别的姿势里它从手上朝下伸着，不用的那几帧用 `state.hide = ["finger"]` 藏起来。道具清单里叫 `finger`，已经加进 `kit/rigacc/index.ts`。
 
 `hand` 要和姿势的 `pose.arm` 是同一只手。不想让手机一直出现，用原来就有的 `state.hide = ["phone"]` 把它藏起来（比如还在口袋里的时候）。藏起来只是不画，那只手休息时仍然按手里有东西来摆（略高一点）。这两个配件没有加进 `kit/rigacc/index.ts`（那个文件由别人汇总），要从各自的文件导入。
 
@@ -148,6 +151,9 @@ rc.update(camera, renderHeightPx);
 - 软件渲染器的单像素孤点（RIG3D.md“已知的小问题”）在新姿势里同样存在，数量不比站着的同一个镜头多。
 - 手机、笔只在 `write`、`phone` 和休息的手里会被摆正。拿着手机做 `wave` 之类别的姿势时，它按固定方式跟着手，不做防穿模。
 
+- `shh` 只适合从正面或者从举手那一侧看。脸是跟着镜头转的，脸转向另一侧超过 30° 左右时，远侧的手臂绕不过头（头和手臂差不多一样宽）：手会柔和地停在够得着的地方，手指离开嘴唇，不会穿进头和身体，也不会跳。这时 `rig.qa.reach` 会报出手指离嘴唇有多远。这种镜头把 `pose.arm` 和 `finger({ hand })` 一起换成另一只手。坐着时身体不跟着镜头转，这个限制来得更早。
+- 头比标准头宽很多的角色（比如彩蛋人物大哥）用 `shh` 时，从远侧看连“够得着”也做不到（`qa.reach`、`qa.clear` 会报），所以这类角色必须按镜头在哪一侧来选手。
+
 ## 怎么出图和检查（在仓库根目录）
 
 ```bash
@@ -157,6 +163,8 @@ node scripts/rig3d/render.mjs src/videos/group/preview/rig3d_pose_sit.ts outdir 
 node scripts/rig3d/render.mjs src/videos/group/preview/rig3d_pose_write.ts outdir --frames 48
 node scripts/rig3d/render.mjs src/videos/group/preview/rig3d_pose_phone.ts outdir --frames 48
 node scripts/rig3d/render.mjs src/videos/group/preview/rig3d_pose_orbit.ts outdir --frames 72
+# “嘘”：三个人（光头、戴帽子、坐在桌前的长发）举手、停住、放下，镜头同时从一侧转到另一侧，40 帧
+node scripts/rig3d/render.mjs src/videos/group/preview/rig3d_pose_shh.ts outdir --frames 40
 # 换人、换姿势、换机位：用 --opts 覆盖入口里的选项（字段见 rig3d_poses_common.ts 的 PoseLabOpts）
 node scripts/rig3d/render.mjs src/videos/group/preview/rig3d_pose_sit.ts outdir --frames 14 \
   --opts '{"who":[{"look":"class7","hat":{"kind":"cap","col":"#3f6b8f"},"pose":"phone","amount":1,"acc":["phone"],"seat":"desk"}]}'
@@ -224,3 +232,9 @@ python3 scripts/rig3d/acc_check.py
    修完后，95,680 次求解里最差的一次还差 2.6 毫米（教室座位、戴耳机、手臂短的体型、头在重音动作中），其余都在 0.5 毫米以内。检查在重音动作的帧里放行 3 毫米以内：全身镜头里这是一个像素，描边有 3.5 个像素宽。头不动时一点都不放行。那几帧里手臂已经伸直，手停在够得着的最远处，离耳罩有几厘米。
 
 合并时定下来的：坐着时头在身体上转过去，这个转动和新版的头部动作按“先低头、再转头、再歪头”的顺序叠加。
+
+## 加了“嘘”（2026-11-11）
+
+- 新姿势 `shh`、新表情 `hush`（`FaceDef.cock`：一边眉毛挑起）、新配件 `finger`。手的位置是按脸这张画自己的方向算的：嘴在脸中间往下 0.34 个头半径的地方，手停在嘴的正下方，手指沿着头的表面往上竖。手和手指都被挡在头的真实形状（连头发、帽子）和身体外面。
+- 第 6 步现在多查 24 组 `shh`（两只手 × 胸前、半路、嘴前 × 站、椅子、桌前、教室座位），每组 3,328 次求解，连同原来的一共 67 组、175,552 次求解。结果：没有任何东西穿过任何东西（最差 0.5 毫米以内），从举手那一侧和正面看，手都在该在的位置。从远侧看时手会按上面说的停在够得着的地方，这一项检查里只算穿模、不算位置。
+- 回归图新增 `acc_finger`、`pose_shh`、`pose_shh_desk`。原来的图逐像素相同。
