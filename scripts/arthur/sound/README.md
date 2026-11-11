@@ -16,6 +16,8 @@ python3 sfx_mix.py narration.mp3 cues.json <folder with the clips> out --dur 66.
 bash remux.sh picture_or_phone.mp4 out_mix.wav film_with_sound.mp4 160
 ```
 
+The narration itself is assembled in `../voice/` (the track in use is `voice_timing_v3.json`).
+
 Loudness: the mix is mono at -12.5 LUFS; written as stereo it reads -9.5 LUFS (a mono file of the same sound reads
 3 LU lower than its stereo copy, so compare like with like).
 
