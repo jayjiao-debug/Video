@@ -1,806 +1,132 @@
 {
- "id": "arthur-vo-06",
- "model_prefs": [
-  "eleven_v4"
- ],
+ "id": "arthur-sfx-03",
+ "tag": true,
  "items": [
   {
-   "name": "x01",
-   "lang": "zh",
-   "text": "他把刚拔出来的石中剑，又插了回去。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "field_1",
+   "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
+   "duration": 8,
+   "influence": 0.5
   },
   {
-   "name": "x02",
-   "lang": "zh",
-   "text": "等等，拔出来不就是国王吗？",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "field_2",
+   "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
+   "duration": 8,
+   "influence": 0.5
   },
   {
-   "name": "x03",
-   "lang": "zh",
-   "text": "名著《亚瑟王之死》里，伦敦教堂院子里多了块大石头，插着把剑。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "field_3",
+   "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
+   "duration": 8,
+   "influence": 0.5
   },
   {
-   "name": "x04",
-   "lang": "zh",
-   "text": "金字写着：谁拔出来，谁就是国王。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "angry_1",
+   "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
+   "duration": 5,
+   "influence": 0.5
   },
   {
-   "name": "x05",
-   "lang": "zh",
-   "text": "贵族排队来拔，脸都憋红了，剑一动不动。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "angry_2",
+   "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
+   "duration": 5,
+   "influence": 0.5
   },
   {
-   "name": "x06",
-   "lang": "zh",
-   "text": "新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "angry_3",
+   "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
+   "duration": 5,
+   "influence": 0.5
   },
   {
-   "name": "x07",
-   "lang": "zh",
-   "text": "亚瑟回去拿，家里没人，全看比武去了。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "grumble_1",
+   "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.",
+   "duration": 4,
+   "influence": 0.5
   },
   {
-   "name": "x08",
-   "lang": "zh",
-   "text": "他想起石头上还插着一把。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "grumble_2",
+   "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.",
+   "duration": 4,
+   "influence": 0.5
   },
   {
-   "name": "x09",
-   "lang": "zh",
-   "text": "连十个守卫都看比武去了，他一拔就出来，第一次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "murmur_1",
+   "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.",
+   "duration": 5,
+   "influence": 0.5
   },
   {
-   "name": "x10",
-   "lang": "zh",
-   "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "murmur_2",
+   "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.",
+   "duration": 5,
+   "influence": 0.5
   },
   {
-   "name": "x11",
-   "lang": "zh",
-   "text": "爸爸让他发誓，凯才承认是弟弟拿的。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "wind_1",
+   "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.",
+   "duration": 6,
+   "influence": 0.5
   },
   {
-   "name": "x12",
-   "lang": "zh",
-   "text": "爸爸让亚瑟插回去再拔一次，他说：“这有什么难的。”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "wind_2",
+   "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.",
+   "duration": 6,
+   "influence": 0.5
   },
   {
-   "name": "x13",
-   "lang": "zh",
-   "text": "爸爸先拔，不动；凯使出吃奶的劲，不动；亚瑟一伸手，第二次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "birds_1",
+   "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.",
+   "duration": 4,
+   "influence": 0.5
   },
   {
-   "name": "x14",
-   "lang": "zh",
-   "text": "几天后贵族全来试，只有他拔得出，第三次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "birds_2",
+   "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.",
+   "duration": 4,
+   "influence": 0.5
   },
   {
-   "name": "x15",
-   "lang": "zh",
-   "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "clap_1",
+   "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.",
+   "duration": 2,
+   "influence": 0.5
   },
   {
-   "name": "x16",
-   "lang": "zh",
-   "text": "二月，雪还没化，第四次，又拖。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "clap_2",
+   "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.",
+   "duration": 2,
+   "influence": 0.5
   },
   {
-   "name": "x17",
-   "lang": "zh",
-   "text": "春天，花都开了，第五次，还拖。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "groan_1",
+   "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.",
+   "duration": 2,
+   "influence": 0.5
   },
   {
-   "name": "x18",
-   "lang": "zh",
-   "text": "初夏，当着所有人的面，第六次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x19",
-   "lang": "zh",
-   "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x20",
-   "lang": "zh",
-   "text": "所有人齐刷刷跪下。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x21",
-   "lang": "zh",
-   "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x01b",
-   "lang": "zh",
-   "text": "他把刚拔出来的石中剑，又插了回去。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x02b",
-   "lang": "zh",
-   "text": "等等，拔出来不就是国王吗？",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x03b",
-   "lang": "zh",
-   "text": "名著《亚瑟王之死》里，伦敦教堂院子里多了块大石头，插着把剑。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x04b",
-   "lang": "zh",
-   "text": "金字写着：谁拔出来，谁就是国王。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x05b",
-   "lang": "zh",
-   "text": "贵族排队来拔，脸都憋红了，剑一动不动。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x06b",
-   "lang": "zh",
-   "text": "新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x07b",
-   "lang": "zh",
-   "text": "亚瑟回去拿，家里没人，全看比武去了。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x08b",
-   "lang": "zh",
-   "text": "他想起石头上还插着一把。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x09b",
-   "lang": "zh",
-   "text": "连十个守卫都看比武去了，他一拔就出来，第一次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x10b",
-   "lang": "zh",
-   "text": "凯拿到剑就找爸爸：“爸，石中剑！我要当国王了！”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x11b",
-   "lang": "zh",
-   "text": "爸爸让他发誓，凯才承认是弟弟拿的。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x12b",
-   "lang": "zh",
-   "text": "爸爸让亚瑟插回去再拔一次，他说：“这有什么难的。”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x13b",
-   "lang": "zh",
-   "text": "爸爸先拔，不动；凯使出吃奶的劲，不动；亚瑟一伸手，第二次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x14b",
-   "lang": "zh",
-   "text": "几天后贵族全来试，只有他拔得出，第三次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x15b",
-   "lang": "zh",
-   "text": "他们气炸了：“让个出身不高的小子管我们？”说改天再拔。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x16b",
-   "lang": "zh",
-   "text": "二月，雪还没化，第四次，又拖。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x17b",
-   "lang": "zh",
-   "text": "春天，花都开了，第五次，还拖。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x18b",
-   "lang": "zh",
-   "text": "初夏，当着所有人的面，第六次。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x19b",
-   "lang": "zh",
-   "text": "老百姓急了：“就要亚瑟当国王，别再拖了！”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x20b",
-   "lang": "zh",
-   "text": "所有人齐刷刷跪下。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "x21b",
-   "lang": "zh",
-   "text": "整整六次，他才当上国王，而第一次，只因为哥哥忘了带剑。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "type": "sfx",
+   "name": "groan_2",
+   "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.",
+   "duration": 2,
+   "influence": 0.5
   }
  ]
 }
