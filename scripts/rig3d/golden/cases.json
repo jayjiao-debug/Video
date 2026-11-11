@@ -1,0 +1,18 @@
+[
+  { "name": "trio", "entry": "rig3d_trio_rig.ts", "size": "360x640" },
+  { "name": "pullers", "entry": "rig3d_main_rig.ts", "size": "360x640" },
+  { "name": "close_you", "entry": "rig3d_close_you.ts", "size": "360x640" },
+  { "name": "close_cap", "entry": "rig3d_close_cap.ts", "size": "360x640" },
+  { "name": "crowd", "entry": "rig3d_crowd_rig.ts", "size": "540x960" },
+  { "name": "turn_you", "entry": "rig3d_sweep540_rig.ts", "size": "360x640", "pick": [0, 20, 40, 60] },
+  { "name": "turn_cap", "entry": "rig3d_sweep540_righat.ts", "size": "360x640", "pick": [0, 15, 30, 45, 60] },
+  { "name": "turn_beanie", "entry": "rig3d_sweep540_righat.ts", "size": "360x640", "pick": [0, 24, 60], "opts": { "turn": { "hat": { "kind": "beanie", "col": "#c9503f", "trim": "#f1e6d2" } } } },
+  { "name": "turn_researcher", "entry": "rig3d_sweep540_rigres.ts", "size": "360x640", "pick": [0, 20, 45] },
+  { "name": "exprs", "entry": "rig3d_exprs_rig.ts", "size": "240x240", "pick": [3, 4, 15, 17, 18] },
+  { "name": "hair_ponytail", "entry": "rig3d_sweep540_rig.ts", "size": "360x640", "pick": [0, 24, 60], "opts": { "turn": { "look": "friend0" } } },
+  { "name": "hair_curly", "entry": "rig3d_sweep540_rig.ts", "size": "360x640", "pick": [0, 24, 60], "opts": { "turn": { "look": "friend1" } } },
+  { "name": "hair_bob", "entry": "rig3d_sweep540_rig.ts", "size": "360x640", "pick": [0, 24, 60], "opts": { "turn": { "look": "friend2" } } },
+  { "name": "hair_side", "entry": "rig3d_sweep540_rig.ts", "size": "360x640", "pick": [0, 24, 60], "opts": { "turn": { "look": "friend3" } } },
+  { "name": "hair_long", "entry": "rig3d_sweep540_rig.ts", "size": "360x640", "pick": [0, 24, 60], "opts": { "turn": { "look": "friend4" } } },
+  { "name": "hair_buzz", "entry": "rig3d_sweep540_rig.ts", "size": "360x640", "pick": [0, 24, 60], "opts": { "turn": { "look": "friend5" } } }
+]

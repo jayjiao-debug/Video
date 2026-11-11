@@ -218,7 +218,7 @@ const taper = (p: Pen, a: P2, b: P2, wa: number, wb: number, col = INK) => {
 };
 
 // ---------------- contours ----------------
-export type Blob = { a: number; b: number; nTop: number; nBot: number; egg: number; asym: number; rot: number; noise: number; seed: number };
+export type Blob = { a: number; b: number; nTop: number; nBot: number; egg: number; asym: number; rot: number; noise: number; seed: number; jaw?: [number, number] };
 
 /** superellipse "bean": separate crown / jaw exponents, egg taper (neg = narrower chin), one-side bulge, soft noise.
  *  Points run right -> down -> left -> up (clockwise on screen). */
@@ -282,7 +282,7 @@ const DEF_LIGHT = rad(-120);
 
 // ---------------- faces ----------------
 export type Expr = "neutral" | "stern" | "grin" | "laugh" | "whistle" | "nervous" | "shock" | "relief" | "relief_open" | "dazed"
-  | "pained" | "smile" | "smile_closed" | "lick" | "sigh" | "wince" | "smug" | "sad" | "deadpan" | "sleep" | "huff" | "happy" | "focus";
+  | "pained" | "smile" | "smile_closed" | "lick" | "sigh" | "wince" | "smug" | "sad" | "deadpan" | "sleep" | "huff" | "happy" | "focus" | "cool" | "hush";
 type EyeK = "dot" | "small" | "lid" | "slit" | "happy" | "dash" | "squeeze" | "shock" | "shockHalf" | "spiral" | "closed" | "down";
 type MouthK = "dash" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
 /** eyes [back, front], brows [inner, outer] offsets in u (+ = down), mouth kind */
@@ -312,6 +312,9 @@ const FACE: Record<Expr, { eye: [EyeK, EyeK]; brow: [number, number]; mouth: Mou
   happy: { eye: ["happy", "happy"], brow: [-2, -2], mouth: "smile" },
   // concentrating on the page: lids lowered to the desk, brows a little knit (not the stern V), a flat mouth
   focus: { eye: ["down", "down"], brow: [1, -0.5], mouth: "dash" },
+  // unbothered: narrowed eyes under heavy level brows, the hint of a smile (rig3d: the brows sit on the lids)
+  cool: { eye: ["slit", "slit"], brow: [2, -2], mouth: "smirk" },
+  hush: { eye: ["slit", "slit"], brow: [2, -2], mouth: "smirk" },
 };
 const halfLid = (k: EyeK): EyeK => (k === "dot" || k === "small" ? "lid" : k === "lid" ? "slit" : k === "shock" ? "shockHalf" : k);
 const eyeKind = (k: EyeK, lid: number): EyeK =>
@@ -1198,6 +1201,12 @@ export type Look = {
   headband?: string;
   /** torso width factor (default 1) */
   width?: number;
+  /** the head's own shape, instead of what the seed gives (headBlob): nTop / nBot = how square the crown / the jaw is
+   *  (2 = round, 4 = a box with round corners), egg = the chin against the crown (+ = a wider jaw), asym, rot, noise;
+   *  jaw = a cut jaw (rig3d only): [how far below the middle of the head its corners sit, as a share of the head's
+   *  half height; how wide the chin is, as a share of the head's width]. From the corners the head runs straight in to
+   *  the chin: [0.34, 0.4] is a diamond of a jaw. */
+  head?: Partial<Pick<Blob, "nTop" | "nBot" | "egg" | "asym" | "rot" | "noise" | "jaw">>;
 };
 export type View = "front" | "side" | "back";
 export type PoseKind = "idle" | "walk" | "jog" | "desk" | "write" | "cardUp" | "curl" | "hold" | "haul" | "throw" | "wave" | "point"
@@ -1262,10 +1271,10 @@ export const WALK_CYCLE_M = 2 * 330 * SU, JOG_CYCLE_M = 2 * 470 * SU;
 export type Dims = { ha: number; H: Blob; W: number; HH: number; u: number; torso: number; legLen: number; aLen: number; Ta: number; Tas: number; Q: ReturnType<typeof quirk> };
 const DIMS = new Map<string, Dims>();
 export const dimsOf = (L: Look): Dims => {
-  const k = `${L.seed}|${L.width ?? 1}`, hit = DIMS.get(k);
+  const k = `${L.seed}|${L.width ?? 1}${L.head ? "|" + JSON.stringify(L.head) : ""}`, hit = DIMS.get(k);
   if (hit) return hit;
   const Q = quirk(L.seed);
-  const ha = 110 * (0.97 + 0.06 * rnd(L.seed, 52)), H = headBlob(L.seed, ha);
+  const ha = 110 * (0.97 + 0.06 * rnd(L.seed, 52)), H: Blob = { ...headBlob(L.seed, ha), ...L.head };
   const W = 2 * H.a, HH = 2 * H.b, u = W / 100;
   const torso = 250 * Q.torso;
   const legLen = FIG_H - 4 * u + 0.12 * HH - torso - HH;
