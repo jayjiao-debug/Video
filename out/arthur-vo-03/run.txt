@@ -1,0 +1,70 @@
+plan: {'tier': 'starter', 'character_count': 22281, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "j21n", "lang": "zh", "text": "整整拔了六次。而他能当上国王，只是因为哥哥忘了带剑。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j21n.mp3", "bytes": 93247}
+{"name": "j21n2", "lang": "zh", "text": "整整拔了六次，而他能当上国王，只是因为哥哥忘了带剑。", "voice": "tOuLUAIdXShmWH7PEUrU", "voice_id": "tOuLUAIdXShmWH7PEUrU", "model": "eleven_v4", "status": 200, "file": "j21n2.mp3", "bytes": 88232}
+{"name": "k21n", "lang": "zh", "text": "整整拔了六次。而他能当上国王，只是因为哥哥忘了带剑。", "voice": "5mZxJZhSmJTjL7GoYfYI", "voice_id": "5mZxJZhSmJTjL7GoYfYI", "model": "eleven_v4", "status": 200, "file": "k21n.mp3", "bytes": 94501}
+{"name": "k21n2", "lang": "zh", "text": "整整拔了六次，而他能当上国王，只是因为哥哥忘了带剑。", "voice": "5mZxJZhSmJTjL7GoYfYI", "voice_id": "5mZxJZhSmJTjL7GoYfYI", "model": "eleven_v4", "status": 200, "file": "k21n2.mp3", "bytes": 91994}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "j21n",
+  "lang": "zh",
+  "text": "整整拔了六次。而他能当上国王，只是因为哥哥忘了带剑。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j21n.mp3",
+  "bytes": 93247,
+  "heard": "整整拔了六次而他能當上國王只是因為哥哥忘了帶劍",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.76
+ },
+ {
+  "name": "j21n2",
+  "lang": "zh",
+  "text": "整整拔了六次，而他能当上国王，只是因为哥哥忘了带剑。",
+  "voice": "tOuLUAIdXShmWH7PEUrU",
+  "voice_id": "tOuLUAIdXShmWH7PEUrU",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "j21n2.mp3",
+  "bytes": 88232,
+  "heard": "整整拔了六次而他能當上國王只是因為哥哥忘了帶劍",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.44
+ },
+ {
+  "name": "k21n",
+  "lang": "zh",
+  "text": "整整拔了六次。而他能当上国王，只是因为哥哥忘了带剑。",
+  "voice": "5mZxJZhSmJTjL7GoYfYI",
+  "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "k21n.mp3",
+  "bytes": 94501,
+  "heard": "整整拔了六次而他能當上國王只是因為哥哥忘了帶劍",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.84
+ },
+ {
+  "name": "k21n2",
+  "lang": "zh",
+  "text": "整整拔了六次，而他能当上国王，只是因为哥哥忘了带剑。",
+  "voice": "5mZxJZhSmJTjL7GoYfYI",
+  "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "k21n2.mp3",
+  "bytes": 91994,
+  "heard": "整整拔了六次,而他能當上國王,只是因為哥哥忘了帶劍",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.68
+ }
+]
