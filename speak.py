@@ -58,6 +58,7 @@ def find_own(accent, gender):
         if not gender or lb.get("gender") == gender: return v["voice_id"], f"own:{v['name']} {lb}"
     return own[0]["voice_id"], f"own:{own[0]['name']}"
 
+KEPT = {}   # library voice id -> the id it has in the account, for items with "keep": true
 for it in req["items"]:
     if it.get("url"):   # fetch a public, openly licensed recording (e.g. First Sounds, CC BY) instead of synthesising
         rec = {"name": it["name"], "lang": it.get("lang", ""), "text": it.get("text", ""), "url": it["url"]}
@@ -119,9 +120,14 @@ for it in req["items"]:
     added = None
     if it.get("add"):   # a shared-library voice by its ids {"owner","voice_id","name"}: add it to the account, speak, remove it again
         ad = it["add"]
-        a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", it["name"]))[:40]}, timeout=30)
-        if a.ok: vid = added = a.json().get("voice_id", ad["voice_id"]); vname = "shared:" + ad.get("name", "")
+        if it.get("keep"):   # "keep": true = many items with one library voice: add it once, remove it when the run ends
+            if ad["voice_id"] in KEPT: vid = KEPT[ad["voice_id"]]; vname = "shared:" + ad.get("name", "").strip(); a = None
+            else: a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", it["name"]))[:40]}, timeout=30)
+            if a is not None and a.ok: vid = KEPT[ad["voice_id"]] = a.json().get("voice_id", ad["voice_id"]); vname = "shared:" + ad.get("name", "").strip()
         else:
+            a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", it["name"]))[:40]}, timeout=30)
+            if a.ok: vid = added = a.json().get("voice_id", ad["voice_id"]); vname = "shared:" + ad.get("name", "")
+        if a is not None and not a.ok:
             rec = {"name": it["name"], "lang": it.get("lang", ""), "text": it["text"], "voice": ad.get("name", ""), "status": a.status_code, "error": "add failed: " + a.text[:300]}
             log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
@@ -140,6 +146,10 @@ for it in req["items"]:
         try: rec["removed"] = requests.delete(f"{API}/v1/voices/{added}", headers=H, timeout=30).status_code
         except Exception as e: rec["removed"] = str(e)[:100]
     log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec)
+for pub, got in KEPT.items():   # the library voices kept for the whole run go back now
+    try: report.setdefault("removed", {})[pub] = requests.delete(f"{API}/v1/voices/{got}", headers=H, timeout=30).status_code
+    except Exception as e: report.setdefault("removed", {})[pub] = str(e)[:100]
+if KEPT: log("removed kept voices:", report.get("removed"))
 
 # check: what does Whisper hear?
 try:
