@@ -2,7 +2,8 @@
 // type with a thick ink stroke and a hard drop shadow; punchy springs; pure functions of the frame). Captions are the
 // engine's (Film.tsx), never drawn here.
 //
-//   <PullCounter n at out? x? y? frame />     "第 N 次": the count of pulls. The numeral slams in on `at` (the frame
+//   <PullCounter n at out? x? y? frame />     "第 N 次": the count of pulls (N as a digit: 一 / 二 / 三 read as bars at
+//        this weight). The numeral slams in on `at` (the frame
 //        the sword comes free), with one small gold sword per pull so far under it. Default place: top centre
 //        (540, 300). Give out (7-frame leave) before the cut that ends the beat. n = 1..6.
 //   <Mark kind="!" | "?" | "!?" at out? x y size? color? frame />   a comic mark that pops beside / above a head:
@@ -28,7 +29,6 @@ const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 const eIn = (x: number) => Math.pow(clamp01(x), 3);
 const springAt = (f: number, at: number, cfg = PUNCH) => (f < at ? 0 : spring({ frame: f - at, fps: 30, config: cfg }));
 const outK = (f: number, out?: number) => (out === undefined ? 0 : eIn((f - out) / 7));
-const CN = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
 /** a small sword glyph, point down, centred on 0,0; h = its height in px */
 const SwordGlyph: React.FC<{ h: number; col?: string }> = ({ h, col = COL.gold }) => {
@@ -60,7 +60,7 @@ export const PullCounter: React.FC<PullCounterProps> = ({ n, at, out, x = 540, y
         <div style={{ position: "absolute", left: -330, top: -150, width: 660, height: 330, background: "radial-gradient(closest-side, rgba(10,12,22,0.5) 0%, rgba(10,12,22,0.46) 50%, rgba(10,12,22,0.2) 80%, rgba(10,12,22,0) 100%)", opacity: clamp01(k) }} />
         <div style={{ position: "absolute", left: 0, top: 0, transform: `translate(-50%,-50%) scale(${0.6 + 0.4 * k})`, display: "flex", alignItems: "center", gap: 14, whiteSpace: "nowrap" }}>
           <span style={ts(96, COL.white)}>第</span>
-          <span style={{ ...ts(230, COL.gold), display: "inline-block", transform: `scale(${0.3 + 0.7 * kn}) rotate(${(1 - Math.min(1, kn)) * -14}deg)` }}>{CN[n] ?? String(n)}</span>
+          <span style={{ ...ts(230, COL.gold), display: "inline-block", transform: `scale(${0.3 + 0.7 * kn}) rotate(${(1 - Math.min(1, kn)) * -14}deg)` }}>{String(n)}</span>
           <span style={ts(96, COL.white)}>次</span>
         </div>
         {Array.from({ length: n }, (_, i) => {
