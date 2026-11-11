@@ -4,7 +4,8 @@ import type { Look } from "../toon";
 import { finger } from "./finger";
 
 /** 大哥 ("big bro"): the account's own cameo figure, hidden once in every film, a finger to his lips. All in greys, as
- *  if cut out of a black-and-white photo: a block of a head with a square jaw wider than its crown (Look.head), combed
+ *  if cut out of a black-and-white photo: a block of a head with a cut jaw (Look.head: wide at the jaw's corners, then
+ *  straight in to the chin, a diamond), combed
  *  dark hair, a shadow of stubble with drawn cheekbones and a cleft chin, narrowed eyes under heavy brows with one of
  *  them cocked (expr "hush"), a broad chest in a grey tee. The hair and the tee are mid greys, not black: next to the
  *  ink line and the near-ink limbs a black head of hair over a black tee joins up into one dark frame round the face
@@ -17,7 +18,7 @@ export const DAGE: Look = {
   seed: 777, skin: "#ececef", width: 1.22,
   top: "tee", topCol: "#70707a", bottom: "jeans", botCol: "#3a3a42", shoes: "#18181c", shoeSole: "#8c8c94",
   hair: "short", hairCol: "#585863", part: 1,
-  head: { nTop: 2.3, nBot: 4.4, egg: 0.2, asym: 0, rot: 0, noise: 0.004 },
+  head: { nTop: 2.3, nBot: 4.4, egg: 0.2, asym: 0, rot: 0, noise: 0.004, jaw: [0.4, 0.42] },
 };
 
 /** a chiselled lower face, drawn on the face: a shadow of stubble over the lip, the chin and the jaw, a drawn

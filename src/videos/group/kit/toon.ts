@@ -218,7 +218,7 @@ const taper = (p: Pen, a: P2, b: P2, wa: number, wb: number, col = INK) => {
 };
 
 // ---------------- contours ----------------
-export type Blob = { a: number; b: number; nTop: number; nBot: number; egg: number; asym: number; rot: number; noise: number; seed: number };
+export type Blob = { a: number; b: number; nTop: number; nBot: number; egg: number; asym: number; rot: number; noise: number; seed: number; jaw?: [number, number] };
 
 /** superellipse "bean": separate crown / jaw exponents, egg taper (neg = narrower chin), one-side bulge, soft noise.
  *  Points run right -> down -> left -> up (clockwise on screen). */
@@ -1202,8 +1202,11 @@ export type Look = {
   /** torso width factor (default 1) */
   width?: number;
   /** the head's own shape, instead of what the seed gives (headBlob): nTop / nBot = how square the crown / the jaw is
-   *  (2 = round, 4 = a box with round corners), egg = the chin against the crown (+ = a wider jaw), asym, rot, noise */
-  head?: Partial<Pick<Blob, "nTop" | "nBot" | "egg" | "asym" | "rot" | "noise">>;
+   *  (2 = round, 4 = a box with round corners), egg = the chin against the crown (+ = a wider jaw), asym, rot, noise;
+   *  jaw = a cut jaw (rig3d only): [how far below the middle of the head its corners sit, as a share of the head's
+   *  half height; how wide the chin is, as a share of the head's width]. From the corners the head runs straight in to
+   *  the chin: [0.34, 0.4] is a diamond of a jaw. */
+  head?: Partial<Pick<Blob, "nTop" | "nBot" | "egg" | "asym" | "rot" | "noise" | "jaw">>;
 };
 export type View = "front" | "side" | "back";
 export type PoseKind = "idle" | "walk" | "jog" | "desk" | "write" | "cardUp" | "curl" | "hold" | "haul" | "throw" | "wave" | "point"
