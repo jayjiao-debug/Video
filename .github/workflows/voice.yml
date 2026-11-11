@@ -29,7 +29,11 @@ jobs:
         run: |
           mkdir -p out
           echo "key present: $([ -n "$ELEVENLABS_API_KEY" ] && echo yes || echo no)" >> out/log.txt
-          pip install -q requests faster-whisper >/dev/null 2>&1 || true
+          pip install -q requests faster-whisper soundfile >/dev/null 2>&1 || true
+          if grep -q '"tag"' request.json; then
+            pip install -q torch --index-url https://download.pytorch.org/whl/cpu >/dev/null 2>&1 || true
+            pip install -q transformers scipy numpy >/dev/null 2>&1 || true
+          fi
           python speak.py 2>&1 | tee -a out/run.txt || echo "speak exited non-zero" >> out/log.txt
       - name: publish
         if: always()

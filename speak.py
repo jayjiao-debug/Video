@@ -134,5 +134,25 @@ try:
         rec["heard"] = "".join(s.text for s in segs).strip(); rec["heard_lang"] = info.language
         rec["heard_lang_p"] = round(info.language_probability, 3); rec["seconds"] = round(info.duration, 2)
 except Exception as e: report["whisper_error"] = str(e)
+# check for sound effects (request: "tag": true): what does an AudioSet tagger (AST) hear in each clip?
+if req.get("tag"):
+    try:
+        import numpy as np, soundfile as sf, torch
+        from scipy.signal import resample_poly
+        from transformers import ASTFeatureExtractor, ASTForAudioClassification
+        name = "MIT/ast-finetuned-audioset-10-10-0.4593"
+        fe = ASTFeatureExtractor.from_pretrained(name); am = ASTForAudioClassification.from_pretrained(name).eval()
+        for rec in report["clips"]:
+            if "file" not in rec or not rec.get("sfx"): continue
+            try:
+                x, sr = sf.read(f"out/{rec['file']}", dtype="float32", always_2d=True); x = x.mean(axis=1)
+                rec["seconds"] = round(len(x) / sr, 2)
+                if sr != 16000: x = resample_poly(x, 16000, sr).astype("float32")
+                with torch.no_grad(): p = torch.sigmoid(am(**fe(x, sampling_rate=16000, return_tensors="pt")).logits)[0]
+                top = torch.topk(p, 8)
+                rec["tags"] = [[am.config.id2label[int(i)], round(float(v), 3)] for v, i in zip(top.values, top.indices)]
+                log(rec["name"], rec["tags"])
+            except Exception as e: rec["tag_error"] = repr(e)[:300]
+    except Exception as e: report["tag_error"] = repr(e)[:500]; log("tag error", report["tag_error"])
 json.dump(report, open("out/report.json", "w"), ensure_ascii=False, indent=2)
 log(json.dumps(report["clips"], ensure_ascii=False, indent=1))
