@@ -1,44 +1,166 @@
 {
- "id": "arthur-voices-01",
+ "id": "arthur-vo-05",
+ "model_prefs": [
+  "eleven_v4"
+ ],
  "items": [
   {
-   "type": "voices",
-   "name": "zh_f_std",
+   "name": "s_shanshan",
    "lang": "zh",
-   "accent": "standard",
-   "gender": "female",
-   "n": 40
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+    "voice_id": "ByhETIclHirOlWnWKhHc",
+    "name": "Shan Shan - Young Energetic Female"
+   }
   },
   {
-   "type": "voices",
-   "name": "zh_m_std",
+   "name": "s_ladaisy",
    "lang": "zh",
-   "accent": "standard",
-   "gender": "male",
-   "n": 30
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "2ddc67b10cd39a8a177a02efd0c8ecfde99500edfffd08ec3528bfdd827049bf",
+    "voice_id": "8RCmdqih4CKjJ7Bd3ZxT",
+    "name": "Ladaisy - Clear Mandarin Explainer"
+   }
   },
   {
-   "type": "voices",
-   "name": "zh_f_social",
+   "name": "s_macy",
    "lang": "zh",
-   "gender": "female",
-   "use_case": "social_media",
-   "n": 20
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "6f8a6719e1fedc9dd3b6da1571efa02331e58995c20c861ff07a5ae057a2cb1f",
+    "voice_id": "NchRhc5KPgHwZagz6MrZ",
+    "name": "Macy - Calm, Warm and Clear"
+   }
   },
   {
-   "type": "voices",
-   "name": "zh_f_narr",
+   "name": "s_amy",
    "lang": "zh",
-   "gender": "female",
-   "use_case": "narrative_story",
-   "n": 20
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+    "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+    "name": "Amy - Friendly, Young and Natural"
+   }
   },
   {
-   "type": "voices",
-   "name": "zh_search_jieshuo",
+   "name": "s_xiaoxi",
    "lang": "zh",
-   "search": "解说",
-   "n": 20
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly  "
+   }
+  },
+  {
+   "name": "s_vincent",
+   "lang": "zh",
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "voice_id": "WkcRFJo38X9XEP8kGExm"
+  },
+  {
+   "name": "s_hanbaba",
+   "lang": "zh",
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+    "voice_id": "mZc8T5doZrU7OCI71i3M",
+    "name": "HanBaba - Laidback, Sarcastic"
+   }
+  },
+  {
+   "name": "s_yichen",
+   "lang": "zh",
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "ca08cc02f01ae53583f455e9f544d8c141e2319b206aa70b1e8a2b1af6f3ffe5",
+    "voice_id": "WLOnxmJlqAiX5zG0dLlu",
+    "name": "Yichen Wang - Bright Clear Narrator"
+   }
+  },
+  {
+   "name": "s_bohai",
+   "lang": "zh",
+   "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "51f194ff5bbf4c1ce458f8bf59fd166a08b3e4ce060528245c979fdaf3739adc",
+    "voice_id": "AwQL7jPTLzD7hSLmirIM",
+    "name": "BoHai - Pure, Clear, Upbeat & Friendly"
+   }
   }
  ]
 }
