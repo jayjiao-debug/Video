@@ -1,845 +1,316 @@
 {
- "id": "hongmen-vo-02",
+ "id": "shz02-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
- "words": true,
  "items": [
   {
-   "name": "y01",
+   "name": "L01",
    "lang": "zh",
-   "text": "他酒喝到一半，起身去上厕所，就再也没回来。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "武松在景阳冈打死一只老虎，被人用轿子抬着，成了英雄。"
   },
   {
-   "name": "y02",
+   "name": "L02",
    "lang": "zh",
-   "text": "等等，一顿酒而已，他跑什么？",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "李逵在沂岭，一夜之间，杀了四只。"
   },
   {
-   "name": "y03",
+   "name": "L03",
    "lang": "zh",
-   "text": "他叫刘邦。两千多年前，他抢先打下了秦朝的都城。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "可天亮以后，他连自己的名字都不敢说。"
   },
   {
-   "name": "y04",
+   "name": "L04",
    "lang": "zh",
-   "text": "手握四十万大军的项羽气炸了：“明天就打他！”",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "因为那一夜，他不是去打虎的。"
   },
   {
-   "name": "y05",
+   "name": "L05",
    "lang": "zh",
-   "text": "刘邦只有十万人，第二天一早，赶紧上门赔罪。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "这天，梁山摆酒，庆贺宋江把父亲接上了山。"
   },
   {
-   "name": "y06",
+   "name": "L06",
    "lang": "zh",
-   "text": "项羽留他喝酒。这顿酒，就叫鸿门宴。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "酒席散了，李逵忽然放声大哭："
   },
   {
-   "name": "y07",
+   "name": "L07",
    "lang": "zh",
-   "text": "可项羽的谋士范增，一心想杀了刘邦。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "这个也去取爷，那个也去望娘，偏铁牛是土掘坑里钻出来的！"
   },
   {
-   "name": "y08",
+   "name": "L08",
    "lang": "zh",
-   "text": "他三次举起玉佩给项羽看，项羽不理。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "他也有个老娘，在沂水县老家。他要接她上山，快活几天。"
   },
   {
-   "name": "y09",
+   "name": "L09",
    "lang": "zh",
-   "text": "范增就叫来一个手下：“你去舞剑，趁机杀了刘邦。”",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "宋江只许他独自去，不准喝酒，也不准带那两把板斧。"
   },
   {
-   "name": "y10",
+   "name": "L10",
    "lang": "zh",
-   "text": "手下拔剑起舞，剑总往刘邦那边去。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "半路上，一个劫道的被他一刀放倒。"
   },
   {
-   "name": "y11",
+   "name": "L11",
    "lang": "zh",
-   "text": "项羽的叔叔也拔剑跳了起来，用身子护住刘邦。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "那人喊：家里还有个九十岁的老娘！"
   },
   {
-   "name": "y12",
+   "name": "L12",
    "lang": "zh",
-   "text": "头天晚上，刘邦刚和这位叔叔约好做亲家。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "杀人不眨眼的李逵，放了他，还给了十两银子。"
   },
   {
-   "name": "y13",
+   "name": "L13",
    "lang": "zh",
-   "text": "刘邦的部下樊哙撞倒卫兵冲进来，瞪着项羽。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "推开家门，娘坐在床上念佛，两只眼睛都瞎了。"
   },
   {
-   "name": "y14",
+   "name": "L14",
    "lang": "zh",
-   "text": "项羽说：“壮士！赏他一条猪腿。”端上来的是生的。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "娘说：我如常思量你，眼泪流干，因此瞎了双目。"
   },
   {
-   "name": "y15",
+   "name": "L15",
    "lang": "zh",
-   "text": "樊哙把盾牌扣在地上当案板，拔剑切着就吃。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "李逵不敢说实话。他说：铁牛做了官，来接娘。"
   },
   {
-   "name": "y16",
+   "name": "L16",
    "lang": "zh",
-   "text": "过了一会儿，刘邦起身去上厕所，把樊哙也叫了出去。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "他背起娘，趁着月色翻沂岭。"
   },
   {
-   "name": "y17",
+   "name": "L17",
    "lang": "zh",
-   "text": "出了门，樊哙说：“人家是刀和案板，咱们是鱼和肉，还告什么辞！”",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "半山上，娘渴得受不住。他把娘放在青石上，去找水。"
   },
   {
-   "name": "y18",
+   "name": "L18",
    "lang": "zh",
-   "text": "刘邦丢下车马，抄小路逃回了军营。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "等他端着水回来——"
   },
   {
-   "name": "y19",
+   "name": "L19",
    "lang": "zh",
-   "text": "等他跑远了，留下的部下才进去送礼，说他喝多了。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "石头上，只剩他插下的那口刀。"
   },
   {
-   "name": "y20",
+   "name": "L20",
    "lang": "zh",
-   "text": "范增拔剑把送他的玉杯砸得粉碎：“夺项羽天下的，一定是刘邦！”",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "草地上有血，一路通到一个虎洞。"
   },
   {
-   "name": "y21",
+   "name": "L21",
    "lang": "zh",
-   "text": "四年后，刘邦果然打败项羽，当上了皇帝。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "李逵红了眼，提刀闯进去。小虎、母虎，一只都没放过。"
   },
   {
-   "name": "y22",
+   "name": "L22",
    "lang": "zh",
-   "text": "而鸿门宴上，他只是去上了个厕所。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "狂风里，又扑出一只吊睛白额虎。他迎上去，只一刀。"
   },
   {
-   "name": "y01b",
+   "name": "L23",
    "lang": "zh",
-   "text": "他酒喝到一半，起身去上厕所，就再也没回来。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "天亮了。他用自己的布衫把娘包好，埋在山上，大哭了一场。"
   },
   {
-   "name": "y02b",
+   "name": "L24",
    "lang": "zh",
-   "text": "等等，一顿酒而已，他跑什么？",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "下山时，猎户们不信：一个人，怎么杀得了四只虎？"
   },
   {
-   "name": "y03b",
+   "name": "L25",
    "lang": "zh",
-   "text": "他叫刘邦。两千多年前，他抢先打下了秦朝的都城。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "可他不敢说自己是谁：官府正悬赏三千贯，捉拿李逵。"
   },
   {
-   "name": "y04b",
+   "name": "L26",
    "lang": "zh",
-   "text": "手握四十万大军的项羽气炸了：“明天就打他！”",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "他只说，自己叫张大胆。"
   },
   {
-   "name": "y05b",
+   "name": "L27",
    "lang": "zh",
-   "text": "刘邦只有十万人，第二天一早，赶紧上门赔罪。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "武松打一只虎，做了都头。"
   },
   {
-   "name": "y06b",
+   "name": "L28",
    "lang": "zh",
-   "text": "项羽留他喝酒。这顿酒，就叫鸿门宴。",
-   "model": "eleven_v4",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
+    "style": 0.35
    },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y07b",
-   "lang": "zh",
-   "text": "可项羽的谋士范增，一心想杀了刘邦。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y08b",
-   "lang": "zh",
-   "text": "他三次举起玉佩给项羽看，项羽不理。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y09b",
-   "lang": "zh",
-   "text": "范增就叫来一个手下：“你去舞剑，趁机杀了刘邦。”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y10b",
-   "lang": "zh",
-   "text": "手下拔剑起舞，剑总往刘邦那边去。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y11b",
-   "lang": "zh",
-   "text": "项羽的叔叔也拔剑跳了起来，用身子护住刘邦。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y12b",
-   "lang": "zh",
-   "text": "头天晚上，刘邦刚和这位叔叔约好做亲家。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y13b",
-   "lang": "zh",
-   "text": "刘邦的部下樊哙撞倒卫兵冲进来，瞪着项羽。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y14b",
-   "lang": "zh",
-   "text": "项羽说：“壮士！赏他一条猪腿。”端上来的是生的。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y15b",
-   "lang": "zh",
-   "text": "樊哙把盾牌扣在地上当案板，拔剑切着就吃。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y16b",
-   "lang": "zh",
-   "text": "过了一会儿，刘邦起身去上厕所，把樊哙也叫了出去。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y17b",
-   "lang": "zh",
-   "text": "出了门，樊哙说：“人家是刀和案板，咱们是鱼和肉，还告什么辞！”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y18b",
-   "lang": "zh",
-   "text": "刘邦丢下车马，抄小路逃回了军营。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y19b",
-   "lang": "zh",
-   "text": "等他跑远了，留下的部下才进去送礼，说他喝多了。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y20b",
-   "lang": "zh",
-   "text": "范增拔剑把送他的玉杯砸得粉碎：“夺项羽天下的，一定是刘邦！”",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y21b",
-   "lang": "zh",
-   "text": "四年后，刘邦果然打败项羽，当上了皇帝。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "y22b",
-   "lang": "zh",
-   "text": "而鸿门宴上，他只是去上了个厕所。",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
+   "text": "李逵杀了四只，没了娘。"
   }
  ]
 }
