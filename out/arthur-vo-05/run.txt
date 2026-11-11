@@ -1,0 +1,158 @@
+plan: {'tier': 'starter', 'character_count': 22741, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "s_shanshan", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:Shan Shan - Young Energetic Female", "voice_id": "ByhETIclHirOlWnWKhHc", "model": "eleven_v4", "status": 200, "file": "s_shanshan.mp3", "bytes": 259595, "removed": 200}
+{"name": "s_ladaisy", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:Ladaisy - Clear Mandarin Explainer", "voice_id": "8RCmdqih4CKjJ7Bd3ZxT", "model": "eleven_v4", "status": 200, "file": "s_ladaisy.mp3", "bytes": 241623, "removed": 200}
+{"name": "s_macy", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:Macy - Calm, Warm and Clear", "voice_id": "NchRhc5KPgHwZagz6MrZ", "model": "eleven_v4", "status": 200, "file": "s_macy.mp3", "bytes": 264611, "removed": 200}
+{"name": "s_amy", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:Amy - Friendly, Young and Natural", "voice_id": "bhJUNIXWQQ94l8eI2VUf", "model": "eleven_v4", "status": 200, "file": "s_amy.mp3", "bytes": 236607, "removed": 200}
+{"name": "s_xiaoxi", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly  ", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "s_xiaoxi.mp3", "bytes": 234100, "removed": 200}
+{"name": "s_vincent", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "WkcRFJo38X9XEP8kGExm", "voice_id": "WkcRFJo38X9XEP8kGExm", "model": "eleven_v4", "status": 200, "file": "s_vincent.mp3", "bytes": 253326}
+{"name": "s_hanbaba", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:HanBaba - Laidback, Sarcastic", "voice_id": "mZc8T5doZrU7OCI71i3M", "model": "eleven_v4", "status": 200, "file": "s_hanbaba.mp3", "bytes": 237861, "removed": 200}
+{"name": "s_yichen", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:Yichen Wang - Bright Clear Narrator", "voice_id": "WLOnxmJlqAiX5zG0dLlu", "model": "eleven_v4", "status": 200, "file": "s_yichen.mp3", "bytes": 244131, "removed": 200}
+{"name": "s_bohai", "lang": "zh", "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。", "voice": "shared:BoHai - Pure, Clear, Upbeat & Friendly", "voice_id": "AwQL7jPTLzD7hSLmirIM", "model": "eleven_v4", "status": 200, "file": "s_bohai.mp3", "bytes": 244131, "removed": 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "s_shanshan",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:Shan Shan - Young Energetic Female",
+  "voice_id": "ByhETIclHirOlWnWKhHc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_shanshan.mp3",
+  "bytes": 259595,
+  "removed": 200,
+  "heard": "金字寫著 誰拔出來誰就是國王貴族排隊來拔臉都憋紅了 見一動不動新年比武大會蠟瑟的哥哥叫凱剛當上騎士一摸腰竟然忘帶了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 16.16
+ },
+ {
+  "name": "s_ladaisy",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:Ladaisy - Clear Mandarin Explainer",
+  "voice_id": "8RCmdqih4CKjJ7Bd3ZxT",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_ladaisy.mp3",
+  "bytes": 241623,
+  "removed": 200,
+  "heard": "金字寫著,誰拔出來誰就是國王貴族排隊來拔,臉都憋紅了,見一動不動新年比武大會,亞瑟的哥哥叫凱剛當上騎士,一摸腰,見忘帶了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 15.04
+ },
+ {
+  "name": "s_macy",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:Macy - Calm, Warm and Clear",
+  "voice_id": "NchRhc5KPgHwZagz6MrZ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_macy.mp3",
+  "bytes": 264611,
+  "removed": 200,
+  "heard": "金字写着,谁拔出来,谁就是国王。贵族排队来拔,脸都憋红了,见一动不动。新年比武大会,亚瑟的哥哥叫凯,刚当上骑士,一摸腰,见忘袋了。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 16.48
+ },
+ {
+  "name": "s_amy",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:Amy - Friendly, Young and Natural",
+  "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_amy.mp3",
+  "bytes": 236607,
+  "removed": 200,
+  "heard": "金字写着谁拔出来谁就是国王贵族排队来拔脸都憋红了箭一动不动新年比武大会亚瑟的哥哥叫凯当当上骑士一摸腰见忘带了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 14.72
+ },
+ {
+  "name": "s_xiaoxi",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly  ",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_xiaoxi.mp3",
+  "bytes": 234100,
+  "removed": 200,
+  "heard": "金字寫著,誰拔出來誰就是國王貴族排隊來拔,臉都憋紅了,劍一動不動新年比武大會,亞瑟的哥哥叫凱剛當上騎士,一摸腰見王代了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 14.56
+ },
+ {
+  "name": "s_vincent",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "WkcRFJo38X9XEP8kGExm",
+  "voice_id": "WkcRFJo38X9XEP8kGExm",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_vincent.mp3",
+  "bytes": 253326,
+  "heard": "金字写着谁拔出来谁就是国王贵族排队来拔脸都憋红了见一动不动新年比武大会雅瑟的哥哥叫凯刚当上骑士一摸腰见王代了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 15.76
+ },
+ {
+  "name": "s_hanbaba",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:HanBaba - Laidback, Sarcastic",
+  "voice_id": "mZc8T5doZrU7OCI71i3M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_hanbaba.mp3",
+  "bytes": 237861,
+  "removed": 200,
+  "heard": "金字写着 谁拔出来谁就是国王贵族排队来拔脸都憋红了简一动不动新年比武大会亚瑟的哥哥叫凯刚当上骑士一摸腰见忘怠了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 14.8
+ },
+ {
+  "name": "s_yichen",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:Yichen Wang - Bright Clear Narrator",
+  "voice_id": "WLOnxmJlqAiX5zG0dLlu",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_yichen.mp3",
+  "bytes": 244131,
+  "removed": 200,
+  "heard": "金字写着,谁拔出来,谁就是国王,贵族排队来拔,脸都憋红了,见一动不动新年比武大会,亚瑟的哥哥叫凯,刚当上骑士,一摸腰,欠忘袋了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 15.2
+ },
+ {
+  "name": "s_bohai",
+  "lang": "zh",
+  "text": "金字写着：谁拔出来，谁就是国王。贵族排队来拔，脸都憋红了，剑一动不动。新年比武大会，亚瑟的哥哥叫凯，刚当上骑士，一摸腰，剑忘带了。",
+  "voice": "shared:BoHai - Pure, Clear, Upbeat & Friendly",
+  "voice_id": "AwQL7jPTLzD7hSLmirIM",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "s_bohai.mp3",
+  "bytes": 244131,
+  "removed": 200,
+  "heard": "金字写着 谁拔出来谁就是国王贵族排队来拔 脸都憋红了 简一动不动新年比武大会 亚瑟的哥哥叫凯 刚当上骑士一摸腰 见忘袋了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 15.2
+ }
+]
