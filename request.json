@@ -1,18 +1,396 @@
 {
- "id": "arthur-en-hope-02",
+ "id": "arthur-en-alex-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "words": true,
  "items": [
   {
+   "name": "x01a",
+   "lang": "en",
+   "text": "He just pulled the sword from the stone, and put it back.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x02a",
+   "lang": "en",
+   "text": "Wait. Doesn't pulling it out make you king?",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x03a",
+   "lang": "en",
+   "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x04a",
+   "lang": "en",
+   "text": "Gold letters say: pull it out, and you're king.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x05a",
+   "lang": "en",
+   "text": "Lords line up to pull, faces turning red, it won't budge.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x06a",
+   "lang": "en",
+   "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x07a",
+   "lang": "en",
+   "text": "Arthur runs back. Nobody's home. All at the tournament.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x08a",
+   "lang": "en",
+   "text": "He thinks: there's a sword in that stone.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x09a",
+   "lang": "en",
+   "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x10a",
+   "lang": "en",
+   "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x11a",
+   "lang": "en",
+   "text": "Dad makes him swear. Kay admits Arthur brought it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x12a",
+   "lang": "en",
+   "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x13a",
+   "lang": "en",
+   "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x14a",
+   "lang": "en",
+   "text": "Days later, every lord tries. Only Arthur can. Pull three.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x15a",
+   "lang": "en",
+   "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x16a",
+   "lang": "en",
+   "text": "Next month, snow on the ground: pull four. Delayed.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x17a",
+   "lang": "en",
+   "text": "Spring, flowers in full bloom: pull five. Again.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x18a",
+   "lang": "en",
+   "text": "Summer, in front of everyone: pull six.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x19a",
+   "lang": "en",
+   "text": "The people snap: \"We want Arthur as king! No more delays!\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x20a",
+   "lang": "en",
+   "text": "Everyone drops to their knees.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x21a",
+   "lang": "en",
+   "text": "Six pulls to make him king. And the first? His brother just forgot his sword.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
    "name": "x01b",
    "lang": "en",
    "text": "He just pulled the sword from the stone, and put it back.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -28,9 +406,9 @@
    "lang": "en",
    "text": "Wait. Doesn't pulling it out make you king?",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -46,9 +424,9 @@
    "lang": "en",
    "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -64,9 +442,9 @@
    "lang": "en",
    "text": "Gold letters say: pull it out, and you're king.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -82,9 +460,9 @@
    "lang": "en",
    "text": "Lords line up to pull, faces turning red, it won't budge.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -100,9 +478,9 @@
    "lang": "en",
    "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -118,9 +496,9 @@
    "lang": "en",
    "text": "Arthur runs back. Nobody's home. All at the tournament.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -136,9 +514,9 @@
    "lang": "en",
    "text": "He thinks: there's a sword in that stone.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -154,9 +532,9 @@
    "lang": "en",
    "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -172,9 +550,9 @@
    "lang": "en",
    "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -190,9 +568,9 @@
    "lang": "en",
    "text": "Dad makes him swear. Kay admits Arthur brought it.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -208,9 +586,9 @@
    "lang": "en",
    "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -226,9 +604,9 @@
    "lang": "en",
    "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -244,9 +622,9 @@
    "lang": "en",
    "text": "Days later, every lord tries. Only Arthur can. Pull three.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -262,9 +640,9 @@
    "lang": "en",
    "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -280,9 +658,9 @@
    "lang": "en",
    "text": "Next month, snow on the ground: pull four. Delayed.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -298,9 +676,9 @@
    "lang": "en",
    "text": "Spring, flowers in full bloom: pull five. Again.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -316,9 +694,9 @@
    "lang": "en",
    "text": "Summer, in front of everyone: pull six.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -334,9 +712,9 @@
    "lang": "en",
    "text": "The people snap: \"We want Arthur as king! No more delays!\"",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -352,9 +730,9 @@
    "lang": "en",
    "text": "Everyone drops to their knees.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -370,9 +748,9 @@
    "lang": "en",
    "text": "Six pulls to make him king. And the first? His brother just forgot his sword.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -388,9 +766,9 @@
    "lang": "en",
    "text": "Lords line up to pull, red in the face: it won't budge.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -406,9 +784,9 @@
    "lang": "en",
    "text": "Dad pulls: stuck. Kay, with all his might: stuck. Arthur reaches out: pull two.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -424,9 +802,9 @@
    "lang": "en",
    "text": "Days later, every lord tries. Only he can. Pull three.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -442,9 +820,9 @@
    "lang": "en",
    "text": "Early summer, in front of everyone: pull six.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -460,9 +838,9 @@
    "lang": "en",
    "text": "The people snap: \"Arthur for king! No more delays!\"",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
@@ -478,9 +856,27 @@
    "lang": "en",
    "text": "And everyone kneels.",
    "add": {
-    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
-    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
-    "name": "hope"
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x03m",
+   "lang": "en",
+   "text": "In Malory's classic tale, outside a London church, a great stone appears, a sword in it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
    },
    "keep": true,
    "settings": {
