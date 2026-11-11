@@ -1,0 +1,6156 @@
+plan: {'tier': 'creator', 'character_count': 1068, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "z0122a", "lang": "zh", "text": "至于刘邦，他靠上厕所，躲过了一场暗杀。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z0122a.mp3", "bytes": 62318}
+{"name": "z0122b", "lang": "zh", "text": "至于刘邦，他靠上厕所，躲过了一场暗杀。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z0122b.mp3", "bytes": 65244}
+{"name": "z0122c", "lang": "zh", "text": "至于刘邦，他靠上厕所，躲过了一场暗杀。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z0122c.mp3", "bytes": 63990}
+{"name": "z01a", "lang": "zh", "text": "他靠上厕所，躲过了一场暗杀。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z01a.mp3", "bytes": 48526}
+{"name": "z02a", "lang": "zh", "text": "这顿饭叫鸿门宴。满屋刀剑，最后只死了一个人，还不在席上。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z02a.mp3", "bytes": 102025}
+{"name": "z02b", "lang": "zh", "text": "这顿饭叫鸿门宴。满屋刀剑，最后只死了一个人，还不在席上。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z02b.mp3", "bytes": 103278}
+{"name": "z03a", "lang": "zh", "text": "秦朝刚灭亡，刘邦抢先打下了都城。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z03a.mp3", "bytes": 57303}
+{"name": "z03b", "lang": "zh", "text": "秦朝刚灭亡，刘邦抢先打下了都城。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z03b.mp3", "bytes": 58557}
+{"name": "z04a", "lang": "zh", "text": "可项羽强得多：四十万大军，对他十万。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z04a.mp3", "bytes": 69006}
+{"name": "z04b", "lang": "zh", "text": "可项羽强得多：四十万大军，对他十万。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z04b.mp3", "bytes": 70260}
+{"name": "z05a", "lang": "zh", "text": "刘邦手下有个军官向项羽告密：“刘邦想称王。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z05a.mp3", "bytes": 74021}
+{"name": "z05b", "lang": "zh", "text": "刘邦手下有个军官向项羽告密：“刘邦想称王。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z05b.mp3", "bytes": 72767}
+{"name": "z06a", "lang": "zh", "text": "项羽大怒：“明天就打他！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z06a.mp3", "bytes": 48526}
+{"name": "z06b", "lang": "zh", "text": "项羽大怒：“明天就打他！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z06b.mp3", "bytes": 46018}
+{"name": "z07a", "lang": "zh", "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为庆家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z07a.mp3", "bytes": 84470}
+{"name": "z07b", "lang": "zh", "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为庆家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z07b.mp3", "bytes": 85724}
+{"name": "z07c", "lang": "zh", "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为亲家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z07c.mp3", "bytes": 81545}
+{"name": "z07d", "lang": "zh", "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为亲家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z07d.mp3", "bytes": 80291}
+{"name": "z08a", "lang": "zh", "text": "第二天一早，刘邦上门赔罪：“一定是有小人挑拨。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z08a.mp3", "bytes": 79037}
+{"name": "z08b", "lang": "zh", "text": "第二天一早，刘邦上门赔罪：“一定是有小人挑拨。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z08b.mp3", "bytes": 80291}
+{"name": "z09a", "lang": "zh", "text": "项羽张口就说：“是你手下曹无伤说的。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z09a.mp3", "bytes": 59811}
+{"name": "z09b", "lang": "zh", "text": "项羽张口就说：“是你手下曹无伤说的。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z09b.mp3", "bytes": 59811}
+{"name": "z09c", "lang": "zh", "text": "项羽张口就说：“是你手下曹吴伤说的。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z09c.mp3", "bytes": 61065}
+{"name": "z09d", "lang": "zh", "text": "项羽张口就说：“是你手下曹吴伤说的。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z09d.mp3", "bytes": 63990}
+{"name": "z10a", "lang": "zh", "text": "项羽留刘邦喝酒。可项羽的谋士范增，认定刘邦必须死。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z10a.mp3", "bytes": 91994}
+{"name": "z10b", "lang": "zh", "text": "项羽留刘邦喝酒。可项羽的谋士范增，认定刘邦必须死。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z10b.mp3", "bytes": 91994}
+{"name": "z11a", "lang": "zh", "text": "范增三次举起玉佩，催项羽动手，项羽没反应。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z11a.mp3", "bytes": 74021}
+{"name": "z11b", "lang": "zh", "text": "范增三次举起玉佩，催项羽动手，项羽没反应。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z11b.mp3", "bytes": 74021}
+{"name": "z12a", "lang": "zh", "text": "范增就叫人进来舞剑，想趁机刺死刘邦。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z12a.mp3", "bytes": 62318}
+{"name": "z12b", "lang": "zh", "text": "范增就叫人进来舞剑，想趁机刺死刘邦。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z12b.mp3", "bytes": 62318}
+{"name": "z13a", "lang": "zh", "text": "项羽的叔叔也下场舞剑，用身子挡着庆家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z13a.mp3", "bytes": 66498}
+{"name": "z13b", "lang": "zh", "text": "项羽的叔叔也下场舞剑，用身子挡着庆家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z13b.mp3", "bytes": 69006}
+{"name": "z13c", "lang": "zh", "text": "项羽的叔叔也下场舞剑，用身子挡着亲家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z13c.mp3", "bytes": 65244}
+{"name": "z13d", "lang": "zh", "text": "项羽的叔叔也下场舞剑，用身子挡着亲家。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z13d.mp3", "bytes": 69006}
+{"name": "z14a", "lang": "zh", "text": "刘邦的保镖樊快撞倒卫兵，冲了进来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z14a.mp3", "bytes": 57303}
+{"name": "z14b", "lang": "zh", "text": "刘邦的保镖樊快撞倒卫兵，冲了进来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z14b.mp3", "bytes": 54795}
+{"name": "z14c", "lang": "zh", "text": "刘邦的保镖樊哙撞倒卫兵，冲了进来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z14c.mp3", "bytes": 54795}
+{"name": "z14d", "lang": "zh", "text": "刘邦的保镖樊哙撞倒卫兵，冲了进来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z14d.mp3", "bytes": 57303}
+{"name": "z15a", "lang": "zh", "text": "项羽夸他是壮士，赏他一条猪腿。生的。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15a.mp3", "bytes": 69006}
+{"name": "z15b", "lang": "zh", "text": "项羽夸他是壮士，赏他一条猪腿。生的。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15b.mp3", "bytes": 69006}
+{"name": "z15p", "lang": "zh", "text": "项羽夸他是壮士，赏他一条猪腿。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15p.mp3", "bytes": 53541}
+{"name": "z15pb", "lang": "zh", "text": "项羽夸他是壮士，赏他一条猪腿。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15pb.mp3", "bytes": 54795}
+{"name": "z15q", "lang": "zh", "text": "生的。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15q.mp3", "bytes": 16343}
+{"name": "z15qb", "lang": "zh", "text": "生的。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15qb.mp3", "bytes": 16343}
+{"name": "z16a", "lang": "zh", "text": "刘邦起身去上厕所，把樊快也叫了出去。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z16a.mp3", "bytes": 59811}
+{"name": "z16b", "lang": "zh", "text": "刘邦起身去上厕所，把樊快也叫了出去。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z16b.mp3", "bytes": 62318}
+{"name": "z16c", "lang": "zh", "text": "刘邦起身去上厕所，把樊哙也叫了出去。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z16c.mp3", "bytes": 62318}
+{"name": "z16d", "lang": "zh", "text": "刘邦起身去上厕所，把樊哙也叫了出去。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z16d.mp3", "bytes": 61065}
+{"name": "z17a", "lang": "zh", "text": "刘邦说还没告辞。樊快说：“人为刀组，我为鱼肉，告什么辞！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z17a.mp3", "bytes": 108712}
+{"name": "z17b", "lang": "zh", "text": "刘邦说还没告辞。樊快说：“人为刀组，我为鱼肉，告什么辞！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z17b.mp3", "bytes": 109966}
+{"name": "z17c", "lang": "zh", "text": "刘邦说还没告辞。樊哙说：“人为刀俎，我为鱼肉，告什么辞！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z17c.mp3", "bytes": 109966}
+{"name": "z17d", "lang": "zh", "text": "刘邦说还没告辞。樊哙说：“人为刀俎，我为鱼肉，告什么辞！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z17d.mp3", "bytes": 109966}
+{"name": "z18a", "lang": "zh", "text": "刘邦丢下车队，只骑一匹马，抄小路回了军营。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z18a.mp3", "bytes": 70260}
+{"name": "z18b", "lang": "zh", "text": "刘邦丢下车队，只骑一匹马，抄小路回了军营。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z18b.mp3", "bytes": 70260}
+{"name": "z19a", "lang": "zh", "text": "等刘邦到了军营，他的谋士才进去说：“他喝多了。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z19a.mp3", "bytes": 75275}
+{"name": "z19b", "lang": "zh", "text": "等刘邦到了军营，他的谋士才进去说：“他喝多了。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z19b.mp3", "bytes": 76529}
+{"name": "z20a", "lang": "zh", "text": "刘邦回营第一件事：杀了曹无伤，那个告密的军官。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z20a.mp3", "bytes": 74021}
+{"name": "z20b", "lang": "zh", "text": "刘邦回营第一件事：杀了曹无伤，那个告密的军官。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z20b.mp3", "bytes": 71514}
+{"name": "z20c", "lang": "zh", "text": "刘邦回营第一件事：杀了曹吴伤，那个告密的军官。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z20c.mp3", "bytes": 74021}
+{"name": "z20d", "lang": "zh", "text": "刘邦回营第一件事：杀了曹吴伤，那个告密的军官。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z20d.mp3", "bytes": 72767}
+{"name": "z21a", "lang": "zh", "text": "而这个名字，是项羽自己说漏的。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z21a.mp3", "bytes": 49780}
+{"name": "z21b", "lang": "zh", "text": "而这个名字，是项羽自己说漏的。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z21b.mp3", "bytes": 48526}
+{"name": "z22a", "lang": "zh", "text": "至于刘邦，", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z22a.mp3", "bytes": 21358}
+removed kept voices: {'9DMBSOAnMDPiFAsz1ZGK': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "z0122a",
+  "lang": "zh",
+  "text": "至于刘邦，他靠上厕所，躲过了一场暗杀。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z0122a.mp3",
+  "bytes": 62318,
+  "words": [
+   [
+    "至",
+    0.0,
+    0.18
+   ],
+   [
+    "於",
+    0.18,
+    0.32
+   ],
+   [
+    "劉",
+    0.32,
+    0.5
+   ],
+   [
+    "邦,",
+    0.5,
+    0.8
+   ],
+   [
+    "他",
+    1.1,
+    1.22
+   ],
+   [
+    "靠",
+    1.22,
+    1.44
+   ],
+   [
+    "上",
+    1.44,
+    1.58
+   ],
+   [
+    "廁",
+    1.58,
+    1.78
+   ],
+   [
+    "所,",
+    1.78,
+    2.16
+   ],
+   [
+    "躲",
+    2.38,
+    2.5
+   ],
+   [
+    "過",
+    2.5,
+    2.64
+   ],
+   [
+    "了",
+    2.64,
+    2.76
+   ],
+   [
+    "一",
+    2.76,
+    2.86
+   ],
+   [
+    "場",
+    2.86,
+    3.0
+   ],
+   [
+    "暗",
+    3.0,
+    3.22
+   ],
+   [
+    "殺",
+    3.22,
+    3.44
+   ]
+  ],
+  "heard": "至於劉邦,他靠上廁所,躲過了一場暗殺",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.84
+ },
+ {
+  "name": "z0122b",
+  "lang": "zh",
+  "text": "至于刘邦，他靠上厕所，躲过了一场暗杀。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z0122b.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "至",
+    0.0,
+    0.18
+   ],
+   [
+    "於",
+    0.18,
+    0.32
+   ],
+   [
+    "劉",
+    0.32,
+    0.5
+   ],
+   [
+    "邦,",
+    0.5,
+    0.78
+   ],
+   [
+    "他",
+    1.22,
+    1.34
+   ],
+   [
+    "靠",
+    1.34,
+    1.52
+   ],
+   [
+    "上",
+    1.52,
+    1.68
+   ],
+   [
+    "廁",
+    1.68,
+    1.9
+   ],
+   [
+    "所,",
+    1.9,
+    2.26
+   ],
+   [
+    "躲",
+    2.48,
+    2.6
+   ],
+   [
+    "過",
+    2.6,
+    2.76
+   ],
+   [
+    "了",
+    2.76,
+    2.88
+   ],
+   [
+    "一",
+    2.88,
+    2.98
+   ],
+   [
+    "場",
+    2.98,
+    3.12
+   ],
+   [
+    "暗",
+    3.12,
+    3.36
+   ],
+   [
+    "殺",
+    3.36,
+    3.58
+   ]
+  ],
+  "heard": "至於劉邦,他靠上廁所,躲過了一場暗殺",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.0
+ },
+ {
+  "name": "z0122c",
+  "lang": "zh",
+  "text": "至于刘邦，他靠上厕所，躲过了一场暗杀。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z0122c.mp3",
+  "bytes": 63990,
+  "words": [
+   [
+    "至",
+    0.0,
+    0.2
+   ],
+   [
+    "於",
+    0.2,
+    0.34
+   ],
+   [
+    "劉",
+    0.34,
+    0.52
+   ],
+   [
+    "邦,",
+    0.52,
+    1.08
+   ],
+   [
+    "他",
+    1.2,
+    1.32
+   ],
+   [
+    "靠",
+    1.32,
+    1.52
+   ],
+   [
+    "上",
+    1.52,
+    1.66
+   ],
+   [
+    "廁",
+    1.66,
+    1.88
+   ],
+   [
+    "所,",
+    1.88,
+    2.24
+   ],
+   [
+    "躲",
+    2.44,
+    2.56
+   ],
+   [
+    "過",
+    2.56,
+    2.74
+   ],
+   [
+    "了",
+    2.74,
+    2.86
+   ],
+   [
+    "一",
+    2.86,
+    2.94
+   ],
+   [
+    "場",
+    2.94,
+    3.1
+   ],
+   [
+    "暗",
+    3.1,
+    3.3
+   ],
+   [
+    "殺",
+    3.3,
+    3.54
+   ]
+  ],
+  "heard": "至於劉邦,他靠上廁所,躲過了一場暗殺",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.92
+ },
+ {
+  "name": "z01a",
+  "lang": "zh",
+  "text": "他靠上厕所，躲过了一场暗杀。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z01a.mp3",
+  "bytes": 48526,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.14
+   ],
+   [
+    "靠",
+    0.14,
+    0.32
+   ],
+   [
+    "上",
+    0.32,
+    0.5
+   ],
+   [
+    "廁",
+    0.5,
+    0.72
+   ],
+   [
+    "所,",
+    0.72,
+    1.06
+   ],
+   [
+    "躲",
+    1.32,
+    1.54
+   ],
+   [
+    "過",
+    1.54,
+    1.68
+   ],
+   [
+    "了",
+    1.68,
+    1.8
+   ],
+   [
+    "一",
+    1.8,
+    1.92
+   ],
+   [
+    "場",
+    1.92,
+    2.06
+   ],
+   [
+    "暗",
+    2.06,
+    2.3
+   ],
+   [
+    "殺",
+    2.3,
+    2.52
+   ]
+  ],
+  "heard": "他靠上廁所,躲過了一場暗殺",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.96
+ },
+ {
+  "name": "z02a",
+  "lang": "zh",
+  "text": "这顿饭叫鸿门宴。满屋刀剑，最后只死了一个人，还不在席上。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z02a.mp3",
+  "bytes": 102025,
+  "words": [
+   [
+    "这",
+    0.0,
+    0.16
+   ],
+   [
+    "顿",
+    0.16,
+    0.32
+   ],
+   [
+    "饭",
+    0.32,
+    0.6
+   ],
+   [
+    "叫",
+    0.6,
+    0.78
+   ],
+   [
+    "红",
+    0.78,
+    1.12
+   ],
+   [
+    "门",
+    1.12,
+    1.38
+   ],
+   [
+    "宴",
+    1.38,
+    1.62
+   ],
+   [
+    "满",
+    1.62,
+    2.34
+   ],
+   [
+    "屋",
+    2.34,
+    2.6
+   ],
+   [
+    "刀",
+    2.6,
+    2.8
+   ],
+   [
+    "剑",
+    2.8,
+    3.12
+   ],
+   [
+    "最",
+    3.12,
+    3.66
+   ],
+   [
+    "后",
+    3.66,
+    3.86
+   ],
+   [
+    "只",
+    3.86,
+    4.02
+   ],
+   [
+    "死",
+    4.02,
+    4.24
+   ],
+   [
+    "了",
+    4.24,
+    4.38
+   ],
+   [
+    "一个",
+    4.38,
+    4.62
+   ],
+   [
+    "人",
+    4.62,
+    4.94
+   ],
+   [
+    "还",
+    4.94,
+    5.34
+   ],
+   [
+    "不",
+    5.34,
+    5.48
+   ],
+   [
+    "再",
+    5.48,
+    5.62
+   ],
+   [
+    "洗",
+    5.62,
+    5.86
+   ],
+   [
+    "上",
+    5.86,
+    6.08
+   ]
+  ],
+  "heard": "这顿饭叫红门宴满屋刀剑最后只死了一个人还不再洗上",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.32
+ },
+ {
+  "name": "z02b",
+  "lang": "zh",
+  "text": "这顿饭叫鸿门宴。满屋刀剑，最后只死了一个人，还不在席上。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z02b.mp3",
+  "bytes": 103278,
+  "words": [
+   [
+    "这",
+    0.0,
+    0.14
+   ],
+   [
+    "顿",
+    0.14,
+    0.32
+   ],
+   [
+    "饭",
+    0.32,
+    0.6
+   ],
+   [
+    "叫",
+    0.6,
+    0.8
+   ],
+   [
+    "红",
+    0.8,
+    1.16
+   ],
+   [
+    "门",
+    1.16,
+    1.42
+   ],
+   [
+    "宴",
+    1.42,
+    1.68
+   ],
+   [
+    "满",
+    1.68,
+    2.42
+   ],
+   [
+    "屋",
+    2.42,
+    2.62
+   ],
+   [
+    "刀",
+    2.62,
+    2.82
+   ],
+   [
+    "剑",
+    2.82,
+    3.3
+   ],
+   [
+    "最",
+    3.3,
+    3.6
+   ],
+   [
+    "后",
+    3.6,
+    3.78
+   ],
+   [
+    "只",
+    3.78,
+    3.96
+   ],
+   [
+    "死",
+    3.96,
+    4.16
+   ],
+   [
+    "了",
+    4.16,
+    4.3
+   ],
+   [
+    "一个",
+    4.3,
+    4.54
+   ],
+   [
+    "人",
+    4.54,
+    4.86
+   ],
+   [
+    "还",
+    4.86,
+    5.32
+   ],
+   [
+    "不",
+    5.32,
+    5.5
+   ],
+   [
+    "再",
+    5.5,
+    5.66
+   ],
+   [
+    "洗",
+    5.66,
+    5.88
+   ],
+   [
+    "上",
+    5.88,
+    6.1
+   ]
+  ],
+  "heard": "这顿饭叫红门宴满屋刀剑最后只死了一个人还不再洗上",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.4
+ },
+ {
+  "name": "z03a",
+  "lang": "zh",
+  "text": "秦朝刚灭亡，刘邦抢先打下了都城。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z03a.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.22
+   ],
+   [
+    "朝",
+    0.22,
+    0.42
+   ],
+   [
+    "剛",
+    0.42,
+    0.62
+   ],
+   [
+    "滅",
+    0.62,
+    0.86
+   ],
+   [
+    "亡,",
+    0.86,
+    1.14
+   ],
+   [
+    "劉",
+    1.5,
+    1.62
+   ],
+   [
+    "邦",
+    1.62,
+    1.78
+   ],
+   [
+    "搶",
+    1.78,
+    2.1
+   ],
+   [
+    "先",
+    2.1,
+    2.3
+   ],
+   [
+    "打",
+    2.3,
+    2.54
+   ],
+   [
+    "下",
+    2.54,
+    2.68
+   ],
+   [
+    "了",
+    2.68,
+    2.8
+   ],
+   [
+    "都",
+    2.8,
+    2.94
+   ],
+   [
+    "城",
+    2.94,
+    3.16
+   ]
+  ],
+  "heard": "秦朝剛滅亡,劉邦搶先打下了都城",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "z03b",
+  "lang": "zh",
+  "text": "秦朝刚灭亡，刘邦抢先打下了都城。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z03b.mp3",
+  "bytes": 58557,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.22
+   ],
+   [
+    "朝",
+    0.22,
+    0.42
+   ],
+   [
+    "剛",
+    0.42,
+    0.6
+   ],
+   [
+    "滅",
+    0.6,
+    0.84
+   ],
+   [
+    "亡,",
+    0.84,
+    1.12
+   ],
+   [
+    "劉",
+    1.48,
+    1.6
+   ],
+   [
+    "邦",
+    1.6,
+    1.78
+   ],
+   [
+    "搶",
+    1.78,
+    2.1
+   ],
+   [
+    "先",
+    2.1,
+    2.32
+   ],
+   [
+    "打",
+    2.32,
+    2.56
+   ],
+   [
+    "下",
+    2.56,
+    2.7
+   ],
+   [
+    "了",
+    2.7,
+    2.84
+   ],
+   [
+    "都",
+    2.84,
+    2.96
+   ],
+   [
+    "城",
+    2.96,
+    3.2
+   ]
+  ],
+  "heard": "秦朝剛滅亡,劉邦搶先打下了都城",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.6
+ },
+ {
+  "name": "z04a",
+  "lang": "zh",
+  "text": "可项羽强得多：四十万大军，对他十万。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z04a.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "可",
+    0.0,
+    0.14
+   ],
+   [
+    "像",
+    0.14,
+    0.36
+   ],
+   [
+    "羽",
+    0.36,
+    0.58
+   ],
+   [
+    "強",
+    0.58,
+    0.86
+   ],
+   [
+    "的",
+    0.86,
+    1.02
+   ],
+   [
+    "多,",
+    1.02,
+    1.24
+   ],
+   [
+    "四",
+    1.62,
+    2.0
+   ],
+   [
+    "十",
+    2.0,
+    2.18
+   ],
+   [
+    "萬",
+    2.18,
+    2.34
+   ],
+   [
+    "大",
+    2.34,
+    2.52
+   ],
+   [
+    "軍",
+    2.52,
+    2.78
+   ],
+   [
+    "對",
+    2.78,
+    3.18
+   ],
+   [
+    "他",
+    3.18,
+    3.36
+   ],
+   [
+    "十",
+    3.36,
+    3.66
+   ],
+   [
+    "萬",
+    3.66,
+    3.9
+   ]
+  ],
+  "heard": "可像羽強的多,四十萬大軍對他十萬",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.24
+ },
+ {
+  "name": "z04b",
+  "lang": "zh",
+  "text": "可项羽强得多：四十万大军，对他十万。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z04b.mp3",
+  "bytes": 70260,
+  "words": [
+   [
+    "可",
+    0.0,
+    0.14
+   ],
+   [
+    "像",
+    0.14,
+    0.38
+   ],
+   [
+    "宇",
+    0.38,
+    0.6
+   ],
+   [
+    "強",
+    0.6,
+    0.88
+   ],
+   [
+    "的",
+    0.88,
+    1.04
+   ],
+   [
+    "多,",
+    1.04,
+    1.26
+   ],
+   [
+    "40",
+    1.6,
+    2.04
+   ],
+   [
+    "萬",
+    2.04,
+    2.32
+   ],
+   [
+    "大",
+    2.32,
+    2.52
+   ],
+   [
+    "軍",
+    2.52,
+    2.78
+   ],
+   [
+    "對",
+    2.78,
+    3.18
+   ],
+   [
+    "他",
+    3.18,
+    3.36
+   ],
+   [
+    "10",
+    3.36,
+    3.7
+   ],
+   [
+    "萬",
+    3.7,
+    3.92
+   ]
+  ],
+  "heard": "可像宇強的多,40萬大軍對他10萬",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.32
+ },
+ {
+  "name": "z05a",
+  "lang": "zh",
+  "text": "刘邦手下有个军官向项羽告密：“刘邦想称王。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z05a.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.2
+   ],
+   [
+    "邦",
+    0.2,
+    0.34
+   ],
+   [
+    "手",
+    0.34,
+    0.54
+   ],
+   [
+    "下",
+    0.54,
+    0.74
+   ],
+   [
+    "有",
+    0.74,
+    0.9
+   ],
+   [
+    "個",
+    0.9,
+    0.98
+   ],
+   [
+    "軍",
+    0.98,
+    1.16
+   ],
+   [
+    "官",
+    1.16,
+    1.4
+   ],
+   [
+    "向",
+    1.4,
+    1.76
+   ],
+   [
+    "項",
+    1.76,
+    2.02
+   ],
+   [
+    "羽",
+    2.02,
+    2.16
+   ],
+   [
+    "告",
+    2.16,
+    2.34
+   ],
+   [
+    "密",
+    2.34,
+    2.58
+   ],
+   [
+    "劉",
+    3.1,
+    3.34
+   ],
+   [
+    "邦",
+    3.34,
+    3.56
+   ],
+   [
+    "想",
+    3.56,
+    3.78
+   ],
+   [
+    "稱",
+    3.78,
+    4.0
+   ],
+   [
+    "王",
+    4.0,
+    4.26
+   ]
+  ],
+  "heard": "劉邦手下有個軍官向項羽告密劉邦想稱王",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "z05b",
+  "lang": "zh",
+  "text": "刘邦手下有个军官向项羽告密：“刘邦想称王。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z05b.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.16
+   ],
+   [
+    "邦",
+    0.16,
+    0.3
+   ],
+   [
+    "手",
+    0.3,
+    0.48
+   ],
+   [
+    "下",
+    0.48,
+    0.68
+   ],
+   [
+    "有",
+    0.68,
+    0.84
+   ],
+   [
+    "個",
+    0.84,
+    0.92
+   ],
+   [
+    "軍",
+    0.92,
+    1.1
+   ],
+   [
+    "官",
+    1.1,
+    1.34
+   ],
+   [
+    "向",
+    1.34,
+    1.68
+   ],
+   [
+    "項",
+    1.68,
+    1.92
+   ],
+   [
+    "羽",
+    1.92,
+    2.08
+   ],
+   [
+    "告",
+    2.08,
+    2.26
+   ],
+   [
+    "密",
+    2.26,
+    2.5
+   ],
+   [
+    "劉",
+    2.94,
+    3.32
+   ],
+   [
+    "邦",
+    3.32,
+    3.52
+   ],
+   [
+    "想",
+    3.52,
+    3.7
+   ],
+   [
+    "稱",
+    3.7,
+    3.92
+   ],
+   [
+    "王",
+    3.92,
+    4.2
+   ]
+  ],
+  "heard": "劉邦手下有個軍官向項羽告密劉邦想稱王",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.48
+ },
+ {
+  "name": "z06a",
+  "lang": "zh",
+  "text": "项羽大怒：“明天就打他！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z06a.mp3",
+  "bytes": 48526,
+  "words": [
+   [
+    "相",
+    0.0,
+    0.3
+   ],
+   [
+    "遇",
+    0.3,
+    0.5
+   ],
+   [
+    "大",
+    0.5,
+    0.8
+   ],
+   [
+    "怒",
+    0.8,
+    1.06
+   ],
+   [
+    "明",
+    1.5,
+    1.7
+   ],
+   [
+    "天",
+    1.7,
+    1.92
+   ],
+   [
+    "就",
+    1.92,
+    2.04
+   ],
+   [
+    "打",
+    2.04,
+    2.28
+   ],
+   [
+    "他",
+    2.28,
+    2.44
+   ]
+  ],
+  "heard": "相遇大怒 明天就打他",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.96
+ },
+ {
+  "name": "z06b",
+  "lang": "zh",
+  "text": "项羽大怒：“明天就打他！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z06b.mp3",
+  "bytes": 46018,
+  "words": [
+   [
+    "相",
+    0.0,
+    0.3
+   ],
+   [
+    "遇",
+    0.3,
+    0.5
+   ],
+   [
+    "大",
+    0.5,
+    0.78
+   ],
+   [
+    "怒",
+    0.78,
+    1.04
+   ],
+   [
+    "明",
+    1.04,
+    1.68
+   ],
+   [
+    "天",
+    1.68,
+    1.94
+   ],
+   [
+    "就",
+    1.94,
+    2.06
+   ],
+   [
+    "打",
+    2.06,
+    2.26
+   ],
+   [
+    "他",
+    2.26,
+    2.44
+   ]
+  ],
+  "heard": "相遇大怒明天就打他",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.8
+ },
+ {
+  "name": "z07a",
+  "lang": "zh",
+  "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为庆家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z07a.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "當",
+    0.0,
+    0.16
+   ],
+   [
+    "晚,",
+    0.16,
+    0.38
+   ],
+   [
+    "項",
+    0.66,
+    0.88
+   ],
+   [
+    "羽",
+    0.88,
+    1.02
+   ],
+   [
+    "的",
+    1.02,
+    1.12
+   ],
+   [
+    "叔",
+    1.12,
+    1.32
+   ],
+   [
+    "叔",
+    1.32,
+    1.5
+   ],
+   [
+    "跑",
+    1.5,
+    1.68
+   ],
+   [
+    "來",
+    1.68,
+    1.8
+   ],
+   [
+    "報",
+    1.8,
+    1.96
+   ],
+   [
+    "信",
+    1.96,
+    2.2
+   ],
+   [
+    "劉",
+    2.2,
+    2.92
+   ],
+   [
+    "邦",
+    2.92,
+    3.08
+   ],
+   [
+    "當",
+    3.08,
+    3.3
+   ],
+   [
+    "場",
+    3.3,
+    3.56
+   ],
+   [
+    "和",
+    3.56,
+    3.72
+   ],
+   [
+    "他",
+    3.72,
+    3.86
+   ],
+   [
+    "約",
+    3.86,
+    4.08
+   ],
+   [
+    "為",
+    4.08,
+    4.36
+   ],
+   [
+    "親",
+    4.36,
+    4.62
+   ],
+   [
+    "家",
+    4.62,
+    4.86
+   ]
+  ],
+  "heard": "當晚,項羽的叔叔跑來報信劉邦當場和他約為親家",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.2
+ },
+ {
+  "name": "z07b",
+  "lang": "zh",
+  "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为庆家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z07b.mp3",
+  "bytes": 85724,
+  "words": [
+   [
+    "當",
+    0.0,
+    0.16
+   ],
+   [
+    "晚,",
+    0.16,
+    0.4
+   ],
+   [
+    "項",
+    0.68,
+    0.88
+   ],
+   [
+    "羽",
+    0.88,
+    1.02
+   ],
+   [
+    "的",
+    1.02,
+    1.1
+   ],
+   [
+    "叔",
+    1.1,
+    1.32
+   ],
+   [
+    "叔",
+    1.32,
+    1.5
+   ],
+   [
+    "跑",
+    1.5,
+    1.68
+   ],
+   [
+    "來",
+    1.68,
+    1.8
+   ],
+   [
+    "報",
+    1.8,
+    1.96
+   ],
+   [
+    "信",
+    1.96,
+    2.2
+   ],
+   [
+    "劉",
+    2.76,
+    2.96
+   ],
+   [
+    "邦",
+    2.96,
+    3.12
+   ],
+   [
+    "當",
+    3.12,
+    3.34
+   ],
+   [
+    "場",
+    3.34,
+    3.58
+   ],
+   [
+    "和",
+    3.58,
+    3.76
+   ],
+   [
+    "他",
+    3.76,
+    3.9
+   ],
+   [
+    "約",
+    3.9,
+    4.1
+   ],
+   [
+    "為",
+    4.1,
+    4.38
+   ],
+   [
+    "親",
+    4.38,
+    4.64
+   ],
+   [
+    "家",
+    4.64,
+    4.92
+   ]
+  ],
+  "heard": "當晚,項羽的叔叔跑來報信劉邦當場和他約為親家",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.28
+ },
+ {
+  "name": "z07c",
+  "lang": "zh",
+  "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为亲家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z07c.mp3",
+  "bytes": 81545,
+  "words": [
+   [
+    "當",
+    0.0,
+    0.16
+   ],
+   [
+    "晚,",
+    0.16,
+    0.4
+   ],
+   [
+    "項",
+    0.64,
+    0.88
+   ],
+   [
+    "羽",
+    0.88,
+    1.02
+   ],
+   [
+    "的",
+    1.02,
+    1.1
+   ],
+   [
+    "叔",
+    1.1,
+    1.32
+   ],
+   [
+    "叔",
+    1.32,
+    1.5
+   ],
+   [
+    "跑",
+    1.5,
+    1.7
+   ],
+   [
+    "來",
+    1.7,
+    1.82
+   ],
+   [
+    "報",
+    1.82,
+    1.96
+   ],
+   [
+    "信,",
+    1.96,
+    2.22
+   ],
+   [
+    "劉",
+    2.72,
+    2.96
+   ],
+   [
+    "邦",
+    2.96,
+    3.12
+   ],
+   [
+    "當",
+    3.12,
+    3.34
+   ],
+   [
+    "場",
+    3.34,
+    3.6
+   ],
+   [
+    "和",
+    3.6,
+    3.78
+   ],
+   [
+    "他",
+    3.78,
+    3.9
+   ],
+   [
+    "約",
+    3.9,
+    4.08
+   ],
+   [
+    "為",
+    4.08,
+    4.26
+   ],
+   [
+    "親",
+    4.26,
+    4.48
+   ],
+   [
+    "家",
+    4.48,
+    4.74
+   ]
+  ],
+  "heard": "當晚,項羽的叔叔跑來報信,劉邦當場和他約為親家",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.04
+ },
+ {
+  "name": "z07d",
+  "lang": "zh",
+  "text": "当晚，项羽的叔叔跑来报信，刘邦当场和他约为亲家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z07d.mp3",
+  "bytes": 80291,
+  "words": [
+   [
+    "當",
+    0.0,
+    0.16
+   ],
+   [
+    "晚,",
+    0.16,
+    0.4
+   ],
+   [
+    "向",
+    0.7,
+    0.86
+   ],
+   [
+    "宇",
+    0.86,
+    1.02
+   ],
+   [
+    "的",
+    1.02,
+    1.12
+   ],
+   [
+    "叔",
+    1.12,
+    1.32
+   ],
+   [
+    "叔",
+    1.32,
+    1.5
+   ],
+   [
+    "跑",
+    1.5,
+    1.66
+   ],
+   [
+    "來",
+    1.66,
+    1.78
+   ],
+   [
+    "報",
+    1.78,
+    1.94
+   ],
+   [
+    "信,",
+    1.94,
+    2.18
+   ],
+   [
+    "劉",
+    2.76,
+    2.92
+   ],
+   [
+    "邦",
+    2.92,
+    3.06
+   ],
+   [
+    "當",
+    3.06,
+    3.28
+   ],
+   [
+    "場",
+    3.28,
+    3.52
+   ],
+   [
+    "和",
+    3.52,
+    3.68
+   ],
+   [
+    "他",
+    3.68,
+    3.82
+   ],
+   [
+    "約",
+    3.82,
+    3.98
+   ],
+   [
+    "為",
+    3.98,
+    4.16
+   ],
+   [
+    "親",
+    4.16,
+    4.38
+   ],
+   [
+    "家",
+    4.38,
+    4.62
+   ]
+  ],
+  "heard": "當晚,向宇的叔叔跑來報信,劉邦當場和他約為親家",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.96
+ },
+ {
+  "name": "z08a",
+  "lang": "zh",
+  "text": "第二天一早，刘邦上门赔罪：“一定是有小人挑拨。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z08a.mp3",
+  "bytes": 79037,
+  "words": [
+   [
+    "第二",
+    0.0,
+    0.18
+   ],
+   [
+    "天",
+    0.18,
+    0.42
+   ],
+   [
+    "一",
+    0.42,
+    0.56
+   ],
+   [
+    "早,",
+    0.56,
+    0.78
+   ],
+   [
+    "劉",
+    1.12,
+    1.26
+   ],
+   [
+    "邦",
+    1.26,
+    1.42
+   ],
+   [
+    "上",
+    1.42,
+    1.62
+   ],
+   [
+    "門",
+    1.62,
+    1.8
+   ],
+   [
+    "陪",
+    1.8,
+    2.04
+   ],
+   [
+    "罪",
+    2.04,
+    2.38
+   ],
+   [
+    "一定",
+    2.92,
+    3.14
+   ],
+   [
+    "是",
+    3.14,
+    3.38
+   ],
+   [
+    "有",
+    3.38,
+    3.52
+   ],
+   [
+    "小",
+    3.52,
+    3.78
+   ],
+   [
+    "人",
+    3.78,
+    3.98
+   ],
+   [
+    "挑",
+    3.98,
+    4.2
+   ],
+   [
+    "撥",
+    4.2,
+    4.46
+   ]
+  ],
+  "heard": "第二天一早,劉邦上門陪罪一定是有小人挑撥",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 4.88
+ },
+ {
+  "name": "z08b",
+  "lang": "zh",
+  "text": "第二天一早，刘邦上门赔罪：“一定是有小人挑拨。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z08b.mp3",
+  "bytes": 80291,
+  "words": [
+   [
+    "第二",
+    0.0,
+    0.18
+   ],
+   [
+    "天",
+    0.18,
+    0.4
+   ],
+   [
+    "一",
+    0.4,
+    0.56
+   ],
+   [
+    "早,",
+    0.56,
+    0.78
+   ],
+   [
+    "劉",
+    1.12,
+    1.3
+   ],
+   [
+    "邦",
+    1.3,
+    1.46
+   ],
+   [
+    "上",
+    1.46,
+    1.68
+   ],
+   [
+    "門",
+    1.68,
+    1.88
+   ],
+   [
+    "陪",
+    1.88,
+    2.14
+   ],
+   [
+    "罪",
+    2.14,
+    2.54
+   ],
+   [
+    "一定",
+    2.54,
+    3.18
+   ],
+   [
+    "是",
+    3.18,
+    3.42
+   ],
+   [
+    "有",
+    3.42,
+    3.56
+   ],
+   [
+    "小",
+    3.56,
+    3.82
+   ],
+   [
+    "人",
+    3.82,
+    4.02
+   ],
+   [
+    "挑",
+    4.02,
+    4.26
+   ],
+   [
+    "撥",
+    4.26,
+    4.52
+   ]
+  ],
+  "heard": "第二天一早,劉邦上門陪罪一定是有小人挑撥",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.96
+ },
+ {
+  "name": "z09a",
+  "lang": "zh",
+  "text": "项羽张口就说：“是你手下曹无伤说的。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z09a.mp3",
+  "bytes": 59811,
+  "words": [
+   [
+    "像",
+    0.0,
+    0.24
+   ],
+   [
+    "與",
+    0.24,
+    0.38
+   ],
+   [
+    "張",
+    0.38,
+    0.58
+   ],
+   [
+    "口",
+    0.58,
+    0.78
+   ],
+   [
+    "就",
+    0.78,
+    0.94
+   ],
+   [
+    "說,",
+    0.94,
+    1.18
+   ],
+   [
+    "是",
+    1.6,
+    1.84
+   ],
+   [
+    "你",
+    1.84,
+    1.96
+   ],
+   [
+    "手",
+    1.96,
+    2.16
+   ],
+   [
+    "下",
+    2.16,
+    2.34
+   ],
+   [
+    "曹",
+    2.34,
+    2.62
+   ],
+   [
+    "無",
+    2.62,
+    2.78
+   ],
+   [
+    "傷",
+    2.78,
+    2.98
+   ],
+   [
+    "說",
+    2.98,
+    3.24
+   ],
+   [
+    "的",
+    3.24,
+    3.4
+   ]
+  ],
+  "heard": "像與張口就說,是你手下曹無傷說的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.68
+ },
+ {
+  "name": "z09b",
+  "lang": "zh",
+  "text": "项羽张口就说：“是你手下曹无伤说的。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z09b.mp3",
+  "bytes": 59811,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.38
+   ],
+   [
+    "張",
+    0.38,
+    0.56
+   ],
+   [
+    "口",
+    0.56,
+    0.78
+   ],
+   [
+    "就",
+    0.78,
+    0.94
+   ],
+   [
+    "說",
+    0.94,
+    1.16
+   ],
+   [
+    "是",
+    1.16,
+    1.88
+   ],
+   [
+    "你",
+    1.88,
+    2.02
+   ],
+   [
+    "手",
+    2.02,
+    2.22
+   ],
+   [
+    "下",
+    2.22,
+    2.42
+   ],
+   [
+    "曹",
+    2.42,
+    2.68
+   ],
+   [
+    "烏",
+    2.68,
+    2.8
+   ],
+   [
+    "商",
+    2.8,
+    2.98
+   ],
+   [
+    "說",
+    2.98,
+    3.22
+   ],
+   [
+    "的",
+    3.22,
+    3.38
+   ]
+  ],
+  "heard": "向宇張口就說是你手下曹烏商說的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.68
+ },
+ {
+  "name": "z09c",
+  "lang": "zh",
+  "text": "项羽张口就说：“是你手下曹吴伤说的。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z09c.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.38
+   ],
+   [
+    "張",
+    0.38,
+    0.56
+   ],
+   [
+    "口",
+    0.56,
+    0.78
+   ],
+   [
+    "就",
+    0.78,
+    0.92
+   ],
+   [
+    "說,",
+    0.92,
+    1.16
+   ],
+   [
+    "是",
+    1.6,
+    1.84
+   ],
+   [
+    "你",
+    1.84,
+    1.96
+   ],
+   [
+    "手",
+    1.96,
+    2.16
+   ],
+   [
+    "下",
+    2.16,
+    2.36
+   ],
+   [
+    "曹",
+    2.36,
+    2.66
+   ],
+   [
+    "吳",
+    2.66,
+    2.82
+   ],
+   [
+    "商",
+    2.82,
+    3.02
+   ],
+   [
+    "說",
+    3.02,
+    3.26
+   ],
+   [
+    "的",
+    3.26,
+    3.42
+   ]
+  ],
+  "heard": "向宇張口就說,是你手下曹吳商說的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.76
+ },
+ {
+  "name": "z09d",
+  "lang": "zh",
+  "text": "项羽张口就说：“是你手下曹吴伤说的。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z09d.mp3",
+  "bytes": 63990,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.38
+   ],
+   [
+    "張",
+    0.38,
+    0.56
+   ],
+   [
+    "口",
+    0.56,
+    0.78
+   ],
+   [
+    "就",
+    0.78,
+    0.92
+   ],
+   [
+    "說",
+    0.92,
+    1.18
+   ],
+   [
+    "是",
+    1.74,
+    1.98
+   ],
+   [
+    "你",
+    1.98,
+    2.1
+   ],
+   [
+    "手",
+    2.1,
+    2.3
+   ],
+   [
+    "下",
+    2.3,
+    2.5
+   ],
+   [
+    "曹",
+    2.5,
+    2.8
+   ],
+   [
+    "吳",
+    2.8,
+    2.98
+   ],
+   [
+    "商",
+    2.98,
+    3.18
+   ],
+   [
+    "說",
+    3.18,
+    3.4
+   ],
+   [
+    "的",
+    3.4,
+    3.58
+   ]
+  ],
+  "heard": "向宇張口就說是你手下曹吳商說的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.92
+ },
+ {
+  "name": "z10a",
+  "lang": "zh",
+  "text": "项羽留刘邦喝酒。可项羽的谋士范增，认定刘邦必须死。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z10a.mp3",
+  "bytes": 91994,
+  "words": [
+   [
+    "項",
+    0.0,
+    0.26
+   ],
+   [
+    "羽",
+    0.26,
+    0.46
+   ],
+   [
+    "留",
+    0.46,
+    0.7
+   ],
+   [
+    "劉",
+    0.7,
+    0.92
+   ],
+   [
+    "邦",
+    0.92,
+    1.06
+   ],
+   [
+    "喝",
+    1.06,
+    1.3
+   ],
+   [
+    "酒",
+    1.3,
+    1.56
+   ],
+   [
+    "可",
+    1.56,
+    2.22
+   ],
+   [
+    "項",
+    2.22,
+    2.48
+   ],
+   [
+    "羽",
+    2.48,
+    2.62
+   ],
+   [
+    "的",
+    2.62,
+    2.7
+   ],
+   [
+    "謀",
+    2.7,
+    2.92
+   ],
+   [
+    "事",
+    2.92,
+    3.12
+   ],
+   [
+    "犯",
+    3.12,
+    3.36
+   ],
+   [
+    "增",
+    3.36,
+    3.68
+   ],
+   [
+    "認",
+    3.68,
+    4.04
+   ],
+   [
+    "定",
+    4.04,
+    4.2
+   ],
+   [
+    "劉",
+    4.2,
+    4.42
+   ],
+   [
+    "邦",
+    4.42,
+    4.64
+   ],
+   [
+    "必",
+    4.64,
+    4.92
+   ],
+   [
+    "須",
+    4.92,
+    5.16
+   ],
+   [
+    "死",
+    5.16,
+    5.4
+   ]
+  ],
+  "heard": "項羽留劉邦喝酒可項羽的謀事犯增認定劉邦必須死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.68
+ },
+ {
+  "name": "z10b",
+  "lang": "zh",
+  "text": "项羽留刘邦喝酒。可项羽的谋士范增，认定刘邦必须死。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z10b.mp3",
+  "bytes": 91994,
+  "words": [
+   [
+    "項",
+    0.0,
+    0.26
+   ],
+   [
+    "羽",
+    0.26,
+    0.5
+   ],
+   [
+    "留",
+    0.5,
+    0.72
+   ],
+   [
+    "劉",
+    0.72,
+    0.96
+   ],
+   [
+    "邦",
+    0.96,
+    1.08
+   ],
+   [
+    "喝",
+    1.08,
+    1.34
+   ],
+   [
+    "酒",
+    1.34,
+    1.58
+   ],
+   [
+    "可",
+    1.58,
+    2.26
+   ],
+   [
+    "項",
+    2.26,
+    2.5
+   ],
+   [
+    "羽",
+    2.5,
+    2.64
+   ],
+   [
+    "的",
+    2.64,
+    2.7
+   ],
+   [
+    "謀",
+    2.7,
+    2.9
+   ],
+   [
+    "勢",
+    2.9,
+    3.12
+   ],
+   [
+    "犯",
+    3.12,
+    3.36
+   ],
+   [
+    "增",
+    3.36,
+    3.7
+   ],
+   [
+    "認",
+    3.7,
+    4.04
+   ],
+   [
+    "定",
+    4.04,
+    4.2
+   ],
+   [
+    "劉",
+    4.2,
+    4.42
+   ],
+   [
+    "邦",
+    4.42,
+    4.64
+   ],
+   [
+    "必",
+    4.64,
+    4.92
+   ],
+   [
+    "須",
+    4.92,
+    5.16
+   ],
+   [
+    "死",
+    5.16,
+    5.4
+   ]
+  ],
+  "heard": "項羽留劉邦喝酒可項羽的謀勢犯增認定劉邦必須死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.68
+ },
+ {
+  "name": "z11a",
+  "lang": "zh",
+  "text": "范增三次举起玉佩，催项羽动手，项羽没反应。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z11a.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "范",
+    0.0,
+    0.18
+   ],
+   [
+    "征",
+    0.18,
+    0.4
+   ],
+   [
+    "三",
+    0.4,
+    0.64
+   ],
+   [
+    "次",
+    0.64,
+    0.9
+   ],
+   [
+    "举",
+    0.9,
+    1.08
+   ],
+   [
+    "起",
+    1.08,
+    1.26
+   ],
+   [
+    "欲",
+    1.26,
+    1.46
+   ],
+   [
+    "配,",
+    1.46,
+    1.66
+   ],
+   [
+    "催",
+    1.96,
+    2.08
+   ],
+   [
+    "向",
+    2.08,
+    2.26
+   ],
+   [
+    "于",
+    2.26,
+    2.42
+   ],
+   [
+    "动",
+    2.42,
+    2.58
+   ],
+   [
+    "手",
+    2.58,
+    2.82
+   ],
+   [
+    "向",
+    3.32,
+    3.58
+   ],
+   [
+    "于",
+    3.58,
+    3.72
+   ],
+   [
+    "没",
+    3.72,
+    3.86
+   ],
+   [
+    "反",
+    3.86,
+    4.08
+   ],
+   [
+    "应",
+    4.08,
+    4.3
+   ]
+  ],
+  "heard": "范征三次举起欲配,催向于动手向于没反应",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "z11b",
+  "lang": "zh",
+  "text": "范增三次举起玉佩，催项羽动手，项羽没反应。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z11b.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "范",
+    0.0,
+    0.2
+   ],
+   [
+    "征",
+    0.2,
+    0.4
+   ],
+   [
+    "三",
+    0.4,
+    0.64
+   ],
+   [
+    "次",
+    0.64,
+    0.88
+   ],
+   [
+    "举",
+    0.88,
+    1.06
+   ],
+   [
+    "起",
+    1.06,
+    1.24
+   ],
+   [
+    "欲",
+    1.24,
+    1.46
+   ],
+   [
+    "配,",
+    1.46,
+    1.64
+   ],
+   [
+    "催",
+    1.94,
+    2.08
+   ],
+   [
+    "向",
+    2.08,
+    2.28
+   ],
+   [
+    "于",
+    2.28,
+    2.42
+   ],
+   [
+    "动",
+    2.42,
+    2.58
+   ],
+   [
+    "手",
+    2.58,
+    2.82
+   ],
+   [
+    "向",
+    2.82,
+    3.56
+   ],
+   [
+    "于",
+    3.56,
+    3.7
+   ],
+   [
+    "没",
+    3.7,
+    3.84
+   ],
+   [
+    "反",
+    3.84,
+    4.06
+   ],
+   [
+    "应",
+    4.06,
+    4.26
+   ]
+  ],
+  "heard": "范征三次举起欲配,催向于动手向于没反应",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "z12a",
+  "lang": "zh",
+  "text": "范增就叫人进来舞剑，想趁机刺死刘邦。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z12a.mp3",
+  "bytes": 62318,
+  "words": [
+   [
+    "范",
+    0.0,
+    0.2
+   ],
+   [
+    "征",
+    0.2,
+    0.44
+   ],
+   [
+    "就",
+    0.44,
+    0.6
+   ],
+   [
+    "叫",
+    0.6,
+    0.74
+   ],
+   [
+    "人",
+    0.74,
+    0.9
+   ],
+   [
+    "進",
+    0.9,
+    1.06
+   ],
+   [
+    "來",
+    1.06,
+    1.22
+   ],
+   [
+    "武",
+    1.22,
+    1.4
+   ],
+   [
+    "艦",
+    1.4,
+    1.8
+   ],
+   [
+    "想",
+    1.8,
+    2.1
+   ],
+   [
+    "趁",
+    2.1,
+    2.38
+   ],
+   [
+    "機",
+    2.38,
+    2.62
+   ],
+   [
+    "刺",
+    2.62,
+    2.9
+   ],
+   [
+    "死",
+    2.9,
+    3.08
+   ],
+   [
+    "劉",
+    3.08,
+    3.26
+   ],
+   [
+    "邦",
+    3.26,
+    3.46
+   ]
+  ],
+  "heard": "范征就叫人進來武艦想趁機刺死劉邦",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.84
+ },
+ {
+  "name": "z12b",
+  "lang": "zh",
+  "text": "范增就叫人进来舞剑，想趁机刺死刘邦。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z12b.mp3",
+  "bytes": 62318,
+  "words": [
+   [
+    "泛",
+    0.0,
+    0.2
+   ],
+   [
+    "增",
+    0.2,
+    0.46
+   ],
+   [
+    "就",
+    0.46,
+    0.62
+   ],
+   [
+    "叫",
+    0.62,
+    0.78
+   ],
+   [
+    "人",
+    0.78,
+    0.94
+   ],
+   [
+    "進",
+    0.94,
+    1.1
+   ],
+   [
+    "來",
+    1.1,
+    1.26
+   ],
+   [
+    "武",
+    1.26,
+    1.46
+   ],
+   [
+    "艦,",
+    1.46,
+    1.8
+   ],
+   [
+    "想",
+    1.9,
+    2.18
+   ],
+   [
+    "趁",
+    2.18,
+    2.44
+   ],
+   [
+    "機",
+    2.44,
+    2.66
+   ],
+   [
+    "刺",
+    2.66,
+    2.92
+   ],
+   [
+    "死",
+    2.92,
+    3.12
+   ],
+   [
+    "劉",
+    3.12,
+    3.3
+   ],
+   [
+    "邦",
+    3.3,
+    3.5
+   ]
+  ],
+  "heard": "泛增就叫人進來武艦,想趁機刺死劉邦",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.84
+ },
+ {
+  "name": "z13a",
+  "lang": "zh",
+  "text": "项羽的叔叔也下场舞剑，用身子挡着庆家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z13a.mp3",
+  "bytes": 66498,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.4
+   ],
+   [
+    "的",
+    0.4,
+    0.5
+   ],
+   [
+    "叔",
+    0.5,
+    0.72
+   ],
+   [
+    "叔",
+    0.72,
+    0.96
+   ],
+   [
+    "也",
+    0.96,
+    1.18
+   ],
+   [
+    "下",
+    1.18,
+    1.44
+   ],
+   [
+    "場",
+    1.44,
+    1.66
+   ],
+   [
+    "舞",
+    1.66,
+    1.84
+   ],
+   [
+    "劍,",
+    1.84,
+    2.14
+   ],
+   [
+    "用",
+    2.32,
+    2.5
+   ],
+   [
+    "身",
+    2.5,
+    2.76
+   ],
+   [
+    "子",
+    2.76,
+    2.96
+   ],
+   [
+    "擋",
+    2.96,
+    3.2
+   ],
+   [
+    "著",
+    3.2,
+    3.36
+   ],
+   [
+    "慶",
+    3.36,
+    3.56
+   ],
+   [
+    "家",
+    3.56,
+    3.8
+   ]
+  ],
+  "heard": "向宇的叔叔也下場舞劍,用身子擋著慶家",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.08
+ },
+ {
+  "name": "z13b",
+  "lang": "zh",
+  "text": "项羽的叔叔也下场舞剑，用身子挡着庆家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z13b.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.4
+   ],
+   [
+    "的",
+    0.4,
+    0.48
+   ],
+   [
+    "叔",
+    0.48,
+    0.72
+   ],
+   [
+    "叔",
+    0.72,
+    0.98
+   ],
+   [
+    "也",
+    0.98,
+    1.18
+   ],
+   [
+    "下",
+    1.18,
+    1.44
+   ],
+   [
+    "場",
+    1.44,
+    1.66
+   ],
+   [
+    "舞",
+    1.66,
+    1.84
+   ],
+   [
+    "劍,",
+    1.84,
+    2.14
+   ],
+   [
+    "用",
+    2.42,
+    2.56
+   ],
+   [
+    "身",
+    2.56,
+    2.82
+   ],
+   [
+    "子",
+    2.82,
+    3.04
+   ],
+   [
+    "擋",
+    3.04,
+    3.3
+   ],
+   [
+    "著",
+    3.3,
+    3.46
+   ],
+   [
+    "慶",
+    3.46,
+    3.68
+   ],
+   [
+    "家",
+    3.68,
+    3.92
+   ]
+  ],
+  "heard": "向宇的叔叔也下場舞劍,用身子擋著慶家",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.24
+ },
+ {
+  "name": "z13c",
+  "lang": "zh",
+  "text": "项羽的叔叔也下场舞剑，用身子挡着亲家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z13c.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.4
+   ],
+   [
+    "的",
+    0.4,
+    0.5
+   ],
+   [
+    "叔",
+    0.5,
+    0.72
+   ],
+   [
+    "叔",
+    0.72,
+    0.96
+   ],
+   [
+    "也",
+    0.96,
+    1.18
+   ],
+   [
+    "下",
+    1.18,
+    1.44
+   ],
+   [
+    "場",
+    1.44,
+    1.66
+   ],
+   [
+    "舞",
+    1.66,
+    1.84
+   ],
+   [
+    "劍,",
+    1.84,
+    2.12
+   ],
+   [
+    "用",
+    2.34,
+    2.5
+   ],
+   [
+    "身",
+    2.5,
+    2.74
+   ],
+   [
+    "子",
+    2.74,
+    2.96
+   ],
+   [
+    "擋",
+    2.96,
+    3.2
+   ],
+   [
+    "著",
+    3.2,
+    3.34
+   ],
+   [
+    "鏡",
+    3.34,
+    3.54
+   ],
+   [
+    "甲",
+    3.54,
+    3.76
+   ]
+  ],
+  "heard": "向宇的叔叔也下場舞劍,用身子擋著鏡甲",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.0
+ },
+ {
+  "name": "z13d",
+  "lang": "zh",
+  "text": "项羽的叔叔也下场舞剑，用身子挡着亲家。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z13d.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "項",
+    0.0,
+    0.26
+   ],
+   [
+    "羽",
+    0.26,
+    0.4
+   ],
+   [
+    "的",
+    0.4,
+    0.5
+   ],
+   [
+    "叔",
+    0.5,
+    0.74
+   ],
+   [
+    "叔",
+    0.74,
+    1.0
+   ],
+   [
+    "也",
+    1.0,
+    1.2
+   ],
+   [
+    "下",
+    1.2,
+    1.44
+   ],
+   [
+    "場",
+    1.44,
+    1.64
+   ],
+   [
+    "舞",
+    1.64,
+    1.84
+   ],
+   [
+    "劍,",
+    1.84,
+    2.12
+   ],
+   [
+    "用",
+    2.38,
+    2.58
+   ],
+   [
+    "身",
+    2.58,
+    2.84
+   ],
+   [
+    "子",
+    2.84,
+    3.06
+   ],
+   [
+    "擋",
+    3.06,
+    3.34
+   ],
+   [
+    "著",
+    3.34,
+    3.5
+   ],
+   [
+    "鏡",
+    3.5,
+    3.7
+   ],
+   [
+    "甲",
+    3.7,
+    3.94
+   ]
+  ],
+  "heard": "項羽的叔叔也下場舞劍,用身子擋著鏡甲",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.24
+ },
+ {
+  "name": "z14a",
+  "lang": "zh",
+  "text": "刘邦的保镖樊快撞倒卫兵，冲了进来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z14a.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.2
+   ],
+   [
+    "邦",
+    0.2,
+    0.38
+   ],
+   [
+    "的",
+    0.38,
+    0.46
+   ],
+   [
+    "保",
+    0.46,
+    0.62
+   ],
+   [
+    "鏢",
+    0.62,
+    0.8
+   ],
+   [
+    "繁",
+    0.8,
+    1.06
+   ],
+   [
+    "快",
+    1.06,
+    1.36
+   ],
+   [
+    "撞",
+    1.36,
+    1.76
+   ],
+   [
+    "倒",
+    1.76,
+    1.94
+   ],
+   [
+    "衛",
+    1.94,
+    2.1
+   ],
+   [
+    "兵,",
+    2.1,
+    2.34
+   ],
+   [
+    "衝",
+    2.54,
+    2.72
+   ],
+   [
+    "了",
+    2.72,
+    2.84
+   ],
+   [
+    "進",
+    2.84,
+    2.96
+   ],
+   [
+    "來",
+    2.96,
+    3.18
+   ]
+  ],
+  "heard": "劉邦的保鏢繁快撞倒衛兵,衝了進來",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.52
+ },
+ {
+  "name": "z14b",
+  "lang": "zh",
+  "text": "刘邦的保镖樊快撞倒卫兵，冲了进来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z14b.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.2
+   ],
+   [
+    "邦",
+    0.2,
+    0.36
+   ],
+   [
+    "的",
+    0.36,
+    0.46
+   ],
+   [
+    "保",
+    0.46,
+    0.62
+   ],
+   [
+    "鏢",
+    0.62,
+    0.8
+   ],
+   [
+    "繁",
+    0.8,
+    1.04
+   ],
+   [
+    "快",
+    1.04,
+    1.3
+   ],
+   [
+    "撞",
+    1.3,
+    1.64
+   ],
+   [
+    "倒",
+    1.64,
+    1.82
+   ],
+   [
+    "衛",
+    1.82,
+    1.98
+   ],
+   [
+    "兵,",
+    1.98,
+    2.22
+   ],
+   [
+    "衝",
+    2.46,
+    2.66
+   ],
+   [
+    "了",
+    2.66,
+    2.76
+   ],
+   [
+    "進",
+    2.76,
+    2.9
+   ],
+   [
+    "來",
+    2.9,
+    3.1
+   ]
+  ],
+  "heard": "劉邦的保鏢繁快撞倒衛兵,衝了進來",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "z14c",
+  "lang": "zh",
+  "text": "刘邦的保镖樊哙撞倒卫兵，冲了进来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z14c.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.2
+   ],
+   [
+    "邦",
+    0.2,
+    0.38
+   ],
+   [
+    "的",
+    0.38,
+    0.46
+   ],
+   [
+    "保",
+    0.46,
+    0.62
+   ],
+   [
+    "鏢",
+    0.62,
+    0.8
+   ],
+   [
+    "繁",
+    0.8,
+    1.06
+   ],
+   [
+    "快",
+    1.06,
+    1.32
+   ],
+   [
+    "撞",
+    1.32,
+    1.68
+   ],
+   [
+    "倒",
+    1.68,
+    1.84
+   ],
+   [
+    "衛",
+    1.84,
+    2.0
+   ],
+   [
+    "兵,",
+    2.0,
+    2.24
+   ],
+   [
+    "衝",
+    2.46,
+    2.66
+   ],
+   [
+    "了",
+    2.66,
+    2.76
+   ],
+   [
+    "進",
+    2.76,
+    2.9
+   ],
+   [
+    "來",
+    2.9,
+    3.1
+   ]
+  ],
+  "heard": "劉邦的保鏢繁快撞倒衛兵,衝了進來",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "z14d",
+  "lang": "zh",
+  "text": "刘邦的保镖樊哙撞倒卫兵，冲了进来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z14d.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.2
+   ],
+   [
+    "邦",
+    0.2,
+    0.38
+   ],
+   [
+    "的",
+    0.38,
+    0.46
+   ],
+   [
+    "保",
+    0.46,
+    0.64
+   ],
+   [
+    "鏢",
+    0.64,
+    0.82
+   ],
+   [
+    "繁",
+    0.82,
+    1.08
+   ],
+   [
+    "快",
+    1.08,
+    1.38
+   ],
+   [
+    "撞",
+    1.38,
+    1.7
+   ],
+   [
+    "倒",
+    1.7,
+    1.88
+   ],
+   [
+    "衛",
+    1.88,
+    2.04
+   ],
+   [
+    "兵,",
+    2.04,
+    2.28
+   ],
+   [
+    "衝",
+    2.54,
+    2.74
+   ],
+   [
+    "了",
+    2.74,
+    2.84
+   ],
+   [
+    "進",
+    2.84,
+    2.98
+   ],
+   [
+    "來",
+    2.98,
+    3.18
+   ]
+  ],
+  "heard": "劉邦的保鏢繁快撞倒衛兵,衝了進來",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.52
+ },
+ {
+  "name": "z15a",
+  "lang": "zh",
+  "text": "项羽夸他是壮士，赏他一条猪腿。生的。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15a.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.44
+   ],
+   [
+    "夸",
+    0.44,
+    0.66
+   ],
+   [
+    "他是",
+    0.66,
+    0.88
+   ],
+   [
+    "壯",
+    0.88,
+    1.18
+   ],
+   [
+    "士",
+    1.18,
+    1.54
+   ],
+   [
+    "賞",
+    1.54,
+    2.04
+   ],
+   [
+    "他",
+    2.04,
+    2.22
+   ],
+   [
+    "一",
+    2.22,
+    2.34
+   ],
+   [
+    "條",
+    2.34,
+    2.48
+   ],
+   [
+    "豬",
+    2.48,
+    2.72
+   ],
+   [
+    "腿",
+    2.72,
+    3.04
+   ],
+   [
+    "生",
+    3.04,
+    3.68
+   ],
+   [
+    "的",
+    3.68,
+    3.92
+   ]
+  ],
+  "heard": "向宇夸他是壯士賞他一條豬腿生的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.24
+ },
+ {
+  "name": "z15b",
+  "lang": "zh",
+  "text": "项羽夸他是壮士，赏他一条猪腿。生的。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15b.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.4
+   ],
+   [
+    "夸",
+    0.4,
+    0.62
+   ],
+   [
+    "他是",
+    0.62,
+    0.84
+   ],
+   [
+    "壯",
+    0.84,
+    1.18
+   ],
+   [
+    "士",
+    1.18,
+    1.52
+   ],
+   [
+    "賞",
+    1.52,
+    2.0
+   ],
+   [
+    "他",
+    2.0,
+    2.16
+   ],
+   [
+    "一",
+    2.16,
+    2.28
+   ],
+   [
+    "條",
+    2.28,
+    2.4
+   ],
+   [
+    "豬",
+    2.4,
+    2.64
+   ],
+   [
+    "腿",
+    2.64,
+    2.98
+   ],
+   [
+    "生",
+    2.98,
+    3.62
+   ],
+   [
+    "的",
+    3.62,
+    3.88
+   ]
+  ],
+  "heard": "向宇夸他是壯士賞他一條豬腿生的",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.24
+ },
+ {
+  "name": "z15p",
+  "lang": "zh",
+  "text": "项羽夸他是壮士，赏他一条猪腿。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15p.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.22
+   ],
+   [
+    "宇",
+    0.22,
+    0.42
+   ],
+   [
+    "誇",
+    0.42,
+    0.64
+   ],
+   [
+    "他是",
+    0.64,
+    0.92
+   ],
+   [
+    "壯",
+    0.92,
+    1.28
+   ],
+   [
+    "士",
+    1.28,
+    1.58
+   ],
+   [
+    "賞",
+    1.92,
+    2.04
+   ],
+   [
+    "他",
+    2.04,
+    2.22
+   ],
+   [
+    "一",
+    2.22,
+    2.32
+   ],
+   [
+    "條",
+    2.32,
+    2.48
+   ],
+   [
+    "豬",
+    2.48,
+    2.72
+   ],
+   [
+    "腿",
+    2.72,
+    2.96
+   ]
+  ],
+  "heard": "向宇誇他是壯士 賞他一條豬腿",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "z15pb",
+  "lang": "zh",
+  "text": "项羽夸他是壮士，赏他一条猪腿。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15pb.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "向",
+    0.0,
+    0.24
+   ],
+   [
+    "宇",
+    0.24,
+    0.42
+   ],
+   [
+    "誇",
+    0.42,
+    0.64
+   ],
+   [
+    "他是",
+    0.64,
+    0.92
+   ],
+   [
+    "壯",
+    0.92,
+    1.28
+   ],
+   [
+    "士",
+    1.28,
+    1.6
+   ],
+   [
+    "賞",
+    1.6,
+    2.14
+   ],
+   [
+    "他",
+    2.14,
+    2.3
+   ],
+   [
+    "一",
+    2.3,
+    2.4
+   ],
+   [
+    "條",
+    2.4,
+    2.56
+   ],
+   [
+    "豬",
+    2.56,
+    2.8
+   ],
+   [
+    "腿",
+    2.8,
+    3.06
+   ]
+  ],
+  "heard": "向宇誇他是壯士賞他一條豬腿",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "z15q",
+  "lang": "zh",
+  "text": "生的。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15q.mp3",
+  "bytes": 16343,
+  "words": [
+   [
+    "深",
+    0.0,
+    0.32
+   ],
+   [
+    "得",
+    0.32,
+    0.58
+   ]
+  ],
+  "heard": "深得",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.862,
+  "seconds": 0.96
+ },
+ {
+  "name": "z15qb",
+  "lang": "zh",
+  "text": "生的。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15qb.mp3",
+  "bytes": 16343,
+  "words": [
+   [
+    "生",
+    0.0,
+    0.34
+   ],
+   [
+    "的",
+    0.34,
+    0.58
+   ]
+  ],
+  "heard": "生的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.885,
+  "seconds": 0.96
+ },
+ {
+  "name": "z16a",
+  "lang": "zh",
+  "text": "刘邦起身去上厕所，把樊快也叫了出去。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z16a.mp3",
+  "bytes": 59811,
+  "words": [
+   [
+    "郵",
+    0.0,
+    0.18
+   ],
+   [
+    "榜",
+    0.18,
+    0.36
+   ],
+   [
+    "起",
+    0.36,
+    0.56
+   ],
+   [
+    "身",
+    0.56,
+    0.76
+   ],
+   [
+    "去",
+    0.76,
+    0.92
+   ],
+   [
+    "上",
+    0.92,
+    1.1
+   ],
+   [
+    "廁",
+    1.1,
+    1.28
+   ],
+   [
+    "所,",
+    1.28,
+    1.6
+   ],
+   [
+    "把",
+    1.78,
+    2.04
+   ],
+   [
+    "繁",
+    2.04,
+    2.28
+   ],
+   [
+    "快",
+    2.28,
+    2.52
+   ],
+   [
+    "也",
+    2.52,
+    2.72
+   ],
+   [
+    "叫",
+    2.72,
+    2.88
+   ],
+   [
+    "了",
+    2.88,
+    3.02
+   ],
+   [
+    "出去",
+    3.02,
+    3.24
+   ]
+  ],
+  "heard": "郵榜起身去上廁所,把繁快也叫了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.68
+ },
+ {
+  "name": "z16b",
+  "lang": "zh",
+  "text": "刘邦起身去上厕所，把樊快也叫了出去。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z16b.mp3",
+  "bytes": 62318,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.34
+   ],
+   [
+    "起",
+    0.34,
+    0.54
+   ],
+   [
+    "身",
+    0.54,
+    0.74
+   ],
+   [
+    "去",
+    0.74,
+    0.92
+   ],
+   [
+    "上",
+    0.92,
+    1.1
+   ],
+   [
+    "廁",
+    1.1,
+    1.3
+   ],
+   [
+    "所,",
+    1.3,
+    1.62
+   ],
+   [
+    "把",
+    1.76,
+    2.08
+   ],
+   [
+    "凡",
+    2.08,
+    2.3
+   ],
+   [
+    "塊",
+    2.3,
+    2.56
+   ],
+   [
+    "也",
+    2.56,
+    2.8
+   ],
+   [
+    "叫",
+    2.8,
+    2.98
+   ],
+   [
+    "了",
+    2.98,
+    3.1
+   ],
+   [
+    "出去",
+    3.1,
+    3.32
+   ]
+  ],
+  "heard": "劉邦起身去上廁所,把凡塊也叫了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.84
+ },
+ {
+  "name": "z16c",
+  "lang": "zh",
+  "text": "刘邦起身去上厕所，把樊哙也叫了出去。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z16c.mp3",
+  "bytes": 62318,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.34
+   ],
+   [
+    "起",
+    0.34,
+    0.58
+   ],
+   [
+    "身",
+    0.58,
+    0.78
+   ],
+   [
+    "去",
+    0.78,
+    0.96
+   ],
+   [
+    "上",
+    0.96,
+    1.14
+   ],
+   [
+    "廁",
+    1.14,
+    1.32
+   ],
+   [
+    "所,",
+    1.32,
+    1.64
+   ],
+   [
+    "把",
+    1.9,
+    2.08
+   ],
+   [
+    "凡",
+    2.08,
+    2.3
+   ],
+   [
+    "塊",
+    2.3,
+    2.56
+   ],
+   [
+    "也",
+    2.56,
+    2.78
+   ],
+   [
+    "叫",
+    2.78,
+    2.94
+   ],
+   [
+    "了",
+    2.94,
+    3.08
+   ],
+   [
+    "出去",
+    3.08,
+    3.3
+   ]
+  ],
+  "heard": "劉邦起身去上廁所,把凡塊也叫了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.84
+ },
+ {
+  "name": "z16d",
+  "lang": "zh",
+  "text": "刘邦起身去上厕所，把樊哙也叫了出去。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z16d.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.34
+   ],
+   [
+    "起",
+    0.34,
+    0.56
+   ],
+   [
+    "身",
+    0.56,
+    0.74
+   ],
+   [
+    "去",
+    0.74,
+    0.92
+   ],
+   [
+    "上",
+    0.92,
+    1.1
+   ],
+   [
+    "廁",
+    1.1,
+    1.3
+   ],
+   [
+    "所,",
+    1.3,
+    1.64
+   ],
+   [
+    "把",
+    1.78,
+    2.08
+   ],
+   [
+    "凡",
+    2.08,
+    2.3
+   ],
+   [
+    "塊",
+    2.3,
+    2.56
+   ],
+   [
+    "也",
+    2.56,
+    2.8
+   ],
+   [
+    "叫",
+    2.8,
+    2.98
+   ],
+   [
+    "了",
+    2.98,
+    3.1
+   ],
+   [
+    "出去",
+    3.1,
+    3.32
+   ]
+  ],
+  "heard": "劉邦起身去上廁所,把凡塊也叫了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "z17a",
+  "lang": "zh",
+  "text": "刘邦说还没告辞。樊快说：“人为刀组，我为鱼肉，告什么辞！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z17a.mp3",
+  "bytes": 108712,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.32
+   ],
+   [
+    "說",
+    0.32,
+    0.56
+   ],
+   [
+    "還",
+    0.56,
+    0.98
+   ],
+   [
+    "沒",
+    0.98,
+    1.12
+   ],
+   [
+    "告",
+    1.12,
+    1.3
+   ],
+   [
+    "辭",
+    1.3,
+    1.8
+   ],
+   [
+    "凡",
+    2.2,
+    2.44
+   ],
+   [
+    "塊",
+    2.44,
+    2.6
+   ],
+   [
+    "說",
+    2.6,
+    2.86
+   ],
+   [
+    "人",
+    2.86,
+    3.58
+   ],
+   [
+    "為",
+    3.58,
+    3.82
+   ],
+   [
+    "刀",
+    3.82,
+    4.04
+   ],
+   [
+    "祖",
+    4.04,
+    4.4
+   ],
+   [
+    "我",
+    4.4,
+    4.78
+   ],
+   [
+    "為",
+    4.78,
+    5.0
+   ],
+   [
+    "魚",
+    5.0,
+    5.22
+   ],
+   [
+    "肉",
+    5.22,
+    5.44
+   ],
+   [
+    "告",
+    5.44,
+    5.88
+   ],
+   [
+    "什麼",
+    5.88,
+    6.16
+   ],
+   [
+    "辭",
+    6.16,
+    6.46
+   ]
+  ],
+  "heard": "劉邦說還沒告辭凡塊說人為刀祖我為魚肉告什麼辭",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 6.72
+ },
+ {
+  "name": "z17b",
+  "lang": "zh",
+  "text": "刘邦说还没告辞。樊快说：“人为刀组，我为鱼肉，告什么辞！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z17b.mp3",
+  "bytes": 109966,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.16
+   ],
+   [
+    "邦",
+    0.16,
+    0.3
+   ],
+   [
+    "說,",
+    0.3,
+    0.56
+   ],
+   [
+    "還",
+    0.92,
+    1.06
+   ],
+   [
+    "沒",
+    1.06,
+    1.22
+   ],
+   [
+    "告",
+    1.22,
+    1.38
+   ],
+   [
+    "辭",
+    1.38,
+    1.82
+   ],
+   [
+    "凡",
+    2.3,
+    2.52
+   ],
+   [
+    "塊",
+    2.52,
+    2.68
+   ],
+   [
+    "說",
+    2.68,
+    2.92
+   ],
+   [
+    "人",
+    3.44,
+    3.66
+   ],
+   [
+    "為",
+    3.66,
+    3.88
+   ],
+   [
+    "刀",
+    3.88,
+    4.1
+   ],
+   [
+    "祖,",
+    4.1,
+    4.44
+   ],
+   [
+    "我",
+    4.66,
+    4.78
+   ],
+   [
+    "為",
+    4.78,
+    4.96
+   ],
+   [
+    "魚",
+    4.96,
+    5.2
+   ],
+   [
+    "肉",
+    5.2,
+    5.4
+   ],
+   [
+    "告",
+    5.4,
+    5.84
+   ],
+   [
+    "什麼",
+    5.84,
+    6.16
+   ],
+   [
+    "辭?",
+    6.16,
+    6.46
+   ]
+  ],
+  "heard": "劉邦說,還沒告辭凡塊說人為刀祖,我為魚肉告什麼辭?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 6.8
+ },
+ {
+  "name": "z17c",
+  "lang": "zh",
+  "text": "刘邦说还没告辞。樊哙说：“人为刀俎，我为鱼肉，告什么辞！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z17c.mp3",
+  "bytes": 109966,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.14
+   ],
+   [
+    "邦",
+    0.14,
+    0.3
+   ],
+   [
+    "說",
+    0.3,
+    0.54
+   ],
+   [
+    "還",
+    0.54,
+    0.98
+   ],
+   [
+    "沒",
+    0.98,
+    1.14
+   ],
+   [
+    "告",
+    1.14,
+    1.3
+   ],
+   [
+    "辭",
+    1.3,
+    2.04
+   ],
+   [
+    "凡",
+    2.04,
+    2.44
+   ],
+   [
+    "塊",
+    2.44,
+    2.6
+   ],
+   [
+    "說",
+    2.6,
+    2.86
+   ],
+   [
+    "人",
+    2.86,
+    3.6
+   ],
+   [
+    "為",
+    3.6,
+    3.82
+   ],
+   [
+    "刀",
+    3.82,
+    4.06
+   ],
+   [
+    "祖",
+    4.06,
+    4.46
+   ],
+   [
+    "我",
+    4.46,
+    4.76
+   ],
+   [
+    "為",
+    4.76,
+    4.98
+   ],
+   [
+    "魚",
+    4.98,
+    5.22
+   ],
+   [
+    "肉",
+    5.22,
+    5.48
+   ],
+   [
+    "告",
+    5.48,
+    5.9
+   ],
+   [
+    "什麼",
+    5.9,
+    6.24
+   ],
+   [
+    "辭",
+    6.24,
+    6.54
+   ]
+  ],
+  "heard": "劉邦說還沒告辭凡塊說人為刀祖我為魚肉告什麼辭",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 6.8
+ },
+ {
+  "name": "z17d",
+  "lang": "zh",
+  "text": "刘邦说还没告辞。樊哙说：“人为刀俎，我为鱼肉，告什么辞！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z17d.mp3",
+  "bytes": 109966,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.16
+   ],
+   [
+    "邦",
+    0.16,
+    0.3
+   ],
+   [
+    "說,",
+    0.3,
+    0.56
+   ],
+   [
+    "還",
+    0.86,
+    1.0
+   ],
+   [
+    "沒",
+    1.0,
+    1.14
+   ],
+   [
+    "告",
+    1.14,
+    1.3
+   ],
+   [
+    "辭",
+    1.3,
+    2.1
+   ],
+   [
+    "凡",
+    2.1,
+    2.44
+   ],
+   [
+    "塊",
+    2.44,
+    2.6
+   ],
+   [
+    "說",
+    2.6,
+    2.86
+   ],
+   [
+    "人",
+    2.86,
+    3.62
+   ],
+   [
+    "為",
+    3.62,
+    3.82
+   ],
+   [
+    "刀",
+    3.82,
+    4.06
+   ],
+   [
+    "祖,",
+    4.06,
+    4.44
+   ],
+   [
+    "我",
+    4.66,
+    4.8
+   ],
+   [
+    "為",
+    4.8,
+    5.0
+   ],
+   [
+    "魚",
+    5.0,
+    5.22
+   ],
+   [
+    "肉",
+    5.22,
+    5.44
+   ],
+   [
+    "告",
+    5.44,
+    5.9
+   ],
+   [
+    "什麼",
+    5.9,
+    6.22
+   ],
+   [
+    "辭?",
+    6.22,
+    6.52
+   ]
+  ],
+  "heard": "劉邦說,還沒告辭凡塊說人為刀祖,我為魚肉告什麼辭?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.8
+ },
+ {
+  "name": "z18a",
+  "lang": "zh",
+  "text": "刘邦丢下车队，只骑一匹马，抄小路回了军营。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z18a.mp3",
+  "bytes": 70260,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.36
+   ],
+   [
+    "丢",
+    0.36,
+    0.54
+   ],
+   [
+    "下",
+    0.54,
+    0.7
+   ],
+   [
+    "車",
+    0.7,
+    0.9
+   ],
+   [
+    "隊,",
+    0.9,
+    1.12
+   ],
+   [
+    "只",
+    1.44,
+    1.54
+   ],
+   [
+    "騎",
+    1.54,
+    1.8
+   ],
+   [
+    "一",
+    1.8,
+    1.96
+   ],
+   [
+    "匹",
+    1.96,
+    2.12
+   ],
+   [
+    "馬,",
+    2.12,
+    2.32
+   ],
+   [
+    "超",
+    2.62,
+    2.8
+   ],
+   [
+    "小",
+    2.8,
+    3.04
+   ],
+   [
+    "路",
+    3.04,
+    3.24
+   ],
+   [
+    "回",
+    3.24,
+    3.48
+   ],
+   [
+    "了",
+    3.48,
+    3.62
+   ],
+   [
+    "軍",
+    3.62,
+    3.78
+   ],
+   [
+    "營",
+    3.78,
+    4.02
+   ]
+  ],
+  "heard": "劉邦丢下車隊,只騎一匹馬,超小路回了軍營",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.32
+ },
+ {
+  "name": "z18b",
+  "lang": "zh",
+  "text": "刘邦丢下车队，只骑一匹马，抄小路回了军营。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z18b.mp3",
+  "bytes": 70260,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.2
+   ],
+   [
+    "邦",
+    0.2,
+    0.36
+   ],
+   [
+    "丢",
+    0.36,
+    0.54
+   ],
+   [
+    "下",
+    0.54,
+    0.7
+   ],
+   [
+    "车",
+    0.7,
+    0.92
+   ],
+   [
+    "队,",
+    0.92,
+    1.2
+   ],
+   [
+    "只",
+    1.48,
+    1.56
+   ],
+   [
+    "骑",
+    1.56,
+    1.8
+   ],
+   [
+    "一",
+    1.8,
+    1.94
+   ],
+   [
+    "匹",
+    1.94,
+    2.12
+   ],
+   [
+    "马,",
+    2.12,
+    2.32
+   ],
+   [
+    "超",
+    2.62,
+    2.8
+   ],
+   [
+    "小",
+    2.8,
+    3.02
+   ],
+   [
+    "路",
+    3.02,
+    3.22
+   ],
+   [
+    "回",
+    3.22,
+    3.44
+   ],
+   [
+    "了",
+    3.44,
+    3.58
+   ],
+   [
+    "军",
+    3.58,
+    3.78
+   ],
+   [
+    "营",
+    3.78,
+    4.0
+   ]
+  ],
+  "heard": "劉邦丢下车队,只骑一匹马,超小路回了军营",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.32
+ },
+ {
+  "name": "z19a",
+  "lang": "zh",
+  "text": "等刘邦到了军营，他的谋士才进去说：“他喝多了。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z19a.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "等",
+    0.0,
+    0.16
+   ],
+   [
+    "劉",
+    0.16,
+    0.34
+   ],
+   [
+    "邦",
+    0.34,
+    0.5
+   ],
+   [
+    "到了",
+    0.5,
+    0.7
+   ],
+   [
+    "軍",
+    0.7,
+    0.96
+   ],
+   [
+    "營,",
+    0.96,
+    1.32
+   ],
+   [
+    "他的",
+    1.5,
+    1.76
+   ],
+   [
+    "謀",
+    1.76,
+    2.02
+   ],
+   [
+    "事",
+    2.02,
+    2.24
+   ],
+   [
+    "才",
+    2.24,
+    2.42
+   ],
+   [
+    "進",
+    2.42,
+    2.6
+   ],
+   [
+    "去",
+    2.6,
+    2.76
+   ],
+   [
+    "說",
+    2.76,
+    3.02
+   ],
+   [
+    "他",
+    3.02,
+    3.72
+   ],
+   [
+    "喝",
+    3.72,
+    3.94
+   ],
+   [
+    "多",
+    3.94,
+    4.16
+   ],
+   [
+    "了",
+    4.16,
+    4.36
+   ]
+  ],
+  "heard": "等劉邦到了軍營,他的謀事才進去說他喝多了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.64
+ },
+ {
+  "name": "z19b",
+  "lang": "zh",
+  "text": "等刘邦到了军营，他的谋士才进去说：“他喝多了。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z19b.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "等",
+    0.0,
+    0.14
+   ],
+   [
+    "劉",
+    0.14,
+    0.34
+   ],
+   [
+    "邦",
+    0.34,
+    0.5
+   ],
+   [
+    "到了",
+    0.5,
+    0.72
+   ],
+   [
+    "軍",
+    0.72,
+    1.0
+   ],
+   [
+    "營,",
+    1.0,
+    1.34
+   ],
+   [
+    "他的",
+    1.42,
+    1.82
+   ],
+   [
+    "謀",
+    1.82,
+    2.08
+   ],
+   [
+    "事",
+    2.08,
+    2.28
+   ],
+   [
+    "才",
+    2.28,
+    2.44
+   ],
+   [
+    "進",
+    2.44,
+    2.62
+   ],
+   [
+    "去",
+    2.62,
+    2.78
+   ],
+   [
+    "說",
+    2.78,
+    3.06
+   ],
+   [
+    "他",
+    3.66,
+    3.86
+   ],
+   [
+    "喝",
+    3.86,
+    4.12
+   ],
+   [
+    "多",
+    4.12,
+    4.32
+   ],
+   [
+    "了",
+    4.32,
+    4.52
+   ]
+  ],
+  "heard": "等劉邦到了軍營,他的謀事才進去說他喝多了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.72
+ },
+ {
+  "name": "z20a",
+  "lang": "zh",
+  "text": "刘邦回营第一件事：杀了曹无伤，那个告密的军官。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z20a.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.36
+   ],
+   [
+    "回",
+    0.36,
+    0.54
+   ],
+   [
+    "憶",
+    0.54,
+    0.72
+   ],
+   [
+    "第一",
+    0.72,
+    1.0
+   ],
+   [
+    "件",
+    1.0,
+    1.22
+   ],
+   [
+    "事",
+    1.22,
+    1.48
+   ],
+   [
+    "殺",
+    1.48,
+    2.06
+   ],
+   [
+    "了",
+    2.06,
+    2.22
+   ],
+   [
+    "曹",
+    2.22,
+    2.46
+   ],
+   [
+    "無",
+    2.46,
+    2.6
+   ],
+   [
+    "商",
+    2.6,
+    2.82
+   ],
+   [
+    "那個",
+    2.82,
+    3.24
+   ],
+   [
+    "告",
+    3.24,
+    3.5
+   ],
+   [
+    "密",
+    3.5,
+    3.7
+   ],
+   [
+    "的",
+    3.7,
+    3.8
+   ],
+   [
+    "軍",
+    3.8,
+    3.96
+   ],
+   [
+    "官",
+    3.96,
+    4.16
+   ]
+  ],
+  "heard": "劉邦回憶第一件事殺了曹無商那個告密的軍官",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "z20b",
+  "lang": "zh",
+  "text": "刘邦回营第一件事：杀了曹无伤，那个告密的军官。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z20b.mp3",
+  "bytes": 71514,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.16
+   ],
+   [
+    "邦",
+    0.16,
+    0.34
+   ],
+   [
+    "回",
+    0.34,
+    0.5
+   ],
+   [
+    "憶",
+    0.5,
+    0.68
+   ],
+   [
+    "第一",
+    0.68,
+    0.94
+   ],
+   [
+    "件",
+    0.94,
+    1.16
+   ],
+   [
+    "事",
+    1.16,
+    1.44
+   ],
+   [
+    "殺",
+    1.44,
+    1.98
+   ],
+   [
+    "了",
+    1.98,
+    2.14
+   ],
+   [
+    "曹",
+    2.14,
+    2.36
+   ],
+   [
+    "無",
+    2.36,
+    2.5
+   ],
+   [
+    "傷",
+    2.5,
+    2.7
+   ],
+   [
+    "那個",
+    2.7,
+    3.12
+   ],
+   [
+    "告",
+    3.12,
+    3.38
+   ],
+   [
+    "密",
+    3.38,
+    3.56
+   ],
+   [
+    "的",
+    3.56,
+    3.68
+   ],
+   [
+    "軍",
+    3.68,
+    3.84
+   ],
+   [
+    "官",
+    3.84,
+    4.04
+   ]
+  ],
+  "heard": "劉邦回憶第一件事殺了曹無傷那個告密的軍官",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "z20c",
+  "lang": "zh",
+  "text": "刘邦回营第一件事：杀了曹吴伤，那个告密的军官。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z20c.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.36
+   ],
+   [
+    "回",
+    0.36,
+    0.54
+   ],
+   [
+    "憶",
+    0.54,
+    0.7
+   ],
+   [
+    "第一",
+    0.7,
+    0.98
+   ],
+   [
+    "件",
+    0.98,
+    1.18
+   ],
+   [
+    "事,",
+    1.18,
+    1.46
+   ],
+   [
+    "殺",
+    1.74,
+    2.06
+   ],
+   [
+    "了",
+    2.06,
+    2.22
+   ],
+   [
+    "曹",
+    2.22,
+    2.46
+   ],
+   [
+    "無",
+    2.46,
+    2.6
+   ],
+   [
+    "傷",
+    2.6,
+    2.82
+   ],
+   [
+    "那個",
+    2.82,
+    3.24
+   ],
+   [
+    "告",
+    3.24,
+    3.48
+   ],
+   [
+    "密",
+    3.48,
+    3.68
+   ],
+   [
+    "的",
+    3.68,
+    3.8
+   ],
+   [
+    "軍",
+    3.8,
+    3.96
+   ],
+   [
+    "官",
+    3.96,
+    4.16
+   ]
+  ],
+  "heard": "劉邦回憶第一件事,殺了曹無傷那個告密的軍官",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "z20d",
+  "lang": "zh",
+  "text": "刘邦回营第一件事：杀了曹吴伤，那个告密的军官。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z20d.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "劉",
+    0.0,
+    0.18
+   ],
+   [
+    "邦",
+    0.18,
+    0.36
+   ],
+   [
+    "回",
+    0.36,
+    0.54
+   ],
+   [
+    "憶",
+    0.54,
+    0.72
+   ],
+   [
+    "第一",
+    0.72,
+    1.0
+   ],
+   [
+    "件",
+    1.0,
+    1.24
+   ],
+   [
+    "事,",
+    1.24,
+    1.5
+   ],
+   [
+    "殺",
+    1.8,
+    2.1
+   ],
+   [
+    "了",
+    2.1,
+    2.26
+   ],
+   [
+    "曹",
+    2.26,
+    2.48
+   ],
+   [
+    "無",
+    2.48,
+    2.64
+   ],
+   [
+    "鄉",
+    2.64,
+    2.9
+   ],
+   [
+    "那個",
+    2.9,
+    3.24
+   ],
+   [
+    "告",
+    3.24,
+    3.5
+   ],
+   [
+    "密",
+    3.5,
+    3.66
+   ],
+   [
+    "的",
+    3.66,
+    3.78
+   ],
+   [
+    "軍",
+    3.78,
+    3.94
+   ],
+   [
+    "官",
+    3.94,
+    4.14
+   ]
+  ],
+  "heard": "劉邦回憶第一件事,殺了曹無鄉那個告密的軍官",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.48
+ },
+ {
+  "name": "z21a",
+  "lang": "zh",
+  "text": "而这个名字，是项羽自己说漏的。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z21a.mp3",
+  "bytes": 49780,
+  "words": [
+   [
+    "而",
+    0.0,
+    0.16
+   ],
+   [
+    "這個",
+    0.16,
+    0.36
+   ],
+   [
+    "名",
+    0.36,
+    0.62
+   ],
+   [
+    "字",
+    0.62,
+    0.86
+   ],
+   [
+    "是",
+    0.86,
+    1.34
+   ],
+   [
+    "像",
+    1.34,
+    1.58
+   ],
+   [
+    "與",
+    1.58,
+    1.72
+   ],
+   [
+    "自己",
+    1.72,
+    1.98
+   ],
+   [
+    "說",
+    1.98,
+    2.34
+   ],
+   [
+    "漏",
+    2.34,
+    2.56
+   ],
+   [
+    "的",
+    2.56,
+    2.74
+   ]
+  ],
+  "heard": "而這個名字是像與自己說漏的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.04
+ },
+ {
+  "name": "z21b",
+  "lang": "zh",
+  "text": "而这个名字，是项羽自己说漏的。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z21b.mp3",
+  "bytes": 48526,
+  "words": [
+   [
+    "而",
+    0.0,
+    0.12
+   ],
+   [
+    "這個",
+    0.12,
+    0.36
+   ],
+   [
+    "名",
+    0.36,
+    0.6
+   ],
+   [
+    "字",
+    0.6,
+    0.84
+   ],
+   [
+    "是",
+    0.84,
+    1.22
+   ],
+   [
+    "向",
+    1.22,
+    1.44
+   ],
+   [
+    "於",
+    1.44,
+    1.6
+   ],
+   [
+    "自己",
+    1.6,
+    1.84
+   ],
+   [
+    "說",
+    1.84,
+    2.18
+   ],
+   [
+    "漏",
+    2.18,
+    2.4
+   ],
+   [
+    "的",
+    2.4,
+    2.58
+   ]
+  ],
+  "heard": "而這個名字是向於自己說漏的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.96
+ },
+ {
+  "name": "z22a",
+  "lang": "zh",
+  "text": "至于刘邦，",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z22a.mp3",
+  "bytes": 21358,
+  "words": [
+   [
+    "至",
+    0.0,
+    0.22
+   ],
+   [
+    "于",
+    0.22,
+    0.38
+   ],
+   [
+    "刘",
+    0.38,
+    0.56
+   ],
+   [
+    "邦",
+    0.56,
+    0.8
+   ]
+  ],
+  "heard": "至于刘邦",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 1.28
+ }
+]
