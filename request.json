@@ -1,12 +1,12 @@
 {
- "id": "arthur-en-hope-01",
+ "id": "arthur-en-hope-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "words": true,
  "items": [
   {
-   "name": "x01a",
+   "name": "x01b",
    "lang": "en",
    "text": "He just pulled the sword from the stone, and put it back.",
    "add": {
@@ -24,7 +24,7 @@
    }
   },
   {
-   "name": "x02a",
+   "name": "x02b",
    "lang": "en",
    "text": "Wait. Doesn't pulling it out make you king?",
    "add": {
@@ -42,7 +42,7 @@
    }
   },
   {
-   "name": "x03a",
+   "name": "x03b",
    "lang": "en",
    "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
    "add": {
@@ -60,7 +60,7 @@
    }
   },
   {
-   "name": "x04a",
+   "name": "x04b",
    "lang": "en",
    "text": "Gold letters say: pull it out, and you're king.",
    "add": {
@@ -78,7 +78,7 @@
    }
   },
   {
-   "name": "x05a",
+   "name": "x05b",
    "lang": "en",
    "text": "Lords line up to pull, faces turning red, it won't budge.",
    "add": {
@@ -96,7 +96,7 @@
    }
   },
   {
-   "name": "x06a",
+   "name": "x06b",
    "lang": "en",
    "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.",
    "add": {
@@ -114,7 +114,7 @@
    }
   },
   {
-   "name": "x07a",
+   "name": "x07b",
    "lang": "en",
    "text": "Arthur runs back. Nobody's home. All at the tournament.",
    "add": {
@@ -132,7 +132,7 @@
    }
   },
   {
-   "name": "x08a",
+   "name": "x08b",
    "lang": "en",
    "text": "He thinks: there's a sword in that stone.",
    "add": {
@@ -150,7 +150,7 @@
    }
   },
   {
-   "name": "x09a",
+   "name": "x09b",
    "lang": "en",
    "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.",
    "add": {
@@ -168,7 +168,7 @@
    }
   },
   {
-   "name": "x10a",
+   "name": "x10b",
    "lang": "en",
    "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"",
    "add": {
@@ -186,7 +186,7 @@
    }
   },
   {
-   "name": "x11a",
+   "name": "x11b",
    "lang": "en",
    "text": "Dad makes him swear. Kay admits Arthur brought it.",
    "add": {
@@ -204,7 +204,7 @@
    }
   },
   {
-   "name": "x12a",
+   "name": "x12b",
    "lang": "en",
    "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"",
    "add": {
@@ -222,7 +222,7 @@
    }
   },
   {
-   "name": "x13a",
+   "name": "x13b",
    "lang": "en",
    "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
    "add": {
@@ -240,7 +240,7 @@
    }
   },
   {
-   "name": "x14a",
+   "name": "x14b",
    "lang": "en",
    "text": "Days later, every lord tries. Only Arthur can. Pull three.",
    "add": {
@@ -258,7 +258,7 @@
    }
   },
   {
-   "name": "x15a",
+   "name": "x15b",
    "lang": "en",
    "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.",
    "add": {
@@ -276,7 +276,7 @@
    }
   },
   {
-   "name": "x16a",
+   "name": "x16b",
    "lang": "en",
    "text": "Next month, snow on the ground: pull four. Delayed.",
    "add": {
@@ -294,7 +294,7 @@
    }
   },
   {
-   "name": "x17a",
+   "name": "x17b",
    "lang": "en",
    "text": "Spring, flowers in full bloom: pull five. Again.",
    "add": {
@@ -312,7 +312,7 @@
    }
   },
   {
-   "name": "x18a",
+   "name": "x18b",
    "lang": "en",
    "text": "Summer, in front of everyone: pull six.",
    "add": {
@@ -330,7 +330,7 @@
    }
   },
   {
-   "name": "x19a",
+   "name": "x19b",
    "lang": "en",
    "text": "The people snap: \"We want Arthur as king! No more delays!\"",
    "add": {
@@ -348,7 +348,7 @@
    }
   },
   {
-   "name": "x20a",
+   "name": "x20b",
    "lang": "en",
    "text": "Everyone drops to their knees.",
    "add": {
@@ -366,7 +366,7 @@
    }
   },
   {
-   "name": "x21a",
+   "name": "x21b",
    "lang": "en",
    "text": "Six pulls to make him king. And the first? His brother just forgot his sword.",
    "add": {
@@ -384,9 +384,99 @@
    }
   },
   {
-   "name": "x03m",
+   "name": "x05c",
    "lang": "en",
-   "text": "In Malory's classic tale, outside a London church, a great stone appears, a sword in it.",
+   "text": "Lords line up to pull, red in the face: it won't budge.",
+   "add": {
+    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
+    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+    "name": "hope"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x13c",
+   "lang": "en",
+   "text": "Dad pulls: stuck. Kay, with all his might: stuck. Arthur reaches out: pull two.",
+   "add": {
+    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
+    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+    "name": "hope"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x14c",
+   "lang": "en",
+   "text": "Days later, every lord tries. Only he can. Pull three.",
+   "add": {
+    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
+    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+    "name": "hope"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x18c",
+   "lang": "en",
+   "text": "Early summer, in front of everyone: pull six.",
+   "add": {
+    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
+    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+    "name": "hope"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x19c",
+   "lang": "en",
+   "text": "The people snap: \"Arthur for king! No more delays!\"",
+   "add": {
+    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
+    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+    "name": "hope"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x20c",
+   "lang": "en",
+   "text": "And everyone kneels.",
    "add": {
     "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
     "voice_id": "tnSpp4vdxKPjI9w0GnoV",
