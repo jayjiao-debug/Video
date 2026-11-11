@@ -1,90 +1,44 @@
 {
- "id": "arthur-sfx-02",
- "tag": true,
+ "id": "arthur-voices-01",
  "items": [
   {
-   "type": "sfx",
-   "name": "sword_thunk_1",
-   "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.",
-   "duration": 0.8,
-   "influence": 0.6
+   "type": "voices",
+   "name": "zh_f_std",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "n": 40
   },
   {
-   "type": "sfx",
-   "name": "sword_thunk_2",
-   "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.",
-   "duration": 0.8,
-   "influence": 0.6
+   "type": "voices",
+   "name": "zh_m_std",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "male",
+   "n": 30
   },
   {
-   "type": "sfx",
-   "name": "slap_1",
-   "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
+   "type": "voices",
+   "name": "zh_f_social",
+   "lang": "zh",
+   "gender": "female",
+   "use_case": "social_media",
+   "n": 20
   },
   {
-   "type": "sfx",
-   "name": "slap_2",
-   "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
+   "type": "voices",
+   "name": "zh_f_narr",
+   "lang": "zh",
+   "gender": "female",
+   "use_case": "narrative_story",
+   "n": 20
   },
   {
-   "type": "sfx",
-   "name": "boulder_1",
-   "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "boulder_2",
-   "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "kneel_b_1",
-   "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.",
-   "duration": 1.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "kneel_b_2",
-   "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.",
-   "duration": 1.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "cheer_b_1",
-   "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.",
-   "duration": 2.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "cheer_b_2",
-   "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.",
-   "duration": 2.5,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "rewind_b_1",
-   "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.",
-   "duration": 0.6,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "rewind_b_2",
-   "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.",
-   "duration": 0.6,
-   "influence": 0.6
+   "type": "voices",
+   "name": "zh_search_jieshuo",
+   "lang": "zh",
+   "search": "解说",
+   "n": 20
   }
  ]
 }

@@ -67,6 +67,17 @@ for it in req["items"]:
             if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         except Exception as e: rec["error"] = str(e)[:300]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "voices":   # list voices of the shared library (no generation): {"type":"voices","name","lang","accent"?,"gender"?,"age"?,"use_case"?,"search"?,"n"?}
+        p = {"page_size": it.get("n", 30), "language": it.get("lang", "zh"), "sort": it.get("sort", "usage_character_count_1y")}
+        for k_src, k_dst in (("accent", "accent"), ("gender", "gender"), ("age", "age"), ("search", "search"), ("use_case", "use_cases"), ("category", "category")):
+            if it.get(k_src): p[k_dst] = it[k_src]
+        r = requests.get(f"{API}/v1/shared-voices", headers=H, params=p, timeout=30)
+        rec = {"name": it["name"], "type": "voices", "status": r.status_code, "query": p}
+        if r.ok:
+            keys = ("name", "voice_id", "public_owner_id", "accent", "language", "gender", "age", "descriptive", "use_case", "category", "description", "usage_character_count_1y", "cloned_by_count", "preview_url")
+            rec["voices"] = [{k: v.get(k) for k in keys} for v in r.json().get("voices", [])]
+        else: rec["error"] = r.text[:400]
+        log(json.dumps({"name": rec["name"], "status": rec["status"], "n": len(rec.get("voices", []))})); report["clips"].append(rec); continue
     if it.get("type") == "sfx":   # ElevenLabs text-to-sound-effects: {"type":"sfx","name","text","duration"?,"influence"?,"loop"?,"model"?}
         body = {"text": it["text"], "model_id": it.get("model", "eleven_text_to_sound_v2"), "prompt_influence": it.get("influence", 0.3)}
         if it.get("duration"): body["duration_seconds"] = it["duration"]
@@ -105,6 +116,14 @@ for it in req["items"]:
         else: rec["error"] = r.text[:600]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     vid, vname = (it.get("voice_id"), it.get("voice_id"))
+    added = None
+    if it.get("add"):   # a shared-library voice by its ids {"owner","voice_id","name"}: add it to the account, speak, remove it again
+        ad = it["add"]
+        a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", it["name"]))[:40]}, timeout=30)
+        if a.ok: vid = added = a.json().get("voice_id", ad["voice_id"]); vname = "shared:" + ad.get("name", "")
+        else:
+            rec = {"name": it["name"], "lang": it.get("lang", ""), "text": it["text"], "voice": ad.get("name", ""), "status": a.status_code, "error": "add failed: " + a.text[:300]}
+            log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
     body = {"text": it["text"], "model_id": it.get("model", MODEL), "language_code": it["lang"]}
@@ -117,6 +136,9 @@ for it in req["items"]:
     if r.ok:
         fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
     else: rec["error"] = r.text[:400]
+    if added and it.get("remove", True):
+        try: rec["removed"] = requests.delete(f"{API}/v1/voices/{added}", headers=H, timeout=30).status_code
+        except Exception as e: rec["removed"] = str(e)[:100]
     log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec)
 
 # check: what does Whisper hear?
