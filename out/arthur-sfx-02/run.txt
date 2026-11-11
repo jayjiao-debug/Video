@@ -1,0 +1,573 @@
+plan: {'tier': 'starter', 'character_count': 22599, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sword_thunk_1", "type": "sfx", "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_thunk_1.mp3", "bytes": 13835}
+{"name": "sword_thunk_2", "type": "sfx", "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_thunk_2.mp3", "bytes": 13835}
+{"name": "slap_1", "type": "sfx", "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "slap_1.mp3", "bytes": 8820}
+{"name": "slap_2", "type": "sfx", "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "slap_2.mp3", "bytes": 8820}
+{"name": "boulder_1", "type": "sfx", "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "boulder_1.mp3", "bytes": 20105}
+{"name": "boulder_2", "type": "sfx", "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "boulder_2.mp3", "bytes": 20105}
+{"name": "kneel_b_1", "type": "sfx", "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "kneel_b_1.mp3", "bytes": 24702}
+{"name": "kneel_b_2", "type": "sfx", "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "kneel_b_2.mp3", "bytes": 24702}
+{"name": "cheer_b_1", "type": "sfx", "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cheer_b_1.mp3", "bytes": 40585}
+{"name": "cheer_b_2", "type": "sfx", "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cheer_b_2.mp3", "bytes": 40585}
+{"name": "rewind_b_1", "type": "sfx", "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "rewind_b_1.mp3", "bytes": 10492}
+{"name": "rewind_b_2", "type": "sfx", "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "rewind_b_2.mp3", "bytes": 10492}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 10778.31it/s]
+sword_thunk_1 [['Clang', 0.464], ['Ding', 0.113], ['Sound effect', 0.046], ['Ping', 0.012], ['Chink, clink', 0.009], ['Bell', 0.006], ['Music', 0.004], ['Speech', 0.004]]
+sword_thunk_2 [['Clang', 0.527], ['Ding', 0.13], ['Sound effect', 0.062], ['Chink, clink', 0.022], ['Ping', 0.013], ['Scrape', 0.008], ['Bang', 0.005], ['Coin (dropping)', 0.004]]
+slap_1 [['Slap, smack', 0.202], ['Whip', 0.057], ['Bang', 0.032], ['Whack, thwack', 0.03], ['Sound effect', 0.023], ['Burst, pop', 0.012], ['Whoosh, swoosh, swish', 0.011], ['Gunshot, gunfire', 0.008]]
+slap_2 [['Sound effect', 0.121], ['Whack, thwack', 0.076], ['Grunt', 0.06], ['Slap, smack', 0.043], ['Gunshot, gunfire', 0.04], ['Bang', 0.038], ['Chop', 0.026], ['Coin (dropping)', 0.024]]
+boulder_1 [['Sound effect', 0.162], ['Single-lens reflex camera', 0.045], ['Door', 0.03], ['Speech', 0.022], ['Scrape', 0.021], ['Crack', 0.016], ['Whack, thwack', 0.016], ['Slam', 0.014]]
+boulder_2 [['Crack', 0.369], ['Sound effect', 0.058], ['Crunch', 0.057], ['Breaking', 0.037], ['Crumpling, crinkling', 0.012], ['Crackle', 0.011], ['Tearing', 0.009], ['Crushing', 0.008]]
+kneel_b_1 [['Zipper (clothing)', 0.112], ['Sound effect', 0.059], ['Scrape', 0.038], ['Rustle', 0.021], ['Speech', 0.02], ['Snort', 0.018], ['Whoosh, swoosh, swish', 0.018], ['Walk, footsteps', 0.016]]
+kneel_b_2 [['Bang', 0.067], ['Slam', 0.05], ['Sound effect', 0.047], ['Speech', 0.041], ['Door', 0.038], ['Sliding door', 0.029], ['Zipper (clothing)', 0.028], ['Music', 0.02]]
+cheer_b_1 [['Speech', 0.219], ['Crowd', 0.217], ['Cheering', 0.141], ['Whoop', 0.121], ['Yell', 0.039], ['Children shouting', 0.037], ['Clapping', 0.032], ['Bellow', 0.031]]
+cheer_b_2 [['Crowd', 0.569], ['Cheering', 0.198], ['Battle cry', 0.121], ['Children shouting', 0.118], ['Whoop', 0.104], ['Speech', 0.079], ['Yell', 0.067], ['Screaming', 0.041]]
+rewind_b_1 [['Sound effect', 0.102], ['Squawk', 0.032], ['Screaming', 0.028], ['Siren', 0.027], ['Squeak', 0.027], ['Music', 0.021], ['Speech', 0.01], ['Scratch', 0.009]]
+rewind_b_2 [['Siren', 0.425], ['Car alarm', 0.166], ['Emergency vehicle', 0.137], ['Ambulance (siren)', 0.132], ['Police car (siren)', 0.076], ['Vehicle', 0.024], ['Speech', 0.022], ['Sound effect', 0.021]]
+[
+ {
+  "name": "sword_thunk_1",
+  "type": "sfx",
+  "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_thunk_1.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Clang",
+    0.464
+   ],
+   [
+    "Ding",
+    0.113
+   ],
+   [
+    "Sound effect",
+    0.046
+   ],
+   [
+    "Ping",
+    0.012
+   ],
+   [
+    "Chink, clink",
+    0.009
+   ],
+   [
+    "Bell",
+    0.006
+   ],
+   [
+    "Music",
+    0.004
+   ],
+   [
+    "Speech",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "sword_thunk_2",
+  "type": "sfx",
+  "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_thunk_2.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Clang",
+    0.527
+   ],
+   [
+    "Ding",
+    0.13
+   ],
+   [
+    "Sound effect",
+    0.062
+   ],
+   [
+    "Chink, clink",
+    0.022
+   ],
+   [
+    "Ping",
+    0.013
+   ],
+   [
+    "Scrape",
+    0.008
+   ],
+   [
+    "Bang",
+    0.005
+   ],
+   [
+    "Coin (dropping)",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "slap_1",
+  "type": "sfx",
+  "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "slap_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Slap, smack",
+    0.202
+   ],
+   [
+    "Whip",
+    0.057
+   ],
+   [
+    "Bang",
+    0.032
+   ],
+   [
+    "Whack, thwack",
+    0.03
+   ],
+   [
+    "Sound effect",
+    0.023
+   ],
+   [
+    "Burst, pop",
+    0.012
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.011
+   ],
+   [
+    "Gunshot, gunfire",
+    0.008
+   ]
+  ]
+ },
+ {
+  "name": "slap_2",
+  "type": "sfx",
+  "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "slap_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.121
+   ],
+   [
+    "Whack, thwack",
+    0.076
+   ],
+   [
+    "Grunt",
+    0.06
+   ],
+   [
+    "Slap, smack",
+    0.043
+   ],
+   [
+    "Gunshot, gunfire",
+    0.04
+   ],
+   [
+    "Bang",
+    0.038
+   ],
+   [
+    "Chop",
+    0.026
+   ],
+   [
+    "Coin (dropping)",
+    0.024
+   ]
+  ]
+ },
+ {
+  "name": "boulder_1",
+  "type": "sfx",
+  "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "boulder_1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Sound effect",
+    0.162
+   ],
+   [
+    "Single-lens reflex camera",
+    0.045
+   ],
+   [
+    "Door",
+    0.03
+   ],
+   [
+    "Speech",
+    0.022
+   ],
+   [
+    "Scrape",
+    0.021
+   ],
+   [
+    "Crack",
+    0.016
+   ],
+   [
+    "Whack, thwack",
+    0.016
+   ],
+   [
+    "Slam",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "boulder_2",
+  "type": "sfx",
+  "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "boulder_2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Crack",
+    0.369
+   ],
+   [
+    "Sound effect",
+    0.058
+   ],
+   [
+    "Crunch",
+    0.057
+   ],
+   [
+    "Breaking",
+    0.037
+   ],
+   [
+    "Crumpling, crinkling",
+    0.012
+   ],
+   [
+    "Crackle",
+    0.011
+   ],
+   [
+    "Tearing",
+    0.009
+   ],
+   [
+    "Crushing",
+    0.008
+   ]
+  ]
+ },
+ {
+  "name": "kneel_b_1",
+  "type": "sfx",
+  "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "kneel_b_1.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Zipper (clothing)",
+    0.112
+   ],
+   [
+    "Sound effect",
+    0.059
+   ],
+   [
+    "Scrape",
+    0.038
+   ],
+   [
+    "Rustle",
+    0.021
+   ],
+   [
+    "Speech",
+    0.02
+   ],
+   [
+    "Snort",
+    0.018
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.018
+   ],
+   [
+    "Walk, footsteps",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "kneel_b_2",
+  "type": "sfx",
+  "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "kneel_b_2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Bang",
+    0.067
+   ],
+   [
+    "Slam",
+    0.05
+   ],
+   [
+    "Sound effect",
+    0.047
+   ],
+   [
+    "Speech",
+    0.041
+   ],
+   [
+    "Door",
+    0.038
+   ],
+   [
+    "Sliding door",
+    0.029
+   ],
+   [
+    "Zipper (clothing)",
+    0.028
+   ],
+   [
+    "Music",
+    0.02
+   ]
+  ]
+ },
+ {
+  "name": "cheer_b_1",
+  "type": "sfx",
+  "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cheer_b_1.mp3",
+  "bytes": 40585,
+  "seconds": 2.48,
+  "tags": [
+   [
+    "Speech",
+    0.219
+   ],
+   [
+    "Crowd",
+    0.217
+   ],
+   [
+    "Cheering",
+    0.141
+   ],
+   [
+    "Whoop",
+    0.121
+   ],
+   [
+    "Yell",
+    0.039
+   ],
+   [
+    "Children shouting",
+    0.037
+   ],
+   [
+    "Clapping",
+    0.032
+   ],
+   [
+    "Bellow",
+    0.031
+   ]
+  ]
+ },
+ {
+  "name": "cheer_b_2",
+  "type": "sfx",
+  "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cheer_b_2.mp3",
+  "bytes": 40585,
+  "seconds": 2.48,
+  "tags": [
+   [
+    "Crowd",
+    0.569
+   ],
+   [
+    "Cheering",
+    0.198
+   ],
+   [
+    "Battle cry",
+    0.121
+   ],
+   [
+    "Children shouting",
+    0.118
+   ],
+   [
+    "Whoop",
+    0.104
+   ],
+   [
+    "Speech",
+    0.079
+   ],
+   [
+    "Yell",
+    0.067
+   ],
+   [
+    "Screaming",
+    0.041
+   ]
+  ]
+ },
+ {
+  "name": "rewind_b_1",
+  "type": "sfx",
+  "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "rewind_b_1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Sound effect",
+    0.102
+   ],
+   [
+    "Squawk",
+    0.032
+   ],
+   [
+    "Screaming",
+    0.028
+   ],
+   [
+    "Siren",
+    0.027
+   ],
+   [
+    "Squeak",
+    0.027
+   ],
+   [
+    "Music",
+    0.021
+   ],
+   [
+    "Speech",
+    0.01
+   ],
+   [
+    "Scratch",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "rewind_b_2",
+  "type": "sfx",
+  "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "rewind_b_2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Siren",
+    0.425
+   ],
+   [
+    "Car alarm",
+    0.166
+   ],
+   [
+    "Emergency vehicle",
+    0.137
+   ],
+   [
+    "Ambulance (siren)",
+    0.132
+   ],
+   [
+    "Police car (siren)",
+    0.076
+   ],
+   [
+    "Vehicle",
+    0.024
+   ],
+   [
+    "Speech",
+    0.022
+   ],
+   [
+    "Sound effect",
+    0.021
+   ]
+  ]
+ }
+]
