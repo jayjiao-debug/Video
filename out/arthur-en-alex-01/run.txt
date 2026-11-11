@@ -1,0 +1,3634 @@
+plan: {'tier': 'starter', 'character_count': 25644, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x01a", "lang": "en", "text": "He just pulled the sword from the stone, and put it back.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x01a.mp3", "bytes": 53541}
+{"name": "x02a", "lang": "en", "text": "Wait. Doesn't pulling it out make you king?", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x02a.mp3", "bytes": 47272}
+{"name": "x03a", "lang": "en", "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x03a.mp3", "bytes": 106204}
+{"name": "x04a", "lang": "en", "text": "Gold letters say: pull it out, and you're king.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04a.mp3", "bytes": 56049}
+{"name": "x05a", "lang": "en", "text": "Lords line up to pull, faces turning red, it won't budge.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x05a.mp3", "bytes": 72767}
+{"name": "x06a", "lang": "en", "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x06a.mp3", "bytes": 111220}
+{"name": "x07a", "lang": "en", "text": "Arthur runs back. Nobody's home. All at the tournament.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07a.mp3", "bytes": 61065}
+{"name": "x08a", "lang": "en", "text": "He thinks: there's a sword in that stone.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08a.mp3", "bytes": 48526}
+{"name": "x09a", "lang": "en", "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x09a.mp3", "bytes": 81545}
+{"name": "x10a", "lang": "en", "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10a.mp3", "bytes": 81545}
+{"name": "x11a", "lang": "en", "text": "Dad makes him swear. Kay admits Arthur brought it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x11a.mp3", "bytes": 61065}
+{"name": "x12a", "lang": "en", "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x12a.mp3", "bytes": 84470}
+{"name": "x13a", "lang": "en", "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x13a.mp3", "bytes": 129192}
+{"name": "x14a", "lang": "en", "text": "Days later, every lord tries. Only Arthur can. Pull three.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14a.mp3", "bytes": 88232}
+{"name": "x15a", "lang": "en", "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15a.mp3", "bytes": 99517}
+{"name": "x16a", "lang": "en", "text": "Next month, snow on the ground: pull four. Delayed.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x16a.mp3", "bytes": 70260}
+{"name": "x17a", "lang": "en", "text": "Spring, flowers in full bloom: pull five. Again.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17a.mp3", "bytes": 77783}
+{"name": "x18a", "lang": "en", "text": "Summer, in front of everyone: pull six.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18a.mp3", "bytes": 54795}
+{"name": "x19a", "lang": "en", "text": "The people snap: \"We want Arthur as king! No more delays!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19a.mp3", "bytes": 75275}
+{"name": "x20a", "lang": "en", "text": "Everyone drops to their knees.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x20a.mp3", "bytes": 35569}
+{"name": "x21a", "lang": "en", "text": "Six pulls to make him king. And the first? His brother just forgot his sword.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x21a.mp3", "bytes": 88232}
+{"name": "x01b", "lang": "en", "text": "He just pulled the sword from the stone, and put it back.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x01b.mp3", "bytes": 57303}
+{"name": "x02b", "lang": "en", "text": "Wait. Doesn't pulling it out make you king?", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x02b.mp3", "bytes": 44764}
+{"name": "x03b", "lang": "en", "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x03b.mp3", "bytes": 107458}
+{"name": "x04b", "lang": "en", "text": "Gold letters say: pull it out, and you're king.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04b.mp3", "bytes": 54795}
+{"name": "x05b", "lang": "en", "text": "Lords line up to pull, faces turning red, it won't budge.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x05b.mp3", "bytes": 74021}
+{"name": "x06b", "lang": "en", "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x06b.mp3", "bytes": 112474}
+{"name": "x07b", "lang": "en", "text": "Arthur runs back. Nobody's home. All at the tournament.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07b.mp3", "bytes": 61065}
+{"name": "x08b", "lang": "en", "text": "He thinks: there's a sword in that stone.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08b.mp3", "bytes": 48526}
+{"name": "x09b", "lang": "en", "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x09b.mp3", "bytes": 84470}
+{"name": "x10b", "lang": "en", "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10b.mp3", "bytes": 82798}
+{"name": "x11b", "lang": "en", "text": "Dad makes him swear. Kay admits Arthur brought it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x11b.mp3", "bytes": 61065}
+{"name": "x12b", "lang": "en", "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x12b.mp3", "bytes": 86978}
+{"name": "x13b", "lang": "en", "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x13b.mp3", "bytes": 126684}
+{"name": "x14b", "lang": "en", "text": "Days later, every lord tries. Only Arthur can. Pull three.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14b.mp3", "bytes": 88232}
+{"name": "x15b", "lang": "en", "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15b.mp3", "bytes": 91994}
+{"name": "x16b", "lang": "en", "text": "Next month, snow on the ground: pull four. Delayed.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x16b.mp3", "bytes": 74021}
+{"name": "x17b", "lang": "en", "text": "Spring, flowers in full bloom: pull five. Again.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17b.mp3", "bytes": 79037}
+{"name": "x18b", "lang": "en", "text": "Summer, in front of everyone: pull six.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18b.mp3", "bytes": 54795}
+{"name": "x19b", "lang": "en", "text": "The people snap: \"We want Arthur as king! No more delays!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19b.mp3", "bytes": 74021}
+{"name": "x20b", "lang": "en", "text": "Everyone drops to their knees.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x20b.mp3", "bytes": 36823}
+{"name": "x21b", "lang": "en", "text": "Six pulls to make him king. And the first? His brother just forgot his sword.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x21b.mp3", "bytes": 88232}
+{"name": "x05c", "lang": "en", "text": "Lords line up to pull, red in the face: it won't budge.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x05c.mp3", "bytes": 74021}
+{"name": "x13c", "lang": "en", "text": "Dad pulls: stuck. Kay, with all his might: stuck. Arthur reaches out: pull two.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x13c.mp3", "bytes": 122505}
+{"name": "x14c", "lang": "en", "text": "Days later, every lord tries. Only he can. Pull three.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14c.mp3", "bytes": 86978}
+{"name": "x18c", "lang": "en", "text": "Early summer, in front of everyone: pull six.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18c.mp3", "bytes": 58557}
+{"name": "x19c", "lang": "en", "text": "The people snap: \"Arthur for king! No more delays!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19c.mp3", "bytes": 65244}
+{"name": "x20c", "lang": "en", "text": "And everyone kneels.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x20c.mp3", "bytes": 31807}
+{"name": "x03m", "lang": "en", "text": "In Malory's classic tale, outside a London church, a great stone appears, a sword in it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x03m.mp3", "bytes": 106204}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x01a",
+  "lang": "en",
+  "text": "He just pulled the sword from the stone, and put it back.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x01a.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "just",
+    0.12,
+    0.42
+   ],
+   [
+    "pulled",
+    0.42,
+    0.68
+   ],
+   [
+    "the",
+    0.68,
+    0.88
+   ],
+   [
+    "sword",
+    0.88,
+    1.16
+   ],
+   [
+    "from",
+    1.16,
+    1.34
+   ],
+   [
+    "the",
+    1.34,
+    1.5
+   ],
+   [
+    "stone",
+    1.5,
+    1.86
+   ],
+   [
+    "and",
+    1.86,
+    2.36
+   ],
+   [
+    "put",
+    2.36,
+    2.58
+   ],
+   [
+    "it",
+    2.58,
+    2.7
+   ],
+   [
+    "back.",
+    2.7,
+    2.94
+   ]
+  ],
+  "heard": "He just pulled the sword from the stone and put it back.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "x02a",
+  "lang": "en",
+  "text": "Wait. Doesn't pulling it out make you king?",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x02a.mp3",
+  "bytes": 47272,
+  "words": [
+   [
+    "Wait,",
+    0.0,
+    0.26
+   ],
+   [
+    "doesn't",
+    0.6,
+    1.1
+   ],
+   [
+    "pulling",
+    1.1,
+    1.38
+   ],
+   [
+    "it",
+    1.38,
+    1.58
+   ],
+   [
+    "out",
+    1.58,
+    1.76
+   ],
+   [
+    "make",
+    1.76,
+    2.0
+   ],
+   [
+    "you",
+    2.0,
+    2.2
+   ],
+   [
+    "king?",
+    2.2,
+    2.46
+   ]
+  ],
+  "heard": "Wait, doesn't pulling it out make you king?",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 2.88
+ },
+ {
+  "name": "x03a",
+  "lang": "en",
+  "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x03a.mp3",
+  "bytes": 106204,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.16
+   ],
+   [
+    "the",
+    0.16,
+    0.26
+   ],
+   [
+    "classic",
+    0.26,
+    0.66
+   ],
+   [
+    "Le",
+    0.66,
+    0.9
+   ],
+   [
+    "Morte",
+    0.9,
+    1.2
+   ],
+   [
+    "d",
+    1.2,
+    1.34
+   ],
+   [
+    "'Arthur,",
+    1.34,
+    1.72
+   ],
+   [
+    "outside",
+    2.1,
+    2.44
+   ],
+   [
+    "a",
+    2.44,
+    2.7
+   ],
+   [
+    "London",
+    2.7,
+    2.92
+   ],
+   [
+    "church,",
+    2.92,
+    3.36
+   ],
+   [
+    "a",
+    3.72,
+    3.8
+   ],
+   [
+    "great",
+    3.8,
+    4.12
+   ],
+   [
+    "stone",
+    4.12,
+    4.54
+   ],
+   [
+    "appears,",
+    4.54,
+    5.04
+   ],
+   [
+    "a",
+    5.56,
+    5.64
+   ],
+   [
+    "sword",
+    5.64,
+    6.02
+   ],
+   [
+    "in",
+    6.02,
+    6.22
+   ],
+   [
+    "it.",
+    6.22,
+    6.38
+   ]
+  ],
+  "heard": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.947,
+  "seconds": 6.56
+ },
+ {
+  "name": "x04a",
+  "lang": "en",
+  "text": "Gold letters say: pull it out, and you're king.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04a.mp3",
+  "bytes": 56049,
+  "words": [
+   [
+    "Gold",
+    0.0,
+    0.26
+   ],
+   [
+    "letters",
+    0.26,
+    0.6
+   ],
+   [
+    "say,",
+    0.6,
+    1.04
+   ],
+   [
+    "pull",
+    1.32,
+    1.64
+   ],
+   [
+    "it",
+    1.64,
+    1.8
+   ],
+   [
+    "out",
+    1.8,
+    2.0
+   ],
+   [
+    "and",
+    2.0,
+    2.34
+   ],
+   [
+    "you're",
+    2.34,
+    2.66
+   ],
+   [
+    "king.",
+    2.66,
+    2.98
+   ]
+  ],
+  "heard": "Gold letters say, pull it out and you're king.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "x05a",
+  "lang": "en",
+  "text": "Lords line up to pull, faces turning red, it won't budge.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x05a.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "Lord's",
+    0.0,
+    0.44
+   ],
+   [
+    "lineup",
+    0.44,
+    0.76
+   ],
+   [
+    "to",
+    0.76,
+    0.98
+   ],
+   [
+    "pull.",
+    0.98,
+    1.32
+   ],
+   [
+    "Face",
+    1.58,
+    1.9
+   ],
+   [
+    "is",
+    1.9,
+    2.08
+   ],
+   [
+    "turning",
+    2.08,
+    2.3
+   ],
+   [
+    "red.",
+    2.3,
+    2.7
+   ],
+   [
+    "It",
+    3.14,
+    3.28
+   ],
+   [
+    "won't",
+    3.28,
+    3.68
+   ],
+   [
+    "budge.",
+    3.68,
+    4.24
+   ]
+  ],
+  "heard": "Lord's lineup to pull. Face is turning red. It won't budge.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.48
+ },
+ {
+  "name": "x06a",
+  "lang": "en",
+  "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x06a.mp3",
+  "bytes": 111220,
+  "words": [
+   [
+    "New",
+    0.0,
+    0.24
+   ],
+   [
+    "Year's",
+    0.24,
+    0.6
+   ],
+   [
+    "tournament.",
+    0.6,
+    0.94
+   ],
+   [
+    "Arthur's",
+    1.46,
+    2.1
+   ],
+   [
+    "big",
+    2.1,
+    2.3
+   ],
+   [
+    "brother",
+    2.3,
+    2.58
+   ],
+   [
+    "Kay,",
+    2.58,
+    3.0
+   ],
+   [
+    "a",
+    3.36,
+    3.48
+   ],
+   [
+    "brand",
+    3.48,
+    3.7
+   ],
+   [
+    "new",
+    3.7,
+    3.92
+   ],
+   [
+    "knight,",
+    3.92,
+    4.24
+   ],
+   [
+    "pats",
+    4.64,
+    4.92
+   ],
+   [
+    "his",
+    4.92,
+    5.04
+   ],
+   [
+    "belt.",
+    5.04,
+    5.32
+   ],
+   [
+    "No",
+    5.98,
+    6.16
+   ],
+   [
+    "sword.",
+    6.16,
+    6.48
+   ]
+  ],
+  "heard": "New Year's tournament. Arthur's big brother Kay, a brand new knight, pats his belt. No sword.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.88
+ },
+ {
+  "name": "x07a",
+  "lang": "en",
+  "text": "Arthur runs back. Nobody's home. All at the tournament.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07a.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "Arthur",
+    0.0,
+    0.3
+   ],
+   [
+    "runs",
+    0.3,
+    0.62
+   ],
+   [
+    "back.",
+    0.62,
+    0.94
+   ],
+   [
+    "Nobody's",
+    1.56,
+    2.0
+   ],
+   [
+    "home.",
+    2.0,
+    2.22
+   ],
+   [
+    "All",
+    2.64,
+    2.84
+   ],
+   [
+    "at",
+    2.84,
+    3.02
+   ],
+   [
+    "the",
+    3.02,
+    3.1
+   ],
+   [
+    "tournament.",
+    3.1,
+    3.4
+   ]
+  ],
+  "heard": "Arthur runs back. Nobody's home. All at the tournament.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "x08a",
+  "lang": "en",
+  "text": "He thinks: there's a sword in that stone.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08a.mp3",
+  "bytes": 48526,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "thinks",
+    0.14,
+    0.48
+   ],
+   [
+    "there's",
+    0.48,
+    1.32
+   ],
+   [
+    "a",
+    1.32,
+    1.42
+   ],
+   [
+    "sword",
+    1.42,
+    1.84
+   ],
+   [
+    "in",
+    1.84,
+    2.04
+   ],
+   [
+    "that",
+    2.04,
+    2.2
+   ],
+   [
+    "stone.",
+    2.2,
+    2.54
+   ]
+  ],
+  "heard": "He thinks there's a sword in that stone.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.96
+ },
+ {
+  "name": "x09a",
+  "lang": "en",
+  "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x09a.mp3",
+  "bytes": 81545,
+  "words": [
+   [
+    "Even",
+    0.0,
+    0.22
+   ],
+   [
+    "the",
+    0.22,
+    0.38
+   ],
+   [
+    "10",
+    0.38,
+    0.64
+   ],
+   [
+    "guards",
+    0.64,
+    1.04
+   ],
+   [
+    "are",
+    1.04,
+    1.26
+   ],
+   [
+    "at",
+    1.26,
+    1.38
+   ],
+   [
+    "the",
+    1.38,
+    1.46
+   ],
+   [
+    "tournament.",
+    1.46,
+    1.84
+   ],
+   [
+    "One",
+    2.4,
+    2.66
+   ],
+   [
+    "tug,",
+    2.66,
+    2.9
+   ],
+   [
+    "and",
+    3.3,
+    3.38
+   ],
+   [
+    "it's",
+    3.38,
+    3.58
+   ],
+   [
+    "out.",
+    3.58,
+    3.76
+   ],
+   [
+    "Pull",
+    4.28,
+    4.5
+   ],
+   [
+    "one.",
+    4.5,
+    4.74
+   ]
+  ],
+  "heard": "Even the 10 guards are at the tournament. One tug, and it's out. Pull one.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.04
+ },
+ {
+  "name": "x10a",
+  "lang": "en",
+  "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10a.mp3",
+  "bytes": 81545,
+  "words": [
+   [
+    "Kay",
+    0.0,
+    0.2
+   ],
+   [
+    "takes",
+    0.2,
+    0.5
+   ],
+   [
+    "it",
+    0.5,
+    0.64
+   ],
+   [
+    "straight",
+    0.64,
+    1.04
+   ],
+   [
+    "to",
+    1.04,
+    1.3
+   ],
+   [
+    "dad.",
+    1.3,
+    1.54
+   ],
+   [
+    "Dad,",
+    1.92,
+    2.36
+   ],
+   [
+    "the",
+    2.64,
+    2.72
+   ],
+   [
+    "sword!",
+    2.72,
+    3.14
+   ],
+   [
+    "I",
+    3.5,
+    3.72
+   ],
+   [
+    "get",
+    3.72,
+    3.86
+   ],
+   [
+    "to",
+    3.86,
+    4.0
+   ],
+   [
+    "be",
+    4.0,
+    4.12
+   ],
+   [
+    "king!",
+    4.12,
+    4.44
+   ]
+  ],
+  "heard": "Kay takes it straight to dad. Dad, the sword! I get to be king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.04
+ },
+ {
+  "name": "x11a",
+  "lang": "en",
+  "text": "Dad makes him swear. Kay admits Arthur brought it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x11a.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.28
+   ],
+   [
+    "makes",
+    0.28,
+    0.56
+   ],
+   [
+    "him",
+    0.56,
+    0.78
+   ],
+   [
+    "swear.",
+    0.78,
+    1.24
+   ],
+   [
+    "Kay",
+    1.96,
+    2.18
+   ],
+   [
+    "admits",
+    2.18,
+    2.52
+   ],
+   [
+    "Arthur",
+    2.52,
+    2.92
+   ],
+   [
+    "brought",
+    2.92,
+    3.34
+   ],
+   [
+    "it.",
+    3.34,
+    3.54
+   ]
+  ],
+  "heard": "Dad makes him swear. Kay admits Arthur brought it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "x12a",
+  "lang": "en",
+  "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x12a.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.26
+   ],
+   [
+    "tells",
+    0.26,
+    0.58
+   ],
+   [
+    "Arthur,",
+    0.58,
+    0.98
+   ],
+   [
+    "put",
+    1.42,
+    1.62
+   ],
+   [
+    "it",
+    1.62,
+    1.76
+   ],
+   [
+    "back",
+    1.76,
+    2.02
+   ],
+   [
+    "and",
+    2.02,
+    2.24
+   ],
+   [
+    "pull",
+    2.24,
+    2.48
+   ],
+   [
+    "again.",
+    2.48,
+    2.82
+   ],
+   [
+    "He",
+    3.24,
+    3.34
+   ],
+   [
+    "says,",
+    3.34,
+    3.54
+   ],
+   [
+    "how",
+    3.88,
+    4.06
+   ],
+   [
+    "hard",
+    4.06,
+    4.32
+   ],
+   [
+    "can",
+    4.32,
+    4.48
+   ],
+   [
+    "it",
+    4.48,
+    4.6
+   ],
+   [
+    "be?",
+    4.6,
+    4.82
+   ]
+  ],
+  "heard": "Dad tells Arthur, put it back and pull again. He says, how hard can it be?",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 5.2
+ },
+ {
+  "name": "x13a",
+  "lang": "en",
+  "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x13a.mp3",
+  "bytes": 129192,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.3
+   ],
+   [
+    "pulls",
+    0.3,
+    0.56
+   ],
+   [
+    "first.",
+    0.56,
+    0.92
+   ],
+   [
+    "Stuck.",
+    1.48,
+    2.04
+   ],
+   [
+    "Kay",
+    2.42,
+    2.76
+   ],
+   [
+    "pulls",
+    2.76,
+    3.08
+   ],
+   [
+    "with",
+    3.08,
+    3.32
+   ],
+   [
+    "all",
+    3.32,
+    3.68
+   ],
+   [
+    "his",
+    3.68,
+    3.88
+   ],
+   [
+    "might.",
+    3.88,
+    4.16
+   ],
+   [
+    "Stuck.",
+    4.66,
+    5.36
+   ],
+   [
+    "Arthur",
+    5.78,
+    6.08
+   ],
+   [
+    "reaches",
+    6.08,
+    6.46
+   ],
+   [
+    "out.",
+    6.46,
+    6.78
+   ],
+   [
+    "Pull",
+    7.16,
+    7.34
+   ],
+   [
+    "two.",
+    7.34,
+    7.58
+   ]
+  ],
+  "heard": "Dad pulls first. Stuck. Kay pulls with all his might. Stuck. Arthur reaches out. Pull two.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 8.0
+ },
+ {
+  "name": "x14a",
+  "lang": "en",
+  "text": "Days later, every lord tries. Only Arthur can. Pull three.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14a.mp3",
+  "bytes": 88232,
+  "words": [
+   [
+    "Days",
+    0.0,
+    0.3
+   ],
+   [
+    "later,",
+    0.3,
+    0.72
+   ],
+   [
+    "every",
+    1.1,
+    1.4
+   ],
+   [
+    "lord",
+    1.4,
+    1.68
+   ],
+   [
+    "tries.",
+    1.68,
+    2.1
+   ],
+   [
+    "Only",
+    2.7,
+    3.0
+   ],
+   [
+    "Arthur",
+    3.0,
+    3.36
+   ],
+   [
+    "can.",
+    3.36,
+    3.76
+   ],
+   [
+    "Pull",
+    4.42,
+    4.64
+   ],
+   [
+    "three.",
+    4.64,
+    5.02
+   ]
+  ],
+  "heard": "Days later, every lord tries. Only Arthur can. Pull three.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.44
+ },
+ {
+  "name": "x15a",
+  "lang": "en",
+  "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15a.mp3",
+  "bytes": 99517,
+  "words": [
+   [
+    "They're",
+    0.0,
+    0.28
+   ],
+   [
+    "furious.",
+    0.28,
+    0.96
+   ],
+   [
+    "A",
+    1.56,
+    1.74
+   ],
+   [
+    "boy",
+    1.74,
+    2.08
+   ],
+   [
+    "of",
+    2.08,
+    2.26
+   ],
+   [
+    "no",
+    2.26,
+    2.54
+   ],
+   [
+    "high",
+    2.54,
+    2.88
+   ],
+   [
+    "blood?",
+    2.88,
+    3.3
+   ],
+   [
+    "Rulous?",
+    3.8,
+    4.48
+   ],
+   [
+    "They",
+    4.84,
+    5.34
+   ],
+   [
+    "delay",
+    5.34,
+    5.66
+   ],
+   [
+    "it.",
+    5.66,
+    5.94
+   ]
+  ],
+  "heard": "They're furious. A boy of no high blood? Rulous? They delay it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.16
+ },
+ {
+  "name": "x16a",
+  "lang": "en",
+  "text": "Next month, snow on the ground: pull four. Delayed.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x16a.mp3",
+  "bytes": 70260,
+  "words": [
+   [
+    "Next",
+    0.0,
+    0.26
+   ],
+   [
+    "month,",
+    0.26,
+    0.66
+   ],
+   [
+    "snow",
+    1.04,
+    1.36
+   ],
+   [
+    "on",
+    1.36,
+    1.54
+   ],
+   [
+    "the",
+    1.54,
+    1.64
+   ],
+   [
+    "ground,",
+    1.64,
+    1.98
+   ],
+   [
+    "pull",
+    2.4,
+    2.62
+   ],
+   [
+    "four,",
+    2.62,
+    3.04
+   ],
+   [
+    "delayed.",
+    3.52,
+    3.8
+   ]
+  ],
+  "heard": "Next month, snow on the ground, pull four, delayed.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.32
+ },
+ {
+  "name": "x17a",
+  "lang": "en",
+  "text": "Spring, flowers in full bloom: pull five. Again.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17a.mp3",
+  "bytes": 77783,
+  "words": [
+   [
+    "Spring.",
+    0.0,
+    0.38
+   ],
+   [
+    "Flowers",
+    0.8,
+    1.3
+   ],
+   [
+    "in",
+    1.3,
+    1.62
+   ],
+   [
+    "full",
+    1.62,
+    1.96
+   ],
+   [
+    "bloom.",
+    1.96,
+    2.38
+   ],
+   [
+    "Pull",
+    2.8,
+    3.06
+   ],
+   [
+    "5.",
+    3.06,
+    3.5
+   ],
+   [
+    "Again.",
+    3.94,
+    4.32
+   ]
+  ],
+  "heard": "Spring. Flowers in full bloom. Pull 5. Again.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.8
+ },
+ {
+  "name": "x18a",
+  "lang": "en",
+  "text": "Summer, in front of everyone: pull six.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18a.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "Summer,",
+    0.0,
+    0.38
+   ],
+   [
+    "in",
+    0.78,
+    0.9
+   ],
+   [
+    "front",
+    0.9,
+    1.1
+   ],
+   [
+    "of",
+    1.1,
+    1.26
+   ],
+   [
+    "everyone.",
+    1.26,
+    1.74
+   ],
+   [
+    "Pull",
+    2.24,
+    2.52
+   ],
+   [
+    "six.",
+    2.52,
+    2.9
+   ]
+  ],
+  "heard": "Summer, in front of everyone. Pull six.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.36
+ },
+ {
+  "name": "x19a",
+  "lang": "en",
+  "text": "The people snap: \"We want Arthur as king! No more delays!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19a.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "people",
+    0.18,
+    0.46
+   ],
+   [
+    "snap.",
+    0.46,
+    0.92
+   ],
+   [
+    "We",
+    1.4,
+    1.66
+   ],
+   [
+    "want",
+    1.66,
+    1.96
+   ],
+   [
+    "Arthurus",
+    1.96,
+    2.64
+   ],
+   [
+    "King!",
+    2.64,
+    2.9
+   ],
+   [
+    "No",
+    3.22,
+    3.48
+   ],
+   [
+    "more",
+    3.48,
+    3.7
+   ],
+   [
+    "delays!",
+    3.7,
+    4.1
+   ]
+  ],
+  "heard": "The people snap. We want Arthurus King! No more delays!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.64
+ },
+ {
+  "name": "x20a",
+  "lang": "en",
+  "text": "Everyone drops to their knees.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x20a.mp3",
+  "bytes": 35569,
+  "words": [
+   [
+    "Everyone",
+    0.0,
+    0.44
+   ],
+   [
+    "drops",
+    0.44,
+    0.9
+   ],
+   [
+    "to",
+    0.9,
+    1.22
+   ],
+   [
+    "their",
+    1.22,
+    1.36
+   ],
+   [
+    "knees.",
+    1.36,
+    1.64
+   ]
+  ],
+  "heard": "Everyone drops to their knees.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 2.16
+ },
+ {
+  "name": "x21a",
+  "lang": "en",
+  "text": "Six pulls to make him king. And the first? His brother just forgot his sword.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x21a.mp3",
+  "bytes": 88232,
+  "words": [
+   [
+    "Six",
+    0.0,
+    0.28
+   ],
+   [
+    "pulls",
+    0.28,
+    0.66
+   ],
+   [
+    "to",
+    0.66,
+    0.92
+   ],
+   [
+    "make",
+    0.92,
+    1.2
+   ],
+   [
+    "him",
+    1.2,
+    1.34
+   ],
+   [
+    "king,",
+    1.34,
+    1.7
+   ],
+   [
+    "and",
+    2.22,
+    2.36
+   ],
+   [
+    "the",
+    2.36,
+    2.46
+   ],
+   [
+    "first,",
+    2.46,
+    2.78
+   ],
+   [
+    "his",
+    3.26,
+    3.42
+   ],
+   [
+    "brother",
+    3.42,
+    3.74
+   ],
+   [
+    "just",
+    3.74,
+    4.16
+   ],
+   [
+    "forgot",
+    4.16,
+    4.5
+   ],
+   [
+    "his",
+    4.5,
+    4.74
+   ],
+   [
+    "sword.",
+    4.74,
+    5.08
+   ]
+  ],
+  "heard": "Six pulls to make him king, and the first, his brother just forgot his sword.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.44
+ },
+ {
+  "name": "x01b",
+  "lang": "en",
+  "text": "He just pulled the sword from the stone, and put it back.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x01b.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "just",
+    0.14,
+    0.48
+   ],
+   [
+    "pulled",
+    0.48,
+    0.74
+   ],
+   [
+    "the",
+    0.74,
+    0.94
+   ],
+   [
+    "sword",
+    0.94,
+    1.24
+   ],
+   [
+    "from",
+    1.24,
+    1.42
+   ],
+   [
+    "the",
+    1.42,
+    1.58
+   ],
+   [
+    "stone",
+    1.58,
+    1.9
+   ],
+   [
+    "and",
+    1.9,
+    2.54
+   ],
+   [
+    "put",
+    2.54,
+    2.82
+   ],
+   [
+    "it",
+    2.82,
+    2.94
+   ],
+   [
+    "back.",
+    2.94,
+    3.18
+   ]
+  ],
+  "heard": "He just pulled the sword from the stone and put it back.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 3.52
+ },
+ {
+  "name": "x02b",
+  "lang": "en",
+  "text": "Wait. Doesn't pulling it out make you king?",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x02b.mp3",
+  "bytes": 44764,
+  "words": [
+   [
+    "Wait,",
+    0.0,
+    0.24
+   ],
+   [
+    "doesn't",
+    0.54,
+    1.08
+   ],
+   [
+    "pulling",
+    1.08,
+    1.36
+   ],
+   [
+    "it",
+    1.36,
+    1.58
+   ],
+   [
+    "out",
+    1.58,
+    1.74
+   ],
+   [
+    "make",
+    1.74,
+    1.96
+   ],
+   [
+    "you",
+    1.96,
+    2.12
+   ],
+   [
+    "king?",
+    2.12,
+    2.34
+   ]
+  ],
+  "heard": "Wait, doesn't pulling it out make you king?",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 2.72
+ },
+ {
+  "name": "x03b",
+  "lang": "en",
+  "text": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x03b.mp3",
+  "bytes": 107458,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.18
+   ],
+   [
+    "the",
+    0.18,
+    0.28
+   ],
+   [
+    "classic",
+    0.28,
+    0.68
+   ],
+   [
+    "Le",
+    0.68,
+    0.96
+   ],
+   [
+    "Morte",
+    0.96,
+    1.22
+   ],
+   [
+    "d",
+    1.22,
+    1.38
+   ],
+   [
+    "'Arthur,",
+    1.38,
+    1.8
+   ],
+   [
+    "outside",
+    2.18,
+    2.48
+   ],
+   [
+    "a",
+    2.48,
+    2.72
+   ],
+   [
+    "London",
+    2.72,
+    2.96
+   ],
+   [
+    "church,",
+    2.96,
+    3.42
+   ],
+   [
+    "a",
+    3.8,
+    3.88
+   ],
+   [
+    "great",
+    3.88,
+    4.22
+   ],
+   [
+    "stone",
+    4.22,
+    4.64
+   ],
+   [
+    "appears,",
+    4.64,
+    5.12
+   ],
+   [
+    "a",
+    5.62,
+    5.72
+   ],
+   [
+    "sword",
+    5.72,
+    6.1
+   ],
+   [
+    "in",
+    6.1,
+    6.3
+   ],
+   [
+    "it.",
+    6.3,
+    6.48
+   ]
+  ],
+  "heard": "In the classic Le Morte d'Arthur, outside a London church, a great stone appears, a sword in it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.968,
+  "seconds": 6.64
+ },
+ {
+  "name": "x04b",
+  "lang": "en",
+  "text": "Gold letters say: pull it out, and you're king.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04b.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "Gold",
+    0.0,
+    0.26
+   ],
+   [
+    "letters",
+    0.26,
+    0.64
+   ],
+   [
+    "say,",
+    0.64,
+    1.08
+   ],
+   [
+    "pull",
+    1.32,
+    1.66
+   ],
+   [
+    "it",
+    1.66,
+    1.84
+   ],
+   [
+    "out",
+    1.84,
+    2.02
+   ],
+   [
+    "and",
+    2.02,
+    2.34
+   ],
+   [
+    "you're",
+    2.34,
+    2.64
+   ],
+   [
+    "king.",
+    2.64,
+    2.92
+   ]
+  ],
+  "heard": "Gold letters say, pull it out and you're king.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "x05b",
+  "lang": "en",
+  "text": "Lords line up to pull, faces turning red, it won't budge.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x05b.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "Lord's",
+    0.0,
+    0.44
+   ],
+   [
+    "lineup",
+    0.44,
+    0.74
+   ],
+   [
+    "to",
+    0.74,
+    0.98
+   ],
+   [
+    "pull.",
+    0.98,
+    1.28
+   ],
+   [
+    "Face",
+    1.66,
+    1.98
+   ],
+   [
+    "is",
+    1.98,
+    2.18
+   ],
+   [
+    "turning",
+    2.18,
+    2.4
+   ],
+   [
+    "red.",
+    2.4,
+    2.84
+   ],
+   [
+    "It",
+    3.3,
+    3.42
+   ],
+   [
+    "won't",
+    3.42,
+    3.84
+   ],
+   [
+    "budge.",
+    3.84,
+    4.34
+   ]
+  ],
+  "heard": "Lord's lineup to pull. Face is turning red. It won't budge.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "x06b",
+  "lang": "en",
+  "text": "New Year's tournament. Arthur's big brother Kay, a brand-new knight, pats his belt: no sword.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x06b.mp3",
+  "bytes": 112474,
+  "words": [
+   [
+    "New",
+    0.0,
+    0.24
+   ],
+   [
+    "Year's",
+    0.24,
+    0.6
+   ],
+   [
+    "Tournament",
+    0.6,
+    1.1
+   ],
+   [
+    "Arthur's",
+    1.68,
+    2.12
+   ],
+   [
+    "Big",
+    2.12,
+    2.32
+   ],
+   [
+    "Brother",
+    2.32,
+    2.62
+   ],
+   [
+    "K,",
+    2.62,
+    2.98
+   ],
+   [
+    "a",
+    3.38,
+    3.46
+   ],
+   [
+    "brand",
+    3.46,
+    3.78
+   ],
+   [
+    "new",
+    3.78,
+    4.02
+   ],
+   [
+    "knight,",
+    4.02,
+    4.36
+   ],
+   [
+    "pats",
+    4.72,
+    4.98
+   ],
+   [
+    "his",
+    4.98,
+    5.12
+   ],
+   [
+    "belt.",
+    5.12,
+    5.42
+   ],
+   [
+    "No",
+    6.02,
+    6.22
+   ],
+   [
+    "sword.",
+    6.22,
+    6.52
+   ]
+  ],
+  "heard": "New Year's Tournament Arthur's Big Brother K, a brand new knight, pats his belt. No sword.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.96
+ },
+ {
+  "name": "x07b",
+  "lang": "en",
+  "text": "Arthur runs back. Nobody's home. All at the tournament.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07b.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "Arthur",
+    0.0,
+    0.3
+   ],
+   [
+    "runs",
+    0.3,
+    0.62
+   ],
+   [
+    "back.",
+    0.62,
+    0.94
+   ],
+   [
+    "Nobody's",
+    1.54,
+    2.0
+   ],
+   [
+    "home.",
+    2.0,
+    2.24
+   ],
+   [
+    "All",
+    2.62,
+    2.82
+   ],
+   [
+    "at",
+    2.82,
+    2.98
+   ],
+   [
+    "the",
+    2.98,
+    3.06
+   ],
+   [
+    "tournament.",
+    3.06,
+    3.34
+   ]
+  ],
+  "heard": "Arthur runs back. Nobody's home. All at the tournament.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "x08b",
+  "lang": "en",
+  "text": "He thinks: there's a sword in that stone.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08b.mp3",
+  "bytes": 48526,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "thinks,",
+    0.14,
+    0.5
+   ],
+   [
+    "there's",
+    0.8,
+    1.34
+   ],
+   [
+    "a",
+    1.34,
+    1.44
+   ],
+   [
+    "sword",
+    1.44,
+    1.84
+   ],
+   [
+    "in",
+    1.84,
+    2.04
+   ],
+   [
+    "that",
+    2.04,
+    2.2
+   ],
+   [
+    "stone.",
+    2.2,
+    2.52
+   ]
+  ],
+  "heard": "He thinks, there's a sword in that stone.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 2.96
+ },
+ {
+  "name": "x09b",
+  "lang": "en",
+  "text": "Even the ten guards are at the tournament. One tug, and it's out. Pull one.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x09b.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "Even",
+    0.0,
+    0.26
+   ],
+   [
+    "the",
+    0.26,
+    0.46
+   ],
+   [
+    "10",
+    0.46,
+    0.76
+   ],
+   [
+    "guards",
+    0.76,
+    1.22
+   ],
+   [
+    "are",
+    1.22,
+    1.46
+   ],
+   [
+    "at",
+    1.46,
+    1.6
+   ],
+   [
+    "the",
+    1.6,
+    1.7
+   ],
+   [
+    "tournament.",
+    1.7,
+    2.08
+   ],
+   [
+    "One",
+    2.58,
+    2.8
+   ],
+   [
+    "tug",
+    2.8,
+    3.06
+   ],
+   [
+    "and",
+    3.06,
+    3.54
+   ],
+   [
+    "it's",
+    3.54,
+    3.76
+   ],
+   [
+    "out.",
+    3.76,
+    3.94
+   ],
+   [
+    "Pull",
+    4.5,
+    4.68
+   ],
+   [
+    "one.",
+    4.68,
+    4.96
+   ]
+  ],
+  "heard": "Even the 10 guards are at the tournament. One tug and it's out. Pull one.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.2
+ },
+ {
+  "name": "x10b",
+  "lang": "en",
+  "text": "Kay takes it straight to Dad: \"Dad! The sword! I get to be king!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10b.mp3",
+  "bytes": 82798,
+  "words": [
+   [
+    "Kay",
+    0.0,
+    0.22
+   ],
+   [
+    "takes",
+    0.22,
+    0.54
+   ],
+   [
+    "it",
+    0.54,
+    0.66
+   ],
+   [
+    "straight",
+    0.66,
+    1.06
+   ],
+   [
+    "to",
+    1.06,
+    1.34
+   ],
+   [
+    "dad.",
+    1.34,
+    1.58
+   ],
+   [
+    "Dad!",
+    2.0,
+    2.36
+   ],
+   [
+    "The",
+    2.68,
+    2.84
+   ],
+   [
+    "sword!",
+    2.84,
+    3.22
+   ],
+   [
+    "I",
+    3.62,
+    3.8
+   ],
+   [
+    "get",
+    3.8,
+    3.94
+   ],
+   [
+    "to",
+    3.94,
+    4.08
+   ],
+   [
+    "be",
+    4.08,
+    4.2
+   ],
+   [
+    "king!",
+    4.2,
+    4.52
+   ]
+  ],
+  "heard": "Kay takes it straight to dad. Dad! The sword! I get to be king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.12
+ },
+ {
+  "name": "x11b",
+  "lang": "en",
+  "text": "Dad makes him swear. Kay admits Arthur brought it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x11b.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.28
+   ],
+   [
+    "makes",
+    0.28,
+    0.56
+   ],
+   [
+    "him",
+    0.56,
+    0.78
+   ],
+   [
+    "swear.",
+    0.78,
+    1.24
+   ],
+   [
+    "Kay",
+    1.8,
+    2.18
+   ],
+   [
+    "admits",
+    2.18,
+    2.52
+   ],
+   [
+    "Arthur",
+    2.52,
+    2.92
+   ],
+   [
+    "brought",
+    2.92,
+    3.34
+   ],
+   [
+    "it.",
+    3.34,
+    3.54
+   ]
+  ],
+  "heard": "Dad makes him swear. Kay admits Arthur brought it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "x12b",
+  "lang": "en",
+  "text": "Dad tells Arthur: put it back and pull again. He says: \"How hard can it be?\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x12b.mp3",
+  "bytes": 86978,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.24
+   ],
+   [
+    "tells",
+    0.24,
+    0.56
+   ],
+   [
+    "Arthur,",
+    0.56,
+    0.96
+   ],
+   [
+    "put",
+    1.34,
+    1.56
+   ],
+   [
+    "it",
+    1.56,
+    1.7
+   ],
+   [
+    "back",
+    1.7,
+    1.96
+   ],
+   [
+    "and",
+    1.96,
+    2.18
+   ],
+   [
+    "pull",
+    2.18,
+    2.44
+   ],
+   [
+    "again.",
+    2.44,
+    2.78
+   ],
+   [
+    "He",
+    3.32,
+    3.44
+   ],
+   [
+    "says,",
+    3.44,
+    3.68
+   ],
+   [
+    "how",
+    4.02,
+    4.24
+   ],
+   [
+    "hard",
+    4.24,
+    4.5
+   ],
+   [
+    "can",
+    4.5,
+    4.66
+   ],
+   [
+    "it",
+    4.66,
+    4.76
+   ],
+   [
+    "be?",
+    4.76,
+    4.98
+   ]
+  ],
+  "heard": "Dad tells Arthur, put it back and pull again. He says, how hard can it be?",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 5.36
+ },
+ {
+  "name": "x13b",
+  "lang": "en",
+  "text": "Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x13b.mp3",
+  "bytes": 126684,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.28
+   ],
+   [
+    "pulls",
+    0.28,
+    0.56
+   ],
+   [
+    "first,",
+    0.56,
+    0.92
+   ],
+   [
+    "stuck.",
+    1.4,
+    1.82
+   ],
+   [
+    "Kay",
+    2.4,
+    2.68
+   ],
+   [
+    "pulls",
+    2.68,
+    3.0
+   ],
+   [
+    "with",
+    3.0,
+    3.24
+   ],
+   [
+    "all",
+    3.24,
+    3.6
+   ],
+   [
+    "his",
+    3.6,
+    3.8
+   ],
+   [
+    "might,",
+    3.8,
+    4.08
+   ],
+   [
+    "stuck.",
+    4.52,
+    5.02
+   ],
+   [
+    "Arthur",
+    5.56,
+    5.94
+   ],
+   [
+    "reaches",
+    5.94,
+    6.32
+   ],
+   [
+    "out,",
+    6.32,
+    6.64
+   ],
+   [
+    "pull",
+    7.06,
+    7.24
+   ],
+   [
+    "two.",
+    7.24,
+    7.5
+   ]
+  ],
+  "heard": "Dad pulls first, stuck. Kay pulls with all his might, stuck. Arthur reaches out, pull two.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 7.84
+ },
+ {
+  "name": "x14b",
+  "lang": "en",
+  "text": "Days later, every lord tries. Only Arthur can. Pull three.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14b.mp3",
+  "bytes": 88232,
+  "words": [
+   [
+    "Days",
+    0.0,
+    0.28
+   ],
+   [
+    "later,",
+    0.28,
+    0.68
+   ],
+   [
+    "every",
+    1.12,
+    1.42
+   ],
+   [
+    "lord",
+    1.42,
+    1.7
+   ],
+   [
+    "tries.",
+    1.7,
+    2.12
+   ],
+   [
+    "Only",
+    2.76,
+    3.02
+   ],
+   [
+    "Arthur",
+    3.02,
+    3.36
+   ],
+   [
+    "can.",
+    3.36,
+    3.74
+   ],
+   [
+    "Pull",
+    4.4,
+    4.64
+   ],
+   [
+    "three.",
+    4.64,
+    5.02
+   ]
+  ],
+  "heard": "Days later, every lord tries. Only Arthur can. Pull three.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 5.44
+ },
+ {
+  "name": "x15b",
+  "lang": "en",
+  "text": "They're furious: \"A boy of no high blood, rule us?\" They delay it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15b.mp3",
+  "bytes": 91994,
+  "words": [
+   [
+    "They're",
+    0.0,
+    0.22
+   ],
+   [
+    "furious.",
+    0.22,
+    0.88
+   ],
+   [
+    "A",
+    1.44,
+    1.62
+   ],
+   [
+    "boy",
+    1.62,
+    1.92
+   ],
+   [
+    "of",
+    1.92,
+    2.1
+   ],
+   [
+    "no",
+    2.1,
+    2.38
+   ],
+   [
+    "high",
+    2.38,
+    2.66
+   ],
+   [
+    "blood?",
+    2.66,
+    3.02
+   ],
+   [
+    "Rulous?",
+    3.46,
+    4.06
+   ],
+   [
+    "They",
+    4.6,
+    4.9
+   ],
+   [
+    "delay",
+    4.9,
+    5.22
+   ],
+   [
+    "it.",
+    5.22,
+    5.48
+   ]
+  ],
+  "heard": "They're furious. A boy of no high blood? Rulous? They delay it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.68
+ },
+ {
+  "name": "x16b",
+  "lang": "en",
+  "text": "Next month, snow on the ground: pull four. Delayed.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x16b.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "Next",
+    0.0,
+    0.26
+   ],
+   [
+    "month,",
+    0.26,
+    0.64
+   ],
+   [
+    "snow",
+    1.08,
+    1.32
+   ],
+   [
+    "on",
+    1.32,
+    1.52
+   ],
+   [
+    "the",
+    1.52,
+    1.62
+   ],
+   [
+    "ground,",
+    1.62,
+    1.98
+   ],
+   [
+    "pull",
+    2.44,
+    2.72
+   ],
+   [
+    "four,",
+    2.72,
+    3.18
+   ],
+   [
+    "delayed.",
+    3.7,
+    4.0
+   ]
+  ],
+  "heard": "Next month, snow on the ground, pull four, delayed.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.56
+ },
+ {
+  "name": "x17b",
+  "lang": "en",
+  "text": "Spring, flowers in full bloom: pull five. Again.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17b.mp3",
+  "bytes": 79037,
+  "words": [
+   [
+    "Spring",
+    0.0,
+    0.44
+   ],
+   [
+    "flowers",
+    0.44,
+    1.36
+   ],
+   [
+    "in",
+    1.36,
+    1.66
+   ],
+   [
+    "full",
+    1.66,
+    2.04
+   ],
+   [
+    "bloom",
+    2.04,
+    2.48
+   ],
+   [
+    "pull",
+    2.48,
+    3.14
+   ],
+   [
+    "five",
+    3.14,
+    3.64
+   ],
+   [
+    "again",
+    3.64,
+    4.42
+   ]
+  ],
+  "heard": "Spring flowers in full bloom pull five again",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.88
+ },
+ {
+  "name": "x18b",
+  "lang": "en",
+  "text": "Summer, in front of everyone: pull six.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18b.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "Summer",
+    0.0,
+    0.4
+   ],
+   [
+    "in",
+    0.4,
+    0.92
+   ],
+   [
+    "front",
+    0.92,
+    1.12
+   ],
+   [
+    "of",
+    1.12,
+    1.26
+   ],
+   [
+    "everyone.",
+    1.26,
+    1.78
+   ],
+   [
+    "Pull",
+    2.12,
+    2.52
+   ],
+   [
+    "6.",
+    2.52,
+    2.88
+   ]
+  ],
+  "heard": "Summer in front of everyone. Pull 6.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "x19b",
+  "lang": "en",
+  "text": "The people snap: \"We want Arthur as king! No more delays!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19b.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "people",
+    0.18,
+    0.44
+   ],
+   [
+    "snap.",
+    0.44,
+    0.88
+   ],
+   [
+    "We",
+    1.4,
+    1.64
+   ],
+   [
+    "want",
+    1.64,
+    1.92
+   ],
+   [
+    "Arthur",
+    1.92,
+    2.34
+   ],
+   [
+    "as",
+    2.34,
+    2.62
+   ],
+   [
+    "king.",
+    2.62,
+    2.88
+   ],
+   [
+    "No",
+    3.18,
+    3.4
+   ],
+   [
+    "more",
+    3.4,
+    3.62
+   ],
+   [
+    "delays.",
+    3.62,
+    4.02
+   ]
+  ],
+  "heard": "The people snap. We want Arthur as king. No more delays.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "x20b",
+  "lang": "en",
+  "text": "Everyone drops to their knees.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x20b.mp3",
+  "bytes": 36823,
+  "words": [
+   [
+    "Everyone",
+    0.0,
+    0.44
+   ],
+   [
+    "drops",
+    0.44,
+    0.92
+   ],
+   [
+    "to",
+    0.92,
+    1.24
+   ],
+   [
+    "their",
+    1.24,
+    1.38
+   ],
+   [
+    "knees",
+    1.38,
+    1.68
+   ]
+  ],
+  "heard": "Everyone drops to their knees",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.24
+ },
+ {
+  "name": "x21b",
+  "lang": "en",
+  "text": "Six pulls to make him king. And the first? His brother just forgot his sword.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x21b.mp3",
+  "bytes": 88232,
+  "words": [
+   [
+    "Six",
+    0.0,
+    0.32
+   ],
+   [
+    "pulls",
+    0.32,
+    0.72
+   ],
+   [
+    "to",
+    0.72,
+    0.98
+   ],
+   [
+    "make",
+    0.98,
+    1.28
+   ],
+   [
+    "him",
+    1.28,
+    1.42
+   ],
+   [
+    "king,",
+    1.42,
+    1.78
+   ],
+   [
+    "and",
+    2.24,
+    2.38
+   ],
+   [
+    "the",
+    2.38,
+    2.48
+   ],
+   [
+    "first,",
+    2.48,
+    2.84
+   ],
+   [
+    "his",
+    3.18,
+    3.5
+   ],
+   [
+    "brother",
+    3.5,
+    3.84
+   ],
+   [
+    "just",
+    3.84,
+    4.14
+   ],
+   [
+    "forgot",
+    4.14,
+    4.48
+   ],
+   [
+    "his",
+    4.48,
+    4.72
+   ],
+   [
+    "sword.",
+    4.72,
+    5.06
+   ]
+  ],
+  "heard": "Six pulls to make him king, and the first, his brother just forgot his sword.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.44
+ },
+ {
+  "name": "x05c",
+  "lang": "en",
+  "text": "Lords line up to pull, red in the face: it won't budge.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x05c.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "Lord's",
+    0.0,
+    0.46
+   ],
+   [
+    "line",
+    0.46,
+    0.7
+   ],
+   [
+    "up",
+    0.7,
+    0.86
+   ],
+   [
+    "to",
+    0.86,
+    1.0
+   ],
+   [
+    "pull.",
+    1.0,
+    1.36
+   ],
+   [
+    "Red",
+    1.76,
+    2.08
+   ],
+   [
+    "in",
+    2.08,
+    2.24
+   ],
+   [
+    "the",
+    2.24,
+    2.34
+   ],
+   [
+    "face.",
+    2.34,
+    2.6
+   ],
+   [
+    "It",
+    3.16,
+    3.34
+   ],
+   [
+    "won't",
+    3.34,
+    3.68
+   ],
+   [
+    "budge.",
+    3.68,
+    4.34
+   ]
+  ],
+  "heard": "Lord's line up to pull. Red in the face. It won't budge.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "x13c",
+  "lang": "en",
+  "text": "Dad pulls: stuck. Kay, with all his might: stuck. Arthur reaches out: pull two.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x13c.mp3",
+  "bytes": 122505,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.28
+   ],
+   [
+    "pulls.",
+    0.28,
+    0.62
+   ],
+   [
+    "Stuck.",
+    1.1,
+    1.7
+   ],
+   [
+    "K,",
+    2.26,
+    2.5
+   ],
+   [
+    "with",
+    2.84,
+    2.96
+   ],
+   [
+    "all",
+    2.96,
+    3.28
+   ],
+   [
+    "his",
+    3.28,
+    3.48
+   ],
+   [
+    "might.",
+    3.48,
+    3.76
+   ],
+   [
+    "Stuck!",
+    4.2,
+    4.84
+   ],
+   [
+    "Arthur",
+    5.34,
+    5.58
+   ],
+   [
+    "reaches",
+    5.58,
+    5.98
+   ],
+   [
+    "out.",
+    5.98,
+    6.32
+   ],
+   [
+    "Pull",
+    6.72,
+    6.92
+   ],
+   [
+    "two.",
+    6.92,
+    7.2
+   ]
+  ],
+  "heard": "Dad pulls. Stuck. K, with all his might. Stuck! Arthur reaches out. Pull two.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 7.6
+ },
+ {
+  "name": "x14c",
+  "lang": "en",
+  "text": "Days later, every lord tries. Only he can. Pull three.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14c.mp3",
+  "bytes": 86978,
+  "words": [
+   [
+    "Days",
+    0.0,
+    0.3
+   ],
+   [
+    "later,",
+    0.3,
+    0.74
+   ],
+   [
+    "every",
+    1.16,
+    1.46
+   ],
+   [
+    "lord",
+    1.46,
+    1.76
+   ],
+   [
+    "tries.",
+    1.76,
+    2.18
+   ],
+   [
+    "Only",
+    2.76,
+    3.06
+   ],
+   [
+    "he",
+    3.06,
+    3.42
+   ],
+   [
+    "can.",
+    3.42,
+    3.74
+   ],
+   [
+    "Pull",
+    4.4,
+    4.62
+   ],
+   [
+    "three.",
+    4.62,
+    4.98
+   ]
+  ],
+  "heard": "Days later, every lord tries. Only he can. Pull three.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.36
+ },
+ {
+  "name": "x18c",
+  "lang": "en",
+  "text": "Early summer, in front of everyone: pull six.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18c.mp3",
+  "bytes": 58557,
+  "words": [
+   [
+    "early",
+    0.0,
+    0.32
+   ],
+   [
+    "summer",
+    0.32,
+    0.7
+   ],
+   [
+    "in",
+    0.7,
+    1.18
+   ],
+   [
+    "front",
+    1.18,
+    1.44
+   ],
+   [
+    "of",
+    1.44,
+    1.6
+   ],
+   [
+    "everyone.",
+    1.6,
+    2.18
+   ],
+   [
+    "Pull",
+    2.5,
+    2.82
+   ],
+   [
+    "6!",
+    2.82,
+    3.14
+   ]
+  ],
+  "heard": "early summer in front of everyone. Pull 6!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.6
+ },
+ {
+  "name": "x19c",
+  "lang": "en",
+  "text": "The people snap: \"Arthur for king! No more delays!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19c.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "people",
+    0.14,
+    0.42
+   ],
+   [
+    "snap!",
+    0.42,
+    0.84
+   ],
+   [
+    "Arthur",
+    1.32,
+    1.66
+   ],
+   [
+    "for",
+    1.66,
+    1.92
+   ],
+   [
+    "King!",
+    1.92,
+    2.24
+   ],
+   [
+    "No",
+    2.52,
+    2.82
+   ],
+   [
+    "more",
+    2.82,
+    3.04
+   ],
+   [
+    "delays!",
+    3.04,
+    3.46
+   ]
+  ],
+  "heard": "The people snap! Arthur for King! No more delays!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.0
+ },
+ {
+  "name": "x20c",
+  "lang": "en",
+  "text": "And everyone kneels.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x20c.mp3",
+  "bytes": 31807,
+  "words": [
+   [
+    "and",
+    0.0,
+    0.22
+   ],
+   [
+    "everyone",
+    0.22,
+    0.72
+   ],
+   [
+    "kneels.",
+    0.72,
+    1.5
+   ]
+  ],
+  "heard": "and everyone kneels.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.995,
+  "seconds": 1.92
+ },
+ {
+  "name": "x03m",
+  "lang": "en",
+  "text": "In Malory's classic tale, outside a London church, a great stone appears, a sword in it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x03m.mp3",
+  "bytes": 106204,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.16
+   ],
+   [
+    "Mallory's",
+    0.16,
+    0.68
+   ],
+   [
+    "classic",
+    0.68,
+    1.1
+   ],
+   [
+    "tale,",
+    1.1,
+    1.52
+   ],
+   [
+    "outside",
+    2.02,
+    2.28
+   ],
+   [
+    "a",
+    2.28,
+    2.54
+   ],
+   [
+    "London",
+    2.54,
+    2.76
+   ],
+   [
+    "church,",
+    2.76,
+    3.24
+   ],
+   [
+    "a",
+    3.64,
+    3.72
+   ],
+   [
+    "great",
+    3.72,
+    4.06
+   ],
+   [
+    "stone",
+    4.06,
+    4.56
+   ],
+   [
+    "appears,",
+    4.56,
+    5.02
+   ],
+   [
+    "a",
+    5.54,
+    5.64
+   ],
+   [
+    "sword",
+    5.64,
+    5.96
+   ],
+   [
+    "in",
+    5.96,
+    6.18
+   ],
+   [
+    "it.",
+    6.18,
+    6.34
+   ]
+  ],
+  "heard": "In Mallory's classic tale, outside a London church, a great stone appears, a sword in it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.56
+ }
+]
