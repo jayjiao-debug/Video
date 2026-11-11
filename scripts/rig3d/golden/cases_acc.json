@@ -27,5 +27,6 @@
   {"name": "acc_coffeeCup", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "coffeeCup", "look": "class23"}}},
   {"name": "acc_phone", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "phone", "look": "friend2"}}},
   {"name": "acc_pen", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "pen", "look": "you"}}},
-  {"name": "acc_finger", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "finger", "look": "friend3", "pose": "shh", "expr": "hush"}}}
+  {"name": "acc_finger", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "finger", "look": "friend3", "pose": "shh", "expr": "hush"}}},
+  {"name": "dage_lineup", "entry": "rig3d_dage.ts", "size": "640x400", "pick": [0]}
 ]

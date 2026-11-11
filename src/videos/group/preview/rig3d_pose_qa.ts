@@ -13,6 +13,7 @@ import { RigCast, type Acc, type RigPoseKind, type RigSeat, type RigHead } from 
 import { LAB_CAST_LIGHT } from "../sets/lab";
 import { accessories } from "../kit/rigacc/catalog";
 import { phone, pen, finger } from "../kit/rigacc/index";
+import { DAGE, dage } from "../kit/rigacc/dage";
 import { lookOf, type LookKey } from "./rig3d_common";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
@@ -78,6 +79,27 @@ for (const [seatName, poses] of CASES) for (const P of poses) {
   total += n;
   const name = `${seatName}.${P.kind}${P.arm ?? ""}${P.amount !== undefined ? "@" + P.amount : ""}${P.things === "both" ? "+things" : ""}`;
   console.log(`QA: pose ${name} gap ${gap.toFixed(4)} at ${at} reach ${reach.toFixed(4)} at ${reachAt} give ${give.toFixed(4)} cases ${n} bad ${fails}${fails ? " (" + failAt.join(", ") + ")" : ""}${P.kind === "shh" ? " rest " + gap0.toFixed(4) : ""}`);
+}
+// 大哥 (kit/rigacc/dage.ts): his own wide head, the finger always at his lips, the hand of the camera's side (the
+// rule in dage.ts: the arm of the far side cannot come round his jaw), standing and on a chair, his head at rest
+for (const seatName of ["stand", "chair"]) for (const arm of [0, 1] as const) {
+  const seat = SEATS[seatName];
+  let gap = 1, at = "-", reach = 0, reachAt = "-", n = 0, fails = 0;
+  const rc = new RigCast(scene, { light: LAB_CAST_LIGHT as never }), f = rc.add(DAGE, { acc: dage({ hand: arm }) });
+  for (const yaw of YAWS) for (const camY of [1.1, 2.4]) {
+    if (arm ? yaw > 180 : yaw > 0 && yaw < 180) continue;                      // the other hand's views
+    const a = (yaw * Math.PI) / 180, where = `dage/yaw${yaw}/y${camY}`;
+    cam.position.set(2.6 * Math.sin(a), camY, 2.6 * Math.cos(a)); cam.lookAt(0, 0.8, 0); cam.updateMatrixWorld();
+    f.set({ at: V(), facing: 0, ...(seat ? { seat } : {}), pose: { kind: "shh", t: 0.4, arm }, expr: "hush", blink: 0 });
+    rc.update(cam, 960);
+    const g = Math.min(f.qa.clear, f.qa.seat, f.qa.head);
+    if (g < gap) { gap = g; at = (g === f.qa.head ? "head:" : g === f.qa.seat ? "seat:" : "clear:") + where; }
+    if (f.qa.reach > reach) { reach = f.qa.reach; reachAt = where; }
+    if (g < -TOL || f.qa.reach > TOL) fails++;
+    n++;
+  }
+  scene.clear(); total += n;
+  console.log(`QA: pose ${seatName}.dage.shh${arm} gap ${gap.toFixed(4)} at ${at} reach ${reach.toFixed(4)} at ${reachAt} give 0.0000 cases ${n} bad ${fails}${fails ? " (dage)" : ""}`);
 }
 console.log(`QA: poses done ${total}`);
 const c = document.createElement("canvas"); c.width = c.height = 8; document.body.appendChild(c);

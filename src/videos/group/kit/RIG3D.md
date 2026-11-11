@@ -142,7 +142,7 @@ rc.update(camera, renderHeightPx);
 rope.update({ a: a.handWorld(1), ... });                 // 绳子等在 update 之后取手的位置
 ```
 
-- 表情（`RIG_EXPRS`）：neutral、smile、happy、grin、laugh、smile_closed、relief、relief_open、smug、deadpan、focus、stern、huff、sad、sigh、nervous、shock、dazed、pained、wince、whistle、lick、sleep、cool（淡定：眯眼、压在眼皮上的粗眉、嘴角一点笑）、hush（“嘘”的脸：眯眼、粗眉、一边眉毛高高挑起、嘴闭着；配姿势 `shh`，见 RIG3D_poses.md）。
+- 表情（`RIG_EXPRS`）：neutral、smile、happy、grin、laugh、smile_closed、relief、relief_open、smug、deadpan、focus、stern、huff、sad、sigh、nervous、shock、dazed、pained、wince、whistle、lick、sleep、cool（淡定：眯眼、压在眼皮上的粗眉、嘴角一点笑）、hush（“嘘”的脸：就是 cool 那张脸，加一边眉毛高高挑起，再加两道颧骨线；颧骨线是表情自己画的，所以谁用这个表情都有削过的下巴；嘴角的笑比 cool 宽一半，手指挡在前面时两头都露得出来；配姿势 `shh`，见 RIG3D_poses.md）。
 - `Look.head`：自定头形，盖掉种子随机出来的那个。`nTop` / `nBot` 是头顶和下巴有多方（2 是圆，4 是圆角的方块），`egg` 是下巴比头顶宽多少，另有 `asym`、`rot`、`noise`。改的是头真正的形状，所以帽子、头发、描边、手臂避让都跟着。彩蛋人物大哥（`kit/rigacc/dage.ts`）的方下巴就是这么做的。
 - `state.blink`：0 睁开、0.5 半闭、1 闭上。`state.gaze`：-1（画面左）到 1（画面右），0.5 一档。
 - `rigFaceCanvas(look, expr, { lid, gaze, brim })`：单独拿一张脸的画（出表情表、检查用）。
