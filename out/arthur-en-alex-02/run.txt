@@ -1,0 +1,808 @@
+plan: {'tier': 'starter', 'character_count': 26815, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x04c", "lang": "en", "text": "In gold: pull it out, and you're king.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04c.mp3", "bytes": 53541}
+{"name": "x04d", "lang": "en", "text": "In gold: pull it out, and you're king.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04d.mp3", "bytes": 52287}
+{"name": "x10c", "lang": "en", "text": "Kay runs to Dad: \"Dad! The sword! I get to be king!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10c.mp3", "bytes": 71514}
+{"name": "x10d", "lang": "en", "text": "Kay runs to Dad: \"Dad! The sword! I get to be king!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10d.mp3", "bytes": 69006}
+{"name": "x13d", "lang": "en", "text": "Dad pulls: stuck. Kay pulls harder: stuck. Arthur reaches out: pull two.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x13d.mp3", "bytes": 112474}
+{"name": "x13e", "lang": "en", "text": "Dad pulls: stuck. Kay pulls harder: stuck. Arthur reaches out: pull two.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x13e.mp3", "bytes": 113727}
+{"name": "x14d", "lang": "en", "text": "Days later, all the lords try. Only he can. Pull three.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14d.mp3", "bytes": 82798}
+{"name": "x14e", "lang": "en", "text": "Days later, all the lords try. Only he can. Pull three.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14e.mp3", "bytes": 85724}
+{"name": "x17c", "lang": "en", "text": "Spring, in full bloom: pull five. Again.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17c.mp3", "bytes": 70260}
+{"name": "x17d", "lang": "en", "text": "Spring, in full bloom: pull five. Again.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17d.mp3", "bytes": 69006}
+{"name": "x18d", "lang": "en", "text": "Early summer, in front of everyone: pull six.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18d.mp3", "bytes": 59811}
+{"name": "x19d", "lang": "en", "text": "The people snap: \"Arthur for king! No more delays!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19d.mp3", "bytes": 66498}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x04c",
+  "lang": "en",
+  "text": "In gold: pull it out, and you're king.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04c.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "in",
+    0.0,
+    0.18
+   ],
+   [
+    "gold.",
+    0.18,
+    0.52
+   ],
+   [
+    "Pull",
+    1.2,
+    1.34
+   ],
+   [
+    "it",
+    1.34,
+    1.5
+   ],
+   [
+    "out",
+    1.5,
+    1.7
+   ],
+   [
+    "and",
+    1.7,
+    2.18
+   ],
+   [
+    "you're",
+    2.18,
+    2.48
+   ],
+   [
+    "king!",
+    2.48,
+    2.88
+   ]
+  ],
+  "heard": "in gold. Pull it out and you're king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "x04d",
+  "lang": "en",
+  "text": "In gold: pull it out, and you're king.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04d.mp3",
+  "bytes": 52287,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.18
+   ],
+   [
+    "gold,",
+    0.18,
+    0.52
+   ],
+   [
+    "pull",
+    1.0,
+    1.36
+   ],
+   [
+    "it",
+    1.36,
+    1.5
+   ],
+   [
+    "out",
+    1.5,
+    1.72
+   ],
+   [
+    "and",
+    1.72,
+    2.12
+   ],
+   [
+    "you're",
+    2.12,
+    2.4
+   ],
+   [
+    "king!",
+    2.4,
+    2.76
+   ]
+  ],
+  "heard": "In gold, pull it out and you're king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 3.2
+ },
+ {
+  "name": "x10c",
+  "lang": "en",
+  "text": "Kay runs to Dad: \"Dad! The sword! I get to be king!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10c.mp3",
+  "bytes": 71514,
+  "words": [
+   [
+    "Kay",
+    0.0,
+    0.22
+   ],
+   [
+    "runs",
+    0.22,
+    0.54
+   ],
+   [
+    "to",
+    0.54,
+    0.8
+   ],
+   [
+    "dad.",
+    0.8,
+    1.02
+   ],
+   [
+    "Dad!",
+    1.48,
+    1.8
+   ],
+   [
+    "The",
+    2.12,
+    2.22
+   ],
+   [
+    "sword!",
+    2.22,
+    2.6
+   ],
+   [
+    "I",
+    2.96,
+    3.08
+   ],
+   [
+    "get",
+    3.08,
+    3.22
+   ],
+   [
+    "to",
+    3.22,
+    3.36
+   ],
+   [
+    "be",
+    3.36,
+    3.46
+   ],
+   [
+    "king!",
+    3.46,
+    3.78
+   ]
+  ],
+  "heard": "Kay runs to dad. Dad! The sword! I get to be king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.4
+ },
+ {
+  "name": "x10d",
+  "lang": "en",
+  "text": "Kay runs to Dad: \"Dad! The sword! I get to be king!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10d.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "Kay",
+    0.0,
+    0.2
+   ],
+   [
+    "runs",
+    0.2,
+    0.5
+   ],
+   [
+    "to",
+    0.5,
+    0.76
+   ],
+   [
+    "dad.",
+    0.76,
+    0.96
+   ],
+   [
+    "Dad!",
+    1.38,
+    1.72
+   ],
+   [
+    "The",
+    2.04,
+    2.16
+   ],
+   [
+    "sword!",
+    2.16,
+    2.54
+   ],
+   [
+    "I",
+    2.9,
+    3.08
+   ],
+   [
+    "get",
+    3.08,
+    3.22
+   ],
+   [
+    "to",
+    3.22,
+    3.36
+   ],
+   [
+    "be",
+    3.36,
+    3.48
+   ],
+   [
+    "king!",
+    3.48,
+    3.78
+   ]
+  ],
+  "heard": "Kay runs to dad. Dad! The sword! I get to be king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.24
+ },
+ {
+  "name": "x13d",
+  "lang": "en",
+  "text": "Dad pulls: stuck. Kay pulls harder: stuck. Arthur reaches out: pull two.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x13d.mp3",
+  "bytes": 112474,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.28
+   ],
+   [
+    "pulls.",
+    0.28,
+    0.62
+   ],
+   [
+    "Stuck.",
+    1.06,
+    1.68
+   ],
+   [
+    "Kay",
+    2.1,
+    2.44
+   ],
+   [
+    "pulls",
+    2.44,
+    2.74
+   ],
+   [
+    "harder.",
+    2.74,
+    3.08
+   ],
+   [
+    "Stuck!",
+    3.52,
+    4.2
+   ],
+   [
+    "Arthur",
+    4.66,
+    4.96
+   ],
+   [
+    "reaches",
+    4.96,
+    5.36
+   ],
+   [
+    "out.",
+    5.36,
+    5.7
+   ],
+   [
+    "Pull",
+    6.06,
+    6.28
+   ],
+   [
+    "two.",
+    6.28,
+    6.58
+   ]
+  ],
+  "heard": "Dad pulls. Stuck. Kay pulls harder. Stuck! Arthur reaches out. Pull two.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 6.96
+ },
+ {
+  "name": "x13e",
+  "lang": "en",
+  "text": "Dad pulls: stuck. Kay pulls harder: stuck. Arthur reaches out: pull two.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x13e.mp3",
+  "bytes": 113727,
+  "words": [
+   [
+    "Dad",
+    0.0,
+    0.28
+   ],
+   [
+    "pulls.",
+    0.28,
+    0.62
+   ],
+   [
+    "Stuck.",
+    1.08,
+    1.72
+   ],
+   [
+    "Kay",
+    2.1,
+    2.46
+   ],
+   [
+    "pulls",
+    2.46,
+    2.76
+   ],
+   [
+    "harder.",
+    2.76,
+    3.1
+   ],
+   [
+    "Stuck!",
+    3.56,
+    4.26
+   ],
+   [
+    "Arthur",
+    4.78,
+    5.04
+   ],
+   [
+    "reaches",
+    5.04,
+    5.42
+   ],
+   [
+    "out.",
+    5.42,
+    5.76
+   ],
+   [
+    "Pull",
+    6.16,
+    6.36
+   ],
+   [
+    "two.",
+    6.36,
+    6.64
+   ]
+  ],
+  "heard": "Dad pulls. Stuck. Kay pulls harder. Stuck! Arthur reaches out. Pull two.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 7.04
+ },
+ {
+  "name": "x14d",
+  "lang": "en",
+  "text": "Days later, all the lords try. Only he can. Pull three.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14d.mp3",
+  "bytes": 82798,
+  "words": [
+   [
+    "Days",
+    0.0,
+    0.24
+   ],
+   [
+    "later,",
+    0.24,
+    0.62
+   ],
+   [
+    "all",
+    1.02,
+    1.22
+   ],
+   [
+    "the",
+    1.22,
+    1.42
+   ],
+   [
+    "lords",
+    1.42,
+    1.78
+   ],
+   [
+    "try.",
+    1.78,
+    2.1
+   ],
+   [
+    "Only",
+    2.64,
+    2.96
+   ],
+   [
+    "he",
+    2.96,
+    3.3
+   ],
+   [
+    "can.",
+    3.3,
+    3.62
+   ],
+   [
+    "Pull",
+    4.2,
+    4.46
+   ],
+   [
+    "3.",
+    4.46,
+    4.8
+   ]
+  ],
+  "heard": "Days later, all the lords try. Only he can. Pull 3.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 5.12
+ },
+ {
+  "name": "x14e",
+  "lang": "en",
+  "text": "Days later, all the lords try. Only he can. Pull three.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14e.mp3",
+  "bytes": 85724,
+  "words": [
+   [
+    "Days",
+    0.0,
+    0.26
+   ],
+   [
+    "later,",
+    0.26,
+    0.66
+   ],
+   [
+    "all",
+    1.12,
+    1.32
+   ],
+   [
+    "the",
+    1.32,
+    1.52
+   ],
+   [
+    "lords",
+    1.52,
+    1.8
+   ],
+   [
+    "try.",
+    1.8,
+    2.14
+   ],
+   [
+    "Only",
+    2.66,
+    2.94
+   ],
+   [
+    "he",
+    2.94,
+    3.28
+   ],
+   [
+    "can.",
+    3.28,
+    3.6
+   ],
+   [
+    "Pull",
+    4.28,
+    4.5
+   ],
+   [
+    "three.",
+    4.5,
+    4.88
+   ]
+  ],
+  "heard": "Days later, all the lords try. Only he can. Pull three.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.28
+ },
+ {
+  "name": "x17c",
+  "lang": "en",
+  "text": "Spring, in full bloom: pull five. Again.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17c.mp3",
+  "bytes": 70260,
+  "words": [
+   [
+    "Spring",
+    0.0,
+    0.46
+   ],
+   [
+    "in",
+    0.46,
+    1.08
+   ],
+   [
+    "full",
+    1.08,
+    1.44
+   ],
+   [
+    "bloom",
+    1.44,
+    1.92
+   ],
+   [
+    "pull",
+    1.92,
+    2.6
+   ],
+   [
+    "five",
+    2.6,
+    3.06
+   ],
+   [
+    "again",
+    3.06,
+    3.84
+   ]
+  ],
+  "heard": "Spring in full bloom pull five again",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.32
+ },
+ {
+  "name": "x17d",
+  "lang": "en",
+  "text": "Spring, in full bloom: pull five. Again.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17d.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "Spring",
+    0.0,
+    0.48
+   ],
+   [
+    "in",
+    0.48,
+    1.06
+   ],
+   [
+    "full",
+    1.06,
+    1.4
+   ],
+   [
+    "bloom",
+    1.4,
+    1.86
+   ],
+   [
+    "pull",
+    1.86,
+    2.54
+   ],
+   [
+    "five",
+    2.54,
+    2.98
+   ],
+   [
+    "again",
+    2.98,
+    3.76
+   ]
+  ],
+  "heard": "Spring in full bloom pull five again",
+  "heard_lang": "en",
+  "heard_lang_p": 0.994,
+  "seconds": 4.24
+ },
+ {
+  "name": "x18d",
+  "lang": "en",
+  "text": "Early summer, in front of everyone: pull six.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18d.mp3",
+  "bytes": 59811,
+  "words": [
+   [
+    "early",
+    0.0,
+    0.3
+   ],
+   [
+    "summer,",
+    0.3,
+    0.7
+   ],
+   [
+    "in",
+    1.12,
+    1.2
+   ],
+   [
+    "front",
+    1.2,
+    1.42
+   ],
+   [
+    "of",
+    1.42,
+    1.58
+   ],
+   [
+    "everyone.",
+    1.58,
+    2.1
+   ],
+   [
+    "Pull",
+    2.52,
+    2.84
+   ],
+   [
+    "six!",
+    2.84,
+    3.14
+   ]
+  ],
+  "heard": "early summer, in front of everyone. Pull six!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.68
+ },
+ {
+  "name": "x19d",
+  "lang": "en",
+  "text": "The people snap: \"Arthur for king! No more delays!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19d.mp3",
+  "bytes": 66498,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "people",
+    0.18,
+    0.46
+   ],
+   [
+    "snap!",
+    0.46,
+    0.92
+   ],
+   [
+    "Arthur",
+    1.32,
+    1.74
+   ],
+   [
+    "for",
+    1.74,
+    2.0
+   ],
+   [
+    "King!",
+    2.0,
+    2.32
+   ],
+   [
+    "No",
+    2.64,
+    2.92
+   ],
+   [
+    "more",
+    2.92,
+    3.14
+   ],
+   [
+    "delays!",
+    3.14,
+    3.56
+   ]
+  ],
+  "heard": "The people snap! Arthur for King! No more delays!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 4.08
+ }
+]
