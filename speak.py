@@ -162,7 +162,10 @@ try:
             try: rec["seconds"] = round(_sf.info(f"out/{rec['file']}").duration, 2)
             except Exception: pass
             continue
-        segs, info = wm.transcribe(f"out/{rec['file']}", beam_size=5)
+        segs, info = wm.transcribe(f"out/{rec['file']}", beam_size=5, word_timestamps=bool(req.get("words")))
+        segs = list(segs)
+        if req.get("words"):   # request "words": true = where each word sits in the clip: [word, start s, end s]
+            rec["words"] = [[w.word.strip(), round(w.start, 3), round(w.end, 3)] for s in segs for w in (s.words or [])]
         rec["heard"] = "".join(s.text for s in segs).strip(); rec["heard_lang"] = info.language
         rec["heard_lang_p"] = round(info.language_probability, 3); rec["seconds"] = round(info.duration, 2)
 except Exception as e: report["whisper_error"] = str(e)

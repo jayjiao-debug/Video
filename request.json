@@ -1,48 +1,77 @@
 {
- "id": "arthur-en-voices-01",
+ "id": "arthur-en-aud-01",
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "words": true,
  "items": [
   {
-   "type": "voices",
-   "name": "en_f_young_us",
+   "name": "aud_amelia",
    "lang": "en",
-   "gender": "female",
-   "age": "young",
-   "accent": "american",
-   "n": 40
+   "text": "He just pulled the sword from the stone, and put it back. Wait. Doesn't pulling it out make you king? Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+   "add": {
+    "owner": "9265ac49c437181ced8d508db9b8248e1b839589ba453afca0db0f9d60ff389a",
+    "voice_id": "ZF6FPAbjXT4488VcRRnw",
+    "name": "amelia"
+   },
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "voices",
-   "name": "en_f_social",
+   "name": "aud_hope",
    "lang": "en",
-   "gender": "female",
-   "use_case": "social_media",
-   "n": 30
+   "text": "He just pulled the sword from the stone, and put it back. Wait. Doesn't pulling it out make you king? Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+   "add": {
+    "owner": "7d272ea0221fbc9ce382a3eaf4d7f907179558360d93b351ec7d344d30023cf9",
+    "voice_id": "tnSpp4vdxKPjI9w0GnoV",
+    "name": "hope"
+   },
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "voices",
-   "name": "en_f_narr",
+   "name": "aud_alex",
    "lang": "en",
-   "gender": "female",
-   "age": "young",
-   "use_case": "narrative_story",
-   "n": 30
+   "text": "He just pulled the sword from the stone, and put it back. Wait. Doesn't pulling it out make you king? Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "voices",
-   "name": "en_m_young_us",
+   "name": "aud_archie",
    "lang": "en",
-   "gender": "male",
-   "age": "young",
-   "accent": "american",
-   "n": 40
-  },
-  {
-   "type": "voices",
-   "name": "en_m_social",
-   "lang": "en",
-   "gender": "male",
-   "use_case": "social_media",
-   "n": 30
+   "text": "He just pulled the sword from the stone, and put it back. Wait. Doesn't pulling it out make you king? Dad pulls first: stuck. Kay pulls with all his might: stuck. Arthur reaches out: pull two.",
+   "add": {
+    "owner": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+    "voice_id": "kmSVBPu7loj4ayNinwWM",
+    "name": "archie"
+   },
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   }
  ]
 }
