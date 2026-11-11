@@ -592,6 +592,8 @@ const FACES: Record<Expr, FaceDef> = {
   huff: { eye: ["lid", "lid"], brow: [3.4, -2.6], mouth: "o", tilt: 10, bar: true, skew: 0 },
   happy: { eye: ["happy", "happy"], brow: [-1, -1], mouth: "smile", blush: true },
   focus: { eye: ["down", "down"], brow: [1, -0.4], mouth: "tiny", skew: 0.2 },
+  // unbothered: narrowed eyes under heavy level brows that sit on the lids, the hint of a smile
+  cool: { eye: ["slit", "slit"], brow: [1.0, -0.6], mouth: "smirk", tilt: 3, bar: true, skew: 0 },
 };
 /** a blink in two steps: half (lid 0.5) and shut (lid 1) */
 const blinkEye = (k: EyeK, lid: number): EyeK =>
