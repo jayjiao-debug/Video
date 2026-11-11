@@ -6,6 +6,9 @@
 // NEUTRAL tone mapping -> grade. The composer has a stencil buffer (the rig figures layer their heads with it).
 // DOM layers on top: P.overlays, the caption, P.top.
 // Debug input props: nopost (raw render), kick: n (extra advances per frame), nocap (no captions), dbg (timing logs).
+// Covers (world.ts): zoom: z (< 1 shows more around the same frame), sx / sy (move the picture right / down by that
+// fraction of the frame), ov (the size of the hook's crown and "?" icons, which do not shrink with zoom). With nocap
+// these give clean stills for the 9:16, 3:4 and 4:3 covers: scripts/arthur/cover/.
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, continueRender, delayRender, getInputProps, useCurrentFrame } from "remotion";

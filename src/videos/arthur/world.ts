@@ -22,6 +22,14 @@ import { buildYard, YARD_FILL, YARD_CAST_LIGHT, type YardSet } from "./sets/yard
 import { buildStone, type StoneRig } from "./props";
 import { addPerson, type Person } from "./people";
 import { FPS, W, H, type CamPose, type Pose, type Season, type V3Like } from "./story";
+import { getInputProps } from "remotion";
+// Cover stills only (debug input props, all default to the film's own framing): zoom < 1 shows more around the same
+// frame; sx / sy move the picture right / down by that fraction of the frame (a lens shift, the perspective stays).
+const COVER = getInputProps() as { zoom?: number; sx?: number; sy?: number; ov?: number };
+const COVER_ZOOM = Number(COVER.zoom ?? 1) || 1, COVER_SX = Number(COVER.sx ?? 0) || 0, COVER_SY = Number(COVER.sy ?? 0) || 0;
+/** Cover stills only: the size of the icons drawn over the picture (the crown and the "?" of the hook), which are set in
+ *  screen px and so do not shrink with zoom. 1 = the film. */
+export const COVER_OV = Number(COVER.ov ?? 1) || 1;
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const toV = (p: V3Like) => (Array.isArray(p) ? V(p[0], p[1], p[2]) : p.clone());
@@ -76,7 +84,12 @@ export class World {
     this._look.copy(toV(c.look));
     cam.lookAt(this._look); cam.rotateZ(c.roll ?? 0);
     cam.fov = c.fov; cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = W / H;
+    cam.zoom = COVER_ZOOM;
     cam.updateProjectionMatrix(); cam.updateMatrixWorld(true);
+    if (COVER_SX || COVER_SY) {
+      const e = cam.projectionMatrix.elements; e[8] -= 2 * COVER_SX; e[9] += 2 * COVER_SY;
+      cam.projectionMatrixInverse.copy(cam.projectionMatrix).invert();
+    }
   }
   project(p: V3Like): Projected {
     const v = this._v.copy(toV(p)), cam = this.camera;

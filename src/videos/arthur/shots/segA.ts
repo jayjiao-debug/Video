@@ -22,7 +22,7 @@
 import React from "react";
 import * as THREE from "three";
 import { SEGMENTS, FPS, h, lin, lerp, smooth, clamp01, spl, camMix, hash, easeOutQuad, easeInQuad, easeOutCubic, easeInOutCubic, easeOutBack, type Segment, type Pose, type CamPose, type Vec3 } from "../story";
-import type { World } from "../world";
+import { COVER_OV, type World } from "../world";
 import { PEOPLE, type Person } from "../people";
 import { V, yawTo, lerpA, lid, accent, heads, walkAlong, walkTime, hopArc, SPOT, STAGE, tug, pullOut, pullOutAfter, bow, cam, type Rig, type RigState, type RigHead } from "./common";
 import { Mark, Burst, Crown, Flush } from "../overlay";
@@ -220,12 +220,13 @@ function shotWhat(w: World, f: number): Pose {
   // ---- overlays: "?" over the hilt; on 国王 the crown pops over Arthur's head and the "?" goes to sit beside it
   const hd = headPx(w, A), q0 = w.project([-0.2, 1.5, 0]);
   const go = smooth((f - T.crown) / 7), bob = Math.sin((f - T.crown) * 0.42) * 9;
-  const cx = hd.x - 20, cy = Math.max(100, hd.y - hd.r * 1.2 - 112) + bob;
+  const ov = COVER_OV;                                    // 1 in the film; a cover still that zooms out makes the icons smaller
+  const cx = hd.x - 20 * ov, cy = Math.max(100 * ov, hd.y - hd.r * 1.2 - 112 * ov) + bob * ov;
   return {
     camera: c, season: 0, focus: [0, -0.3],
     overlays: frag(
-      h(Mark, { key: "q", kind: "?", at: T.what, x: lerp(q0.x, cx + 150, go), y: lerp(q0.y, cy - 4, go), size: lerp(170, 150, go), frame: f }),
-      h(Crown, { key: "c", at: T.crown, x: cx, y: cy, size: 165, frame: f }),
+      h(Mark, { key: "q", kind: "?", at: T.what, x: lerp(q0.x, cx + 150 * ov, go), y: lerp(q0.y, cy - 4 * ov, go), size: lerp(170, 150, go) * ov, frame: f }),
+      h(Crown, { key: "c", at: T.crown, x: cx, y: cy, size: 165 * ov, frame: f }),
     ),
   };
 }
