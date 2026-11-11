@@ -18,6 +18,7 @@ import React from "react";
 import * as THREE from "three";
 import { SEGMENTS, FPS, H, h, lin, lerp, smooth, clamp01, easeInOutCubic, quote, type Segment, type Pose, type CamPose, type Vec3 } from "../story";
 import type { World } from "../world";
+import { EN, TXT, TAG_X, STAMP_CW } from "../lang";
 import { PEOPLE, type Person } from "../people";
 import { V, v3, yawTo, lid, speak, accent, heads, walkAlong, hopArc, SPOT, tug, pullOut, pullOutAfter, raise, raiseAfter, crowd, stagger, alive, type Rig, type RigState, type RigHead } from "./common";
 import { PullCounter, Mark, Burst, Flush } from "../overlay";
@@ -121,7 +122,7 @@ function lordsTry(w: World, f: number): Pose {
   }
   w.update();
   if (k > 0 && !slipped) { const hp = headPx(w, r, cam.fov); ov.push(h(Flush, { key: "fl", x: hp.x, y: hp.y, r: hp.r * 1.02, a: 0.35 + 0.5 * u })); }
-  ov.push(h(CornerTag, { key: "tag", at: 1267, out: 1336, text: "几天后", frame: f }));
+  ov.push(h(CornerTag, { key: "tag", at: 1267, out: 1336, text: TXT.daysLater, x: TAG_X, frame: f }));
   // a red x over the hilt as each one gives up (the last 4 frames before the cut; the fourth as his hands slip)
   const gp = w.project(w.stone.grip(0)), xAt = k < 3 ? T.m[k + 1] - 5 : T.slip;
   ov.push(h(Cross, { key: `x${k}`, at: xAt, x: gp.x, y: gp.y - (k === 0 ? 40 : 115), size: k === 0 ? 230 : 300, frame: f }));
@@ -154,7 +155,7 @@ function pullThree(w: World, f: number): Pose {
   if (f >= T.hop3[1]) pullOutAfter(w, A, u, "R");
   if (f >= T.pull3[1]) w.stone.setShine(clamp01(1 - (f - T.pull3[1]) / 14) * 0.9 + 0.1);
   const slot = w.project([0, 0.6, 0]), ov: Ov = [];
-  ov.push(h(CornerTag, { key: "tag", at: 1267, out: 1336, text: "几天后", frame: f }));
+  ov.push(h(CornerTag, { key: "tag", at: 1267, out: 1336, text: TXT.daysLater, x: TAG_X, frame: f }));
   ov.push(h(Burst, { key: "b", at: free, x: slot.x, y: slot.y, r: 150, frame: f }));
   ov.push(h(PullCounter, { key: "n", n: 3, at: T.n3, x: 300, y: 250, scale: 0.8, frame: f }));
   dbg(w, f, "pull3", [["arthur", A]]);
@@ -244,7 +245,7 @@ function later(w: World, f: number): Pose {
   w.update();
   if (f <= home + 2) pullOutAfter(w, A, uu, "R");
   const slot = w.project([0, 0.6, 0]), ov: Ov = [];
-  ov.push(h(Stamp, { key: "st", at: T.stamp1, x: 360, y: 300, text: "改天再拔", rot: -7, scale: 0.9, frame: f }));
+  ov.push(h(Stamp, { key: "st", at: T.stamp1, x: EN ? 385 : 360, y: 300, text: TXT.delay1, rot: -7, scale: 0.9, size: EN ? 104 : 118, cw: STAMP_CW, frame: f }));
   ov.push(h(Burst, { key: "b", at: home, x: slot.x, y: slot.y, r: 120, frame: f }));
   dbg(w, f, "later", [["arthur", A]]);
   return { camera: cam, season: 0, focus: [0, 0], overlays: fr(...ov) };
@@ -280,10 +281,10 @@ function february(w: World, f: number): Pose {
   w.update();
   if (f >= T.hop4[1]) pullOutAfter(w, A, u4, "R");
   const slot = w.project([0, 0.6, 0]), ov: Ov = [];
-  ov.push(h(CornerTag, { key: "tag", at: 1484, out: 1560, text: "二月", frame: f }));
+  ov.push(h(CornerTag, { key: "tag", at: 1484, out: 1560, text: TXT.february, x: TAG_X, frame: f }));
   ov.push(h(Burst, { key: "b", at: free, x: slot.x, y: slot.y, r: 150, frame: f }));
   ov.push(h(PullCounter, { key: "n", n: 4, at: T.n4, out: T.stamp2 - 2, x: 820, y: 245, scale: 0.8, frame: f }));
-  ov.push(h(Stamp, { key: "st", at: T.stamp2, x: 820, y: 270, text: "又拖", rot: 6, frame: f }));
+  ov.push(h(Stamp, { key: "st", at: T.stamp2, x: EN ? 730 : 820, y: 270, text: TXT.delay2, rot: 6, size: EN ? 84 : 118, cw: STAMP_CW, frame: f }));
   dbg(w, f, "feb", [["arthur", A]]);
   return { camera: cam, season: 1, focus: [0, 0], overlays: fr(...ov) };
 }
@@ -337,9 +338,9 @@ function spring(w: World, f: number): Pose {
     ov.push(h(PullCounter, { key: "n", n: 5, at: T.n5, x: 830, y: 250, scale: 0.8, frame: f }));
   } else {
     [0, 3].forEach((n) => { const hp = headPx(w, cm[n], cam.fov); ov.push(h(Mark, { key: `m${n}`, kind: "!?", at: T.stamp3 + 3 + n * 2, x: hp.x + (n ? 0.3 : -0.3) * hp.r, y: hp.y - hp.r - 95, size: 140, frame: f })); });
-    ov.push(h(Stamp, { key: "st", at: T.stamp3, x: 540, y: 285, text: "还拖", rot: -6, frame: f }));
+    ov.push(h(Stamp, { key: "st", at: T.stamp3, x: EN ? 615 : 540, y: 285, text: TXT.delay3, rot: -6, size: EN ? 100 : 118, cw: STAMP_CW, frame: f }));
   }
-  ov.push(h(CornerTag, { key: "tag", at: 1566, out: 1644, text: "春天", frame: f }));
+  ov.push(h(CornerTag, { key: "tag", at: 1566, out: 1644, text: TXT.spring, x: TAG_X, frame: f }));
   dbg(w, f, "spring", [["arthur", A], ["c0", cm[0]], ["c1", cm[1]], ["c2", cm[2]]]);
   return { camera: cam, season: 2, focus: [0, 0], overlays: fr(...ov) };
 }
@@ -367,7 +368,7 @@ function summer(w: World, f: number): Pose {
   pullOutAfter(w, A, u, "R");
   w.stone.setShine(f >= T.pull6[1] ? 0.35 + 0.65 * clamp01(1 - Math.abs(f - (T.n6 + 2)) / 8) : 0.2 * up);
   const slot = w.project([0, 0.6, 0]), ov: Ov = [];
-  ov.push(h(CornerTag, { key: "tag", at: 1649, out: 1712, text: "初夏", frame: f }));
+  ov.push(h(CornerTag, { key: "tag", at: 1649, out: 1712, text: TXT.summer, x: TAG_X, frame: f }));
   ov.push(h(Burst, { key: "b", at: free, x: slot.x, y: slot.y, r: 130, frame: f }));
   ov.push(h(PullCounter, { key: "n", n: 6, at: T.n6, x: 830, y: 232, scale: 0.8, frame: f }));
   dbg(w, f, "summer", [["arthur", A]]);

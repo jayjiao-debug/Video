@@ -88,6 +88,8 @@ import type * as THREE from "three";
 import type { GradeParams } from "../vasa/grade";
 import type { World } from "./world";
 import { VOICE_RAW, VOICE_END_S, QUOTE_RAW } from "./voice";
+import { EN, L } from "./lang";
+import { QUOTE_RAW_EN } from "./captions_en";
 
 export {
   clamp01, clamp, lerp, lin, smooth, smootherstep, easeInQuad, easeOutQuad, easeInOutQuad, easeInCubic, easeOutCubic, easeInOutCubic,
@@ -97,7 +99,7 @@ export {
 // ---------------------------------------------------------------------------------------------------- film constants
 export const FPS = 30;
 export const W = 1080, H = 1920;
-export const TITLE = "石中剑，亚瑟王到底拔了几次？";
+export const TITLE = L("石中剑，亚瑟王到底拔了几次？", "How many times did King Arthur pull the sword from the stone?");
 /** caption band: centre y 70 %, band y 64-76 % */
 export const CAPTION_Y = 0.7 * H;
 
@@ -154,7 +156,10 @@ export const lineAt = (f: number) => LINES.find((l) => f >= l.from && f <= l.to)
 /** a character's own quoted words inside a narration line: who speaks, the absolute frames, the seconds, the syllable
  *  count (for rigSpeak: { from, to } in seconds of YOUR clock, syl) and the text */
 export type Quote = { line: number; who: "kay" | "arthur" | "lord" | "commons"; text: string; syl: number; from: number; to: number; start: number; end: number };
-export const QUOTES: Quote[] = QUOTE_RAW.map(([ln, who, s, e, text]) => ({ line: ln, who, text, syl: [...text.replace(/[^一-鿿]/g, "")].length, start: s, end: e, from: Math.round(s * FPS), to: Math.round(e * FPS) }));
+/** (English: the same lines' quotes, with the times and the syllables of the English narration) */
+export const QUOTES: Quote[] = EN
+  ? QUOTE_RAW_EN.map(([ln, who, s, e, syl, text]) => ({ line: ln, who, text, syl, start: s, end: e, from: Math.round(s * FPS), to: Math.round(e * FPS) }))
+  : QUOTE_RAW.map(([ln, who, s, e, text]) => ({ line: ln, who, text, syl: [...text.replace(/[^一-鿿]/g, "")].length, start: s, end: e, from: Math.round(s * FPS), to: Math.round(e * FPS) }));
 export const quote = (who: Quote["who"]) => QUOTES.find((q) => q.who === who)!;
 
 /** film length in frames: the speech, then a short tail */

@@ -27,6 +27,7 @@ import { Fragment, type ReactNode } from "react";
 import * as THREE from "three";
 import { SEGMENTS, FPS, h, lin, smooth, clamp01, lerp, spl, easeOutCubic, easeInCubic, easeInOutCubic, easeOutBack, quote, type Segment, type Pose, type CamPose, type Vec3 } from "../story";
 import type { World } from "../world";
+import { EN, TXT, STAMP_CW } from "../lang";
 import { PEOPLE } from "../people";
 import { V, lid, speak, accent, heads, lerpA, walkAlong, hopArc, tug, pullOut, pullOutAfter, raisePoint, offerPoint, offer, kneel, SPOT, STAGE, type Rig, type RigState, type RigHead } from "./common";
 import { PullCounter, Mark, Burst, Crown, NameTag, Flush } from "../overlay";
@@ -293,7 +294,7 @@ function shotBrother(w: World, f: number): Pose {
   w.update();
   const ah = headPx(w, A);
   dbg(f, "arthur head", ah.x, ah.y, ah.r);
-  return { camera: cam, season: 0, overlays: frag(h(NameTag, { at: T.bro, x: ah.x, y: ah.y - ah.r - 105, text: "弟弟", frame: f })) };
+  return { camera: cam, season: 0, overlays: frag(h(NameTag, { at: T.bro, x: EN ? Math.min(Math.max(ah.x, 380), 700) : ah.x, y: ah.y - ah.r - 105, text: TXT.bro, size: EN ? 70 : 84, frame: f })) };
 }
 /** 1014-1026: Ector's shock */
 function shotShock(w: World, f: number): Pose {
@@ -419,7 +420,7 @@ function shotStill(w: World, f: number): Pose {
   K.set({ at: LB_AT.clone(), facing: 0.7, pose: { kind: "idle", t }, expr: "smug", gaze: 1, blink: lid(t, 2), visible: true });
   w.update();
   dbg(f, "insc", insc(w), "top", w.project(V(0, 0.36, 0.5)).y / 1920);
-  return { camera: cam, season: 0, overlays: frag(h(Stamp, { at: T.still, x: 225, y: 290, text: "不动", rot: -9, size: 104, frame: f })) };
+  return { camera: cam, season: 0, overlays: frag(h(Stamp, { at: T.still, x: EN ? 335 : 225, y: 290, text: TXT.stuck, rot: -9, size: 104, cw: STAMP_CW, frame: f })) };
 }
 /** 1170-1208: 凯使出吃奶的劲: three jump cuts, closer and closer */
 function shotKayTug(w: World, f: number): Pose {
@@ -466,7 +467,7 @@ function shotKayOff(w: World, f: number): Pose {
   const feet = w.project(R_AT);
   dbg(f, "insc", insc(w), "kay head", w.project(K.headWorld()).x, w.project(K.headWorld()).y);
   const ov = frag(
-    h(Stamp, { at: T.off, x: 250, y: 250, text: "不动", rot: -9, size: 104, frame: f }),
+    h(Stamp, { at: T.off, x: EN ? 335 : 250, y: 250, text: TXT.stuck, rot: -9, size: 104, cw: STAMP_CW, frame: f }),
     h(Burst, { at: T.land, x: feet.x, y: feet.y - 20, r: 150, n: 9, color: "#ffffff", frame: f }),
   );
   return { camera: cam, season: 0, overlays: ov };

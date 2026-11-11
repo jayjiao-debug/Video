@@ -19,6 +19,7 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import type { Mats } from "../bt/pbr";
 import { FONT_STACK } from "../group/kit/phone";
 import { NOINK } from "../vasa/ink";
+import { EN, TXT } from "./lang";
 
 /** the numbers of what is built (metres, in the group's frame; the sword's are for the stuck pose).
  *  Where the kit rig (1.45 m, arms 0.40 m) can stand ON the stone and really hold the grip (measured in
@@ -247,18 +248,22 @@ function drawMarble(g: CanvasRenderingContext2D, W: number, H: number, ppm: numb
   g.globalAlpha = 1;
 }
 
-const ROWS: { text: string; y: number }[] = [{ text: "拔出此剑者", y: 0.105 }, { text: "即为英格兰之王", y: 0.243 }]; // y = row centre below the top edge (m)
-const CHAR = 0.11, PITCH = 0.128;
+// y = row centre below the top edge (m). Chinese: two rows of big characters on a fixed pitch. English: three rows of
+// capitals, each row set as one string (the letters have their own widths).
+const ROW_Y = EN ? [0.085, 0.175, 0.265] : [0.105, 0.243];
+const ROWS: { text: string; y: number }[] = TXT.stone.map((text, i) => ({ text, y: ROW_Y[i] }));
+const CHAR = EN ? 0.07 : 0.11, PITCH = 0.128;
 /** the inscription's characters, each at its place (canvas px); draw(ch, x, y) is called per character */
 const eachChar = (fn: (ch: string, x: number, y: number) => void) => {
   for (const row of ROWS) {
+    if (EN) { fn(row.text, (SX / 2) * PPM, row.y * PPM); continue; }
     const cs = Array.from(row.text);
     cs.forEach((ch, i) => fn(ch, (SX / 2 + (i - (cs.length - 1) / 2) * PITCH) * PPM, row.y * PPM));
   }
 };
 function inscriptionTex() {
   const font = `700 ${Math.round(CHAR * PPM)}px ${FONT_STACK}`;
-  const setup = (g: CanvasRenderingContext2D) => { g.font = font; g.textAlign = "center"; g.textBaseline = "middle"; g.lineJoin = "round"; };
+  const setup = (g: CanvasRenderingContext2D) => { g.font = font; g.textAlign = "center"; g.textBaseline = "middle"; g.lineJoin = "round"; if (EN) (g as unknown as { letterSpacing: string }).letterSpacing = "7px"; };
   const map = canvasTex(2048, 512, (g) => {
     drawMarble(g, 2048, 512, PPM, 4107);
     // weathering toward the ground, so the face is not one flat tone
