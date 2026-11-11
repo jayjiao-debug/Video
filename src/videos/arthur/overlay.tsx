@@ -30,16 +30,18 @@ const eIn = (x: number) => Math.pow(clamp01(x), 3);
 const springAt = (f: number, at: number, cfg = PUNCH) => (f < at ? 0 : spring({ frame: f - at, fps: 30, config: cfg }));
 const outK = (f: number, out?: number) => (out === undefined ? 0 : eIn((f - out) / 7));
 
-/** a small sword glyph, point down, centred on 0,0; h = its height in px */
+/** a small sword glyph, point down, centred on 0,0; h = its height in px. The ink is drawn UNDER the fills
+ *  (paint-order) and stays thin: at this size a full-width outline swallowed the blade and the glyph read as a black
+ *  dagger mark. */
 const SwordGlyph: React.FC<{ h: number; col?: string }> = ({ h, col = COL.gold }) => {
-  const w = h * 0.36, k = h / 100;
+  const w = h * 0.44;
   return (
-    <svg width={w} height={h} viewBox="-18 -50 36 100" style={{ position: "absolute", left: -w / 2, top: -h / 2, overflow: "visible" }}>
-      <g stroke={COL.ink} strokeWidth={7 / Math.max(0.5, k)} strokeLinejoin="round" strokeLinecap="round">
-        <path d="M-5,-18 L5,-18 L5,34 L0,46 L-5,34 Z" fill="#eef2f7" />
-        <rect x={-16} y={-24} width={32} height={8} rx={3} fill={col} />
-        <rect x={-4} y={-40} width={8} height={17} fill="#6b4a2c" />
-        <circle cx={0} cy={-44} r={6} fill={col} />
+    <svg width={w} height={h} viewBox="-22 -50 44 100" style={{ position: "absolute", left: -w / 2, top: -h / 2, overflow: "visible" }}>
+      <g stroke={COL.ink} strokeWidth={7} strokeLinejoin="round" strokeLinecap="round" style={{ paintOrder: "stroke" }}>
+        <path d="M-7.5,-20 L7.5,-20 L7.5,30 L0,47 L-7.5,30 Z" fill="#f4f7fb" />
+        <rect x={-20} y={-27} width={40} height={10} rx={4} fill={col} />
+        <rect x={-4.5} y={-41} width={9} height={15} fill="#8a5a2e" />
+        <circle cx={0} cy={-44} r={7} fill={col} />
       </g>
     </svg>
   );
@@ -53,7 +55,7 @@ export const PullCounter: React.FC<PullCounterProps> = ({ n, at, out, x = 540, y
   const leave = outK(f, out); if (leave >= 1) return null;
   const k = springAt(f, at, PUNCH), kn = springAt(f, at + 1, { damping: 8, stiffness: 260, mass: 0.6 });
   const s = scale * (1 - leave), o = 1 - leave;
-  const gap = 58, w0 = (n - 1) * gap;
+  const gap = 66, w0 = (n - 1) * gap;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <div style={{ position: "absolute", left: x, top: y, width: 0, height: 0, transform: `scale(${s})`, opacity: o }}>
@@ -67,7 +69,7 @@ export const PullCounter: React.FC<PullCounterProps> = ({ n, at, out, x = 540, y
           const ki = i === n - 1 ? springAt(f, at + 4, SNAP) : 1;
           return (
             <div key={i} style={{ position: "absolute", left: -w0 / 2 + i * gap, top: 150, width: 0, height: 0, transform: `scale(${ki})`, opacity: clamp01(k) }}>
-              <SwordGlyph h={84} />
+              <SwordGlyph h={104} />
             </div>
           );
         })}
