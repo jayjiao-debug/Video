@@ -1,0 +1,454 @@
+plan: {'tier': 'creator', 'character_count': 832, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "L01", "lang": "zh", "text": "武松在景阳冈打死一只老虎，被人用轿子抬着，成了英雄。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L01.mp3", "bytes": 90740}
+{"name": "L02", "lang": "zh", "text": "李逵在沂岭，一夜之间，杀了四只。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L02.mp3", "bytes": 62318}
+{"name": "L03", "lang": "zh", "text": "可天亮以后，他连自己的名字都不敢说。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L03.mp3", "bytes": 59811}
+{"name": "L04", "lang": "zh", "text": "因为那一夜，他不是去打虎的。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L04.mp3", "bytes": 51034}
+{"name": "L05", "lang": "zh", "text": "这天，梁山摆酒，庆贺宋江把父亲接上了山。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L05.mp3", "bytes": 80291}
+{"name": "L06", "lang": "zh", "text": "酒席散了，李逵忽然放声大哭：", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L06.mp3", "bytes": 61065}
+{"name": "L07", "lang": "zh", "text": "这个也去取爷，那个也去望娘，偏铁牛是土掘坑里钻出来的！", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L07.mp3", "bytes": 106204}
+{"name": "L08", "lang": "zh", "text": "他也有个老娘，在沂水县老家。他要接她上山，快活几天。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L08.mp3", "bytes": 95755}
+{"name": "L09", "lang": "zh", "text": "宋江只许他独自去，不准喝酒，也不准带那两把板斧。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L09.mp3", "bytes": 80291}
+{"name": "L10", "lang": "zh", "text": "半路上，一个劫道的被他一刀放倒。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L10.mp3", "bytes": 54795}
+{"name": "L11", "lang": "zh", "text": "那人喊：家里还有个九十岁的老娘！", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L11.mp3", "bytes": 58557}
+{"name": "L12", "lang": "zh", "text": "杀人不眨眼的李逵，放了他，还给了十两银子。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L12.mp3", "bytes": 72767}
+{"name": "L13", "lang": "zh", "text": "推开家门，娘坐在床上念佛，两只眼睛都瞎了。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L13.mp3", "bytes": 88232}
+{"name": "L14", "lang": "zh", "text": "娘说：我如常思量你，眼泪流干，因此瞎了双目。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L14.mp3", "bytes": 111220}
+{"name": "L15", "lang": "zh", "text": "李逵不敢说实话。他说：铁牛做了官，来接娘。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L15.mp3", "bytes": 89486}
+{"name": "L16", "lang": "zh", "text": "他背起娘，趁着月色翻沂岭。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L16.mp3", "bytes": 57303}
+{"name": "L17", "lang": "zh", "text": "半山上，娘渴得受不住。他把娘放在青石上，去找水。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L17.mp3", "bytes": 100771}
+{"name": "L18", "lang": "zh", "text": "等他端着水回来——", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L18.mp3", "bytes": 28046}
+{"name": "L19", "lang": "zh", "text": "石头上，只剩他插下的那口刀。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L19.mp3", "bytes": 51034}
+{"name": "L20", "lang": "zh", "text": "草地上有血，一路通到一个虎洞。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L20.mp3", "bytes": 56049}
+{"name": "L21", "lang": "zh", "text": "李逵红了眼，提刀闯进去。小虎、母虎，一只都没放过。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L21.mp3", "bytes": 86978}
+{"name": "L22", "lang": "zh", "text": "狂风里，又扑出一只吊睛白额虎。他迎上去，只一刀。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L22.mp3", "bytes": 88232}
+{"name": "L23", "lang": "zh", "text": "天亮了。他用自己的布衫把娘包好，埋在山上，大哭了一场。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L23.mp3", "bytes": 106204}
+{"name": "L24", "lang": "zh", "text": "下山时，猎户们不信：一个人，怎么杀得了四只虎？", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L24.mp3", "bytes": 85724}
+{"name": "L25", "lang": "zh", "text": "可他不敢说自己是谁：官府正悬赏三千贯，捉拿李逵。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L25.mp3", "bytes": 91994}
+{"name": "L26", "lang": "zh", "text": "他只说，自己叫张大胆。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L26.mp3", "bytes": 40585}
+{"name": "L27", "lang": "zh", "text": "武松打一只虎，做了都头。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L27.mp3", "bytes": 44764}
+{"name": "L28", "lang": "zh", "text": "李逵杀了四只，没了娘。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "L28.mp3", "bytes": 46018}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "L01",
+  "lang": "zh",
+  "text": "武松在景阳冈打死一只老虎，被人用轿子抬着，成了英雄。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L01.mp3",
+  "bytes": 90740,
+  "heard": "武松在井陽崗打死一隻老虎被人用轎子抬著成了英雄",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.6
+ },
+ {
+  "name": "L02",
+  "lang": "zh",
+  "text": "李逵在沂岭，一夜之间，杀了四只。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L02.mp3",
+  "bytes": 62318,
+  "heard": "李魁在遺领,一夜之间杀了四只。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.84
+ },
+ {
+  "name": "L03",
+  "lang": "zh",
+  "text": "可天亮以后，他连自己的名字都不敢说。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L03.mp3",
+  "bytes": 59811,
+  "heard": "可天亮以后他连自己的名字都不敢说",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.68
+ },
+ {
+  "name": "L04",
+  "lang": "zh",
+  "text": "因为那一夜，他不是去打虎的。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L04.mp3",
+  "bytes": 51034,
+  "heard": "因為那一頁它不是去打虎的。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.12
+ },
+ {
+  "name": "L05",
+  "lang": "zh",
+  "text": "这天，梁山摆酒，庆贺宋江把父亲接上了山。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L05.mp3",
+  "bytes": 80291,
+  "heard": "這天 梁山白酒慶賀宋江把父親接上了山",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.96
+ },
+ {
+  "name": "L06",
+  "lang": "zh",
+  "text": "酒席散了，李逵忽然放声大哭：",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L06.mp3",
+  "bytes": 61065,
+  "heard": "九席散了李魁忽然放声大哭",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.76
+ },
+ {
+  "name": "L07",
+  "lang": "zh",
+  "text": "这个也去取爷，那个也去望娘，偏铁牛是土掘坑里钻出来的！",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L07.mp3",
+  "bytes": 106204,
+  "heard": "这个也去取爷,那个也去望娘。偏铁牛是土爵坑里钻出来的。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.56
+ },
+ {
+  "name": "L08",
+  "lang": "zh",
+  "text": "他也有个老娘，在沂水县老家。他要接她上山，快活几天。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L08.mp3",
+  "bytes": 95755,
+  "heard": "他也有個老娘,在遺水縣老家。她要接她上山,快活幾天。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.92
+ },
+ {
+  "name": "L09",
+  "lang": "zh",
+  "text": "宋江只许他独自去，不准喝酒，也不准带那两把板斧。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L09.mp3",
+  "bytes": 80291,
+  "heard": "宋江只许他独自去,不准喝酒,也不准带那两把板斧。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.96
+ },
+ {
+  "name": "L10",
+  "lang": "zh",
+  "text": "半路上，一个劫道的被他一刀放倒。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L10.mp3",
+  "bytes": 54795,
+  "heard": "半路上一個劫到的被他一刀放倒",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "L11",
+  "lang": "zh",
+  "text": "那人喊：家里还有个九十岁的老娘！",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L11.mp3",
+  "bytes": 58557,
+  "heard": "那人喊家里还有个90岁的老娘",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.6
+ },
+ {
+  "name": "L12",
+  "lang": "zh",
+  "text": "杀人不眨眼的李逵，放了他，还给了十两银子。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L12.mp3",
+  "bytes": 72767,
+  "heard": "杀人不眨眼的李魁放了他还给了十两银子",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.48
+ },
+ {
+  "name": "L13",
+  "lang": "zh",
+  "text": "推开家门，娘坐在床上念佛，两只眼睛都瞎了。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L13.mp3",
+  "bytes": 88232,
+  "heard": "推開家門,娘坐在床上念佛,兩隻眼睛都瞎了。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.44
+ },
+ {
+  "name": "L14",
+  "lang": "zh",
+  "text": "娘说：我如常思量你，眼泪流干，因此瞎了双目。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L14.mp3",
+  "bytes": 111220,
+  "heard": "娘说,我如常思量你眼泪流干,因此瞎了双目。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.88
+ },
+ {
+  "name": "L15",
+  "lang": "zh",
+  "text": "李逵不敢说实话。他说：铁牛做了官，来接娘。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L15.mp3",
+  "bytes": 89486,
+  "heard": "李魁不敢說實話,他說,鐵牛做了官來接娘。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.52
+ },
+ {
+  "name": "L16",
+  "lang": "zh",
+  "text": "他背起娘，趁着月色翻沂岭。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L16.mp3",
+  "bytes": 57303,
+  "heard": "她悲起娘趁著月色翻移領",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.52
+ },
+ {
+  "name": "L17",
+  "lang": "zh",
+  "text": "半山上，娘渴得受不住。他把娘放在青石上，去找水。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L17.mp3",
+  "bytes": 100771,
+  "heard": "半山上,娘可得受不住。她把娘放在青石上去找水。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 6.24
+ },
+ {
+  "name": "L18",
+  "lang": "zh",
+  "text": "等他端着水回来——",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L18.mp3",
+  "bytes": 28046,
+  "heard": "等它端着水回来",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 1.68
+ },
+ {
+  "name": "L19",
+  "lang": "zh",
+  "text": "石头上，只剩他插下的那口刀。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L19.mp3",
+  "bytes": 51034,
+  "heard": "石頭上只剩它插下的那口刀。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.12
+ },
+ {
+  "name": "L20",
+  "lang": "zh",
+  "text": "草地上有血，一路通到一个虎洞。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L20.mp3",
+  "bytes": 56049,
+  "heard": "草地上有血,一路通到一个虎洞。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "L21",
+  "lang": "zh",
+  "text": "李逵红了眼，提刀闯进去。小虎、母虎，一只都没放过。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L21.mp3",
+  "bytes": 86978,
+  "heard": "李魁虹的眼提刀闯进去小虎、母虎一直都没放过",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.36
+ },
+ {
+  "name": "L22",
+  "lang": "zh",
+  "text": "狂风里，又扑出一只吊睛白额虎。他迎上去，只一刀。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L22.mp3",
+  "bytes": 88232,
+  "heard": "狂風裡又鋪出一隻掉驚白鵝虎他迎上去只一刀",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.44
+ },
+ {
+  "name": "L23",
+  "lang": "zh",
+  "text": "天亮了。他用自己的布衫把娘包好，埋在山上，大哭了一场。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L23.mp3",
+  "bytes": 106204,
+  "heard": "天亮了,他用自己的布衫把娘包好埋在山上,大哭了一場。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 6.56
+ },
+ {
+  "name": "L24",
+  "lang": "zh",
+  "text": "下山时，猎户们不信：一个人，怎么杀得了四只虎？",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L24.mp3",
+  "bytes": 85724,
+  "heard": "下山时,猎户们不信,一个人怎么杀得了四只虎?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.28
+ },
+ {
+  "name": "L25",
+  "lang": "zh",
+  "text": "可他不敢说自己是谁：官府正悬赏三千贯，捉拿李逵。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L25.mp3",
+  "bytes": 91994,
+  "heard": "可他不敢說自己是誰官府正懸賞三千罐捉拿李魁",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.68
+ },
+ {
+  "name": "L26",
+  "lang": "zh",
+  "text": "他只说，自己叫张大胆。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L26.mp3",
+  "bytes": 40585,
+  "heard": "他只说自己叫张大胆。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.48
+ },
+ {
+  "name": "L27",
+  "lang": "zh",
+  "text": "武松打一只虎，做了都头。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L27.mp3",
+  "bytes": 44764,
+  "heard": "武松打一支虎做了肚头",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.72
+ },
+ {
+  "name": "L28",
+  "lang": "zh",
+  "text": "李逵杀了四只，没了娘。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L28.mp3",
+  "bytes": 46018,
+  "heard": "李魁杀了四只梅勒娘",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.8
+ }
+]
