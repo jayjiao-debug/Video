@@ -24,5 +24,7 @@
   {"name": "acc_cowboyHat", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "cowboyHat", "look": "friend0"}}},
   {"name": "acc_apron", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "apron", "look": "you"}}},
   {"name": "acc_faceMask", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "faceMask", "look": "you"}}},
-  {"name": "acc_coffeeCup", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "coffeeCup", "look": "class23"}}}
+  {"name": "acc_coffeeCup", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "coffeeCup", "look": "class23"}}},
+  {"name": "acc_phone", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "phone", "look": "friend2"}}},
+  {"name": "acc_pen", "entry": "rig3d_acc.ts", "size": "360x640", "pick": [0, 30, 60], "opts": {"turn": {"set": "pen", "look": "you"}}}
 ]

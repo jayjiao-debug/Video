@@ -73,7 +73,30 @@
 //   stay planted, the body bounces (a sharp low after each landing, a rounded high as the legs pass) and the head
 //   and hat nod a beat late.
 //   a.qa after update: clear = the smallest gap between an arm and the own body / head in metres (< 0 = clipping),
-//   reach = how far a hand target is beyond the arm (> 0 = cannot reach).
+//   reach = how far a hand target is beyond the arm (> 0 = cannot reach); seated, clear also counts the seat, the
+//   desk and the chair's back, and qa.seat / qa.head give the legs' and a front arm's gaps (see Rig.qa).
+// Sitting, writing, a phone (kit/RIG3D_poses.md has the staging advice and the limits):
+//   a.set({ at, facing, seat: { top: V(x, 0.456, z), deskEdge: 0.23, deskTop: 0.75 }, pose: { kind: "write", t } });
+//   state.seat (see RigSeat: the fields of kit/cast.ts's seat, plus backrest / backrestTop): the figure sits there and
+//   `at` is ignored. The hips rest on the seat; the thighs lie forward over it in the TRAVEL frame, the knees bend
+//   just past the front edge and the shins hang; a foot is planted only if the leg reaches the floor without passing
+//   through the seat, otherwise it dangles (these legs are short: on a 0.456 m chair they dangle). The legs belong
+//   to the seat, so they are still. Every pose keeps its upper body on a seat (idle, wave, cheer, point, hold ...);
+//   a hand that would hang rests on its own thigh, or on the desk top when the seat has a desk, and stays put while
+//   the body breathes and the camera moves. Seated, the torso turns at most 20 deg from the chair toward the camera
+//   (14 at a desk, less where a build's resting hands could not keep their places); the head turns the rest of the
+//   way on the body (up to 46 deg), so face, hair and hat follow the camera as they do on a standing figure.
+//   pose kinds: "sit" (= "desk"): hands on the lap, or forearms ON the desk top when the seat has a desk.
+//     "write": seated at a desk, pose.arm (default 0) makes small strokes on the desk top with what it holds (pen()),
+//     the other forearm rests, the head tips down; driven by pose.t alone.
+//     "phone": pose.arm (default 1) holds a phone (phone()): amount 0 = looking at it in front of the chest, 1 = at
+//     the ear, in between a smooth raise (animate amount over 8-12 frames). Standing or seated.
+//   state.armFront = [right, left]: true = that arm, its hand and what it holds are drawn at their true depth against
+//   the figure's own head (rule 4 is off for that arm only), so they can show in front of the face, and they are kept
+//   strictly outside the head's real shape (hair and hat included). undefined = the pose decides ("phone" sets it for
+//   the phone's arm); false = under the own head, as always. With no arm in front every picture is as before.
+//   Things for a hand: kit/rigacc/phone.ts, pen.ts (PartKit.held with posed: true: these poses turn the thing and
+//   keep every point of it outside the head, the body and the desk).
 // Accessories (role props: glasses, a moustache, hats, headphones, a tie, a backpack, a briefcase ...) plug in:
 //   rc.add(look, { acc: [glasses({ kind: "round" }), topHat()] })           // kit/rigacc/ has the standard ones
 //   An accessory is a plain object (see Acc) made by a function in its own file. It can draw on the face (face /
@@ -86,11 +109,14 @@
 //   pixel by pixel with recorded ones, run it after every change to this file.
 //   state.hide = ["phone"] hides an accessory's 3D parts for a frame (a phone that is still in the pocket).
 // Staging: keep a facing out of 115-170 deg from the camera (the turn-away transition; use turn = 1 for a back view).
-//   A figure's own hand never shows in front of its own head (rule 4), so poses keep the hands beside or below it.
+//   A figure's own hand never shows in front of its own head (rule 4), so poses keep the hands beside or below it;
+//   state.armFront (and the "phone" pose) lifts that for one arm.
 // Pipeline: EffectComposer needs stencilBuffer: true (postprocessing: new EffectComposer(renderer, { stencilBuffer:
 //   true }); @react-three/postprocessing: <EffectComposer stencilBuffer>). The figures draw in three steps by
 //   renderOrder: heads (0), bodies and limbs (1), heads again as depth only (2). Within a head, a hat's shells go
-//   first (-0.2), then the skin (-0.1), which skips their pixels.
+//   first (-0.2), then the skin (-0.1), which skips their pixels. While an arm is drawn in front of its own head
+//   (armFront), a depth-only disc through the head's edge plane goes in between (0.6): the head's ink ring is the
+//   back of a hull and lies behind that plane, and without the disc a phone tucked behind the head would cover it.
 // Lighting: the same CastLight as the cards (key, tint, shade, gain). The key is held within a per-part angle of the
 //   view, so shade never swallows a face. Outline: inverted hulls pushed out in view space, never thinner than uMinPx
 //   pixels. Everything is on NOINK (the world ink pass never outlines it).
@@ -1216,9 +1242,12 @@ const ikFrame = (a: V3, t: V3, l1: number, l2: number, pole: V3, pole2: V3) => {
 };
 
 // ===== poses =====
-export type RigPoseKind = "idle" | "walk" | "wave" | "point" | "haul" | "hold" | "cheer";
-/** walk: phase = where in the cycle of two steps (0..1; from the distance walked, so that the feet stay planted:
- *  rigWalk gives it), stride = half a step's length in metres (default 0.2), amount = how much it bounces (1) */
+export type RigPoseKind = "idle" | "walk" | "wave" | "point" | "haul" | "hold" | "cheer" | "sit" | "desk" | "write" | "phone";
+/** t = seconds (breathing, waving, the writing strokes: every frame is a pure function of it); arm = which arm waves /
+ *  points / writes (default 0, the right hand) / holds the phone (default 1); amount: haul = effort, phone = 0 looking
+ *  at it .. 1 at the ear, walk = how much it bounces (1).
+ *  walk: phase = where in the cycle of two steps (0..1; from the distance walked, so that the feet stay planted:
+ *  rigWalk gives it), stride = half a step's length in metres (default 0.2) */
 export type RigPose = { kind: RigPoseKind; t?: number; phase?: number; amount?: number; arm?: 0 | 1; stride?: number };
 /** The head as a layer of its own. The reference moves the head against a still body, in short accents on stressed
  *  words and reactions (never a steady wobble): it pops 6 to 7 % larger for 3 frames, squashes a tenth and stretches
@@ -1228,8 +1257,31 @@ export type RigPose = { kind: RigPoseKind; t?: number; phase?: number; amount?: 
  *  scale = its size (1 = as built), growing from the chin; squash = that share flatter and half that share wider
  *  (negative = taller and thinner), also from the chin. The face, the hair and everything worn on the head go along. */
 export type RigHead = { dx?: number; dy?: number; tilt?: number; scale?: number; squash?: number };
+/** Where a figure sits (the same fields as kit/cast.ts FigState.seat, so a card scene ports one to one). Metres, world.
+ *    top       the centre of the seat's top surface
+ *    back      how far the hip sits behind that centre (default 0.03)
+ *    front     from the centre to the seat's front edge (default 0.2): the knees bend just past it
+ *    deskEdge  from the centre to the desk's near edge, along the facing (leave out: no desk)
+ *    deskTop   the height of the desk top (world y, default 0.75)
+ *    floor     the floor's height (world y, default 0): a foot is planted only if the leg reaches it
+ *    backrest  (not in cast.ts) from the centre back to the front face of the chair's back: the hip then sits no
+ *              further back than the body's own radius and ink allow, and the arms stay in front of it
+ *    backrestTop  the height of that back's top edge (world y, default 0.42 above the seat): above it nothing is in
+ *              the way (a hand at the ear with the head turned)
+ *  The seat is taken as a bench: as wide as it needs to be, solid below its top and back from its front edge. The
+ *  desk is a slab 6 cm thick from its near edge on (legs go under it). */
+export type RigSeat = { top: V3; back?: number; deskEdge?: number; deskTop?: number; front?: number; floor?: number; backrest?: number; backrestTop?: number };
 export type RigState = {
   at: V3; facing: number; pose: RigPose;
+  /** sitting: the figure sits on this seat and `at` is ignored. Every pose keeps its upper body (a hand that would
+   *  hang rests on the lap, or on the desk when the seat has one). "sit" / "desk" / "write" without a seat sit on a
+   *  seat 0.472 m high over `at`, as the cards do. */
+  seat?: RigSeat;
+  /** per arm (0 = the right): true = the arm, its hand and what it holds are drawn at their true depth against the
+   *  figure's own head, so they can show in front of it; they are then kept strictly outside the head's real shape.
+   *  false = hidden behind the own head, as always. undefined (also per arm) = the pose decides: "phone" sets it for
+   *  the arm that holds the phone. */
+  armFront?: [boolean | undefined, boolean | undefined];
   hands?: [V3 | null, V3 | null];
   expr?: Expr; blink?: number; visible?: boolean;
   /** a speaking mouth for this frame, instead of the expression's own (see RigMouth; rigSay(t, lines) gives the
@@ -1260,13 +1312,62 @@ export type RigState = {
  *  `at`), 2 = staged for the camera (x = screen right, y up from the bottom of the body, z toward the camera): a wave
  *  or a cheer stays beside the head on screen from any camera angle, it never crosses the face */
 type HandT = { p: V3; f: 0 | 1 | 2 };
+/** an arm whose place depends on where things are in this frame (the lap, the desk top, the head): solved once the
+ *  body stands (see armPlan). lap / desk = the hand rests there; write = the pen hand; phone = the phone hand. */
+type ArmPlan = "lap" | "desk" | "write" | "phone" | null;
 type BodyPose = {
   hip: V3; ankle: [V3, V3]; footYaw: [number, number];     // TRAVEL frame: x = the person's left, y up, z = the story facing
   pitch: number; roll: number; breathe: number;
+  /** the part of `roll` that is the body's idle sway (the rest is the pose's own lean to the side) */
+  sway: number;
   hand: [HandT | null, HandT | null];
   elbowPole: [V3, V3];                                      // show frame
   headPitch: number;
+  plan: [ArmPlan, ArmPlan];
+  /** the pose wants this arm drawn in front of the own head (see RigState.armFront) */
+  front: [boolean, boolean];
 };
+/** a seat for one frame, in the TRAVEL frame from the floor point under the hip (y = above the floor, z = forward):
+ *  h = the seat top, front = its front edge, deskZ / deskY = the desk's near edge and top (deskZ null: none), restZ /
+ *  restY = the front face of the chair's back (null: unknown) and its top edge */
+type SeatBox = { h: number; front: number; deskZ: number | null; deskY: number; restZ: number | null; restY: number };
+/** how the legs lie on a seat: fixed for a seat and a build, worked out once (Rig.seatFit) */
+type SeatFit = {
+  /** per leg, in that frame (x = the person's left): hip joint, knee, ankle */
+  hip: [V3, V3]; knee: [V3, V3]; ankle: [V3, V3];
+  /** per leg: toes up (rad): a dangling foot stays square to its shin; a planted one lies flat */
+  footPitch: [number, number];
+  /** per leg: how far the ankle hangs above its place on the floor (0 = planted) */
+  dangle: [number, number];
+  /** the smallest gap of the legs and feet to the seat, the desk, the floor and each other (m) */
+  gap: number;
+  /** the furthest lean forward (rad) that keeps the body's ink clear of the desk's near edge */
+  leanMax: number;
+  /** how far (rad) the torso may turn from the seat's direction toward the camera: as far as both resting hands
+   *  (on the lap, or on the desk) still reach their places with the arms clear of the body (Rig.seatTurn; null =
+   *  not worked out yet) */
+  turn: number | null;
+  /** per arm: where a hand resting on the lap lies on this seat, the same place for every turn of the torso
+   *  (z = how far along the thigh from the seat's centre; u above 1 = held that far over it: see the lap plan in
+   *  Rig.armPlan; null = not worked out yet) */
+  lap: [{ z: number; u: number } | null, { z: number; u: number } | null];
+};
+type Sit = SeatBox & { at: V3; fit: SeatFit };
+/** the desk is taken as a slab this thick from its near edge on (a top and its rail) */
+const DESK_T = 0.06;
+/** how far a point is outside the seat, the chair's back and the desk (m, < 0 = inside), in the seat's frame */
+const furnGap = (S: SeatBox, y: number, z: number) => {
+  const sy = y - S.h, sz = z - S.front;
+  let g = sy > 0 && sz > 0 ? Math.hypot(sy, sz) : Math.max(sy, sz);
+  if (S.restZ !== null && sy > 0) { const dz = z - S.restZ, dy = y - S.restY; g = Math.min(g, dz > 0 && dy > 0 ? Math.hypot(dz, dy) : Math.max(dz, dy)); }
+  if (S.deskZ !== null) {
+    const dz = S.deskZ - z, dy = Math.max(y - S.deskY, S.deskY - DESK_T - y);
+    g = Math.min(g, dz > 0 && dy > 0 ? Math.hypot(dz, dy) : Math.max(dz, dy));
+  }
+  return g;
+};
+/** x for |x| up to 0.7 lim, then easing toward lim (never beyond): a limit without a corner */
+const softLim = (x: number, lim: number) => { const a = Math.abs(x), k = 0.7 * lim; return a < k ? x : Math.sign(x) * (k + (lim - k) * (1 - Math.exp(-(a - k) / Math.max(lim - k, 1e-4)))); };
 export type Hat = { kind: "cap" | "beanie"; col: string; trim?: string };
 
 // ===== accessories: role props (glasses, moustaches, hats, ties, headphones, packs, things in a hand) =====
@@ -1444,13 +1545,23 @@ export type PartKit = {
   band: (o: { r: number; a0: number; a1: number; half: number; yaw?: number; edge?: number }) => THREE.BufferGeometry;
   /** IN A HAND: a group that follows hand i (0 = the person's right). offset = metres from the hand's centre in the
    *  body's frame (x = the person's left, y = up, z = forward); rot = [pitch, yaw, roll] in radians on top of the
-   *  body's facing. layer "limb" (the default) = hidden behind the figure's own head, like the hand; "free" = plain
-   *  depth (something held up over the head). Add parts to it with solid(group, ...) / plate(group, ...).
+   *  body's facing. layer "limb" (the default) = drawn like the hand that holds it: hidden behind the figure's own
+   *  head, or in front of it when that arm is (RigState.armFront); "free" = plain depth (something held up over the
+   *  head). Add parts to it with solid(group, ...) / plate(group, ...).
    *  hang: true = the thing hangs from the hand (a case, a bag, a bucket): that arm then stays down in wave, point
    *  and cheer, as a person carrying a case would keep it; a wave or a point asked of that arm goes to the other arm
-   *  when that one is free. Leave it out for what is raised with the hand (a cup, a phone, a flag). Either way
-   *  Rig.qa.held tells whether the thing passes through the figure's own body or head in a pose. */
-  held: (i: 0 | 1, o?: { offset?: [number, number, number]; rot?: [number, number, number]; layer?: "limb" | "free"; hang?: boolean }) => THREE.Group;
+   *  when that one is free. Leave it out for what is raised with the hand (a cup, a flag). Either way Rig.qa.held
+   *  tells whether the thing passes through the figure's own body or head in a pose.
+   *  posed: true = a thing a pose knows how to hold (a pen, a phone). In the poses that handle what a hand holds
+   *  ("write", "phone", and a hand resting on the lap or the desk) the group then sits ON the hand's centre and the
+   *  pose turns it; offset and rot are left out. Build the thing for that: its length along the group's +y (a pen:
+   *  the tip at the -y end; a phone: its top at +y), its face toward +z (a phone's screen), the group's origin where
+   *  the hand grips it (so the hand is behind a phone, on -z). What the poses do with it: writing leans +y back over
+   *  the paper and sets the hand's height so the thing's lowest point touches the paper; looking at a phone turns
+   *  +z to the face; a call lays +z against the side of the head; a resting hand lays the thing flat under itself
+   *  (+z down). The pose keeps every point of the thing (its vertices, with its ink) outside the head, the body and
+   *  the desk. In every other pose, and for groups without `posed`, offset and rot apply exactly as before. */
+  held: (i: 0 | 1, o?: { offset?: [number, number, number]; rot?: [number, number, number]; layer?: "limb" | "free"; hang?: boolean; posed?: boolean }) => THREE.Group;
   /** ON THE BODY: the arms stay clear of this ball (centre in body metres). Head parts need none: the head is drawn
    *  over the arms. */
   keepOut: (c: V3, r: number) => void;
@@ -1657,6 +1768,15 @@ type Dim = { R: number; ys: number; Ht: number; rb: number; rt: number; hipY: nu
 /** ink widths (m). Reference, in head widths: the head's line 2.2 % on the lit side, 5.5 % on the far side, 8 % under
  *  the chin; the body's line about as heavy; a limb with its line about 5.4 %, a hand about 2.1 x the limb */
 const HULL = { head: 0.021, body: 0.0175, limb: 0.0037, hand: 0.0041, prop: 0.011 };
+/** sitting. The body's bottom rests SEAT_LIFT above the seat: its ink line (the heaviest: underneath) sits on the
+ *  seat instead of in it; BODY_INK = the room that line takes at the body's sides. SEAT_TURN = the most the torso may
+ *  turn from the chair's direction toward the camera (the head turns the rest of the way, up to HEAD_TURN on the
+ *  body); at a desk less, so both forearms stay on it; a build whose short arms cannot rest both hands at that turn
+ *  gets less (SeatFit.turn). SEAT_LEAN = the lean forward of a seated body (more at a desk in the desk poses).
+ *  REST_GAP = the air under a limb that rests on something. */
+const SEAT_LIFT = 1.6 * HULL.body, BODY_INK = 1.6 * HULL.body, SEAT_TURN = rad(20), SEAT_TURN_DESK = rad(14), HEAD_TURN = rad(46), SEAT_LEAN = rad(3), REST_GAP = 0.003;
+/** the head's real reach from its centre is kept per direction on this grid (see Rig.headEnv) */
+const ENV_T = 40, ENV_A = 80;
 /** reference build: the head is about a third of the height, the body about 0.58 head widths wide and 0.85 long below
  *  the head, the arms about 0.85 head widths: a bigger head, a slimmer body and shorter arms than the drawn cards */
 const HEAD_K = 1.16, BODY_W = 0.88;
@@ -1676,30 +1796,61 @@ const dimOf = (L: Look, hand: number): Dim => {
 };
 
 const _q1 = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _q3 = new THREE.Quaternion(), _s = V(), _w = V(), _bq = new THREE.Quaternion(), _bq2 = new THREE.Quaternion(), _bv = V();
+const _hl = V(), _hp = V(), _m4 = new THREE.Matrix4();
+/** a turn from its three axes (x = y cross z) */
+const basisQ = (y: V3, z: V3, out: THREE.Quaternion) => out.setFromRotationMatrix(_m4.makeBasis(V().crossVectors(y, z), y, z));
 
 export class Rig {
   readonly group = new THREE.Group();
   look: Look;
   state: RigState = { at: V(), facing: 0, pose: { kind: "idle" } };
   readonly dim: Dim;
-  /** QA after update: worst hand reach error (m), the smallest arm clearance to the body / head (m, < 0 = inside) and
-   *  the smallest gap between a held thing and the figure's own body and head (m, < 0 = it passes through; 1 = no
-   *  held thing) */
-  qa = { reach: 0, clear: 1, swivel: [0, 0] as [number, number], held: 1 };
+  /** QA after update (metres; a gap below 0 = something passes through something):
+   *    reach   how far the worst hand is from where it should be (0 = every hand is in its place)
+   *    clear   the smallest gap the arms keep: to the own body, the head (its real shape for an arm in front of it),
+   *            an accessory's keep-out, and, seated, the seat / desk / chair back; and of a posed thing to the body
+   *    held    the smallest gap between a held thing and the figure's own body and head (1 = no held thing)
+   *    seat    seated: the smallest gap of the legs, feet, arms, hands, posed things and the body to the seat, the
+   *            desk, the chair back, the floor, and of the arms to the own legs (1 = not seated)
+   *    head    the smallest gap of an arm in front of the head (rings, hand, what it holds) to the head's real shape
+   *            (1 = no arm in front)
+   *    swivel  how far each elbow was turned out of the pose's own plane to clear (rad) */
+  qa = { reach: 0, clear: 1, swivel: [0, 0] as [number, number], held: 1, seat: 1, head: 1 };
   private torsoG = new THREE.Group(); private headG = new THREE.Group();
   private faceU: FaceU; private hatLine: number;
   /** this figure's accessories (the hat option comes first), what they do to the face drawing, and whether a hat
    *  shades the eyes */
   readonly acc: Acc[]; private fa: FaceAcc; private shade: boolean;
   /** held things (they follow a hand) and the balls the arms stay clear of (body frame; w = in the world, per frame) */
-  private held: { g: THREE.Group; i: 0 | 1; off: V3; rot: [number, number, number]; hang: boolean }[] = [];
+  private held: { g: THREE.Group; i: 0 | 1; off: V3; rot: [number, number, number]; hang: boolean; posed: boolean; pts: Float32Array | null; ink: number; far: number }[] = [];
   /** each accessory's 3D parts (state.hide switches them off by the accessory's name) */
   private accParts: { name: string; o: THREE.Object3D }[] = [];
   private keep: { c: V3; r: number; w: V3 }[] = [];
   private limbs: Tube[] = []; private hands: THREE.Mesh[] = []; private feet: THREE.Group[] = []; private caps: THREE.Mesh[] = [];
   private clip: THREE.Group; private blob: THREE.Mesh;
+  /** an arm in front of the head (state.armFront) is drawn by depth against the head, but the head's ink ring is the
+   *  back of a pushed-out hull: up to 10 cm behind the head's edge, so a thing just behind the head would hide the ring
+   *  and leave the head without its line there. While an arm is in front, this flat disc through the head's edge
+   *  plane (it faces the camera; depth only, on the head's own pixels, after the heads and before the limbs) brings
+   *  the ring forward to that plane: what is behind the head is behind its line too. */
+  private ring: THREE.Mesh;
   private torsoM = new THREE.Matrix4(); private torsoInv = new THREE.Matrix4();
-  private out = { hand: [V(), V()] as [V3, V3], head: V(), foot: [V(), V()] as [V3, V3], bodyYaw: 0, faceYaw: 0 };
+  private out = { hand: [V(), V()] as [V3, V3], elbow: [V(), V()] as [V3, V3], head: V(), foot: [V(), V()] as [V3, V3], bodyYaw: 0, faceYaw: 0 };
+  /** per arm: its own materials (tube, hand, shoulder cap, their hulls, and what it holds on the "limb" layer), so
+   *  one arm can be drawn in front of the head; whether it is this frame; and the turn a pose gives a posed thing */
+  private armMats: THREE.Material[][] = [[], []];
+  private frontArm: [boolean, boolean] = [false, false];
+  private grip: [THREE.Quaternion | null, THREE.Quaternion | null] = [null, null];
+  private gripQ = [new THREE.Quaternion(), new THREE.Quaternion()];
+  /** sitting: this frame's seat (null = standing), the floor point under the hip, sin / cos of the facing, the legs
+   *  in the world, and the fits worked out so far (one per seat) */
+  private sit: Sit | null = null; private sitAt = V(); private sitF: [number, number] = [0, 1];
+  private legW = [{ h: V(), k: V(), a: V() }, { h: V(), k: V(), a: V() }];
+  /** seated: points along both legs' centre lines in the world (every second ring from the 4th), for the arms' tests */
+  private legPts = new Float32Array(2 * (SEG / 2 - 1) * 3);
+  private fits = new Map<string, SeatFit>();
+  /** the head's real reach from its centre by direction (see buildHeadEnv), and world -> head frame for this frame */
+  private headEnv: Float32Array | null = null; private headInv = new THREE.Matrix4();
   /** depth-only offsets of head parts (m toward the camera): the curls sit a little behind the ball, so their ink shows
    *  only outside the head. The head itself is at its true depth; see layerMat for how it stays on top of the body. */
   private pullU: NumU = { value: 0 }; private curlPullU: NumU = { value: -0.03 };
@@ -1735,13 +1886,13 @@ export class Rig {
     const inked = (parent: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, w: number, thick = 0.4, ho: HullO = {}, hg: THREE.BufferGeometry = geo) => {
       const m = add(parent, new THREE.Mesh(geo, mat)), hs: HullO = { brush: 0.26 * hand, seed: sd + 0.37 * ++hid, ...ho };
       const h = add(m, new THREE.Mesh(hg, hullMat(U, w, thick, hs)), false);
-      h.frustumCulled = false;
+      h.frustumCulled = false; h.userData.hull = true; m.userData.ink = w;
       if (ho.pull) {                                                     // a head part: its depth-only twins
         const dp = ho.pull === this.curlPullU ? this.curlDepthU : this.depthU, hm = hullMat(U, w, thick, { ...hs, pull: dp });
         hm.colorWrite = false;
         for (const tm of [rigMat(U, PART.head, { colorWrite: false }, "plain", undefined, dp), hm]) {
           const t = add(m, new THREE.Mesh(tm === hm ? hg : geo, tm), false);
-          t.frustumCulled = false; t.userData.depthOnly = true;
+          t.frustumCulled = false; t.userData.depthOnly = true; if (tm === hm) t.userData.hull = true;
         }
       }
       return m;
@@ -1853,7 +2004,7 @@ export class Rig {
         held: (i, ho = {}) => {
           const g = new THREE.Group();
           if (ho.layer === "free") g.userData.free = true;
-          this.group.add(g); this.held.push({ g, i, off: V(...(ho.offset ?? [0, 0, 0])), rot: ho.rot ?? [0, 0, 0], hang: !!ho.hang });
+          this.group.add(g); this.held.push({ g, i, off: V(...(ho.offset ?? [0, 0, 0])), rot: ho.rot ?? [0, 0, 0], hang: !!ho.hang, posed: !!ho.posed, pts: null, ink: 0, far: 0 });
           return g;
         },
         keepOut: (c, r) => { this.keep.push({ c: c.clone(), r, w: V() }); },
@@ -1867,12 +2018,17 @@ export class Rig {
       a.build(kit);
     }
     // limbs: 0 right arm, 1 left arm, 2 right leg, 3 left leg (built in world space: the group stays at the origin)
-    const limbMat = rigMat(U, PART.limb, { color: LIMB_COL }, "tube"), ballMat = rigMat(U, PART.ball, { color: LIMB_COL });
-    const limbHull = hullMat(U, HULL.limb, 0.3), ballHull = hullMat(U, HULL.hand, 0.3, { brush: 0.15 * hand, seed: sd + 7, freq: 60 });
+    // Each arm has its own materials (the legs and feet share theirs): an arm can then be drawn in front of the head
+    // (state.armFront) while the rest of the figure stays under it.
+    const mkLimb = () => rigMat(U, PART.limb, { color: LIMB_COL }, "tube"), mkBall = () => rigMat(U, PART.ball, { color: LIMB_COL });
+    const mkLimbHull = () => hullMat(U, HULL.limb, 0.3), mkBallHull = () => hullMat(U, HULL.hand, 0.3, { brush: 0.15 * hand, seed: sd + 7, freq: 60 });
+    const limbMats = [mkLimb(), mkLimb()], limbMat = mkLimb(), ballMats = [mkBall(), mkBall()], ballMat = mkBall();
+    const limbHulls = [mkLimbHull(), mkLimbHull()], limbHull = mkLimbHull(), ballHulls = [mkBallHull(), mkBallHull()];
+    for (let i = 0; i < 2; i++) this.armMats[i].push(limbMats[i], ballMats[i], limbHulls[i], ballHulls[i]);
     for (let i = 0; i < 4; i++) {
       const tb = new Tube(); this.limbs.push(tb);
-      add(this.group, new THREE.Mesh(tb.geo, limbMat)).frustumCulled = false;
-      add(this.group, new THREE.Mesh(tb.geo, limbHull), false).frustumCulled = false;
+      add(this.group, new THREE.Mesh(tb.geo, i < 2 ? limbMats[i] : limbMat)).frustumCulled = false;
+      add(this.group, new THREE.Mesh(tb.geo, i < 2 ? limbHulls[i] : limbHull), false).frustumCulled = false;
     }
     const handGeo = new THREE.SphereGeometry(d.handR, 24, 16), capGeo = new THREE.SphereGeometry(d.limbR, 12, 8);
     // L foot: the leg bent forward at the ankle: the same thickness, heel on the ankle
@@ -1882,11 +2038,11 @@ export class Rig {
     const footMat = rigMat(U, PART.ball, { color: LIMB_COL }), footHull = hullMat(U, HULL.limb, 0.3);
     footMat.polygonOffset = footHull.polygonOffset = false;
     for (let i = 0; i < 2; i++) {
-      const h = add(this.group, new THREE.Mesh(handGeo, ballMat));
-      add(h, new THREE.Mesh(handGeo, ballHull), false).frustumCulled = false;
+      const h = add(this.group, new THREE.Mesh(handGeo, ballMats[i]));
+      add(h, new THREE.Mesh(handGeo, ballHulls[i]), false).frustumCulled = false;
       this.hands.push(h);
-      const cap = add(this.group, new THREE.Mesh(capGeo, ballMat));       // the arm's rounded root on the shoulder
-      add(cap, new THREE.Mesh(capGeo, limbHull), false).frustumCulled = false;
+      const cap = add(this.group, new THREE.Mesh(capGeo, ballMats[i]));   // the arm's rounded root on the shoulder
+      add(cap, new THREE.Mesh(capGeo, limbHulls[i]), false).frustumCulled = false;
       this.caps.push(cap);
       const fg = new THREE.Group(); this.group.add(fg);
       const foot = add(fg, new THREE.Mesh(footGeo, footMat));
@@ -1912,12 +2068,24 @@ export class Rig {
     this.group.traverse((o3) => {
       const m = o3 as THREE.Mesh;
       if (!m.isMesh || m === this.blob) return;
-      for (let q: THREE.Object3D | null = m; q; q = q.parent) if (q === cb || q.userData.free) return;       // props keep their true depth
+      let inHand = -1;
+      for (let q: THREE.Object3D | null = m; q; q = q.parent) {
+        if (q === cb || q.userData.free) return;                           // props keep their true depth
+        const hd = this.held.find((x) => x.g === q);
+        if (hd) inHand = hd.i;
+      }
       const head = heads.has(m), mat = m.material as THREE.Material;
       if (m.userData.depthOnly) { layerMat(mat, sid, "depth"); m.renderOrder = 2; return; }
       layerMat(mat, sid, head ? "head" : "under");
       if (!head) { m.renderOrder = 1; if (!this.under.includes(mat)) this.under.push(mat); }
+      if (inHand >= 0 && !this.armMats[inHand].includes(mat)) this.armMats[inHand].push(mat);   // a held thing follows its arm
     });
+    {
+      const rm = new THREE.MeshBasicMaterial({ colorWrite: false });
+      layerMat(rm, sid, "depth");
+      const ring = (this.ring = new THREE.Mesh(new THREE.CircleGeometry(1, 48), rm));
+      ring.layers.set(NOINK); ring.renderOrder = 0.6; ring.frustumCulled = false; ring.visible = false; this.group.add(ring);
+    }
     // a hat's shells are drawn before the skin, and the skin skips the pixels they took: a shell's front is always
     // nearer than the head inside it, and this does not rest on the depth test. (At the head's own outline, under a
     // hat, the rasteriser can give one sample of an edge-on triangle a depth in front of the hat: a one-pixel speck
@@ -1935,6 +2103,7 @@ export class Rig {
 
   set(s: Partial<RigState>) { Object.assign(this.state, s); return this; }
   handWorld(i: 0 | 1) { return this.out.hand[i].clone(); }
+  elbowWorld(i: 0 | 1) { return this.out.elbow[i].clone(); }
   headWorld() { return this.out.head.clone(); }
   footWorld(i: 0 | 1) { return this.out.foot[i].clone(); }
   get bodyYaw() { return this.out.bodyYaw; }
@@ -1970,22 +2139,45 @@ export class Rig {
   private solvePose(): BodyPose {
     const d = this.dim, st = this.state, P = st.pose, t = P.t ?? 0, sx = 0.085, A = d.upper + d.fore, shx = (i: number) => Math.abs(d.sh[i].x), shy = d.sh[0].y, shz = d.sh[0].z;
     const bp: BodyPose = {
-      hip: V(0, d.hipY, 0), pitch: 0, roll: 0, breathe: 0.012 * Math.sin(t * 2 * Math.PI * 0.28),
+      hip: V(0, d.hipY, 0), pitch: 0, roll: 0, sway: 0, breathe: 0.012 * Math.sin(t * 2 * Math.PI * 0.28),
       hand: [null, null], elbowPole: [V(-1, -0.1, -0.7), V(1, -0.1, -0.7)],
       ankle: [V(-sx, d.ankleY, 0), V(sx, d.ankleY, 0)], footYaw: [-0.35, 0.35], headPitch: rad(st.lookDown ?? 0),
+      plan: [null, null], front: [false, false],
     };
     // hanging hand: near full reach (almost straight, a small outward bow), just outside the body's side
-    const reach = 0.972 * A;
+    const reach = 0.972 * A, hung = [false, false];
     const hang = (i: number, dz = 0): HandT => {
       const s = i ? 1 : -1, hx = d.rb + 0.05, hz = 0.03 + dz, dx = hx - shx(i), dzz = hz - shz;
+      hung[i] = true;
       return { p: V(s * hx, shy - Math.sqrt(Math.max(0.01, reach * reach - dx * dx - dzz * dzz)), hz), f: 0 };
     };
     // a hand that carries a hanging thing (PartKit.held hang) stays down: a gesture goes to the other arm if it is free
     const carries = (i: number) => this.held.some((h) => h.hang && h.i === i);
     const free = (a: 0 | 1): 0 | 1 => (carries(a) && !carries(1 - a) ? ((1 - a) as 0 | 1) : a);
-    switch (P.kind) {
+    // seated: the lower body belongs to the seat whatever the pose; a pose made for standing legs sits still
+    const sit = this.sit, kind: RigPoseKind = sit && (P.kind === "walk" || P.kind === "haul" || P.kind === "idle") ? "sit" : P.kind;
+    switch (kind) {
+      case "sit": case "desk": {
+        bp.roll = bp.sway = rad(0.8) * Math.sin(t * 2 * Math.PI * 0.21);
+        bp.hand = [hang(0), hang(1)];                  // seated, a hand that would hang rests (see below)
+        break;
+      }
+      case "write": {
+        const a = P.arm ?? 0;
+        bp.hand = [hang(0), hang(1)];
+        if (sit && sit.deskZ !== null) { bp.plan[a] = "write"; hung[a] = false; bp.hand[a] = null; }
+        bp.headPitch += rad(13);
+        break;
+      }
+      case "phone": {
+        const a = P.arm ?? 1;
+        bp.hand[1 - a] = hang(1 - a);
+        bp.plan[a] = "phone"; bp.front[a] = true;
+        bp.headPitch += rad(17) * (1 - smooth(P.amount ?? 0));      // looking down at it; level again for a call
+        break;
+      }
       case "idle": {
-        bp.roll = rad(1.2) * Math.sin(t * 2 * Math.PI * 0.21);
+        bp.roll = bp.sway = rad(1.2) * Math.sin(t * 2 * Math.PI * 0.21);
         bp.hand = [hang(0, 0.012 * Math.sin(t * 1.3)), hang(1, 0.012 * Math.sin(t * 1.3 + 1))];
         break;
       }
@@ -2051,23 +2243,532 @@ export class Rig {
       }
     }
     if (P.kind === "wave" || P.kind === "point" || P.kind === "cheer") for (let i = 0; i < 2; i++) if (carries(i)) { bp.hand[i] = hang(i); bp.elbowPole[i] = V(i ? 1 : -1, -0.1, -0.7); }
+    if (sit) {
+      // the body on the seat: its bottom SEAT_LIFT above the top (it rolls on its round bottom as it leans; _update adds
+      // that), a small lean forward: more to write, and at a desk never so far that the belly's ink meets the edge
+      const desk = sit.deskZ !== null, far = desk ? clamp((sit.deskZ! - 0.26) / 0.01, 0, 8) : 0;
+      const want = desk && (kind === "write" || kind === "sit" || kind === "desk") ? rad((kind === "write" ? 12 : 5) + far) : SEAT_LEAN;
+      bp.pitch = desk ? Math.min(want, sit.fit.leanMax) : want;
+      bp.hip.set(0, sit.h + SEAT_LIFT, 0);
+      // a hand that would hang rests instead: on the desk, or on the lap. Holding a board over a desk: above its top.
+      for (let i = 0; i < 2; i++) if (hung[i]) { bp.hand[i] = null; bp.plan[i] = desk ? "desk" : "lap"; }
+      if (kind === "hold" && desk) for (const h of bp.hand) if (h) h.p.y = Math.max(h.p.y, sit.deskY - sit.h - SEAT_LIFT + 0.07);
+    }
     return bp;
+  }
+
+  /** this frame's seat, or null when the figure stands (see RigSeat) */
+  private resolveSeat(): Sit | null {
+    const st = this.state, k = st.pose.kind, d = this.dim;
+    let s = st.seat;
+    if (!s) {
+      if (k !== "sit" && k !== "desk" && k !== "write") return null;
+      s = { top: V(st.at.x, st.at.y + 0.472, st.at.z), back: 0, floor: st.at.y };       // as the cards: a seat 0.472 m high under `at`
+    }
+    const floor = s.floor ?? 0;
+    let back = s.back ?? 0.03;
+    if (s.backrest !== undefined) back = Math.min(back, s.backrest - (d.rb * 1.05 + BODY_INK + 0.004));
+    const B: SeatBox = {
+      h: s.top.y - floor, front: (s.front ?? 0.2) + back, deskZ: s.deskEdge !== undefined ? s.deskEdge + back : null,
+      deskY: (s.deskTop ?? 0.75) - floor, restZ: s.backrest !== undefined ? back - s.backrest : null, restY: (s.backrestTop ?? s.top.y + 0.42) - floor,
+    };
+    const key = [B.h, B.front, B.deskZ, B.deskY, B.restZ, B.restY].map((x) => (x === null ? "-" : x.toFixed(5))).join("|");
+    let fit = this.fits.get(key);
+    if (!fit) { if (this.fits.size > 16) this.fits.clear(); fit = this.seatFit(B); this.fits.set(key, fit); }
+    const sn = Math.sin(st.facing), cs = Math.cos(st.facing);
+    this.sitF = [sn, cs];
+    this.sitAt.set(s.top.x - sn * back, floor, s.top.z - cs * back);
+    return { ...B, at: this.sitAt, fit };
+  }
+  /** the body's gap to the desk's near edge when it leans p forward (its ink counted) */
+  private bodyDeskGap(S: SeatBox, p: number) {
+    if (S.deskZ === null) return 1;
+    const d = this.dim, by = S.h + SEAT_LIFT + d.rb * (1 - Math.cos(p)), cp = Math.cos(p), sp = Math.sin(p);
+    let g = 1;
+    for (let c = 0; c <= 2; c++) {                                        // the edge's corner, the slab's face, its lower corner
+      const ry = S.deskY - (c * DESK_T) / 2 - by, rz = S.deskZ, t = ry * cp + rz * sp, dp = rz * cp - ry * sp;
+      const r0 = bodyR(clamp(t, 1e-4, d.Ht - 1e-4), d.Ht, d.rb, d.rt) * 1.05;
+      if (dp <= r0 && t > 0 && t < d.Ht) { g = Math.min(g, dp - r0); continue; }
+      for (let k = -4; k <= 4; k++) { const tt = clamp(t + k * 0.015, 1e-4, d.Ht - 1e-4); g = Math.min(g, Math.hypot(dp - bodyR(tt, d.Ht, d.rb, d.rt) * 1.05, t - tt)); }
+    }
+    return g - BODY_INK;
+  }
+  /** how the legs lie on a seat (see SeatFit). Thighs forward over the seat in the travel frame, as low as they can
+   *  lie with their ink clear of it; the knees bend past the front edge; the shins hang. Searched per leg: the smallest
+   *  reach forward of the shin, then the lowest thigh, for which every ring of the leg and the foot clears the seat,
+   *  the desk and the floor. So on a chair the feet dangle or stand, as the leg's length decides; on a low seat the
+   *  knees come up and the feet stand on the floor; on a seat too deep for the knee to pass its edge they stand on
+   *  the seat. The hip joints are the seat's (they do not ride the torso's lean or breath), so seated legs are still. */
+  private seatFit(S: SeatBox): SeatFit {
+    const d = this.dim, own = d.legR * 1.08 + HULL.limb, yH = S.h + SEAT_LIFT + 0.09 * d.Ht, splay = rad(4), footLen = 0.055, onFloor = own + 0.004;
+    const H: [V3, V3] = [V(-0.38 * d.rb, yH, 0), V(0.38 * d.rb, yH, 0)], K: [V3, V3] = [V(), V()], A: [V3, V3] = [V(), V()];
+    const place = (i: number, sl: number, a: number) => {
+      const sg = i ? 1 : -1;
+      K[i].set(H[i].x + sg * d.thigh * Math.sin(splay) * Math.cos(sl), yH - d.thigh * Math.sin(sl), d.thigh * Math.cos(splay) * Math.cos(sl));
+      A[i].set(K[i].x, K[i].y - d.shin * Math.cos(a), K[i].z + d.shin * Math.sin(a));
+    };
+    const pitchOf = (i: number, a: number) => a * smooth((A[i].y - onFloor) / 0.03);
+    /** [gap to the seat and desk, gap to the floor] of leg i as placed */
+    const gaps = (i: number, a: number): [number, number] => {
+      let fu = 1, fl = 1;
+      for (let r = 0; r <= SEG; r++) {
+        limbAt(H[i], K[i], A[i], r, _w, undefined, this.bow[2 + i]);
+        fu = Math.min(fu, furnGap(S, _w.y, _w.z) - own); fl = Math.min(fl, _w.y - own);
+      }
+      const fp = pitchOf(i, a);
+      for (let u = 0; u <= 1; u += 0.5) {
+        const y = A[i].y + Math.sin(fp) * footLen * u, z = A[i].z + Math.cos(fp) * footLen * u;
+        fu = Math.min(fu, furnGap(S, y, z) - own); fl = Math.min(fl, y - own);
+      }
+      return [fu, fl];
+    };
+    const ok = (i: number, sl: number, a: number) => { place(i, sl, a); const g = gaps(i, a); return g[0] >= REST_GAP && g[1] >= 0.004; };
+    const lowest = (i: number, a: number): number | null => {
+      const S0 = rad(35), DS = rad(5);
+      if (ok(i, S0, a)) return S0;
+      for (let sl = S0 - DS; sl >= rad(-76); sl -= DS) if (ok(i, sl, a)) {
+        let lo = sl + DS, hi = sl;
+        for (let n = 0; n < 10; n++) { const m = (lo + hi) / 2; if (ok(i, m, a)) hi = m; else lo = m; }
+        return hi;
+      }
+      return null;
+    };
+    const footPitch: [number, number] = [0, 0], dangle: [number, number] = [0, 0];
+    let gap = 1;
+    for (let i = 0; i < 2; i++) {
+      let sl = lowest(i, 0), a = 0;
+      if (sl === null) {
+        const DA = rad(5);
+        sl = rad(-20); a = rad(90);                                         // nothing clears (a seat inside a box): qa.seat says by how much
+        for (let q = DA; q <= rad(90) + 1e-6; q += DA) {
+          const s1 = lowest(i, q);
+          if (s1 === null) continue;
+          let lo = q - DA, hi = q; sl = s1;
+          for (let n = 0; n < 8; n++) { const m = (lo + hi) / 2, s2 = lowest(i, m); if (s2 !== null) { hi = m; sl = s2; } else lo = m; }
+          a = hi; break;
+        }
+      }
+      place(i, sl, a);
+      const g = gaps(i, a);
+      gap = Math.min(gap, g[0], g[1]);
+      footPitch[i] = pitchOf(i, a); dangle[i] = Math.max(0, A[i].y - onFloor);
+    }
+    // the two legs against each other
+    const o = V();
+    for (let r = 4; r <= SEG; r++) {
+      limbAt(H[0], K[0], A[0], r, _w, undefined, this.bow[2]);
+      for (let q = 4; q <= SEG; q++) gap = Math.min(gap, limbAt(H[1], K[1], A[1], q, o, undefined, this.bow[3]).distanceTo(_w) - 2 * own);
+    }
+    // the furthest lean that keeps the belly off the desk's edge
+    let leanMax = rad(24);
+    if (S.deskZ !== null) {
+      const fine = (p: number) => this.bodyDeskGap(S, p) >= 0.006;
+      if (!fine(leanMax)) {
+        let lo = 0, hi = leanMax;
+        if (!fine(0)) leanMax = 0;
+        else { for (let n = 0; n < 12; n++) { const m = (lo + hi) / 2; if (fine(m)) lo = m; else hi = m; } leanMax = lo; }
+      }
+    }
+    return { hip: H, knee: K, ankle: A, footPitch, dangle, gap, leanMax, turn: null, lap: [null, null] };
+  }
+  /** How far this figure's torso may turn on this seat (SeatFit.turn), worked out once per seat: the largest turn,
+   *  up to SEAT_TURN (SEAT_TURN_DESK at a desk), at which both resting hands still reach their places with the
+   *  arms clear of the body, either way round, with 2 degrees to spare. Builds differ: a wide body under short arms
+   *  cannot rest a hand on the far thigh once that shoulder has swung back. One limit for every pose on the seat, so
+   *  a change of pose never turns the body. */
+  private seatTurn(sit: Sit, at: V3, facing: number) {
+    const fit = sit.fit;
+    if (fit.turn !== null) return fit.turn;
+    const max = sit.deskZ !== null ? SEAT_TURN_DESK : SEAT_TURN, spare = rad(2);
+    const ok = (tw: number) => this.restOk(sit, at, facing, tw + spare) && this.restOk(sit, at, facing, -tw - spare);
+    let lim = max;
+    if (!ok(max)) { let lo = 0, hi = max; for (let n = 0; n < 6; n++) { const m = (lo + hi) / 2; if (ok(m)) lo = m; else hi = m; } lim = lo; }
+    this.grip[0] = this.grip[1] = null;
+    return (fit.turn = Math.max(lim, rad(0.5)));
+  }
+  /** would both resting arms be fine with the torso turned tw from the seat's direction? (the still pose: no sway) */
+  private restOk(sit: Sit, at: V3, facing: number, tw: number) {
+    const d = this.dim, cT = Math.cos(facing), sT = Math.sin(facing), fwdT = V(sT, 0, cT), leftT = V(cT, 0, -sT), bodyYaw = facing + tw;
+    const lean = Math.min(SEAT_LEAN, sit.deskZ !== null ? sit.fit.leanMax : 1);
+    const q1 = new THREE.Quaternion().setFromAxisAngle(UP, bodyYaw), tq = new THREE.Quaternion().setFromAxisAngle(leftT, lean).multiply(q1);
+    this.torsoM.compose(V(at.x, at.y + sit.h + SEAT_LIFT + d.rb * (1 - V(0, 1, 0).applyQuaternion(tq).y), at.z), tq, V(1, 1, 1));
+    this.torsoInv.copy(this.torsoM).invert();
+    const headC = V(0, d.Ht + 0.72 * d.R, 0).applyMatrix4(this.torsoM);
+    for (const k of this.keep) k.w.copy(k.c).applyMatrix4(this.torsoM);
+    const C = { at, fwdT, leftT, headC, q1, bodyYaw, yawF: bodyYaw, lean, roll: 0, t: 0, am: 0, arm: -1 };
+    for (let i = 0; i < 2; i++) {
+      const sh = d.sh[i].clone().applyMatrix4(this.torsoM), g = this.armPlan(sit.deskZ !== null ? "desk" : "lap", i, sh, C);
+      const k = this.solveArm(i, sh, g.target, g.pole, V(i ? 1 : -1, 0, 0).applyQuaternion(q1), headC);
+      if (k.c < 0 || k.reach > 1e-4) return false;
+    }
+    return true;
+  }
+  /** a world point's gap to the seat, the chair back and the desk (seated only) */
+  private furnGapW(p: V3) {
+    const S = this.sit!;
+    return furnGap(S, p.y - S.at.y, (p.x - S.at.x) * this.sitF[0] + (p.z - S.at.z) * this.sitF[1]);
+  }
+  /** a world point's gap to the body's surface (the body's own ink not counted) */
+  private bodyGap(p: V3) {
+    const d = this.dim;
+    _s.copy(p).applyMatrix4(this.torsoInv);
+    const r = bodyR(_s.y, d.Ht, d.rb, d.rt);
+    if (r > 0) return Math.hypot(_s.x, _s.z) - r * d.bw(_s.x, _s.y, _s.z);
+    return _s.y <= 0 ? Math.hypot(_s.x, _s.y, _s.z) : Math.hypot(_s.x, _s.y - d.Ht, _s.z);
+  }
+
+  /** The head's real reach from its centre, per direction in the head's own frame: the lumpy skin, the hair props, a
+   *  hat, whatever an accessory puts on the head (their ink not counted). An arm that is drawn in front of the head
+   *  is kept outside this shape, not outside a ball. Built on first use from the head's own meshes (every triangle
+   *  is sampled finely enough that no cell between its corners is missed), then widened by a cell. */
+  private buildHeadEnv() {
+    const NT = ENV_T, NA = ENV_A, raw = new Float32Array(NT * NA), rel = new THREE.Matrix4(), A = V(), B = V(), C = V(), P = V();
+    const splat = (p: V3) => {
+      const r = p.length();
+      if (r < 1e-6) return;
+      const ti = clamp(Math.floor((Math.acos(clamp(p.y / r, -1, 1)) / Math.PI) * NT), 0, NT - 1);
+      const ai = ((Math.floor(((Math.atan2(p.x, p.z) + Math.PI) / (2 * Math.PI)) * NA) % NA) + NA) % NA;
+      if (r > raw[ti * NA + ai]) raw[ti * NA + ai] = r;
+    };
+    this.headG.traverse((o3) => {
+      const m = o3 as THREE.Mesh;
+      if (!m.isMesh || m.userData.depthOnly || m.userData.hull || m.userData.under || (m.parent && m.parent.userData.under)) return;
+      rel.identity();
+      for (let q: THREE.Object3D | null = m; q && q !== this.headG; q = q.parent) { q.updateMatrix(); rel.premultiply(q.matrix); }
+      const pos = m.geometry.attributes.position, idx = m.geometry.index, n = idx ? idx.count : pos.count;
+      for (let t = 0; t + 2 < n; t += 3) {
+        A.fromBufferAttribute(pos, idx ? idx.getX(t) : t).applyMatrix4(rel);
+        B.fromBufferAttribute(pos, idx ? idx.getX(t + 1) : t + 1).applyMatrix4(rel);
+        C.fromBufferAttribute(pos, idx ? idx.getX(t + 2) : t + 2).applyMatrix4(rel);
+        const ext = Math.max(A.distanceTo(B), B.distanceTo(C), C.distanceTo(A)) / Math.max(Math.min(A.length(), B.length(), C.length()), 0.02);
+        const k = clamp(Math.ceil(ext / ((0.5 * Math.PI) / NT)), 1, 24);
+        for (let i = 0; i <= k; i++) for (let j = 0; j <= k - i; j++) splat(P.set(0, 0, 0).addScaledVector(A, i / k).addScaledVector(B, j / k).addScaledVector(C, (k - i - j) / k));
+      }
+    });
+    const env = new Float32Array(NT * NA);
+    for (let ti = 0; ti < NT; ti++) {
+      const w = Math.min(NA >> 1, Math.ceil(1 / Math.max(Math.sin(((ti + 0.5) / NT) * Math.PI), 0.03)));       // a cell's width in azimuth cells
+      for (let ai = 0; ai < NA; ai++) {
+        let mx = 0;
+        for (let dt = -1; dt <= 1; dt++) { const tj = clamp(ti + dt, 0, NT - 1); for (let da = -w; da <= w; da++) mx = Math.max(mx, raw[tj * NA + ((ai + da + NA) % NA)]); }
+        env[ti * NA + ai] = mx || this.dim.R;
+      }
+    }
+    this.headEnv = env;
+  }
+  /** the head's reach (m) toward a point given in the head's frame */
+  private headRho(x: number, y: number, z: number) {
+    const env = this.headEnv!, r = Math.hypot(x, y, z) || 1e-9;
+    const tf = clamp((Math.acos(clamp(y / r, -1, 1)) / Math.PI) * ENV_T - 0.5, 0, ENV_T - 1), af = ((Math.atan2(x, z) + Math.PI) / (2 * Math.PI)) * ENV_A - 0.5;
+    const t0 = Math.floor(tf), t1 = Math.min(t0 + 1, ENV_T - 1), a0 = Math.floor(af), u = tf - t0, v = af - a0;
+    const A0 = ((a0 % ENV_A) + ENV_A) % ENV_A, A1 = (A0 + 1) % ENV_A;
+    return lerp(lerp(env[t0 * ENV_A + A0], env[t0 * ENV_A + A1], v), lerp(env[t1 * ENV_A + A0], env[t1 * ENV_A + A1], v), u);
+  }
+  /** how far a world point is outside the head's real shape (m, < 0 = inside), along the line from the head's centre */
+  private headGap(p: V3) {
+    _hl.copy(p).applyMatrix4(this.headInv);
+    return _hl.length() - this.headRho(_hl.x, _hl.y, _hl.z);
+  }
+  /** a posed thing's points in its group's frame (its vertices; the six furthest along the axes always among them),
+   *  its ink, and its reach along +z (what a resting hand lays it down on) */
+  private heldPts(hd: Rig["held"][number]) {
+    if (hd.pts) return hd.pts;
+    const out: number[] = [], rel = new THREE.Matrix4(), v = V(), ext: (V3 | null)[] = [null, null, null, null, null, null];
+    hd.g.traverse((o3) => {
+      const m = o3 as THREE.Mesh;
+      if (!m.isMesh || m.userData.hull || m.userData.depthOnly) return;
+      rel.identity();
+      for (let q: THREE.Object3D | null = m; q && q !== hd.g; q = q.parent) { q.updateMatrix(); rel.premultiply(q.matrix); }
+      const P = m.geometry.attributes.position, step = Math.max(1, Math.ceil(P.count / 200));
+      for (let k = 0; k < P.count; k++) {
+        v.fromBufferAttribute(P, k).applyMatrix4(rel);
+        if (k % step === 0) out.push(v.x, v.y, v.z);
+        for (let c = 0; c < 6; c++) { const e = ext[c], val = v.getComponent(c >> 1) * (c & 1 ? -1 : 1); if (!e || val > e.getComponent(c >> 1) * (c & 1 ? -1 : 1)) ext[c] = v.clone(); }
+      }
+      hd.ink = Math.max(hd.ink, m.userData.ink ?? 0);
+    });
+    for (const e of ext) if (e) out.push(e.x, e.y, e.z);
+    hd.pts = new Float32Array(out);
+    hd.far = 0;
+    for (let k = 2; k < out.length; k += 3) hd.far = Math.max(hd.far, out[k] + hd.ink);
+    return hd.pts;
+  }
+  /** the smallest value of fn over the points of the posed things in hand i, each less the thing's ink, with the hand
+   *  at H and the things turned by q (1 if the hand holds nothing posed) */
+  private heldMin(i: number, H: V3, q: THREE.Quaternion, fn: (p: V3) => number) {
+    let worst = 1;
+    for (const hd of this.held) {
+      if (hd.i !== i || !hd.posed || !hd.g.visible) continue;
+      const pts = this.heldPts(hd);
+      for (let k = 0; k < pts.length; k += 3) worst = Math.min(worst, fn(_hp.set(pts[k], pts[k + 1], pts[k + 2]).applyQuaternion(q).add(H)) - hd.ink);
+    }
+    return worst;
+  }
+  /** how high a resting hand's centre lies over what it rests on: its own radius and ink, or the posed thing under it */
+  private restH(i: number) {
+    let h = this.dim.handR + HULL.hand;
+    for (const hd of this.held) if (hd.i === i && hd.posed && hd.g.visible) { this.heldPts(hd); h = Math.max(h, hd.far); }
+    return h;
   }
 
   /** smallest clearance of arm i (shoulder a, elbow j, hand e) to the body surface and the head, in metres. Every ring
    *  keeps its own ink clear of the body (that line never cuts into the body's); the head is a looser test, because
-   *  the head is drawn in front of whatever is near it. */
+   *  the head is drawn in front of whatever is near it. An arm that is itself drawn in front of the head (frontArm)
+   *  gets the strict test instead: every ring and the hand, with their ink, outside the head's real shape. Seated,
+   *  the seat, the chair back and the desk count too. */
   private armClear(i: number, a: V3, j: V3, e: V3, headC: V3) {
-    const d = this.dim;
+    const d = this.dim, strict = this.frontArm[i], sit = this.sit;
     let worst = 1;
     for (const ri of CLEAR_RINGS) {
       const own = ri === SEG ? d.handR + HULL.hand : d.limbR * 1.08 + HULL.limb;
       limbAt(a, j, e, ri, _w, undefined, this.bow[i]);
-      worst = Math.min(worst, _w.distanceTo(headC) - d.R * 1.04 - own);
+      if (strict) worst = Math.min(worst, this.headGap(_w) - own - 0.002);
+      else worst = Math.min(worst, _w.distanceTo(headC) - d.R * 1.04 - own);
       _s.copy(_w).applyMatrix4(this.torsoInv);
       const r = bodyR(_s.y, d.Ht, d.rb, d.rt);
       if (r > 0) worst = Math.min(worst, Math.hypot(_s.x, _s.z) - r * d.bw(_s.x, _s.y, _s.z) - own - 0.002);
       for (const k of this.keep) worst = Math.min(worst, _w.distanceTo(k.w) - k.r - own);
+      if (sit) {
+        worst = Math.min(worst, this.furnGapW(_w) - own);
+        if (ri >= N1 + NC) {                                               // the forearm and the hand: off the own legs
+          const lp = this.legPts, legOwn = d.legR * 1.08 + HULL.limb;
+          let m = 1e9;
+          for (let n = 0; n < lp.length; n += 3) { const dx = lp[n] - _w.x, dy = lp[n + 1] - _w.y, dz = lp[n + 2] - _w.z; m = Math.min(m, dx * dx + dy * dy + dz * dz); }
+          worst = Math.min(worst, Math.sqrt(m) - own - legOwn);
+        }
+      }
+    }
+    return worst;
+  }
+  /** a resting hand lays a posed thing flat under itself: its length across the line it rests along (the thigh, the
+   *  forearm), pointing in toward the body's middle, its face down on what it rests on */
+  private layFlat(i: number, along: V3) {
+    const y = V().crossVectors(UP, along).multiplyScalar(i ? -1 : 1);
+    if (y.lengthSq() < 1e-8) y.set(i ? -1 : 1, 0, 0);
+    y.normalize();
+    const z = V().crossVectors(y, along).normalize();
+    if (z.y > 0) z.negate();
+    return (this.grip[i] = basisQ(y, z, this.gripQ[i]));
+  }
+  /** The arms whose place depends on where things are this frame (see ArmPlan): the hand's place and the elbow's
+   *  side, in the world, and the turn of a posed thing in that hand (this.grip; flat = the hand rests on the desk:
+   *  the thing is laid under it once the forearm is known). sh = the shoulder. C = this frame's frames: q1 = the show
+   *  yaw, yawF = the face's yaw, t / am = the pose's time and amount, arm = the writing arm (-1: nobody writes). */
+  private armPlan(plan: Exclude<ArmPlan, null>, i: number, sh: V3, C: { at: V3; fwdT: V3; leftT: V3; headC: V3; q1: THREE.Quaternion; bodyYaw: number; yawF: number; lean: number; roll: number; t: number; am: number; arm: number; laid?: boolean }): { target: V3; pole: V3; flat: boolean } {
+    const d = this.dim, sit = this.sit, s = i ? 1 : -1, A = d.upper + d.fore, hand = d.handR + HULL.hand, limb = d.limbR * 1.08 + HULL.limb;
+    const show = (x: number, y: number, z: number) => V(x, y, z).applyQuaternion(C.q1);
+    if (plan === "lap" && sit) {
+      // The hand lies on its own thigh, on the outer half of it (the arm comes down past the belly's side: any
+      // further in and it would have to press through), toward the knee as far as an easy reach allows, never
+      // nearer the body than the belly lets the hand, and what it holds, lie. The arm is short: where it cannot
+      // come down to the thigh clear of the body, the hand slides back to the belly, and then is held just over
+      // the thigh in front of it (see `put`). The place is found for the STILL body (no sway, no breath), with
+      // 1.5 mm to spare, and once per seat for the two ends of the torso's turn (SeatFit.lap): the nearer, higher
+      // of the two serves every turn in between. So the hand lies still while the body breathes and while the
+      // camera moves round the figure, and the elbow keeps its own place (no swivel search): a resting arm never
+      // jumps. Only where that place is not clear at this frame's turn does the hand go on back, continuously.
+      const M0 = new THREE.Matrix4().copy(this.torsoM), I0 = new THREE.Matrix4().copy(this.torsoInv);
+      const L = this.legW[i], zOf = (p: V3) => (p.x - C.at.x) * C.fwdT.x + (p.z - C.at.z) * C.fwdT.z;
+      const OUT = 0.025, zK = zOf(L.k), up = d.legR * 1.08 + HULL.limb + this.restH(i) + REST_GAP, rise = Math.sqrt(Math.max(up * up - OUT * OUT, 1e-6));
+      const tgt = V(), p0 = V(), p1 = V();
+      const onThigh = (zt: number) => {
+        limbAt(L.h, L.k, L.a, 0, p0, undefined, this.bow[2 + i]);
+        for (let r = 1; r <= N1 + NC / 2; r++) {
+          limbAt(L.h, L.k, L.a, r, p1, undefined, this.bow[2 + i]);
+          const z0 = zOf(p0), z1 = zOf(p1);
+          if (z1 >= zt || r === N1 + NC / 2) { tgt.lerpVectors(p0, p1, clamp((zt - z0) / Math.max(z1 - z0, 1e-6), 0, 1)); break; }
+          p0.copy(p1);
+        }
+        // OUT to the side, and up by what keeps the hand `up` away from the thigh's line where it slopes
+        tgt.y += rise / Math.max(Math.hypot(p1.x - p0.x, p1.z - p0.z) / Math.max(p0.distanceTo(p1), 1e-6), 0.5);
+        return tgt.addScaledVector(C.leftT, s * OUT);
+      };
+      const q = this.layFlat(i, V().copy(L.k).sub(L.h).normalize());
+      let lift = 0;
+      const at = (zt: number) => { onThigh(zt).y += lift; return tgt; };
+      const clearAt = (zt: number) => { at(zt); return Math.min(this.bodyGap(tgt) - hand, this.heldMin(i, tgt, q, (p) => this.bodyGap(p)) - BODY_INK * 0.5) - 0.004; };
+      const zPref = zK - 0.085, zMax = zK - 0.036, z0 = zOf(L.h);
+      /** the place nearest the body where the hand (lifted so far) lies clear of the belly */
+      const nearest = () => {
+        let lo = z0, hi = zPref;                                         // lo: inside the belly; hi: clear of it
+        if (clearAt(hi) < 0) { lo = hi; hi = zMax; }
+        if (clearAt(hi) >= 0) for (let n = 0; n < 12; n++) { const m = (lo + hi) / 2; if (clearAt(m) >= 0) hi = m; else lo = m; }
+        return hi;
+      };
+      const pole = V(), p2 = V(), j = V(), e = V(), hc = V(), tq = new THREE.Quaternion(), rq = new THREE.Quaternion();
+      /** Puts tgt at the hand's place for the still body turned to q1 (and leaning `roll` to the side, as a waving
+       *  body does) and returns it as { z: how far along the thigh, u: 0 = lying on it, above 1 = held over it (see
+       *  `put`) }. from = the place to start from (the seat's own: nothing further from the body, nothing lower);
+       *  null = the best place for this turn alone. */
+      const rest = (q1: THREE.Quaternion, roll: number, from: { z: number; u: number } | null) => {
+        tq.setFromAxisAngle(C.leftT, C.lean).multiply(rq.setFromAxisAngle(_s.set(0, 0, 1).applyQuaternion(q1), -roll)).multiply(q1);
+        this.torsoM.compose(V(C.at.x, C.at.y + sit.h + SEAT_LIFT + d.rb * (1 - _s.set(0, 1, 0).applyQuaternion(tq).y), C.at.z), tq, V(1, 1, 1));
+        this.torsoInv.copy(this.torsoM).invert();
+        for (const k of this.keep) k.w.copy(k.c).applyMatrix4(this.torsoM);
+        sh = d.sh[i].clone().applyMatrix4(this.torsoM);
+        hc.set(0, d.Ht + 0.72 * d.R, 0).applyMatrix4(this.torsoM);
+        pole.set(s, -0.3, 0.5).applyQuaternion(q1); p2.set(s, 0, 0).applyQuaternion(q1);
+        const far = (zt: number) => at(zt).distanceTo(sh) - 0.95 * A;
+        /** how clear the arm is with the hand at tgt and the elbow in its own place (1.5 mm to spare; below 0 too
+         *  when the arm would be straighter than a hanging one) */
+        const arm = () => {
+          if (tgt.distanceTo(sh) > 0.972 * A) return -1;
+          const F = ikFrame(sh, tgt, d.upper, d.fore, pole, p2);
+          e.copy(sh).addScaledVector(F.dir, F.d); j.copy(sh).addScaledVector(F.dir, F.x).addScaledVector(F.pp, F.h);
+          return this.armClear(i, sh, j, e, hc) - 0.0015;
+        };
+        lift = 0;
+        const zLo = nearest();
+        let zA = zLo, u = 0;
+        if (from) { zA = Math.max(from.z, zLo); u = from.u; }
+        else if (zLo < zPref) {
+          if (far(zPref) <= 0) zA = zPref;
+          else { let a = zLo, b = zPref; for (let n = 0; n < 12; n++) { const m = (a + b) / 2; if (far(m) <= 0) a = m; else b = m; } zA = a; }
+        }
+        // v = 0: there. Up to 1: back along the thigh to the belly. Up to 2: held up to 0.16 m over the thigh, at
+        // the belly. The smallest v, from u on, at which the arm is clear.
+        const put = (v: number) => { if (v <= 1) { lift = 0; at(lerp(zA, zLo, v)); } else { lift = (v - 1) * 0.16; at(nearest()); } };
+        put(u);
+        if (arm() < 0) {
+          let a = u, b = 2;
+          put(2);
+          if (arm() >= 0) for (let n = 0; n < 14; n++) { const m = (a + b) / 2; put(m); if (arm() >= 0) b = m; else a = m; }
+          put(b); u = b;
+        }
+        return u <= 1 ? { z: lerp(zA, zLo, u), u: 0 } : { z: zLo, u };
+      };
+      const fit = sit.fit;
+      let own = fit.lap[i];
+      if (!own && fit.turn !== null) {
+        const f = Math.atan2(C.fwdT.x, C.fwdT.z), qe = new THREE.Quaternion();
+        const a = rest(qe.setFromAxisAngle(UP, f + fit.turn), 0, null), b = rest(qe.setFromAxisAngle(UP, f - fit.turn), 0, null);
+        own = fit.lap[i] = { z: Math.min(a.z, b.z), u: Math.max(a.u, b.u) };
+      }
+      rest(C.q1, C.roll, own);
+      this.torsoM.copy(M0); this.torsoInv.copy(I0);
+      for (const k of this.keep) k.w.copy(k.c).applyMatrix4(this.torsoM);
+      return { target: tgt, pole, flat: false };
+    }
+    if ((plan === "desk" || plan === "write") && sit && sit.deskZ !== null) {
+      const top = C.at.y + sit.deskY, write = plan === "write";
+      const sx = (sh.x - C.at.x) * C.leftT.x + (sh.z - C.at.z) * C.leftT.z, sz = (sh.x - C.at.x) * C.fwdT.x + (sh.z - C.at.z) * C.fwdT.z;
+      let hx: number, hz: number, hy = top + this.restH(i) + REST_GAP;
+      if (write) {
+        // small looping strokes (2.2 a second: 14 frames a loop, so the hand never jitters) along a line that runs to
+        // the person's right, then a quick return with the pen lifted
+        const T = 2.4, u = (((C.t / T) % 1) + 1) % 1, back = u < 0.84 ? 0 : (u - 0.84) / 0.16, along = u < 0.84 ? u / 0.84 : 1 - smooth(back), w = C.t * 2 * Math.PI * 2.2;
+        hx = s * 0.04 - (along - 0.5) * 0.075 + 0.0065 * Math.sin(w);
+        hz = sit.deskZ + 0.095 + 0.004 * Math.sin(w + 1.1);
+        // the pen leans back over the paper, its top toward the writer and out to the writing side; the hand's height
+        // puts the thing's lowest point on the paper
+        const y = show(s * 0.42, 0.82, -0.56).normalize(), zd = show(0, 0.3, -1), z = zd.addScaledVector(y, -zd.dot(y)).normalize();
+        const q = (this.grip[i] = basisQ(y, z, this.gripQ[i]));
+        const low = this.heldMin(i, V(), q, (p) => p.y);
+        hy = Math.max(top + hand + REST_GAP, low < 1 ? top + 0.0015 - low : 0) + 0.012 * Math.sin(Math.PI * back);
+      } else {
+        // resting: the hands a little apart in front of the chest (further apart beside a writing hand, and when a
+        // resting hand has a posed thing laid under it: a phone lies across the forearm and would reach the other hand)
+        hx = s * (C.arm >= 0 || C.laid ? 0.09 : 0.062); hz = sit.deskZ + (C.arm >= 0 ? 0.11 : 0.1);
+      }
+      // within easy reach: toward the shoulder if it is not, but never off the desk
+      const dy = sh.y - hy, Rh = Math.sqrt(Math.max((0.9 * A) ** 2 - dy * dy, 1e-4)), px = hx - sx, pz = hz - sz, dist = Math.hypot(px, pz);
+      if (dist > Rh) {
+        hx = sx + (px * Rh) / dist; hz = sz + (pz * Rh) / dist;
+        const zMin = sit.deskZ + hand + 0.012;
+        if (hz < zMin) { hz = zMin; const w = Rh * Rh - (hz - sz) ** 2; if (w > 0) hx = sx + Math.sign(px || s) * Math.min(Math.abs(px), Math.sqrt(w)); }
+      }
+      const target = V().copy(C.at).addScaledVector(C.leftT, hx).addScaledVector(C.fwdT, hz).setY(hy);
+      // the forearm lies ON the desk: the elbow is turned about the shoulder-hand line, outward, down to the height
+      // at which the lowest ring of the forearm (its ink counted, its own bend too) rests REST_GAP above the top
+      const dir = target.clone().sub(sh), D = dir.length() || 1e-6; dir.divideScalar(D);
+      const dd = clamp(D, Math.abs(d.upper - d.fore) + 1e-3, A - 1e-3), x = (d.upper * d.upper - d.fore * d.fore + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, d.upper * d.upper - x * x));
+      const down = V(0, -1, 0).addScaledVector(dir, dir.y), dl = down.length(), pole = show(s, -0.4, 0);
+      if (dl > 1e-3 && h > 1e-4) {
+        down.divideScalar(dl);
+        const out = V().crossVectors(dir, down);
+        if (out.dot(C.leftT) * s < 0) out.negate();
+        const mid = sh.clone().addScaledVector(dir, x), e = sh.clone().addScaledVector(dir, dd), j = V();
+        let yE = top + limb + REST_GAP;
+        for (let n = 0; n < 4; n++) {
+          const c = clamp((yE - mid.y) / (h * down.y), -1, 1);
+          pole.copy(down).multiplyScalar(c).addScaledVector(out, Math.sqrt(1 - c * c));
+          if (n === 3) break;
+          j.copy(mid).addScaledVector(pole, h);
+          let g = 1;
+          for (let r = N1 + NC / 2; r < SEG; r++) g = Math.min(g, this.furnGapW(limbAt(sh, j, e, r, _w, undefined, this.bow[i])) - limb);
+          if (Math.abs(g - REST_GAP) < 2e-4) break;
+          yE += REST_GAP - g;
+        }
+      }
+      return { target, pole, flat: !write };
+    }
+    if (plan === "phone") {
+      const e = smooth(C.am), shy = d.sh[0].y, hc = C.headC;
+      // looking at it: in front of the chest, the top leaning away, the screen up toward the face
+      const tau = rad(40), P0 = V(s * 0.05, shy - 0.2 * A, d.rt + BODY_INK + 0.075).applyMatrix4(this.torsoM);
+      const q0 = basisQ(show(0, Math.cos(tau), Math.sin(tau)), show(0, Math.sin(tau), -Math.cos(tau)), new THREE.Quaternion());
+      // a call: against the side of the head that the FACE shows (the face is the drawing's front; held within 50 deg of
+      // the body's own side so the arm reaches), a little under the middle and toward the cheek, the top tipped back
+      const yaw = C.bodyYaw + softLim(wrapA(C.yawF - C.bodyYaw), rad(50)), Fd = V(Math.sin(yaw), 0, Math.cos(yaw)), side = V(Math.cos(yaw), 0, -Math.sin(yaw)).multiplyScalar(s);
+      const dirE = side.clone().addScaledVector(Fd, 0.14).addScaledVector(UP, -0.22).normalize(), z1 = dirE.clone().negate();
+      const yd = V(0, Math.cos(rad(20)), 0).addScaledVector(Fd, -Math.sin(rad(20))), y1 = yd.addScaledVector(z1, -yd.dot(z1)).normalize();
+      const q1 = basisQ(y1, z1, new THREE.Quaternion());
+      _hl.copy(dirE).transformDirection(this.headInv);
+      const P1 = hc.clone().addScaledVector(dirE, this.headRho(_hl.x, _hl.y, _hl.z) + 0.012);
+      // between the two: a straight run that swings a little out to the side, the turn spread evenly over it
+      const H = P0.lerp(P1, e).addScaledVector(side, 0.03 * Math.sin(Math.PI * e)).addScaledVector(show(0, 0, 1), 0.02 * Math.sin(Math.PI * e));
+      const q = (this.grip[i] = this.gripQ[i].copy(q0).slerp(q1, e));
+      // nothing through anything: the hand and every point of the phone are moved out of the head (along the line
+      // from its centre), off the body (straight out from its axis) and off the desk, the seat and the chair's back
+      // (the way that frees them fastest), by what each is short; twice over, in case one push undid another
+      const GAP = 0.004, hg = (p: V3) => this.headGap(p), bg = (p: V3) => this.bodyGap(p), fg = (p: V3) => this.furnGapW(p), o = V();
+      const furn = (P: V3) => Math.min(fg(P) - hand, this.heldMin(i, P, q, fg));
+      for (let round = 0; round < 2; round++) {
+        for (let n = 0; n < 6; n++) {
+          const g = Math.min(hg(H) - hand, this.heldMin(i, H, q, hg)) - GAP;
+          if (g >= -2e-4) break;
+          H.addScaledVector(o.copy(H).sub(hc).normalize(), -g);
+        }
+        for (let n = 0; n < 4; n++) {
+          const g = Math.min(bg(H) - hand - 0.002, this.heldMin(i, H, q, bg) - BODY_INK * 0.5) - GAP;
+          if (g >= -2e-4) break;
+          o.copy(H).applyMatrix4(this.torsoInv).setY(0);
+          if (o.lengthSq() < 1e-8) o.set(0, 0, 1);
+          H.addScaledVector(o.normalize().transformDirection(this.torsoM), -g);
+        }
+        if (sit) for (let n = 0; n < 4; n++) {
+          const g0 = furn(H), g = g0 - 0.012 * (1 - e) - GAP;
+          if (g >= -2e-4) break;
+          const E = 0.002, dy = (furn(o.copy(H).setY(H.y + E)) - g0) / E, dz = (furn(o.copy(H).addScaledVector(C.fwdT, E)) - g0) / E, l = Math.hypot(dy, dz);
+          if (l < 1e-3) H.y -= g; else { H.y -= (g * dy) / l; H.addScaledVector(C.fwdT, (-g * dz) / l); }
+        }
+      }
+      const pole = show(s * 0.55, -1, -0.2).normalize().lerp(show(s, -0.5, 0.2).normalize(), e).normalize();
+      return { target: H, pole, flat: false };
+    }
+    // a plan without its furniture (a desk pose and no desk): the hand hangs in front of the hip
+    return { target: sh.clone().add(show(s * 0.02, -0.3, 0.05)), pole: show(s, -0.3, -0.45), flat: false };
+  }
+  /** An arm the swivel could not clear (on some builds the body swells just under the shoulder): the whole arm,
+   *  shoulder and hand (a and target are moved), goes straight out from the body's axis, 1 mm at a time (it takes 2 or
+   *  3). k = what solveArm gave; returns the arm as it is then. */
+  private armOut(i: number, a: V3, target: V3, pole: V3, pole2: V3, headC: V3, k: ReturnType<Rig["solveArm"]>) {
+    if (k.c < -0.0005) {
+      const out = _s.copy(a).applyMatrix4(this.torsoInv).setY(0);
+      if (out.lengthSq() > 1e-8) {
+        const dir = out.normalize().transformDirection(this.torsoM).clone();
+        for (let n = 0; n < 8 && k.c < 0; n++) { a.addScaledVector(dir, 0.001); target.addScaledVector(dir, 0.001); k = this.solveArm(i, a, target, pole, pole2, headC); }
+      }
+    }
+    return k;
+  }
+  /** how far an arm (its rings and its hand, with their ink) is outside the head's real shape (m, < 0 = inside) */
+  private armHeadClear(i: number, a: V3, j: V3, e: V3) {
+    const d = this.dim;
+    let worst = 1;
+    for (const ri of CLEAR_RINGS) {
+      limbAt(a, j, e, ri, _w, undefined, this.bow[i]);
+      worst = Math.min(worst, this.headGap(_w) - (ri === SEG ? d.handR + HULL.hand : d.limbR * 1.08 + HULL.limb) - 0.002);
     }
     return worst;
   }
@@ -2099,12 +2800,21 @@ export class Rig {
     const st = this.state, d = this.dim, L = this.look;
     this.group.visible = st.visible ?? true;
     if (!this.group.visible) return;
-    this.qa.reach = 0; this.qa.clear = 1;
+    this.qa.reach = 0; this.qa.clear = 1; this.qa.seat = 1; this.qa.head = 1;
     const front = (st.headFront ?? 1) >= 0.5, fn = front ? THREE.NotEqualStencilFunc : THREE.AlwaysStencilFunc;
     for (const m of this.under) m.stencilFunc = fn;
     this.depthU.value = front ? this.rc.headDepth * d.R : 0; this.curlDepthU.value = this.depthU.value - 0.03;
     const hand = this.rc.hand;
-    const camPos = V().setFromMatrixPosition(cam.matrixWorld), at = st.at;
+    // seated: the figure belongs to its seat (state.at is not used)
+    const sit = (this.sit = this.resolveSeat());
+    const camPos = V().setFromMatrixPosition(cam.matrixWorld), at = sit ? sit.at : st.at;
+    // seated legs: the seat's own (see seatFit), set in the world first (a hand may rest on a thigh)
+    if (sit) {
+      const c = Math.cos(st.facing), sn = Math.sin(st.facing), f = sit.fit;
+      for (let i = 0; i < 2; i++) for (const [p, o] of [[f.hip[i], this.legW[i].h], [f.knee[i], this.legW[i].k], [f.ankle[i], this.legW[i].a]] as [V3, V3][]) o.set(at.x + p.x * c + p.z * sn, at.y + p.y, at.z - p.x * sn + p.z * c);
+      for (let i = 0, n = 0; i < 2; i++) for (let r = 4; r <= SEG; r += 2, n += 3) { limbAt(this.legW[i].h, this.legW[i].k, this.legW[i].a, r, _w, undefined, this.bow[2 + i]); this.legPts[n] = _w.x; this.legPts[n + 1] = _w.y; this.legPts[n + 2] = _w.z; }
+      this.frontArm[0] = this.frontArm[1] = false;
+    }
     // 1. the show yaw: soft knee instead of a hard clamp; an overhead camera leaves the true facing; a facing well
     //    away from the camera (or state.turn) goes continuously to the true back view.
     const hz = Math.hypot(camPos.x - at.x, camPos.z - at.z), vt = Math.max(Math.abs(camPos.y - (at.y + 1)), 1e-3);
@@ -2115,7 +2825,15 @@ export class Rig {
     const soft = aOff < knee ? aOff : knee + (maxB - knee) * (1 - Math.exp(-(aOff - knee) / Math.max(maxB - knee, 1e-4)));
     const wB = st.turn !== undefined ? clamp(st.turn, 0, 1) : smooth((aOff - rad(115)) / rad(55));
     const offB = Math.sign(off) * lerp(soft, aOff, wB);
-    const bodyYaw = faceT + follow * wrapA(camYaw + offB - faceT);
+    let bodyYaw = faceT + follow * wrapA(camYaw + offB - faceT), headYaw = bodyYaw;
+    if (sit) {
+      // seated, the torso turns only so far from its chair (both hands keep their places, nothing swings into the
+      // desk or the chair back); the head turns the rest of the way on the body, so the head, hair and face still
+      // follow the camera as they do on a standing figure
+      const lim = this.seatTurn(sit, at, st.facing), free = wrapA(bodyYaw - st.facing);
+      bodyYaw = st.facing + lim * Math.tanh(free / lim);
+      headYaw = bodyYaw + HEAD_TURN * Math.tanh(wrapA(st.facing + free - bodyYaw) / HEAD_TURN);
+    }
     this.out.bodyYaw = bodyYaw;
     // 2. frames: travel (planted in the world) and the torso's world matrix (show yaw, lean about the travel axis)
     const bp = this.solvePose();
@@ -2127,14 +2845,17 @@ export class Rig {
     _q3.setFromAxisAngle(leftT, bp.pitch);
     const tq = _q3.clone().multiply(_q2).multiply(_q1);
     const scl = V(1, 1 + bp.breathe, 1);
+    // seated: the body rolls on its round bottom as it leans, so its lowest point stays on the seat
+    if (sit) bp.hip.y += d.rb * (1 - _s.set(0, 1, 0).applyQuaternion(tq).y);
     // hip joints: under the body, in the TRAVEL frame (they turn with the feet, not with the camera-turned torso), so
     // the legs never cross however far the torso has turned toward the camera
     const dT = wrapA(st.facing - bodyYaw), hjx = 0.38 * d.rb * Math.cos(dT), hjz = 0.38 * d.rb * Math.sin(dT);
     const hipJL = [V(-hjx, 0.09 * d.Ht, hjz), V(hjx, 0.09 * d.Ht, -hjz)];
     const ankle = [travel(bp.ankle[0]), travel(bp.ankle[1])];
     const legLen = d.thigh + d.shin;
-    // lower the hips until both ankles are within reach: feet never hover
-    for (let n = 0; n < 3; n++) {
+    // lower the hips until both ankles are within reach: feet never hover (seated, the hips stay on the seat and a
+    // foot that does not reach the floor dangles)
+    if (!sit) for (let n = 0; n < 3; n++) {
       this.torsoM.compose(travel(bp.hip, _w), tq, scl);
       let need = 0;
       for (let i = 0; i < 2; i++) need = Math.max(need, _s.copy(hipJL[i]).applyMatrix4(this.torsoM).distanceTo(ankle[i]) - 0.985 * legLen);
@@ -2155,6 +2876,7 @@ export class Rig {
     this.headG.position.copy(head0.applyMatrix4(this.torsoInv));
     this.headG.scale.set(hsx, hsy, hsx);
     this.headG.quaternion.setFromAxisAngle(_s.set(1, 0, 0), bp.headPitch * 0.6);
+    if (sit) this.headG.quaternion.premultiply(_bq.setFromAxisAngle(UP, wrapA(headYaw - bodyYaw)));   // seated, the head turns on the body
     if (hTilt) this.headG.quaternion.premultiply(tq).premultiply(_bq.setFromAxisAngle(toCam0, -hTilt)).premultiply(_bq2.copy(tq).invert());   // (scratch of its own: _q1 = the body's yaw is used further down)
     this.torsoG.updateMatrixWorld(true);
     const headC = V().setFromMatrixPosition(this.headG.matrixWorld);
@@ -2164,12 +2886,12 @@ export class Rig {
     //    it goes round with the head for a back view. Its upward slide stops under the hairline / hat brim.
     const toCam = camPos.clone().sub(headC), dist = toCam.length() || 1; toCam.divideScalar(dist);
     const camYawH = Math.atan2(toCam.x, toCam.z), camPitch = Math.asin(clamp(toCam.y, -1, 1));
-    const rel = wrapA(bodyYaw - camYawH);
+    const rel = wrapA(headYaw - camYawH);
     const slid = camYawH + clamp(rel * 0.3, -FACE_MAX, FACE_MAX);
-    const fy = lerpA(lerpA(bodyYaw, slid, follow), bodyYaw, wB);
+    const fy = lerpA(lerpA(headYaw, slid, follow), headYaw, wB);
     const storyPitch = -bp.headPitch - bp.pitch * 0.5;
     let fp = camPitch + clamp((storyPitch - camPitch) * 0.4, -rad(12), rad(12));
-    const line = this.hatLine || hairLine(L, wrapA(fy - bodyYaw));
+    const line = this.hatLine || hairLine(L, wrapA(fy - headYaw));
     fp = Math.min(fp, rad(58 - line) - bp.headPitch * 0.6);
     fp = lerp(fp, 0, wB);
     const F = V(Math.sin(fy) * Math.cos(fp), Math.sin(fp), Math.cos(fy) * Math.cos(fp));
@@ -2196,7 +2918,34 @@ export class Rig {
     this.out.faceYaw = fy;
     // 4. arms (show frame, on the leaned torso) with the clearance swivel; legs (travel frame)
     const showDir = (p: V3) => p.clone().applyQuaternion(_q1);
-    const scrF = V(Math.sin(camYaw), 0, Math.cos(camYaw)), scrR = V(Math.cos(camYaw), 0, -Math.sin(camYaw));
+    // the picture plane a staged hand (wave, cheer) is set out in: the camera's. Seated, the torso cannot turn to it
+    // as a standing one does, so the plane follows the camera only as far from the torso as a standing torso would
+    // be (BODY_MAX): the hands stay where the shoulders can put them
+    const stYaw = sit ? bodyYaw + softLim(wrapA(camYaw - bodyYaw), BODY_MAX) : camYaw;
+    const scrF = V(Math.sin(stYaw), 0, Math.cos(stYaw)), scrR = V(Math.cos(stYaw), 0, -Math.sin(stYaw));
+    // which arms are drawn in front of the own head this frame (the state's word, else the pose's); those are tested
+    // against the head's real shape
+    this.grip[0] = this.grip[1] = null;
+    let anyFront = false;
+    for (let i = 0; i < 2; i++) {
+      const f = (this.frontArm[i] = st.armFront?.[i] ?? bp.front[i]);
+      anyFront = anyFront || f;
+      if (f && front) for (const m of this.armMats[i]) m.stencilFunc = THREE.AlwaysStencilFunc;
+    }
+    if (anyFront || bp.plan[0] === "phone" || bp.plan[1] === "phone") {
+      if (!this.headEnv) this.buildHeadEnv();
+      this.headInv.copy(this.headG.matrixWorld).invert();
+    }
+    // the head's ink ring at the depth of the head's edge while an arm is in front (see `ring`): the plane of a ball's
+    // outline as the camera sees it lies R * R / distance in front of its centre
+    this.ring.visible = anyFront && front;
+    if (this.ring.visible) {
+      this.ring.position.copy(headC).addScaledVector(toCam, (d.R * d.R) / dist);
+      this.ring.lookAt(camPos);
+      this.ring.scale.setScalar(4 * d.R);
+    }
+    const P = st.pose, planC = { at, fwdT, leftT, headC, q1: _q1, bodyYaw, yawF: fy, lean: bp.pitch, roll: bp.roll - bp.sway, t: P.t ?? 0, am: clamp(P.amount ?? 0, 0, 1), arm: P.kind === "write" ? P.arm ?? 0 : -1,
+      laid: this.held.some((hd) => hd.posed && hd.g.visible && bp.plan[hd.i] === "desk" && !st.hands?.[hd.i]) };
     for (let i = 0; i < 2; i++) {
       const s = i ? 1 : -1, sh = d.sh[i].clone().applyMatrix4(this.torsoM);
       const wt = st.hands?.[i], ht = bp.hand[i];
@@ -2206,16 +2955,20 @@ export class Rig {
         target.lerp(staged, follow * (1 - wB));
       }
       if (st.pose.kind === "point" && wt && i === (st.pose.arm ?? 1)) target = sh.clone().addScaledVector(wt.clone().sub(sh).normalize(), (d.upper + d.fore) * 0.94);
-      let k = this.solveArm(i, sh, target, showDir(bp.elbowPole[i]), showDir(V(s, 0, 0)), headC);
-      // an arm the swivel could not clear (on some builds the body swells just under the shoulder): the whole arm,
-      // shoulder and hand, moves straight out from the body's axis, 1 mm at a time (it takes 2 or 3). Only for a free
-      // hand: one pinned to the world (state.hands) stays where it was put, and qa.clear reports it.
-      if (!wt && k.c < -0.0005) {
-        const out = _s.copy(sh).applyMatrix4(this.torsoInv).setY(0);
-        if (out.lengthSq() > 1e-8) {
-          const dir = out.normalize().transformDirection(this.torsoM).clone();
-          for (let n = 0; n < 8 && k.c < 0; n++) { sh.addScaledVector(dir, 0.001); target.addScaledVector(dir, 0.001); k = this.solveArm(i, sh, target, showDir(bp.elbowPole[i]), showDir(V(s, 0, 0)), headC); }
-        }
+      let pole = showDir(bp.elbowPole[i]), flat = false;
+      const plan = wt ? null : bp.plan[i];
+      if (plan) { const g = this.armPlan(plan, i, sh, planC); target = g.target; pole = g.pole; flat = g.flat; }
+      let k = this.solveArm(i, sh, target, pole, showDir(V(s, 0, 0)), headC);
+      // an arm the swivel could not clear: the whole arm moves out (see armOut). Only for a free hand: one pinned to
+      // the world (state.hands) stays where it was put, and qa.clear reports it.
+      if (!wt) k = this.armOut(i, sh, target, pole, showDir(V(s, 0, 0)), headC, k);
+      // an arm in front of the head that no swivel clears (a call past an ear cup while the head pops and tilts): its
+      // hand goes out from the head, by what the arm is short, until the arm is outside the head's real shape
+      if (!wt && this.frontArm[i] && k.c < -0.0005) for (let n = 0; n < 8; n++) {
+        const short = this.armHeadClear(i, sh, k.j, k.e);
+        if (short >= 0) break;
+        target.addScaledVector(_w.copy(target).sub(headC).normalize(), Math.min(0.03, 0.002 - 1.5 * short));
+        k = this.solveArm(i, sh, target, pole, showDir(V(s, 0, 0)), headC);
       }
       this.qa.swivel[i as 0 | 1] = k.phi; this.qa.clear = Math.min(this.qa.clear, k.c); this.qa.reach = Math.max(this.qa.reach, k.reach);
       const seed = V().copy(k.j).sub(sh).cross(V().copy(k.e).sub(k.j));
@@ -2223,17 +2976,48 @@ export class Rig {
       this.limbs[i].update(sh, k.j, k.e, d.limbR, seed.normalize(), this.bow[i], 0.07 * hand, this.wobPh[i]);
       this.hands[i].position.copy(k.e);
       this.caps[i].position.copy(sh);
-      this.out.hand[i].copy(k.e);
+      this.out.hand[i].copy(k.e); this.out.elbow[i].copy(k.j);
+      // a hand resting on the desk lays a posed thing flat under itself, across its forearm
+      if (flat) { const fa = V().copy(k.e).sub(k.j).setY(0); this.layFlat(i, fa.lengthSq() > 1e-8 ? fa.normalize() : fwdT); }
+      // QA beyond the arm's own clearance: what the hand holds, the furniture, the own legs, the head's real shape
+      const gq = this.grip[i];
+      if (gq) {
+        this.qa.clear = Math.min(this.qa.clear, this.heldMin(i, k.e, gq, (p) => this.bodyGap(p)));
+        if (sit) this.qa.seat = Math.min(this.qa.seat, this.heldMin(i, k.e, gq, (p) => this.furnGapW(p)));
+        if (this.frontArm[i]) this.qa.head = Math.min(this.qa.head, this.heldMin(i, k.e, gq, (p) => this.headGap(p)));
+      }
+      if (this.frontArm[i] || sit) {
+        const legOwn = d.legR * 1.08 + HULL.limb;
+        for (const ri of CLEAR_RINGS) {
+          const own = ri === SEG ? d.handR + HULL.hand : d.limbR * 1.08 + HULL.limb;
+          limbAt(sh, k.j, k.e, ri, _w, undefined, this.bow[i]);
+          if (this.frontArm[i]) this.qa.head = Math.min(this.qa.head, this.headGap(_w) - own);
+          if (sit) {
+            this.qa.seat = Math.min(this.qa.seat, this.furnGapW(_w) - own);
+            if (ri >= N1 + NC) for (let n = 0; n < this.legPts.length; n += 3) this.qa.seat = Math.min(this.qa.seat, Math.hypot(this.legPts[n] - _w.x, this.legPts[n + 1] - _w.y, this.legPts[n + 2] - _w.z) - own - legOwn);
+          }
+        }
+      }
+      const fg = this.feet[i];
+      if (sit) {
+        // seated leg: as the seat has it; a dangling foot stays square to its shin
+        const W = this.legW[i];
+        this.limbs[2 + i].update(W.h, W.k, W.a, d.legR, leftT, this.bow[2 + i], 0.07 * hand, this.wobPh[2 + i]);
+        fg.position.copy(W.a);
+        fg.rotation.set(-sit.fit.footPitch[i], st.facing + 0.2 * s, 0, "YXZ");
+        this.out.foot[i].copy(fg.position);
+        continue;
+      }
       // leg: hip joint on the turned torso, ankle planted in the travel frame, knee toward the travel direction
       const hipJ = hipJL[i].clone().applyMatrix4(this.torsoM);
       const Fl = ikFrame(hipJ, ankle[i], d.thigh, d.shin, fwdT.clone().addScaledVector(UP, 0.15), leftT);
       const knee2 = hipJ.clone().addScaledVector(Fl.dir, Fl.x).addScaledVector(Fl.pp, Fl.h), foot = hipJ.clone().addScaledVector(Fl.dir, Fl.d);
       this.limbs[2 + i].update(hipJ, knee2, foot, d.legR, leftT, this.bow[2 + i], 0.07 * hand, this.wobPh[2 + i]);
-      const fg = this.feet[i];
       fg.position.copy(foot); fg.position.y = Math.max(fg.position.y, at.y + d.ankleY);
-      fg.rotation.set(0, st.facing + bp.footYaw[i] + clamp(wrapA(bodyYaw - st.facing), -rad(20), rad(20)), 0);
+      fg.rotation.set(0, st.facing + bp.footYaw[i] + clamp(wrapA(bodyYaw - st.facing), -rad(20), rad(20)), 0, "XYZ");
       this.out.foot[i].copy(fg.position);
     }
+    if (sit) this.qa.seat = Math.min(this.qa.seat, sit.fit.gap, this.bodyDeskGap(sit, bp.pitch));
     // contact shadow: between the feet, stretched away from the key (CastLight contactLen)
     {
       const k = this.rc.light.key, kh = Math.hypot(k[0], k[2]) || 1, dx = -k[0] / kh, dz = -k[2] / kh, tl = this.rc.light.contactLen ?? 0;
@@ -2241,10 +3025,15 @@ export class Rig {
       this.blob.position.set((this.out.foot[0].x + this.out.foot[1].x) / 2 + dx * tl * 0.22, at.y + 0.003, (this.out.foot[0].z + this.out.foot[1].z) / 2 + dz * tl * 0.22);
       this.blob.rotation.set(-Math.PI / 2, 0, Math.atan2(dx, dz), "YXZ");
       this.blob.scale.set(wid, len, 1);
+      // seated with the feet off the floor: nothing touches it, so no contact shadow (the chair has its own)
+      this.blob.visible = true;
+      if (sit) { const k = 1 - smooth(Math.min(sit.fit.dangle[0], sit.fit.dangle[1]) / 0.05); this.blob.visible = k > 0.01; this.blob.scale.set(wid * k, len * k, 1); }
     }
     if (this.accParts.length) for (const ap of this.accParts) ap.o.visible = !st.hide || !st.hide.includes(ap.name);
     this.qa.held = 1;
     for (const hd of this.held) {
+      const gq = hd.posed ? this.grip[hd.i] : null;
+      if (gq) { hd.g.position.copy(this.out.hand[hd.i]); hd.g.quaternion.copy(gq); continue; }      // a pose turns it (see PartKit.held)
       hd.g.position.copy(this.out.hand[hd.i]).add(showDir(hd.off));
       hd.g.rotation.set(hd.rot[0], bodyYaw + hd.rot[1], hd.rot[2], "YXZ");
       // QA: the gap between the held thing and this figure's own body and head (its points against their surfaces)

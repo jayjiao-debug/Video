@@ -2,7 +2,7 @@
 """One command to run after adding or changing an accessory (kit/rigacc/): it stops at the first thing that broke.
 
   python3 scripts/rig3d/acc_check.py            everything below
-  python3 scripts/rig3d/acc_check.py --fast     steps 1 to 3 only (no pictures are rendered)
+  python3 scripts/rig3d/acc_check.py --fast     steps 1 to 3 and 6 only (no pictures are rendered)
   python3 scripts/rig3d/acc_check.py --jobs 2   renders at a time in steps 4 and 5 (default 3)
 
   1. types: npx tsc -p scripts/rig3d/tsconfig.rig.json
@@ -19,6 +19,10 @@
      single-pixel specks (one wrong pixel that flickers as the figure moves; RIG3D.md, "specks") and compares with
      the same figure in the same place without the accessory. Stills cannot show these. The line it prints names
      the accessories that add the most, also when all pass.
+  6. poses: the seated and phone poses (RIG3D_poses.md) on 13 builds x 4 seats x 16 camera positions, with the head
+     at rest and in the accents of talking (RigState.head), a phone or a pen in the hand, headphones and hats on:
+     no arm, hand, leg or held thing may pass through the body, the head's real shape, the seat, the desk or the
+     chair's back, and every hand must reach its place (preview/rig3d_pose_qa.ts says what it lets through)
 """
 import sys, os, re, json, math, shutil, subprocess, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -133,6 +137,19 @@ def main():
             for n, a, b, g, c in more: print("   %s: %d single-pixel specks in %d frames (the same figure without it: %d). Frames: %s/%s_turn and _walk, figure %d from the left; RIG3D.md \"specks\" has the causes" % (n, a, frames, b, tmp, g, c + 1))
             if more: bad.append("motion")
             else: shutil.rmtree(tmp, ignore_errors=True)
+    # 6. poses
+    tmp = tempfile.mkdtemp(prefix="rig3d-pose.")
+    r = subprocess.run(["node", os.path.join(HERE, "render.mjs"), os.path.join(ROOT, "src/videos/group/preview/rig3d_pose_qa.ts"), os.path.join(tmp, "x.png")], capture_output=True, text=True)
+    shutil.rmtree(tmp, ignore_errors=True)
+    rows = re.findall(r"QA: pose (\S+) gap (-?[\d.]+) at (\S+) reach (-?[\d.]+) at (\S+) give (-?[\d.]+) cases (\d+) bad (\d+)(?: \(([^)]*)\))?", r.stdout)
+    done = re.search(r"QA: poses done (\d+)", r.stdout)
+    if r.returncode != 0 or not rows or not done:
+        bad.append("poses"); print("6. poses: the check did not run"); print("   " + "\n   ".join((r.stdout + r.stderr).strip().splitlines()[-5:]))
+    else:
+        off = [x for x in rows if int(x[7]) > 0]
+        print("6. poses: %d seated and phone cases (%s solves), %s" % (len(rows), done.group(1), "nothing passes through anything and every hand is in its place" if not off else "%d have something passing through or a hand that misses" % len(off)))
+        for name, gap, at, reach, rat, _give, n, nb, where in off: print("   %s: %s of %s; the smallest gap %s m at %s, the worst reach %s m at %s (first: %s)" % (name, nb, n, gap, at, reach, rat, where))
+        if off: bad.append("poses")
     print("FAILED: " + ", ".join(bad) if bad else "ALL GOOD" + ("" if not fast else " (pictures not checked)"))
     sys.exit(1 if bad else 0)
 

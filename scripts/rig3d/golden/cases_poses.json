@@ -1,0 +1,17 @@
+[
+  { "name": "pose_sit", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [0, 3, 6, 8, 10, 12] },
+  { "name": "pose_desk", "entry": "rig3d_pose_desk.ts", "size": "360x640", "pick": [0, 3, 4, 6, 13] },
+  { "name": "pose_write", "entry": "rig3d_pose_write.ts", "size": "360x640", "pick": [0, 16, 32, 47] },
+  { "name": "pose_phone", "entry": "rig3d_pose_phone.ts", "size": "360x640", "pick": [0, 9, 12, 15, 24, 36] },
+  { "name": "pose_phone_seat", "entry": "rig3d_pose_phone_seat.ts", "size": "360x640", "pick": [0, 12, 24, 36] },
+  { "name": "pose_orbit", "entry": "rig3d_pose_orbit.ts", "size": "360x640", "pick": [0, 9, 18, 27, 36, 54] },
+  { "name": "pose_row", "entry": "rig3d_pose_row.ts", "size": "640x360" },
+  { "name": "pose_call_cap", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [0, 4, 8, 10], "opts": { "who": [{ "look": "class7", "hat": { "kind": "cap", "col": "#3f6b8f", "trim": "#2c4a66" }, "pose": "phone", "arm": 0, "amount": 1, "acc": ["phone"], "seat": "chair" }] } },
+  { "name": "pose_look_chair", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [0, 2, 11], "opts": { "who": [{ "look": "friend2", "pose": "phone", "amount": 0, "acc": ["phone"], "seat": "chair" }] } },
+  { "name": "pose_call_stand", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [0, 4, 6], "opts": { "who": [{ "look": "mate", "pose": "phone", "arm": 0, "amount": 1, "acc": ["phone"] }] } },
+  { "name": "pose_wave_seat", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [0, 6], "opts": { "who": [{ "look": "friend1", "pose": "wave", "seat": "chair" }] } },
+  { "name": "pose_cheer_desk", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [0, 3], "opts": { "who": [{ "look": "friend3", "pose": "cheer", "seat": "desk" }] } },
+  { "name": "pose_short_arms", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [0, 2, 8], "opts": { "who": [{ "look": "class7", "pose": "sit", "seat": "chair" }] } },
+  { "name": "pose_low_seat", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [2, 6], "opts": { "who": [{ "look": "friend5", "pose": "sit", "seat": "chair" }], "seatTop": 0.3 } },
+  { "name": "pose_implicit", "entry": "rig3d_pose_sit.ts", "size": "360x640", "pick": [2], "opts": { "who": [{ "look": "worker", "pose": "sit", "seat": "none" }] } }
+]
