@@ -1,0 +1,173 @@
+plan: {'tier': 'starter', 'character_count': 27059, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x10e", "lang": "en", "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10e.mp3", "bytes": 76529}
+{"name": "x10f", "lang": "en", "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10f.mp3", "bytes": 76529}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x10e",
+  "lang": "en",
+  "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10e.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "Kay",
+    0.0,
+    0.24
+   ],
+   [
+    "takes",
+    0.24,
+    0.68
+   ],
+   [
+    "it",
+    0.68,
+    0.82
+   ],
+   [
+    "to",
+    0.82,
+    0.98
+   ],
+   [
+    "dad.",
+    0.98,
+    1.26
+   ],
+   [
+    "Dad!",
+    1.64,
+    2.04
+   ],
+   [
+    "The",
+    2.32,
+    2.42
+   ],
+   [
+    "sword!",
+    2.42,
+    2.82
+   ],
+   [
+    "I",
+    3.16,
+    3.34
+   ],
+   [
+    "get",
+    3.34,
+    3.52
+   ],
+   [
+    "to",
+    3.52,
+    3.66
+   ],
+   [
+    "be",
+    3.66,
+    3.78
+   ],
+   [
+    "king!",
+    3.78,
+    4.12
+   ]
+  ],
+  "heard": "Kay takes it to dad. Dad! The sword! I get to be king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.72
+ },
+ {
+  "name": "x10f",
+  "lang": "en",
+  "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10f.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "Kay",
+    0.0,
+    0.24
+   ],
+   [
+    "takes",
+    0.24,
+    0.64
+   ],
+   [
+    "it",
+    0.64,
+    0.8
+   ],
+   [
+    "to",
+    0.8,
+    0.96
+   ],
+   [
+    "dad.",
+    0.96,
+    1.28
+   ],
+   [
+    "Dad!",
+    1.76,
+    2.06
+   ],
+   [
+    "The",
+    2.38,
+    2.5
+   ],
+   [
+    "sword!",
+    2.5,
+    2.88
+   ],
+   [
+    "I",
+    3.24,
+    3.48
+   ],
+   [
+    "get",
+    3.48,
+    3.62
+   ],
+   [
+    "to",
+    3.62,
+    3.76
+   ],
+   [
+    "be",
+    3.76,
+    3.88
+   ],
+   [
+    "king!",
+    3.88,
+    4.22
+   ]
+  ],
+  "heard": "Kay takes it to dad. Dad! The sword! I get to be king!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.72
+ }
+]
