@@ -1,0 +1,2350 @@
+{
+  "id": "arthur-sfx-01",
+  "clips": [
+    {
+      "name": "sword_out_a_1",
+      "type": "sfx",
+      "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sword_out_a_1.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Clang",
+          0.309
+        ],
+        [
+          "Ding",
+          0.089
+        ],
+        [
+          "Sound effect",
+          0.049
+        ],
+        [
+          "Bell",
+          0.013
+        ],
+        [
+          "Ping",
+          0.011
+        ],
+        [
+          "Squeak",
+          0.007
+        ],
+        [
+          "Chink, clink",
+          0.007
+        ],
+        [
+          "Dishes, pots, and pans",
+          0.003
+        ]
+      ]
+    },
+    {
+      "name": "sword_out_a_2",
+      "type": "sfx",
+      "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sword_out_a_2.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Clang",
+          0.224
+        ],
+        [
+          "Ding",
+          0.071
+        ],
+        [
+          "Chink, clink",
+          0.055
+        ],
+        [
+          "Sound effect",
+          0.044
+        ],
+        [
+          "Breaking",
+          0.024
+        ],
+        [
+          "Ping",
+          0.017
+        ],
+        [
+          "Glass",
+          0.008
+        ],
+        [
+          "Crack",
+          0.007
+        ]
+      ]
+    },
+    {
+      "name": "sword_out_b_1",
+      "type": "sfx",
+      "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sword_out_b_1.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Clang",
+          0.313
+        ],
+        [
+          "Ding",
+          0.205
+        ],
+        [
+          "Bell",
+          0.037
+        ],
+        [
+          "Ping",
+          0.013
+        ],
+        [
+          "Sound effect",
+          0.012
+        ],
+        [
+          "Bicycle bell",
+          0.008
+        ],
+        [
+          "Squeak",
+          0.005
+        ],
+        [
+          "Chink, clink",
+          0.005
+        ]
+      ]
+    },
+    {
+      "name": "sword_out_b_2",
+      "type": "sfx",
+      "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sword_out_b_2.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Clang",
+          0.293
+        ],
+        [
+          "Ding",
+          0.114
+        ],
+        [
+          "Sound effect",
+          0.033
+        ],
+        [
+          "Bell",
+          0.032
+        ],
+        [
+          "Ping",
+          0.015
+        ],
+        [
+          "Coin (dropping)",
+          0.012
+        ],
+        [
+          "Bicycle bell",
+          0.012
+        ],
+        [
+          "Chink, clink",
+          0.008
+        ]
+      ]
+    },
+    {
+      "name": "sword_in_1",
+      "type": "sfx",
+      "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sword_in_1.mp3",
+      "bytes": 17179,
+      "seconds": 1.0,
+      "tags": [
+        [
+          "Clang",
+          0.264
+        ],
+        [
+          "Vehicle horn, car horn, honking",
+          0.119
+        ],
+        [
+          "Sound effect",
+          0.037
+        ],
+        [
+          "Air horn, truck horn",
+          0.03
+        ],
+        [
+          "Ding",
+          0.024
+        ],
+        [
+          "Breaking",
+          0.012
+        ],
+        [
+          "Ping",
+          0.01
+        ],
+        [
+          "Speech",
+          0.009
+        ]
+      ]
+    },
+    {
+      "name": "sword_in_2",
+      "type": "sfx",
+      "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sword_in_2.mp3",
+      "bytes": 17179,
+      "seconds": 1.0,
+      "tags": [
+        [
+          "Breaking",
+          0.091
+        ],
+        [
+          "Glass",
+          0.074
+        ],
+        [
+          "Sound effect",
+          0.065
+        ],
+        [
+          "Music",
+          0.042
+        ],
+        [
+          "Chink, clink",
+          0.023
+        ],
+        [
+          "Crack",
+          0.022
+        ],
+        [
+          "Speech",
+          0.016
+        ],
+        [
+          "Scrape",
+          0.01
+        ]
+      ]
+    },
+    {
+      "name": "stone_drop_1",
+      "type": "sfx",
+      "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "stone_drop_1.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Explosion",
+          0.305
+        ],
+        [
+          "Burst, pop",
+          0.142
+        ],
+        [
+          "Bang",
+          0.037
+        ],
+        [
+          "Sound effect",
+          0.026
+        ],
+        [
+          "Eruption",
+          0.022
+        ],
+        [
+          "Speech",
+          0.021
+        ],
+        [
+          "Breaking",
+          0.017
+        ],
+        [
+          "Flap",
+          0.01
+        ]
+      ]
+    },
+    {
+      "name": "stone_drop_2",
+      "type": "sfx",
+      "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "stone_drop_2.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Explosion",
+          0.313
+        ],
+        [
+          "Burst, pop",
+          0.12
+        ],
+        [
+          "Sound effect",
+          0.08
+        ],
+        [
+          "Breaking",
+          0.069
+        ],
+        [
+          "Bang",
+          0.039
+        ],
+        [
+          "Eruption",
+          0.014
+        ],
+        [
+          "Crackle",
+          0.014
+        ],
+        [
+          "Scrape",
+          0.011
+        ]
+      ]
+    },
+    {
+      "name": "knock_1",
+      "type": "sfx",
+      "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "knock_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Knock",
+          0.141
+        ],
+        [
+          "Door",
+          0.106
+        ],
+        [
+          "Sound effect",
+          0.095
+        ],
+        [
+          "Boing",
+          0.021
+        ],
+        [
+          "Music",
+          0.019
+        ],
+        [
+          "Sliding door",
+          0.018
+        ],
+        [
+          "Speech",
+          0.015
+        ],
+        [
+          "Grunt",
+          0.014
+        ]
+      ]
+    },
+    {
+      "name": "knock_2",
+      "type": "sfx",
+      "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "knock_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Knock",
+          0.713
+        ],
+        [
+          "Door",
+          0.094
+        ],
+        [
+          "Sound effect",
+          0.036
+        ],
+        [
+          "Tap",
+          0.027
+        ],
+        [
+          "Sliding door",
+          0.021
+        ],
+        [
+          "Speech",
+          0.017
+        ],
+        [
+          "Whack, thwack",
+          0.015
+        ],
+        [
+          "Slam",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "stamp_1",
+      "type": "sfx",
+      "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "stamp_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.147
+        ],
+        [
+          "Knock",
+          0.141
+        ],
+        [
+          "Door",
+          0.132
+        ],
+        [
+          "Thunk",
+          0.036
+        ],
+        [
+          "Whack, thwack",
+          0.027
+        ],
+        [
+          "Slam",
+          0.024
+        ],
+        [
+          "Sliding door",
+          0.022
+        ],
+        [
+          "Bang",
+          0.019
+        ]
+      ]
+    },
+    {
+      "name": "stamp_2",
+      "type": "sfx",
+      "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "stamp_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Knock",
+          0.523
+        ],
+        [
+          "Sound effect",
+          0.09
+        ],
+        [
+          "Thunk",
+          0.052
+        ],
+        [
+          "Door",
+          0.023
+        ],
+        [
+          "Music",
+          0.023
+        ],
+        [
+          "Tap",
+          0.014
+        ],
+        [
+          "Whack, thwack",
+          0.013
+        ],
+        [
+          "Speech",
+          0.011
+        ]
+      ]
+    },
+    {
+      "name": "crown_1",
+      "type": "sfx",
+      "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "crown_1.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Ding",
+          0.762
+        ],
+        [
+          "Clang",
+          0.291
+        ],
+        [
+          "Sound effect",
+          0.024
+        ],
+        [
+          "Bell",
+          0.016
+        ],
+        [
+          "Bicycle bell",
+          0.012
+        ],
+        [
+          "Jingle, tinkle",
+          0.008
+        ],
+        [
+          "Ping",
+          0.007
+        ],
+        [
+          "Music",
+          0.005
+        ]
+      ]
+    },
+    {
+      "name": "crown_2",
+      "type": "sfx",
+      "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "crown_2.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Ding",
+          0.594
+        ],
+        [
+          "Clang",
+          0.078
+        ],
+        [
+          "Bicycle bell",
+          0.03
+        ],
+        [
+          "Ping",
+          0.02
+        ],
+        [
+          "Bell",
+          0.018
+        ],
+        [
+          "Sound effect",
+          0.016
+        ],
+        [
+          "Music",
+          0.009
+        ],
+        [
+          "Coin (dropping)",
+          0.005
+        ]
+      ]
+    },
+    {
+      "name": "cheer_1",
+      "type": "sfx",
+      "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "cheer_1.mp3",
+      "bytes": 48944,
+      "seconds": 3.0,
+      "tags": [
+        [
+          "Screaming",
+          0.39
+        ],
+        [
+          "Grunt",
+          0.206
+        ],
+        [
+          "Crowd",
+          0.1
+        ],
+        [
+          "Sound effect",
+          0.071
+        ],
+        [
+          "Yell",
+          0.05
+        ],
+        [
+          "Groan",
+          0.047
+        ],
+        [
+          "Children shouting",
+          0.037
+        ],
+        [
+          "Speech",
+          0.029
+        ]
+      ]
+    },
+    {
+      "name": "cheer_2",
+      "type": "sfx",
+      "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "cheer_2.mp3",
+      "bytes": 48944,
+      "seconds": 3.0,
+      "tags": [
+        [
+          "Crowd",
+          0.199
+        ],
+        [
+          "Screaming",
+          0.195
+        ],
+        [
+          "Children shouting",
+          0.152
+        ],
+        [
+          "Cheering",
+          0.135
+        ],
+        [
+          "Whoop",
+          0.058
+        ],
+        [
+          "Yell",
+          0.056
+        ],
+        [
+          "Speech",
+          0.048
+        ],
+        [
+          "Grunt",
+          0.027
+        ]
+      ]
+    },
+    {
+      "name": "rewind_1",
+      "type": "sfx",
+      "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "rewind_1.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Squeak",
+          0.23
+        ],
+        [
+          "Vehicle horn, car horn, honking",
+          0.125
+        ],
+        [
+          "Sound effect",
+          0.096
+        ],
+        [
+          "Cacophony",
+          0.045
+        ],
+        [
+          "Music",
+          0.034
+        ],
+        [
+          "Speech",
+          0.015
+        ],
+        [
+          "Scratch",
+          0.011
+        ],
+        [
+          "Inside, small room",
+          0.01
+        ]
+      ]
+    },
+    {
+      "name": "rewind_2",
+      "type": "sfx",
+      "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "rewind_2.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Sound effect",
+          0.315
+        ],
+        [
+          "Music",
+          0.099
+        ],
+        [
+          "Cacophony",
+          0.073
+        ],
+        [
+          "Squeak",
+          0.057
+        ],
+        [
+          "Vehicle horn, car horn, honking",
+          0.037
+        ],
+        [
+          "Scratch",
+          0.015
+        ],
+        [
+          "Speech",
+          0.015
+        ],
+        [
+          "Musical instrument",
+          0.009
+        ]
+      ]
+    },
+    {
+      "name": "pat_1",
+      "type": "sfx",
+      "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "pat_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Crunch",
+          0.088
+        ],
+        [
+          "Tearing",
+          0.082
+        ],
+        [
+          "Scrape",
+          0.052
+        ],
+        [
+          "Sound effect",
+          0.049
+        ],
+        [
+          "Crackle",
+          0.028
+        ],
+        [
+          "Speech",
+          0.023
+        ],
+        [
+          "Shuffling cards",
+          0.017
+        ],
+        [
+          "Crumpling, crinkling",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "pat_2",
+      "type": "sfx",
+      "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "pat_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.054
+        ],
+        [
+          "Tearing",
+          0.051
+        ],
+        [
+          "Scrape",
+          0.049
+        ],
+        [
+          "Crunch",
+          0.046
+        ],
+        [
+          "Shuffling cards",
+          0.04
+        ],
+        [
+          "Scissors",
+          0.032
+        ],
+        [
+          "Crackle",
+          0.028
+        ],
+        [
+          "Speech",
+          0.019
+        ]
+      ]
+    },
+    {
+      "name": "body_thud_1",
+      "type": "sfx",
+      "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "body_thud_1.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Knock",
+          0.567
+        ],
+        [
+          "Door",
+          0.034
+        ],
+        [
+          "Sound effect",
+          0.032
+        ],
+        [
+          "Speech",
+          0.017
+        ],
+        [
+          "Tap",
+          0.013
+        ],
+        [
+          "Inside, small room",
+          0.01
+        ],
+        [
+          "Music",
+          0.009
+        ],
+        [
+          "Slam",
+          0.009
+        ]
+      ]
+    },
+    {
+      "name": "body_thud_2",
+      "type": "sfx",
+      "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "body_thud_2.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Sound effect",
+          0.199
+        ],
+        [
+          "Music",
+          0.102
+        ],
+        [
+          "Speech",
+          0.027
+        ],
+        [
+          "Silence",
+          0.024
+        ],
+        [
+          "Musical instrument",
+          0.023
+        ],
+        [
+          "Knock",
+          0.017
+        ],
+        [
+          "Heart murmur",
+          0.016
+        ],
+        [
+          "Whoosh, swoosh, swish",
+          0.014
+        ]
+      ]
+    },
+    {
+      "name": "kneel_1",
+      "type": "sfx",
+      "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "kneel_1.mp3",
+      "bytes": 21358,
+      "seconds": 1.28,
+      "tags": [
+        [
+          "Heart sounds, heartbeat",
+          0.057
+        ],
+        [
+          "Speech",
+          0.05
+        ],
+        [
+          "Music",
+          0.043
+        ],
+        [
+          "Sound effect",
+          0.034
+        ],
+        [
+          "Inside, small room",
+          0.02
+        ],
+        [
+          "Gasp",
+          0.02
+        ],
+        [
+          "Slam",
+          0.019
+        ],
+        [
+          "Throbbing",
+          0.017
+        ]
+      ]
+    },
+    {
+      "name": "kneel_2",
+      "type": "sfx",
+      "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "kneel_2.mp3",
+      "bytes": 21358,
+      "seconds": 1.28,
+      "tags": [
+        [
+          "Speech",
+          0.054
+        ],
+        [
+          "Slam",
+          0.053
+        ],
+        [
+          "Bang",
+          0.038
+        ],
+        [
+          "Sound effect",
+          0.03
+        ],
+        [
+          "Scrape",
+          0.021
+        ],
+        [
+          "Door",
+          0.02
+        ],
+        [
+          "Whoosh, swoosh, swish",
+          0.02
+        ],
+        [
+          "Explosion",
+          0.018
+        ]
+      ]
+    },
+    {
+      "name": "pop_1",
+      "type": "sfx",
+      "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "pop_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Plop",
+          0.799
+        ],
+        [
+          "Music",
+          0.044
+        ],
+        [
+          "Speech",
+          0.039
+        ],
+        [
+          "Sound effect",
+          0.028
+        ],
+        [
+          "Inside, small room",
+          0.006
+        ],
+        [
+          "Male speech, man speaking",
+          0.006
+        ],
+        [
+          "Beep, bleep",
+          0.004
+        ],
+        [
+          "Silence",
+          0.004
+        ]
+      ]
+    },
+    {
+      "name": "pop_2",
+      "type": "sfx",
+      "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "pop_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Plop",
+          0.939
+        ],
+        [
+          "Music",
+          0.05
+        ],
+        [
+          "Speech",
+          0.047
+        ],
+        [
+          "Sound effect",
+          0.026
+        ],
+        [
+          "Inside, small room",
+          0.006
+        ],
+        [
+          "Vehicle",
+          0.006
+        ],
+        [
+          "Drip",
+          0.004
+        ],
+        [
+          "Male speech, man speaking",
+          0.004
+        ]
+      ]
+    }
+  ],
+  "plan": {
+    "tier": "starter",
+    "character_count": 22321,
+    "character_limit": 30001,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "female",
+        "language": "zh",
+        "accent": "standard",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "age": "young",
+        "language": "zh",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "chill"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "zh",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "entertainment_tv",
+        "gender": "male",
+        "language": "zh",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "age": "young",
+        "use_case": "characters_animation",
+        "gender": "female",
+        "descriptive": "sassy",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "language": "zh",
+        "age": "young",
+        "gender": "male",
+        "use_case": "conversational",
+        "accent": "standard",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "descriptive": "excited",
+        "language": "ru",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "descriptive": "serious",
+        "language": "en",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "female",
+        "language": "hi",
+        "accent": "standard",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "language": "ar",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "accent": "modern standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "language": "it",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "milanese",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian",
+        "language": "pt"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "descriptive": "casual",
+        "language": "es",
+        "gender": "female",
+        "age": "young",
+        "accent": "latin american",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "language": "es",
+        "descriptive": "cute",
+        "gender": "female",
+        "age": "young",
+        "accent": "mexican",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "descriptive": "casual",
+        "language": "es",
+        "gender": "female",
+        "age": "young",
+        "accent": "latin american",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "descriptive": "calm",
+        "language": "es",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "latin american",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "language": "hi",
+        "age": "young",
+        "gender": "female",
+        "use_case": "conversational",
+        "accent": "standard",
+        "descriptive": "pleasant"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "language": "hi",
+        "descriptive": "classy",
+        "gender": "female",
+        "age": "young",
+        "accent": "standard",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "language": "ar",
+        "accent": "modern standard",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "language": "it",
+        "age": "middle_aged",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "descriptive": "excited",
+        "language": "pt",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "brazilian",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "language": "es",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "accent": "peruvian",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "language": "es",
+        "use_case": "conversational",
+        "gender": "female",
+        "descriptive": "casual",
+        "accent": "mexican",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "age": "young",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "language": "en",
+        "accent": "american",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "middle-aged",
+        "gender": "male",
+        "language": "zh",
+        "accent": "standard",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "zh",
+        "accent": "standard",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "age": "middle_aged",
+        "language": "zh",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "descriptive": "deep",
+        "language": "zh",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "el",
+        "accent": "standard",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "el",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "old"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "professional",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "el"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "use_case": "characters_animation",
+        "language": "de",
+        "gender": "male",
+        "age": "old",
+        "accent": "standard",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "descriptive": "calm",
+        "age": "young",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "gender": "male",
+        "language": "zh",
+        "accent": "standard",
+        "descriptive": "pleasant"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "language": "zh",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "descriptive": "formal",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "neutral",
+        "gender": "male",
+        "age": "young",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "descriptive": "pleasant",
+        "language": "zh",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "language": "en",
+        "descriptive": "calm",
+        "gender": "male",
+        "use_case": "conversational",
+        "accent": "american",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "descriptive": "crisp",
+        "age": "young",
+        "gender": "female",
+        "use_case": "conversational",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "en",
+        "accent": "scottish",
+        "descriptive": "crisp"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "advertisement",
+        "gender": "male",
+        "accent": "scottish",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "descriptive": "gentle",
+        "language": "en",
+        "gender": "male",
+        "age": "young",
+        "accent": "chinese",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "confident",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "it",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "intense"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "age": "young",
+        "language": "en",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "scottish",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "american",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "gentle",
+        "accent": "beijing mandarin",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "age": "middle_aged",
+        "language": "zh",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "singapore mandarin",
+        "descriptive": "deep"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "chill",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "chinese",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "language": "en",
+        "use_case": "social_media",
+        "gender": "male",
+        "age": "young",
+        "accent": "american",
+        "descriptive": "chill"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "en",
+        "accent": "italian",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "en",
+        "accent": "scottish",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "age": "old",
+        "language": "en",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "american",
+        "descriptive": "gentle"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "en",
+        "accent": "british",
+        "descriptive": "mature"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "language": "fr",
+        "age": "middle_aged",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "professional",
+        "accent": "parisian",
+        "language": "fr"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "de",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "de"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "ru"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "descriptive": "confident",
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "ru",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "age": "young",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "zh",
+        "accent": "taiwan mandarin",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "language": "zh",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "serious",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "gender": "male",
+        "descriptive": "casual",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "age": "young",
+        "accent": "standard",
+        "language": "hi"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "descriptive": "professional",
+        "language": "en",
+        "gender": "female",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "descriptive": "classy",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "accent": "american",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "entertainment_tv"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "descriptive": "sassy",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "social_media"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "australian",
+        "use_case": "conversational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "descriptive": "mature",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "use_case": "narrative_story"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "characters_animation"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "neutral",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "conversational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "descriptive": "rough",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "characters_animation"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "descriptive": "confident",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "use_case": "social_media"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "use_case": "informative_educational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "descriptive": "upbeat",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "use_case": "informative_educational"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "descriptive": "chill",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "descriptive": "cute",
+        "language": "en",
+        "gender": "female",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "descriptive": "casual",
+        "language": "en",
+        "gender": "male",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "descriptive": "classy",
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "descriptive": "formal",
+        "language": "en",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "informative_educational",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "descriptive": "crisp",
+        "language": "en",
+        "gender": "male",
+        "use_case": "advertisement",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "premade"
+    }
+  ]
+}

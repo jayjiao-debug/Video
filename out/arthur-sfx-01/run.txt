@@ -1,0 +1,1231 @@
+plan: {'tier': 'starter', 'character_count': 22321, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sword_out_a_1", "type": "sfx", "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_out_a_1.mp3", "bytes": 20105}
+{"name": "sword_out_a_2", "type": "sfx", "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_out_a_2.mp3", "bytes": 20105}
+{"name": "sword_out_b_1", "type": "sfx", "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_out_b_1.mp3", "bytes": 20105}
+{"name": "sword_out_b_2", "type": "sfx", "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_out_b_2.mp3", "bytes": 20105}
+{"name": "sword_in_1", "type": "sfx", "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_in_1.mp3", "bytes": 17179}
+{"name": "sword_in_2", "type": "sfx", "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_in_2.mp3", "bytes": 17179}
+{"name": "stone_drop_1", "type": "sfx", "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "stone_drop_1.mp3", "bytes": 24702}
+{"name": "stone_drop_2", "type": "sfx", "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "stone_drop_2.mp3", "bytes": 24702}
+{"name": "knock_1", "type": "sfx", "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "knock_1.mp3", "bytes": 8820}
+{"name": "knock_2", "type": "sfx", "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "knock_2.mp3", "bytes": 8820}
+{"name": "stamp_1", "type": "sfx", "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "stamp_1.mp3", "bytes": 8820}
+{"name": "stamp_2", "type": "sfx", "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "stamp_2.mp3", "bytes": 8820}
+{"name": "crown_1", "type": "sfx", "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "crown_1.mp3", "bytes": 24702}
+{"name": "crown_2", "type": "sfx", "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "crown_2.mp3", "bytes": 24702}
+{"name": "cheer_1", "type": "sfx", "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cheer_1.mp3", "bytes": 48944}
+{"name": "cheer_2", "type": "sfx", "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cheer_2.mp3", "bytes": 48944}
+{"name": "rewind_1", "type": "sfx", "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "rewind_1.mp3", "bytes": 10492}
+{"name": "rewind_2", "type": "sfx", "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "rewind_2.mp3", "bytes": 10492}
+{"name": "pat_1", "type": "sfx", "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "pat_1.mp3", "bytes": 8820}
+{"name": "pat_2", "type": "sfx", "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "pat_2.mp3", "bytes": 8820}
+{"name": "body_thud_1", "type": "sfx", "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "body_thud_1.mp3", "bytes": 10492}
+{"name": "body_thud_2", "type": "sfx", "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "body_thud_2.mp3", "bytes": 10492}
+{"name": "kneel_1", "type": "sfx", "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "kneel_1.mp3", "bytes": 21358}
+{"name": "kneel_2", "type": "sfx", "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "kneel_2.mp3", "bytes": 21358}
+{"name": "pop_1", "type": "sfx", "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "pop_1.mp3", "bytes": 8820}
+{"name": "pop_2", "type": "sfx", "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "pop_2.mp3", "bytes": 8820}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 5739.73it/s]
+sword_out_a_1 [['Clang', 0.309], ['Ding', 0.089], ['Sound effect', 0.049], ['Bell', 0.013], ['Ping', 0.011], ['Squeak', 0.007], ['Chink, clink', 0.007], ['Dishes, pots, and pans', 0.003]]
+sword_out_a_2 [['Clang', 0.224], ['Ding', 0.071], ['Chink, clink', 0.055], ['Sound effect', 0.044], ['Breaking', 0.024], ['Ping', 0.017], ['Glass', 0.008], ['Crack', 0.007]]
+sword_out_b_1 [['Clang', 0.313], ['Ding', 0.205], ['Bell', 0.037], ['Ping', 0.013], ['Sound effect', 0.012], ['Bicycle bell', 0.008], ['Squeak', 0.005], ['Chink, clink', 0.005]]
+sword_out_b_2 [['Clang', 0.293], ['Ding', 0.114], ['Sound effect', 0.033], ['Bell', 0.032], ['Ping', 0.015], ['Coin (dropping)', 0.012], ['Bicycle bell', 0.012], ['Chink, clink', 0.008]]
+sword_in_1 [['Clang', 0.264], ['Vehicle horn, car horn, honking', 0.119], ['Sound effect', 0.037], ['Air horn, truck horn', 0.03], ['Ding', 0.024], ['Breaking', 0.012], ['Ping', 0.01], ['Speech', 0.009]]
+sword_in_2 [['Breaking', 0.091], ['Glass', 0.074], ['Sound effect', 0.065], ['Music', 0.042], ['Chink, clink', 0.023], ['Crack', 0.022], ['Speech', 0.016], ['Scrape', 0.01]]
+stone_drop_1 [['Explosion', 0.305], ['Burst, pop', 0.142], ['Bang', 0.037], ['Sound effect', 0.026], ['Eruption', 0.022], ['Speech', 0.021], ['Breaking', 0.017], ['Flap', 0.01]]
+stone_drop_2 [['Explosion', 0.313], ['Burst, pop', 0.12], ['Sound effect', 0.08], ['Breaking', 0.069], ['Bang', 0.039], ['Eruption', 0.014], ['Crackle', 0.014], ['Scrape', 0.011]]
+knock_1 [['Knock', 0.141], ['Door', 0.106], ['Sound effect', 0.095], ['Boing', 0.021], ['Music', 0.019], ['Sliding door', 0.018], ['Speech', 0.015], ['Grunt', 0.014]]
+knock_2 [['Knock', 0.713], ['Door', 0.094], ['Sound effect', 0.036], ['Tap', 0.027], ['Sliding door', 0.021], ['Speech', 0.017], ['Whack, thwack', 0.015], ['Slam', 0.013]]
+stamp_1 [['Sound effect', 0.147], ['Knock', 0.141], ['Door', 0.132], ['Thunk', 0.036], ['Whack, thwack', 0.027], ['Slam', 0.024], ['Sliding door', 0.022], ['Bang', 0.019]]
+stamp_2 [['Knock', 0.523], ['Sound effect', 0.09], ['Thunk', 0.052], ['Door', 0.023], ['Music', 0.023], ['Tap', 0.014], ['Whack, thwack', 0.013], ['Speech', 0.011]]
+crown_1 [['Ding', 0.762], ['Clang', 0.291], ['Sound effect', 0.024], ['Bell', 0.016], ['Bicycle bell', 0.012], ['Jingle, tinkle', 0.008], ['Ping', 0.007], ['Music', 0.005]]
+crown_2 [['Ding', 0.594], ['Clang', 0.078], ['Bicycle bell', 0.03], ['Ping', 0.02], ['Bell', 0.018], ['Sound effect', 0.016], ['Music', 0.009], ['Coin (dropping)', 0.005]]
+cheer_1 [['Screaming', 0.39], ['Grunt', 0.206], ['Crowd', 0.1], ['Sound effect', 0.071], ['Yell', 0.05], ['Groan', 0.047], ['Children shouting', 0.037], ['Speech', 0.029]]
+cheer_2 [['Crowd', 0.199], ['Screaming', 0.195], ['Children shouting', 0.152], ['Cheering', 0.135], ['Whoop', 0.058], ['Yell', 0.056], ['Speech', 0.048], ['Grunt', 0.027]]
+rewind_1 [['Squeak', 0.23], ['Vehicle horn, car horn, honking', 0.125], ['Sound effect', 0.096], ['Cacophony', 0.045], ['Music', 0.034], ['Speech', 0.015], ['Scratch', 0.011], ['Inside, small room', 0.01]]
+rewind_2 [['Sound effect', 0.315], ['Music', 0.099], ['Cacophony', 0.073], ['Squeak', 0.057], ['Vehicle horn, car horn, honking', 0.037], ['Scratch', 0.015], ['Speech', 0.015], ['Musical instrument', 0.009]]
+pat_1 [['Crunch', 0.088], ['Tearing', 0.082], ['Scrape', 0.052], ['Sound effect', 0.049], ['Crackle', 0.028], ['Speech', 0.023], ['Shuffling cards', 0.017], ['Crumpling, crinkling', 0.013]]
+pat_2 [['Sound effect', 0.054], ['Tearing', 0.051], ['Scrape', 0.049], ['Crunch', 0.046], ['Shuffling cards', 0.04], ['Scissors', 0.032], ['Crackle', 0.028], ['Speech', 0.019]]
+body_thud_1 [['Knock', 0.567], ['Door', 0.034], ['Sound effect', 0.032], ['Speech', 0.017], ['Tap', 0.013], ['Inside, small room', 0.01], ['Music', 0.009], ['Slam', 0.009]]
+body_thud_2 [['Sound effect', 0.199], ['Music', 0.102], ['Speech', 0.027], ['Silence', 0.024], ['Musical instrument', 0.023], ['Knock', 0.017], ['Heart murmur', 0.016], ['Whoosh, swoosh, swish', 0.014]]
+kneel_1 [['Heart sounds, heartbeat', 0.057], ['Speech', 0.05], ['Music', 0.043], ['Sound effect', 0.034], ['Inside, small room', 0.02], ['Gasp', 0.02], ['Slam', 0.019], ['Throbbing', 0.017]]
+kneel_2 [['Speech', 0.054], ['Slam', 0.053], ['Bang', 0.038], ['Sound effect', 0.03], ['Scrape', 0.021], ['Door', 0.02], ['Whoosh, swoosh, swish', 0.02], ['Explosion', 0.018]]
+pop_1 [['Plop', 0.799], ['Music', 0.044], ['Speech', 0.039], ['Sound effect', 0.028], ['Inside, small room', 0.006], ['Male speech, man speaking', 0.006], ['Beep, bleep', 0.004], ['Silence', 0.004]]
+pop_2 [['Plop', 0.939], ['Music', 0.05], ['Speech', 0.047], ['Sound effect', 0.026], ['Inside, small room', 0.006], ['Vehicle', 0.006], ['Drip', 0.004], ['Male speech, man speaking', 0.004]]
+[
+ {
+  "name": "sword_out_a_1",
+  "type": "sfx",
+  "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_out_a_1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Clang",
+    0.309
+   ],
+   [
+    "Ding",
+    0.089
+   ],
+   [
+    "Sound effect",
+    0.049
+   ],
+   [
+    "Bell",
+    0.013
+   ],
+   [
+    "Ping",
+    0.011
+   ],
+   [
+    "Squeak",
+    0.007
+   ],
+   [
+    "Chink, clink",
+    0.007
+   ],
+   [
+    "Dishes, pots, and pans",
+    0.003
+   ]
+  ]
+ },
+ {
+  "name": "sword_out_a_2",
+  "type": "sfx",
+  "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_out_a_2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Clang",
+    0.224
+   ],
+   [
+    "Ding",
+    0.071
+   ],
+   [
+    "Chink, clink",
+    0.055
+   ],
+   [
+    "Sound effect",
+    0.044
+   ],
+   [
+    "Breaking",
+    0.024
+   ],
+   [
+    "Ping",
+    0.017
+   ],
+   [
+    "Glass",
+    0.008
+   ],
+   [
+    "Crack",
+    0.007
+   ]
+  ]
+ },
+ {
+  "name": "sword_out_b_1",
+  "type": "sfx",
+  "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_out_b_1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Clang",
+    0.313
+   ],
+   [
+    "Ding",
+    0.205
+   ],
+   [
+    "Bell",
+    0.037
+   ],
+   [
+    "Ping",
+    0.013
+   ],
+   [
+    "Sound effect",
+    0.012
+   ],
+   [
+    "Bicycle bell",
+    0.008
+   ],
+   [
+    "Squeak",
+    0.005
+   ],
+   [
+    "Chink, clink",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "sword_out_b_2",
+  "type": "sfx",
+  "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_out_b_2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Clang",
+    0.293
+   ],
+   [
+    "Ding",
+    0.114
+   ],
+   [
+    "Sound effect",
+    0.033
+   ],
+   [
+    "Bell",
+    0.032
+   ],
+   [
+    "Ping",
+    0.015
+   ],
+   [
+    "Coin (dropping)",
+    0.012
+   ],
+   [
+    "Bicycle bell",
+    0.012
+   ],
+   [
+    "Chink, clink",
+    0.008
+   ]
+  ]
+ },
+ {
+  "name": "sword_in_1",
+  "type": "sfx",
+  "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_in_1.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Clang",
+    0.264
+   ],
+   [
+    "Vehicle horn, car horn, honking",
+    0.119
+   ],
+   [
+    "Sound effect",
+    0.037
+   ],
+   [
+    "Air horn, truck horn",
+    0.03
+   ],
+   [
+    "Ding",
+    0.024
+   ],
+   [
+    "Breaking",
+    0.012
+   ],
+   [
+    "Ping",
+    0.01
+   ],
+   [
+    "Speech",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "sword_in_2",
+  "type": "sfx",
+  "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_in_2.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Breaking",
+    0.091
+   ],
+   [
+    "Glass",
+    0.074
+   ],
+   [
+    "Sound effect",
+    0.065
+   ],
+   [
+    "Music",
+    0.042
+   ],
+   [
+    "Chink, clink",
+    0.023
+   ],
+   [
+    "Crack",
+    0.022
+   ],
+   [
+    "Speech",
+    0.016
+   ],
+   [
+    "Scrape",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "stone_drop_1",
+  "type": "sfx",
+  "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "stone_drop_1.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Explosion",
+    0.305
+   ],
+   [
+    "Burst, pop",
+    0.142
+   ],
+   [
+    "Bang",
+    0.037
+   ],
+   [
+    "Sound effect",
+    0.026
+   ],
+   [
+    "Eruption",
+    0.022
+   ],
+   [
+    "Speech",
+    0.021
+   ],
+   [
+    "Breaking",
+    0.017
+   ],
+   [
+    "Flap",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "stone_drop_2",
+  "type": "sfx",
+  "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "stone_drop_2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Explosion",
+    0.313
+   ],
+   [
+    "Burst, pop",
+    0.12
+   ],
+   [
+    "Sound effect",
+    0.08
+   ],
+   [
+    "Breaking",
+    0.069
+   ],
+   [
+    "Bang",
+    0.039
+   ],
+   [
+    "Eruption",
+    0.014
+   ],
+   [
+    "Crackle",
+    0.014
+   ],
+   [
+    "Scrape",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "knock_1",
+  "type": "sfx",
+  "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "knock_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Knock",
+    0.141
+   ],
+   [
+    "Door",
+    0.106
+   ],
+   [
+    "Sound effect",
+    0.095
+   ],
+   [
+    "Boing",
+    0.021
+   ],
+   [
+    "Music",
+    0.019
+   ],
+   [
+    "Sliding door",
+    0.018
+   ],
+   [
+    "Speech",
+    0.015
+   ],
+   [
+    "Grunt",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "knock_2",
+  "type": "sfx",
+  "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "knock_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Knock",
+    0.713
+   ],
+   [
+    "Door",
+    0.094
+   ],
+   [
+    "Sound effect",
+    0.036
+   ],
+   [
+    "Tap",
+    0.027
+   ],
+   [
+    "Sliding door",
+    0.021
+   ],
+   [
+    "Speech",
+    0.017
+   ],
+   [
+    "Whack, thwack",
+    0.015
+   ],
+   [
+    "Slam",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "stamp_1",
+  "type": "sfx",
+  "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "stamp_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.147
+   ],
+   [
+    "Knock",
+    0.141
+   ],
+   [
+    "Door",
+    0.132
+   ],
+   [
+    "Thunk",
+    0.036
+   ],
+   [
+    "Whack, thwack",
+    0.027
+   ],
+   [
+    "Slam",
+    0.024
+   ],
+   [
+    "Sliding door",
+    0.022
+   ],
+   [
+    "Bang",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "stamp_2",
+  "type": "sfx",
+  "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "stamp_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Knock",
+    0.523
+   ],
+   [
+    "Sound effect",
+    0.09
+   ],
+   [
+    "Thunk",
+    0.052
+   ],
+   [
+    "Door",
+    0.023
+   ],
+   [
+    "Music",
+    0.023
+   ],
+   [
+    "Tap",
+    0.014
+   ],
+   [
+    "Whack, thwack",
+    0.013
+   ],
+   [
+    "Speech",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "crown_1",
+  "type": "sfx",
+  "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "crown_1.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Ding",
+    0.762
+   ],
+   [
+    "Clang",
+    0.291
+   ],
+   [
+    "Sound effect",
+    0.024
+   ],
+   [
+    "Bell",
+    0.016
+   ],
+   [
+    "Bicycle bell",
+    0.012
+   ],
+   [
+    "Jingle, tinkle",
+    0.008
+   ],
+   [
+    "Ping",
+    0.007
+   ],
+   [
+    "Music",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "crown_2",
+  "type": "sfx",
+  "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "crown_2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Ding",
+    0.594
+   ],
+   [
+    "Clang",
+    0.078
+   ],
+   [
+    "Bicycle bell",
+    0.03
+   ],
+   [
+    "Ping",
+    0.02
+   ],
+   [
+    "Bell",
+    0.018
+   ],
+   [
+    "Sound effect",
+    0.016
+   ],
+   [
+    "Music",
+    0.009
+   ],
+   [
+    "Coin (dropping)",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "cheer_1",
+  "type": "sfx",
+  "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cheer_1.mp3",
+  "bytes": 48944,
+  "seconds": 3.0,
+  "tags": [
+   [
+    "Screaming",
+    0.39
+   ],
+   [
+    "Grunt",
+    0.206
+   ],
+   [
+    "Crowd",
+    0.1
+   ],
+   [
+    "Sound effect",
+    0.071
+   ],
+   [
+    "Yell",
+    0.05
+   ],
+   [
+    "Groan",
+    0.047
+   ],
+   [
+    "Children shouting",
+    0.037
+   ],
+   [
+    "Speech",
+    0.029
+   ]
+  ]
+ },
+ {
+  "name": "cheer_2",
+  "type": "sfx",
+  "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cheer_2.mp3",
+  "bytes": 48944,
+  "seconds": 3.0,
+  "tags": [
+   [
+    "Crowd",
+    0.199
+   ],
+   [
+    "Screaming",
+    0.195
+   ],
+   [
+    "Children shouting",
+    0.152
+   ],
+   [
+    "Cheering",
+    0.135
+   ],
+   [
+    "Whoop",
+    0.058
+   ],
+   [
+    "Yell",
+    0.056
+   ],
+   [
+    "Speech",
+    0.048
+   ],
+   [
+    "Grunt",
+    0.027
+   ]
+  ]
+ },
+ {
+  "name": "rewind_1",
+  "type": "sfx",
+  "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "rewind_1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Squeak",
+    0.23
+   ],
+   [
+    "Vehicle horn, car horn, honking",
+    0.125
+   ],
+   [
+    "Sound effect",
+    0.096
+   ],
+   [
+    "Cacophony",
+    0.045
+   ],
+   [
+    "Music",
+    0.034
+   ],
+   [
+    "Speech",
+    0.015
+   ],
+   [
+    "Scratch",
+    0.011
+   ],
+   [
+    "Inside, small room",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "rewind_2",
+  "type": "sfx",
+  "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "rewind_2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Sound effect",
+    0.315
+   ],
+   [
+    "Music",
+    0.099
+   ],
+   [
+    "Cacophony",
+    0.073
+   ],
+   [
+    "Squeak",
+    0.057
+   ],
+   [
+    "Vehicle horn, car horn, honking",
+    0.037
+   ],
+   [
+    "Scratch",
+    0.015
+   ],
+   [
+    "Speech",
+    0.015
+   ],
+   [
+    "Musical instrument",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "pat_1",
+  "type": "sfx",
+  "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "pat_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Crunch",
+    0.088
+   ],
+   [
+    "Tearing",
+    0.082
+   ],
+   [
+    "Scrape",
+    0.052
+   ],
+   [
+    "Sound effect",
+    0.049
+   ],
+   [
+    "Crackle",
+    0.028
+   ],
+   [
+    "Speech",
+    0.023
+   ],
+   [
+    "Shuffling cards",
+    0.017
+   ],
+   [
+    "Crumpling, crinkling",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "pat_2",
+  "type": "sfx",
+  "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "pat_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.054
+   ],
+   [
+    "Tearing",
+    0.051
+   ],
+   [
+    "Scrape",
+    0.049
+   ],
+   [
+    "Crunch",
+    0.046
+   ],
+   [
+    "Shuffling cards",
+    0.04
+   ],
+   [
+    "Scissors",
+    0.032
+   ],
+   [
+    "Crackle",
+    0.028
+   ],
+   [
+    "Speech",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "body_thud_1",
+  "type": "sfx",
+  "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "body_thud_1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Knock",
+    0.567
+   ],
+   [
+    "Door",
+    0.034
+   ],
+   [
+    "Sound effect",
+    0.032
+   ],
+   [
+    "Speech",
+    0.017
+   ],
+   [
+    "Tap",
+    0.013
+   ],
+   [
+    "Inside, small room",
+    0.01
+   ],
+   [
+    "Music",
+    0.009
+   ],
+   [
+    "Slam",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "body_thud_2",
+  "type": "sfx",
+  "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "body_thud_2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Sound effect",
+    0.199
+   ],
+   [
+    "Music",
+    0.102
+   ],
+   [
+    "Speech",
+    0.027
+   ],
+   [
+    "Silence",
+    0.024
+   ],
+   [
+    "Musical instrument",
+    0.023
+   ],
+   [
+    "Knock",
+    0.017
+   ],
+   [
+    "Heart murmur",
+    0.016
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "kneel_1",
+  "type": "sfx",
+  "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "kneel_1.mp3",
+  "bytes": 21358,
+  "seconds": 1.28,
+  "tags": [
+   [
+    "Heart sounds, heartbeat",
+    0.057
+   ],
+   [
+    "Speech",
+    0.05
+   ],
+   [
+    "Music",
+    0.043
+   ],
+   [
+    "Sound effect",
+    0.034
+   ],
+   [
+    "Inside, small room",
+    0.02
+   ],
+   [
+    "Gasp",
+    0.02
+   ],
+   [
+    "Slam",
+    0.019
+   ],
+   [
+    "Throbbing",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "kneel_2",
+  "type": "sfx",
+  "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "kneel_2.mp3",
+  "bytes": 21358,
+  "seconds": 1.28,
+  "tags": [
+   [
+    "Speech",
+    0.054
+   ],
+   [
+    "Slam",
+    0.053
+   ],
+   [
+    "Bang",
+    0.038
+   ],
+   [
+    "Sound effect",
+    0.03
+   ],
+   [
+    "Scrape",
+    0.021
+   ],
+   [
+    "Door",
+    0.02
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.02
+   ],
+   [
+    "Explosion",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "pop_1",
+  "type": "sfx",
+  "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "pop_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Plop",
+    0.799
+   ],
+   [
+    "Music",
+    0.044
+   ],
+   [
+    "Speech",
+    0.039
+   ],
+   [
+    "Sound effect",
+    0.028
+   ],
+   [
+    "Inside, small room",
+    0.006
+   ],
+   [
+    "Male speech, man speaking",
+    0.006
+   ],
+   [
+    "Beep, bleep",
+    0.004
+   ],
+   [
+    "Silence",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "pop_2",
+  "type": "sfx",
+  "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "pop_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Plop",
+    0.939
+   ],
+   [
+    "Music",
+    0.05
+   ],
+   [
+    "Speech",
+    0.047
+   ],
+   [
+    "Sound effect",
+    0.026
+   ],
+   [
+    "Inside, small room",
+    0.006
+   ],
+   [
+    "Vehicle",
+    0.006
+   ],
+   [
+    "Drip",
+    0.004
+   ],
+   [
+    "Male speech, man speaking",
+    0.004
+   ]
+  ]
+ }
+]
