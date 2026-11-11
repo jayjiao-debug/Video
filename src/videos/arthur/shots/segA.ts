@@ -23,6 +23,7 @@ import React from "react";
 import * as THREE from "three";
 import { SEGMENTS, FPS, h, lin, lerp, smooth, clamp01, spl, camMix, hash, easeOutQuad, easeInQuad, easeOutCubic, easeInOutCubic, easeOutBack, type Segment, type Pose, type CamPose, type Vec3 } from "../story";
 import { COVER_OV, type World } from "../world";
+import { TXT, TAG_X } from "../lang";
 import { PEOPLE, type Person } from "../people";
 import { V, yawTo, lerpA, lid, accent, heads, walkAlong, walkTime, hopArc, SPOT, STAGE, tug, pullOut, pullOutAfter, bow, cam, type Rig, type RigState, type RigHead } from "./common";
 import { Mark, Burst, Crown, Flush } from "../overlay";
@@ -325,8 +326,8 @@ function shotYard(w: World, f: number): Pose {
 
   // ---- overlays
   const ov: React.ReactNode[] = [
-    h(CornerTag, { key: "t1", at: T.tag1, out: T.tag2 - 6, text: "《亚瑟王之死》", icon: "none", tone: "white", y: 120, frame: f }),
-    h(CornerTag, { key: "t2", at: T.tag2, out: T.push0 - 2, text: "伦敦", icon: "none", tone: "white", y: 120, frame: f }),
+    h(CornerTag, { key: "t1", at: T.tag1, out: T.tag2 - 6, text: TXT.book, icon: "none", tone: "white", x: TAG_X, y: 120, frame: f }),
+    h(CornerTag, { key: "t2", at: T.tag2, out: T.push0 - 2, text: TXT.london, icon: "none", tone: "white", x: TAG_X, y: 120, frame: f }),
   ];
   if (f >= T.land && f < T.land + 9) {
     const l = w.project([-0.8, 0.05, 0.5]), r = w.project([0.8, 0.05, 0.5]);

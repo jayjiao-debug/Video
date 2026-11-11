@@ -24,6 +24,7 @@
 import React from "react";
 import * as THREE from "three";
 import type { World } from "../world";
+import { EN, TXT, TAG_X } from "../lang";
 import { SEGMENTS, FPS, h, lin, smooth, lerp, clamp01, easeOutCubic, easeInOutCubic, hash, camMix, type Segment, type Pose, type CamPose, type Vec3 } from "../story";
 import { PEOPLE, SPOT, STAGE, V, lerpA, lid, accent, heads, walkAlong, hopArc, pullOut, pullOutAfter, raisePoint, rigWalk, cam, type Rig, type RigState, type RigHead } from "./common";
 import { PullCounter, Mark, Burst, NameTag } from "../overlay";
@@ -125,7 +126,9 @@ function arthurArrives(w: World, f: number, extra: Partial<RigState> = {}) {
   const stride = 0.2, pose = a.moving ? { kind: "walk" as const, phase: (a.d / ((2 * stride) / 0.6)) % 1, stride, amount: 1.15 } : a.pose;
   return w.actor(PEOPLE.arthur).set({ at: a.at, facing: a.facing, pose, expr: "smile", blink: bl(f, 1), visible: true, ...extra });
 }
-const tagNew = (f: number) => h(CornerTag, { key: "ny", at: 454, out: 583, text: "新年", icon: "none", tone: "white", frame: f });
+// the name tags stay inside the frame: the English names are wider (ARTHUR; KAY over "Arthur's big brother")
+const NAME_A_MAX = EN ? 810 : 930, NAME_K_MIN = EN ? 340 : 250;
+const tagNew = (f: number) => h(CornerTag, { key: "ny", at: 454, out: 583, text: TXT.newYear, icon: "none", tone: "white", x: TAG_X, frame: f });
 
 const fieldWide: Shot = (w, f) => {
   const c = camMix(cam([-14.75, 1.55, 8.9], [-15.55, 0.8, 0], 48), cam([-17.62, 1.45, 7.6], [-17.72, 0.9, 0.5], 44), smooth(lin(f, 440, 492)));
@@ -161,8 +164,8 @@ const names: Shot = (w, f) => {
   return {
     camera: c, focus: [-17.5, 1],
     overlays: frag(tagNew(f),
-      h(NameTag, { key: "na", at: F.names, out: 541, x: Math.min(ha.x, 930), y: ha.y - 120, text: "亚瑟", frame: f }),
-      h(NameTag, { key: "nk", at: F.tagKay, out: 541, x: Math.max(hk.x, 250), y: hk.y - 150, text: "凯", sub: "亚瑟的哥哥", frame: f })),
+      h(NameTag, { key: "na", at: F.names, out: 541, x: Math.min(ha.x, NAME_A_MAX), y: ha.y - 120, text: TXT.arthur, frame: f }),
+      h(NameTag, { key: "nk", at: F.tagKay, out: 541, x: Math.max(hk.x, NAME_K_MIN), y: hk.y - 150, text: TXT.kay, sub: TXT.kaySub, frame: f })),
   };
 };
 
@@ -200,8 +203,8 @@ const knight: Shot = (w, f) => {
   return {
     camera: c, focus: [-17.5, 1],
     overlays: frag(tagNew(f),
-      h(NameTag, { key: "na", at: F.names, out: 541, x: Math.min(ha.x, 930), y: ha.y - 120, text: "亚瑟", frame: f }),
-      h(NameTag, { key: "nk", at: F.tagKay, out: 541, x: Math.max(hk.x, 250), y: hk.y - 150, text: "凯", sub: "亚瑟的哥哥", frame: f }),
+      h(NameTag, { key: "na", at: F.names, out: 541, x: Math.min(ha.x, NAME_A_MAX), y: ha.y - 120, text: TXT.arthur, frame: f }),
+      h(NameTag, { key: "nk", at: F.tagKay, out: 541, x: Math.max(hk.x, NAME_K_MIN), y: hk.y - 150, text: TXT.kay, sub: TXT.kaySub, frame: f }),
       h(Burst, { key: "b1", at: 528, x: helm.x - 165, y: helm.y - 110, r: 90, n: 8, frame: f }),
       h(Burst, { key: "b2", at: 539, x: helm.x + 150, y: helm.y - 140, r: 70, n: 6, color: "#ffffff", frame: f })),
   };

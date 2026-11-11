@@ -5,6 +5,7 @@
 // P = SEG.pose(w, f); w.endFrame(P). <Inner> applies P.post on the chain N8AO -> InkPass -> lens blur -> bloom ->
 // NEUTRAL tone mapping -> grade. The composer has a stencil buffer (the rig figures layer their heads with it).
 // DOM layers on top: P.overlays, the caption, P.top.
+// Language: input prop lang: "en" = the English version (lang.ts): English captions, tags, stamps and inscription.
 // Debug input props: nopost (raw render), kick: n (extra advances per frame), nocap (no captions), dbg (timing logs).
 // Covers (world.ts): zoom: z (< 1 shows more around the same frame), sx / sy (move the picture right / down by that
 // fraction of the frame), ov (the size of the hook's crown and "?" icons, which do not shrink with zoom). With nocap
@@ -24,6 +25,8 @@ import { FONT_STACK, COL, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
 import { W, H, TOTAL, CAPTION_Y, SEGMENTS, clamp01, easeOutBack, type Pose, type Segment } from "./story";
 import { captionAt, captionRuns, TRAILING_PUNCT } from "./captions";
+import { captionAtEN } from "./captions_en";
+import { EN } from "./lang";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -148,18 +151,20 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
  *  feathered shade; centred at y 70 %; trailing ？！，。： pulled back by half an em; a small pop-in per group */
 export const Caption: React.FC<{ f: number }> = ({ f }) => {
   useOverlayFont();
-  const c = captionAt(f);
+  const en = EN ? captionAtEN(f) : null;
+  const c = EN ? en : captionAt(f);
   if (!c) return null;
   const k = c.from === 0 ? 1 : clamp01((f - c.from + 1) / 5);
   const s = c.from === 0 ? 1 : 0.86 + 0.14 * easeOutBack(k, 2.2), o = c.from === 0 ? 1 : clamp01((f - c.from + 1) / 2.5);
   const runs = captionRuns(c.text);
-  const last = runs[runs.length - 1], lastCh = last.text.slice(-1), pull = TRAILING_PUNCT.includes(lastCh);
+  // (English: ASCII punctuation is narrow, nothing to pull back; the chunk carries its own size and width)
+  const last = runs[runs.length - 1], lastCh = last.text.slice(-1), pull = !EN && TRAILING_PUNCT.includes(lastCh);
   if (pull) last.text = last.text.slice(0, -1);
   const len = [...c.text.replace(/[【】]/g, "")].length;
-  const shadeW = 150 + len * 68;
+  const shadeW = en ? 170 + en.w * 1.08 : 150 + len * 68;
   const edge = "0 0 2px rgba(8,9,16,0.95), 0 0 5px rgba(8,9,16,0.75), 0 2px 12px rgba(8,9,16,0.55), 0 4px 26px rgba(8,9,16,0.35)";
   const text: React.CSSProperties = {
-    fontFamily: FONT_STACK, fontWeight: 700, fontSize: 64, lineHeight: 1, letterSpacing: 2, whiteSpace: "nowrap", color: COL.white, textShadow: edge,
+    fontFamily: FONT_STACK, fontWeight: 700, fontSize: en ? en.px : 64, lineHeight: 1, letterSpacing: en ? 0.5 : 2, whiteSpace: "nowrap", color: COL.white, textShadow: edge,
   };
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>

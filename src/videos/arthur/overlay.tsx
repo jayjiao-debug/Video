@@ -24,6 +24,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, spring } from "remotion";
 import { COL, PUNCH, SNAP, ts, useOverlayFont } from "../group/kit/overlay";
+import { EN, TXT } from "./lang";
 
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 const eIn = (x: number) => Math.pow(clamp01(x), 3);
@@ -61,9 +62,9 @@ export const PullCounter: React.FC<PullCounterProps> = ({ n, at, out, x = 540, y
       <div style={{ position: "absolute", left: x, top: y, width: 0, height: 0, transform: `scale(${s})`, opacity: o }}>
         <div style={{ position: "absolute", left: -330, top: -150, width: 660, height: 330, background: "radial-gradient(closest-side, rgba(10,12,22,0.5) 0%, rgba(10,12,22,0.46) 50%, rgba(10,12,22,0.2) 80%, rgba(10,12,22,0) 100%)", opacity: clamp01(k) }} />
         <div style={{ position: "absolute", left: 0, top: 0, transform: `translate(-50%,-50%) scale(${0.6 + 0.4 * k})`, display: "flex", alignItems: "center", gap: 14, whiteSpace: "nowrap" }}>
-          <span style={ts(96, COL.white)}>第</span>
+          <span style={ts(EN ? 84 : 96, COL.white)}>{TXT.pull[0]}</span>
           <span style={{ ...ts(230, COL.gold), display: "inline-block", transform: `scale(${0.3 + 0.7 * kn}) rotate(${(1 - Math.min(1, kn)) * -14}deg)` }}>{String(n)}</span>
-          <span style={ts(96, COL.white)}>次</span>
+          {TXT.pull[1] ? <span style={ts(96, COL.white)}>{TXT.pull[1]}</span> : null}
         </div>
         {Array.from({ length: n }, (_, i) => {
           const ki = i === n - 1 ? springAt(f, at + 4, SNAP) : 1;
@@ -154,7 +155,7 @@ export const NameTag: React.FC<NameTagProps> = ({ at, out, x, y, text, sub, size
       <div style={{ position: "absolute", left: x, top: y, width: 0, height: 0, opacity: 1 - leave }}>
         <div style={{ position: "absolute", left: 0, top: 0, transform: `translate(-50%,-50%) scale(${(0.5 + 0.5 * k) * (1 - leave)})`, display: "flex", flexDirection: "column", alignItems: "center", whiteSpace: "nowrap" }}>
           <span style={ts(size, color)}>{text}</span>
-          {sub ? <span style={{ ...ts(Math.round(size * 0.5), COL.white), marginTop: -6, transform: `scale(${ks})`, display: "inline-block" }}>{sub}</span> : null}
+          {sub ? <span style={{ ...ts(Math.round(size * 0.5), COL.white), marginTop: EN ? 22 : -6, transform: `scale(${ks})`, display: "inline-block" }}>{sub}</span> : null}
         </div>
       </div>
     </AbsoluteFill>

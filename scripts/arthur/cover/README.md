@@ -28,6 +28,10 @@ The pictures are not kept in the repository (`*.png` is ignored here). To make t
    the scrim behind the type, the lines with their sizes, and the anchor (the middle of the lines and the top of the
    first one).
 
+The English cover (YouTube Shorts, 9:16 only): the same clean still with `python3 cover_text.py spec_en.json`
+(`arthur_cover_en_9x16.png`, PULLED IT OUT. / PUT IT BACK?). Latin capitals in this face are wide, so the two lines are
+94 and 111 px tall, smaller than the Chinese glyphs, and keep 7.8 % from the sides.
+
 What the script checks and prints: every line is centred by its ink, not by its advance width (a line that ends in a
 full-width ？ would otherwise sit left of centre), and the margins of the type. The type keeps at least 6 % from every
 edge, the glyphs are 120 to 160 px tall, and on the two Douyin covers the lower 18 % holds no type.
