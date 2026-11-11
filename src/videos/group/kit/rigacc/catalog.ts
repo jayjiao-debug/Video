@@ -2,7 +2,7 @@
 // scripts/rig3d/ go through this list, so an accessory that is listed here is checked with the rest.
 //   rc.add(look, { acc: accessories("suit", "glasses.square", "briefcase") })
 import type { Acc } from "../rig3d";
-import { glasses, moustache, topHat, headphones, tie, backpack, briefcase, hardHat, chefHat, gradCap, peakedCap, labCoat, cowboyHat, apron, faceMask, coffeeCup, phone, pen } from "./index";
+import { glasses, moustache, topHat, headphones, tie, backpack, briefcase, hardHat, chefHat, gradCap, peakedCap, labCoat, cowboyHat, apron, faceMask, coffeeCup, phone, pen, finger } from "./index";
 
 export type AccEntry = { zh: string; role: string; make: () => Acc[] };
 export const ACCESSORIES: Record<string, AccEntry> = {
@@ -34,6 +34,7 @@ export const ACCESSORIES: Record<string, AccEntry> = {
   coffeeCup: { zh: "咖啡杯", role: "上班族、熬夜的学生", make: () => [coffeeCup()] },
   phone: { zh: "手机", role: "低头族、打电话的人（姿势 phone 会把它举到脸前或耳边，见 RIG3D_poses.md）", make: () => [phone()] },
   pen: { zh: "笔", role: "学生、记笔记的人（姿势 write 会让它在桌面上写，见 RIG3D_poses.md）", make: () => [pen()] },
+  finger: { zh: "竖起的食指", role: "让人别出声的人、保密的人（姿势 shh 会把手举到嘴前、食指竖在嘴唇上，表情用 hush，见 RIG3D_poses.md）", make: () => [finger()] },
 };
 /** the accessories of the named catalogue entries, in order */
 export const accessories = (...names: string[]): Acc[] => names.flatMap((n) => {

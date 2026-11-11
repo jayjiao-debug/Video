@@ -18,6 +18,7 @@ import { RigCast, type Rig, type Hat, type Acc, type RigPoseKind, type RigSeat, 
 import { accessories } from "../kit/rigacc/catalog";
 import { phone } from "../kit/rigacc/phone";
 import { pen } from "../kit/rigacc/pen";
+import { finger } from "../kit/rigacc/finger";
 import type { Expr } from "../kit/toon";
 import { lookOf, type LookKey } from "./rig3d_common";
 
@@ -25,7 +26,7 @@ const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const rad = (d: number) => (d * Math.PI) / 180;
 
 /** one person. seat: "chair" = on the chair, "desk" = on the chair at the desk, "none" (default) = standing.
- *  acc: accessories by name ("phone", "pen": in the pose's own hand; "phone0" / "phone1" / "pen0" / "pen1" = in that
+ *  acc: accessories by name ("phone", "pen", "finger": in the pose's own hand; "phone0" / "phone1" / "pen0" / "pen1" / "finger0" / "finger1" = in that
  *  hand; any other name is taken from the catalogue, kit/rigacc/catalog.ts). facing = degrees the person (and the furniture) is turned from the row's direction. x / z = the place in
  *  the row (m; default: 0.95 m apart, centred). */
 export type PoseWho = {
@@ -143,6 +144,7 @@ export function poseLab(o0: PoseLabOpts) {
     const own = wh.arm, last = a.slice(-1), hd = last === "0" ? 0 : last === "1" ? 1 : undefined;
     if (a.startsWith("phone")) return phone({ hand: hd ?? own ?? 1 });
     if (a.startsWith("pen")) return pen({ hand: hd ?? own ?? 0 });
+    if (a.startsWith("finger")) return finger({ hand: hd ?? own ?? 1 });
     return accessories(a);
   }).flat();
   for (const pr of o.props ?? []) {
