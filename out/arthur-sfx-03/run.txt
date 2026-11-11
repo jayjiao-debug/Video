@@ -1,0 +1,855 @@
+plan: {'tier': 'starter', 'character_count': 23315, 'character_limit': 30001, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "field_1", "type": "sfx", "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "field_1.mp3", "bytes": 129192}
+{"name": "field_2", "type": "sfx", "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "field_2.mp3", "bytes": 129192}
+{"name": "field_3", "type": "sfx", "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "field_3.mp3", "bytes": 129192}
+{"name": "angry_1", "type": "sfx", "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "angry_1.mp3", "bytes": 81127}
+{"name": "angry_2", "type": "sfx", "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "angry_2.mp3", "bytes": 81127}
+{"name": "angry_3", "type": "sfx", "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "angry_3.mp3", "bytes": 81127}
+{"name": "grumble_1", "type": "sfx", "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "grumble_1.mp3", "bytes": 65244}
+{"name": "grumble_2", "type": "sfx", "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "grumble_2.mp3", "bytes": 65244}
+{"name": "murmur_1", "type": "sfx", "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "murmur_1.mp3", "bytes": 81127}
+{"name": "murmur_2", "type": "sfx", "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "murmur_2.mp3", "bytes": 81127}
+{"name": "wind_1", "type": "sfx", "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "wind_1.mp3", "bytes": 97009}
+{"name": "wind_2", "type": "sfx", "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "wind_2.mp3", "bytes": 97009}
+{"name": "birds_1", "type": "sfx", "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "birds_1.mp3", "bytes": 65244}
+{"name": "birds_2", "type": "sfx", "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "birds_2.mp3", "bytes": 65244}
+{"name": "clap_1", "type": "sfx", "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "clap_1.mp3", "bytes": 33061}
+{"name": "clap_2", "type": "sfx", "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "clap_2.mp3", "bytes": 33061}
+{"name": "groan_1", "type": "sfx", "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "groan_1.mp3", "bytes": 33061}
+{"name": "groan_2", "type": "sfx", "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "groan_2.mp3", "bytes": 33061}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 4417.74it/s]
+field_1 [['Speech', 0.724], ['Applause', 0.553], ['Crowd', 0.339], ['Clapping', 0.256], ['Run', 0.22], ['Cheering', 0.202], ['Outside, urban or manmade', 0.09], ['Male speech, man speaking', 0.05]]
+field_2 [['Applause', 0.621], ['Speech', 0.598], ['Clapping', 0.285], ['Crowd', 0.284], ['Cheering', 0.16], ['Sound effect', 0.056], ['Male speech, man speaking', 0.039], ['Run', 0.036]]
+field_3 [['Applause', 0.761], ['Speech', 0.46], ['Clapping', 0.179], ['Music', 0.098], ['Crowd', 0.09], ['Male speech, man speaking', 0.058], ['Cheering', 0.048], ['Sound effect', 0.039]]
+angry_1 [['Crowd', 0.358], ['Speech', 0.275], ['Battle cry', 0.236], ['Whoop', 0.075], ['Cheering', 0.037], ['Male singing', 0.032], ['Yell', 0.032], ['Bellow', 0.031]]
+angry_2 [['Speech', 0.704], ['Crowd', 0.363], ['Cheering', 0.148], ['Children shouting', 0.105], ['Whoop', 0.104], ['Yell', 0.055], ['Outside, urban or manmade', 0.053], ['Bellow', 0.035]]
+angry_3 [['Crowd', 0.798], ['Battle cry', 0.5], ['Cheering', 0.165], ['Children shouting', 0.043], ['Whoop', 0.043], ['Yell', 0.032], ['Speech', 0.032], ['Screaming', 0.024]]
+grumble_1 [['Grunt', 0.265], ['Groan', 0.248], ['Sound effect', 0.182], ['Screaming', 0.072], ['Speech', 0.037], ['Yell', 0.031], ['Bellow', 0.028], ['Gasp', 0.023]]
+grumble_2 [['Groan', 0.427], ['Grunt', 0.259], ['Speech', 0.213], ['Sound effect', 0.095], ['Wail, moan', 0.077], ['Male speech, man speaking', 0.044], ['Gasp', 0.044], ['Sigh', 0.019]]
+murmur_1 [['Speech', 0.543], ['Crowd', 0.049], ['Animal', 0.031], ['Inside, public space', 0.028], ['Run', 0.028], ['Male speech, man speaking', 0.027], ['Outside, urban or manmade', 0.026], ['Printer', 0.022]]
+murmur_2 [['Speech', 0.727], ['Inside, public space', 0.057], ['Crowd', 0.026], ['Vehicle', 0.025], ['Slap, smack', 0.02], ['Male speech, man speaking', 0.02], ['Outside, urban or manmade', 0.019], ['Animal', 0.018]]
+wind_1 [['Sonar', 0.809], ['Silence', 0.052], ['Animal', 0.046], ['Music', 0.026], ['Sound effect', 0.019], ['Whale vocalization', 0.016], ['Stomach rumble', 0.011], ['Sine wave', 0.01]]
+wind_2 [['Sound effect', 0.211], ['Sonar', 0.136], ['Whoosh, swoosh, swish', 0.098], ['Silence', 0.014], ['Music', 0.014], ['Snort', 0.008], ['Whale vocalization', 0.006], ['Hum', 0.006]]
+birds_1 [['Chirp, tweet', 0.615], ['Bird', 0.504], ['Bird vocalization, bird call, bird song', 0.351], ['Domestic animals, pets', 0.045], ['Inside, small room', 0.027], ['Animal', 0.02], ['Speech', 0.016], ['Squawk', 0.015]]
+birds_2 [['Bird', 0.635], ['Chirp, tweet', 0.559], ['Bird vocalization, bird call, bird song', 0.436], ['Domestic animals, pets', 0.027], ['Mouse', 0.023], ['Animal', 0.019], ['Owl', 0.016], ['Inside, small room', 0.016]]
+clap_1 [['Sound effect', 0.114], ['Clapping', 0.085], ['Grunt', 0.083], ['Screaming', 0.068], ['Crowd', 0.057], ['Speech', 0.039], ['Cheering', 0.035], ['Whoop', 0.021]]
+clap_2 [['Clapping', 0.463], ['Sound effect', 0.179], ['Applause', 0.072], ['Crowd', 0.055], ['Speech', 0.041], ['Chopping (food)', 0.032], ['Cheering', 0.017], ['Chop', 0.011]]
+groan_1 [['Grunt', 0.233], ['Groan', 0.197], ['Bellow', 0.172], ['Sound effect', 0.17], ['Whoop', 0.151], ['Yell', 0.136], ['Speech', 0.123], ['Screaming', 0.08]]
+groan_2 [['Groan', 0.235], ['Grunt', 0.233], ['Sound effect', 0.178], ['Sigh', 0.101], ['Speech', 0.099], ['Wail, moan', 0.098], ['Gasp', 0.052], ['Male speech, man speaking', 0.033]]
+[
+ {
+  "name": "field_1",
+  "type": "sfx",
+  "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "field_1.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Speech",
+    0.724
+   ],
+   [
+    "Applause",
+    0.553
+   ],
+   [
+    "Crowd",
+    0.339
+   ],
+   [
+    "Clapping",
+    0.256
+   ],
+   [
+    "Run",
+    0.22
+   ],
+   [
+    "Cheering",
+    0.202
+   ],
+   [
+    "Outside, urban or manmade",
+    0.09
+   ],
+   [
+    "Male speech, man speaking",
+    0.05
+   ]
+  ]
+ },
+ {
+  "name": "field_2",
+  "type": "sfx",
+  "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "field_2.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Applause",
+    0.621
+   ],
+   [
+    "Speech",
+    0.598
+   ],
+   [
+    "Clapping",
+    0.285
+   ],
+   [
+    "Crowd",
+    0.284
+   ],
+   [
+    "Cheering",
+    0.16
+   ],
+   [
+    "Sound effect",
+    0.056
+   ],
+   [
+    "Male speech, man speaking",
+    0.039
+   ],
+   [
+    "Run",
+    0.036
+   ]
+  ]
+ },
+ {
+  "name": "field_3",
+  "type": "sfx",
+  "text": "Crowd of spectators at an outdoor medieval tournament: a few hundred people cheering, clapping and chattering happily, lively and continuous, heard from a short distance. No music, no horses, no single voice in the foreground.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "field_3.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Applause",
+    0.761
+   ],
+   [
+    "Speech",
+    0.46
+   ],
+   [
+    "Clapping",
+    0.179
+   ],
+   [
+    "Music",
+    0.098
+   ],
+   [
+    "Crowd",
+    0.09
+   ],
+   [
+    "Male speech, man speaking",
+    0.058
+   ],
+   [
+    "Cheering",
+    0.048
+   ],
+   [
+    "Sound effect",
+    0.039
+   ]
+  ]
+ },
+ {
+  "name": "angry_1",
+  "type": "sfx",
+  "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "angry_1.mp3",
+  "bytes": 81127,
+  "seconds": 5.0,
+  "tags": [
+   [
+    "Crowd",
+    0.358
+   ],
+   [
+    "Speech",
+    0.275
+   ],
+   [
+    "Battle cry",
+    0.236
+   ],
+   [
+    "Whoop",
+    0.075
+   ],
+   [
+    "Cheering",
+    0.037
+   ],
+   [
+    "Male singing",
+    0.032
+   ],
+   [
+    "Yell",
+    0.032
+   ],
+   [
+    "Bellow",
+    0.031
+   ]
+  ]
+ },
+ {
+  "name": "angry_2",
+  "type": "sfx",
+  "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "angry_2.mp3",
+  "bytes": 81127,
+  "seconds": 5.0,
+  "tags": [
+   [
+    "Speech",
+    0.704
+   ],
+   [
+    "Crowd",
+    0.363
+   ],
+   [
+    "Cheering",
+    0.148
+   ],
+   [
+    "Children shouting",
+    0.105
+   ],
+   [
+    "Whoop",
+    0.104
+   ],
+   [
+    "Yell",
+    0.055
+   ],
+   [
+    "Outside, urban or manmade",
+    0.053
+   ],
+   [
+    "Bellow",
+    0.035
+   ]
+  ]
+ },
+ {
+  "name": "angry_3",
+  "type": "sfx",
+  "text": "An angry crowd of townspeople shouting and protesting loudly outdoors, men and women yelling in outrage, a continuous uproar. No music, no single voice in the foreground.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "angry_3.mp3",
+  "bytes": 81127,
+  "seconds": 5.0,
+  "tags": [
+   [
+    "Crowd",
+    0.798
+   ],
+   [
+    "Battle cry",
+    0.5
+   ],
+   [
+    "Cheering",
+    0.165
+   ],
+   [
+    "Children shouting",
+    0.043
+   ],
+   [
+    "Whoop",
+    0.043
+   ],
+   [
+    "Yell",
+    0.032
+   ],
+   [
+    "Speech",
+    0.032
+   ],
+   [
+    "Screaming",
+    0.024
+   ]
+  ]
+ },
+ {
+  "name": "grumble_1",
+  "type": "sfx",
+  "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "grumble_1.mp3",
+  "bytes": 65244,
+  "seconds": 4.0,
+  "tags": [
+   [
+    "Grunt",
+    0.265
+   ],
+   [
+    "Groan",
+    0.248
+   ],
+   [
+    "Sound effect",
+    0.182
+   ],
+   [
+    "Screaming",
+    0.072
+   ],
+   [
+    "Speech",
+    0.037
+   ],
+   [
+    "Yell",
+    0.031
+   ],
+   [
+    "Bellow",
+    0.028
+   ],
+   [
+    "Gasp",
+    0.023
+   ]
+  ]
+ },
+ {
+  "name": "grumble_2",
+  "type": "sfx",
+  "text": "A small group of five older men grumbling and muttering indignantly, annoyed scoffs and harrumphs, low voices, continuous. No clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "grumble_2.mp3",
+  "bytes": 65244,
+  "seconds": 4.0,
+  "tags": [
+   [
+    "Groan",
+    0.427
+   ],
+   [
+    "Grunt",
+    0.259
+   ],
+   [
+    "Speech",
+    0.213
+   ],
+   [
+    "Sound effect",
+    0.095
+   ],
+   [
+    "Wail, moan",
+    0.077
+   ],
+   [
+    "Male speech, man speaking",
+    0.044
+   ],
+   [
+    "Gasp",
+    0.044
+   ],
+   [
+    "Sigh",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "murmur_1",
+  "type": "sfx",
+  "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "murmur_1.mp3",
+  "bytes": 81127,
+  "seconds": 5.0,
+  "tags": [
+   [
+    "Speech",
+    0.543
+   ],
+   [
+    "Crowd",
+    0.049
+   ],
+   [
+    "Animal",
+    0.031
+   ],
+   [
+    "Inside, public space",
+    0.028
+   ],
+   [
+    "Run",
+    0.028
+   ],
+   [
+    "Male speech, man speaking",
+    0.027
+   ],
+   [
+    "Outside, urban or manmade",
+    0.026
+   ],
+   [
+    "Printer",
+    0.022
+   ]
+  ]
+ },
+ {
+  "name": "murmur_2",
+  "type": "sfx",
+  "text": "A large crowd outdoors murmuring quietly in anticipation, hushed excited chatter, continuous and even. No music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "murmur_2.mp3",
+  "bytes": 81127,
+  "seconds": 5.0,
+  "tags": [
+   [
+    "Speech",
+    0.727
+   ],
+   [
+    "Inside, public space",
+    0.057
+   ],
+   [
+    "Crowd",
+    0.026
+   ],
+   [
+    "Vehicle",
+    0.025
+   ],
+   [
+    "Slap, smack",
+    0.02
+   ],
+   [
+    "Male speech, man speaking",
+    0.02
+   ],
+   [
+    "Outside, urban or manmade",
+    0.019
+   ],
+   [
+    "Animal",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "wind_1",
+  "type": "sfx",
+  "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "wind_1.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Sonar",
+    0.809
+   ],
+   [
+    "Silence",
+    0.052
+   ],
+   [
+    "Animal",
+    0.046
+   ],
+   [
+    "Music",
+    0.026
+   ],
+   [
+    "Sound effect",
+    0.019
+   ],
+   [
+    "Whale vocalization",
+    0.016
+   ],
+   [
+    "Stomach rumble",
+    0.011
+   ],
+   [
+    "Sine wave",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "wind_2",
+  "type": "sfx",
+  "text": "Soft cold winter wind blowing gently across an empty stone courtyard, quiet and steady. No whistling, no strong gusts, nothing else.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "wind_2.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Sound effect",
+    0.211
+   ],
+   [
+    "Sonar",
+    0.136
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.098
+   ],
+   [
+    "Silence",
+    0.014
+   ],
+   [
+    "Music",
+    0.014
+   ],
+   [
+    "Snort",
+    0.008
+   ],
+   [
+    "Whale vocalization",
+    0.006
+   ],
+   [
+    "Hum",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "birds_1",
+  "type": "sfx",
+  "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "birds_1.mp3",
+  "bytes": 65244,
+  "seconds": 4.0,
+  "tags": [
+   [
+    "Chirp, tweet",
+    0.615
+   ],
+   [
+    "Bird",
+    0.504
+   ],
+   [
+    "Bird vocalization, bird call, bird song",
+    0.351
+   ],
+   [
+    "Domestic animals, pets",
+    0.045
+   ],
+   [
+    "Inside, small room",
+    0.027
+   ],
+   [
+    "Animal",
+    0.02
+   ],
+   [
+    "Speech",
+    0.016
+   ],
+   [
+    "Squawk",
+    0.015
+   ]
+  ]
+ },
+ {
+  "name": "birds_2",
+  "type": "sfx",
+  "text": "Spring morning birdsong: a few small songbirds chirping cheerfully in a garden, light and clear. No other sounds.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "birds_2.mp3",
+  "bytes": 65244,
+  "seconds": 4.0,
+  "tags": [
+   [
+    "Bird",
+    0.635
+   ],
+   [
+    "Chirp, tweet",
+    0.559
+   ],
+   [
+    "Bird vocalization, bird call, bird song",
+    0.436
+   ],
+   [
+    "Domestic animals, pets",
+    0.027
+   ],
+   [
+    "Mouse",
+    0.023
+   ],
+   [
+    "Animal",
+    0.019
+   ],
+   [
+    "Owl",
+    0.016
+   ],
+   [
+    "Inside, small room",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "clap_1",
+  "type": "sfx",
+  "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "clap_1.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Sound effect",
+    0.114
+   ],
+   [
+    "Clapping",
+    0.085
+   ],
+   [
+    "Grunt",
+    0.083
+   ],
+   [
+    "Screaming",
+    0.068
+   ],
+   [
+    "Crowd",
+    0.057
+   ],
+   [
+    "Speech",
+    0.039
+   ],
+   [
+    "Cheering",
+    0.035
+   ],
+   [
+    "Whoop",
+    0.021
+   ]
+  ]
+ },
+ {
+  "name": "clap_2",
+  "type": "sfx",
+  "text": "A handful of people, five or six, clapping happily outdoors with a short cheer. Brief.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "clap_2.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Clapping",
+    0.463
+   ],
+   [
+    "Sound effect",
+    0.179
+   ],
+   [
+    "Applause",
+    0.072
+   ],
+   [
+    "Crowd",
+    0.055
+   ],
+   [
+    "Speech",
+    0.041
+   ],
+   [
+    "Chopping (food)",
+    0.032
+   ],
+   [
+    "Cheering",
+    0.017
+   ],
+   [
+    "Chop",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "groan_1",
+  "type": "sfx",
+  "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "groan_1.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Grunt",
+    0.233
+   ],
+   [
+    "Groan",
+    0.197
+   ],
+   [
+    "Bellow",
+    0.172
+   ],
+   [
+    "Sound effect",
+    0.17
+   ],
+   [
+    "Whoop",
+    0.151
+   ],
+   [
+    "Yell",
+    0.136
+   ],
+   [
+    "Speech",
+    0.123
+   ],
+   [
+    "Screaming",
+    0.08
+   ]
+  ]
+ },
+ {
+  "name": "groan_2",
+  "type": "sfx",
+  "text": "A small crowd lets out a disappointed groan: a collective 'aww' that turns into a short boo. Outdoors, brief.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "groan_2.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Groan",
+    0.235
+   ],
+   [
+    "Grunt",
+    0.233
+   ],
+   [
+    "Sound effect",
+    0.178
+   ],
+   [
+    "Sigh",
+    0.101
+   ],
+   [
+    "Speech",
+    0.099
+   ],
+   [
+    "Wail, moan",
+    0.098
+   ],
+   [
+    "Gasp",
+    0.052
+   ],
+   [
+    "Male speech, man speaking",
+    0.033
+   ]
+  ]
+ }
+]
