@@ -1,187 +1,89 @@
 {
- "id": "arthur-sfx-01",
+ "id": "arthur-sfx-02",
  "tag": true,
  "items": [
   {
    "type": "sfx",
-   "name": "sword_out_a_1",
-   "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+   "name": "sword_thunk_1",
+   "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.",
+   "duration": 0.8,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sword_thunk_2",
+   "text": "A metal sword blade slides into a tight stone slot and stops with a hard solid thunk, metal against stone. Short, dry, close-up foley.",
+   "duration": 0.8,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "slap_1",
+   "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "slap_2",
+   "text": "One quick slap of a palm on a leather scabbard: a short sharp leather smack. One hit only, dry, close.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "boulder_1",
+   "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.",
    "duration": 1.2,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "sword_out_a_2",
-   "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+   "name": "boulder_2",
+   "text": "A big rock slams down onto stone paving with a loud crunchy crack and a heavy thump, bits of gravel scatter. Short, no voices.",
    "duration": 1.2,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "sword_out_b_1",
-   "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "sword_out_b_2",
-   "text": "A steel sword blade pulled quickly out of a slot in a stone: quick metal scrape, then a bright ring. Single short sound effect, dry.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "sword_in_1",
-   "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.",
-   "duration": 1.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "sword_in_2",
-   "text": "A steel sword pushed down into a slot in a stone anvil: short metal scrape ending in one solid heavy clunk. Dry, close, no reverb.",
-   "duration": 1.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "stone_drop_1",
-   "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.",
+   "name": "kneel_b_1",
+   "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.",
    "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "stone_drop_2",
-   "text": "A huge heavy boulder drops onto snowy ground: one deep heavy thud impact with a short low rumble. No voices, no music.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "knock_1",
-   "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "knock_2",
-   "text": "One single firm knock on a thick wooden door with the knuckles. One knock only. Dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "stamp_1",
-   "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "stamp_2",
-   "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "crown_1",
-   "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "crown_2",
-   "text": "A bright magical bell chime: one clear ding with a little sparkle, like winning a prize in a cartoon. Short, clean.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "cheer_1",
-   "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.",
-   "duration": 3.0,
    "influence": 0.5
   },
   {
    "type": "sfx",
-   "name": "cheer_2",
-   "text": "A small crowd of about thirty villagers cheering and whooping happily outdoors, hooray, with some clapping. The cheer starts immediately. No music.",
-   "duration": 3.0,
+   "name": "kneel_b_2",
+   "text": "Thirty people in cloaks and armor kneel down at the same time: a wave of rustling cloth, clinking metal and knees touching the ground. No voices, no music.",
+   "duration": 1.5,
    "influence": 0.5
   },
   {
    "type": "sfx",
-   "name": "rewind_1",
-   "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.",
+   "name": "cheer_b_1",
+   "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.",
+   "duration": 2.5,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "cheer_b_2",
+   "text": "A village crowd bursts into happy cheering and applause, hooray, yay, outdoors. Starts at full volume. No music.",
+   "duration": 2.5,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "rewind_b_1",
+   "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.",
    "duration": 0.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "rewind_2",
-   "text": "Fast tape rewind squeal, a cartoon video rewind effect, very short.",
+   "name": "rewind_b_2",
+   "text": "Video tape rewinding fast: a quick high-pitched whirring chirp sweeping upward. Very short cartoon rewind sound effect.",
    "duration": 0.6,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "pat_1",
-   "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "pat_2",
-   "text": "One soft pat of a hand on a leather belt pouch: dull, quiet, dry. One pat only.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "body_thud_1",
-   "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.",
-   "duration": 0.6,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "body_thud_2",
-   "text": "A person falls flat on their back into soft snow: one muffled soft thump. No voice.",
-   "duration": 0.6,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "kneel_1",
-   "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.",
-   "duration": 1.3,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "kneel_2",
-   "text": "A crowd of people dropping to their knees all at once on stone paving: rustle of cloth and a soft collective thump. No voices, no music.",
-   "duration": 1.3,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "pop_1",
-   "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "pop_2",
-   "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
-   "duration": 0.5,
    "influence": 0.6
   }
  ]
