@@ -1,45 +1,997 @@
 {
- "id": "arthur-en-alex-03",
+ "id": "hongmen-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "words": true,
  "items": [
   {
-   "name": "x10e",
-   "lang": "en",
-   "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "name": "x01",
+   "lang": "zh",
+   "text": "他起身去上厕所，就再也没回来。",
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
     "similarity_boost": 0.8,
     "style": 0.75,
     "speed": 1.2,
     "use_speaker_boost": true
-   }
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
   },
   {
-   "name": "x10f",
-   "lang": "en",
-   "text": "Kay takes it to Dad: \"Dad! The sword! I get to be king!\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "name": "x02",
+   "lang": "zh",
+   "text": "等等，鸿门宴不是有人拔剑要杀他吗？",
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.2,
     "similarity_boost": 0.8,
     "style": 0.75,
     "speed": 1.2,
     "use_speaker_boost": true
-   }
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x03",
+   "lang": "zh",
+   "text": "项羽四十万人要打刘邦，刘邦十万，上门道歉。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x04",
+   "lang": "zh",
+   "text": "酒席上，项羽的谋士范增想杀刘邦，三次举玉佩，项羽没理。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x05",
+   "lang": "zh",
+   "text": "范增出去找人：“大王心软，你去舞剑，杀了刘邦。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x06",
+   "lang": "zh",
+   "text": "那人进来说：“军中没乐子，我舞个剑吧。”他拔剑，第一次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x07",
+   "lang": "zh",
+   "text": "项羽的叔叔也拔剑，护着刘邦，第二次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x08",
+   "lang": "zh",
+   "text": "头天晚上，刘邦刚和他约好做亲家。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x09",
+   "lang": "zh",
+   "text": "刘邦的部下樊哙，撞倒卫兵闯进来。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x10",
+   "lang": "zh",
+   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。生的。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x11",
+   "lang": "zh",
+   "text": "壮士拿盾牌当案板，拔剑切着吃，第三次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x12",
+   "lang": "zh",
+   "text": "吃完数落项羽，他答不上来，只说：“坐。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x13",
+   "lang": "zh",
+   "text": "没坐多久，刘邦起身去上厕所，叫上壮士。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x14",
+   "lang": "zh",
+   "text": "出门刘邦问：“还没告辞，怎么办？”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x15",
+   "lang": "zh",
+   "text": "壮士说：“人家是刀和案板，咱们是鱼肉，告什么辞。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x16",
+   "lang": "zh",
+   "text": "刘邦连车都不要了，只骑一匹马，四个部下跟着跑。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x17",
+   "lang": "zh",
+   "text": "刘邦的谋士等他走远才去送礼，说他喝多了，没法告辞。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x18",
+   "lang": "zh",
+   "text": "项羽问：“人呢？”答：“已经回军营了。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x19",
+   "lang": "zh",
+   "text": "范增收下一对玉酒杯，放地上，拔剑砸了，第四次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x20",
+   "lang": "zh",
+   "text": "四次拔剑，遭殃的只有一条猪腿、一对玉酒杯。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x21",
+   "lang": "zh",
+   "text": "刘邦呢？上厕所去了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x01b",
+   "lang": "zh",
+   "text": "他起身去上厕所，就再也没回来。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x02b",
+   "lang": "zh",
+   "text": "等等，鸿门宴不是有人拔剑要杀他吗？",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x03b",
+   "lang": "zh",
+   "text": "项羽四十万人要打刘邦，刘邦十万，上门道歉。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x04b",
+   "lang": "zh",
+   "text": "酒席上，项羽的谋士范增想杀刘邦，三次举玉佩，项羽没理。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x05b",
+   "lang": "zh",
+   "text": "范增出去找人：“大王心软，你去舞剑，杀了刘邦。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x06b",
+   "lang": "zh",
+   "text": "那人进来说：“军中没乐子，我舞个剑吧。”他拔剑，第一次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x07b",
+   "lang": "zh",
+   "text": "项羽的叔叔也拔剑，护着刘邦，第二次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x08b",
+   "lang": "zh",
+   "text": "头天晚上，刘邦刚和他约好做亲家。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x09b",
+   "lang": "zh",
+   "text": "刘邦的部下樊哙，撞倒卫兵闯进来。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x10b",
+   "lang": "zh",
+   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。生的。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x11b",
+   "lang": "zh",
+   "text": "壮士拿盾牌当案板，拔剑切着吃，第三次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x12b",
+   "lang": "zh",
+   "text": "吃完数落项羽，他答不上来，只说：“坐。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x13b",
+   "lang": "zh",
+   "text": "没坐多久，刘邦起身去上厕所，叫上壮士。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x14b",
+   "lang": "zh",
+   "text": "出门刘邦问：“还没告辞，怎么办？”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x15b",
+   "lang": "zh",
+   "text": "壮士说：“人家是刀和案板，咱们是鱼肉，告什么辞。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x16b",
+   "lang": "zh",
+   "text": "刘邦连车都不要了，只骑一匹马，四个部下跟着跑。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x17b",
+   "lang": "zh",
+   "text": "刘邦的谋士等他走远才去送礼，说他喝多了，没法告辞。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x18b",
+   "lang": "zh",
+   "text": "项羽问：“人呢？”答：“已经回军营了。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x19b",
+   "lang": "zh",
+   "text": "范增收下一对玉酒杯，放地上，拔剑砸了，第四次。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x20b",
+   "lang": "zh",
+   "text": "四次拔剑，遭殃的只有一条猪腿、一对玉酒杯。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x21b",
+   "lang": "zh",
+   "text": "刘邦呢？上厕所去了。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x10p",
+   "lang": "zh",
+   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x10q",
+   "lang": "zh",
+   "text": "生的。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x10pb",
+   "lang": "zh",
+   "text": "项羽先按住剑，再叫他壮士，赏条猪腿。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x10qb",
+   "lang": "zh",
+   "text": "生的。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x08alt",
+   "lang": "zh",
+   "text": "头天晚上，刘邦刚和他约好做庆家。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x08altb",
+   "lang": "zh",
+   "text": "头天晚上，刘邦刚和他约好做庆家。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x09alt",
+   "lang": "zh",
+   "text": "刘邦的部下樊快，撞倒卫兵闯进来。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x09altb",
+   "lang": "zh",
+   "text": "刘邦的部下樊快，撞倒卫兵闯进来。",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x12alt",
+   "lang": "zh",
+   "text": "吃完属落项羽，他答不上来，只说：“坐。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
+  },
+  {
+   "name": "x12altb",
+   "lang": "zh",
+   "text": "吃完属落项羽，他答不上来，只说：“坐。”",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
+    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+    "name": "Xiaoxi - Neutral, Young and Friendly"
+   },
+   "keep": true
   }
  ]
 }
