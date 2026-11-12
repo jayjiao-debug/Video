@@ -1,69 +1,257 @@
 {
- "id": "wanbi-sfx-02",
- "tag": true,
+ "id": "qin-vo-fix-01",
  "items": [
   {
-   "type": "sfx",
-   "name": "hall_r1",
-   "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "type": "dialogue",
+   "name": "dlg_G_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[softly, hopeful] 陛下？今天……还拍吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[quiet, sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[quiet] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[quiet, wistful] 陛下一直，想长生不老。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[gentle] 他没活过五十岁。可他的兵马俑，站了两千多年。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[off-screen, weak, gentle] 这段，也删了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[soft laugh, teary] 不删。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "type": "sfx",
-   "name": "hall_r2",
-   "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "type": "dialogue",
+   "name": "dlg_G_s4243",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4243,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[softly, hopeful] 陛下？今天……还拍吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[quiet, sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[quiet] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[quiet, wistful] 陛下一直，想长生不老。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[gentle] 他没活过五十岁。可他的兵马俑，站了两千多年。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[off-screen, weak, gentle] 这段，也删了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[soft laugh, teary] 不删。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "type": "sfx",
-   "name": "hall_r3",
-   "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.",
-   "duration": 15,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "drone_r1",
-   "text": "A low tense sustained hum, like a large bronze singing bowl ringing softly: one steady mid-low tone with soft overtones, even from start to finish. Not a rumble, no sub-bass, no melody, no beat, no music.",
-   "duration": 6.0,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "drone_r2",
-   "text": "A low tense sustained hum, like a large bronze singing bowl ringing softly: one steady mid-low tone with soft overtones, even from start to finish. Not a rumble, no sub-bass, no melody, no beat, no music.",
-   "duration": 6.0,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "cymbal_r1",
-   "text": "Chinese opera percussion: one crash of a pair of large brass hand cymbals, a bright brassy metallic chang with a short shimmering ring. Brass, not glass. One crash only, no drum, no music.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "cymbal_r2",
-   "text": "Chinese opera percussion: one crash of a pair of large brass hand cymbals, a bright brassy metallic chang with a short shimmering ring. Brass, not glass. One crash only, no drum, no music.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "cauldron_r1",
-   "text": "A heavy bronze cauldron dropped onto a stone floor: a loud metallic clang and thud with a bright short ring, clearly audible in the mid and high range, not only bass. One impact only, no voices, no music.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "cauldron_r2",
-   "text": "A heavy bronze cauldron dropped onto a stone floor: a loud metallic clang and thud with a bright short ring, clearly audible in the mid and high range, not only bass. One impact only, no voices, no music.",
-   "duration": 1.5,
-   "influence": 0.6
+   "type": "dialogue",
+   "name": "dlg_G_s4244",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4244,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[softly, hopeful] 陛下？今天……还拍吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[quiet, sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[quiet] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[quiet, wistful] 陛下一直，想长生不老。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[gentle] 他没活过五十岁。可他的兵马俑，站了两千多年。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[off-screen, weak, gentle] 这段，也删了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[soft laugh, teary] 不删。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   }
  ]
 }
