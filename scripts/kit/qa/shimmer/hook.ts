@@ -1,7 +1,7 @@
 // SHIMMER TEST, part 2: the page hook. It makes ANY preview entry of this repo render one frame K times with the
 // camera jitters of jitter.ts and with single post passes switched off, in ONE page load, WITHOUT a change to the
 // entry or to its harness. shimmer.py writes a two-line wrapper entry
-//     import "<repo>/scripts/qa/shimmer/hook";      // first: it patches before the entry runs
+//     import "<repo>/scripts/kit/qa/shimmer/hook";      // first: it patches before the entry runs
 //     import "<the entry under test>";
 // and renders it with  render.mjs ... --pick 0,1,2,...  and  --opts '{"jit":{...}}'.
 //

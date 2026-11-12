@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
-"""The driver behind make_cut.sh (read scripts/hongmen/cut/README.md first).
+"""The driver behind make_cut.sh (read scripts/kit/cut/README.md first). Any film with a kit.json: make_cut.sh passes
+its path as $KIT_CONFIG.
 
 Three layers -> one mp4:
   pic   the 3D picture with the film's post chain, drawn by the preview harness (preview/film_cut.ts) in short chunks
-        through /home/user/hm_tools/still.sh (the machine-wide render queue)
+        through scripts/kit/queue/still.sh (the machine-wide render queue)
   ov    the DOM layers (HUD, Pose.overlays, caption, Pose.top) as transparent PNGs, drawn by Remotion with the input
         prop "ovonly" from a bundle made once per source state, in short chunks through the same queue
-        (/home/user/hm_tools/q.sh)
-  snd   the sound engineer's mix, rebuilt right before the mux (scripts/hongmen/sound/build.sh, into the cut's own
-        folder) and put on with scripts/hongmen/sound/mux.sh (no padding, no trimming)
+        (scripts/kit/queue/q.sh)
+  snd   the sound engineer's mix, rebuilt right before the mux (kit.json sound.build, into the cut's own
+        folder) and put on with kit.json sound.mux (scripts/kit/sound/mux.sh) (no padding, no trimming)
 Everything is resumable: manifest.json records for each chunk the hash of the sources its frames were made from
 (deps.mjs: esbuild's import graph per segment) and which frames exist with that hash. A chunk is rendered only for the
 frames that are missing or were made from other sources.
-Nothing is written into the repo; all outputs live under $HM_CUT_DIR (default /home/user/hm_work/final).
+Nothing is written into the repo; all outputs live under $HM_CUT_DIR (default: kit.json cut.dir).
 """
 import argparse
 import fcntl
@@ -30,14 +31,21 @@ from concurrent.futures import ThreadPoolExecutor
 HERE = os.path.dirname(os.path.abspath(__file__))
 LIVE = os.path.abspath(os.path.join(HERE, "../../.."))
 REPO = os.path.abspath(os.environ.get("HM_CUT_REPO") or LIVE)      # the tree the film is read from (a frozen copy: make_cut.sh --freeze)
-FILM = os.path.join(REPO, "src/videos/hongmen")
-FINAL = os.environ.get("HM_CUT_DIR", "/home/user/hm_work/final")
-STILL = os.environ.get("HM_STILL", "/home/user/hm_tools/still.sh")
-QSH = os.environ.get("HM_QSH", "/home/user/hm_tools/q.sh")   # the machine-wide render queue: EVERY locked job goes through it
-HS = "/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell"
+if not os.environ.get("KIT_CONFIG"):
+    sys.exit("cut.py: no film config: run it through make_cut.sh --film <name> (or --config <kit.json>)")
+CFG = json.load(open(os.environ["KIT_CONFIG"], encoding="utf8"))        # the film's kit.json (KIT.md)
+ENT = CFG["entries"]
+FILM = os.path.join(REPO, CFG["dir"])
+FINAL = os.environ.get("HM_CUT_DIR", CFG["cut"]["dir"])
+# the queue scripts of the LIVE repo, never the frozen copy's (the copy has no node_modules of its own to cd into)
+STILL = os.environ.get("HM_STILL", os.path.join(LIVE, "scripts/kit/queue/still.sh"))
+QSH = os.environ.get("HM_QSH", os.path.join(LIVE, "scripts/kit/queue/q.sh"))   # the machine-wide render queue: EVERY locked job goes through it
+HS = os.environ.get("KIT_CHROME", "/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell")
 FONT = os.path.join(REPO, "public/bt/sans700.ttf")
-COMP = "HongmenFilm"
-FILM_W, FILM_H = 1080, 1920
+COMP = CFG["composition"]
+CUT_NAME = CFG["cut"]["name"]
+FILM_W, FILM_H = CFG.get("size", [1080, 1920])
+FPS = 30                    # set from story.ts by deps() (the timeline deps.mjs evaluates)
 # measured in this container (x_cut.md): seconds a frame, and the seconds a job needs before its first frame
 PIC_SPF = float(os.environ.get("HM_CUT_PIC_SPF", "2.4"))     # 1.9 (privy, quiet machine) .. 3.1 (tent, busy machine)
 PIC_START = 16.0                                            # bundle, browser, world, the first frame's shader compile
@@ -136,15 +144,22 @@ def deps(pic_entry=None):
             d = json.load(f)
     if "total" not in d:
         raise RuntimeError("story.ts could not be evaluated (the film's length is unknown): " + d.get("timelineError", "?"))
+    global FPS
+    FPS = int(d.get("fps", FPS))
     return d
+
+
+def seg_ids(d):
+    """the film's segment ids in order (from story.ts SEGMENTS, through deps.json)"""
+    return [g["id"] for g in d["segs"]]
 
 
 def pic_entry_for(d):
     """the picture entry: preview/film_cut.ts, or (when Film.tsx imports its ink pass from another module than
     film_cut.ts does) a generated copy with Film.tsx's own import lines, outside the repo"""
     if d["ink"]["same"]:
-        return os.path.join(FILM, "preview/film_cut.ts"), None
-    src = open(os.path.join(FILM, "Film.tsx")).read()
+        return os.path.join(FILM, ENT["pic"]), None
+    src = open(os.path.join(FILM, ENT["overlay"])).read()
     lines = []
     for m in re.finditer(r"^import\s*\{([^}]*)\}\s*from\s*[\"']([^\"']+)[\"'];?\s*$", src, re.M):
         names = [n.strip() for n in m.group(1).split(",")]
@@ -157,12 +172,13 @@ def pic_entry_for(d):
         lines.append("import { noInkFallback } from %s;" % json.dumps(os.path.join(REPO, "src/videos/vasa/ink")))
     ent = os.path.join(BUILD, "entry", "film_cut_ink.ts")
     os.makedirs(os.path.dirname(ent), exist_ok=True)
-    body = "// GENERATED by scripts/hongmen/cut/cut.py: preview/film_cut.ts with the ink imports of Film.tsx as it is now\n"
+    body = "// GENERATED by scripts/kit/cut/cut.py: %s with the ink imports of %s as it is now\n" % (ENT["pic"], ENT["overlay"])
     body += "\n".join(lines) + "\n"
-    body += "import { runCut } from %s;\n" % json.dumps(os.path.join(FILM, "preview/film_cut_core"))
-    for s in "ABCDE":
-        body += "import { SEG as %s } from %s;\n" % (s, json.dumps(os.path.join(FILM, "shots/seg" + s)))
-    body += "runCut({ InkPass, noInkFallback } as any, [A, B, C, D, E]);\n"
+    body += "import { runCut } from %s;\n" % json.dumps(os.path.join(FILM, ENT.get("picCore", "preview/film_cut_core")))
+    ids = [g["id"] for g in d["segs"]]
+    for s in ids:
+        body += "import { SEG as SEG_%s } from %s;\n" % (s, json.dumps(os.path.join(FILM, ENT["segFile"].replace("{SEG}", s))))
+    body += "runCut({ InkPass, noInkFallback } as any, [%s]);\n" % ", ".join("SEG_" + s for s in ids)
     if not os.path.exists(ent) or open(ent).read() != body:
         with open(ent, "w") as f:
             f.write(body)
@@ -305,7 +321,7 @@ def render_pic(L, c, todo, entry, size, logf, ink=8, lens="auto"):
 # ------------------------------------------------------------------------------------------------ overlays
 def ensure_bundle(d, logf):
     """the Remotion bundle of the film as the sources are now; returns the ov hashes it was made from, or None"""
-    want = {s: d["ov"][s].get("hash") for s in "ABCDE"}
+    want = {s: d["ov"][s].get("hash") for s in seg_ids(d)}
     if os.path.exists(BUNDLE_STAMP) and os.path.exists(os.path.join(BUNDLE, "index.html")):
         have = json.load(open(BUNDLE_STAMP))
         if have == want:
@@ -324,7 +340,7 @@ def ensure_bundle(d, logf):
             say("[ov] the bundle failed: " + (r.stdout.strip().splitlines() or ["?"])[-1][:200])
             return None
         d2 = deps(d.get("_pic_entry_arg"))
-        now = {s: d2["ov"][s].get("hash") for s in "ABCDE"}
+        now = {s: d2["ov"][s].get("hash") for s in seg_ids(d2)}
         if now == want:
             shutil.rmtree(BUNDLE, ignore_errors=True)
             os.replace(tmp, BUNDLE)
@@ -400,9 +416,9 @@ def compose(pic, ov, A, B, out, size, logf):
     fc = (chain + "[p];[1:v]format=gbrap[o];[p][o]overlay=format=gbrp:alpha=straight:eof_action=endall,"
           "scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int+bitexact,format=yuv420p[v]")
     cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
-           "-framerate", "30", "-start_number", str(A), "-i", os.path.join(pic.dir, pic.pattern),
-           "-framerate", "30", "-start_number", str(A), "-i", os.path.join(ov.dir, ov.pattern),
-           "-filter_complex", fc, "-map", "[v]", "-frames:v", str(n), "-r", "30",
+           "-framerate", str(FPS), "-start_number", str(A), "-i", os.path.join(pic.dir, pic.pattern),
+           "-framerate", str(FPS), "-start_number", str(A), "-i", os.path.join(ov.dir, ov.pattern),
+           "-filter_complex", fc, "-map", "[v]", "-frames:v", str(n), "-r", str(FPS),
            "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
            "-movflags", "+faststart", out]
@@ -424,9 +440,9 @@ def build_sound(logf):
     """the sound engineer's one command, into the cut's own folder (his files are not touched); returns the 48 kHz mix"""
     work = SOUND_DIR
     os.makedirs(work, exist_ok=True)
-    env = dict(os.environ, NAME="mix_cut", WORK=work, CLIPS=os.environ.get("CLIPS", "/home/user/hm_work/sound/clips"))
+    env = dict(os.environ, NAME="mix_cut", WORK=work, CLIPS=os.environ.get("CLIPS", CFG.get("sound", {}).get("clips", os.path.join(work, "clips"))))
     t0 = time.time()
-    r = sh(["bash", os.path.join(REPO, "scripts/hongmen/sound/build.sh")], env=env, cwd=REPO)
+    r = sh(["bash", os.path.join(REPO, CFG["sound"]["build"])], env=env, cwd=REPO)
     with open(logf, "a") as f:
         f.write(f"\n==== sound build rc {r.returncode} {time.time() - t0:.0f} s\n{r.stdout[-6000:]}\n")
     mix = os.path.join(work, "mix_cut_48k.wav")
@@ -440,7 +456,7 @@ def excerpt(mix, A, B, out):
     """frames A..B of the 48 kHz mix, to the sample (1600 samples a frame), for a clip of a range"""
     with wave.open(mix, "rb") as wv:
         sr, ch, sw = wv.getframerate(), wv.getnchannels(), wv.getsampwidth()
-        per = sr // 30
+        per = sr // FPS
         wv.setpos(A * per)
         data = wv.readframes((B - A + 1) * per)
     with wave.open(out, "wb") as o:
@@ -450,7 +466,7 @@ def excerpt(mix, A, B, out):
 
 
 def mux(silent, mix, out, logf):
-    r = sh(["bash", os.path.join(REPO, "scripts/hongmen/sound/mux.sh"), silent, mix, out])
+    r = sh(["bash", os.path.join(REPO, CFG.get("sound", {}).get("mux", "scripts/kit/sound/mux.sh")), silent, mix, out])
     with open(logf, "a") as f:
         f.write(f"\n==== mux rc {r.returncode}\n{r.stdout[-3000:]}\n")
     for l in r.stdout.strip().splitlines()[-2:]:
@@ -473,7 +489,7 @@ def same_picture(a, b):
 
 # ------------------------------------------------------------------------------------------------ main
 def main():
-    ap = argparse.ArgumentParser(description="the Hongmen cut: picture (harness) + overlays (Remotion ovonly) + sound")
+    ap = argparse.ArgumentParser(description="the %s cut: picture (harness) + overlays (Remotion ovonly) + sound" % CFG["film"])
     ap.add_argument("--from", dest="a", type=int, default=None, help="first frame (default 0)")
     ap.add_argument("--to", dest="b", type=int, default=None, help="last frame, inclusive (default: the film's last)")
     ap.add_argument("--force", action="store_true", help="re-render the range even where the manifest says it is current")
@@ -482,13 +498,14 @@ def main():
     ap.add_argument("--chunk", type=int, default=0, help="picture frames per locked job (default: what fits in 90 s)")
     ap.add_argument("--ov-chunk", type=int, default=0, help="overlay frames per locked job (default: what fits in 90 s)")
     ap.add_argument("--passes", type=int, default=4, help="how often to go round again for chunks that failed or whose sources changed while they rendered")
-    ap.add_argument("--out", default=None, help="the mp4 (default hongmen_cut.mp4, or hongmen_cut_<A>-<B>.mp4 for a range)")
+    ap.add_argument("--out", default=None, help="the mp4 (default <cut.name>.mp4, or <cut.name>_<A>-<B>.mp4 for a range)")
     ap.add_argument("--ink-samples", type=int, default=8, choices=[1, 2, 4, 8, 16], help="the ink pass's sub-pixel buffers (8 = the film; 4 saves about 0.3 s a frame and crawls a little more). Frames made with another value count as made from other sources")
     ap.add_argument("--lens", default="file", choices=["auto", "on", "file"], help="auto: frames without depth of field (Pose.post.dof unset: all of them tonight) skip the two lens passes, which copy their input unchanged there: the same picture, 0.5 to 0.8 s a frame less. on: the film's passes on every frame. file (default): what " + LENS_MODE + " says (auto | on; no file = on), read again before every chunk, so that a running cut can be switched")
     ap.add_argument("--wait-broken", type=int, default=20, help="minutes to wait, per pass, for a source file that does not build (somebody mid-edit)")
     ap.add_argument("--jobs", type=int, default=2, help="picture chunks that wait in the render queue at the same time (default 2). Each is its own job of at most ~90 s; more = a larger share of a busy queue")
     ap.add_argument("--priority", action="store_true", help="picture chunks go to the front of the render queue (cost 1); one job of somebody else still gets in between two chunks. The director's call")
     ap.add_argument("--status", action="store_true", help="only print what is current / stale / missing")
+    ap.add_argument("--adopt", metavar="OLD_DEPS_JSON", default=None, help="the sources MOVED but draw the same (checked with stills first): frames made from the hashes in this older deps.json count as made from today's, per segment and layer; the manifest is rewritten (a copy is kept), nothing is rendered")
     ap.add_argument("--no-sound", action="store_true", help="leave the mp4 silent (same as --only pic,ov,compose)")
     a = ap.parse_args()
     global PRIORITY
@@ -543,7 +560,7 @@ def main():
     if note:
         say("NOTE: " + note)
     if not d["chain"]["ok"]:
-        say("WARNING: the post section of Film.tsx changed since preview/film_cut_core.ts was written (chain.sha): the cut's look may differ from the film's. Port the change, then update scripts/hongmen/cut/chain.sha")
+        say("WARNING: the post section of %s changed since %s was written (chain.sha): the cut's look may differ from the film's. Port the change, then update %s" % (ENT["overlay"], ENT.get("picCore", "preview/film_cut_core") + ".ts", CFG["chainSha"]))
     if d.get("blend"):
         say("note: mix-blend-mode / backdrop-filter appears in " + ", ".join(d["blend"]) + ": a DOM effect that reads the picture under it cannot be reproduced by a separate overlay layer")
 
@@ -554,6 +571,26 @@ def main():
             res[L.name] = {"current": len(cur), "stale": stale, "missing": miss}
             say(f"[{L.name}] current {len(cur)}/{B - A + 1}  stale {ranges(stale)}  missing {ranges(miss)}")
         return res
+
+    if a.adopt:
+        old = json.load(open(a.adopt))
+        n = 0
+        with MLOCK:
+            shutil.copy(MANIFEST, MANIFEST + ".before_adopt")
+            for L in ("pic", "ov"):
+                done = man.get(L, {}).get("done", {})
+                for s in seg_ids(d):
+                    ho, hn = old.get(L, {}).get(s, {}).get("hash"), d[L][s].get("hash")
+                    if not ho or not hn or ho == hn:
+                        continue
+                    for k in [k for k in done if k.split("|", 1)[0] == ho]:
+                        nk = hn + "|" + k.split("|", 1)[1]
+                        done[nk] = ranges(sorted(expand(done.get(nk)) | expand(done.pop(k))))
+                        n += 1
+            save_manifest(man)
+        say(f"adopted {n} manifest entr{'y' if n == 1 else 'ies'} from {a.adopt} (the old manifest: {MANIFEST}.before_adopt)")
+        report(d)
+        return 0
 
     if a.status:
         report(d)
@@ -566,7 +603,7 @@ def main():
         # segment it is in: the picture entry and Film.tsx import all five. Wait for it instead of failing chunk by chunk.
         waited = 0
         while True:
-            broken = sorted({f"{l}.{s}" for l in ("pic", "ov") for s in "ABCDE" if d[l][s].get("hash") is None})
+            broken = sorted({f"{l}.{s}" for l in ("pic", "ov") for s in seg_ids(d) if d[l][s].get("hash") is None})
             if not broken or waited >= a.wait_broken * 60:
                 break
             if waited == 0:
@@ -609,7 +646,7 @@ def main():
                         if not ok:
                             say(f"[pic] {c['id']} f{ranges(todo)} FAILED: {info}")
                             fails[c["id"]] = info; count["problems"] += 1
-                            if "Build failed" in info or any(d2["pic"][x].get("hash") is None for x in "ABCDE"):
+                            if "Build failed" in info or any(d2["pic"][x].get("hash") is None for x in seg_ids(d2)):
                                 if not stop.is_set():
                                     say("[pic] the entry does not bundle: the rest of the picture waits for the next pass")
                                 stop.set()
@@ -708,9 +745,9 @@ def main():
     st = report(d)
     summary = {"range": [A, B], "total": total, "whole": whole, "pic": {k: (ranges(v) if isinstance(v, list) else v) for k, v in st["pic"].items()},
                "ov": {k: (ranges(v) if isinstance(v, list) else v) for k, v in st["ov"].items()}, "failed": fails,
-               "hashes": {"pic": {s: d["pic"][s].get("hash") for s in "ABCDE"}, "ov": {s: d["ov"][s].get("hash") for s in "ABCDE"}},
+               "hashes": {"pic": {s: d["pic"][s].get("hash") for s in seg_ids(d)}, "ov": {s: d["ov"][s].get("hash") for s in seg_ids(d)}},
                "chain_ok": d["chain"]["ok"], "ink": d["ink"], "minutes": round((time.time() - t_start) / 60, 1)}
-    name = "hongmen_cut" if whole else f"hongmen_cut_{A}-{B}"
+    name = CUT_NAME if whole else f"{CUT_NAME}_{A}-{B}"
     out = a.out or os.path.join(FINAL, name + ".mp4")
     silent = os.path.splitext(out)[0] + "_silent.mp4"
     rc = 0

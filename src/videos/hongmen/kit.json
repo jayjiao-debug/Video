@@ -1,0 +1,21 @@
+{
+  "film": "hongmen",
+  "composition": "HongmenFilm",
+  "dir": "src/videos/hongmen",
+  "story": "story.ts",
+  "hooks": "kit.world.ts",
+  "entries": {
+    "pic": "preview/film_cut.ts",
+    "picCore": "preview/film_cut_core",
+    "overlay": "Film.tsx",
+    "segFile": "shots/seg{SEG}"
+  },
+  "tsc": ["Film.tsx", "preview/film.ts", "preview/smoke.ts", "preview/filmA.ts", "preview/filmB.ts", "preview/filmC.ts", "preview/filmD.ts", "preview/filmE.ts", "kit.world.ts"],
+  "domOnly": ["hud/"],
+  "chainSha": "scripts/hongmen/cut/chain.sha",
+  "langs": ["zh", "en"],
+  "work": "/home/user/hm_work",
+  "qa": { "clearanceOut": "/home/user/hm_work/qa/clearance" },
+  "cut": { "dir": "/home/user/hm_work/final", "name": "hongmen_cut", "freeze": ["src", "scripts/hongmen", "scripts/kit"] },
+  "sound": { "build": "scripts/hongmen/sound/build.sh", "mux": "scripts/kit/sound/mux.sh", "clips": "/home/user/hm_work/sound/clips" }
+}

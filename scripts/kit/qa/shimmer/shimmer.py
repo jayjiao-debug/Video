@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """SHIMMER TEST: does a still picture change when the camera moves by a fraction of a pixel?
 
-  python3 scripts/qa/shimmer/shimmer.py run <entry.ts> <outdir> [--frame F] [--size WxH] [--opts JSON] ...
-      renders frame F of a preview entry K times with fixed camera jitters (scripts/qa/shimmer/hook.ts, no change to
+  python3 scripts/kit/qa/shimmer/shimmer.py run <entry.ts> <outdir> [--frame F] [--size WxH] [--opts JSON] ...
+      renders frame F of a preview entry K times with fixed camera jitters (scripts/kit/qa/shimmer/hook.ts, no change to
       the entry or its harness), once per variant (final / noink / noao / raw / mask), then analyses.
-  python3 scripts/qa/shimmer/shimmer.py analyse <outdir> [--sigma S] [--thr T] [--roi x0,y0,x1,y1]
+  python3 scripts/kit/qa/shimmer/shimmer.py analyse <outdir> [--sigma S] [--thr T] [--roi x0,y0,x1,y1]
       analyses again what `run` rendered (other blur, threshold or region).
-  python3 scripts/qa/shimmer/shimmer.py real <frames dir> <outdir> --cams cams.json [--ref F] [--frames a,b,..]
+  python3 scripts/kit/qa/shimmer/shimmer.py real <frames dir> <outdir> --cams cams.json [--ref F] [--frames a,b,..]
       the same measure on REAL consecutive frames of a camera move that only turns and zooms (the camera's place is
       fixed): every frame is warped into the view of frame --ref (an exact homography) and the pictures are compared.
       Used to validate the jitter test against a real clip (README.md).
@@ -21,15 +21,15 @@ Numbers per variant:
   p99.9      the 99.9th percentile of D          max   the largest D          mean   the mean of D
 Files: heat_<variant>.png (D over the dimmed picture), d_<variant>.png (D x 2 as grey, for other tools),
 sheet.png (all heat maps side by side), report.json, report.md.
-Needs numpy + Pillow. Renders ONLY through /home/user/hm_tools/still.sh (the machine-wide render lock).
+Needs numpy + Pillow. Renders ONLY through scripts/kit/queue/still.sh (the machine-wide render queue).
 """
 import argparse, json, math, os, subprocess, sys
 import numpy as np
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.abspath(os.path.join(HERE, "../../.."))
-STILL = os.environ.get("SHIMMER_STILL", "/home/user/hm_tools/still.sh")
+REPO = os.path.abspath(os.path.join(HERE, "../../../.."))
+STILL = os.environ.get("SHIMMER_STILL", os.path.join(REPO, "scripts/kit/queue/still.sh"))
 FONT = os.path.join(REPO, "public/bt/sans700.ttf")
 VARIANTS = ["final", "noink", "noao", "raw", "mask"]
 THR = 12.0           # levels: see README.md "the threshold"

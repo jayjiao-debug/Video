@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """compare.py <frame> <remotion_still.png> [--out dir] [--pic dir] [--ov dir]
 Compares the cut's frame (picture layer + overlay layer, laid together exactly as make_cut.sh does) with a real
-Remotion still of the same frame at the same size (/home/user/hm_tools/remotion_still.sh HongmenFilm <frame> out.png).
+Remotion still of the same frame at the same size (bash scripts/kit/queue/remotion_still.sh <Composition> <frame> out.png).
 Prints, per channel, the mean absolute difference
   - of the whole frame,
   - of the PICTURE (where the overlay layer is fully transparent),
@@ -19,7 +19,9 @@ import sys
 import numpy as np
 from PIL import Image
 
-FINAL = os.environ.get("HM_CUT_DIR", "/home/user/hm_work/final")
+import json
+# the cut's folder: $HM_CUT_DIR, else kit.json cut.dir of $KIT_CONFIG, else Hongmen's
+FINAL = os.environ.get("HM_CUT_DIR") or (json.load(open(os.environ["KIT_CONFIG"]))["cut"]["dir"] if os.environ.get("KIT_CONFIG") else "/home/user/hm_work/final")
 
 
 def over_ffmpeg(pic, ov, out):

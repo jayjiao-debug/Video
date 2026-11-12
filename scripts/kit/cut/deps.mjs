@@ -25,10 +25,14 @@ const args = process.argv.slice(2);
 const OUT = args[0];
 if (!OUT) { console.error("usage: deps.mjs <out.json> [--pic-entry entry.ts]"); process.exit(2); }
 const pi = args.indexOf("--pic-entry");
-const FILM = resolve(REPO, "src/videos/hongmen");
-const PIC_ENTRY = resolve(pi >= 0 ? args[pi + 1] : join(FILM, "preview/film_cut.ts"));
-const OV_ENTRY = join(FILM, "Film.tsx");
-const SEGS = ["A", "B", "C", "D", "E"];
+if (!process.env.KIT_CONFIG) { console.error("deps.mjs: no film config ($KIT_CONFIG = the film's kit.json; make_cut.sh sets it)"); process.exit(2); }
+const CFG = JSON.parse(readFileSync(process.env.KIT_CONFIG, "utf8")), ENT = CFG.entries;
+const FILM = resolve(REPO, CFG.dir);
+const PIC_ENTRY = resolve(pi >= 0 ? args[pi + 1] : join(FILM, ENT.pic));
+const OV_ENTRY = join(FILM, ENT.overlay);
+/** the segment files as the entries import them: "shots/seg{SEG}" -> /shots\/seg([A-Za-z0-9]+)$/ */
+const SEG_RE = new RegExp(ENT.segFile.replace(/\.tsx?$/, "").replace(/[.*+?^${}()|[\]\\/]/g, "\\$&").replace("\\{SEG\\}", "([A-Za-z0-9]+)") + "$");
+let SEGS = [];
 const sha = (s) => createHash("sha256").update(s).digest("hex");
 
 /** leaves out the other four segments, but only where the ENTRY imports them (a segment that imports a sibling for
@@ -36,8 +40,8 @@ const sha = (s) => createHash("sha256").update(s).digest("hex");
 const only = (seg, entry) => ({
   name: "one-segment",
   setup(b) {
-    b.onResolve({ filter: /shots\/seg[A-E]$/ }, (a) => {
-      const s = a.path.slice(-1);
+    b.onResolve({ filter: SEG_RE }, (a) => {
+      const s = a.path.match(SEG_RE)[1];
       if (s === seg || resolve(a.importer) !== entry) return null;
       return { path: a.path, namespace: "left-out" };
     });
@@ -73,7 +77,7 @@ function timeline() {
   const HOLE = `(() => { const hole = () => new Proxy(function () {}, { get: (t, k) => k === Symbol.toPrimitive ? () => 0 : k === "then" ? undefined : hole(), apply: () => hole(), construct: () => hole(), set: () => true, has: () => true });
   for (const k of ["document", "Image", "OffscreenCanvas"]) if (typeof globalThis[k] === "undefined") { try { globalThis[k] = hole(); } catch (e) {} } })();`;
   esbuild.buildSync({
-    stdin: { contents: `import { TOTAL, FPS, SEGMENTS } from ${JSON.stringify(join(FILM, "story"))};\nprocess.stdout.write("CUT_TIMELINE " + JSON.stringify({ total: TOTAL, fps: FPS, segs: SEGMENTS.map((s) => ({ id: s.id, from: s.from, to: s.to })) }) + "\\n");`, resolveDir: FILM, loader: "ts" },
+    stdin: { contents: `import { TOTAL, FPS, SEGMENTS } from ${JSON.stringify(join(FILM, (CFG.story ?? "story.ts").replace(/\.tsx?$/, "")))};\nprocess.stdout.write("CUT_TIMELINE " + JSON.stringify({ total: TOTAL, fps: FPS, segs: SEGMENTS.map((s) => ({ id: s.id, from: s.from, to: s.to })) }) + "\\n");`, resolveDir: FILM, loader: "ts" },
     banner: { js: HOLE }, bundle: true, platform: "node", format: "cjs", logLevel: "silent", outfile: js, nodePaths: [join(REPO, "node_modules")],
   });
   const out = execFileSync("node", [js], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
@@ -101,15 +105,16 @@ const chainOf = () => {
 
 const res = { at: new Date().toISOString(), picEntry: relative(REPO, PIC_ENTRY), pic: {}, ov: {} };
 try { Object.assign(res, timeline()); } catch (e) { res.timelineError = String(e.message ?? e).slice(0, 500); }
-const HUD = join(FILM, "hud") + "/";
+SEGS = (res.segs ?? []).map((g) => g.id);
+const HUD = (CFG.domOnly ?? []).map((d) => join(FILM, d));
 for (const s of SEGS) {
-  res.pic[s] = await graph(PIC_ENTRY, s, [HUD]);
+  res.pic[s] = await graph(PIC_ENTRY, s, HUD);
   res.ov[s] = await graph(OV_ENTRY, s, [], ["src/Root.tsx", "src/index.ts"]);
 }
 const fi = inkOf(OV_ENTRY), ci = inkOf(PIC_ENTRY);
 res.ink = { film: fi, cut: ci, same: !!fi.InkPass && fi.InkPass === ci.InkPass && fi.noInkFallback === ci.noInkFallback };
 res.chain = chainOf();
-const known = join(REPO, "scripts/hongmen/cut/chain.sha");
+const known = join(REPO, CFG.chainSha ?? "-");
 res.chain.expected = existsSync(known) ? readFileSync(known, "utf8").trim().split(/\s+/)[0] : null;
 res.chain.ok = res.chain.sha !== null && res.chain.sha === res.chain.expected;
 // DOM effects that read the picture under them cannot be reproduced by laying a separate overlay over the picture
