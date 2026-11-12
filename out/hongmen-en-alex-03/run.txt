@@ -1,0 +1,274 @@
+plan: {'tier': 'creator', 'character_count': 5934, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x04c", "lang": "en", "text": "But Shyahng Yoo had four times the troops.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04c.mp3", "bytes": 53541}
+{"name": "x05c", "lang": "en", "text": "His own officer snitched to Shyahng Yoo: \"He wants to be king.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x05c.mp3", "bytes": 72767}
+{"name": "x08c", "lang": "en", "text": "Next day, Leo Bahng said sorry: \"Surely some rat lied.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08c.mp3", "bytes": 80291}
+{"name": "x11c", "lang": "en", "text": "Fahn Dzung signalled: kill him. Again. And again. Nothing.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x11c.mp3", "bytes": 89486}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x04c",
+  "lang": "en",
+  "text": "But Shyahng Yoo had four times the troops.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04c.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "But",
+    0.0,
+    0.16
+   ],
+   [
+    "Cheyong",
+    0.16,
+    0.66
+   ],
+   [
+    "Yoo",
+    0.66,
+    0.9
+   ],
+   [
+    "had",
+    0.9,
+    1.24
+   ],
+   [
+    "four",
+    1.24,
+    1.74
+   ],
+   [
+    "times",
+    1.74,
+    2.3
+   ],
+   [
+    "the",
+    2.3,
+    2.5
+   ],
+   [
+    "troops.",
+    2.5,
+    2.82
+   ]
+  ],
+  "heard": "But Cheyong Yoo had four times the troops.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 3.28
+ },
+ {
+  "name": "x05c",
+  "lang": "en",
+  "text": "His own officer snitched to Shyahng Yoo: \"He wants to be king.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x05c.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "His",
+    0.0,
+    0.18
+   ],
+   [
+    "own",
+    0.18,
+    0.54
+   ],
+   [
+    "officer",
+    0.54,
+    1.1
+   ],
+   [
+    "snitched",
+    1.1,
+    1.74
+   ],
+   [
+    "to",
+    1.74,
+    1.9
+   ],
+   [
+    "Shang",
+    1.9,
+    2.16
+   ],
+   [
+    "Yu.",
+    2.16,
+    2.44
+   ],
+   [
+    "He",
+    2.98,
+    3.18
+   ],
+   [
+    "wants",
+    3.18,
+    3.4
+   ],
+   [
+    "to",
+    3.4,
+    3.62
+   ],
+   [
+    "be",
+    3.62,
+    3.72
+   ],
+   [
+    "king.",
+    3.72,
+    4.08
+   ]
+  ],
+  "heard": "His own officer snitched to Shang Yu. He wants to be king.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.99,
+  "seconds": 4.48
+ },
+ {
+  "name": "x08c",
+  "lang": "en",
+  "text": "Next day, Leo Bahng said sorry: \"Surely some rat lied.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08c.mp3",
+  "bytes": 80291,
+  "words": [
+   [
+    "Next",
+    0.0,
+    0.24
+   ],
+   [
+    "day,",
+    0.24,
+    0.6
+   ],
+   [
+    "Leo",
+    0.98,
+    1.18
+   ],
+   [
+    "Bong",
+    1.18,
+    1.48
+   ],
+   [
+    "said",
+    1.48,
+    1.78
+   ],
+   [
+    "sorry.",
+    1.78,
+    2.3
+   ],
+   [
+    "Surely",
+    2.8,
+    3.3
+   ],
+   [
+    "some",
+    3.3,
+    3.7
+   ],
+   [
+    "rat",
+    3.7,
+    4.08
+   ],
+   [
+    "lied.",
+    4.08,
+    4.5
+   ]
+  ],
+  "heard": "Next day, Leo Bong said sorry. Surely some rat lied.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.96
+ },
+ {
+  "name": "x11c",
+  "lang": "en",
+  "text": "Fahn Dzung signalled: kill him. Again. And again. Nothing.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x11c.mp3",
+  "bytes": 89486,
+  "words": [
+   [
+    "Fan",
+    0.0,
+    0.24
+   ],
+   [
+    "Zong",
+    0.24,
+    0.52
+   ],
+   [
+    "signaled.",
+    0.52,
+    1.08
+   ],
+   [
+    "Kill",
+    1.6,
+    1.8
+   ],
+   [
+    "him.",
+    1.8,
+    2.04
+   ],
+   [
+    "Again.",
+    2.42,
+    2.82
+   ],
+   [
+    "And",
+    3.6,
+    3.68
+   ],
+   [
+    "again.",
+    3.68,
+    3.96
+   ],
+   [
+    "Nothing.",
+    4.64,
+    5.06
+   ]
+  ],
+  "heard": "Fan Zong signaled. Kill him. Again. And again. Nothing.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.953,
+  "seconds": 5.52
+ }
+]
