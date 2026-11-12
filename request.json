@@ -1,101 +1,996 @@
 {
- "id": "qin-va-search-02",
+ "id": "qin-va-demo-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "type": "voices",
-   "name": "m_old",
+   "name": "r_Anna_r1",
+   "text": "[whispers] 嘘——你们看，这走廊……怎么每条都长一样啊。",
    "lang": "zh",
-   "n": 40,
-   "gender": "male",
-   "age": "old"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+    "voice_id": "9lHjugDhwqoxA5MhX0az",
+    "name": "Anna"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "m_mid",
+   "name": "r_Anna_r2",
+   "text": "[panicked, fast] 啊啊啊别别别！我们不是坏人！我们是来……拍您的！拍您一天都干嘛！",
    "lang": "zh",
-   "n": 40,
-   "gender": "male",
-   "age": "middle_aged"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+    "voice_id": "9lHjugDhwqoxA5MhX0az",
+    "name": "Anna"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "m_s_cangsang",
+   "name": "r_Anna_r3",
+   "text": "[shy, very soft, sweet] 特别特别厉害。",
    "lang": "zh",
-   "n": 40,
-   "search": "沧桑"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+    "voice_id": "9lHjugDhwqoxA5MhX0az",
+    "name": "Anna"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "m_s_rough",
+   "name": "r_Anna_r4",
+   "text": "[soft, caring, out of breath] 陛下……您每天……都这样啊……好辛苦哦。",
    "lang": "zh",
-   "n": 40,
-   "gender": "male",
-   "search": "rough"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+    "voice_id": "9lHjugDhwqoxA5MhX0az",
+    "name": "Anna"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "m_s_raspy",
+   "name": "r_Anna_r5",
+   "text": "[whispers, mischievous] 偷偷告诉你们……这个徐福，后来再也没回来。",
    "lang": "zh",
-   "n": 40,
-   "gender": "male",
-   "search": "raspy"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+    "voice_id": "9lHjugDhwqoxA5MhX0az",
+    "name": "Anna"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "m_s_emperor",
+   "name": "r_Anna_r6",
+   "text": "[terrified, barely audible] 不……不在……我、我什么都没拍。",
    "lang": "zh",
-   "n": 40,
-   "search": "emperor"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+    "voice_id": "9lHjugDhwqoxA5MhX0az",
+    "name": "Anna"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "f_young",
+   "name": "r_Anna_r7",
+   "text": "[soft laugh, teary] 不删。",
    "lang": "zh",
-   "n": 60,
-   "gender": "female",
-   "age": "young"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "649d5d7a8d7cda374f337b08fe37fe9066686b8c337c4e357fb5f15ff9b699f9",
+    "voice_id": "9lHjugDhwqoxA5MhX0az",
+    "name": "Anna"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "f_s_soft",
+   "name": "r_Lin_r1",
+   "text": "[whispers] 嘘——你们看，这走廊……怎么每条都长一样啊。",
    "lang": "zh",
-   "n": 40,
-   "gender": "female",
-   "search": "soft"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "f_s_sweet",
+   "name": "r_Lin_r2",
+   "text": "[panicked, fast] 啊啊啊别别别！我们不是坏人！我们是来……拍您的！拍您一天都干嘛！",
    "lang": "zh",
-   "n": 40,
-   "gender": "female",
-   "search": "sweet"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "f_s_girl",
+   "name": "r_Lin_r3",
+   "text": "[shy, very soft, sweet] 特别特别厉害。",
    "lang": "zh",
-   "n": 40,
-   "gender": "female",
-   "search": "girl"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "f_s_shaonv",
+   "name": "r_Lin_r4",
+   "text": "[soft, caring, out of breath] 陛下……您每天……都这样啊……好辛苦哦。",
    "lang": "zh",
-   "n": 40,
-   "search": "少女"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true
   },
   {
-   "type": "voices",
-   "name": "f_s_cute",
+   "name": "r_Lin_r5",
+   "text": "[whispers, mischievous] 偷偷告诉你们……这个徐福，后来再也没回来。",
    "lang": "zh",
-   "n": 40,
-   "gender": "female",
-   "search": "cute"
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Lin_r6",
+   "text": "[terrified, barely audible] 不……不在……我、我什么都没拍。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Lin_r7",
+   "text": "[soft laugh, teary] 不删。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_ZiYue_r1",
+   "text": "[whispers] 嘘——你们看，这走廊……怎么每条都长一样啊。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+    "voice_id": "5qr5FEpvZGzmVOPBS55W",
+    "name": "ZiYue"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_ZiYue_r2",
+   "text": "[panicked, fast] 啊啊啊别别别！我们不是坏人！我们是来……拍您的！拍您一天都干嘛！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+    "voice_id": "5qr5FEpvZGzmVOPBS55W",
+    "name": "ZiYue"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_ZiYue_r3",
+   "text": "[shy, very soft, sweet] 特别特别厉害。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+    "voice_id": "5qr5FEpvZGzmVOPBS55W",
+    "name": "ZiYue"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_ZiYue_r4",
+   "text": "[soft, caring, out of breath] 陛下……您每天……都这样啊……好辛苦哦。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+    "voice_id": "5qr5FEpvZGzmVOPBS55W",
+    "name": "ZiYue"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_ZiYue_r5",
+   "text": "[whispers, mischievous] 偷偷告诉你们……这个徐福，后来再也没回来。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+    "voice_id": "5qr5FEpvZGzmVOPBS55W",
+    "name": "ZiYue"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_ZiYue_r6",
+   "text": "[terrified, barely audible] 不……不在……我、我什么都没拍。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+    "voice_id": "5qr5FEpvZGzmVOPBS55W",
+    "name": "ZiYue"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_ZiYue_r7",
+   "text": "[soft laugh, teary] 不删。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "0761ca268d5e14a5a888935315f7a6d8b44da84bd142cee2279676a86f7988d8",
+    "voice_id": "5qr5FEpvZGzmVOPBS55W",
+    "name": "ZiYue"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Yui_TW_r1",
+   "text": "[whispers] 嘘——你们看，这走廊……怎么每条都长一样啊。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5cb134719206cde8d28794b08248de419f153cc7bf85537fc46b0d542d947c1c",
+    "voice_id": "kGjJqO6wdwRN9iJsoeIC",
+    "name": "Yui_TW"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Yui_TW_r2",
+   "text": "[panicked, fast] 啊啊啊别别别！我们不是坏人！我们是来……拍您的！拍您一天都干嘛！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5cb134719206cde8d28794b08248de419f153cc7bf85537fc46b0d542d947c1c",
+    "voice_id": "kGjJqO6wdwRN9iJsoeIC",
+    "name": "Yui_TW"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Yui_TW_r3",
+   "text": "[shy, very soft, sweet] 特别特别厉害。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5cb134719206cde8d28794b08248de419f153cc7bf85537fc46b0d542d947c1c",
+    "voice_id": "kGjJqO6wdwRN9iJsoeIC",
+    "name": "Yui_TW"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Yui_TW_r4",
+   "text": "[soft, caring, out of breath] 陛下……您每天……都这样啊……好辛苦哦。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5cb134719206cde8d28794b08248de419f153cc7bf85537fc46b0d542d947c1c",
+    "voice_id": "kGjJqO6wdwRN9iJsoeIC",
+    "name": "Yui_TW"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Yui_TW_r5",
+   "text": "[whispers, mischievous] 偷偷告诉你们……这个徐福，后来再也没回来。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5cb134719206cde8d28794b08248de419f153cc7bf85537fc46b0d542d947c1c",
+    "voice_id": "kGjJqO6wdwRN9iJsoeIC",
+    "name": "Yui_TW"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Yui_TW_r6",
+   "text": "[terrified, barely audible] 不……不在……我、我什么都没拍。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5cb134719206cde8d28794b08248de419f153cc7bf85537fc46b0d542d947c1c",
+    "voice_id": "kGjJqO6wdwRN9iJsoeIC",
+    "name": "Yui_TW"
+   },
+   "keep": true
+  },
+  {
+   "name": "r_Yui_TW_r7",
+   "text": "[soft laugh, teary] 不删。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.5,
+    "speed": 0.98,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "5cb134719206cde8d28794b08248de419f153cc7bf85537fc46b0d542d947c1c",
+    "voice_id": "kGjJqO6wdwRN9iJsoeIC",
+    "name": "Yui_TW"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_JasonChen_e1",
+   "text": "[startled, shouting] 谁？！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "213859b1d1703a17daae1d56066a547571ab298b14e1a86eedd05126a8bf08b8",
+    "voice_id": "DowyQ68vDpgFYdWVGjc3",
+    "name": "JasonChen"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_JasonChen_e2",
+   "text": "[clears throat, gruff, embarrassed] 咳。……拍好看点。[pause] 跟上。朕带你见见世面。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "213859b1d1703a17daae1d56066a547571ab298b14e1a86eedd05126a8bf08b8",
+    "voice_id": "DowyQ68vDpgFYdWVGjc3",
+    "name": "JasonChen"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_JasonChen_e3",
+   "text": "[grudgingly pleased] ……这句留着。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "213859b1d1703a17daae1d56066a547571ab298b14e1a86eedd05126a8bf08b8",
+    "voice_id": "DowyQ68vDpgFYdWVGjc3",
+    "name": "JasonChen"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_JasonChen_e4",
+   "text": "[furious, shouting] 砍！全给朕砍了！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "213859b1d1703a17daae1d56066a547571ab298b14e1a86eedd05126a8bf08b8",
+    "voice_id": "DowyQ68vDpgFYdWVGjc3",
+    "name": "JasonChen"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_JasonChen_e5",
+   "text": "[cold, very quiet, menacing] 你。昨天，在不在？",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "213859b1d1703a17daae1d56066a547571ab298b14e1a86eedd05126a8bf08b8",
+    "voice_id": "DowyQ68vDpgFYdWVGjc3",
+    "name": "JasonChen"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_JasonChen_e6",
+   "text": "[weak, tired, gentle] ……这段也删了。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "213859b1d1703a17daae1d56066a547571ab298b14e1a86eedd05126a8bf08b8",
+    "voice_id": "DowyQ68vDpgFYdWVGjc3",
+    "name": "JasonChen"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_Haoran_e1",
+   "text": "[startled, shouting] 谁？！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+    "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+    "name": "Haoran"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_Haoran_e2",
+   "text": "[clears throat, gruff, embarrassed] 咳。……拍好看点。[pause] 跟上。朕带你见见世面。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+    "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+    "name": "Haoran"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_Haoran_e3",
+   "text": "[grudgingly pleased] ……这句留着。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+    "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+    "name": "Haoran"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_Haoran_e4",
+   "text": "[furious, shouting] 砍！全给朕砍了！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+    "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+    "name": "Haoran"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_Haoran_e5",
+   "text": "[cold, very quiet, menacing] 你。昨天，在不在？",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+    "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+    "name": "Haoran"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_Haoran_e6",
+   "text": "[weak, tired, gentle] ……这段也删了。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+    "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+    "name": "Haoran"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_LaoDao_e1",
+   "text": "[startled, shouting] 谁？！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "ad2273ea41c989cb52eba0a9f9eeb40260f159286d4cf6824985dd5fb2c0de11",
+    "voice_id": "2I36mEahS1u7ZnTKUoaB",
+    "name": "LaoDao"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_LaoDao_e2",
+   "text": "[clears throat, gruff, embarrassed] 咳。……拍好看点。[pause] 跟上。朕带你见见世面。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "ad2273ea41c989cb52eba0a9f9eeb40260f159286d4cf6824985dd5fb2c0de11",
+    "voice_id": "2I36mEahS1u7ZnTKUoaB",
+    "name": "LaoDao"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_LaoDao_e3",
+   "text": "[grudgingly pleased] ……这句留着。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "ad2273ea41c989cb52eba0a9f9eeb40260f159286d4cf6824985dd5fb2c0de11",
+    "voice_id": "2I36mEahS1u7ZnTKUoaB",
+    "name": "LaoDao"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_LaoDao_e4",
+   "text": "[furious, shouting] 砍！全给朕砍了！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "ad2273ea41c989cb52eba0a9f9eeb40260f159286d4cf6824985dd5fb2c0de11",
+    "voice_id": "2I36mEahS1u7ZnTKUoaB",
+    "name": "LaoDao"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_LaoDao_e5",
+   "text": "[cold, very quiet, menacing] 你。昨天，在不在？",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "ad2273ea41c989cb52eba0a9f9eeb40260f159286d4cf6824985dd5fb2c0de11",
+    "voice_id": "2I36mEahS1u7ZnTKUoaB",
+    "name": "LaoDao"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_LaoDao_e6",
+   "text": "[weak, tired, gentle] ……这段也删了。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "ad2273ea41c989cb52eba0a9f9eeb40260f159286d4cf6824985dd5fb2c0de11",
+    "voice_id": "2I36mEahS1u7ZnTKUoaB",
+    "name": "LaoDao"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_ErichLi_e1",
+   "text": "[startled, shouting] 谁？！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "2943756abb4c6781ac5c5ec6c00c18af78aa51a283589973ab6b04e83fa7b1d1",
+    "voice_id": "fYmV8EanqZP9BI4WvpB7",
+    "name": "ErichLi"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_ErichLi_e2",
+   "text": "[clears throat, gruff, embarrassed] 咳。……拍好看点。[pause] 跟上。朕带你见见世面。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "2943756abb4c6781ac5c5ec6c00c18af78aa51a283589973ab6b04e83fa7b1d1",
+    "voice_id": "fYmV8EanqZP9BI4WvpB7",
+    "name": "ErichLi"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_ErichLi_e3",
+   "text": "[grudgingly pleased] ……这句留着。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "2943756abb4c6781ac5c5ec6c00c18af78aa51a283589973ab6b04e83fa7b1d1",
+    "voice_id": "fYmV8EanqZP9BI4WvpB7",
+    "name": "ErichLi"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_ErichLi_e4",
+   "text": "[furious, shouting] 砍！全给朕砍了！",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "2943756abb4c6781ac5c5ec6c00c18af78aa51a283589973ab6b04e83fa7b1d1",
+    "voice_id": "fYmV8EanqZP9BI4WvpB7",
+    "name": "ErichLi"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_ErichLi_e5",
+   "text": "[cold, very quiet, menacing] 你。昨天，在不在？",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "2943756abb4c6781ac5c5ec6c00c18af78aa51a283589973ab6b04e83fa7b1d1",
+    "voice_id": "fYmV8EanqZP9BI4WvpB7",
+    "name": "ErichLi"
+   },
+   "keep": true
+  },
+  {
+   "name": "e_ErichLi_e6",
+   "text": "[weak, tired, gentle] ……这段也删了。",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.3,
+    "similarity_boost": 0.8,
+    "style": 0.6,
+    "speed": 0.92,
+    "use_speaker_boost": true
+   },
+   "add": {
+    "owner": "2943756abb4c6781ac5c5ec6c00c18af78aa51a283589973ab6b04e83fa7b1d1",
+    "voice_id": "fYmV8EanqZP9BI4WvpB7",
+    "name": "ErichLi"
+   },
+   "keep": true
   }
  ]
 }
