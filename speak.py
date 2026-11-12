@@ -68,6 +68,42 @@ for it in req["items"]:
             if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         except Exception as e: rec["error"] = str(e)[:300]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "dialogue":   # several speakers in ONE generation (consistent voices, natural turn-taking):
+        # {"type":"dialogue","name","lang"?,"model"?,"seed"?,"settings"?,"lines":[{"text","voice":{"owner","voice_id","name"}}]}
+        ids_for = {}
+        rec = {"name": it["name"], "type": "dialogue", "lang": it.get("lang", ""), "lines": [l["text"] for l in it["lines"]]}
+        try:
+            for l in it["lines"]:
+                ad = l["voice"]
+                if ad["voice_id"] in KEPT: ids_for[ad["voice_id"]] = KEPT[ad["voice_id"]]; continue
+                a = requests.post(f"{API}/v1/voices/add/{ad['owner']}/{ad['voice_id']}", headers=H, json={"new_name": ("s-" + ad.get("name", ""))[:40]}, timeout=30)
+                if not a.ok: raise RuntimeError(f"add {ad.get('name')} failed {a.status_code} {a.text[:200]}")
+                KEPT[ad["voice_id"]] = ids_for[ad["voice_id"]] = a.json().get("voice_id", ad["voice_id"])
+            inputs = [{"text": l["text"], "voice_id": ids_for[l["voice"]["voice_id"]]} for l in it["lines"]]
+            tried = []
+            for mdl in [it.get("model", "eleven_v4"), "eleven_v3"]:
+                if mdl in tried: continue
+                tried.append(mdl)
+                body = {"inputs": inputs, "model_id": mdl}
+                if it.get("lang"): body["language_code"] = it["lang"]
+                if it.get("settings"): body["settings"] = it["settings"]
+                if it.get("seed") is not None: body["seed"] = it["seed"]
+                r = requests.post(f"{API}/v1/text-to-dialogue/with-timestamps?output_format=mp3_44100_128", headers=H, json=body, timeout=600)
+                if not r.ok and "language_code" in body:
+                    log("dialogue retry without language_code:", r.status_code, r.text[:200]); body.pop("language_code")
+                    r = requests.post(f"{API}/v1/text-to-dialogue/with-timestamps?output_format=mp3_44100_128", headers=H, json=body, timeout=600)
+                rec["status"] = r.status_code; rec["model"] = mdl
+                if r.ok: break
+                log("dialogue failed with", mdl, r.status_code, r.text[:300]); rec.setdefault("errors", []).append(f"{mdl}: {r.status_code} {r.text[:300]}")
+            if r.ok:
+                import base64
+                j = r.json(); fn = f"{it['name']}.mp3"
+                open(f"out/{fn}", "wb").write(base64.b64decode(j["audio_base64"])); rec["file"] = fn
+                rec["voice_segments"] = j.get("voice_segments")     # per input line: start/end seconds
+                al = j.get("alignment") or {}
+                rec["alignment"] = {k: al.get(k) for k in ("characters", "character_start_times_seconds", "character_end_times_seconds")}
+        except Exception as e: rec["error"] = str(e)[:400]
+        log(json.dumps({k: v for k, v in rec.items() if k not in ("alignment",)}, ensure_ascii=False)[:2000]); report["clips"].append(rec); continue
     if it.get("type") == "voices":   # list voices of the shared library (no generation): {"type":"voices","name","lang","accent"?,"gender"?,"age"?,"use_case"?,"search"?,"n"?}
         p = {"page_size": it.get("n", 30), "language": it.get("lang", "zh"), "sort": it.get("sort", "usage_character_count_1y")}
         for k_src, k_dst in (("accent", "accent"), ("gender", "gender"), ("age", "age"), ("search", "search"), ("use_case", "use_cases"), ("category", "category")):
@@ -134,6 +170,8 @@ for it in req["items"]:
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
     body = {"text": it["text"], "model_id": it.get("model", MODEL), "language_code": it["lang"]}
     if it.get("settings"): body["voice_settings"] = it["settings"]
+    for k in ("seed", "previous_text", "next_text", "apply_text_normalization"):   # optional: continuity between separately generated lines
+        if it.get(k) is not None: body[k] = it[k]
     url = f"{API}/v1/text-to-speech/{vid}?output_format=mp3_44100_128"
     r = requests.post(url, headers=H, json=body, timeout=120)
     if not r.ok and r.status_code in (400, 422):
