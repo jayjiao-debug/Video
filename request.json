@@ -1,425 +1,201 @@
 {
- "id": "hongmen-sfx-01",
+ "id": "hongmen-sfx-02",
  "tag": true,
  "items": [
   {
    "type": "sfx",
-   "name": "whoosh_1",
-   "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "whoosh_2",
-   "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "pop_1",
-   "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "pop_2",
-   "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "seal_1",
-   "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "seal_2",
-   "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "flag_1",
-   "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.",
-   "duration": 0.7,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "flag_2",
-   "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.",
-   "duration": 0.7,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "army_1",
-   "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.",
-   "duration": 0.9,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "army_2",
-   "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.",
-   "duration": 0.9,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "slam_1",
-   "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.",
-   "duration": 0.8,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "slam_2",
-   "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.",
-   "duration": 0.8,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "hooves_in_1",
-   "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.",
-   "duration": 2.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "hooves_in_2",
-   "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.",
-   "duration": 2.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "clink_1",
-   "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "clink_2",
-   "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "drum_1",
-   "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "drum_2",
-   "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "jade_1",
-   "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.",
+   "name": "meat_r1",
+   "text": "A wet slap: a heavy raw steak slapped down hard on a wooden table. One loud wet smack, mid-range, clearly audible. One hit only, close, dry.",
    "duration": 0.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "jade_2",
-   "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.",
+   "name": "meat_r2",
+   "text": "A wet slap: a heavy raw steak slapped down hard on a wooden table. One loud wet smack, mid-range, clearly audible. One hit only, close, dry.",
    "duration": 0.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "shing_1",
-   "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 1.2,
+   "name": "meat_r3",
+   "text": "A wet slap: a heavy raw steak slapped down hard on a wooden table. One loud wet smack, mid-range, clearly audible. One hit only, close, dry.",
+   "duration": 0.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "shing_2",
-   "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 1.2,
+   "name": "drum_r1",
+   "text": "One hard hit with a wooden stick on a big Chinese war drum: a loud punchy thud with a clear attack and a short tail. One hit only, close, dry, no music.",
+   "duration": 1.0,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "swish_1",
-   "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.",
+   "name": "drum_r2",
+   "text": "One hard hit with a wooden stick on a big Chinese war drum: a loud punchy thud with a clear attack and a short tail. One hit only, close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "drum_r3",
+   "text": "One hard hit with a wooden stick on a big Chinese war drum: a loud punchy thud with a clear attack and a short tail. One hit only, close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "swish_r1",
+   "text": "Whoosh of a thin sword blade slicing through the air: one fast bright airy swoosh, no impact, no thump. Single short sound effect, close, dry.",
    "duration": 0.5,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "swish_2",
-   "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.",
+   "name": "swish_r2",
+   "text": "Whoosh of a thin sword blade slicing through the air: one fast bright airy swoosh, no impact, no thump. Single short sound effect, close, dry.",
    "duration": 0.5,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "clash_1",
-   "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.",
-   "duration": 0.7,
+   "name": "swish_r3",
+   "text": "Whoosh of a thin sword blade slicing through the air: one fast bright airy swoosh, no impact, no thump. Single short sound effect, close, dry.",
+   "duration": 0.5,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "clash_2",
-   "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.",
-   "duration": 0.7,
+   "name": "jade_r1",
+   "text": "One single clear note of a small stone chime struck once: a soft high ting with a short clean ring. One strike only, no second hit, dry, no music.",
+   "duration": 0.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "ram_1",
-   "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.",
+   "name": "jade_r2",
+   "text": "One single clear note of a small stone chime struck once: a soft high ting with a short clean ring. One strike only, no second hit, dry, no music.",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "jade_r3",
+   "text": "One single clear note of a small stone chime struck once: a soft high ting with a short clean ring. One strike only, no second hit, dry, no music.",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "stamp_r1",
+   "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "stamp_r2",
+   "text": "A rubber stamp slammed down hard on a wooden desk: one short dry thump.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "slam_r1",
+   "text": "A fist bangs hard on a wooden table, the cups and dishes on it jump and rattle: one loud bang, then a short rattle. Close, dry, loud, no voice.",
    "duration": 0.8,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "ram_2",
-   "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.",
+   "name": "slam_r2",
+   "text": "A fist bangs hard on a wooden table, the cups and dishes on it jump and rattle: one loud bang, then a short rattle. Close, dry, loud, no voice.",
    "duration": 0.8,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "armour_1",
-   "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.",
-   "duration": 1.0,
+   "name": "march_r1",
+   "text": "Two soldiers marching in step on hard earth: left, right, left, right, four clear even footsteps with armour clinking. Close, dry, no voices, no music.",
+   "duration": 1.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "armour_2",
-   "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.",
-   "duration": 1.0,
+   "name": "march_r2",
+   "text": "Two soldiers marching in step on hard earth: left, right, left, right, four clear even footsteps with armour clinking. Close, dry, no voices, no music.",
+   "duration": 1.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "flap_1",
-   "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.",
-   "duration": 0.6,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "flap_2",
-   "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.",
-   "duration": 0.6,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "meat_1",
-   "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "meat_2",
-   "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "chop_1",
-   "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "chop_2",
-   "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.",
-   "duration": 0.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "sneak_1",
-   "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "sneak_2",
-   "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "gallop_1",
-   "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.",
-   "duration": 3.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "gallop_2",
-   "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.",
-   "duration": 3.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "run_1",
-   "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.",
-   "duration": 2.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "run_2",
-   "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.",
-   "duration": 2.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "cap_1",
-   "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.",
-   "duration": 0.7,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "cap_2",
-   "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.",
-   "duration": 0.7,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "march_1",
-   "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "march_2",
-   "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.",
-   "duration": 1.5,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "whisper_1",
-   "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "whisper_2",
-   "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "fly_1",
-   "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "fly_2",
-   "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.",
-   "duration": 1.2,
-   "influence": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "tent_1",
-   "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.",
-   "duration": 10,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "tent_2",
-   "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.",
-   "duration": 10,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "night_1",
-   "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.",
-   "duration": 10,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "night_2",
-   "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.",
-   "duration": 10,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "day_1",
-   "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.",
-   "duration": 8,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "day_2",
-   "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.",
-   "duration": 8,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "privy_1",
-   "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.",
-   "duration": 6,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "privy_2",
-   "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.",
-   "duration": 6,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "troops_1",
-   "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.",
+   "name": "troops_r1",
+   "text": "The low murmur of a very large crowd of men, thousands of soldiers waiting in a field: deep indistinct male voices and rustling, continuous and even. No single voice in the foreground, no animals, no birds, no music.",
    "duration": 5,
    "influence": 0.5
   },
   {
    "type": "sfx",
-   "name": "troops_2",
-   "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.",
+   "name": "troops_r2",
+   "text": "The low murmur of a very large crowd of men, thousands of soldiers waiting in a field: deep indistinct male voices and rustling, continuous and even. No single voice in the foreground, no animals, no birds, no music.",
    "duration": 5,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "troops_r3",
+   "text": "The low murmur of a very large crowd of men, thousands of soldiers waiting in a field: deep indistinct male voices and rustling, continuous and even. No single voice in the foreground, no animals, no birds, no music.",
+   "duration": 5,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "privy_r1",
+   "text": "Quiet outdoor room tone in the daytime: a faint gentle breeze and two or three soft bird chirps far away. Very calm and even. No hiss, no insects, no voices, no music.",
+   "duration": 6,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "privy_r2",
+   "text": "Quiet outdoor room tone in the daytime: a faint gentle breeze and two or three soft bird chirps far away. Very calm and even. No hiss, no insects, no voices, no music.",
+   "duration": 6,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "privy_r3",
+   "text": "Quiet outdoor room tone in the daytime: a faint gentle breeze and two or three soft bird chirps far away. Very calm and even. No hiss, no insects, no voices, no music.",
+   "duration": 6,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "day_r1",
+   "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering in a light breeze, a few distant voices of men, far-off clatter. Even and continuous. No footsteps close by, no horses, no music.",
+   "duration": 8,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "day_r2",
+   "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering in a light breeze, a few distant voices of men, far-off clatter. Even and continuous. No footsteps close by, no horses, no music.",
+   "duration": 8,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "fire_r1",
+   "text": "Inside a large tent: a wood fire crackling softly in a brazier, quiet room tone. Calm, even, continuous. No voices, no music.",
+   "duration": 10,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "fire_r2",
+   "text": "Inside a large tent: a wood fire crackling softly in a brazier, quiet room tone. Calm, even, continuous. No voices, no music.",
+   "duration": 10,
    "influence": 0.5
   }
  ]
