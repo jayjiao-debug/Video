@@ -1,0 +1,4067 @@
+plan: {'tier': 'creator', 'character_count': 16927, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x01a", "lang": "en", "text": "The envoy's one job: deliver the jade. He's about to smash it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x01a.mp3", "bytes": 80291}
+{"name": "x01b", "lang": "en", "text": "The envoy's one job: deliver the jade. He's about to smash it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x01b.mp3", "bytes": 84470}
+{"name": "x01c", "lang": "en", "text": "The envoy has one job: deliver the jade. He's about to smash it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x01c.mp3", "bytes": 84470}
+{"name": "x02a", "lang": "en", "text": "Who's begging him to stop? The King of Chin.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x02a.mp3", "bytes": 52287}
+{"name": "x02b", "lang": "en", "text": "Who's begging him to stop? The King of Chin.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x02b.mp3", "bytes": 49780}
+{"name": "x02c", "lang": "en", "text": "Begging him to stop? The King of Chin.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x02c.mp3", "bytes": 53541}
+{"name": "x03a", "lang": "en", "text": "Chin offered Jow fifteen cities for it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x03a.mp3", "bytes": 49780}
+{"name": "x03b", "lang": "en", "text": "Chin offered Jow fifteen cities for it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x03b.mp3", "bytes": 49780}
+{"name": "x03c", "lang": "en", "text": "Chin offered Jow fifteen cities.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x03c.mp3", "bytes": 44764}
+{"name": "x04a", "lang": "en", "text": "Give it: maybe no cities. Keep it: Chin's army, for sure.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04a.mp3", "bytes": 89486}
+{"name": "x04b", "lang": "en", "text": "Give it: maybe no cities. Keep it: Chin's army, for sure.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04b.mp3", "bytes": 90740}
+{"name": "x05a", "lang": "en", "text": "Who goes? Nobody. So a eunuch offered his retainer.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x05a.mp3", "bytes": 69006}
+{"name": "x05b", "lang": "en", "text": "Who goes? Nobody. So a eunuch offered his retainer.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x05b.mp3", "bytes": 66498}
+{"name": "x06a", "lang": "en", "text": "He says: \"I'll go. No cities? The jade comes back intact.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x06a.mp3", "bytes": 74021}
+{"name": "x06b", "lang": "en", "text": "He says: \"I'll go. No cities? The jade comes back intact.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x06b.mp3", "bytes": 75275}
+{"name": "x07a", "lang": "en", "text": "The king takes the jade, overjoyed, and shows his ladies.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07a.mp3", "bytes": 67752}
+{"name": "x07b", "lang": "en", "text": "The king takes the jade, overjoyed, and shows his ladies.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07b.mp3", "bytes": 69006}
+{"name": "x08a", "lang": "en", "text": "\"Long live the king!\" No one mentions cities.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08a.mp3", "bytes": 65244}
+{"name": "x08b", "lang": "en", "text": "\"Long live the king!\" No one mentions cities.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08b.mp3", "bytes": 63990}
+{"name": "x09a", "lang": "en", "text": "He steps up: \"There's a flaw in it. Let me show you.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x09a.mp3", "bytes": 58557}
+{"name": "x09b", "lang": "en", "text": "He steps up: \"There's a flaw in it. Let me show you.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x09b.mp3", "bytes": 58557}
+{"name": "x10a", "lang": "en", "text": "Jade in hand, he backs off, furious, hair lifting his hat.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10a.mp3", "bytes": 76529}
+{"name": "x10b", "lang": "en", "text": "Jade in hand, he backs off, furious, hair lifting his hat.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10b.mp3", "bytes": 76529}
+{"name": "x10c", "lang": "en", "text": "Jade in hand, he backs off, hair lifting his hat.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10c.mp3", "bytes": 61065}
+{"name": "x11a", "lang": "en", "text": "\"Push me, and my head and this jade shatter on this pillar!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x11a.mp3", "bytes": 67752}
+{"name": "x11b", "lang": "en", "text": "\"Push me, and my head and this jade shatter on this pillar!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x11b.mp3", "bytes": 66498}
+{"name": "x12a", "lang": "en", "text": "The king says sorry, unrolls a map, points: \"These fifteen cities. Jow's.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x12a.mp3", "bytes": 99517}
+{"name": "x12b", "lang": "en", "text": "The king says sorry, unrolls a map, points: \"These fifteen cities. Jow's.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x12b.mp3", "bytes": 103278}
+{"name": "x12c", "lang": "en", "text": "The king apologizes, unrolls a map, points: \"These fifteen cities. Jow's.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x12c.mp3", "bytes": 106204}
+{"name": "x13a", "lang": "en", "text": "He can tell the king is acting.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x13a.mp3", "bytes": 34315}
+{"name": "x13b", "lang": "en", "text": "He can tell the king is acting.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x13b.mp3", "bytes": 31807}
+{"name": "x14a", "lang": "en", "text": "He acts too: \"My king fasted five days to send it. Now you fast five days, full honors, then it's yours.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14a.mp3", "bytes": 134207}
+{"name": "x14b", "lang": "en", "text": "He acts too: \"My king fasted five days to send it. Now you fast five days, full honors, then it's yours.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14b.mp3", "bytes": 134207}
+{"name": "x15a", "lang": "en", "text": "The king can't grab it, so he caves.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15a.mp3", "bytes": 46018}
+{"name": "x15b", "lang": "en", "text": "The king can't grab it, so he caves.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15b.mp3", "bytes": 47272}
+{"name": "x15c", "lang": "en", "text": "The king can't grab it, so he agrees.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15c.mp3", "bytes": 44764}
+{"name": "x16a", "lang": "en", "text": "Meanwhile his servant dresses in rough cloth, hides the jade, and sneaks home to Jow.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x16a.mp3", "bytes": 89486}
+{"name": "x16b", "lang": "en", "text": "Meanwhile his servant dresses in rough cloth, hides the jade, and sneaks home to Jow.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x16b.mp3", "bytes": 93247}
+{"name": "x17a", "lang": "en", "text": "Five days later, all set, the king wants it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17a.mp3", "bytes": 56049}
+{"name": "x17b", "lang": "en", "text": "Five days later, all set, the king wants it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17b.mp3", "bytes": 56049}
+{"name": "x17c", "lang": "en", "text": "Day five, all set, the king wants it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17c.mp3", "bytes": 49780}
+{"name": "x18a", "lang": "en", "text": "He says: \"Chin's had twenty-odd kings; not one kept his word. The jade's already in Jow.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18a.mp3", "bytes": 112474}
+{"name": "x18b", "lang": "en", "text": "He says: \"Chin's had twenty-odd kings; not one kept his word. The jade's already in Jow.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18b.mp3", "bytes": 111220}
+{"name": "x19a", "lang": "en", "text": "\"I tricked you. I deserve death. Throw me in the pot.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19a.mp3", "bytes": 66498}
+{"name": "x19b", "lang": "en", "text": "\"I tricked you. I deserve death. Throw me in the pot.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19b.mp3", "bytes": 65244}
+{"name": "x19c", "lang": "en", "text": "\"I lied. I deserve death. Throw me in the pot.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19c.mp3", "bytes": 62318}
+{"name": "x20a", "lang": "en", "text": "The ministers stare at each other. A guard grabs him.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x20a.mp3", "bytes": 56049}
+{"name": "x20b", "lang": "en", "text": "The ministers stare at each other. A guard grabs him.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x20b.mp3", "bytes": 54795}
+{"name": "x21a", "lang": "en", "text": "The king says: \"Kill him, and still no jade. Let him go home.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x21a.mp3", "bytes": 79037}
+{"name": "x21b", "lang": "en", "text": "The king says: \"Kill him, and still no jade. Let him go home.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x21b.mp3", "bytes": 76529}
+{"name": "x22a", "lang": "en", "text": "In the end, Chin gave no cities. Jow gave no jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x22a.mp3", "bytes": 75275}
+{"name": "x22b", "lang": "en", "text": "In the end, Chin gave no cities. Jow gave no jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x22b.mp3", "bytes": 75275}
+{"name": "x23a", "lang": "en", "text": "A jade worth fifteen cities didn't get one. But the retainer came home a big shot.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x23a.mp3", "bytes": 93247}
+{"name": "x23b", "lang": "en", "text": "A jade worth fifteen cities didn't get one. But the retainer came home a big shot.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x23b.mp3", "bytes": 99517}
+{"name": "x23c", "lang": "en", "text": "A jade worth fifteen cities didn't get one. But the eunuch's retainer came home a big shot.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x23c.mp3", "bytes": 98263}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x01a",
+  "lang": "en",
+  "text": "The envoy's one job: deliver the jade. He's about to smash it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x01a.mp3",
+  "bytes": 80291,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "Envoy's",
+    0.14,
+    0.72
+   ],
+   [
+    "one",
+    0.72,
+    1.0
+   ],
+   [
+    "job.",
+    1.0,
+    1.38
+   ],
+   [
+    "Deliver",
+    1.86,
+    2.3
+   ],
+   [
+    "the",
+    2.3,
+    2.48
+   ],
+   [
+    "Jade.",
+    2.48,
+    2.86
+   ],
+   [
+    "He's",
+    3.36,
+    3.6
+   ],
+   [
+    "about",
+    3.6,
+    3.76
+   ],
+   [
+    "to",
+    3.76,
+    3.98
+   ],
+   [
+    "smash",
+    3.98,
+    4.32
+   ],
+   [
+    "it.",
+    4.32,
+    4.72
+   ]
+  ],
+  "heard": "The Envoy's one job. Deliver the Jade. He's about to smash it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.96
+ },
+ {
+  "name": "x01b",
+  "lang": "en",
+  "text": "The envoy's one job: deliver the jade. He's about to smash it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x01b.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "Envoy's",
+    0.16,
+    0.74
+   ],
+   [
+    "one",
+    0.74,
+    1.02
+   ],
+   [
+    "job.",
+    1.02,
+    1.44
+   ],
+   [
+    "Deliver",
+    1.92,
+    2.36
+   ],
+   [
+    "the",
+    2.36,
+    2.56
+   ],
+   [
+    "Jade.",
+    2.56,
+    2.92
+   ],
+   [
+    "He's",
+    3.48,
+    3.74
+   ],
+   [
+    "about",
+    3.74,
+    3.94
+   ],
+   [
+    "to",
+    3.94,
+    4.16
+   ],
+   [
+    "smash",
+    4.16,
+    4.54
+   ],
+   [
+    "it!",
+    4.54,
+    4.96
+   ]
+  ],
+  "heard": "The Envoy's one job. Deliver the Jade. He's about to smash it!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.2
+ },
+ {
+  "name": "x01c",
+  "lang": "en",
+  "text": "The envoy has one job: deliver the jade. He's about to smash it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x01c.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "Envoy",
+    0.16,
+    0.58
+   ],
+   [
+    "has",
+    0.58,
+    0.88
+   ],
+   [
+    "one",
+    0.88,
+    1.22
+   ],
+   [
+    "job.",
+    1.22,
+    1.64
+   ],
+   [
+    "Deliver",
+    2.14,
+    2.52
+   ],
+   [
+    "the",
+    2.52,
+    2.72
+   ],
+   [
+    "Jade.",
+    2.72,
+    3.08
+   ],
+   [
+    "He's",
+    3.68,
+    3.88
+   ],
+   [
+    "about",
+    3.88,
+    4.02
+   ],
+   [
+    "to",
+    4.02,
+    4.22
+   ],
+   [
+    "smash",
+    4.22,
+    4.56
+   ],
+   [
+    "it!",
+    4.56,
+    4.96
+   ]
+  ],
+  "heard": "The Envoy has one job. Deliver the Jade. He's about to smash it!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 5.2
+ },
+ {
+  "name": "x02a",
+  "lang": "en",
+  "text": "Who's begging him to stop? The King of Chin.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x02a.mp3",
+  "bytes": 52287,
+  "words": [
+   [
+    "Who's",
+    0.0,
+    0.28
+   ],
+   [
+    "begging",
+    0.28,
+    0.54
+   ],
+   [
+    "him",
+    0.54,
+    0.78
+   ],
+   [
+    "to",
+    0.78,
+    0.92
+   ],
+   [
+    "stop",
+    0.92,
+    1.32
+   ],
+   [
+    "the",
+    1.32,
+    1.98
+   ],
+   [
+    "King",
+    1.98,
+    2.34
+   ],
+   [
+    "of",
+    2.34,
+    2.5
+   ],
+   [
+    "Chin?",
+    2.5,
+    2.82
+   ]
+  ],
+  "heard": "Who's begging him to stop the King of Chin?",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ },
+ {
+  "name": "x02b",
+  "lang": "en",
+  "text": "Who's begging him to stop? The King of Chin.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x02b.mp3",
+  "bytes": 49780,
+  "words": [
+   [
+    "Who's",
+    0.0,
+    0.26
+   ],
+   [
+    "begging",
+    0.26,
+    0.54
+   ],
+   [
+    "him",
+    0.54,
+    0.74
+   ],
+   [
+    "to",
+    0.74,
+    0.88
+   ],
+   [
+    "stop?",
+    0.88,
+    1.28
+   ],
+   [
+    "The",
+    1.8,
+    1.92
+   ],
+   [
+    "King",
+    1.92,
+    2.18
+   ],
+   [
+    "of",
+    2.18,
+    2.34
+   ],
+   [
+    "Chin!",
+    2.34,
+    2.64
+   ]
+  ],
+  "heard": "Who's begging him to stop? The King of Chin!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.04
+ },
+ {
+  "name": "x02c",
+  "lang": "en",
+  "text": "Begging him to stop? The King of Chin.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x02c.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "Begging",
+    0.0,
+    0.44
+   ],
+   [
+    "him",
+    0.44,
+    0.64
+   ],
+   [
+    "to",
+    0.64,
+    0.8
+   ],
+   [
+    "stop",
+    0.8,
+    1.24
+   ],
+   [
+    "the",
+    1.24,
+    2.02
+   ],
+   [
+    "king",
+    2.02,
+    2.36
+   ],
+   [
+    "of",
+    2.36,
+    2.52
+   ],
+   [
+    "chin",
+    2.52,
+    2.9
+   ]
+  ],
+  "heard": "Begging him to stop the king of chin",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "x03a",
+  "lang": "en",
+  "text": "Chin offered Jow fifteen cities for it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x03a.mp3",
+  "bytes": 49780,
+  "words": [
+   [
+    "Chen",
+    0.0,
+    0.24
+   ],
+   [
+    "offered",
+    0.24,
+    0.62
+   ],
+   [
+    "Joe",
+    0.62,
+    0.98
+   ],
+   [
+    "15",
+    0.98,
+    1.58
+   ],
+   [
+    "cities",
+    1.58,
+    2.28
+   ],
+   [
+    "for",
+    2.28,
+    2.64
+   ],
+   [
+    "it.",
+    2.64,
+    2.84
+   ]
+  ],
+  "heard": "Chen offered Joe 15 cities for it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.04
+ },
+ {
+  "name": "x03b",
+  "lang": "en",
+  "text": "Chin offered Jow fifteen cities for it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x03b.mp3",
+  "bytes": 49780,
+  "words": [
+   [
+    "Chen",
+    0.0,
+    0.26
+   ],
+   [
+    "offered",
+    0.26,
+    0.64
+   ],
+   [
+    "Zhao",
+    0.64,
+    1.04
+   ],
+   [
+    "15",
+    1.04,
+    1.54
+   ],
+   [
+    "cities",
+    1.54,
+    2.28
+   ],
+   [
+    "for",
+    2.28,
+    2.66
+   ],
+   [
+    "it.",
+    2.66,
+    2.86
+   ]
+  ],
+  "heard": "Chen offered Zhao 15 cities for it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 3.04
+ },
+ {
+  "name": "x03c",
+  "lang": "en",
+  "text": "Chin offered Jow fifteen cities.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x03c.mp3",
+  "bytes": 44764,
+  "words": [
+   [
+    "Chen",
+    0.0,
+    0.26
+   ],
+   [
+    "offered",
+    0.26,
+    0.62
+   ],
+   [
+    "Joe",
+    0.62,
+    1.02
+   ],
+   [
+    "15",
+    1.02,
+    1.64
+   ],
+   [
+    "cities.",
+    1.64,
+    2.26
+   ]
+  ],
+  "heard": "Chen offered Joe 15 cities.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 2.72
+ },
+ {
+  "name": "x04a",
+  "lang": "en",
+  "text": "Give it: maybe no cities. Keep it: Chin's army, for sure.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04a.mp3",
+  "bytes": 89486,
+  "words": [
+   [
+    "Give",
+    0.0,
+    0.22
+   ],
+   [
+    "it.",
+    0.22,
+    0.46
+   ],
+   [
+    "Maybe",
+    0.86,
+    1.22
+   ],
+   [
+    "no",
+    1.22,
+    1.76
+   ],
+   [
+    "cities.",
+    1.76,
+    2.12
+   ],
+   [
+    "Keep",
+    2.78,
+    3.04
+   ],
+   [
+    "it.",
+    3.04,
+    3.28
+   ],
+   [
+    "Chin's",
+    3.74,
+    4.06
+   ],
+   [
+    "army",
+    4.06,
+    4.34
+   ],
+   [
+    "for",
+    4.34,
+    4.72
+   ],
+   [
+    "sure.",
+    4.72,
+    5.12
+   ]
+  ],
+  "heard": "Give it. Maybe no cities. Keep it. Chin's army for sure.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 5.52
+ },
+ {
+  "name": "x04b",
+  "lang": "en",
+  "text": "Give it: maybe no cities. Keep it: Chin's army, for sure.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04b.mp3",
+  "bytes": 90740,
+  "words": [
+   [
+    "Give",
+    0.0,
+    0.24
+   ],
+   [
+    "it.",
+    0.24,
+    0.5
+   ],
+   [
+    "Maybe",
+    0.92,
+    1.36
+   ],
+   [
+    "no",
+    1.36,
+    1.82
+   ],
+   [
+    "cities.",
+    1.82,
+    2.16
+   ],
+   [
+    "Keep",
+    2.78,
+    3.08
+   ],
+   [
+    "it.",
+    3.08,
+    3.34
+   ],
+   [
+    "Chin's",
+    3.8,
+    4.16
+   ],
+   [
+    "army",
+    4.16,
+    4.46
+   ],
+   [
+    "for",
+    4.46,
+    4.8
+   ],
+   [
+    "sure.",
+    4.8,
+    5.18
+   ]
+  ],
+  "heard": "Give it. Maybe no cities. Keep it. Chin's army for sure.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.6
+ },
+ {
+  "name": "x05a",
+  "lang": "en",
+  "text": "Who goes? Nobody. So a eunuch offered his retainer.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x05a.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "Who",
+    0.0,
+    0.14
+   ],
+   [
+    "goes?",
+    0.14,
+    0.4
+   ],
+   [
+    "Nobody.",
+    1.0,
+    1.36
+   ],
+   [
+    "So",
+    1.98,
+    2.24
+   ],
+   [
+    "a",
+    2.24,
+    2.48
+   ],
+   [
+    "eunuch",
+    2.48,
+    2.94
+   ],
+   [
+    "offered",
+    2.94,
+    3.26
+   ],
+   [
+    "his",
+    3.26,
+    3.44
+   ],
+   [
+    "retainer.",
+    3.44,
+    3.98
+   ]
+  ],
+  "heard": "Who goes? Nobody. So a eunuch offered his retainer.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 4.24
+ },
+ {
+  "name": "x05b",
+  "lang": "en",
+  "text": "Who goes? Nobody. So a eunuch offered his retainer.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x05b.mp3",
+  "bytes": 66498,
+  "words": [
+   [
+    "Who",
+    0.0,
+    0.14
+   ],
+   [
+    "goes?",
+    0.14,
+    0.4
+   ],
+   [
+    "Nobody.",
+    1.0,
+    1.36
+   ],
+   [
+    "So",
+    1.92,
+    2.16
+   ],
+   [
+    "a",
+    2.16,
+    2.36
+   ],
+   [
+    "eunuch",
+    2.36,
+    2.86
+   ],
+   [
+    "offered",
+    2.86,
+    3.16
+   ],
+   [
+    "his",
+    3.16,
+    3.36
+   ],
+   [
+    "retainer.",
+    3.36,
+    3.88
+   ]
+  ],
+  "heard": "Who goes? Nobody. So a eunuch offered his retainer.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 4.08
+ },
+ {
+  "name": "x06a",
+  "lang": "en",
+  "text": "He says: \"I'll go. No cities? The jade comes back intact.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x06a.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "says,",
+    0.14,
+    0.36
+   ],
+   [
+    "I'll",
+    0.84,
+    1.06
+   ],
+   [
+    "go.",
+    1.06,
+    1.26
+   ],
+   [
+    "No",
+    1.82,
+    2.02
+   ],
+   [
+    "cities?",
+    2.02,
+    2.34
+   ],
+   [
+    "The",
+    2.88,
+    3.02
+   ],
+   [
+    "Jade",
+    3.02,
+    3.24
+   ],
+   [
+    "comes",
+    3.24,
+    3.5
+   ],
+   [
+    "back",
+    3.5,
+    3.74
+   ],
+   [
+    "intact.",
+    3.74,
+    4.02
+   ]
+  ],
+  "heard": "He says, I'll go. No cities? The Jade comes back intact.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "x06b",
+  "lang": "en",
+  "text": "He says: \"I'll go. No cities? The jade comes back intact.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x06b.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "says,",
+    0.12,
+    0.38
+   ],
+   [
+    "I'll",
+    0.9,
+    1.16
+   ],
+   [
+    "go.",
+    1.16,
+    1.34
+   ],
+   [
+    "No",
+    1.88,
+    2.08
+   ],
+   [
+    "cities?",
+    2.08,
+    2.38
+   ],
+   [
+    "The",
+    2.94,
+    3.08
+   ],
+   [
+    "jade",
+    3.08,
+    3.38
+   ],
+   [
+    "comes",
+    3.38,
+    3.56
+   ],
+   [
+    "back",
+    3.56,
+    3.82
+   ],
+   [
+    "intact.",
+    3.82,
+    4.08
+   ]
+  ],
+  "heard": "He says, I'll go. No cities? The jade comes back intact.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.64
+ },
+ {
+  "name": "x07a",
+  "lang": "en",
+  "text": "The king takes the jade, overjoyed, and shows his ladies.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07a.mp3",
+  "bytes": 67752,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.4
+   ],
+   [
+    "takes",
+    0.4,
+    0.78
+   ],
+   [
+    "the",
+    0.78,
+    1.02
+   ],
+   [
+    "jade,",
+    1.02,
+    1.4
+   ],
+   [
+    "overjoyed,",
+    1.64,
+    2.56
+   ],
+   [
+    "and",
+    2.62,
+    2.74
+   ],
+   [
+    "shows",
+    2.74,
+    3.08
+   ],
+   [
+    "his",
+    3.08,
+    3.32
+   ],
+   [
+    "ladies.",
+    3.32,
+    3.66
+   ]
+  ],
+  "heard": "The king takes the jade, overjoyed, and shows his ladies.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.16
+ },
+ {
+  "name": "x07b",
+  "lang": "en",
+  "text": "The king takes the jade, overjoyed, and shows his ladies.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07b.mp3",
+  "bytes": 69006,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "king",
+    0.18,
+    0.42
+   ],
+   [
+    "takes",
+    0.42,
+    0.8
+   ],
+   [
+    "the",
+    0.8,
+    1.02
+   ],
+   [
+    "jade,",
+    1.02,
+    1.5
+   ],
+   [
+    "overjoyed,",
+    1.72,
+    2.72
+   ],
+   [
+    "and",
+    2.8,
+    2.88
+   ],
+   [
+    "shows",
+    2.88,
+    3.2
+   ],
+   [
+    "his",
+    3.2,
+    3.42
+   ],
+   [
+    "ladies.",
+    3.42,
+    3.8
+   ]
+  ],
+  "heard": "The king takes the jade, overjoyed, and shows his ladies.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.24
+ },
+ {
+  "name": "x08a",
+  "lang": "en",
+  "text": "\"Long live the king!\" No one mentions cities.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08a.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "Long",
+    0.0,
+    0.4
+   ],
+   [
+    "live",
+    0.4,
+    0.74
+   ],
+   [
+    "the",
+    0.74,
+    1.02
+   ],
+   [
+    "king!",
+    1.02,
+    1.36
+   ],
+   [
+    "No",
+    1.98,
+    2.42
+   ],
+   [
+    "one",
+    2.42,
+    2.64
+   ],
+   [
+    "mentioned",
+    2.64,
+    2.98
+   ],
+   [
+    "cities.",
+    2.98,
+    3.44
+   ]
+  ],
+  "heard": "Long live the king! No one mentioned cities.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 4.0
+ },
+ {
+  "name": "x08b",
+  "lang": "en",
+  "text": "\"Long live the king!\" No one mentions cities.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08b.mp3",
+  "bytes": 63990,
+  "words": [
+   [
+    "Long",
+    0.0,
+    0.38
+   ],
+   [
+    "live",
+    0.38,
+    0.68
+   ],
+   [
+    "the",
+    0.68,
+    0.96
+   ],
+   [
+    "king!",
+    0.96,
+    1.3
+   ],
+   [
+    "No",
+    2.04,
+    2.4
+   ],
+   [
+    "one",
+    2.4,
+    2.58
+   ],
+   [
+    "mentioned",
+    2.58,
+    2.88
+   ],
+   [
+    "cities.",
+    2.88,
+    3.32
+   ]
+  ],
+  "heard": "Long live the king! No one mentioned cities.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.92
+ },
+ {
+  "name": "x09a",
+  "lang": "en",
+  "text": "He steps up: \"There's a flaw in it. Let me show you.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x09a.mp3",
+  "bytes": 58557,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "steps",
+    0.12,
+    0.38
+   ],
+   [
+    "up.",
+    0.38,
+    0.72
+   ],
+   [
+    "There's",
+    1.34,
+    1.54
+   ],
+   [
+    "a",
+    1.54,
+    1.62
+   ],
+   [
+    "flaw",
+    1.62,
+    1.9
+   ],
+   [
+    "in",
+    1.9,
+    2.12
+   ],
+   [
+    "it.",
+    2.12,
+    2.32
+   ],
+   [
+    "Let",
+    2.64,
+    2.8
+   ],
+   [
+    "me",
+    2.8,
+    2.92
+   ],
+   [
+    "show",
+    2.92,
+    3.14
+   ],
+   [
+    "you.",
+    3.14,
+    3.32
+   ]
+  ],
+  "heard": "He steps up. There's a flaw in it. Let me show you.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.6
+ },
+ {
+  "name": "x09b",
+  "lang": "en",
+  "text": "He steps up: \"There's a flaw in it. Let me show you.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x09b.mp3",
+  "bytes": 58557,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "steps",
+    0.14,
+    0.4
+   ],
+   [
+    "up.",
+    0.4,
+    0.74
+   ],
+   [
+    "There's",
+    1.1,
+    1.54
+   ],
+   [
+    "a",
+    1.54,
+    1.58
+   ],
+   [
+    "flaw",
+    1.58,
+    1.88
+   ],
+   [
+    "in",
+    1.88,
+    2.14
+   ],
+   [
+    "it.",
+    2.14,
+    2.32
+   ],
+   [
+    "Let",
+    2.64,
+    2.8
+   ],
+   [
+    "me",
+    2.8,
+    2.92
+   ],
+   [
+    "show",
+    2.92,
+    3.14
+   ],
+   [
+    "you.",
+    3.14,
+    3.32
+   ]
+  ],
+  "heard": "He steps up. There's a flaw in it. Let me show you.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.6
+ },
+ {
+  "name": "x10a",
+  "lang": "en",
+  "text": "Jade in hand, he backs off, furious, hair lifting his hat.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10a.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "Jade",
+    0.0,
+    0.32
+   ],
+   [
+    "in",
+    0.32,
+    0.5
+   ],
+   [
+    "hand,",
+    0.5,
+    0.9
+   ],
+   [
+    "he",
+    1.16,
+    1.26
+   ],
+   [
+    "backs",
+    1.26,
+    1.56
+   ],
+   [
+    "off,",
+    1.56,
+    1.98
+   ],
+   [
+    "furious,",
+    2.24,
+    2.8
+   ],
+   [
+    "hair",
+    3.26,
+    3.54
+   ],
+   [
+    "lifting",
+    3.54,
+    3.94
+   ],
+   [
+    "his",
+    3.94,
+    4.16
+   ],
+   [
+    "hat.",
+    4.16,
+    4.4
+   ]
+  ],
+  "heard": "Jade in hand, he backs off, furious, hair lifting his hat.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ },
+ {
+  "name": "x10b",
+  "lang": "en",
+  "text": "Jade in hand, he backs off, furious, hair lifting his hat.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10b.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "Jade",
+    0.0,
+    0.32
+   ],
+   [
+    "in",
+    0.32,
+    0.5
+   ],
+   [
+    "hand,",
+    0.5,
+    0.94
+   ],
+   [
+    "he",
+    1.16,
+    1.28
+   ],
+   [
+    "backs",
+    1.28,
+    1.56
+   ],
+   [
+    "off,",
+    1.56,
+    2.0
+   ],
+   [
+    "furious,",
+    2.34,
+    2.74
+   ],
+   [
+    "hair",
+    3.16,
+    3.44
+   ],
+   [
+    "lifting",
+    3.44,
+    3.94
+   ],
+   [
+    "his",
+    3.94,
+    4.16
+   ],
+   [
+    "hat.",
+    4.16,
+    4.4
+   ]
+  ],
+  "heard": "Jade in hand, he backs off, furious, hair lifting his hat.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ },
+ {
+  "name": "x10c",
+  "lang": "en",
+  "text": "Jade in hand, he backs off, hair lifting his hat.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10c.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "Jade",
+    0.0,
+    0.3
+   ],
+   [
+    "in",
+    0.3,
+    0.48
+   ],
+   [
+    "hand,",
+    0.48,
+    0.8
+   ],
+   [
+    "he",
+    1.16,
+    1.26
+   ],
+   [
+    "backs",
+    1.26,
+    1.52
+   ],
+   [
+    "off,",
+    1.52,
+    1.94
+   ],
+   [
+    "hair",
+    2.3,
+    2.52
+   ],
+   [
+    "lifting",
+    2.52,
+    3.0
+   ],
+   [
+    "his",
+    3.0,
+    3.22
+   ],
+   [
+    "hat.",
+    3.22,
+    3.46
+   ]
+  ],
+  "heard": "Jade in hand, he backs off, hair lifting his hat.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "x11a",
+  "lang": "en",
+  "text": "\"Push me, and my head and this jade shatter on this pillar!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x11a.mp3",
+  "bytes": 67752,
+  "words": [
+   [
+    "Push",
+    0.0,
+    0.22
+   ],
+   [
+    "me",
+    0.22,
+    0.56
+   ],
+   [
+    "and",
+    0.56,
+    0.88
+   ],
+   [
+    "my",
+    0.88,
+    1.08
+   ],
+   [
+    "head",
+    1.08,
+    1.42
+   ],
+   [
+    "and",
+    1.42,
+    1.64
+   ],
+   [
+    "this",
+    1.64,
+    1.84
+   ],
+   [
+    "jade",
+    1.84,
+    2.38
+   ],
+   [
+    "shatter",
+    2.38,
+    2.88
+   ],
+   [
+    "on",
+    2.88,
+    3.08
+   ],
+   [
+    "this",
+    3.08,
+    3.28
+   ],
+   [
+    "pillar!",
+    3.28,
+    3.6
+   ]
+  ],
+  "heard": "Push me and my head and this jade shatter on this pillar!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.16
+ },
+ {
+  "name": "x11b",
+  "lang": "en",
+  "text": "\"Push me, and my head and this jade shatter on this pillar!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x11b.mp3",
+  "bytes": 66498,
+  "words": [
+   [
+    "Push",
+    0.0,
+    0.24
+   ],
+   [
+    "me,",
+    0.24,
+    0.54
+   ],
+   [
+    "and",
+    0.8,
+    0.9
+   ],
+   [
+    "my",
+    0.9,
+    1.1
+   ],
+   [
+    "head",
+    1.1,
+    1.46
+   ],
+   [
+    "and",
+    1.46,
+    1.68
+   ],
+   [
+    "this",
+    1.68,
+    1.94
+   ],
+   [
+    "jade",
+    1.94,
+    2.44
+   ],
+   [
+    "shatter",
+    2.44,
+    2.96
+   ],
+   [
+    "on",
+    2.96,
+    3.14
+   ],
+   [
+    "this",
+    3.14,
+    3.32
+   ],
+   [
+    "pillar.",
+    3.32,
+    3.66
+   ]
+  ],
+  "heard": "Push me, and my head and this jade shatter on this pillar.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.08
+ },
+ {
+  "name": "x12a",
+  "lang": "en",
+  "text": "The king says sorry, unrolls a map, points: \"These fifteen cities. Jow's.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x12a.mp3",
+  "bytes": 99517,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "king",
+    0.14,
+    0.36
+   ],
+   [
+    "says",
+    0.36,
+    0.6
+   ],
+   [
+    "sorry,",
+    0.6,
+    1.04
+   ],
+   [
+    "unrolls",
+    1.44,
+    1.96
+   ],
+   [
+    "a",
+    1.96,
+    2.04
+   ],
+   [
+    "map,",
+    2.04,
+    2.32
+   ],
+   [
+    "points.",
+    2.58,
+    2.88
+   ],
+   [
+    "These",
+    3.54,
+    3.84
+   ],
+   [
+    "15",
+    3.84,
+    4.3
+   ],
+   [
+    "cities.",
+    4.3,
+    4.8
+   ],
+   [
+    "Jows.",
+    5.3,
+    5.78
+   ]
+  ],
+  "heard": "The king says sorry, unrolls a map, points. These 15 cities. Jows.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.16
+ },
+ {
+  "name": "x12b",
+  "lang": "en",
+  "text": "The king says sorry, unrolls a map, points: \"These fifteen cities. Jow's.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x12b.mp3",
+  "bytes": 103278,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "king",
+    0.18,
+    0.4
+   ],
+   [
+    "says",
+    0.4,
+    0.68
+   ],
+   [
+    "sorry.",
+    0.68,
+    1.12
+   ],
+   [
+    "Unrolls",
+    1.52,
+    2.02
+   ],
+   [
+    "a",
+    2.02,
+    2.1
+   ],
+   [
+    "map.",
+    2.1,
+    2.36
+   ],
+   [
+    "Points.",
+    2.72,
+    2.96
+   ],
+   [
+    "These",
+    3.74,
+    3.96
+   ],
+   [
+    "15",
+    3.96,
+    4.46
+   ],
+   [
+    "cities.",
+    4.46,
+    4.94
+   ],
+   [
+    "Jows.",
+    5.62,
+    6.0
+   ]
+  ],
+  "heard": "The king says sorry. Unrolls a map. Points. These 15 cities. Jows.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 6.4
+ },
+ {
+  "name": "x12c",
+  "lang": "en",
+  "text": "The king apologizes, unrolls a map, points: \"These fifteen cities. Jow's.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x12c.mp3",
+  "bytes": 106204,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.32
+   ],
+   [
+    "apologizes,",
+    0.32,
+    1.26
+   ],
+   [
+    "unrolls",
+    1.68,
+    2.1
+   ],
+   [
+    "a",
+    2.1,
+    2.18
+   ],
+   [
+    "map,",
+    2.18,
+    2.44
+   ],
+   [
+    "points,",
+    2.8,
+    3.1
+   ],
+   [
+    "these",
+    3.72,
+    4.1
+   ],
+   [
+    "15",
+    4.1,
+    4.66
+   ],
+   [
+    "cities,",
+    4.66,
+    5.14
+   ],
+   [
+    "jowls.",
+    5.76,
+    6.38
+   ]
+  ],
+  "heard": "The king apologizes, unrolls a map, points, these 15 cities, jowls.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 6.56
+ },
+ {
+  "name": "x13a",
+  "lang": "en",
+  "text": "He can tell the king is acting.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x13a.mp3",
+  "bytes": 34315,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.16
+   ],
+   [
+    "can",
+    0.16,
+    0.34
+   ],
+   [
+    "tell",
+    0.34,
+    0.68
+   ],
+   [
+    "the",
+    0.68,
+    0.88
+   ],
+   [
+    "king",
+    0.88,
+    1.1
+   ],
+   [
+    "is",
+    1.1,
+    1.28
+   ],
+   [
+    "acting.",
+    1.28,
+    1.66
+   ]
+  ],
+  "heard": "He can tell the king is acting.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.08
+ },
+ {
+  "name": "x13b",
+  "lang": "en",
+  "text": "He can tell the king is acting.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x13b.mp3",
+  "bytes": 31807,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.16
+   ],
+   [
+    "can",
+    0.16,
+    0.32
+   ],
+   [
+    "tell",
+    0.32,
+    0.64
+   ],
+   [
+    "the",
+    0.64,
+    0.84
+   ],
+   [
+    "king",
+    0.84,
+    1.04
+   ],
+   [
+    "is",
+    1.04,
+    1.2
+   ],
+   [
+    "acting.",
+    1.2,
+    1.54
+   ]
+  ],
+  "heard": "He can tell the king is acting.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 1.92
+ },
+ {
+  "name": "x14a",
+  "lang": "en",
+  "text": "He acts too: \"My king fasted five days to send it. Now you fast five days, full honors, then it's yours.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14a.mp3",
+  "bytes": 134207,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.22
+   ],
+   [
+    "acts",
+    0.22,
+    0.5
+   ],
+   [
+    "too.",
+    0.5,
+    0.84
+   ],
+   [
+    "My",
+    1.48,
+    1.6
+   ],
+   [
+    "king",
+    1.6,
+    1.86
+   ],
+   [
+    "fasted",
+    1.86,
+    2.38
+   ],
+   [
+    "five",
+    2.38,
+    2.78
+   ],
+   [
+    "days",
+    2.78,
+    3.18
+   ],
+   [
+    "to",
+    3.18,
+    3.44
+   ],
+   [
+    "send",
+    3.44,
+    3.7
+   ],
+   [
+    "it.",
+    3.7,
+    3.9
+   ],
+   [
+    "Now",
+    4.3,
+    4.5
+   ],
+   [
+    "you",
+    4.5,
+    4.78
+   ],
+   [
+    "fast",
+    4.78,
+    5.1
+   ],
+   [
+    "five",
+    5.1,
+    5.42
+   ],
+   [
+    "days,",
+    5.42,
+    5.76
+   ],
+   [
+    "full",
+    6.12,
+    6.3
+   ],
+   [
+    "honors,",
+    6.3,
+    6.7
+   ],
+   [
+    "then",
+    7.06,
+    7.42
+   ],
+   [
+    "it's",
+    7.42,
+    7.62
+   ],
+   [
+    "yours.",
+    7.62,
+    7.82
+   ]
+  ],
+  "heard": "He acts too. My king fasted five days to send it. Now you fast five days, full honors, then it's yours.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 8.32
+ },
+ {
+  "name": "x14b",
+  "lang": "en",
+  "text": "He acts too: \"My king fasted five days to send it. Now you fast five days, full honors, then it's yours.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14b.mp3",
+  "bytes": 134207,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.2
+   ],
+   [
+    "acts",
+    0.2,
+    0.52
+   ],
+   [
+    "too.",
+    0.52,
+    0.84
+   ],
+   [
+    "My",
+    1.42,
+    1.56
+   ],
+   [
+    "king",
+    1.56,
+    1.82
+   ],
+   [
+    "fasted",
+    1.82,
+    2.4
+   ],
+   [
+    "five",
+    2.4,
+    2.8
+   ],
+   [
+    "days",
+    2.8,
+    3.26
+   ],
+   [
+    "to",
+    3.26,
+    3.52
+   ],
+   [
+    "send",
+    3.52,
+    3.8
+   ],
+   [
+    "it.",
+    3.8,
+    4.02
+   ],
+   [
+    "Now",
+    4.4,
+    4.58
+   ],
+   [
+    "you",
+    4.58,
+    4.86
+   ],
+   [
+    "fast",
+    4.86,
+    5.18
+   ],
+   [
+    "five",
+    5.18,
+    5.5
+   ],
+   [
+    "days.",
+    5.5,
+    5.86
+   ],
+   [
+    "Full",
+    6.22,
+    6.4
+   ],
+   [
+    "honors,",
+    6.4,
+    6.78
+   ],
+   [
+    "then",
+    7.14,
+    7.44
+   ],
+   [
+    "it's",
+    7.44,
+    7.64
+   ],
+   [
+    "yours.",
+    7.64,
+    7.86
+   ]
+  ],
+  "heard": "He acts too. My king fasted five days to send it. Now you fast five days. Full honors, then it's yours.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 8.32
+ },
+ {
+  "name": "x15a",
+  "lang": "en",
+  "text": "The king can't grab it, so he caves.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15a.mp3",
+  "bytes": 46018,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "king",
+    0.14,
+    0.4
+   ],
+   [
+    "can't",
+    0.4,
+    0.76
+   ],
+   [
+    "grab",
+    0.76,
+    1.02
+   ],
+   [
+    "it,",
+    1.02,
+    1.3
+   ],
+   [
+    "so",
+    1.54,
+    1.74
+   ],
+   [
+    "he",
+    1.74,
+    1.96
+   ],
+   [
+    "caves.",
+    1.96,
+    2.28
+   ]
+  ],
+  "heard": "The king can't grab it, so he caves.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "x15b",
+  "lang": "en",
+  "text": "The king can't grab it, so he caves.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15b.mp3",
+  "bytes": 47272,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.4
+   ],
+   [
+    "can't",
+    0.4,
+    0.74
+   ],
+   [
+    "grab",
+    0.74,
+    1.04
+   ],
+   [
+    "it,",
+    1.04,
+    1.28
+   ],
+   [
+    "so",
+    1.5,
+    1.76
+   ],
+   [
+    "he",
+    1.76,
+    2.02
+   ],
+   [
+    "caves.",
+    2.02,
+    2.34
+   ]
+  ],
+  "heard": "The king can't grab it, so he caves.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.88
+ },
+ {
+  "name": "x15c",
+  "lang": "en",
+  "text": "The king can't grab it, so he agrees.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15c.mp3",
+  "bytes": 44764,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "king",
+    0.14,
+    0.4
+   ],
+   [
+    "can't",
+    0.4,
+    0.72
+   ],
+   [
+    "grab",
+    0.72,
+    1.0
+   ],
+   [
+    "it,",
+    1.0,
+    1.24
+   ],
+   [
+    "so",
+    1.44,
+    1.64
+   ],
+   [
+    "he",
+    1.64,
+    1.94
+   ],
+   [
+    "agrees.",
+    1.94,
+    2.26
+   ]
+  ],
+  "heard": "The king can't grab it, so he agrees.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.72
+ },
+ {
+  "name": "x16a",
+  "lang": "en",
+  "text": "Meanwhile his servant dresses in rough cloth, hides the jade, and sneaks home to Jow.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x16a.mp3",
+  "bytes": 89486,
+  "words": [
+   [
+    "Meanwhile,",
+    0.0,
+    0.44
+   ],
+   [
+    "his",
+    0.76,
+    0.84
+   ],
+   [
+    "servant",
+    0.84,
+    1.22
+   ],
+   [
+    "dresses",
+    1.22,
+    1.58
+   ],
+   [
+    "in",
+    1.58,
+    1.86
+   ],
+   [
+    "rough",
+    1.86,
+    2.12
+   ],
+   [
+    "cloth,",
+    2.12,
+    2.52
+   ],
+   [
+    "hides",
+    2.9,
+    3.12
+   ],
+   [
+    "the",
+    3.12,
+    3.4
+   ],
+   [
+    "jade,",
+    3.4,
+    3.78
+   ],
+   [
+    "and",
+    3.96,
+    4.04
+   ],
+   [
+    "sneaks",
+    4.04,
+    4.46
+   ],
+   [
+    "home",
+    4.46,
+    4.7
+   ],
+   [
+    "to",
+    4.7,
+    4.9
+   ],
+   [
+    "Jiao.",
+    4.9,
+    5.28
+   ]
+  ],
+  "heard": "Meanwhile, his servant dresses in rough cloth, hides the jade, and sneaks home to Jiao.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 5.52
+ },
+ {
+  "name": "x16b",
+  "lang": "en",
+  "text": "Meanwhile his servant dresses in rough cloth, hides the jade, and sneaks home to Jow.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x16b.mp3",
+  "bytes": 93247,
+  "words": [
+   [
+    "Meanwhile,",
+    0.0,
+    0.44
+   ],
+   [
+    "his",
+    0.76,
+    0.84
+   ],
+   [
+    "servant",
+    0.84,
+    1.22
+   ],
+   [
+    "dresses",
+    1.22,
+    1.6
+   ],
+   [
+    "in",
+    1.6,
+    1.86
+   ],
+   [
+    "rough",
+    1.86,
+    2.12
+   ],
+   [
+    "cloth,",
+    2.12,
+    2.5
+   ],
+   [
+    "hides",
+    2.9,
+    3.12
+   ],
+   [
+    "the",
+    3.12,
+    3.4
+   ],
+   [
+    "jade,",
+    3.4,
+    3.8
+   ],
+   [
+    "and",
+    4.0,
+    4.08
+   ],
+   [
+    "sneaks",
+    4.08,
+    4.48
+   ],
+   [
+    "home",
+    4.48,
+    4.76
+   ],
+   [
+    "to",
+    4.76,
+    4.98
+   ],
+   [
+    "Jiao.",
+    4.98,
+    5.36
+   ]
+  ],
+  "heard": "Meanwhile, his servant dresses in rough cloth, hides the jade, and sneaks home to Jiao.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.76
+ },
+ {
+  "name": "x17a",
+  "lang": "en",
+  "text": "Five days later, all set, the king wants it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17a.mp3",
+  "bytes": 56049,
+  "words": [
+   [
+    "Five",
+    0.0,
+    0.28
+   ],
+   [
+    "days",
+    0.28,
+    0.5
+   ],
+   [
+    "later,",
+    0.5,
+    0.88
+   ],
+   [
+    "all",
+    1.28,
+    1.5
+   ],
+   [
+    "set,",
+    1.5,
+    1.8
+   ],
+   [
+    "the",
+    2.22,
+    2.32
+   ],
+   [
+    "king",
+    2.32,
+    2.58
+   ],
+   [
+    "wants",
+    2.58,
+    2.98
+   ],
+   [
+    "it.",
+    2.98,
+    3.18
+   ]
+  ],
+  "heard": "Five days later, all set, the king wants it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "x17b",
+  "lang": "en",
+  "text": "Five days later, all set, the king wants it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17b.mp3",
+  "bytes": 56049,
+  "words": [
+   [
+    "Five",
+    0.0,
+    0.28
+   ],
+   [
+    "days",
+    0.28,
+    0.52
+   ],
+   [
+    "later,",
+    0.52,
+    0.88
+   ],
+   [
+    "all",
+    1.3,
+    1.52
+   ],
+   [
+    "set,",
+    1.52,
+    1.82
+   ],
+   [
+    "the",
+    2.2,
+    2.28
+   ],
+   [
+    "king",
+    2.28,
+    2.56
+   ],
+   [
+    "wants",
+    2.56,
+    2.96
+   ],
+   [
+    "it.",
+    2.96,
+    3.18
+   ]
+  ],
+  "heard": "Five days later, all set, the king wants it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "x17c",
+  "lang": "en",
+  "text": "Day five, all set, the king wants it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17c.mp3",
+  "bytes": 49780,
+  "words": [
+   [
+    "Day",
+    0.0,
+    0.22
+   ],
+   [
+    "5.",
+    0.22,
+    0.58
+   ],
+   [
+    "All",
+    1.1,
+    1.26
+   ],
+   [
+    "set.",
+    1.26,
+    1.56
+   ],
+   [
+    "The",
+    2.0,
+    2.06
+   ],
+   [
+    "king",
+    2.06,
+    2.3
+   ],
+   [
+    "wants",
+    2.3,
+    2.66
+   ],
+   [
+    "it.",
+    2.66,
+    2.86
+   ]
+  ],
+  "heard": "Day 5. All set. The king wants it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.04
+ },
+ {
+  "name": "x18a",
+  "lang": "en",
+  "text": "He says: \"Chin's had twenty-odd kings; not one kept his word. The jade's already in Jow.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18a.mp3",
+  "bytes": 112474,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "says,",
+    0.12,
+    0.38
+   ],
+   [
+    "Chins",
+    0.84,
+    1.26
+   ],
+   [
+    "had",
+    1.26,
+    1.5
+   ],
+   [
+    "20",
+    1.5,
+    1.96
+   ],
+   [
+    "odd",
+    1.96,
+    2.2
+   ],
+   [
+    "kings.",
+    2.2,
+    2.62
+   ],
+   [
+    "Not",
+    3.06,
+    3.3
+   ],
+   [
+    "one",
+    3.3,
+    3.72
+   ],
+   [
+    "kept",
+    3.72,
+    4.04
+   ],
+   [
+    "his",
+    4.04,
+    4.26
+   ],
+   [
+    "word.",
+    4.26,
+    4.54
+   ],
+   [
+    "The",
+    5.08,
+    5.18
+   ],
+   [
+    "Jade's",
+    5.18,
+    5.72
+   ],
+   [
+    "already",
+    5.72,
+    6.06
+   ],
+   [
+    "in",
+    6.06,
+    6.28
+   ],
+   [
+    "Zhao.",
+    6.28,
+    6.52
+   ]
+  ],
+  "heard": "He says, Chins had 20 odd kings. Not one kept his word. The Jade's already in Zhao.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 6.96
+ },
+ {
+  "name": "x18b",
+  "lang": "en",
+  "text": "He says: \"Chin's had twenty-odd kings; not one kept his word. The jade's already in Jow.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18b.mp3",
+  "bytes": 111220,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "says,",
+    0.14,
+    0.42
+   ],
+   [
+    "Chins",
+    0.82,
+    1.26
+   ],
+   [
+    "had",
+    1.26,
+    1.5
+   ],
+   [
+    "20",
+    1.5,
+    1.96
+   ],
+   [
+    "odd",
+    1.96,
+    2.24
+   ],
+   [
+    "kings.",
+    2.24,
+    2.64
+   ],
+   [
+    "Not",
+    3.08,
+    3.3
+   ],
+   [
+    "one",
+    3.3,
+    3.7
+   ],
+   [
+    "kept",
+    3.7,
+    4.02
+   ],
+   [
+    "his",
+    4.02,
+    4.24
+   ],
+   [
+    "word.",
+    4.24,
+    4.54
+   ],
+   [
+    "The",
+    5.06,
+    5.14
+   ],
+   [
+    "Jade's",
+    5.14,
+    5.62
+   ],
+   [
+    "already",
+    5.62,
+    5.98
+   ],
+   [
+    "in",
+    5.98,
+    6.22
+   ],
+   [
+    "Zhao.",
+    6.22,
+    6.46
+   ]
+  ],
+  "heard": "He says, Chins had 20 odd kings. Not one kept his word. The Jade's already in Zhao.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 6.88
+ },
+ {
+  "name": "x19a",
+  "lang": "en",
+  "text": "\"I tricked you. I deserve death. Throw me in the pot.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19a.mp3",
+  "bytes": 66498,
+  "words": [
+   [
+    "I",
+    0.0,
+    0.2
+   ],
+   [
+    "tricked",
+    0.2,
+    0.46
+   ],
+   [
+    "you!",
+    0.46,
+    0.76
+   ],
+   [
+    "I",
+    1.12,
+    1.34
+   ],
+   [
+    "deserve",
+    1.34,
+    1.7
+   ],
+   [
+    "death!",
+    1.7,
+    2.24
+   ],
+   [
+    "Throw",
+    2.64,
+    2.98
+   ],
+   [
+    "me",
+    2.98,
+    3.18
+   ],
+   [
+    "in",
+    3.18,
+    3.3
+   ],
+   [
+    "the",
+    3.3,
+    3.4
+   ],
+   [
+    "pot!",
+    3.4,
+    3.68
+   ]
+  ],
+  "heard": "I tricked you! I deserve death! Throw me in the pot!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.08
+ },
+ {
+  "name": "x19b",
+  "lang": "en",
+  "text": "\"I tricked you. I deserve death. Throw me in the pot.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19b.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "I",
+    0.0,
+    0.18
+   ],
+   [
+    "tricked",
+    0.18,
+    0.5
+   ],
+   [
+    "you.",
+    0.5,
+    0.8
+   ],
+   [
+    "I",
+    1.14,
+    1.36
+   ],
+   [
+    "deserve",
+    1.36,
+    1.66
+   ],
+   [
+    "death.",
+    1.66,
+    2.16
+   ],
+   [
+    "Throw",
+    2.56,
+    2.96
+   ],
+   [
+    "me",
+    2.96,
+    3.14
+   ],
+   [
+    "in",
+    3.14,
+    3.24
+   ],
+   [
+    "the",
+    3.24,
+    3.34
+   ],
+   [
+    "pot.",
+    3.34,
+    3.6
+   ]
+  ],
+  "heard": "I tricked you. I deserve death. Throw me in the pot.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.0
+ },
+ {
+  "name": "x19c",
+  "lang": "en",
+  "text": "\"I lied. I deserve death. Throw me in the pot.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19c.mp3",
+  "bytes": 62318,
+  "words": [
+   [
+    "I",
+    0.0,
+    0.22
+   ],
+   [
+    "lied.",
+    0.22,
+    0.52
+   ],
+   [
+    "I",
+    1.06,
+    1.28
+   ],
+   [
+    "deserve",
+    1.28,
+    1.58
+   ],
+   [
+    "death.",
+    1.58,
+    2.08
+   ],
+   [
+    "Throw",
+    2.54,
+    2.86
+   ],
+   [
+    "me",
+    2.86,
+    3.04
+   ],
+   [
+    "in",
+    3.04,
+    3.16
+   ],
+   [
+    "the",
+    3.16,
+    3.24
+   ],
+   [
+    "pot.",
+    3.24,
+    3.5
+   ]
+  ],
+  "heard": "I lied. I deserve death. Throw me in the pot.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 3.84
+ },
+ {
+  "name": "x20a",
+  "lang": "en",
+  "text": "The ministers stare at each other. A guard grabs him.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x20a.mp3",
+  "bytes": 56049,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.12
+   ],
+   [
+    "ministers",
+    0.12,
+    0.46
+   ],
+   [
+    "stare",
+    0.46,
+    0.98
+   ],
+   [
+    "at",
+    0.98,
+    1.16
+   ],
+   [
+    "each",
+    1.16,
+    1.34
+   ],
+   [
+    "other.",
+    1.34,
+    1.58
+   ],
+   [
+    "A",
+    2.1,
+    2.18
+   ],
+   [
+    "guard",
+    2.18,
+    2.5
+   ],
+   [
+    "grabs",
+    2.5,
+    2.86
+   ],
+   [
+    "him.",
+    2.86,
+    3.16
+   ]
+  ],
+  "heard": "The ministers stare at each other. A guard grabs him.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 3.44
+ },
+ {
+  "name": "x20b",
+  "lang": "en",
+  "text": "The ministers stare at each other. A guard grabs him.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x20b.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "ministers",
+    0.14,
+    0.48
+   ],
+   [
+    "stare",
+    0.48,
+    1.0
+   ],
+   [
+    "at",
+    1.0,
+    1.2
+   ],
+   [
+    "each",
+    1.2,
+    1.36
+   ],
+   [
+    "other.",
+    1.36,
+    1.6
+   ],
+   [
+    "A",
+    2.1,
+    2.18
+   ],
+   [
+    "guard",
+    2.18,
+    2.48
+   ],
+   [
+    "grabs",
+    2.48,
+    2.84
+   ],
+   [
+    "him.",
+    2.84,
+    3.14
+   ]
+  ],
+  "heard": "The ministers stare at each other. A guard grabs him.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "x21a",
+  "lang": "en",
+  "text": "The king says: \"Kill him, and still no jade. Let him go home.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x21a.mp3",
+  "bytes": 79037,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "king",
+    0.18,
+    0.4
+   ],
+   [
+    "says,",
+    0.4,
+    0.74
+   ],
+   [
+    "kill",
+    1.12,
+    1.62
+   ],
+   [
+    "him",
+    1.62,
+    1.9
+   ],
+   [
+    "and",
+    1.9,
+    2.3
+   ],
+   [
+    "still",
+    2.3,
+    2.72
+   ],
+   [
+    "no",
+    2.72,
+    2.94
+   ],
+   [
+    "Jade.",
+    2.94,
+    3.26
+   ],
+   [
+    "Let",
+    3.78,
+    4.0
+   ],
+   [
+    "him",
+    4.0,
+    4.12
+   ],
+   [
+    "go",
+    4.12,
+    4.3
+   ],
+   [
+    "home.",
+    4.3,
+    4.54
+   ]
+  ],
+  "heard": "The king says, kill him and still no Jade. Let him go home.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.88
+ },
+ {
+  "name": "x21b",
+  "lang": "en",
+  "text": "The king says: \"Kill him, and still no jade. Let him go home.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x21b.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.38
+   ],
+   [
+    "says,",
+    0.38,
+    0.7
+   ],
+   [
+    "kill",
+    1.08,
+    1.46
+   ],
+   [
+    "him",
+    1.46,
+    1.76
+   ],
+   [
+    "and",
+    1.76,
+    2.16
+   ],
+   [
+    "still",
+    2.16,
+    2.58
+   ],
+   [
+    "no",
+    2.58,
+    2.82
+   ],
+   [
+    "jade.",
+    2.82,
+    3.3
+   ],
+   [
+    "Let",
+    3.52,
+    3.86
+   ],
+   [
+    "him",
+    3.86,
+    3.98
+   ],
+   [
+    "go",
+    3.98,
+    4.14
+   ],
+   [
+    "home.",
+    4.14,
+    4.38
+   ]
+  ],
+  "heard": "The king says, kill him and still no jade. Let him go home.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ },
+ {
+  "name": "x22a",
+  "lang": "en",
+  "text": "In the end, Chin gave no cities. Jow gave no jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x22a.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.14
+   ],
+   [
+    "the",
+    0.14,
+    0.28
+   ],
+   [
+    "end,",
+    0.28,
+    0.62
+   ],
+   [
+    "Qin",
+    0.98,
+    1.16
+   ],
+   [
+    "gave",
+    1.16,
+    1.52
+   ],
+   [
+    "no",
+    1.52,
+    1.82
+   ],
+   [
+    "cities.",
+    1.82,
+    2.2
+   ],
+   [
+    "Zhao",
+    2.62,
+    3.14
+   ],
+   [
+    "gave",
+    3.14,
+    3.54
+   ],
+   [
+    "no",
+    3.54,
+    3.88
+   ],
+   [
+    "jade.",
+    3.88,
+    4.34
+   ]
+  ],
+  "heard": "In the end, Qin gave no cities. Zhao gave no jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 4.64
+ },
+ {
+  "name": "x22b",
+  "lang": "en",
+  "text": "In the end, Chin gave no cities. Jow gave no jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x22b.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.2
+   ],
+   [
+    "the",
+    0.2,
+    0.36
+   ],
+   [
+    "end,",
+    0.36,
+    0.7
+   ],
+   [
+    "Qin",
+    1.06,
+    1.24
+   ],
+   [
+    "gave",
+    1.24,
+    1.64
+   ],
+   [
+    "no",
+    1.64,
+    1.96
+   ],
+   [
+    "cities.",
+    1.96,
+    2.36
+   ],
+   [
+    "Zhao",
+    2.9,
+    3.28
+   ],
+   [
+    "gave",
+    3.28,
+    3.66
+   ],
+   [
+    "no",
+    3.66,
+    3.88
+   ],
+   [
+    "jade.",
+    3.88,
+    4.32
+   ]
+  ],
+  "heard": "In the end, Qin gave no cities. Zhao gave no jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.99,
+  "seconds": 4.64
+ },
+ {
+  "name": "x23a",
+  "lang": "en",
+  "text": "A jade worth fifteen cities didn't get one. But the retainer came home a big shot.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x23a.mp3",
+  "bytes": 93247,
+  "words": [
+   [
+    "A",
+    0.0,
+    0.12
+   ],
+   [
+    "jade",
+    0.12,
+    0.54
+   ],
+   [
+    "worth",
+    0.54,
+    0.7
+   ],
+   [
+    "15",
+    0.7,
+    1.4
+   ],
+   [
+    "cities",
+    1.4,
+    2.02
+   ],
+   [
+    "didn't",
+    2.02,
+    2.46
+   ],
+   [
+    "get",
+    2.46,
+    2.62
+   ],
+   [
+    "one,",
+    2.62,
+    2.86
+   ],
+   [
+    "but",
+    3.3,
+    3.54
+   ],
+   [
+    "the",
+    3.54,
+    3.64
+   ],
+   [
+    "retainer",
+    3.64,
+    4.16
+   ],
+   [
+    "came",
+    4.16,
+    4.34
+   ],
+   [
+    "home",
+    4.34,
+    4.64
+   ],
+   [
+    "a",
+    4.64,
+    4.84
+   ],
+   [
+    "big",
+    4.84,
+    5.08
+   ],
+   [
+    "shot.",
+    5.08,
+    5.44
+   ]
+  ],
+  "heard": "A jade worth 15 cities didn't get one, but the retainer came home a big shot.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 5.76
+ },
+ {
+  "name": "x23b",
+  "lang": "en",
+  "text": "A jade worth fifteen cities didn't get one. But the retainer came home a big shot.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x23b.mp3",
+  "bytes": 99517,
+  "words": [
+   [
+    "A",
+    0.0,
+    0.14
+   ],
+   [
+    "jade",
+    0.14,
+    0.52
+   ],
+   [
+    "worth",
+    0.52,
+    0.7
+   ],
+   [
+    "15",
+    0.7,
+    1.42
+   ],
+   [
+    "cities",
+    1.42,
+    2.08
+   ],
+   [
+    "didn't",
+    2.08,
+    2.46
+   ],
+   [
+    "get",
+    2.46,
+    2.62
+   ],
+   [
+    "one,",
+    2.62,
+    3.06
+   ],
+   [
+    "but",
+    3.54,
+    3.86
+   ],
+   [
+    "the",
+    3.86,
+    4.08
+   ],
+   [
+    "retainer",
+    4.08,
+    4.6
+   ],
+   [
+    "came",
+    4.6,
+    4.76
+   ],
+   [
+    "home",
+    4.76,
+    5.04
+   ],
+   [
+    "a",
+    5.04,
+    5.24
+   ],
+   [
+    "big",
+    5.24,
+    5.52
+   ],
+   [
+    "shot.",
+    5.52,
+    5.88
+   ]
+  ],
+  "heard": "A jade worth 15 cities didn't get one, but the retainer came home a big shot.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 6.16
+ },
+ {
+  "name": "x23c",
+  "lang": "en",
+  "text": "A jade worth fifteen cities didn't get one. But the eunuch's retainer came home a big shot.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x23c.mp3",
+  "bytes": 98263,
+  "words": [
+   [
+    "A",
+    0.0,
+    0.18
+   ],
+   [
+    "jade",
+    0.18,
+    0.56
+   ],
+   [
+    "worth",
+    0.56,
+    0.74
+   ],
+   [
+    "15",
+    0.74,
+    1.4
+   ],
+   [
+    "cities",
+    1.4,
+    2.0
+   ],
+   [
+    "didn't",
+    2.0,
+    2.46
+   ],
+   [
+    "get",
+    2.46,
+    2.6
+   ],
+   [
+    "one,",
+    2.6,
+    2.86
+   ],
+   [
+    "but",
+    3.3,
+    3.52
+   ],
+   [
+    "the",
+    3.52,
+    3.66
+   ],
+   [
+    "Unix",
+    3.66,
+    3.98
+   ],
+   [
+    "Retainer",
+    3.98,
+    4.52
+   ],
+   [
+    "came",
+    4.52,
+    4.74
+   ],
+   [
+    "home",
+    4.74,
+    5.02
+   ],
+   [
+    "a",
+    5.02,
+    5.18
+   ],
+   [
+    "big",
+    5.18,
+    5.42
+   ],
+   [
+    "shot.",
+    5.42,
+    5.76
+   ]
+  ],
+  "heard": "A jade worth 15 cities didn't get one, but the Unix Retainer came home a big shot.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.08
+ }
+]
