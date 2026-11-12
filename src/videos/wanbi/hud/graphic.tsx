@@ -12,7 +12,7 @@
 //   army({ f, from })                THE ARMY (line 4): three rows of eight black pawns slide in from the left edge
 //   crowns({ f, from, crossAt })     22 tiny flat-crown icons (two rows of 11) and a seal-red cross onto each (18a)
 //   suns({ f, from, x, y, ... })     five suns, grey -> gold, popping in a row; slide; flash (14, 17)
-//   stage({ f, from, out, at, r })   THE STAGE (V3, 13-14): the dark outside a soft circle, a light cone, curtains
+//   stage({ f, from, out, at, r, fade? })   THE STAGE (V3, 13-14): the dark outside a soft circle, a light cone, curtains
 //   bill({ f, from, out, zeroAt })   THE BILL (V6, 22): bamboo slats bound by two cords, the two 「0」 seals
 // Every one is a plain function of the frame; nothing random (hash01), no ids, no blend modes (the cut lays the overlay
 // pass over the picture).
@@ -277,12 +277,21 @@ const valance = () => {
     </g>
   );
 };
+/** the light cone's fill: 0.26 at the top edge down to 0.07 at the frame's foot (cut off at the spot's centre `y`). With
+ *  `fade` (0..1, WP9 fix round, additive: the default 0 keeps the old fill) it dies out to 0 over the last `fade` of
+ *  the cone's length instead of ending in a straight edge at the spot's centre (f1085: a pale band with a flat bottom
+ *  through the lit figure's chin) */
+const coneFill = (y: number, fade: number) => {
+  if (fade <= 0) return "linear-gradient(to bottom, rgba(255,248,222,0.26), rgba(255,248,222,0.07))";
+  const y1 = y * (1 - clamp01(fade)), a1 = lerp(0.26, 0.07, clamp01(y1 / 1920));
+  return `linear-gradient(to bottom, rgba(255,248,222,0.26) 0px, rgba(255,248,222,${a1.toFixed(3)}) ${y1.toFixed(1)}px, rgba(255,248,222,0) ${y.toFixed(1)}px)`;
+};
 /** THE STAGE (V3, 13-14): outside a soft circle (centre `at`, radius `r` px = 0.55 m projected) the picture darkens
  *  45 % over 6 frames from `from`, a pale light cone from the top edge, red-and-gold curtain swags drop into the top
  *  corners; it lifts from `out` (10 frames: the curtains fly up, the dark clears). The shot gives the circle every
  *  frame (it slides king -> envoy 1094-1102). The curtains keep off the source tag and the chip; the dark lies over
  *  everything under the shot's overlays (the HUD too, at 55 %). */
-export const stage = (p: LifeP & { at: Pt; r: number }): React.ReactNode => {
+export const stage = (p: LifeP & { at: Pt; r: number; fade?: number }): React.ReactNode => {
   const { f, from, at, r } = p, out = outOf(p), Lf = life(f, from, out, 10);
   if (!Lf) return null;
   const kin = eOut((Lf.t + 1) / 6), lift = Lf.lv, dark = 0.45 * kin * (1 - eIn(lift * 1.2));
@@ -293,7 +302,7 @@ export const stage = (p: LifeP & { at: Pt; r: number }): React.ReactNode => {
   return (
     <div key={p.key ?? `stage${from}`} style={FULL}>
       <div style={{ ...FULL, background: `radial-gradient(circle at ${x}px ${y}px, rgba(8,6,14,0) 0px, rgba(8,6,14,0) ${r0}px, rgba(8,6,14,${dark.toFixed(3)}) ${r1}px)` }} />
-      <div style={{ ...FULL, clipPath: cone, background: "linear-gradient(to bottom, rgba(255,248,222,0.26), rgba(255,248,222,0.07))", opacity: kin * (1 - lift) }} />
+      <div style={{ ...FULL, clipPath: cone, background: coneFill(at.y, p.fade ?? 0), opacity: kin * (1 - lift) }} />
       <div style={{ ...FULL, background: `radial-gradient(ellipse ${(r * 1.05).toFixed(1)}px ${(r * 0.95).toFixed(1)}px at ${x}px ${y}px, rgba(255,246,214,0.12), rgba(255,246,214,0) 100%)`, opacity: kin * (1 - lift) }} />
       <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ ...FULL, overflow: "visible", transform: `translateY(${drop.toFixed(1)}px)` }}>
         {curtainL(false)}{curtainL(true)}{valance()}

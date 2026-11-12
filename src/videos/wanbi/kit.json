@@ -5,12 +5,17 @@
   "story": "story.ts",
   "hooks": "kit.world.ts",
   "entries": {
+    "pic": "preview/film_cut.ts",
+    "picCore": "preview/film_cut_core",
     "overlay": "Film.tsx",
     "segFile": "shots/seg{SEG}"
   },
-  "tsc": ["Film.tsx", "kit.world.ts", "preview/film.ts", "preview/smoke.ts", "preview/filmA.ts", "preview/filmB.ts", "preview/filmC.ts", "preview/filmD.ts", "preview/filmE.ts", "preview/set_hall.ts", "preview/set_zhao.ts", "preview/set_road.ts", "preview/people_lineup.ts", "preview/props_sheet.ts", "hud/sheet.tsx"],
+  "tsc": ["Film.tsx", "kit.world.ts", "preview/film.ts", "preview/film_cut.ts", "preview/smoke.ts", "preview/filmA.ts", "preview/filmB.ts", "preview/filmC.ts", "preview/filmD.ts", "preview/filmE.ts", "preview/set_hall.ts", "preview/set_zhao.ts", "preview/set_road.ts", "preview/people_lineup.ts", "preview/props_sheet.ts", "hud/sheet.tsx"],
   "domOnly": ["hud/"],
+  "chainSha": "scripts/wanbi/cut/chain.sha",
   "langs": ["zh", "en"],
   "work": "/home/user/wanbi_work",
-  "qa": { "clearanceOut": "/home/user/wanbi_work/qa/clearance" }
+  "qa": { "clearanceOut": "/home/user/wanbi_work/qa/clearance" },
+  "cut": { "dir": "/home/user/wanbi_work/final", "name": "wanbi_cut", "freeze": ["src", "scripts/wanbi", "scripts/kit"] },
+  "sound": { "build": "scripts/wanbi/sound/build.sh", "mux": "scripts/kit/sound/mux.sh", "clips": "/home/user/wanbi_work/sound/clips" }
 }
