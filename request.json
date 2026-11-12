@@ -1,104 +1,405 @@
 {
- "id": "hongmen-sfx-03",
- "tag": true,
+ "id": "hongmen-en-alex-01",
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "words": true,
  "items": [
   {
-   "type": "sfx",
-   "name": "feet_t1",
-   "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.",
-   "duration": 1.2,
-   "influence": 0.6
+   "name": "x0122a",
+   "lang": "en",
+   "text": "As for Leo Bahng, he dodged an assassin by going to the toilet.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "feet_t2",
-   "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.",
-   "duration": 1.2,
-   "influence": 0.6
+   "name": "x0122b",
+   "lang": "en",
+   "text": "As for Leo Bahng, he dodged an assassin with a toilet break.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "feet_t3",
-   "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.",
-   "duration": 1.2,
-   "influence": 0.6
+   "name": "x02a",
+   "lang": "en",
+   "text": "This was the Hongmen Feast. Swords everywhere, and only one man died. He wasn't there.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "day_t1",
-   "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering steadily in a light breeze, far-off clatter and a faint distant murmur. Even and continuous from start to finish, no loud single events. No footsteps close by, no horses, no clear words, no music.",
-   "duration": 14,
-   "influence": 0.5
+   "name": "x03a",
+   "lang": "en",
+   "text": "The empire fell. Leo Bahng grabbed the capital.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "day_t2",
-   "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering steadily in a light breeze, far-off clatter and a faint distant murmur. Even and continuous from start to finish, no loud single events. No footsteps close by, no horses, no clear words, no music.",
-   "duration": 14,
-   "influence": 0.5
+   "name": "x04a",
+   "lang": "en",
+   "text": "But Shyahng Yoo was stronger: four times Leo Bahng's army.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "fire_t1",
-   "text": "A wood fire burning steadily in an iron brazier: a soft continuous flame with gentle irregular crackles. Calm, even, continuous from start to finish. Mid-range, not bassy. No clicks, no tapping, no voices, no music.",
-   "duration": 20,
-   "influence": 0.5
+   "name": "x05a",
+   "lang": "en",
+   "text": "His own officer snitched to Shyahng Yoo: \"Leo Bahng wants to be king.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "fire_t2",
-   "text": "A wood fire burning steadily in an iron brazier: a soft continuous flame with gentle irregular crackles. Calm, even, continuous from start to finish. Mid-range, not bassy. No clicks, no tapping, no voices, no music.",
-   "duration": 20,
-   "influence": 0.5
+   "name": "x06a",
+   "lang": "en",
+   "text": "Shyahng Yoo raged: \"We attack at dawn!\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "air_t1",
-   "text": "Leaves rustling very softly and steadily in a light breeze outdoors: quiet, smooth, even and continuous from start to finish. No gusts, no hiss, no birds, no insects, no voices, no music.",
-   "duration": 6,
-   "influence": 0.5
+   "name": "x07a",
+   "lang": "en",
+   "text": "That night, Shyahng Yoo's uncle warned Leo Bahng, who at once made him an in-law.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "air_t2",
-   "text": "Leaves rustling very softly and steadily in a light breeze outdoors: quiet, smooth, even and continuous from start to finish. No gusts, no hiss, no birds, no insects, no voices, no music.",
-   "duration": 6,
-   "influence": 0.5
+   "name": "x08a",
+   "lang": "en",
+   "text": "Next morning, Leo Bahng apologized: \"Surely some rat lied to you.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "meat_t1",
-   "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.",
-   "duration": 0.6,
-   "influence": 0.6
+   "name": "x09a",
+   "lang": "en",
+   "text": "Shyahng Yoo blurted out: \"Your man Tsao Wooshahng told me.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "meat_t2",
-   "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.",
-   "duration": 0.6,
-   "influence": 0.6
+   "name": "x10a",
+   "lang": "en",
+   "text": "Shyahng Yoo kept him for drinks. But his adviser, Fahn Dzung, was sure Leo Bahng must die.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "meat_t3",
-   "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.",
-   "duration": 0.6,
-   "influence": 0.6
+   "name": "x11a",
+   "lang": "en",
+   "text": "Three times, Fahn Dzung raised his jade, meaning: kill him. No reaction.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "tiptoe_t1",
-   "text": "Cartoon sneaking: four quick soft tiptoe footsteps on a wooden floor, light and careful, evenly spaced. Footsteps only, no voice, no music. Close, dry.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x12a",
+   "lang": "en",
+   "text": "Fahn Dzung sent in a sword dancer to stab Leo Bahng mid-dance.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "tiptoe_t2",
-   "text": "Cartoon sneaking: four quick soft tiptoe footsteps on a wooden floor, light and careful, evenly spaced. Footsteps only, no voice, no music. Close, dry.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x13a",
+   "lang": "en",
+   "text": "Shyahng Yoo's uncle joined the dance, shielding his new in-law.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x14a",
+   "lang": "en",
+   "text": "Leo Bahng's man, Fahn Kwhy, flattened the guards and burst in.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x15a",
+   "lang": "en",
+   "text": "Shyahng Yoo called him brave and gave him a leg of pork. Raw.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x16a",
+   "lang": "en",
+   "text": "Leo Bahng went to the toilet and waved Fahn Kwhy out too.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x17a",
+   "lang": "en",
+   "text": "Leo Bahng hadn't said goodbye. Fahn Kwhy said: \"They're the knife, we're the fish. Forget goodbye!\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x18a",
+   "lang": "en",
+   "text": "Leo Bahng ditched his convoy, jumped on one horse, and took a back road home.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x19a",
+   "lang": "en",
+   "text": "Only once Leo Bahng reached camp, his adviser walked in: \"He drank too much.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x20a",
+   "lang": "en",
+   "text": "The first thing Leo Bahng did: kill Tsao Wooshahng, the officer who snitched.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x21a",
+   "lang": "en",
+   "text": "And that name? Shyahng Yoo let it slip himself.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   }
  ]
 }
