@@ -1,34 +1,387 @@
 {
- "id": "wanbi-sfx-03",
- "tag": true,
+ "id": "wanbi-en-02",
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "words": true,
  "items": [
   {
-   "type": "sfx",
-   "name": "hall_s1",
-   "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "name": "x04d",
+   "lang": "en",
+   "text": "Give it: maybe no cities. Keep it: war.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "hall_s2",
-   "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "name": "x04e",
+   "lang": "en",
+   "text": "Give it: maybe no cities. Keep it: war.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "hall_s3",
-   "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "name": "x04f",
+   "lang": "en",
+   "text": "Give it: maybe no cities. Keep it: Chin attacks.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "hall_s4",
-   "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "name": "x07d",
+   "lang": "en",
+   "text": "The king takes it, thrilled, and shows his ladies.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x07e",
+   "lang": "en",
+   "text": "The king takes it, thrilled, and shows his ladies.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x07f",
+   "lang": "en",
+   "text": "The king takes it, thrilled, shows his ladies.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x08d",
+   "lang": "en",
+   "text": "\"Long live the king!\" And the cities?",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x08e",
+   "lang": "en",
+   "text": "\"Long live the king!\" And the cities?",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x08f",
+   "lang": "en",
+   "text": "\"Long live the king!\" Cities? Silence.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x14d",
+   "lang": "en",
+   "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x14e",
+   "lang": "en",
+   "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x14f",
+   "lang": "en",
+   "text": "He acts too: \"My king fasted five days. Your turn: five days, full honors, then it's yours.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x15d",
+   "lang": "en",
+   "text": "The king can't grab it. He caves.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x15e",
+   "lang": "en",
+   "text": "The king can't grab it. He caves.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x15f",
+   "lang": "en",
+   "text": "Can't grab it? The king caves.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x18d",
+   "lang": "en",
+   "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x18e",
+   "lang": "en",
+   "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x18f",
+   "lang": "en",
+   "text": "He says: \"Twenty-odd Chin kings broke their word. The jade's in Jow now.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x22d",
+   "lang": "en",
+   "text": "The bill: Chin, no cities. Jow, no jade.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x22e",
+   "lang": "en",
+   "text": "The bill: Chin, no cities. Jow, no jade.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
+  },
+  {
+   "name": "x22f",
+   "lang": "en",
+   "text": "In the end: no cities, no jade.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   }
  ]
 }
