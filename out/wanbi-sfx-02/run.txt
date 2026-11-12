@@ -1,0 +1,432 @@
+plan: {'tier': 'creator', 'character_count': 18318, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "hall_r1", "type": "sfx", "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hall_r1.mp3", "bytes": 241205}
+{"name": "hall_r2", "type": "sfx", "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hall_r2.mp3", "bytes": 241205}
+{"name": "hall_r3", "type": "sfx", "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hall_r3.mp3", "bytes": 241205}
+{"name": "drone_r1", "type": "sfx", "text": "A low tense sustained hum, like a large bronze singing bowl ringing softly: one steady mid-low tone with soft overtones, even from start to finish. Not a rumble, no sub-bass, no melody, no beat, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "drone_r1.mp3", "bytes": 97009}
+{"name": "drone_r2", "type": "sfx", "text": "A low tense sustained hum, like a large bronze singing bowl ringing softly: one steady mid-low tone with soft overtones, even from start to finish. Not a rumble, no sub-bass, no melody, no beat, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "drone_r2.mp3", "bytes": 97009}
+{"name": "cymbal_r1", "type": "sfx", "text": "Chinese opera percussion: one crash of a pair of large brass hand cymbals, a bright brassy metallic chang with a short shimmering ring. Brass, not glass. One crash only, no drum, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cymbal_r1.mp3", "bytes": 20105}
+{"name": "cymbal_r2", "type": "sfx", "text": "Chinese opera percussion: one crash of a pair of large brass hand cymbals, a bright brassy metallic chang with a short shimmering ring. Brass, not glass. One crash only, no drum, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cymbal_r2.mp3", "bytes": 20105}
+{"name": "cauldron_r1", "type": "sfx", "text": "A heavy bronze cauldron dropped onto a stone floor: a loud metallic clang and thud with a bright short ring, clearly audible in the mid and high range, not only bass. One impact only, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cauldron_r1.mp3", "bytes": 24702}
+{"name": "cauldron_r2", "type": "sfx", "text": "A heavy bronze cauldron dropped onto a stone floor: a loud metallic clang and thud with a bright short ring, clearly audible in the mid and high range, not only bass. One impact only, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cauldron_r2.mp3", "bytes": 24702}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 6839.56it/s]
+hall_r1 [['Silence', 0.216], ['Sine wave', 0.103], ['Sonar', 0.053], ['Music', 0.024], ['White noise', 0.019], ['Hum', 0.019], ['Chirp tone', 0.018], ['Rumble', 0.014]]
+hall_r2 [['Silence', 0.159], ['Sine wave', 0.139], ['Hum', 0.038], ['Music', 0.032], ['White noise', 0.017], ['Throbbing', 0.015], ['Chirp tone', 0.012], ['Sidetone', 0.011]]
+hall_r3 [['Silence', 0.242], ['Sine wave', 0.068], ['Rumble', 0.043], ['Sonar', 0.038], ['Music', 0.037], ['White noise', 0.027], ['Ambient music', 0.017], ['Vehicle', 0.016]]
+drone_r1 [['Silence', 0.172], ['Sine wave', 0.146], ['Music', 0.043], ['Chirp tone', 0.023], ['Static', 0.016], ['Sound effect', 0.014], ['White noise', 0.01], ['Sonar', 0.008]]
+drone_r2 [['Sine wave', 0.194], ['Chirp tone', 0.093], ['Rumble', 0.025], ['Sonar', 0.019], ['Sound effect', 0.017], ['Hum', 0.017], ['Music', 0.012], ['Throbbing', 0.011]]
+cymbal_r1 [['Breaking', 0.431], ['Chink, clink', 0.176], ['Glass', 0.167], ['Sound effect', 0.034], ['Clang', 0.028], ['Shatter', 0.013], ['Music', 0.012], ['Crack', 0.01]]
+cymbal_r2 [['Breaking', 0.157], ['Clang', 0.066], ['Music', 0.057], ['Chink, clink', 0.047], ['Glass', 0.032], ['Musical instrument', 0.026], ['Sound effect', 0.014], ['Speech', 0.013]]
+cauldron_r1 [['Clang', 0.636], ['Ding', 0.093], ['Bell', 0.051], ['Vehicle horn, car horn, honking', 0.033], ['Sound effect', 0.012], ['Dishes, pots, and pans', 0.012], ['Church bell', 0.01], ['Ping', 0.006]]
+cauldron_r2 [['Sound effect', 0.131], ['Clang', 0.081], ['Bell', 0.049], ['Ding', 0.039], ['Music', 0.017], ['Squeak', 0.011], ['Air horn, truck horn', 0.008], ['Vehicle horn, car horn, honking', 0.006]]
+[
+ {
+  "name": "hall_r1",
+  "type": "sfx",
+  "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hall_r1.mp3",
+  "bytes": 241205,
+  "seconds": 15.0,
+  "tags": [
+   [
+    "Silence",
+    0.216
+   ],
+   [
+    "Sine wave",
+    0.103
+   ],
+   [
+    "Sonar",
+    0.053
+   ],
+   [
+    "Music",
+    0.024
+   ],
+   [
+    "White noise",
+    0.019
+   ],
+   [
+    "Hum",
+    0.019
+   ],
+   [
+    "Chirp tone",
+    0.018
+   ],
+   [
+    "Rumble",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "hall_r2",
+  "type": "sfx",
+  "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hall_r2.mp3",
+  "bytes": 241205,
+  "seconds": 15.0,
+  "tags": [
+   [
+    "Silence",
+    0.159
+   ],
+   [
+    "Sine wave",
+    0.139
+   ],
+   [
+    "Hum",
+    0.038
+   ],
+   [
+    "Music",
+    0.032
+   ],
+   [
+    "White noise",
+    0.017
+   ],
+   [
+    "Throbbing",
+    0.015
+   ],
+   [
+    "Chirp tone",
+    0.012
+   ],
+   [
+    "Sidetone",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "hall_r3",
+  "type": "sfx",
+  "text": "Room tone of a large empty stone palace hall: a soft airy hush with a faint distant murmur of voices far away and the gentle crackle of a brazier. Smooth, even and continuous from start to finish. Mid-range, not bassy. No ticking, no clock, no clicks, no footsteps, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hall_r3.mp3",
+  "bytes": 241205,
+  "seconds": 15.0,
+  "tags": [
+   [
+    "Silence",
+    0.242
+   ],
+   [
+    "Sine wave",
+    0.068
+   ],
+   [
+    "Rumble",
+    0.043
+   ],
+   [
+    "Sonar",
+    0.038
+   ],
+   [
+    "Music",
+    0.037
+   ],
+   [
+    "White noise",
+    0.027
+   ],
+   [
+    "Ambient music",
+    0.017
+   ],
+   [
+    "Vehicle",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "drone_r1",
+  "type": "sfx",
+  "text": "A low tense sustained hum, like a large bronze singing bowl ringing softly: one steady mid-low tone with soft overtones, even from start to finish. Not a rumble, no sub-bass, no melody, no beat, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "drone_r1.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Silence",
+    0.172
+   ],
+   [
+    "Sine wave",
+    0.146
+   ],
+   [
+    "Music",
+    0.043
+   ],
+   [
+    "Chirp tone",
+    0.023
+   ],
+   [
+    "Static",
+    0.016
+   ],
+   [
+    "Sound effect",
+    0.014
+   ],
+   [
+    "White noise",
+    0.01
+   ],
+   [
+    "Sonar",
+    0.008
+   ]
+  ]
+ },
+ {
+  "name": "drone_r2",
+  "type": "sfx",
+  "text": "A low tense sustained hum, like a large bronze singing bowl ringing softly: one steady mid-low tone with soft overtones, even from start to finish. Not a rumble, no sub-bass, no melody, no beat, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "drone_r2.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Sine wave",
+    0.194
+   ],
+   [
+    "Chirp tone",
+    0.093
+   ],
+   [
+    "Rumble",
+    0.025
+   ],
+   [
+    "Sonar",
+    0.019
+   ],
+   [
+    "Sound effect",
+    0.017
+   ],
+   [
+    "Hum",
+    0.017
+   ],
+   [
+    "Music",
+    0.012
+   ],
+   [
+    "Throbbing",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "cymbal_r1",
+  "type": "sfx",
+  "text": "Chinese opera percussion: one crash of a pair of large brass hand cymbals, a bright brassy metallic chang with a short shimmering ring. Brass, not glass. One crash only, no drum, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cymbal_r1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Breaking",
+    0.431
+   ],
+   [
+    "Chink, clink",
+    0.176
+   ],
+   [
+    "Glass",
+    0.167
+   ],
+   [
+    "Sound effect",
+    0.034
+   ],
+   [
+    "Clang",
+    0.028
+   ],
+   [
+    "Shatter",
+    0.013
+   ],
+   [
+    "Music",
+    0.012
+   ],
+   [
+    "Crack",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "cymbal_r2",
+  "type": "sfx",
+  "text": "Chinese opera percussion: one crash of a pair of large brass hand cymbals, a bright brassy metallic chang with a short shimmering ring. Brass, not glass. One crash only, no drum, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cymbal_r2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Breaking",
+    0.157
+   ],
+   [
+    "Clang",
+    0.066
+   ],
+   [
+    "Music",
+    0.057
+   ],
+   [
+    "Chink, clink",
+    0.047
+   ],
+   [
+    "Glass",
+    0.032
+   ],
+   [
+    "Musical instrument",
+    0.026
+   ],
+   [
+    "Sound effect",
+    0.014
+   ],
+   [
+    "Speech",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "cauldron_r1",
+  "type": "sfx",
+  "text": "A heavy bronze cauldron dropped onto a stone floor: a loud metallic clang and thud with a bright short ring, clearly audible in the mid and high range, not only bass. One impact only, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cauldron_r1.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Clang",
+    0.636
+   ],
+   [
+    "Ding",
+    0.093
+   ],
+   [
+    "Bell",
+    0.051
+   ],
+   [
+    "Vehicle horn, car horn, honking",
+    0.033
+   ],
+   [
+    "Sound effect",
+    0.012
+   ],
+   [
+    "Dishes, pots, and pans",
+    0.012
+   ],
+   [
+    "Church bell",
+    0.01
+   ],
+   [
+    "Ping",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "cauldron_r2",
+  "type": "sfx",
+  "text": "A heavy bronze cauldron dropped onto a stone floor: a loud metallic clang and thud with a bright short ring, clearly audible in the mid and high range, not only bass. One impact only, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cauldron_r2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.131
+   ],
+   [
+    "Clang",
+    0.081
+   ],
+   [
+    "Bell",
+    0.049
+   ],
+   [
+    "Ding",
+    0.039
+   ],
+   [
+    "Music",
+    0.017
+   ],
+   [
+    "Squeak",
+    0.011
+   ],
+   [
+    "Air horn, truck horn",
+    0.008
+   ],
+   [
+    "Vehicle horn, car horn, honking",
+    0.006
+   ]
+  ]
+ }
+]
