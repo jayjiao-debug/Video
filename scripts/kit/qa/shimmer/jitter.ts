@@ -6,10 +6,10 @@
 // analyser (shimmer.py) moves every jittered picture back by its offset and looks at what is left.
 //
 // Use it from any harness:
-//     import { shimmerJitter } from "<repo>/scripts/qa/shimmer/jitter";
+//     import { shimmerJitter } from "<repo>/scripts/kit/qa/shimmer/jitter";
 //     shimmerJitter(camera, w, h, k);        // k = 0..7; call it BEFORE the frame is drawn; k < 0 switches it off
 // It stays on the camera through later updateProjectionMatrix() calls (three keeps camera.view). The preview entries
-// of this repo do not need to call it: scripts/qa/shimmer/hook.ts does it from outside (see README.md).
+// of this repo do not need to call it: scripts/kit/qa/shimmer/hook.ts does it from outside (see README.md).
 //
 // Deterministic: the offsets are a fixed table (Halton 2,3 for the fraction, Halton 5,7 for whole pixels).
 import type { PerspectiveCamera } from "three";

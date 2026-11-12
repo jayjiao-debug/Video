@@ -1,0 +1,12 @@
+{"font": "../../../public/bt/sans700.ttf",
+ "_about": "Hongmen's published covers (privy, frame 20): the Douyin 4:3 and 3:4 covers and the English Shorts thumbnail. The stills live in /home/user/hm_work/cover (not in the repo). bash: python3 scripts/kit/cover/cover.py scripts/hongmen/cover/spec.json",
+ "covers": [
+  {"bg": "/home/user/hm_work/cover/privy_wide_big_20.png", "crop": [0, 0, 1440, 1080], "target": "douyin43", "layout": "side",
+   "hook": ["他靠上厕所", "躲过了一场暗杀"], "title": "《鸿门宴，到底死了谁？》", "out": "/home/user/hm_work/cover/out/cover_4x3_zh.png"},
+  {"bg": "/home/user/hm_work/cover/privy_tall_20.png", "target": "douyin34", "layout": "low",
+   "hook": ["他靠上厕所", "躲过了一场暗杀"], "title": "《鸿门宴，到底死了谁？》", "out": "/home/user/hm_work/cover/out/cover_3x4_zh.png"},
+  {"bg": "/home/user/hm_work/cover/privy_916_en_20.png", "target": "shorts916", "layout": "low", "same": true,
+   "override": {"shade": ["bottom", 0.60, 0.72], "hooks": [[0.665, 0.88, 120, 6], [0.712, 0.88, 120, 6]], "title": [0.755, 42]},
+   "hook": ["HE DODGED AN ASSASSINATION", "BY GOING TO THE TOILET"], "title": "The Hongmen Feast · 206 BC", "out": "/home/user/hm_work/cover/out/thumb_916_en.png"}
+ ],
+ "sheet": "/home/user/hm_work/cover/out/privy_covers_sheet.png"}

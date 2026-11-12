@@ -18,6 +18,7 @@
 # Nothing is written into the repo (it is public: no audio there).
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
+KIT="$(cd "$HERE/../../kit/sound" && pwd)"      # the shared mixer, verifier and mux (scripts/kit/sound/README.md)
 HMLANG=zh; PUBLISH=0
 while [ $# -gt 0 ]; do case "$1" in --lang) HMLANG="$2"; shift 2;; --publish) PUBLISH=1; shift;; *) echo "build.sh: unknown argument $1" >&2; exit 2;; esac; done
 if [ "$HMLANG" = "en" ]; then
@@ -32,12 +33,12 @@ mkdir -p "$WORK" "$OUT"; O="$OUT/$NAME"
 # the English picture's beats differ a little (segB/segE follow the English quote times): its own beats file, never the Chinese one
 BEATS="$WORK/beats.json"; [ "$HMLANG" = "en" ] && BEATS="$OUT/beats_en.json"
 HM_LANG="$HMLANG" bash "$HERE/dump_beats.sh" "$BEATS"
-python3 "$HERE/mix.py" "$NARR" "$BEATS" "$HERE/cues.json" "$CLIPS" "$O" --timing "$TIMING" $MIXARGS | tee "$O"_log.txt | grep -v "^  \|^ *[0-9]\+ \|^frame" || true
+python3 "$KIT/mix.py" "$NARR" "$BEATS" "$HERE/cues.json" "$CLIPS" "$O" --timing "$TIMING" $MIXARGS | tee "$O"_log.txt | grep -v "^  \|^ *[0-9]\+ \|^frame" || true
 # listening copies (mono, as the wav): the mix, and the mix twice in a row = one pass through the loop point
 ffmpeg -v error -y -i "$O.wav" -c:a libmp3lame -b:a 160k "$O.mp3"
 ffmpeg -v error -y -i "$O.wav" -i "$O.wav" -filter_complex "[0:a][1:a]concat=n=2:v=0:a=1" -c:a libmp3lame -b:a 160k "${O}_looped_twice.mp3"
-python3 "$HERE/verify.py" "$O.wav" "$NARR" "$BEATS" | tee -a "$O"_log.txt
-echo "to mux: bash $HERE/mux.sh <silent picture.mp4> ${O}_48k.wav <out.mp4>"
+python3 "$KIT/verify.py" "$O.wav" "$NARR" "$BEATS" | tee -a "$O"_log.txt
+echo "to mux: bash $KIT/mux.sh <silent picture.mp4> ${O}_48k.wav <out.mp4>"
 echo "cue table: ${O}_cues.txt   words under sound: ${O}_words.txt   log: ${O}_log.txt"
 if [ "$PUBLISH" = 1 ]; then
   mkdir -p "$PUB"; cp "$O.wav" "${O}_48k.wav" "$O.mp3" "${O}_looped_twice.mp3" "$PUB/"; sleep 10

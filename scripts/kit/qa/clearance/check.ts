@@ -1,23 +1,19 @@
-// Headless clearance checker of the Hongmen film (README.md). Builds the REAL World (sets, props, rig cast) in node
-// with inert canvas / WebGL stubs (stub.js), runs the real segments' pose(w, f) through beginFrame / endFrame exactly as
-// the film does, then measures interpenetration between the meshes the World built, placed by their world matrices.
-//   bash scripts/hongmen/qa/clearance/run.sh                  the whole film, one file pair per segment
-//   bash scripts/hongmen/qa/clearance/run.sh --seg D          one segment;  --from 1400 --to 1500  a range
-//   options: --tol 1 (cm)  --step 1  --out DIR  --seed (the seeded-clip validation)  --pts (write every penetrating
-//            pair's deepest point even off screen; default too)  --quiet
+// Headless clearance (clipping, 穿模) checker for any toon film that keeps the film contract (src/kit/film/contract.ts;
+// README.md). Builds the film's REAL World (sets, props, rig cast) in node through the film's hooks (<film>/kit.world.ts),
+// poses every frame exactly as the film does, then measures interpenetration between the meshes the World built,
+// placed by their world matrices.
+//   bash scripts/kit/qa/clearance/run.sh --film hongmen             the whole film, one file pair per segment
+//   bash scripts/kit/qa/clearance/run.sh --film hongmen --seg D     one segment;  --from 1400 --to 1500  a range
+//   bash scripts/kit/qa/clearance/run.sh --config my/kit.json ...   a film described by any kit.json
+//   options: --tol 1 (cm)  --step 1  --out DIR  --seed (the seeded-clip validation)  --dump F,G  --quiet
+// run.sh writes a small entry that imports the hooks and calls main(hooks).
 import * as THREE from "three";
 import * as fs from "fs";
-import { World } from "../../../../src/videos/hongmen/world";
-import { SEG as SA } from "../../../../src/videos/hongmen/shots/segA";
-import { SEG as SB } from "../../../../src/videos/hongmen/shots/segB";
-import { SEG as SC } from "../../../../src/videos/hongmen/shots/segC";
-import { SEG as SD } from "../../../../src/videos/hongmen/shots/segD";
-import { SEG as SE } from "../../../../src/videos/hongmen/shots/segE";
-import { shotAt } from "../../../../src/videos/hongmen/beats";
-import { SEATS } from "../../../../src/videos/hongmen/layout";
-import { W as FW, H as FH, type Segment } from "../../../../src/videos/hongmen/story";
+import type { FilmHooks, Segment } from "../../../../src/kit/film/contract";
 import { TriSolid, PlacedTri, Capsules, Sphere, trisOf, componentsOf, planarOf, samplesOf, bboxOf, BALL_DIRS, type Solid } from "./vol";
 
+/** the whole checker; its body is not indented (it was a top-level script: keeps the diff and the blame readable) */
+export function main(H: FilmHooks<any>) {
 // ---------------------------------------------------------------------------------------------------------------------
 // options
 // ---------------------------------------------------------------------------------------------------------------------
@@ -26,18 +22,18 @@ const opt = (k: string, d?: string) => { const i = argv.indexOf("--" + k); retur
 const flag = (k: string) => argv.includes("--" + k);
 const TOL = Number(opt("tol", "1")) / 100;
 const STEP = Math.max(1, Number(opt("step", "1")));
-const OUT = opt("out", "/home/user/hm_work/qa/clearance")!;
+const OUT = opt("out", H.out ?? `/tmp/clearance_${H.film}`)!;
 const SEEDED = flag("seed"), QUIET = flag("quiet");
 /** findings of one pair less than GAP frames apart are one range in the summary */
 const GAP = Math.max(Number(opt("gap", "6")), STEP + 1);
 const DUMP = new Set((opt("dump", "") ?? "").split(",").filter(Boolean).map(Number));
-const SEGS: Segment[] = [SA, SB, SC, SD, SE];
+const SEGS: Segment<any, any>[] = H.segments;
 const segArg = opt("seg");
 const fromArg = opt("from"), toArg = opt("to");
 type Job = { name: string; from: number; to: number };
 let jobs: Job[];
 if (fromArg !== undefined || toArg !== undefined) {
-  const a = Number(fromArg ?? 0), b = Number(toArg ?? SE.to);
+  const a = Number(fromArg ?? 0), b = Number(toArg ?? SEGS[SEGS.length - 1].to);
   jobs = [{ name: SEEDED ? `seed_f${a}-${b}` : `f${a}-${b}`, from: a, to: b }];
 } else {
   const ids = segArg ? segArg.toUpperCase().split(",") : SEGS.map((s) => s.id);
@@ -48,8 +44,8 @@ fs.mkdirSync(OUT, { recursive: true });
 // ---------------------------------------------------------------------------------------------------------------------
 // the World, headless
 // ---------------------------------------------------------------------------------------------------------------------
-const camera = new THREE.PerspectiveCamera(40, FW / FH, 0.03, 600);
-const w = new World((globalThis as any).__mk(), camera);
+const camera = new THREE.PerspectiveCamera(40, H.W / H.H, 0.03, 600);
+const w = H.makeWorld((globalThis as any).__mk(), camera);
 const W_: any = w;
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -83,7 +79,7 @@ const xform = (local: Float32Array, m: THREE.Matrix4, out?: Float32Array) => {
 const cat = (arrs: Float32Array[]) => { let n = 0; for (const a of arrs) n += a.length; const o = new Float32Array(n); let k = 0; for (const a of arrs) { o.set(a, k); k += a.length; } return o; };
 const visibleUp = (o: THREE.Object3D) => { for (let p: THREE.Object3D | null = o; p; p = p.parent) if (!p.visible) return false; return true; };
 /** a mesh that is drawn as a surface (not an ink hull, a depth-only twin, a shadow disc, a glow, a background) */
-const SKIP_NAME = /(^|\.)(ink|far|sky|backdrop|glow|contact|blob|spill|light|flame|shadow|outside)(\.|$)|^glow$|^far$|^sky$/;
+const SKIP_NAME = H.skipName ?? /(^|\.)(ink|far|sky|backdrop|glow|contact|blob|spill|light|flame|shadow|outside)(\.|$)|^glow$|^far$|^sky$/;
 const surfaceMesh = (m: THREE.Mesh) => {
   if (!m.isMesh || m.userData.hull || m.userData.depthOnly) return false;
   const mat = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.Material;
@@ -117,9 +113,9 @@ const meshSolids = (meshes: THREE.Mesh[], sp: number, cap: number) => {
 
 // ---- figures
 const rigNames = (): Map<any, string> => {
-  const byId = new Map<number, string>(), out = new Map<any, string>();
-  for (const [p, id] of W_.ids as Map<any, number>) byId.set(id, p.name);
-  for (const [k, r] of W_.rigs as Map<string, any>) { const [id, key] = k.split("|"); out.set(r, byId.get(Number(id)) + (key ? ":" + key : "")); }
+  if (H.rigNames) return H.rigNames(w) as Map<any, string>;
+  const out = new Map<any, string>();
+  (W_.rc.figures as any[]).forEach((r, i) => out.set(r, `figure${i}`));
   return out;
 };
 /** the acc name of every object an accessory built (and what holds what) */
@@ -201,7 +197,7 @@ function figureParts(r: any, name: string): Part[] {
 // ---- props
 function propParts(): Part[] {
   const out: Part[] = [];
-  for (const g of w.props.group.children) {
+  for (const g of (w.props?.group.children ?? []) as THREE.Object3D[]) {
     if (!g.visible || !g.name.startsWith("prop.")) continue;
     const meshes: THREE.Mesh[] = [];
     g.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh && surfaceMesh(m) && visibleUp(m)) meshes.push(m); });
@@ -226,7 +222,7 @@ const labelOf = (m: THREE.Mesh) => {
 const setPartCache = new Map<THREE.Mesh, { key: string; parts: Part[] }>();
 function setParts(): Part[] {
   const out: Part[] = [];
-  w.set.group.traverse((o) => {
+  w.set?.group.traverse((o: THREE.Object3D) => {
     const m = o as THREE.Mesh;
     if (!m.isMesh || !surfaceMesh(m) || !visibleUp(m)) return;
     const key = m.matrixWorld.elements.map((x) => x.toFixed(5)).join(",") + "|" + (m.geometry.attributes.position as THREE.BufferAttribute).version;
@@ -316,7 +312,7 @@ type Finding = { f: number; shot: string; place: string; cat: string; a: string;
 const SELF_OK = /^(body|acc:(robe|armour|lamellar|cape|cloak|swordBelt|hilt|pendant|scroll|warBelt|beard))$/;
 function frame(f: number, out: Finding[], seeds: (() => (() => void) | void) | null) {
   const s = SEGS.find((g) => f >= g.from && f <= g.to)!;
-  if (s !== cur) { cur?.exit(w); s.enter(w); cur = s; }
+  if (s !== cur) { cur?.exit?.(w); s.enter?.(w); cur = s; }
   w.beginFrame(f); const P = s.pose(w, f); w.endFrame(P); w.root.updateMatrixWorld(true);
   let undo: (() => void) | void = undefined;
   if (seeds) { undo = seeds(); w.root.updateMatrixWorld(true); }
@@ -324,7 +320,7 @@ function frame(f: number, out: Finding[], seeds: (() => (() => void) | void) | n
 }
 function frameBody(f: number, out: Finding[]) {
   camera.updateMatrixWorld(); _pm.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse); frustum.setFromProjectionMatrix(_pm);
-  const shot = shotAt(f).id, place = String(w.place);
+  const shot = H.shotAt ? H.shotAt(f) : SEGS.find((g) => f >= g.from && f <= g.to)!.id, place = String(w.place);
   let everything: Part[] = [];
   const byId = new Map<string, Part>();
   /** the first part (not a, not b) the line of sight from the camera to the point passes through, 3 cm or more from it */
@@ -514,13 +510,7 @@ const seedsFor = (f: number): (() => (() => void) | void) | null => {
       seedLog.push(`f${f}: ${names.get(st2)} put 0.20 m beside ${names.get(st)} (expect fig-fig body x body about ${((R(st) + R(st2) - 0.2) * 100).toFixed(1)} cm = R1 + R2 - 0.20)`);
     }
     w.update(); w.root.updateMatrixWorld(true);
-    if (w.place === "tent") {
-      // S4. a cup floating 8 cm over Liu Bang's table; S5. the pork leg through the middle of Fan Kuai's table top
-      const c = SEATS.liu.cup; w.prop("cup:liu").put([c.x, c.y + 0.08, c.z]); seedLog.push(`f${f}: cup:liu 8.0 cm above Liu Bang's table (expect float 8 cm)`);
-      // S2. the wine vessel standing 5 cm into the floor beside Liu Bang's table
-      const c2 = SEATS.liu.table.at; w.prop("wineJar").put([c2.x + 0.5, -0.05, c2.z]); seedLog.push(`f${f}: wineJar 5.0 cm into the floor (expect floor 5 cm)`);
-      const t = SEATS.fankuai.table.at; w.prop("pigLeg").put([t.x, 0.32, t.z]); seedLog.push(`f${f}: pigLeg centred on Fan Kuai's table top (expect prop-set: the 4 cm slab passes through the 21 cm thick leg: several cm)`);
-    }
+    H.seeds?.(w, f, (line) => seedLog.push(line));        // the film's own seeds (Hongmen: cup, wine jar, pork leg)
   };
 };
 
@@ -570,3 +560,4 @@ for (const job of jobs) {
   console.log(`wrote ${OUT}/${job.name}.json / .txt`);
 }
 console.log(`done in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+}
