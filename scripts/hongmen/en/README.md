@@ -36,7 +36,8 @@ character's own words who says them and how many syllables (`who` = a key of PEO
 of a line under their take letter (the shorter ones written after the first takes ran long). `say` respells the names
 for the voice (`Shyahng Yoo` for Xiang Yu, `Leo Bahng` for Liu Bang, `Fahn Dzung`, `Fahn Kwhy`, `Tsao Wooshahng`); every
 respelling has as many words as the name, so the word times line up. `loop`: lines 22 and 1 are ONE take, "As for Liu
-Bang, he dodged an assassin by going to the toilet." (as the Chinese 「至于刘邦，他靠上厕所……」).
+Bang, he dodged an assassination by going to the toilet." (as the Chinese 「至于刘邦，他靠上厕所……」). Take `d` of lines
+1 (the loop), 2 and 6 is the owner's own wording (2026-11-12); the wordings before it are kept under `alt` `a`/`b`/`c`.
 
 The English is written to the time each group has, not translated word for word. Facts only from
 `next-video/hongmen/script_v4.md` and its Shiji sources (the 4 to 1 of line 4 is its 400,000 against 100,000).
@@ -47,7 +48,8 @@ The English is written to the time each group has, not translated word for word.
    `x0122<take>.mp3`, `"words": true` so the report carries where Whisper heard each word. The voice: the ElevenLabs
    library voice Alex (Arthur's English narrator), eleven_v4, stability 0.2, similarity 0.8, style 0.75, speed 1.2.
    Requests `hongmen-en-alex-01` (every line, the loop take in two wordings), `-02` (shorter wordings of 13 lines),
-   `-03` (third wordings of lines 4, 5, 8, 11). The three reports merged: `/home/user/hm_work/en/raw/report_all.json`.
+   `-03` (third wordings of lines 4, 5, 8, 11), `-04` (the owner's wordings of lines 1 (loop take x0122d), 2 and 6 = take d,
+   and a shorter line 2, take e). The four reports merged: `/home/user/hm_work/en/raw/report_all.json`.
 2. `fit_en.py <clips> <report.json> <narration.wav> <en_timing.json> [line=take ...] [line@tmax ...] [--takes abc]`
    (an adapted copy of `scripts/arthur/en/fit_en.py`): pauses over 0.10 s cut to 0.07 s, the take cut at the group
    boundaries, a tempo per group (0.97 to 1.15) and a little more pause where there is one, so that each group starts
@@ -63,13 +65,14 @@ The English is written to the time each group has, not translated word for word.
    `mix_en_looped_twice.mp3`. Loudness -15.0 LUFS mono (as Arthur's English: this voice has taller peaks).
    The beats come from the ENGLISH picture (HM_LANG=en -> dump_beats.mjs gives env.ts {lang:"en"}; written to
    /home/user/hm_work/en/beats_en.json): segB/segE follow the English quote times, so e.g. line 6's second fist
-   (PIC.B.hit2) is at f528 in English, f524 in Chinese.
+   (PIC.B.hit2) is at f527 in English, f524 in Chinese (in English it lands on the quote's last syllable, "dawn":
+   `syl(Q6, EN ? Q6.syl - 1 : 3)` in segB.ts; the Chinese one stays on 打).
 
 The commands that made the files in use:
 
 ```
 python3 scripts/hongmen/en/fit_en.py /home/user/hm_work/en/raw /home/user/hm_work/en/raw/report_all.json \
-  /home/user/hm_work/en/narration_en.wav /home/user/hm_work/en/en_timing.json --takes abc 8@1.18
+  /home/user/hm_work/en/narration_en.wav /home/user/hm_work/en/en_timing.json --takes abc 8@1.18 1=d 2=d 6=d 1@1.2 2@1.2 6@1.2
 python3 scripts/hongmen/en/gen_en.py /home/user/hm_work/en/en_timing.json
 bash scripts/hongmen/sound/build.sh --lang en
 bash scripts/hongmen/tsc.sh

@@ -29,6 +29,7 @@ import { shot, HIT, TAG, TAG_LEN } from "../beats";
 import { CAMS, CART, GATE, NIGHT_L, NIGHT_X } from "../layout";
 import { FPS, PEOPLE, V, accent, at, cam, frag, headPx, heads, kick, kneel, ky, lid, path, seated, speak, staged, swaps, walkAlong, walkTime, yawTo, type Rig, type RigState } from "./common";
 import { inset, stamp, tag } from "../hud";
+import { EN } from "../lang";
 import { anger, burst, flapWipe, mystery, streak } from "./segB_ov";
 import { FACE } from "./segB_face";
 
@@ -64,7 +65,8 @@ const B = (() => {
   const words = Q5.from;                                   // the first frame of his words (the push-in has arrived)
   const flick = syl(Q5, 3);                                // his eyes flick to us on "称"; Xiang Yu hears "称王"
   // ---- line 6
-  const slam = HIT.slam, hit2 = syl(Q6, 3);                // the fist lands; on "打" the arm points out of the door
+  const slam = HIT.slam, hit2 = syl(Q6, EN ? Q6.syl - 1 : 3); // the fist lands; on "打" the arm points out of the door
+                                                           // (English: on the last syllable, "dawn", whatever the wording)
   const smug6 = slam + 17;                                 // the officer has what he came for
   // ---- line 7
   const uncleAt = TAG.uncle - 5;                           // he stops 5 frames before his tag (he runs in under the whip pan, on "当晚")
