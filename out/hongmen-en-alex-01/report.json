@@ -1,0 +1,2892 @@
+{
+  "id": "hongmen-en-alex-01",
+  "clips": [
+    {
+      "name": "x0122a",
+      "lang": "en",
+      "text": "As for Leo Bahng, he dodged an assassin by going to the toilet.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x0122a.mp3",
+      "bytes": 71514,
+      "words": [
+        [
+          "As",
+          0.0,
+          0.22
+        ],
+        [
+          "for",
+          0.22,
+          0.44
+        ],
+        [
+          "Leo",
+          0.44,
+          0.66
+        ],
+        [
+          "Bang,",
+          0.66,
+          0.98
+        ],
+        [
+          "he",
+          1.52,
+          1.72
+        ],
+        [
+          "dodged",
+          1.72,
+          2.14
+        ],
+        [
+          "an",
+          2.14,
+          2.26
+        ],
+        [
+          "assassin",
+          2.26,
+          2.76
+        ],
+        [
+          "by",
+          2.76,
+          3.08
+        ],
+        [
+          "going",
+          3.08,
+          3.32
+        ],
+        [
+          "to",
+          3.32,
+          3.52
+        ],
+        [
+          "the",
+          3.52,
+          3.64
+        ],
+        [
+          "toilet.",
+          3.64,
+          4.02
+        ]
+      ],
+      "heard": "As for Leo Bang, he dodged an assassin by going to the toilet.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.997,
+      "seconds": 4.4
+    },
+    {
+      "name": "x0122b",
+      "lang": "en",
+      "text": "As for Leo Bahng, he dodged an assassin with a toilet break.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x0122b.mp3",
+      "bytes": 67752,
+      "words": [
+        [
+          "As",
+          0.0,
+          0.22
+        ],
+        [
+          "for",
+          0.22,
+          0.42
+        ],
+        [
+          "Leo",
+          0.42,
+          0.66
+        ],
+        [
+          "Bong,",
+          0.66,
+          1.02
+        ],
+        [
+          "he",
+          1.52,
+          1.72
+        ],
+        [
+          "dodged",
+          1.72,
+          2.16
+        ],
+        [
+          "an",
+          2.16,
+          2.26
+        ],
+        [
+          "assassin",
+          2.26,
+          2.74
+        ],
+        [
+          "with",
+          2.74,
+          3.04
+        ],
+        [
+          "a",
+          3.04,
+          3.16
+        ],
+        [
+          "toilet",
+          3.16,
+          3.52
+        ],
+        [
+          "break.",
+          3.52,
+          3.86
+        ]
+      ],
+      "heard": "As for Leo Bong, he dodged an assassin with a toilet break.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 4.16
+    },
+    {
+      "name": "x02a",
+      "lang": "en",
+      "text": "This was the Hongmen Feast. Swords everywhere, and only one man died. He wasn't there.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x02a.mp3",
+      "bytes": 106204,
+      "words": [
+        [
+          "This",
+          0.0,
+          0.24
+        ],
+        [
+          "was",
+          0.24,
+          0.42
+        ],
+        [
+          "the",
+          0.42,
+          0.58
+        ],
+        [
+          "Hongmen",
+          0.58,
+          1.08
+        ],
+        [
+          "Feast,",
+          1.08,
+          1.64
+        ],
+        [
+          "swords",
+          1.9,
+          2.48
+        ],
+        [
+          "everywhere,",
+          2.48,
+          3.16
+        ],
+        [
+          "and",
+          3.58,
+          3.74
+        ],
+        [
+          "only",
+          3.74,
+          3.98
+        ],
+        [
+          "one",
+          3.98,
+          4.34
+        ],
+        [
+          "man",
+          4.34,
+          4.56
+        ],
+        [
+          "died.",
+          4.56,
+          4.96
+        ],
+        [
+          "He",
+          5.56,
+          5.7
+        ],
+        [
+          "wasn't",
+          5.7,
+          6.04
+        ],
+        [
+          "there.",
+          6.04,
+          6.22
+        ]
+      ],
+      "heard": "This was the Hongmen Feast, swords everywhere, and only one man died. He wasn't there.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 6.56
+    },
+    {
+      "name": "x03a",
+      "lang": "en",
+      "text": "The empire fell. Leo Bahng grabbed the capital.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x03a.mp3",
+      "bytes": 59811,
+      "words": [
+        [
+          "The",
+          0.0,
+          0.16
+        ],
+        [
+          "Empire",
+          0.16,
+          0.64
+        ],
+        [
+          "fell.",
+          0.64,
+          1.1
+        ],
+        [
+          "Liu",
+          1.6,
+          1.98
+        ],
+        [
+          "Bang",
+          1.98,
+          2.32
+        ],
+        [
+          "grabbed",
+          2.32,
+          2.78
+        ],
+        [
+          "the",
+          2.78,
+          2.96
+        ],
+        [
+          "capital.",
+          2.96,
+          3.34
+        ]
+      ],
+      "heard": "The Empire fell. Liu Bang grabbed the capital.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 3.68
+    },
+    {
+      "name": "x04a",
+      "lang": "en",
+      "text": "But Shyahng Yoo was stronger: four times Leo Bahng's army.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x04a.mp3",
+      "bytes": 70260,
+      "words": [
+        [
+          "But",
+          0.0,
+          0.16
+        ],
+        [
+          "Xiang",
+          0.16,
+          0.5
+        ],
+        [
+          "Yu",
+          0.5,
+          0.78
+        ],
+        [
+          "was",
+          0.78,
+          1.08
+        ],
+        [
+          "stronger,",
+          1.08,
+          1.64
+        ],
+        [
+          "four",
+          2.14,
+          2.52
+        ],
+        [
+          "times",
+          2.52,
+          2.94
+        ],
+        [
+          "Liu",
+          2.94,
+          3.26
+        ],
+        [
+          "Bang's",
+          3.26,
+          3.74
+        ],
+        [
+          "army.",
+          3.74,
+          4.0
+        ]
+      ],
+      "heard": "But Xiang Yu was stronger, four times Liu Bang's army.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.983,
+      "seconds": 4.32
+    },
+    {
+      "name": "x05a",
+      "lang": "en",
+      "text": "His own officer snitched to Shyahng Yoo: \"Leo Bahng wants to be king.\"",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x05a.mp3",
+      "bytes": 82798,
+      "words": [
+        [
+          "His",
+          0.0,
+          0.14
+        ],
+        [
+          "own",
+          0.14,
+          0.44
+        ],
+        [
+          "officer",
+          0.44,
+          1.02
+        ],
+        [
+          "snitched",
+          1.02,
+          1.66
+        ],
+        [
+          "to",
+          1.66,
+          1.84
+        ],
+        [
+          "Xiang",
+          1.84,
+          2.14
+        ],
+        [
+          "Yu.",
+          2.14,
+          2.38
+        ],
+        [
+          "Liu",
+          2.98,
+          3.28
+        ],
+        [
+          "Bang",
+          3.28,
+          3.68
+        ],
+        [
+          "wants",
+          3.68,
+          4.04
+        ],
+        [
+          "to",
+          4.04,
+          4.22
+        ],
+        [
+          "be",
+          4.22,
+          4.34
+        ],
+        [
+          "king.",
+          4.34,
+          4.68
+        ]
+      ],
+      "heard": "His own officer snitched to Xiang Yu. Liu Bang wants to be king.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.983,
+      "seconds": 5.12
+    },
+    {
+      "name": "x06a",
+      "lang": "en",
+      "text": "Shyahng Yoo raged: \"We attack at dawn!\"",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x06a.mp3",
+      "bytes": 56049,
+      "words": [
+        [
+          "Xiong",
+          0.0,
+          0.58
+        ],
+        [
+          "Yu",
+          0.58,
+          0.74
+        ],
+        [
+          "raged!",
+          0.74,
+          1.48
+        ],
+        [
+          "We",
+          1.84,
+          1.98
+        ],
+        [
+          "attack",
+          1.98,
+          2.36
+        ],
+        [
+          "at",
+          2.36,
+          2.62
+        ],
+        [
+          "dawn!",
+          2.62,
+          3.04
+        ]
+      ],
+      "heard": "Xiong Yu raged! We attack at dawn!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.987,
+      "seconds": 3.44
+    },
+    {
+      "name": "x07a",
+      "lang": "en",
+      "text": "That night, Shyahng Yoo's uncle warned Leo Bahng, who at once made him an in-law.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x07a.mp3",
+      "bytes": 88232,
+      "words": [
+        [
+          "That",
+          0.0,
+          0.24
+        ],
+        [
+          "night,",
+          0.24,
+          0.5
+        ],
+        [
+          "Xiaoyang",
+          0.76,
+          1.22
+        ],
+        [
+          "Yu's",
+          1.22,
+          1.52
+        ],
+        [
+          "uncle",
+          1.52,
+          1.84
+        ],
+        [
+          "warned",
+          1.84,
+          2.3
+        ],
+        [
+          "Liu",
+          2.3,
+          2.64
+        ],
+        [
+          "Bang,",
+          2.64,
+          3.02
+        ],
+        [
+          "who",
+          3.38,
+          3.54
+        ],
+        [
+          "at",
+          3.54,
+          3.68
+        ],
+        [
+          "once",
+          3.68,
+          4.04
+        ],
+        [
+          "made",
+          4.04,
+          4.42
+        ],
+        [
+          "him",
+          4.42,
+          4.58
+        ],
+        [
+          "an",
+          4.58,
+          4.7
+        ],
+        [
+          "in",
+          4.7,
+          4.88
+        ],
+        [
+          "-law.",
+          4.88,
+          5.12
+        ]
+      ],
+      "heard": "That night, Xiaoyang Yu's uncle warned Liu Bang, who at once made him an in-law.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.991,
+      "seconds": 5.44
+    },
+    {
+      "name": "x08a",
+      "lang": "en",
+      "text": "Next morning, Leo Bahng apologized: \"Surely some rat lied to you.\"",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x08a.mp3",
+      "bytes": 90740,
+      "words": [
+        [
+          "Next",
+          0.0,
+          0.28
+        ],
+        [
+          "morning,",
+          0.28,
+          0.72
+        ],
+        [
+          "Leo",
+          1.12,
+          1.32
+        ],
+        [
+          "Bang",
+          1.32,
+          1.64
+        ],
+        [
+          "apologized.",
+          1.64,
+          2.4
+        ],
+        [
+          "Surely",
+          3.06,
+          3.6
+        ],
+        [
+          "some",
+          3.6,
+          4.02
+        ],
+        [
+          "rat",
+          4.02,
+          4.46
+        ],
+        [
+          "lied",
+          4.46,
+          4.82
+        ],
+        [
+          "to",
+          4.82,
+          5.1
+        ],
+        [
+          "you.",
+          5.1,
+          5.28
+        ]
+      ],
+      "heard": "Next morning, Leo Bang apologized. Surely some rat lied to you.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.995,
+      "seconds": 5.6
+    },
+    {
+      "name": "x09a",
+      "lang": "en",
+      "text": "Shyahng Yoo blurted out: \"Your man Tsao Wooshahng told me.\"",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x09a.mp3",
+      "bytes": 61065,
+      "words": [
+        [
+          "Shying",
+          0.0,
+          0.42
+        ],
+        [
+          "you,",
+          0.42,
+          0.62
+        ],
+        [
+          "blurted",
+          0.8,
+          1.08
+        ],
+        [
+          "out,",
+          1.08,
+          1.26
+        ],
+        [
+          "your",
+          1.76,
+          1.88
+        ],
+        [
+          "man",
+          1.88,
+          2.08
+        ],
+        [
+          "Sa",
+          2.08,
+          2.44
+        ],
+        [
+          "Wuxiang",
+          2.44,
+          3.0
+        ],
+        [
+          "told",
+          3.0,
+          3.2
+        ],
+        [
+          "me.",
+          3.2,
+          3.44
+        ]
+      ],
+      "heard": "Shying you, blurted out, your man Sa Wuxiang told me.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.996,
+      "seconds": 3.76
+    },
+    {
+      "name": "x10a",
+      "lang": "en",
+      "text": "Shyahng Yoo kept him for drinks. But his adviser, Fahn Dzung, was sure Leo Bahng must die.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x10a.mp3",
+      "bytes": 106204,
+      "words": [
+        [
+          "Xiang",
+          0.0,
+          0.3
+        ],
+        [
+          "Yu",
+          0.3,
+          0.58
+        ],
+        [
+          "kept",
+          0.58,
+          0.88
+        ],
+        [
+          "him",
+          0.88,
+          1.06
+        ],
+        [
+          "for",
+          1.06,
+          1.2
+        ],
+        [
+          "drinks,",
+          1.2,
+          1.62
+        ],
+        [
+          "but",
+          2.1,
+          2.26
+        ],
+        [
+          "his",
+          2.26,
+          2.4
+        ],
+        [
+          "advisor,",
+          2.4,
+          3.0
+        ],
+        [
+          "Fan",
+          3.26,
+          3.48
+        ],
+        [
+          "Zhong,",
+          3.48,
+          3.76
+        ],
+        [
+          "was",
+          4.18,
+          4.28
+        ],
+        [
+          "sure",
+          4.28,
+          4.68
+        ],
+        [
+          "Liu",
+          4.68,
+          5.0
+        ],
+        [
+          "Bang",
+          5.0,
+          5.32
+        ],
+        [
+          "must",
+          5.32,
+          5.76
+        ],
+        [
+          "die.",
+          5.76,
+          6.16
+        ]
+      ],
+      "heard": "Xiang Yu kept him for drinks, but his advisor, Fan Zhong, was sure Liu Bang must die.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.985,
+      "seconds": 6.56
+    },
+    {
+      "name": "x11a",
+      "lang": "en",
+      "text": "Three times, Fahn Dzung raised his jade, meaning: kill him. No reaction.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x11a.mp3",
+      "bytes": 98263,
+      "words": [
+        [
+          "Three",
+          0.0,
+          0.28
+        ],
+        [
+          "times,",
+          0.28,
+          0.82
+        ],
+        [
+          "Fanzung",
+          1.16,
+          1.66
+        ],
+        [
+          "raised",
+          1.66,
+          2.02
+        ],
+        [
+          "his",
+          2.02,
+          2.3
+        ],
+        [
+          "jade,",
+          2.3,
+          2.82
+        ],
+        [
+          "meaning",
+          3.12,
+          3.36
+        ],
+        [
+          "kill",
+          3.36,
+          4.04
+        ],
+        [
+          "him.",
+          4.04,
+          4.3
+        ],
+        [
+          "No",
+          4.98,
+          5.2
+        ],
+        [
+          "reaction.",
+          5.2,
+          5.56
+        ]
+      ],
+      "heard": "Three times, Fanzung raised his jade, meaning kill him. No reaction.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.994,
+      "seconds": 6.08
+    },
+    {
+      "name": "x12a",
+      "lang": "en",
+      "text": "Fahn Dzung sent in a sword dancer to stab Leo Bahng mid-dance.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x12a.mp3",
+      "bytes": 74021,
+      "words": [
+        [
+          "Fanzung",
+          0.0,
+          0.64
+        ],
+        [
+          "sent",
+          0.64,
+          0.92
+        ],
+        [
+          "in",
+          0.92,
+          1.12
+        ],
+        [
+          "a",
+          1.12,
+          1.24
+        ],
+        [
+          "sword",
+          1.24,
+          1.56
+        ],
+        [
+          "dancer",
+          1.56,
+          1.98
+        ],
+        [
+          "to",
+          1.98,
+          2.12
+        ],
+        [
+          "stab",
+          2.12,
+          2.6
+        ],
+        [
+          "Liu",
+          2.6,
+          2.88
+        ],
+        [
+          "Bang",
+          2.88,
+          3.26
+        ],
+        [
+          "mid",
+          3.26,
+          3.7
+        ],
+        [
+          "-dance.",
+          3.7,
+          4.26
+        ]
+      ],
+      "heard": "Fanzung sent in a sword dancer to stab Liu Bang mid-dance.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.948,
+      "seconds": 4.56
+    },
+    {
+      "name": "x13a",
+      "lang": "en",
+      "text": "Shyahng Yoo's uncle joined the dance, shielding his new in-law.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x13a.mp3",
+      "bytes": 62318,
+      "words": [
+        [
+          "Shang",
+          0.0,
+          0.28
+        ],
+        [
+          "Yu's",
+          0.28,
+          0.7
+        ],
+        [
+          "uncle",
+          0.7,
+          0.98
+        ],
+        [
+          "joined",
+          0.98,
+          1.38
+        ],
+        [
+          "the",
+          1.38,
+          1.56
+        ],
+        [
+          "dance,",
+          1.56,
+          1.96
+        ],
+        [
+          "shielding",
+          2.22,
+          2.74
+        ],
+        [
+          "his",
+          2.74,
+          2.9
+        ],
+        [
+          "new",
+          2.9,
+          3.1
+        ],
+        [
+          "in",
+          3.1,
+          3.32
+        ],
+        [
+          "-law.",
+          3.32,
+          3.54
+        ]
+      ],
+      "heard": "Shang Yu's uncle joined the dance, shielding his new in-law.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.997,
+      "seconds": 3.84
+    },
+    {
+      "name": "x14a",
+      "lang": "en",
+      "text": "Leo Bahng's man, Fahn Kwhy, flattened the guards and burst in.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x14a.mp3",
+      "bytes": 71514,
+      "words": [
+        [
+          "Leo",
+          0.0,
+          0.26
+        ],
+        [
+          "Bung's",
+          0.26,
+          0.72
+        ],
+        [
+          "man,",
+          0.72,
+          0.98
+        ],
+        [
+          "Phan",
+          1.26,
+          1.52
+        ],
+        [
+          "Khoi,",
+          1.52,
+          2.04
+        ],
+        [
+          "flattened",
+          2.24,
+          2.76
+        ],
+        [
+          "the",
+          2.76,
+          2.78
+        ],
+        [
+          "guards",
+          2.78,
+          3.1
+        ],
+        [
+          "and",
+          3.1,
+          3.36
+        ],
+        [
+          "burst",
+          3.36,
+          3.72
+        ],
+        [
+          "in.",
+          3.72,
+          4.06
+        ]
+      ],
+      "heard": "Leo Bung's man, Phan Khoi, flattened the guards and burst in.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.993,
+      "seconds": 4.4
+    },
+    {
+      "name": "x15a",
+      "lang": "en",
+      "text": "Shyahng Yoo called him brave and gave him a leg of pork. Raw.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x15a.mp3",
+      "bytes": 75275,
+      "words": [
+        [
+          "Xiang",
+          0.0,
+          0.28
+        ],
+        [
+          "Yu",
+          0.28,
+          0.6
+        ],
+        [
+          "called",
+          0.6,
+          0.92
+        ],
+        [
+          "him",
+          0.92,
+          1.12
+        ],
+        [
+          "brave,",
+          1.12,
+          1.54
+        ],
+        [
+          "and",
+          2.0,
+          2.06
+        ],
+        [
+          "gave",
+          2.06,
+          2.3
+        ],
+        [
+          "him",
+          2.3,
+          2.46
+        ],
+        [
+          "a",
+          2.46,
+          2.56
+        ],
+        [
+          "leg",
+          2.56,
+          2.74
+        ],
+        [
+          "of",
+          2.74,
+          2.86
+        ],
+        [
+          "pork,",
+          2.86,
+          3.28
+        ],
+        [
+          "raw.",
+          3.74,
+          4.1
+        ]
+      ],
+      "heard": "Xiang Yu called him brave, and gave him a leg of pork, raw.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 4.64
+    },
+    {
+      "name": "x16a",
+      "lang": "en",
+      "text": "Leo Bahng went to the toilet and waved Fahn Kwhy out too.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x16a.mp3",
+      "bytes": 61065,
+      "words": [
+        [
+          "Leo",
+          0.0,
+          0.26
+        ],
+        [
+          "Bang",
+          0.26,
+          0.58
+        ],
+        [
+          "went",
+          0.58,
+          0.9
+        ],
+        [
+          "to",
+          0.9,
+          1.08
+        ],
+        [
+          "the",
+          1.08,
+          1.16
+        ],
+        [
+          "toilet",
+          1.16,
+          1.54
+        ],
+        [
+          "and",
+          1.54,
+          1.96
+        ],
+        [
+          "waved",
+          1.96,
+          2.32
+        ],
+        [
+          "Fonkwai",
+          2.32,
+          2.94
+        ],
+        [
+          "out",
+          2.94,
+          3.14
+        ],
+        [
+          "too.",
+          3.14,
+          3.38
+        ]
+      ],
+      "heard": "Leo Bang went to the toilet and waved Fonkwai out too.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 3.76
+    },
+    {
+      "name": "x17a",
+      "lang": "en",
+      "text": "Leo Bahng hadn't said goodbye. Fahn Kwhy said: \"They're the knife, we're the fish. Forget goodbye!\"",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x17a.mp3",
+      "bytes": 118743,
+      "words": [
+        [
+          "Leo",
+          0.0,
+          0.28
+        ],
+        [
+          "Bong",
+          0.28,
+          0.66
+        ],
+        [
+          "hadn't",
+          0.66,
+          1.24
+        ],
+        [
+          "said",
+          1.24,
+          1.36
+        ],
+        [
+          "goodbye.",
+          1.36,
+          1.78
+        ],
+        [
+          "Fonkwai",
+          2.38,
+          3.06
+        ],
+        [
+          "said,",
+          3.06,
+          3.38
+        ],
+        [
+          "They're",
+          3.76,
+          4.1
+        ],
+        [
+          "the",
+          4.1,
+          4.22
+        ],
+        [
+          "knife,",
+          4.22,
+          4.54
+        ],
+        [
+          "we're",
+          4.9,
+          5.12
+        ],
+        [
+          "the",
+          5.12,
+          5.24
+        ],
+        [
+          "fish.",
+          5.24,
+          5.58
+        ],
+        [
+          "Forget",
+          6.06,
+          6.38
+        ],
+        [
+          "goodbye.",
+          6.38,
+          6.8
+        ]
+      ],
+      "heard": "Leo Bong hadn't said goodbye. Fonkwai said, They're the knife, we're the fish. Forget goodbye.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.997,
+      "seconds": 7.36
+    },
+    {
+      "name": "x18a",
+      "lang": "en",
+      "text": "Leo Bahng ditched his convoy, jumped on one horse, and took a back road home.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x18a.mp3",
+      "bytes": 80291,
+      "words": [
+        [
+          "Leo",
+          0.0,
+          0.26
+        ],
+        [
+          "Bong",
+          0.26,
+          0.62
+        ],
+        [
+          "ditched",
+          0.62,
+          1.18
+        ],
+        [
+          "his",
+          1.18,
+          1.24
+        ],
+        [
+          "convoy,",
+          1.24,
+          1.92
+        ],
+        [
+          "jumped",
+          2.2,
+          2.34
+        ],
+        [
+          "on",
+          2.34,
+          2.58
+        ],
+        [
+          "one",
+          2.58,
+          2.86
+        ],
+        [
+          "horse,",
+          2.86,
+          3.2
+        ],
+        [
+          "and",
+          3.52,
+          3.56
+        ],
+        [
+          "took",
+          3.56,
+          3.72
+        ],
+        [
+          "a",
+          3.72,
+          3.88
+        ],
+        [
+          "back",
+          3.88,
+          4.12
+        ],
+        [
+          "road",
+          4.12,
+          4.36
+        ],
+        [
+          "home.",
+          4.36,
+          4.68
+        ]
+      ],
+      "heard": "Leo Bong ditched his convoy, jumped on one horse, and took a back road home.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 4.96
+    },
+    {
+      "name": "x19a",
+      "lang": "en",
+      "text": "Only once Leo Bahng reached camp, his adviser walked in: \"He drank too much.\"",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x19a.mp3",
+      "bytes": 85724,
+      "words": [
+        [
+          "Only",
+          0.0,
+          0.24
+        ],
+        [
+          "once",
+          0.24,
+          0.54
+        ],
+        [
+          "Leo",
+          0.54,
+          0.84
+        ],
+        [
+          "Bang",
+          0.84,
+          1.1
+        ],
+        [
+          "reached",
+          1.1,
+          1.46
+        ],
+        [
+          "camp,",
+          1.46,
+          1.92
+        ],
+        [
+          "his",
+          2.3,
+          2.42
+        ],
+        [
+          "advisor",
+          2.42,
+          2.78
+        ],
+        [
+          "walked",
+          2.78,
+          3.2
+        ],
+        [
+          "in.",
+          3.2,
+          3.42
+        ],
+        [
+          "He",
+          3.92,
+          4.08
+        ],
+        [
+          "drank",
+          4.08,
+          4.36
+        ],
+        [
+          "too",
+          4.36,
+          4.58
+        ],
+        [
+          "much.",
+          4.58,
+          4.84
+        ]
+      ],
+      "heard": "Only once Leo Bang reached camp, his advisor walked in. He drank too much.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 5.28
+    },
+    {
+      "name": "x20a",
+      "lang": "en",
+      "text": "The first thing Leo Bahng did: kill Tsao Wooshahng, the officer who snitched.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x20a.mp3",
+      "bytes": 81545,
+      "words": [
+        [
+          "The",
+          0.0,
+          0.16
+        ],
+        [
+          "first",
+          0.16,
+          0.44
+        ],
+        [
+          "thing",
+          0.44,
+          0.66
+        ],
+        [
+          "Liu",
+          0.66,
+          0.9
+        ],
+        [
+          "Bang",
+          0.9,
+          1.16
+        ],
+        [
+          "did,",
+          1.16,
+          1.5
+        ],
+        [
+          "killed",
+          2.08,
+          2.36
+        ],
+        [
+          "Cao",
+          2.36,
+          2.72
+        ],
+        [
+          "Wuxiang,",
+          2.72,
+          3.32
+        ],
+        [
+          "the",
+          3.56,
+          3.62
+        ],
+        [
+          "officer",
+          3.62,
+          4.02
+        ],
+        [
+          "who",
+          4.02,
+          4.24
+        ],
+        [
+          "snitched.",
+          4.24,
+          4.76
+        ]
+      ],
+      "heard": "The first thing Liu Bang did, killed Cao Wuxiang, the officer who snitched.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.989,
+      "seconds": 5.04
+    },
+    {
+      "name": "x21a",
+      "lang": "en",
+      "text": "And that name? Shyahng Yoo let it slip himself.",
+      "voice": "shared:alex",
+      "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "x21a.mp3",
+      "bytes": 52287,
+      "words": [
+        [
+          "And",
+          0.0,
+          0.16
+        ],
+        [
+          "that",
+          0.16,
+          0.34
+        ],
+        [
+          "name,",
+          0.34,
+          0.64
+        ],
+        [
+          "shall",
+          1.1,
+          1.4
+        ],
+        [
+          "you",
+          1.4,
+          1.68
+        ],
+        [
+          "let",
+          1.68,
+          1.94
+        ],
+        [
+          "it",
+          1.94,
+          2.04
+        ],
+        [
+          "slip",
+          2.04,
+          2.26
+        ],
+        [
+          "himself?",
+          2.26,
+          2.66
+        ]
+      ],
+      "heard": "And that name, shall you let it slip himself?",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 3.2
+    }
+  ],
+  "plan": {
+    "tier": "creator",
+    "character_count": 4932,
+    "character_limit": 123898,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "chill"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "descriptive": "calm",
+        "age": "young",
+        "gender": "male",
+        "accent": "standard",
+        "language": "zh",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "use_case": "entertainment_tv",
+        "age": "young",
+        "gender": "male",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "descriptive": "sassy",
+        "accent": "american",
+        "language": "en",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "gender": "male",
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "descriptive": "excited",
+        "age": "middle_aged",
+        "gender": "female",
+        "accent": "standard",
+        "language": "ru",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "descriptive": "serious",
+        "accent": "british",
+        "language": "en",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "female",
+        "accent": "standard",
+        "language": "hi",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "modern standard",
+        "language": "ar",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "descriptive": "confident",
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "milanese",
+        "language": "it",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "accent": "brazilian",
+        "language": "pt",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "descriptive": "casual",
+        "age": "young",
+        "gender": "female",
+        "accent": "latin american",
+        "language": "es",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "descriptive": "cute",
+        "accent": "mexican",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "use_case": "conversational",
+        "age": "young",
+        "descriptive": "casual",
+        "accent": "latin american",
+        "language": "es",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "gender": "female",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "accent": "latin american",
+        "language": "es",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "standard",
+        "language": "hi",
+        "descriptive": "pleasant"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "descriptive": "classy",
+        "accent": "standard",
+        "language": "hi",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "modern standard",
+        "language": "ar",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "it",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "accent": "brazilian",
+        "language": "pt",
+        "descriptive": "excited"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "descriptive": "casual",
+        "accent": "peruvian",
+        "language": "es",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "descriptive": "casual",
+        "age": "young",
+        "gender": "female",
+        "accent": "mexican",
+        "language": "es",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "descriptive": "upbeat",
+        "age": "young",
+        "gender": "female",
+        "accent": "american",
+        "language": "en",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "middle-aged",
+        "gender": "male",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "standard",
+        "language": "zh",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "descriptive": "deep",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "el",
+        "descriptive": "confident"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "old",
+        "descriptive": "calm",
+        "accent": "standard",
+        "language": "el",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "standard",
+        "language": "el",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "old",
+        "gender": "male",
+        "accent": "standard",
+        "language": "de",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "gender": "female",
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "gender": "male",
+        "accent": "standard",
+        "language": "zh",
+        "descriptive": "pleasant"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "descriptive": "formal",
+        "age": "middle_aged",
+        "gender": "female",
+        "accent": "standard",
+        "language": "zh",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "descriptive": "neutral",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "descriptive": "pleasant",
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "descriptive": "crisp",
+        "age": "young",
+        "use_case": "conversational",
+        "accent": "american",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "old",
+        "gender": "male",
+        "accent": "scottish",
+        "language": "en",
+        "descriptive": "crisp"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "use_case": "advertisement",
+        "gender": "male",
+        "accent": "scottish",
+        "language": "en",
+        "descriptive": "professional"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "accent": "american",
+        "language": "en",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "gender": "male",
+        "age": "young",
+        "descriptive": "gentle",
+        "accent": "chinese",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "descriptive": "confident",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "standard",
+        "language": "it",
+        "descriptive": "intense"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "descriptive": "calm",
+        "accent": "scottish",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "american",
+        "language": "en",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "young",
+        "descriptive": "gentle",
+        "accent": "beijing mandarin",
+        "language": "zh",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "singapore mandarin",
+        "language": "zh",
+        "descriptive": "deep"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "gender": "female",
+        "accent": "standard",
+        "language": "zh",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "descriptive": "chill",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "chinese",
+        "language": "en",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "descriptive": "chill",
+        "age": "young",
+        "use_case": "social_media",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "gender": "male",
+        "age": "young",
+        "descriptive": "calm",
+        "accent": "italian",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "descriptive": "casual",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "scottish",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "gender": "male",
+        "age": "old",
+        "use_case": "narrative_story",
+        "accent": "american",
+        "language": "en",
+        "descriptive": "gentle"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "old",
+        "gender": "male",
+        "accent": "british",
+        "language": "en",
+        "descriptive": "mature"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "gender": "female",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "fr",
+        "descriptive": "casual"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "accent": "parisian",
+        "language": "fr",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "gender": "female",
+        "accent": "standard",
+        "language": "de",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "standard",
+        "language": "de",
+        "descriptive": "calm"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "language": "ru",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "use_case": "social_media",
+        "accent": "standard",
+        "language": "ru",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "use_case": "social_media",
+        "age": "young",
+        "descriptive": "casual",
+        "accent": "taiwan mandarin",
+        "language": "zh",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "gender": "male",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "accent": "standard",
+        "language": "zh",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "descriptive": "serious",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "use_case": "conversational",
+        "age": "young",
+        "descriptive": "casual",
+        "accent": "american",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "descriptive": "upbeat",
+        "age": "young",
+        "gender": "female",
+        "accent": "standard",
+        "language": "hi",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "classy",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "use_case": "entertainment_tv",
+        "language": "en",
+        "age": "young",
+        "descriptive": "professional",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "young",
+        "descriptive": "sassy",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "descriptive": "hyped",
+        "accent": "australian",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "mature",
+        "accent": "british",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "use_case": "characters_animation",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "accent": "american",
+        "gender": "neutral"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "use_case": "characters_animation",
+        "language": "en",
+        "age": "young",
+        "descriptive": "rough",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "young",
+        "descriptive": "confident",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "accent": "british",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "upbeat",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "descriptive": "chill",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "descriptive": "cute",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "classy",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "casual",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "classy",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "formal",
+        "accent": "british",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "confident",
+        "accent": "british",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "use_case": "advertisement",
+        "language": "en",
+        "age": "old",
+        "descriptive": "crisp",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    }
+  ],
+  "removed": {
+    "yl2ZDV1MzN4HbQJbMihG": 200
+  }
+}
