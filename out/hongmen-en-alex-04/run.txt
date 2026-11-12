@@ -1,0 +1,329 @@
+plan: {'tier': 'creator', 'character_count': 6030, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x0122d", "lang": "en", "text": "As for Leo Bahng, he dodged an assassination by going to the toilet.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x0122d.mp3", "bytes": 75275}
+{"name": "x02d", "lang": "en", "text": "This is the Hongmen Feast, a plot for assassination. The person who died wasn't even invited.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x02d.mp3", "bytes": 104950}
+{"name": "x02e", "lang": "en", "text": "The Hongmen Feast: a plot for assassination. The man who died wasn't even invited.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x02e.mp3", "bytes": 100771}
+{"name": "x06d", "lang": "en", "text": "Shyahng Yoo said to attack at dawn.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x06d.mp3", "bytes": 40585}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x0122d",
+  "lang": "en",
+  "text": "As for Leo Bahng, he dodged an assassination by going to the toilet.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x0122d.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "As",
+    0.0,
+    0.24
+   ],
+   [
+    "for",
+    0.24,
+    0.44
+   ],
+   [
+    "Leo",
+    0.44,
+    0.68
+   ],
+   [
+    "Bong,",
+    0.68,
+    1.0
+   ],
+   [
+    "he",
+    1.54,
+    1.7
+   ],
+   [
+    "dodged",
+    1.7,
+    2.14
+   ],
+   [
+    "an",
+    2.14,
+    2.24
+   ],
+   [
+    "assassination",
+    2.24,
+    2.72
+   ],
+   [
+    "by",
+    2.72,
+    3.3
+   ],
+   [
+    "going",
+    3.3,
+    3.56
+   ],
+   [
+    "to",
+    3.56,
+    3.74
+   ],
+   [
+    "the",
+    3.74,
+    3.84
+   ],
+   [
+    "toilet.",
+    3.84,
+    4.22
+   ]
+  ],
+  "heard": "As for Leo Bong, he dodged an assassination by going to the toilet.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.64
+ },
+ {
+  "name": "x02d",
+  "lang": "en",
+  "text": "This is the Hongmen Feast, a plot for assassination. The person who died wasn't even invited.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x02d.mp3",
+  "bytes": 104950,
+  "words": [
+   [
+    "This",
+    0.0,
+    0.28
+   ],
+   [
+    "is",
+    0.28,
+    0.5
+   ],
+   [
+    "the",
+    0.5,
+    0.64
+   ],
+   [
+    "Homemen",
+    0.64,
+    1.12
+   ],
+   [
+    "Feast.",
+    1.12,
+    1.62
+   ],
+   [
+    "A",
+    1.9,
+    2.06
+   ],
+   [
+    "plot",
+    2.06,
+    2.36
+   ],
+   [
+    "for",
+    2.36,
+    2.58
+   ],
+   [
+    "assassination.",
+    2.58,
+    3.12
+   ],
+   [
+    "The",
+    4.0,
+    4.16
+   ],
+   [
+    "person",
+    4.16,
+    4.42
+   ],
+   [
+    "who",
+    4.42,
+    4.6
+   ],
+   [
+    "died",
+    4.6,
+    4.96
+   ],
+   [
+    "wasn't",
+    4.96,
+    5.4
+   ],
+   [
+    "even",
+    5.4,
+    5.54
+   ],
+   [
+    "invited.",
+    5.54,
+    6.06
+   ]
+  ],
+  "heard": "This is the Homemen Feast. A plot for assassination. The person who died wasn't even invited.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.48
+ },
+ {
+  "name": "x02e",
+  "lang": "en",
+  "text": "The Hongmen Feast: a plot for assassination. The man who died wasn't even invited.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x02e.mp3",
+  "bytes": 100771,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "Hongmen",
+    0.18,
+    0.6
+   ],
+   [
+    "feast.",
+    0.6,
+    0.9
+   ],
+   [
+    "A",
+    1.52,
+    1.68
+   ],
+   [
+    "plot",
+    1.68,
+    1.98
+   ],
+   [
+    "for",
+    1.98,
+    2.22
+   ],
+   [
+    "assassination.",
+    2.22,
+    2.76
+   ],
+   [
+    "The",
+    3.64,
+    3.86
+   ],
+   [
+    "man",
+    3.86,
+    4.04
+   ],
+   [
+    "who",
+    4.04,
+    4.24
+   ],
+   [
+    "died",
+    4.24,
+    4.6
+   ],
+   [
+    "wasn't",
+    4.6,
+    5.14
+   ],
+   [
+    "even",
+    5.14,
+    5.28
+   ],
+   [
+    "invited.",
+    5.28,
+    5.78
+   ]
+  ],
+  "heard": "The Hongmen feast. A plot for assassination. The man who died wasn't even invited.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 6.24
+ },
+ {
+  "name": "x06d",
+  "lang": "en",
+  "text": "Shyahng Yoo said to attack at dawn.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x06d.mp3",
+  "bytes": 40585,
+  "words": [
+   [
+    "Xiang",
+    0.0,
+    0.3
+   ],
+   [
+    "Yu",
+    0.3,
+    0.62
+   ],
+   [
+    "said",
+    0.62,
+    0.94
+   ],
+   [
+    "to",
+    0.94,
+    1.14
+   ],
+   [
+    "attack",
+    1.14,
+    1.54
+   ],
+   [
+    "at",
+    1.54,
+    1.68
+   ],
+   [
+    "dawn.",
+    1.68,
+    2.02
+   ]
+  ],
+  "heard": "Xiang Yu said to attack at dawn.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.986,
+  "seconds": 2.48
+ }
+]
