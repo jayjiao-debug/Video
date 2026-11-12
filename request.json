@@ -1,412 +1,999 @@
 {
- "id": "wanbi-sfx-01",
- "tag": true,
+ "id": "wanbi-en-01",
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "words": true,
  "items": [
   {
-   "type": "sfx",
-   "name": "drone_1",
-   "text": "A low dark sustained drone: a deep soft bowed bronze hum holding one steady pitch, tense and quiet, even from start to finish. No melody, no beat, no music.",
-   "duration": 6.0,
-   "influence": 0.6
+   "name": "x01a",
+   "lang": "en",
+   "text": "The envoy's one job: deliver the jade. He's about to smash it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "drone_2",
-   "text": "A low dark sustained drone: a deep soft bowed bronze hum holding one steady pitch, tense and quiet, even from start to finish. No melody, no beat, no music.",
-   "duration": 6.0,
-   "influence": 0.6
+   "name": "x01b",
+   "lang": "en",
+   "text": "The envoy's one job: deliver the jade. He's about to smash it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "riser_1",
-   "text": "A short tension riser: an airy whoosh that swells up fast and stops sharply at its loudest point. One rise only, no impact, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x01c",
+   "lang": "en",
+   "text": "The envoy has one job: deliver the jade. He's about to smash it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "riser_2",
-   "text": "A short tension riser: an airy whoosh that swells up fast and stops sharply at its loudest point. One rise only, no impact, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x02a",
+   "lang": "en",
+   "text": "Who's begging him to stop? The King of Chin.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "hit_1",
-   "text": "One deep soft low impact: a muffled heavy boom, like a big padded hit, with a short tail. One hit only, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x02b",
+   "lang": "en",
+   "text": "Who's begging him to stop? The King of Chin.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "hit_2",
-   "text": "One deep soft low impact: a muffled heavy boom, like a big padded hit, with a short tail. One hit only, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x02c",
+   "lang": "en",
+   "text": "Begging him to stop? The King of Chin.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "knock_1",
-   "text": "A hard stone disc knocks once against a lacquered wooden pillar: one short sharp hollow wooden tock. One hit only. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x03a",
+   "lang": "en",
+   "text": "Chin offered Jow fifteen cities for it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "knock_2",
-   "text": "A hard stone disc knocks once against a lacquered wooden pillar: one short sharp hollow wooden tock. One hit only. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x03b",
+   "lang": "en",
+   "text": "Chin offered Jow fifteen cities for it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "thock_1",
-   "text": "A man's back bumps against a thick wooden pillar: one dull soft hollow thud. One hit only. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x03c",
+   "lang": "en",
+   "text": "Chin offered Jow fifteen cities.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "thock_2",
-   "text": "A man's back bumps against a thick wooden pillar: one dull soft hollow thud. One hit only. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x04a",
+   "lang": "en",
+   "text": "Give it: maybe no cities. Keep it: Chin's army, for sure.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "rewind_1",
-   "text": "A reversed whoosh: a soft airy swish played backwards, swelling up from silence and cutting off abruptly at its loudest point. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.7,
-   "influence": 0.6
+   "name": "x04b",
+   "lang": "en",
+   "text": "Give it: maybe no cities. Keep it: Chin's army, for sure.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "rewind_2",
-   "text": "A reversed whoosh: a soft airy swish played backwards, swelling up from silence and cutting off abruptly at its loudest point. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.7,
-   "influence": 0.6
+   "name": "x05a",
+   "lang": "en",
+   "text": "Who goes? Nobody. So a eunuch offered his retainer.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cloth_1",
-   "text": "A quick swish of a wide silk robe sleeve through the air: one short soft cloth whoosh with a light flutter. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x05b",
+   "lang": "en",
+   "text": "Who goes? Nobody. So a eunuch offered his retainer.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cloth_2",
-   "text": "A quick swish of a wide silk robe sleeve through the air: one short soft cloth whoosh with a light flutter. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x06a",
+   "lang": "en",
+   "text": "He says: \"I'll go. No cities? The jade comes back intact.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "silk_1",
-   "text": "A silk map scroll unrolled fast from a wooden roller: a quick soft silky rustle and swish that ends with a light wooden tap. Close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x06b",
+   "lang": "en",
+   "text": "He says: \"I'll go. No cities? The jade comes back intact.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "silk_2",
-   "text": "A silk map scroll unrolled fast from a wooden roller: a quick soft silky rustle and swish that ends with a light wooden tap. Close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x07a",
+   "lang": "en",
+   "text": "The king takes the jade, overjoyed, and shows his ladies.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "puff_1",
-   "text": "A heavy coarse cloth thrown over a man: one soft dusty whump of cloth. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.7,
-   "influence": 0.6
+   "name": "x07b",
+   "lang": "en",
+   "text": "The king takes the jade, overjoyed, and shows his ladies.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "puff_2",
-   "text": "A heavy coarse cloth thrown over a man: one soft dusty whump of cloth. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.7,
-   "influence": 0.6
+   "name": "x08a",
+   "lang": "en",
+   "text": "\"Long live the king!\" No one mentions cities.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "grab_1",
-   "text": "A hand grabs a thick cloth sleeve hard: one quick cloth thwap. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x08b",
+   "lang": "en",
+   "text": "\"Long live the king!\" No one mentions cities.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "grab_2",
-   "text": "A hand grabs a thick cloth sleeve hard: one quick cloth thwap. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x09a",
+   "lang": "en",
+   "text": "He steps up: \"There's a flaw in it. Let me show you.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "clap_1",
-   "text": "One single sharp clap of two hands. One clap only, close, dry.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x09b",
+   "lang": "en",
+   "text": "He steps up: \"There's a flaw in it. Let me show you.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "clap_2",
-   "text": "One single sharp clap of two hands. One clap only, close, dry.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x10a",
+   "lang": "en",
+   "text": "Jade in hand, he backs off, furious, hair lifting his hat.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "tick_1",
-   "text": "One tiny dry wooden click, like a single abacus bead flicked. One click only, very short, close, dry.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x10b",
+   "lang": "en",
+   "text": "Jade in hand, he backs off, furious, hair lifting his hat.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "tick_2",
-   "text": "One tiny dry wooden click, like a single abacus bead flicked. One click only, very short, close, dry.",
-   "duration": 0.5,
-   "influence": 0.6
+   "name": "x10c",
+   "lang": "en",
+   "text": "Jade in hand, he backs off, hair lifting his hat.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "deflate_1",
-   "text": "A comic deflating sound: air squeaking out of a small balloon, a short descending fizzle. Cartoon, close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x11a",
+   "lang": "en",
+   "text": "\"Push me, and my head and this jade shatter on this pillar!\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "deflate_2",
-   "text": "A comic deflating sound: air squeaking out of a small balloon, a short descending fizzle. Cartoon, close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x11b",
+   "lang": "en",
+   "text": "\"Push me, and my head and this jade shatter on this pillar!\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "boing_1",
-   "text": "A soft comic boing: a short springy wobble, light and playful. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.6,
-   "influence": 0.6
+   "name": "x12a",
+   "lang": "en",
+   "text": "The king says sorry, unrolls a map, points: \"These fifteen cities. Jow's.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "boing_2",
-   "text": "A soft comic boing: a short springy wobble, light and playful. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.6,
-   "influence": 0.6
+   "name": "x12b",
+   "lang": "en",
+   "text": "The king says sorry, unrolls a map, points: \"These fifteen cities. Jow's.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "gulp_1",
-   "text": "A comic nervous gulp: one loud swallow. Close, dry, no voice, no music.",
-   "duration": 0.6,
-   "influence": 0.6
+   "name": "x12c",
+   "lang": "en",
+   "text": "The king apologizes, unrolls a map, points: \"These fifteen cities. Jow's.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "gulp_2",
-   "text": "A comic nervous gulp: one loud swallow. Close, dry, no voice, no music.",
-   "duration": 0.6,
-   "influence": 0.6
+   "name": "x13a",
+   "lang": "en",
+   "text": "He can tell the king is acting.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "steps_1",
-   "text": "One man walking at a calm, steady pace on a polished wooden floor in a large hall, soft cloth shoes: six even footsteps. Footsteps only, no voice, no music. Close, dry.",
-   "duration": 3.0,
-   "influence": 0.6
+   "name": "x13b",
+   "lang": "en",
+   "text": "He can tell the king is acting.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "steps_2",
-   "text": "One man walking at a calm, steady pace on a polished wooden floor in a large hall, soft cloth shoes: six even footsteps. Footsteps only, no voice, no music. Close, dry.",
-   "duration": 3.0,
-   "influence": 0.6
+   "name": "x14a",
+   "lang": "en",
+   "text": "He acts too: \"My king fasted five days to send it. Now you fast five days, full honors, then it's yours.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "scuttle_1",
-   "text": "One man scurrying backwards in quick small hurried steps on a wooden floor, soft cloth shoes: eight fast light footsteps. Footsteps only, no voice, no music.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x14b",
+   "lang": "en",
+   "text": "He acts too: \"My king fasted five days to send it. Now you fast five days, full honors, then it's yours.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "scuttle_2",
-   "text": "One man scurrying backwards in quick small hurried steps on a wooden floor, soft cloth shoes: eight fast light footsteps. Footsteps only, no voice, no music.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x15a",
+   "lang": "en",
+   "text": "The king can't grab it, so he caves.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "clank_1",
-   "text": "One guard in metal armour striding fast on a stone floor: five heavy steps with armour clinking. Footsteps only, no voice, no music.",
-   "duration": 2.5,
-   "influence": 0.6
+   "name": "x15b",
+   "lang": "en",
+   "text": "The king can't grab it, so he caves.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "clank_2",
-   "text": "One guard in metal armour striding fast on a stone floor: five heavy steps with armour clinking. Footsteps only, no voice, no music.",
-   "duration": 2.5,
-   "influence": 0.6
+   "name": "x15c",
+   "lang": "en",
+   "text": "The king can't grab it, so he agrees.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cymbal_1",
-   "text": "One crash of a pair of Chinese opera cymbals: a bright brassy chang with a short shimmering ring. One crash only, no drum, no music.",
-   "duration": 1.2,
-   "influence": 0.6
+   "name": "x16a",
+   "lang": "en",
+   "text": "Meanwhile his servant dresses in rough cloth, hides the jade, and sneaks home to Jow.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cymbal_2",
-   "text": "One crash of a pair of Chinese opera cymbals: a bright brassy chang with a short shimmering ring. One crash only, no drum, no music.",
-   "duration": 1.2,
-   "influence": 0.6
+   "name": "x16b",
+   "lang": "en",
+   "text": "Meanwhile his servant dresses in rough cloth, hides the jade, and sneaks home to Jow.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "gong_1",
-   "text": "One hit on a low Chinese opera gong: a deep dark wobbling bwong with a short decay. One hit only, no music.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x17a",
+   "lang": "en",
+   "text": "Five days later, all set, the king wants it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "gong_2",
-   "text": "One hit on a low Chinese opera gong: a deep dark wobbling bwong with a short decay. One hit only, no music.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x17b",
+   "lang": "en",
+   "text": "Five days later, all set, the king wants it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "whum_1",
-   "text": "A big theatre spotlight switching on: one deep soft electric whum. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.8,
-   "influence": 0.6
+   "name": "x17c",
+   "lang": "en",
+   "text": "Day five, all set, the king wants it.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "whum_2",
-   "text": "A big theatre spotlight switching on: one deep soft electric whum. Single sound effect, close, dry, no reverb, no music.",
-   "duration": 0.8,
-   "influence": 0.6
+   "name": "x18a",
+   "lang": "en",
+   "text": "He says: \"Chin's had twenty-odd kings; not one kept his word. The jade's already in Jow.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "bell_1",
-   "text": "One strike of a wooden mallet on an ancient Chinese bronze bell: a warm clear deep bell tone with a long gentle ring. One strike only, no music.",
-   "duration": 3.0,
-   "influence": 0.6
+   "name": "x18b",
+   "lang": "en",
+   "text": "He says: \"Chin's had twenty-odd kings; not one kept his word. The jade's already in Jow.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "bell_2",
-   "text": "One strike of a wooden mallet on an ancient Chinese bronze bell: a warm clear deep bell tone with a long gentle ring. One strike only, no music.",
-   "duration": 3.0,
-   "influence": 0.6
+   "name": "x19a",
+   "lang": "en",
+   "text": "\"I tricked you. I deserve death. Throw me in the pot.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cauldron_1",
-   "text": "A huge heavy bronze cauldron dropped onto a stone floor: one deep heavy metallic thud with a short low ring. One impact only, no voices, no music.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x19b",
+   "lang": "en",
+   "text": "\"I tricked you. I deserve death. Throw me in the pot.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cauldron_2",
-   "text": "A huge heavy bronze cauldron dropped onto a stone floor: one deep heavy metallic thud with a short low ring. One impact only, no voices, no music.",
-   "duration": 1.5,
-   "influence": 0.6
+   "name": "x19c",
+   "lang": "en",
+   "text": "\"I lied. I deserve death. Throw me in the pot.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "steam_1",
-   "text": "Steam hissing softly from a large pot of boiling water: a gentle low continuous hiss. Calm and even, no bubbling clicks, no music.",
-   "duration": 2.5,
-   "influence": 0.6
+   "name": "x20a",
+   "lang": "en",
+   "text": "The ministers stare at each other. A guard grabs him.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "steam_2",
-   "text": "Steam hissing softly from a large pot of boiling water: a gentle low continuous hiss. Calm and even, no bubbling clicks, no music.",
-   "duration": 2.5,
-   "influence": 0.6
+   "name": "x20b",
+   "lang": "en",
+   "text": "The ministers stare at each other. A guard grabs him.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "bamboo_1",
-   "text": "A bundle of bamboo slips tied with cord, an ancient bamboo scroll, unrolled fast on a wooden table: a quick dry wooden clatter and slide. Close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x21a",
+   "lang": "en",
+   "text": "The king says: \"Kill him, and still no jade. Let him go home.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "bamboo_2",
-   "text": "A bundle of bamboo slips tied with cord, an ancient bamboo scroll, unrolled fast on a wooden table: a quick dry wooden clatter and slide. Close, dry, no music.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "x21b",
+   "lang": "en",
+   "text": "The king says: \"Kill him, and still no jade. Let him go home.\"",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cheer_1",
-   "text": "A hall full of about forty men cheering together in one big joyful shout, an excited roar of male voices, no clear words. Starts at full volume at once, then holds. No music.",
-   "duration": 2.0,
-   "influence": 0.6
+   "name": "x22a",
+   "lang": "en",
+   "text": "In the end, Chin gave no cities. Jow gave no jade.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "cheer_2",
-   "text": "A hall full of about forty men cheering together in one big joyful shout, an excited roar of male voices, no clear words. Starts at full volume at once, then holds. No music.",
-   "duration": 2.0,
-   "influence": 0.6
+   "name": "x22b",
+   "lang": "en",
+   "text": "In the end, Chin gave no cities. Jow gave no jade.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "hall_1",
-   "text": "The interior of a vast quiet ancient palace hall: a soft deep room tone, a faint far-off murmur of courtiers, a brazier crackling gently far away. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "name": "x23a",
+   "lang": "en",
+   "text": "A jade worth fifteen cities didn't get one. But the retainer came home a big shot.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "hall_2",
-   "text": "The interior of a vast quiet ancient palace hall: a soft deep room tone, a faint far-off murmur of courtiers, a brazier crackling gently far away. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
-   "duration": 15,
-   "influence": 0.5
+   "name": "x23b",
+   "lang": "en",
+   "text": "A jade worth fifteen cities didn't get one. But the retainer came home a big shot.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   },
   {
-   "type": "sfx",
-   "name": "court_1",
-   "text": "A quiet palace room in the daytime with open lattice windows: a light breeze and a few soft birds chirping outside, a faint distant murmur. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
-   "duration": 12,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "court_2",
-   "text": "A quiet palace room in the daytime with open lattice windows: a light breeze and a few soft birds chirping outside, a faint distant murmur. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
-   "duration": 12,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "dusk_1",
-   "text": "Dusk outdoors on a quiet dirt road beside an old town wall: a soft evening breeze and a few crickets beginning to chirp. Calm, even and continuous from start to finish. No voices, no footsteps, no music.",
-   "duration": 12,
-   "influence": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "dusk_2",
-   "text": "Dusk outdoors on a quiet dirt road beside an old town wall: a soft evening breeze and a few crickets beginning to chirp. Calm, even and continuous from start to finish. No voices, no footsteps, no music.",
-   "duration": 12,
-   "influence": 0.5
+   "name": "x23c",
+   "lang": "en",
+   "text": "A jade worth fifteen cities didn't get one. But the eunuch's retainer came home a big shot.",
+   "add": {
+    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
+    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+    "name": "alex"
+   },
+   "keep": true,
+   "settings": {
+    "stability": 0.2,
+    "similarity_boost": 0.8,
+    "style": 0.75,
+    "speed": 1.2,
+    "use_speaker_boost": true
+   }
   }
  ]
 }
