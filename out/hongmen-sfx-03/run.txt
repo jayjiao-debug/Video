@@ -1,0 +1,667 @@
+plan: {'tier': 'creator', 'character_count': 3958, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "feet_t1", "type": "sfx", "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "feet_t1.mp3", "bytes": 20105}
+{"name": "feet_t2", "type": "sfx", "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "feet_t2.mp3", "bytes": 20105}
+{"name": "feet_t3", "type": "sfx", "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "feet_t3.mp3", "bytes": 20105}
+{"name": "day_t1", "type": "sfx", "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering steadily in a light breeze, far-off clatter and a faint distant murmur. Even and continuous from start to finish, no loud single events. No footsteps close by, no horses, no clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "day_t1.mp3", "bytes": 224905}
+{"name": "day_t2", "type": "sfx", "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering steadily in a light breeze, far-off clatter and a faint distant murmur. Even and continuous from start to finish, no loud single events. No footsteps close by, no horses, no clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "day_t2.mp3", "bytes": 224905}
+{"name": "fire_t1", "type": "sfx", "text": "A wood fire burning steadily in an iron brazier: a soft continuous flame with gentle irregular crackles. Calm, even, continuous from start to finish. Mid-range, not bassy. No clicks, no tapping, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "fire_t1.mp3", "bytes": 321035}
+{"name": "fire_t2", "type": "sfx", "text": "A wood fire burning steadily in an iron brazier: a soft continuous flame with gentle irregular crackles. Calm, even, continuous from start to finish. Mid-range, not bassy. No clicks, no tapping, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "fire_t2.mp3", "bytes": 321035}
+{"name": "air_t1", "type": "sfx", "text": "Leaves rustling very softly and steadily in a light breeze outdoors: quiet, smooth, even and continuous from start to finish. No gusts, no hiss, no birds, no insects, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "air_t1.mp3", "bytes": 97009}
+{"name": "air_t2", "type": "sfx", "text": "Leaves rustling very softly and steadily in a light breeze outdoors: quiet, smooth, even and continuous from start to finish. No gusts, no hiss, no birds, no insects, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "air_t2.mp3", "bytes": 97009}
+{"name": "meat_t1", "type": "sfx", "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "meat_t1.mp3", "bytes": 10492}
+{"name": "meat_t2", "type": "sfx", "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "meat_t2.mp3", "bytes": 10492}
+{"name": "meat_t3", "type": "sfx", "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "meat_t3.mp3", "bytes": 10492}
+{"name": "tiptoe_t1", "type": "sfx", "text": "Cartoon sneaking: four quick soft tiptoe footsteps on a wooden floor, light and careful, evenly spaced. Footsteps only, no voice, no music. Close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "tiptoe_t1.mp3", "bytes": 24702}
+{"name": "tiptoe_t2", "type": "sfx", "text": "Cartoon sneaking: four quick soft tiptoe footsteps on a wooden floor, light and careful, evenly spaced. Footsteps only, no voice, no music. Close, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "tiptoe_t2.mp3", "bytes": 24702}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 5289.82it/s]
+feet_t1 [['Knock', 0.151], ['Music', 0.074], ['Sound effect', 0.044], ['Speech', 0.034], ['Shuffle', 0.031], ['Walk, footsteps', 0.022], ['Inside, small room', 0.016], ['Tap', 0.014]]
+feet_t2 [['Chopping (food)', 0.112], ['Walk, footsteps', 0.053], ['Sound effect', 0.046], ['Speech', 0.026], ['Knock', 0.023], ['Tap', 0.02], ['Crunch', 0.012], ['Inside, small room', 0.011]]
+feet_t3 [['Sound effect', 0.09], ['Music', 0.047], ['Heart sounds, heartbeat', 0.034], ['Heart murmur', 0.026], ['Speech', 0.026], ['Chopping (food)', 0.022], ['Inside, small room', 0.017], ['Knock', 0.012]]
+day_t1 [['Walk, footsteps', 0.094], ['Rustle', 0.047], ['Crackle', 0.044], ['Zipper (clothing)', 0.041], ['Eruption', 0.03], ['Flap', 0.021], ['Scrape', 0.02], ['Outside, rural or natural', 0.019]]
+day_t2 [['Walk, footsteps', 0.149], ['Rustle', 0.044], ['Crackle', 0.039], ['Outside, rural or natural', 0.034], ['Biting', 0.024], ['Crunch', 0.022], ['Crumpling, crinkling', 0.02], ['Tearing', 0.019]]
+fire_t1 [['Scissors', 0.353], ['Keys jangling', 0.174], ['Chewing, mastication', 0.126], ['Patter', 0.043], ['Fire', 0.031], ['Inside, small room', 0.026], ['Squish', 0.023], ['Computer keyboard', 0.014]]
+fire_t2 [['Keys jangling', 0.549], ['Computer keyboard', 0.058], ['Typing', 0.046], ['Scissors', 0.045], ['Chewing, mastication', 0.039], ['Rattle', 0.031], ['Patter', 0.015], ['Fire', 0.012]]
+air_t1 [['Sizzle', 0.174], ['Rain on surface', 0.064], ['Raindrop', 0.058], ['Frying (food)', 0.054], ['Water', 0.04], ['Rain', 0.039], ['Rustle', 0.034], ['Squish', 0.017]]
+air_t2 [['Rustle', 0.057], ['Rustling leaves', 0.048], ['Sizzle', 0.042], ['Static', 0.038], ['Snake', 0.033], ['Crackle', 0.024], ['Squish', 0.024], ['Silence', 0.02]]
+meat_t1 [['Crack', 0.111], ['Single-lens reflex camera', 0.05], ['Scrape', 0.04], ['Crunch', 0.02], ['Coin (dropping)', 0.018], ['Sound effect', 0.018], ['Speech', 0.015], ['Music', 0.014]]
+meat_t2 [['Crack', 0.171], ['Crunch', 0.162], ['Sound effect', 0.067], ['Breaking', 0.034], ['Speech', 0.027], ['Single-lens reflex camera', 0.015], ['Biting', 0.012], ['Inside, small room', 0.01]]
+meat_t3 [['Crack', 0.946], ['Breaking', 0.121], ['Crunch', 0.06], ['Crackle', 0.023], ['Sound effect', 0.018], ['Scrape', 0.014], ['Speech', 0.012], ['Biting', 0.009]]
+tiptoe_t1 [['Knock', 0.878], ['Sound effect', 0.03], ['Music', 0.019], ['Inside, small room', 0.015], ['Door', 0.012], ['Tap', 0.012], ['Speech', 0.011], ['Wood block', 0.009]]
+tiptoe_t2 [['Knock', 0.337], ['Wood', 0.111], ['Door', 0.073], ['Sound effect', 0.026], ['Thunk', 0.024], ['Slam', 0.021], ['Whack, thwack', 0.014], ['Sliding door', 0.014]]
+[
+ {
+  "name": "feet_t1",
+  "type": "sfx",
+  "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "feet_t1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Knock",
+    0.151
+   ],
+   [
+    "Music",
+    0.074
+   ],
+   [
+    "Sound effect",
+    0.044
+   ],
+   [
+    "Speech",
+    0.034
+   ],
+   [
+    "Shuffle",
+    0.031
+   ],
+   [
+    "Walk, footsteps",
+    0.022
+   ],
+   [
+    "Inside, small room",
+    0.016
+   ],
+   [
+    "Tap",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "feet_t2",
+  "type": "sfx",
+  "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "feet_t2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Chopping (food)",
+    0.112
+   ],
+   [
+    "Walk, footsteps",
+    0.053
+   ],
+   [
+    "Sound effect",
+    0.046
+   ],
+   [
+    "Speech",
+    0.026
+   ],
+   [
+    "Knock",
+    0.023
+   ],
+   [
+    "Tap",
+    0.02
+   ],
+   [
+    "Crunch",
+    0.012
+   ],
+   [
+    "Inside, small room",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "feet_t3",
+  "type": "sfx",
+  "text": "One man running fast on packed earth in soft cloth shoes: five quick light footsteps coming closer, then he stops dead. Human footsteps only, no horse, no hooves, no voice, no music. Close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "feet_t3.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Sound effect",
+    0.09
+   ],
+   [
+    "Music",
+    0.047
+   ],
+   [
+    "Heart sounds, heartbeat",
+    0.034
+   ],
+   [
+    "Heart murmur",
+    0.026
+   ],
+   [
+    "Speech",
+    0.026
+   ],
+   [
+    "Chopping (food)",
+    0.022
+   ],
+   [
+    "Inside, small room",
+    0.017
+   ],
+   [
+    "Knock",
+    0.012
+   ]
+  ]
+ },
+ {
+  "name": "day_t1",
+  "type": "sfx",
+  "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering steadily in a light breeze, far-off clatter and a faint distant murmur. Even and continuous from start to finish, no loud single events. No footsteps close by, no horses, no clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "day_t1.mp3",
+  "bytes": 224905,
+  "seconds": 14.0,
+  "tags": [
+   [
+    "Walk, footsteps",
+    0.094
+   ],
+   [
+    "Rustle",
+    0.047
+   ],
+   [
+    "Crackle",
+    0.044
+   ],
+   [
+    "Zipper (clothing)",
+    0.041
+   ],
+   [
+    "Eruption",
+    0.03
+   ],
+   [
+    "Flap",
+    0.021
+   ],
+   [
+    "Scrape",
+    0.02
+   ],
+   [
+    "Outside, rural or natural",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "day_t2",
+  "type": "sfx",
+  "text": "Daytime outdoor ambience at an army camp: cloth flags fluttering steadily in a light breeze, far-off clatter and a faint distant murmur. Even and continuous from start to finish, no loud single events. No footsteps close by, no horses, no clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "day_t2.mp3",
+  "bytes": 224905,
+  "seconds": 14.0,
+  "tags": [
+   [
+    "Walk, footsteps",
+    0.149
+   ],
+   [
+    "Rustle",
+    0.044
+   ],
+   [
+    "Crackle",
+    0.039
+   ],
+   [
+    "Outside, rural or natural",
+    0.034
+   ],
+   [
+    "Biting",
+    0.024
+   ],
+   [
+    "Crunch",
+    0.022
+   ],
+   [
+    "Crumpling, crinkling",
+    0.02
+   ],
+   [
+    "Tearing",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "fire_t1",
+  "type": "sfx",
+  "text": "A wood fire burning steadily in an iron brazier: a soft continuous flame with gentle irregular crackles. Calm, even, continuous from start to finish. Mid-range, not bassy. No clicks, no tapping, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "fire_t1.mp3",
+  "bytes": 321035,
+  "seconds": 20.0,
+  "tags": [
+   [
+    "Scissors",
+    0.353
+   ],
+   [
+    "Keys jangling",
+    0.174
+   ],
+   [
+    "Chewing, mastication",
+    0.126
+   ],
+   [
+    "Patter",
+    0.043
+   ],
+   [
+    "Fire",
+    0.031
+   ],
+   [
+    "Inside, small room",
+    0.026
+   ],
+   [
+    "Squish",
+    0.023
+   ],
+   [
+    "Computer keyboard",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "fire_t2",
+  "type": "sfx",
+  "text": "A wood fire burning steadily in an iron brazier: a soft continuous flame with gentle irregular crackles. Calm, even, continuous from start to finish. Mid-range, not bassy. No clicks, no tapping, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "fire_t2.mp3",
+  "bytes": 321035,
+  "seconds": 20.0,
+  "tags": [
+   [
+    "Keys jangling",
+    0.549
+   ],
+   [
+    "Computer keyboard",
+    0.058
+   ],
+   [
+    "Typing",
+    0.046
+   ],
+   [
+    "Scissors",
+    0.045
+   ],
+   [
+    "Chewing, mastication",
+    0.039
+   ],
+   [
+    "Rattle",
+    0.031
+   ],
+   [
+    "Patter",
+    0.015
+   ],
+   [
+    "Fire",
+    0.012
+   ]
+  ]
+ },
+ {
+  "name": "air_t1",
+  "type": "sfx",
+  "text": "Leaves rustling very softly and steadily in a light breeze outdoors: quiet, smooth, even and continuous from start to finish. No gusts, no hiss, no birds, no insects, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "air_t1.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Sizzle",
+    0.174
+   ],
+   [
+    "Rain on surface",
+    0.064
+   ],
+   [
+    "Raindrop",
+    0.058
+   ],
+   [
+    "Frying (food)",
+    0.054
+   ],
+   [
+    "Water",
+    0.04
+   ],
+   [
+    "Rain",
+    0.039
+   ],
+   [
+    "Rustle",
+    0.034
+   ],
+   [
+    "Squish",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "air_t2",
+  "type": "sfx",
+  "text": "Leaves rustling very softly and steadily in a light breeze outdoors: quiet, smooth, even and continuous from start to finish. No gusts, no hiss, no birds, no insects, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "air_t2.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Rustle",
+    0.057
+   ],
+   [
+    "Rustling leaves",
+    0.048
+   ],
+   [
+    "Sizzle",
+    0.042
+   ],
+   [
+    "Static",
+    0.038
+   ],
+   [
+    "Snake",
+    0.033
+   ],
+   [
+    "Crackle",
+    0.024
+   ],
+   [
+    "Squish",
+    0.024
+   ],
+   [
+    "Silence",
+    0.02
+   ]
+  ]
+ },
+ {
+  "name": "meat_t1",
+  "type": "sfx",
+  "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "meat_t1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Crack",
+    0.111
+   ],
+   [
+    "Single-lens reflex camera",
+    0.05
+   ],
+   [
+    "Scrape",
+    0.04
+   ],
+   [
+    "Crunch",
+    0.02
+   ],
+   [
+    "Coin (dropping)",
+    0.018
+   ],
+   [
+    "Sound effect",
+    0.018
+   ],
+   [
+    "Speech",
+    0.015
+   ],
+   [
+    "Music",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "meat_t2",
+  "type": "sfx",
+  "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "meat_t2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Crack",
+    0.171
+   ],
+   [
+    "Crunch",
+    0.162
+   ],
+   [
+    "Sound effect",
+    0.067
+   ],
+   [
+    "Breaking",
+    0.034
+   ],
+   [
+    "Speech",
+    0.027
+   ],
+   [
+    "Single-lens reflex camera",
+    0.015
+   ],
+   [
+    "Biting",
+    0.012
+   ],
+   [
+    "Inside, small room",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "meat_t3",
+  "type": "sfx",
+  "text": "Cartoon wet splat: a big slab of raw meat flops onto a flat wooden board. One squelchy wet slap, loud and clear. One hit only, close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "meat_t3.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Crack",
+    0.946
+   ],
+   [
+    "Breaking",
+    0.121
+   ],
+   [
+    "Crunch",
+    0.06
+   ],
+   [
+    "Crackle",
+    0.023
+   ],
+   [
+    "Sound effect",
+    0.018
+   ],
+   [
+    "Scrape",
+    0.014
+   ],
+   [
+    "Speech",
+    0.012
+   ],
+   [
+    "Biting",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "tiptoe_t1",
+  "type": "sfx",
+  "text": "Cartoon sneaking: four quick soft tiptoe footsteps on a wooden floor, light and careful, evenly spaced. Footsteps only, no voice, no music. Close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "tiptoe_t1.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Knock",
+    0.878
+   ],
+   [
+    "Sound effect",
+    0.03
+   ],
+   [
+    "Music",
+    0.019
+   ],
+   [
+    "Inside, small room",
+    0.015
+   ],
+   [
+    "Door",
+    0.012
+   ],
+   [
+    "Tap",
+    0.012
+   ],
+   [
+    "Speech",
+    0.011
+   ],
+   [
+    "Wood block",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "tiptoe_t2",
+  "type": "sfx",
+  "text": "Cartoon sneaking: four quick soft tiptoe footsteps on a wooden floor, light and careful, evenly spaced. Footsteps only, no voice, no music. Close, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "tiptoe_t2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Knock",
+    0.337
+   ],
+   [
+    "Wood",
+    0.111
+   ],
+   [
+    "Door",
+    0.073
+   ],
+   [
+    "Sound effect",
+    0.026
+   ],
+   [
+    "Thunk",
+    0.024
+   ],
+   [
+    "Slam",
+    0.021
+   ],
+   [
+    "Whack, thwack",
+    0.014
+   ],
+   [
+    "Sliding door",
+    0.014
+   ]
+  ]
+ }
+]
