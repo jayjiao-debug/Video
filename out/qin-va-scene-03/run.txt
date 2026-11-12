@@ -1,0 +1,647 @@
+plan: {'tier': 'creator', 'character_count': 10129, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "A_s01_Lin", "lang": "zh", "text": "[quietly, nervous] 嘘，大家小声点。这走廊，怎么每条都长得一样啊。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s01_Lin.mp3", "bytes": 94501}
+{"name": "A_s02_Lin", "lang": "zh", "text": "[quietly, unsure] 应该……没走错吧。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s02_Lin.mp3", "bytes": 43510}
+{"name": "A_s03_Lin", "lang": "zh", "text": "[quietly, surprised] 诶，在那儿。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s03_Lin.mp3", "bytes": 29300}
+{"name": "A_s04_Haoran", "lang": "zh", "text": "[startled, shouting] 谁！", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_s04_Haoran.mp3", "bytes": 31807}
+{"name": "A_s05_Haoran", "lang": "zh", "text": "[straining, grunting] 嗯——！", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_s05_Haoran.mp3", "bytes": 47272}
+{"name": "A_s06_Lin", "lang": "zh", "text": "[timid] 陛下，要、要不要帮您……", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s06_Lin.mp3", "bytes": 54795}
+{"name": "A_s07_Haoran", "lang": "zh", "text": "[sharp] 住口。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_s07_Haoran.mp3", "bytes": 13835}
+{"name": "A_s08_Lin", "lang": "zh", "text": "[panicked, fast] 陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s08_Lin.mp3", "bytes": 81545}
+{"name": "A_s09_Haoran", "lang": "zh", "text": "[suspicious] 记录朕？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_s09_Haoran.mp3", "bytes": 23030}
+{"name": "A_s10_Lin", "lang": "zh", "text": "[eager, nervous] 是是是！让天下百姓都看看，陛下有多英明神武！", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s10_Lin.mp3", "bytes": 75275}
+{"name": "A_s11_Haoran", "lang": "zh", "text": "[quieter, a little curious] 英明神武？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_s11_Haoran.mp3", "bytes": 48526}
+{"name": "A_s12_Lin", "lang": "zh", "text": "[shy, sincere, soft] 千古一帝。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s12_Lin.mp3", "bytes": 31807}
+{"name": "A_s13_Haoran", "lang": "zh", "text": "[clears throat, gruff, embarrassed] 咳。拍好看点。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_s13_Haoran.mp3", "bytes": 58557}
+{"name": "A_s14_Haoran", "lang": "zh", "text": "[gruff, proud] 跟上。朕今天，带你见见世面。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_s14_Haoran.mp3", "bytes": 52287}
+{"name": "A_s15_Lin", "lang": "zh", "text": "[small happy laugh] 嘿嘿，遵命。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_s15_Lin.mp3", "bytes": 39331}
+{"name": "A_c01_Haoran", "lang": "zh", "text": "[slow, cold] 昨天朕那句话，是谁传出去的？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_c01_Haoran.mp3", "bytes": 72767}
+{"name": "A_c02_Haoran", "lang": "zh", "text": "[very quiet, menacing] 你。昨天，在不在？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_c02_Haoran.mp3", "bytes": 66498}
+{"name": "A_c03_Lin", "lang": "zh", "text": "[terrified, small voice] 不、不在。我什么都没拍到。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_c03_Lin.mp3", "bytes": 53541}
+{"name": "A_d01_Lin", "lang": "zh", "text": "[softly, caring, a little out of breath] 陛下，您每天都这样吗？好辛苦啊。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "A_d01_Lin.mp3", "bytes": 67752}
+{"name": "A_d02_Haoran", "lang": "zh", "text": "[pauses, grudgingly pleased] 这句，留着。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v4", "status": 200, "file": "A_d02_Haoran.mp3", "bytes": 43510}
+{"name": "B_s01_Lin", "lang": "zh", "text": "[quietly, nervous] 嘘，大家小声点。这走廊，怎么每条都长得一样啊。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s01_Lin.mp3", "bytes": 99517}
+{"name": "B_s02_Lin", "lang": "zh", "text": "[quietly, unsure] 应该……没走错吧。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s02_Lin.mp3", "bytes": 49780}
+{"name": "B_s03_Lin", "lang": "zh", "text": "[quietly, surprised] 诶，在那儿。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s03_Lin.mp3", "bytes": 17597}
+{"name": "B_s04_Haoran", "lang": "zh", "text": "[startled, shouting] 谁！", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_s04_Haoran.mp3", "bytes": 23030}
+{"name": "B_s05_Haoran", "lang": "zh", "text": "[straining, grunting] 嗯——！", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_s05_Haoran.mp3", "bytes": 20105}
+{"name": "B_s06_Lin", "lang": "zh", "text": "[timid] 陛下，要、要不要帮您……", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s06_Lin.mp3", "bytes": 52287}
+{"name": "B_s07_Haoran", "lang": "zh", "text": "[sharp] 住口。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_s07_Haoran.mp3", "bytes": 16343}
+{"name": "B_s08_Lin", "lang": "zh", "text": "[panicked, fast] 陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s08_Lin.mp3", "bytes": 97009}
+{"name": "B_s09_Haoran", "lang": "zh", "text": "[suspicious] 记录朕？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_s09_Haoran.mp3", "bytes": 16343}
+{"name": "B_s10_Lin", "lang": "zh", "text": "[eager, nervous] 是是是！让天下百姓都看看，陛下有多英明神武！", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s10_Lin.mp3", "bytes": 86978}
+{"name": "B_s11_Haoran", "lang": "zh", "text": "[quieter, a little curious] 英明神武？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_s11_Haoran.mp3", "bytes": 24284}
+{"name": "B_s12_Lin", "lang": "zh", "text": "[shy, sincere, soft] 千古一帝。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s12_Lin.mp3", "bytes": 43510}
+{"name": "B_s13_Haoran", "lang": "zh", "text": "[clears throat, gruff, embarrassed] 咳。拍好看点。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_s13_Haoran.mp3", "bytes": 36823}
+{"name": "B_s14_Haoran", "lang": "zh", "text": "[gruff, proud] 跟上。朕今天，带你见见世面。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_s14_Haoran.mp3", "bytes": 65244}
+{"name": "B_s15_Lin", "lang": "zh", "text": "[small happy laugh] 嘿嘿，遵命。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_s15_Lin.mp3", "bytes": 33061}
+{"name": "B_c01_Haoran", "lang": "zh", "text": "[slow, cold] 昨天朕那句话，是谁传出去的？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_c01_Haoran.mp3", "bytes": 51034}
+{"name": "B_c02_Haoran", "lang": "zh", "text": "[very quiet, menacing] 你。昨天，在不在？", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_c02_Haoran.mp3", "bytes": 44764}
+{"name": "B_c03_Lin", "lang": "zh", "text": "[terrified, small voice] 不、不在。我什么都没拍到。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_c03_Lin.mp3", "bytes": 47272}
+{"name": "B_d01_Lin", "lang": "zh", "text": "[softly, caring, a little out of breath] 陛下，您每天都这样吗？好辛苦啊。", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v3", "status": 200, "file": "B_d01_Lin.mp3", "bytes": 61065}
+{"name": "B_d02_Haoran", "lang": "zh", "text": "[pauses, grudgingly pleased] 这句，留着。", "voice": "shared:Haoran", "voice_id": "pU9NaAwkoR3v0Mrg3uKz", "model": "eleven_v3", "status": 200, "file": "B_d02_Haoran.mp3", "bytes": 23030}
+removed kept voices: {'I23uc91tu5zY2PA1tKEN': 200, 'pU9NaAwkoR3v0Mrg3uKz': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "A_s01_Lin",
+  "lang": "zh",
+  "text": "[quietly, nervous] 嘘，大家小声点。这走廊，怎么每条都长得一样啊。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s01_Lin.mp3",
+  "bytes": 94501,
+  "heard": "咻咻 大家小心点这走廊怎么每条都长得一样啊",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 5.84
+ },
+ {
+  "name": "A_s02_Lin",
+  "lang": "zh",
+  "text": "[quietly, unsure] 应该……没走错吧。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s02_Lin.mp3",
+  "bytes": 43510,
+  "heard": "應該沒走錯吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.984,
+  "seconds": 2.64
+ },
+ {
+  "name": "A_s03_Lin",
+  "lang": "zh",
+  "text": "[quietly, surprised] 诶，在那儿。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s03_Lin.mp3",
+  "bytes": 29300,
+  "heard": "欸 在那兒",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.871,
+  "seconds": 1.76
+ },
+ {
+  "name": "A_s04_Haoran",
+  "lang": "zh",
+  "text": "[startled, shouting] 谁！",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s04_Haoran.mp3",
+  "bytes": 31807,
+  "heard": "谁谁",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.952,
+  "seconds": 1.92
+ },
+ {
+  "name": "A_s05_Haoran",
+  "lang": "zh",
+  "text": "[straining, grunting] 嗯——！",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s05_Haoran.mp3",
+  "bytes": 47272,
+  "heard": "Oh",
+  "heard_lang": "en",
+  "heard_lang_p": 0.548,
+  "seconds": 2.88
+ },
+ {
+  "name": "A_s06_Lin",
+  "lang": "zh",
+  "text": "[timid] 陛下，要、要不要帮您……",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s06_Lin.mp3",
+  "bytes": 54795,
+  "heard": "陛下,要...要不要帮您?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.987,
+  "seconds": 3.36
+ },
+ {
+  "name": "A_s07_Haoran",
+  "lang": "zh",
+  "text": "[sharp] 住口。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s07_Haoran.mp3",
+  "bytes": 13835,
+  "heard": "住口",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.961,
+  "seconds": 0.8
+ },
+ {
+  "name": "A_s08_Lin",
+  "lang": "zh",
+  "text": "[panicked, fast] 陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s08_Lin.mp3",
+  "bytes": 81545,
+  "heard": "陛下饶命,我們不是此刻,我們是來給您拍記錄的,記錄陛下的一天",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.99,
+  "seconds": 5.04
+ },
+ {
+  "name": "A_s09_Haoran",
+  "lang": "zh",
+  "text": "[suspicious] 记录朕？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s09_Haoran.mp3",
+  "bytes": 23030,
+  "heard": "记录朕",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 1.36
+ },
+ {
+  "name": "A_s10_Lin",
+  "lang": "zh",
+  "text": "[eager, nervous] 是是是！让天下百姓都看看，陛下有多英明神武！",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s10_Lin.mp3",
+  "bytes": 75275,
+  "heard": "是是是,让天下百姓都看看,陛下有多英明神武",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.64
+ },
+ {
+  "name": "A_s11_Haoran",
+  "lang": "zh",
+  "text": "[quieter, a little curious] 英明神武？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s11_Haoran.mp3",
+  "bytes": 48526,
+  "heard": "英明神舞英明神舞",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.974,
+  "seconds": 2.96
+ },
+ {
+  "name": "A_s12_Lin",
+  "lang": "zh",
+  "text": "[shy, sincere, soft] 千古一帝。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s12_Lin.mp3",
+  "bytes": 31807,
+  "heard": "千古一帝",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.918,
+  "seconds": 1.92
+ },
+ {
+  "name": "A_s13_Haoran",
+  "lang": "zh",
+  "text": "[clears throat, gruff, embarrassed] 咳。拍好看点。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s13_Haoran.mp3",
+  "bytes": 58557,
+  "heard": "看 拍好 拍好看点",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.6
+ },
+ {
+  "name": "A_s14_Haoran",
+  "lang": "zh",
+  "text": "[gruff, proud] 跟上。朕今天，带你见见世面。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s14_Haoran.mp3",
+  "bytes": 52287,
+  "heard": "跟上朕今天帶你見見世面",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.2
+ },
+ {
+  "name": "A_s15_Lin",
+  "lang": "zh",
+  "text": "[small happy laugh] 嘿嘿，遵命。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_s15_Lin.mp3",
+  "bytes": 39331,
+  "heard": "嘿嘿 遵命",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.834,
+  "seconds": 2.4
+ },
+ {
+  "name": "A_c01_Haoran",
+  "lang": "zh",
+  "text": "[slow, cold] 昨天朕那句话，是谁传出去的？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_c01_Haoran.mp3",
+  "bytes": 72767,
+  "heard": "昨天朕那句话是谁传出去的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.48
+ },
+ {
+  "name": "A_c02_Haoran",
+  "lang": "zh",
+  "text": "[very quiet, menacing] 你。昨天，在不在？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_c02_Haoran.mp3",
+  "bytes": 66498,
+  "heard": "你昨天昨天在不在",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.991,
+  "seconds": 4.08
+ },
+ {
+  "name": "A_c03_Lin",
+  "lang": "zh",
+  "text": "[terrified, small voice] 不、不在。我什么都没拍到。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_c03_Lin.mp3",
+  "bytes": 53541,
+  "heard": "不,讀在,我什麽都沒拍到",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 3.28
+ },
+ {
+  "name": "A_d01_Lin",
+  "lang": "zh",
+  "text": "[softly, caring, a little out of breath] 陛下，您每天都这样吗？好辛苦啊。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_d01_Lin.mp3",
+  "bytes": 67752,
+  "heard": "陛下,你每天都这样吗?好辛苦啊",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.99,
+  "seconds": 4.16
+ },
+ {
+  "name": "A_d02_Haoran",
+  "lang": "zh",
+  "text": "[pauses, grudgingly pleased] 这句，留着。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "A_d02_Haoran.mp3",
+  "bytes": 43510,
+  "heard": "这句留着",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ },
+ {
+  "name": "B_s01_Lin",
+  "lang": "zh",
+  "text": "[quietly, nervous] 嘘，大家小声点。这走廊，怎么每条都长得一样啊。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s01_Lin.mp3",
+  "bytes": 99517,
+  "heard": "去大家小声点这走廊怎么每条都长得一样了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.989,
+  "seconds": 6.16
+ },
+ {
+  "name": "B_s02_Lin",
+  "lang": "zh",
+  "text": "[quietly, unsure] 应该……没走错吧。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s02_Lin.mp3",
+  "bytes": 49780,
+  "heard": "應該 沒走錯吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.975,
+  "seconds": 3.04
+ },
+ {
+  "name": "B_s03_Lin",
+  "lang": "zh",
+  "text": "[quietly, surprised] 诶，在那儿。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s03_Lin.mp3",
+  "bytes": 17597,
+  "heard": "Hey, it's Anar!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.654,
+  "seconds": 1.04
+ },
+ {
+  "name": "B_s04_Haoran",
+  "lang": "zh",
+  "text": "[startled, shouting] 谁！",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s04_Haoran.mp3",
+  "bytes": 23030,
+  "heard": "Say? Say.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.728,
+  "seconds": 1.36
+ },
+ {
+  "name": "B_s05_Haoran",
+  "lang": "zh",
+  "text": "[straining, grunting] 嗯——！",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s05_Haoran.mp3",
+  "bytes": 20105,
+  "heard": "MMMMMMMM",
+  "heard_lang": "en",
+  "heard_lang_p": 0.776,
+  "seconds": 1.2
+ },
+ {
+  "name": "B_s06_Lin",
+  "lang": "zh",
+  "text": "[timid] 陛下，要、要不要帮您……",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s06_Lin.mp3",
+  "bytes": 52287,
+  "heard": "陛下,要不要帮你?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.985,
+  "seconds": 3.2
+ },
+ {
+  "name": "B_s07_Haoran",
+  "lang": "zh",
+  "text": "[sharp] 住口。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s07_Haoran.mp3",
+  "bytes": 16343,
+  "heard": "住口",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.966,
+  "seconds": 0.96
+ },
+ {
+  "name": "B_s08_Lin",
+  "lang": "zh",
+  "text": "[panicked, fast] 陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s08_Lin.mp3",
+  "bytes": 97009,
+  "heard": "陛下饶命,我們不是刺客,我們是來給您拍記錄的,記下的一天",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.0
+ },
+ {
+  "name": "B_s09_Haoran",
+  "lang": "zh",
+  "text": "[suspicious] 记录朕？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s09_Haoran.mp3",
+  "bytes": 16343,
+  "heard": "記錄證",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 0.96
+ },
+ {
+  "name": "B_s10_Lin",
+  "lang": "zh",
+  "text": "[eager, nervous] 是是是！让天下百姓都看看，陛下有多英明神武！",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s10_Lin.mp3",
+  "bytes": 86978,
+  "heard": "事事事 讓天下百姓都看看 陛下有多英明神武",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.36
+ },
+ {
+  "name": "B_s11_Haoran",
+  "lang": "zh",
+  "text": "[quieter, a little curious] 英明神武？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s11_Haoran.mp3",
+  "bytes": 24284,
+  "heard": "營明神物",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 1.44
+ },
+ {
+  "name": "B_s12_Lin",
+  "lang": "zh",
+  "text": "[shy, sincere, soft] 千古一帝。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s12_Lin.mp3",
+  "bytes": 43510,
+  "heard": "千古一帝",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.967,
+  "seconds": 2.64
+ },
+ {
+  "name": "B_s13_Haoran",
+  "lang": "zh",
+  "text": "[clears throat, gruff, embarrassed] 咳。拍好看点。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s13_Haoran.mp3",
+  "bytes": 36823,
+  "heard": "嗯 拍好看點",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.991,
+  "seconds": 2.24
+ },
+ {
+  "name": "B_s14_Haoran",
+  "lang": "zh",
+  "text": "[gruff, proud] 跟上。朕今天，带你见见世面。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s14_Haoran.mp3",
+  "bytes": 65244,
+  "heard": "跟上,朕今天帶你見見世面",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.0
+ },
+ {
+  "name": "B_s15_Lin",
+  "lang": "zh",
+  "text": "[small happy laugh] 嘿嘿，遵命。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_s15_Lin.mp3",
+  "bytes": 33061,
+  "heard": "哼哼,真命",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.911,
+  "seconds": 2.0
+ },
+ {
+  "name": "B_c01_Haoran",
+  "lang": "zh",
+  "text": "[slow, cold] 昨天朕那句话，是谁传出去的？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_c01_Haoran.mp3",
+  "bytes": 51034,
+  "heard": "昨天鎮那句話是誰傳出去的?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.12
+ },
+ {
+  "name": "B_c02_Haoran",
+  "lang": "zh",
+  "text": "[very quiet, menacing] 你。昨天，在不在？",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_c02_Haoran.mp3",
+  "bytes": 44764,
+  "heard": "你昨天在不在?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.72
+ },
+ {
+  "name": "B_c03_Lin",
+  "lang": "zh",
+  "text": "[terrified, small voice] 不、不在。我什么都没拍到。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_c03_Lin.mp3",
+  "bytes": 47272,
+  "heard": "不,不在,我什么都没拍到",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.88
+ },
+ {
+  "name": "B_d01_Lin",
+  "lang": "zh",
+  "text": "[softly, caring, a little out of breath] 陛下，您每天都这样吗？好辛苦啊。",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_d01_Lin.mp3",
+  "bytes": 61065,
+  "heard": "陛下 您每篇都这样吗 好辛苦啊",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.76
+ },
+ {
+  "name": "B_d02_Haoran",
+  "lang": "zh",
+  "text": "[pauses, grudgingly pleased] 这句，留着。",
+  "voice": "shared:Haoran",
+  "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "B_d02_Haoran.mp3",
+  "bytes": 23030,
+  "heard": "這局留著",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 1.36
+ }
+]
