@@ -1,0 +1,1445 @@
+plan: {'tier': 'creator', 'character_count': 20007, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x04d", "lang": "en", "text": "Give it: maybe no cities. Keep it: war.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04d.mp3", "bytes": 72767}
+{"name": "x04e", "lang": "en", "text": "Give it: maybe no cities. Keep it: war.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04e.mp3", "bytes": 75275}
+{"name": "x04f", "lang": "en", "text": "Give it: maybe no cities. Keep it: Chin attacks.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04f.mp3", "bytes": 76529}
+{"name": "x07d", "lang": "en", "text": "The king takes it, thrilled, and shows his ladies.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07d.mp3", "bytes": 59811}
+{"name": "x07e", "lang": "en", "text": "The king takes it, thrilled, and shows his ladies.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07e.mp3", "bytes": 58557}
+{"name": "x07f", "lang": "en", "text": "The king takes it, thrilled, shows his ladies.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07f.mp3", "bytes": 58557}
+{"name": "x08d", "lang": "en", "text": "\"Long live the king!\" And the cities?", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08d.mp3", "bytes": 49780}
+{"name": "x08e", "lang": "en", "text": "\"Long live the king!\" And the cities?", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08e.mp3", "bytes": 51034}
+{"name": "x08f", "lang": "en", "text": "\"Long live the king!\" Cities? Silence.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08f.mp3", "bytes": 71514}
+{"name": "x14d", "lang": "en", "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14d.mp3", "bytes": 123758}
+{"name": "x14e", "lang": "en", "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14e.mp3", "bytes": 127938}
+{"name": "x14f", "lang": "en", "text": "He acts too: \"My king fasted five days. Your turn: five days, full honors, then it's yours.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14f.mp3", "bytes": 126684}
+{"name": "x15d", "lang": "en", "text": "The king can't grab it. He caves.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15d.mp3", "bytes": 44764}
+{"name": "x15e", "lang": "en", "text": "The king can't grab it. He caves.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15e.mp3", "bytes": 44764}
+{"name": "x15f", "lang": "en", "text": "Can't grab it? The king caves.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x15f.mp3", "bytes": 40585}
+{"name": "x18d", "lang": "en", "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18d.mp3", "bytes": 99517}
+{"name": "x18e", "lang": "en", "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18e.mp3", "bytes": 102025}
+{"name": "x18f", "lang": "en", "text": "He says: \"Twenty-odd Chin kings broke their word. The jade's in Jow now.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18f.mp3", "bytes": 86978}
+{"name": "x22d", "lang": "en", "text": "The bill: Chin, no cities. Jow, no jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x22d.mp3", "bytes": 74021}
+{"name": "x22e", "lang": "en", "text": "The bill: Chin, no cities. Jow, no jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x22e.mp3", "bytes": 75275}
+{"name": "x22f", "lang": "en", "text": "In the end: no cities, no jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x22f.mp3", "bytes": 52287}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x04d",
+  "lang": "en",
+  "text": "Give it: maybe no cities. Keep it: war.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04d.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "Give",
+    0.0,
+    0.24
+   ],
+   [
+    "it.",
+    0.24,
+    0.48
+   ],
+   [
+    "Maybe",
+    0.94,
+    1.32
+   ],
+   [
+    "no",
+    1.32,
+    1.82
+   ],
+   [
+    "cities.",
+    1.82,
+    2.22
+   ],
+   [
+    "Keep",
+    2.78,
+    3.08
+   ],
+   [
+    "it.",
+    3.08,
+    3.34
+   ],
+   [
+    "War.",
+    3.76,
+    4.06
+   ]
+  ],
+  "heard": "Give it. Maybe no cities. Keep it. War.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.48
+ },
+ {
+  "name": "x04e",
+  "lang": "en",
+  "text": "Give it: maybe no cities. Keep it: war.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04e.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "Give",
+    0.0,
+    0.24
+   ],
+   [
+    "it,",
+    0.24,
+    0.5
+   ],
+   [
+    "maybe",
+    0.96,
+    1.38
+   ],
+   [
+    "no",
+    1.38,
+    1.9
+   ],
+   [
+    "cities.",
+    1.9,
+    2.32
+   ],
+   [
+    "Keep",
+    2.74,
+    3.2
+   ],
+   [
+    "it,",
+    3.2,
+    3.46
+   ],
+   [
+    "war.",
+    3.82,
+    4.18
+   ]
+  ],
+  "heard": "Give it, maybe no cities. Keep it, war.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.64
+ },
+ {
+  "name": "x04f",
+  "lang": "en",
+  "text": "Give it: maybe no cities. Keep it: Chin attacks.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04f.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "Give",
+    0.0,
+    0.2
+   ],
+   [
+    "it.",
+    0.2,
+    0.44
+   ],
+   [
+    "Maybe",
+    0.82,
+    1.26
+   ],
+   [
+    "no",
+    1.26,
+    1.7
+   ],
+   [
+    "cities.",
+    1.7,
+    2.08
+   ],
+   [
+    "Keep",
+    2.64,
+    2.94
+   ],
+   [
+    "it.",
+    2.94,
+    3.18
+   ],
+   [
+    "Chin",
+    3.56,
+    3.86
+   ],
+   [
+    "attacks.",
+    3.86,
+    4.12
+   ]
+  ],
+  "heard": "Give it. Maybe no cities. Keep it. Chin attacks.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 4.72
+ },
+ {
+  "name": "x07d",
+  "lang": "en",
+  "text": "The king takes it, thrilled, and shows his ladies.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07d.mp3",
+  "bytes": 59811,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "king",
+    0.18,
+    0.4
+   ],
+   [
+    "takes",
+    0.4,
+    0.82
+   ],
+   [
+    "it,",
+    0.82,
+    1.04
+   ],
+   [
+    "thrilled",
+    1.32,
+    1.72
+   ],
+   [
+    "and",
+    1.72,
+    2.24
+   ],
+   [
+    "shows",
+    2.24,
+    2.6
+   ],
+   [
+    "his",
+    2.6,
+    2.84
+   ],
+   [
+    "ladies.",
+    2.84,
+    3.22
+   ]
+  ],
+  "heard": "The king takes it, thrilled and shows his ladies.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 3.68
+ },
+ {
+  "name": "x07e",
+  "lang": "en",
+  "text": "The king takes it, thrilled, and shows his ladies.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07e.mp3",
+  "bytes": 58557,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "king",
+    0.14,
+    0.38
+   ],
+   [
+    "takes",
+    0.38,
+    0.78
+   ],
+   [
+    "it,",
+    0.78,
+    1.02
+   ],
+   [
+    "thrilled,",
+    1.32,
+    1.72
+   ],
+   [
+    "and",
+    2.16,
+    2.24
+   ],
+   [
+    "shows",
+    2.24,
+    2.58
+   ],
+   [
+    "his",
+    2.58,
+    2.82
+   ],
+   [
+    "ladies.",
+    2.82,
+    3.16
+   ]
+  ],
+  "heard": "The king takes it, thrilled, and shows his ladies.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.6
+ },
+ {
+  "name": "x07f",
+  "lang": "en",
+  "text": "The king takes it, thrilled, shows his ladies.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07f.mp3",
+  "bytes": 58557,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.4
+   ],
+   [
+    "takes",
+    0.4,
+    0.74
+   ],
+   [
+    "it.",
+    0.74,
+    1.02
+   ],
+   [
+    "Thrilled.",
+    1.32,
+    1.92
+   ],
+   [
+    "Shows",
+    2.14,
+    2.6
+   ],
+   [
+    "his",
+    2.6,
+    2.76
+   ],
+   [
+    "ladies.",
+    2.76,
+    3.08
+   ]
+  ],
+  "heard": "The king takes it. Thrilled. Shows his ladies.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.6
+ },
+ {
+  "name": "x08d",
+  "lang": "en",
+  "text": "\"Long live the king!\" And the cities?",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08d.mp3",
+  "bytes": 49780,
+  "words": [
+   [
+    "Long",
+    0.0,
+    0.36
+   ],
+   [
+    "live",
+    0.36,
+    0.64
+   ],
+   [
+    "the",
+    0.64,
+    0.9
+   ],
+   [
+    "king",
+    0.9,
+    1.26
+   ],
+   [
+    "and",
+    1.26,
+    2.2
+   ],
+   [
+    "the",
+    2.2,
+    2.32
+   ],
+   [
+    "cities!",
+    2.32,
+    2.62
+   ]
+  ],
+  "heard": "Long live the king and the cities!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.04
+ },
+ {
+  "name": "x08e",
+  "lang": "en",
+  "text": "\"Long live the king!\" And the cities?",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08e.mp3",
+  "bytes": 51034,
+  "words": [
+   [
+    "Long",
+    0.0,
+    0.4
+   ],
+   [
+    "live",
+    0.4,
+    0.76
+   ],
+   [
+    "the",
+    0.76,
+    1.04
+   ],
+   [
+    "king!",
+    1.04,
+    1.4
+   ],
+   [
+    "And",
+    1.98,
+    2.3
+   ],
+   [
+    "the",
+    2.3,
+    2.42
+   ],
+   [
+    "cities?",
+    2.42,
+    2.7
+   ]
+  ],
+  "heard": "Long live the king! And the cities?",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 3.12
+ },
+ {
+  "name": "x08f",
+  "lang": "en",
+  "text": "\"Long live the king!\" Cities? Silence.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08f.mp3",
+  "bytes": 71514,
+  "words": [
+   [
+    "Long",
+    0.0,
+    0.34
+   ],
+   [
+    "live",
+    0.34,
+    0.74
+   ],
+   [
+    "the",
+    0.74,
+    1.02
+   ],
+   [
+    "king.",
+    1.02,
+    1.34
+   ],
+   [
+    "Cities,",
+    1.8,
+    2.6
+   ],
+   [
+    "silence.",
+    3.4,
+    3.82
+   ]
+  ],
+  "heard": "Long live the king. Cities, silence.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.995,
+  "seconds": 4.4
+ },
+ {
+  "name": "x14d",
+  "lang": "en",
+  "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14d.mp3",
+  "bytes": 123758,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.22
+   ],
+   [
+    "acts",
+    0.22,
+    0.54
+   ],
+   [
+    "too,",
+    0.54,
+    0.88
+   ],
+   [
+    "my",
+    1.4,
+    1.62
+   ],
+   [
+    "king",
+    1.62,
+    1.92
+   ],
+   [
+    "fasted",
+    1.92,
+    2.46
+   ],
+   [
+    "five",
+    2.46,
+    2.84
+   ],
+   [
+    "days.",
+    2.84,
+    3.26
+   ],
+   [
+    "Now",
+    3.74,
+    3.92
+   ],
+   [
+    "you",
+    3.92,
+    4.2
+   ],
+   [
+    "fast",
+    4.2,
+    4.5
+   ],
+   [
+    "five",
+    4.5,
+    4.82
+   ],
+   [
+    "days,",
+    4.82,
+    5.16
+   ],
+   [
+    "full",
+    5.5,
+    5.74
+   ],
+   [
+    "honors,",
+    5.74,
+    6.14
+   ],
+   [
+    "then",
+    6.56,
+    6.8
+   ],
+   [
+    "it's",
+    6.8,
+    7.02
+   ],
+   [
+    "yours.",
+    7.02,
+    7.22
+   ]
+  ],
+  "heard": "He acts too, my king fasted five days. Now you fast five days, full honors, then it's yours.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 7.68
+ },
+ {
+  "name": "x14e",
+  "lang": "en",
+  "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14e.mp3",
+  "bytes": 127938,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.18
+   ],
+   [
+    "acts",
+    0.18,
+    0.48
+   ],
+   [
+    "too.",
+    0.48,
+    0.82
+   ],
+   [
+    "My",
+    1.52,
+    1.64
+   ],
+   [
+    "king",
+    1.64,
+    1.9
+   ],
+   [
+    "fasted",
+    1.9,
+    2.48
+   ],
+   [
+    "five",
+    2.48,
+    2.86
+   ],
+   [
+    "days.",
+    2.86,
+    3.28
+   ],
+   [
+    "Now",
+    3.88,
+    4.06
+   ],
+   [
+    "you",
+    4.06,
+    4.36
+   ],
+   [
+    "fast",
+    4.36,
+    4.68
+   ],
+   [
+    "five",
+    4.68,
+    5.0
+   ],
+   [
+    "days.",
+    5.0,
+    5.36
+   ],
+   [
+    "Full",
+    5.76,
+    5.92
+   ],
+   [
+    "honors,",
+    5.92,
+    6.26
+   ],
+   [
+    "then",
+    6.74,
+    7.0
+   ],
+   [
+    "it's",
+    7.0,
+    7.22
+   ],
+   [
+    "yours.",
+    7.22,
+    7.44
+   ]
+  ],
+  "heard": "He acts too. My king fasted five days. Now you fast five days. Full honors, then it's yours.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 7.92
+ },
+ {
+  "name": "x14f",
+  "lang": "en",
+  "text": "He acts too: \"My king fasted five days. Your turn: five days, full honors, then it's yours.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14f.mp3",
+  "bytes": 126684,
+  "words": [
+   [
+    "Keyaxe",
+    0.0,
+    0.62
+   ],
+   [
+    "2.",
+    0.62,
+    0.76
+   ],
+   [
+    "My",
+    1.42,
+    1.64
+   ],
+   [
+    "King",
+    1.64,
+    1.92
+   ],
+   [
+    "Fasted",
+    1.92,
+    2.48
+   ],
+   [
+    "5",
+    2.48,
+    2.9
+   ],
+   [
+    "Days.",
+    2.9,
+    3.3
+   ],
+   [
+    "Your",
+    3.92,
+    4.14
+   ],
+   [
+    "turn.",
+    4.14,
+    4.38
+   ],
+   [
+    "5",
+    4.8,
+    5.1
+   ],
+   [
+    "days.",
+    5.1,
+    5.38
+   ],
+   [
+    "Full",
+    5.82,
+    6.0
+   ],
+   [
+    "honors.",
+    6.0,
+    6.34
+   ],
+   [
+    "Then",
+    6.78,
+    7.0
+   ],
+   [
+    "it's",
+    7.0,
+    7.18
+   ],
+   [
+    "yours.",
+    7.18,
+    7.36
+   ]
+  ],
+  "heard": "Keyaxe 2. My King Fasted 5 Days. Your turn. 5 days. Full honors. Then it's yours.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 7.84
+ },
+ {
+  "name": "x15d",
+  "lang": "en",
+  "text": "The king can't grab it. He caves.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15d.mp3",
+  "bytes": 44764,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.46
+   ],
+   [
+    "can't",
+    0.46,
+    0.8
+   ],
+   [
+    "grab",
+    0.8,
+    1.06
+   ],
+   [
+    "it,",
+    1.06,
+    1.34
+   ],
+   [
+    "he",
+    1.68,
+    1.78
+   ],
+   [
+    "caves.",
+    1.78,
+    2.36
+   ]
+  ],
+  "heard": "The king can't grab it, he caves.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.72
+ },
+ {
+  "name": "x15e",
+  "lang": "en",
+  "text": "The king can't grab it. He caves.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15e.mp3",
+  "bytes": 44764,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "king",
+    0.14,
+    0.44
+   ],
+   [
+    "can't",
+    0.44,
+    0.78
+   ],
+   [
+    "grab",
+    0.78,
+    1.08
+   ],
+   [
+    "it.",
+    1.08,
+    1.36
+   ],
+   [
+    "He",
+    1.72,
+    1.82
+   ],
+   [
+    "caves.",
+    1.82,
+    2.18
+   ]
+  ],
+  "heard": "The king can't grab it. He caves.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.72
+ },
+ {
+  "name": "x15f",
+  "lang": "en",
+  "text": "Can't grab it? The king caves.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x15f.mp3",
+  "bytes": 40585,
+  "words": [
+   [
+    "Can't",
+    0.0,
+    0.36
+   ],
+   [
+    "grab",
+    0.36,
+    0.6
+   ],
+   [
+    "it?",
+    0.6,
+    0.8
+   ],
+   [
+    "The",
+    1.16,
+    1.28
+   ],
+   [
+    "King",
+    1.28,
+    1.58
+   ],
+   [
+    "Caves.",
+    1.58,
+    2.2
+   ]
+  ],
+  "heard": "Can't grab it? The King Caves.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.48
+ },
+ {
+  "name": "x18d",
+  "lang": "en",
+  "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18d.mp3",
+  "bytes": 99517,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "says,",
+    0.12,
+    0.4
+   ],
+   [
+    "20",
+    0.88,
+    1.2
+   ],
+   [
+    "odd",
+    1.2,
+    1.54
+   ],
+   [
+    "Chin",
+    1.54,
+    1.86
+   ],
+   [
+    "Kings,",
+    1.86,
+    2.3
+   ],
+   [
+    "not",
+    2.6,
+    2.86
+   ],
+   [
+    "one",
+    2.86,
+    3.28
+   ],
+   [
+    "kept",
+    3.28,
+    3.62
+   ],
+   [
+    "his",
+    3.62,
+    3.84
+   ],
+   [
+    "word.",
+    3.84,
+    4.14
+   ],
+   [
+    "The",
+    4.68,
+    4.76
+   ],
+   [
+    "Jade's",
+    4.76,
+    5.18
+   ],
+   [
+    "in",
+    5.18,
+    5.26
+   ],
+   [
+    "Jow",
+    5.26,
+    5.6
+   ],
+   [
+    "now.",
+    5.6,
+    5.8
+   ]
+  ],
+  "heard": "He says, 20 odd Chin Kings, not one kept his word. The Jade's in Jow now.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 6.16
+ },
+ {
+  "name": "x18e",
+  "lang": "en",
+  "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18e.mp3",
+  "bytes": 102025,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "says,",
+    0.14,
+    0.4
+   ],
+   [
+    "20",
+    0.9,
+    1.24
+   ],
+   [
+    "odd",
+    1.24,
+    1.54
+   ],
+   [
+    "Chin",
+    1.54,
+    1.88
+   ],
+   [
+    "Kings,",
+    1.88,
+    2.34
+   ],
+   [
+    "not",
+    2.66,
+    2.9
+   ],
+   [
+    "one",
+    2.9,
+    3.34
+   ],
+   [
+    "kept",
+    3.34,
+    3.7
+   ],
+   [
+    "his",
+    3.7,
+    3.92
+   ],
+   [
+    "word.",
+    3.92,
+    4.26
+   ],
+   [
+    "The",
+    4.78,
+    4.88
+   ],
+   [
+    "Jade's",
+    4.88,
+    5.32
+   ],
+   [
+    "in",
+    5.32,
+    5.4
+   ],
+   [
+    "Jiao",
+    5.4,
+    5.78
+   ],
+   [
+    "now.",
+    5.78,
+    5.94
+   ]
+  ],
+  "heard": "He says, 20 odd Chin Kings, not one kept his word. The Jade's in Jiao now.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.32
+ },
+ {
+  "name": "x18f",
+  "lang": "en",
+  "text": "He says: \"Twenty-odd Chin kings broke their word. The jade's in Jow now.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18f.mp3",
+  "bytes": 86978,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "says,",
+    0.12,
+    0.38
+   ],
+   [
+    "20",
+    0.9,
+    1.2
+   ],
+   [
+    "-odd",
+    1.2,
+    1.62
+   ],
+   [
+    "Chin",
+    1.62,
+    1.78
+   ],
+   [
+    "Kings",
+    1.78,
+    2.18
+   ],
+   [
+    "broke",
+    2.18,
+    2.48
+   ],
+   [
+    "their",
+    2.48,
+    2.74
+   ],
+   [
+    "word.",
+    2.74,
+    3.1
+   ],
+   [
+    "The",
+    3.58,
+    3.66
+   ],
+   [
+    "Jade's",
+    3.66,
+    4.12
+   ],
+   [
+    "in",
+    4.12,
+    4.22
+   ],
+   [
+    "Jow",
+    4.22,
+    4.6
+   ],
+   [
+    "now.",
+    4.6,
+    4.82
+   ]
+  ],
+  "heard": "He says, 20-odd Chin Kings broke their word. The Jade's in Jow now.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 5.36
+ },
+ {
+  "name": "x22d",
+  "lang": "en",
+  "text": "The bill: Chin, no cities. Jow, no jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x22d.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.2
+   ],
+   [
+    "bill.",
+    0.2,
+    0.5
+   ],
+   [
+    "Qin.",
+    0.96,
+    1.26
+   ],
+   [
+    "No",
+    1.72,
+    1.9
+   ],
+   [
+    "cities.",
+    1.9,
+    2.22
+   ],
+   [
+    "Jiao.",
+    2.78,
+    3.28
+   ],
+   [
+    "No",
+    3.6,
+    3.86
+   ],
+   [
+    "jade.",
+    3.86,
+    4.28
+   ]
+  ],
+  "heard": "The bill. Qin. No cities. Jiao. No jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.93,
+  "seconds": 4.56
+ },
+ {
+  "name": "x22e",
+  "lang": "en",
+  "text": "The bill: Chin, no cities. Jow, no jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x22e.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.2
+   ],
+   [
+    "bill.",
+    0.2,
+    0.48
+   ],
+   [
+    "Qin.",
+    0.92,
+    1.26
+   ],
+   [
+    "No",
+    1.74,
+    1.92
+   ],
+   [
+    "cities.",
+    1.92,
+    2.24
+   ],
+   [
+    "Zhao.",
+    2.78,
+    3.16
+   ],
+   [
+    "No",
+    3.66,
+    3.86
+   ],
+   [
+    "jade.",
+    3.86,
+    4.32
+   ]
+  ],
+  "heard": "The bill. Qin. No cities. Zhao. No jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.931,
+  "seconds": 4.64
+ },
+ {
+  "name": "x22f",
+  "lang": "en",
+  "text": "In the end: no cities, no jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x22f.mp3",
+  "bytes": 52287,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.18
+   ],
+   [
+    "the",
+    0.18,
+    0.3
+   ],
+   [
+    "end,",
+    0.3,
+    0.6
+   ],
+   [
+    "no",
+    1.02,
+    1.28
+   ],
+   [
+    "cities,",
+    1.28,
+    1.68
+   ],
+   [
+    "no",
+    2.18,
+    2.46
+   ],
+   [
+    "jade.",
+    2.46,
+    2.92
+   ]
+  ],
+  "heard": "In the end, no cities, no jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 3.2
+ }
+]
