@@ -1,0 +1,989 @@
+plan: {'tier': 'creator', 'character_count': 5583, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "x04b", "lang": "en", "text": "Shyahng Yoo was stronger: four times Leo Bahng's army.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x04b.mp3", "bytes": 70260}
+{"name": "x05b", "lang": "en", "text": "His own man snitched to Shyahng Yoo: \"Leo Bahng wants to be king.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x05b.mp3", "bytes": 77783}
+{"name": "x06b", "lang": "en", "text": "Shyahng Yoo raged: \"Attack at dawn.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x06b.mp3", "bytes": 57303}
+{"name": "x06c", "lang": "en", "text": "Shyahng Yoo: \"Attack at dawn.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x06c.mp3", "bytes": 46018}
+{"name": "x07b", "lang": "en", "text": "That night, his uncle warned Leo Bahng, who at once made him an in-law.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x07b.mp3", "bytes": 76529}
+{"name": "x08b", "lang": "en", "text": "Next day, Leo Bahng said sorry: \"Surely some rat lied to you.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x08b.mp3", "bytes": 84470}
+{"name": "x10b", "lang": "en", "text": "Then came drinks. But his adviser, Fahn Dzung, wanted Leo Bahng dead.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x10b.mp3", "bytes": 89486}
+{"name": "x11b", "lang": "en", "text": "Three times, Fahn Dzung raised his jade, meaning: kill him. Nothing.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x11b.mp3", "bytes": 93247}
+{"name": "x12b", "lang": "en", "text": "So in came a sword dancer to stab Leo Bahng.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x12b.mp3", "bytes": 54795}
+{"name": "x14b", "lang": "en", "text": "Then Fahn Kwhy flattened guards and burst in.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x14b.mp3", "bytes": 54795}
+{"name": "x16b", "lang": "en", "text": "Leo Bahng went to the toilet and waved Fahn Kwhy out.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x16b.mp3", "bytes": 56049}
+{"name": "x17b", "lang": "en", "text": "Leave without goodbye? Fahn Kwhy: \"They're the knife, we're the fish. Forget it!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x17b.mp3", "bytes": 95755}
+{"name": "x18b", "lang": "en", "text": "He ditched his convoy, took one horse, and snuck home.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x18b.mp3", "bytes": 61065}
+{"name": "x19b", "lang": "en", "text": "Only when he was home, his adviser walked in: \"He drank too much.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "x19b.mp3", "bytes": 76529}
+removed kept voices: {'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "x04b",
+  "lang": "en",
+  "text": "Shyahng Yoo was stronger: four times Leo Bahng's army.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x04b.mp3",
+  "bytes": 70260,
+  "words": [
+   [
+    "Xiang",
+    0.0,
+    0.32
+   ],
+   [
+    "Yu",
+    0.32,
+    0.62
+   ],
+   [
+    "was",
+    0.62,
+    0.86
+   ],
+   [
+    "stronger,",
+    0.86,
+    1.38
+   ],
+   [
+    "four",
+    2.02,
+    2.22
+   ],
+   [
+    "times",
+    2.22,
+    2.82
+   ],
+   [
+    "Liu",
+    2.82,
+    3.16
+   ],
+   [
+    "Bang's",
+    3.16,
+    3.66
+   ],
+   [
+    "army.",
+    3.66,
+    3.94
+   ]
+  ],
+  "heard": "Xiang Yu was stronger, four times Liu Bang's army.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.969,
+  "seconds": 4.32
+ },
+ {
+  "name": "x05b",
+  "lang": "en",
+  "text": "His own man snitched to Shyahng Yoo: \"Leo Bahng wants to be king.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x05b.mp3",
+  "bytes": 77783,
+  "words": [
+   [
+    "His",
+    0.0,
+    0.14
+   ],
+   [
+    "own",
+    0.14,
+    0.46
+   ],
+   [
+    "man",
+    0.46,
+    0.82
+   ],
+   [
+    "snitched",
+    0.82,
+    1.44
+   ],
+   [
+    "to",
+    1.44,
+    1.6
+   ],
+   [
+    "Xiaoyang",
+    1.6,
+    2.02
+   ],
+   [
+    "Yu.",
+    2.02,
+    2.24
+   ],
+   [
+    "Liu",
+    2.8,
+    3.12
+   ],
+   [
+    "Bang",
+    3.12,
+    3.48
+   ],
+   [
+    "wants",
+    3.48,
+    3.8
+   ],
+   [
+    "to",
+    3.8,
+    4.0
+   ],
+   [
+    "be",
+    4.0,
+    4.1
+   ],
+   [
+    "king.",
+    4.1,
+    4.42
+   ]
+  ],
+  "heard": "His own man snitched to Xiaoyang Yu. Liu Bang wants to be king.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.988,
+  "seconds": 4.8
+ },
+ {
+  "name": "x06b",
+  "lang": "en",
+  "text": "Shyahng Yoo raged: \"Attack at dawn.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x06b.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "Xiong",
+    0.0,
+    0.58
+   ],
+   [
+    "Yu",
+    0.58,
+    0.76
+   ],
+   [
+    "raged.",
+    0.76,
+    1.56
+   ],
+   [
+    "Attack",
+    1.9,
+    2.3
+   ],
+   [
+    "at",
+    2.3,
+    2.62
+   ],
+   [
+    "dawn!",
+    2.62,
+    3.04
+   ]
+  ],
+  "heard": "Xiong Yu raged. Attack at dawn!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.989,
+  "seconds": 3.52
+ },
+ {
+  "name": "x06c",
+  "lang": "en",
+  "text": "Shyahng Yoo: \"Attack at dawn.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x06c.mp3",
+  "bytes": 46018,
+  "words": [
+   [
+    "Xiang",
+    0.0,
+    0.36
+   ],
+   [
+    "Yu.",
+    0.36,
+    0.74
+   ],
+   [
+    "Attack",
+    1.28,
+    1.66
+   ],
+   [
+    "at",
+    1.66,
+    1.98
+   ],
+   [
+    "dawn.",
+    1.98,
+    2.36
+   ]
+  ],
+  "heard": "Xiang Yu. Attack at dawn.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.931,
+  "seconds": 2.8
+ },
+ {
+  "name": "x07b",
+  "lang": "en",
+  "text": "That night, his uncle warned Leo Bahng, who at once made him an in-law.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x07b.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "That",
+    0.0,
+    0.22
+   ],
+   [
+    "night,",
+    0.22,
+    0.52
+   ],
+   [
+    "his",
+    0.76,
+    0.86
+   ],
+   [
+    "uncle",
+    0.86,
+    1.18
+   ],
+   [
+    "warned",
+    1.18,
+    1.62
+   ],
+   [
+    "Leo",
+    1.62,
+    1.96
+   ],
+   [
+    "Bang,",
+    1.96,
+    2.34
+   ],
+   [
+    "who",
+    2.7,
+    2.86
+   ],
+   [
+    "at",
+    2.86,
+    3.0
+   ],
+   [
+    "once",
+    3.0,
+    3.4
+   ],
+   [
+    "made",
+    3.4,
+    3.8
+   ],
+   [
+    "him",
+    3.8,
+    3.96
+   ],
+   [
+    "an",
+    3.96,
+    4.08
+   ],
+   [
+    "in",
+    4.08,
+    4.24
+   ],
+   [
+    "-law.",
+    4.24,
+    4.48
+   ]
+  ],
+  "heard": "That night, his uncle warned Leo Bang, who at once made him an in-law.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.994,
+  "seconds": 4.72
+ },
+ {
+  "name": "x08b",
+  "lang": "en",
+  "text": "Next day, Leo Bahng said sorry: \"Surely some rat lied to you.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x08b.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "Next",
+    0.0,
+    0.24
+   ],
+   [
+    "day,",
+    0.24,
+    0.6
+   ],
+   [
+    "Leo",
+    1.02,
+    1.22
+   ],
+   [
+    "Bong",
+    1.22,
+    1.5
+   ],
+   [
+    "said",
+    1.5,
+    1.8
+   ],
+   [
+    "sorry.",
+    1.8,
+    2.28
+   ],
+   [
+    "Surely",
+    2.86,
+    3.34
+   ],
+   [
+    "some",
+    3.34,
+    3.7
+   ],
+   [
+    "rat",
+    3.7,
+    4.1
+   ],
+   [
+    "lied",
+    4.1,
+    4.46
+   ],
+   [
+    "to",
+    4.46,
+    4.74
+   ],
+   [
+    "you.",
+    4.74,
+    4.94
+   ]
+  ],
+  "heard": "Next day, Leo Bong said sorry. Surely some rat lied to you.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 5.2
+ },
+ {
+  "name": "x10b",
+  "lang": "en",
+  "text": "Then came drinks. But his adviser, Fahn Dzung, wanted Leo Bahng dead.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x10b.mp3",
+  "bytes": 89486,
+  "words": [
+   [
+    "Then",
+    0.0,
+    0.28
+   ],
+   [
+    "came",
+    0.28,
+    0.6
+   ],
+   [
+    "drinks,",
+    0.6,
+    1.02
+   ],
+   [
+    "but",
+    1.64,
+    1.8
+   ],
+   [
+    "his",
+    1.8,
+    1.94
+   ],
+   [
+    "advisor,",
+    1.94,
+    2.5
+   ],
+   [
+    "Fan",
+    2.78,
+    2.98
+   ],
+   [
+    "Zong,",
+    2.98,
+    3.4
+   ],
+   [
+    "wanted",
+    3.64,
+    4.06
+   ],
+   [
+    "Liu",
+    4.06,
+    4.34
+   ],
+   [
+    "Bang",
+    4.34,
+    4.68
+   ],
+   [
+    "dead.",
+    4.68,
+    5.16
+   ]
+  ],
+  "heard": "Then came drinks, but his advisor, Fan Zong, wanted Liu Bang dead.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.992,
+  "seconds": 5.52
+ },
+ {
+  "name": "x11b",
+  "lang": "en",
+  "text": "Three times, Fahn Dzung raised his jade, meaning: kill him. Nothing.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x11b.mp3",
+  "bytes": 93247,
+  "words": [
+   [
+    "Three",
+    0.0,
+    0.3
+   ],
+   [
+    "times,",
+    0.3,
+    0.84
+   ],
+   [
+    "Fan",
+    1.22,
+    1.38
+   ],
+   [
+    "Zong",
+    1.38,
+    1.7
+   ],
+   [
+    "raised",
+    1.7,
+    2.06
+   ],
+   [
+    "his",
+    2.06,
+    2.34
+   ],
+   [
+    "jade,",
+    2.34,
+    2.86
+   ],
+   [
+    "meaning",
+    3.14,
+    3.44
+   ],
+   [
+    "kill",
+    3.44,
+    4.12
+   ],
+   [
+    "him,",
+    4.12,
+    4.4
+   ],
+   [
+    "nothing.",
+    4.94,
+    5.3
+   ]
+  ],
+  "heard": "Three times, Fan Zong raised his jade, meaning kill him, nothing.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.98,
+  "seconds": 5.76
+ },
+ {
+  "name": "x12b",
+  "lang": "en",
+  "text": "So in came a sword dancer to stab Leo Bahng.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x12b.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "So",
+    0.0,
+    0.16
+   ],
+   [
+    "in",
+    0.16,
+    0.44
+   ],
+   [
+    "came",
+    0.44,
+    0.66
+   ],
+   [
+    "a",
+    0.66,
+    0.82
+   ],
+   [
+    "sword",
+    0.82,
+    1.14
+   ],
+   [
+    "dancer",
+    1.14,
+    1.58
+   ],
+   [
+    "to",
+    1.58,
+    1.8
+   ],
+   [
+    "stab",
+    1.8,
+    2.22
+   ],
+   [
+    "Leo",
+    2.22,
+    2.58
+   ],
+   [
+    "Bang.",
+    2.58,
+    2.96
+   ]
+  ],
+  "heard": "So in came a sword dancer to stab Leo Bang.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.36
+ },
+ {
+  "name": "x14b",
+  "lang": "en",
+  "text": "Then Fahn Kwhy flattened guards and burst in.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x14b.mp3",
+  "bytes": 54795,
+  "words": [
+   [
+    "Then,",
+    0.0,
+    0.3
+   ],
+   [
+    "Funquai",
+    0.52,
+    1.1
+   ],
+   [
+    "flattened",
+    1.1,
+    1.72
+   ],
+   [
+    "guards",
+    1.72,
+    2.02
+   ],
+   [
+    "and",
+    2.02,
+    2.3
+   ],
+   [
+    "burst",
+    2.3,
+    2.66
+   ],
+   [
+    "in!",
+    2.66,
+    3.0
+   ]
+  ],
+  "heard": "Then, Funquai flattened guards and burst in!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 3.36
+ },
+ {
+  "name": "x16b",
+  "lang": "en",
+  "text": "Leo Bahng went to the toilet and waved Fahn Kwhy out.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x16b.mp3",
+  "bytes": 56049,
+  "words": [
+   [
+    "Leo",
+    0.0,
+    0.26
+   ],
+   [
+    "Bang",
+    0.26,
+    0.6
+   ],
+   [
+    "went",
+    0.6,
+    0.9
+   ],
+   [
+    "to",
+    0.9,
+    1.08
+   ],
+   [
+    "the",
+    1.08,
+    1.18
+   ],
+   [
+    "toilet",
+    1.18,
+    1.58
+   ],
+   [
+    "and",
+    1.58,
+    1.84
+   ],
+   [
+    "waved",
+    1.84,
+    2.2
+   ],
+   [
+    "Phan",
+    2.2,
+    2.5
+   ],
+   [
+    "Khoi",
+    2.5,
+    2.84
+   ],
+   [
+    "out.",
+    2.84,
+    3.08
+   ]
+  ],
+  "heard": "Leo Bang went to the toilet and waved Phan Khoi out.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 3.44
+ },
+ {
+  "name": "x17b",
+  "lang": "en",
+  "text": "Leave without goodbye? Fahn Kwhy: \"They're the knife, we're the fish. Forget it!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x17b.mp3",
+  "bytes": 95755,
+  "words": [
+   [
+    "Leave",
+    0.0,
+    0.28
+   ],
+   [
+    "without",
+    0.28,
+    0.6
+   ],
+   [
+    "goodbye?",
+    0.6,
+    1.12
+   ],
+   [
+    "Fumquai,",
+    1.88,
+    2.52
+   ],
+   [
+    "they're",
+    2.96,
+    3.18
+   ],
+   [
+    "the",
+    3.18,
+    3.3
+   ],
+   [
+    "knife,",
+    3.3,
+    3.62
+   ],
+   [
+    "we're",
+    3.98,
+    4.16
+   ],
+   [
+    "the",
+    4.16,
+    4.26
+   ],
+   [
+    "fish.",
+    4.26,
+    4.6
+   ],
+   [
+    "Forget",
+    5.0,
+    5.36
+   ],
+   [
+    "it!",
+    5.36,
+    5.6
+   ]
+  ],
+  "heard": "Leave without goodbye? Fumquai, they're the knife, we're the fish. Forget it!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 5.92
+ },
+ {
+  "name": "x18b",
+  "lang": "en",
+  "text": "He ditched his convoy, took one horse, and snuck home.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x18b.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "ditched",
+    0.14,
+    0.58
+   ],
+   [
+    "his",
+    0.58,
+    0.62
+   ],
+   [
+    "convoy,",
+    0.62,
+    1.3
+   ],
+   [
+    "took",
+    1.52,
+    1.68
+   ],
+   [
+    "one",
+    1.68,
+    2.04
+   ],
+   [
+    "horse,",
+    2.04,
+    2.42
+   ],
+   [
+    "and",
+    2.78,
+    2.8
+   ],
+   [
+    "snuck",
+    2.8,
+    3.22
+   ],
+   [
+    "home.",
+    3.22,
+    3.46
+   ]
+  ],
+  "heard": "He ditched his convoy, took one horse, and snuck home.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.76
+ },
+ {
+  "name": "x19b",
+  "lang": "en",
+  "text": "Only when he was home, his adviser walked in: \"He drank too much.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "x19b.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "Only",
+    0.0,
+    0.26
+   ],
+   [
+    "when",
+    0.26,
+    0.46
+   ],
+   [
+    "he",
+    0.46,
+    0.58
+   ],
+   [
+    "was",
+    0.58,
+    0.74
+   ],
+   [
+    "home,",
+    0.74,
+    1.12
+   ],
+   [
+    "his",
+    1.48,
+    1.62
+   ],
+   [
+    "advisor",
+    1.62,
+    1.98
+   ],
+   [
+    "walked",
+    1.98,
+    2.42
+   ],
+   [
+    "in.",
+    2.42,
+    2.64
+   ],
+   [
+    "He",
+    3.24,
+    3.4
+   ],
+   [
+    "drank",
+    3.4,
+    3.76
+   ],
+   [
+    "too",
+    3.76,
+    4.0
+   ],
+   [
+    "much.",
+    4.0,
+    4.26
+   ]
+  ],
+  "heard": "Only when he was home, his advisor walked in. He drank too much.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ }
+]
