@@ -1,14 +1,14 @@
 {
- "id": "hongmen-en-alex-03",
+ "id": "hongmen-en-alex-04",
  "model_prefs": [
   "eleven_v4"
  ],
  "words": true,
  "items": [
   {
-   "name": "x04c",
+   "name": "x0122d",
    "lang": "en",
-   "text": "But Shyahng Yoo had four times the troops.",
+   "text": "As for Leo Bahng, he dodged an assassination by going to the toilet.",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
@@ -24,9 +24,9 @@
    }
   },
   {
-   "name": "x05c",
+   "name": "x02d",
    "lang": "en",
-   "text": "His own officer snitched to Shyahng Yoo: \"He wants to be king.\"",
+   "text": "This is the Hongmen Feast, a plot for assassination. The person who died wasn't even invited.",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
@@ -42,9 +42,9 @@
    }
   },
   {
-   "name": "x08c",
+   "name": "x02e",
    "lang": "en",
-   "text": "Next day, Leo Bahng said sorry: \"Surely some rat lied.\"",
+   "text": "The Hongmen Feast: a plot for assassination. The man who died wasn't even invited.",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
@@ -60,9 +60,9 @@
    }
   },
   {
-   "name": "x11c",
+   "name": "x06d",
    "lang": "en",
-   "text": "Fahn Dzung signalled: kill him. Again. And again. Nothing.",
+   "text": "Shyahng Yoo said to attack at dawn.",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
