@@ -17,7 +17,7 @@ picture is timed to the Chinese narration: its beats sit on the first frames of 
      a stamp or a number lands on it) counts three times.
 The slots: a line starts where the Chinese line starts (voice_timing_v4.json) and may run to 0.08 s before the next
 Chinese line starts; lines 9 and 21 end where the Chinese ones end (the beat of silence after the name).
-THE LOOP: lines 22 and 1 are ONE take, "As for Liu Bang, he dodged an assassin by going to the toilet."
+THE LOOP: lines 22 and 1 are ONE take, "As for Liu Bang, he dodged an assassination by going to the toilet."
 (<prefix>0122<take>.mp3). It is fitted as one line from line 22's start (frame 2064) through the end of the film into
 line 1 (line 1's windows + the film's length) and written round the end of the track: the part after the end of the
 film is the head of the track. So the end of the track followed by its head is the take itself; the cut sits in the
