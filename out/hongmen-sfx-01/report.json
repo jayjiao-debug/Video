@@ -1,0 +1,3880 @@
+{
+  "id": "hongmen-sfx-01",
+  "clips": [
+    {
+      "name": "whoosh_1",
+      "type": "sfx",
+      "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "whoosh_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.271
+        ],
+        [
+          "Grunt",
+          0.122
+        ],
+        [
+          "Boing",
+          0.049
+        ],
+        [
+          "Bang",
+          0.029
+        ],
+        [
+          "Clang",
+          0.02
+        ],
+        [
+          "Speech",
+          0.016
+        ],
+        [
+          "Whoosh, swoosh, swish",
+          0.012
+        ],
+        [
+          "Scrape",
+          0.012
+        ]
+      ]
+    },
+    {
+      "name": "whoosh_2",
+      "type": "sfx",
+      "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "whoosh_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.281
+        ],
+        [
+          "Music",
+          0.102
+        ],
+        [
+          "Boing",
+          0.097
+        ],
+        [
+          "Speech",
+          0.056
+        ],
+        [
+          "Quack",
+          0.027
+        ],
+        [
+          "Ringtone",
+          0.014
+        ],
+        [
+          "Electronic music",
+          0.014
+        ],
+        [
+          "Animal",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "pop_1",
+      "type": "sfx",
+      "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "pop_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Plop",
+          0.868
+        ],
+        [
+          "Speech",
+          0.064
+        ],
+        [
+          "Music",
+          0.037
+        ],
+        [
+          "Sound effect",
+          0.031
+        ],
+        [
+          "Grunt",
+          0.01
+        ],
+        [
+          "Male speech, man speaking",
+          0.008
+        ],
+        [
+          "Silence",
+          0.006
+        ],
+        [
+          "Inside, small room",
+          0.005
+        ]
+      ]
+    },
+    {
+      "name": "pop_2",
+      "type": "sfx",
+      "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "pop_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Plop",
+          0.811
+        ],
+        [
+          "Sound effect",
+          0.054
+        ],
+        [
+          "Music",
+          0.034
+        ],
+        [
+          "Speech",
+          0.022
+        ],
+        [
+          "Grunt",
+          0.015
+        ],
+        [
+          "Vehicle",
+          0.005
+        ],
+        [
+          "Male speech, man speaking",
+          0.004
+        ],
+        [
+          "Beep, bleep",
+          0.004
+        ]
+      ]
+    },
+    {
+      "name": "seal_1",
+      "type": "sfx",
+      "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "seal_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.152
+        ],
+        [
+          "Music",
+          0.043
+        ],
+        [
+          "Speech",
+          0.04
+        ],
+        [
+          "Grunt",
+          0.029
+        ],
+        [
+          "Male speech, man speaking",
+          0.018
+        ],
+        [
+          "Boing",
+          0.016
+        ],
+        [
+          "Silence",
+          0.013
+        ],
+        [
+          "Musical instrument",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "seal_2",
+      "type": "sfx",
+      "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "seal_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.21
+        ],
+        [
+          "Music",
+          0.056
+        ],
+        [
+          "Clang",
+          0.041
+        ],
+        [
+          "Bang",
+          0.04
+        ],
+        [
+          "Musical instrument",
+          0.016
+        ],
+        [
+          "Ding",
+          0.012
+        ],
+        [
+          "Vehicle horn, car horn, honking",
+          0.011
+        ],
+        [
+          "Grunt",
+          0.009
+        ]
+      ]
+    },
+    {
+      "name": "flag_1",
+      "type": "sfx",
+      "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "flag_1.mp3",
+      "bytes": 12163,
+      "seconds": 0.68,
+      "tags": [
+        [
+          "Knock",
+          0.537
+        ],
+        [
+          "Door",
+          0.07
+        ],
+        [
+          "Slam",
+          0.049
+        ],
+        [
+          "Tap",
+          0.032
+        ],
+        [
+          "Thunk",
+          0.026
+        ],
+        [
+          "Whack, thwack",
+          0.024
+        ],
+        [
+          "Sound effect",
+          0.019
+        ],
+        [
+          "Chopping (food)",
+          0.018
+        ]
+      ]
+    },
+    {
+      "name": "flag_2",
+      "type": "sfx",
+      "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "flag_2.mp3",
+      "bytes": 12163,
+      "seconds": 0.68,
+      "tags": [
+        [
+          "Door",
+          0.122
+        ],
+        [
+          "Wood",
+          0.037
+        ],
+        [
+          "Sliding door",
+          0.035
+        ],
+        [
+          "Knock",
+          0.034
+        ],
+        [
+          "Slam",
+          0.028
+        ],
+        [
+          "Sound effect",
+          0.028
+        ],
+        [
+          "Whack, thwack",
+          0.02
+        ],
+        [
+          "Chopping (food)",
+          0.017
+        ]
+      ]
+    },
+    {
+      "name": "army_1",
+      "type": "sfx",
+      "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "army_1.mp3",
+      "bytes": 15089,
+      "seconds": 0.88,
+      "tags": [
+        [
+          "Door",
+          0.309
+        ],
+        [
+          "Slam",
+          0.149
+        ],
+        [
+          "Knock",
+          0.055
+        ],
+        [
+          "Whack, thwack",
+          0.037
+        ],
+        [
+          "Breaking",
+          0.034
+        ],
+        [
+          "Thunk",
+          0.03
+        ],
+        [
+          "Chop",
+          0.02
+        ],
+        [
+          "Tap",
+          0.018
+        ]
+      ]
+    },
+    {
+      "name": "army_2",
+      "type": "sfx",
+      "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "army_2.mp3",
+      "bytes": 15089,
+      "seconds": 0.88,
+      "tags": [
+        [
+          "Door",
+          0.351
+        ],
+        [
+          "Knock",
+          0.303
+        ],
+        [
+          "Slam",
+          0.221
+        ],
+        [
+          "Thunk",
+          0.051
+        ],
+        [
+          "Speech",
+          0.023
+        ],
+        [
+          "Tap",
+          0.015
+        ],
+        [
+          "Sliding door",
+          0.014
+        ],
+        [
+          "Whack, thwack",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "slam_1",
+      "type": "sfx",
+      "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "slam_1.mp3",
+      "bytes": 13835,
+      "seconds": 0.8,
+      "tags": [
+        [
+          "Door",
+          0.165
+        ],
+        [
+          "Sound effect",
+          0.12
+        ],
+        [
+          "Sliding door",
+          0.097
+        ],
+        [
+          "Knock",
+          0.074
+        ],
+        [
+          "Speech",
+          0.02
+        ],
+        [
+          "Music",
+          0.019
+        ],
+        [
+          "Slam",
+          0.018
+        ],
+        [
+          "Tap",
+          0.016
+        ]
+      ]
+    },
+    {
+      "name": "slam_2",
+      "type": "sfx",
+      "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "slam_2.mp3",
+      "bytes": 13835,
+      "seconds": 0.8,
+      "tags": [
+        [
+          "Door",
+          0.317
+        ],
+        [
+          "Knock",
+          0.186
+        ],
+        [
+          "Sliding door",
+          0.089
+        ],
+        [
+          "Sound effect",
+          0.054
+        ],
+        [
+          "Slam",
+          0.017
+        ],
+        [
+          "Thunk",
+          0.013
+        ],
+        [
+          "Music",
+          0.013
+        ],
+        [
+          "Tap",
+          0.011
+        ]
+      ]
+    },
+    {
+      "name": "hooves_in_1",
+      "type": "sfx",
+      "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "hooves_in_1.mp3",
+      "bytes": 33061,
+      "seconds": 2.0,
+      "tags": [
+        [
+          "Horse",
+          0.701
+        ],
+        [
+          "Clip-clop",
+          0.666
+        ],
+        [
+          "Animal",
+          0.646
+        ],
+        [
+          "Neigh, whinny",
+          0.24
+        ],
+        [
+          "Sound effect",
+          0.064
+        ],
+        [
+          "Speech",
+          0.028
+        ],
+        [
+          "Music",
+          0.027
+        ],
+        [
+          "Livestock, farm animals, working animals",
+          0.023
+        ]
+      ]
+    },
+    {
+      "name": "hooves_in_2",
+      "type": "sfx",
+      "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "hooves_in_2.mp3",
+      "bytes": 33061,
+      "seconds": 2.0,
+      "tags": [
+        [
+          "Helicopter",
+          0.329
+        ],
+        [
+          "Animal",
+          0.064
+        ],
+        [
+          "Sound effect",
+          0.062
+        ],
+        [
+          "Vehicle",
+          0.05
+        ],
+        [
+          "Clip-clop",
+          0.018
+        ],
+        [
+          "Horse",
+          0.016
+        ],
+        [
+          "Speech",
+          0.015
+        ],
+        [
+          "Outside, rural or natural",
+          0.015
+        ]
+      ]
+    },
+    {
+      "name": "clink_1",
+      "type": "sfx",
+      "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "clink_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Clang",
+          0.325
+        ],
+        [
+          "Ding",
+          0.183
+        ],
+        [
+          "Sound effect",
+          0.05
+        ],
+        [
+          "Chink, clink",
+          0.048
+        ],
+        [
+          "Ping",
+          0.025
+        ],
+        [
+          "Coin (dropping)",
+          0.019
+        ],
+        [
+          "Music",
+          0.007
+        ],
+        [
+          "Speech",
+          0.006
+        ]
+      ]
+    },
+    {
+      "name": "clink_2",
+      "type": "sfx",
+      "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "clink_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Ding",
+          0.449
+        ],
+        [
+          "Clang",
+          0.176
+        ],
+        [
+          "Ping",
+          0.047
+        ],
+        [
+          "Sound effect",
+          0.038
+        ],
+        [
+          "Music",
+          0.034
+        ],
+        [
+          "Chink, clink",
+          0.02
+        ],
+        [
+          "Beep, bleep",
+          0.016
+        ],
+        [
+          "Speech",
+          0.011
+        ]
+      ]
+    },
+    {
+      "name": "drum_1",
+      "type": "sfx",
+      "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "drum_1.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Music",
+          0.275
+        ],
+        [
+          "Sound effect",
+          0.115
+        ],
+        [
+          "Whoosh, swoosh, swish",
+          0.041
+        ],
+        [
+          "Heart murmur",
+          0.032
+        ],
+        [
+          "Bang",
+          0.032
+        ],
+        [
+          "Musical instrument",
+          0.031
+        ],
+        [
+          "Speech",
+          0.028
+        ],
+        [
+          "Heart sounds, heartbeat",
+          0.024
+        ]
+      ]
+    },
+    {
+      "name": "drum_2",
+      "type": "sfx",
+      "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "drum_2.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Heart murmur",
+          0.166
+        ],
+        [
+          "Heart sounds, heartbeat",
+          0.091
+        ],
+        [
+          "Music",
+          0.071
+        ],
+        [
+          "Sound effect",
+          0.068
+        ],
+        [
+          "Whoosh, swoosh, swish",
+          0.055
+        ],
+        [
+          "Explosion",
+          0.033
+        ],
+        [
+          "Speech",
+          0.026
+        ],
+        [
+          "Sonar",
+          0.016
+        ]
+      ]
+    },
+    {
+      "name": "jade_1",
+      "type": "sfx",
+      "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "jade_1.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Ding",
+          0.623
+        ],
+        [
+          "Clang",
+          0.276
+        ],
+        [
+          "Ping",
+          0.048
+        ],
+        [
+          "Sound effect",
+          0.03
+        ],
+        [
+          "Music",
+          0.024
+        ],
+        [
+          "Beep, bleep",
+          0.017
+        ],
+        [
+          "Bell",
+          0.014
+        ],
+        [
+          "Chink, clink",
+          0.009
+        ]
+      ]
+    },
+    {
+      "name": "jade_2",
+      "type": "sfx",
+      "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "jade_2.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Coin (dropping)",
+          0.889
+        ],
+        [
+          "Sound effect",
+          0.053
+        ],
+        [
+          "Single-lens reflex camera",
+          0.027
+        ],
+        [
+          "Music",
+          0.021
+        ],
+        [
+          "Rattle",
+          0.013
+        ],
+        [
+          "Cash register",
+          0.011
+        ],
+        [
+          "Typewriter",
+          0.011
+        ],
+        [
+          "Ding",
+          0.01
+        ]
+      ]
+    },
+    {
+      "name": "shing_1",
+      "type": "sfx",
+      "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "shing_1.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Clang",
+          0.596
+        ],
+        [
+          "Ding",
+          0.193
+        ],
+        [
+          "Ping",
+          0.022
+        ],
+        [
+          "Chink, clink",
+          0.018
+        ],
+        [
+          "Sound effect",
+          0.017
+        ],
+        [
+          "Dishes, pots, and pans",
+          0.015
+        ],
+        [
+          "Breaking",
+          0.008
+        ],
+        [
+          "Coin (dropping)",
+          0.006
+        ]
+      ]
+    },
+    {
+      "name": "shing_2",
+      "type": "sfx",
+      "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "shing_2.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Clang",
+          0.409
+        ],
+        [
+          "Ding",
+          0.099
+        ],
+        [
+          "Sound effect",
+          0.084
+        ],
+        [
+          "Ping",
+          0.014
+        ],
+        [
+          "Bell",
+          0.009
+        ],
+        [
+          "Chink, clink",
+          0.009
+        ],
+        [
+          "Music",
+          0.008
+        ],
+        [
+          "Speech",
+          0.007
+        ]
+      ]
+    },
+    {
+      "name": "swish_1",
+      "type": "sfx",
+      "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "swish_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Grunt",
+          0.287
+        ],
+        [
+          "Sound effect",
+          0.16
+        ],
+        [
+          "Bang",
+          0.078
+        ],
+        [
+          "Music",
+          0.016
+        ],
+        [
+          "Speech",
+          0.015
+        ],
+        [
+          "Coin (dropping)",
+          0.014
+        ],
+        [
+          "Clang",
+          0.014
+        ],
+        [
+          "Crack",
+          0.011
+        ]
+      ]
+    },
+    {
+      "name": "swish_2",
+      "type": "sfx",
+      "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "swish_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.411
+        ],
+        [
+          "Grunt",
+          0.241
+        ],
+        [
+          "Plop",
+          0.052
+        ],
+        [
+          "Music",
+          0.039
+        ],
+        [
+          "Burping, eructation",
+          0.03
+        ],
+        [
+          "Bang",
+          0.028
+        ],
+        [
+          "Rattle",
+          0.017
+        ],
+        [
+          "Wood block",
+          0.012
+        ]
+      ]
+    },
+    {
+      "name": "clash_1",
+      "type": "sfx",
+      "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "clash_1.mp3",
+      "bytes": 12163,
+      "seconds": 0.68,
+      "tags": [
+        [
+          "Clang",
+          0.635
+        ],
+        [
+          "Ding",
+          0.104
+        ],
+        [
+          "Chink, clink",
+          0.021
+        ],
+        [
+          "Sound effect",
+          0.011
+        ],
+        [
+          "Dishes, pots, and pans",
+          0.011
+        ],
+        [
+          "Ping",
+          0.009
+        ],
+        [
+          "Breaking",
+          0.009
+        ],
+        [
+          "Hammer",
+          0.006
+        ]
+      ]
+    },
+    {
+      "name": "clash_2",
+      "type": "sfx",
+      "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "clash_2.mp3",
+      "bytes": 12163,
+      "seconds": 0.68,
+      "tags": [
+        [
+          "Clang",
+          0.794
+        ],
+        [
+          "Ding",
+          0.167
+        ],
+        [
+          "Sound effect",
+          0.012
+        ],
+        [
+          "Dishes, pots, and pans",
+          0.011
+        ],
+        [
+          "Ping",
+          0.007
+        ],
+        [
+          "Chink, clink",
+          0.006
+        ],
+        [
+          "Bell",
+          0.005
+        ],
+        [
+          "Hammer",
+          0.005
+        ]
+      ]
+    },
+    {
+      "name": "ram_1",
+      "type": "sfx",
+      "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "ram_1.mp3",
+      "bytes": 13835,
+      "seconds": 0.8,
+      "tags": [
+        [
+          "Door",
+          0.311
+        ],
+        [
+          "Slam",
+          0.106
+        ],
+        [
+          "Thunk",
+          0.086
+        ],
+        [
+          "Knock",
+          0.077
+        ],
+        [
+          "Bang",
+          0.022
+        ],
+        [
+          "Whack, thwack",
+          0.02
+        ],
+        [
+          "Speech",
+          0.019
+        ],
+        [
+          "Sound effect",
+          0.016
+        ]
+      ]
+    },
+    {
+      "name": "ram_2",
+      "type": "sfx",
+      "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "ram_2.mp3",
+      "bytes": 13835,
+      "seconds": 0.8,
+      "tags": [
+        [
+          "Bang",
+          0.063
+        ],
+        [
+          "Sound effect",
+          0.059
+        ],
+        [
+          "Door",
+          0.044
+        ],
+        [
+          "Thunk",
+          0.039
+        ],
+        [
+          "Knock",
+          0.037
+        ],
+        [
+          "Boing",
+          0.018
+        ],
+        [
+          "Clang",
+          0.017
+        ],
+        [
+          "Slam",
+          0.017
+        ]
+      ]
+    },
+    {
+      "name": "armour_1",
+      "type": "sfx",
+      "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "armour_1.mp3",
+      "bytes": 17179,
+      "seconds": 1.0,
+      "tags": [
+        [
+          "Crack",
+          0.194
+        ],
+        [
+          "Breaking",
+          0.186
+        ],
+        [
+          "Coin (dropping)",
+          0.091
+        ],
+        [
+          "Sound effect",
+          0.066
+        ],
+        [
+          "Scrape",
+          0.052
+        ],
+        [
+          "Smash, crash",
+          0.037
+        ],
+        [
+          "Dishes, pots, and pans",
+          0.035
+        ],
+        [
+          "Cutlery, silverware",
+          0.019
+        ]
+      ]
+    },
+    {
+      "name": "armour_2",
+      "type": "sfx",
+      "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "armour_2.mp3",
+      "bytes": 17179,
+      "seconds": 1.0,
+      "tags": [
+        [
+          "Bang",
+          0.103
+        ],
+        [
+          "Coin (dropping)",
+          0.06
+        ],
+        [
+          "Music",
+          0.044
+        ],
+        [
+          "Sound effect",
+          0.042
+        ],
+        [
+          "Breaking",
+          0.042
+        ],
+        [
+          "Smash, crash",
+          0.033
+        ],
+        [
+          "Musical instrument",
+          0.028
+        ],
+        [
+          "Drum",
+          0.027
+        ]
+      ]
+    },
+    {
+      "name": "flap_1",
+      "type": "sfx",
+      "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "flap_1.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Door",
+          0.097
+        ],
+        [
+          "Thunk",
+          0.075
+        ],
+        [
+          "Sound effect",
+          0.049
+        ],
+        [
+          "Slam",
+          0.044
+        ],
+        [
+          "Fart",
+          0.039
+        ],
+        [
+          "Knock",
+          0.026
+        ],
+        [
+          "Whack, thwack",
+          0.021
+        ],
+        [
+          "Bang",
+          0.018
+        ]
+      ]
+    },
+    {
+      "name": "flap_2",
+      "type": "sfx",
+      "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "flap_2.mp3",
+      "bytes": 10492,
+      "seconds": 0.6,
+      "tags": [
+        [
+          "Knock",
+          0.214
+        ],
+        [
+          "Door",
+          0.143
+        ],
+        [
+          "Sound effect",
+          0.062
+        ],
+        [
+          "Slam",
+          0.032
+        ],
+        [
+          "Thunk",
+          0.026
+        ],
+        [
+          "Speech",
+          0.013
+        ],
+        [
+          "Fart",
+          0.01
+        ],
+        [
+          "Bang",
+          0.01
+        ]
+      ]
+    },
+    {
+      "name": "meat_1",
+      "type": "sfx",
+      "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "meat_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Gasp",
+          0.134
+        ],
+        [
+          "Speech",
+          0.092
+        ],
+        [
+          "Music",
+          0.068
+        ],
+        [
+          "Sound effect",
+          0.044
+        ],
+        [
+          "Throat clearing",
+          0.035
+        ],
+        [
+          "Silence",
+          0.022
+        ],
+        [
+          "Male speech, man speaking",
+          0.019
+        ],
+        [
+          "Slap, smack",
+          0.019
+        ]
+      ]
+    },
+    {
+      "name": "meat_2",
+      "type": "sfx",
+      "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "meat_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Music",
+          0.089
+        ],
+        [
+          "Sound effect",
+          0.072
+        ],
+        [
+          "Speech",
+          0.032
+        ],
+        [
+          "Finger snapping",
+          0.03
+        ],
+        [
+          "Slap, smack",
+          0.028
+        ],
+        [
+          "Single-lens reflex camera",
+          0.019
+        ],
+        [
+          "Silence",
+          0.018
+        ],
+        [
+          "Tick",
+          0.016
+        ]
+      ]
+    },
+    {
+      "name": "chop_1",
+      "type": "sfx",
+      "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "chop_1.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.099
+        ],
+        [
+          "Grunt",
+          0.052
+        ],
+        [
+          "Clang",
+          0.042
+        ],
+        [
+          "Music",
+          0.037
+        ],
+        [
+          "Ding",
+          0.012
+        ],
+        [
+          "Boing",
+          0.012
+        ],
+        [
+          "Vehicle horn, car horn, honking",
+          0.009
+        ],
+        [
+          "Bang",
+          0.007
+        ]
+      ]
+    },
+    {
+      "name": "chop_2",
+      "type": "sfx",
+      "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "chop_2.mp3",
+      "bytes": 8820,
+      "seconds": 0.48,
+      "tags": [
+        [
+          "Clang",
+          0.215
+        ],
+        [
+          "Sound effect",
+          0.077
+        ],
+        [
+          "Ding",
+          0.051
+        ],
+        [
+          "Grunt",
+          0.021
+        ],
+        [
+          "Bang",
+          0.018
+        ],
+        [
+          "Music",
+          0.012
+        ],
+        [
+          "Chink, clink",
+          0.009
+        ],
+        [
+          "Boing",
+          0.006
+        ]
+      ]
+    },
+    {
+      "name": "sneak_1",
+      "type": "sfx",
+      "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sneak_1.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.139
+        ],
+        [
+          "Chewing, mastication",
+          0.124
+        ],
+        [
+          "Crunch",
+          0.061
+        ],
+        [
+          "Inside, small room",
+          0.021
+        ],
+        [
+          "Clip-clop",
+          0.013
+        ],
+        [
+          "Biting",
+          0.013
+        ],
+        [
+          "Speech",
+          0.012
+        ],
+        [
+          "Tearing",
+          0.012
+        ]
+      ]
+    },
+    {
+      "name": "sneak_2",
+      "type": "sfx",
+      "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "sneak_2.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Chopping (food)",
+          0.901
+        ],
+        [
+          "Sound effect",
+          0.021
+        ],
+        [
+          "Knock",
+          0.01
+        ],
+        [
+          "Speech",
+          0.007
+        ],
+        [
+          "Music",
+          0.006
+        ],
+        [
+          "Inside, small room",
+          0.005
+        ],
+        [
+          "Animal",
+          0.005
+        ],
+        [
+          "Walk, footsteps",
+          0.004
+        ]
+      ]
+    },
+    {
+      "name": "gallop_1",
+      "type": "sfx",
+      "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "gallop_1.mp3",
+      "bytes": 48944,
+      "seconds": 3.0,
+      "tags": [
+        [
+          "Horse",
+          0.822
+        ],
+        [
+          "Clip-clop",
+          0.815
+        ],
+        [
+          "Animal",
+          0.759
+        ],
+        [
+          "Neigh, whinny",
+          0.227
+        ],
+        [
+          "Speech",
+          0.077
+        ],
+        [
+          "Sound effect",
+          0.03
+        ],
+        [
+          "Livestock, farm animals, working animals",
+          0.025
+        ],
+        [
+          "Music",
+          0.025
+        ]
+      ]
+    },
+    {
+      "name": "gallop_2",
+      "type": "sfx",
+      "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "gallop_2.mp3",
+      "bytes": 48944,
+      "seconds": 3.0,
+      "tags": [
+        [
+          "Clip-clop",
+          0.727
+        ],
+        [
+          "Horse",
+          0.672
+        ],
+        [
+          "Animal",
+          0.667
+        ],
+        [
+          "Neigh, whinny",
+          0.084
+        ],
+        [
+          "Sound effect",
+          0.069
+        ],
+        [
+          "Speech",
+          0.051
+        ],
+        [
+          "Music",
+          0.041
+        ],
+        [
+          "Bird",
+          0.04
+        ]
+      ]
+    },
+    {
+      "name": "run_1",
+      "type": "sfx",
+      "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "run_1.mp3",
+      "bytes": 40585,
+      "seconds": 2.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.077
+        ],
+        [
+          "Walk, footsteps",
+          0.073
+        ],
+        [
+          "Clip-clop",
+          0.054
+        ],
+        [
+          "Chop",
+          0.04
+        ],
+        [
+          "Breaking",
+          0.029
+        ],
+        [
+          "Horse",
+          0.029
+        ],
+        [
+          "Animal",
+          0.016
+        ],
+        [
+          "Run",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "run_2",
+      "type": "sfx",
+      "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "run_2.mp3",
+      "bytes": 40585,
+      "seconds": 2.48,
+      "tags": [
+        [
+          "Clip-clop",
+          0.286
+        ],
+        [
+          "Horse",
+          0.201
+        ],
+        [
+          "Sound effect",
+          0.121
+        ],
+        [
+          "Animal",
+          0.09
+        ],
+        [
+          "Chopping (food)",
+          0.074
+        ],
+        [
+          "Run",
+          0.034
+        ],
+        [
+          "Walk, footsteps",
+          0.021
+        ],
+        [
+          "Neigh, whinny",
+          0.021
+        ]
+      ]
+    },
+    {
+      "name": "cap_1",
+      "type": "sfx",
+      "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "cap_1.mp3",
+      "bytes": 12163,
+      "seconds": 0.68,
+      "tags": [
+        [
+          "Tearing",
+          0.07
+        ],
+        [
+          "Scissors",
+          0.068
+        ],
+        [
+          "Scrape",
+          0.042
+        ],
+        [
+          "Sound effect",
+          0.039
+        ],
+        [
+          "Crunch",
+          0.035
+        ],
+        [
+          "Speech",
+          0.03
+        ],
+        [
+          "Shuffling cards",
+          0.023
+        ],
+        [
+          "Coin (dropping)",
+          0.021
+        ]
+      ]
+    },
+    {
+      "name": "cap_2",
+      "type": "sfx",
+      "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "cap_2.mp3",
+      "bytes": 12163,
+      "seconds": 0.68,
+      "tags": [
+        [
+          "Sound effect",
+          0.082
+        ],
+        [
+          "Chopping (food)",
+          0.025
+        ],
+        [
+          "Chop",
+          0.022
+        ],
+        [
+          "Whack, thwack",
+          0.018
+        ],
+        [
+          "Crack",
+          0.015
+        ],
+        [
+          "Speech",
+          0.015
+        ],
+        [
+          "Breaking",
+          0.011
+        ],
+        [
+          "Grunt",
+          0.01
+        ]
+      ]
+    },
+    {
+      "name": "march_1",
+      "type": "sfx",
+      "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "march_1.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Bang",
+          0.107
+        ],
+        [
+          "Door",
+          0.05
+        ],
+        [
+          "Slam",
+          0.041
+        ],
+        [
+          "Whack, thwack",
+          0.04
+        ],
+        [
+          "Sound effect",
+          0.029
+        ],
+        [
+          "Creak",
+          0.023
+        ],
+        [
+          "Slap, smack",
+          0.022
+        ],
+        [
+          "Breaking",
+          0.022
+        ]
+      ]
+    },
+    {
+      "name": "march_2",
+      "type": "sfx",
+      "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "march_2.mp3",
+      "bytes": 24702,
+      "seconds": 1.48,
+      "tags": [
+        [
+          "Sound effect",
+          0.076
+        ],
+        [
+          "Bang",
+          0.052
+        ],
+        [
+          "Door",
+          0.044
+        ],
+        [
+          "Whack, thwack",
+          0.034
+        ],
+        [
+          "Slap, smack",
+          0.027
+        ],
+        [
+          "Coin (dropping)",
+          0.02
+        ],
+        [
+          "Slam",
+          0.018
+        ],
+        [
+          "Crack",
+          0.017
+        ]
+      ]
+    },
+    {
+      "name": "whisper_1",
+      "type": "sfx",
+      "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "whisper_1.mp3",
+      "bytes": 17179,
+      "seconds": 1.0,
+      "tags": [
+        [
+          "Hiss",
+          0.251
+        ],
+        [
+          "Snake",
+          0.151
+        ],
+        [
+          "Snort",
+          0.084
+        ],
+        [
+          "Owl",
+          0.069
+        ],
+        [
+          "Breathing",
+          0.063
+        ],
+        [
+          "Speech",
+          0.049
+        ],
+        [
+          "Sneeze",
+          0.048
+        ],
+        [
+          "Steam",
+          0.037
+        ]
+      ]
+    },
+    {
+      "name": "whisper_2",
+      "type": "sfx",
+      "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "whisper_2.mp3",
+      "bytes": 17179,
+      "seconds": 1.0,
+      "tags": [
+        [
+          "Speech",
+          0.91
+        ],
+        [
+          "Gasp",
+          0.086
+        ],
+        [
+          "Sigh",
+          0.077
+        ],
+        [
+          "Male speech, man speaking",
+          0.074
+        ],
+        [
+          "Groan",
+          0.02
+        ],
+        [
+          "Sound effect",
+          0.015
+        ],
+        [
+          "Caw",
+          0.014
+        ],
+        [
+          "Grunt",
+          0.011
+        ]
+      ]
+    },
+    {
+      "name": "fly_1",
+      "type": "sfx",
+      "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "fly_1.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Insect",
+          0.542
+        ],
+        [
+          "Fly, housefly",
+          0.487
+        ],
+        [
+          "Mosquito",
+          0.318
+        ],
+        [
+          "Sound effect",
+          0.086
+        ],
+        [
+          "Bee, wasp, etc.",
+          0.049
+        ],
+        [
+          "Fart",
+          0.019
+        ],
+        [
+          "Buzz",
+          0.016
+        ],
+        [
+          "Music",
+          0.009
+        ]
+      ]
+    },
+    {
+      "name": "fly_2",
+      "type": "sfx",
+      "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "fly_2.mp3",
+      "bytes": 20105,
+      "seconds": 1.2,
+      "tags": [
+        [
+          "Music",
+          0.315
+        ],
+        [
+          "Insect",
+          0.13
+        ],
+        [
+          "Mosquito",
+          0.098
+        ],
+        [
+          "Fly, housefly",
+          0.098
+        ],
+        [
+          "Sound effect",
+          0.068
+        ],
+        [
+          "Speech",
+          0.028
+        ],
+        [
+          "Fart",
+          0.025
+        ],
+        [
+          "Musical instrument",
+          0.017
+        ]
+      ]
+    },
+    {
+      "name": "tent_1",
+      "type": "sfx",
+      "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "tent_1.mp3",
+      "bytes": 160957,
+      "seconds": 10.0,
+      "tags": [
+        [
+          "Speech",
+          0.626
+        ],
+        [
+          "Crack",
+          0.084
+        ],
+        [
+          "Arrow",
+          0.048
+        ],
+        [
+          "Inside, small room",
+          0.025
+        ],
+        [
+          "Outside, urban or manmade",
+          0.024
+        ],
+        [
+          "Chop",
+          0.022
+        ],
+        [
+          "Breaking",
+          0.014
+        ],
+        [
+          "Music",
+          0.014
+        ]
+      ]
+    },
+    {
+      "name": "tent_2",
+      "type": "sfx",
+      "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "tent_2.mp3",
+      "bytes": 160957,
+      "seconds": 10.0,
+      "tags": [
+        [
+          "Speech",
+          0.662
+        ],
+        [
+          "Wood",
+          0.13
+        ],
+        [
+          "Chop",
+          0.059
+        ],
+        [
+          "Crack",
+          0.056
+        ],
+        [
+          "Crackle",
+          0.032
+        ],
+        [
+          "Music",
+          0.03
+        ],
+        [
+          "Inside, small room",
+          0.024
+        ],
+        [
+          "Inside, public space",
+          0.023
+        ]
+      ]
+    },
+    {
+      "name": "night_1",
+      "type": "sfx",
+      "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "night_1.mp3",
+      "bytes": 160957,
+      "seconds": 10.0,
+      "tags": [
+        [
+          "Insect",
+          0.315
+        ],
+        [
+          "Cricket",
+          0.199
+        ],
+        [
+          "Squeal",
+          0.056
+        ],
+        [
+          "Whistle",
+          0.011
+        ],
+        [
+          "Smoke detector, smoke alarm",
+          0.008
+        ],
+        [
+          "Sound effect",
+          0.005
+        ],
+        [
+          "Frog",
+          0.005
+        ],
+        [
+          "Alarm",
+          0.005
+        ]
+      ]
+    },
+    {
+      "name": "night_2",
+      "type": "sfx",
+      "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "night_2.mp3",
+      "bytes": 160957,
+      "seconds": 10.0,
+      "tags": [
+        [
+          "Buzz",
+          0.025
+        ],
+        [
+          "Engine",
+          0.017
+        ],
+        [
+          "Musical instrument",
+          0.016
+        ],
+        [
+          "Rub",
+          0.015
+        ],
+        [
+          "Percussion",
+          0.014
+        ],
+        [
+          "Vehicle",
+          0.014
+        ],
+        [
+          "Sound effect",
+          0.014
+        ],
+        [
+          "Drum",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "day_1",
+      "type": "sfx",
+      "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "day_1.mp3",
+      "bytes": 129192,
+      "seconds": 8.0,
+      "tags": [
+        [
+          "Clip-clop",
+          0.202
+        ],
+        [
+          "Horse",
+          0.148
+        ],
+        [
+          "Walk, footsteps",
+          0.102
+        ],
+        [
+          "Animal",
+          0.077
+        ],
+        [
+          "Run",
+          0.043
+        ],
+        [
+          "Silence",
+          0.018
+        ],
+        [
+          "Inside, small room",
+          0.014
+        ],
+        [
+          "Flap",
+          0.013
+        ]
+      ]
+    },
+    {
+      "name": "day_2",
+      "type": "sfx",
+      "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "day_2.mp3",
+      "bytes": 129192,
+      "seconds": 8.0,
+      "tags": [
+        [
+          "Clip-clop",
+          0.073
+        ],
+        [
+          "Chopping (food)",
+          0.061
+        ],
+        [
+          "Run",
+          0.058
+        ],
+        [
+          "Sound effect",
+          0.056
+        ],
+        [
+          "Flap",
+          0.047
+        ],
+        [
+          "Horse",
+          0.044
+        ],
+        [
+          "Walk, footsteps",
+          0.031
+        ],
+        [
+          "Animal",
+          0.027
+        ]
+      ]
+    },
+    {
+      "name": "privy_1",
+      "type": "sfx",
+      "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "privy_1.mp3",
+      "bytes": 97009,
+      "seconds": 6.0,
+      "tags": [
+        [
+          "Spray",
+          0.101
+        ],
+        [
+          "Sizzle",
+          0.084
+        ],
+        [
+          "Snake",
+          0.056
+        ],
+        [
+          "Music",
+          0.036
+        ],
+        [
+          "Maraca",
+          0.034
+        ],
+        [
+          "Rattle (instrument)",
+          0.031
+        ],
+        [
+          "Rattle",
+          0.031
+        ],
+        [
+          "Static",
+          0.021
+        ]
+      ]
+    },
+    {
+      "name": "privy_2",
+      "type": "sfx",
+      "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "privy_2.mp3",
+      "bytes": 97009,
+      "seconds": 6.0,
+      "tags": [
+        [
+          "Spray",
+          0.442
+        ],
+        [
+          "Snake",
+          0.318
+        ],
+        [
+          "Hiss",
+          0.187
+        ],
+        [
+          "Steam",
+          0.06
+        ],
+        [
+          "Rattle",
+          0.027
+        ],
+        [
+          "Animal",
+          0.025
+        ],
+        [
+          "Sizzle",
+          0.017
+        ],
+        [
+          "Outside, rural or natural",
+          0.014
+        ]
+      ]
+    },
+    {
+      "name": "troops_1",
+      "type": "sfx",
+      "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "troops_1.mp3",
+      "bytes": 81127,
+      "seconds": 5.0,
+      "tags": [
+        [
+          "Animal",
+          0.132
+        ],
+        [
+          "Domestic animals, pets",
+          0.101
+        ],
+        [
+          "Dog",
+          0.091
+        ],
+        [
+          "Whimper (dog)",
+          0.05
+        ],
+        [
+          "Bow-wow",
+          0.05
+        ],
+        [
+          "Speech",
+          0.042
+        ],
+        [
+          "Yip",
+          0.038
+        ],
+        [
+          "Inside, small room",
+          0.02
+        ]
+      ]
+    },
+    {
+      "name": "troops_2",
+      "type": "sfx",
+      "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.",
+      "model": "eleven_text_to_sound_v2",
+      "status": 200,
+      "sfx": true,
+      "file": "troops_2.mp3",
+      "bytes": 81127,
+      "seconds": 5.0,
+      "tags": [
+        [
+          "Bird",
+          0.641
+        ],
+        [
+          "Pigeon, dove",
+          0.531
+        ],
+        [
+          "Coo",
+          0.384
+        ],
+        [
+          "Bird vocalization, bird call, bird song",
+          0.199
+        ],
+        [
+          "Inside, small room",
+          0.103
+        ],
+        [
+          "Animal",
+          0.067
+        ],
+        [
+          "Speech",
+          0.04
+        ],
+        [
+          "Chirp, tweet",
+          0.028
+        ]
+      ]
+    }
+  ],
+  "plan": {
+    "tier": "creator",
+    "character_count": 1610,
+    "character_limit": 123898,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "descriptive": "confident",
+        "gender": "female",
+        "use_case": "conversational",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "descriptive": "chill",
+        "language": "zh",
+        "accent": "standard",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "gender": "male",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "entertainment_tv",
+        "accent": "standard",
+        "age": "young",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "use_case": "characters_animation",
+        "gender": "female",
+        "descriptive": "sassy",
+        "age": "young",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "male",
+        "accent": "standard",
+        "age": "young",
+        "use_case": "conversational",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "use_case": "characters_animation",
+        "descriptive": "excited",
+        "language": "ru",
+        "age": "middle_aged",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "use_case": "characters_animation",
+        "accent": "british",
+        "descriptive": "serious",
+        "age": "middle_aged",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "hi",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "ar",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "modern standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "descriptive": "confident",
+        "language": "it",
+        "accent": "milanese",
+        "age": "young",
+        "use_case": "narrative_story",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian",
+        "language": "pt"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "language": "es",
+        "age": "young",
+        "gender": "female",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "female",
+        "language": "es",
+        "age": "young",
+        "descriptive": "cute",
+        "accent": "mexican"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "language": "es",
+        "age": "young",
+        "accent": "latin american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "language": "es",
+        "age": "middle_aged",
+        "accent": "latin american",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "descriptive": "pleasant",
+        "language": "hi",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "standard",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "use_case": "conversational",
+        "gender": "female",
+        "language": "hi",
+        "age": "young",
+        "descriptive": "classy",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "descriptive": "calm",
+        "accent": "modern standard",
+        "use_case": "narrative_story",
+        "age": "young",
+        "language": "ar",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "descriptive": "professional",
+        "language": "it",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "descriptive": "excited",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian",
+        "language": "pt"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "use_case": "conversational",
+        "gender": "female",
+        "accent": "peruvian",
+        "age": "young",
+        "descriptive": "casual",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "use_case": "conversational",
+        "accent": "mexican",
+        "descriptive": "casual",
+        "age": "young",
+        "gender": "female",
+        "language": "es"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "characters_animation",
+        "language": "zh",
+        "age": "middle-aged",
+        "gender": "male",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "language": "zh",
+        "age": "middle_aged",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "descriptive": "casual",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "descriptive": "deep",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "descriptive": "confident",
+        "accent": "standard",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "el",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "el",
+        "accent": "standard",
+        "age": "old",
+        "descriptive": "calm",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "el",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "characters_animation",
+        "language": "de",
+        "age": "old",
+        "gender": "male",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "age": "young",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "descriptive": "pleasant",
+        "use_case": "social_media",
+        "accent": "standard",
+        "age": "young",
+        "gender": "male",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "zh",
+        "descriptive": "formal",
+        "age": "middle_aged",
+        "gender": "female",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "zh",
+        "descriptive": "neutral",
+        "age": "young",
+        "accent": "standard",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "descriptive": "pleasant",
+        "gender": "female",
+        "language": "zh",
+        "age": "young",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "descriptive": "calm",
+        "accent": "american",
+        "language": "en",
+        "age": "middle_aged",
+        "use_case": "conversational",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "descriptive": "crisp",
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "use_case": "conversational",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "descriptive": "crisp",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "old",
+        "accent": "scottish",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "advertisement",
+        "gender": "male",
+        "accent": "scottish",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "descriptive": "casual",
+        "accent": "american",
+        "use_case": "narrative_story",
+        "age": "young",
+        "gender": "female",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "gentle",
+        "accent": "chinese",
+        "age": "young",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "confident",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "descriptive": "intense",
+        "use_case": "narrative_story",
+        "language": "it",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "use_case": "narrative_story",
+        "accent": "scottish",
+        "language": "en",
+        "age": "young",
+        "descriptive": "calm",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "american",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "male",
+        "accent": "beijing mandarin",
+        "age": "young",
+        "descriptive": "gentle",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "descriptive": "deep",
+        "language": "zh",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "singapore mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard",
+        "language": "zh"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "use_case": "informative_educational",
+        "descriptive": "chill",
+        "accent": "chinese",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "descriptive": "chill",
+        "language": "en",
+        "use_case": "social_media",
+        "age": "young",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "calm",
+        "age": "young",
+        "language": "en",
+        "accent": "italian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "descriptive": "casual",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "descriptive": "gentle",
+        "language": "en",
+        "accent": "american",
+        "age": "old",
+        "use_case": "narrative_story",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "descriptive": "mature",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "old",
+        "gender": "male",
+        "accent": "british"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "descriptive": "casual",
+        "language": "fr",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "fr",
+        "accent": "parisian",
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "de",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "descriptive": "calm",
+        "language": "de",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "gender": "male",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "female",
+        "accent": "standard",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "language": "ru"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "descriptive": "confident",
+        "accent": "standard",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "language": "ru",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "use_case": "social_media",
+        "descriptive": "casual",
+        "language": "zh",
+        "age": "young",
+        "accent": "taiwan mandarin",
+        "gender": "female"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "zh",
+        "gender": "male",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "descriptive": "serious",
+        "accent": "american",
+        "language": "en",
+        "age": "middle_aged",
+        "use_case": "narrative_story",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "en",
+        "accent": "american",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "use_case": "conversational",
+        "accent": "american",
+        "language": "en",
+        "age": "young",
+        "descriptive": "casual",
+        "gender": "male"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "use_case": "social_media",
+        "accent": "standard",
+        "descriptive": "upbeat",
+        "age": "young",
+        "gender": "female",
+        "language": "hi"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "classy",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "use_case": "entertainment_tv",
+        "language": "en",
+        "age": "young",
+        "descriptive": "professional",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "young",
+        "descriptive": "sassy",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "descriptive": "hyped",
+        "accent": "australian",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "mature",
+        "accent": "british",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "use_case": "characters_animation",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "calm",
+        "accent": "american",
+        "gender": "neutral"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "use_case": "characters_animation",
+        "language": "en",
+        "age": "young",
+        "descriptive": "rough",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "young",
+        "descriptive": "confident",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "accent": "british",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "upbeat",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "descriptive": "chill",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "descriptive": "cute",
+        "accent": "american",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "classy",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "casual",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "classy",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "formal",
+        "accent": "british",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "en",
+        "age": "middle_aged",
+        "descriptive": "confident",
+        "accent": "british",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "use_case": "social_media",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "use_case": "advertisement",
+        "language": "en",
+        "age": "old",
+        "descriptive": "crisp",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    }
+  ]
+}

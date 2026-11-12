@@ -1,0 +1,2829 @@
+plan: {'tier': 'creator', 'character_count': 1610, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "whoosh_1", "type": "sfx", "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "whoosh_1.mp3", "bytes": 8820}
+{"name": "whoosh_2", "type": "sfx", "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "whoosh_2.mp3", "bytes": 8820}
+{"name": "pop_1", "type": "sfx", "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "pop_1.mp3", "bytes": 8820}
+{"name": "pop_2", "type": "sfx", "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "pop_2.mp3", "bytes": 8820}
+{"name": "seal_1", "type": "sfx", "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "seal_1.mp3", "bytes": 8820}
+{"name": "seal_2", "type": "sfx", "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "seal_2.mp3", "bytes": 8820}
+{"name": "flag_1", "type": "sfx", "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "flag_1.mp3", "bytes": 12163}
+{"name": "flag_2", "type": "sfx", "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "flag_2.mp3", "bytes": 12163}
+{"name": "army_1", "type": "sfx", "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "army_1.mp3", "bytes": 15089}
+{"name": "army_2", "type": "sfx", "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "army_2.mp3", "bytes": 15089}
+{"name": "slam_1", "type": "sfx", "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "slam_1.mp3", "bytes": 13835}
+{"name": "slam_2", "type": "sfx", "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "slam_2.mp3", "bytes": 13835}
+{"name": "hooves_in_1", "type": "sfx", "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hooves_in_1.mp3", "bytes": 33061}
+{"name": "hooves_in_2", "type": "sfx", "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hooves_in_2.mp3", "bytes": 33061}
+{"name": "clink_1", "type": "sfx", "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "clink_1.mp3", "bytes": 8820}
+{"name": "clink_2", "type": "sfx", "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "clink_2.mp3", "bytes": 8820}
+{"name": "drum_1", "type": "sfx", "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "drum_1.mp3", "bytes": 20105}
+{"name": "drum_2", "type": "sfx", "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "drum_2.mp3", "bytes": 20105}
+{"name": "jade_1", "type": "sfx", "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "jade_1.mp3", "bytes": 10492}
+{"name": "jade_2", "type": "sfx", "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "jade_2.mp3", "bytes": 10492}
+{"name": "shing_1", "type": "sfx", "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "shing_1.mp3", "bytes": 20105}
+{"name": "shing_2", "type": "sfx", "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "shing_2.mp3", "bytes": 20105}
+{"name": "swish_1", "type": "sfx", "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "swish_1.mp3", "bytes": 8820}
+{"name": "swish_2", "type": "sfx", "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "swish_2.mp3", "bytes": 8820}
+{"name": "clash_1", "type": "sfx", "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "clash_1.mp3", "bytes": 12163}
+{"name": "clash_2", "type": "sfx", "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "clash_2.mp3", "bytes": 12163}
+{"name": "ram_1", "type": "sfx", "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "ram_1.mp3", "bytes": 13835}
+{"name": "ram_2", "type": "sfx", "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "ram_2.mp3", "bytes": 13835}
+{"name": "armour_1", "type": "sfx", "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "armour_1.mp3", "bytes": 17179}
+{"name": "armour_2", "type": "sfx", "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "armour_2.mp3", "bytes": 17179}
+{"name": "flap_1", "type": "sfx", "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "flap_1.mp3", "bytes": 10492}
+{"name": "flap_2", "type": "sfx", "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "flap_2.mp3", "bytes": 10492}
+{"name": "meat_1", "type": "sfx", "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "meat_1.mp3", "bytes": 8820}
+{"name": "meat_2", "type": "sfx", "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "meat_2.mp3", "bytes": 8820}
+{"name": "chop_1", "type": "sfx", "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "chop_1.mp3", "bytes": 8820}
+{"name": "chop_2", "type": "sfx", "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "chop_2.mp3", "bytes": 8820}
+{"name": "sneak_1", "type": "sfx", "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sneak_1.mp3", "bytes": 24702}
+{"name": "sneak_2", "type": "sfx", "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sneak_2.mp3", "bytes": 24702}
+{"name": "gallop_1", "type": "sfx", "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "gallop_1.mp3", "bytes": 48944}
+{"name": "gallop_2", "type": "sfx", "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "gallop_2.mp3", "bytes": 48944}
+{"name": "run_1", "type": "sfx", "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "run_1.mp3", "bytes": 40585}
+{"name": "run_2", "type": "sfx", "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "run_2.mp3", "bytes": 40585}
+{"name": "cap_1", "type": "sfx", "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cap_1.mp3", "bytes": 12163}
+{"name": "cap_2", "type": "sfx", "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cap_2.mp3", "bytes": 12163}
+{"name": "march_1", "type": "sfx", "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "march_1.mp3", "bytes": 24702}
+{"name": "march_2", "type": "sfx", "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "march_2.mp3", "bytes": 24702}
+{"name": "whisper_1", "type": "sfx", "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "whisper_1.mp3", "bytes": 17179}
+{"name": "whisper_2", "type": "sfx", "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "whisper_2.mp3", "bytes": 17179}
+{"name": "fly_1", "type": "sfx", "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "fly_1.mp3", "bytes": 20105}
+{"name": "fly_2", "type": "sfx", "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "fly_2.mp3", "bytes": 20105}
+{"name": "tent_1", "type": "sfx", "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "tent_1.mp3", "bytes": 160957}
+{"name": "tent_2", "type": "sfx", "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "tent_2.mp3", "bytes": 160957}
+{"name": "night_1", "type": "sfx", "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "night_1.mp3", "bytes": 160957}
+{"name": "night_2", "type": "sfx", "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "night_2.mp3", "bytes": 160957}
+{"name": "day_1", "type": "sfx", "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "day_1.mp3", "bytes": 129192}
+{"name": "day_2", "type": "sfx", "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "day_2.mp3", "bytes": 129192}
+{"name": "privy_1", "type": "sfx", "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "privy_1.mp3", "bytes": 97009}
+{"name": "privy_2", "type": "sfx", "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "privy_2.mp3", "bytes": 97009}
+{"name": "troops_1", "type": "sfx", "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "troops_1.mp3", "bytes": 81127}
+{"name": "troops_2", "type": "sfx", "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "troops_2.mp3", "bytes": 81127}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 4995.21it/s]
+whoosh_1 [['Sound effect', 0.271], ['Grunt', 0.122], ['Boing', 0.049], ['Bang', 0.029], ['Clang', 0.02], ['Speech', 0.016], ['Whoosh, swoosh, swish', 0.012], ['Scrape', 0.012]]
+whoosh_2 [['Sound effect', 0.281], ['Music', 0.102], ['Boing', 0.097], ['Speech', 0.056], ['Quack', 0.027], ['Ringtone', 0.014], ['Electronic music', 0.014], ['Animal', 0.013]]
+pop_1 [['Plop', 0.868], ['Speech', 0.064], ['Music', 0.037], ['Sound effect', 0.031], ['Grunt', 0.01], ['Male speech, man speaking', 0.008], ['Silence', 0.006], ['Inside, small room', 0.005]]
+pop_2 [['Plop', 0.811], ['Sound effect', 0.054], ['Music', 0.034], ['Speech', 0.022], ['Grunt', 0.015], ['Vehicle', 0.005], ['Male speech, man speaking', 0.004], ['Beep, bleep', 0.004]]
+seal_1 [['Sound effect', 0.152], ['Music', 0.043], ['Speech', 0.04], ['Grunt', 0.029], ['Male speech, man speaking', 0.018], ['Boing', 0.016], ['Silence', 0.013], ['Musical instrument', 0.013]]
+seal_2 [['Sound effect', 0.21], ['Music', 0.056], ['Clang', 0.041], ['Bang', 0.04], ['Musical instrument', 0.016], ['Ding', 0.012], ['Vehicle horn, car horn, honking', 0.011], ['Grunt', 0.009]]
+flag_1 [['Knock', 0.537], ['Door', 0.07], ['Slam', 0.049], ['Tap', 0.032], ['Thunk', 0.026], ['Whack, thwack', 0.024], ['Sound effect', 0.019], ['Chopping (food)', 0.018]]
+flag_2 [['Door', 0.122], ['Wood', 0.037], ['Sliding door', 0.035], ['Knock', 0.034], ['Slam', 0.028], ['Sound effect', 0.028], ['Whack, thwack', 0.02], ['Chopping (food)', 0.017]]
+army_1 [['Door', 0.309], ['Slam', 0.149], ['Knock', 0.055], ['Whack, thwack', 0.037], ['Breaking', 0.034], ['Thunk', 0.03], ['Chop', 0.02], ['Tap', 0.018]]
+army_2 [['Door', 0.351], ['Knock', 0.303], ['Slam', 0.221], ['Thunk', 0.051], ['Speech', 0.023], ['Tap', 0.015], ['Sliding door', 0.014], ['Whack, thwack', 0.013]]
+slam_1 [['Door', 0.165], ['Sound effect', 0.12], ['Sliding door', 0.097], ['Knock', 0.074], ['Speech', 0.02], ['Music', 0.019], ['Slam', 0.018], ['Tap', 0.016]]
+slam_2 [['Door', 0.317], ['Knock', 0.186], ['Sliding door', 0.089], ['Sound effect', 0.054], ['Slam', 0.017], ['Thunk', 0.013], ['Music', 0.013], ['Tap', 0.011]]
+hooves_in_1 [['Horse', 0.701], ['Clip-clop', 0.666], ['Animal', 0.646], ['Neigh, whinny', 0.24], ['Sound effect', 0.064], ['Speech', 0.028], ['Music', 0.027], ['Livestock, farm animals, working animals', 0.023]]
+hooves_in_2 [['Helicopter', 0.329], ['Animal', 0.064], ['Sound effect', 0.062], ['Vehicle', 0.05], ['Clip-clop', 0.018], ['Horse', 0.016], ['Speech', 0.015], ['Outside, rural or natural', 0.015]]
+clink_1 [['Clang', 0.325], ['Ding', 0.183], ['Sound effect', 0.05], ['Chink, clink', 0.048], ['Ping', 0.025], ['Coin (dropping)', 0.019], ['Music', 0.007], ['Speech', 0.006]]
+clink_2 [['Ding', 0.449], ['Clang', 0.176], ['Ping', 0.047], ['Sound effect', 0.038], ['Music', 0.034], ['Chink, clink', 0.02], ['Beep, bleep', 0.016], ['Speech', 0.011]]
+drum_1 [['Music', 0.275], ['Sound effect', 0.115], ['Whoosh, swoosh, swish', 0.041], ['Heart murmur', 0.032], ['Bang', 0.032], ['Musical instrument', 0.031], ['Speech', 0.028], ['Heart sounds, heartbeat', 0.024]]
+drum_2 [['Heart murmur', 0.166], ['Heart sounds, heartbeat', 0.091], ['Music', 0.071], ['Sound effect', 0.068], ['Whoosh, swoosh, swish', 0.055], ['Explosion', 0.033], ['Speech', 0.026], ['Sonar', 0.016]]
+jade_1 [['Ding', 0.623], ['Clang', 0.276], ['Ping', 0.048], ['Sound effect', 0.03], ['Music', 0.024], ['Beep, bleep', 0.017], ['Bell', 0.014], ['Chink, clink', 0.009]]
+jade_2 [['Coin (dropping)', 0.889], ['Sound effect', 0.053], ['Single-lens reflex camera', 0.027], ['Music', 0.021], ['Rattle', 0.013], ['Cash register', 0.011], ['Typewriter', 0.011], ['Ding', 0.01]]
+shing_1 [['Clang', 0.596], ['Ding', 0.193], ['Ping', 0.022], ['Chink, clink', 0.018], ['Sound effect', 0.017], ['Dishes, pots, and pans', 0.015], ['Breaking', 0.008], ['Coin (dropping)', 0.006]]
+shing_2 [['Clang', 0.409], ['Ding', 0.099], ['Sound effect', 0.084], ['Ping', 0.014], ['Bell', 0.009], ['Chink, clink', 0.009], ['Music', 0.008], ['Speech', 0.007]]
+swish_1 [['Grunt', 0.287], ['Sound effect', 0.16], ['Bang', 0.078], ['Music', 0.016], ['Speech', 0.015], ['Coin (dropping)', 0.014], ['Clang', 0.014], ['Crack', 0.011]]
+swish_2 [['Sound effect', 0.411], ['Grunt', 0.241], ['Plop', 0.052], ['Music', 0.039], ['Burping, eructation', 0.03], ['Bang', 0.028], ['Rattle', 0.017], ['Wood block', 0.012]]
+clash_1 [['Clang', 0.635], ['Ding', 0.104], ['Chink, clink', 0.021], ['Sound effect', 0.011], ['Dishes, pots, and pans', 0.011], ['Ping', 0.009], ['Breaking', 0.009], ['Hammer', 0.006]]
+clash_2 [['Clang', 0.794], ['Ding', 0.167], ['Sound effect', 0.012], ['Dishes, pots, and pans', 0.011], ['Ping', 0.007], ['Chink, clink', 0.006], ['Bell', 0.005], ['Hammer', 0.005]]
+ram_1 [['Door', 0.311], ['Slam', 0.106], ['Thunk', 0.086], ['Knock', 0.077], ['Bang', 0.022], ['Whack, thwack', 0.02], ['Speech', 0.019], ['Sound effect', 0.016]]
+ram_2 [['Bang', 0.063], ['Sound effect', 0.059], ['Door', 0.044], ['Thunk', 0.039], ['Knock', 0.037], ['Boing', 0.018], ['Clang', 0.017], ['Slam', 0.017]]
+armour_1 [['Crack', 0.194], ['Breaking', 0.186], ['Coin (dropping)', 0.091], ['Sound effect', 0.066], ['Scrape', 0.052], ['Smash, crash', 0.037], ['Dishes, pots, and pans', 0.035], ['Cutlery, silverware', 0.019]]
+armour_2 [['Bang', 0.103], ['Coin (dropping)', 0.06], ['Music', 0.044], ['Sound effect', 0.042], ['Breaking', 0.042], ['Smash, crash', 0.033], ['Musical instrument', 0.028], ['Drum', 0.027]]
+flap_1 [['Door', 0.097], ['Thunk', 0.075], ['Sound effect', 0.049], ['Slam', 0.044], ['Fart', 0.039], ['Knock', 0.026], ['Whack, thwack', 0.021], ['Bang', 0.018]]
+flap_2 [['Knock', 0.214], ['Door', 0.143], ['Sound effect', 0.062], ['Slam', 0.032], ['Thunk', 0.026], ['Speech', 0.013], ['Fart', 0.01], ['Bang', 0.01]]
+meat_1 [['Gasp', 0.134], ['Speech', 0.092], ['Music', 0.068], ['Sound effect', 0.044], ['Throat clearing', 0.035], ['Silence', 0.022], ['Male speech, man speaking', 0.019], ['Slap, smack', 0.019]]
+meat_2 [['Music', 0.089], ['Sound effect', 0.072], ['Speech', 0.032], ['Finger snapping', 0.03], ['Slap, smack', 0.028], ['Single-lens reflex camera', 0.019], ['Silence', 0.018], ['Tick', 0.016]]
+chop_1 [['Sound effect', 0.099], ['Grunt', 0.052], ['Clang', 0.042], ['Music', 0.037], ['Ding', 0.012], ['Boing', 0.012], ['Vehicle horn, car horn, honking', 0.009], ['Bang', 0.007]]
+chop_2 [['Clang', 0.215], ['Sound effect', 0.077], ['Ding', 0.051], ['Grunt', 0.021], ['Bang', 0.018], ['Music', 0.012], ['Chink, clink', 0.009], ['Boing', 0.006]]
+sneak_1 [['Sound effect', 0.139], ['Chewing, mastication', 0.124], ['Crunch', 0.061], ['Inside, small room', 0.021], ['Clip-clop', 0.013], ['Biting', 0.013], ['Speech', 0.012], ['Tearing', 0.012]]
+sneak_2 [['Chopping (food)', 0.901], ['Sound effect', 0.021], ['Knock', 0.01], ['Speech', 0.007], ['Music', 0.006], ['Inside, small room', 0.005], ['Animal', 0.005], ['Walk, footsteps', 0.004]]
+gallop_1 [['Horse', 0.822], ['Clip-clop', 0.815], ['Animal', 0.759], ['Neigh, whinny', 0.227], ['Speech', 0.077], ['Sound effect', 0.03], ['Livestock, farm animals, working animals', 0.025], ['Music', 0.025]]
+gallop_2 [['Clip-clop', 0.727], ['Horse', 0.672], ['Animal', 0.667], ['Neigh, whinny', 0.084], ['Sound effect', 0.069], ['Speech', 0.051], ['Music', 0.041], ['Bird', 0.04]]
+run_1 [['Sound effect', 0.077], ['Walk, footsteps', 0.073], ['Clip-clop', 0.054], ['Chop', 0.04], ['Breaking', 0.029], ['Horse', 0.029], ['Animal', 0.016], ['Run', 0.013]]
+run_2 [['Clip-clop', 0.286], ['Horse', 0.201], ['Sound effect', 0.121], ['Animal', 0.09], ['Chopping (food)', 0.074], ['Run', 0.034], ['Walk, footsteps', 0.021], ['Neigh, whinny', 0.021]]
+cap_1 [['Tearing', 0.07], ['Scissors', 0.068], ['Scrape', 0.042], ['Sound effect', 0.039], ['Crunch', 0.035], ['Speech', 0.03], ['Shuffling cards', 0.023], ['Coin (dropping)', 0.021]]
+cap_2 [['Sound effect', 0.082], ['Chopping (food)', 0.025], ['Chop', 0.022], ['Whack, thwack', 0.018], ['Crack', 0.015], ['Speech', 0.015], ['Breaking', 0.011], ['Grunt', 0.01]]
+march_1 [['Bang', 0.107], ['Door', 0.05], ['Slam', 0.041], ['Whack, thwack', 0.04], ['Sound effect', 0.029], ['Creak', 0.023], ['Slap, smack', 0.022], ['Breaking', 0.022]]
+march_2 [['Sound effect', 0.076], ['Bang', 0.052], ['Door', 0.044], ['Whack, thwack', 0.034], ['Slap, smack', 0.027], ['Coin (dropping)', 0.02], ['Slam', 0.018], ['Crack', 0.017]]
+whisper_1 [['Hiss', 0.251], ['Snake', 0.151], ['Snort', 0.084], ['Owl', 0.069], ['Breathing', 0.063], ['Speech', 0.049], ['Sneeze', 0.048], ['Steam', 0.037]]
+whisper_2 [['Speech', 0.91], ['Gasp', 0.086], ['Sigh', 0.077], ['Male speech, man speaking', 0.074], ['Groan', 0.02], ['Sound effect', 0.015], ['Caw', 0.014], ['Grunt', 0.011]]
+fly_1 [['Insect', 0.542], ['Fly, housefly', 0.487], ['Mosquito', 0.318], ['Sound effect', 0.086], ['Bee, wasp, etc.', 0.049], ['Fart', 0.019], ['Buzz', 0.016], ['Music', 0.009]]
+fly_2 [['Music', 0.315], ['Insect', 0.13], ['Mosquito', 0.098], ['Fly, housefly', 0.098], ['Sound effect', 0.068], ['Speech', 0.028], ['Fart', 0.025], ['Musical instrument', 0.017]]
+tent_1 [['Speech', 0.626], ['Crack', 0.084], ['Arrow', 0.048], ['Inside, small room', 0.025], ['Outside, urban or manmade', 0.024], ['Chop', 0.022], ['Breaking', 0.014], ['Music', 0.014]]
+tent_2 [['Speech', 0.662], ['Wood', 0.13], ['Chop', 0.059], ['Crack', 0.056], ['Crackle', 0.032], ['Music', 0.03], ['Inside, small room', 0.024], ['Inside, public space', 0.023]]
+night_1 [['Insect', 0.315], ['Cricket', 0.199], ['Squeal', 0.056], ['Whistle', 0.011], ['Smoke detector, smoke alarm', 0.008], ['Sound effect', 0.005], ['Frog', 0.005], ['Alarm', 0.005]]
+night_2 [['Buzz', 0.025], ['Engine', 0.017], ['Musical instrument', 0.016], ['Rub', 0.015], ['Percussion', 0.014], ['Vehicle', 0.014], ['Sound effect', 0.014], ['Drum', 0.013]]
+day_1 [['Clip-clop', 0.202], ['Horse', 0.148], ['Walk, footsteps', 0.102], ['Animal', 0.077], ['Run', 0.043], ['Silence', 0.018], ['Inside, small room', 0.014], ['Flap', 0.013]]
+day_2 [['Clip-clop', 0.073], ['Chopping (food)', 0.061], ['Run', 0.058], ['Sound effect', 0.056], ['Flap', 0.047], ['Horse', 0.044], ['Walk, footsteps', 0.031], ['Animal', 0.027]]
+privy_1 [['Spray', 0.101], ['Sizzle', 0.084], ['Snake', 0.056], ['Music', 0.036], ['Maraca', 0.034], ['Rattle (instrument)', 0.031], ['Rattle', 0.031], ['Static', 0.021]]
+privy_2 [['Spray', 0.442], ['Snake', 0.318], ['Hiss', 0.187], ['Steam', 0.06], ['Rattle', 0.027], ['Animal', 0.025], ['Sizzle', 0.017], ['Outside, rural or natural', 0.014]]
+troops_1 [['Animal', 0.132], ['Domestic animals, pets', 0.101], ['Dog', 0.091], ['Whimper (dog)', 0.05], ['Bow-wow', 0.05], ['Speech', 0.042], ['Yip', 0.038], ['Inside, small room', 0.02]]
+troops_2 [['Bird', 0.641], ['Pigeon, dove', 0.531], ['Coo', 0.384], ['Bird vocalization, bird call, bird song', 0.199], ['Inside, small room', 0.103], ['Animal', 0.067], ['Speech', 0.04], ['Chirp, tweet', 0.028]]
+[
+ {
+  "name": "whoosh_1",
+  "type": "sfx",
+  "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "whoosh_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.271
+   ],
+   [
+    "Grunt",
+    0.122
+   ],
+   [
+    "Boing",
+    0.049
+   ],
+   [
+    "Bang",
+    0.029
+   ],
+   [
+    "Clang",
+    0.02
+   ],
+   [
+    "Speech",
+    0.016
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.012
+   ],
+   [
+    "Scrape",
+    0.012
+   ]
+  ]
+ },
+ {
+  "name": "whoosh_2",
+  "type": "sfx",
+  "text": "A tiny quick soft whoosh, like a head turning fast in a cartoon: one short airy swish. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "whoosh_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.281
+   ],
+   [
+    "Music",
+    0.102
+   ],
+   [
+    "Boing",
+    0.097
+   ],
+   [
+    "Speech",
+    0.056
+   ],
+   [
+    "Quack",
+    0.027
+   ],
+   [
+    "Ringtone",
+    0.014
+   ],
+   [
+    "Electronic music",
+    0.014
+   ],
+   [
+    "Animal",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "pop_1",
+  "type": "sfx",
+  "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "pop_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Plop",
+    0.868
+   ],
+   [
+    "Speech",
+    0.064
+   ],
+   [
+    "Music",
+    0.037
+   ],
+   [
+    "Sound effect",
+    0.031
+   ],
+   [
+    "Grunt",
+    0.01
+   ],
+   [
+    "Male speech, man speaking",
+    0.008
+   ],
+   [
+    "Silence",
+    0.006
+   ],
+   [
+    "Inside, small room",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "pop_2",
+  "type": "sfx",
+  "text": "A soft cartoon pop, like a small bubble popping. One pop only, short, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "pop_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Plop",
+    0.811
+   ],
+   [
+    "Sound effect",
+    0.054
+   ],
+   [
+    "Music",
+    0.034
+   ],
+   [
+    "Speech",
+    0.022
+   ],
+   [
+    "Grunt",
+    0.015
+   ],
+   [
+    "Vehicle",
+    0.005
+   ],
+   [
+    "Male speech, man speaking",
+    0.004
+   ],
+   [
+    "Beep, bleep",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "seal_1",
+  "type": "sfx",
+  "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "seal_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.152
+   ],
+   [
+    "Music",
+    0.043
+   ],
+   [
+    "Speech",
+    0.04
+   ],
+   [
+    "Grunt",
+    0.029
+   ],
+   [
+    "Male speech, man speaking",
+    0.018
+   ],
+   [
+    "Boing",
+    0.016
+   ],
+   [
+    "Silence",
+    0.013
+   ],
+   [
+    "Musical instrument",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "seal_2",
+  "type": "sfx",
+  "text": "A big carved stone seal stamped down hard onto paper on a wooden desk: one short dry heavy thump.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "seal_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.21
+   ],
+   [
+    "Music",
+    0.056
+   ],
+   [
+    "Clang",
+    0.041
+   ],
+   [
+    "Bang",
+    0.04
+   ],
+   [
+    "Musical instrument",
+    0.016
+   ],
+   [
+    "Ding",
+    0.012
+   ],
+   [
+    "Vehicle horn, car horn, honking",
+    0.011
+   ],
+   [
+    "Grunt",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "flag_1",
+  "type": "sfx",
+  "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "flag_1.mp3",
+  "bytes": 12163,
+  "seconds": 0.68,
+  "tags": [
+   [
+    "Knock",
+    0.537
+   ],
+   [
+    "Door",
+    0.07
+   ],
+   [
+    "Slam",
+    0.049
+   ],
+   [
+    "Tap",
+    0.032
+   ],
+   [
+    "Thunk",
+    0.026
+   ],
+   [
+    "Whack, thwack",
+    0.024
+   ],
+   [
+    "Sound effect",
+    0.019
+   ],
+   [
+    "Chopping (food)",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "flag_2",
+  "type": "sfx",
+  "text": "A wooden flag pole rammed firmly into the top of a wall: one solid wooden thunk, then a short flap of cloth. Dry, close, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "flag_2.mp3",
+  "bytes": 12163,
+  "seconds": 0.68,
+  "tags": [
+   [
+    "Door",
+    0.122
+   ],
+   [
+    "Wood",
+    0.037
+   ],
+   [
+    "Sliding door",
+    0.035
+   ],
+   [
+    "Knock",
+    0.034
+   ],
+   [
+    "Slam",
+    0.028
+   ],
+   [
+    "Sound effect",
+    0.028
+   ],
+   [
+    "Whack, thwack",
+    0.02
+   ],
+   [
+    "Chopping (food)",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "army_1",
+  "type": "sfx",
+  "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "army_1.mp3",
+  "bytes": 15089,
+  "seconds": 0.88,
+  "tags": [
+   [
+    "Door",
+    0.309
+   ],
+   [
+    "Slam",
+    0.149
+   ],
+   [
+    "Knock",
+    0.055
+   ],
+   [
+    "Whack, thwack",
+    0.037
+   ],
+   [
+    "Breaking",
+    0.034
+   ],
+   [
+    "Thunk",
+    0.03
+   ],
+   [
+    "Chop",
+    0.02
+   ],
+   [
+    "Tap",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "army_2",
+  "type": "sfx",
+  "text": "Thousands of soldiers stamp their feet once, all together: one massive low thud with a rattle of armour and spears. One stamp only, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "army_2.mp3",
+  "bytes": 15089,
+  "seconds": 0.88,
+  "tags": [
+   [
+    "Door",
+    0.351
+   ],
+   [
+    "Knock",
+    0.303
+   ],
+   [
+    "Slam",
+    0.221
+   ],
+   [
+    "Thunk",
+    0.051
+   ],
+   [
+    "Speech",
+    0.023
+   ],
+   [
+    "Tap",
+    0.015
+   ],
+   [
+    "Sliding door",
+    0.014
+   ],
+   [
+    "Whack, thwack",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "slam_1",
+  "type": "sfx",
+  "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "slam_1.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Door",
+    0.165
+   ],
+   [
+    "Sound effect",
+    0.12
+   ],
+   [
+    "Sliding door",
+    0.097
+   ],
+   [
+    "Knock",
+    0.074
+   ],
+   [
+    "Speech",
+    0.02
+   ],
+   [
+    "Music",
+    0.019
+   ],
+   [
+    "Slam",
+    0.018
+   ],
+   [
+    "Tap",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "slam_2",
+  "type": "sfx",
+  "text": "A fist slammed down hard on a low wooden table, the cups on it rattle: one heavy wooden bang and a short rattle of crockery. Dry, close, no voice.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "slam_2.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Door",
+    0.317
+   ],
+   [
+    "Knock",
+    0.186
+   ],
+   [
+    "Sliding door",
+    0.089
+   ],
+   [
+    "Sound effect",
+    0.054
+   ],
+   [
+    "Slam",
+    0.017
+   ],
+   [
+    "Thunk",
+    0.013
+   ],
+   [
+    "Music",
+    0.013
+   ],
+   [
+    "Tap",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "hooves_in_1",
+  "type": "sfx",
+  "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hooves_in_1.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Horse",
+    0.701
+   ],
+   [
+    "Clip-clop",
+    0.666
+   ],
+   [
+    "Animal",
+    0.646
+   ],
+   [
+    "Neigh, whinny",
+    0.24
+   ],
+   [
+    "Sound effect",
+    0.064
+   ],
+   [
+    "Speech",
+    0.028
+   ],
+   [
+    "Music",
+    0.027
+   ],
+   [
+    "Livestock, farm animals, working animals",
+    0.023
+   ]
+  ]
+ },
+ {
+  "name": "hooves_in_2",
+  "type": "sfx",
+  "text": "A single horse gallops up fast on a dirt road at night and pulls up: quick hoofbeats coming closer, then stopping. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hooves_in_2.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Helicopter",
+    0.329
+   ],
+   [
+    "Animal",
+    0.064
+   ],
+   [
+    "Sound effect",
+    0.062
+   ],
+   [
+    "Vehicle",
+    0.05
+   ],
+   [
+    "Clip-clop",
+    0.018
+   ],
+   [
+    "Horse",
+    0.016
+   ],
+   [
+    "Speech",
+    0.015
+   ],
+   [
+    "Outside, rural or natural",
+    0.015
+   ]
+  ]
+ },
+ {
+  "name": "clink_1",
+  "type": "sfx",
+  "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "clink_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Clang",
+    0.325
+   ],
+   [
+    "Ding",
+    0.183
+   ],
+   [
+    "Sound effect",
+    0.05
+   ],
+   [
+    "Chink, clink",
+    0.048
+   ],
+   [
+    "Ping",
+    0.025
+   ],
+   [
+    "Coin (dropping)",
+    0.019
+   ],
+   [
+    "Music",
+    0.007
+   ],
+   [
+    "Speech",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "clink_2",
+  "type": "sfx",
+  "text": "Two small bronze wine cups clinked together once: one short bright metallic clink. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "clink_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Ding",
+    0.449
+   ],
+   [
+    "Clang",
+    0.176
+   ],
+   [
+    "Ping",
+    0.047
+   ],
+   [
+    "Sound effect",
+    0.038
+   ],
+   [
+    "Music",
+    0.034
+   ],
+   [
+    "Chink, clink",
+    0.02
+   ],
+   [
+    "Beep, bleep",
+    0.016
+   ],
+   [
+    "Speech",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "drum_1",
+  "type": "sfx",
+  "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "drum_1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Music",
+    0.275
+   ],
+   [
+    "Sound effect",
+    0.115
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.041
+   ],
+   [
+    "Heart murmur",
+    0.032
+   ],
+   [
+    "Bang",
+    0.032
+   ],
+   [
+    "Musical instrument",
+    0.031
+   ],
+   [
+    "Speech",
+    0.028
+   ],
+   [
+    "Heart sounds, heartbeat",
+    0.024
+   ]
+  ]
+ },
+ {
+  "name": "drum_2",
+  "type": "sfx",
+  "text": "One single hit on a large low war drum: a dark heavy boom with a short decay. One hit only, dry, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "drum_2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Heart murmur",
+    0.166
+   ],
+   [
+    "Heart sounds, heartbeat",
+    0.091
+   ],
+   [
+    "Music",
+    0.071
+   ],
+   [
+    "Sound effect",
+    0.068
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.055
+   ],
+   [
+    "Explosion",
+    0.033
+   ],
+   [
+    "Speech",
+    0.026
+   ],
+   [
+    "Sonar",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "jade_1",
+  "type": "sfx",
+  "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "jade_1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Ding",
+    0.623
+   ],
+   [
+    "Clang",
+    0.276
+   ],
+   [
+    "Ping",
+    0.048
+   ],
+   [
+    "Sound effect",
+    0.03
+   ],
+   [
+    "Music",
+    0.024
+   ],
+   [
+    "Beep, bleep",
+    0.017
+   ],
+   [
+    "Bell",
+    0.014
+   ],
+   [
+    "Chink, clink",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "jade_2",
+  "type": "sfx",
+  "text": "A small jade pendant tapped once: one tiny clear high glassy chime, like a little stone bell. One note only, short, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "jade_2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Coin (dropping)",
+    0.889
+   ],
+   [
+    "Sound effect",
+    0.053
+   ],
+   [
+    "Single-lens reflex camera",
+    0.027
+   ],
+   [
+    "Music",
+    0.021
+   ],
+   [
+    "Rattle",
+    0.013
+   ],
+   [
+    "Cash register",
+    0.011
+   ],
+   [
+    "Typewriter",
+    0.011
+   ],
+   [
+    "Ding",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "shing_1",
+  "type": "sfx",
+  "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "shing_1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Clang",
+    0.596
+   ],
+   [
+    "Ding",
+    0.193
+   ],
+   [
+    "Ping",
+    0.022
+   ],
+   [
+    "Chink, clink",
+    0.018
+   ],
+   [
+    "Sound effect",
+    0.017
+   ],
+   [
+    "Dishes, pots, and pans",
+    0.015
+   ],
+   [
+    "Breaking",
+    0.008
+   ],
+   [
+    "Coin (dropping)",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "shing_2",
+  "type": "sfx",
+  "text": "Sword unsheathed fast: one short bright metallic shing with a clean ringing tail. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "shing_2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Clang",
+    0.409
+   ],
+   [
+    "Ding",
+    0.099
+   ],
+   [
+    "Sound effect",
+    0.084
+   ],
+   [
+    "Ping",
+    0.014
+   ],
+   [
+    "Bell",
+    0.009
+   ],
+   [
+    "Chink, clink",
+    0.009
+   ],
+   [
+    "Music",
+    0.008
+   ],
+   [
+    "Speech",
+    0.007
+   ]
+  ]
+ },
+ {
+  "name": "swish_1",
+  "type": "sfx",
+  "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "swish_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Grunt",
+    0.287
+   ],
+   [
+    "Sound effect",
+    0.16
+   ],
+   [
+    "Bang",
+    0.078
+   ],
+   [
+    "Music",
+    0.016
+   ],
+   [
+    "Speech",
+    0.015
+   ],
+   [
+    "Coin (dropping)",
+    0.014
+   ],
+   [
+    "Clang",
+    0.014
+   ],
+   [
+    "Crack",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "swish_2",
+  "type": "sfx",
+  "text": "A sword blade swung fast through the air: one sharp quick whoosh, no impact. Single sound effect, close, dry, no reverb, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "swish_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.411
+   ],
+   [
+    "Grunt",
+    0.241
+   ],
+   [
+    "Plop",
+    0.052
+   ],
+   [
+    "Music",
+    0.039
+   ],
+   [
+    "Burping, eructation",
+    0.03
+   ],
+   [
+    "Bang",
+    0.028
+   ],
+   [
+    "Rattle",
+    0.017
+   ],
+   [
+    "Wood block",
+    0.012
+   ]
+  ]
+ },
+ {
+  "name": "clash_1",
+  "type": "sfx",
+  "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "clash_1.mp3",
+  "bytes": 12163,
+  "seconds": 0.68,
+  "tags": [
+   [
+    "Clang",
+    0.635
+   ],
+   [
+    "Ding",
+    0.104
+   ],
+   [
+    "Chink, clink",
+    0.021
+   ],
+   [
+    "Sound effect",
+    0.011
+   ],
+   [
+    "Dishes, pots, and pans",
+    0.011
+   ],
+   [
+    "Ping",
+    0.009
+   ],
+   [
+    "Breaking",
+    0.009
+   ],
+   [
+    "Hammer",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "clash_2",
+  "type": "sfx",
+  "text": "Two steel swords clash once: one short hard metallic clang with a brief ring. One hit only, dry, close, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "clash_2.mp3",
+  "bytes": 12163,
+  "seconds": 0.68,
+  "tags": [
+   [
+    "Clang",
+    0.794
+   ],
+   [
+    "Ding",
+    0.167
+   ],
+   [
+    "Sound effect",
+    0.012
+   ],
+   [
+    "Dishes, pots, and pans",
+    0.011
+   ],
+   [
+    "Ping",
+    0.007
+   ],
+   [
+    "Chink, clink",
+    0.006
+   ],
+   [
+    "Bell",
+    0.005
+   ],
+   [
+    "Hammer",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "ram_1",
+  "type": "sfx",
+  "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "ram_1.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Door",
+    0.311
+   ],
+   [
+    "Slam",
+    0.106
+   ],
+   [
+    "Thunk",
+    0.086
+   ],
+   [
+    "Knock",
+    0.077
+   ],
+   [
+    "Bang",
+    0.022
+   ],
+   [
+    "Whack, thwack",
+    0.02
+   ],
+   [
+    "Speech",
+    0.019
+   ],
+   [
+    "Sound effect",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "ram_2",
+  "type": "sfx",
+  "text": "A heavy round wooden shield rammed into two men in armour: one big dull wooden impact with a clatter of metal plates. Short, dry, no voices.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "ram_2.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Bang",
+    0.063
+   ],
+   [
+    "Sound effect",
+    0.059
+   ],
+   [
+    "Door",
+    0.044
+   ],
+   [
+    "Thunk",
+    0.039
+   ],
+   [
+    "Knock",
+    0.037
+   ],
+   [
+    "Boing",
+    0.018
+   ],
+   [
+    "Clang",
+    0.017
+   ],
+   [
+    "Slam",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "armour_1",
+  "type": "sfx",
+  "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "armour_1.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Crack",
+    0.194
+   ],
+   [
+    "Breaking",
+    0.186
+   ],
+   [
+    "Coin (dropping)",
+    0.091
+   ],
+   [
+    "Sound effect",
+    0.066
+   ],
+   [
+    "Scrape",
+    0.052
+   ],
+   [
+    "Smash, crash",
+    0.037
+   ],
+   [
+    "Dishes, pots, and pans",
+    0.035
+   ],
+   [
+    "Cutlery, silverware",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "armour_2",
+  "type": "sfx",
+  "text": "Two soldiers in metal armour fall flat on the ground: a heavy clattering crash of armour plates and one thud. Short, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "armour_2.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Bang",
+    0.103
+   ],
+   [
+    "Coin (dropping)",
+    0.06
+   ],
+   [
+    "Music",
+    0.044
+   ],
+   [
+    "Sound effect",
+    0.042
+   ],
+   [
+    "Breaking",
+    0.042
+   ],
+   [
+    "Smash, crash",
+    0.033
+   ],
+   [
+    "Musical instrument",
+    0.028
+   ],
+   [
+    "Drum",
+    0.027
+   ]
+  ]
+ },
+ {
+  "name": "flap_1",
+  "type": "sfx",
+  "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "flap_1.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Door",
+    0.097
+   ],
+   [
+    "Thunk",
+    0.075
+   ],
+   [
+    "Sound effect",
+    0.049
+   ],
+   [
+    "Slam",
+    0.044
+   ],
+   [
+    "Fart",
+    0.039
+   ],
+   [
+    "Knock",
+    0.026
+   ],
+   [
+    "Whack, thwack",
+    0.021
+   ],
+   [
+    "Bang",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "flap_2",
+  "type": "sfx",
+  "text": "A heavy canvas tent door flap thrown open fast: one quick cloth whump and flutter. Short, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "flap_2.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Knock",
+    0.214
+   ],
+   [
+    "Door",
+    0.143
+   ],
+   [
+    "Sound effect",
+    0.062
+   ],
+   [
+    "Slam",
+    0.032
+   ],
+   [
+    "Thunk",
+    0.026
+   ],
+   [
+    "Speech",
+    0.013
+   ],
+   [
+    "Fart",
+    0.01
+   ],
+   [
+    "Bang",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "meat_1",
+  "type": "sfx",
+  "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "meat_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Gasp",
+    0.134
+   ],
+   [
+    "Speech",
+    0.092
+   ],
+   [
+    "Music",
+    0.068
+   ],
+   [
+    "Sound effect",
+    0.044
+   ],
+   [
+    "Throat clearing",
+    0.035
+   ],
+   [
+    "Silence",
+    0.022
+   ],
+   [
+    "Male speech, man speaking",
+    0.019
+   ],
+   [
+    "Slap, smack",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "meat_2",
+  "type": "sfx",
+  "text": "A big piece of raw meat slapped down onto a hard flat surface: one wet heavy smack. One hit only, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "meat_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Music",
+    0.089
+   ],
+   [
+    "Sound effect",
+    0.072
+   ],
+   [
+    "Speech",
+    0.032
+   ],
+   [
+    "Finger snapping",
+    0.03
+   ],
+   [
+    "Slap, smack",
+    0.028
+   ],
+   [
+    "Single-lens reflex camera",
+    0.019
+   ],
+   [
+    "Silence",
+    0.018
+   ],
+   [
+    "Tick",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "chop_1",
+  "type": "sfx",
+  "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "chop_1.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.099
+   ],
+   [
+    "Grunt",
+    0.052
+   ],
+   [
+    "Clang",
+    0.042
+   ],
+   [
+    "Music",
+    0.037
+   ],
+   [
+    "Ding",
+    0.012
+   ],
+   [
+    "Boing",
+    0.012
+   ],
+   [
+    "Vehicle horn, car horn, honking",
+    0.009
+   ],
+   [
+    "Bang",
+    0.007
+   ]
+  ]
+ },
+ {
+  "name": "chop_2",
+  "type": "sfx",
+  "text": "One single chop of a blade into raw meat on a wooden board: one short wet thunk. One chop only, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "chop_2.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Clang",
+    0.215
+   ],
+   [
+    "Sound effect",
+    0.077
+   ],
+   [
+    "Ding",
+    0.051
+   ],
+   [
+    "Grunt",
+    0.021
+   ],
+   [
+    "Bang",
+    0.018
+   ],
+   [
+    "Music",
+    0.012
+   ],
+   [
+    "Chink, clink",
+    0.009
+   ],
+   [
+    "Boing",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "sneak_1",
+  "type": "sfx",
+  "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sneak_1.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.139
+   ],
+   [
+    "Chewing, mastication",
+    0.124
+   ],
+   [
+    "Crunch",
+    0.061
+   ],
+   [
+    "Inside, small room",
+    0.021
+   ],
+   [
+    "Clip-clop",
+    0.013
+   ],
+   [
+    "Biting",
+    0.013
+   ],
+   [
+    "Speech",
+    0.012
+   ],
+   [
+    "Tearing",
+    0.012
+   ]
+  ]
+ },
+ {
+  "name": "sneak_2",
+  "type": "sfx",
+  "text": "Two men tiptoeing away quickly on packed earth: a few fast soft careful footsteps. Quiet, dry, no voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sneak_2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Chopping (food)",
+    0.901
+   ],
+   [
+    "Sound effect",
+    0.021
+   ],
+   [
+    "Knock",
+    0.01
+   ],
+   [
+    "Speech",
+    0.007
+   ],
+   [
+    "Music",
+    0.006
+   ],
+   [
+    "Inside, small room",
+    0.005
+   ],
+   [
+    "Animal",
+    0.005
+   ],
+   [
+    "Walk, footsteps",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "gallop_1",
+  "type": "sfx",
+  "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "gallop_1.mp3",
+  "bytes": 48944,
+  "seconds": 3.0,
+  "tags": [
+   [
+    "Horse",
+    0.822
+   ],
+   [
+    "Clip-clop",
+    0.815
+   ],
+   [
+    "Animal",
+    0.759
+   ],
+   [
+    "Neigh, whinny",
+    0.227
+   ],
+   [
+    "Speech",
+    0.077
+   ],
+   [
+    "Sound effect",
+    0.03
+   ],
+   [
+    "Livestock, farm animals, working animals",
+    0.025
+   ],
+   [
+    "Music",
+    0.025
+   ]
+  ]
+ },
+ {
+  "name": "gallop_2",
+  "type": "sfx",
+  "text": "A single horse gallops away fast on a dirt road, the hoofbeats fade into the distance. Starts at once. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "gallop_2.mp3",
+  "bytes": 48944,
+  "seconds": 3.0,
+  "tags": [
+   [
+    "Clip-clop",
+    0.727
+   ],
+   [
+    "Horse",
+    0.672
+   ],
+   [
+    "Animal",
+    0.667
+   ],
+   [
+    "Neigh, whinny",
+    0.084
+   ],
+   [
+    "Sound effect",
+    0.069
+   ],
+   [
+    "Speech",
+    0.051
+   ],
+   [
+    "Music",
+    0.041
+   ],
+   [
+    "Bird",
+    0.04
+   ]
+  ]
+ },
+ {
+  "name": "run_1",
+  "type": "sfx",
+  "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "run_1.mp3",
+  "bytes": 40585,
+  "seconds": 2.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.077
+   ],
+   [
+    "Walk, footsteps",
+    0.073
+   ],
+   [
+    "Clip-clop",
+    0.054
+   ],
+   [
+    "Chop",
+    0.04
+   ],
+   [
+    "Breaking",
+    0.029
+   ],
+   [
+    "Horse",
+    0.029
+   ],
+   [
+    "Animal",
+    0.016
+   ],
+   [
+    "Run",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "run_2",
+  "type": "sfx",
+  "text": "Four men running fast on a dirt path: quick steady footfalls with a light rattle of gear. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "run_2.mp3",
+  "bytes": 40585,
+  "seconds": 2.48,
+  "tags": [
+   [
+    "Clip-clop",
+    0.286
+   ],
+   [
+    "Horse",
+    0.201
+   ],
+   [
+    "Sound effect",
+    0.121
+   ],
+   [
+    "Animal",
+    0.09
+   ],
+   [
+    "Chopping (food)",
+    0.074
+   ],
+   [
+    "Run",
+    0.034
+   ],
+   [
+    "Walk, footsteps",
+    0.021
+   ],
+   [
+    "Neigh, whinny",
+    0.021
+   ]
+  ]
+ },
+ {
+  "name": "cap_1",
+  "type": "sfx",
+  "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cap_1.mp3",
+  "bytes": 12163,
+  "seconds": 0.68,
+  "tags": [
+   [
+    "Tearing",
+    0.07
+   ],
+   [
+    "Scissors",
+    0.068
+   ],
+   [
+    "Scrape",
+    0.042
+   ],
+   [
+    "Sound effect",
+    0.039
+   ],
+   [
+    "Crunch",
+    0.035
+   ],
+   [
+    "Speech",
+    0.03
+   ],
+   [
+    "Shuffling cards",
+    0.023
+   ],
+   [
+    "Coin (dropping)",
+    0.021
+   ]
+  ]
+ },
+ {
+  "name": "cap_2",
+  "type": "sfx",
+  "text": "A small stiff cloth cap drops onto dirt ground and rolls a little: one soft light thump, then a tiny scuff. Quiet, dry, close.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cap_2.mp3",
+  "bytes": 12163,
+  "seconds": 0.68,
+  "tags": [
+   [
+    "Sound effect",
+    0.082
+   ],
+   [
+    "Chopping (food)",
+    0.025
+   ],
+   [
+    "Chop",
+    0.022
+   ],
+   [
+    "Whack, thwack",
+    0.018
+   ],
+   [
+    "Crack",
+    0.015
+   ],
+   [
+    "Speech",
+    0.015
+   ],
+   [
+    "Breaking",
+    0.011
+   ],
+   [
+    "Grunt",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "march_1",
+  "type": "sfx",
+  "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "march_1.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Bang",
+    0.107
+   ],
+   [
+    "Door",
+    0.05
+   ],
+   [
+    "Slam",
+    0.041
+   ],
+   [
+    "Whack, thwack",
+    0.04
+   ],
+   [
+    "Sound effect",
+    0.029
+   ],
+   [
+    "Creak",
+    0.023
+   ],
+   [
+    "Slap, smack",
+    0.022
+   ],
+   [
+    "Breaking",
+    0.022
+   ]
+  ]
+ },
+ {
+  "name": "march_2",
+  "type": "sfx",
+  "text": "Two soldiers marching in step on packed earth: four heavy even steps with a light clink of armour. No voices, no music, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "march_2.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.076
+   ],
+   [
+    "Bang",
+    0.052
+   ],
+   [
+    "Door",
+    0.044
+   ],
+   [
+    "Whack, thwack",
+    0.034
+   ],
+   [
+    "Slap, smack",
+    0.027
+   ],
+   [
+    "Coin (dropping)",
+    0.02
+   ],
+   [
+    "Slam",
+    0.018
+   ],
+   [
+    "Crack",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "whisper_1",
+  "type": "sfx",
+  "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "whisper_1.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Hiss",
+    0.251
+   ],
+   [
+    "Snake",
+    0.151
+   ],
+   [
+    "Snort",
+    0.084
+   ],
+   [
+    "Owl",
+    0.069
+   ],
+   [
+    "Breathing",
+    0.063
+   ],
+   [
+    "Speech",
+    0.049
+   ],
+   [
+    "Sneeze",
+    0.048
+   ],
+   [
+    "Steam",
+    0.037
+   ]
+  ]
+ },
+ {
+  "name": "whisper_2",
+  "type": "sfx",
+  "text": "A man whispering a secret quickly into someone's ear: a few hushed whispered syllables, no clear words. Close, dry, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "whisper_2.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Speech",
+    0.91
+   ],
+   [
+    "Gasp",
+    0.086
+   ],
+   [
+    "Sigh",
+    0.077
+   ],
+   [
+    "Male speech, man speaking",
+    0.074
+   ],
+   [
+    "Groan",
+    0.02
+   ],
+   [
+    "Sound effect",
+    0.015
+   ],
+   [
+    "Caw",
+    0.014
+   ],
+   [
+    "Grunt",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "fly_1",
+  "type": "sfx",
+  "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "fly_1.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Insect",
+    0.542
+   ],
+   [
+    "Fly, housefly",
+    0.487
+   ],
+   [
+    "Mosquito",
+    0.318
+   ],
+   [
+    "Sound effect",
+    0.086
+   ],
+   [
+    "Bee, wasp, etc.",
+    0.049
+   ],
+   [
+    "Fart",
+    0.019
+   ],
+   [
+    "Buzz",
+    0.016
+   ],
+   [
+    "Music",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "fly_2",
+  "type": "sfx",
+  "text": "A single housefly buzzing lazily close by: one short lazy buzz that passes. Nothing else, dry.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "fly_2.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Music",
+    0.315
+   ],
+   [
+    "Insect",
+    0.13
+   ],
+   [
+    "Mosquito",
+    0.098
+   ],
+   [
+    "Fly, housefly",
+    0.098
+   ],
+   [
+    "Sound effect",
+    0.068
+   ],
+   [
+    "Speech",
+    0.028
+   ],
+   [
+    "Fart",
+    0.025
+   ],
+   [
+    "Musical instrument",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "tent_1",
+  "type": "sfx",
+  "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "tent_1.mp3",
+  "bytes": 160957,
+  "seconds": 10.0,
+  "tags": [
+   [
+    "Speech",
+    0.626
+   ],
+   [
+    "Crack",
+    0.084
+   ],
+   [
+    "Arrow",
+    0.048
+   ],
+   [
+    "Inside, small room",
+    0.025
+   ],
+   [
+    "Outside, urban or manmade",
+    0.024
+   ],
+   [
+    "Chop",
+    0.022
+   ],
+   [
+    "Breaking",
+    0.014
+   ],
+   [
+    "Music",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "tent_2",
+  "type": "sfx",
+  "text": "Inside a large army command tent during a small banquet: a few men talking in low voices, a fire crackling softly in a brazier, now and then a cup set down on a table. Calm, even, continuous. No clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "tent_2.mp3",
+  "bytes": 160957,
+  "seconds": 10.0,
+  "tags": [
+   [
+    "Speech",
+    0.662
+   ],
+   [
+    "Wood",
+    0.13
+   ],
+   [
+    "Chop",
+    0.059
+   ],
+   [
+    "Crack",
+    0.056
+   ],
+   [
+    "Crackle",
+    0.032
+   ],
+   [
+    "Music",
+    0.03
+   ],
+   [
+    "Inside, small room",
+    0.024
+   ],
+   [
+    "Inside, public space",
+    0.023
+   ]
+  ]
+ },
+ {
+  "name": "night_1",
+  "type": "sfx",
+  "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "night_1.mp3",
+  "bytes": 160957,
+  "seconds": 10.0,
+  "tags": [
+   [
+    "Insect",
+    0.315
+   ],
+   [
+    "Cricket",
+    0.199
+   ],
+   [
+    "Squeal",
+    0.056
+   ],
+   [
+    "Whistle",
+    0.011
+   ],
+   [
+    "Smoke detector, smoke alarm",
+    0.008
+   ],
+   [
+    "Sound effect",
+    0.005
+   ],
+   [
+    "Frog",
+    0.005
+   ],
+   [
+    "Alarm",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "night_2",
+  "type": "sfx",
+  "text": "Night in a military camp: crickets chirping steadily and a torch flame crackling softly close by. Quiet, even, continuous. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "night_2.mp3",
+  "bytes": 160957,
+  "seconds": 10.0,
+  "tags": [
+   [
+    "Buzz",
+    0.025
+   ],
+   [
+    "Engine",
+    0.017
+   ],
+   [
+    "Musical instrument",
+    0.016
+   ],
+   [
+    "Rub",
+    0.015
+   ],
+   [
+    "Percussion",
+    0.014
+   ],
+   [
+    "Vehicle",
+    0.014
+   ],
+   [
+    "Sound effect",
+    0.014
+   ],
+   [
+    "Drum",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "day_1",
+  "type": "sfx",
+  "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "day_1.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Clip-clop",
+    0.202
+   ],
+   [
+    "Horse",
+    0.148
+   ],
+   [
+    "Walk, footsteps",
+    0.102
+   ],
+   [
+    "Animal",
+    0.077
+   ],
+   [
+    "Run",
+    0.043
+   ],
+   [
+    "Silence",
+    0.018
+   ],
+   [
+    "Inside, small room",
+    0.014
+   ],
+   [
+    "Flap",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "day_2",
+  "type": "sfx",
+  "text": "Daytime at the gate of a military camp outdoors: a light wind, cloth banners flapping softly, soldiers and a horse far away now and then. Quiet, even, continuous. No clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "day_2.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Clip-clop",
+    0.073
+   ],
+   [
+    "Chopping (food)",
+    0.061
+   ],
+   [
+    "Run",
+    0.058
+   ],
+   [
+    "Sound effect",
+    0.056
+   ],
+   [
+    "Flap",
+    0.047
+   ],
+   [
+    "Horse",
+    0.044
+   ],
+   [
+    "Walk, footsteps",
+    0.031
+   ],
+   [
+    "Animal",
+    0.027
+   ]
+  ]
+ },
+ {
+  "name": "privy_1",
+  "type": "sfx",
+  "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "privy_1.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Spray",
+    0.101
+   ],
+   [
+    "Sizzle",
+    0.084
+   ],
+   [
+    "Snake",
+    0.056
+   ],
+   [
+    "Music",
+    0.036
+   ],
+   [
+    "Maraca",
+    0.034
+   ],
+   [
+    "Rattle (instrument)",
+    0.031
+   ],
+   [
+    "Rattle",
+    0.031
+   ],
+   [
+    "Static",
+    0.021
+   ]
+  ]
+ },
+ {
+  "name": "privy_2",
+  "type": "sfx",
+  "text": "A quiet corner outdoors in the daytime behind a reed screen: a very soft breeze through dry reeds and one or two small birds far away. Calm, even, nearly silent. No voices, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "privy_2.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Spray",
+    0.442
+   ],
+   [
+    "Snake",
+    0.318
+   ],
+   [
+    "Hiss",
+    0.187
+   ],
+   [
+    "Steam",
+    0.06
+   ],
+   [
+    "Rattle",
+    0.027
+   ],
+   [
+    "Animal",
+    0.025
+   ],
+   [
+    "Sizzle",
+    0.017
+   ],
+   [
+    "Outside, rural or natural",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "troops_1",
+  "type": "sfx",
+  "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "troops_1.mp3",
+  "bytes": 81127,
+  "seconds": 5.0,
+  "tags": [
+   [
+    "Animal",
+    0.132
+   ],
+   [
+    "Domestic animals, pets",
+    0.101
+   ],
+   [
+    "Dog",
+    0.091
+   ],
+   [
+    "Whimper (dog)",
+    0.05
+   ],
+   [
+    "Bow-wow",
+    0.05
+   ],
+   [
+    "Speech",
+    0.042
+   ],
+   [
+    "Yip",
+    0.038
+   ],
+   [
+    "Inside, small room",
+    0.02
+   ]
+  ]
+ },
+ {
+  "name": "troops_2",
+  "type": "sfx",
+  "text": "A huge army of thousands of soldiers standing in a field: a low massed murmur of men, armour rustling, a few spears knocking. Continuous and even, heard from a short distance. No shouting, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "troops_2.mp3",
+  "bytes": 81127,
+  "seconds": 5.0,
+  "tags": [
+   [
+    "Bird",
+    0.641
+   ],
+   [
+    "Pigeon, dove",
+    0.531
+   ],
+   [
+    "Coo",
+    0.384
+   ],
+   [
+    "Bird vocalization, bird call, bird song",
+    0.199
+   ],
+   [
+    "Inside, small room",
+    0.103
+   ],
+   [
+    "Animal",
+    0.067
+   ],
+   [
+    "Speech",
+    0.04
+   ],
+   [
+    "Chirp, tweet",
+    0.028
+   ]
+  ]
+ }
+]
