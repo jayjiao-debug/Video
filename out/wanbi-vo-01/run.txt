@@ -1,0 +1,8990 @@
+plan: {'tier': 'creator', 'character_count': 6152, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "z01a", "lang": "zh", "text": "宦官的门客蔺相如，举着和氏璧要往柱子上撞。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z01a.mp3", "bytes": 72767}
+{"name": "z01b", "lang": "zh", "text": "宦官的门客蔺相如，举着和氏璧要往柱子上撞。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z01b.mp3", "bytes": 72767}
+{"name": "z01p0", "lang": "zh", "text": "宦官的门客吝相如，举着和氏璧要往柱子上撞。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z01p0.mp3", "bytes": 74021}
+{"name": "z02a", "lang": "zh", "text": "对面急得直摆手的，是秦王。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z02a.mp3", "bytes": 47272}
+{"name": "z02b", "lang": "zh", "text": "对面急得直摆手的，是秦王。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z02b.mp3", "bytes": 44764}
+{"name": "z03a", "lang": "zh", "text": "这块玉，秦王开价十五座城。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z03a.mp3", "bytes": 51034}
+{"name": "z03b", "lang": "zh", "text": "这块玉，秦王开价十五座城。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z03b.mp3", "bytes": 51034}
+{"name": "z04a", "lang": "zh", "text": "赵国给了，城可能不来；不给，秦兵一定来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z04a.mp3", "bytes": 76529}
+{"name": "z04b", "lang": "zh", "text": "赵国给了，城可能不来；不给，秦兵一定来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z04b.mp3", "bytes": 75275}
+{"name": "z05a", "lang": "zh", "text": "派谁去？没人。最后，宦官把自家门客推了出来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z05a.mp3", "bytes": 81545}
+{"name": "z05b", "lang": "zh", "text": "派谁去？没人。最后，宦官把自家门客推了出来。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z05b.mp3", "bytes": 80291}
+{"name": "z06a", "lang": "zh", "text": "他说：“我去。城不来，我把玉完整带回来。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z06a.mp3", "bytes": 71514}
+{"name": "z06b", "lang": "zh", "text": "他说：“我去。城不来，我把玉完整带回来。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z06b.mp3", "bytes": 72767}
+{"name": "z07a", "lang": "zh", "text": "秦王接过玉，乐坏了，传给美人们看。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z07a.mp3", "bytes": 61065}
+{"name": "z07b", "lang": "zh", "text": "秦王接过玉，乐坏了，传给美人们看。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z07b.mp3", "bytes": 56049}
+{"name": "z08a", "lang": "zh", "text": "满屋子喊万岁，没人提城的事。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z08a.mp3", "bytes": 53541}
+{"name": "z08b", "lang": "zh", "text": "满屋子喊万岁，没人提城的事。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z08b.mp3", "bytes": 51034}
+{"name": "z09a", "lang": "zh", "text": "他走上前：“这玉有个瑕疵，我指给大王看。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z09a.mp3", "bytes": 72767}
+{"name": "z09b", "lang": "zh", "text": "他走上前：“这玉有个瑕疵，我指给大王看。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z09b.mp3", "bytes": 71514}
+{"name": "z10a", "lang": "zh", "text": "玉一到手，他退到柱子边，怒发冲冠。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z10a.mp3", "bytes": 57303}
+{"name": "z10b", "lang": "zh", "text": "玉一到手，他退到柱子边，怒发冲冠。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z10b.mp3", "bytes": 57303}
+{"name": "z10p0", "lang": "zh", "text": "玉一到手，他退到柱子边，怒髮衝冠。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z10p0.mp3", "bytes": 57303}
+{"name": "z11a", "lang": "zh", "text": "“再逼我，我的头和这块玉，一起碎在柱子上！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z11a.mp3", "bytes": 67752}
+{"name": "z11b", "lang": "zh", "text": "“再逼我，我的头和这块玉，一起碎在柱子上！”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z11b.mp3", "bytes": 65244}
+{"name": "z12a", "lang": "zh", "text": "秦王赶紧道歉，摊开地图一指：“这十五座城，给赵国。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z12a.mp3", "bytes": 85724}
+{"name": "z12b", "lang": "zh", "text": "秦王赶紧道歉，摊开地图一指：“这十五座城，给赵国。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z12b.mp3", "bytes": 84470}
+{"name": "z13a", "lang": "zh", "text": "他看得出来，秦王在演。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z13a.mp3", "bytes": 39331}
+{"name": "z13b", "lang": "zh", "text": "他看得出来，秦王在演。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z13b.mp3", "bytes": 39331}
+{"name": "z14a", "lang": "zh", "text": "他也演：“赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z14a.mp3", "bytes": 122505}
+{"name": "z14b", "lang": "zh", "text": "他也演：“赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z14b.mp3", "bytes": 125430}
+{"name": "z14p0", "lang": "zh", "text": "他也演：“赵王摘戒五天才送玉，大王也得摘戒五天，摆上大礼，我才交。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z14p0.mp3", "bytes": 123758}
+{"name": "z15a", "lang": "zh", "text": "秦王抢不到，只好答应。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15a.mp3", "bytes": 36823}
+{"name": "z15b", "lang": "zh", "text": "秦王抢不到，只好答应。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z15b.mp3", "bytes": 38077}
+{"name": "z16a", "lang": "zh", "text": "转头，他让随从穿上粗布衣服，揣着玉，抄小路溜回赵国。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z16a.mp3", "bytes": 93247}
+{"name": "z16b", "lang": "zh", "text": "转头，他让随从穿上粗布衣服，揣着玉，抄小路溜回赵国。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z16b.mp3", "bytes": 94501}
+{"name": "z17a", "lang": "zh", "text": "五天后，大礼摆好，秦王要玉。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z17a.mp3", "bytes": 53541}
+{"name": "z17b", "lang": "zh", "text": "五天后，大礼摆好，秦王要玉。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z17b.mp3", "bytes": 52287}
+{"name": "z18a", "lang": "zh", "text": "他说：“秦国二十多个国君，没一个守约的。玉已经到赵国了。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z18a.mp3", "bytes": 94501}
+{"name": "z18b", "lang": "zh", "text": "他说：“秦国二十多个国君，没一个守约的。玉已经到赵国了。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z18b.mp3", "bytes": 89486}
+{"name": "z19a", "lang": "zh", "text": "“骗了大王，该死。把我下锅煮了吧。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z19a.mp3", "bytes": 56049}
+{"name": "z19b", "lang": "zh", "text": "“骗了大王，该死。把我下锅煮了吧。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z19b.mp3", "bytes": 53541}
+{"name": "z20a", "lang": "zh", "text": "满朝大臣面面相觑，有人要拖他出去。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z20a.mp3", "bytes": 63990}
+{"name": "z20b", "lang": "zh", "text": "满朝大臣面面相觑，有人要拖他出去。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z20b.mp3", "bytes": 65244}
+{"name": "z20p0", "lang": "zh", "text": "满朝大臣面面相趣，有人要拖他出去。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z20p0.mp3", "bytes": 62318}
+{"name": "z21a", "lang": "zh", "text": "秦王说：“杀了他，玉也回不来。放他回去吧。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z21a.mp3", "bytes": 71514}
+{"name": "z21b", "lang": "zh", "text": "秦王说：“杀了他，玉也回不来。放他回去吧。”", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z21b.mp3", "bytes": 70260}
+{"name": "z22a", "lang": "zh", "text": "最后，秦国没给城，赵国也没给玉。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z22a.mp3", "bytes": 61065}
+{"name": "z22b", "lang": "zh", "text": "最后，秦国没给城，赵国也没给玉。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z22b.mp3", "bytes": 61065}
+{"name": "z23a", "lang": "zh", "text": "价值连城的玉，一座城也没换到；倒是那个门客，回国就当了大官。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z23a.mp3", "bytes": 102025}
+{"name": "z23b", "lang": "zh", "text": "价值连城的玉，一座城也没换到；倒是那个门客，回国就当了大官。", "voice": "shared:Xiaoxi - Neutral, Young and Friendly", "voice_id": "9DMBSOAnMDPiFAsz1ZGK", "model": "eleven_v4", "status": 200, "file": "z23b.mp3", "bytes": 104950}
+{"name": "e01a", "lang": "en", "text": "The envoy has one job: deliver the world's most precious jade. He's about to smash it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e01a.mp3", "bytes": 106204}
+{"name": "e01b", "lang": "en", "text": "The envoy has one job: deliver the world's most precious jade. He's about to smash it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e01b.mp3", "bytes": 107458}
+{"name": "e02a", "lang": "en", "text": "And the one begging him to stop? The King of Chin, who's supposed to receive it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e02a.mp3", "bytes": 76529}
+{"name": "e02b", "lang": "en", "text": "And the one begging him to stop? The King of Chin, who's supposed to receive it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e02b.mp3", "bytes": 75275}
+{"name": "e03a", "lang": "en", "text": "The king had offered the kingdom of Jow fifteen cities for it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e03a.mp3", "bytes": 63990}
+{"name": "e03b", "lang": "en", "text": "The king had offered the kingdom of Jow fifteen cities for it.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e03b.mp3", "bytes": 65244}
+{"name": "e04a", "lang": "en", "text": "Hand it over, and the cities may never come. Refuse, and Chin's army definitely will.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e04a.mp3", "bytes": 98263}
+{"name": "e04b", "lang": "en", "text": "Hand it over, and the cities may never come. Refuse, and Chin's army definitely will.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e04b.mp3", "bytes": 99517}
+{"name": "e05a", "lang": "en", "text": "Who could Jow send? Nobody. Until a palace eunuch put forward his own retainer.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e05a.mp3", "bytes": 94501}
+{"name": "e05b", "lang": "en", "text": "Who could Jow send? Nobody. Until a palace eunuch put forward his own retainer.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e05b.mp3", "bytes": 94501}
+{"name": "e06a", "lang": "en", "text": "He says: \"I'll go. No cities, and I bring the jade back in one piece.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e06a.mp3", "bytes": 84470}
+{"name": "e06b", "lang": "en", "text": "He says: \"I'll go. No cities, and I bring the jade back in one piece.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e06b.mp3", "bytes": 82798}
+{"name": "e07a", "lang": "en", "text": "The king takes the jade, thrilled, and passes it round to his ladies.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e07a.mp3", "bytes": 75275}
+{"name": "e07b", "lang": "en", "text": "The king takes the jade, thrilled, and passes it round to his ladies.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e07b.mp3", "bytes": 74021}
+{"name": "e08a", "lang": "en", "text": "Everyone shouts \"Long live the king!\" Nobody mentions the cities.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e08a.mp3", "bytes": 80291}
+{"name": "e08b", "lang": "en", "text": "Everyone shouts \"Long live the king!\" Nobody mentions the cities.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e08b.mp3", "bytes": 77783}
+{"name": "e09a", "lang": "en", "text": "He steps forward: \"There's a flaw in it. Let me show Your Majesty.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e09a.mp3", "bytes": 71514}
+{"name": "e09b", "lang": "en", "text": "He steps forward: \"There's a flaw in it. Let me show Your Majesty.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e09b.mp3", "bytes": 72767}
+{"name": "e10a", "lang": "en", "text": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e10a.mp3", "bytes": 99517}
+{"name": "e10b", "lang": "en", "text": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e10b.mp3", "bytes": 94501}
+{"name": "e11a", "lang": "en", "text": "\"Push me, and my head and this jade shatter on this pillar together!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e11a.mp3", "bytes": 76529}
+{"name": "e11b", "lang": "en", "text": "\"Push me, and my head and this jade shatter on this pillar together!\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e11b.mp3", "bytes": 74021}
+{"name": "e12a", "lang": "en", "text": "The king apologises at once, unrolls a map and points: \"These fifteen cities. Jow's.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e12a.mp3", "bytes": 113727}
+{"name": "e12b", "lang": "en", "text": "The king apologises at once, unrolls a map and points: \"These fifteen cities. Jow's.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e12b.mp3", "bytes": 112474}
+{"name": "e13a", "lang": "en", "text": "He can tell the king is acting.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e13a.mp3", "bytes": 33061}
+{"name": "e13b", "lang": "en", "text": "He can tell the king is acting.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e13b.mp3", "bytes": 34315}
+{"name": "e14a", "lang": "en", "text": "So he acts too: \"My king fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony, then I hand it over.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e14a.mp3", "bytes": 162211}
+{"name": "e14b", "lang": "en", "text": "So he acts too: \"My king fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony, then I hand it over.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e14b.mp3", "bytes": 157195}
+{"name": "e15a", "lang": "en", "text": "The king can't just grab it, so he agrees.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e15a.mp3", "bytes": 51034}
+{"name": "e15b", "lang": "en", "text": "The king can't just grab it, so he agrees.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e15b.mp3", "bytes": 53541}
+{"name": "e16a", "lang": "en", "text": "Meanwhile he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e16a.mp3", "bytes": 112474}
+{"name": "e16b", "lang": "en", "text": "Meanwhile he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e16b.mp3", "bytes": 107458}
+{"name": "e17a", "lang": "en", "text": "Five days later the ceremony is set. The king asks for the jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e17a.mp3", "bytes": 77783}
+{"name": "e17b", "lang": "en", "text": "Five days later the ceremony is set. The king asks for the jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e17b.mp3", "bytes": 77783}
+{"name": "e18a", "lang": "en", "text": "He says: \"Chin has had twenty-odd rulers, and not one ever kept a deal. The jade is already in Jow.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e18a.mp3", "bytes": 125430}
+{"name": "e18b", "lang": "en", "text": "He says: \"Chin has had twenty-odd rulers, and not one ever kept a deal. The jade is already in Jow.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e18b.mp3", "bytes": 126684}
+{"name": "e19a", "lang": "en", "text": "\"I deceived Your Majesty. I deserve death. Throw me in the pot.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e19a.mp3", "bytes": 79037}
+{"name": "e19b", "lang": "en", "text": "\"I deceived Your Majesty. I deserve death. Throw me in the pot.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e19b.mp3", "bytes": 76529}
+{"name": "e20a", "lang": "en", "text": "The ministers stare at each other. Someone moves to drag him out.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e20a.mp3", "bytes": 65244}
+{"name": "e20b", "lang": "en", "text": "The ministers stare at each other. Someone moves to drag him out.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e20b.mp3", "bytes": 65244}
+{"name": "e21a", "lang": "en", "text": "The king says: \"Kill him and we still don't get the jade. Let him go home.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e21a.mp3", "bytes": 81545}
+{"name": "e21b", "lang": "en", "text": "The king says: \"Kill him and we still don't get the jade. Let him go home.\"", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e21b.mp3", "bytes": 80291}
+{"name": "e22a", "lang": "en", "text": "In the end, Chin never gave the cities. Jow never gave the jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e22a.mp3", "bytes": 79037}
+{"name": "e22b", "lang": "en", "text": "In the end, Chin never gave the cities. Jow never gave the jade.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e22b.mp3", "bytes": 79037}
+{"name": "e23a", "lang": "en", "text": "A jade worth fifteen cities didn't get a single one. But the eunuch's retainer came home a senior official.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e23a.mp3", "bytes": 114981}
+{"name": "e23b", "lang": "en", "text": "A jade worth fifteen cities didn't get a single one. But the eunuch's retainer came home a senior official.", "voice": "shared:alex", "voice_id": "yl2ZDV1MzN4HbQJbMihG", "model": "eleven_v4", "status": 200, "file": "e23b.mp3", "bytes": 112474}
+removed kept voices: {'9DMBSOAnMDPiFAsz1ZGK': 200, 'yl2ZDV1MzN4HbQJbMihG': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "z01a",
+  "lang": "zh",
+  "text": "宦官的门客蔺相如，举着和氏璧要往柱子上撞。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z01a.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "换",
+    0.0,
+    0.16
+   ],
+   [
+    "官",
+    0.16,
+    0.36
+   ],
+   [
+    "的",
+    0.36,
+    0.48
+   ],
+   [
+    "门",
+    0.48,
+    0.68
+   ],
+   [
+    "客",
+    0.68,
+    0.9
+   ],
+   [
+    "令",
+    0.9,
+    1.14
+   ],
+   [
+    "相",
+    1.14,
+    1.36
+   ],
+   [
+    "如",
+    1.36,
+    1.66
+   ],
+   [
+    "举",
+    1.66,
+    2.12
+   ],
+   [
+    "着",
+    2.12,
+    2.26
+   ],
+   [
+    "合",
+    2.26,
+    2.46
+   ],
+   [
+    "适",
+    2.46,
+    2.68
+   ],
+   [
+    "币",
+    2.68,
+    2.94
+   ],
+   [
+    "要",
+    2.94,
+    3.14
+   ],
+   [
+    "往",
+    3.14,
+    3.28
+   ],
+   [
+    "柱",
+    3.28,
+    3.54
+   ],
+   [
+    "子",
+    3.54,
+    3.68
+   ],
+   [
+    "上",
+    3.68,
+    3.84
+   ],
+   [
+    "撞",
+    3.84,
+    4.1
+   ]
+  ],
+  "heard": "换官的门客令相如举着合适币要往柱子上撞",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.48
+ },
+ {
+  "name": "z01b",
+  "lang": "zh",
+  "text": "宦官的门客蔺相如，举着和氏璧要往柱子上撞。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z01b.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "換",
+    0.0,
+    0.22
+   ],
+   [
+    "官",
+    0.22,
+    0.42
+   ],
+   [
+    "的",
+    0.42,
+    0.52
+   ],
+   [
+    "門",
+    0.52,
+    0.66
+   ],
+   [
+    "客",
+    0.66,
+    0.9
+   ],
+   [
+    "令",
+    0.9,
+    1.16
+   ],
+   [
+    "相",
+    1.16,
+    1.38
+   ],
+   [
+    "如,",
+    1.38,
+    1.7
+   ],
+   [
+    "舉",
+    2.02,
+    2.16
+   ],
+   [
+    "著",
+    2.16,
+    2.3
+   ],
+   [
+    "合",
+    2.3,
+    2.5
+   ],
+   [
+    "適",
+    2.5,
+    2.74
+   ],
+   [
+    "幣",
+    2.74,
+    2.98
+   ],
+   [
+    "要",
+    2.98,
+    3.18
+   ],
+   [
+    "往",
+    3.18,
+    3.3
+   ],
+   [
+    "柱",
+    3.3,
+    3.54
+   ],
+   [
+    "子",
+    3.54,
+    3.68
+   ],
+   [
+    "上",
+    3.68,
+    3.82
+   ],
+   [
+    "撞",
+    3.82,
+    4.08
+   ]
+  ],
+  "heard": "換官的門客令相如,舉著合適幣要往柱子上撞",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.48
+ },
+ {
+  "name": "z01p0",
+  "lang": "zh",
+  "text": "宦官的门客吝相如，举着和氏璧要往柱子上撞。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z01p0.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "換",
+    0.0,
+    0.2
+   ],
+   [
+    "官",
+    0.2,
+    0.4
+   ],
+   [
+    "的",
+    0.4,
+    0.5
+   ],
+   [
+    "門",
+    0.5,
+    0.64
+   ],
+   [
+    "客",
+    0.64,
+    0.88
+   ],
+   [
+    "令",
+    0.88,
+    1.14
+   ],
+   [
+    "相",
+    1.14,
+    1.38
+   ],
+   [
+    "如,",
+    1.38,
+    1.68
+   ],
+   [
+    "舉",
+    2.02,
+    2.22
+   ],
+   [
+    "著",
+    2.22,
+    2.38
+   ],
+   [
+    "合",
+    2.38,
+    2.58
+   ],
+   [
+    "適",
+    2.58,
+    2.82
+   ],
+   [
+    "幣",
+    2.82,
+    3.08
+   ],
+   [
+    "要",
+    3.08,
+    3.26
+   ],
+   [
+    "往",
+    3.26,
+    3.4
+   ],
+   [
+    "柱",
+    3.4,
+    3.66
+   ],
+   [
+    "子",
+    3.66,
+    3.8
+   ],
+   [
+    "上",
+    3.8,
+    3.94
+   ],
+   [
+    "撞",
+    3.94,
+    4.18
+   ]
+  ],
+  "heard": "換官的門客令相如,舉著合適幣要往柱子上撞",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "z02a",
+  "lang": "zh",
+  "text": "对面急得直摆手的，是秦王。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z02a.mp3",
+  "bytes": 47272,
+  "words": [
+   [
+    "對",
+    0.0,
+    0.12
+   ],
+   [
+    "面",
+    0.12,
+    0.32
+   ],
+   [
+    "急",
+    0.32,
+    0.52
+   ],
+   [
+    "得",
+    0.52,
+    0.66
+   ],
+   [
+    "直",
+    0.66,
+    0.82
+   ],
+   [
+    "白",
+    0.82,
+    1.0
+   ],
+   [
+    "守",
+    1.0,
+    1.26
+   ],
+   [
+    "的,",
+    1.26,
+    1.46
+   ],
+   [
+    "是",
+    1.66,
+    1.84
+   ],
+   [
+    "秦",
+    1.84,
+    2.16
+   ],
+   [
+    "王",
+    2.16,
+    2.38
+   ]
+  ],
+  "heard": "對面急得直白守的,是秦王",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.88
+ },
+ {
+  "name": "z02b",
+  "lang": "zh",
+  "text": "对面急得直摆手的，是秦王。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z02b.mp3",
+  "bytes": 44764,
+  "words": [
+   [
+    "對",
+    0.0,
+    0.12
+   ],
+   [
+    "面",
+    0.12,
+    0.32
+   ],
+   [
+    "急",
+    0.32,
+    0.52
+   ],
+   [
+    "得",
+    0.52,
+    0.66
+   ],
+   [
+    "直",
+    0.66,
+    0.86
+   ],
+   [
+    "白",
+    0.86,
+    1.04
+   ],
+   [
+    "守",
+    1.04,
+    1.28
+   ],
+   [
+    "的,",
+    1.28,
+    1.48
+   ],
+   [
+    "是",
+    1.64,
+    1.84
+   ],
+   [
+    "秦",
+    1.84,
+    2.14
+   ],
+   [
+    "王",
+    2.14,
+    2.34
+   ]
+  ],
+  "heard": "對面急得直白守的,是秦王",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.72
+ },
+ {
+  "name": "z03a",
+  "lang": "zh",
+  "text": "这块玉，秦王开价十五座城。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z03a.mp3",
+  "bytes": 51034,
+  "words": [
+   [
+    "这",
+    0.0,
+    0.16
+   ],
+   [
+    "块",
+    0.16,
+    0.32
+   ],
+   [
+    "玉,",
+    0.32,
+    0.6
+   ],
+   [
+    "秦",
+    0.96,
+    1.1
+   ],
+   [
+    "王",
+    1.1,
+    1.26
+   ],
+   [
+    "开",
+    1.26,
+    1.44
+   ],
+   [
+    "架",
+    1.44,
+    1.74
+   ],
+   [
+    "15",
+    1.74,
+    2.16
+   ],
+   [
+    "座",
+    2.32,
+    2.5
+   ],
+   [
+    "城",
+    2.5,
+    2.72
+   ]
+  ],
+  "heard": "这块玉,秦王开架 15 座城",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.12
+ },
+ {
+  "name": "z03b",
+  "lang": "zh",
+  "text": "这块玉，秦王开价十五座城。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z03b.mp3",
+  "bytes": 51034,
+  "words": [
+   [
+    "这",
+    0.0,
+    0.14
+   ],
+   [
+    "块",
+    0.14,
+    0.36
+   ],
+   [
+    "域,",
+    0.36,
+    0.64
+   ],
+   [
+    "秦",
+    0.8,
+    1.14
+   ],
+   [
+    "王",
+    1.14,
+    1.3
+   ],
+   [
+    "开",
+    1.3,
+    1.5
+   ],
+   [
+    "架",
+    1.5,
+    1.8
+   ],
+   [
+    "十",
+    1.8,
+    2.12
+   ],
+   [
+    "五",
+    2.12,
+    2.32
+   ],
+   [
+    "座",
+    2.32,
+    2.52
+   ],
+   [
+    "城",
+    2.52,
+    2.72
+   ]
+  ],
+  "heard": "这块域,秦王开架十五座城",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.12
+ },
+ {
+  "name": "z04a",
+  "lang": "zh",
+  "text": "赵国给了，城可能不来；不给，秦兵一定来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z04a.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "照",
+    0.0,
+    0.18
+   ],
+   [
+    "國",
+    0.18,
+    0.38
+   ],
+   [
+    "給",
+    0.38,
+    0.58
+   ],
+   [
+    "了",
+    0.58,
+    0.76
+   ],
+   [
+    "成",
+    1.14,
+    1.34
+   ],
+   [
+    "可能",
+    1.34,
+    1.66
+   ],
+   [
+    "不",
+    1.66,
+    1.86
+   ],
+   [
+    "來",
+    1.86,
+    2.1
+   ],
+   [
+    "不",
+    2.1,
+    2.64
+   ],
+   [
+    "給",
+    2.64,
+    2.88
+   ],
+   [
+    "秦",
+    3.24,
+    3.42
+   ],
+   [
+    "兵",
+    3.42,
+    3.68
+   ],
+   [
+    "一定",
+    3.68,
+    4.04
+   ],
+   [
+    "來",
+    4.04,
+    4.36
+   ]
+  ],
+  "heard": "照國給了 成可能不來 不給 秦兵一定來",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.72
+ },
+ {
+  "name": "z04b",
+  "lang": "zh",
+  "text": "赵国给了，城可能不来；不给，秦兵一定来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z04b.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "照",
+    0.0,
+    0.18
+   ],
+   [
+    "顾",
+    0.18,
+    0.38
+   ],
+   [
+    "给",
+    0.38,
+    0.58
+   ],
+   [
+    "了,",
+    0.58,
+    0.78
+   ],
+   [
+    "成",
+    1.14,
+    1.34
+   ],
+   [
+    "可能",
+    1.34,
+    1.7
+   ],
+   [
+    "不",
+    1.7,
+    1.9
+   ],
+   [
+    "来,",
+    1.9,
+    2.12
+   ],
+   [
+    "不",
+    2.5,
+    2.64
+   ],
+   [
+    "给,",
+    2.64,
+    2.86
+   ],
+   [
+    "秦",
+    3.2,
+    3.42
+   ],
+   [
+    "宾",
+    3.42,
+    3.66
+   ],
+   [
+    "一定",
+    3.66,
+    4.04
+   ],
+   [
+    "来",
+    4.04,
+    4.34
+   ]
+  ],
+  "heard": "照顾给了,成可能不来,不给,秦宾一定来",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.64
+ },
+ {
+  "name": "z05a",
+  "lang": "zh",
+  "text": "派谁去？没人。最后，宦官把自家门客推了出来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z05a.mp3",
+  "bytes": 81545,
+  "words": [
+   [
+    "派",
+    0.0,
+    0.18
+   ],
+   [
+    "誰",
+    0.18,
+    0.34
+   ],
+   [
+    "去?",
+    0.34,
+    0.6
+   ],
+   [
+    "沒",
+    1.06,
+    1.22
+   ],
+   [
+    "人",
+    1.22,
+    1.42
+   ],
+   [
+    "最後",
+    2.18,
+    2.58
+   ],
+   [
+    "換",
+    2.58,
+    2.98
+   ],
+   [
+    "官",
+    2.98,
+    3.16
+   ],
+   [
+    "把",
+    3.16,
+    3.32
+   ],
+   [
+    "自",
+    3.32,
+    3.52
+   ],
+   [
+    "家",
+    3.52,
+    3.7
+   ],
+   [
+    "門",
+    3.7,
+    3.86
+   ],
+   [
+    "客",
+    3.86,
+    4.08
+   ],
+   [
+    "推",
+    4.08,
+    4.3
+   ],
+   [
+    "了",
+    4.3,
+    4.42
+   ],
+   [
+    "出來",
+    4.42,
+    4.7
+   ]
+  ],
+  "heard": "派誰去? 沒人最後換官把自家門客推了出來",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.04
+ },
+ {
+  "name": "z05b",
+  "lang": "zh",
+  "text": "派谁去？没人。最后，宦官把自家门客推了出来。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z05b.mp3",
+  "bytes": 80291,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.14
+   ],
+   [
+    "誰",
+    0.14,
+    0.36
+   ],
+   [
+    "去,",
+    0.36,
+    0.62
+   ],
+   [
+    "沒",
+    1.0,
+    1.24
+   ],
+   [
+    "人",
+    1.24,
+    1.44
+   ],
+   [
+    "最後,",
+    1.92,
+    2.34
+   ],
+   [
+    "換",
+    2.8,
+    2.92
+   ],
+   [
+    "官",
+    2.92,
+    3.12
+   ],
+   [
+    "把",
+    3.12,
+    3.26
+   ],
+   [
+    "自",
+    3.26,
+    3.44
+   ],
+   [
+    "家",
+    3.44,
+    3.62
+   ],
+   [
+    "門",
+    3.62,
+    3.78
+   ],
+   [
+    "客",
+    3.78,
+    4.0
+   ],
+   [
+    "推",
+    4.0,
+    4.22
+   ],
+   [
+    "了",
+    4.22,
+    4.34
+   ],
+   [
+    "出來",
+    4.34,
+    4.6
+   ]
+  ],
+  "heard": "他誰去,沒人最後,換官把自家門客推了出來",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.96
+ },
+ {
+  "name": "z06a",
+  "lang": "zh",
+  "text": "他说：“我去。城不来，我把玉完整带回来。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z06a.mp3",
+  "bytes": 71514,
+  "words": [
+   [
+    "他說,",
+    0.0,
+    0.24
+   ],
+   [
+    "我",
+    0.72,
+    0.86
+   ],
+   [
+    "去,",
+    0.86,
+    1.1
+   ],
+   [
+    "成",
+    1.58,
+    1.76
+   ],
+   [
+    "不",
+    1.76,
+    1.9
+   ],
+   [
+    "來,",
+    1.9,
+    2.12
+   ],
+   [
+    "我",
+    2.56,
+    2.68
+   ],
+   [
+    "把",
+    2.68,
+    2.84
+   ],
+   [
+    "喻",
+    2.84,
+    3.06
+   ],
+   [
+    "完",
+    3.06,
+    3.32
+   ],
+   [
+    "整",
+    3.32,
+    3.56
+   ],
+   [
+    "帶",
+    3.56,
+    3.76
+   ],
+   [
+    "回來",
+    3.76,
+    4.0
+   ]
+  ],
+  "heard": "他說,我去,成不來,我把喻完整帶回來",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 4.4
+ },
+ {
+  "name": "z06b",
+  "lang": "zh",
+  "text": "他说：“我去。城不来，我把玉完整带回来。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z06b.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.14
+   ],
+   [
+    "说,",
+    0.14,
+    0.36
+   ],
+   [
+    "我",
+    0.76,
+    0.92
+   ],
+   [
+    "去,",
+    0.92,
+    1.16
+   ],
+   [
+    "成",
+    1.66,
+    1.88
+   ],
+   [
+    "不",
+    1.88,
+    2.02
+   ],
+   [
+    "来,",
+    2.02,
+    2.22
+   ],
+   [
+    "我",
+    2.64,
+    2.76
+   ],
+   [
+    "把",
+    2.76,
+    2.92
+   ],
+   [
+    "玉",
+    2.92,
+    3.12
+   ],
+   [
+    "完全",
+    3.12,
+    3.5
+   ],
+   [
+    "带",
+    3.5,
+    3.86
+   ],
+   [
+    "回",
+    3.86,
+    4.02
+   ],
+   [
+    "来",
+    4.02,
+    4.2
+   ]
+  ],
+  "heard": "他说,我去,成不来,我把玉完全带回来",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.48
+ },
+ {
+  "name": "z07a",
+  "lang": "zh",
+  "text": "秦王接过玉，乐坏了，传给美人们看。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z07a.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.22
+   ],
+   [
+    "王",
+    0.22,
+    0.38
+   ],
+   [
+    "接",
+    0.38,
+    0.58
+   ],
+   [
+    "過",
+    0.58,
+    0.76
+   ],
+   [
+    "獄",
+    0.76,
+    1.06
+   ],
+   [
+    "樂",
+    1.26,
+    1.44
+   ],
+   [
+    "壞",
+    1.44,
+    1.88
+   ],
+   [
+    "了",
+    1.88,
+    2.04
+   ],
+   [
+    "傳",
+    2.48,
+    2.6
+   ],
+   [
+    "給",
+    2.6,
+    2.74
+   ],
+   [
+    "美",
+    2.74,
+    2.92
+   ],
+   [
+    "人",
+    2.92,
+    3.06
+   ],
+   [
+    "們",
+    3.06,
+    3.18
+   ],
+   [
+    "看",
+    3.18,
+    3.38
+   ]
+  ],
+  "heard": "秦王接過獄 樂壞了 傳給美人們看",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.76
+ },
+ {
+  "name": "z07b",
+  "lang": "zh",
+  "text": "秦王接过玉，乐坏了，传给美人们看。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z07b.mp3",
+  "bytes": 56049,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.18
+   ],
+   [
+    "王",
+    0.18,
+    0.34
+   ],
+   [
+    "接",
+    0.34,
+    0.54
+   ],
+   [
+    "過",
+    0.54,
+    0.7
+   ],
+   [
+    "獄",
+    0.7,
+    0.98
+   ],
+   [
+    "樂",
+    1.18,
+    1.36
+   ],
+   [
+    "壞",
+    1.36,
+    1.74
+   ],
+   [
+    "了",
+    1.74,
+    1.9
+   ],
+   [
+    "傳",
+    2.22,
+    2.36
+   ],
+   [
+    "給",
+    2.36,
+    2.5
+   ],
+   [
+    "美",
+    2.5,
+    2.66
+   ],
+   [
+    "人",
+    2.66,
+    2.8
+   ],
+   [
+    "們",
+    2.8,
+    2.92
+   ],
+   [
+    "看",
+    2.92,
+    3.12
+   ]
+  ],
+  "heard": "秦王接過獄 樂壞了 傳給美人們看",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.44
+ },
+ {
+  "name": "z08a",
+  "lang": "zh",
+  "text": "满屋子喊万岁，没人提城的事。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z08a.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "满",
+    0.0,
+    0.24
+   ],
+   [
+    "屋",
+    0.24,
+    0.42
+   ],
+   [
+    "子",
+    0.42,
+    0.56
+   ],
+   [
+    "喊",
+    0.56,
+    0.76
+   ],
+   [
+    "万",
+    0.76,
+    0.92
+   ],
+   [
+    "岁,",
+    0.92,
+    1.3
+   ],
+   [
+    "没",
+    1.64,
+    1.88
+   ],
+   [
+    "人",
+    1.88,
+    2.06
+   ],
+   [
+    "提",
+    2.06,
+    2.26
+   ],
+   [
+    "诚",
+    2.26,
+    2.58
+   ],
+   [
+    "的是",
+    2.58,
+    2.86
+   ]
+  ],
+  "heard": "满屋子喊万岁,没人提诚的是",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "z08b",
+  "lang": "zh",
+  "text": "满屋子喊万岁，没人提城的事。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z08b.mp3",
+  "bytes": 51034,
+  "words": [
+   [
+    "满",
+    0.0,
+    0.24
+   ],
+   [
+    "屋",
+    0.24,
+    0.42
+   ],
+   [
+    "子",
+    0.42,
+    0.56
+   ],
+   [
+    "喊",
+    0.56,
+    0.74
+   ],
+   [
+    "万",
+    0.74,
+    0.9
+   ],
+   [
+    "岁,",
+    0.9,
+    1.28
+   ],
+   [
+    "没",
+    1.6,
+    1.8
+   ],
+   [
+    "人",
+    1.8,
+    1.94
+   ],
+   [
+    "提",
+    1.94,
+    2.12
+   ],
+   [
+    "诚",
+    2.12,
+    2.46
+   ],
+   [
+    "的是",
+    2.46,
+    2.76
+   ]
+  ],
+  "heard": "满屋子喊万岁,没人提诚的是",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.12
+ },
+ {
+  "name": "z09a",
+  "lang": "zh",
+  "text": "他走上前：“这玉有个瑕疵，我指给大王看。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z09a.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.14
+   ],
+   [
+    "走",
+    0.14,
+    0.3
+   ],
+   [
+    "上",
+    0.3,
+    0.48
+   ],
+   [
+    "前,",
+    0.48,
+    0.78
+   ],
+   [
+    "這",
+    1.5,
+    1.64
+   ],
+   [
+    "獄",
+    1.64,
+    1.88
+   ],
+   [
+    "有",
+    1.88,
+    2.1
+   ],
+   [
+    "個",
+    2.1,
+    2.22
+   ],
+   [
+    "瑕",
+    2.22,
+    2.44
+   ],
+   [
+    "疵,",
+    2.44,
+    2.78
+   ],
+   [
+    "我",
+    3.14,
+    3.26
+   ],
+   [
+    "只",
+    3.26,
+    3.42
+   ],
+   [
+    "給",
+    3.42,
+    3.56
+   ],
+   [
+    "大",
+    3.56,
+    3.72
+   ],
+   [
+    "王",
+    3.72,
+    3.88
+   ],
+   [
+    "看",
+    3.88,
+    4.1
+   ]
+  ],
+  "heard": "他走上前,這獄有個瑕疵,我只給大王看",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.48
+ },
+ {
+  "name": "z09b",
+  "lang": "zh",
+  "text": "他走上前：“这玉有个瑕疵，我指给大王看。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z09b.mp3",
+  "bytes": 71514,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.16
+   ],
+   [
+    "走",
+    0.16,
+    0.32
+   ],
+   [
+    "上",
+    0.32,
+    0.48
+   ],
+   [
+    "前,",
+    0.48,
+    0.8
+   ],
+   [
+    "這",
+    1.18,
+    1.62
+   ],
+   [
+    "獄",
+    1.62,
+    1.84
+   ],
+   [
+    "有",
+    1.84,
+    2.08
+   ],
+   [
+    "個",
+    2.08,
+    2.22
+   ],
+   [
+    "瑕",
+    2.22,
+    2.44
+   ],
+   [
+    "疵,",
+    2.44,
+    2.76
+   ],
+   [
+    "我",
+    3.12,
+    3.28
+   ],
+   [
+    "只",
+    3.28,
+    3.42
+   ],
+   [
+    "給",
+    3.42,
+    3.56
+   ],
+   [
+    "大",
+    3.56,
+    3.72
+   ],
+   [
+    "王",
+    3.72,
+    3.88
+   ],
+   [
+    "看",
+    3.88,
+    4.1
+   ]
+  ],
+  "heard": "他走上前,這獄有個瑕疵,我只給大王看",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.4
+ },
+ {
+  "name": "z10a",
+  "lang": "zh",
+  "text": "玉一到手，他退到柱子边，怒发冲冠。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z10a.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "御",
+    0.0,
+    0.2
+   ],
+   [
+    "医",
+    0.2,
+    0.3
+   ],
+   [
+    "到",
+    0.3,
+    0.46
+   ],
+   [
+    "手,",
+    0.46,
+    0.74
+   ],
+   [
+    "他",
+    1.04,
+    1.14
+   ],
+   [
+    "退",
+    1.14,
+    1.34
+   ],
+   [
+    "到",
+    1.34,
+    1.5
+   ],
+   [
+    "柱",
+    1.5,
+    1.68
+   ],
+   [
+    "子",
+    1.68,
+    1.82
+   ],
+   [
+    "邊,",
+    1.82,
+    2.0
+   ],
+   [
+    "怒",
+    2.36,
+    2.52
+   ],
+   [
+    "發",
+    2.52,
+    2.76
+   ],
+   [
+    "衝",
+    2.76,
+    3.0
+   ],
+   [
+    "關",
+    3.0,
+    3.18
+   ]
+  ],
+  "heard": "御医到手,他退到柱子邊,怒發衝關",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "z10b",
+  "lang": "zh",
+  "text": "玉一到手，他退到柱子边，怒发冲冠。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z10b.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "寓",
+    0.0,
+    0.16
+   ],
+   [
+    "意",
+    0.16,
+    0.28
+   ],
+   [
+    "到",
+    0.28,
+    0.42
+   ],
+   [
+    "手,",
+    0.42,
+    0.7
+   ],
+   [
+    "他",
+    0.92,
+    1.1
+   ],
+   [
+    "退",
+    1.1,
+    1.26
+   ],
+   [
+    "到",
+    1.26,
+    1.42
+   ],
+   [
+    "柱",
+    1.42,
+    1.58
+   ],
+   [
+    "子",
+    1.58,
+    1.72
+   ],
+   [
+    "邊,",
+    1.72,
+    1.88
+   ],
+   [
+    "怒",
+    2.24,
+    2.44
+   ],
+   [
+    "發",
+    2.44,
+    2.68
+   ],
+   [
+    "衝",
+    2.68,
+    2.94
+   ],
+   [
+    "關",
+    2.94,
+    3.12
+   ]
+  ],
+  "heard": "寓意到手,他退到柱子邊,怒發衝關",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "z10p0",
+  "lang": "zh",
+  "text": "玉一到手，他退到柱子边，怒髮衝冠。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z10p0.mp3",
+  "bytes": 57303,
+  "words": [
+   [
+    "御",
+    0.0,
+    0.16
+   ],
+   [
+    "医",
+    0.16,
+    0.28
+   ],
+   [
+    "到",
+    0.28,
+    0.42
+   ],
+   [
+    "手",
+    0.42,
+    0.68
+   ],
+   [
+    "他",
+    0.68,
+    1.12
+   ],
+   [
+    "退",
+    1.12,
+    1.3
+   ],
+   [
+    "到",
+    1.3,
+    1.46
+   ],
+   [
+    "柱",
+    1.46,
+    1.64
+   ],
+   [
+    "子",
+    1.64,
+    1.78
+   ],
+   [
+    "邊",
+    1.78,
+    1.94
+   ],
+   [
+    "怒",
+    1.94,
+    2.48
+   ],
+   [
+    "罰",
+    2.48,
+    2.74
+   ],
+   [
+    "充",
+    2.74,
+    2.96
+   ],
+   [
+    "管",
+    2.96,
+    3.16
+   ]
+  ],
+  "heard": "御医到手他退到柱子邊怒罰充管",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "z11a",
+  "lang": "zh",
+  "text": "“再逼我，我的头和这块玉，一起碎在柱子上！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z11a.mp3",
+  "bytes": 67752,
+  "words": [
+   [
+    "再",
+    0.0,
+    0.2
+   ],
+   [
+    "逼",
+    0.2,
+    0.44
+   ],
+   [
+    "我",
+    0.44,
+    0.68
+   ],
+   [
+    "我的",
+    0.68,
+    1.32
+   ],
+   [
+    "头",
+    1.32,
+    1.58
+   ],
+   [
+    "和",
+    1.58,
+    1.76
+   ],
+   [
+    "这",
+    1.76,
+    1.92
+   ],
+   [
+    "块",
+    1.92,
+    2.06
+   ],
+   [
+    "玉",
+    2.06,
+    2.3
+   ],
+   [
+    "一起",
+    2.3,
+    2.8
+   ],
+   [
+    "碎",
+    2.8,
+    3.1
+   ],
+   [
+    "在",
+    3.1,
+    3.24
+   ],
+   [
+    "柱",
+    3.24,
+    3.44
+   ],
+   [
+    "子",
+    3.44,
+    3.58
+   ],
+   [
+    "上",
+    3.58,
+    3.74
+   ]
+  ],
+  "heard": "再逼我我的头和这块玉一起碎在柱子上",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.16
+ },
+ {
+  "name": "z11b",
+  "lang": "zh",
+  "text": "“再逼我，我的头和这块玉，一起碎在柱子上！”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z11b.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "再",
+    0.0,
+    0.2
+   ],
+   [
+    "逼",
+    0.2,
+    0.46
+   ],
+   [
+    "我,",
+    0.46,
+    0.72
+   ],
+   [
+    "我的",
+    1.02,
+    1.16
+   ],
+   [
+    "頭",
+    1.16,
+    1.46
+   ],
+   [
+    "和",
+    1.46,
+    1.68
+   ],
+   [
+    "這",
+    1.68,
+    1.84
+   ],
+   [
+    "塊",
+    1.84,
+    1.98
+   ],
+   [
+    "玉",
+    1.98,
+    2.2
+   ],
+   [
+    "一起",
+    2.2,
+    2.7
+   ],
+   [
+    "碎",
+    2.7,
+    3.02
+   ],
+   [
+    "在",
+    3.02,
+    3.16
+   ],
+   [
+    "柱",
+    3.16,
+    3.4
+   ],
+   [
+    "子",
+    3.4,
+    3.52
+   ],
+   [
+    "上",
+    3.52,
+    3.7
+   ]
+  ],
+  "heard": "再逼我,我的頭和這塊玉一起碎在柱子上",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.0
+ },
+ {
+  "name": "z12a",
+  "lang": "zh",
+  "text": "秦王赶紧道歉，摊开地图一指：“这十五座城，给赵国。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z12a.mp3",
+  "bytes": 85724,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.18
+   ],
+   [
+    "王",
+    0.18,
+    0.34
+   ],
+   [
+    "趕",
+    0.34,
+    0.58
+   ],
+   [
+    "緊",
+    0.58,
+    0.82
+   ],
+   [
+    "道",
+    0.82,
+    1.02
+   ],
+   [
+    "歉,",
+    1.02,
+    1.24
+   ],
+   [
+    "攤",
+    1.52,
+    1.66
+   ],
+   [
+    "開",
+    1.66,
+    1.8
+   ],
+   [
+    "地",
+    1.8,
+    1.94
+   ],
+   [
+    "圖",
+    1.94,
+    2.12
+   ],
+   [
+    "一",
+    2.12,
+    2.28
+   ],
+   [
+    "指,",
+    2.28,
+    2.46
+   ],
+   [
+    "這",
+    3.0,
+    3.24
+   ],
+   [
+    "十",
+    3.24,
+    3.46
+   ],
+   [
+    "五",
+    3.46,
+    3.62
+   ],
+   [
+    "座",
+    3.62,
+    3.78
+   ],
+   [
+    "城",
+    3.78,
+    4.1
+   ],
+   [
+    "給",
+    4.1,
+    4.44
+   ],
+   [
+    "趙",
+    4.44,
+    4.68
+   ],
+   [
+    "國",
+    4.68,
+    4.92
+   ]
+  ],
+  "heard": "秦王趕緊道歉,攤開地圖一指,這十五座城給趙國",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.28
+ },
+ {
+  "name": "z12b",
+  "lang": "zh",
+  "text": "秦王赶紧道歉，摊开地图一指：“这十五座城，给赵国。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z12b.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.2
+   ],
+   [
+    "王",
+    0.2,
+    0.34
+   ],
+   [
+    "趕",
+    0.34,
+    0.6
+   ],
+   [
+    "緊",
+    0.6,
+    0.8
+   ],
+   [
+    "道",
+    0.8,
+    0.98
+   ],
+   [
+    "歉,",
+    0.98,
+    1.24
+   ],
+   [
+    "攤",
+    1.52,
+    1.66
+   ],
+   [
+    "開",
+    1.66,
+    1.82
+   ],
+   [
+    "地",
+    1.82,
+    1.94
+   ],
+   [
+    "圖",
+    1.94,
+    2.14
+   ],
+   [
+    "一",
+    2.14,
+    2.28
+   ],
+   [
+    "指,",
+    2.28,
+    2.46
+   ],
+   [
+    "這",
+    3.02,
+    3.18
+   ],
+   [
+    "十",
+    3.18,
+    3.38
+   ],
+   [
+    "五",
+    3.38,
+    3.54
+   ],
+   [
+    "座",
+    3.54,
+    3.72
+   ],
+   [
+    "城",
+    3.72,
+    3.98
+   ],
+   [
+    "給",
+    3.98,
+    4.36
+   ],
+   [
+    "趙",
+    4.36,
+    4.6
+   ],
+   [
+    "國",
+    4.6,
+    4.84
+   ]
+  ],
+  "heard": "秦王趕緊道歉,攤開地圖一指,這十五座城給趙國",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 5.2
+ },
+ {
+  "name": "z13a",
+  "lang": "zh",
+  "text": "他看得出来，秦王在演。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z13a.mp3",
+  "bytes": 39331,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.12
+   ],
+   [
+    "看",
+    0.12,
+    0.3
+   ],
+   [
+    "得",
+    0.3,
+    0.42
+   ],
+   [
+    "出來,",
+    0.42,
+    0.82
+   ],
+   [
+    "秦",
+    1.12,
+    1.3
+   ],
+   [
+    "王",
+    1.3,
+    1.46
+   ],
+   [
+    "在",
+    1.46,
+    1.64
+   ],
+   [
+    "演",
+    1.64,
+    1.92
+   ]
+  ],
+  "heard": "他看得出來,秦王在演",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.4
+ },
+ {
+  "name": "z13b",
+  "lang": "zh",
+  "text": "他看得出来，秦王在演。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z13b.mp3",
+  "bytes": 39331,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.14
+   ],
+   [
+    "看",
+    0.14,
+    0.32
+   ],
+   [
+    "得",
+    0.32,
+    0.44
+   ],
+   [
+    "出來",
+    0.44,
+    0.84
+   ],
+   [
+    "秦",
+    1.2,
+    1.32
+   ],
+   [
+    "王",
+    1.32,
+    1.48
+   ],
+   [
+    "在",
+    1.48,
+    1.64
+   ],
+   [
+    "演",
+    1.64,
+    1.94
+   ]
+  ],
+  "heard": "他看得出來 秦王在演",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.4
+ },
+ {
+  "name": "z14a",
+  "lang": "zh",
+  "text": "他也演：“赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z14a.mp3",
+  "bytes": 122505,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.16
+   ],
+   [
+    "也",
+    0.16,
+    0.34
+   ],
+   [
+    "演,",
+    0.34,
+    0.64
+   ],
+   [
+    "趙",
+    1.18,
+    1.36
+   ],
+   [
+    "王",
+    1.36,
+    1.58
+   ],
+   [
+    "摘",
+    1.58,
+    1.86
+   ],
+   [
+    "戒",
+    1.86,
+    2.06
+   ],
+   [
+    "五",
+    2.06,
+    2.32
+   ],
+   [
+    "天",
+    2.32,
+    2.56
+   ],
+   [
+    "才",
+    2.56,
+    2.76
+   ],
+   [
+    "送",
+    2.76,
+    3.0
+   ],
+   [
+    "禦,",
+    3.0,
+    3.24
+   ],
+   [
+    "大",
+    3.56,
+    3.84
+   ],
+   [
+    "王",
+    3.84,
+    4.08
+   ],
+   [
+    "也",
+    4.08,
+    4.26
+   ],
+   [
+    "得",
+    4.26,
+    4.38
+   ],
+   [
+    "摘",
+    4.38,
+    4.58
+   ],
+   [
+    "戒",
+    4.58,
+    4.78
+   ],
+   [
+    "五",
+    4.78,
+    4.98
+   ],
+   [
+    "天,",
+    4.98,
+    5.28
+   ],
+   [
+    "擺",
+    5.66,
+    5.88
+   ],
+   [
+    "上",
+    5.88,
+    6.04
+   ],
+   [
+    "大",
+    6.04,
+    6.3
+   ],
+   [
+    "礼",
+    6.3,
+    6.68
+   ],
+   [
+    "我",
+    6.68,
+    6.9
+   ],
+   [
+    "才",
+    6.9,
+    7.08
+   ],
+   [
+    "教。",
+    7.08,
+    7.32
+   ]
+  ],
+  "heard": "他也演,趙王摘戒五天才送禦,大王也得摘戒五天,擺上大礼我才教。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 7.6
+ },
+ {
+  "name": "z14b",
+  "lang": "zh",
+  "text": "他也演：“赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z14b.mp3",
+  "bytes": 125430,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.18
+   ],
+   [
+    "也",
+    0.18,
+    0.36
+   ],
+   [
+    "演,",
+    0.36,
+    0.68
+   ],
+   [
+    "趙",
+    1.32,
+    1.44
+   ],
+   [
+    "王",
+    1.44,
+    1.68
+   ],
+   [
+    "摘",
+    1.68,
+    1.94
+   ],
+   [
+    "戒",
+    1.94,
+    2.12
+   ],
+   [
+    "五",
+    2.12,
+    2.4
+   ],
+   [
+    "天",
+    2.4,
+    2.64
+   ],
+   [
+    "才",
+    2.64,
+    2.84
+   ],
+   [
+    "送",
+    2.84,
+    3.08
+   ],
+   [
+    "禦",
+    3.08,
+    3.32
+   ],
+   [
+    "大",
+    3.32,
+    3.96
+   ],
+   [
+    "王",
+    3.96,
+    4.22
+   ],
+   [
+    "也",
+    4.22,
+    4.4
+   ],
+   [
+    "得",
+    4.4,
+    4.54
+   ],
+   [
+    "摘",
+    4.54,
+    4.74
+   ],
+   [
+    "戒",
+    4.74,
+    4.92
+   ],
+   [
+    "五",
+    4.92,
+    5.12
+   ],
+   [
+    "天,",
+    5.12,
+    5.42
+   ],
+   [
+    "擺",
+    5.62,
+    6.02
+   ],
+   [
+    "上",
+    6.02,
+    6.18
+   ],
+   [
+    "大",
+    6.18,
+    6.42
+   ],
+   [
+    "礼",
+    6.42,
+    6.74
+   ],
+   [
+    "我",
+    6.74,
+    6.98
+   ],
+   [
+    "才",
+    6.98,
+    7.16
+   ],
+   [
+    "教",
+    7.16,
+    7.4
+   ]
+  ],
+  "heard": "他也演,趙王摘戒五天才送禦大王也得摘戒五天,擺上大礼我才教",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 7.76
+ },
+ {
+  "name": "z14p0",
+  "lang": "zh",
+  "text": "他也演：“赵王摘戒五天才送玉，大王也得摘戒五天，摆上大礼，我才交。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z14p0.mp3",
+  "bytes": 123758,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.16
+   ],
+   [
+    "也",
+    0.16,
+    0.34
+   ],
+   [
+    "演,",
+    0.34,
+    0.62
+   ],
+   [
+    "趙",
+    1.2,
+    1.34
+   ],
+   [
+    "王",
+    1.34,
+    1.52
+   ],
+   [
+    "摘",
+    1.52,
+    1.7
+   ],
+   [
+    "戒",
+    1.7,
+    1.94
+   ],
+   [
+    "五",
+    1.94,
+    2.24
+   ],
+   [
+    "天",
+    2.24,
+    2.5
+   ],
+   [
+    "才",
+    2.5,
+    2.68
+   ],
+   [
+    "送",
+    2.68,
+    2.92
+   ],
+   [
+    "禦",
+    2.92,
+    3.14
+   ],
+   [
+    "大",
+    3.14,
+    3.8
+   ],
+   [
+    "王",
+    3.8,
+    4.06
+   ],
+   [
+    "也",
+    4.06,
+    4.22
+   ],
+   [
+    "得",
+    4.22,
+    4.36
+   ],
+   [
+    "摘",
+    4.36,
+    4.56
+   ],
+   [
+    "戒",
+    4.56,
+    4.74
+   ],
+   [
+    "五",
+    4.74,
+    4.92
+   ],
+   [
+    "天,",
+    4.92,
+    5.2
+   ],
+   [
+    "擺",
+    5.54,
+    5.9
+   ],
+   [
+    "上",
+    5.9,
+    6.06
+   ],
+   [
+    "大",
+    6.06,
+    6.3
+   ],
+   [
+    "礼,",
+    6.3,
+    6.74
+   ],
+   [
+    "我",
+    6.82,
+    6.92
+   ],
+   [
+    "才",
+    6.92,
+    7.12
+   ],
+   [
+    "教",
+    7.12,
+    7.38
+   ]
+  ],
+  "heard": "他也演,趙王摘戒五天才送禦大王也得摘戒五天,擺上大礼,我才教",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 7.68
+ },
+ {
+  "name": "z15a",
+  "lang": "zh",
+  "text": "秦王抢不到，只好答应。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15a.mp3",
+  "bytes": 36823,
+  "words": [
+   [
+    "勤",
+    0.0,
+    0.18
+   ],
+   [
+    "王",
+    0.18,
+    0.34
+   ],
+   [
+    "搶",
+    0.34,
+    0.6
+   ],
+   [
+    "不到",
+    0.6,
+    0.82
+   ],
+   [
+    "只",
+    0.82,
+    1.34
+   ],
+   [
+    "好",
+    1.34,
+    1.52
+   ],
+   [
+    "答",
+    1.52,
+    1.72
+   ],
+   [
+    "應",
+    1.72,
+    1.94
+   ]
+  ],
+  "heard": "勤王搶不到只好答應",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.24
+ },
+ {
+  "name": "z15b",
+  "lang": "zh",
+  "text": "秦王抢不到，只好答应。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z15b.mp3",
+  "bytes": 38077,
+  "words": [
+   [
+    "勤",
+    0.0,
+    0.18
+   ],
+   [
+    "王",
+    0.18,
+    0.34
+   ],
+   [
+    "搶",
+    0.34,
+    0.6
+   ],
+   [
+    "不到",
+    0.6,
+    0.82
+   ],
+   [
+    "只",
+    0.82,
+    1.36
+   ],
+   [
+    "好",
+    1.36,
+    1.54
+   ],
+   [
+    "答",
+    1.54,
+    1.74
+   ],
+   [
+    "應",
+    1.74,
+    1.96
+   ]
+  ],
+  "heard": "勤王搶不到只好答應",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.32
+ },
+ {
+  "name": "z16a",
+  "lang": "zh",
+  "text": "转头，他让随从穿上粗布衣服，揣着玉，抄小路溜回赵国。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z16a.mp3",
+  "bytes": 93247,
+  "words": [
+   [
+    "轉",
+    0.0,
+    0.16
+   ],
+   [
+    "頭,",
+    0.16,
+    0.5
+   ],
+   [
+    "他",
+    0.66,
+    0.84
+   ],
+   [
+    "讓",
+    0.84,
+    0.98
+   ],
+   [
+    "隨",
+    0.98,
+    1.16
+   ],
+   [
+    "從",
+    1.16,
+    1.4
+   ],
+   [
+    "穿",
+    1.4,
+    1.66
+   ],
+   [
+    "上",
+    1.66,
+    1.82
+   ],
+   [
+    "初",
+    1.82,
+    2.08
+   ],
+   [
+    "步",
+    2.08,
+    2.28
+   ],
+   [
+    "衣",
+    2.28,
+    2.5
+   ],
+   [
+    "服",
+    2.5,
+    2.7
+   ],
+   [
+    "揣",
+    2.7,
+    3.18
+   ],
+   [
+    "著",
+    3.18,
+    3.36
+   ],
+   [
+    "玉,",
+    3.36,
+    3.64
+   ],
+   [
+    "超",
+    3.92,
+    4.1
+   ],
+   [
+    "小",
+    4.1,
+    4.32
+   ],
+   [
+    "路",
+    4.32,
+    4.56
+   ],
+   [
+    "流",
+    4.56,
+    4.8
+   ],
+   [
+    "回",
+    4.8,
+    5.0
+   ],
+   [
+    "趙",
+    5.0,
+    5.18
+   ],
+   [
+    "國",
+    5.18,
+    5.42
+   ]
+  ],
+  "heard": "轉頭,他讓隨從穿上初步衣服揣著玉,超小路流回趙國",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 5.76
+ },
+ {
+  "name": "z16b",
+  "lang": "zh",
+  "text": "转头，他让随从穿上粗布衣服，揣着玉，抄小路溜回赵国。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z16b.mp3",
+  "bytes": 94501,
+  "words": [
+   [
+    "轉",
+    0.0,
+    0.18
+   ],
+   [
+    "頭,",
+    0.18,
+    0.5
+   ],
+   [
+    "他",
+    0.72,
+    0.9
+   ],
+   [
+    "讓",
+    0.9,
+    1.04
+   ],
+   [
+    "隨",
+    1.04,
+    1.24
+   ],
+   [
+    "從",
+    1.24,
+    1.48
+   ],
+   [
+    "穿",
+    1.48,
+    1.72
+   ],
+   [
+    "上",
+    1.72,
+    1.88
+   ],
+   [
+    "初",
+    1.88,
+    2.12
+   ],
+   [
+    "步",
+    2.12,
+    2.34
+   ],
+   [
+    "衣",
+    2.34,
+    2.54
+   ],
+   [
+    "服,",
+    2.54,
+    2.74
+   ],
+   [
+    "揣",
+    3.04,
+    3.18
+   ],
+   [
+    "著",
+    3.18,
+    3.38
+   ],
+   [
+    "玉,",
+    3.38,
+    3.6
+   ],
+   [
+    "超",
+    4.0,
+    4.18
+   ],
+   [
+    "小",
+    4.18,
+    4.4
+   ],
+   [
+    "路",
+    4.4,
+    4.64
+   ],
+   [
+    "流",
+    4.64,
+    4.9
+   ],
+   [
+    "回",
+    4.9,
+    5.1
+   ],
+   [
+    "趙",
+    5.1,
+    5.28
+   ],
+   [
+    "國",
+    5.28,
+    5.52
+   ]
+  ],
+  "heard": "轉頭,他讓隨從穿上初步衣服,揣著玉,超小路流回趙國",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 5.84
+ },
+ {
+  "name": "z17a",
+  "lang": "zh",
+  "text": "五天后，大礼摆好，秦王要玉。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z17a.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "五",
+    0.0,
+    0.12
+   ],
+   [
+    "天",
+    0.12,
+    0.3
+   ],
+   [
+    "后,",
+    0.3,
+    0.6
+   ],
+   [
+    "大",
+    0.9,
+    1.04
+   ],
+   [
+    "礼",
+    1.04,
+    1.24
+   ],
+   [
+    "拜",
+    1.24,
+    1.38
+   ],
+   [
+    "好,",
+    1.38,
+    1.68
+   ],
+   [
+    "秦",
+    2.04,
+    2.22
+   ],
+   [
+    "王",
+    2.22,
+    2.42
+   ],
+   [
+    "要",
+    2.42,
+    2.64
+   ],
+   [
+    "喻",
+    2.64,
+    2.88
+   ]
+  ],
+  "heard": "五天后,大礼拜好,秦王要喻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "z17b",
+  "lang": "zh",
+  "text": "五天后，大礼摆好，秦王要玉。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z17b.mp3",
+  "bytes": 52287,
+  "words": [
+   [
+    "五",
+    0.0,
+    0.14
+   ],
+   [
+    "天",
+    0.14,
+    0.32
+   ],
+   [
+    "后,",
+    0.32,
+    0.58
+   ],
+   [
+    "大",
+    0.92,
+    1.08
+   ],
+   [
+    "礼",
+    1.08,
+    1.28
+   ],
+   [
+    "拜",
+    1.28,
+    1.4
+   ],
+   [
+    "好,",
+    1.4,
+    1.7
+   ],
+   [
+    "秦",
+    2.1,
+    2.26
+   ],
+   [
+    "王",
+    2.26,
+    2.46
+   ],
+   [
+    "要",
+    2.46,
+    2.64
+   ],
+   [
+    "喻",
+    2.64,
+    2.88
+   ]
+  ],
+  "heard": "五天后,大礼拜好,秦王要喻",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ },
+ {
+  "name": "z18a",
+  "lang": "zh",
+  "text": "他说：“秦国二十多个国君，没一个守约的。玉已经到赵国了。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z18a.mp3",
+  "bytes": 94501,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.14
+   ],
+   [
+    "说,",
+    0.14,
+    0.36
+   ],
+   [
+    "秦",
+    0.82,
+    1.1
+   ],
+   [
+    "国",
+    1.1,
+    1.32
+   ],
+   [
+    "二",
+    1.32,
+    1.56
+   ],
+   [
+    "十",
+    1.56,
+    1.72
+   ],
+   [
+    "多",
+    1.72,
+    1.86
+   ],
+   [
+    "个",
+    1.86,
+    1.98
+   ],
+   [
+    "国",
+    1.98,
+    2.16
+   ],
+   [
+    "军",
+    2.16,
+    2.48
+   ],
+   [
+    "没",
+    2.48,
+    2.82
+   ],
+   [
+    "一个",
+    2.82,
+    3.1
+   ],
+   [
+    "守",
+    3.1,
+    3.34
+   ],
+   [
+    "约",
+    3.34,
+    3.56
+   ],
+   [
+    "的,",
+    3.56,
+    3.76
+   ],
+   [
+    "玉",
+    4.2,
+    4.44
+   ],
+   [
+    "已经",
+    4.44,
+    4.74
+   ],
+   [
+    "到",
+    4.74,
+    4.94
+   ],
+   [
+    "赵",
+    4.94,
+    5.18
+   ],
+   [
+    "国",
+    5.18,
+    5.42
+   ],
+   [
+    "了",
+    5.42,
+    5.58
+   ]
+  ],
+  "heard": "他说,秦国二十多个国军没一个守约的,玉已经到赵国了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 5.84
+ },
+ {
+  "name": "z18b",
+  "lang": "zh",
+  "text": "他说：“秦国二十多个国君，没一个守约的。玉已经到赵国了。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z18b.mp3",
+  "bytes": 89486,
+  "words": [
+   [
+    "他",
+    0.0,
+    0.14
+   ],
+   [
+    "说,",
+    0.14,
+    0.38
+   ],
+   [
+    "秦",
+    0.72,
+    1.0
+   ],
+   [
+    "国",
+    1.0,
+    1.2
+   ],
+   [
+    "二",
+    1.2,
+    1.42
+   ],
+   [
+    "十",
+    1.42,
+    1.6
+   ],
+   [
+    "多",
+    1.6,
+    1.74
+   ],
+   [
+    "个",
+    1.74,
+    1.84
+   ],
+   [
+    "国",
+    1.84,
+    2.02
+   ],
+   [
+    "军",
+    2.02,
+    2.36
+   ],
+   [
+    "没",
+    2.36,
+    2.7
+   ],
+   [
+    "一个",
+    2.7,
+    2.98
+   ],
+   [
+    "守",
+    2.98,
+    3.18
+   ],
+   [
+    "约",
+    3.18,
+    3.42
+   ],
+   [
+    "的,",
+    3.42,
+    3.62
+   ],
+   [
+    "玉",
+    3.92,
+    4.22
+   ],
+   [
+    "已经",
+    4.22,
+    4.5
+   ],
+   [
+    "到",
+    4.5,
+    4.7
+   ],
+   [
+    "赵",
+    4.7,
+    4.92
+   ],
+   [
+    "国",
+    4.92,
+    5.16
+   ],
+   [
+    "了",
+    5.16,
+    5.32
+   ]
+  ],
+  "heard": "他说,秦国二十多个国军没一个守约的,玉已经到赵国了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 5.52
+ },
+ {
+  "name": "z19a",
+  "lang": "zh",
+  "text": "“骗了大王，该死。把我下锅煮了吧。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z19a.mp3",
+  "bytes": 56049,
+  "words": [
+   [
+    "騙",
+    0.0,
+    0.28
+   ],
+   [
+    "了",
+    0.28,
+    0.38
+   ],
+   [
+    "大",
+    0.38,
+    0.58
+   ],
+   [
+    "王,",
+    0.58,
+    0.8
+   ],
+   [
+    "該",
+    1.0,
+    1.28
+   ],
+   [
+    "死,",
+    1.28,
+    1.62
+   ],
+   [
+    "把",
+    2.02,
+    2.14
+   ],
+   [
+    "我",
+    2.14,
+    2.24
+   ],
+   [
+    "下",
+    2.24,
+    2.4
+   ],
+   [
+    "鍋",
+    2.4,
+    2.64
+   ],
+   [
+    "煮",
+    2.64,
+    2.82
+   ],
+   [
+    "了吧",
+    2.82,
+    2.98
+   ]
+  ],
+  "heard": "騙了大王,該死,把我下鍋煮了吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.44
+ },
+ {
+  "name": "z19b",
+  "lang": "zh",
+  "text": "“骗了大王，该死。把我下锅煮了吧。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z19b.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "騙",
+    0.0,
+    0.26
+   ],
+   [
+    "了",
+    0.26,
+    0.36
+   ],
+   [
+    "大",
+    0.36,
+    0.54
+   ],
+   [
+    "王,",
+    0.54,
+    0.78
+   ],
+   [
+    "該",
+    0.96,
+    1.2
+   ],
+   [
+    "死,",
+    1.2,
+    1.54
+   ],
+   [
+    "把",
+    1.9,
+    2.06
+   ],
+   [
+    "我",
+    2.06,
+    2.18
+   ],
+   [
+    "下",
+    2.18,
+    2.34
+   ],
+   [
+    "鍋",
+    2.34,
+    2.56
+   ],
+   [
+    "煮",
+    2.56,
+    2.74
+   ],
+   [
+    "了吧!",
+    2.74,
+    2.9
+   ]
+  ],
+  "heard": "騙了大王,該死,把我下鍋煮了吧!",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.28
+ },
+ {
+  "name": "z20a",
+  "lang": "zh",
+  "text": "满朝大臣面面相觑，有人要拖他出去。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z20a.mp3",
+  "bytes": 63990,
+  "words": [
+   [
+    "滿",
+    0.0,
+    0.18
+   ],
+   [
+    "朝",
+    0.18,
+    0.38
+   ],
+   [
+    "大",
+    0.38,
+    0.56
+   ],
+   [
+    "臣",
+    0.56,
+    0.86
+   ],
+   [
+    "面",
+    0.86,
+    1.08
+   ],
+   [
+    "面",
+    1.08,
+    1.28
+   ],
+   [
+    "相",
+    1.28,
+    1.48
+   ],
+   [
+    "去,",
+    1.48,
+    1.76
+   ],
+   [
+    "有人",
+    2.06,
+    2.54
+   ],
+   [
+    "要",
+    2.54,
+    2.72
+   ],
+   [
+    "拖",
+    2.72,
+    2.92
+   ],
+   [
+    "他",
+    2.92,
+    3.06
+   ],
+   [
+    "出去",
+    3.06,
+    3.32
+   ]
+  ],
+  "heard": "滿朝大臣面面相去,有人要拖他出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.92
+ },
+ {
+  "name": "z20b",
+  "lang": "zh",
+  "text": "满朝大臣面面相觑，有人要拖他出去。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z20b.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "滿",
+    0.0,
+    0.18
+   ],
+   [
+    "朝",
+    0.18,
+    0.38
+   ],
+   [
+    "大",
+    0.38,
+    0.56
+   ],
+   [
+    "臣",
+    0.56,
+    0.86
+   ],
+   [
+    "面",
+    0.86,
+    1.1
+   ],
+   [
+    "面",
+    1.1,
+    1.32
+   ],
+   [
+    "相",
+    1.32,
+    1.52
+   ],
+   [
+    "聚",
+    1.52,
+    1.94
+   ],
+   [
+    "有人",
+    1.94,
+    2.56
+   ],
+   [
+    "要",
+    2.56,
+    2.78
+   ],
+   [
+    "拖",
+    2.78,
+    2.98
+   ],
+   [
+    "他",
+    2.98,
+    3.12
+   ],
+   [
+    "出去",
+    3.12,
+    3.4
+   ]
+  ],
+  "heard": "滿朝大臣面面相聚有人要拖他出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.0
+ },
+ {
+  "name": "z20p0",
+  "lang": "zh",
+  "text": "满朝大臣面面相趣，有人要拖他出去。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z20p0.mp3",
+  "bytes": 62318,
+  "words": [
+   [
+    "滿",
+    0.0,
+    0.18
+   ],
+   [
+    "朝",
+    0.18,
+    0.38
+   ],
+   [
+    "大",
+    0.38,
+    0.56
+   ],
+   [
+    "臣",
+    0.56,
+    0.86
+   ],
+   [
+    "面",
+    0.86,
+    1.08
+   ],
+   [
+    "面",
+    1.08,
+    1.3
+   ],
+   [
+    "相",
+    1.3,
+    1.5
+   ],
+   [
+    "去,",
+    1.5,
+    1.8
+   ],
+   [
+    "有人",
+    2.02,
+    2.44
+   ],
+   [
+    "要",
+    2.44,
+    2.62
+   ],
+   [
+    "拖",
+    2.62,
+    2.82
+   ],
+   [
+    "他",
+    2.82,
+    2.98
+   ],
+   [
+    "出去",
+    2.98,
+    3.24
+   ]
+  ],
+  "heard": "滿朝大臣面面相去,有人要拖他出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.84
+ },
+ {
+  "name": "z21a",
+  "lang": "zh",
+  "text": "秦王说：“杀了他，玉也回不来。放他回去吧。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z21a.mp3",
+  "bytes": 71514,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.16
+   ],
+   [
+    "王",
+    0.16,
+    0.32
+   ],
+   [
+    "說",
+    0.32,
+    0.56
+   ],
+   [
+    "殺",
+    1.06,
+    1.34
+   ],
+   [
+    "了",
+    1.34,
+    1.46
+   ],
+   [
+    "他",
+    1.46,
+    1.66
+   ],
+   [
+    "玉",
+    2.12,
+    2.24
+   ],
+   [
+    "也",
+    2.24,
+    2.4
+   ],
+   [
+    "回",
+    2.4,
+    2.56
+   ],
+   [
+    "不",
+    2.56,
+    2.7
+   ],
+   [
+    "來",
+    2.7,
+    2.92
+   ],
+   [
+    "放",
+    3.32,
+    3.46
+   ],
+   [
+    "他",
+    3.46,
+    3.6
+   ],
+   [
+    "回去",
+    3.6,
+    3.84
+   ],
+   [
+    "吧",
+    3.84,
+    4.1
+   ]
+  ],
+  "heard": "秦王說 殺了他 玉也回不來 放他回去吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "z21b",
+  "lang": "zh",
+  "text": "秦王说：“杀了他，玉也回不来。放他回去吧。”",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z21b.mp3",
+  "bytes": 70260,
+  "words": [
+   [
+    "秦",
+    0.0,
+    0.16
+   ],
+   [
+    "王",
+    0.16,
+    0.32
+   ],
+   [
+    "說",
+    0.32,
+    0.58
+   ],
+   [
+    "殺",
+    1.08,
+    1.38
+   ],
+   [
+    "了",
+    1.38,
+    1.52
+   ],
+   [
+    "他",
+    1.52,
+    1.72
+   ],
+   [
+    "玉",
+    2.06,
+    2.16
+   ],
+   [
+    "也",
+    2.16,
+    2.32
+   ],
+   [
+    "回",
+    2.32,
+    2.48
+   ],
+   [
+    "不",
+    2.48,
+    2.62
+   ],
+   [
+    "來",
+    2.62,
+    2.84
+   ],
+   [
+    "放",
+    3.2,
+    3.36
+   ],
+   [
+    "他",
+    3.36,
+    3.52
+   ],
+   [
+    "回去",
+    3.52,
+    3.76
+   ],
+   [
+    "吧",
+    3.76,
+    4.02
+   ]
+  ],
+  "heard": "秦王說 殺了他 玉也回不來 放他回去吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.32
+ },
+ {
+  "name": "z22a",
+  "lang": "zh",
+  "text": "最后，秦国没给城，赵国也没给玉。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z22a.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "最後,",
+    0.0,
+    0.38
+   ],
+   [
+    "秦",
+    0.76,
+    0.92
+   ],
+   [
+    "國",
+    0.92,
+    1.12
+   ],
+   [
+    "沒",
+    1.12,
+    1.3
+   ],
+   [
+    "給",
+    1.3,
+    1.46
+   ],
+   [
+    "城,",
+    1.46,
+    1.78
+   ],
+   [
+    "趙",
+    2.24,
+    2.38
+   ],
+   [
+    "國",
+    2.38,
+    2.64
+   ],
+   [
+    "也",
+    2.64,
+    2.86
+   ],
+   [
+    "沒",
+    2.86,
+    3.04
+   ],
+   [
+    "給",
+    3.04,
+    3.18
+   ],
+   [
+    "玉",
+    3.18,
+    3.44
+   ]
+  ],
+  "heard": "最後,秦國沒給城,趙國也沒給玉",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.76
+ },
+ {
+  "name": "z22b",
+  "lang": "zh",
+  "text": "最后，秦国没给城，赵国也没给玉。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z22b.mp3",
+  "bytes": 61065,
+  "words": [
+   [
+    "最後,",
+    0.0,
+    0.36
+   ],
+   [
+    "秦",
+    0.78,
+    0.96
+   ],
+   [
+    "國",
+    0.96,
+    1.14
+   ],
+   [
+    "沒",
+    1.14,
+    1.32
+   ],
+   [
+    "給",
+    1.32,
+    1.48
+   ],
+   [
+    "成,",
+    1.48,
+    1.78
+   ],
+   [
+    "趙",
+    2.24,
+    2.38
+   ],
+   [
+    "國",
+    2.38,
+    2.66
+   ],
+   [
+    "也",
+    2.66,
+    2.88
+   ],
+   [
+    "沒",
+    2.88,
+    3.06
+   ],
+   [
+    "給",
+    3.06,
+    3.2
+   ],
+   [
+    "預",
+    3.2,
+    3.44
+   ]
+  ],
+  "heard": "最後,秦國沒給成,趙國也沒給預",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.76
+ },
+ {
+  "name": "z23a",
+  "lang": "zh",
+  "text": "价值连城的玉，一座城也没换到；倒是那个门客，回国就当了大官。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z23a.mp3",
+  "bytes": 102025,
+  "words": [
+   [
+    "价",
+    0.0,
+    0.22
+   ],
+   [
+    "值",
+    0.22,
+    0.4
+   ],
+   [
+    "连",
+    0.4,
+    0.6
+   ],
+   [
+    "城",
+    0.6,
+    0.78
+   ],
+   [
+    "的",
+    0.78,
+    0.92
+   ],
+   [
+    "御",
+    0.92,
+    1.16
+   ],
+   [
+    "一",
+    1.16,
+    1.7
+   ],
+   [
+    "座",
+    1.7,
+    1.9
+   ],
+   [
+    "城",
+    1.9,
+    2.14
+   ],
+   [
+    "也",
+    2.14,
+    2.3
+   ],
+   [
+    "没",
+    2.3,
+    2.46
+   ],
+   [
+    "换",
+    2.46,
+    2.64
+   ],
+   [
+    "到",
+    2.64,
+    2.88
+   ],
+   [
+    "倒",
+    3.32,
+    3.52
+   ],
+   [
+    "是",
+    3.52,
+    3.66
+   ],
+   [
+    "那个",
+    3.66,
+    3.84
+   ],
+   [
+    "门",
+    3.84,
+    4.06
+   ],
+   [
+    "客",
+    4.06,
+    4.36
+   ],
+   [
+    "回",
+    4.36,
+    4.82
+   ],
+   [
+    "国",
+    4.82,
+    5.1
+   ],
+   [
+    "就",
+    5.1,
+    5.28
+   ],
+   [
+    "当",
+    5.28,
+    5.42
+   ],
+   [
+    "了",
+    5.42,
+    5.56
+   ],
+   [
+    "大",
+    5.56,
+    5.74
+   ],
+   [
+    "官",
+    5.74,
+    5.96
+   ]
+  ],
+  "heard": "价值连城的御一座城也没换到倒是那个门客回国就当了大官",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 6.32
+ },
+ {
+  "name": "z23b",
+  "lang": "zh",
+  "text": "价值连城的玉，一座城也没换到；倒是那个门客，回国就当了大官。",
+  "voice": "shared:Xiaoxi - Neutral, Young and Friendly",
+  "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "z23b.mp3",
+  "bytes": 104950,
+  "words": [
+   [
+    "价",
+    0.0,
+    0.24
+   ],
+   [
+    "值",
+    0.24,
+    0.44
+   ],
+   [
+    "连",
+    0.44,
+    0.64
+   ],
+   [
+    "成",
+    0.64,
+    0.82
+   ],
+   [
+    "的",
+    0.82,
+    0.94
+   ],
+   [
+    "御,",
+    0.94,
+    1.18
+   ],
+   [
+    "一",
+    1.46,
+    1.76
+   ],
+   [
+    "座",
+    1.76,
+    1.96
+   ],
+   [
+    "城",
+    1.96,
+    2.2
+   ],
+   [
+    "也",
+    2.2,
+    2.44
+   ],
+   [
+    "没",
+    2.44,
+    2.58
+   ],
+   [
+    "换",
+    2.58,
+    2.8
+   ],
+   [
+    "到",
+    2.8,
+    3.02
+   ],
+   [
+    "倒",
+    3.02,
+    3.66
+   ],
+   [
+    "是",
+    3.66,
+    3.82
+   ],
+   [
+    "那个",
+    3.82,
+    3.98
+   ],
+   [
+    "门",
+    3.98,
+    4.22
+   ],
+   [
+    "客,",
+    4.22,
+    4.5
+   ],
+   [
+    "回",
+    4.86,
+    5.0
+   ],
+   [
+    "国",
+    5.0,
+    5.26
+   ],
+   [
+    "就",
+    5.26,
+    5.46
+   ],
+   [
+    "当",
+    5.46,
+    5.62
+   ],
+   [
+    "了",
+    5.62,
+    5.74
+   ],
+   [
+    "大",
+    5.74,
+    5.9
+   ],
+   [
+    "官",
+    5.9,
+    6.1
+   ]
+  ],
+  "heard": "价值连成的御,一座城也没换到倒是那个门客,回国就当了大官",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.48
+ },
+ {
+  "name": "e01a",
+  "lang": "en",
+  "text": "The envoy has one job: deliver the world's most precious jade. He's about to smash it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e01a.mp3",
+  "bytes": 106204,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "Envoy",
+    0.14,
+    0.58
+   ],
+   [
+    "has",
+    0.58,
+    0.88
+   ],
+   [
+    "one",
+    0.88,
+    1.22
+   ],
+   [
+    "job.",
+    1.22,
+    1.64
+   ],
+   [
+    "Deliver",
+    2.14,
+    2.52
+   ],
+   [
+    "the",
+    2.52,
+    2.68
+   ],
+   [
+    "world's",
+    2.68,
+    3.1
+   ],
+   [
+    "most",
+    3.1,
+    3.24
+   ],
+   [
+    "precious",
+    3.24,
+    3.8
+   ],
+   [
+    "Jade.",
+    3.8,
+    4.28
+   ],
+   [
+    "He's",
+    4.8,
+    5.16
+   ],
+   [
+    "about",
+    5.16,
+    5.32
+   ],
+   [
+    "to",
+    5.32,
+    5.54
+   ],
+   [
+    "smash",
+    5.54,
+    5.94
+   ],
+   [
+    "it.",
+    5.94,
+    6.34
+   ]
+  ],
+  "heard": "The Envoy has one job. Deliver the world's most precious Jade. He's about to smash it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.56
+ },
+ {
+  "name": "e01b",
+  "lang": "en",
+  "text": "The envoy has one job: deliver the world's most precious jade. He's about to smash it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e01b.mp3",
+  "bytes": 107458,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "envoy",
+    0.16,
+    0.52
+   ],
+   [
+    "has",
+    0.52,
+    0.88
+   ],
+   [
+    "one",
+    0.88,
+    1.26
+   ],
+   [
+    "job.",
+    1.26,
+    1.68
+   ],
+   [
+    "Deliver",
+    2.14,
+    2.52
+   ],
+   [
+    "the",
+    2.52,
+    2.68
+   ],
+   [
+    "world's",
+    2.68,
+    3.08
+   ],
+   [
+    "most",
+    3.08,
+    3.24
+   ],
+   [
+    "precious",
+    3.24,
+    3.82
+   ],
+   [
+    "jade.",
+    3.82,
+    4.46
+   ],
+   [
+    "He's",
+    4.8,
+    5.2
+   ],
+   [
+    "about",
+    5.2,
+    5.38
+   ],
+   [
+    "to",
+    5.38,
+    5.6
+   ],
+   [
+    "smash",
+    5.6,
+    5.94
+   ],
+   [
+    "it!",
+    5.94,
+    6.36
+   ]
+  ],
+  "heard": "The envoy has one job. Deliver the world's most precious jade. He's about to smash it!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 6.64
+ },
+ {
+  "name": "e02a",
+  "lang": "en",
+  "text": "And the one begging him to stop? The King of Chin, who's supposed to receive it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e02a.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "And",
+    0.0,
+    0.16
+   ],
+   [
+    "the",
+    0.16,
+    0.28
+   ],
+   [
+    "one",
+    0.28,
+    0.46
+   ],
+   [
+    "begging",
+    0.46,
+    0.78
+   ],
+   [
+    "him",
+    0.78,
+    1.0
+   ],
+   [
+    "to",
+    1.0,
+    1.14
+   ],
+   [
+    "stop?",
+    1.14,
+    1.48
+   ],
+   [
+    "The",
+    2.0,
+    2.12
+   ],
+   [
+    "King",
+    2.12,
+    2.36
+   ],
+   [
+    "of",
+    2.36,
+    2.46
+   ],
+   [
+    "Qin,",
+    2.46,
+    2.84
+   ],
+   [
+    "who's",
+    3.16,
+    3.36
+   ],
+   [
+    "supposed",
+    3.36,
+    3.66
+   ],
+   [
+    "to",
+    3.66,
+    3.92
+   ],
+   [
+    "receive",
+    3.92,
+    4.22
+   ],
+   [
+    "it.",
+    4.22,
+    4.48
+   ]
+  ],
+  "heard": "And the one begging him to stop? The King of Qin, who's supposed to receive it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ },
+ {
+  "name": "e02b",
+  "lang": "en",
+  "text": "And the one begging him to stop? The King of Chin, who's supposed to receive it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e02b.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "And",
+    0.0,
+    0.18
+   ],
+   [
+    "the",
+    0.18,
+    0.3
+   ],
+   [
+    "one",
+    0.3,
+    0.46
+   ],
+   [
+    "begging",
+    0.46,
+    0.76
+   ],
+   [
+    "him",
+    0.76,
+    0.98
+   ],
+   [
+    "to",
+    0.98,
+    1.1
+   ],
+   [
+    "stop?",
+    1.1,
+    1.42
+   ],
+   [
+    "The",
+    1.94,
+    2.06
+   ],
+   [
+    "King",
+    2.06,
+    2.3
+   ],
+   [
+    "of",
+    2.3,
+    2.42
+   ],
+   [
+    "Qin,",
+    2.42,
+    2.78
+   ],
+   [
+    "who's",
+    3.08,
+    3.28
+   ],
+   [
+    "supposed",
+    3.28,
+    3.56
+   ],
+   [
+    "to",
+    3.56,
+    3.84
+   ],
+   [
+    "receive",
+    3.84,
+    4.14
+   ],
+   [
+    "it.",
+    4.14,
+    4.4
+   ]
+  ],
+  "heard": "And the one begging him to stop? The King of Qin, who's supposed to receive it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.64
+ },
+ {
+  "name": "e03a",
+  "lang": "en",
+  "text": "The king had offered the kingdom of Jow fifteen cities for it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e03a.mp3",
+  "bytes": 63990,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.4
+   ],
+   [
+    "had",
+    0.4,
+    0.6
+   ],
+   [
+    "offered",
+    0.6,
+    0.9
+   ],
+   [
+    "the",
+    0.9,
+    1.08
+   ],
+   [
+    "kingdom",
+    1.08,
+    1.36
+   ],
+   [
+    "of",
+    1.36,
+    1.6
+   ],
+   [
+    "Zhao",
+    1.6,
+    1.98
+   ],
+   [
+    "15",
+    1.98,
+    2.56
+   ],
+   [
+    "cities",
+    2.56,
+    3.18
+   ],
+   [
+    "for",
+    3.18,
+    3.54
+   ],
+   [
+    "it.",
+    3.54,
+    3.72
+   ]
+  ],
+  "heard": "The king had offered the kingdom of Zhao 15 cities for it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 3.92
+ },
+ {
+  "name": "e03b",
+  "lang": "en",
+  "text": "The king had offered the kingdom of Jow fifteen cities for it.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e03b.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "king",
+    0.18,
+    0.4
+   ],
+   [
+    "had",
+    0.4,
+    0.6
+   ],
+   [
+    "offered",
+    0.6,
+    0.92
+   ],
+   [
+    "the",
+    0.92,
+    1.1
+   ],
+   [
+    "kingdom",
+    1.1,
+    1.38
+   ],
+   [
+    "of",
+    1.38,
+    1.62
+   ],
+   [
+    "Zhao",
+    1.62,
+    1.98
+   ],
+   [
+    "15",
+    1.98,
+    2.5
+   ],
+   [
+    "cities",
+    2.5,
+    3.2
+   ],
+   [
+    "for",
+    3.2,
+    3.58
+   ],
+   [
+    "it.",
+    3.58,
+    3.78
+   ]
+  ],
+  "heard": "The king had offered the kingdom of Zhao 15 cities for it.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.0
+ },
+ {
+  "name": "e04a",
+  "lang": "en",
+  "text": "Hand it over, and the cities may never come. Refuse, and Chin's army definitely will.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e04a.mp3",
+  "bytes": 98263,
+  "words": [
+   [
+    "Hand",
+    0.0,
+    0.2
+   ],
+   [
+    "it",
+    0.2,
+    0.36
+   ],
+   [
+    "over",
+    0.36,
+    0.6
+   ],
+   [
+    "and",
+    0.6,
+    1.02
+   ],
+   [
+    "the",
+    1.02,
+    1.12
+   ],
+   [
+    "cities",
+    1.12,
+    1.46
+   ],
+   [
+    "may",
+    1.46,
+    1.7
+   ],
+   [
+    "never",
+    1.7,
+    2.1
+   ],
+   [
+    "come.",
+    2.1,
+    2.48
+   ],
+   [
+    "Refuse",
+    2.9,
+    3.5
+   ],
+   [
+    "and",
+    3.5,
+    3.92
+   ],
+   [
+    "Chin's",
+    3.92,
+    4.34
+   ],
+   [
+    "army",
+    4.34,
+    4.6
+   ],
+   [
+    "definitely",
+    4.6,
+    5.24
+   ],
+   [
+    "will.",
+    5.24,
+    5.7
+   ]
+  ],
+  "heard": "Hand it over and the cities may never come. Refuse and Chin's army definitely will.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 6.08
+ },
+ {
+  "name": "e04b",
+  "lang": "en",
+  "text": "Hand it over, and the cities may never come. Refuse, and Chin's army definitely will.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e04b.mp3",
+  "bytes": 99517,
+  "words": [
+   [
+    "Hand",
+    0.0,
+    0.22
+   ],
+   [
+    "it",
+    0.22,
+    0.38
+   ],
+   [
+    "over,",
+    0.38,
+    0.64
+   ],
+   [
+    "and",
+    1.0,
+    1.06
+   ],
+   [
+    "the",
+    1.06,
+    1.16
+   ],
+   [
+    "cities",
+    1.16,
+    1.52
+   ],
+   [
+    "may",
+    1.52,
+    1.78
+   ],
+   [
+    "never",
+    1.78,
+    2.16
+   ],
+   [
+    "come.",
+    2.16,
+    2.52
+   ],
+   [
+    "Refuse,",
+    3.06,
+    3.6
+   ],
+   [
+    "and",
+    4.0,
+    4.08
+   ],
+   [
+    "Chin's",
+    4.08,
+    4.5
+   ],
+   [
+    "army",
+    4.5,
+    4.78
+   ],
+   [
+    "definitely",
+    4.78,
+    5.42
+   ],
+   [
+    "will.",
+    5.42,
+    5.86
+   ]
+  ],
+  "heard": "Hand it over, and the cities may never come. Refuse, and Chin's army definitely will.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.16
+ },
+ {
+  "name": "e05a",
+  "lang": "en",
+  "text": "Who could Jow send? Nobody. Until a palace eunuch put forward his own retainer.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e05a.mp3",
+  "bytes": 94501,
+  "words": [
+   [
+    "Who",
+    0.0,
+    0.2
+   ],
+   [
+    "could",
+    0.2,
+    0.4
+   ],
+   [
+    "joust",
+    0.4,
+    0.86
+   ],
+   [
+    "send?",
+    0.86,
+    1.12
+   ],
+   [
+    "Nobody.",
+    1.64,
+    2.1
+   ],
+   [
+    "Until",
+    2.66,
+    2.98
+   ],
+   [
+    "a",
+    2.98,
+    3.2
+   ],
+   [
+    "palace",
+    3.2,
+    3.48
+   ],
+   [
+    "eunuch",
+    3.48,
+    4.04
+   ],
+   [
+    "put",
+    4.04,
+    4.18
+   ],
+   [
+    "forward",
+    4.18,
+    4.54
+   ],
+   [
+    "his",
+    4.54,
+    4.76
+   ],
+   [
+    "own",
+    4.76,
+    5.02
+   ],
+   [
+    "retainer.",
+    5.02,
+    5.64
+   ]
+  ],
+  "heard": "Who could joust send? Nobody. Until a palace eunuch put forward his own retainer.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 5.84
+ },
+ {
+  "name": "e05b",
+  "lang": "en",
+  "text": "Who could Jow send? Nobody. Until a palace eunuch put forward his own retainer.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e05b.mp3",
+  "bytes": 94501,
+  "words": [
+   [
+    "Who",
+    0.0,
+    0.2
+   ],
+   [
+    "could",
+    0.2,
+    0.4
+   ],
+   [
+    "joust",
+    0.4,
+    0.86
+   ],
+   [
+    "send?",
+    0.86,
+    1.08
+   ],
+   [
+    "Nobody.",
+    1.64,
+    2.06
+   ],
+   [
+    "Until",
+    2.66,
+    2.98
+   ],
+   [
+    "a",
+    2.98,
+    3.22
+   ],
+   [
+    "palace",
+    3.22,
+    3.52
+   ],
+   [
+    "eunuch",
+    3.52,
+    4.04
+   ],
+   [
+    "put",
+    4.04,
+    4.2
+   ],
+   [
+    "forward",
+    4.2,
+    4.56
+   ],
+   [
+    "his",
+    4.56,
+    4.78
+   ],
+   [
+    "own",
+    4.78,
+    5.04
+   ],
+   [
+    "retainer.",
+    5.04,
+    5.62
+   ]
+  ],
+  "heard": "Who could joust send? Nobody. Until a palace eunuch put forward his own retainer.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.84
+ },
+ {
+  "name": "e06a",
+  "lang": "en",
+  "text": "He says: \"I'll go. No cities, and I bring the jade back in one piece.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e06a.mp3",
+  "bytes": 84470,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "says,",
+    0.14,
+    0.38
+   ],
+   [
+    "I'll",
+    0.88,
+    1.14
+   ],
+   [
+    "go.",
+    1.14,
+    1.36
+   ],
+   [
+    "No",
+    1.86,
+    2.06
+   ],
+   [
+    "cities,",
+    2.06,
+    2.46
+   ],
+   [
+    "and",
+    2.84,
+    2.92
+   ],
+   [
+    "I",
+    2.92,
+    3.02
+   ],
+   [
+    "bring",
+    3.02,
+    3.26
+   ],
+   [
+    "the",
+    3.26,
+    3.4
+   ],
+   [
+    "Jade",
+    3.4,
+    3.62
+   ],
+   [
+    "back",
+    3.62,
+    3.92
+   ],
+   [
+    "in",
+    3.92,
+    4.16
+   ],
+   [
+    "one",
+    4.16,
+    4.44
+   ],
+   [
+    "piece.",
+    4.44,
+    4.76
+   ]
+  ],
+  "heard": "He says, I'll go. No cities, and I bring the Jade back in one piece.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.2
+ },
+ {
+  "name": "e06b",
+  "lang": "en",
+  "text": "He says: \"I'll go. No cities, and I bring the jade back in one piece.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e06b.mp3",
+  "bytes": 82798,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "says,",
+    0.12,
+    0.36
+   ],
+   [
+    "I'll",
+    0.84,
+    1.1
+   ],
+   [
+    "go,",
+    1.1,
+    1.32
+   ],
+   [
+    "no",
+    1.78,
+    2.0
+   ],
+   [
+    "cities,",
+    2.0,
+    2.36
+   ],
+   [
+    "and",
+    2.76,
+    2.84
+   ],
+   [
+    "I",
+    2.84,
+    2.94
+   ],
+   [
+    "bring",
+    2.94,
+    3.16
+   ],
+   [
+    "the",
+    3.16,
+    3.32
+   ],
+   [
+    "Jade",
+    3.32,
+    3.54
+   ],
+   [
+    "back",
+    3.54,
+    3.84
+   ],
+   [
+    "in",
+    3.84,
+    4.1
+   ],
+   [
+    "one",
+    4.1,
+    4.38
+   ],
+   [
+    "piece.",
+    4.38,
+    4.7
+   ]
+  ],
+  "heard": "He says, I'll go, no cities, and I bring the Jade back in one piece.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.12
+ },
+ {
+  "name": "e07a",
+  "lang": "en",
+  "text": "The king takes the jade, thrilled, and passes it round to his ladies.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e07a.mp3",
+  "bytes": 75275,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.42
+   ],
+   [
+    "takes",
+    0.42,
+    0.78
+   ],
+   [
+    "the",
+    0.78,
+    0.98
+   ],
+   [
+    "jade,",
+    0.98,
+    1.46
+   ],
+   [
+    "thrilled,",
+    1.7,
+    2.12
+   ],
+   [
+    "and",
+    2.56,
+    2.64
+   ],
+   [
+    "passes",
+    2.64,
+    3.0
+   ],
+   [
+    "it",
+    3.0,
+    3.2
+   ],
+   [
+    "round",
+    3.2,
+    3.44
+   ],
+   [
+    "to",
+    3.44,
+    3.66
+   ],
+   [
+    "his",
+    3.66,
+    3.82
+   ],
+   [
+    "ladies.",
+    3.82,
+    4.18
+   ]
+  ],
+  "heard": "The king takes the jade, thrilled, and passes it round to his ladies.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.64
+ },
+ {
+  "name": "e07b",
+  "lang": "en",
+  "text": "The king takes the jade, thrilled, and passes it round to his ladies.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e07b.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.4
+   ],
+   [
+    "takes",
+    0.4,
+    0.78
+   ],
+   [
+    "the",
+    0.78,
+    1.0
+   ],
+   [
+    "jade,",
+    1.0,
+    1.4
+   ],
+   [
+    "thrilled,",
+    1.66,
+    2.04
+   ],
+   [
+    "and",
+    2.48,
+    2.56
+   ],
+   [
+    "passes",
+    2.56,
+    2.92
+   ],
+   [
+    "it",
+    2.92,
+    3.12
+   ],
+   [
+    "round",
+    3.12,
+    3.36
+   ],
+   [
+    "to",
+    3.36,
+    3.58
+   ],
+   [
+    "his",
+    3.58,
+    3.76
+   ],
+   [
+    "ladies.",
+    3.76,
+    4.1
+   ]
+  ],
+  "heard": "The king takes the jade, thrilled, and passes it round to his ladies.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "e08a",
+  "lang": "en",
+  "text": "Everyone shouts \"Long live the king!\" Nobody mentions the cities.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e08a.mp3",
+  "bytes": 80291,
+  "words": [
+   [
+    "Everyone",
+    0.0,
+    0.38
+   ],
+   [
+    "shouts,",
+    0.38,
+    0.92
+   ],
+   [
+    "Long",
+    1.18,
+    1.42
+   ],
+   [
+    "live",
+    1.42,
+    1.68
+   ],
+   [
+    "the",
+    1.68,
+    1.92
+   ],
+   [
+    "king!",
+    1.92,
+    2.24
+   ],
+   [
+    "Nobody",
+    2.88,
+    3.34
+   ],
+   [
+    "mentions",
+    3.34,
+    3.9
+   ],
+   [
+    "the",
+    3.9,
+    4.14
+   ],
+   [
+    "cities.",
+    4.14,
+    4.46
+   ]
+  ],
+  "heard": "Everyone shouts, Long live the king! Nobody mentions the cities.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.96
+ },
+ {
+  "name": "e08b",
+  "lang": "en",
+  "text": "Everyone shouts \"Long live the king!\" Nobody mentions the cities.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e08b.mp3",
+  "bytes": 77783,
+  "words": [
+   [
+    "Everyone",
+    0.0,
+    0.36
+   ],
+   [
+    "shouts",
+    0.36,
+    0.84
+   ],
+   [
+    "long",
+    0.84,
+    1.28
+   ],
+   [
+    "live",
+    1.28,
+    1.6
+   ],
+   [
+    "the",
+    1.6,
+    1.82
+   ],
+   [
+    "king",
+    1.82,
+    2.16
+   ],
+   [
+    "nobody",
+    2.16,
+    3.18
+   ],
+   [
+    "mentions",
+    3.18,
+    3.7
+   ],
+   [
+    "the",
+    3.7,
+    3.98
+   ],
+   [
+    "cities",
+    3.98,
+    4.3
+   ]
+  ],
+  "heard": "Everyone shouts long live the king nobody mentions the cities",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.8
+ },
+ {
+  "name": "e09a",
+  "lang": "en",
+  "text": "He steps forward: \"There's a flaw in it. Let me show Your Majesty.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e09a.mp3",
+  "bytes": 71514,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "steps",
+    0.12,
+    0.38
+   ],
+   [
+    "forward.",
+    0.38,
+    0.84
+   ],
+   [
+    "There's",
+    1.4,
+    1.78
+   ],
+   [
+    "a",
+    1.78,
+    1.84
+   ],
+   [
+    "flaw",
+    1.84,
+    2.12
+   ],
+   [
+    "in",
+    2.12,
+    2.34
+   ],
+   [
+    "it.",
+    2.34,
+    2.54
+   ],
+   [
+    "Let",
+    2.9,
+    3.04
+   ],
+   [
+    "me",
+    3.04,
+    3.18
+   ],
+   [
+    "show",
+    3.18,
+    3.46
+   ],
+   [
+    "your",
+    3.46,
+    3.62
+   ],
+   [
+    "majesty.",
+    3.62,
+    4.0
+   ]
+  ],
+  "heard": "He steps forward. There's a flaw in it. Let me show your majesty.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "e09b",
+  "lang": "en",
+  "text": "He steps forward: \"There's a flaw in it. Let me show Your Majesty.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e09b.mp3",
+  "bytes": 72767,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "steps",
+    0.14,
+    0.4
+   ],
+   [
+    "forward.",
+    0.4,
+    0.86
+   ],
+   [
+    "There's",
+    1.38,
+    1.8
+   ],
+   [
+    "a",
+    1.8,
+    1.88
+   ],
+   [
+    "flaw",
+    1.88,
+    2.2
+   ],
+   [
+    "in",
+    2.2,
+    2.44
+   ],
+   [
+    "it.",
+    2.44,
+    2.62
+   ],
+   [
+    "Let",
+    3.0,
+    3.14
+   ],
+   [
+    "me",
+    3.14,
+    3.28
+   ],
+   [
+    "show",
+    3.28,
+    3.54
+   ],
+   [
+    "your",
+    3.54,
+    3.68
+   ],
+   [
+    "majesty.",
+    3.68,
+    4.08
+   ]
+  ],
+  "heard": "He steps forward. There's a flaw in it. Let me show your majesty.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.48
+ },
+ {
+  "name": "e10a",
+  "lang": "en",
+  "text": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e10a.mp3",
+  "bytes": 99517,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "second",
+    0.16,
+    0.54
+   ],
+   [
+    "it's",
+    0.54,
+    0.8
+   ],
+   [
+    "back",
+    0.8,
+    1.0
+   ],
+   [
+    "in",
+    1.0,
+    1.14
+   ],
+   [
+    "his",
+    1.14,
+    1.26
+   ],
+   [
+    "hands,",
+    1.26,
+    1.64
+   ],
+   [
+    "he",
+    1.9,
+    2.02
+   ],
+   [
+    "backs",
+    2.02,
+    2.32
+   ],
+   [
+    "against",
+    2.32,
+    2.64
+   ],
+   [
+    "a",
+    2.64,
+    2.8
+   ],
+   [
+    "pillar,",
+    2.8,
+    3.12
+   ],
+   [
+    "so",
+    3.46,
+    3.76
+   ],
+   [
+    "furious",
+    3.76,
+    4.36
+   ],
+   [
+    "his",
+    4.36,
+    4.68
+   ],
+   [
+    "hair",
+    4.68,
+    5.04
+   ],
+   [
+    "lifts",
+    5.04,
+    5.34
+   ],
+   [
+    "his",
+    5.34,
+    5.54
+   ],
+   [
+    "hat!",
+    5.54,
+    5.86
+   ]
+  ],
+  "heard": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 6.16
+ },
+ {
+  "name": "e10b",
+  "lang": "en",
+  "text": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e10b.mp3",
+  "bytes": 94501,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.12
+   ],
+   [
+    "second",
+    0.12,
+    0.48
+   ],
+   [
+    "it's",
+    0.48,
+    0.7
+   ],
+   [
+    "back",
+    0.7,
+    0.92
+   ],
+   [
+    "in",
+    0.92,
+    1.06
+   ],
+   [
+    "his",
+    1.06,
+    1.18
+   ],
+   [
+    "hands,",
+    1.18,
+    1.56
+   ],
+   [
+    "he",
+    1.76,
+    1.9
+   ],
+   [
+    "backs",
+    1.9,
+    2.2
+   ],
+   [
+    "against",
+    2.2,
+    2.5
+   ],
+   [
+    "a",
+    2.5,
+    2.68
+   ],
+   [
+    "pillar,",
+    2.68,
+    3.02
+   ],
+   [
+    "so",
+    3.26,
+    3.48
+   ],
+   [
+    "furious",
+    3.48,
+    4.08
+   ],
+   [
+    "his",
+    4.08,
+    4.38
+   ],
+   [
+    "hair",
+    4.38,
+    4.72
+   ],
+   [
+    "lifts",
+    4.72,
+    5.02
+   ],
+   [
+    "his",
+    5.02,
+    5.22
+   ],
+   [
+    "hat.",
+    5.22,
+    5.52
+   ]
+  ],
+  "heard": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.84
+ },
+ {
+  "name": "e11a",
+  "lang": "en",
+  "text": "\"Push me, and my head and this jade shatter on this pillar together!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e11a.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "Push",
+    0.0,
+    0.26
+   ],
+   [
+    "me",
+    0.26,
+    0.56
+   ],
+   [
+    "and",
+    0.56,
+    0.92
+   ],
+   [
+    "my",
+    0.92,
+    1.12
+   ],
+   [
+    "head",
+    1.12,
+    1.5
+   ],
+   [
+    "and",
+    1.5,
+    1.72
+   ],
+   [
+    "this",
+    1.72,
+    1.9
+   ],
+   [
+    "jade",
+    1.9,
+    2.46
+   ],
+   [
+    "shatter",
+    2.46,
+    2.94
+   ],
+   [
+    "on",
+    2.94,
+    3.12
+   ],
+   [
+    "this",
+    3.12,
+    3.3
+   ],
+   [
+    "pillar",
+    3.3,
+    3.58
+   ],
+   [
+    "together!",
+    3.58,
+    4.02
+   ]
+  ],
+  "heard": "Push me and my head and this jade shatter on this pillar together!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.72
+ },
+ {
+  "name": "e11b",
+  "lang": "en",
+  "text": "\"Push me, and my head and this jade shatter on this pillar together!\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e11b.mp3",
+  "bytes": 74021,
+  "words": [
+   [
+    "Push",
+    0.0,
+    0.26
+   ],
+   [
+    "me",
+    0.26,
+    0.58
+   ],
+   [
+    "and",
+    0.58,
+    0.9
+   ],
+   [
+    "my",
+    0.9,
+    1.1
+   ],
+   [
+    "head",
+    1.1,
+    1.46
+   ],
+   [
+    "and",
+    1.46,
+    1.66
+   ],
+   [
+    "this",
+    1.66,
+    1.84
+   ],
+   [
+    "jade",
+    1.84,
+    2.34
+   ],
+   [
+    "shatter",
+    2.34,
+    2.86
+   ],
+   [
+    "on",
+    2.86,
+    3.02
+   ],
+   [
+    "this",
+    3.02,
+    3.2
+   ],
+   [
+    "pillar",
+    3.2,
+    3.48
+   ],
+   [
+    "together!",
+    3.48,
+    3.86
+   ]
+  ],
+  "heard": "Push me and my head and this jade shatter on this pillar together!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "e12a",
+  "lang": "en",
+  "text": "The king apologises at once, unrolls a map and points: \"These fifteen cities. Jow's.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e12a.mp3",
+  "bytes": 113727,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "king",
+    0.18,
+    0.38
+   ],
+   [
+    "apologizes",
+    0.38,
+    1.24
+   ],
+   [
+    "at",
+    1.24,
+    1.4
+   ],
+   [
+    "once,",
+    1.4,
+    1.8
+   ],
+   [
+    "unrolls",
+    2.22,
+    2.68
+   ],
+   [
+    "a",
+    2.68,
+    2.74
+   ],
+   [
+    "map,",
+    2.74,
+    3.04
+   ],
+   [
+    "and",
+    3.18,
+    3.24
+   ],
+   [
+    "points.",
+    3.24,
+    3.54
+   ],
+   [
+    "These",
+    4.34,
+    4.56
+   ],
+   [
+    "15",
+    4.56,
+    5.1
+   ],
+   [
+    "cities.",
+    5.1,
+    5.62
+   ],
+   [
+    "Jows.",
+    6.16,
+    6.64
+   ]
+  ],
+  "heard": "The king apologizes at once, unrolls a map, and points. These 15 cities. Jows.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 7.04
+ },
+ {
+  "name": "e12b",
+  "lang": "en",
+  "text": "The king apologises at once, unrolls a map and points: \"These fifteen cities. Jow's.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e12b.mp3",
+  "bytes": 112474,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.34
+   ],
+   [
+    "apologizes",
+    0.34,
+    1.16
+   ],
+   [
+    "at",
+    1.16,
+    1.32
+   ],
+   [
+    "once,",
+    1.32,
+    1.74
+   ],
+   [
+    "unrolls",
+    2.16,
+    2.58
+   ],
+   [
+    "a",
+    2.58,
+    2.66
+   ],
+   [
+    "map",
+    2.66,
+    2.94
+   ],
+   [
+    "and",
+    2.94,
+    3.14
+   ],
+   [
+    "points.",
+    3.14,
+    3.48
+   ],
+   [
+    "These",
+    4.26,
+    4.46
+   ],
+   [
+    "15",
+    4.46,
+    5.06
+   ],
+   [
+    "cities.",
+    5.06,
+    5.54
+   ],
+   [
+    "Jows.",
+    6.14,
+    6.58
+   ]
+  ],
+  "heard": "The king apologizes at once, unrolls a map and points. These 15 cities. Jows.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 6.96
+ },
+ {
+  "name": "e13a",
+  "lang": "en",
+  "text": "He can tell the king is acting.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e13a.mp3",
+  "bytes": 33061,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "can",
+    0.14,
+    0.32
+   ],
+   [
+    "tell",
+    0.32,
+    0.64
+   ],
+   [
+    "the",
+    0.64,
+    0.82
+   ],
+   [
+    "king",
+    0.82,
+    1.0
+   ],
+   [
+    "is",
+    1.0,
+    1.2
+   ],
+   [
+    "acting.",
+    1.2,
+    1.54
+   ]
+  ],
+  "heard": "He can tell the king is acting.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.0
+ },
+ {
+  "name": "e13b",
+  "lang": "en",
+  "text": "He can tell the king is acting.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e13b.mp3",
+  "bytes": 34315,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "can",
+    0.14,
+    0.32
+   ],
+   [
+    "tell",
+    0.32,
+    0.68
+   ],
+   [
+    "the",
+    0.68,
+    0.88
+   ],
+   [
+    "king",
+    0.88,
+    1.1
+   ],
+   [
+    "is",
+    1.1,
+    1.28
+   ],
+   [
+    "acting.",
+    1.28,
+    1.66
+   ]
+  ],
+  "heard": "He can tell the king is acting.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 2.08
+ },
+ {
+  "name": "e14a",
+  "lang": "en",
+  "text": "So he acts too: \"My king fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony, then I hand it over.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e14a.mp3",
+  "bytes": 162211,
+  "words": [
+   [
+    "So",
+    0.0,
+    0.24
+   ],
+   [
+    "he",
+    0.24,
+    0.48
+   ],
+   [
+    "acts,",
+    0.48,
+    0.76
+   ],
+   [
+    "too.",
+    0.88,
+    1.04
+   ],
+   [
+    "My",
+    1.68,
+    1.82
+   ],
+   [
+    "King",
+    1.82,
+    2.1
+   ],
+   [
+    "fasted",
+    2.1,
+    2.64
+   ],
+   [
+    "five",
+    2.64,
+    3.06
+   ],
+   [
+    "days",
+    3.06,
+    3.48
+   ],
+   [
+    "before",
+    3.48,
+    3.84
+   ],
+   [
+    "sending",
+    3.84,
+    4.24
+   ],
+   [
+    "it.",
+    4.24,
+    4.48
+   ],
+   [
+    "Your",
+    4.98,
+    5.08
+   ],
+   [
+    "Majesty",
+    5.08,
+    5.42
+   ],
+   [
+    "fasts",
+    5.42,
+    6.06
+   ],
+   [
+    "five",
+    6.06,
+    6.26
+   ],
+   [
+    "days",
+    6.26,
+    6.6
+   ],
+   [
+    "and",
+    6.6,
+    6.8
+   ],
+   [
+    "holds",
+    6.8,
+    7.06
+   ],
+   [
+    "the",
+    7.06,
+    7.26
+   ],
+   [
+    "grand",
+    7.26,
+    7.58
+   ],
+   [
+    "ceremony.",
+    7.58,
+    8.08
+   ],
+   [
+    "Then",
+    8.58,
+    8.92
+   ],
+   [
+    "I",
+    8.92,
+    9.18
+   ],
+   [
+    "hand",
+    9.18,
+    9.4
+   ],
+   [
+    "it",
+    9.4,
+    9.5
+   ],
+   [
+    "over.",
+    9.5,
+    9.72
+   ]
+  ],
+  "heard": "So he acts, too. My King fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony. Then I hand it over.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 10.08
+ },
+ {
+  "name": "e14b",
+  "lang": "en",
+  "text": "So he acts too: \"My king fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony, then I hand it over.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e14b.mp3",
+  "bytes": 157195,
+  "words": [
+   [
+    "So",
+    0.0,
+    0.24
+   ],
+   [
+    "he",
+    0.24,
+    0.5
+   ],
+   [
+    "acts",
+    0.5,
+    0.74
+   ],
+   [
+    "too.",
+    0.74,
+    1.04
+   ],
+   [
+    "My",
+    1.74,
+    1.86
+   ],
+   [
+    "king",
+    1.86,
+    2.14
+   ],
+   [
+    "fasted",
+    2.14,
+    2.7
+   ],
+   [
+    "five",
+    2.7,
+    3.12
+   ],
+   [
+    "days",
+    3.12,
+    3.48
+   ],
+   [
+    "before",
+    3.48,
+    3.82
+   ],
+   [
+    "sending",
+    3.82,
+    4.22
+   ],
+   [
+    "it.",
+    4.22,
+    4.48
+   ],
+   [
+    "Your",
+    4.92,
+    5.02
+   ],
+   [
+    "majesty",
+    5.02,
+    5.38
+   ],
+   [
+    "fasts",
+    5.38,
+    6.04
+   ],
+   [
+    "five",
+    6.04,
+    6.26
+   ],
+   [
+    "days",
+    6.26,
+    6.6
+   ],
+   [
+    "and",
+    6.6,
+    6.8
+   ],
+   [
+    "holds",
+    6.8,
+    7.04
+   ],
+   [
+    "the",
+    7.04,
+    7.2
+   ],
+   [
+    "grand",
+    7.2,
+    7.44
+   ],
+   [
+    "ceremony.",
+    7.44,
+    7.88
+   ],
+   [
+    "Then",
+    8.38,
+    8.68
+   ],
+   [
+    "I",
+    8.68,
+    8.92
+   ],
+   [
+    "hand",
+    8.92,
+    9.16
+   ],
+   [
+    "it",
+    9.16,
+    9.26
+   ],
+   [
+    "over.",
+    9.26,
+    9.48
+   ]
+  ],
+  "heard": "So he acts too. My king fasted five days before sending it. Your majesty fasts five days and holds the grand ceremony. Then I hand it over.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 9.76
+ },
+ {
+  "name": "e15a",
+  "lang": "en",
+  "text": "The king can't just grab it, so he agrees.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e15a.mp3",
+  "bytes": 51034,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "king",
+    0.14,
+    0.4
+   ],
+   [
+    "can't",
+    0.4,
+    0.74
+   ],
+   [
+    "just",
+    0.74,
+    0.92
+   ],
+   [
+    "grab",
+    0.92,
+    1.26
+   ],
+   [
+    "it,",
+    1.26,
+    1.54
+   ],
+   [
+    "so",
+    1.74,
+    1.98
+   ],
+   [
+    "he",
+    1.98,
+    2.3
+   ],
+   [
+    "agrees.",
+    2.3,
+    2.58
+   ]
+  ],
+  "heard": "The king can't just grab it, so he agrees.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 3.12
+ },
+ {
+  "name": "e15b",
+  "lang": "en",
+  "text": "The king can't just grab it, so he agrees.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e15b.mp3",
+  "bytes": 53541,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "king",
+    0.14,
+    0.4
+   ],
+   [
+    "can't",
+    0.4,
+    0.78
+   ],
+   [
+    "just",
+    0.78,
+    0.96
+   ],
+   [
+    "grab",
+    0.96,
+    1.32
+   ],
+   [
+    "it,",
+    1.32,
+    1.62
+   ],
+   [
+    "so",
+    1.8,
+    2.08
+   ],
+   [
+    "he",
+    2.08,
+    2.44
+   ],
+   [
+    "agrees.",
+    2.44,
+    2.74
+   ]
+  ],
+  "heard": "The king can't just grab it, so he agrees.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 3.28
+ },
+ {
+  "name": "e16a",
+  "lang": "en",
+  "text": "Meanwhile he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e16a.mp3",
+  "bytes": 112474,
+  "words": [
+   [
+    "Meanwhile,",
+    0.0,
+    0.48
+   ],
+   [
+    "he",
+    0.84,
+    0.94
+   ],
+   [
+    "dresses",
+    0.94,
+    1.24
+   ],
+   [
+    "a",
+    1.24,
+    1.48
+   ],
+   [
+    "servant",
+    1.48,
+    1.82
+   ],
+   [
+    "in",
+    1.82,
+    2.06
+   ],
+   [
+    "rough",
+    2.06,
+    2.34
+   ],
+   [
+    "cloth,",
+    2.34,
+    2.7
+   ],
+   [
+    "the",
+    3.18,
+    3.28
+   ],
+   [
+    "jade",
+    3.28,
+    3.66
+   ],
+   [
+    "tucked",
+    3.66,
+    3.86
+   ],
+   [
+    "in",
+    3.86,
+    4.08
+   ],
+   [
+    "his",
+    4.08,
+    4.2
+   ],
+   [
+    "coat,",
+    4.2,
+    4.48
+   ],
+   [
+    "and",
+    4.88,
+    4.98
+   ],
+   [
+    "sends",
+    4.98,
+    5.24
+   ],
+   [
+    "him",
+    5.24,
+    5.42
+   ],
+   [
+    "home",
+    5.42,
+    5.7
+   ],
+   [
+    "by",
+    5.7,
+    5.94
+   ],
+   [
+    "the",
+    5.94,
+    6.06
+   ],
+   [
+    "back",
+    6.06,
+    6.3
+   ],
+   [
+    "roads.",
+    6.3,
+    6.56
+   ]
+  ],
+  "heard": "Meanwhile, he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 6.96
+ },
+ {
+  "name": "e16b",
+  "lang": "en",
+  "text": "Meanwhile he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e16b.mp3",
+  "bytes": 107458,
+  "words": [
+   [
+    "Meanwhile,",
+    0.0,
+    0.4
+   ],
+   [
+    "he",
+    0.76,
+    0.84
+   ],
+   [
+    "dresses",
+    0.84,
+    1.16
+   ],
+   [
+    "a",
+    1.16,
+    1.4
+   ],
+   [
+    "servant",
+    1.4,
+    1.74
+   ],
+   [
+    "in",
+    1.74,
+    1.96
+   ],
+   [
+    "rough",
+    1.96,
+    2.22
+   ],
+   [
+    "cloth,",
+    2.22,
+    2.6
+   ],
+   [
+    "the",
+    2.98,
+    3.08
+   ],
+   [
+    "jade",
+    3.08,
+    3.44
+   ],
+   [
+    "tucked",
+    3.44,
+    3.66
+   ],
+   [
+    "in",
+    3.66,
+    3.86
+   ],
+   [
+    "his",
+    3.86,
+    4.0
+   ],
+   [
+    "coat,",
+    4.0,
+    4.28
+   ],
+   [
+    "and",
+    4.6,
+    4.7
+   ],
+   [
+    "sends",
+    4.7,
+    4.96
+   ],
+   [
+    "him",
+    4.96,
+    5.14
+   ],
+   [
+    "home",
+    5.14,
+    5.38
+   ],
+   [
+    "by",
+    5.38,
+    5.6
+   ],
+   [
+    "the",
+    5.6,
+    5.74
+   ],
+   [
+    "back",
+    5.74,
+    5.98
+   ],
+   [
+    "roads.",
+    5.98,
+    6.26
+   ]
+  ],
+  "heard": "Meanwhile, he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 6.64
+ },
+ {
+  "name": "e17a",
+  "lang": "en",
+  "text": "Five days later the ceremony is set. The king asks for the jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e17a.mp3",
+  "bytes": 77783,
+  "words": [
+   [
+    "Five",
+    0.0,
+    0.28
+   ],
+   [
+    "days",
+    0.28,
+    0.52
+   ],
+   [
+    "later,",
+    0.52,
+    0.94
+   ],
+   [
+    "the",
+    1.2,
+    1.28
+   ],
+   [
+    "ceremony",
+    1.28,
+    1.76
+   ],
+   [
+    "is",
+    1.76,
+    2.1
+   ],
+   [
+    "set.",
+    2.1,
+    2.42
+   ],
+   [
+    "The",
+    2.94,
+    3.02
+   ],
+   [
+    "king",
+    3.02,
+    3.28
+   ],
+   [
+    "asks",
+    3.28,
+    3.74
+   ],
+   [
+    "for",
+    3.74,
+    4.0
+   ],
+   [
+    "the",
+    4.0,
+    4.12
+   ],
+   [
+    "jade.",
+    4.12,
+    4.44
+   ]
+  ],
+  "heard": "Five days later, the ceremony is set. The king asks for the jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.8
+ },
+ {
+  "name": "e17b",
+  "lang": "en",
+  "text": "Five days later the ceremony is set. The king asks for the jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e17b.mp3",
+  "bytes": 77783,
+  "words": [
+   [
+    "Five",
+    0.0,
+    0.28
+   ],
+   [
+    "days",
+    0.28,
+    0.52
+   ],
+   [
+    "later,",
+    0.52,
+    0.92
+   ],
+   [
+    "the",
+    1.2,
+    1.28
+   ],
+   [
+    "ceremony",
+    1.28,
+    1.74
+   ],
+   [
+    "is",
+    1.74,
+    2.08
+   ],
+   [
+    "set.",
+    2.08,
+    2.36
+   ],
+   [
+    "The",
+    2.94,
+    3.02
+   ],
+   [
+    "king",
+    3.02,
+    3.28
+   ],
+   [
+    "asks",
+    3.28,
+    3.72
+   ],
+   [
+    "for",
+    3.72,
+    4.0
+   ],
+   [
+    "the",
+    4.0,
+    4.12
+   ],
+   [
+    "jade.",
+    4.12,
+    4.44
+   ]
+  ],
+  "heard": "Five days later, the ceremony is set. The king asks for the jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.8
+ },
+ {
+  "name": "e18a",
+  "lang": "en",
+  "text": "He says: \"Chin has had twenty-odd rulers, and not one ever kept a deal. The jade is already in Jow.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e18a.mp3",
+  "bytes": 125430,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.12
+   ],
+   [
+    "says,",
+    0.12,
+    0.4
+   ],
+   [
+    "Chin",
+    0.82,
+    1.18
+   ],
+   [
+    "has",
+    1.18,
+    1.46
+   ],
+   [
+    "had",
+    1.46,
+    1.66
+   ],
+   [
+    "20",
+    1.66,
+    2.08
+   ],
+   [
+    "odd",
+    2.08,
+    2.44
+   ],
+   [
+    "rulers",
+    2.44,
+    2.88
+   ],
+   [
+    "and",
+    2.88,
+    3.26
+   ],
+   [
+    "not",
+    3.26,
+    3.48
+   ],
+   [
+    "one",
+    3.48,
+    3.94
+   ],
+   [
+    "ever",
+    3.94,
+    4.36
+   ],
+   [
+    "kept",
+    4.36,
+    4.64
+   ],
+   [
+    "the",
+    4.64,
+    4.82
+   ],
+   [
+    "deal.",
+    4.82,
+    5.1
+   ],
+   [
+    "The",
+    5.58,
+    5.68
+   ],
+   [
+    "Jade",
+    5.68,
+    6.0
+   ],
+   [
+    "is",
+    6.0,
+    6.24
+   ],
+   [
+    "already",
+    6.24,
+    6.74
+   ],
+   [
+    "in",
+    6.74,
+    7.04
+   ],
+   [
+    "Jiao.",
+    7.04,
+    7.4
+   ]
+  ],
+  "heard": "He says, Chin has had 20 odd rulers and not one ever kept the deal. The Jade is already in Jiao.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 7.76
+ },
+ {
+  "name": "e18b",
+  "lang": "en",
+  "text": "He says: \"Chin has had twenty-odd rulers, and not one ever kept a deal. The jade is already in Jow.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e18b.mp3",
+  "bytes": 126684,
+  "words": [
+   [
+    "He",
+    0.0,
+    0.14
+   ],
+   [
+    "says,",
+    0.14,
+    0.42
+   ],
+   [
+    "Chin",
+    0.88,
+    1.26
+   ],
+   [
+    "has",
+    1.26,
+    1.54
+   ],
+   [
+    "had",
+    1.54,
+    1.74
+   ],
+   [
+    "20",
+    1.74,
+    2.14
+   ],
+   [
+    "odd",
+    2.14,
+    2.44
+   ],
+   [
+    "rulers",
+    2.44,
+    2.86
+   ],
+   [
+    "and",
+    2.86,
+    3.34
+   ],
+   [
+    "not",
+    3.34,
+    3.56
+   ],
+   [
+    "one",
+    3.56,
+    3.98
+   ],
+   [
+    "ever",
+    3.98,
+    4.44
+   ],
+   [
+    "kept",
+    4.44,
+    4.7
+   ],
+   [
+    "the",
+    4.7,
+    4.86
+   ],
+   [
+    "deal.",
+    4.86,
+    5.14
+   ],
+   [
+    "The",
+    5.76,
+    5.88
+   ],
+   [
+    "Jade",
+    5.88,
+    6.22
+   ],
+   [
+    "is",
+    6.22,
+    6.48
+   ],
+   [
+    "already",
+    6.48,
+    7.0
+   ],
+   [
+    "in",
+    7.0,
+    7.2
+   ],
+   [
+    "Jiao.",
+    7.2,
+    7.56
+   ]
+  ],
+  "heard": "He says, Chin has had 20 odd rulers and not one ever kept the deal. The Jade is already in Jiao.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 7.84
+ },
+ {
+  "name": "e19a",
+  "lang": "en",
+  "text": "\"I deceived Your Majesty. I deserve death. Throw me in the pot.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e19a.mp3",
+  "bytes": 79037,
+  "words": [
+   [
+    "I",
+    0.0,
+    0.24
+   ],
+   [
+    "deceived",
+    0.24,
+    0.64
+   ],
+   [
+    "your",
+    0.64,
+    0.94
+   ],
+   [
+    "majesty.",
+    0.94,
+    1.42
+   ],
+   [
+    "I",
+    1.98,
+    2.26
+   ],
+   [
+    "deserve",
+    2.26,
+    2.54
+   ],
+   [
+    "death.",
+    2.54,
+    3.04
+   ],
+   [
+    "Throw",
+    3.48,
+    3.8
+   ],
+   [
+    "me",
+    3.8,
+    4.02
+   ],
+   [
+    "in",
+    4.02,
+    4.12
+   ],
+   [
+    "the",
+    4.12,
+    4.22
+   ],
+   [
+    "pot!",
+    4.22,
+    4.48
+   ]
+  ],
+  "heard": "I deceived your majesty. I deserve death. Throw me in the pot!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.88
+ },
+ {
+  "name": "e19b",
+  "lang": "en",
+  "text": "\"I deceived Your Majesty. I deserve death. Throw me in the pot.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e19b.mp3",
+  "bytes": 76529,
+  "words": [
+   [
+    "I",
+    0.0,
+    0.22
+   ],
+   [
+    "deceived",
+    0.22,
+    0.58
+   ],
+   [
+    "Your",
+    0.58,
+    0.86
+   ],
+   [
+    "Majesty.",
+    0.86,
+    1.34
+   ],
+   [
+    "I",
+    1.84,
+    2.08
+   ],
+   [
+    "deserve",
+    2.08,
+    2.36
+   ],
+   [
+    "death.",
+    2.36,
+    2.86
+   ],
+   [
+    "Throw",
+    3.38,
+    3.72
+   ],
+   [
+    "me",
+    3.72,
+    3.94
+   ],
+   [
+    "in",
+    3.94,
+    4.04
+   ],
+   [
+    "the",
+    4.04,
+    4.12
+   ],
+   [
+    "pot.",
+    4.12,
+    4.36
+   ]
+  ],
+  "heard": "I deceived Your Majesty. I deserve death. Throw me in the pot.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.72
+ },
+ {
+  "name": "e20a",
+  "lang": "en",
+  "text": "The ministers stare at each other. Someone moves to drag him out.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e20a.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "ministers",
+    0.16,
+    0.5
+   ],
+   [
+    "stare",
+    0.5,
+    1.02
+   ],
+   [
+    "at",
+    1.02,
+    1.2
+   ],
+   [
+    "each",
+    1.2,
+    1.38
+   ],
+   [
+    "other.",
+    1.38,
+    1.6
+   ],
+   [
+    "Someone",
+    2.16,
+    2.46
+   ],
+   [
+    "moves",
+    2.46,
+    2.86
+   ],
+   [
+    "to",
+    2.86,
+    3.08
+   ],
+   [
+    "drag",
+    3.08,
+    3.32
+   ],
+   [
+    "him",
+    3.32,
+    3.5
+   ],
+   [
+    "out.",
+    3.5,
+    3.72
+   ]
+  ],
+  "heard": "The ministers stare at each other. Someone moves to drag him out.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.0
+ },
+ {
+  "name": "e20b",
+  "lang": "en",
+  "text": "The ministers stare at each other. Someone moves to drag him out.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e20b.mp3",
+  "bytes": 65244,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.14
+   ],
+   [
+    "ministers",
+    0.14,
+    0.5
+   ],
+   [
+    "stare",
+    0.5,
+    1.02
+   ],
+   [
+    "at",
+    1.02,
+    1.18
+   ],
+   [
+    "each",
+    1.18,
+    1.36
+   ],
+   [
+    "other.",
+    1.36,
+    1.6
+   ],
+   [
+    "Someone",
+    2.12,
+    2.48
+   ],
+   [
+    "moves",
+    2.48,
+    2.8
+   ],
+   [
+    "to",
+    2.8,
+    2.98
+   ],
+   [
+    "drag",
+    2.98,
+    3.24
+   ],
+   [
+    "him",
+    3.24,
+    3.42
+   ],
+   [
+    "out.",
+    3.42,
+    3.68
+   ]
+  ],
+  "heard": "The ministers stare at each other. Someone moves to drag him out.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.0
+ },
+ {
+  "name": "e21a",
+  "lang": "en",
+  "text": "The king says: \"Kill him and we still don't get the jade. Let him go home.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e21a.mp3",
+  "bytes": 81545,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.18
+   ],
+   [
+    "king",
+    0.18,
+    0.4
+   ],
+   [
+    "says,",
+    0.4,
+    0.74
+   ],
+   [
+    "Kill",
+    1.16,
+    1.54
+   ],
+   [
+    "him",
+    1.54,
+    1.78
+   ],
+   [
+    "and",
+    1.78,
+    2.02
+   ],
+   [
+    "we",
+    2.02,
+    2.18
+   ],
+   [
+    "still",
+    2.18,
+    2.52
+   ],
+   [
+    "don't",
+    2.52,
+    2.8
+   ],
+   [
+    "get",
+    2.8,
+    2.92
+   ],
+   [
+    "the",
+    2.92,
+    3.08
+   ],
+   [
+    "Jade.",
+    3.08,
+    3.36
+   ],
+   [
+    "Let",
+    3.78,
+    4.02
+   ],
+   [
+    "him",
+    4.02,
+    4.14
+   ],
+   [
+    "go",
+    4.14,
+    4.32
+   ],
+   [
+    "home.",
+    4.32,
+    4.64
+   ]
+  ],
+  "heard": "The king says, Kill him and we still don't get the Jade. Let him go home.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 5.04
+ },
+ {
+  "name": "e21b",
+  "lang": "en",
+  "text": "The king says: \"Kill him and we still don't get the jade. Let him go home.\"",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e21b.mp3",
+  "bytes": 80291,
+  "words": [
+   [
+    "The",
+    0.0,
+    0.16
+   ],
+   [
+    "king",
+    0.16,
+    0.38
+   ],
+   [
+    "says,",
+    0.38,
+    0.72
+   ],
+   [
+    "kill",
+    1.14,
+    1.58
+   ],
+   [
+    "him",
+    1.58,
+    1.82
+   ],
+   [
+    "and",
+    1.82,
+    2.02
+   ],
+   [
+    "we",
+    2.02,
+    2.18
+   ],
+   [
+    "still",
+    2.18,
+    2.52
+   ],
+   [
+    "don't",
+    2.52,
+    2.82
+   ],
+   [
+    "get",
+    2.82,
+    2.94
+   ],
+   [
+    "the",
+    2.94,
+    3.08
+   ],
+   [
+    "jade.",
+    3.08,
+    3.48
+   ],
+   [
+    "Let",
+    3.78,
+    3.98
+   ],
+   [
+    "him",
+    3.98,
+    4.1
+   ],
+   [
+    "go",
+    4.1,
+    4.28
+   ],
+   [
+    "home.",
+    4.28,
+    4.56
+   ]
+  ],
+  "heard": "The king says, kill him and we still don't get the jade. Let him go home.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.96
+ },
+ {
+  "name": "e22a",
+  "lang": "en",
+  "text": "In the end, Chin never gave the cities. Jow never gave the jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e22a.mp3",
+  "bytes": 79037,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.16
+   ],
+   [
+    "the",
+    0.16,
+    0.3
+   ],
+   [
+    "end,",
+    0.3,
+    0.64
+   ],
+   [
+    "Chen",
+    1.02,
+    1.22
+   ],
+   [
+    "never",
+    1.22,
+    1.68
+   ],
+   [
+    "gave",
+    1.68,
+    1.94
+   ],
+   [
+    "the",
+    1.94,
+    2.14
+   ],
+   [
+    "cities.",
+    2.14,
+    2.44
+   ],
+   [
+    "Zhao",
+    2.96,
+    3.36
+   ],
+   [
+    "never",
+    3.36,
+    3.78
+   ],
+   [
+    "gave",
+    3.78,
+    4.06
+   ],
+   [
+    "the",
+    4.06,
+    4.22
+   ],
+   [
+    "jade.",
+    4.22,
+    4.54
+   ]
+  ],
+  "heard": "In the end, Chen never gave the cities. Zhao never gave the jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 4.88
+ },
+ {
+  "name": "e22b",
+  "lang": "en",
+  "text": "In the end, Chin never gave the cities. Jow never gave the jade.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e22b.mp3",
+  "bytes": 79037,
+  "words": [
+   [
+    "In",
+    0.0,
+    0.2
+   ],
+   [
+    "the",
+    0.2,
+    0.36
+   ],
+   [
+    "end,",
+    0.36,
+    0.68
+   ],
+   [
+    "Chin",
+    1.06,
+    1.24
+   ],
+   [
+    "never",
+    1.24,
+    1.68
+   ],
+   [
+    "gave",
+    1.68,
+    1.94
+   ],
+   [
+    "the",
+    1.94,
+    2.14
+   ],
+   [
+    "cities.",
+    2.14,
+    2.44
+   ],
+   [
+    "Zhao",
+    2.98,
+    3.32
+   ],
+   [
+    "never",
+    3.32,
+    3.78
+   ],
+   [
+    "gave",
+    3.78,
+    4.06
+   ],
+   [
+    "the",
+    4.06,
+    4.22
+   ],
+   [
+    "Jade.",
+    4.22,
+    4.44
+   ]
+  ],
+  "heard": "In the end, Chin never gave the cities. Zhao never gave the Jade.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.88
+ },
+ {
+  "name": "e23a",
+  "lang": "en",
+  "text": "A jade worth fifteen cities didn't get a single one. But the eunuch's retainer came home a senior official.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e23a.mp3",
+  "bytes": 114981,
+  "words": [
+   [
+    "A",
+    0.0,
+    0.12
+   ],
+   [
+    "jade",
+    0.12,
+    0.48
+   ],
+   [
+    "worth",
+    0.48,
+    0.66
+   ],
+   [
+    "15",
+    0.66,
+    1.3
+   ],
+   [
+    "cities",
+    1.3,
+    1.94
+   ],
+   [
+    "didn't",
+    1.94,
+    2.4
+   ],
+   [
+    "get",
+    2.4,
+    2.5
+   ],
+   [
+    "a",
+    2.5,
+    2.6
+   ],
+   [
+    "single",
+    2.6,
+    2.96
+   ],
+   [
+    "one,",
+    2.96,
+    3.42
+   ],
+   [
+    "but",
+    3.9,
+    4.08
+   ],
+   [
+    "the",
+    4.08,
+    4.22
+   ],
+   [
+    "eunuch's",
+    4.22,
+    4.6
+   ],
+   [
+    "retainer",
+    4.6,
+    5.14
+   ],
+   [
+    "came",
+    5.14,
+    5.36
+   ],
+   [
+    "home",
+    5.36,
+    5.66
+   ],
+   [
+    "a",
+    5.66,
+    5.9
+   ],
+   [
+    "senior",
+    5.9,
+    6.24
+   ],
+   [
+    "official.",
+    6.24,
+    6.72
+   ]
+  ],
+  "heard": "A jade worth 15 cities didn't get a single one, but the eunuch's retainer came home a senior official.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 7.12
+ },
+ {
+  "name": "e23b",
+  "lang": "en",
+  "text": "A jade worth fifteen cities didn't get a single one. But the eunuch's retainer came home a senior official.",
+  "voice": "shared:alex",
+  "voice_id": "yl2ZDV1MzN4HbQJbMihG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "e23b.mp3",
+  "bytes": 112474,
+  "words": [
+   [
+    "A",
+    0.0,
+    0.12
+   ],
+   [
+    "jade",
+    0.12,
+    0.48
+   ],
+   [
+    "worth",
+    0.48,
+    0.64
+   ],
+   [
+    "15",
+    0.64,
+    1.3
+   ],
+   [
+    "cities",
+    1.3,
+    1.92
+   ],
+   [
+    "didn't",
+    1.92,
+    2.36
+   ],
+   [
+    "get",
+    2.36,
+    2.48
+   ],
+   [
+    "a",
+    2.48,
+    2.58
+   ],
+   [
+    "single",
+    2.58,
+    2.96
+   ],
+   [
+    "one,",
+    2.96,
+    3.4
+   ],
+   [
+    "but",
+    3.72,
+    4.08
+   ],
+   [
+    "the",
+    4.08,
+    4.22
+   ],
+   [
+    "eunuch's",
+    4.22,
+    4.58
+   ],
+   [
+    "retainer",
+    4.58,
+    5.1
+   ],
+   [
+    "came",
+    5.1,
+    5.3
+   ],
+   [
+    "home",
+    5.3,
+    5.56
+   ],
+   [
+    "a",
+    5.56,
+    5.74
+   ],
+   [
+    "senior",
+    5.74,
+    6.06
+   ],
+   [
+    "official.",
+    6.06,
+    6.6
+   ]
+  ],
+  "heard": "A jade worth 15 cities didn't get a single one, but the eunuch's retainer came home a senior official.",
+  "heard_lang": "en",
+  "heard_lang_p": 1.0,
+  "seconds": 6.96
+ }
+]
