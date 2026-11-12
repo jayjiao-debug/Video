@@ -91,6 +91,11 @@
 //     the other forearm rests, the head tips down; driven by pose.t alone.
 //     "phone": pose.arm (default 1) holds a phone (phone()): amount 0 = looking at it in front of the chest, 1 = at
 //     the ear, in between a smooth raise (animate amount over 8-12 frames). Standing or seated.
+//     "shh": a finger to the lips. pose.arm (default 1) brings its hand up under the mouth, in front of the chin, and
+//     what it holds as `posed` (finger()) stands up across the lips: amount 1 (the default) = at the lips, 0 = in
+//     front of the chest. Its arm is drawn in front of the own head. The face for it: expr "hush".
+//     pose.jaw (0..2) takes the finger off the lips and along the jaw: 0 = at the lips, 1 = its tip under the ear on
+//     the hand's own side, 2 = at the chin, having run down the jawline (rigJawline gives the whole gesture in time).
 //   state.armFront = [right, left]: true = that arm, its hand and what it holds are drawn at their true depth against
 //   the figure's own head (rule 4 is off for that arm only), so they can show in front of the face, and they are kept
 //   strictly outside the head's real shape (hair and hat included). undefined = the pose decides ("phone" sets it for
@@ -147,6 +152,16 @@ const lumps = (seed: number) => {
 
 export const BODY_MAX = rad(45);
 export const FACE_MAX = rad(12);
+/** "shh": how far to the other side of the body's front a hand follows the face (see armPlan) */
+export const SHH_FAR = rad(30);
+/** "shh" with pose.jaw: the finger's tip runs along the edge of the face (the head's own outline, as the face plane
+ *  shows it). JAW_ANG = where on that edge it is under the ear and at the chin, in degrees round from the side of
+ *  the head toward its underside; JAW_IN = how far inside the edge the finger's own side stays at those two places (m: under the ear the finger
+ *  lies along the edge, at the chin it comes at it end on and its tip goes a little further in); JAW_LEAN = how
+ *  far the hand hangs to its own side of the tip at those two places (degrees from straight under it); JAW_REACH =
+ *  how much of the arm's length the hand's place may be from the shoulder (past that the trace starts further down);
+ *  JAW_NEAR = how much of it the hand keeps from the shoulder at least (it comes toward the camera for that) */
+export const JAW_ANG: [number, number] = [18, 80], JAW_IN: [number, number] = [0.002, 0.014], JAW_LEAN: [number, number] = [12, 38], JAW_REACH = 0.94, JAW_NEAR = 0.3;
 /** The part of the head that belongs to the face drawing, for 3D parts: az = degrees from the face side, top = height
  *  in head units. The face turns to the camera on its own (FACE_MAX) while hair and hats turn with the body
  *  (BODY_MAX), so the drawn eyes and mouth slide up to 33 degrees round the head, and their outer ends lie another
@@ -224,7 +239,7 @@ uniform vec3 uKey; uniform vec3 uTint; uniform float uGain; uniform vec3 uShade;
 uniform float uWrap; uniform float uK; uniform vec2 uBand; uniform float uSat; uniform vec4 uStripe; uniform vec4 uGrad; uniform float uGradOn; uniform float uPale; uniform vec2 uLit; uniform float uFar; uniform vec4 uForm;
 varying vec3 vWN; varying vec3 vWP;
 ${kind === "face" ? /* glsl */ `
-uniform sampler2D uFace; uniform vec3 uFF; uniform vec3 uFR; uniform vec3 uFU; uniform float uFaceOn; uniform vec3 uInkLift;
+uniform sampler2D uFace; uniform vec3 uFF; uniform vec3 uFR; uniform vec3 uFU; uniform float uFaceOn; uniform float uFaceEdge; uniform vec3 uInkLift;
 uniform vec4 uHead; uniform vec3 uInk;
 uniform sampler2D uHair; uniform vec3 uHairCol; uniform vec4 uHeadband; uniform vec4 uHairPart; uniform float uHairInk;
 uniform vec4 uBrim; uniform vec2 uBrimAz; uniform vec3 uKeyH; uniform vec4 uRim;
@@ -263,7 +278,10 @@ ${kind === "face" ? /* glsl */ `
   float hcd = max( length( hc ), 1e-4 );
   vec2 q = vec2( dot( hp, uFR ), dot( hp, uFU ) ) * ( hcd * hcd / max( dot( vWP - cameraPosition, hc ), 1e-4 ) );
   vec4 f = texture2D( uFace, clamp( q * 0.5 + 0.5, 0.0, 1.0 ) );
-  float fm = uFaceOn * smoothstep( 0.0, 0.2, dot( n, uFF ) ) * step( abs( q.x ), 1.0 ) * step( abs( q.y ), 1.0 );
+  // (uFaceEdge: past the drawing's edge its outermost pixel goes on. Set for a drawing with an under layer, whose edge
+  // is that layer alone (see faceEdge): a stubble's shade then reaches the outline of a head that is wider than the
+  // ball, or of one whose face has slid to the other side. Every other drawing ends at its edge.)
+  float fm = uFaceOn * smoothstep( 0.0, 0.2, dot( n, uFF ) ) * max( step( abs( q.x ), 1.0 ) * step( abs( q.y ), 1.0 ), uFaceEdge );
   float fl = dot( f.rgb, vec3( 0.2126, 0.7152, 0.0722 ) );
   vec3 fc = f.rgb + uInkLift * ( 1.0 - smoothstep( 0.012, 0.05, fl ) );
   // hair and headband are painted on the ball itself (no second surface: nothing can z-fight along the hairline)
@@ -372,7 +390,7 @@ ${kind === "tube" ? /* glsl */ `
 }
 `;
 type NumU = { value: number };
-type FaceU = { uFace: { value: THREE.Texture }; uFF: { value: V3 }; uFR: { value: V3 }; uFU: { value: V3 }; uFaceOn: NumU; uHead: { value: THREE.Vector4 }; uInk: { value: THREE.Color };
+type FaceU = { uFace: { value: THREE.Texture }; uFF: { value: V3 }; uFR: { value: V3 }; uFU: { value: V3 }; uFaceOn: NumU; uFaceEdge: NumU; uHead: { value: THREE.Vector4 }; uInk: { value: THREE.Color };
   uHair: { value: THREE.Texture }; uHairCol: { value: THREE.Color }; uHeadband: { value: THREE.Vector4 }; uHairPart: { value: THREE.Vector4 }; uHairInk: NumU;
   uBrim: { value: THREE.Vector4 }; uBrimAz: { value: THREE.Vector2 }; uKeyH: { value: V3 }; uRim: { value: THREE.Vector4 } };
 /** pull: the mesh is drawn that many metres nearer the camera along the view ray (depth only; its place on screen and
@@ -552,7 +570,7 @@ const blobMat = (col: string) => {
 //   - extras: a sweat drop, a soft blush.
 // Each character strays a little from the pattern (spacing, sizes, tilts), the same way in every expression (seeded).
 type EyeK = "lid" | "slit" | "down" | "dot" | "happy" | "closed" | "dash" | "squeeze" | "ring" | "ringHalf" | "spiral";
-type MouthK = "tiny" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
+type MouthK = "tiny" | "frown" | "smirk" | "smirkWide" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
 /** The mouths of a character who is speaking (RigState.mouth; rigSay gives the sequence for a line). The reference's
  *  talk kit, measured on five characters (width x height in u): mouths two to four times the size of the resting
  *  one, dark boxes with round corners, white teeth, a pink tongue. They hang from the upper lip: the top edge rises a
@@ -567,7 +585,10 @@ export const RIG_MOUTHS: RigMouth[] = ["line", "pill", "strip", "small", "half",
 /** eye = [screen left, screen right]; brow = [inner, outer] end offsets (u, + = down); tilt = the lid bar's slope (deg,
  *  + = inner end lower); bar = heavy straight brows sitting on the lids; raise = brows higher by that many u; skew =
  *  how much higher one brow rides than the other; pupil = a ring eye's pupil radius */
-type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; pupil?: number; sweat?: boolean; blush?: boolean };
+/** cock = one brow cocked (the one on the strong side): it goes up by that many u in a high arch, its inner end
+ *  staying down by the nose; the other brow stays where it is. cheek = a cheekbone line on each side (cheekbone()):
+ *  it cuts the round face into a jaw, on any head */
+type FaceDef = { eye: [EyeK, EyeK]; brow: [number, number]; mouth: MouthK; tilt?: number; bar?: boolean; raise?: number; skew?: number; cock?: number; cheek?: boolean; pupil?: number; sweat?: boolean; blush?: boolean };
 const FACES: Record<Expr, FaceDef> = {
   neutral: { eye: ["lid", "lid"], brow: [0, -0.5], mouth: "tiny" },
   stern: { eye: ["lid", "lid"], brow: [3.2, -2.2], mouth: "frown", tilt: 9, bar: true, skew: 0 },
@@ -592,6 +613,11 @@ const FACES: Record<Expr, FaceDef> = {
   huff: { eye: ["lid", "lid"], brow: [3.4, -2.6], mouth: "o", tilt: 10, bar: true, skew: 0 },
   happy: { eye: ["happy", "happy"], brow: [-1, -1], mouth: "smile", blush: true },
   focus: { eye: ["down", "down"], brow: [1, -0.4], mouth: "tiny", skew: 0.2 },
+  // unbothered: narrowed eyes under heavy level brows that sit on the lids, the hint of a smile
+  cool: { eye: ["slit", "slit"], brow: [1.0, -0.6], mouth: "smirk", tilt: 3, bar: true, skew: 0 },
+  // "not a word" (for the "shh" pose): the face of "cool" with one brow cocked high and a cheekbone line on each
+  // side (a cut jaw); the finger stands in front of the hint of a smile
+  hush: { eye: ["slit", "slit"], brow: [1.0, -0.6], mouth: "smirkWide", tilt: 3, bar: true, skew: 0, cock: 7.5, cheek: true },
 };
 /** a blink in two steps: half (lid 0.5) and shut (lid 1) */
 const blinkEye = (k: EyeK, lid: number): EyeK =>
@@ -608,13 +634,17 @@ const arcPts = (cx: number, cy: number, rx: number, ry: number, a0 = 0, a1 = 360
   for (let i = 0; i <= n; i++) { const a = rad(a0 + ((a1 - a0) * i) / n); o.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]); }
   return o;
 };
+/** the cheekbone line of side s (-1 / +1), in u from the middle of the eye line: from under the outer end of the eye
+ *  in and down toward the corner of the mouth. Drawn CHEEK_PEN wide: lighter than the features, it is a contour. */
+export const cheekbone = (s: number): P2[] => quadPts([s * 36.5, 5.5], [s * 30.5, 9.5], [s * 27.5, 17], 8);
+export const CHEEK_PEN = 2.4;
 const TEETH = "#ffffff", TONGUE = "#e8697a", SWEAT = "#a9dcff";
 /** the pen: every line of a face is this wide (u), with round ends */
 const PEN = 3.3;
 /** design u -> canvas u (the head's outline is about 1 % wider than the ball's diameter the canvas spans) */
 const FACE_FS = 0.99;
 /** the face, front on, on a canvas that spans the head ball's diameter (W px). gaze -1..1 slides the pupils. */
-const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boolean, gaze: number, hand: number, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth) => {
+const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boolean, gaze: number, hand: number, fa: FaceAcc = faceAccOf(L, []), talk?: RigMouth, underOnly = false) => {
   const F = FACES[expr], sd = L.seed, u = (W / 100) * FACE_FS, g = p.g;
   if (!F) throw new Error(`rig3d: there is no expression "${expr}" (there are: ${Object.keys(FACES).join(", ")})`);
   const jit = (k: number, a: number) => (2 * rnd(sd, 60 + k) - 1) * a * hand;
@@ -629,11 +659,12 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
   const lipY = fa.lens ? 15 : 12.4, mouthY = fa.lip ? lipY + 9.5 : 18.7;
   // accessories drawn on the face (see Acc): under = before the eyes, brows and mouth; over = after everything
   const kit: FaceKit = {
-    look: L, expr, hand, sp, mouth: [jit(20, 1.1), mouthY], lip: lipY, lens: fa.lens, strong, shade: brim, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
+    look: L, expr, hand, sp, mouth: [jit(20, 1.1), mouthY], lip: lipY, lens: fa.lens, strong, shade: brim, cheek: !!F.cheek, PEN, INK, jit: (k, a) => jit(Math.max(k, 100), a),
     line, fill, turned, arc: arcPts, quad: quadPts, g, u, px: (x, y) => [cx + x * u, E + y * u],
   };
   const hook = (fn: (f: FaceKit) => void) => { g.save(); fn(kit); g.restore(); p.rot = null; };
   fa.under.forEach(hook);
+  if (underOnly) return;
   for (const s of [-1, 1]) {
     const i = s < 0 ? 0 : 1, kind = blinkEye(F.eye[i], lid);
     const x0 = s * sp, y0 = jit(2 + i, 0.5), sc = 1 + jit(4 + i, 0.045), gl = fa.lens;
@@ -669,7 +700,9 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
     if (brim) bh = Math.min(bh, 16.5);
     const [dI, dO] = F.brow, bl = 7.75 * (1 + jit(12 + i, 0.06)), by = y0 - bh, arch = F.bar ? 0.4 : 2 + jit(14 + i, 0.5);
     const a: P2 = [x0 - s * bl, by + dI], b: P2 = [x0 + s * bl, by + dO];
-    line(quadPts(a, [x0 + jit(16 + i, 1.2), (a[1] + b[1]) / 2 - 2 * arch], b), F.bar ? PEN + 0.9 : PEN);
+    const ck = s === strong && !brim ? F.cock ?? 0 : 0;
+    if (ck) line(quadPts(a, [x0 + s * 0.12 * bl, by - 1.9 * ck], [x0 + s * 1.06 * bl, by + dO - 0.35 * ck]), F.bar ? PEN + 0.9 : PEN);
+    else line(quadPts(a, [x0 + jit(16 + i, 1.2), (a[1] + b[1]) / 2 - 2 * arch], b), F.bar ? PEN + 0.9 : PEN);
   }
   // mouth
   const mx = jit(20, 1.1), my = mouthY, ms = 1 + jit(21, 0.05);
@@ -734,6 +767,8 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       case "tiny": fill([...quadPts([mx - 4.6, my + 0.2], [mx - 0.4, my - 3.9], [mx + 4.6, my - 0.3], 12), ...quadPts([mx + 4.6, my - 0.3], [mx + 0.6, my + 4.3], [mx - 4.6, my + 0.2], 12).slice(1, -1)], INK, 0.7); break;
       case "frown": line(quadPts([mx - 6.5 * ms, my + 1.8], [mx, my - 5], [mx + 6.5 * ms, my + 1.8])); break;
       case "smirk": line(quadPts([mx - strong * 5.6, my + 1.3], [mx + strong * 1, my + 4.6], [mx + strong * 5.9, my - 3.3])); break;
+      // the same smirk half as wide again: both of its ends show beside a finger held in front of it
+      case "smirkWide": line(quadPts([mx - strong * 8.8, my + 1.2], [mx + strong * 1.6, my + 5.6], [mx + strong * 9.4, my - 3.8])); break;
       case "smile": line(quadPts([mx - 6.9 * ms, my - 1.6], [mx + 0.5 * strong, my + 5.4], [mx + 6.9 * ms, my - 1.6])); break;
       case "smileWide": line(quadPts([mx - 12 * ms, my - 2.6], [mx, my + 9.4], [mx + 12 * ms, my - 2.6])); break;
       case "grin": openMouth(20 * ms, my - 6.5, 2.75, 13.5, false); break;
@@ -756,6 +791,7 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
       case "lick": line(quadPts([mx - 6.9 * ms, my - 1.6], [mx, my + 5.4], [mx + 6.9 * ms, my - 1.6])); fill(arcPts(mx + strong * 6.3, my + 3.6, 3.3, 4.3), TONGUE, 2.2); break;
     }
   });
+  if (F.cheek) for (const s of [-1, 1]) line(cheekbone(s), CHEEK_PEN);
   if (F.blush) for (const s of [-1, 1]) {
     const bx = cx + s * 20.5 * u, by = E + 9.6 * u, r = 6.6 * u, gr = g.createRadialGradient(0, 0, 0, 0, 0, r);
     gr.addColorStop(0, "rgba(238,118,140,0.5)"); gr.addColorStop(0.55, "rgba(238,118,140,0.3)"); gr.addColorStop(1, "rgba(238,118,140,0)");
@@ -773,7 +809,24 @@ const drawFace = (p: Pen, W: number, L: Look, expr: Expr, lid: number, brim: boo
   }
   fa.over.forEach(hook);
 };
-const FACE_PX = 1024, FACE_CACHE_MAX = 160;
+const FACE_PX = 1024, FACE_CACHE_MAX = 160, FACE_EDGE = 8;
+/** A face drawing with an under layer (Acc.faceUnder: a shade on the skin) goes on past its own edge on the head (the
+ *  head shader's uFaceEdge repeats the outermost pixel), so that the shade reaches the head's outline. For that the
+ *  band of FACE_EDGE px along the edge is made that layer alone: it is drawn once more on its own (under), wobbled as
+ *  the drawing was, and what it has FACE_EDGE px in from each edge is carried out to the edge. A line of the face or
+ *  of another accessory that runs to the edge (a mask's ear loop) ends FACE_EDGE px short of it and is not repeated;
+ *  the wobble (it slides rows and columns by less than that) leaves no gaps there. */
+const faceEdge = (c: HTMLCanvasElement, under: (g: CanvasRenderingContext2D) => void, wob: Wob) => {
+  const n = c.width, B = FACE_EDGE, m = n - 2 * B, a = document.createElement("canvas"), g = c.getContext("2d")!;
+  a.width = a.height = n;
+  under(a.getContext("2d")!); wobbleCanvas(a, wob);
+  g.save(); g.imageSmoothingEnabled = false;
+  for (const [x, y, w, h] of [[0, 0, n, B], [0, n - B, n, B], [0, B, B, m], [n - B, B, B, m]]) g.clearRect(x, y, w, h);
+  g.drawImage(a, B, B, 1, m, 0, B, B, m); g.drawImage(a, n - B - 1, B, 1, m, n - B, B, B, m);                 // left, right
+  g.drawImage(a, B, B, m, 1, B, 0, m, B); g.drawImage(a, B, n - B - 1, m, 1, B, n - B, m, B);                 // top, bottom
+  for (const [sx, dx] of [[B, 0], [n - B - 1, n - B]]) for (const [sy, dy] of [[B, 0], [n - B - 1, n - B]]) g.drawImage(a, sx, sy, 1, 1, dx, dy, B, B);
+  g.restore();
+};
 const faceCache = new Map<string, THREE.CanvasTexture>();
 /** the face drawing for one look / expression / lid state / gaze step: a canvas that spans the head ball's diameter.
  *  True LRU; three lid states and five gaze steps only. */
@@ -783,7 +836,12 @@ const faceTex = (L: Look, expr: Expr, lid: number, brim: boolean, hand = 1, gaze
   const key = `${L.seed}|${expr}|${lq}|${gq}|${brim ? 1 : 0}|${L.glasses ?? ""}|${L.glassCol ?? ""}|${hand}|${fa.own ? 1 : 0}|${fa.key}${fa.under.length || fa.over.length ? "|" + JSON.stringify(L) : ""}${talk ? "|say:" + talk : ""}`;
   let t = faceCache.get(key);
   if (t) { faceCache.delete(key); faceCache.set(key, t); return t; }
-  t = canvasTex(FACE_PX, FACE_PX, (g) => drawFace(new Pen(g), FACE_PX, L, expr, lq, brim, gq, hand, fa, talk), { amp: FACE_PX * 0.0045 * hand, seed: L.seed });
+  const wob = { amp: FACE_PX * 0.0045 * hand, seed: L.seed };
+  t = canvasTex(FACE_PX, FACE_PX, (g) => drawFace(new Pen(g), FACE_PX, L, expr, lq, brim, gq, hand, fa, talk), wob);
+  if (fa.under.length) {
+    faceEdge(t.image as HTMLCanvasElement, (g) => drawFace(new Pen(g), FACE_PX, L, expr, lq, brim, gq, hand, fa, talk, true), wob);
+    t.userData.edge = true;
+  }
   t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter;
   faceCache.set(key, t);
   while (faceCache.size > FACE_CACHE_MAX) { const k0 = faceCache.keys().next().value!; faceCache.get(k0)!.dispose(); faceCache.delete(k0); }
@@ -1210,14 +1268,24 @@ const bodyGeo = (Ht: number, rb: number, rt: number, bw: (x: number, y: number, 
   return g;
 };
 /** the head: a ball pushed into the look's drawn blob (toon.ts headBlob: a squarer jaw, a wider crown, one fuller
- *  side, a tilt, soft lumps). Returns a map for points given on / around the unit ball (any radius), in place. */
+ *  side, a tilt, soft lumps). Returns a map for points given on / around the unit ball (any radius), in place.
+ *  A cut jaw (Blob.jaw = [a, c]): the lower corner of the blob is cut off along the straight line from the jaw's
+ *  corner (the full width, a of the half height below the middle) to the chin's corner (c of the width, at the
+ *  bottom), all the way round (a cone), with the two corners a little round (JAW_CUT). What lies outside the line
+ *  is drawn in toward the middle of the head, so the mesh keeps its even spread along the cut. */
+const JAW_CUT = 40;
 const headWarp = (B: Blob, ys: number, hand: number) => {
   const N = lumps(B.seed + 5), eT = 2 / lerp(2, B.nTop, hand), eB = 2 / lerp(2, B.nBot, hand);
   const egg = B.egg * 0.5 * hand, asym = B.asym * hand, nz = B.noise * 1.6 * hand, cr = Math.cos(B.rot * hand), sr = Math.sin(B.rot * hand);
+  const jw = B.jaw, ja = jw ? 1 - jw[0] : 0, jc = jw ? 1 - jw[1] : 0, jd = jw ? ja + jc * jw[0] : 1;
   return (v: V3) => {
     const r = v.length() || 1e-9, x = v.x / r, y = v.y / r, z = v.z / r, c = Math.hypot(x, z), e = y > 0 ? eT : eB;
     const Y = Math.sign(y) * Math.abs(y) ** e, C = c > 1e-6 ? c ** e / c : 0, lump = 1 + nz * N(x, y, z), k = (1 - egg * Y) * lump;
-    const px = x * C * k * (1 + asym * x), py = Y * ys * lump, pz = z * C * k;
+    let px = x * C * k * (1 + asym * x), py = Y * ys * lump, pz = z * C * k;
+    if (jw) {
+      const q = (ja * Math.hypot(px, pz) + jc * Math.max(0, -py / ys)) / jd, t = (1 + q ** JAW_CUT) ** (-1 / JAW_CUT);
+      px *= t; py *= t; pz *= t;
+    }
     return v.set((px * cr - py * sr) * r, (px * sr + py * cr) * r, pz * r);
   };
 };
@@ -1242,13 +1310,37 @@ const ikFrame = (a: V3, t: V3, l1: number, l2: number, pole: V3, pole2: V3) => {
 };
 
 // ===== poses =====
-export type RigPoseKind = "idle" | "walk" | "wave" | "point" | "haul" | "hold" | "cheer" | "sit" | "desk" | "write" | "phone";
+/** "Not a word. Look at the jaw." as a gesture in time (t = seconds from its start): the finger at the lips, then the
+ *  head turns away from that hand to show the jaw while the finger's tip goes to under the ear, then the tip runs down
+ *  the jawline to the chin and stays. Measured on the meme: at the lips for 0.95 s, 0.25 s for the turn, 1.3 s along
+ *  the jaw (2.5 s; hold the end for a few frames).
+ *  It gives what to put into the state for this frame: pose (a "shh" with its jaw), expr, gaze (the eyes stay on the
+ *  camera as the head turns away), head (it tips toward the hand and leans away from it) and twist (the turn, on planted feet: add it to
+ *  the state's own twist). arm = which hand (default 0, the right: the head turns to the person's left; give the
+ *  finger to the same hand); amount = the pose's own (0 = the hand down in front of the chest, to raise and lower it
+ *  before and after); turn = how far the head and body turn (degrees, default 46). */
+export const rigJawline = (t: number, o: { arm?: 0 | 1; amount?: number; hold?: number; turnT?: number; trace?: number; turn?: number } = {}): { pose: RigPose; expr: Expr; gaze: number; head: RigHead; twist: number } => {
+  const arm = o.arm ?? 0, s = arm ? 1 : -1, hold = o.hold ?? 0.95, turnT = o.turnT ?? 0.25, trace = o.trace ?? 1.3;
+  const k1 = clamp((t - hold) / turnT, 0, 1), k2 = clamp((t - hold - turnT) / trace, 0, 1), e1 = smooth(k1);
+  // along the jaw: a slow start under the ear, then steady, easing out at the chin
+  const run = k2 < 0.2 ? 3.125 * k2 * k2 : k2 > 0.8 ? 1 - 3.125 * (1 - k2) ** 2 : 0.125 + 1.25 * (k2 - 0.2);
+  return {
+    pose: { kind: "shh", arm, amount: o.amount ?? 1, t, jaw: k1 + run },
+    expr: "hush", gaze: s * e1,
+    head: { tilt: s * 10 * e1, dx: -s * 0.06 * e1, dy: 0.05 * e1 },
+    twist: -s * rad(o.turn ?? 46) * e1,
+  };
+};
+export type RigPoseKind = "idle" | "walk" | "wave" | "point" | "haul" | "hold" | "cheer" | "sit" | "desk" | "write" | "phone" | "shh";
 /** t = seconds (breathing, waving, the writing strokes: every frame is a pure function of it); arm = which arm waves /
  *  points / writes (default 0, the right hand) / holds the phone (default 1); amount: haul = effort, phone = 0 looking
  *  at it .. 1 at the ear, walk = how much it bounces (1).
  *  walk: phase = where in the cycle of two steps (0..1; from the distance walked, so that the feet stay planted:
  *  rigWalk gives it), stride = half a step's length in metres (default 0.2) */
-export type RigPose = { kind: RigPoseKind; t?: number; phase?: number; amount?: number; arm?: 0 | 1; stride?: number };
+export type RigPose = { kind: RigPoseKind; t?: number; phase?: number; amount?: number; arm?: 0 | 1; stride?: number;
+  /** "shh" only: 0 (default) = the finger at the lips; 0..1 = its tip leaves the lips and lands under the ear, at the
+   *  corner of the jaw on the hand's own side; 1..2 = it runs down the jawline to the chin (see rigJawline) */
+  jaw?: number };
 /** The head as a layer of its own. The reference moves the head against a still body, in short accents on stressed
  *  words and reactions (never a steady wobble): it pops 6 to 7 % larger for 3 frames, squashes a tenth and stretches
  *  a twentieth, nods, tilts a few degrees across a line, rocks while laughing.
@@ -1280,7 +1372,7 @@ export type RigState = {
   /** per arm (0 = the right): true = the arm, its hand and what it holds are drawn at their true depth against the
    *  figure's own head, so they can show in front of it; they are then kept strictly outside the head's real shape.
    *  false = hidden behind the own head, as always. undefined (also per arm) = the pose decides: "phone" sets it for
-   *  the arm that holds the phone. */
+   *  the arm that holds the phone, "shh" for the arm at the lips. */
   armFront?: [boolean | undefined, boolean | undefined];
   hands?: [V3 | null, V3 | null];
   expr?: Expr; blink?: number; visible?: boolean;
@@ -1313,8 +1405,9 @@ export type RigState = {
  *  or a cheer stays beside the head on screen from any camera angle, it never crosses the face */
 type HandT = { p: V3; f: 0 | 1 | 2 };
 /** an arm whose place depends on where things are in this frame (the lap, the desk top, the head): solved once the
- *  body stands (see armPlan). lap / desk = the hand rests there; write = the pen hand; phone = the phone hand. */
-type ArmPlan = "lap" | "desk" | "write" | "phone" | null;
+ *  body stands (see armPlan). lap / desk = the hand rests there; write = the pen hand; phone = the phone hand; shh = the
+ *  hand at the lips. */
+type ArmPlan = "lap" | "desk" | "write" | "phone" | "shh" | null;
 type BodyPose = {
   hip: V3; ankle: [V3, V3]; footYaw: [number, number];     // TRAVEL frame: x = the person's left, y up, z = the story facing
   pitch: number; roll: number; breathe: number;
@@ -1438,6 +1531,8 @@ export type FaceKit = {
   strong: number;
   /** true under a hat that shades the eyes */
   shade: boolean;
+  /** true when the expression draws the cheekbone lines itself (do not draw them again) */
+  cheek: boolean;
   /** the pen every line of the face is drawn with (3.3u, round ends) and the ink colour */
   PEN: number; INK: string;
   /** a seeded offset within +-a, the same in every expression of this character (k: your own index, 100 and up) */
@@ -1842,6 +1937,9 @@ export class Rig {
   private frontArm: [boolean, boolean] = [false, false];
   private grip: [THREE.Quaternion | null, THREE.Quaternion | null] = [null, null];
   private gripQ = [new THREE.Quaternion(), new THREE.Quaternion()];
+  /** how far a plan had to leave a hand from its place this frame (m; "shh": off the lips), for qa.reach */
+  private planOff = [0, 0];
+  private skinPts: ArrayLike<number> = new Float32Array(0);
   /** sitting: this frame's seat (null = standing), the floor point under the hip, sin / cos of the facing, the legs
    *  in the world, and the fits worked out so far (one per seat) */
   private sit: Sit | null = null; private sitAt = V(); private sitF: [number, number] = [0, 1];
@@ -1911,13 +2009,14 @@ export class Rig {
     if (bleach > 0 && LUMA(new THREE.Color(L.skin).convertLinearToSRGB()) >= 0.76) { const mx = Math.max(skin.r, skin.g, skin.b); skin.lerp(new THREE.Color(mx, mx, mx), bleach); }
     const bandC = new THREE.Color(L.headband ?? "#000000");
     this.faceU = {
-      uFace: { value: faceTex(L, "neutral", 0, this.shade, hand, 0, this.fa) }, uFF: { value: V(0, 0, 1) }, uFR: { value: V(1, 0, 0) }, uFU: { value: V(0, 1, 0) }, uFaceOn: { value: 1 },
+      uFace: { value: faceTex(L, "neutral", 0, this.shade, hand, 0, this.fa) }, uFF: { value: V(0, 0, 1) }, uFR: { value: V(1, 0, 0) }, uFU: { value: V(0, 1, 0) }, uFaceOn: { value: 1 }, uFaceEdge: { value: 0 },
       uHead: { value: new THREE.Vector4(0, 0, 0, d.R) }, uInk: { value: new THREE.Color(RIG_INK) },
       uHair: { value: hairTex(L, cut ? rimDeg : 0) }, uHairCol: { value: new THREE.Color(L.hairCol) }, uHeadband: { value: new THREE.Vector4(bandC.r, bandC.g, bandC.b, L.headband && !hatA && !slotOf.has("crown") ? 1 : 0) },
       uHairPart: { value: hairDraw(L, hand, cut) }, uHairInk: { value: 0.03 * hand },
       uBrim: { value: new THREE.Vector4(0, 0, 0, 0) }, uBrimAz: { value: new THREE.Vector2(0, 4) }, uKeyH: { value: V(0, 1, 0) }, uRim: { value: new THREE.Vector4(...RIM) },
     };
     const skinM = inked(this.headG, warpGeo(new THREE.SphereGeometry(1, 72, 48), warp, d.R), rigMat(U, PART.head, { color: skin }, "face", this.faceU, pullU), HULL.head, 0.63, { down: 0.5, ...HP });
+    this.skinPts = skinM.geometry.attributes.position.array;
     const shells: THREE.Mesh[] = [];                                            // a hat's parts that enclose the head
     const hairSolid = () => onHead(PART.hair, { color: L.hairCol });
     // the curls are lumps on the head's hair: they take the head's light, not one each (a bun or a ponytail stands
@@ -2174,6 +2273,12 @@ export class Rig {
         bp.hand[1 - a] = hang(1 - a);
         bp.plan[a] = "phone"; bp.front[a] = true;
         bp.headPitch += rad(17) * (1 - smooth(P.amount ?? 0));      // looking down at it; level again for a call
+        break;
+      }
+      case "shh": {
+        const a = P.arm ?? 1;
+        bp.hand[1 - a] = hang(1 - a);
+        bp.plan[a] = "shh"; bp.front[a] = true;
         break;
       }
       case "idle": {
@@ -2504,6 +2609,25 @@ export class Rig {
     }
     return worst;
   }
+  /** how far the head's skin (the bare head: no hair, no hat) reaches from the head's centre along a world direction
+   *  (m): where its outline is for any camera that looks across that direction */
+  private skinEdge(dir: V3) {
+    const e = this.headG.matrixWorld.elements, x = e[0] * dir.x + e[1] * dir.y + e[2] * dir.z, y = e[4] * dir.x + e[5] * dir.y + e[6] * dir.z, z = e[8] * dir.x + e[9] * dir.y + e[10] * dir.z;
+    const P = this.skinPts;
+    let best = 0;
+    for (let k = 0; k < P.length; k += 3) { const v = P[k] * x + P[k + 1] * y + P[k + 2] * z; if (v > best) best = v; }
+    return best;
+  }
+  /** how far the posed things in hand i reach along their own +y from the hand's centre (a finger's length; 0 = none) */
+  private heldTip(i: number) {
+    let tip = 0;
+    for (const hd of this.held) {
+      if (hd.i !== i || !hd.posed || !hd.g.visible) continue;
+      const pts = this.heldPts(hd);
+      for (let k = 1; k < pts.length; k += 3) tip = Math.max(tip, pts[k]);
+    }
+    return tip;
+  }
   /** how high a resting hand's centre lies over what it rests on: its own radius and ink, or the posed thing under it */
   private restH(i: number) {
     let h = this.dim.handR + HULL.hand;
@@ -2553,8 +2677,9 @@ export class Rig {
   /** The arms whose place depends on where things are this frame (see ArmPlan): the hand's place and the elbow's
    *  side, in the world, and the turn of a posed thing in that hand (this.grip; flat = the hand rests on the desk:
    *  the thing is laid under it once the forearm is known). sh = the shoulder. C = this frame's frames: q1 = the show
-   *  yaw, yawF = the face's yaw, t / am = the pose's time and amount, arm = the writing arm (-1: nobody writes). */
-  private armPlan(plan: Exclude<ArmPlan, null>, i: number, sh: V3, C: { at: V3; fwdT: V3; leftT: V3; headC: V3; q1: THREE.Quaternion; bodyYaw: number; yawF: number; lean: number; roll: number; t: number; am: number; arm: number; laid?: boolean }): { target: V3; pole: V3; flat: boolean } {
+   *  yaw, yawF = the face's yaw, t / am = the pose's time and amount, arm = the writing arm (-1: nobody writes),
+   *  face = the face drawing's frame (F = out of the face, U = up the face, r = one ball radius on the drawing, m). */
+  private armPlan(plan: Exclude<ArmPlan, null>, i: number, sh: V3, C: { at: V3; fwdT: V3; leftT: V3; headC: V3; q1: THREE.Quaternion; bodyYaw: number; yawF: number; lean: number; roll: number; t: number; am: number; arm: number; laid?: boolean; face?: { F: V3; U: V3; r: number }; jaw?: number; cam?: V3 }): { target: V3; pole: V3; flat: boolean } {
     const d = this.dim, sit = this.sit, s = i ? 1 : -1, A = d.upper + d.fore, hand = d.handR + HULL.hand, limb = d.limbR * 1.08 + HULL.limb;
     const show = (x: number, y: number, z: number) => V(x, y, z).applyQuaternion(C.q1);
     if (plan === "lap" && sit) {
@@ -2746,6 +2871,133 @@ export class Rig {
       const pole = show(s * 0.55, -1, -0.2).normalize().lerp(show(s, -0.5, 0.2).normalize(), e).normalize();
       return { target: H, pole, flat: false };
     }
+    if (plan === "shh" && C.face) {
+      // A finger to the lips. The face is a drawing laid on the head along its own direction: its mouth is 0.34 r
+      // under the middle, wherever the drawing has slid to. The hand comes to rest just under the mouth, in front of
+      // the chin, and what it holds (a finger: its length along +y) stands up across the lips toward where a nose
+      // would be, leaning back as the head's surface does, its +z out of the face. Hand and finger are kept outside
+      // the head's real shape (hair and hat included) and off the body. amount 0 = in front of the chest.
+      // The arm of the far side cannot come round the head to a face that has turned away from it (the head is as
+      // wide as the arm is long): the hand follows the face up to SHH_FAR to that side of the body's front and
+      // then stays behind, beside the lips, softly (nothing jumps). Rig.qa.reach reports how far off the lips it is.
+      // For such a view give the pose the other arm (pose.arm, and finger({ hand })).
+      const e = smooth(C.am), r = C.face.r, hc = C.headC, shy = d.sh[0].y, GAP = 0.004, o = V();
+      const far = Math.max(0, -s * wrapA(C.yawF - C.bodyYaw)), back = far - softLim(far, SHH_FAR);
+      const F = back ? C.face.F.clone().applyAxisAngle(UP, s * back) : C.face.F, U = back ? C.face.U.clone().applyAxisAngle(UP, s * back) : C.face.U;
+      this.planOff[i] = e * back * d.R;
+      const hg = (p: V3) => this.headGap(p), bg = (p: V3) => this.bodyGap(p);
+      // the point y ball radii up the face that is `own` clear of the head, straight out of the face
+      const onFace = (y: number, own: number) => {
+        const p = hc.clone().addScaledVector(U, y * r).addScaledVector(F, d.R);
+        for (let n = 0; n < 10; n++) {
+          const g = hg(p) - own;
+          if (Math.abs(g) < 1e-4) break;
+          p.addScaledVector(F, -g / Math.max(0.35, o.copy(p).sub(hc).normalize().dot(F)));
+        }
+        return p;
+      };
+      const H1 = onFace(-0.4 - hand / r, hand + GAP), T1 = onFace(-0.14, 0.014 + GAP), jw = C.jaw ?? 0;
+      const y1 = V().subVectors(T1, H1).normalize(), z1 = F.clone().addScaledVector(y1, -F.dot(y1)).normalize(), q1 = basisQ(y1, z1, new THREE.Quaternion());
+      if (jw > 0) {
+        // Along the jaw (pose.jaw): the finger's TIP is what is placed. It goes from the lips (0) to under the ear
+        // on the hand's own side (1), a little off the face on the way, and from there down the jawline to the chin
+        // (2): along the edge of the face. The path is the outline of the bare head as the face plane shows it
+        // (skinEdge: round on a ball, the straight cut of a cut jaw), from JAW_ANG[0] round from the side to
+        // JAW_ANG[1], the finger's own side JAW_IN inside it, and laid on the head's real shape straight into the
+        // face (so the finger is in front of the head, never behind its edge). The hand hangs from the tip, below it
+        // and to its own side (JAW_LEAN), and swings out of the face about the tip just as far as hand and finger
+        // need to stay off the head and the body: the smallest swing that clears, so nothing jumps.
+        // (a held thing's far end is taken as round and a finger wide; an empty hand is its own tip)
+        const Rf = V().crossVectors(U, F), reach = this.heldTip(i), tipR = reach > 1e-4 ? 0.42 * d.handR + 0.0037 : hand;
+        const lipA = y1.clone().negate(), lipL = H1.distanceTo(T1);
+        // (what the hand at the lips is short of, if anything, is let through there and less and less on the way: the
+        // pushes further down deal with it as they always did, and the two ways of standing clear meet without a step)
+        const need0 = Math.min(-2e-4, Math.min(hg(H1) - hand, this.heldMin(i, H1, q1, hg), bg(H1) - hand - 0.002, this.heldMin(i, H1, q1, bg) - BODY_INK * 0.5) - GAP);
+        const T = V(), a0 = V(), out = V(), a = V(), yq = V(), zq = V(), qj = new THREE.Quaternion();
+        // the hand's place (into H1; how it is turned, into qj) with the tip k1 of the way from the lips to the point
+        // k2 of the jaw (0 = under the ear, 1 = the chin), `lift` further off the face
+        const place = (k1: number, k2: number, lift: number) => {
+          const ang = rad(lerp(JAW_ANG[0], JAW_ANG[1], k2)), ex = s * Math.cos(ang), ey = -Math.sin(ang);
+          const rho = this.skinEdge(o.copy(Rf).multiplyScalar(ex).addScaledVector(U, ey)) - tipR - lerp(JAW_IN[0], JAW_IN[1], k2);
+          const px = lerp(0, ex * rho, k1), py = lerp(-0.14 * r, ey * rho, k1);
+          const own = lerp(0.014, tipR + 0.0008, k1) + GAP + lift;
+          // the tip: that point of the drawing's plane, laid on the head straight into the face (as onFace does)
+          T.copy(hc).addScaledVector(Rf, px).addScaledVector(U, py).addScaledVector(F, d.R);
+          for (let n = 0; n < 20; n++) {
+            const g = hg(T) - own;
+            if (Math.abs(g) < 1e-4) break;
+            T.addScaledVector(F, -g / Math.max(0.35, o.copy(T).sub(hc).normalize().dot(F)));
+          }
+          // from the tip to the hand: at the lips as the finger stands there; then down and to the hand's side
+          const lean = rad(lerp(JAW_LEAN[0], JAW_LEAN[1], k2));
+          a0.copy(Rf).multiplyScalar(s * Math.sin(lean)).addScaledVector(U, -Math.cos(lean));
+          a0.lerpVectors(lipA, a0, k1).normalize();
+          const Lc = lerp(lipL, reach > 1e-4 ? reach - 0.42 * d.handR : 0, k1), need = lerp(need0, -2e-4, k1);
+          out.copy(F).addScaledVector(a0, -F.dot(a0)).normalize();
+          const gapAt = (b: number) => {
+            a.copy(a0).multiplyScalar(Math.cos(b)).addScaledVector(out, Math.sin(b));
+            H1.copy(T).addScaledVector(a, Lc);
+            yq.copy(a).negate(); zq.copy(F).addScaledVector(yq, -F.dot(yq));
+            if (zq.lengthSq() < 1e-6) zq.copy(U); zq.normalize();
+            basisQ(yq, zq, qj);
+            return Math.min(hg(H1) - hand, this.heldMin(i, H1, qj, hg), bg(H1) - hand - 0.002, this.heldMin(i, H1, qj, bg) - BODY_INK * 0.5) - GAP;
+          };
+          let lo = 0, hi = 0;
+          if (gapAt(0) < need) {
+            const STEP = rad(6), MAX = rad(96);
+            for (hi = STEP; hi < MAX && gapAt(hi) < need; hi += STEP);
+            lo = hi - STEP;
+            for (let n = 0; n < 7; n++) { const mid = (lo + hi) / 2; if (gapAt(mid) < need) lo = mid; else hi = mid; }
+          }
+          gapAt(hi);
+          // The edge of a wide jaw lies right over the shoulder, and a hand that came to its own shoulder would fold
+          // the arm up to nothing (the elbow then swings round at the least move). The hand keeps JAW_NEAR of the
+          // arm's length from the shoulder by coming toward the camera along its own line of sight, as little as it
+          // takes: on the screen it stays where it was, on the edge. (A camera that is not in front of the face, a
+          // back view: straight out of the face instead.)
+          const near = (d.upper + d.fore) * JAW_NEAR * k1;
+          if (C.cam && H1.distanceTo(sh) < near) {
+            const v = a.copy(C.cam).sub(H1).normalize();
+            v.lerp(F, 1 - smooth((v.dot(F) - 0.2) / 0.6)).normalize();
+            const w = yq.copy(H1).sub(sh), bq = w.dot(v);
+            H1.addScaledVector(v, -bq + Math.sqrt(Math.max(0, bq * bq - w.lengthSq() + near * near)));
+          }
+        };
+        // An arm that cannot reach under the ear (an ear cup stands the place off; a head that pops up and away for
+        // a word; a seated torso that cannot turn with the head): the trace starts as far up the jaw as the arm does
+        // reach (JAW_REACH of its length), found by bisection, so it comes and goes without a step. A hand that fell
+        // short of its place would take the finger into the head.
+        const maxL = (d.upper + d.fore) * JAW_REACH, over = (k: number) => { place(1, k, 0); return H1.distanceTo(sh) - maxL; };
+        let kR = 0;
+        if (over(0) > 0) {
+          if (over(1) > 0) kR = 1;
+          else { let lo = 0, hi = 1; for (let n = 0; n < 7; n++) { const mid = (lo + hi) / 2; if (over(mid) > 0) lo = mid; else hi = mid; } kR = hi; }
+        }
+        place(smooth(Math.min(jw, 1)), Math.max(clamp(jw - 1, 0, 1), kR), 0.03 * Math.sin(Math.PI * Math.min(jw, 1)) ** 2);
+        q1.copy(qj);
+      }
+      const P0 = V(s * 0.05, shy - 0.2 * A, d.rt + BODY_INK + 0.075).applyMatrix4(this.torsoM), q0 = basisQ(show(0, 1, 0), show(0, 0, 1), new THREE.Quaternion());
+      const H = P0.lerp(H1, e), q = (this.grip[i] = this.gripQ[i].copy(q0).slerp(q1, e));
+      for (let round = 0; round < 2; round++) {
+        for (let n = 0; n < 6; n++) {
+          const g = Math.min(hg(H) - hand, this.heldMin(i, H, q, hg)) - GAP;
+          if (g >= -2e-4) break;
+          H.addScaledVector(F, -g / Math.max(0.35, o.copy(H).sub(hc).normalize().dot(F)));
+        }
+        for (let n = 0; n < 4; n++) {
+          const g = Math.min(bg(H) - hand - 0.002, this.heldMin(i, H, q, bg) - BODY_INK * 0.5) - GAP;
+          if (g >= -2e-4) break;
+          o.copy(H).applyMatrix4(this.torsoInv).setY(0);
+          if (o.lengthSq() < 1e-8) o.set(0, 0, 1);
+          H.addScaledVector(o.normalize().transformDirection(this.torsoM), -g);
+        }
+      }
+      // the elbow low and forward: the forearm comes up to the mouth from in front, not from under the jaw. Along the
+      // jaw the elbow goes out to the hand's own side: the hand comes down to the shoulder's height there, and an
+      // elbow kept low would have to cross the chest (and flip over from one side of it to the other).
+      const ej = e * smooth(Math.min(jw, 1));
+      return { target: H, pole: show(s * 0.5, -0.85, 0.45).lerp(show(s, -0.4, 0.05), ej).normalize(), flat: false };
+    }
     // a plan without its furniture (a desk pose and no desk): the hand hangs in front of the hip
     return { target: sh.clone().add(show(s * 0.02, -0.3, 0.05)), pole: show(s, -0.3, -0.45), flat: false };
   }
@@ -2903,6 +3155,7 @@ export class Rig {
     const fSlide = clamp(wrapA(fy - camYawH) / FACE_MAX, -1, 1), fNarrow = Math.sqrt(1 - (0.49 * fSlide) ** 2);
     this.faceU.uFF.value.copy(F); this.faceU.uFR.value.copy(Rf).multiplyScalar(1 / (hsx * fNarrow)); this.faceU.uFU.value.copy(Uf).multiplyScalar(1 / hsy);
     this.faceU.uFace.value = faceTex(L, st.expr ?? "neutral", clamp(st.blink ?? 0, 0, 1), this.shade, hand, st.gaze ?? 0, this.fa, st.mouth);
+    this.faceU.uFaceEdge.value = this.faceU.uFace.value.userData.edge ? 1 : 0;
     this.faceU.uHead.value.set(headC.x, headC.y, headC.z, d.R);
     if (this.faceU.uBrim.value.w > 0) {
       // the light that throws a brim's shadow (see the shader): as high as the key, kept within BRIM_ELEV, leaning
@@ -2944,7 +3197,8 @@ export class Rig {
       this.ring.lookAt(camPos);
       this.ring.scale.setScalar(4 * d.R);
     }
-    const P = st.pose, planC = { at, fwdT, leftT, headC, q1: _q1, bodyYaw, yawF: fy, lean: bp.pitch, roll: bp.roll - bp.sway, t: P.t ?? 0, am: clamp(P.amount ?? 0, 0, 1), arm: P.kind === "write" ? P.arm ?? 0 : -1,
+    const P = st.pose, planC = { at, fwdT, leftT, headC, q1: _q1, bodyYaw, yawF: fy, lean: bp.pitch, roll: bp.roll - bp.sway, t: P.t ?? 0, am: clamp(P.amount ?? (P.kind === "shh" ? 1 : 0), 0, 1), arm: P.kind === "write" ? P.arm ?? 0 : -1,
+      face: { F, U: Uf, r: d.R * hsy }, jaw: P.kind === "shh" ? clamp(P.jaw ?? 0, 0, 2) : 0, cam: camPos,
       laid: this.held.some((hd) => hd.posed && hd.g.visible && bp.plan[hd.i] === "desk" && !st.hands?.[hd.i]) };
     for (let i = 0; i < 2; i++) {
       const s = i ? 1 : -1, sh = d.sh[i].clone().applyMatrix4(this.torsoM);
@@ -2957,6 +3211,7 @@ export class Rig {
       if (st.pose.kind === "point" && wt && i === (st.pose.arm ?? 1)) target = sh.clone().addScaledVector(wt.clone().sub(sh).normalize(), (d.upper + d.fore) * 0.94);
       let pole = showDir(bp.elbowPole[i]), flat = false;
       const plan = wt ? null : bp.plan[i];
+      this.planOff[i] = 0;
       if (plan) { const g = this.armPlan(plan, i, sh, planC); target = g.target; pole = g.pole; flat = g.flat; }
       let k = this.solveArm(i, sh, target, pole, showDir(V(s, 0, 0)), headC);
       // an arm the swivel could not clear: the whole arm moves out (see armOut). Only for a free hand: one pinned to
@@ -2970,7 +3225,7 @@ export class Rig {
         target.addScaledVector(_w.copy(target).sub(headC).normalize(), Math.min(0.03, 0.002 - 1.5 * short));
         k = this.solveArm(i, sh, target, pole, showDir(V(s, 0, 0)), headC);
       }
-      this.qa.swivel[i as 0 | 1] = k.phi; this.qa.clear = Math.min(this.qa.clear, k.c); this.qa.reach = Math.max(this.qa.reach, k.reach);
+      this.qa.swivel[i as 0 | 1] = k.phi; this.qa.clear = Math.min(this.qa.clear, k.c); this.qa.reach = Math.max(this.qa.reach, k.reach, this.planOff[i]);
       const seed = V().copy(k.j).sub(sh).cross(V().copy(k.e).sub(k.j));
       if (seed.lengthSq() < 1e-10) seed.copy(showDir(V(1, 0, 0)));
       this.limbs[i].update(sh, k.j, k.e, d.limbR, seed.normalize(), this.bow[i], 0.07 * hand, this.wobPh[i]);

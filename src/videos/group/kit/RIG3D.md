@@ -51,7 +51,7 @@
 
 `RigCast` 有一个 `hand` 参数：0 是干净的几何体，1 是参考那种手绘程度（默认）。
 
-- 五官：一张平的 2D 画，按上面那套零件画，23 个表情。它按位置贴在头上（不跟着头的起伏弯曲），按远近缩放（任何镜头距离下在头上一样大），画在头发上面（挑起的眉毛可以压过刘海），只有帽子能盖住它。每个角色的眼睛大小和左右略有不同，按种子固定。
+- 五官：一张平的 2D 画，按上面那套零件画，25 个表情。它按位置贴在头上（不跟着头的起伏弯曲），按远近缩放（任何镜头距离下在头上一样大），画在头发上面（挑起的眉毛可以压过刘海），只有帽子能盖住它。每个角色的眼睛大小和左右略有不同，按种子固定。
 - 眨眼只有两格（半闭、全闭），没有中间帧。视线 `gaze` 以 0.5 为一档，瞳孔在眼皮线下面滑动。
 - 头发直接画在头上（同一个面，发际线不会有两个面打架的亮点）：平涂、发际线墨线、分缝、几条浅色发丝，刘海压低。线是着色器里算的，细到不足一个像素之前先淡出。
 - 帽子：鸭舌帽有画出来的缝线和一圈压线，毛线帽有罗纹。帽子下面的头发只从鬓角往后露出来。帽檐是从帽圈下面长出来的一块楔形，不碰头，没有外壳描边，墨线直接画在帽檐边上。帽子先画，头让开帽子占的像素。
@@ -142,7 +142,8 @@ rc.update(camera, renderHeightPx);
 rope.update({ a: a.handWorld(1), ... });                 // 绳子等在 update 之后取手的位置
 ```
 
-- 表情（`RIG_EXPRS`）：neutral、smile、happy、grin、laugh、smile_closed、relief、relief_open、smug、deadpan、focus、stern、huff、sad、sigh、nervous、shock、dazed、pained、wince、whistle、lick、sleep。
+- 表情（`RIG_EXPRS`）：neutral、smile、happy、grin、laugh、smile_closed、relief、relief_open、smug、deadpan、focus、stern、huff、sad、sigh、nervous、shock、dazed、pained、wince、whistle、lick、sleep、cool（淡定：眯眼、压在眼皮上的粗眉、嘴角一点笑）、hush（“嘘”的脸：就是 cool 那张脸，加一边眉毛高高挑起，再加两道颧骨线；颧骨线是表情自己画的，所以谁用这个表情都有削过的下巴；嘴角的笑比 cool 宽一半，手指挡在前面时两头都露得出来；配姿势 `shh`，见 RIG3D_poses.md）。
+- `Look.head`：自定头形，盖掉种子随机出来的那个。`nTop` / `nBot` 是头顶和下巴有多方（2 是圆，4 是圆角的方块），`egg` 是下巴比头顶宽多少，另有 `asym`、`rot`、`noise`；`jaw: [a, c]` 是切出来的下巴（下颌角在头中间往下 `a`，下巴宽 `c`，中间一条直线，大哥用的菱形下巴）。改的是头真正的形状，所以帽子、头发、描边、手臂避让都跟着。彩蛋人物大哥（`kit/rigacc/dage.ts`）的方下巴就是这么做的。
 - `state.blink`：0 睁开、0.5 半闭、1 闭上。`state.gaze`：-1（画面左）到 1（画面右），0.5 一档。
 - `rigFaceCanvas(look, expr, { lid, gaze, brim })`：单独拿一张脸的画（出表情表、检查用）。
 - 已有姿势：`idle`、`walk`（见“走路”）、`wave`、`point`、`haul`、`hold`（拿板子）、`cheer`；坐着的 `sit` / `desk`、`write`（写字）和 `phone`（看手机、打电话），连同 `state.seat`（坐在哪）见 `RIG3D_poses.md`。
@@ -280,7 +281,7 @@ boss.set({ ..., hide: ["briefcase"] });      // 这一帧不显示公文包（�
 
 1. 单帧：`bash scripts/rig3d/shot.sh src/videos/group/preview/rig3d_trio_rig.ts out.png`，大约 10 秒（84 人那张约 30 秒）。
 2. 多帧：`bash scripts/rig3d/frames.sh src/videos/group/preview/rig3d_orbit720_rig.ts outdir 120 720 1280`。只出其中几帧：`bash scripts/rig3d/pick.sh <入口> outdir 540 960 4 6 40`。
-3. 23 个表情：`bash scripts/rig3d/frames.sh src/videos/group/preview/rig3d_exprs_rig.ts outdir 23 480 480`。
+3. 25 个表情：`bash scripts/rig3d/frames.sh src/videos/group/preview/rig3d_exprs_rig.ts outdir 25 480 480`。
 4. 类型检查：`npx tsc -p scripts/rig3d/tsconfig.rig.json`，`n8ao` 的 TS7016 报错可以忽略。
 5. 闪烁扫描：把帧合成 mp4 后 `python3 scripts/rig3d/scan.py clip.mp4 outdir 帧数`。
 6. 逐像素闪点：`python3 scripts/rig3d/sparkle.py <帧目录> [对照帧目录]`。单像素孤点：`python3 scripts/rig3d/specks.py <帧目录> [阈值] [--mask <遮罩帧目录>]`（见“单像素点”）。

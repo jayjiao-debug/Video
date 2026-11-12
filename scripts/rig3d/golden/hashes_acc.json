@@ -26,6 +26,9 @@
  "acc_faceMask/f0000.png": "dbdea3380c15fb1adcc2fc66",
  "acc_faceMask/f0030.png": "47e5620199893a2adb0b6c04",
  "acc_faceMask/f0060.png": "9b52162e0544831cf6f4b1b1",
+ "acc_finger/f0000.png": "71df3fc5d4b4d69dc56b7405",
+ "acc_finger/f0030.png": "aab297dc780fc5d36b8b8954",
+ "acc_finger/f0060.png": "5c17dd044b2666ef29a0f519",
  "acc_glasses.round/f0000.png": "ddea2db54427b5f4b6bff18e",
  "acc_glasses.round/f0030.png": "0e62080ee83248ed446f54f5",
  "acc_glasses.round/f0060.png": "9b52162e0544831cf6f4b1b1",
@@ -82,5 +85,6 @@
  "acc_tie/f0060.png": "217143775f63880355fd1561",
  "acc_topHat/f0000.png": "e4490322f369cb5555b8f1f7",
  "acc_topHat/f0030.png": "0d2cc2529da49a015fb96f8b",
- "acc_topHat/f0060.png": "7742ce78b5cd7bf33c760d7e"
+ "acc_topHat/f0060.png": "7742ce78b5cd7bf33c760d7e",
+ "dage_lineup/f0000.png": "583c366d58336514bdfa1fed"
 }
