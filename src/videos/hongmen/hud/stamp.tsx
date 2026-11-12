@@ -100,12 +100,15 @@ export type TitleProps = {
   /** size of the big row in px (default 178) */ size?: number;
   /** false = only the big row 鸿门宴 */ question?: boolean;
 };
+/** the widest the English title row may be, px (the frame's 1080 less 120 px a side: tall phones cut the sides) */
+const TITLE_EN_W = 840;
 /** THE TITLE 《鸿门宴，到底死了谁？》: no plate, type on a thick ink line. The big row slams (large -> rest over 3 frames,
  *  a settle); a short red rule is drawn under it; the question pops in white with 谁？ in gold. */
 export const title = (p: TitleProps): React.ReactNode => {
   const { f, from, x = 540, y = 330, question = true } = p, L = life(f, from, p.out, 4);
   if (!L) return null;
-  const size = p.size ?? (EN ? 96 : 178), t = L.t, ask = p.ask ?? from + 8;
+  // (English: the size a builder asks for is for the three Chinese characters; the English title is kept to TITLE_EN_W)
+  const size0 = p.size ?? (EN ? 96 : 178), size = EN ? Math.min(size0, Math.floor((size0 * TITLE_EN_W) / textW(TXT.title, size0, Math.round(size0 * 0.07)))) : size0, t = L.t, ask = p.ask ?? from + 8;
   const k = clamp01((t + 1) / 3), settle = t > 2 ? 0.05 * Math.exp(-(t - 2) / 2.2) * Math.cos((t - 2) * 1.9) : 0;
   const s = (lerp(2.2, 1, eOut(k)) - settle) * (1 + 0.06 * L.lv), op = clamp01((t + 1) / 2) * (1 - L.lv);
   const main = TXT.title, n = [...main].length, ls = Math.round(size * 0.07), mw = EN ? textW(main, size, 2) : n * size + (n - 1) * ls;

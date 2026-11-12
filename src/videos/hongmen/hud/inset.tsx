@@ -74,6 +74,8 @@ export const inset = (p: InsetProps): React.ReactNode => {
   const sy = j === -2 ? 0.6 : j === -1 ? 0.14 : j === 0 ? 0.5 : j === 1 ? 1.1 : j === 2 ? 0.97 : 1;
   const s = (0.3 + 0.7 * k) * zoom * (1 - 0.12 * L.lv), op = clamp01((L.t + 1) / 2) * (1 - L.lv);
   const spec = plateOf(named), ps = plateSize(spec), py = r + ps.h / 2 - 22;   // the plate hangs from the lower rim (it covers the rim, never the face)
+  // (English: CAO WUSHANG is wider than 曹无伤: the plate slides left so that its rim keeps ZONE.side from the right edge)
+  const pxs = EN ? Math.min(0, FW - ZONE.side - (x + ps.w / 2 + 11)) : 0;
   const pic = d - 28;                                                  // the picture inside the ring
   // the burst on the name
   const u = j / 8, rays: React.ReactNode[] = [];
@@ -100,7 +102,7 @@ export const inset = (p: InsetProps): React.ReactNode => {
         </div>,
         svg0("over",
           sealMark("mark", -r * 0.74, -r * 0.7, Math.max(34, r * 0.27), TXT.informerMark),
-          p.plate === false ? null : <g key="pl" transform={`translate(0,${py}) scale(1,${sy})`}>{plate("p", spec)}</g>))}
+          p.plate === false ? null : <g key="pl" transform={`translate(${pxs},${py}) scale(1,${sy})`}>{plate("p", spec)}</g>))}
     </React.Fragment>
   );
 };
@@ -116,11 +118,15 @@ export type BubbleProps = {
   /** text colour (default ink); gold: true = the informer's name as an accusation: red text */ color?: string;
   key?: string;
 };
+/** the widest an English bubble may be, px */
+const BUBBLE_EN_W = 560;
 /** a white speech bubble with an ink line; pops out of the tail's end */
 export const bubble = (p: BubbleProps): React.ReactNode => {
   const { f, from, text, to } = p, L = life(f, from, p.out);
   if (!L) return null;
-  const size = p.size ?? (EN ? 44 : 64), w = textW(text, size, 4) + 64, hgt = Math.round(size * 1.5);
+  // (English: a builder's size is for the Chinese name's three characters; the English bubble is held to BUBBLE_EN_W)
+  const size0 = p.size ?? (EN ? 44 : 64), size = EN ? Math.min(size0, Math.floor((size0 * (BUBBLE_EN_W - 64)) / textW(text, size0, 4))) : size0;
+  const w = textW(text, size, 4) + 64, hgt = Math.round(size * 1.5);
   const x = clamp(p.x, ZONE.side + w / 2 + 12, FW - ZONE.side - w / 2 - 12), y = p.y;
   const k = springAt(f, from, PUNCH), ox = to?.x ?? x, oy = to?.y ?? y, s = (0.35 + 0.65 * k) * (1 - 0.12 * L.lv);
   const x0 = -w / 2, x1 = w / 2, y0 = -hgt / 2, y1 = hgt / 2, R = hgt / 2;

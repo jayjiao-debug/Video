@@ -52,6 +52,7 @@ import { NOINK } from "../../vasa/ink";
 import { rng } from "../../arthur/sets/yard_paint";
 import { rigJawline, rigHeadAdd, type RigSeat, type RigState, type RigHead } from "../../group/kit/rig3d";
 import type { Expr } from "../../group/kit/toon";
+import { L } from "../lang";
 
 type V3 = [number, number, number];
 export type PrivyVariant = "A" | "B";
@@ -268,7 +269,10 @@ const signTex = (ch: string) => {
   g.strokeStyle = "rgba(150,110,60,0.35)"; g.lineWidth = 2;
   for (let k = 0; k < 9; k++) { const y = S * (0.06 + 0.11 * k + 0.03 * r()); g.beginPath(); g.moveTo(0, y); g.bezierCurveTo(S * 0.3, y + 5 * (r() - 0.5), S * 0.7, y + 5 * (r() - 0.5), S, y); g.stroke(); }
   g.strokeStyle = "#5b2a1c"; g.lineWidth = 9; g.strokeRect(11, 11, S - 22, S - 22);
-  g.fillStyle = "#3a1c18"; g.font = `700 ${Math.round(S * 0.66)}px FrSans, "Noto Sans SC", "Noto Sans CJK SC", sans-serif`;
+  const face = (px: number) => `700 ${px}px FrSans, "Noto Sans SC", "Noto Sans CJK SC", sans-serif`;
+  let px = Math.round(S * 0.66); g.font = face(px);
+  const wide = g.measureText(ch).width; if (wide > S * 0.72) { px = Math.floor(px * (S * 0.72) / wide); g.font = face(px); }   // Latin text (the English "WC") is shrunk to fit; one Chinese character is not touched
+  g.fillStyle = "#3a1c18";
   g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(ch, S / 2, S * 0.53);
   return texOf(c);
 };
@@ -402,7 +406,7 @@ export function buildPrivy(M: Mats, o: { variant?: PrivyVariant; sign?: string }
   const mMat = flat("#b3955c", variant === "B" ? matTex(7, 640, 512) : matTex(7));
   const mPlankH = flat("#b88a58", boardsTex(13, 3, true)), mPlankTop = flat("#c69a66", boardsTex(17, 4, false));
   const mPost = flat("#6a4a32");
-  const mSign = flat("#ffffff", signTex(o.sign ?? "厕"), 0.85), mSignEdge = flat("#b08a58");
+  const mSign = flat("#ffffff", signTex(o.sign ?? L("厕", "WC")), 0.85), mSignEdge = flat("#b08a58");
   const mCord = flat("#5a4030");
   // The bowl and the lid are round, made of many small faces, pale, and they stand close behind and under the red robe. Where
   // such a thing turns away from the lens its faces are slivers seen edge-on, and the rasteriser's depth for a sliver
