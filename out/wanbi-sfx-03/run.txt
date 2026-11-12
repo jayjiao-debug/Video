@@ -1,0 +1,197 @@
+plan: {'tier': 'creator', 'character_count': 19347, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "hall_s1", "type": "sfx", "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hall_s1.mp3", "bytes": 241205}
+{"name": "hall_s2", "type": "sfx", "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hall_s2.mp3", "bytes": 241205}
+{"name": "hall_s3", "type": "sfx", "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hall_s3.mp3", "bytes": 241205}
+{"name": "hall_s4", "type": "sfx", "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "hall_s4.mp3", "bytes": 241205}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 11258.76it/s]
+hall_s1 [['Rumble', 0.55], ['Music', 0.103], ['Silence', 0.055], ['Sound effect', 0.027], ['Field recording', 0.014], ['Whoosh, swoosh, swish', 0.012], ['Outside, rural or natural', 0.01], ['Explosion', 0.008]]
+hall_s2 [['Rumble', 0.174], ['Music', 0.103], ['Sound effect', 0.056], ['Silence', 0.054], ['Sonar', 0.052], ['Whoosh, swoosh, swish', 0.036], ['Explosion', 0.018], ['Electronic music', 0.009]]
+hall_s3 [['Animal', 0.443], ['Neigh, whinny', 0.184], ['Horse', 0.176], ['Speech', 0.077], ['Clip-clop', 0.061], ['Bird', 0.036], ['Silence', 0.035], ['Domestic animals, pets', 0.034]]
+hall_s4 [['Speech', 0.643], ['Snort', 0.161], ['Inside, large room or hall', 0.052], ['Writing', 0.035], ['Breathing', 0.026], ['Silence', 0.025], ['Shuffle', 0.018], ['Inside, public space', 0.018]]
+[
+ {
+  "name": "hall_s1",
+  "type": "sfx",
+  "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hall_s1.mp3",
+  "bytes": 241205,
+  "seconds": 15.0,
+  "tags": [
+   [
+    "Rumble",
+    0.55
+   ],
+   [
+    "Music",
+    0.103
+   ],
+   [
+    "Silence",
+    0.055
+   ],
+   [
+    "Sound effect",
+    0.027
+   ],
+   [
+    "Field recording",
+    0.014
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.012
+   ],
+   [
+    "Outside, rural or natural",
+    0.01
+   ],
+   [
+    "Explosion",
+    0.008
+   ]
+  ]
+ },
+ {
+  "name": "hall_s2",
+  "type": "sfx",
+  "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hall_s2.mp3",
+  "bytes": 241205,
+  "seconds": 15.0,
+  "tags": [
+   [
+    "Rumble",
+    0.174
+   ],
+   [
+    "Music",
+    0.103
+   ],
+   [
+    "Sound effect",
+    0.056
+   ],
+   [
+    "Silence",
+    0.054
+   ],
+   [
+    "Sonar",
+    0.052
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.036
+   ],
+   [
+    "Explosion",
+    0.018
+   ],
+   [
+    "Electronic music",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "hall_s3",
+  "type": "sfx",
+  "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hall_s3.mp3",
+  "bytes": 241205,
+  "seconds": 15.0,
+  "tags": [
+   [
+    "Animal",
+    0.443
+   ],
+   [
+    "Neigh, whinny",
+    0.184
+   ],
+   [
+    "Horse",
+    0.176
+   ],
+   [
+    "Speech",
+    0.077
+   ],
+   [
+    "Clip-clop",
+    0.061
+   ],
+   [
+    "Bird",
+    0.036
+   ],
+   [
+    "Silence",
+    0.035
+   ],
+   [
+    "Domestic animals, pets",
+    0.034
+   ]
+  ]
+ },
+ {
+  "name": "hall_s4",
+  "type": "sfx",
+  "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "hall_s4.mp3",
+  "bytes": 241205,
+  "seconds": 15.0,
+  "tags": [
+   [
+    "Speech",
+    0.643
+   ],
+   [
+    "Snort",
+    0.161
+   ],
+   [
+    "Inside, large room or hall",
+    0.052
+   ],
+   [
+    "Writing",
+    0.035
+   ],
+   [
+    "Breathing",
+    0.026
+   ],
+   [
+    "Silence",
+    0.025
+   ],
+   [
+    "Shuffle",
+    0.018
+   ],
+   [
+    "Inside, public space",
+    0.018
+   ]
+  ]
+ }
+]
