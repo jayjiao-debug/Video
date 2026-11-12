@@ -1,219 +1,412 @@
 {
- "id": "qin-sfx-01",
+ "id": "wanbi-sfx-01",
  "tag": true,
  "items": [
   {
    "type": "sfx",
-   "name": "amb_corridor",
-   "text": "Quiet ancient palace corridor at dawn, distant birds, faint wind through wooden lattice, soft room echo",
+   "name": "drone_1",
+   "text": "A low dark sustained drone: a deep soft bowed bronze hum holding one steady pitch, tense and quiet, even from start to finish. No melody, no beat, no music.",
+   "duration": 6.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "drone_2",
+   "text": "A low dark sustained drone: a deep soft bowed bronze hum holding one steady pitch, tense and quiet, even from start to finish. No melody, no beat, no music.",
+   "duration": 6.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "riser_1",
+   "text": "A short tension riser: an airy whoosh that swells up fast and stops sharply at its loudest point. One rise only, no impact, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "riser_2",
+   "text": "A short tension riser: an airy whoosh that swells up fast and stops sharply at its loudest point. One rise only, no impact, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "hit_1",
+   "text": "One deep soft low impact: a muffled heavy boom, like a big padded hit, with a short tail. One hit only, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "hit_2",
+   "text": "One deep soft low impact: a muffled heavy boom, like a big padded hit, with a short tail. One hit only, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "knock_1",
+   "text": "A hard stone disc knocks once against a lacquered wooden pillar: one short sharp hollow wooden tock. One hit only. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "knock_2",
+   "text": "A hard stone disc knocks once against a lacquered wooden pillar: one short sharp hollow wooden tock. One hit only. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "thock_1",
+   "text": "A man's back bumps against a thick wooden pillar: one dull soft hollow thud. One hit only. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "thock_2",
+   "text": "A man's back bumps against a thick wooden pillar: one dull soft hollow thud. One hit only. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "rewind_1",
+   "text": "A reversed whoosh: a soft airy swish played backwards, swelling up from silence and cutting off abruptly at its loudest point. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.7,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "rewind_2",
+   "text": "A reversed whoosh: a soft airy swish played backwards, swelling up from silence and cutting off abruptly at its loudest point. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.7,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cloth_1",
+   "text": "A quick swish of a wide silk robe sleeve through the air: one short soft cloth whoosh with a light flutter. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cloth_2",
+   "text": "A quick swish of a wide silk robe sleeve through the air: one short soft cloth whoosh with a light flutter. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "silk_1",
+   "text": "A silk map scroll unrolled fast from a wooden roller: a quick soft silky rustle and swish that ends with a light wooden tap. Close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "silk_2",
+   "text": "A silk map scroll unrolled fast from a wooden roller: a quick soft silky rustle and swish that ends with a light wooden tap. Close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "puff_1",
+   "text": "A heavy coarse cloth thrown over a man: one soft dusty whump of cloth. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.7,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "puff_2",
+   "text": "A heavy coarse cloth thrown over a man: one soft dusty whump of cloth. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.7,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "grab_1",
+   "text": "A hand grabs a thick cloth sleeve hard: one quick cloth thwap. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "grab_2",
+   "text": "A hand grabs a thick cloth sleeve hard: one quick cloth thwap. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "clap_1",
+   "text": "One single sharp clap of two hands. One clap only, close, dry.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "clap_2",
+   "text": "One single sharp clap of two hands. One clap only, close, dry.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "tick_1",
+   "text": "One tiny dry wooden click, like a single abacus bead flicked. One click only, very short, close, dry.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "tick_2",
+   "text": "One tiny dry wooden click, like a single abacus bead flicked. One click only, very short, close, dry.",
+   "duration": 0.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "deflate_1",
+   "text": "A comic deflating sound: air squeaking out of a small balloon, a short descending fizzle. Cartoon, close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "deflate_2",
+   "text": "A comic deflating sound: air squeaking out of a small balloon, a short descending fizzle. Cartoon, close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "boing_1",
+   "text": "A soft comic boing: a short springy wobble, light and playful. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "boing_2",
+   "text": "A soft comic boing: a short springy wobble, light and playful. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "gulp_1",
+   "text": "A comic nervous gulp: one loud swallow. Close, dry, no voice, no music.",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "gulp_2",
+   "text": "A comic nervous gulp: one loud swallow. Close, dry, no voice, no music.",
+   "duration": 0.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "steps_1",
+   "text": "One man walking at a calm, steady pace on a polished wooden floor in a large hall, soft cloth shoes: six even footsteps. Footsteps only, no voice, no music. Close, dry.",
+   "duration": 3.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "steps_2",
+   "text": "One man walking at a calm, steady pace on a polished wooden floor in a large hall, soft cloth shoes: six even footsteps. Footsteps only, no voice, no music. Close, dry.",
+   "duration": 3.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "scuttle_1",
+   "text": "One man scurrying backwards in quick small hurried steps on a wooden floor, soft cloth shoes: eight fast light footsteps. Footsteps only, no voice, no music.",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "scuttle_2",
+   "text": "One man scurrying backwards in quick small hurried steps on a wooden floor, soft cloth shoes: eight fast light footsteps. Footsteps only, no voice, no music.",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "clank_1",
+   "text": "One guard in metal armour striding fast on a stone floor: five heavy steps with armour clinking. Footsteps only, no voice, no music.",
+   "duration": 2.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "clank_2",
+   "text": "One guard in metal armour striding fast on a stone floor: five heavy steps with armour clinking. Footsteps only, no voice, no music.",
+   "duration": 2.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cymbal_1",
+   "text": "One crash of a pair of Chinese opera cymbals: a bright brassy chang with a short shimmering ring. One crash only, no drum, no music.",
+   "duration": 1.2,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cymbal_2",
+   "text": "One crash of a pair of Chinese opera cymbals: a bright brassy chang with a short shimmering ring. One crash only, no drum, no music.",
+   "duration": 1.2,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "gong_1",
+   "text": "One hit on a low Chinese opera gong: a deep dark wobbling bwong with a short decay. One hit only, no music.",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "gong_2",
+   "text": "One hit on a low Chinese opera gong: a deep dark wobbling bwong with a short decay. One hit only, no music.",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "whum_1",
+   "text": "A big theatre spotlight switching on: one deep soft electric whum. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.8,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "whum_2",
+   "text": "A big theatre spotlight switching on: one deep soft electric whum. Single sound effect, close, dry, no reverb, no music.",
+   "duration": 0.8,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "bell_1",
+   "text": "One strike of a wooden mallet on an ancient Chinese bronze bell: a warm clear deep bell tone with a long gentle ring. One strike only, no music.",
+   "duration": 3.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "bell_2",
+   "text": "One strike of a wooden mallet on an ancient Chinese bronze bell: a warm clear deep bell tone with a long gentle ring. One strike only, no music.",
+   "duration": 3.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cauldron_1",
+   "text": "A huge heavy bronze cauldron dropped onto a stone floor: one deep heavy metallic thud with a short low ring. One impact only, no voices, no music.",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cauldron_2",
+   "text": "A huge heavy bronze cauldron dropped onto a stone floor: one deep heavy metallic thud with a short low ring. One impact only, no voices, no music.",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "steam_1",
+   "text": "Steam hissing softly from a large pot of boiling water: a gentle low continuous hiss. Calm and even, no bubbling clicks, no music.",
+   "duration": 2.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "steam_2",
+   "text": "Steam hissing softly from a large pot of boiling water: a gentle low continuous hiss. Calm and even, no bubbling clicks, no music.",
+   "duration": 2.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "bamboo_1",
+   "text": "A bundle of bamboo slips tied with cord, an ancient bamboo scroll, unrolled fast on a wooden table: a quick dry wooden clatter and slide. Close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "bamboo_2",
+   "text": "A bundle of bamboo slips tied with cord, an ancient bamboo scroll, unrolled fast on a wooden table: a quick dry wooden clatter and slide. Close, dry, no music.",
+   "duration": 1.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cheer_1",
+   "text": "A hall full of about forty men cheering together in one big joyful shout, an excited roar of male voices, no clear words. Starts at full volume at once, then holds. No music.",
+   "duration": 2.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "cheer_2",
+   "text": "A hall full of about forty men cheering together in one big joyful shout, an excited roar of male voices, no clear words. Starts at full volume at once, then holds. No music.",
+   "duration": 2.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "hall_1",
+   "text": "The interior of a vast quiet ancient palace hall: a soft deep room tone, a faint far-off murmur of courtiers, a brazier crackling gently far away. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
+   "duration": 15,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "hall_2",
+   "text": "The interior of a vast quiet ancient palace hall: a soft deep room tone, a faint far-off murmur of courtiers, a brazier crackling gently far away. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
+   "duration": 15,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "court_1",
+   "text": "A quiet palace room in the daytime with open lattice windows: a light breeze and a few soft birds chirping outside, a faint distant murmur. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
    "duration": 12,
-   "loop": true
+   "influence": 0.5
   },
   {
    "type": "sfx",
-   "name": "steps_her",
-   "text": "Light quick soft footsteps of a young woman on wooden floor, slightly hurried",
-   "duration": 6
-  },
-  {
-   "type": "sfx",
-   "name": "steps_him",
-   "text": "Heavy slow confident footsteps of a man in boots on stone floor with robe rustle",
-   "duration": 6
-  },
-  {
-   "type": "sfx",
-   "name": "sword_stuck",
-   "text": "A long metal sword grinding and sticking in a tight scabbard, a short failed pull",
-   "duration": 1.2
-  },
-  {
-   "type": "sfx",
-   "name": "sword_ring",
-   "text": "A long sword drawn fully from its scabbard with a bright metallic ring, cinematic",
-   "duration": 1.5
-  },
-  {
-   "type": "sfx",
-   "name": "cloth",
-   "text": "Heavy silk robe rustle, quick movement",
-   "duration": 1.0
-  },
-  {
-   "type": "sfx",
-   "name": "crown_beads",
-   "text": "Small jade beads clicking and swinging",
-   "duration": 1.2
-  },
-  {
-   "type": "sfx",
-   "name": "whoosh",
-   "text": "Fast camera whip pan whoosh, short",
-   "duration": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "bundle_thud",
-   "text": "Heavy bundle of bamboo slips dropped onto a wooden scale pan, thud and clatter",
-   "duration": 1.0
-  },
-  {
-   "type": "sfx",
-   "name": "scale_creak",
-   "text": "Wooden balance beam creaking and wobbling to rest",
-   "duration": 1.5
-  },
-  {
-   "type": "sfx",
-   "name": "amb_hall",
-   "text": "Large empty ancient throne hall, low room tone, faint wind outside, subtle reverb",
+   "name": "court_2",
+   "text": "A quiet palace room in the daytime with open lattice windows: a light breeze and a few soft birds chirping outside, a faint distant murmur. Calm, even and continuous from start to finish. No clear words, no footsteps, no music.",
    "duration": 12,
-   "loop": true
+   "influence": 0.5
   },
   {
    "type": "sfx",
-   "name": "snore",
-   "text": "A man snoring once softly then waking with a startled snort",
-   "duration": 2.0
-  },
-  {
-   "type": "sfx",
-   "name": "rush_in",
-   "text": "Someone hurrying in on knees across a wooden floor, robe sliding",
-   "duration": 1.5
-  },
-  {
-   "type": "sfx",
-   "name": "crossbow",
-   "text": "Crossbow firing, string twang and bolt whoosh",
-   "duration": 1.0
-  },
-  {
-   "type": "sfx",
-   "name": "splash_pop",
-   "text": "Cartoon water splash followed by a comedic pop",
-   "duration": 1.0
-  },
-  {
-   "type": "sfx",
-   "name": "amb_terrace",
-   "text": "Wind on a high stone terrace, flags flapping, wide open air",
+   "name": "dusk_1",
+   "text": "Dusk outdoors on a quiet dirt road beside an old town wall: a soft evening breeze and a few crickets beginning to chirp. Calm, even and continuous from start to finish. No voices, no footsteps, no music.",
    "duration": 12,
-   "loop": true
+   "influence": 0.5
   },
   {
    "type": "sfx",
-   "name": "drone_tense",
-   "text": "Low ominous cinematic drone, tension building, dark",
-   "duration": 10
-  },
-  {
-   "type": "sfx",
-   "name": "pop_hat",
-   "text": "Cute comedic pop sound",
-   "duration": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "rain_thunder",
-   "text": "Heavy mountain rain with distant thunder",
-   "duration": 8,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "storm_waves",
-   "text": "Violent storm wind over a lake with waves and creaking boat",
-   "duration": 8,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "axes",
-   "text": "Many axes chopping trees and trees crashing down in the distance",
-   "duration": 4
-  },
-  {
-   "type": "sfx",
-   "name": "amb_night",
-   "text": "Night by a pond, crickets and frogs, gentle breeze in reeds",
+   "name": "dusk_2",
+   "text": "Dusk outdoors on a quiet dirt road beside an old town wall: a soft evening breeze and a few crickets beginning to chirp. Calm, even and continuous from start to finish. No voices, no footsteps, no music.",
    "duration": 12,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "bandits",
-   "text": "Ambush: men shouting and metal blades clashing, short scuffle",
-   "duration": 3
-  },
-  {
-   "type": "sfx",
-   "name": "amb_summer",
-   "text": "Hot summer dry road, loud cicadas, heat",
-   "duration": 12,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "flies",
-   "text": "Flies buzzing around",
-   "duration": 4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "cart",
-   "text": "Old wooden cart wheels creaking slowly on a dirt road",
-   "duration": 4
-  },
-  {
-   "type": "sfx",
-   "name": "amb_museum",
-   "text": "Quiet indoor museum hall room tone, very soft distant footsteps and murmur",
-   "duration": 10,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "rec_beep",
-   "text": "Small digital camera record start beep",
-   "duration": 0.5
-  },
-  {
-   "type": "sfx",
-   "name": "card_ding",
-   "text": "Soft gentle bell ding for an on-screen caption card",
-   "duration": 0.8
-  },
-  {
-   "type": "sfx",
-   "name": "palm_cover",
-   "text": "Hand quickly grabbing and covering a camera lens, muffled thump",
-   "duration": 0.6
-  },
-  {
-   "type": "sfx",
-   "name": "gasp_crowd",
-   "text": "A few people gasping in shock",
-   "duration": 1.2
-  },
-  {
-   "type": "music",
-   "name": "mus_comic",
-   "text": "Playful light comedic Chinese traditional music, plucked guzheng and pipa pizzicato with soft wood block, sneaky curious mood, vlog background, no vocals, 96 bpm",
-   "ms": 45000
-  },
-  {
-   "type": "music",
-   "name": "mus_tense",
-   "text": "Dark tense cinematic underscore, low taiko pulse and deep strings drone, ancient Chinese court menace, sparse, no vocals",
-   "ms": 30000
-  },
-  {
-   "type": "music",
-   "name": "mus_sad",
-   "text": "Gentle melancholic Chinese traditional music, solo guqin with soft strings, bittersweet ending, slow, no vocals",
-   "ms": 40000
+   "influence": 0.5
   }
  ]
 }
