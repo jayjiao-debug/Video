@@ -57,11 +57,14 @@ export const life = (f: number, from: number, out: number | undefined, n = 5) =>
 
 // ---------------------------------------------------------------------------------------------------- text
 const isWide = (c: string) => { const u = c.codePointAt(0) ?? 0; return u >= 0x2e80 || u === 0x00d7 /* × */; };
+/** (English: capitals by width, so that a name in capitals such as CAO WUSHANG gets its whole plate; the Chinese film
+ *  keeps the one class of 0.68 it was laid out with) */
+const CAP_EN = (c: string) => (/[MW]/.test(c) ? 0.9 : c === "I" ? 0.34 : /[DGHNOQU]/.test(c) ? 0.75 : 0.65);
 /** the width of a line of Noto Sans SC Bold in px, without measuring the DOM: full-width characters are 1 em; Latin
  *  letters, digits and marks by class (within 3 %). `ls` = letter spacing in px. */
 export const textW = (s: string, size: number, ls = 0) => {
   let w = 0; const cs = [...s];
-  for (const c of cs) w += isWide(c) ? 1 : c === " " ? 0.26 : /[0-9]/.test(c) ? 0.59 : /[A-Z]/.test(c) ? 0.68 : /[a-z]/.test(c) ? (/[iljt.,'!|]/.test(c) ? 0.33 : /[mw]/.test(c) ? 0.9 : 0.57) : /[·]/.test(c) ? 0.5 : 0.4;
+  for (const c of cs) w += isWide(c) ? 1 : c === " " ? 0.26 : /[0-9]/.test(c) ? 0.59 : /[A-Z]/.test(c) ? (EN ? CAP_EN(c) : 0.68) : /[a-z]/.test(c) ? (/[iljt.,'!|]/.test(c) ? 0.33 : /[mw]/.test(c) ? 0.9 : 0.57) : /[·]/.test(c) ? 0.5 : 0.4;
   return w * size + Math.max(0, cs.length - 1) * ls;
 };
 /** an SVG line of text centred on (x, y): ink line under the fill. sw = the ink line's width (0 = none). */

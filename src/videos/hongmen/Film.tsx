@@ -184,14 +184,16 @@ export const Caption: React.FC<{ f: number }> = ({ f }) => {
     for (let i = 0; i < plain.length && LEAD_PUNCT.includes(plain[i]); i++) blankL += 0.5;
   }
   const shift = ((blankR - blankL) / 2) * px;
-  const text: React.CSSProperties = { fontFamily: FONT_STACK, fontWeight: 700, fontSize: px, lineHeight: 1, letterSpacing: en ? 0.5 : 2, whiteSpace: "nowrap" };
+  const text: React.CSSProperties = { fontFamily: FONT_STACK, fontWeight: 700, fontSize: px, lineHeight: 1, letterSpacing: en ? 0.5 : 2, whiteSpace: en ? "pre" : "nowrap" }; // (English: "pre" keeps the space at the edge of a gold run)
   const line = Math.round(px * 0.19);                         // the ink line's full width: half of it shows outside the glyph
   const under: React.CSSProperties = { color: CAP_INK, WebkitTextStroke: `${line}px ${CAP_INK}`, textShadow: `0 ${Math.round(px * 0.06)}px 0 rgba(8,8,16,0.5), 0 ${Math.round(px * 0.08)}px ${Math.round(px * 0.3)}px rgba(8,8,16,0.5)` } as React.CSSProperties;
   // the key word's punch: on the frame its first syllable falls (its share of the group's spoken frames), 5 frames long
   let pos = 0;
   const bumps = runs.map((r) => {
     const at = c.from + Math.round((pos / Math.max(1, len)) * (c.end - c.from)); pos += [...r.text].length;
-    return r.gold && f >= at && f < at + 5 ? 1 + 0.13 * (1 - (f - at) / 5) : 1;
+    // (English: a long gold run at +13 % grows over the space before it ("a sword dancer"): runs over 4 letters punch less, down to +5 %)
+    const amp = en ? Math.max(0.05, 0.13 * Math.min(1, 4 / Math.max(1, [...r.text.trim()].length))) : 0.13;
+    return r.gold && f >= at && f < at + 5 ? 1 + amp * (1 - (f - at) / 5) : 1;
   });
   const spans = (fill: boolean) => runs.map((r, i) => (
     <span key={i} style={{ display: "inline-block", transform: `scale(${bumps[i].toFixed(4)})`, transformOrigin: "50% 62%", color: fill ? (r.gold ? COL.gold : COL.white) : undefined }}>{r.text}</span>

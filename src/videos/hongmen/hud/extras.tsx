@@ -10,8 +10,8 @@
 //   label({ f, from, out, x, y, text, size, color })            a word with an ink line (a place name, a mark)
 //   arrow({ f, from, out, a: {x, y}, b: {x, y} })               a bold arrow from a to b ("this one"), draws on in 5 frames
 import React from "react";
-import { TAG_X, TXT } from "../lang";
-import { CAMP, HC, FULL, ZONE, clamp01, eOut, life, layerAt, springAt, svg0, svgText, inkText, textW, PUNCH, SNAP, type Camp } from "./base";
+import { EN, TAG_X, TXT } from "../lang";
+import { CAMP, HC, FULL, ZONE, FW, clamp, clamp01, eOut, life, layerAt, springAt, svg0, svgText, inkText, textW, PUNCH, SNAP, type Camp } from "./base";
 
 // ---------------------------------------------------------------------------------------------------- source tag
 export type SourceProps = { f: number; from: number; out?: number; x?: number; y?: number; text?: string; /** frames at full strength (default 135) */ strong?: number };
@@ -65,9 +65,11 @@ export const count = (p: CountProps): React.ReactNode => {
   };
   // the digits keep the width of the final number, so the unit does not jitter while it counts
   const numW = m ? textW(commas ? withCommas(target) : String(target), size, 2) + 2 : 0;
+  // (English: "400,000" is wider than "40万": the number keeps ZONE.side from the frame's edges, ink line included)
+  const tw = numW + (unit ? textW(unit, m ? us : size, 2) : 0) + 2 * (e + 11), cx = EN ? clamp(x, ZONE.side + tw / 2, FW - ZONE.side - tw / 2) : x;
   return (
     <div key={p.key ?? `count-${text}-${from}`} style={FULL}>
-      <div style={{ position: "absolute", left: x, top: y, width: 0, height: 0, opacity: clamp01((L.t + 1) / 2) * (1 - L.lv) }}>
+      <div style={{ position: "absolute", left: cx, top: y, width: 0, height: 0, opacity: clamp01((L.t + 1) / 2) * (1 - L.lv) }}>
         <div style={{ position: "absolute", left: 0, top: 0, transform: `translate(-50%,-50%) scale(${s.toFixed(4)}) rotate(${(-4 * (1 - Math.min(1, k))).toFixed(2)}deg)`, display: "flex", alignItems: "baseline", whiteSpace: "nowrap" }}>
           {m ? two(num, size, e, "n", numW) : null}
           {unit ? two(unit, m ? us : size, Math.round((m ? us : size) * 0.13), "u") : null}
