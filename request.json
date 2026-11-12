@@ -1,1833 +1,1012 @@
 {
- "id": "wanbi-vo-01",
+ "id": "qin-va-demo-01",
  "model_prefs": [
   "eleven_v4"
  ],
- "words": true,
  "items": [
   {
-   "name": "z01a",
-   "text": "宦官的门客蔺相如，举着和氏璧要往柱子上撞。",
+   "name": "zh_r_Xiaoxi_r1",
+   "text": "[whispers, tense] 二百七十座宫殿，全用廊道连着……他今晚睡哪，说出去，是死罪。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
     "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
     "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "name": "Xiaoxi"
    },
    "keep": true
   },
   {
-   "name": "z01b",
-   "text": "宦官的门客蔺相如，举着和氏璧要往柱子上撞。",
+   "name": "zh_r_Xiaoxi_r2",
+   "text": "[panicked, fast] 陛下息怒！我们是来拍您的一天的！[dramatic] 让天下百姓都看看，他们的皇帝，是多么英明神武！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
     "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
     "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "name": "Xiaoxi"
    },
    "keep": true
   },
   {
-   "name": "z01p0",
-   "text": "宦官的门客吝相如，举着和氏璧要往柱子上撞。",
+   "name": "zh_r_Xiaoxi_r3",
+   "text": "[gushing, cute, excited] 千古一帝！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
     "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
     "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "name": "Xiaoxi"
    },
    "keep": true
   },
   {
-   "name": "z02a",
-   "text": "对面急得直摆手的，是秦王。",
+   "name": "zh_r_Xiaoxi_r5",
+   "text": "[whispers, mischievous] 剧透一下……徐福后来，再也没回来。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
     "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
     "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "name": "Xiaoxi"
    },
    "keep": true
   },
   {
-   "name": "z02b",
-   "text": "对面急得直摆手的，是秦王。",
+   "name": "zh_r_Xiaoxi_r7",
+   "text": "[terrified, tiny voice] 我……我什么都没拍到……",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
     "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
     "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "name": "Xiaoxi"
    },
    "keep": true
   },
   {
-   "name": "z03a",
-   "text": "这块玉，秦王开价十五座城。",
+   "name": "zh_r_Xiaoxi_r9",
+   "text": "[soft laugh, teary] ……不删。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
     "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
     "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "name": "Xiaoxi"
    },
    "keep": true
   },
   {
-   "name": "z03b",
-   "text": "这块玉，秦王开价十五座城。",
+   "name": "zh_r_ShanShan_r1",
+   "text": "[whispers, tense] 二百七十座宫殿，全用廊道连着……他今晚睡哪，说出去，是死罪。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+    "voice_id": "ByhETIclHirOlWnWKhHc",
+    "name": "ShanShan"
    },
    "keep": true
   },
   {
-   "name": "z04a",
-   "text": "赵国给了，城可能不来；不给，秦兵一定来。",
+   "name": "zh_r_ShanShan_r2",
+   "text": "[panicked, fast] 陛下息怒！我们是来拍您的一天的！[dramatic] 让天下百姓都看看，他们的皇帝，是多么英明神武！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+    "voice_id": "ByhETIclHirOlWnWKhHc",
+    "name": "ShanShan"
    },
    "keep": true
   },
   {
-   "name": "z04b",
-   "text": "赵国给了，城可能不来；不给，秦兵一定来。",
+   "name": "zh_r_ShanShan_r3",
+   "text": "[gushing, cute, excited] 千古一帝！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+    "voice_id": "ByhETIclHirOlWnWKhHc",
+    "name": "ShanShan"
    },
    "keep": true
   },
   {
-   "name": "z05a",
-   "text": "派谁去？没人。最后，宦官把自家门客推了出来。",
+   "name": "zh_r_ShanShan_r5",
+   "text": "[whispers, mischievous] 剧透一下……徐福后来，再也没回来。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+    "voice_id": "ByhETIclHirOlWnWKhHc",
+    "name": "ShanShan"
    },
    "keep": true
   },
   {
-   "name": "z05b",
-   "text": "派谁去？没人。最后，宦官把自家门客推了出来。",
+   "name": "zh_r_ShanShan_r7",
+   "text": "[terrified, tiny voice] 我……我什么都没拍到……",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+    "voice_id": "ByhETIclHirOlWnWKhHc",
+    "name": "ShanShan"
    },
    "keep": true
   },
   {
-   "name": "z06a",
-   "text": "他说：“我去。城不来，我把玉完整带回来。”",
+   "name": "zh_r_ShanShan_r9",
+   "text": "[soft laugh, teary] ……不删。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "3e76152f62e469dfef7259244d6e4a6c4bb9662cae01fd97c52cfde8f915bf32",
+    "voice_id": "ByhETIclHirOlWnWKhHc",
+    "name": "ShanShan"
    },
    "keep": true
   },
   {
-   "name": "z06b",
-   "text": "他说：“我去。城不来，我把玉完整带回来。”",
+   "name": "zh_r_Amy_r1",
+   "text": "[whispers, tense] 二百七十座宫殿，全用廊道连着……他今晚睡哪，说出去，是死罪。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+    "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+    "name": "Amy"
    },
    "keep": true
   },
   {
-   "name": "z07a",
-   "text": "秦王接过玉，乐坏了，传给美人们看。",
+   "name": "zh_r_Amy_r2",
+   "text": "[panicked, fast] 陛下息怒！我们是来拍您的一天的！[dramatic] 让天下百姓都看看，他们的皇帝，是多么英明神武！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+    "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+    "name": "Amy"
    },
    "keep": true
   },
   {
-   "name": "z07b",
-   "text": "秦王接过玉，乐坏了，传给美人们看。",
+   "name": "zh_r_Amy_r3",
+   "text": "[gushing, cute, excited] 千古一帝！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+    "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+    "name": "Amy"
    },
    "keep": true
   },
   {
-   "name": "z08a",
-   "text": "满屋子喊万岁，没人提城的事。",
+   "name": "zh_r_Amy_r5",
+   "text": "[whispers, mischievous] 剧透一下……徐福后来，再也没回来。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+    "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+    "name": "Amy"
    },
    "keep": true
   },
   {
-   "name": "z08b",
-   "text": "满屋子喊万岁，没人提城的事。",
+   "name": "zh_r_Amy_r7",
+   "text": "[terrified, tiny voice] 我……我什么都没拍到……",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+    "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+    "name": "Amy"
    },
    "keep": true
   },
   {
-   "name": "z09a",
-   "text": "他走上前：“这玉有个瑕疵，我指给大王看。”",
+   "name": "zh_r_Amy_r9",
+   "text": "[soft laugh, teary] ……不删。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+    "voice_id": "bhJUNIXWQQ94l8eI2VUf",
+    "name": "Amy"
    },
    "keep": true
   },
   {
-   "name": "z09b",
-   "text": "他走上前：“这玉有个瑕疵，我指给大王看。”",
+   "name": "zh_e_MartinLi_e1",
+   "text": "[startled, shouting] 何人！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "name": "MartinLi"
    },
    "keep": true
   },
   {
-   "name": "z10a",
-   "text": "玉一到手，他退到柱子边，怒发冲冠。",
+   "name": "zh_e_MartinLi_e2",
+   "text": "[gruff] 哼。[flustered] 镜头……给朕拿稳了。[pause] 跟上。[proud, a little embarrassed] 朕今天，带你见见世面。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "name": "MartinLi"
    },
    "keep": true
   },
   {
-   "name": "z10b",
-   "text": "玉一到手，他退到柱子边，怒发冲冠。",
+   "name": "zh_e_MartinLi_e3",
+   "text": "[pleased, trying to hide a smile] 这句。剪进去。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "name": "MartinLi"
    },
    "keep": true
   },
   {
-   "name": "z10p0",
-   "text": "玉一到手，他退到柱子边，怒髮衝冠。",
+   "name": "zh_e_MartinLi_e5",
+   "text": "[furious, shouting] 砍！给朕全砍了！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "name": "MartinLi"
    },
    "keep": true
   },
   {
-   "name": "z11a",
-   "text": "“再逼我，我的头和这块玉，一起碎在柱子上！”",
+   "name": "zh_e_MartinLi_e6",
+   "text": "[cold, very quiet, menacing] 你。……刚才，在吗？",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "name": "MartinLi"
    },
    "keep": true
   },
   {
-   "name": "z11b",
-   "text": "“再逼我，我的头和这块玉，一起碎在柱子上！”",
+   "name": "zh_e_MartinLi_e9",
+   "text": "[weak, tired, gentle] ……这段，也删掉。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+    "name": "MartinLi"
    },
    "keep": true
   },
   {
-   "name": "z12a",
-   "text": "秦王赶紧道歉，摊开地图一指：“这十五座城，给赵国。”",
+   "name": "zh_e_Julian_e1",
+   "text": "[startled, shouting] 何人！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5951f90d074d19aecf1d409ba6aeb248ffef53fec80d28b85a9a080ccbc568f0",
+    "voice_id": "j2FxFb20sd3xlm2pRaM5",
+    "name": "Julian"
    },
    "keep": true
   },
   {
-   "name": "z12b",
-   "text": "秦王赶紧道歉，摊开地图一指：“这十五座城，给赵国。”",
+   "name": "zh_e_Julian_e2",
+   "text": "[gruff] 哼。[flustered] 镜头……给朕拿稳了。[pause] 跟上。[proud, a little embarrassed] 朕今天，带你见见世面。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5951f90d074d19aecf1d409ba6aeb248ffef53fec80d28b85a9a080ccbc568f0",
+    "voice_id": "j2FxFb20sd3xlm2pRaM5",
+    "name": "Julian"
    },
    "keep": true
   },
   {
-   "name": "z13a",
-   "text": "他看得出来，秦王在演。",
+   "name": "zh_e_Julian_e3",
+   "text": "[pleased, trying to hide a smile] 这句。剪进去。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5951f90d074d19aecf1d409ba6aeb248ffef53fec80d28b85a9a080ccbc568f0",
+    "voice_id": "j2FxFb20sd3xlm2pRaM5",
+    "name": "Julian"
    },
    "keep": true
   },
   {
-   "name": "z13b",
-   "text": "他看得出来，秦王在演。",
+   "name": "zh_e_Julian_e5",
+   "text": "[furious, shouting] 砍！给朕全砍了！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5951f90d074d19aecf1d409ba6aeb248ffef53fec80d28b85a9a080ccbc568f0",
+    "voice_id": "j2FxFb20sd3xlm2pRaM5",
+    "name": "Julian"
    },
    "keep": true
   },
   {
-   "name": "z14a",
-   "text": "他也演：“赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。”",
+   "name": "zh_e_Julian_e6",
+   "text": "[cold, very quiet, menacing] 你。……刚才，在吗？",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5951f90d074d19aecf1d409ba6aeb248ffef53fec80d28b85a9a080ccbc568f0",
+    "voice_id": "j2FxFb20sd3xlm2pRaM5",
+    "name": "Julian"
    },
    "keep": true
   },
   {
-   "name": "z14b",
-   "text": "他也演：“赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。”",
+   "name": "zh_e_Julian_e9",
+   "text": "[weak, tired, gentle] ……这段，也删掉。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "5951f90d074d19aecf1d409ba6aeb248ffef53fec80d28b85a9a080ccbc568f0",
+    "voice_id": "j2FxFb20sd3xlm2pRaM5",
+    "name": "Julian"
    },
    "keep": true
   },
   {
-   "name": "z14p0",
-   "text": "他也演：“赵王摘戒五天才送玉，大王也得摘戒五天，摆上大礼，我才交。”",
+   "name": "zh_e_Wilson_e1",
+   "text": "[startled, shouting] 何人！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "f9c44b76005be48e38ab60b85decedcdba161459bdb6d19e526679a9556a5672",
+    "voice_id": "z1etx2H6NQWq1LH6oqJA",
+    "name": "Wilson"
    },
    "keep": true
   },
   {
-   "name": "z15a",
-   "text": "秦王抢不到，只好答应。",
+   "name": "zh_e_Wilson_e2",
+   "text": "[gruff] 哼。[flustered] 镜头……给朕拿稳了。[pause] 跟上。[proud, a little embarrassed] 朕今天，带你见见世面。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "f9c44b76005be48e38ab60b85decedcdba161459bdb6d19e526679a9556a5672",
+    "voice_id": "z1etx2H6NQWq1LH6oqJA",
+    "name": "Wilson"
    },
    "keep": true
   },
   {
-   "name": "z15b",
-   "text": "秦王抢不到，只好答应。",
+   "name": "zh_e_Wilson_e3",
+   "text": "[pleased, trying to hide a smile] 这句。剪进去。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "f9c44b76005be48e38ab60b85decedcdba161459bdb6d19e526679a9556a5672",
+    "voice_id": "z1etx2H6NQWq1LH6oqJA",
+    "name": "Wilson"
    },
    "keep": true
   },
   {
-   "name": "z16a",
-   "text": "转头，他让随从穿上粗布衣服，揣着玉，抄小路溜回赵国。",
+   "name": "zh_e_Wilson_e5",
+   "text": "[furious, shouting] 砍！给朕全砍了！",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "f9c44b76005be48e38ab60b85decedcdba161459bdb6d19e526679a9556a5672",
+    "voice_id": "z1etx2H6NQWq1LH6oqJA",
+    "name": "Wilson"
    },
    "keep": true
   },
   {
-   "name": "z16b",
-   "text": "转头，他让随从穿上粗布衣服，揣着玉，抄小路溜回赵国。",
+   "name": "zh_e_Wilson_e6",
+   "text": "[cold, very quiet, menacing] 你。……刚才，在吗？",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "f9c44b76005be48e38ab60b85decedcdba161459bdb6d19e526679a9556a5672",
+    "voice_id": "z1etx2H6NQWq1LH6oqJA",
+    "name": "Wilson"
    },
    "keep": true
   },
   {
-   "name": "z17a",
-   "text": "五天后，大礼摆好，秦王要玉。",
+   "name": "zh_e_Wilson_e9",
+   "text": "[weak, tired, gentle] ……这段，也删掉。",
    "lang": "zh",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
+    "owner": "f9c44b76005be48e38ab60b85decedcdba161459bdb6d19e526679a9556a5672",
+    "voice_id": "z1etx2H6NQWq1LH6oqJA",
+    "name": "Wilson"
    },
    "keep": true
   },
   {
-   "name": "z17b",
-   "text": "五天后，大礼摆好，秦王要玉。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z18a",
-   "text": "他说：“秦国二十多个国君，没一个守约的。玉已经到赵国了。”",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z18b",
-   "text": "他说：“秦国二十多个国君，没一个守约的。玉已经到赵国了。”",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z19a",
-   "text": "“骗了大王，该死。把我下锅煮了吧。”",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z19b",
-   "text": "“骗了大王，该死。把我下锅煮了吧。”",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z20a",
-   "text": "满朝大臣面面相觑，有人要拖他出去。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z20b",
-   "text": "满朝大臣面面相觑，有人要拖他出去。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z20p0",
-   "text": "满朝大臣面面相趣，有人要拖他出去。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z21a",
-   "text": "秦王说：“杀了他，玉也回不来。放他回去吧。”",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z21b",
-   "text": "秦王说：“杀了他，玉也回不来。放他回去吧。”",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z22a",
-   "text": "最后，秦国没给城，赵国也没给玉。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z22b",
-   "text": "最后，秦国没给城，赵国也没给玉。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z23a",
-   "text": "价值连城的玉，一座城也没换到；倒是那个门客，回国就当了大官。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "z23b",
-   "text": "价值连城的玉，一座城也没换到；倒是那个门客，回国就当了大官。",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "5ec7715ee5949825dc0959dee2f1f30693d4a5d1ae49c50c078270f5d886caf7",
-    "voice_id": "9DMBSOAnMDPiFAsz1ZGK",
-    "name": "Xiaoxi - Neutral, Young and Friendly"
-   },
-   "keep": true
-  },
-  {
-   "name": "e01a",
-   "text": "The envoy has one job: deliver the world's most precious jade. He's about to smash it.",
+   "name": "en_r_Miranda_r2",
+   "text": "[panicked, fast] Please don't! We're filming your day! [dramatic] So every citizen can see how wise and mighty their emperor is!",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "afe74f90c04ae627fa4cd227d106b7050b6bead505f93e712d338fcf180f13e3",
+    "voice_id": "PoHUWWWMHFrA8z7Q88pu",
+    "name": "Miranda"
    },
    "keep": true
   },
   {
-   "name": "e01b",
-   "text": "The envoy has one job: deliver the world's most precious jade. He's about to smash it.",
+   "name": "en_r_Miranda_r3",
+   "text": "[gushing, cute, excited] Greatest emperor ever!",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "afe74f90c04ae627fa4cd227d106b7050b6bead505f93e712d338fcf180f13e3",
+    "voice_id": "PoHUWWWMHFrA8z7Q88pu",
+    "name": "Miranda"
    },
    "keep": true
   },
   {
-   "name": "e02a",
-   "text": "And the one begging him to stop? The King of Chin, who's supposed to receive it.",
+   "name": "en_r_Miranda_r7",
+   "text": "[terrified, tiny voice] I... I didn't film anything...",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "afe74f90c04ae627fa4cd227d106b7050b6bead505f93e712d338fcf180f13e3",
+    "voice_id": "PoHUWWWMHFrA8z7Q88pu",
+    "name": "Miranda"
    },
    "keep": true
   },
   {
-   "name": "e02b",
-   "text": "And the one begging him to stop? The King of Chin, who's supposed to receive it.",
+   "name": "en_r_Miranda_r9",
+   "text": "[soft laugh, teary] ...Not this one.",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "afe74f90c04ae627fa4cd227d106b7050b6bead505f93e712d338fcf180f13e3",
+    "voice_id": "PoHUWWWMHFrA8z7Q88pu",
+    "name": "Miranda"
    },
    "keep": true
   },
   {
-   "name": "e03a",
-   "text": "The king had offered the kingdom of Jow fifteen cities for it.",
+   "name": "en_r_Ivy_r2",
+   "text": "[panicked, fast] Please don't! We're filming your day! [dramatic] So every citizen can see how wise and mighty their emperor is!",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "db90e9d28d86510262ed2a7235586923c68c9c8ae2e533739754741e8965a616",
+    "voice_id": "i4CzbCVWoqvD0P1QJCUL",
+    "name": "Ivy"
    },
    "keep": true
   },
   {
-   "name": "e03b",
-   "text": "The king had offered the kingdom of Jow fifteen cities for it.",
+   "name": "en_r_Ivy_r3",
+   "text": "[gushing, cute, excited] Greatest emperor ever!",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "db90e9d28d86510262ed2a7235586923c68c9c8ae2e533739754741e8965a616",
+    "voice_id": "i4CzbCVWoqvD0P1QJCUL",
+    "name": "Ivy"
    },
    "keep": true
   },
   {
-   "name": "e04a",
-   "text": "Hand it over, and the cities may never come. Refuse, and Chin's army definitely will.",
+   "name": "en_r_Ivy_r7",
+   "text": "[terrified, tiny voice] I... I didn't film anything...",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "db90e9d28d86510262ed2a7235586923c68c9c8ae2e533739754741e8965a616",
+    "voice_id": "i4CzbCVWoqvD0P1QJCUL",
+    "name": "Ivy"
    },
    "keep": true
   },
   {
-   "name": "e04b",
-   "text": "Hand it over, and the cities may never come. Refuse, and Chin's army definitely will.",
+   "name": "en_r_Ivy_r9",
+   "text": "[soft laugh, teary] ...Not this one.",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "db90e9d28d86510262ed2a7235586923c68c9c8ae2e533739754741e8965a616",
+    "voice_id": "i4CzbCVWoqvD0P1QJCUL",
+    "name": "Ivy"
    },
    "keep": true
   },
   {
-   "name": "e05a",
-   "text": "Who could Jow send? Nobody. Until a palace eunuch put forward his own retainer.",
+   "name": "en_e_Adam_e1",
+   "text": "[startled, shouting] Who goes there!",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "149cc7afaf194860df2f66c5a9ca433972bb2f74dab074e92fdbd7e86a532e0c",
+    "voice_id": "QAmlwgbPtjxpk7u98Qs9",
+    "name": "Adam"
    },
    "keep": true
   },
   {
-   "name": "e05b",
-   "text": "Who could Jow send? Nobody. Until a palace eunuch put forward his own retainer.",
+   "name": "en_e_Adam_e2",
+   "text": "[gruff] Hmph. [flustered] Hold that thing... steady. [pause] Follow me. [proud, a little embarrassed] Today I'll show you how it's done.",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "149cc7afaf194860df2f66c5a9ca433972bb2f74dab074e92fdbd7e86a532e0c",
+    "voice_id": "QAmlwgbPtjxpk7u98Qs9",
+    "name": "Adam"
    },
    "keep": true
   },
   {
-   "name": "e06a",
-   "text": "He says: \"I'll go. No cities, and I bring the jade back in one piece.\"",
+   "name": "en_e_Adam_e6",
+   "text": "[cold, very quiet, menacing] You. ...Were you there?",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "149cc7afaf194860df2f66c5a9ca433972bb2f74dab074e92fdbd7e86a532e0c",
+    "voice_id": "QAmlwgbPtjxpk7u98Qs9",
+    "name": "Adam"
    },
    "keep": true
   },
   {
-   "name": "e06b",
-   "text": "He says: \"I'll go. No cities, and I bring the jade back in one piece.\"",
+   "name": "en_e_Adam_e9",
+   "text": "[weak, tired, gentle] ...Delete that too.",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "149cc7afaf194860df2f66c5a9ca433972bb2f74dab074e92fdbd7e86a532e0c",
+    "voice_id": "QAmlwgbPtjxpk7u98Qs9",
+    "name": "Adam"
    },
    "keep": true
   },
   {
-   "name": "e07a",
-   "text": "The king takes the jade, thrilled, and passes it round to his ladies.",
+   "name": "en_e_Coach_e1",
+   "text": "[startled, shouting] Who goes there!",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "f441776f9bb056eb2295e030ffce576ee35583946b9d95b273731d9887cb51e9",
+    "voice_id": "84Fal4DSXWfp7nJ8emqQ",
+    "name": "Coach"
    },
    "keep": true
   },
   {
-   "name": "e07b",
-   "text": "The king takes the jade, thrilled, and passes it round to his ladies.",
+   "name": "en_e_Coach_e2",
+   "text": "[gruff] Hmph. [flustered] Hold that thing... steady. [pause] Follow me. [proud, a little embarrassed] Today I'll show you how it's done.",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "f441776f9bb056eb2295e030ffce576ee35583946b9d95b273731d9887cb51e9",
+    "voice_id": "84Fal4DSXWfp7nJ8emqQ",
+    "name": "Coach"
    },
    "keep": true
   },
   {
-   "name": "e08a",
-   "text": "Everyone shouts \"Long live the king!\" Nobody mentions the cities.",
+   "name": "en_e_Coach_e6",
+   "text": "[cold, very quiet, menacing] You. ...Were you there?",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "f441776f9bb056eb2295e030ffce576ee35583946b9d95b273731d9887cb51e9",
+    "voice_id": "84Fal4DSXWfp7nJ8emqQ",
+    "name": "Coach"
    },
    "keep": true
   },
   {
-   "name": "e08b",
-   "text": "Everyone shouts \"Long live the king!\" Nobody mentions the cities.",
+   "name": "en_e_Coach_e9",
+   "text": "[weak, tired, gentle] ...Delete that too.",
    "lang": "en",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.2,
+    "stability": 0.25,
     "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
+    "style": 0.6,
+    "speed": 1.0,
     "use_speaker_boost": true
    },
    "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "owner": "f441776f9bb056eb2295e030ffce576ee35583946b9d95b273731d9887cb51e9",
+    "voice_id": "84Fal4DSXWfp7nJ8emqQ",
+    "name": "Coach"
    },
    "keep": true
   },
   {
-   "name": "e09a",
-   "text": "He steps forward: \"There's a flaw in it. Let me show Your Majesty.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
+   "type": "voices",
+   "name": "list_zh_m_characters",
+   "lang": "zh",
+   "gender": "male",
+   "use_case": "characters_animation",
+   "n": 30
   },
   {
-   "name": "e09b",
-   "text": "He steps forward: \"There's a flaw in it. Let me show Your Majesty.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e10a",
-   "text": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e10b",
-   "text": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e11a",
-   "text": "\"Push me, and my head and this jade shatter on this pillar together!\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e11b",
-   "text": "\"Push me, and my head and this jade shatter on this pillar together!\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e12a",
-   "text": "The king apologises at once, unrolls a map and points: \"These fifteen cities. Jow's.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e12b",
-   "text": "The king apologises at once, unrolls a map and points: \"These fifteen cities. Jow's.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e13a",
-   "text": "He can tell the king is acting.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e13b",
-   "text": "He can tell the king is acting.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e14a",
-   "text": "So he acts too: \"My king fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony, then I hand it over.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e14b",
-   "text": "So he acts too: \"My king fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony, then I hand it over.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e15a",
-   "text": "The king can't just grab it, so he agrees.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e15b",
-   "text": "The king can't just grab it, so he agrees.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e16a",
-   "text": "Meanwhile he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e16b",
-   "text": "Meanwhile he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e17a",
-   "text": "Five days later the ceremony is set. The king asks for the jade.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e17b",
-   "text": "Five days later the ceremony is set. The king asks for the jade.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e18a",
-   "text": "He says: \"Chin has had twenty-odd rulers, and not one ever kept a deal. The jade is already in Jow.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e18b",
-   "text": "He says: \"Chin has had twenty-odd rulers, and not one ever kept a deal. The jade is already in Jow.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e19a",
-   "text": "\"I deceived Your Majesty. I deserve death. Throw me in the pot.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e19b",
-   "text": "\"I deceived Your Majesty. I deserve death. Throw me in the pot.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e20a",
-   "text": "The ministers stare at each other. Someone moves to drag him out.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e20b",
-   "text": "The ministers stare at each other. Someone moves to drag him out.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e21a",
-   "text": "The king says: \"Kill him and we still don't get the jade. Let him go home.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e21b",
-   "text": "The king says: \"Kill him and we still don't get the jade. Let him go home.\"",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e22a",
-   "text": "In the end, Chin never gave the cities. Jow never gave the jade.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e22b",
-   "text": "In the end, Chin never gave the cities. Jow never gave the jade.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e23a",
-   "text": "A jade worth fifteen cities didn't get a single one. But the eunuch's retainer came home a senior official.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
-  },
-  {
-   "name": "e23b",
-   "text": "A jade worth fifteen cities didn't get a single one. But the eunuch's retainer came home a senior official.",
-   "lang": "en",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   },
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true
+   "type": "voices",
+   "name": "list_zh_f_characters",
+   "lang": "zh",
+   "gender": "female",
+   "use_case": "characters_animation",
+   "n": 30
   }
  ]
 }
