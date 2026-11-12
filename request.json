@@ -1,14 +1,14 @@
 {
- "id": "hongmen-en-alex-02",
+ "id": "hongmen-en-alex-03",
  "model_prefs": [
   "eleven_v4"
  ],
  "words": true,
  "items": [
   {
-   "name": "x04b",
+   "name": "x04c",
    "lang": "en",
-   "text": "Shyahng Yoo was stronger: four times Leo Bahng's army.",
+   "text": "But Shyahng Yoo had four times the troops.",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
@@ -24,9 +24,9 @@
    }
   },
   {
-   "name": "x05b",
+   "name": "x05c",
    "lang": "en",
-   "text": "His own man snitched to Shyahng Yoo: \"Leo Bahng wants to be king.\"",
+   "text": "His own officer snitched to Shyahng Yoo: \"He wants to be king.\"",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
@@ -42,9 +42,9 @@
    }
   },
   {
-   "name": "x06b",
+   "name": "x08c",
    "lang": "en",
-   "text": "Shyahng Yoo raged: \"Attack at dawn.\"",
+   "text": "Next day, Leo Bahng said sorry: \"Surely some rat lied.\"",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
@@ -60,189 +60,9 @@
    }
   },
   {
-   "name": "x06c",
+   "name": "x11c",
    "lang": "en",
-   "text": "Shyahng Yoo: \"Attack at dawn.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x07b",
-   "lang": "en",
-   "text": "That night, his uncle warned Leo Bahng, who at once made him an in-law.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x08b",
-   "lang": "en",
-   "text": "Next day, Leo Bahng said sorry: \"Surely some rat lied to you.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x10b",
-   "lang": "en",
-   "text": "Then came drinks. But his adviser, Fahn Dzung, wanted Leo Bahng dead.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x11b",
-   "lang": "en",
-   "text": "Three times, Fahn Dzung raised his jade, meaning: kill him. Nothing.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x12b",
-   "lang": "en",
-   "text": "So in came a sword dancer to stab Leo Bahng.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x14b",
-   "lang": "en",
-   "text": "Then Fahn Kwhy flattened guards and burst in.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x16b",
-   "lang": "en",
-   "text": "Leo Bahng went to the toilet and waved Fahn Kwhy out.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x17b",
-   "lang": "en",
-   "text": "Leave without goodbye? Fahn Kwhy: \"They're the knife, we're the fish. Forget it!\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x18b",
-   "lang": "en",
-   "text": "He ditched his convoy, took one horse, and snuck home.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x19b",
-   "lang": "en",
-   "text": "Only when he was home, his adviser walked in: \"He drank too much.\"",
+   "text": "Fahn Dzung signalled: kill him. Again. And again. Nothing.",
    "add": {
     "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
     "voice_id": "yl2ZDV1MzN4HbQJbMihG",
