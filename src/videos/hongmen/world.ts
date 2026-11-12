@@ -105,13 +105,20 @@ export class World {
   look(): PlaceLook { return this.set.look(this.place ?? "tent"); }
   /** a prop (props/index.ts): w.prop("shield").put(at, { facing }) */
   prop(name: PropName): Prop { return this.props.prop(name); }
+  /** the lens's aspect: the film's 9:16, or the drawing buffer's own shape when a preview renders another shape (the
+   *  4:3 / 3:4 covers): the same vertical field of view, nothing stretched. At 9:16 this is exactly W / H. */
+  private aspect() {
+    const b = this.gl.getDrawingBufferSize(this._buf), r = b.y > 0 ? b.x / b.y : W / H;
+    return Math.abs(r - W / H) > 0.01 ? r : W / H;
+  }
+  private readonly _buf = new THREE.Vector2();
   setCamera(c: CamPose) {
     const cam = this.camera;
     cam.up.set(...(c.up ?? [0, 1, 0]));
     cam.position.copy(toV(c.pos));
     this._look.copy(toV(c.look));
     cam.lookAt(this._look); cam.rotateZ(c.roll ?? 0);
-    cam.fov = c.fov; cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = W / H;
+    cam.fov = c.fov; cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
     cam.zoom = COVER_ZOOM;
     cam.updateProjectionMatrix(); cam.updateMatrixWorld(true);
     if (COVER_SX || COVER_SY) {
