@@ -1,0 +1,1 @@
+9b91383636ef5f6b  Film.tsx post section (post defaults .. FirstKick) as film_cut_core.ts copies it; rewrite with: node scripts/hongmen/cut/deps.mjs /tmp/d.json, then the chain.sha it prints, AFTER porting the change
