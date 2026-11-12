@@ -1,257 +1,34 @@
 {
- "id": "qin-vo-fix-01",
+ "id": "wanbi-sfx-03",
+ "tag": true,
  "items": [
   {
-   "type": "dialogue",
-   "name": "dlg_G_s4242",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 4242,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[softly, hopeful] 陛下？今天……还拍吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[thin, flat] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[thin, flat] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[quiet, sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[quiet] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[quiet, wistful] 陛下一直，想长生不老。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[gentle] 他没活过五十岁。可他的兵马俑，站了两千多年。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[off-screen, weak, gentle] 这段，也删了。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[soft laugh, teary] 不删。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "hall_s1",
+   "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.",
+   "duration": 15,
+   "influence": 0.5
   },
   {
-   "type": "dialogue",
-   "name": "dlg_G_s4243",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 4243,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[softly, hopeful] 陛下？今天……还拍吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[thin, flat] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[thin, flat] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[quiet, sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[quiet] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[quiet, wistful] 陛下一直，想长生不老。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[gentle] 他没活过五十岁。可他的兵马俑，站了两千多年。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[off-screen, weak, gentle] 这段，也删了。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[soft laugh, teary] 不删。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "hall_s2",
+   "text": "Inside a grand ancient stone hall: a soft breeze blowing through a wide open doorway, silk banners rustling faintly, the distant murmur of people outside echoing softly. Gentle, even and continuous from start to finish. No footsteps, no clear words, no music.",
+   "duration": 15,
+   "influence": 0.5
   },
   {
-   "type": "dialogue",
-   "name": "dlg_G_s4244",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 4244,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[softly, hopeful] 陛下？今天……还拍吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[thin, flat] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[thin, flat] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[quiet, sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[quiet] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[quiet, wistful] 陛下一直，想长生不老。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[gentle] 他没活过五十岁。可他的兵马俑，站了两千多年。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[off-screen, weak, gentle] 这段，也删了。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[soft laugh, teary] 不删。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "sfx",
+   "name": "hall_s3",
+   "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.",
+   "duration": 15,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "hall_s4",
+   "text": "Quiet ambience inside a large palace hall with high wooden beams: soft echoing air, a faint distant murmur of a crowd and the occasional soft rustle of silk robes, gentle reverb. Even and continuous from start to finish. No bells, no footsteps, no clear words, no music.",
+   "duration": 15,
+   "influence": 0.5
   }
  ]
 }
