@@ -1,0 +1,1607 @@
+plan: {'tier': 'creator', 'character_count': 12136, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "amb_corridor", "type": "sfx", "text": "Quiet ancient palace corridor at dawn, distant birds, faint wind through wooden lattice, soft room echo", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_corridor.mp3", "bytes": 193140}
+{"name": "steps_her", "type": "sfx", "text": "Light quick soft footsteps of a young woman on wooden floor, slightly hurried", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "steps_her.mp3", "bytes": 97009}
+{"name": "steps_him", "type": "sfx", "text": "Heavy slow confident footsteps of a man in boots on stone floor with robe rustle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "steps_him.mp3", "bytes": 97009}
+{"name": "sword_stuck", "type": "sfx", "text": "A long metal sword grinding and sticking in a tight scabbard, a short failed pull", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_stuck.mp3", "bytes": 20105}
+{"name": "sword_ring", "type": "sfx", "text": "A long sword drawn fully from its scabbard with a bright metallic ring, cinematic", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sword_ring.mp3", "bytes": 24702}
+{"name": "cloth", "type": "sfx", "text": "Heavy silk robe rustle, quick movement", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cloth.mp3", "bytes": 17179}
+{"name": "crown_beads", "type": "sfx", "text": "Small jade beads clicking and swinging", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "crown_beads.mp3", "bytes": 20105}
+{"name": "whoosh", "type": "sfx", "text": "Fast camera whip pan whoosh, short", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "whoosh.mp3", "bytes": 10492}
+{"name": "bundle_thud", "type": "sfx", "text": "Heavy bundle of bamboo slips dropped onto a wooden scale pan, thud and clatter", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "bundle_thud.mp3", "bytes": 17179}
+{"name": "scale_creak", "type": "sfx", "text": "Wooden balance beam creaking and wobbling to rest", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "scale_creak.mp3", "bytes": 24702}
+{"name": "amb_hall", "type": "sfx", "text": "Large empty ancient throne hall, low room tone, faint wind outside, subtle reverb", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_hall.mp3", "bytes": 193140}
+{"name": "snore", "type": "sfx", "text": "A man snoring once softly then waking with a startled snort", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "snore.mp3", "bytes": 33061}
+{"name": "rush_in", "type": "sfx", "text": "Someone hurrying in on knees across a wooden floor, robe sliding", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "rush_in.mp3", "bytes": 24702}
+{"name": "crossbow", "type": "sfx", "text": "Crossbow firing, string twang and bolt whoosh", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "crossbow.mp3", "bytes": 17179}
+{"name": "splash_pop", "type": "sfx", "text": "Cartoon water splash followed by a comedic pop", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "splash_pop.mp3", "bytes": 17179}
+{"name": "amb_terrace", "type": "sfx", "text": "Wind on a high stone terrace, flags flapping, wide open air", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_terrace.mp3", "bytes": 193140}
+{"name": "drone_tense", "type": "sfx", "text": "Low ominous cinematic drone, tension building, dark", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "drone_tense.mp3", "bytes": 160957}
+{"name": "pop_hat", "type": "sfx", "text": "Cute comedic pop sound", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "pop_hat.mp3", "bytes": 8820}
+{"name": "rain_thunder", "type": "sfx", "text": "Heavy mountain rain with distant thunder", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "rain_thunder.mp3", "bytes": 129192}
+{"name": "storm_waves", "type": "sfx", "text": "Violent storm wind over a lake with waves and creaking boat", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "storm_waves.mp3", "bytes": 129192}
+{"name": "axes", "type": "sfx", "text": "Many axes chopping trees and trees crashing down in the distance", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "axes.mp3", "bytes": 65244}
+{"name": "amb_night", "type": "sfx", "text": "Night by a pond, crickets and frogs, gentle breeze in reeds", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_night.mp3", "bytes": 193140}
+{"name": "bandits", "type": "sfx", "text": "Ambush: men shouting and metal blades clashing, short scuffle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "bandits.mp3", "bytes": 48944}
+{"name": "amb_summer", "type": "sfx", "text": "Hot summer dry road, loud cicadas, heat", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_summer.mp3", "bytes": 193140}
+{"name": "flies", "type": "sfx", "text": "Flies buzzing around", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "flies.mp3", "bytes": 65244}
+{"name": "cart", "type": "sfx", "text": "Old wooden cart wheels creaking slowly on a dirt road", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "cart.mp3", "bytes": 65244}
+{"name": "amb_museum", "type": "sfx", "text": "Quiet indoor museum hall room tone, very soft distant footsteps and murmur", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_museum.mp3", "bytes": 160957}
+{"name": "rec_beep", "type": "sfx", "text": "Small digital camera record start beep", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "rec_beep.mp3", "bytes": 8820}
+{"name": "card_ding", "type": "sfx", "text": "Soft gentle bell ding for an on-screen caption card", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "card_ding.mp3", "bytes": 13835}
+{"name": "palm_cover", "type": "sfx", "text": "Hand quickly grabbing and covering a camera lens, muffled thump", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "palm_cover.mp3", "bytes": 10492}
+{"name": "gasp_crowd", "type": "sfx", "text": "A few people gasping in shock", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "gasp_crowd.mp3", "bytes": 20105}
+{"name": "mus_comic", "type": "music", "text": "Playful light comedic Chinese traditional music, plucked guzheng and pipa pizzicato with soft wood block, sneaky curious mood, vlog background, no vocals, 96 bpm", "model": null, "status": 200, "sfx": true, "file": "mus_comic.mp3", "bytes": 1080886}
+{"name": "mus_tense", "type": "music", "text": "Dark tense cinematic underscore, low taiko pulse and deep strings drone, ancient Chinese court menace, sparse, no vocals", "model": null, "status": 200, "sfx": true, "file": "mus_tense.mp3", "bytes": 721023}
+{"name": "mus_sad", "type": "music", "text": "Gentle melancholic Chinese traditional music, solo guqin with soft strings, bittersweet ending, slow, no vocals", "model": null, "status": 200, "sfx": true, "file": "mus_sad.mp3", "bytes": 961768}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 3863.09it/s]
+amb_corridor [['Silence', 0.445], ['White noise', 0.042], ['Rustle', 0.033], ['Inside, small room', 0.024], ['Owl', 0.018], ['Mechanical fan', 0.017], ['Tick', 0.015], ['Hum', 0.013]]
+steps_her [['Chopping (food)', 0.231], ['Walk, footsteps', 0.209], ['Knock', 0.054], ['Sound effect', 0.023], ['Crunch', 0.017], ['Chop', 0.016], ['Tap', 0.012], ['Speech', 0.011]]
+steps_him [['Sound effect', 0.259], ['Walk, footsteps', 0.089], ['Whack, thwack', 0.028], ['Whoosh, swoosh, swish', 0.025], ['Sigh', 0.019], ['Chop', 0.017], ['Thump, thud', 0.016], ['Thunk', 0.009]]
+sword_stuck [['Music', 0.18], ['Sound effect', 0.044], ['Breaking', 0.035], ['Chink, clink', 0.029], ['Glass', 0.027], ['Musical instrument', 0.019], ['Speech', 0.013], ['Ping', 0.013]]
+sword_ring [['Breaking', 0.114], ['Chink, clink', 0.107], ['Glass', 0.091], ['Sound effect', 0.028], ['Music', 0.024], ['Crack', 0.018], ['Clang', 0.016], ['Bell', 0.008]]
+cloth [['Crunch', 0.138], ['Sound effect', 0.053], ['Speech', 0.051], ['Chewing, mastication', 0.041], ['Tearing', 0.038], ['Inside, small room', 0.035], ['Scissors', 0.021], ['Biting', 0.016]]
+crown_beads [['Mechanisms', 0.139], ['Gears', 0.123], ['Rattle', 0.102], ['Sound effect', 0.059], ['Ratchet, pawl', 0.056], ['Coin (dropping)', 0.036], ['Speech', 0.036], ['Clatter', 0.03]]
+whoosh [['Clang', 0.247], ['Sound effect', 0.11], ['Bang', 0.052], ['Ding', 0.037], ['Grunt', 0.023], ['Music', 0.013], ['Musical instrument', 0.007], ['Boing', 0.006]]
+bundle_thud [['Coin (dropping)', 0.173], ['Sound effect', 0.062], ['Door', 0.024], ['Dishes, pots, and pans', 0.024], ['Skateboard', 0.012], ['Whack, thwack', 0.012], ['Music', 0.011], ['Speech', 0.011]]
+scale_creak [['Computer keyboard', 0.148], ['Sound effect', 0.136], ['Typing', 0.095], ['Typewriter', 0.045], ['Rattle', 0.013], ['Speech', 0.013], ['Keys jangling', 0.013], ['Vehicle', 0.012]]
+amb_hall [['Rumble', 0.219], ['Music', 0.151], ['Silence', 0.045], ['Sonar', 0.037], ['Sound effect', 0.016], ['Ambient music', 0.014], ['Explosion', 0.01], ['Electronic music', 0.01]]
+snore [['Snoring', 0.267], ['Sound effect', 0.11], ['Snort', 0.103], ['Grunt', 0.056], ['Burping, eructation', 0.043], ['Gasp', 0.025], ['Purr', 0.025], ['Speech', 0.021]]
+rush_in [['Sound effect', 0.097], ['Vehicle', 0.037], ['Boiling', 0.032], ['Crackle', 0.03], ['Scrape', 0.027], ['Rain on surface', 0.025], ['Speech', 0.024], ['Rain', 0.022]]
+crossbow [['Bang', 0.189], ['Sound effect', 0.174], ['Whack, thwack', 0.174], ['Whoosh, swoosh, swish', 0.063], ['Zipper (clothing)', 0.034], ['Slap, smack', 0.029], ['Scrape', 0.017], ['Gunshot, gunfire', 0.014]]
+splash_pop [['Speech', 0.04], ['Crunch', 0.036], ['Breaking', 0.034], ['Sound effect', 0.034], ['Single-lens reflex camera', 0.033], ['Water', 0.032], ['Crack', 0.022], ['Squish', 0.018]]
+amb_terrace [['Outside, rural or natural', 0.107], ['Eruption', 0.065], ['Rain', 0.065], ['Animal', 0.045], ['Rain on surface', 0.042], ['Walk, footsteps', 0.037], ['Pigeon, dove', 0.037], ['Thunderstorm', 0.037]]
+drone_tense [['Music', 0.587], ['Ambient music', 0.257], ['Electronic music', 0.07], ['Whale vocalization', 0.056], ['Singing bowl', 0.048], ['Soundtrack music', 0.04], ['Sonar', 0.035], ['Sine wave', 0.018]]
+pop_hat [['Plop', 0.74], ['Sound effect', 0.066], ['Music', 0.032], ['Speech', 0.027], ['Grunt', 0.017], ['Boing', 0.01], ['Male speech, man speaking', 0.004], ['Inside, small room', 0.004]]
+rain_thunder [['Rain', 0.892], ['Rain on surface', 0.725], ['Thunderstorm', 0.539], ['Thunder', 0.529], ['Raindrop', 0.364], ['Music', 0.008], ['Rustle', 0.006], ['Speech', 0.005]]
+storm_waves [['Waves, surf', 0.791], ['Ocean', 0.771], ['Wind', 0.492], ['Wind noise (microphone)', 0.446], ['Sailboat, sailing ship', 0.075], ['Boat, Water vehicle', 0.071], ['Speech', 0.054], ['Rustling leaves', 0.049]]
+axes [['Arrow', 0.549], ['Slam', 0.087], ['Door', 0.027], ['Slap, smack', 0.018], ['Tap', 0.017], ['Whack, thwack', 0.017], ['Burst, pop', 0.015], ['Sound effect', 0.015]]
+amb_night [['Squeal', 0.399], ['Insect', 0.137], ['Cricket', 0.119], ['Inside, small room', 0.013], ['Tools', 0.009], ['Sound effect', 0.008], ['Owl', 0.005], ['Music', 0.005]]
+bandits [['Battle cry', 0.432], ['Crowd', 0.312], ['Speech', 0.294], ['Yell', 0.082], ['Screaming', 0.061], ['Whoop', 0.041], ['Bellow', 0.031], ['Cheering', 0.019]]
+amb_summer [['Insect', 0.227], ['Cricket', 0.19], ['Hiss', 0.099], ['Snake', 0.074], ['Steam', 0.056], ['Outside, rural or natural', 0.024], ['Animal', 0.012], ['Rattle', 0.011]]
+flies [['Mosquito', 0.646], ['Fly, housefly', 0.49], ['Insect', 0.42], ['Sound effect', 0.042], ['Buzz', 0.019], ['Speech', 0.017], ['Music', 0.016], ['Bee, wasp, etc.', 0.004]]
+cart [['Bird', 0.069], ['Inside, small room', 0.061], ['Typing', 0.041], ['Scissors', 0.037], ['Pigeon, dove', 0.037], ['Computer keyboard', 0.037], ['Patter', 0.035], ['Typewriter', 0.031]]
+amb_museum [['Speech', 0.195], ['Silence', 0.136], ['Rustle', 0.063], ['Rustling leaves', 0.036], ['Animal', 0.03], ['Ship', 0.025], ['Single-lens reflex camera', 0.022], ['Bird', 0.021]]
+rec_beep [['Beep, bleep', 0.268], ['Sound effect', 0.068], ['Music', 0.029], ['Speech', 0.019], ['Ringtone', 0.017], ['Ding', 0.008], ['Telephone dialing, DTMF', 0.008], ['Clang', 0.007]]
+card_ding [['Ding', 0.239], ['Clang', 0.067], ['Coin (dropping)', 0.055], ['Bicycle bell', 0.048], ['Sound effect', 0.024], ['Bell', 0.017], ['Music', 0.007], ['Ping', 0.007]]
+palm_cover [['Sound effect', 0.155], ['Music', 0.055], ['Silence', 0.028], ['Speech', 0.028], ['Door', 0.022], ['Male speech, man speaking', 0.02], ['Sliding door', 0.019], ['Gasp', 0.018]]
+gasp_crowd [['Gasp', 0.729], ['Sigh', 0.501], ['Breathing', 0.032], ['Sneeze', 0.025], ['Snort', 0.024], ['Speech', 0.016], ['Sound effect', 0.01], ['Music', 0.009]]
+mus_comic [['Music', 0.36], ['Pizzicato', 0.336], ['Zither', 0.21], ['Musical instrument', 0.069], ['Traditional music', 0.036], ['Harp', 0.025], ['Ringtone', 0.021], ['Mandolin', 0.017]]
+mus_tense [['Music', 0.832], ['Ambient music', 0.32], ['Hum', 0.145], ['Electronic music', 0.087], ['Throbbing', 0.085], ['Scary music', 0.076], ['Mains hum', 0.049], ['Soundtrack music', 0.047]]
+mus_sad [['Zither', 0.544], ['Music', 0.468], ['Pizzicato', 0.383], ['Harp', 0.1], ['Mandolin', 0.063], ['Musical instrument', 0.054], ['Plucked string instrument', 0.05], ['Bowed string instrument', 0.014]]
+[
+ {
+  "name": "amb_corridor",
+  "type": "sfx",
+  "text": "Quiet ancient palace corridor at dawn, distant birds, faint wind through wooden lattice, soft room echo",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_corridor.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Silence",
+    0.445
+   ],
+   [
+    "White noise",
+    0.042
+   ],
+   [
+    "Rustle",
+    0.033
+   ],
+   [
+    "Inside, small room",
+    0.024
+   ],
+   [
+    "Owl",
+    0.018
+   ],
+   [
+    "Mechanical fan",
+    0.017
+   ],
+   [
+    "Tick",
+    0.015
+   ],
+   [
+    "Hum",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "steps_her",
+  "type": "sfx",
+  "text": "Light quick soft footsteps of a young woman on wooden floor, slightly hurried",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "steps_her.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Chopping (food)",
+    0.231
+   ],
+   [
+    "Walk, footsteps",
+    0.209
+   ],
+   [
+    "Knock",
+    0.054
+   ],
+   [
+    "Sound effect",
+    0.023
+   ],
+   [
+    "Crunch",
+    0.017
+   ],
+   [
+    "Chop",
+    0.016
+   ],
+   [
+    "Tap",
+    0.012
+   ],
+   [
+    "Speech",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "steps_him",
+  "type": "sfx",
+  "text": "Heavy slow confident footsteps of a man in boots on stone floor with robe rustle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "steps_him.mp3",
+  "bytes": 97009,
+  "seconds": 6.0,
+  "tags": [
+   [
+    "Sound effect",
+    0.259
+   ],
+   [
+    "Walk, footsteps",
+    0.089
+   ],
+   [
+    "Whack, thwack",
+    0.028
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.025
+   ],
+   [
+    "Sigh",
+    0.019
+   ],
+   [
+    "Chop",
+    0.017
+   ],
+   [
+    "Thump, thud",
+    0.016
+   ],
+   [
+    "Thunk",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "sword_stuck",
+  "type": "sfx",
+  "text": "A long metal sword grinding and sticking in a tight scabbard, a short failed pull",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_stuck.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Music",
+    0.18
+   ],
+   [
+    "Sound effect",
+    0.044
+   ],
+   [
+    "Breaking",
+    0.035
+   ],
+   [
+    "Chink, clink",
+    0.029
+   ],
+   [
+    "Glass",
+    0.027
+   ],
+   [
+    "Musical instrument",
+    0.019
+   ],
+   [
+    "Speech",
+    0.013
+   ],
+   [
+    "Ping",
+    0.013
+   ]
+  ]
+ },
+ {
+  "name": "sword_ring",
+  "type": "sfx",
+  "text": "A long sword drawn fully from its scabbard with a bright metallic ring, cinematic",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sword_ring.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Breaking",
+    0.114
+   ],
+   [
+    "Chink, clink",
+    0.107
+   ],
+   [
+    "Glass",
+    0.091
+   ],
+   [
+    "Sound effect",
+    0.028
+   ],
+   [
+    "Music",
+    0.024
+   ],
+   [
+    "Crack",
+    0.018
+   ],
+   [
+    "Clang",
+    0.016
+   ],
+   [
+    "Bell",
+    0.008
+   ]
+  ]
+ },
+ {
+  "name": "cloth",
+  "type": "sfx",
+  "text": "Heavy silk robe rustle, quick movement",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cloth.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Crunch",
+    0.138
+   ],
+   [
+    "Sound effect",
+    0.053
+   ],
+   [
+    "Speech",
+    0.051
+   ],
+   [
+    "Chewing, mastication",
+    0.041
+   ],
+   [
+    "Tearing",
+    0.038
+   ],
+   [
+    "Inside, small room",
+    0.035
+   ],
+   [
+    "Scissors",
+    0.021
+   ],
+   [
+    "Biting",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "crown_beads",
+  "type": "sfx",
+  "text": "Small jade beads clicking and swinging",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "crown_beads.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Mechanisms",
+    0.139
+   ],
+   [
+    "Gears",
+    0.123
+   ],
+   [
+    "Rattle",
+    0.102
+   ],
+   [
+    "Sound effect",
+    0.059
+   ],
+   [
+    "Ratchet, pawl",
+    0.056
+   ],
+   [
+    "Coin (dropping)",
+    0.036
+   ],
+   [
+    "Speech",
+    0.036
+   ],
+   [
+    "Clatter",
+    0.03
+   ]
+  ]
+ },
+ {
+  "name": "whoosh",
+  "type": "sfx",
+  "text": "Fast camera whip pan whoosh, short",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "whoosh.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Clang",
+    0.247
+   ],
+   [
+    "Sound effect",
+    0.11
+   ],
+   [
+    "Bang",
+    0.052
+   ],
+   [
+    "Ding",
+    0.037
+   ],
+   [
+    "Grunt",
+    0.023
+   ],
+   [
+    "Music",
+    0.013
+   ],
+   [
+    "Musical instrument",
+    0.007
+   ],
+   [
+    "Boing",
+    0.006
+   ]
+  ]
+ },
+ {
+  "name": "bundle_thud",
+  "type": "sfx",
+  "text": "Heavy bundle of bamboo slips dropped onto a wooden scale pan, thud and clatter",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "bundle_thud.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Coin (dropping)",
+    0.173
+   ],
+   [
+    "Sound effect",
+    0.062
+   ],
+   [
+    "Door",
+    0.024
+   ],
+   [
+    "Dishes, pots, and pans",
+    0.024
+   ],
+   [
+    "Skateboard",
+    0.012
+   ],
+   [
+    "Whack, thwack",
+    0.012
+   ],
+   [
+    "Music",
+    0.011
+   ],
+   [
+    "Speech",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "scale_creak",
+  "type": "sfx",
+  "text": "Wooden balance beam creaking and wobbling to rest",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "scale_creak.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Computer keyboard",
+    0.148
+   ],
+   [
+    "Sound effect",
+    0.136
+   ],
+   [
+    "Typing",
+    0.095
+   ],
+   [
+    "Typewriter",
+    0.045
+   ],
+   [
+    "Rattle",
+    0.013
+   ],
+   [
+    "Speech",
+    0.013
+   ],
+   [
+    "Keys jangling",
+    0.013
+   ],
+   [
+    "Vehicle",
+    0.012
+   ]
+  ]
+ },
+ {
+  "name": "amb_hall",
+  "type": "sfx",
+  "text": "Large empty ancient throne hall, low room tone, faint wind outside, subtle reverb",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_hall.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Rumble",
+    0.219
+   ],
+   [
+    "Music",
+    0.151
+   ],
+   [
+    "Silence",
+    0.045
+   ],
+   [
+    "Sonar",
+    0.037
+   ],
+   [
+    "Sound effect",
+    0.016
+   ],
+   [
+    "Ambient music",
+    0.014
+   ],
+   [
+    "Explosion",
+    0.01
+   ],
+   [
+    "Electronic music",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "snore",
+  "type": "sfx",
+  "text": "A man snoring once softly then waking with a startled snort",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "snore.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Snoring",
+    0.267
+   ],
+   [
+    "Sound effect",
+    0.11
+   ],
+   [
+    "Snort",
+    0.103
+   ],
+   [
+    "Grunt",
+    0.056
+   ],
+   [
+    "Burping, eructation",
+    0.043
+   ],
+   [
+    "Gasp",
+    0.025
+   ],
+   [
+    "Purr",
+    0.025
+   ],
+   [
+    "Speech",
+    0.021
+   ]
+  ]
+ },
+ {
+  "name": "rush_in",
+  "type": "sfx",
+  "text": "Someone hurrying in on knees across a wooden floor, robe sliding",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "rush_in.mp3",
+  "bytes": 24702,
+  "seconds": 1.48,
+  "tags": [
+   [
+    "Sound effect",
+    0.097
+   ],
+   [
+    "Vehicle",
+    0.037
+   ],
+   [
+    "Boiling",
+    0.032
+   ],
+   [
+    "Crackle",
+    0.03
+   ],
+   [
+    "Scrape",
+    0.027
+   ],
+   [
+    "Rain on surface",
+    0.025
+   ],
+   [
+    "Speech",
+    0.024
+   ],
+   [
+    "Rain",
+    0.022
+   ]
+  ]
+ },
+ {
+  "name": "crossbow",
+  "type": "sfx",
+  "text": "Crossbow firing, string twang and bolt whoosh",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "crossbow.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Bang",
+    0.189
+   ],
+   [
+    "Sound effect",
+    0.174
+   ],
+   [
+    "Whack, thwack",
+    0.174
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.063
+   ],
+   [
+    "Zipper (clothing)",
+    0.034
+   ],
+   [
+    "Slap, smack",
+    0.029
+   ],
+   [
+    "Scrape",
+    0.017
+   ],
+   [
+    "Gunshot, gunfire",
+    0.014
+   ]
+  ]
+ },
+ {
+  "name": "splash_pop",
+  "type": "sfx",
+  "text": "Cartoon water splash followed by a comedic pop",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "splash_pop.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Speech",
+    0.04
+   ],
+   [
+    "Crunch",
+    0.036
+   ],
+   [
+    "Breaking",
+    0.034
+   ],
+   [
+    "Sound effect",
+    0.034
+   ],
+   [
+    "Single-lens reflex camera",
+    0.033
+   ],
+   [
+    "Water",
+    0.032
+   ],
+   [
+    "Crack",
+    0.022
+   ],
+   [
+    "Squish",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "amb_terrace",
+  "type": "sfx",
+  "text": "Wind on a high stone terrace, flags flapping, wide open air",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_terrace.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Outside, rural or natural",
+    0.107
+   ],
+   [
+    "Eruption",
+    0.065
+   ],
+   [
+    "Rain",
+    0.065
+   ],
+   [
+    "Animal",
+    0.045
+   ],
+   [
+    "Rain on surface",
+    0.042
+   ],
+   [
+    "Walk, footsteps",
+    0.037
+   ],
+   [
+    "Pigeon, dove",
+    0.037
+   ],
+   [
+    "Thunderstorm",
+    0.037
+   ]
+  ]
+ },
+ {
+  "name": "drone_tense",
+  "type": "sfx",
+  "text": "Low ominous cinematic drone, tension building, dark",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "drone_tense.mp3",
+  "bytes": 160957,
+  "seconds": 10.0,
+  "tags": [
+   [
+    "Music",
+    0.587
+   ],
+   [
+    "Ambient music",
+    0.257
+   ],
+   [
+    "Electronic music",
+    0.07
+   ],
+   [
+    "Whale vocalization",
+    0.056
+   ],
+   [
+    "Singing bowl",
+    0.048
+   ],
+   [
+    "Soundtrack music",
+    0.04
+   ],
+   [
+    "Sonar",
+    0.035
+   ],
+   [
+    "Sine wave",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "pop_hat",
+  "type": "sfx",
+  "text": "Cute comedic pop sound",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "pop_hat.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Plop",
+    0.74
+   ],
+   [
+    "Sound effect",
+    0.066
+   ],
+   [
+    "Music",
+    0.032
+   ],
+   [
+    "Speech",
+    0.027
+   ],
+   [
+    "Grunt",
+    0.017
+   ],
+   [
+    "Boing",
+    0.01
+   ],
+   [
+    "Male speech, man speaking",
+    0.004
+   ],
+   [
+    "Inside, small room",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "rain_thunder",
+  "type": "sfx",
+  "text": "Heavy mountain rain with distant thunder",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "rain_thunder.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Rain",
+    0.892
+   ],
+   [
+    "Rain on surface",
+    0.725
+   ],
+   [
+    "Thunderstorm",
+    0.539
+   ],
+   [
+    "Thunder",
+    0.529
+   ],
+   [
+    "Raindrop",
+    0.364
+   ],
+   [
+    "Music",
+    0.008
+   ],
+   [
+    "Rustle",
+    0.006
+   ],
+   [
+    "Speech",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "storm_waves",
+  "type": "sfx",
+  "text": "Violent storm wind over a lake with waves and creaking boat",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "storm_waves.mp3",
+  "bytes": 129192,
+  "seconds": 8.0,
+  "tags": [
+   [
+    "Waves, surf",
+    0.791
+   ],
+   [
+    "Ocean",
+    0.771
+   ],
+   [
+    "Wind",
+    0.492
+   ],
+   [
+    "Wind noise (microphone)",
+    0.446
+   ],
+   [
+    "Sailboat, sailing ship",
+    0.075
+   ],
+   [
+    "Boat, Water vehicle",
+    0.071
+   ],
+   [
+    "Speech",
+    0.054
+   ],
+   [
+    "Rustling leaves",
+    0.049
+   ]
+  ]
+ },
+ {
+  "name": "axes",
+  "type": "sfx",
+  "text": "Many axes chopping trees and trees crashing down in the distance",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "axes.mp3",
+  "bytes": 65244,
+  "seconds": 4.0,
+  "tags": [
+   [
+    "Arrow",
+    0.549
+   ],
+   [
+    "Slam",
+    0.087
+   ],
+   [
+    "Door",
+    0.027
+   ],
+   [
+    "Slap, smack",
+    0.018
+   ],
+   [
+    "Tap",
+    0.017
+   ],
+   [
+    "Whack, thwack",
+    0.017
+   ],
+   [
+    "Burst, pop",
+    0.015
+   ],
+   [
+    "Sound effect",
+    0.015
+   ]
+  ]
+ },
+ {
+  "name": "amb_night",
+  "type": "sfx",
+  "text": "Night by a pond, crickets and frogs, gentle breeze in reeds",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_night.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Squeal",
+    0.399
+   ],
+   [
+    "Insect",
+    0.137
+   ],
+   [
+    "Cricket",
+    0.119
+   ],
+   [
+    "Inside, small room",
+    0.013
+   ],
+   [
+    "Tools",
+    0.009
+   ],
+   [
+    "Sound effect",
+    0.008
+   ],
+   [
+    "Owl",
+    0.005
+   ],
+   [
+    "Music",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "bandits",
+  "type": "sfx",
+  "text": "Ambush: men shouting and metal blades clashing, short scuffle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "bandits.mp3",
+  "bytes": 48944,
+  "seconds": 3.0,
+  "tags": [
+   [
+    "Battle cry",
+    0.432
+   ],
+   [
+    "Crowd",
+    0.312
+   ],
+   [
+    "Speech",
+    0.294
+   ],
+   [
+    "Yell",
+    0.082
+   ],
+   [
+    "Screaming",
+    0.061
+   ],
+   [
+    "Whoop",
+    0.041
+   ],
+   [
+    "Bellow",
+    0.031
+   ],
+   [
+    "Cheering",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "amb_summer",
+  "type": "sfx",
+  "text": "Hot summer dry road, loud cicadas, heat",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_summer.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Insect",
+    0.227
+   ],
+   [
+    "Cricket",
+    0.19
+   ],
+   [
+    "Hiss",
+    0.099
+   ],
+   [
+    "Snake",
+    0.074
+   ],
+   [
+    "Steam",
+    0.056
+   ],
+   [
+    "Outside, rural or natural",
+    0.024
+   ],
+   [
+    "Animal",
+    0.012
+   ],
+   [
+    "Rattle",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "flies",
+  "type": "sfx",
+  "text": "Flies buzzing around",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "flies.mp3",
+  "bytes": 65244,
+  "seconds": 4.0,
+  "tags": [
+   [
+    "Mosquito",
+    0.646
+   ],
+   [
+    "Fly, housefly",
+    0.49
+   ],
+   [
+    "Insect",
+    0.42
+   ],
+   [
+    "Sound effect",
+    0.042
+   ],
+   [
+    "Buzz",
+    0.019
+   ],
+   [
+    "Speech",
+    0.017
+   ],
+   [
+    "Music",
+    0.016
+   ],
+   [
+    "Bee, wasp, etc.",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "cart",
+  "type": "sfx",
+  "text": "Old wooden cart wheels creaking slowly on a dirt road",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "cart.mp3",
+  "bytes": 65244,
+  "seconds": 4.0,
+  "tags": [
+   [
+    "Bird",
+    0.069
+   ],
+   [
+    "Inside, small room",
+    0.061
+   ],
+   [
+    "Typing",
+    0.041
+   ],
+   [
+    "Scissors",
+    0.037
+   ],
+   [
+    "Pigeon, dove",
+    0.037
+   ],
+   [
+    "Computer keyboard",
+    0.037
+   ],
+   [
+    "Patter",
+    0.035
+   ],
+   [
+    "Typewriter",
+    0.031
+   ]
+  ]
+ },
+ {
+  "name": "amb_museum",
+  "type": "sfx",
+  "text": "Quiet indoor museum hall room tone, very soft distant footsteps and murmur",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_museum.mp3",
+  "bytes": 160957,
+  "seconds": 10.0,
+  "tags": [
+   [
+    "Speech",
+    0.195
+   ],
+   [
+    "Silence",
+    0.136
+   ],
+   [
+    "Rustle",
+    0.063
+   ],
+   [
+    "Rustling leaves",
+    0.036
+   ],
+   [
+    "Animal",
+    0.03
+   ],
+   [
+    "Ship",
+    0.025
+   ],
+   [
+    "Single-lens reflex camera",
+    0.022
+   ],
+   [
+    "Bird",
+    0.021
+   ]
+  ]
+ },
+ {
+  "name": "rec_beep",
+  "type": "sfx",
+  "text": "Small digital camera record start beep",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "rec_beep.mp3",
+  "bytes": 8820,
+  "seconds": 0.48,
+  "tags": [
+   [
+    "Beep, bleep",
+    0.268
+   ],
+   [
+    "Sound effect",
+    0.068
+   ],
+   [
+    "Music",
+    0.029
+   ],
+   [
+    "Speech",
+    0.019
+   ],
+   [
+    "Ringtone",
+    0.017
+   ],
+   [
+    "Ding",
+    0.008
+   ],
+   [
+    "Telephone dialing, DTMF",
+    0.008
+   ],
+   [
+    "Clang",
+    0.007
+   ]
+  ]
+ },
+ {
+  "name": "card_ding",
+  "type": "sfx",
+  "text": "Soft gentle bell ding for an on-screen caption card",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "card_ding.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Ding",
+    0.239
+   ],
+   [
+    "Clang",
+    0.067
+   ],
+   [
+    "Coin (dropping)",
+    0.055
+   ],
+   [
+    "Bicycle bell",
+    0.048
+   ],
+   [
+    "Sound effect",
+    0.024
+   ],
+   [
+    "Bell",
+    0.017
+   ],
+   [
+    "Music",
+    0.007
+   ],
+   [
+    "Ping",
+    0.007
+   ]
+  ]
+ },
+ {
+  "name": "palm_cover",
+  "type": "sfx",
+  "text": "Hand quickly grabbing and covering a camera lens, muffled thump",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "palm_cover.mp3",
+  "bytes": 10492,
+  "seconds": 0.6,
+  "tags": [
+   [
+    "Sound effect",
+    0.155
+   ],
+   [
+    "Music",
+    0.055
+   ],
+   [
+    "Silence",
+    0.028
+   ],
+   [
+    "Speech",
+    0.028
+   ],
+   [
+    "Door",
+    0.022
+   ],
+   [
+    "Male speech, man speaking",
+    0.02
+   ],
+   [
+    "Sliding door",
+    0.019
+   ],
+   [
+    "Gasp",
+    0.018
+   ]
+  ]
+ },
+ {
+  "name": "gasp_crowd",
+  "type": "sfx",
+  "text": "A few people gasping in shock",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "gasp_crowd.mp3",
+  "bytes": 20105,
+  "seconds": 1.2,
+  "tags": [
+   [
+    "Gasp",
+    0.729
+   ],
+   [
+    "Sigh",
+    0.501
+   ],
+   [
+    "Breathing",
+    0.032
+   ],
+   [
+    "Sneeze",
+    0.025
+   ],
+   [
+    "Snort",
+    0.024
+   ],
+   [
+    "Speech",
+    0.016
+   ],
+   [
+    "Sound effect",
+    0.01
+   ],
+   [
+    "Music",
+    0.009
+   ]
+  ]
+ },
+ {
+  "name": "mus_comic",
+  "type": "music",
+  "text": "Playful light comedic Chinese traditional music, plucked guzheng and pipa pizzicato with soft wood block, sneaky curious mood, vlog background, no vocals, 96 bpm",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_comic.mp3",
+  "bytes": 1080886,
+  "seconds": 45.04,
+  "tags": [
+   [
+    "Music",
+    0.36
+   ],
+   [
+    "Pizzicato",
+    0.336
+   ],
+   [
+    "Zither",
+    0.21
+   ],
+   [
+    "Musical instrument",
+    0.069
+   ],
+   [
+    "Traditional music",
+    0.036
+   ],
+   [
+    "Harp",
+    0.025
+   ],
+   [
+    "Ringtone",
+    0.021
+   ],
+   [
+    "Mandolin",
+    0.017
+   ]
+  ]
+ },
+ {
+  "name": "mus_tense",
+  "type": "music",
+  "text": "Dark tense cinematic underscore, low taiko pulse and deep strings drone, ancient Chinese court menace, sparse, no vocals",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_tense.mp3",
+  "bytes": 721023,
+  "seconds": 30.04,
+  "tags": [
+   [
+    "Music",
+    0.832
+   ],
+   [
+    "Ambient music",
+    0.32
+   ],
+   [
+    "Hum",
+    0.145
+   ],
+   [
+    "Electronic music",
+    0.087
+   ],
+   [
+    "Throbbing",
+    0.085
+   ],
+   [
+    "Scary music",
+    0.076
+   ],
+   [
+    "Mains hum",
+    0.049
+   ],
+   [
+    "Soundtrack music",
+    0.047
+   ]
+  ]
+ },
+ {
+  "name": "mus_sad",
+  "type": "music",
+  "text": "Gentle melancholic Chinese traditional music, solo guqin with soft strings, bittersweet ending, slow, no vocals",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_sad.mp3",
+  "bytes": 961768,
+  "seconds": 40.07,
+  "tags": [
+   [
+    "Zither",
+    0.544
+   ],
+   [
+    "Music",
+    0.468
+   ],
+   [
+    "Pizzicato",
+    0.383
+   ],
+   [
+    "Harp",
+    0.1
+   ],
+   [
+    "Mandolin",
+    0.063
+   ],
+   [
+    "Musical instrument",
+    0.054
+   ],
+   [
+    "Plucked string instrument",
+    0.05
+   ],
+   [
+    "Bowed string instrument",
+    0.014
+   ]
+  ]
+ }
+]
