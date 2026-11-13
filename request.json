@@ -1,166 +1,943 @@
 {
- "id": "sudongpo-va-search-01",
+ "id": "sudongpo-va-aud-01",
+ "model_prefs": [
+  "eleven_v4"
+ ],
  "items": [
   {
-   "type": "voices",
-   "name": "m_old_std",
+   "name": "lin_j03",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "age": "old"
+   "text": "[puzzled] 您不也是官吗？",
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_mid_warm",
+   "name": "lin_j08",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "age": "middle_aged",
-   "search": "warm"
+   "text": "[chewing, curious] 那啃完的骨头，给狗吗？",
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_old",
+   "name": "lin_j28",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "old"
+   "text": "[lost] 琼州……是哪儿？",
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_elderly",
+   "name": "lin_j31",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "elderly"
+   "text": "[to camera, stunned, half laughing] 被贬到天边，他第一句问吃的。",
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_grandpa",
+   "name": "lin_j56",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "grandpa"
+   "text": "[sincere] 您这辈子，最大的功业是什么？",
+   "add": {
+    "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+    "voice_id": "I23uc91tu5zY2PA1tKEN",
+    "name": "Lin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_grandfather",
+   "name": "JamesGao_s01",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "grandfather"
+   "text": "[shouting, cheerful] 荔枝熟了，替我多吃几颗！",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_uncle",
+   "name": "JamesGao_s02",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "uncle"
+   "text": "[ecstatic] 这蚝太好吃了，[conspiratorial] 千万别让北方人知道。[dead serious] 他们会抢着被贬过来，分我的蚝。",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_laugh",
+   "name": "JamesGao_s03",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "laugh"
+   "text": "[laughing at himself] 我是被贬来的官。[delighted] 你看，骨头缝里，还有肉！",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_cheerful",
+   "name": "JamesGao_s04",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "cheerful"
+   "text": "[breezy, like reading a to-do list] 安排一下。到了海南，第一件事，做棺材。第二件事，做坟。[grinning] 找吃的。",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_humorous",
+   "name": "JamesGao_s05",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "humorous"
+   "text": "[deadpan, mock-sorry] 啃得这么干净，狗都不高兴。",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_storyteller",
+   "name": "JamesGao_s06",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "storyteller"
+   "text": "[stunned, then genuinely curious] 海南……有什么好吃的？",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_wise",
+   "name": "JamesGao_s07",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "wise"
+   "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_hearty",
+   "name": "JamesGao_s08",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "hearty"
+   "text": "[steady, then voice cracking] 去年夏天，她病死在这儿。[breaking] 明天，我去海南。这一回，带不走你了。",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_jolly",
+   "name": "JamesGao_s09",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "jolly"
+   "text": "[smiling through tears, warm] 走吧，明早还要赶路。",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_u8001",
+   "name": "JamesGao_s10",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "老"
+   "text": "[old, warm, simple] 黄州，惠州，儋州。",
+   "add": {
+    "owner": "60079d355e8d217eb5d21249e688a09ac07a6d483c50a63560d9936211b5b100",
+    "voice_id": "4VZIsMPtgggwNg7OXbPY",
+    "name": "James Gao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_u5927u53d4",
+   "name": "Gavin_s01",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "大叔"
+   "text": "[shouting, cheerful] 荔枝熟了，替我多吃几颗！",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_u7237u7237",
+   "name": "Gavin_s02",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "爷爷"
+   "text": "[ecstatic] 这蚝太好吃了，[conspiratorial] 千万别让北方人知道。[dead serious] 他们会抢着被贬过来，分我的蚝。",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_u6e29u6696",
+   "name": "Gavin_s03",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "温暖"
+   "text": "[laughing at himself] 我是被贬来的官。[delighted] 你看，骨头缝里，还有肉！",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_u8c6au723d",
+   "name": "Gavin_s04",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "豪爽"
+   "text": "[breezy, like reading a to-do list] 安排一下。到了海南，第一件事，做棺材。第二件事，做坟。[grinning] 找吃的。",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "voices",
-   "name": "m_s_u5e7du9ed8",
+   "name": "Gavin_s05",
    "lang": "zh",
-   "gender": "male",
-   "n": 40,
-   "search": "幽默"
+   "text": "[deadpan, mock-sorry] 啃得这么干净，狗都不高兴。",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Gavin_s06",
+   "lang": "zh",
+   "text": "[stunned, then genuinely curious] 海南……有什么好吃的？",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Gavin_s07",
+   "lang": "zh",
+   "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Gavin_s08",
+   "lang": "zh",
+   "text": "[steady, then voice cracking] 去年夏天，她病死在这儿。[breaking] 明天，我去海南。这一回，带不走你了。",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Gavin_s09",
+   "lang": "zh",
+   "text": "[smiling through tears, warm] 走吧，明早还要赶路。",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Gavin_s10",
+   "lang": "zh",
+   "text": "[old, warm, simple] 黄州，惠州，儋州。",
+   "add": {
+    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
+    "voice_id": "YGeNjTKY1wBaKygyl4y8",
+    "name": "Gavin"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s01",
+   "lang": "zh",
+   "text": "[shouting, cheerful] 荔枝熟了，替我多吃几颗！",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s02",
+   "lang": "zh",
+   "text": "[ecstatic] 这蚝太好吃了，[conspiratorial] 千万别让北方人知道。[dead serious] 他们会抢着被贬过来，分我的蚝。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s03",
+   "lang": "zh",
+   "text": "[laughing at himself] 我是被贬来的官。[delighted] 你看，骨头缝里，还有肉！",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s04",
+   "lang": "zh",
+   "text": "[breezy, like reading a to-do list] 安排一下。到了海南，第一件事，做棺材。第二件事，做坟。[grinning] 找吃的。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s05",
+   "lang": "zh",
+   "text": "[deadpan, mock-sorry] 啃得这么干净，狗都不高兴。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s06",
+   "lang": "zh",
+   "text": "[stunned, then genuinely curious] 海南……有什么好吃的？",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s07",
+   "lang": "zh",
+   "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s08",
+   "lang": "zh",
+   "text": "[steady, then voice cracking] 去年夏天，她病死在这儿。[breaking] 明天，我去海南。这一回，带不走你了。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s09",
+   "lang": "zh",
+   "text": "[smiling through tears, warm] 走吧，明早还要赶路。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_s10",
+   "lang": "zh",
+   "text": "[old, warm, simple] 黄州，惠州，儋州。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s01",
+   "lang": "zh",
+   "text": "[shouting, cheerful] 荔枝熟了，替我多吃几颗！",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s02",
+   "lang": "zh",
+   "text": "[ecstatic] 这蚝太好吃了，[conspiratorial] 千万别让北方人知道。[dead serious] 他们会抢着被贬过来，分我的蚝。",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s03",
+   "lang": "zh",
+   "text": "[laughing at himself] 我是被贬来的官。[delighted] 你看，骨头缝里，还有肉！",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s04",
+   "lang": "zh",
+   "text": "[breezy, like reading a to-do list] 安排一下。到了海南，第一件事，做棺材。第二件事，做坟。[grinning] 找吃的。",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s05",
+   "lang": "zh",
+   "text": "[deadpan, mock-sorry] 啃得这么干净，狗都不高兴。",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s06",
+   "lang": "zh",
+   "text": "[stunned, then genuinely curious] 海南……有什么好吃的？",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s07",
+   "lang": "zh",
+   "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s08",
+   "lang": "zh",
+   "text": "[steady, then voice cracking] 去年夏天，她病死在这儿。[breaking] 明天，我去海南。这一回，带不走你了。",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s09",
+   "lang": "zh",
+   "text": "[smiling through tears, warm] 走吧，明早还要赶路。",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "GuanTangBao_s10",
+   "lang": "zh",
+   "text": "[old, warm, simple] 黄州，惠州，儋州。",
+   "add": {
+    "owner": "5ae291ac4cd2e07a385496035ae65afe635d5bd428dad7a15f80df5af5c7c61b",
+    "voice_id": "MQkiCZS3mnl44caDtxkJ",
+    "name": "Guan Tang Bao"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s01",
+   "lang": "zh",
+   "text": "[shouting, cheerful] 荔枝熟了，替我多吃几颗！",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s02",
+   "lang": "zh",
+   "text": "[ecstatic] 这蚝太好吃了，[conspiratorial] 千万别让北方人知道。[dead serious] 他们会抢着被贬过来，分我的蚝。",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s03",
+   "lang": "zh",
+   "text": "[laughing at himself] 我是被贬来的官。[delighted] 你看，骨头缝里，还有肉！",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s04",
+   "lang": "zh",
+   "text": "[breezy, like reading a to-do list] 安排一下。到了海南，第一件事，做棺材。第二件事，做坟。[grinning] 找吃的。",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s05",
+   "lang": "zh",
+   "text": "[deadpan, mock-sorry] 啃得这么干净，狗都不高兴。",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s06",
+   "lang": "zh",
+   "text": "[stunned, then genuinely curious] 海南……有什么好吃的？",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s07",
+   "lang": "zh",
+   "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s08",
+   "lang": "zh",
+   "text": "[steady, then voice cracking] 去年夏天，她病死在这儿。[breaking] 明天，我去海南。这一回，带不走你了。",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s09",
+   "lang": "zh",
+   "text": "[smiling through tears, warm] 走吧，明早还要赶路。",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "SiqiLiu_s10",
+   "lang": "zh",
+   "text": "[old, warm, simple] 黄州，惠州，儋州。",
+   "add": {
+    "owner": "37c7a55dd5ac8593c00a130495e595a5d0754ef56973f2acc6c1f1097c10fdfa",
+    "voice_id": "W8lBaQb9YIoddhxfQNLP",
+    "name": "Siqi Liu"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   }
  ]
 }
