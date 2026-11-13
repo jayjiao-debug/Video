@@ -59,7 +59,10 @@ def find_own(accent, gender):
     return own[0]["voice_id"], f"own:{own[0]['name']}"
 
 KEPT = {}   # library voice id -> the id it has in the account, for items with "keep": true
+TR = []     # "transcribe" items, checked with Whisper after generation
 for it in req["items"]:
+    if it.get("type") == "transcribe":   # no ElevenLabs call: Whisper on a slice of an earlier output {"type":"transcribe","name","src":"out/<id>/<file>","start"?,"end"?,"lang"?}
+        TR.append(it); continue
     if it.get("url"):   # fetch a public, openly licensed recording (e.g. First Sounds, CC BY) instead of synthesising
         rec = {"name": it["name"], "lang": it.get("lang", ""), "text": it.get("text", ""), "url": it["url"]}
         try:
@@ -206,6 +209,24 @@ try:
             rec["words"] = [[w.word.strip(), round(w.start, 3), round(w.end, 3)] for s in segs for w in (s.words or [])]
         rec["heard"] = "".join(s.text for s in segs).strip(); rec["heard_lang"] = info.language
         rec["heard_lang_p"] = round(info.language_probability, 3); rec["seconds"] = round(info.duration, 2)
+    if TR:   # per-line check: transcribe each slice twice, with the language detected and with the expected one
+        from faster_whisper.audio import decode_audio
+        cache = {}
+        for it in TR:
+            rec = {"name": it["name"], "type": "transcribe", "src": it["src"], "start": it.get("start", 0), "end": it.get("end"), "lang": it.get("lang", "")}
+            try:
+                if it["src"] not in cache:
+                    r = requests.get(f"https://raw.githubusercontent.com/{os.environ.get('GITHUB_REPOSITORY', 'jayjiao-debug/video')}/voice-output/{it['src']}", timeout=60)
+                    r.raise_for_status(); p = "/tmp/tr_" + re.sub(r"[^A-Za-z0-9_.-]", "_", it["src"]); open(p, "wb").write(r.content)
+                    cache[it["src"]] = decode_audio(p, sampling_rate=16000)
+                x = cache[it["src"]]; a0 = int(float(it.get("start", 0)) * 16000); a1 = int(float(it["end"]) * 16000) if it.get("end") else len(x)
+                segs, info = wm.transcribe(x[a0:a1], beam_size=5)
+                rec["heard_auto"] = "".join(s.text for s in segs).strip(); rec["heard_lang"] = info.language; rec["heard_lang_p"] = round(info.language_probability, 3)
+                if it.get("lang"):
+                    segs, info = wm.transcribe(x[a0:a1], beam_size=5, language=it["lang"])
+                    rec["heard"] = "".join(s.text for s in segs).strip()
+            except Exception as e: rec["error"] = repr(e)[:300]
+            report["clips"].append(rec)
 except Exception as e: report["whisper_error"] = str(e)
 # check for sound effects (request: "tag": true): what does an AudioSet tagger (AST) hear in each clip?
 if req.get("tag"):

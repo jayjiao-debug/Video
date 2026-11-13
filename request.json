@@ -1,274 +1,1055 @@
 {
- "id": "newton-sfx-01",
- "tag": true,
+ "id": "newton-check-01",
+ "model_prefs": [
+  "eleven_v4"
+ ],
  "items": [
   {
-   "type": "music",
-   "name": "mus_P_open",
-   "text": "A single music box note, then a delicate harpsichord arpeggio rising as a beam of light splits into a rainbow, baroque, magical crystalline shimmer, wonder, no vocals",
-   "ms": 14000
-  },
-  {
-   "type": "music",
-   "name": "mus_R_red",
-   "text": "Eerie but playful baroque chamber music in C minor, music box and harpsichord with pizzicato strings, an obsessive scientist alone by candlelight at three in the morning, curious and slightly unsettling, light comedy, no vocals, 92 bpm",
-   "ms": 24000
-  },
-  {
-   "type": "music",
-   "name": "mus_O_orange",
-   "text": "Lonely solo harpsichord in D minor in a large empty stone hall with long reverb, slow baroque prelude, melancholy with a dry wit, sunset, no vocals, 70 bpm",
-   "ms": 18000
-  },
-  {
-   "type": "music",
    "name": "mus_Y_yellow",
-   "text": "Bright joyful baroque allegro in E major, galloping strings and harpsichord continuo, a eureka moment, excited and quick, in the style of Handel, no vocals, 132 bpm",
-   "ms": 32000
-  },
-  {
    "type": "music",
-   "name": "mus_G_green",
-   "text": "Mock-heroic comic tension in F minor, baroque bassoon and plucked strings with sudden angry string stabs, a petty rivalry between two scholars, playful menace, no vocals, 108 bpm",
-   "ms": 28000
+   "ms": 32000,
+   "instrumental": true,
+   "text": "Bright joyful baroque allegro in E major, galloping strings and harpsichord continuo, a eureka moment, excited and quick, 18th-century chamber orchestra, no vocals, 132 bpm"
   },
   {
-   "type": "music",
-   "name": "mus_B_blue",
-   "text": "Cold clockwork baroque in G major, precise staccato harpsichord and pizzicato strings over a ticking metronomic pulse, a rigged trial played as dry comedy, mechanical and smug, no vocals, 120 bpm",
-   "ms": 30000
+   "name": "tr_s1727_P01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
+   "start": 0.0,
+   "end": 3.08,
+   "lang": "zh"
   },
   {
-   "type": "music",
-   "name": "mus_I_indigo",
-   "text": "Dark baroque nocturne in A minor, low strings and a slow heartbeat drum, a ruthless hunt through London at night, tense and cold, no vocals, 64 bpm",
-   "ms": 28000
+   "name": "tr_s1727_P02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
+   "start": 3.22,
+   "end": 5.78,
+   "lang": "en"
   },
   {
-   "type": "music",
-   "name": "mus_V_violet",
-   "text": "Tender solo cello in B minor, slow intimate baroque lament, a lonely childhood remembered, heartbreaking but restrained, no vocals, 60 bpm",
-   "ms": 36000
+   "name": "tr_s1727_P03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
+   "start": 5.82,
+   "end": 8.31,
+   "lang": "zh"
   },
   {
-   "type": "music",
-   "name": "mus_W_white",
-   "text": "Majestic church organ and wordless choir swelling in C major, a funeral in Westminster Abbey turning into radiant light, baroque, warm and triumphant, ends on a bright held final chord, no lyrics",
-   "ms": 28000,
-   "instrumental": false
+   "name": "tr_s1727_P04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
+   "start": 8.37,
+   "end": 10.02,
+   "lang": "en"
   },
   {
-   "type": "music",
-   "name": "mus_W_button",
-   "text": "A very short cheeky baroque harpsichord flourish ending on a comic pizzicato pluck, no vocals",
-   "ms": 4000
+   "name": "tr_s1727_P05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
+   "start": 10.34,
+   "end": 15.43,
+   "lang": "zh"
   },
   {
-   "type": "music",
-   "name": "mus_tavern_fiddle",
-   "text": "A lively folk fiddle jig played live in a crowded seventeenth century London tavern, slightly rough playing, heard from across the room, no vocals",
-   "ms": 16000
+   "name": "tr_s1727_R01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
+   "start": 0.04,
+   "end": 3.0,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "amb_room_night",
-   "text": "Old stone college room at night, distant crickets through a window, a candle flame fluttering, faint wooden creaks, calm room tone",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_R02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
+   "start": 3.0,
+   "end": 4.53,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "amb_clock_three",
-   "text": "A distant college clock tower bell striking three times at night, crickets",
-   "duration": 6
+   "name": "tr_s1727_R03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
+   "start": 4.55,
+   "end": 6.98,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "amb_hall",
-   "text": "Huge empty stone lecture hall, room tone with a long echo, wind at tall windows, a pigeon cooing far away",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_R04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
+   "start": 6.98,
+   "end": 8.51,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "amb_noon",
-   "text": "Sunny noon heard from inside an old college room, birdsong outside the window, a distant bell, faint voices in a courtyard",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_R05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
+   "start": 8.84,
+   "end": 14.72,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "amb_society",
-   "text": "Old wood panelled meeting room, gentlemen murmuring, chairs creaking, rain on the windows",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_O01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_O_s1727.mp3",
+   "start": 0.02,
+   "end": 3.45,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "amb_clock_tick",
-   "text": "Loud slow ticking of an old pendulum clock in a quiet room",
-   "duration": 10,
-   "loop": true
+   "name": "tr_s1727_O02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_O_s1727.mp3",
+   "start": 3.75,
+   "end": 6.78,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "amb_tavern",
-   "text": "Crowded seventeenth century London tavern at night, chatter, laughter, pewter mugs clinking, fire crackling",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_O03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_O_s1727.mp3",
+   "start": 6.91,
+   "end": 10.4,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "amb_office_rain",
-   "text": "Rain on a window at night, a candle burning, a quiet wooden office",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_Y01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 0.0,
+   "end": 2.88,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "amb_dawn",
-   "text": "Just before dawn, the first few birds singing outside a window, light wind, a candle guttering",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_Y02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 2.88,
+   "end": 6.99,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "amb_abbey",
-   "text": "Inside a vast stone cathedral, reverberant footsteps on stone, a hushed crowd, huge room reverb",
-   "duration": 12,
-   "loop": true
+   "name": "tr_s1727_Y03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 7.03,
+   "end": 7.89,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_prism",
-   "text": "Magical glass prism shimmer, crystalline sparkle as light splits into a rainbow, a rising chime",
-   "duration": 2.5
+   "name": "tr_s1727_Y04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 7.99,
+   "end": 9.39,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_slide",
-   "text": "Smooth airy whoosh with a crystalline shimmer, a camera gliding through coloured light",
-   "duration": 1.5
+   "name": "tr_s1727_Y05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 9.39,
+   "end": 10.3,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_apple_thud",
-   "text": "A single apple drops and hits a wooden floor with a dull thud and one small bounce",
-   "duration": 1.2
+   "name": "tr_s1727_Y06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 10.37,
+   "end": 12.11,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_apple_paper",
-   "text": "An apple drops onto a pile of paper with a papery thump",
-   "duration": 1.0
+   "name": "tr_s1727_Y07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 12.18,
+   "end": 16.14,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_bonk",
-   "text": "Cartoon bonk of an apple hitting someone on the head, comedic, then a microphone clattering onto a wooden floor",
-   "duration": 1.8
+   "name": "tr_s1727_Y08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 16.14,
+   "end": 17.85,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_freeze",
-   "text": "Comedic freeze frame sting: a quick tape stop and a camera shutter click",
-   "duration": 0.8
+   "name": "tr_s1727_Y09",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 17.88,
+   "end": 23.08,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_unfreeze",
-   "text": "A quick reverse tape rewind blip",
-   "duration": 0.6
+   "name": "tr_s1727_Y10",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
+   "start": 23.12,
+   "end": 23.81,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_door",
-   "text": "A heavy old wooden door bangs open",
-   "duration": 1.2
+   "name": "tr_s1727_G01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
+   "start": 0.01,
+   "end": 4.13,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_paper",
-   "text": "A flurry of loose paper sheets flying and fluttering around a room",
-   "duration": 2.5
+   "name": "tr_s1727_G02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
+   "start": 4.15,
+   "end": 7.73,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_quill",
-   "text": "A quill pen scratching steadily on parchment",
-   "duration": 4
+   "name": "tr_s1727_G03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
+   "start": 7.79,
+   "end": 11.14,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_book_slam",
-   "text": "A thick manuscript slammed down hard on a wooden table",
-   "duration": 1.0
+   "name": "tr_s1727_G04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
+   "start": 11.14,
+   "end": 14.4,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_clap",
-   "text": "One person clapping alone in a huge empty echoing hall, then stopping",
-   "duration": 3
+   "name": "tr_s1727_G05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
+   "start": 14.46,
+   "end": 17.89,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_punch",
-   "text": "Short comedic whoosh zoom hit",
-   "duration": 0.6
+   "name": "tr_s1727_G06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
+   "start": 17.92,
+   "end": 20.03,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_coin",
-   "text": "Old silver coins dropping and spinning on a wooden table",
-   "duration": 1.5
+   "name": "tr_s1727_B01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 0.07,
+   "end": 3.1,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_letter",
-   "text": "An old paper letter being unfolded",
-   "duration": 1.5
+   "name": "tr_s1727_B02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 3.2,
+   "end": 4.42,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_letter_fold",
-   "text": "An old paper letter folded closed and set down on a desk",
-   "duration": 1.2
+   "name": "tr_s1727_B03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 4.52,
+   "end": 6.38,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_chair",
-   "text": "An old wooden chair creaking as someone sits down slowly",
-   "duration": 1.5
+   "name": "tr_s1727_B04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 6.44,
+   "end": 10.62,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_bite",
-   "text": "A single crunchy bite of food",
-   "duration": 0.6
+   "name": "tr_s1727_B05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 10.71,
+   "end": 12.49,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_recombine",
-   "text": "A shimmering crystalline whoosh rising into a bright radiant swell of light",
-   "duration": 3
+   "name": "tr_s1727_B06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 12.56,
+   "end": 13.7,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_bell_toll",
-   "text": "A single deep church bell toll with long reverb",
-   "duration": 4
+   "name": "tr_s1727_B07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 13.72,
+   "end": 15.32,
+   "lang": "zh"
   },
   {
-   "type": "sfx",
-   "name": "sfx_candle_snuff",
-   "text": "A candle being snuffed out, short",
-   "duration": 0.8
+   "name": "tr_s1727_B08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 15.34,
+   "end": 16.25,
+   "lang": "en"
   },
   {
-   "type": "sfx",
-   "name": "sfx_tick_stop",
-   "text": "A ticking clock that suddenly stops",
-   "duration": 2
+   "name": "tr_s1727_B09",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 16.33,
+   "end": 18.5,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_B10",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 18.6,
+   "end": 19.69,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_B11",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 19.73,
+   "end": 21.7,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_B12",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 21.78,
+   "end": 22.85,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_B13",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
+   "start": 22.88,
+   "end": 24.02,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_I01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 0.06,
+   "end": 2.75,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_I02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 2.84,
+   "end": 4.67,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_I03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 4.8,
+   "end": 6.67,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_I04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 6.71,
+   "end": 9.66,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_I05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 9.74,
+   "end": 13.33,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_I06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 13.4,
+   "end": 16.53,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_I07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 16.55,
+   "end": 19.03,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_I08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
+   "start": 19.03,
+   "end": 21.2,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_V01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 0.1,
+   "end": 2.96,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_V02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 2.98,
+   "end": 4.09,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_V03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 4.71,
+   "end": 9.71,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_V04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 9.89,
+   "end": 12.14,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_V05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 12.37,
+   "end": 18.86,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_V06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 19.55,
+   "end": 23.5,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_V07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 23.79,
+   "end": 25.38,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_V08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 25.52,
+   "end": 32.8,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_V09",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
+   "start": 33.28,
+   "end": 34.36,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_W01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
+   "start": 0.03,
+   "end": 6.52,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_W02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
+   "start": 6.62,
+   "end": 9.04,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_W03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
+   "start": 9.08,
+   "end": 11.42,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_W04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
+   "start": 11.42,
+   "end": 14.42,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1727_W05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
+   "start": 14.43,
+   "end": 16.66,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1727_W06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
+   "start": 16.78,
+   "end": 19.76,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_P01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
+   "start": 0.0,
+   "end": 3.2,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_P02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
+   "start": 3.27,
+   "end": 5.77,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_P03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
+   "start": 5.83,
+   "end": 8.4,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_P04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
+   "start": 8.46,
+   "end": 10.15,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_P05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
+   "start": 10.31,
+   "end": 15.36,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_R01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
+   "start": 0.04,
+   "end": 2.95,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_R02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
+   "start": 2.99,
+   "end": 4.53,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_R03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
+   "start": 4.56,
+   "end": 6.96,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_R04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
+   "start": 7.0,
+   "end": 8.26,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_R05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
+   "start": 8.27,
+   "end": 14.48,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_O01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_O_s1642.mp3",
+   "start": 0.0,
+   "end": 3.69,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_O02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_O_s1642.mp3",
+   "start": 3.85,
+   "end": 6.9,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_O03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_O_s1642.mp3",
+   "start": 6.99,
+   "end": 10.48,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 0.0,
+   "end": 2.96,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 2.96,
+   "end": 6.97,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 7.0,
+   "end": 7.89,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 8.01,
+   "end": 9.34,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 9.34,
+   "end": 10.25,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 10.35,
+   "end": 12.03,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 12.1,
+   "end": 16.29,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_Y08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 16.29,
+   "end": 17.95,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y09",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 17.96,
+   "end": 23.25,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_Y10",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
+   "start": 23.31,
+   "end": 24.04,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_G01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
+   "start": 0.01,
+   "end": 4.28,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_G02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
+   "start": 4.29,
+   "end": 7.9,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_G03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
+   "start": 8.04,
+   "end": 11.42,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_G04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
+   "start": 11.42,
+   "end": 14.62,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_G05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
+   "start": 14.63,
+   "end": 17.96,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_G06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
+   "start": 18.04,
+   "end": 20.18,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_B01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 0.04,
+   "end": 3.06,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_B02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 3.2,
+   "end": 4.41,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_B03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 4.51,
+   "end": 6.36,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_B04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 6.46,
+   "end": 10.65,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_B05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 10.79,
+   "end": 12.49,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_B06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 12.56,
+   "end": 13.69,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_B07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 13.75,
+   "end": 15.25,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_B08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 15.27,
+   "end": 16.13,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_B09",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 16.22,
+   "end": 18.64,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_B10",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 18.72,
+   "end": 19.8,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_B11",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 19.89,
+   "end": 21.9,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_B12",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 22.07,
+   "end": 23.12,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_B13",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
+   "start": 23.15,
+   "end": 24.27,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_I01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 0.0,
+   "end": 2.63,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_I02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 2.68,
+   "end": 4.64,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_I03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 4.76,
+   "end": 6.44,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_I04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 6.5,
+   "end": 9.57,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_I05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 9.64,
+   "end": 13.33,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_I06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 13.33,
+   "end": 16.65,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_I07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 16.71,
+   "end": 19.34,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_I08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
+   "start": 19.34,
+   "end": 21.76,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_V01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 0.04,
+   "end": 2.91,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_V02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 2.98,
+   "end": 4.07,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_V03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 4.38,
+   "end": 9.1,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_V04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 9.39,
+   "end": 11.73,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_V05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 11.91,
+   "end": 18.16,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_V06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 18.81,
+   "end": 22.74,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_V07",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 22.92,
+   "end": 24.58,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_V08",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 24.63,
+   "end": 31.98,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_V09",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
+   "start": 32.53,
+   "end": 33.6,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_W01",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
+   "start": 0.0,
+   "end": 6.65,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_W02",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
+   "start": 6.68,
+   "end": 9.06,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_W03",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
+   "start": 9.09,
+   "end": 11.39,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_W04",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
+   "start": 11.39,
+   "end": 14.26,
+   "lang": "en"
+  },
+  {
+   "name": "tr_s1642_W05",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
+   "start": 14.26,
+   "end": 16.5,
+   "lang": "zh"
+  },
+  {
+   "name": "tr_s1642_W06",
+   "type": "transcribe",
+   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
+   "start": 16.64,
+   "end": 19.68,
+   "lang": "zh"
   }
  ]
 }
