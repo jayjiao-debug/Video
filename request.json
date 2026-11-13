@@ -1,387 +1,1214 @@
 {
- "id": "wanbi-en-02",
- "model_prefs": [
-  "eleven_v4"
- ],
+ "id": "qin-vo-full-02",
  "words": true,
  "items": [
   {
-   "name": "x04d",
-   "lang": "en",
-   "text": "Give it: maybe no cities. Keep it: war.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_A_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[nervous, excited] 嘘，大家小声点。这走廊，怎么每条都长得一样啊。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[surprised] 诶，在那儿。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, shouting] 谁！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[straining, grunting] 嗯——！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[nervous, stammering] 陛下，要、要不要帮您……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sharp] 住口。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[panicked, fast] 陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[suspicious] 记录朕？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[eager, nervous] 是是是！让天下百姓都看看，陛下有多英明神武！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[curious, flattered] 英明神武？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[shy, sincere] 千古一帝。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[clears throat, gruff, embarrassed] 咳。拍好看点。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[gruff, proud] 跟上。朕今天，带你见见世面。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[small happy laugh] 嘿嘿，遵命。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x04e",
-   "lang": "en",
-   "text": "Give it: maybe no cities. Keep it: war.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_A_s5151",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 5151,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[nervous, excited] 嘘，大家小声点。这走廊，怎么每条都长得一样啊。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[surprised] 诶，在那儿。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, shouting] 谁！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[straining, grunting] 嗯——！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[nervous, stammering] 陛下，要、要不要帮您……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sharp] 住口。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[panicked, fast] 陛下饶命！我们不是刺客！我们是来给您拍纪录的，记录陛下的一天！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[suspicious] 记录朕？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[eager, nervous] 是是是！让天下百姓都看看，陛下有多英明神武！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[curious, flattered] 英明神武？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[shy, sincere] 千古一帝。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[clears throat, gruff, embarrassed] 咳。拍好看点。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[gruff, proud] 跟上。朕今天，带你见见世面。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[small happy laugh] 嘿嘿，遵命。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x04f",
-   "lang": "en",
-   "text": "Give it: maybe no cities. Keep it: Chin attacks.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_B_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[amazed] 哇，好多竹简……陛下，这是在称重吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, busy] 今天的，还差三十斤。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[confused] 奏章……是论斤算的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud] 嗯。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[smug] 你搬一捆试试。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[straining] 是。唔……好沉……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[amused] 呵。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[caring, a little out of breath] 陛下，您每天都这样吗？好辛苦啊。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[pauses, grudgingly pleased] 这句，留着。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    }
+   ]
   },
   {
-   "name": "x07d",
-   "lang": "en",
-   "text": "The king takes it, thrilled, and shows his ladies.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_B_s5151",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 5151,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[amazed] 哇，好多竹简……陛下，这是在称重吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, busy] 今天的，还差三十斤。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[confused] 奏章……是论斤算的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud] 嗯。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[smug] 你搬一捆试试。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[straining] 是。唔……好沉……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[amused] 呵。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[caring, a little out of breath] 陛下，您每天都这样吗？好辛苦啊。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[pauses, grudgingly pleased] 这句，留着。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    }
+   ]
   },
   {
-   "name": "x07e",
-   "lang": "en",
-   "text": "The king takes it, thrilled, and shows his ladies.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_C_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 陛下平时，有什么喜欢做的事吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud, matter-of-fact] 找神仙。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[surprised] 神仙？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[excited, oily] 陛下！仙药有消息了！只是……海里有条大鱼，挡着道。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[interested] 鱼？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[hesitant] 好大一条。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[commanding] 拿弩来。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[to the audience, playful] 偷偷告诉大家，这个徐福，后来再也没回来。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[suspicious] 你在说什么？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[flustered, too cheerful] 没、没什么！祝徐先生一路顺风！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x07f",
-   "lang": "en",
-   "text": "The king takes it, thrilled, shows his ladies.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_C_s5151",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 5151,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 陛下平时，有什么喜欢做的事吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud, matter-of-fact] 找神仙。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[surprised] 神仙？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[excited, oily] 陛下！仙药有消息了！只是……海里有条大鱼，挡着道。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[interested] 鱼？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[hesitant] 好大一条。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[commanding] 拿弩来。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[to the audience, playful] 偷偷告诉大家，这个徐福，后来再也没回来。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[suspicious] 你在说什么？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[flustered, too cheerful] 没、没什么！祝徐先生一路顺风！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x08d",
-   "lang": "en",
-   "text": "\"Long live the king!\" And the cities?",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_D_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[displeased] 丞相出个门，带这么多车？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[scornful] 哼。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[surprised, uneasy] 诶……车少了好多。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[slow, cold] 昨天朕那句话，是谁传出去的？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[cold, menacing] 你。昨天，在不在？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[terrified, stammering] 不、不在。我什么都没拍到。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x08e",
-   "lang": "en",
-   "text": "\"Long live the king!\" And the cities?",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_D_s5151",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 5151,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[displeased] 丞相出个门，带这么多车？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[scornful] 哼。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[surprised, uneasy] 诶……车少了好多。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[slow, cold] 昨天朕那句话，是谁传出去的？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[cold, menacing] 你。昨天，在不在？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[terrified, stammering] 不、不在。我什么都没拍到。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x08f",
-   "lang": "en",
-   "text": "\"Long live the king!\" Cities? Silence.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_E_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[pleased, showing off] 来，给你看样东西。上回出巡。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[grand] 这棵树，挡雨有功。封它，五大夫。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[puzzled] 树……也能封官吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[matter-of-fact] 朕说能，就能。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[annoyed] 这山上供的，是什么神？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[solemn] 回陛下，是尧的女儿，舜的妃子。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "MartinLi"
+     }
+    },
+    {
+     "text": "[furious, shouting] 砍！全给朕砍了！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[to the audience, playful, nervous] 以后，千万别惹陛下。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x14d",
-   "lang": "en",
-   "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_E_s5151",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 5151,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[pleased, showing off] 来，给你看样东西。上回出巡。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[grand] 这棵树，挡雨有功。封它，五大夫。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[puzzled] 树……也能封官吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[matter-of-fact] 朕说能，就能。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[annoyed] 这山上供的，是什么神？",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[solemn] 回陛下，是尧的女儿，舜的妃子。",
+     "voice": {
+      "owner": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "MartinLi"
+     }
+    },
+    {
+     "text": "[furious, shouting] 砍！全给朕砍了！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[to the audience, playful, nervous] 以后，千万别惹陛下。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x14e",
-   "lang": "en",
-   "text": "He acts too: \"My king fasted five days. Now you fast five days, full honors, then it's yours.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_F_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[firm, plotting] 今晚，出去走走。不许声张。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[surprised, worried] 陛下，只带四个人吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[firm] 够了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[holding back a laugh] 陛下，您的珠子……露出来了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[hissing] 嘘！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[scared, shouting] 啊！有人！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[composing himself, gruff] 刚才，朕没有吓到。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[holding back a laugh] 是，陛下没有吓到。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[stern] 那段，删了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    }
+   ]
   },
   {
-   "name": "x14f",
-   "lang": "en",
-   "text": "He acts too: \"My king fasted five days. Your turn: five days, full honors, then it's yours.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_F_s5151",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 5151,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[firm, plotting] 今晚，出去走走。不许声张。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[surprised, worried] 陛下，只带四个人吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[firm] 够了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[holding back a laugh] 陛下，您的珠子……露出来了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[hissing] 嘘！",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[scared, shouting] 啊！有人！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[composing himself, gruff] 刚才，朕没有吓到。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[holding back a laugh] 是，陛下没有吓到。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[stern] 那段，删了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    }
+   ]
   },
   {
-   "name": "x15d",
-   "lang": "en",
-   "text": "The king can't grab it. He caves.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_G_s4242",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 4242,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[hopeful] 陛下？今天……还拍吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sad, matter-of-fact] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[wistful] 陛下一直，想长生不老。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[warm, a little sad] 他没活过五十岁。可他的兵马俑，站了两千多年。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[off-screen, tired, kind] 这段，也删了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[laughing a little, teary] 不删。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "x15e",
-   "lang": "en",
-   "text": "The king can't grab it. He caves.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
+   "type": "dialogue",
+   "name": "dlg_G_s5151",
+   "lang": "zh",
+   "model": "eleven_v4",
+   "seed": 5151,
    "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x15f",
-   "lang": "en",
-   "text": "Can't grab it? The king caves.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
+    "stability": 0.5
    },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x18d",
-   "lang": "en",
-   "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x18e",
-   "lang": "en",
-   "text": "He says: \"Twenty-odd Chin kings, not one kept his word. The jade's in Jow now.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x18f",
-   "lang": "en",
-   "text": "He says: \"Twenty-odd Chin kings broke their word. The jade's in Jow now.\"",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x22d",
-   "lang": "en",
-   "text": "The bill: Chin, no cities. Jow, no jade.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x22e",
-   "lang": "en",
-   "text": "The bill: Chin, no cities. Jow, no jade.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
-  },
-  {
-   "name": "x22f",
-   "lang": "en",
-   "text": "In the end: no cities, no jade.",
-   "add": {
-    "owner": "a231663267efedf44629d1210c43f7045270e9dc6cf04a23c533dd75a567d5ba",
-    "voice_id": "yl2ZDV1MzN4HbQJbMihG",
-    "name": "alex"
-   },
-   "keep": true,
-   "settings": {
-    "stability": 0.2,
-    "similarity_boost": 0.8,
-    "style": 0.75,
-    "speed": 1.2,
-    "use_speaker_boost": true
-   }
+   "lines": [
+    {
+     "text": "[hopeful] 陛下？今天……还拍吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[thin, flat] 准。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "ZeyuLiu"
+     }
+    },
+    {
+     "text": "[sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sad, matter-of-fact] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[wistful] 陛下一直，想长生不老。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[warm, a little sad] 他没活过五十岁。可他的兵马俑，站了两千多年。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[off-screen, tired, kind] 这段，也删了。",
+     "voice": {
+      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
+      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
+      "name": "Haoran"
+     }
+    },
+    {
+     "text": "[laughing a little, teary] 不删。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   }
  ]
 }
