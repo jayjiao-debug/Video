@@ -1,27 +1,1183 @@
 {
- "id": "newton-v4-cast-01",
+ "id": "newton-v4-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
+ "words": true,
  "items": [
   {
-   "type": "voices",
-   "name": "en_gb_young_male",
-   "lang": "en",
-   "accent": "british",
-   "gender": "male",
-   "age": "young",
-   "n": 30
+   "type": "dialogue",
+   "name": "v4_S1_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[bright, eager] 早上好！今天陪您过一天！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, matter-of-fact] Good night.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[baffled, amused] 他这是……刚要睡？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[friendly, curious] 助手小哥，他平时笑吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, incredulous] Laugh? Mr Newton?",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[fired up, cheeky] 好，今天我要让他笑一次。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "type": "voices",
-   "name": "en_gb_young_male_story",
-   "lang": "en",
-   "accent": "british",
-   "gender": "male",
-   "age": "young",
-   "use_case": "characters_animation",
-   "n": 20
+   "type": "dialogue",
+   "name": "v4_S1_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[bright, eager] 早上好！今天陪您过一天！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, matter-of-fact] Good night.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[baffled, amused] 他这是……刚要睡？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[friendly, curious] 助手小哥，他平时笑吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, incredulous] Laugh? Mr Newton?",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[fired up, cheeky] 好，今天我要让他笑一次。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S2_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[polite, hopeful] Sir, your dinner.",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[calling out, helpful] 他说马上来！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[lively] 牛顿先生，您在写什么？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, distracted] An answer. The astronomer Halley asked how planets go round the Sun.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[teasing] 一个问题，写这么厚？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, absorbed] I lost the first one. Began again.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheeky] 是苹果砸头那个吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, precise] It fell to the ground. Not on me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan] 没笑。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S2_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[polite, hopeful] Sir, your dinner.",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[calling out, helpful] 他说马上来！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[lively] 牛顿先生，您在写什么？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, distracted] An answer. The astronomer Halley asked how planets go round the Sun.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[teasing] 一个问题，写这么厚？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, absorbed] I lost the first one. Began again.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheeky] 是苹果砸头那个吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, precise] It fell to the ground. Not on me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan] 没笑。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S3_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[cheeky, a bit rude] 您从来不出去玩吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, literal] I am out.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[teasing] 绕两圈就算玩？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[lecturing, then cut off] Two laps is—",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[startled, curious] 诶？他想到什么了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[amused, coaxing] 坐下写嘛。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[absorbed, dismissive] No time.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S3_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[cheeky, a bit rude] 您从来不出去玩吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, literal] I am out.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[teasing] 绕两圈就算玩？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[lecturing, then cut off] Two laps is—",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[startled, curious] 诶？他想到什么了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[amused, coaxing] 坐下写嘛。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[absorbed, dismissive] No time.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S4_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[amazed] 一个学生都没有。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, unbothered] The walls never miss a lecture.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheeky] 墙听得懂吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[deadpan] As well as the students.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[laughing] 他没笑，我笑了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat] Don't.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S4_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[amazed] 一个学生都没有。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, unbothered] The walls never miss a lecture.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheeky] 墙听得懂吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[deadpan] As well as the students.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[laughing] 他没笑，我笑了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat] Don't.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S5_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[scolding, warm] 您今天一口都没吃！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[genuinely surprised] Have I not?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[brave, cheeky] 您是不是……没什么朋友？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[matter-of-fact] Friends interrupt.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[unbothered, cheeky] 那讨厌的人呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[instant, with relish] Hooke.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[impressed, deadpan] 秒答。胡克定律那个胡克。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S5_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[scolding, warm] 您今天一口都没吃！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[genuinely surprised] Have I not?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[brave, cheeky] 您是不是……没什么朋友？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[matter-of-fact] Friends interrupt.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[unbothered, cheeky] 那讨厌的人呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[instant, with relish] Hooke.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[impressed, deadpan] 秒答。胡克定律那个胡克。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S6_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious, a little wary] 您在……炼金吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[evasive] I am watching a fire.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[flat] Go to bed.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[stubborn, warm] 不走，说好陪您一天。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, puzzled] Nobody stays a whole day.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[tired, sincere] 这么守着火，不难熬吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[plain] I have sat up longer.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 守谁？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[plain, guarded] My mother. When she was dying. Whole nights.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[warm] 您跟妈妈，一定很亲吧。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, bitter] Close? My father died before I was born.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[flat, bitter] When I was three, she remarried. And left me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[stunned] 三岁？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[hard, ashamed] As a boy, I threatened to burn her and my stepfather, house and all.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, warm] 她走了，您却没走。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S6_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious, a little wary] 您在……炼金吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[evasive] I am watching a fire.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[flat] Go to bed.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[stubborn, warm] 不走，说好陪您一天。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, puzzled] Nobody stays a whole day.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[tired, sincere] 这么守着火，不难熬吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[plain] I have sat up longer.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 守谁？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[plain, guarded] My mother. When she was dying. Whole nights.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[warm] 您跟妈妈，一定很亲吧。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, bitter] Close? My father died before I was born.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[flat, bitter] When I was three, she remarried. And left me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[stunned] 三岁？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[hard, ashamed] As a boy, I threatened to burn her and my stepfather, house and all.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, warm] 她走了，您却没走。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S7_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[moved, then brave and cheeky] 两点了……说点轻松的……学几何，到底有什么用？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[bursts out laughing, incredulous] What... use! [laughs]",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[warm, gruff, still smiling] Good night.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[warm, smiling] 晚安，牛顿先生。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v4_S7_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[moved, then brave and cheeky] 两点了……说点轻松的……学几何，到底有什么用？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[bursts out laughing, incredulous] What... use! [laughs]",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[warm, gruff, still smiling] Good night.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[warm, smiling] 晚安，牛顿先生。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_H_Toby",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[friendly, curious] 助手小哥，他平时笑吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, incredulous] Laugh? Mr Newton?",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    },
+    {
+     "text": "[polite, hopeful] Sir, your dinner. It is getting cold.",
+     "voice": {
+      "owner": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+      "voice_id": "pYDLV125o4CgqP8i49Lg",
+      "name": "Toby"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_H_Josh",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[friendly, curious] 助手小哥，他平时笑吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, incredulous] Laugh? Mr Newton?",
+     "voice": {
+      "owner": "27f08375e1d0b3055a43ce3785abef90578df6457223ad19204a4ddbdcfef291",
+      "voice_id": "JxfH70f7jvYhi0DKD8Xs",
+      "name": "Josh Midlands"
+     }
+    },
+    {
+     "text": "[polite, hopeful] Sir, your dinner. It is getting cold.",
+     "voice": {
+      "owner": "27f08375e1d0b3055a43ce3785abef90578df6457223ad19204a4ddbdcfef291",
+      "voice_id": "JxfH70f7jvYhi0DKD8Xs",
+      "name": "Josh Midlands"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_H_Bradley",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[friendly, curious] 助手小哥，他平时笑吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, incredulous] Laugh? Mr Newton?",
+     "voice": {
+      "owner": "0da5cab5d9e530fcd746fc04e21c2859bfc0b1da8b70adfe8c8490757d3ce5df",
+      "voice_id": "tczmcUWPAdiP3gKQPrv7",
+      "name": "Bradley"
+     }
+    },
+    {
+     "text": "[polite, hopeful] Sir, your dinner. It is getting cold.",
+     "voice": {
+      "owner": "0da5cab5d9e530fcd746fc04e21c2859bfc0b1da8b70adfe8c8490757d3ce5df",
+      "voice_id": "tczmcUWPAdiP3gKQPrv7",
+      "name": "Bradley"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "aud_H_Peter",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[friendly, curious] 助手小哥，他平时笑吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[startled, incredulous] Laugh? Mr Newton?",
+     "voice": {
+      "owner": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+      "voice_id": "bTrXJpbeuC5KgriLhQeC",
+      "name": "Peter"
+     }
+    },
+    {
+     "text": "[polite, hopeful] Sir, your dinner. It is getting cold.",
+     "voice": {
+      "owner": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+      "voice_id": "bTrXJpbeuC5KgriLhQeC",
+      "name": "Peter"
+     }
+    }
+   ]
   }
  ]
 }
