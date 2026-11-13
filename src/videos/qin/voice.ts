@@ -137,13 +137,13 @@ export const LINE_RAW: [number, string, string, Speaker, number, number][] = [
   [62, "G06", "G", "ji", 0.3, 0],
   [63, "G07", "G", "ji", 0.8, 0],
   [64, "G08", "G", "di", 1.2, 0],
-  [65, "G09", "G", "ji", 0.6, 1.6],
+  [65, "G09", "G", "ji", 0.6, 2.2],
 ];
 export const VOICE_END_S = 183.865;
 /** frames before the first word, frames of film after the last word, the film's length in frames */
 export const VOICE_LEAD_F = 3;
-export const VOICE_TAIL_F = 72;
-export const VOICE_TOTAL_F = 5588;
+export const VOICE_TAIL_F = 90;
+export const VOICE_TOTAL_F = 5606;
 /** each line is a quote of its speaker: [line, who, start s, end s, the words] */
 export const QUOTE_RAW: [number, Speaker, number, number, string][] = [
   [1, "ji", 0.1, 5.42, "嘘大家小声点这走廊怎么每条都长得一样啊"],
@@ -222,7 +222,7 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
   ["D", 34, 39, 2565, 3097],
   ["E", 40, 47, 3098, 3877],
   ["F", 48, 56, 3878, 4532],
-  ["G", 57, 65, 4533, 5587],
+  ["G", 57, 65, 4533, 5605],
 ];
 /** the fact cards: [line, line id, first frame, last frame (inclusive), zh, en]: from the end of the line (+ CARD_DELAY) for
  *  the line's "after" seconds, else 2.4 s */
