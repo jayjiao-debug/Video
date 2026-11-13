@@ -7,7 +7,7 @@ gold_text() (the kit itself is unchanged): it measures the drawn ink, outline in
 ink is centred on the layout's x, and returns the ink box with the outline, so the safe-zone check sees the outline too.
   python3 scripts/qin/cover/make_covers.py [scripts/qin/cover/spec.json]"""
 import os, sys
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "kit", "cover"))
@@ -38,6 +38,16 @@ def gold_ink(base, xy_center, text, size, stroke):
 
 
 cover.gold_text = gold_ink
+
+
+def soft_vignette(base):
+    """the kit's vignette, lighter (corners at about 70 % instead of 43 %): Jay found the dark bottom ugly (2026-11-13)"""
+    W, H = base.size; m = Image.new('L', (W, H), 0); d = ImageDraw.Draw(m)
+    d.ellipse([-W * 0.25, -H * 0.2, W * 1.25, H * 1.2], fill=255); m = m.filter(ImageFilter.GaussianBlur(min(W, H) * 0.12))
+    dark = Image.new('RGB', (W, H), (8, 5, 4)); return Image.composite(base, dark, m.point(lambda v: int(180 + v * 75 / 255)))
+
+
+cover.vignette = soft_vignette
 
 if __name__ == "__main__":
     cover.main(sys.argv[1:] or [os.path.join(HERE, "spec.json")])

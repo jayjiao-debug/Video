@@ -1,52 +1,14 @@
 {
  "font": "../../../public/bt/sans700.ttf",
- "_about": "采访秦始皇的一天 Douyin covers (v3, frame 886: the blush, the sword on his shoulder; title only, as Jay asked: 采访秦始皇｜的一天 on two lines). Backgrounds are picture-only stills from the preview harness at the cover's shape, larger, then cropped uniformly (not in the repo): bash scripts/kit/queue/still.sh src/videos/qin/preview/film.ts /home/user/qin_work/cover/pv_wide3 --pick 886 --size 2160x1620 (and pv_tall2 at 1350x1800). Then: python3 scripts/qin/cover/make_covers.py (the kit's cover.py with every line centred on its ink)",
+ "_about": "采访秦始皇的一天 Douyin covers, title only (Jay, 2026-11-13), no dark band (Jay found the dark bottom ugly). A = frame 2985 (the terrace, he shouts at the camera), B = frame 886 (the corridor, blush and sword). Backgrounds are picture-only stills from the preview harness at the cover's shape, larger, then cropped uniformly (not in the repo): bash scripts/kit/queue/still.sh src/videos/qin/preview/film.ts /home/user/qin_work/cover/pv_tall_c --pick 2985 --size 1350x1800 and pv_wide_c at 2160x1620 (886: pv_tall2 at 1350x1800, pv_wide3 at 2160x1620). Then: python3 scripts/qin/cover/make_covers.py (the kit's cover.py with every line centred on its ink and a lighter vignette)",
  "covers": [
   {
-   "bg": "/home/user/qin_work/cover/pv_wide3/f0886.png",
+   "bg": "/home/user/qin_work/cover/pv_tall_c/f2985.png",
    "crop": [
-    0,
-    150,
-    1440,
-    1230
-   ],
-   "target": "douyin43",
-   "layout": "side",
-   "hook": [
-    "采访秦始皇",
-    "的一天"
-   ],
-   "out": "/home/user/qin_work/cover/out/cover_4x3_zh.png",
-   "override": {
-    "cx": 0.3,
-    "side": [
-     0.26,
-     0.61
-    ],
-    "hooks": [
-     [
-      0.44,
-      0.47,
-      170,
-      7
-     ],
-     [
-      0.575,
-      0.47,
-      170,
-      7
-     ]
-    ]
-   },
-   "same": true
-  },
-  {
-   "bg": "/home/user/qin_work/cover/pv_tall2/f0886.png",
-   "crop": [
-    121,
-    120,
-    1201,
-    1560
+    135,
+    90,
+    1215,
+    1530
    ],
    "target": "douyin34",
    "layout": "low",
@@ -54,14 +16,10 @@
     "采访秦始皇",
     "的一天"
    ],
-   "out": "/home/user/qin_work/cover/out/cover_3x4_zh.png",
    "same": true,
+   "out": "/home/user/qin_work/cover/out/cover_3x4_zh.png",
    "override": {
-    "shade": [
-     "bottom",
-     0.56,
-     0.74
-    ],
+    "shade": null,
     "hooks": [
      [
       0.661,
@@ -79,6 +37,41 @@
    }
   },
   {
+   "bg": "/home/user/qin_work/cover/pv_wide_c/f2985.png",
+   "crop": [
+    720,
+    150,
+    2160,
+    1230
+   ],
+   "target": "douyin43",
+   "layout": "side",
+   "hook": [
+    "采访秦始皇",
+    "的一天"
+   ],
+   "same": true,
+   "out": "/home/user/qin_work/cover/out/cover_4x3_zh.png",
+   "override": {
+    "cx": 0.705,
+    "side": null,
+    "hooks": [
+     [
+      0.4,
+      0.46,
+      170,
+      8
+     ],
+     [
+      0.535,
+      0.46,
+      170,
+      8
+     ]
+    ]
+   }
+  },
+  {
    "bg": "/home/user/qin_work/cover/pv_tall2/f0886.png",
    "crop": [
     121,
@@ -89,21 +82,60 @@
    "target": "douyin34",
    "layout": "low",
    "hook": [
-    "采访秦始皇的一天"
+    "采访秦始皇",
+    "的一天"
    ],
-   "out": "/home/user/qin_work/cover/out/cover_3x4_zh_oneline.png",
+   "same": true,
+   "out": "/home/user/qin_work/cover/out/cover_3x4_zh_B.png",
    "override": {
-    "shade": [
-     "bottom",
-     0.56,
-     0.74
-    ],
+    "shade": null,
     "hooks": [
      [
-      0.705,
-      0.86,
+      0.661,
+      0.8,
       150,
-      6
+      7
+     ],
+     [
+      0.763,
+      0.8,
+      150,
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "bg": "/home/user/qin_work/cover/pv_wide3/f0886.png",
+   "crop": [
+    0,
+    150,
+    1440,
+    1230
+   ],
+   "target": "douyin43",
+   "layout": "side",
+   "hook": [
+    "采访秦始皇",
+    "的一天"
+   ],
+   "same": true,
+   "out": "/home/user/qin_work/cover/out/cover_4x3_zh_B.png",
+   "override": {
+    "cx": 0.3,
+    "side": null,
+    "hooks": [
+     [
+      0.44,
+      0.47,
+      170,
+      7
+     ],
+     [
+      0.575,
+      0.47,
+      170,
+      7
      ]
     ]
    }
