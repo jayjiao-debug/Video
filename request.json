@@ -1,9 +1,1314 @@
 {
- "id": "newton-voices-01",
+ "id": "newton-vo-01",
+ "words": true,
  "items": [
-  {"type": "voices", "name": "en_brit_old_male", "lang": "en", "accent": "british", "gender": "male", "age": "old", "n": 30},
-  {"type": "voices", "name": "en_brit_old_male_char", "lang": "en", "accent": "british", "gender": "male", "age": "old", "use_case": "characters_animation", "n": 30},
-  {"type": "voices", "name": "en_brit_mid_male_char", "lang": "en", "accent": "british", "gender": "male", "age": "middle_aged", "use_case": "characters_animation", "n": 30},
-  {"type": "voices", "name": "en_cockney", "lang": "en", "search": "cockney", "gender": "male", "n": 20}
+  {
+   "type": "dialogue",
+   "name": "dlg_P_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[shocked, alarmed] 牛、牛顿先生！您拿针在干什么？！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, irritated, not looking up] Don't move. You're in my light.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[alarmed, to the audience] 同声传译：大家千万别学！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, firm] Not for publication.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[bright, warm, to the audience] 牛顿把阳光分成了七种颜色。今天，我们一种一种看。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_R_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[concerned] 牛顿先生，您的晚饭一口没动。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[genuinely surprised] Have I not eaten?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious, eager] 听说，您被苹果砸了头？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, offended] It did not hit me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[intense, fascinated] It fell. Why always straight down? Never sideways. Never up.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_O_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[lecturing, precise, proud] So white light is all the colours, mixed.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[puzzled] 今天没有学生？那您在跟谁讲？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, deadpan] The walls. The walls never interrupt.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_Y_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[excited, out of breath] Newton! No one in London can answer this!",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[eager, fast] If the Sun pulls by the inverse square, what path does a planet take?",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[instantly, matter-of-fact] An ellipse.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[dry] I have calculated it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[thrilled] Show me!",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[deadpan, a little embarrassed] I can't find it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[disbelief, laughing, to the audience] 他算出了宇宙的规律，然后，弄丢了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[annoyed, firm] Not for publication.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheerful, then sheepish] I'll publish it! But the Society is broke. They spent it on a book about fish.",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[baffled] 鱼？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_G_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[careful, nervous] 胡克先生说，平方反比是他先想到的。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[contemptuous, bitter] Hooke? That man claims every idea in England.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[smoothing it over, polite smile, to the audience] 牛顿先生说，胡克先生，很有想法。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[furious, shouting] Then I shall cut Book Three. He gets nothing!",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[suspicious, teasing] 听说胡克的画像，是您毁掉的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[perfectly calm, deadpan] There is no evidence of that.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_B_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 听说莱布尼茨，也发明了微积分？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, cold] He stole it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 那，谁来判断呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[smug] The Royal Society. A committee. Perfectly impartial.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 委员会是谁选的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[smug] The President.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[suspicious] 会长是？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud] Me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[getting suspicious] 那调查报告，是谁写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[pause, reluctant] Me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[suspicious, teasing] 那夸报告的书评呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[blank, evasive] Anonymous.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan, to the audience] 也是他。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_I_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[startled] 牛顿先生？您怎么穿成这样？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[serious, focused] Hunting coiners.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[confused] 您不是科学家吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, menacing] Tonight, I am the Mint.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[desperate, pleading, voice breaking] O dear Sir. Nobody can save me but you.",
+     "voice": {
+      "owner": "3d1fa6a5595e0a31fff8d7c1a2f2794b91ca87ddd200066dfbdfcef662a65a1b",
+      "voice_id": "1TE7ou3jyxHsyRehUuMB",
+      "name": "EastendSteve"
+     }
+    },
+    {
+     "text": "[cold, menacing, leaning in] And you. Ever clipped a coin?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[scared, stammering] 没、没有！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[forced cheerful, nervous laugh, to the audience] 他问我，今天过得好不好。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_V_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 这个小本子，是您小时候的吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sharp, defensive] Put it down.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[reading slowly, uneasy] 威胁继父和母亲，要把他们连房子一起烧掉。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[careful, sympathetic] 您，为什么这么恨他们？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[weary, plain, honest] My father died before I was born. I was so small, I'd have fit in a quart mug.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[weary, plain, hurt underneath] At three, my mother remarried. And left me behind.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, sympathetic] 那，后来呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[emotional, voice catching] Later, she fell ill. I sat up with her, whole nights. I dressed her blisters myself.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[composing himself, curt] Next question.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_W_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[moved, sincere] 他葬在威斯敏斯特教堂。为他抬棺的，是大法官、公爵和伯爵。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[satisfied, proud] That one may be published.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[surprised, delighted] 牛顿先生，您是不是笑了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[stiff, embarrassed] I did not. Not for publication.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheerful, cheeky, to the audience] 他说，欢迎点赞关注。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[laughing in pain] 哎哟！这次，真砸到头了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_P_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[shocked, alarmed] 牛、牛顿先生！您拿针在干什么？！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, irritated, not looking up] Don't move. You're in my light.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[alarmed, to the audience] 同声传译：大家千万别学！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, firm] Not for publication.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[bright, warm, to the audience] 牛顿把阳光分成了七种颜色。今天，我们一种一种看。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_R_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[concerned] 牛顿先生，您的晚饭一口没动。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[genuinely surprised] Have I not eaten?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious, eager] 听说，您被苹果砸了头？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, offended] It did not hit me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[intense, fascinated] It fell. Why always straight down? Never sideways. Never up.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_O_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[lecturing, precise, proud] So white light is all the colours, mixed.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[puzzled] 今天没有学生？那您在跟谁讲？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[dry, deadpan] The walls. The walls never interrupt.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_Y_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[excited, out of breath] Newton! No one in London can answer this!",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[eager, fast] If the Sun pulls by the inverse square, what path does a planet take?",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[instantly, matter-of-fact] An ellipse.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[dry] I have calculated it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[thrilled] Show me!",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[deadpan, a little embarrassed] I can't find it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[disbelief, laughing, to the audience] 他算出了宇宙的规律，然后，弄丢了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[annoyed, firm] Not for publication.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheerful, then sheepish] I'll publish it! But the Society is broke. They spent it on a book about fish.",
+     "voice": {
+      "owner": "300b35287e8acc21dd12bd610b831e19b47dc75e8b8c15c2bca80cdcb776ef2d",
+      "voice_id": "yZ3w1DL4ZAxIdOscv2t8",
+      "name": "Wilf"
+     }
+    },
+    {
+     "text": "[baffled] 鱼？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_G_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[careful, nervous] 胡克先生说，平方反比是他先想到的。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[contemptuous, bitter] Hooke? That man claims every idea in England.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[smoothing it over, polite smile, to the audience] 牛顿先生说，胡克先生，很有想法。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[furious, shouting] Then I shall cut Book Three. He gets nothing!",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[suspicious, teasing] 听说胡克的画像，是您毁掉的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[perfectly calm, deadpan] There is no evidence of that.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_B_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 听说莱布尼茨，也发明了微积分？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, cold] He stole it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 那，谁来判断呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[smug] The Royal Society. A committee. Perfectly impartial.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 委员会是谁选的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[smug] The President.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[suspicious] 会长是？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud] Me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[getting suspicious] 那调查报告，是谁写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[pause, reluctant] Me.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[suspicious, teasing] 那夸报告的书评呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[blank, evasive] Anonymous.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan, to the audience] 也是他。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_I_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[startled] 牛顿先生？您怎么穿成这样？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[serious, focused] Hunting coiners.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[confused] 您不是科学家吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold, menacing] Tonight, I am the Mint.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[desperate, pleading, voice breaking] O dear Sir. Nobody can save me but you.",
+     "voice": {
+      "owner": "3d1fa6a5595e0a31fff8d7c1a2f2794b91ca87ddd200066dfbdfcef662a65a1b",
+      "voice_id": "1TE7ou3jyxHsyRehUuMB",
+      "name": "EastendSteve"
+     }
+    },
+    {
+     "text": "[cold, menacing, leaning in] And you. Ever clipped a coin?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[scared, stammering] 没、没有！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[forced cheerful, nervous laugh, to the audience] 他问我，今天过得好不好。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_V_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[curious] 这个小本子，是您小时候的吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sharp, defensive] Put it down.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[reading slowly, uneasy] 威胁继父和母亲，要把他们连房子一起烧掉。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[careful, sympathetic] 您，为什么这么恨他们？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[weary, plain, honest] My father died before I was born. I was so small, I'd have fit in a quart mug.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[weary, plain, hurt underneath] At three, my mother remarried. And left me behind.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, sympathetic] 那，后来呢？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[emotional, voice catching] Later, she fell ill. I sat up with her, whole nights. I dressed her blisters myself.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[composing himself, curt] Next question.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "dlg_W_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[moved, sincere] 他葬在威斯敏斯特教堂。为他抬棺的，是大法官、公爵和伯爵。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[satisfied, proud] That one may be published.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[surprised, delighted] 牛顿先生，您是不是笑了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[stiff, embarrassed] I did not. Not for publication.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheerful, cheeky, to the audience] 他说，欢迎点赞关注。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[laughing in pain] 哎哟！这次，真砸到头了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "name": "aud_1_Mandrake",
+   "lang": "en",
+   "model": "eleven_v4",
+   "text": "[cold, offended] It did not hit me. [furious, shouting] Then I shall cut Book Three! He gets nothing! [emotional, voice catching] Later, she fell ill. I sat up with her, whole nights. I dressed her blisters myself.",
+   "settings": {
+    "stability": 0.5
+   },
+   "add": {
+    "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+    "voice_id": "dUercWozs0yhe4xBCgZ0",
+    "name": "Mandrake"
+   }
+  },
+  {
+   "name": "aud_2_Schmitz_Elitist",
+   "lang": "en",
+   "model": "eleven_v4",
+   "text": "[cold, offended] It did not hit me. [furious, shouting] Then I shall cut Book Three! He gets nothing! [emotional, voice catching] Later, she fell ill. I sat up with her, whole nights. I dressed her blisters myself.",
+   "settings": {
+    "stability": 0.5
+   },
+   "add": {
+    "owner": "1bdf478ac5e1a81b0b8423faadde277a29cb25195ed2c86adcb0622464c9b930",
+    "voice_id": "0SpgpJ4D3MpHCiWdyTg3",
+    "name": "Schmitz_Elitist"
+   }
+  },
+  {
+   "name": "aud_3_Julian",
+   "lang": "en",
+   "model": "eleven_v4",
+   "text": "[cold, offended] It did not hit me. [furious, shouting] Then I shall cut Book Three! He gets nothing! [emotional, voice catching] Later, she fell ill. I sat up with her, whole nights. I dressed her blisters myself.",
+   "settings": {
+    "stability": 0.5
+   },
+   "add": {
+    "owner": "5950b4bbcd7f674c5fc1f6d2a7aea6b66c9a94c8e3c5a00093b6dc405fe4461a",
+    "voice_id": "7p1Ofvcwsv7UBPoFNcpI",
+    "name": "Julian"
+   }
+  },
+  {
+   "name": "aud_4_Lance_Blackwood",
+   "lang": "en",
+   "model": "eleven_v4",
+   "text": "[cold, offended] It did not hit me. [furious, shouting] Then I shall cut Book Three! He gets nothing! [emotional, voice catching] Later, she fell ill. I sat up with her, whole nights. I dressed her blisters myself.",
+   "settings": {
+    "stability": 0.5
+   },
+   "add": {
+    "owner": "d396af315ee8681a2edbd4739b7c111101366f851614b6d67562a5f62a619e20",
+    "voice_id": "agL69Vji082CshT65Tcy",
+    "name": "Lance_Blackwood"
+   }
+  },
+  {
+   "name": "aud_5_Gerald",
+   "lang": "en",
+   "model": "eleven_v4",
+   "text": "[cold, offended] It did not hit me. [furious, shouting] Then I shall cut Book Three! He gets nothing! [emotional, voice catching] Later, she fell ill. I sat up with her, whole nights. I dressed her blisters myself.",
+   "settings": {
+    "stability": 0.5
+   },
+   "add": {
+    "owner": "981267fcf71e91a066005ad65239898716b85010a5fbf21aada9b4d5aca9f0e1",
+    "voice_id": "fGIZlgPQ75MMlvQ6WxgY",
+    "name": "Gerald"
+   }
+  }
  ]
 }
