@@ -176,7 +176,7 @@ export const TAG = {
   /** 秦王 / "King of Qin" (shot 2) */ qinWang: HIT.kingTag /* 148 */,
   /** 赵王 / "King of Zhao" (shot 3) */ zhaoWang: HIT.zhaoTag /* 196 */,
   /** 赵国大臣 / "Zhao's ministers" (5a) */ zhaoMin: HIT.zhaoMin /* 330 */,
-  /** 赵国宦官 / "the palace eunuch" (5b) */ miao: cap(5, 3).from + 2 /* 409 */,
+  /** 赵国宦官 / "the eunuch" (5b; "the palace eunuch" was too wide beside the envoy's plate in English) */ miao: cap(5, 3).from + 2 /* 409 */,
   /** 蔺相如 · 宦官的门客 / "the envoy" · "the eunuch's retainer" (5b, with miao) */ lin5: cap(5, 3).from + 2 /* 409 */,
   /** 美人 / "the king's ladies" (7b, over lady A) */ ladies: cap(7, 2).from /* 565 */,
   /** 秦国大臣 / "Qin's ministers" (8a) */ qinMin: HIT.qinMin /* 600 */,

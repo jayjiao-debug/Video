@@ -32,7 +32,7 @@ export const TAGS: Record<Who, { camp: Camp; name: string; role: string; flip?: 
   qinWang: { camp: "qin", name: L("秦王", "King of Qin"), role: "" },
   zhaoWang: { camp: "zhao", name: L("赵王", "King of Zhao"), role: "" },
   zhaoMin: { camp: "zhao", name: L("赵国大臣", "Zhao's ministers"), role: "" },
-  miao: { camp: "zhao", name: L("赵国宦官", "the palace eunuch"), role: "" },
+  miao: { camp: "zhao", name: L("赵国宦官", "the eunuch"), role: "" },
   ladies: { camp: "qin", name: L("美人", "the king's ladies"), role: "" },
   qinMin: { camp: "qin", name: L("秦国大臣", "Qin's ministers"), role: "" },
   servant: { camp: "zhao", name: L("随从", "his servant"), role: "" },
