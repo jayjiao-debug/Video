@@ -1,358 +1,125 @@
 {
- "id": "qin-vo-fix-02",
- "words": true,
+ "id": "qin-sfx-02",
+ "tag": true,
  "items": [
   {
-   "type": "dialogue",
-   "name": "dlg_C_s6161",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 6161,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious] 陛下平时，有什么喜欢做的事吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[proud, confident] 找神仙。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[surprised] 神仙？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[excited, oily] 陛下！仙药有消息了！只是……海里有条大鱼，挡着道。",
-     "voice": {
-      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-      "voice_id": "mZc8T5doZrU7OCI71i3M",
-      "name": "HanBaba"
-     }
-    },
-    {
-     "text": "[interested] 鱼？",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[hesitant] 好大一条。",
-     "voice": {
-      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-      "voice_id": "mZc8T5doZrU7OCI71i3M",
-      "name": "HanBaba"
-     }
-    },
-    {
-     "text": "[commanding] 拿弩来。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[to the audience, playful] 偷偷告诉大家，这个徐福，后来再也没回来。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[suspicious] 你在说什么？",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[flustered, too cheerful] 没、没什么！祝徐先生一路顺风！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "music",
+   "name": "mus_sneak",
+   "text": "Sneaky tiptoe comedic music, light pizzicato strings and plucked pipa, soft woodblock ticks, playful suspense, quiet, ancient Chinese palace at dawn, no vocals, 100 bpm",
+   "ms": 16000
   },
   {
-   "type": "dialogue",
-   "name": "dlg_C_s7272",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 7272,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[curious] 陛下平时，有什么喜欢做的事吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[proud, confident] 找神仙。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[surprised] 神仙？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[excited, oily] 陛下！仙药有消息了！只是……海里有条大鱼，挡着道。",
-     "voice": {
-      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-      "voice_id": "mZc8T5doZrU7OCI71i3M",
-      "name": "HanBaba"
-     }
-    },
-    {
-     "text": "[interested] 鱼？",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[hesitant] 好大一条。",
-     "voice": {
-      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-      "voice_id": "mZc8T5doZrU7OCI71i3M",
-      "name": "HanBaba"
-     }
-    },
-    {
-     "text": "[commanding] 拿弩来。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[to the audience, playful] 偷偷告诉大家，这个徐福，后来再也没回来。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[suspicious] 你在说什么？",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[flustered, too cheerful] 没、没什么！祝徐先生一路顺风！",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "music",
+   "name": "mus_hero_sting",
+   "text": "Short grand heroic fanfare sting, Chinese brass and a big taiko hit, majestic and a little over the top, comedic pomp, ends on a held chord, no vocals",
+   "ms": 5000
   },
   {
-   "type": "dialogue",
-   "name": "dlg_G_s6161",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 6161,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[hopeful] 陛下？今天……还拍吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[flat, matter-of-fact] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[flat, matter-of-fact] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sad, matter-of-fact] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[wistful] 陛下一直，想长生不老。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[warm, a little sad] 他没活过五十岁。可他的兵马俑，站了两千多年。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[off-screen, tired, kind] 这段，也删了。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[laughing a little, teary] 不删。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "music",
+   "name": "mus_march",
+   "text": "Confident playful march, plucked guzheng and dizi flute over light drums, an emperor striding through his palace, upbeat, no vocals, 110 bpm",
+   "ms": 20000
   },
   {
-   "type": "dialogue",
-   "name": "dlg_G_s7272",
-   "lang": "zh",
-   "model": "eleven_v4",
-   "seed": 7272,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[hopeful] 陛下？今天……还拍吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[flat, matter-of-fact] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[flat, matter-of-fact] 准。",
-     "voice": {
-      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
-      "voice_id": "AAYMKjNBrET5q9uPiIQS",
-      "name": "ZeyuLiu"
-     }
-    },
-    {
-     "text": "[sad] 那年夏天，陛下死在了出巡的路上。丞相瞒住了消息，百官每天照样往车里递奏章。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sad, matter-of-fact] 天太热，车里有了臭味。他们就往车上装了咸鱼，盖住味道。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[wistful] 陛下一直，想长生不老。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[warm, a little sad] 他没活过五十岁。可他的兵马俑，站了两千多年。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[off-screen, tired, kind] 这段，也删了。",
-     "voice": {
-      "owner": "adc9f3ee76562072a32fad7d72edc6b3e523b1628c749f160e836396cd54ef0e",
-      "voice_id": "pU9NaAwkoR3v0Mrg3uKz",
-      "name": "Haoran"
-     }
-    },
-    {
-     "text": "[laughing a little, teary] 不删。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "music",
+   "name": "mus_busy",
+   "text": "Busy comedic office music, quick plucked guzheng ostinato and wood block, paperwork montage, light and bouncy, ancient Chinese court, no vocals, 104 bpm",
+   "ms": 30000
+  },
+  {
+   "type": "music",
+   "name": "mus_mystic",
+   "text": "Mysterious shimmering music with a shady comic edge, glass chimes, low bowed strings and a sly woodwind line, a charlatan alchemist with big promises, ancient China, no vocals",
+   "ms": 22000
+  },
+  {
+   "type": "music",
+   "name": "mus_night",
+   "text": "Stealthy night music, low plucked bass, soft hand drum and a breathy flute, sneaky suspense, ancient Chinese night outing, quiet, no vocals, 90 bpm",
+   "ms": 26000
+  },
+  {
+   "type": "music",
+   "name": "mus_action",
+   "text": "Sudden fast action percussion, pounding taiko drums and urgent strings, an ambush in the dark, short and intense, no vocals",
+   "ms": 10000
+  },
+  {
+   "type": "music",
+   "name": "mus_pomp",
+   "text": "Short pompous comedic royal fanfare, small brass, cymbal and gong, a solemn ceremony for something silly, no vocals",
+   "ms": 5000
+  },
+  {
+   "type": "music",
+   "name": "mus_museum",
+   "text": "Gentle bittersweet ending music, soft piano and erhu with warm strings, the last scene of a documentary, slow, hopeful, no vocals",
+   "ms": 24000
+  },
+  {
+   "type": "sfx",
+   "name": "amb_court",
+   "text": "Ancient palace office in the morning, scribes writing with brushes, bamboo slips clacking softly, rustling, quiet indoor room tone",
+   "duration": 12,
+   "loop": true
+  },
+  {
+   "type": "sfx",
+   "name": "amb_coast",
+   "text": "Seashore, gentle waves on sand, seagulls calling, light sea wind",
+   "duration": 12,
+   "loop": true
+  },
+  {
+   "type": "sfx",
+   "name": "amb_city_far",
+   "text": "Distant ancient city below a high stone terrace, faint crowd murmur, horse carts rolling, hooves, wind",
+   "duration": 12,
+   "loop": true
+  },
+  {
+   "type": "sfx",
+   "name": "amb_road",
+   "text": "Hot dry desert road, dry wind, horses snorting and shifting, a wooden carriage creaking, distant cicadas",
+   "duration": 12,
+   "loop": true
+  },
+  {
+   "type": "sfx",
+   "name": "amb_museum_crowd",
+   "text": "Large museum hall, soft murmur of visitors, occasional echoing footsteps, quiet reverent atmosphere",
+   "duration": 12,
+   "loop": true
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_poweroff",
+   "text": "An old camcorder power button click, then an old CRT television switching off: a falling electric whine and a soft static pop, then silence",
+   "duration": 2.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_blush",
+   "text": "Cute soft magical sparkle chime, short and gentle",
+   "duration": 1.0
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_taiko",
+   "text": "One huge taiko drum hit with a deep cinematic boom",
+   "duration": 2.0
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_scratch",
+   "text": "Comedic vinyl record scratch, short",
+   "duration": 0.8
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_gulp",
+   "text": "Nervous cartoon gulp, short",
+   "duration": 0.8
   }
  ]
 }
