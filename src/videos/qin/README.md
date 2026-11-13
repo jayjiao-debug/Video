@@ -356,6 +356,15 @@ Film.tsx draws, in order: the HUD layer (`VlogHud`: REC dot + 时辰 timestamp +
 
 ## 13. Open issues (integration check, 2026-11-12)
 
+**Update (2026-11-13, voice v2):** the owner heard lines cut off and whispering. All seven scenes were re-voiced with
+normal-volume directions in `qin_lines.json` (no quiet / soft / low / whisper tags) and cut again with the new
+`scripts/qin/voice/cut_lines.py`: each line is cut in the silence between lines (energy in 10 ms frames), placed by the
+Whisper word times when the take has them (farm `"words": true`) and by the ElevenLabs alignment otherwise, keeping
+50 ms before the first and 120 ms after the last loud frame; pauses inside a line over 0.4 s are shortened to 0.4 s.
+It writes `line_cuts.json` (cut, kept span, edge level per line) for `assemble.py`. Gap between lines 0.04 s, D01
+`pre` 0.2 s (room for D's lead cut), cards hold their own time (`card_hold`). TOTAL is now 5616 frames = 187.2 s:
+A 0-1110, B 1111-1863, C 1864-2586, D 2587-3119, E 3120-3899, F 3900-4555, G 4556-5615.
+
 **Update (22:45 UTC, after the check):** the REAL voice timing is in (`VOICE_SOURCE` real, `TOTAL` 5297 frames =
 176.6 s). Segments: A 0-1050, B 1051-1798, C 1799-2477, D 2478-2951, E 2952-3660, F 3661-4231, G 4232-5296. Fixed
 since the check: Film.tsx passes `cards={P.cards}`; the C07 / E07 cards no longer run into the next line (C07 after
