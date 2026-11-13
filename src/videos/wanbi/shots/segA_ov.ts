@@ -100,11 +100,13 @@ export const ov5a = (f: number, P: { king: Head; minA: Head; minB: Head }): Node
 
 // ====================================================================================================== shot 5b
 /** shot 5b: the two tags together (the eunuch 赵国宦官, the envoy 蔺相如 · 宦官的门客 + "the eunuch's retainer"), both
- *  pinned above their heads (he steps 0.2 m while they are up), clear of the king's head */
+ *  pinned above their heads (he steps 0.2 m while they are up), clear of the king's head. English: both plates at
+ *  scale 1 (the close-up would make them 1.3x), else the eunuch's plate, held in by the right safe line, slid under
+ *  the envoy's two-row plate (seen on the first English farm render, frames 409-441) */
 export const ov5b = (f: number, P: { lin: Head; miao: Head; king: Head }): Node[] => [
   tags(f, [
-    { who: "miao", at: P.miao, from: TAG.miao, out: TAG_OUT.miao, side: "up" },
-    { who: "lin5", at: P.lin, from: TAG.lin5, out: TAG_OUT.lin5, side: "up" },
+    { who: "miao", at: P.miao, from: TAG.miao, out: TAG_OUT.miao, side: "up", scale: EN ? 1 : undefined },
+    { who: "lin5", at: P.lin, from: TAG.lin5, out: TAG_OUT.lin5, side: "up", scale: EN ? 1 : undefined },
   ], { avoid: [P.king] }),
 ];
 
