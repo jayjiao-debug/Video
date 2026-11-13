@@ -1,0 +1,555 @@
+plan: {'tier': 'creator', 'character_count': 49864, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "mus_morning", "type": "music", "text": "Bright, cheerful Chinese folk theme on plucked strings: a guzheng melody with pipa, light woodblock and a small hand drum, a sunny southern market morning, a jolly food-loving old poet showing off his cooking, G major pentatonic, 112 bpm, playful and warm, it starts at once with a plucked guzheng phrase. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_morning.mp3", "bytes": 1201258}
+{"name": "mus_huangzhou", "type": "music", "text": "Rustic solo bamboo flute (dizi) over gentle guzheng arpeggios, a fond memory of farming a bare hillside long ago and slow-cooking pork at night, warm and nostalgic, D major pentatonic, 72 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_huangzhou.mp3", "bytes": 289689}
+{"name": "mus_noon", "type": "music", "text": "Lazy sunny noon under a lychee tree: slow plucked guzheng with a little pipa, relaxed, contented and drowsy, a little humorous, G major pentatonic, 80 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_noon.mp3", "bytes": 768044}
+{"name": "mus_evening", "type": "music", "text": "Tender, warm and a little bittersweet: guzheng with a gentle erhu, golden evening light, a family packing trunks, a cheerful old man who will not be sad, F major pentatonic, 70 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_evening.mp3", "bytes": 721023}
+{"name": "mus_cello", "type": "music", "text": "One single sustained solo cello note, a low D, bowed slowly with gentle vibrato, swelling and then fading away. Nothing else, no other instruments. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_cello.mp3", "bytes": 218218}
+{"name": "mus_river", "type": "music", "text": "The warm guzheng theme returns, unhurried and bright: dawn on a wide river, a small boat setting off, hopeful and kind, G major pentatonic, 92 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_river.mp3", "bytes": 216964}
+{"name": "mus_beach", "type": "music", "text": "Light, cheeky island tune: plucked guzheng and pipa with a soft hand drum and a little marimba, a happy old man grilling oysters on a beach, G major pentatonic, 104 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_beach.mp3", "bytes": 361160}
+{"name": "mus_end", "type": "music", "text": "One last warm phrase of a gentle guzheng theme, slow and tender, a whole life remembered with a smile, resolving to a single plucked note and then silence, G major pentatonic, 66 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_end.mp3", "bytes": 384357}
+{"name": "amb_market", "type": "sfx", "text": "A busy Chinese village morning market: vendors and buyers chattering, a rooster crowing far off, baskets, footsteps on packed earth.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_market.mp3", "bytes": 193140}
+{"name": "sfx_cleaver", "type": "sfx", "text": "A heavy meat cleaver chopping down hard onto a thick wooden chopping block, one solid thunk.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_cleaver.mp3", "bytes": 20105}
+{"name": "sfx_coins", "type": "sfx", "text": "A few copper coins dropped into a palm.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_coins.mp3", "bytes": 17179}
+{"name": "sfx_whoosh", "type": "sfx", "text": "A fast whip-pan whoosh, air swish.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_whoosh.mp3", "bytes": 13835}
+{"name": "amb_yard", "type": "sfx", "text": "A hillside village yard in the morning: birds singing, children laughing and running nearby, a light breeze.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_yard.mp3", "bytes": 193140}
+{"name": "sfx_bubble", "type": "sfx", "text": "A clay pot gently bubbling and simmering on a small charcoal stove.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_bubble.mp3", "bytes": 97009}
+{"name": "sfx_sizzle", "type": "sfx", "text": "A bone put on a hot iron grill over charcoal, meat sizzling.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_sizzle.mp3", "bytes": 48944}
+{"name": "sfx_dog_whine", "type": "sfx", "text": "A small dog gives one short, offended, disappointed whine.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_dog_whine.mp3", "bytes": 24702}
+{"name": "sfx_chew", "type": "sfx", "text": "Someone gnawing and chewing on a grilled bone.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_chew.mp3", "bytes": 24702}
+{"name": "sfx_lid", "type": "sfx", "text": "Lifting a heavy clay pot lid, a ceramic clink and a puff of steam.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_lid.mp3", "bytes": 24702}
+{"name": "amb_noon", "type": "sfx", "text": "Hot southern Chinese noon: cicadas buzzing in the trees, a breeze rustling leaves.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_noon.mp3", "bytes": 193140}
+{"name": "sfx_bell_far", "type": "sfx", "text": "A single distant temple bell rung once, ringing out far across green hills.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_bell_far.mp3", "bytes": 81127}
+{"name": "sfx_snore", "type": "sfx", "text": "An old man snoring contentedly, slow and peaceful.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_snore.mp3", "bytes": 81127}
+{"name": "sfx_catch", "type": "sfx", "text": "A small round fruit caught in a hand, a light slap.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_catch.mp3", "bytes": 8820}
+{"name": "sfx_hooves", "type": "sfx", "text": "A horse trotting up a dirt hill road and being reined in to a stop, then a snort.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_hooves.mp3", "bytes": 65244}
+{"name": "sfx_scroll", "type": "sfx", "text": "A paper scroll being unrolled.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_scroll.mp3", "bytes": 24702}
+{"name": "amb_wind", "type": "sfx", "text": "A light wind over a quiet hillside, very still, nothing else.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_wind.mp3", "bytes": 160957}
+{"name": "amb_evening", "type": "sfx", "text": "A wooden house in the evening: birds settling outside, calm room tone.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_evening.mp3", "bytes": 193140}
+{"name": "sfx_brush", "type": "sfx", "text": "A Chinese ink brush writing on paper, steady strokes.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_brush.mp3", "bytes": 97009}
+{"name": "sfx_trunk", "type": "sfx", "text": "A wooden trunk lid closing gently.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_trunk.mp3", "bytes": 20105}
+{"name": "sfx_hum", "type": "sfx", "text": "An old man humming a cheerful little folk tune to himself with his mouth closed, relaxed.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_hum.mp3", "bytes": 97009}
+{"name": "amb_pines", "type": "sfx", "text": "Night in a pine wood beside a lake: crickets chirping, wind in the pine needles, tiny lapping water.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_pines.mp3", "bytes": 193140}
+{"name": "sfx_lantern_set", "type": "sfx", "text": "A paper lantern set down on a stone step, a light wooden knock.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_lantern_set.mp3", "bytes": 13835}
+{"name": "sfx_sleeve", "type": "sfx", "text": "A cloth sleeve wiping across a face, two strokes.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_sleeve.mp3", "bytes": 13835}
+{"name": "amb_river", "type": "sfx", "text": "Dawn on a wide river: water lapping a muddy bank, reeds rustling, early birds, a distant rooster.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_river.mp3", "bytes": 193140}
+{"name": "sfx_oars", "type": "sfx", "text": "A wooden oar sculling in a river, rhythmic water strokes and a creak.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_oars.mp3", "bytes": 97009}
+{"name": "amb_beach", "type": "sfx", "text": "A tropical beach: surf waves rolling in, a sea breeze, palm leaves rustling.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_beach.mp3", "bytes": 193140}
+{"name": "amb_fire", "type": "sfx", "text": "A small driftwood campfire crackling on a beach.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_fire.mp3", "bytes": 129192}
+{"name": "sfx_shell_pop", "type": "sfx", "text": "An oyster shell popping open on a hot fire with a hiss.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_shell_pop.mp3", "bytes": 20105}
+{"name": "sfx_slurp", "type": "sfx", "text": "A man slurping an oyster from its shell.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_slurp.mp3", "bytes": 17179}
+{"name": "amb_temple", "type": "sfx", "text": "Inside a quiet Buddhist temple hall: a big still room, far wind chimes, stillness.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_temple.mp3", "bytes": 193140}
+{"name": "sfx_temple_bell", "type": "sfx", "text": "A deep bronze temple bell struck once, long resonant decay.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_temple_bell.mp3", "bytes": 97009}
+{"name": "sfx_stamp", "type": "sfx", "text": "A heavy seal stamp pressed down onto paper, a solid thump.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_stamp.mp3", "bytes": 10492}
+{"name": "sfx_ink_wipe", "type": "sfx", "text": "A big brush sweeping across paper, a smooth airy whoosh.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_ink_wipe.mp3", "bytes": 17179}
+{"name": "sfx_card", "type": "sfx", "text": "A paper card sliding in, a light paper rustle.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_card.mp3", "bytes": 10492}
+{"name": "laugh_su_s7", "lang": "zh", "text": "[warm laugh, fond memory] 哈哈哈。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "laugh_su_s7.mp3", "bytes": 44764}
+{"name": "laugh_su_s11", "lang": "zh", "text": "[laughs warmly] 哈哈。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "laugh_su_s11.mp3", "bytes": 23030}
+removed kept voices: {'YGeNjTKY1wBaKygyl4y8': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "mus_morning",
+  "type": "music",
+  "text": "Bright, cheerful Chinese folk theme on plucked strings: a guzheng melody with pipa, light woodblock and a small hand drum, a sunny southern market morning, a jolly food-loving old poet showing off his cooking, G major pentatonic, 112 bpm, playful and warm, it starts at once with a plucked guzheng phrase. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_morning.mp3",
+  "bytes": 1201258,
+  "seconds": 50.13
+ },
+ {
+  "name": "mus_huangzhou",
+  "type": "music",
+  "text": "Rustic solo bamboo flute (dizi) over gentle guzheng arpeggios, a fond memory of farming a bare hillside long ago and slow-cooking pork at night, warm and nostalgic, D major pentatonic, 72 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_huangzhou.mp3",
+  "bytes": 289689,
+  "seconds": 12.09
+ },
+ {
+  "name": "mus_noon",
+  "type": "music",
+  "text": "Lazy sunny noon under a lychee tree: slow plucked guzheng with a little pipa, relaxed, contented and drowsy, a little humorous, G major pentatonic, 80 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_noon.mp3",
+  "bytes": 768044,
+  "seconds": 32.05
+ },
+ {
+  "name": "mus_evening",
+  "type": "music",
+  "text": "Tender, warm and a little bittersweet: guzheng with a gentle erhu, golden evening light, a family packing trunks, a cheerful old man who will not be sad, F major pentatonic, 70 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_evening.mp3",
+  "bytes": 721023,
+  "seconds": 30.09
+ },
+ {
+  "name": "mus_cello",
+  "type": "music",
+  "text": "One single sustained solo cello note, a low D, bowed slowly with gentle vibrato, swelling and then fading away. Nothing else, no other instruments. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_cello.mp3",
+  "bytes": 218218,
+  "seconds": 9.11
+ },
+ {
+  "name": "mus_river",
+  "type": "music",
+  "text": "The warm guzheng theme returns, unhurried and bright: dawn on a wide river, a small boat setting off, hopeful and kind, G major pentatonic, 92 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_river.mp3",
+  "bytes": 216964,
+  "seconds": 9.05
+ },
+ {
+  "name": "mus_beach",
+  "type": "music",
+  "text": "Light, cheeky island tune: plucked guzheng and pipa with a soft hand drum and a little marimba, a happy old man grilling oysters on a beach, G major pentatonic, 104 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_beach.mp3",
+  "bytes": 361160,
+  "seconds": 15.07
+ },
+ {
+  "name": "mus_end",
+  "type": "music",
+  "text": "One last warm phrase of a gentle guzheng theme, slow and tender, a whole life remembered with a smile, resolving to a single plucked note and then silence, G major pentatonic, 66 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_end.mp3",
+  "bytes": 384357,
+  "seconds": 16.04
+ },
+ {
+  "name": "amb_market",
+  "type": "sfx",
+  "text": "A busy Chinese village morning market: vendors and buyers chattering, a rooster crowing far off, baskets, footsteps on packed earth.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_market.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "sfx_cleaver",
+  "type": "sfx",
+  "text": "A heavy meat cleaver chopping down hard onto a thick wooden chopping block, one solid thunk.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_cleaver.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "sfx_coins",
+  "type": "sfx",
+  "text": "A few copper coins dropped into a palm.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_coins.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "sfx_whoosh",
+  "type": "sfx",
+  "text": "A fast whip-pan whoosh, air swish.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_whoosh.mp3",
+  "bytes": 13835,
+  "seconds": 0.8
+ },
+ {
+  "name": "amb_yard",
+  "type": "sfx",
+  "text": "A hillside village yard in the morning: birds singing, children laughing and running nearby, a light breeze.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_yard.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "sfx_bubble",
+  "type": "sfx",
+  "text": "A clay pot gently bubbling and simmering on a small charcoal stove.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_bubble.mp3",
+  "bytes": 97009,
+  "seconds": 6.0
+ },
+ {
+  "name": "sfx_sizzle",
+  "type": "sfx",
+  "text": "A bone put on a hot iron grill over charcoal, meat sizzling.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_sizzle.mp3",
+  "bytes": 48944,
+  "seconds": 3.0
+ },
+ {
+  "name": "sfx_dog_whine",
+  "type": "sfx",
+  "text": "A small dog gives one short, offended, disappointed whine.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_dog_whine.mp3",
+  "bytes": 24702,
+  "seconds": 1.48
+ },
+ {
+  "name": "sfx_chew",
+  "type": "sfx",
+  "text": "Someone gnawing and chewing on a grilled bone.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_chew.mp3",
+  "bytes": 24702,
+  "seconds": 1.48
+ },
+ {
+  "name": "sfx_lid",
+  "type": "sfx",
+  "text": "Lifting a heavy clay pot lid, a ceramic clink and a puff of steam.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_lid.mp3",
+  "bytes": 24702,
+  "seconds": 1.48
+ },
+ {
+  "name": "amb_noon",
+  "type": "sfx",
+  "text": "Hot southern Chinese noon: cicadas buzzing in the trees, a breeze rustling leaves.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_noon.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "sfx_bell_far",
+  "type": "sfx",
+  "text": "A single distant temple bell rung once, ringing out far across green hills.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_bell_far.mp3",
+  "bytes": 81127,
+  "seconds": 5.0
+ },
+ {
+  "name": "sfx_snore",
+  "type": "sfx",
+  "text": "An old man snoring contentedly, slow and peaceful.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_snore.mp3",
+  "bytes": 81127,
+  "seconds": 5.0
+ },
+ {
+  "name": "sfx_catch",
+  "type": "sfx",
+  "text": "A small round fruit caught in a hand, a light slap.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_catch.mp3",
+  "bytes": 8820,
+  "seconds": 0.48
+ },
+ {
+  "name": "sfx_hooves",
+  "type": "sfx",
+  "text": "A horse trotting up a dirt hill road and being reined in to a stop, then a snort.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_hooves.mp3",
+  "bytes": 65244,
+  "seconds": 4.0
+ },
+ {
+  "name": "sfx_scroll",
+  "type": "sfx",
+  "text": "A paper scroll being unrolled.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_scroll.mp3",
+  "bytes": 24702,
+  "seconds": 1.48
+ },
+ {
+  "name": "amb_wind",
+  "type": "sfx",
+  "text": "A light wind over a quiet hillside, very still, nothing else.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_wind.mp3",
+  "bytes": 160957,
+  "seconds": 10.0
+ },
+ {
+  "name": "amb_evening",
+  "type": "sfx",
+  "text": "A wooden house in the evening: birds settling outside, calm room tone.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_evening.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "sfx_brush",
+  "type": "sfx",
+  "text": "A Chinese ink brush writing on paper, steady strokes.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_brush.mp3",
+  "bytes": 97009,
+  "seconds": 6.0
+ },
+ {
+  "name": "sfx_trunk",
+  "type": "sfx",
+  "text": "A wooden trunk lid closing gently.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_trunk.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "sfx_hum",
+  "type": "sfx",
+  "text": "An old man humming a cheerful little folk tune to himself with his mouth closed, relaxed.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_hum.mp3",
+  "bytes": 97009,
+  "seconds": 6.0
+ },
+ {
+  "name": "amb_pines",
+  "type": "sfx",
+  "text": "Night in a pine wood beside a lake: crickets chirping, wind in the pine needles, tiny lapping water.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_pines.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "sfx_lantern_set",
+  "type": "sfx",
+  "text": "A paper lantern set down on a stone step, a light wooden knock.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_lantern_set.mp3",
+  "bytes": 13835,
+  "seconds": 0.8
+ },
+ {
+  "name": "sfx_sleeve",
+  "type": "sfx",
+  "text": "A cloth sleeve wiping across a face, two strokes.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_sleeve.mp3",
+  "bytes": 13835,
+  "seconds": 0.8
+ },
+ {
+  "name": "amb_river",
+  "type": "sfx",
+  "text": "Dawn on a wide river: water lapping a muddy bank, reeds rustling, early birds, a distant rooster.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_river.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "sfx_oars",
+  "type": "sfx",
+  "text": "A wooden oar sculling in a river, rhythmic water strokes and a creak.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_oars.mp3",
+  "bytes": 97009,
+  "seconds": 6.0
+ },
+ {
+  "name": "amb_beach",
+  "type": "sfx",
+  "text": "A tropical beach: surf waves rolling in, a sea breeze, palm leaves rustling.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_beach.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "amb_fire",
+  "type": "sfx",
+  "text": "A small driftwood campfire crackling on a beach.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_fire.mp3",
+  "bytes": 129192,
+  "seconds": 8.0
+ },
+ {
+  "name": "sfx_shell_pop",
+  "type": "sfx",
+  "text": "An oyster shell popping open on a hot fire with a hiss.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_shell_pop.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "sfx_slurp",
+  "type": "sfx",
+  "text": "A man slurping an oyster from its shell.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_slurp.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "amb_temple",
+  "type": "sfx",
+  "text": "Inside a quiet Buddhist temple hall: a big still room, far wind chimes, stillness.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_temple.mp3",
+  "bytes": 193140,
+  "seconds": 12.0
+ },
+ {
+  "name": "sfx_temple_bell",
+  "type": "sfx",
+  "text": "A deep bronze temple bell struck once, long resonant decay.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_temple_bell.mp3",
+  "bytes": 97009,
+  "seconds": 6.0
+ },
+ {
+  "name": "sfx_stamp",
+  "type": "sfx",
+  "text": "A heavy seal stamp pressed down onto paper, a solid thump.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_stamp.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "sfx_ink_wipe",
+  "type": "sfx",
+  "text": "A big brush sweeping across paper, a smooth airy whoosh.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_ink_wipe.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "sfx_card",
+  "type": "sfx",
+  "text": "A paper card sliding in, a light paper rustle.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_card.mp3",
+  "bytes": 10492,
+  "seconds": 0.6
+ },
+ {
+  "name": "laugh_su_s7",
+  "lang": "zh",
+  "text": "[warm laugh, fond memory] 哈哈哈。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "laugh_su_s7.mp3",
+  "bytes": 44764,
+  "heard": "Ha, ha, ha, ha, ha, ha.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.726,
+  "seconds": 2.72
+ },
+ {
+  "name": "laugh_su_s11",
+  "lang": "zh",
+  "text": "[laughs warmly] 哈哈。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "laugh_su_s11.mp3",
+  "bytes": 23030,
+  "heard": "Ha, ha, ha!",
+  "heard_lang": "en",
+  "heard_lang_p": 0.769,
+  "seconds": 1.36
+ }
+]
