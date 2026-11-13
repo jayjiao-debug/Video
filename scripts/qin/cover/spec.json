@@ -1,6 +1,6 @@
 {
  "font": "../../../public/bt/sans700.ttf",
- "_about": "采访秦始皇的一天 Douyin covers (v3, frame 886: the blush, the sword on his shoulder; title only, as Jay asked: 采访秦始皇｜的一天 on two lines). Backgrounds are picture-only stills from the preview harness at the cover's shape, larger, then cropped uniformly (not in the repo): bash scripts/kit/queue/still.sh src/videos/qin/preview/film.ts /home/user/qin_work/cover/pv_wide3 --pick 886 --size 2160x1620 (and pv_tall2 at 1350x1800). Then: python3 scripts/kit/cover/cover.py scripts/qin/cover/spec.json",
+ "_about": "采访秦始皇的一天 Douyin covers (v3, frame 886: the blush, the sword on his shoulder; title only, as Jay asked: 采访秦始皇｜的一天 on two lines). Backgrounds are picture-only stills from the preview harness at the cover's shape, larger, then cropped uniformly (not in the repo): bash scripts/kit/queue/still.sh src/videos/qin/preview/film.ts /home/user/qin_work/cover/pv_wide3 --pick 886 --size 2160x1620 (and pv_tall2 at 1350x1800). Then: python3 scripts/qin/cover/make_covers.py (the kit's cover.py with every line centred on its ink)",
  "covers": [
   {
    "bg": "/home/user/qin_work/cover/pv_wide3/f0886.png",
@@ -64,13 +64,13 @@
     ],
     "hooks": [
      [
-      0.668,
+      0.661,
       0.8,
       150,
       7
      ],
      [
-      0.77,
+      0.763,
       0.8,
       150,
       7
