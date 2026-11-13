@@ -1,11 +1,1 @@
-{
-  "id": "group-v4-full",
-  "composition": "GroupFilm",
-  "start": 0,
-  "end": 2002,
-  "chunks": 20,
-  "concurrency": 1,
-  "timeout": 600000,
-  "output": "group_v4",
-  "flags": "--crf=16"
-}
+{"id":"qin-01","composition":"QinFilm","start":0,"end":5296,"chunks":20,"concurrency":1,"timeout":900000,"output":"qin_v1","flags":"--crf=14"}
