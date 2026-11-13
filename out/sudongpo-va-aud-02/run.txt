@@ -1,0 +1,359 @@
+plan: {'tier': 'creator', 'character_count': 39791, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "JamesGao_s06_r11", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:James Gao", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "JamesGao_s06_r11.mp3", "bytes": 56049}
+{"name": "JamesGao_s06_r22", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:James Gao", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "JamesGao_s06_r22.mp3", "bytes": 53541}
+{"name": "Gavin_s06_r11", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "Gavin_s06_r11.mp3", "bytes": 43510}
+{"name": "Gavin_s06_r22", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "Gavin_s06_r22.mp3", "bytes": 41838}
+{"name": "PlatonWang_s06_r11", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_s06_r11.mp3", "bytes": 41838}
+{"name": "PlatonWang_s06_r22", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_s06_r22.mp3", "bytes": 39331}
+{"name": "GuanTangBao_s06_r11", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Guan Tang Bao", "voice_id": "MQkiCZS3mnl44caDtxkJ", "model": "eleven_v4", "status": 200, "file": "GuanTangBao_s06_r11.mp3", "bytes": 41838}
+{"name": "GuanTangBao_s06_r22", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Guan Tang Bao", "voice_id": "MQkiCZS3mnl44caDtxkJ", "model": "eleven_v4", "status": 200, "file": "GuanTangBao_s06_r22.mp3", "bytes": 54795}
+{"name": "SiqiLiu_s06_r11", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Siqi Liu", "voice_id": "W8lBaQb9YIoddhxfQNLP", "model": "eleven_v4", "status": 200, "file": "SiqiLiu_s06_r11.mp3", "bytes": 39331}
+{"name": "SiqiLiu_s06_r22", "lang": "zh", "text": "[stunned, then genuinely curious] 海南，有什么好吃的？", "voice": "shared:Siqi Liu", "voice_id": "W8lBaQb9YIoddhxfQNLP", "model": "eleven_v4", "status": 200, "file": "SiqiLiu_s06_r22.mp3", "bytes": 56049}
+{"name": "JamesGao_s10_r11", "lang": "zh", "text": "[old, warm, simple] 黄州，惠州，儋州。", "voice": "shared:James Gao", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "JamesGao_s10_r11.mp3", "bytes": 79037}
+{"name": "JamesGao_s10_r22", "lang": "zh", "text": "[old, warm, simple] 黄州，惠州，儋州。", "voice": "shared:James Gao", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "JamesGao_s10_r22.mp3", "bytes": 84470}
+{"name": "GuanTangBao_s10_r11", "lang": "zh", "text": "[old, warm, simple] 黄州，惠州，儋州。", "voice": "shared:Guan Tang Bao", "voice_id": "MQkiCZS3mnl44caDtxkJ", "model": "eleven_v4", "status": 200, "file": "GuanTangBao_s10_r11.mp3", "bytes": 79037}
+{"name": "GuanTangBao_s10_r22", "lang": "zh", "text": "[old, warm, simple] 黄州，惠州，儋州。", "voice": "shared:Guan Tang Bao", "voice_id": "MQkiCZS3mnl44caDtxkJ", "model": "eleven_v4", "status": 200, "file": "GuanTangBao_s10_r22.mp3", "bytes": 82798}
+{"name": "SiqiLiu_s10_r11", "lang": "zh", "text": "[old, warm, simple] 黄州，惠州，儋州。", "voice": "shared:Siqi Liu", "voice_id": "W8lBaQb9YIoddhxfQNLP", "model": "eleven_v4", "status": 200, "file": "SiqiLiu_s10_r11.mp3", "bytes": 81545}
+{"name": "SiqiLiu_s10_r22", "lang": "zh", "text": "[old, warm, simple] 黄州，惠州，儋州。", "voice": "shared:Siqi Liu", "voice_id": "W8lBaQb9YIoddhxfQNLP", "model": "eleven_v4", "status": 200, "file": "SiqiLiu_s10_r22.mp3", "bytes": 81545}
+{"name": "SiqiLiu_s07_r11", "lang": "zh", "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]", "voice": "shared:Siqi Liu", "voice_id": "W8lBaQb9YIoddhxfQNLP", "model": "eleven_v4", "status": 200, "file": "SiqiLiu_s07_r11.mp3", "bytes": 117489}
+{"name": "SiqiLiu_s07_r22", "lang": "zh", "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]", "voice": "shared:Siqi Liu", "voice_id": "W8lBaQb9YIoddhxfQNLP", "model": "eleven_v4", "status": 200, "file": "SiqiLiu_s07_r22.mp3", "bytes": 102025}
+{"name": "lin_j08_r11", "lang": "zh", "text": "[curious] 那啃完的骨头，给狗吗？", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "lin_j08_r11.mp3", "bytes": 38077}
+{"name": "lin_j28_r11", "lang": "zh", "text": "[lost] 琼州……是哪儿？", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "lin_j28_r11.mp3", "bytes": 40585}
+{"name": "lin_j08_r22", "lang": "zh", "text": "[curious] 那啃完的骨头，给狗吗？", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "lin_j08_r22.mp3", "bytes": 38077}
+{"name": "lin_j28_r22", "lang": "zh", "text": "[lost] 琼州……是哪儿？", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "lin_j28_r22.mp3", "bytes": 43510}
+removed kept voices: {'4VZIsMPtgggwNg7OXbPY': 200, 'YGeNjTKY1wBaKygyl4y8': 200, 'AQbPC7Yz1mwtsONnKsJn': 200, 'MQkiCZS3mnl44caDtxkJ': 200, 'W8lBaQb9YIoddhxfQNLP': 200, 'I23uc91tu5zY2PA1tKEN': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "JamesGao_s06_r11",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:James Gao",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "JamesGao_s06_r11.mp3",
+  "bytes": 56049,
+  "heard": "海南 海南 有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.44
+ },
+ {
+  "name": "JamesGao_s06_r22",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:James Gao",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "JamesGao_s06_r22.mp3",
+  "bytes": 53541,
+  "heard": "海南 海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.28
+ },
+ {
+  "name": "Gavin_s06_r11",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Gavin_s06_r11.mp3",
+  "bytes": 43510,
+  "heard": "海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ },
+ {
+  "name": "Gavin_s06_r22",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Gavin_s06_r22.mp3",
+  "bytes": 41838,
+  "heard": "海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.56
+ },
+ {
+  "name": "PlatonWang_s06_r11",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_s06_r11.mp3",
+  "bytes": 41838,
+  "heard": "海南?有什麼好吃的?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 2.56
+ },
+ {
+  "name": "PlatonWang_s06_r22",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_s06_r22.mp3",
+  "bytes": 39331,
+  "heard": "海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.4
+ },
+ {
+  "name": "GuanTangBao_s06_r11",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Guan Tang Bao",
+  "voice_id": "MQkiCZS3mnl44caDtxkJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "GuanTangBao_s06_r11.mp3",
+  "bytes": 41838,
+  "heard": "海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.56
+ },
+ {
+  "name": "GuanTangBao_s06_r22",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Guan Tang Bao",
+  "voice_id": "MQkiCZS3mnl44caDtxkJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "GuanTangBao_s06_r22.mp3",
+  "bytes": 54795,
+  "heard": "海南 海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.36
+ },
+ {
+  "name": "SiqiLiu_s06_r11",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Siqi Liu",
+  "voice_id": "W8lBaQb9YIoddhxfQNLP",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SiqiLiu_s06_r11.mp3",
+  "bytes": 39331,
+  "heard": "海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.4
+ },
+ {
+  "name": "SiqiLiu_s06_r22",
+  "lang": "zh",
+  "text": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+  "voice": "shared:Siqi Liu",
+  "voice_id": "W8lBaQb9YIoddhxfQNLP",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SiqiLiu_s06_r22.mp3",
+  "bytes": 56049,
+  "heard": "海南海南有什么好吃的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "JamesGao_s10_r11",
+  "lang": "zh",
+  "text": "[old, warm, simple] 黄州，惠州，儋州。",
+  "voice": "shared:James Gao",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "JamesGao_s10_r11.mp3",
+  "bytes": 79037,
+  "heard": "皇州 惠州 皇州 惠州 丹州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.955,
+  "seconds": 4.88
+ },
+ {
+  "name": "JamesGao_s10_r22",
+  "lang": "zh",
+  "text": "[old, warm, simple] 黄州，惠州，儋州。",
+  "voice": "shared:James Gao",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "JamesGao_s10_r22.mp3",
+  "bytes": 84470,
+  "heard": "皇州 惠州 皇州 惠州 丹州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.985,
+  "seconds": 5.2
+ },
+ {
+  "name": "GuanTangBao_s10_r11",
+  "lang": "zh",
+  "text": "[old, warm, simple] 黄州，惠州，儋州。",
+  "voice": "shared:Guan Tang Bao",
+  "voice_id": "MQkiCZS3mnl44caDtxkJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "GuanTangBao_s10_r11.mp3",
+  "bytes": 79037,
+  "heard": "皇州 惠州 丹州 惠州 丹州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.961,
+  "seconds": 4.88
+ },
+ {
+  "name": "GuanTangBao_s10_r22",
+  "lang": "zh",
+  "text": "[old, warm, simple] 黄州，惠州，儋州。",
+  "voice": "shared:Guan Tang Bao",
+  "voice_id": "MQkiCZS3mnl44caDtxkJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "GuanTangBao_s10_r22.mp3",
+  "bytes": 82798,
+  "heard": "皇州 惠州 丹州 惠州 丹州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.984,
+  "seconds": 5.12
+ },
+ {
+  "name": "SiqiLiu_s10_r11",
+  "lang": "zh",
+  "text": "[old, warm, simple] 黄州，惠州，儋州。",
+  "voice": "shared:Siqi Liu",
+  "voice_id": "W8lBaQb9YIoddhxfQNLP",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SiqiLiu_s10_r11.mp3",
+  "bytes": 81545,
+  "heard": "皇州、惠州、皇州、惠州、丹州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.988,
+  "seconds": 5.04
+ },
+ {
+  "name": "SiqiLiu_s10_r22",
+  "lang": "zh",
+  "text": "[old, warm, simple] 黄州，惠州，儋州。",
+  "voice": "shared:Siqi Liu",
+  "voice_id": "W8lBaQb9YIoddhxfQNLP",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SiqiLiu_s10_r22.mp3",
+  "bytes": 81545,
+  "heard": "皇州,惠州,皇州,惠州,丹州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 5.04
+ },
+ {
+  "name": "SiqiLiu_s07_r11",
+  "lang": "zh",
+  "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+  "voice": "shared:Siqi Liu",
+  "voice_id": "W8lBaQb9YIoddhxfQNLP",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SiqiLiu_s07_r11.mp3",
+  "bytes": 117489,
+  "heard": "只有他才对了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.987,
+  "seconds": 7.28
+ },
+ {
+  "name": "SiqiLiu_s07_r22",
+  "lang": "zh",
+  "text": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+  "voice": "shared:Siqi Liu",
+  "voice_id": "W8lBaQb9YIoddhxfQNLP",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SiqiLiu_s07_r22.mp3",
+  "bytes": 102025,
+  "heard": "只有他才对了只有他才对了他说是一肚子不合时宜",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 6.32
+ },
+ {
+  "name": "lin_j08_r11",
+  "lang": "zh",
+  "text": "[curious] 那啃完的骨头，给狗吗？",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "lin_j08_r11.mp3",
+  "bytes": 38077,
+  "heard": "那啃完的骨頭給狗嗎?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.32
+ },
+ {
+  "name": "lin_j28_r11",
+  "lang": "zh",
+  "text": "[lost] 琼州……是哪儿？",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "lin_j28_r11.mp3",
+  "bytes": 40585,
+  "heard": "熊州是哪儿",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 2.48
+ },
+ {
+  "name": "lin_j08_r22",
+  "lang": "zh",
+  "text": "[curious] 那啃完的骨头，给狗吗？",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "lin_j08_r22.mp3",
+  "bytes": 38077,
+  "heard": "那肯玩的骨頭 多狗嗎?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.984,
+  "seconds": 2.32
+ },
+ {
+  "name": "lin_j28_r22",
+  "lang": "zh",
+  "text": "[lost] 琼州……是哪儿？",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "lin_j28_r22.mp3",
+  "bytes": 43510,
+  "heard": "熊州是哪儿",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 2.64
+ }
+]
