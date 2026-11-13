@@ -1,0 +1,1037 @@
+{
+ "film": "newton",
+ "title": {
+  "zh": "跟着牛顿过一天",
+  "en": "A Day with Newton"
+ },
+ "subtitle": {
+  "zh": "1686年5月 · 剑桥三一学院",
+  "en": "May 1686 · Trinity College, Cambridge"
+ },
+ "speakers": {
+  "ji": "记者 (Lin, never seen: the camera)",
+  "nt": "牛顿 Newton",
+  "hm": "汉弗莱 Humphrey, his assistant"
+ },
+ "scenes": {
+  "A": {
+   "time": "清晨",
+   "en": "Early morning",
+   "place": "stairs"
+  },
+  "B": {
+   "time": "上午",
+   "en": "Late morning",
+   "place": "room"
+  },
+  "C": {
+   "time": "中午",
+   "en": "Noon",
+   "place": "garden"
+  },
+  "D": {
+   "time": "下午",
+   "en": "Afternoon",
+   "place": "schools"
+  },
+  "E": {
+   "time": "傍晚",
+   "en": "Supper time",
+   "place": "room"
+  },
+  "F": {
+   "time": "夜",
+   "en": "Night",
+   "place": "elaboratory"
+  },
+  "G": {
+   "time": "凌晨两点",
+   "en": "2 a.m.",
+   "place": "elaboratory"
+  }
+ },
+ "gap": 0.1,
+ "lead": 0.1,
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "script_id": "01",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[bright, eager] 早上好！今天陪您过一天！",
+   "zh": "早上好！今天陪您过一天！",
+   "en": "Good morning! I'm spending the day with you!",
+   "screens": [
+    {
+     "zh": "早上好！今天陪您过一天！",
+     "en": "Good morning! I'm spending the day with you!"
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "script_id": "02",
+   "scene": "A",
+   "who": "nt",
+   "tts": "[flat, matter-of-fact] Good night.",
+   "zh": "晚安。",
+   "en": "Good night.",
+   "screens": [
+    {
+     "zh": "晚安。",
+     "en": "Good night."
+    }
+   ],
+   "after": 1.5,
+   "beat": "door shuts; title block on the door (3 s, runs under 03)"
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "script_id": "03",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[baffled, amused] 他这是……刚要睡？",
+   "zh": "他这是……刚要睡？",
+   "en": "Is he... only just going to bed?",
+   "screens": [
+    {
+     "zh": "他这是……刚要睡？",
+     "en": "Is he... only just going to bed?"
+    }
+   ],
+   "card": {
+    "zh": "助手回忆：他常到两三点才睡，有时五六点。",
+    "en": "His assistant recalled: he seldom went to bed before 2 or 3, sometimes not till 5 or 6."
+   },
+   "card_hold": 3.5,
+   "after": 3.5
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "script_id": "04",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[friendly, curious] 助手小哥，他平时笑吗？",
+   "zh": "助手小哥，他平时笑吗？",
+   "en": "Hey, assistant: does he ever laugh?",
+   "screens": [
+    {
+     "zh": "助手小哥，他平时笑吗？",
+     "en": "Hey, assistant: does he ever laugh?"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "script_id": "05",
+   "scene": "A",
+   "who": "hm",
+   "tts": "[startled, incredulous] Laugh? Mr Newton?",
+   "zh": "笑？牛顿先生？",
+   "en": "Laugh? Mr Newton?",
+   "screens": [
+    {
+     "zh": "笑？牛顿先生？",
+     "en": "Laugh? Mr Newton?"
+    }
+   ],
+   "after": 1.0,
+   "beat": "Humphrey goes down the stairs"
+  },
+  {
+   "n": 6,
+   "id": "A06",
+   "script_id": "06",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[fired up, cheeky] 好，今天我要让他笑一次。",
+   "zh": "好，今天我要让他笑一次。",
+   "en": "Right. Today, I'm going to make him laugh. Once.",
+   "screens": [
+    {
+     "zh": "好，今天我要让他笑一次。",
+     "en": "Right. Today, I'm going to make him laugh. Once."
+    }
+   ],
+   "after": 0.3
+  },
+  {
+   "n": 7,
+   "id": "B01",
+   "script_id": "07",
+   "scene": "B",
+   "who": "hm",
+   "tts": "[polite, hopeful] Sir, your dinner.",
+   "zh": "先生，饭来了。",
+   "en": "Sir, your dinner.",
+   "screens": [
+    {
+     "zh": "先生，饭来了。",
+     "en": "Sir, your dinner."
+    }
+   ],
+   "pre": 1.5,
+   "after": 1.0,
+   "beat": "pre: morning plate + pull back; after: Humphrey leaves"
+  },
+  {
+   "n": 8,
+   "id": "B02",
+   "script_id": "08",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[calling out, helpful] 他说马上来！",
+   "zh": "他说马上来！",
+   "en": "He says he's coming!",
+   "screens": [
+    {
+     "zh": "他说马上来！",
+     "en": "He says he's coming!"
+    }
+   ],
+   "after": 0.5,
+   "beat": "mic back to the plate"
+  },
+  {
+   "n": 9,
+   "id": "B03",
+   "script_id": "09",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[lively] 牛顿先生，您在写什么？",
+   "zh": "牛顿先生，您在写什么？",
+   "en": "Mr Newton, what are you writing?",
+   "screens": [
+    {
+     "zh": "牛顿先生，您在写什么？",
+     "en": "Mr Newton, what are you writing?"
+    }
+   ]
+  },
+  {
+   "n": 10,
+   "id": "B04",
+   "script_id": "10",
+   "scene": "B",
+   "who": "nt",
+   "tts": "[dry, distracted] An answer. The astronomer Halley asked how planets go round the Sun.",
+   "zh": "一个答案。天文学家哈雷问：行星是怎么绕太阳转的。",
+   "en": "An answer. The astronomer Halley asked how planets go round the Sun.",
+   "screens": [
+    {
+     "zh": "一个答案。天文学家哈雷问：",
+     "en": "An answer. The astronomer Halley asked"
+    },
+    {
+     "zh": "行星是怎么绕太阳转的。",
+     "en": "how planets go round the Sun."
+    }
+   ]
+  },
+  {
+   "n": 11,
+   "id": "B05",
+   "script_id": "11",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[teasing] 一个问题，写这么厚？",
+   "zh": "一个问题，写这么厚？",
+   "en": "One question, and it's this thick?",
+   "screens": [
+    {
+     "zh": "一个问题，写这么厚？",
+     "en": "One question, and it's this thick?"
+    }
+   ]
+  },
+  {
+   "n": 12,
+   "id": "B06",
+   "script_id": "12",
+   "scene": "B",
+   "who": "nt",
+   "tts": "[dry, absorbed] I lost the first one. Began again.",
+   "zh": "第一份弄丢了，只好重来。",
+   "en": "I lost the first one. Began again.",
+   "screens": [
+    {
+     "zh": "第一份弄丢了，只好重来。",
+     "en": "I lost the first one. Began again."
+    }
+   ]
+  },
+  {
+   "n": 13,
+   "id": "B07",
+   "script_id": "13",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[cheeky] 是苹果砸头那个吗？",
+   "zh": "是苹果砸头那个吗？",
+   "en": "Is this the apple-on-the-head thing?",
+   "screens": [
+    {
+     "zh": "是苹果砸头那个吗？",
+     "en": "Is this the apple-on-the-head thing?"
+    }
+   ]
+  },
+  {
+   "n": 14,
+   "id": "B08",
+   "script_id": "14",
+   "scene": "B",
+   "who": "nt",
+   "tts": "[cold, precise] It fell to the ground. Not on me.",
+   "zh": "它掉在地上。没砸我。",
+   "en": "It fell to the ground. Not on me.",
+   "screens": [
+    {
+     "zh": "它掉在地上。没砸我。",
+     "en": "It fell to the ground. Not on me."
+    }
+   ]
+  },
+  {
+   "n": 15,
+   "id": "B09",
+   "script_id": "15",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[deadpan] 没笑。",
+   "zh": "没笑。",
+   "en": "No laugh.",
+   "screens": [
+    {
+     "zh": "没笑。",
+     "en": "No laugh."
+    }
+   ],
+   "card": {
+    "zh": "这个答案越写越厚，成了讲万有引力的巨著。",
+    "en": "The answer kept growing, and became his great book on universal gravitation."
+   },
+   "card_hold": 3.5,
+   "after": 3.5
+  },
+  {
+   "n": 16,
+   "id": "C01",
+   "script_id": "16",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[cheeky, a bit rude] 您从来不出去玩吗？",
+   "zh": "您从来不出去玩吗？",
+   "en": "Don't you ever go out and have fun?",
+   "screens": [
+    {
+     "zh": "您从来不出去玩吗？",
+     "en": "Don't you ever go out and have fun?"
+    }
+   ],
+   "pre": 1.5
+  },
+  {
+   "n": 17,
+   "id": "C02",
+   "script_id": "17",
+   "scene": "C",
+   "who": "nt",
+   "tts": "[dry, literal] I am out.",
+   "zh": "我这不是出来了？",
+   "en": "I am out.",
+   "screens": [
+    {
+     "zh": "我这不是出来了？",
+     "en": "I am out."
+    }
+   ]
+  },
+  {
+   "n": 18,
+   "id": "C03",
+   "script_id": "18",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[teasing] 绕两圈就算玩？",
+   "zh": "绕两圈就算玩？",
+   "en": "Two laps of a garden counts as fun?",
+   "screens": [
+    {
+     "zh": "绕两圈就算玩？",
+     "en": "Two laps of a garden counts as fun?"
+    }
+   ]
+  },
+  {
+   "n": 19,
+   "id": "C04",
+   "script_id": "19",
+   "scene": "C",
+   "who": "nt",
+   "tts": "[lecturing, then cut off] Two laps is—",
+   "zh": "两圈就够——",
+   "en": "Two laps is—",
+   "screens": [
+    {
+     "zh": "两圈就够——",
+     "en": "Two laps is—"
+    }
+   ],
+   "after": 1.0,
+   "beat": "he stops dead, turns, runs for the stairs"
+  },
+  {
+   "n": 20,
+   "id": "C05",
+   "script_id": "20",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[startled, curious] 诶？他想到什么了？",
+   "zh": "诶？他想到什么了？",
+   "en": "Huh? What's he thought of?",
+   "screens": [
+    {
+     "zh": "诶？他想到什么了？",
+     "en": "Huh? What's he thought of?"
+    }
+   ],
+   "after": 1.0,
+   "beat": "whip upstairs: he is writing standing"
+  },
+  {
+   "n": 21,
+   "id": "C06",
+   "script_id": "21",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[amused, coaxing] 坐下写嘛。",
+   "zh": "坐下写嘛。",
+   "en": "Sit down to write!",
+   "screens": [
+    {
+     "zh": "坐下写嘛。",
+     "en": "Sit down to write!"
+    }
+   ]
+  },
+  {
+   "n": 22,
+   "id": "C07",
+   "script_id": "22",
+   "scene": "C",
+   "who": "nt",
+   "tts": "[absorbed, dismissive] No time.",
+   "zh": "没空。",
+   "en": "No time.",
+   "screens": [
+    {
+     "zh": "没空。",
+     "en": "No time."
+    }
+   ],
+   "after": 1.0,
+   "beat": "the empty chair"
+  },
+  {
+   "n": 23,
+   "id": "D01",
+   "script_id": "23",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[amazed] 一个学生都没有。",
+   "zh": "一个学生都没有。",
+   "en": "Not one student.",
+   "screens": [
+    {
+     "zh": "一个学生都没有。",
+     "en": "Not one student."
+    }
+   ],
+   "pre": 3.0,
+   "beat": "pre: walk to the lecture with the ink wipe (1.5) + wide on the empty benches (1.5)"
+  },
+  {
+   "n": 24,
+   "id": "D02",
+   "script_id": "24",
+   "scene": "D",
+   "who": "nt",
+   "tts": "[dry, unbothered] The walls never miss a lecture.",
+   "zh": "墙，从来不缺课。",
+   "en": "The walls never miss a lecture.",
+   "screens": [
+    {
+     "zh": "墙，从来不缺课。",
+     "en": "The walls never miss a lecture."
+    }
+   ]
+  },
+  {
+   "n": 25,
+   "id": "D03",
+   "script_id": "25",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[cheeky] 墙听得懂吗？",
+   "zh": "墙听得懂吗？",
+   "en": "Do the walls understand it?",
+   "screens": [
+    {
+     "zh": "墙听得懂吗？",
+     "en": "Do the walls understand it?"
+    }
+   ]
+  },
+  {
+   "n": 26,
+   "id": "D04",
+   "script_id": "26",
+   "scene": "D",
+   "who": "nt",
+   "tts": "[deadpan] As well as the students.",
+   "zh": "跟学生差不多。",
+   "en": "As well as the students.",
+   "screens": [
+    {
+     "zh": "跟学生差不多。",
+     "en": "As well as the students."
+    }
+   ]
+  },
+  {
+   "n": 27,
+   "id": "D05",
+   "script_id": "27",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[laughing] 他没笑，我笑了。",
+   "zh": "他没笑，我笑了。",
+   "en": "He didn't laugh. I did.",
+   "screens": [
+    {
+     "zh": "他没笑，我笑了。",
+     "en": "He didn't laugh. I did."
+    }
+   ],
+   "after": 2.0,
+   "beat": "muffled lecture, time cut, the lone clap"
+  },
+  {
+   "n": 28,
+   "id": "D06",
+   "script_id": "28",
+   "scene": "D",
+   "who": "nt",
+   "tts": "[flat] Don't.",
+   "zh": "别鼓掌。",
+   "en": "Don't.",
+   "screens": [
+    {
+     "zh": "别鼓掌。",
+     "en": "Don't."
+    }
+   ]
+  },
+  {
+   "n": 29,
+   "id": "E01",
+   "script_id": "29",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[scolding, warm] 您今天一口都没吃！",
+   "zh": "您今天一口都没吃！",
+   "en": "You haven't had a bite all day!",
+   "screens": [
+    {
+     "zh": "您今天一口都没吃！",
+     "en": "You haven't had a bite all day!"
+    }
+   ],
+   "pre": 1.5,
+   "beat": "pre: supper plate with the fly"
+  },
+  {
+   "n": 30,
+   "id": "E02",
+   "script_id": "30",
+   "scene": "E",
+   "who": "nt",
+   "tts": "[genuinely surprised] Have I not?",
+   "zh": "我没吃吗？",
+   "en": "Have I not?",
+   "screens": [
+    {
+     "zh": "我没吃吗？",
+     "en": "Have I not?"
+    }
+   ],
+   "after": 2.0,
+   "beat": "two bites standing"
+  },
+  {
+   "n": 31,
+   "id": "E03",
+   "script_id": "31",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[brave, cheeky] 您是不是……没什么朋友？",
+   "zh": "您是不是……没什么朋友？",
+   "en": "Do you... not have many friends?",
+   "screens": [
+    {
+     "zh": "您是不是……没什么朋友？",
+     "en": "Do you... not have many friends?"
+    }
+   ]
+  },
+  {
+   "n": 32,
+   "id": "E04",
+   "script_id": "32",
+   "scene": "E",
+   "who": "nt",
+   "tts": "[matter-of-fact] Friends interrupt.",
+   "zh": "朋友只会打扰我。",
+   "en": "Friends interrupt.",
+   "screens": [
+    {
+     "zh": "朋友只会打扰我。",
+     "en": "Friends interrupt."
+    }
+   ]
+  },
+  {
+   "n": 33,
+   "id": "E05",
+   "script_id": "33",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[unbothered, cheeky] 那讨厌的人呢？",
+   "zh": "那讨厌的人呢？",
+   "en": "And people you can't stand?",
+   "screens": [
+    {
+     "zh": "那讨厌的人呢？",
+     "en": "And people you can't stand?"
+    }
+   ]
+  },
+  {
+   "n": 34,
+   "id": "E06",
+   "script_id": "34",
+   "scene": "E",
+   "who": "nt",
+   "tts": "[instant, with relish] Hooke.",
+   "zh": "胡克。",
+   "en": "Hooke.",
+   "screens": [
+    {
+     "zh": "胡克。",
+     "en": "Hooke."
+    }
+   ]
+  },
+  {
+   "n": 35,
+   "id": "E07",
+   "script_id": "35",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[impressed, deadpan] 秒答。胡克定律那个胡克。",
+   "zh": "秒答。胡克定律那个胡克。",
+   "en": "Instant answer. Hooke, as in Hooke's law.",
+   "screens": [
+    {
+     "zh": "秒答。",
+     "en": "Instant answer."
+    },
+    {
+     "zh": "胡克定律那个胡克。",
+     "en": "Hooke, as in Hooke's law."
+    }
+   ]
+  },
+  {
+   "n": 36,
+   "id": "F01",
+   "script_id": "36",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[curious, a little wary] 您在……炼金吗？",
+   "zh": "您在……炼金吗？",
+   "en": "Are you... making gold?",
+   "screens": [
+    {
+     "zh": "您在……炼金吗？",
+     "en": "Are you... making gold?"
+    }
+   ],
+   "pre": 2.2,
+   "beat": "pre: candle along the gravel to the glowing outbuilding"
+  },
+  {
+   "n": 37,
+   "id": "F02",
+   "script_id": "37",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[evasive] I'm watching a fire.",
+   "zh": "我在看火。",
+   "en": "I'm watching a fire.",
+   "screens": [
+    {
+     "zh": "我在看火。",
+     "en": "I'm watching a fire."
+    }
+   ],
+   "card": {
+    "zh": "看火？他留下的炼金手稿，超过一百万词。",
+    "en": "Watching a fire? His alchemy papers run to over a million words."
+   },
+   "card_hold": 3.5,
+   "after": 3.5,
+   "tts_note": "generated as 'I am watching a fire.'; the take (1642) says I'm"
+  },
+  {
+   "n": 38,
+   "id": "F03",
+   "script_id": "38",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[flat] Go to bed.",
+   "zh": "回去睡觉。",
+   "en": "Go to bed.",
+   "screens": [
+    {
+     "zh": "回去睡觉。",
+     "en": "Go to bed."
+    }
+   ]
+  },
+  {
+   "n": 39,
+   "id": "F04",
+   "script_id": "39",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[stubborn, warm] 不走，说好陪您一天。",
+   "zh": "不走，说好陪您一天。",
+   "en": "No. I said I'd spend the whole day with you.",
+   "screens": [
+    {
+     "zh": "不走，说好陪您一天。",
+     "en": "No. I said I'd spend the whole day with you."
+    }
+   ]
+  },
+  {
+   "n": 40,
+   "id": "F05",
+   "script_id": "40",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[dry, puzzled] Nobody stays a whole day.",
+   "zh": "没人会待一整天。",
+   "en": "Nobody stays a whole day.",
+   "screens": [
+    {
+     "zh": "没人会待一整天。",
+     "en": "Nobody stays a whole day."
+    }
+   ],
+   "after": 2.0,
+   "beat": "time passes: candle shorter, fire deep red, the board on his knee"
+  },
+  {
+   "n": 41,
+   "id": "F06",
+   "script_id": "41",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[tired, sincere] 这么守着火，不难熬吗？",
+   "zh": "这么守着火，不难熬吗？",
+   "en": "Sitting up with a fire like this, isn't it hard?",
+   "screens": [
+    {
+     "zh": "这么守着火，不难熬吗？",
+     "en": "Sitting up with a fire like this, isn't it hard?"
+    }
+   ]
+  },
+  {
+   "n": 42,
+   "id": "F07",
+   "script_id": "42",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[plain] I have sat up longer.",
+   "zh": "我守过更久的。",
+   "en": "I have sat up longer.",
+   "screens": [
+    {
+     "zh": "我守过更久的。",
+     "en": "I have sat up longer."
+    }
+   ]
+  },
+  {
+   "n": 43,
+   "id": "F08",
+   "script_id": "43",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[curious] 守谁？",
+   "zh": "守谁？",
+   "en": "Sat up with who?",
+   "screens": [
+    {
+     "zh": "守谁？",
+     "en": "Sat up with who?"
+    }
+   ]
+  },
+  {
+   "n": 44,
+   "id": "F09",
+   "script_id": "44",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[plain, guarded] My mother. When she was dying. Whole nights.",
+   "zh": "我母亲。她临终时，我整夜整夜地守。",
+   "en": "My mother. When she was dying. Whole nights.",
+   "screens": [
+    {
+     "zh": "我母亲。她临终时，",
+     "en": "My mother. When she was dying."
+    },
+    {
+     "zh": "我整夜整夜地守。",
+     "en": "Whole nights."
+    }
+   ]
+  },
+  {
+   "n": 45,
+   "id": "F10",
+   "script_id": "45",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[warm] 您跟妈妈，一定很亲吧。",
+   "zh": "您跟妈妈，一定很亲吧。",
+   "en": "You must have been close to your mother.",
+   "screens": [
+    {
+     "zh": "您跟妈妈，一定很亲吧。",
+     "en": "You must have been close to your mother."
+    }
+   ]
+  },
+  {
+   "n": 46,
+   "id": "F11",
+   "script_id": "46",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[dry, bitter] Close? My father died before I was born.",
+   "zh": "亲？我出生前，父亲就死了。",
+   "en": "Close? My father died before I was born.",
+   "screens": [
+    {
+     "zh": "亲？我出生前，父亲就死了。",
+     "en": "Close? My father died before I was born."
+    }
+   ],
+   "after": 1.0,
+   "beat": "he pokes the fire"
+  },
+  {
+   "n": 47,
+   "id": "F12",
+   "script_id": "47",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[flat, bitter] When I was three, she remarried. And left me.",
+   "zh": "我三岁那年，她改嫁了。把我留下了。",
+   "en": "When I was three, she remarried. And left me.",
+   "screens": [
+    {
+     "zh": "我三岁那年，她改嫁了。",
+     "en": "When I was three, she remarried."
+    },
+    {
+     "zh": "把我留下了。",
+     "en": "And left me."
+    }
+   ]
+  },
+  {
+   "n": 48,
+   "id": "F13",
+   "script_id": "48",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[stunned] 三岁？",
+   "zh": "三岁？",
+   "en": "Three?",
+   "screens": [
+    {
+     "zh": "三岁？",
+     "en": "Three?"
+    }
+   ]
+  },
+  {
+   "n": 49,
+   "id": "F14",
+   "script_id": "49",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[hard, ashamed] As a boy, I threatened to burn her and my stepfather, house and all.",
+   "zh": "小时候，我威胁过要把她和继父连人带房烧了。",
+   "en": "As a boy, I threatened to burn her and my stepfather, house and all.",
+   "screens": [
+    {
+     "zh": "小时候，我威胁过",
+     "en": "As a boy, I threatened to burn"
+    },
+    {
+     "zh": "要把她和继父连人带房烧了。",
+     "en": "her and my stepfather, house and all."
+    }
+   ],
+   "after": 1.5,
+   "beat": "the fire spits; one cello note"
+  },
+  {
+   "n": 50,
+   "id": "F15",
+   "script_id": "50",
+   "scene": "F",
+   "who": "nt",
+   "tts": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+   "zh": "她最后病重时，是我亲手给她换药。",
+   "en": "In her last illness, I changed her dressings myself.",
+   "screens": [
+    {
+     "zh": "她最后病重时，",
+     "en": "In her last illness,"
+    },
+    {
+     "zh": "是我亲手给她换药。",
+     "en": "I changed her dressings myself."
+    }
+   ]
+  },
+  {
+   "n": 51,
+   "id": "F16",
+   "script_id": "51",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[moved, warm] 她走了，您却没走。",
+   "zh": "她走了，您却没走。",
+   "en": "She left. You stayed.",
+   "screens": [
+    {
+     "zh": "她走了，您却没走。",
+     "en": "She left. You stayed."
+    }
+   ],
+   "after": 2.0,
+   "beat": "silence, only the fire"
+  },
+  {
+   "n": 52,
+   "id": "G01",
+   "script_id": "52",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[moved, then brave and cheeky] 两点了……说点轻松的……学几何，到底有什么用？",
+   "zh": "两点了……说点轻松的……学几何，到底有什么用？",
+   "en": "Two o'clock... something lighter... what is the actual use of geometry?",
+   "screens": [
+    {
+     "zh": "两点了……说点轻松的……",
+     "en": "Two o'clock... something lighter..."
+    },
+    {
+     "zh": "学几何，到底有什么用？",
+     "en": "what is the actual use of geometry?"
+    }
+   ],
+   "pre": 3.0,
+   "beat": "pre: the clock strikes two (two strokes ~1.4 s apart), the board slides off his knee on the second stroke and clatters, her hand picks it up and holds it close"
+  },
+  {
+   "n": 53,
+   "id": "G02",
+   "script_id": "53",
+   "scene": "G",
+   "who": "nt",
+   "tts": "[bursts out laughing, incredulous] What... use! [laughs]",
+   "zh": "有……什么用！",
+   "en": "What... use!",
+   "screens": [
+    {
+     "zh": "有……什么用！",
+     "en": "What... use!"
+    }
+   ],
+   "card": {
+    "zh": "五年里，助手只见他笑过一次：有人问了这句。",
+    "en": "In five years his assistant saw him laugh only once: someone had asked this."
+   },
+   "card_hold": 3.5,
+   "after": 5.0,
+   "card_delay": 1.5,
+   "beat": "THE LAUGH: its own take (eyes squeezed shut, head shaking), 'What... use!' over its tail; then the laugh hold (2 s), Humphrey drops the sack (1 s), then card 4",
+   "pre": 0.6
+  },
+  {
+   "n": 54,
+   "id": "G03",
+   "script_id": "54",
+   "scene": "G",
+   "who": "nt",
+   "tts": "[warm, gruff, still smiling] Good night.",
+   "zh": "晚安。",
+   "en": "Good night.",
+   "screens": [
+    {
+     "zh": "晚安。",
+     "en": "Good night."
+    }
+   ]
+  },
+  {
+   "n": 55,
+   "id": "G04",
+   "script_id": "55",
+   "scene": "G",
+   "who": "ji",
+   "tts": "[warm, smiling] 晚安，牛顿先生。",
+   "zh": "晚安，牛顿先生。",
+   "en": "Good night, Mr Newton.",
+   "screens": [
+    {
+     "zh": "晚安，牛顿先生。",
+     "en": "Good night, Mr Newton."
+    }
+   ],
+   "after": 4.5,
+   "card": {
+    "zh": "片中他的每个习惯，都出自他助手的回忆。",
+    "en": "Every habit of his in this film comes from his assistant's own account."
+   },
+   "card_hold": 3.5,
+   "beat": "card 5 under the 2 a.m. bites, then his window goes dark, black"
+  }
+ ]
+}
