@@ -1,0 +1,902 @@
+plan: {'tier': 'creator', 'character_count': 22518, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "mus_sneak", "type": "music", "text": "Sneaky tiptoe comedic music, light pizzicato strings and plucked pipa, soft woodblock ticks, playful suspense, quiet, ancient Chinese palace at dawn, no vocals, 100 bpm", "model": null, "status": 200, "sfx": true, "file": "mus_sneak.mp3", "bytes": 385611}
+{"name": "mus_hero_sting", "type": "music", "text": "Short grand heroic fanfare sting, Chinese brass and a big taiko hit, majestic and a little over the top, comedic pomp, ends on a held chord, no vocals", "model": null, "status": 200, "sfx": true, "file": "mus_hero_sting.mp3", "bytes": 146120}
+{"name": "mus_march", "type": "music", "text": "Confident playful march, plucked guzheng and dizi flute over light drums, an emperor striding through his palace, upbeat, no vocals, 110 bpm", "model": null, "status": 200, "sfx": true, "file": "mus_march.mp3", "bytes": 480279}
+{"name": "mus_busy", "type": "music", "text": "Busy comedic office music, quick plucked guzheng ostinato and wood block, paperwork montage, light and bouncy, ancient Chinese court, no vocals, 104 bpm", "model": null, "status": 200, "sfx": true, "file": "mus_busy.mp3", "bytes": 719769}
+{"name": "mus_mystic", "type": "music", "text": "Mysterious shimmering music with a shady comic edge, glass chimes, low bowed strings and a sly woodwind line, a charlatan alchemist with big promises, ancient China, no vocals", "model": null, "status": 200, "sfx": true, "file": "mus_mystic.mp3", "bytes": 529180}
+{"name": "mus_night", "type": "music", "text": "Stealthy night music, low plucked bass, soft hand drum and a breathy flute, sneaky suspense, ancient Chinese night outing, quiet, no vocals, 90 bpm", "model": null, "status": 200, "sfx": true, "file": "mus_night.mp3", "bytes": 623848}
+{"name": "mus_action", "type": "music", "text": "Sudden fast action percussion, pounding taiko drums and urgent strings, an ambush in the dark, short and intense, no vocals", "model": null, "status": 200, "sfx": true, "file": "mus_action.mp3", "bytes": 252700}
+{"name": "mus_pomp", "type": "music", "text": "Short pompous comedic royal fanfare, small brass, cymbal and gong, a solemn ceremony for something silly, no vocals", "model": null, "status": 200, "sfx": true, "file": "mus_pomp.mp3", "bytes": 146120}
+{"name": "mus_museum", "type": "music", "text": "Gentle bittersweet ending music, soft piano and erhu with warm strings, the last scene of a documentary, slow, hopeful, no vocals", "model": null, "status": 200, "sfx": true, "file": "mus_museum.mp3", "bytes": 576200}
+{"name": "amb_court", "type": "sfx", "text": "Ancient palace office in the morning, scribes writing with brushes, bamboo slips clacking softly, rustling, quiet indoor room tone", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_court.mp3", "bytes": 193140}
+{"name": "amb_coast", "type": "sfx", "text": "Seashore, gentle waves on sand, seagulls calling, light sea wind", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_coast.mp3", "bytes": 193140}
+{"name": "amb_city_far", "type": "sfx", "text": "Distant ancient city below a high stone terrace, faint crowd murmur, horse carts rolling, hooves, wind", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_city_far.mp3", "bytes": 193140}
+{"name": "amb_road", "type": "sfx", "text": "Hot dry desert road, dry wind, horses snorting and shifting, a wooden carriage creaking, distant cicadas", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_road.mp3", "bytes": 193140}
+{"name": "amb_museum_crowd", "type": "sfx", "text": "Large museum hall, soft murmur of visitors, occasional echoing footsteps, quiet reverent atmosphere", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "amb_museum_crowd.mp3", "bytes": 193140}
+{"name": "sfx_poweroff", "type": "sfx", "text": "An old camcorder power button click, then an old CRT television switching off: a falling electric whine and a soft static pop, then silence", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_poweroff.mp3", "bytes": 40585}
+{"name": "sfx_blush", "type": "sfx", "text": "Cute soft magical sparkle chime, short and gentle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_blush.mp3", "bytes": 17179}
+{"name": "sfx_taiko", "type": "sfx", "text": "One huge taiko drum hit with a deep cinematic boom", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_taiko.mp3", "bytes": 33061}
+{"name": "sfx_scratch", "type": "sfx", "text": "Comedic vinyl record scratch, short", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_scratch.mp3", "bytes": 13835}
+{"name": "sfx_gulp", "type": "sfx", "text": "Nervous cartoon gulp, short", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_gulp.mp3", "bytes": 13835}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/transformers/audio_utils.py:829: UserWarning: At least one mel filter has all zero values. The value for `num_mel_filters` (128) may be set too high. Or, the value for `num_frequency_bins` (257) may be set too low.
+  warnings.warn(
+Loading weights:   0%|          | 0/203 [00:00<?, ?it/s]Loading weights: 100%|██████████| 203/203 [00:00<00:00, 4535.78it/s]
+mus_sneak [['Music', 0.619], ['Pizzicato', 0.331], ['Musical instrument', 0.128], ['Violin, fiddle', 0.059], ['Keyboard (musical)', 0.057], ['Piano', 0.045], ['Zither', 0.037], ['Traditional music', 0.036]]
+mus_hero_sting [['Music', 0.826], ['Television', 0.802], ['Theme music', 0.106], ['Soundtrack music', 0.051], ['Video game music', 0.035], ['Sound effect', 0.032], ['Background music', 0.025], ['Scary music', 0.016]]
+mus_march [['Music', 0.594], ['Zither', 0.593], ['Pizzicato', 0.278], ['Traditional music', 0.068], ['Mandolin', 0.057], ['Musical instrument', 0.043], ['Plucked string instrument', 0.035], ['Sitar', 0.031]]
+mus_busy [['Music', 0.652], ['Wood block', 0.144], ['Percussion', 0.117], ['Musical instrument', 0.059], ['Ringtone', 0.04], ['Folk music', 0.03], ['Traditional music', 0.026], ['Cowbell', 0.022]]
+mus_mystic [['Music', 0.606], ['Wind instrument, woodwind instrument', 0.431], ['Flute', 0.283], ['Clarinet', 0.131], ['Musical instrument', 0.084], ['Theremin', 0.046], ['Saxophone', 0.03], ['Brass instrument', 0.019]]
+mus_night [['Music', 0.803], ['Wood block', 0.183], ['Musical instrument', 0.115], ['Harmonic', 0.097], ['Synthesizer', 0.071], ['Drum', 0.068], ['Percussion', 0.062], ['Drum machine', 0.043]]
+mus_action [['Music', 0.639], ['Gunshot, gunfire', 0.117], ['Fusillade', 0.086], ['Boom', 0.066], ['Theme music', 0.041], ['Whoosh, swoosh, swish', 0.04], ['Sound effect', 0.035], ['Explosion', 0.028]]
+mus_pomp [['Gong', 0.914], ['Music', 0.097], ['Sound effect', 0.025], ['Musical instrument', 0.012], ['Echo', 0.011], ['Percussion', 0.008], ['Bell', 0.008], ['Drum', 0.007]]
+mus_museum [['Music', 0.7], ['New-age music', 0.247], ['Ambient music', 0.179], ['Piano', 0.139], ['Keyboard (musical)', 0.117], ['Singing bowl', 0.1], ['Electric piano', 0.092], ['Musical instrument', 0.076]]
+amb_court [['Writing', 0.609], ['Rub', 0.223], ['Inside, small room', 0.021], ['Scratch', 0.018], ['Pant', 0.017], ['Filing (rasp)', 0.009], ['Speech', 0.009], ['Breathing', 0.005]]
+amb_coast [['Ocean', 0.348], ['Waves, surf', 0.224], ['Goose', 0.104], ['Fowl', 0.069], ['Honk', 0.054], ['Wind', 0.049], ['Outside, rural or natural', 0.043], ['Animal', 0.042]]
+amb_city_far [['Animal', 0.376], ['Chewing, mastication', 0.316], ['Biting', 0.118], ['Clip-clop', 0.107], ['Horse', 0.062], ['Inside, small room', 0.035], ['Domestic animals, pets', 0.033], ['Pig', 0.033]]
+amb_road [['Animal', 0.629], ['Outside, rural or natural', 0.106], ['Wild animals', 0.096], ['Domestic animals, pets', 0.085], ['Roaring cats (lions, tigers)', 0.063], ['Dog', 0.048], ['Pig', 0.04], ['Bird', 0.037]]
+amb_museum_crowd [['Snort', 0.209], ['Speech', 0.178], ['Gasp', 0.04], ['Sigh', 0.034], ['Breathing', 0.032], ['Inside, public space', 0.032], ['Music', 0.026], ['Inside, large room or hall', 0.025]]
+sfx_poweroff [['Heart sounds, heartbeat', 0.075], ['Speech', 0.058], ['Stomach rumble', 0.054], ['Silence', 0.052], ['Hum', 0.04], ['Clicking', 0.038], ['Clip-clop', 0.026], ['Heart murmur', 0.024]]
+sfx_blush [['Clang', 0.64], ['Ding', 0.572], ['Ping', 0.029], ['Bell', 0.024], ['Sound effect', 0.019], ['Chink, clink', 0.01], ['Music', 0.005], ['Coin (dropping)', 0.004]]
+sfx_taiko [['Explosion', 0.254], ['Sound effect', 0.191], ['Whoosh, swoosh, swish', 0.104], ['Burst, pop', 0.063], ['Bang', 0.061], ['Music', 0.028], ['Rumble', 0.01], ['Slam', 0.01]]
+sfx_scratch [['Sound effect', 0.138], ['Gasp', 0.08], ['Scratch', 0.075], ['Snicker', 0.067], ['Snort', 0.027], ['Chuckle, chortle', 0.027], ['Music', 0.012], ['Speech', 0.011]]
+sfx_gulp [['Grunt', 0.171], ['Sound effect', 0.134], ['Speech', 0.05], ['Male speech, man speaking', 0.037], ['Burping, eructation', 0.034], ['Music', 0.022], ['Gasp', 0.015], ['Throat clearing', 0.01]]
+[
+ {
+  "name": "mus_sneak",
+  "type": "music",
+  "text": "Sneaky tiptoe comedic music, light pizzicato strings and plucked pipa, soft woodblock ticks, playful suspense, quiet, ancient Chinese palace at dawn, no vocals, 100 bpm",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_sneak.mp3",
+  "bytes": 385611,
+  "seconds": 16.07,
+  "tags": [
+   [
+    "Music",
+    0.619
+   ],
+   [
+    "Pizzicato",
+    0.331
+   ],
+   [
+    "Musical instrument",
+    0.128
+   ],
+   [
+    "Violin, fiddle",
+    0.059
+   ],
+   [
+    "Keyboard (musical)",
+    0.057
+   ],
+   [
+    "Piano",
+    0.045
+   ],
+   [
+    "Zither",
+    0.037
+   ],
+   [
+    "Traditional music",
+    0.036
+   ]
+  ]
+ },
+ {
+  "name": "mus_hero_sting",
+  "type": "music",
+  "text": "Short grand heroic fanfare sting, Chinese brass and a big taiko hit, majestic and a little over the top, comedic pomp, ends on a held chord, no vocals",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_hero_sting.mp3",
+  "bytes": 146120,
+  "seconds": 6.09,
+  "tags": [
+   [
+    "Music",
+    0.826
+   ],
+   [
+    "Television",
+    0.802
+   ],
+   [
+    "Theme music",
+    0.106
+   ],
+   [
+    "Soundtrack music",
+    0.051
+   ],
+   [
+    "Video game music",
+    0.035
+   ],
+   [
+    "Sound effect",
+    0.032
+   ],
+   [
+    "Background music",
+    0.025
+   ],
+   [
+    "Scary music",
+    0.016
+   ]
+  ]
+ },
+ {
+  "name": "mus_march",
+  "type": "music",
+  "text": "Confident playful march, plucked guzheng and dizi flute over light drums, an emperor striding through his palace, upbeat, no vocals, 110 bpm",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_march.mp3",
+  "bytes": 480279,
+  "seconds": 20.01,
+  "tags": [
+   [
+    "Music",
+    0.594
+   ],
+   [
+    "Zither",
+    0.593
+   ],
+   [
+    "Pizzicato",
+    0.278
+   ],
+   [
+    "Traditional music",
+    0.068
+   ],
+   [
+    "Mandolin",
+    0.057
+   ],
+   [
+    "Musical instrument",
+    0.043
+   ],
+   [
+    "Plucked string instrument",
+    0.035
+   ],
+   [
+    "Sitar",
+    0.031
+   ]
+  ]
+ },
+ {
+  "name": "mus_busy",
+  "type": "music",
+  "text": "Busy comedic office music, quick plucked guzheng ostinato and wood block, paperwork montage, light and bouncy, ancient Chinese court, no vocals, 104 bpm",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_busy.mp3",
+  "bytes": 719769,
+  "seconds": 29.99,
+  "tags": [
+   [
+    "Music",
+    0.652
+   ],
+   [
+    "Wood block",
+    0.144
+   ],
+   [
+    "Percussion",
+    0.117
+   ],
+   [
+    "Musical instrument",
+    0.059
+   ],
+   [
+    "Ringtone",
+    0.04
+   ],
+   [
+    "Folk music",
+    0.03
+   ],
+   [
+    "Traditional music",
+    0.026
+   ],
+   [
+    "Cowbell",
+    0.022
+   ]
+  ]
+ },
+ {
+  "name": "mus_mystic",
+  "type": "music",
+  "text": "Mysterious shimmering music with a shady comic edge, glass chimes, low bowed strings and a sly woodwind line, a charlatan alchemist with big promises, ancient China, no vocals",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_mystic.mp3",
+  "bytes": 529180,
+  "seconds": 22.05,
+  "tags": [
+   [
+    "Music",
+    0.606
+   ],
+   [
+    "Wind instrument, woodwind instrument",
+    0.431
+   ],
+   [
+    "Flute",
+    0.283
+   ],
+   [
+    "Clarinet",
+    0.131
+   ],
+   [
+    "Musical instrument",
+    0.084
+   ],
+   [
+    "Theremin",
+    0.046
+   ],
+   [
+    "Saxophone",
+    0.03
+   ],
+   [
+    "Brass instrument",
+    0.019
+   ]
+  ]
+ },
+ {
+  "name": "mus_night",
+  "type": "music",
+  "text": "Stealthy night music, low plucked bass, soft hand drum and a breathy flute, sneaky suspense, ancient Chinese night outing, quiet, no vocals, 90 bpm",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_night.mp3",
+  "bytes": 623848,
+  "seconds": 25.99,
+  "tags": [
+   [
+    "Music",
+    0.803
+   ],
+   [
+    "Wood block",
+    0.183
+   ],
+   [
+    "Musical instrument",
+    0.115
+   ],
+   [
+    "Harmonic",
+    0.097
+   ],
+   [
+    "Synthesizer",
+    0.071
+   ],
+   [
+    "Drum",
+    0.068
+   ],
+   [
+    "Percussion",
+    0.062
+   ],
+   [
+    "Drum machine",
+    0.043
+   ]
+  ]
+ },
+ {
+  "name": "mus_action",
+  "type": "music",
+  "text": "Sudden fast action percussion, pounding taiko drums and urgent strings, an ambush in the dark, short and intense, no vocals",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_action.mp3",
+  "bytes": 252700,
+  "seconds": 10.53,
+  "tags": [
+   [
+    "Music",
+    0.639
+   ],
+   [
+    "Gunshot, gunfire",
+    0.117
+   ],
+   [
+    "Fusillade",
+    0.086
+   ],
+   [
+    "Boom",
+    0.066
+   ],
+   [
+    "Theme music",
+    0.041
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.04
+   ],
+   [
+    "Sound effect",
+    0.035
+   ],
+   [
+    "Explosion",
+    0.028
+   ]
+  ]
+ },
+ {
+  "name": "mus_pomp",
+  "type": "music",
+  "text": "Short pompous comedic royal fanfare, small brass, cymbal and gong, a solemn ceremony for something silly, no vocals",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_pomp.mp3",
+  "bytes": 146120,
+  "seconds": 6.09,
+  "tags": [
+   [
+    "Gong",
+    0.914
+   ],
+   [
+    "Music",
+    0.097
+   ],
+   [
+    "Sound effect",
+    0.025
+   ],
+   [
+    "Musical instrument",
+    0.012
+   ],
+   [
+    "Echo",
+    0.011
+   ],
+   [
+    "Percussion",
+    0.008
+   ],
+   [
+    "Bell",
+    0.008
+   ],
+   [
+    "Drum",
+    0.007
+   ]
+  ]
+ },
+ {
+  "name": "mus_museum",
+  "type": "music",
+  "text": "Gentle bittersweet ending music, soft piano and erhu with warm strings, the last scene of a documentary, slow, hopeful, no vocals",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_museum.mp3",
+  "bytes": 576200,
+  "seconds": 24.01,
+  "tags": [
+   [
+    "Music",
+    0.7
+   ],
+   [
+    "New-age music",
+    0.247
+   ],
+   [
+    "Ambient music",
+    0.179
+   ],
+   [
+    "Piano",
+    0.139
+   ],
+   [
+    "Keyboard (musical)",
+    0.117
+   ],
+   [
+    "Singing bowl",
+    0.1
+   ],
+   [
+    "Electric piano",
+    0.092
+   ],
+   [
+    "Musical instrument",
+    0.076
+   ]
+  ]
+ },
+ {
+  "name": "amb_court",
+  "type": "sfx",
+  "text": "Ancient palace office in the morning, scribes writing with brushes, bamboo slips clacking softly, rustling, quiet indoor room tone",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_court.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Writing",
+    0.609
+   ],
+   [
+    "Rub",
+    0.223
+   ],
+   [
+    "Inside, small room",
+    0.021
+   ],
+   [
+    "Scratch",
+    0.018
+   ],
+   [
+    "Pant",
+    0.017
+   ],
+   [
+    "Filing (rasp)",
+    0.009
+   ],
+   [
+    "Speech",
+    0.009
+   ],
+   [
+    "Breathing",
+    0.005
+   ]
+  ]
+ },
+ {
+  "name": "amb_coast",
+  "type": "sfx",
+  "text": "Seashore, gentle waves on sand, seagulls calling, light sea wind",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_coast.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Ocean",
+    0.348
+   ],
+   [
+    "Waves, surf",
+    0.224
+   ],
+   [
+    "Goose",
+    0.104
+   ],
+   [
+    "Fowl",
+    0.069
+   ],
+   [
+    "Honk",
+    0.054
+   ],
+   [
+    "Wind",
+    0.049
+   ],
+   [
+    "Outside, rural or natural",
+    0.043
+   ],
+   [
+    "Animal",
+    0.042
+   ]
+  ]
+ },
+ {
+  "name": "amb_city_far",
+  "type": "sfx",
+  "text": "Distant ancient city below a high stone terrace, faint crowd murmur, horse carts rolling, hooves, wind",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_city_far.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Animal",
+    0.376
+   ],
+   [
+    "Chewing, mastication",
+    0.316
+   ],
+   [
+    "Biting",
+    0.118
+   ],
+   [
+    "Clip-clop",
+    0.107
+   ],
+   [
+    "Horse",
+    0.062
+   ],
+   [
+    "Inside, small room",
+    0.035
+   ],
+   [
+    "Domestic animals, pets",
+    0.033
+   ],
+   [
+    "Pig",
+    0.033
+   ]
+  ]
+ },
+ {
+  "name": "amb_road",
+  "type": "sfx",
+  "text": "Hot dry desert road, dry wind, horses snorting and shifting, a wooden carriage creaking, distant cicadas",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_road.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Animal",
+    0.629
+   ],
+   [
+    "Outside, rural or natural",
+    0.106
+   ],
+   [
+    "Wild animals",
+    0.096
+   ],
+   [
+    "Domestic animals, pets",
+    0.085
+   ],
+   [
+    "Roaring cats (lions, tigers)",
+    0.063
+   ],
+   [
+    "Dog",
+    0.048
+   ],
+   [
+    "Pig",
+    0.04
+   ],
+   [
+    "Bird",
+    0.037
+   ]
+  ]
+ },
+ {
+  "name": "amb_museum_crowd",
+  "type": "sfx",
+  "text": "Large museum hall, soft murmur of visitors, occasional echoing footsteps, quiet reverent atmosphere",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "amb_museum_crowd.mp3",
+  "bytes": 193140,
+  "seconds": 12.0,
+  "tags": [
+   [
+    "Snort",
+    0.209
+   ],
+   [
+    "Speech",
+    0.178
+   ],
+   [
+    "Gasp",
+    0.04
+   ],
+   [
+    "Sigh",
+    0.034
+   ],
+   [
+    "Breathing",
+    0.032
+   ],
+   [
+    "Inside, public space",
+    0.032
+   ],
+   [
+    "Music",
+    0.026
+   ],
+   [
+    "Inside, large room or hall",
+    0.025
+   ]
+  ]
+ },
+ {
+  "name": "sfx_poweroff",
+  "type": "sfx",
+  "text": "An old camcorder power button click, then an old CRT television switching off: a falling electric whine and a soft static pop, then silence",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_poweroff.mp3",
+  "bytes": 40585,
+  "seconds": 2.48,
+  "tags": [
+   [
+    "Heart sounds, heartbeat",
+    0.075
+   ],
+   [
+    "Speech",
+    0.058
+   ],
+   [
+    "Stomach rumble",
+    0.054
+   ],
+   [
+    "Silence",
+    0.052
+   ],
+   [
+    "Hum",
+    0.04
+   ],
+   [
+    "Clicking",
+    0.038
+   ],
+   [
+    "Clip-clop",
+    0.026
+   ],
+   [
+    "Heart murmur",
+    0.024
+   ]
+  ]
+ },
+ {
+  "name": "sfx_blush",
+  "type": "sfx",
+  "text": "Cute soft magical sparkle chime, short and gentle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_blush.mp3",
+  "bytes": 17179,
+  "seconds": 1.0,
+  "tags": [
+   [
+    "Clang",
+    0.64
+   ],
+   [
+    "Ding",
+    0.572
+   ],
+   [
+    "Ping",
+    0.029
+   ],
+   [
+    "Bell",
+    0.024
+   ],
+   [
+    "Sound effect",
+    0.019
+   ],
+   [
+    "Chink, clink",
+    0.01
+   ],
+   [
+    "Music",
+    0.005
+   ],
+   [
+    "Coin (dropping)",
+    0.004
+   ]
+  ]
+ },
+ {
+  "name": "sfx_taiko",
+  "type": "sfx",
+  "text": "One huge taiko drum hit with a deep cinematic boom",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_taiko.mp3",
+  "bytes": 33061,
+  "seconds": 2.0,
+  "tags": [
+   [
+    "Explosion",
+    0.254
+   ],
+   [
+    "Sound effect",
+    0.191
+   ],
+   [
+    "Whoosh, swoosh, swish",
+    0.104
+   ],
+   [
+    "Burst, pop",
+    0.063
+   ],
+   [
+    "Bang",
+    0.061
+   ],
+   [
+    "Music",
+    0.028
+   ],
+   [
+    "Rumble",
+    0.01
+   ],
+   [
+    "Slam",
+    0.01
+   ]
+  ]
+ },
+ {
+  "name": "sfx_scratch",
+  "type": "sfx",
+  "text": "Comedic vinyl record scratch, short",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_scratch.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Sound effect",
+    0.138
+   ],
+   [
+    "Gasp",
+    0.08
+   ],
+   [
+    "Scratch",
+    0.075
+   ],
+   [
+    "Snicker",
+    0.067
+   ],
+   [
+    "Snort",
+    0.027
+   ],
+   [
+    "Chuckle, chortle",
+    0.027
+   ],
+   [
+    "Music",
+    0.012
+   ],
+   [
+    "Speech",
+    0.011
+   ]
+  ]
+ },
+ {
+  "name": "sfx_gulp",
+  "type": "sfx",
+  "text": "Nervous cartoon gulp, short",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_gulp.mp3",
+  "bytes": 13835,
+  "seconds": 0.8,
+  "tags": [
+   [
+    "Grunt",
+    0.171
+   ],
+   [
+    "Sound effect",
+    0.134
+   ],
+   [
+    "Speech",
+    0.05
+   ],
+   [
+    "Male speech, man speaking",
+    0.037
+   ],
+   [
+    "Burping, eructation",
+    0.034
+   ],
+   [
+    "Music",
+    0.022
+   ],
+   [
+    "Gasp",
+    0.015
+   ],
+   [
+    "Throat clearing",
+    0.01
+   ]
+  ]
+ }
+]
