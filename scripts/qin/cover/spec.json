@@ -1,0 +1,62 @@
+{
+ "font": "../../../public/bt/sans700.ttf",
+ "_about": "采访秦始皇的一天 Douyin covers (v3, frame 886: the blush, the sword on his shoulder). Backgrounds are picture-only stills from the preview harness at the cover's shape, larger, then cropped uniformly (not in the repo): bash scripts/kit/queue/still.sh src/videos/qin/preview/film.ts /home/user/qin_work/cover/pv_wide3 --pick 886 --size 2160x1620 (and pv_tall2 at 1350x1800). Then: python3 scripts/kit/cover/cover.py scripts/qin/cover/spec.json",
+ "covers": [
+  {
+   "bg": "/home/user/qin_work/cover/pv_wide3/f0886.png",
+   "crop": [
+    0,
+    150,
+    1440,
+    1230
+   ],
+   "target": "douyin43",
+   "layout": "side",
+   "hook": [
+    "他拔剑指着我",
+    "然后……脸红了"
+   ],
+   "title": "《采访秦始皇的一天》",
+   "out": "/home/user/qin_work/cover/out/cover_4x3_zh.png",
+   "override": {
+    "cx": 0.3,
+    "side": [
+     0.26,
+     0.61
+    ],
+    "hooks": [
+     [
+      0.42,
+      0.46,
+      150,
+      7
+     ],
+     [
+      0.535,
+      0.47,
+      140,
+      6
+     ]
+    ]
+   }
+  },
+  {
+   "bg": "/home/user/qin_work/cover/pv_tall2/f0886.png",
+   "crop": [
+    121,
+    120,
+    1201,
+    1560
+   ],
+   "target": "douyin34",
+   "layout": "low",
+   "hook": [
+    "他拔剑指着我",
+    "然后……脸红了"
+   ],
+   "title": "《采访秦始皇的一天》",
+   "out": "/home/user/qin_work/cover/out/cover_3x4_zh.png"
+  }
+ ],
+ "sheet": "/home/user/qin_work/cover/out/qin_covers_sheet.png"
+}
