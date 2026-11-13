@@ -1,1055 +1,865 @@
 {
- "id": "newton-check-01",
+ "id": "newton-v3-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
+ "words": true,
  "items": [
   {
-   "name": "mus_Y_yellow",
-   "type": "music",
-   "ms": 32000,
-   "instrumental": true,
-   "text": "Bright joyful baroque allegro in E major, galloping strings and harpsichord continuo, a eureka moment, excited and quick, 18th-century chamber orchestra, no vocals, 132 bpm"
-  },
-  {
-   "name": "tr_s1727_P01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
-   "start": 0.0,
-   "end": 3.08,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_P02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
-   "start": 3.22,
-   "end": 5.78,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_P03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
-   "start": 5.82,
-   "end": 8.31,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_P04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
-   "start": 8.37,
-   "end": 10.02,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_P05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1727.mp3",
-   "start": 10.34,
-   "end": 15.43,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_R01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
-   "start": 0.04,
-   "end": 3.0,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_R02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
-   "start": 3.0,
-   "end": 4.53,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_R03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
-   "start": 4.55,
-   "end": 6.98,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_R04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
-   "start": 6.98,
-   "end": 8.51,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_R05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1727.mp3",
-   "start": 8.84,
-   "end": 14.72,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_O01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_O_s1727.mp3",
-   "start": 0.02,
-   "end": 3.45,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_O02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_O_s1727.mp3",
-   "start": 3.75,
-   "end": 6.78,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_O03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_O_s1727.mp3",
-   "start": 6.91,
-   "end": 10.4,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 0.0,
-   "end": 2.88,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 2.88,
-   "end": 6.99,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 7.03,
-   "end": 7.89,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 7.99,
-   "end": 9.39,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 9.39,
-   "end": 10.3,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 10.37,
-   "end": 12.11,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 12.18,
-   "end": 16.14,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_Y08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 16.14,
-   "end": 17.85,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y09",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 17.88,
-   "end": 23.08,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_Y10",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1727.mp3",
-   "start": 23.12,
-   "end": 23.81,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_G01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
-   "start": 0.01,
-   "end": 4.13,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_G02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
-   "start": 4.15,
-   "end": 7.73,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_G03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
-   "start": 7.79,
-   "end": 11.14,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_G04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
-   "start": 11.14,
-   "end": 14.4,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_G05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
-   "start": 14.46,
-   "end": 17.89,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_G06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1727.mp3",
-   "start": 17.92,
-   "end": 20.03,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_B01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 0.07,
-   "end": 3.1,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_B02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 3.2,
-   "end": 4.42,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_B03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 4.52,
-   "end": 6.38,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_B04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 6.44,
-   "end": 10.62,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_B05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 10.71,
-   "end": 12.49,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_B06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 12.56,
-   "end": 13.7,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_B07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 13.72,
-   "end": 15.32,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_B08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 15.34,
-   "end": 16.25,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_B09",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 16.33,
-   "end": 18.5,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_B10",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 18.6,
-   "end": 19.69,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_B11",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 19.73,
-   "end": 21.7,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_B12",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 21.78,
-   "end": 22.85,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_B13",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1727.mp3",
-   "start": 22.88,
-   "end": 24.02,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_I01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 0.06,
-   "end": 2.75,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_I02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 2.84,
-   "end": 4.67,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_I03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 4.8,
-   "end": 6.67,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_I04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 6.71,
-   "end": 9.66,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_I05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 9.74,
-   "end": 13.33,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_I06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 13.4,
-   "end": 16.53,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_I07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 16.55,
-   "end": 19.03,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_I08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1727.mp3",
-   "start": 19.03,
-   "end": 21.2,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_V01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 0.1,
-   "end": 2.96,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_V02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 2.98,
-   "end": 4.09,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_V03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 4.71,
-   "end": 9.71,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_V04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 9.89,
-   "end": 12.14,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_V05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 12.37,
-   "end": 18.86,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_V06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 19.55,
-   "end": 23.5,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_V07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 23.79,
-   "end": 25.38,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_V08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 25.52,
-   "end": 32.8,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_V09",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1727.mp3",
-   "start": 33.28,
-   "end": 34.36,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_W01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
-   "start": 0.03,
-   "end": 6.52,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_W02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
-   "start": 6.62,
-   "end": 9.04,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_W03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
-   "start": 9.08,
-   "end": 11.42,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_W04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
-   "start": 11.42,
-   "end": 14.42,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1727_W05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
-   "start": 14.43,
-   "end": 16.66,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1727_W06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1727.mp3",
-   "start": 16.78,
-   "end": 19.76,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_P01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
-   "start": 0.0,
-   "end": 3.2,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_P02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
-   "start": 3.27,
-   "end": 5.77,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_P03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
-   "start": 5.83,
-   "end": 8.4,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_P04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
-   "start": 8.46,
-   "end": 10.15,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_P05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_P_s1642.mp3",
-   "start": 10.31,
-   "end": 15.36,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_R01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
-   "start": 0.04,
-   "end": 2.95,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_R02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
-   "start": 2.99,
-   "end": 4.53,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_R03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
-   "start": 4.56,
-   "end": 6.96,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_R04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
-   "start": 7.0,
-   "end": 8.26,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_R05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_R_s1642.mp3",
-   "start": 8.27,
-   "end": 14.48,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_O01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_O_s1642.mp3",
-   "start": 0.0,
-   "end": 3.69,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_O02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_O_s1642.mp3",
-   "start": 3.85,
-   "end": 6.9,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_O03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_O_s1642.mp3",
-   "start": 6.99,
-   "end": 10.48,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 0.0,
-   "end": 2.96,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 2.96,
-   "end": 6.97,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 7.0,
-   "end": 7.89,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 8.01,
-   "end": 9.34,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 9.34,
-   "end": 10.25,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 10.35,
-   "end": 12.03,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 12.1,
-   "end": 16.29,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_Y08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 16.29,
-   "end": 17.95,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y09",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 17.96,
-   "end": 23.25,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_Y10",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_Y_s1642.mp3",
-   "start": 23.31,
-   "end": 24.04,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_G01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
-   "start": 0.01,
-   "end": 4.28,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_G02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
-   "start": 4.29,
-   "end": 7.9,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_G03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
-   "start": 8.04,
-   "end": 11.42,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_G04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
-   "start": 11.42,
-   "end": 14.62,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_G05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
-   "start": 14.63,
-   "end": 17.96,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_G06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_G_s1642.mp3",
-   "start": 18.04,
-   "end": 20.18,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_B01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 0.04,
-   "end": 3.06,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_B02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 3.2,
-   "end": 4.41,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_B03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 4.51,
-   "end": 6.36,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_B04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 6.46,
-   "end": 10.65,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_B05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 10.79,
-   "end": 12.49,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_B06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 12.56,
-   "end": 13.69,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_B07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 13.75,
-   "end": 15.25,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_B08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 15.27,
-   "end": 16.13,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_B09",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 16.22,
-   "end": 18.64,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_B10",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 18.72,
-   "end": 19.8,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_B11",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 19.89,
-   "end": 21.9,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_B12",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 22.07,
-   "end": 23.12,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_B13",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_B_s1642.mp3",
-   "start": 23.15,
-   "end": 24.27,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_I01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 0.0,
-   "end": 2.63,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_I02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 2.68,
-   "end": 4.64,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_I03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 4.76,
-   "end": 6.44,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_I04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 6.5,
-   "end": 9.57,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_I05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 9.64,
-   "end": 13.33,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_I06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 13.33,
-   "end": 16.65,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_I07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 16.71,
-   "end": 19.34,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_I08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_I_s1642.mp3",
-   "start": 19.34,
-   "end": 21.76,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_V01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 0.04,
-   "end": 2.91,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_V02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 2.98,
-   "end": 4.07,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_V03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 4.38,
-   "end": 9.1,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_V04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 9.39,
-   "end": 11.73,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_V05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 11.91,
-   "end": 18.16,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_V06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 18.81,
-   "end": 22.74,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_V07",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 22.92,
-   "end": 24.58,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_V08",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 24.63,
-   "end": 31.98,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_V09",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_V_s1642.mp3",
-   "start": 32.53,
-   "end": 33.6,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_W01",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
-   "start": 0.0,
-   "end": 6.65,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_W02",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
-   "start": 6.68,
-   "end": 9.06,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_W03",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
-   "start": 9.09,
-   "end": 11.39,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_W04",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
-   "start": 11.39,
-   "end": 14.26,
-   "lang": "en"
-  },
-  {
-   "name": "tr_s1642_W05",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
-   "start": 14.26,
-   "end": 16.5,
-   "lang": "zh"
-  },
-  {
-   "name": "tr_s1642_W06",
-   "type": "transcribe",
-   "src": "out/newton-vo-01/dlg_W_s1642.mp3",
-   "start": 16.64,
-   "end": 19.68,
-   "lang": "zh"
+   "type": "dialogue",
+   "name": "v3_S1_s1716",
+   "model": "eleven_v4",
+   "seed": 1716,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[bright, cheeky] 牛顿爵士，苹果砸头疼吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[offended, sharp] It did not hit my head.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cold, final] Three minutes.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[thrilled] 才三分钟？看我的。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[innocent, confidently wrong] 哦，那是砸到您脚了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[irritated, correcting] No. It fell to the ground. Straight down.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[absorbed, thinking aloud] Why always straight down?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[catching himself, cold] We are done.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[unbothered, pleased with herself] 赶我？看到没，说错一句，他就忍不住。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[casual, provoking] 听说引力那本书，其实是哈雷写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[outraged] Halley paid for it. I wrote it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[innocent] 皇家学会怎么不出钱？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[disgusted] Their money went on a book about fish.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[petty, triumphant] Your time is up.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheeky] 沙子还在掉呢。直直往下。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v3_S2_s1716",
+   "model": "eleven_v4",
+   "seed": 1716,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[casual, dropping a bomb] 胡克说过，引力定律有他一份功劳。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[furious] Hooke!",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[ranting] He wanted my credit. I nearly cut Book Three.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[needling] 您就这么不想发表？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[prickly] Who would understand it?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[dry, sour] At Cambridge, I often lectured to walls.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan] 墙，辛苦了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sly] 胡克去世第二年，您就出了《光学》？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, too quick, dodging] My friends insisted. Next question.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v3_S3_s1716",
+   "model": "eleven_v4",
+   "seed": 1716,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[sweet, going for it] 好。微积分是莱布尼茨发明的吧？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[exploding] Leibniz? It was mine!",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 那皇家学会怎么判的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud, composed] A committee looked into it. Very fair.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[innocent] 会长，委员谁选的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud] I did.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[quicker] 报告谁写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[prouder] I did.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[quicker still] 夸报告的文章，谁写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[natural] Anonymous.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan] 也是他。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold fury] Out. Now.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v3_S4_s1716",
+   "model": "eleven_v4",
+   "seed": 1716,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[puzzled] 这写的什么？像密码。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sharp] Give me that.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[sincere, careful] 您为什么威胁要烧死他们？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[matter-of-fact] At birth, I could fit in that. My father was already dead.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[matter-of-fact, tight] At three, my mother married again. She left me with my grandmother.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[sincere] 那您……原谅她了吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[steady, holding it in] When she was dying, I sat up whole nights with her.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[steady, voice catching] I dressed her blisters with my own hands.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, trying to sound professional] ……时间到了。谢谢您，牛顿爵士。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[gruff] Sit down. Next question.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[delighted, teary, teasing] 那……苹果到底砸没砸到您的头？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[exasperated, fighting a smile] For the last time. It did not hit my head.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v3_S1_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[bright, cheeky] 牛顿爵士，苹果砸头疼吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[offended, sharp] It did not hit my head.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cold, final] Three minutes.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[thrilled] 才三分钟？看我的。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[innocent, confidently wrong] 哦，那是砸到您脚了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[irritated, correcting] No. It fell to the ground. Straight down.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[absorbed, thinking aloud] Why always straight down?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[catching himself, cold] We are done.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[unbothered, pleased with herself] 赶我？看到没，说错一句，他就忍不住。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[casual, provoking] 听说引力那本书，其实是哈雷写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[outraged] Halley paid for it. I wrote it.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[innocent] 皇家学会怎么不出钱？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[disgusted] Their money went on a book about fish.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[petty, triumphant] Your time is up.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[cheeky] 沙子还在掉呢。直直往下。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v3_S2_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[casual, dropping a bomb] 胡克说过，引力定律有他一份功劳。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[furious] Hooke!",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[ranting] He wanted my credit. I nearly cut Book Three.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[needling] 您就这么不想发表？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[prickly] Who would understand it?",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[dry, sour] At Cambridge, I often lectured to walls.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan] 墙，辛苦了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sly] 胡克去世第二年，您就出了《光学》？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[flat, too quick, dodging] My friends insisted. Next question.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v3_S3_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[sweet, going for it] 好。微积分是莱布尼茨发明的吧？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[exploding] Leibniz? It was mine!",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[curious] 那皇家学会怎么判的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud, composed] A committee looked into it. Very fair.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[innocent] 会长，委员谁选的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud] I did.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[quicker] 报告谁写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[prouder] I did.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[quicker still] 夸报告的文章，谁写的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[natural] Anonymous.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[deadpan] 也是他。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cold fury] Out. Now.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v3_S4_s1727",
+   "model": "eleven_v4",
+   "seed": 1727,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[puzzled] 这写的什么？像密码。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sharp] Give me that.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[sincere, careful] 您为什么威胁要烧死他们？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[matter-of-fact] At birth, I could fit in that. My father was already dead.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[matter-of-fact, tight] At three, my mother married again. She left me with my grandmother.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[sincere] 那您……原谅她了吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[steady, holding it in] When she was dying, I sat up whole nights with her.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[steady, voice catching] I dressed her blisters with my own hands.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, trying to sound professional] ……时间到了。谢谢您，牛顿爵士。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[gruff] Sit down. Next question.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[delighted, teary, teasing] 那……苹果到底砸没砸到您的头？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[exasperated, fighting a smile] For the last time. It did not hit my head.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    }
+   ]
   }
  ]
 }
