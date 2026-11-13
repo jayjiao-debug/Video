@@ -1,1 +1,1 @@
-{"id":"wanbi-en-01","composition":"WanbiFilm","start":0,"end":2106,"chunks":20,"concurrency":1,"timeout":900000,"output":"wanbi_en_v1","flags":"--crf=14 --props={\"lang\":\"en\"}"}
+{"id":"wanbi-en-02","composition":"WanbiFilm","start":318,"end":529,"chunks":2,"concurrency":1,"timeout":900000,"output":"wanbi_en_fix318","flags":"--crf=14 --props={\"lang\":\"en\"}"}
