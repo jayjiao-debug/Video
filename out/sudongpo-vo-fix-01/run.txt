@@ -1,0 +1,199 @@
+plan: {'tier': 'creator', 'character_count': 45057, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "r37a_s7", "lang": "zh", "text": "[same breezy tone] 第二件事，做坟。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r37a_s7.mp3", "bytes": 25538}
+{"name": "r37a_s8", "lang": "zh", "text": "[same breezy tone] 第二件事，做坟。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r37a_s8.mp3", "bytes": 29300}
+{"name": "r37b_s7", "lang": "zh", "text": "[same breezy tone] 第二件事，做焚。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r37b_s7.mp3", "bytes": 26792}
+{"name": "r37b_s8", "lang": "zh", "text": "[same breezy tone] 第二件事，做焚。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r37b_s8.mp3", "bytes": 29300}
+{"name": "r38_s7", "lang": "zh", "text": "[scared to ask] 第三件呢？", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "r38_s7.mp3", "bytes": 18851}
+{"name": "r38_s8", "lang": "zh", "text": "[scared to ask] 第三件呢？", "voice": "shared:Lin", "voice_id": "I23uc91tu5zY2PA1tKEN", "model": "eleven_v4", "status": 200, "file": "r38_s8.mp3", "bytes": 20105}
+{"name": "r48_s7", "lang": "zh", "text": "[plain] 昭云。家里人都散了，只有她，跟我来了惠州。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r48_s7.mp3", "bytes": 80291}
+{"name": "r48_s8", "lang": "zh", "text": "[plain] 昭云。家里人都散了，只有她，跟我来了惠州。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r48_s8.mp3", "bytes": 79037}
+{"name": "r55a_s7", "lang": "zh", "text": "[dead serious] 他们会抢着被贬过来，分我的蚝。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r55a_s7.mp3", "bytes": 52287}
+{"name": "r55a_s8", "lang": "zh", "text": "[dead serious] 他们会抢着被贬过来，分我的蚝。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r55a_s8.mp3", "bytes": 48526}
+{"name": "r55b_s7", "lang": "zh", "text": "[dead serious] 他们会抢着被贬过来，分我的豪。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r55b_s7.mp3", "bytes": 52287}
+{"name": "r55b_s8", "lang": "zh", "text": "[dead serious] 他们会抢着被贬过来，分我的豪。", "voice": "shared:Gavin", "voice_id": "YGeNjTKY1wBaKygyl4y8", "model": "eleven_v4", "status": 200, "file": "r55b_s8.mp3", "bytes": 49780}
+removed kept voices: {'YGeNjTKY1wBaKygyl4y8': 200, 'I23uc91tu5zY2PA1tKEN': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "r37a_s7",
+  "lang": "zh",
+  "text": "[same breezy tone] 第二件事，做坟。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r37a_s7.mp3",
+  "bytes": 25538,
+  "heard": "第二件事做粉",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 1.52
+ },
+ {
+  "name": "r37a_s8",
+  "lang": "zh",
+  "text": "[same breezy tone] 第二件事，做坟。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r37a_s8.mp3",
+  "bytes": 29300,
+  "heard": "第二件是做粉",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 1.76
+ },
+ {
+  "name": "r37b_s7",
+  "lang": "zh",
+  "text": "[same breezy tone] 第二件事，做焚。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r37b_s7.mp3",
+  "bytes": 26792,
+  "heard": "第二件是做粉",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 1.6
+ },
+ {
+  "name": "r37b_s8",
+  "lang": "zh",
+  "text": "[same breezy tone] 第二件事，做焚。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r37b_s8.mp3",
+  "bytes": 29300,
+  "heard": "第二件事 做坟",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 1.76
+ },
+ {
+  "name": "r38_s7",
+  "lang": "zh",
+  "text": "[scared to ask] 第三件呢？",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r38_s7.mp3",
+  "bytes": 18851,
+  "heard": "第三件呢",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.646,
+  "seconds": 1.12
+ },
+ {
+  "name": "r38_s8",
+  "lang": "zh",
+  "text": "[scared to ask] 第三件呢？",
+  "voice": "shared:Lin",
+  "voice_id": "I23uc91tu5zY2PA1tKEN",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r38_s8.mp3",
+  "bytes": 20105,
+  "heard": "第三件呢",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.715,
+  "seconds": 1.2
+ },
+ {
+  "name": "r48_s7",
+  "lang": "zh",
+  "text": "[plain] 昭云。家里人都散了，只有她，跟我来了惠州。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r48_s7.mp3",
+  "bytes": 80291,
+  "heard": "赵云,家里人都散了,只有他跟我来了惠州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.96
+ },
+ {
+  "name": "r48_s8",
+  "lang": "zh",
+  "text": "[plain] 昭云。家里人都散了，只有她，跟我来了惠州。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r48_s8.mp3",
+  "bytes": 79037,
+  "heard": "赵云 家里人都散了只有他跟我来了惠州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.88
+ },
+ {
+  "name": "r55a_s7",
+  "lang": "zh",
+  "text": "[dead serious] 他们会抢着被贬过来，分我的蚝。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r55a_s7.mp3",
+  "bytes": 52287,
+  "heard": "他们会抢着被贬过来奋我的豪",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ },
+ {
+  "name": "r55a_s8",
+  "lang": "zh",
+  "text": "[dead serious] 他们会抢着被贬过来，分我的蚝。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r55a_s8.mp3",
+  "bytes": 48526,
+  "heard": "他们会抢着被扁过来分我的好",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.96
+ },
+ {
+  "name": "r55b_s7",
+  "lang": "zh",
+  "text": "[dead serious] 他们会抢着被贬过来，分我的豪。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r55b_s7.mp3",
+  "bytes": 52287,
+  "heard": "他们会抢着被贬过来分我的好",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ },
+ {
+  "name": "r55b_s8",
+  "lang": "zh",
+  "text": "[dead serious] 他们会抢着被贬过来，分我的豪。",
+  "voice": "shared:Gavin",
+  "voice_id": "YGeNjTKY1wBaKygyl4y8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "r55b_s8.mp3",
+  "bytes": 49780,
+  "heard": "他们会抢着被扁过来分我的好",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.04
+ }
+]
