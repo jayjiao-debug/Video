@@ -547,7 +547,8 @@
    "scene": "G",
    "who": "huanguan",
    "tts": "[flat, matter-of-fact] 准。",
-   "zh": "准。"
+   "zh": "准。",
+   "silent": 0.55
   },
   {
    "n": 59,
@@ -555,7 +556,8 @@
    "scene": "G",
    "who": "huanguan",
    "tts": "[flat, matter-of-fact] 准。",
-   "zh": "准。"
+   "zh": "准。",
+   "silent": 0.55
   },
   {
    "n": 60,
@@ -614,5 +616,7 @@
  ],
  "gap": 0.04,
  "lead": 0.1,
- "trim": {}
+ "trim": {
+  "B09": 1.74
+ }
 }
