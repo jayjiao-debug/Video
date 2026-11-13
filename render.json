@@ -1,1 +1,1 @@
-{"id":"qin-02","composition":"QinFilm","start":0,"end":5615,"chunks":20,"concurrency":1,"timeout":900000,"output":"qin_v2","flags":"--crf=14"}
+{"id":"qin-03","composition":"QinFilm","start":0,"end":5605,"chunks":20,"concurrency":1,"timeout":900000,"output":"qin_v3","flags":"--crf=14"}
