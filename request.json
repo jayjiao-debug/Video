@@ -1,888 +1,395 @@
 {
- "id": "newton-v4-check-01",
+ "id": "newton-v4-sound-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "type": "transcribe",
-   "name": "chk_A01_s1686",
-   "src": "out/newton-v4-vo-01/v4_S1_s1686.mp3",
-   "start": 0.0,
-   "end": 2.43,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A02_s1686",
-   "src": "out/newton-v4-vo-01/v4_S1_s1686.mp3",
-   "start": 2.66,
-   "end": 3.56,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A03_s1686",
-   "src": "out/newton-v4-vo-01/v4_S1_s1686.mp3",
-   "start": 3.72,
-   "end": 6.05,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A04_s1686",
-   "src": "out/newton-v4-vo-01/v4_S1_s1686.mp3",
-   "start": 6.37,
-   "end": 8.485,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A05_s1686",
-   "src": "out/newton-v4-vo-01/v4_S1_s1686.mp3",
-   "start": 8.55,
-   "end": 11.1,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A06_s1686",
-   "src": "out/newton-v4-vo-01/v4_S1_s1686.mp3",
-   "start": 11.18,
-   "end": 13.2,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B01_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 0.0,
-   "end": 1.56,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B02_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 1.67,
-   "end": 3.07,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B03_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 3.39,
-   "end": 5.27,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B04_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 5.41,
-   "end": 10.45,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B05_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 10.55,
-   "end": 12.755,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B06_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 12.83,
-   "end": 14.46,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B07_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 14.52,
-   "end": 15.49,
-   "lang": "zh"
+   "type": "music",
+   "name": "mus_morning",
+   "text": "Light, playful baroque chamber music: pizzicato strings and harpsichord, bouncy and curious, a little cheeky, D major, about 104 bpm, a gentle comedy about an absent-minded scholar's morning in an old college. It starts at once with a single plucked note. Instrumental, no vocals.",
+   "ms": 54000
   },
   {
-   "type": "transcribe",
-   "name": "chk_B08_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 15.525,
-   "end": 18.86,
-   "lang": "en"
+   "type": "music",
+   "name": "mus_noon",
+   "text": "Bright strolling pizzicato strings with harpsichord, a sunny noon walk round a small walled garden, steady walking rhythm, D major, 108 bpm, light and witty. Instrumental, no vocals.",
+   "ms": 22000
   },
   {
-   "type": "transcribe",
-   "name": "chk_B09_s1686",
-   "src": "out/newton-v4-vo-01/v4_S2_s1686.mp3",
-   "start": 18.99,
-   "end": 21.04,
-   "lang": "zh"
+   "type": "music",
+   "name": "mus_lecture",
+   "text": "Sparse, dry, deadpan baroque comedy: solo harpsichord with a bassoon, slow and stately, a professor lecturing to an empty hall, slightly absurd, G major, 84 bpm. Instrumental, no vocals.",
+   "ms": 22000
   },
   {
-   "type": "transcribe",
-   "name": "chk_C01_s1686",
-   "src": "out/newton-v4-vo-01/v4_S3_s1686.mp3",
-   "start": 0.05,
-   "end": 1.67,
-   "lang": "zh"
+   "type": "music",
+   "name": "mus_supper",
+   "text": "Warm golden evening baroque: slow harpsichord and a viola, gentle and a little lonely, a supper left to go cold, F major, 72 bpm. Instrumental, no vocals.",
+   "ms": 20000
   },
   {
-   "type": "transcribe",
-   "name": "chk_C02_s1686",
-   "src": "out/newton-v4-vo-01/v4_S3_s1686.mp3",
-   "start": 1.8,
-   "end": 3.01,
-   "lang": "en"
+   "type": "music",
+   "name": "mus_night",
+   "text": "Moonlit nocturne: plucked lute and harp over sustained dark strings, mysterious and calm, a furnace glowing in a garden at night, D minor, 66 bpm. Instrumental, no vocals.",
+   "ms": 30000
   },
   {
-   "type": "transcribe",
-   "name": "chk_C03_s1686",
-   "src": "out/newton-v4-vo-01/v4_S3_s1686.mp3",
-   "start": 3.25,
-   "end": 4.8,
-   "lang": "zh"
+   "type": "music",
+   "name": "mus_cello",
+   "text": "One single sustained solo cello note, a low D, bowed slowly with gentle vibrato, swelling and then fading away. Nothing else, no other instruments. Instrumental, no vocals.",
+   "ms": 8000
   },
   {
-   "type": "transcribe",
-   "name": "chk_C04_s1686",
-   "src": "out/newton-v4-vo-01/v4_S3_s1686.mp3",
-   "start": 4.88,
-   "end": 6.685,
-   "lang": "en"
+   "type": "music",
+   "name": "mus_laugh",
+   "text": "Warm, tender return of a playful pizzicato and harpsichord theme over gentle sustained strings, the feeling of finally sharing a laugh late at night, D major, 96 bpm, resolving gently and ending on one single plucked note. Instrumental, no vocals.",
+   "ms": 28000
   },
   {
-   "type": "transcribe",
-   "name": "chk_C05_s1686",
-   "src": "out/newton-v4-vo-01/v4_S3_s1686.mp3",
-   "start": 6.75,
-   "end": 7.8,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "amb_stairs",
+   "text": "Early morning inside an old stone college staircase: birdsong outside a window, a quiet wooden building, distant sparrows and a blackbird.",
+   "duration": 12,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_C06_s1686",
-   "src": "out/newton-v4-vo-01/v4_S3_s1686.mp3",
-   "start": 7.89,
-   "end": 9.27,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "amb_room",
+   "text": "Room tone of an old wood-panelled study in the daytime, faint birds outside the window, a clock ticking very faintly.",
+   "duration": 12,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_C07_s1686",
-   "src": "out/newton-v4-vo-01/v4_S3_s1686.mp3",
-   "start": 9.3,
-   "end": 10.44,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_quill",
+   "text": "A goose-feather quill pen scratching steadily on paper, continuous writing.",
+   "duration": 8,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_D01_s1686",
-   "src": "out/newton-v4-vo-01/v4_S4_s1686.mp3",
-   "start": 0.02,
-   "end": 1.84,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "amb_garden",
+   "text": "A small walled college garden at noon: birds, a light breeze in hedges, distant church bells far off, peaceful.",
+   "duration": 12,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_D02_s1686",
-   "src": "out/newton-v4-vo-01/v4_S4_s1686.mp3",
-   "start": 1.97,
-   "end": 4.28,
-   "lang": "en"
+   "type": "sfx",
+   "name": "amb_street",
+   "text": "A cobbled 17th-century town street: a horse and cart passing, distant voices, footsteps on cobbles, a dog barking far away.",
+   "duration": 12,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_D03_s1686",
-   "src": "out/newton-v4-vo-01/v4_S4_s1686.mp3",
-   "start": 4.44,
-   "end": 5.88,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "amb_hall",
+   "text": "Large empty stone lecture hall room tone with a faint long echo, dust, stillness.",
+   "duration": 12,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_D04_s1686",
-   "src": "out/newton-v4-vo-01/v4_S4_s1686.mp3",
-   "start": 6.06,
-   "end": 7.75,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_fly",
+   "text": "A single house fly buzzing around close by, landing and taking off.",
+   "duration": 6,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_D05_s1686",
-   "src": "out/newton-v4-vo-01/v4_S4_s1686.mp3",
-   "start": 7.88,
-   "end": 10.58,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "amb_night",
+   "text": "A garden at night: crickets chirping, a light breeze, an owl very far away.",
+   "duration": 12,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_D06_s1686",
-   "src": "out/newton-v4-vo-01/v4_S4_s1686.mp3",
-   "start": 10.66,
-   "end": 11.44,
-   "lang": "en"
+   "type": "sfx",
+   "name": "amb_furnace",
+   "text": "A roaring fire inside a brick furnace, steady roar with crackling coals.",
+   "duration": 10,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_E01_s1686",
-   "src": "out/newton-v4-vo-01/v4_S5_s1686.mp3",
-   "start": 0.01,
-   "end": 1.935,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "amb_embers",
+   "text": "Deep red embers in a brick furnace, gentle crackles and a slow breathing glow of fire.",
+   "duration": 10,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_E02_s1686",
-   "src": "out/newton-v4-vo-01/v4_S5_s1686.mp3",
-   "start": 2.02,
-   "end": 3.21,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_knock",
+   "text": "Two quick raps of a hard object on an old oak door.",
+   "duration": 1.2,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_E03_s1686",
-   "src": "out/newton-v4-vo-01/v4_S5_s1686.mp3",
-   "start": 3.31,
-   "end": 5.71,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_door_shut",
+   "text": "A heavy old oak door shut firmly in someone's face, thud and an iron latch clicking.",
+   "duration": 1.5,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_E04_s1686",
-   "src": "out/newton-v4-vo-01/v4_S5_s1686.mp3",
-   "start": 5.78,
-   "end": 7.385,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_pigeon",
+   "text": "A pigeon flapping its wings and flying off a stone window sill.",
+   "duration": 1.5,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_E05_s1686",
-   "src": "out/newton-v4-vo-01/v4_S5_s1686.mp3",
-   "start": 7.47,
-   "end": 8.79,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_stairs_up",
+   "text": "Someone running up the last two wooden stair steps quickly.",
+   "duration": 1.2,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_E06_s1686",
-   "src": "out/newton-v4-vo-01/v4_S5_s1686.mp3",
-   "start": 8.84,
-   "end": 9.575,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_door_crack",
+   "text": "An old wooden door opening a crack with a faint creak and closing again carefully with a click.",
+   "duration": 2.5,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_E07_s1686",
-   "src": "out/newton-v4-vo-01/v4_S5_s1686.mp3",
-   "start": 9.65,
-   "end": 12.58,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_stairs_down",
+   "text": "Footsteps going down a wooden staircase, unhurried, fading away.",
+   "duration": 3,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F01_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 0.01,
-   "end": 2.115,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_lid",
+   "text": "Lifting a metal pewter dish cover off a plate, a small metallic clink.",
+   "duration": 1.2,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F02_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 2.19,
-   "end": 4.23,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_bell",
+   "text": "A distant college bell tolling once, far away across rooftops.",
+   "duration": 4,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F03_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 4.42,
-   "end": 5.325,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_gravel",
+   "text": "Footsteps walking slowly on a raked gravel path.",
+   "duration": 6,
+   "loop": true,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F04_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 5.36,
-   "end": 7.43,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_gravel_run",
+   "text": "A man suddenly turns and runs away fast across gravel and up stone steps.",
+   "duration": 2.5,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F05_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 7.5,
-   "end": 9.755,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_whoosh",
+   "text": "A fast whip-pan whoosh, air swish.",
+   "duration": 0.8,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F06_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 9.82,
-   "end": 12.26,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_chair",
+   "text": "A wooden chair dragged across old wooden floorboards.",
+   "duration": 1.3,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F07_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 12.27,
-   "end": 13.815,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_wipe",
+   "text": "Two quick strokes of a cloth handkerchief wiping skin.",
+   "duration": 0.8,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F08_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 13.87,
-   "end": 14.62,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_big_door",
+   "text": "A large old wooden door creaking open slowly.",
+   "duration": 2.5,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F09_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 14.68,
-   "end": 18.27,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_steps_echo",
+   "text": "Footsteps walking into an empty stone hall with echo.",
+   "duration": 4,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F10_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 18.34,
-   "end": 20.55,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_clap",
+   "text": "One person clapping slowly three times alone in a big empty hall, each clap echoing.",
+   "duration": 3,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F11_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 20.61,
-   "end": 24.51,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_fork",
+   "text": "A fork clinking against a pewter plate.",
+   "duration": 1.0,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F12_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 24.89,
-   "end": 28.1,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_chew",
+   "text": "A man chewing a mouthful of bread.",
+   "duration": 1.5,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F13_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 28.16,
-   "end": 29.24,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_shovel",
+   "text": "A shovel of charcoal tipped into a roaring furnace, coals sliding and sparks.",
+   "duration": 2,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F14_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 29.32,
-   "end": 34.46,
-   "lang": "en"
+   "type": "sfx",
+   "name": "sfx_poke",
+   "text": "An iron poker stirring burning coals in a furnace.",
+   "duration": 1.5,
+   "influence": 0.4
   },
   {
-   "type": "transcribe",
-   "name": "chk_F15_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 34.74,
-   "end": 38.385,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F16_s1686",
-   "src": "out/newton-v4-vo-01/v4_S6_s1686.mp3",
-   "start": 38.47,
-   "end": 40.76,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G01_s1686",
-   "src": "out/newton-v4-vo-01/v4_S7_s1686.mp3",
-   "start": 0.11,
-   "end": 4.795,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G02_s1686",
-   "src": "out/newton-v4-vo-01/v4_S7_s1686.mp3",
-   "start": 4.85,
-   "end": 8.27,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G03_s1686",
-   "src": "out/newton-v4-vo-01/v4_S7_s1686.mp3",
-   "start": 8.34,
-   "end": 9.42,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G04_s1686",
-   "src": "out/newton-v4-vo-01/v4_S7_s1686.mp3",
-   "start": 9.6,
-   "end": 11.44,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A01_s1642",
-   "src": "out/newton-v4-vo-01/v4_S1_s1642.mp3",
-   "start": 0.01,
-   "end": 2.36,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A02_s1642",
-   "src": "out/newton-v4-vo-01/v4_S1_s1642.mp3",
-   "start": 2.53,
-   "end": 3.41,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A03_s1642",
-   "src": "out/newton-v4-vo-01/v4_S1_s1642.mp3",
-   "start": 3.51,
-   "end": 5.72,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A04_s1642",
-   "src": "out/newton-v4-vo-01/v4_S1_s1642.mp3",
-   "start": 6.08,
-   "end": 8.31,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A05_s1642",
-   "src": "out/newton-v4-vo-01/v4_S1_s1642.mp3",
-   "start": 8.38,
-   "end": 10.95,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_A06_s1642",
-   "src": "out/newton-v4-vo-01/v4_S1_s1642.mp3",
-   "start": 11.04,
-   "end": 12.99,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B01_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 0.03,
-   "end": 1.585,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B02_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 1.67,
-   "end": 2.96,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B03_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 3.23,
-   "end": 5.11,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B04_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 5.25,
-   "end": 10.2,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B05_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 10.29,
-   "end": 12.63,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B06_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 12.75,
-   "end": 15.46,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B07_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 15.55,
-   "end": 17.285,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B08_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 17.34,
-   "end": 19.97,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_B09_s1642",
-   "src": "out/newton-v4-vo-01/v4_S2_s1642.mp3",
-   "start": 20.06,
-   "end": 20.88,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_C01_s1642",
-   "src": "out/newton-v4-vo-01/v4_S3_s1642.mp3",
-   "start": 0.06,
-   "end": 1.68,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_C02_s1642",
-   "src": "out/newton-v4-vo-01/v4_S3_s1642.mp3",
-   "start": 1.81,
-   "end": 3.1,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_C03_s1642",
-   "src": "out/newton-v4-vo-01/v4_S3_s1642.mp3",
-   "start": 3.26,
-   "end": 4.79,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_C04_s1642",
-   "src": "out/newton-v4-vo-01/v4_S3_s1642.mp3",
-   "start": 4.86,
-   "end": 6.595,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_C05_s1642",
-   "src": "out/newton-v4-vo-01/v4_S3_s1642.mp3",
-   "start": 6.66,
-   "end": 7.75,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_C06_s1642",
-   "src": "out/newton-v4-vo-01/v4_S3_s1642.mp3",
-   "start": 7.9,
-   "end": 9.31,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_C07_s1642",
-   "src": "out/newton-v4-vo-01/v4_S3_s1642.mp3",
-   "start": 9.33,
-   "end": 10.4,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_D01_s1642",
-   "src": "out/newton-v4-vo-01/v4_S4_s1642.mp3",
-   "start": 0.0,
-   "end": 1.76,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_D02_s1642",
-   "src": "out/newton-v4-vo-01/v4_S4_s1642.mp3",
-   "start": 1.91,
-   "end": 4.24,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_D03_s1642",
-   "src": "out/newton-v4-vo-01/v4_S4_s1642.mp3",
-   "start": 4.38,
-   "end": 5.89,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_D04_s1642",
-   "src": "out/newton-v4-vo-01/v4_S4_s1642.mp3",
-   "start": 6.06,
-   "end": 7.72,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_D05_s1642",
-   "src": "out/newton-v4-vo-01/v4_S4_s1642.mp3",
-   "start": 7.78,
-   "end": 10.51,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_D06_s1642",
-   "src": "out/newton-v4-vo-01/v4_S4_s1642.mp3",
-   "start": 10.61,
-   "end": 11.36,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_E01_s1642",
-   "src": "out/newton-v4-vo-01/v4_S5_s1642.mp3",
-   "start": 0.0,
-   "end": 1.86,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_E02_s1642",
-   "src": "out/newton-v4-vo-01/v4_S5_s1642.mp3",
-   "start": 1.95,
-   "end": 3.15,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_E03_s1642",
-   "src": "out/newton-v4-vo-01/v4_S5_s1642.mp3",
-   "start": 3.23,
-   "end": 5.73,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_E04_s1642",
-   "src": "out/newton-v4-vo-01/v4_S5_s1642.mp3",
-   "start": 5.81,
-   "end": 7.395,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_E05_s1642",
-   "src": "out/newton-v4-vo-01/v4_S5_s1642.mp3",
-   "start": 7.46,
-   "end": 8.85,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_E06_s1642",
-   "src": "out/newton-v4-vo-01/v4_S5_s1642.mp3",
-   "start": 8.93,
-   "end": 10.8,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_E07_s1642",
-   "src": "out/newton-v4-vo-01/v4_S5_s1642.mp3",
-   "start": 10.95,
-   "end": 12.74,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F01_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 0.04,
-   "end": 2.185,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F02_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 2.28,
-   "end": 4.45,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F03_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 4.72,
-   "end": 5.65,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F04_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 5.71,
-   "end": 7.79,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F05_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 7.86,
-   "end": 10.005,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F06_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 10.07,
-   "end": 12.59,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F07_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 12.67,
-   "end": 14.14,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F08_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 14.29,
-   "end": 15.06,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F09_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 15.12,
-   "end": 18.68,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F10_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 18.75,
-   "end": 20.975,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F11_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 21.05,
-   "end": 24.51,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F12_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 25.06,
-   "end": 27.17,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F13_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 27.45,
-   "end": 29.355,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F14_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 29.42,
-   "end": 34.545,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F15_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 34.76,
-   "end": 38.06,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_F16_s1642",
-   "src": "out/newton-v4-vo-01/v4_S6_s1642.mp3",
-   "start": 38.15,
-   "end": 40.5,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G01_s1642",
-   "src": "out/newton-v4-vo-01/v4_S7_s1642.mp3",
-   "start": 0.12,
-   "end": 4.8,
-   "lang": "zh"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G02_s1642",
-   "src": "out/newton-v4-vo-01/v4_S7_s1642.mp3",
-   "start": 4.86,
-   "end": 8.115,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G03_s1642",
-   "src": "out/newton-v4-vo-01/v4_S7_s1642.mp3",
-   "start": 8.19,
-   "end": 9.77,
-   "lang": "en"
-  },
-  {
-   "type": "transcribe",
-   "name": "chk_G04_s1642",
-   "src": "out/newton-v4-vo-01/v4_S7_s1642.mp3",
-   "start": 9.97,
-   "end": 11.82,
-   "lang": "zh"
+   "type": "sfx",
+   "name": "sfx_spit",
+   "text": "A fire spits and pops loudly, a burst of sparks.",
+   "duration": 1.2,
+   "influence": 0.4
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_clock_two",
+   "text": "A distant town church clock striking two, two deep bell strokes, at night.",
+   "duration": 6,
+   "influence": 0.4
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_board",
+   "text": "A small wooden board sliding off a knee and clattering onto a stone floor.",
+   "duration": 1.2,
+   "influence": 0.4
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_sack",
+   "text": "A heavy sack of charcoal dropped on a stone floor, a dull thump and coals shifting.",
+   "duration": 1.3,
+   "influence": 0.4
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper",
+   "text": "A sheaf of papers being shuffled and tapped straight on a desk.",
+   "duration": 1.5,
+   "influence": 0.4
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_pluck",
+   "text": "One single plucked violin note, pizzicato, D.",
+   "duration": 1.5,
+   "influence": 0.4
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_card",
+   "text": "A small paper slip fluttering and landing on a table.",
+   "duration": 0.8,
+   "influence": 0.4
+  },
+  {
+   "name": "laugh_1",
+   "lang": "en",
+   "text": "[bursts out laughing helplessly, a rusty, real laugh] Ha! Ha ha ha ha... ha ha ha!",
+   "add": {
+    "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+    "voice_id": "dUercWozs0yhe4xBCgZ0",
+    "name": "Mandrake"
+   },
+   "keep": true,
+   "seed": 1686,
+   "settings": {
+    "stability": 0.35
+   }
+  },
+  {
+   "name": "laugh_2",
+   "lang": "en",
+   "text": "[bursts out laughing helplessly, a rusty, real laugh] Ha! Ha ha ha ha... ha ha ha!",
+   "add": {
+    "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+    "voice_id": "dUercWozs0yhe4xBCgZ0",
+    "name": "Mandrake"
+   },
+   "keep": true,
+   "seed": 1642,
+   "settings": {
+    "stability": 0.35
+   }
+  },
+  {
+   "name": "laugh_3",
+   "lang": "en",
+   "text": "[bursts out laughing helplessly, a rusty, real laugh] Ha! Ha ha ha ha... ha ha ha!",
+   "add": {
+    "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+    "voice_id": "dUercWozs0yhe4xBCgZ0",
+    "name": "Mandrake"
+   },
+   "keep": true,
+   "seed": 1727,
+   "settings": {
+    "stability": 0.35
+   }
+  },
+  {
+   "name": "whatuse_1",
+   "lang": "en",
+   "text": "[still laughing, incredulous] What... use!",
+   "add": {
+    "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+    "voice_id": "dUercWozs0yhe4xBCgZ0",
+    "name": "Mandrake"
+   },
+   "keep": true,
+   "seed": 1686,
+   "settings": {
+    "stability": 0.4
+   }
+  },
+  {
+   "name": "whatuse_2",
+   "lang": "en",
+   "text": "[still laughing, incredulous] What... use!",
+   "add": {
+    "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+    "voice_id": "dUercWozs0yhe4xBCgZ0",
+    "name": "Mandrake"
+   },
+   "keep": true,
+   "seed": 1642,
+   "settings": {
+    "stability": 0.4
+   }
   }
  ]
 }
