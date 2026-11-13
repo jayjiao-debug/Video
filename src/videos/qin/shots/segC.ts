@@ -26,7 +26,7 @@ import * as THREE from "three";
 import { SEGMENTS, line, capWord, FPS, clamp01, lerp, lin, smooth, easeOutCubic, easeInOutCubic, quote, type Segment, type Pose, type CamPose, type Vec3 } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
-import { EMPEROR, XUFU, type Person } from "../people";
+import { EMPEROR, XUFU, miniature, type Person } from "../people";
 import { QHALL, TABLE, EYE, FOV } from "../layout";
 import { deskSeat, holdPoints } from "../props";
 import type { World } from "../world";
@@ -320,7 +320,7 @@ function hallShot(w: World, f: number): Pose {
 
 // ---------------------------------------------------------------------------------------------------- the coast
 /** the tiny emperor on the shore: the rig figure at the sand table's scale */
-const TINY: Person = { ...EMPEROR, name: "emperorTinyC", scale: 0.085 };
+const TINY: Person = miniature(EMPEROR, "emperorTinyC", 0.085);
 const TS = (TINY.scale ?? 1) / ES;                                  // his hand offsets / the crossbow, against the real one
 const SHORE = TABLE.shore.clone().setY(TABLE.shore.y + 0.004);
 const FISH_YAW = yawTo(SHORE, TABLE.fish);

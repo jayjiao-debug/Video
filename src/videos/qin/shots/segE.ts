@@ -27,7 +27,7 @@ import * as THREE from "three";
 import { SEGMENTS, line, capWord, quote, FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, h, type Segment, type Pose, type CamPose, type Vec3 } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
-import { EMPEROR, BOSHI, type Person } from "../people";
+import { EMPEROR, BOSHI, miniature, type Person } from "../people";
 import { QHALL, TABLE, BX } from "../layout";
 import { deskSeat, holdPoints } from "../props";
 import type { World } from "../world";
@@ -74,7 +74,7 @@ const ASIDE_CUT = T.back + 4;                         // the table -> the hall w
 
 // ---------------------------------------------------------------------------------------------------------- the people
 /** the tiny emperor on the tableau (a scaled copy of the EMPEROR: World caches one figure per Person) */
-const MINI: Person = { ...EMPEROR, name: "emperorMini", scale: 0.08 };
+const MINI: Person = miniature(EMPEROR, "emperorMini", 0.08);
 /** the hall: he stands in front of the desk, facing her */
 const HE = V(0.12, 0, -1.95);
 /** the table room: he stands behind the table (TABLE.behind), the BOSHI at the table's east end */

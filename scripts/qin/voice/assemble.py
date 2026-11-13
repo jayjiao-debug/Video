@@ -5,6 +5,7 @@
                                         lines_dir holds <id>.wav (one per line, 48 kHz mono, silence trimmed), cut from the
                                         voice farm's dialogue generations (one generation per scene = consistent voices)
 Reads scripts/qin/voice/qin_lines.json: per line "pre" (silent seconds before it, for action), "after" (hold after it),
+"silent" (seconds: the line keeps a span of that length on the timeline but has no voice and no caption),
 plus "gap" (seconds between two lines), "lead" (silence before the first line), "trim" ({id: keep only the first N s}).
 Writes <out_dir>/voice_timing.json (the format scripts/qin/gen_timing.py reads: lines with start/end, speech_end,
 frames) and <out_dir>/voice_48k.wav (the whole dialogue track). No media goes into the repo.
@@ -37,15 +38,17 @@ def main(lines_dir, out_dir, cut_files=()):
     t, lines, parts = lead, [], []
     for i, l in enumerate(spec["lines"]):
         src = os.path.join(lines_dir, l["id"] + ".wav")
-        d = dur(src)
+        silent = l.get("silent")                     # a silent line: its span stays on the timeline (for the action), no voice
+        d = float(silent) if silent else dur(src)
         if l["id"] in trim: d = min(d, trim[l["id"]])
         if i: t += gap
         t += l.get("pre", 0)
         rec = {"line": l["n"], "id": l["id"], "who": l["who"], "text": l["zh"], "start": round(t, 3), "end": round(t + d, 3)}
-        w = words_for(cuts.get(l["id"]), t, t + d)
+        if silent: rec["silent"] = True
+        w = None if silent else words_for(cuts.get(l["id"]), t, t + d)
         if w: rec["words"] = w
         lines.append(rec)
-        parts.append((src, t, d))
+        if not silent: parts.append((src, t, d))
         t += d + l.get("after", 0)
     speech_end = lines[-1]["end"]
     total = t + TAIL_S

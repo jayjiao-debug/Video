@@ -13,8 +13,9 @@
 //     arched roof on steel trusses with two skylight strips along the crown;
 //   - the walkway (dark stone tiles) and THE RAILING in the foreground: steel posts, a flat steel handrail, a bottom
 //     rail, faintly tinted glass panels (NOINK: the pit shows through), a small plaque "一号坑";
-//   - light: dim and warm, a soft top light over the pit and a warm pool over the grid; the far rows fall darker.
-// INK / FLICKER: statues, glass, skylights and the plaque are NOINK (statues carry their hulls); inked geometry is
+//   - light: dim and warm, a soft top light over the pit and a warm pool over the grid; the far rows fall darker;
+//   - DUST: faint warm motes drifting slowly in the light over the grid (animate(t): the only moving thing of the set).
+// INK / FLICKER: statues, glass, skylights, the plaque and the dust are NOINK (statues carry their hulls); inked geometry is
 // chunky (walls 70 cm, trusses 36 cm, rail posts 7 cm only near the camera). Seeded; animate / setParam are pure.
 import * as THREE from "three";
 import type { EnvSpec } from "../../bt/pbr";
@@ -271,9 +272,44 @@ export function buildMuseum(K: Kit) {
   const L = lightRig(group, { dir: [0.15, 0.9, 0.35], k: 1.25, col: "#ffe8cc", at: [MX, 0, -7], half: 13, hemi: ["#8a8278", "#5a4c44", 1.2], point: { col: "#ffc890", k: 46, at: [MX, 6.8, MUSEUM.grid[10].z], dist: 16 } });
   const setLight = (k: number) => { L.key.intensity = 1.25 * k; L.point.intensity = 46 * k; L.hemi.intensity = 0.6 + 0.6 * k; };
   setLight(1);
+
+  // =================================================================================================== the dust
+  // DUST MOTES drifting in the top light over the grid (life in the still hall): soft warm specks (a radial sprite, never
+  // a hard pixel), 5-12 px at the film's size, dim (additive, far under the bloom threshold), slow (a few cm a second,
+  // sinking a little, wandering); NOINK, no depth write; a pure function of t. They keep 1.7 m off her lens and
+  // below 3 m over the grid ranks 0-5 (seen from the walkway against the clay and the floor, never against the dark
+  // hall above, where they read as stars).
+  const DN = 170, DY = [0.9, 3.0], dust = new Float32Array(DN * 3), dustBase: number[][] = [];
+  {
+    const r = rng(415);
+    for (let i = 0; i < DN; i++) dustBase.push([MX + (r() - 0.5) * 5.4, DY[0] + (DY[1] - DY[0]) * r(), 0.8 - 7.8 * r(), r() * 6.28, 0.6 + 0.8 * r()]);
+  }
+  const dustCol = new Float32Array(DN * 3);
+  const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute("position", new THREE.BufferAttribute(dust, 3)); dustGeo.setAttribute("color", new THREE.BufferAttribute(dustCol, 3));
+  const mote = paint(64, 64, (g, W) => { const gr = g.createRadialGradient(W / 2, W / 2, 0, W / 2, W / 2, W / 2); gr.addColorStop(0, "rgba(255,244,222,1)"); gr.addColorStop(0.35, "rgba(255,232,200,0.55)"); gr.addColorStop(1, "rgba(255,226,190,0)"); g.fillStyle = gr; g.fillRect(0, 0, W, W); });
+  const motes = new THREE.Points(dustGeo, new THREE.PointsMaterial({ map: mote, color: "#ffe2bc", size: 0.05, sizeAttenuation: true, transparent: true, opacity: 0.62, vertexColors: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }));
+  motes.name = "museum.dust"; motes.layers.set(NOINK); motes.frustumCulled = false; motes.renderOrder = 5; group.add(motes);
+  const animate = (t: number) => {
+    const H = DY[1] - DY[0], y0 = DY[0];
+    for (let i = 0; i < DN; i++) {
+      const [x, y, z, p, s] = dustBase[i];
+      dust[i * 3] = x + 0.22 * Math.sin(t * 0.21 * s + p) + 0.08 * Math.sin(t * 0.53 + p * 2.1);
+      // a slow sink (2-4 cm/s) that wraps round inside the light's height; each mote fades out over the last 0.3 m
+      // before the wrap and back in over the first 0.3 m after it (additive: a black mote draws nothing), so none pops
+      const yy = ((((y - y0 - t * 0.03 * s + 0.12 * Math.sin(t * 0.37 + p)) % H) + H) % H);
+      dust[i * 3 + 1] = y0 + yy;
+      dust[i * 3 + 2] = z + 0.18 * Math.cos(t * 0.17 * s + p * 0.7);
+      const k = Math.min(1, yy / 0.3, (H - yy) / 0.3) * (0.55 + 0.45 * Math.sin(p * 3.7) ** 2);
+      dustCol[i * 3] = dustCol[i * 3 + 1] = dustCol[i * 3 + 2] = Math.max(0, k);
+    }
+    (dustGeo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+    (dustGeo.attributes.color as THREE.BufferAttribute).needsUpdate = true;
+  };
+  animate(0);
   return {
     group,
     view(cam: THREE.Vector3) { void cam; },
+    animate(t: number) { animate(t); },
     setParam(name: string, v: ParamValue) { if (name === "light") setLight(Math.max(0, Math.min(1, Number(v)))); },
   };
 }

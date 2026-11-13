@@ -20,18 +20,20 @@ const sec = (s: number) => Math.round(s * FPS);
 export type Span = [number, number];
 
 // ---------------------------------------------------------------------------------------------------- A 卯时 corridor
-const aGrab = pre("A04");
+/** the sword gag on the fixed mix's anchors (voice times, as segA.ts's SND): four sword_stuck tugs (A04 - 0.3 s, A04 +
+ *  0.3 s, A05 + 0.35 s, the first frame showing 帮), sword_ring 0.15 s before 住口 (A06) */
+const aTug1 = sec(lineId("A04").start - 0.3), aRing = sec(lineId("A06").start - 0.15);
 const A = {
   /** f0 .. A02: the creep down the corridor (follow-forward, scared sway) */ creep: [0, from("A02") - 1] as Span,
   /** she stops behind the pillar (duck / peek: the pillar's edge in the left foreground) */ peek: from("A02") - 8,
   /** he glances over his shoulder, turns back away (A03's silent beat starts) */ glance: pre("A03"),
   /** THE SNAP: he snaps round to face the lens (4 frames before 谁) */ turn: from("A03") - 4,
   /** the punch-in on 谁 */ punchIn: from("A03"),
-  /** hand to the hilt at his left hip (A04's beat) */ grab: aGrab,
-  /** the two stuck tugs (0.5 s apart: body jerks) */ tugs: [aGrab + 8, aGrab + 8 + sec(0.5)] as [number, number],
-  /** the third pull swings it up over his shoulder and out */ swordOut: aGrab + 8 + sec(1.0),
-  /** the tip stops 0.4 m from the lens: the camera trembles from here */ swordStop: aGrab + 8 + sec(1.0) + 10,
-  /** 住口 with a jab of the tip */ jab: from("A06"),
+  /** his hand goes for the hilt at his left hip (it closes on it on tug 1) */ grab: aTug1 - sec(0.3),
+  /** the four stuck tugs (body + hilt jerks; he strains on between them, through her offer A05) */ tugs: [aTug1, sec(lineId("A04").start + 0.3), sec(lineId("A05").start + 0.35), capWord("A05", "帮").from] as [number, number, number, number],
+  /** the blade rings free (0.15 s before 住口) and swings up over his shoulder and out */ swordOut: aRing,
+  /** the tip stops 0.4 m from the lens, 0.35 s later (住口 lands on it): the camera trembles from here */ swordStop: aRing + sec(0.35),
+  /** a poke of the tip on 口 */ jab: capWord("A06", "口").from,
   /** the tremble while she pleads, until the blade lowers */ tremble: [from("A07"), from("A10")] as Span,
   /** he steps closer (记录朕?) */ stepIn: from("A08"),
   /** the blade lowers (英明神武?) */ lower: from("A10"),
@@ -114,15 +116,22 @@ const F = {
 
 // ---------------------------------------------------------------------------------------------------- G the last day + museum
 const gMuseum = pre("G07");
+/** HER CAMERA SWITCHES OFF after 不删 (frames): the HUD frozen after the click, the picture collapsing to a line, the
+ *  line shrinking to a dot that fades, then at least MIN_BLACK frames of pure black to the last frame */
+const OFF = { freeze: 9, collapse: 8, dot: 10, minBlack: 24 };
+const gOff = Math.min(to("G09") + sec(1.0), TOTAL - (OFF.freeze + OFF.collapse + OFF.dot + OFF.minBlack));
 const G = {
   /** the timestamp 「公元前210年 七月 沙丘」, heat shimmer, battery 8%; the CREEP to the closed carriage */ creep: [seg("G").from, from("G01") - 1] as Span,
-  /** the officials pass bundles through the curtain; the thin voice answers (G02-G03) */ queue: [from("G02") - 20, to("G03")] as Span,
+  /** the officials pass bundles through the curtain; the eunuch listens and nods (G02-G03 are silent) */ queue: [from("G02") - 20, to("G03")] as Span,
   /** G04-G05: officials hand slips in, unaware; on G05 attendants set baskets of salted fish on the carriages; flies (no separate cart) */ fishCart: [from("G04"), to("G05")] as Span,
   /** LOWER: the camera droops, the horizon tilts (G06's beat) */ lower: pre("G06"),
-  /** THE CUT TO THE MUSEUM: the first perfectly still frame, no REC dot (G07's beat) */ museum: gMuseum,
+  /** THE CUT TO THE MUSEUM: her lens again (handheld, REC on), one slow move to 不删 (G07's beat) */ museum: gMuseum,
   /** his voice off-screen (G08) */ voice: from("G08"),
-  /** the last line, then the hold (1.5 s) and the fade to black */ last: from("G09"),
-  /** the fade to black: from 1.5 s after G09 to the last frame */ fade: [Math.min(to("G09") + sec(1.5), TOTAL - 2), TOTAL - 1] as Span,
+  /** the last line 不删, then the hold and her camera switching off */ last: from("G09"),
+  /** OFF CLICK (sound: the camera's power button): the REC lamp goes out, the HUD freezes (1.0 s after G09) */ offClick: gOff,
+  /** the picture collapses to a thin bright horizontal line (sound: the tube's collapse) */ collapse: [gOff + OFF.freeze, gOff + OFF.freeze + OFF.collapse - 1] as Span,
+  /** the line shrinks to a dot (6 frames), the dot fades (4 frames) */ dot: [gOff + OFF.freeze + OFF.collapse, gOff + OFF.freeze + OFF.collapse + OFF.dot - 1] as Span,
+  /** the first frame of pure black (#000), to the last frame */ black: gOff + OFF.freeze + OFF.collapse + OFF.dot,
 };
 
 /** THE BEATS, per scene */

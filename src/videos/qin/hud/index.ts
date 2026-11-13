@@ -8,8 +8,9 @@
 // Every overlay is a PLAIN FUNCTION OF THE FRAME: no state, nothing random, so frames render in any order on fresh
 // pages. Zones: layout.ts SCREEN (+ style.ts SAFE: x 50..925 below y 900, nothing below 1613). Strings: L(zh, en)
 // (lang.ts TXT for the shared ones). No box behind any text: an ink line under the fill.
-//   vlog.tsx     <VlogHud f rec? cards? />  REC (1 Hz soft blink), the 时辰 timestamp (slides in big at each scene start
-//                and on 第二天, then rests small under REC), the battery 100 % -> 8 % (red on the last day)
+//   vlog.tsx     <VlogHud f rec? cards? />  REC (1 Hz soft blink; the lamp goes out on BEAT.G.offClick and the HUD
+//                holds still), the 时辰 timestamp (slides in big at each scene start and on 第二天, then rests small
+//                under REC; not in the museum), the battery 100 % -> 8 % (red on the last day)
 //   card.tsx     <FactCard f />  the paper fact card of story.ts CARDS with the 「史记」 seal and the source line
 //   title.tsx    <TitleCard f />  the brush title after A14;  <NextDayCard f />  「第二天」
 //   caption.tsx  <Caption f />  the subtitles (speaker colours, max 14 a row, two rows max, kept left of the rail)
@@ -31,10 +32,8 @@ export { HC, SAFE, inked, spanK, em, type Rect } from "./style";
  *  the battery, and the fact card / title / 第二天 while they show. Captions: layout.ts SCREEN.capTop..capBottom. */
 export const hudRectsAt = (f: number): { what: string; r: Rect }[] => {
   const out: { what: string; r: Rect }[] = [];
-  if (placeAt(f) !== "museum") {
-    out.push({ what: "rec", r: VLOG_RECT.rec });
-    out.push({ what: "stamp", r: timeStampAt(f).t < 56 ? VLOG_RECT.stampBig : VLOG_RECT.stamp });
-  }
+  out.push({ what: "rec", r: VLOG_RECT.rec });
+  if (placeAt(f) !== "museum") out.push({ what: "stamp", r: timeStampAt(f).t < 56 ? VLOG_RECT.stampBig : VLOG_RECT.stamp });
   out.push({ what: "battery", r: VLOG_RECT.battery });
   if (factCardAt(f)) out.push({ what: "card", r: FACT_RECT });
   if (f >= TITLE_SPAN[0] && f <= TITLE_SPAN[1]) out.push({ what: "title", r: TITLE_RECT });

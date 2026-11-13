@@ -3,28 +3,34 @@
 //                 tired, up behind the officials' queue at the closed carriage. 「陛下？」 the lens lifts, hopeful;
 //                 「还拍吗」 it leans in. Official A hands his bundle to the 宦官 at the curtain, who slips it through;
 //                 an unseen hand inside draws it in.
-//           G02   「准。」 the eunuch (not the emperor) listens at the curtain, says it flat, nods; the lens perks up
-//           G03   「准。」 again, before official B has even arrived: the hope goes out of the lens
+//           G02   SILENT (no voice, no caption: a 准 there read as the emperor answering): the eunuch listens at
+//                 the curtain and gives one small curt nod, mouth shut; the official bows; the lens perks up
+//           G03   SILENT again, before official B has even arrived: another curt nod; the hope goes out of the lens
 //           G04   the narration: she pushes slowly toward the closed window; on 死 the lens sinks; the officials keep
 //                 handing their slips in, calm, unaware; on 瞒 the eunuch's eyes flick to the lens and away; on 递
 //                 official D's bundle goes through the curtain
 //           G05   the flies start; on 臭 she steps back and turns to the rear rack; two attendants carry baskets of
 //                 salted whole fish in and set them on the rack, each landing on its bundle_thud; they step back, bow
 //           G06   LOWER: the camera droops to 0.6 m, the horizon tilts; the flies over the baskets against the sky
-//   museum  G07   straight cut: the first perfectly still frame of the film (no handheld, no REC): rows of terracotta
-//                 facing the lens; 大哥 in clay hides once at the left edge (one blink, late: the easter egg)
-//           G08   his voice off-screen; G09 her 「不删。」; hold, then the fade to the darkest warm tone by the last frame
+//   museum  G07   straight cut to the museum: her lens again (REC on, the calm breathing handheld): rows of terracotta
+//                 facing the lens; one slow continuous move through G07-G09 (she steps up to the railing, leans out
+//                 over it and tracks left along the grid, the lens panning across the faces, rising a little), never a
+//                 cut; dust drifts in the top light; 大哥 in clay hides at the left of the grid (one blink, late)
+//           G08   his voice off-screen; G09 her 「不删。」 as the move comes to rest; the hold (大哥's blink), then HER
+//                 CAMERA SWITCHES OFF: the off click (the REC lamp goes out, the HUD freezes), the picture collapses to
+//                 a thin bright line, the line to a dot that fades, pure black to the last frame (BEAT.G offClick,
+//                 collapse, dot, black)
 // Every frame comes from line() / capWord() / BEAT / SEGMENTS; every mark from layout/road.ts and layout/museum.ts.
 import * as THREE from "three";
-import { SEGMENTS, line, capWord, quote, FPS, clamp01, lerp, lin, smooth, easeOutCubic, easeInOutCubic, h, type Segment, type Pose, type CamPose } from "../story";
+import { SEGMENTS, line, capWord, FPS, clamp01, lerp, lin, smooth, easeOutCubic, easeInOutCubic, h, type Segment, type Pose, type CamPose } from "../story";
 import { BEAT } from "../beats";
 import type { World } from "../world";
 import * as C from "../cam";
 import { HUANGUAN, OFFICIAL, ATTENDANT, TERRACOTTA, DAGE_CLAY } from "../people";
 import { ROAD, RX } from "../layout/road";
-import { MUSEUM, MUSEUM_CAMS, museumMark } from "../layout/museum";
+import { MUSEUM, MUSEUM_CAMS, MX, museumMark } from "../layout/museum";
 import { holdPoints, SLIPS, BIG_CARRIAGE, type Prop } from "../props";
-import { V, rel, lid, path, accent, heads, speak, frag, walkAlong, alive, salute, bow, lerpA, wrapA, yawTo, type RigState, type RigHead } from "./common";
+import { V, rel, lid, path, accent, heads, frag, walkAlong, alive, salute, bow, lerpA, wrapA, yawTo, type RigState, type RigHead } from "./common";
 
 type Extra = Partial<RigState>;
 type Expr = NonNullable<RigState["expr"]>;
@@ -40,7 +46,7 @@ const T = {
   /** she arrives behind the queue */ arrive: G01.from + sec(1.9),
   /** 「陛下？」 the lens lifts */ hope: capWord("G01", "陛下").from,
   /** 「还拍吗」 it leans in */ lean: capWord("G01", "拍").from,
-  /** 「准。」 x 2 */ zhun1: G02.from, zhun2: G03.from,
+  /** G02 / G03 (silent): the eunuch listens and nods, twice */ zhun1: G02.from, zhun2: G03.from,
   /** 死: the lens sinks */ dead: capWord("G04", "死").from,
   /** 瞒: the eunuch's glance */ hide: capWord("G04", "瞒").from,
   /** 递: D's bundle goes in */ hand: capWord("G04", "递").from,
@@ -51,8 +57,9 @@ const T = {
   thud1: Math.round((G05.end - 1.3) * FPS), thud2: Math.round((G05.end - 0.5) * FPS),
   /** the droop */ lower: BEAT.G.lower,
   /** the museum */ museum: BEAT.G.museum,
-  /** 大哥's one blink: late in the hold after 不删 */ dageBlink: G09.to + sec(0.7),
-  fade: BEAT.G.fade,
+  /** 大哥's one blink: late in the hold after 不删 (before her camera's off click) */ dageBlink: G09.to + sec(0.7),
+  /** her camera switches off: the click, the collapse to a line, the dot, pure black (beats.ts) */
+  offClick: BEAT.G.offClick, collapse: BEAT.G.collapse, dot: BEAT.G.dot, black: BEAT.G.black,
 };
 
 // ====================================================================================================== the road marks
@@ -198,21 +205,24 @@ function eunuch(f: number): { st: Extra; bundle: Bundle } {
   const listen = (f >= T.zhun1 - 16 && f < T.zhun1 + 4) || (f >= T.zhun2 - 8 && f < T.zhun2 + 4);
   const expr: Expr = glance ? "focus" : "deadpan";
   const gaze = glance ? 0 : listen ? -1 : cy ? -0.5 : [0, -0.5, 0, 0.5][Math.floor(t * 0.6) % 4];
-  const sp = { ...speak(quoteOf("G02"), f, 5), ...speak(quoteOf("G03"), f, 5) };
+  // G02 / G03 are SILENT (no 准: a voice there read as the emperor answering): his mouth stays shut; he listens at the
+  // curtain and gives one small curt nod on each (the second smaller, the same flat face)
+  // the listening tilt eases in and out of each window (no one-frame snap back upright)
+  const win = (a: number, b: number) => smooth(lin(f, a, a + 8)) * (1 - smooth(lin(f, b - 2, b + 6)));
+  const lk = Math.max(win(T.zhun1 - 16, T.zhun1 + 4), win(T.zhun2 - 8, T.zhun2 + 4));
   const bw0 = bow(bw);
   const head: RigHead | undefined = heads(
-    sp.head, bw0.head,
-    listen ? { tilt: -6 * smooth(lin(f, T.zhun1 - 16, T.zhun1 - 8)), dx: -0.05 } : undefined,
-    accent("nod", f, T.zhun1 + 2, { amp: 0.7 }),
+    bw0.head,
+    lk > 0.001 ? { tilt: -6 * lk, dx: -0.05 * lk } : undefined,
+    accent("nod", f, T.zhun1 + 2, { amp: 0.75 }),
     accent("nod", f, T.zhun2 + 2, { amp: 0.5 }),
   );
-  const blink = sp.blink ?? lid(t, 31, [T.hide / FPS, (T.hide + 18) / FPS]);
+  const blink = lid(t, 31, [T.hide / FPS, (T.hide + 18) / FPS]);
   return {
-    st: { at: EUN, facing, pose: { kind: "idle", t: t + 0.6 }, hands, expr, gaze, blink, mouth: sp.mouth, head, lookDown: bw0.lookDown, visible: true },
+    st: { at: EUN, facing, pose: { kind: "idle", t: t + 0.6 }, hands, expr, gaze, blink, head, lookDown: bw0.lookDown, visible: true },
     bundle,
   };
 }
-const quoteOf = (id: string) => quote("huanguan", id);
 
 /** the bundle a cycle's push left in the window, drawn in off his palm by an unseen hand over 6 frames (from the push:
  *  its inner end is in the window from the 2nd frame; hidden once wholly inside) */
@@ -323,7 +333,7 @@ function roadCam(f: number): CamPose {
     mood: "calm", amp: 0.85, seed: 7,
     walk: [[S.from, 0.55], [T.arrive - 24, 0.45], [T.arrive, 0], [G04.preFrom, 0], [G04.preFrom + 20, 0.1], [T.hand - 30, 0.1], [T.hand - 20, 0], [turn, 0], [turn + 12, 0.4], [T.smell + 10, 0.25], [T.smell + 22, 0]],
   });
-  // 「陛下？」 the lens lifts a little (hope); 「还拍吗」 it leans in; 准 (1) it perks up, 准 (2) the hope goes out of it
+  // 「陛下？」 the lens lifts a little (hope); 「还拍吗」 it leans in; the first silent nod it perks up, the second the hope goes out of it
   const hope = smooth(lin(f, T.hope - 4, T.hope + 10)) * (1 - smooth(lin(f, T.zhun2, T.zhun2 + 30)));
   const lean = smooth(lin(f, T.lean - 6, T.lean + 8)) * (1 - smooth(lin(f, T.zhun2 + 2, T.zhun2 + 30)));
   cam = C.nudge(cam, { pitch: 1.2 * hope, up: 0.015 * hope, fwd: 0.08 * lean });
@@ -384,17 +394,45 @@ const fadeUp = (f: number) => {
 };
 
 // ============================================================================================= THE MUSEUM (G07-G09)
-/** the rail camera (MUSEUM_CAMS.rail) 10 cm nearer the rail and aimed MDOWN deg down: the front rank's faces (chins
- *  included) above the caption band, the handrail low in the frame. Perfectly still: no handheld at all. */
-const MDOWN = 29;
-const MR = MUSEUM_CAMS.rail;
-const MCAM: CamPose = { pos: [MR.pos[0], MR.pos[1], MR.pos[2] - 0.1], look: [MR.look[0], MR.pos[1] - Math.tan((MDOWN * Math.PI) / 180) * Math.hypot(MR.pos[0] - MR.look[0], MR.pos[2] - 0.1 - MR.look[2]), MR.look[2]], fov: MR.fov };
+/** HER LENS AGAIN (she is there: G08 his voice off-screen, G09 her 不删): REC on, the calm breathing handheld, and ONE
+ *  slow continuous move from the cut to 不删, never a cut: she steps up to the railing and leans out over it (the
+ *  handrail drops out of the bottom of the frame), tracking left along the front of the grid while the lens pans across
+ *  the faces toward 大哥's file and rises a little. It is already moving on the cut and comes to rest as she answers
+ *  (zero speed on MOVE.settle); after that it drifts on, slowly, until the off click. The pitch keeps the front rank's faces (chins included)
+ *  above the caption band all the way; 大哥 stays in frame from G08 on (his late blink). */
+const LOOK_Z = -5;                                        // the look point's z (the grid's middle ranks)
+const MOVE = {
+  /** on the cut: 0.55 m behind the rail, a little right of the middle (a rail post 0.3 m to her right, low in the
+   *  frame), the old still frame's view */ a: { pos: V(MX + 0.3, MUSEUM.walkTop + 1.55, 3.0), lookX: MX + 0.25, pitch: 29 },
+  /** at rest for 不删: leaning out over the rail (the lens 0.6 m over its top, 10 cm out past it), left of the middle,
+   *  5 cm higher, aimed a little steeper (the front rank nearer: its chins stay above the caption band) */
+  b: { pos: V(MX - 0.45, MUSEUM.walkTop + 1.6, 2.55), lookX: MX - 0.5, pitch: 32 },
+  /** the frame it comes to rest on */ settle: G09.from + 6,
+};
+/** a glide over s 0..1 that starts at speed v0 (x the average speed) and arrives at speed 0 (a cubic Hermite) */
+const glide = (s: number, v0: number) => { const x = clamp01(s); return v0 * x + (3 - 2 * v0) * x * x + (v0 - 2) * x * x * x; };
+/** her camera on museum frame f (exported for the checks) */
+export function museumCamAt(f: number): CamPose {
+  const s = lin(f, T.museum, MOVE.settle), uz = glide(s, 1.5), ux = glide(s, 1.0);   // the step up to the rail leads, the track left runs on
+  const { a, b } = MOVE;
+  // after the rest it never quite stops (review: still too static): from zero speed a slow drift left along the rail
+  // with a touch more pan, easing in until the off click (12 cm, about 1 deg of yaw)
+  const d = lin(f, MOVE.settle, T.offClick), dr = d * d;
+  const pos = V(lerp(a.pos.x, b.pos.x, ux) - 0.12 * dr, lerp(a.pos.y, b.pos.y, uz), lerp(a.pos.z, b.pos.z, uz));
+  const lx = lerp(a.lookX, b.lookX, ux) - 0.17 * dr, pitch = lerp(a.pitch, b.pitch, uz);
+  const look: [number, number, number] = [lx, pos.y - Math.tan((pitch * Math.PI) / 180) * Math.hypot(pos.x - lx, pos.z - LOOK_Z), LOOK_Z];
+  const cam = C.handheld({ pos: [pos.x, pos.y, pos.z], look, fov: MUSEUM_CAMS.rail.fov }, f, { mood: "calm", amp: 0.9, seed: 11 });
+  // OFF CLICK: her thumb on the power button, the lens gives a little (in 2 frames, back in 5)
+  const j = clamp01((f - T.offClick + 1) / 2) * (1 - clamp01((f - T.offClick - 1) / 5));
+  return j > 0 ? C.nudge(cam, { pitch: -0.4 * j, up: -0.004 * j }) : cam;
+}
 /** the grid mark 大哥 takes (the left file, third rank: he stands a third of a step out toward the wall) */
 const DAGE_MARK = { file: 0, rank: 2 };
 function museum(w: World, f: number): Pose {
   w.setPlace("museum");
   w.set.param("light", 1);
-  w.setCamera(MCAM);
+  const camera = museumCamAt(f);
+  w.setCamera(camera);
   // the warriors: clay, perfectly still (each a slightly different breath phase frozen, so the rows are not clones);
   // a calm, flat face (TERRACOTTA's neutral reads as a sly grin on 23 faces at once: wrong for this ending)
   for (let r = 0; r < 6; r++) for (let fl = 0; fl < 4; fl++) {
@@ -406,13 +444,50 @@ function museum(w: World, f: number): Pose {
   w.actor(DAGE_CLAY).set({ at: MUSEUM.dage, facing: MUSEUM.facing, pose: { kind: "shh", t: 0 }, expr: "hush", gaze: 0, blink, visible: true });
   w.update();
   // G06's caption (captions.ts holds it 8 frames past its line) stays on the road side of the cut: the museum opens
-  // clean, and its first caption is G07's
-  return { camera: MCAM, rec: false, ...(f < G07.from ? { captions: false } : {}), overlays: frag(fadeOut(f)), slate: `G museum${f >= BEAT.G.voice ? " (voice)" : ""}` };
+  // clean, and its first caption is G07's; from the off click no caption (G09's is long gone), from black no HUD
+  const quiet = f < G07.from || f >= T.offClick;
+  const what = f >= T.black ? "black" : f >= T.dot[0] ? "dot" : f >= T.collapse[0] ? "collapse" : f >= T.offClick ? "off click" : f >= BEAT.G.voice ? "voice" : "move";
+  return { camera, rec: true, ...(quiet ? { captions: false } : {}), ...(f >= T.black ? { hud: false } : {}), overlays: frag(switchOff(f)), slate: `G museum: ${what}` };
 }
-/** the end: the darkest warm tone over BEAT.G.fade, full on the last frame */
-const fadeOut = (f: number) => {
-  const a = smooth(lin(f, T.fade[0], T.fade[1]));
-  return a > 0.001 ? h("div", { key: "fadeOut", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, background: WARM, opacity: a } }) : null;
+
+// ================================================================================================ HER CAMERA SWITCHES OFF
+/** THE END (BEAT.G offClick, collapse, dot, black; the REC lamp going out and the frozen HUD are hud/vlog.tsx's): pure
+ *  black closes in from the top and the bottom toward the middle while what is left of the picture pales and
+ *  brightens toward its middle line (a grey veil and a warm white one, strongest in the middle), until it is one thin
+ *  glowing line; the line shrinks to a dot, the dot fades; then pure black (#000) to the last frame. Alpha overlays
+ *  only (the cut lays them over the picture as their own layer): no transform of the canvas, no blend mode, and never
+ *  a full-frame white (the veil is strong only where the strip is already thin). */
+const OFF_MID = 960;
+const offBlack = (key: string, top: number, height: number) => h("div", { key, style: { position: "absolute", left: 0, top, width: 1080, height, background: "#000" } });
+/** the glowing line / dot: half-width hw, half-height hh, opacity a */
+const offLine = (hw: number, hh: number, a: number) => h("div", { key: "offLine", style: {
+  position: "absolute", left: 540 - hw, top: OFF_MID - hh, width: 2 * hw, height: 2 * hh, borderRadius: hh, background: "#fffaf0", opacity: a,
+  boxShadow: "0 0 10px 3px rgba(255,242,222,0.9), 0 0 34px 8px rgba(255,226,190,0.32)" } });
+const switchOff = (f: number) => {
+  const [c0, c1] = T.collapse, d0 = T.dot[0];
+  if (f < c0) return null;
+  if (f >= T.black) return offBlack("offBlack", 0, 1920);
+  const kids: ReturnType<typeof h>[] = [];
+  if (f <= c1) {
+    // THE COLLAPSE: k 1/n .. 1; the strip's half-height eases from the full frame to 3 px
+    const k = (f - c0 + 1) / (c1 - c0 + 1), hh = Math.max(3, OFF_MID * (1 - smooth(k)));
+    const edge = 0.04 + 0.45 * k * k * k, mid = 0.08 + 0.8 * k * k * k, grey = 0.2 * k;
+    kids.push(
+      h("div", { key: "offGrey", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh, background: `rgba(128,124,120,${grey.toFixed(3)})` } }),
+      h("div", { key: "offVeil", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh,
+        background: `linear-gradient(to bottom, rgba(255,246,232,${edge.toFixed(3)}) 0%, rgba(255,246,232,${mid.toFixed(3)}) 50%, rgba(255,246,232,${edge.toFixed(3)}) 100%)` } }),
+      offBlack("offTop", 0, OFF_MID - hh), offBlack("offBottom", OFF_MID + hh, 1920 - OFF_MID - hh),
+    );
+    // the line itself glows up in the last frames, when the strip is thin
+    const la = clamp01((60 - hh) / 50);
+    if (la > 0) kids.push(offLine(540, 3, la));
+  } else {
+    // THE DOT: the line shrinks to a dot over 6 frames, then the dot fades over the last 4 of BEAT.G.dot
+    // (it rounds off as it goes: 6 px tall as a line, a 14 px round dot at the end)
+    const n = f - d0, u = smooth(Math.min(1, (n + 1) / 6)), a = n < 6 ? 1 : 1 - (n - 5) / 5;
+    kids.push(offBlack("offAll", 0, 1920), offLine(lerp(540, 7, u), lerp(3, 7, u * u), a));
+  }
+  return h("div", { key: "switchOff", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden" } }, ...kids);
 };
 
 export const SEG: Segment = {

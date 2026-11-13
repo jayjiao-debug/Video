@@ -147,7 +147,7 @@ Also exported: `SPEAKER_PERSON` (ji -> null: she is the camera, never a figure),
 THE BLUSH / HOOD SWAP (a figure swap on a blink, never a fade):
 
 ```ts
-const KEYS: [number, EmpState][] = [[S.from, "plain"], [line("A06").from - 3, "blush1"], [BEAT.A.blush, "blush2"]];
+const KEYS: [number, EmpState][] = [[S.from, "plain"], [capWord("A05", "帮").from - 3, "blush1"], [BEAT.A.blush, "blush2"]];
 const r = w.actor(emperorAt(f, KEYS));                                // the figure that plays frame f
 r.set({ ..., blink: lid(f / FPS, 1, swaps(KEYS)), visible: true });   // each change hides under a blink
 ```
@@ -250,7 +250,8 @@ C.nudge(cam, { yaw, pitch, roll, right, up, fwd })                // turn / shif
 
 Rules: never inside geometry (the handheld moves the lens up to 3 cm: keep 0.15 m from walls); his eyes in the upper
 third (`SCREEN.eyes` y < 640); faces out of the caption band (y 1190-1498). In the museum pass `floorY:
-MUSEUM.walkTop` to `duck` / `lower` and use mood "still" (G07: the first perfectly still frame). The palm at cover 1 is
+MUSEUM.walkTop` to `duck` / `lower`. The museum (G07-G09) is her handheld again since v3 (mood "calm", REC on, one slow
+continuous move, `museumCamAt` in segG.ts), and the film ends with her camera switching off (BEAT.G.offClick). The palm at cover 1 is
 a dark warm brown (#2a1d19), never pure black. `shots/common.ts` adds `kick`, `shake`, `yawCam`, `whip` (a CamPose
 whip, Wanbi's) and `eye` (a camera at her eyes, no handheld).
 
@@ -272,19 +273,18 @@ whip, Wanbi's) and `eye` (a camera at her eyes, no handheld).
 
 | scene | beats |
 |---|---|
-| A | `creep` [ ], `peek`, `glance`, `turn`, `punchIn`, `grab`, `tugs` [2], `swordOut`, `swordStop`, `jab`, `tremble` [ ], `stepIn`, `lower`, `push` [ ], `blush`, `crown`, `walkOff`, `follow` |
+| A | `creep` [ ], `peek`, `glance`, `turn`, `punchIn`, `grab`, `tugs` [4], `swordOut`, `swordStop`, `jab`, `tremble` [ ], `stepIn`, `lower`, `push` [ ], `blush`, `crown`, `walkOff`, `follow` |
 | B | `enter`, `sit`, `thump`, `card` [ ], `dip` [ ], `smug`, `rise`, `blush`, `nod` [ ], `jerk` |
 | C | `lean`, `whip`, `twoShot`, `stand`, `flash` [ ] (the table), `bolt`, `pop`, `aside`, `back`, `flustered` |
 | D | `enter`, `nextDay` [ ], `fewCars`, `creep` [ ], `turn` [ ], `pan` [ ], `card` [ ], `lean` [ ], `tremble` [ ], `black` [ ] |
 | E | `hall`, `toTable`, `taishan` [ ], `hat`, `xiangshan` [ ], `huff`, `bare` [ ], `back` |
 | F | `hood`, `giggle`, `beads`, `bandits`, `clash` [ ], `straighten`, `glance`, `handCover` [ ], `black` [ ] |
-| G | `creep` [ ], `queue` [ ], `fishCart` [ ], `lower`, `museum`, `voice`, `last`, `fade` [ ] |
+| G | `creep` [ ], `queue` [ ], `fishCart` [ ], `lower`, `museum`, `voice`, `last`, `offClick`, `collapse` [ ], `dot` [ ], `black` |
 
 `placeAt(f)` is the storyboard's place (C's table flashback is `BEAT.C.flash`, E's table runs `BEAT.E.toTable` to
 `BEAT.E.back - 1`, G's museum from `BEAT.G.museum`). A segment may cut differently inside its own frames. A beat that is
 not in beats.ts is derived in your own file the same way (`capWord`, `line().preFrom`, `+ Math.round(s * FPS)`).
-`BEAT.A.swordStop` does not match the sword's own timing yet, and the C07 / E07 cards run into the next line
-(section 13).
+The C07 / E07 cards run into the next line (section 13).
 
 ## 9. The shared verbs (`shots/common.ts`)
 
@@ -365,6 +365,14 @@ It writes `line_cuts.json` (cut, kept span, edge level per line) for `assemble.p
 `pre` 0.2 s (room for D's lead cut), cards hold their own time (`card_hold`). TOTAL is now 5616 frames = 187.2 s:
 A 0-1110, B 1111-1863, C 1864-2586, D 2587-3119, E 3120-3899, F 3900-4555, G 4556-5615.
 
+**Update (2026-11-13, v3 from the owner's review):** B09 keeps one 留着 (`trim`), G02/G03 are SILENT lines (`"silent": s`
+in qin_lines.json: the span stays for the action, no voice, no caption; the eunuch nods), A05's offer comes during the
+stuck sword (four tugs, the blade rings free on 住口), the miniature emperor's ink outline follows his scale
+(`miniature()` in people.ts: the rig's outline width is in metres), the museum moves, the camera switches off at the
+end, and the mix has a cue per scene (scripts/qin/sound/cues.json, voice farm run qin-sfx-02; the switch-off sound is
+synthesised by scripts/qin/sound/make_poweroff.py: `make_poweroff.py 0.30 0.90 <clips>/sfx_poweroff.mp3`). TOTAL 5606 frames = 186.9 s: A 0-1110, B 1111-1841,
+C 1842-2564, D 2565-3097, E 3098-3877, F 3878-4532, G 4533-5605.
+
 **Update (22:45 UTC, after the check):** the REAL voice timing is in (`VOICE_SOURCE` real, `TOTAL` 5297 frames =
 176.6 s). Segments: A 0-1050, B 1051-1798, C 1799-2477, D 2478-2951, E 2952-3660, F 3661-4231, G 4232-5296. Fixed
 since the check: Film.tsx passes `cards={P.cards}`; the C07 / E07 cards no longer run into the next line (C07 after
@@ -381,8 +389,7 @@ The list with owners is the integration report (`/home/user/qin_work/check/`). T
   (z >= -3.38 at facing 0) or hide `["swordBelt", "hilt"]` when he sits.
 - `layout.ts` does not re-export `X_CAMS`, `X_STAND` or `museumMark`: import them from `layout/<place>.ts`.
 - `Film.tsx` does not pass `P.cards` to `VlogHud` yet, so `cards: false` does not stop the timestamp's big intro.
-- `BEAT.A.swordStop` (grab + 1.6 s) is 7 frames earlier than the sword's own arrival (`DRAW.point` 1.82 s): take the
-  tip's arrival from `swordDraw` (phase "point"), not from the beat.
+- (fixed in v3: segA runs its own struggle through A05; `BEAT.A.swordStop` is the tip's arrival, 0.35 s after the ring.)
 - The C07 fact card overlaps the first words of C08 (8 frames) and E07's ends on E08's first frame (voice lane).
 - The C07 card (frames 2011-2082 on the placeholder timing) covers the WHOLE table flashback (`BEAT.C.flash`
   2025-2070), and the E07 card covers `BEAT.E.bare`: on those table frames keep every face out of y 300-560 (the stand-in

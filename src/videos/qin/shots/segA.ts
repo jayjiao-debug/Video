@@ -6,10 +6,14 @@
 //   sneak    A02-A03    reporter's instinct: she tiptoes out toward him; he glances over his shoulder, she freezes; he
 //                       turns back; two more steps; the double take: 谁！ he snaps round (the whoosh), shock, a lunge
 //                       step, her flinch, the punch-in
-//   sword    A04-A06    the draw gag on the mix's anchors: hand to the hilt, stuck tug 1, stuck tug 2 (the two
-//                       sword_stuck hits), the wind-up, the blade rings free (sword_ring) and swings over his shoulder
-//                       to stop 0.4 m from her lens (her recoil, the tremble); her lagging offer of help; the blush
-//                       swap on a blink; 住口 with a jab
+//   sword    A04-A06    the draw gag on the mix's anchors: hand to the hilt, stuck tug 1 and tug 2 (A04's grunt), and
+//                       he keeps struggling through her offer of help (A05): he hauls back off the stuck hilt (the
+//                       rig's haul pose, a tremor, slow heaves), tug 3 cuts into her 陛下, his eyes come up from the
+//                       hilt to glare at her on 要, the blush swap on a blink just before 帮, tug 4 (the biggest) on
+//                       帮 (four sword_stuck hits, each a jerk of the body and the hilt hand; the blade never comes);
+//                       the wind-up crouch, and ON 住口 the blade rings free (sword_ring, A06 - 0.15 s) and swings over
+//                       his shoulder to stop 0.4 m from her lens 0.35 s later (her recoil, the tremble), a poke on 口.
+//                       She leans in a little with her offer, flinches at tug 4, recoils as the blade arrives
 //   plead    A07-A10    she pleads (tremble); he squints on 刺客, is intrigued on 一天; 记录朕？ he steps in, the tip
 //                       dips under her chin; the flattery lifts his chin, a smug flicker he catches; 英明神武？ the
 //                       blade lowers
@@ -35,6 +39,7 @@ import { V, v3, rel, lid, swaps, speak, accent, heads, headPop, at, ky, walkAlon
 
 type St = Partial<RigState>;
 type Expr = NonNullable<RigState["expr"]>;
+type Head = NonNullable<RigState["head"]>;
 const S = SEGMENTS[0];
 const ln = (id: string) => lineId(id);
 const sec = (s: number) => Math.round(s * FPS);
@@ -52,9 +57,12 @@ const COWER = -0.24;
 const AIM: [number, number, number] = [0.08, -0.08, 0];
 
 // ------------------------------------------------------------------------------------------------ the sound anchors
-/** the fixed mix's hits in segment A (scripts/qin/sound/cues.json): the picture lands on them */
+/** the fixed mix's hits in segment A (scripts/qin/sound/cues.json): the picture lands on them. The four sword_stuck
+ *  tugs: two round A04's grunt, two inside her offer (A05 + 0.35 s, and the first frame showing 帮); the blade rings
+ *  free 0.15 s before 住口 (A06) */
 const SND = {
-  tug1: atSec(ln("A04").start - 0.3), tug2: atSec(ln("A04").start + 0.3), ring: atSec(ln("A04").end + 0.05),
+  tug1: atSec(ln("A04").start - 0.3), tug2: atSec(ln("A04").start + 0.3), tug3: atSec(ln("A05").start + 0.35), tug4: word("A05", "帮"),
+  ring: atSec(ln("A06").start - 0.15),
   cloth: atSec(ln("A12").start), himSteps: atSec(ln("A13").start + 0.4), herSteps: atSec(ln("A13").end + 0.1),
   whoosh: atSec(ln("A14").end + 0.15),
 };
@@ -95,7 +103,13 @@ const W_HALL = word("A01", "走廊"), W_SAME = word("A01", "一样");
 const SPOT = A.peek - 24, SPOT_TURN = SPOT - 13, SCURRY = SPOT + 6;
 const LEAN_OUT = ln("A02").from + 2, SNEAK1 = ln("A02").from + 14, FREEZE = A.glance + 3, SNEAK2 = A.glance + 14;
 const REACH0 = SND.tug1 - sec(DRAW.reach), LUNGE0 = A.turn + 3;
-const F_POINT = SND.ring + sec(DRAW.point - DRAW.free);
+/** the wind-up: the crouch into the pull that frees it (swordDraw's wind pose by the ring) */
+const WIND0 = SND.ring - sec(0.17);
+/** the tip arrives 0.4 m from her lens 0.35 s after the blade rings free (住口 lands on it): the tremble, her recoil and
+ *  the glint start here (= BEAT.A.swordStop) */
+const F_POINT = SND.ring + sec(0.35);
+/** her offer: the first 要 (his eyes come up to glare at her; "要" alone occurs three times in A05) */
+const W_YAO = word("A05", "要要");
 const STEP0 = A.stepIn - 4, STEP1 = A.stepIn + 10;
 const TURN0 = ln("A13").preFrom;
 const W_PAT = A.crown, W_DIAN = word("A12", "点"), W_SHIMIAN = word("A13", "世面"), W_GENSHANG = word("A13", "跟上");
@@ -105,28 +119,30 @@ const WHIP_END = S.to - 4;
  *  hidden at the blur's peak */
 const WHIP1 = SND.whoosh - 1, SKIP = WHIP1 + 4;
 
-/** the draw gag's clock (s of acc/sword.ts DRAW) from the film frame: warped so tug 1, tug 2 and the blade coming free
- *  land on the mix's sword_stuck / sword_stuck / sword_ring hits; 1:1 after it */
+/** the draw gag's clock (s of acc/sword.ts DRAW) from the film frame: the reach ends on tug 1, the wind-up starts at
+ *  WIND0, the blade comes free on the mix's sword_ring and the tip arrives at F_POINT (the swing 0.35 s instead of
+ *  0.4); 1:1 after it. (Between tug 1 and the ring the body is struggle()'s, not swordDraw's.) */
 const drawT = (f: number) => {
-  const K: [number, number][] = [[REACH0, 0], [SND.tug1, DRAW.tug1], [SND.tug2, DRAW.tug2], [SND.ring, DRAW.free]];
+  const K: [number, number][] = [[REACH0, 0], [SND.tug1, DRAW.tug1], [WIND0, DRAW.wind], [SND.ring, DRAW.free], [F_POINT, DRAW.point]];
   if (f <= K[0][0]) return (f - K[0][0]) / FPS;
   for (let i = 0; i + 1 < K.length; i++) if (f <= K[i + 1][0]) return lerp(K[i][1], K[i + 1][1], (f - K[i][0]) / (K[i + 1][0] - K[i][0]));
-  return DRAW.free + (f - SND.ring) / FPS;
+  return DRAW.point + (f - F_POINT) / FPS;
 };
 
 // --------------------------------------------------------------------------------------------- his face, his blush
-const BLUSH: [number, EmpState][] = [[S.from, "plain"], [ln("A06").from - 3, "blush1"], [A.blush, "blush2"], [TURN0 + 9, "blush1"], [ln("A14").to, "plain"]];
+const BLUSH: [number, EmpState][] = [[S.from, "plain"], [SND.tug4 - 3, "blush1"], [A.blush, "blush2"], [TURN0 + 9, "blush1"], [ln("A14").to, "plain"]];
 const EXPR: [number, Expr][] = [
-  [S.from, "neutral"], [A.turn, "shock"], [REACH0, "huff"], [SND.tug1, "pained"], [SND.ring, "huff"], [F_POINT + 6, "stern"],
-  [word("A05", "帮"), "focus"], [ln("A06").from - 3, "huff"], [ln("A07").from + 8, "stern"], [W_CIKE, "focus"], [W_YITIAN, "neutral"],
+  [S.from, "neutral"], [A.turn, "shock"], [REACH0, "huff"], [SND.tug1, "pained"], [SND.tug2, "wince"], [ln("A05").from + 4, "stern"],
+  [SND.tug3, "pained"], [W_YAO, "huff"], [SND.tug4, "wince"], [SND.ring, "huff"], [ln("A07").from + 8, "stern"], [W_CIKE, "focus"], [W_YITIAN, "neutral"],
   [STEP0, "focus"], [W_YINGMING, "smug"], [W_YINGMING + 20, "stern"], [ln("A10").from - 2, "neutral"], [W_YIDI, "smile_closed"],
   [A.blush, "stern"], [W_GENSHANG - 6, "cool"],
 ];
 /** the expression changes that hide under a blink (the swaps, the smug he catches, the melt) */
 const BLINKS = [...swaps(BLUSH), ...[W_YINGMING + 20, W_YIDI].map((k) => k / FPS)];
-/** the pupils: at her lens; the flattery slides them aside; looking away from BLUSH2; a stolen glance back on 点 */
+/** the pupils: at her lens; down at the stuck hilt (his left, screen right) through the tugs, up at her when she calls him
+ *  (陛下) and from 要 on (the glare); the flattery slides them aside; looking away from BLUSH2; a stolen glance on 点 */
 const GAZE: [number, number][] = [
-  [S.from, 0], [W_YINGMING + 4, 0.5], [W_YINGMING + 20, 0], [ln("A10").from + 4, 0.5], [ln("A10").to - 6, 0],
+  [S.from, 0], [SND.tug1, 0.5], [ln("A05").from + 4, 0], [SND.tug3, 0.5], [W_YAO, 0], [W_YINGMING + 4, 0.5], [W_YINGMING + 20, 0], [ln("A10").from + 4, 0.5], [ln("A10").to - 6, 0],
   [A.blush, -1], [W_DIAN - 2, -0.5], [W_DIAN + 3, 0], [W_DIAN + 12, -1], [TURN0, 0],
 ];
 const DI = ["A03", "A04", "A06", "A08", "A10", "A12", "A13"];
@@ -147,6 +163,41 @@ const antic = (p: THREE.Vector3, facing: number) => relS(p, facing, 0.27, 0.64, 
 const hover = (f: number) => { const t = f / FPS; return V(0.006 * Math.sin(2 * PI * 0.7 * t), 0.008 * Math.sin(2 * PI * 0.45 * t + 1), 0.004 * Math.sin(2 * PI * 0.55 * t + 2)); };
 /** a direction between a and b along the great circle */
 const slerpDir = (a: THREE.Vector3, b: THREE.Vector3, k: number) => a.clone().applyQuaternion(new THREE.Quaternion().slerp(new THREE.Quaternion().setFromUnitVectors(a.clone().normalize(), b.clone().normalize()), clamp01(k))).normalize();
+/** THE STRUGGLE (tug 1 .. the ring): the blade stays stuck while she offers help. The four tugs land on the mix's
+ *  sword_stuck hits [frame, strength]: each a jerk of the whole body back and down with the torso twisting after the
+ *  hand, a head jolt, the hand yanking 2-3 cm up the grip and snapping back (swordDraw's tug: out in 0.07 s, held, back
+ *  by 0.36 s). Between them he keeps hauling: the rig's "haul" pose (leaning back off the hilt, its own slow heave) at
+ *  a strain that grows with each failed tug, a tremor through the body, the head and both hands, the free hand braced
+ *  out in front. In the last 0.17 s he lets the haul go and crouches into swordDraw's wind pose (down 3.5 cm, the head
+ *  sunk, the hand drawn up 1.9 cm), so the ring (its smear) starts from swordDraw's own pose.
+ *    at = his floor point, amount = the haul's effort, twist = the torso's turn, pull = the hilt hand up the scabbard's
+ *    line (m), trem = the tremor (-1..1), brace = how far the free hand is braced */
+const TUGS: [number, number][] = [[SND.tug1, 0.6], [SND.tug2, 1.0], [SND.tug3, 0.85], [SND.tug4, 1.2]];
+const yankAt = (u: number) => (u < 0 ? 0 : u < 0.07 ? easeOutCubic(u / 0.07) : u < 0.16 ? 1 : 1 - smooth((u - 0.16) / 0.2));
+const struggle = (f: number) => {
+  const t = f / FPS;
+  // (each yank is already 0.86 out on its anchor frame: the jerk lands on the hit, not a frame after it)
+  let y = 0, side = 1;
+  TUGS.forEach(([k, amp], i) => { const v = amp * yankAt((f - k + 1) / FPS); if (v > y) { y = v; side = i % 2 ? -1 : 1; } });
+  const wind = smooth((f - WIND0) / (SND.ring - WIND0)), keep = 1 - wind;
+  const on = smooth((f - SND.tug1) / 8) * keep;
+  const level = ky(f, [[SND.tug1, 0.26], [SND.tug2 + 6, 0.32], [SND.tug3 + 6, 0.4], [SND.tug4 + 6, 0.48]]);
+  // he heaves at it (a pull a little under a second long) and shakes with the effort
+  const heave = Math.sin(2 * PI * 1.15 * t), trem = 0.6 * Math.sin(2 * PI * 7.3 * t) + 0.4 * Math.sin(2 * PI * 4.6 * t + 1.7);
+  // (capped: past about 0.6 the haul's forward foot pokes out under the hem, a dark nub on the floor)
+  const amount = Math.min(0.58, on * (level + 0.06 * heave) + 0.2 * y * keep);
+  const back = (0.035 * y + on * (0.006 + 0.004 * heave + 0.004 * trem)) * keep, down = 0.018 * y * keep + 0.035 * wind;
+  const head: Head = {
+    dy: -(0.05 * y + on * (0.025 + 0.01 * heave)) * keep - 0.06 * wind, squash: (0.07 * y + on * (0.03 + 0.015 * heave)) * keep + 0.05 * wind,
+    tilt: (5 * side * y + 2.4 * on * trem) * keep, dx: 0.02 * on * trem * keep,
+  };
+  const pull = HS * ((0.022 * y + on * (0.005 + 0.003 * heave + 0.002 * trem)) * keep + 0.022 * 0.8 * wind);
+  return { at: rel(M, F_HER, 0, -down, -back), amount, twist: (0.07 * y + 0.025 * on * heave) * keep, head, pull, trem, brace: on };
+};
+/** the hilt hand at rest on the grip (swordDraw between its tugs: the hand ball against the grip's near side) and the
+ *  line it pulls along (up the scabbard's line, swordDraw's tug) */
+const DRAW_O = { at: M, facing: F_HER, lens: LENS, scale: HS, aim: AIM };
+const ON_HILT = swordDraw(DRAW.tug2 - 1e-3, DRAW_O), PULL_DIR = rel(V(), F_HER, -0.1, 0.64, 0.77).normalize();
 /** his place on the walk-off (pure: the camera tracks it) */
 const walkOf = (f: number) => walkAlong([M2, WALK_END], WALK_V, (f - SND.himSteps) / FPS, { startFacing: F_AWAY });
 /** where he stands on frame f (for the camera's framing) */
@@ -208,22 +259,36 @@ function emperor(w: World, f: number, cam: CamPose): React.ReactNode {
     w.update();
     return null;
   }
-  // 3. THE DRAW: hand to the hilt, two stuck tugs, the wind-up, free, the swing, the point; 住口 with a jab
+  // 3. THE DRAW: hand to the hilt; the struggle through her offer (four stuck tugs, the haul, the glare); the wind-up;
+  //    free on 住口, the swing, the point; a poke of the tip on 口
   if (f < STEP0) {
-    const D = swordDraw(drawT(f), { at: M, facing: F_HER, lens: LENS, scale: HS, aim: AIM });
+    const D = swordDraw(drawT(f), DRAW_O), G = f >= SND.tug1 && f < SND.ring ? struggle(f) : null;
     const jab = ky(f, [[A.jab - 3, 0], [A.jab, 1], [A.jab + 3, 1], [A.jab + 11, 0]]);
     const glare = f >= F_POINT ? { dy: -0.04 * smooth((f - F_POINT) / 10) } : undefined;      // the chin drops into the glare
-    r.set({ ...base, at: D.at, facing: F_HER, pose: D.pose, turn: 0, hide: D.hide, head: heads(D.head, T.head, glare, accent("jolt", f, A.jab, { amp: 0.8 })) });
+    // his eyes down at the stuck hilt; up at her on 陛下, down again at tug 3, up for good on 要 (the glare); the haul's
+    // lean back is made up for so the chin stays down
+    const look = ky(f, [[REACH0, 0], [SND.tug1, 9], [ln("A05").from + 1, 9], [ln("A05").from + 5, 0], [SND.tug3, 0], [SND.tug3 + 3, 8], [W_YAO - 3, 8], [W_YAO + 1, -2], [SND.ring, -2], [SND.ring + 4, 0]]);
+    r.set({ ...base, at: G ? G.at : D.at, facing: F_HER, pose: idle, turn: 0, hide: D.hide, lookDown: look + (G ? 10 * G.amount : 0),
+      head: heads(G ? G.head : D.head, T.head, glare, accent("jolt", f, A.jab, { amp: 0.8 })) });
     w.update();
+    // the struggle: the free hand stays where it hangs and braces a little forward and out while the body hauls back
+    // (from the idle solve: no jump where the haul starts and ends, on tug 1 and on the ring)
+    let free: THREE.Vector3 | null = null;
+    if (G) {
+      free = r.handWorld(0).add(rel(V(), F_HER, -0.03 * HS, (0.03 + 0.006 * G.trem) * HS, 0.06 * HS).multiplyScalar(G.brace));
+      r.set({ pose: { kind: "haul", t, amount: G.amount }, twist: G.twist, hands: [free, null] });
+      w.update();
+    }
     const hilt = hiltGrip(r);
     // the reach starts where the lunge left the hand (antic), not from the rig's hang (inside his wide robe)
-    const hand = D.phase === "reach" ? antic(M, F_HER).lerp(swordDraw(DRAW.tug1, { at: M, facing: F_HER, lens: LENS, scale: HS, aim: AIM }).handAt(hilt) ?? antic(M, F_HER), smooth(drawT(f) / DRAW.reach)) : D.handAt(hilt);
+    const hand = D.phase === "reach" ? antic(M, F_HER).lerp(ON_HILT.handAt(hilt) ?? antic(M, F_HER), smooth(drawT(f) / DRAW.reach))
+      : G ? ON_HILT.handAt(hilt)?.addScaledVector(PULL_DIR, G.pull) ?? null : D.handAt(hilt);
     if (hand) {
       if (D.phase === "point") hand.add(hover(f));
       // the swing over the top passes out to his left, the blade clear of his crown and head
       if (D.phase === "swing") hand.addScaledVector(V(Math.cos(F_HER), 0, -Math.sin(F_HER)), 0.08 * Math.sin(PI * clamp01((drawT(f) - DRAW.swing) / (DRAW.point - DRAW.swing))));
       if (jab > 0 && D.sword) hand.addScaledVector(D.sword.dir, 0.07 * jab);
-      r.set({ hands: [null, hand] });
+      r.set({ hands: [free, hand] });
       w.update();
     }
     let tip: THREE.Vector3 | null = null;
@@ -365,6 +430,13 @@ function camAt(f: number): { camera: CamPose; post?: Pose["post"]; smear: number
     + ky(f, [[F_POINT - 1, 0], [F_POINT + 2, 1], [F_POINT + 22, 0.5], [ln("A10").from, 0.5], [ln("A10").to, 0]]) * (f >= F_POINT ? 1 : 0);
   const jab = ky(f, [[A.jab, 0], [A.jab + 2, 1], [A.jab + 12, 0]]);
   c = C.nudge(c, { fwd: -0.05 * flinch - 0.035 * jab, pitch: 1.2 * flinch + 1.5 * jab });
+  // her offer of help: she leans in a little (up out of the cower, a tilt of the head, a glance down at the hilt), shies
+  // back from tug 4 and is driven back down into the cower by the swing (the recoil above takes over on its arrival)
+  const offer = ky(f, [[ln("A05").from, 0], [W_YAO + 4, 1], [SND.tug4, 1], [SND.tug4 + 4, 0.45], [SND.ring, 0.45], [F_POINT, 0]]);
+  if (offer > 0.001) c = C.nudge(c, { fwd: 0.06 * offer, up: 0.04 * offer, roll: -2.5 * offer, pitch: -1.2 * offer });
+  // the struggle crouches him (the haul, the jerks): the lens dips with him, his eyes stay near the upper third
+  const sag = ky(f, [[SND.tug1, 0], [SND.tug1 + 10, 1], [SND.ring, 1], [F_POINT, 0]]);
+  if (sag > 0.001) c = C.nudge(c, { pitch: -1.1 * sag });
   // his eyes in the upper third once he faces her (review: the rig's eyes sit under HEAD_Y and her recoil tips the lens
   // up, so they landed at y 660-700): the lens dips a little from the snap until the push, which frames him itself
   // (there his eyes are at the third and the crown's left end must stay clear of the time stamp)
@@ -373,6 +445,8 @@ function camAt(f: number): { camera: CamPose; post?: Pose["post"]; smear: number
   c = shake(c, f, SPOT, 5, 6, 6);
   c = shake(c, f, SND.tug1, 4, 2, 6);
   c = shake(c, f, SND.tug2, 6, 2, 6);
+  c = shake(c, f, SND.tug3, 5, 2, 6);
+  c = shake(c, f, SND.tug4, 7, 2, 6);
   c = shake(c, f, F_POINT, 12, 2, 10);
   c = shake(c, f, A.jab + 1, 9, 2, 8);
   // 跟上: the camera nods yes

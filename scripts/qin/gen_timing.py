@@ -211,7 +211,7 @@ def place(lines, rows, use_words=True):
             if k >= tot: return e
             return wt[k][0] if side == 1 else wt[k - 1][1]
         acc, line_caps = 0, []
-        for gi, (shown, han) in enumerate(groups_of(n, l["zh"])):
+        for gi, (shown, han) in enumerate([] if l.get("silent") else groups_of(n, l["zh"])):   # a silent line: no caption
             k = len(han); a, b = when(acc, 1), when(acc + k, 0)
             at = [frame(when(acc + j, 1)) for j in range(k)]
             acc += k
