@@ -1,0 +1,88 @@
+// SEGMENT G's own helpers (WP5-G): framing, camera mixing, her walking ease, the mic's aim through keys, axes ->
+// quaternion, keyed rigid poses (the falling board), the fork. Copies of the generic camera helpers of segE_parts /
+// segF_parts, kept here so segment G never moves when another segment's file changes. Every function is pure.
+import * as THREE from "three";
+import { FPS, clamp01, lerp, smooth, type CamPose } from "../story";
+import { FOV } from "../layout";
+import * as C from "../cam";
+
+export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+export const sec = (s: number) => Math.round(s * FPS);
+const v3 = (p: CamPose["pos"]) => (p instanceof THREE.Vector3 ? p.clone() : V(p[0], p[1], p[2]));
+/** a camera's position as a Vector3 */
+export const posOf = (c: CamPose) => v3(c.pos);
+
+/** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (vertical fov, 9:16) */
+export const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: number, fov = FOV): CamPose => {
+  const tanV = Math.tan((fov * Math.PI) / 360), tanH = tanV * (1080 / 1920);
+  const d = p.clone().sub(pos), yawP = Math.atan2(d.x, -d.z), pitchP = Math.atan2(d.y, Math.hypot(d.x, d.z));
+  const yaw = yawP - Math.atan(((sx / 1080) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / 1920) * 2) * tanV);
+  const L = 3;
+  return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
+};
+/** two cameras mixed: position, view direction and fov (k 0..1, eased) */
+export const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
+  if (k <= 0) return a;
+  if (k >= 1) return b;
+  const A = C.camAxes(a), B = C.camAxes(b), e = smooth(k);
+  const pos = A.p.clone().lerp(B.p, e), dir = A.fwd.clone().lerp(B.fwd, e).normalize(), dist = lerp(A.dist, B.dist, e);
+  const look = pos.clone().addScaledVector(dir, dist);
+  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e) };
+};
+/** a walker's ease: speeding up over the first quarter, steady, slowing over the last (peak 1.33 x the average) */
+export const stride = (x: number, r = 0.25) => {
+  const v = 1 / (1 - r), u = clamp01(x);
+  return u < r ? (v * u * u) / (2 * r) : u > 1 - r ? 1 - (v * (1 - u) * (1 - u)) / (2 * r) : v * (u - r / 2);
+};
+/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames */
+export const aimThrough = (f: number, keys: [number, (g: number) => THREE.Vector3][], len = 9) => {
+  let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= f) i++;
+  const cur = keys[i][1](f);
+  if (i === 0) return cur;
+  const k = smooth(clamp01((f - keys[i][0]) / len));
+  return k >= 1 ? cur : keys[i - 1][1](f).lerp(cur, k);
+};
+/** a world rotation from a thing's local +y and +z given as world directions (z made perpendicular to y) */
+export const quatYZ = (y: THREE.Vector3, z: THREE.Vector3) => {
+  const yy = y.clone().normalize(); let zz = z.clone().addScaledVector(yy, -z.dot(yy));
+  if (zz.lengthSq() < 1e-8) zz = Math.abs(yy.y) < 0.9 ? V(0, 1, 0).addScaledVector(yy, -yy.y) : V(0, 0, 1);
+  zz.normalize();
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(V().crossVectors(yy, zz), yy, zz));
+};
+/** a quaternion from Euler angles in the order YZX: yaw y, then a roll z about the yawed forward axis, then a tilt x
+ *  (applied first): the board's tilt on his knee, its roll off his knee, its yaw on the floor */
+export const eulYZX = (x: number, y: number, z: number) => new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, z, "YZX"));
+
+/** A RIGID THING'S WAY THROUGH KEYS [frame, centre, rotation, ease?]: centre lerped, rotation slerped (the ease shapes
+ *  the leg that arrives at its key; default smooth). Holds before the first and after the last key. */
+export type RigidKey = [number, THREE.Vector3, THREE.Quaternion, ((x: number) => number)?];
+export const rigidAt = (f: number, keys: RigidKey[]): { at: THREE.Vector3; rot: THREE.Quaternion } => {
+  if (f <= keys[0][0]) return { at: keys[0][1].clone(), rot: keys[0][2].clone() };
+  for (let i = 1; i < keys.length; i++) if (f <= keys[i][0]) {
+    const [a, pa, qa] = keys[i - 1], [b, pb, qb, e] = keys[i], u = (e ?? smooth)(clamp01((f - a) / Math.max(1, b - a)));
+    return { at: pa.clone().lerp(pb, u), rot: qa.clone().slerp(qb, u) };
+  }
+  const k = keys[keys.length - 1];
+  return { at: k[1].clone(), rot: k[2].clone() };
+};
+/** a falling thing's ease (gravity: slow at first, fast at the end) */
+export const fall = (x: number) => x * x;
+
+// ------------------------------------------------------------------------------------------------- the fork
+/** the fork's tines' tip above its hilt (the origin), along its +y */
+export const FORK_TIP = 0.128;
+/** the fork's rotation with its +y (toward the tines) along `dir` (world), the tines spread level (local x level) */
+export const forkRot = (dir: THREE.Vector3) => {
+  const y = dir.clone().normalize();
+  let x = new THREE.Vector3().crossVectors(y, V(0, 1, 0));
+  if (x.lengthSq() < 1e-6) x = V(1, 0, 0); else x.normalize();
+  const z = new THREE.Vector3().crossVectors(x, y).normalize();
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+};
+/** a point's way through [frame, point, ease?] keys (a hand that travels) */
+export type PtKey = [number, THREE.Vector3, ((x: number) => number)?];
+export const pathAt = (f: number, keys: PtKey[]) => {
+  if (f <= keys[0][0]) return keys[0][1].clone();
+  for (let i = 1; i < keys.length; i++) if (f <= keys[i][0]) return keys[i - 1][1].clone().lerp(keys[i][1], (keys[i][2] ?? smooth)(clamp01((f - keys[i - 1][0]) / Math.max(1, keys[i][0] - keys[i - 1][0]))));
+  return keys[keys.length - 1][1].clone();
+};
