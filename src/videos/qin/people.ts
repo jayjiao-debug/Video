@@ -51,7 +51,8 @@
 // BLUSH SWAPS (PLAN 2, 7; the bible's tic 1 "blush, look away, 哼"): a blush is part of the face drawing, so a rising
 // blush is a SWAP of figures with one Look (body, robe, face the same), each change under a blink: w.actor(emperorAt(f,
 // KEYS)) with blink: lid(t, id, swaps(KEYS)) (shots/common.ts). Which level where (line ids of voice.ts):
-//   A05 she offers to help with the stuck sword -> "plain"; on the blink before A06 "住口" -> "blush1"
+//   A05 she offers to help while he still struggles with the stuck sword -> "plain"; on the blink just before 帮 (her
+//       "help", tug 4) -> "blush1" (住口 follows with the blush)
 //   A11 "千古一帝" lands -> A12 pre (he looks away, straightens the crown, "咳。拍好看点。") -> "blush2"; back to
 //       "blush1" once his back is to the lens in A13, "plain" by the cut
 //   B07 "呵" (smug) -> "plain"; B09 "这句，留着。" (eyes away) -> "blush1" (stern or smile_closed with it)
@@ -59,8 +60,9 @@
 //   F01 he puts the hood on -> "hood"; F05 "嘘！" (shoves the beads in: hide ["hoodBeads"] from here) -> "hoodBlush1";
 //       F07-F09 "刚才，朕没有吓到 ... 那段，删了" -> "hoodBlush1" (glances at the lens)
 //   G: he is only a voice
+import * as THREE from "three";
 import type { Look } from "../group/kit/toon";
-import type { Acc } from "../group/kit/rig3d";
+import type { Acc, Rig, RigCast } from "../group/kit/rig3d";
 import { classmate, friend } from "../group/kit/cast";
 import { moustache } from "../group/kit/rigacc";
 import { DAGE, chiselled } from "../group/kit/rigacc/dage";
@@ -69,7 +71,7 @@ import { topknot, scholarCap, flatCap, helmet, officerCap } from "../../kit/acc/
 import { robe, armour } from "../../kit/acc/garb";
 import { beard, swordBrows } from "../../kit/acc/facehair";
 import { halberd } from "../../kit/acc/held";
-import { QIN_WANG, addPerson, personalise, type Person } from "../wanbi/people";
+import { QIN_WANG, addPerson as addKitPerson, personalise, type Person } from "../wanbi/people";
 import { mianCrown } from "../wanbi/acc/crown";
 import { roundCap } from "../wanbi/acc/envoy";
 import { headCloth } from "../wanbi/acc/bundle";
@@ -79,7 +81,56 @@ import { qinSword } from "./acc/sword";
 import { banditCloth } from "./acc/mask";
 import type { Speaker } from "./voice";
 
-export { addPerson, personalise, blush, BLUSH, type Person };
+export { personalise, blush, BLUSH, type Person };
+
+// ---------------------------------------------------------------------------------------------------- miniatures
+/** A figure smaller than this (Person.scale) is a MINIATURE (the tiny emperor on the sand table, 0.08-0.085). */
+export const MINI_BELOW = 0.5;
+/** Adds the figure to the cast (Wanbi's addPerson: accessories, rim light, resting face, size) and fixes what does not
+ *  follow Person.scale on a miniature. The rig's ink hulls are pushed out along the view-space normal by a width in
+ *  METRES (rig3d.ts hullMat uW: 1.75 cm on the body, 2.1 cm on the head, 1.1 cm on a prop part) and the head's curls
+ *  sit 3 cm behind the ball (curlPullU / curlDepthU): personalise scales the figure's drawing, not those. At 1.08 that
+ *  is invisible; at the table's 0.08 the 1.75 cm hull is 12 x too thick and, wobbled by the brush, swallows the figure
+ *  in a puffy ink blob much wider than his head (WP5 review, "why is the figure black"). Here every hull of a miniature
+ *  is drawn at its width x scale (its line then has the weight it has at full size, at least the rig's 1.6 px) and
+ *  the curls' pull and depth offset are scaled too. Every other figure is built exactly as before. */
+export function addPerson(rc: RigCast, p: Person): Rig {
+  const r = addKitPerson(rc, p), s = p.scale ?? 1;
+  if (s < MINI_BELOW) miniInk(r, s);
+  return r;
+}
+type InkU = { value: number };
+/** the rig's private uniforms a miniature's fix touches (rig3d.ts Rig: pullU / curlPullU, depthU / curlDepthU) */
+type RigInner = { _update: (cam: THREE.Camera) => void; curlPullU: InkU; depthU: InkU; curlDepthU: InkU };
+const miniInk = (r: Rig, s: number) => {
+  // the hulls: every material made by rig3d.ts hullMat (its program key "rig3-hull"), on the body, limbs, head and
+  // every accessory part; the width uniform is the hull's own (each hull mesh has a material of its own)
+  let n = 0;
+  r.group.traverse((o) => {
+    const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+    for (const mat of Array.isArray(m) ? m : m ? [m] : []) {
+      if (mat.userData.qinMiniInk || mat.customProgramCacheKey() !== "rig3-hull") continue;
+      mat.userData.qinMiniInk = s;
+      const base = mat.onBeforeCompile;
+      // (a new uniform object from the rig's own value every compile: a recompile never scales it twice)
+      mat.onBeforeCompile = function (this: THREE.Material, sh, renderer) {
+        base.call(this, sh, renderer);
+        const u = sh.uniforms as Record<string, InkU | undefined>;
+        if (u.uW) u.uW = { value: u.uW.value * s };
+      };
+      mat.needsUpdate = true;
+      n++;
+    }
+  });
+  if (!n) console.warn(`[qin people] miniature ${r.group.name || "figure"}: no rig3-hull ink found (rig3d.ts changed?): its ink is not scaled`);
+  const rr = r as unknown as RigInner;
+  rr.curlPullU.value *= s;
+  const up = rr._update;
+  rr._update = (cam: THREE.Camera) => { up(cam); rr.curlDepthU.value = rr.depthU.value - 0.03 * s; };
+};
+/** a miniature of a Person (a figure of its own: World caches one figure per Person): the same look and accessories at
+ *  `scale` (< MINI_BELOW: addPerson scales its ink). The sand table's tiny emperor: miniature(EMPEROR, "emperorTinyC", 0.085) */
+export const miniature = (p: Person, name: string, scale: number): Person => ({ ...p, name, scale });
 
 const HAIR = "#1f1c22";
 /** the film's colours (never pure black: the ink must stay the darkest thing; nothing brighter than #f4f1ea) */
@@ -205,7 +256,7 @@ export type EmpState = "plain" | "blush1" | "blush2" | "hood" | "hoodBlush1";
 export const EMP_BY: Record<EmpState, Person> = { plain: EMPEROR, blush1: EMPEROR_BLUSH1, blush2: EMPEROR_BLUSH2, hood: EMPEROR_HOOD, hoodBlush1: EMPEROR_HOOD_BLUSH1 };
 /** WHICH EMPEROR PLAYS FRAME f: step keys [frame, state] (the first key's state before it). Show it with
  *  w.actor(emperorAt(f, KEYS)) and hide each change under a blink: blink: lid(f / FPS, id, swaps(KEYS)) (shots/common.ts).
- *    const KEYS: [number, EmpState][] = [[S.from, "plain"], [line("A06").from - 3, "blush1"], [BEAT.A.blush, "blush2"]];
+ *    const KEYS: [number, EmpState][] = [[S.from, "plain"], [capWord("A05", "帮").from - 3, "blush1"], [BEAT.A.blush, "blush2"]];
  *  The notes on which level goes where: "BLUSH SWAPS" at the head of this file. */
 export const emperorAt = (f: number, keys: [number, EmpState][]): Person => {
   let s = keys[0][1];

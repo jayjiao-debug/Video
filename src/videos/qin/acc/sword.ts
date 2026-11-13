@@ -30,6 +30,9 @@
 //   if (hand) { r.set({ hands: D.arm ? [null, hand] : [hand, null] }); w.update(); }   // 2nd solve with the hand pinned
 //   if (D.sword) w.prop("sword").put(r.handWorld(D.arm), { grip: "hilt", rot: D.sword.rot });
 //   camera: cam.ts tremble / handheld with D.shake; overlay: a smear of strength D.smear along the hand's path
+// (Segment A, v3: the struggle is longer than DRAW's two tugs: shots/segA.ts plays its own four tugs and the haul between
+// its tug 1 and the ring (struggle()), and takes the reach, the wind-up's end, the smear, the swing and the point from
+// swordDraw with its clock warped onto the mix's hits.)
 // The tip at the end stands `tip` (0.4 m) from o.lens only if he stands far enough: put his mark at drawStand(...)
 // (about 2.1 m from her lens); swordDraw's `reachShort` says by how much the tip falls short (0 = it reaches).
 import * as THREE from "three";

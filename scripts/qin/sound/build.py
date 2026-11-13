@@ -39,7 +39,7 @@ def main():
         return L[k]["start" if which == "start" else "end"] + off
     inputs, flt = [a.voice], ["[0:a]aresample=48000,aformat=channel_layouts=mono[v]"]
     mix = ["[v]"]
-    def add(clip, t0, t1, gain, loop, fade):
+    def add(clip, t0, t1, gain, loop, fade, fade_out=None):
         path = os.path.join(a.clips, clip + ".mp3"); k = len(inputs)
         if not os.path.exists(path): print("missing", path); return
         args = []
@@ -47,11 +47,13 @@ def main():
         inputs.append((args, path))
         length = max(0.05, (t1 - t0) if t1 is not None else dur(path))
         f = f"[{k}:a]aresample=48000,aformat=channel_layouts=mono,atrim=0:{length:.3f},asetpts=PTS-STARTPTS,volume={gain}dB"
-        if fade: f += f",afade=t=in:d={fade},afade=t=out:st={max(0, length - fade):.3f}:d={fade}"
+        fo = fade if fade_out is None else fade_out                 # "fade_out" (s) overrides the fade at the end
+        if fade: f += f",afade=t=in:d={fade}"
+        if fo: f += f",afade=t=out:st={max(0, length - fo):.3f}:d={fo}"
         ms = int(round(max(0, t0) * 1000)); f += f",adelay={ms}|{ms}[c{k}]"
         flt.append(f); mix.append(f"[c{k}]")
     for b in spec["beds"]:
-        add(b["clip"], at(b["at"]), at(b["until"]), b["gain"], b.get("loop", False), b.get("fade", 0.3))
+        add(b["clip"], at(b["at"]), at(b["until"]), b["gain"], b.get("loop", False), b.get("fade", 0.3), b.get("fade_out"))
     for h in spec["hits"]:
         add(h["clip"], at(h["at"]), None, h["gain"], False, 0)
     for l in T["lines"]:
