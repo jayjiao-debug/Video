@@ -1,0 +1,209 @@
+{
+ "film": "wanbi",
+ "title": "完璧归赵",
+ "script": "next-video/wanbi/script_v2.md, the 旁白 column: 23 lines, 367 字",
+ "about": [
+  "speakers = who may speak a quote: keys of PEOPLE in src/videos/wanbi/people.ts (lin = 蔺相如 the envoy, qinWang = 秦王 the King of Qin).",
+  "quotes = a character's own words inside the line, in order (the lip-sync lines: the envoy at 6, 9, 11, 14, 18, 19; the King of Qin at 12, 21). who = a key of speakers, name = the role, text = the words exactly as in the line, punctuation included (without the quote marks). scripts/wanbi/gen_timing.py checks them against its CAP table and writes QUOTE_RAW."
+ ],
+ "speakers": [
+  "lin",
+  "qinWang"
+ ],
+ "lines": [
+  {
+   "id": 1,
+   "text": "宦官的门客蔺相如，举着和氏璧要往柱子上撞。",
+   "en": "The envoy has one job: deliver the world's most precious jade. He's about to smash it.",
+   "source": "為趙宦者令繆賢舍人……相如持其璧睨柱，欲以擊柱"
+  },
+  {
+   "id": 2,
+   "text": "对面急得直摆手的，是秦王。",
+   "en": "And the one begging him to stop? The King of Qin, who's supposed to receive it.",
+   "source": "秦王恐其破璧，乃辭謝固請"
+  },
+  {
+   "id": 3,
+   "text": "这块玉，秦王开价十五座城。",
+   "en": "The king had offered the kingdom of Zhao fifteen cities for it.",
+   "source": "願以十五城請易璧"
+  },
+  {
+   "id": 4,
+   "text": "赵国给了，城可能不来；不给，秦兵一定来。",
+   "en": "Hand it over, and the cities may never come. Refuse, and Qin's army definitely will.",
+   "source": "欲予秦，秦城恐不可得，徒見欺；欲勿予，即患秦兵之來"
+  },
+  {
+   "id": 5,
+   "text": "派谁去？没人。最后，宦官把自家门客推了出来。",
+   "en": "Who could Zhao send? Nobody. Until a palace eunuch put forward his own retainer.",
+   "source": "求人可使報秦者，未得。宦者令繆賢曰：「臣舍人藺相如可使。」"
+  },
+  {
+   "id": 6,
+   "text": "他说：“我去。城不来，我把玉完整带回来。”",
+   "quotes": [
+    {
+     "who": "lin",
+     "name": "蔺相如",
+     "text": "我去。城不来，我把玉完整带回来。"
+    }
+   ],
+   "en": "He says: \"I'll go. No cities, and I bring the jade back in one piece.\"",
+   "source": "臣願奉璧往使。城入趙而璧留秦；城不入，臣請完璧歸趙"
+  },
+  {
+   "id": 7,
+   "text": "秦王接过玉，乐坏了，传给美人们看。",
+   "en": "The king takes the jade, thrilled, and passes it round to his ladies.",
+   "source": "秦王坐章臺見相如……秦王大喜，傳以示美人及左右"
+  },
+  {
+   "id": 8,
+   "text": "满屋子喊万岁，没人提城的事。",
+   "en": "Everyone shouts \"Long live the king!\" Nobody mentions the cities.",
+   "source": "左右皆呼萬歲。相如視秦王無意償趙城"
+  },
+  {
+   "id": 9,
+   "text": "他走上前：“这玉有个瑕疵，我指给大王看。”",
+   "quotes": [
+    {
+     "who": "lin",
+     "name": "蔺相如",
+     "text": "这玉有个瑕疵，我指给大王看。"
+    }
+   ],
+   "en": "He steps forward: \"There's a flaw in it. Let me show Your Majesty.\"",
+   "source": "乃前曰：「璧有瑕，請指示王。」"
+  },
+  {
+   "id": 10,
+   "text": "玉一到手，他退到柱子边，怒发冲冠。",
+   "en": "The second it's back in his hands, he backs against a pillar, so furious his hair lifts his hat.",
+   "source": "王授璧，相如因持璧卻立，倚柱，怒髪上沖冠"
+  },
+  {
+   "id": 11,
+   "text": "“再逼我，我的头和这块玉，一起碎在柱子上！”",
+   "quotes": [
+    {
+     "who": "lin",
+     "name": "蔺相如",
+     "text": "再逼我，我的头和这块玉，一起碎在柱子上！"
+    }
+   ],
+   "en": "\"Push me, and my head and this jade shatter on this pillar together!\"",
+   "source": "大王必欲急臣，臣頭今與璧俱碎於柱矣！"
+  },
+  {
+   "id": 12,
+   "text": "秦王赶紧道歉，摊开地图一指：“这十五座城，给赵国。”",
+   "quotes": [
+    {
+     "who": "qinWang",
+     "name": "秦王",
+     "text": "这十五座城，给赵国。"
+    }
+   ],
+   "en": "The king apologises at once, unrolls a map and points: \"These fifteen cities. Zhao's.\"",
+   "source": "乃辭謝固請，召有司案圖，指從此以往十五都予趙"
+  },
+  {
+   "id": 13,
+   "text": "他看得出来，秦王在演。",
+   "en": "He can tell the king is acting.",
+   "source": "相如度秦王特以詐詳為予趙城，實不可得"
+  },
+  {
+   "id": 14,
+   "text": "他也演：“赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。”",
+   "quotes": [
+    {
+     "who": "lin",
+     "name": "蔺相如",
+     "text": "赵王斋戒五天才送玉，大王也得斋戒五天，摆上大礼，我才交。"
+    }
+   ],
+   "en": "So he acts too: \"My king fasted five days before sending it. Your Majesty fasts five days and holds the grand ceremony, then I hand it over.\"",
+   "source": "趙王送璧時，齋戒五日，今大王亦宜齋戒五日，設九賓於廷，臣乃敢上璧"
+  },
+  {
+   "id": 15,
+   "text": "秦王抢不到，只好答应。",
+   "en": "The king can't just grab it, so he agrees.",
+   "source": "秦王度之，終不可彊奪，遂許齋五日"
+  },
+  {
+   "id": 16,
+   "text": "转头，他让随从穿上粗布衣服，揣着玉，抄小路溜回赵国。",
+   "en": "Meanwhile he dresses a servant in rough cloth, the jade tucked in his coat, and sends him home by the back roads.",
+   "source": "乃使其從者衣褐，懷其璧，從徑道亡，歸璧于趙"
+  },
+  {
+   "id": 17,
+   "text": "五天后，大礼摆好，秦王要玉。",
+   "en": "Five days later the ceremony is set. The king asks for the jade.",
+   "source": "秦王齋五日後，乃設九賓禮於廷，引趙使者藺相如"
+  },
+  {
+   "id": 18,
+   "text": "他说：“秦国二十多个国君，没一个守约的。玉已经到赵国了。”",
+   "quotes": [
+    {
+     "who": "lin",
+     "name": "蔺相如",
+     "text": "秦国二十多个国君，没一个守约的。玉已经到赵国了。"
+    }
+   ],
+   "en": "He says: \"Qin has had twenty-odd rulers, and not one ever kept a deal. The jade is already in Zhao.\"",
+   "source": "秦自繆公以來二十餘君，未嘗有堅明約束者也……故令人持璧歸，閒至趙矣"
+  },
+  {
+   "id": 19,
+   "text": "“骗了大王，该死。把我下锅煮了吧。”",
+   "quotes": [
+    {
+     "who": "lin",
+     "name": "蔺相如",
+     "text": "骗了大王，该死。把我下锅煮了吧。"
+    }
+   ],
+   "en": "\"I deceived Your Majesty. I deserve death. Throw me in the pot.\"",
+   "source": "臣知欺大王之罪當誅，臣請就湯鑊"
+  },
+  {
+   "id": 20,
+   "text": "满朝大臣面面相觑，有人要拖他出去。",
+   "en": "The ministers stare at each other. Someone moves to drag him out.",
+   "source": "秦王與群臣相視而嘻。左右或欲引相如去"
+  },
+  {
+   "id": 21,
+   "text": "秦王说：“杀了他，玉也回不来。放他回去吧。”",
+   "quotes": [
+    {
+     "who": "qinWang",
+     "name": "秦王",
+     "text": "杀了他，玉也回不来。放他回去吧。"
+    }
+   ],
+   "en": "The king says: \"Kill him and we still don't get the jade. Let him go home.\"",
+   "source": "今殺相如，終不能得璧也……不如因而厚遇之，使歸趙"
+  },
+  {
+   "id": 22,
+   "text": "最后，秦国没给城，赵国也没给玉。",
+   "en": "In the end, Qin never gave the cities. Zhao never gave the jade.",
+   "source": "秦亦不以城予趙，趙亦終不予秦璧"
+  },
+  {
+   "id": 23,
+   "text": "价值连城的玉，一座城也没换到；倒是那个门客，回国就当了大官。",
+   "en": "A jade worth fifteen cities didn't get a single one. But the eunuch's retainer came home a senior official.",
+   "source": "相如既歸，趙王以為賢大夫使不辱於諸侯，拜相如為上大夫"
+  }
+ ]
+}
