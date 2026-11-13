@@ -1,865 +1,166 @@
 {
- "id": "newton-v3-vo-01",
- "model_prefs": [
-  "eleven_v4"
- ],
- "words": true,
+ "id": "sudongpo-va-search-01",
  "items": [
   {
-   "type": "dialogue",
-   "name": "v3_S1_s1716",
-   "model": "eleven_v4",
-   "seed": 1716,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[bright, cheeky] 牛顿爵士，苹果砸头疼吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[offended, sharp] It did not hit my head.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[cold, final] Three minutes.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[thrilled] 才三分钟？看我的。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[innocent, confidently wrong] 哦，那是砸到您脚了？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[irritated, correcting] No. It fell to the ground. Straight down.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[absorbed, thinking aloud] Why always straight down?",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[catching himself, cold] We are done.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[unbothered, pleased with herself] 赶我？看到没，说错一句，他就忍不住。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[casual, provoking] 听说引力那本书，其实是哈雷写的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[outraged] Halley paid for it. I wrote it.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[innocent] 皇家学会怎么不出钱？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[disgusted] Their money went on a book about fish.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[petty, triumphant] Your time is up.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[cheeky] 沙子还在掉呢。直直往下。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_old_std",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "age": "old"
   },
   {
-   "type": "dialogue",
-   "name": "v3_S2_s1716",
-   "model": "eleven_v4",
-   "seed": 1716,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[casual, dropping a bomb] 胡克说过，引力定律有他一份功劳。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[furious] Hooke!",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[ranting] He wanted my credit. I nearly cut Book Three.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[needling] 您就这么不想发表？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[prickly] Who would understand it?",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[dry, sour] At Cambridge, I often lectured to walls.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[deadpan] 墙，辛苦了。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sly] 胡克去世第二年，您就出了《光学》？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[flat, too quick, dodging] My friends insisted. Next question.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_mid_warm",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "age": "middle_aged",
+   "search": "warm"
   },
   {
-   "type": "dialogue",
-   "name": "v3_S3_s1716",
-   "model": "eleven_v4",
-   "seed": 1716,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sweet, going for it] 好。微积分是莱布尼茨发明的吧？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[exploding] Leibniz? It was mine!",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[curious] 那皇家学会怎么判的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[proud, composed] A committee looked into it. Very fair.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[innocent] 会长，委员谁选的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[proud] I did.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[quicker] 报告谁写的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[prouder] I did.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[quicker still] 夸报告的文章，谁写的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[natural] Anonymous.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[deadpan] 也是他。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[cold fury] Out. Now.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_s_old",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "old"
   },
   {
-   "type": "dialogue",
-   "name": "v3_S4_s1716",
-   "model": "eleven_v4",
-   "seed": 1716,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[puzzled] 这写的什么？像密码。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sharp] Give me that.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[sincere, careful] 您为什么威胁要烧死他们？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[matter-of-fact] At birth, I could fit in that. My father was already dead.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[matter-of-fact, tight] At three, my mother married again. She left me with my grandmother.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[sincere] 那您……原谅她了吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[steady, holding it in] When she was dying, I sat up whole nights with her.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[steady, voice catching] I dressed her blisters with my own hands.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[moved, trying to sound professional] ……时间到了。谢谢您，牛顿爵士。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[gruff] Sit down. Next question.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[delighted, teary, teasing] 那……苹果到底砸没砸到您的头？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[exasperated, fighting a smile] For the last time. It did not hit my head.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_s_elderly",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "elderly"
   },
   {
-   "type": "dialogue",
-   "name": "v3_S1_s1727",
-   "model": "eleven_v4",
-   "seed": 1727,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[bright, cheeky] 牛顿爵士，苹果砸头疼吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[offended, sharp] It did not hit my head.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[cold, final] Three minutes.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[thrilled] 才三分钟？看我的。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[innocent, confidently wrong] 哦，那是砸到您脚了？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[irritated, correcting] No. It fell to the ground. Straight down.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[absorbed, thinking aloud] Why always straight down?",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[catching himself, cold] We are done.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[unbothered, pleased with herself] 赶我？看到没，说错一句，他就忍不住。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[casual, provoking] 听说引力那本书，其实是哈雷写的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[outraged] Halley paid for it. I wrote it.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[innocent] 皇家学会怎么不出钱？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[disgusted] Their money went on a book about fish.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[petty, triumphant] Your time is up.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[cheeky] 沙子还在掉呢。直直往下。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_s_grandpa",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "grandpa"
   },
   {
-   "type": "dialogue",
-   "name": "v3_S2_s1727",
-   "model": "eleven_v4",
-   "seed": 1727,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[casual, dropping a bomb] 胡克说过，引力定律有他一份功劳。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[furious] Hooke!",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[ranting] He wanted my credit. I nearly cut Book Three.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[needling] 您就这么不想发表？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[prickly] Who would understand it?",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[dry, sour] At Cambridge, I often lectured to walls.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[deadpan] 墙，辛苦了。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sly] 胡克去世第二年，您就出了《光学》？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[flat, too quick, dodging] My friends insisted. Next question.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_s_grandfather",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "grandfather"
   },
   {
-   "type": "dialogue",
-   "name": "v3_S3_s1727",
-   "model": "eleven_v4",
-   "seed": 1727,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[sweet, going for it] 好。微积分是莱布尼茨发明的吧？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[exploding] Leibniz? It was mine!",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[curious] 那皇家学会怎么判的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[proud, composed] A committee looked into it. Very fair.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[innocent] 会长，委员谁选的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[proud] I did.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[quicker] 报告谁写的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[prouder] I did.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[quicker still] 夸报告的文章，谁写的？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[natural] Anonymous.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[deadpan] 也是他。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[cold fury] Out. Now.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_s_uncle",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "uncle"
   },
   {
-   "type": "dialogue",
-   "name": "v3_S4_s1727",
-   "model": "eleven_v4",
-   "seed": 1727,
-   "settings": {
-    "stability": 0.5
-   },
-   "lines": [
-    {
-     "text": "[puzzled] 这写的什么？像密码。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[sharp] Give me that.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[sincere, careful] 您为什么威胁要烧死他们？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[matter-of-fact] At birth, I could fit in that. My father was already dead.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[matter-of-fact, tight] At three, my mother married again. She left me with my grandmother.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[sincere] 那您……原谅她了吗？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[steady, holding it in] When she was dying, I sat up whole nights with her.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[steady, voice catching] I dressed her blisters with my own hands.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[moved, trying to sound professional] ……时间到了。谢谢您，牛顿爵士。",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[gruff] Sit down. Next question.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    },
-    {
-     "text": "[delighted, teary, teasing] 那……苹果到底砸没砸到您的头？",
-     "voice": {
-      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
-      "voice_id": "I23uc91tu5zY2PA1tKEN",
-      "name": "Lin"
-     }
-    },
-    {
-     "text": "[exasperated, fighting a smile] For the last time. It did not hit my head.",
-     "voice": {
-      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
-      "voice_id": "dUercWozs0yhe4xBCgZ0",
-      "name": "Mandrake"
-     }
-    }
-   ]
+   "type": "voices",
+   "name": "m_s_laugh",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "laugh"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_cheerful",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "cheerful"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_humorous",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "humorous"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_storyteller",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "storyteller"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_wise",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "wise"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_hearty",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "hearty"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_jolly",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "jolly"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_u8001",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "老"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_u5927u53d4",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "大叔"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_u7237u7237",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "爷爷"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_u6e29u6696",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "温暖"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_u8c6au723d",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "豪爽"
+  },
+  {
+   "type": "voices",
+   "name": "m_s_u5e7du9ed8",
+   "lang": "zh",
+   "gender": "male",
+   "n": 40,
+   "search": "幽默"
   }
  ]
 }
