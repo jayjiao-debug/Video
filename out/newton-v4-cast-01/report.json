@@ -1,0 +1,1831 @@
+{
+  "id": "newton-v4-cast-01",
+  "clips": [
+    {
+      "name": "en_gb_young_male",
+      "type": "voices",
+      "status": 200,
+      "query": {
+        "page_size": 30,
+        "language": "en",
+        "sort": "usage_character_count_1y",
+        "accent": "british",
+        "gender": "male",
+        "age": "young"
+      },
+      "voices": [
+        {
+          "name": "Astro - Smooth, Strong and Confident",
+          "voice_id": "B5vjwBxGgp4GLTiUjDxM",
+          "public_owner_id": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "crisp",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Astro, a young and mature British Male voice - designed for audio books, story telling and narration. Crystal clear pronunciation, words spoken with firmness. Welcome to use it in any project you wish.",
+          "usage_character_count_1y": 534465589,
+          "cloned_by_count": 27988,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/601992c59fd04a389af932ba6eff25c5/voices/B5vjwBxGgp4GLTiUjDxM/xALlVIafllagz4qTkvd8.mp3"
+        },
+        {
+          "name": "Axell - Energetic YouTube Personality",
+          "voice_id": "2mltbVQP21Fq8XgIfRQJ",
+          "public_owner_id": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "excited",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A trendy young British voice, perfect for entertaining and informative content for YouTube and TikTok. Clear and crisp audio that is very easy to understand. Limitless uses!",
+          "usage_character_count_1y": 366429965,
+          "cloned_by_count": 69722,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/2mltbVQP21Fq8XgIfRQJ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiZHZKT2dvekt0TVFmZ1ZRZjlmTzhnTVlOMldxMiIsImZpbGVuYW1lIjoiM2xCbTczUVFFajVTQnczenNacjIubXAzIiwidGltZXN0YW1wIjoxNzk0NTc4NDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Alyx - Vibrant, British and Expressive",
+          "voice_id": "1BUhH8aaMvGMUdGAmWVM",
+          "public_owner_id": "70f5a5480e10b0bfc6be976e983454dd45959b0912e28c385f7b15fd46e2cdbb",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "A very high quality, diverse british voice that can be used in many fields. Perfect for YouTube channels that need a voice to narrate videos. Especially good for informative and educational content.",
+          "usage_character_count_1y": 298963134,
+          "cloned_by_count": 69733,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/601992c59fd04a389af932ba6eff25c5/voices/1BUhH8aaMvGMUdGAmWVM/iau4yubfObiA0v1XIpZo.mp3"
+        },
+        {
+          "name": "Northern Terry",
+          "voice_id": "wo6udizrrtpIxWGp2qJk",
+          "public_owner_id": "3d1fa6a5595e0a31fff8d7c1a2f2794b91ca87ddd200066dfbdfcef662a65a1b",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "husky",
+          "use_case": "characters_animation",
+          "category": "high_quality",
+          "description": "Eccentric & husky character from the North of England. Perfect for games, animation or quirky conversations. ",
+          "usage_character_count_1y": 291247387,
+          "cloned_by_count": 67775,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/wo6udizrrtpIxWGp2qJk/hE6lDLlBQf56q6cg6FIP.mp3"
+        },
+        {
+          "name": "Johnny Kid - Serious and Calm Narrator",
+          "voice_id": "8JVbfL6oEdmuxKn5DK2C",
+          "public_owner_id": "e9a6840c69b79812b77ea81fa11d55aaf80dcf1938fa0137bf7f514f67f75c99",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Young British male with a serious and calm voice. Perfect for audiobooks.",
+          "usage_character_count_1y": 274447466,
+          "cloned_by_count": 223479,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/8JVbfL6oEdmuxKn5DK2C/9Hw1XQQvlZM44JEKddyi.mp3"
+        },
+        {
+          "name": "Sam - Neutral, Friendly and Clear",
+          "voice_id": "G7ILShrCNLfmS0A37SXS",
+          "public_owner_id": "2485825829f9fa49abed561fe8e7e7cd78cbc8acdac91837122e6aba40a231a6",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "A talented British male narrator, perfect for bringing your non-fiction audiobooks to life. With a warm, engaging voice and a clear, articulate delivery, he captures the essence of the material while maintaining listener interest. His versatile tone is well-suited for a variety of genres, from self-help and memoirs to history and science, ensuring your content resonates with audiences. With a keen understanding of pacing and emphasis.",
+          "usage_character_count_1y": 243296766,
+          "cloned_by_count": 85707,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/SxKc9zakkgexS9VDBHJYgFlTi272/voices/G7ILShrCNLfmS0A37SXS/y0cRCM7FHQmMcshjWpRK.mp3"
+        },
+        {
+          "name": "Archie - Social Media Narrator",
+          "voice_id": "kmSVBPu7loj4ayNinwWM",
+          "public_owner_id": "89befade7c13aab22ca8c36dfb1892f659fd750058462eeed6b05ab238204d74",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A young British English male voice; warm, deep and easy to understand. Friendly and enthusiastic, it's great for narration, podcasts and social media such as YouTube, Tiktok, Reels and Stories. This studio-produced audio works well for a late teen male Gen-Z voice in audiobooks, games, high-quality video dubbing, advertising and reading.",
+          "usage_character_count_1y": 242352593,
+          "cloned_by_count": 93127,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/kmSVBPu7loj4ayNinwWM/YOCkh6Kvyz07q9hkhZ4l.mp3"
+        },
+        {
+          "name": "Julian - Warm, Articulate and Engaging",
+          "voice_id": "9IzcwKmvwJcw58h3KnlH",
+          "public_owner_id": "bb2cf94b50b0c896a7379e353e0cbf14e27975948e820bb6e749f0013e238cc8",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "pleasant",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "A trusted young British voice for eLearning, documentaries, and training. Knowledgeable, approachable, and effortlessly professional.",
+          "usage_character_count_1y": 213770839,
+          "cloned_by_count": 87219,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/8lFbpyj9WaVPcRPynJQfb7WMid32/voices/9IzcwKmvwJcw58h3KnlH/FimPC0FFqRCqCA2rj15a.mp3"
+        },
+        {
+          "name": "James - Sales Professional ",
+          "voice_id": "nXIYu9FT5meibkBbZFT7",
+          "public_owner_id": "5920cdcfbbba6b586a775c206e220f8f6e8e9f28a2a72a5dedbb8a72dc1bbf3d",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "Real sales voice.",
+          "usage_character_count_1y": 195504075,
+          "cloned_by_count": 4054,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/HsYaDRHnHRejVs7nQGcgfTpbRhH2/voices/nXIYu9FT5meibkBbZFT7/6ed76ed7-8ac2-4ef3-9172-f8fbcc01a831.mp3"
+        },
+        {
+          "name": "Asher - Confident, Charismatic & Playful",
+          "voice_id": "UaYTS0wayjmO9KD1LR4R",
+          "public_owner_id": "bb2cf94b50b0c896a7379e353e0cbf14e27975948e820bb6e749f0013e238cc8",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "Asher’s smooth influencer-style with charismatic delivery and subtle humour breaks down style, aura, and fashion hacks in a way that’s effortless, relatable, and internationally friendly on social media platforms.",
+          "usage_character_count_1y": 191119720,
+          "cloned_by_count": 114004,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/f1affe425a5841d88b0c1f6aa4666fc0/voices/UaYTS0wayjmO9KD1LR4R/EKm8pgubX31EKqlrFvpE.mp3"
+        },
+        {
+          "name": "Adam Greene – Clear, Friendly & Energetic",
+          "voice_id": "1wzJ0Fr9SDexsF2IsKU4",
+          "public_owner_id": "149e92e9e73c80e45b70cc3bbaa4ef8e053354d73f5fb60e446105be425794dc",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Adam is a young American male voice that’s clear, friendly, and naturally energetic. Perfect for YouTube videos, shorts, TikToks and other social media content, he also works great for explainers, podcasts, and light narration whenever you want a real, conversational sound.",
+          "usage_character_count_1y": 129375956,
+          "cloned_by_count": 109226,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/c2690c181a6c45a78113b8862b675e5e/voices/1wzJ0Fr9SDexsF2IsKU4/20qVVtqYU4X5gSt4jCjv.mp3"
+        },
+        {
+          "name": "Toby - Raspy, Youthful and Articulate",
+          "voice_id": "pYDLV125o4CgqP8i49Lg",
+          "public_owner_id": "333250518273b1daa7efac81d613e82401a57b4749951a5f22c1dd136fde494b",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "British male in 20's from England, Nottinghamshire.",
+          "usage_character_count_1y": 108670357,
+          "cloned_by_count": 43396,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/acmyDAfyx7PKTSg0zFu3uUbp9oy2/voices/pYDLV125o4CgqP8i49Lg/VIyNwEFlTbGDMMdlKkYX.mp3"
+        },
+        {
+          "name": "Josh - Mid Twenties Midlands Accent",
+          "voice_id": "JxfH70f7jvYhi0DKD8Xs",
+          "public_owner_id": "27f08375e1d0b3055a43ce3785abef90578df6457223ad19204a4ddbdcfef291",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "professional",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A professional narrator voice clone from a popular voice over artist in the Midlands, UK",
+          "usage_character_count_1y": 107163968,
+          "cloned_by_count": 31866,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/d8c66231152347498d21d8d0df8aa31b/voices/JxfH70f7jvYhi0DKD8Xs/Y4m5apDpAAdD7P4cZ4oy.mp3"
+        },
+        {
+          "name": "Felix - Warm, positive & contemporary RP",
+          "voice_id": "Sq93GQT4X1lKDXsQcixO",
+          "public_owner_id": "bb2cf94b50b0c896a7379e353e0cbf14e27975948e820bb6e749f0013e238cc8",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "pleasant",
+          "use_case": "conversational",
+          "category": "high_quality",
+          "description": "An excellent choice for infomercials, product demos, explainer videos, and direct-response advertising - and perfectly suited for customer service roles, help desk interactions, IVR systems, and virtual agents.",
+          "usage_character_count_1y": 94203843,
+          "cloned_by_count": 47189,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/8lFbpyj9WaVPcRPynJQfb7WMid32/voices/Sq93GQT4X1lKDXsQcixO/0NEVDESbOjo4aachPLfb.mp3"
+        },
+        {
+          "name": "Elliot - Light & Professional",
+          "voice_id": "8gNL8wXI7PQOc82yBLOg",
+          "public_owner_id": "bb2cf94b50b0c896a7379e353e0cbf14e27975948e820bb6e749f0013e238cc8",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "professional",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "A clear, confident and approachable explainer voice with a light, modern British tone - balancing professional authority with ease of understanding.",
+          "usage_character_count_1y": 85926428,
+          "cloned_by_count": 15913,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/f1affe425a5841d88b0c1f6aa4666fc0/voices/8gNL8wXI7PQOc82yBLOg/uc02vqLA6GNUA9VSoIwR.mp3"
+        },
+        {
+          "name": "Jofra – Expressive & Neutral Narrator",
+          "voice_id": "NuRyEq0OdD9mMOyd51UZ",
+          "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Jofra brings drama, clarity, and expressive polish to narration across any genre. His British-accented voice carries natural authority — equally at home in thrillers, documentaries, romance, and corporate films. Built for audiobooks, cinematic narration, and documentary voiceovers. Ideal for audiobook studios, OTT platforms, and production houses needing one narrator that works everywhere.",
+          "usage_character_count_1y": 83308967,
+          "cloned_by_count": 28312,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/NuRyEq0OdD9mMOyd51UZ/peluonDTjBzcef2jGyhG.mp3"
+        },
+        {
+          "name": "Ned",
+          "voice_id": "fNYuJl2dBlX9V7NxmjnV",
+          "public_owner_id": "6f59ea96f4fd932c8ad03c50f92953227c93820b0e43185a3bba8756f153ee5e",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A very easy-on-the-ears casual general southern British accent from a young man in the 25-35 age range.  Best used for conversational purposes but could also be used as a character voice or for narration. The tone of the voice is friendly and charismatic.",
+          "usage_character_count_1y": 82967246,
+          "cloned_by_count": 5515,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/fNYuJl2dBlX9V7NxmjnV/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiYndMNHBvdXpESloxM3lBSTZocElKS1dFUUQzMyIsImZpbGVuYW1lIjoiODUwYWFmN2QtOTdjYy00ZWM0LTkwMjItNTliYjQxYmI4OGMxLm1wMyIsInRpbWVzdGFtcCI6MTc5NDU3ODQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Dan - Young, British and Friendly",
+          "voice_id": "9x3LCv1U6rJuU05dIEO3",
+          "public_owner_id": "96813dea7c230050da48544b1a186b3a56fd04e7a66c881eed27c2ef6b86147a",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "A young British male with a southern accent. Clear and crisp yet gentle. ",
+          "usage_character_count_1y": 72101614,
+          "cloned_by_count": 28185,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/9x3LCv1U6rJuU05dIEO3/WG179USTllEo3zGhvC87.mp3"
+        },
+        {
+          "name": "James - Warm, Clear and Natural",
+          "voice_id": "WkVhWA2EqSfUAWAZG7La",
+          "public_owner_id": "4f206286dfee65891c11aa6895ced7558e70f6d26638457f514189954be6967f",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "narrative_story",
+          "category": "professional",
+          "description": "Clear and articulate British male voice in his 30s, ideal for non-fiction audiobook narration. Neutral yet engaging UK English accent with warmth, authority, and clarity. Perfect for business, history, biography, education, and self-development. This professional British narrator blends trustworthiness with conversational tone, keeping listeners engaged over long passages.",
+          "usage_character_count_1y": 71479259,
+          "cloned_by_count": 16802,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/lmLAXGn1QMWgeIio6mh5WA13AIf1/voices/WkVhWA2EqSfUAWAZG7La/C9x5fBOaKE8UQJMy291O.mp3"
+        },
+        {
+          "name": "Dan - Energetic, Young and UK-based",
+          "voice_id": "DvhK1yIWv9GpUpAD6dsU",
+          "public_owner_id": "c5057fb4f3c06781d82867b2d9e5d1d85031815b799e8ffdbbbe009c4d07ba67",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "Youthful, energetic, enthusiastic, confident, funny and versatile",
+          "usage_character_count_1y": 54576805,
+          "cloned_by_count": 28514,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/DvhK1yIWv9GpUpAD6dsU/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoicU9QUE4wbk5aeFdtV0hMdVJpNDJWUW9tQnoyMyIsImZpbGVuYW1lIjoiMWU3MTIzNjYtMTUzNy00YjRjLTlmOTUtMWY3MTFmM2E5MzU5Lm1wMyIsInRpbWVzdGFtcCI6MTc5NDU3ODQwMDAwMDAwMH0%3D"
+        },
+        {
+          "name": "Daniel - Warm, Clear & Dynamic Guide",
+          "voice_id": "ynTHHllfDmGsZ3G8QJt9",
+          "public_owner_id": "3d30f2332cefa6a2059a85a2fc3a98187994399deb3a7dc54cd99382f86ca08e",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "professional",
+          "use_case": "informative_educational",
+          "category": "high_quality",
+          "description": "A youthful, professional male voice with a warm, friendly character and crisp, natural clarity. Daniel sounds confident, approachable and engaging, with a dynamic delivery that keeps listeners interested without feeling over-produced.\r\nIdeal for audio guides, city tours, travel content, eLearning, explainers, documentaries, corporate narration, educational content, museums, attractions and guided experiences.",
+          "usage_character_count_1y": 51812156,
+          "cloned_by_count": 18097,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/e7716d543e93469782f63ec7e57fecea/voices/ynTHHllfDmGsZ3G8QJt9/6tyR03cUuvNvVgSP088W.mp3"
+        },
+        {
+          "name": "Timmy ",
+          "voice_id": "chcMmmtY1cmQh2ye1oXi",
+          "public_owner_id": "ad827f2c0300d36094ca79e518b1a5df8c3609eb269353c30dcec3ac8878a437",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "hyped",
+          "use_case": "characters_animation",
+          "category": "high_quality",
+          "description": "A young to middle aged medieval style character. High energy, Higher Pitch. Perfect for Games & Animation. Peasant, Unit, Grunt, Villager, Town Crier, Farmer.",
+          "usage_character_count_1y": 51083069,
+          "cloned_by_count": 12109,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/chcMmmtY1cmQh2ye1oXi/mdBV0XLS9541mA6h7u7N.mp3"
+        },
+        {
+          "name": "Jack - British, Clear and Steady",
+          "voice_id": "RL2gbGArFsmr05q4aJLj",
+          "public_owner_id": "37b885d0482a2b0ba59edaf28f8f2cad71aaacd18e00a413fc1b1cdb8ab4e228",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "Male adult British voice. Great for Narrations.",
+          "usage_character_count_1y": 45942566,
+          "cloned_by_count": 14743,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/RL2gbGArFsmr05q4aJLj/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiUThPbTAxY0JzZlJrYlE0UHE5eGFEUWg2cURrMiIsImZpbGVuYW1lIjoibUpyMUoyMlpxYXd1RE1EbzE4dHYubXAzIiwidGltZXN0YW1wIjoxNzk0NTc4NDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Jonathan - Sophisticated, Calm Narrator",
+          "voice_id": "4u5cJuSmHP9d6YRolsOu",
+          "public_owner_id": "bb9155af3bec8240b8db699685a81097bc615809ef5b2becc1fa9d4da8bd0a1c",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "professional",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "A youthful and engaging voice with a UK accent is perfect for professional audiobooks and captivating narrations for stories and fantasy novels, especially with a lighter-hearted tone. It adds charm to advertisements and promotional materials.",
+          "usage_character_count_1y": 42739078,
+          "cloned_by_count": 16164,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/4u5cJuSmHP9d6YRolsOu/DaP3mvl9IX8lKgPZeEzH.mp3"
+        },
+        {
+          "name": "William - Premium, Refined and Inviting",
+          "voice_id": "NmpxQl3ZUbfh8HgoNCGM",
+          "public_owner_id": "e343a9d215f45ffbdf95f98c4a9f0276ec84960ed74f217b57eebbe43f1b86fc",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "classy",
+          "use_case": "informative_educational",
+          "category": "professional",
+          "description": "Young British Story Teller - Great for Podcasts, Teaching, Storytelling - even serious advertisements.",
+          "usage_character_count_1y": 40340030,
+          "cloned_by_count": 8294,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/JrLHRhiafdNY5TLSffGdOx0Brvw2/voices/NmpxQl3ZUbfh8HgoNCGM/zM2jydSZXfoNwkWvAs2L.mp3"
+        },
+        {
+          "name": "George",
+          "voice_id": "j57KDF72L6gxbLk4sOo5",
+          "public_owner_id": "128425fca46e4e961a0c71bc2d4a5376bb208316f449bf8f4c4678061dd69968",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "chill",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": " British Male Voice | Northern Accent | Clear, Friendly & Authentic\n25-year-old from the North of England. Ideal for narration, YouTube, podcasts, character voices, and more. Let’s bring a relatable, genuine Northern touch to your project!",
+          "usage_character_count_1y": 39616625,
+          "cloned_by_count": 21620,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/Uom2Gh3Gj4Vt5RXZfX3mpZyAFmB2/voices/j57KDF72L6gxbLk4sOo5/94bf5f51-0cd7-412f-9e8f-b6b732b77ecc.mp3"
+        },
+        {
+          "name": "Sam - Soft, Slightly Welsh and Friendly",
+          "voice_id": "DikmR0aoFXAp1A3NcovW",
+          "public_owner_id": "d848ec610bbf81bc0c9165b8fc65f65038d6b5d6006f6f647702ab177888f271",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "deep",
+          "use_case": "narrative_story",
+          "category": "high_quality",
+          "description": "A young welsh male with a deep smoothing voice.",
+          "usage_character_count_1y": 34904980,
+          "cloned_by_count": 7403,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/NAAZocrJHWcMf6O5aZjRt44z6Eu2/voices/DikmR0aoFXAp1A3NcovW/ed9a9c15-edcf-492a-aff4-b3222f19659b.mp3"
+        },
+        {
+          "name": "Ryan - Youthful, Cool and Confident",
+          "voice_id": "50y2RdLRjpTShM4ZFm5D",
+          "public_owner_id": "42cd53539426e92a14d7059ebae9d7390913b403fe1a6aea757c11be2fafbca2",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "social_media",
+          "category": "professional",
+          "description": "This is a 20-30 sounding, young, cool, British male perfect for ads, promos, video narration and explainers. ",
+          "usage_character_count_1y": 33321720,
+          "cloned_by_count": 9144,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/6xskCWrkB1XHrX3yolcs2HYMXsJ2/voices/50y2RdLRjpTShM4ZFm5D/w5mXdZPZXTv4QAT85t00.mp3"
+        },
+        {
+          "name": "James - Energetic & Charismatic",
+          "voice_id": "yBXjgyIwt8fF3slvxWZi",
+          "public_owner_id": "2640ead46d8bbfe0ad2f3436f5e2b054d85e4431065bed1cae5797767e0f68f7",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "conversational",
+          "category": "professional",
+          "description": "A cheeky, charismatic British voice with a natural sparkle and plenty of personality. James sounds like the mate who can turn anything into a good story. Whether it’s a YouTube ad, a TikTok skit, or a brand spot that needs energy without the hard sell. Warm, witty, and effortlessly engaging; the perfect voice when you want your audience to lean in and actually enjoy the message.",
+          "usage_character_count_1y": 31903427,
+          "cloned_by_count": 9395,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/yBXjgyIwt8fF3slvxWZi/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI5ZTNiY2VmNTdmZjc0MDAzOWIwYWIxNmYxNmY5NDdlNiIsImZpbGVuYW1lIjoicGRuUUl4UXZabTFSek41ZTI1Y1EubXAzIiwidGltZXN0YW1wIjoxNzk0NTc4NDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Echo - Young, English & High Energy",
+          "voice_id": "Sun6GPdivU7N4kTmYtDw",
+          "public_owner_id": "f73897174eaec9c826f22617cd26cc65c2ee4d81abb629877472fb43c27b251b",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "upbeat",
+          "use_case": "social_media",
+          "category": "high_quality",
+          "description": "A high-energy, authentic teen voice with a natural \"creator\" vibe. Perfect for fast-paced social media narration, \"Day in the Life\" vlogs, and hype-heavy content. This voice is crisp, expressive, and brings a modern, relatable edge to any script.",
+          "usage_character_count_1y": 31668670,
+          "cloned_by_count": 8987,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/user_1201kfrzeak2ekq8t6vmjmwkb0ms/voices/Sun6GPdivU7N4kTmYtDw/v8nhpDEFbI9W0O65vzuL.mp3"
+        }
+      ]
+    },
+    {
+      "name": "en_gb_young_male_story",
+      "type": "voices",
+      "status": 200,
+      "query": {
+        "page_size": 20,
+        "language": "en",
+        "sort": "usage_character_count_1y",
+        "accent": "british",
+        "gender": "male",
+        "age": "young",
+        "use_cases": "characters_animation"
+      },
+      "voices": [
+        {
+          "name": "Northern Terry",
+          "voice_id": "wo6udizrrtpIxWGp2qJk",
+          "public_owner_id": "3d1fa6a5595e0a31fff8d7c1a2f2794b91ca87ddd200066dfbdfcef662a65a1b",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "husky",
+          "use_case": "characters_animation",
+          "category": "high_quality",
+          "description": "Eccentric & husky character from the North of England. Perfect for games, animation or quirky conversations. ",
+          "usage_character_count_1y": 291247387,
+          "cloned_by_count": 67775,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/wo6udizrrtpIxWGp2qJk/hE6lDLlBQf56q6cg6FIP.mp3"
+        },
+        {
+          "name": "Timmy ",
+          "voice_id": "chcMmmtY1cmQh2ye1oXi",
+          "public_owner_id": "ad827f2c0300d36094ca79e518b1a5df8c3609eb269353c30dcec3ac8878a437",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "hyped",
+          "use_case": "characters_animation",
+          "category": "high_quality",
+          "description": "A young to middle aged medieval style character. High energy, Higher Pitch. Perfect for Games & Animation. Peasant, Unit, Grunt, Villager, Town Crier, Farmer.",
+          "usage_character_count_1y": 51083069,
+          "cloned_by_count": 12109,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/chcMmmtY1cmQh2ye1oXi/mdBV0XLS9541mA6h7u7N.mp3"
+        },
+        {
+          "name": "Posh Josh",
+          "voice_id": "NXaTw4ifg0LAguvKuIwZ",
+          "public_owner_id": "be7f2f07098dc23343bab4a9a1202b290c2456f82b01ebcecea0a8af8a146bd9",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "classy",
+          "use_case": "characters_animation",
+          "category": "high_quality",
+          "description": "Posh British male voice (30s) with crisp RP/Received Pronunciation accent—arrogant, smug, prideful, witty, charismatic, and confident. Best for villain, rich snob, aristocrat, upper-class gentleman, luxury/premium ads, comedy skits, satire, sarcastic dialogue, character acting, narration, storytelling, audiobooks, Social Media reels, memes, and skit voiceovers. ",
+          "usage_character_count_1y": 16530349,
+          "cloned_by_count": 17014,
+          "preview_url": "https://api.us.elevenlabs.io/v1/voices/NXaTw4ifg0LAguvKuIwZ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2MmEyYTcxYmZiOWE0MGNiYTZlZWU4ZjZjOWE2ZjNkZCIsImZpbGVuYW1lIjoiczJseVNIZDVONjVZWEFDZnJhYXIubXAzIiwidGltZXN0YW1wIjoxNzk0NTc4NDAwMDAwMDAwfQ%3D%3D"
+        },
+        {
+          "name": "Cameron",
+          "voice_id": "FiQVBfstqvAXNba9nkRV",
+          "public_owner_id": "d9cf88409e4a49d33b5585b33a518c53bbdfd599e359c105abcdc120395a5711",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "calm",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "Young British male voice. Works well for Characters & Animation.",
+          "usage_character_count_1y": 10582684,
+          "cloned_by_count": 2028,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/4pURG7Xz5gQnnnIN00nOlziejFz2/voices/FiQVBfstqvAXNba9nkRV/lGMIOX8bkCTCzfF8GjEc.mp3"
+        },
+        {
+          "name": "Cassian - British Noble",
+          "voice_id": "Veg2qijYoJAS8VPKOOmi",
+          "public_owner_id": "70fa77ad315f86a084535ecf1154f55545ee91e923d9f4a0322756008d4c135d",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "A refined English voice. Low, clear, and elegant, suited for romance, narration, and characters of noble charm.",
+          "usage_character_count_1y": 9104937,
+          "cloned_by_count": 6555,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/OeNgvixn0hO26ZLPFAudWTqnsj23/voices/Veg2qijYoJAS8VPKOOmi/dhcGmwPKvj5g1al270E8.mp3"
+        },
+        {
+          "name": "Taz",
+          "voice_id": "sjFiQiLHGgEyVwArBT5s",
+          "public_owner_id": "7be42f981ddb7929a28b0f6357483ac215dcb869d8a3a7b553437879c1e78175",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "chill",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "Young British male voice.",
+          "usage_character_count_1y": 3341799,
+          "cloned_by_count": 1647,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/pODEZLokKORCGP6zHNwUPXn2mx93/voices/sjFiQiLHGgEyVwArBT5s/48ca8a16-0404-40c7-a0f4-857d581d6fa2.mp3"
+        },
+        {
+          "name": "Bradley",
+          "voice_id": "tczmcUWPAdiP3gKQPrv7",
+          "public_owner_id": "0da5cab5d9e530fcd746fc04e21c2859bfc0b1da8b70adfe8c8490757d3ce5df",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "casual",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "Young English man with common accent",
+          "usage_character_count_1y": 2632366,
+          "cloned_by_count": 2491,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/cE0udOy1zSVo3MgEyNwekkcUcrv1/voices/tczmcUWPAdiP3gKQPrv7/Vz3TDe2OYmmNeVJqwfT8.mp3"
+        },
+        {
+          "name": "Valerius Thorne - Sultry Prince",
+          "voice_id": "Vpystn6DH6JceRJWbGhF",
+          "public_owner_id": "7c21d00663c0ac01dd49970e54edc72463eac8fbd096c3a39be91d6f7aa15302",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "sassy",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "Valerius Thorne, Prince of the Thornwood Kingdom, is a figure of captivating allure and ancient mystique, barely out of his teens yet carrying the weight of centuries. His voice is a low, smooth purr that seems to wrap around his words, rich with a velvety, husky undertone. It can be disarmingly warm or precisely cutting, always drawing you closer. When he whispers, it carries an almost hypnotic resonance, bypassing the ears to settle deep within the mind, imbued with a captivating intimacy.",
+          "usage_character_count_1y": 2205895,
+          "cloned_by_count": 3462,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/6GmZKHJgWqas1lmnSS5nQraVXqr2/voices/Vpystn6DH6JceRJWbGhF/TFB2ut8ggN89Kgf8lxV0.mp3"
+        },
+        {
+          "name": "Shadow Dweller",
+          "voice_id": "1zvnni6XluAvqQJWPf1M",
+          "public_owner_id": "b999e754b91cfbb10de3a68bd7d50674d2ea5f8cdc59d5047f5b77aece2cd3d0",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "modulated",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "A raspy, ancient, dual-natured voice with heavy sibilance. Shifts between low, guttural whispers and high-pitched, frantic whines. Characterised by wet glottal tics and a sharp, aspirated texture. Delivery is erratic and breathless, featuring rhythmic muttering and sudden agitation. Sounds physically small, desperate, and weather-worn. Ideal for eccentric, obsessive characters with a fractured psyche. Gritty, atmospheric, and highly textured for character-driven fantasy narration.",
+          "usage_character_count_1y": 1265834,
+          "cloned_by_count": 2607,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/user_7701kec49r13egja6myk2jgdk7d1/voices/1zvnni6XluAvqQJWPf1M/4TwxuSvRJqmvgaI5iEdK.mp3"
+        },
+        {
+          "name": "Álfwyn - Excitable & Squeaky",
+          "voice_id": "o7bn7T3k6h58H9hn9j3y",
+          "public_owner_id": "e21da34db31d58704b7b2776dcf7db1c31b464e5bffd71727d5f1c4abafafa87",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "excited",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "Álfwyn sounds small and high, sir, with a bit of a squeak in the nose and a soft British accent. Álfwyn is useful for fantasy games and NPCs, cartoons, audiobooks and children’s stories. He does helpers, sidekicks, servants, and any small creature who worries too much. Words that would fit Álfwyn: character, fantasy, elf, goblin, creature, cartoon, high-pitched, nervous, excited, funny, expressive, and of course british, sir.",
+          "usage_character_count_1y": 408087,
+          "cloned_by_count": 729,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/631bf5a20c2d45ffacc1311eb5dec41f/voices/o7bn7T3k6h58H9hn9j3y/chIM4vkLSJ6rIEARqJjg.mp3"
+        },
+        {
+          "name": "Syndicate - Top G",
+          "voice_id": "I8ERYU9lOxALy2vtIvHd",
+          "public_owner_id": "fc6bd480a72b198d6c942a304faeecc3be12ae097896979cf3660d8bc7a89ee4",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "confident",
+          "use_case": "characters_animation",
+          "category": "professional",
+          "description": "An authentic, deep voice with a realistic, grounded delivery and a subtle seductive edge—smooth, confident, and quietly compelling.",
+          "usage_character_count_1y": 340530,
+          "cloned_by_count": 998,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/user_1801keab3mdwfbbbj9yp61vp0sdg/voices/I8ERYU9lOxALy2vtIvHd/3mng6XfxPPm5lRuaCU0d.mp3"
+        },
+        {
+          "name": "Peter",
+          "voice_id": "bTrXJpbeuC5KgriLhQeC",
+          "public_owner_id": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+          "accent": "british",
+          "language": "en",
+          "gender": "male",
+          "age": "young",
+          "descriptive": "intense",
+          "use_case": "characters_animation",
+          "category": "high_quality",
+          "description": "Young British male with a tenor pitch - eager and energetic.",
+          "usage_character_count_1y": 0,
+          "cloned_by_count": 9890,
+          "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/bTrXJpbeuC5KgriLhQeC/VM0T1wrxlg7KPFYZVaUz.mp3"
+        }
+      ]
+    }
+  ],
+  "plan": {
+    "tier": "creator",
+    "character_count": 41927,
+    "character_limit": 123898,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "gender": "female",
+        "descriptive": "confident",
+        "use_case": "conversational",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "gender": "female",
+        "descriptive": "chill",
+        "use_case": "narrative_story",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "language": "zh",
+        "descriptive": "casual",
+        "use_case": "entertainment_tv",
+        "gender": "male",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "language": "en",
+        "descriptive": "sassy",
+        "use_case": "characters_animation",
+        "gender": "female",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "language": "zh",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "gender": "male",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "gender": "female",
+        "descriptive": "excited",
+        "use_case": "characters_animation",
+        "language": "ru",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "gender": "male",
+        "descriptive": "serious",
+        "use_case": "characters_animation",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "gender": "female",
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "language": "hi",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "gender": "female",
+        "language": "ar",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "modern standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "gender": "female",
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "language": "it",
+        "age": "young",
+        "accent": "milanese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "language": "pt",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "language": "es",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "female",
+        "age": "young",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "gender": "female",
+        "descriptive": "cute",
+        "use_case": "narrative_story",
+        "language": "es",
+        "age": "young",
+        "accent": "mexican"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "gender": "female",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "language": "es",
+        "age": "young",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "gender": "female",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "language": "es",
+        "age": "middle_aged",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "gender": "female",
+        "descriptive": "pleasant",
+        "use_case": "conversational",
+        "language": "hi",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "gender": "female",
+        "descriptive": "classy",
+        "use_case": "conversational",
+        "language": "hi",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "gender": "female",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "language": "ar",
+        "age": "young",
+        "accent": "modern standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "gender": "female",
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "language": "it",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "language": "pt",
+        "descriptive": "excited",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "language": "es",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "female",
+        "age": "young",
+        "accent": "peruvian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "language": "es",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "female",
+        "age": "young",
+        "accent": "mexican"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "gender": "female",
+        "descriptive": "upbeat",
+        "use_case": "social_media",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "language": "zh",
+        "descriptive": "professional",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "age": "middle-aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "gender": "male",
+        "descriptive": "professional",
+        "use_case": "informative_educational",
+        "language": "zh",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "gender": "male",
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "language": "zh",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "gender": "male",
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "language": "el",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "language": "el",
+        "age": "old",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "language": "el",
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "language": "de",
+        "descriptive": "professional",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "age": "old",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "language": "zh",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "language": "zh",
+        "descriptive": "pleasant",
+        "use_case": "social_media",
+        "gender": "male",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "language": "zh",
+        "descriptive": "formal",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "gender": "male",
+        "descriptive": "neutral",
+        "use_case": "narrative_story",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "gender": "female",
+        "descriptive": "pleasant",
+        "use_case": "narrative_story",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "gender": "female",
+        "descriptive": "crisp",
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "gender": "male",
+        "descriptive": "crisp",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "old",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "language": "en",
+        "descriptive": "professional",
+        "use_case": "advertisement",
+        "gender": "male",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "language": "en",
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "gender": "male",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "young",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "language": "en",
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "language": "it",
+        "descriptive": "intense",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "young",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "language": "zh",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "young",
+        "accent": "beijing mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "language": "zh",
+        "descriptive": "deep",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "singapore mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "language": "zh",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "language": "en",
+        "descriptive": "chill",
+        "use_case": "informative_educational",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "gender": "male",
+        "descriptive": "chill",
+        "use_case": "social_media",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "accent": "italian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "gender": "male",
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "gender": "male",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "gender": "female",
+        "descriptive": "casual",
+        "use_case": "narrative_story",
+        "language": "fr",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "gender": "male",
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "language": "fr",
+        "age": "middle_aged",
+        "accent": "parisian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "gender": "female",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "language": "de",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "language": "de",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "language": "ru",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "gender": "male",
+        "descriptive": "confident",
+        "use_case": "social_media",
+        "language": "ru",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "gender": "male",
+        "descriptive": "serious",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "gender": "male",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "language": "hi",
+        "descriptive": "upbeat",
+        "use_case": "social_media",
+        "gender": "female",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "descriptive": "classy",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "entertainment_tv",
+        "gender": "female",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "descriptive": "sassy",
+        "use_case": "social_media",
+        "gender": "female",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "australian"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "descriptive": "mature",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "use_case": "characters_animation",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "gender": "neutral",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "descriptive": "rough",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "descriptive": "confident",
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "descriptive": "upbeat",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "descriptive": "chill",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "descriptive": "cute",
+        "use_case": "conversational",
+        "gender": "female",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "descriptive": "classy",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "descriptive": "classy",
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "descriptive": "formal",
+        "use_case": "informative_educational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "descriptive": "confident",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "descriptive": "crisp",
+        "use_case": "advertisement",
+        "gender": "male",
+        "language": "en",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "premade"
+    }
+  ]
+}
