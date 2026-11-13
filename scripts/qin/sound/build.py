@@ -20,7 +20,7 @@ def main():
     ap.add_argument("--voice", default="/home/user/qin_work/voice/voice_48k.wav")
     ap.add_argument("--clips", default="/home/user/qin_work/sound/clips")
     ap.add_argument("--out", default="/home/user/qin_work/sound/mix_48k.wav")
-    ap.add_argument("--gain", type=float, default=5.5, help="master gain in dB before the limiter (~-16 LUFS)")
+    ap.add_argument("--gain", type=float, default=2.5, help="master gain in dB before the limiter (mono mix ~-19.5 LUFS = ~-16.5 LUFS once mux.sh puts it on both channels)")
     a = ap.parse_args()
     T = json.load(open(a.timing)); spec = json.load(open(os.path.join(ROOT, "scripts/qin/sound/cues.json")))
     lines_spec = {l["id"]: l for l in json.load(open(os.path.join(ROOT, "scripts/qin/voice/qin_lines.json")))["lines"]}
@@ -56,10 +56,10 @@ def main():
         add(h["clip"], at(h["at"]), None, h["gain"], False, 0)
     for l in T["lines"]:
         if "card" in lines_spec[l["id"]]: add(spec["cards"]["clip"], l["end"] + 0.1, None, spec["cards"]["gain"], False, 0)
-    flt.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:dropout_transition=0,apad,atrim=0:{total:.4f},volume={a.gain}dB,alimiter=limit=0.89:level=false[out]")
+    flt.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:dropout_transition=0,apad,atrim=end_sample={int(round(total * SR))},volume={a.gain}dB,alimiter=limit=0.89:level=false[out]")
     args = ["ffmpeg", "-y", "-v", "error", "-i", a.voice]
     for x in inputs[1:]: args += x[0] + ["-i", x[1]]
-    args += ["-filter_complex", ";".join(flt), "-map", "[out]", "-ac", "2", "-ar", str(SR), a.out]
+    args += ["-filter_complex", ";".join(flt), "-map", "[out]", "-ac", "1", "-ar", str(SR), a.out]
     subprocess.run(args, check=True)
     print("mix", a.out, f"{dur(a.out):.2f} s (film {total:.2f} s)", "scenes", {s: [round(x, 2) for x in bounds[s]] for s in order})
 

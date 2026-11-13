@@ -20,7 +20,7 @@ def dur(f):
 
 def words_for(cut, start, end):
     if not cut or not cut.get("chars"): return None
-    v0 = cut["chars"][0][1]
+    v0 = cut["kept"][0] - 0.05 if cut.get("kept") else cut["chars"][0][1]   # the clip starts at "kept"[0]
     w = []
     for ch, a, b in cut["chars"]:
         a2 = min(max(start + (a - v0) + 0.05, start), end); b2 = min(max(start + (b - v0) + 0.05, a2), end)
