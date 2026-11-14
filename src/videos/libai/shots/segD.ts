@@ -34,7 +34,7 @@ const cam = (f: number): CamPose => {
 /** the chest: in the eunuch's hands until the give, then his; up high on 天生 */
 const chestAt = (f: number, liAt: THREE.Vector3, liF: number) => {
   const give = ramp(f, D.give - 4, D.give + 8);
-  const huanHold = rel(HUAN_AT, HUAN_F, 0, 0.72, 0.3), liHold = rel(liAt, liF, 0, 0.7, 0.32), liHigh = rel(liAt, liF, 0, 1.12, 0.38);
+  const huanHold = rel(HUAN_AT, HUAN_F, 0, 0.72, 0.3), liHold = rel(liAt, liF, 0, 0.7, 0.32), liHigh = rel(liAt, liF, -0.3, 1.0, 0.34);
   const up = ramp(f, D.hold - 6, D.hold + 6) * (1 - ramp(f, lineId("D25").to, lineId("D25").to + 12));
   return { p: huanHold.lerp(liHold, give).lerp(liHigh, up), open: ramp(f, D.look - 6, D.look + 6), mine: give > 0.5 };
 };
