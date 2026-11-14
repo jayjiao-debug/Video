@@ -21,6 +21,14 @@ export const aim = (pos: THREE.Vector3 | [number, number, number], tgt: THREE.Ve
   const look = p.clone().add(V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(3));
   return { pos: [p.x, p.y, p.z], look: [look.x, look.y, look.z], fov };
 };
+/** two cameras blended (k 0..1): positions, look points and lens */
+export const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
+  if (k <= 0) return a;
+  if (k >= 1) return b;
+  const P = (x: CamPose["pos"]) => (Array.isArray(x) ? V(...(x as [number, number, number])) : (x as THREE.Vector3).clone());
+  const p = P(a.pos).lerp(P(b.pos), k), l = P(a.look).lerp(P(b.look), k);
+  return { pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z], fov: a.fov + (b.fov - a.fov) * k, roll: (a.roll ?? 0) + ((b.roll ?? 0) - (a.roll ?? 0)) * k };
+};
 /** a blend 0..1 from frame a to frame b (smooth) */
 export const ramp = (f: number, a: number, b: number) => smooth(clamp01((f - a) / Math.max(1, b - a)));
 

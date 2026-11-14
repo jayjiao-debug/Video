@@ -6,7 +6,8 @@
 // scrim): a thick ink line drawn as a layer of its own UNDER the fills, a hard little drop and a soft dark shadow.
 // Chinese size by the row's length: up to 9 characters 72 px, 10-11 68, 12-13 64, 14-15 60, 16 56 (shrunk further only
 // if it would cross the rail). One row up to CAP_ROW (16) characters, else two balanced rows. The pair stays inside
-// x 50-925 (Douyin rail) and the band y 1190-1520. A small pop-in per Chinese group (none on a group that starts on
+// x 150-930 (a centred row at most 780 px, left of the app's buttons) and the band y 1300-1488 (layout.ts SCREEN).
+// NO ENGLISH ROW in the Chinese version: every line is spoken in Chinese (Jay, 14 Nov). A small pop-in per Chinese group (none on a group that starts on
 // frame 0). Gold 【key words】 (captions.ts captionRuns) punch on their first syllable.
 // The ending's line (I57, 黄州，惠州，儋州) is NOT captioned here: hud/endnames.tsx draws the three names (END_LINE).
 // English version (input prop lang "en"): the line's English is the caption (bigger, up to three rows), no Chinese;
@@ -18,6 +19,9 @@ import { CAPTION_Y, clamp01, easeOutBack, lineEn, capsOf, type Speaker } from ".
 import { captionAt, captionRuns, TRAILING_PUNCT, type CaptionGroup } from "../captions";
 import { captionAtEN, QUOTE_RAW_EN } from "../captions_en";
 import { EN } from "../lang";
+import { SCREEN } from "../layout";
+/** the caption's own room: a centred row at most SCREEN.capW wide, left of the app's buttons */
+const CAP_L = Math.max(SCREEN.side + 10, 540 - SCREEN.capW / 2), CAP_R = Math.min(SCREEN.rail.x, 540 + SCREEN.capW / 2);
 import { FONT_STACK, HC, SAFE, textW } from "./style";
 /** LIBAI: no line is drawn by an end-names layer */
 const END_LINE = -1;
@@ -97,7 +101,7 @@ const blanks = (row: string) => {
 const rowX = (w: number, line: number, b: { r: number; l: number }, px: number) => {
   const half = w / 2 + line, opt = ((b.r - b.l) / 2) * px;
   const x0 = 540 + opt - half + b.l * px, x1 = 540 + opt + half - b.r * px;
-  const push = Math.min(0, SAFE.right - x1) + Math.max(0, SAFE.left - (x0 + Math.min(0, SAFE.right - x1)));
+  const push = Math.min(0, CAP_R - x1) + Math.max(0, CAP_L - (x0 + Math.min(0, CAP_R - x1)));
   return opt + push;
 };
 
@@ -120,7 +124,7 @@ const CapRow: React.FC<{ runs: Run[]; px: number; bumps: number[]; en: boolean; 
 const zhLayout = (plain: string) => {
   const rows = capRows(plain);
   let px = capPx(Math.max(...rows.map((r) => [...r].length)));
-  const room = SAFE.right - SAFE.left, widest = Math.max(...rows.map((r) => textW(r, px, LS_ZH)));
+  const room = CAP_R - CAP_L, widest = Math.max(...rows.map((r) => textW(r, px, LS_ZH)));
   if (widest + 2 * inkW(px) > room) px = Math.floor((px * (room - 2 * inkW(px))) / widest);
   return { rows, px };
 };
@@ -128,7 +132,7 @@ const zhLayout = (plain: string) => {
 export const captionRect = (f: number): { x0: number; y0: number; x1: number; y1: number } | null => {
   const c = captionAt(f);
   if (!c || c.line === END_LINE) return null;
-  return { x0: SAFE.left, y0: 1190, x1: SAFE.right, y1: 1520 };
+  return { x0: CAP_L, y0: SCREEN.capTop, x1: CAP_R, y1: SCREEN.capBottom };
 };
 
 const ENGLISH_DUB = EN && QUOTE_RAW_EN.length > 0;
@@ -137,7 +141,7 @@ export const Caption: React.FC<{ f: number }> = ({ f }) => {
   useOverlayFont();
   const c: CaptionGroup | null = ENGLISH_DUB ? captionAtEN(f) : captionAt(f);
   if (!c || c.line === END_LINE) return null;
-  const room = SAFE.right - SAFE.left;
+  const room = CAP_R - CAP_L;
   const first = capsOf(c.line)[0] ?? c;
   // the line's English: steady over all of the line's groups (its fade-in on the line's first frame only)
   const en = ENGLISH_DUB ? c.text : lineEn(c.line);
@@ -168,10 +172,10 @@ export const Caption: React.FC<{ f: number }> = ({ f }) => {
   const color = SPEAKER_COL[c.who] ?? HC.white;
   const gap = Math.round(px * 1.28);
   // the block: Chinese rows centred round CAPTION_Y (moved up when the English takes two rows), the English under them
-  const E = enRows(en, CAP_EN.px, room - 2 * 4, CAP_EN.rows);
-  const enH = (E.rows.length - 1) * CAP_EN.gap + E.px;
+  const E = { rows: [] as string[], px: 0 }; // Chinese speech: no English row (Jay, 14 Nov)
+  const enH = 0;
   const zhH = (rows.length - 1) * gap + px;
-  const top = Math.max(1190 + 4, Math.min(CAPTION_Y - zhH / 2, 1520 - 4 - (zhH + CAP_EN.top + enH)));
+  const top = Math.max(SCREEN.capTop + 4, Math.min(CAPTION_Y - zhH / 2, SCREEN.capBottom - 4 - zhH));
   const zy = top + px / 2, ey = top + zhH + CAP_EN.top + E.px / 2;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>

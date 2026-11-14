@@ -60,6 +60,7 @@ import { VOICE_RAW, VOICE_END_S, QUOTE_RAW, VOICE_TOTAL_F, VOICE_LEAD_F, VOICE_T
 import { lineNum } from "./captions";
 import { EN, L } from "./lang";
 import { QUOTE_RAW_EN } from "./captions_en";
+import { worldClock } from "../../kit/overlay/freeze";
 
 export {
   clamp01, clamp, lerp, lin, smooth, smootherstep, easeInQuad, easeOutQuad, easeInOutQuad, easeInCubic, easeOutCubic, easeInOutCubic,
@@ -71,12 +72,22 @@ export type { Speaker };
 
 // ---------------------------------------------------------------------------------------------------- film constants
 export const FPS = 30;
-export const W = 1080, H = 1920;
+/** THE FRAME: 9:15, 1080 x 1800 (Jay, 14 Nov: the app fits a 9:15 film to the phone's width, nothing is cut at the
+ *  sides; the phone-safe layout is layout.ts SCREEN and hud/). */
+export const W = 1080, H = 1800;
+/** THE LENS REFERENCE: every CamPose.fov in this film is the vertical angle of the 1080 x 1920 frame the scenes were
+ *  first built for, so a fov number keeps its WIDTH of view. The 1800 frame's real vertical angle is lensFov(fov):
+ *  tan(half angle) x H / LENS_H (world.ts setCamera applies it). The same view, 60 px less at the top and the bottom:
+ *  a screen y given on the 1920 reference (shots/lb.ts aim's sy) lands at y - REF_DY on the film. */
+export const LENS_H = 1920, REF_DY = (LENS_H - H) / 2;
+export const lensTan = (fov: number) => Math.tan((fov * Math.PI) / 360) * (H / LENS_H);
+export const lensFov = (fov: number) => (360 / Math.PI) * Math.atan(lensTan(fov));
 export const TITLE = L("采访李白的一天", "A Day with Li Bai");
 /** the line under the title (the title block, A, frames 0-90) */
 export const SUBTITLE = L("744年 · 长安", "744 · Chang'an");
-/** caption band: the Chinese rows centred on y 1310, the English under them; band y 1190-1520 px */
-export const CAPTION_Y = 1310;
+/** caption band: the Chinese rows centred on y 1410 (band y 1300-1488 px, layout.ts SCREEN; no English row: every line
+ *  is spoken in Chinese, and a foreign row shows only under foreign speech) */
+export const CAPTION_Y = 1410;
 
 // ---------------------------------------------------------------------------------------------------- the places
 /** One place shows at a time (w.setPlace). Each is its own island along x (layout.ts ISLAND, PLAN section 1):
@@ -217,6 +228,20 @@ export const quotesOf = (who: Speaker): Quote[] => QUOTES.filter((q) => q.who ==
 /** film length in frames: the lead, the dialogue with its beats, the tail (voice.ts). The film does not loop. */
 export const TOTAL = VOICE_TOTAL_F;
 export const LEAD = VOICE_LEAD_F, TAIL = VOICE_TAIL_F;
+
+// ---------------------------------------------------------------------------------------------------- the freeze
+/** THE FREEZE of 李白's intro card (src/kit/overlay/freeze.ts, the SHIFT way; hud/intro.tsx LeadCard): every number in
+ *  story / beats / captions / the shots is on the PICTURE's clock (TOTAL frames); the film inserts FREEZE_N held frames
+ *  on his first close-up, just after A02 (他眯眼凑近镜头: 哟，月亮？你怎么白天就出来了？) and before her answer. Film.tsx
+ *  poses the picture at CLOCK.world(f) and hides the subtitle while CLOCK.at(f); the sound mix (scripts/libai/sound/
+ *  build.py) moves everything after the freeze later by FREEZE_N. No voice is re-recorded: the gap is silence. */
+export const FREEZE_N = 42;
+export const FREEZE = { lead: 0 } as const;
+/** the picture stops on the frame before her answer starts, so the subtitle after the freeze is hers, never A02 again */
+export const FREEZE_AT_WORLD = line("A03").from - 1;
+export const CLOCK = worldClock([{ at: FREEZE_AT_WORLD, frames: FREEZE_N }]);
+/** the film's real length (the freeze included): the composition's durationInFrames */
+export const FILM_TOTAL = CLOCK.total(TOTAL);
 
 // ---------------------------------------------------------------------------------------------------- segments
 const WHAT: Record<string, string> = {

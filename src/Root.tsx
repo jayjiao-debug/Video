@@ -22,5 +22,5 @@ export const Root: React.FC = () => <>
   <Composition id="WanbiFilm" component={WanbiFilm} durationInFrames={WANBI_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="QinFilm" component={QinFilm} durationInFrames={QIN_FRAMES} fps={30} width={1080} height={1920} />
   <Composition id="SuFilm" component={SuFilm} durationInFrames={SU_FRAMES} fps={30} width={1080} height={1920} />
-  <Composition id="LibaiFilm" component={LibaiFilm} durationInFrames={LIBAI_FRAMES} fps={30} width={1080} height={1920} />
+  <Composition id="LibaiFilm" component={LibaiFilm} durationInFrames={LIBAI_FRAMES} fps={30} width={1080} height={1800} />
 </>;

@@ -1,3 +1,37 @@
+# 《采访李白的一天》 (LibaiFilm): the polish of 14 Nov 2026 (read this first)
+
+This folder began as a copy of the Su film's engine; the text further down is that film's plan and is kept only as the
+engine's history. What the Li Bai film is now, after the format update (day-in-life-film skill, 14 Nov):
+
+- **Frame 9:15, 1080 x 1800** (story.ts W/H, LENS_H, lensFov; layout.ts SCREEN is the phone-safe frame). Shots still
+  aim on the 1920 reference (shots/lb.ts aim's sy): a reference y lands 60 px higher on the film.
+- **Subtitles Chinese only** (every line is spoken in Chinese). Fact cards are Chinese only, low, in the film's skin.
+- **The skin** (hud/skin.ts): the tavern's wine flag: unbleached cloth, sky-blue toothed hem, amber wine, night-indigo
+  ink, a wine-cup ring for a stamp; things sway in like a drunk and tip over to leave.
+- **Themed title** (hud/title.tsx, beats.ts TITLE_SPAN): the wine flag swings down above the sleeping man in the cold
+  open, 采访 / 李 / 白 / 的一天, the cup ring. Only the words 采访李白的一天.
+- **李白's intro card** (hud/intro.tsx LeadCard) on a FREEZE of FREEZE_N frames after A02 (story.ts CLOCK, the kit's
+  SHIFT way: all data stays on the picture's clock; Film.tsx poses CLOCK.world(f); the mix shifts by the same amount).
+  高力士 gets a banner on the live shot (GaoBanner).
+- **综艺 effects** (hud/fx.tsx): the cup counter (A08 to E33, spins to 300 and stamps 达标 after E28), the wait bar (B15),
+  醒酒 ✓ (the splash: the card's 今日目标), 记仇 +1 (高力士's glare). None in F. Check: node scripts/libai/overlay_check.mjs.
+- **Whispers** (whisper.ts, hud/whisper.tsx; Newton's treatment): A09, C22, E29, E32. The lens leans in on him, the
+  edges darken, the room dips 6 dB (build.py), her line in the 悄悄说 bubble. No aside turns away any more.
+- **Camera**: one take per scene; each segment's header has its camera plan (moves only with a reason; snap zooms land
+  on the word, cam.ts snap / jolt); F is left still except the open (finishing the match cut) and the last rise.
+- **Joins** (beats.ts TRANSITIONS): A>B whip, B>C clock race (hud/vlog.tsx ClockRace), C>D whip, D>E clock race,
+  E>F the last lamp matched to the moon (segE LAMP_BODY: the lantern's measured spot; segF puts the set's real moon
+  disc there), F's memory dissolves in and out.
+- **Posture** (people.ts Person.lean, the approved RigState.lean patch): 李白 leans back and lists (-5, 3), 高力士 stiff
+  (-3); asleep in A he slumps forward over the jar.
+- **Clearance**: no worse than the delivered film. The lean needed two fixes: in the boot gag 李白 lolls straight back
+  and 高力士 kneels a step to the side (their heads touched, and his hid 李白's face); in F the cup is put in his hand
+  (handWorld) because the lean leaves the hand short of the toast target. E's chest is held low so it never hides his face.
+- **Sound**: node scripts/libai/sound/events.mjs (the freeze, whispers and overlay sounds from the picture), then
+  python3 scripts/libai/sound/build.py. No voice was re-recorded.
+
+---
+
 # 《采访苏东坡的一天》 (LibaiFilm): bible, storyboard and build plan
 
 Episode 3 of the interview series 采访XX的一天. **The camera IS the reporter** (a young woman, never seen; we hear her,

@@ -1,39 +1,57 @@
 // SEGMENT E, lines E28-E33: 酉时, the tavern in the evening. beats.ts BEAT.E.
 //   pour    E28     今天我请！ he tips the chest of gold out on his table; the drinkers cheer.
-//   aside   E29     一个下午，花得差不多了: the camera goes down to the table: a few coins left.
-//   poem    E31     三百六十日，日日醉如泥: proud of it.        aside2 E32: the camera turns away to the jars.
-//   leave   E33     太白兄，我先回了啊！ his friend gets up and goes; the room is empty, the lamps go out. Fade to blue.
+//   aside   E29     一个下午，花得差不多了: her whisper (whisper.ts); a few coins left on the table in front of him.
+//   poem    E31     三百六十日，日日醉如泥: proud of it.        aside2 E32: her whisper.
+//   leave   E33     太白兄，我先回了啊！ his friend gets up and goes; the room is empty, the lamps go out; the last lamp matches to F's moon.
 import * as THREE from "three";
-import { SEGMENTS, FPS, lineId, type Segment, type CamPose } from "../story";
+import { SEGMENTS, FPS, lineId, capWord, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { LI_RED, YOU } from "../people";
 import { RX, ROOM } from "../layout";
 import { transitionAt } from "../hud";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, standing } from "./common";
-import { aim, ramp, held, tavern, LI_TABLE, DRINKER_PEOPLE, atTable, type St } from "./lb";
+import { aim, ramp, held, mixCam, tavern, LI_TABLE, DRINKER_PEOPLE, atTable, type St } from "./lb";
+import { whisperLean } from "../whisper";
 import { KEEPER } from "../people";
 
 const S = SEGMENTS[4], E = BEAT.E, T = LI_TABLE;
 const L28 = lineId("E28"), L33 = lineId("E33");
 const HEAD = rel(T.at, T.facing, 0, 0.98, 0);
-const CAM0 = V(T.at.x - 0.55, 1.45, T.at.z + 2.9);
-const JARS = V(RX - 2.4, 0.9, -2.9);
+/** THE CAMERA PLAN (one take):
+ *    open     the full tavern at evening, him at his table right of centre, the gold coming out of the chest
+ *    今天我请  E28: snap zoom landing on 我请, held through the cheer
+ *    E29      her whisper (the gold heap on the table in front of him, nearly gone)
+ *    E31      三百六十日: snap zoom landing on 三百, held to her question; E32 her whisper
+ *    E33      his friend gets up and goes: she pans with him to the door and back
+ *    lamps    the lamps go out one by one: she tilts up to the last lamp as it dies; the cut to F matches it to the
+ *             moon (the join) */
+const CAM0 = V(T.at.x - 0.6, 1.38, T.at.z + 2.3);
 /** the friend sits at his left, on a cushion of his own */
 const YOU_SEAT = { ...T, at: rel(T.at, T.facing, 0.8, 0, -0.05), seat: { ...T.seat, top: rel(T.seat.top, T.facing, 0.8, 0, -0.05) }, facing: T.facing - 0.7 } as typeof T;
 const DOOR = ROOM.door;
 const YOU_OUT = [YOU_SEAT.at.clone().add(V(0.25, 0, 0.45)), V(RX + 2.2, 0, 0.6), DOOR, DOOR.clone().add(V(1.0, 0, 0))];
 const youGo = L33.to + 6;
 const crowdGone = E.aside2 + 20;
-const lampsOut = [youGo + 40, youGo + 62];
+/** the first lamp goes out after the friend has gone; the last one burns low to the cut (it becomes F's moon) */
+const lampsOut = [youGo + 30, S.to + 1];
 
+/** the last lamp to go out (lb.ts tavern: lamp1) and where it sits on screen as it dies (the moon sits there when F
+ *  opens: shots/segF.ts MOON_SCREEN) */
+export const LAST_LAMP = V(RX + 1.25, 2.55, -1.25);
+export const LAMP_SCREEN = { sx: 640, sy: 520 };
+/** where the lantern's BODY lands with that aim (measured on the still of picture 3745: x 637, film y 570; aim() works on
+ *  the 1920 reference, film y + 60): segF puts the moon's disc there */
+export const LAMP_BODY = { sx: 637, sy: 630 };
 const cam = (f: number): CamPose => {
-  let c = aim(CAM0, HEAD.clone().add(V(0.25, -0.15, 0)), 740);
-  c = C.handheld(c, f, { mood: f >= E.cheer - 4 && f < E.aside ? "excited" : "calm" });
-  c = C.tiltDown(c, f, E.aside, lineId("E29").to + 4, T.on(0, 0.1), { len: 10 });
-  c = C.aside(c, f, E.aside2, lineId("E32").to + 8, JARS, { len: 10 });
+  let c = aim(CAM0, HEAD.clone().add(V(0.0, -0.12, 0)), 860, 640);
+  c = C.snap(c, f, capWord("E28", "我请").from, lineId("E28").to + 24);
+  c = C.snap(c, f, E.poem, lineId("E32").from - 4, { k: 0.75 });
   if (f >= youGo) c = C.nudge(c, { yaw: 14 * ramp(f, youGo, youGo + 30) * (1 - ramp(f, youGo + 50, youGo + 75)) });
-  return c;
+  const up = ramp(f, youGo + 44, youGo + 66);
+  if (up) c = mixCam(c, aim(CAM0, LAST_LAMP, LAMP_SCREEN.sy, LAMP_SCREEN.sx), up);
+  c = C.handheld(c, f, { mood: f >= E.cheer - 4 && f < E.cheer + 40 ? "excited" : "calm", amp: f >= youGo ? 0.4 : 0.7 });
+  return whisperLean(f, c, { at: HEAD });
 };
 
 export const SEG: Segment = {
@@ -55,7 +73,7 @@ export const SEG: Segment = {
     const expr = at<NonNullable<St["expr"]>>(f, [[0, "grin"], [L28.from, "laugh"], [E.aside, "happy"], [lineId("E30").from, "smile"], [lineId("E31").from, "happy"], [E.poem, "smug"], [E.aside2, "smile_closed"], [L33.from, "smile"], [youGo + 20, "sigh"], [lampsOut[1], "smile_closed"]]);
     const m = says("li", ["E28", "E31"], f, 2);
     const pour = ramp(f, E.pour, E.pour + 14);
-    const chestP = T.on(-0.05, 0.12).add(V(0, 0.08 + 0.18 * (1 - ramp(f, E.pour + 14, E.pour + 30)) * (f >= E.pour - 10 ? 1 : 0), 0));
+    const chestP = T.on(-0.05, 0.22).add(V(0, 0.08 + 0.07 * (1 - ramp(f, E.pour + 14, E.pour + 30)) * (f >= E.pour - 10 ? 1 : 0), 0)); // low and to the front: it must not hide his face
     const holding = f < E.pour + 20;
     const hc = held("chest", chestP, { rot: [-1.6 * pour, 0, 0], open: Math.max(pour, ramp(f, S.from, S.from + 1)) });
     w.actor(LI_RED).set({

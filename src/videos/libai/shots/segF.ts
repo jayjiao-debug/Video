@@ -3,7 +3,7 @@
 //   memory   F37      贺老……: an ink-warm flashback in the tavern: 贺知章 laughs, unties his gold turtle, puts it on the
 //                     table for wine (the dissolves in and out are the HUD's TRANSITIONS).
 //   F38-F40  back at night. 谁说一个人？ he lifts his cup to the moon.
-//   F41      举杯邀明月: the camera rises to the moon; 对影: down to his shadow; 三人: back on him.
+//   F41      举杯邀明月: he lifts the cup to the moon, points at his shadow, at himself (the camera holds still).
 //   F42      he looks into his cup.   F43 我陪您喝一杯: her cup floats in from the lens and clinks his (no hand).
 //   F44      好。四个人。 he drinks; the camera rises slowly to the moon under cards 4 and 5; her camera switches off.
 import * as THREE from "three";
@@ -11,11 +11,13 @@ import { SEGMENTS, FPS, lineId, capWord, clamp01, lerp, smooth, h, type Segment,
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { LI, LI_RED, HE } from "../people";
-import { NX } from "../layout";
+import { NX, NIGHT_SET } from "../layout";
+import { NIGHT_STAND } from "../../qin/layout/night";
 import { STONE } from "../props/things";
 import { transitionAt } from "../hud";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, standing, frag } from "./common";
-import { aim, ramp, table, putTable, tavern, LI_TABLE, DRINKER_PEOPLE, atTable, type St } from "./lb";
+import { aim, ramp, mixCam, table, putTable, tavern, LI_TABLE, DRINKER_PEOPLE, atTable, type St } from "./lb";
+import { LAMP_BODY } from "./segE";
 import { KEEPER } from "../people";
 import { setSeat } from "../../../kit/acc/garb";
 
@@ -30,35 +32,42 @@ const TREE = V(NX - 1.25, 0, -5.3);
 const JAR = rel(STONE_AT, FAC, -0.62, 0, 0.15);
 const HEAD = V(STONE_AT.x, 1.38, STONE_AT.z);
 const CAM0 = V(NX + 0.25, 1.25, -1.0);
-/** the moon's direction (layout NIGHT_SET.moon: az 8, el 16 from the stand) */
-const MOON = V(NX + 0.35 + Math.sin(8 * Math.PI / 180) * 60, 1.5 + Math.tan(16 * Math.PI / 180) * 60, 1.9 - Math.cos(8 * Math.PI / 180) * 60);
+/** the moon's disc, exactly where the night set draws it (qin/sets/night.ts: the stand's eye + its direction x dist),
+ *  so the match cut from E's last lamp lands on the same spot of the screen */
+const MOON = (() => {
+  const m = NIGHT_SET.moon, az = (m.az * Math.PI) / 180, el = (m.el * Math.PI) / 180, e = NIGHT_STAND.cam.pos;
+  return V(e[0], e[1], e[2]).add(V(Math.sin(az) * Math.cos(el), Math.sin(el), -Math.cos(az) * Math.cos(el)).multiplyScalar(m.dist));
+})();
 const SHADOW = rel(STONE_AT, FAC, 0.2, 0.7, 0.9);
 
+/** THE CAMERA PLAN: the quiet scene is left alone (no handheld sway, no snaps, no screen effects).
+ *    open     the join: E's last lamp cuts to the moon on the same spot of the screen; she lowers the lens from the
+ *             moon to him alone on the stone under the tree, then holds
+ *    memory   the ink-warm flashback in the tavern: held still
+ *    F38-F44  held still: he toasts the moon, points at his shadow, her cup floats in and clinks his
+ *    end      the one slow move: after 四个人 the lens rises slowly to the moon under cards 4 and 5 */
 const cam = (f: number): CamPose => {
   const base = aim(CAM0, HEAD.clone().add(V(0, -0.2, 0)), 980);
-  let c = C.slowPush(base, f, S.from, F.memory[0], 0.5);
-  const toMoon = aim(CAM0, MOON, 900), toShadow = aim(CAM0, SHADOW.clone().add(V(0, 0.2, 0)), 900);
-  const m = ramp(f, F.moon - 6, F.moon + 18) * (1 - ramp(f, F.shadow - 6, F.shadow + 8));
-  const s = 0.45 * ramp(f, F.shadow - 6, F.shadow + 8) * (1 - ramp(f, F.three - 4, F.three + 12));
-  if (m > 0) c = C.keyCam(0, [{ f: 0, pos: c.pos, look: V(...(c.look as [number, number, number])).lerp(V(...(toMoon.look as [number, number, number])), m) }]);
-  if (s > 0) c = C.keyCam(0, [{ f: 0, pos: c.pos, look: V(...(c.look as [number, number, number])).lerp(V(...(toShadow.look as [number, number, number])), s) }]);
+  const toMoon = aim(CAM0, MOON, LAMP_BODY.sy, LAMP_BODY.sx);
+  const down = ramp(f, S.from + 8, S.from + 62);
+  let c = mixCam(toMoon, base, down);
   const r = ramp(f, F.rise[0], F.rise[1]);
   if (r > 0) {
     const p = CAM0.clone().add(V(0, 0.6 * r, 0.3 * r));
-    const l = V(...(base.look as [number, number, number])).lerp(V(...(toMoon.look as [number, number, number])), r);
+    const l = V(...(base.look as [number, number, number])).lerp(V(...(aim(CAM0, MOON, 900).look as [number, number, number])), r);
     c = { pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z], fov: base.fov };
   }
-  return C.handheld(c, f, { mood: "calm", amp: 0.6 });
+  return c;
 };
 
 // ------------------------------------------------------------------------------------------------ the memory
 const MT = LI_TABLE;
 const HE_AT = rel(MT.at, MT.facing, 0.75, 0, 0.35), HE_F = yawTo(HE_AT, MT.at) - 0.3;
-const memoryCam = (f: number): CamPose => C.handheld(aim(V(MT.at.x + 0.3, 1.4, MT.at.z + 2.4), rel(MT.at, MT.facing, 0.35, 0.95, 0), 760), f, { mood: "calm", amp: 0.4 });
-const PAPER = (f: number) => h("div", { key: "memPaper", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, background: "rgba(236,214,170,0.38)", boxShadow: "inset 0 0 220px 80px rgba(120,90,50,0.55)", opacity: 1, pointerEvents: "none" }, "data-f": f });
+const memoryCam = (f: number): CamPose => { void f; return aim(V(MT.at.x + 0.3, 1.36, MT.at.z + 2.1), rel(MT.at, MT.facing, 0.35, 0.95, 0), 840); };
+const PAPER = (f: number) => h("div", { key: "memPaper", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1800, background: "rgba(236,214,170,0.38)", boxShadow: "inset 0 0 220px 80px rgba(120,90,50,0.55)", opacity: 1, pointerEvents: "none" }, "data-f": f });
 
 // ------------------------------------------------------------------------------------------------ the end
-const OFF_MID = 960;
+const OFF_MID = 900;
 const offBlack = (key: string, top: number, height: number) => h("div", { key, style: { position: "absolute", left: 0, top, width: 1080, height, background: "#000" } });
 const offLine = (hw: number, hh: number, a: number) => h("div", { key: "offLine", style: {
   position: "absolute", left: 540 - hw, top: OFF_MID - hh, width: 2 * hw, height: 2 * hh, borderRadius: hh, background: "#fffaf0", opacity: a,
@@ -66,7 +75,7 @@ const offLine = (hw: number, hh: number, a: number) => h("div", { key: "offLine"
 const switchOff = (f: number) => {
   const [c0, c1] = F.collapse, d0 = F.dot[0];
   if (f < c0) return null;
-  if (f >= F.black) return offBlack("offBlack", 0, 1920);
+  if (f >= F.black) return offBlack("offBlack", 0, 1800);
   const kids: ReturnType<typeof h>[] = [];
   if (f <= c1) {
     const k = (f - c0 + 1) / (c1 - c0 + 1), hh = Math.max(3, OFF_MID * (1 - smooth(k)));
@@ -75,15 +84,15 @@ const switchOff = (f: number) => {
       h("div", { key: "offGrey", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh, background: `rgba(128,124,120,${grey.toFixed(3)})` } }),
       h("div", { key: "offVeil", style: { position: "absolute", left: 0, top: OFF_MID - hh, width: 1080, height: 2 * hh,
         background: `linear-gradient(to bottom, rgba(255,246,232,${edge.toFixed(3)}) 0%, rgba(255,246,232,${mid.toFixed(3)}) 50%, rgba(255,246,232,${edge.toFixed(3)}) 100%)` } }),
-      offBlack("offTop", 0, OFF_MID - hh), offBlack("offBottom", OFF_MID + hh, 1920 - OFF_MID - hh),
+      offBlack("offTop", 0, OFF_MID - hh), offBlack("offBottom", OFF_MID + hh, 1800 - OFF_MID - hh),
     );
     const la = clamp01((60 - hh) / 50);
     if (la > 0) kids.push(offLine(540, 3, la));
   } else {
     const n = f - d0, u = smooth(Math.min(1, (n + 1) / 6)), a = n < 6 ? 1 : 1 - (n - 5) / 5;
-    kids.push(offBlack("offAll", 0, 1920), offLine(lerp(540, 7, u), lerp(3, 7, u * u), a));
+    kids.push(offBlack("offAll", 0, 1800), offLine(lerp(540, 7, u), lerp(3, 7, u * u), a));
   }
-  return h("div", { key: "switchOff", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden" } }, ...kids);
+  return h("div", { key: "switchOff", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1800, overflow: "hidden" } }, ...kids);
 };
 
 // ------------------------------------------------------------------------------------------------ 李白 at night
@@ -155,7 +164,8 @@ export const SEG: Segment = {
       lookDown: f >= F.cupLook && f < F.cupIn ? 20 : 0, gaze: f >= F.toast && f < F.three ? 0.5 : 0,
     });
     w.update();
-    w.prop("wineBowl").put(cp.p, { grip: "hilt", rot: [cp.tilt, 0, 0] });
+    // the cup goes where his hand got to (his lean-back posture can leave the hand short of the target on the toast)
+    w.prop("wineBowl").put(w.actor(LI_RED).handWorld(0), { grip: "hilt", rot: [cp.tilt, 0, 0] });
     if (f >= F.cupIn) w.prop("wineBowl", "ji").put(herCup(f), { grip: "hilt" });
     const off = f0 >= F.offClick;
     return {

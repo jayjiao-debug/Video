@@ -24,8 +24,11 @@ import { LensBlur } from "../vasa/lensblur";
 import { GradeEffect, type GradeParams } from "../vasa/grade";
 import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
-import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
+import { W, H, FILM_TOTAL, CLOCK, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
 import { TitleBlock, FactCard, VlogHud, Caption } from "./hud";
+import { LeadCard, GaoBanner } from "./hud/intro";
+import { Whisper, whisperCapAt } from "./hud/whisper";
+import { Fx } from "./hud/fx";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -33,7 +36,8 @@ import { SEG as SEG_D } from "./shots/segD";
 import { SEG as SEG_E } from "./shots/segE";
 import { SEG as SEG_F } from "./shots/segF";
 
-export const LIBAI_FRAMES = TOTAL;
+/** the film's length: the picture (story.ts TOTAL) plus the intro card's freeze (story.ts CLOCK) */
+export const LIBAI_FRAMES = FILM_TOTAL;
 const COVER = ipFlag("cover"), NOCAP = COVER || ipFlag("nocap"), NOHUD = COVER || ipFlag("nohud"), NOOV = COVER || ipFlag("noov");
 const NOPOST = ipFlag("nopost"), DBG = ipFlag("dbg"), SLATE = ipFlag("slate"), KICK = ipNum("kick", 0);
 const OVONLY = ipFlag("ovonly"); // the cut's overlay pass: the world is posed every frame, nothing is drawn in 3D, the page is transparent
@@ -160,24 +164,26 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
  *  registerHud, in registration order) and the end names (hud/) */
 const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <>
-    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /></> : null}
+    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /><GaoBanner f={f} /><Fx f={f} /></> : null}
     <VlogHud f={f} cards={P.cards} />
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
   </>
 );
 /** the animatic's slate (input prop slate: true): frame, segment, line and the shot's own label, top left. Its own
  *  layer above everything, also where a shot hides the HUD. */
-const Slate: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
+const Slate: React.FC<{ f: number; fz: number; P: Pose }> = ({ f, fz, P }) => (
   <AbsoluteFill style={{ pointerEvents: "none" }}>
     <div style={{ position: "absolute", left: 44, top: 96, padding: "8px 16px", borderRadius: 10, background: "rgba(10,12,22,0.62)", color: "#fff", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 34, letterSpacing: 1, whiteSpace: "nowrap" }}>
-      {`f${f} · ${segAt(f).id} · L${lineNo(f)}${P.slate ? " · " + P.slate : ""}`}
+      {`f${f}${fz !== f ? ` (film ${fz})` : ""} · ${segAt(f).id} · L${lineNo(f)}${P.slate ? " · " + P.slate : ""}`}
     </div>
   </AbsoluteFill>
 );
 
 // ---------------------------------------------------------------------------------------------------- the composition
 export const LibaiFilm: React.FC = () => {
-  const f = useCurrentFrame();
+  // the film's frame (fz: the intro card's freeze counts) and the picture's own frame f (story.ts CLOCK): everything but
+  // the freeze's own card runs on the picture's clock
+  const fz = useCurrentFrame(), f = CLOCK.world(fz), frozen = CLOCK.at(fz) !== null;
   const [handle] = useState(() => { if (DBG) console.log(`[su] composition mounted at page time ${Math.round(performance.now())} ms`); return delayRender("su world build"); });
   const [ctx, setCtx] = useState<{ gl: THREE.WebGLRenderer; camera: THREE.PerspectiveCamera } | null>(null);
   // the font first: anything drawn into textures when the world is built uses it
@@ -195,11 +201,13 @@ export const LibaiFilm: React.FC = () => {
       <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
         {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
       </ThreeCanvas>
+      {P && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Whisper f={f} words={P.captions !== false && !NOCAP} /></AbsoluteFill> : null}
       {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
-      {P && P.captions !== false && !NOCAP ? <Caption f={f} /> : null}
+      {P && P.hud !== false && !NOHUD && frozen ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><LeadCard f={fz} /></AbsoluteFill> : null}
+      {P && P.captions !== false && !NOCAP && !frozen && !whisperCapAt(f) ? <Caption f={f} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
-      {P && SLATE ? <Slate f={f} P={P} /> : null}
+      {P && SLATE ? <Slate f={f} fz={fz} P={P} /> : null}
     </AbsoluteFill>
   );
 };

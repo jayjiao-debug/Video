@@ -45,9 +45,9 @@ export const timeStampAt = (f: number): { id: SceneId; text: string; at: number;
 };
 
 // ---------------------------------------------------------------------------------------------------- geometry
-const ROW = 230;                                      // the REC row's centre (SCREEN.rec)
+const ROW = 120;                                      // the REC row's centre (SCREEN.rec; the app's icons end at y 60)
 const DOT = { x: SCREEN.rec.x0 + 39, r: 17 };         // the REC dot's centre x and radius
-const STAMP = { x: SCREEN.rec.x0 + 22, y: 288, px: EN ? 30 : 34, big: 1.55, bigY: 304 };
+const STAMP = { x: SCREEN.rec.x0 + 22, y: 180, px: EN ? 30 : 34, big: 1.55, bigY: 196 };
 const IN = 8, HOLD = 44, SHRINK = 12;                 // the timestamp's intro: slide in, hold, shrink (frames)
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
@@ -124,6 +124,40 @@ export const VlogHud: React.FC<{ f: number; rec?: boolean; cards?: boolean }> = 
       {showRec ? <RecMark f={fz} out={out} /> : null}
       {showRec && !museum ? <TimeStamp f={fz} intro={cards !== false} /> : null}
       <Battery f={fz} still={rec === false} />
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------------------------------------------- the clock race
+/** THE CLOCK RACE (a join between two scenes, beats.ts TRANSITIONS kind "clock"): her camera's clock runs fast. Over
+ *  the join the 时辰 rolls hour by hour from the outgoing scene's to the incoming one's in the middle of the top of the
+ *  frame (her camera's UI type), a ▶▶ mark beside it, two tracking bands slide down the picture, and the cut lands on
+ *  a two-frame flash. The incoming scene's own big timestamp then takes over (TimeStamp). p 0..1 over the join (0.5 on
+ *  the frame before the cut). */
+const SHICHEN = "子丑寅卯辰巳午未申酉戌亥";
+export const ClockRace: React.FC<{ p: number; from: SceneId; to: SceneId; cutIn: number }> = ({ p, from, to, cutIn }) => {
+  const h0 = SHICHEN.indexOf(SCENE_TIME[from][0]), h1 = SHICHEN.indexOf(SCENE_TIME[to][0]);
+  if (h0 < 0 || h1 < 0) return null;
+  const n = (h1 - h0 + 12) % 12, u = clamp01(p / 0.62), roll = h0 + n * easeInOutCubic(u), i = Math.floor(roll), frac = roll - i;
+  const fadeOut = clamp01((p - 0.66) / 0.3), op = clamp01(p / 0.08) * (1 - fadeOut);
+  const ch = (k: number) => SHICHEN[((k % 12) + 12) % 12] + "时";
+  const band = (k: number, y0: number) => {
+    const y = ((y0 + 1800 * p * 2.2 + 300 * k) % 1900) - 50;
+    return <div key={k} style={{ position: "absolute", left: 0, top: y, width: 1080, height: 26 + 10 * k, background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 100%)", mixBlendMode: "screen" }} />;
+  };
+  const flash = cutIn >= 0 && cutIn <= 1 ? 0.5 * (1 - cutIn / 2) : 0;
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <div style={{ position: "absolute", inset: 0, opacity: op }}>{band(0, 200)}{band(1, 900)}</div>
+      <div style={{ position: "absolute", left: 540, top: 330, transform: "translate(-50%, -50%)", opacity: op, display: "flex", alignItems: "center", gap: 18 }}>
+        <div style={{ position: "relative", width: 230, height: 96, overflow: "hidden" }}>
+          {[0, 1].map((k) => (
+            <div key={k} style={{ position: "absolute", left: 0, width: 230, top: (k - frac) * 96, textAlign: "center", ...inked(84, k === 0 && frac < 0.5 ? HC.goldPale : HC.cream, { letterSpacing: 4 }) }}>{ch(i + k)}</div>
+          ))}
+        </div>
+        <div style={{ ...inked(54, HC.white, { letterSpacing: -8 }) }}>▶▶</div>
+      </div>
+      {flash > 0 ? <div style={{ position: "absolute", inset: 0, background: "#fff8ea", opacity: flash }} /> : null}
     </AbsoluteFill>
   );
 };

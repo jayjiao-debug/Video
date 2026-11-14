@@ -36,7 +36,10 @@ export { personalise };
 /** a Person (Wanbi's type) + the accessories hidden by default (a shot's own `hide` replaces this list) + the figure
  *  fixes of acc/figure.ts: nape = how far down the back of the head the hair goes (deg from the crown; default NAPE
  *  165, false = the rig's own line), limbs = the ball hands' / arm tubes' colours (default: the rig's near-ink) */
-export type Person = KitPerson & { hide?: string[]; nape?: number | false; limbs?: { hand?: string; arm?: string } };
+export type Person = KitPerson & { hide?: string[]; nape?: number | false; limbs?: { hand?: string; arm?: string }; lean?: Lean };
+/** a resting POSTURE (RigState.lean, the approved posture patch): degrees added to the pose's own lean, pitch + =
+ *  forward, roll + = to the person's left. Applied on every frame whose state sets no lean of its own. */
+export type Lean = { pitch?: number; roll?: number };
 
 type Inner = { _update: (cam: unknown) => void };
 /** Adds the figure to the cast: Wanbi's addPerson (accessories, rim light, the hair over the beard, the resting face
@@ -46,6 +49,15 @@ export function addPerson(rc: RigCast, p: Person): Rig {
   const r = addKitPerson(rc, p);
   napeHair(r, p.look, { nape: p.nape });
   if (p.limbs) limbColours(r, p.limbs);
+  if (p.lean) {
+    const rr = r as unknown as Inner, up = rr._update.bind(r), lean = p.lean;
+    rr._update = (cam) => {
+      const st = r.state as { lean?: Lean };
+      if (st.lean !== undefined) { up(cam); return; }
+      st.lean = lean;
+      try { up(cam); } finally { st.lean = undefined; }
+    };
+  }
   if (p.hide?.length) {
     const rr = r as unknown as Inner, base = rr._update.bind(r), def = p.hide;
     rr._update = (cam) => {
@@ -85,7 +97,9 @@ const liAcc = (k: number): Acc[] => [
 ];
 const LI_LOOK = song(friend(7), { width: 0.96, skin: S_FAIR, topCol: COL.li });
 /** 李白 (see the head of this file): the white robe with the blue band, light blush; resting face happy */
-export const LI: Person = { name: "li", expr: "happy", look: LI_LOOK, acc: () => liAcc(BLUSH.light) };
+/** his posture: he leans back a little, chest out, and lists to one side (proud and a few cups in: the personality
+ *  profile's signature body) */
+export const LI: Person = { name: "li", expr: "happy", look: LI_LOOK, acc: () => liAcc(BLUSH.light), lean: { pitch: -5, roll: 3 } };
 /** the same, red-cheeked (after the cups: E, F) */
 export const LI_RED: Person = { ...LI, name: "liRed", acc: () => liAcc(BLUSH.strong) };
 
@@ -94,6 +108,7 @@ export const LI_RED: Person = { ...LI, name: "liRed", acc: () => liAcc(BLUSH.str
 export const GAO: Person = {
   name: "gao", expr: "smug", look: song(classmate(64), { width: 1.2, skin: S_PALE, topCol: COL.gao, head: { nTop: 2.2, nBot: 2, egg: 0.12 } }),
   acc: () => [robe({ col: COL.gao, band: COL.gaoBand, sash: COL.gaoBand }), roundCap()],
+  /** stiff and upright, the chin up: the palace's man */ lean: { pitch: -3 },
 };
 /** the messenger eunuch: round, beardless, olive robe, the round cap */
 export const HUAN: Person = {
