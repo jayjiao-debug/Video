@@ -32,7 +32,7 @@ export const TitleBlock: React.FC<{ f: number }> = ({ f }) => {
   const u = easeInCubic(clamp01((f - (b - OUT)) / OUT));
   const op = 1 - u, s = 1 + 0.01 * ((f - a) / (b - a + 1)), dy = -10 * u;
   // the main row fits the frame with margin (the English is longer)
-  const ls = EN ? 1 : 6, px = Math.min(MAIN, Math.floor((MAIN * 860) / Math.max(1, textW(TITLE, MAIN, ls))));
+  const ls = EN ? 1 : 6, px = Math.min(MAIN, Math.floor((MAIN * 740) / Math.max(1, textW(TITLE, MAIN, ls))));   // phone-safe width
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <div style={{ position: "absolute", left: 0, top: 0, width: 1080, height: 1920, opacity: op, transform: `translateY(${dy.toFixed(2)}px) scale(${s.toFixed(4)})`, transformOrigin: `540px ${Y_MAIN}px` }}>

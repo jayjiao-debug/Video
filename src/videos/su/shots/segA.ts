@@ -1,4 +1,6 @@
 // SEGMENT A, lines A01-A05: 清晨, the 惠州 morning market (the hook). WP5 segA. PLAN.md 8A, beats.ts BEAT.A.
+// CAMERA PASS (PLAN 12, 2026-11-14): her camera is the one in "the cameras" below (plan: su_work/cam2/A_plan.md); where
+// the notes here still speak of her camera (the pan on 当官的, the creep, the small punch-in, the mic) they are history.
 // One handheld take in her eyes, no cut until the whip into B:
 //   walk     A01 (f0)   already moving: she strides down lane A toward the butcher's stall (the walk bob dies by 1.0 s,
 //                       BEAT.A.walk); the title block on top. SU, bamboo hat, beard everywhere, stands at the chopping
@@ -50,7 +52,6 @@ const RAD = Math.PI / 180;
 /** 一只羊: his raised hand ("one") */ const ONE = word("A02", "一只羊");
 /** 肉: his eyes flick to the carcass on the rack */ const MEAT = word("A02", "肉");
 /** 骨头缝: he waggles the spine at the lens */ const GAP = word("A05", "骨头缝");
-/** her walk stops (the lens settles in front of him) */ const STOP_F = A.walk[1] + 12;
 /** card 1: the coin out of his robe, the flick (BEAT.A.pay), the butcher's catch, his thanks */
 const COIN = CARD1.from + 10, TOSS = A.pay, CATCH = A.pay + 9;
 /** the coin at 1.8 x (a 3 cm coin at 2 m is a few pixels: a toon glint big enough to follow in the air) */
@@ -71,15 +72,20 @@ const BF = yawTo(BUT, BLOCK);
 /** WP3's block stands on legs that end 1.2 cm over its origin: it is put that much lower (requests.md), so its top is
  *  the layout's (MARKET_SET.block.top, the cleaver's resting mark) less that */
 const BLOCK_SINK = 0.012, TOP = MARKET.cleaver.y - BLOCK_SINK;
-/** the two servants: their walk (layout servantPath) at a loaded pace; servant 0 is already 1.5 m along it on frame 0,
+/** the two servants: their walk at a loaded pace; servant 0 is already walking on frame 0 (his own path, below),
  *  servant 1 waits at the counter and sets off so that he is just past the path's second point on 当官的 */
 const SV_PATH = MARKET.servantPath, SV_SPEED = 0.85;
 /** servant 1 waits with his bundle at the counter right of the butcher (from the layout's first point it stood right
  *  behind SU in her walk-in), and goes round behind the butcher to the layout's path */
 const SV1_PATH = [SV_PATH[0].clone().add(V(1.05, 0, 0.05)), SV_PATH[0].clone().add(V(-0.05, 0, -0.1)), ...SV_PATH.slice(1)];
 const pathLen = (P: THREE.Vector3[], n: number) => { let d = 0; for (let i = 0; i < n; i++) d += P[i].distanceTo(P[i + 1]); return d; };
-const SV_PATHS = [SV_PATH, SV1_PATH];
-const SV_GO = [S.from - Math.round(((pathLen(SV_PATH, 1) - 0.4) / SV_SPEED) * FPS), A.nod - Math.round(((pathLen(SV1_PATH, 2) + 0.36) / SV_SPEED) * FPS)];
+/** CAMERA PASS (PLAN 12.6, a view with something in the foreground): servant 0 no longer walks the layout's path (it
+ *  kept him behind SU and then beside her lens, never in her view); on frame 0 he is already 1.5 m in front of SU and
+ *  0.8 m to his right, at the left edge of her opening view (clear of SU), and walks out of it with the bundle of cuts
+ *  (a foreground pass), past her left and up lane A behind her (hidden once he is behind her, as before) */
+const SV0_PATH = [V(MARKET.su.x - 0.8, 0, MARKET.su.z + 1.5), V(MARKET.su.x - 1.25, 0, MARKET.stop.z + 0.1), V(MARKET.su.x - 1.55, 0, MARKET.stop.z + 1.85), SV_PATH[3].clone()];
+const SV_PATHS = [SV0_PATH, SV1_PATH];
+const SV_GO = [S.from - 3, A.nod - Math.round(((pathLen(SV1_PATH, 2) + 0.36) / SV_SPEED) * FPS)];
 /** the background villagers: [layout mark index, look, facing, turn (1 = browsing the stall, back to us)] */
 const CROWD: [number, Person, number, number][] = [[0, VILLAGER2, Math.PI + 0.3, 1], [1, VILLAGER, Math.PI / 2, 0], [4, VILLAGER4, Math.PI / 2 + 0.4, 0], [3, VILLAGER3, 0.6, 0], [5, VILLAGER, -0.4, 0]];
 
@@ -140,37 +146,69 @@ const cutsOf = (w: World) => {
 };
 
 // ------------------------------------------------------------------------------------------------------ the cameras
-const key = (f: number, c: CamPose, ease?: (x: number) => number): C.CamKey => ({ f, pos: c.pos, look: c.look, fov: c.fov, ease });
+// THE CAMERA PASS (PLAN 12, Jay's camera rules; the plan table: /home/user/su_work/cam2/A_plan.md). ONE TAKE, no cut
+// until the whip into B. Still is the default (her calm breathing, no wander); the lens moves only for a reason, each
+// move lands on its word's first frame, and between the moves it holds:
+//   0  f0-30    the opening: she walks in from 1 m further back and to the left, SU 3/4 (turned to the butcher with
+//               his prize) right of centre, servant 0 with the bundle of cuts walking out of the left foreground
+//   1  骨头      snap zoom to the bone he shows her (two-thing: his face over the spine), lands on 骨头
+//   2  当官的    he nods at the servant carrying the meat off: a half step back, wider, panned left so the servant and
+//               the meat are in with him (SU on the right), lands on 当官的
+//   3  A03      her question (the speaker changes): a calm push back in to a close on him for the answer
+//   -  A05 你看  no move of hers: he steps up and hands the spine to the lens (the bone in the foreground)
+//   4  还有肉    THE scene's one extreme close: snap zoom onto the bone and his face, lands on 还有肉, a decaying jolt
+//   5  card 1   a calm step back and to the right: the coin goes to the butcher (his face over the card)
+//   -  whip     the join into B (unchanged)
 const head = (p: THREE.Vector3) => p.clone().add(V(0, 1.3, 0));
 const STOP = MARKET.stop.clone().setY(EYE);
-/** f0: 1.5 m back down the lane, striding in (his eyes just under the upper third, his hat's tip under the title
- *  block, the servant with the cuts on the left) */
-const WALK0 = aim(STOP.clone().add(V(0.05, 0, 1.5)), head(SU0), 690, 560);
-/** the stall: at her stop, 2.4 m in front of him (his eyes in the upper third, his hat's tip under the title block) */
-const STALL0 = aim(STOP, head(SU0), 660, 520);
-/** after his step in */
-const STALL_IN = aim(STOP, head(SU_IN), 600, 525);
-/** A05: she creeps in 0.3 m as he steps up to her: his face above the spine he holds up at her */
-const CLOSE_POS = STOP.clone().add(SU_IN.clone().setY(EYE).sub(STOP).normalize().multiplyScalar(0.3));
-const CLOSE = aim(CLOSE_POS, head(SU_IN2), 500, 590);   // (QA1: 540 -> 590, the hat crown out of the REC row)
-/** card 1: back and to the right: his face above the card (mid-left), the block and the butcher on the right */
-const CARD_POS = STOP.clone().add(V(0.3, 0, 0.1));
-const CARD = aim(CARD_POS, head(SU_IN2), 600, 465);   // (QA1: 430 -> 465, the hat clear of the timestamp)
-/** her camera before the whip: the walk in, the stall, the pan to the servant on 当官的, close for the bone, the card */
+/** a set-up: the lens at pos, the world point tgt on screen (sx, sy) px of 1080 x 1920, the lens angle */
+type Shot = { pos: THREE.Vector3; tgt: THREE.Vector3; sy: number; sx: number; fov: number };
+const mk = (s: Shot): CamPose => aim(s.pos, s.tgt, s.sy, s.sx, s.fov);
+const mixShot = (a: Shot, b: Shot, t: number): Shot => ({ pos: a.pos.clone().lerp(b.pos, t), tgt: a.tgt.clone().lerp(b.tgt, t), sy: lerp(a.sy, b.sy, t), sx: lerp(a.sx, b.sx, t), fov: lerp(a.fov, b.fov, t) });
+/** the little shake that lands with a snap: decays over n frames from `on` (one per event) */
+const jolt = (c: CamPose, f: number, on: number, amp = 1, n = 8): CamPose => {
+  const k = f - on; if (k < 0 || k >= n) return c; const d = amp * Math.pow(1 - k / n, 2);
+  return C.nudge(c, { yaw: 0.9 * d * Math.sin(k * 2.3), pitch: 0.7 * d * Math.cos(k * 2.9), roll: 0.5 * d * Math.sin(k * 1.7) });
+};
+const out3 = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+/** her positions: the walk's first frame (1 m further back and 0.4 m left of where she stops), where she stops (0.3 m
+ *  short of the layout's stop and 0.15 m left of it, so he stands 2.75 m away and a little to her right), the half step
+ *  back on 当官的, and card 1's step back and to the right */
+const P_OPEN = STOP.clone().add(V(-0.4, 0, 1.25)), P_STAND = STOP.clone().add(V(-0.15, 0, 0.3));
+const P_BACK = P_STAND.clone().add(V(-0.05, 0, 0.2)), P_CARD = STOP.clone().add(V(0.3, 0, 0.45));
+/** the moves' frames */
+const BONE_W = word("A01", "骨头"), OFFICIALS = A.nod, ASK = L3.from, MEATY = A.punchIn;
+/** servant 1 on 当官的 (the meat going to the officials): where he is when SU nods at him */
+const SV1_ON_NOD = walkAlong(SV1_PATH, SV_SPEED, (A.nod - SV_GO[1]) / FPS).at;
+/** her camera: the set-ups, eased into each other at the moves; the handheld (calm breathing, the walk bob dying by
+ *  1.0 s) on top; the jolt on 还有肉 */
 export const camA = (f: number): CamPose => {
-  const c = C.povCam(f, [
-    key(S.from, WALK0), key(STOP_F, STALL0, easeOutQuad),
-    key(A.lean, STALL0), key(A.lean + 16, STALL_IN),
-    key(A.boneUp - 6, STALL_IN), key(A.boneUp + 10, CLOSE),
-    key(CARD1.from, CLOSE), key(CARD1.from + 20, CARD),
-  ], { mood: [[S.from, "excited"], [STOP_F + 20, "calm"]], walk: [[S.from, 1], [A.walk[1], 0]], amp: 0.8 });
-  const pan = ky(f, [[A.nod - 2, 0], [A.nod + 12, -12], [L3.from - 6, -12], [L3.from + 8, 0]]);
-  return C.punchIn(pan ? C.nudge(c, { yaw: pan }) : c, f, A.punchIn, { k: 0.9, len: 5, off: CARD1.from + 8 });
+  const hd = head(suLeg(f).at);
+  const OPEN: Shot = { pos: P_OPEN, tgt: hd, sy: 730, sx: 660, fov: 60 };
+  const STAND: Shot = { pos: P_STAND, tgt: hd, sy: 712, sx: 610, fov: 60 };
+  const BONE: Shot = { pos: P_STAND, tgt: hd, sy: 635, sx: 600, fov: 47 };
+  const TALK: Shot = { pos: P_STAND, tgt: hd, sy: 640, sx: 590, fov: 51 };   // the same size after his step in
+  const WIDE: Shot = { pos: P_BACK, tgt: head(SU_IN).lerp(SV1_ON_NOD.clone().add(V(0, 1.1, 0)), 0.3), sy: 770, sx: 520, fov: 62 };
+  const CLOSE: Shot = { pos: P_STAND, tgt: hd, sy: 720, sx: 560, fov: 46 };
+  const XCU: Shot = { pos: P_STAND, tgt: hd, sy: 650, sx: 505, fov: 32 };
+  const CARD: Shot = { pos: P_CARD, tgt: hd, sy: 578, sx: 450, fov: 62 };   // his mouth well above the card's top
+  let s = OPEN;
+  const go = (a: number, b: number, to: Shot, ease: (x: number) => number = smooth) => { if (f >= a) s = mixShot(s, to, ease((f - a) / Math.max(1, b - a))); };
+  go(S.from, A.walk[1], STAND, easeOutQuad);            // 0 the walk in, settling at her stop
+  go(BONE_W - 5, BONE_W, BONE, out3);                   // 1 骨头: snap to the bone he shows her
+  go(A.lean + 2, A.lean + 22, TALK);                     //   (his step in: the lens keeps the same size, no move)
+  go(OFFICIALS - 10, OFFICIALS, WIDE, out3);             // 2 当官的: a half step back and over to the servant with the meat
+  go(ASK - 6, ASK + 12, CLOSE);                          // 3 A03: the speaker changes, a calm push back in to him
+  go(MEATY - 5, MEATY, XCU, out3);                       // 4 还有肉: the extreme close, on the word
+  go(lineId("A05").to - 1, lineId("A05").to + 25, CARD, out3); // 5 card 1: a step back and right that settles calmly, the coin to the butcher
+  //   (whole-film QA: it starts on A05's last frame and eases out, so his mouth is above card 1's top edge as the card fades in)
+  const c = C.handheld(mk(s), f, { mood: "calm", walk: [[S.from, 1], [A.walk[1], 0]], amp: 0.75 });
+  return jolt(c, f, MEATY, 1.1, 8);
 };
 
 // ------------------------------------------------------------------------------------------------------ SU
 /** where he stands and his pose: the mark, the one step in on A02 */
-const suLeg = (f: number) => f < STEP2 ? walkAlong([SU0, SU_IN], 0.8, (f - A.lean) / FPS, { startFacing: F0, endFacing: F0 }) : walkAlong([SU_IN, SU_IN2], 0.8, (f - STEP2) / FPS, { startFacing: F0, endFacing: F0 });
+export const suLeg = (f: number) => f < STEP2 ? walkAlong([SU0, SU_IN], 0.8, (f - A.lean) / FPS, { startFacing: F0, endFacing: F0 }) : walkAlong([SU_IN, SU_IN2], 0.8, (f - STEP2) / FPS, { startFacing: F0, endFacing: F0 });
 const suFacing = (f: number) => ky(f, [[S.from, F_PRIZE], [A.turn, F_PRIZE], [A.turn + 10, F0], [CARD1.from + 2, F0], [TOSS - 5, F_PAY], [CATCH + 6, F_PAY], [A.tuck + 6, F0]]);
 const EXPR: [number, Expr][] = [
   [S.from, "happy"], [A.turn, "grin"], [A.lean, "smug"], [L3.from + 6, "smile_closed"], [L3.to - 4, "grin"], [A.laugh, "laugh"],
@@ -331,7 +369,7 @@ export const SEG: Segment = {
     const hw = rSu.headWorld();
     putHer(w, cam, f, { mic: { ...herKeys<MicMode>(f, [[A.micIn, "in"], [A.boneUp - 10, "off"]]), aim: hw.clone().add(V(0, -0.12, 0)), avoid: [hw] } });
 
-    const shot = f < STOP_F ? "walk" : f < A.lean ? "turn" : f < L3.from ? "lean" : f < A.boneUp - 8 ? "laugh" : f < CARD1.from ? "bone" : f < A.whip ? "card" : "whip";
+    const shot = f < A.walk[1] ? "walk in" : f < A.lean ? "bone" : f < A.nod - 10 ? "talk" : f < L3.from - 6 ? "officials" : f < A.punchIn - 5 ? "close" : f < CARD1.from ? "xcu" : f < A.whip ? "card" : "whip";
     return { camera: cam, post: W.post, overlays: frag(C.whipSmear(W.smear, 1), transitionAt(f)?.node), slate: `A ${shot}` };
   },
 };

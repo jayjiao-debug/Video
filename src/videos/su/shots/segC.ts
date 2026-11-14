@@ -1,7 +1,7 @@
 // SEGMENT C, lines C19-C26: 中午, under the lychee tree. WP5 segC, RESTAGED IN A BAMBOO CHAIR by the C-chair lane
 // (2026-11-14: Jay saw him upright on the rattan day bed with his shins sunk into it, "very off"; PLAN 11.6). PLAN.md 8C,
 // beats.ts BEAT.C; PLAN 11.1-3: no mic, no arm (her.ts draws only what her invisible hand holds), asides without the mic.
-// One handheld take in her eyes (a hard cut in from B's stove, a hard cut out to D's hooves):
+// One take in her eyes, no cut inside (a hard cut in from B's stove, a hard cut out to D's hooves):
 //   tree     C pre     the lychee tree heavy with red fruit, SU sitting back in the BAMBOO CHAIR in its shade in his 东坡巾
 //                      (SU_HAT.cap), his feet on the ground, his left forearm over the armrest dangling a bunch of lychees
 //                      outside it, peeling one with his right hand; she walks in; he TOSSES it (BEAT.C.toss): it flies into
@@ -11,23 +11,26 @@
 //                      lifts the bunch, plucks another and peels it, amused, smug on 真的假的.
 //   wink     C20       mock-solemn (deadpan), the peeled lychee raised like a lecturer's pointer on 诗嘛; on 夸张 THE WINK
 //                      (the SU_WINK swap: smug, a head tilt, eyes to the lens).
-//   shells   C20 after THE TILT DOWN: she steps back and her camera tips down and pans off him to the ground BESIDE THE
-//                      CHAIR on his left: the mountain of red shells (yard param shells 1) fills the frame's middle (it was
-//                      never in frame before: layout YARD.shells, every earlier framing measured); he eats the fruit off
-//                      the frame. C21 「一点。」 is an ASIDE: a small further turn away, a tilt and a push in (she leans to the
-//                      viewer, deadpan) while his empty shell sails in from the left and lands on the top on 点.
+//   shells   C20 after he eats the second lychee (on camera since the camera pass). C21 「一点。」 is her aside about a
+//                      THING, so it is a GLANCE (PLAN 12.4): he flicks the empty shell and her lens follows it down and
+//                      right to the ground BESIDE THE CHAIR on his left, the mountain of red shells (yard param shells 1;
+//                      never in frame before: every earlier set-up measured), on it from 点 as the shell lands on top,
+//                      and back on him inside 1 s.
 //   sincere  C22-C23   her camera comes back to him; he listens, the smile softening, plucks and peels a third; C23
 //                      content, meaning it: holds it up on 有荔枝吃, eats it on 吃, waves the bunch out at the yard on 一辈子.
 //   lieBack  C23 after he leans back in the chair (the rig has no recline: his back on the backrest, the head dropping
 //                      back): the bunch dropped in his lap, the empty shell left on his belly, BOTH HANDS BEHIND HIS HEAD,
-//                      elbows out (she drifts round to face him, so both elbows show); the far-off temple bell: eyes
-//                      shut, bliss.
-//   recite   C24-C25   she asks; he recites drowsy, eyes half shut, his head rocking to the metre; a slow push in.
-//   snore    C26-end   C26 is an ASIDE (she translates to the viewer: her camera turns away from him toward the tree side,
-//                      tilts, pushes in, holds, comes back); when it comes back he has nodded off: slumped in the chair,
-//                      head lolled over to one side and back, hands still behind his head, the shell on his belly rising
-//                      with slow deep breaths; the camera drifts back and over, so he sits in the right half and card 2
-//                      takes the left (his face never under it, out of the top rows and the top-right HUD corner).
+//                      elbows out (seen whole from her step back on 一辈子, the pile in front of him); the far-off
+//                      temple bell: eyes shut, bliss.
+//   recite   C24-C25   she steps back in and asks (from in front: both elbows read); he recites drowsy, eyes half shut,
+//                      his head rocking to the metre; a slow push in that lands on 五更钟.
+//   snore    C26-end   C26 is an ASIDE (she translates to the viewer): her lens NEVER leaves him (PLAN 12.4), a small step
+//                      closer and a 2 deg tip; he nods off under it: slumped in the chair, head lolled over to one side
+//                      and back, hands still behind his head, the shell on his belly rising with slow deep breaths; she
+//                      drifts back and crouches a little, his face above card 2 (y 770-1086: it crosses his body, never
+//                      his face), his body, the chair and his feet filling the lower half.
+// THE CAMERA (PLAN 12, the camera pass): one take, still by default, every move for a reason and landing on its word:
+// see "her camera" below and /home/user/su_work/cam2/C_plan.md.
 // Every frame from beats.ts (BEAT.C) / lineId / capWord / SEGMENTS; every mark from layout/yard.ts (YARD.chair,
 // YARD.chairRot, YARD.shells) and props/ (chairSeat, chairHands); her invisible hand is her.ts (putHer, hand only); props
 // pinned after w.update().
@@ -55,7 +58,7 @@ const sec = (s: number) => Math.round(s * FPS);
 const L19 = ln("C19"), L20 = ln("C20"), L21 = ln("C21"), L22 = ln("C22"), L23 = ln("C23"), L24 = ln("C24"), L25 = ln("C25"), L26 = ln("C26");
 const W_ZHEN = word("C19", "真的假的"), W_SHIMA = word("C20", "诗嘛"), W_DIAN21 = word("C21", "点");
 const W_NANGUO = word("C22", "难过"), W_CHI = word("C23", "吃"), W_ZAI = word("C23", "在这儿"), W_BEIZI = word("C23", "一辈子");
-const W_DAOREN = word("C25", "道人"), W_ZHONG = word("C25", "五更钟"), W_SHUI = word("C26", "睡得");
+const W_XINSHI = word("C24", "新诗"), W_DAOREN = word("C25", "道人"), W_ZHONG = word("C25", "五更钟"), W_SHUI = word("C26", "睡得");
 /** under the tree at noon the bamboo hat is off: the 东坡巾 cap (PLAN 2) */
 const HAT = SU_HAT.cap;
 /** her walk in ends (eased) on this frame: the talking framing */
@@ -74,8 +77,6 @@ const SETDOWN = B.lieBack + 14, DROP = B.lieBack + 4, HANDS_UP = B.lieBack + 30;
 const DOZE = W_SHUI;
 /** C26: her aside to the viewer (the turn away starts just before the line, comes back just after it) */
 const ASIDE26 = [L26.from - 9, L26.to + 14] as const;
-/** C21: her deadpan aside over the pile (B.aside is the turn's start; it comes back as her camera returns to him) */
-const ASIDE21 = [B.aside, L21.to + 11] as const;
 
 // ------------------------------------------------------------------------------------------------------- the marks
 /** the bamboo chair (its origin: the ground under the middle of its seat's front edge) and his seat in it: the rig's
@@ -112,6 +113,20 @@ const PILE_TOP = V(PILE.x - 0.02, 0.445, PILE.z - 0.04);
 const BELLY = sp(-0.11, 0.21, 0.22);
 
 // ------------------------------------------------------------------------------------------------------- her camera
+// THE CAMERA PASS (PLAN 12, Jay's camera rules; plan: /home/user/su_work/cam2/C_plan.md). ONE TAKE, no cut: she
+// stands in the shade a couple of metres from his chair and the view changes only when she moves it, for a reason the
+// scene gives her (the named set-ups below, mixed by ramps that land on the words). Still is the default: only her
+// breathing bob (no wandering sway) between the moves; her walking bob on the walk in.
+//   1 walk in (she arrives)          OPEN -> TALK        S.from .. ARRIVE (the toss / the catch's jolt on the way)
+//   2 snap zoom on 夸张 (the wink)    TALK -> WINK        lands on W_KUA (the scene's one extreme close), holds
+//   3 calm look back out             WINK -> TALK        after C20 (after two fast moves, one calm look)
+//   4 THE GLANCE on 「一点。」          TALK -> PILE -> TALK out with the flicked shell, on the pile from 点, back inside 1 s
+//   5 push in on 难过 (warmth)         TALK -> NEAR        lands on W_NANGUO (she asks the sincere question)
+//   6 step back on 一辈子              NEAR -> WIDE        he waves the bunch at the yard: the yard, the pile in front
+//   7 round and in (lie-back, C24)   WIDE -> TALK2       he lies back (both elbows read from his front), she asks
+//   8 slow push on the recital       TALK2 -> CLOSE      lands on W_ZHONG
+//   9 C26 her aside: a small lean in (a step closer, a 2 deg tip), never off him
+//  10 the slow drift back as he snores: END, his face above card 2 (the card crosses his body, never his face)
 type K = { pos: Vec3; look: Vec3 };
 /** a camera at `pos` aimed so the world point `target` lands at screen (sx, sy) px (of 1080 x 1920; no roll) */
 const aim = (pos: Vec3, target: THREE.Vector3, sx: number, sy: number, fov = C.FOV): K => {
@@ -122,76 +137,95 @@ const aim = (pos: Vec3, target: THREE.Vector3, sx: number, sy: number, fov = C.F
   const l = p.addScaledVector(fw, d.length());
   return { pos, look: [l.x, l.y, l.z] };
 };
-/** her eyes `dist` m from his head (horizontally), `az` deg round from +z toward +x (his chair faces 14 deg) */
-const around = (az: number, dist: number): Vec3 => [HEAD.x + dist * Math.sin((az * Math.PI) / 180), EYE, HEAD.z + dist * Math.cos((az * Math.PI) / 180)];
-/** THE PILE STAYS HIDDEN until the tilt: it lies on the ground beside the chair on his left (screen right), so every
- *  framing of him before the tilt keeps his head right of the frame's middle and the pile past its right edge
- *  (measured with the probe, every key and the walk in between).
- *  The talking framing: her eyes 2.1 m from him, at his left-front (11 deg off the way he faces); his eyes in the upper
- *  third, his head a third of the frame wide, a little right of the middle (the tree's trunk behind him on the left) */
-const TALK = aim(around(25, 2.1), HEAD, 670, 585);
-/** C pre: from further out on the yard side, his head lower in the frame, the lychee tree's trunk and its fruit-hung
- *  crown over him; she walks in to TALK */
-const START = aim(around(22, 3.2), HEAD, 765, 900);
-/** THE TILT DOWN, a comic pull-back and pan: she steps back 0.3 m and right 0.2 m and her camera tips down and swings
- *  off him to the pile beside the chair: the mountain of shells big in the middle (its body above the caption
- *  band, where the flicked shell lands), he and his chair out of the frame on the left, a hen pecking behind it */
-const REVEAL = (() => {
-  const p = V(...TALK.pos), back = p.clone().sub(HEAD).setY(0).normalize(), right = V(back.z, 0, -back.x);
-  const q = p.addScaledVector(back, 0.3).addScaledVector(right, 0.2);
-  return aim([q.x, EYE, q.z], V(PILE.x, 0.42, PILE.z), 610, 930);
-})();
-/** he leans back: she drifts round to face him (3 deg off the way he faces: his hands behind his head read from in
- *  front, both elbows out beside his jaw; chairHands), his head a touch lower in the frame */
-const TALK2 = aim(around(17, 2.1), HEAD, 640, 600);
-/** C25: a slow push in on the recital (from in front too) */
-const CLOSE = aim(around(18, 1.72), HEAD, 640, 600);
-/** the end: drifted back and over, so he sits in the right half (card 2 on the left, his face right of its edge x 760) */
-const CARD_IN = aim(around(24, 3.35), HEAD, 880, 545);
-/** ...and still easing back under the card */
-const END = aim(around(24, 3.5), HEAD, 885, 540);
-const key = (f: number, k: K, ease?: (x: number) => number): C.CamKey => ({ f, pos: k.pos, look: k.look, fov: C.FOV, ease });
-const KEYS: C.CamKey[] = [
-  key(S.from, START),
-  key(ARRIVE, TALK, easeOutCubic),
-  key(B.tilt[0], TALK),
-  key(B.tilt[0] + 24, REVEAL),
-  key(L21.to + 1, REVEAL),
-  key(L22.from + 12, TALK),
-  key(B.lieBack + 4, TALK),
-  key(B.lieBack + 30, TALK2),
-  key(L25.from - 4, TALK2),
-  key(L25.to, CLOSE, (x) => x),
-  key(B.snore[0] + 6, CLOSE),
-  key(B.card[0] - 2, CARD_IN, easeInOutCubic),
-  key(S.to, END, (x) => x),
-];
+/** her eyes `dist` m from his head (horizontally), `az` deg round from +z toward +x (his chair faces 14 deg), `eye` high */
+const around = (az: number, dist: number, eye = EYE): Vec3 => [HEAD.x + dist * Math.sin((az * Math.PI) / 180), eye, HEAD.z + dist * Math.cos((az * Math.PI) / 180)];
+/** a set-up: her lens at pos, the world point tgt at screen (sx, sy) px, the lens angle (vertical fov, deg) */
+type Shot = { pos: Vec3; tgt: THREE.Vector3; sx: number; sy: number; fov: number };
+const shot = (s: Shot): CamPose => { const k = aim(s.pos, s.tgt, s.sx, s.sy, s.fov); return { pos: k.pos, look: k.look, fov: s.fov }; };
+const mixShot = (a: Shot, b: Shot, t: number): Shot => ({
+  pos: [lerp(a.pos[0], b.pos[0], t), lerp(a.pos[1], b.pos[1], t), lerp(a.pos[2], b.pos[2], t)],
+  tgt: a.tgt.clone().lerp(b.tgt, t), sx: lerp(a.sx, b.sx, t), sy: lerp(a.sy, b.sy, t), fov: lerp(a.fov, b.fov, t),
+});
+/** where her glance lands: the middle of the shell pile beside the chair (yard param shells 1) */
+const PILE_SEE = V(PILE.x - 0.04, 0.24, PILE.z + 0.02);
+/** THE PILE STAYS HIDDEN until the glance: it lies beside the chair on his left (screen right), so every framing before
+ *  it keeps his head right of the frame's middle and the pile past the right edge (the probe: every set-up before 点).
+ *  1 OPEN: from further out on his left-front, low in the frame, the lychee tree's crown hung with fruit over him (wide:
+ *  the place); not centred, not front-on; the tossed lychee then flies at her lens, the foreground */
+const OPEN: Shot = { pos: around(32, 3.3), tgt: HEAD, sx: 735, sy: 960, fov: 62 };
+/** the talking two-thing: his face high (eyes y ~650), his peeling hands and the bunch under it, the chair and his feet
+ *  down to the bottom (the tall frame filled); head about 40 % of the width */
+const TALK: Shot = { pos: around(24, 1.72), tgt: HEAD, sx: 640, sy: 690, fov: 62 };
+/** 2 the snap on 夸张: the wink fills the frame (size x 1.5: the scene's one extreme close) */
+const WINK: Shot = { ...TALK, sx: 610, sy: 840, fov: 45 };
+/** 4 the glance: the same place, her lens turned down and right onto the pile (above the caption band) */
+const GLANCE: Shot = { pos: TALK.pos, tgt: PILE_SEE, sx: 560, sy: 800, fov: 60 };
+/** 5 the sincere question: half a step in, a touch tighter (size x 1.3), his face a little lower and left */
+const NEAR: Shot = { pos: around(20, 1.5), tgt: HEAD, sx: 600, sy: 790, fov: 56 };
+/** 6 on 一辈子: she steps back and right: he waves the bunch at the yard; the pile now sits in front of him on the right
+ *  (the foreground), the tree's trunk behind; the lie-back reads whole here (both elbows out) */
+const WIDE: Shot = { pos: around(44, 2.6), tgt: HEAD, sx: 430, sy: 830, fov: 64 };
+/** 7 as he lies back she comes round to his front and in, landing on C24's 新诗 (his hands behind his head read from
+ *  the front, both elbows out) */
+const TALK2: Shot = { pos: around(16, 1.85), tgt: HEAD, sx: 600, sy: 680, fov: 62 };
+/** 8 the recital: the slow push (size x 1.33) */
+const CLOSE: Shot = { pos: around(17, 1.5), tgt: HEAD, sx: 600, sy: 790, fov: 57 };
+/** 10 the end: she drifts back and crouches a little (lens 1.25 m), his face above card 2 (card y 770-1086: the card crosses his body, not his face),
+ *  his body, the shell on his belly, the chair and his feet filling the lower half */
+const END: Shot = { pos: around(22, 2.15, 1.25), tgt: HEAD, sx: 705, sy: 600, fov: 62 };
+const END2: Shot = { ...END, pos: around(22, 2.25, 1.25) };
+/** the frames of the moves (every one from the beats; a move ENDS on its word) */
+const W_KUA = B.wink;
+const GL = [FLICK + 2, W_DIAN21, LAND + 7, LAND + 14] as const;          // out with the shell, on the pile from 点, back
+const PUSH = [L22.from + 6, W_NANGUO] as const;
+const BACK = [W_BEIZI - 18, W_BEIZI] as const;
+const ASK = [B.lieBack + 4, W_XINSHI] as const;
+const RECITE = [L25.from + 6, W_ZHONG] as const;
+const DRIFT = [B.snore[0] + 2, B.card[0] + 4] as const;
+const smoothE = (x: number) => smooth(clamp01(x));
+/** the keys alone (no handheld), on frame f: each ramp starts from wherever the previous ones left the lens */
+const setUp = (f: number): Shot => {
+  let s = OPEN;
+  const go = (a: number, b: number, to: Shot, ease: (x: number) => number = easeInOutCubic) => { if (f >= a) s = mixShot(s, to, ease(clamp01((f - a) / Math.max(1, b - a)))); };
+  go(S.from, ARRIVE, TALK, easeOutCubic);              // 1 she walks in
+  go(W_KUA - 5, W_KUA, WINK, easeOutCubic);            // 2 snap zoom on 夸张
+  go(L20.to + 2, L20.to + 26, TALK);                   // 3 one calm look back out
+  go(GL[0], GL[1], GLANCE, easeOutCubic);              // 4 the glance to the pile ...
+  go(GL[2], GL[3], TALK);                              //   ... and back to him
+  go(PUSH[0], PUSH[1], NEAR, smoothE);                 // 5 push in on 难过
+  go(BACK[0], BACK[1], WIDE);                          // 6 step back on 一辈子
+  go(ASK[0], ASK[1], TALK2);                           // 7 round to his front as he lies back, in for her question
+  go(RECITE[0], RECITE[1], CLOSE, smoothE);            // 8 the slow push on the recital
+  go(DRIFT[0], DRIFT[1], END);                         // 10 the drift back as he snores ...
+  go(DRIFT[1], S.to, END2, (x) => x);                  //    ... still easing back under the card
+  return s;
+};
 /** in over `len` frames from `on`, out over `len` frames ending on `off` (0..1, eased) */
 const inOut = (f: number, on: number, off: number, len: number) =>
   easeInOutCubic(clamp01((f - on) / len)) * (1 - easeInOutCubic(clamp01((f - (off - len)) / len)));
-/** THE ASIDES (PLAN 11.3): her camera turns away from him toward an empty side (yaw, + = right), tilts (roll), pushes
- *  in a little, holds for the line and comes back: C21 a small further lean over the pile (she is already turned away
- *  from him, to his left), C26 25 deg to the left (the tree's side): he slides out of the frame on the right and is
- *  found asleep when it comes back */
-const asides = (c: CamPose, f: number): CamPose => {
-  const a = inOut(f, ASIDE21[0], ASIDE21[1], 9), b = inOut(f, ASIDE26[0], ASIDE26[1], 11);
-  if (!a && !b) return c;
-  return C.nudge(c, { yaw: 8 * a - 25 * b, pitch: 1.5 * a + 1.2 * b, roll: 2.5 * a - 3 * b, fwd: 0.12 * a + 0.12 * b });
+/** 9 C26, HER ASIDE (PLAN 12.4: never leaves him): a small step closer and a 2 deg tip, as if she turned her shoulder
+ *  to the viewer; back as the line ends (he has nodded off under it) */
+const aside26 = (c: CamPose, f: number): CamPose => {
+  const b = inOut(f, ASIDE26[0], ASIDE26[1], 10);
+  return b ? C.nudge(c, { roll: -2 * b, pitch: 1.4 * b, fwd: 0.12 * b }) : c;
 };
-/** the catch: her camera jolts a little as her hand closes on the lychee (the frame after it stops) */
+/** the catch: her camera jolts a little as her hand closes on the lychee (the frame after it stops; decays in 8) */
 const jolt = (c: CamPose, f: number): CamPose => {
   const hit = f - (B.catch + 1);
   if (hit < 0 || hit >= 8) return c;
   const j = (1 - hit / 8) * (hit % 2 ? -0.5 : 1);
   return C.nudge(c, { pitch: -1.3 * j, roll: 0.9 * j, up: -0.006 * j });
 };
-/** her camera on frame f (pure): the keys, a gentle handheld (walking in at the start; nearly still while he dozes),
- *  the catch's jolt and the two asides */
-export const camC = (f: number): CamPose => asides(jolt(C.povCam(f, KEYS, {
-  mood: [[S.from, "calm"], [B.snore[0], "still"]],
-  walk: [[S.from, 1], [ARRIVE - 12, 0.8], [ARRIVE, 0]],
-  amp: 0.8, seed: 3,
-}), f), f);
+/** her breathing (the calm bob, no drift): a slow rise and fall of the lens and a hint of pitch; softer while he sleeps */
+const breathe = (c: CamPose, f: number): CamPose => {
+  const t = f / FPS, a = f >= B.snore[0] ? 0.5 : 1, ph = 2 * Math.PI * 0.24 * t;
+  return C.nudge(c, { up: 0.005 * a * Math.sin(ph + 0.7), pitch: 0.16 * a * Math.sin(ph + 1.9) });
+};
+/** her camera on frame f (pure): the set-ups, her walking bob on the walk in (cam.ts handheld, mood "still": no
+ *  sway), her breathing, the catch's jolt and the C26 aside */
+export const camC = (f: number): CamPose => aside26(jolt(breathe(C.handheld(shot(setUp(f)), f, {
+  mood: "still", walk: [[S.from, 1], [ARRIVE - 12, 0.8], [ARRIVE, 0]], seed: 3,
+}), f), f), f);
 /** the catch: where the lychee stops dead in her (invisible) hand: the lower right of the frame, under the caption
  *  band, 0.40 m from her lens, on the camera of the catch frame: where her.ts's "hold" (with HAND_DY) then keeps it, so
  *  it does not drift after it stops */
@@ -199,7 +233,6 @@ const CATCH_AT = (() => {
   const c = camC(B.catch), p = V(...(c.pos as Vec3)), A = C.camAxes(c), tan = Math.tan((c.fov * Math.PI) / 360), d = 0.4;
   return p.addScaledVector(A.fwd, d).addScaledVector(A.right, 0.24 * d * tan * (9 / 16)).addScaledVector(A.up, -0.565 * d * tan);
 })();
-
 // ------------------------------------------------------------------------------------------------------- his hands
 /** the left hand (arm 1) holds the bunch: over the armrest, the bunch dangling outside the chair; lifted to his belly
  *  for each pluck; out to the yard on C23's 一辈子 (he waves the bunch at it all); dropped in his lap as he leans back */
@@ -333,8 +366,8 @@ const props = (w: World, f: number, r: Rig, caught: THREE.Vector3 | null) => {
 
 // ------------------------------------------------------------------------------------------------------- her
 /** her invisible hand (PLAN 11.2: her.ts draws only the lychee): it closes on the lychee where it stops (catch), holds it
- *  low in the lower right (under the caption band) bobbing with her camera, and takes it out of the frame before the
- *  tilt. The mic is gone (PLAN 11.1): no mic keys. */
+ *  low in the lower right (under the caption band) bobbing with her camera, and takes it out of the frame at the end
+ *  of C19. The mic is gone (PLAN 11.1): no mic keys. */
 const HAND_KEYS: [number, HandO["mode"], number?][] = [[B.catch - 6, "catch", 6], [B.catch, "hold", 1], [L19.to - 6, "off", 14]];   // gone before C20 (a floating fruit reads odd for long)
 /** the hold's screen offset (NDC): the held lychee sits where it was caught, under the caption band (y > 1500) */
 const HAND_DY = { hold: -0.24, off: -0.24 };

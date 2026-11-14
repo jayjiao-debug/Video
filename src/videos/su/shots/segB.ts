@@ -1,5 +1,7 @@
 // SEGMENT B, lines B06-B18: 上午, the yard on 白鹤峰 + the 黄州 flashback. WP5 segB. PLAN.md 8B, beats.ts BEAT.B.
-// One handheld take in her eyes, three cuts (the whip down to the dog, the whip into the flashback, the ink dissolve back):
+// CAMERA PASS (PLAN 12): the yard is ONE take in her eyes (no cut inside the scene: the old whip down to the dog is now a
+// tilt along his look); the flashback stays the memory insert behind its whip in and ink dissolve out. The camera's
+// set-ups and moves are under "the cameras" below (plan: /home/user/su_work/cam2/B_plan.md). The staging as built:
 //   land     B pre     A's whip lands in the yard (its arriving half, 4 frames): the new house and its board 「德有邻堂」,
 //                      SU squatting at the clay stove stirring the pot with the long chopsticks, the kids chasing round
 //                      the yard, the dog lying in the sun in front; he looks up at her: happy. She walks in to the stove.
@@ -13,12 +15,11 @@
 //   gnaw     B08       she asks with her mouth full (hand "eat", the mic toward him); he gnaws his bone, listening.
 //   clean    B09       he pulls it away from his mouth: picked spotless white; he looks at it, deadpan, mock-sorry, then
 //                      at her (狗都不高兴), and flicks it down to the dog (one spin in the air).
-//   dog      B09 after THE WHIP DOWN (4 frames out, 4 in, a vertical smear) to her camera 0.55 m over the ground: the
-//                      white bone lands at the forepaws of the yard dog begging by the stove; it sniffs it, then looks up
-//                      at him, betrayed (head tilt, ears back), her lens tilting up with it.
-//   aside    B10       her aside (PLAN 11.3: no mic): her lens, still low on the dog, leans in a little to the viewer
-//                      (a small turn, a tilt, a push), she laughs (a shake of laughter); the camera rises back to her
-//                      eye height on him (he is laughing, gnawing a new bone).
+//   dog      B09 after her lens TILTS DOWN ALONG HIS LOOK: the white bone lands at the forepaws of the yard dog begging
+//                      by the stove; it sniffs it, then looks up at him, betrayed (head tilt, ears back), and her lens
+//                      tilts back up with its look to him for B10.
+//   aside    B10       her aside (PLAN 12.4): the lens stays on him, a small step closer, she laughs (a shake of
+//                      laughter); he is deadpan, then laughing, gnawing a new bone.
 //   house    B11       beaming; on 房子 he waves the bone at the house and the camera pans with it to the house: the
 //                      lantern hung and lit, MAI on the ladder; on 一家人 MAI turns round on the ladder and waves back, a
 //                      kid runs through; on 团聚 the pan comes back to him, hand on his belly, warm. The dog stands by,
@@ -44,14 +45,14 @@
 // wider); the stool / bench are put 1.3 / 1.5 cm low (their feet float); the dog's height per pose (DOG_Y); MAI 4.5 cm
 // back from YARD.mai (his robe touched the ladder); arms in front of the long beard are drawn over the head (armFront).
 import * as THREE from "three";
-import { SEGMENTS, FPS, lineId, capWord, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, hash, h, type Pose, type Segment, type CamPose, type Vec3, type PostPose } from "../story";
+import { SEGMENTS, FPS, lineId, capWord, clamp01, lerp, smooth, easeInOutCubic, type Pose, type Segment, type CamPose, type Vec3, type PostPose } from "../story";
 import { BEAT, vignetteAt } from "../beats";
 import * as C from "../cam";
 import { SU, MAI, KID, KID2 } from "../people";
 import { YARD, HUANGZHOU, HUANGZHOU_CAMS, EYE, FOV, SU_HEAD } from "../layout";
 import { stovePoint, ladderRot, ploughFor, GRILL, STOOL, WINE_BOWL, CHOPSTICKS, STOVE as STOVE_DIM } from "../props";
 import { putHer, herKeys, type HandO, type MicO, type MicMode } from "../her";
-import { transitionAt } from "../hud";
+import { transitionAt, InkDissolve } from "../hud";
 import type { World } from "../world";
 import { V, rel, yawTo, says, accent, heads, at, ky, walkAlong, walkTime, frag, lid, swaps, alive, type Rig, type RigState } from "./common";
 
@@ -88,8 +89,11 @@ const PICK_D = W_KEN + 6, HANDOFF = B.crab - 12, CHOP_POT = L07.to + 2;
 const GNAW0 = L08.from - 2, PULL = L09.from - 4, CLEAN = L09.from - 2, FLICK = B.dog[0] - 10, LET_GO = B.dog[0] - 8;
 /** the whip down to the dog: the cut (its arriving half's first frame); the dog sniffs, looks up (betrayed) */
 const DOG_CUT = B.dog[0], SNIFF = B.dog[0] + 2, BETRAY = B.dog[0] + 20;
+/** (camera pass) the chopsticks are laid on the stove and his right hand freed here, his next bone comes up at BONE_E:
+ *  both while her lens is tilted down on the dog (his hands and the stove's back strip are out of that view) */
+const SWAP = DOG_CUT + 12;
 /** B10: her aside (the mic to the lens from B.aside), the rise back to her eye height, his new bone (boneE, off screen) */
-const RISE_CAM0 = B.rise - 7, RISE_CAM1 = L11.from - 3, BONE_E = B.dog[0] + 40;
+const RISE_CAM0 = B.rise - 7, RISE_CAM1 = L11.from - 3, BONE_E = SWAP + 6;
 /** B11's pan: out to the house with the wave (房子), MAI waves back (一家人), back to him (团聚) */
 const PAN0 = W_FANGZI - 10, PAN1 = W_JIA - 2, PAN2 = W_TUAN - 18, PAN3 = W_TUAN + 10;
 /** the lantern: carried by MAI until this frame (her lens is on SU), then the set's hangs at YARD.lantern, lit */
@@ -167,105 +171,105 @@ const aim = (pos: THREE.Vector3, tgt: THREE.Vector3, sy: number, sx = 540, fov =
   const look = pos.clone().add(V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(3));
   return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov };
 };
-/** the whip lands: SU squatting at the stove (left third), the house's board 「德有邻堂」 whole over his shoulder (upper
- *  right), the dog lying in the sun (lower right); she walks straight in from here (5 m) to STOVE by 撒盐 */
-const LAND = aim(loc(1.2, EYE, 4.8), HEAD_SQ, 690, 330);
-/** B06: the stove and his hands at work (the four actions read above the caption band) */
-const STOVE = aim(loc(-0.1, EYE, 2.4), HEAD_SQ, 520, 650);
-/** B07: she steps in, a little to his right, so the bone he serves on the chopsticks shows in the lower right quarter
- *  (where her taking hand reaches: her.ts) above the caption band */
-const OFFER = aim(loc(-0.45, EYE, 1.65), HEAD_UP, 500, 430);
-/** B08-B09 and B11-B14, B18: talking, his head about 40 % of the width */
-const TALK = aim(TALK_POS, HEAD_UP, 595, 500);   // (QA1: sy +35..40 on the talk framings: his hat clear of the REC timestamp)
-const TALK_B = aim(TALK_POS.clone().add(V(0.05, 0, 0.1)), HEAD_UP, 605, 520);
-const TALK_IN = aim(loc(0.18, EYE, 1.62), HEAD_UP, 585, 510);
-const TALK_18 = aim(loc(0.26, EYE, 1.85), HEAD_UP, 600, 505);
-/** B11's pan: from his place, the house: the lantern (left) and MAI on the ladder (right), the kids below */
-const HOUSE = aim(TALK_POS.clone().add(V(0.05, 0, 0.1)), V((YARD.lantern.x + MAI_AT.x) / 2 + 0.1, 1.75, (YARD.lantern.z + MAI_AT.z) / 2), 660, 540);   // (QA1: 700 -> 660: the running kid's face above the caption band)
-/** the dog: her lens 0.55 m over the ground; its sniffing head over the bone in the upper middle (its betrayed look up
- *  higher still, the bone at its paws above the caption band) */
-const DOG_HEAD = DOG_SIT.clone().add(V(0, 0.2, 0)).lerp(DOG_CAM_POS.clone().setY(0.2), 0.12);
-const DOG_CAM = aim(DOG_CAM_POS, DOG_HEAD, 700, 560);
-/** ... and tilted up with it when it looks up at him (betrayed) */
-const DOG_CAM_UP = aim(DOG_CAM_POS, DOG_SIT.clone().add(V(0, 0.42, 0)), 640, 560);
-
-const K1: C.CamKey[] = [
-  key(S.from, LAND),
-  key(SA - 4, STOVE),
-  key(RISE0, STOVE),
-  key(OUT + 2, OFFER),
-  key(TO_EAT + 14, OFFER),
-  key(B.crab - 6, TALK),
-  key(L09.from, TALK),
-  key(W_BUGAO, TALK_B),
+// THE CAMERA PASS (PLAN 12; plan /home/user/su_work/cam2/B_plan.md): the yard is ONE TAKE from 516 to the whip into the
+// flashback (no cut: the old whip down to the dog is now a tilt along his look), still by default (her calm breath),
+// nine moves, each landing on its word; B18 is one still set-up behind the ink dissolve; inside the memory one still
+// painting (the slope), the HUD's ink dissolve to the second (the pot), and one slow push into the pot.
+/** a set-up: the lens at pos, the world point tgt on screen (sx, sy) px of 1080 x 1920, the lens angle, the roll (deg) */
+type Shot = { pos: THREE.Vector3; tgt: THREE.Vector3; sy: number; sx?: number; fov?: number; roll?: number };
+const mk = (s: Shot): CamPose => { const c = aim(s.pos, s.tgt, s.sy, s.sx ?? 540, s.fov ?? FOV); return s.roll ? { ...c, roll: s.roll * RAD } : c; };
+const mix = (a: Shot, b: Shot, t: number): Shot => ({ pos: a.pos.clone().lerp(b.pos, t), tgt: a.tgt.clone().lerp(b.tgt, t), sy: lerp(a.sy, b.sy, t), sx: lerp(a.sx ?? 540, b.sx ?? 540, t), fov: lerp(a.fov ?? FOV, b.fov ?? FOV, t), roll: lerp(a.roll ?? 0, b.roll ?? 0, t) });
+/** the little shake that lands with a snap: decays over n frames from `on` */
+const jolt = (c: CamPose, f: number, on: number, amp = 1, n = 8): CamPose => {
+  const k = f - on; if (k < 0 || k >= n) return c; const d = amp * Math.pow(1 - k / n, 2);
+  return C.nudge(c, { yaw: 0.9 * d * Math.sin(k * 2.3), pitch: 0.7 * d * Math.cos(k * 2.9), roll: 0.5 * d * Math.sin(k * 1.7) });
+};
+const out3 = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+const W_GANJING = word("B09", "干净"), W_ZUO4 = word("B14", "四个多月");
+/** 0 the whip lands: SU squatting at the stove (left third), the board 「德有邻堂」 over his shoulder (upper right), the dog
+ *  lying in the sun (lower right, the foreground); she walks straight in from here (5 m) to the stove by 撒盐 */
+const LAND: Shot = { pos: loc(1.2, EYE, 4.8), tgt: HEAD_SQ, sy: 690, sx: 330 };
+/** 1 B06, two-thing: the stove and his hands at work (the four actions above the caption band), his face over them */
+const STOVE: Shot = { pos: loc(-0.1, EYE, 2.4), tgt: HEAD_SQ, sy: 620, sx: 640 };
+/** 2 B07, close: she steps in, a little to his right; the bone he hands to the lens on the chopsticks in the lower right
+ *  (where her invisible hand takes it), his face over it (hat clear of the REC timestamp) */
+const OFFER: Shot = { pos: loc(-0.42, EYE, 1.8), tgt: HEAD_UP, sy: 680, sx: 440 };
+/** 3 螃蟹, medium: half a step back (the crab mime with both hands, the dog's head at the stove's right end) */
+const MED: Shot = { pos: loc(-0.05, EYE, 2.45), tgt: HEAD_UP, sy: 655, sx: 470 };
+/** 4 干净, snap to the thing: the clean white bone held up by his deadpan face */
+const SNAP_BONE: Shot = { pos: MED.pos, tgt: HEAD_UP.clone().lerp(loc(0.3, 1.22, 0.38), 0.35), sy: 745, sx: 500, fov: 45 };
+/** 5 her look along his: the dog at the stove's right end, the white bone at its paws (she dips 8 cm with the tilt) */
+const DOGV: Shot = { pos: MED.pos.clone().add(V(0, -0.08, 0)), tgt: DOG_SIT.clone().add(V(0, 0.3, 0)), sy: 950, sx: 480, fov: 41 };
+/** 6 B10-B11, talk: his reaction (the aside stays on him) */
+const TALK_B: Shot = { pos: TALK_POS.clone().add(V(0.05, 0, 0.1)), tgt: HEAD_UP, sy: 705, sx: 520 };
+/** 7 along his wave: the house he built: the lantern (left) and MAI on the ladder (right), the kids below */
+const HOUSE: Shot = { pos: TALK_B.pos, tgt: V((YARD.lantern.x + MAI_AT.x) / 2 + 0.1, 1.75, (YARD.lantern.z + MAI_AT.z) / 2), sy: 660, sx: 540 };   // (QA1: 700 -> 660: the running kid's face above the caption band)
+/** 8 团聚 .. B14, talk */
+const TALK: Shot = { pos: TALK_POS, tgt: HEAD_UP, sy: 685, sx: 500 };
+/** 9 四个多月: THE EXTREME CLOSE (the scene's one) */
+const XCU: Shot = { pos: TALK_POS, tgt: HEAD_UP, sy: 805, sx: 515, fov: 44.5 };
+/** 10 B18 (behind the ink dissolve): 3/4 from his right, the stool with the wine bowl and the stove's corner in the
+ *  foreground at the lower left */
+const S18: Shot = { pos: loc(-0.8, EYE, 1.85), tgt: HEAD_UP, sy: 690, sx: 600, fov: 56 };
+/** (every framing keeps his hat's apex, 0.345 m over his eyes, below y 370: clear of the REC timestamp row) */
+/** the camera's own frames */
+const WALK_END = SA, OFFER0 = RISE0, STEP0 = B.crab - 16, SNAP0 = W_GANJING - 5, TILT0 = FLICK - 2, TILT1 = DOG_CUT + 3;
+const UP0 = L10.from - 18, PAN_OUT0 = W_FANGZI - 24, PAN_BACK0 = W_TUAN - 20, XCU0 = W_ZUO4 - 5;
+/** the moves (from, to, why) */
+export const MOVES_B: [number, number, string][] = [
+  [S.from + 4, WALK_END, "she arrives at the stove"], [OFFER0, B.take, "the bone changes hands (慢慢剔)"], [STEP0, B.crab, "螃蟹: room for the mime"],
+  [SNAP0, W_GANJING, "snap to the clean bone (干净)"], [TILT0, TILT1, "along his look: the bone to the dog"], [UP0, L10.from, "back up for his reaction (B10)"],
+  [PAN_OUT0, W_FANGZI, "along his wave to the house (房子)"], [PAN_BACK0, W_TUAN, "back to him (团聚)"], [XCU0, W_ZUO4, "snap: 四个多月"],
 ];
-const K2: C.CamKey[] = [
-  key(RISE_CAM0, DOG_CAM_UP),
-  key(RISE_CAM1, TALK_B),
-  key(PAN0, TALK_B),
-  key(PAN1, HOUSE),
-  key(PAN2, HOUSE),
-  key(PAN3, TALK_B),
-  key(L13.from, TALK),
-  key(L14.from + 10, TALK),
-  key(L14.to, TALK_IN),
-];
-const K18: C.CamKey[] = [key(B.flashOut, TALK_18), key(S.to, aim(loc(0.24, EYE, 1.7), HEAD_UP, 595, 505))];
-const MOOD: [number, C.Mood][] = [[S.from, "excited"], [SA - 4, "calm"], [B.aside, "excited"], [L11.from, "calm"]];
-const WALK: [number, number][] = [[S.from, 0.8], [SA - 8, 0.8], [SA - 2, 0], [RISE0 - 2, 0], [RISE0 + 2, 0.6], [OUT, 0.5], [OUT + 4, 0], [S.to, 0]];
-/** her yard camera (no whips): the keys + the handheld; the dog shot; her laugh */
+/** her yard camera: one take of set-ups and ramps + her calm breath; the bites, her laugh, the aside's small step in */
 const yardCam = (f: number): CamPose => {
-  let c: CamPose;
-  if (f < DOG_CUT) c = C.keyCam(f, K1);
-  else if (f < RISE_CAM0) c = C.keyCam(f, [key(DOG_CUT, DOG_CAM), key(BETRAY + 2, DOG_CAM), key(BETRAY + 14, DOG_CAM_UP)]);
-  else if (f < B.flashIn) c = C.keyCam(f, K2);
-  else c = C.keyCam(f, K18);
-  c = C.handheld(c, f, { mood: MOOD, walk: WALK, amp: f >= DOG_CUT && f < RISE_CAM0 ? 0.55 : 0.85, seed: 2 });
+  let s: Shot = f >= B.flashOut ? S18 : LAND;
+  const go = (a: number, b: number, to: Shot, ease: (x: number) => number = smooth) => { if (f >= a) s = mix(s, to, ease((f - a) / Math.max(1, b - a))); };
+  if (f < B.flashOut) {
+    go(S.from + 4, WALK_END, STOVE, easeInOutCubic);    // 1 she walks in to the stove (lands on 撒盐)
+    go(OFFER0, B.take, OFFER);                          // 2 he hands the bone to the lens (lands on 慢慢剔)
+    go(STEP0, B.crab, MED);                             // 3 half a step back (lands on 螃蟹)
+    go(SNAP0, W_GANJING, SNAP_BONE, out3);              // 4 snap to the clean bone (lands on 干净)
+    go(TILT0, TILT1, DOGV, easeInOutCubic);             // 5 tilt along his look: the bone flies down to the dog
+    go(UP0, L10.from, TALK_B);                          // 6 back up with the dog's look: his reaction (B10's first word)
+    go(PAN_OUT0, W_FANGZI, HOUSE);                      // 7 along his wave to the house (lands on 房子)
+    go(PAN_BACK0, W_TUAN, TALK);                        // 8 back to him (lands on 团聚)
+    go(XCU0, W_ZUO4, XCU, out3);                        // 9 the extreme close (lands on 四个多月)
+  }
+  let c = mk(s);
+  c = C.handheld(c, f, { mood: "calm", walk: WALK, amp: 0.7, seed: 2 });
+  c = jolt(c, f, TILT1 - 1, 0.7, 6);
+  c = jolt(c, f, W_LAO, 0.6, 8);
   // her laugh (B10): a shake of laughter, a few bounces, dying away
   const lk = ky(f, [[L10.from - 2, 0], [L10.from + 6, 1], [L10.to - 10, 0.8], [L10.to + 14, 0]]);
   if (lk > 0.001) { const t = f / FPS; c = C.nudge(c, { up: 0.006 * lk * Math.abs(Math.sin(2 * PI * 2.6 * t)), pitch: 0.8 * lk * Math.sin(2 * PI * 2.6 * t + 0.5), roll: 0.9 * lk * Math.sin(2 * PI * 1.3 * t) }); }
   // her bites (B07-B08): a small nod of her camera as the bone comes up to her mouth
   const bk = biteK(f);
   if (bk > 0.001) c = C.nudge(c, { pitch: -2.2 * bk, up: -0.008 * bk });
-  // B10 is an ASIDE (PLAN 11.3: no mic): her lens is already off him (on the betrayed dog); she leans in a little to the
-  // viewer (a small turn, a tilt, a push) for the line and comes out of it as she rises back to him
-  const ak = easeInOutCubic(clamp01((f - (L10.from - 8)) / 10)) * (1 - easeInOutCubic(clamp01((f - (RISE_CAM0 - 2)) / 12)));
-  if (ak > 0.001) c = C.nudge(c, { yaw: 6 * ak, pitch: 1 * ak, roll: 2.5 * ak, fwd: 0.05 * ak });
+  // B10 is an ASIDE (PLAN 12.4): the lens stays on him and leans a small step closer, tipped 2 deg, then comes back
+  const ak = easeInOutCubic(clamp01((f - L10.from) / 10)) * (1 - easeInOutCubic(clamp01((f - (L11.from - 12)) / 10)));
+  if (ak > 0.001) c = C.nudge(c, { roll: 2 * ak, fwd: 0.12 * ak });
   return c;
 };
-/** her camera in the flashback: the slope's lateral drift, then the pot's slow push, the lid, the pork */
+const WALK: [number, number][] = [[S.from, 0.8], [SA - 8, 0.8], [SA - 2, 0], [RISE0 - 2, 0], [RISE0 + 2, 0.6], [OUT, 0.5], [OUT + 4, 0], [STEP0, 0], [STEP0 + 4, 0.4], [B.crab - 2, 0], [S.to, 0]];
+/** her camera in the flashback: the slope is one still painting; the pot gets the one slow push (into the pot as the
+ *  lid lifts), then holds on the pork */
 const hzCam = (f: number): CamPose => {
-  const k = (c: CamPose | { pos: Vec3; look: Vec3; fov: number }, g: number, e?: (x: number) => number) => key(g, c as CamPose, e);
-  if (vignetteAt(f) === "slope") return C.povCam(f, [k(HUANGZHOU_CAMS.slope, B.flashIn), k(HUANGZHOU_CAMS.slopeEnd, B.pot - 1, (x) => x)], { mood: "calm", amp: 0.35, seed: 4 });
-  return C.povCam(f, [k(HUANGZHOU_CAMS.pot, B.pot), k(HUANGZHOU_CAMS.potClose, L16.to, (x) => smooth(x)), k(HUANGZHOU_CAMS.lid, LID1 + 4), k(HUANGZHOU_CAMS.pork, L17.from + 4), k(HUANGZHOU_CAMS.pork, B.flashOut)], { mood: "calm", amp: 0.3, seed: 4 });
+  const k = (c: { pos: Vec3; look: Vec3; fov: number }, g: number, e?: (x: number) => number) => key(g, c as CamPose, e);
+  if (vignetteAt(f) === "slope") return C.povCam(f, [k(HUANGZHOU_CAMS.slopeEnd, B.flashIn)], { mood: "calm", amp: 0.3, seed: 4 });
+  return C.povCam(f, [k(HUANGZHOU_CAMS.pot, PUSH0), k(HUANGZHOU_CAMS.pork, PUSH1, smooth)], { mood: "calm", amp: 0.3, seed: 4 });
 };
-/** THE WHIP DOWN to the dog (a tilt: 4 frames out pitching down, 4 in arriving from above), the cut on `on` */
-const whipDown = (cA: CamPose, cB: CamPose, f: number, on: number, deg = 30) => {
-  if (f < on - 4 || f >= on + 4) return null;
-  const leaving = f < on, u = leaving ? (f - (on - 4) + 1) / 4 : (f - on) / 4;
-  const k = leaving ? easeInCubic(u) : 1 - easeOutCubic(u);
-  return { cam: C.nudge(leaving ? cA : cB, { pitch: leaving ? -deg * k : deg * k }), post: { dof: { focus: 0.05, amount: 22 * k } } as PostPose, smear: k };
-};
-/** the whip down's smear: soft pale vertical streaks drifting down (never opaque) */
-const vSmear = (k: number, seed = 5) => {
-  if (k <= 0.01) return null;
-  const bars: ReturnType<typeof h>[] = [];
-  for (let i = 0; i < 12; i++) {
-    const a = hash(i, seed), b = hash(i, seed + 1), x = ((i + 0.5) / 12) * 1080 + (a - 0.5) * 60, wd = 18 + 50 * b, len = 900 + 900 * a;
-    bars.push(h("div", { key: i, style: { position: "absolute", left: x - wd / 2, top: -len * 0.3 + b * 1920 * (1 - k), width: wd, height: len, borderRadius: wd / 2, background: i % 3 === 2 ? "#d9c08a" : "#f3ead8", opacity: (0.16 + 0.2 * a) * k } }));
-  }
-  return h("div", { key: "vSmear", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden", pointerEvents: "none" } },
-    h("div", { style: { position: "absolute", inset: 0, background: "#efe6d2", opacity: 0.2 * k * k } }), ...bars);
-};
-/** her camera on frame f, with the whips: { camera, post, smear, vsmear } */
-function camAt(f: number): { camera: CamPose; post?: PostPose; smear: number; vsmear: number } {
-  if (f >= B.flashIn - 4 && f < B.flashIn + 4) { const W = C.whip(yardCam(f), f, WHIP_HZ, { dir: 1, to: hzCam(f) }); return { camera: W.cam, post: W.post, smear: W.smear, vsmear: 0 }; }
-  if (f >= B.flashIn && f < B.flashOut) return { camera: hzCam(f), smear: 0, vsmear: 0 };
-  const D = whipDown(yardCam(f), yardCam(f), f, DOG_CUT);
-  if (D) return { camera: D.cam, post: D.post, smear: 0, vsmear: D.smear };
+const PUSH0 = B.pot + 8, PUSH1 = LID1 + 6;
+/** the memory's two paintings join through the HUD's ink dissolve (16 frames round BEAT.B.pot), not a bare cut */
+const INNER_N = 8;
+const innerDissolve = (f: number) => (f >= B.pot - INNER_N && f < B.pot + INNER_N ? InkDissolve((f - (B.pot - INNER_N) + 0.5) / (2 * INNER_N), 9) : null);
+/** her camera on frame f, with the two whips (A's arriving half, the whip into the flashback): { camera, post, smear } */
+function camAt(f: number): { camera: CamPose; post?: PostPose; smear: number } {
+  if (f >= B.flashIn - 4 && f < B.flashIn + 4) { const W = C.whip(yardCam(f), f, WHIP_HZ, { dir: 1, to: hzCam(f) }); return { camera: W.cam, post: W.post, smear: W.smear }; }
+  if (f >= B.flashIn && f < B.flashOut) return { camera: hzCam(f), smear: 0 };
   const c = yardCam(f);
   const W = C.whip(c, f, A.whip, { dir: 1, to: c });
-  return { camera: W.cam, post: W.post, smear: W.smear, vsmear: 0 };
+  return { camera: W.cam, post: W.post, smear: W.smear };
 }
 
 /** her camera on frame f (for previews and checks) */
@@ -327,7 +331,7 @@ const TIPS: TipKey[] = [
   [PICK_D + 2, POT_HI, D_POT], [PICK_D + 6, POT, D_POT], [PICK_D + 10, POT, D_POT], [PICK_D + 18, POT_UP, D_UP],
   [HANDOFF - 4, HAND_TIP, D_CRAB], [HANDOFF + 6, HAND_TIP, D_CRAB],
   [B.crab - 2, CRAB_TIP, D_CRAB], [CHOP_POT, CRAB_TIP, D_CRAB],
-  [CHOP_POT + 12, REST_TIP, D_REST], [DOG_CUT, REST_TIP, D_REST],
+  [CHOP_POT + 12, REST_TIP, D_REST], [SWAP, REST_TIP, D_REST],
 ];
 /** the tips and the unit direction (world) on frame f, with the stirring, the crab-picking and an idle sway on top */
 const chopTip = (f: number): { tip: THREE.Vector3; dir: THREE.Vector3 } => {
@@ -393,7 +397,7 @@ const LEFT: HandKey[] = [
  *  count, the shrug, the writing in the air, the thumb over his shoulder */
 const COUNT = loc(-0.3, 1.18, 0.25), WRITE = loc(-0.22, 1.0, 0.34), THUMB = loc(-0.36, 1.12, 0.1);
 const RIGHT: HandKey[] = [
-  [DOG_CUT, "rest"],
+  [SWAP, "rest"],
   [B.count - 10, "rest"], [B.count - 2, COUNT], [L13.to + 2, COUNT], [L14.from - 2, "rest"], [L14.from + 6, SHRUG_R], [L14.from + 24, SHRUG_R], [L14.from + 32, "rest"],
   [W_SHI - 6, "rest"], [W_SHI + 2, WRITE], [W_SHI + 16, WRITE], [W_SHI + 26, "rest"],
   [B.flashOut, "rest"], [B.thumb - 8, "rest"], [B.thumb, THUMB], [S.to, THUMB],
@@ -401,7 +405,7 @@ const RIGHT: HandKey[] = [
 const handsAt = (f: number): [THREE.Vector3 | null, THREE.Vector3 | null] => {
   const t = f / FPS;
   let r: THREE.Vector3 | null;
-  if (f < DOG_CUT) { const c = chopTip(f); r = c.tip.clone().addScaledVector(c.dir, -CHOP_LEN); }
+  if (f < SWAP) { const c = chopTip(f); r = c.tip.clone().addScaledVector(c.dir, -CHOP_LEN); }
   else r = track(f, RIGHT, 0);
   let l = track(f, LEFT, 1);
   if (l) {
@@ -412,7 +416,7 @@ const handsAt = (f: number): [THREE.Vector3 | null, THREE.Vector3 | null] => {
     if (f >= W_FANGZI - 2 && f < W_JIA - 4) l.add(dirL(1, 0, 0).multiplyScalar(0.06 * Math.sin(2 * PI * 2.2 * (t - W_FANGZI / FPS))));
     if (f >= L14.from + 6 && f < L14.from + 30) l.add(V(0, 0.05 * Math.sin(PI * clamp01((f - L14.from - 6) / 20)), 0));
   }
-  if (r && f >= DOG_CUT) {
+  if (r && f >= SWAP) {
     if (f >= B.count - 2 && f < L13.to) { for (const on of [B.count, W_HUIZ]) { const d = f - on; if (d >= 0 && d < 10) r.add(V(0, 0.05 * Math.sin((PI * d) / 10), 0)); } }
     if (f >= L14.from + 6 && f < L14.from + 30) r.add(V(0, 0.05 * Math.sin(PI * clamp01((f - L14.from - 6) / 20)), 0));
     if (f >= W_SHI + 2 && f < W_SHI + 16) r.add(dirL(1, 0, 0).multiplyScalar(0.035 * Math.sin(2 * PI * 3.2 * t)).add(V(0, -0.02 * ((f - W_SHI) / 14), 0)));
@@ -487,7 +491,7 @@ function dressYard(w: World, f: number) {
   if (f < W_WEIJIAO + 5) w.prop("bone", "B").put(SLOT.B, { rot: [0, SLOT_YAW.B, PI / 2] });
   // the white bone in front of the dog, from the moment it lands
   if (f >= DOG_CUT + 1) w.prop("bone", "dog").put(DOG_BONE, { clean: true, rot: [0, DOG_ROT + 1.2, PI / 2] });
-  if (f >= DOG_CUT) w.prop("chopsticks").put(CHOP_REST, { grip: "hilt", rot: CHOP_REST_ROT });
+  if (f >= SWAP) w.prop("chopsticks").put(CHOP_REST, { grip: "hilt", rot: CHOP_REST_ROT });
 }
 /** the yard dog: lying in the sun, then over to the stove to beg (sitting), the white bone: sniff, the betrayed look */
 /** the dog prop's poses do not all stand on its origin (measured with the clearance check): lying sinks 4.8 cm into the
@@ -505,8 +509,19 @@ function dog(w: World, f: number, suHead: THREE.Vector3, bone: THREE.Vector3) {
   // begging by his side; the white bone: the sniff, the betrayed look up at him; then it stands on, watching the next
   // bone in his hand (the wave on 房子 included), tail going
   // (it puts its nose down as the bone falls, in the whip's smear: a blend of the two poses dips into the ground)
-  if (f < DOG_CUT - 3) return put("sit", "walk", clamp01((f - DOG_WALK0 - walkTime(DOG_PATH, DOG_V) * FPS) / 8), suHead);
-  if (f < BETRAY) return put("sniff", "sit", 1);
+  // (camera pass: the fall is now seen, so its nose goes down only once the bone has landed, over 5 frames)
+  if (f <= DOG_CUT) {
+    // (camera pass: its arrival is now in the corner of the offer view; the walk -> sit blend dips its feet 3 cm: lifted)
+    const k = clamp01((f - DOG_WALK0 - walkTime(DOG_PATH, DOG_V) * FPS) / 8);
+    w.prop("dog").put(dogAt(at0, "sit", "walk", k).add(V(0, 0.032 * Math.sin(PI * k), 0)), { pose: "sit", from: "walk", k, t, rot, lookAt: suHead });
+    return;
+  }
+  if (f < BETRAY) {
+    // (the blend of the two poses dips its feet 3 cm into the ground: lifted by as much while it blends)
+    const k = smooth(clamp01((f - DOG_CUT) / 5));
+    w.prop("dog").put(dogAt(at0, "sniff", "sit", k).add(V(0, 0.034 * Math.sin(PI * k), 0)), { pose: "sniff", from: "sit", k, t, rot });
+    return;
+  }
   if (f < RISE_CAM1 + 30) return put("lookUp", "sniff", smooth(clamp01((f - BETRAY) / 6)), suHead);
   put("idle", "lookUp", smooth(clamp01((f - RISE_CAM1 - 30) / 12)), bone);
 }
@@ -535,7 +550,7 @@ function kids(w: World, f: number) {
 function heldBones(w: World, f: number, s: Rig) {
   const across = (d: THREE.Vector3, extra = 0): Vec3 => [0, Math.atan2(d.x, d.z) + extra, PI / 2];
   const inHand = (up: THREE.Vector3) => ({ grip: "hilt" as const, rot: rotUp(up) });
-  if (f < DOG_CUT) {
+  if (f < SWAP) {
     // the chopsticks in his right hand; whatever rides on their tips sits where the SOLVED hand puts them
     const c = chopTip(f), tip = s.handWorld(0).addScaledVector(c.dir, CHOP_LEN), onTip = onTips(tip, c.dir);
     w.prop("chopsticks").put(s.handWorld(0), { grip: "hilt", rot: rotChop(c.dir) });
@@ -618,7 +633,7 @@ export const SEG: Segment = {
     const hz = f >= B.flashIn && f < B.flashOut;
     w.setPlace(hz ? "huangzhou" : "yard");
     w.setCamera(K.camera);
-    const overlays = frag(C.whipSmear(K.smear, 1), vSmear(K.vsmear), transitionAt(f)?.node);
+    const overlays = frag(C.whipSmear(K.smear, 1), innerDissolve(f), transitionAt(f)?.node);
     if (hz) {
       huangzhou(w, f);
       w.update();
@@ -628,9 +643,8 @@ export const SEG: Segment = {
     w.set.param("lantern", f >= HUNG ? 0.35 + 0.65 * smooth(clamp01((f - HUNG) / 40)) : 0);
     dressYard(w, f);
     const s = su(w, f);
-    const lowDog = f >= DOG_CUT && f < RISE_CAM0;
     const m = mai(w, f);
-    if (!lowDog) kids(w, f);
+    kids(w, f);
     dog(w, f, headAt(f).add(V(0, 0.05, 0)), track(f, LEFT, 1) ?? suRest(f, 1));
     w.update();
     if (f < HUNG) w.prop("lantern").put(m.handWorld(1), { grip: "hook", lit: 0 });
@@ -639,3 +653,9 @@ export const SEG: Segment = {
     return { camera: K.camera, post: K.post, overlays, focus: [SQ.x + 0.6, SQ.z + 0.6], slate: `B ${phase(f)}` };
   },
 };
+
+/** (camera pass checks) world points the framing must keep in view or out of view on frame f */
+export const probeB = (f: number): Record<string, THREE.Vector3> => ({
+  serveBone: serveAt(f), dogHead: DOG_SIT.clone().add(V(0, 0.42, 0)), dogBone: DOG_BONE.clone(), chopRest: CHOP_REST.clone(),
+  handR: track(f, RIGHT, 0) ?? suRest(f, 0), handL: track(f, LEFT, 1) ?? suRest(f, 1), cleanBone: loc(0.3, 1.22, 0.38), mai: MAI_AT.clone().add(V(0, 0.75, 0)),
+});

@@ -18,8 +18,9 @@ import { CAPTION_Y, clamp01, easeOutBack, lineEn, capsOf, type Speaker } from ".
 import { captionAt, captionRuns, TRAILING_PUNCT, type CaptionGroup } from "../captions";
 import { captionAtEN, QUOTE_RAW_EN } from "../captions_en";
 import { EN } from "../lang";
-import { FONT_STACK, HC, SAFE, textW } from "./style";
+import { FONT_STACK, HC, SAFE, CAP_MAXW, textW } from "./style";
 import { END_LINE } from "./endnames";
+import { SHOW_EN_UNDER } from "./style";
 
 /** each speaker's caption colour */
 export const SPEAKER_COL: Record<Speaker, string> = { ji: HC.warm, su: HC.goldPale, guo: HC.white, chai: HC.white };
@@ -119,7 +120,7 @@ const CapRow: React.FC<{ runs: Run[]; px: number; bumps: number[]; en: boolean; 
 const zhLayout = (plain: string) => {
   const rows = capRows(plain);
   let px = capPx(Math.max(...rows.map((r) => [...r].length)));
-  const room = SAFE.right - SAFE.left, widest = Math.max(...rows.map((r) => textW(r, px, LS_ZH)));
+  const room = Math.min(CAP_MAXW, SAFE.right - SAFE.left), widest = Math.max(...rows.map((r) => textW(r, px, LS_ZH)));
   if (widest + 2 * inkW(px) > room) px = Math.floor((px * (room - 2 * inkW(px))) / widest);
   return { rows, px };
 };
@@ -127,16 +128,17 @@ const zhLayout = (plain: string) => {
 export const captionRect = (f: number): { x0: number; y0: number; x1: number; y1: number } | null => {
   const c = captionAt(f);
   if (!c || c.line === END_LINE) return null;
-  return { x0: SAFE.left, y0: 1190, x1: SAFE.right, y1: 1520 };
+  return { x0: SAFE.left, y0: 1190, x1: SAFE.right, y1: 1490 };
 };
 
 const ENGLISH_DUB = EN && QUOTE_RAW_EN.length > 0;
+export { SHOW_EN_UNDER };
 
 export const Caption: React.FC<{ f: number }> = ({ f }) => {
   useOverlayFont();
   const c: CaptionGroup | null = ENGLISH_DUB ? captionAtEN(f) : captionAt(f);
   if (!c || c.line === END_LINE) return null;
-  const room = SAFE.right - SAFE.left;
+  const room = Math.min(CAP_MAXW, SAFE.right - SAFE.left);
   const first = capsOf(c.line)[0] ?? c;
   // the line's English: steady over all of the line's groups (its fade-in on the line's first frame only)
   const en = ENGLISH_DUB ? c.text : lineEn(c.line);
@@ -167,10 +169,10 @@ export const Caption: React.FC<{ f: number }> = ({ f }) => {
   const color = SPEAKER_COL[c.who] ?? HC.white;
   const gap = Math.round(px * 1.28);
   // the block: Chinese rows centred round CAPTION_Y (moved up when the English takes two rows), the English under them
-  const E = enRows(en, CAP_EN.px, room - 2 * 4, CAP_EN.rows);
-  const enH = (E.rows.length - 1) * CAP_EN.gap + E.px;
+  const E = SHOW_EN_UNDER ? enRows(en, CAP_EN.px, room - 2 * 4, CAP_EN.rows) : { rows: [] as string[], px: CAP_EN.px };
+  const enH = E.rows.length ? (E.rows.length - 1) * CAP_EN.gap + E.px + CAP_EN.top : 0;
   const zhH = (rows.length - 1) * gap + px;
-  const top = Math.max(1190 + 4, Math.min(CAPTION_Y - zhH / 2, 1520 - 4 - (zhH + CAP_EN.top + enH)));
+  const top = Math.max(1190 + 4, Math.min(CAPTION_Y - zhH / 2, 1490 - 4 - (zhH + enH)));
   const zy = top + px / 2, ey = top + zhH + CAP_EN.top + E.px / 2;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>

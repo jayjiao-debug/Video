@@ -1,1 +1,1 @@
-{"id": "su-final-01", "composition": "SuFilm", "start": 0, "end": 6095, "chunks": 20, "concurrency": 1, "timeout": 900000, "output": "su_v1", "flags": "--crf=14"}
+{"id": "su-final-02", "composition": "SuFilm", "start": 0, "end": 6095, "chunks": 20, "concurrency": 1, "timeout": 900000, "output": "su_v2", "flags": "--crf=14"}

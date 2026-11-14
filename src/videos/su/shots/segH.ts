@@ -1,25 +1,30 @@
 // SEGMENT H, lines H53-H55: 两年后 · 儋州, oysters at the driftwood fire on the beach. WP5 segH. PLAN.md 8H, BEAT.H.
-// One handheld take in her eyes (the ink wash in from G, the ink wash out to I: both the HUD's, transitionAt):
+// ONE TAKE in her eyes, still between four moves (PLAN 12; the plan /home/user/su_work/cam2/H_plan.md; the ink wash in
+// from G and the ink wash out to I are both the HUD's, transitionAt, unchanged):
 //   pre      H pre     the wipe lands on the beach: the hut, the palms, the sea, the two of them sitting low on their
 //                      driftwood logs at the set's fire (BEACH.suSeat / guoSeat; the FIRE IS THE SET'S, param fire);
 //                      the HUD's 两年后 · 儋州 (from BEAT.H.stamp, top left). SU_DAN holds an oyster out over the flames in his right
 //                      hand, turning it; GUO grills his own on the long chopsticks. THE SHELL POPS (POP: the lid snaps up,
 //                      the oyster jumps, his head pops, a delighted start), he pulls it in and prises it open with his
 //                      left thumb, lifts it to his mouth and SLURPS it (BEAT.H.slurp: whistle, the head tips back), eyes
-//                      shut in bliss (smile_closed). She drifts in from the establishing two-shot onto him.
-//   H53      ecstatic  「这蚝太好吃了，」 eyes open, beaming (relief_open), the oyster held up to her lens on 好吃, a little
+//                      shut in bliss (smile_closed). She holds the establishing wide two-shot (the fire in the foreground).
+//   H53      ecstatic  「这蚝太好吃了，」 eyes open, beaming (relief_open), the oyster held up to her lens on 好吃 (M1: she steps in
+//                      to him and the offered oyster, landing on 好吃), a little
 //                      shake of delight (GUO, off to her right, has lifted his own off the fire and blows on it); then his
 //                      eyes dart left and right (nobody listening?), his free hand beckons her closer, and on 千万
 //                      (BEAT.H.lean) THE CONSPIRATORIAL LEAN: smug, the head down and in toward the lens (the rig has no
-//                      seated lean: head dy / scale / tilt), the oyster clutched to his chest; her camera leans in close.
-//   H54      puzzled   her 「为什么？」: her camera tips its head (a small roll) and gives back a little; he holds the
+//                      seated lean: head dy / scale / tilt, made bigger for the still lens), the oyster clutched to his chest; HER
+//                      CAMERA HOLDS STILL (he talks to the viewers: he comes to the lens, the lens does not wander).
+//   H54      puzzled   her 「为什么？」: M2, the scene's one slow move, starts (10 deg less lens to 过来, no sway); he holds the
 //                      look, eyes to the lens, the hand comes down; a blink and the face goes flat.
-//   H55      deadpan   dead serious, eyes to the lens, her camera nearly still; a slow nod on 抢着, one on 被贬; on 分我的蚝
+//   H55      deadpan   dead serious, eyes to the lens, the slow push; a slow nod on 抢着, one on 被贬; M3 THE SNAP ZOOM lands
+//                      on 分我的蚝 (the scene's one close):
 //                      both hands pull the oyster in to his chest and his shoulders turn a little away from her (mine).
 //                      (GUO, off frame, presses his lips together, shaking with a laugh he holds in.)
-//   card 4   delighted she drifts back and over so they sit right of the card (mid-left: never over a face or the
+//   card 4   delighted M4: as he looks down she steps back to the two-shot, landing on GUO's laugh, both faces above the card
+//                      (mid-left: never over a face or the
 //                      oyster); he goes back to his oyster delighted (looks down at it, happy), lifts it and slurps the
-//                      rest, eyes shut, swaying; GUO bursts out laughing (BEAT.H.laugh), the chopsticks shaking. The ink
+//                      rest, eyes shut, swaying; GUO bursts out laughing (BEAT.H.laugh), the chopsticks shaking. Still to the end. The ink
 //                      wash takes it (BEAT.H.wipe).
 // NO MIC, NO HAND (PLAN 11): she is only the camera here; nothing of her is drawn (putHer is not called).
 // Every frame from BEAT.H / lineId / capWord / card / SEGMENTS; every mark from layout/beach.ts (BEACH: suSeat, guoSeat,
@@ -44,7 +49,7 @@ const word = (id: string, w: string) => capWord(id, w).from;
 // ------------------------------------------------------------------------------------------------------- the beats
 const L53 = lineId("H53"), L54 = lineId("H54"), L55 = lineId("H55"), CARD4 = card("H55");
 const W_HAOCHI = word("H53", "好吃"), W_BEIFANG = word("H53", "北方人"), W_QIANG = word("H55", "抢着"), W_BEIBIAN = word("H55", "被贬");
-const W_FEN = word("H55", "分我的蚝");
+const W_FEN = word("H55", "分我的蚝"), W_GUOLAI = word("H55", "过来");
 /** THE SHELL POPS (11 frames before the slurp: after the stamp has landed), he prises it open, lifts it to his mouth */
 const POP = B.slurp - 11, PRISE = [POP + 2, POP + 8] as const;
 /** the slurp (BEAT.H.slurp) and the bliss after it (eyes shut until H53) */
@@ -79,53 +84,68 @@ const BIG = 1.5, GBIG = 1.3;
 const OY_UNDER = 0.0225, STICK_R = 0.0035;
 
 // ------------------------------------------------------------------------------------------------------- her camera
-type K = { pos: Vec3; look: Vec3 };
-/** a camera at `pos` aimed so the world point `target` lands at screen (sx, sy) px (of 1080 x 1920; no roll) */
+// ONE TAKE (PLAN 12, Jay's camera rules; the plan: /home/user/su_work/cam2/H_plan.md). Still is the default: between the
+// moves the lens holds (her calm breathing only, no walk, no sway). Four moves, each with a reason:
+//   M1 STEP IN    5277 -> 好吃      the wide two-shot -> him and the oyster he holds up to her lens (3.8 -> 2.1 m, x1.7)
+//   (hold)        千万 .. 知道        he leans INTO the lens and talks to the viewers: THE CAMERA HOLDS STILL
+//   M2 SLOW PUSH  为什么 -> 过来       her question, his dead-serious answer: -10 deg of lens angle, no sway (x1.23)
+//   M3 SNAP ZOOM  -> 分我的蚝          5 frames, lands on the punch word's first frame: the scene's one close (x1.38)
+//   M4 STEP BACK  LOOK -> GUO laughs  back to the two-shot above card 4, landing on the laugh; then still to the end
+type K = { pos: Vec3; look: Vec3; fov: number };
+/** a camera at `pos` with the lens angle `fov` aimed so the world point `target` lands at screen (sx, sy) px (of 1080 x
+ *  1920; no roll) */
 const aim = (pos: Vec3, target: THREE.Vector3, sx: number, sy: number, fov = C.FOV): K => {
   const p = V(...pos), d = target.clone().sub(p), hd = Math.hypot(d.x, d.z), t = Math.tan((fov * Math.PI) / 360);
   const f0 = V(d.x / hd, 0, d.z / hd), r0 = V(-f0.z, 0, f0.x);
   const dyaw = Math.atan((sx / 540 - 1) * t * (9 / 16)), pitch = Math.atan2(d.y, hd) - Math.atan((1 - sy / 960) * t);
   const fw = f0.multiplyScalar(Math.cos(dyaw)).addScaledVector(r0, -Math.sin(dyaw)).multiplyScalar(Math.cos(pitch)).add(V(0, Math.sin(pitch), 0));
   const l = p.addScaledVector(fw, d.length());
-  return { pos, look: [l.x, l.y, l.z] };
+  return { pos, look: [l.x, l.y, l.z], fov };
 };
 /** her eyes `side` m to his left (screen right of him) and `dist` m in front of his seat */
 const eyeAt = (side: number, dist: number): Vec3 => { const p = rel(SU_AT, FACE, side, EYE, dist); return [p.x, p.y, p.z]; };
 /** the middle between the two heads (the two-shots aim at it) */
 const MID = HEAD.clone().lerp(GHEAD, 0.5);
-/** pre: the establishing two-shot as the wipe lands (the sea and the palms behind them, the fire in front, GUO at the
- *  right), the stamp over the sky at the top left; she walks in from here onto him */
+/** the opening wide two-shot as the wipe lands (the old opening, kept): the sea, the hut and the palms behind, the fire
+ *  in the foreground at the bottom left, GUO at the right, the stamp over the sky */
 const OPEN = aim(eyeAt(0.3, 3.8), MID, 575, 600);
-/** H53: on him, her eyes 2.1 m away beside the fire (the flames low at the left, under the captions) */
-const TALK = aim(eyeAt(0.3, 2.1), HEAD, 530, 590);
-/** 千万: she leans in close, beside the fire ring (0.7 m from its middle: never over it) */
-const LEAN = aim(eyeAt(0.45, 1.75), HEAD, 540, 580);
-/** H54: she gives back a little as she asks */
-const ASK = aim(eyeAt(0.42, 1.9), HEAD, 540, 590);
-/** H55: dead serious: close, still */
-const DEAD = aim(eyeAt(0.38, 1.82), HEAD, 540, 585);
-/** card 4: back and over to his left so the two of them sit right of the card's edge / above its top (card x 52-768,
- *  y 780-1086): his face upper left, GUO's at the right */
-const CARD_F = aim(eyeAt(0.9, 3.1), MID, 555, 555);
-/** ...still drifting a little when the ink takes it */
-const END = aim(eyeAt(0.95, 3.25), MID, 558, 552);
-const key = (f: number, k: K, ease?: (x: number) => number, roll?: number): C.CamKey => ({ f, pos: k.pos, look: k.look, fov: C.FOV, ease, roll });
+/** M1 lands (好吃): him and the oyster he holds up to her lens, his head right of the middle, the offered oyster at the
+ *  left above the captions, the fire's flames low in the foreground; she stands 2.1 m off, a little to his left */
+const TALK_AT = eyeAt(0.35, 2.1);
+const TALK = aim(TALK_AT, HEAD, 600, 600, 62);
+/** M2's end: the same place, 10 deg less lens */
+const PUSHED = aim(TALK_AT, HEAD, 610, 610, 52);
+/** M3, THE CLOSE (分我的蚝): the face at y ~600 and the oyster clutched under it above the captions; his head right of
+ *  the middle so the topknot clears the stamp's text (x < 612) */
+const CLOSE = aim(TALK_AT, HEAD, 662, 555, 40);
+/** M4 lands (GUO laughs): the two of them above card 4 (x 106-788, y 770-1086), GUO inside the phone-safe x 1015 */
+const TWO = aim(eyeAt(0.75, 3.5), MID, 530, 525);
+/** M4 halfway (as card 4 slides in): she has stepped half back and still holds him a little right and low, so his
+ *  topknot passes under the stamp's text (x 126-612, y 266-310) and his oyster stays above the card's top (y 770) */
+const BACKING = aim([(TALK_AT[0] + TWO.pos[0]) / 2, EYE + (SU_AT.y ?? 0), (TALK_AT[2] + TWO.pos[2]) / 2], HEAD, 600, 610, 54);
+/** the beats of the moves (all from BEAT / lineId / capWord) */
+const M1 = [L53.from - 2, W_HAOCHI] as const, M2 = [L54.from, W_GUOLAI + 10] as const, M3 = [W_FEN - 5, W_FEN] as const;
+const M4 = [LOOK, B.laugh] as const;
+/** a slow push's speed: steady, with soft ends (a quarter of the time each) */
+const soft = (x: number) => { const r = 0.25, v = 1 / (1 - r); return x < r ? (v * x * x) / (2 * r) : x > 1 - r ? 1 - (v * (1 - x) * (1 - x)) / (2 * r) : v * (x - r / 2); };
+const key = (f: number, k: K, ease?: (x: number) => number): C.CamKey => ({ f, pos: k.pos, look: k.look, fov: k.fov, ease });
 const KEYS: C.CamKey[] = [
-  key(S.from, OPEN),
-  key(B.lean - 6, TALK, easeInOutCubic),
-  key(B.lean + 12, LEAN, easeOutCubic),
-  key(L54.from - 2, LEAN),
-  key(L54.from + 10, ASK, easeInOutCubic, 3.5),
-  key(L54.to + 2, ASK, undefined, 3.5),
-  key(L55.from + 6, DEAD, easeInOutCubic, 0),
-  key(L55.to - 4, DEAD),
-  key(CARD4.from + 40, CARD_F, easeInOutCubic),
-  key(S.to, END, (x) => x),
+  key(S.from, OPEN), key(M1[0], OPEN),
+  key(M1[1], TALK, easeInOutCubic),
+  key(M2[0], TALK),
+  key(M2[1], PUSHED, soft),
+  key(M3[0], PUSHED),
+  key(M3[1], CLOSE, easeOutCubic),
+  key(M4[0], CLOSE),
+  key((M4[0] + M4[1]) / 2, BACKING, (x) => x * x),
+  key(M4[1], TWO, (x) => 1 - (1 - x) * (1 - x)),
+  key(S.to, TWO),
 ];
-/** her camera on frame f (pure): the keys and a gentle handheld; nearly still while he is dead serious */
+/** her camera on frame f (pure): the keys and her calm breathing; a light walking bob only while she steps (M1, M4);
+ *  the handheld STILL through the slow push, the snap and its hold */
 export const camH = (f: number): CamPose => C.povCam(f, KEYS, {
-  mood: [[S.from, "calm"], [L55.from, "still"], [L55.to + 4, "calm"]],
-  walk: [[S.from, 0.5], [S.from + 10, 0.7], [B.lean - 16, 0.7], [B.lean - 4, 0], [L55.to, 0], [L55.to + 10, 0.5], [CARD4.from + 34, 0]],
+  mood: C.stillFrom(M2[0] - 4, M4[0], "calm"),
+  walk: [[M1[0], 0], [M1[0] + 5, 0.45], [M1[1] - 5, 0.45], [M1[1], 0], [M4[0], 0], [M4[0] + 4, 0.45], [M4[1] - 4, 0.45], [M4[1], 0]],
   amp: 0.7, seed: 8,
 });
 
@@ -207,7 +227,7 @@ const headAt = (f: number) => {
   const mine = ky(f, [[W_FEN - 2, 0], [W_FEN + 6, 1], [L55.to + 6, 1], [L55.to + 16, 0]]);
   const sway = f >= SIP_END ? 3 * Math.sin((2 * PI * (f - SIP_END)) / 40) * clamp01((f - SIP_END) / 10) : 0;
   return heads(
-    { dy: -0.07 * lean, dx: 0.05 * lean - 0.06 * mine, scale: 1 + 0.035 * lean, tilt: 6 * lean - 5 * mine + sway },
+    { dy: -0.09 * lean, dx: 0.05 * lean - 0.06 * mine, scale: 1 + 0.09 * lean, tilt: 6 * lean - 5 * mine + sway },
     headPop(f, POP),
     accent("shake", f, W_HAOCHI + 2, { amp: 0.8 }),
     accent("nod", f, W_QIANG, { amp: 0.7 }), accent("nod", f, W_BEIBIAN, { amp: 0.7 }),

@@ -29,7 +29,11 @@ export const inked = (px: number, color: string, extra: React.CSSProperties = {}
 /** a screen box in film px (1080 x 1920) */
 export type Rect = { x0: number; y0: number; x1: number; y1: number };
 /** the Douyin-safe area for anything that matters: x 50..930 below y 900 (the app's button rail), nothing below 1613 */
-export const SAFE = { left: 50, right: SCREEN.rail.x - 5, railY: SCREEN.rail.y, bottom: SCREEN.bottom, top: SCREEN.top };
+/** the phone-safe area (day-in-life-film skill, 14 Nov: 抖音 cuts 57 px off each side of a 9:16 film; a 9:15 crop shows
+ *  the whole width but the app's button column covers x > 930 low down): words and the HUD stay inside x 110 .. 930 */
+export const SAFE = { left: 110, right: 930, railY: SCREEN.rail.y, bottom: SCREEN.bottom, top: SCREEN.top };
+/** a subtitle row is at most this wide (px), centred: x 150 .. 930 */
+export const CAP_MAXW = 780;
 
 /** in / out of a span [a, b] (inclusive): 0 outside, 1 inside, eased linearly over `nin` frames at the start and `nout`
  *  at the end; a span that starts on frame 0 is already in */
@@ -38,3 +42,8 @@ export const spanK = (f: number, a: number, b: number, nin: number, nout = nin) 
 
 /** the width of a string in em of FrSans (CJK and full-width marks 1 em, ASCII its real advance) */
 export const em = (s: string) => textW(s, 1, 0);
+
+/** Jay 2026-11-14: a foreign-language subtitle shows ONLY when a character speaks a different language from the
+ *  film's. Everyone in this film speaks Chinese, so the Chinese version shows no English under the captions, on the
+ *  fact cards or under the end names. The English version (lang "en") is unchanged. */
+export const SHOW_EN_UNDER = false;

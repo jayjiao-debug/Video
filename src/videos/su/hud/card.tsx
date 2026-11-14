@@ -14,6 +14,7 @@ import { AbsoluteFill } from "remotion";
 import { CARDS, clamp01, easeInCubic, easeOutBack, easeOutCubic, lineNum, type Card } from "../story";
 import { SCREEN } from "../layout";
 import { EN } from "../lang";
+import { SHOW_EN_UNDER } from "./style";
 import { FONT_STACK, HC, em, textW, type Rect } from "./style";
 import { END_LINE } from "./endnames";
 
@@ -60,7 +61,7 @@ const NIN = 8, NOUT = 8;
 /** the box a mid-left card takes at its widest (motion and seal included) */
 export const FACT_RECT: Rect = { x0: Z.x0 - 4, y0: Z.y0 - 10, x1: Z.x1 + 8, y1: Z.y1 + 6 };
 /** the box the last card (I57's) takes, low in the caption band */
-export const FACT_END_RECT: Rect = { x0: 110, y0: 1236, x1: 970, y1: 1500 };
+export const FACT_END_RECT: Rect = { x0: 110, y0: 1216, x1: 890, y1: 1480 };   // phone-safe: x <= 890 low down, nothing below 1490
 /** the box the card of frame f takes, or null */
 export const factRect = (f: number): Rect | null => { const c = factCardAt(f); return c ? (isEnd(c) ? FACT_END_RECT : FACT_RECT) : null; };
 
@@ -75,7 +76,7 @@ export const FactCard: React.FC<{ f: number }> = ({ f }) => {
   const W = end ? FACT_END_RECT.x1 - FACT_END_RECT.x0 : MAXW;
   const inner = W - 2 * BORDER - 2 * PADX;
   const zhRows = EN ? [] : factRows(c.zh, inner / (ZH + LS)) ?? [c.zh];
-  const enRows = wrapEn(c.en, ENPX, inner, EN ? 4 : 3);
+  const enRows = EN || SHOW_EN_UNDER ? wrapEn(c.en, ENPX, inner, EN ? 4 : 3) : [];   // Chinese version: no English (caption.tsx SHOW_EN_UNDER)
   // the width: hug the rows (between 480 and the zone's width)
   const need = Math.max(...zhRows.map((r) => em(r) * (ZH + LS)), ...enRows.map((r) => textW(r, ENPX, 0)), 300) + 2 * PADX + 2 * BORDER + 10;
   const width = Math.round(Math.min(W, Math.max(end ? 600 : 480, need)));

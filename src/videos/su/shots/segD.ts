@@ -1,6 +1,8 @@
 // SEGMENT D, lines D27-D31: 下午, the order at the new gate. WP5 segD. PLAN.md 8D, beats.ts BEAT.D.
-// ONE LOCKED-OFF FRAME (cam.ts tripod: no handheld, no move, PLAN 5 / 8D "the camera is STILL here"). The staging moves
-// inside it (deep focus): her eyes in the yard looking out through the open red gate at the hill road and the valley.
+// ONE TAKE (PLAN 12, the camera pass: see "the take" below and /home/user/su_work/cam2/D_plan.md): she stands frozen in
+// the yard where the hooves found her, looking out through the open red gate at the hill road, and only turns and zooms:
+// the courier in the gateway, wide as the family comes out, a snap on 琼州, back for the hand-down to GUO, in on the
+// order, the extreme close on 好吃, back to a medium on him for her aside. The staging is unchanged (deep focus).
 //   pre       the hooves: the COURIER in red rides up the road and reins in, in the gateway (BEAT.D.rein), turned three
 //             quarters to her; he lifts the rolled order and unrolls it. The family comes out of the house behind her:
 //             GUO first, out to the gate; MAI holding the KID's hand, to the left; SU comes up last from the right,
@@ -14,8 +16,8 @@
 //             reads it for a long time (focus). GUO steps back a little. Hold.
 //   D30       he looks up (BEAT.D.look), genuinely curious: focus -> the open eyes of his resting smile (a
 //             head tilt on 有什么) -> happy (BEAT.D.brighten, 好吃).
-//   D31       her aside, stunned, half laughing (PLAN 11.3: no mic; her camera turns a little away from him, to the
-//             family, and leans in: camD). SU rolls the order up, happy, and looks to the courier for an answer; the
+//   D31       her aside, stunned, half laughing (PLAN 12.4: the camera stays on him, a medium with the family round him
+//             and a small slow step closer: camD). SU rolls the order up, happy, and looks to the courier for an answer; the
 //             courier is lost (dazed), GUO dumbfounded, MAI laughs with relief, the kid is happy again. The fade through gold (hud TRANSITIONS, transitionAt).
 // Every frame from beats.ts (BEAT.D) / lineId / capWord / SEGMENTS; every mark from layout/yard.ts (YARD.courier,
 // YARD.road); the people stand on floor points given in her view (cp: metres out along her line of sight, metres to
@@ -65,20 +67,9 @@ const CAM_D = 5.6;
 const FEET = YARD.courier.clone().addScaledVector(FW, -CAM_D);
 /** a floor point `d` m out along her line of sight and `r` m to its right (screen right) */
 const cp = (d: number, r: number) => FEET.clone().addScaledVector(FW, d).addScaledVector(RT, r);
-/** tipped down so his eyes sit in the upper third (y about 560 of 1920 at 2.4 m), the courier's head above them */
-const PITCH = 16.5 * (Math.PI / 180);   // (QA1: 18.5 -> 16.5: the courier's face out from under the REC timestamp, SU's cap clear of the battery)
+/** her lens: she stands here the whole scene (the camera pass turns and zooms from it: "the take" below) */
 const POS: Vec3 = [FEET.x, EYE, FEET.z];
-const LOOK: Vec3 = [FEET.x + FW.x * 6 * Math.cos(PITCH), EYE - 6 * Math.sin(PITCH), FEET.z + FW.z * 6 * Math.cos(PITCH)];
-/** D31 IS AN ASIDE (PLAN 11.3: no mic): just before her line she turns a little away from him, to the left (he leaves
- *  the frame on the right; MAI, the kid, GUO and the courier on the horse stay in it, reacting), tilts, leans in, and
- *  holds to the end (the fade through gold takes it). One slow eased move: the tripod's stillness otherwise. */
-const L31 = ln("D31"), ASIDE31 = [L31.from - 10, L31.from + 6] as const;
-const asideK = (f: number) => easeInOutCubic(clamp01((f - ASIDE31[0]) / (ASIDE31[1] - ASIDE31[0])));
-/** THE STILL: one tripod key, nothing moves (PLAN 8D), until the D31 aside */
-export const camD = (f: number): CamPose => {
-  const c = C.tripod(f, [{ f: S.from, pos: POS, look: LOOK, fov: C.FOV }]), k = asideK(f);
-  return k > 0 ? C.nudge(c, { yaw: -13 * k, pitch: 1.2 * k, roll: -2.2 * k, fwd: 0.18 * k }) : c;
-};
+const L31 = ln("D31");
 
 // ------------------------------------------------------------------------------------------------------- the marks
 /** the courier reins in on his mark, turned three quarters to her (his horse's near flank and head to her) */
@@ -281,6 +272,70 @@ const suOrder = (f: number, facing: number): Order => {
 
 // ------------------------------------------------------------------------------------------------------- her mic
 const MIC_KEYS: [number, MicO["mode"], number?][] = [[L28.from - 8, "in", 12], [B.aside, "lens", 12]];
+
+// ------------------------------------------------------------------------------------------------------- the take
+// THE CAMERA PASS (PLAN 12, Jay's camera rules; the plan table: /home/user/su_work/cam2/D_plan.md). ONE TAKE, no cut
+// (the fade through gold at the end is the join, unchanged). She does not move her feet (frozen where she stood when the
+// hooves came: POS, the old tripod's spot, so the rig's turn-to-the-lens sums above stay exact); every move is her
+// turning and zooming from there, each for a reason, landing on its word; between the moves the lens holds, with only
+// her calm breathing (no drift, no sway):
+//   0  pre        her look: the courier reining in, framed in the gateway, the fence and the open gate leaf before him
+//   1  苏轼        STEP BACK WIDE as the family comes out round her (SU up from the right): the courier on top, SU in the
+//                 right foreground; lands on D27's first word
+//   2  琼州        SNAP ZOOM onto SU's shock (close), a decaying jolt; hold through 昌化军安置 (the calm look)
+//   3  D28        STEP BACK to the stacked two-thing as the courier hands the order down to GUO (lands as the offer
+//                 starts); hold through D29 and GUO's walk back
+//   4  take       STEP IN and down along his look: SU's face over the opened order he holds out to her (lands as it is
+//                 open); hold through the long read, his look up and 海南……有什么
+//   5  好吃        SNAP ZOOM to the scene's one EXTREME CLOSE: his face lighting up; holds a second
+//   6  aside      STEP BACK to a medium on him (calm), the family's and the courier's reactions round him; lands just
+//                 before D31: the aside never leaves him
+//   7  D31        SLOW PUSH: the aside's small step closer, to the fade
+const RAD = Math.PI / 180;
+const EYE_AT = V(POS[0], POS[1], POS[2]);
+/** a camera at `pos` turned so that the world point `tgt` lands on screen (sx, sy) (px of 1080 x 1920) */
+const aim = (pos: THREE.Vector3, tgt: THREE.Vector3, sy: number, sx: number, fov: number): CamPose => {
+  const d = tgt.clone().sub(pos), hz = Math.hypot(d.x, d.z);
+  const tv = Math.tan((fov * RAD) / 2), th = (tv * 9) / 16;
+  const pitch = Math.atan2(d.y, hz) - Math.atan(((960 - sy) / 960) * tv), yaw = Math.atan2(d.x, d.z) + Math.atan(((sx - 540) / 540) * th);
+  const look = pos.clone().add(V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(3));
+  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov };
+};
+/** a set-up: the world point tgt on screen (sx, sy) px, the lens angle (her feet never move) */
+type Shot = { tgt: THREE.Vector3; sy: number; sx: number; fov: number };
+const mixShot = (a: Shot, b: Shot, t: number): Shot => ({ tgt: a.tgt.clone().lerp(b.tgt, t), sy: lerp(a.sy, b.sy, t), sx: lerp(a.sx, b.sx, t), fov: lerp(a.fov, b.fov, t) });
+const out3 = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+/** the little shake that lands with a snap: decays over n frames from `on` (one per event) */
+const jolt = (c: CamPose, f: number, on: number, amp = 1, n = 7): CamPose => {
+  const k = f - on; if (k < 0 || k >= n) return c; const d = amp * Math.pow(1 - k / n, 2);
+  return C.nudge(c, { yaw: 0.9 * d * Math.sin(k * 2.3), pitch: 0.7 * d * Math.cos(k * 2.9), roll: 0.5 * d * Math.sin(k * 1.7) });
+};
+/** her calm breathing and nothing else (PLAN 12.2: still is the default; no wandering): a slow rise and fall */
+const breathe = (c: CamPose, f: number): CamPose => { const b = Math.sin(2 * Math.PI * C.MOODS.calm.hz * (f / FPS)); return C.nudge(c, { up: 0.005 * b, pitch: 0.12 * b }); };
+/** what she frames: the courier's head on his horse at its mark, SU's head on his mark */
+const COURIER_HEAD = HORSE_AT.clone().add(V(0, 1.6, 0)), SU_HEAD = S1.clone().add(V(0, 1.3, 0));
+const OPEN_: Shot = { tgt: COURIER_HEAD, sx: 520, sy: 700, fov: 34 };          // 0 the courier in the gateway
+const WIDE: Shot = { tgt: SU_HEAD, sx: 800, sy: 700, fov: 62 };               // 1/3 the stacked two-thing
+const SHOCK: Shot = { tgt: SU_HEAD, sx: 740, sy: 700, fov: 46 };              // 2 琼州
+const READS: Shot = { tgt: SU_HEAD, sx: 600, sy: 660, fov: 48 };              // 4 the order
+const XCU: Shot = { tgt: SU_HEAD, sx: 520, sy: 860, fov: 30 };                // 5 好吃
+const ASIDE: Shot = { tgt: SU_HEAD, sx: 790, sy: 640, fov: 56 };              // 6 the aside
+const NEAR: Shot = { ...ASIDE, sx: 760, fov: 50 };                                     // 7 its small step closer
+/** the moves' frames (all from the beats) */
+const M_WIDE = [B.rein + 2, L27.from] as const, M_BACK = [L27.to - 1, OFFER[0] + 4] as const, M_READ = [TAKE - 2, OPEN[1] - 2] as const;
+const M_ASIDE = [B.brighten + 30, L31.from - 2] as const, M_PUSH = [L31.from + 4, B.fade[0]] as const;
+export const camD = (f: number): CamPose => {
+  let s = OPEN_;
+  const go = (a: number, b: number, to: Shot, ease: (x: number) => number = smooth) => { if (f >= a) s = mixShot(s, to, ease((f - a) / Math.max(1, b - a))); };
+  go(M_WIDE[0], M_WIDE[1], WIDE);                    // 1 the family comes out: step back wide, lands on 苏轼
+  go(W_QIONG - 5, W_QIONG, SHOCK, out3);             // 2 snap onto his shock
+  go(M_BACK[0], M_BACK[1], WIDE);                    // 3 the order goes down to GUO
+  go(M_READ[0], M_READ[1], READS);                   // 4 SU takes it and opens it to her
+  go(B.brighten - 5, B.brighten, XCU, out3);         // 5 好吃: the extreme close
+  go(M_ASIDE[0], M_ASIDE[1], ASIDE);                 // 6 her aside: back to a medium, on him
+  go(M_PUSH[0], M_PUSH[1], NEAR);                    // 7 the small step closer (slow, soft ends)
+  return jolt(breathe(aim(EYE_AT, s.tgt, s.sy, s.sx, s.fov), f), f, W_QIONG, 0.8);
+};
 
 // ------------------------------------------------------------------------------------------------------- the shot
 const restHands = (p: THREE.Vector3, facing: number, y = 0.64, x = 0.24, z = 0.06): [THREE.Vector3, THREE.Vector3] => [rel(p, facing, -x, y, z), rel(p, facing, x, y, z)];

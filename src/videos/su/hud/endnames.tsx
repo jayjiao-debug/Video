@@ -15,13 +15,14 @@ import { AbsoluteFill } from "remotion";
 import { clamp01, easeOutBack, easeOutCubic, smootherstep, lineNum } from "../story";
 import { BEAT } from "../beats";
 import { EN, TXT } from "../lang";
+import { SHOW_EN_UNDER } from "./style";
 import { FONT_STACK, HC, type Rect } from "./style";
 
 /** the line whose caption the end names replace */
 export const END_LINE = lineNum("I57");
-const XS = [205, 490, 775], Y_NAME = 760, Y_EN = 852, Y_PIC = 1010, R_PIC = 120, PX = 110;
+const XS = [232, 500, 768], Y_NAME = 760, Y_EN = 852, Y_PIC = 1010, R_PIC = 120, PX = 110;
 /** the box the names and their pictures take (px) */
-export const NAMES_RECT: Rect = { x0: 60, y0: 690, x1: 920, y1: 1140 };
+export const NAMES_RECT: Rect = { x0: 110, y0: 690, x1: 890, y1: 1140 };
 /** how dark the 3D picture gets under the names (QA2 2026-11-14: 0.6 -> 0.45, so SU_OLD's face and his last look at
  *  us stay readable; the names keep their thick ink line) */
 const END_DIM = 0.45;
@@ -95,7 +96,7 @@ export const EndNames: React.FC<{ f: number }> = ({ f }) => {
           <div key={k} style={{ position: "absolute", left: XS[k], top: Y_NAME, width: 0, height: 0, opacity: kin, transform: `scale(${s.toFixed(4)})` }}>
             <div style={{ position: "absolute", left: 0, top: 0, transform: "translate(-50%, -50%)", fontFamily: FONT_STACK, fontWeight: 700, fontSize: px, lineHeight: 1, letterSpacing: EN ? 0 : 4, whiteSpace: "nowrap",
               color: HC.warm, WebkitTextStroke: `${Math.round(px * 0.18)}px ${HC.ink}`, paintOrder: "stroke fill", textShadow: `0 ${Math.round(px * 0.06)}px 0 rgba(8,8,16,0.55), 0 ${Math.round(px * 0.1)}px ${Math.round(px * 0.3)}px rgba(8,8,16,0.5)` } as React.CSSProperties}>{main}</div>
-            {!EN ? <div style={{ position: "absolute", left: 0, top: Y_EN - Y_NAME, transform: "translate(-50%, -50%)", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 32, lineHeight: 1, whiteSpace: "nowrap",
+            {!EN && SHOW_EN_UNDER ? <div style={{ position: "absolute", left: 0, top: Y_EN - Y_NAME, transform: "translate(-50%, -50%)", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 32, lineHeight: 1, whiteSpace: "nowrap",
               color: HC.enGrey, WebkitTextStroke: `6px ${HC.ink}`, paintOrder: "stroke fill" } as React.CSSProperties}>{nm.en}</div> : null}
           </div>
         );

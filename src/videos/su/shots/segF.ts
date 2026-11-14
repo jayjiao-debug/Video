@@ -8,20 +8,20 @@
 //                      into the riddle (F41, smug), turns his belly to her and pats it on 肚子 (right hand, three taps,
 //                      low), shakes his head at both guesses
 //                      (F43 grin, F45 happy). Handheld "calm" with her steps; the mic swings in for the riddle.
-//   reveal   F45 after he stops before the pavilion step, still smiling at her; she drifts back and left onto the path
-//                      behind him (the walk camera blends into REVEAL: the pavilion, the grave mound, the big moon over its
-//                      right shoulder); he turns to the grave (back view) once she is behind him, crouches and sets the
-//                      lantern on the step's front edge (BEAT.F.lantern): the warm glow goes low. Her mic droops.
-//   F46      back      「只有她猜对了」 to the grave (his back, the pavilion, the moon), then on 她说 he turns to her and she
-//                      steps in to the STOP framing: fond (smile_closed), happy on 不合时宜; the laugh after it.
-//   F47-F48  stop      her careful 「她是……？」 (mic up again); 朝云 plain, 散了 a little bowed, 只有她 fond.
-//   push     F48-F50   THE SLOW PUSH-IN (BEAT.F.push), no sway at all, STOP -> CLOSE. F49 steady, cracking on 病死 (sad);
-//                      F50 he turns to the grave (back three-quarters, the body turned first with his face to her, the
-//                      head goes round in two frames: never a profile), his head bows on 带不走.
-//   after    F50 after the push has stopped; the mic hand drops out of frame (low); he wipes his eyes (right hand), squares
-//                      up to the step, crouches, picks the lantern up, turns back to her lens and smiles through it.
-//   F51      smile     「走吧，明早还要赶路。」 warm, a small beckon with the free hand; her breathing comes back. The fade
-//                      through blue-black to dawn is the HUD's (TRANSITIONS).
+//   CAMERA PASS (PLAN 12, 2026-11-14): the camera notes below that name REVEAL / STOP / the step-in / the push-in are
+//   the old camera; the take is now the one in "her camera" (plan: /home/user/su_work/cam2/F_plan.md): M1-M5 before
+//   F46, then STILL (no handheld at all) with ONE slow pull back from the bow on 带不走 to just before F51.
+//   stop     F45 after he stops before the pavilion step and turns to the grave at once (AWAY, 4 frames after the stop),
+//                      crouches and sets the lantern on the step's front edge (BEAT.F.lantern): the warm glow goes low.
+//   F46      back      「只有她猜对了」 to the grave (his back), then on 她说 he turns to her: fond (smile_closed), happy on
+//                      不合时宜; the laugh after it.
+//   F47-F49  front     her careful 「她是……？」; 朝云 plain, 散了 a little bowed, 只有她 fond; F49 steady, cracking on 病死.
+//   F50      grave     he turns to the grave (back three-quarters, the head goes round in two frames: never a profile), his
+//                      head bows on 带不走.
+//   after    F50 after: he wipes his eyes (right hand), squares up to the step, crouches, picks the lantern up, turns back
+//                      to her lens and smiles through it.
+//   F51      smile     「走吧，明早还要赶路。」 warm, a small beckon with the free hand. The fade through blue-black to dawn is
+//                      the HUD's (TRANSITIONS).
 // HIS WARM LIGHT: pinesLight() from the lantern's point moved 0.6 m toward her lens (a DP's cheat: the key keeps the
 // lantern's side and height but stays in front of his face, so the face reads warm and never falls into the shade).
 // Every frame from BEAT.F / capWord / lineId, every mark from layout/pines.ts (PINES, PINES_SET), her mic from her.ts.
@@ -34,7 +34,7 @@ import { SEGMENTS, FPS, clamp01, smooth, camMix, mix3, capWord, lineId, type Pos
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { SU } from "../people";
-import { PINES, PINES_SET, SU_HEAD, FOV, frontCam } from "../layout";
+import { PINES, PINES_SET, SU_HEAD, FOV } from "../layout";
 import { pinesLight } from "../sets/pines";
 import { LANTERN_CENTRE } from "../props";
 import { putHer, herKeys, type MicMode } from "../her";
@@ -53,14 +53,13 @@ const WD = {
 const F42 = lineId("F42"), F44 = lineId("F44"), F47 = lineId("F47"), F50 = lineId("F50");
 /** the mic swings in for the riddle (8 frames before F41's first syllable) */
 const MIC_IN = lineId("F41").from - 8;
-/** the walk camera starts drifting back onto the path behind him (the reveal), and has arrived */
-const REV0 = B.stop - 14, REV1 = B.lantern + 12;
-/** he turns from her to the grave (a 5-frame turn ramp: her camera is past 140 deg behind him by then) */
-const AWAY = B.stop + 18;
+/** from here (14 frames before the stop) to 她说 his facing is kept within REV_LIM of her lens (facingAt) */
+const REV0 = B.stop - 14;
+/** he turns from her to the grave (CAMERA PASS: 4 frames after the stop, was 18, so her lens can come round behind him
+ *  on M4 while he is already turning: his facing clamp (facingAt) has opened past 180 deg before her lens crosses his back) */
+const AWAY = B.stop + 4;
 /** her mic droops while she takes in the place; comes back up when he turns to her on 她说 */
 const MIC_DOWN = B.stop + 8, MIC_UP = WD.said + 4;
-/** she steps in from the reveal to the STOP framing as he turns to her */
-const IN0 = WD.said - 4, IN1 = WD.said + 50;
 /** the set-down (crouch, the hand on the step's edge, release) and the pick-up */
 const L0 = B.lantern, P0 = B.pickUp;
 /** F50: the head bow on 带不走 holds until the pick-up */
@@ -117,63 +116,94 @@ const anchor = (f: number) => {
 };
 
 // ------------------------------------------------------------------------------------------------ her camera
-/** WALK: a step behind him and to his right (100 deg off his walking direction), 2.1 m from him (his hat fits), his head
- *  at y 600 */
-const SIDE = 100 * DEG;
-const camWalk = (f: number): CamPose => { const A = anchor(Math.min(f, B.stop + 12)); return frontCam(A.at, A.yaw - SIDE, 2.1, { eyesPx: 600 }); };
-/** REVEAL: on the path 3.2 m behind his stop, aimed past him at the pavilion, a little to its right so the big moon sits
- *  over its right shoulder (layout PINES_SET.moon az 24), slightly down so he stays in the frame's middle */
-const REVEAL: CamPose = (() => {
-  const pos = STOP.clone().add(V(-0.25, 1.5, 3.2)), yaw = yawTo(pos, PINES.pavilion) - 8.5 * DEG, pitch = -2 * DEG;
-  const look = pos.clone().add(V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(5));
-  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: FOV };
-})();
-/** STOP (F46 on, she has stepped in) and CLOSE (the push's end, F50): in front of him, the pavilion behind him */
-const STOP_CAM: CamPose = frontCam(STOP, F_HER, 2.35, { side: -0.22, eyesPx: 610 });
-const CLOSE_CAM: CamPose = frontCam(STOP, F_HER, 1.75, { side: -0.12, eyesPx: 580 });
-/** her step in from the reveal to STOP as he turns to her on 她说: her lens tips down onto him first (from 8 frames
- *  before IN0, done 18 frames after it, as his face comes round), her feet follow (IN0..IN1): his face is in the upper
- *  part of the frame from the moment it shows (a plain mix of the two poses left it low until the end) */
-const dirOf = (c: CamPose) => { const p = mix3(c.pos, c.pos, 0), l = mix3(c.look, c.look, 0); return V(l[0] - p[0], l[1] - p[1], l[2] - p[2]).normalize(); };
-const stepIn = (f: number): CamPose => {
-  const a = revealCreep(f), kp = smooth(clamp01((f - IN0) / (IN1 - IN0))), kd = smooth(clamp01((f - (IN0 - 8)) / 26));
-  const p = mix3(a.pos, STOP_CAM.pos, kp), d = dirOf(a).lerp(dirOf(STOP_CAM), kd).normalize();
-  return { ...a, pos: p, look: [p[0] + d.x * 3, p[1] + d.y * 3, p[2] + d.z * 3], fov: a.fov + (STOP_CAM.fov - a.fov) * kp };
+// THE CAMERA PASS (PLAN 12, Jay 2026-11-14; plan table /home/user/su_work/cam2/F_plan.md): ONE TAKE, still between
+// moves, each move with a reason. A set-up is a Shot: the lens at pos, the world point tgt on screen (sx, sy) px of
+// 1080 x 1920, the lens angle; a move mixes the whole Shot (so the subject stays framed while she moves).
+//   M1 4023-4037  she closes in as he turns to her (lands on 你猜)          walk follow 2.9 m -> 2.0 m
+//   M2 4063-4068  snap down to the belly he pats (lands on 肚子); back up for 装的 (4084-4094)
+//   M3 4242-4247  snap zoom on 也不对 (fov 62 -> 45), held 1.3 s
+//   M4 4285-4305  he turns to the grave: she follows his look round behind his left shoulder (his hat in the foreground)
+//   M5 4318-4339  she steps back and left to the still frame P1 (lands on F46's first frame)
+//   F46-F51 (4339 on): THE EMOTIONAL SCENE (PLAN 12.5): NO handheld, no sway, no effect; ONE slow move:
+//   M6 BEAT.F.bow -> 5005  the slow pull back P1 -> P2 (1.2 m back, the frame tips up a little to the roof and moon)
+type Shot = { pos: THREE.Vector3; tgt: THREE.Vector3; sx: number; sy: number; fov: number };
+/** where a world point lands on screen (px of 1080 x 1920) for a camera at pos looking at look */
+const project = (pos: THREE.Vector3, look: THREE.Vector3, fov: number, p: THREE.Vector3) => {
+  const c = new THREE.PerspectiveCamera(fov, 9 / 16, 0.05, 500);
+  c.position.copy(pos); c.up.set(0, 1, 0); c.lookAt(look); c.updateMatrixWorld(); c.updateProjectionMatrix();
+  const q = p.clone().project(c); return { x: (q.x + 1) * 540, y: (1 - q.y) * 960 };
 };
-/** the push's progress 0..1: steady in the middle, long soft ends (cam.ts slowPush's profile), on BEAT.F.push */
-const pushK = (f: number) => {
-  const [a, b] = B.push, n = b - a, r = Math.min(30, n / 2.5), x = Math.max(0, Math.min(n, f - a)), v = 1 / (n - r);
+/** the camera of a Shot: the look turned (yaw, pitch about the lens) until tgt lands on (sx, sy) */
+const shotCam = (s: Shot): CamPose => {
+  const tanV = Math.tan((s.fov * DEG) / 2), tanH = tanV * (9 / 16);
+  let look = s.tgt.clone();
+  for (let i = 0; i < 5; i++) {
+    const q = project(s.pos, look, s.fov, s.tgt), d = look.clone().sub(s.pos);
+    const yaw = Math.atan2(d.x, d.z) - Math.atan(((q.x - s.sx) / 540) * tanH), pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)) - Math.atan(((q.y - s.sy) / 960) * tanV);
+    look = s.pos.clone().add(V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(3));
+  }
+  return { pos: [s.pos.x, s.pos.y, s.pos.z], look: [look.x, look.y, look.z], fov: s.fov };
+};
+const lerpN = (a: number, b: number, t: number) => a + (b - a) * t;
+const mixShot = (a: Shot, b: Shot, t: number): Shot => t <= 0 ? a : t >= 1 ? b :
+  { pos: a.pos.clone().lerp(b.pos, t), tgt: a.tgt.clone().lerp(b.tgt, t), sx: lerpN(a.sx, b.sx, t), sy: lerpN(a.sy, b.sy, t), fov: lerpN(a.fov, b.fov, t) };
+const out3 = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+/** the slow move's profile: steady in the middle, long soft ends (cam.ts slowPush's), 0..1 over [a, b] */
+const slowK = (f: number, a: number, b: number) => {
+  const n = b - a, r = Math.min(30, n / 2.5), x = Math.max(0, Math.min(n, f - a)), v = 1 / (n - r);
   return x < r ? (v * x * x) / (2 * r) : x > n - r ? 1 - (v * (n - x) * (n - x)) / (2 * r) : v * (x - r / 2);
 };
-/** QA2: the blend from the walk camera into REVEAL swung his head to x 121 px (the hat cut by the frame's left edge,
- *  f4288-4296): keepRight turns the look (a pure yaw about her eye, softly) so his head's middle stays KEEP_X px or more
- *  from the left edge (1080 wide; the horizontal half-angle from the 9:16 lens) */
-const STOP_HEAD = STOP.clone().add(V(0, SU_HEAD, 0)), KEEP_X = 380;
-const keepRight = (c: CamPose, p: THREE.Vector3, xMin: number): CamPose => {
-  const pos = V(...(c.pos as [number, number, number])), d = V(...(c.look as [number, number, number])).sub(pos);
-  const toP = p.clone().sub(pos), rel = wrapA(Math.atan2(toP.x, toP.z) - Math.atan2(d.x, d.z));
-  const tanH = Math.tan(((c.fov ?? FOV) * DEG) / 2) * (9 / 16), relMax = Math.atan(((540 - xMin) / 540) * tanH);
-  const x = rel - relMax, s = 2 * DEG, a = x > 0 ? (x * x) / (x + s) : 0;  // max(0, x) with a soft onset (0 inside)
-  if (a < 1e-5) return c;
-  const ca = Math.cos(a), sa = Math.sin(a), nd = V(d.x * ca + d.z * sa, d.y, -d.x * sa + d.z * ca);
-  return { ...c, look: [pos.x + nd.x, pos.y + nd.y, pos.z + nd.z] };
+/** the moves' frames (from the beats: plan table) */
+const M1 = [WD.riddle - 14, WD.riddle], M2 = [B.pat - 5, B.pat], M2B = [WD.what, WD.what + 10], M3 = [WD.no2 - 5, WD.no2];
+const M4 = [AWAY, AWAY + 20], M5 = [lineId("F46").preFrom - 21, lineId("F46").preFrom], M6 = [B.bow, B.smile - 6];
+/** THE STILL FROM HERE: F46's first frame */
+const STILL = lineId("F46").preFrom;
+/** the walk: her lens a step behind him and to his right (100 deg off his walking direction), dist m from him */
+const SIDE = 100 * DEG;
+const EYE_H = 1.5;
+const walkPos = (A: { at: THREE.Vector3; yaw: number }, dist: number) => A.at.clone().add(V(Math.sin(A.yaw - SIDE) * dist, EYE_H, Math.cos(A.yaw - SIDE) * dist));
+/** the still frames after the stop: P1 (F46-F50) 2.65 m from him, 25 deg to his right, the stele at his right shoulder
+ *  (screen left of him), the lantern low at the left; P2 (after the pull back) 1.2 m further back along her view, the
+ *  frame tipped up a little (his head lower: the pavilion roof and the moon come in) */
+const STOP_HEAD = STOP.clone().add(V(0, SU_HEAD, 0));
+const P1: Shot = { pos: STOP.clone().add(V(-1.0, EYE_H, 2.1)), tgt: STOP_HEAD, sx: 600, sy: 650, fov: FOV };
+const P2: Shot = (() => {
+  const back = STOP_HEAD.clone().sub(P1.pos).setY(0).normalize().multiplyScalar(-1.2);
+  return { pos: P1.pos.clone().add(back), tgt: STOP_HEAD, sx: 585, sy: 790, fov: FOV };
+})();
+/** OTS (the set-down): behind his left shoulder, on the grave: his hat brim and shoulder in the right foreground */
+const OTS: Shot = { pos: STOP.clone().add(V(-0.75, EYE_H, 1.5)), tgt: PINES.stele.clone(), sx: 470, sy: 820, fov: 52 };
+/** M4 goes round him on an arc about his mark (radius and bearing eased), never through the space just behind his head */
+const orbit = (a: Shot, b: Shot, t: number): Shot => {
+  const m = mixShot(a, b, t); if (t <= 0 || t >= 1) return m;
+  const ra = a.pos.clone().sub(STOP).setY(0), rb = b.pos.clone().sub(STOP).setY(0);
+  const ang = lerpN(Math.atan2(ra.x, ra.z), Math.atan2(rb.x, rb.z), t), r = lerpN(ra.length(), rb.length(), t);
+  m.pos.set(STOP.x + Math.sin(ang) * r, m.pos.y, STOP.z + Math.cos(ang) * r);
+  return m;
 };
-/** the reveal's slow creep (and the start of her step-in from it), kept the same way (continuous with the blend) */
-const revealCreep = (f: number): CamPose => keepRight(C.creep(REVEAL, f, REV1 + 8, IN0, 0.22), STOP_HEAD, KEEP_X);
-/** her steps and her breathing: walking while he walks and while she moves; STILL from the push on (no sway), the
- *  breath comes back softly when he smiles at her again */
-const WALKING: [number, number][] = [[S.from, 1], [B.stop, 1], [REV1, 0], [IN0, 0], [IN0 + 10, 0.55], [IN1, 0]];
-const ampAt = (f: number) => ky(f, [[S.from, 0.8], [B.stop, 0.8], [REV1, 0.5], [B.push[0], 0.5], [B.push[0] + 10, 0], [B.smile, 0], [B.smile + 24, 0.3]]);
-const camF = (f: number): CamPose => {
-  let base: CamPose;
-  if (f < REV0) base = camWalk(f);
-  else if (f < REV1) base = keepRight(camMix(camWalk(f), REVEAL, smooth((f - REV0) / (REV1 - REV0))), STOP_HEAD, KEEP_X);
-  else if (f < IN0 - 8) base = revealCreep(f);
-  else if (f < IN1) base = stepIn(f);
-  else base = camMix(STOP_CAM, CLOSE_CAM, pushK(f));
-  const amp = ampAt(f);
+/** her steps (walk bob) and her calm breathing: walking while he walks and while she moves round him; from F46 on NONE */
+const WALKING: [number, number][] = [[S.from, 1], [B.stop, 1], [B.stop + 10, 0.2], [M4[0], 0.7], [M4[1], 0.2], [M5[0], 0.5], [STILL, 0]];
+const ampAt = (f: number) => (f >= STILL ? 0 : ky(f, [[S.from, 0.8], [M5[0], 0.8], [STILL, 0]]));
+export const camF = (f: number): CamPose => {
+  const A = anchor(Math.min(f, B.stop + 12)), him = f < B.stop ? leg(f).at : STOP, head = him.clone().add(V(0, SU_HEAD, 0));
+  const near = walkPos(A, 2.0), toLens = near.clone().sub(A.at).setY(0).normalize();
+  const W0: Shot = { pos: walkPos(A, 2.9), tgt: head, sx: 400, sy: 760, fov: FOV };
+  const W1: Shot = { pos: near, tgt: head, sx: 530, sy: 660, fov: FOV };
+  const BELLY: Shot = { pos: near, tgt: him.clone().add(V(0, 0.68, 0)).addScaledVector(toLens, 0.22), sx: 550, sy: 740, fov: 34 };   // whole-film QA: 860 -> 740, his chin off the top edge
+  const CLOSE: Shot = { pos: near, tgt: head, sx: 540, sy: 690, fov: 45 };
+  let s = W0;
+  const go = (m: number[], to: Shot, e: (x: number) => number = smooth, mix = mixShot) => { if (f >= m[0]) s = mix(s, to, e((f - m[0]) / (m[1] - m[0]))); };
+  go(M1, W1);            // M1 he turns to her: she closes in (lands on 你猜)
+  go(M2, BELLY, out3);   // M2 snap down to the belly he pats (lands on 肚子)
+  go(M2B, W1);           //    back up to his face for 装的是什么
+  go(M3, CLOSE, out3);   // M3 snap zoom on 也不对
+  go(M4, OTS, smooth, orbit);   // M4 he turns to the grave: she follows his look round behind his left shoulder
+  go(M5, P1);            // M5 she steps back to the still frame (lands on F46)
+  if (f >= M6[0]) s = mixShot(P1, P2, slowK(f, M6[0], M6[1]));   // M6 THE ONE SLOW MOVE: the pull back
+  const base = shotCam(s), amp = ampAt(f);
   return amp > 0 ? C.handheld(base, f, { mood: "calm", walk: WALKING, amp }) : base;
 };
+const camAt = camF;
 
 // ------------------------------------------------------------------------------------------------ his facing and turn
 /** his facing after the stop (eased keys; the walk gives it before): square to the step, to her on 她说, to the grave
@@ -247,7 +277,7 @@ export const SEG: Segment = {
   id: "F", from: S.from, to: S.to,
   enter() {}, exit() {},
   pose(w, f): Pose {
-    const L = leg(f), cam = camF(f);
+    const L = leg(f), cam = camAt(f);
     const sink = crouchAt(f), at0 = f < B.stop ? L.at : STOP.clone();
     const facing = facingAt(f, L, at0, cam), turn = turnFor(f, facing, at0, cam);
     const head0 = at0.clone().add(V(0, SU_HEAD - 0.38 * sink, 0));
@@ -327,7 +357,7 @@ export const SEG: Segment = {
     const mic = herKeys<MicMode>(f, [[MIC_IN, "in"], [MIC_DOWN, "low", 20], [MIC_UP, "toward", 16], [B.low, "low", 36]], "off");
     putHer(w, cam, f, { mic: { ...mic, aim: hd.clone().add(V(0, -0.08, 0)) } });
 
-    const shot = f < B.stop ? "walk" : f < WD.said ? "reveal" : f < B.push[0] ? "stop" : f <= B.push[1] ? "push" : f < B.smile ? "after" : "smile";
+    const shot = f < M1[0] ? "open" : f < M2[0] ? "M1 medium" : f < M2B[1] ? "M2 belly" : f < M3[0] ? "medium" : f < M4[0] ? "M3 close" : f < M5[0] ? "M4 ots" : f < M6[0] ? "P1 still" : "M6 pull back";
     return { camera: cam, overlays: transitionAt(f)?.node ?? null, slate: `F ${shot} turn ${turn.toFixed(2)}` };
   },
 };

@@ -63,10 +63,10 @@ export const SCREEN = {
   top: 210, capTop: 1190, capBottom: 1520, bottom: 1613, eyes: 700,
   rail: { x: 930, y: 900 },
   title: { x0: 90, y0: 940, x1: 990, y1: 1130 },
-  rec: { x0: 40, y0: 205, x1: 820, y1: 342 }, battery: { x0: 850, y0: 205, x1: 1040, y1: 255 },
-  card: { x0: 56, y0: 780, x1: 760, y1: 1080 },
+  rec: { x0: 110, y0: 205, x1: 890, y1: 342 }, battery: { x0: 780, y0: 205, x1: 970, y1: 255 },
+  card: { x0: 110, y0: 780, x1: 780, y1: 1080 },
   stamp: { x0: 60, y0: 230, x1: 560, y1: 430 },
-  names: { x0: 60, y0: 640, x1: 1020, y1: 1180 },
+  names: { x0: 110, y0: 640, x1: 890, y1: 1180 },
 };
 /** a camera given as a story.ts CamPose with Vec3s (for a mark's camera in a layout file) */
 export const camOf = (pos: Vec3, look: Vec3, fov = FOV): Cam => c(pos, look, fov);

@@ -320,7 +320,7 @@ your own file. Checks: section "Hard rules" + README section 12 (with `--film su
    item, held in the lower part of the frame by an unseen hand (it bobs gently with her camera; a bite = the item lifts
    toward the bottom of the lens and the camera nods). A catch = the lychee flies into the lower right, stops dead as an
    invisible hand closes on it, and her camera jolts a little. G's "wave" = no hand: her camera does a small happy bounce.
-3. **Asides without the mic** (lines 10, 21, 26, 31, 40, and any other line she says to the viewer): her camera turns a
+3. ~~**Asides without the mic**~~ OVERRIDDEN by §12.4 (the camera never turns away from him on an aside). Old text: her camera turns a
    little away from him (15-25° yaw toward an empty side, a slight tilt, a small push in, as if she leans to the
    viewer), holds for the line, then comes back (cam.ts `nudge` / `aside`). Subtle, in her handheld style.
 4. **The recording look like 秦始皇** (integrator, in the HUD): REC dot + "REC" top left (y about 205-255), the scene's
@@ -333,3 +333,35 @@ your own file. Checks: section "Hard rules" + README section 12 (with `--film su
    items 1-3 above inside C. **QA lanes: do NOT edit `shots/segC.ts`**; check C only after
    `/home/user/su_work/me/report_C_chair.md` exists, and send C findings to `/home/user/su_work/requests.md`.
 7. **The music is being redone FUNNY** (integrator, sound only): no lane changes timing for it.
+8. **Subtitles: no English in the Chinese version** (Jay 2026-11-14 14:23): a foreign-language subtitle shows only when
+   a character speaks a different language. Everyone here speaks Chinese, so `hud/style.ts SHOW_EN_UNDER = false`
+   hides the English under the captions, on the fact cards and under the end names (lang "en" is unchanged).
+
+## 12. JAY'S CAMERA RULES (2026-11-14 14:30, from the day-in-the-life bible): these OVERRIDE everything above
+The bible's camera section is copied to /home/user/su_work/me/bible_camera.md: read it all. For this film:
+1. **One take per scene, no cut inside a scene.** She is one person holding one camera: the view changes only when
+   she moves it (tilt, zoom, step). Cuts belong to the joins between scenes (keep the joins as they are). B's 黄州
+   flashback stays a memory insert behind its ink dissolve; B's whip down to the dog becomes a move inside the take.
+2. **Still is the default.** Her breathing bob stays (cam.ts handheld, calm), but no wandering. The lens moves only for
+   a reason: something changes hands, someone arrives or leaves, the lead looks at something, the punch word lands,
+   the speaker changes, the lead walks. About 4 to 8 moves per 20 s. After two fast moves, one calm look.
+3. **Moves that read.** A zoom or push changes the size by at least a quarter (less is mood, not emphasis); a move
+   lands on the punch word's first frame, never after it. One extreme close per scene at most, for its biggest line.
+   Tools: snap zoom on the punch word, snap to the thing (evidence above the caption band), tilt along his look, step
+   back wide, slow push for warmth, jolt on a hit (3-9 frames, one per event). 苏东坡 hands things to the lens.
+4. **Asides never leave him.** When she talks to the viewers (B10, C21, C26, D31, E40, any other), he stays on screen;
+   at most a small step closer. A GLANCE is allowed when a thing is the joke: to the thing and back inside 1 s while she
+   talks (C21: the shell pile on 「一点」), never for the whole line. No whisper bubble, no freeze (not decided).
+5. **The emotional scene is left alone.** F from F46 (只有她猜对了) to F51: still camera, no handheld sway, no screen
+   effects, no snaps or jolts, at most one slow move (grief: still, then a slow pull back).
+6. **Fill the tall frame.** His face between a quarter and a half of the way down (y 480-960); no beat leaves the
+   bottom 40 % as empty floor unless emptiness is the point. No scene opens on him centred, chest-up, front-on; at
+   least one view per scene has something in the foreground (a door frame, the stove, hanging things).
+7. **Keep:** timings, lines and beats (beats.ts); the HUD zones (REC/timestamp/battery y < 360 and the top right, the
+   caption band 1190-1520, hudRectsAt cards); nothing important above y 300 or below y 1500 (a 9:15 crop may follow).
+8. **Plan first.** Each scene gets a camera table before code (beat | look at | size | angle | move | why), saved in
+   /home/user/su_work/cam2/<scene>_plan.md. A row that cannot name what to look at is not ready.
+9. **Phone-safe HUD** (integrator, from the day-in-life-film skill): 抖音 cuts 57 px off each side of a 9:16 film, so
+   the REC row now starts at x 110, the battery ends at x 970, subtitle rows are at most 780 px (x 150-930) and end
+   above y 1490, the fact cards sit inside x 110-890, the end names inside x 110-890. The film ships as 9:16 and as a
+   9:15 crop (rows 110-1909: the REC row lands at y 120, as the skill's 9:15 layout asks).
