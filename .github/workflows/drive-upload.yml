@@ -1,0 +1,110 @@
+# Uploads finished films to Google Drive with rclone, so they stop piling up in GitHub storage.
+#
+# Reusable: a deliver-<id> branch's workflow uploads its files as Actions artifacts (which stay as the fallback
+# download link), then calls this workflow, which downloads those artifacts and copies them to
+#   Google Drive / <root> / <folder> /
+# checks every file's md5 against Drive, writes the Drive links to the run summary, and (with delete_branch) deletes
+# the deliver-<id> branch, since the film is safe in Drive and in the artifact.
+#
+#   drive:
+#     needs: package
+#     uses: jayjiao-debug/Video/.github/workflows/drive-upload.yml@claude/original-short-film-nhwy85
+#     with: { artifacts: "零糖_v6_*", folder: "zero", delete_branch: true }
+#     secrets: inherit
+#
+# Needs the repo secret RCLONE_DRIVE_TOKEN (one-time sign-in: bash scripts/drive/connect_drive.sh on a computer with
+# a browser; see scripts/drive/README.md). Without it the job only prints a warning and passes, so a delivery still
+# gives its artifact link. The token uses the drive.file scope: rclone sees only the files and folders it created.
+name: drive-upload
+
+on:
+  workflow_call:
+    inputs:
+      artifacts:
+        description: "Artifact name or pattern to upload (e.g. 零糖_v6_*)"
+        type: string
+        required: true
+      folder:
+        description: "Sub-folder for this film inside the root folder (e.g. the episode id)"
+        type: string
+        required: true
+      root:
+        description: "Top folder in My Drive"
+        type: string
+        default: "Video Maker films"
+      delete_branch:
+        description: "Delete the calling deliver-* branch once every file is verified in Drive"
+        type: boolean
+        default: false
+    secrets:
+      RCLONE_DRIVE_TOKEN:
+        required: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RCLONE_CONFIG_GDRIVE_TYPE: drive
+      RCLONE_CONFIG_GDRIVE_SCOPE: drive.file
+      DEST: "gdrive:${{ inputs.root }}/${{ inputs.folder }}"
+    steps:
+      - name: Read the Drive token
+        id: tok
+        env:
+          T: ${{ secrets.RCLONE_DRIVE_TOKEN }}
+        run: |
+          T=$(printf '%s' "$T" | tr -d '\r\n')
+          if [ -z "$T" ]; then
+            echo "::warning::RCLONE_DRIVE_TOKEN is not set, so nothing went to Google Drive. The artifact link still works. See scripts/drive/README.md."
+            echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          case "$T" in
+            "{"*) tok="$T" ;;
+            *)    # a config blob from `rclone authorize drive <blob>`: base64 (no padding) of {"token": ...}
+                  while [ $(( ${#T} % 4 )) -ne 0 ]; do T="$T="; done
+                  tok=$(printf '%s' "$T" | base64 -d | jq -r .token) ;;
+          esac
+          printf '%s' "$tok" | jq -e .refresh_token >/dev/null || { echo "::error::RCLONE_DRIVE_TOKEN is not a valid rclone Drive token. Run scripts/drive/connect_drive.sh again."; exit 1; }
+          echo "::add-mask::$tok"
+          echo "RCLONE_CONFIG_GDRIVE_TOKEN=$tok" >> "$GITHUB_ENV"
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install rclone
+        if: steps.tok.outputs.ok == 'true'
+        run: |
+          curl -fsSL https://rclone.org/install.sh | sudo bash >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq rclone; }
+          rclone version | head -1
+
+      - uses: actions/download-artifact@v4
+        if: steps.tok.outputs.ok == 'true'
+        with:
+          pattern: ${{ inputs.artifacts }}
+          path: films
+          merge-multiple: true
+
+      - name: Upload to Google Drive and verify
+        if: steps.tok.outputs.ok == 'true'
+        run: |
+          ls -la films
+          [ -n "$(ls -A films)" ] || { echo "::error::no files matched ${{ inputs.artifacts }}"; exit 1; }
+          rclone copy films "$DEST" --transfers 2 --drive-chunk-size 64M --retries 5 --low-level-retries 20 --stats-one-line -v
+          rclone check films "$DEST" --one-way      # md5 of every local file against Drive; fails the job on any mismatch
+
+      - name: Drive links
+        if: steps.tok.outputs.ok == 'true'
+        run: |
+          folder_id=$(rclone lsjson "gdrive:${{ inputs.root }}" --dirs-only | jq -r --arg n "${{ inputs.folder }}" '.[] | select(.Name==$n) | .ID' | head -1)
+          {
+            echo "### Google Drive"
+            echo "Folder: [${{ inputs.root }}/${{ inputs.folder }}](https://drive.google.com/drive/folders/$folder_id)"
+            echo
+            rclone lsjson "$DEST" --files-only | jq -r '.[] | "- [\(.Name)](https://drive.google.com/file/d/\(.ID)/view) (\(.Size/1048576*10|floor/10) MB)"'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Delete the delivery branch (the film is now in Drive and in the artifact)
+        if: steps.tok.outputs.ok == 'true' && inputs.delete_branch && startsWith(github.ref_name, 'deliver-')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X DELETE "repos/${{ github.repository }}/git/refs/heads/${{ github.ref_name }}" && echo "deleted ${{ github.ref_name }}"
