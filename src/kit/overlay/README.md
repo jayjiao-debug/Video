@@ -47,7 +47,10 @@ red seal slapped on. Rebuilt from these blocks it matches the original (see "Pro
    (`motion.hit`), then time it with `life`, `part`, `pop`, `slap`.
 3. **The intro cards**: the lead, and only the side characters who play a role. The card's design is the film's; the
    kit gives the freeze (`clock`), the place (`slots`, `fit`), the pointer to the face (`pointer`, `leader`) and the
-   pieces for a stat (`barBoxes`, `countAt`, `odometer`, `typeOn`).
+   pieces for a stat (`barBoxes`, `countAt`, `odometer`, `typeOn`). On his card the lead is ISOLATED: cut out of the
+   picture in full colour while the rest drops to a wash. That half is in the picture, not in this layer:
+   `IsolatePass` in `src/kit/fx/isolate.ts` (`src/kit/fx/README.md`), with the wash, the line and the lift from the
+   film's skin. Its `screenBox` and `liftBox` give the box the card's words must keep clear.
 4. **The effects**: a 花字 is `setRow` + `glyph` + `slap` or `pop`, with `burst`, `ring` or `shake` for the hit. A
    counter is `odometer` or `countAt`. A stamp is `seal` + `slap`.
 5. **The check**: list everything the film shows as `Shown` items and run `checkOverlays` in the film's smoke test.
@@ -117,6 +120,15 @@ const S = slots(FRAME_9x15, face, { keep: [body] });          // the free slots 
 const B = fit({ w: 300, h: 372 }, S[0].r, { ay: 0.8 });       // the film's card placed in it (shrunk if it must, never grown)
 const P = pointer(B.r, face);                                 // the two ends of a pointer from the card to the face
 ```
+
+**A card that rides a camera move.** A side character's card stays up while the camera travels, and travels with its
+person. Take the slot BY NAME (`S.find((s) => s.name === "right")`, not `S[0]`, which may be another slot on the next
+frame) from the person's box on every frame (`screenBox`), and align the card to the person's side of it (`ax: 0` in
+the slot on his right). Its place then follows him frame by frame with nothing remembered.
+
+**The REC display in 9:15** starts 32 px from the left edge and the battery ends 32 px from the right (`FRAME_9x15.rec`;
+it was 54). The owner asked for them nearer the sides in 9:15, where the app cuts nothing off the sides; 32 is this
+file's number until it has been seen on a phone.
 
 The check, in the film's smoke test (plain Node; import `../../kit/overlay/frame` alone):
 
