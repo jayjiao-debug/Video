@@ -1399,6 +1399,8 @@ export type RigState = {
   /** accessories (by name) whose 3D parts are not shown this frame: a phone that is still in the pocket. What an
    *  accessory draws on the face or the clothes is part of those drawings and always shows. */
   hide?: string[];
+  /** POSTURE (try-out): degrees added to the pose's own lean: pitch + = forward, roll + = to the person's left */
+  lean?: { pitch?: number; roll?: number };
 };
 /** a hand target: f 0 = torso-local (origin = bottom of the body, follows its lean), 1 = travel frame (floor under
  *  `at`), 2 = staged for the camera (x = screen right, y up from the bottom of the body, z toward the camera): a wave
@@ -2359,6 +2361,7 @@ export class Rig {
       for (let i = 0; i < 2; i++) if (hung[i]) { bp.hand[i] = null; bp.plan[i] = desk ? "desk" : "lap"; }
       if (kind === "hold" && desk) for (const h of bp.hand) if (h) h.p.y = Math.max(h.p.y, sit.deskY - sit.h - SEAT_LIFT + 0.07);
     }
+    if (st.lean) { bp.pitch += rad(st.lean.pitch ?? 0); bp.roll += rad(st.lean.roll ?? 0); }
     return bp;
   }
 
