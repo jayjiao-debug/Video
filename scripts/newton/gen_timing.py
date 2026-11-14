@@ -13,10 +13,12 @@ An adapted copy of scripts/qin/gen_timing.py. What is different in this film:
     line), "card_hold" (its seconds) and "card_delay" (seconds after the line before it shows) go to voice.ts (LINE_RAW,
     CARD_RAW); the scenes' "time" / "en" / "place" to SCENE_RAW; the title block to TITLE_RAW: the lines file's
     "title_span_s" ([from, to] s on the film clock; 14 Nov evening: from the slam's thud at the end of the cold open,
-    EFFECTS_PLAN row 1, gap G1 behind it; it was 0.2-3.2 s over the cold open), else (v4, PLAN 5) on the shut door after
+    EFFECTS_PLAN row 1, gap G1 behind it; it was 0.2-3.2 s over the cold open; 14 Nov night: the title's real window,
+    f184-233, skin A's MsTitle from the thud), else (v4, PLAN 5) on the shut door after
     TITLE_AFTER, TITLE_DELAY s after its last word, for TITLE_HOLD s. The title's only words are 采访牛顿的一天: the lines
     file has no "subtitle" (the date and place moved to Newton's intro card), so TITLE_RAW's subtitle fields are empty
-    strings. No 时辰 HUD in this film.
+    strings. No 时辰 HUD in this film. The title never shares the screen with a subtitle: a caption's linger ends the
+    frame before TITLE_RAW's first frame (a caption whose own words reach into the title block is a WARNING).
 
   gen_timing.py --placeholder [--json <timing.json>]   a bring-up timing laid out by length: no voice needed
   gen_timing.py <voice_timing.json>                    the real dialogue (/home/user/newton_work/film/voice/voice_timing.json)
@@ -62,7 +64,8 @@ SAY = {}          # placeholder: {id: seconds} how long a line takes when it is 
 LAUGH_LEAD = {"G02": 1.0}   # placeholder: seconds of the non-verbal laugh before the line's first word (PLAN 7 G.2:
                             # "What... use!" goes over the laugh's tail, its subtitle appears mid-laugh)
 WORD_SLACK = 0.15 # real voice: word times may run this far outside their line (then they are clamped into it)
-LINGER = 12       # a caption stays up to this many frames after its last token, or until the next one starts
+LINGER = 12       # a caption stays up to this many frames after its last token, or until the next one starts, and
+                  # never into the title block (it ends the frame before TITLE_RAW's first frame)
 MAXW = 16         # a screen's Chinese: at most this many full-width characters (PLAN 5), else a WARNING
 LEAD_CUT = 2      # a segment whose first line has no "pre" starts this many frames before its first word
 CARD_HOLD = 3.5   # a fact card is shown for the line's "card_hold" s, else its "after" s, else this long
@@ -291,12 +294,22 @@ def finish(caps, lines, rows, total, j):
         prev = rows[first[sc] - 2]
         if seg_from[sc] <= frame(prev["end"]): fail(f"segment {sc} would start on frame {seg_from[sc]}, inside line {prev['id']} (ends {frame(prev['end'])})")
     segs = [(sc, first[sc], last[sc], seg_from[sc], (seg_from[ids[i + 1]] if i + 1 < len(ids) else total) - 1) for i, sc in enumerate(ids)]
+    # the title block first: no caption lingers into it (the owner's rule: the title never shares the screen with a
+    # subtitle)
+    if j.get("title_span_s"):   # v5: the lines file places the title block itself (seconds on the film clock, inclusive)
+        t0, t1 = frame(j["title_span_s"][0]), frame(j["title_span_s"][1]) - 1
+        if t1 < t0: fail(f"title_span_s {j['title_span_s']} is empty")
+    else:
+        ta = next(r for r in rows if r["id"] == TITLE_AFTER)
+        t0 = frame(ta["end"]) + 1 + frame(TITLE_DELAY); t1 = t0 + frame(TITLE_HOLD) - 1
     for i, c in enumerate(caps):
         nx = caps[i + 1] if i + 1 < len(caps) else None
         to = c["end"] + LINGER if nx is None else min(nx["from"] - 1, c["end"] + LINGER)
         if nx is not None and nx["seg"] != c["seg"]: to = min(to, seg_from[nx["seg"]] - 1)    # not across the cut into the next segment
         if nx is None: to = min(to, total - 1)
+        if c["from"] < t0 <= to: to = t0 - 1                                                 # the linger ends before the title's first frame
         c["to"] = max(c["end"], to)
+        if c["from"] <= t1 and c["to"] >= t0: warn.append(f"line {c['id']} screen {c['k']} 「{c['zh']}」 ({c['from']}-{c['to']}) is on screen with the title block ({t0}-{t1})")
     cards = []
     for l, r in zip(lines, rows):
         if not l.get("card"): continue
@@ -305,12 +318,6 @@ def finish(caps, lines, rows, total, j):
         nx = rows[l["n"]] if l["n"] < len(rows) else None
         if nx is not None and to >= frame(nx["start"]): warn.append(f"the card after {l['id']} ({fr}-{to}) runs into line {nx['id']} (starts {frame(nx['start'])})")
         cards.append((l["n"], l["id"], fr, min(to, total - 1), l["card"]["zh"], l["card"]["en"]))
-    if j.get("title_span_s"):   # v5: the lines file places the title block itself (seconds on the film clock, inclusive)
-        t0, t1 = frame(j["title_span_s"][0]), frame(j["title_span_s"][1]) - 1
-        if t1 < t0: fail(f"title_span_s {j['title_span_s']} is empty")
-    else:
-        ta = next(r for r in rows if r["id"] == TITLE_AFTER)
-        t0 = frame(ta["end"]) + 1 + frame(TITLE_DELAY); t1 = t0 + frame(TITLE_HOLD) - 1
     sub = j.get("subtitle") or {}   # 14 Nov evening: no subtitle row on the title (the date is on Newton's card)
     title = (t0, t1, j["title"]["zh"], j["title"]["en"], sub.get("zh", ""), sub.get("en", ""))
     if title[0] <= 0: fail("the title block would sit on frame 0")

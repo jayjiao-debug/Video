@@ -7,31 +7,45 @@
 //   <MsCard f ctx />    f = the film frame; ctx = hud/ms/screen.ts MsCtx (null where nothing draws)
 //   When: msT("card", f): t 0..74 = the 75 frames after B03's last frame (the picture is held on that frame and the set
 //         washed to sepia laid paper in 3D: freeze.ts, wash.ts; 75 = the voice track's and the mix's G2, director r1
-//         note 1). Beats in msItem("card").beats: everything is WRITTEN ON in the first 6-7 frames (the slip laid 0,
-//         the compass construction 0, the name 1, the propositions 1-3, the date, the seal pressed and the target 3), it
-//         holds to `out` (67), then the card sinks into the paper (6 f) while the target line FLIES to the meter's slot
-//         (`fly`, 8 f) and lands exactly on skin.ts METER (the empty circle with 笑 in it, 0/1, turned with the meter's
-//         slip) on t 74; fx's meter (hud/ms/meter.tsx, meter0) takes over from the next frame, the frame the picture runs
-//         again on. The wash drains back into colour from `drain` (71).
+//         note 1). THE CUT-OUT (cutout.ts, the kit's IsolatePass in the film's post chain) lifts him, in colour with a
+//         margin of the paper and a hard iron-gall edge, off the frozen page over t 0-5 (freeze.ts CUT.in) and lets him
+//         settle back over t 67-74 (CUT.out, CUT.leave). Beats in msItem("card").beats (r3, 14 Nov: the build leads to
+//         the seal, which presses on f939 = t 23, where the morning music turns from A major to G major inside the
+//         freeze): the slip laid and the compass construction from 0, the name from 1 (who he is, first), the date from
+//         6, the three propositions from 8, one every `rowGap` (3) frames, the target line from 17, the seal pressed on
+//         23 (settled 26); it holds to `out` (67), then the card sinks into the paper (6 f) while the target line FLIES
+//         to the meter's slot (`fly`, 8 f) and lands exactly on skin.ts METER (the empty circle with 笑 in it, 0/1, turned
+//         with the meter's slip) on t 74; fx's meter (hud/ms/meter.tsx, meter0) takes over from the next frame, the
+//         frame the picture runs again on. The wash drains back into colour from `drain` (71).
 //   What: the approved frame (looks/frames/A_card.png; skin_a.py card()), fitted to the phone-safe rules:
 //     - a soft shade under the vlog UI (REC and 上午 keep their contrast on the pale page);
 //     - the compass construction BEHIND HIM (a circle round his head, the inscribed triangle ABC with its letters in
-//       FreeSerif Italic, a dashed orbit), anchored to his head on screen (msFig(ctx, "newton")) and cut away round his
-//       head, wig, body and hands (a mask from the figure's head, face box and hands: DOM cannot go behind him), so no
-//       line crosses his face;
-//     - the crimson wax seal 冷面学神 in the wall space right of his head;
+//       the skin's italic (glyphs.ts SERIF: FrSans written again with a slanted nib), a dashed orbit), anchored to his
+//       LIFTED head on screen (msFig(ctx, "newton") moved by freeze.ts cutLift about cutPivot, the lift the cut-out
+//       is drawn with) and cut away under the lifted sticker (DOM cannot go behind him: a mask from screen.ts
+//       ctx.cut, his kept things on screen with the sticker's paper margin and ink edge, lifted with the same
+//       transform; off the cut-out's frames a mask from his head, face box and hands), so no line crosses his face or
+//       runs onto the sticker;
+//     - the crimson wax seal 冷面学神 in the wall space right of his lifted head;
 //     - the label slip pasted over the desk line: 艾萨克·牛顿 (crimson, the broad nib), 1686年5月 · 剑桥三一学院 (small,
 //       sepia), 命题一/二/三 (crimson labels) with the three stats in iron-gall, a dotted rule, 今日目标：让他笑一次 with the
 //       meter's empty circle and 0/1 (upright FrSans bold, as the meter draws it: the approved frames' numerals).
 //   Where: the slip and every word inside x 70-930 (the paper inside x 56-930), y 944-1490; the seal in x 690-926,
-//         y 330-578 (msItem("card").box); the construction x 57-800, y 150-870, never over his face.
+//         y 330-578 (msItem("card").box); the construction x 57-800, y 150-870, never over his face. The lifted
+//         cut-out (14 px margin and the 3 / 4 px edge included) stays clear of the slip's words and of the seal:
+//         scripts/newton/qa/faces measures it on the held frame (THE CUT-OUT vs THE CARD).
 //   Ids: every id starts with "newton-ms-card". No blend modes and no backdrop filters. A pure function of (f, ctx).
+//   msCardWords()   the slip's written lines on screen at rest (each line's ink box, turned with the slip): what the
+//                   lifted cut-out must stay clear of (scripts/newton/qa/faces, THE CUT-OUT vs THE CARD)
 import React from "react";
 import { clamp, clamp01, easeOut, smooth } from "../../../../kit/overlay";
 import { MS, METER } from "./skin";
-import { msDefs, nibFilter, sinkFilter, quill, inkText, serifText, leaf, waxSeal, ellipseArc, ellipseLen, drawOn, writeK } from "./marks";
+import { msDefs, nibFilter, sinkFilter, quill, quillLayout, inkText, serifText, textWidth, leaf, waxSeal, ellipseArc, ellipseLen, drawOn, writeK } from "./marks";
+import { GLYPH_SIZE, type QuillGlyph } from "./glyphs";
 import { msItem, msT } from "./when";
 import { msFig, type MsCtx, type MsPt } from "./screen";
+import { cutLift, cutPivot, liftPt } from "../../freeze";
+import { liftBox } from "../../../../kit/fx/isolate";
 
 const P = "newton-ms-card";
 
@@ -40,6 +54,8 @@ const P = "newton-ms-card";
 // ran to x 46 and y 1496) and its rows closed up by 4 % to fit
 const SLIP = { x: 68, y: 962, w: 848, h: 508, rot: -0.8 };
 const SC = { x: SLIP.x + SLIP.w / 2, y: SLIP.y + SLIP.h / 2 };
+/** the name's write: one character every NAME_PER frames from beats.name */
+const NAME_PER = 0.9;
 const NAME = { x: 88, y: 1080, S: 118, o: { rots: [-4, 2, -1, 0, -3, 4], lifts: [0, 5, -3, 0, 2, 7], scales: [1.0, 0.96, 1.02, 1.0, 1.0, 0.97], track: 2, seed: 4 } };
 const DATE = { s: "1686年5月 · 剑桥三一学院", x: 90, y: 1132, px: 34, ls: 3 };
 const ROWS: [string, string][] = [["命题一", "睡衣：助手从没见他穿过"], ["命题二", "独自坐下吃饭：助手没见过"], ["命题三", "出生：他说一升杯装得下"]];
@@ -66,6 +82,58 @@ const rotAbout = (p: MsPt, c: MsPt, deg: number): MsPt => {
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 const lerpPt = (a: MsPt, b: MsPt, k: number): MsPt => ({ x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k) });
 
+// ---------------------------------------------------------------------------------------------------- the words' boxes
+type Box = { x0: number; y0: number; x1: number; y1: number };
+/** a quill glyph's ink box at GLYPH_SIZE (its outline's points, absolute M L H V Q Z; a curve's control point makes it a
+ *  little generous) */
+const glyphInk = (g: QuillGlyph): Box => {
+  const b: Box = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity };
+  const put = (x: number, y: number) => { b.x0 = Math.min(b.x0, x); b.x1 = Math.max(b.x1, x); b.y0 = Math.min(b.y0, y); b.y1 = Math.max(b.y1, y); };
+  let cmd = "M", x = 0, y = 0;
+  const tok = g.d.match(/[A-Za-z]|-?\d*\.?\d+(?:e-?\d+)?/g) ?? [];
+  for (let i = 0; i < tok.length;) {
+    if (/[A-Za-z]/.test(tok[i])) { cmd = tok[i++]; if (cmd === "Z" || cmd === "z") continue; }
+    const n = (k: number) => Number(tok[i + k]);
+    if (cmd === "H") { x = n(0); i += 1; } else if (cmd === "V") { y = n(0); i += 1; }
+    else if (cmd === "Q") { put(n(0), n(1)); x = n(2); y = n(3); i += 4; }
+    else { x = n(0); y = n(1); i += 2; }
+    put(x, y);
+  }
+  return b;
+};
+const boxOf = (ps: MsPt[]): Box => ({ x0: Math.min(...ps.map((p) => p.x)), y0: Math.min(...ps.map((p) => p.y)), x1: Math.max(...ps.map((p) => p.x)), y1: Math.max(...ps.map((p) => p.y)) });
+const corners = (b: Box): MsPt[] => [{ x: b.x0, y: b.y0 }, { x: b.x1, y: b.y0 }, { x: b.x1, y: b.y1 }, { x: b.x0, y: b.y1 }];
+/** a box in the slip's own frame, on screen (turned with the slip) */
+const onSlip = (b: Box): Box => boxOf(corners(b).map((p) => rotAbout(p, SC, SLIP.rot)));
+/** a body row's ink box (FrSans: the CJK ink from 0.9 em over the baseline to 0.15 em under it) */
+const rowBox = (s: string, x: number, y: number, px: number, ls = 0): Box => ({ x0: x, y0: y - 0.9 * px, x1: x + textWidth(s, px, ls), y1: y + 0.15 * px });
+/** THE CARD'S WORDS on screen at rest: the name (each quill character's own ink, its turn and lift), the date, the three
+ *  propositions, the dotted rule and the target row (the ring and 0/1 with it), each turned with the slip; 4 px round
+ *  each (6 for the name) for the nib's swell and the ink filters. at / to = the card's first t on which the line is being
+ *  written and its last t before it has sunk into the paper (the beats below) */
+export const msCardWords = (): { what: string; r: Box; at: number; to: number }[] => {
+  // (the ink sinks from `out` over 6 f: part() reaches 1 on out + 5, where the slip's ink is no longer drawn)
+  const b = msItem("card").beats, to = b.out + 4;
+  const grow = (r: Box, d = 4): Box => ({ x0: r.x0 - d, y0: r.y0 - d, x1: r.x1 + d, y1: r.y1 + d });
+  const out: { what: string; r: Box; at: number; to: number }[] = [];
+  const { chars, x0 } = quillLayout("艾萨克·牛顿", NAME.S, NAME.o, NAME.x);
+  chars.forEach((c, ci) => {
+    if (c.dot || !c.g) return;
+    const ink = glyphInk(c.g), sc = c.S / GLYPH_SIZE, ox = x0 + c.x, oy = NAME.y + c.lift, pv = { x: ox + c.adv / 2, y: oy - 0.38 * c.S };
+    const ps = corners({ x0: ox + ink.x0 * sc, y0: oy + ink.y0 * sc, x1: ox + ink.x1 * sc, y1: oy + ink.y1 * sc }).map((p) => rotAbout(p, pv, c.rot));
+    out.push({ what: `name ${c.ch}`, r: grow(onSlip(boxOf(ps)), 6), at: b.name + ci * NAME_PER, to });
+  });
+  out.push({ what: "date", r: grow(onSlip(rowBox(DATE.s, DATE.x, DATE.y, DATE.px, DATE.ls))), at: b.date, to });
+  ROWS.forEach(([, v], i) => {
+    const y = ROW.y + i * ROW.step;
+    out.push({ what: `row ${i + 1}`, r: grow(onSlip({ x0: ROW.kx, y0: y - 0.9 * ROW.vpx, x1: ROW.vx + textWidth(v, ROW.vpx, 0), y1: y + 2 + 0.15 * ROW.vpx })), at: b.stats + i * b.rowGap, to });
+  });
+  out.push({ what: "rule", r: grow(onSlip({ x0: RULE.x0, y0: RULE.y - 2, x1: RULE.x1, y1: RULE.y + 2 })), at: b.target, to });
+  const tw = textWidth(TGT.pre + TGT.mid + TGT.post, TGT.px, 0);
+  out.push({ what: "target", r: grow(onSlip({ x0: TGT.x, y0: Math.min(TGT.y - 0.9 * TGT.px, RING.cy - RING.r - 5), x1: Math.max(TGT.x + tw, COUNT.x + 3 * 0.57 * COUNT.px), y1: TGT.y + 0.15 * TGT.px })), at: b.target, to: b.fly });
+  return out;
+};
+
 // ---------------------------------------------------------------------------------------------------- the card
 export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) => {
   const t = msT("card", f);
@@ -77,11 +145,14 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
   // ---- the slip laid down in 3 f: it settles the last few px onto the frozen page, its opacity up over the first half
   // (no scale: the slip already runs to within a few px of the safe frame's left edge)
   const lay = writeK(t, b.wipe, 3), layDy = -10 * (1 - easeOut(lay, 2));
-  // ---- his head on the held frame
+  // ---- his head on the held frame, LIFTED as the cut-out draws him (freeze.ts cutLift about cutPivot: the same pivot
+  // cutout.ts gives the pass, from the same projected head and hands), so everything below goes round the lifted figure
   const nt = ctx ? msFig(ctx, "newton") : null;
-  const hd = nt ? { x: nt.head.x, y: nt.head.y, r: nt.r } : HEAD0;
-  const face = nt?.face ?? { x0: HEAD0.x - 190, y0: HEAD0.y + 26, x1: HEAD0.x + 186, y1: HEAD0.y + 198 };
-  const hands = nt?.hands ?? [{ x: 225, y: 930 }, { x: 388, y: 928 }];
+  const lift = nt ? cutLift(f, cutPivot(nt.head, nt.hands)) : undefined;
+  const hd0 = nt ? { x: nt.head.x, y: nt.head.y, r: nt.r } : HEAD0, hp = liftPt(hd0, lift);
+  const hd = { x: hp.x, y: hp.y, r: hd0.r * (lift?.s ?? 1) };
+  const face = liftBox(nt?.face ?? { x0: HEAD0.x - 190, y0: HEAD0.y + 26, x1: HEAD0.x + 186, y1: HEAD0.y + 198 }, lift);
+  const hands = (nt?.hands ?? [{ x: 225, y: 930 }, { x: 388, y: 928 }]).map((h) => liftPt(h, lift));
 
   // ---- THE CONSTRUCTION (behind him: cut away round his figure)
   const ccx = hd.x + CON.dx * hd.r, ccy = hd.y + CON.dy * hd.r;
@@ -96,7 +167,20 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
     return writeK(t, b.construct + 2 + i, 1) > 0 ? <React.Fragment key={i}>{serifText(`${P}-L${i}`, "ABC"[i], x, y, 50, { filter: `${P}-inkAsm` })}</React.Fragment> : null;
   };
   const r = hd.r;
-  const cut = (
+  // on the cut-out's frames the construction is cut away under the STICKER itself (screen.ts ctx.cut: his kept things
+  // on screen with the paper margin and the ink edge), lifted as the pass lifts it; otherwise round the figure's head,
+  // face box and hands
+  const sticker = ctx?.cut && lift ? ctx.cut : null;
+  const liftT = lift ? `translate(${n1(lift.cx + (lift.x ?? 0))} ${n1(lift.cy + (lift.y ?? 0))}) rotate(${(lift.rot ?? 0).toFixed(3)}) scale(${(lift.s ?? 1).toFixed(4)}) translate(${n1(-lift.cx)} ${n1(-lift.cy)})` : undefined;
+  const cut = sticker ? (
+    <mask id={`${P}-behind`} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1800}>
+      <rect x={0} y={0} width={1080} height={1800} fill="#fff" />
+      <g fill="#000" transform={liftT}>
+        {sticker.rects.map(([x, y, w, h], i) => <rect key={i} x={x} y={y} width={w} height={h} />)}
+      </g>
+      <rect x={n1(face.x0 - 10)} y={n1(face.y0 - 10)} width={n1(face.x1 - face.x0 + 20)} height={n1(face.y1 - face.y0 + 20)} fill="#000" />
+    </mask>
+  ) : (
     <mask id={`${P}-behind`} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1800}>
       <rect x={0} y={0} width={1080} height={1800} fill="#fff" />
       <g fill="#000" stroke="#000">
@@ -132,10 +216,10 @@ export const MsCard: React.FC<{ f: number; ctx?: MsCtx | null }> = ({ f, ctx }) 
   const rowPer = 0.3;
   const slipInk = (
     <>
-      {quill(`${P}-name`, "艾萨克·牛顿", NAME.x, NAME.y, NAME.S, `${P}-nibN`, { ...NAME.o, write: { t, at: b.name, per: 0.9, pool: 2 } })}
+      {quill(`${P}-name`, "艾萨克·牛顿", NAME.x, NAME.y, NAME.S, `${P}-nibN`, { ...NAME.o, write: { t, at: b.name, per: NAME_PER, pool: 2 } })}
       {inkText(`${P}-date`, DATE.s, DATE.x, DATE.y, DATE.px, `${P}-inkS`, { ls: DATE.ls, write: { t, at: b.date, per: 0.2 } })}
       {ROWS.map(([k, v], i) => {
-        const y = ROW.y + i * ROW.step, at = b.stats + i;
+        const y = ROW.y + i * ROW.step, at = b.stats + i * b.rowGap;
         return (
           <React.Fragment key={i}>
             {inkText(`${P}-k${i}`, k, ROW.kx, y, ROW.kpx, `${P}-inkRsm`, { ls: 2, write: { t, at, per: rowPer } })}

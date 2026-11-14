@@ -37,7 +37,7 @@ import { FPS, line, card, seg, segmentAt, type SceneId } from "../../story";
 import { whisperSpan } from "../../whisper";
 import { IP } from "../../../../kit/film/env";
 import { life, clamp01, type Life } from "../../../../kit/overlay/time";
-import { CARD_LEN, DRAIN, FREEZE, FREEZE_ON, G2_READY, WIPE } from "../../freeze";
+import { CARD_LEN, CUT, DRAIN, FREEZE, FREEZE_ON, G2_READY, WIPE } from "../../freeze";
 import type { Rect, Shown } from "../../../../kit/overlay/frame";
 import { bannerPlace, bannerRects, type Head } from "./bannerplace";
 import { HUMPHREY_TRACK } from "./track";
@@ -163,13 +163,17 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
   {
     id: "card", row: 4, what: "Newton's intro card (the 2.5 s freeze after B03)", kind: "card", layer: "card",
     from: FREEZE_AT + 1, to: FREEZE_AT + CARD_LEN,
-    // 75 frames (director r1 note 1: the voice track and the mix hold 75): builds in 6 f, holds to t 66, leaves t 67-74
+    // 75 frames (director r1 note 1: the voice track and the mix hold 75): the cut-out lifts him off the page and the
+    // card builds in 6 f (freeze.ts CUT.in), holds, leaves t 67-74 (CUT.out, CUT.leave: the cut-out settles back with it)
     // while its target line flies to the meter's slot and lands there on t 74; the wash: a page-turn wipe sweeps the
-    // colour out of the room (t 0-5), the ink drains back into colour (t 71-74). Stage 2a (card.tsx): everything written
-    // on by t 7 (the slip laid from `wipe`, the compass from `construct`, the name and the propositions from `name` /
-    // `stats` (one row a frame), the date, the seal and the target from `date` / `seal` / `target`), held from `hold`;
-    // the card sinks over 6 f from `out` (= fly) while the target line flies (`fly`, `leave` frames)
-    beats: { in: 6, wipe: WIPE.at, construct: 0, name: 1, stats: 1, date: 3, seal: 3, target: 3, hold: 7, leave: 8, fly: CARD_LEN - 8, drain: DRAIN },
+    // colour out of the room (t 0-5), the ink drains back into colour (t 71-74). r3 (14 Nov night): THE SEAL PRESSES ON
+    // f939 (t 23), where the morning music turns from A major to G major inside the freeze (REMIX_v5.md: its G-major
+    // section from 31.30 s), and the build is laid out to lead to it: the slip laid from `wipe` and the compass from
+    // `construct` (t 0-6, with the cut-out), the name from `name` (t 1-6: who he is, first), the date from `date`, the
+    // three propositions from `stats`, one every `rowGap` frames (t 8, 11, 14), the target line from `target` (t 17-21),
+    // then the wax seal 冷面学神 pressed on `seal` (t 23, settled t 26 = `hold`); the card sinks over 6 f from `out`
+    // (= fly) while the target line flies (`fly`, `leave` frames). (r2: everything written by t 7, the seal on t 3)
+    beats: { in: CUT.in, wipe: WIPE.at, construct: 0, name: 1, date: 6, stats: 8, rowGap: 3, target: 17, seal: 23, hold: 26, leave: CUT.leave, fly: CARD_LEN - 8, drain: DRAIN },
     gap: "G2", whilePending: "off",
     // the label slip (name, date, the three propositions, the target) and the wax seal; the rest of the frame is the
     // washed set and Newton himself (no word over his face)
@@ -191,8 +195,10 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
   },
   {
     id: "tick1", row: 6, what: "meter tick 1: the first crimson cross", kind: "effect", layer: "fx",
-    // in the gap after B09 「没笑。」 (G3), the cross written in 0.2 s; card 2 flutters in mid-left after it
-    from: B09.to + 2, to: B09.to + 30,
+    // in the gap after B09 「没笑。」 (G3), the cross written in 0.2 s; card 2 flutters in mid-left after it. r3 (14 Nov
+    // night): 3 frames later than r2 (B09.to + 2), so the cross's first frame (t2, B09.to + 7 = B09 end + 0.223 s) and its
+    // nib tick (cues.json 'skin A: meter tick 1') land on an onset of the morning music; the same 29 frames
+    from: B09.to + 5, to: B09.to + 33,
     beats: { in: 4, slip: 0, cross: 2, crossLen: 6, leave: 6 },
     gap: "G3", whilePending: "show",
     box: [SLOT], provisional: false,

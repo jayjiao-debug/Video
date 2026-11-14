@@ -1,4 +1,4 @@
-# 《跟着牛顿过一天》 (NewtonFilm): bible, storyboard and build plan
+# 《采访牛顿的一天》 (NewtonFilm; formerly 《跟着牛顿过一天》): bible, storyboard and build plan
 
 An interview that follows Isaac Newton through ONE ordinary working day at Trinity College, Cambridge, in May 1686
 (he is 43 and writing the *Principia*). **The camera IS the interviewer** (记者, a young woman, Lin's voice, NEVER SEEN:
@@ -172,7 +172,7 @@ hand holds it up close); stick of charcoal; crucible(s); glass vessels; bellows;
 - FACT CARDS (5): one slot MID-LEFT, ink on a cream paper slip (a slight tilt, torn/deckled edge, soft shadow),
   Chinese large and English small under it, shown only while nobody speaks (timing from the lines file), a short
   slide/flutter in and out. They never sit on a face.
-- TITLE BLOCK: 「跟着牛顿过一天」 large, 「1686年5月 · 剑桥三一学院」 small under it (English small line too), lands ON
+- TITLE BLOCK: 「采访牛顿的一天」 (formerly 「跟着牛顿过一天」) large, 「1686年5月 · 剑桥三一学院」 small under it (English small line too), lands ON
   THE SHUT DOOR after "Good night" (line A02) for 3 s; never on frame 0. It sits on the door's upper panel (segA: world
   y 1.28 m), its top about 140 px under the timestamp's English row at frame 140 (at least 80 px wanted).
 - End: his window goes dark (the last pluck), 0.4 s later her camera switches off (the click: the REC lamp dies, the

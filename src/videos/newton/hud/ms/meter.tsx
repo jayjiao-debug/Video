@@ -2,7 +2,7 @@
 // right under the battery (skin.ts METER: x 742-1012, y 154-292), with 笑 inside the dashed pencil guide of a circle his
 // compass has not drawn yet, the count 0/1, and one CRIMSON CROSS per failed try (the meter's rubric mark). THE COUNT is
 // set in the body hand (FrSans bold through the iron-gall ink filter), as the approved frames draw it (A_fx.png,
-// swatch_A.png: upright bold numerals; the generator's FSerifI face never loaded, so what Jay picked is FrSans), not in
+// swatch_A.png: upright bold numerals; the generator's italic face never loaded, so what Jay picked is FrSans), not in
 // glyphs.ts SERIF; the card draws its 0/1 the same way. It is on screen only at its four moments, each written on and
 // each leaving by sinking into the paper:
 //   meter0  row 5   born from the card's target line (card.tsx flies it onto METER.circle / METER.count over its t 67-74

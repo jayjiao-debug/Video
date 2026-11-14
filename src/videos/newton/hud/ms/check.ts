@@ -8,11 +8,15 @@
 //     film's REC row, battery and stamp, the subtitle shown, the whisper bubble, the fact card, the app's buttons (this
 //     film's rule: nothing right of x 930 below y 950), the post's text (nothing below y 1490), each other, the quiet
 //     span F07..G02 and the effects budget (2 a scene, 45 frames apart). Faces are the faces checker's
-//     (scripts/newton/qa/faces: hudRectsAt carries the skin's boxes as "ms-<id>").
+//     (scripts/newton/qa/faces: hudRectsAt carries the skin's boxes as "ms-<id>");
+//   - THE CUT-OUT (cutout.ts, freeze.ts): its ink and paper are the skin's (CUT_INK = MS.ink, the line and the place he
+//     left = MS.paper), the pass's own wash is off (one wash look: wash.ts), and it lives on the card's frames only, with
+//     the card's arrival and leaving (freeze.ts CUT against msItem("card").beats in / leave / out); the lifted
+//     sticker against the card's words is the faces checker's (THE CUT-OUT vs THE CARD).
 // Exit code 0 unless the check finds a fault in an item that is not provisional (provisional boxes are reported as
 // notes until the builder fits them).
 import { FRAME_9x15, checkOverlays, type FrameSpec, type Zone } from "../../../../kit/overlay/frame";
-import { MS_ITEMS, QUIET, FREEZE, msEnabled, msShown, msFrozen, gapLines, sec } from "./when";
+import { MS_ITEMS, QUIET, FREEZE, msEnabled, msShown, msFrozen, msItem, gapLines, sec } from "./when";
 import { capOn, capLayout, enShown } from "../caption";
 import { factRectAt } from "../card";
 import { vlogRectsAt, VLOG_RECT } from "../vlog";
@@ -20,6 +24,8 @@ import { whisperCapAt, whisperRectAt } from "../whisper";
 import { TOTAL } from "../../story";
 import { MS } from "./skin";
 import { WASH_PAPER } from "../../wash";
+import { CUT, CARD_LEN, cutAt } from "../../freeze";
+import { CUT_INK, CUT_LOOK } from "../../cutout";
 
 declare const process: { exitCode?: number };   // plain Node (no @types/node in the film's tsc run)
 const SPEC: FrameSpec = { ...FRAME_9x15, rec: VLOG_RECT.rec };
@@ -41,6 +47,19 @@ const protect = (f: number): Zone[] => {
 
 console.log(gapLines().join("\n"));
 if (WASH_PAPER.toLowerCase() !== MS.paper.toLowerCase()) { console.log(`QA: MS FAULT wash.ts WASH_PAPER ${WASH_PAPER} is not the skin's paper ${MS.paper}`); process.exitCode = 1; }
+// THE CUT-OUT: the skin's colours, no second wash, the card's life
+{
+  const fault = (why: string) => { console.log(`QA: MS FAULT the cut-out: ${why}`); process.exitCode = 1; };
+  const card = msItem("card"), b = card.beats;
+  if (CUT_INK.toLowerCase() !== MS.ink.toLowerCase()) fault(`cutout.ts CUT_INK ${CUT_INK} is not the skin's ink ${MS.ink}`);
+  if (CUT_LOOK.outline.color.toLowerCase() !== MS.paper.toLowerCase() || CUT_LOOK.left.color.toLowerCase() !== MS.paper.toLowerCase()) fault("its line or the place he left is not the skin's paper");
+  if (CUT_LOOK.wash.amount !== 0) fault(`the pass's own wash is ${CUT_LOOK.wash.amount}, not 0 (wash.ts is the one wash)`);
+  if (b.in !== CUT.in || b.leave !== CUT.leave || b.out !== CUT.out || card.to - card.from + 1 !== CARD_LEN) fault(`freeze.ts CUT ${JSON.stringify(CUT)} and the card's beats in ${b.in} / leave ${b.leave} / out ${b.out} disagree`);
+  const on: number[] = [];
+  for (let f = card.from - 5; f <= card.to + 5; f++) if (cutAt(f)) on.push(f);
+  if (msEnabled("card") && (!on.length || on[0] < card.from || on[on.length - 1] > card.to)) fault(`it shows f${on[0]}-f${on[on.length - 1]}, outside the card's f${card.from}-f${card.to}`);
+  console.log(`QA: MS the cut-out: f${on[0] ?? "-"}-f${on[on.length - 1] ?? "-"} (in ${CUT.in} f, out from t ${CUT.out} over ${CUT.leave} f), line ${CUT_LOOK.outline.width} px paper, drop ${CUT_LOOK.shadow.x} / ${CUT_LOOK.shadow.y} px ink, the pass's wash ${CUT_LOOK.wash.amount}`);
+}
 console.log(`QA: MS film ${TOTAL} frames; the freeze ${msEnabled("card") ? `ON: the picture holds frame ${FREEZE.at} for ${FREEZE.frames} frames` : "OFF (the card waits for G2)"}; quiet ${QUIET[0]}-${QUIET[1]} (${sec(QUIET[0])}-${sec(QUIET[1])} s)`);
 for (const i of MS_ITEMS) {
   const on = msEnabled(i.id);

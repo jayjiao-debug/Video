@@ -1,16 +1,23 @@
-// 《跟着牛顿过一天》 the film composition "NewtonFilm" (9:15, 1080 x 1800, 30 fps, TOTAL frames from the timing; the
-// lens keeps the 1920 frame's width of view: story.ts LENS_H, world.ts setCamera). A copy of
+// 《采访牛顿的一天》 (formerly 《跟着牛顿过一天》) the film composition "NewtonFilm" (9:15, 1080 x 1800, 30 fps, TOTAL
+// frames from the timing; the lens keeps the 1920 frame's width of view: story.ts LENS_H, world.ts setCamera). A copy of
 // Qin's Film.tsx (WP1) on the shared kit (src/kit/fx/ink, src/kit/film/env).
 // Engine: story.ts (segment contract + how to build a segment), world.ts (places, props, cast).
 // Per page (a still, or one farm chunk): the font is loaded, then the World is built ONCE under the delayRender handle
 // "newton world build"; per frame the Director picks the segment (exit / enter on a change), then w.beginFrame(f);
 // P = SEG.pose(w, f); w.endFrame(P). <Inner> applies the PLACE's look (background, N8AO, bloom, grade: world.look())
-// and P.post on the chain N8AO -> InkPass -> lens blur -> bloom -> NEUTRAL tone mapping -> grade. The composer has a
+// and P.post on the chain N8AO -> InkPass -> lens blur -> the cut-out (IsolatePass, idle off the lead card) -> bloom ->
+// NEUTRAL tone mapping -> grade. The composer has a
 // stencil buffer (the rig figures layer their heads with it).
 // THE FREEZE (skin A's lead card, freeze.ts: the kit's freeze clock, HOLD): the Director poses the world at msHold(f),
 // B03's last frame on the card's 75 frames (only while the card is on: gap G2 in the voice track, or a still forcing
 // it), the film's own frame otherwise; then wash.ts msWash turns the set and props to a sepia ink drawing on laid paper
 // for washAt(f) (the figures stay in colour) and the background goes to the paper (P.post.bg). TOTAL is not changed.
+// THE CUT-OUT (the owner, 14 Nov: the lead card ISOLATES him): on the same frames the kit's IsolatePass (src/kit/fx/
+// isolate.ts; README "The cut-out for the lead's intro card") keeps Newton and what he holds in colour with a margin of
+// the skin's paper and a hard iron-gall edge, lifted off the frozen page (cutout.ts cutState, timed by freeze.ts cutAt /
+// cutLift: in with the card's build, out with its exit). It is created with the other passes and sits in the chain
+// between the lens blur and bloom; it is set every frame (null off the card), so every other frame is the picture as
+// before. Its own wash is off (amount 0): wash.ts is the one wash.
 // DOM layers on top, in this order: the whisper's darkened edges, SKIN A's card layer (hud/ms <MsCard>: Humphrey's banner
 // and Newton's lead card, under the vlog UI), the HUD layer (hud/: her camera's recording UI (hud/vlog.tsx: the REC
 // lamp, the scene's timestamp, the battery; REC and timestamp hidden by Pose.rec === false, the timestamp's big intro
@@ -43,6 +50,7 @@ import { useThree, type RootState } from "@react-three/fiber";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import { BlendFunction, BloomEffect, ToneMappingEffect, ToneMappingMode } from "postprocessing";
 import { InkPass, noInkFallback } from "../../kit/fx/ink";
+import { IsolatePass, type IsolateState } from "../../kit/fx/isolate";
 import { IP, ipFlag, ipNum } from "../../kit/film/env";
 import { LensBlur } from "../vasa/lensblur";
 import { GradeEffect, type GradeParams } from "../vasa/grade";
@@ -55,6 +63,8 @@ import { Caption, FactCard, PhoneMask, VlogHud } from "./hud";
 import { MS_FX, MsCard, MsFx, MsProof, MsTitle, msAny, msScreen, msStillFrame, type MsCtx } from "./hud/ms";
 import { msFrozen, msHold, washAt } from "./freeze";
 import { msWash, msWashBg } from "./wash";
+// THE CUT-OUT (cutout.ts: the IsolatePass state of the card's frames; the props he holds stay out of the wash too)
+import { cutHeld, cutLead, cutState } from "./cutout";
 // THE WHISPER (hud/whisper.tsx, whisper.ts): her asides' bubble and darkened edges, under the HUD layer; the bubble
 // replaces the subtitle on a whisper line's frames
 import { Whisper, whisperCapAt } from "./hud/whisper";
@@ -104,8 +114,8 @@ class Director {
     this.w.beginFrame(h);
     const P = s.pose(this.w, h);
     this.w.endFrame(P);
-    const wash = washAt(f);
-    msWash(this.w, wash);
+    const wash = washAt(f), lead = wash ? cutLead(this.w) : null;
+    msWash(this.w, wash, lead ? cutHeld(this.w, lead) : undefined);
     return wash ? { ...P, post: { ...P.post, bg: msWashBg(P.post?.bg ?? this.w.look().bg, wash) } } : P;
   }
 }
@@ -120,11 +130,12 @@ const CAM_OPTS = { fov: 46, near: 0.03, far: 600 };
 
 // ---------------------------------------------------------------------------------------------------- inside the canvas
 type N8 = { configuration: { aoRadius: number; distanceFalloff: number; intensity: number; color: THREE.Color } };
-const Inner: React.FC<{ world: World; P: Pose; onReady: () => void }> = ({ world, P, onReady }) => {
+const Inner: React.FC<{ world: World; P: Pose; iso: IsolateState | null; onReady: () => void }> = ({ world, P, iso, onReady }) => {
   const { scene, camera } = useThree();
   const fx = useMemo(() => ({
     ink: new InkPass(scene, camera as THREE.PerspectiveCamera, { samples: ipNum("inksamples", 8, false) }), // 8 = the film; --props '{"inksamples":4}' = faster checks
     lens: new LensBlur({ maxCoC: 20, nearScale: 1.0 }),
+    iso: new IsolatePass(scene, camera),                    // THE CUT-OUT of the lead card (cutout.ts); idle off the card
     bloom: new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: BLOOM, luminanceThreshold: 1.0, luminanceSmoothing: 0.2, mipmapBlur: true }),
     tone: new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }),
     grade: new GradeEffect(GRADE_FILM, 1),
@@ -139,6 +150,7 @@ const Inner: React.FC<{ world: World; P: Pose; onReady: () => void }> = ({ world
       <primitive object={fx.ink} dispose={null} />
       <primitive object={fx.lens.pre} dispose={null} />
       <primitive object={fx.lens.main} dispose={null} />
+      <primitive object={fx.iso} dispose={null} />
       <primitive object={fx.bloom} dispose={null} />
       <primitive object={fx.tone} dispose={null} />
       <primitive object={fx.grade} dispose={null} />
@@ -151,6 +163,7 @@ const Inner: React.FC<{ world: World; P: Pose; onReady: () => void }> = ({ world
   fx.bloom.intensity = pp.bloom ?? look.bloom ?? BLOOM;
   fx.grade.set(pp.grade ?? look.grade ?? GRADE_FILM); fx.grade.amount = pp.gradeAmount ?? 1;
   fx.ink.set({ strength: pp.ink ?? 1 });
+  fx.iso.set(iso);                                          // every frame: null (or k 0) leaves the picture untouched
   noInkFallback(world.root);
   const aoMul = pp.ao ?? 1;
   useLayoutEffect(() => {
@@ -235,6 +248,8 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
   const director = useMemo(() => (world ? new Director(world) : null), [world]);
   const t0 = DBG ? performance.now() : 0;
   const P = director ? director.frame(f) : null;
+  // THE CUT-OUT's state for this frame (the world as posed: the held frame on the card's frames), null elsewhere
+  const iso = world && P ? cutState(world, f) : null;
   if (DBG && P) console.log(`[newton] f${f} pose (segment ${director!.cur?.id}, place ${world!.place}) in ${Math.round(performance.now() - t0)} ms`);
   // skin A's view of the posed frame (faces, hands, the camera), only on frames where one of its items draws
   const showHud = !!P && P.hud !== false && !NOHUD, frozen = msFrozen(f);
@@ -245,7 +260,7 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
   return (
     <AbsoluteFill style={{ background: OVONLY ? "transparent" : "#0d0e16" }}>
       <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
-        {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
+        {world && P && !OVONLY ? <Inner world={world} P={P} iso={iso} onReady={onReady} /> : null}
       </ThreeCanvas>
       {P ? <Whisper f={f} words={false} edges={!NOOV} /> : null}
       {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsCard f={f} ctx={ms} /></AbsoluteFill> : null}

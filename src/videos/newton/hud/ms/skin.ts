@@ -32,7 +32,8 @@ export const SKIN = defineSkin({
   // THE BODY HAND (labels, the stats, 1686年5月 · 剑桥三一学院, 今日目标, 午饭进度, 我笑的不算): FrSans as SVG text through
   // an INK filter (marks.tsx inkFilter: horizontals eroded a little, the edge roughened, a faint bleed); set straight,
   // not turned; numerals too (0/1 on the card and the meter, 1%/2%: upright FrSans bold, as every approved frame draws
-  // them); only the construction letters A B C are FreeSerif Italic outlines (glyphs.ts SERIF)
+  // them); only the construction letters A B C are italic outlines (glyphs.ts SERIF: FrSans written again with a slanted
+  // flat nib)
   body: { ink: 0, track: 0.04, tilt: 0, hand: { rot: 0, lift: 0, scale: 0 }, rough: { fx: 0.65, fy: 0.65, scale: 3, seed: 5 } },
   material: "iron-gall ink and a crimson rubric on laid paper (torn edges, chain lines about 100 px apart, foxing); the epithet pressed in a crimson wax seal",
   motion: {
@@ -91,7 +92,7 @@ export const METER = {
   /** the circle the compass must close, 笑 inside it (46 px), its tick dot (r 5) at the top */
   circle: { cx: 806, cy: 224, r: 42, px: 46 },
   /** the count 0/1: its baseline-left. The approved frames set it upright in FrSans bold (A_fx.png: the generator's
-   *  FSerifI face did not load), so meter.tsx draws it in the body hand (inkText, -inkA), not glyphs.ts SERIF */
+   *  italic face did not load), so meter.tsx draws it in the body hand (inkText, -inkA), not glyphs.ts SERIF */
   count: { x: 870, y: 246, px: 70 },
   /** the tries row: a crimson cross per failed try, a sepia dot per try left (3 before the laugh, 2 after) */
   tries: { x: 882, y: 270, step: 40, s: 9 },

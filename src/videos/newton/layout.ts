@@ -84,7 +84,7 @@ export const PHONE = {
  *  of it); the title block at its default place (`title` = hud TITLE_RECT, over TITLE_SPAN; segA moves it onto the
  *  door); HER CAMERA'S RECORDING UI (hud/vlog.tsx) owns the two top corners under the icons: `rec` = the REC lamp's
  *  row (centre y 116) and the scene's timestamp under it (centre about y 176) (hud VLOG_RECT.rec + .stamp; for the first
- *  2 s of every scene the timestamp holds 1.5x bigger: VLOG_RECT.stampBig, about x 54-400, y 140-235; each scene's own
+ *  2 s of every scene the timestamp holds 1.5x bigger: VLOG_RECT.stampBig, about x 28-346, y 140-235; each scene's own
  *  box: hud stampRect(id, big)), `battery` = the battery and its % top right. The mic and her hands are never drawn
  *  (props INVISIBLE); `mic` / `micRest` / `micTop` are where the invisible mic still rests (cam.ts MIC_FRAME). */
 export const SCREEN = {
@@ -96,11 +96,13 @@ export const SCREEN = {
   card: { x0: 54, y0: 758, x1: 676, y1: 1161 },
   title: { x0: 125, y0: 736, x1: 955, y1: 1026 },
   /** the vlog UI's corners (hud VLOG_RECT): REC + the small timestamp top left (the widest scene's, A's), its big intro
-   *  for a scene's first 2 s, the battery + its % top right. The camera plans assumed x 54-330, y 95-205 (REC and the
-   *  stamp), the big stamp to about y 290 and the battery x 820-1026: these are inside. */
-  rec: { x0: 54, y0: 97, x1: 267, y1: 204 },
-  stampBig: { x0: 54, y0: 140, x1: 372, y1: 234 },
-  battery: { x0: 843, y0: 95, x1: 1026, y1: 137 },
+   *  for a scene's first 2 s, the battery + its % top right. Since 14 Nov the REC lamp starts on x 32 and the battery
+   *  ends on x 1048 (kit FRAME_9x15.rec; the stamp keeps its place under the lamp, its ink allowance from x 28). The
+   *  camera plans assumed x 54-330, y 95-205 (REC and the stamp), the big stamp to about y 290 and the battery
+   *  x 820-1026: these reach nearer the sides now, never further in. */
+  rec: { x0: 28, y0: 97, x1: 241, y1: 204 },
+  stampBig: { x0: 28, y0: 140, x1: 346, y1: 234 },
+  battery: { x0: 865, y0: 95, x1: 1048, y1: 137 },
 };
 /** a camera given as a story.ts CamPose with Vec3s (for a mark's camera in a layout file) */
 export const camOf = (pos: Vec3, look: Vec3, fov = FOV): Cam => c(pos, look, fov);

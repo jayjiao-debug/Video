@@ -1,6 +1,6 @@
 # NewtonFilm: the segment builder's contract
 
-《跟着牛顿过一天》 (composition `NewtonFilm`, this folder). 9:15, 1080 x 1800 since 14 Nov (the phone-safe frame: section
+《采访牛顿的一天》 (formerly 《跟着牛顿过一天》; composition `NewtonFilm`, this folder). 9:15, 1080 x 1800 since 14 Nov (the phone-safe frame: section
 10 and `layout.ts PHONE`; the lens keeps the 1920 frame's width of view: section 7), 30 fps, `TOTAL` frames from the timing (5258 =
 175.3 s on the placeholder timing; the real voice will change it: never copy a number). The bible and the storyboard
 are `PLAN.md`: read section 7 for your scene, and the script's stage directions
@@ -442,7 +442,7 @@ vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big 
   runs over the clipped end; `factCardAt(f)` returns the card with its shown `to`). Exports `FactCard, factCardAt,
   cardEnd, SHOWN_CARDS, factRows, factLayout, factRectAt, FACT_SLOT {54, 758, 676, 1161}, CARD_X, CARD_BOTTOM, cardTop,
   CARD_MAXW, CARD_ROW`.
-- TITLE BLOCK (`hud/title.tsx`): 「跟着牛顿过一天」 96 px, an ivory double rule with a lozenge, 「1686年5月 · 剑桥三一学院」
+- TITLE BLOCK (`hud/title.tsx`, no longer mounted: skin A's `hud/ms` MsTitle draws the title 「采访牛顿的一天」): the title 96 px, an ivory double rule with a lozenge, 「1686年5月 · 剑桥三一学院」
   40 px and the English line 24 px, ivory paint on the dark oak; drops 46 px over 10 frames, one bounce, fades over
   its last 10, over `TITLE_SPAN`. Exports `TitleCard, setTitlePlace, titleRect, titleRectAt, TITLE_HOME (540, 900),
   TITLE_RECT {125, 736, 955, 1026}, TitlePlace`. In 9:15 the plans put it on the door's upper panel, the block about

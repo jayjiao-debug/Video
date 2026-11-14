@@ -38,6 +38,13 @@
 // clipped to the HUD box (a round face does not fill its box's corners). Every hit also gives how much of the drawn
 // features lies under the item (severity). Occlusion: a face whose five key points (eyes, nose, mouth, chin) are all
 // behind another solid (a ray from the camera through the set, the props and the other figures) is listed apart.
+// THE FREEZE AND THE CUT-OUT (skin A's lead card, freeze.ts / cutout.ts): each frame is posed as Film.tsx poses it, at
+// msHold(f) (B03's last frame on the lead card's frames, f otherwise). On the cut-out's frames (freeze.ts cutAt) the lead's
+// face is moved with the lift the cut-out is drawn with (cutout.ts cutLiftOf) before it is tested, and THE CUT-OUT vs THE
+// CARD section measures the lifted sticker itself: what the camera really sees of what it keeps (cutKeep: his rig and
+// what he holds; rays through the held frame, every CUT_CELL px), grown by its paper margin and its ink edge
+// (cutout.ts CUT_LOOK: 14 px + the 3 / 4 px drop), lifted on each frame and laid against the card's own boxes (when.ts
+// msItem("card").box: the slip, the seal) and the vlog UI.
 import * as THREE from "three";
 import * as fs from "fs";
 import hooks from "../../../../src/videos/newton/kit.world";
@@ -46,6 +53,12 @@ import { SCREEN, PHONE } from "../../../../src/videos/newton/layout";
 import { BEAT, JOINS, WHIP_CLEAR, joinAfter } from "../../../../src/videos/newton/beats";
 import { W, H, CAPTIONS, LINE_IDS, CARDS } from "../../../../src/videos/newton/story";
 import { WHISPERS } from "../../../../src/videos/newton/whisper";
+import { msHold, cutAt, liftPt } from "../../../../src/videos/newton/freeze";
+import { cutLead, cutKeep, cutLiftOf, CUT_LOOK } from "../../../../src/videos/newton/cutout";
+import { msItem } from "../../../../src/videos/newton/hud/ms/when";
+import { msCardWords } from "../../../../src/videos/newton/hud/ms/card";
+import { msScreen } from "../../../../src/videos/newton/hud/ms/screen";
+import { liftBox, screenBox, type Lift } from "../../../../src/kit/fx/isolate";
 
 const argv = process.argv.slice(2);
 const opt = (k: string, d?: string) => { const i = argv.indexOf("--" + k); return i >= 0 ? argv[i + 1] : d; };
@@ -261,6 +274,107 @@ function hudOf(f: number, P: any): { items: Item[]; black: number } {
   return { items, black };
 }
 
+// ---------------------------------------------------------------------------------------------------- the cut-out
+const liftPoly = (p: Poly, l: Lift): Poly => p.map(([x, y]) => { const q = liftPt({ x, y }, l); return [q.x, q.y] as [number, number]; });
+/** the lead's face where the lifted cut-out draws it */
+function liftFace(fc: Face, l: Lift) {
+  fc.eyeY = liftPt({ x: (fc.full.x0 + fc.full.x1) / 2, y: fc.eyeY }, l).y;
+  fc.poly = liftPoly(fc.poly, l); fc.featPoly = liftPoly(fc.featPoly, l);
+  fc.box = liftBox(fc.box, l); fc.feat = liftBox(fc.feat, l); fc.full = liftBox(fc.full, l);
+}
+/** the sticker's grid (px): what the camera sees of the kept things, on the held frame */
+const CUT_CELL = 4;
+/** the margin round the matte: the paper line and the ink edge's offset (cutout.ts CUT_LOOK) */
+const CUT_GROW = CUT_LOOK.outline.width + Math.hypot(CUT_LOOK.shadow.x, CUT_LOOK.shadow.y);
+type Sticker = { h: number; matte: [number, number][]; foot: [number, number][]; box: Box; kept: string; secs: number; parts: Map<string, Box> };
+let sticker: Sticker | null = null;
+/** the sticker on held frame h: rays from the camera every CUT_CELL px over the kept things' screen boxes; a cell is
+ *  matte where the first solid it meets belongs to them; the footprint = the matte grown by CUT_GROW (the paper margin
+ *  and the ink edge) */
+function stickerOf(h: number, lead: any): Sticker {
+  const keep: THREE.Object3D[] = cutKeep(w, lead);
+  const kept = (o: THREE.Object3D | null) => { for (let p = o; p; p = p.parent) if (keep.includes(p)) return true; return false; };
+  const key = `${h}|${keep.map((o) => o.name || o.uuid).join(",")}`;
+  if (sticker && sticker.kept === key) return sticker;
+  const t0 = Date.now();
+  let R: Box | null = null;
+  for (const o of keep) { const b = screenBox(o, camera, W, H); if (b) R = R ? { x0: Math.min(R.x0, b.x0), y0: Math.min(R.y0, b.y0), x1: Math.max(R.x1, b.x1), y1: Math.max(R.y1, b.y1) } : b; }
+  const occ: THREE.Object3D[] = [];
+  w.root.traverse((o: any) => {
+    if (!o.isMesh || !o.visible || o.userData.hull || o.userData.depthOnly) return;
+    const m = Array.isArray(o.material) ? o.material[0] : o.material;
+    if (!m || m.colorWrite === false || m.side === THREE.BackSide || m.transparent && m.opacity < 0.6) return;
+    if (SKIP.test(o.name ?? "") || !visibleUp(o)) return;
+    freshBounds(o.geometry); occ.push(o);
+  });
+  const matte: [number, number][] = [], parts = new Map<string, Box>();
+  const box: Box = { x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 };
+  /** which kept thing a mesh belongs to (the keep entry's name, then the mesh's own) */
+  const partOf = (o: THREE.Object3D) => { let m = o; for (let p: THREE.Object3D | null = o; p; p = p.parent) if (keep.includes(p)) return p === keep[0] ? "his figure" : p.name || "a held prop"; else m = p; return m.name || o.name; };
+  if (R) {
+    const r = inter(R, SCR), nd = new THREE.Vector2();
+    ray.near = camera.near; ray.far = Infinity;
+    for (let y = Math.floor(r.y0 / CUT_CELL) * CUT_CELL + CUT_CELL / 2; y < r.y1; y += CUT_CELL) for (let x = Math.floor(r.x0 / CUT_CELL) * CUT_CELL + CUT_CELL / 2; x < r.x1; x += CUT_CELL) {
+      nd.set((x / W) * 2 - 1, 1 - (y / H) * 2); ray.setFromCamera(nd, camera);
+      const hit = ray.intersectObjects(occ, false)[0];
+      if (hit && kept(hit.object)) {
+        matte.push([x, y]); box.x0 = Math.min(box.x0, x); box.y0 = Math.min(box.y0, y); box.x1 = Math.max(box.x1, x); box.y1 = Math.max(box.y1, y);
+        const k = partOf(hit.object), b = parts.get(k) ?? { x0: x, y0: y, x1: x, y1: y };
+        parts.set(k, { x0: Math.min(b.x0, x), y0: Math.min(b.y0, y), x1: Math.max(b.x1, x), y1: Math.max(b.y1, y) });
+      }
+    }
+  }
+  // the footprint: every cell within CUT_GROW of the matte (a disc stamped round each matte cell on a grid)
+  const on = new Set(matte.map(([x, y]) => `${x},${y}`)), foot = new Map<string, [number, number]>();
+  const n = Math.ceil(CUT_GROW / CUT_CELL);
+  for (const [x, y] of matte) {
+    // only the matte's edge cells grow anything new
+    if (on.has(`${x - CUT_CELL},${y}`) && on.has(`${x + CUT_CELL},${y}`) && on.has(`${x},${y - CUT_CELL}`) && on.has(`${x},${y + CUT_CELL}`)) { foot.set(`${x},${y}`, [x, y]); continue; }
+    for (let j = -n; j <= n; j++) for (let i = -n; i <= n; i++) if (Math.hypot(i, j) * CUT_CELL <= CUT_GROW) { const X = x + i * CUT_CELL, Y = y + j * CUT_CELL; foot.set(`${X},${Y}`, [X, Y]); }
+  }
+  sticker = { h, matte, foot: [...foot.values()], box: matte.length ? box : { x0: 0, y0: 0, x1: 0, y1: 0 }, kept: key, secs: (Date.now() - t0) / 1000, parts };
+  return sticker;
+}
+type CutRow = { f: number; h: number; k: number; foot: Box; over: { what: string; area: number; gap: number }[] };
+/** how much of the sticker (rays) the card's construction mask (screen.ts ctx.cut, unlifted) covers */
+let maskCover: { pct: number; spill: number; box: Box | null } | null = null;
+function coverOf(cut: { rects: [number, number, number, number][] } | null) {
+  if (!cut || !sticker) return { pct: 0, spill: 0, box: null };
+  const inR = (x: number, y: number) => cut.rects.some(([rx, ry, rw, rh]) => x >= rx && x < rx + rw && y >= ry && y < ry + rh);
+  const n = sticker.foot.filter(([x, y]) => inR(x, y)).length;
+  const box: Box = { x0: Math.min(...cut.rects.map((r) => r[0])), y0: Math.min(...cut.rects.map((r) => r[1])), x1: Math.max(...cut.rects.map((r) => r[0] + r[2])), y1: Math.max(...cut.rects.map((r) => r[1] + r[3])) };
+  const area = cut.rects.reduce((a, r) => a + r[2] * r[3], 0), footA = sticker.foot.length * CUT_CELL * CUT_CELL;
+  return { pct: Math.round((1000 * n) / Math.max(1, sticker.foot.length)) / 10, spill: Math.round(area - footA), box };
+}
+const cutRows: CutRow[] = [];
+/** the lifted sticker on film frame f against the card's boxes and the vlog UI of that frame */
+function cutCheck(f: number, h: number, lead: any, l: Lift, items: Item[]) {
+  const st = stickerOf(h, lead), s = l.s ?? 1;
+  const pts = st.foot.map(([x, y]) => liftPt({ x, y }, l));
+  const fb: Box = { x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 };
+  for (const p of pts) { fb.x0 = Math.min(fb.x0, p.x); fb.y0 = Math.min(fb.y0, p.y); fb.x1 = Math.max(fb.x1, p.x); fb.y1 = Math.max(fb.y1, p.y); }
+  const half = (CUT_CELL * s) / 2;
+  // the card's words (card.tsx msCardWords: each written line's ink on the turned slip) and the seal's box: the sticker
+  // must stay off them; the card's own boxes (the slip's paper, pasted over the desk line as the approved frame has it)
+  // and the vlog UI are info
+  const seal = msItem("card").box[1];
+  const t = f - msItem("card").from, b = msItem("card").beats;
+  // (a line counts from the frame it starts being written to the frame it has sunk into the paper)
+  const targets: Item[] = [...msCardWords().filter((x) => t >= x.at && t <= x.to).map((x) => ({ what: `word: ${x.what}`, r: x.r })),
+    ...(t >= b.seal && t <= b.out + 4 ? [{ what: "word: the seal", r: seal }] : []),
+    ...msItem("card").box.map((r, i) => ({ what: `ms-card#${i + 1}${i === 0 ? " (the slip's paper)" : " (the seal's box)"}`, r }))];
+  for (const it of items) if (["rec", "stamp", "stampBig", "battery"].includes(it.what) || it.what.startsWith("ms-meter")) targets.push(it);
+  const over = targets.map((t) => {
+    let n = 0, gap = Infinity;
+    for (const p of pts) {
+      const dx = Math.max(t.r.x0 - (p.x + half), 0, (p.x - half) - t.r.x1), dy = Math.max(t.r.y0 - (p.y + half), 0, (p.y - half) - t.r.y1);
+      if (dx === 0 && dy === 0) n++; gap = Math.min(gap, Math.hypot(dx, dy));
+    }
+    return { what: t.what, area: Math.round(n * CUT_CELL * CUT_CELL * s * s), gap: Math.round(gap) };
+  });
+  cutRows.push({ f, h, k: cutAt(f)!.k, foot: { x0: fb.x0 - half, y0: fb.y0 - half, x1: fb.x1 + half, y1: fb.y1 + half }, over });
+}
+
 // ---------------------------------------------------------------------------------------------------- run
 type Hit = { f: number; seg: string; shot: string; slate: string; fig: string; what: string; area: number; pct: number; face: Box; rect: Box; hidden: boolean; feat: number };
 const hits: Hit[] = [], eyesLow: { f: number; seg: string; fig: string; y: number }[] = [];
@@ -270,14 +384,22 @@ const perSeg = new Map<string, { n: number; hitFrames: Set<number>; faces: numbe
 let cur: any = null;
 const t0 = Date.now();
 for (const f of frames) {
-  const s = SEGS.find((g) => f >= g.from && f <= g.to)!;
+  const h = msHold(f);                                         // THE FREEZE: the held frame on the lead card's frames
+  const s = SEGS.find((g) => h >= g.from && h <= g.to)!;
   const ps = perSeg.get(s.id) ?? { n: 0, hitFrames: new Set<number>(), faces: 0, errs: 0 }; perSeg.set(s.id, ps);
   try {
     if (s !== cur) { cur?.exit?.(w); s.enter?.(w); cur = s; }
-    w.beginFrame(f); const P = s.pose(w, f); w.endFrame(P); w.root.updateMatrixWorld(true); camera.updateMatrixWorld();
+    w.beginFrame(h); const P = s.pose(w, h); w.endFrame(P); w.root.updateMatrixWorld(true); camera.updateMatrixWorld();
     ps.n++; placeOf.set(f, String(w.place));
     const hud = hudOf(f, P);
     const faces = hud.black >= 0.97 ? [] : facesOf();
+    // THE CUT-OUT: the lead's face goes up with the lifted sticker; the sticker itself against the card (cutCheck)
+    const lead = cutAt(f) ? cutLead(w) : null, lift = lead ? cutLiftOf(w, lead, f) : undefined;
+    if (lead && lift) {
+      for (const fc of faces) if (fc.group === lead.group) liftFace(fc, lift);
+      cutCheck(f, h, lead, lift, hud.items);
+      if (!maskCover) maskCover = coverOf(msScreen(w, P, f, h).cut ?? null);
+    }
     const shot = hooks.shotAt ? hooks.shotAt(f) : s.id;
     for (const fc of faces) {
       const vis = inter(fc.box, SCR);
@@ -345,6 +467,29 @@ for (const r of RACES) if (!JOINS.some((j) => j.kind === "clock" && j.cut === r.
 const fmtR = (r: Range) => `${sev(r).padEnd(4)} ${r.seg}  f${r.f0}-${r.f1} (${r.n - r.nHidden}/${r.f1 - r.f0 + 1} frames${r.nHidden ? `, ${r.nHidden} hidden` : ""})  ${r.fig.padEnd(12)} x ${r.what.padEnd(8)} max ${String(r.max).padStart(6)} px2 (${String(r.maxPct).padStart(3)} % of the face; features ${r.maxFeat} px2) at f${r.fMax}  face ${fmtB(r.face)}  ${r.what} ${fmtB(r.rect)}  [${[...r.slates].join(" | ") || [...r.shots].join(",")}]`;
 const eyeR: { seg: string; fig: string; f0: number; f1: number; maxY: number }[] = [];
 for (const e of eyesLow) { const l = eyeR[eyeR.length - 1]; if (l && l.fig === e.fig && l.seg === e.seg && e.f <= l.f1 + GAP) { l.f1 = e.f; l.maxY = Math.max(l.maxY, e.y); } else eyeR.push({ seg: e.seg, fig: e.fig, f0: e.f, f1: e.f, maxY: e.y }); }
+/** THE CUT-OUT vs THE CARD: the lifted sticker's footprint (matte + paper margin + ink edge) against each box, per
+ *  box: the worst overlap (px^2) and the nearest it comes (px), over the cut-out's frames */
+function cutReport(): string[] {
+  const head = `== THE CUT-OUT vs THE CARD (skin A's lead card: the lifted sticker = what the camera sees of cutKeep on the held frame, every ${CUT_CELL} px, grown by ${CUT_GROW.toFixed(0)} px for the paper margin and the ink edge, lifted per frame; ${cutRows.length} frames)`;
+  if (!cutRows.length) return [head, "no cut-out frame in the frames checked"];
+  const st = sticker!;
+  const full = cutRows.reduce((a, r) => (r.k > a.k ? r : a), cutRows[0]);
+  const out = [head,
+    `held frame f${st.h}: matte ${fmtB(st.box)} (${st.matte.length} cells, ${st.foot.length} with the margin; ${st.secs.toFixed(1)} s of rays); frames f${cutRows[0].f}-${cutRows[cutRows.length - 1].f}; fully lifted (k ${full.k.toFixed(2)}) at f${full.f}: footprint ${fmtB(full.foot)}`,
+    `the card's construction mask (screen.ts ctx.cut, unlifted): ${maskCover?.box ? `${fmtB(maskCover.box)}, covers ${maskCover.pct} % of the sticker (rays), ${maskCover.spill} px2 more than it (hidden parts, the grid)` : "none"}`,
+    `the matte's parts, lowest first: ${[...st.parts].sort((a, b) => b[1].y1 - a[1].y1).slice(0, 8).map(([k, b]) => `${k} ${fmtB(b)}`).join("; ")}`];
+  const names = [...new Set(cutRows.flatMap((r) => r.over.map((o) => o.what)))];
+  let bad = 0;
+  for (const nm of names) {
+    let worst = { f: 0, area: 0 }, near = { f: 0, gap: Infinity };
+    for (const r of cutRows) for (const o of r.over) if (o.what === nm) { if (o.area > worst.area) worst = { f: r.f, area: o.area }; if (o.gap < near.gap) near = { f: r.f, gap: o.gap }; }
+    const word = nm.startsWith("word:");
+    if (word && worst.area > 0) bad++;
+    out.push(`${(word ? (worst.area > 0 ? "OVER" : "ok") : "info").padEnd(4)} ${nm.padEnd(26)} worst ${String(worst.area).padStart(6)} px2${worst.area ? ` at f${worst.f}` : ""}  nearest ${near.gap === Infinity ? "-" : near.gap + " px"} at f${near.f}`);
+  }
+  out.splice(3, 0, `the card's words: ${bad ? `${bad} OVER (the sticker lies under the card's words)` : "clear (no part of the lifted sticker, margin and edge included, under a written line or the seal)"}; info rows: the card's own boxes (the slip's paper is pasted over the desk line, as in the approved frame) and the vlog UI (the sticker is picture, under the HUD)`);
+  return out;
+}
 const lines = [
   `face vs HUD (NewtonFilm): ${frames.length} frames (${frames[0]}-${frames[frames.length - 1]}, step ${STEP}) in ${secs.toFixed(1)} s; zone ${ZONE}, pad ${PAD} px, min ${MIN} px2, ranges join across ${GAP} frames`,
   `per scene: ${[...perSeg].map(([k, v]) => `${k} ${v.hitFrames.size}/${v.n} frames hit${v.errs ? ` (${v.errs} threw)` : ""}`).join(", ")}`,
@@ -362,10 +507,12 @@ const lines = [
   "",
   ...wordsTable(),
   "",
+  ...cutReport(),
+  "",
   `== NEWTON'S EYES BELOW THE UPPER THIRD (y > ${SCREEN.eyes}; info: inserts, seated and low framings may mean it; ${eyeR.length} ranges)`,
   ...eyeR.map((e) => `${e.seg}  f${e.f0}-${e.f1}  ${e.fig}  eyes down to y ${e.maxY}`),
 ];
 fs.writeFileSync(`${OUT}/faces.txt`, lines.join("\n") + "\n");
-fs.writeFileSync(`${OUT}/faces.json`, JSON.stringify({ frames: [frames[0], frames[frames.length - 1]], step: STEP, zone: ZONE, pad: PAD, joins, eyesLow: eyeR, ranges: ranges.map((r) => ({ ...r, shots: [...r.shots], slates: [...r.slates], severity: sev(r) })), hits }, null, 0));
+fs.writeFileSync(`${OUT}/faces.json`, JSON.stringify({ frames: [frames[0], frames[frames.length - 1]], step: STEP, zone: ZONE, pad: PAD, joins, eyesLow: eyeR, cutout: { rows: cutRows, matte: sticker?.box ?? null }, ranges: ranges.map((r) => ({ ...r, shots: [...r.shots], slates: [...r.slates], severity: sev(r) })), hits }, null, 0));
 if (!QUIET) console.log(lines.slice(0, 80).join("\n"));
 console.log(`wrote ${OUT}/faces.txt / faces.json (${secs.toFixed(1)} s)`);

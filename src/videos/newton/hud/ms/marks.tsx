@@ -31,7 +31,7 @@
 //   THE BODY HAND
 //     inkText(key, s, x, y, px, filterId, o)                     FrSans as SVG text through an ink filter; o.write = a
 //                                                                nib-slanted wipe along the row, o.per frames a character
-//     serifText(key, s, x, y, px, o)                             numerals and A B C in FreeSerif Italic outlines
+//     serifText(key, s, x, y, px, o)                             numerals and A B C in the skin's italic outlines
 //                                                                (glyphs.ts SERIF): 0/1, 1/1, 2%
 //   PAPER, WAX, MARKS
 //     leaf(p, key, x, y, w, h, rot, o, children)                 a leaf of laid paper: torn edge, chain lines, fibres,
@@ -332,14 +332,15 @@ export const inkText = (key: string, s: string, x: number, y: number, px: number
     </g>
   );
 };
-/** the width of a body row (FrSans; kit charEm classes), px */
-const textWidth = (s: string, px: number, ls: number) => {
+/** the width of a body row (FrSans; kit charEm classes), px (card.tsx msCardWords measures its rows with it) */
+export const textWidth = (s: string, px: number, ls: number) => {
   const em = (c: string) => { const u = c.codePointAt(0) ?? 0; return u >= 0x2e80 ? 1 : c === " " ? 0.26 : /[0-9]/.test(c) ? 0.59 : c === "·" ? 0.5 : /[A-Z]/.test(c) ? 0.68 : 0.55; };
   const cs = [...s];
   return cs.reduce((a, c) => a + em(c), 0) * px + Math.max(0, cs.length - 1) * ls;
 };
-/** NUMERALS IN FREESERIF ITALIC (glyphs.ts SERIF: 0-9 / % . A B C Q E D), baseline at y; drawn black for an ink filter
- *  unless o.fill; o.filter = a filter id (`${p}-inkA`); returns null for an empty string */
+/** THE ITALIC LETTERS (glyphs.ts SERIF: 0-9 / % . A B C Q E D, FrSans written again with a slanted flat nib), baseline
+ *  at y; drawn black for an ink filter unless o.fill; o.filter = a filter id (`${p}-inkA`); returns null for an empty
+ *  string */
 export const serifText = (key: string, s: string, x: number, y: number, px: number, o: { anchor?: "start" | "middle" | "end"; fill?: string; filter?: string; track?: number; opacity?: number } = {}) => {
   const sc = px / GLYPH_SIZE, track = o.track ?? 0;
   const cs = [...s].map((ch) => { const g = SERIF[ch]; if (!g) throw new Error(`serifText: 「${ch}」 is not baked (bake_glyphs.py SERIF_CHARS)`); return g; });

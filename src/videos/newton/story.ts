@@ -1,5 +1,5 @@
-// 《跟着牛顿过一天》 (NewtonFilm) film engine: timing, the segment contract and the segment table. An adapted copy of
-// src/videos/qin/story.ts. The design: PLAN.md in this folder (the bible, the storyboard of section 7, file owners).
+// 《采访牛顿的一天》 (NewtonFilm; formerly 《跟着牛顿过一天》) film engine: timing, the segment contract and the segment
+// table. An adapted copy of src/videos/qin/story.ts. The design: PLAN.md in this folder (the bible, the storyboard of section 7, file owners).
 // Data files (WP1; segment builders treat them as read-only and ask for changes in /home/user/newton_work/film/requests.md):
 //   story.ts     this file: FPS / frames, the dialogue lines (zh + en), quotes, the Segment / Pose / Place types,
 //                SEGMENTS, CARDS, SCENE, SCENE_CLOCK / SCENE_STAMP / SCENE_TIME (the vlog's timestamps), the title block,

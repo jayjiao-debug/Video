@@ -4,7 +4,8 @@
 //               inkFilter, sinkFilter, quill / quillLayout / quillOutline (the display hand, written on stroke by stroke,
 //               ink pools), inkText / serifText (the body hand, the numerals), leaf (a laid-paper leaf), waxSeal, swash,
 //               xMark, manicule, ellipseArc / ellipsePt / ellipseLen, writeK / drawOn / sinkK (the motion)
-//   glyphs.ts   QUILL / SERIF glyph outlines baked from FrSans / FreeSerif Italic (+ pools and strokes in writing order)
+//   glyphs.ts   QUILL / SERIF glyph outlines baked from FrSans (SERIF: slanted, written with a flat nib) (+ pools and
+//               strokes in writing order)
 //   when.ts     MS_ITEMS, msItem, msOn, msT, msLife, msEnabled, QUIET, gapPending, gapLines, MS_FX, msStillFrame,
 //               msRectsAt, msShown; and the freeze (picture side: ../../freeze.ts) msHold, msFrozen, washAt, FREEZE
 //   screen.ts   MsCtx (msScreen, msFig): where faces, hands and the camera are on the frame

@@ -5,7 +5,7 @@
 // frame's Pose says hud: false.
 //   <VlogHud f rec? cards? />
 //     REC       a red lamp + "REC" top left (layout.ts SCREEN.rec, the row centred on y 116, under the phone app's icons
-//               that cover the top corners to y 60; the left edge on the 54 px picture-only margin). The lamp BREATHES at
+//               that cover the top corners to y 60; the lamp's ink ring starts on x 32, kit FRAME_9x15.rec). The lamp BREATHES at
 //               1 Hz: about 11 frames lit, 11 dim, 4-frame soft ramps, never below 24 % (never a hard flash). Gone
 //               (with the timestamp) where a Pose says rec: false. The blink's period is 1 s stretched by a hair
 //               (about 30.07 frames) so that the lamp is lit on frame 0 AND has been lit for 10 frames when it dies.
@@ -18,7 +18,7 @@
 //     时间戳    the scene's timestamp, two rows: the time of day (story.ts SCENE_STAMP: 清晨 in pale gold) and the clock
 //               (05:00, warm white), the English word small under it (EARLY MORNING, 22 px, ivory, spaced capitals);
 //               lang en: the clock alone over the same English row (one corner size in both languages). The label rows
-//               sit under REC at about y 161 / 189 (the box x 54..~285, y 140..204: SCREEN.rec).
+//               sit under REC at about y 161 / 189 (the box x 28..~241, y 140..204: SCREEN.rec).
 //               On every scene's first frame it SLIDES IN BIG (x1.5, to about x 400, y 234) under REC, holds, then
 //               shrinks into its small place (2 s in all) and stays.
 //               THE CLOCK RUNS FAST ONLY AT THE CLOCK JOINS (camplan OVERVIEW 3, B.md 6): A->B, C->D, D->E and F->G
@@ -35,7 +35,8 @@
 //               gives the hour, A 05:00 and G 02:00; B-F show the time word alone (上午 / 中午 / 下午 / 傍晚 / 夜). Their
 //               digits come in (3 frames) as a race into or out of them starts, run, and fade out over DIGITS_FADE
 //               frames after a race lands on a word-only scene (digitsAlpha). Lang en: the English row is the word.
-//     battery   top right (SCREEN.battery: x ~850..1026 on the row y 116): its level follows the CLOCK, not the frame:
+//     battery   top right (SCREEN.battery: x ~870..1048 on the row y 116, its nub ending on x 1048, kit FRAME_9x15.rec):
+//               its level follows the CLOCK, not the frame:
 //               100 % at 05:00 down to 12 % at
 //               02:00 (scene starts: A 100, B 75, C 71, D 58, E 46, F 25, G 12), each scene draining 3 points more
 //               while it runs (G: 12 -> 7), so it steps down at every cut (a later recording). Green over 35 %, amber
@@ -47,7 +48,7 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
 import { FPS, SCENES, SCENE_STAMP, SEGMENTS, G_GARDEN_CLOCK, clamp01, clockText, easeInOutCubic, easeOutCubic, seg, segmentAt, type SceneId } from "../story";
-import { PHONE } from "../layout";
+import { FRAME_9x15 } from "../../../kit/overlay/frame";
 import { EN } from "../lang";
 import { BEAT, JOINS } from "../beats";
 import { FONT_STACK, HC, textW, type Rect } from "./style";
@@ -132,15 +133,20 @@ export const batteryAt = (f: number): number => {
 
 // ---------------------------------------------------------------------------------------------------- geometry
 // THE 9:15 PHONE-SAFE PLACE (layout.ts PHONE, Jay's measure, 14 Nov): the app's back / search icons cover the top
-// corners down to y 60, so the REC row sits at y 116 and its label rows (the timestamp) at about 161 / 189; the left
-// edge on the 54 px margin, the battery's right edge on 1080 - 54. The camera plans assumed REC + stamp in x 54-330,
-// y 95-205, the big stamp to about y 290 for 2 s, the battery x 820-1026: the boxes below stay inside those.
+// corners down to y 60, so the REC row sits at y 116 and its label rows (the timestamp) at about 161 / 189. THE SIDES
+// (the owner, 14 Nov; kit FRAME_9x15.rec x0 32, x1 1048): the REC lamp's outer ink ring starts on x 32 and the
+// battery's nub (with its ink line) ends on x 1048, nearer the sides than the 54 px picture-only margin (nothing is cut
+// off in 9:15); the REC label and the timestamp under it keep their place against the lamp (the stamp's left edge on
+// the lamp's), so the whole left corner moved 26 px left and the battery with its % 22 px right, each on its old y.
+// The camera plans assumed REC + stamp in x 54-330, y 95-205, the big stamp to about y 290 for 2 s, the battery
+// x 820-1026: the boxes below now start / end nearer the sides, never further in.
 const ROW = 116;                                          // the REC row's centre y (SCREEN.rec)
-const X0 = PHONE.margin;                                  // 54: the corner's left edge
-const DOT = { x: X0 + 22, r: 13 };                        // the lamp's centre x and radius (its ink ring 5 px more)
-const REC_X = X0 + 46, REC_PX = 36, REC = "REC";          // the label (the same in both languages)
-const ST = { x: X0 + 4, y: 144, zh: 30, en: 22, gap: 4, big: 1.5, bigY: 144, lsEn: 2.0 };
-const BAT = { x1: PHONE.W - PHONE.margin - 10, w: 66, h: 30, px: 32 };
+const X0 = FRAME_9x15.rec.x0;                             // 32: the corner's left edge (the lamp's ink ring)
+const X1 = FRAME_9x15.rec.x1;                             // 1048: the battery's right edge (its nub's ink line)
+const DOT = { x: X0 + 5 + 13, r: 13 };                    // the lamp's centre x and radius (its ink ring 5 px more: x 32)
+const REC_X = DOT.x + 24, REC_PX = 36, REC = "REC";       // the label (the same in both languages)
+const ST = { x: X0, y: 144, zh: 30, en: 22, gap: 4, big: 1.5, bigY: 144, lsEn: 2.0 };
+const BAT = { x1: X1 - 10, w: 66, h: 30, px: 32 };        // the body's right edge; the nub reaches x1 + 8 and its ink 3 more
 const inkW = (px: number) => Math.max(5, Math.round(px * 0.17));
 /** the two rows' strings for a scene (lang zh: 清晨 05:00 / EARLY MORNING; lang en: 05:00 / EARLY MORNING, the
  *  word only once, so the corner keeps the same size in both languages and the shots' face-clear framing holds) */
@@ -161,7 +167,7 @@ const STAMP_W = Math.max(...SCENES.map((id) => stampW(id, true)));
 const STAMP_H = ST.zh + ST.gap + ST.en + 4;
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery with its % */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
-  rec: { x0: X0, y0: ROW - DOT.r - 6, x1: Math.ceil(REC_X + textW(REC, REC_PX, 2) + inkW(REC_PX)), y1: ROW + DOT.r + 6 },
+  rec: { x0: DOT.x - DOT.r - 5, y0: ROW - DOT.r - 6, x1: Math.ceil(REC_X + textW(REC, REC_PX, 2) + inkW(REC_PX)), y1: ROW + DOT.r + 6 },
   stamp: { x0: ST.x - 4, y0: ST.y - 4, x1: Math.ceil(ST.x + STAMP_W), y1: ST.y + STAMP_H },
   stampBig: { x0: ST.x - 4, y0: ST.bigY - 4, x1: Math.ceil(ST.x + STAMP_W * ST.big), y1: Math.ceil(ST.bigY + STAMP_H * ST.big) },
   battery: { x0: Math.floor(BAT.x1 - BAT.w - 14 - textW("100%", BAT.px, 0) - inkW(BAT.px)), y0: ROW - BAT.h / 2 - 6, x1: BAT.x1 + 10, y1: ROW + BAT.h / 2 + 6 },

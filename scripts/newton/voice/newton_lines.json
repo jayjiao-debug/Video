@@ -7,8 +7,8 @@
   "en": "A Day Interviewing Newton"
  },
  "title_span_s": [
-  5.9,
-  7.77
+  6.1333,
+  7.8
  ],
  "title_en_on_screen": false,
  "card_en_on_screen": false,
@@ -2072,6 +2072,14 @@
   "was_fallback_span_s": [
    5.9,
    7.57
-  ]
+  ],
+  "r3": {
+   "date": "2026-11-14 (night)",
+   "why": "title_span_s is the title's REAL window now: skin A's MsTitle (hud/ms/when.ts TITLE_FROM) starts on the slam's audible thud, A02 end + 0.37 + 0.27 s = f184 (segA's SND.thud; director r1 note 4), and TITLE_LEN resolves to 50 frames, so the title is f184-233 (6.1333-7.8 s, TITLE_RAW f184-f233), gone the frame before A03's whisper bubble at f234. gen_timing.py ends any caption's linger the frame before TITLE_RAW's first frame (the owner's rule: the title never shares the screen with a subtitle); A02's subtitle already ends on f177 on this voice track.",
+   "was_title_span_s": [
+    5.9,
+    7.77
+   ]
+  }
  }
 }

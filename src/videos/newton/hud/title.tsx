@@ -1,5 +1,8 @@
-// hud/title.tsx: THE TITLE BLOCK of the Newton film (PLAN.md sections 5 and 7 A2; WP4). A pure function of the frame.
-//   <TitleCard f />            over beats.ts TITLE_SPAN (v5: over the cold open, 0.2-3.2 s; never on frame 0)
+// hud/title.tsx: THE OLD TITLE BLOCK of 《采访牛顿的一天》 (formerly 《跟着牛顿过一天》; PLAN.md sections 5 and 7 A2; WP4). NO LONGER
+// MOUNTED: skin A's <MsTitle> (hud/ms/title.tsx) draws the title; the faces checker still imports its boxes. A pure
+// function of the frame.
+//   <TitleCard f />            over beats.ts TITLE_SPAN (the lines file's title_span_s: f184-233 since 14 Nov night, the
+//                              title's real window from the slam's thud; never on frame 0)
 //   <TitleCard f at={{ x, y, scale, rot }} />   placed by the caller (any field left out comes from setTitlePlace /
 //                              the default); `span={[a, b]}` draws it over another span (previews)
 //   setTitlePlace(p)           where the block sits: a TitlePlace, or a function of the frame (to follow the door while
@@ -9,8 +12,9 @@
 // the block about y 260-480, clear of the REC label row at 180 by 80 px or more); segA places it with Pose.title (the
 // door's point through cam.ts toScreen, which is in 1800-frame px). Its whole width (about 830 px at scale 1) stays
 // inside the 54 px margins.
-// The look: a title page painted on dark oak: 「跟着牛顿过一天」 large (96 px), a thin ivory double rule with a lozenge,
-// 「1686年5月 · 剑桥三一学院」 small (40 px) and "A Day with Newton · May 1686, Trinity College, Cambridge" smaller
+// The look: a title page painted on dark oak: the title (story.ts TITLE: 「采访牛顿的一天」) large (96 px), a thin ivory double
+// rule with a lozenge, the subtitle row (empty since the date and place moved to Newton's intro card; it was
+// 「1686年5月 · 剑桥三一学院」 small (40 px) and "May 1686, Trinity College, Cambridge") with the English title smaller
 // (24 px) under it (DECISION 3, script v5's default: that English line is OFF, story.ts TITLE_EN_ON_SCREEN; the block
 // is then the title, the rule and the Chinese line); ivory paint (a soft gradient, a thin dark edge, a hair of roughening so it reads painted, not
 // typed) with a warm dark shadow on the wood. English version (lang en): the English title large, the Chinese small.

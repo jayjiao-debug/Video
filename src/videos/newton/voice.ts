@@ -204,9 +204,9 @@ export const CARD_RAW: [number, string, number, number, string, string][] = [
   [53, "G02", 5064, 5174, "五年里，助手只见他笑过一次：有人问了这句。", "In five years his assistant saw him laugh only once: someone had asked this."],
   [55, "G04", 5283, 5393, "熬夜、忘了吃饭、对墙讲课：都出自助手的回忆。", "Staying up late, forgetting to eat, lecturing to the walls: all from his assistant's own account."],
 ];
-/** the title block (PLAN 5): [first frame, last frame (inclusive), title zh, title en, subtitle zh, subtitle en]: 5.9-7.77 s on the film clock (the lines file's title_span_s);
+/** the title block (PLAN 5): [first frame, last frame (inclusive), title zh, title en, subtitle zh, subtitle en]: 6.1333-7.8 s on the film clock (the lines file's title_span_s);
  *  no subtitle row (empty strings): the title's only words are its zh */
-export const TITLE_RAW: [number, number, string, string, string, string] = [177, 232, "采访牛顿的一天", "A Day Interviewing Newton", "", ""];
+export const TITLE_RAW: [number, number, string, string, string, string] = [184, 233, "采访牛顿的一天", "A Day Interviewing Newton", "", ""];
 /** the scenes (the lines file): [id, time of day zh, en, place] */
 export const SCENE_RAW: [string, string, string, string][] = [
   ["A", "清晨", "Early morning", "stairs"],
