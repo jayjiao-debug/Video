@@ -34,7 +34,7 @@ import { ipNum } from "../../kit/film/env";
 import { buildSets, BAKED_LIGHT, type SuSet, type PlaceLook } from "./sets";
 import { buildProps, type Props, type Prop, type PropName } from "./props";
 import { addPerson, type Person } from "./people";
-import { FPS, W, H, type CamPose, type Pose, type Place, type V3Like } from "./story";
+import { FPS, W, H, lensFov, type CamPose, type Pose, type Place, type V3Like } from "./story";
 // Cover stills only (input props, all default to the film's own framing): zoom < 1 shows more around the same frame;
 // sx / sy move the picture right / down by that fraction of the frame (a lens shift, the perspective stays).
 const COVER_ZOOM = ipNum("zoom", 1, false), COVER_SX = ipNum("sx", 0), COVER_SY = ipNum("sy", 0);
@@ -96,6 +96,8 @@ export class World {
     if (!r) { r = addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.hide(r); }   // (never scaled: the rig's solver works in world space)
     return r;
   }
+  /** every figure but `keep` leaves the frame (call before update): 李白's isolation on his card (Film.tsx) */
+  only(keep: Rig) { for (const r of this.rigs.values()) if (r !== keep) this.hide(r); }
   private hide(r: Rig) {
     const s = r.state as unknown as Record<string, unknown>;
     for (const key of Object.keys(s)) delete s[key];
@@ -124,7 +126,7 @@ export class World {
     cam.position.copy(toV(c.pos));
     this._look.copy(toV(c.look));
     cam.lookAt(this._look); cam.rotateZ(c.roll ?? 0);
-    cam.fov = c.fov; cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
+    cam.fov = lensFov(c.fov); cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
     cam.zoom = COVER_ZOOM;
     cam.updateProjectionMatrix(); cam.updateMatrixWorld(true);
     if (COVER_SX || COVER_SY) {

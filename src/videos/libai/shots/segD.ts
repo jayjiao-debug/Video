@@ -11,7 +11,7 @@ import { LI, HUAN } from "../people";
 import { CX } from "../layout";
 import { transitionAt } from "../hud";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, standing } from "./common";
-import { aim, ramp, held, type St } from "./lb";
+import { aim, ramp, held, mixCam, type St } from "./lb";
 
 const S = SEGMENTS[3], D = BEAT.D;
 const L23 = lineId("D23");
@@ -19,14 +19,25 @@ const GATE = V(CX, 0, -4.3);
 const LI_AT = V(CX - 0.1, 0, -2.4);
 const HUAN_AT = V(CX + 0.65, 0, -2.75), HUAN_F = yawTo(HUAN_AT, LI_AT) + 0.4;
 const HUAN_BACK = [HUAN_AT, V(CX + 0.35, 0, -4.0), V(CX + 0.2, 0, -6.0)];
-const CAM0 = V(CX + 0.35, 1.45, 0.75);
+/** THE CAMERA PLAN (one take):
+ *    open     the gate behind him, the eunuch handing over the little chest; held
+ *    shut     the great gate slams behind him: a jolt
+ *    look     D24's end: he looks down at the chest, so she looks too (a snap down to it), and back up with him
+ *    有钱了    D25: snap zoom landing on his laugh, held through 天生我材 (the chest up high) to her question
+ *    stride   喝酒！ he strides off past the lens: she pans with him */
+const CAM0 = V(CX + 0.4, 1.38, 0.55);
 /** the stride: from his mark past the lens on its right */
 const STRIDE = [LI_AT, V(CX + 0.7, 0, -1.0), V(CX + 1.2, 0, 1.2)];
 
+const CHEST_LOOK = LI_AT.clone().add(V(0.15, 0.72, 0.3));
 const cam = (f: number): CamPose => {
-  let c = aim(CAM0, LI_AT.clone().add(V(0.15, 1.05, 0)), 720);
-  c = C.handheld(c, f, { mood: f >= D.laugh ? "excited" : "calm" });
-  c = C.punchIn(c, f, D.hold, { k: 0.88, len: 6, off: lineId("D26").from });
+  let c = aim(CAM0, LI_AT.clone().add(V(0.15, 1.05, 0)), 820, 560);
+  // D24's end: down to the chest with his look, back up for the laugh
+  const dn = ramp(f, D.look - 5, D.look) * (1 - ramp(f, D.laugh - 8, D.laugh - 2));
+  if (dn) c = mixCam(c, aim(CAM0, CHEST_LOOK, 960, 560), 0.8 * dn);
+  c = C.handheld(c, f, { mood: f >= D.laugh && f < D.stride ? "excited" : "calm", amp: 0.7 });
+  c = C.jolt(c, f, D.shut[1], { len: 8, amp: 1.8 });
+  c = C.snap(c, f, D.laugh, lineId("D26").from + 4);
   if (f >= D.stride) c = C.nudge(c, { yaw: 22 * ramp(f, D.stride + 6, D.stride + 30) });
   return c;
 };
@@ -45,7 +56,9 @@ export const SEG: Segment = {
   pose(w, f) {
     w.setPlace("corridor");
     w.set.param("dawn", 0.0);
-    const camera = cam(f);
+    // the join from C: the first 4 frames whip in
+    const W = C.whip(cam(f), f, S.from - 4, { dir: 1, out: 4, in: 4 });
+    const camera = W.cam;
     w.setCamera(camera);
     const t = f / FPS;
     w.prop("gate").put(GATE, { open: 1 - ramp(f, D.shut[0], D.shut[1]) });
@@ -68,7 +81,7 @@ export const SEG: Segment = {
     w.actor(HUAN).set({ ...standing(back.at, f < D.give + 6 ? HUAN_F : back.facing, f, 5), pose: back.pose, expr: "smile", mouth: hm.mouth, head: hm.head, blink: hm.blink ?? lid(t, 5), hands: ch.mine ? [null, null] : hh.hands, visible: f < D.shut[1] });
     w.update();
     hc.put(w);
-    return { camera, overlays: transitionAt(f)?.node, slate: "D palace gate" };
+    return { camera, post: W.post, overlays: C.whipSmear(W.smear, 1) ?? transitionAt(f)?.node, slate: "D palace gate" };
   },
 };
 void L23;

@@ -15,6 +15,7 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { clamp01, smootherstep, hash } from "../story";
 import { TRANSITIONS, type Transition } from "../beats";
+import { ClockRace } from "./vlog";
 
 /** the progress at which the next scene's picture shows */
 export const INK_CUT = 0.5;
@@ -138,6 +139,7 @@ export const transitionAt = (f: number): { node: React.ReactNode; p: number; cut
   const p = progressOf(t, f), cut = f >= t.cut;
   if (t.kind === "ink") return { node: InkWipe(p, t.cut % 7 + 2), p, cut, kind: t.kind, t };
   if (t.kind === "dissolve") return { node: InkDissolve(p), p, cut, kind: t.kind, t };
+  if (t.kind === "clock") return { node: <ClockRace key="clockRace" p={p} from={t.scenes![0]} to={t.scenes![1]} cutIn={f - t.cut} />, p, cut, kind: t.kind, t };
   const k = smootherstep(clamp01((1 - Math.abs(p - 0.5) / 0.5) * 1.15));
   const col = cut && t.tone2 ? mixHex(t.tone ?? "#000000", t.tone2, clamp01((p - 0.5) / 0.25)) : t.tone ?? "#000000";
   return { node: ToneFade(k, col), p, cut, kind: t.kind, t };

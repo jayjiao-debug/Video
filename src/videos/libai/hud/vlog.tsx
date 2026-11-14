@@ -19,7 +19,7 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { SCENE_TIME, SEGMENTS, clamp01, easeInOutCubic, easeOutCubic, seg, segmentAt, type SceneId } from "../story";
-import { BEAT } from "../beats";
+import { BEAT, TRANSITIONS } from "../beats";
 import { SCREEN } from "../layout";
 import { EN, TXT } from "../lang";
 import { HC, inked, type Rect } from "./style";
@@ -45,9 +45,9 @@ export const timeStampAt = (f: number): { id: SceneId; text: string; at: number;
 };
 
 // ---------------------------------------------------------------------------------------------------- geometry
-const ROW = 230;                                      // the REC row's centre (SCREEN.rec)
+const ROW = 120;                                      // the REC row's centre (SCREEN.rec; the app's icons end at y 60)
 const DOT = { x: SCREEN.rec.x0 + 39, r: 17 };         // the REC dot's centre x and radius
-const STAMP = { x: SCREEN.rec.x0 + 22, y: 288, px: EN ? 30 : 34, big: 1.55, bigY: 304 };
+const STAMP = { x: SCREEN.rec.x0 + 22, y: 180, px: EN ? 30 : 34, big: 1.55, bigY: 196 };
 const IN = 8, HOLD = 44, SHRINK = 12;                 // the timestamp's intro: slide in, hold, shrink (frames)
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
@@ -122,8 +122,44 @@ export const VlogHud: React.FC<{ f: number; rec?: boolean; cards?: boolean }> = 
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       {showRec ? <RecMark f={fz} out={out} /> : null}
-      {showRec && !museum ? <TimeStamp f={fz} intro={cards !== false} /> : null}
+      {showRec && !museum && !racing(fz) ? <TimeStamp f={fz} intro={cards !== false} /> : null}
       <Battery f={fz} still={rec === false} />
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------------------------------------------- the clock race
+/** THE CLOCK RACE (a join between two scenes, beats.ts TRANSITIONS kind "clock"): her camera's clock runs fast. Over
+ *  the join the 时辰 rolls hour by hour from the outgoing scene's to the incoming one's in her camera's time row
+ *  (in place of the outgoing scene's timestamp, under REC: never over a face), a ▶▶ mark beside it, two tracking bands slide down the picture, and the cut lands on
+ *  a two-frame flash. The incoming scene's own big timestamp then takes over (TimeStamp). p 0..1 over the join (0.5 on
+ *  the frame before the cut). */
+const SHICHEN = "子丑寅卯辰巳午未申酉戌亥";
+/** the outgoing scene's timestamp is hidden while the race runs, up to the cut */
+const racing = (f: number) => TRANSITIONS.some((t) => t.kind === "clock" && f >= t.from && f < t.cut);
+export const ClockRace: React.FC<{ p: number; from: SceneId; to: SceneId; cutIn: number }> = ({ p, from, to, cutIn }) => {
+  const h0 = SHICHEN.indexOf(SCENE_TIME[from][0]), h1 = SHICHEN.indexOf(SCENE_TIME[to][0]);
+  if (h0 < 0 || h1 < 0) return null;
+  const n = (h1 - h0 + 12) % 12, u = clamp01(p / 0.45), roll = h0 + n * easeInOutCubic(u), i = Math.floor(roll), frac = roll - i;
+  const op = clamp01(p / 0.08), rowOp = op * (1 - clamp01((p - 0.5) / 0.07)), bandOp = op * (1 - clamp01((p - 0.66) / 0.3));
+  const ch = (k: number) => SHICHEN[((k % 12) + 12) % 12] + "时";
+  const band = (k: number, y0: number) => {
+    const y = ((y0 + 1800 * p * 2.2 + 300 * k) % 1900) - 50;
+    return <div key={k} style={{ position: "absolute", left: 0, top: y, width: 1080, height: 26 + 10 * k, background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 100%)", mixBlendMode: "screen" }} />;
+  };
+  const flash = cutIn >= 0 && cutIn <= 1 ? 0.5 * (1 - cutIn / 2) : 0;
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <div style={{ position: "absolute", inset: 0, opacity: bandOp }}>{band(0, 200)}{band(1, 900)}</div>
+      <div style={{ position: "absolute", left: STAMP.x - 4, top: STAMP.bigY, transform: "translateY(-50%)", opacity: rowOp, display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ position: "relative", width: 150, height: 74, overflow: "hidden" }}>
+          {[0, 1].map((k) => (
+            <div key={k} style={{ position: "absolute", left: 0, width: 150, top: (k - frac) * 74, textAlign: "left", ...inked(60, k === 0 && frac < 0.5 ? HC.goldPale : HC.cream, { letterSpacing: 2 }) }}>{ch(i + k)}</div>
+          ))}
+        </div>
+        <div style={{ ...inked(44, HC.white, { letterSpacing: -7 }) }}>▶▶</div>
+      </div>
+      {flash > 0 ? <div style={{ position: "absolute", inset: 0, background: "#fff8ea", opacity: flash }} /> : null}
     </AbsoluteFill>
   );
 };

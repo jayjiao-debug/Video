@@ -26,10 +26,11 @@ export const inked = (px: number, color: string, extra: React.CSSProperties = {}
   textShadow: `0 ${Math.max(2, Math.round(px * 0.06))}px 0 ${HC.shade}`, fontVariantNumeric: "tabular-nums", ...extra,
 } as React.CSSProperties);
 
-/** a screen box in film px (1080 x 1920) */
+/** a screen box in film px (1080 x 1800) */
 export type Rect = { x0: number; y0: number; x1: number; y1: number };
-/** the Douyin-safe area for anything that matters: x 50..930 below y 900 (the app's button rail), nothing below 1613 */
-export const SAFE = { left: 50, right: SCREEN.rail.x - 5, railY: SCREEN.rail.y, bottom: SCREEN.bottom, top: SCREEN.top };
+/** the phone-safe area for anything that matters (layout.ts SCREEN): x 64..1016 above the button rail, x 64..925 below
+ *  y 950, nothing above y 60 or below y 1500 */
+export const SAFE = { left: SCREEN.side + 10, right: SCREEN.rail.x - 5, railY: SCREEN.rail.y, bottom: SCREEN.bottom, top: SCREEN.top };
 
 /** in / out of a span [a, b] (inclusive): 0 outside, 1 inside, eased linearly over `nin` frames at the start and `nout`
  *  at the end; a span that starts on frame 0 is already in */

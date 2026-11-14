@@ -30,12 +30,15 @@ const A = {
   /** A04: the jar comes up to the lens */ jar: from("A04"),
   /** A06: very pleased with himself (早酒) */ proud: word("A06", "早酒"),
   /** A08: counting on his fingers, then the shrug */ count: from("A08"), shrug: word("A08", "一日"),
-  /** A09: the aside: the camera turns away from him to the viewers */ aside: from("A09") - 6,
+  /** A09: her whisper to the viewers (whisper.ts) */ aside: from("A09"),
   /** card 1: back on him, he drinks from the jar */ card: cardSpan("A09"),
   /** the whip out of the tavern (its first frame; 4 out, 4 in) */ whip: seg("A").to - 3,
 };
 /** the title block 「采访李白的一天」 / 「744年 · 长安」 (frames 0-90) */
-export const TITLE_SPAN: Span = [seg("A").from, seg("A").from + sec(3.0)];
+/** 高力士's banner (hud/intro.tsx GaoBanner): on the live shot when C opens, before and under her first words */
+export const GAO_BANNER: Span = [seg("C").from + 6, lineId("C19").from + 24];
+/** the themed title (hud/title.tsx): inside the cold open, from the REC beep to just before her first word */
+export const TITLE_SPAN: Span = [seg("A").from + 6, lineId("A01").from - 3];
 
 // ---------------------------------------------------------------------------------------------------- B 辰时 the door
 const B = {
@@ -130,12 +133,17 @@ export const shotAt = (f: number): { id: string } => ({ id: SEGMENTS.find((s) =>
 
 // ---------------------------------------------------------------------------------------------------- transitions
 /** a fade through `tone` round a cut (or the memory's ink dissolve in and out) */
-export type Transition = { kind: "tone" | "ink" | "dissolve"; cut: number; from: number; to: number; tone?: string; tone2?: string; what: string };
+export type Transition = { kind: "tone" | "ink" | "dissolve" | "clock"; cut: number; from: number; to: number; tone?: string; tone2?: string; scenes?: [SceneId, SceneId]; what: string };
+/** THE JOINS between scenes (the format: one kind per join, never the same kind twice in a row; no cut inside a scene):
+ *    A -> B  whip pan (shots: A's last 4 frames out, B's first 4 in)
+ *    B -> C  the clock race (her camera's clock runs fast: 辰时 -> 午时)
+ *    C -> D  whip pan (shots)
+ *    D -> E  the clock race (未时 -> 酉时)
+ *    E -> F  a match cut: E's last lamp, burning low, cuts to the moon on the same spot of the screen (shots)
+ *  and F's memory, a flashback in another drawn style, dissolves in and out (ink). */
 export const TRANSITIONS: Transition[] = [
-  { kind: "tone", cut: seg("C").from, from: B.fade[0], to: C.fadeIn[1], tone: "#f6e7c6", what: "B -> C through warm cream" },
-  { kind: "tone", cut: seg("D").from, from: C.fade[0], to: D.fadeIn[1], tone: "#f6e7c6", what: "C -> D through warm cream" },
-  { kind: "tone", cut: seg("E").from, from: D.fade[0], to: E.fadeIn[1], tone: "#e9a65a", what: "D -> E through amber" },
-  { kind: "tone", cut: seg("F").from, from: E.fade[0], to: F.fadeIn[1], tone: "#1f2d5c", what: "E -> F through deep blue" },
+  { kind: "clock", cut: seg("C").from, from: seg("C").from - 16, to: seg("C").from + 5, scenes: ["B", "C"], what: "B -> C: the clock race" },
+  { kind: "clock", cut: seg("E").from, from: seg("E").from - 16, to: seg("E").from + 5, scenes: ["D", "E"], what: "D -> E: the clock race" },
   { kind: "dissolve", cut: F.memory[0], from: F.memory[0] - 8, to: F.memory[0] + 13, what: "night -> the memory (ink)" },
   { kind: "dissolve", cut: F.memory[1] + 1, from: F.memory[1] - 7, to: F.memory[1] + 14, what: "the memory -> night (ink)" },
 ];

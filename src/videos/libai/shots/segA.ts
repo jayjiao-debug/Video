@@ -6,28 +6,37 @@
 //   jar     A04        好！先喝一杯！ the jar comes up to the lens in both hands.
 //   proud   A06        早酒: very pleased with himself (smug, a head tilt).
 //   count   A08        a hand up (counting), 一日: both hands out, a shrug.
-//   aside   A09        the camera turns away from him to the window (her words to the viewers).
+//   aside   A09        her whisper to the viewers (whisper.ts): the lens leans in on him, he carries on.
 //   card 1             back on him: he drinks from the jar. The last 4 frames whip right.
 import * as THREE from "three";
 import { SEGMENTS, FPS, lineId, capWord, quote, type Pose, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { LI } from "../people";
-import { RX } from "../layout";
+
 import { transitionAt } from "../hud";
 import type { World } from "../world";
 import { V, rel, lid, says, speak, accent, heads, headPop, at, ky } from "./common";
-import { aim, ramp, held, tavern, LI_TABLE, DRINKER_PEOPLE, type St } from "./lb";
+import { aim, ramp, held, mixCam, tavern, LI_TABLE, DRINKER_PEOPLE, type St } from "./lb";
+import { whisperLean } from "../whisper";
 import { KEEPER } from "../people";
 
 const S = SEGMENTS[0], A = BEAT.A, T = LI_TABLE;
 const word = (id: string, w: string) => capWord(id, w).from;
 const L4 = lineId("A04"), L5 = lineId("A05"), L8 = lineId("A08");
 
-/** his head when seated upright (about) and the lens in front of him */
+/** his head when seated upright (about) */
 const HEAD = rel(T.at, T.facing, 0, 0.98, 0.0);
-const CAM0 = V(T.at.x - 0.55, 1.45, T.at.z + 2.9), CAM_IN = V(T.at.x - 0.2, 1.3, T.at.z + 1.6);
-const WINDOW = V(RX - 2.4, 0.9, -2.9);
+/** THE CAMERA PLAN (one take, still unless something gives her a reason):
+ *    open     from his front left, him RIGHT of centre (the title's wine flag hangs on the left), the table filling the
+ *             foot of the frame; her breathing only. The knocks: a small jolt each.
+ *    月亮      A02: he leans right up to the lens, so she leans in too: the scene's one extreme close (his card freezes
+ *             on it).
+ *    jar      A04: the jar comes at the lens: she pulls back fast (6 frames) to the open framing.
+ *    早酒      A06: snap zoom landing on 早酒, held to her next question.
+ *    aside    A09: the whisper (whisper.ts): a small lean in and a tip, he carries on.
+ *    card 1   held while he drinks; the last 4 frames whip right (the join). */
+const CAM0 = V(T.at.x - 0.62, 1.36, T.at.z + 1.95), CAM_IN = V(T.at.x - 0.06, 1.16, T.at.z + 0.72);
 
 /** the jar: on the table in front of him (hugged), lifted to the lens on A04, back down, up to his mouth on the card */
 const JAR_TABLE = T.on(0, 0.1).add(V(0, 0.17 * 0.72, 0));
@@ -40,16 +49,14 @@ const jarAt = (f: number) => {
 };
 
 const cam = (f: number): CamPose => {
-  const base = aim(CAM0, HEAD.clone().add(V(0, -0.15, 0)), 760);
-  const inK = ramp(f, A.lean - 4, A.lean + 14) * (1 - ramp(f, L4.from - 10, L4.from + 6));
-  const p = CAM0.clone().lerp(CAM_IN, inK);
-  let c: CamPose = aim(p, HEAD.clone().add(V(0, -0.1, 0)), 740);
-  if (inK === 0) c = base;
-  c = C.handheld(c, f, { mood: "calm" });
-  for (const k of A.knock) c = C.punchIn(c, f, k, { k: 0.97, len: 2, off: k + 4 });
-  c = C.punchIn(c, f, L4.from, { k: 0.88, len: 5, off: L5.from + 6 });
-  c = C.aside(c, f, A.aside, A.card[0] + 4, WINDOW, { len: 10 });
-  return c;
+  const wide = aim(CAM0, HEAD.clone().add(V(0, -0.1, 0)), 860, 680);
+  const close = aim(CAM_IN, HEAD.clone().add(V(0, -0.06, 0)), 800, 550);
+  const inK = ramp(f, A.lean - 6, A.lean + 12) * (1 - ramp(f, L4.from - 9, L4.from - 3));
+  let c = mixCam(wide, close, inK);
+  c = C.handheld(c, f, { mood: "calm", amp: 0.7 });
+  for (const k of A.knock) c = C.jolt(c, f, k, { len: 4, amp: 0.7 });
+  c = C.snap(c, f, word("A06", "早酒"), lineId("A07").from);
+  return whisperLean(f, c, { at: HEAD });
 };
 
 const li = (w: World, f: number): St => {
@@ -71,8 +78,10 @@ const li = (w: World, f: number): St => {
   );
   return {
     at: T.at.clone(), facing: T.facing, seat: T.seat, pose: { kind: "sit", t }, hands, expr, visible: true,
+    // asleep he slumps forward over the jar on the table (the posture patch), then sits back up into his own lean
+    lean: { pitch: 26 * (1 - wakeK) - 5 * wakeK, roll: 3 },
     lookDown: asleep ? 38 : 38 * (1 - wakeK) + (J.tilt ? 0 : 0), blink: asleep ? 1 : mouth.blink ?? lid(t, 2, [A.wake / FPS]),
-    mouth: mouth.mouth, head, gaze: f >= A.aside && f < A.card[0] ? 0.5 : 0, armFront: J.held ? [true, true] : undefined,
+    mouth: mouth.mouth, head, gaze: 0, armFront: J.held ? [true, true] : undefined,
   };
 };
 

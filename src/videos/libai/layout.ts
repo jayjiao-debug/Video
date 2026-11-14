@@ -53,21 +53,22 @@ export const islandOf = (x: number): Place | null => {
 };
 
 // ------------------------------------------------------------------------------------------------- the screen
-/** screen zones in px on the 1080 x 1920 frame (PLAN "Hard rules", 6): nothing that matters above `top`, in the
- *  caption band capTop..capBottom (the Chinese rows and the English under them), below `bottom`, or right of `rail.x`
- *  below `rail.y` (the app's buttons); his eyes in the upper third (y < `eyes`); the title block owns `title` for the
- *  first 3 s, a fact card `card` (middle left) while it shows, a stamp `stamp` (top left) at H's and I's start, the
- *  end names `names` in I (hud/index.ts hudRectsAt(f) gives the boxes frame by frame) */
+/** screen zones in px on the 9:15 frame, 1080 x 1800 (Jay, 14 Nov; measured on his phone, day-in-life-film skill):
+ *  the outer 54 px of each side are picture only; nothing that matters above `top` (the app's icons) or below `bottom`
+ *  (the post's own text), nor right of `rail.x` below `rail.y` (the app's buttons); the caption band capTop..capBottom
+ *  (Chinese only: every line of this film is spoken in Chinese), a centred row at most capW wide; his eyes between a
+ *  quarter and a half of the way down (y < `eyes`); the vlog UI's row `rec` / `battery` (hud/vlog.tsx). The shots
+ *  still aim on the 1920 reference (story.ts REF_DY): a reference y lands 60 px higher on the film. */
 export const SCREEN = {
-  top: 210, capTop: 1190, capBottom: 1520, bottom: 1613, eyes: 700,
-  /** the vlog UI (hud/vlog.tsx): REC + the timestamp row, the battery */
-  rec: { x0: 40, y0: 205, x1: 820, y1: 255 },
-  battery: { x0: 880, y0: 205, x1: 1040, y1: 255 },
-  rail: { x: 930, y: 900 },
-  title: { x0: 90, y0: 220, x1: 990, y1: 430 },
-  card: { x0: 90, y0: 1220, x1: 990, y1: 1500 },
-  stamp: { x0: 60, y0: 230, x1: 560, y1: 430 },
-  names: { x0: 60, y0: 640, x1: 1020, y1: 1180 },
+  W: 1080, H: 1800, side: 54, top: 60, capTop: 1300, capBottom: 1488, capW: 780, bottom: 1500, eyes: 860,
+  /** the vlog UI (hud/vlog.tsx): REC + the timestamp row (y about 120 / 180), the battery */
+  rec: { x0: 64, y0: 92, x1: 760, y1: 210 },
+  battery: { x0: 846, y0: 95, x1: 1020, y1: 145 },
+  rail: { x: 930, y: 950 },
+  title: { x0: 110, y0: 400, x1: 970, y1: 900 },
+  card: { x0: 110, y0: 1060, x1: 930, y1: 1290 },
+  stamp: { x0: 64, y0: 140, x1: 560, y1: 330 },
+  names: { x0: 64, y0: 580, x1: 1016, y1: 1120 },
 };
 /** a camera given as a story.ts CamPose with Vec3s (for a mark's camera in a layout file) */
 export const camOf = (pos: Vec3, look: Vec3, fov = FOV): Cam => c(pos, look, fov);

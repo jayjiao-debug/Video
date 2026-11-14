@@ -149,6 +149,18 @@ export const punchIn = (c: CamPose, f: number, on: number, o: { k?: number; len?
   const t = prog(f, on, len, easeOutCubic) * (o.off === undefined ? 1 : 1 - prog(f, o.off - len, len, easeInOutCubic));
   return t ? { ...c, fov: c.fov * lerp(1, k, t) } : c;
 };
+/** SNAP ZOOM (the format's punch word): the lens angle drops by a quarter to a third (k 0.72 = -28 %) in `len` (4-6)
+ *  frames that LAND ON the frame the word starts, holds, and with `off` eases back out ending on off (hold a second or
+ *  more: off - word >= 30).  snap(cam, f, capWord("A06", "早酒").from, line("A07").from) */
+export const snap = (c: CamPose, f: number, word: number, off?: number, o: { k?: number; len?: number } = {}): CamPose =>
+  punchIn(c, f, word - (o.len ?? 5), { k: o.k ?? 0.72, len: o.len ?? 5, off });
+/** JOLT: a hit (3-9 frames): the lens kicks `amp` deg and settles, one per event */
+export const jolt = (c: CamPose, f: number, on: number, o: { len?: number; amp?: number; seed?: number } = {}): CamPose => {
+  const len = o.len ?? 6, d = f - on;
+  if (d < 0 || d >= len) return c;
+  const a = (o.amp ?? 1.2) * Math.pow(1 - d / len, 2), sd = o.seed ?? 3;
+  return nudge(c, { pitch: a * (hash(d, sd) - 0.5) * 2, yaw: a * (hash(d, sd + 7) - 0.5) * 2, roll: 0.6 * a * (hash(d, sd + 11) - 0.5) * 2 });
+};
 /** WHIP PAN: from `on`, `out` frames (4) yawing away from `c` (ease-in, `deg` 25, dir 1 = to the right), then `in`
  *  frames (4) arriving into `to` (default c) from the other side (ease-out); settled on on + out + in. Returns the
  *  camera, the post (a lens blur through the film's DOF, all depths alike: focus 0.05 m) and smear 0..1 (for

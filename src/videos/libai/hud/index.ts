@@ -24,6 +24,9 @@ import { VLOG_RECT, timeStampAt } from "./vlog";
 import { captionRect } from "./caption";
 import { TITLE_SPAN } from "../beats";
 import type { Rect } from "./style";
+import { whisperRectAt, whisperCapAt } from "./whisper";
+import { gaoBannerRect } from "./intro";
+import { FX_RECTS } from "./fx";
 
 export { TitleBlock, TITLE_RECT } from "./title";
 export { FactCard, factCardAt, factRows, factRect, FACT_RECT, FACT_END_RECT } from "./card";
@@ -42,7 +45,12 @@ export const hudRectsAt = (f: number): { what: string; r: Rect }[] => {
   out.push({ what: "rec", r: VLOG_RECT.rec });
   out.push({ what: "stamp", r: timeStampAt(f).t < 56 ? VLOG_RECT.stampBig : VLOG_RECT.stamp });
   out.push({ what: "battery", r: VLOG_RECT.battery });
-  const cap = captionRect(f);
+  const wr = whisperRectAt(f);
+  if (wr) out.push({ what: "whisper", r: wr });
+  const cap = whisperCapAt(f) ? null : captionRect(f);
   if (cap) out.push({ what: "caption", r: cap });
+  out.push(...FX_RECTS(f));
+  const gb = gaoBannerRect(f);
+  if (gb) out.push({ what: "banner", r: gb });
   return out;
 };

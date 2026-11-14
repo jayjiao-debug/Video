@@ -24,8 +24,14 @@ import { LensBlur } from "../vasa/lensblur";
 import { GradeEffect, type GradeParams } from "../vasa/grade";
 import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
-import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
+import { W, H, FILM_TOTAL, CLOCK, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
 import { TitleBlock, FactCard, VlogHud, Caption } from "./hud";
+import { LeadCard, GaoBanner, leadIsolation } from "./hud/intro";
+import { Isolation } from "./isolate";
+import { LI } from "./people";
+import { aim, mixCam } from "./shots/lb";
+import { Whisper, whisperCapAt } from "./hud/whisper";
+import { Fx } from "./hud/fx";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -33,7 +39,8 @@ import { SEG as SEG_D } from "./shots/segD";
 import { SEG as SEG_E } from "./shots/segE";
 import { SEG as SEG_F } from "./shots/segF";
 
-export const LIBAI_FRAMES = TOTAL;
+/** the film's length: the picture (story.ts TOTAL) plus the intro card's freeze (story.ts CLOCK) */
+export const LIBAI_FRAMES = FILM_TOTAL;
 const COVER = ipFlag("cover"), NOCAP = COVER || ipFlag("nocap"), NOHUD = COVER || ipFlag("nohud"), NOOV = COVER || ipFlag("noov");
 const NOPOST = ipFlag("nopost"), DBG = ipFlag("dbg"), SLATE = ipFlag("slate"), KICK = ipNum("kick", 0);
 const OVONLY = ipFlag("ovonly"); // the cut's overlay pass: the world is posed every frame, nothing is drawn in 3D, the page is transparent
@@ -47,10 +54,19 @@ SEGMENTS.forEach((s, i) => {
 const segAt = (f: number) => SEGS.find((s) => f >= s.from && f <= s.to) ?? (f < SEGS[0].from ? SEGS[0] : SEGS[SEGS.length - 1]);
 
 /** owns the segment switch: exit the old one, enter the new one; then reset the world and pose the frame */
+/** THE CARD'S FRAMING while 李白's card is up (the picture frozen): she pulls back from the live close-up to a
+ *  close shot with his head in the top half (the card takes the lower half), then back as the card leaves. The figures
+ *  are solved again for this camera. k 0..1 (hud/intro.tsx leadIsolation). */
+const CARD_BACK = 1.9, CARD_HEAD_SY = 620;   // metres from his head; his head's height on the 1920 reference (film y 560)
+const cardCam = (live: Pose["camera"], head: THREE.Vector3): Pose["camera"] => {
+  const lp = Array.isArray(live.pos) ? new THREE.Vector3(...(live.pos as [number, number, number])) : (live.pos as THREE.Vector3).clone();
+  const u = lp.sub(head); u.y *= 0.5; u.normalize();
+  return aim(head.clone().addScaledVector(u, CARD_BACK), head, CARD_HEAD_SY, 540, live.fov);
+};
 class Director {
   cur: Segment | null = null;
   constructor(readonly w: World) {}
-  frame(f: number): Pose {
+  frame(f: number, fz = f): Pose {
     const s = segAt(f);
     if (s !== this.cur) {
       if (this.cur) this.cur.exit(this.w);
@@ -58,7 +74,15 @@ class Director {
       this.cur = s;
     }
     this.w.beginFrame(f);
-    const P = s.pose(this.w, f);
+    let P = s.pose(this.w, f);
+    const k = leadIsolation(fz);
+    if (k > 0) {
+      const e = k * k * (3 - 2 * k);
+      const li = this.w.actor(LI);
+      P = { ...P, camera: mixCam(P.camera, cardCam(P.camera, li.headWorld()), e) };
+      if (k > 0.5) this.w.only(li);    // nobody else in his card's frame (once the backdrop is mostly in)
+      this.w.setCamera(P.camera); this.w.update();
+    }
     this.w.endFrame(P);
     return P;
   }
@@ -160,24 +184,26 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
  *  registerHud, in registration order) and the end names (hud/) */
 const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <>
-    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /></> : null}
+    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /><GaoBanner f={f} /><Fx f={f} /></> : null}
     <VlogHud f={f} cards={P.cards} />
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
   </>
 );
 /** the animatic's slate (input prop slate: true): frame, segment, line and the shot's own label, top left. Its own
  *  layer above everything, also where a shot hides the HUD. */
-const Slate: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
+const Slate: React.FC<{ f: number; fz: number; P: Pose }> = ({ f, fz, P }) => (
   <AbsoluteFill style={{ pointerEvents: "none" }}>
     <div style={{ position: "absolute", left: 44, top: 96, padding: "8px 16px", borderRadius: 10, background: "rgba(10,12,22,0.62)", color: "#fff", fontFamily: FONT_STACK, fontWeight: 700, fontSize: 34, letterSpacing: 1, whiteSpace: "nowrap" }}>
-      {`f${f} · ${segAt(f).id} · L${lineNo(f)}${P.slate ? " · " + P.slate : ""}`}
+      {`f${f}${fz !== f ? ` (film ${fz})` : ""} · ${segAt(f).id} · L${lineNo(f)}${P.slate ? " · " + P.slate : ""}`}
     </div>
   </AbsoluteFill>
 );
 
 // ---------------------------------------------------------------------------------------------------- the composition
 export const LibaiFilm: React.FC = () => {
-  const f = useCurrentFrame();
+  // the film's frame (fz: the intro card's freeze counts) and the picture's own frame f (story.ts CLOCK): everything but
+  // the freeze's own card runs on the picture's clock
+  const fz = useCurrentFrame(), f = CLOCK.world(fz), frozen = CLOCK.at(fz) !== null;
   const [handle] = useState(() => { if (DBG) console.log(`[su] composition mounted at page time ${Math.round(performance.now())} ms`); return delayRender("su world build"); });
   const [ctx, setCtx] = useState<{ gl: THREE.WebGLRenderer; camera: THREE.PerspectiveCamera } | null>(null);
   // the font first: anything drawn into textures when the world is built uses it
@@ -185,7 +211,10 @@ export const LibaiFilm: React.FC = () => {
   const world = useMemo(() => (ctx && fontReady ? new World(ctx.gl, ctx.camera) : null), [ctx, fontReady]);
   const director = useMemo(() => (world ? new Director(world) : null), [world]);
   const t0 = DBG ? performance.now() : 0;
-  const P = director ? director.frame(f) : null;
+  const P = director ? director.frame(f, fz) : null;
+  // 李白's intro card: he is isolated in the frozen picture (isolate.ts), the backdrop set up after the pose's camera
+  const iso = useMemo(() => (world ? new Isolation(world.root) : null), [world]);
+  if (world && iso && P) { const k = leadIsolation(fz); iso.set(k, world.camera, k > 0 ? world.actor(LI).headWorld() : world.camera.position); }
   if (DBG && P) console.log(`[su] f${f} pose (segment ${director!.cur?.id}, place ${world!.place}) in ${Math.round(performance.now() - t0)} ms`);
   const onCreated = useCallback((s: RootState) => setCtx({ gl: s.gl, camera: s.camera as THREE.PerspectiveCamera }), []);
   const onReady = useCallback(() => continueRender(handle), [handle]);
@@ -195,11 +224,13 @@ export const LibaiFilm: React.FC = () => {
       <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
         {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
       </ThreeCanvas>
+      {P && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Whisper f={f} words={P.captions !== false && !NOCAP} /></AbsoluteFill> : null}
       {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
-      {P && P.captions !== false && !NOCAP ? <Caption f={f} /> : null}
+      {P && P.hud !== false && !NOHUD && frozen ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><LeadCard f={fz} /></AbsoluteFill> : null}
+      {P && P.captions !== false && !NOCAP && !frozen && !whisperCapAt(f) ? <Caption f={f} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
-      {P && SLATE ? <Slate f={f} P={P} /> : null}
+      {P && SLATE ? <Slate f={f} fz={fz} P={P} /> : null}
     </AbsoluteFill>
   );
 };

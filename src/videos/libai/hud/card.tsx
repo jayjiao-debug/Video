@@ -14,7 +14,8 @@ import { AbsoluteFill } from "remotion";
 import { CARDS, clamp01, easeInCubic, easeOutBack, easeOutCubic, lineNum, type Card } from "../story";
 import { SCREEN } from "../layout";
 import { EN } from "../lang";
-import { FONT_STACK, HC, em, textW, type Rect } from "./style";
+import { FONT_STACK, em, textW, type Rect } from "./style";
+import { C as SC, TONE, sway } from "./skin";
 const END_LINE = -1;
 
 /** the card on frame f (story.ts CARDS), or null */
@@ -54,49 +55,58 @@ const wrapEn = (s: string, px: number, room: number, n: number): string[] => {
 };
 
 // ---------------------------------------------------------------------------------------------------- the card
-const Z = SCREEN.card, MAXW = Z.x1 - Z.x0;
-const BORDER = 3, PADX = 36, PADY = 24, ZH = 48, ENPX = EN ? 34 : 26, LS = 1;
+/** THE SOURCES' VOICE, in the film's skin (hud/skin.ts): a strip of the flag's cloth with its sky-blue hem across the
+ *  top, the source named in a small ink chip (旧唐书, 新唐书), the words in night-indigo ink, Chinese only (the film is
+ *  spoken in Chinese). LOW in the frame (nobody speaks while it shows, so it may take the subtitle band), centred,
+ *  left of the app's buttons. It swings in from the top a little drunk and tips out. */
+const Z = { x0: 150, x1: 930, bottom: 1478 }, MAXW = Z.x1 - Z.x0;
+const PADX = 34, PADY = 26, ZH = 46, LS = 1, ROWH = Math.round(ZH * 1.4), CHIP = 30;
 const NIN = 8, NOUT = 8;
-/** the box a mid-left card takes at its widest (motion and seal included) */
-export const FACT_RECT: Rect = { x0: Z.x0 - 4, y0: Z.y0 - 10, x1: Z.x1 + 8, y1: Z.y1 + 6 };
-/** the box the last card (I57's) takes, low in the caption band */
-export const FACT_END_RECT: Rect = { x0: 110, y0: 1236, x1: 970, y1: 1500 };
+/** split 「旧唐书：……」 into the source and the words */
+const sourceOf = (zh: string): { src: string | null; text: string } => {
+  const m = zh.match(/^(旧唐书|新唐书|[^：]{2,6}书)：(.*)$/);
+  return m ? { src: m[1], text: m[2] } : { src: null, text: zh };
+};
+const layout = (c: Card) => {
+  const { src, text } = sourceOf(c.zh);
+  const inner = MAXW - 2 * PADX;
+  const rows = EN ? [c.en] : factRows(text, inner / (ZH + LS)) ?? [text];
+  const w = Math.round(Math.min(MAXW, Math.max(520, ...rows.map((r) => em(r) * (ZH + LS))) + 2 * PADX));
+  const h = PADY * 2 + (src ? CHIP + 16 : 0) + rows.length * ROWH - (ROWH - ZH) + 10;
+  const x0 = Math.round(Math.min(540 - w / 2, Z.x1 - w)), y0 = Z.bottom - h;
+  return { src, rows, w, h, x0, y0 };
+};
 /** the box the card of frame f takes, or null */
-export const factRect = (f: number): Rect | null => { const c = factCardAt(f); return c ? (isEnd(c) ? FACT_END_RECT : FACT_RECT) : null; };
+export const factRect = (f: number): Rect | null => {
+  const c = factCardAt(f);
+  if (!c) return null;
+  const L = layout(c);
+  return { x0: L.x0 - 6, y0: L.y0 - 30, x1: Math.min(L.x0 + L.w + 8, Z.x1 + 8), y1: Z.bottom + 8 };
+};
+export const FACT_RECT: Rect = { x0: Z.x0, y0: 1180, x1: Z.x1, y1: Z.bottom };
+export const FACT_END_RECT = FACT_RECT;
 
 export const FactCard: React.FC<{ f: number }> = ({ f }) => {
   const c = factCardAt(f);
   if (!c) return null;
-  const end = isEnd(c), t = f - c.from;
-  const kin = easeOutCubic((t + 1) / NIN), kb = easeOutBack((t + 1) / NIN, 1.5);
-  const u = easeInCubic((f - (c.to - NOUT)) / NOUT);                               // the leave: 0 .. 1 on the last frame
+  const t = f - c.from, L = layout(c);
+  const kin = easeOutBack((t + 1) / NIN, 1.6), u = easeInCubic((f - (c.to - NOUT)) / NOUT);
   const op = clamp01((t + 1) / 3) * (1 - u);
-  const float = 2 * Math.sin((2 * Math.PI * t) / 96);
-  const W = end ? FACT_END_RECT.x1 - FACT_END_RECT.x0 : MAXW;
-  const inner = W - 2 * BORDER - 2 * PADX;
-  const zhRows = EN ? [] : factRows(c.zh, inner / (ZH + LS)) ?? [c.zh];
-  const enRows = wrapEn(c.en, ENPX, inner, EN ? 4 : 3);
-  // the width: hug the rows (between 480 and the zone's width)
-  const need = Math.max(...zhRows.map((r) => em(r) * (ZH + LS)), ...enRows.map((r) => textW(r, ENPX, 0)), 300) + 2 * PADX + 2 * BORDER + 10;
-  const width = Math.round(Math.min(W, Math.max(end ? 600 : 480, need)));
-  const left = end ? 540 - width / 2 : Z.x0, top = end ? FACT_END_RECT.y0 + 8 : Z.y0;
-  const dx = end ? 0 : -60 * (1 - kb) - 40 * u, dy = end ? 26 * (1 - kin) + 16 * u : 0;
-  const zhStyle: React.CSSProperties = { fontFamily: FONT_STACK, fontWeight: 700, fontSize: ZH, lineHeight: 1.36, letterSpacing: LS, color: HC.paperInk, whiteSpace: "nowrap" };
-  const enStyle: React.CSSProperties = { fontFamily: FONT_STACK, fontWeight: 700, fontSize: ENPX, lineHeight: 1.3, color: EN ? HC.paperInk : "#6a5a48", whiteSpace: "nowrap" };
+  const rot = sway(t, 0, -7, 22, 10) + 18 * u, dy = -40 * (1 - kin) + 60 * u * u + 2 * Math.sin((2 * Math.PI * t) / 96);
+  void isEnd; void easeOutCubic;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <div style={{ position: "absolute", left, top, width, opacity: op, transform: `translate(${dx.toFixed(2)}px, ${(dy + float).toFixed(2)}px) rotate(-0.8deg)`, transformOrigin: "0% 50%" }}>
-        <div style={{ position: "relative", boxSizing: "border-box", width, padding: `${PADY}px ${PADX}px ${PADY - 4}px`, borderRadius: 14, border: `${BORDER}px solid ${HC.ink}`,
-          background: `linear-gradient(172deg, ${HC.paper} 0%, #f7efdc 60%, ${HC.paperLow} 100%)`, boxShadow: "0 12px 22px rgba(10,8,6,0.32), 0 3px 0 rgba(10,8,6,0.2)" }}>
-          <div style={{ position: "absolute", left: 8, top: 8, right: 8, bottom: 8, borderRadius: 9, border: `1.5px solid ${HC.paperRule}` }} />
-          {zhRows.map((r, i) => <div key={i} style={{ ...zhStyle, marginLeft: OPEN.includes([...r][0]) ? -ZH / 2 : 0 }}>{r}</div>)}
-          <div style={{ marginTop: zhRows.length ? 8 : 0 }}>{enRows.map((r, i) => <div key={i} style={enStyle}>{r}</div>)}</div>
-          {/* the small red seal mark 「注」 */}
-          <svg width={46} height={46} viewBox="0 0 46 46" style={{ position: "absolute", right: 12, top: -16, transform: "rotate(6deg)" }}>
-            <rect x={2} y={2} width={42} height={42} rx={5} fill={HC.seal} />
-            <rect x={6} y={6} width={34} height={34} rx={3} fill="none" stroke="#f6e6d0" strokeWidth={2} />
-            <text x={23} y={31} textAnchor="middle" fontFamily={FONT_STACK} fontWeight={700} fontSize={24} fill="#f6e6d0">注</text>
-          </svg>
+      <div style={{ position: "absolute", left: L.x0, top: L.y0, width: L.w, height: L.h, opacity: op, transform: `translateY(${dy.toFixed(2)}px) rotate(${rot.toFixed(2)}deg)`, transformOrigin: "50% 0%" }}>
+        <div style={{ position: "absolute", left: 5, top: 9, width: L.w, height: L.h, borderRadius: 10, background: TONE.shadow }} />
+        <div style={{ position: "absolute", inset: 0, borderRadius: 10, border: `5px solid ${SC.ink}`, boxSizing: "border-box", overflow: "hidden",
+          background: `linear-gradient(180deg, ${SC.paper} 0%, ${SC.paper} 45%, ${TONE.clothLow} 100%)` }}>
+          <div style={{ position: "absolute", left: 0, top: 0, right: 0, height: 14, background: SC.accent, borderBottom: `4px solid ${SC.ink}` }} />
+          {L.src ? (
+            <div style={{ position: "absolute", left: PADX, top: PADY + 4, height: CHIP + 6, padding: "0 14px", borderRadius: 8, background: SC.ink, color: SC.paper, fontFamily: FONT_STACK, fontWeight: 700, fontSize: 24, letterSpacing: 3, lineHeight: `${CHIP + 6}px` }}>{L.src}</div>
+          ) : null}
+          {L.rows.map((r, i) => (
+            <div key={i} style={{ position: "absolute", left: PADX, top: PADY + (L.src ? CHIP + 22 : 6) + i * ROWH, fontFamily: FONT_STACK, fontWeight: 700, fontSize: EN ? 34 : ZH, letterSpacing: LS, lineHeight: 1, color: SC.ink, whiteSpace: "nowrap", marginLeft: OPEN.includes([...r][0]) ? -ZH / 2 : 0 }}>{r}</div>
+          ))}
         </div>
       </div>
     </AbsoluteFill>

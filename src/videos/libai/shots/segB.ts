@@ -38,18 +38,28 @@ const huanGo = B.run[0];
 const BASIN_END = rel(SEAT.at, SEAT.facing, 0.85, 0, 0.42);
 const BASIN_PATH = [V(MX - 0.6, 0, 10.5), V(MX + 0.7, 0, 7.0), BASIN_END];
 const basinGo = L17.from - 70;
-const CAM0 = rel(SEAT.at, SEAT.facing, 0.2, 1.45, 3.7);
+/** THE CAMERA PLAN (one take):
+ *    open     the whip lands on him on the bench, a little from below (he is about to boast), him right of centre
+ *    翰林待诏  B11: snap zoom landing on the title, held through her question
+ *    run      the messenger runs in from the street: she pans left to meet him, and back to 李白 when he answers
+ *    splash   the second eunuch lifts the basin: she steps back (the place does something to him), the water hits
+ *             (a jolt), then a snap in on his dripping grin
+ *    card 2   held; the scene ends on the clock race (the join to C) */
+const CAM0 = rel(SEAT.at, SEAT.facing, 0.3, 1.24, 2.05);
 
 const cam = (f: number): CamPose => {
-  const look = HEAD.clone().add(V(0, -0.2, 0));
-  let c = aim(CAM0, look, 700);
-  // the run: a small pan left to meet the messenger, then back
-  const k = ramp(f, B.run[0] - 6, B.run[0] + 14) * (1 - ramp(f, L16.from + 20, L16.from + 44));
-  if (k) c = C.nudge(c, { yaw: -8 * k });
-  c = C.handheld(c, f, { mood: f >= B.splash - 4 && f < B.drip ? "excited" : "calm" });
-  c = C.punchIn(c, f, B.proud, { k: 0.9, len: 4, off: B.proud + 24 });
-  c = C.punchIn(c, f, B.drip, { k: 0.86, len: 6 });
-  return C.whip(c, f, S.from - 4, { dir: 1, out: 4, in: 4 }).cam;
+  let c = aim(CAM0, HEAD.clone().add(V(0, -0.38, 0)), 1010, 580);
+  // the run: a pan left to meet the messenger, then back when 李白 answers
+  const k = ramp(f, B.run[0] - 4, B.run[0] + 12) * (1 - ramp(f, L17.from - 16, L17.from - 2));
+  if (k) c = C.nudge(c, { yaw: -11 * k });
+  // the splash: she steps back as the basin comes up, then pushes in again on the grin
+  const back = ramp(f, B.splash - 18, B.splash - 6) * (1 - ramp(f, B.drip - 6, B.drip + 4));
+  if (back) c = C.nudge(c, { fwd: -0.7 * back });
+  c = C.handheld(c, f, { mood: f >= B.splash - 4 && f < B.drip ? "excited" : "calm", amp: 0.7 });
+  c = C.jolt(c, f, B.splash, { len: 7, amp: 1.6 });
+  c = C.snap(c, f, B.proud, lineId("B12").from + 6);
+  c = C.snap(c, f, B.drip, undefined, { k: 0.74, len: 6 });
+  return c;
 };
 
 const cupAt = (f: number) => {
@@ -81,7 +91,9 @@ export const SEG: Segment = {
     w.setPlace("street");
     w.set.param("carcass", false);
     w.set.param("crowd", 0.7);
-    const camera = cam(f);
+    // the join from A: the first 4 frames whip in
+    const W = C.whip(cam(f), f, S.from - 4, { dir: 1, out: 4, in: 4 });
+    const camera = W.cam;
     w.setCamera(camera);
     w.prop("bench").put(BENCH.clone().setY(-FOOT_LIFT.bench), { rot: BROT });
     w.prop("flag").put(FLAG);
@@ -109,7 +121,7 @@ export const SEG: Segment = {
     if (f >= basinGo - 10) bh.put(w);
     const sp = (f - B.splash + 2) / 14;
     if (sp > 0 && sp < 1) w.prop("splash").put(rel(bl.at, bl.facing, 0, 1.05, 0.45), { rot: bl.facing, open: sp });
-    return { camera, overlays: transitionAt(f)?.node, slate: "B tavern door" };
+    return { camera, post: W.post, overlays: C.whipSmear(W.smear, 1) ?? transitionAt(f)?.node, slate: "B tavern door" };
   },
 };
 void word; void THREE;
