@@ -31,6 +31,11 @@ engine's history. What the Li Bai film is now, after the format update (day-in-l
 - **Clearance**: no worse than the delivered film. The lean needed two fixes: in the boot gag 李白 lolls straight back
   and 高力士 kneels a step to the side (their heads touched, and his hid 李白's face); in F the cup is put in his hand
   (handWorld) because the lean leaves the hand short of the toast target. E's chest is held low so it never hides his face.
+- **Jay's notes of 14 Nov** (from the 苏东坡 review, applied here): the card holds 2 s (FREEZE_N 60) with a Smash-style
+  cut-out (isolate.ts: his silhouette into a mask each frame, an amber ring round it on the backdrop) and rides her zoom
+  back in; 高力士's banner follows his head (track.ts, written by segC); his poems are brushwork in place of the
+  subtitle (hud/poem.tsx, the night poem soft); the market street has a tiled close-up grain (sets/market.ts DETAIL).
+  REC and battery already sit 54 px in from the sides.
 - **Sound**: node scripts/libai/sound/events.mjs (the freeze, whispers and overlay sounds from the picture), then
   python3 scripts/libai/sound/build.py. No voice was re-recorded.
 
