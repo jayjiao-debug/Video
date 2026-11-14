@@ -1,12 +1,90 @@
 {
-  "id": "libai-sfx-01",
-  "model_prefs": ["eleven_v4"],
-  "items": [
-    {"type": "sfx", "name": "sfx_knock", "text": "Two sharp knuckle knocks on a wooden table top, knock knock.", "duration": 1.0, "influence": 0.5},
-    {"type": "sfx", "name": "sfx_clink", "text": "Two small ceramic wine cups clinking together in a toast, one bright clink.", "duration": 1.0, "influence": 0.5},
-    {"type": "sfx", "name": "sfx_cheer", "text": "A small rowdy tavern crowd of men cheering and laughing, hooray, clapping, cups banging on tables.", "duration": 3.0, "influence": 0.4},
-    {"type": "sfx", "name": "sfx_gate", "text": "A huge heavy wooden palace gate swinging shut with a deep booming slam and a creak.", "duration": 2.5, "influence": 0.4},
-    {"type": "sfx", "name": "sfx_boot", "text": "A tight leather boot being pulled off a foot with effort, a squeaky leather pop.", "duration": 1.2, "influence": 0.5},
-    {"type": "sfx", "name": "sfx_pour_gold", "text": "A heap of gold ingots and coins poured out of a wooden box onto a wooden table, clattering.", "duration": 2.0, "influence": 0.4}
-  ]
+ "id": "newton-v5-f16-01",
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "words": true,
+ "items": [
+  {
+   "type": "dialogue",
+   "name": "v5_F16_s1686",
+   "model": "eleven_v4",
+   "seed": 1686,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, warm] 她丢下了您，您却守着她。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v5_F16_s1642",
+   "model": "eleven_v4",
+   "seed": 1642,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, warm] 她丢下了您，您却守着她。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  },
+  {
+   "type": "dialogue",
+   "name": "v5_F16_s2026",
+   "model": "eleven_v4",
+   "seed": 2026,
+   "settings": {
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[steady, then cracking] In her last illness, I changed her dressings myself.",
+     "voice": {
+      "owner": "9d48e632126e47fa24331617611c4fab3fbb61beadec42067817c28ade5f332f",
+      "voice_id": "dUercWozs0yhe4xBCgZ0",
+      "name": "Mandrake"
+     }
+    },
+    {
+     "text": "[moved, warm] 她丢下了您，您却守着她。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
+  }
+ ]
 }
