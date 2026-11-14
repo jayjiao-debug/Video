@@ -1,0 +1,37 @@
+{
+  "film": "libai",
+  "composition": "LibaiFilm",
+  "dir": "src/videos/libai",
+  "story": "story.ts",
+  "hooks": "kit.world.ts",
+  "entries": {
+    "overlay": "Film.tsx",
+    "segFile": "shots/seg{SEG}"
+  },
+  "tsc": [
+    "Film.tsx",
+    "kit.world.ts",
+    "cam.ts",
+    "preview/film.ts",
+    "preview/smoke.ts",
+    "preview/filmA.ts",
+    "preview/filmB.ts",
+    "preview/filmC.ts",
+    "preview/filmD.ts",
+    "preview/filmE.ts",
+    "preview/filmF.ts",
+    "preview/people_lineup.ts",
+    "preview/set_places.ts"
+  ],
+  "domOnly": [
+    "hud/"
+  ],
+  "langs": [
+    "zh",
+    "en"
+  ],
+  "work": "/home/user/libai_work",
+  "qa": {
+    "clearanceOut": "/home/user/libai_work/qa/clearance"
+  }
+}

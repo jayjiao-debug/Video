@@ -1,0 +1,641 @@
+{
+ "film": "libai",
+ "speakers": {
+  "ji": "记者",
+  "li": "李白",
+  "huan": "宦官",
+  "you": "酒友"
+ },
+ "scenes": {
+  "A": {
+   "time": "卯时 长安酒馆"
+  },
+  "B": {
+   "time": "辰时 酒馆门口"
+  },
+  "C": {
+   "time": "午时 沉香亭"
+  },
+  "D": {
+   "time": "未时 宫门外"
+  },
+  "E": {
+   "time": "酉时 酒馆"
+  },
+  "F": {
+   "time": "子时 花下"
+  }
+ },
+ "end_card": {
+  "zh": "762年新皇帝下诏请他做官，诏书到时他已去世。",
+  "en": "In 762 a new emperor sent for him with a post. When the edict arrived, he had already died.",
+  "hold": 3.6
+ },
+ "source": "script v1 (approved by Jay 2026-11-14)",
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[polite, a bit nervous] 请问，您是李白，李太白先生吗？",
+   "zh": "请问，您是李白，李太白先生吗？",
+   "screens": [
+    "请问，",
+    "您是李白，李太白先生吗？"
+   ],
+   "en": "Excuse me, are you Li Bai? Li Taibai?",
+   "pre": 1.8
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "li",
+   "tts": "[waking up, squinting, delighted, tipsy] 哟，月亮？你怎么白天就出来了？",
+   "zh": "哟，月亮？你怎么白天就出来了？",
+   "screens": [
+    "哟，月亮？",
+    "你怎么白天就出来了？"
+   ],
+   "en": "Oh, the moon? What are you doing out in the daytime?"
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[flustered] 我不是月亮！我是来拍您一天的！",
+   "zh": "我不是月亮！我是来拍您一天的！",
+   "screens": [
+    "我不是月亮！",
+    "我是来拍您一天的！"
+   ],
+   "en": "I'm not the moon! I'm here to film your day!"
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "scene": "A",
+   "who": "li",
+   "tts": "[grand, lifting the jar] 好！先喝一杯！",
+   "zh": "好！先喝一杯！",
+   "screens": [
+    "好！先喝一杯！"
+   ],
+   "en": "Great! Have a drink first!"
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[protesting] 现在才早上……",
+   "zh": "现在才早上……",
+   "screens": [
+    "现在才早上……"
+   ],
+   "en": "It's only morning..."
+  },
+  {
+   "n": 6,
+   "id": "A06",
+   "scene": "A",
+   "who": "li",
+   "tts": "[very pleased with himself] 早上喝的，叫早酒。",
+   "zh": "早上喝的，叫早酒。",
+   "screens": [
+    "早上喝的，叫早酒。"
+   ],
+   "en": "Morning drinks are called breakfast.",
+   "after": 0.5
+  },
+  {
+   "n": 7,
+   "id": "A07",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[curious] 您昨晚喝了多少啊？",
+   "zh": "您昨晚喝了多少啊？",
+   "screens": [
+    "您昨晚喝了多少啊？"
+   ],
+   "en": "How much did you drink last night?"
+  },
+  {
+   "n": 8,
+   "id": "A08",
+   "scene": "A",
+   "who": "li",
+   "tts": "[counting on fingers, then shrugging, pleased] 不多。一日须倾三百杯嘛。",
+   "zh": "不多。一日须倾三百杯嘛。",
+   "screens": [
+    "不多。",
+    "一日须倾三百杯嘛。"
+   ],
+   "en": "Not much. \"Three hundred cups a day\", you know."
+  },
+  {
+   "n": 9,
+   "id": "A09",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[to camera, deadpan] 他把自己的诗，当说明书用。",
+   "zh": "他把自己的诗，当说明书用。",
+   "screens": [
+    "他把自己的诗，当说明书用。"
+   ],
+   "en": "He uses his own poems as an instruction manual.",
+   "after": 3.2,
+   "card": {
+    "zh": "旧唐书：李白嗜酒，天天和酒友醉在酒馆里。",
+    "en": "Old Book of Tang: Li Bai loved wine and was drunk in the taverns every day."
+   },
+   "card_delay": 0.2,
+   "card_hold": 3.0
+  },
+  {
+   "n": 10,
+   "id": "B10",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[impressed] 听说，您在朝廷当官？",
+   "zh": "听说，您在朝廷当官？",
+   "screens": [
+    "听说，您在朝廷当官？"
+   ],
+   "en": "I hear you're an official at court?",
+   "pre": 0.9
+  },
+  {
+   "n": 11,
+   "id": "B11",
+   "scene": "B",
+   "who": "li",
+   "tts": "[sitting up straight, proud] 翰林待诏！",
+   "zh": "翰林待诏！",
+   "screens": [
+    "翰林待诏！"
+   ],
+   "en": "Hanlin Academician-in-Waiting!"
+  },
+  {
+   "n": 12,
+   "id": "B12",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[puzzled] 待诏，是管什么的？",
+   "zh": "待诏，是管什么的？",
+   "screens": [
+    "待诏，是管什么的？"
+   ],
+   "en": "And what does \"in waiting\" do?"
+  },
+  {
+   "n": 13,
+   "id": "B13",
+   "scene": "B",
+   "who": "li",
+   "tts": "[deflating a little] 就是……等皇上叫。",
+   "zh": "就是……等皇上叫。",
+   "screens": [
+    "就是……等皇上叫。"
+   ],
+   "en": "Well... I wait for the emperor to call."
+  },
+  {
+   "n": 14,
+   "id": "B14",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[curious] 皇上多久叫您一次？",
+   "zh": "皇上多久叫您一次？",
+   "screens": [
+    "皇上多久叫您一次？"
+   ],
+   "en": "How often does he call?"
+  },
+  {
+   "n": 15,
+   "id": "B15",
+   "scene": "B",
+   "who": "li",
+   "tts": "[cheerful, raising the cup] 不知道。所以我在这儿等。",
+   "zh": "不知道。所以我在这儿等。",
+   "screens": [
+    "不知道。所以我在这儿等。"
+   ],
+   "en": "No idea. So I wait here.",
+   "after": 0.6
+  },
+  {
+   "n": 16,
+   "id": "B16",
+   "scene": "B",
+   "who": "huan",
+   "tts": "[running in, out of breath, urgent] 李翰林！陛下在沉香亭，叫您马上去写新词！",
+   "zh": "李翰林！陛下在沉香亭，叫您马上去写新词！",
+   "screens": [
+    "李翰林！",
+    "陛下在沉香亭，",
+    "叫您马上去写新词！"
+   ],
+   "en": "Academician Li! His Majesty is at the Chenxiang Pavilion. He wants new lyrics, right now!"
+  },
+  {
+   "n": 17,
+   "id": "B17",
+   "scene": "B",
+   "who": "li",
+   "tts": "[getting up, wobbly, confident] 好，走！",
+   "zh": "好，走！",
+   "screens": [
+    "好，走！"
+   ],
+   "en": "Right. Let's go!",
+   "after": 0.7
+  },
+  {
+   "n": 18,
+   "id": "B18",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[panicking] 他站不起来了！",
+   "zh": "他站不起来了！",
+   "screens": [
+    "他站不起来了！"
+   ],
+   "en": "He can't stand up!",
+   "after": 4.6,
+   "card": {
+    "zh": "新唐书：召他进宫时已醉，左右用水泼他的脸。",
+    "en": "New Book of Tang: when he was summoned he was already drunk; attendants splashed water on his face."
+   },
+   "card_delay": 1.4,
+   "card_hold": 3.0
+  },
+  {
+   "n": 19,
+   "id": "C19",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[nervous, careful] 李先生，您脸还湿着呢……",
+   "zh": "李先生，您脸还湿着呢……",
+   "screens": [
+    "李先生，您脸还湿着呢……"
+   ],
+   "en": "Mr Li, your face is still wet...",
+   "pre": 1.2
+  },
+  {
+   "n": 20,
+   "id": "C20",
+   "scene": "C",
+   "who": "li",
+   "tts": "[grand, flowing, reciting] 云想衣裳花想容，春风拂槛露华浓。",
+   "zh": "云想衣裳花想容，春风拂槛露华浓。",
+   "screens": [
+    "云想衣裳花想容，",
+    "春风拂槛露华浓。"
+   ],
+   "en": "\"The clouds long for her gown, the flowers for her face; spring wind brushes the rail, the dew lies thick.\"",
+   "after": 0.8
+  },
+  {
+   "n": 21,
+   "id": "C21",
+   "scene": "C",
+   "who": "li",
+   "tts": "[lazy, grand, casual] 高公公，靴子太紧，帮我脱一下。",
+   "zh": "高公公，靴子太紧，帮我脱一下。",
+   "screens": [
+    "高公公，",
+    "靴子太紧，帮我脱一下。"
+   ],
+   "en": "Lord Gao, my boots are tight. Take them off for me.",
+   "after": 3.4
+  },
+  {
+   "n": 22,
+   "id": "C22",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[to camera, scared] 完了。他可是皇上身边最红的人。",
+   "zh": "完了。他可是皇上身边最红的人。",
+   "screens": [
+    "完了。",
+    "他可是皇上身边最红的人。"
+   ],
+   "en": "Uh-oh. He's the emperor's favourite.",
+   "after": 3.4,
+   "card": {
+    "zh": "新唐书：高力士记仇，皇上想封他官，杨妃总拦。",
+    "en": "New Book of Tang: Gao Lishi held a grudge. Whenever the emperor wanted to give Li Bai a post, Consort Yang blocked it."
+   },
+   "card_delay": 0.2,
+   "card_hold": 3.2
+  },
+  {
+   "n": 23,
+   "id": "D23",
+   "scene": "D",
+   "who": "huan",
+   "tts": "[formal, stiff] 陛下准您回山了。这是赏的金子。",
+   "zh": "陛下准您回山了。这是赏的金子。",
+   "screens": [
+    "陛下准您回山了。",
+    "这是赏的金子。"
+   ],
+   "en": "His Majesty grants your leave to go home to the mountains. Here is gold.",
+   "pre": 1.6,
+   "after": 0.6
+  },
+  {
+   "n": 24,
+   "id": "D24",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[sad, careful] 李先生……您这是，被请出来了？",
+   "zh": "李先生……您这是，被请出来了？",
+   "screens": [
+    "李先生……",
+    "您这是，被请出来了？"
+   ],
+   "en": "Mr Li... did they just show you out?",
+   "after": 1.0
+  },
+  {
+   "n": 25,
+   "id": "D25",
+   "scene": "D",
+   "who": "li",
+   "tts": "[a beat, then a huge laugh, triumphant] 有钱了！天生我材必有用，千金散尽环复来！",
+   "zh": "有钱了！天生我材必有用，千金散尽还复来！",
+   "screens": [
+    "有钱了！",
+    "天生我材必有用，",
+    "千金散尽还复来！"
+   ],
+   "en": "I'm rich! \"Heaven made me for a reason; spend a fortune and it comes back!\""
+  },
+  {
+   "n": 26,
+   "id": "D26",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[worried] 那这些钱，您打算干嘛？",
+   "zh": "那这些钱，您打算干嘛？",
+   "screens": [
+    "那这些钱，您打算干嘛？"
+   ],
+   "en": "So what will you do with the money?"
+  },
+  {
+   "n": 27,
+   "id": "D27",
+   "scene": "D",
+   "who": "li",
+   "tts": "[striding off, delighted] 喝酒！",
+   "zh": "喝酒！",
+   "screens": [
+    "喝酒！"
+   ],
+   "en": "Drink!",
+   "after": 1.0
+  },
+  {
+   "n": 28,
+   "id": "E28",
+   "scene": "E",
+   "who": "li",
+   "tts": "[to the whole room, generous, loud] 今天我请！谁都别跟我抢！",
+   "zh": "今天我请！谁都别跟我抢！",
+   "screens": [
+    "今天我请！",
+    "谁都别跟我抢！"
+   ],
+   "en": "Drinks are on me! Nobody else pays!",
+   "pre": 1.2,
+   "after": 0.6
+  },
+  {
+   "n": 29,
+   "id": "E29",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[to camera, amused] 一个下午，花得差不多了。",
+   "zh": "一个下午，花得差不多了。",
+   "screens": [
+    "一个下午，花得差不多了。"
+   ],
+   "en": "One afternoon, and it's nearly gone."
+  },
+  {
+   "n": 30,
+   "id": "E30",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[curious] 您天天这么喝，夫人知道吗？",
+   "zh": "您天天这么喝，夫人知道吗？",
+   "screens": [
+    "您天天这么喝，",
+    "夫人知道吗？"
+   ],
+   "en": "You drink like this every day. Does your wife know?"
+  },
+  {
+   "n": 31,
+   "id": "E31",
+   "scene": "E",
+   "who": "li",
+   "tts": "[proud, as if it's romantic] 知道啊。我写诗告诉她了：三百六十日，日日醉如泥。",
+   "zh": "知道啊。我写诗告诉她了：三百六十日，日日醉如泥。",
+   "screens": [
+    "知道啊。",
+    "我写诗告诉她了：",
+    "三百六十日，日日醉如泥。"
+   ],
+   "en": "Of course. I wrote her a poem: \"Three hundred and sixty days, drunk as mud every day.\""
+  },
+  {
+   "n": 32,
+   "id": "E32",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[to camera, deadpan] 这是在认错，还是在炫耀？",
+   "zh": "这是在认错，还是在炫耀？",
+   "screens": [
+    "这是在认错，还是在炫耀？"
+   ],
+   "en": "Is that an apology, or bragging?",
+   "after": 0.6
+  },
+  {
+   "n": 33,
+   "id": "E33",
+   "scene": "E",
+   "who": "you",
+   "tts": "[getting up, friendly] 太白兄，我先回了啊！",
+   "zh": "太白兄，我先回了啊！",
+   "screens": [
+    "太白兄，我先回了啊！"
+   ],
+   "en": "Taibai, I'm heading home!",
+   "after": 2.8
+  },
+  {
+   "n": 34,
+   "id": "F34",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[gentle] 人都走了。",
+   "zh": "人都走了。",
+   "screens": [
+    "人都走了。"
+   ],
+   "en": "Everyone's gone.",
+   "pre": 2.4
+  },
+  {
+   "n": 35,
+   "id": "F35",
+   "scene": "F",
+   "who": "li",
+   "tts": "[looking around, smiling] 走了好，清静。",
+   "zh": "走了好，清静。",
+   "screens": [
+    "走了好，清静。"
+   ],
+   "en": "Good. Peace and quiet."
+  },
+  {
+   "n": 36,
+   "id": "F36",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[gentle] 以前，都是谁陪您喝？",
+   "zh": "以前，都是谁陪您喝？",
+   "screens": [
+    "以前，都是谁陪您喝？"
+   ],
+   "en": "Who used to drink with you?"
+  },
+  {
+   "n": 37,
+   "id": "F37",
+   "scene": "F",
+   "who": "li",
+   "tts": "[fond, remembering] 贺老。第一次见我，就叫我谪仙人。没带钱，把腰上的金龟解下来，换酒。",
+   "zh": "贺老。第一次见我，就叫我谪仙人。没带钱，把腰上的金龟解下来，换酒。",
+   "screens": [
+    "贺老。",
+    "第一次见我，",
+    "就叫我谪仙人。",
+    "没带钱，",
+    "把腰上的金龟解下来，",
+    "换酒。"
+   ],
+   "en": "Old He. The first time we met he called me an immortal banished from heaven. He'd no money, so he untied the gold turtle from his belt and swapped it for wine."
+  },
+  {
+   "n": 38,
+   "id": "F38",
+   "scene": "F",
+   "who": "li",
+   "tts": "[light, but it lands] 过年那会儿，他回老家了。",
+   "zh": "过年那会儿，他回老家了。",
+   "screens": [
+    "过年那会儿，他回老家了。"
+   ],
+   "en": "He went home at the new year.",
+   "after": 1.4
+  },
+  {
+   "n": 39,
+   "id": "F39",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[gentle] 您一个人，不孤单吗？",
+   "zh": "您一个人，不孤单吗？",
+   "screens": [
+    "您一个人，不孤单吗？"
+   ],
+   "en": "All alone like this, aren't you lonely?"
+  },
+  {
+   "n": 40,
+   "id": "F40",
+   "scene": "F",
+   "who": "li",
+   "tts": "[lifting his cup to the moon, a small smile] 谁说一个人？",
+   "zh": "谁说一个人？",
+   "screens": [
+    "谁说一个人？"
+   ],
+   "en": "Who says I'm alone?"
+  },
+  {
+   "n": 41,
+   "id": "F41",
+   "scene": "F",
+   "who": "li",
+   "tts": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+   "zh": "花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+   "screens": [
+    "花间一壶酒，",
+    "独酌无相亲。",
+    "举杯邀明月，",
+    "对影成三人。"
+   ],
+   "en": "\"A jug of wine among the flowers, I drink alone, no friend in sight. I raise my cup to invite the moon; with my shadow, we make three.\"",
+   "after": 1.2
+  },
+  {
+   "n": 42,
+   "id": "F42",
+   "scene": "F",
+   "who": "li",
+   "tts": "[quieter, looking into the cup, wistful] 可惜，月亮不会喝，影子只会跟着我。",
+   "zh": "可惜，月亮不会喝，影子只会跟着我。",
+   "screens": [
+    "可惜，",
+    "月亮不会喝，",
+    "影子只会跟着我。"
+   ],
+   "en": "Shame the moon can't drink, and my shadow just follows me around.",
+   "after": 2.2
+  },
+  {
+   "n": 43,
+   "id": "F43",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[warm, a little shy] 李先生，我陪您喝一杯。",
+   "zh": "李先生，我陪您喝一杯。",
+   "screens": [
+    "李先生，我陪您喝一杯。"
+   ],
+   "en": "Mr Li, I'll have a drink with you.",
+   "after": 0.9
+  },
+  {
+   "n": 44,
+   "id": "F44",
+   "scene": "F",
+   "who": "li",
+   "tts": "[surprised, then his warmest smile] 好。四个人。",
+   "zh": "好。四个人。",
+   "screens": [
+    "好。四个人。"
+   ],
+   "en": "All right. That makes four.",
+   "after": 2.6,
+   "card": {
+    "zh": "这年春天他离开长安。当官的梦，再没实现。",
+    "en": "He left Chang'an that spring. His dream of office never came true."
+   },
+   "card_delay": 0.6,
+   "card_hold": 3.4
+  }
+ ]
+}

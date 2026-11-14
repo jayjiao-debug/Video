@@ -1,0 +1,702 @@
+{
+ "note": "采访苏东坡的一天 sound plan (script_v1.md 'Sound'). at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. gain in dB. loop repeats the clip to fill [at, until]; seek starts inside the clip. Clips: /home/user/libai_work/sound/clips (voice farm run sudongpo-sound-01). Music is never ducked (owner's rule): it sits low and constant under the voice. The music stops dead at the courier's hooves and stays out until line 30; at night only crickets and pines, one cello note at 49, all music out after 50; the warm theme returns on the river and for one phrase on 黄州，惠州，儋州.",
+ "beds": [
+  {
+   "clip": "amb_market",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "A",
+    "to",
+    0
+   ],
+   "gain": -21,
+   "loop": true
+  },
+  {
+   "clip": "mus_morning",
+   "at": [
+    "A",
+    "from",
+    0
+   ],
+   "until": [
+    "B15",
+    "start",
+    -0.15
+   ],
+   "gain": -23,
+   "fade": 0.05,
+   "fade_out": 0.35,
+   "note": "the theme from frame 0, out at the whip into 黄州"
+  },
+  {
+   "clip": "amb_yard",
+   "at": [
+    "B",
+    "from",
+    0
+   ],
+   "until": [
+    "B15",
+    "start",
+    -0.15
+   ],
+   "gain": -23,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.3
+  },
+  {
+   "clip": "sfx_bubble",
+   "at": [
+    "B",
+    "from",
+    0.2
+   ],
+   "until": [
+    "B07",
+    "end",
+    0
+   ],
+   "gain": -25,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.8
+  },
+  {
+   "clip": "mus_huangzhou",
+   "at": [
+    "B15",
+    "start",
+    -0.15
+   ],
+   "until": [
+    "B17",
+    "start",
+    -0.1
+   ],
+   "gain": -21,
+   "fade": 0.3,
+   "fade_out": 0.6,
+   "note": "the flashback: rustic flute"
+  },
+  {
+   "clip": "sfx_bubble",
+   "at": [
+    "B16",
+    "start",
+    0
+   ],
+   "until": [
+    "B17",
+    "start",
+    -0.1
+   ],
+   "gain": -23,
+   "loop": true,
+   "fade": 0.6,
+   "fade_out": 0.4,
+   "note": "the pot at night"
+  },
+  {
+   "clip": "amb_yard",
+   "at": [
+    "B17",
+    "start",
+    -0.1
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -23,
+   "loop": true,
+   "fade": 0.4
+  },
+  {
+   "clip": "mus_morning",
+   "at": [
+    "B17",
+    "start",
+    -0.1
+   ],
+   "until": [
+    "B",
+    "to",
+    0
+   ],
+   "gain": -23,
+   "seek": 36.0,
+   "fade": 0.6,
+   "fade_out": 0.8,
+   "note": "back in the yard"
+  },
+  {
+   "clip": "amb_noon",
+   "at": [
+    "C",
+    "from",
+    0
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -23,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.05
+  },
+  {
+   "clip": "mus_noon",
+   "at": [
+    "C",
+    "from",
+    0.2
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -25,
+   "fade": 1.0,
+   "fade_out": 0.05,
+   "note": "cut dead at the hooves (D starts)"
+  },
+  {
+   "clip": "sfx_snore",
+   "at": [
+    "C26",
+    "end",
+    0.3
+   ],
+   "until": [
+    "C",
+    "to",
+    0
+   ],
+   "gain": -17,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.05
+  },
+  {
+   "clip": "amb_wind",
+   "at": [
+    "D",
+    "from",
+    0
+   ],
+   "until": [
+    "D",
+    "to",
+    0
+   ],
+   "gain": -22,
+   "loop": true,
+   "fade": 0.05,
+   "fade_out": 0.6
+  },
+  {
+   "clip": "sfx_hooves",
+   "at": [
+    "D",
+    "from",
+    0
+   ],
+   "until": [
+    "D27",
+    "start",
+    -0.1
+   ],
+   "gain": -9,
+   "fade": 0.02,
+   "fade_out": 0.3
+  },
+  {
+   "clip": "mus_evening",
+   "at": [
+    "D31",
+    "start",
+    -0.3
+   ],
+   "until": [
+    "E",
+    "to",
+    0
+   ],
+   "gain": -24,
+   "fade": 1.5,
+   "fade_out": 2.0,
+   "note": "the music comes back after his question"
+  },
+  {
+   "clip": "amb_evening",
+   "at": [
+    "E",
+    "from",
+    0
+   ],
+   "until": [
+    "E",
+    "to",
+    0
+   ],
+   "gain": -24,
+   "loop": true,
+   "fade": 0.6,
+   "fade_out": 1.0
+  },
+  {
+   "clip": "sfx_brush",
+   "at": [
+    "E",
+    "from",
+    0.2
+   ],
+   "until": [
+    "E35",
+    "end",
+    0
+   ],
+   "gain": -27,
+   "loop": true,
+   "fade": 0.4,
+   "fade_out": 0.6
+  },
+  {
+   "clip": "sfx_hum",
+   "at": [
+    "E",
+    "from",
+    0.1
+   ],
+   "until": [
+    "E32",
+    "start",
+    -0.1
+   ],
+   "gain": -22,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.3
+  },
+  {
+   "clip": "sfx_hum",
+   "at": [
+    "E39",
+    "end",
+    0.4
+   ],
+   "until": [
+    "E40",
+    "start",
+    -0.2
+   ],
+   "gain": -22,
+   "loop": true,
+   "fade": 0.3,
+   "fade_out": 0.6,
+   "note": "still humming while he blots the letter (card 3)"
+  },
+  {
+   "clip": "amb_pines",
+   "at": [
+    "F",
+    "from",
+    0
+   ],
+   "until": [
+    "F",
+    "to",
+    0
+   ],
+   "gain": -21,
+   "loop": true,
+   "fade": 1.0,
+   "fade_out": 1.0
+  },
+  {
+   "clip": "mus_cello",
+   "at": [
+    "F49",
+    "start",
+    -0.2
+   ],
+   "until": [
+    "F50",
+    "end",
+    0.6
+   ],
+   "gain": -20,
+   "fade": 0.8,
+   "fade_out": 1.6,
+   "note": "one cello note at 49, out after 50"
+  },
+  {
+   "clip": "amb_river",
+   "at": [
+    "G",
+    "from",
+    0
+   ],
+   "until": [
+    "G",
+    "to",
+    0
+   ],
+   "gain": -21,
+   "loop": true,
+   "fade": 1.0,
+   "fade_out": 0.6
+  },
+  {
+   "clip": "sfx_oars",
+   "at": [
+    "G",
+    "from",
+    0
+   ],
+   "until": [
+    "G",
+    "to",
+    0
+   ],
+   "gain": -25,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.8
+  },
+  {
+   "clip": "mus_river",
+   "at": [
+    "G",
+    "from",
+    0.1
+   ],
+   "until": [
+    "H",
+    "from",
+    0.6
+   ],
+   "gain": -22,
+   "fade": 1.0,
+   "fade_out": 0.8,
+   "note": "the warm theme returns"
+  },
+  {
+   "clip": "amb_beach",
+   "at": [
+    "H",
+    "from",
+    0
+   ],
+   "until": [
+    "H",
+    "to",
+    0
+   ],
+   "gain": -22,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.8
+  },
+  {
+   "clip": "amb_fire",
+   "at": [
+    "H",
+    "from",
+    0
+   ],
+   "until": [
+    "H",
+    "to",
+    0
+   ],
+   "gain": -25,
+   "loop": true,
+   "fade": 0.5,
+   "fade_out": 0.8
+  },
+  {
+   "clip": "mus_beach",
+   "at": [
+    "H",
+    "from",
+    0.2
+   ],
+   "until": [
+    "H",
+    "to",
+    0
+   ],
+   "gain": -24,
+   "fade": 0.8,
+   "fade_out": 1.0
+  },
+  {
+   "clip": "amb_temple",
+   "at": [
+    "I",
+    "from",
+    0
+   ],
+   "until": [
+    "I",
+    "to",
+    0
+   ],
+   "gain": -24,
+   "loop": true,
+   "fade": 0.8,
+   "fade_out": 3.0
+  },
+  {
+   "clip": "mus_end",
+   "at": [
+    "I57",
+    "start",
+    -0.1
+   ],
+   "until": [
+    "I",
+    "to",
+    0
+   ],
+   "gain": -21,
+   "fade": 0.8,
+   "fade_out": 3.0,
+   "note": "one phrase of the theme on 黄州，惠州，儋州"
+  }
+ ],
+ "hits": [
+  {
+   "clip": "sfx_cleaver",
+   "at": [
+    "A",
+    "from",
+    0.15
+   ],
+   "gain": -9
+  },
+  {
+   "clip": "sfx_cleaver",
+   "at": [
+    "A03",
+    "end",
+    0.15
+   ],
+   "gain": -15
+  },
+  {
+   "clip": "sfx_coins",
+   "at": [
+    "A05",
+    "end",
+    1.3
+   ],
+   "gain": -15
+  },
+  {
+   "clip": "sfx_whoosh",
+   "at": [
+    "A",
+    "to",
+    -0.3
+   ],
+   "gain": -13
+  },
+  {
+   "clip": "sfx_sizzle",
+   "at": [
+    "B06",
+    "start",
+    2.3
+   ],
+   "gain": -13
+  },
+  {
+   "clip": "sfx_chew",
+   "at": [
+    "B08",
+    "start",
+    0.0
+   ],
+   "gain": -15
+  },
+  {
+   "clip": "sfx_whoosh",
+   "at": [
+    "B09",
+    "end",
+    0.05
+   ],
+   "gain": -15
+  },
+  {
+   "clip": "sfx_dog_whine",
+   "at": [
+    "B09",
+    "end",
+    0.75
+   ],
+   "gain": -11
+  },
+  {
+   "clip": "sfx_whoosh",
+   "at": [
+    "B15",
+    "start",
+    -0.3
+   ],
+   "gain": -13
+  },
+  {
+   "clip": "sfx_lid",
+   "at": [
+    "B16",
+    "end",
+    0.2
+   ],
+   "gain": -11
+  },
+  {
+   "clip": "sfx_catch",
+   "at": [
+    "C",
+    "from",
+    0.55
+   ],
+   "gain": -12
+  },
+  {
+   "clip": "sfx_bell_far",
+   "at": [
+    "C23",
+    "end",
+    0.6
+   ],
+   "gain": -15
+  },
+  {
+   "clip": "sfx_scroll",
+   "at": [
+    "D27",
+    "start",
+    -0.6
+   ],
+   "gain": -15
+  },
+  {
+   "clip": "sfx_trunk",
+   "at": [
+    "E",
+    "from",
+    0.4
+   ],
+   "gain": -17
+  },
+  {
+   "clip": "sfx_lantern_set",
+   "at": [
+    "F45",
+    "end",
+    1.2
+   ],
+   "gain": -12
+  },
+  {
+   "clip": "laugh_su",
+   "at": [
+    "F46",
+    "end",
+    0.04
+   ],
+   "gain": -4,
+   "note": "his one laugh at the memory (a take of the laugh, picked after the run)"
+  },
+  {
+   "clip": "sfx_sleeve",
+   "at": [
+    "F50",
+    "end",
+    1.0
+   ],
+   "gain": -14
+  },
+  {
+   "clip": "sfx_ink_wipe",
+   "at": [
+    "G",
+    "to",
+    -0.55
+   ],
+   "gain": -12
+  },
+  {
+   "clip": "sfx_stamp",
+   "at": [
+    "H",
+    "from",
+    0.45
+   ],
+   "gain": -11
+  },
+  {
+   "clip": "sfx_shell_pop",
+   "at": [
+    "H",
+    "from",
+    0.25
+   ],
+   "gain": -13
+  },
+  {
+   "clip": "sfx_slurp",
+   "at": [
+    "H",
+    "from",
+    0.8
+   ],
+   "gain": -10
+  },
+  {
+   "clip": "sfx_ink_wipe",
+   "at": [
+    "H",
+    "to",
+    -0.55
+   ],
+   "gain": -12
+  },
+  {
+   "clip": "sfx_stamp",
+   "at": [
+    "I",
+    "from",
+    0.45
+   ],
+   "gain": -11
+  },
+  {
+   "clip": "sfx_temple_bell",
+   "at": [
+    "I",
+    "from",
+    0.15
+   ],
+   "gain": -17
+  }
+ ],
+ "cards": {
+  "clip": "sfx_card",
+  "gain": -16
+ }
+}
