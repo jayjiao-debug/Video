@@ -152,10 +152,10 @@ const STALL0 = aim(STOP, head(SU0), 660, 520);
 const STALL_IN = aim(STOP, head(SU_IN), 600, 525);
 /** A05: she creeps in 0.3 m as he steps up to her: his face above the spine he holds up at her */
 const CLOSE_POS = STOP.clone().add(SU_IN.clone().setY(EYE).sub(STOP).normalize().multiplyScalar(0.3));
-const CLOSE = aim(CLOSE_POS, head(SU_IN2), 500, 540);
+const CLOSE = aim(CLOSE_POS, head(SU_IN2), 500, 590);   // (QA1: 540 -> 590, the hat crown out of the REC row)
 /** card 1: back and to the right: his face above the card (mid-left), the block and the butcher on the right */
 const CARD_POS = STOP.clone().add(V(0.3, 0, 0.1));
-const CARD = aim(CARD_POS, head(SU_IN2), 600, 430);
+const CARD = aim(CARD_POS, head(SU_IN2), 600, 465);   // (QA1: 430 -> 465, the hat clear of the timestamp)
 /** her camera before the whip: the walk in, the stall, the pan to the servant on 当官的, close for the bone, the card */
 export const camA = (f: number): CamPose => {
   const c = C.povCam(f, [

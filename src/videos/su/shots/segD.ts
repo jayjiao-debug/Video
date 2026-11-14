@@ -14,9 +14,9 @@
 //             reads it for a long time (focus). GUO steps back a little. Hold.
 //   D30       he looks up (BEAT.D.look), genuinely curious: focus -> the open eyes of his resting smile (a
 //             head tilt on 有什么) -> happy (BEAT.D.brighten, 好吃).
-//   D31       the mic swings round to the lens (BEAT.D.aside): her aside, stunned, half laughing. SU rolls the order up,
-//             happy, and looks to the courier for an answer; the courier is lost (dazed), GUO dumbfounded, MAI laughs
-//             with relief, the kid is happy again. The fade through gold (hud TRANSITIONS, transitionAt).
+//   D31       her aside, stunned, half laughing (PLAN 11.3: no mic; her camera turns a little away from him, to the
+//             family, and leans in: camD). SU rolls the order up, happy, and looks to the courier for an answer; the
+//             courier is lost (dazed), GUO dumbfounded, MAI laughs with relief, the kid is happy again. The fade through gold (hud TRANSITIONS, transitionAt).
 // Every frame from beats.ts (BEAT.D) / lineId / capWord / SEGMENTS; every mark from layout/yard.ts (YARD.courier,
 // YARD.road); the people stand on floor points given in her view (cp: metres out along her line of sight, metres to
 // its right) from the camera that stands on YARD.courier's line. Props pinned after w.update().
@@ -66,11 +66,19 @@ const FEET = YARD.courier.clone().addScaledVector(FW, -CAM_D);
 /** a floor point `d` m out along her line of sight and `r` m to its right (screen right) */
 const cp = (d: number, r: number) => FEET.clone().addScaledVector(FW, d).addScaledVector(RT, r);
 /** tipped down so his eyes sit in the upper third (y about 560 of 1920 at 2.4 m), the courier's head above them */
-const PITCH = 18.5 * (Math.PI / 180);
+const PITCH = 16.5 * (Math.PI / 180);   // (QA1: 18.5 -> 16.5: the courier's face out from under the REC timestamp, SU's cap clear of the battery)
 const POS: Vec3 = [FEET.x, EYE, FEET.z];
 const LOOK: Vec3 = [FEET.x + FW.x * 6 * Math.cos(PITCH), EYE - 6 * Math.sin(PITCH), FEET.z + FW.z * 6 * Math.cos(PITCH)];
-/** THE STILL: one tripod key, nothing moves (PLAN 8D) */
-export const camD = (f: number): CamPose => C.tripod(f, [{ f: S.from, pos: POS, look: LOOK, fov: C.FOV }]);
+/** D31 IS AN ASIDE (PLAN 11.3: no mic): just before her line she turns a little away from him, to the left (he leaves
+ *  the frame on the right; MAI, the kid, GUO and the courier on the horse stay in it, reacting), tilts, leans in, and
+ *  holds to the end (the fade through gold takes it). One slow eased move: the tripod's stillness otherwise. */
+const L31 = ln("D31"), ASIDE31 = [L31.from - 10, L31.from + 6] as const;
+const asideK = (f: number) => easeInOutCubic(clamp01((f - ASIDE31[0]) / (ASIDE31[1] - ASIDE31[0])));
+/** THE STILL: one tripod key, nothing moves (PLAN 8D), until the D31 aside */
+export const camD = (f: number): CamPose => {
+  const c = C.tripod(f, [{ f: S.from, pos: POS, look: LOOK, fov: C.FOV }]), k = asideK(f);
+  return k > 0 ? C.nudge(c, { yaw: -13 * k, pitch: 1.2 * k, roll: -2.2 * k, fwd: 0.18 * k }) : c;
+};
 
 // ------------------------------------------------------------------------------------------------------- the marks
 /** the courier reins in on his mark, turned three quarters to her (his horse's near flank and head to her) */

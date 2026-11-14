@@ -4,7 +4,8 @@
 //                   the English small under each ("Huangzhou" "Huizhou" "Danzhou"); from I57's end (BEAT.I.pictures)
 //                   under each name a small round PAINTED PICTURE fades up (240 px, flat SVG in the toon palette): the
 //                   pot of red pork, the pile of lychee shells, an oyster open on the fire. Meanwhile the 3D picture
-//                   darkens under them (BEAT.I.dim, to 60 %). All held through card 5; then EVERYTHING fades to black
+//                   darkens under them (BEAT.I.dim, to 45 %: <EndDim f />, drawn first in the HUD layer).
+//                   All held through card 5; then EVERYTHING fades to black
 //                   by the last frame (BEAT.I.black: <EndBlack f /> over everything, the last frames pure film-black
 //                   #0b0a0e). I57's normal
 //                   caption is hidden (hud/caption.tsx skips END_LINE): the names ARE the caption.
@@ -21,8 +22,11 @@ export const END_LINE = lineNum("I57");
 const XS = [205, 490, 775], Y_NAME = 760, Y_EN = 852, Y_PIC = 1010, R_PIC = 120, PX = 110;
 /** the box the names and their pictures take (px) */
 export const NAMES_RECT: Rect = { x0: 60, y0: 690, x1: 920, y1: 1140 };
-/** how dark the 3D picture is under the names (0 .. 0.6), then the final fade to black (to 1 on the last frame) */
-export const endDim = (f: number) => 0.6 * smootherstep(clamp01((f - BEAT.I.dim[0]) / Math.max(1, BEAT.I.dim[1] - BEAT.I.dim[0])));
+/** how dark the 3D picture gets under the names (QA2 2026-11-14: 0.6 -> 0.45, so SU_OLD's face and his last look at
+ *  us stay readable; the names keep their thick ink line) */
+const END_DIM = 0.45;
+/** how dark the 3D picture is under the names (0 .. END_DIM), then the final fade to black (to 1 on the last frame) */
+export const endDim = (f: number) => END_DIM * smootherstep(clamp01((f - BEAT.I.dim[0]) / Math.max(1, BEAT.I.dim[1] - BEAT.I.dim[0])));
 export const endBlack = (f: number) => clamp01((f - BEAT.I.black[0] + 1) / Math.max(1, BEAT.I.black[1] - BEAT.I.black[0] - 4));
 
 // ---------------------------------------------------------------------------------------------------- the pictures
@@ -78,12 +82,10 @@ const PICS = [Pork, Shells, Oyster];
 export const EndNames: React.FC<{ f: number }> = ({ f }) => {
   const n0 = BEAT.I.names[0];
   if (f < n0) return null;
-  const dim = endDim(f);
   const pk = (k: number) => smootherstep(clamp01((f - BEAT.I.pictures - k * 8) / 24));
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      {/* the 3D picture darkens under the names */}
-      {dim > 0 ? <div style={{ position: "absolute", inset: 0, background: HC.black, opacity: dim }} /> : null}
+      {/* the 3D picture's dim is <EndDim f /> (drawn FIRST in the HUD layer, under the vlog HUD and card 5) */}
       {TXT.names.map((nm, k) => {
         const t = f - BEAT.I.names[k];
         if (t < 0) return null;
@@ -113,6 +115,12 @@ export const EndNames: React.FC<{ f: number }> = ({ f }) => {
       </svg>
     </AbsoluteFill>
   );
+};
+/** THE 3D PICTURE'S DIM under the end names (QA2 2026-11-14: split out of EndNames so Film.tsx draws it FIRST in the
+ *  HUD layer: the REC mark, the battery and card 5 stay bright over it; before, card 5 read grey) */
+export const EndDim: React.FC<{ f: number }> = ({ f }) => {
+  const dim = endDim(f);
+  return dim > 0 ? <AbsoluteFill style={{ pointerEvents: "none", background: HC.black, opacity: dim }} /> : null;
 };
 /** THE END'S BLACK over everything (Film.tsx draws it last, above the captions and P.top): 0 until BEAT.I.black, then
  *  up to 1 (pure film-black) a few frames before the last frame */

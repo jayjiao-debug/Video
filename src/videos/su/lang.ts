@@ -8,6 +8,8 @@ import { L } from "../../kit/film/lang";
 export { LANG, EN, L, type Lang } from "../../kit/film/lang";
 
 export const TXT = {
+  /** her camera's REC label (hud/vlog.tsx) */
+  rec: "REC",
   /** the film's title (the title block, A, frames 0-90) */
   title: L("采访苏东坡的一天", "A Day with Su Dongpo"),
   /** the line under the title */

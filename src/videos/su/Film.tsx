@@ -8,7 +8,9 @@
 // stencil buffer (the rig figures layer their heads with it).
 // DOM layers on top, in this order: the HUD layer (hud/: the title block and the fact card (hidden by Pose.cards ===
 // false), the time-jump stamp, the registered HUDs, the end names; all hidden by Pose.hud === false), P.overlays, the
-// caption (hud/caption.tsx: Chinese + the line's English), P.top, the end's black (EndBlack), the slate. No vlog UI.
+// caption (hud/caption.tsx: Chinese + the line's English), P.top, her camera switching off (hud/vlog.tsx SwitchOff),
+// the slate. The vlog UI (REC, timestamp, battery: hud/vlog.tsx) is the first thing in the HUD layer (Jay, PLAN 11.4),
+// over only the end's dim of the 3D picture (hud/endnames.tsx EndDim; QA2 2026-11-14: card 5 and REC stay bright).
 // Input props: src/kit/film/env.ts (lang, nocap, nohud, noov, cover, zoom / sx / sy / ov, nopost, slate, kick, dbg,
 // ovonly, inksamples).
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -25,7 +27,7 @@ import { GradeEffect, type GradeParams } from "../vasa/grade";
 import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
 import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
-import { TitleBlock, FactCard, Stamp, EndNames, EndBlack, Caption } from "./hud";
+import { TitleBlock, FactCard, EndNames, EndDim, Caption, VlogHud, SwitchOff } from "./hud";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -163,8 +165,9 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
  *  registerHud, in registration order) and the end names (hud/) */
 const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <>
+    <EndDim f={f} />
+    <VlogHud f={f} rec={P.rec} />
     {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /></> : null}
-    <Stamp f={f} />
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
     <EndNames f={f} />
   </>
@@ -203,7 +206,7 @@ export const SuFilm: React.FC = () => {
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
       {P && P.captions !== false && !NOCAP ? <Caption f={f} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
-      {!COVER ? <EndBlack f={f} /> : null}
+      {!COVER ? <SwitchOff f={f} /> : null}
       {P && SLATE ? <Slate f={f} P={P} /> : null}
     </AbsoluteFill>
   );

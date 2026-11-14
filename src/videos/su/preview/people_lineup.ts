@@ -18,7 +18,8 @@
 //           "swaps" (SU, SU_WINK)
 //   layout  "row" (default up to `cols` figures) | "sheet" (rows stacked upward, no ground);  cols (default 5),
 //           gap (m between figures: 0.78 standing, 1.0 seated), rowH (sheet, 2.0)
-//   view    "front" | "34" | "34r" | "high" | "side" | "sider" | "back" | "back34" | "face";  fov (40);  far (m added
+//   view    "front" | "34" | "34r" | "high" | "side" | "sider" | "back" | "back34" | "back115" / "back115l" (the camera
+//           115 deg round from the face: the turn-away zone, F50) | "face";  fov (40);  far (m added
 //           to the distance);  camUp, camX;  camPose = { pos, look, fov }
 //   light   "lab" (the default) | a place: market, yard, room, huangzhou, pines, river, beach, temple (sets/index.ts
 //           PLACE_LOOKS: the place's figure light, background and AO);  ground = the ground's colour
@@ -94,7 +95,7 @@ const find = (w: string | number): Person[] => {
   return [p];
 };
 const pickOf = <T,>(v: T | T[] | undefined, i: number, d: T): T => (v === undefined ? d : Array.isArray(v) ? v[i % v.length] : v);
-const DIRS: Record<string, [number, number, number]> = { front: [0, 0.1, 1], "34": [0.6, 0.22, 0.77], "34r": [-0.6, 0.22, 0.77], high: [0, 0.5, 0.87], side: [1, 0.1, 0.001], sider: [-1, 0.1, 0.001], back: [0, 0.1, -1], back34: [-0.6, 0.3, -0.77], face: [0, 0.02, 1] };
+const DIRS: Record<string, [number, number, number]> = { front: [0, 0.1, 1], "34": [0.6, 0.22, 0.77], "34r": [-0.6, 0.22, 0.77], high: [0, 0.5, 0.87], side: [1, 0.1, 0.001], sider: [-1, 0.1, 0.001], back: [0, 0.1, -1], back34: [-0.6, 0.3, -0.77], back115: [0.9, 0.2, -0.42], back115l: [-0.9, 0.2, -0.42], face: [0, 0.02, 1] };
 /** the seat of the line-up: a platform this high */
 const SEAT_TOP = 0.4;
 

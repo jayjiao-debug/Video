@@ -130,6 +130,8 @@ export type Pose = {
   hud?: boolean;
   /** false hides the fact card and the title block on this frame (the stamps and the end names stay) */
   cards?: boolean;
+  /** false hides her camera's REC lamp and timestamp on this frame (hud/vlog.tsx; the battery stays, still) */
+  rec?: boolean;
   /** a debug label for the animatic (drawn only with the input prop slate: true): e.g. "A3 turn" */
   slate?: string;
 };

@@ -17,7 +17,11 @@
 //              view is drawn as before; a three-quarter view shows a little more hair behind the far ear (SU's far side
 //              is his beard's anyway); a back or back three-quarter view shows the back of a head of hair. Under a
 //              cut hat (the rig's "hat: { hair: 'cut' }": SU_OLD's 东坡巾, the 幞头) the rig's under-the-rim line is
-//              kept and the nape is added to it the same way. nape false = the rig's own line.
+//              kept and the nape is added to it the same way. nape false = the rig's own line; a number = its depth;
+//              { deg, from, full } = its depth and where round the head it blends in. SU's three ages (a full beard
+//              of the hair's colour) take NAPE_BEARD (from 55, full 115): from a back three-quarter (the face drawing,
+//              and with it the beard, has faded out there) the side of his head below the ear is hair and beard, not a
+//              bare skin cheek; seen from the front that band lies under the beard's sideburn, which is the same colour.
 //   limbColours(rig, { hand, arm })   HANDS THAT READ. The rig draws both arms (tubes) and the ball hands in LIMB_COL
 //              (near-ink), the colour of SU's grey-black beard: a hand over the beard vanished (B f586). The Look has no
 //              field for it (rig3d.ts: mkLimb / mkBall take LIMB_COL), so this recolours the figure's own two arm
@@ -40,21 +44,27 @@ const rad = (d: number) => (d * Math.PI) / 180;
 export const NAPE = 165;
 /** the nape is blended in from behind the ears (NAPE_FROM, deg round from the face) to the back (NAPE_FULL) */
 export const NAPE_FROM = 80, NAPE_FULL = 140;
+/** SU's nape (a full beard of the hair's colour wraps the jaw: see the head of this file) */
+export const NAPE_BEARD: Nape = { deg: NAPE, from: 55, full: 115 };
 /** the rig's lookup resolution (rig3d.ts HAIR_N; module private there: any width samples right, the lookup is by u) */
 const HAIR_N = 256;
 /** rig3d.ts hairLineHat (module private there; the same one line): the hairline under a hat whose rim is `rim` deg */
 const hairLineHat = (L: Look, az: number, rim: number): number =>
   lerp(rim - 22, Math.max(hairLine(L, az), rim + 11), smooth((Math.abs(az) - rad(50)) / rad(12)));
-/** the hairline with the nape: the rig's own line in front of the ears, going down to `nape` behind them (deg) */
-export const napeLine = (L: Look, az: number, rim: number, nape = NAPE): number => {
-  const base = rim ? hairLineHat(L, az, rim) : hairLine(L, az);
-  if (nape <= base) return base;
-  return lerp(base, nape, smooth((Math.abs(az) - rad(NAPE_FROM)) / rad(NAPE_FULL - NAPE_FROM)));
+/** the nape's shape: deg = how far down (from the crown), from / full = the azimuths (deg round from the face) where it
+ *  starts to blend in and where it is full. A full beard of the hair's colour (SU) wraps the jaw: from 55 / full 115
+ *  (see napeHair) */
+export type Nape = { deg?: number; from?: number; full?: number };
+/** the hairline with the nape: the rig's own line in front of `from`, going down to `deg` behind it (deg) */
+export const napeLine = (L: Look, az: number, rim: number, n: Nape = {}): number => {
+  const base = rim ? hairLineHat(L, az, rim) : hairLine(L, az), deg = n.deg ?? NAPE, from = n.from ?? NAPE_FROM, full = Math.max(from + 5, n.full ?? NAPE_FULL);
+  if (deg <= base) return base;
+  return lerp(base, deg, smooth((Math.abs(az) - rad(from)) / rad(full - from)));
 };
 const napeTexCache = new Map<string, THREE.DataTexture>();
 /** the head shader's hairline lookup with the nape (encoded as rig3d.ts hairTex: 16 bits of deg / 180, R high, G low) */
-const napeTex = (L: Look, rim: number, nape: number) => {
-  const key = `${L.hair}|${L.part ?? 1}|${rim}|${nape}`;
+const napeTex = (L: Look, rim: number, nape: Nape) => {
+  const key = `${L.hair}|${L.part ?? 1}|${rim}|${nape.deg ?? NAPE}|${nape.from ?? NAPE_FROM}|${nape.full ?? NAPE_FULL}`;
   let t = napeTexCache.get(key);
   if (!t) {
     const data = new Uint8Array(HAIR_N * 4);
@@ -76,12 +86,12 @@ const warnOnce = (id: string, msg: string) => { if (!warned.has(id)) { warned.ad
 /** THE BACK OF THE HEAD (see the head of this file): the figure's hair goes on down the back of its head to `nape`
  *  deg from the crown. Call once, after the rig built the figure. Returns false (and changes nothing) when the rig's
  *  insides are not as expected or nape is false. */
-export const napeHair = (r: Rig, L: Look, o: { nape?: number | false } = {}): boolean => {
+export const napeHair = (r: Rig, L: Look, o: { nape?: number | Nape | false } = {}): boolean => {
   if (o.nape === false) return false;
   const rr = r as unknown as RigInner, u = rr.faceU?.uHair;
   if (!u || !(u.value instanceof THREE.DataTexture)) { warnOnce("nape", "napeHair: the rig's head has no uHair lookup (rig3d.ts changed?): the back of the head is the rig's own"); return false; }
   const rim = typeof rr.hatLine === "number" ? rr.hatLine : 0;
-  u.value = napeTex(L, rim, o.nape ?? NAPE);
+  u.value = napeTex(L, rim, typeof o.nape === "number" ? { deg: o.nape } : o.nape ?? {});
   return true;
 };
 

@@ -14,8 +14,10 @@
 //     right of the door the BENCH against the wall, the DOG lying in front of it, the LADDER leaning on the veranda
 //     beam (MAI on it), the red LANTERN's hook on the beam between the board and the ladder. The kids chase round a
 //     loop in the open yard right of the middle.
-//   - THE LYCHEE TREE at the plateau's left edge (x -6.1), its crown spreading over the RATTAN BED (along z, his head to
-//     the tree, his feet toward her) and the SHELL PILE at the bed's foot.
+//   - THE LYCHEE TREE at the plateau's left edge (x -6.1), its crown spreading over the BAMBOO CHAIR (C; C-chair lane
+//     2026-11-14: it replaces the rattan bed, whose marks stay for the preview sheets) turned a little toward the yard,
+//     he sits in it facing her side; the SHELL PILE on the ground BESIDE the chair, on his left (+x), half a metre
+//     past the armrest: out of the frame while she talks to him from his left-front, found when her camera tips down.
 //   - The FENCE along the front (z 4) with the GATE right of the middle; outside it the HILL ROAD runs along the level
 //     shelf from +x to the gate (the courier rides it; everything a figure stands on is y 0).
 // Every mark stands clear of the set (the rig figure is about 0.5 m across; SU 1.06 with a belly about 0.6 m).
@@ -32,7 +34,8 @@ export const YARD_SET = {
   /** NEW: the two lattice windows of the front wall (middles x, width, sill, top) */ windows: { x: [YX - 2.05, YX + 2.05], w: 1.1, y0: 0.95, y1: 1.95 },
   /** the fence along the front and the gate opening in it */ fence: { z: 4.0, x0: YX - 7.2, x1: YX + 6.5, h: 1.1 }, gate: { x: YX + 2.6, w: 1.7 },
   /** the lychee tree's trunk, its crown (radius, height of its middle) */ lychee: { x: YX - 6.1, z: -1.2, crown: 2.8, crownY: 3.5 },
-  /** the rattan bed (along z: head end at z0, foot at z1), its top */ bed: { x: YX - 4.9, z0: -0.4, z1: 1.5, w: 0.72, top: 0.42 },
+  /** the rattan bed (along z: head end at z0, foot at z1), its top (C no longer uses it: the bamboo chair, YARD.chair) */ bed: { x: YX - 4.9, z0: -0.4, z1: 1.5, w: 0.72, top: 0.42 },
+  /** NEW (C-chair): the bamboo chair's footprint round its seat's middle (props CHAIR: 0.58 x 0.38, seat top 0.35) */ chair: { x: YX - 4.95, z: 0.15, w: 0.66, d: 0.5, top: 0.35 },
   /** the clay stove: footprint radius, top */ stove: { r: 0.38, top: 0.62 },
   /** the bench (along x) */ bench: { len: 1.5, d: 0.36, top: 0.45 },
   /** NEW: the ladder: the width between its rails, its rung spacing */ ladder: { w: 0.7, rung: 0.35 },
@@ -51,8 +54,16 @@ export const YARD = {
   /** the lantern's hook under the veranda beam */ lantern: V(YX + 1.35, 2.55, -3.85),
   /** the kids' chase: a closed loop in the open yard right of the middle */
   kids: [V(YX + 0.3, 0, -0.9), V(YX + 1.3, 0, -0.6), V(YX + 1.65, 0, -1.5), V(YX + 0.95, 0, -2.3), V(YX + 0.2, 0, -1.8), V(YX + 0.3, 0, -0.9)] as Path,
-  /** the lychee tree (its trunk), the rattan bed (the middle of its top: he lies on it facing +z), the shell pile at its foot */
-  lychee: V(YX - 6.1, 0, -1.2), bed: V(YX - 4.9, 0.42, 0.55), shells: V(YX - 4.9, 0, 1.95),
+  /** the lychee tree (its trunk); the rattan bed (the middle of its top: C no longer uses it, the preview sheets do) */
+  lychee: V(YX - 6.1, 0, -1.2), bed: V(YX - 4.9, 0.42, 0.55),
+  /** C: THE BAMBOO CHAIR (props "bambooChair": its origin, the ground under the middle of its seat's front edge) and its
+   *  yaw (turned 0.25 rad toward the yard, so he faces her lens as she talks to him from his left-front); he sits in it
+   *  (props chairSeat(YARD.chair, YARD.chairRot): the seat's middle is at x -4.95, z 0.15) */
+  chair: V(YX - 4.9, 0, 0.33), chairRot: 0.25,
+  /** C: the pile of lychee shells (the set's, param shells; about 1.1 m across with its loose crust, 0.42 high at shells 1)
+   *  on the ground BESIDE THE CHAIR on his left: its middle 1.37 m to his left of the seat's middle and 0.15 m forward
+   *  (about 0.55 m clear of the armrest), so the whole heap stays out of her talking frame until her camera tips down */
+  shells: V(YX - 3.59, 0, -0.05),
   /** NEW: where the set's two chickens peck (clear of every walk) */ hens: [V(YX + 4.4, 0, 0.6), V(YX - 3.3, 0, -1.6)],
   /** the gate (the middle of its opening), just inside it, the hill road up to it (along the shelf), where the courier
    *  reins in (outside) */
@@ -72,10 +83,10 @@ export const YARD_CAMS: Record<"land" | "stove" | "su" | "dog" | "house" | "bed"
   dog: { pos: [YX + 1.0, 0.5, -2.3], look: [YX + 1.25, 0.22, -3.5], fov: 62 },
   /** B11: the house, the kids, the son on the ladder (the pan's far end) */
   house: eyeCam(YX - 0.4, 0.2, [YX + 1.3, 1.7, -4.2]),
-  /** C: the lychee tree and SU on the rattan bed (from her side of its foot) */
+  /** C: the lychee tree and SU in its shade (from her side; named for the old rattan bed: the bamboo chair is there now) */
   bed: eyeCam(YX - 3.5, 3.4, [YX - 5.0, 1.0, 0.0]),
-  /** C after C20: tilted down to the shell pile at the bed's foot */
-  shells: eyeCam(YX - 3.6, 3.4, [YX - 4.9, 0.25, 1.8]),
+  /** C after C20: tilted down to the shell pile beside the chair */
+  shells: eyeCam(YX - 3.55, 2.4, [YX - 3.59, 0.25, -0.05]),
   /** D (STILL): from the yard toward the gate, the courier on the horse outside, the family coming out, the valley */
   gate: eyeCam(YX - 0.6, -1.4, [YX + 2.4, 0.2, 4.6]),
   /** NEW: establishing, from the hill road outside the gate: the gate on the left half (a frame in the frame), the yard

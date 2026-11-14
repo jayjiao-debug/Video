@@ -51,8 +51,8 @@
 //     above his brows: a hand raised to his head or a held thing beside it keeps clear of the rim (self-head).
 //   - ji (the reporter) is the camera: she has no figure (her hand and red mic: her.ts).
 //   - WP3-fix (2026-11-14, acc/figure.ts, every Person): the hair goes on down the back of the head to the collar
-//     (Person.nape, default 165 deg from the crown): a back view (turn 1) shows the back of a head of hair, not a skin
-//     oval under a hair band. SU, SU_WINK, SU_DAN, SU_OLD: skin-coloured ball hands and arms in the robe's band colour
+//     (Person.nape, default 165 deg from the crown; SU's ages also round the jaw under the beard, NAPE_BEARD): a back
+//     view (turn 1) shows the back of a head of hair, not a skin oval under a hair band. SU, SU_WINK, SU_DAN, SU_OLD: skin-coloured ball hands and arms in the robe's band colour
 //     (Person.limbs), so a hand over his long beard reads (the rest of the cast keep the rig's near-ink limbs).
 import type { Expr, Look } from "../group/kit/toon";
 import type { Acc, Rig, RigCast } from "../group/kit/rig3d";
@@ -67,14 +67,14 @@ import { headCloth } from "../wanbi/acc/bundle";
 import { ladyBun, ladyFace } from "../wanbi/acc/lady";
 import { bambooHat, dongpoCap, futou, twinBuns, wink } from "./acc/hats";
 import { patches, stains, apronBib } from "./acc/cloth";
-import { napeHair, limbColours } from "./acc/figure";
+import { napeHair, limbColours, NAPE_BEARD, type Nape } from "./acc/figure";
 import type { Speaker } from "./voice";
 
 export { personalise };
 /** a Person (Wanbi's type) + the accessories hidden by default (a shot's own `hide` replaces this list) + the figure
- *  fixes of acc/figure.ts: nape = how far down the back of the head the hair goes (deg from the crown; default NAPE
- *  165, false = the rig's own line), limbs = the ball hands' / arm tubes' colours (default: the rig's near-ink) */
-export type Person = KitPerson & { hide?: string[]; nape?: number | false; limbs?: { hand?: string; arm?: string } };
+ *  fixes of acc/figure.ts: nape = how far down the back of the head the hair goes (deg from the crown, or { deg, from,
+ *  full }; default NAPE 165 from the ears back, SU's ages NAPE_BEARD; false = the rig's own line), limbs = the ball hands' / arm tubes' colours (default: the rig's near-ink) */
+export type Person = KitPerson & { hide?: string[]; nape?: number | Nape | false; limbs?: { hand?: string; arm?: string } };
 
 type Inner = { _update: (cam: unknown) => void };
 /** Adds the figure to the cast: Wanbi's addPerson (accessories, rim light, the hair over the beard, the resting face
@@ -133,13 +133,13 @@ const suAcc = (): Acc[] => [
 ];
 /** 苏东坡 at 60 (see the head of this file): 1.06 x, the roundest body, the long grey-black beard, the patched ochre robe,
  *  the bamboo hat (default) or the 东坡巾 (hide SU_HAT.cap); resting face smile */
-export const SU: Person = { name: "su", scale: 1.06, expr: "smile", look: SU_LOOK, acc: suAcc, hide: ["dongpoCap"], limbs: { hand: S_RUDDY, arm: COL.suBand } };
+export const SU: Person = { name: "su", scale: 1.06, expr: "smile", look: SU_LOOK, acc: suAcc, hide: ["dongpoCap"], limbs: { hand: S_RUDDY, arm: COL.suBand }, nape: NAPE_BEARD };
 /** the same with a wink (one eye closed in an arch on the side of the smirk): a swap for a few frames (C20) */
 export const SU_WINK: Person = { ...SU, name: "suWink", acc: () => [...suAcc(), wink()] };
 /** 苏东坡 two years later (儋州): thinner, tanned, nearly white hair and beard, the robe faded, bare-headed */
 export const SU_DAN: Person = {
   name: "suDan", scale: 1.06, expr: "smile", look: song(classmate(64), { width: 1.08, skin: S_TAN, hairCol: COL.white, topCol: COL.suFaded, head: SU_HEAD }),
-  limbs: { hand: S_TAN, arm: COL.suFadedBand },
+  limbs: { hand: S_TAN, arm: COL.suFadedBand }, nape: NAPE_BEARD,
   acc: () => [
     robe({ col: COL.suFaded, band: COL.suFadedBand, sash: COL.suBelt }), patches({ col: COL.patchFaded, thread: "#efe4c8" }),
     beard({ kind: "long", col: COL.white, len: 2.15, wide: 1.0 }), moustache({ kind: "walrus", col: COL.white }),
@@ -149,7 +149,7 @@ export const SU_DAN: Person = {
 /** 苏东坡 four years later (金山): very thin, white hair and beard, a plain grey robe, the 东坡巾; the stick is a prop */
 export const SU_OLD: Person = {
   name: "suOld", scale: 1.04, expr: "smile_closed", look: song(classmate(64), { width: 0.8, skin: S_OLD, hairCol: COL.whiteOld, topCol: COL.suOld, head: { ...SU_HEAD, egg: 0.06 } }),
-  limbs: { hand: S_OLD, arm: COL.suOldBand },
+  limbs: { hand: S_OLD, arm: COL.suOldBand }, nape: NAPE_BEARD,
   acc: () => [
     robe({ col: COL.suOld, band: COL.suOldBand, sash: COL.suOldBand }),
     beard({ kind: "long", col: COL.whiteOld, len: 2.25, wide: 0.86 }), moustache({ kind: "walrus", col: COL.whiteOld }),

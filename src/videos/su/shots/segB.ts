@@ -16,8 +16,9 @@
 //   dog      B09 after THE WHIP DOWN (4 frames out, 4 in, a vertical smear) to her camera 0.55 m over the ground: the
 //                      white bone lands at the forepaws of the yard dog begging by the stove; it sniffs it, then looks up
 //                      at him, betrayed (head tilt, ears back), her lens tilting up with it.
-//   aside    B10       the mic swings round to the lens (her aside), she laughs (a shake of laughter); the camera rises
-//                      back to her eye height on him (he is laughing, gnawing a new bone).
+//   aside    B10       her aside (PLAN 11.3: no mic): her lens, still low on the dog, leans in a little to the viewer
+//                      (a small turn, a tilt, a push), she laughs (a shake of laughter); the camera rises back to her
+//                      eye height on him (he is laughing, gnawing a new bone).
 //   house    B11       beaming; on 房子 he waves the bone at the house and the camera pans with it to the house: the
 //                      lantern hung and lit, MAI on the ladder; on 一家人 MAI turns round on the ladder and waves back, a
 //                      kid runs through; on 团聚 the pan comes back to him, hand on his belly, warm. The dog stands by,
@@ -131,7 +132,9 @@ const WINE_IN = BOWL_AT.clone().add(V(0, WINE_BOWL.h + 0.012, 0));
 // --------------------------------------------------------------------------------------------- the dog, MAI, kids
 /** where the dog sits begging, at the stove's right end by his left side, and her low lens in front of it */
 const DOG_SIT = loc(0.84, 0, 0.3);
-const DOG_CAM_POS = V(DOG_SIT.x - 0.3, 0.55, DOG_SIT.z + 0.98);
+/** (QA1: 1.0 -> 1.4 m back: from 1 m the whole dog took half the frame's height and its look-up put its head under the REC
+ *  timestamp; from here it sits between the top rows and the caption band) */
+const DOG_CAM_POS = V(DOG_SIT.x - 0.42, 0.55, DOG_SIT.z + 1.34);
 const DOG_ROT = yawTo(DOG_SIT, DOG_CAM_POS);
 /** the white bone just in front of its forepaws, under its nose when it sniffs (where the flick lands) */
 const DOG_BONE = DOG_SIT.clone().add(V(Math.sin(DOG_ROT), 0, Math.cos(DOG_ROT)).multiplyScalar(0.27)).setY(0.0285);
@@ -147,8 +150,12 @@ const MAI_AT = YARD.mai.clone().add(V(0, 0, 0.045));
 /** MAI's left hand holds the lantern up toward the hook (as far as his short arm goes) */
 const MAI_SH = rel(MAI_AT, MAI_FACE, 0.2, 0.95, 0.08);
 const LAN_HOLD = MAI_SH.clone().add(V(-0.22, 0.17, -0.15));
-const KID_SPEED = 1.8, LOOP_T = walkTime(YARD.kids, KID_SPEED);
-const kidLeg = (f: number, k: number) => walkAlong(YARD.kids, KID_SPEED, (((f / FPS - 0.55 * k) % LOOP_T) + LOOP_T) % LOOP_T + 1e-3);
+/** the kids' chase loop: YARD.kids moved 1.0 m right and 0.3 m back (QA1: on YARD.kids itself the kid running through
+ *  B11's house pan passed 1.5-2 m from her lens and its face fell into the caption band; from here it runs past 3 m
+ *  away, face above the band, still clear of the ladder, the bench, the dog and the stove) */
+const KIDS_PATH = YARD.kids.map((p) => V(p.x + 1.0, p.y, p.z - 0.3));
+const KID_SPEED = 1.8, LOOP_T = walkTime(KIDS_PATH, KID_SPEED);
+const kidLeg = (f: number, k: number) => walkAlong(KIDS_PATH, KID_SPEED, (((f / FPS - 0.55 * k) % LOOP_T) + LOOP_T) % LOOP_T + 1e-3);
 
 // ------------------------------------------------------------------------------------------------------- the cameras
 const key = (f: number, c: CamPose, ease?: (x: number) => number): C.CamKey => ({ f, pos: c.pos, look: c.look, fov: c.fov, ease });
@@ -169,18 +176,18 @@ const STOVE = aim(loc(-0.1, EYE, 2.4), HEAD_SQ, 520, 650);
  *  (where her taking hand reaches: her.ts) above the caption band */
 const OFFER = aim(loc(-0.45, EYE, 1.65), HEAD_UP, 500, 430);
 /** B08-B09 and B11-B14, B18: talking, his head about 40 % of the width */
-const TALK = aim(TALK_POS, HEAD_UP, 560, 500);
-const TALK_B = aim(TALK_POS.clone().add(V(0.05, 0, 0.1)), HEAD_UP, 570, 520);
-const TALK_IN = aim(loc(0.18, EYE, 1.62), HEAD_UP, 545, 510);
-const TALK_18 = aim(loc(0.26, EYE, 1.85), HEAD_UP, 560, 505);
+const TALK = aim(TALK_POS, HEAD_UP, 595, 500);   // (QA1: sy +35..40 on the talk framings: his hat clear of the REC timestamp)
+const TALK_B = aim(TALK_POS.clone().add(V(0.05, 0, 0.1)), HEAD_UP, 605, 520);
+const TALK_IN = aim(loc(0.18, EYE, 1.62), HEAD_UP, 585, 510);
+const TALK_18 = aim(loc(0.26, EYE, 1.85), HEAD_UP, 600, 505);
 /** B11's pan: from his place, the house: the lantern (left) and MAI on the ladder (right), the kids below */
-const HOUSE = aim(TALK_POS.clone().add(V(0.05, 0, 0.1)), V((YARD.lantern.x + MAI_AT.x) / 2 + 0.1, 1.75, (YARD.lantern.z + MAI_AT.z) / 2), 700, 540);
+const HOUSE = aim(TALK_POS.clone().add(V(0.05, 0, 0.1)), V((YARD.lantern.x + MAI_AT.x) / 2 + 0.1, 1.75, (YARD.lantern.z + MAI_AT.z) / 2), 660, 540);   // (QA1: 700 -> 660: the running kid's face above the caption band)
 /** the dog: her lens 0.55 m over the ground; its sniffing head over the bone in the upper middle (its betrayed look up
  *  higher still, the bone at its paws above the caption band) */
 const DOG_HEAD = DOG_SIT.clone().add(V(0, 0.2, 0)).lerp(DOG_CAM_POS.clone().setY(0.2), 0.12);
-const DOG_CAM = aim(DOG_CAM_POS, DOG_HEAD, 720, 560);
+const DOG_CAM = aim(DOG_CAM_POS, DOG_HEAD, 700, 560);
 /** ... and tilted up with it when it looks up at him (betrayed) */
-const DOG_CAM_UP = aim(DOG_CAM_POS, DOG_SIT.clone().add(V(0, 0.42, 0)), 600, 560);
+const DOG_CAM_UP = aim(DOG_CAM_POS, DOG_SIT.clone().add(V(0, 0.42, 0)), 640, 560);
 
 const K1: C.CamKey[] = [
   key(S.from, LAND),
@@ -203,7 +210,7 @@ const K2: C.CamKey[] = [
   key(L14.from + 10, TALK),
   key(L14.to, TALK_IN),
 ];
-const K18: C.CamKey[] = [key(B.flashOut, TALK_18), key(S.to, aim(loc(0.24, EYE, 1.7), HEAD_UP, 555, 505))];
+const K18: C.CamKey[] = [key(B.flashOut, TALK_18), key(S.to, aim(loc(0.24, EYE, 1.7), HEAD_UP, 595, 505))];
 const MOOD: [number, C.Mood][] = [[S.from, "excited"], [SA - 4, "calm"], [B.aside, "excited"], [L11.from, "calm"]];
 const WALK: [number, number][] = [[S.from, 0.8], [SA - 8, 0.8], [SA - 2, 0], [RISE0 - 2, 0], [RISE0 + 2, 0.6], [OUT, 0.5], [OUT + 4, 0], [S.to, 0]];
 /** her yard camera (no whips): the keys + the handheld; the dog shot; her laugh */
@@ -217,6 +224,13 @@ const yardCam = (f: number): CamPose => {
   // her laugh (B10): a shake of laughter, a few bounces, dying away
   const lk = ky(f, [[L10.from - 2, 0], [L10.from + 6, 1], [L10.to - 10, 0.8], [L10.to + 14, 0]]);
   if (lk > 0.001) { const t = f / FPS; c = C.nudge(c, { up: 0.006 * lk * Math.abs(Math.sin(2 * PI * 2.6 * t)), pitch: 0.8 * lk * Math.sin(2 * PI * 2.6 * t + 0.5), roll: 0.9 * lk * Math.sin(2 * PI * 1.3 * t) }); }
+  // her bites (B07-B08): a small nod of her camera as the bone comes up to her mouth
+  const bk = biteK(f);
+  if (bk > 0.001) c = C.nudge(c, { pitch: -2.2 * bk, up: -0.008 * bk });
+  // B10 is an ASIDE (PLAN 11.3: no mic): her lens is already off him (on the betrayed dog); she leans in a little to the
+  // viewer (a small turn, a tilt, a push) for the line and comes out of it as she rises back to him
+  const ak = easeInOutCubic(clamp01((f - (L10.from - 8)) / 10)) * (1 - easeInOutCubic(clamp01((f - (RISE_CAM0 - 2)) / 12)));
+  if (ak > 0.001) c = C.nudge(c, { yaw: 6 * ak, pitch: 1 * ak, roll: 2.5 * ak, fwd: 0.05 * ak });
   return c;
 };
 /** her camera in the flashback: the slope's lateral drift, then the pot's slow push, the lid, the pork */
@@ -253,6 +267,9 @@ function camAt(f: number): { camera: CamPose; post?: PostPose; smear: number; vs
   const W = C.whip(c, f, A.whip, { dir: 1, to: c });
   return { camera: W.cam, post: W.post, smear: W.smear, vsmear: 0 };
 }
+
+/** her camera on frame f (for previews and checks) */
+export const camB = (f: number): CamPose => camAt(f).camera;
 
 // ---------------------------------------------------------------------------------------------- the chopsticks
 /** a bone's axis in his left hand (grip hilt: the hand holds its lower end): up and a little toward her (k 0) .. across
@@ -557,12 +574,19 @@ const MIC: [number, MicMode, number?][] = [
   [ZHU - 2, "in"], [ZHU + 10, "toward"], [FLICK - 4, "off", 8], [B.aside, "lens", 10], [RISE_CAM1 - 4, "toward", 12],
 ];
 const micAt = (f: number): Pick<MicO, "mode" | "from" | "k"> => herKeys<MicMode>(f, MIC, "off");
+/** HER INVISIBLE HAND'S BONE (PLAN 11.2: only the bone is drawn): held at the bottom of her lens BELOW the caption band
+ *  (her.ts "eat" with dy: only its top end shows, under the subtitles), and a bite in each of the two gaps between
+ *  the lines (B07 / B08 / B09): the bone lifts toward the lens and her camera nods (biteK, yardCam) */
+const BITES = [L07.to + 2, L08.to + 1];
+const biteK = (f: number) => BITES.reduce((m, b) => Math.max(m, f >= b && f < b + 10 ? Math.sin((PI * (f - b)) / 10) : 0), 0);
+const EAT_DY = -0.55;
 function herHand(f: number): HandO | undefined {
   if (f < REACH) return undefined;
+  const dy = { eat: EAT_DY + 0.14 * biteK(f), off: EAT_DY };
   if (f < GRAB) return { mode: "reach", from: "off", k: clamp01((f - REACH) / 10), at: serveAt(f) };
   if (f < TO_EAT) return { mode: "reach", k: 1, at: serveAt(f), curl: clamp01((f - GRAB) / 5), item: "bone" };
-  if (f < L09.from + 6) return { mode: "eat", from: "reach", k: clamp01((f - TO_EAT) / 12), item: "bone", curl: 1 };
-  if (f < L09.from + 20) return { mode: "off", from: "eat", k: clamp01((f - L09.from - 6) / 12), item: "bone", curl: 1 };
+  if (f < L09.from + 6) return { mode: "eat", from: "reach", k: clamp01((f - TO_EAT) / 12), item: "bone", curl: 1, dy };
+  if (f < L09.from + 20) return { mode: "off", from: "eat", k: clamp01((f - L09.from - 6) / 12), item: "bone", curl: 1, dy };
   return undefined;
 }
 

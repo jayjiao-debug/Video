@@ -334,6 +334,69 @@ export const rattanBed = (K: Kit, g: THREE.Group) => {
   for (const sx of [-1, 1]) P.add(frame, limb(V(sx * (W / 2 - 0.03), -0.02, bk.z), V(sx * (W / 2 - 0.03), topRail.y, topRail.z), 0.022, 0.022, 8), 0.005);
   P.into(g, "rattanBed");
 };
+/** the BAMBOO ARMCHAIR (竹椅) under the lychee tree (C; C-chair lane, 2026-11-14: Jay found him on the day bed "very
+ *  off"): a Song-style chair of pale green-yellow bamboo poles with node rings (painted), a seat of split-bamboo slats
+ *  (painted on one slab) in a pole frame, LOW ARMRESTS on the front posts with a spindle under each, a slat BACKREST
+ *  reclined `back.lean` (15.5 deg) on the bent rear posts up to a top rail (搭脑) with knobbed ends `back.h` above the seat,
+ *  stretchers low between the legs. Sizes: CHAIR (top = the seat's top, 0.35: a low lounging chair, so SU's short rig
+ *  legs reach the ground from it (0.40 leaves his feet 4 cm in the air); w = between the side poles' centres, 0.58: room
+ *  for his round body between the armrests; d = from the seat's front edge back to the rear posts' line, 0.38: with his
+ *  back on the backrest his short thighs still reach past the front edge and the shins hang to the ground). ORIGIN = THE GROUND UNDER THE MIDDLE OF THE SEAT'S FRONT EDGE; the seat runs back
+ *  toward -z and the sitter faces +z (props/index.ts chairSeat(at, rot): his feet on the ground in front of it) */
+export const CHAIR = { top: 0.35, w: 0.58, d: 0.38, arm: 0.21, r: 0.02, back: { h: 0.52, lean: 0.27 } } as const;
+export const bambooChair = (K: Kit, g: THREE.Group) => {
+  const C = CHAIR, R: number = C.r, xs = C.w / 2, NODE = 0.17, tl = Math.tan(C.back.lean);
+  // the bamboo's skin: one internode per tile of a repeating paint (a dark node ring with its pale ridge, faint streaks);
+  // each pole's v is scaled to its length, so the nodes keep their spacing (NODE m) on every pole
+  const skin = paint(32, 128, (c, w, h) => {
+    c.fillStyle = "#d3cb84"; c.fillRect(0, 0, w, h);
+    c.fillStyle = "#c6bd74"; for (let i = 0; i < 5; i++) c.fillRect(Math.round(w * hash(i + 31)), 0, 2, h);
+    c.fillStyle = "#e3dba0"; c.fillRect(0, 14, w, 8);
+    c.fillStyle = "#958c4a"; c.fillRect(0, 8, w, 6);
+  }, true);
+  const pole = K.flat("#ffffff", { map: skin, rough: 0.55 }), knob = K.flat("#b9b066", { rough: 0.6 });
+  let seed = 0;
+  /** a bamboo pole from a to b (radius r) with its nodes NODE apart */
+  const bam = (a: THREE.Vector3, b: THREE.Vector3, r = R) => {
+    const geo = limb(a, b, r, r, 12), uv = geo.attributes.uv as THREE.BufferAttribute, k = a.distanceTo(b) / NODE, o = hash(++seed + 40);
+    for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) * k + o);
+    return geo;
+  };
+  const P = new Part(K), ink = 0.004;
+  const T = C.top, yF = T - 0.03, yA = T + C.arm, yT = T + C.back.h, zF = -R, zB = -C.d + R;
+  /** a rear post's centre at height y (vertical up to the seat frame, then leaning back) */
+  const rear = (sx: number, y: number) => V(sx * xs, y, y <= yF ? zB : zB - (y - yF) * tl);
+  for (const sx of [-1, 1]) {
+    P.add(pole, bam(V(sx * xs, 0, zF), V(sx * xs, yA, zF), 0.021), ink);                          // the front post (up to the arm)
+    P.add(pole, bam(rear(sx, 0), rear(sx, yF)), ink);                                             // the rear leg
+    P.add(pole, bam(rear(sx, yF), rear(sx, yT + 0.01)), ink);                                     // bent back: the backrest post
+    P.add(knob, ball(rear(sx, yF), R * 1.12, [1, 1, 1], 12), ink);                                // the bend (a node)
+    P.add(pole, bam(V(sx * xs, yA, 0.04), rear(sx, yA).add(V(0, 0, -0.02)), 0.02), ink);         // the armrest
+    P.add(knob, ball(V(sx * xs, yA, 0.04), 0.024, [1, 1, 1], 12), ink);                           // its rounded front end
+    P.add(pole, bam(V(sx * xs, yF, -C.d * 0.5), V(sx * xs, yA, -C.d * 0.5 + 0.005), 0.013), ink); // the spindle under it
+    P.add(pole, bam(V(sx * xs, yF, zF + 0.03), V(sx * xs, yF, zB - 0.03)), ink);                  // the seat frame's side
+    P.add(pole, bam(V(sx * xs, 0.19, zF), V(sx * xs, 0.19, zB), 0.014), ink);                     // the side stretcher
+  }
+  P.add(pole, bam(V(-xs - 0.03, yF, zF), V(xs + 0.03, yF, zF)), ink);                             // the seat frame's front
+  P.add(pole, bam(V(-xs - 0.03, yF, zB), V(xs + 0.03, yF, zB)), ink);                             // ...and back
+  P.add(pole, bam(V(-xs, 0.12, zF), V(xs, 0.12, zF), 0.014), ink);                                // the front stretcher
+  P.add(pole, bam(V(-xs, 0.12, zB), V(xs, 0.12, zB), 0.014), ink);                                // the back stretcher
+  // the seat: split-bamboo slats front to back (painted on one slab), its top at CHAIR.top, inside the pole frame
+  const slats = (n: number) => paint(128, 128, (c, w, h) => {
+    c.fillStyle = "#e0d49a"; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < n; i++) { const x = (w * i) / n; c.fillStyle = "#9c9050"; c.fillRect(x, 0, 2, h); c.fillStyle = "#ece2b0"; c.fillRect(x + 3, 0, 3, h); }
+    c.fillStyle = "#cdbf80"; for (let i = 0; i < 6; i++) c.fillRect(0, Math.round(h * hash(i + 61)), w, 1);
+  });
+  P.add(K.flat("#ffffff", { map: slats(10), rough: 0.6 }), box(C.w - 0.01, 0.024, C.d - 0.02, 0, T - 0.012, -C.d / 2), 0.003);
+  // the backrest: a lower rail, a slat panel leaning back with the posts, the top rail (搭脑) with knobbed ends
+  const lo = rear(1, T + 0.1), hi = rear(1, yT);
+  P.add(pole, bam(V(-xs, lo.y, lo.z), V(xs, lo.y, lo.z), 0.016), ink);
+  P.add(pole, bam(V(-xs - 0.05, hi.y, hi.z), V(xs + 0.05, hi.y, hi.z), 0.022), ink);
+  for (const sx of [-1, 1]) P.add(knob, ball(V(sx * (xs + 0.05), hi.y, hi.z), 0.026, [1, 1, 1], 12), ink);
+  const ph = (hi.y - lo.y) / Math.cos(C.back.lean);
+  P.add(K.flat("#ffffff", { map: slats(7), rough: 0.6 }), box(C.w - 0.03, ph, 0.016, 0, ph / 2, 0).rotateX(-C.back.lean).translate(0, lo.y, lo.z), 0.003);
+  P.into(g, "bambooChair");
+};
 
 // ===================================================================================================== D: the order
 /** the order (圣旨-like scroll): a dark roller 0.42 m along x (knobs 0.46 overall), a yellow silk sheet 0.36 x 0.30 with

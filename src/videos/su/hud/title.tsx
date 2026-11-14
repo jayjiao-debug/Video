@@ -1,5 +1,5 @@
 // hud/title.tsx: THE TITLE BLOCK of the Su film (PLAN.md section 6; WP1). A pure function of the frame.
-//   <TitleBlock f />   frames TITLE_SPAN (0-90, beats.ts), top centre (y 230-420): 「采访苏东坡的一天」 big (92 px, warm white,
+//   <TitleBlock f />   frames TITLE_SPAN (0-90, beats.ts), low centre (y 940-1130, above the captions; the vlog UI owns the top): 「采访苏东坡的一天」 big (92 px, warm white,
 //                      the captions' thick ink line, no box) and under it 「1097年 · 惠州」 (40 px, cream). English:
 //                      "A Day with Su Dongpo" / "1097 · Huizhou". Already up on frame 0 (the film opens moving), a slow
 //                      1 % drift, and it fades out (rising 10 px) over its last 12 frames.
@@ -11,9 +11,9 @@ import { TITLE_SPAN } from "../beats";
 import { EN } from "../lang";
 import { FONT_STACK, HC, textW, type Rect } from "./style";
 
-const MAIN = EN ? 80 : 92, SUB = 40, Y_MAIN = 300, Y_SUB = 382, OUT = 12;
+const MAIN = EN ? 80 : 92, SUB = 40, Y_MAIN = 1010, Y_SUB = 1092, OUT = 12;   // low: the REC row and the timestamp own the top (PLAN 11.4)
 /** the box the title takes (px) */
-export const TITLE_RECT: Rect = { x0: 90, y0: 230, x1: 990, y1: 420 };
+export const TITLE_RECT: Rect = { x0: 90, y0: 940, x1: 990, y1: 1130 };
 
 /** one line of inked text centred at (540, y): the ink line drawn under the fill, a hard drop */
 const Inked: React.FC<{ s: string; px: number; y: number; color: string; ls: number; sw: number }> = ({ s, px, y, color, ls, sw }) => {

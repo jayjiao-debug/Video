@@ -1,5 +1,5 @@
 {
- "note": "采访苏东坡的一天 sound plan (script_v1.md 'Sound'). at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. gain in dB. loop repeats the clip to fill [at, until]; seek starts inside the clip. Clips: /home/user/su_work/sound/clips (voice farm run sudongpo-sound-01). Music is never ducked (owner's rule): it sits low and constant under the voice. The music stops dead at the courier's hooves and stays out until line 30; at night only crickets and pines, one cello note at 49, all music out after 50; the warm theme returns on the river and for one phrase on 黄州，惠州，儋州.",
+ "note": "采访苏东坡的一天 sound plan (script_v1.md 'Sound'). at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. gain in dB. loop repeats the clip to fill [at, until]; seek starts inside the clip. Clips: /home/user/su_work/sound/clips (voice farm runs sudongpo-sound-01, -02; rec_beep / card_ding from qin-sfx-01; sfx_poweroff_su from scripts/qin/sound/make_poweroff.py). Music is never ducked (owner's rule): it sits low and constant under the voice. The music stops dead at the courier's hooves and stays out until line 30; at night only crickets and pines, one cello note at 49, all music out after 50; the warm theme returns on the river and for one phrase on 黄州，惠州，儋州.",
  "beds": [
   {
    "clip": "amb_market",
@@ -17,7 +17,7 @@
    "loop": true
   },
   {
-   "clip": "mus_morning",
+   "clip": "mus_morning2",
    "at": [
     "A",
     "from",
@@ -28,7 +28,7 @@
     "start",
     -0.15
    ],
-   "gain": -23,
+   "gain": -24.5,
    "fade": 0.05,
    "fade_out": 0.35,
    "note": "the theme from frame 0, out at the whip into 黄州"
@@ -68,7 +68,7 @@
    "fade_out": 0.8
   },
   {
-   "clip": "mus_huangzhou",
+   "clip": "mus_huangzhou2",
    "at": [
     "B15",
     "start",
@@ -79,7 +79,7 @@
     "start",
     -0.1
    ],
-   "gain": -21,
+   "gain": -19,
    "fade": 0.3,
    "fade_out": 0.6,
    "note": "the flashback: rustic flute"
@@ -119,7 +119,7 @@
    "fade": 0.4
   },
   {
-   "clip": "mus_morning",
+   "clip": "mus_morning2",
    "at": [
     "B17",
     "start",
@@ -130,7 +130,7 @@
     "to",
     0
    ],
-   "gain": -23,
+   "gain": -24.5,
    "seek": 36.0,
    "fade": 0.6,
    "fade_out": 0.8,
@@ -154,7 +154,7 @@
    "fade_out": 0.05
   },
   {
-   "clip": "mus_noon",
+   "clip": "mus_noon2",
    "at": [
     "C",
     "from",
@@ -165,7 +165,7 @@
     "to",
     0
    ],
-   "gain": -25,
+   "gain": -27,
    "fade": 1.0,
    "fade_out": 0.05,
    "note": "cut dead at the hooves (D starts)"
@@ -221,7 +221,7 @@
    "fade_out": 0.3
   },
   {
-   "clip": "mus_evening",
+   "clip": "mus_evening2",
    "at": [
     "D31",
     "start",
@@ -375,7 +375,7 @@
    "fade_out": 0.8
   },
   {
-   "clip": "mus_river",
+   "clip": "mus_river2",
    "at": [
     "G",
     "from",
@@ -386,7 +386,7 @@
     "from",
     0.6
    ],
-   "gain": -22,
+   "gain": -21,
    "fade": 1.0,
    "fade_out": 0.8,
    "note": "the warm theme returns"
@@ -426,7 +426,7 @@
    "fade_out": 0.8
   },
   {
-   "clip": "mus_beach",
+   "clip": "mus_beach2",
    "at": [
     "H",
     "from",
@@ -449,14 +449,14 @@
     0
    ],
    "until": [
-    "I",
-    "to",
-    0
+    "I57",
+    "end",
+    6.477
    ],
    "gain": -24,
    "loop": true,
    "fade": 0.8,
-   "fade_out": 3.0
+   "fade_out": 0.12
   },
   {
    "clip": "mus_end",
@@ -466,17 +466,27 @@
     -0.1
    ],
    "until": [
-    "I",
-    "to",
-    0
+    "I57",
+    "end",
+    6.477
    ],
    "gain": -21,
    "fade": 0.8,
-   "fade_out": 3.0,
+   "fade_out": 0.12,
    "note": "one phrase of the theme on 黄州，惠州，儋州"
   }
  ],
  "hits": [
+  {
+   "clip": "rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.0
+   ],
+   "gain": -14,
+   "note": "her camera starts recording (Qin's rec beep)"
+  },
   {
    "clip": "sfx_cleaver",
    "at": [
@@ -641,15 +651,6 @@
    "gain": -12
   },
   {
-   "clip": "sfx_stamp",
-   "at": [
-    "H",
-    "from",
-    0.45
-   ],
-   "gain": -11
-  },
-  {
    "clip": "sfx_shell_pop",
    "at": [
     "H",
@@ -677,15 +678,6 @@
    "gain": -12
   },
   {
-   "clip": "sfx_stamp",
-   "at": [
-    "I",
-    "from",
-    0.45
-   ],
-   "gain": -11
-  },
-  {
    "clip": "sfx_temple_bell",
    "at": [
     "I",
@@ -693,10 +685,80 @@
     0.15
    ],
    "gain": -17
+  },
+  {
+   "clip": "sfx_poweroff_su",
+   "at": [
+    "I57",
+    "end",
+    6.177
+   ],
+   "gain": -12,
+   "note": "her camera switches off (hud/vlog.tsx OFF.click = frame 6050; make_poweroff.py 0.267 0.867)"
+  },
+  {
+   "clip": "sting_tai",
+   "at": [
+    "B10",
+    "end",
+    0.08
+   ],
+   "gain": -17,
+   "note": "punchline: 大文豪，跟狗抢饭吃 (opera gong+cymbal)"
+  },
+  {
+   "clip": "sting_tai",
+   "at": [
+    "B17",
+    "end",
+    0.05
+   ],
+   "gain": -17,
+   "note": "这就是东坡肉！"
+  },
+  {
+   "clip": "sting_oops",
+   "at": [
+    "C21",
+    "end",
+    0.05
+   ],
+   "gain": -17,
+   "note": "「一点。」 deadpan"
+  },
+  {
+   "clip": "sting_tai",
+   "at": [
+    "D30",
+    "end",
+    0.25
+   ],
+   "gain": -18,
+   "note": "海南……有什么好吃的？ (in the silence after the hooves)"
+  },
+  {
+   "clip": "sting_oops",
+   "at": [
+    "E35",
+    "end",
+    0.02
+   ],
+   "gain": -18,
+   "note": "做棺材 -> 啊？"
+  },
+  {
+   "clip": "sting_tai",
+   "at": [
+    "H53",
+    "end",
+    0.05
+   ],
+   "gain": -17,
+   "note": "千万别让北方人知道"
   }
  ],
  "cards": {
-  "clip": "sfx_card",
-  "gain": -16
+  "clip": "card_ding",
+  "gain": -18
  }
 }

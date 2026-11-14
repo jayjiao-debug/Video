@@ -311,3 +311,25 @@ your own file. Checks: section "Hard rules" + README section 12 (with `--film su
 - The fact card (y 780-1080, mid-left) may cross his body, never his face or a held prop that matters.
 - Su's warmth is the film: in every scene he should be doing something with his hands (food, the lantern, the letter,
   the stick), and his face should change on the words (capWord), not sit on one expression.
+
+## 11. JAY'S CHANGES (2026-11-14 08:07): these OVERRIDE everything above
+1. **No hand, no mic, no arm, ever.** Jay does not want the red mic or her arms in the picture. The integrator switches
+   `her.ts` so `putHer` draws NOTHING of her (no mic, no sleeve, no hand). Do not draw her in any other way.
+2. **The invisible hand (like 秦始皇).** Where she takes or holds something (B07 the grilled bone, B08 eating it, C's
+   caught lychee, C19 holding it), keep the `putHer(..., { hand: { mode, item } })` calls: from now on they draw ONLY the
+   item, held in the lower part of the frame by an unseen hand (it bobs gently with her camera; a bite = the item lifts
+   toward the bottom of the lens and the camera nods). A catch = the lychee flies into the lower right, stops dead as an
+   invisible hand closes on it, and her camera jolts a little. G's "wave" = no hand: her camera does a small happy bounce.
+3. **Asides without the mic** (lines 10, 21, 26, 31, 40, and any other line she says to the viewer): her camera turns a
+   little away from him (15-25° yaw toward an empty side, a slight tilt, a small push in, as if she leans to the
+   viewer), holds for the line, then comes back (cam.ts `nudge` / `aside`). Subtle, in her handheld style.
+4. **The recording look like 秦始皇** (integrator, in the HUD): REC dot + "REC" top left (y about 205-255), the scene's
+   timestamp under it (it slides in big at each scene's start, then sits small), a battery top right that drains through
+   the day. Keep faces and anything important out of the top rows (y < 360) and the top right corner.
+5. **Sounds like 秦始皇** (integrator): a REC beep at frame 0, a ding for each fact card, and her camera switching off at
+   the very end (the REC lamp goes out, the picture collapses, the power-off sound) after card 5.
+6. **Scene C is restaged on a BAMBOO CHAIR** (Jay 06:09: the day-bed pose "is very off"). A separate lane ("C-chair")
+   owns `shots/segC.ts`, the new `bambooChair` prop + `chairSeat` helper, and the yard's shell pile; it also applies
+   items 1-3 above inside C. **QA lanes: do NOT edit `shots/segC.ts`**; check C only after
+   `/home/user/su_work/me/report_C_chair.md` exists, and send C findings to `/home/user/su_work/requests.md`.
+7. **The music is being redone FUNNY** (integrator, sound only): no lane changes timing for it.

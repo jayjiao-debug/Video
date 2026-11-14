@@ -18,13 +18,16 @@
 import * as THREE from "three";
 import { V, Part, limb, ball, type Kit } from "../../../kit/props/kit";
 import type { PutOpts } from "./index";
-import { BONE, LYCHEE } from "./things";
+import { BONE, lychee as lycheeProp } from "./things";
 
 /** the mic: the foam ball's radius, the ring, the body's length below the ball, where her fist grips it (y), the cuff */
 export const MIC = { ball: 0.032, ring: -0.036, body: 0.2, grip: -0.13, wrist: -0.175, sleeve: 0.42 } as const;
 /** her hand: the palm's width / length / thickness, a finger's radius and length, the sleeve's length */
 export const HAND = { w: 0.074, len: 0.074, t: 0.03, finger: 0.0092, fLen: 0.05, sleeve: 0.42 } as const;
 const INK = 0.0012;
+/** Jay 2026-11-14 (PLAN 11.1-2): NO hand, NO mic, NO sleeve ever. The reporter is an INVISIBLE HAND: herMic draws
+ *  nothing, herHand draws only the thing it holds (bone, lychee). Flip to true only to see the old arms again. */
+export const SHOW_HER = false;
 export const HER_COL = { skin: "#f8d8c0", skinLo: "#eebca0", cuff: "#f2cfc8", cuffBand: "#e2aea8", sleeve: "#f6dcd4", mic: "#d23a34", micLo: "#a82a28", foam: "#4a464e", ring: "#f0ece4" } as const;
 
 /** a finger: a two-joint chain in a group per joint (curl bends both) */
@@ -50,6 +53,7 @@ const bend = (pivot: THREE.Object3D, w?: [number, number, number]) => { if (w) p
 
 /** the right hand with the red mic (see the head of this file) */
 export const herMic = (K: Kit, g: THREE.Group) => {
+  if (!SHOW_HER) return (_o: PutOpts) => {};
   const P = new Part(K), red = K.flat(HER_COL.mic, { rough: 0.35 }), redLo = K.flat(HER_COL.micLo, { rough: 0.4 }), skin = K.flat(HER_COL.skin, { rough: 0.7 });
   P.add(K.flat(HER_COL.foam, { rough: 0.95 }), ball(V(0, 0, 0), MIC.ball, [1, 1, 1], 18), INK);
   P.add(K.flat(HER_COL.ring, { rough: 0.4 }), new THREE.CylinderGeometry(0.021, 0.02, 0.01, 18).translate(0, MIC.ring, 0), INK);
@@ -75,17 +79,20 @@ export const herMic = (K: Kit, g: THREE.Group) => {
 /** the left hand (see the head of this file) */
 export const herHand = (K: Kit, g: THREE.Group) => {
   const skin = K.flat(HER_COL.skin, { rough: 0.7 }), H = HAND;
+  let pivot: THREE.Group | null = null, fingers: Finger[] = [], thumb: Finger | null = null;
+  if (SHOW_HER) {
   const P = new Part(K);
   // the palm: a soft slab, a heel at the wrist
   const palm = new THREE.SphereGeometry(0.5, 18, 12).scale(H.w, H.len, H.t).translate(0, 0, 0);
   P.add(skin, palm, INK);
   P.add(skin, new THREE.CylinderGeometry(0.026, 0.029, 0.05, 16).translate(0, -H.len / 2 - 0.012, -0.002), INK);
   P.into(g, "herHand");
-  const pivot = sleeveOf(K, g, -H.len / 2 - 0.03, H.sleeve, "herHand.sleeve");
+  pivot = sleeveOf(K, g, -H.len / 2 - 0.03, H.sleeve, "herHand.sleeve");
   // four fingers along +y from the palm's top edge, a thumb from its +x side
-  const fingers: Finger[] = [-0.027, -0.009, 0.009, 0.027].map((x, i) => fingerOf(K, g, V(x, H.len / 2 - 0.006, 0.002), H.fLen * [0.86, 1, 0.96, 0.8][i], H.finger, skin, "herHand.finger"));
-  const thumb = fingerOf(K, g, V(H.w / 2 - 0.006, -0.008, -0.004), 0.042, H.finger * 1.05, skin, "herHand.thumb");
+  fingers = [-0.027, -0.009, 0.009, 0.027].map((x, i) => fingerOf(K, g, V(x, H.len / 2 - 0.006, 0.002), H.fLen * [0.86, 1, 0.96, 0.8][i], H.finger, skin, "herHand.finger"));
+  thumb = fingerOf(K, g, V(H.w / 2 - 0.006, -0.008, -0.004), 0.042, H.finger * 1.05, skin, "herHand.thumb");
   thumb.base.rotation.set(0, 0, -0.75);
+  }
   // the things she holds (in the palm, under the curled fingers)
   const items = new Map<string, THREE.Group>();
   const item = (name: string, build: (gg: THREE.Group) => void) => { const gg = new THREE.Group(); gg.visible = false; g.add(gg); build(gg); items.set(name, gg); };
@@ -98,19 +105,18 @@ export const herHand = (K: Kit, g: THREE.Group) => {
     gg.position.set(0.02, 0.026, -0.03);
   };
   item("bone", boneOf(false)); item("boneClean", boneOf(true));
-  const lycheeOf = (peeled: boolean) => (gg: THREE.Group) => {
-    new Part(K).add(K.flat(peeled ? "#f4eee2" : "#c8323a", { rough: peeled ? 0.2 : 0.7 }), ball(V(0, 0, 0), LYCHEE.r * (peeled ? 0.88 : 1), [1, 1.08, 1], 14), INK * 1.5).into(gg, "herHand.item");
-    gg.position.set(0, 0.02, -0.034);
-  };
-  item("lychee", lycheeOf(false)); item("lycheePeeled", lycheeOf(true));
+  // the held lychee is the tree's own (bumpy red skin, a stalk): with no hand round it, it must read as a lychee
+  let lycheeHook: ((o: PutOpts) => void) | null = null;
+  item("lychee", (gg) => { const inner = new THREE.Group(); inner.name = "herHand.item"; gg.add(inner); lycheeHook = lycheeProp(K, inner) as (o: PutOpts) => void; gg.position.set(0, 0.02, -0.034); });
   return (o: PutOpts) => {
-    bend(pivot, o.wrist);
+    if (pivot) bend(pivot, o.wrist);
     const c = Math.max(0, Math.min(1, o.curl ?? 0));
     // a closed hand: each finger bends ~75 deg at the base and ~95 at the middle (toward the palm, -z)
     fingers.forEach((f, i) => { f.base.rotation.set(-1.3 * c - 0.08 * (1 - c) * i, 0, (i - 1.5) * 0.06 * (1 - c)); f.mid.rotation.set(-1.65 * c - 0.1, 0, 0); });
-    thumb.base.rotation.set(-0.7 * c, 0.4 * c, -0.75 + 0.5 * c); thumb.mid.rotation.set(-0.5 * c, 0, 0);
+    if (thumb) { thumb.base.rotation.set(-0.7 * c, 0.4 * c, -0.75 + 0.5 * c); thumb.mid.rotation.set(-0.5 * c, 0, 0); }
     for (const gg of items.values()) gg.visible = false;
-    const want = o.item === "lychee" && (o.peeled ?? 0) > 0.5 ? "lycheePeeled" : o.item;
+    const want = o.item;
     if (want && items.has(want)) items.get(want)!.visible = true;
+    if (want === "lychee" && lycheeHook) lycheeHook({ peeled: o.peeled ?? 0 } as PutOpts);
   };
 };

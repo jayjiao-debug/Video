@@ -18,10 +18,11 @@
 //                      her mic down): the brush still in his fist, he lifts the letter in both hands to his chest, tipped
 //                      toward her so the writing shows, blows the ink dry (whistle), still humming, and lays it back
 //                      (BEAT.E.blot).
-//   E40      aside     the mic swings round to the lens (BEAT.E.aside); a slow re-frame brings him to the middle; her voice
-//                      wobbles: from 他觉得 (BEAT.E.sag) the camera sags a little (a slow lower, a slight tilt) while he
-//                      sits humming over the finished letter in the last gold light (off screen the kids watch him). The
-//                      fade through deep blue is the HUD's (TRANSITIONS).
+//   E40      aside     her aside (PLAN 11.3: no mic): her camera turns away from him, to the left, toward the bench where
+//                      the kids sit still and watch him (sad now), tilts and leans in (camE asideK); her voice wobbles:
+//                      from 他觉得 (BEAT.E.sag) the camera sags a little (a slow lower, a slight tilt) while he sits humming
+//                      over the finished letter off screen in the last gold light. The fade through deep blue is the
+//                      HUD's (TRANSITIONS).
 // Every frame from beats.ts (BEAT.E) / lineId / capWord / card / SEGMENTS; every mark from layout/room.ts (ROOM.desk,
 // ROOM.trunks, ROOM.wife, ROOM.bench) and props/ (deskSeat, benchSeat); her mic is her.ts (lowered out of the caption
 // band here, segC's way); held props pinned after w.update(). The wife's robe is this file's own little prop (built once
@@ -104,15 +105,14 @@ const TALK = aim([HEAD.x + 0.5, EYE, HEAD.z + 2.0], HEAD, 560, 560);
 /** she follows his glance: the wife by the trunk and the kids on the bench (a pan from where she stands) */
 const FAMILY = aim(TALK.pos, WIFE_AT.clone().setY(1.21), 205, 690);
 /** 您在写什么: she leans in over the desk: the letter and the brush low in the frame, his face above */
-const PEEK = aim([HEAD.x + 0.32, EYE - 0.03, HEAD.z + 1.5], LETTER_AT, 520, 1070);
+const PEEK = aim([HEAD.x + 0.32, EYE - 0.03, HEAD.z + 1.75], LETTER_AT, 420, 1090);   // (QA1: 1.5 m / 520,1070 -> 1.75 / 420,1090: his cap clear of the battery)
 /** 找吃的: up on his face, close */
 const CLOSE = aim([HEAD.x + 0.28, EYE, HEAD.z + 1.55], HEAD, 540, 560);
 /** card 3: back and over to his right (screen left of him), so he sits in the right of the frame with the gold window
  *  behind him, the letter to the right of his face (clear of the card), the card on the left over the wall */
-const CARD_F = aim([HEAD.x - 1.0, EYE, HEAD.z + 2.4], HEAD, 840, 470);
+const CARD_F = aim([HEAD.x - 1.0, EYE, HEAD.z + 2.4], HEAD, 840, 555);   // (QA1: 470 -> 555: his cap clear of the battery)
 /** E40: once the card is gone a slow re-frame brings him to the middle over her mic while she talks to the lens (the
  *  sag is cam.ts lower on top); still moving when the blue fade takes it */
-const END = aim([HEAD.x - 0.98, EYE, HEAD.z + 2.62], HEAD, 640, 520);
 const key = (f: number, k: K, ease?: (x: number) => number): C.CamKey => ({ f, pos: k.pos, look: k.look, fov: C.FOV, ease });
 const KEYS: C.CamKey[] = [
   key(S.from, OPEN),
@@ -126,10 +126,15 @@ const KEYS: C.CamKey[] = [
   key(CARD3.from - 12, CLOSE),
   key(CARD3.from + 24, CARD_F),
   key(B.aside, CARD_F),
-  key(S.to, END, (x) => x * x * (2 - x)),
 ];
+/** E40 IS AN ASIDE (PLAN 11.3: no mic): as card 3 goes, just before her line, her camera turns away from him to the
+ *  left (he leaves the frame on the right) toward the back wall and the bench where the younger kid sits still (the
+ *  family he leaves behind), tilts and leans in a little; it holds to the end (the sag on
+ *  他觉得 on top; the deep-blue fade takes it) */
+const ASIDE40 = [L40.from - 10, L40.from + 10] as const, AY = 17, AP = 7;
+const asideK = (f: number) => easeInOutCubic(clamp01((f - ASIDE40[0]) / (ASIDE40[1] - ASIDE40[0])));
 /** her camera on frame f (pure): the keys, a gentle handheld (walking in at the start), the kick on 啊 with a small
- *  recoil, and the sag under E40 */
+ *  recoil, the E40 aside and the sag under it */
 export const camE = (f: number): CamPose => {
   let c = C.povCam(f, KEYS, {
     mood: [[S.from, "calm"], [L40.from, "calm"]],
@@ -140,6 +145,8 @@ export const camE = (f: number): CamPose => {
   if (recoil > 0) c = C.nudge(c, { fwd: -0.07 * recoil, up: 0.01 * recoil });
   c = kick(c, f, B.jolt, 0.05);
   c = C.creep(c, f, L38.from, L38.to, 0.12);
+  const a = asideK(f);
+  if (a > 0) c = C.nudge(c, { yaw: -AY * a, pitch: AP * a, roll: -2.4 * a, fwd: 0.12 * a });
   return C.lower(c, f, B.sag, { to: 1.3, tilt: 3, pitch: 2, len: 60 });
 };
 
@@ -325,7 +332,7 @@ export const SEG: Segment = {
     // the kids on the bench, very still (breathing, blinks, a look at grandpa now and then)
     [KID, KID2].forEach((P, k) => {
       const kr = w.actor(P), s = KIDS[k];
-      kr.set({ at: s.at, facing: s.facing, seat: s.seat, pose: { kind: "sit", t: t * 0.7 + k }, expr: "neutral", blink: lid(t, 11 + k), gaze: kidGaze(f, k), lookDown: 4, hide: KID_HIDE[k], visible: true });
+      kr.set({ at: s.at, facing: s.facing, seat: s.seat, pose: { kind: "sit", t: t * 0.7 + k }, expr: f >= L40.from + 4 + 6 * k ? "sad" : "neutral", blink: lid(t, 11 + k), gaze: kidGaze(f, k), lookDown: 4, hide: KID_HIDE[k], visible: true });
       setSeat(kr, s.seat, s.facing);
     });
     w.update();

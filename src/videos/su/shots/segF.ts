@@ -25,9 +25,10 @@
 // HIS WARM LIGHT: pinesLight() from the lantern's point moved 0.6 m toward her lens (a DP's cheat: the key keeps the
 // lantern's side and height but stays in front of his face, so the face reads warm and never falls into the shade).
 // Every frame from BEAT.F / capWord / lineId, every mark from layout/pines.ts (PINES, PINES_SET), her mic from her.ts.
-// FACES NEVER IN PROFILE: turn (rig) is 0 while her lens is less than 120 deg off his facing and 1 past 136 deg (turnFor);
-// his facing moves fast through that window on every turn, and during the reveal (where her camera moves round him
-// instead) the turn is a 5-frame ramp on a frame when she is already well behind him (AWAY).
+// FACES NEVER IN PROFILE: turn (rig) is 0 while her lens is less than 128 deg off his facing and 1 from there, a one-frame
+// switch (turnFor; QA2 2026-11-14: the old 120-136 deg ramp left frames at turn 0.3-0.7, a squeezed near profile); his
+// facing passes 128 deg fast on every turn, and during the reveal (where her camera moves round him) he turns with her,
+// his facing kept within 112 deg of her lens, until AWAY, when he turns away to the step (facingAt).
 import * as THREE from "three";
 import { SEGMENTS, FPS, clamp01, smooth, camMix, mix3, capWord, lineId, type Pose, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
@@ -76,10 +77,12 @@ const STOP = V(PINES.su.x, 0, STEP_FRONT + 0.34);
 /** his facings: to her lens; square to the step (a hair off PI so the back view never flips sides); to the grave in F50
  *  (back three-quarters: about 137 deg from her lens: we see his back and his right side, the moonlit lake ahead of him) */
 const F_HER = PINES.suFacing, F_STEP = PI - 0.15, F_GRAVE = PINES.suGrave - 0.45;
-/** the wipe: he turns a little from the grave toward the lake (about 105 deg from her lens, his true facing kept: a lost
- *  profile, the face drawing is gone past 72 deg): his sleeve going up to his eyes then shows beside his head (at
- *  F_GRAVE the arm is all behind the head) */
-const F_WIPE = F_GRAVE - 30 * DEG;
+/** the wipe: he turns a little from the grave toward the lake (QA2: about 125 deg from her lens, his true facing kept;
+ *  at the old 105 deg the rig drew no face but a bare skin cheek under the hat, WP3-fix's note): his hand going up to
+ *  his eyes shows at the right edge of his head (the hand's target at the side of his face, 0.30 m from the head's
+ *  middle, not in front of it: the arm no longer goes 10-13 cm through his body, rig qa clear -0.02 at worst; the
+ *  clearance checker is clean) */
+const F_WIPE = F_GRAVE - 12 * DEG;
 /** the lantern (props/things.ts lantern: the bottom cap 0.405 m under the hook, the tassel to 0.53, r 0.15): set down
  *  with its hook over a point 3.5 cm in front of the step's front edge, so the bottom cap rests on the edge (5 mm into
  *  it: the checker sees it supported) and the tassel hangs clear in front of the riser. At his LEFT (-x) as he faces the
@@ -133,7 +136,7 @@ const CLOSE_CAM: CamPose = frontCam(STOP, F_HER, 1.75, { side: -0.12, eyesPx: 58
  *  part of the frame from the moment it shows (a plain mix of the two poses left it low until the end) */
 const dirOf = (c: CamPose) => { const p = mix3(c.pos, c.pos, 0), l = mix3(c.look, c.look, 0); return V(l[0] - p[0], l[1] - p[1], l[2] - p[2]).normalize(); };
 const stepIn = (f: number): CamPose => {
-  const a = C.creep(REVEAL, f, REV1 + 8, IN0, 0.22), kp = smooth(clamp01((f - IN0) / (IN1 - IN0))), kd = smooth(clamp01((f - (IN0 - 8)) / 26));
+  const a = revealCreep(f), kp = smooth(clamp01((f - IN0) / (IN1 - IN0))), kd = smooth(clamp01((f - (IN0 - 8)) / 26));
   const p = mix3(a.pos, STOP_CAM.pos, kp), d = dirOf(a).lerp(dirOf(STOP_CAM), kd).normalize();
   return { ...a, pos: p, look: [p[0] + d.x * 3, p[1] + d.y * 3, p[2] + d.z * 3], fov: a.fov + (STOP_CAM.fov - a.fov) * kp };
 };
@@ -142,6 +145,21 @@ const pushK = (f: number) => {
   const [a, b] = B.push, n = b - a, r = Math.min(30, n / 2.5), x = Math.max(0, Math.min(n, f - a)), v = 1 / (n - r);
   return x < r ? (v * x * x) / (2 * r) : x > n - r ? 1 - (v * (n - x) * (n - x)) / (2 * r) : v * (x - r / 2);
 };
+/** QA2: the blend from the walk camera into REVEAL swung his head to x 121 px (the hat cut by the frame's left edge,
+ *  f4288-4296): keepRight turns the look (a pure yaw about her eye, softly) so his head's middle stays KEEP_X px or more
+ *  from the left edge (1080 wide; the horizontal half-angle from the 9:16 lens) */
+const STOP_HEAD = STOP.clone().add(V(0, SU_HEAD, 0)), KEEP_X = 380;
+const keepRight = (c: CamPose, p: THREE.Vector3, xMin: number): CamPose => {
+  const pos = V(...(c.pos as [number, number, number])), d = V(...(c.look as [number, number, number])).sub(pos);
+  const toP = p.clone().sub(pos), rel = wrapA(Math.atan2(toP.x, toP.z) - Math.atan2(d.x, d.z));
+  const tanH = Math.tan(((c.fov ?? FOV) * DEG) / 2) * (9 / 16), relMax = Math.atan(((540 - xMin) / 540) * tanH);
+  const x = rel - relMax, s = 2 * DEG, a = x > 0 ? (x * x) / (x + s) : 0;  // max(0, x) with a soft onset (0 inside)
+  if (a < 1e-5) return c;
+  const ca = Math.cos(a), sa = Math.sin(a), nd = V(d.x * ca + d.z * sa, d.y, -d.x * sa + d.z * ca);
+  return { ...c, look: [pos.x + nd.x, pos.y + nd.y, pos.z + nd.z] };
+};
+/** the reveal's slow creep (and the start of her step-in from it), kept the same way (continuous with the blend) */
+const revealCreep = (f: number): CamPose => keepRight(C.creep(REVEAL, f, REV1 + 8, IN0, 0.22), STOP_HEAD, KEEP_X);
 /** her steps and her breathing: walking while he walks and while she moves; STILL from the push on (no sway), the
  *  breath comes back softly when he smiles at her again */
 const WALKING: [number, number][] = [[S.from, 1], [B.stop, 1], [REV1, 0], [IN0, 0], [IN0 + 10, 0.55], [IN1, 0]];
@@ -149,8 +167,8 @@ const ampAt = (f: number) => ky(f, [[S.from, 0.8], [B.stop, 0.8], [REV1, 0.5], [
 const camF = (f: number): CamPose => {
   let base: CamPose;
   if (f < REV0) base = camWalk(f);
-  else if (f < REV1) base = camMix(camWalk(f), REVEAL, smooth((f - REV0) / (REV1 - REV0)));
-  else if (f < IN0 - 8) base = C.creep(REVEAL, f, REV1 + 8, IN0, 0.22);
+  else if (f < REV1) base = keepRight(camMix(camWalk(f), REVEAL, smooth((f - REV0) / (REV1 - REV0))), STOP_HEAD, KEEP_X);
+  else if (f < IN0 - 8) base = revealCreep(f);
   else if (f < IN1) base = stepIn(f);
   else base = camMix(STOP_CAM, CLOSE_CAM, pushK(f));
   const amp = ampAt(f);
@@ -160,19 +178,32 @@ const camF = (f: number): CamPose => {
 // ------------------------------------------------------------------------------------------------ his facing and turn
 /** his facing after the stop (eased keys; the walk gives it before): square to the step, to her on 她说, to the grave
  *  in F50, square to the step again for the pick-up, to her for F51 (each a 16-frame turn, the short way round) */
-const facingAt = (f: number, L: Leg) => f < B.stop + 6 ? L.facing : ky(f, [
+const facingKeys = (f: number, L: Leg) => f < B.stop + 6 ? L.facing : ky(f, [
   [B.stop + 6, F_STEP], [WD.said, F_STEP], [WD.said + 16, F_HER], [B.turn, F_HER], [B.turn + 16, F_GRAVE],
   [B.wipe - 16, F_GRAVE], [B.wipe - 4, F_WIPE], [P0 - 8, F_WIPE], [P0, F_STEP], [B.smile, F_STEP], [B.smile + 16, F_HER],
 ]);
+/** her lens seen from where he stands (yaw) */
+const lensYaw = (at: THREE.Vector3, cam: CamPose) => { const c = cam.pos as [number, number, number]; return Math.atan2(c[0] - at.x, c[2] - at.z); };
+/** THE REVEAL (QA2): while she drifts round behind him he still smiles at her: his facing is kept within REV_LIM of her
+ *  lens (he turns with her, the face stays on her); on AWAY he turns away to the step, his facing sweeping 8 deg a
+ *  frame, and the back view switches on the way (TURN_AT) */
+const REV_LIM = 112 * DEG;
+const revLim = (f: number) => (f < AWAY ? REV_LIM : Math.min(PI, REV_LIM + (f - AWAY) * 8 * DEG));
+const facingAt = (f: number, L: Leg, at: THREE.Vector3, cam: CamPose) => {
+  const raw = facingKeys(f, L);
+  if (f < REV0 || f >= WD.said) return raw;
+  const lens = lensYaw(at, cam), d = wrapA(raw - lens), lim = revLim(f);
+  return Math.abs(d) <= lim ? raw : lens + Math.sign(d) * lim;
+};
 /** THE BACK VIEW (rig `turn`): 0 = his body and face turned to her lens (the face stays within 12 deg of the lens),
- *  1 = his true facing (a back view). From the angle between his facing and her lens: 0 up to 120 deg, 1 from 136 deg
- *  (his facing crosses that in a few frames on every turn); during the reveal a time ramp on AWAY (see the header);
- *  held at 1 from the end of F50's turn to the grave until he turns back to her (the wipe at 115 deg included) */
+ *  1 = his true facing (a back view). A CLEAN SWITCH with no in-between (QA2, segI's finding: a rig turn of 0.3-0.7
+ *  draws the face squeezed against the side of the head, a near profile): 1 once his facing is TURN_AT or more off her
+ *  lens; his facing passes that at 8-15 deg a frame on every turn (the reveal's included, facingAt), so the switch is
+ *  one frame of a quick turn. Held at 1 from the end of F50's turn to the grave until he turns back to her (the wipe) */
+const TURN_AT = 128 * DEG;
 const turnFor = (f: number, facing: number, at: THREE.Vector3, cam: CamPose) => {
-  if (f >= B.stop - 20 && f < WD.said) return smooth(clamp01((f - AWAY) / 5));
   if (f >= B.turn + 16 && f < B.smile) return 1;
-  const c = cam.pos as [number, number, number], off = Math.abs(wrapA(facing - Math.atan2(c[0] - at.x, c[2] - at.z)));
-  return clamp01((off - 120 * DEG) / (16 * DEG));
+  return Math.abs(wrapA(facing - lensYaw(at, cam))) >= TURN_AT ? 1 : 0;
 };
 
 // ------------------------------------------------------------------------------------------------ the lantern
@@ -194,12 +225,13 @@ const lanternEst = (f: number, at: THREE.Vector3, facing: number, L: Leg) =>
 const keyFrom = (p: THREE.Vector3, cam: CamPose) => { const c = cam.pos as [number, number, number], d = V(c[0] - p.x, 0, c[2] - p.z); return p.clone().addScaledVector(d.normalize(), 0.6); };
 
 // ------------------------------------------------------------------------------------------------ his face
-/** expressions on the words (capWord / lineId / BEAT) */
+/** expressions on the words (capWord / lineId / BEAT). SU's "neutral" is his resting smile (people.ts), so the plain
+ *  beats are explicit (QA2): a soft smile on 朝云, a sigh on 散了 and on F49's 去年夏天 (steady, then sad on 病死) */
 const EXPR: [number, NonNullable<RigState["expr"]>][] = [
   [S.from, "smile"], [WD.riddle - 14, "smug"], [B.pat, "grin"], [WD.what, "happy"], [F42.from, "smug"], [WD.no1, "grin"],
   [F44.from, "smug"], [WD.no2, "happy"], [B.stop + 10, "smile"], [AWAY, "smile_closed"], [WD.outOfStep, "happy"],
-  [B.laugh, "laugh"], [B.laugh + 22, "smile_closed"], [F47.from + 20, "neutral"], [WD.onlyHer, "smile_closed"],
-  [lineId("F49").from, "neutral"], [WD.died, "sad"], [F50.from + 30, "pained"], [F50.to + 8, "sad"],
+  [B.laugh, "laugh"], [B.laugh + 22, "smile_closed"], [F47.from + 20, "smile"], [WD.scattered, "sigh"],
+  [WD.onlyHer, "smile_closed"], [lineId("F49").from, "sigh"], [WD.died, "sad"], [F50.from + 30, "pained"], [F50.to + 8, "sad"],
   [B.smile, "smile_closed"], [WD.road, "smile"],
 ];
 /** the gaze (pupils: -1 screen left .. 1 screen right): ahead on the walk (screen right) between the lines, to her
@@ -217,7 +249,7 @@ export const SEG: Segment = {
   pose(w, f): Pose {
     const L = leg(f), cam = camF(f);
     const sink = crouchAt(f), at0 = f < B.stop ? L.at : STOP.clone();
-    const facing = facingAt(f, L), turn = turnFor(f, facing, at0, cam);
+    const facing = facingAt(f, L, at0, cam), turn = turnFor(f, facing, at0, cam);
     const head0 = at0.clone().add(V(0, SU_HEAD - 0.38 * sink, 0));
     // the place and his light: the lantern's warm light on him (pinesLight), from an estimate of where the lantern is
     w.setPlace("pines", { light: pinesLight({ glow: 1, lantern: keyFrom(lanternEst(f, at0, facing, L), cam), head: head0 }) });
@@ -272,7 +304,7 @@ export const SEG: Segment = {
     const wipeU = (f - WIPE0) / (WIPE1 - WIPE0), wiping = wipeU > 0 && wipeU < 1;
     if (wiping) {
       const up = smooth(clamp01(wipeU / 0.25)) * (1 - smooth(clamp01((wipeU - 0.8) / 0.2))), across = 0.04 * Math.sin(clamp01((wipeU - 0.25) / 0.55) * 2 * PI);
-      const eyes = hd.clone().add(V(Math.sin(yaw), 0, Math.cos(yaw)).multiplyScalar(0.28)).add(V(Math.cos(yaw), 0, -Math.sin(yaw)).multiplyScalar(-0.11 + across)).add(V(0, -0.03, 0));
+      const eyes = hd.clone().add(V(Math.sin(yaw), 0, Math.cos(yaw)).multiplyScalar(0.2)).add(V(Math.cos(yaw), 0, -Math.sin(yaw)).multiplyScalar(-0.225 + across)).add(V(0, -0.03, 0));
       right = r.handWorld(0).lerp(eyes, up);
     }
     // the beckon on 走吧: the free hand lifts a little toward her, palm in, and drops

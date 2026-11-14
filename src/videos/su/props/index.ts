@@ -24,9 +24,10 @@
 // HANDS: holdPoints(name, at, opts) = the world points the holder's hands are pinned to for that very put: pin the
 // hands there, w.update(), then put the prop with the same (at, opts). A HAND of the rig is a ball 4.6 cm across with
 // no fingers: a grip passes through (or within a centimetre of) the ball's middle. Never read handWorld before update.
-// SEATS: deskSeat (the cushion behind the desk, "write" / "sit"), bedSeat (the rattan bed), benchSeat (the bench),
-// boatSeat (the stern seat), courierSeat (on the horse): each gives { at, facing, seat } for rig.set and, where the
-// robe's skirt must lie over the thighs, says so (kit acc/garb.ts setSeat(rig, seat, facing)).
+// SEATS: deskSeat (the cushion behind the desk, "write" / "sit"), chairSeat (the bamboo chair, C) + chairHands (his
+// hands behind his head in it), bedSeat (the rattan bed: no longer used by C), benchSeat (the bench), boatSeat (the
+// stern seat), courierSeat (on the horse): each gives { at, facing, seat } for rig.set and, where the robe's skirt must
+// lie over the thighs, says so (kit acc/garb.ts setSeat(rig, seat, facing)).
 import * as THREE from "three";
 import type { Mats } from "../../bt/pbr";
 import { makeKit, V, type Kit } from "../../../kit/props/kit";
@@ -34,7 +35,7 @@ import * as T from "./things";
 import { dog, DOG, type DogO } from "./dog";
 import { horse, horseSeat, COATS, HORSE, type HorseO } from "./horse";
 import { herMic, herHand, MIC, HAND } from "./her";
-export { PC, STOVE, GRILL, BED, BENCH, BOAT, LADDER, DESK, CUSHION, SCROLL, LETTER, TRUNK, PORK_POT, OYSTER, STICK, BONE, SPINE, CLEAVER, BLOCK, LYCHEE, WINE_BOWL, STOOL, CHOPSTICKS, PLOUGH, FIRE } from "./things";
+export { PC, STOVE, GRILL, BED, CHAIR, BENCH, BOAT, LADDER, DESK, CUSHION, SCROLL, LETTER, TRUNK, PORK_POT, OYSTER, STICK, BONE, SPINE, CLEAVER, BLOCK, LYCHEE, WINE_BOWL, STOOL, CHOPSTICKS, PLOUGH, FIRE } from "./things";
 export { DOG, HORSE, MIC, HAND, horseSeat };
 
 type V3Like = [number, number, number] | THREE.Vector3;
@@ -43,7 +44,7 @@ const toV = (p: V3Like) => (Array.isArray(p) ? V(p[0], p[1], p[2]) : p.clone());
 
 export type PropName =
   | "cleaver" | "block" | "spine" | "coin" | "bone" | "stove" | "grill" | "wineBowl" | "stool" | "chopsticks" | "porkPot"
-  | "ladder" | "lantern" | "bench" | "lychee" | "lycheeBunch" | "shell" | "rattanBed" | "scroll" | "desk" | "cushion"
+  | "ladder" | "lantern" | "bench" | "lychee" | "lycheeBunch" | "shell" | "rattanBed" | "bambooChair" | "scroll" | "desk" | "cushion"
   | "brush" | "inkstone" | "letter" | "trunk" | "robes" | "plough" | "boat" | "fire" | "oyster" | "stick" | "dog" | "horse"
   | "herMic" | "herHand";
 /** what each prop is, where its origin is and which way its axes point (sizes at the film's scale) */
@@ -66,6 +67,7 @@ export const PROP_INFO: Record<PropName, string> = {
   lycheeBunch: "a bunch of eight lychees on a twig with three leaves (C), 0.16 m. Origin = the stem's top; grip hook (the origin)",
   shell: "one empty red lychee shell half (C26: on his sleeping belly), r 0.021, open side up (+y). Origin = its middle",
   rattanBed: "the rattan day bed under the lychee tree (C): 1.90 long along z x 0.72 wide, its woven top at 0.42 (layout YARD_SET.bed), a slanted woven backrest at the head end (-z, from z -0.62) rising 0.55 above the top, short legs. Origin = the MIDDLE OF ITS TOP (layout YARD.bed is that point); the sitter faces +z: bedSeat(at, rot)",
+  bambooChair: "the bamboo armchair (竹椅) under the lychee tree (C, where the rattan bed was): pale green-yellow bamboo poles with painted node rings, a seat of split-bamboo slats in a pole frame, its top at CHAIR.top 0.35 (low: SU's feet reach the ground), 0.58 between the side poles x 0.38 deep, low armrests 0.21 above the seat on the front posts (a spindle under each), a slat backrest reclined 15.5 deg on the bent rear posts up to a knobbed top rail 0.52 above the seat, stretchers low between the legs. Origin = THE GROUND UNDER THE MIDDLE OF THE SEAT'S FRONT EDGE; the seat runs back to -z, the sitter faces +z with his feet on the ground in front of it: chairSeat(at, rot); hands behind his head: chairHands",
   scroll: "the order (D): a dark roller 0.42 m along x with gold knobs, a yellow silk sheet 0.36 x 0.30 with columns of ink and a red seal unrolling down -y with put({ open: 0..1 }), a second roller at its foot. Origin = the middle of the top roller; grip pair (the roller's ends, x +-0.19: holdPoints)",
   desk: "his writing desk (E): plain pale wood, top 1.20 x 0.56 at 0.42 m, four square legs; its long side along x. Origin = the floor under its middle; the sitter behind it at -z faces +z (deskSeat). (layout ROOM_SET.desk.top is 0.36: requested to follow this desk's 0.42)",
   cushion: "a square floor cushion (E): 0.62 x 0.62, 0.10 high (0.12 puffed), indigo with a pale edge. Origin = the floor under its middle (deskSeat puts it behind the desk)",
@@ -191,6 +193,44 @@ export const benchSeat = (at: V3Like, rot = 0, x = 0) => {
   const o = toV(at), top = propPoint([x, T.BENCH.top, 0.02], o, rot);
   return { at: V(top.x, o.y, top.z), facing: rot, seat: { top, floor: o.y, back: 0.03, front: T.BENCH.d / 2 + 0.02 } };
 };
+/** THE SEAT in the bamboo chair (C): `at` = the chair's origin (the ground under the middle of its seat's front edge),
+ *  rot its yaw; the sitter faces the chair's front (+z at rot 0). The rig's "sit": the thighs over the seat, the knees
+ *  just past its front edge, the shins hanging and the FEET ON THE GROUND (the seat is CHAIR.top 0.35 high: SU's legs,
+ *  1.06 x, reach the floor from it; nothing passes through the chair), and THE HIP PUSHED BACK UNTIL HIS BACK TOUCHES
+ *  THE BACKREST. The rig takes a backrest as an upright plane and keeps the body's widest ring off it; this one leans
+ *  back, so seat.backrest is the distance from the seat's middle back to the panel's front face `touch` m above the
+ *  seat (default 0.27: where SU's round lower back, upright on the seat, meets the 15.5 deg panel with its ink clear;
+ *  measured with the clearance checker): his back rests on the panel there and the panel leans away above it, as a
+ *  sitter's shoulders leave a reclined back. A slimmer sitter: a smaller `touch`. Returns { at, facing, seat, back }
+ *  (back = the middle of the backrest's top rail, world, the top of the rail); call kit garb.ts setSeat(rig, seat,
+ *  facing) so the robe lies over his thighs, not through the seat.
+ *    const S = chairSeat(YARD.chair, YARD.chairRot); w.prop("bambooChair").put(YARD.chair, { rot: YARD.chairRot });
+ *    setSeat(su, S.seat, S.facing); su.set({ at: S.at, facing: S.facing, seat: S.seat, pose: { kind: "sit", t } }) */
+export const chairSeat = (at: V3Like, rot = 0, touch = 0.27) => {
+  const o = toV(at), C = T.CHAIR, top = propPoint([0, C.top, -C.d / 2], o, rot), tl = Math.tan(C.back.lean);
+  // the panel's front face (its middle plane on the rear posts' line, 8 mm thick each side) `touch` above the seat
+  const rest = C.d / 2 - C.r - 0.008 + (touch + 0.03) * tl, railY = o.y + C.top + C.back.h;
+  return {
+    at: V(top.x, o.y, top.z), facing: rot,
+    seat: { top, floor: o.y, back: 0.12, front: C.d / 2, backrest: rest, backrestTop: railY },
+    back: propPoint([0, C.top + C.back.h + C.r, -C.d + C.r - (C.back.h + 0.03) * tl], o, rot),
+  };
+};
+/** HANDS BEHIND HIS HEAD in the chair (C, after C23): the two world points [right, left] (arm 0, arm 1) for a sitter
+ *  facing `facing` whose head centre is `head` (his headWorld() of this very frame: set, update, read, set again):
+ *  cupping the back of his head low, 0.21 m to each side, 0.21 m behind its centre and 0.1 m below it (`scale` = the
+ *  figure's, SU 1.06: side and back scale, lift does not), so that from in front the hands sit just inside the head's
+ *  outline and the elbows stick out beside the jaw (about 45 / 65 px out of the head's outline at 2.1 m); `lift` moves them up (m). Measured on SU at C's lie-back with a sweep of side 0.1..0.26, back
+ *  -0.06..-0.26, lift -0.12..0.04: the head's real shape (hat, beard) reaches about 0.29 m from its centre, so every
+ *  point nearer puts the arm into it (rig qa.clear < 0); this one keeps 9 mm. Lower, the elbows go further out; further out to the side the near hand
+ *  shows well past the head's outline and reads as a raised fist (the old 0.25 m beside the ears did); further back
+ *  the arm straightens and the elbows tuck in. Best seen from in front (within about 5 deg of his facing): from the
+ *  side the near hand peeks past the head. (bedHands puts them beside the ears, where they read as a raised hand.) */
+export const chairHands = (head: V3Like, facing: number, scale = 1.06, lift = -0.1): [THREE.Vector3, THREE.Vector3] => {
+  const h = toV(head), c = Math.cos(facing), s = Math.sin(facing), side = 0.2 * scale, back = -0.2 * scale;
+  // the person's left (+x at facing 0) = (c, 0, -s); forward = (s, 0, c)
+  return [V(h.x - c * side + s * back, h.y + lift, h.z + s * side + c * back), V(h.x + c * side + s * back, h.y + lift, h.z - s * side + c * back)];
+};
 /** THE BOAT'S PLACES (G): SU sits on the stern seat facing the stern (toward the camera at rot 0); GUO stands at the
  *  oar just behind the awning on the boat's +x side (behind SU and to the right as we see it from the stern), facing
  *  the stern too, his two hands on the oar's handle (guoHands: it swings with t, so pass the boat's t);
@@ -254,7 +294,7 @@ type Builder = (K: Kit, g: THREE.Group) => ((o: PutOpts, g: THREE.Group) => void
 const BUILD: Record<PropName, Builder> = {
   cleaver: T.cleaver, block: T.block, spine: T.spine, coin: T.coin, bone: T.bone, stove: T.stove, grill: T.grill, wineBowl: T.wineBowl,
   stool: T.stool, chopsticks: T.chopsticks, porkPot: T.porkPot, ladder: T.ladder, lantern: T.lantern, bench: T.bench, lychee: T.lychee,
-  lycheeBunch: T.lycheeBunch, shell: T.shell, rattanBed: T.rattanBed, scroll: T.scroll, desk: T.desk, cushion: T.cushion, brush: T.brush,
+  lycheeBunch: T.lycheeBunch, shell: T.shell, rattanBed: T.rattanBed, bambooChair: T.bambooChair, scroll: T.scroll, desk: T.desk, cushion: T.cushion, brush: T.brush,
   inkstone: T.inkstone, letter: T.letter, trunk: T.trunk, robes: T.robes, plough: T.plough, boat: T.boat, fire: T.fire, oyster: T.oyster,
   stick: T.stick,
   dog: (K, g) => { const hk = dog(K, g); return (o, gg) => hk({ pose: o.pose, t: o.t, lookAt: o.lookAt, from: o.from, k: o.k } as DogO, gg); },
