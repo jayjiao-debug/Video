@@ -26,7 +26,10 @@ import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
 import { W, H, FILM_TOTAL, CLOCK, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
 import { TitleBlock, FactCard, VlogHud, Caption } from "./hud";
-import { LeadCard, GaoBanner } from "./hud/intro";
+import { LeadCard, GaoBanner, leadIsolation } from "./hud/intro";
+import { Isolation } from "./isolate";
+import { LI } from "./people";
+import { aim, mixCam } from "./shots/lb";
 import { Whisper, whisperCapAt } from "./hud/whisper";
 import { Fx } from "./hud/fx";
 import { SEG as SEG_A } from "./shots/segA";
@@ -51,10 +54,19 @@ SEGMENTS.forEach((s, i) => {
 const segAt = (f: number) => SEGS.find((s) => f >= s.from && f <= s.to) ?? (f < SEGS[0].from ? SEGS[0] : SEGS[SEGS.length - 1]);
 
 /** owns the segment switch: exit the old one, enter the new one; then reset the world and pose the frame */
+/** THE CARD'S FRAMING while 李白's card is up (the picture frozen): she pulls back from the live close-up to a
+ *  close shot with his head in the top half (the card takes the lower half), then back as the card leaves. The figures
+ *  are solved again for this camera. k 0..1 (hud/intro.tsx leadIsolation). */
+const CARD_BACK = 1.9, CARD_HEAD_SY = 620;   // metres from his head; his head's height on the 1920 reference (film y 560)
+const cardCam = (live: Pose["camera"], head: THREE.Vector3): Pose["camera"] => {
+  const lp = Array.isArray(live.pos) ? new THREE.Vector3(...(live.pos as [number, number, number])) : (live.pos as THREE.Vector3).clone();
+  const u = lp.sub(head); u.y *= 0.5; u.normalize();
+  return aim(head.clone().addScaledVector(u, CARD_BACK), head, CARD_HEAD_SY, 540, live.fov);
+};
 class Director {
   cur: Segment | null = null;
   constructor(readonly w: World) {}
-  frame(f: number): Pose {
+  frame(f: number, fz = f): Pose {
     const s = segAt(f);
     if (s !== this.cur) {
       if (this.cur) this.cur.exit(this.w);
@@ -62,7 +74,15 @@ class Director {
       this.cur = s;
     }
     this.w.beginFrame(f);
-    const P = s.pose(this.w, f);
+    let P = s.pose(this.w, f);
+    const k = leadIsolation(fz);
+    if (k > 0) {
+      const e = k * k * (3 - 2 * k);
+      const li = this.w.actor(LI);
+      P = { ...P, camera: mixCam(P.camera, cardCam(P.camera, li.headWorld()), e) };
+      if (k > 0.5) this.w.only(li);    // nobody else in his card's frame (once the backdrop is mostly in)
+      this.w.setCamera(P.camera); this.w.update();
+    }
     this.w.endFrame(P);
     return P;
   }
@@ -191,7 +211,10 @@ export const LibaiFilm: React.FC = () => {
   const world = useMemo(() => (ctx && fontReady ? new World(ctx.gl, ctx.camera) : null), [ctx, fontReady]);
   const director = useMemo(() => (world ? new Director(world) : null), [world]);
   const t0 = DBG ? performance.now() : 0;
-  const P = director ? director.frame(f) : null;
+  const P = director ? director.frame(f, fz) : null;
+  // 李白's intro card: he is isolated in the frozen picture (isolate.ts), the backdrop set up after the pose's camera
+  const iso = useMemo(() => (world ? new Isolation(world.root) : null), [world]);
+  if (world && iso && P) { const k = leadIsolation(fz); iso.set(k, world.camera, k > 0 ? world.actor(LI).headWorld() : world.camera.position); }
   if (DBG && P) console.log(`[su] f${f} pose (segment ${director!.cur?.id}, place ${world!.place}) in ${Math.round(performance.now() - t0)} ms`);
   const onCreated = useCallback((s: RootState) => setCtx({ gl: s.gl, camera: s.camera as THREE.PerspectiveCamera }), []);
   const onReady = useCallback(() => continueRender(handle), [handle]);

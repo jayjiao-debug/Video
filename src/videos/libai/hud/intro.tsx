@@ -33,10 +33,17 @@ const STATS_EN: [string, string, string][] = [
   ["Money", "300,000 gone in a year", "his own words"],
 ];
 
-/** the picture's veil while frozen (night indigo, darker at the edges) */
+/** the picture's veil while frozen: only the frame's edges (he is isolated in 3D: isolate.ts, Film.tsx) */
 const Veil: React.FC<{ k: number }> = ({ k }) => (
-  <div style={{ position: "absolute", inset: 0, opacity: k, background: `radial-gradient(ellipse 80% 60% at 50% 32%, rgba(27,33,72,0.10) 0%, rgba(27,33,72,0.22) 55%, rgba(14,16,40,0.55) 100%)` }} />
+  <div style={{ position: "absolute", inset: 0, opacity: k, background: `radial-gradient(ellipse 85% 65% at 50% 36%, rgba(27,33,72,0) 0%, rgba(27,33,72,0) 60%, rgba(10,12,32,0.45) 100%)` }} />
 );
+/** how far 李白 is isolated (isolate.ts) on film frame f: in with the freeze, out with the card */
+export const leadIsolation = (f: number): number => {
+  const z = CLOCK.at(f);
+  if (!z || z.i !== FREEZE.lead) return 0;
+  const L = life(z.t, 0, z.n, 1, 7);
+  return L ? clamp01((L.t + 1) / 3) * (1 - easeIn(L.leave, 2)) : 0;
+};
 
 export const LeadCard: React.FC<{ f: number }> = ({ f }) => {
   const z = CLOCK.at(f);

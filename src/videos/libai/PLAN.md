@@ -12,14 +12,18 @@ engine's history. What the Li Bai film is now, after the format update (day-in-l
   open, 采访 / 李 / 白 / 的一天, the cup ring. Only the words 采访李白的一天.
 - **李白's intro card** (hud/intro.tsx LeadCard) on a FREEZE of FREEZE_N frames after A02 (story.ts CLOCK, the kit's
   SHIFT way: all data stays on the picture's clock; Film.tsx poses CLOCK.world(f); the mix shifts by the same amount).
-  高力士 gets a banner on the live shot (GaoBanner).
+  高力士 gets a banner on the live shot (GaoBanner). While frozen he is ISOLATED (isolate.ts; Film.tsx Director): she
+  pulls back to a close shot with his head in the top half, everyone else leaves the frame, and a backdrop in the skin
+  (night indigo, rays, a big pale moon right behind his head) is set up in 3D just behind him, so he and his table keep
+  full colour and his own outline; it all goes back as the card tips away.
 - **综艺 effects** (hud/fx.tsx): the cup counter (A08 to E33, spins to 300 and stamps 达标 after E28), the wait bar (B15),
   醒酒 ✓ (the splash: the card's 今日目标), 记仇 +1 (高力士's glare). None in F. Check: node scripts/libai/overlay_check.mjs.
 - **Whispers** (whisper.ts, hud/whisper.tsx; Newton's treatment): A09, C22, E29, E32. The lens leans in on him, the
   edges darken, the room dips 6 dB (build.py), her line in the 悄悄说 bubble. No aside turns away any more.
 - **Camera**: one take per scene; each segment's header has its camera plan (moves only with a reason; snap zooms land
   on the word, cam.ts snap / jolt); F is left still except the open (finishing the match cut) and the last rise.
-- **Joins** (beats.ts TRANSITIONS): A>B whip, B>C clock race (hud/vlog.tsx ClockRace), C>D whip, D>E clock race,
+- **Joins** (beats.ts TRANSITIONS): A>B whip, B>C clock race (hud/vlog.tsx ClockRace: the 时辰 rolls in her time row
+  under REC, in place of the timestamp), C>D whip, D>E clock race,
   E>F the last lamp matched to the moon (segE LAMP_BODY: the lantern's measured spot; segF puts the set's real moon
   disc there), F's memory dissolves in and out.
 - **Posture** (people.ts Person.lean, the approved RigState.lean patch): 李白 leans back and lists (-5, 3), 高力士 stiff

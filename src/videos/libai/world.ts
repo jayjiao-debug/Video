@@ -96,6 +96,8 @@ export class World {
     if (!r) { r = addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.hide(r); }   // (never scaled: the rig's solver works in world space)
     return r;
   }
+  /** every figure but `keep` leaves the frame (call before update): 李白's isolation on his card (Film.tsx) */
+  only(keep: Rig) { for (const r of this.rigs.values()) if (r !== keep) this.hide(r); }
   private hide(r: Rig) {
     const s = r.state as unknown as Record<string, unknown>;
     for (const key of Object.keys(s)) delete s[key];
