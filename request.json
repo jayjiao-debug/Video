@@ -1,518 +1,857 @@
 {
- "id": "libai-va-01",
+ "id": "libai-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
+ "words": true,
  "items": [
   {
-   "name": "HanBaba_a02",
+   "type": "dialogue",
+   "name": "lb_A_s744",
    "lang": "zh",
-   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
-   "add": {
-    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-    "voice_id": "mZc8T5doZrU7OCI71i3M",
-    "name": "HanBaba"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 744,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[polite, a bit nervous] 请问，您是李白，李太白先生吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[waking up, squinting, delighted, tipsy] 哟，月亮？你怎么白天就出来了？",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[flustered] 我不是月亮！我是来拍您一天的！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[grand, lifting the jar] 好！先喝一杯！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[protesting] 现在才早上……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[very pleased with himself] 早上喝的，叫早酒。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[curious] 您昨晚喝了多少啊？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[counting on fingers, then shrugging, pleased] 不多。一日须倾三百杯嘛。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, deadpan] 他把自己的诗，当说明书用。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "HanBaba_a08",
+   "type": "dialogue",
+   "name": "lb_B_s744",
    "lang": "zh",
-   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
-   "add": {
-    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-    "voice_id": "mZc8T5doZrU7OCI71i3M",
-    "name": "HanBaba"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 744,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[impressed] 听说，您在朝廷当官？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sitting up straight, proud] 翰林待诏！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[puzzled] 待诏，是管什么的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[deflating a little] 就是……等皇上叫。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[curious] 皇上多久叫您一次？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cheerful, raising the cup] 不知道。所以我在这儿等。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[running in, out of breath, urgent] 李翰林！陛下在沉香亭，叫您马上去写新词！",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "Zeyu Liu"
+     }
+    },
+    {
+     "text": "[getting up, wobbly, confident] 好，走！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[panicking] 他站不起来了！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "HanBaba_a13",
+   "type": "dialogue",
+   "name": "lb_C_s744",
    "lang": "zh",
-   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
-   "add": {
-    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-    "voice_id": "mZc8T5doZrU7OCI71i3M",
-    "name": "HanBaba"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 744,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[nervous, careful] 李先生，您脸还湿着呢……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[grand, flowing, reciting] 云想衣裳花想容，春风拂槛露华浓。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[lazy, grand, casual] 高公公，靴子太紧，帮我脱一下。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, scared] 完了。他可是皇上身边最红的人。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "HanBaba_a25",
+   "type": "dialogue",
+   "name": "lb_D_s744",
    "lang": "zh",
-   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
-   "add": {
-    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-    "voice_id": "mZc8T5doZrU7OCI71i3M",
-    "name": "HanBaba"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 744,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[formal, stiff] 陛下准您回山了。这是赏的金子。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "Zeyu Liu"
+     }
+    },
+    {
+     "text": "[sad, careful] 李先生……您这是，被请出来了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[a beat, then a huge laugh, triumphant] 有钱了！天生我材必有用，千金散尽环复来！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[worried] 那这些钱，您打算干嘛？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[striding off, delighted] 喝酒！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    }
+   ]
   },
   {
-   "name": "HanBaba_a41",
+   "type": "dialogue",
+   "name": "lb_E_s744",
    "lang": "zh",
-   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
-   "add": {
-    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-    "voice_id": "mZc8T5doZrU7OCI71i3M",
-    "name": "HanBaba"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 744,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[to the whole room, generous, loud] 今天我请！谁都别跟我抢！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, amused] 一个下午，花得差不多了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[curious] 您天天这么喝，夫人知道吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud, as if it's romantic] 知道啊。我写诗告诉她了：三百六十日，日日醉如泥。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, deadpan] 这是在认错，还是在炫耀？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[getting up, friendly] 太白兄，我先回了啊！",
+     "voice": {
+      "owner": "0e6727b7d53597ce7629413dbe71eba6c1e077ca3309013a30a82e9d5230317b",
+      "voice_id": "EttSxNTvxX50EUdRPQQl",
+      "name": "Jordan Li"
+     }
+    }
+   ]
   },
   {
-   "name": "HanBaba_a44",
+   "type": "dialogue",
+   "name": "lb_F_s744",
    "lang": "zh",
-   "text": "[surprised, then a warm smile] 好。四个人。",
-   "add": {
-    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-    "voice_id": "mZc8T5doZrU7OCI71i3M",
-    "name": "HanBaba"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 744,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[gentle] 人都走了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[looking around, smiling] 走了好，清静。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[gentle] 以前，都是谁陪您喝？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[fond, remembering] 贺老。第一次见我，就叫我谪仙人。没带钱，把腰上的金龟解下来，换酒。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[light, but it lands] 过年那会儿，他回老家了。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[gentle] 您一个人，不孤单吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[lifting his cup to the moon, a small smile] 谁说一个人？",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[quieter, looking into the cup, wistful] 可惜，月亮不会喝，影子只会跟着我。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[warm, a little shy] 李先生，我陪您喝一杯。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[surprised, then his warmest smile] 好。四个人。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    }
+   ]
   },
   {
-   "name": "PlatonWang_a02",
+   "type": "dialogue",
+   "name": "lb_A_s762",
    "lang": "zh",
-   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
-   "add": {
-    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
-    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
-    "name": "Platon Wang"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 762,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[polite, a bit nervous] 请问，您是李白，李太白先生吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[waking up, squinting, delighted, tipsy] 哟，月亮？你怎么白天就出来了？",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[flustered] 我不是月亮！我是来拍您一天的！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[grand, lifting the jar] 好！先喝一杯！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[protesting] 现在才早上……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[very pleased with himself] 早上喝的，叫早酒。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[curious] 您昨晚喝了多少啊？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[counting on fingers, then shrugging, pleased] 不多。一日须倾三百杯嘛。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, deadpan] 他把自己的诗，当说明书用。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "PlatonWang_a08",
+   "type": "dialogue",
+   "name": "lb_B_s762",
    "lang": "zh",
-   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
-   "add": {
-    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
-    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
-    "name": "Platon Wang"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 762,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[impressed] 听说，您在朝廷当官？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[sitting up straight, proud] 翰林待诏！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[puzzled] 待诏，是管什么的？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[deflating a little] 就是……等皇上叫。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[curious] 皇上多久叫您一次？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[cheerful, raising the cup] 不知道。所以我在这儿等。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[running in, out of breath, urgent] 李翰林！陛下在沉香亭，叫您马上去写新词！",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "Zeyu Liu"
+     }
+    },
+    {
+     "text": "[getting up, wobbly, confident] 好，走！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[panicking] 他站不起来了！",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "PlatonWang_a13",
+   "type": "dialogue",
+   "name": "lb_C_s762",
    "lang": "zh",
-   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
-   "add": {
-    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
-    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
-    "name": "Platon Wang"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 762,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[nervous, careful] 李先生，您脸还湿着呢……",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[grand, flowing, reciting] 云想衣裳花想容，春风拂槛露华浓。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[lazy, grand, casual] 高公公，靴子太紧，帮我脱一下。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, scared] 完了。他可是皇上身边最红的人。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    }
+   ]
   },
   {
-   "name": "PlatonWang_a25",
+   "type": "dialogue",
+   "name": "lb_D_s762",
    "lang": "zh",
-   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
-   "add": {
-    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
-    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
-    "name": "Platon Wang"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 762,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[formal, stiff] 陛下准您回山了。这是赏的金子。",
+     "voice": {
+      "owner": "5c5962287b218047405eda9089bab96b2b24534c3e0fe1be105b6168cf79c324",
+      "voice_id": "AAYMKjNBrET5q9uPiIQS",
+      "name": "Zeyu Liu"
+     }
+    },
+    {
+     "text": "[sad, careful] 李先生……您这是，被请出来了？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[a beat, then a huge laugh, triumphant] 有钱了！天生我材必有用，千金散尽环复来！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[worried] 那这些钱，您打算干嘛？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[striding off, delighted] 喝酒！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    }
+   ]
   },
   {
-   "name": "PlatonWang_a41",
+   "type": "dialogue",
+   "name": "lb_E_s762",
    "lang": "zh",
-   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
-   "add": {
-    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
-    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
-    "name": "Platon Wang"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 762,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+    "stability": 0.5
+   },
+   "lines": [
+    {
+     "text": "[to the whole room, generous, loud] 今天我请！谁都别跟我抢！",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, amused] 一个下午，花得差不多了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[curious] 您天天这么喝，夫人知道吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[proud, as if it's romantic] 知道啊。我写诗告诉她了：三百六十日，日日醉如泥。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[to camera, deadpan] 这是在认错，还是在炫耀？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[getting up, friendly] 太白兄，我先回了啊！",
+     "voice": {
+      "owner": "0e6727b7d53597ce7629413dbe71eba6c1e077ca3309013a30a82e9d5230317b",
+      "voice_id": "EttSxNTvxX50EUdRPQQl",
+      "name": "Jordan Li"
+     }
+    }
+   ]
   },
   {
-   "name": "PlatonWang_a44",
+   "type": "dialogue",
+   "name": "lb_F_s762",
    "lang": "zh",
-   "text": "[surprised, then a warm smile] 好。四个人。",
-   "add": {
-    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
-    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
-    "name": "Platon Wang"
-   },
-   "keep": true,
    "model": "eleven_v4",
+   "seed": 762,
    "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "EthanZhang_a02",
-   "lang": "zh",
-   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
-   "add": {
-    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
-    "voice_id": "brChkoggsUHF1stW6omH",
-    "name": "Ethan Zhang"
+    "stability": 0.5
    },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "EthanZhang_a08",
-   "lang": "zh",
-   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
-   "add": {
-    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
-    "voice_id": "brChkoggsUHF1stW6omH",
-    "name": "Ethan Zhang"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "EthanZhang_a13",
-   "lang": "zh",
-   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
-   "add": {
-    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
-    "voice_id": "brChkoggsUHF1stW6omH",
-    "name": "Ethan Zhang"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "EthanZhang_a25",
-   "lang": "zh",
-   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
-   "add": {
-    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
-    "voice_id": "brChkoggsUHF1stW6omH",
-    "name": "Ethan Zhang"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "EthanZhang_a41",
-   "lang": "zh",
-   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
-   "add": {
-    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
-    "voice_id": "brChkoggsUHF1stW6omH",
-    "name": "Ethan Zhang"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "EthanZhang_a44",
-   "lang": "zh",
-   "text": "[surprised, then a warm smile] 好。四个人。",
-   "add": {
-    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
-    "voice_id": "brChkoggsUHF1stW6omH",
-    "name": "Ethan Zhang"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Jing_a02",
-   "lang": "zh",
-   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
-   "add": {
-    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
-    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
-    "name": "Jing"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Jing_a08",
-   "lang": "zh",
-   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
-   "add": {
-    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
-    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
-    "name": "Jing"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Jing_a13",
-   "lang": "zh",
-   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
-   "add": {
-    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
-    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
-    "name": "Jing"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Jing_a25",
-   "lang": "zh",
-   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
-   "add": {
-    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
-    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
-    "name": "Jing"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Jing_a41",
-   "lang": "zh",
-   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
-   "add": {
-    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
-    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
-    "name": "Jing"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Jing_a44",
-   "lang": "zh",
-   "text": "[surprised, then a warm smile] 好。四个人。",
-   "add": {
-    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
-    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
-    "name": "Jing"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Adrian_a02",
-   "lang": "zh",
-   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
-   "add": {
-    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
-    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
-    "name": "Adrian"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Adrian_a08",
-   "lang": "zh",
-   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
-   "add": {
-    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
-    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
-    "name": "Adrian"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Adrian_a13",
-   "lang": "zh",
-   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
-   "add": {
-    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
-    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
-    "name": "Adrian"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Adrian_a25",
-   "lang": "zh",
-   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
-   "add": {
-    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
-    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
-    "name": "Adrian"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Adrian_a41",
-   "lang": "zh",
-   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
-   "add": {
-    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
-    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
-    "name": "Adrian"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
-  },
-  {
-   "name": "Adrian_a44",
-   "lang": "zh",
-   "text": "[surprised, then a warm smile] 好。四个人。",
-   "add": {
-    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
-    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
-    "name": "Adrian"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.75,
-    "style": 0.15
-   }
+   "lines": [
+    {
+     "text": "[gentle] 人都走了。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[looking around, smiling] 走了好，清静。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[gentle] 以前，都是谁陪您喝？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[fond, remembering] 贺老。第一次见我，就叫我谪仙人。没带钱，把腰上的金龟解下来，换酒。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[light, but it lands] 过年那会儿，他回老家了。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[gentle] 您一个人，不孤单吗？",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[lifting his cup to the moon, a small smile] 谁说一个人？",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[quieter, looking into the cup, wistful] 可惜，月亮不会喝，影子只会跟着我。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    },
+    {
+     "text": "[warm, a little shy] 李先生，我陪您喝一杯。",
+     "voice": {
+      "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
+      "voice_id": "I23uc91tu5zY2PA1tKEN",
+      "name": "Lin"
+     }
+    },
+    {
+     "text": "[surprised, then his warmest smile] 好。四个人。",
+     "voice": {
+      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+      "voice_id": "mZc8T5doZrU7OCI71i3M",
+      "name": "HanBaba"
+     }
+    }
+   ]
   }
  ]
 }
