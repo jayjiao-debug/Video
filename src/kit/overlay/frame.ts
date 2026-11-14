@@ -32,9 +32,11 @@ export type FrameSpec = {
   /** the caption band: the widest and tallest the captions may be */ caption: Rect;
 };
 /** 9:15, 1080 x 1800: the owner's choice for new films (14 Nov 2026). Douyin shows its whole width, with a black bar
- *  above and below, so the phone's clock and part of the post's text fall off the picture. */
+ *  above and below, so the phone's clock and part of the post's text fall off the picture. The REC dot starts at
+ *  rec.x0 and the battery ends at rec.x1, 32 px from each side: the owner asked for them nearer the sides here, where
+ *  nothing is cut off (it was 54; 32 is a first number, not yet seen on a phone). */
 export const FRAME_9x15: FrameSpec = {
-  W: 1080, H: 1800, side: 54, top: 215, bottom: 1500, recY: 120, labelY: 180, rec: { x0: 54, y0: 85, x1: 1026, y1: 205 },
+  W: 1080, H: 1800, side: 54, top: 215, bottom: 1500, recY: 120, labelY: 180, rec: { x0: 32, y0: 85, x1: 1048, y1: 205 },
   app: [
     { what: "the app's back icon", r: { x0: 0, y0: 0, x1: 90, y1: 60 } },
     { what: "the app's search icon", r: { x0: 970, y0: 0, x1: 1080, y1: 60 } },

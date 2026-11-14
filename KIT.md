@@ -20,6 +20,7 @@ one command. Hongmen keeps working through one-line re-exports and wrappers at i
 | farm | the final 1080 x 1920 picture on GitHub runners | `bash scripts/kit/farm/new_farm.sh --film <name>` (writes files only) | `scripts/kit/farm/` |
 | stable ink pass | the outline pass of every 3D film (no flicker) | `import { InkPass, noInkFallback } from "../../kit/fx/ink"` | `src/kit/fx/` |
 | rim light, stability helpers | soft white rim on heads; AO / shadow / texture settings that hold still | `src/kit/fx/rim.ts`, `src/kit/fx/stable.ts` | `src/kit/fx/` |
+| the cut-out for an intro card | the lead isolated on his card: he stays in colour with a cut-out line, the picture behind him is washed (a pass with no look of its own; the film gives the colours, the line and the lift) | `import { IsolatePass, screenBox, liftBox } from "../../kit/fx/isolate"` | `src/kit/fx/` |
 | prop kit + period props | held / carried things, a horse | `src/kit/props/{kit,things,horse}.ts` | `src/kit/props/` |
 | outdoor kit | building outdoor places | `src/kit/sets/okit.ts` | `src/kit/sets/` |
 | wardrobe | Qin / Han robes, armour, hats, beards, a halberd for the rig's figures | `src/kit/acc/*.ts` | `src/kit/acc/` |
