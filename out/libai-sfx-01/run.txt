@@ -1,0 +1,78 @@
+plan: {'tier': 'creator', 'character_count': 58663, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_knock", "type": "sfx", "text": "Two sharp knuckle knocks on a wooden table top, knock knock.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_knock.mp3", "bytes": 17179}
+{"name": "sfx_clink", "type": "sfx", "text": "Two small ceramic wine cups clinking together in a toast, one bright clink.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_clink.mp3", "bytes": 17179}
+{"name": "sfx_cheer", "type": "sfx", "text": "A small rowdy tavern crowd of men cheering and laughing, hooray, clapping, cups banging on tables.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_cheer.mp3", "bytes": 48944}
+{"name": "sfx_gate", "type": "sfx", "text": "A huge heavy wooden palace gate swinging shut with a deep booming slam and a creak.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_gate.mp3", "bytes": 40585}
+{"name": "sfx_boot", "type": "sfx", "text": "A tight leather boot being pulled off a foot with effort, a squeaky leather pop.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_boot.mp3", "bytes": 20105}
+{"name": "sfx_pour_gold", "type": "sfx", "text": "A heap of gold ingots and coins poured out of a wooden box onto a wooden table, clattering.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_pour_gold.mp3", "bytes": 33061}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "sfx_knock",
+  "type": "sfx",
+  "text": "Two sharp knuckle knocks on a wooden table top, knock knock.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_knock.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "sfx_clink",
+  "type": "sfx",
+  "text": "Two small ceramic wine cups clinking together in a toast, one bright clink.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_clink.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "sfx_cheer",
+  "type": "sfx",
+  "text": "A small rowdy tavern crowd of men cheering and laughing, hooray, clapping, cups banging on tables.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_cheer.mp3",
+  "bytes": 48944,
+  "seconds": 3.0
+ },
+ {
+  "name": "sfx_gate",
+  "type": "sfx",
+  "text": "A huge heavy wooden palace gate swinging shut with a deep booming slam and a creak.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_gate.mp3",
+  "bytes": 40585,
+  "seconds": 2.48
+ },
+ {
+  "name": "sfx_boot",
+  "type": "sfx",
+  "text": "A tight leather boot being pulled off a foot with effort, a squeaky leather pop.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_boot.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "sfx_pour_gold",
+  "type": "sfx",
+  "text": "A heap of gold ingots and coins poured out of a wooden box onto a wooden table, clattering.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_pour_gold.mp3",
+  "bytes": 33061,
+  "seconds": 2.0
+ }
+]
