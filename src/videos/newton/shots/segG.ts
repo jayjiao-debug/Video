@@ -7,24 +7,31 @@
 // = his window goes dark at G end - 1.77 s).
 //   G1  THE BOARD (F's last framing, ELAB_CAMS.push, carries on): the clock strikes; at the first stroke his eyes lift
 //       and his hands slip off the board; it slides off his left knee and knocks on the floor on the second stroke,
-//       slaps down flat and skids to her feet. He startles and looks down at it. She crouches, her two hands take its
-//       edges, and she rises (stepping back) with it held up close to the lens: circles and triangles, his face above
-//       it, his eyes on it, not on her. She sniffs; 52 over it. On 「学几何」 his eyes come up to her; she lowers the
-//       board out of the frame; he stares (G02's silent beat) while her mic comes in from the lower left.
+//       slaps down flat and skids to her feet. He startles and looks down at it. She crouches to it; her invisible
+//       hands take it (its near edge tips up on its far one) and she rises (stepping back) with it held up close to
+//       the lens: circles and triangles, his face above it, his eyes on it, not on her. She sniffs; 52 over it. On
+//       「学几何」 his eyes come up to her; she lowers the board out of the frame (the focus racks from it to him); he
+//       stares (G02's silent beat) while she leans in a little for his answer.
 //   G2  THE LAUGH (53): the camera DEAD STILL; it bursts out of him: eyes squeezed shut, mouth open, the round head
 //       shaking, his body bobbing, his right hand slapping his knee; "What... use!" over its tail; he wipes an eye.
 //   G3  THE WHIP round to the door (the cut in the blur): HUMPHREY, sooty, outside on the threshold with the full sack
 //       in his arms, stares past her, aghast, and DROPS it (the thump). CARD 4: NEWTON comes in from the right with his
 //       candle, walks to the door, stops and turns, the smile still on him, and wipes an eye; HUMPHREY (dazed, spiral
-//       eyes) backs two steps out of his way. 54 "Good night." (her mic back toward him): Humphrey's second beat, wide
-//       eyes and a small amazed smile, his eyes on Newton; 55 「晚安，牛顿先生。」; he nods, turns and goes out.
+//       eyes) backs two steps out of his way. 54 "Good night." (her light focus back on him): Humphrey's second beat,
+//       his eyes on Newton: wide ring eyes over a small open mouth, then under 55 「晚安，牛顿先生。」 (she bows her head:
+//       the camera's small nod) a small smile; Newton nods, turns and goes out.
 //   G4  HIS ROOM by candle (the cut on BEAT.G.room): the day's clock, last tick: he stands at the window table with the
 //       cold plate in his left hand (framed right), takes a bite with the fork (the clink), lifts it to his mouth
 //       unhurried, chews, smiling a little. CARD 5 mid-left over it.
 //   G5  OUTSIDE, from the elaboratory's doorway (its firelit jamb down the right edge, the gravel below): his window lit
-//       across the blue garden (a second at least); it goes dark (the pluck); black a second later.
+//       across the blue garden (a second at least); it goes dark (the pluck); black a second later. The camera does
+//       not move in this shot (her camera switches off over it: hud/vlog.tsx).
+// SHE IS INVISIBLE (Jay, 14 Nov: "get rid of the microphone and arms", "pretend there is an invisible hand"): no mic
+// and no hand are put. The board is taken up and held by invisible hands (its pose kept in her frame, so it rises and
+// stays with her as one body: segG_parts heldBoard / toCamLocal); where the mic was aimed, the lens keeps the film's
+// light focus (segA / segC do the same); G has no aside to the lens.
 import * as THREE from "three";
-import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT, laugh } from "../people";
@@ -32,7 +39,7 @@ import { ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, RMX, ROOM, ROOM_SET, GDX, GARDEN, 
 import { BOARD, STOOL, SACK } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, rel, seated, type Rig, type RigPose } from "./common";
 import { endBlack } from "../hud";
-import { V, sec, posOf, frameOn, mixCam, stride, aimThrough, quatYZ, eulYZX, rigidAt, fall, forkRot, FORK_TIP, pathAt, GRADE_NIGHT_LIFT, spill, type RigidKey, type PtKey } from "./segG_parts";
+import { V, sec, posOf, frameOn, mixCam, stride, quatYZ, eulYZX, rigidAt, fall, forkRot, FORK_TIP, pathAt, GRADE_NIGHT_G5, spill, toCamLocal, fromCamLocal, heldBoard, boxBottom, lightFocus, type RigidKey, type PtKey } from "./segG_parts";
 import type { World } from "../world";
 
 const S = SEGMENTS[6];
@@ -63,19 +70,27 @@ const T_ROOM = BEAT.G.room;
 const T_LIFT = T_S1 + 3, T_LETGO0 = T_S1 + 4, T_LETGO1 = T_S1 + 13;
 /** the board slides off his left knee (it knocks on the floor on T_CLAT) */
 const T_SLIP = T_CLAT - 12;
-/** she crouches to it, her hands take its edges, she rises with it (stepping back) */
-const T_BEND0 = T_FLAT + 3, T_BEND1 = T_BEND0 + 14, T_REACH = T_BEND1 - 9, T_GRAB = T_BEND1 + 1, T_RISE0 = T_GRAB + 3, T_RISE1 = T_RISE0 + 18;
+/** she crouches to it, her invisible hands take it (T_TAKE0: its near edge tips up), she rises with it (stepping back);
+ *  it is held up by T_HELD */
+const T_BEND0 = T_FLAT + 3, T_BEND1 = T_BEND0 + 14, T_GRAB = T_BEND1 + 1, T_RISE0 = T_GRAB + 3, T_RISE1 = T_RISE0 + 18;
+const T_TAKE0 = T_GRAB - 3, T_HELD = T_RISE1 + 2;
 /** she sniffs before she speaks */
 const T_SNIFF = L1.from - 8;
-/** on 「学几何」 his eyes come up to her; she lowers the board out of the frame; the stare; her mic comes in */
+/** on 「学几何」 his eyes come up to her; she lowers the board out of the frame (the focus racks to him); the stare */
 const T_EYESUP = cap("G01", 1).from + 2, T_LOWER0 = L1.to - 4, T_LOWER1 = L2.preFrom + 5;
-const T_MIC0 = L2.preFrom + 2, T_MIC1 = T_MIC0 + 14;
 /** THE LAUGH bursts out; it eases off over its tail; he wipes an eye (his right hand) */
 const T_LAUGH = BEAT.G.laugh, T_EASE0 = capWord("G02", "use").from + 10, T_WIPE0 = L2.to - sec(1.05), T_WIPE1 = L2.to + 4;
+/** THE STARE: the board down, she leans in a little for his answer (7 cm, steady, from the lowering to the laugh's
+ *  burst, which it stops on: through the laugh the camera is dead still). What her mic coming in used to say. */
+const T_LEAN0 = T_LOWER1 - 3, T_LEAN1 = T_LAUGH, LEAN = 0.07;
 /** THE WHIP round to the door (4 frames out, 4 in: the cut in the blur) */
 const T_WHIP = L2.to - 2, T_DOOR = T_WHIP + 4;
 
 // ---------------------------------------------------------------------------------------------------- G3 beats
+/** her 55 「晚安，牛顿先生。」: she bows her head a little (the camera dips 3 deg in 5 frames, back up in 10) */
+const T_BOW = L4.from - 1;
+/** her light focus comes back onto him as card 4 goes (for 54 and her 55; the mic used to come back up here) */
+const T_FOCUS0 = CARD4.to - 10, T_FOCUS1 = CARD4.to + 4;
 /** HUMPHREY lets go of the sack (it falls 9 frames to the thump) */
 const T_DROP = T_SACK - 9;
 /** NEWTON (off the frame, behind her) gets up and fetches his candle from the furnace, then walks to the door */
@@ -105,9 +120,10 @@ const KNEE_R = rel(SEAT.top, FACE, -0.12, 0.09, 0.3);
 const PK_DIR_REST = V(0, -1, 0.05).normalize();
 const PK_GRIP_REST = V(ELX - 1.22 + 0.0078, 0.83 + 0.0325, -0.713).addScaledVector(PK_DIR_REST, 0.066);
 const PK_ROT_REST = quatYZ(PK_DIR_REST, V(1, 0, 0));
-/** his candle, short, on the furnace's top by the corner (F's) */
-const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07, -0.42);
-const CANDLE_LEN = 0.3;
+/** his candle, burned down to a stub, on the furnace's top by the corner (F's marks since its round-1 fixes,
+ *  requests.md WP5-F: 2 mm up off the top, length 0.12; the same stub goes up to his room) */
+const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07 + 0.002, -0.42);
+const CANDLE_LEN = 0.12;
 /** where she stands: F's push (the start), crouched by the board, and back a step with the board held up */
 const PUSH: CamPose = { pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov };
 const P_PUSH = posOf(PUSH).setY(0);
@@ -174,7 +190,7 @@ const CH_KEYS: RigidKey[] = [
 const charcoalAt = (f: number) => (f < T_SLIP ? { at: CH_REST, rot: CH_REST_ROT } : f <= T_CHOFF ? chOnBoard(f) : rigidAt(f, CH_KEYS));
 
 // ---- her eyes in the elaboratory
-/** crouched by the board, looking down at it (it sits low in the middle: her hands come in from the lower corners) */
+/** crouched by the board, looking down at it (it sits low in the middle of the frame) */
 const P_CROUCH = B_REST.clone().addScaledVector(TO_HER, 0.4).setY(0.86);
 const CROUCH = frameOn(P_CROUCH, B_REST, 540, 980);
 /** up again a step back, the board held up close: his eyes high in the frame, the board in the lower middle */
@@ -191,8 +207,11 @@ const DOOR: CamPose = frameOn(P_DOOR, DOOR_LOOK, 500, 510);
 const g1Cam = (f: number): CamPose => {
   if (f < T_BEND0) return PUSH;
   if (f < T_RISE0) return mixCam(PUSH, CROUCH, stride(clamp01((f - T_BEND0) / (T_BEND1 - T_BEND0))));
-  return mixCam(CROUCH, HOLD, stride(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0))));
+  return C.creep(mixCam(CROUCH, HOLD, stride(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)))), f, T_LEAN0, T_LEAN1, LEAN);
 };
+/** the door, with her bow on 55 */
+const bowK = (f: number) => { const d = f - T_BOW; return d < 0 || d >= 15 ? 0 : d < 5 ? easeOutCubic(d / 5) : 1 - smooth((d - 5) / 10); };
+const doorCam = (f: number): CamPose => { const b = bowK(f); return b > 0 ? C.nudge(DOOR, { pitch: -3 * b }) : DOOR; };
 
 // ---- HUMPHREY outside on the threshold with the full sack in his arms (he stays there, aghast)
 const H_AT = V(ELX + DR.x, 0, WL.z1 + DR.wall + 0.22);
@@ -259,10 +278,15 @@ const N_EXPR: [number, Ex][] = [
 /** his eyes: on the fire (F's), lifting at the clock, down at the board as it falls, at the board she holds, up at her */
 const N_GAZE: [number, number][] = [[S.from, -0.5], [T_LIFT, 0], [T_CLAT + 2, 0.5], [T_RISE0 + 6, 0], [T_EYESUP, 0]];
 const nLookDown = (f: number) => ky(f, [[S.from, 8], [T_LIFT + 6, 2], [T_CLAT, 2], [T_CLAT + 6, 30], [T_RISE0, 30], [T_RISE1, 10], [T_EYESUP, 10], [T_EYESUP + 8, 0], [T_LAUGH, 0], [T_LAUGH + 6, -4], [T_WIPE1, -4], [T_WIPE1 + 10, 2]]);
-/** HUMPHREY: aghast at the drop, dazed (spiral eyes) through card 4, then on "Good night." the second beat of his
- *  reaction: wide open eyes and a small amazed smile, his eyes following NEWTON */
+/** HUMPHREY: aghast at the drop, dazed (spiral eyes) through card 4, then the second beat of his reaction, his eyes
+ *  on NEWTON: on "Good night." his eyes go wide (the rig's ring eyes, brows up) over a small open mouth (amazed: the
+ *  man said good night), and under her 55 a small smile comes up (the rig has no face with ring eyes AND a smile, so
+ *  the two come one after the other; the open mouth bends up with the smile for its first frames) */
 type HEx = "shock" | "dazed" | "smile";
-const H_EXPR: [number, HEx][] = [[S.from, "shock"], [T_SACK + 40, "dazed"], [L3.from, "smile"]];
+const T_HSMILE = L4.from + 4;
+const H_EXPR: [number, HEx][] = [[S.from, "shock"], [T_SACK + 40, "dazed"], [L3.from, "shock"], [T_HSMILE, "smile"]];
+/** his mouth: round (aghast) at the drop; small and open on "Good night." and as the smile comes up; else his face's */
+const hMouth = (f: number) => (f < T_SACK + 60 ? "round" as const : f >= L3.from && f < T_HSMILE + 10 ? "small" as const : undefined);
 
 // ---------------------------------------------------------------------------------------------------- G1-G3 the elaboratory
 const elab = (w: World, f: number): Pose => {
@@ -271,7 +295,7 @@ const elab = (w: World, f: number): Pose => {
   w.set.param("fire", 0.3);
   w.set.param("candle", 0.42);
   const door = f >= T_DOOR;
-  const Wp = C.whip(g1Cam(f), f, T_WHIP, { dir: -1, to: DOOR, deg: 32 });
+  const Wp = C.whip(g1Cam(f), f, T_WHIP, { dir: -1, to: doorCam(f), deg: 32 });
   const cam = Wp.cam;
   w.setCamera(cam);
 
@@ -332,7 +356,7 @@ const elab = (w: World, f: number): Pose => {
     const hFace = lerpA(H_FACE, yawTo(H_BACK, N_DOOR), 0.6 * smooth(clamp01((f - (T_NARR - 20)) / 24)));
     // his eyes: on Newton (past her, screen right), following him to the door; at her once (did you see that?); on him
     const hGaze = at(f, [[S.from, 0.5], [T_NARR - 16, 0.25], [L3.to + 4, 0], [T_NOD, 0.25]]);
-    hm.set({ at: hs.at, facing: hFace, pose: hs.pose, expr: at(f, H_EXPR), mouth: f < T_SACK + 60 ? "round" : undefined, gaze: hGaze,
+    hm.set({ at: hs.at, facing: hFace, pose: hs.pose, expr: at(f, H_EXPR), mouth: hMouth(f), gaze: hGaze,
       blink: f > T_DROP - 4 && f < T_SACK + 24 ? 0 : lid(t, 2, swaps(H_EXPR)), visible: true,
       head: heads(f >= T_SACK && f < T_SACK + 40 ? { tilt: 2.2 * Math.sin((f - T_SACK) * 0.9) * (1 - (f - T_SACK) / 40) } : undefined, accent("jolt", f, T_DROP - 2, { amp: 0.5 }),
         accent("pop", f, L3.from, { amp: 0.5 })),
@@ -359,23 +383,24 @@ const elab = (w: World, f: number): Pose => {
   if (!ns2.seated && f >= T_CANDLE) w.prop("candle").put(n.handWorld(0), { grip: "grip", len: CANDLE_LEN, lit: true, t });
   if (hm && holding) w.prop("sack").put(SACK_HELD, { full: 1, scale: SACK_S, rot: SACK_ROT });
 
-  // ---- THE BOARD and her hands
-  const B = boardAt(w, cam, f);
-  if (B) {
-    w.prop("board").put(B.at, { rot: B.rot });
-    if (B.hr) w.prop("handR").put(B.hr.at, { rot: B.hr.rot, pose: "grip" });
-    if (B.hl) w.prop("hand").put(B.hl.at, { rot: B.hl.rot, pose: "grip" });
+  // ---- THE BOARD (her invisible hands: no hand is put)
+  const B = boardAt(cam, f);
+  if (B) w.prop("board").put(B.at, { rot: B.rot });
+
+  // ---- the lens (no mic: Jay, 14 Nov): a light focus on the board while she holds it up, racking to him as she
+  // lowers it; on him for the stare and the laugh; none in the whip and under card 4 (she is as stunned as Humphrey);
+  // back on him as card 4 goes, for 54 and her 55; the whip's blur
+  const mouth = n.headWorld().add(V(0, -0.1, 0));
+  let dof: { focus: number; amount: number } | undefined;
+  if (!door) {
+    if (B && f >= T_RISE0) {
+      const r = smooth(clamp01((f - T_LOWER0) / (T_LOWER1 + 2 - T_LOWER0)));
+      dof = { focus: lerp(posOf(cam).distanceTo(B.at), posOf(cam).distanceTo(mouth), r), amount: lerp(1.6 * smooth(clamp01((f - T_RISE0) / 10)), 3, r) };
+    } else if (f >= T_LOWER1 + 2) dof = lightFocus(cam, mouth);
+  } else {
+    const a = ky(f, [[T_FOCUS0, 0], [T_FOCUS1, 3]]);
+    if (a > 0.05) dof = lightFocus(cam, mouth, a);
   }
-
-  // ---- HER MIC: out until the board goes down; in toward him for the laugh; down in the whip (she is as stunned as
-  // Humphrey) and under card 4; back toward him at the door for 54 and her 55
-  const mouth = () => n.headWorld().add(V(0, -0.1, 0));
-  const enter = !door ? ky(f, [[T_MIC0, 0], [T_MIC1, 1]]) : ky(f, [[T_DOOR - 4, 1], [T_DOOR + 2, 0], [CARD4.to - 10, 0], [CARD4.to + 4, 1]]);
-  const M = enter > 0.001 && !(B && B.hl) ? C.putMic(w, cam, f, { aim: aimThrough(f, [[S.from, mouth]]), enter }) : null;
-
-  // ---- the lens: light focus on the board while she holds it up; on him for the laugh; the whip's blur
-  let dof: { focus: number; amount: number } | undefined = M?.dof;
-  if (B && !door && f >= T_RISE0) dof = { focus: posOf(cam).distanceTo(B.at), amount: 1.6 * smooth(clamp01((f - T_RISE0) / 10)) };
   if (Wp.post?.dof) dof = Wp.post.dof;
   return { camera: cam, post: dof && dof.amount > 0.05 ? { dof } : undefined, overlays: Wp.smear > 0.01 ? C.whipSmear(Wp.smear, -1) : undefined, slate: door ? "G3 door" : f >= T_LAUGH ? "G2 laugh" : "G1 board" };
 };
@@ -394,61 +419,40 @@ const hmHands = (f: number, p: THREE.Vector3, face: number): [THREE.Vector3 | nu
   return [r.lerp(rel(p, face, -0.17, 0.58, 0.04), k), l.lerp(rel(p, face, 0.17, 0.58, 0.04), k)];
 };
 
-// ---- the board: on his knee; falling; on the floor; lifted by her two hands; held up close; lowered out
-type HandP = { at: THREE.Vector3; rot: THREE.Quaternion };
-/** her hand gripping a bar along `bar` at a world point. Its forearm runs back toward her shoulder (`s` = 0: from
- *  where her shoulders really are, under and behind her eyes) or off along cam.ts's ARM (`s` = 1: as boardHold's hands
- *  hold the board up), made perpendicular to the bar */
-const herHand = (cam: CamPose, grip: THREE.Vector3, bar: THREE.Vector3, side: "R" | "L", s = 0): HandP => {
-  const F = C.camFrame(cam), g = C.worldToCam(F, grip);
-  const toSh = V(...(side === "R" ? C.BODY.shoulderR : C.BODY.shoulderL)).sub(g).normalize();
-  const armC = toSh.lerp(V(...C.ARM[side]).normalize(), s).normalize();
-  const arm = F.right.clone().multiplyScalar(armC.x).addScaledVector(F.up, armC.y).addScaledVector(F.fwd, armC.z);
-  return { at: grip.clone(), rot: quatYZ(bar, arm.multiplyScalar(-1)) };
+// ---- the board: on his knee; falling; on the floor; taken up by her invisible hands; held up close; lowered out
+/** THE TAKE: her invisible fingers get under its near edge (her side, the drawing's foot): it tips up TAKE_DEG on its
+ *  far edge, which stays on the brick, and gives a centimetre her way (T_TAKE0 .. T_RISE0) */
+const TAKE_DEG = 8, FAR_EDGE = V(0, BOARD.h / 2, -BOARD.t / 2);
+const takenAt = (f: number) => {
+  const k = easeOutCubic(clamp01((f - T_TAKE0) / (T_RISE0 - T_TAKE0)));
+  const rot = Q_FLOOR.clone().multiply(new THREE.Quaternion().setFromAxisAngle(V(1, 0, 0), (-TAKE_DEG * Math.PI / 180) * k));
+  const pivot = B_REST.clone().add(FAR_EDGE.clone().applyQuaternion(Q_FLOOR)).addScaledVector(TO_HER, 0.01 * k);
+  return { at: pivot.sub(FAR_EDGE.clone().applyQuaternion(rot)), rot };
 };
-/** where her fists take the board: on the floor its NEAR edge (her side, the drawing's foot), the bar along that edge,
- *  so her forearms come in from below; held up, its two side edges (boardHold's grips). `s` 0..1 between the two */
-const grips = (at: THREE.Vector3, rot: THREE.Quaternion, s: number) => {
-  const xb = V(1, 0, 0).applyQuaternion(rot), yb = V(0, 1, 0).applyQuaternion(rot);
-  const g = (side: number) => {
-    const near = at.clone().addScaledVector(xb, side * 0.14).addScaledVector(yb, -(BOARD.h / 2 + 0.01));
-    const edge = at.clone().addScaledVector(xb, side * (BOARD.w / 2 + 0.004)).addScaledVector(yb, -0.04);
-    return near.lerp(edge, smooth(s));
-  };
-  // on the near edge the two fists are mirror images: the left hand's bar runs the other way along the edge (the
-  // hand prop's thumb side is +x of a LEFT fist, -x of the right), so both show the back of the hand on top, the
-  // fingers curled over the edge and the thumb under it; up on the side edges both bars run up the board (boardHold)
-  const k = smooth(s);
-  return { r: g(1), l: g(-1), barR: xb.clone().lerp(yb, k).normalize(), barL: xb.clone().multiplyScalar(-1).lerp(yb, k).normalize() };
-};
-const boardAt = (w: World, cam: CamPose, f: number): { at: THREE.Vector3; rot: THREE.Quaternion; hr?: HandP; hl?: HandP } | null => {
-  void w;
+/** where she took it, in her frame (the crouch's camera) */
+const TAKEN = takenAt(T_RISE0), TAKEN_L = toCamLocal(CROUCH, TAKEN.at, TAKEN.rot);
+const held = (cam: CamPose, f: number, k = 1, dy = 0) => heldBoard(cam, f, { k, px: BH.px, py: BH.py + dy, depth: BH.depth });
+const boardAt = (cam: CamPose, f: number): { at: THREE.Vector3; rot: THREE.Quaternion } | null => {
   if (f < T_SLIP) return { at: B_C.clone(), rot: B_ROT.clone() };
   if (f >= T_LOWER1 + 2 || f >= T_DOOR) return null;
-  const hold = (k: number, dy = 0) => C.boardHold(cam, f, { k, px: BH.px, py: BH.py + dy, depth: BH.depth });
-  if (f <= T_RISE0) {
-    const b = boardFall(f);
-    if (f < T_REACH) return b;
-    // her hands come in from the lower corners and take its near edge (the fists on the edge, off the brick)
-    const E = grips(b.at, b.rot, 0), F = C.camFrame(cam), u = easeOutCubic(clamp01((f - T_REACH) / (T_GRAB - T_REACH)));
-    const offR = C.camToWorld(F, ...(C.fromScreen(F, 1240, 2150, 0.45).toArray() as [number, number, number]));
-    const offL = C.camToWorld(F, ...(C.fromScreen(F, -160, 2150, 0.45).toArray() as [number, number, number]));
-    const lift = V(0, 0.026, 0);
-    return { ...b, hr: herHand(cam, offR.lerp(E.r.add(lift), u), E.barR, "R"), hl: herHand(cam, offL.lerp(E.l.add(lift), u), E.barL, "L") };
-  }
-  if (f < T_RISE1 + 2) {
-    // up she comes: the board from the brick to the held pose in front of her eyes, tipped up by its far edge
-    const H = hold(1), u = easeInOutCubic(clamp01((f - T_RISE0) / (T_RISE1 + 2 - T_RISE0)));
-    const at = B_REST.clone().lerp(H.board.at, u), rot = Q_FLOOR.clone().slerp(H.board.rot, u);
-    const E = grips(at, rot, u), lift = V(0, 0.026 * (1 - u), 0);
-    if (u >= 0.999) return { at, rot, hr: H.hand, hl: H.handL };
-    return { at, rot, hr: herHand(cam, E.r.add(lift), E.barR, "R", u), hl: herHand(cam, E.l.add(lift), E.barL, "L", u) };
+  if (f < T_TAKE0) return boardFall(f);
+  if (f <= T_RISE0) return takenAt(f);
+  if (f < T_HELD) {
+    // UP SHE COMES WITH IT: the board in her frame, from where she took it to held up in front of her eyes (it rises
+    // and turns with her as one body; its turn spread evenly over the rise, so the firelight leaves its face gently);
+    // a little behind her eyes on the way (its weight: up to 6 cm low in her frame mid-way); never through the brick
+    const u = smooth(clamp01((f - T_RISE0) / (T_HELD - T_RISE0)));
+    const H = held(HOLD, f), HL = toCamLocal(HOLD, H.at, H.rot);
+    const p = TAKEN_L.p.clone().lerp(HL.p, u); p.y -= 0.06 * Math.sin(Math.PI * u);
+    const b = fromCamLocal(cam, { p, q: TAKEN_L.q.clone().slerp(HL.q, u) });
+    const lo = boxBottom(b.at, b.rot, BOARD.w / 2, BOARD.h / 2, BOARD.t / 2);
+    if (lo < 0) b.at.y -= lo;
+    return b;
   }
   // held up close (her sniff: a small dip of her hands); then lowered out of the frame
   const sniff = f >= T_SNIFF && f < T_SNIFF + 8 ? 12 * Math.sin(Math.PI * (f - T_SNIFF) / 8) : 0;
   const k = 1 - smooth(clamp01((f - T_LOWER0) / (T_LOWER1 - T_LOWER0)));
-  const H = hold(k, sniff);
-  return { at: H.board.at, rot: H.board.rot, hr: H.hand, hl: H.handL };
+  return held(cam, f, k, sniff);
 };
 
 // ---------------------------------------------------------------------------------------------------- G4 his room by candle
@@ -517,33 +521,36 @@ const room = (w: World, f: number): Pose => {
 
 // ---------------------------------------------------------------------------------------------------- G5 the garden
 const GE = GARDEN_SET.elab;
-/** OUTSIDE, FROM THE ELABORATORY'S DOOR: her eyes in the doorway, a step in from the wall's face by the east half of the
- *  opening (the set hides the outbuilding's front wall from in there; the jambs stay), looking out across the blue
- *  garden to his window (upper third, right of the middle: card 5 is mid-left). The west jamb's firelit brick runs down
- *  the right edge; the north walk's gravel along the bottom, the box hedge, his staircase door under his window */
-const G_EYE = V(GDX + GE.door.x + 0.07, EYE, GE.z1 - 0.3);
-const GARDEN_CAM: CamPose = frameOn(G_EYE, GARDEN.window, 700, 345, 64);
-/** where the firelight from behind her lands: on the west jamb's reveal (at her eye height, the right edge) and out
- *  over the sill on the gravel in front of the door (the bottom of the frame) */
-const G_JAMB = V(GDX + GE.door.x - GE.door.w / 2, 1.45, GE.z1 - 0.06), G_SILL = V(GDX + GE.door.x - 1.6, 0, GE.z1 + 0.75);
+/** OUTSIDE, FROM THE ELABORATORY'S DOOR: her eyes on the threshold (EYE), a step in from the wall's face by the east
+ *  half of the opening (the set hides the outbuilding's front wall from in there; the jambs stay), looking out across
+ *  the blue garden to his window: upper third, right of the middle (card 5 is mid-left). The west jamb's firelit edge
+ *  runs down the right edge; a wide lens (72) and the window high in the frame put the north walk's moonlit gravel in
+ *  the bottom third, its edge (the bed's box hedge) leading off toward his range and his staircase door under the
+ *  window */
+const G_EYE = V(GDX + GE.door.x + 0.08, EYE, GE.z1 - 0.3);
+const GARDEN_CAM: CamPose = frameOn(G_EYE, GARDEN.window, 780, 285, 72);
+/** where the firelight from behind her lands: on the west jamb's reveal (at her eye height, the right edge) and on the
+ *  gravel in front of the door (just off the frame's lower-left corner: the pool's rim comes into the bottom-left) */
+const G_JAMB = V(GDX + GE.door.x - GE.door.w / 2, 1.45, GE.z1 - 0.06), G_POOL = V(GDX + GE.door.x - 0.2, 0, GE.z1 + 0.9);
 const garden = (w: World, f: number): Pose => {
   const t = f / FPS;
   w.setPlace("garden");
   w.set.param("time", "night");
   // the outbuilding's glow: from in its doorway the set's warm door light sits right at her feet; at full strength it
-  // turns the moonlit bed in front of her olive, so it burns lower here (the jamb and the sill get the 2D spill below)
-  w.set.param("glow", 0.45);
+  // turns the moonlit gravel and the box in front of her lilac and olive, so it burns low here (the jamb and the pool
+  // in front of the door get the 2D spill below, so the walk further out stays moon-blue)
+  w.set.param("glow", 0.2);
   w.set.param("gravel", "rough");
   // his window lit warm (param window 1) until the last pluck, then dark
   w.set.param("window", f >= T_DARK ? 0 : 1);
   w.setCamera(GARDEN_CAM);
   w.update();
-  // the outbuilding still glows behind her: the fire's light on the jamb and spilling out over the sill (the set's own
-  // flicker, so it lives)
+  // the outbuilding still glows behind her: the fire's light on the jamb and spilling out over the sill onto the gravel
+  // (the set's own flicker, so it lives)
   const fl = 1 + 0.08 * Math.sin(t * 6.3) + 0.05 * Math.sin(t * 11.1 + 0.7) + 0.03 * Math.sin(t * 17.3 + 1.9);
-  const pj = w.project(G_JAMB), ps = w.project(G_SILL);
-  const glow = [spill("jambGlow", { x: pj.x + 90, y: pj.y - 260 }, 430, 0.8 * fl), spill("sillSpill", { x: ps.x - 300, y: ps.y + 200 }, 500, 0.42 * fl)].filter(Boolean);
-  return { camera: GARDEN_CAM, post: { grade: GRADE_NIGHT_LIFT }, overlays: glow.length ? glow : undefined, top: f >= T_BLACK ? endBlack(f, T_BLACK) : undefined, slate: "G5 garden" };
+  const pj = w.project(G_JAMB), pp = w.project(G_POOL);
+  const glow = [spill("jambGlow", { x: pj.x + 80, y: pj.y - 120 }, 460, 1.0 * fl), spill("sillSpill", { x: Math.max(pp.x, -60), y: Math.min(pp.y, 2120) }, 720, 0.8 * fl)].filter(Boolean);
+  return { camera: GARDEN_CAM, post: { grade: GRADE_NIGHT_G5 }, overlays: glow.length ? glow : undefined, top: f >= T_BLACK ? endBlack(f, T_BLACK) : undefined, slate: "G5 garden" };
 };
 
 const pose = (w: World, f: number): Pose => (f >= T_GARDEN ? garden(w, f) : f >= T_ROOM ? room(w, f) : elab(w, f));

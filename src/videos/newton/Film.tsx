@@ -6,9 +6,11 @@
 // P = SEG.pose(w, f); w.endFrame(P). <Inner> applies the PLACE's look (background, N8AO, bloom, grade: world.look())
 // and P.post on the chain N8AO -> InkPass -> lens blur -> bloom -> NEUTRAL tone mapping -> grade. The composer has a
 // stencil buffer (the rig figures layer their heads with it).
-// DOM layers on top, in this order: the HUD layer (hud/: every registered HUD, then the title block (placed by Pose.title,
-// else hud setTitlePlace) and the fact card; hidden by Pose.hud === false, the title block and the card by Pose.cards === false), P.overlays, the subtitle
-// (hud/: Chinese large, English small under it), P.top, the slate. NO vlog UI (no REC, no timestamp, no battery).
+// DOM layers on top, in this order: the HUD layer (hud/: her camera's recording UI (hud/vlog.tsx: the REC lamp, the
+// scene's timestamp, the battery; REC and timestamp hidden by Pose.rec === false, the timestamp's big intro skipped by
+// Pose.cards === false), every registered HUD, then the title block (placed by Pose.title, else hud setTitlePlace) and
+// the fact card; hidden by Pose.hud === false, the title block and the card by Pose.cards === false), P.overlays, the
+// subtitle (hud/: Chinese large, English small under it), P.top (the end black covers the HUD too), the slate.
 // Input props: src/kit/film/env.ts (lang, nocap, nohud, noov, cover, zoom / sx / sy / ov, nopost, slate, kick, dbg,
 // ovonly, inksamples).
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -25,8 +27,8 @@ import { GradeEffect, type GradeParams } from "../vasa/grade";
 import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
 import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
-// the HUD's three layers (hud/index.ts: no vlog UI; importing the index also brings hud/index.ts and hud/end.tsx under tsc)
-import { Caption, FactCard, TitleCard } from "./hud";
+// the HUD's layers (hud/index.ts; importing the index also brings hud/index.ts and hud/end.tsx under tsc)
+import { Caption, FactCard, TitleCard, VlogHud } from "./hud";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -158,9 +160,11 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
 };
 
 // ---------------------------------------------------------------------------------------------------- the HUD layer
-/** every registered HUD (story.ts registerHud, in registration order), the title block and the fact card (hud/) */
+/** her camera's recording UI, every registered HUD (story.ts registerHud, in registration order), the title block and
+ *  the fact card (hud/) */
 const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <>
+    <VlogHud f={f} rec={P.rec} cards={P.cards} />
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
     {P.cards !== false ? <><TitleCard f={f} at={P.title} /><FactCard f={f} /></> : null}
   </>

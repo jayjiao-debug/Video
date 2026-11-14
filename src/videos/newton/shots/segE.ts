@@ -12,18 +12,22 @@
 //       lays the fork down and goes back to the desk.
 //   E3  She steps in and bends over the plate: two bites gone (the mic tips toward it).
 //   E4  She turns and walks to the desk asking 31 「您是不是……没什么朋友？」; he is writing again (the quill). 32
-//       "Friends interrupt.": he stops the quill and lifts his head; on "interrupt" his eyes go pointedly to her mic and
-//       stay there. 33 「那讨厌的人呢？」 (he is back at his page); 34 "Hooke.": his head snaps up, instant: still deadpan
-//       (never seemingly angry; the relish is in the timing, the voice and her 秒答), the "oo" an O mouth, no teeth.
-//   E5  ASIDE 35 「秒答。胡克定律那个胡克。」: the mic swings round to the lens, Newton soft behind it, writing.
+//       "Friends interrupt.": he stops the quill and lifts his head; on "interrupt" he looks POINTEDLY INTO THE LENS
+//       (at her: the eyes level, the lids half down, a hair of a lean toward her) and she shrinks back a few
+//       centimetres; 33 「那讨厌的人呢？」 (he is back at his page); 34 "Hooke.": his head snaps up, instant: still
+//       deadpan (never seemingly angry; the relish is in the timing, the voice and her 秒答), the "oo" an O mouth.
+//   E5  ASIDE 35 「秒答。胡克定律那个胡克。」: THE CAMERA TURNS AWAY to tell us: in the silence after "Hooke." she
+//       swings right, a step toward the bookcase on the right wall (his books: "Hooke's law"), the head a little
+//       cocked, he is out of frame; 秒答 there; on 胡克定律那个胡克 she turns back to him: he writes on, oblivious.
+// SHE IS INVISIBLE (Jay, 14 Nov): no mic is put; the lens keeps the light focus the mic's aim used to give.
 import * as THREE from "three";
-import { SEGMENTS, line, capWord, FPS, clamp01, lerp, smooth, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, capWord, cap, FPS, clamp01, lerp, smooth, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON, NEWTON_HIDE } from "../people";
 import { RMX, ROOM, ROOM_SET, EYE } from "../layout";
 import { flyAt } from "../props";
-import { lid, speak, saying, accent, heads, headPop, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, rel, asideK, CHAIR_ASIDE, type Rig, type RigPose } from "./common";
+import { lid, speak, saying, accent, heads, headPop, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, rel, CHAIR_ASIDE, type Rig, type RigPose } from "./common";
 import { V, sec, frameOn, mixCam, stride, lagged, aimThrough, nibAt, quillFist, QROT, pagePut, forkRot, FORK_TIP, posOf, putMorsel, morselOff } from "./segE_parts";
 import type { World } from "../world";
 
@@ -58,6 +62,12 @@ const T_TURN0 = Math.max(L3.from + sec(0.85), T_PLATE1 + 6), T_DESK1 = L3.to + 1
 const T_UP0 = L4.from + sec(0.25), T_LOOK = capWord("E04", "interrupt").from, T_DOWN1 = capWord("E05", "讨").from;
 /** 34 "Hooke.": the head snaps up on the word, back down as her aside starts */
 const T_HOOKE = capWord("E06", "Hooke").from, T_DOWN2 = L7.from + 2;
+/** THE ASIDE (35): out in the silence between "Hooke." and 秒 (9 frames, landing just before 秒), held over 秒答, back
+ *  to him on the second screen (胡克定律那个胡克) over 13 frames */
+const T_MIAO = capWord("E07", "秒").from, T_HOOKE2 = cap("E07", 1).from;
+const T_AS0 = Math.max(L6.to + 4, T_MIAO - 9), T_AS1 = T_MIAO, T_AS2 = T_HOOKE2 + 1, T_AS3 = T_HOOKE2 + 14;
+/** his pointed look on "interrupt": the lids half down, held until 33; she shrinks back 5 cm */
+const T_POINT0 = T_LOOK, T_POINT1 = T_DOWN1;
 
 // ---------------------------------------------------------------------------------------------------- the marks
 const T = ROOM_SET.table, TT = ROOM.tableTop;
@@ -136,6 +146,15 @@ const P5 = P(0.3, -0.2, EYE);
 const CAM_DESK = frameOn(P5, eyesOf(ND), 590, 600);
 const herE4 = (f: number) => P4.clone().lerp(P5, stride(clamp01((f - T_TURN0) / (T_DESK1 - T_TURN0))));
 
+/** THE ASIDE's quiet spot: the bookcase on the right wall (its shelves' faces, mid height, the middle of its run) */
+const BOOKS = V(RMX + ROOM_SET.walls.x1 - ROOM_SET.books.d - 0.02, 1.3, (ROOM_SET.books.z0 + ROOM_SET.books.z1) / 2);
+/** 0..1 how far she is turned away for the aside */
+const asideK35 = (f: number) => ky(f, [[T_AS0, 0], [T_AS1, 1], [T_AS2, 1], [T_AS3, 0]]);
+/** turned to the bookcase from where she stands: a step (0.3 m) toward it, the shelves filling the frame */
+const asideCam = (c: CamPose): CamPose => {
+  const p = posOf(c), to = BOOKS.clone().sub(p).setY(0).normalize();
+  return frameOn(p.clone().addScaledVector(to, 0.3), BOOKS, 560, 880, c.fov);
+};
 const camAt = (f: number): CamPose => {
   let cam: CamPose;
   if (f < T_SWING0) cam = insertCam(f);
@@ -154,6 +173,12 @@ const camAt = (f: number): CamPose => {
     cam = k >= 1 ? CAM_DESK : mixCam(onPlate, onHim, smooth(Math.min(1, (f - T_TURN0) / 16)));
     // 33-34: she leans in a little toward him
     cam = C.creep(cam, f, L5.from, L6.to, 0.12);
+    // his pointed look on "interrupt": she shrinks back 5 cm (and gives it back as he looks down again)
+    const shrink = ky(f, [[T_POINT0 + 1, 0], [T_POINT0 + 9, 1], [T_POINT1, 1], [T_POINT1 + 12, 0]]);
+    if (shrink > 0) cam = C.nudge(cam, { fwd: -0.05 * shrink, pitch: 0.6 * shrink });
+    // THE ASIDE: turned away to the bookcase and back
+    const ka = asideK35(f);
+    if (ka > 0) cam = C.nudge(mixCam(cam, asideCam(cam), ka), { roll: -1.5 * Math.sin(Math.PI * ka) - 1.5 * ka });
   }
   return C.handheld(cam, f, { walk: [[T_WALK0, 0], [T_WALK0 + 6, 0.5], [T_ARRIVE, 0.5], [T_ARRIVE + 8, 0], [T_PLATE0, 0], [T_PLATE0 + 5, 0.45], [T_PLATE1 - 5, 0.45], [T_PLATE1, 0], [T_TURN0, 0], [T_TURN0 + 6, 0.65], [T_DESK1 - 6, 0.65], [T_DESK1, 0]] });
 };
@@ -235,7 +260,9 @@ const lookDownAt = (f: number) => {
   return lerp(44, 3, 1 - writeK(f));
 };
 /** his eyes: on the page in his left hand (screen right) while he reads and eats; up at her; at her mic (screen left) */
-const gazeAt = (f: number) => at(f, [[S.from, 0.5], [T_LOOKUP, 0], [capWord("E02", "not").from + 4, 0.5], [T_DESK, 0], [T_LOOK, -1], [T_DOWN1, 0], [T_HOOKE, 0], [T_DOWN2, 0]]);
+const gazeAt = (f: number) => at(f, [[S.from, 0.5], [T_LOOKUP, 0], [capWord("E02", "not").from + 4, 0.5], [T_DESK, 0], [T_LOOK, 0], [T_DOWN1, 0], [T_HOOKE, 0], [T_DOWN2, 0]]);
+/** his pointed look into the lens on "interrupt": the lids half down (0..1 how far) */
+const pointK = (f: number) => ky(f, [[T_POINT0, 0], [T_POINT0 + 4, 1], [T_POINT1 - 2, 1], [T_POINT1 + 4, 0]]);
 /** chewing (his mouth stays shut: the head bobs a little, the jaw's work), after each bite */
 const chewAt = (f: number) => {
   const on = (a: number, b: number) => f >= a && f < b ? Math.sin(Math.PI * clamp01((f - a) / 4)) * Math.sin(Math.PI * clamp01((b - f) / 4)) : 0;
@@ -274,10 +301,10 @@ const pose = (w: World, f: number): Pose => {
   n.set({
     at: s.at, facing: s.facing, pose: s.pose, expr: at(f, NEWTON_EXPR), ...ns,
     // the surprise stays wide-eyed (no blink over "Have I not?" once the swap's blink is done)
-    blink: f >= L2.from + 1 && f < SHOCK_END ? 0 : ns.blink ?? lid(t, 1, swaps(NEWTON_EXPR)),
+    blink: f >= L2.from + 1 && f < SHOCK_END ? 0 : Math.max(0.42 * pointK(f), ns.blink ?? lid(t, 1, swaps(NEWTON_EXPR))),
     head: heads(ns.head, chewAt(f), accent("nod", f, T_HOOKE, { amp: 0.6 }), headPop(f, T_HOOKE), accent("jolt", f, L2.from - 3, { amp: 0.35 }),
-      // the pointed look: his head leans a little toward her mic
-      f >= T_LOOK - 4 && f < T_DOWN1 + 6 ? { dx: -0.07 * smooth(clamp01((f - T_LOOK + 4) / 8)) * smooth(clamp01((T_DOWN1 + 6 - f) / 8)), tilt: 3 * smooth(clamp01((f - T_LOOK + 4) / 8)) * smooth(clamp01((T_DOWN1 + 6 - f) / 8)) } : undefined),
+      // the pointed look: a hair of a lean toward her (the head a touch bigger to the lens), the chin a little down
+      pointK(f) > 0 ? { scale: 1 + 0.035 * pointK(f), dy: -0.01 * pointK(f) } : undefined),
     lookDown: lookDownAt(f), gaze: gazeAt(f), hands: [right, left], armFront: [upToMouth, false], hide: NEWTON_HIDE, visible: true,
   });
 
@@ -314,16 +341,19 @@ const pose = (w: World, f: number): Pose => {
     putMorsel(w, morselOn(f) ? forkAt : null, forkQ);
   } else { w.prop("fork").put(FORK_HILT, { rot: FORK_REST }); putMorsel(w, null); }
 
-  // HER MIC: out over the insert; in from the lower left toward him on "Have I not?"; tipped at the plate (two bites);
-  // back on him for 31-34; round to the lens on the aside
+  // where her mic used to be held (it is gone): out over the insert; toward him from "Have I not?"; at the plate (two
+  // bites); back on him for 31-34
   const mouthOf = () => head.clone().add(V(0, -0.1, 0));
   const plateTop = () => ROOM.plate.clone().add(V(0, 0.06, 0));
   const aim = aimThrough(f, [[S.from, mouthOf], [T_PLATE0 + 4, plateTop], [T_TURN0 + 4, mouthOf]], 10);
   // (lowered out of the frame while she bends over the plate: the bites stay clear)
   const enter = easeOutCubic(clamp01((f - L2.from) / 12)) * (1 - ky(f, [[T_PLATE0 + 4, 0], [T_PLATE0 + 14, 1], [T_TURN0 + 2, 1], [T_TURN0 + 14, 0]]));
-  const M = C.putMic(w, cam, f, { aim, lens: asideK(f), enter, tilt: ky(f, [[T_PLATE0 + 4, 0], [T_PLATE0 + 14, 12], [T_TURN0, 12], [T_TURN0 + 10, 0]]) });
+  // (no mic, Jay 14 Nov: the light focus on what it was held toward, while it would have been in; on the bookcase
+  // while she is turned away)
+  const camPos0 = posOf(cam), kA = asideK35(f);
+  const M = { visible: enter > 0.001, dof: { focus: Math.max(0.2, lerp(camPos0.distanceTo(aim), camPos0.distanceTo(BOOKS), kA)), amount: 3 } };
 
-  // the lens: the insert focuses on the fly (the plate soft round it), the plate close on the plate; the aside on the mic
+  // the lens: the insert focuses on the fly (the plate soft round it), the plate close on the plate
   const camPos = posOf(cam);
   let dof: { focus: number; amount: number } | undefined;
   if (f < T_SWING1) { const k = 1 - smooth(clamp01((f - T_SWING0) / (T_SWING1 - T_SWING0))); dof = { focus: camPos.distanceTo(lagged(f, flyPos, 6)), amount: lerp(2, 9, smooth(clamp01((f - S.from) / (T_PUSH1 - S.from)))) * k }; }

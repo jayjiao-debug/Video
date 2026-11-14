@@ -58,7 +58,8 @@ export const lagged = (f: number, at: (g: number) => THREE.Vector3, win = 6) => 
   for (let i = 0; i < win; i++) { const wg = win - i; p.addScaledVector(at(f - i), wg); ws += wg; }
   return p.divideScalar(ws);
 };
-/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames */
+/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames (unused since the mic went
+ *  invisible, 14 Nov: kept for a held thing's aim) */
 export const aimThrough = (f: number, keys: [number, (g: number) => THREE.Vector3][], len = 9) => {
   let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= f) i++;
   const cur = keys[i][1](f);
@@ -142,12 +143,19 @@ export const flash = (key: string, p: { x: number; y: number }, r: number, k: nu
   h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
     background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,170,90,0.62) 0%, rgba(255,130,60,0.34) 42%, rgba(255,110,40,0) 100%)` } });
 
+/** THE FLARE ON HIS CHEEK: a warm glow laid over the cheek nearest the fire, overlay-blended (a screen or normal blend
+ *  lifts his drawn eyes and brows to brown, a haze; overlay warms the pale skin toward orange and keeps the dark lines
+ *  dark), centred on `p` px, radius r px, `k` 0..1 */
+export const cheekGlow = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
+  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "overlay", opacity: Math.min(1, k),
+    background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,120,30,0.8) 0%, rgba(255,120,30,0.5) 45%, rgba(255,110,30,0) 100%)` } });
+
 // ------------------------------------------------------------------------------------------------- the grades
 /** a COPY of Film.tsx GRADE_FILM (the default every place uses; kept here so F never imports the composition) */
 export const GRADE_BASE: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.97, 0.98, 0.96], tintS: [0.006, 0.006], tintM: [-0.01, 0.008], tintH: [-0.016, 0.01], vig: [0.16, 0.42] };
 /** F1, the night garden: the moonlit day colours pulled toward a desaturated blue (shadows and mids cooled and greyed),
  *  the highlights (his candle, the lit window, the door's glow) left warm; the same curve, so the same mid-tone */
-export const GRADE_NIGHT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.66, 0.74, 1.0], tintS: [0.034, -0.016], tintM: [0.024, -0.012], tintH: [-0.018, 0.022], vig: [0.22, 0.4] };
+export const GRADE_NIGHT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.46, 0.55, 1.0], tintS: [0.04, -0.022], tintM: [0.03, -0.018], tintH: [-0.018, 0.022], vig: [0.22, 0.4] };
 /** F4-F5, hours later: the room sunk round him (the low end pressed, a heavier vignette), the face's highlights kept */
 export const GRADE_LATE: GradeParams = { ky: [0, 0.075, 0.215, 0.52, 0.79, 0.93, 1], sat: [0.94, 0.98, 0.98], tintS: [0.004, 0.012], tintM: [-0.012, 0.01], tintH: [-0.016, 0.01], vig: [0.38, 0.28] };
 /** two grades mixed (k 0..1) */

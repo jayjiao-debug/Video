@@ -1,9 +1,10 @@
 // SEGMENT G's own helpers (WP5-G): framing, camera mixing, her walking ease, the mic's aim through keys, axes ->
-// quaternion, keyed rigid poses (the falling board), the fork, the night garden's grade and the doorway's warm spill.
+// quaternion, keyed rigid poses (the falling board), her invisible hands (poses in the camera's frame, the held board,
+// the light focus), the fork, the night garden's grade and the doorway's warm spill.
 // Copies of the generic camera helpers of segE_parts /
 // segF_parts, kept here so segment G never moves when another segment's file changes. Every function is pure.
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, h, type CamPose } from "../story";
+import { FPS, clamp01, lerp, smooth, easeOutCubic, h, type CamPose } from "../story";
 import { FOV } from "../layout";
 import * as C from "../cam";
 import type { GradeParams } from "../../vasa/grade";
@@ -70,6 +71,45 @@ export const rigidAt = (f: number, keys: RigidKey[]): { at: THREE.Vector3; rot: 
 /** a falling thing's ease (gravity: slow at first, fast at the end) */
 export const fall = (x: number) => x * x;
 
+// ------------------------------------------------------------------------------------------------- her invisible hands
+// SHE IS INVISIBLE (Jay, 14 Nov): no mic and no hand are drawn. What her hands hold is placed in HER frame (the
+// camera's), so it moves with her as one body: an invisible pair of hands. A pose in the camera's frame: p = metres
+// (x right, y up, z BACK toward her, three.js camera axes), q = the rotation relative to the camera's axes.
+export type CamLocal = { p: THREE.Vector3; q: THREE.Quaternion };
+const camQuat = (F: C.CamFrame) => new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(F.right, F.up, F.fwd.clone().negate()));
+/** a world pose -> the camera's frame */
+export const toCamLocal = (cam: CamPose, at: THREE.Vector3, rot: THREE.Quaternion): CamLocal => {
+  const F = C.camFrame(cam), d = at.clone().sub(F.p);
+  return { p: V(d.dot(F.right), d.dot(F.up), -d.dot(F.fwd)), q: camQuat(F).invert().multiply(rot) };
+};
+/** a pose in the camera's frame -> world */
+export const fromCamLocal = (cam: CamPose, L: CamLocal): { at: THREE.Vector3; rot: THREE.Quaternion } => {
+  const F = C.camFrame(cam);
+  return { at: F.p.clone().addScaledVector(F.right, L.p.x).addScaledVector(F.up, L.p.y).addScaledVector(F.fwd, -L.p.z), rot: camQuat(F).multiply(L.q) };
+};
+/** THE BOARD HELD UP BY HER INVISIBLE HANDS (a steady copy of cam.ts boardHold, without the hands): k 0..1 = it comes
+ *  up into the frame from below (lowered out: its top tips away from her as it goes down, as two hands lower a board
+ *  to the lap); its face to the lens tilted back `tilt` deg (6), the drawing upright (a slow roll of half a degree,
+ *  millimetres of life: held, never frozen, never swaying), its middle at (px, py) on the frame at `depth` m */
+export const heldBoard = (cam: CamPose, f: number, o: { k?: number; px?: number; py?: number; depth?: number; tilt?: number } = {}) => {
+  const F = C.camFrame(cam), k = easeOutCubic(clamp01(o.k ?? 1)), depth = o.depth ?? 0.72;
+  const life = V(0.0018 * Math.sin(f * 0.061 + 2), 0.0015 * Math.sin(f * 0.047 + 3.3), 0.001 * Math.sin(f * 0.037 + 4.1));
+  const mid = C.fromScreen(F, o.px ?? 540, (o.py ?? 820) + (1 - k) * 1300, depth).add(life);
+  const tilt = ((o.tilt ?? 6) + 26 * (1 - k)) * Math.PI / 180, roll = 0.009 * Math.sin(f * 0.043) + 0.05 * (1 - k);
+  // its axes in camera space (x right, y up, z forward): its face (+z) toward the lens, its +y up the frame
+  const zb = V(0, Math.sin(tilt), -Math.cos(tilt)), up0 = V(-Math.sin(roll), Math.cos(roll), 0), yb = up0.addScaledVector(zb, -up0.dot(zb)).normalize();
+  const w = (c: THREE.Vector3) => F.right.clone().multiplyScalar(c.x).addScaledVector(F.up, c.y).addScaledVector(F.fwd, c.z);
+  return { at: C.camToWorld(F, mid.x, mid.y, mid.z), rot: quatYZ(w(yb), w(zb)) };
+};
+/** the lowest point of a box (half sizes hx, hy, hz) put at `at` with `rot`: world y */
+export const boxBottom = (at: THREE.Vector3, rot: THREE.Quaternion, hx: number, hy: number, hz: number) => {
+  let lo = Infinity;
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) lo = Math.min(lo, at.y + V(sx * hx, sy * hy, sz * hz).applyQuaternion(rot).y);
+  return lo;
+};
+/** the film's light focus (amount 3) on a world point: what the mic's aim used to give (segA / segC do the same) */
+export const lightFocus = (cam: CamPose, p: THREE.Vector3, amount = 3) => ({ focus: Math.max(0.2, posOf(cam).distanceTo(p)), amount });
+
 // ------------------------------------------------------------------------------------------------- the fork
 /** the fork's tines' tip above its hilt (the origin), along its +y */
 export const FORK_TIP = 0.128;
@@ -95,6 +135,10 @@ export const pathAt = (f: number, keys: PtKey[]) => {
 export const GRADE_NIGHT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.66, 0.74, 1.0], tintS: [0.034, -0.016], tintM: [0.024, -0.012], tintH: [-0.018, 0.022], vig: [0.22, 0.4] };
 /** the same grade with the low end and the mids lifted a step (the last shot: a blue MID-TONE, owner's "too dark") */
 export const GRADE_NIGHT_LIFT: GradeParams = { ...GRADE_NIGHT, ky: [0.02, 0.135, 0.32, 0.625, 0.845, 0.945, 1] };
+/** the last shot's grade: the lift, with the highlights' warm tint taken down so the moonlit gravel of the walk (a
+ *  highlight here, close to the lens) stays blue-grey as in F1 instead of going lilac; the lit window and the
+ *  firelight are warm by themselves */
+export const GRADE_NIGHT_G5: GradeParams = { ...GRADE_NIGHT_LIFT, tintH: [-0.004, 0.008] };
 /** A WARM SPILL of firelight (a soft radial glow, screen-blended) centred at (x, y) px on the 1080 x 1920 frame,
  *  radius r px, strength k 0..1 (the same look as segF_parts flash) */
 export const spill = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :

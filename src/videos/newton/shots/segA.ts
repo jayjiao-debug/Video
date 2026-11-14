@@ -24,6 +24,18 @@
 //                        her (the bottle clutched to his chest, a wary eye on her: never the bare back of his head),
 //                        and turns to go on down only once she has swung back to the door
 //   aside    A06         she swings back to his door, the mic round to the lens: 「好，今天我要让他笑一次。」
+// SHE IS INVISIBLE (Jay, 14 Nov: "get rid of the microphone and arms", "pretend there is an invisible hand"): no mic,
+// no hand is put. What they did is now the camera's and the door's:
+//   the raps    each rap is the camera's own small push (her weight behind the knuckles), the leaf shivers in its
+//               frame and a little dust puffs off the panel into the sun (sets/stairs.ts puff / puff2); the first rap
+//               finds the door unlatched (it gives a crack of candlelight), the second knocks it open
+//   the slam    she leans in after him as he backs off on "night"; on the thud the camera FLINCHES back (a quick
+//               jerk of 13 cm and a 3 deg tip up, settling); the title block is painted on the door: it follows the door's
+//               place, size and tilt on screen
+//   A03 aside   the camera's puzzled head tilt: she leans in toward the shut door and cocks her head (roll), a
+//               little more on 睡？, and straightens before Humphrey's latch
+//   A06 aside   back on his door: a firm nod on 好, a determined push toward the door over 今天我要让他笑, a small
+//               punch-in on 一次
 // Every frame is looked up (lineId / capWord / card / BEAT / SEGMENTS and the sound anchors from the lines' voice
 // times + the clips' own measured offsets); every mark comes from layout/stairs.ts (STAIRS, STAIRS_SET).
 import * as THREE from "three";
@@ -33,8 +45,8 @@ import * as C from "../cam";
 import { NEWTON_INK, HUMPHREY } from "../people";
 import { STAIRS, STAIRS_SET, EYE, FOV } from "../layout";
 import type { World } from "../world";
-import { V, rel, hang, lid, speak, accent, heads, headPop, walkAlong, yawTo, lerpA, wrapA, asideK, cardLower, rigWalk, type RigState, type RigPose } from "./common";
-import { micA } from "./segA_parts";
+import { V, rel, hang, lid, speak, accent, heads, headPop, walkAlong, yawTo, lerpA, wrapA, ky, rigWalk, type RigState, type RigPose } from "./common";
+import { rapPush, shiver, lightFocus, doorTitle } from "./segA_parts";
 
 type St = Partial<RigState>;
 const S = SEGMENTS[0];
@@ -78,6 +90,11 @@ const H_TURN3 = H_DOWN + sec(1.05);               // .. and turns to go on down 
 const H_BACKV = 0.75, H_DOWNV = 1.35;             // m/s along his way: backing down, then going on down
 const SWING0 = BEAT.A.aside06[0] - 4;             // she swings back to the door for the aside
 const STEP2_0 = SND.latch + 2, STEP2_1 = SND.latch + sec(1.7);   // she steps back by the window to give him room
+/** the invisible reporter's beats: the raps; the A03 tilt (in on 他, a little more on 睡, out before the latch); the
+ *  A06 nod (好), push (今 .. 次) and punch-in (一) */
+const RAPS = [SND.rap1, SND.rap2];
+const A03_IN = word("A03", "他") - 6, A03_SHUI = word("A03", "睡"), A03_OUT = Math.min(BEAT.A.aside03[1] + 4, SND.latch - 6);
+const A06_NOD = word("A06", "好") - 2, A06_PUSH0 = word("A06", "今"), A06_PUSH1 = word("A06", "次") + 6, A06_PUNCH = word("A06", "一");
 
 // ------------------------------------------------------------------------------------------------------- the marks
 const D = STAIRS_SET.door, ST = STAIRS_SET.steps;
@@ -203,15 +220,49 @@ const camAt = (f: number): CamPose => {
   }
   if (f >= SWING0) d = nl(d, DIR_DOOR, easeInOutCubic((f - SWING0) / 18));
   const roll = f <= ARRIVE + 6 ? stepBob(f).roll : 0;
-  return C.nudge({ pos: [pos.x, pos.y, pos.z], look: [pos.x + 2 * d.x, pos.y + 2 * d.y, pos.z + 2 * d.z], fov: FOV }, { roll });
+  const M = moves(f);
+  const cam = C.nudge({ pos: [pos.x, pos.y, pos.z], look: [pos.x + 2 * d.x, pos.y + 2 * d.y, pos.z + 2 * d.z], fov: FOV }, { roll: roll + M.roll, fwd: M.fwd, pitch: M.pitch, yaw: M.yaw });
+  return M.fov === 1 ? cam : { ...cam, fov: cam.fov * M.fov };
+};
+/** THE INVISIBLE REPORTER'S MOVES (see the head of the file), on top of her eyes: fwd (m), pitch / roll / yaw (deg), fov
+ *  factor. Pure. */
+const moves = (f: number) => {
+  // the raps: a small push with each (the second a little more: the door gives under it)
+  const rp = rapPush(f, RAPS, [0.022, 0.034]);
+  let fwd = rp, pitch = -18 * rp, roll = 0, yaw = 0, fov = 1;
+  // the slam: leaning in after him as he backs off, then THE FLINCH on the thud (back to -6 cm in 3 frames, a tip up and a
+  // little roll, settling over 14), the last 2 cm given back as she leans in for the aside (13 cm in all, 3 deg)
+  const d = f - SND.thud;
+  if (f >= N_GO && d < 0) fwd += 0.07 * smooth((f - N_GO) / (SHUT0 - N_GO));
+  else if (d >= 0) {
+    const jerk = easeOutCubic(clamp01(d / 3)), settle = smooth(clamp01((d - 3) / 14));
+    fwd += d < 3 ? lerp(0.07, -0.06, jerk) : lerp(-0.06, -0.02, settle) * (1 - smooth(clamp01((f - A03_IN) / 14)));
+    const fl = d < 3 ? jerk : 1 - settle;
+    pitch += 3 * fl; roll += -1.4 * fl;
+  }
+  // A03: the puzzled head tilt (lean in 9 cm, roll 4.5 deg, a touch more on 睡)
+  const tilt = ky(f, [[A03_IN, 0], [A03_IN + 14, 1], [A03_OUT - 14, 1], [A03_OUT, 0]]);
+  const more = ky(f, [[A03_SHUI - 2, 0], [A03_SHUI + 6, 1], [A03_OUT - 14, 1], [A03_OUT, 0]]);
+  fwd += 0.09 * tilt; roll += -4.5 * tilt - 2 * more; pitch += -1.2 * tilt; yaw += -1.5 * more;
+  // A06: the nod on 好 (down 3 deg and back in 10 frames), the push toward his door, the punch-in on 一次
+  if (f >= A06_NOD && f < A06_NOD + 10) pitch += -3 * Math.sin((Math.PI * (f - A06_NOD)) / 10);
+  fwd += 0.28 * smooth(clamp01((f - A06_PUSH0) / (A06_PUSH1 - A06_PUSH0)));
+  if (f >= A06_PUNCH) fov = lerp(1, 0.9, easeOutCubic(clamp01((f - A06_PUNCH) / 5)));
+  return { fwd, pitch, roll, yaw, fov };
 };
 
 // ------------------------------------------------------------------------------------------------------- the door
-/** the door: opens as she raps (already opening by the second rap), held while he stands in it, swung shut on the
- *  thud; opened for Humphrey on the latch and drawn shut on the click */
+/** the door: the first rap finds it unlatched (it shivers and gives a crack of candlelight), the second knocks it open
+ *  (it swings in, he catches it at 0.8 as he steps up), held while he stands in it, swung shut on the thud; opened for
+ *  Humphrey on the latch and drawn shut on the click. Each rap's shiver rides on top (segA_parts shiver). */
+const DOOR_CRACK = 0.015;
 const doorAt = (f: number) => {
-  if (f < OPEN0) return 0;
-  if (f < SHUT0) return 0.8 * easeOutCubic(clamp01((f - OPEN0) / (OPEN1 - OPEN0)));
+  if (f < SND.rap1) return 0;
+  if (f < SHUT0) {
+    const crack = DOOR_CRACK * smooth((f - SND.rap1) / 3);
+    const swing = f < SND.rap2 ? 0 : (0.8 - DOOR_CRACK) * easeOutCubic(clamp01((f - SND.rap2) / (OPEN1 - SND.rap2)));
+    return crack + swing + shiver(f, RAPS);
+  }
   if (f < SND.thud) return 0.8 * (1 - easeInCubic((f - SHUT0) / (SND.thud - SHUT0)));
   if (f < SND.latch) return 0;
   if (f < H_PULL0) return 0.62 * smooth((f - SND.latch) / 7);
@@ -271,6 +322,9 @@ export const SEG: Segment = {
     // shut tight (their day seams hung as white strings over the heads in the doorway)
     w.set.param("gapLine", 1);
     w.set.param("leak", 0);
+    // the dust each rap shakes off the panel (sets/stairs.ts)
+    if (f >= SND.rap1 && f < SND.rap1 + 24) w.set.param("puff", (f - SND.rap1) / FPS);
+    if (f >= SND.rap2 && f < SND.rap2 + 24) w.set.param("puff2", (f - SND.rap2) / FPS);
     const cam = camAt(f);
     w.setCamera(cam);
 
@@ -332,8 +386,8 @@ export const SEG: Segment = {
       w.prop("inkBottle").put(g, { grip: "grip", rot: H.facing });
     }
 
-    // HER MIC: in from the lower left on the run, the raps, on him; the slam in its face; round to the lens on the
-    // asides; lowered under the card; on Humphrey
+    // (no mic, no hand: Jay, 14 Nov) the lens keeps its light focus on what she was holding the mic toward: the knock
+    // point, his mouth, the shut door, Humphrey
     const knock = leafPt(door, KNOCK_ALONG, STAIRS.knock.y, KNOCK_FACE);
     const nMouth = nOn ? nt.headWorld().add(V(0, -0.1, 0)) : V(STAIRS.door.x, 1.0, STAIRS.door.z);
     const shutPt = V(STAIRS.door.x - 0.03, 1.05, STAIRS.door.z + 0.1);
@@ -341,22 +395,20 @@ export const SEG: Segment = {
     aim = aim.clone().lerp(nMouth, smooth((f - BACK0) / 14));
     aim.lerp(shutPt, smooth((f - SHUT0) / (SND.thud - SHUT0)));
     if (f >= SND.latch) aim = hOn ? hm.headWorld().add(V(0, -0.11, 0)) : shutPt;
-    const flinch = f >= SND.thud && f < SND.thud + 7 ? Math.sin((Math.PI * (f - SND.thud + 1)) / 8) : 0;
-    const enter = Math.min(smooth((f - SND.steps[0] + 1) / 11), 1 - cardLower(f)) * (1 - 0.35 * flinch);
-    // (segA_parts micA = putMic with segA's own aside pose: the handle leaning to the lower left, the fist's curls to
-    // the lens)
-    const M = micA(w, cam, f, { aim, lens: asideK(f), rap: C.rapK(f, [SND.rap1, SND.rap2]), enter });
+    const dof = lightFocus(cam, aim);
 
-    // the title block on the shut door's upper panel; it lands ON the thud (TITLE_SPAN starts a few frames before it:
-    // held back until the door is shut, requests.md WP5-A -> WP1)
-    const tp = C.toScreen(cam, V(STAIRS.door.x - 0.03, 1.36, STAIRS.door.z + 0.02));
+    // the title block on the shut door's upper panel, painted on it: its place, size and tilt follow the door on
+    // screen (the flinch, the A03 tilt); it lands ON the thud (TITLE_SPAN starts a few frames before it: held back
+    // until the door is shut, requests.md WP5-A -> WP1)
+    // (on the panel at 1.28 m: clear under her camera's timestamp, top left, since the REC HUD came in on 14 Nov)
+    const tp = doorTitle(cam, V(STAIRS.door.x - 0.03, 1.28, STAIRS.door.z + 0.02), P_HOLD, 0.9);
     const titleOn = f >= TITLE_SPAN[0] - 2 && f <= TITLE_SPAN[1] + 2;
     const titleHeld = f >= TITLE_SPAN[0] && f < SND.thud;
     return {
       camera: cam,
-      ...(M.dof ? { post: { dof: M.dof } } : {}),
+      post: { dof },
       ...(titleHeld ? { cards: false } : {}),
-      ...(titleOn ? { title: { x: Math.round(tp.x), y: Math.round(tp.y), scale: 0.9 } } : {}),
+      ...(titleOn ? { title: tp } : {}),
       slate: f <= ARRIVE ? "A1 run" : f < SND.thud ? "A1 doorway" : f < BEAT.A.card1[0] ? "A2 title / aside" : f < BEAT.A.micHumphrey ? "A2 card 1" : f < H_DOWN ? "A3 Humphrey" : "A3 aside 06",
     };
   },

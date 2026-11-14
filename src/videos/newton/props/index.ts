@@ -151,6 +151,10 @@ const BUILD: Record<PropName, (K: Kit, g: THREE.Group) => Hook> = {
   crucible: T.crucible, flask: T.flask, bellows: T.bellows, mic: T.mic, hand: T.hand, handR: T.handR,
 };
 const _g = V();
+/** SHE IS INVISIBLE (Jay, 14 Nov): her mic and her hands are never drawn. The shots still put them (so the props they
+ *  hold keep their places), but these three stay hidden: the handkerchief, the chair, the board and the door's raps
+ *  move as if an invisible hand did it (the Qin film's way). */
+export const INVISIBLE: ReadonlySet<PropName> = new Set<PropName>(["mic", "hand", "handR"]);
 export function buildProps(M: Mats): Props {
   const group = new THREE.Group(); group.name = "newton-props";
   const K = makeKit(M);
@@ -163,7 +167,7 @@ export function buildProps(M: Mats): Props {
       name, group: g,
       put(at, o = {}) {
         const s = o.scale ?? film;
-        g.visible = true; g.position.copy(toV(at)); g.scale.setScalar(s);
+        g.visible = !INVISIBLE.has(name); g.position.copy(toV(at)); g.scale.setScalar(s);
         g.quaternion.copy(quatOf(o));
         if (o.grip) { const q = gripOf(name, o.grip); g.position.sub(_g.set(q[0], q[1], q[2]).multiplyScalar(s).applyQuaternion(g.quaternion)); }
         hook?.(o, g);

@@ -379,8 +379,9 @@ export const stool = (K: Kit, g: THREE.Group) => {
 /** a white linen handkerchief, crumpled in a wad with two corners hanging (big enough to read in her fist at arm's
  *  length): origin = the pinch (the top of the wad), grip pinch (the origin); the long corner hangs down -y (a little
  *  toward +z), the short one off to +x */
-export const handkerchief = (K: Kit, g: THREE.Group) => {
+export const handkerchief = (K: Kit, g: THREE.Group): Hook => {
   const P = new Part(K), lin = K.flat(PC.linen, { rough: 0.85 }), lo = K.flat(PC.linenLo, { rough: 0.85 });
+  const wad = new THREE.Group(); wad.name = "handkerchief.wad"; g.add(wad);
   P.add(lin, ball(V(0, -0.014, 0), 0.032, [1.15, 0.9, 1.0], 14), 0.0022);
   P.add(lo, ball(V(0.016, -0.004, 0.016), 0.017, [1, 0.8, 1], 10), 0.0018);
   P.add(lin, ball(V(-0.018, -0.02, 0.012), 0.016, [1, 0.85, 1], 10), 0.0018);
@@ -388,8 +389,50 @@ export const handkerchief = (K: Kit, g: THREE.Group) => {
   P.add(lin, turned([[0, -0.16], [0.01, -0.14], [0.026, -0.1], [0.038, -0.06], [0.036, -0.03], [0, -0.016]], 12).scale(1, 1, 0.28).rotateZ(0.12).rotateX(-0.18), 0.002);
   // the short corner off to the side
   P.add(lo, turned([[0, -0.085], [0.014, -0.06], [0.022, -0.035], [0, -0.012]], 10).scale(1, 1, 0.3).rotateZ(1.0).translate(0.012, 0, 0.004), 0.0018);
-  P.into(g, "handkerchief");
+  P.into(wad, "handkerchief");
+  // THE PAD (put({ pad: true }): HankyOpts): the same cloth crumpled into a small pad in an INVISIBLE hand (D's wipe:
+  // the owner's "invisible hand, like the Qin film"). Origin = the middle of its pressing face; +z = the way it presses
+  // (into what it wipes), -z = its back (toward the lens); +y up. A crumpled white pad with three cloth points round
+  // its rim, the biggest at its lower -x side (with +z away from the lens, -x is SCREEN RIGHT: where the hand would
+  // be), and a short corner hanging from there (flap rad swings it about z: + = toward +x). Its white is lifted a
+  // little (emissive) so it reads as white linen next to his bleached toon face, never as a grey part of it.
+  const pad = new THREE.Group(); pad.name = "handkerchief.pad"; g.add(pad);
+  const white = (K.flat("#f4f1ea", { rough: 0.85 }) as THREE.MeshPhysicalMaterial).clone(); white.emissive.set("#aca79e");
+  const fold = (K.flat(PC.linen, { rough: 0.85 }) as THREE.MeshPhysicalMaterial).clone(); fold.emissive.set("#78746c");
+  /** a ball crumpled: every vertex pushed in or out by a few crossed ripples (fixed: no randomness) */
+  const crumple = (geo: THREE.BufferGeometry, amt: number, seed: number) => {
+    const P = geo.getAttribute("position") as THREE.BufferAttribute, c = new THREE.Vector3();
+    geo.computeBoundingBox(); geo.boundingBox!.getCenter(c);
+    for (let i = 0; i < P.count; i++) {
+      const x = P.getX(i) - c.x, y = P.getY(i) - c.y, z = P.getZ(i) - c.z, r = Math.hypot(x, y, z) || 1, u = x / r, v = y / r, w = z / r;
+      const k = 1 + amt * (0.55 * Math.sin(6 * u + 2.1 * seed) * Math.sin(5 * v + 1.3) + 0.3 * Math.sin(9 * v + 4 * w + seed) + 0.15 * Math.sin(13 * u - 7 * v + 2 * seed));
+      P.setXYZ(i, c.x + x * k, c.y + y * k, c.z + z * k);
+    }
+    P.needsUpdate = true; geo.computeVertexNormals();
+    return geo;
+  };
+  /** a flattened cloth point: from `at`, `len` long toward `dir`, `w` wide at its root, flattened across `flat` */
+  const corner = (at: THREE.Vector3, dir: THREE.Vector3, len: number, w: number, flat = 0.32, twist = 0) => {
+    const geo = turned([[0, -len], [w * 0.35, -len * 0.82], [w * 0.8, -len * 0.5], [w, -len * 0.2], [w * 0.7, -len * 0.04], [0, 0]], 10).scale(1, 1, flat).rotateY(twist);
+    return geo.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(V(0, -1, 0), dir.clone().normalize())).translate(at.x, at.y, at.z);
+  };
+  const Q = new Part(K);
+  Q.add(white, crumple(ball(V(0, 0, -0.015), 0.032, [1.0, 0.86, 0.5], 18), 0.13, 1), 0.002);          // the pressed pad
+  Q.add(fold, crumple(ball(V(0.012, 0.01, -0.026), 0.013, [1.1, 0.8, 0.6], 10), 0.15, 2), 0.0015);    // crumples on its back
+  Q.add(white, crumple(ball(V(-0.01, -0.007, -0.028), 0.014, [1.15, 0.85, 0.6], 10), 0.15, 3), 0.0015);
+  Q.add(white, corner(V(-0.024, -0.017, -0.02), V(-0.8, -0.55, -0.22), 0.03, 0.012, 0.32, 0.25), 0.0015);   // the points
+  Q.add(fold, corner(V(-0.027, 0.012, -0.02), V(-0.95, 0.3, -0.18), 0.021, 0.009, 0.32, -0.3), 0.0015);
+  Q.add(white, corner(V(0.026, 0.004, -0.02), V(0.95, -0.25, -0.2), 0.017, 0.008, 0.32, 0.3), 0.0015);
+  Q.into(pad, "handkerchief");
+  const flapG = new THREE.Group(); flapG.name = "handkerchief.flap"; flapG.position.set(-0.02, -0.022, -0.022); pad.add(flapG);
+  const Fp = new Part(K);
+  Fp.add(white, corner(V(0, 0, 0), V(-0.35, -1, -0.15), 0.04, 0.013, 0.3, 0.2), 0.0016);
+  Fp.into(flapG, "handkerchief");
+  return (o) => { const q = o as HankyOpts; wad.visible = !q.pad; pad.visible = !!q.pad; flapG.rotation.set(0, 0, q.flap ?? 0); };
 };
+/** the handkerchief's own put options (pass a HankyOpts variable to put): pad = the crumpled pad of an invisible hand
+ *  (default: the wad with its long corner); flap = the pad's hanging corner swung (rad about its z, + toward +x) */
+export type HankyOpts = PutOpts & { pad?: boolean; flap?: number };
 /** THE SACK (hessian): put({ full }) 0 = empty (a limp folded sack lying flat), 1 = full of charcoal, its neck gathered
  *  with a cord and lumps at the mouth; { slump: true } = the full sack dropped, slumped on its side with a few lumps
  *  spilled toward +z. Origin = on the floor under its middle; grip neck = the gathered neck of the full sack */
