@@ -20,6 +20,8 @@
 //               On every scene's first frame it SLIDES IN BIG (x1.5) under REC; while it lands the CLOCK RUNS ON from
 //               the last scene's time to this one (the day fast-forwarding: 05:00 ... 11:00, ease-out over 14 frames);
 //               it holds, then shrinks into its small place under REC (left x 54, rows on y 255 / 291) and stays.
+//               The word follows the running digits (WORD_FROM: the previous scene's word until they enter this one's
+//               hours).
 //               Frame 0 starts big and settled (no run: the first frame is complete). cards: false skips the big
 //               intro (only the small stamp).
 //     battery   top right (SCREEN.battery): its level follows the CLOCK, not the frame: 100 % at 05:00 down to 12 % at
@@ -64,6 +66,18 @@ export const clockAt = (f: number): number => {
   if (i <= 0 || st.t >= RUN) return to;
   const from = SCENE_STAMP[SCENES[i - 1]].min;
   return from + (to - from) * easeOutCubic(clamp01((st.t + 1) / RUN));
+};
+/** WHERE EACH SCENE'S TIME WORD STARTS on the clock (minutes after the film day's midnight, story.ts SCENE_CLOCK's
+ *  scale): 清晨 until 08:00, 上午 from 08:00, 中午 from 11:30, 下午 from 13:00, 傍晚 from 17:00, 夜 from 19:00, 凌晨 from
+ *  24:00 (each scene's own clock lies inside its word's hours). While the clock runs on at a cut, the word (and the
+ *  English row under it) is the PREVIOUS scene's until the running digits cross into this scene's hours (review v2
+ *  row 7: G's first frame read 「凌晨 23:25」, E's 「傍晚 15:35」, D's 「下午 12:35」). It changes only in the run's first
+ *  frames (B, C: 2; E: 4, before the English row fades in; D, F, G: the first frame alone) */
+export const WORD_FROM: Record<SceneId, number> = { A: 0, B: 8 * 60, C: 11 * 60 + 30, D: 13 * 60, E: 17 * 60, F: 19 * 60, G: 24 * 60 };
+/** the scene whose time word goes with scene `id`'s clock at `min` (the clock as shown: whole minutes) */
+export const wordOf = (id: SceneId, min: number): SceneId => {
+  const i = SCENES.indexOf(id);
+  return i > 0 && Math.floor(min) < WORD_FROM[id] ? SCENES[i - 1] : id;
 };
 /** the battery (%) on frame f: each scene starts at its clock's level (100 % at 05:00 .. 12 % at 02:00) and drains 3
  *  points more while it runs (the last one 5) */
@@ -155,7 +169,8 @@ const RecMark: React.FC<{ f: number; out: boolean }> = ({ f, out }) => {
 
 const TimeStamp: React.FC<{ f: number; intro: boolean; out: boolean }> = ({ f, intro, out }) => {
   const st = stampAt(f), t = intro ? st.t : HOLD + SHRINK;
-  const r = rows(st.id, clockText(intro ? clockAt(f) : SCENE_STAMP[st.id].min));
+  const min = intro ? clockAt(f) : SCENE_STAMP[st.id].min;
+  const r = rows(wordOf(st.id, min), clockText(min));
   const kin = easeOutCubic(clamp01((t + 1) / IN)), op = clamp01((t + 1) / 5), ks = stampK(t);
   const s = ST.big + (1 - ST.big) * ks, y = ST.bigY + (ST.y - ST.bigY) * ks, dx = -40 * (1 - kin);
   // the English row comes in a few frames after the Chinese one (it settles under the running clock)

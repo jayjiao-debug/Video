@@ -10,7 +10,9 @@
 // Width: the safe area is x 50..925 (Douyin's button rail is right of x 930 below y 900), so a row CENTRED on x 540
 // may be 770 px wide: up to 11 characters at 66 px. A 12-13 character row shrinks (to 60 px at most) so it stays
 // centred over the English; wider than that (up to the lines file's 16) it slides left only as far as it must and
-// shrinks to fit on ONE row (16 characters = 53 px). Optical centring: a trailing full-width mark counts half.
+// shrinks to fit on ONE row (16 characters = 53 px). Optical centring: a trailing full-width mark counts half. Two
+// trailing marks in a row (「？！」) are set tight: the first is pulled back half an em (its own blank half would show as
+// a gap) and only the last one's half em counts as blank.
 // More than 16 characters (not in the lines file) falls back to two balanced rows.
 // English wider than 800 px breaks into two balanced rows (so it stays centred instead of sliding off the rail).
 // Motion: fades in over 3 frames where a run of captions starts and out over 3 frames where it ends; between two
@@ -56,13 +58,33 @@ export const capRows = (plain: string): string[] => {
   }
   return [cs.slice(0, best).join(""), cs.slice(best).join("")];
 };
-/** the optical blank of a Chinese row (em): half an em per trailing / leading full-width mark */
+/** a full-width mark pulled back half an em: a trailing mark followed by another one (「？！」: the ？ keeps only its glyph) */
+const PULL = 0.5;
+const pulledAt = (cs: string[], i: number) => i + 1 < cs.length && TRAILING_PUNCT.includes(cs[i]) && TRAILING_PUNCT.includes(cs[i + 1]);
+const pulls = (row: string) => { const cs = [...row]; return cs.filter((_, i) => pulledAt(cs, i)).length; };
+/** a Chinese row's width in px as drawn (the pulled marks half an em narrower) */
+const zhW = (row: string, px: number, ls: number) => textW(row, px, ls) - pulls(row) * PULL * px;
+/** the optical blank of a Chinese row (em): half an em for its trailing full-width mark(s) (the pulled ones have none),
+ *  half an em per leading one */
 const blanks = (row: string) => {
   const cs = [...row];
-  let r = 0, l = 0;
-  for (let i = cs.length - 1; i >= 0 && TRAILING_PUNCT.includes(cs[i]); i--) r += 0.5;
+  let l = 0;
+  const r = cs.length && TRAILING_PUNCT.includes(cs[cs.length - 1]) ? 0.5 : 0;
   for (let i = 0; i < cs.length && LEAD_PUNCT.includes(cs[i]); i++) l += 0.5;
   return { r, l };
+};
+/** characters [from, to) of a Chinese row as drawn: each pulled mark half an em narrower (ink layer and fill alike) */
+const kern = (row: string, from = 0, to = [...row].length): React.ReactNode => {
+  const cs = [...row], out: React.ReactNode[] = [];
+  let buf = "";
+  for (let i = from; i < to; i++) {
+    if (!pulledAt(cs, i)) { buf += cs[i]; continue; }
+    if (buf) out.push(buf);
+    buf = "";
+    out.push(<span key={i} style={{ marginRight: `-${PULL}em` }}>{cs[i]}</span>);
+  }
+  if (buf) out.push(buf);
+  return out.length === 1 && typeof out[0] === "string" ? out[0] : out;
 };
 
 /** what a caption looks like on screen: each row (text, px, centre x / y, its visible box) */
@@ -78,13 +100,13 @@ export const capLayout = (zh: string, en: string): CapLayout => {
   // it slide left, and it shrinks further only if it still does not fit the safe area)
   let zpx = ZH_PX;
   for (const r of zRows) {
-    const b = blanks(r), w = textW(r, 1, 0) - b.r - b.l, ink = inkZh(ZH_PX), ls = LS_ZH * ([...r].length - 1);
+    const b = blanks(r), w = zhW(r, 1, 0) - b.r - b.l, ink = inkZh(ZH_PX), ls = LS_ZH * ([...r].length - 1);
     const centred = Math.floor((2 * (SAFE.right - 540) - ink - ls) / w), fits = Math.floor((room - ink - ls) / w);
     zpx = Math.min(zpx, Math.max(centred, Math.min(ZH_MIN, fits)));
   }
   const rows: CapRowLayout[] = [];
   const place = (text: string, zhRow: boolean, px: number, y: number) => {
-    const ls = zhRow ? LS_ZH : LS_EN, w = textW(text, px, ls), out = (zhRow ? inkZh(px) : inkEn(px)) / 2;
+    const ls = zhRow ? LS_ZH : LS_EN, w = zhRow ? zhW(text, px, ls) : textW(text, px, ls), out = (zhRow ? inkZh(px) : inkEn(px)) / 2;
     const b = zhRow ? blanks(text) : { r: 0, l: 0 };
     const opt = ((b.r - b.l) / 2) * px;                                 // optical centring
     let x = 540 + opt;
@@ -128,11 +150,14 @@ const Row: React.FC<{ r: CapRowLayout; color: string; runs: { text: string; gold
     textShadow: `0 ${drop}px 0 rgba(10,6,4,0.45), 0 ${drop + 2}px ${soft}px rgba(10,6,4,0.55)`,
   } as React.CSSProperties;
   const fill = color;
+  const all = r.zh ? kern(r.text) : r.text;
+  let at = 0;
+  const part = (s: string) => { const n = [...s].length, node = r.zh ? kern(r.text, at, at + n) : s; at += n; return node; };
   return (
     <div style={{ position: "absolute", left: r.x, top: r.y, transform: "translate(-50%, -50%)", ...text }}>
-      <span style={under}>{r.text}</span>
+      <span style={under}>{all}</span>
       <span style={{ position: "absolute", left: 0, top: 0, color: fill, opacity: r.zh ? 1 : 0.96 }}>
-        {runs.length > 1 || runs[0]?.gold ? runs.map((u, i) => <span key={i} style={{ color: u.gold ? HC.gold : fill }}>{u.text}</span>) : r.text}
+        {runs.length > 1 || runs[0]?.gold ? runs.map((u, i) => <span key={i} style={{ color: u.gold ? HC.gold : fill }}>{part(u.text)}</span>) : all}
       </span>
     </div>
   );

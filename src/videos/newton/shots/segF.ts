@@ -42,7 +42,7 @@ import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT } from "../people";
 import { GDX, GARDEN, GARDEN_SET, ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, type TaSeat } from "../layout";
 import { BOARD, POKER, STOOL, candleTop } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, yawTo, lerpA, rel, seated, kneel, type Rig } from "./common";
-import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, quatYZ, shovelPut, stroke, sparks, flash, cheekGlow, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, PUSH_END, putStoolUnder, type SparkMask } from "./segF_parts";
+import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, quatYZ, shovelPut, stroke, sparks, flash, cheekGlow, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, PUSH_END, putStoolUnder, putCandleLight, candleLightOff, type SparkMask, type LitQuad } from "./segF_parts";
 import type { World } from "../world";
 import type React from "react";
 
@@ -262,6 +262,24 @@ const PK_ROT_REST = quatYZ(PK_DIR_REST, V(1, 0, 0));
 /** his candle, burned down to a stub (it was a new candle in his hand at the cut in: len 0.75), on the furnace's top by
  *  the corner (where G finds it; lifted 2 mm off the plate) */
 const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07 + 0.002, -0.42), CANDLE_LEN = 0.12;
+/** ITS LIGHT on the furnace's top (review v2 row 11: over the time cut the iron top plate read as an unlit near-black
+ *  block): segF_parts putCandleLight, warm light added on the plate round the candlestick, on the rim where its front
+ *  and side edges catch it (a band fading down each edge face), and on the sand bath's front face, which looks at the
+ *  flame. The plate (sets/elaboratory.ts "elab.furnace.top"): x from the left wall to the face + 4 cm, z0 .. z1 + 4 cm,
+ *  its top 7 cm over the furnace's brick. Shown while the stub stands there (the time cut to F's end) */
+const FU = ELAB_SET.furnace, TOP_Y = FU.h + 0.07, TX0 = ELX + ELAB_SET.walls.x0, TX1 = ELX + FU.x1 + 0.04, TZ0 = FU.z0, TZ1 = FU.z1 + 0.04;
+const FLAME = CANDLE_AT.clone().add(V(0, candleTop(CANDLE_LEN), 0));
+const CL_AX = Math.max(TX0, FLAME.x - 0.45), CL_AZ = Math.max(TZ0, FLAME.z - 0.45), CL_RIM = 0.012, CL_BAND = 0.05;
+const CANDLE_LIGHT: LitQuad[] = [
+  { a: V(CL_AX, TOP_Y + 0.0012, CL_AZ), u: V(TX1 - CL_AX, 0, 0), v: V(0, 0, TZ1 - CL_AZ), nu: 40, nv: 40, gain: 0.34 },
+  { a: V(CL_AX, TOP_Y + 0.0018, TZ1 - CL_RIM), u: V(TX1 - CL_AX, 0, 0), v: V(0, 0, CL_RIM), nu: 40, nv: 1, gain: 0.25 },
+  { a: V(TX1 - CL_RIM, TOP_Y + 0.0018, CL_AZ), u: V(CL_RIM, 0, 0), v: V(0, 0, TZ1 - CL_AZ), nu: 1, nv: 40, gain: 0.25 },
+  { a: V(CL_AX, TOP_Y - CL_BAND, TZ1 + 0.0015), u: V(TX1 - CL_AX, 0, 0), v: V(0, CL_BAND, 0), nu: 40, nv: 1, gain: 0.22, fade: true },
+  { a: V(TX1 + 0.0015, TOP_Y - CL_BAND, CL_AZ), u: V(0, 0, TZ1 - CL_AZ), v: V(0, CL_BAND, 0), nu: 40, nv: 1, gain: 0.22, fade: true },
+  { a: V(ELX + FU.x1 - 0.42, TOP_Y, FU.door.z + 0.25 + 0.0015), u: V(0.38, 0, 0), v: V(0, 0.08, 0), nu: 24, nv: 4, gain: 0.8, n: V(0, 0, 1) },
+];
+/** its strength now: the flame's flicker rides on it */
+const candleGlow = (t: number) => 1 + 0.05 * Math.sin(t * 9.1) + 0.03 * Math.sin(t * 13.7 + 0.4);
 /** her eyes: close over the board (she leans in over his knees: the drawing big in the lower half, his bowed head
  *  above it; his 0.5 m head is too near the board for an insert without it), then back to the stool framing
  *  (ELAB_CAMS.stool's place, his eyes high in the middle); the push ends on PUSH_END (ELAB_CAMS.push eased back a
@@ -296,13 +314,14 @@ const laterCam = (f: number): CamPose => {
 
 /** THE FIRE after the time cut, hours later: settled to a low bed of red embers (fire 0.13 + the set's embers: no
  *  standing flames, the room dimmer, the faces still lit). The pokes stir flames up for a moment; THE SPIT throws them up
- *  hard for about 6 frames; the poke after 51 brings the fire back up to what G opens on (fire 0.3, no embers, the
- *  film's own grade), so the cut to G matches. `late` = how much of the hours-later grade, `spit` = the spit's flare. */
+ *  (spitK: a 6-frame swell; only SPIT_ROOM of it reaches the room's light, the rest stays on the fire door and his face);
+ *  the poke after 51 brings the fire back up to what G opens on (fire 0.3, no embers, the film's own grade), so the cut
+ *  to G matches. `late` = how much of the hours-later grade, `spit` = the spit's flare. */
 const FIRE_LOW = 0.13, FIRE_G = 0.3;
 const fireLate = (f: number) => {
   const rv = smooth(clamp01((f - T_POKE2) / REVIVE));
-  const sp = holdK(f, T_SPIT, 4, 6), p1 = flareK(f, T_POKE, 12), p2 = flareK(f, T_POKE2, 10);
-  const fire = Math.min(1, lerp(FIRE_LOW, FIRE_G, rv) + 0.75 * sp + 0.3 * p1 + 0.15 * p2);
+  const sp = spitK(f, T_SPIT), p1 = flareK(f, T_POKE, 12), p2 = flareK(f, T_POKE2, 10);
+  const fire = Math.min(1, lerp(FIRE_LOW, FIRE_G, rv) + SPIT_ROOM * sp + 0.3 * p1 + 0.15 * p2);
   const embers = clamp01((1 - rv) * (1 - 0.85 * sp) * (1 - 0.55 * p1) - 0.3 * p2);
   return { fire, embers, late: 1 - rv, spit: sp, poke: Math.max(p1, p2) };
 };
@@ -310,13 +329,18 @@ const fireLate = (f: number) => {
 const FDR = ELAB_SET.furnace.door, FD_X = ELX + ELAB_SET.furnace.x1;
 
 // ---------------------------------------------------------------------------------------------------- faces
-type Ex = "deadpan" | "focus" | "stern" | "sad" | "sigh" | "pained";
+type Ex = "deadpan" | "focus" | "stern" | "sad" | "sigh";
 /** deadpan until the cracks (47 on): "stern" only as a 0.6 s flash on "Close?" (director round 1: held, it read as
- *  cartoon anger), "dying" deadpan with his head bowed a little (nLook); "sigh" only once the second poke is done */
+ *  cartoon anger), "dying" deadpan with his head bowed a little (nLook); "sigh" only once the second poke is done.
+ *  49 「小时候，我威胁过……」 is "sad" from "boy" on (review v2 row 2: the rig's "pained" is one squeezed eye and one lidded
+ *  eye, and on this, the film's darkest line, it read as a cheeky WINK). Tried at phone size on 4005 / 4020: "wince"
+ *  (both eyes squeezed, ><) read as a cartoon yelp, "sigh" (both shut) as dozing; "sad" (both eyes heavy-lidded,
+ *  looking down to the fire, the brows' inner ends up) reads as shame and does not meet her eyes. The second "sad" key on
+ *  "burn" changes nothing but gives him a blink on the word */
 const T_CLOSE = capWord("F11", "Close").from;
 const N_EXPR: [number, Ex][] = [
   [S.from, "deadpan"], [T_TP, "focus"], [T_STOP, "deadpan"],
-  [T_CLOSE - 2, "stern"], [T_CLOSE + sec(0.6) - 2, "deadpan"], [capWord("F12", "left").from, "sad"], [L13.from, "deadpan"], [capWord("F14", "boy").from + 4, "pained"],
+  [T_CLOSE - 2, "stern"], [T_CLOSE + sec(0.6) - 2, "deadpan"], [capWord("F12", "left").from, "sad"], [L13.from, "deadpan"], [capWord("F14", "boy").from + 4, "sad"],
   [capWord("F14", "burn").from + 10, "sad"], [T_POKE2 + 22, "sigh"],
 ];
 /** his eyes (screen: -0.5 = toward the fire on his screen-left, 0 = at her) */
@@ -333,6 +357,7 @@ const HM_EXPR: [number, "sleep" | "neutral"][] = [[S.from, "neutral"], [T_FREE +
 const pose = (w: World, f: number): Pose => {
   const t = f / FPS;
   const overlays: React.ReactNode[] = [];
+  if (f < T_TP) candleLightOff(w);
 
   // ================================================================ F1 THE NIGHT GARDEN
   if (f < T_IN) {
@@ -426,6 +451,7 @@ const pose = (w: World, f: number): Pose => {
     putStoolUnder(w, ELAB.stool, FACE);   // a little shorter, its seat hidden inside his coat (segF_parts STOOL_SY)
     w.prop("board").put(B_C, { rot: B_ROT });
     w.prop("candle").put(CANDLE_AT, { len: CANDLE_LEN, lit: true, t });
+    putCandleLight(w, FLAME, CANDLE_LIGHT, candleGlow(t));
   }
 
   w.update();
@@ -477,9 +503,11 @@ const pose = (w: World, f: number): Pose => {
     // the flare's warm flash out of the door (the spit; a little on a poke); the cheek nearest the fire takes a warm glow
     if (fs) {
       const hd = mask[0], side = Math.sign((eL.x + eR.x) / 2 - hd.x) || -1;
-      // the screen-blended flash stays round the door's mouth (spread over his face it lifted his drawn lines to a haze)
-      overlays.push(flash("flash", { x: (eL.x + eR.x) / 2, y: lerp(eL.y, bL.y, 0.45) }, wTop * 0.8, 0.9 * fs.spit + 0.25 * fs.poke),
-        cheekGlow("cheek", { x: hd.x + side * 0.5 * hd.r, y: hd.y + 0.3 * hd.r }, hd.r * 0.6, fs.spit + 0.3 * fs.poke));
+      // the screen-blended flash stays round the door's mouth (spread over his face it lifted his drawn lines to a haze);
+      // the spit's flare is carried here and on his cheek, not by the room's light (SPIT_ROOM; review v2 row 8)
+      const mouthOf = { x: (eL.x + eR.x) / 2, y: lerp(eL.y, bL.y, 0.45) };
+      overlays.push(flash("flash", mouthOf, wTop * 1.25, fs.spit + 0.25 * fs.poke), flash("flashCore", mouthOf, wTop * 0.55, 0.7 * fs.spit),
+        cheekGlow("cheek", { x: hd.x + side * 0.45 * hd.r, y: hd.y + 0.25 * hd.r }, hd.r * (0.6 + 0.2 * fs.spit), fs.spit + 0.3 * fs.poke));
     }
   }
 
@@ -505,9 +533,18 @@ const pose = (w: World, f: number): Pose => {
   const ov = overlays.filter(Boolean);
   return { camera: cam, post: post.dof || post.grade ? post : undefined, overlays: ov.length ? ov : undefined, slate: later ? "F4-5 stool" : "F2-3 inside" };
 };
-/** a held flare (the spit): up in 2 frames, full for `hold`, down over `len` */
-const holdK = (f: number, on: number, hold: number, len: number) => { const d = f - on; return d < -2 || d > hold + len ? 0 : d < 0 ? (d + 2) / 2 : d <= hold ? 1 : 1 - smooth((d - hold) / len); };
+/** THE SPIT'S FLARE (review v2 row 8): it was up in 2 frames (the room's light +40 % at once, held 6 frames: it read as
+ *  a camera flash). Now it swells over SPIT_UP frames from the burst (the first light on the sync frame itself, full on
+ *  its 6th frame), holds SPIT_HOLD and dies down over SPIT_DOWN, like flames leaping and settling */
+const SPIT_UP = 6, SPIT_HOLD = 3, SPIT_DOWN = 14;
+const spitK = (f: number, on: number) => {
+  const d = f - on, full = SPIT_UP - 1;
+  return d < 0 || d > full + SPIT_HOLD + SPIT_DOWN ? 0 : d < full ? smooth((d + 1) / SPIT_UP) : d <= full + SPIT_HOLD ? 1 : 1 - smooth((d - full - SPIT_HOLD) / SPIT_DOWN);
+};
+/** how much of the spit reaches the ROOM's light (the fire param drives the set's key and point lights: at 0.75 the
+ *  whole frame lifted with it); the rest of the flare is kept on the fire door and his face (2D, in pose) */
+const SPIT_ROOM = 0.12;
 /** a flare of the fire on a hit: up in 2 frames, down over `len` */
 const flareK = (f: number, on: number, len: number) => { const d = f - on; return d < -2 || d > len ? 0 : d < 0 ? (d + 2) / 2 : 1 - easeOutCubic(d / len); };
 
-export const SEG: Segment = { id: "F", from: S.from, to: S.to, enter() {}, exit() {}, pose };
+export const SEG: Segment = { id: "F", from: S.from, to: S.to, enter() {}, exit(w) { candleLightOff(w); }, pose };

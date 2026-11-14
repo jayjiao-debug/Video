@@ -1,5 +1,5 @@
 {
- "note": "跟着牛顿过一天 sound plan. at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. gain in dB. loop = repeat the clip to fill [at, until]. Clips: /home/user/newton_work/film/sound/clips (voice farm run newton-v4-sound-01). Music is never ducked (owner's rule); it sits low under the voice. The script's sound notes: a pizzicato-and-harpsichord bed from frame 0 with a pluck on the knock; room tone changes with each place; one cello note at line 49 (F14); everything but the fire drops out after 51 (F16); the bed comes back warm with the laugh (G02) at the sack drop. Review pass 1: gains set from each clip's measured loudness (music cues about 17 dB under the dialogue, beds 25-30 dB under), hits moved onto the music's accents or out from under words, the night nocturne played twice so it carries to 49; a bed entry with fade 0 is a trimmed one-shot (only its tail is cut). Her camera (Jay 14 Nov, 'recording visuals and sound effects like 秦始皇'; hud/vlog.tsx): rec_beep (the Qin film's clip, voice farm run qin-sfx-01) as she starts recording on frame 0, sfx_poweroff (make_poweroff.py 0.40 0.67: the button click on the off frame, the power-down over segG's end-black fade) when the camera switches off at G to - 1.2 s. No beep at the other scene starts: every cut already carries a voice line's last syllable or a hit within 0.1-0.4 s (B the bell, C mus_noon's first note, D the big door, E D06's 'Don't.' and mus_supper, F E07 and mus_night, G the clock's first stroke), so the timestamp slides in silently, as in the Qin film.",
+ "note": "跟着牛顿过一天 sound plan. at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]: a scene's 'from' is its first frame and 'to' the next scene's first frame, read by build.py from the PICTURE's own bounds (src/videos/newton/voice.ts SEGMENT_RAW, frame / 30), so scene-anchored cues land on the cut (v2 put scenes 0.3 s early: review v2 row 4). gain in dB, ONE static gain per cue (music is never ducked: no automation, no sidechain; fades only at a cue's own start / end). loop = repeat the clip to fill [at, until]; in = seconds skipped at the clip's start; a bed entry with fade 0 is a trimmed one-shot (only its tail is cut). Clips: /home/user/newton_work/film/sound/clips (voice farm run newton-v4-sound-01). The script's sound notes: a pizzicato-and-harpsichord bed from frame 0 with a pluck on the knock; room tone changes with each place; one cello note at line 49 (F14); everything but the fire drops out after 51 (F16); the bed comes back warm with the laugh (G02) at the sack drop. Levels (v3 remix, 14 Nov, review v2 row 3, and v3b, the director's gate-4 notes; /home/user/newton_work/film/sound/REMIX_v3.md): the music cues sit 11-14 LU under the dialogue per scene (v2: 17-22) and every line stays at least 10 LU over everything under it (voice track vs the bed rebuilt with a silent voice), in the full band AND in the phone band (450 Hz-9 kHz: what a phone speaker plays; tightest F04 10.1 and G03 10.1 full band, F10 10.1 phone band). mus_night and mus_laugh carry most of their weight below 450 Hz, which a phone cannot play, so each has ONE fixed low shelf for the whole cue (\"lowshelf\": [Hz, dB], build.py static_eq; no automation) and a higher static gain: on a phone they now sit F 16.0 / G 13.8 LU under the voice (v3: 22.9 / 17.5); the card ding is sfx_card retuned to A5 (sfx_card_A5: python3 scripts/newton/sound/retune_clip.py <clips>/sfx_card.mp3 <clips>/sfx_card_A5.mp3 --target 880; the original rang at 725 Hz, between F5 and F#5); beds 25-30 dB under; mono mix -19.0 LUFS, true peak -1.8 dBTP (build.py --gain 6.2 --ceiling -1.8; -1.4 dBTP after mux.sh's AAC on v3b). Hits sit on the music's accents or out from under words. Her camera (Jay 14 Nov, 'recording visuals and sound effects like 秦始皇'; hud/vlog.tsx): rec_beep (the Qin film's clip, voice farm run qin-sfx-01) as she starts recording on frame 0; sfx_poweroff (python3 scripts/newton/sound/make_poweroff.py 0.80 1.07 <clips>/sfx_poweroff.mp3: the button click on the off frame, the power-down sweep 0.8 s later on segG's end black) when the camera switches off at G to - 1.4 s (= BEAT.G.cameraOff = hud/vlog.tsx OFF_AT, frame 5211). No beep at the other scene starts: every cut carries a voice line's last syllable or a scene sound ON the cut frame (B the bell, C mus_noon's first note, D the street tone and mus_lecture's first note (the big door creaks on the in-scene cut into the hall, frame 1900), E the room tone and mus_supper 0.1 s in, F the crickets, G the clock's first stroke), so the timestamp slides in silently, as in the Qin film.",
  "beds": [
   {
    "clip": "amb_stairs_birds",
@@ -47,10 +47,10 @@
     "to",
     0
    ],
-   "gain": -27.5,
+   "gain": -21.0,
    "fade": 0.0,
-   "fade_out": 1.2,
-   "note": "the pizzicato bed: frame 0 through card 2"
+   "fade_out": 0.6,
+   "note": "the pizzicato bed: frame 0 through card 2; fade out 0.6 s into the C cut (was 1.2: the card-2 hold stayed fuller); v3 remix: +6.5 dB static (held by B02 and A06 (10.6 / 10.8 LU over the bed))"
   },
   {
    "clip": "amb_room",
@@ -111,10 +111,10 @@
     "end",
     0.05
    ],
-   "gain": -22.5,
+   "gain": -17.5,
    "fade": 0.02,
    "fade_out": 0.06,
-   "note": "first note on the cut; the cut at C04 end falls 20 ms before a beat: the music skips a beat"
+   "note": "first note on the cut; the cut at C04 end falls 20 ms before a beat: the music skips a beat; v3 remix: +5 dB static (held by C03 (10.8 LU))"
   },
   {
    "clip": "sfx_gravel",
@@ -176,10 +176,10 @@
     "to",
     0
    ],
-   "gain": -27,
+   "gain": -18.5,
    "fade": 0.02,
    "fade_out": 0.6,
-   "note": "the walk music picks up again on the whip cut (first note on the whoosh), a little lower"
+   "note": "the walk music picks up again on the whip cut (first note on the whoosh), a little lower; v3 remix: +8.5 dB static (still 1 dB under pass 1; C07 12 LU)"
   },
   {
    "clip": "amb_street",
@@ -215,6 +215,24 @@
    "fade": 0.4
   },
   {
+   "clip": "sfx_big_door",
+   "at": [
+    "D",
+    "from",
+    1.5
+   ],
+   "until": [
+    "D",
+    "from",
+    2.45
+   ],
+   "gain": -26,
+   "in": 1.5,
+   "fade": 0.01,
+   "fade_out": 0.05,
+   "note": "the tall door: its last creaks (clip 1.5-2.31 s, the ratchet) ON the cut through the door into the Schools (BEAT.D.schools = pre(D01) + 1.5 s = D from + 1.5 s = frame 1900), with the steps echo and the hall's room tone; they end at 64.14 s, 0.68 s before D01 (SYNC_POINTS). v2 played the whole clip from D01 - 3.1 s: it began 0.11 s before the picture's cut into D, over Newton writing, and creaked under the whole street walk where no door is seen (WP5-D request 13 Nov and the director's note 5 asked for it on the hall cut)"
+  },
+  {
    "clip": "mus_lecture",
    "at": [
     "D",
@@ -226,10 +244,10 @@
     "to",
     0
    ],
-   "gain": -35.5,
+   "gain": -26.0,
    "fade": 0.05,
    "fade_out": 0.8,
-   "note": "first note on the cut (the clip's 0.25 s of lead silence skipped); the clip's own 1 s rest (clip 6.4-7.6 s) falls under D02 'never miss a lecture' and it comes back at 69.20 s, on D03 (starts 69.15)",
+   "note": "first note on the cut (the clip's 0.25 s of lead silence skipped); the clip's own 1 s rest (clip 6.4-7.6 s) falls under D02 'never miss a lecture' and it comes back at 69.20 s, on D03 (starts 69.15); v3 remix: +9.5 dB static (the lowest scene in v2 (22 LU under D's voice), now level with the others; D03 12 LU)",
    "in": 0.25
   },
   {
@@ -276,9 +294,10 @@
     "to",
     0
    ],
-   "gain": -28,
+   "gain": -22,
    "fade": 0.3,
-   "fade_out": 1.0
+   "fade_out": 1.0,
+   "note": "v3 remix: +6 dB static (held by E03 (10.6 LU))"
   },
   {
    "clip": "sfx_quill",
@@ -396,10 +415,14 @@
     "from",
     16.2
    ],
-   "gain": -28.5,
+   "gain": -13.0,
    "fade": 0.8,
    "fade_out": 1.4,
-   "note": "nocturne, pass 1, on the F cut (+0.2 s, the clip's soft pickup under its 0.8 s fade): out before its section C (the clip's section C chord at 15.07 s sounds 3.6 dB down in the fade); ends at clip 16.0 s. Pass 1 and 2 are both anchored on F's start so the loop stays on the beat"
+   "note": "nocturne, pass 1, on the F cut (+0.2 s, the clip's soft pickup under its 0.8 s fade): out before its section C (the clip's section C chord at 15.07 s sounds 3.6 dB down in the fade); ends at clip 16.0 s. Pass 1 and 2 are both anchored on F's start so the loop stays on the beat; v3 remix: +7.5 dB static (held by F04 (11 LU)); v3b (gate-4 note 1, on a phone the nocturne was gone: phone band 450 Hz-9 kHz 22.9 LU under F's voice): one fixed low shelf 350 Hz -12 dB for the whole cue (the clip's sub pedal and low strings are 60 % of its energy and no phone plays them) and +8.0 dB static: the bass stays within 4 dB of v3 on full-range playback, its upper strings come up about 8 dB; held by F04 (10.1 LU full band)",
+   "lowshelf": [
+    350,
+    -12
+   ]
   },
   {
    "clip": "mus_night",
@@ -413,10 +436,14 @@
     "end",
     1.0
    ],
-   "gain": -29.5,
+   "gain": -12.8,
    "fade": 0.3,
    "fade_out": 0.6,
-   "note": "nocturne, pass 2: exactly 17 beats (15.93 s at 64 bpm, beat 0.937 s; the clip's triplet onsets 0.3125 s apart) after pass 1, so its first notes land on pass 1's grid and the pulse carries through 'time passes' (v2 had it 0.21 s off the beat). With the current voice: F05 end + 0.505 s; its last phrase (clip 22.5 s) starts on F14 (133.03 s) and dies away before the spit"
+   "note": "nocturne, pass 2: exactly 17 beats (15.93 s at 64 bpm, beat 0.937 s; the clip's triplet onsets 0.3125 s apart) after pass 1, so its first notes land on pass 1's grid and the pulse carries through 'time passes' (v2 had it 0.21 s off the beat). With the current voice: F05 end + 0.505 s; its last phrase (clip 22.5 s) starts on F14 (133.03 s) and dies away before the spit; v3 remix: +7.5 dB static (held by F09 (10.9 LU)); v3b: the same low shelf (350 Hz -12 dB) and +9.2 dB static (now 0.2 dB over pass 1, was 1 dB under); held by F10 (10.1 LU in the phone band, 10.7 full band)",
+   "lowshelf": [
+    350,
+    -12
+   ]
   },
   {
    "clip": "mus_cello",
@@ -430,10 +457,10 @@
     "end",
     -0.2
    ],
-   "gain": -31,
+   "gain": -24,
    "fade": 0.3,
    "fade_out": 0.6,
-   "note": "one cello note after the spit, swelling into 50 (the clip is a C, not a D)"
+   "note": "one cello note after the spit, swelling into 50 (the clip is a C, not a D); v3 remix: +7 dB static (F15 14 LU)"
   },
   {
    "clip": "mus_cello",
@@ -447,10 +474,10 @@
     "end",
     1.2
    ],
-   "gain": -35,
+   "gain": -28,
    "fade": 0.3,
    "fade_out": 1.2,
-   "note": "the same note bowed again so it carries 51, then drops out with everything but the fire"
+   "note": "the same note bowed again so it carries 51, then drops out with everything but the fire; v3 remix: +7 dB static (F16 15 LU)"
   },
   {
    "clip": "mus_laugh",
@@ -464,10 +491,14 @@
     "to",
     -1.77
    ],
-   "gain": -23,
+   "gain": -12.7,
    "fade": 0.05,
    "fade_out": 3.0,
-   "note": "the bed comes back warm one beat after the sack thump; fades over its last 3 s and ends on the beat the last pluck takes"
+   "note": "the bed comes back warm one beat after the sack thump; fades over its last 3 s and ends on the beat the last pluck takes; v3 remix: +6 dB static (the post-laugh return is now the loudest music in the film (2:42.7-2:46.8 about -28 LUFS short-term, 18 dB over the embers before it); held by G03 'Good night.' (10.2 LU over the music, the film's tightest line)); v3b (gate-4 note 1): one fixed low shelf 250 Hz -9 dB for the whole cue (its weight sits at 80-450 Hz, under a phone's range) and +4.3 dB static: on a phone G's music went from 17.5 to 13.8 LU under the voice, on full range the warm low end stays within 4.5 dB of v3; still held by G03 (10.1 LU full band)",
+   "lowshelf": [
+    250,
+    -9
+   ]
   },
   {
    "clip": "amb_room",
@@ -634,16 +665,6 @@
     -2.4
    ],
    "gain": -20
-  },
-  {
-   "clip": "sfx_big_door",
-   "at": [
-    "D",
-    "from",
-    0.0
-   ],
-   "gain": -26,
-   "note": "the tall door, on the cut into D (the street): its loud creaks (clip 0-2.31 s) end 0.68 s before D01 (SYNC_POINTS); v2 had it on D01 start - 3.1, 0.11 s before the picture's cut"
   },
   {
    "clip": "sfx_steps_echo",
@@ -828,7 +849,8 @@
   }
  ],
  "cards": {
-  "clip": "sfx_card",
-  "gain": -28
+  "clip": "sfx_card_A5",
+  "gain": -28,
+  "note": "the fact-card ding at each card's line end (+ card_delay + 0.1 s), gain unchanged. v3b (gate-4 note 2): sfx_card_A5 = sfx_card retuned from 725 Hz (a quarter-tone between F5 and F#5, in no cue's key) to A5 880 Hz, which is in D major (cards 1, 2, 4, 5: mus_morning, mus_laugh) and in D minor (card 3, 1:41.1: the nocturne's G3-D4-F4-Bb4 chord with an A3 already in it; A5 is its 9th). Played 1.214x faster like a sampler key (0.80 -> 0.71 s), its loudest moment kept at 0.31 s and its loudness matched (within 0.3 dB): scripts/newton/sound/retune_clip.py"
  }
 }

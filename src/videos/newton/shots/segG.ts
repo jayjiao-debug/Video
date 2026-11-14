@@ -42,6 +42,7 @@ import { ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, RMX, ROOM, ROOM_SET, GDX, GARDEN, 
 import { BOARD, STOOL, SACK } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, rel, seated, type Rig, type RigPose } from "./common";
 import { endBlack } from "../hud";
+import { putStoolUnder } from "./segF_parts";
 import { V, sec, posOf, frameOn, mixCam, blendCam, startle, stride, quatYZ, eulYZX, rigidAt, fall, forkRot, FORK_TIP, pathAt, GRADE_NIGHT_G5, spill, toCamLocal, fromCamLocal, heldBoard, boxBottom, lightFocus, type RigidKey, type PtKey } from "./segG_parts";
 import type { World } from "../world";
 
@@ -67,6 +68,8 @@ const T_GARDEN = Math.max(Math.min(T_OUT, T_DARK - sec(1.0)), T_CLINK + 30);
 const T_BLACK = Math.max(BEAT.G.black[0], T_DARK + sec(1.0));
 /** the cut to his room */
 const T_ROOM = BEAT.G.room;
+/** the last frame of her 55's subtitle screen (its hold runs past the cut: hidden from the cut on) */
+const CAP_G04_END = cap("G04", -1).to;
 
 // ---------------------------------------------------------------------------------------------------- G1-G2 beats
 /** his eyes lift at the first stroke; his hands slip off the board */
@@ -376,6 +379,11 @@ const elab = (w: World, f: number): Pose => {
   const nq = saying("nt", f), ns: ReturnType<typeof speak> = nq && (f < T_LAUGH - 4 || f > T_WIPE1) ? speak(nq, f, 1) : {};
   // his dry talking mouth (segB's ntSpeak, requests.md WP5-B): no full row of teeth, smaller open shapes
   if (ns.mouth === "strip") ns.mouth = "pill"; else if (ns.mouth === "wide") ns.mouth = "half";
+  // 54 "Good night." is WARM, STILL SMILING (review v2 row 10): the speech's blink at the line's end (a half lid on
+  // the smile: with the flat closing mouth and the brows it read as a sideways smirk at 5038-5041) is dropped over the
+  // line and its tail, and once his words are out the smile keeps its own mouth, not the speech's closing one
+  const g03 = f >= L3.from - 6 && f <= L3.to + 10;
+  if (g03 && f > L3.to) delete ns.mouth;
   const expr = at(f, N_EXPR);
   const ns2 = newtonDoor(f);
   let right: THREE.Vector3 | null = null, left: THREE.Vector3 | null = null;
@@ -405,7 +413,7 @@ const elab = (w: World, f: number): Pose => {
   const stare = f >= T_EYESUP + 10 && f < T_LAUGH;
   const nState = {
     expr: laughS ? laughS.expr : expr, ...(laughS?.mouth ? { mouth: laughS.mouth } : {}), ...(ns.mouth ? { mouth: ns.mouth } : {}),
-    gaze: at(f, N_GAZE), blink: stare || laughS ? 0 : ns.blink ?? lid(t, 1, swaps(N_EXPR)), head, lookDown: nLookDown(f), hide: NEWTON_HIDE, visible: true,
+    gaze: at(f, N_GAZE), blink: stare || laughS || g03 ? 0 : ns.blink ?? lid(t, 1, swaps(N_EXPR)), head, lookDown: nLookDown(f), hide: NEWTON_HIDE, visible: true,
   };
   if (ns2.seated) {
     const seat = bob ? { ...SEAT, top: SEAT.top.clone().add(V(0, bob, 0)) } : SEAT;
@@ -453,7 +461,9 @@ const elab = (w: World, f: number): Pose => {
   }
 
   // ---- props before the solve
-  w.prop("stool").put(ELAB.stool, { rot: FACE });
+  // the stool as F leaves it (segF_parts putStoolUnder: a little shorter, its seat hidden inside his coat; at full
+  // height its seat's front edge came out through the coat as an orange wedge on his lap, 4435-4450: review v2 row 10)
+  putStoolUnder(w, ELAB.stool, FACE);
   w.prop("poker").put(PK_GRIP_REST, { rot: PK_ROT_REST, hot: 0 });
   if (f < T_CANDLE) w.prop("candle").put(CANDLE_AT, { len: CANDLE_LEN, lit: true, t });
   const ch = charcoalAt(f);
@@ -474,7 +484,7 @@ const elab = (w: World, f: number): Pose => {
 
   // ---- THE BOARD (her invisible hands: no hand is put)
   const B = boardAt(cam, f);
-  if (B) w.prop("board").put(B.at, { rot: B.rot });
+  if (B) w.prop("board").put(B.at, { rot: B.rot, warm: boardWarm(f) });
 
   // ---- the lens (no mic: Jay, 14 Nov): a light focus on the board while she holds it up, racking to him as she
   // lowers it; on him for the stare and the laugh; none in the whip and under card 4 (she is as stunned as Humphrey);
@@ -518,6 +528,13 @@ const takenAt = (f: number) => {
   const pivot = B_REST.clone().add(FAR_EDGE.clone().applyQuaternion(Q_FLOOR)).addScaledVector(TO_HER, 0.01 * k);
   return { at: pivot.sub(FAR_EDGE.clone().applyQuaternion(rot)), rot };
 };
+/** THE FIRELIGHT ON IT WHILE SHE HOLDS IT UP (review v2 row 11): on the floor its face looks up into the fire door's
+ *  light and reads firelit orange; turned up to her lens its face looks away from the fire and the place's light left
+ *  it a flat olive-grey right on the key question (4515-4665). The board prop's `warm` (props/things.ts: firelight
+ *  added to the drawn face, the charcoal lines stay dark) comes up as it rises and turns (T_RISE0 .. T_HELD) and holds
+ *  while it is held; the elaboratory set and its light are untouched */
+const BOARD_WARM_K = 0.45;
+const boardWarm = (f: number) => (f < T_RISE0 ? 0 : BOARD_WARM_K * smooth(clamp01((f - T_RISE0) / (T_HELD - T_RISE0))));
 /** where she took it, in her frame (the crouch's camera) */
 const TAKEN = takenAt(T_RISE0), TAKEN_L = toCamLocal(CROUCH, TAKEN.at, TAKEN.rot);
 const held = (cam: CamPose, f: number, k = 1, dy = 0) => heldBoard(cam, f, { k, px: BH.px, py: BH.py + dy, depth: BH.depth });
@@ -605,7 +622,9 @@ const room = (w: World, f: number): Pose => {
   const base = f < T_CLINK ? REST_DIR.clone().lerp(FORK_DIR_STAB, smooth(clamp01((f - (T_CLINK - 8)) / 4))).normalize() : f < T_CHEW ? FORK_DIR_STAB : REST_DIR;
   const dir = base.clone().lerp(toMouth, up).normalize();
   w.prop("fork").put(fh, { grip: "hilt", rot: forkRot(dir) });
-  return { camera: cam, slate: "G4 room" };
+  // her 55 「晚安，牛顿先生。」 ends AT THE CUT (review v2 row 9): its screen's hold ran 12 frames into his room under
+  // card 5 coming in (two text blocks at once)
+  return { camera: cam, ...(f <= CAP_G04_END ? { captions: false } : {}), slate: "G4 room" };
 };
 
 // ---------------------------------------------------------------------------------------------------- G5 the garden

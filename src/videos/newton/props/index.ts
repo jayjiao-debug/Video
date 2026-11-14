@@ -101,6 +101,7 @@ export type PutOpts = {
   /** sheets, books */ n?: number;
   /** shovel */ load?: boolean;
   /** poker, crucible */ hot?: number;
+  /** board: firelight on its drawn face 0..1 (default 0: the place's light alone; things.ts board) */ warm?: number;
   /** bellows */ open?: number;
   /** hand, handR */ pose?: "grip" | "open";
 };

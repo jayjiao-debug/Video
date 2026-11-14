@@ -858,7 +858,7 @@
    "scene": "F",
    "who": "nt",
    "tts": "[flat, bitter] When I was three, she remarried. And left me.",
-   "zh": "我三岁那年，她改嫁了。把我留下了。",
+   "zh": "我三岁那年，她改嫁了。把我丢下了。",
    "en": "When I was three, she remarried. And left me.",
    "screens": [
     {
@@ -866,7 +866,7 @@
      "en": "When I was three, she remarried."
     },
     {
-     "zh": "把我留下了。",
+     "zh": "把我丢下了。",
      "en": "And left me."
     }
    ]
@@ -976,11 +976,11 @@
    "scene": "G",
    "who": "nt",
    "tts": "[bursts out laughing, incredulous] What... use! [laughs]",
-   "zh": "有……什么用！",
+   "zh": "什么……用？！",
    "en": "What... use!",
    "screens": [
     {
-     "zh": "有……什么用！",
+     "zh": "什么……用？！",
      "en": "What... use!"
     }
    ],

@@ -11,6 +11,7 @@ import { FOV, ELAB_CAMS } from "../layout";
 import * as C from "../cam";
 import type { GradeParams } from "../../vasa/grade";
 import type { World } from "../world";
+import { NOINK } from "../../../kit/fx/ink";
 
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const sec = (s: number) => Math.round(s * FPS);
@@ -182,6 +183,59 @@ export const flash = (key: string, p: { x: number; y: number }, r: number, k: nu
 export const cheekGlow = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
   h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "overlay", opacity: Math.min(1, k),
     background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,120,30,0.8) 0%, rgba(255,120,30,0.5) 45%, rgba(255,110,30,0) 100%)` } });
+
+// ------------------------------------------------------------------------------------------------- the candle's light
+/** a flat rectangle lit by the candle: corner `a`, edges `u` and `v` (world vectors), `nu` x `nv` segments; `n` = its
+ *  normal for a Lambert term (omit: none), `fade` = the light falls off linearly along v (full at the a + v edge, 0 at
+ *  the `a` edge: a band that fades down a face from a lit edge), `gain` = its strength */
+export type LitQuad = { a: THREE.Vector3; u: THREE.Vector3; v: THREE.Vector3; nu: number; nv: number; gain: number; n?: THREE.Vector3; fade?: boolean };
+/** the candle's light: soft (a toon pool, not the real inverse square: 1 / (1 + (d / CL_R0)^2)), gone by CL_REACH m */
+const CL_R0 = 0.07, CL_KNEE = 0.22, CL_REACH = 0.45;
+const clFall = (d: number) => (1 / (1 + (d / CL_R0) * (d / CL_R0))) * (1 - smooth(clamp01((d - CL_KNEE) / (CL_REACH - CL_KNEE))));
+/** the warm candle colour the pool adds (linear, before `gain`) */
+const CL_COL = new THREE.Color(1.0, 0.56, 0.24);
+const litQuadGeo = (q: LitQuad, L: THREE.Vector3) => {
+  const pos: number[] = [], col: number[] = [], idx: number[] = [];
+  const p = V(), d = V();
+  for (let j = 0; j <= q.nv; j++) for (let i = 0; i <= q.nu; i++) {
+    p.copy(q.a).addScaledVector(q.u, i / q.nu).addScaledVector(q.v, j / q.nv);
+    d.copy(L).sub(p); const r = d.length();
+    let c = q.gain * clFall(r);
+    if (q.n) c *= Math.max(0, q.n.dot(d) / Math.max(r, 1e-6));
+    if (q.fade) c *= j / q.nv;
+    pos.push(p.x, p.y, p.z); col.push(CL_COL.r * c, CL_COL.g * c, CL_COL.b * c);
+  }
+  for (let j = 0; j < q.nv; j++) for (let i = 0; i < q.nu; i++) {
+    const k = j * (q.nu + 1) + i;
+    idx.push(k, k + 1, k + q.nu + 1, k + 1, k + q.nu + 2, k + q.nu + 1);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("color", new THREE.Float32BufferAttribute(col, 3)); g.setIndex(idx);
+  return g;
+};
+const CLIGHT = new WeakMap<World, { g: THREE.Group; m: THREE.MeshBasicMaterial }>();
+/** THE CANDLE'S LIGHT ON WHAT IT STANDS ON (review v2 row 11, 14 Nov): over the time cut his stub stands on the
+ *  furnace's iron top plate, which the room's light alone leaves a featureless near-black slab (it read as an unlit
+ *  block). F's own meshes on w.root (not a set light: the elaboratory set is WP2's and its look elsewhere is unchanged):
+ *  warm light ADDED on the quads `quads` (built by the caller from the set's layout: the pool on the top round the
+ *  candlestick, the rim where the plate's edges catch it, the faces that look at the flame), each vertex lit from
+ *  `flame` with the candle's soft falloff. Additive, unlit, no ink line, no shadow, never written to depth (what stands
+ *  in front of it hides it). Built once per World on first use (the candle never moves while it shows); `k` = its
+ *  strength now (the flame's flicker rides on it), 0 hides it. Segment F's exit() hides it (candleLightOff). */
+export const putCandleLight = (w: World, flame: THREE.Vector3, quads: LitQuad[], k: number) => {
+  let c = CLIGHT.get(w);
+  if (!c) {
+    if (k <= 0) return;
+    const g = new THREE.Group(); g.name = "segF.candleLight";
+    const m = new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, side: THREE.DoubleSide });
+    for (const q of quads) { const me = new THREE.Mesh(litQuadGeo(q, flame), m); me.layers.set(NOINK); me.castShadow = false; me.receiveShadow = false; me.renderOrder = 4; g.add(me); }
+    w.root.add(g); c = { g, m }; CLIGHT.set(w, c);
+  }
+  c.g.visible = k > 0;
+  c.m.color.setScalar(Math.max(0, k));
+};
+/** hides the candle's light (segment F's exit) */
+export const candleLightOff = (w: World) => { const c = CLIGHT.get(w); if (c) c.g.visible = false; };
 
 // ------------------------------------------------------------------------------------------------- the grades
 /** a COPY of Film.tsx GRADE_FILM (the default every place uses; kept here so F never imports the composition) */

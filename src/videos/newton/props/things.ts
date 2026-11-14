@@ -559,13 +559,23 @@ export const boardDrawing = (c: CanvasRenderingContext2D, w: number, h: number) 
   lab("S", S, -0.035, 0.04); lab("A", A, 0.035, -0.02); lab("B", B, 0.035, 0.035); lab("C", Cc, -0.01, 0.05); lab("D", D, -0.04, 0.0);
   void FONT;
 };
-export const board = (K: Kit, g: THREE.Group) => {
+/** the firelight's colour on the board's drawn face (put({ warm })) */
+export const BOARD_WARM = "#ff8a3c";
+/** put({ warm }) 0..1 (default 0 = the place's light alone, as before): firelight added to the drawn face, scaled by
+ *  the drawing itself (its emissive map is its own picture, so the charcoal lines stay dark). For G (WP5-G, review v2
+ *  row 11): held up to her lens the face is turned from the fire door and the place's light left it flat olive-grey,
+ *  while on the floor and on his knee it is firelit orange */
+export const board = (K: Kit, g: THREE.Group): Hook => {
   const P = new Part(K);
   P.add(K.flat(PC.woodHi, { rough: 0.7 }), box(BOARD.w, BOARD.h, BOARD.t, 0, 0, 0), 0.004);
   P.into(g, "board");
   const tex = paint(1024, 768, (c, w, h) => boardDrawing(c, w, h));
-  const face = own(new THREE.Mesh(new THREE.PlaneGeometry(BOARD.w - 0.006, BOARD.h - 0.006), K.flat("#ffffff", { map: tex, rough: 0.85 })), "board.face");
+  const fm = K.flat("#ffffff", { map: tex, rough: 0.85 }) as THREE.MeshStandardMaterial;
+  fm.emissive = new THREE.Color(0, 0, 0); fm.emissiveMap = tex;
+  const face = own(new THREE.Mesh(new THREE.PlaneGeometry(BOARD.w - 0.006, BOARD.h - 0.006), fm), "board.face");
   face.position.z = BOARD.t / 2 + 0.0008; face.receiveShadow = true; g.add(face);
+  const warm = new THREE.Color(BOARD_WARM);
+  return (o) => { fm.emissive.copy(warm).multiplyScalar(clamp01(o.warm ?? 0)); };
 };
 /** a stick of charcoal: 7 cm, 1.3 cm thick; origin = its middle, +y toward the worn tip; grip hilt (the origin) */
 export const charcoal = (K: Kit, g: THREE.Group) => {
