@@ -7,12 +7,19 @@
 // P = SEG.pose(w, f); w.endFrame(P). <Inner> applies the PLACE's look (background, N8AO, bloom, grade: world.look())
 // and P.post on the chain N8AO -> InkPass -> lens blur -> bloom -> NEUTRAL tone mapping -> grade. The composer has a
 // stencil buffer (the rig figures layer their heads with it).
-// DOM layers on top, in this order: the HUD layer (hud/: her camera's recording UI (hud/vlog.tsx: the REC lamp, the
-// scene's timestamp, the battery; REC and timestamp hidden by Pose.rec === false, the timestamp's big intro skipped by
-// Pose.cards === false), every registered HUD, then the title block (placed by Pose.title, else hud setTitlePlace) and
-// the fact card; hidden by Pose.hud === false, the title block and the card by Pose.cards === false), P.overlays, the
-// subtitle (hud/: Chinese large, English small under it), P.top (the end black covers the HUD too), the slate, and
-// last THE PHONE MASK (hud/phone.tsx) when the prop `mask` is true.
+// THE FREEZE (skin A's lead card, freeze.ts: the kit's freeze clock, HOLD): the Director poses the world at msHold(f),
+// B03's last frame on the card's 75 frames (only while the card is on: gap G2 in the voice track, or a still forcing
+// it), the film's own frame otherwise; then wash.ts msWash turns the set and props to a sepia ink drawing on laid paper
+// for washAt(f) (the figures stay in colour) and the background goes to the paper (P.post.bg). TOTAL is not changed.
+// DOM layers on top, in this order: the whisper's darkened edges, SKIN A's card layer (hud/ms <MsCard>: Humphrey's banner
+// and Newton's lead card, under the vlog UI), the HUD layer (hud/: her camera's recording UI (hud/vlog.tsx: the REC
+// lamp, the scene's timestamp, the battery; REC and timestamp hidden by Pose.rec === false, the timestamp's big intro
+// skipped by Pose.cards === false), every registered HUD and the fact card (hidden by Pose.cards === false), all at the
+// HELD frame msHold(f); the whole layer hidden by Pose.hud === false), P.overlays, SKIN A's title and effects (hud/ms
+// <MsTitle>, <MsFx>; the skin's three layers hidden with the HUD layer), her whisper bubble, the subtitle (hud/:
+// Chinese large, English small under it; the bubble and the subtitle hidden on the card's frozen frames), P.top (the end
+// black covers the HUD too), the slate, and last THE PHONE MASK (hud/phone.tsx) when the prop `mask` is true. The old
+// title block (hud/title.tsx TitleCard) is no longer mounted: skin A's <MsTitle> replaces it.
 // Input props: src/kit/film/env.ts (lang, nocap, nohud, noov, cover, zoom / sx / sy / ov, nopost, slate, kick, dbg,
 // ovonly, inksamples), and this film's own:
 //   mask: true   THE PHONE MASK for review cuts (default off): the phone app's covered areas (the top-corner icons to
@@ -20,6 +27,14 @@
 //                margins) as translucent overlays over everything. A component prop or an input prop:
 //                bash scripts/kit/queue/remotion_still.sh NewtonFilm 582 /abs/out.png --props='{"mask":true}'
 //   cap: {zh, en?, who?}   a caption drawn instead of the frame's own (subtitle layout reviews only)
+//   fx: {force, at?, item?}   SKIN A's STILL TEST (hud/ms/when.ts MS_FX; stills only, never the film): force = the item
+//                ids drawn even while their voice gap is pending ("title", "banner", "flick", "card", "meter0", "tick1",
+//                "stamp", "tick2", "lunch", "meter1", or "all"; forcing "card" also turns the freeze and the wash on);
+//                at = 0..1: the whole composition is drawn at the frame that shows item `item` (default: the first
+//                forced) at that progress through its frames, whatever frame number is asked for:
+//                bash scripts/kit/queue/remotion_still.sh NewtonFilm 0 /abs/out.png --props='{"mask":true,"fx":{"force":["title","card"],"at":0.4}}'
+//                (at 0.4 of the title; the card is forced too, so the freeze is on for that render)
+//                fx.proof: true (or a local frame t) = skin A's marks proof sheet on top (hud/ms/proof.tsx; stills only)
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from "remotion";
@@ -35,7 +50,11 @@ import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
 import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
 // the HUD's layers (hud/index.ts; importing the index also brings hud/index.ts and hud/end.tsx under tsc)
-import { Caption, FactCard, PhoneMask, TitleCard, VlogHud } from "./hud";
+import { Caption, FactCard, PhoneMask, VlogHud } from "./hud";
+// SKIN A 「手稿」 (hud/ms/): the title, the two intro cards, the 综艺 effects; the freeze (freeze.ts) and the wash (wash.ts)
+import { MS_FX, MsCard, MsFx, MsProof, MsTitle, msAny, msScreen, msStillFrame, type MsCtx } from "./hud/ms";
+import { msFrozen, msHold, washAt } from "./freeze";
+import { msWash, msWashBg } from "./wash";
 // THE WHISPER (hud/whisper.tsx, whisper.ts): her asides' bubble and darkened edges, under the HUD layer; the bubble
 // replaces the subtitle on a whisper line's frames
 import { Whisper, whisperCapAt } from "./hud/whisper";
@@ -68,21 +87,26 @@ SEGMENTS.forEach((s, i) => {
 });
 const segAt = (f: number) => SEGS.find((s) => f >= s.from && f <= s.to) ?? (f < SEGS[0].from ? SEGS[0] : SEGS[SEGS.length - 1]);
 
-/** owns the segment switch: exit the old one, enter the new one; then reset the world and pose the frame */
+/** owns the segment switch: exit the old one, enter the new one; then reset the world and pose the frame. THE FREEZE:
+ *  the world is posed at msHold(f) (freeze.ts: B03's last frame on the lead card's frames, f otherwise); then the sepia
+ *  wash of the held frame (wash.ts; nothing on the other frames) */
 class Director {
   cur: Segment | null = null;
   constructor(readonly w: World) {}
   frame(f: number): Pose {
-    const s = segAt(f);
+    const h = msHold(f);
+    const s = segAt(h);
     if (s !== this.cur) {
       if (this.cur) this.cur.exit(this.w);
       s.enter(this.w);
       this.cur = s;
     }
-    this.w.beginFrame(f);
-    const P = s.pose(this.w, f);
+    this.w.beginFrame(h);
+    const P = s.pose(this.w, h);
     this.w.endFrame(P);
-    return P;
+    const wash = washAt(f);
+    msWash(this.w, wash);
+    return wash ? { ...P, post: { ...P.post, bg: msWashBg(P.post?.bg ?? this.w.look().bg, wash) } } : P;
   }
 }
 
@@ -178,13 +202,14 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
 };
 
 // ---------------------------------------------------------------------------------------------------- the HUD layer
-/** her camera's recording UI, every registered HUD (story.ts registerHud, in registration order), the title block and
- *  the fact card (hud/) */
-const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
+/** her camera's recording UI, every registered HUD (story.ts registerHud, in registration order) and the fact card
+ *  (hud/), drawn at the frame the picture shows (h = msHold(f): held with the picture on the lead card's frames). The
+ *  old title block (hud/title.tsx TitleCard) is not mounted any more: skin A's <MsTitle> replaces it. */
+const Hud: React.FC<{ h: number; P: Pose }> = ({ h, P }) => (
   <>
-    <VlogHud f={f} rec={P.rec} cards={P.cards} />
-    {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
-    {P.cards !== false ? <><TitleCard f={f} at={P.title} /><FactCard f={f} /></> : null}
+    <VlogHud f={h} rec={P.rec} cards={P.cards} />
+    {huds().map((x) => <React.Fragment key={x.name}>{x.draw(h, P)}</React.Fragment>)}
+    {P.cards !== false ? <FactCard f={h} /> : null}
   </>
 );
 /** the animatic's slate (input prop slate: true): frame, segment, line and the shot's own label, top left. Its own
@@ -199,7 +224,8 @@ const Slate: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
 
 // ---------------------------------------------------------------------------------------------------- the composition
 export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
-  const f = useCurrentFrame();
+  // the film frame (a still with the fx prop's `at` is drawn at its item's frame instead: hud/ms/when.ts msStillFrame)
+  const f = msStillFrame(useCurrentFrame());
   const showMask = mask === true || MASK;
   const [handle] = useState(() => { if (DBG) console.log(`[newton] composition mounted at page time ${Math.round(performance.now())} ms`); return delayRender("newton world build"); });
   const [ctx, setCtx] = useState<{ gl: THREE.WebGLRenderer; camera: THREE.PerspectiveCamera } | null>(null);
@@ -210,6 +236,9 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
   const t0 = DBG ? performance.now() : 0;
   const P = director ? director.frame(f) : null;
   if (DBG && P) console.log(`[newton] f${f} pose (segment ${director!.cur?.id}, place ${world!.place}) in ${Math.round(performance.now() - t0)} ms`);
+  // skin A's view of the posed frame (faces, hands, the camera), only on frames where one of its items draws
+  const showHud = !!P && P.hud !== false && !NOHUD, frozen = msFrozen(f);
+  const ms: MsCtx | null = world && P && showHud && msAny(f) ? msScreen(world, P, f, msHold(f)) : null;
   const onCreated = useCallback((s: RootState) => setCtx({ gl: s.gl, camera: s.camera as THREE.PerspectiveCamera }), []);
   const onReady = useCallback(() => continueRender(handle), [handle]);
   React.useEffect(() => { if (OVONLY && world) continueRender(handle); }, [world, handle]); // ovonly has no <Inner> to release the world handle
@@ -218,12 +247,16 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
       <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
         {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
       </ThreeCanvas>
-      {P ? <Whisper f={f} words={P.captions !== false && !NOCAP && !CAP_TEST} edges={!NOOV} /> : null}
-      {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
+      {P ? <Whisper f={f} words={false} edges={!NOOV} /> : null}
+      {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsCard f={f} ctx={ms} /></AbsoluteFill> : null}
+      {P && showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud h={msHold(f)} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
-      {P && P.captions !== false && !NOCAP && (CAP_TEST || !whisperCapAt(f)) ? <Caption f={f} cap={CAP_TEST ?? undefined} /> : null}
+      {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsTitle f={f} ctx={ms} /><MsFx f={f} ctx={ms} /></AbsoluteFill> : null}
+      {P && !frozen ? <Whisper f={f} words={P.captions !== false && !NOCAP && !CAP_TEST} edges={false} /> : null}
+      {P && !frozen && P.captions !== false && !NOCAP && (CAP_TEST || !whisperCapAt(f)) ? <Caption f={f} cap={CAP_TEST ?? undefined} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
       {P && SLATE ? <Slate f={f} P={P} /> : null}
+      {MS_FX.proof !== null ? <MsProof t={MS_FX.proof} /> : null}
       {showMask ? <PhoneMask /> : null}
     </AbsoluteFill>
   );

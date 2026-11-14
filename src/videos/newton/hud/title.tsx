@@ -1,5 +1,5 @@
 // hud/title.tsx: THE TITLE BLOCK of the Newton film (PLAN.md sections 5 and 7 A2; WP4). A pure function of the frame.
-//   <TitleCard f />            over beats.ts TITLE_SPAN (on the shut door after A02, 3 s; never on frame 0)
+//   <TitleCard f />            over beats.ts TITLE_SPAN (v5: over the cold open, 0.2-3.2 s; never on frame 0)
 //   <TitleCard f at={{ x, y, scale, rot }} />   placed by the caller (any field left out comes from setTitlePlace /
 //                              the default); `span={[a, b]}` draws it over another span (previews)
 //   setTitlePlace(p)           where the block sits: a TitlePlace, or a function of the frame (to follow the door while
@@ -11,7 +11,8 @@
 // inside the 54 px margins.
 // The look: a title page painted on dark oak: 「跟着牛顿过一天」 large (96 px), a thin ivory double rule with a lozenge,
 // 「1686年5月 · 剑桥三一学院」 small (40 px) and "A Day with Newton · May 1686, Trinity College, Cambridge" smaller
-// (24 px) under it; ivory paint (a soft gradient, a thin dark edge, a hair of roughening so it reads painted, not
+// (24 px) under it (DECISION 3, script v5's default: that English line is OFF, story.ts TITLE_EN_ON_SCREEN; the block
+// is then the title, the rule and the Chinese line); ivory paint (a soft gradient, a thin dark edge, a hair of roughening so it reads painted, not
 // typed) with a warm dark shadow on the wood. English version (lang en): the English title large, the Chinese small.
 // Motion: it DROPS IN onto the door (falls 46 px and scales from 1.07 over 10 frames, its shadow tightening from a
 // lifted blur to a contact shadow), settles with one 4 px bounce, the rule grows from the lozenge, the small lines fade
@@ -20,7 +21,7 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
-import { W, H, clamp01, easeInCubic, easeOutCubic } from "../story";
+import { W, H, TITLE_EN_ON_SCREEN, clamp01, easeInCubic, easeOutCubic } from "../story";
 import { TITLE_SPAN } from "../beats";
 import { EN, TXT } from "../lang";
 import { FONT_STACK, HC, textW, type Rect } from "./style";
@@ -40,11 +41,12 @@ const placeAt = (f: number, at?: Partial<TitlePlace>): Required<TitlePlace> => {
 // ---------------------------------------------------------------------------------------------------- the words
 const MAIN = EN ? TXT.titleEn : TXT.titleZh;
 const SUB = EN ? TXT.subtitleEn : TXT.subtitleZh;
-const SMALL = EN ? `${TXT.titleZh} · ${TXT.subtitleZh}` : `${TXT.titleEn} · ${TXT.subtitleEn.replace(" · ", ", ")}`;
+/** the small third row: the other language (lang en: the Chinese; lang zh: the English, only if TITLE_EN_ON_SCREEN) */
+const SMALL = EN ? `${TXT.titleZh} · ${TXT.subtitleZh}` : TITLE_EN_ON_SCREEN ? `${TXT.titleEn} · ${TXT.subtitleEn.replace(" · ", ", ")}` : "";
 const MAIN_LS = EN ? 3 : 8, SUB_LS = EN ? 1 : 4, SMALL_LS = EN ? 2 : 1.5;
 const MAIN_PX = Math.min(EN ? 104 : 96, Math.floor((820 - MAIN_LS * ([...MAIN].length - 1)) / textW(MAIN, 1, 0)));
 const SUB_PX = Math.min(40, Math.floor(700 / textW(SUB, 1, 0)));
-const SMALL_PX = Math.min(24, Math.floor(820 / textW(SMALL, 1, 0)));
+const SMALL_PX = SMALL ? Math.min(24, Math.floor(820 / textW(SMALL, 1, 0))) : 0;
 /** the rows' centres relative to the block's centre */
 const Y_MAIN = -66, Y_RULE = -6, Y_SUB = 40, Y_SMALL = 90;
 const BLOCK_W = Math.max(textW(MAIN, MAIN_PX, MAIN_LS), textW(SUB, SUB_PX, SUB_LS), textW(SMALL, SMALL_PX, SMALL_LS));
@@ -52,7 +54,7 @@ const RULE_W = Math.round(Math.min(BLOCK_W, 470));
 
 /** the box the block takes at a place (its shadow and the drop's last frames included) */
 export const titleRect = (p: TitlePlace): Rect => {
-  const s = p.scale ?? 1, hw = (BLOCK_W / 2 + 24) * s, top = (-Y_MAIN + MAIN_PX / 2 + 50) * s, bot = (Y_SMALL + SMALL_PX / 2 + 24) * s;
+  const s = p.scale ?? 1, hw = (BLOCK_W / 2 + 24) * s, top = (-Y_MAIN + MAIN_PX / 2 + 50) * s, bot = ((SMALL ? Y_SMALL + SMALL_PX / 2 : Y_SUB + SUB_PX / 2) + 24) * s;
   const r = Math.abs(((p.rot ?? 0) * Math.PI) / 180), grow = Math.sin(r) * hw;
   return { x0: Math.floor(p.x - hw - grow * 0.2), y0: Math.floor(p.y - top - grow), x1: Math.ceil(p.x + hw + grow * 0.2), y1: Math.ceil(p.y + bot + grow) };
 };
@@ -116,7 +118,7 @@ export const TitleCard: React.FC<{ f: number; at?: Partial<TitlePlace>; span?: [
               </g>
             ) : null}
             {subO > 0 ? paint("sub", SUB, Y_SUB, SUB_PX, SUB_LS, 2.6, `url(#${ID}iv)`, subO) : null}
-            {smallO > 0 ? paint("small", SMALL, Y_SMALL, SMALL_PX, SMALL_LS, 2, HC.ivory, 0.9 * smallO) : null}
+            {SMALL && smallO > 0 ? paint("small", SMALL, Y_SMALL, SMALL_PX, SMALL_LS, 2, HC.ivory, 0.9 * smallO) : null}
           </g>
         </g>
       </svg>

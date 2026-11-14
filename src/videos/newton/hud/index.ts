@@ -1,12 +1,18 @@
 // src/videos/newton/hud/: EVERYTHING DRAWN OVER THE PICTURE of the Newton film (9:15, 1080 x 1800 px; the phone-safe
 // layout: layout.ts PHONE / SCREEN), PLAN.md section 5
 // (WP4). Her camera's recording UI (REC, the scene's timestamp, the battery: vlog.tsx) since Jay's note of 14 Nov.
-// Film.tsx draws, in this order:
-//   the HUD layer (unless Pose.hud === false): <VlogHud f rec={P.rec} cards={P.cards} />, every registered HUD
-//      (story.ts registerHud), and (unless Pose.cards === false) <TitleCard f />, <FactCard f />
+// Film.tsx draws, in this order (h = freeze.ts msHold(f): the frame the picture shows; = f except on the lead card's
+// frozen frames, where the picture and the HUD hold B03's last frame):
+//   the whisper's darkened edges
+//   SKIN A's card layer: <MsCard f ctx />  (hud/ms/: Humphrey's banner, Newton's lead card; under the vlog UI)
+//   the HUD layer (unless Pose.hud === false): <VlogHud f={h} rec={P.rec} cards={P.cards} />, every registered HUD
+//      (story.ts registerHud), and (unless Pose.cards === false) <FactCard f={h} />
 //   P.overlays (the shot's own)
-//   <Caption f />   (unless Pose.captions === false)
+//   SKIN A's title and effects: <MsTitle f ctx />, <MsFx f ctx />  (hidden with the HUD layer)
+//   her whisper bubble, then <Caption f />   (unless Pose.captions === false; both hidden on the card's frozen frames)
 //   P.top           (put the end black here: endBlack(f, from) covers the subtitle too)
+// The old title block (title.tsx <TitleCard>) is no longer mounted (skin A's <MsTitle> replaces it); its exports stay
+// for the faces checker.
 // Every overlay is a PLAIN FUNCTION OF THE FRAME: no state, nothing random, so frames render in any order on fresh
 // pages. Text: both languages always (captions.ts groups and story.ts CARDS carry zh + en).
 //   caption.tsx  <Caption f />     the subtitles: Chinese large (66 px; over 13 characters two rows) + English small
@@ -23,11 +29,13 @@
 //   end.tsx      endBlack(f, from, fade?), dipAlpha(f, a, b, fade?), black(a): the warm black, never #000
 //   style.ts     the palette HC, SAFE, text metrics, spanK, Rect helpers
 //   phone.tsx    <PhoneMask />     the phone's covered areas over a review cut (Film.tsx, input prop mask: true)
+//   ms/          SKIN A 「手稿」: <MsTitle>, <MsCard>, <MsFx>, the timing (ms/when.ts), the marks (ms/marks.tsx)
 //   hudRectsAt(f)    the boxes the HUD takes on frame f (keep faces out of them);  hudHits(f, r)  the ones r overlaps
 import { capOn, capLayout, enShown, CAP_BAND } from "./caption";
 import { factRectAt } from "./card";
-import { titleRectAt } from "./title";
 import { vlogRectsAt } from "./vlog";
+import { msRectsAt, type MsId } from "./ms/when";
+import { msFrozen, msHold } from "../freeze";
 import { overlaps, type Rect } from "./style";
 import { whisperCapAt, whisperRectAt } from "./whisper";
 
@@ -39,22 +47,24 @@ export { VlogHud, VLOG_RECT, OFF_AT, STAMP_AT, recAlpha, stampAt, stampRect, clo
 export { PhoneMask } from "./phone";
 export { HC, SAFE, spanK, em, textW, overlaps, turnedRect, type Rect } from "./style";
 
-export type HudItem = "caption" | "card" | "title" | "rec" | "stamp" | "battery" | "whisper";
+export type HudItem = "caption" | "card" | "title" | "rec" | "stamp" | "battery" | "whisper" | `ms-${MsId}`;
 /** the boxes the HUD takes on frame f (px, 1080 x 1800): the vlog UI (the REC row, the timestamp: its big intro for
- *  the first 2 s of a scene, the battery), the subtitle (its real rows' box while one shows), the fact card and the
- *  title block while they show. CAP_BAND (y 1325-1490) is the subtitles' band (the faces checker's "band"). On a
- *  whisper line's frames (whisper.ts) her bubble REPLACES the subtitle: "whisper" = the bubble's box while it shows
- *  (hud/whisper.tsx whisperRectAt), and no "caption" box. */
+ *  the first 2 s of a scene, the battery) and the fact card at the frame the picture shows (msHold(f)), the subtitle
+ *  (its real rows' box while one shows), and skin A's items while they show ("ms-<id>": each item's boxes, hud/ms/when.ts
+ *  MS_ITEMS box; the title is "ms-title" now, the old "title" block is not drawn). CAP_BAND (y 1325-1490) is the
+ *  subtitles' band (the faces checker's "band"). On a whisper line's frames (whisper.ts) her bubble REPLACES the
+ *  subtitle: "whisper" = the bubble's box while it shows (hud/whisper.tsx whisperRectAt), and no "caption" box. On the
+ *  lead card's frozen frames neither the subtitle nor the bubble shows. */
 export const hudRectsAt = (f: number): { what: HudItem; r: Rect }[] => {
-  const out: { what: HudItem; r: Rect }[] = [...vlogRectsAt(f)];
+  const h = msHold(f), frozen = msFrozen(f);
+  const out: { what: HudItem; r: Rect }[] = [...vlogRectsAt(h)];
   const c = capOn(f);
-  if (c && !whisperCapAt(f)) out.push({ what: "caption", r: capLayout(c.zh, enShown(c)).box });
-  const bubble = whisperRectAt(f);
+  if (c && !whisperCapAt(f) && !frozen) out.push({ what: "caption", r: capLayout(c.zh, enShown(c)).box });
+  const bubble = frozen ? null : whisperRectAt(f);
   if (bubble) out.push({ what: "whisper", r: bubble });
-  const card = factRectAt(f);
+  const card = factRectAt(h);
   if (card) out.push({ what: "card", r: card });
-  const title = titleRectAt(f);
-  if (title) out.push({ what: "title", r: title });
+  out.push(...msRectsAt(f));
   return out;
 };
 /** the HUD items a screen box (a face, a hand) would sit under on frame f */

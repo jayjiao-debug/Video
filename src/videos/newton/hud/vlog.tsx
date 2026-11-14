@@ -31,6 +31,10 @@
 //               hours).
 //               Frame 0 starts big and settled (the first frame is complete). cards: false skips the big intro (only
 //               the small stamp).
+//               DECISION 2 (script v5's default, story.ts SCENE_DIGITS): the digits show at rest only where a source
+//               gives the hour, A 05:00 and G 02:00; B-F show the time word alone (上午 / 中午 / 下午 / 傍晚 / 夜). Their
+//               digits come in (3 frames) as a race into or out of them starts, run, and fade out over DIGITS_FADE
+//               frames after a race lands on a word-only scene (digitsAlpha). Lang en: the English row is the word.
 //     battery   top right (SCREEN.battery: x ~850..1026 on the row y 116): its level follows the CLOCK, not the frame:
 //               100 % at 05:00 down to 12 % at
 //               02:00 (scene starts: A 100, B 75, C 71, D 58, E 46, F 25, G 12), each scene draining 3 points more
@@ -107,6 +111,17 @@ export const wordOf = (f: number, id: SceneId, min: number): SceneId => {
   if (!r || r.fromId === r.toId) return id;
   return Math.floor(min) >= WORD_FROM[r.toId] ? r.toId : r.fromId;
 };
+/** DECISION 2: how much of the clock's digits shows on frame f (0..1): 1 in a scene whose hour a source gives (story.ts
+ *  SCENE_DIGITS: A, G) and through every race; coming in over 3 frames as a race out of a word-only scene starts; going
+ *  over DIGITS_FADE frames after a race lands on a word-only scene; else 0 (the word alone) */
+export const DIGITS_FADE = 6;
+export const digitsAlpha = (f: number): number => {
+  const r = raceAt(f);
+  if (r) return SCENE_STAMP[r.fromId].digits ? 1 : clamp01((f - (r.cut - RACE_PRE) + 1) / 3);
+  if (SCENE_STAMP[segmentAt(f).id].digits) return 1;
+  const landed = RACES.find((x) => f > x.cut + RACE_POST && f <= x.cut + RACE_POST + DIGITS_FADE);
+  return landed ? 1 - clamp01((f - (landed.cut + RACE_POST)) / DIGITS_FADE) : 0;
+};
 /** the battery (%) on frame f: each scene starts at its clock's level (100 % at 05:00 .. 12 % at 02:00) and drains 3
  *  points more while it runs (the last one 5) */
 export const batteryAt = (f: number): number => {
@@ -133,15 +148,16 @@ const rows = (id: SceneId, clock: string) => {
   const s = SCENE_STAMP[id];
   return { word: EN ? "" : s.zh, clock, small: s.en.toUpperCase(), smallLs: ST.lsEn };
 };
-/** the big row's text: the time word (if any) and the clock */
-const bigRow = (r: { word: string; clock: string }) => (r.word ? `${r.word} ${r.clock}` : r.clock);
-/** a scene's timestamp width at rest (px, before the 1.5x intro): its wider row, with the ink line */
-const stampW = (id: SceneId) => {
-  const r = rows(id, SCENE_STAMP[id].clock);
+/** the big row's text: the time word (if any) and the clock (if any) */
+const bigRow = (r: { word: string; clock: string }) => [r.word, r.clock].filter(Boolean).join(" ");
+/** a scene's timestamp width at rest (px, before the 1.5x intro): its wider row, with the ink line; `digits`: with the
+ *  clock (default: as the scene shows it at rest, story.ts SCENE_DIGITS) */
+const stampW = (id: SceneId, digits = SCENE_STAMP[id].digits) => {
+  const r = rows(id, digits ? SCENE_STAMP[id].clock : "");
   return Math.max(textW(bigRow(r), ST.zh, 1), textW(r.small, ST.en, r.smallLs)) + inkW(ST.zh);
 };
-/** the widest timestamp at rest: the widest of any scene (A's EARLY MORNING) */
-const STAMP_W = Math.max(...SCENES.map(stampW));
+/** the widest timestamp: the widest of any scene WITH its digits (a race shows them; A's EARLY MORNING) */
+const STAMP_W = Math.max(...SCENES.map((id) => stampW(id, true)));
 const STAMP_H = ST.zh + ST.gap + ST.en + 4;
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery with its % */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
@@ -152,17 +168,18 @@ export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> =
 };
 /** the timestamp's scale on frame f (1.5 = the big intro, 1 = at rest) */
 const stampK = (t: number) => easeInOutCubic(clamp01((t - HOLD) / SHRINK));
-/** the timestamp's box for one scene (its own width: F's 「夜 23:00 / NIGHT」 is narrower than A's), at rest or big */
-export const stampRect = (id: SceneId, big: boolean): Rect => {
-  const w = stampW(id), k = big ? ST.big : 1, y = big ? ST.bigY : ST.y;
+/** the timestamp's box for one scene (its own width: F's 「夜 / NIGHT」 is narrower than A's), at rest or big; `digits`:
+ *  with the clock (default: as the scene shows it at rest) */
+export const stampRect = (id: SceneId, big: boolean, digits = SCENE_STAMP[id].digits): Rect => {
+  const w = stampW(id, digits), k = big ? ST.big : 1, y = big ? ST.bigY : ST.y;
   return { x0: ST.x - 4, y0: y - 4, x1: Math.ceil(ST.x + w * k), y1: Math.ceil(y + STAMP_H * k) };
 };
 /** the boxes the vlog UI takes on frame f (the scene's own timestamp: its big intro while it is bigger than at rest;
  *  across a race both scenes' words, whichever is wider) */
 export const vlogRectsAt = (f: number): { what: "rec" | "stamp" | "battery"; r: Rect }[] => {
   const fz = Math.min(f, OFF_AT), st = stampAt(fz), big = stampK(st.t) < 1, r = raceAt(fz);
-  const ids = r ? [st.id, r.fromId, r.toId] : [st.id];
-  const sr = ids.map((id) => stampRect(id, big)).reduce((a, b) => ({ x0: Math.min(a.x0, b.x0), y0: Math.min(a.y0, b.y0), x1: Math.max(a.x1, b.x1), y1: Math.max(a.y1, b.y1) }));
+  const ids = r ? [st.id, r.fromId, r.toId] : [st.id], dg = digitsAlpha(fz) > 0;
+  const sr = ids.map((id) => stampRect(id, big, dg || SCENE_STAMP[id].digits)).reduce((a, b) => ({ x0: Math.min(a.x0, b.x0), y0: Math.min(a.y0, b.y0), x1: Math.max(a.x1, b.x1), y1: Math.max(a.y1, b.y1) }));
   return [
     { what: "rec", r: VLOG_RECT.rec },
     { what: "stamp", r: sr },
@@ -204,7 +221,7 @@ const RecMark: React.FC<{ f: number; out: boolean }> = ({ f, out }) => {
 
 const TimeStamp: React.FC<{ f: number; intro: boolean; out: boolean }> = ({ f, intro, out }) => {
   const st = stampAt(f), t = intro ? st.t : HOLD + SHRINK;
-  const min = clockAt(f);
+  const min = clockAt(f), dA = digitsAlpha(f);
   const r = rows(wordOf(f, st.id, min), clockText(min));
   const kin = easeOutCubic(clamp01((t + 1) / IN)), op = clamp01((t + 1) / 5), ks = stampK(t);
   const s = ST.big + (1 - ST.big) * ks, y = ST.bigY + (ST.y - ST.bigY) * ks, dx = -40 * (1 - kin);
@@ -212,7 +229,21 @@ const TimeStamp: React.FC<{ f: number; intro: boolean; out: boolean }> = ({ f, i
   const opSmall = clamp01((t - 3) / 6);
   return (
     <div style={{ position: "absolute", left: ST.x + dx, top: y, width: STAMP_W, height: STAMP_H, transform: `scale(${s.toFixed(4)})`, transformOrigin: "0 0", opacity: op }}>
-      <Inked px={ST.zh} ls={1} runs={[{ text: r.word ? `${r.word} ` : "", color: out ? OFF.fill : HC.goldPale }, { text: r.clock, color: out ? OFF.fill : HC.warm }]} style={{ left: 0, top: 0 }} />
+      {dA >= 1 || !r.word ? (
+        <div style={{ opacity: r.word ? 1 : dA }}>
+          <Inked px={ST.zh} ls={1} runs={[{ text: r.word ? `${r.word} ` : "", color: out ? OFF.fill : HC.goldPale }, { text: r.clock, color: out ? OFF.fill : HC.warm }]} style={{ left: 0, top: 0 }} />
+        </div>
+      ) : (
+        // decision 2: the word alone, its digits (if any) fading in / out after it
+        <>
+          <Inked px={ST.zh} ls={1} runs={[{ text: r.word, color: out ? OFF.fill : HC.goldPale }]} style={{ left: 0, top: 0 }} />
+          {dA > 0 ? (
+            <div style={{ opacity: dA }}>
+              <Inked px={ST.zh} ls={1} runs={[{ text: r.clock, color: out ? OFF.fill : HC.warm }]} style={{ left: textW(`${r.word} `, ST.zh, 1), top: 0 }} />
+            </div>
+          ) : null}
+        </>
+      )}
       <div style={{ opacity: opSmall }}>
         <Inked px={ST.en} ls={r.smallLs} runs={[{ text: r.small, color: out ? OFF.small : HC.ivory }]} style={{ left: 1, top: ST.zh + ST.gap }} />
       </div>

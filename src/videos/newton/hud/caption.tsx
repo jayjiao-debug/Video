@@ -18,8 +18,9 @@
 // em counts as blank.
 // English wider than 780 px breaks into two balanced rows (so it stays centred and clear of the buttons).
 // Motion: fades in over 3 frames where a run of captions starts and out over 3 frames where it ends; between two
-// screens that follow each other frame to frame it switches clean (a fade there would blink). Line 01's screen is
-// already up on frame 0 (PLAN 7 A1), whatever frame the timing gives it.
+// screens that follow each other frame to frame it switches clean (a fade there would blink). When the film OPENS ON
+// A LINE (its first word within OPEN_ON frames, v4's greeting: PLAN 7 A1) that screen is already up on frame 0; v5's
+// cold open has no line before "Good night." (4.6 s), so nothing shows over it and A02's screen fades in like any other.
 // THE JOINS (camplan OVERVIEW item 4; owner row 86: nothing from the outgoing place may still show once the move
 // starts): a screen's hold after its speech, its 3-frame fade included, is CLIPPED before the next whip or match join
 // (beats.ts joinClip): none in the 6 frames before a whip's cut (WHIP_CLEAR), none across a whip or a match cut. capEnd(c)
@@ -150,9 +151,13 @@ export const capLayout = (zh: string, en: string): CapLayout => {
  *  (beats.ts joinClip: nothing in the 6 frames before a whip's cut, nothing across a whip or a match cut). C05 ends on
  *  1711 before the whip up the stairs (cut 1718), G04 on 5088 before G's whip (cut 5095) */
 export const capEnd = (c: Pick<CaptionGroup, "from" | "to">): number => joinClip(c.from, c.to);
-/** the screen shown on frame f (line 01's is already up before its first word: PLAN 7 A1; none after its capEnd) */
+/** the film opens on a line when its first word comes within this many frames (then its screen is up from frame 0) */
+const OPEN_ON = 15;
+const opensOnLine = CAPTIONS.length > 0 && CAPTIONS[0].from <= OPEN_ON;
+/** the screen shown on frame f (the first line's is already up before its first word when the film opens on it: PLAN 7
+ *  A1; none after its capEnd) */
 export const capOn = (f: number): CaptionGroup | null => {
-  const c = captionAt(f) ?? (CAPTIONS.length && f >= 0 && f < CAPTIONS[0].from ? CAPTIONS[0] : null);
+  const c = captionAt(f) ?? (opensOnLine && f >= 0 && f < CAPTIONS[0].from ? CAPTIONS[0] : null);
   return c && f <= capEnd(c) ? c : null;
 };
 /** the caption's opacity on frame f (0 when none): 3-frame fades where a run of screens starts / ends (a screen
@@ -161,7 +166,7 @@ export const capAlpha = (f: number): number => {
   const c = capOn(f);
   if (!c) return 0;
   const i = CAPTIONS.indexOf(c), prev = CAPTIONS[i - 1], next = CAPTIONS[i + 1], end = capEnd(c);
-  const joinedIn = i === 0 || (prev && capEnd(prev) + 1 >= c.from), joinedOut = next && end + 1 >= next.from;
+  const joinedIn = (i === 0 && opensOnLine) || (prev && capEnd(prev) + 1 >= c.from), joinedOut = next && end + 1 >= next.from;
   const kin = joinedIn ? 1 : Math.min(1, (f - c.from + 1) / FADE), kout = joinedOut ? 1 : Math.min(1, (end - f + 1) / FADE);
   return Math.max(0, Math.min(kin, kout));
 };

@@ -44,7 +44,7 @@
 // 4. Frames: every frame number comes from beats.ts (BEAT.X.name, placeAt, TITLE_SPAN) or from line() / lineId() /
 //    cap() / capWord() / quote() / SEGMENTS / CARDS here; every mark from layout.ts / layout/<place>.ts; every
 //    on-screen string is L(zh, en). A beat that is not in beats.ts is derived in the segment's own file the same way
-//    (capWord("A01", "好").from for a ji line, capWord("F14", "burn").from for an nt / hm line: the word in the language
+//    (capWord("A06", "好").from for a ji line, capWord("F14", "burn").from for an nt / hm line: the word in the language
 //    the line is SPOKEN in).
 //    Screen zones (px on the 9:15 frame, 1080 x 1800, layout.ts SCREEN = the phone-safe frame): the outer 54 px of each
 //    side are picture only; nothing that matters above y 60 (the app's icons) or below y 1500 (the post's text), nor
@@ -52,10 +52,11 @@
 //    Chinese large, English small under it only for English speech); faces between a quarter and a half of the way
 //    down and out of the vlog UI's corners (SCREEN.rec top left, x 54-330, y 95-205; SCREEN.battery top right; for the
 //    first 2 s of every scene the timestamp holds BIG in the top-left corner: hud VLOG_RECT.stampBig, to about y 290);
-//    the fact card's slot is MID-LEFT (hud/ hudRectsAt(f) gives its box while it shows); the title block sits on the
-//    shut door (TITLE_SPAN). Her mic and her hands are NEVER DRAWN (props/index.ts INVISIBLE; Jay, 14 Nov): what she
-//    holds or does moves as if by an invisible hand. Mouths move ONLY inside a character's own line:
-//    ...speak(quote("nt", "A02"), f, id). ji (the reporter) is the camera: never a figure.
+//    the fact card's slot is MID-LEFT (hud/ hudRectsAt(f) gives its box while it shows); the title block sits over the
+//    cold open (TITLE_SPAN, 0.2-3.2 s: v5 puts it on the door leaf, segA places it). Her mic and her hands are NEVER
+//    DRAWN (props/index.ts INVISIBLE; Jay, 14 Nov): what she holds or does moves as if by an invisible hand. Mouths
+//    move ONLY inside a character's own line: ...speak(quote("nt", "A02"), f, id). ji (the reporter) is the camera:
+//    never a figure.
 // =====================================================================================================================
 import type React from "react";
 import type * as THREE from "three";
@@ -70,7 +71,8 @@ export {
   clamp01, clamp, lerp, lin, smooth, smootherstep, easeInQuad, easeOutQuad, easeInOutQuad, easeInCubic, easeOutCubic, easeInOutCubic,
   easeOutBack, between, spring, pop, spl, mix3, add3, camMix, rng, hash, since, h,
 } from "../group/story";
-export { cap, capWord, capsOf, captionAt, lineNum, enWords, CAPTIONS, LINE_IDS, CAP_MAXW, type CaptionGroup } from "./captions";
+import { cap as capV5, capWord as capWordV5, capsOf, type CaptionGroup } from "./captions";
+export { capsOf, captionAt, lineNum, enWords, CAPTIONS, LINE_IDS, CAP_MAXW, type CaptionGroup } from "./captions";
 export { VOICE_SOURCE, SPOKEN };
 export type { Speaker };
 
@@ -91,8 +93,19 @@ export const lensFov = (fov: number) => (360 / Math.PI) * Math.atan(lensTan(fov)
 /** the film's title and the line under it (the title block, PLAN 5; from the lines file) */
 export const TITLE = L(TITLE_RAW[2], TITLE_RAW[3]);
 export const SUBTITLE = L(TITLE_RAW[4], TITLE_RAW[5]);
-/** the title block on the shut door after A02 (PLAN 5): inclusive frames and both languages (beats.ts TITLE_SPAN) */
+/** the title block (inclusive frames and both languages; beats.ts TITLE_SPAN): v5 puts it over the cold open, 0.2-3.2 s
+ *  (the lines file's title_span_s), on the door leaf in the foreground (segA places it: Pose.title / setTitlePlace) */
 export const TITLE_BLOCK = { from: TITLE_RAW[0], to: TITLE_RAW[1], zh: TITLE_RAW[2], en: TITLE_RAW[3], subZh: TITLE_RAW[4], subEn: TITLE_RAW[5] };
+/** DECISION 3 (script v5, the default built while Jay decides): the fact cards and the title block show their Chinese
+ *  only, no English line on screen (Jay's rule: an English row only under English speech, which the subtitles already
+ *  follow). true brings back the small English line on the cards (hud/card.tsx) / under the title (hud/title.tsx); the
+ *  English stays in CARDS / TITLE_BLOCK for reference. The lines file says the same (card_en_on_screen,
+ *  title_en_on_screen). The English version of the film (lang en) is not affected. */
+export const CARD_EN_ON_SCREEN = false;
+export const TITLE_EN_ON_SCREEN = false;
+/** THE COLD OPEN's beats (script v5's A rows, seconds on the film clock; "Good night." (A02) comes at 4.6 s, after its
+ *  4.5 s silent beat): his STOP 1/5 at 1.5 s (15 frames), her two raps on the door at 2.2 s. beats.ts BEAT.A reads them */
+export const COLD_OPEN_S = { stop: 1.5, knock: 2.2 };
 /** subtitle band centre: the Chinese row's middle (the HUD's own numbers rule: hud/caption.tsx, layout.ts SCREEN) */
 export const CAPTION_Y = 1450;
 
@@ -118,6 +131,11 @@ export const SCENE_CLOCK: Record<SceneId, number> = { A: 5 * 60, B: 11 * 60, C: 
 /** G's clock after its room -> garden clock join (beats.ts BEAT.G.garden): 03:00 (27:00 on the film day's scale), from
  *  Humphrey's "2 or 3 of the clock" (camplan G.md director note 2; the researcher logs it) */
 export const G_GARDEN_CLOCK = 27 * 60;
+/** DECISION 2 (script v5, the default built while Jay decides): THE CLOCK'S DIGITS SHOW ONLY WHERE A SOURCE GIVES THE
+ *  HOUR: 05:00 (A) and 02:00 (G). B-F show the time word alone (上午 / 中午 / 下午 / 傍晚 / 夜); their digits appear only
+ *  while the clock races across a clock join and land on the word (hud/vlog.tsx). SCENE_CLOCK still orders the day (the
+ *  races, the battery). true for a scene brings its digits back (review v2 row 7: 11:00 ... 23:00, no source). */
+export const SCENE_DIGITS: Record<SceneId, boolean> = { A: true, B: false, C: false, D: false, E: false, F: false, G: true };
 /** "HH:MM" (24-hour) of a clock in minutes (26:00 -> "02:00") */
 export const clockText = (min: number) => {
   const m = Math.floor(min), h = Math.floor(m / 60) % 24;
@@ -125,16 +143,17 @@ export const clockText = (min: number) => {
 };
 /** the timestamp's words: the lines file's time of day (zh) and its English, except where the hour is in the digits */
 const STAMP_WORD: Partial<Record<SceneId, [string, string]>> = { G: ["凌晨", "Small hours"] };
-/** each scene's timestamp: zh word (清晨), en word (Early morning), clock ("05:00"), min (300) */
+/** each scene's timestamp: zh word (清晨), en word (Early morning), clock ("05:00"), min (300), digits (whether the
+ *  clock shows at rest: SCENE_DIGITS) */
 export const SCENE_STAMP = Object.fromEntries(SCENES.map((id) => {
   const [zh, en] = STAMP_WORD[id] ?? [SCENE[id].time, SCENE[id].en];
-  return [id, { zh, en, clock: clockText(SCENE_CLOCK[id]), min: SCENE_CLOCK[id] }];
-})) as Record<SceneId, { zh: string; en: string; clock: string; min: number }>;
-/** each scene's timestamp as one string, L(zh, en): SCENE_TIME.A = "清晨 05:00" / "05:00 · Early morning" (the vlog UI
- *  draws it in two rows: hud/vlog.tsx) */
+  return [id, { zh, en, clock: clockText(SCENE_CLOCK[id]), min: SCENE_CLOCK[id], digits: SCENE_DIGITS[id] }];
+})) as Record<SceneId, { zh: string; en: string; clock: string; min: number; digits: boolean }>;
+/** each scene's timestamp at rest as one string, L(zh, en): SCENE_TIME.A = "清晨 05:00" / "05:00 · Early morning",
+ *  SCENE_TIME.B = "上午" / "Late morning" (the vlog UI draws it in two rows: hud/vlog.tsx) */
 export const SCENE_TIME = Object.fromEntries(SCENES.map((id) => {
   const s = SCENE_STAMP[id];
-  return [id, L(`${s.zh} ${s.clock}`, `${s.clock} · ${s.en}`)];
+  return [id, s.digits ? L(`${s.zh} ${s.clock}`, `${s.clock} · ${s.en}`) : L(s.zh, s.en)];
 })) as Record<SceneId, string>;
 
 // ---------------------------------------------------------------------------------------------------- the contract
@@ -225,14 +244,67 @@ export const LINES: VoiceLine[] = VOICE_RAW.map(([n, s, e]) => {
   return { n, id: m.id, scene: m.scene, who: m.who, text: m.zh, zh: m.zh, en: m.en, spoken: SPOKEN[m.who], start: s, end: e, from, to: Math.round(e * FPS), pre, after: Math.round(m.after * FPS), preFrom: from - pre };
 });
 export const SPEECH_END = Math.round(VOICE_END_S * FPS);
-/** the line with number n (1-based) or id ("A03"). Throws when there is no such line. */
+/** the line with number n (1-based) or id ("A03"). Throws when there is no such line. (Until the A and G rebuild it also
+ *  answers v5's retired ids "A01" and "G01": RETIRED below.) */
 export const line = (n: number | string): VoiceLine => {
+  if (typeof n === "string" && n in RETIRED) return RETIRED[n]();
   const k = lineNum(n), l = LINES[k - 1];
   if (!l || l.n !== k) throw new Error(`line(${JSON.stringify(n)}): the dialogue has ${LINES.length} lines`);
   return l;
 };
 /** the line with this id: lineId("A03") -> { from, to, who, ... } (the same as line("A03")) */
 export const lineId = (id: string): VoiceLine => line(id);
+// ---------------------------------------------------------------------------------------------------- retired ids
+/** THE v4 IDS THAT v5 RETIRED (voice v5): A01 (her greeting) is cut, and G01 is split at its recorded pause into G01a
+ *  and G01b. segA and segG, built on v4, still name them; until their rebuild (next) line() / lineId() / cap() /
+ *  capWord() answer for them, so the film keeps computing on the v5 timing. Every other lookup (LINES, CAPTIONS,
+ *  capsOf(), quote(), card()) knows only the v5 ids. NEW CODE NEVER NAMES THEM; the A and G rebuilds delete this block.
+ *    "G01" = G01a's start .. G01b's end as one line; its screens are G01a's (k 0) and G01b's (k 1);
+ *    "A01" = NOT A LINE (no voice, no subtitle): a stand-in span from A01_RAP s before the cold open's knock (so segA's v4
+ *            rap, its "A01 start + 0.54 s", lands on COLD_OPEN_S.knock) to 0.1 s before A02, its ten characters
+ *            早上好今天陪您过一天 spread evenly over it (segA's sleepy blink on 一 needs one). */
+const A01_RAP = 0.54;
+const A01_TEXT = "早上好！今天陪您过一天！";
+const a01Line = (): VoiceLine => {
+  const a2 = line("A02"), start = COLD_OPEN_S.knock - A01_RAP, end = a2.start - 0.1;
+  const from = Math.round(start * FPS);
+  return { n: 0, id: "A01", scene: "A", who: "ji", text: A01_TEXT, zh: A01_TEXT, en: "(cut in v5)", spoken: "zh", start, end, from, to: Math.round(end * FPS), pre: 0, after: 0, preFrom: from };
+};
+const g01Line = (): VoiceLine => {
+  const a = line("G01a"), b = line("G01b");
+  return { ...a, id: "G01", text: a.zh + b.zh, zh: a.zh + b.zh, en: `${a.en} ${b.en}`, to: b.to, end: b.end, after: b.after };
+};
+const RETIRED: Record<string, () => VoiceLine> = { A01: a01Line, G01: g01Line };
+/** the retired ids' screens: G01's are G01a's and G01b's; A01's one stand-in screen (its `at` = its tokens' frames) */
+const retiredCaps = (id: string): { c: CaptionGroup; at: number[] }[] => {
+  if (id === "G01") return [...capsOf("G01a"), ...capsOf("G01b")].map((c) => ({ c, at: [] }));
+  const l = a01Line(), han = [...A01_TEXT.replace(/[^一-鿿]/g, "")];
+  const at = han.map((_, i) => Math.round((l.start + ((l.end - l.start) * i) / han.length) * FPS));
+  return [{ c: { from: l.from, to: l.to, text: l.zh, zh: l.zh, en: l.en, shot: "A", line: 0, k: 0, end: l.to, who: "ji", spoken: "zh" }, at }];
+};
+/** screen k of line `line` (number or id): k counts from 0, a negative k from the end (cap("F09", -1)).
+ *  .from = the frame the screen is shown from = the frame its first spoken token starts on. Throws when there is none.
+ *  (captions.ts cap(), plus the retired ids above) */
+export const cap = (ln: number | string, k: number): CaptionGroup => {
+  if (typeof ln !== "string" || !(ln in RETIRED)) return capV5(ln, k);
+  const g = retiredCaps(ln), c = g[k < 0 ? g.length + k : k];
+  if (!c) throw new Error(`cap(${JSON.stringify(ln)}, ${k}): the line has ${g.length} screens`);
+  return c.c;
+};
+/** THE FRAME OF A WORD (captions.ts capWord(), plus the retired ids above: G01 looks in G01a and G01b; A01 in its
+ *  stand-in) */
+export const capWord = (ln: number | string, word: string): CaptionGroup => {
+  if (typeof ln !== "string" || !(ln in RETIRED)) return capWordV5(ln, word);
+  if (ln === "G01") {
+    const hits = (["G01a", "G01b"] as const).flatMap((id) => { try { return [capWordV5(id, word)]; } catch { return []; } });
+    if (hits.length !== 1) throw new Error(`capWord("G01", "${word}"): ${hits.length} of G01a / G01b say it`);
+    return hits[0];
+  }
+  const [{ c, at }] = retiredCaps(ln), han = c.zh.replace(/[^一-鿿]/g, ""), w = word.replace(/[^一-鿿]/g, ""), i = han.indexOf(w);
+  if (!w || i < 0 || han.indexOf(w, i + 1) >= 0) throw new Error(`capWord("A01", "${word}"): not once in 「${han}」`);
+  return { ...c, from: at[i] };
+};
+
 /** the line spoken at frame f (or null in a pause) */
 export const lineAt = (f: number) => LINES.find((l) => f >= l.from && f <= l.to) ?? null;
 /** the number of the line that frame f belongs to as PICTURE: the last line whose silent beat has started */

@@ -5,7 +5,7 @@
 // WP1; segment builders read it and ask for additions in /home/user/newton_work/film/requests.md (or derive a beat the
 // same way in their own file).
 //   BEAT.A .. BEAT.G   per scene, the frames the storyboard names (a span is [first, last], inclusive)
-//   TITLE_SPAN         the title block on the shut door after A02 (3 s; story.ts TITLE_BLOCK)
+//   TITLE_SPAN         the title block over the cold open (v5: 0.2-3.2 s, the lines file's title_span_s; story.ts TITLE_BLOCK)
 //   ASIDES             RETIRED (the whisper replaced the old aside: README section 10 "THE WHISPER"): kept only for the
 //                      old shots' asideK until each scene is rebuilt; it reads whisper.ts WHISPER_LINES
 //   JOINS              THE 12 JOINS of the camera plans (5 clock, 5 whip, 2 match), each looked up; joinAfter(f);
@@ -14,8 +14,11 @@
 //   placeAt(f)         the place every frame shows (the storyboard's cuts); SPANS the same as [place, from, to] runs
 //   shotAt(f)          { id } (the segment id, for the clearance checker)
 //   beatCheck()        [] when every beat lies inside its segment and the spans are in order (the previews print it)
-// Script line numbers (PLAN 7 says "44-50") are the lines file's n: line(44) = F09; the ids are A01 .. G04.
-import { lineId, capWord, card, seg, SEGMENTS, TOTAL, FPS, TITLE_BLOCK, type Place, type SceneId } from "./story";
+// Script line numbers are the lines file's n (v5: line(1) = A02 ... line(55) = G04; A01 is cut, G01 is G01a + G01b).
+// VOICE v5 (script v5, 14 Nov): the beats below are the v4 storyboard's, LOOKED UP ON THE v5 TIMING so the shots that
+// are not rebuilt yet keep computing; where v5 removed what a beat stood on, the beat stands on v5's equivalent (the cold
+// open's knock, card 1 after A06, G01a / G01b). The scene rebuild replaces them with v5's own.
+import { lineId, capWord, card, seg, SEGMENTS, TOTAL, FPS, TITLE_BLOCK, COLD_OPEN_S, type Place, type SceneId } from "./story";
 import { WHISPER_LINES } from "./whisper";
 
 const from = (id: string) => lineId(id).from;
@@ -29,25 +32,26 @@ export type Span = [number, number];
 const aside = (id: string): Span => [from(id) - 8, Math.min(to(id) + 8, seg(lineId(id).scene).to)];
 const cardSpan = (id: string): Span => { const c = card(id); return [c.from, c.to]; };
 
-/** the title block (PLAN 5): on the shut door, 0.4 s after "Good night" (A02), for 3 s; never on frame 0 */
+/** the title block: v5 over the cold open, 0.2-3.2 s (story.ts TITLE_BLOCK; v4 had it on the shut door after A02); never on frame 0 */
 export const TITLE_SPAN: Span = [TITLE_BLOCK.from, TITLE_BLOCK.to];
 
 // ---------------------------------------------------------------------------------------------------- A 清晨 stairs
-const aKnock = capWord("A01", "好").from;
+/** v5: no greeting (A01 is cut); the cold open's knock is the script's 2.2 s (story.ts COLD_OPEN_S) */
+const aKnock = sec(COLD_OPEN_S.knock);
 const aShut = to("A02") + sec(0.4);
 const A = {
-  /** f0 .. the knock: the camera takes the last two steps at a run, low sun through the stair window, the mic swings in
-   *  from the lower left */ run: [0, aKnock - 1] as Span,
-  /** the mic raps on the door (the pizzicato pluck), on 好 of 早上好 */ knock: aKnock,
-  /** the door, already opening, swings open: NEWTON in the doorway (candle stub, bird's-nest hair, ink, quill) */ doorOpen: [aKnock + 2, capWord("A01", "陪").from] as Span,
-  /** "Good night." (over her 一天) */ goodNight: from("A02"),
+  /** f0 .. the knock: v5's cold open through the door gap (v4: the run up the stairs) */ run: [0, aKnock - 1] as Span,
+  /** v5's STOP 1/5 in the cold open: 15 frames from 1.5 s (story.ts COLD_OPEN_S) */ stop: [sec(COLD_OPEN_S.stop), sec(COLD_OPEN_S.stop) + 14] as Span,
+  /** the invisible hand raps on the door twice (the pizzicato pluck): v5 at 2.2 s (v4: on 好 of 早上好) */ knock: aKnock,
+  /** the door swings open: NEWTON comes to the doorway (v5: three strides, there 0.5 s before "Good night.") */ doorOpen: [aKnock + 2, from("A02") - sec(0.5)] as Span,
+  /** "Good night." (v5: 4.6 s, the first line; v4: over her 一天) */ goodNight: from("A02"),
   /** he shuts the door in the mic's face (the thud: the door is shut on this frame) */ doorShut: aShut,
   /** the candle glow under the door goes out */ glowOut: aShut + sec(0.5),
-  /** THE TITLE BLOCK lands on the shut door (3 s, story.ts TITLE_BLOCK) */ title: TITLE_SPAN[0],
+  /** THE TITLE BLOCK (v5: over the cold open from 0.2 s, 3 s; story.ts TITLE_BLOCK) */ title: TITLE_SPAN[0],
   /** ASIDE 03: the mic swings round to the lens */ aside03: aside("A03"),
-  /** fact card 1 (A03): the door opens a crack, HUMPHREY slips out yawning (empty ink bottle) and pulls it shut */ card1: cardSpan("A03"),
-  /** Humphrey's door opens a crack (0.4 s into card 1) */ humphreyOut: card("A03").from + sec(0.4),
-  /** the door shut again behind him without a sound (1 s before card 1 ends) */ humphreyShuts: card("A03").to - sec(1.0),
+  /** fact card 1: v5 after A06, over the shut door under the A -> B clock join (v4: after A03) */ card1: cardSpan("A06"),
+  /** v5: HUMPHREY slips out yawning in A03's 1 s hold (no card there now): the door opens a crack 0.1 s after A03 */ humphreyOut: to("A03") + sec(0.1),
+  /** .. and is drawn shut without a sound before A04 */ humphreyShuts: from("A04") - sec(0.2),
   /** the mic swings to Humphrey (A04) */ micHumphrey: from("A04") - 6,
   /** "Laugh? Mr Newton?" */ laugh: from("A05"),
   /** he looks at her, at the door, back; shakes his head (A05's hold) */ headShake: to("A05") + 1,
@@ -136,11 +140,11 @@ const F = {
   /** he pokes the fire (F11's hold) */ poke: to("F11") + sec(0.2),
   /** the fire spits; one cello note (F14's hold) */ spit: to("F14") + sec(0.3),
   /** silence, only the fire; he pokes it; the push-in has stopped (F16's hold) */ silence: [to("F16") + 1, seg("F").to] as Span,
-  /** the second poke in the silence */ poke2: to("F16") + sec(0.7),
+  /** the second poke in the silence (v5: F16 holds only 0.3 s before G's clock join, so at the latest on F's last frame) */ poke2: Math.min(to("F16") + sec(0.7), seg("F").to),
 };
 
 // ---------------------------------------------------------------------------------------------------- G 凌晨两点
-const gStrike2 = pre("G01") + Math.round((from("G01") - pre("G01")) * 0.4);   // 40 % into G01's silent beat (1.2 s of 3)
+const gStrike2 = pre("G01a") + Math.round((from("G01a") - pre("G01a")) * 0.4);   // 40 % into G01a's silent beat (v5: 1.24 s of 3.1)
 const gRoom = to("G04") + 1;
 const gOutside = card("G04").to + 1;
 const gDark = gOutside + sec(0.4);
@@ -155,10 +159,12 @@ const gOff = seg("G").to + 1 - sec(1.4);
  *  checker (scripts/newton/qa/faces) reports it if the two ever differ (the place must change on this frame). */
 const gGarden = Math.max(Math.min(seg("G").to - sec(2.6), seg("G").to - sec(1.77) - sec(1.0)), to("G04") + sec(1.2) + sec(0.23) + 30);
 const G = {
-  /** a clock strikes two (sound): the first stroke */ strike1: pre("G01") + 2,
+  /** a clock strikes two (sound): the first stroke */ strike1: pre("G01a") + 2,
   /** the second stroke: the board slides off his knee */ strike2: gStrike2,
   /** the board clatters at the camera's feet */ board: gStrike2 + sec(0.3),
-  /** her hand picks it up and holds it into frame, close (circles and triangles); she sniffs; G01 over it */ boardUp: [gStrike2 + sec(0.5), to("G01")] as Span,
+  /** her hand picks it up and holds it into frame, close (circles and triangles); she sniffs; G01a, the board turned
+   *  to him, G01b over it */ boardUp: [gStrike2 + sec(0.5), to("G01b")] as Span,
+  /** v5: the beat between G01a and G01b in which the board turns to face him */ boardTurn: [to("G01a") + 1, from("G01b") - 1] as Span,
   /** THE LAUGH bursts out (eyes squeezed shut, mouth open, head shaking); the camera holds DEAD STILL. "What... use!"
    *  goes over its tail (capWord("G02", "what")) */ laugh: from("G02"),
   /** the laugh's hold after the words (~2 s) */ laughHold: [to("G02") + 1, to("G02") + sec(2.0)] as Span,

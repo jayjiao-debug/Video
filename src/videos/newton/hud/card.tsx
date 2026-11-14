@@ -19,21 +19,25 @@
 // (beats.ts joinClip: none in the 6 frames before a whip's cut, none across a whip or a match cut); its exit flutter
 // runs over the clipped end. Card 2 (B09) is gone by 1398, before the B -> C whip (cut 1405). Card 5 crosses G's garden
 // CLOCK join (approved: clock joins clip nothing). story.ts CARDS keeps the timing's frames; cardEnd(c), SHOWN_CARDS.
+// DECISION 3 (script v5's default, story.ts CARD_EN_ON_SCREEN false): the cards show their Chinese only; the English
+// stays in CARDS for reference and the slip draws no English row and no rule (factLayout: an empty en). Lang en keeps it.
 //   factCardAt(f)   the card on frame f (or null; its `to` = the clipped end);  factRows(zh)  the Chinese rows;
 //   factLayout(card)  rows, sizes, box;  cardEnd(c)  the last frame a card shows;  SHOWN_CARDS  the cards as shown
 //   factRectAt(f)   the screen box the card takes on frame f (or null);  FACT_SLOT  the most it ever takes
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
-import { CARDS, clamp01, easeInCubic, easeOutCubic, type Card } from "../story";
+import { CARDS, CARD_EN_ON_SCREEN, clamp01, easeInCubic, easeOutCubic, type Card } from "../story";
+import { EN } from "../lang";
 import { joinClip } from "../beats";
 import { FONT_STACK, HC, em, enWrap, hh, textW, turnedRect, type Rect } from "./style";
 
 /** the last frame a card is on screen, its exit included: its `to`, clipped before the next whip or match join (beats.ts
  *  joinClip) */
 export const cardEnd = (c: Pick<Card, "from" | "to">): number => joinClip(c.from, c.to);
-/** the cards AS SHOWN: story.ts CARDS with each `to` clipped to cardEnd (the timing's frames stay in CARDS) */
-export const SHOWN_CARDS: Card[] = CARDS.map((c) => ({ ...c, to: cardEnd(c) }));
+/** the cards AS SHOWN: story.ts CARDS with each `to` clipped to cardEnd (the timing's frames stay in CARDS), and their
+ *  English dropped unless CARD_EN_ON_SCREEN (decision 3) or the film is in English */
+export const SHOWN_CARDS: Card[] = CARDS.map((c) => ({ ...c, to: cardEnd(c), en: CARD_EN_ON_SCREEN || EN ? c.en : "" }));
 /** the card on frame f as shown (SHOWN_CARDS: `to` is its clipped end), or null */
 export const factCardAt = (f: number): Card | null => SHOWN_CARDS.find((c) => f >= c.from && f <= c.to) ?? null;
 
