@@ -24,6 +24,7 @@ one command. Hongmen keeps working through one-line re-exports and wrappers at i
 | outdoor kit | building outdoor places | `src/kit/sets/okit.ts` | `src/kit/sets/` |
 | wardrobe | Qin / Han robes, armour, hats, beards, a halberd for the rig's figures | `src/kit/acc/*.ts` | `src/kit/acc/` |
 | film contract, input props, language switch | every film | `src/kit/film/{contract,env,lang}.ts` | `src/kit/film/` |
+| title, intro card and screen effect building blocks | every 采访XX的一天 film: its themed title, intro cards, 花字, counters, stamps (blocks only; each film designs its own on top) | `import { defineSkin, life, pop, slap, setRow, glyph, bandPath, seal, slots, fit, clock, checkOverlays } from "../../kit/overlay"` | `src/kit/overlay/` |
 
 **The rig is not in the kit.** `src/videos/group/kit` (rig3d, toon, cast, overlay, rigacc) is the rig layer, owned by
 another team: import it from there, never edit it (nor `vasa/`, `bt/`, `arthur/`, `scripts/rig3d/`, `scripts/arthur/`).
