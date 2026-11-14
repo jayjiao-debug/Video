@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""《采访苏东坡的一天》 sound mix (a copy of scripts/qin/sound/build.py: exact scene bounds = the segments, a cue may
+"""《采访李白的一天》 sound mix (a copy of scripts/qin/sound/build.py: exact scene bounds = the segments, a cue may
 "seek" into its clip, a card's sound follows the lines file's card_delay): voice track + ambience beds + music + effects, from cues.json and the voice timing.
 
   build.py [--timing /home/user/libai_work/voice/voice_timing.json] [--voice /home/user/libai_work/voice/voice_48k.wav]
@@ -21,11 +21,13 @@ def main():
     ap.add_argument("--voice", default="/home/user/libai_work/voice/voice_48k.wav")
     ap.add_argument("--clips", default="/home/user/libai_work/sound/clips")
     ap.add_argument("--out", default="/home/user/libai_work/sound/mix_48k.wav")
-    ap.add_argument("--gain", type=float, default=-1.6, help="master gain in dB before the limiter (mono mix ~-19.5 LUFS = ~-16.5 LUFS once mux.sh puts it on both channels)")
+    ap.add_argument("--gain", type=float, default=1.6, help="master gain in dB before the limiter (mono mix ~-19.5 LUFS = ~-16.5 LUFS once mux.sh puts it on both channels)")
     a = ap.parse_args()
     T = json.load(open(a.timing)); spec = json.load(open(os.path.join(ROOT, "scripts/libai/sound/cues.json")))
-    lines_spec = {l["id"]: l for l in json.load(open(os.path.join(ROOT, "scripts/libai/voice/su_lines.json")))["lines"]}
-    total = T["frames"] / 30.0
+    lines_spec = {l["id"]: l for l in json.load(open(os.path.join(ROOT, "scripts/libai/voice/libai_lines.json")))["lines"]}
+    import re
+    vt = open(os.path.join(ROOT, "src/videos/libai/voice.ts")).read()
+    total = int(re.search(r"VOICE_TOTAL_F = (\d+)", vt).group(1)) / 30.0   # the film's length (with the end card), not the voice track's
     L = {l["id"]: l for l in T["lines"]}
     scenes = {}
     for l in T["lines"]:

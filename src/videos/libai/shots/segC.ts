@@ -49,7 +49,7 @@ const gao = (f: number): St => {
   const facing = f < Cb.kneel - 16 ? GAO_F : f < Cb.up + 4 ? GAO_KF : yawTo(p, CAM0);
   const expr = at<NonNullable<St["expr"]>>(f, [[0, "smug"], [Cb.foot + 4, "shock"], [Cb.kneel, "pained"], [Cb.boot, "wince"], [Cb.glare, "huff"], [Cb.card[0], "stern"]]);
   const hold = f >= Cb.boot - 6;
-  const bootAt = rel(p, facing, 0, 0.82, 0.28);
+  const bootAt = rel(p, facing, 0, 0.82, 0.38);
   return {
     ...standing(p, facing, f, 4), ...kneel(k, p), facing, expr, blink: lid(t, 4),
     pose: hold ? { kind: "hold", t } : { kind: "idle", t }, hands: hold ? [bootAt.clone().add(V(0, 0, 0)), bootAt.clone()] : [null, null],

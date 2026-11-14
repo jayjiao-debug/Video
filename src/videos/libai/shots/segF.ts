@@ -17,6 +17,7 @@ import { transitionAt } from "../hud";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, standing, frag } from "./common";
 import { aim, ramp, table, putTable, tavern, LI_TABLE, DRINKER_PEOPLE, atTable, type St } from "./lb";
 import { KEEPER } from "../people";
+import { setSeat } from "../../../kit/acc/garb";
 
 const S = SEGMENTS[5], F = BEAT.F;
 const word = (id: string, w: string) => capWord(id, w).from;
@@ -24,7 +25,7 @@ const L42 = lineId("F42"), L43 = lineId("F43"), L44 = lineId("F44");
 
 // ------------------------------------------------------------------------------------------------ the night marks
 const STONE_AT = V(NX - 0.35, 0, -4.2), FAC = 0.12;
-const SEAT = { top: V(STONE_AT.x, STONE.top, STONE_AT.z - 0.05), floor: 0, back: 0.03 };
+const SEAT = { top: V(STONE_AT.x, STONE.top, STONE_AT.z + 0.12), floor: 0, back: 0.03 };
 const TREE = V(NX - 1.25, 0, -5.3);
 const JAR = rel(STONE_AT, FAC, -0.62, 0, 0.15);
 const HEAD = V(STONE_AT.x, 1.38, STONE_AT.z);
@@ -86,29 +87,31 @@ const switchOff = (f: number) => {
 };
 
 // ------------------------------------------------------------------------------------------------ 李白 at night
+/** his hip on the stone (the seat is 0.17 m in front of the stone's middle) */
+const SITP = rel(STONE_AT, FAC, 0, 0, 0.17);
 const cupAt = (f: number) => {
   const toast = ramp(f, F.toast, F.toast + 10) * (1 - ramp(f, F.cupLook - 12, F.cupLook));
   const look = ramp(f, F.cupLook, F.cupLook + 8) * (1 - ramp(f, F.cupIn - 6, F.cupIn + 4));
   const out = ramp(f, F.cupIn, F.cupIn + 10) * (1 - ramp(f, F.drink - 4, F.drink + 4));
   const drink = ramp(f, F.drink, F.drink + 8) * (1 - ramp(f, F.drink + 40, F.drink + 52));
-  const p = rel(STONE_AT, FAC, -0.17, 0.78, 0.22);
-  p.lerp(rel(STONE_AT, FAC, -0.2, 1.2, 0.24), toast);
-  p.lerp(rel(STONE_AT, FAC, -0.05, 0.92, 0.3), look);
-  p.lerp(rel(STONE_AT, FAC, -0.06, 1.0, 0.38), out);
-  p.lerp(rel(STONE_AT, FAC, -0.06, 1.2, 0.2), drink);
+  const p = rel(SITP, FAC, -0.17, 0.78, 0.22);
+  p.lerp(rel(SITP, FAC, -0.22, 1.18, 0.36), toast);
+  p.lerp(rel(SITP, FAC, -0.05, 0.92, 0.3), look);
+  p.lerp(rel(SITP, FAC, -0.06, 1.0, 0.38), out);
+  p.lerp(rel(SITP, FAC, -0.1, 1.12, 0.32), drink);
   return { p, tilt: -1.0 * drink };
 };
 /** her cup: floats in from below the lens to meet his (clink), stays */
 const herCup = (f: number) => {
   const k = ramp(f, F.cupIn, F.clink);
-  const from = V(CAM0.x - 0.05, 0.75, CAM0.z - 0.6), to = rel(STONE_AT, FAC, -0.04, 1.0, 0.47).add(V(0.09, 0, 0.02));
+  const from = V(CAM0.x - 0.05, 0.75, CAM0.z - 0.6), to = rel(SITP, FAC, -0.04, 1.0, 0.47).add(V(0.09, 0, 0.02));
   const bump = f >= F.clink && f < F.clink + 4 ? 0.01 : 0;
   return from.lerp(to, k).add(V(0, bump, 0));
 };
 
 export const SEG: Segment = {
   id: "F", from: S.from, to: S.to,
-  enter() {}, exit(w) { w.actor(HE).set({ visible: false }); w.actor(LI).set({ visible: false }); DRINKER_PEOPLE.forEach((p) => w.actor(p).set({ visible: false })); w.actor(KEEPER).set({ visible: false }); },
+  enter() {}, exit(w) { setSeat(w.actor(LI_RED), null); w.actor(HE).set({ visible: false }); w.actor(LI).set({ visible: false }); DRINKER_PEOPLE.forEach((p) => w.actor(p).set({ visible: false })); w.actor(KEEPER).set({ visible: false }); },
   pose(w, f0) {
     // after the off click the picture is frozen on that frame (the overlays still run on f0)
     const f = Math.min(f0, F.offClick), t = f / FPS;
@@ -119,6 +122,7 @@ export const SEG: Segment = {
       w.set.param("sun", 0.8);
       const camera = memoryCam(f);
       w.setCamera(camera);
+      setSeat(w.actor(LI_RED), null);
       w.actor(LI_RED).set({ visible: false });
       tavern(w, f, { drinkers: 2, lamps: 0 });
       const untie = F.turtle, down = word("F37", "换酒");
@@ -143,6 +147,7 @@ export const SEG: Segment = {
     const expr = at<NonNullable<St["expr"]>>(f, [[0, "smile_closed"], [lineId("F35").from, "smile"], [lineId("F37").from, "smile_closed"], [lineId("F38").from, "sigh"], [lineId("F39").to, "smile"], [F.toast, "happy"], [F.moon, "smile_closed"], [F.cupLook, "sigh"], [L42.to, "sad"], [L43.from + 20, "smile"], [L44.from, "smile_closed"], [F.drink + 50, "happy"]]);
     const m = says("li", ["F35", "F37", "F38", "F40", "F41", "F42", "F44"], f, 2);
     const cp = cupAt(f);
+    setSeat(w.actor(LI_RED), SEAT, FAC);
     w.actor(LI_RED).set({
       at: V(STONE_AT.x, 0, STONE_AT.z), facing: FAC, seat: SEAT, pose: { kind: "sit", t }, visible: true,
       hands: [cp.p, null], expr, mouth: m.mouth, blink: m.blink ?? lid(t, 2),

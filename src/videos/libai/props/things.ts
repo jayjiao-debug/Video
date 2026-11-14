@@ -634,7 +634,7 @@ export const splash = (K: Kit, g: THREE.Group): Hook => {
   for (let i = 0; i < 26; i++) {
     const a = hash(i * 3.1) * TAU, sp = 0.2 + hash(i * 7.7) * 0.5, r = 0.025 + hash(i * 1.9) * 0.05;
     const dir = V(Math.cos(a) * sp, 0.2 + Math.sin(a) * sp * 0.8, 1);
-    const ms = new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), i % 5 ? m : hi); ms.name = `splash.spill${i}`; ms.layers.set(NOINK);
+    const ms = new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), i % 5 ? m : hi); ms.name = `splash${i}.spill`; ms.layers.set(NOINK);
     g.add(ms); drops.push([ms, dir, r]);
   }
   return (o) => {

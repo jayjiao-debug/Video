@@ -31,7 +31,7 @@ const WINDOW = V(RX - 2.4, 0.9, -2.9);
 
 /** the jar: on the table in front of him (hugged), lifted to the lens on A04, back down, up to his mouth on the card */
 const JAR_TABLE = T.on(0, 0.1).add(V(0, 0.17 * 0.72, 0));
-const JAR_UP = rel(T.at, T.facing, -0.12, 0.72, 0.42), JAR_MOUTH = rel(T.at, T.facing, -0.16, 0.9, 0.2);
+const JAR_UP = rel(T.at, T.facing, -0.12, 0.72, 0.42), JAR_MOUTH = rel(T.at, T.facing, -0.24, 0.86, 0.34);
 const jarAt = (f: number) => {
   const up = ramp(f, L4.from - 8, L4.from + 6) * (1 - ramp(f, L5.from + 4, L5.from + 18));
   const drink = ramp(f, A.card[0] + 6, A.card[0] + 22) * (1 - ramp(f, A.card[1] - 22, A.card[1] - 8));
@@ -60,7 +60,7 @@ const li = (w: World, f: number): St => {
   const jar = held("jar", J.p, { rot: [J.tilt, 0, J.tilt * 0.6] });
   // the hands: hugging the jar / holding it up; A08 counting (right hand up), 一日 shrug (both out)
   let hands: St["hands"] = J.held ? jar.hands : [null, null];
-  if (f >= L8.from && f < A.shrug) hands = [rel(T.at, T.facing, -0.16, 0.95, 0.25), jar.hands[1]];
+  if (f >= L8.from && f < A.shrug) hands = [rel(T.at, T.facing, -0.26, 0.88, 0.3), jar.hands[1]];
   if (f >= A.shrug && f < L8.to + 18) { const k = ramp(f, A.shrug, A.shrug + 6); hands = [rel(T.at, T.facing, -0.18 - 0.14 * k, 0.75 + 0.08 * k, 0.22), rel(T.at, T.facing, 0.18 + 0.14 * k, 0.75 + 0.08 * k, 0.22)]; }
   const mouth = says("li", ["A02", "A04", "A06", "A08"], f, 2);
   const head = heads(

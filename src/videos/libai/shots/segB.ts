@@ -17,6 +17,7 @@ import { transitionAt } from "../hud";
 import type { World } from "../world";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, seated } from "./common";
 import { aim, ramp, held, type St } from "./lb";
+import { setSeat } from "../../../kit/acc/garb";
 
 const S = SEGMENTS[1], B = BEAT.B;
 const word = (id: string, w: string) => capWord(id, w).from;
@@ -75,7 +76,7 @@ const li = (f: number): St => {
 
 export const SEG: Segment = {
   id: "B", from: S.from, to: S.to,
-  enter() {}, exit(w) { w.actor(HUAN).set({ visible: false }); w.actor(HUAN, "2").set({ visible: false }); },
+  enter() {}, exit(w) { setSeat(w.actor(LI), null); w.actor(HUAN).set({ visible: false }); w.actor(HUAN, "2").set({ visible: false }); },
   pose(w, f) {
     w.setPlace("street");
     w.set.param("carcass", false);
@@ -87,6 +88,7 @@ export const SEG: Segment = {
     w.prop("jar", "door0").put(V(MX + 2.3, 0, 5.35), { scale: 1.1 });
     w.prop("jar", "door1").put(V(MX + 2.55, 0, 5.75), { scale: 1.0, rot: 0.6 });
     const t = f / FPS;
+    setSeat(w.actor(LI), SEAT.seat, SEAT.facing);
     w.actor(LI).set(li(f));
     // the messenger
     const hl = walkAlong(HUAN_PATH, HUAN_SPEED, (f - huanGo) / FPS, { endFacing: yawTo(HUAN_END, SEAT.at) });
@@ -101,7 +103,7 @@ export const SEG: Segment = {
     const basinAt = rel(bl.at, bl.facing, 0, 0.62 + 0.38 * lift, 0.3 + 0.08 * lift);
     const brot = bl.facing;
     const bh = held("basin", basinAt, { rot: brot, open: tip });
-    B2.set({ at: bl.at, facing: bl.facing, pose: bl.pose, hands: tip > 0.3 ? [null, null] : bh.hands, visible: f >= basinGo - 10, expr: f < B.splash ? "focus" : "grin", blink: lid(t, 7) });
+    B2.set({ at: bl.at, facing: bl.facing, pose: bl.pose, hands: bh.hands, visible: f >= basinGo - 10, expr: f < B.splash ? "focus" : "grin", blink: lid(t, 7) });
     w.update();
     w.prop("wineBowl").put(cupAt(f), { grip: "hilt" });
     if (f >= basinGo - 10) bh.put(w);

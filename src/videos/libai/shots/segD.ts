@@ -34,7 +34,7 @@ const cam = (f: number): CamPose => {
 /** the chest: in the eunuch's hands until the give, then his; up high on 天生 */
 const chestAt = (f: number, liAt: THREE.Vector3, liF: number) => {
   const give = ramp(f, D.give - 4, D.give + 8);
-  const huanHold = rel(HUAN_AT, HUAN_F, 0, 0.72, 0.3), liHold = rel(liAt, liF, 0, 0.7, 0.32), liHigh = rel(liAt, liF, 0, 1.25, 0.24);
+  const huanHold = rel(HUAN_AT, HUAN_F, 0, 0.72, 0.3), liHold = rel(liAt, liF, 0, 0.7, 0.32), liHigh = rel(liAt, liF, 0, 1.12, 0.38);
   const up = ramp(f, D.hold - 6, D.hold + 6) * (1 - ramp(f, lineId("D25").to, lineId("D25").to + 12));
   return { p: huanHold.lerp(liHold, give).lerp(liHigh, up), open: ramp(f, D.look - 6, D.look + 6), mine: give > 0.5 };
 };
@@ -62,10 +62,10 @@ export const SEG: Segment = {
       lookDown: f >= D.look && f < D.laugh ? 22 : 0, hands: ch.mine ? hc.hands : [null, null],
     });
     // the messenger
-    const back = walkAlong(HUAN_BACK, 1.2, (f - D.give - 14) / FPS);
+    const back = walkAlong(HUAN_BACK, 2.0, (f - D.give - 6) / FPS);
     const hm = says("huan", ["D23"], f, 5);
     const hh = held("chest", ch.p, { rot: HUAN_F });
-    w.actor(HUAN).set({ ...standing(back.at, f < D.give + 14 ? HUAN_F : back.facing, f, 5), pose: back.pose, expr: "smile", mouth: hm.mouth, head: hm.head, blink: hm.blink ?? lid(t, 5), hands: ch.mine ? [null, null] : hh.hands, visible: f < D.shut[1] });
+    w.actor(HUAN).set({ ...standing(back.at, f < D.give + 6 ? HUAN_F : back.facing, f, 5), pose: back.pose, expr: "smile", mouth: hm.mouth, head: hm.head, blink: hm.blink ?? lid(t, 5), hands: ch.mine ? [null, null] : hh.hands, visible: f < D.shut[1] });
     w.update();
     hc.put(w);
     return { camera, overlays: transitionAt(f)?.node, slate: "D palace gate" };

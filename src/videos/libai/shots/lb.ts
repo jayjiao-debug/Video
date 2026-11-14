@@ -53,7 +53,7 @@ export const held = (name: PropName, at: THREE.Vector3, o: PutOpts = {}) => {
 /** THE TAVERN (Su's room set, place "tavern"): his table in the middle (ROOM.desk), two more tables of drinkers, the
  *  keeper by the screen, jars along the wall. n = how many drinkers are there (0..4), lit = the lamps (0..1) */
 export const LI_TABLE = table(V(RX + 0.6, 0, -0.45), 0);
-export const TABLES = [table(V(RX - 0.6, 0, -2.2), 0.35), table(V(RX + 1.8, 0, -1.95), -0.45)];
+export const TABLES = [table(V(RX - 0.6, 0, -2.2), 0.35), table(V(RX + 1.25, 0, -1.25), -0.45)];
 export const KEEPER_AT = V(RX - 1.7, 0, -2.75);
 const DRINKERS: [Person, number, number][] = [[VILLAGER2, 0, 0], [VILLAGER3, 1, 0], [VILLAGER, 0, 1], [VILLAGER4, 1, 1]];
 /** where the extra drinkers sit (two at each side table: the second beside the first, 0.45 m along) */
@@ -67,7 +67,7 @@ export const tavern = (w: World, f: number, o: TavernO = {}) => {
   putTable(w, LI_TABLE);
   TABLES.forEach((T, i) => putTable(w, T, `t${i}`));
   // jars along the back wall and by the tables
-  [[RX - 2.6, -2.9], [RX - 2.2, -3.0], [RX - 2.4, -2.55], [RX + 1.6, -3.05], [RX - 0.4, -3.05]].forEach(([x, z], i) => w.prop("jar", `wall${i}`).put(V(x, 0, z), { rot: 0.3 * i, scale: 1.15 }));
+  [[RX - 2.6, -2.9], [RX - 2.2, -3.0], [RX - 2.4, -2.55], [RX + 1.6, -3.05], [RX + 0.65, -3.1]].forEach(([x, z], i) => w.prop("jar", `wall${i}`).put(V(x, 0, z), { rot: 0.3 * i, scale: 1.15 }));
   w.prop("jar", "t0").put(TABLES[0].on(0.25, 0.05), { rot: 0.4 });
   w.prop("wineBowl", "t0").put(TABLES[0].on(-0.15, 0.12));
   w.prop("wineBowl", "t1").put(TABLES[1].on(0.1, 0.1));
@@ -84,7 +84,7 @@ export const tavern = (w: World, f: number, o: TavernO = {}) => {
   if (o.keeper !== false) w.actor(KEEPER).set({ at: KEEPER_AT, facing: 0.5, pose: { kind: "idle", t: f / FPS }, expr: "smile", blink: lid(f / FPS, 31), visible: true });
   else w.actor(KEEPER).set({ visible: false });
   const lit = o.lamps ?? 0;
-  [[RX - 0.6, -2.2], [RX + 1.8, -1.95]].forEach(([x, z], i) => w.prop("lantern", `lamp${i}`).put(V(x, 2.55, z), { lit: lit > i * 0.5 ? 1 : 0.15 }));
+  [[RX - 0.6, -2.2], [RX + 1.25, -1.25]].forEach(([x, z], i) => w.prop("lantern", `lamp${i}`).put(V(x, 2.55, z), { lit: lit > i * 0.5 ? 1 : 0.15 }));
 };
 /** the drinkers' Person list (for exits) */
 export const DRINKER_PEOPLE = DRINKERS.map((d) => d[0]);
