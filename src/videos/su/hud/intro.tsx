@@ -5,7 +5,7 @@
 //                     dims at its edges and ochre rays come off him; a band of braised-pork glaze sweeps in under his
 //                     beard; on it 「今日采访对象」 (a lychee-red tag), his name 苏东坡 in running script, the square
 //                     red seal 东坡居士 (his own name for himself, 1081); three joke stats with lychees for pips (饭量
-//                     5, 诗才 5, 运气 1); 「今日目标：荔枝三百颗」 on an ochre bar (his own poem's 日啖荔枝三百颗:
+//                     5, 诗才 5, 运气 1); 「1097年 · 惠州」 small under the seal (off the title); 「今日目标：荔枝三百颗」 on an ochre bar (his own poem's 日啖荔枝三百颗:
 //                     scene C pays it off with the counter). Everything plops in, then shrinks away at the end.
 //   LEAD_RECT         the box it takes (his face stays above it)
 import React from "react";
@@ -89,6 +89,10 @@ export const LeadCard: React.FC<{ t: number }> = ({ t }) => {
             {/* read right column first, top to bottom: 东坡 / 居士 */}
             {["居", "东", "士", "坡"].map((c, i) => <div key={i} style={{ fontFamily: XING, fontSize: 52, lineHeight: 1, color: SK.rice, textAlign: "center", marginTop: -2 }}>{c}</div>)}
           </div>
+        ) : null}
+        {/* the year and the place (moved here from the title: Jay 2026-11-14, the title says only 采访苏东坡的一天) */}
+        {tag.o > 0 ? (
+          <div style={{ position: "absolute", left: 890, top: 1178, opacity: tag.o, transform: "translateX(-100%) rotate(-5deg)", transformOrigin: "100% 50%", ...skinText(KUAILE, 40, SK.robeLight, 9) }}>1097年 · 惠州</div>
         ) : null}
         {/* the day's target */}
         {bar.o > 0 ? (

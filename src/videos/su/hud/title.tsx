@@ -5,12 +5,13 @@
 //                      glossy braised pork with its layers (dark skin, a band of fat, the lean), tied with straw the
 //                      way the dish is tied, one running-script character on each (XING, rice cream on the ink line),
 //                      steam curling up. They plop down one after another and jiggle (the skin's motion); 「采访」
-//                      plops on a lychee-red tag above left, 「的一天」 below right, 「1097年 · 惠州」 small under it.
+//                      plops on a lychee-red tag above left, 「的一天」 below right. NO OTHER WORDS (Jay 2026-11-14:
+//                      the intro card says who he is, so the title is only 采访苏东坡的一天; 1097年 · 惠州 is on his card).
 //                      Everything shrinks away over the last 6 frames. English: the same cubes carry SU / DONG / PO.
 //   TITLE_RECT  the box it takes.
 import React from "react";
 import { AbsoluteFill } from "remotion";
-import { SUBTITLE, clamp01, easeOutCubic, hash } from "../story";
+import { clamp01, hash } from "../story";
 import { TITLE_SPAN } from "../beats";
 import { EN } from "../lang";
 import { type Rect } from "./style";
@@ -81,7 +82,7 @@ export const TitleBlock: React.FC<{ f: number }> = ({ f }) => {
   const [a, b] = TITLE_SPAN;
   if (f < a || f > b) return null;
   const t = f - a, out = shrink(f, b + 1, 6);
-  const tag = plop(t - 11, 5, 90), tail = plop(t - 14, 5, 90), sub = easeOutCubic((t - 16) / 6);
+  const tag = plop(t - 11, 5, 90), tail = plop(t - 14, 5, 90);
   return (
     <AbsoluteFill style={{ pointerEvents: "none", opacity: out.o }}>
       <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, overflow: "visible", transform: `scale(${out.s.toFixed(4)})`, transformOrigin: `540px ${CY}px` }}>
@@ -106,9 +107,6 @@ export const TitleBlock: React.FC<{ f: number }> = ({ f }) => {
           <g opacity={tail.o} transform={`translate(${XS[2] + S / 2 + 18},${(CY + S / 2 + 58 + tail.y).toFixed(1)}) scale(${tail.sx.toFixed(4)},${tail.sy.toFixed(4)}) rotate(-4)`}>
             <text x={0} y={0} textAnchor="end" dominantBaseline="middle" fontFamily={KUAILE} fontSize={74} fill={SK.robeLight} stroke={SK.ink} strokeWidth={14} strokeLinejoin="round" style={{ paintOrder: "stroke fill" } as React.CSSProperties}>的一天</text>
           </g>
-        ) : null}
-        {sub > 0 ? (
-          <text x={XS[0] - 70} y={CY + S / 2 + 62} dominantBaseline="middle" fontFamily={KUAILE} fontSize={40} fill={SK.rice} stroke={SK.ink} strokeWidth={9} strokeLinejoin="round" opacity={sub} style={{ paintOrder: "stroke fill" } as React.CSSProperties}>{SUBTITLE}</text>
         ) : null}
       </svg>
     </AbsoluteFill>
