@@ -567,7 +567,9 @@ export const BOAT = { len: 3.6, w: 1.0, deck: 0.14, rail: 0.42, seat: V(0, 0.36,
 /** the stern oar's swing (rad about its pivot's vertical) at time t (s); on false = still */
 export const boatSwing = (t: number, on?: boolean) => (on === false ? 0 : BOAT.swing * Math.sin(TAU * 0.4 * t));
 export const boat = (K: Kit, g: THREE.Group): Hook => {
-  const P = new Part(K), hull = K.flat("#7a5a3e", { rough: 0.8 }), lo = K.flat("#5a4230", { rough: 0.8 }), deck = K.flat(PC.woodHi, { rough: 0.8 });
+  // (the hull is drawn on both faces, v4: with its inside culled, the water showed through the boat above the deck
+  // boards, between them and the rails; Jay 2026-11-14 "the water is clipping into the boat")
+  const P = new Part(K), hull = K.flat("#7a5a3e", { rough: 0.8, side: THREE.DoubleSide }), lo = K.flat("#5a4230", { rough: 0.8 }), deck = K.flat(PC.woodHi, { rough: 0.8 });
   // the hull: a lathe-like swept shape: rows across, pointed at both ends (more at the bow)
   const rows = 16, cols = 10, pos: number[] = [], idx: number[] = [], L = BOAT.len, Wd = BOAT.w;
   for (let i = 0; i <= rows; i++) {

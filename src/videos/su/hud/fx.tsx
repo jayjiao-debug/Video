@@ -15,6 +15,8 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { clamp01, easeOutCubic, lineId, seg } from "../story";
+import { capWord } from "../captions";
+import { EN } from "../lang";
 import { type Rect } from "./style";
 import { KUAILE, XING } from "./fonts";
 import { SK, plop, shrink, skinText } from "./skin";
@@ -28,10 +30,14 @@ export const FX: Record<string, Span> = {
   dog: [to("B09") + 4, from("B10") - 6],
   os: [to("B11") + 2, to("B12") - 2],
   counter: [to("C20") + 30, from("C22") - 3],
-  courier: [seg("D").from + 22, seg("D").from + 88],
+  courier: [seg("D").from + 18, seg("D").from + 112],   // v4 (Jay: "flashed too fast"): 66 -> 94 frames, riding on his head
   todo: [to("E35") + 2, from("E40") - 8],
-  guo: [seg("H").from + 4, seg("H").from + 50],
+  guo: [seg("H").from + 3, seg("H").from + 58],         // v4: rides on his head and leaves with him when her lens steps in to SU
   secret: [to("H53") + 3, to("H54") + 8],
+  // his poem (C25) written on the screen as he reads it, in place of its subtitle (v4, Jay 2026-11-14), and kept up
+  // while her C26 explains it: two columns either side of him, read right to left
+  poemR: [from("C25") - 1, to("C26") + 8],
+  poemL: [from("C25") - 1, to("C26") + 8],
 };
 /** the boxes they take while they show (a shot keeps faces out from under them) */
 export const FX_RECT: Record<string, Rect> = {
@@ -42,6 +48,8 @@ export const FX_RECT: Record<string, Rect> = {
   todo: { x0: 110, y0: 330, x1: 470, y1: 760 },
   guo: { x0: 330, y0: 1060, x1: 900, y1: 1250 },
   secret: { x0: 650, y0: 860, x1: 930, y1: 1110 },
+  poemR: { x0: 915, y0: 330, x1: 1010, y1: 950 },
+  poemL: { x0: 70, y0: 330, x1: 166, y1: 1070 },
 };
 export const fxRectsAt = (f: number): { what: string; r: Rect }[] =>
   Object.entries(FX).filter(([, [a, b]]) => f >= a && f <= b).map(([k]) => ({ what: `fx ${k}`, r: FX_RECT[k] }));
@@ -136,7 +144,16 @@ const LycheeCounter: React.FC<{ f: number }> = ({ f }) => {
 };
 
 // ---------------------------------------------------------------------------------------------------- the side banners
-/** a side character's banner on the live shot (no freeze): 出场人物 tag, the name in running script, one line */
+/** a side character's banner on the live shot (no freeze): 出场人物 tag, the name in running script, one line. v4 (Jay
+ *  2026-11-14: "the intro cards flashed too fast, it can move with the 运镜"): it stays about 3 s and RIDES ON THE
+ *  CHARACTER'S HEAD (Pose.anchors, from the segment): (x, y) = his head + (dx, dy), its centre kept between x0 and x1
+ *  (the courier's stays clear of the button column; 苏过's is left free, so it slides out of frame with him) */
+type Pin = { key: string; dx: number; dy: number; x0?: number; x1?: number; y0?: number; y1?: number; fx: number; fy: number };
+const pinned = (p: Pin, anchors?: Record<string, [number, number]>): [number, number] => {
+  const a = anchors?.[p.key];
+  if (!a) return [p.fx, p.fy];
+  return [Math.min(p.x1 ?? 1e9, Math.max(p.x0 ?? -1e9, a[0] + p.dx)), Math.min(p.y1 ?? 1e9, Math.max(p.y0 ?? -1e9, a[1] + p.dy))];
+};
 const Banner: React.FC<{ f: number; span: Span; x: number; y: number; name: string; children: React.ReactNode; rot?: number }> = ({ f, span, x, y, name, children, rot = -3 }) => (
   <Plop f={f} span={span} x={x} y={y} rot={rot} h={120}>
     <div style={{ position: "relative", ...panel({ background: `linear-gradient(${SK.porkTop}, ${SK.pork} 45%, ${SK.porkDeep})`, padding: "14px 30px 16px" }) }}>
@@ -147,16 +164,24 @@ const Banner: React.FC<{ f: number; span: Span; x: number; y: number; name: stri
   </Plop>
 );
 const sub: React.CSSProperties = { fontFamily: KUAILE, fontSize: 38, color: SK.rice, verticalAlign: "middle" };
-const CourierBanner: React.FC<{ f: number }> = ({ f }) => (
-  <Banner f={f} span={FX.courier} x={680} y={1240} name="差役">
-    <span style={sub}>带来：坏消息 </span><Pips n={5} on={5} r={13} />
-  </Banner>
-);
-const GuoBanner: React.FC<{ f: number }> = ({ f }) => (
-  <Banner f={f} span={FX.guo} x={610} y={1240} name="苏过" rot={3}>
-    <span style={sub}>小儿子 · <span style={{ color: SK.robeLight }}>唯一跟来海南的家人</span></span>
-  </Banner>
-);
+const COURIER_PIN: Pin = { key: "courier", dx: 190, dy: 520, x0: 340, x1: 690, y0: 1150, y1: 1250, fx: 680, fy: 1240 };   // (y0: SU's face is above 830 when the lens widens)
+const GUO_PIN: Pin = { key: "guo", dx: -255, dy: 620, y1: 1250, fx: 610, fy: 1240 };
+const CourierBanner: React.FC<{ f: number; anchors?: Record<string, [number, number]> }> = ({ f, anchors }) => {
+  const [x, y] = pinned(COURIER_PIN, anchors);
+  return (
+    <Banner f={f} span={FX.courier} x={x} y={y} name="差役">
+      <span style={sub}>带来：坏消息 </span><Pips n={5} on={5} r={13} />
+    </Banner>
+  );
+};
+const GuoBanner: React.FC<{ f: number; anchors?: Record<string, [number, number]> }> = ({ f, anchors }) => {
+  const [x, y] = pinned(GUO_PIN, anchors);
+  return (
+    <Banner f={f} span={FX.guo} x={x} y={y} name="苏过" rot={3}>
+      <span style={sub}>小儿子 · <span style={{ color: SK.robeLight }}>唯一跟来海南的家人</span></span>
+    </Banner>
+  );
+};
 
 // ---------------------------------------------------------------------------------------------------- E: the to-do list
 const Coffin: React.FC = () => (
@@ -209,8 +234,56 @@ const SecretStamp: React.FC<{ f: number }> = ({ f }) => {
   );
 };
 
+// ---------------------------------------------------------------------------------------------------- the poem
+/** 纵笔 (Huizhou, 1097): 报道先生春睡美，道人轻打五更钟. Each character is brushed onto the screen on its
+ *  own syllable (capWord: the frame it is spoken), big running script in rice on the ink line, a thin wash of ink
+ *  behind each column growing down with it; his red seal 东坡 lands under the second column after its last word. The
+ *  caption is off for C25 (Film.tsx: POEM_LINE). */
+const POEM: { x: number; chars: [string, string][] }[] = [
+  { x: 962, chars: [["报", "报"], ["道", "道先"], ["先", "先"], ["生", "生"], ["春", "春"], ["睡", "睡"], ["美", "美"]] },
+  { x: 118, chars: [["道", "道人"], ["人", "人"], ["轻", "轻"], ["打", "打"], ["五", "五"], ["更", "更"], ["钟", "钟"]] },
+];
+const POEM_Y0 = 382, POEM_STEP = 88, POEM_PX = 84;   // (both columns end above y 950: her push-in brings his face out to x 900, and the app's buttons sit right of x 930 below y 950)
+const POEM_AT = POEM.map((c) => c.chars.map(([, w]) => capWord("C25", w).from));
+export const POEM_LINE = 25;
+const Poem: React.FC<{ f: number }> = ({ f }) => {
+  const span = FX.poemR, out = shrink(f, span[1] + 1, 6);
+  if (f < span[0] || out.o <= 0) return null;
+  const sealAt = POEM_AT[1][6] + 12, seal = f - sealAt;
+  const sealK = seal < 0 ? 0 : seal === 0 ? 1.9 : seal === 1 ? 1.3 : seal === 2 ? 0.92 : seal === 3 ? 1.05 : 1;
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none", opacity: out.o }}>
+      {POEM.map((col, ci) => {
+        const at = POEM_AT[ci], shown = at.filter((a) => f >= a).length;
+        if (!shown) return null;
+        // the wash: down to just past the newest character, easing as it grows
+        const last = at[shown - 1], grow = easeOutCubic(clamp01((f - last + 1) / 5));
+        const h = (shown - 1 + grow) * POEM_STEP + 108;
+        return (
+          <React.Fragment key={ci}>
+            <div style={{ position: "absolute", left: col.x - 54, top: POEM_Y0 - 62, width: 108, height: h, borderRadius: "46% 54% 40% 60% / 6% 7% 9% 8%", background: "linear-gradient(90deg, rgba(36,19,11,0) 0%, rgba(36,19,11,0.38) 22%, rgba(36,19,11,0.46) 55%, rgba(36,19,11,0.3) 82%, rgba(36,19,11,0) 100%)", filter: "blur(3px)" }} />
+            {col.chars.map(([ch], k) => {
+              const t = f - at[k];
+              if (t < 0) return null;
+              const s = 1.45 - 0.45 * easeOutCubic(clamp01(t / 6)), o = clamp01((t + 1) / 3), blur = Math.max(0, 5 * (1 - t / 4));
+              return (
+                <div key={k} style={{ position: "absolute", left: col.x, top: POEM_Y0 + k * POEM_STEP, transform: `translate(-50%, -50%) scale(${s.toFixed(3)}) rotate(${(((k * 37 + ci * 11) % 9) - 4) * 0.8}deg)`, opacity: o, filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : undefined, ...skinText(XING, POEM_PX, SK.rice, 15), lineHeight: 1 }}>{ch}</div>
+              );
+            })}
+          </React.Fragment>
+        );
+      })}
+      {sealK > 0 ? (
+        <div style={{ position: "absolute", left: POEM[1].x, top: POEM_Y0 + 7 * POEM_STEP - 14, width: 70, height: 70, transform: `translate(-50%, 0) scale(${sealK.toFixed(3)}) rotate(-6deg)`, borderRadius: 8, background: SK.lychee, border: `4px solid ${SK.ink}`, boxShadow: `inset 0 0 0 3px ${SK.rice}`, display: "grid", placeItems: "center" }}>
+          <div style={{ fontFamily: XING, fontSize: 30, lineHeight: 0.95, color: SK.rice, textAlign: "center" }}>东<br />坡</div>
+        </div>
+      ) : null}
+    </AbsoluteFill>
+  );
+};
+
 /** every effect and banner showing on story frame f */
-export const Fx: React.FC<{ f: number }> = ({ f }) => {
+export const Fx: React.FC<{ f: number; anchors?: Record<string, [number, number]> }> = ({ f, anchors }) => {
   const on = (k: string) => f >= FX[k][0] && f <= FX[k][1];
   if (!Object.keys(FX).some(on)) return null;
   return (
@@ -218,10 +291,11 @@ export const Fx: React.FC<{ f: number }> = ({ f }) => {
       {on("dog") ? <DogLabel f={f} /> : null}
       {on("os") ? <ReporterOS f={f} /> : null}
       {on("counter") ? <LycheeCounter f={f} /> : null}
-      {on("courier") ? <CourierBanner f={f} /> : null}
+      {on("courier") ? <CourierBanner f={f} anchors={anchors} /> : null}
       {on("todo") ? <TodoList f={f} /> : null}
-      {on("guo") ? <GuoBanner f={f} /> : null}
+      {on("guo") ? <GuoBanner f={f} anchors={anchors} /> : null}
       {on("secret") ? <SecretStamp f={f} /> : null}
+      {on("poemR") && !EN ? <Poem f={f} /> : null}
     </AbsoluteFill>
   );
 };

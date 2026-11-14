@@ -77,9 +77,12 @@ const boatS = (f: number) => {
   return base - 0.025 * Math.sin(2 * PI * 0.8 * t);
 };
 /** the boat's origin and its yaw (the bow along the way it goes: the path's direction smoothed over 1.6 m) */
+/** (v4) the boat sits IN the water: its bottom DRAFT m under the surface (RIVER water y -0.04), the deck boards still
+ *  above it; before, its bottom sat on y 0, 4 cm over the water, and the whole hull hovered on it */
+const DRAFT = 0.08, SINK = 0.04 + DRAFT;
 const boatAt = (f: number) => {
   const s = boatS(f), p = along(s), d = along(s + 0.8).sub(along(s - 0.8));
-  return { at: p, rot: Math.atan2(-d.x, -d.z) };
+  return { at: p.add(V(0, -SINK, 0)), rot: Math.atan2(-d.x, -d.z) };
 };
 /** his head centre sitting on the stern seat (measured headless: 0.726 m over the seat's top, on its middle) */
 const HEAD_UP = 0.726;

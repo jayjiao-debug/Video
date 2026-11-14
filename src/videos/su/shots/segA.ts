@@ -202,7 +202,9 @@ export const camA = (f: number): CamPose => {
   go(MEATY - 5, MEATY, XCU, out3);                       // 4 还有肉: the extreme close, on the word
   go(lineId("A05").to - 1, lineId("A05").to + 25, CARD, out3); // 5 card 1: a step back and right that settles calmly, the coin to the butcher
   //   (whole-film QA: it starts on A05's last frame and eases out, so his mouth is above card 1's top edge as the card fades in)
-  const c = C.handheld(mk(s), f, { mood: "calm", walk: [[S.from, 1], [A.walk[1], 0]], amp: 0.75 });
+  // (v4, Jay 2026-11-14 "the ground is jiggling in the beginning": her walk's bob and roll were the whole lower frame of
+  //  bare earth rocking; a third of it now, still a walk, dying by the same frame)
+  const c = C.handheld(mk(s), f, { mood: "calm", walk: [[S.from, 0.35], [A.walk[1], 0]], amp: 0.75 });
   return jolt(c, f, MEATY, 1.1, 8);
 };
 

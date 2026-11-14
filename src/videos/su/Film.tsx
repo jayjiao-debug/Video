@@ -24,12 +24,16 @@ import { InkPass, noInkFallback } from "../../kit/fx/ink";
 import { ipFlag, ipNum } from "../../kit/film/env";
 import { LensBlur } from "../vasa/lensblur";
 import { GradeEffect, type GradeParams } from "../vasa/grade";
+import { IsolateEffect } from "./isolate";
 import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
-import { W, H, TOTAL, SEGMENTS, huds, lineNo, lineId, type Pose, type Segment } from "./story";
+import { W, H, TOTAL, SEGMENTS, huds, lineNo, lineId, clamp01, easeInCubic, easeOutCubic, easeInOutCubic, type Pose, type Segment } from "./story";
+import { SU } from "./people";
 import { TitleBlock, FactCard, EndNames, EndDim, Caption, VlogHud, SwitchOff } from "./hud";
 import { LeadCard } from "./hud/intro";
-import { Fx } from "./hud/fx";
+import { Fx, POEM_LINE } from "./hud/fx";
+import { captionAt } from "./captions";
+import { EN } from "./lang";
 import { useSkinFonts } from "./hud/fonts";
 import { FREEZE, storyFrame, freezeT } from "./beats";
 import { SEG as SEG_A } from "./shots/segA";
@@ -86,7 +90,13 @@ const CAM_OPTS = { fov: 46, near: 0.03, far: 600 };
 
 // ---------------------------------------------------------------------------------------------------- inside the canvas
 type N8 = { configuration: { aoRadius: number; distanceFalloff: number; intensity: number; color: THREE.Color } };
-const Inner: React.FC<{ world: World; P: Pose; onReady: () => void }> = ({ world, P, onReady }) => {
+/** how far the lead is cut out of the frozen picture (isolate.ts), t = frames into the freeze (-1 outside it): in over
+ *  the flash, out with the card's shrink (hud/intro.tsx shrink(t, N + 1, 6)) */
+/** the smash-in on the frozen picture while his card is up: a punch toward his face over the flash, a slow push through
+ *  the hold, back to 1 with the card's shrink so the live picture picks up where it froze */
+const freezeZoom = (t: number) => (t < 0 ? 1 : 1 + (0.06 * easeOutCubic(clamp01(t / 5)) + 0.035 * clamp01((t - 5) / (FREEZE.n - 11))) * (1 - easeInOutCubic(clamp01((t - (FREEZE.n - 6)) / 6))));
+const isoAmount = (t: number) => (t < 0 ? 0 : clamp01((t + 1) / 3) * (1 - easeInCubic(clamp01((t - (FREEZE.n - 5)) / 6))));
+const Inner: React.FC<{ world: World; P: Pose; ft: number; onReady: () => void }> = ({ world, P, ft, onReady }) => {
   const { scene, camera } = useThree();
   const fx = useMemo(() => ({
     ink: new InkPass(scene, camera as THREE.PerspectiveCamera, { samples: ipNum("inksamples", 8, false) }), // 8 = the film; --props '{"inksamples":4}' = faster checks
@@ -94,6 +104,7 @@ const Inner: React.FC<{ world: World; P: Pose; onReady: () => void }> = ({ world
     bloom: new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: BLOOM, luminanceThreshold: 1.0, luminanceSmoothing: 0.2, mipmapBlur: true }),
     tone: new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }),
     grade: new GradeEffect(GRADE_FILM, 1),
+    iso: new IsolateEffect(scene, camera),
   }), [scene, camera]);
   const ao = useRef<N8 | null>(null);
   // the place's look for this frame (the N8AO element is created with the first place's values and re-set every frame)
@@ -108,6 +119,7 @@ const Inner: React.FC<{ world: World; P: Pose; onReady: () => void }> = ({ world
       <primitive object={fx.bloom} dispose={null} />
       <primitive object={fx.tone} dispose={null} />
       <primitive object={fx.grade} dispose={null} />
+      <primitive object={fx.iso} dispose={null} />
     </EffectComposer>
   ), [fx]);
   // per frame: the place's values, then the pose's own (defaults where omitted)
@@ -117,6 +129,13 @@ const Inner: React.FC<{ world: World; P: Pose; onReady: () => void }> = ({ world
   fx.bloom.intensity = pp.bloom ?? look.bloom ?? BLOOM;
   fx.grade.set(pp.grade ?? look.grade ?? GRADE_FILM); fx.grade.amount = pp.gradeAmount ?? 1;
   fx.ink.set({ strength: pp.ink ?? 1 });
+  // the lead's intro card: 苏东坡 and the spine he holds stay in colour, cut out of the frozen frame (isolate.ts)
+  fx.iso.amount = isoAmount(ft);
+  if (fx.iso.amount > 0) {
+    const su = world.actor(SU), e = world.project(su.headWorld());
+    fx.iso.target = () => [su.group, world.prop("spine").group];
+    fx.iso.focusPx.set(e.x, e.y + 10); fx.iso.t = ft;
+  }
   noInkFallback(world.root);
   const aoMul = pp.ao ?? 1;
   useLayoutEffect(() => {
@@ -174,7 +193,7 @@ const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <>
     <EndDim f={f} />
     <VlogHud f={f} rec={P.rec} />
-    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /><Fx f={f} /></> : null}
+    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /><Fx f={f} anchors={P.anchors} /></> : null}
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
     <EndNames f={f} />
   </>
@@ -207,12 +226,12 @@ export const SuFilm: React.FC = () => {
   React.useEffect(() => { if (OVONLY && world) continueRender(handle); }, [world, handle]); // ovonly has no <Inner> to release the world handle
   return (
     <AbsoluteFill style={{ background: OVONLY ? "transparent" : "#0d0e16" }}>
-      <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
-        {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
+      <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : ft >= 0 ? { transform: `scale(${freezeZoom(ft).toFixed(4)})`, transformOrigin: "590px 640px" } : undefined}>
+        {world && P && !OVONLY ? <Inner world={world} P={P} ft={ft} onReady={onReady} /> : null}
       </ThreeCanvas>
       {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
-      {P && P.captions !== false && !NOCAP && ft < 0 && !(f >= FREEZE.at && f < A02_FROM) ? <Caption f={f} /> : null}
+      {P && P.captions !== false && !NOCAP && ft < 0 && !(f >= FREEZE.at && f < A02_FROM) && !(!EN && captionAt(f)?.line === POEM_LINE) ? <Caption f={f} /> : null}
       {ft >= 0 && !NOHUD ? <LeadCard t={ft} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
       {!COVER ? <SwitchOff f={f} /> : null}

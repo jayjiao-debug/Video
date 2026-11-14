@@ -5,9 +5,9 @@ time after that point moved later by the same amount (frames += N), so build.py 
 composition's clock: beds that started before the freeze simply play on through it.
 
   freeze.py [--timing voice_timing.json] [--voice voice_48k.wav] [--out-timing ...v3.json] [--out-voice ...v3_48k.wav]
-Keep AT and N equal to beats.ts FREEZE (at = to("A01") + 3 = 72, n = 39)."""
+Keep AT and N equal to beats.ts FREEZE (at = to("A01") + 3 = 72, n = 75)."""
 import argparse, json, subprocess
-AT, N, FPS, SR = 72, 39, 30, 48000
+AT, N, FPS, SR = 72, 75, 30, 48000
 
 def main():
     ap = argparse.ArgumentParser()

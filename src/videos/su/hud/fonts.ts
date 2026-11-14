@@ -20,6 +20,8 @@ const STRINGS = [
   "出场人物", "差役", "带来：坏消息", "苏过", "小儿子 · 唯一跟来海南的家人",
   // effects
   "当事狗", "很不高兴", "记者OS", "这是被贬，还是度假？", "今日已吃 0123456789 / 300 颗", "海南待办①②③", "绝密",
+  // his poem written on the screen as he reads it (C25, v4)
+  "报道先生春睡美", "道人轻打五更钟", "纵笔",
 ];
 export const SKIN_TEXT = [...new Set(STRINGS.join("").replace(/\s/g, "") + "，。！？：·「」")].join("");
 

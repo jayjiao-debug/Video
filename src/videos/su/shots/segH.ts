@@ -329,6 +329,7 @@ export const SEG: Segment = {
     const mid = tip.addScaledVector(dir, -0.012).addScaledVector(up, OY_UNDER * GBIG + STICK_R - 0.0025);
     w.prop("oyster", "guo").put(mid.addScaledVector(dir, -OYSTER.len / 2 * GBIG), { rot: rotZY(dir, up), open: 0.12, scale: GBIG });
     const shot = f < L53.from ? "pre" : f < B.lean ? "ecstatic" : f < L54.from ? "lean" : f < L55.from ? "why" : f < CARD4.from ? "deadpan" : "card";
-    return { camera: cam, overlays: transitionAt(f)?.node ?? null, slate: `H ${shot}` };
+    const gP = w.project(g.headWorld());
+    return { camera: cam, anchors: { guo: [gP.x, gP.y] }, overlays: transitionAt(f)?.node ?? null, slate: `H ${shot}` };
   },
 };

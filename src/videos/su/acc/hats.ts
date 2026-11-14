@@ -1,7 +1,8 @@
 // THE HEADS of the Su film's cast (PLAN 2; WP3): the accessories the kit's wardrobe does not have, for the rig3d
 // figures of group/kit (read only). Each function returns an Acc (rig3d.ts "accessories"); people.ts puts them on.
 //   bambooHat()    SU's wide conical bamboo hat (斗笠): a shallow cone a head and a half wide each side with a
-//                  rounded rim, woven rings painted at low contrast, a dark band where it sits; a plug under it sits
+//                  rounded rim, woven rings, 24 spokes, a faint plait, a stitched rim binding and a darker tip (v4),
+//                  a dark band where it sits; a plug under it sits
 //                  in the head. No slot (it is no rig "hat": see bambooHat). hide: ["bambooHat"]
 //   dongpoCap()    the tall square black cap 东坡巾: a square tube with rounded corners, a little wider at the top, a
 //                  flat top, a darker band at its foot and a seam line round it a third of the way up (the double wall
@@ -36,24 +37,48 @@ export const bambooHat = (o: { col?: string; band?: string } = {}): Acc => {
     // (not a rig "hat": a hat covers the crown slot, and SU also wears the 东坡巾 there, each hidden in turn; its rim
     //  stands above the head, so the hair needs nothing from it: the look's buzz hair stays as drawn, as under a
     //  perched hat with hair "keep")
-    name: "bambooHat", slots: [], key: ["bambooHat", col, band].join("|"),
+    name: "bambooHat", slots: [], key: ["bambooHat", col, band, "v4b"].join("|"),
     build(b) {
       b.tilt(0, -4);
       // one closed solid, the material on the left of the profile: a plug that stands in the head up to the cone's
       // underside, the underside out to the rim, the rounded rim, the top surface up to the apex
       const prof = rounded([[0.48, 0.42], [0.6, 1.09], [H.rim - 0.08, H.rimY - 0.03], [H.rim, H.rimY + 0.02], [H.rim - 0.1, H.rimY + 0.1], [0.07, H.apex - 0.01], [0, H.apex]], 0.06);
       const g = lathe(b.toM, prof, 64), vAt = g.userData.vAt as number[];
-      // v by length: the underside from vAt[1] to vAt[2], the top from vAt[4] to vAt[5]; woven rings on the top, a
-      // darker band on the underside near the plug (seen from below: where it sits on the head)
-      const weave = shade(col, 0.86), dark = shade(col, 0.74);
-      const map = b.tex(8, 512, (cg) => {
-        const Y = (v: number) => 512 * (1 - v);
-        cg.fillStyle = col; cg.fillRect(0, 0, 8, 512);
-        cg.fillStyle = dark; cg.fillRect(0, Y(vAt[2]), 8, Y(vAt[1]) - Y(vAt[2]));          // the underside: a shade darker
-        cg.fillStyle = band; cg.fillRect(0, Y(vAt[1] + 0.06), 8, Y(vAt[1]) - Y(vAt[1] + 0.06));
-        cg.fillStyle = weave; for (let k = 1; k < 9; k++) { const v = vAt[4] + ((vAt[5] - vAt[4]) * k) / 9; cg.fillRect(0, Y(v) - 3, 8, 6); }
-        cg.fillStyle = band; cg.fillRect(0, Y(vAt[4] + 0.012), 8, Y(vAt[3]) - Y(vAt[4] + 0.012));   // the rim's binding
-      }, `bambooHat|${col}|${band}`);
+      // v by length. rounded() puts 6 points on each inner corner (corner c: indices 1 + 6 (c - 1) .. + 5), so: the
+      // underside from the plug's top corner (1) to the rim's under corner (2), the rim from there to its top corner
+      // (4), the top surface from there to the apex (v 1). (v4: the rings were painted at vAt[4]..vAt[5], inside the
+      // plug's fillet, so they never showed.)
+      const at = (c: number, end = false) => vAt[1 + 6 * (c - 1) + (end ? 5 : 0)];
+      const under0 = at(1, true), rimLo = at(2), rimHi = at(4, true), top0 = rimHi, top1 = 1;
+      // v4 (Jay 2026-11-14: "for the hat just some simple details"): 24 bamboo spokes running from the rim up to the
+      // tip, woven rings, a faint plait between them, small stitches over the rim's binding and a darker cap of bark
+      // at the tip; the underside a shade darker with the band where it sits. u runs round the hat, v up its profile.
+      const weave = shade(col, 0.82), dark = shade(col, 0.74), spoke = shade(col, 0.76), plait = shade(col, 0.92), tip = shade(col, 0.66);
+      const TW = 256, TH = 1024;
+      const map = b.tex(TW, TH, (cg) => {
+        const Y = (v: number) => TH * (1 - v);
+        cg.fillStyle = col; cg.fillRect(0, 0, TW, TH);
+        cg.fillStyle = dark; cg.fillRect(0, Y(rimLo), TW, Y(under0) - Y(rimLo));                 // the underside
+        cg.fillStyle = band; cg.fillRect(0, Y(under0 + 0.03), TW, Y(under0) - Y(under0 + 0.03)); // where it sits
+        // the plait: short staggered dashes between the rings (faint)
+        const NR = 9, ring = (k: number) => top0 + ((top1 - top0) * k) / NR;
+        cg.fillStyle = plait;
+        for (let k = 0; k < NR - 1; k++) {
+          const ya = Y(ring(k + 1)) + 3, yb = Y(ring(k)) - 3;
+          for (let i = 0; i < 48; i++) cg.fillRect(((i + (k % 2) * 0.5) * TW) / 48, ya, TW / 96, yb - ya);
+        }
+        // the rings
+        cg.fillStyle = weave; for (let k = 1; k < NR; k++) cg.fillRect(0, Y(ring(k)) - 3, TW, 6);
+        // the spokes, rim to tip
+        cg.fillStyle = spoke; for (let i = 0; i < 24; i++) cg.fillRect((i * TW) / 24 - 1.5, Y(top1), 3, Y(top0) - Y(top1));
+        // the tip's cap of bark and its tie
+        const tipV = top1 - (top1 - top0) * 0.1;
+        cg.fillStyle = tip; cg.fillRect(0, 0, TW, Y(tipV));
+        cg.fillStyle = band; cg.fillRect(0, Y(tipV) - 3, TW, 6);
+        // the rim's binding and its stitches
+        cg.fillStyle = band; cg.fillRect(0, Y(rimHi), TW, Y(rimLo) - Y(rimHi));
+        cg.fillStyle = shade(band, 0.7); for (let i = 0; i < 72; i++) cg.fillRect((i * TW) / 72, Y(rimHi), 1.5, Y(rimLo) - Y(rimHi));
+      }, `bambooHat|${col}|${band}|v4b`);
       b.solid("head", g, { map, ink: 0.008 });
     },
   };

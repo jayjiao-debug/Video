@@ -54,7 +54,7 @@ export const TITLE_SPAN: Span = [card("A05").to + 2, from("B06") - 3];
  *  beat, line and segment stays in story frames; only Film.tsx maps the composition's frame g to the story frame
  *  (storyFrame) and the film is FREEZE.n frames longer. The sound gets the same gap at FREEZE.at / 30 s
  *  (scripts/su/sound/freeze.py: keep the two in step). */
-export const FREEZE = { at: to("A01") + 3, n: 39 };
+export const FREEZE = { at: to("A01") + 3, n: 75 };   // v4 (Jay 2026-11-14 "hold a bit longer"; the bible: about 2.5 s): 39 -> 75
 /** the composition frame g -> the story frame it shows */
 export const storyFrame = (g: number) => (g < FREEZE.at ? g : g <= FREEZE.at + FREEZE.n ? FREEZE.at : g - FREEZE.n);
 /** frames since the freeze began on composition frame g (-1 outside it) */

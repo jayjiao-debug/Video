@@ -72,18 +72,20 @@ export const timeStampAt = (f: number): { id: SceneId; text: string; at: number;
 };
 
 // ---------------------------------------------------------------------------------------------------- geometry
-const X0 = 110, ROW = 230;                                  // x 110: inside 抖音's side crop (skill, 14 Nov)
-const _X0_OLD = 40; void _X0_OLD;                                    // the REC row's left edge and centre
+// v4 (Jay 2026-11-14: "since we are going with 9x15, we can have the rec and battery more on the sides"): the REC dot's
+// ink and the battery's nub end 32 px from each side (the kit's FRAME_9x15.rec: x 32..1048; the 9:15 crop keeps the
+// whole width). In a 9:16 post 抖音 would cut 57 px off each side: this film is posted 9:15.
+const X0 = 15, ROW = 230;                                   // (was 110: inside 抖音's 9:16 side crop)
 const DOT = { x: X0 + 39, r: 17 };
 const STAMP = { x: X0 + 22, y: 288, px: EN ? 30 : 34, big: 1.55, bigY: 304 };
 const IN = 8, HOLD = 44, SHRINK = 12;                        // the timestamp's intro: slide in, hold, shrink (frames)
-const BAT_X1 = 970;
+const BAT_X1 = 1046;
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
   rec: { x0: X0, y0: ROW - 26, x1: X0 + 190, y1: ROW + 26 },
   stamp: { x0: STAMP.x - 6, y0: STAMP.y - 22, x1: STAMP.x + 480, y1: STAMP.y + 22 },
   stampBig: { x0: STAMP.x - 6, y0: STAMP.bigY - 34, x1: STAMP.x + 760, y1: STAMP.bigY + 38 },
-  battery: { x0: 780, y0: ROW - 26, x1: BAT_X1, y1: ROW + 26 },
+  battery: { x0: BAT_X1 - 190, y0: ROW - 26, x1: BAT_X1 + 2, y1: ROW + 26 },
 };
 /** the boxes the vlog UI takes on frame f */
 export const vlogRectsAt = (f: number): { what: string; r: Rect }[] => {

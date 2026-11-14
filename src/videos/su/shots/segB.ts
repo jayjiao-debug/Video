@@ -48,7 +48,7 @@ import * as THREE from "three";
 import { SEGMENTS, FPS, lineId, capWord, clamp01, lerp, smooth, easeInOutCubic, type Pose, type Segment, type CamPose, type Vec3, type PostPose } from "../story";
 import { BEAT, vignetteAt } from "../beats";
 import * as C from "../cam";
-import { SU, MAI, KID, KID2 } from "../people";
+import { SU, MAI, WIFE, KID, KID2 } from "../people";
 import { YARD, HUANGZHOU, HUANGZHOU_CAMS, EYE, FOV, SU_HEAD } from "../layout";
 import { stovePoint, ladderRot, ploughFor, GRILL, STOOL, WINE_BOWL, CHOPSTICKS, STOVE as STOVE_DIM } from "../props";
 import { putHer, herKeys, type HandO, type MicO, type MicMode } from "../her";
@@ -539,6 +539,21 @@ function mai(w: World, f: number): Rig {
   });
   return m;
 }
+/** 苏迈's wife at the ladder's foot (v4, Jay 2026-11-14: "一家人" should show a family, not one man; his own wife and
+ *  朝云 had died, so it is 苏迈's household: the son up the ladder, his wife, the two kids): she steadies the ladder with
+ *  her left hand on its left rail, looking up at him; on 一家人 she turns to the lens and waves with her right */
+const RAIL_Y = 0.98, RAIL = V(YARD.ladder.x - 0.35, RAIL_Y, YARD.ladder.z + (YARD.ladderTop.z - YARD.ladder.z) * (RAIL_Y / YARD.ladderTop.y));
+const WIFE_AT = V(YARD.ladder.x - 0.62, 0, YARD.ladder.z - 0.38);
+function wife(w: World, f: number) {
+  const t = f / FPS, waving = f >= W_JIA - 2 && f < W_TUAN + 14;
+  const turn = ky(f, [[W_JIA - 10, 0], [W_JIA - 2, 1], [W_TUAN + 14, 1], [W_TUAN + 24, 0]]);
+  w.actor(WIFE).set({
+    at: WIFE_AT.clone(), facing: 0.95 - 0.75 * turn, visible: true,
+    pose: waving ? { kind: "wave", t: t + 0.4, arm: 0 } : { kind: "idle", t: t + 2.1 },
+    expr: waving ? "happy" : "smile_closed", ...alive(t, 7),
+    hands: [null, RAIL.clone().add(V(0.015, 0, 0.012))],
+  });
+}
 /** the two kids chasing round the yard (not on the dog's low shot) */
 function kids(w: World, f: number) {
   for (const k of [0, 1]) {
@@ -644,6 +659,7 @@ export const SEG: Segment = {
     dressYard(w, f);
     const s = su(w, f);
     const m = mai(w, f);
+    wife(w, f);
     kids(w, f);
     dog(w, f, headAt(f).add(V(0, 0.05, 0)), track(f, LEFT, 1) ?? suRest(f, 1));
     w.update();

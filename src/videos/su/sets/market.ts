@@ -144,7 +144,8 @@ const carcassTex = () => paint(256, 512, (g, W, H) => {
   g.fillStyle = COL.fat; g.fillRect(0, H * 0.88, W, H * 0.12);
   g.fillStyle = "rgba(255,255,255,0.4)"; g.fillRect(0, H * 0.06, W, H * 0.05);
 });
-/** THE GROUND (one painted square): packed earth, the lanes worn lighter, stone gutters along every shop front, straw */
+/** THE GROUND (one painted square): packed earth with its grit, pebbles, cracks and cart ruts (v4), the lanes worn
+ *  lighter, stone gutters along every shop front, straw */
 const GROUND = { cx: MX - 4, cz: -2, size: 64 };
 const paintGround = () => groundTex(GROUND.cx, GROUND.cz, GROUND.size, 2048, COL.earth, (g, k) => {
   const r = rng(81), X = k.px, Z = k.pz, s = k.s;
@@ -167,6 +168,26 @@ const paintGround = () => groundTex(GROUND.cx, GROUND.cz, GROUND.size, 2048, COL
   gutter(MX + S.stalls.x - 0.45, MX + S.stalls.x - 0.1, S.lane.z0 + 0.1, S.lane.z1, false);
   gutter(MX - S.stalls.x + 0.1, MX - S.stalls.x + 0.45, S.stalls.z[0] + 1.75, S.lane.z1, false);
   gutter(MX - 30, MX + 2.6, S.butcher.z + 0.1, S.butcher.z + 0.45, true);
+  // v4 (Jay 2026-11-14: "add some texture but not attention grabbing, just for more realistic sake"): packed-earth grit,
+  // small pebbles with a lit top, faint dry cracks and two worn cart ruts down lane A, all at low contrast and no finer
+  // than a texel or two (3 cm), so nothing crawls when her lens moves
+  for (let i = 0; i < 70000; i++) { const x = k.S * (0.03 + 0.94 * r()), y = k.S * (0.03 + 0.94 * r()), lo = r() < 0.55; g.fillStyle = css(lo ? COL.earthLo : COL.earthHi, 0.18 + 0.14 * r()); g.fillRect(x, y, 1 + r(), 1 + r()); }
+  for (let i = 0; i < 2600; i++) {
+    const x = k.S * (0.04 + 0.92 * r()), y = k.S * (0.04 + 0.92 * r()), rx = 1.3 + 1.7 * r(), ry = rx * (0.6 + 0.3 * r()), a = r() * 3.14;
+    g.fillStyle = css(r() < 0.5 ? "#9a8a72" : "#a89a86", 0.55); g.beginPath(); g.ellipse(x, y, rx, ry, a, 0, 7); g.fill();
+    g.fillStyle = css("#e2d6bc", 0.4); g.beginPath(); g.ellipse(x - rx * 0.25, y - ry * 0.3, rx * 0.45, ry * 0.4, a, 0, 7); g.fill();
+  }
+  g.lineCap = "round";
+  for (let i = 0; i < 90; i++) {
+    let x = k.S * (0.06 + 0.88 * r()), y = k.S * (0.06 + 0.88 * r()), a = r() * 6.28;
+    g.strokeStyle = css(COL.earthLo, 0.32); g.lineWidth = 1.4; g.beginPath(); g.moveTo(x, y);
+    for (let j = 0, n = 3 + Math.floor(4 * r()); j < n; j++) { a += (r() - 0.5) * 1.4; x += Math.cos(a) * (6 + 10 * r()); y += Math.sin(a) * (6 + 10 * r()); g.lineTo(x, y); }
+    g.stroke();
+  }
+  soft(g, 0.9 * s / 10, () => {
+    g.strokeStyle = css(COL.earthLo, 0.3); g.lineWidth = 0.09 * s;
+    for (const dx of [-0.62, 0.62]) { g.beginPath(); g.moveTo(X(MX + dx), Z(S.lane.z0 + 0.5)); for (let z = S.lane.z0 + 0.5; z <= S.lane.z1; z += 1) g.lineTo(X(MX + dx + 0.06 * Math.sin(z * 0.37)), Z(z)); g.stroke(); }
+  });
   // straw, leaves, a few dark damp patches (by the butcher's: wet earth, no blood)
   for (let i = 0; i < 900; i++) { const x = k.S * (0.06 + 0.88 * r()), y = k.S * (0.06 + 0.88 * r()), a = r() * 3.14, l = 4 + 6 * r(); g.strokeStyle = css(r() < 0.6 ? COL.straw : "#8a7a52", 0.55); g.lineWidth = 1.6; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
   for (const [x, z, rr] of [[MX + 0.9, -2.4, 0.9], [MX + 2.0, -1.0, 0.6], [MX - 1.6, 4.2, 0.7]] as [number, number, number][]) blotch(g, X(x), Z(z), rr * s, "#8e7656", 0.35);

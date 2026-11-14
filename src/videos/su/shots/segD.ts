@@ -485,6 +485,7 @@ export const SEG: Segment = {
     const mAim = gHead.clone().lerp(sHead, smooth(clamp01((f - (L29.to + 2)) / 16))).add(V(0, -0.1, 0));
     putHer(w, cam, f, { mic: { ...herKeys(f, MIC_KEYS), aim: mAim, avoid: [gHead, sHead] } });
 
-    return { camera: cam, overlays: frag(transitionAt(f)?.node ?? null), slate: `D ${f < L27.from ? "rein" : f < L28.from ? "order" : f < L29.to ? "where" : f < B.look ? "read" : f < B.aside ? "food" : "aside"}` };
+    const coP = w.project(co.headWorld());
+    return { camera: cam, anchors: { courier: [coP.x, coP.y] }, overlays: frag(transitionAt(f)?.node ?? null), slate: `D ${f < L27.from ? "rein" : f < L28.from ? "order" : f < L29.to ? "where" : f < B.look ? "read" : f < B.aside ? "food" : "aside"}` };
   },
 };

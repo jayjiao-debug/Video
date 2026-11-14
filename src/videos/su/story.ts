@@ -134,6 +134,9 @@ export type Pose = {
   rec?: boolean;
   /** a debug label for the animatic (drawn only with the input prop slate: true): e.g. "A3 turn" */
   slate?: string;
+  /** screen points (px of 1080 x 1920) the HUD pins things to on this frame: a side character's banner rides on its
+   *  head so it moves with her camera (hud/fx.tsx; v4) */
+  anchors?: Record<string, [number, number]>;
 };
 export type Segment = {
   id: string;
