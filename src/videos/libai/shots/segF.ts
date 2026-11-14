@@ -7,6 +7,7 @@
 //   F42      he looks into his cup.   F43 我陪您喝一杯: her cup floats in from the lens and clinks his (no hand).
 //   F44      好。四个人。 he drinks; the camera rises slowly to the moon under cards 4 and 5; her camera switches off.
 import * as THREE from "three";
+import { trackHead } from "../track";
 import { SEGMENTS, FPS, lineId, capWord, clamp01, lerp, smooth, h, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
@@ -140,6 +141,7 @@ export const SEG: Segment = {
       const holding = f >= untie - 2 && f < down;
       w.actor(HE).set({ ...standing(HE_AT, HE_F, f, 8), expr: f < untie ? "laugh" : "happy", head: heads(accent("laugh", f, F.memory[0] + 4, { dur: 1.2 }), headPop(f, untie)), pose: holding ? { kind: "hold", t } : { kind: "idle", t }, hands: holding ? [tp, null] : [null, null] });
       w.update();
+      trackHead(w, "he", w.actor(HE), f);
       if (f >= untie - 2) w.prop("turtle").put(tp, { grip: "hilt", rot: HE_F });
       putTable(w, MT);
       return { camera, overlays: frag(PAPER(f), transitionAt(f)?.node), slate: "F memory" };

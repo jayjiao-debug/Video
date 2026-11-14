@@ -2,16 +2,19 @@
 // night indigo, the cloth). The reporter's edit voice: each one is earned by something already in the picture or the
 // line, lands in the gap after a line, never repeats the subtitle, and none plays in the night scene. Pure functions of
 // the frame (the picture's clock, story.ts CLOCK).
-//   CupCounter  今日 n/300 杯: from 「一日须倾三百杯」 (A08) to the friend's goodbye (E33); ticks when he drinks (card 1's
-//               swig, B15's cup), spins up to 300 when he buys the room drinks (E28) and stamps 达标
+//   CupCounter  今日 n/300 杯: from 「一日须倾三百杯」 (A08) until he is carried into the palace (C), ticking when he
+//               drinks (card 1's swig, B15's cup). It comes back at the night's last cup, the one she shares with him
+//               (F43): it rolls up to 300 as it swings in (the whole evening), and his gulp makes it 301, 达标 (Jay, 15 Nov:
+//               "it should disappear then come back again when he takes that sip with the interviewer")
 //   WaitBar     等皇上叫…… a loading bar after 「所以我在这儿等」 (B15), crawling; the eunuch's 李翰林！ fills it
 //   SoberStamp  the bucket of water lands: 醒酒 ✓ (his card's 今日目标, paid off)
 //   GrudgeMeter 高力士 glares into the lens: 记仇 +1, a little meter over him
+//   MoonOS      记者OS after 「哟，月亮？」: he takes her lens for the moon
 //   <Fx f />    all of them;  fxShown()  the list for the overlay check (src/kit/overlay checkOverlays)
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { EN } from "../lang";
-import { lineId, cap, seg } from "../story";
+import { lineId, cap, capWord, seg, FREEZE_AT_WORLD } from "../story";
 import { BEAT } from "../beats";
 import { life, glyph, roughFilter, gradient, seal, pop, slap, part, easeOut, easeIn, clamp01, burst, ring, barBoxes, odometer, type Shown, type Rect } from "../../../kit/overlay";
 import { SKIN, C, TONE, sway, hiccup } from "./skin";
@@ -20,13 +23,17 @@ const ID = "libai-fx";
 
 // ---------------------------------------------------------------------------------------------------- the moments
 const A = BEAT.A, B = BEAT.B, Cb = BEAT.C, E = BEAT.E;
-/** the cup counter: in after A08, gone with the friend (E33) */
-const CUPS_IN = lineId("A08").to + 1, CUPS_OUT = lineId("E33").from + 10;
-/** its ticks: [frame, value]; the spin to 300 after E28 */
-const SPIN = [lineId("E28").to + 2, lineId("E28").to + 30] as const, GOAL_AT = SPIN[1] + 1;
-const TICKS: [number, number][] = [[CUPS_IN, 2], [A.card[0] + 22, 3], [B.cup + 6, 4]];
+/** the cup counter: in after A08, gone before the palace (scene C); back for the cup she shares with him (F43's clink)
+ *  until just before the end card */
+const CUPS_IN = lineId("A08").to + 1, CUPS_OUT = seg("C").from - 2;
+const SIP_IN = lineId("F43").to + 18, SIP_OUT = lineId("F44").to + 96;
+/** the counter's return at the night's last cup (the overlay check lets it into the quiet scene: Jay asked for it) */
+export const LAST_CUP_SPAN = [SIP_IN, SIP_OUT] as const;
+/** its ticks: [frame, value]; the roll to 300 as it comes back; his gulp: 301 */
+const SPIN = [SIP_IN + 4, SIP_IN + 22] as const, GULP = lineId("F44").to + 10, GOAL_AT = GULP + 1;
+const TICKS: [number, number][] = [[CUPS_IN, 2], [A.card[0] + 22, 3], [B.cup + 6, 4], [GULP, 301]];
 export const cupsAt = (f: number) => {
-  if (f >= SPIN[0]) return Math.round(4 + (300 - 4) * easeIn(clamp01((f - SPIN[0]) / (SPIN[1] - SPIN[0])), 2));
+  if (f >= SPIN[0] && f < GULP) return Math.round(4 + (300 - 4) * easeOut(clamp01((f - SPIN[0]) / (SPIN[1] - SPIN[0])), 2));
   let v = 0; for (const [at, n] of TICKS) if (f >= at) v = n;
   return v;
 };
@@ -41,7 +48,7 @@ const GRUDGE = [Cb.glare + 4, lineId("C22").from + 10] as const;
 // ---------------------------------------------------------------------------------------------------- the cup counter
 const CC = { x0: 792, y0: 222, x1: 1016, y1: 324 };
 const CupCounter: React.FC<{ f: number }> = ({ f }) => {
-  const L = life(f, CUPS_IN, CUPS_OUT, SKIN.motion.arrive, SKIN.motion.leave);
+  const L = life(f, CUPS_IN, CUPS_OUT, SKIN.motion.arrive, SKIN.motion.leave) ?? life(f, SIP_IN, SIP_OUT, SKIN.motion.arrive, SKIN.motion.leave);
   if (!L) return null;
   const t = L.t, n = cupsAt(f), lt = f - lastTick(f), leave = easeIn(L.leave, 2);
   const swing = sway(t, 0, 24, 20, 9) + (f >= SPIN[0] && f < SPIN[1] ? 6 * Math.sin(f * 1.7) : 0) + 50 * leave;
@@ -49,7 +56,7 @@ const CupCounter: React.FC<{ f: number }> = ({ f }) => {
   const w = CC.x1 - CC.x0, h = CC.y1 - CC.y0, goal = f >= GOAL_AT, gs = slap(f - GOAL_AT, 0, 1.8);
   const digits = odometer(n, Math.max(1, String(n).length)), dw = digits.length * 30;
   // "/300" only while short of the goal; the number and "/300" shrink to fit the cloth (138 px after the cup)
-  const of = n < 300, nk = Math.min(1, 138 / (dw + (of ? 68 : 0)));
+  const of = n < 300 || n > 300, nk = Math.min(1, 138 / (dw + (of ? 68 : 0)));
   return (
     <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
       <defs>
@@ -89,6 +96,46 @@ const CupCounter: React.FC<{ f: number }> = ({ f }) => {
           </g>
         ) : null}
         {goal ? burst("gb", CC.x0 + 124, CC.y1 + 24, 10, 40, 110, clamp01((f - GOAL_AT) / 10), { color: C.lead, width: 6, seed: 4 }) : null}
+      </g>
+    </svg>
+  );
+};
+
+// ---------------------------------------------------------------------------------------------------- 记者OS: the moon
+/** 记者OS after 「哟，月亮？」 (A02): her thought, what the viewer needs to get the joke: he takes her round lens for the
+ *  moon (Jay, 15 Nov: "why you are out in the morning doesn't give me context"). A thought cloud in her own warm paper,
+ *  top left, out before the picture freezes for his card. */
+const MOON_OS = [capWord("A02", "月亮").from + 8, FREEZE_AT_WORLD - 3] as const;
+const MO = { x0: 96, y0: 238, x1: 640, y1: 330 };
+const MoonOS: React.FC<{ f: number }> = ({ f }) => {
+  const L = life(f, MOON_OS[0], MOON_OS[1], 5, 5);
+  if (!L) return null;
+  const p = pop(L.t, 0, 7), op = p.o * (1 - L.leave), cy = (MO.y0 + MO.y1) / 2;
+  return (
+    <svg width={1080} height={1800} viewBox="0 0 1080 1800" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+      <g transform={`translate(${MO.x0 + 40},${cy}) scale(${p.s.toFixed(3)}) translate(${-MO.x0 - 40},${-cy})`}>
+        {/* the cloud: a rounded body with three bumps, and two little puffs trailing down toward the lens */}
+        <rect x={MO.x0 + 4} y={MO.y0 + 8} width={MO.x1 - MO.x0} height={MO.y1 - MO.y0} rx={44} fill={TONE.shadow} />
+        <rect x={MO.x0} y={MO.y0} width={MO.x1 - MO.x0} height={MO.y1 - MO.y0} rx={44} fill="#fff6e8" stroke={C.ink} strokeWidth={5} />
+        <circle cx={MO.x0 + 60} cy={MO.y1 + 22} r={12} fill="#fff6e8" stroke={C.ink} strokeWidth={4} />
+        <circle cx={MO.x0 + 40} cy={MO.y1 + 48} r={7} fill="#fff6e8" stroke={C.ink} strokeWidth={4} />
+        {/* her tag, in the REC lamp's red */}
+        <g transform={`translate(${MO.x0 + 26},${MO.y0 - 2}) rotate(-4)`}>
+          <rect x={0} y={-18} width={108} height={36} rx={8} fill="#e2463c" stroke={C.ink} strokeWidth={4} />
+          {glyph("os-tag", EN ? "HER" : "记者OS", 54, 0, 22, "#ffffff", { ls: 1 })}
+        </g>
+        {/* a lens = a moon: the little drawing, then her words */}
+        <g transform={`translate(${MO.x0 + 62},${cy + 6})`}>
+          <circle r={24} fill="#2a2f45" stroke={C.ink} strokeWidth={4} />
+          <circle r={13} fill="#5d6a9c" />
+          <circle cx={-6} cy={-7} r={5} fill="#ffffff" opacity={0.85} />
+        </g>
+        {glyph("os-eq", "=", MO.x0 + 112, cy + 6, 40, C.ink)}
+        <g transform={`translate(${MO.x0 + 160},${cy + 6})`}>
+          <circle r={24} fill={C.paper} stroke={C.ink} strokeWidth={4} />
+          <circle cx={7} cy={6} r={5} fill="rgba(214,189,138,0.8)" /><circle cx={-8} cy={-4} r={3.5} fill="rgba(214,189,138,0.8)" />
+        </g>
+        {glyph("os-t", EN ? "my lens = his moon?!" : "他把镜头当月亮了", MO.x0 + 204, cy + 6, EN ? 34 : 40, "#3a2a1c", { anchor: "start", ls: 2 })}
       </g>
     </svg>
   );
@@ -161,13 +208,15 @@ const GrudgeMeter: React.FC<{ f: number }> = ({ f }) => {
 /** every effect on frame f (the picture's clock) */
 export const Fx: React.FC<{ f: number }> = ({ f }) => (
   <AbsoluteFill style={{ pointerEvents: "none" }}>
-    <CupCounter f={f} /><WaitBar f={f} /><SoberStamp f={f} /><GrudgeMeter f={f} />
+    <CupCounter f={f} /><MoonOS f={f} /><WaitBar f={f} /><SoberStamp f={f} /><GrudgeMeter f={f} />
   </AbsoluteFill>
 );
 
 /** the effects for the overlay check (checkOverlays): their spans and boxes */
 export const fxShown = (): Shown[] => [
   { what: "cup counter", kind: "effect", from: CUPS_IN, to: CUPS_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }) },
+  { what: "cup counter (the last cup)", kind: "effect", from: SIP_IN, to: SIP_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }), scene: "F" },
+  { what: "记者OS (the moon)", kind: "effect", from: MOON_OS[0], to: MOON_OS[1], rect: () => ({ x0: MO.x0 - 6, y0: MO.y0 - 24, x1: MO.x1 + 10, y1: MO.y1 + 60 }), scene: "A" },
   { what: "wait bar", kind: "effect", from: WAIT[0], to: WAIT[1], rect: () => ({ x0: WB.x - 6, y0: WB.y - 64, x1: WB.x + WB.w + 6, y1: WB.y + 22 }), scene: "B" },
   { what: "醒酒 stamp", kind: "effect", from: SOBER[0], to: SOBER[1], rect: () => ({ x0: 130, y0: 300, x1: 470, y1: 500 }), scene: "B" },
   { what: "记仇 meter", kind: "effect", from: GRUDGE[0], to: GRUDGE[1], rect: () => ({ x0: GM.cx - GM.w / 2 - 110, y0: GM.y - 40, x1: GM.cx + GM.w / 2 + 100, y1: GM.y + 40 }), scene: "C" },
@@ -178,9 +227,11 @@ void seg; void E;
 /** the effects' sounds (picture frames; scripts/libai/sound/events.mjs dumps them for the mix): [frame, clip, gain dB] */
 export const FX_SOUNDS: [number, string, number, string][] = [
   [CUPS_IN, "pop_hat", -17, "the cup counter swings in"],
-  ...TICKS.slice(1).map(([at]): [number, string, number, string] => [at, "sfx_shell_pop", -17, "a cup more"]),
-  [SPIN[0], "sfx_coins", -16, "the counter spins up (the room drinks)"],
-  [GOAL_AT, "sfx_stamp", -13, "达标"],
+  ...TICKS.slice(1, -1).map(([at]): [number, string, number, string] => [at, "sfx_shell_pop", -17, "a cup more"]),
+  [SIP_IN, "pop_hat", -20, "the cup counter swings back in (the last cup)"],
+  [SPIN[0], "sfx_coins", -20, "the counter rolls up to 300 (the whole evening)"],
+  [GOAL_AT, "sfx_stamp", -16, "301: 达标"],
+  [MOON_OS[0], "sfx_bubble", -21, "记者OS: the lens is his moon"],
   [WAIT[0], "sfx_bubble", -19, "the wait bar"],
   [WAIT_FULL, "card_ding", -15, "the wait bar fills"],
   [SOBER[0], "sfx_stamp", -12, "醒酒 ✓"],

@@ -34,6 +34,7 @@ import { ipNum } from "../../kit/film/env";
 import { buildSets, BAKED_LIGHT, type SuSet, type PlaceLook } from "./sets";
 import { buildProps, type Props, type Prop, type PropName } from "./props";
 import { addPerson, type Person } from "./people";
+import { installDrunk } from "./drunk";
 import { FPS, W, H, lensFov, type CamPose, type Pose, type Place, type V3Like } from "./story";
 // Cover stills only (input props, all default to the film's own framing): zoom < 1 shows more around the same frame;
 // sx / sy move the picture right / down by that fraction of the frame (a lens shift, the perspective stays).
@@ -65,6 +66,7 @@ export class World {
   readonly rc: RigCast;
   readonly M: Mats;
   f = 0; t = 0;
+  private readonly drunkOn = new Set<Rig>();
   place: Place | null = null;
   updated = false;
   private rigs = new Map<string, Rig>();
@@ -94,6 +96,8 @@ export class World {
     const k = `${id}|${key}`;
     let r = this.rigs.get(k);
     if (!r) { r = addPerson(this.rc, p); r.group.scale.setScalar(1); this.rigs.set(k, r); this.hide(r); }   // (never scaled: the rig's solver works in world space)
+    // 李白 sways, tips his head and hiccups on every frame (drunk.ts), over whatever the segment poses
+    if (this.rigs.get(k) === r && !this.drunkOn.has(r) && (p.name === "li" || p.name === "liRed")) { this.drunkOn.add(r); installDrunk(r, p.lean ?? {}, () => this.f); }
     return r;
   }
   /** every figure but `keep` leaves the frame (call before update): 李白's isolation on his card (Film.tsx) */

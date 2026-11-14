@@ -17,7 +17,9 @@ import { transitionAt } from "../hud";
 import type { World } from "../world";
 import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, seated } from "./common";
 import { aim, ramp, held, type St } from "./lb";
+import { clamp01 } from "../story";
 import { setSeat } from "../../../kit/acc/garb";
+import { trackHead } from "../track";
 
 const S = SEGMENTS[1], B = BEAT.B;
 const word = (id: string, w: string) => capWord(id, w).from;
@@ -56,30 +58,61 @@ const cam = (f: number): CamPose => {
   const back = ramp(f, B.splash - 18, B.splash - 6) * (1 - ramp(f, B.drip - 6, B.drip + 4));
   if (back) c = C.nudge(c, { fwd: -0.7 * back });
   c = C.handheld(c, f, { mood: f >= B.splash - 4 && f < B.drip ? "excited" : "calm", amp: 0.7 });
+  c = C.jolt(c, f, UP.land, { len: 5, amp: 0.7 });       // he drops back onto the bench
   c = C.jolt(c, f, B.splash, { len: 7, amp: 1.6 });
   c = C.snap(c, f, B.proud, lineId("B12").from + 6);
   c = C.snap(c, f, B.drip, undefined, { k: 0.74, len: 6 });
   return c;
 };
 
+/** THE ATTEMPT TO STAND (B17 好，走！; Jay, 15 Nov: "his movements when he was trying to get up off the bench is not
+ *  emphasised"): 好 he rocks forward to get going, 走 he shoves himself up, nearly standing, arms flung out for balance,
+ *  teeters forward and back and side to side ... and drops back onto the bench with a bump (her 他站不起来了！ after it). */
+const UP = { gather: B.rise - 2, push: B.rise + 9, top: B.rise + 19, fall: B.sitBack, land: B.sitBack + 5 };
+/** how far up he gets, 0..1: half way (a held partial rise reads as one; higher, the sitting legs hang in the air) */
+const TOP = 0.5;
+const riseAt = (f: number) => {
+  if (f < UP.push || f >= UP.land + 1) return 0;
+  if (f < UP.top) return TOP * (1 - (1 - (f - UP.push) / (UP.top - UP.push)) ** 2);
+  if (f < UP.fall) return TOP - 0.06 * Math.abs(Math.sin((f - UP.top) * 0.42));
+  return (TOP - 0.02) * (1 - ((f - UP.fall) / (UP.land - UP.fall)) ** 2);
+};
+/** the teeter: big at the top and dying away; 0 outside the attempt */
+const teeter = (f: number) => (f >= UP.top - 3 && f < UP.fall + 2 ? 1 - 0.5 * clamp01((f - UP.top) / (UP.fall - UP.top)) : 0);
+export const LI_LANDS = UP.land;
 const cupAt = (f: number) => {
   const up = ramp(f, B.cup, B.cup + 8) * (1 - ramp(f, lineId("B15").to + 10, lineId("B15").to + 22));
-  return rel(SEAT.at, SEAT.facing, -0.17, 0.82 + 0.25 * up, 0.24 + 0.05 * up);
+  const rest = rel(SEAT.at, SEAT.facing, -0.17, 0.82 + 0.25 * up, 0.24 + 0.05 * up);
+  // the attempt: the cup hand flies out to his right for balance (and comes back as he lands)
+  const out = ramp(f, UP.push - 2, UP.top - 2) * (1 - ramp(f, UP.fall + 1, UP.land + 6));
+  return out ? rest.lerp(rel(SEAT.at, SEAT.facing, -0.5, 1.0 + 0.5 * riseAt(f) + 0.06 * Math.sin(f * 0.9) * teeter(f), 0.2), out) : rest;
+};
+const freeHand = (f: number) => {
+  const out = ramp(f, UP.push - 2, UP.top - 2) * (1 - ramp(f, UP.fall + 1, UP.land + 6));
+  if (out) return rel(SEAT.at, SEAT.facing, 0.5, 1.0 + 0.5 * riseAt(f) - 0.06 * Math.sin(f * 0.9) * teeter(f), 0.2);
+  // 翰林待诏！ he taps his own chest with it, proud (and lets it drop as the title sinks in)
+  const proud = ramp(f, B.proud - 3, B.proud + 5) * (1 - ramp(f, lineId("B11").to + 6, lineId("B11").to + 16));
+  if (proud) return rel(SEAT.at, SEAT.facing, 0.06, 0.78 + 0.012 * Math.sin(f * 1.1), 0.17);
+  return null;
 };
 
 const li = (f: number): St => {
   const t = f / FPS;
-  // the rise and the fall back
-  const rise = ramp(f, B.rise, B.rise + 10) * 0.55 * (1 - ramp(f, B.sitBack - 4, B.sitBack + 4));
-  const wob = f > B.rise + 8 && f < B.sitBack ? Math.sin((f - B.rise) * 0.55) * 0.18 : 0;
+  const rise = riseAt(f), tt = teeter(f);
+  const wob = tt ? Math.sin((f - UP.top) * 0.55) * 0.16 * tt : 0;
   const expr = at<NonNullable<St["expr"]>>(f, [[0, "happy"], [B.proud, "smug"], [B.deflate, "sigh"], [lineId("B14").from + 10, "deadpan"], [B.cup, "grin"], [L16.from, "shock"], [L16.from + 30, "happy"], [B.rise, "grin"], [B.sitBack, "dazed"], [B.splash, "wince"], [B.drip, "laugh"], [B.drip + 30, "happy"]]);
   const mouth = says("li", ["B11", "B13", "B15", "B17"], f, 3);
   const head = heads(mouth.head, headPop(f, B.proud), f >= B.deflate && f < lineId("B14").from ? { dy: -0.1 } : undefined,
-    accent("jolt", f, L16.from, { amp: 0.8 }), wob ? { tilt: wob * 30 } : undefined, accent("shake", f, B.splash + 2, { amp: 1.2 }), accent("laugh", f, B.drip, { dur: 1.0 }));
+    accent("jolt", f, L16.from, { amp: 0.8 }), wob ? { tilt: -wob * 40 } : undefined, accent("squash", f, UP.land, { amp: 1.6 }), accent("shake", f, B.splash + 2, { amp: 1.2 }), accent("laugh", f, B.drip, { dur: 1.0 }));
   const lookAtHuan = f >= L16.from - 10 && f < B.splash;
   return {
     ...seated(TA, t, { rise, hipY: 0.62 }), facing: SEAT.facing + (lookAtHuan ? -0.45 : 0) + wob,
-    hands: [cupAt(f), null], expr, mouth: mouth.mouth, head, visible: true,
+    hands: [cupAt(f), freeHand(f)], expr, mouth: mouth.mouth, head, visible: true,
+    // 好: rocks forward to get going; up: teeters forward and back, side to side; the bump: thrown back as he lands
+    lean: f >= UP.gather && f < UP.land + 14 ? {
+      pitch: -5 + 22 * ramp(f, UP.gather, UP.push) * (1 - 0.6 * ramp(f, UP.push, UP.top)) + 9 * tt * Math.sin((f - UP.top) * 0.33) - 9 * ramp(f, UP.land - 1, UP.land + 1) * (1 - ramp(f, UP.land + 2, UP.land + 14)),
+      roll: 3 + 11 * tt * Math.sin((f - UP.top) * 0.47 + 0.6),
+    } : undefined,
     blink: f >= B.splash && f < B.drip ? 1 : mouth.blink ?? lid(t, 2), gaze: lookAtHuan ? -1 : 0,
   };
 };
@@ -117,7 +150,9 @@ export const SEG: Segment = {
     const bh = held("basin", basinAt, { rot: brot, open: tip });
     B2.set({ at: bl.at, facing: bl.facing, pose: bl.pose, hands: bh.hands, visible: f >= basinGo - 10, expr: f < B.splash ? "focus" : "grin", blink: lid(t, 7) });
     w.update();
-    w.prop("wineBowl").put(cupAt(f), { grip: "hilt" });
+    trackHead(w, "huan", w.actor(HUAN), f);
+    // the bowl goes where his hand got to (flung out for balance, the hand can fall short of the target)
+    w.prop("wineBowl").put(w.actor(LI).handWorld(0), { grip: "hilt" });
     if (f >= basinGo - 10) bh.put(w);
     const sp = (f - B.splash + 2) / 14;
     if (sp > 0 && sp < 1) w.prop("splash").put(rel(bl.at, bl.facing, 0, 1.05, 0.45), { rot: bl.facing, open: sp });

@@ -74,7 +74,7 @@ def main():
     for b in spec["beds"]:
         add(b["clip"], at(b["at"]), at(b["until"]), b["gain"], b.get("loop", False), b.get("fade", 0.3), b.get("fade_out"), b.get("seek", 0.0), dip=b["clip"].startswith("amb_"))
     for h in spec["hits"]:
-        add(h["clip"], at(h["at"]), at(h["until"]) if "until" in h else None, h["gain"], False, 0, h.get("fade_out"))
+        add(h["clip"], at(h["at"]), at(h["until"]) if "until" in h else (at(h["at"]) + h["len"] if "len" in h else None), h["gain"], False, h.get("fade", 0), h.get("fade_out"), h.get("seek", 0.0))
     for l in T["lines"]:
         if "card" in lines_spec[l["id"]]: add(spec["cards"]["clip"], shift(l["end"] + lines_spec[l["id"]].get("card_delay", 0.1)), None, spec["cards"]["gain"], False, 0)
     # the overlays' own sounds (the title, the banner, the joins, the effects) and the freeze card's

@@ -2,7 +2,8 @@
 // writes /home/user/libai_work/sound/events.json; build.py reads it). Every frame is on the PICTURE's clock: the mix
 // moves everything after the freeze later by its length, as Film.tsx does.
 import { FPS, FREEZE_AT_WORLD, FREEZE_N, seg } from "./story";
-import { TITLE_SPAN, GAO_BANNER, TRANSITIONS } from "./beats";
+import { TITLE_SPAN, SIDE_BANNERS, TRANSITIONS } from "./beats";
+import { HICCUP_FRAMES } from "./drunk";
 import { WHISPERS } from "./whisper";
 import { FX_SOUNDS } from "./hud/fx";
 import { POEM_SOUNDS } from "./hud/poem";
@@ -18,7 +19,8 @@ export const soundEvents = () => ({
     [TITLE_SPAN[0], "sfx_whoosh", -18, "the title's pole slides in"],
     [TITLE_SPAN[0] + 3, "cloth", -14, "the wine flag drops and swings"],
     [TITLE_SPAN[0] + 31, "sfx_lid", -14, "the cup is set down on the flag"],
-    [GAO_BANNER[0], "cloth", -16, "高力士's banner"],
+    ...SIDE_BANNERS.filter((b) => b.who !== "he").map((b) => [b.span[0], "cloth", -16, `${b.who}'s banner`]),
+    ...HICCUP_FRAMES.filter((f) => f > seg("A").from + 90 && f < seg("F").from).map((f) => [f, "sfx_hiccup", -20, "李白 hiccups"]),
     ...TRANSITIONS.filter((t) => t.kind === "clock").map((t) => [t.from, "clock_race", -14, `clock race ${t.scenes!.join("->")}`]),
     [seg("C").to - 3, "whoosh", -14, "the whip C -> D"],
     ...FX_SOUNDS,
