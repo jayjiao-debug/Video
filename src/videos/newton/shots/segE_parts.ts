@@ -1,4 +1,4 @@
-// SEGMENT E's own helpers (WP5-E): framing, camera mixing, her walking ease, a lagged eye, the mic's aim through keys,
+// SEGMENT E's own helpers (WP5-E): framing, camera mixing, her walking ease, a lagged eye, the light focus's aim through keys,
 // his quill on the page, the page held in his hand, the fork and the morsel on its tines. Copies of the generic camera helpers of segC_parts
 // (kept here so segment E never moves when another segment's file changes). Every function is pure: nothing keeps
 // state between frames (the morsel's mesh is made once per World, like a prop, and placed or hidden every frame).
@@ -44,7 +44,7 @@ export const lagged = (f: number, at: (g: number) => THREE.Vector3, win = 6) => 
   for (let i = 0; i < win; i++) { const wg = win - i; p.addScaledVector(at(f - i), wg); ws += wg; }
   return p.divideScalar(ws);
 };
-/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames */
+/** the light focus's aim through step keys [frame, aim(f)], each change eased over `len` frames */
 export const aimThrough = (f: number, keys: [number, (g: number) => THREE.Vector3][], len = 9) => {
   let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= f) i++;
   const cur = keys[i][1](f);

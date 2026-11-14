@@ -6,7 +6,8 @@
 // the fork's clink 0.23 s into sfx_fork at G04 end + 1.2 s; the crickets outside from G end - 2.6 s; the last pluck
 // = his window goes dark at G end - 1.77 s).
 //   G1  THE BOARD (F's last framing, ELAB_CAMS.push, carries on): the clock strikes; at the first stroke his eyes lift
-//       and his hands slip off the board; it slides off his left knee and knocks on the floor on the second stroke,
+//       (and hers: she draws back half a step, his whole head comes into the frame, clear of the vlog's timestamp) and
+//       his hands slip off the board; it slides off his left knee and knocks on the floor on the second stroke,
 //       slaps down flat and skids to her feet. He startles and looks down at it. She crouches to it; her invisible
 //       hands take it (its near edge tips up on its far one) and she rises (stepping back) with it held up close to
 //       the lens: circles and triangles, his face above it, his eyes on it, not on her. She sniffs; 52 over it. On
@@ -204,9 +205,20 @@ const BH = { px: 540, py: 960, depth: 0.86 };
 const P_DOOR = V(ELX + 0.85, EYE, -0.22);
 const DOOR_LOOK = V(ELX + DR.x + 0.04, 1.12, WL.z1 + 0.1);
 const DOOR: CamPose = frameOn(P_DOOR, DOOR_LOOK, 500, 510);
+/** THE CLOCK'S FIRST STROKE: she draws back half a step (35 cm, level: her eyes stay at 1.6 m) and her eyes lift with
+ *  his (12 deg up, 4 to the left), off F's push, over T_S1 .. T_S1 + 9 (eased in from the still push, so the cut from F
+ *  is seamless). It brings his whole head into the frame, his face right of and below the vlog's corner (the big
+ *  timestamp intro, 4435-4495: hud/vlog.tsx VLOG_RECT.stampBig; requests.md WP4 vlog UI), his eyes in the upper third
+ *  (about y 520), the battery clear, and keeps the board's slide, knock and skid in the frame. */
+const levelBack = (c: CamPose, d: number): CamPose => {
+  const A = C.camAxes(c), h = V(A.fwd.x, 0, A.fwd.z).normalize().multiplyScalar(-d), p = A.p.add(h), l = A.l.add(h);
+  return { ...c, pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z] };
+};
+const PUSH_BACK = C.nudge(levelBack(PUSH, 0.35), { yaw: -4, pitch: 12 });
+const T_BACK1 = T_S1 + 9;
 const g1Cam = (f: number): CamPose => {
-  if (f < T_BEND0) return PUSH;
-  if (f < T_RISE0) return mixCam(PUSH, CROUCH, stride(clamp01((f - T_BEND0) / (T_BEND1 - T_BEND0))));
+  if (f < T_BEND0) return mixCam(PUSH, PUSH_BACK, clamp01((f - T_S1) / (T_BACK1 - T_S1)));
+  if (f < T_RISE0) return mixCam(PUSH_BACK, CROUCH, stride(clamp01((f - T_BEND0) / (T_BEND1 - T_BEND0))));
   return C.creep(mixCam(CROUCH, HOLD, stride(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)))), f, T_LEAN0, T_LEAN1, LEAN);
 };
 /** the door, with her bow on 55 */

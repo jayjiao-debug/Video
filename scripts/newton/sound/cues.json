@@ -813,17 +813,17 @@
     0.05
    ],
    "gain": -17,
-   "note": "her camera starts recording (frame 0, the REC lamp lit): 1 kHz, ~80 ms, ends before her first word (0.26 s) and the knock (0.64 s)"
+   "note": "her camera starts recording (frame 0, the REC lamp lit): 1 kHz, audible about 60 ms (0.05-0.11 s), ends 80 ms before her first word (voice onset about 0.19 s) and well before the knock (0.64 s)"
   },
   {
    "clip": "sfx_poweroff",
    "at": [
     "G",
     "to",
-    -1.2
+    -1.4
    ],
    "gain": -18,
-   "note": "her camera switches off (hud/vlog.tsx OFF_AT = TOTAL - 36 = frame 5217): the click 0.57 s after the last pluck, in the crickets; synthesised: python3 scripts/newton/sound/make_poweroff.py 0.40 0.67 <clips>/sfx_poweroff.mp3 (the power-down falls on segG's end black, 12 frames later)"
+   "note": "her camera switches off (beats.ts BEAT.G.cameraOff = hud/vlog.tsx OFF_AT = TOTAL - 42 = frame 5211): the click 0.4 s (12 frames) after the last pluck, once it has decayed, in the crickets; the dead UI holds 24 frames; synthesised: python3 scripts/newton/sound/make_poweroff.py 0.80 1.07 <clips>/sfx_poweroff.mp3 (the power-down sweep starts 0.8 s after the click, on segG's end black BEAT.G.black = OFF_AT + 24, and is gone as the black's fade completes)"
   }
  ],
  "cards": {

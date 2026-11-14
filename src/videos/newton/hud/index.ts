@@ -29,7 +29,7 @@ export { Caption, SPEAKER_COL, capOn, capAlpha, capLayout, capRows, CAP_BAND, CA
 export { FactCard, factCardAt, factRows, factLayout, factRectAt, FACT_SLOT, CARD_X, CARD_BOTTOM, cardTop, CARD_MAXW, CARD_ROW, type FactLayout } from "./card";
 export { TitleCard, setTitlePlace, titleRect, titleRectAt, TITLE_HOME, TITLE_RECT, type TitlePlace } from "./title";
 export { EndBlack, endBlack, endBlackAlpha, dipAlpha, Black, black, FADE_MIN } from "./end";
-export { VlogHud, VLOG_RECT, OFF_AT, STAMP_AT, recAlpha, stampAt, clockAt, batteryAt, vlogRectsAt } from "./vlog";
+export { VlogHud, VLOG_RECT, OFF_AT, STAMP_AT, recAlpha, stampAt, stampRect, clockAt, batteryAt, vlogRectsAt } from "./vlog";
 export { HC, SAFE, spanK, em, textW, overlaps, turnedRect, type Rect } from "./style";
 
 export type HudItem = "caption" | "card" | "title" | "rec" | "stamp" | "battery";

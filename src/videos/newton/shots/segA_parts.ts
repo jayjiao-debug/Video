@@ -1,13 +1,13 @@
 // SEGMENT A's helpers (WP5-A): THE INVISIBLE REPORTER (Jay, 14 Nov: no mic, no hand; "pretend there is an invisible
 // hand like 秦始皇"). Every function is pure (the frame in, a number or a pose out).
-//   rapPush(f, ons, amp)   the camera's small push on each rap (her weight behind the knuckles): in over 2 frames,
+//   rapPush(f, ons, amp)   the camera's small push on each rap (her weight behind the knock): in over 2 frames,
 //                          back over 5; amp[i] metres for rap i
 //   shiver(f, ons)         the leaf's answer to each rap: a damped rattle in its frame (door param units, inward only:
 //                          it rattles against its stop), every other frame, over 7 frames
-//   lightFocus(cam, p)     the film's light focus (amount 3) on a world point: what the mic used to give
+//   lightFocus(cam, p)     the film's light focus (amount 3) on a world point (the knock point, his mouth, the door)
 //   doorTitle(cam, p, ref, scale)  the title block PAINTED on the door: its centre at world point p on screen, its
-//                          tilt from the door's vertical on screen (the camera's roll), its size from the distance
-//                          (scale at the distance from `ref`)
+//                          tilt from the door's vertical on screen (the camera's roll) held to +-1.5 deg, its size
+//                          from the distance (scale at the distance from `ref`)
 import * as THREE from "three";
 import * as C from "../cam";
 import { clamp01, easeInCubic, easeOutCubic, type CamPose } from "../story";
@@ -34,10 +34,13 @@ export const shiver = (f: number, ons: number[]) => {
 };
 /** the light focus on a world point (the film's dof at amount 3: the subject crisp, the far wall a touch soft) */
 export const lightFocus = (cam: CamPose, p: THREE.Vector3) => ({ focus: Math.max(0.2, posOf(cam).distanceTo(p)), amount: 3 });
-/** the title block painted on the door (see the head of the file) */
+/** the title block painted on the door (see the head of the file); its tilt at most TITLE_ROT deg either way */
+export const TITLE_ROT = 1.5;
 export const doorTitle = (cam: CamPose, p: THREE.Vector3, ref: THREE.Vector3, scale: number) => {
   const c = C.toScreen(cam, p), top = C.toScreen(cam, p.clone().add(V(0, 0.3, 0))), bot = C.toScreen(cam, p.clone().add(V(0, -0.3, 0)));
-  const rot = (Math.atan2(top.x - bot.x, bot.y - top.y) * 180) / Math.PI;
+  // the tilt is held to +-1.5 deg: the block is a flat graphic (HUD font, gold rule, shadow) that takes neither the door's
+  // perspective nor its light, so a bigger roll reads as crooked, not painted on (director, 14 Nov)
+  const rot = Math.max(-TITLE_ROT, Math.min(TITLE_ROT, (Math.atan2(top.x - bot.x, bot.y - top.y) * 180) / Math.PI));
   const k = ref.distanceTo(p) / Math.max(0.3, posOf(cam).distanceTo(p));
   return { x: Math.round(c.x), y: Math.round(c.y), scale: +(scale * clamp01(k / 1.5) * 1.5).toFixed(4), rot: +rot.toFixed(2) };
 };

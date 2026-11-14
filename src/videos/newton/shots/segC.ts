@@ -5,7 +5,7 @@
 //       50), the lid off and set down beside it (where Humphrey left it in B), no steam, the window bars' short sharp
 //       shadows across the cloth; a slow push in.
 //   C2  THE GARDEN WALK (one take): NEWTON in his gown comes down the east walk toward her, hands behind his back; she
-//       walks BACKWARDS in front of him, the mic in (16 「您从来不出去玩吗？」 17 "I am out." 18 「绕两圈就算玩？」). On
+//       walks BACKWARDS in front of him, the lens on him (16 「您从来不出去玩吗？」 17 "I am out." 18 「绕两圈就算玩？」). On
 //       19 "Two laps is—" his right hand comes out to lecture, and on the cut-off he STOPS DEAD at the crossing (eyes
 //       wide, mouth still open on the word, staring at nothing; the gravel stops with him).
 //   C3  he turns on his heel and RUNS west along the cross walk for his staircase door (the gravel run, on the mix's
@@ -18,8 +18,8 @@
 //       four legs against the backs of his knees with a little rock; the camera leans after it as she pushes, then
 //       steps back: 21 「坐下写嘛。」 He waves it away over his shoulder without looking; 22 "No time." He writes on;
 //       her eyes go to the empty chair.
-// SHE IS INVISIBLE (Jay, 14 Nov): no mic and no hand are put; the lens keeps the light focus on his mouth that the mic
-// used to give.
+// SHE IS INVISIBLE (Jay, 14 Nov): nothing of her is put; the chair moves by itself (the invisible hand) and the lens
+// keeps a light focus on his mouth.
 import * as THREE from "three";
 import { SEGMENTS, line, capWord, FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
@@ -62,7 +62,7 @@ const T_LET = T_DRAG0 + 12;
 const T_BACK0 = T_LET + 2, T_BACK1 = L6.from + sec(0.8);
 /** he waves the chair away without looking (into 22 "No time.") */
 const T_WAVE0 = L7.from - 8, T_WAVE1 = L7.from + sec(0.6);
-/** her mic arm relaxes after 22 and her eyes go to the empty chair */
+/** after 22 her eyes drift off him onto the empty chair */
 const T_DROOP = L7.to + 8;
 
 // ---------------------------------------------------------------------------------------------------- C1 the plate
@@ -151,11 +151,11 @@ const gardenLook = (f: number) => {
 // She is on his LEFT, in the corner past the bookcase, looking along the back wall: he stands turned a little toward
 // her (his left), so his face is a 3/4 and THE PAGE he writes on lies on her side of him (the loose sheet on the set's
 // open book, in front of his left shoulder), the white quill standing up off it at the frame's left; the window and its
-// table far behind him; the chair at the lower right, out from the wall where he pushed it when he got up; her RIGHT
-// hand (in from the lower right) shoves it back in behind his knees; her mic is DOWN while nobody speaks (from the
-// whip until just before 21), up on him for 21 and 22, then down again. A WIDER LENS here (C4_FOV): from the only
-// corner where her hand reaches the chair she cannot stand further back, so the lens keeps his big toon head inside
-// the frame and the chair's top rail in shot at the end.
+// table far behind him; the chair at the lower right, out from the wall where he pushed it when he got up; an
+// invisible hand shoves it back in behind his knees (chairPut: the lurch, the tip onto its leading legs, the
+// stick-slip, the drop and the rock). A WIDER LENS here (C4_FOV): it was chosen when her hand had to reach the chair
+// from this corner; that reason is gone, but the wide lens stays as it is (it keeps his big toon head inside the
+// frame and the chair's top rail in shot at the end, and the framing is signed off).
 const C4_FOV = 70;
 /** he stands 10 cm nearer the desk than his morning mark and 8 cm to his right (his gown's hem clear of the chair's
  *  front legs at the backs of his knees, his belly clear of the open book's corner), turned N_TURN toward his left
@@ -229,7 +229,7 @@ const chairPut = (f: number) => {
   return { at: pivot.clone().add(base.clone().sub(pivot).applyQuaternion(q)), rot: q.multiply(qYaw) as THREE.Quaternion | number };
 };
 /** her eyes in the room (lens C4_FOV): A = on the cut, bent toward the chair (his face left of the middle, the quill
- *  at the left, the chair and her hand at the lower right); B = leaning after the chair as she shoves it; M =
+ *  at the left, the chair at the lower right); B = leaning after the chair as it is shoved; M =
  *  straightened, back in the corner (his face, the quill, the chair at his knees) for 21 and 22; E = her eyes drifting
  *  right onto the empty chair */
 const CAM_A = frameOn(V(RMX + 1.95, 1.42, -2.45), N_HEAD, 430, 560, C4_FOV);
@@ -271,7 +271,7 @@ const R_EXPR: [number, "focus" | "deadpan"][] = [[S.from, "focus"], [L7.from - 3
 
 // ---------------------------------------------------------------------------------------------------- the shot
 const mouthOf = (r: Rig) => r.headWorld().add(V(0, -0.1, 0));
-/** the film's light focus (amount 3) on a world point: what the mic's aim used to give */
+/** the film's light focus (amount 3) on a world point (his mouth) */
 const lightFocus = (cam: CamPose, p: THREE.Vector3) => ({ focus: Math.max(0.2, posOf(cam).distanceTo(p)), amount: 3 });
 
 const posePlate = (w: World, f: number): Pose => {
@@ -313,7 +313,7 @@ const poseGarden = (w: World, f: number): Pose => {
     hands: gardenHands(f, s), hide: NEWTON_HIDE, visible: true,
   });
   w.update();
-  // (no mic: the light focus stays on his mouth as he runs off)
+  // the light focus stays on his mouth as he runs off
   const post = Wh.post ?? { dof: lightFocus(cam, mouthOf(n)) };
   return { camera: cam, post, slate: f < T_STOP ? "C2 walk" : "C3 run" };
 };
@@ -348,7 +348,7 @@ const poseRoom = (w: World, f: number): Pose => {
   w.update();
   w.prop("quill").put(n.handWorld(0), { grip: "hilt", rot: QROT_C4 });
 
-  // (no hand, no mic: the light focus on his mouth)
+  // the light focus on his mouth
   const post = Wh.post ?? { dof: lightFocus(cam, mouthOf(n)) };
   return { camera: cam, post, slate: "C4 room" };
 };

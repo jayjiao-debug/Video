@@ -7,10 +7,10 @@
 //       in until the fly is big in the frame (it walks, stops, walks on). 29 「您今天一口都没吃！」 over it.
 //   E2  On 「没吃！」 she straightens up and turns to him: NEWTON standing at his desk reading a page. He looks up,
 //       genuinely surprised: 30 "Have I not?", and is already on his way to the table, the page still in his left hand;
-//       she steps back out of his way (the mic comes in toward him). At the table he takes the fork and, standing, eyes on
+//       she steps back out of his way, the lens on him. At the table he takes the fork and, standing, eyes on
 //       the page, takes a bite (the clink; the morsel on the tines up to his lips), chews, a second bite (the clink),
 //       lays the fork down and goes back to the desk.
-//   E3  She steps in and bends over the plate: two bites gone (the mic tips toward it).
+//   E3  She steps in and bends over the plate: two bites gone (the light focus goes to the plate).
 //   E4  She turns and walks to the desk asking 31 「您是不是……没什么朋友？」; he is writing again (the quill). 32
 //       "Friends interrupt.": he stops the quill and lifts his head; on "interrupt" he looks POINTEDLY INTO THE LENS
 //       (at her: the eyes level, the lids half down, a hair of a lean toward her) and she shrinks back a few
@@ -19,7 +19,8 @@
 //   E5  ASIDE 35 「秒答。胡克定律那个胡克。」: THE CAMERA TURNS AWAY to tell us: in the silence after "Hooke." she
 //       swings right, a step toward the bookcase on the right wall (his books: "Hooke's law"), the head a little
 //       cocked, he is out of frame; 秒答 there; on 胡克定律那个胡克 she turns back to him: he writes on, oblivious.
-// SHE IS INVISIBLE (Jay, 14 Nov): no mic is put; the lens keeps the light focus the mic's aim used to give.
+// SHE IS INVISIBLE (Jay, 14 Nov): nothing of her is put; the lens keeps a light focus on what she looks at (his
+// mouth, the plate, the bookcase in the aside).
 import * as THREE from "three";
 import { SEGMENTS, line, capWord, cap, FPS, clamp01, lerp, smooth, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
@@ -58,7 +59,7 @@ const T_PLATE0 = Math.min(BEAT.E.twoBites + 1, T_DOWN - 4), T_PLATE1 = T_PLATE0 
 /** she turns to the desk and walks over, asking 31 (the bitten chop held clean under the start of 31 first; she is at
  *  the desk as 31 ends, before 32) */
 const T_TURN0 = Math.max(L3.from + sec(0.85), T_PLATE1 + 6), T_DESK1 = L3.to + 1;
-/** 32: he stops the quill and lifts his head; on "interrupt" his eyes go to her mic; back to the page during 33 */
+/** 32: he stops the quill and lifts his head; on "interrupt" he looks straight into the lens; back to the page during 33 */
 const T_UP0 = L4.from + sec(0.25), T_LOOK = capWord("E04", "interrupt").from, T_DOWN1 = capWord("E05", "讨").from;
 /** 34 "Hooke.": the head snaps up on the word, back down as her aside starts */
 const T_HOOKE = capWord("E06", "Hooke").from, T_DOWN2 = L7.from + 2;
@@ -259,7 +260,7 @@ const lookDownAt = (f: number) => {
   if (f < T_DESK) return ky(f, [[T_LOOKUP - 2, 26], [T_LOOKUP + 6, 2], [capWord("E02", "not").from + 4, 2], [L2.to + 4, 22]]);
   return lerp(44, 3, 1 - writeK(f));
 };
-/** his eyes: on the page in his left hand (screen right) while he reads and eats; up at her; at her mic (screen left) */
+/** his eyes: on the page in his left hand (screen right) while he reads and eats; otherwise straight at her (the lens) */
 const gazeAt = (f: number) => at(f, [[S.from, 0.5], [T_LOOKUP, 0], [capWord("E02", "not").from + 4, 0.5], [T_DESK, 0], [T_LOOK, 0], [T_DOWN1, 0], [T_HOOKE, 0], [T_DOWN2, 0]]);
 /** his pointed look into the lens on "interrupt": the lids half down (0..1 how far) */
 const pointK = (f: number) => ky(f, [[T_POINT0, 0], [T_POINT0 + 4, 1], [T_POINT1 - 2, 1], [T_POINT1 + 4, 0]]);
@@ -341,15 +342,13 @@ const pose = (w: World, f: number): Pose => {
     putMorsel(w, morselOn(f) ? forkAt : null, forkQ);
   } else { w.prop("fork").put(FORK_HILT, { rot: FORK_REST }); putMorsel(w, null); }
 
-  // where her mic used to be held (it is gone): out over the insert; toward him from "Have I not?"; at the plate (two
-  // bites); back on him for 31-34
+  // what she looks at (the light focus): him from "Have I not?"; the plate (two bites); him again for 31-34
   const mouthOf = () => head.clone().add(V(0, -0.1, 0));
   const plateTop = () => ROOM.plate.clone().add(V(0, 0.06, 0));
   const aim = aimThrough(f, [[S.from, mouthOf], [T_PLATE0 + 4, plateTop], [T_TURN0 + 4, mouthOf]], 10);
-  // (lowered out of the frame while she bends over the plate: the bites stay clear)
+  // (off while she bends over the plate: the plate's own focus takes over)
   const enter = easeOutCubic(clamp01((f - L2.from) / 12)) * (1 - ky(f, [[T_PLATE0 + 4, 0], [T_PLATE0 + 14, 1], [T_TURN0 + 2, 1], [T_TURN0 + 14, 0]]));
-  // (no mic, Jay 14 Nov: the light focus on what it was held toward, while it would have been in; on the bookcase
-  // while she is turned away)
+  // (the light focus on that point, from 30 on; on the bookcase while she is turned away in the aside)
   const camPos0 = posOf(cam), kA = asideK35(f);
   const M = { visible: enter > 0.001, dof: { focus: Math.max(0.2, lerp(camPos0.distanceTo(aim), camPos0.distanceTo(BOOKS), kA)), amount: 3 } };
 
