@@ -23,7 +23,7 @@ import { lightRig, paint, rng, css, mix, blotch, skyDome, Batch, type SkyStops }
 import { STREET_SET as S, STRX } from "../layout/street";
 import type { PlaceLook, ParamValue } from "./index";
 import { maker, boxG, levelQuad, wallQuad, tileUV, quad4 } from "./parts/common";
-import { NC, NOINK, holedWall, brickTex, ashlarTex, leadedTex, plasterTex, cobblesTex, roofTilesTex, plankTex, spinesTex, type Hole } from "./parts/newton";
+import { NC, NOINK, holedWall, brickTex, ashlarTex, leadedTex, plasterTex, roofTilesTex, plankTex, spinesTex, type Hole } from "./parts/newton";
 
 const BAKED = { bleach: 0.7, bodyShadeK: 0.4, contact: "#8a93c2" };
 const CAST: Partial<CastLight> = { key: S.sun, tint: [1.0, 0.96, 0.9], tintK: 0.7, gain: 0.97, shade: [1.04, 0.95, 1.34], broad: 0, sheen: 0.08, contactLen: 0.5 } as unknown as Partial<CastLight>;
@@ -86,6 +86,36 @@ const flagsTex = (seed: number) => paint(256, 512, (g, W, H) => {
     while (x < W + 80) { const w = 70 + 70 * r(); g.fillStyle = css(mix("#c4b8a0", r() < 0.5 ? "#a89c86" : "#d6ccb4", 0.2 + 0.5 * r())); g.fillRect(x - off + 2, y + 2, w - 4, h - 4); x += w; }
     y += h;
   }
+}, true);
+/** THE CARRIAGEWAY (WP5-D, for the director's note on the round cobbles that read as polka dots): small, irregular,
+ *  tightly packed granite SETTS laid in courses across the street (rows along u = x), each a slightly skewed rounded
+ *  block of its own grey, thin dark joints, only a faint lit top edge (no domes). 512 px = 1.4 m: courses 0.1 m,
+ *  stones 0.1-0.17 m long. Tiles both ways. */
+const roadSettsTex = (seed: number) => paint(512, 512, (g, W, H) => {
+  const r = rng(seed), rows = 14, ch = H / rows;
+  g.fillStyle = "#5f584f"; g.fillRect(0, 0, W, H);
+  const greys = ["#8e8679", "#9a9184", "#a69d8e", "#847c70", "#958c7c", "#a0988c"];
+  for (let j = 0; j < rows; j++) {
+    const y0 = j * ch, ws: number[] = [];
+    let tot = 0; while (tot < W - 40) { const w = 38 + 26 * r(); ws.push(w); tot += w; }
+    const k = W / tot, off = r() * W;                                                   // stretch the course to tile exactly
+    let x = 0;
+    for (const w0 of ws) {
+      const w = w0 * k, gap = 2.6 + 1.2 * r(), j1 = () => (r() - 0.5) * 2.4;
+      const pts: [number, number][] = [[x + gap / 2 + j1(), y0 + gap / 2 + j1()], [x + w - gap / 2 + j1(), y0 + gap / 2 + j1()], [x + w - gap / 2 + j1(), y0 + ch - gap / 2 + j1()], [x + gap / 2 + j1(), y0 + ch - gap / 2 + j1()]];
+      const col = css(mix(greys[Math.floor(r() * greys.length)], r() < 0.5 ? "#7c7468" : "#b0a796", 0.35 * r()));
+      for (const dx of [-W, 0, W]) for (const dy of j === 0 ? [0, H] : j === rows - 1 ? [0, -H] : [0]) {
+        const P = pts.map(([px, py]) => [px + off + dx, py + dy] as [number, number]);
+        g.fillStyle = col; g.beginPath(); P.forEach(([px, py], i) => (i ? g.lineTo(px, py) : g.moveTo(px, py))); g.closePath(); g.fill();
+        // a faint lit top edge and a soft shadowed bottom edge (worn, nearly flat tops)
+        g.fillStyle = "rgba(255,246,228,0.09)"; g.fillRect(P[0][0] + 2, P[0][1], P[1][0] - P[0][0] - 4, 3);
+        g.fillStyle = "rgba(30,26,22,0.16)"; g.fillRect(P[3][0] + 2, P[3][1] - 3, P[2][0] - P[3][0] - 4, 3);
+      }
+      x += w;
+    }
+  }
+  // a little grit and wear, and a gentle unevenness of tone across the courses
+  for (let i = 0; i < 900; i++) { g.fillStyle = r() < 0.5 ? "rgba(40,36,30,0.18)" : "rgba(220,210,190,0.10)"; g.fillRect(W * r(), H * r(), 1.5 + 2 * r(), 1.5 + 2 * r()); }
 }, true);
 /** the KENNEL: narrow stone setts along v, darker and damp in the middle */
 const settsTex = (seed: number) => paint(128, 512, (g, W, H) => {
@@ -172,7 +202,7 @@ export function buildStreet(K: Kit) {
 
   // =================================================================================================== the ground
   const X0 = WX, X1 = EX, Z0 = S.z0, Z1 = S.z1;
-  Mk.mesh("street.cobbles", levelQuad(X0 - 0.3, X1 + 0.3, Z0 - 0.3, Z1 + 0.3, 0, (x, z) => [x / 1.4, -z / 1.4]), Mk.tex(cobblesTex(206), 0.95), { cast: false });
+  Mk.mesh("street.cobbles", levelQuad(X0 - 0.3, X1 + 0.3, Z0 - 0.3, Z1 + 0.3, 0, (x, z) => [x / 1.4, -z / 1.4]), Mk.tex(roadSettsTex(206), 0.95), { cast: false });
   Mk.mesh("street.kennel", levelQuad(STRX - S.kennel / 2, STRX + S.kennel / 2, Z0, Z1, 0.0005, (x, z) => [(x - STRX + S.kennel / 2) / S.kennel, -z / 1.6]), Mk.tex(settsTex(207), 0.9), { cast: false });
   const mFlags = Mk.tex(flagsTex(208), 0.92);
   Mk.mesh("street.footW", levelQuad(X0, X0 + S.foot, Z0, Z1, 0.0008, (x, z) => [(x - X0) / 1.2, -z / 2.4]), mFlags, { cast: false });
@@ -374,7 +404,7 @@ export function buildStreet(K: Kit) {
     Mk.mesh("street.gate.passageS", wallQuad([gx + 0.001, A.z + aw / 2 - 0.002], [back, A.z + aw / 2 - 0.002], 0, top, { tileU: 1.8, vTile: 1.28 }), mPass, { cast: false });
     Mk.mesh("street.gate.ceiling", new THREE.PlaneGeometry(G.depth, aw).rotateX(Math.PI / 2).translate((back + gx) / 2, top - 0.002, A.z), mStoneLo, { cast: false });
     for (let x = back + 0.8; x < gx - 0.3; x += 1.3) BT.add(mStonePlain, boxG(x - 0.09, x + 0.09, top - 0.2, top, A.z - aw / 2, A.z + aw / 2));
-    Mk.mesh("street.gate.floor", levelQuad(back, gx, A.z - aw / 2, A.z + aw / 2, 0, (x, z) => [x / 1.4, -z / 1.4]), Mk.tex(cobblesTex(210), 0.95), { cast: false });
+    Mk.mesh("street.gate.floor", levelQuad(back, gx, A.z - aw / 2, A.z + aw / 2, 0, (x, z) => [x / 1.4, -z / 1.4]), Mk.tex(roadSettsTex(210), 0.95), { cast: false });
     Mk.mesh("street.gate.court", new THREE.PlaneGeometry(aw + 0.02, top + 0.02).rotateY(Math.PI / 2).translate(back + 0.01, top / 2, A.z), Mk.basic("#ffffff", { map: courtTex() }), { cast: false, noink: true });
     const mGate = Mk.tex(plankTex("#5e4430", 211), 0.85);
     for (const sz of [-1, 1]) {

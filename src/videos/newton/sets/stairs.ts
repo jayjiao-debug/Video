@@ -16,6 +16,10 @@
 //     faint shaft with dust turning in it;
 //   - behind the door, only seen through the doorway: a corner of his room in candle light (dark panelling, closed
 //     shutters with day leaking round them, a table heaped with paper, a shelf of books).
+//   OPTIONAL PARAMS (added by WP5-A; their defaults keep the set as it was): `leak` 0..1 (1: the bright day round the
+//   shutters; 0: the shutters shut tight, no bright seams: segA, so no white line hangs over a head in the doorway);
+//   `gapLine` 0..1 (0: off; 1: the candle light as a bright warm line IN the gap under the shut door, landing side, and
+//   a short spill on the boards in front of it: the strip behind the leaf is hidden from eye height).
 import * as THREE from "three";
 import type { EnvSpec } from "../../bt/pbr";
 import type { Kit } from "../../../kit/props/kit";
@@ -44,8 +48,10 @@ export const STAIRS_LOOK: PlaceLook = {
   fill: FILL,
   bloom: 0.4,
 };
-/** the per-frame dressing: door 0..1 (0 shut, 1 open inward ~100 deg), glow 0..1 (his candle's light under the door) */
-export const STAIRS_PARAMS: Record<string, ParamValue> = { door: 0, glow: 0 };
+/** the per-frame dressing: door 0..1 (0 shut, 1 open inward ~100 deg), glow 0..1 (his candle's light under the door);
+ *  leak 0..1 (the day round his room's shutters: 1 bright seams, 0 shut tight), gapLine 0..1 (the glow as a bright line
+ *  in the gap under the shut door, seen from the landing: 0 off) */
+export const STAIRS_PARAMS: Record<string, ParamValue> = { door: 0, glow: 0, leak: 1, gapLine: 0 };
 
 const W = S.well, L = S.landing, ST = S.steps, D = S.door, WI = S.window, R = S.room;
 const X0 = STX + W.x0, X1 = STX + W.x1;
@@ -84,6 +90,19 @@ const shutterTex = () => paint(256, 384, (g, Wd, H) => {
   g.fillStyle = "#fff3d0"; g.fillRect(0, 0, Wd, H);
   const m = 6; g.fillStyle = "#3e2c22"; g.fillRect(m, m, Wd / 2 - m * 1.3, H - 2 * m); g.fillRect(Wd / 2 + m * 0.3, m, Wd / 2 - m * 1.3, H - 2 * m);
   g.strokeStyle = "rgba(20,14,12,0.6)"; g.lineWidth = 2; for (let i = 1; i < 4; i++) { const x = (Wd / 2) * i / 4; g.beginPath(); g.moveTo(x + m, m); g.lineTo(x + m, H - m); g.stroke(); g.beginPath(); g.moveTo(Wd / 2 + x, m); g.lineTo(Wd / 2 + x, H - m); g.stroke(); }
+});
+/** the same SHUTTERS shut tight (param leak 0): no bright seams, only a dim warm edge round the boards */
+const shutterShutTex = () => paint(256, 384, (g, Wd, H) => {
+  g.fillStyle = "#5a3e2c"; g.fillRect(0, 0, Wd, H);
+  const m = 6; g.fillStyle = "#3e2c22"; g.fillRect(m * 0.5, m * 0.5, Wd / 2 - m * 0.5, H - m); g.fillRect(Wd / 2, m * 0.5, Wd / 2 - m * 0.5, H - m);
+  g.strokeStyle = "rgba(20,14,12,0.6)"; g.lineWidth = 2; for (let i = 1; i < 4; i++) { const x = (Wd / 2) * i / 4; g.beginPath(); g.moveTo(x + m, m); g.lineTo(x + m, H - m); g.stroke(); g.beginPath(); g.moveTo(Wd / 2 + x, m); g.lineTo(Wd / 2 + x, H - m); g.stroke(); }
+});
+/** the candle light spilling a hand's breadth onto the boards from the gap under the door (bright at v 0; additive) */
+const spillTex = () => paint(256, 64, (g, Wd, H) => {
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "rgba(255,214,140,1)"); gr.addColorStop(0.35, "rgba(255,180,96,0.5)"); gr.addColorStop(1, "rgba(255,160,80,0)");
+  g.fillStyle = gr; g.fillRect(0, 0, Wd, H);
+  const ex = g.createLinearGradient(0, 0, Wd, 0); ex.addColorStop(0, "rgba(0,0,0,1)"); ex.addColorStop(0.06, "rgba(0,0,0,0)"); ex.addColorStop(0.94, "rgba(0,0,0,0)"); ex.addColorStop(1, "rgba(0,0,0,1)");
+  g.globalCompositeOperation = "destination-out"; g.fillStyle = ex; g.fillRect(0, 0, Wd, H);
 });
 /** the soft fan of candle light on the boards in front of the door (a half ellipse; additive) */
 const fanTex = () => paint(256, 128, (g, Wd, H) => {
@@ -185,6 +204,13 @@ export function buildStairs(K: Kit) {
   const mFan = new THREE.MeshBasicMaterial({ map: fanTex(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
   const fan = Mk.mesh("stairs.glow.fan", new THREE.PlaneGeometry(1.3, 0.75).rotateX(-Math.PI / 2).translate(0, 0.0008, 0.375).rotateY(-Math.PI / 2).translate(X1 - 0.01, 0, (D.z0 + D.z1) / 2), mFan, { cast: false, receive: false, noink: true });
   fan.renderOrder = 4;
+  // param gapLine: the same light as a LINE in the gap itself, just behind the leaf's landing face (2.5 cm tall: seen
+  // from eye height on the landing, unlike the strip behind the leaf), and a hand's breadth of spill on the boards
+  const xFace = STAIRS.hinge.x + 0.02 - D.t / 2, mLine = Mk.basic("#ffd08a");
+  const gapLine = Mk.mesh("stairs.glow.line", new THREE.PlaneGeometry(D.z1 - D.z0 - 0.03, 0.021).rotateY(-Math.PI / 2).translate(xFace + 0.004, 0.0125, (D.z0 + D.z1) / 2), mLine, { cast: false, receive: false, noink: true });
+  const mSpill = new THREE.MeshBasicMaterial({ map: spillTex(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
+  const spill = Mk.mesh("stairs.glow.spill", new THREE.PlaneGeometry(D.z1 - D.z0 - 0.02, 0.09).rotateX(-Math.PI / 2).translate(0, 0.0012, 0.045).rotateY(-Math.PI / 2).translate(xFace + 0.004, 0, (D.z0 + D.z1) / 2), mSpill, { cast: false, receive: false, noink: true });
+  spill.renderOrder = 5; gapLine.visible = false; spill.visible = false;
 
   // =================================================================================================== the window
   const mGlass = new THREE.MeshBasicMaterial({ color: "#fff1d6", fog: false });
@@ -197,6 +223,7 @@ export function buildStairs(K: Kit) {
   const dust = dustMotes(26, corners, travel, 1.6, { size: 0.011, seed: 57 }); group.add(dust.points);
 
   // =================================================================================================== his room behind the door
+  let shutOpen: THREE.Object3D | null = null, shutShut: THREE.Object3D | null = null, mShut: THREE.MeshBasicMaterial | null = null;
   {
     const rx0 = X1 + S.wall, rx1 = STX + W.x1 + R.x1, mPanel = Mk.tex(panelTex({ seed: 64, cols: 2, rows: 2, tw: 1.2, th: 1.2, base: "#5a3e2a", lo: "#3e2a1e", hi: "#7a5a3e" }), 0.8);
     Mk.mesh("stairs.room.floor", levelQuad(X1, rx1, R.z0, R.z1, 0, (x, z) => [x / 0.6, -z / 1.2]), mBoards, { cast: false });
@@ -205,7 +232,11 @@ export function buildStairs(K: Kit) {
     Mk.mesh("stairs.room.front", wallQuad([rx1, R.z1], [rx0, R.z1], 0, R.h, { tileU: 1.2, vTile: 1.2 }), mPanel, { cast: false });
     Mk.mesh("stairs.room.ceiling", ceilQuad(X1, rx1, R.z0, R.z1, R.h, (x, z) => [x / 1.2, z / 1.2]), mCeil, { cast: false });
     // the shuttered window on the far wall (day leaking round the shutters), a table heaped with paper, a shelf
-    Mk.mesh("stairs.room.shutters", new THREE.PlaneGeometry(0.9, 1.3).rotateY(-Math.PI / 2).translate(rx1 - 0.01, 1.55, -0.4), Mk.basic("#ffffff", { map: shutterTex() }), { cast: false, receive: false, noink: true });
+    shutOpen = Mk.mesh("stairs.room.shutters", new THREE.PlaneGeometry(0.9, 1.3).rotateY(-Math.PI / 2).translate(rx1 - 0.01, 1.55, -0.4), Mk.basic("#ffffff", { map: shutterTex() }), { cast: false, receive: false, noink: true });
+    // param leak < 1: the shutters shut tight, laid 2 mm in front (opacity 1 - leak)
+    mShut = new THREE.MeshBasicMaterial({ map: shutterShutTex(), transparent: true, opacity: 1, fog: false });
+    shutShut = Mk.mesh("stairs.room.shuttersShut", new THREE.PlaneGeometry(0.9, 1.3).rotateY(-Math.PI / 2).translate(rx1 - 0.012, 1.55, -0.4), mShut, { cast: false, receive: false, noink: true });
+    shutShut.visible = false;
     const P = new Part(K), mPaper = Mk.tex(pageEdgeTex(65), 0.9), mPage = Mk.tex(pageTex(66, { figure: true }), 0.9), tz = -0.4, tx = rx1 - 0.55;
     P.add(mOakMid, boxG(tx - 0.35, tx + 0.35, 0.7, 0.75, tz - 0.6, tz + 0.6), 0.006);
     for (const [dx, dz] of [[-0.3, -0.5], [0.3, -0.5], [-0.3, 0.5], [0.3, 0.5]]) P.add(mOakMid, boxG(tx + dx - 0.03, tx + dx + 0.03, 0, 0.7, tz + dz - 0.03, tz + dz + 0.03), 0.005);
@@ -229,7 +260,8 @@ export function buildStairs(K: Kit) {
     if (o.name === "stairs.wall.back") hideable.push([o, (p) => p.z < ZB - 0.02]);
     if (o.name === "stairs.wall.end") hideable.push([o, (p) => p.z > ZEND + 0.02]);
   });
-  let glow = 0;
+  let glow = 0, door = 0, line = 0;
+  const showLine = () => { const on = glow > 0.01 && line > 0.01 && door < 0.02; gapLine.visible = on; spill.visible = on; };
   return {
     group,
     view(cam: THREE.Vector3) { for (const [o, behind] of hideable) o.visible = !behind(cam); },
@@ -239,10 +271,16 @@ export function buildStairs(K: Kit) {
       const k = glow * (1 + 0.06 * Math.sin(t * 7.3) + 0.04 * Math.sin(t * 12.9 + 1.1));
       Lr.point.intensity = 1.6 * k; mFan.opacity = 0.5 * k;
       mGap.color.setRGB(1.0 * Math.min(1, 0.15 + k), 0.7 * Math.min(1, 0.15 + k), 0.35 * Math.min(1, 0.15 + k));
+      const kl = Math.min(1, k * line); mLine.color.setRGB(1.0 * kl, 0.74 * kl, 0.4 * kl); mSpill.opacity = 0.8 * kl;
     },
     setParam(name: string, v: ParamValue) {
-      if (name === "door") leaf.rotation.y = -Math.PI / 2 + Math.max(0, Math.min(1, Number(v))) * D.swing;
-      if (name === "glow") { glow = Math.max(0, Math.min(1, Number(v))); gapStrip.visible = glow > 0.01; fan.visible = glow > 0.01; }
+      if (name === "door") { door = Math.max(0, Math.min(1, Number(v))); leaf.rotation.y = -Math.PI / 2 + door * D.swing; showLine(); }
+      if (name === "glow") { glow = Math.max(0, Math.min(1, Number(v))); gapStrip.visible = glow > 0.01; fan.visible = glow > 0.01; showLine(); }
+      if (name === "gapLine") { line = Math.max(0, Math.min(1, Number(v))); showLine(); }
+      if (name === "leak" && shutOpen && shutShut && mShut) {
+        const lk = Math.max(0, Math.min(1, Number(v)));
+        shutOpen.visible = lk > 0.001; shutShut.visible = lk < 0.999; mShut.opacity = 1 - lk;
+      }
     },
     cast(): Partial<CastLight> { return {}; },
   };

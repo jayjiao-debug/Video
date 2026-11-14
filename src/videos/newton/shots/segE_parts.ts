@@ -1,13 +1,14 @@
 // SEGMENT E's own helpers (WP5-E): framing, camera mixing, her walking ease, a lagged eye, the mic's aim through keys,
-// his quill on the page, the page held in his hand and the fork. Copies of the generic camera helpers of segC_parts
+// his quill on the page, the page held in his hand, the fork and the morsel on its tines. Copies of the generic camera helpers of segC_parts
 // (kept here so segment E never moves when another segment's file changes). Every function is pure: nothing keeps
-// state between frames.
+// state between frames (the morsel's mesh is made once per World, like a prop, and placed or hidden every frame).
 import * as THREE from "three";
 import { FPS, clamp01, lerp, smooth, type CamPose } from "../story";
 import { FOV } from "../layout";
 import * as C from "../cam";
-import { QUILL, SHEET } from "../props";
-import { hash as kitHash } from "../../../kit/props/kit";
+import { QUILL, SHEET, PC } from "../props";
+import { hash as kitHash, makeKit, ball, Part } from "../../../kit/props/kit";
+import type { World } from "../world";
 
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const sec = (s: number) => Math.round(s * FPS);
@@ -117,3 +118,32 @@ export const forkRot = (dir: THREE.Vector3) => {
   const z = new THREE.Vector3().crossVectors(x, y).normalize();
   return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
 };
+
+// ------------------------------------------------------------------------------------------------- the morsel
+/** where the morsel sits on the fork: this far up from the hilt (the tines run 0.072 .. 0.13; their tips show above it) */
+export const MORSEL_ON = 0.111;
+const MORSELS = new WeakMap<World, THREE.Group>();
+/** THE MORSEL on the fork's tines (a bite of the chop, ~2.8 x 2.1 x 1.7 cm, the chop's colour, the props' outline): the
+ *  segment's own mesh on w.root (not a prop: the clearance checker skips it, as it should a bite skewered on the
+ *  tines). `at` = the fork's origin as put, `rot` = the fork's rotation; null hides it. Made on first use, then the
+ *  same mesh every frame; segment E's exit() hides it (morselOff). */
+export const putMorsel = (w: World, at: THREE.Vector3 | null, rot?: THREE.Quaternion) => {
+  let g = MORSELS.get(w);
+  if (!g) {
+    if (!at) return;
+    g = new THREE.Group(); g.name = "segE.morsel";
+    const K = makeKit(w.M);
+    new Part(K)
+      .add(K.flat(PC.meat), ball(V(0, 0, 0), 0.0105, [1.33, 1, 0.82], 14), 0.0018)
+      .add(K.flat(PC.meatLo), ball(V(0.004, 0.006, 0.004), 0.0062, [1.2, 0.55, 0.9], 10), 0)
+      .into(g, "segE.morsel");
+    w.root.add(g); MORSELS.set(w, g);
+  }
+  g.visible = !!at;
+  if (!at) return;
+  const q = rot ?? new THREE.Quaternion();
+  g.quaternion.copy(q);
+  g.position.copy(at).add(V(0, MORSEL_ON, 0.0015).applyQuaternion(q));
+};
+/** hides the morsel (segment E's exit) */
+export const morselOff = (w: World) => { const g = MORSELS.get(w); if (g) g.visible = false; };

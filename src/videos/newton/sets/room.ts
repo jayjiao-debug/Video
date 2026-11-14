@@ -59,8 +59,11 @@ export const ROOM_LOOK: PlaceLook = {
   fill: FILL,
   bloom: 0.35,
 };
-/** the per-frame dressing: hour "morning" | "noon" | "evening" | "night", door 0..1 (the door to the stairs, inward) */
-export const ROOM_PARAMS: Record<string, ParamValue> = { hour: "morning", door: 0 };
+/** the per-frame dressing: hour "morning" | "noon" | "evening" | "night", door 0..1 (the door to the stairs, inward),
+ *  shaftSoft 0..1 (added by WP5-B; 0 = the shaft as built, the default: 1 = the hour's sun shaft as a SOFT volume, the
+ *  owner's lighting rule: no hard-edged wedge, its sides, its far end and its window end fading to nothing, half the
+ *  opacity, swept down to the floor) */
+export const ROOM_PARAMS: Record<string, ParamValue> = { hour: "morning", door: 0, shaftSoft: 0 };
 
 /** the hours' set light: the sun (toward it), its colour and strength, the glass, the shaft, the hemisphere, the
  *  environment share, the candle */
@@ -150,6 +153,35 @@ export function buildRoom(K: Kit) {
     const dir = new THREE.Vector3(...HL[h].sun).normalize().negate();
     shafts[h] = sunShaft(corners, dir, h === "noon" ? 1.9 : 3.2, HL[h].shaftCol, HL[h].shaft); shafts[h].name = "room.shaft." + h; group.add(shafts[h]);
   }
+  // (WP5-B, param shaftSoft) THE SOFT SHAFT of each hour: the same window swept down to the floor, its texture fading
+  // to nothing on all four edges of every face (the box's long edges, where two faces meet, are both faded: no hard
+  // silhouette) and well before the floor (no cut line where it lands); crossfaded with the built shaft by shaftSoft
+  const softTex = paint(64, 256, (g, W, H) => {
+    const img = g.createImageData(W, H), sm = (a: number, b: number, x: number) => { const k = Math.max(0, Math.min(1, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
+    for (let py = 0; py < H; py++) {
+      const v = 1 - py / (H - 1), pv = sm(0.12, 0.55, v) * (1 - 0.45 * sm(0.75, 1, v));
+      for (let px = 0; px < W; px++) {
+        const u = px / (W - 1), a = pv * sm(0, 0.4, u) * sm(0, 0.4, 1 - u), i = 4 * (py * W + px);
+        img.data[i] = img.data[i + 1] = img.data[i + 2] = 255; img.data[i + 3] = Math.round(255 * a);
+      }
+    }
+    g.putImageData(img, 0, 0);
+  });
+  const softShafts = {} as Record<Hour, THREE.Mesh>;
+  for (const h of ["morning", "noon", "evening"] as Hour[]) {
+    const dir = new THREE.Vector3(...HL[h].sun).normalize().negate();
+    softShafts[h] = sunShaft(corners, dir, h === "noon" ? 1.9 : 3.2, HL[h].shaftCol, HL[h].shaft * 0.5, 0); softShafts[h].name = "room.shaft.soft." + h;
+    const sm = softShafts[h].material as THREE.MeshBasicMaterial; sm.map = softTex; sm.needsUpdate = true;
+    softShafts[h].visible = false; group.add(softShafts[h]);
+  }
+  let shaftSoft = 0;
+  const showShafts = () => {
+    for (const k of Object.keys(shafts) as Hour[]) {
+      const on = k === hour;
+      shafts[k].visible = on && shaftSoft < 1; (shafts[k].material as THREE.MeshBasicMaterial).opacity = HL[k].shaft * (1 - shaftSoft);
+      softShafts[k].visible = on && shaftSoft > 0; (softShafts[k].material as THREE.MeshBasicMaterial).opacity = HL[k].shaft * 0.5 * shaftSoft;
+    }
+  };
   const dust = dustMotes(30, corners, new THREE.Vector3(...HL.morning.sun).normalize().negate(), 2.6, { size: 0.01, seed: 77 }); group.add(dust.points);
 
   // =================================================================================================== the window table
@@ -288,7 +320,7 @@ export function buildRoom(K: Kit) {
     Lr.hemi.color.set(L.hemi[0]); Lr.hemi.groundColor.set(L.hemi[1]); Lr.hemi.intensity = L.hemi[2];
     Lr.point.intensity = L.candle;
     mGlass.color.set(L.glass);
-    for (const k of Object.keys(shafts) as Hour[]) shafts[k].visible = k === h;
+    showShafts();
     for (const [m, e] of envMats) m.envMapIntensity = e * L.env;
   };
   applyHour("morning");
@@ -302,6 +334,7 @@ export function buildRoom(K: Kit) {
     setParam(name: string, v: ParamValue) {
       if (name === "hour") { const h = (HOURS as string[]).includes(String(v)) ? (v as Hour) : "morning"; applyHour(h); }
       if (name === "door") leaf.rotation.y = -Math.PI / 2 + Math.max(0, Math.min(1, Number(v))) * DR.swing;
+      if (name === "shaftSoft") { shaftSoft = Math.max(0, Math.min(1, Number(v))); showShafts(); }
     },
     cast(): Partial<CastLight> { return roomCast(hour); },
   };

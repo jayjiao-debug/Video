@@ -1,12 +1,14 @@
 // SEGMENT F's own helpers (WP5-F): framing, camera mixing, her walking ease, a lagged eye, the mic's aim through keys
 // (copies of the generic camera helpers of segE_parts, kept here so segment F never moves when another segment's file
 // changes), the constant-speed push, axes -> quaternion, THE SHOVEL by its blade, the charcoal's strokes on the board
-// and THE SPARKS (a 2D burst out of the fire door: the fire spits, the shovel's charcoal goes in, the poker stirs).
+// and THE SPARKS (a 2D burst out of the fire door, kept off the faces: the fire spits, the shovel's charcoal goes in, the
+// poker stirs), the flare's warm flash, the grades (the night garden; the room hours later).
 // Every function is pure: nothing keeps state between frames; all noise from hash().
 import * as THREE from "three";
 import { FPS, clamp01, lerp, smooth, easeOutCubic, hash, h, type CamPose } from "../story";
 import { FOV } from "../layout";
 import * as C from "../cam";
+import type { GradeParams } from "../../vasa/grade";
 
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const sec = (s: number) => Math.round(s * FPS);
@@ -96,22 +98,61 @@ export const stroke = (t: number) => {
 };
 
 // ------------------------------------------------------------------------------------------------- the sparks
-/** THE SPARKS: a burst of glowing dots flying up and out from screen point `p` (px) on frame f, `on` = the burst's
+/** screen circles (px, 1080 x 1920) a spark never crosses: the heads in front of the fire (its sparks fly out of the
+ *  fire door BEHIND them, so a 2D spark over a face is wrong; director round 1) */
+export type SparkMask = { x: number; y: number; r: number }[];
+const masked = (m: SparkMask, x: number, y: number, pad: number) => m.some((c) => (x - c.x) * (x - c.x) + (y - c.y) * (y - c.y) < (c.r + pad) * (c.r + pad));
+/** THE SPARKS: a burst of glowing sparks flying up and out from screen point `p` (px) on frame f, `on` = the burst's
  *  first frame; `dir` = the screen direction they mostly fly (deg, 0 = right, -90 = up); `n` sparks, `len` frames,
- *  `speed` px a frame, `size` px. Nothing before `on` or after the last spark dies. */
-export const sparks = (f: number, on: number, p: { x: number; y: number }, o: { n?: number; len?: number; speed?: number; size?: number; dir?: number; spread?: number; seed?: number } = {}) => {
-  const d = f - on, len = o.len ?? 16;
-  if (d < 0 || d > len + 4) return null;
-  const n = o.n ?? 14, dots: ReturnType<typeof h>[] = [];
+ *  `speed` px a frame, `size` px, `stagger` = over how many frames they are born, `streak` > 0 = drawn as streaks
+ *  along their flight (that many frames of travel long), `glow` = the halo's strength. A spark whose head or tail is in
+ *  a `mask` circle is not drawn. Nothing before `on` or after the last spark dies. */
+export const sparks = (f: number, on: number, p: { x: number; y: number }, o: { n?: number; len?: number; speed?: number; size?: number; dir?: number; spread?: number; seed?: number; stagger?: number; streak?: number; glow?: number; jitter?: number } = {}, mask: SparkMask = []) => {
+  const d = f - on, len = o.len ?? 16, stag = o.stagger ?? 2;
+  if (d < 0 || d > len + stag + 2) return null;
+  const n = o.n ?? 14, sd = o.seed ?? 0, dots: ReturnType<typeof h>[] = [];
   for (let i = 0; i < n; i++) {
-    const a = ((o.dir ?? -70) + (hash(i, 11 + (o.seed ?? 0)) - 0.5) * (o.spread ?? 90)) * (Math.PI / 180);
-    const life = len * (0.5 + 0.5 * hash(i, 13 + (o.seed ?? 0))), age = d - 2 * hash(i, 17 + (o.seed ?? 0));
+    const a = ((o.dir ?? -70) + (hash(i, 11 + sd) - 0.5) * (o.spread ?? 90)) * (Math.PI / 180);
+    const life = len * (0.5 + 0.5 * hash(i, 13 + sd)), age = d - stag * hash(i, 17 + sd);
     if (age < 0 || age > life) continue;
-    const v = (o.speed ?? 14) * (0.55 + 0.6 * hash(i, 19 + (o.seed ?? 0))), u = age / life;
-    const x = p.x + Math.cos(a) * v * age, y = p.y + Math.sin(a) * v * age + 0.35 * age * age;
-    const s = (o.size ?? 9) * (0.6 + 0.6 * hash(i, 23 + (o.seed ?? 0))) * (1 - 0.5 * u), al = (1 - easeOutCubic(u)) * 0.95;
-    dots.push(h("div", { key: i, style: { position: "absolute", left: x - s / 2, top: y - s / 2, width: s, height: s, borderRadius: "50%", opacity: al,
-      background: "radial-gradient(circle, #ffffff 0%, #fff0a0 30%, #ffb040 58%, rgba(255,110,30,0) 100%)", boxShadow: `0 0 ${Math.round(s * 1.4)}px ${Math.round(s * 0.45)}px rgba(255,130,40,0.7)` } }));
+    const v = (o.speed ?? 14) * (0.55 + 0.6 * hash(i, 19 + sd)), u = age / life;
+    const j = (o.jitter ?? 0) * (hash(i, 29 + sd) - 0.5);
+    const x0 = p.x + j * Math.sin(a), y0 = p.y - j * Math.cos(a);
+    const x = x0 + Math.cos(a) * v * age, y = y0 + Math.sin(a) * v * age + 0.35 * age * age;
+    const vx = Math.cos(a) * v, vy = Math.sin(a) * v + 0.7 * age, sp = Math.hypot(vx, vy) || 1;
+    const s = (o.size ?? 9) * (0.6 + 0.6 * hash(i, 23 + sd)) * (1 - 0.5 * u), al = (1 - easeOutCubic(u)) * 0.97;
+    const L = o.streak ? Math.max(s, sp * o.streak * (1 - 0.4 * u)) : s;
+    const tx = x - (vx / sp) * L, ty = y - (vy / sp) * L;
+    if (masked(mask, x, y, s * 0.6) || masked(mask, tx, ty, s * 0.4)) continue;
+    const gl = o.glow ?? 1;
+    if (!o.streak) {
+      dots.push(h("div", { key: i, style: { position: "absolute", left: x - s / 2, top: y - s / 2, width: s, height: s, borderRadius: "50%", opacity: al,
+        background: "radial-gradient(circle, #ffffff 0%, #fff0a0 30%, #ffb040 58%, rgba(255,110,30,0) 100%)", boxShadow: `0 0 ${Math.round(s * 1.4 * gl)}px ${Math.round(s * 0.45 * gl)}px rgba(255,130,40,0.7)` } }));
+    } else {
+      const th = Math.max(2, s * 0.42), ang = (Math.atan2(vy, vx) * 180) / Math.PI;
+      dots.push(h("div", { key: i, style: { position: "absolute", left: x - L, top: y - th / 2, width: L, height: th, borderRadius: th, opacity: al, transformOrigin: `${L}px ${th / 2}px`, transform: `rotate(${ang.toFixed(1)}deg)`,
+        background: "linear-gradient(to right, rgba(255,90,20,0) 0%, rgba(255,150,50,0.85) 45%, #fff3b8 88%, #ffffff 100%)", boxShadow: `0 0 ${Math.round(s * 1.1 * gl)}px ${Math.round(s * 0.3 * gl)}px rgba(255,140,50,0.65)` } }));
+    }
   }
   return dots.length ? h("div", { key: `sparks${on}`, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden", pointerEvents: "none" } }, ...dots) : null;
+};
+/** THE FLASH of a flare: warm firelight thrown out of the fire door for a few frames (a soft radial glow, screen-blended,
+ *  centred on the door's mouth on screen, radius r px), `k` 0..1 */
+export const flash = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
+  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
+    background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,170,90,0.62) 0%, rgba(255,130,60,0.34) 42%, rgba(255,110,40,0) 100%)` } });
+
+// ------------------------------------------------------------------------------------------------- the grades
+/** a COPY of Film.tsx GRADE_FILM (the default every place uses; kept here so F never imports the composition) */
+export const GRADE_BASE: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.97, 0.98, 0.96], tintS: [0.006, 0.006], tintM: [-0.01, 0.008], tintH: [-0.016, 0.01], vig: [0.16, 0.42] };
+/** F1, the night garden: the moonlit day colours pulled toward a desaturated blue (shadows and mids cooled and greyed),
+ *  the highlights (his candle, the lit window, the door's glow) left warm; the same curve, so the same mid-tone */
+export const GRADE_NIGHT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.66, 0.74, 1.0], tintS: [0.034, -0.016], tintM: [0.024, -0.012], tintH: [-0.018, 0.022], vig: [0.22, 0.4] };
+/** F4-F5, hours later: the room sunk round him (the low end pressed, a heavier vignette), the face's highlights kept */
+export const GRADE_LATE: GradeParams = { ky: [0, 0.075, 0.215, 0.52, 0.79, 0.93, 1], sat: [0.94, 0.98, 0.98], tintS: [0.004, 0.012], tintM: [-0.012, 0.01], tintH: [-0.016, 0.01], vig: [0.38, 0.28] };
+/** two grades mixed (k 0..1) */
+export const mixGrade = (a: GradeParams, b: GradeParams, k: number): GradeParams => {
+  const L = (x: number, y: number) => x + (y - x) * k;
+  return { ky: a.ky.map((v, i) => L(v, b.ky[i])), sat: [L(a.sat[0], b.sat[0]), L(a.sat[1], b.sat[1]), L(a.sat[2], b.sat[2])], tintS: [L(a.tintS[0], b.tintS[0]), L(a.tintS[1], b.tintS[1])],
+    tintM: [L(a.tintM[0], b.tintM[0]), L(a.tintM[1], b.tintM[1])], tintH: [L(a.tintH[0], b.tintH[0]), L(a.tintH[1], b.tintH[1])], vig: [L(a.vig[0], b.vig[0]), L(a.vig[1], b.vig[1])] };
 };

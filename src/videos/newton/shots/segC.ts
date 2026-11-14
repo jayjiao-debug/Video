@@ -24,7 +24,7 @@ import { NEWTON_GOWN_INK, NEWTON_HIDE } from "../people";
 import { RMX, ROOM, ROOM_CAMS, ROOM_SET, GDX, GARDEN, GARDEN_SET, EYE } from "../layout";
 import { CHAIR } from "../props";
 import { rel, hang, lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, type Rig, type RigPose } from "./common";
-import { V, sec, frameOn, mixCam, stride, lagged, whipUp, whipSmearUp, nibAt, quillFist, QROT, posOf } from "./segC_parts";
+import { V, sec, frameOn, mixCam, stride, lagged, whipUp, nibAt, quillFist, quillRot, posOf } from "./segC_parts";
 import type { World } from "../world";
 
 const S = SEGMENTS[2];
@@ -33,13 +33,15 @@ const L1 = line("C01"), L4 = line("C04"), L5 = line("C05"), L6 = line("C06"), L7
 // ---------------------------------------------------------------------------------------------------- the beats
 /** the cut from the noon plate to the garden */
 const T_GARDEN = BEAT.C.garden;
-/** "Two laps is—": the lecturing hand comes out on "Two", beats on "laps" */
+/** "Two laps is—": he lifts his chin to lecture on "Two" (hands still behind his back), bobs his head on "laps" */
 const T_HAND = L4.from - 4, T_LAPS = capWord("C04", "laps").from;
-/** HE STOPS DEAD on the cut-off (the gravel under him fades out with it) */
+/** HE STOPS DEAD on the cut-off (the gravel under him fades out with it): his eyes go off her, up and to frame left
+ *  (his window, his staircase), held about 0.3 s before he turns */
 const T_STOP = BEAT.C.stop;
-/** the gravel run (the mix's anchor, C04 end + 0.25 s): he turns on his heel just before it */
+/** the gravel run (the mix's anchor, C04 end + 0.25 s): he turns on his heel just before it (a quick turn, after the
+ *  held stare) */
 const T_RUN = L4.to + sec(0.25);
-const T_TURN0 = T_RUN - 7, T_TURN1 = T_RUN + 3;
+const T_TURN0 = Math.max(T_RUN - 7, T_STOP + sec(0.3)), T_TURN1 = T_RUN + 3;
 /** she sets off after him */
 const T_CHASE = L5.to - sec(0.55);
 /** THE WHIP UP (the whoosh, C05 end + 0.1 s): 6 frames out of the garden, the cut, 6 frames into the room */
@@ -91,10 +93,15 @@ const gardenNewton = (f: number): NState => {
 };
 /** how far she stands in front of him while she walks backwards (he gains on her a little) */
 const DIST = (f: number) => ky(f, [[T_GARDEN, 3.3], [L4.from, 2.55]]);
-/** her floor point in the garden: backwards in front of him (a little late), stopping with him, then after him */
+/** as he bolts she steps back and to her left (west, toward the bed's edge): the clipped cone at the bed's corner
+ *  (between her and his run) then wipes across early and leaves at the frame's right edge while he runs */
+const STEP_ASIDE = V(-0.52, 0, 0.62);
+/** her floor point in the garden: backwards in front of him (a little late), stopping with him, a startled step
+ *  aside as he runs, then after him */
 const herGarden = (f: number) => {
   const g = Math.min(f, T_STOP + 6);
   const p = lagged(g, (k) => gardenNewton(Math.min(k, T_STOP)).at, 7).add(V(0.12, 0, DIST(g)));
+  p.addScaledVector(STEP_ASIDE, stride(clamp01((f - T_TURN0) / (T_RUN + sec(0.7) - T_TURN0))));
   if (f <= T_CHASE) return p;
   // the chase: up the east walk toward the crossing, a trot
   const k = stride(clamp01((f - T_CHASE) / (T_CUT + 8 - T_CHASE)), 0.4);
@@ -104,43 +111,66 @@ const herGarden = (f: number) => {
 const gardenCam = (f: number): CamPose => {
   const p = herGarden(f), pos = V(p.x, EYE, p.z);
   const eye = lagged(f, (k) => eyesOf(gardenNewton(k).at), f < T_STOP ? 5 : 4);
-  // while he runs off, the frame keeps him a little below the middle third (the range front above him)
-  const sy = ky(f, [[T_RUN, 600], [T_RUN + sec(0.8), 700]]), sx = ky(f, [[T_RUN, 560], [T_RUN + sec(0.8), 540]]);
+  // while he runs off, the frame keeps him a little below the middle third (the range front above him), a little
+  // right of the middle (the cone's side stays the frame's edge)
+  const sy = ky(f, [[T_RUN, 600], [T_RUN + sec(0.8), 700]]), sx = ky(f, [[T_RUN, 560], [T_RUN + sec(0.8), 600]]);
   const cam = frameOn(pos, eye, sx, sy);
   return C.handheld(cam, f, { walk: [[T_GARDEN, 0.75], [T_STOP - 2, 0.75], [T_STOP + 8, 0], [T_CHASE, 0], [T_CHASE + 6, 1.3]] });
 };
 /** NEWTON's expressions in the garden (swaps under blinks): dry on his "I am out.", lecturing on 19, then the idea */
 const G_EXPR: [number, "deadpan" | "stern" | "shock" | "focus"][] = [[S.from, "deadpan"], [T_HAND, "stern"], [T_STOP, "shock"], [T_RUN + 4, "focus"]];
-/** his hands: behind his back while he walks; the right one out to lecture on 19 (frozen on the stop), both let go
- *  as he turns to run */
+/** his hands: behind his back all through the walk and the lecture (the script's walk; 19's lecture is his chin and a
+ *  head bob); as he turns on his heel they come out to his sides */
 const gardenHands = (f: number, s: NState): [THREE.Vector3 | null, THREE.Vector3 | null] => {
   if (f >= T_RUN) return [null, null];
   const back = (side: 1 | -1) => rel(s.at, s.facing, side * 0.11, 0.6, -0.24);
-  const lect = rel(s.at, s.facing, -0.34, 1.04 + 0.035 * Math.sin(Math.PI * clamp01((f - T_LAPS + 2) / 6)), 0.16);
-  // out from behind his back round his side (never through the body), up in front of his chest
-  const u = clamp01((f - T_HAND) / 10), side = rel(s.at, s.facing, -0.34, 0.66, 0.0);
-  let right = u < 0.5 ? back(-1).lerp(side, smooth(u * 2)) : side.lerp(lect, smooth(u * 2 - 1));
-  let left = back(1);
-  // as he turns on his heel: both hands to where his arms hang, so the run's swing takes over without a jump
-  const k = smooth(clamp01((f - T_TURN0) / (T_RUN - T_TURN0)));
-  if (k > 0) { right = right.lerp(hang(s.at, s.facing, 0), k); left = left.lerp(hang(s.at, s.facing, 1), k); }
-  return [right, left];
+  // as he turns on his heel: both hands to where his arms hang, round his sides (never through the body), so the
+  // run's swing takes over without a jump
+  const k = smooth(clamp01((f - T_TURN0 + 3) / (T_RUN - T_TURN0 + 3)));
+  const hand = (side: 1 | -1, arm: 0 | 1) => {
+    const mid = rel(s.at, s.facing, side * 0.24, 0.6, -0.08);
+    return k < 0.5 ? back(side).lerp(mid, smooth(k * 2)) : mid.lerp(hang(s.at, s.facing, arm), smooth(k * 2 - 1));
+  };
+  return [hand(-1, 0), hand(1, 1)];
+};
+/** his head in the garden: the chin up to lecture on 19 (a bob on "laps"), then THE STARE: the head up a little
+ *  more, eyes off her toward frame left, held until the turn, level again as he turns */
+const gardenLook = (f: number) => {
+  const chin = ky(f, [[T_HAND, 0], [T_HAND + 8, -14], [T_STOP, -14], [T_STOP + 3, -22], [T_TURN0, -22], [T_TURN1, 0]]);
+  const gaze = f >= T_STOP && f < T_TURN1 ? -1 : 0;
+  return { lookDown: chin, gaze, head: heads(accent("nod", f, T_LAPS, { amp: 1.3 }), accent("jolt", f, T_STOP, { amp: 0.6 }), f >= T_STOP + 2 && f < T_TURN0 + 2 ? { dy: 0.06 } : undefined) };
 };
 
 // ---------------------------------------------------------------------------------------------------- C4 the room
-// She is on his LEFT, in the corner past the bookcase, looking along the back wall: his face at the upper left (the
-// window and its table far behind him), the chair at the lower right, out from the wall where he pushed it when he got
-// up; her RIGHT hand (in from the lower right) drags it back to the wall and shoves it in behind his knees; her mic stays
-// at the lower left on him, clear of the chair.
-/** he stands 10 cm nearer the desk than his morning mark and 3 cm to his right (bent over the page: his gown's hem
- *  clear of the chair's front legs at the backs of his knees, his front clear of the papers at the desk's edge), the
- *  sheets 6 cm further onto the desk with him */
-const N_AT = ROOM.newtonDesk.clone().add(V(-0.03, 0, 0.1)), N_FACING = ROOM.deskFacing;
+// She is on his LEFT, in the corner past the bookcase, looking along the back wall: he stands turned a little toward
+// her (his left), so his face is a 3/4 and THE PAGE he writes on lies on her side of him (the loose sheet on the set's
+// open book, in front of his left shoulder), the white quill standing up off it at the frame's left; the window and its
+// table far behind him; the chair at the lower right, out from the wall where he pushed it when he got up; her RIGHT
+// hand (in from the lower right) shoves it back in behind his knees; her mic is DOWN while nobody speaks (from the
+// whip until just before 21), up on him for 21 and 22, then down again. A WIDER LENS here (C4_FOV): from the only
+// corner where her hand reaches the chair she cannot stand further back, so the lens keeps his big toon head inside
+// the frame and the chair's top rail in shot at the end.
+const C4_FOV = 70;
+/** he stands 10 cm nearer the desk than his morning mark and 8 cm to his right (his gown's hem clear of the chair's
+ *  front legs at the backs of his knees, his belly clear of the open book's corner), turned N_TURN toward his left
+ *  (toward her): the page in front of him */
+const N_TURN = 0.6;
+const N_AT = ROOM.newtonDesk.clone().add(V(-0.08, 0, 0.1)), N_FACING = ROOM.deskFacing + N_TURN;
 /** his head's middle while he leans over the page (the lean carries it forward of his floor mark) */
-const N_HEAD = N_AT.clone().add(V(0, 1.19, 0.12));
+const N_HEAD = rel(N_AT, N_FACING, 0, 1.19, 0.12);
+/** the set's open book on the desk's back band (sets/room.ts: desk middle + (0.2, -0.32), yaw 0.1, its pages 3.65 cm
+ *  up): THE LOOSE SHEET lies on it, along it, a little toward him; the nib writes on that sheet */
+const BOOK = V(RMX + ROOM_SET.desk.x + 0.2, ROOM.deskTop + 0.0365, ROOM_SET.desk.z - 0.32), BOOK_YAW = 0.1;
+const SHEET_AT = BOOK.clone().add(V(-0.03 * Math.cos(BOOK_YAW), 0.0003, 0.03 * Math.sin(BOOK_YAW)));
+/** the sheets prop's first sheet sits turned -0.166 in it (props/things.ts sheets' fan): this puts it square along
+ *  the book */
+const SHEET_ROT = Math.PI / 2 + BOOK_YAW + 0.166;
+/** where his nib writes (nibAt's page point: lines run 5 cm either side of it, rows from 6 cm toward her to 3.6 cm
+ *  away): the middle of the sheet's half on his side */
+const PAGE = SHEET_AT.clone().add(V(-0.04, 0.004, -0.012));
 /** the chair: on the cut out from the wall on his left, a little askew; it ends square behind him, its back a few
  *  millimetres off the skirting */
-const CH0 = ROOM.chair.clone().add(V(0.6, 0, 0.32)), CH1 = ROOM.chair.clone().add(V(-0.03, 0, -0.006)), ROT0 = -0.2;
+const CH0 = ROOM.chair.clone().add(V(0.6, 0, 0.32)), CH1 = ROOM.chair.clone().add(V(-0.08, 0, -0.006)), ROT0 = -0.2;
 /** 0..1 along its way: speeding up under her hand (to SHOVE), then sliding on, slowed by the floor */
 const dragK = (f: number) => {
   const t = clamp01((f - T_DRAG0) / (T_DRAG1 - T_DRAG0)), r = SHOVE;
@@ -158,13 +188,14 @@ const railGrip = (p: THREE.Vector3, yaw: number) => {
   const cy = Math.cos(yaw), sy = Math.sin(yaw), r = CHAIR.rail, s = r[0] + GRIP_ALONG;
   return { at: V(p.x + s * cy + r[2] * sy, r[1] + 0.06, p.z - s * sy + r[2] * cy), along: V(cy, 0, -sy) };
 };
-/** her eyes in the room: A = on the cut (his face at the upper left, the chair and her hand at the lower right);
- *  B = leaning after the chair as she shoves it; M = straightened, back in the corner (his face, the chair at his
- *  knees) for 21 and 22; E = her eyes drifting right onto the empty chair */
-const CAM_A = frameOn(V(RMX + 1.95, 1.48, -2.45), N_HEAD, 270, 410);
-const CAM_B = frameOn(V(RMX + 1.88, 1.44, -2.44), N_HEAD, 205, 420);
-const CAM_M = frameOn(V(RMX + 2.03, EYE, -2.45), N_HEAD, 330, 470);
-const CAM_E = frameOn(V(RMX + 2.03, EYE, -2.45), N_HEAD, 250, 450);
+/** her eyes in the room (lens C4_FOV): A = on the cut, bent toward the chair (his face left of the middle, the quill
+ *  at the left, the chair and her hand at the lower right); B = leaning after the chair as she shoves it; M =
+ *  straightened, back in the corner (his face, the quill, the chair at his knees) for 21 and 22; E = her eyes drifting
+ *  right onto the empty chair */
+const CAM_A = frameOn(V(RMX + 1.95, 1.42, -2.45), N_HEAD, 430, 560, C4_FOV);
+const CAM_B = frameOn(V(RMX + 1.88, 1.38, -2.44), N_HEAD, 380, 560, C4_FOV);
+const CAM_M = frameOn(V(RMX + 2.03, EYE, -2.45), N_HEAD, 450, 580, C4_FOV);
+const CAM_E = frameOn(V(RMX + 2.02, EYE, -2.5), N_HEAD, 290, 500, C4_FOV);
 const roomCam = (f: number): CamPose => {
   const lean = stride(clamp01((f - T_DRAG0 + 2) / (T_LET + 2 - T_DRAG0)));
   const back = stride(clamp01((f - T_BACK0) / (T_BACK1 - T_BACK0)));
@@ -173,24 +204,33 @@ const roomCam = (f: number): CamPose => {
   return C.handheld(cam, f, { walk: [[T_DRAG0, 0], [T_DRAG0 + 3, 0.3], [T_LET + 2, 0.3], [T_BACK0 + 3, 0.3], [T_BACK1 - 3, 0.3], [T_BACK1, 0]] });
 };
 /** NEWTON bent over the desk: the "haul" pose run backwards leans him forward over the page (the rig's only forward
- *  lean), breathing a little (its heave) */
-const LEAN = 0.18;
+ *  lean), breathing a little (its heave); his head pitched only a little down (LOOK_DOWN), so from her corner above
+ *  him she sees his face, not his crown */
+const LEAN = 0.25, LOOK_DOWN = 10;
 const leanPose = (f: number): RigPose => ({ kind: "haul", t: 0, phase: 0.03 * Math.sin((2 * Math.PI * 0.23 * f) / FPS), amount: -LEAN });
-/** where his nib writes: on the sheets, toward their right (his right arm reaches out beside him, not across him) */
-const PAGE = ROOM.deskWrite.clone().add(V(-0.04, 0, 0.03));
-const quillHand = (f: number) => quillFist(nibAt(f, PAGE, 1));
-/** THE WAVE: his left hand (her side) comes off the page and flaps back over his shoulder toward the chair twice, his
- *  eyes on the page; 0..1 how far it is out */
+/** THE QUILL: the feather up and forward off the page, over the desk, on her side of his head (never behind it), its
+ *  broad vane turned to her */
+const QDIR_C4 = V(-0.3, 0.72, 0.62).normalize();
+const QROT_C4 = quillRot(QDIR_C4, posOf(CAM_M).sub(PAGE));
+const quillHand = (f: number) => quillFist(nibAt(f, PAGE, 1), QDIR_C4);
+/** THE WAVE: his left hand (her side) comes off the sheet's far corner and flaps back over his shoulder toward the
+ *  chair twice, his eyes on the page; 0..1 how far it is out */
 const waveK = (f: number) => (f < T_WAVE0 || f > T_WAVE1 ? 0 : Math.sin(Math.PI * clamp01((f - T_WAVE0) / (T_WAVE1 - T_WAVE0))) ** 0.6);
+/** his left hand holds the sheet down at its far end (toward the wall: frame right of the quill, never in front of it) */
+const SHEET_HOLD = SHEET_AT.clone().add(V(0.05, 0.026, -0.075));
 const leftHand = (f: number) => {
-  const rest = ROOM.deskWrite.clone().add(V(0.21 + 0.004 * Math.sin(f * 0.031), 0.06, 0.01 + 0.003 * Math.sin(f * 0.023 + 1)));
+  const rest = SHEET_HOLD.clone().add(V(0.003 * Math.sin(f * 0.031), 0, 0.003 * Math.sin(f * 0.023 + 1)));
   const k = waveK(f);
   if (k <= 0) return rest;
   const u = clamp01((f - T_WAVE0) / (T_WAVE1 - T_WAVE0)), flick = Math.max(0, Math.sin(2 * Math.PI * 2 * clamp01((u - 0.15) / 0.7)));
   return rest.lerp(rel(N_AT, N_FACING, 0.3, 1.0 + 0.03 * flick, -0.2 - 0.14 * flick), k);
 };
-/** absorbed on the page all through (his eyes never leave it) */
-const R_EXPR: [number, "focus"][] = [[S.from, "focus"]];
+/** absorbed on the page all through (his eyes never leave it); flat and dismissive for 22 "No time." (deadpan: level
+ *  brows, not the frown of "focus" over a talking mouth, which read angry), the swaps under blinks */
+const R_EXPR: [number, "focus" | "deadpan"][] = [[S.from, "focus"], [L7.from - 3, "deadpan"], [L7.to + 6, "focus"]];
+/** her mic in the room: DOWN from the whip (nobody speaks while she shoves the chair), up on him for 21 and 22, down
+ *  again once he has said "No time." (it sinks out at the lower left) */
+const micIn = (f: number) => ky(f, [[L6.from - 8, 0], [L6.from + 2, 1], [T_DROOP, 1], [T_DROOP + 22, 0]]);
 
 // ---------------------------------------------------------------------------------------------------- the shot
 const mouthOf = (r: Rig) => r.headWorld().add(V(0, -0.1, 0));
@@ -204,7 +244,7 @@ const posePlate = (w: World, f: number): Pose => {
   w.prop("lid").put(LID_DOWN);
   w.prop("drafts").put(ROOM.drafts, { rot: -0.15 });
   w.prop("inkwell").put(ROOM.inkwell);
-  w.prop("sheets").put(ROOM.deskWrite, { n: 3 });
+  w.prop("sheets").put(SHEET_AT, { n: 1, rot: SHEET_ROT });
   w.prop("chair").put(CH0, { rot: ROT0 });
   w.update();
   return { camera: cam, post: { dof: { focus: posOf(cam).distanceTo(ROOM.plate), amount: 4 } }, slate: "C1 plate" };
@@ -214,6 +254,7 @@ const poseGarden = (w: World, f: number): Pose => {
   const t = f / FPS;
   w.setPlace("garden");
   w.set.param("time", "noon");
+  w.set.param("gravel", "rough");      // the rough raked gravel (sets/garden.ts option, WP5-C): never cream planks
   const base = gardenCam(f);
   const Wh = whipUp(base, f, T_WHIP, { to: roomCam(f), out: WHIP_OUT, in: WHIP_IN, deg: 44, inDeg: 30, yaw: -4 });
   const cam = Wh.cam;
@@ -222,24 +263,28 @@ const poseGarden = (w: World, f: number): Pose => {
   const s = gardenNewton(f);
   const n = w.actor(NEWTON_GOWN_INK);
   const q = f < T_STOP ? saying("nt", f) : null, sp = q ? speak(q, f, 1) : {};
-  const turnBack = ky(f, [[T_TURN0 + 3, 0], [T_RUN + 12, 1]]);
+  const turnBack = ky(f, [[T_TURN0 + 2, 0], [T_RUN + 12, 1]]);
+  const gl = gardenLook(f);
   n.set({
-    at: s.at, facing: s.facing, pose: s.pose, expr: at(f, G_EXPR), blink: lid(t, 1, swaps(G_EXPR)), ...sp,
-    head: heads(sp.head, accent("jolt", f, T_STOP, { amp: 0.6 })),
-    gaze: f >= T_STOP && f < T_RUN ? -0.5 : 0, turn: turnBack > 0 ? turnBack : undefined,
+    at: s.at, facing: s.facing, pose: s.pose, expr: at(f, G_EXPR), ...sp,
+    // eyes wide through the stare (no blink between the stop's swap and the turn)
+    blink: f > T_STOP + 2 && f < T_TURN1 ? 0 : sp.blink ?? lid(t, 1, swaps(G_EXPR)),
+    head: heads(sp.head, gl.head), lookDown: gl.lookDown,
+    gaze: gl.gaze, turn: turnBack > 0 ? turnBack : undefined,
     hands: gardenHands(f, s), hide: NEWTON_HIDE, visible: true,
   });
   w.update();
   // HER MIC: in from the cut, held toward his mouth all the way (it follows him as he runs off)
   const M = C.putMic(w, cam, f, { aim: mouthOf(n) });
   const post = Wh.post ?? (M.dof ? { dof: M.dof } : undefined);
-  return { camera: cam, post, overlays: whipSmearUp(Wh.smear), slate: f < T_STOP ? "C2 walk" : "C3 run" };
+  return { camera: cam, post, slate: f < T_STOP ? "C2 walk" : "C3 run" };
 };
 
 const poseRoom = (w: World, f: number): Pose => {
   const t = f / FPS;
   w.setPlace("room");
   w.set.param("hour", "noon");
+  w.set.param("shaftSoft", 1);         // the noon sun shaft as a soft volume (owner rule: no hard-edged wedge; WP5-B's param)
   const Wh = whipUp(gardenCam(f), f, T_WHIP, { to: roomCam(f), out: WHIP_OUT, in: WHIP_IN, deg: 44, inDeg: 30, yaw: -4 });
   const cam = Wh.cam;
   w.setCamera(cam);
@@ -247,21 +292,23 @@ const poseRoom = (w: World, f: number): Pose => {
   // NEWTON: bent over the desk, writing standing; the wave; "No time." (his mouth only on his own line)
   const n = w.actor(NEWTON_GOWN_INK);
   const q = saying("nt", f), sp = q ? speak(q, f, 1) : {};
+  // 22 is flat, not angry: the teeth-together shape ("t") becomes the closed slot, so no gritted teeth on "No time."
+  if (sp.mouth === "strip") sp.mouth = "pill";
   n.set({
-    at: N_AT.clone(), facing: N_FACING, pose: leanPose(f), expr: at(f, R_EXPR), blink: lid(t, 1), ...sp,
+    at: N_AT.clone(), facing: N_FACING, pose: leanPose(f), expr: at(f, R_EXPR), blink: lid(t, 1, swaps(R_EXPR)), ...sp,
     head: heads(sp.head, accent("shake", f, L7.from, { amp: 0.45 })),
-    lookDown: 36, gaze: 0, hands: [quillHand(f), leftHand(f)], hide: NEWTON_HIDE, visible: true,
+    lookDown: LOOK_DOWN, gaze: 0, hands: [quillHand(f), leftHand(f)], hide: NEWTON_HIDE, visible: true,
   });
   // the room's things: the plate and its lid, the desk's paper, THE CHAIR
   w.prop("plate").put(ROOM.plate, { rot: PLATE_ROT, lid: 0, steam: 0, t });
   w.prop("lid").put(LID_DOWN);
   w.prop("drafts").put(ROOM.drafts, { rot: -0.15 });
   w.prop("inkwell").put(ROOM.inkwell);
-  w.prop("sheets").put(ROOM.deskWrite.clone().add(V(0, 0, 0.06)), { n: 3 });
+  w.prop("sheets").put(SHEET_AT, { n: 1, rot: SHEET_ROT });
   const ch = chairAt(f), rot = chairRot(f);
   w.prop("chair").put(ch, { rot });
   w.update();
-  w.prop("quill").put(n.handWorld(0), { grip: "hilt", rot: QROT });
+  w.prop("quill").put(n.handWorld(0), { grip: "hilt", rot: QROT_C4 });
 
   // HER RIGHT HAND on the chair's top rail from the cut: it drags, shoves, lets go and goes out at the lower right
   if (f < T_GONE) {
@@ -276,11 +323,10 @@ const poseRoom = (w: World, f: number): Pose => {
     }
     w.prop("handR").put(H.at, { rot: H.rot, pose: H.pose });
   }
-  // HER MIC toward his mouth; her arm relaxes once he has said "No time." (it sinks out at the lower left)
-  const enter = ky(f, [[T_DROOP, 1], [T_DROOP + 22, 0]]);
-  const M = C.putMic(w, cam, f, { aim: mouthOf(n), enter });
+  // HER MIC toward his mouth while it is up (micIn)
+  const M = C.putMic(w, cam, f, { aim: mouthOf(n), enter: micIn(f) });
   const post = Wh.post ?? (M.dof ? { dof: M.dof } : undefined);
-  return { camera: cam, post, overlays: whipSmearUp(Wh.smear), slate: "C4 room" };
+  return { camera: cam, post, slate: "C4 room" };
 };
 
 const pose = (w: World, f: number): Pose => (f < T_GARDEN ? posePlate(w, f) : f < T_CUT ? poseGarden(w, f) : poseRoom(w, f));

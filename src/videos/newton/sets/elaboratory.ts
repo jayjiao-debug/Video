@@ -1,5 +1,5 @@
 // THE ELABORATORY (place "elaboratory", island x 600): inside Newton's brick outbuilding at night (PLAN 1, 7F, G
-// start). WP2's set; the exports are the contract of sets/index.ts: ELAB_LOOK, ELAB_PARAMS { fire, candle },
+// start). WP2's set; the exports are the contract of sets/index.ts: ELAB_LOOK, ELAB_PARAMS { fire, candle, embers },
 // buildElaboratory(K) -> { group, animate, setParam, cast }; elabCast(fire, t) is the figure light. Every
 // place-number is layout/elaboratory.ts ELAB_SET.
 //
@@ -46,8 +46,9 @@ export const ELAB_LOOK: PlaceLook = {
   fill: FILL,
   bloom: 0.45,
 };
-/** the per-frame dressing: fire 0..1 (deep red .. roaring), candle 0..1 (the set candle's length; < 0 hides it) */
-export const ELAB_PARAMS: Record<string, ParamValue> = { fire: 1, candle: 1 };
+/** the per-frame dressing: fire 0..1 (deep red .. roaring), candle 0..1 (the set candle's length; < 0 hides it),
+ *  embers 0..1 (0 default = off; 1 = the settled fire hours later: a low red ember bed, the standing flames gone) */
+export const ELAB_PARAMS: Record<string, ParamValue> = { fire: 1, candle: 1, embers: 0 };
 
 const W = S.walls, X0 = ELX + W.x0, X1 = ELX + W.x1, Z0 = W.z0, Z1 = W.z1, CB = S.ceilBack, CF = S.ceilFront;
 const F = S.furnace, FD = F.door, BN = S.bench, DR = S.door, WN = S.win;
@@ -94,6 +95,20 @@ const fireTex = () => paint(128, 128, (g, Wd, H) => {
   for (let i = 0; i < 18; i++) { g.fillStyle = css(r() < 0.5 ? "#fff0a0" : "#ffc048", 0.95); g.beginPath(); g.ellipse(Wd * r(), H * (0.86 + 0.12 * r()), 7 + 6 * r(), 4 + 3 * r(), 0, 0, 7); g.fill(); }
   g.fillStyle = "rgba(60,14,4,0.7)"; for (let i = 0; i < 10; i++) { g.beginPath(); g.ellipse(Wd * r(), H * (0.9 + 0.08 * r()), 5 + 4 * r(), 2.5, 0, 0, 7); g.fill(); }
 });
+/** THE SETTLED FIRE (param embers): the fire box gone dark red, a low bed of glowing coals along its floor, a few short
+ *  licks of flame no higher than a hand, no yellow (the painted fire above, hours later) */
+const emberTex = () => paint(128, 128, (g, Wd, H) => {
+  g.fillStyle = "#240603"; g.fillRect(0, 0, Wd, H);
+  const r = rng(616);
+  const glow = g.createRadialGradient(Wd / 2, H * 1.05, 0, Wd / 2, H * 1.05, H * 0.62); glow.addColorStop(0, "rgba(230,80,20,0.95)"); glow.addColorStop(0.55, "rgba(150,30,8,0.55)"); glow.addColorStop(1, "rgba(60,10,4,0)");
+  g.fillStyle = glow; g.fillRect(0, 0, Wd, H);
+  for (let i = 0; i < 6; i++) {   // short licks of flame
+    const x = Wd * (0.12 + 0.76 * r()), w = 5 + 5 * r(), h = H * (0.1 + 0.1 * r());
+    g.fillStyle = css(r() < 0.5 ? "#e0501a" : "#f06a22", 0.7); g.beginPath(); g.moveTo(x - w, H * 0.86); g.quadraticCurveTo(x - w * 0.5, H * 0.86 - h * 0.6, x + (r() - 0.5) * 4, H * 0.86 - h); g.quadraticCurveTo(x + w * 0.5, H * 0.86 - h * 0.55, x + w, H * 0.86); g.fill();
+  }
+  for (let i = 0; i < 26; i++) { g.fillStyle = css(r() < 0.35 ? "#ff8a30" : r() < 0.7 ? "#e85a1c" : "#b83410", 0.95); g.beginPath(); g.ellipse(Wd * r(), H * (0.84 + 0.14 * r()), 6 + 5 * r(), 3 + 3 * r(), 0, 0, 7); g.fill(); }
+  g.fillStyle = "rgba(30,6,3,0.8)"; for (let i = 0; i < 16; i++) { g.beginPath(); g.ellipse(Wd * r(), H * (0.86 + 0.12 * r()), 4 + 4 * r(), 2, 0, 0, 7); g.fill(); }
+});
 /** THE NIGHT GARDEN through the door: blue moonlit gravel, a box cone, the garden wall, the dark range with a lit window */
 const nightTex = () => paint(256, 256, (g, Wd, H) => {
   const sky = g.createLinearGradient(0, 0, 0, H * 0.5); sky.addColorStop(0, "#26346a"); sky.addColorStop(1, "#4a5c96");
@@ -121,6 +136,7 @@ export function buildElaboratory(K: Kit) {
   const mGlassB = new THREE.MeshStandardMaterial({ color: "#7a9a8a", roughness: 0.15, metalness: 0, transparent: true, opacity: 0.75 });
   const glowMats: { m: THREE.MeshBasicMaterial; k: number; tex: boolean }[] = [];
   const glowMat = (map: THREE.Texture | null, k = 1, o: Partial<THREE.MeshBasicMaterialParameters> = {}) => { const m = new THREE.MeshBasicMaterial({ map, color: "#ffffff", fog: false, ...o }); glowMats.push({ m, k, tex: !!map }); return m; };
+  let mEmbers: THREE.MeshBasicMaterial | null = null, emberMesh: THREE.Mesh | null = null, flamesMat: THREE.MeshBasicMaterial | null = null;
 
   // =================================================================================================== floor, walls, roof
   Mk.mesh("elab.floor", levelQuad(X0, X1, Z0, Z1, 0, (x, z) => [(x - X0) / 0.92, -z / 0.92]), Mk.tex(floorTex(), 0.92), { cast: false });
@@ -163,6 +179,12 @@ export function buildElaboratory(K: Kit) {
     // the flames standing in the middle of the fire box (additive: the dark of the painting adds nothing)
     const mFlames = glowMat(fireTex(), 0.9, { transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
     Mk.mesh("elab.furnace.flames", new THREE.PlaneGeometry(FD.w - 0.04, FD.y1 - FD.y0 - 0.02).rotateY(Math.PI / 2).translate(fx - 0.15, (FD.y0 + FD.y1) / 2, fzc), mFlames, { cast: false, noink: true });
+    // param embers (default 0 = off, the look above unchanged): the SETTLED fire, hours later: a low bed of red embers
+    // painted over the fire, the standing flames gone (WP5-F, director round 1: the time cut must read)
+    mEmbers = glowMat(emberTex(), 1.3, { transparent: true, opacity: 0, depthWrite: false });
+    emberMesh = Mk.mesh("elab.furnace.embers", new THREE.PlaneGeometry(FD.w + 0.02, FD.y1 - FD.y0 + 0.02).rotateY(Math.PI / 2).translate(fx - 0.31, (FD.y0 + FD.y1) / 2, fzc), mEmbers, { cast: false, noink: true });
+    emberMesh.visible = false;
+    flamesMat = mFlames;
     for (let i = 0; i < 9; i++) { const r = rng(610 + i); const c = new THREE.Mesh(rockG(620 + i, 0.07 + 0.04 * r(), 0.05, 0.07 + 0.04 * r(), 1, 0).translate(fx - 0.06 - 0.24 * r(), FD.y0 + 0.02, fzc + (r() - 0.5) * (FD.w - 0.08)), mCoals); c.layers.set(NOINK); c.name = "elab.furnace.coals"; group.add(c); }
     const mAsh = glowMat(null, 0.3);
     Mk.mesh("elab.furnace.ash", new THREE.PlaneGeometry(F.ash.w, F.ash.y1 - F.ash.y0).rotateY(Math.PI / 2).translate(fx - 0.2, (F.ash.y0 + F.ash.y1) / 2, fzc), mAsh, { cast: false, noink: true });
@@ -290,8 +312,20 @@ export function buildElaboratory(K: Kit) {
     const mNight = new THREE.MeshBasicMaterial({ map: nightTex(), fog: false });
     Mk.mesh("elab.night", new THREE.PlaneGeometry(3.2, 3.2).rotateY(Math.PI).translate(ELX + DR.x, 1.3, Z1 + DR.wall + 1.4), mNight, { cast: false, noink: true });
     Mk.mesh("elab.night.ground", levelQuad(ELX + DR.x - 1.6, ELX + DR.x + 1.6, Z1, Z1 + DR.wall + 1.4, 0, (x, z) => [x, z]), Mk.basic("#56628e"), { cast: false, noink: true });
-    // the moonlight spilling in over the threshold (a soft blue patch on the bricks)
-    const spill = paint(64, 128, (g, Wd, H) => { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "rgba(120,140,220,0.0)"); gr.addColorStop(1, "rgba(120,140,220,0.28)"); g.fillStyle = gr; g.fillRect(4, 0, Wd - 8, H); });
+    // the moonlight spilling in over the threshold: a faint blue-grey cooling of the bricks, strongest AT the threshold
+    // (the canvas' top row = v 1 = the threshold) and fading into the room, every edge feathered (no shape to point at;
+    // director round 1: the old hard-edged 0.28 lilac wedge read as a colour block in F's corner shot). WP5-F.
+    const spill = paint(64, 128, (g, Wd, H) => {
+      const img = g.createImageData(Wd, H), D = img.data, ss = (a: number, b: number, x: number) => { const u = Math.max(0, Math.min(1, (x - a) / (b - a))); return u * u * (3 - 2 * u); };
+      for (let py = 0; py < H; py++) for (let px = 0; px < Wd; px++) {
+        const d = py / (H - 1), u = (px + 0.5) / Wd;                      // d: 0 at the threshold .. 1 at 1.3 m inside
+        const uc = 0.42 + 0.22 * d, hw = 0.3 + 0.12 * d;                   // the beam drifts right and widens as it goes in
+        const side = ss(hw, hw * 0.35, Math.abs(u - uc));                  // soft sides
+        const a = side * (0.1 * Math.pow(1 - d, 1.7) + 0.06 * Math.exp(-d / 0.07));
+        const i = 4 * (py * Wd + px); D[i] = 150; D[i + 1] = 165; D[i + 2] = 198; D[i + 3] = Math.round(255 * Math.min(1, a));
+      }
+      g.putImageData(img, 0, 0);
+    });
     Mk.mesh("elab.moonspill", levelQuad(ELX + DR.x - DR.w / 2 + 0.06, ELX + DR.x + DR.w / 2 + 0.3, Z1 - 1.3, Z1, 0.0008, (x, z) => [(x - (ELX + DR.x - DR.w / 2)) / (DR.w + 0.3), 1 - (Z1 - z) / 1.3]), Mk.basic("#ffffff", { map: spill, additive: true }), { cast: false, noink: true });
     // the little window: dark blue leaded glass set in the wall
     const mWin = new THREE.MeshBasicMaterial({ map: leadedTex({ w: WN.w, h: WN.y1 - WN.y0, q: 0.1, glass: "#4a5a90", hi: "#5e70a8", lo: "#3a4878", lead: "#20222c" }), fog: false });
@@ -310,7 +344,7 @@ export function buildElaboratory(K: Kit) {
   // =================================================================================================== the light
   const Lr = lightRig(group, { dir: [-0.78, 0.14, -0.6], k: 4.0, col: "#ffb47c", at: [ELX + 0.2, 0, 0], half: 4.2, hemi: ["#7a7c98", "#3a302c", 0.75], point: { col: "#ffa860", k: 6, at: [fx + 0.7, 0.95, fzc + 0.5], dist: 6.5 } });
   const red = new THREE.Color("#e06a44"), roar = new THREE.Color("#ffbc84"), tmp = new THREE.Color();
-  let fire = 1, candle = 1;
+  let fire = 1, candle = 1, embers = 0;
   const animate = (t: number) => {
     const fl = fireFlicker(t, 0.4), k = fire;
     tmp.copy(red).lerp(roar, k);
@@ -320,6 +354,11 @@ export function buildElaboratory(K: Kit) {
       const g = (0.55 + 0.45 * k) * (1 + 1.5 * (fl - 1)) * w;
       if (tex) m.color.setRGB(Math.min(1, g), Math.min(1, g * (0.45 + 0.55 * k)), Math.min(1, g * (0.3 + 0.7 * k)));      // the painted fire keeps its own colours (deep red at 0)
       else m.color.setRGB(Math.min(1, g), Math.min(1, (0.05 + 0.3 * k) * g), Math.min(1, (0.01 + 0.06 * k) * g));
+    }
+    // the settled fire (param embers, default 0 = nothing changes): the ember bed over the painting, the flames sunk
+    if (emberMesh && mEmbers && flamesMat) {
+      emberMesh.visible = embers > 0.001; mEmbers.opacity = embers;
+      if (embers > 0) flamesMat.color.multiplyScalar(1 - 0.94 * embers);
     }
     fireGlow.material.opacity = (0.1 + 0.16 * k) * fl;
     // sparks: each rises from the door mouth on its own loop, drifting, fading as it climbs
@@ -346,6 +385,7 @@ export function buildElaboratory(K: Kit) {
     setParam(name: string, v: ParamValue) {
       if (name === "fire") fire = Math.max(0, Math.min(1, Number(v)));
       if (name === "candle") candle = Number(v);
+      if (name === "embers") embers = Math.max(0, Math.min(1, Number(v)));
     },
     cast(t: number): Partial<CastLight> { return elabCast(fire, t); },
   };

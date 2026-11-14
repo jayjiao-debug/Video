@@ -13,25 +13,29 @@
 //   F3  37 "I'm watching a fire." (to the fire, not to her). CARD 3: he stares at the fire; HUMPHREY turns to the heap,
 //       scoops, swings round and throws two loads into the fire door (sparks) on the mix's shovel hits, then leans the
 //       shovel on the furnace's side and dozes standing. 38 "Go to bed." (he turns his eyes to her); 39 「不走…」 (she steps in, stubborn); 40 "Nobody stays a
-//       whole day." (dry, puzzled: a tilt of the head); HUMPHREY takes the folded empty sack off the stool and goes out
-//       (out of frame left); Newton's eyes follow him, then go back to the fire.
-//   F4  TIME PASSES (the cut on BEAT.F.timePass): close over the board on his knees, his charcoal scratching circles
-//       and triangles, his head bowed over it, the fire gone deep red. She straightens up and steps back as she asks
-//       41: NEWTON on the stool by the fire door, the board on his knee, the poker hung by the door, his candle
-//       (shorter) on the furnace's corner (off the frame; G finds it there).
+//       whole day." (dry, puzzled: a tilt of the head); HUMPHREY takes the folded empty sack off the stool in his left
+//       hand and goes out past the heap, upstage of her mic (out of frame left); Newton's eyes follow him, then go back
+//       to the fire.
+//   F4  TIME PASSES (the cut on BEAT.F.timePass): it opens on his candle burned down to a stub on the furnace top (0.7 s),
+//       her eyes drop to the board on his knees, his charcoal scratching circles and triangles, his head bowed over it;
+//       the fire has settled to a low bed of red embers (fire 0.13 + the set's embers), the room sunk round him (a
+//       grade). She straightens up and steps back as she asks 41: NEWTON on the stool by the fire door, the board on his
+//       knee, the poker hung by the door, his candle on the furnace's corner (G finds it there).
 //   F5  42-43. THE SLOW PUSH-IN from 44 (BEAT.F.push[0]) to the end of 50 (ELAB_CAMS.stool -> ELAB_CAMS.push): 44 at
-//       the fire; 46 "Close?" at her; he takes the poker off its hook and POKES the fire (sparks); 47-49 bitter, then ashamed,
-//       his eyes down; THE FIRE SPITS (sparks, a flare of light) and he does not look up; 50 sad, cracking; 51 her
-//       「她走了，您却没走。」. Silence: the push has stopped; he pokes the fire again; she lowers the mic.
+//       the fire; 46 "Close?" at her (a 0.6 s flash of stern, then deadpan, eyes on the fire); he takes the poker off its
+//       hook and POKES the fire (sparks, the flames stirred up); 47-49 bitter, then ashamed, his eyes down; THE FIRE SPITS
+//       (a hard burst of sparks up out of the door, never over his face; the flames leap; a warm flash on his near
+//       cheek) and he does not look up; 50 sad, cracking; 51 her 「她走了，您却没走。」. Silence: the push has stopped; he
+//       pokes the fire again, eyes open on it, and it comes back up to G's fire; she lowers the mic; then "sigh".
 import * as THREE from "three";
 import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT } from "../people";
 import { GDX, GARDEN, GARDEN_SET, ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, type TaSeat } from "../layout";
-import { BOARD, POKER, STOOL } from "../props";
+import { BOARD, POKER, STOOL, candleTop } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, yawTo, lerpA, rel, seated, kneel, cardLower, type Rig } from "./common";
-import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, aimThrough, quatYZ, shovelPut, stroke, sparks } from "./segF_parts";
+import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, aimThrough, quatYZ, shovelPut, stroke, sparks, flash, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, type SparkMask } from "./segF_parts";
 import type { World } from "../world";
 import type React from "react";
 
@@ -49,8 +53,10 @@ const CARD3 = card("F02");
 const TH1 = L02.to + sec(0.7), TH2 = L03.from - sec(1.4);
 /** he leans the shovel on the furnace; he takes the sack off the stool and goes out (gone before the time cut) */
 const T_LEAN = TH2 + 8, T_FREE = TH2 + 20, T_SACK = L05.from + 8;
-/** THE TIME CUT; she straightens up from the board and steps back as she asks 41 */
-const T_TP = BEAT.F.timePass, T_RISE0 = BEAT.F.board[1] - 10, T_RISE1 = L06.from + 22;
+/** THE TIME CUT: it opens on his candle burned down to a stub on the furnace top (0.7 s), her eyes drop to the board
+ *  on his knees; she straightens up from the board and steps back as she asks 41 */
+const T_TP = BEAT.F.timePass, T_CANDLE1 = T_TP + sec(0.67), T_BOARD_ON = T_CANDLE1 + 12;
+const T_RISE0 = BEAT.F.board[1] + 10, T_RISE1 = L06.from + 38;
 /** he stops drawing (42) and lays the charcoal down on the board */
 const T_STOP = L07.from + 4;
 /** THE PUSH-IN (44 .. the end of 50) */
@@ -157,17 +163,24 @@ const shovelAt = (f: number): { sh: Sh; face: number } => {
   return { sh: { blade: bl.applyAxisAngle(Y, face).add(H_AT), handle: hd.applyAxisAngle(Y, face) }, face };
 };
 const loaded = (f: number) => (f > TH1 - 18 && f < TH1) || (f > TH2 - 18 && f < TH2);
-/** his way out: to the stool, the sack, the door, the night */
-const H_TAKE = ST1.clone().add(V(-0.31, 0, -0.13));
-const HPATH_OUT = [H_AT, H_TAKE], HPATH_DOOR = [H_TAKE, V(ELX - 0.45, 0, 1.15), ELAB.doorOut];
-/** the folded empty sack lying on the stool, its near end toward his right hand; he takes it by that end (A_SACK, in the
- *  sack's own frame) and it swings down from his fist to hang flat at his right side */
+/** his way out: to the stool for the sack; then back past the heap, UPSTAGE of her mic (on her screen the sack at his
+ *  side passes above her hand and left of the mic's head instead of behind them: director round 1), and round the heap
+ *  to the door, the night */
+const H_TAKE = ST1.clone().add(V(-0.415, 0, -0.174)), H_PAST = V(ELX - 0.75, 0, -0.25);
+const HPATH_OUT = [H_AT, H_TAKE], HPATH_DOOR = [H_TAKE, H_PAST, V(ELX - 0.95, 0, 0.4), V(ELX - 0.6, 0, 1.3), ELAB.doorOut];
+const OUT_YAW = yawTo(H_TAKE, H_PAST);
+/** the folded empty sack lying on the stool, its near end toward his LEFT hand (the side he walks out with toward her);
+ *  he takes it by that end (A_SACK, in the sack's own frame) and it swings down from his fist to hang flat at his left side */
 const H_TAKE_FACE = yawTo(H_TAKE, ST1);
 const SACK_LYING = SACK_ON_STOOL.clone().add(V(0, 0.002, 0));
-const SACK_LYING_ROT = (() => { const d = rel(H_TAKE, H_TAKE_FACE, -0.16, 0, 0.2).sub(ST1).setY(0).normalize(); return new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), Math.atan2(-d.x, -d.z)); })();
+const SACK_LYING_ROT = (() => { const d = rel(H_TAKE, H_TAKE_FACE, 0.16, 0, 0.2).sub(ST1).setY(0).normalize(); return new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), Math.atan2(-d.x, -d.z)); })();
 const A_SACK = V(0, 0.045, -0.2);
 const SACK_GRAB = SACK_LYING.clone().add(A_SACK.clone().applyQuaternion(SACK_LYING_ROT));
-const T_TAKE = T_SACK + Math.round((0.75 / 0.9) * FPS) + 8, T_GO = T_TAKE + 10;
+/** he takes it; he straightens up turning to his way out (14 frames), and goes */
+const T_TAKE = T_SACK + Math.round((0.75 / 0.9) * FPS) + 8, T_GO = T_TAKE + 14;
+/** his left fist carrying the sack, out from his side and a little forward; the sack hangs from it with its foot swung
+ *  out (SACK_OUT), clear of his coat's flared skirt */
+const SACK_CARRY = (p: THREE.Vector3, face: number) => rel(p, face, 0.31, 0.72, 0.07), SACK_OUT = 0.55;
 
 // ---------------------------------------------------------------------------------------------------- F4-F5 the stool, the board, the poker
 const SEAT: TaSeat = { top: ELAB.stool.clone().add(V(0, STOOL.seat, 0)), floor: 0, back: 0.03, facing: ELAB.stoolFacing };
@@ -224,8 +237,9 @@ const pokeAt = (f: number): { hand: THREE.Vector3; held: { end: THREE.Vector3; d
 };
 /** the poker's rotation at rest: +y down the rod, its ring flat against the furnace's face (+z = the face's normal) */
 const PK_ROT_REST = quatYZ(PK_DIR_REST, V(1, 0, 0));
-/** his candle, short, on the furnace's top by the corner (where G finds it) */
-const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07, -0.42), CANDLE_LEN = 0.3;
+/** his candle, burned down to a stub (it was a new candle in his hand at the cut in: len 0.75), on the furnace's top by
+ *  the corner (where G finds it; lifted 2 mm off the plate) */
+const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07 + 0.002, -0.42), CANDLE_LEN = 0.12;
 /** her eyes: close over the board (she leans in over his knees: the drawing big in the lower half, his bowed head
  *  above it; his 0.5 m head is too near the board for an insert without it), then back to the stool framing
  *  (ELAB_CAMS.stool's place, his eyes high in the middle); the push ends on ELAB_CAMS.push (G carries on from it) */
@@ -235,27 +249,51 @@ const SEAT_EYES = SEAT.top.clone().add(V(0.005, 0.64, 0));
 const STOOL_POS = V(...ELAB_CAMS.stool.pos);
 const STOOL_CAM: CamPose = frameOn(STOOL_POS, SEAT_EYES, 545, 480);
 const PUSH_CAM: CamPose = { pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov };
+/** THE TIME CUT opens on his candle, burned down to a stub on the furnace top (she is leaning in toward it, by the
+ *  board; her head eases in a little over the hold), then her eyes drop to the board */
+const CANDLE_LOOK = CANDLE_AT.clone().add(V(0, candleTop(CANDLE_LEN) * 0.55, 0));
+const candleCam = (f: number): CamPose => frameOn(BOARD_POS.clone().lerp(CANDLE_LOOK, 0.3 + 0.04 * smooth(clamp01((f - T_TP) / (T_CANDLE1 - T_TP)))), CANDLE_LOOK, 560, 960, 44);
 const laterCam = (f: number): CamPose => {
+  if (f < T_CANDLE1) return candleCam(f);
+  if (f < T_BOARD_ON) return mixCam(candleCam(T_CANDLE1), BOARD_CAM, stride(clamp01((f - T_CANDLE1) / (T_BOARD_ON - T_CANDLE1))));
   if (f < T_RISE0) return BOARD_CAM;
   if (f < T_RISE1) return mixCam(BOARD_CAM, STOOL_CAM, stride(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0))));
   return lerpCam(STOOL_CAM, PUSH_CAM, creepU(f, P0, P1, 10));
 };
 
+/** THE FIRE after the time cut, hours later: settled to a low bed of red embers (fire 0.13 + the set's embers: no
+ *  standing flames, the room dimmer, the faces still lit). The pokes stir flames up for a moment; THE SPIT throws them up
+ *  hard for about 6 frames; the poke after 51 brings the fire back up to what G opens on (fire 0.3, no embers, the
+ *  film's own grade), so the cut to G matches. `late` = how much of the hours-later grade, `spit` = the spit's flare. */
+const FIRE_LOW = 0.13, FIRE_G = 0.3;
+const fireLate = (f: number) => {
+  const rv = smooth(clamp01((f - T_POKE2) / 26));
+  const sp = holdK(f, T_SPIT, 4, 6), p1 = flareK(f, T_POKE, 12), p2 = flareK(f, T_POKE2, 10);
+  const fire = Math.min(1, lerp(FIRE_LOW, FIRE_G, rv) + 0.75 * sp + 0.3 * p1 + 0.15 * p2);
+  const embers = clamp01((1 - rv) * (1 - 0.85 * sp) * (1 - 0.55 * p1) - 0.3 * p2);
+  return { fire, embers, late: 1 - rv, spit: sp, poke: Math.max(p1, p2) };
+};
+/** the fire door's opening on the furnace's face (its top edge throws the sparks) */
+const FDR = ELAB_SET.furnace.door, FD_X = ELX + ELAB_SET.furnace.x1;
+
 // ---------------------------------------------------------------------------------------------------- faces
 type Ex = "deadpan" | "focus" | "stern" | "sad" | "sigh" | "pained";
+/** deadpan until the cracks (47 on): "stern" only as a 0.6 s flash on "Close?" (director round 1: held, it read as
+ *  cartoon anger), "dying" deadpan with his head bowed a little (nLook); "sigh" only once the second poke is done */
+const T_CLOSE = capWord("F11", "Close").from;
 const N_EXPR: [number, Ex][] = [
-  [S.from, "deadpan"], [T_TP, "focus"], [T_STOP, "deadpan"], [capWord("F09", "dying").from, "sad"], [L09.to + 6, "deadpan"],
-  [capWord("F11", "Close").from - 2, "stern"], [capWord("F12", "left").from, "sad"], [L13.from, "deadpan"], [capWord("F14", "boy").from + 4, "pained"],
-  [capWord("F14", "burn").from + 10, "sad"], [L16.to + 20, "sigh"],
+  [S.from, "deadpan"], [T_TP, "focus"], [T_STOP, "deadpan"],
+  [T_CLOSE - 2, "stern"], [T_CLOSE + sec(0.6) - 2, "deadpan"], [capWord("F12", "left").from, "sad"], [L13.from, "deadpan"], [capWord("F14", "boy").from + 4, "pained"],
+  [capWord("F14", "burn").from + 10, "sad"], [T_POKE2 + 22, "sigh"],
 ];
 /** his eyes (screen: -0.5 = toward the fire on his screen-left, 0 = at her) */
 const N_GAZE: [number, number][] = [
   [T_IN, 0], [N_ARRIVE, -0.5], [T_GOLD, 0], [L02.from + 8, -0.5], [L03.from - 2, 0], [T_SACK + 4, -0.5], [T_SACK + 30, -0.5],
-  [T_TP, 0], [T_STOP + 4, -0.5], [L10.from + 10, 0], [capWord("F11", "father").from, -0.5], [L13.from + 4, 0], [L14.from + 6, -0.5], [L16.from + 10, 0], [L16.to + 6, -0.5],
+  [T_TP, 0], [T_STOP + 4, -0.5], [L10.from + 10, 0], [T_CLOSE + sec(0.6), -0.5], [L13.from + 4, 0], [L14.from + 6, -0.5], [L16.from + 10, 0], [L16.to + 6, -0.5],
 ];
 /** how far his head is bowed (deg) */
 const nLook = (f: number) => (f < T_TP ? ky(f, [[L05.from, 4], [capWord("F05", "Nobody").from + 6, 0]]) :
-  ky(f, [[T_RISE0, 44], [T_RISE1, 28], [T_STOP - 2, 28], [T_STOP + 8, 6], [L14.from + 4, 6], [L14.from + 16, 16], [L15.from + 10, 16], [L15.from + 22, 8]]));
+  ky(f, [[T_RISE0, 44], [T_RISE1, 28], [T_STOP - 2, 28], [T_STOP + 8, 6], [capWord("F09", "dying").from - 4, 6], [capWord("F09", "dying").from + 8, 13], [L09.to + 4, 13], [L09.to + 16, 6], [L14.from + 4, 6], [L14.from + 16, 16], [L15.from + 10, 16], [L15.from + 22, 8]]));
 const HM_EXPR: [number, "sleep" | "neutral"][] = [[S.from, "neutral"], [T_FREE + 8, "sleep"], [T_SACK, "neutral"]];
 
 // ---------------------------------------------------------------------------------------------------- the shot
@@ -276,14 +314,20 @@ const pose = (w: World, f: number): Pose => {
       hands: [null, rel(g.at, g.facing, 0.27, 0.74 + bob, 0.12)] });
     w.update();
     w.prop("candle").put(n.handWorld(1), { grip: "grip", len: 0.8, lit: true, t });
-    return { camera: cam, post: { dof: { focus: posOf(cam).distanceTo(n.headWorld()), amount: 2 } }, slate: "F1 garden" };
+    // the outbuilding's firelight: a warm spill on the gravel at its door and on the door itself (the night grade cools
+    // everything else; the set's own door gap and chimney glow: requests.md WP2)
+    const sill = V(GDX + GE.door.x, 0.02, GE.z1 + 0.4), sp = w.project(sill), sr = w.project(sill.clone().add(V(1.1, 0, 0)));
+    const dm = w.project(V(GDX + GE.door.x, 0.9, GE.z1 + 0.02)), rr = Math.hypot(sr.x - sp.x, sr.y - sp.y);
+    const glow = sp.front ? [flash("doorSpill", sp, rr, 0.5), flash("doorGlow", dm, rr * 0.75, 0.32)].filter(Boolean) : [];
+    return { camera: cam, post: { dof: { focus: posOf(cam).distanceTo(n.headWorld()), amount: 2 }, grade: GRADE_NIGHT }, overlays: glow.length ? glow : undefined, slate: "F1 garden" };
   }
 
   // ================================================================ THE ELABORATORY
   const later = f >= T_TP;
   w.setPlace("elaboratory");
-  const flare = later ? Math.max(0.28 * flareK(f, T_SPIT, 14), 0.12 * flareK(f, T_POKE, 10), 0.08 * flareK(f, T_POKE2, 10)) : 0;
-  w.set.param("fire", later ? 0.3 + flare : 1);
+  const fs = later ? fireLate(f) : null;
+  w.set.param("fire", fs ? fs.fire : 1);
+  w.set.param("embers", fs ? fs.embers : 0);
   w.set.param("candle", later ? 0.42 : 1);
   const cam = later ? laterCam(f) : insideCam(f);
   w.setCamera(cam);
@@ -326,13 +370,15 @@ const pose = (w: World, f: number): Pose => {
       hm.set({ at: H_AT.clone(), facing: face, pose: { kind: "idle", t: t + 0.7 }, expr: hExpr, gaze: f < N_ARRIVE + 20 ? 0.5 : 0, blink: lid(t, 2), visible: true,
         lookDown: twoHands ? 14 : 0, hands: holding ? (twoHands ? [pair[0], pair[1]] : [tEnd, null]) : [null, null] });
     } else {
-      const walk1 = walkAlong(HPATH_OUT, 0.9, (f - T_SACK) / FPS, { endFacing: yawTo(HPATH_OUT[1], ST1) });
-      const out = f >= T_GO ? walkAlong(HPATH_DOOR, 1.35, (f - T_GO) / FPS) : null;
+      const walk1 = walkAlong(HPATH_OUT, 0.9, (f - T_SACK) / FPS, { endFacing: H_TAKE_FACE });
+      const out = f >= T_GO ? walkAlong(HPATH_DOOR, 1.05, (f - T_GO) / FPS) : null;
       const s = out ?? walk1;
+      // he straightens up with it turning from the stool to his way out (round through her side), then walks
+      const face = out ? s.facing : f >= T_TAKE ? lerpA(H_TAKE_FACE, OUT_YAW, smooth(clamp01((f - T_TAKE - 6) / (T_GO - T_TAKE - 6)))) : s.facing;
       const dip = Math.sin(Math.PI * clamp01((f - (T_TAKE - 10)) / 20));
-      const handR = f < T_TAKE ? (f >= T_TAKE - 5 ? SACK_GRAB.clone() : null) : f < T_GO ? SACK_GRAB.clone().lerp(rel(s.at, s.facing, -0.25, 0.64, 0.05), smooth((f - T_TAKE) / 9)) : rel(s.at, s.facing, -0.25, 0.64, 0.04);
-      hm.set({ at: s.at, facing: s.facing, pose: s.pose, expr: hExpr, gaze: 0, blink: lid(t, 2), visible: true, ...kneel(0.45 * dip, s.at, 20),
-        hands: [handR, null], turn: out ? undefined : 0 });
+      const handL = f < T_TAKE ? (f >= T_TAKE - 5 ? SACK_GRAB.clone() : null) : f < T_TAKE + 9 ? SACK_GRAB.clone().lerp(SACK_CARRY(s.at, face), smooth((f - T_TAKE) / 9)) : SACK_CARRY(s.at, face);
+      hm.set({ at: s.at, facing: face, pose: s.pose, expr: hExpr, gaze: 0, blink: lid(t, 2), visible: true, ...kneel(0.45 * dip, s.at, 20),
+        hands: [null, handL], turn: f >= T_TAKE ? undefined : 0 });
     }
   }
 
@@ -355,9 +401,9 @@ const pose = (w: World, f: number): Pose => {
     w.prop("candle").put(n.handWorld(1), { grip: "grip", len: 0.75, lit: true, t });
     if (hm && f < T_FREE) { const P = shovelPut(sh.sh.blade, sh.sh.handle); w.prop("shovel").put(P.at, { rot: P.rot, load: loaded(f) }); }
     if (hm && f >= T_TAKE) {
-      // lifted off the stool by its near end, it swings down from his fist to hang flat at his right side
-      const hand = hm.handWorld(0), right = V(-Math.cos(hm.bodyYaw), 0, Math.sin(hm.bodyYaw)), k = smooth(clamp01((f - T_TAKE) / 9));
-      const rot = SACK_LYING_ROT.clone().slerp(quatYZ(right.clone().multiplyScalar(-1), V(0, -1, 0)), k);
+      // lifted off the stool by its near end, it swings down from his fist to hang flat at his left side
+      const hand = hm.handWorld(1), right = V(-Math.cos(hm.bodyYaw), 0, Math.sin(hm.bodyYaw)), k = smooth(clamp01((f - T_TAKE) / 9));
+      const rot = SACK_LYING_ROT.clone().slerp(quatYZ(right.clone(), V(0, -1, 0).addScaledVector(right, -SACK_OUT)), k);
       w.prop("sack").put(hand.clone().sub(A_SACK.clone().applyQuaternion(rot)), { full: 0, rot });
     }
   } else {
@@ -376,22 +422,47 @@ const pose = (w: World, f: number): Pose => {
     : ky(f, [[T_RISE0 + 4, 0], [T_RISE0 + 16, 1], [T_MICDOWN, 1], [T_MICDOWN + 26, 0]]);
   const M = enter > 0.001 ? C.putMic(w, cam, f, { aim: aimThrough(f, [[S.from, mouth]]), enter }) : null;
 
-  // ---- the sparks: the shovel's charcoal, the poker, the spit (from the fire door's mouth on screen)
+  // ---- the sparks: the shovel's charcoal, the poker, THE SPIT: out of the fire door's top edge on screen, up and away
+  // from his face; the heads in front of the fire are masked out (a spark never crosses a face)
   const door = w.project(ELAB.furnaceDoor);
   if (door.front) {
-    const pd = { x: door.x, y: door.y - 25 };
-    if (!later) { overlays.push(sparks(f, TH1, pd, { n: 14, len: 16, speed: 12, size: 13, dir: -60, seed: 1 }), sparks(f, TH2, pd, { n: 14, len: 16, speed: 12, size: 13, dir: -60, seed: 2 })); }
-    else {
-      overlays.push(sparks(f, T_POKE, pd, { n: 10, len: 15, speed: 11, size: 13, dir: -55, seed: 3 }), sparks(f, T_POKE2, pd, { n: 8, len: 13, speed: 10, size: 12, dir: -55, seed: 4 }));
-      overlays.push(sparks(f, T_SPIT, pd, { n: 30, len: 22, speed: 26, size: 20, dir: -35, spread: 120, seed: 5 }));
+    const A = C.camAxes(cam);
+    const disc = (p: THREE.Vector3, r: number) => { const c = w.project(p), e = w.project(p.clone().addScaledVector(A.right, r)); return { x: c.x, y: c.y, r: Math.hypot(e.x - c.x, e.y - c.y) }; };
+    const mask: SparkMask = [disc(n.headWorld(), 0.31)];
+    if (hm) mask.push(disc(hm.headWorld(), 0.28));
+    const e0 = w.project(V(FD_X, FDR.y1, FDR.z - FDR.w / 2)), e1 = w.project(V(FD_X, FDR.y1, FDR.z + FDR.w / 2)), b0 = w.project(V(FD_X, FDR.y0, FDR.z - FDR.w / 2)), b1 = w.project(V(FD_X, FDR.y0, FDR.z + FDR.w / 2));
+    const [eL, eR] = e0.x < e1.x ? [e0, e1] : [e1, e0], bL = e0.x < e1.x ? b0 : b1;
+    const top = (k: number) => ({ x: lerp(eL.x, eR.x, k), y: lerp(eL.y, eR.y, k) + 8 }), wTop = Math.abs(eR.x - eL.x);
+    if (!later) {
+      overlays.push(sparks(f, TH1, top(0.5), { n: 18, len: 16, speed: 12, size: 13, dir: -88, spread: 50, seed: 1, jitter: wTop * 0.6 }, mask),
+        sparks(f, TH2, top(0.5), { n: 18, len: 16, speed: 12, size: 13, dir: -88, spread: 50, seed: 2, jitter: wTop * 0.6 }, mask));
+    } else {
+      overlays.push(sparks(f, T_POKE, top(0.35), { n: 18, len: 14, speed: 15, size: 13, dir: -104, spread: 40, seed: 3, streak: 0.8, jitter: wTop * 0.5 }, mask),
+        sparks(f, T_POKE2, top(0.35), { n: 14, len: 13, speed: 13, size: 12, dir: -104, spread: 40, seed: 4, streak: 0.8, jitter: wTop * 0.5 }, mask));
+      // THE SPIT: a hard burst up out of the top edge and out of the left edge, brighter, many more sparks
+      overlays.push(sparks(f, T_SPIT, top(0.4), { n: 140, len: 26, speed: 40, size: 24, dir: -100, spread: 46, seed: 5, stagger: 4, streak: 1.4, glow: 1.5, jitter: wTop * 0.9 }, mask),
+        sparks(f, T_SPIT, { x: lerp(eL.x, bL.x, 0.35), y: lerp(eL.y, bL.y, 0.35) }, { n: 40, len: 18, speed: 34, size: 20, dir: -150, spread: 40, seed: 6, stagger: 3, streak: 1.3, glow: 1.4, jitter: 50 }, mask));
     }
+    // the flare's warm flash out of the door onto the near side of his face (the spit; a little on a poke)
+    if (fs) { const hd = mask[0]; overlays.push(flash("flash", { x: lerp(eR.x, hd.x, 0.25), y: lerp(eR.y, hd.y, 0.35) }, hd.r * 1.5, 0.9 * fs.spit + 0.25 * fs.poke)); }
   }
 
   // ---- the lens: a light focus on him; close on the board, on the board
-  let dof: { focus: number; amount: number } | undefined = M?.dof;
-  if (later && f < T_RISE1) dof = { focus: posOf(cam).distanceTo(B_C), amount: 3 * (1 - smooth(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)))) };
-  return { camera: cam, post: dof && dof.amount > 0.05 ? { dof } : undefined, overlays: overlays.filter(Boolean).length ? overlays.filter(Boolean) : undefined, slate: later ? "F4-5 stool" : "F2-3 inside" };
+  // (her mic hand near the lens: a lighter blur in the wide 3-shot, so it reads as a hand, not a grey mitten)
+  let dof: { focus: number; amount: number } | undefined = M?.dof && !later ? { focus: M.dof.focus, amount: Math.min(M.dof.amount, 1.1) } : M?.dof;
+  if (later && f < T_RISE1) {
+    const kb = f < T_CANDLE1 ? 0 : clamp01((f - T_CANDLE1) / (T_BOARD_ON - T_CANDLE1));
+    dof = { focus: posOf(cam).distanceTo(CANDLE_LOOK.clone().lerp(B_C, smooth(kb))), amount: lerp(2.2, 3, kb) * (1 - smooth(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)))) };
+  }
+  // the grade: hours later the room sinks round him (until the poke after 51 brings the fire back up)
+  const post: Pose["post"] = {};
+  if (dof && dof.amount > 0.05) post.dof = dof;
+  if (fs && fs.late > 0.001) post.grade = mixGrade(GRADE_BASE, GRADE_LATE, fs.late);
+  const ov = overlays.filter(Boolean);
+  return { camera: cam, post: post.dof || post.grade ? post : undefined, overlays: ov.length ? ov : undefined, slate: later ? "F4-5 stool" : "F2-3 inside" };
 };
+/** a held flare (the spit): up in 2 frames, full for `hold`, down over `len` */
+const holdK = (f: number, on: number, hold: number, len: number) => { const d = f - on; return d < -2 || d > hold + len ? 0 : d < 0 ? (d + 2) / 2 : d <= hold ? 1 : 1 - smooth((d - hold) / len); };
 /** a flare of the fire on a hit: up in 2 frames, down over `len` */
 const flareK = (f: number, on: number, len: number) => { const d = f - on; return d < -2 || d > len ? 0 : d < 0 ? (d + 2) / 2 : 1 - easeOutCubic(d / len); };
 

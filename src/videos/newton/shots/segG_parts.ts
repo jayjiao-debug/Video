@@ -1,10 +1,12 @@
 // SEGMENT G's own helpers (WP5-G): framing, camera mixing, her walking ease, the mic's aim through keys, axes ->
-// quaternion, keyed rigid poses (the falling board), the fork. Copies of the generic camera helpers of segE_parts /
+// quaternion, keyed rigid poses (the falling board), the fork, the night garden's grade and the doorway's warm spill.
+// Copies of the generic camera helpers of segE_parts /
 // segF_parts, kept here so segment G never moves when another segment's file changes. Every function is pure.
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, type CamPose } from "../story";
+import { FPS, clamp01, lerp, smooth, h, type CamPose } from "../story";
 import { FOV } from "../layout";
 import * as C from "../cam";
+import type { GradeParams } from "../../vasa/grade";
 
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const sec = (s: number) => Math.round(s * FPS);
@@ -86,3 +88,15 @@ export const pathAt = (f: number, keys: PtKey[]) => {
   for (let i = 1; i < keys.length; i++) if (f <= keys[i][0]) return keys[i - 1][1].clone().lerp(keys[i][1], (keys[i][2] ?? smooth)(clamp01((f - keys[i - 1][0]) / Math.max(1, keys[i][0] - keys[i - 1][0]))));
   return keys[keys.length - 1][1].clone();
 };
+
+// ------------------------------------------------------------------------------------------------- the night garden
+/** F1's night-garden grade (a COPY of segF_parts GRADE_NIGHT, so G's last shot of the garden matches F's first): the
+ *  moonlit colours pulled toward a desaturated blue, the highlights (the lit window, the firelight) left warm */
+export const GRADE_NIGHT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.66, 0.74, 1.0], tintS: [0.034, -0.016], tintM: [0.024, -0.012], tintH: [-0.018, 0.022], vig: [0.22, 0.4] };
+/** the same grade with the low end and the mids lifted a step (the last shot: a blue MID-TONE, owner's "too dark") */
+export const GRADE_NIGHT_LIFT: GradeParams = { ...GRADE_NIGHT, ky: [0.02, 0.135, 0.32, 0.625, 0.845, 0.945, 1] };
+/** A WARM SPILL of firelight (a soft radial glow, screen-blended) centred at (x, y) px on the 1080 x 1920 frame,
+ *  radius r px, strength k 0..1 (the same look as segF_parts flash) */
+export const spill = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
+  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
+    background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,170,90,0.62) 0%, rgba(255,130,60,0.34) 42%, rgba(255,110,40,0) 100%)` } });

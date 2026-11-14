@@ -2,12 +2,15 @@
 // One take after the plate insert, the camera moving only because people move (her eyes at 1.6 m):
 //   B1  THE PLATE (the day's clock, first tick): close on the window table (ROOM_CAMS.plate, fov 50). HUMPHREY's hands
 //       set the covered dinner down and lift the lid: steam (the lid comes up on the mix's anchor, B01 start - 1.1 s).
-//   B2  PULL BACK (she straightens and steps back to the front of the room): the window table with its steaming plate
-//       on the left, NEWTON writing at the paper-buried desk on the right, HUMPHREY between them with the lid in his
-//       hand. 07 "Sir, your dinner." (the mic comes in from the lower left toward him). Newton does not look up.
-//   B3  HUMPHREY waits, sighs, goes: to the door in the left wall, pulls it open, out; she turns her head after him and
-//       the mic swings to the door: 08 「他说马上来！」; the door shuts behind him.
-//   B4  she turns back: the steaming plate three steps from his elbow, Newton writing on; she walks up to the desk
+//   B2  PULL BACK (she straightens and steps back to the front of the room): her eyes go from the plate to HUMPHREY
+//       (18 frames) for 07 "Sir, your dinner." in a two-shot, NEWTON writing on the right sliding in whole as she backs
+//       off; then the wide: the steaming plate left, Humphrey between, Newton right. The mic comes in from the lower
+//       left toward Humphrey. Newton does not look up.
+//   B3  HUMPHREY sighs and goes as his line ends: to the open door in the left wall; she turns her head after him and
+//       the mic swings to the door; he looks back at her from the doorway in the first half of 08 「他说马上来！」, steps
+//       out and aside on the landing and pulls the door shut (shut by B02's end + 4: B03 follows 0.6 s later).
+//   B4  she turns back as it shuts (16+ frames, the mic with her head onto Newton by 09's first word): the steaming plate
+//       three steps from his elbow on the left, Newton writing on, whole, on the right; she walks up to the desk
 //       asking 09; 10 (he answers without looking up); 11 the mic tilts to the drafts stack; 12; 13; 14 he stops the
 //       quill and lifts his eyes to her, cold ("Not on me."), then back to the page.
 //   B5  ASIDE 15 「没笑。」: the mic swings round to the lens, Newton soft behind it, writing; CARD 2 over the scratching
@@ -22,6 +25,7 @@ import { RMX, ROOM, ROOM_CAMS, ROOM_SET, EYE, FOV, SCREEN } from "../layout";
 import { PLATE, QUILL } from "../props";
 import { V, rel, hang, lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, asideK, cardLower, CHAIR_ASIDE, type Rig, type RigPose } from "./common";
 import type { World } from "../world";
+import { ntSpeak, lidInside, plateLidGroup } from "./segB_parts";
 
 const S = SEGMENTS[1];
 const sec = (s: number) => Math.round(s * FPS);
@@ -38,11 +42,12 @@ const T_TILT = T_LID + 7, T_DOWN = T_TILT + 11, T_FREE = T_DOWN + 7;
 /** the pull back (she straightens and steps back) */
 const T_PULL0 = BEAT.B.pullBack[0];
 const T_PULL1 = L1.to + 4;
-/** HUMPHREY turns from the table toward NEWTON and takes a step (with the lid) */
-const T_TURN0 = T_FREE - 2, T_TURN1 = L1.from + 6;
-/** he waits; Newton does not look up; he sighs and goes */
+/** HUMPHREY turns from the table toward NEWTON and takes two steps into the room (he has set the cover down) */
+const T_TURN0 = T_FREE - 2, T_TURN1 = L1.from + 8;
+/** Newton does not look up: he sighs and goes, turning away as his line ends (B02 follows 1.1 s after it on the real
+ *  voice: he must be through the door and it shut by the end of her call, line("B02").to + 4) */
 const T_SIGH = L1.to + 2;
-const T_GO = L1.to + sec(0.3);
+const T_GO = L1.to;
 /** her mic comes in from the lower left toward Humphrey, mid-"Sir, your dinner" */
 const T_MIC = L1.from + sec(0.5);
 /** the mic (and her eyes, a little) tilt to the drafts stack (11) and come back for his answer */
@@ -59,27 +64,33 @@ const P = (x: number, z: number, y = 0) => V(RMX + x, y, z);
 /** HUMPHREY at the window table for the insert: front-right of the plate, out of the insert's frame but for his arms */
 const H0 = P(T.x + 0.23, T.z + 0.44);
 const H0_FACING = yawTo(H0, ROOM.plate);
-/** where he says "Sir, your dinner.": two steps toward the desk (between the plate and Newton in the wide) */
-const H1 = P(T.x + 0.75, T.z + 0.42);
-const H1_FACING = yawTo(H1, ROOM.newtonDesk) - 0.25;
+/** where he says "Sir, your dinner.": two steps toward the desk (between the plate and Newton in the wide), turned
+ *  toward Newton and a little toward her (his face three-quarter to her pull back) */
+const H1 = P(T.x + 0.65, T.z + 0.52);
+const H1_FACING = yawTo(H1, ROOM.newtonDesk) - 0.35;
 /** his way out: the door stands open (he came in with the dinner in both hands), lying back along the wall's hinge
- *  side; he walks to the doorway (clear of the open leaf and its ring) ... */
+ *  side; he walks round its free edge to the doorway ... */
 const DOOR_Z = (ROOM_SET.door.z0 + ROOM_SET.door.z1) / 2;
-const LEG_A = [H1, P(-1.25, 0.0), P(-1.95, DOOR_Z + 0.17)];
-/** ... looks back at her once ("He says he's coming!"), and goes out onto the landing */
-const LEG_B = [LEG_A[2], P(-2.4, DOOR_Z + 0.1), P(-3.0, DOOR_Z + 0.08)];
-const SPEED_A = 1.7, SPEED_B = 1.8;
+const LEG_A = [H1, P(-1.25, 0.0), P(-2.12, DOOR_Z + 0.13)];
+/** ... looks back at her from the doorway in the first half of her call ("He says he's coming!"), goes out onto the
+ *  landing and HALF A STEP ASIDE toward the front, behind the wall beside the latch jamb (out of the door gap's sight
+ *  line from her before the leaf closes past 0.3), and pulls the door shut after him */
+const LEG_B = [LEG_A[2], P(-2.78, DOOR_Z + 0.11), P(-2.93, DOOR_Z + 0.59)];
+const SPEED_A = 1.9, SPEED_B = 2.0;
 const T_DZ = T_GO + Math.round(walkTime(LEG_A, SPEED_A) * FPS);
-const T_GOB = T_DZ + sec(0.5);
+/** (his look back starts over his last step into the doorway: 0.5 s from the first turn of his body to its last) */
+const T_GOB = T_DZ + sec(0.4);
 const T_OUT = T_GOB + Math.round(walkTime(LEG_B, SPEED_B) * FPS);
-/** the door: open (0.9) until he is out, then pulled shut from the landing */
+/** the door: open (0.9) until he is through it, then pulled shut from the landing (shut by line("B02").to + 4) */
 const DOOR_OPEN = 0.9;
-const doorK = (f: number) => ky(f, [[T_OUT - 3, DOOR_OPEN], [T_OUT + 8, 0]]);
-const T_GONE = T_OUT + 8;
-/** she turns back from the door: the steaming plate, Newton writing on */
-const T_BACK0 = Math.max(L2.to + sec(0.15), T_OUT + 2), T_BACK1 = T_BACK0 + sec(0.5);
-/** she walks up to the desk asking 09 (setting off as her head comes back round) */
-const T_WALK0 = T_BACK0 + 8, T_WALK1 = L3.to - 2;
+const T_SHUT = T_OUT + 5;
+const doorK = (f: number) => ky(f, [[T_GOB + 7, DOOR_OPEN], [T_SHUT, 0]]);
+const T_GONE = T_SHUT;
+/** she turns back from the door as it clicks shut (over 16 frames or more): the steaming plate on the left, Newton
+ *  writing on the right; the mic goes with her head from the doorway to Newton, on him by the first word of 09 */
+const T_BACK0 = T_SHUT - 6, T_BACK1 = Math.max(T_BACK0 + 16, L3.from - 1);
+/** she walks up to the desk asking 09 (setting off once the wide has landed) */
+const T_WALK0 = T_BACK1 + 2, T_WALK1 = L3.to - 2;
 
 /** NEWTON behind the desk, writing standing (his page on ROOM.deskWrite, in reach) */
 const N_AT = ROOM.newtonDesk, N_FACING = ROOM.deskFacing;
@@ -98,7 +109,10 @@ const eyesOf = (p: THREE.Vector3, e: number) => p.clone().add(V(0, e, 0));
 /** B2 / B4: from the front of the room: the plate (left) and Newton (right) in one frame, his eyes high */
 const POS_WIDE = P(-0.28, 1.95, EYE);
 const MID_WIDE = V(lerp(ROOM.plate.x, N_AT.x, 0.5), N_EYE, lerp(ROOM.plate.z, N_AT.z, 0.5));
-const CAM_WIDE = frameOn(POS_WIDE, MID_WIDE, 540, 600);
+/** (the middle between them a little left of the frame's middle: Newton whole on the right with a margin, the plate
+ *  still in on the left) */
+const WIDE_SX = 484;
+const CAM_WIDE = frameOn(POS_WIDE, MID_WIDE, WIDE_SX, 600);
 /** B3: Humphrey at the door, from the same place (her head turned) */
 const camDoor = (p: THREE.Vector3) => frameOn(POS_WIDE, eyesOf(p, H_EYE), 600, 640);
 /** B4: at the desk, Newton left of the middle, the drafts stack right of it; his eyes in the upper third */
@@ -127,9 +141,11 @@ const humphreyAt = (f: number): HState | null => {
   }
   if (f < T_GOB) {
     const g = walkAlong(LEG_A, SPEED_A, (f - T_GO) / FPS, { startFacing: H1_FACING, endFacing: -Math.PI / 2 });
+    // he turns away from Newton over his first steps (walkAlong alone would snap to the path in one frame)
+    const facing0 = lerpA(H1_FACING, g.facing, smooth(clamp01((f - T_GO) / 7)));
     // in the doorway he looks back at her over his shoulder (her line), then turns to go
-    const back = ky(f, [[T_DZ, 0], [T_DZ + 5, 0.8], [T_GOB - 4, 0.8], [T_GOB, 0]]);
-    return { at: g.at, facing: lerpA(g.facing, yawTo(g.at, POS_WIDE), back), pose: g.pose, walking: g.moving };
+    const back = ky(f, [[T_DZ - 3, 0], [T_DZ + 3, 0.8], [T_GOB - 4, 0.8], [T_GOB, 0]]);
+    return { at: g.at, facing: lerpA(facing0, yawTo(g.at, POS_WIDE), back), pose: g.pose, walking: g.moving };
   }
   const g = walkAlong(LEG_B, SPEED_B, (f - T_GOB) / FPS, { startFacing: -Math.PI / 2, endFacing: -Math.PI / 2 });
   return { at: g.at, facing: g.facing, pose: g.pose, walking: g.moving };
@@ -204,7 +220,8 @@ const camAt = (f: number): CamPose => {
   for (let i = 0; i < 6; i++) { const wgt = 6 - i; hp.addScaledVector(hLook(f - i), wgt); ws += wgt; }
   hp.divideScalar(ws);
   const doorCam = camDoor(hp);
-  const kDoor = ky(f, [[T_GO + 2, 0], [T_GO + sec(0.6), 1], [T_BACK0, 1], [T_BACK1, 0]]);
+  // (linear keys: mixCam eases each change once; eased keys eased again made the turn back a whip)
+  const kDoor = kLin(f, [[T_GO + 2, 0], [T_GO + sec(0.6), 1], [T_BACK0, 1], [T_BACK1, 0]]);
   const base = f < T_PULL0 ? CAM_PLATE : f < T_PULL1 ? pullCam(f) : C.keyCam(f, [
     { f: T_WALK0, ...CAM_WIDE }, { f: T_WALK1, ...CAM_INT, ease: stride },
     { f: T_DR0, ...CAM_INT }, { f: T_DR0 + 14, ...CAM_DRAFTS }, { f: T_DR1, ...CAM_DRAFTS }, { f: T_DR1 + 14, ...CAM_INT }]);
@@ -218,14 +235,28 @@ const camAt = (f: number): CamPose => {
 const PULL_FROM = V(...(CAM_PLATE.pos as [number, number, number]));
 /** she backs straight away from the table first (keeping her distance from Humphrey, who steps off to her right),
  *  then curves round to the front of the room */
-const PULL_VIA = V(PULL_FROM.x - 0.3, lerp(PULL_FROM.y, EYE, 0.3), PULL_FROM.z + 1.4);
+const PULL_VIA = V(PULL_FROM.x + 0.25, lerp(PULL_FROM.y, EYE, 0.3), PULL_FROM.z + 1.4);
+/** THE TWO-SHOT on his line: Humphrey (speaking, left) and Newton (writing, right) both in, the pair centred; while she
+ *  is still too close for both, Humphrey's head stays whole (its left edge 20 px in from the frame's) and Newton is
+ *  as far in as he goes. Head half-widths: Humphrey 0.29 m, Newton 0.34 m with his hair. */
+const N_HEAD = eyesOf(N_AT, N_EYE);
+const onPair = (pos: THREE.Vector3, hEyes: THREE.Vector3, fov: number): CamPose => {
+  const tanH = Math.tan((fov * Math.PI) / 360) * (1080 / 1920);
+  const yawOf = (p: THREE.Vector3) => Math.atan2(p.x - pos.x, -(p.z - pos.z));
+  const flat = (p: THREE.Vector3) => Math.hypot(p.x - pos.x, p.z - pos.z);
+  const yH = yawOf(hEyes), yN = yawOf(N_HEAD), rH = Math.atan(0.29 / flat(hEyes)), rN = Math.atan(0.34 / flat(N_HEAD));
+  const half = Math.atan(tanH), margin = Math.atan((40 / 540) * tanH);
+  const cY = Math.min((yH - rH + yN + rN) / 2, yH - rH + half - margin);
+  return frameOn(pos, hEyes, 540 + 540 * (Math.tan(yH - cY) / tanH), 620, fov);
+};
 const pullCam = (f: number): CamPose => {
   const u = stride((f - T_PULL0) / (T_PULL1 - T_PULL0)), fov = lerp(CAM_PLATE.fov, FOV, smooth(u));
   const pos = PULL_FROM.clone().multiplyScalar((1 - u) * (1 - u)).addScaledVector(PULL_VIA, 2 * u * (1 - u)).addScaledVector(POS_WIDE, u * u);
   const h = humphreyAt(f), onPlate = frameOn(pos, ROOM.plate.clone().add(V(0, 0.05, 0)), 540, 1040, fov);
-  const onHim = h ? frameOn(pos, eyesOf(h.at, H_EYE), 400, 620, fov) : onPlate, onWide = frameOn(pos, MID_WIDE, 540, 600, fov);
-  // her eyes go to him once she has backed off enough to hold him (head and chest) as he starts to speak
-  const k1 = ky(f, [[T_PULL0 + 13, 0], [L1.from + 9, 1]]), k2 = ky(f, [[L1.from + 15, 0], [T_PULL1, 1]]);
+  const onHim = h ? onPair(pos, eyesOf(h.at, H_EYE), fov) : onPlate, onWide = frameOn(pos, MID_WIDE, WIDE_SX, 600, fov);
+  // her eyes go to him over 18 frames as he steps up to speak (one ease: mixCam's), hold him (head and chest) while
+  // Newton is behind him, then open out to the wide as Newton comes out from behind him
+  const k1 = kLin(f, [[T_PULL0 + 10, 0], [L1.from + 10, 1]]), k2 = kLin(f, [[L1.from + 20, 0], [T_PULL1, 1]]);
   return mixCam(mixCam(onPlate, onHim, k1), onWide, k2);
 };
 /** a walker's ease: speeding up over the first quarter, steady, slowing over the last (peak 1.33 x the average, not
@@ -233,6 +264,12 @@ const pullCam = (f: number): CamPose => {
 const stride = (x: number) => {
   const r = 0.25, v = 1 / (1 - r), u = clamp01(x);
   return u < r ? (v * u * u) / (2 * r) : u > 1 - r ? 1 - (v * (1 - u) * (1 - u)) / (2 * r) : v * (u - r / 2);
+};
+/** LINEAR keys [frame, value] (for a mixCam weight: mixCam eases it once) */
+const kLin = (f: number, keys: [number, number][]) => {
+  if (f <= keys[0][0]) return keys[0][1];
+  for (let i = 0; i + 1 < keys.length; i++) if (f <= keys[i + 1][0]) return lerp(keys[i][1], keys[i + 1][1], (f - keys[i][0]) / Math.max(1, keys[i + 1][0] - keys[i][0]));
+  return keys[keys.length - 1][1];
 };
 const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
   const A = C.camAxes(a), B = C.camAxes(b), e = smooth(k);
@@ -243,12 +280,12 @@ const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
 
 // ---------------------------------------------------------------------------------------------------- the mic
 type Aim = (f: number) => THREE.Vector3;
-/** an aim through step keys, each change eased over `len` frames */
-const aimThrough = (f: number, keys: [number, Aim][], len = 9) => {
+/** an aim through step keys, each change eased over `len` frames (or the key's own length) */
+const aimThrough = (f: number, keys: [number, Aim, number?][], len = 9) => {
   let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= f) i++;
   const cur = keys[i][1](f);
   if (i === 0) return cur;
-  const k = smooth(clamp01((f - keys[i][0]) / len));
+  const k = smooth(clamp01((f - keys[i][0]) / (keys[i][2] ?? len)));
   return k >= 1 ? cur : keys[i - 1][1](f).lerp(cur, k);
 };
 
@@ -262,13 +299,16 @@ const pose = (w: World, f: number): Pose => {
   w.setPlace("room");
   w.set.param("hour", "morning");
   w.set.param("door", doorK(f));
+  // the morning sun shaft as a soft volume (the room's param, added by WP5-B: no hard-edged pale wedge on the desk leg)
+  w.set.param("shaftSoft", 1);
   const cam0 = camAt(f);
   w.setCamera(cam0);
 
   // NEWTON: writing standing at the paper-buried desk; his mouth only on his own lines
   const n: Rig = w.actor(NEWTON_INK);
   const nq = saying("nt", f);
-  const up = 1 - writeK(f), ns = nq ? speak(nq, f, 1) : {};
+  // (his dry talking mouth: no full row of teeth under the deadpan brows; segB_parts ntSpeak)
+  const up = 1 - writeK(f), ns = nq ? ntSpeak(nq, f, 1) : {};
   n.set({
     at: N_AT.clone(), facing: N_FACING, pose: { kind: "idle", t: t + 1.7 }, expr: at(f, NEWTON_EXPR),
     blink: lid(t, 1, swaps(NEWTON_EXPR)), ...ns,
@@ -303,8 +343,11 @@ const pose = (w: World, f: number): Pose => {
 
   // the room: the plate (covered, then lifted: steam), the desk's things, the chair aside
   const plateY = hs ? plateLift(f) : 0;
-  // the lid's first frame up is the plate's own lid (lifted 3 cm); the loose lid prop takes over from the next
-  w.prop("plate").put(ROOM.plate.clone().add(V(0, plateY, 0)), { rot: H0_FACING, lid: f < T_LID ? 1 : f === T_LID ? 0.82 : 0, steam: 1, t });
+  // the lid's first frame up is the plate's own lid (lifted 3 cm); the loose lid prop takes over from the next.
+  // B's own plate and lid (keyed instances): their covers carry a lit pewter inside (segB_parts lidInside)
+  const plate = w.prop("plate", "B"), plateLid = plateLidGroup(plate.group);
+  if (plateLid) lidInside(w, plateLid);
+  plate.put(ROOM.plate.clone().add(V(0, plateY, 0)), { rot: H0_FACING, lid: f < T_LID ? 1 : f === T_LID ? 0.82 : 0, steam: 1, t });
   w.prop("drafts").put(ROOM.drafts, { rot: -0.15 });
   w.prop("inkwell").put(ROOM.inkwell);
   w.prop("sheets").put(ROOM.deskWrite, { n: 3 });
@@ -317,7 +360,9 @@ const pose = (w: World, f: number): Pose => {
   if (f > T_LID) {
     // the cover in his fist goes where his fist really is (the rig's hand), so it never floats off it
     const L = lidPose(f), o = hm && L.hand && f < T_DOWN ? L.o.clone().add(hm.handWorld(0).sub(L.hand)) : L.o;
-    w.prop("lid").put(o, { rot: L.q });
+    const cover = w.prop("lid", "B");
+    lidInside(w, cover.group);
+    cover.put(o, { rot: L.q });
   }
 
   // HER MIC: in from the lower left toward Humphrey, after him to the door, back to the plate, to Newton, to the
@@ -327,9 +372,8 @@ const pose = (w: World, f: number): Pose => {
   const hMouth: Aim = (g) => (hm && humphreyAt(g) ? mouth(hm) : eyesOf(LEG_B[1], 1.0));
   const doorway: Aim = () => eyesOf(ROOM.door, 1.0);
   const draftsTop: Aim = () => ROOM.drafts.clone().add(V(0, 0.08, 0));
-  // (the door shut, she turns back: the mic goes back to the steaming plate, then over to Newton as she asks 09)
-  const plateTop: Aim = () => ROOM.plate.clone().add(V(0, 0.1, 0));
-  const aim = aimThrough(f, [[S.from, hMouth], [T_OUT - 6, doorway], [T_BACK0, plateTop], [Math.max(T_BACK1, L3.from + 12), nMouth], [T_DR0, draftsTop], [T_DR1, nMouth]]);
+  // (as the door shuts she turns back: the mic swings with her head from the doorway to Newton, on him by 09)
+  const aim = aimThrough(f, [[S.from, hMouth], [T_OUT - 6, doorway], [T_BACK0, nMouth, T_BACK1 - T_BACK0], [T_DR0, draftsTop], [T_DR1, nMouth]]);
   const enter = Math.min(easeOutCubic(clamp01((f - T_MIC) / 12)), 1 - cardLower(f));
   const M = C.putMic(w, cam0, f, { aim, lens: asideK(f), enter, tilt: ky(f, [[T_DR0, 0], [T_DR0 + 10, 14], [T_DR1, 14], [T_DR1 + 10, 0]]), avoid: f >= CARD2.from && f <= CARD2.to ? SCREEN.card : undefined });
 

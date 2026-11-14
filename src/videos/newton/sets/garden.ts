@@ -50,8 +50,9 @@ export const GARDEN_LOOK: PlaceLook = {
   bloom: 0.35,
 };
 /** the per-frame dressing: time "noon" | "night", glow 0..1 (the elaboratory's door, window and chimney), window 0..1
- *  (his window lit) */
-export const GARDEN_PARAMS: Record<string, ParamValue> = { time: "noon", glow: 0, window: 0 };
+ *  (his window lit), gravel "raked" (the default: gravelTex's straight rake lines) | "rough" (roughGravelTex: coarser
+ *  grain, faint broken wavy rake grooves; C sets it; added by WP5-C) */
+export const GARDEN_PARAMS: Record<string, ParamValue> = { time: "noon", glow: 0, window: 0, gravel: "raked" };
 
 const B = S.bounds, WK = S.walks, R = S.range, C = S.chapel, E = S.elab;
 const X0 = GDX + B.x0, X1 = GDX + B.x1, Z0 = B.z0, Z1 = B.z1;
@@ -69,6 +70,37 @@ const leafTex = (base: string, lo: string, hi: string, seed: number) => paint(25
   const r = rng(seed);
   g.fillStyle = base; g.fillRect(0, 0, W, H);
   for (let i = 0; i < 320; i++) { const x = W * r(), y = H * r(), s = 3 + 6 * r(); for (const dx of [-W, 0, W]) for (const dy of [-H, 0, H]) { g.fillStyle = css(r() < 0.5 ? lo : hi, 0.5); g.beginPath(); g.ellipse(x + dx, y + dy, s, s * 0.7, r() * 3, 0, 7); g.fill(); } }
+}, true);
+/** ROUGH RAKED GRAVEL (param gravel "rough", WP5-C for the director's note "the path reads as planks"): a coarse
+ *  grain of mixed pebbles (light, mid, grey-brown, a few dark, each with a little shadow), soft patches of tone, and
+ *  FEWER, FAINT, WOBBLING, BROKEN rake grooves (never straight boards); tiles both ways like gravelTex */
+const roughGravelTex = (seed: number, lines = 11, px = 512) => paint(px, px, (g, W, H) => {
+  const r = rng(seed), wrap = (fn: (dx: number, dy: number) => void) => { for (const dx of [-W, 0, W]) for (const dy of [-H, 0, H]) fn(dx, dy); };
+  g.fillStyle = css(mix(NC.gravel, NC.gravelLo, 0.25)); g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 26; i++) { const x = W * r(), y = H * r(), rr = W * (0.08 + 0.14 * r()), c = r() < 0.5 ? NC.gravelHi : "#b9aa86"; wrap((dx, dy) => blotch(g, x + dx, y + dy, rr, c, 0.35)); }
+  // the rake grooves first (the stones lie over and between them): faint, wavy, broken into strokes of varying weight
+  for (let i = 0; i < lines; i++) {
+    const x0 = (W * (i + 0.3 + 0.4 * r())) / lines, k1 = 1 + Math.floor(r() * 2), k2 = 3 + Math.floor(r() * 3), a1 = W * (0.006 + 0.01 * r()), a2 = W * 0.004 * r(), p1 = 7 * r(), p2 = 7 * r();
+    const xAt = (y: number) => x0 + a1 * Math.sin((2 * Math.PI * k1 * y) / H + p1) + a2 * Math.sin((2 * Math.PI * k2 * y) / H + p2);
+    for (let y = 0; y < H; ) {
+      const len = H * (0.04 + 0.1 * r()), on = r() < 0.78, w = (W / lines) * (0.08 + 0.1 * r());
+      if (on) for (const [dx, col, a] of [[w * 0.55, "#8f8062", 0.16 + 0.12 * r()], [-w * 0.5, "#f6efdc", 0.18 + 0.14 * r()]] as [number, string, number][]) {
+        g.strokeStyle = css(col, a); g.lineWidth = w; g.lineCap = "round";
+        for (const ddy of [-H, 0, H]) { g.beginPath(); for (let t = 0; t <= 6; t++) { const yy = y + (len * t) / 6; g[t ? "lineTo" : "moveTo"](xAt(yy) + dx, yy + ddy); } g.stroke(); }
+      }
+      y += len + (on ? H * 0.004 : H * 0.02 * r());
+    }
+  }
+  // the stones: many, mixed, small to coarse; the bigger ones with a shadow under them
+  const cols = [NC.gravelHi, NC.gravelHi, "#f1e9d6", NC.gravelLo, NC.gravelLo, "#b3a481", "#9d9076", "#8a7f6c", "#cfc3a4"];
+  for (let i = 0; i < 9000; i++) {
+    const x = W * r(), y = H * r(), rr = 0.7 + 2.6 * r() * r(), c = cols[Math.floor(r() * cols.length)], a = 0.55 + 0.4 * r(), ang = r() * 3;
+    wrap((dx, dy) => {
+      if (x + dx < -4 || x + dx > W + 4 || y + dy < -4 || y + dy > H + 4) return;
+      if (rr > 1.6) { g.fillStyle = css("#6e6452", 0.25); g.beginPath(); g.ellipse(x + dx + 0.6, y + dy + 0.8, rr, rr * 0.75, ang, 0, 7); g.fill(); }
+      g.fillStyle = css(c, a); g.beginPath(); g.ellipse(x + dx, y + dy, rr, rr * 0.75, ang, 0, 7); g.fill();
+    });
+  }
 }, true);
 /** a big perpendicular chapel window: pale stone mullions and tracery over dark glass (blue-grey by day) */
 const traceryTex = (w: number, h: number, rise: number) => paint(Math.round(w * 100), Math.round(h * 100), (g, W, H) => {
@@ -107,6 +139,9 @@ export function buildGarden(K: Kit) {
   const group = new THREE.Group(); group.name = "garden";
   const Mk = maker(K, group), BT = new Batch();
   const mGravelZ = Mk.tex(gravelTex({ seed: 94, lines: 9 }), 0.95), mGravelX = Mk.tex(gravelTex({ seed: 95, lines: 9 }), 0.95);
+  // param gravel: the walks' two maps, raked (the default) and rough, swapped on the same two materials
+  const gZ = mGravelZ as THREE.MeshStandardMaterial, gX = mGravelX as THREE.MeshStandardMaterial;
+  const GRAVEL_MAPS: Record<"raked" | "rough", [THREE.Texture | null, THREE.Texture]> = { raked: [gZ.map, gX.map as THREE.Texture], rough: [roughGravelTex(94), roughGravelTex(95)] };
   const mLawn = Mk.tex(lawnTex(), 0.95), mBox = Mk.tex(leafTex(NC.box, NC.boxLo, NC.boxHi, 96), 0.9);
   const mBrick = Mk.tex(brickTex({ seed: 97 }), 0.9), mBrickE = Mk.tex(brickTex({ seed: 98, soot: 0.25 }), 0.9);
   const mStone = Mk.tex(ashlarTex({ seed: 99, nx: 3, ny: 4 }), 0.9), mStonePlain = Mk.flat(NC.stone, 0.9), mStoneLo = Mk.flat(NC.stoneLo, 0.9);
@@ -304,7 +339,8 @@ export function buildGarden(K: Kit) {
     for (const q of m ? (Array.isArray(m) ? m : [m]) : []) if ((q as THREE.MeshStandardMaterial).isMeshStandardMaterial && !envMats.some(([e]) => e === q)) envMats.push([q as THREE.MeshStandardMaterial, (q as THREE.MeshStandardMaterial).envMapIntensity, (q as THREE.MeshStandardMaterial).color.clone()]);
   });
   const NIGHT_TINT = new THREE.Color(0.5, 0.64, 1.0);
-  let time: GardenTime = "noon", glow = 0, win = 0;
+  let time: GardenTime = "noon", glow = 0, win = 0, gravel: "raked" | "rough" = "raked";
+  const applyGravel = () => { const [mz, mx] = GRAVEL_MAPS[gravel]; if (gZ.map !== mz) { gZ.map = mz; gX.map = mx; } };
   const warm = new THREE.Color("#ffc870"), dark = new THREE.Color("#2a3252"), day = new THREE.Color("#ffffff"), nightGlass = new THREE.Color("#46557e");
   const applyTime = () => {
     const night = time === "night";
@@ -341,6 +377,7 @@ export function buildGarden(K: Kit) {
       if (name === "time") { time = v === "night" ? "night" : "noon"; applyTime(); }
       if (name === "glow") glow = Math.max(0, Math.min(1, Number(v)));
       if (name === "window") { win = Math.max(0, Math.min(1, Number(v))); applyTime(); }
+      if (name === "gravel") { gravel = v === "rough" ? "rough" : "raked"; applyGravel(); }
     },
     cast(): Partial<CastLight> { return gardenCast(time); },
   };

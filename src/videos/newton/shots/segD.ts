@@ -20,13 +20,13 @@
 // (/home/user/newton_work/film/sound/SYNC_POINTS.md). Where BEAT.D (lecture, timeCut, clap) and the mix disagree, the
 // mix wins (it is built): the gathering paper at D05 end + 0.05 s, the claps at D06 - 1.3 s and - 0.75 s.
 import * as THREE from "three";
-import { SEGMENTS, line, capWord, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, capWord, capsOf, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON_GOWN, NEWTON_HIDE, newtonAt, type NewtonState } from "../people";
-import { STREET, SCX, SCHOOLS, SCHOOLS_SET, SCHOOLS_CAMS, EYE, FOV } from "../layout";
+import { STREET, STREET_SET, SCX, SCHOOLS, SCHOOLS_SET, SCHOOLS_CAMS, EYE, FOV } from "../layout";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, lerpA, rel, hang, path, rigSpeak, type Rig, type PathKey } from "./common";
-import { frameOn, deskPoint, deskRot, underArm, clapOnFist, NOTES } from "./segD_parts";
+import { frameOn, deskPoint, deskRot, underArm, clapOnFist, wipePut, NOTES } from "./segD_parts";
 import type { World } from "../world";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
@@ -64,9 +64,12 @@ const T_TC = SND_GATHER + 6;
 
 // ---------------------------------------------------------------------------------------------------- D1 the street
 const N_EYE = 1.14;
-const ST_SPEED = 1.45, ST_T0 = 0.45;
-/** his walk: from just past the turn out of the gate, straight down the street toward +z */
-const ST_PATH = [V(STREET.lineX, 0, STREET.turn.z + 0.2), V(STREET.lineX, 0, STREET.walkTo.z)];
+const ST_SPEED = 1.45, ST_T0 = 0.1;
+/** his walk: just out of the gate's arch, down the street toward +z on the college side, 0.3 m nearer the college than
+ *  the layout's line (still 0.55 m clear of the gatehouse's south turret): she looks across at him with the gatehouse
+ *  front close behind him, so its arch, brick and stone fill the top of the frame and the setts only the bottom */
+const ST_X = STREET.lineX - 0.3;
+const ST_PATH = [V(ST_X, 0, STREET.turn.z - 0.4), V(ST_X, 0, STREET.walkTo.z)];
 const streetLeg = (f: number) => walkAlong(ST_PATH, ST_SPEED, (f - S.from) / FPS + ST_T0);
 /** THE WIPE, timed to the mix: her hand comes in over W_IN frames (the cloth touches his nose on the first swish),
  *  two strokes of W_ST frames, out over W_OUT (gone before the cut). cam.ts wipe() is driven on a warped frame so its
@@ -86,13 +89,19 @@ const wipeFrame = (f: number): number | null => {
 };
 /** the ink: on until her first stroke, the ghost after it, clean after the second (each swap under the cloth) */
 const KEYS: [number, NewtonState][] = [[S.from, "gownInk"], [Math.round(STROKE1), "gownSmudge"], [Math.round(STROKE2), "gown"]];
-/** the handkerchief's long corner swung round toward her wrist (hanging straight down it read as a white beard) */
-const CLOTH_TWIST = new THREE.Quaternion().setFromAxisAngle(V(0, 0, 1), 0.6), CLOTH_SCALE = 1.2;
-/** her eyes: trotting beside him on his LEFT (east), a little ahead, looking back at him; she closes in for the wipe */
-const camStreet = (f: number): CamPose => {
-  const g = streetLeg(f), k = ky(f, [[S.from, 1.3], [WIPE_ON - 1, 1.0]]);
-  const pos = g.at.clone().add(V(0.6 * k, EYE, 0.86 * k));
-  return C.handheld(frameOn(pos, g.at.clone().add(V(0, N_EYE, 0)), 560, 590), f, { walk: 1.5 });
+/** her eyes: trotting beside him on his LEFT (east), a little ahead (ST_ANG off his line), looking across at him and the
+ *  college front close behind him; she closes in for the wipe. Framed on his SOLVED head (pass `head` after w.update():
+ *  the walk's own bob does not move his eyes on the frame, the trot's handheld does, lightly): his eyes at
+ *  (ST_EYE_PX) in the upper third for the whole trot. */
+const ST_ANG = 1.25, ST_EYE_PX: [number, number] = [480, 585];
+/** the drawn eye line under the solved head's middle (m) at her distance k: nearer, she looks down on him more steeply
+ *  and his face (drawn toward her) sits lower on the ball */
+const stEyeDy = (k: number) => 0.074 - 0.093 * (k - 1.05);
+const camStreet = (f: number, head?: THREE.Vector3): CamPose => {
+  const g = streetLeg(f), k = ky(f, [[S.from, 1.5], [WIPE_ON - 1, 1.1]]);
+  const pos = g.at.clone().add(V(Math.sin(ST_ANG) * k, EYE, Math.cos(ST_ANG) * k));
+  const eyes = head ? head.clone().add(V(0, -stEyeDy(k), 0)) : g.at.clone().add(V(0, N_EYE, 0));
+  return C.handheld(frameOn(pos, eyes, ST_EYE_PX[0], ST_EYE_PX[1]), f, { walk: 1.5 });
 };
 
 // ---------------------------------------------------------------------------------------------------- D2-D3 the hall
@@ -114,8 +123,9 @@ const camHall = (f: number): CamPose =>
 const N_EYES = N_AT.clone().add(V(0, N_EYE, 0));
 const LECT_POS = V(SCX + 0.45, EYE, LZ + 1.5);
 const CAM_LECT = frameOn(LECT_POS, N_EYES, 520, 600);
-/** D5: she sits on the front bench (row 0, by the aisle), her eyes at about 1.22 m */
-const SEAT = V(SCX + 0.95, 1.22, SCHOOLS.rows[0] + 0.08);
+/** D5: she sits on the front bench (row 0, half a metre along it from the aisle end), her eyes at about 1.22 m: about
+ *  28 deg off his axis, so the gather, the lifted sheaf and the tuck rise beside his face, not under it */
+const SEAT = V(SCX + 1.45, 1.22, SCHOOLS.rows[0] + 0.08);
 const CAM_SEAT = frameOn(SEAT, N_EYES, 560, 640);
 const FACE_LECT = Math.atan2(LECT_POS.x - N_AT.x, LECT_POS.z - N_AT.z);
 const FACE_SEAT = Math.atan2(SEAT.x - N_AT.x, SEAT.z - N_AT.z);
@@ -136,6 +146,9 @@ const SHEAF_TOP_R = deskPoint(SHEAF.dx - 0.06, SHEAF.dz - 0.04, NOTES.h + 0.026)
 const sideL = (facing: number) => rel(N_AT, facing, 0.42, 0.86, 0.06);
 const liftL = (facing: number) => rel(N_AT, facing, 0.4, 1.02, 0.36);
 const liftR = (facing: number) => rel(N_AT, facing, -0.3, 0.98, 0.3);
+/** the tuck's way off the desk: lower and further out to his left than liftL (past the lectern's end, nothing to
+ *  clear), so from her low seat the sheaf on edge stays below his cheek */
+const tuckL = (facing: number) => liftL(facing);
 /** laying out: the sheaf from under his arm onto the desk, then three sheets dealt from it to his right */
 const T_PUT0 = T_ARRIVE + 4, T_PUT1 = T_PUT0 + 10;
 const DEAL = [T_PUT1 + 6, T_PUT1 + 12, T_PUT1 + 18];
@@ -180,8 +193,7 @@ const deskAt = (f: number, facing: number): Desk => {
   }
   if (f < G_TUCK0) {
     // both hands on its edges, lift it, tap it on the desk twice
-    // (a small lift: from her low seat the sheaf only peeks over the desk lip, below his chin)
-    const lift = 0.035 * smooth(clamp01((f - G_SWEEP1) / (G_LIFT - G_SWEEP1)));
+    const lift = 0.08 * smooth(clamp01((f - G_SWEEP1) / (G_LIFT - G_SWEEP1)));
     let tap = 0; for (const t of G_TAPS) { const d = f - t; if (d >= -2 && d <= 2) tap = Math.max(tap, 1 - Math.abs(d) / 2); }
     const o = SHEAF_AT.clone().add(V(0, lift * (1 - tap), 0));
     const q = SHEAF_Q.clone();
@@ -193,7 +205,7 @@ const deskAt = (f: number, facing: number): Desk => {
   // up off the desk first (still flat), then turning on edge down to his side; the right hand up, back and down
   const o0 = SHEAF_AT.clone().add(V(0, 0.08, 0));
   const q = SHEAF_Q.clone().slerp(arm.rot, smooth(clamp01((f - G_TUCK0 - 1) / 4)));
-  const g = path(f, [[G_TUCK0, gripOf(o0, SHEAF_Q)], [G_TUCK0 + 4, liftL(facing)], [G_TUCK0 + 7, sideL(facing)], [G_TUCK1, arm.hand]]);
+  const g = path(f, [[G_TUCK0, gripOf(o0, SHEAF_Q)], [G_TUCK0 + 4, tuckL(facing)], [G_TUCK0 + 7, sideL(facing)], [G_TUCK1, arm.hand]]);
   const rr = f < G_TUCK0 + 9 ? path(f, [[G_TUCK0, o0.clone().add(V(-NOTES.w / 2, 0, 0).applyQuaternion(SHEAF_Q))], [G_TUCK0 + 4, liftR(facing)], [G_TUCK0 + 9, hang(N_AT, facing, 0)]]) : null;
   return { hands: [rr, g], notes: f < G_TUCK1 ? { mode: "hand", q } : { mode: "arm" }, spread: 0, moving: null, sweep: null };
 };
@@ -243,6 +255,8 @@ const newtonState = (f: number): NState => {
 // ---------------------------------------------------------------------------------------------------- the shot
 type ShotId = "street" | "hall" | "lectern" | "bench";
 const shotOf = (f: number): ShotId => (f < T_HALL ? "street" : f < T_WHIP + 4 ? "hall" : f < T_TC ? "lectern" : "bench");
+/** the last frame of line 27's caption (it runs on past her voice) */
+const CAP27_END = capsOf("D05")[capsOf("D05").length - 1].to;
 /** the lecture's silent mouth (no words: the music is the muffled lecture), only once her line is over */
 const LECTURE = { from: (L5.to + 1) / FPS, to: (T_TC - 1) / FPS, syl: Math.max(2, Math.round(((T_TC - L5.to) / FPS) * 5.5)) };
 
@@ -264,6 +278,8 @@ const pose = (w: World, f: number): Pose => {
   // NEWTON
   const ns = newtonState(f), n: Rig = w.actor(ns.who);
   const q = saying("nt", f), sp = q ? speak(q, f, 1) : f > L5.to && f < T_TC ? rigSpeak(t, LECTURE, 1) : {};
+  // "Don't." [flat]: the rounded o through its middle (the teeth-together strip reads as a grimace at phone size)
+  if (q && q.id === "D06" && (sp.mouth === "strip" || (sp.mouth === "small" && f >= q.from + 2 && f <= q.to - 6))) sp.mouth = "round";
   const nodOn = capWord("D04", "students").from;
   n.set({
     at: ns.at, facing: ns.facing, pose: ns.pose, expr: ns.expr, blink: lid(t, 1, swaps(EXPR)), ...sp,
@@ -279,6 +295,8 @@ const pose = (w: World, f: number): Pose => {
   if (d && d.sweep) w.prop("sheets").put(d.sweep, { rot: SPREAD_Q, n: 3 });
 
   w.update();
+  // (the street: framed again on his solved head; only the turn of the lens changes, so the solve stands)
+  if (shot === "street") { cam = camStreet(f, n.headWorld()); w.setCamera(cam); }
 
   // the notes in his hand / under his arm (at the rig's real hand)
   if (d && d.notes.mode !== "desk") w.prop("notes").put(n.handWorld(1), { grip: "grip", rot: d.notes.mode === "arm" ? underArm(ns.at, ns.facing).rot : d.notes.q });
@@ -288,10 +306,15 @@ const pose = (w: World, f: number): Pose => {
     const fw = wipeFrame(f);
     const Wp = fw === null ? null : C.wipe(cam, fw, C.noseOf(n), WIPE_ON);
     if (Wp) {
-      // (both 2.5 cm nearer her: the corner swung round to her wrist clears his cheek)
-      const toLens = C.camAxes(cam).p.sub(Wp.cloth.at).normalize().multiplyScalar(0.025);
-      w.prop("handR").put(Wp.hand.at.clone().add(toLens), { rot: Wp.hand.rot, pose: "grip", scale: Wp.hand.scale });
-      w.prop("handkerchief").put(Wp.cloth.at.clone().add(toLens), { rot: Wp.cloth.rot.clone().multiply(CLOTH_TWIST), scale: CLOTH_SCALE });
+      // (re-placed on wipe()'s path so the white cloth reads: the wad on his nose, her fist beside it, the tail hanging
+      // over the front of her knuckles: two instances of the cloth, each group squashed along its y after put:
+      // segD_parts wipePut)
+      const P = wipePut(cam, Wp.cloth.at, { sun: STREET_SET.sun });
+      w.prop("handR").put(P.hand.at, { rot: P.hand.rot, pose: "grip", scale: P.hand.scale });
+      for (const [key, c] of [["", P.wad], ["tail", P.tail]] as const) {
+        const hk = w.prop("handkerchief", key).put(c.at, { rot: c.rot, scale: c.s });
+        hk.group.scale.set(c.s, c.s * c.sy, c.s); hk.group.updateMatrixWorld(true);
+      }
     }
     return { camera: cam, slate: "D1 street" };
   }
@@ -335,7 +358,10 @@ const pose = (w: World, f: number): Pose => {
   }
   // (on the bench her hands are near the lens: a lighter focus pull than the mic's default, so the claps read)
   if (dof && shot === "bench") dof = { focus: dof.focus, amount: Math.min(dof.amount, 1.2) };
-  return { camera: cam, post: post ?? (dof ? { dof } : undefined), overlays, slate: `D ${shot}` };
+  // her line 27's caption goes as his silent lecture mouth starts (it would sit under his moving mouth and cross the
+  // time cut: the captions owner is asked to end it there, requests.md)
+  const captions = f > L5.to && f <= CAP27_END ? false : undefined;
+  return { camera: cam, post: post ?? (dof ? { dof } : undefined), overlays, captions, slate: `D ${shot}` };
 };
 
 export const SEG: Segment = { id: "D", from: S.from, to: S.to, enter() {}, exit() {}, pose };

@@ -1,7 +1,7 @@
-// SEGMENT C's own helpers (WP5-C): framing, camera mixing, THE PITCH WHIP (up the stairs: the whip IS the cut) with its
-// vertical smear, and his quill on the page. Every function is pure (frame in, pose out); nothing keeps state.
+// SEGMENT C's own helpers (WP5-C): framing, camera mixing, THE PITCH WHIP (up the stairs: the whip IS the cut: a lens
+// blur ramp, no overlay), and his quill on the page. Every function is pure (frame in, pose out); nothing keeps state.
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, hash, h, type CamPose } from "../story";
+import { FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, type CamPose } from "../story";
 import { FOV } from "../layout";
 import * as C from "../cam";
 import { QUILL } from "../props";
@@ -52,19 +52,7 @@ export const whipUp = (c: CamPose, f: number, on: number, o: { to: CamPose; deg?
   const cam = leaving ? C.nudge(c, { pitch: deg * k, yaw: yaw * k }) : C.nudge(o.to, { pitch: -inDeg * k, yaw: -yaw * k });
   return { cam, post: { dof: { focus: 0.05, amount: (o.blur ?? 24) * k } }, smear: k, cut: !leaving };
 };
-/** the pitch whip's smear (k 0..1): soft pale VERTICAL streaks drifting down the frame (the view travels up), never
- *  opaque */
-export const whipSmearUp = (k: number, seed = 5) => {
-  if (k <= 0.01) return null;
-  const bars: ReturnType<typeof h>[] = [];
-  for (let i = 0; i < 12; i++) {
-    const a = hash(i, seed), b = hash(i, seed + 1), x = ((i + 0.5) / 12) * 1080 + (a - 0.5) * 60, wd = 18 + 60 * b, len = 900 + 1100 * a;
-    const y = -len * 0.5 + b * 1920 * k;
-    bars.push(h("div", { key: i, style: { position: "absolute", left: x - wd / 2, top: y, width: wd, height: len, borderRadius: wd / 2, background: i % 3 === 2 ? "#d9c08a" : "#f3ead8", opacity: (0.16 + 0.2 * a) * k } }));
-  }
-  return h("div", { key: "whipSmearUp", style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden", pointerEvents: "none" } },
-    h("div", { style: { position: "absolute", inset: 0, background: "#efe6d2", opacity: 0.2 * k * k } }), ...bars);
-};
+// (no overlay on the whip: the lens blur ramp alone carries it; r3's pale streaks read as rain / a glitch)
 
 // ------------------------------------------------------------------------------------------------- his quill
 /** the nib on the page (world) at frame f: lines of small loops from his left to his right, a carriage return every
@@ -86,11 +74,16 @@ export const nibAt = (f: number, page: THREE.Vector3, k = 1) => {
   const nib = V(x, 0.004 + y, z), still = V(x, 0.016 + 0.002 * Math.sin(t * 1.3), z);
   return page.clone().add(nib.lerp(still, 1 - clamp01(k)));
 };
-/** the quill's direction from the nib up the feather (out toward his right, a little back: clear of his head as he
- *  leans over the page) */
+/** the quill's direction from the nib up the feather (out toward his right, a little back) */
 export const QDIR = V(-0.62, 0.76, -0.18).normalize();
 export const QROT = new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), QDIR);
-/** his writing fist for a nib point */
-export const quillFist = (nib: THREE.Vector3) => nib.clone().addScaledVector(QDIR, -QUILL.nib);
+/** the quill's turn for a feather direction `dir` (its +y) with its broad vane facing `toward` (a world direction, e.g.
+ *  to her eyes): the quill's thin axis (+z) points as near to `toward` as it can */
+export const quillRot = (dir: THREE.Vector3, toward: THREE.Vector3) => {
+  const y = dir.clone().normalize(), z = toward.clone().addScaledVector(y, -toward.dot(y)).normalize(), x = new THREE.Vector3().crossVectors(y, z);
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+};
+/** his writing fist for a nib point (the quill along `dir`) */
+export const quillFist = (nib: THREE.Vector3, dir = QDIR) => nib.clone().addScaledVector(dir, -QUILL.nib);
 /** a camera's position as a Vector3 */
 export const posOf = (c: CamPose) => v3(c.pos);

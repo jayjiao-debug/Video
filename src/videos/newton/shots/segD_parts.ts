@@ -78,3 +78,45 @@ export const clapOnFist = (cam: CamPose, f: number, fist: THREE.Vector3, ons: nu
   const palm = V().addScaledVector(F.up, -0.85).addScaledVector(F.right, -0.35).addScaledVector(F.fwd, 0.2);
   return C.freeHand(cam, w, { pose: "open", bar: fingers, palm });
 };
+
+// ---------------------------------------------------------------------------------------------------- the wipe
+/** THE WIPE's handkerchief: TWO instances of the cloth make one handkerchief that reads: `wad` = its crumpled middle
+ *  pressed on his nose (its long corner squashed short and turned into her fist, out of sight), `tail` = its end bunched
+ *  in her fist with the long corner hanging down in FRONT of her knuckles toward the lens, white over his dark gown.
+ *  s = scale (cam.ts WIPE.cloth is 1.5), sy = a squash along the prop's own y (the shot applies it to the group after
+ *  put) */
+export const WIPE_CLOTH = { wad: { s: 1.9, sy: 0.45 }, tail: { s: 1.6, sy: 0.75 } };
+/** a rotation from camera-space y and z axes (z made perpendicular to y) */
+const quatYZ = (F: C.CamFrame, yc: THREE.Vector3, zc: THREE.Vector3) => {
+  const toW = (c: THREE.Vector3) => V().addScaledVector(F.right, c.x).addScaledVector(F.up, c.y).addScaledVector(F.fwd, c.z);
+  const y = toW(yc).normalize(), z = toW(zc);
+  z.addScaledVector(y, -z.dot(y)).normalize();
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(V().crossVectors(y, z), y, z));
+};
+export type ClothPut = { at: THREE.Vector3; rot: THREE.Quaternion; s: number; sy: number };
+/** THE HANDKERCHIEF placed so that the white cloth reads in one glance: cam.ts wipe() gives the path (its cloth point:
+ *  pass `clothAt`, 4 cm out from his nose during the strokes) and the timing; this re-places the hand and the cloth on
+ *  it. The white wad is pressed on his nose; her fist holds it from its lower right, BESIDE it (his face is drawn
+ *  toward the lens, so a fist on the nose hides the cloth); the tail hangs from her fist down over the front of her
+ *  knuckles toward the lens. The cloth's flat faces turn partly from the lens toward the sun (`sun`: world, toward it).
+ *  Returns the puts: "handR" (pose grip, at its scale), "handkerchief" (wad) and "handkerchief" key "tail". Pure. */
+export const wipePut = (cam: CamPose, clothAt: THREE.Vector3, o: { fist?: [number, number, number]; tail?: [number, number, number]; sun?: readonly number[]; face?: number; spin?: number } = {}) => {
+  const F = C.camFrame(cam), q = C.worldToCam(F, clothAt).add(V(0, -0.02, 0)), toCam = q.clone().normalize().multiplyScalar(-1);
+  const sunC = o.sun ? C.worldToCam(F, V(o.sun[0], o.sun[1], o.sun[2]).normalize().add(F.p)) : toCam.clone();
+  const zc = toCam.clone().lerp(sunC, o.face ?? 0.6);
+  const A = WIPE_CLOTH.wad, B = WIPE_CLOTH.tail, rW = 0.032 * A.s * 0.95;
+  // the wad's middle: on the path's point, pulled back so its own (squashed, turned) surface just meets his nose
+  const wc = q.clone().addScaledVector(toCam, rW - 0.022);
+  // the fist: at the wad's lower right, a little nearer the lens, round a bar leaning like cam.ts wipe()'s
+  const fo = o.fist ?? [0.075, -0.035, 0.01], g = wc.clone().add(V(fo[0], fo[1], 0)).addScaledVector(toCam, fo[2]);
+  const bar = V().addScaledVector(F.right, 0.25).addScaledVector(F.up, 1).addScaledVector(F.fwd, -0.2);
+  const H = C.freeHand(cam, C.camToWorld(F, g.x, g.y, g.z), { bar, pose: "grip" });
+  // the wad: its (short-squashed) long corner runs from the wad into the fist; turned (`spin` about that line) so its
+  // short corner folds down under the wad, never up over his eyes
+  const yA = wc.clone().sub(g).normalize(), oA = wc.clone().addScaledVector(yA, 0.014 * A.s * A.sy);
+  // the tail: bunched in the fist's front, its long corner hanging down (and a little toward the lens)
+  const to = o.tail ?? [0.15, -1, 0.6], yB = V(to[0], to[1], 0).addScaledVector(toCam, to[2]).normalize().multiplyScalar(-1);
+  const oB = g.clone().add(V(-0.005, -0.012, 0)).addScaledVector(toCam, 0.045);
+  const put = (p: THREE.Vector3, y: THREE.Vector3, c: { s: number; sy: number }, spin = 0): ClothPut => ({ at: C.camToWorld(F, p.x, p.y, p.z), rot: quatYZ(F, y, zc).multiply(new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), spin)), s: c.s, sy: c.sy });
+  return { hand: { ...H, scale: C.WIPE.hand }, wad: put(oA, yA, A, o.spin ?? 2.4), tail: put(oB, yB, B) };
+};
