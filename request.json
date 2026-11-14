@@ -1,350 +1,65 @@
 {
- "id": "sudongpo-sound-01",
+ "id": "sudongpo-sound-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
    "type": "music",
-   "name": "mus_morning",
-   "text": "Bright, cheerful Chinese folk theme on plucked strings: a guzheng melody with pipa, light woodblock and a small hand drum, a sunny southern market morning, a jolly food-loving old poet showing off his cooking, G major pentatonic, 112 bpm, playful and warm, it starts at once with a plucked guzheng phrase. Instrumental, no vocals.",
-   "ms": 50000
+   "name": "mus_morning2",
+   "text": "Funny, bouncy Chinese folk comedy theme for a cheeky cooking vlog starring a jolly, greedy old poet: staccato plucked pipa and guzheng play a mischievous tiptoeing melody, a plucked zhongruan bass bounces on the off-beats, comic woodblock and temple-block hits, playful pitch bends and little slides like a wink, now and then a short squeaky suona note as a punchline, G major pentatonic, 120 bpm, witty, sunny and light, it starts at once with the plucked melody. Instrumental, no vocals.",
+   "ms": 62000
   },
   {
    "type": "music",
-   "name": "mus_huangzhou",
-   "text": "Rustic solo bamboo flute (dizi) over gentle guzheng arpeggios, a fond memory of farming a bare hillside long ago and slow-cooking pork at night, warm and nostalgic, D major pentatonic, 72 bpm. Instrumental, no vocals.",
-   "ms": 12000
+   "name": "mus_huangzhou2",
+   "text": "A mock-grand, tongue-in-cheek flashback: a pompous, overly serious bamboo flute (dizi) melody over a slow gong roll, answered by a cheeky plucked pipa phrase, nostalgic and funny, an old man bragging about the pork he invented, D major pentatonic, 76 bpm. Instrumental, no vocals.",
+   "ms": 14000
   },
   {
    "type": "music",
-   "name": "mus_noon",
-   "text": "Lazy sunny noon under a lychee tree: slow plucked guzheng with a little pipa, relaxed, contented and drowsy, a little humorous, G major pentatonic, 80 bpm. Instrumental, no vocals.",
-   "ms": 32000
+   "name": "mus_noon2",
+   "text": "Lazy comic nap music: a sleepy, sliding erhu yawns over tiptoeing pizzicato guzheng plucks, a sly little melody that keeps nearly dozing off, woodblock ticks like a clock, cheeky and drowsy, a funny old man stuffing himself with lychees in the shade, G major pentatonic, 84 bpm. Instrumental, no vocals.",
+   "ms": 34000
   },
   {
    "type": "music",
-   "name": "mus_evening",
-   "text": "Tender, warm and a little bittersweet: guzheng with a gentle erhu, golden evening light, a family packing trunks, a cheerful old man who will not be sad, F major pentatonic, 70 bpm. Instrumental, no vocals.",
-   "ms": 30000
+   "name": "mus_evening2",
+   "text": "Warm and gently funny evening music: guzheng and a light-hearted erhu over a soft plucked rhythm, a cheerful old man packing for exile and cracking jokes so his family will smile, tender with a playful wink, F major pentatonic, 78 bpm. Instrumental, no vocals.",
+   "ms": 34000
   },
   {
    "type": "music",
-   "name": "mus_cello",
-   "text": "One single sustained solo cello note, a low D, bowed slowly with gentle vibrato, swelling and then fading away. Nothing else, no other instruments. Instrumental, no vocals.",
-   "ms": 9000
+   "name": "mus_river2",
+   "text": "The cheeky plucked guzheng theme returns, bright and jaunty: dawn on a wide river, a small boat setting off, a happy bounce with pipa and woodblock, hopeful and fun, G major pentatonic, 100 bpm, it starts at once. Instrumental, no vocals.",
+   "ms": 10000
   },
   {
    "type": "music",
-   "name": "mus_river",
-   "text": "The warm guzheng theme returns, unhurried and bright: dawn on a wide river, a small boat setting off, hopeful and kind, G major pentatonic, 92 bpm. Instrumental, no vocals.",
-   "ms": 9000
-  },
-  {
-   "type": "music",
-   "name": "mus_beach",
-   "text": "Light, cheeky island tune: plucked guzheng and pipa with a soft hand drum and a little marimba, a happy old man grilling oysters on a beach, G major pentatonic, 104 bpm. Instrumental, no vocals.",
-   "ms": 15000
-  },
-  {
-   "type": "music",
-   "name": "mus_end",
-   "text": "One last warm phrase of a gentle guzheng theme, slow and tender, a whole life remembered with a smile, resolving to a single plucked note and then silence, G major pentatonic, 66 bpm. Instrumental, no vocals.",
-   "ms": 16000
+   "name": "mus_beach2",
+   "text": "A silly, cheeky island tune: plucked pipa and guzheng with marimba, a bouncy hand drum and comic woodblock hits, a happy old man secretly grilling oysters on a beach and very pleased with himself, G major pentatonic, 112 bpm, it starts at once. Instrumental, no vocals.",
+   "ms": 17000
   },
   {
    "type": "sfx",
-   "name": "amb_market",
-   "text": "A busy Chinese village morning market: vendors and buyers chattering, a rooster crowing far off, baskets, footsteps on packed earth.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_cleaver",
-   "text": "A heavy meat cleaver chopping down hard onto a thick wooden chopping block, one solid thunk.",
+   "name": "sting_luo",
+   "text": "A Peking opera percussion punchline: one bright clash of small gong and cymbals, a single comic hit, short.",
    "duration": 1.2,
-   "influence": 0.4
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "sfx_coins",
-   "text": "A few copper coins dropped into a palm.",
+   "name": "sting_tai",
+   "text": "A single small Chinese opera gong hit with a rising comic pitch bend, short.",
    "duration": 1.0,
-   "influence": 0.4
+   "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "sfx_whoosh",
-   "text": "A fast whip-pan whoosh, air swish.",
-   "duration": 0.8,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "amb_yard",
-   "text": "A hillside village yard in the morning: birds singing, children laughing and running nearby, a light breeze.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_bubble",
-   "text": "A clay pot gently bubbling and simmering on a small charcoal stove.",
-   "duration": 6,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_sizzle",
-   "text": "A bone put on a hot iron grill over charcoal, meat sizzling.",
-   "duration": 3,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_dog_whine",
-   "text": "A small dog gives one short, offended, disappointed whine.",
-   "duration": 1.5,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_chew",
-   "text": "Someone gnawing and chewing on a grilled bone.",
-   "duration": 1.5,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_lid",
-   "text": "Lifting a heavy clay pot lid, a ceramic clink and a puff of steam.",
-   "duration": 1.5,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "amb_noon",
-   "text": "Hot southern Chinese noon: cicadas buzzing in the trees, a breeze rustling leaves.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_bell_far",
-   "text": "A single distant temple bell rung once, ringing out far across green hills.",
-   "duration": 5,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_snore",
-   "text": "An old man snoring contentedly, slow and peaceful.",
-   "duration": 5,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_catch",
-   "text": "A small round fruit caught in a hand, a light slap.",
-   "duration": 0.5,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_hooves",
-   "text": "A horse trotting up a dirt hill road and being reined in to a stop, then a snort.",
-   "duration": 4,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_scroll",
-   "text": "A paper scroll being unrolled.",
-   "duration": 1.5,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "amb_wind",
-   "text": "A light wind over a quiet hillside, very still, nothing else.",
-   "duration": 10,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "amb_evening",
-   "text": "A wooden house in the evening: birds settling outside, calm room tone.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_brush",
-   "text": "A Chinese ink brush writing on paper, steady strokes.",
-   "duration": 6,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_trunk",
-   "text": "A wooden trunk lid closing gently.",
+   "name": "sting_oops",
+   "text": "A playful descending plucked pipa glissando, a comic oops sound, short.",
    "duration": 1.2,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_hum",
-   "text": "An old man humming a cheerful little folk tune to himself with his mouth closed, relaxed.",
-   "duration": 6,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "amb_pines",
-   "text": "Night in a pine wood beside a lake: crickets chirping, wind in the pine needles, tiny lapping water.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_lantern_set",
-   "text": "A paper lantern set down on a stone step, a light wooden knock.",
-   "duration": 0.8,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_sleeve",
-   "text": "A cloth sleeve wiping across a face, two strokes.",
-   "duration": 0.8,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "amb_river",
-   "text": "Dawn on a wide river: water lapping a muddy bank, reeds rustling, early birds, a distant rooster.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_oars",
-   "text": "A wooden oar sculling in a river, rhythmic water strokes and a creak.",
-   "duration": 6,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "amb_beach",
-   "text": "A tropical beach: surf waves rolling in, a sea breeze, palm leaves rustling.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "amb_fire",
-   "text": "A small driftwood campfire crackling on a beach.",
-   "duration": 8,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_shell_pop",
-   "text": "An oyster shell popping open on a hot fire with a hiss.",
-   "duration": 1.2,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_slurp",
-   "text": "A man slurping an oyster from its shell.",
-   "duration": 1.0,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "amb_temple",
-   "text": "Inside a quiet Buddhist temple hall: a big still room, far wind chimes, stillness.",
-   "duration": 12,
-   "influence": 0.4,
-   "loop": true
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_temple_bell",
-   "text": "A deep bronze temple bell struck once, long resonant decay.",
-   "duration": 6,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_stamp",
-   "text": "A heavy seal stamp pressed down onto paper, a solid thump.",
-   "duration": 0.6,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_ink_wipe",
-   "text": "A big brush sweeping across paper, a smooth airy whoosh.",
-   "duration": 1.0,
-   "influence": 0.4
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_card",
-   "text": "A paper card sliding in, a light paper rustle.",
-   "duration": 0.6,
-   "influence": 0.4
-  },
-  {
-   "name": "laugh_su_s7",
-   "lang": "zh",
-   "text": "[warm laugh, fond memory] 哈哈哈。",
-   "add": {
-    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
-    "voice_id": "YGeNjTKY1wBaKygyl4y8",
-    "name": "Gavin"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "seed": 7,
-   "settings": {
-    "stability": 0.5
-   },
-   "previous_text": "只有她猜对了。她说，是一肚子不合时宜。"
-  },
-  {
-   "name": "laugh_su_s11",
-   "lang": "zh",
-   "text": "[laughs warmly] 哈哈。",
-   "add": {
-    "owner": "c743e7cedaa9a7794b5da030508bf2397fb3cb091d3375652cdd776bf0443d71",
-    "voice_id": "YGeNjTKY1wBaKygyl4y8",
-    "name": "Gavin"
-   },
-   "keep": true,
-   "model": "eleven_v4",
-   "seed": 11,
-   "settings": {
-    "stability": 0.5
-   },
-   "previous_text": "只有她猜对了。她说，是一肚子不合时宜。"
+   "influence": 0.6
   }
  ]
 }
