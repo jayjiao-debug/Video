@@ -15,7 +15,8 @@
 //   vlog.tsx     <VlogHud f />     her camera's UI: the REC lamp (1 Hz, soft) top left, the scene's timestamp under it
 //                                  (清晨 05:00 / EARLY MORNING: slides in big on each scene's first frame while the clock
 //                                  runs on, then sits small), the battery top right (drains with the clock, red at 2 a.m.);
-//                                  the camera switches off on OFF_AT (lamp out, the UI holds still)
+//                                  the camera switches off on OFF_AT (BEAT.G.cameraOff: the lamp dies, the whole UI goes
+//                                  grey, the battery empties, it holds still 24 frames until the end black)
 //   end.tsx      endBlack(f, from, fade?), dipAlpha(f, a, b, fade?), black(a): the warm black, never #000
 //   style.ts     the palette HC, SAFE, text metrics, spanK, Rect helpers
 //   hudRectsAt(f)    the boxes the HUD takes on frame f (keep faces out of them);  hudHits(f, r)  the ones r overlaps

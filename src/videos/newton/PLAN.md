@@ -104,29 +104,47 @@ hand holds it up close); stick of charcoal; crucible(s); glass vessels; bellows;
   covers it.
   - REC (top left, `SCREEN.rec`, row centred on y 204, left x 50): a red lamp (glass with a glint in a warm ink ring)
     and "REC" in warm white, 38 px. The lamp breathes at 1 Hz: about 11 frames lit, 11 dim, 4-frame soft ramps, never below
-    24 % (never a hard flash).
+    24 % (never a hard flash). Its period is 1 s stretched by a hair (about 30.07 frames, a whole number of blinks
+    between frame 4 and OFF_AT - 5) so the lamp is lit on frame 0 and has been lit for 10 frames when it dies.
   - TIMESTAMP (under REC): two rows, the time of day in pale gold + the clock in warm white (「清晨 05:00」, 34 px), the
-    English small under it (EARLY MORNING, 21 px spaced capitals, ivory). On every scene's FIRST FRAME it slides in
+    English small under it (EARLY MORNING, 24 px spaced capitals (letter spacing 2), ivory: the smallest tag size the
+    owner accepts, about 22.5 px on this frame). On every scene's FIRST FRAME it slides in
     1.5x big (in 8 frames, from 40 px left) and while it lands THE CLOCK RUNS ON from the last scene's time to this
     one (05:00 ... 11:00 in 14 frames, ease-out: the day fast-forwarding, this film's own touch); it holds big to
-    1.6 s, then shrinks over 12 frames into its small place (rows on y 255 / 290) and stays for the scene. Frame 0
-    starts big and settled (no run). Big intro box `VLOG_RECT.stampBig` x 50..364, y 242..348; at rest x 50..261,
-    y 234..306. No sound when it slides in (see Sounds).
-  - BATTERY (top right, `SCREEN.battery` x 845..1040, y 182..226): its level follows the CLOCK, not the frame: 100 %
+    1.6 s, then shrinks over 12 frames into its small place (rows on y 255 / 291) and stays for the scene. Frame 0
+    starts big and settled (no run). The corner's reserve (the widest scene, A's EARLY MORNING): big intro
+    `VLOG_RECT.stampBig` x 50..394, y 242..353; at rest `VLOG_RECT.stamp` x 50..281, y 234..309. Each scene's own box
+    (`stampRect(id, big)`, what `hudRectsAt` reports): at rest A 281, B 263, C 235, D 235, E 240, F 200, G 250 (x1;
+    y 234..309); big A 394, B 368, C 325, D 325, E 333, F 272, G 348 (x1; y 242..353). No sound when it slides in
+    (see Sounds).
+  - BATTERY (top right, `VLOG_RECT.battery` x 845..1038, y 182..226, inside `SCREEN.battery`): its level follows the CLOCK, not the frame: 100 %
     at 05:00 down to 12 % at 02:00 (scene starts A 100, B 75, C 71, D 58, E 46, F 25, G 12), each scene draining 3
     points more while it runs (G 12 -> 7), so it steps down at every cut (a later recording). Green over 35 %, amber
     over 15 %, RED in the 2 a.m. scene, where its fill breathes softly at 1 Hz.
-  - SWITCH-OFF (the Qin film's ending, our timing): after his window goes dark (the last pluck, G to - 1.77 s) the
-    camera switches off on `OFF_AT` = G to - 1.2 s = frame 5217 (TOTAL - 36), in the quiet after the pluck (only the
-    crickets) and 12 frames before segG's end black starts (frame 5229): the lamp goes out (a dead dark-red glass),
-    "REC" turns warm grey, the whole UI holds still (nothing breathes); then the black covers it. The blink's phase is
-    set from OFF_AT so the lamp has been fully lit for 7 frames when it dies (and it is lit on frame 0).
+  - SWITCH-OFF (the Qin film's idea, our look and timing): his window goes dark on the last pluck (G to - 1.77 s =
+    frame 5199); 12 frames (0.4 s) later, once the pluck has decayed (the mix there: crickets only, -42 to -49 dB
+    RMS), the camera switches off on `OFF_AT` = `BEAT.G.cameraOff` = G to - 1.4 s = frame 5211 (TOTAL - 42), on the
+    click of `sfx_poweroff`. In that one frame the WHOLE UI goes dead, which nothing in a blink does: the lamp goes
+    out to a dead GREY glass (no red, no glow; a dim blink stays red), "REC", the timestamp and the battery's outline
+    and % all turn one warm grey (#8f857c; the English row a shade darker), and the battery's fill is emptied. It
+    holds still (nothing breathes) for 24 frames (0.8 s, long enough to read on a phone), then segG's end black
+    (`BEAT.G.black[0]` = OFF_AT + 24 = frame 5235; fade 8 frames) falls on the power-down sweep; 18 frames of black
+    to the end. The dark window shows 36 frames (5199-5234). All of it hangs off the scene's end, like the pluck, so
+    it follows if G's tail is extended.
   - Switches: `Pose.rec: false` hides the lamp and the timestamp on a frame (the battery stays, still); `Pose.cards:
     false` skips the big intro (small timestamp only); `Pose.hud: false` hides everything. `hudRectsAt(f)` includes the
-    vlog boxes (the big intro for the first 2 s of a scene). Keep faces out of the two top corners.
+    vlog boxes (each scene's own timestamp box; the big intro for the first 2 s of a scene). Keep faces (skin) out
+    of the two top corners for the whole scene, push-ins included: reframe, never switch the lamp off mid-scene.
   - THE TIMES (story.ts `SCENE_CLOCK` / `SCENE_STAMP`; 24-hour, read at a glance). No source gives the hours of one
     day; they are chosen to agree with what the characters say, the light the script asks for and Humphrey Newton's
-    account (Keynes MS 135):
+    account (Keynes MS 135). SOURCED (director vlog round 1, note 5; facts_checked.md rows): only A 05:00 (row 3,
+    "sometimes not till 5 or 6"; card 1) and G 02:00 (G01 「两点了」 and row 3, "2 or 3 of the clock"). B 11:00,
+    D 15:00, E 18:00 and F 23:00 have NO ROW in facts_checked.md, and a quick search (14 Nov) found no primary source:
+    neither Trinity's hall dinner / supper hours around 1686 nor a day or hour for the Lucasian lecture (the
+    Dictionary of Scientific Biography gives only "at least one lecture a week in every term", and adds "there is no
+    record of what lectures, if any, he gave in 1686"). OPEN, for the researcher and the screenwriter: verify those four
+    hours or decide whether B-F keep exact digits (the owner's rule: no on-screen number the sources don't give).
+    Until then the digits stay as below.
     | scene | stamp | why |
     |---|---|---|
     | A | 清晨 05:00 · EARLY MORNING | the script's "about 5 a.m."; May 1686 (Julian) = 11 May-10 June (Gregorian), sunrise about 3:40-4:15 local solar time, so the low sun on the stairs is right; he says "Good night": card 1 / Humphrey, "very rarely went to bed till 2 or 3 of the clock, sometimes not till 5 or 6" |
@@ -137,14 +155,16 @@ hand holds it up close); stick of charcoal; crucible(s); glass vessels; bellows;
     | F | 夜 23:00 · NIGHT | the blue garden: at Cambridge in late May the sky never gets fully black, at 23:00 it is a deep blue (the script's "blue mid-tone"); F03 "Go to bed"; the fire watch (Humphrey: in spring the fire "scarcely went out", they sat up on alternate nights); leaves "time passes" (candle shorter, fire deep red) room before two |
     | G | 凌晨 02:00 · SMALL HOURS | the clock strikes two and G01 says 「两点了」; he goes to bed straight after (G03 "Good night", his window goes dark): Humphrey's "2 or 3 of the clock" |
   - SOUNDS (`scripts/newton/sound/cues.json`, the Qin film's way): `rec_beep` (the Qin film's 1 kHz beep, voice farm
-    run qin-sfx-01) at scene A from + 0.05 s, before her first word (0.26 s) and the knock (0.64 s); `sfx_poweroff`
-    (synthesised: `make_poweroff.py 0.40 0.67`: the button click on OFF_AT, the power-down sweep and a little static on
-    the end black's fade) at G to - 1.2 s. NO beep at the other scene starts: every cut already carries a line's last
+    run qin-sfx-01) at scene A from + 0.05 s: audible 0.05-0.11 s, 80 ms before her first word (A01's voice onset at
+    about 0.19 s; the timing file's line start is 0.10 s) and well before the knock (0.64 s); `sfx_poweroff`
+    (synthesised: `make_poweroff.py 0.80 1.07`: the button click on OFF_AT, the power-down sweep from 0.8 s later, on
+    the end black, gone with the black's fade, a little static) at G to - 1.4 s. NO beep at the other scene starts: every cut already carries a line's last
     syllable or a hit within 0.1-0.4 s (B the college bell, C mus_noon's first note, D the big door, E "Don't." and
     mus_supper, F the end of E07 and mus_night, G the clock's first stroke), so the timestamp slides in silently, as in
-    the Qin film. Measured (mono mix): integrated -19.0 LUFS (unchanged), true peak -1.2 dBTP; the beep peaks at
-    -11.6 dBFS, about 4 dB under her voice's level above 300 Hz; the switch-off click and sweep sit 10-12 dB under the
-    last line and 20 dB over the crickets.
+    the Qin film. Measured (mono mix, 14 Nov, after the re-time): integrated -19.0 LUFS (unchanged), true peak
+    -1.2 dBTP; the beep peaks at -11.6 dBFS, about 4 dB under her voice's level above 300 Hz; the switch-off click
+    (173.70 s) peaks at -14.7 dBFS, -32 dB above 300 Hz (the last line G04 -21.5, the crickets -55 to -58): about
+    10 dB under the voice, 23 dB over the bed; the sweep (174.50-174.65 s) -33 to -44 dB above 300 Hz.
 - SUBTITLES on every spoken line, in the bottom band: CHINESE LARGE (main, about 64-72 px), ENGLISH SMALL under it
   (about 34-40 px), both centred, white/warm white with a dark outline, NO BOX. One screen at a time (the lines file's
   `screens`, each <= 16 Chinese characters); Newton's lines: the Chinese is the translation, the English is what he
@@ -153,9 +173,11 @@ hand holds it up close); stick of charcoal; crucible(s); glass vessels; bellows;
   Chinese large and English small under it, shown only while nobody speaks (timing from the lines file), a short
   slide/flutter in and out. They never sit on a face.
 - TITLE BLOCK: 「跟着牛顿过一天」 large, 「1686年5月 · 剑桥三一学院」 small under it (English small line too), lands ON
-  THE SHUT DOOR after "Good night" (line A02) for 3 s; never on frame 0.
-- End: his window goes dark (the last pluck), her camera switches off (the REC lamp goes out, the UI holds still,
-  the click), then black (fade over >= 3 frames, the film's darkest warm tone, not #000).
+  THE SHUT DOOR after "Good night" (line A02) for 3 s; never on frame 0. It sits on the door's upper panel (segA: world
+  y 1.28 m), its top about 140 px under the timestamp's English row at frame 140 (at least 80 px wanted).
+- End: his window goes dark (the last pluck), 0.4 s later her camera switches off (the click: the REC lamp dies, the
+  whole UI goes grey and holds still 0.8 s), then black on the power-down sweep (fade 8 frames, the film's darkest
+  warm tone, not #000).
 
 ## 6. Timing
 `scripts/newton/gen_timing.py` reads `scripts/newton/voice/newton_lines.json` (+ the real voice timing
@@ -164,41 +186,43 @@ and `captions.ts`. Caption groups = the lines file's `screens` (zh + en), placed
 Segments = scenes A-G. Every beat is a lookup (`line`, `cap`, `capWord`, `BEAT`): never type a frame number.
 
 ## 7. Storyboard (scene = segment). Read the script's stage directions for each scene; this is the shot plan.
-Since 14 Nov (section 4): she is never seen. Read every "mic" and "her hand" below as her INVISIBLE hand: the object
-(door, chair, handkerchief, board) moves by itself on the sound's anchor; "the mic swings to X" = the camera turns to X;
-"mic to the lens" (asides) = her voice to us, the camera carries it.
+Since 14 Nov (section 4) she is never seen: no mic, no hands. The storyboard below is written that way: every object
+she handles (door, chair, handkerchief, board) moves by itself, as if by an invisible hand, on the sound's anchor
+(SYNC_POINTS.md); "the camera turns to X" is her looking; an aside is her voice to us, carried by a small camera move.
 ### A · 清晨 · stairs (01-06)
 1. f0 already moving, line 01's subtitle on it: the camera takes the last two steps at a run; low sun through the stair
-   window. The mic swings in from lower left and raps on the door, which is already opening: NEWTON in the doorway,
+   window. Two raps on the door, nothing seen knocking (the camera pushes in a little on each, the leaf shivers, dust
+   puffs off the panel); it swings open on the second: NEWTON in the doorway,
    candle stub under his chin, bird's-nest grey hair, ink on his nose, quill behind his ear, yesterday's clothes.
-2. 02 "Good night." over her 一天: he shuts the door in the mic's face; the glow under the door goes out. TITLE BLOCK
-   on the shut door (3 s). 03 aside (mic to the lens). CARD 1 under which the door opens a crack and HUMPHREY slips
+2. 02 "Good night." over her 一天: he shuts the door in her face (the camera flinches back on the thud); the glow under
+   the door goes out. TITLE BLOCK on the shut door (3 s). 03 aside (the camera's puzzled head tilt at the shut door).
+   CARD 1 under which the door opens a crack and HUMPHREY slips
    out yawning with an empty ink bottle and pulls the door shut without a sound.
-3. 04 mic to Humphrey; 05 "Laugh? Mr Newton?": he looks at her, at the door, back, shakes his head, goes down the stairs.
-   06 aside: 「好，今天我要让他笑一次。」
+3. 04 the camera turns to Humphrey; 05 "Laugh? Mr Newton?": he looks at her lens, at the door, back, shakes his head,
+   goes down the stairs. 06 aside (back on his door: a nod, a push toward it): 「好，今天我要让他笑一次。」
 ### B · 上午 · room, morning light (07-15)
 1. Plate insert, clean white light: Humphrey sets the covered dinner on the window table, lifts the lid: steam.
    Pull back: Newton writing at the paper-buried desk. 07 "Sir, your dinner." Newton does not look up; Humphrey goes.
-2. 08 the mic swings after Humphrey to the door 「他说马上来！」, back to Newton. 09-10 (he writes on). 11 the mic tilts
-   to the drafts stack. 12-14 (cold, precise, no face change). 15 aside 「没笑。」 CARD 2 over the scratching quill.
+2. 08 the camera swings after Humphrey to the door 「他说马上来！」, back to Newton. 09-10 (he writes on). 11 the
+   camera tilts to the drafts stack. 12-14 (cold, precise, no face change). 15 aside 「没笑。」 CARD 2 over the scratching quill.
 ### C · 中午 · garden (16-22)
 1. Plate insert: hard noon light, lid off, no steam, the window bars' short sharp shadows on the cloth.
 2. The garden: Newton walks a turn, hands behind his back; the camera walks BACKWARDS in front of him. 16-18.
 3. 19 "Two laps is—": he stops dead mid-word, stares at nothing, turns on his heel, RUNS for the staircase. 20 as he
-   goes. WHIP after him up the stairs (the cut): in the room he is already writing, bent over the desk, STANDING. Her
-   hand drags the chair to the backs of his knees: 21. He waves it away without looking: 22. The chair stays empty.
+   goes. WHIP after him up the stairs (the cut): in the room he is already writing, bent over the desk, STANDING. The
+   chair slides itself to the backs of his knees (the scrape; no one seen pushing it): 21. He waves it away without looking: 22. The chair stays empty.
 ### D · 下午 · street + schools (23-28)
-1. Out of the college gate along the street, gown flapping, notes under his arm; the camera trots beside him; her
-   hand darts in with a handkerchief and wipes the ink off his nose in two strokes (from here: no ink). He has not
+1. Out of the college gate along the street, gown flapping, notes under his arm; the camera trots beside him; a
+   handkerchief floats in by itself and wipes the ink off his nose in two strokes (from here: no ink). He has not
    noticed.
 2. A tall door; inside: rows of empty benches, dust in a sunbeam. One WIDE hold: one man at the front, nobody else.
    23 aside. He lays out his notes as if the hall were full. 24-26. 27 aside (his face unchanged, out of focus behind).
 3. He lectures to the empty benches (mouth moving, no words: muffled echo is sound), time cut, he gathers his notes;
-   she claps alone (her hand + mic hand); 28 "Don't."
+   two lone claps ring in the empty hall (sound only; the camera jolts a little on each, no hands seen); 28 "Don't."
 ### E · 傍晚 · room, gold light (29-35)
 1. Plate insert, slanting gold light, cold; a FLY walks across it; push in until the fly is big. 29.
 2. 30 "Have I not?": he steps to the table, takes a bite, a second, standing, eyes on the page in his other hand,
-   back to the desk. Close on the plate: two bites gone. 31-34 (he looks pointedly at the mic on 32). 35 aside.
+   back to the desk. Close on the plate: two bites gone. 31-34 (he looks pointedly into her lens on 32). 35 aside.
 ### F · 夜 · garden at night -> elaboratory (36-51)
 1. The garden in blue moonlight; the outbuilding glows orange at its door and chimney; the camera follows his candle
    along the gravel to it. Inside: brick furnace, crucibles, the mouldy book open on a bench; Humphrey, sooty, feeds
@@ -209,13 +233,16 @@ Since 14 Nov (section 4): she is never seen. Read every "mic" and "her hand" bel
    Silence, he pokes the fire, the push-in has stopped.
 ### G · 凌晨两点 · elaboratory -> room -> garden (52-55)
 1. A clock strikes two (sound); on the second stroke the board slides off his knee and clatters at the camera's feet;
-   her hand picks it up and holds it into frame, close (circles and triangles). She sniffs. 52.
+   it rises off the floor by itself (taken up by her invisible hands) and hangs close in front of the lens (circles
+   and triangles), drifting a little as a held thing does. She sniffs. 52.
 2. 53 THE LAUGH: he stares, then it bursts out: eyes squeezed shut, mouth open, whole round head shaking; the camera
    holds DEAD STILL; "What... use!" over its tail. Hold ~2 s. HUMPHREY in the doorway with a full sack sees it and
    DROPS the sack. CARD 4 under which Newton wipes his eyes, takes his candle, stops at the door, the smile still on
    him. 54 "Good night." 55 「晚安，牛顿先生。」
 3. His room by candle: he lifts the cold plate and eats a bite or two standing, smiling a little (plate framed right;
-   CARD 5 mid-left). Then outside, from the elaboratory door: his window goes dark; the outbuilding still glows. Black.
+   CARD 5 mid-left). Then outside, from the elaboratory door: his window goes dark (the last pluck); the outbuilding
+   still glows. 0.4 s later her camera SWITCHES OFF (the click; the REC lamp dies, the whole vlog UI goes grey and
+   holds still for 0.8 s), then black on the power-down sweep (section 5).
 
 ## 8. Files (one owner per file)
 | owner | files |

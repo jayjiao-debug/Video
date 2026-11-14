@@ -67,7 +67,8 @@ export const islandOf = (x: number): Place | null => {
  *  shows: keep faces out of it); the title block at its default place (`title` = hud TITLE_RECT, over TITLE_SPAN; segA
  *  moves it onto the door); HER CAMERA'S RECORDING UI (hud/vlog.tsx, PLAN 5) owns the two top corners below `top`:
  *  `rec` = the REC lamp's row (centre y 204) and the scene's timestamp at rest under it (hud VLOG_RECT.rec + .stamp;
- *  for the first 2 s of every scene the timestamp holds 1.5x bigger: VLOG_RECT.stampBig, x 50..~400, y 242..~345),
+ *  for the first 2 s of every scene the timestamp holds 1.5x bigger: VLOG_RECT.stampBig, x 50..394, y 242..353 at
+ *  most; each scene's own box: hud stampRect(id, big)),
  *  `battery` = the battery and its % top right. The mic and her hands are never drawn (props INVISIBLE); `mic` /
  *  `micRest` / `micTop` are where the invisible mic still rests (cam.ts MIC_FRAME.band) */
 export const SCREEN = {
@@ -78,7 +79,7 @@ export const SCREEN = {
   card: { x0: 35, y0: 811, x1: 677, y1: 1216 },
   title: { x0: 125, y0: 796, x1: 955, y1: 1086 },
   /** the vlog UI's corners (hud VLOG_RECT): REC + the small timestamp top left, the battery + its % top right */
-  rec: { x0: 50, y0: 184, x1: 264, y1: 306 },
+  rec: { x0: 50, y0: 184, x1: 284, y1: 310 },
   battery: { x0: 845, y0: 182, x1: 1040, y1: 226 },
 };
 /** a camera given as a story.ts CamPose with Vec3s (for a mark's camera in a layout file) */

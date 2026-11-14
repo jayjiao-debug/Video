@@ -15,10 +15,11 @@
 //               the same warm grey, and the battery's fill is emptied. From that frame it holds still (nothing breathes)
 //               until the end black (Pose.top) covers it.
 //     时间戳    the scene's timestamp, two rows: the time of day (story.ts SCENE_STAMP: 清晨 in pale gold) and the clock
-//               (05:00, warm white), the English word small under it (EARLY MORNING, ivory, spaced capitals).
+//               (05:00, warm white), the English word small under it (EARLY MORNING, 24 px, ivory, spaced capitals);
+//               lang en: the clock alone over the same English row (one corner size in both languages).
 //               On every scene's first frame it SLIDES IN BIG (x1.5) under REC; while it lands the CLOCK RUNS ON from
 //               the last scene's time to this one (the day fast-forwarding: 05:00 ... 11:00, ease-out over 14 frames);
-//               it holds, then shrinks into its small place under REC (left x 54, rows on y 255 / 290) and stays.
+//               it holds, then shrinks into its small place under REC (left x 54, rows on y 255 / 291) and stays.
 //               Frame 0 starts big and settled (no run: the first frame is complete). cards: false skips the big
 //               intro (only the small stamp).
 //     battery   top right (SCREEN.battery): its level follows the CLOCK, not the frame: 100 % at 05:00 down to 12 % at
@@ -80,15 +81,18 @@ const REC_X = X0 + 48, REC_PX = 38, REC = "REC";          // the label (the same
 const ST = { x: X0 + 4, y: 238, zh: 34, en: 24, gap: 7, big: 1.5, bigY: 246, lsEn: 2.0 };
 const BAT = { x1: SCREEN.battery.x1 - 12, w: 70, h: 32, px: 34 };
 const inkW = (px: number) => Math.max(5, Math.round(px * 0.17));
-/** the two rows' strings for a scene (lang zh: 清晨 05:00 / EARLY MORNING; lang en: Early morning 05:00 / 清晨) */
+/** the two rows' strings for a scene (lang zh: 清晨 05:00 / EARLY MORNING; lang en: 05:00 / EARLY MORNING, the
+ *  word only once, so the corner keeps the same size in both languages and the shots' face-clear framing holds) */
 const rows = (id: SceneId, clock: string) => {
   const s = SCENE_STAMP[id];
-  return EN ? { word: s.en, clock, small: s.zh, smallLs: 1 } : { word: s.zh, clock, small: s.en.toUpperCase(), smallLs: ST.lsEn };
+  return { word: EN ? "" : s.zh, clock, small: s.en.toUpperCase(), smallLs: ST.lsEn };
 };
+/** the big row's text: the time word (if any) and the clock */
+const bigRow = (r: { word: string; clock: string }) => (r.word ? `${r.word} ${r.clock}` : r.clock);
 /** a scene's timestamp width at rest (px, before the 1.5x intro): its wider row, with the ink line */
 const stampW = (id: SceneId) => {
   const r = rows(id, SCENE_STAMP[id].clock);
-  return Math.max(textW(`${r.word} ${r.clock}`, ST.zh, 1), textW(r.small, ST.en, r.smallLs)) + inkW(ST.zh);
+  return Math.max(textW(bigRow(r), ST.zh, 1), textW(r.small, ST.en, r.smallLs)) + inkW(ST.zh);
 };
 /** the widest timestamp at rest: the widest of any scene (A's EARLY MORNING) */
 const STAMP_W = Math.max(...SCENES.map(stampW));
@@ -158,7 +162,7 @@ const TimeStamp: React.FC<{ f: number; intro: boolean; out: boolean }> = ({ f, i
   const opSmall = clamp01((t - 3) / 6);
   return (
     <div style={{ position: "absolute", left: ST.x + dx, top: y, width: STAMP_W, height: STAMP_H, transform: `scale(${s.toFixed(4)})`, transformOrigin: "0 0", opacity: op }}>
-      <Inked px={ST.zh} ls={1} runs={[{ text: `${r.word} `, color: out ? OFF.fill : HC.goldPale }, { text: r.clock, color: out ? OFF.fill : HC.warm }]} style={{ left: 0, top: 0 }} />
+      <Inked px={ST.zh} ls={1} runs={[{ text: r.word ? `${r.word} ` : "", color: out ? OFF.fill : HC.goldPale }, { text: r.clock, color: out ? OFF.fill : HC.warm }]} style={{ left: 0, top: 0 }} />
       <div style={{ opacity: opSmall }}>
         <Inked px={ST.en} ls={r.smallLs} runs={[{ text: r.small, color: out ? OFF.small : HC.ivory }]} style={{ left: 1, top: ST.zh + ST.gap }} />
       </div>

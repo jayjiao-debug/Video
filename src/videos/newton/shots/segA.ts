@@ -402,11 +402,10 @@ export const SEG: Segment = {
     // the title block on the shut door's upper panel, painted on it: its place and size follow the door on screen
     // (the jolt of the flinch), its tilt only up to +-1.5 deg (the A03 head tilt barely rolls it); it lands ON the
     // thud (TITLE_SPAN starts a few frames before it: held back until the door is shut, requests.md WP5-A -> WP1)
-    // (on the panel at 1.23 m: well clear under her camera's timestamp, top left, since the REC HUD came in on 14 Nov:
-    // 5 cm (about 40 px at frame 140) lower than first set, so at least 80 px lie between the two text blocks (vlog
-    // director round 1, note 7); 2 cm left of the door's middle (z - 0.02: the door's face looks -x, so screen left is
-    // -z), so the end of the English line, "Cambridge", stays clear of the black latch plate at the leaf's free edge)
-    const tp = doorTitle(cam, V(STAIRS.door.x - 0.03, 1.23, STAIRS.door.z - 0.02), P_HOLD, 0.9);
+    // (on the panel at 1.28 m: clear under her camera's timestamp, top left, since the REC HUD came in on 14 Nov; 2 cm
+    // left of the door's middle (z - 0.02: the door's face looks -x, so screen left is -z), so the end of the English
+    // line, "Cambridge", stays clear of the black latch plate at the leaf's free edge)
+    const tp = doorTitle(cam, V(STAIRS.door.x - 0.03, 1.28, STAIRS.door.z - 0.02), P_HOLD, 0.9);
     const titleOn = f >= TITLE_SPAN[0] - 2 && f <= TITLE_SPAN[1] + 2;
     const titleHeld = f >= TITLE_SPAN[0] && f < SND.thud;
     return {
