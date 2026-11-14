@@ -1,11 +1,1 @@
-{
-  "id": "group-v4-full",
-  "composition": "GroupFilm",
-  "start": 0,
-  "end": 2002,
-  "chunks": 20,
-  "concurrency": 1,
-  "timeout": 600000,
-  "output": "group_v4",
-  "flags": "--crf=16"
-}
+{"id": "su-review-01", "composition": "SuFilm", "start": 0, "end": 6095, "chunks": 20, "concurrency": 1, "timeout": 900000, "output": "su_review1", "flags": "--crf=18 --scale=0.5"}

@@ -1,0 +1,800 @@
+{
+ "film": "su",
+ "speakers": {
+  "ji": "记者",
+  "su": "苏东坡",
+  "guo": "苏过",
+  "chai": "差役"
+ },
+ "scenes": {
+  "A": {
+   "time": "清晨 · 惠州集市"
+  },
+  "B": {
+   "time": "上午 · 白鹤峰新居"
+  },
+  "C": {
+   "time": "中午 · 荔枝树下"
+  },
+  "D": {
+   "time": "下午 · 新居门口"
+  },
+  "E": {
+   "time": "傍晚 · 新居里"
+  },
+  "F": {
+   "time": "夜 · 西湖边的松林"
+  },
+  "G": {
+   "time": "黎明 · 江边"
+  },
+  "H": {
+   "time": "两年后 · 儋州"
+  },
+  "I": {
+   "time": "四年后 · 金山寺"
+  }
+ },
+ "source": "voice draft v1 (3:23), approved by Jay",
+ "lines": [
+  {
+   "n": 1,
+   "id": "A01",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[surprised, bright] 东坡先生？您怎么在买骨头？",
+   "zh": "东坡先生？您怎么在买骨头？",
+   "screens": [
+    "东坡先生？",
+    "您怎么在买骨头？"
+   ],
+   "en": "Master Dongpo? Why are you buying bones?"
+  },
+  {
+   "n": 2,
+   "id": "A02",
+   "scene": "A",
+   "who": "su",
+   "tts": "[cheerful, conspiratorial, leaning in] 惠州一天只杀一只羊，肉，得让给当官的。",
+   "zh": "惠州一天只杀一只羊，肉，得让给当官的。",
+   "screens": [
+    "惠州一天只杀一只羊，",
+    "肉，得让给当官的。"
+   ],
+   "en": "Huizhou kills one sheep a day. The meat goes to the officials."
+  },
+  {
+   "n": 3,
+   "id": "A03",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[puzzled] 您不也是官吗？",
+   "zh": "您不也是官吗？",
+   "screens": [
+    "您不也是官吗？"
+   ],
+   "en": "Aren't you an official?"
+  },
+  {
+   "n": 4,
+   "id": "A04",
+   "scene": "A",
+   "who": "su",
+   "tts": "[laughing at himself] 我是被贬来的官。",
+   "zh": "我是被贬来的官。",
+   "screens": [
+    "我是被贬来的官。"
+   ],
+   "en": "I'm the banished kind."
+  },
+  {
+   "n": 5,
+   "id": "A05",
+   "scene": "A",
+   "who": "su",
+   "tts": "[delighted, like showing off treasure] 你看，骨头缝里，还有肉！",
+   "zh": "你看，骨头缝里，还有肉！",
+   "screens": [
+    "你看，骨头缝里，还有肉！"
+   ],
+   "en": "Look! There's still meat between the bones!",
+   "card": {
+    "zh": "他写信告诉弟弟：惠州一天杀一羊，他只买脊骨。",
+    "en": "He wrote to his brother: Huizhou kills one sheep a day, and he buys only the spine."
+   },
+   "card_delay": 0.2,
+   "card_hold": 3.0
+  },
+  {
+   "n": 6,
+   "id": "B06",
+   "scene": "B",
+   "who": "su",
+   "tts": "[proud, demonstrating step by step] 煮熟，泡酒，撒盐，烤到微焦。",
+   "zh": "煮熟，泡酒，撒盐，烤到微焦。",
+   "screens": [
+    "煮熟，泡酒，撒盐，烤到微焦。"
+   ],
+   "en": "Boil it, soak it in wine, a pinch of salt, grill it till it just chars.",
+   "pre": 0.81
+  },
+  {
+   "n": 7,
+   "id": "B07",
+   "scene": "B",
+   "who": "su",
+   "tts": "[blissful] 慢慢剔，能啃一整天，跟吃螃蟹一样。",
+   "zh": "慢慢剔，能啃一整天，跟吃螃蟹一样。",
+   "screens": [
+    "慢慢剔，能啃一整天，",
+    "跟吃螃蟹一样。"
+   ],
+   "en": "Pick at it slowly and it lasts all day. Like eating crab."
+  },
+  {
+   "n": 8,
+   "id": "B08",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[curious] 那啃完的骨头，给狗吗？",
+   "zh": "那啃完的骨头，给狗吗？",
+   "screens": [
+    "那啃完的骨头，给狗吗？"
+   ],
+   "en": "And when you're done, the bones go to the dog?"
+  },
+  {
+   "n": 9,
+   "id": "B09",
+   "scene": "B",
+   "who": "su",
+   "tts": "[mock-sorry, deadpan] 啃得这么干净，狗都不高兴。",
+   "zh": "啃得这么干净，狗都不高兴。",
+   "screens": [
+    "啃得这么干净，狗都不高兴。"
+   ],
+   "en": "Picked this clean? The dogs are not happy.",
+   "after": 1.27
+  },
+  {
+   "n": 10,
+   "id": "B10",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[to camera, laughing] 大文豪，跟狗抢饭吃。",
+   "zh": "大文豪，跟狗抢饭吃。",
+   "screens": [
+    "大文豪，跟狗抢饭吃。"
+   ],
+   "en": "The great poet is stealing the dog's dinner."
+  },
+  {
+   "n": 11,
+   "id": "B11",
+   "scene": "B",
+   "who": "su",
+   "tts": "[beaming] 我自己盖的房子。一家人，总算团聚了。",
+   "zh": "我自己盖的房子。一家人，总算团聚了。",
+   "screens": [
+    "我自己盖的房子。",
+    "一家人，总算团聚了。"
+   ],
+   "en": "I built this house myself. The whole family is finally together."
+  },
+  {
+   "n": 12,
+   "id": "B12",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[curious] 您被贬过几次了？",
+   "zh": "您被贬过几次了？",
+   "screens": [
+    "您被贬过几次了？"
+   ],
+   "en": "How many times have you been banished?"
+  },
+  {
+   "n": 13,
+   "id": "B13",
+   "scene": "B",
+   "who": "su",
+   "tts": "[counting on his fingers, cheerful] 黄州一次，惠州一次。",
+   "zh": "黄州一次，惠州一次。",
+   "screens": [
+    "黄州一次，惠州一次。"
+   ],
+   "en": "Huangzhou once. Huizhou once."
+  },
+  {
+   "n": 14,
+   "id": "B14",
+   "scene": "B",
+   "who": "su",
+   "tts": "[shrugging, light] 黄州那次，是因为写诗，坐了四个多月牢。",
+   "zh": "黄州那次，是因为写诗，坐了四个多月牢。",
+   "screens": [
+    "黄州那次，是因为写诗，",
+    "坐了四个多月牢。"
+   ],
+   "en": "Huangzhou was for poems. Four months in prison first."
+  },
+  {
+   "n": 15,
+   "id": "B15",
+   "scene": "B",
+   "who": "su",
+   "tts": "[fond, remembering] 黄州猪肉便宜，有钱人不吃，穷人不会煮。",
+   "zh": "黄州猪肉便宜，有钱人不吃，穷人不会煮。",
+   "screens": [
+    "黄州猪肉便宜，",
+    "有钱人不吃，穷人不会煮。"
+   ],
+   "en": "Pork in Huangzhou was dirt cheap. The rich wouldn't eat it, the poor didn't know how to cook it."
+  },
+  {
+   "n": 16,
+   "id": "B16",
+   "scene": "B",
+   "who": "su",
+   "tts": "[savouring every word] 少放水，小火慢炖，火候到了，自然就香。",
+   "zh": "少放水，小火慢炖，火候到了，自然就香。",
+   "screens": [
+    "少放水，小火慢炖，",
+    "火候到了，自然就香。"
+   ],
+   "en": "Not much water, a small fire, no hurry. When it's ready, it turns delicious all by itself.",
+   "after": 1.02
+  },
+  {
+   "n": 17,
+   "id": "B17",
+   "scene": "B",
+   "who": "ji",
+   "tts": "[excited] 这就是东坡肉！",
+   "zh": "这就是东坡肉！",
+   "screens": [
+    "这就是东坡肉！"
+   ],
+   "en": "That's Dongpo pork!"
+  },
+  {
+   "n": 18,
+   "id": "B18",
+   "scene": "B",
+   "who": "su",
+   "tts": "[amused, correcting her] 东坡，是我在黄州种地的那块坡。",
+   "zh": "东坡，是我在黄州种地的那块坡。",
+   "screens": [
+    "东坡，是我在黄州",
+    "种地的那块坡。"
+   ],
+   "en": "Dongpo, \"East Slope\", is the hillside I farmed in Huangzhou."
+  },
+  {
+   "n": 19,
+   "id": "C19",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[amazed] “日啖荔枝三百颗”，真的假的？",
+   "zh": "“日啖荔枝三百颗”，真的假的？",
+   "screens": [
+    "“日啖荔枝三百颗”，",
+    "真的假的？"
+   ],
+   "en": "\"Three hundred lychees a day\", from your poem. Really?",
+   "pre": 0.81
+  },
+  {
+   "n": 20,
+   "id": "C20",
+   "scene": "C",
+   "who": "su",
+   "tts": "[mock-solemn, then a wink] 诗嘛，要夸张一点。",
+   "zh": "诗嘛，要夸张一点。",
+   "screens": [
+    "诗嘛，要夸张一点。"
+   ],
+   "en": "It's poetry. You exaggerate a little.",
+   "after": 1.02
+  },
+  {
+   "n": 21,
+   "id": "C21",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[deadpan] 一点。",
+   "zh": "一点。",
+   "screens": [
+    "一点。"
+   ],
+   "en": "\"A little.\""
+  },
+  {
+   "n": 22,
+   "id": "C22",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[sincere] 被贬到这么远，您不难过吗？",
+   "zh": "被贬到这么远，您不难过吗？",
+   "screens": [
+    "被贬到这么远，您不难过吗？"
+   ],
+   "en": "Banished this far from home, aren't you sad?"
+  },
+  {
+   "n": 23,
+   "id": "C23",
+   "scene": "C",
+   "who": "su",
+   "tts": "[content, meaning it] 有荔枝吃，在这儿待一辈子都行。",
+   "zh": "有荔枝吃，在这儿待一辈子都行。",
+   "screens": [
+    "有荔枝吃，",
+    "在这儿待一辈子都行。"
+   ],
+   "en": "With lychees like these, I'd stay here for life.",
+   "after": 1.27
+  },
+  {
+   "n": 24,
+   "id": "C24",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[curious] 最近写新诗了吗？",
+   "zh": "最近写新诗了吗？",
+   "screens": [
+    "最近写新诗了吗？"
+   ],
+   "en": "Written any new poems lately?"
+  },
+  {
+   "n": 25,
+   "id": "C25",
+   "scene": "C",
+   "who": "su",
+   "tts": "[drowsy, pleased with himself, reciting] 报道先生春睡美，道人轻打五更钟。",
+   "zh": "报道先生春睡美，道人轻打五更钟。",
+   "screens": [
+    "报道先生春睡美，",
+    "道人轻打五更钟。"
+   ],
+   "en": "\"Tell them the old man sleeps sweetly this spring; the monk rings the dawn bell gently, so as not to wake him.\""
+  },
+  {
+   "n": 26,
+   "id": "C26",
+   "scene": "C",
+   "who": "ji",
+   "tts": "[to camera, translating] 意思是：我在这儿，睡得可香了。",
+   "zh": "意思是：我在这儿，睡得可香了。",
+   "screens": [
+    "意思是：我在这儿，",
+    "睡得可香了。"
+   ],
+   "en": "Translation: \"I'm sleeping just great down here.\"",
+   "card": {
+    "zh": "宋人笔记：诗传到京城，宰相笑：他还这么快活？",
+    "en": "A Song-era note: the poem reached the capital. The chief minister laughed: \"Still this happy?\""
+   },
+   "card_delay": 1.4,
+   "card_hold": 3.0
+  },
+  {
+   "n": 27,
+   "id": "D27",
+   "scene": "D",
+   "who": "chai",
+   "tts": "[loud, formal, reading] 苏轼，责授琼州别驾，昌化军安置！",
+   "zh": "苏轼，责授琼州别驾，昌化军安置！",
+   "screens": [
+    "苏轼，责授琼州别驾，",
+    "昌化军安置！"
+   ],
+   "en": "Su Shi! Demoted to Assistant Prefect of Qiongzhou, confined at Changhua!",
+   "pre": 1.66
+  },
+  {
+   "n": 28,
+   "id": "D28",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[lost] 穹州……是哪儿？",
+   "zh": "琼州……是哪儿？",
+   "screens": [
+    "琼州……是哪儿？"
+   ],
+   "en": "Qiongzhou... where's that?"
+  },
+  {
+   "n": 29,
+   "id": "D29",
+   "scene": "D",
+   "who": "guo",
+   "tts": "[stunned] 海南。",
+   "zh": "海南。",
+   "screens": [
+    "海南。"
+   ],
+   "en": "Hainan. Across the sea.",
+   "after": 2.12
+  },
+  {
+   "n": 30,
+   "id": "D30",
+   "scene": "D",
+   "who": "su",
+   "tts": "[stunned, then genuinely curious] 海南，有什么好吃的？",
+   "zh": "海南……有什么好吃的？",
+   "screens": [
+    "海南……有什么好吃的？"
+   ],
+   "en": "Hainan... so what's good to eat there?",
+   "after": 0.85
+  },
+  {
+   "n": 31,
+   "id": "D31",
+   "scene": "D",
+   "who": "ji",
+   "tts": "[to camera, stunned, half laughing] 被贬到天边，他第一句问吃的。",
+   "zh": "被贬到天边，他第一句问吃的。",
+   "screens": [
+    "被贬到天边，",
+    "他第一句问吃的。"
+   ],
+   "en": "Banished to the edge of the world, and his first question is about food."
+  },
+  {
+   "n": 32,
+   "id": "E32",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[hesitant] 家里人，不跟您去吗？",
+   "zh": "家里人，不跟您去吗？",
+   "screens": [
+    "家里人，不跟您去吗？"
+   ],
+   "en": "Isn't the family going with you?",
+   "pre": 0.98
+  },
+  {
+   "n": 33,
+   "id": "E33",
+   "scene": "E",
+   "who": "su",
+   "tts": "[matter-of-fact, kind] 只带小儿子。房子盖好了，给他们住。",
+   "zh": "只带小儿子。房子盖好了，给他们住。",
+   "screens": [
+    "只带小儿子。",
+    "房子盖好了，给他们住。"
+   ],
+   "en": "Only my youngest. The house is finished. They'll live in it."
+  },
+  {
+   "n": 34,
+   "id": "E34",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[curious] 您在写什么？",
+   "zh": "您在写什么？",
+   "screens": [
+    "您在写什么？"
+   ],
+   "en": "What are you writing?"
+  },
+  {
+   "n": 35,
+   "id": "E35",
+   "scene": "E",
+   "who": "su",
+   "tts": "[breezy, like reading out a to-do list] 安排一下。到了海南，第一件事，做棺材。",
+   "zh": "安排一下。到了海南，第一件事，做棺材。",
+   "screens": [
+    "安排一下。到了海南，",
+    "第一件事，做棺材。"
+   ],
+   "en": "Just planning ahead. Hainan, item one: make a coffin."
+  },
+  {
+   "n": 36,
+   "id": "E36",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[shocked] 啊？",
+   "zh": "啊？",
+   "screens": [
+    "啊？"
+   ],
+   "en": "What?"
+  },
+  {
+   "n": 37,
+   "id": "E37",
+   "scene": "E",
+   "who": "su",
+   "tts": "[same breezy tone] 第二件事，做坟。",
+   "zh": "第二件事，做坟。",
+   "screens": [
+    "第二件事，做坟。"
+   ],
+   "en": "Item two: make a grave."
+  },
+  {
+   "n": 38,
+   "id": "E38",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[scared to ask] 第三件呢？",
+   "zh": "第三件呢？",
+   "screens": [
+    "第三件呢？"
+   ],
+   "en": "And item three?"
+  },
+  {
+   "n": 39,
+   "id": "E39",
+   "scene": "E",
+   "who": "su",
+   "tts": "[grinning] 找吃的。",
+   "zh": "找吃的。",
+   "screens": [
+    "找吃的。"
+   ],
+   "en": "Find food.",
+   "card": {
+    "zh": "他真的在信里写：到了海南，先做棺材，再做坟。",
+    "en": "His real letter: in Hainan, first make a coffin, then a grave."
+   },
+   "card_delay": 0.2,
+   "card_hold": 3.0
+  },
+  {
+   "n": 40,
+   "id": "E40",
+   "scene": "E",
+   "who": "ji",
+   "tts": "[to camera, trying to laugh and not managing] 他笑着写的。他觉得，自己回不来了。",
+   "zh": "他笑着写的。他觉得，自己回不来了。",
+   "screens": [
+    "他笑着写的。",
+    "他觉得，自己回不来了。"
+   ],
+   "en": "He wrote it smiling. He thinks he's not coming back."
+  },
+  {
+   "n": 41,
+   "id": "F41",
+   "scene": "F",
+   "who": "su",
+   "tts": "[playful, a riddle] 你猜，我这肚子里装的是什么？",
+   "zh": "你猜，我这肚子里装的是什么？",
+   "screens": [
+    "你猜，我这肚子里",
+    "装的是什么？"
+   ],
+   "en": "Guess what's in this belly of mine.",
+   "pre": 1.23
+  },
+  {
+   "n": 42,
+   "id": "F42",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[guessing] 学问？",
+   "zh": "学问？",
+   "screens": [
+    "学问？"
+   ],
+   "en": "Learning?"
+  },
+  {
+   "n": 43,
+   "id": "F43",
+   "scene": "F",
+   "who": "su",
+   "tts": "[shaking his head] 不对。",
+   "zh": "不对。",
+   "screens": [
+    "不对。"
+   ],
+   "en": "Nope."
+  },
+  {
+   "n": 44,
+   "id": "F44",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[guessing again] 文章？",
+   "zh": "文章？",
+   "screens": [
+    "文章？"
+   ],
+   "en": "Poems?"
+  },
+  {
+   "n": 45,
+   "id": "F45",
+   "scene": "F",
+   "who": "su",
+   "tts": "[smiling, shaking his head] 也不对。",
+   "zh": "也不对。",
+   "screens": [
+    "也不对。"
+   ],
+   "en": "Nope.",
+   "after": 1.7
+  },
+  {
+   "n": 46,
+   "id": "F46",
+   "scene": "F",
+   "who": "su",
+   "tts": "[fond, remembering] 只有她猜对了。她说，是一肚子不合时宜。[laughs]",
+   "zh": "只有她猜对了。她说，是一肚子不合时宜。",
+   "screens": [
+    "只有她猜对了。",
+    "她说，是一肚子不合时宜。"
+   ],
+   "en": "Only she ever got it right. She said it was a bellyful of being out of step with the times.",
+   "after": 0.51
+  },
+  {
+   "n": 47,
+   "id": "F47",
+   "scene": "F",
+   "who": "ji",
+   "tts": "[careful] 她是……？",
+   "zh": "她是……？",
+   "screens": [
+    "她是……？"
+   ],
+   "en": "She was...?"
+  },
+  {
+   "n": 48,
+   "id": "F48",
+   "scene": "F",
+   "who": "su",
+   "tts": "[plain] 朝云。家里人都散了，只有她，跟我来了惠州。",
+   "zh": "朝云。家里人都散了，只有她，跟我来了惠州。",
+   "screens": [
+    "朝云。家里人都散了，",
+    "只有她，跟我来了惠州。"
+   ],
+   "en": "Zhaoyun. When I was banished, the household scattered. Only she came with me to Huizhou.",
+   "after": 0.51
+  },
+  {
+   "n": 49,
+   "id": "F49",
+   "scene": "F",
+   "who": "su",
+   "tts": "[steady, then cracking] 去年夏天，她病死在这儿。",
+   "zh": "去年夏天，她病死在这儿。",
+   "screens": [
+    "去年夏天，",
+    "她病死在这儿。"
+   ],
+   "en": "Last summer she fell ill and died here."
+  },
+  {
+   "n": 50,
+   "id": "F50",
+   "scene": "F",
+   "who": "su",
+   "tts": "[to the grave, gentle, breaking] 明天，我去海南。这一回，带不走你了。",
+   "zh": "明天，我去海南。这一回，带不走你了。",
+   "screens": [
+    "明天，我去海南。",
+    "这一回，带不走你了。"
+   ],
+   "en": "Tomorrow I go to Hainan. This time I can't take you with me.",
+   "after": 2.55
+  },
+  {
+   "n": 51,
+   "id": "F51",
+   "scene": "F",
+   "who": "su",
+   "tts": "[smiling through it, warm] 走吧，明早还要赶路。",
+   "zh": "走吧，明早还要赶路。",
+   "screens": [
+    "走吧，明早还要赶路。"
+   ],
+   "en": "Come on. Early start tomorrow."
+  },
+  {
+   "n": 52,
+   "id": "G52",
+   "scene": "G",
+   "who": "su",
+   "tts": "[shouting back across the water, cheerful] 荔枝熟了，替我多吃几颗！",
+   "zh": "荔枝熟了，替我多吃几颗！",
+   "screens": [
+    "荔枝熟了，替我多吃几颗！"
+   ],
+   "en": "When the lychees ripen, eat a few for me!",
+   "pre": 1.23,
+   "after": 1.7
+  },
+  {
+   "n": 53,
+   "id": "H53",
+   "scene": "H",
+   "who": "su",
+   "tts": "[ecstatic, then conspiratorial] 这蚝太好吃了，千万别让北方人知道。",
+   "zh": "这蚝太好吃了，千万别让北方人知道。",
+   "screens": [
+    "这蚝太好吃了，",
+    "千万别让北方人知道。"
+   ],
+   "en": "These oysters are too good. Whatever you do, don't let anyone up north find out.",
+   "pre": 1.23
+  },
+  {
+   "n": 54,
+   "id": "H54",
+   "scene": "H",
+   "who": "ji",
+   "tts": "[puzzled] 为什么？",
+   "zh": "为什么？",
+   "screens": [
+    "为什么？"
+   ],
+   "en": "Why not?"
+  },
+  {
+   "n": 55,
+   "id": "H55",
+   "scene": "H",
+   "who": "su",
+   "tts": "[dead serious] 他们会抢着被贬过来，分我的蚝。",
+   "zh": "他们会抢着被贬过来，分我的蚝。",
+   "screens": [
+    "他们会抢着被贬过来，",
+    "分我的蚝。"
+   ],
+   "en": "They'll all scramble to get banished down here and eat my oysters.",
+   "card": {
+    "zh": "这是真的。他一再叮嘱儿子别说，怕北方人来分。",
+    "en": "True. He kept telling his son to keep quiet, for fear northerners would come to share."
+   },
+   "card_delay": 0.2,
+   "card_hold": 3.0
+  },
+  {
+   "n": 56,
+   "id": "I56",
+   "scene": "I",
+   "who": "ji",
+   "tts": "[sincere] 您这辈子，最大的功业是什么？",
+   "zh": "您这辈子，最大的功业是什么？",
+   "screens": [
+    "您这辈子，",
+    "最大的功业是什么？"
+   ],
+   "en": "What was the greatest achievement of your life?",
+   "pre": 1.23,
+   "after": 1.7
+  },
+  {
+   "n": 57,
+   "id": "I57",
+   "scene": "I",
+   "who": "su",
+   "tts": "[old, warm, simple] 黄州，惠州，儋州。",
+   "zh": "黄州，惠州，儋州。",
+   "screens": [
+    "黄州，惠州，儋州。"
+   ],
+   "en": "Huangzhou. Huizhou. Danzhou.",
+   "card": {
+    "zh": "两个月后，他病逝在北归路上的常州。",
+    "en": "Two months later, on his way home north, he died in Changzhou."
+   },
+   "card_delay": 3.2,
+   "card_hold": 3.0
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+  "film": "su",
+  "composition": "SuFilm",
+  "dir": "src/videos/su",
+  "story": "story.ts",
+  "hooks": "kit.world.ts",
+  "entries": {
+    "overlay": "Film.tsx",
+    "segFile": "shots/seg{SEG}"
+  },
+  "tsc": [
+    "Film.tsx",
+    "kit.world.ts",
+    "cam.ts",
+    "preview/film.ts",
+    "preview/smoke.ts",
+    "preview/filmA.ts",
+    "preview/filmB.ts",
+    "preview/filmC.ts",
+    "preview/filmD.ts",
+    "preview/filmE.ts",
+    "preview/filmF.ts",
+    "preview/filmG.ts",
+    "preview/filmH.ts",
+    "preview/filmI.ts",
+    "preview/people_lineup.ts",
+    "preview/props_sheet.ts",
+    "preview/cam_test.ts",
+    "preview/set_places.ts",
+    "preview/sets_wp2a.ts"
+  ],
+  "domOnly": [
+    "hud/"
+  ],
+  "langs": [
+    "zh",
+    "en"
+  ],
+  "work": "/home/user/su_work",
+  "qa": {
+    "clearanceOut": "/home/user/su_work/qa/clearance"
+  }
+}
