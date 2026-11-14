@@ -32,7 +32,7 @@ import { ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, RMX, ROOM, ROOM_SET, GDX, GARDEN, 
 import { BOARD, STOOL, SACK } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, rel, seated, type Rig, type RigPose } from "./common";
 import { endBlack } from "../hud";
-import { V, sec, posOf, frameOn, mixCam, stride, aimThrough, quatYZ, eulYZX, rigidAt, fall, forkRot, FORK_TIP, pathAt, GRADE_NIGHT_LIFT, spill, type RigidKey, type PtKey } from "./segG_parts";
+import { V, sec, posOf, frameOn, mixCam, stride, aimThrough, quatYZ, eulYZX, rigidAt, fall, forkRot, FORK_TIP, pathAt, GRADE_NIGHT_G5, spill, type RigidKey, type PtKey } from "./segG_parts";
 import type { World } from "../world";
 
 const S = SEGMENTS[6];
@@ -105,9 +105,10 @@ const KNEE_R = rel(SEAT.top, FACE, -0.12, 0.09, 0.3);
 const PK_DIR_REST = V(0, -1, 0.05).normalize();
 const PK_GRIP_REST = V(ELX - 1.22 + 0.0078, 0.83 + 0.0325, -0.713).addScaledVector(PK_DIR_REST, 0.066);
 const PK_ROT_REST = quatYZ(PK_DIR_REST, V(1, 0, 0));
-/** his candle, short, on the furnace's top by the corner (F's) */
-const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07, -0.42);
-const CANDLE_LEN = 0.3;
+/** his candle, burned down to a stub, on the furnace's top by the corner (F's marks since its round-1 fixes,
+ *  requests.md WP5-F: 2 mm up off the top, length 0.12; the same stub goes up to his room) */
+const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07 + 0.002, -0.42);
+const CANDLE_LEN = 0.12;
 /** where she stands: F's push (the start), crouched by the board, and back a step with the board held up */
 const PUSH: CamPose = { pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov };
 const P_PUSH = posOf(PUSH).setY(0);
@@ -259,10 +260,15 @@ const N_EXPR: [number, Ex][] = [
 /** his eyes: on the fire (F's), lifting at the clock, down at the board as it falls, at the board she holds, up at her */
 const N_GAZE: [number, number][] = [[S.from, -0.5], [T_LIFT, 0], [T_CLAT + 2, 0.5], [T_RISE0 + 6, 0], [T_EYESUP, 0]];
 const nLookDown = (f: number) => ky(f, [[S.from, 8], [T_LIFT + 6, 2], [T_CLAT, 2], [T_CLAT + 6, 30], [T_RISE0, 30], [T_RISE1, 10], [T_EYESUP, 10], [T_EYESUP + 8, 0], [T_LAUGH, 0], [T_LAUGH + 6, -4], [T_WIPE1, -4], [T_WIPE1 + 10, 2]]);
-/** HUMPHREY: aghast at the drop, dazed (spiral eyes) through card 4, then on "Good night." the second beat of his
- *  reaction: wide open eyes and a small amazed smile, his eyes following NEWTON */
+/** HUMPHREY: aghast at the drop, dazed (spiral eyes) through card 4, then the second beat of his reaction, his eyes
+ *  on NEWTON: on "Good night." his eyes go wide (the rig's ring eyes, brows up) over a small open mouth (amazed: the
+ *  man said good night), and under her 55 a small smile comes up (the rig has no face with ring eyes AND a smile, so
+ *  the two come one after the other; the open mouth bends up with the smile for its first frames) */
 type HEx = "shock" | "dazed" | "smile";
-const H_EXPR: [number, HEx][] = [[S.from, "shock"], [T_SACK + 40, "dazed"], [L3.from, "smile"]];
+const T_HSMILE = L4.from + 4;
+const H_EXPR: [number, HEx][] = [[S.from, "shock"], [T_SACK + 40, "dazed"], [L3.from, "shock"], [T_HSMILE, "smile"]];
+/** his mouth: round (aghast) at the drop; small and open on "Good night." and as the smile comes up; else his face's */
+const hMouth = (f: number) => (f < T_SACK + 60 ? "round" as const : f >= L3.from && f < T_HSMILE + 10 ? "small" as const : undefined);
 
 // ---------------------------------------------------------------------------------------------------- G1-G3 the elaboratory
 const elab = (w: World, f: number): Pose => {
@@ -332,7 +338,7 @@ const elab = (w: World, f: number): Pose => {
     const hFace = lerpA(H_FACE, yawTo(H_BACK, N_DOOR), 0.6 * smooth(clamp01((f - (T_NARR - 20)) / 24)));
     // his eyes: on Newton (past her, screen right), following him to the door; at her once (did you see that?); on him
     const hGaze = at(f, [[S.from, 0.5], [T_NARR - 16, 0.25], [L3.to + 4, 0], [T_NOD, 0.25]]);
-    hm.set({ at: hs.at, facing: hFace, pose: hs.pose, expr: at(f, H_EXPR), mouth: f < T_SACK + 60 ? "round" : undefined, gaze: hGaze,
+    hm.set({ at: hs.at, facing: hFace, pose: hs.pose, expr: at(f, H_EXPR), mouth: hMouth(f), gaze: hGaze,
       blink: f > T_DROP - 4 && f < T_SACK + 24 ? 0 : lid(t, 2, swaps(H_EXPR)), visible: true,
       head: heads(f >= T_SACK && f < T_SACK + 40 ? { tilt: 2.2 * Math.sin((f - T_SACK) * 0.9) * (1 - (f - T_SACK) / 40) } : undefined, accent("jolt", f, T_DROP - 2, { amp: 0.5 }),
         accent("pop", f, L3.from, { amp: 0.5 })),
@@ -517,33 +523,36 @@ const room = (w: World, f: number): Pose => {
 
 // ---------------------------------------------------------------------------------------------------- G5 the garden
 const GE = GARDEN_SET.elab;
-/** OUTSIDE, FROM THE ELABORATORY'S DOOR: her eyes in the doorway, a step in from the wall's face by the east half of the
- *  opening (the set hides the outbuilding's front wall from in there; the jambs stay), looking out across the blue
- *  garden to his window (upper third, right of the middle: card 5 is mid-left). The west jamb's firelit brick runs down
- *  the right edge; the north walk's gravel along the bottom, the box hedge, his staircase door under his window */
-const G_EYE = V(GDX + GE.door.x + 0.07, EYE, GE.z1 - 0.3);
-const GARDEN_CAM: CamPose = frameOn(G_EYE, GARDEN.window, 700, 345, 64);
-/** where the firelight from behind her lands: on the west jamb's reveal (at her eye height, the right edge) and out
- *  over the sill on the gravel in front of the door (the bottom of the frame) */
-const G_JAMB = V(GDX + GE.door.x - GE.door.w / 2, 1.45, GE.z1 - 0.06), G_SILL = V(GDX + GE.door.x - 1.6, 0, GE.z1 + 0.75);
+/** OUTSIDE, FROM THE ELABORATORY'S DOOR: her eyes on the threshold (EYE), a step in from the wall's face by the east
+ *  half of the opening (the set hides the outbuilding's front wall from in there; the jambs stay), looking out across
+ *  the blue garden to his window: upper third, right of the middle (card 5 is mid-left). The west jamb's firelit edge
+ *  runs down the right edge; a wide lens (72) and the window high in the frame put the north walk's moonlit gravel in
+ *  the bottom third, its edge (the bed's box hedge) leading off toward his range and his staircase door under the
+ *  window */
+const G_EYE = V(GDX + GE.door.x + 0.08, EYE, GE.z1 - 0.3);
+const GARDEN_CAM: CamPose = frameOn(G_EYE, GARDEN.window, 780, 285, 72);
+/** where the firelight from behind her lands: on the west jamb's reveal (at her eye height, the right edge) and on the
+ *  gravel in front of the door (just off the frame's lower-left corner: the pool's rim comes into the bottom-left) */
+const G_JAMB = V(GDX + GE.door.x - GE.door.w / 2, 1.45, GE.z1 - 0.06), G_POOL = V(GDX + GE.door.x - 0.2, 0, GE.z1 + 0.9);
 const garden = (w: World, f: number): Pose => {
   const t = f / FPS;
   w.setPlace("garden");
   w.set.param("time", "night");
   // the outbuilding's glow: from in its doorway the set's warm door light sits right at her feet; at full strength it
-  // turns the moonlit bed in front of her olive, so it burns lower here (the jamb and the sill get the 2D spill below)
-  w.set.param("glow", 0.45);
+  // turns the moonlit gravel and the box in front of her lilac and olive, so it burns low here (the jamb and the pool
+  // in front of the door get the 2D spill below, so the walk further out stays moon-blue)
+  w.set.param("glow", 0.2);
   w.set.param("gravel", "rough");
   // his window lit warm (param window 1) until the last pluck, then dark
   w.set.param("window", f >= T_DARK ? 0 : 1);
   w.setCamera(GARDEN_CAM);
   w.update();
-  // the outbuilding still glows behind her: the fire's light on the jamb and spilling out over the sill (the set's own
-  // flicker, so it lives)
+  // the outbuilding still glows behind her: the fire's light on the jamb and spilling out over the sill onto the gravel
+  // (the set's own flicker, so it lives)
   const fl = 1 + 0.08 * Math.sin(t * 6.3) + 0.05 * Math.sin(t * 11.1 + 0.7) + 0.03 * Math.sin(t * 17.3 + 1.9);
-  const pj = w.project(G_JAMB), ps = w.project(G_SILL);
-  const glow = [spill("jambGlow", { x: pj.x + 90, y: pj.y - 260 }, 430, 0.8 * fl), spill("sillSpill", { x: ps.x - 300, y: ps.y + 200 }, 500, 0.42 * fl)].filter(Boolean);
-  return { camera: GARDEN_CAM, post: { grade: GRADE_NIGHT_LIFT }, overlays: glow.length ? glow : undefined, top: f >= T_BLACK ? endBlack(f, T_BLACK) : undefined, slate: "G5 garden" };
+  const pj = w.project(G_JAMB), pp = w.project(G_POOL);
+  const glow = [spill("jambGlow", { x: pj.x + 80, y: pj.y - 120 }, 460, 1.0 * fl), spill("sillSpill", { x: Math.max(pp.x, -60), y: Math.min(pp.y, 2120) }, 720, 0.8 * fl)].filter(Boolean);
+  return { camera: GARDEN_CAM, post: { grade: GRADE_NIGHT_G5 }, overlays: glow.length ? glow : undefined, top: f >= T_BLACK ? endBlack(f, T_BLACK) : undefined, slate: "G5 garden" };
 };
 
 const pose = (w: World, f: number): Pose => (f >= T_GARDEN ? garden(w, f) : f >= T_ROOM ? room(w, f) : elab(w, f));

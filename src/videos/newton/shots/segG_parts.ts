@@ -95,6 +95,10 @@ export const pathAt = (f: number, keys: PtKey[]) => {
 export const GRADE_NIGHT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.66, 0.74, 1.0], tintS: [0.034, -0.016], tintM: [0.024, -0.012], tintH: [-0.018, 0.022], vig: [0.22, 0.4] };
 /** the same grade with the low end and the mids lifted a step (the last shot: a blue MID-TONE, owner's "too dark") */
 export const GRADE_NIGHT_LIFT: GradeParams = { ...GRADE_NIGHT, ky: [0.02, 0.135, 0.32, 0.625, 0.845, 0.945, 1] };
+/** the last shot's grade: the lift, with the highlights' warm tint taken down so the moonlit gravel of the walk (a
+ *  highlight here, close to the lens) stays blue-grey as in F1 instead of going lilac; the lit window and the
+ *  firelight are warm by themselves */
+export const GRADE_NIGHT_G5: GradeParams = { ...GRADE_NIGHT_LIFT, tintH: [-0.004, 0.008] };
 /** A WARM SPILL of firelight (a soft radial glow, screen-blended) centred at (x, y) px on the 1080 x 1920 frame,
  *  radius r px, strength k 0..1 (the same look as segF_parts flash) */
 export const spill = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :

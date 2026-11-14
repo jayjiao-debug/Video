@@ -65,11 +65,12 @@ const T_TC = SND_GATHER + 6;
 // ---------------------------------------------------------------------------------------------------- D1 the street
 const N_EYE = 1.14;
 const ST_SPEED = 1.45, ST_T0 = 0.1;
-/** his walk: just out of the gate's arch, down the street toward +z on the college side, 0.3 m nearer the college than
- *  the layout's line (still 0.55 m clear of the gatehouse's south turret): she looks across at him with the gatehouse
- *  front close behind him, so its arch, brick and stone fill the top of the frame and the setts only the bottom */
-const ST_X = STREET.lineX - 0.3;
-const ST_PATH = [V(ST_X, 0, STREET.turn.z - 0.4), V(ST_X, 0, STREET.walkTo.z)];
+/** his walk: just out of the gate's arch, down the street toward +z on the college side, close along the gatehouse
+ *  front (about 1.1 m off it at the arch, easing out to clear its south turret by about 0.45 m, then on down the
+ *  street): she looks across at him with the gatehouse front close behind him, so its arch, brick and stone fill the
+ *  top of the frame and the setts only a band at the bottom (the nearer the wall, the less ground between him and it) */
+const ST_X0 = STREET.lineX - 0.9, ST_X1 = STREET.lineX - 0.4, ST_Z0 = STREET.turn.z - 0.4;
+const ST_PATH = [V(ST_X0, 0, ST_Z0), V(ST_X1, 0, ST_Z0 + 3.0), V(ST_X1, 0, STREET.walkTo.z)];
 const streetLeg = (f: number) => walkAlong(ST_PATH, ST_SPEED, (f - S.from) / FPS + ST_T0);
 /** THE WIPE, timed to the mix: her hand comes in over W_IN frames (the cloth touches his nose on the first swish),
  *  two strokes of W_ST frames, out over W_OUT (gone before the cut). cam.ts wipe() is driven on a warped frame so its
@@ -101,7 +102,9 @@ const camStreet = (f: number, head?: THREE.Vector3): CamPose => {
   const g = streetLeg(f), k = ky(f, [[S.from, 1.5], [WIPE_ON - 1, 1.1]]);
   const pos = g.at.clone().add(V(Math.sin(ST_ANG) * k, EYE, Math.cos(ST_ANG) * k));
   const eyes = head ? head.clone().add(V(0, -stEyeDy(k), 0)) : g.at.clone().add(V(0, N_EYE, 0));
-  return C.handheld(frameOn(pos, eyes, ST_EYE_PX[0], ST_EYE_PX[1]), f, { walk: 1.5 });
+  // (stEyeDy is measured at the wipe's distance; further off, before she closes in, the drawn eyes landed about 50 px
+  // low (fix1 f1855 / f1862: 0.33 of the height): aim them that much higher there)
+  return C.handheld(frameOn(pos, eyes, ST_EYE_PX[0], ST_EYE_PX[1] - 50 * clamp01((k - 1.1) / 0.15)), f, { walk: 1.5 });
 };
 
 // ---------------------------------------------------------------------------------------------------- D2-D3 the hall
@@ -126,9 +129,14 @@ const CAM_LECT = frameOn(LECT_POS, N_EYES, 520, 600);
 /** D5: she sits on the front bench (row 0, half a metre along it from the aisle end), her eyes at about 1.22 m: about
  *  28 deg off his axis, so the gather, the lifted sheaf and the tuck rise beside his face, not under it */
 const SEAT = V(SCX + 1.45, 1.22, SCHOOLS.rows[0] + 0.08);
-const CAM_SEAT = frameOn(SEAT, N_EYES, 560, 640);
+/** D5 (after the time cut: a new shot, so he may stand elsewhere): he has stepped up to the desk, N_B (0.1 m nearer
+ *  it), and gathers the paper on the desk's near half (SHEAF_B / SPREAD_B), so his hands REACH it: from N_AT the
+ *  desk's middle is 0.1-0.2 m beyond his arms (hidden behind the desk from the lectern camera, but from her low seat
+ *  the lifted, tapped sheaf floated beside his face with no hands on it) */
+const N_B = N_AT.clone().add(V(0, 0, 0.1));
+const CAM_SEAT = frameOn(SEAT, N_B.clone().add(V(0, N_EYE, 0)), 560, 640);
 const FACE_LECT = Math.atan2(LECT_POS.x - N_AT.x, LECT_POS.z - N_AT.z);
-const FACE_SEAT = Math.atan2(SEAT.x - N_AT.x, SEAT.z - N_AT.z);
+const FACE_SEAT = Math.atan2(SEAT.x - N_B.x, SEAT.z - N_B.z);
 
 // ---------------------------------------------------------------------------------------------------- the lectern
 /** the sheaf's place (his left, screen right) and the spread sheets' (his right, screen left) on the sloped desk */
@@ -136,19 +144,28 @@ const SHEAF = { dx: 0.15, dz: 0.02, yaw: 0.1 }, SPREAD = { dx: -0.14, dz: 0.03, 
 const qOf = (e: [number, number, number]) => new THREE.Quaternion().setFromEuler(new THREE.Euler(e[0], e[1], e[2], "YXZ"));
 const SHEAF_AT = deskPoint(SHEAF.dx, SHEAF.dz, NOTES.h / 2), SHEAF_Q = qOf(deskRot(SHEAF.yaw));
 const SPREAD_AT = deskPoint(SPREAD.dx, SPREAD.dz, 0), SPREAD_Q = qOf(deskRot(SPREAD.yaw));
+/** after the time cut: the paper on the desk's near half (the sheaf's near end 2 cm inside the book lip) */
+const SHEAF_B = { dx: 0.04, dz: -0.05, yaw: 0.1 }, SPREAD_B = { dx: -0.24, dz: -0.03, yaw: -0.12 };
+const SHEAF_B_AT = deskPoint(SHEAF_B.dx, SHEAF_B.dz, NOTES.h / 2), SHEAF_B_Q = qOf(deskRot(SHEAF_B.yaw));
+const SPREAD_B_AT = deskPoint(SPREAD_B.dx, SPREAD_B.dz, 0), SPREAD_B_Q = qOf(deskRot(SPREAD_B.yaw));
 /** the sheaf's grip edge (its +x edge: the left hand) for an origin and a rotation */
 const gripOf = (o: THREE.Vector3, q: THREE.Quaternion) => o.clone().add(V(NOTES.w / 2, 0, 0).applyQuaternion(q));
 /** where his hands rest: left on the sheaf, right on the spread sheets */
 const REST_L = deskPoint(SHEAF.dx + 0.03, SHEAF.dz - 0.07, NOTES.h + 0.024);
 const REST_R = deskPoint(SPREAD.dx - 0.01, SPREAD.dz - 0.07, 0.03);
 const SHEAF_TOP_R = deskPoint(SHEAF.dx - 0.06, SHEAF.dz - 0.04, NOTES.h + 0.026);
+const REST_LB = deskPoint(SHEAF_B.dx + 0.03, SHEAF_B.dz - 0.07, NOTES.h + 0.024);
+const REST_RB = deskPoint(SPREAD_B.dx - 0.01, SPREAD_B.dz - 0.07, 0.03);
 /** a hand lifted clear of the desk's near edge (left / right), on its way onto the desk or off it */
-const sideL = (facing: number) => rel(N_AT, facing, 0.42, 0.86, 0.06);
-const liftL = (facing: number) => rel(N_AT, facing, 0.4, 1.02, 0.36);
-const liftR = (facing: number) => rel(N_AT, facing, -0.3, 0.98, 0.3);
-/** the tuck's way off the desk: lower and further out to his left than liftL (past the lectern's end, nothing to
- *  clear), so from her low seat the sheaf on edge stays below his cheek */
-const tuckL = (facing: number) => liftL(facing);
+const sideL = (facing: number, at = N_AT) => rel(at, facing, 0.42, 0.86, 0.06);
+const liftL = (facing: number, at = N_AT) => rel(at, facing, 0.4, 1.02, 0.36);
+const liftR = (facing: number, at = N_AT) => rel(at, facing, -0.3, 0.98, 0.3);
+/** the tuck's way off the desk (the left hand at the sheaf's grip edge): first down onto the desk's near half, still
+ *  flat (TUCK_OVER: the sheaf's middle, 3 cm over the surface, inside the near edge's book lip), then back over the lip
+ *  toward him (tuckL: the sheaf's bottom about 4 cm over the lip), low: from her seat 28 deg off his axis the sheaf
+ *  crosses under his chin, never his face */
+const TUCK_OVER = deskPoint(SHEAF_B.dx + 0.02, SHEAF_B.dz - 0.02, NOTES.h / 2 + 0.03);
+const tuckL = (facing: number) => rel(N_B, facing, 0.36, 0.98, 0.2);
 /** laying out: the sheaf from under his arm onto the desk, then three sheets dealt from it to his right */
 const T_PUT0 = T_ARRIVE + 4, T_PUT1 = T_PUT0 + 10;
 const DEAL = [T_PUT1 + 6, T_PUT1 + 12, T_PUT1 + 18];
@@ -162,7 +179,7 @@ type Desk = { hands: [THREE.Vector3 | null, THREE.Vector3 | null]; notes: { mode
 const lectureHand = (f: number, facing: number) => rel(N_AT, facing, -0.36 - 0.04 * Math.sin((f / FPS) * 2.3), 1.16 + 0.05 * Math.sin((f / FPS) * 5.2), 0.22);
 /** his hands and the paper at the lectern on frame f (from his arrival on) */
 const deskAt = (f: number, facing: number): Desk => {
-  const arm = underArm(N_AT, facing);
+  const arm = underArm(f < T_TC ? N_AT : N_B, facing);
   if (f < T_TC) {
     // laying out
     if (f < T_PUT0) return { hands: [null, arm.hand], notes: { mode: "arm" }, spread: 0, moving: null, sweep: null };
@@ -185,28 +202,32 @@ const deskAt = (f: number, facing: number): Desk => {
     const life = V(0.004 * Math.sin(f * 0.07), 0.003 * Math.sin(f * 0.05 + 1), 0);
     return { hands: [right.add(f > DEAL[2] + 6 && f < T_ME ? life : V()), left.add(life.clone().multiplyScalar(0.7))], notes: { mode: "desk", o: SHEAF_AT.clone(), q: SHEAF_Q.clone() }, spread, moving: carrying ? right.clone().add(V(0, -0.012, 0)) : null, sweep: null };
   }
-  // gathering
+  // gathering (he stands at N_B, the paper on the desk's near half: SHEAF_B / SPREAD_B, in his reach)
   if (f < G_SWEEP1) {
     const k = smooth(clamp01((f - G_SWEEP0) / (G_SWEEP1 - G_SWEEP0)));
-    const sw = SPREAD_AT.clone().lerp(deskPoint(SHEAF.dx, SHEAF.dz, NOTES.h + 0.004), k).add(V(0, 0.012 * Math.sin(Math.PI * k), 0));
-    return { hands: [sw.clone().add(V(-0.02, 0.03, -0.06)), REST_L.clone()], notes: { mode: "desk", o: SHEAF_AT.clone(), q: SHEAF_Q.clone() }, spread: 0, moving: null, sweep: sw };
+    const sw = SPREAD_B_AT.clone().lerp(deskPoint(SHEAF_B.dx, SHEAF_B.dz, NOTES.h + 0.004), k).add(V(0, 0.03 * Math.sin(Math.PI * k), 0));
+    return { hands: [sw.clone().add(V(-0.02, 0.03, -0.06)), REST_LB.clone()], notes: { mode: "desk", o: SHEAF_B_AT.clone(), q: SHEAF_B_Q.clone() }, spread: 0, moving: null, sweep: sw };
   }
   if (f < G_TUCK0) {
     // both hands on its edges, lift it, tap it on the desk twice
     const lift = 0.08 * smooth(clamp01((f - G_SWEEP1) / (G_LIFT - G_SWEEP1)));
     let tap = 0; for (const t of G_TAPS) { const d = f - t; if (d >= -2 && d <= 2) tap = Math.max(tap, 1 - Math.abs(d) / 2); }
-    const o = SHEAF_AT.clone().add(V(0, lift * (1 - tap), 0));
-    const q = SHEAF_Q.clone();
+    const o = SHEAF_B_AT.clone().add(V(0, lift * (1 - tap), 0));
+    const q = SHEAF_B_Q.clone();
     const edgeR = o.clone().add(V(-NOTES.w / 2, 0, 0).applyQuaternion(q));
     const toEdges = smooth(clamp01((f - G_SWEEP1) / 4));
-    return { hands: [REST_R.clone().lerp(edgeR, toEdges), REST_L.clone().lerp(gripOf(o, q), toEdges)], notes: { mode: "desk", o, q }, spread: 0, moving: null, sweep: null };
+    // (the hands ride on the edges' top, so on the taps they meet the desk without sinking into it)
+    const up = V(0, 0.02, 0);
+    return { hands: [REST_RB.clone().lerp(edgeR.add(up), toEdges), REST_LB.clone().lerp(gripOf(o, q).add(up), toEdges)], notes: { mode: "desk", o, q }, spread: 0, moving: null, sweep: null };
   }
   // tucked under his left arm; the right hand goes back to his side
-  // up off the desk first (still flat), then turning on edge down to his side; the right hand up, back and down
-  const o0 = SHEAF_AT.clone().add(V(0, 0.08, 0));
-  const q = SHEAF_Q.clone().slerp(arm.rot, smooth(clamp01((f - G_TUCK0 - 1) / 4)));
-  const g = path(f, [[G_TUCK0, gripOf(o0, SHEAF_Q)], [G_TUCK0 + 4, tuckL(facing)], [G_TUCK0 + 7, sideL(facing)], [G_TUCK1, arm.hand]]);
-  const rr = f < G_TUCK0 + 9 ? path(f, [[G_TUCK0, o0.clone().add(V(-NOTES.w / 2, 0, 0).applyQuaternion(SHEAF_Q))], [G_TUCK0 + 4, liftR(facing)], [G_TUCK0 + 9, hang(N_AT, facing, 0)]]) : null;
+  // from the 8 cm lift the sheaf comes DOWN onto the desk's near half and back over the book lip toward his left side,
+  // still FLAT (a thin sliver from her seat, at his chin line, never across his face), turning on edge only as it
+  // drops at his side below the desk top, then up under the arm; the right hand up, back and down
+  const o0 = SHEAF_B_AT.clone().add(V(0, 0.08, 0));
+  const q = SHEAF_B_Q.clone().slerp(arm.rot, smooth(clamp01((f - G_TUCK0 - 5) / 4)));
+  const g = path(f, [[G_TUCK0, gripOf(o0, SHEAF_B_Q)], [G_TUCK0 + 3, gripOf(TUCK_OVER, SHEAF_B_Q)], [G_TUCK0 + 5, tuckL(facing)], [G_TUCK0 + 8, sideL(facing, N_B).add(V(0, -0.1, 0))], [G_TUCK1, arm.hand]]);
+  const rr = f < G_TUCK0 + 9 ? path(f, [[G_TUCK0, o0.clone().add(V(-NOTES.w / 2, 0, 0).applyQuaternion(SHEAF_B_Q))], [G_TUCK0 + 4, rel(N_B, facing, -0.3, 1.0, 0.17)], [G_TUCK0 + 9, hang(N_B, facing, 0)]]) : null;
   return { hands: [rr, g], notes: f < G_TUCK1 ? { mode: "hand", q } : { mode: "arm" }, spread: 0, moving: null, sweep: null };
 };
 
@@ -249,7 +270,7 @@ const newtonState = (f: number): NState => {
     facing = lerpA(0.05, FACE_SEAT, smooth((f - T_LOOK) / 8));
     lookDown = ky(f, [[T_TC, 28], [T_LOOK, 28], [T_LOOK + 6, 0]]);
   }
-  return { who: NEWTON_GOWN, at: N_AT.clone(), facing, pose: { kind: "idle", t: t + 2.3 }, desk: deskAt(f, facing), expr, gaze, lookDown };
+  return { who: NEWTON_GOWN, at: (f < T_TC ? N_AT : N_B).clone(), facing, pose: { kind: "idle", t: t + 2.3 }, desk: deskAt(f, facing), expr, gaze, lookDown };
 };
 
 // ---------------------------------------------------------------------------------------------------- the shot
@@ -292,7 +313,7 @@ const pose = (w: World, f: number): Pose => {
   if (d && d.notes.mode === "desk") w.prop("notes").put(d.notes.o, { rot: d.notes.q });
   if (d && d.spread > 0) w.prop("sheets").put(SPREAD_AT, { rot: SPREAD_Q, n: d.spread });
   if (d && d.moving) w.prop("sheets", "dealt").put(d.moving, { rot: SPREAD_Q, n: 1 });
-  if (d && d.sweep) w.prop("sheets").put(d.sweep, { rot: SPREAD_Q, n: 3 });
+  if (d && d.sweep) w.prop("sheets").put(d.sweep, { rot: SPREAD_B_Q, n: 3 });
 
   w.update();
   // (the street: framed again on his solved head; only the turn of the lens changes, so the solve stands)

@@ -35,7 +35,7 @@ import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT } from "../people";
 import { GDX, GARDEN, GARDEN_SET, ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, type TaSeat } from "../layout";
 import { BOARD, POKER, STOOL, candleTop } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, yawTo, lerpA, rel, seated, kneel, cardLower, type Rig } from "./common";
-import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, aimThrough, quatYZ, shovelPut, stroke, sparks, flash, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, type SparkMask } from "./segF_parts";
+import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, aimThrough, quatYZ, shovelPut, stroke, sparks, flash, cheekGlow, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, type SparkMask } from "./segF_parts";
 import type { World } from "../world";
 import type React from "react";
 
@@ -169,13 +169,27 @@ const loaded = (f: number) => (f > TH1 - 18 && f < TH1) || (f > TH2 - 18 && f < 
 const H_TAKE = ST1.clone().add(V(-0.415, 0, -0.174)), H_PAST = V(ELX - 0.75, 0, -0.25);
 const HPATH_OUT = [H_AT, H_TAKE], HPATH_DOOR = [H_TAKE, H_PAST, V(ELX - 0.95, 0, 0.4), V(ELX - 0.6, 0, 1.3), ELAB.doorOut];
 const OUT_YAW = yawTo(H_TAKE, H_PAST);
-/** the folded empty sack lying on the stool, its near end toward his LEFT hand (the side he walks out with toward her);
- *  he takes it by that end (A_SACK, in the sack's own frame) and it swings down from his fist to hang flat at his left side */
+/** THE EMPTY SACK, drawn as cloth: the prop's empty state (two flat boxes) read as an open wooden book (director round
+ *  1; WP3 asked for a cloth look), so F shows the FULL sack's lumpy hessian body with its gathered, corded neck, squashed
+ *  flat and stretched: an empty bag (the same sack G's full one is). Put by its NECK (world): `up` = from its bottom
+ *  toward the neck, `thin` = the flattened axis, `s` = [width, length, thickness] factors of the full sack. */
+const NECK_Y = 0.49;
+type Limp = { up: THREE.Vector3; thin: THREE.Vector3; s: [number, number, number] };
+const putLimpSack = (w: World, neck: THREE.Vector3, rot: THREE.Quaternion, s: [number, number, number]) => {
+  const up = V(0, 1, 0).applyQuaternion(rot), P = w.prop("sack");
+  P.put(neck.clone().addScaledVector(up, -NECK_Y * s[1]), { full: 1, rot });
+  P.group.scale.set(s[0], s[1], s[2]); P.group.updateMatrixWorld(true);
+};
+/** lying folded on the stool, flat, its gathered neck at the seat's edge toward his LEFT hand (the side he walks out
+ *  with); he takes it by the neck and it unfolds as it swings down from his fist to hang at his left side */
 const H_TAKE_FACE = yawTo(H_TAKE, ST1);
-const SACK_LYING = SACK_ON_STOOL.clone().add(V(0, 0.002, 0));
-const SACK_LYING_ROT = (() => { const d = rel(H_TAKE, H_TAKE_FACE, 0.16, 0, 0.2).sub(ST1).setY(0).normalize(); return new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), Math.atan2(-d.x, -d.z)); })();
-const A_SACK = V(0, 0.045, -0.2);
-const SACK_GRAB = SACK_LYING.clone().add(A_SACK.clone().applyQuaternion(SACK_LYING_ROT));
+const SACK_D = rel(H_TAKE, H_TAKE_FACE, 0.16, 0, 0.2).sub(ST1).setY(0).normalize();
+const LIMP_LYING: Limp = { up: SACK_D, thin: V(0, 1, 0), s: [0.85, 0.62, 0.16] };
+const SACK_GRAB = SACK_ON_STOOL.clone().add(V(0, 0.226 * LIMP_LYING.s[2] + 0.006, 0)).addScaledVector(SACK_D, (NECK_Y - 0.275) * LIMP_LYING.s[1]);
+/** hanging from his fist: wider and longer than folded, flat in the plane of his side, its foot swung out */
+const limpHanging = (right: THREE.Vector3): Limp => ({ up: V(0, 1, 0).addScaledVector(right, SACK_OUT), thin: right.clone(), s: [1.05, 0.95, 0.2] });
+const mixLimp = (a: Limp, b: Limp, k: number): { rot: THREE.Quaternion; s: [number, number, number] } => ({
+  rot: quatYZ(a.up, a.thin).slerp(quatYZ(b.up, b.thin), k), s: [lerp(a.s[0], b.s[0], k), lerp(a.s[1], b.s[1], k), lerp(a.s[2], b.s[2], k)] });
 /** he takes it; he straightens up turning to his way out (14 frames), and goes */
 const T_TAKE = T_SACK + Math.round((0.75 / 0.9) * FPS) + 8, T_GO = T_TAKE + 14;
 /** his left fist carrying the sack, out from his side and a little forward; the sack hangs from it with its foot swung
@@ -306,6 +320,7 @@ const pose = (w: World, f: number): Pose => {
     w.setPlace("garden");
     w.set.param("time", "night");
     w.set.param("glow", 1);
+    w.set.param("gravel", "rough");   // WP5-C's rough gravel (C and G's garden use it; the raked lines read as planks)
     const cam = gardenCam(f);
     w.setCamera(cam);
     const g = gLeg(f), n: Rig = w.actor(NEWTON);
@@ -386,7 +401,7 @@ const pose = (w: World, f: number): Pose => {
   w.prop("poker").put(PK_GRIP_REST, { rot: PK_ROT_REST, hot: 0 });
   if (!later) {
     w.prop("stool").put(ST1, { rot: 0.4 });
-    if (f < T_TAKE) w.prop("sack").put(SACK_LYING, { full: 0, rot: SACK_LYING_ROT });
+    if (f < T_TAKE) putLimpSack(w, SACK_GRAB, quatYZ(LIMP_LYING.up, LIMP_LYING.thin), LIMP_LYING.s);
     if (f >= T_FREE) { const P = shovelPut(SH_LEAN.blade, SH_LEAN.handle, V(0, 0, 1)); w.prop("shovel").put(P.at, { rot: P.rot }); }
   } else {
     w.prop("stool").put(ELAB.stool, { rot: FACE });
@@ -401,10 +416,10 @@ const pose = (w: World, f: number): Pose => {
     w.prop("candle").put(n.handWorld(1), { grip: "grip", len: 0.75, lit: true, t });
     if (hm && f < T_FREE) { const P = shovelPut(sh.sh.blade, sh.sh.handle); w.prop("shovel").put(P.at, { rot: P.rot, load: loaded(f) }); }
     if (hm && f >= T_TAKE) {
-      // lifted off the stool by its near end, it swings down from his fist to hang flat at his left side
+      // lifted off the stool by its neck, it unfolds as it swings down from his fist to hang flat at his left side
       const hand = hm.handWorld(1), right = V(-Math.cos(hm.bodyYaw), 0, Math.sin(hm.bodyYaw)), k = smooth(clamp01((f - T_TAKE) / 9));
-      const rot = SACK_LYING_ROT.clone().slerp(quatYZ(right.clone(), V(0, -1, 0).addScaledVector(right, -SACK_OUT)), k);
-      w.prop("sack").put(hand.clone().sub(A_SACK.clone().applyQuaternion(rot)), { full: 0, rot });
+      const L = mixLimp(LIMP_LYING, limpHanging(right), k);
+      putLimpSack(w, hand, L.rot, L.s);
     }
   } else {
     // held: put on its keyed line (his fist is on the grip within 3.5 cm), so the rod's end keeps to the door's opening
@@ -443,8 +458,13 @@ const pose = (w: World, f: number): Pose => {
       overlays.push(sparks(f, T_SPIT, top(0.4), { n: 140, len: 26, speed: 40, size: 24, dir: -100, spread: 46, seed: 5, stagger: 4, streak: 1.4, glow: 1.5, jitter: wTop * 0.9 }, mask),
         sparks(f, T_SPIT, { x: lerp(eL.x, bL.x, 0.35), y: lerp(eL.y, bL.y, 0.35) }, { n: 40, len: 18, speed: 34, size: 20, dir: -150, spread: 40, seed: 6, stagger: 3, streak: 1.3, glow: 1.4, jitter: 50 }, mask));
     }
-    // the flare's warm flash out of the door onto the near side of his face (the spit; a little on a poke)
-    if (fs) { const hd = mask[0]; overlays.push(flash("flash", { x: lerp(eR.x, hd.x, 0.25), y: lerp(eR.y, hd.y, 0.35) }, hd.r * 1.5, 0.9 * fs.spit + 0.25 * fs.poke)); }
+    // the flare's warm flash out of the door onto the near side of his face (the spit; a little on a poke); on THE SPIT
+    // the cheek nearest the fire also takes a warm glow (a screen blend alone does not show on his pale face)
+    if (fs) {
+      const hd = mask[0], side = Math.sign((eL.x + eR.x) / 2 - hd.x) || -1;
+      overlays.push(flash("flash", { x: lerp(eR.x, hd.x, 0.25), y: lerp(eR.y, hd.y, 0.35) }, hd.r * 1.5, 0.9 * fs.spit + 0.25 * fs.poke),
+        cheekGlow("cheek", { x: hd.x + side * 0.5 * hd.r, y: hd.y + 0.3 * hd.r }, hd.r * 0.6, fs.spit + 0.3 * fs.poke));
+    }
   }
 
   // ---- the lens: a light focus on him; close on the board, on the board

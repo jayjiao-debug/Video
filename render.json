@@ -1,11 +1,1 @@
-{
-  "id": "group-v4-full",
-  "composition": "GroupFilm",
-  "start": 0,
-  "end": 2002,
-  "chunks": 20,
-  "concurrency": 1,
-  "timeout": 600000,
-  "output": "group_v4",
-  "flags": "--crf=16"
-}
+{"id":"newton-wip-01","composition":"NewtonFilm","start":0,"end":5252,"chunks":30,"concurrency":1,"timeout":900000,"output":"newton_wip1","flags":"--crf=14"}
