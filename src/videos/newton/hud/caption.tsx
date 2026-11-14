@@ -1,45 +1,58 @@
 // hud/caption.tsx: THE SUBTITLES of the Newton film (PLAN.md section 5; WP4). A pure function of the frame.
 //   <Caption f />            the caption group of captions.ts on frame f (one SCREEN of the lines file at a time)
 //   <Caption f cap={...} />  draw a given { zh, en, who } instead (previews, tests; full opacity)
-// The look: the bottom band, NOTHING behind the words (no box, no plate, no scrim). CHINESE LARGE (66 px, bold) on one
-// row, centred on y 1318; ENGLISH SMALL (36 px) under it ONLY for lines spoken in English (enShown), one row, or two balanced rows when it is wider than the safe
-// area. Both in the SPEAKER'S TINT (记者 ji warm white, Newton nt pale gold, Humphrey hm white) over a dark warm ink
-// line drawn as its own layer UNDER the fills (Chinese 5.5 px, English a thinner 3.5 px so it reads lighter), a hard
-// little drop and a soft shadow. The block stays inside y 1270-1460 (CAP_BAND 1250-1500): the mic's head stops above
-// y 1190 and faces sit in the upper third.
-// Width: the safe area is x 50..925 (Douyin's button rail is right of x 930 below y 900), so a row CENTRED on x 540
-// may be 770 px wide: up to 11 characters at 66 px. A 12-13 character row shrinks (to 60 px at most) so it stays
-// centred over the English; wider than that (up to the lines file's 16) it slides left only as far as it must and
-// shrinks to fit on ONE row (16 characters = 53 px). Optical centring: a trailing full-width mark counts half. Two
-// trailing marks in a row (「？！」) are set tight: the first is pulled back half an em (its own blank half would show as
-// a gap) and only the last one's half em counts as blank.
-// More than 16 characters (not in the lines file) falls back to two balanced rows.
-// English wider than 800 px breaks into two balanced rows (so it stays centred instead of sliding off the rail).
+// The look: the bottom band, NOTHING behind the words (no box, no plate, no scrim). CHINESE LARGE (66 px, bold);
+// ENGLISH SMALL (36 px) under it ONLY for lines spoken in English (enShown), one row, or two balanced rows when it is
+// wider than a row may be. Both in the SPEAKER'S TINT (记者 ji warm white, Newton nt pale gold, Humphrey hm white) over
+// a dark warm ink line drawn as its own layer UNDER the fills (Chinese 5.5 px, English a thinner 3.5 px so it reads
+// lighter), a hard little drop and a soft shadow.
+// THE 9:15 PHONE-SAFE PLACE (layout.ts PHONE, Jay's measure, 14 Nov): the block is anchored on its BOTTOM: its last
+// row (the English one under an English line, else the Chinese) ends above y 1490 (CAP_BOTTOM; the post's text covers
+// the left from y 1510). One Chinese row sits at about y 1405-1490; two rows from about y 1325; an English row under
+// them pushes the Chinese up (one Chinese + one English row: about y 1355-1490).
+// Width: the app's buttons cover x > 940 below y 950, so words stay left of x 930 and a row CENTRED on x 540 is at most
+// 780 px wide (CAP_W). A CHINESE LINE OVER 13 CHARACTERS (CAP_ROW) BREAKS INTO TWO ROWS (the most balanced split at a
+// mark); a row of up to 11 characters keeps 66 px, a 12-13 character row shrinks (to 58 px at the least) so it stays
+// centred in 780 px. Optical centring: a trailing full-width mark counts half. Two trailing marks in a row (「？！」) are
+// set tight: the first is pulled back half an em (its own blank half would show as a gap) and only the last one's half
+// em counts as blank.
+// English wider than 780 px breaks into two balanced rows (so it stays centred and clear of the buttons).
 // Motion: fades in over 3 frames where a run of captions starts and out over 3 frames where it ends; between two
 // screens that follow each other frame to frame it switches clean (a fade there would blink). Line 01's screen is
 // already up on frame 0 (PLAN 7 A1), whatever frame the timing gives it.
+// THE JOINS (camplan OVERVIEW item 4; owner row 86: nothing from the outgoing place may still show once the move
+// starts): a screen's hold after its speech, its 3-frame fade included, is CLIPPED before the next whip or match join
+// (beats.ts joinClip): none in the 6 frames before a whip's cut (WHIP_CLEAR), none across a whip or a match cut. capEnd(c)
+// is the last frame screen c shows; capOn / capAlpha / hudRectsAt follow it. The timing (captions.ts) never moves.
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
 import type { Speaker } from "../voice";
 import { CAPTIONS, captionAt, captionRuns, TRAILING_PUNCT, type CaptionGroup } from "../captions";
+import { joinClip } from "../beats";
 import { FONT_STACK, HC, SAFE, textW, enWrap, type Rect } from "./style";
 
 /** each speaker's tint */
 export const SPEAKER_COL: Record<Speaker, string> = { ji: HC.warm, nt: HC.goldPale, hm: HC.white };
-/** the Chinese row's size (px) and the most characters it takes at that size */
+/** the Chinese row's size (px) and the English row's */
 export const ZH_PX = 66, EN_PX = 36;
-/** a long Chinese row shrinks (to stay centred) down to this size before it slides left of the centre */
-export const ZH_MIN = 60;
-/** the most characters in one Chinese row (the lines file's longest allowed screen) */
-export const CAP_ROW = 16;
-/** the Chinese row's centre y, the English rows' first centre and their step (px) */
-export const ZH_Y = 1318, EN_Y0 = ZH_Y + ZH_PX / 2 + 14 + EN_PX / 2, EN_STEP = Math.round(EN_PX * 1.24);
-/** the band the subtitles own (layout.ts SCREEN.capTop / capBottom should match: keep faces and the mic out) */
-export const CAP_BAND: Rect = { x0: SAFE.left, y0: 1250, x1: SAFE.right, y1: 1500 };
+/** a 12-13 character Chinese row shrinks down to this size to stay centred inside CAP_W */
+export const ZH_MIN = 58;
+/** the most characters in one Chinese row: a screen over 13 characters breaks into two rows (Jay, 14 Nov) */
+export const CAP_ROW = 13;
+/** the widest a row may be (px), centred on x 540: 2 x (930 - 540) */
+export const CAP_W = 2 * (SAFE.right - 540);
+/** the block's bottom: its last row's ink and drop end on or above this y (the phone's post text from y 1510) */
+export const CAP_BOTTOM = 1488;
+/** the single Chinese row's centre y (Chinese only), the English rows' first centre below a Chinese row and their step;
+ *  capLayout anchors the whole block on CAP_BOTTOM, so these are the one-row Chinese case */
+export const ZH_Y = 1444, EN_Y0 = ZH_Y + ZH_PX / 2 + 14 + EN_PX / 2, EN_STEP = Math.round(EN_PX * 1.24);
+/** the band the subtitles own (layout.ts SCREEN.capTop / capBottom match): two Chinese rows, or one Chinese and one
+ *  English row, fill it; keep faces out of it while a subtitle shows (hudRectsAt gives the real rows' box) */
+export const CAP_BAND: Rect = { x0: SAFE.left, y0: 1325, x1: SAFE.right, y1: 1490 };
 const LS_ZH = 1, LS_EN = 0.4, FADE = 3;
 /** the widest English row (px): wider than this and it breaks into two balanced rows (keeps it centred) */
-const EN_ROW_W = 800;
+const EN_ROW_W = CAP_W;
 const inkZh = (px: number) => Math.round(px * 0.17), inkEn = (px: number) => Math.max(5, Math.round(px * 0.2));
 const LEAD_PUNCT = "“‘（《「";
 const STRONG = "。！？；…", WEAK = "，、：—";
@@ -90,7 +103,8 @@ const kern = (row: string, from = 0, to = [...row].length): React.ReactNode => {
 /** what a caption looks like on screen: each row (text, px, centre x / y, its visible box) */
 export type CapRowLayout = { text: string; zh: boolean; px: number; x: number; y: number; box: Rect };
 export type CapLayout = { rows: CapRowLayout[]; box: Rect };
-/** lay out a screen: Chinese row(s) at ZH_PX (shrunk to fit), English row(s) under them; every row kept in SAFE */
+/** lay out a screen: Chinese row(s) at ZH_PX (shrunk to fit), English row(s) under them; every row kept in SAFE and
+ *  the block's bottom on CAP_BOTTOM */
 export const capLayout = (zh: string, en: string): CapLayout => {
   const room = SAFE.right - SAFE.left;
   const plain = zh.replace(/[【】]/g, "").trim();
@@ -123,21 +137,32 @@ export const capLayout = (zh: string, en: string): CapLayout => {
   const eRows = en.trim() ? enWrap(en, EN_PX, Math.min(room - inkEn(EN_PX), EN_ROW_W), LS_EN) : [];
   const ey0 = zRows.length ? (zRows.length > 1 ? rows[rows.length - 1].y + zpx / 2 + 14 + EN_PX / 2 : EN_Y0) : ZH_Y;
   eRows.forEach((r, i) => place(r, false, EN_PX, Math.round(ey0 + i * EN_STEP)));
+  // anchor the block on its bottom: the last row's ink and drop end on CAP_BOTTOM
+  const dy = rows.length ? CAP_BOTTOM - Math.max(...rows.map((r) => r.box.y1)) : 0;
+  for (const r of rows) { r.y += dy; r.box = { ...r.box, y0: r.box.y0 + dy, y1: r.box.y1 + dy }; }
   const box = rows.length
     ? { x0: Math.min(...rows.map((r) => r.box.x0)), y0: Math.min(...rows.map((r) => r.box.y0)), x1: Math.max(...rows.map((r) => r.box.x1)), y1: Math.max(...rows.map((r) => r.box.y1)) }
     : { x0: 540, y0: ZH_Y, x1: 540, y1: ZH_Y };
   return { rows, box };
 };
 
-/** the screen shown on frame f (line 01's is already up before its first word: PLAN 7 A1) */
-export const capOn = (f: number): CaptionGroup | null => captionAt(f) ?? (CAPTIONS.length && f >= 0 && f < CAPTIONS[0].from ? CAPTIONS[0] : null);
-/** the caption's opacity on frame f (0 when none): 3-frame fades where a run of screens starts / ends */
+/** the last frame screen c is on screen, its fade included: its `to`, clipped before the next whip or match join
+ *  (beats.ts joinClip: nothing in the 6 frames before a whip's cut, nothing across a whip or a match cut). C05 ends on
+ *  1711 before the whip up the stairs (cut 1718), G04 on 5088 before G's whip (cut 5095) */
+export const capEnd = (c: Pick<CaptionGroup, "from" | "to">): number => joinClip(c.from, c.to);
+/** the screen shown on frame f (line 01's is already up before its first word: PLAN 7 A1; none after its capEnd) */
+export const capOn = (f: number): CaptionGroup | null => {
+  const c = captionAt(f) ?? (CAPTIONS.length && f >= 0 && f < CAPTIONS[0].from ? CAPTIONS[0] : null);
+  return c && f <= capEnd(c) ? c : null;
+};
+/** the caption's opacity on frame f (0 when none): 3-frame fades where a run of screens starts / ends (a screen
+ *  clipped before a join fades out over its last 3 frames up to capEnd) */
 export const capAlpha = (f: number): number => {
   const c = capOn(f);
   if (!c) return 0;
-  const i = CAPTIONS.indexOf(c), prev = CAPTIONS[i - 1], next = CAPTIONS[i + 1];
-  const joinedIn = i === 0 || (prev && prev.to + 1 >= c.from), joinedOut = next && c.to + 1 >= next.from;
-  const kin = joinedIn ? 1 : Math.min(1, (f - c.from + 1) / FADE), kout = joinedOut ? 1 : Math.min(1, (c.to - f + 1) / FADE);
+  const i = CAPTIONS.indexOf(c), prev = CAPTIONS[i - 1], next = CAPTIONS[i + 1], end = capEnd(c);
+  const joinedIn = i === 0 || (prev && capEnd(prev) + 1 >= c.from), joinedOut = next && end + 1 >= next.from;
+  const kin = joinedIn ? 1 : Math.min(1, (f - c.from + 1) / FADE), kout = joinedOut ? 1 : Math.min(1, (end - f + 1) / FADE);
   return Math.max(0, Math.min(kin, kout));
 };
 

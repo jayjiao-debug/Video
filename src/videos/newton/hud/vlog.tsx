@@ -4,7 +4,8 @@
 // (above the 3D picture, under the title block, the fact card, the shot's overlays and the subtitles), unless the
 // frame's Pose says hud: false.
 //   <VlogHud f rec? cards? />
-//     REC       a red lamp + "REC" top left (layout.ts SCREEN.rec, the row centred on y 204). The lamp BREATHES at
+//     REC       a red lamp + "REC" top left (layout.ts SCREEN.rec, the row centred on y 116, under the phone app's icons
+//               that cover the top corners to y 60; the left edge on the 54 px picture-only margin). The lamp BREATHES at
 //               1 Hz: about 11 frames lit, 11 dim, 4-frame soft ramps, never below 24 % (never a hard flash). Gone
 //               (with the timestamp) where a Pose says rec: false. The blink's period is 1 s stretched by a hair
 //               (about 30.07 frames) so that the lamp is lit on frame 0 AND has been lit for 10 frames when it dies.
@@ -15,29 +16,36 @@
 //               the same warm grey, and the battery's fill is emptied. From that frame it holds still (nothing breathes)
 //               until the end black (Pose.top) covers it.
 //     时间戳    the scene's timestamp, two rows: the time of day (story.ts SCENE_STAMP: 清晨 in pale gold) and the clock
-//               (05:00, warm white), the English word small under it (EARLY MORNING, 24 px, ivory, spaced capitals);
-//               lang en: the clock alone over the same English row (one corner size in both languages).
-//               On every scene's first frame it SLIDES IN BIG (x1.5) under REC; while it lands the CLOCK RUNS ON from
-//               the last scene's time to this one (the day fast-forwarding: 05:00 ... 11:00, ease-out over 14 frames);
-//               it holds, then shrinks into its small place under REC (left x 54, rows on y 255 / 291) and stays.
-//               The word follows the running digits (WORD_FROM: the previous scene's word until they enter this one's
+//               (05:00, warm white), the English word small under it (EARLY MORNING, 22 px, ivory, spaced capitals);
+//               lang en: the clock alone over the same English row (one corner size in both languages). The label rows
+//               sit under REC at about y 161 / 189 (the box x 54..~285, y 140..204: SCREEN.rec).
+//               On every scene's first frame it SLIDES IN BIG (x1.5, to about x 400, y 234) under REC, holds, then
+//               shrinks into its small place (2 s in all) and stays.
+//               THE CLOCK RUNS FAST ONLY AT THE CLOCK JOINS (camplan OVERVIEW 3, B.md 6): A->B, C->D, D->E and F->G
+//               (the first frames of B, D, E, G, read from SEGMENTS: never a frame number, the voice will move them)
+//               it races from 10 frames BEFORE the cut (on the outgoing scene's small stamp) to 8 frames after it (under
+//               the big stamp sliding in), 18 frames eased in-out; and once inside G at its room -> garden join
+//               (beats.ts BEAT.G.garden: 02:00 -> 03:00, story.ts G_GARDEN_CLOCK; G.md note 2) on the small stamp. At a
+//               WHIP or MATCH join (B->C, E->F) the stamp slides in with its time already set: nothing runs. The word
+//               follows the running digits (WORD_FROM: the outgoing scene's word until they enter the incoming scene's
 //               hours).
-//               Frame 0 starts big and settled (no run: the first frame is complete). cards: false skips the big
-//               intro (only the small stamp).
-//     battery   top right (SCREEN.battery): its level follows the CLOCK, not the frame: 100 % at 05:00 down to 12 % at
+//               Frame 0 starts big and settled (the first frame is complete). cards: false skips the big intro (only
+//               the small stamp).
+//     battery   top right (SCREEN.battery: x ~850..1026 on the row y 116): its level follows the CLOCK, not the frame:
+//               100 % at 05:00 down to 12 % at
 //               02:00 (scene starts: A 100, B 75, C 71, D 58, E 46, F 25, G 12), each scene draining 3 points more
 //               while it runs (G: 12 -> 7), so it steps down at every cut (a later recording). Green over 35 %, amber
 //               over 15 %, RED from the 2 a.m. scene, where its fill breathes softly at 1 Hz. Still from the off frame
 //               and where rec: false; emptied and grey from the off frame.
-//   recAlpha(f), stampAt(f), clockAt(f), batteryAt(f), OFF_AT, VLOG_RECT (the corners' reserve: the widest scene),
-//   stampRect(id, big) (one scene's timestamp box), vlogRectsAt(f): the numbers behind it.
+//   recAlpha(f), stampAt(f), clockAt(f), raceAt(f), RACES, CLOCK_JOINS, batteryAt(f), OFF_AT, VLOG_RECT (the corners'
+//   reserve: the widest scene), stampRect(id, big) (one scene's timestamp box), vlogRectsAt(f): the numbers behind it.
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
-import { FPS, SCENES, SCENE_STAMP, SEGMENTS, clamp01, clockText, easeInOutCubic, easeOutCubic, segmentAt, type SceneId } from "../story";
-import { SCREEN } from "../layout";
+import { FPS, SCENES, SCENE_STAMP, SEGMENTS, G_GARDEN_CLOCK, clamp01, clockText, easeInOutCubic, easeOutCubic, seg, segmentAt, type SceneId } from "../story";
+import { PHONE } from "../layout";
 import { EN } from "../lang";
-import { BEAT } from "../beats";
+import { BEAT, JOINS } from "../beats";
 import { FONT_STACK, HC, textW, type Rect } from "./style";
 
 // ---------------------------------------------------------------------------------------------------- the clock
@@ -52,32 +60,52 @@ const BLINK = (LIT1 - LIT0) / Math.max(1, Math.round((LIT1 - LIT0) / FPS));
 const blinkCos = (f: number) => Math.cos((2 * Math.PI * (f - LIT0)) / BLINK);
 /** the REC lamp's opacity on frame f: 1 Hz, 11 frames lit, 11 dim, 4-frame ramps, 0.24 at its dimmest */
 export const recAlpha = (f: number) => 0.24 + 0.76 * clamp01(0.5 + 1.25 * blinkCos(f));
-/** the timestamp's intro: slide in, run the clock, hold big, shrink (frames from the scene's first frame) */
-const IN = 8, RUN = 14, HOLD = 48, SHRINK = 12;
+/** the timestamp's intro: slide in, hold big, shrink (frames from the scene's first frame) */
+const IN = 8, HOLD = 48, SHRINK = 12;
 /** the timestamp on frame f: its scene, t = frames since that scene's first frame (frame 0: already slid in) */
 export const stampAt = (f: number): { id: SceneId; at: number; t: number } => {
   const s = segmentAt(f);
   return { id: s.id, at: s.from, t: s.from === 0 ? Math.max(f, 0) + IN : f - s.from };
 };
-/** the clock the timestamp shows on frame f (minutes, story.ts SCENE_CLOCK): it runs on from the last scene's time to
- *  this scene's over the intro's first RUN frames (ease-out), then holds */
+/** THE CLOCK JOINS (camplan OVERVIEW: 5 clock, 5 whip, 2 match joins; beats.ts JOINS is the one list): the scenes whose
+ *  first frame is a clock join (A->B, C->D, D->E, F->G). B->C and E->F are whips: their stamp slides in already set. */
+export const CLOCK_JOINS: SceneId[] = JOINS.filter((j) => j.kind === "clock" && j.first).map((j) => j.scene);
+/** a race of the clock: from `cut - RACE_PRE` to `cut + RACE_POST` it runs from `from` to `to` (minutes on the film
+ *  day's scale), eased in-out; the word goes from `fromId`'s to `toId`'s when the digits enter toId's hours */
+export type Race = { cut: number; from: number; to: number; fromId: SceneId; toId: SceneId; inScene: boolean };
+export const RACE_PRE = 10, RACE_POST = 8;
+/** every race of the film: one per clock join of beats.ts JOINS: the four at scene starts (keyed on SEGMENTS) and G's
+ *  room -> garden join (BEAT.G.garden, 02:00 -> 03:00: G_GARDEN_CLOCK, the only clock join inside a scene) */
+export const RACES: Race[] = JOINS.filter((j) => j.kind === "clock").map((j): Race => {
+  if (j.first) {
+    const prev = SCENES[SCENES.indexOf(j.scene) - 1];
+    return { cut: seg(j.scene).from, from: SCENE_STAMP[prev].min, to: SCENE_STAMP[j.scene].min, fromId: prev, toId: j.scene, inScene: false };
+  }
+  if (j.scene !== "G") throw new Error(`hud/vlog.tsx RACES: a clock join inside scene ${j.scene} (${j.cut}) has no clock to run to (only G's garden join does)`);
+  return { cut: j.cut, from: SCENE_STAMP.G.min, to: G_GARDEN_CLOCK, fromId: "G", toId: "G", inScene: true };
+});
+/** the race running on frame f, or null */
+export const raceAt = (f: number): Race | null => RACES.find((r) => f >= r.cut - RACE_PRE && f <= r.cut + RACE_POST) ?? null;
+/** the clock the timestamp shows on frame f (minutes, story.ts SCENE_CLOCK): the scene's own time, racing only across
+ *  a clock join (raceAt); G shows 03:00 after its garden join */
 export const clockAt = (f: number): number => {
-  const st = stampAt(f), i = SCENES.indexOf(st.id), to = SCENE_STAMP[st.id].min;
-  if (i <= 0 || st.t >= RUN) return to;
-  const from = SCENE_STAMP[SCENES[i - 1]].min;
-  return from + (to - from) * easeOutCubic(clamp01((st.t + 1) / RUN));
+  const r = raceAt(f);
+  if (r) return r.from + (r.to - r.from) * easeInOutCubic(clamp01((f - (r.cut - RACE_PRE)) / (RACE_PRE + RACE_POST)));
+  const s = segmentAt(f);
+  return s.id === "G" && f > BEAT.G.garden ? G_GARDEN_CLOCK : SCENE_STAMP[s.id].min;
 };
 /** WHERE EACH SCENE'S TIME WORD STARTS on the clock (minutes after the film day's midnight, story.ts SCENE_CLOCK's
  *  scale): 清晨 until 08:00, 上午 from 08:00, 中午 from 11:30, 下午 from 13:00, 傍晚 from 17:00, 夜 from 19:00, 凌晨 from
- *  24:00 (each scene's own clock lies inside its word's hours). While the clock runs on at a cut, the word (and the
- *  English row under it) is the PREVIOUS scene's until the running digits cross into this scene's hours (review v2
- *  row 7: G's first frame read 「凌晨 23:25」, E's 「傍晚 15:35」, D's 「下午 12:35」). It changes only in the run's first
- *  frames (B, C: 2; E: 4, before the English row fades in; D, F, G: the first frame alone) */
+ *  24:00 (each scene's own clock lies inside its word's hours). While the clock races across a join, the word (and the
+ *  English row under it) is the OUTGOING scene's until the running digits cross into the incoming scene's hours
+ *  (review v2 row 7: never 「凌晨 23:25」, 「傍晚 15:35」 or 「下午 12:35」) */
 export const WORD_FROM: Record<SceneId, number> = { A: 0, B: 8 * 60, C: 11 * 60 + 30, D: 13 * 60, E: 17 * 60, F: 19 * 60, G: 24 * 60 };
-/** the scene whose time word goes with scene `id`'s clock at `min` (the clock as shown: whole minutes) */
-export const wordOf = (id: SceneId, min: number): SceneId => {
-  const i = SCENES.indexOf(id);
-  return i > 0 && Math.floor(min) < WORD_FROM[id] ? SCENES[i - 1] : id;
+/** the scene whose time word goes with frame f's clock `min` (the clock as shown: whole minutes): the stamp's own scene,
+ *  or across a race the outgoing / incoming scene's by the digits */
+export const wordOf = (f: number, id: SceneId, min: number): SceneId => {
+  const r = raceAt(f);
+  if (!r || r.fromId === r.toId) return id;
+  return Math.floor(min) >= WORD_FROM[r.toId] ? r.toId : r.fromId;
 };
 /** the battery (%) on frame f: each scene starts at its clock's level (100 % at 05:00 .. 12 % at 02:00) and drains 3
  *  points more while it runs (the last one 5) */
@@ -88,12 +116,16 @@ export const batteryAt = (f: number): number => {
 };
 
 // ---------------------------------------------------------------------------------------------------- geometry
-const ROW = 204;                                          // the REC row's centre y (SCREEN.rec)
-const X0 = SCREEN.rec.x0;                                 // 50: the corner's left edge
-const DOT = { x: X0 + 22, r: 14 };                        // the lamp's centre x and radius (its ink ring 5 px more)
-const REC_X = X0 + 48, REC_PX = 38, REC = "REC";          // the label (the same in both languages)
-const ST = { x: X0 + 4, y: 238, zh: 34, en: 24, gap: 7, big: 1.5, bigY: 246, lsEn: 2.0 };
-const BAT = { x1: SCREEN.battery.x1 - 12, w: 70, h: 32, px: 34 };
+// THE 9:15 PHONE-SAFE PLACE (layout.ts PHONE, Jay's measure, 14 Nov): the app's back / search icons cover the top
+// corners down to y 60, so the REC row sits at y 116 and its label rows (the timestamp) at about 161 / 189; the left
+// edge on the 54 px margin, the battery's right edge on 1080 - 54. The camera plans assumed REC + stamp in x 54-330,
+// y 95-205, the big stamp to about y 290 for 2 s, the battery x 820-1026: the boxes below stay inside those.
+const ROW = 116;                                          // the REC row's centre y (SCREEN.rec)
+const X0 = PHONE.margin;                                  // 54: the corner's left edge
+const DOT = { x: X0 + 22, r: 13 };                        // the lamp's centre x and radius (its ink ring 5 px more)
+const REC_X = X0 + 46, REC_PX = 36, REC = "REC";          // the label (the same in both languages)
+const ST = { x: X0 + 4, y: 144, zh: 30, en: 22, gap: 4, big: 1.5, bigY: 144, lsEn: 2.0 };
+const BAT = { x1: PHONE.W - PHONE.margin - 10, w: 66, h: 30, px: 32 };
 const inkW = (px: number) => Math.max(5, Math.round(px * 0.17));
 /** the two rows' strings for a scene (lang zh: 清晨 05:00 / EARLY MORNING; lang en: 05:00 / EARLY MORNING, the
  *  word only once, so the corner keeps the same size in both languages and the shots' face-clear framing holds) */
@@ -110,7 +142,7 @@ const stampW = (id: SceneId) => {
 };
 /** the widest timestamp at rest: the widest of any scene (A's EARLY MORNING) */
 const STAMP_W = Math.max(...SCENES.map(stampW));
-const STAMP_H = ST.zh + ST.gap + ST.en + 6;
+const STAMP_H = ST.zh + ST.gap + ST.en + 4;
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery with its % */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
   rec: { x0: X0, y0: ROW - DOT.r - 6, x1: Math.ceil(REC_X + textW(REC, REC_PX, 2) + inkW(REC_PX)), y1: ROW + DOT.r + 6 },
@@ -125,12 +157,15 @@ export const stampRect = (id: SceneId, big: boolean): Rect => {
   const w = stampW(id), k = big ? ST.big : 1, y = big ? ST.bigY : ST.y;
   return { x0: ST.x - 4, y0: y - 4, x1: Math.ceil(ST.x + w * k), y1: Math.ceil(y + STAMP_H * k) };
 };
-/** the boxes the vlog UI takes on frame f (the scene's own timestamp: its big intro while it is bigger than at rest) */
+/** the boxes the vlog UI takes on frame f (the scene's own timestamp: its big intro while it is bigger than at rest;
+ *  across a race both scenes' words, whichever is wider) */
 export const vlogRectsAt = (f: number): { what: "rec" | "stamp" | "battery"; r: Rect }[] => {
-  const st = stampAt(Math.min(f, OFF_AT));
+  const fz = Math.min(f, OFF_AT), st = stampAt(fz), big = stampK(st.t) < 1, r = raceAt(fz);
+  const ids = r ? [st.id, r.fromId, r.toId] : [st.id];
+  const sr = ids.map((id) => stampRect(id, big)).reduce((a, b) => ({ x0: Math.min(a.x0, b.x0), y0: Math.min(a.y0, b.y0), x1: Math.max(a.x1, b.x1), y1: Math.max(a.y1, b.y1) }));
   return [
     { what: "rec", r: VLOG_RECT.rec },
-    { what: "stamp", r: stampRect(st.id, stampK(st.t) < 1) },
+    { what: "stamp", r: sr },
     { what: "battery", r: VLOG_RECT.battery },
   ];
 };
@@ -169,8 +204,8 @@ const RecMark: React.FC<{ f: number; out: boolean }> = ({ f, out }) => {
 
 const TimeStamp: React.FC<{ f: number; intro: boolean; out: boolean }> = ({ f, intro, out }) => {
   const st = stampAt(f), t = intro ? st.t : HOLD + SHRINK;
-  const min = intro ? clockAt(f) : SCENE_STAMP[st.id].min;
-  const r = rows(wordOf(st.id, min), clockText(min));
+  const min = clockAt(f);
+  const r = rows(wordOf(f, st.id, min), clockText(min));
   const kin = easeOutCubic(clamp01((t + 1) / IN)), op = clamp01((t + 1) / 5), ks = stampK(t);
   const s = ST.big + (1 - ST.big) * ks, y = ST.bigY + (ST.y - ST.bigY) * ks, dx = -40 * (1 - kin);
   // the English row comes in a few frames after the Chinese one (it settles under the running clock)

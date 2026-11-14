@@ -11,6 +11,7 @@
 //   Raked gravel walks round two lawn beds edged with low box hedges and clipped cones; a cross walk from his staircase
 //   door to the east walk; a sundial on a stone pillar in the south bed.
 import { ISLAND, V, EYE, eyeCam, type Stand, type Cam } from "./base";
+import { N_EYE } from "../people";
 
 export const GDX = ISLAND.garden;
 const EW = 3.6, WW = -5.2, NW = -10.0, SW = 6.6, XW = -3.0;           // the walks' centre lines (east, west, north, south, cross)
@@ -49,9 +50,10 @@ export const GARDEN = {
   night: [V(GDX + G.range.x + 0.45, 0, XW), V(GDX + EW, 0, XW), V(GDX + EW, 0, NW), V(GDX + E.door.x, 0, NW + 0.1), V(GDX + E.door.x, 0, E.z1 + 0.55)],
   /** the sundial's pillar (its foot) */ sundial: V(GDX + G.sundial.x, 0, G.sundial.z),
 };
-/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (1.14 m over his floor) in the frame's
+/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (N_EYE over his floor: people.ts, 1.14 x
+ *  his scale, gate 1 director note 1) in the frame's
  *  upper third (layout.ts SCREEN.eyes) when her eyes stand at (cx, cz), `eye` over the same floor */
-const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - 1.14) / d) + 0.197); };
+const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - N_EYE) / d) + 0.197); };
 /** NAMED CAMERAS (her eyes, EYE over the gravel) */
 export const GARDEN_CAMS: Record<"walk" | "turn" | "stairDoor" | "follow" | "elab" | "window" | "wide", Cam> = {
   /** C16-18: walking backwards in front of him down the east walk (the elaboratory and the chapel behind him) */

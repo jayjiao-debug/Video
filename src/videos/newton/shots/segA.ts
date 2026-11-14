@@ -40,7 +40,7 @@
 // Every frame is looked up (lineId / capWord / card / BEAT / SEGMENTS and the sound anchors from the lines' voice
 // times + the clips' own measured offsets); every mark comes from layout/stairs.ts (STAIRS, STAIRS_SET).
 import * as THREE from "three";
-import { SEGMENTS, FPS, lineId, capWord, quote, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, type Segment, type CamPose } from "../story";
+import { SEGMENTS, FPS, lineId, capWord, quote, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, W, H, lensTan, type Segment, type CamPose } from "../story";
 import { BEAT, TITLE_SPAN } from "../beats";
 import * as C from "../cam";
 import { NEWTON_INK, HUMPHREY } from "../people";
@@ -152,9 +152,9 @@ const RUN: [number, THREE.Vector3][] = [
   [SND.steps[2], V(lerp(RUN_X + 0.16, P_KNOCK.x, 0.45), 0, lerp(STAIRS.stairHead.z, P_KNOCK.z, 0.62))],
   [ARRIVE, V(P_KNOCK.x, 0, P_KNOCK.z)],
 ];
-/** the direction that puts world point `target` on screen at (px, py) from `pos` (fov vertical, 9:16) */
+/** the direction that puts world point `target` on screen at (px, py) from `pos` (CamPose fov, the 9:15 frame) */
 const aimDir = (pos: THREE.Vector3, target: THREE.Vector3, px: number, py: number, fov = FOV) => {
-  const tanV = Math.tan((fov * Math.PI) / 360), tanH = (tanV * 9) / 16, nx = (px / 540 - 1) * tanH, ny = (1 - py / 960) * tanV;
+  const tanV = lensTan(fov), tanH = tanV * (W / H), nx = (px / (W / 2) - 1) * tanH, ny = (1 - py / (H / 2)) * tanV;
   const d = target.clone().sub(pos).normalize(), n = Math.hypot(1, nx, ny);
   let fwd = d.clone();
   for (let i = 0; i < 8; i++) {

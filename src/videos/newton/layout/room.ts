@@ -7,6 +7,7 @@
 // WP3's chair); THE DOOR to the stairs is in the LEFT wall (it opens inward, hinged at its back end, as on the stairs).
 // A tall bookcase on the right wall, a stone fireplace further forward on the right, a plaster frieze over the panels.
 import { ISLAND, V, EYE, eyeCam, type Stand, type Cam } from "./base";
+import { N_EYE } from "../people";
 
 export const RMX = ISLAND.room;
 export const ROOM_SET = {
@@ -40,9 +41,10 @@ export const ROOM = {
   /** the door's hinge axis on the floor and the leaf's width */ hinge: V(RMX + ROOM_SET.walls.x0 - 0.06, 0, DR.z0 + 0.01), leafW: DR.z1 - DR.z0,
   /** the middle of the room (her usual floor point) */ middle: V(RMX + 0.1, 0, 0.3),
 };
-/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (1.14 m over his floor) in the frame's
+/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (N_EYE over his floor: people.ts, 1.14 x
+ *  his scale, gate 1 director note 1) in the frame's
  *  upper third (layout.ts SCREEN.eyes) when her eyes stand at (cx, cz), `eye` over the same floor */
-const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - 1.14) / d) + 0.197); };
+const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - N_EYE) / d) + 0.197); };
 /** NAMED CAMERAS (her eyes, EYE over the floor; `plate` is the plate insert, closer and lower) */
 export const ROOM_CAMS: Record<"plate" | "desk" | "wide" | "door" | "window" | "drafts" | "chair", Cam> = {
   /** B, C, E, G: the day's clock: close on the plate on the window table (the window's light falls across it) */

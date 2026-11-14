@@ -4,7 +4,11 @@
 //                              the default); `span={[a, b]}` draws it over another span (previews)
 //   setTitlePlace(p)           where the block sits: a TitlePlace, or a function of the frame (to follow the door while
 //                              the camera settles). The SEGMENT BUILDER calls it once at module scope (segA.ts), e.g.
-//                              setTitlePlace({ x: 540, y: 880, scale: 0.95 }). Default: the frame's centre (540, 960).
+//                              setTitlePlace({ x: 540, y: 880, scale: 0.95 }). Default: the frame's centre (540, 900).
+// On the 9:15 frame (1080 x 1800) the plans put it on the shut door's upper panel (camplan A.md: its anchor about y 368,
+// the block about y 260-480, clear of the REC label row at 180 by 80 px or more); segA places it with Pose.title (the
+// door's point through cam.ts toScreen, which is in 1800-frame px). Its whole width (about 830 px at scale 1) stays
+// inside the 54 px margins.
 // The look: a title page painted on dark oak: 「跟着牛顿过一天」 large (96 px), a thin ivory double rule with a lozenge,
 // 「1686年5月 · 剑桥三一学院」 small (40 px) and "A Day with Newton · May 1686, Trinity College, Cambridge" smaller
 // (24 px) under it; ivory paint (a soft gradient, a thin dark edge, a hair of roughening so it reads painted, not
@@ -16,7 +20,7 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
-import { clamp01, easeInCubic, easeOutCubic } from "../story";
+import { W, H, clamp01, easeInCubic, easeOutCubic } from "../story";
 import { TITLE_SPAN } from "../beats";
 import { EN, TXT } from "../lang";
 import { FONT_STACK, HC, textW, type Rect } from "./style";
@@ -24,7 +28,7 @@ import { FONT_STACK, HC, textW, type Rect } from "./style";
 /** where the block sits: its centre (px), scale and turn (deg) */
 export type TitlePlace = { x: number; y: number; scale?: number; rot?: number };
 /** the default: the frame's centre */
-export const TITLE_HOME: Required<TitlePlace> = { x: 540, y: 960, scale: 1, rot: 0 };
+export const TITLE_HOME: Required<TitlePlace> = { x: W / 2, y: H / 2, scale: 1, rot: 0 };
 let PLACE: TitlePlace | ((f: number) => TitlePlace) = TITLE_HOME;
 /** set where the title block sits (once, at module scope: a constant or a function of the frame, nothing stateful) */
 export const setTitlePlace = (p: TitlePlace | ((f: number) => TitlePlace)) => { PLACE = p; };
@@ -88,7 +92,7 @@ export const TitleCard: React.FC<{ f: number; at?: Partial<TitlePlace>; span?: [
   const hw = RULE_W / 2;
   return (
     <AbsoluteFill style={{ pointerEvents: "none", opacity: op }}>
-      <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
         <defs>
           <linearGradient id={`${ID}iv`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor={HC.ivoryHi} />

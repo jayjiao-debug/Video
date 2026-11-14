@@ -8,6 +8,7 @@
 // back left and lays a slanting slab of light, cut by the leading, across the door. Behind the door: a dim corner of
 // his room lit only by his candle (the set's point light = the glow under the door).
 import { ISLAND, V, EYE, eyeCam, type Stand, type Cam } from "./base";
+import { N_EYE } from "../people";
 
 export const STX = ISLAND.stairs;
 const RISE = 0.18, GO = 0.28, Z1 = 0.5;
@@ -43,9 +44,10 @@ export const STAIRS = {
   /** the tread centre of step k (k = 1 .. n; top at y -k * rise): Humphrey goes down these */ step,
   /** where her run starts (A01: two steps down) and where it ends on the landing (her floor points) */ runFrom: step(2, -0.2), runTo: V(STX - 0.5, 0, -0.3),
 };
-/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (1.14 m over his floor) in the frame's
+/** the look height, at a figure's floor point (x, z), that puts NEWTON's eyes (N_EYE over his floor: people.ts, 1.14 x
+ *  his scale, gate 1 director note 1) in the frame's
  *  upper third (layout.ts SCREEN.eyes) when her eyes stand at (cx, cz), `eye` over the same floor */
-const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - 1.14) / d) + 0.197); };
+const third = (cx: number, cz: number, x: number, z: number, eye = EYE) => { const d = Math.hypot(x - cx, z - cz); return eye - d * Math.tan(Math.atan((eye - N_EYE) / d) + 0.197); };
 /** NAMED CAMERAS (her eyes, EYE over her floor) */
 export const STAIRS_CAMS: Record<"run" | "top" | "door" | "down" | "low", Cam> = {
   /** A01 start: two steps down, running up, the door ahead and to the right in its slab of sun */

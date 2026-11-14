@@ -25,7 +25,7 @@
 // but harmless: its aim keys still steer the light focus); everything it did is now her eyes' own move.
 // Every frame is a pure function of f; every time comes from line() / card() / BEAT / the mix's anchors.
 import * as THREE from "three";
-import { SEGMENTS, line, card, capWord, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, card, capWord, FPS, clamp01, lerp, smooth, easeOutCubic, W, H, lensTan, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON_INK, NEWTON_HIDE, HUMPHREY } from "../people";
@@ -118,11 +118,11 @@ const N_AT = ROOM.newtonDesk, N_FACING = ROOM.deskFacing;
 const N_EYE = 1.14, H_EYE = 1.14 * (HUMPHREY.scale ?? 1);
 
 // ---------------------------------------------------------------------------------------------------- framing
-/** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (fov vertical, 9:16) */
+/** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (CamPose fov, the 9:15 frame) */
 const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: number, fov = FOV): CamPose => {
-  const tanV = Math.tan((fov * Math.PI) / 360), tanH = tanV * (1080 / 1920);
+  const tanV = lensTan(fov), tanH = tanV * (W / H);
   const d = p.clone().sub(pos), yawP = Math.atan2(d.x, -d.z), pitchP = Math.atan2(d.y, Math.hypot(d.x, d.z));
-  const yaw = yawP - Math.atan(((sx / 1080) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / 1920) * 2) * tanV);
+  const yaw = yawP - Math.atan(((sx / W) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / H) * 2) * tanV);
   const L = 3;
   return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
 };
@@ -310,7 +310,7 @@ const PULL_VIA = DOOR_EDGE.clone().add(V(0.8, 0, -0.05));
  *  as far in as he goes. Head half-widths: Humphrey 0.29 m, Newton 0.34 m with his hair. */
 const N_HEAD = eyesOf(N_AT, N_EYE);
 const onPair = (pos: THREE.Vector3, hEyes: THREE.Vector3, fov: number): CamPose => {
-  const tanH = Math.tan((fov * Math.PI) / 360) * (1080 / 1920);
+  const tanH = lensTan(fov) * (W / H);
   const yawOf = (p: THREE.Vector3) => Math.atan2(p.x - pos.x, -(p.z - pos.z));
   const flat = (p: THREE.Vector3) => Math.hypot(p.x - pos.x, p.z - pos.z);
   const yH = yawOf(hEyes), yN = yawOf(N_HEAD), rH = Math.atan(0.29 / flat(hEyes)), rN = Math.atan(0.34 / flat(N_HEAD));

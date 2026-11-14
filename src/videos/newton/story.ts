@@ -46,10 +46,12 @@
 //    on-screen string is L(zh, en). A beat that is not in beats.ts is derived in the segment's own file the same way
 //    (capWord("A01", "好").from for a ji line, capWord("F14", "burn").from for an nt / hm line: the word in the language
 //    the line is SPOKEN in).
-//    Screen zones (px on 1080 x 1920, layout.ts SCREEN): nothing that matters above y 150 or in the subtitle band
-//    (SCREEN.capTop..capBottom: Chinese large, English small under it) or below SCREEN.bottom; faces in the upper third
-//    but out of the vlog UI's corners (SCREEN.rec top left, SCREEN.battery top right; for the first 2 s of every scene the
-//    timestamp holds BIG in the top-left corner: hud VLOG_RECT.stampBig, about x 50..400, y 240..345);
+//    Screen zones (px on the 9:15 frame, 1080 x 1800, layout.ts SCREEN = the phone-safe frame): the outer 54 px of each
+//    side are picture only; nothing that matters above y 60 (the app's icons) or below y 1500 (the post's text), nor
+//    right of x 930 below y 950 (the app's buttons); the subtitle band (SCREEN.capTop..capBottom, ending above y 1490:
+//    Chinese large, English small under it only for English speech); faces between a quarter and a half of the way
+//    down and out of the vlog UI's corners (SCREEN.rec top left, x 54-330, y 95-205; SCREEN.battery top right; for the
+//    first 2 s of every scene the timestamp holds BIG in the top-left corner: hud VLOG_RECT.stampBig, to about y 290);
 //    the fact card's slot is MID-LEFT (hud/ hudRectsAt(f) gives its box while it shows); the title block sits on the
 //    shut door (TITLE_SPAN). Her mic and her hands are NEVER DRAWN (props/index.ts INVISIBLE; Jay, 14 Nov): what she
 //    holds or does moves as if by an invisible hand. Mouths move ONLY inside a character's own line:
@@ -74,14 +76,25 @@ export type { Speaker };
 
 // ---------------------------------------------------------------------------------------------------- film constants
 export const FPS = 30;
-export const W = 1080, H = 1920;
+/** THE FRAME: 9:15, 1080 x 1800 (Jay, 14 Nov: the app fits a 9:15 film to the phone's width, nothing is cut at the
+ *  sides; the phone-safe layout is layout.ts SCREEN and hud/). */
+export const W = 1080, H = 1800;
+/** THE LENS REFERENCE: every CamPose.fov in this film (layout cameras, cam.ts, the shots) is the vertical angle of the
+ *  1080 x 1920 frame the scenes were first built for, so a fov number keeps its WIDTH of view. The 1800 frame's real
+ *  vertical angle is lensFov(fov): tan(half angle) x H / LENS_H (world.ts setCamera and cam.ts camFrame apply it; no
+ *  shot converts by hand). The result: the same horizontal view, 60 px less at the top and the bottom. */
+export const LENS_H = 1920;
+/** tan of the half vertical angle the 1800 frame really has for a CamPose fov (degrees) */
+export const lensTan = (fov: number) => Math.tan((fov * Math.PI) / 360) * (H / LENS_H);
+/** the real vertical fov (degrees) of the 1800 frame for a CamPose fov */
+export const lensFov = (fov: number) => (360 / Math.PI) * Math.atan(lensTan(fov));
 /** the film's title and the line under it (the title block, PLAN 5; from the lines file) */
 export const TITLE = L(TITLE_RAW[2], TITLE_RAW[3]);
 export const SUBTITLE = L(TITLE_RAW[4], TITLE_RAW[5]);
 /** the title block on the shut door after A02 (PLAN 5): inclusive frames and both languages (beats.ts TITLE_SPAN) */
 export const TITLE_BLOCK = { from: TITLE_RAW[0], to: TITLE_RAW[1], zh: TITLE_RAW[2], en: TITLE_RAW[3], subZh: TITLE_RAW[4], subEn: TITLE_RAW[5] };
-/** subtitle band centre (the HUD's own numbers rule: hud/) */
-export const CAPTION_Y = 0.72 * H;
+/** subtitle band centre: the Chinese row's middle (the HUD's own numbers rule: hud/caption.tsx, layout.ts SCREEN) */
+export const CAPTION_Y = 1450;
 
 // ---------------------------------------------------------------------------------------------------- the places
 /** One place shows at a time (w.setPlace). Each is its own island along x (layout/base.ts ISLAND), all real and a few
@@ -102,6 +115,9 @@ export const SCENE = Object.fromEntries(SCENE_RAW.map(([id, zh, en, place]) => [
 /** THE VLOG'S CLOCK (PLAN 5, hud/vlog.tsx): each scene's time on her camera's timestamp, in minutes after the midnight
  *  that starts the film's day (G = 26:00 = 02:00 the next morning). Why these hours: PLAN.md section 5. */
 export const SCENE_CLOCK: Record<SceneId, number> = { A: 5 * 60, B: 11 * 60, C: 12 * 60, D: 15 * 60, E: 18 * 60, F: 23 * 60, G: 26 * 60 };
+/** G's clock after its room -> garden clock join (beats.ts BEAT.G.garden): 03:00 (27:00 on the film day's scale), from
+ *  Humphrey's "2 or 3 of the clock" (camplan G.md director note 2; the researcher logs it) */
+export const G_GARDEN_CLOCK = 27 * 60;
 /** "HH:MM" (24-hour) of a clock in minutes (26:00 -> "02:00") */
 export const clockText = (min: number) => {
   const m = Math.floor(min), h = Math.floor(m / 60) % 24;
@@ -127,7 +143,7 @@ export type V3Like = Vec3 | THREE.Vector3;
 /** a camera pose: camera.up = up ?? (0,1,0); position = pos; lookAt(look); rotateZ(roll ?? 0); fov (vertical, degrees) */
 export type CamPose = { pos: V3Like; look: V3Like; fov: number; roll?: number; up?: Vec3; near?: number; far?: number };
 export type PostPose = {
-  /** depth of field: focus distance (m) and blur-disc radius in px (at 1080 x 1920) of things at infinity; 0 = off.
+  /** depth of field: focus distance (m) and blur-disc radius in px (on the 1080-wide frame) of things at infinity; 0 = off.
    *  The ASIDES (mic to the lens, Newton soft behind it) use it. */
   dof?: { focus: number; amount: number } | null;
   /** bloom intensity (threshold 1.0: only emissive / glowing things bloom); default: the place's */

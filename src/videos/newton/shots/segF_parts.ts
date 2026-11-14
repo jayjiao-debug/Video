@@ -6,7 +6,7 @@
 // Newton (a little shorter: its seat stays hidden inside his coat).
 // Every function is pure: nothing keeps state between frames; all noise from hash().
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, easeOutCubic, hash, h, type CamPose } from "../story";
+import { FPS, clamp01, lerp, smooth, easeOutCubic, hash, h, W, H, lensTan, type CamPose } from "../story";
 import { FOV, ELAB_CAMS } from "../layout";
 import * as C from "../cam";
 import type { GradeParams } from "../../vasa/grade";
@@ -21,9 +21,9 @@ export const posOf = (c: CamPose) => v3(c.pos);
 
 /** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (vertical fov, 9:16) */
 export const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: number, fov = FOV): CamPose => {
-  const tanV = Math.tan((fov * Math.PI) / 360), tanH = tanV * (1080 / 1920);
+  const tanV = lensTan(fov), tanH = tanV * (W / H);
   const d = p.clone().sub(pos), yawP = Math.atan2(d.x, -d.z), pitchP = Math.atan2(d.y, Math.hypot(d.x, d.z));
-  const yaw = yawP - Math.atan(((sx / 1080) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / 1920) * 2) * tanV);
+  const yaw = yawP - Math.atan(((sx / W) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / H) * 2) * tanV);
   const L = 3;
   return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
 };
@@ -133,7 +133,7 @@ export const stroke = (t: number) => {
 };
 
 // ------------------------------------------------------------------------------------------------- the sparks
-/** screen circles (px, 1080 x 1920) a spark never crosses: the heads in front of the fire (its sparks fly out of the
+/** screen circles (px, 1080 x 1800) a spark never crosses: the heads in front of the fire (its sparks fly out of the
  *  fire door BEHIND them, so a 2D spark over a face is wrong; director round 1) */
 export type SparkMask = { x: number; y: number; r: number }[];
 const masked = (m: SparkMask, x: number, y: number, pad: number) => m.some((c) => (x - c.x) * (x - c.x) + (y - c.y) * (y - c.y) < (c.r + pad) * (c.r + pad));
@@ -169,19 +169,19 @@ export const sparks = (f: number, on: number, p: { x: number; y: number }, o: { 
         background: "linear-gradient(to right, rgba(255,90,20,0) 0%, rgba(255,150,50,0.85) 45%, #fff3b8 88%, #ffffff 100%)", boxShadow: `0 0 ${Math.round(s * 1.1 * gl)}px ${Math.round(s * 0.3 * gl)}px rgba(255,140,50,0.65)` } }));
     }
   }
-  return dots.length ? h("div", { key: `sparks${on}`, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, overflow: "hidden", pointerEvents: "none" } }, ...dots) : null;
+  return dots.length ? h("div", { key: `sparks${on}`, style: { position: "absolute", left: 0, top: 0, width: W, height: H, overflow: "hidden", pointerEvents: "none" } }, ...dots) : null;
 };
 /** THE FLASH of a flare: warm firelight thrown out of the fire door for a few frames (a soft radial glow, screen-blended,
  *  centred on the door's mouth on screen, radius r px), `k` 0..1 */
 export const flash = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
-  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
+  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: W, height: H, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
     background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,170,90,0.62) 0%, rgba(255,130,60,0.34) 42%, rgba(255,110,40,0) 100%)` } });
 
 /** THE FLARE ON HIS CHEEK: a warm glow laid over the cheek nearest the fire, overlay-blended (a screen or normal blend
  *  lifts his drawn eyes and brows to brown, a haze; overlay warms the pale skin toward orange and keeps the dark lines
  *  dark), centred on `p` px, radius r px, `k` 0..1 */
 export const cheekGlow = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
-  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "overlay", opacity: Math.min(1, k),
+  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: W, height: H, pointerEvents: "none", mixBlendMode: "overlay", opacity: Math.min(1, k),
     background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,120,30,0.8) 0%, rgba(255,120,30,0.5) 45%, rgba(255,110,30,0) 100%)` } });
 
 // ------------------------------------------------------------------------------------------------- the candle's light

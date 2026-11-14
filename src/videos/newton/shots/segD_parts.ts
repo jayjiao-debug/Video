@@ -2,7 +2,7 @@
 // her lone clap (her eyes jolt: no hands), the handkerchief pad of the wipe (an invisible hand). Pure functions of
 // their arguments (no state between frames).
 import * as THREE from "three";
-import { clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, type CamPose } from "../story";
+import { clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, W, H, lensTan, type CamPose } from "../story";
 import * as C from "../cam";
 import { FOV, SCHOOLS, SCHOOLS_SET } from "../layout";
 import { NOTES } from "../props";
@@ -12,9 +12,9 @@ const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 // ---------------------------------------------------------------------------------------------------- framing
 /** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (fov vertical, 9:16) */
 export const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: number, fov = FOV): CamPose => {
-  const tanV = Math.tan((fov * Math.PI) / 360), tanH = tanV * (1080 / 1920);
+  const tanV = lensTan(fov), tanH = tanV * (W / H);
   const d = p.clone().sub(pos), yawP = Math.atan2(d.x, -d.z), pitchP = Math.atan2(d.y, Math.hypot(d.x, d.z));
-  const yaw = yawP - Math.atan(((sx / 1080) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / 1920) * 2) * tanV);
+  const yaw = yawP - Math.atan(((sx / W) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / H) * 2) * tanV);
   const L = 3;
   return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
 };

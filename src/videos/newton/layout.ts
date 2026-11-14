@@ -59,28 +59,48 @@ export const islandOf = (x: number): Place | null => {
 };
 
 // ------------------------------------------------------------------------------------------------- the screen
-/** screen zones in px on the 1080 x 1920 frame (PLAN 5), set to the HUD's real boxes (hud/: per frame hudRectsAt(f)):
- *  nothing that matters above `top` (the phone's status bar and the app's top row), in the subtitle band
- *  capTop..capBottom (hud CAP_BAND: Chinese large centred on y 1318, English small under it, text inside y 1277-1455),
- *  below `bottom`, or right of `rail.x` below `rail.y` (the app's buttons); faces in the upper third (eyes y < `eyes`);
- *  the fact card's slot MID-LEFT (`card` = hud FACT_SLOT, the tallest slip with its tilt and shadow, while a card
- *  shows: keep faces out of it); the title block at its default place (`title` = hud TITLE_RECT, over TITLE_SPAN; segA
- *  moves it onto the door); HER CAMERA'S RECORDING UI (hud/vlog.tsx, PLAN 5) owns the two top corners below `top`:
- *  `rec` = the REC lamp's row (centre y 204) and the scene's timestamp at rest under it (hud VLOG_RECT.rec + .stamp;
- *  for the first 2 s of every scene the timestamp holds 1.5x bigger: VLOG_RECT.stampBig, x 50..394, y 242..353 at
- *  most; each scene's own box: hud stampRect(id, big)),
- *  `battery` = the battery and its % top right. The mic and her hands are never drawn (props INVISIBLE); `mic` /
- *  `micRest` / `micTop` are where the invisible mic still rests (cam.ts MIC_FRAME.band) */
+/** THE PHONE-SAFE FRAME (9:15, 1080 x 1800; Jay's measure on his phone, 14 Nov; the bible's "phone-safe frame"). The
+ *  app fits the film to the phone's width (black bars above and below); its own things sit on the picture here:
+ *    margin   the outer 54 px of each side are PICTURE ONLY (a screen of another shape may trim a sliver)
+ *    icons    the back and search icons cover the top corners down to y 60
+ *    buttons  the button column covers x > 940 from y 950 down: below y 950 words and effects stay left of x 930
+ *    post     the post's own text covers the left from y 1510 down: subtitles end above y 1490, nothing that matters
+ *             sits below y 1500
+ *  The film's mask for review cuts draws exactly these (hud/phone.tsx, input prop mask: true). */
+export const PHONE = {
+  W: 1080, H: 1800, margin: 54,
+  icons: { y1: 60, w: 150 },
+  buttons: { x0: 940, y0: 950 },
+  post: { y0: 1510, x1: 900 },
+  /** words and effects: x 54..1026 above y 950, x 54..930 below it, nothing below y 1500 (subtitles end at 1490) */
+  words: { x0: 54, x1: 1026, x1Low: 930, yLow: 950, capBottom: 1490, bottom: 1500, top: 60 },
+} as const;
+/** screen zones in px on the 1080 x 1800 frame, set to the HUD's real boxes (hud/: per frame hudRectsAt(f)):
+ *  nothing that matters above `top` (the app's icons), below `bottom` (the post's text), or right of `rail.x` below
+ *  `rail.y` (the app's buttons); the subtitle band capTop..capBottom (hud CAP_BAND: the rows are anchored on their
+ *  bottom, y 1490: one Chinese row about y 1405-1490, two rows from about 1325, the English row (English speech only)
+ *  under the Chinese, the Chinese moving up for it); faces between a quarter and half of the way down (eyes above
+ *  `eyes`, the upper third); the fact card's slot MID-LEFT (`card` = hud FACT_SLOT while a card shows: keep faces out
+ *  of it); the title block at its default place (`title` = hud TITLE_RECT, over TITLE_SPAN; segA moves it onto the
+ *  door); HER CAMERA'S RECORDING UI (hud/vlog.tsx) owns the two top corners under the icons: `rec` = the REC lamp's
+ *  row (centre y 116) and the scene's timestamp under it (centre about y 176) (hud VLOG_RECT.rec + .stamp; for the first
+ *  2 s of every scene the timestamp holds 1.5x bigger: VLOG_RECT.stampBig, about x 54-400, y 140-235; each scene's own
+ *  box: hud stampRect(id, big)), `battery` = the battery and its % top right. The mic and her hands are never drawn
+ *  (props INVISIBLE); `mic` / `micRest` / `micTop` are where the invisible mic still rests (cam.ts MIC_FRAME). */
 export const SCREEN = {
-  top: 150, capTop: 1250, capBottom: 1500, bottom: 1640, eyes: 640, mic: 1190, micRest: { x: 335, y: 1048 },
+  W: 1080, H: 1800, cx: 540, cy: 900,
+  top: 60, capTop: 1325, capBottom: 1490, bottom: 1500, eyes: 600, mic: 1130, micRest: { x: 335, y: 988 },
   /** LEGACY name (= the top of the mic's resting head): the mic's head lives in micTop..mic */
-  micTop: 950,
-  rail: { x: 930, y: 900 },
-  card: { x0: 35, y0: 811, x1: 677, y1: 1216 },
-  title: { x0: 125, y0: 796, x1: 955, y1: 1086 },
-  /** the vlog UI's corners (hud VLOG_RECT): REC + the small timestamp top left, the battery + its % top right */
-  rec: { x0: 50, y0: 184, x1: 284, y1: 310 },
-  battery: { x0: 845, y0: 182, x1: 1040, y1: 226 },
+  micTop: 890,
+  rail: { x: 930, y: 950 },
+  card: { x0: 54, y0: 758, x1: 676, y1: 1161 },
+  title: { x0: 125, y0: 736, x1: 955, y1: 1026 },
+  /** the vlog UI's corners (hud VLOG_RECT): REC + the small timestamp top left (the widest scene's, A's), its big intro
+   *  for a scene's first 2 s, the battery + its % top right. The camera plans assumed x 54-330, y 95-205 (REC and the
+   *  stamp), the big stamp to about y 290 and the battery x 820-1026: these are inside. */
+  rec: { x0: 54, y0: 97, x1: 267, y1: 204 },
+  stampBig: { x0: 54, y0: 140, x1: 372, y1: 234 },
+  battery: { x0: 843, y0: 95, x1: 1026, y1: 137 },
 };
 /** a camera given as a story.ts CamPose with Vec3s (for a mark's camera in a layout file) */
 export const camOf = (pos: Vec3, look: Vec3, fov = FOV): Cam => c(pos, look, fov);

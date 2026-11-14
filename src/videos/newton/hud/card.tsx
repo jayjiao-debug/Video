@@ -8,21 +8,34 @@
 // shrunk only if its widest row needs it) in ink black, broken into 2-3 rows of at most 12 characters at the best
 // punctuation; the English small (28 px, sepia ink) under a faint hand-ruled line. Both inks are roughened a hair by an
 // SVG displacement so they read as printed ink on paper, not a UI font (FrSans is the repo's only CJK face).
-// Slot: x 56..656, the slip's BOTTOM on y 1195 (so it spans y ~850..1195 at its tallest, ~940..1195 for a short one):
-// clear of faces in the upper third (chins included) and of the subtitle band (1250); the slip hugs its words (420-600
-// px wide). The mic should keep out of x < 680 between y 830 and 1215 while a card shows (cards come when nobody speaks).
+// Slot (the 9:15 phone-safe frame, layout.ts PHONE): the slip's left edge on x 75 (its tilt and shadow keep clear of
+// the 54 px picture-only margin), at most 580 px wide (its box ends by x 677), its BOTTOM on y 1140 (so the card's box,
+// tilt and shadow included, spans about y 750..1162 at its tallest): clear of faces in the upper third (chins
+// included), of the subtitle band (from y 1325) and of the app's buttons (x > 940 below y 950); the slip hugs its words
+// (420-580 px wide). The invisible mic keeps out of the slot while a card shows (cards come when nobody speaks).
 // Motion: flutters in from the left over 8 frames (slides 90 px, swings from -11 deg with a damped wobble, the shadow
 // tightens as it lands), floats 1.5 px while it rests, and over its last 8 frames lifts and slides out left.
-//   factCardAt(f)   the card on frame f (or null);  factRows(zh)  the Chinese rows;  factLayout(card)  rows, sizes, box
+// THE JOINS (camplan OVERVIEW item 4): a card's end, its exit included, is CLIPPED before the next whip or match join
+// (beats.ts joinClip: none in the 6 frames before a whip's cut, none across a whip or a match cut); its exit flutter
+// runs over the clipped end. Card 2 (B09) is gone by 1398, before the B -> C whip (cut 1405). Card 5 crosses G's garden
+// CLOCK join (approved: clock joins clip nothing). story.ts CARDS keeps the timing's frames; cardEnd(c), SHOWN_CARDS.
+//   factCardAt(f)   the card on frame f (or null; its `to` = the clipped end);  factRows(zh)  the Chinese rows;
+//   factLayout(card)  rows, sizes, box;  cardEnd(c)  the last frame a card shows;  SHOWN_CARDS  the cards as shown
 //   factRectAt(f)   the screen box the card takes on frame f (or null);  FACT_SLOT  the most it ever takes
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
 import { CARDS, clamp01, easeInCubic, easeOutCubic, type Card } from "../story";
+import { joinClip } from "../beats";
 import { FONT_STACK, HC, em, enWrap, hh, textW, turnedRect, type Rect } from "./style";
 
-/** the card on frame f (story.ts CARDS), or null */
-export const factCardAt = (f: number): Card | null => CARDS.find((c) => f >= c.from && f <= c.to) ?? null;
+/** the last frame a card is on screen, its exit included: its `to`, clipped before the next whip or match join (beats.ts
+ *  joinClip) */
+export const cardEnd = (c: Pick<Card, "from" | "to">): number => joinClip(c.from, c.to);
+/** the cards AS SHOWN: story.ts CARDS with each `to` clipped to cardEnd (the timing's frames stay in CARDS) */
+export const SHOWN_CARDS: Card[] = CARDS.map((c) => ({ ...c, to: cardEnd(c) }));
+/** the card on frame f as shown (SHOWN_CARDS: `to` is its clipped end), or null */
+export const factCardAt = (f: number): Card | null => SHOWN_CARDS.find((c) => f >= c.from && f <= c.to) ?? null;
 
 // ---------------------------------------------------------------------------------------------------- the words
 const STRONG = "。！？", MID = "：；", WEAK = "，、", NO_START = "，。！？；：、）》」”’…—", OPEN = "（《「“‘";
@@ -60,10 +73,10 @@ export const factRows = (s: string): string[] => {
 };
 
 // ---------------------------------------------------------------------------------------------------- the layout
-/** the slot (px): left edge, top, the widest slip */
-export const CARD_X = 56, CARD_BOTTOM = 1195, CARD_MAXW = 600, CARD_MINW = 420;
-/** the slip's top on screen: slips are anchored by their BOTTOM edge (y 1195, above the subtitle band at 1250), so a
- *  short card sits lower, further from the faces (the tallest, 3 + 3 rows, starts at y ~850) */
+/** the slot (px): left edge, bottom edge, the widest and the narrowest slip */
+export const CARD_X = 75, CARD_BOTTOM = 1140, CARD_MAXW = 580, CARD_MINW = 420;
+/** the slip's top on screen: slips are anchored by their BOTTOM edge (y 1140, above the subtitle band from 1325), so a
+ *  short card sits lower, further from the faces (the tallest starts at about y 775) */
 export const cardTop = (L: { h: number }) => CARD_BOTTOM - L.h;
 const PADX = 36, PADT = 30, PADB = 30, ZPX = 46, EPX = 28, ZLS = 1, ELS = 0.2, ZSTEP = 1.3, ESTEP = 1.3, RULE_GAP = 28;
 const M = 26;                                                        // the SVG's margin round the slip (shadow, rim)

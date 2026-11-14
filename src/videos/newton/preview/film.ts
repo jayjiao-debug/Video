@@ -1,5 +1,5 @@
 // The whole film's 3D picture (see film_core.ts); frames are absolute film frames:
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/film.ts /home/user/newton_work/film/<lane>/ --pick 0,15,30 --size 540x960
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/film.ts /home/user/newton_work/film/<lane>/ --pick 0,15,30 --size 540x900
 import { runFilm } from "./film_core";
 import { SEG as A } from "../shots/segA";
 import { SEG as B } from "../shots/segB";

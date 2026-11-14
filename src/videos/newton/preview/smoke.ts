@@ -2,7 +2,7 @@
 // film's font, the sun and the two figures of the stand-in cast (shots/common.ts STAND_IN: NEWTON and HUMPHREY once
 // people.ts exports them) under the room's figure light. If this renders, the harness, the font and the cast work. It
 // also prints the beat table's check (beats.ts beatCheck(): "QA: BEATS ok" or one line per problem).
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/smoke.ts /home/user/newton_work/film/<lane>/smoke.png --size 540x960
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/smoke.ts /home/user/newton_work/film/<lane>/smoke.png --size 540x900
 import * as THREE from "three";
 import { preview } from "./common";
 import { makeSun } from "../../bt/pbr";
@@ -14,7 +14,7 @@ import { STAND_IN } from "../shots/common";
 import { beatCheck } from "../beats";
 import { TITLE } from "../story";
 
-preview({ w: 540, h: 960 }, (c) => {
+preview({ w: 540, h: 900 }, (c) => {
   const bad = beatCheck();
   console.log(bad.length ? bad.map((m) => `QA: BEATS ${m}`).join("\n") : "QA: BEATS ok (beatCheck() = [])");
   const M = c.mats();

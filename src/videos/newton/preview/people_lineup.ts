@@ -1,10 +1,10 @@
 // The cast line-up of the Newton film (WP3): the people of people.ts in a row or a sheet of rows, standing, walking or
 // seated, under the figure light of a film place (or the lab's). A copy of Wanbi's preview/people_lineup.ts.
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/people_lineup.ts /home/user/newton_work/film/wp3/x.png --size 540x960 --opts '{"who":"swaps","view":"34"}'
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/people_lineup.ts /home/user/newton_work/film/wp3/x.png --size 540x900 --opts '{"who":"swaps","view":"34"}'
 //   the laugh at quarter-screen: --opts '{"who":["newton"],"view":"face","laugh":0.3,"far":1.2}'
 // Render ONLY through the queue:
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/people_lineup.ts /home/user/newton_work/film/wp3/ --pick 0,1 --size 540x960
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/people_lineup.ts /home/user/newton_work/film/wp3/x.png --size 540x960 --opts '{"who":"swaps","view":"34"}'
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/people_lineup.ts /home/user/newton_work/film/wp3/ --pick 0,1 --size 540x900
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/people_lineup.ts /home/user/newton_work/film/wp3/x.png --size 540x900 --opts '{"who":"swaps","view":"34"}'
 // Options (all optional; preview/common.ts adds w, h, ink, ao, raw, cam):
 //   who     PEOPLE keys (newton, newtonInk, newtonGown, newtonGownInk, newtonGownSmudge, humphrey, humphreySoot), person
 //           names, indices into ALL_PEOPLE or groups: "film" (every PEOPLE entry), "named" (one per role, the default),
@@ -78,7 +78,7 @@ const DIRS: Record<string, [number, number, number]> = { front: [0, 0.1, 1], "34
 /** the seat of the line-up: a platform this high */
 const SEAT_TOP = 0.4;
 
-preview({ w: 540, h: 960 }, (c) => {
+preview({ w: 540, h: 900 }, (c) => {
   const o0 = c.opts, M = c.mats();
   const pages: Record<string, any>[] = Array.isArray(o0.pages) && o0.pages.length ? o0.pages : [{}];
   const page = (i: number): Record<string, any> => ({ ...o0, ...pages[((i % pages.length) + pages.length) % pages.length] });

@@ -4,7 +4,7 @@
 // Copies of the generic camera helpers of segE_parts /
 // segF_parts, kept here so segment G never moves when another segment's file changes. Every function is pure.
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, easeOutCubic, h, type CamPose } from "../story";
+import { FPS, clamp01, lerp, smooth, easeOutCubic, h, W, H, lensTan, type CamPose } from "../story";
 import { FOV } from "../layout";
 import * as C from "../cam";
 import type { GradeParams } from "../../vasa/grade";
@@ -17,9 +17,9 @@ export const posOf = (c: CamPose) => v3(c.pos);
 
 /** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (vertical fov, 9:16) */
 export const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: number, fov = FOV): CamPose => {
-  const tanV = Math.tan((fov * Math.PI) / 360), tanH = tanV * (1080 / 1920);
+  const tanV = lensTan(fov), tanH = tanV * (W / H);
   const d = p.clone().sub(pos), yawP = Math.atan2(d.x, -d.z), pitchP = Math.atan2(d.y, Math.hypot(d.x, d.z));
-  const yaw = yawP - Math.atan(((sx / 1080) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / 1920) * 2) * tanV);
+  const yaw = yawP - Math.atan(((sx / W) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / H) * 2) * tanV);
   const L = 3;
   return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
 };
@@ -149,8 +149,8 @@ export const GRADE_NIGHT_LIFT: GradeParams = { ...GRADE_NIGHT, ky: [0.02, 0.135,
  *  highlight here, close to the lens) stays blue-grey as in F1 instead of going lilac; the lit window and the
  *  firelight are warm by themselves */
 export const GRADE_NIGHT_G5: GradeParams = { ...GRADE_NIGHT_LIFT, tintH: [-0.004, 0.008] };
-/** A WARM SPILL of firelight (a soft radial glow, screen-blended) centred at (x, y) px on the 1080 x 1920 frame,
+/** A WARM SPILL of firelight (a soft radial glow, screen-blended) centred at (x, y) px on the 1080 x 1800 frame,
  *  radius r px, strength k 0..1 (the same look as segF_parts flash) */
 export const spill = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
-  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
+  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: W, height: H, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
     background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,170,90,0.62) 0%, rgba(255,130,60,0.34) 42%, rgba(255,110,40,0) 100%)` } });

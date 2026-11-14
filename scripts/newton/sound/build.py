@@ -17,12 +17,22 @@ mus_night and mus_laugh so they carry on a phone speaker (director's gate-4 note
 the mono mix at about -19 LUFS with the true peak at -1.8 dBTP (-1.4 dBTP after mux.sh's AAC encode: v3b, 14 Nov).
 Stems for measuring: --only picks the groups to keep (voice / music = mus_* / amb = amb_* / sfx = everything else and the
 card dings; a cue's "group" overrides); the others are left out, the voice is replaced by silence of the same length.
-Use --nolimit with --only so the stems add up to the mix (the limiter is idle in normal use)."""
+Use --nolimit with --only so the stems add up to the mix (the limiter is idle in normal use).
+THE WHISPER DIP (Jay, 14 Nov: the reporter's asides are whispered; src/videos/newton/whisper.ts): over each whisper
+line THE ROOM dips by cues.json "whisper_dip" db (-6) with "ramp" s (0.2) ramps, down by her first word and back up from
+the end of her voice (both inside the line's picture scene). The room = the ambience beds (group "amb") plus the clips
+named in "whisper_dip" "also" (["sfx_quill"]: in Newton's room amb_room is about -85 dBFS and the room you hear is the
+quill loop; director, 14 Nov). The line ids are read from the picture's own list (whisper.ts WHISPER_LINES, the same
+array the bubble and the camera's lean use), the times from the voice timing. It is a gain envelope on those cues only,
+where they meet a window (an "also" clip that is music is refused: music is never ducked); voice, music and every other
+effect are untouched, and outside the windows the envelope is exactly 1, so the rest of the mix is sample for sample
+what it was. The run prints which cue was dipped under which line."""
 import argparse, json, os, re, subprocess
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 SR = 48000
 FPS = 30
 VOICE_TS = os.path.join(ROOT, "src/videos/newton/voice.ts")
+WHISPER_TS = os.path.join(ROOT, "src/videos/newton/whisper.ts")
 
 def dur(f):
     return float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f]).decode())
@@ -39,6 +49,43 @@ def picture_scenes(total_f):
     for (_, _, t0), (s1, f1, _) in zip(rows, rows[1:]):
         if f1 != t0 + 1: raise SystemExit(f"build.py: SEGMENT_RAW scene {s1} does not follow on")
     return [s for s, _, _ in rows], {s: (f0 / FPS, (f1 + 1) / FPS) for s, f0, f1 in rows}
+
+def whisper_lines():
+    """the whisper lines (the picture's list: whisper.ts WHISPER_LINES = ["A03", ...])"""
+    src = open(WHISPER_TS, encoding="utf-8").read()
+    m = re.search(r"export const WHISPER_LINES[^=]*=\s*\[(.*?)\];", src, re.S)
+    if not m: raise SystemExit(f"build.py: no WHISPER_LINES in {WHISPER_TS}")
+    return re.findall(r'"([A-Z]\d{2})"', m.group(1))
+
+def whisper_windows(spec, L, bounds):
+    """[(id, a0, a1, b0, b1)] in seconds: the amb gain goes down over a0..a1 (a1 = her first word), stays down, comes back
+    over b0..b1 (b0 = the end of her voice); every ramp inside the line's picture scene"""
+    d = spec.get("whisper_dip")
+    if not d: return []
+    r, out = d["ramp"], []
+    for lid in whisper_lines():
+        if lid not in L: raise SystemExit(f"build.py: whisper line {lid} is not in the voice timing")
+        l = L[lid]; s0, s1 = bounds[lid[0]]
+        w0 = l["words"][0][1] if l.get("words") else l["start"]
+        a1 = max(s0 + r, w0); b0 = min(l["end"], s1 - r)
+        out.append((lid, a1 - r, a1, b0, b0 + r))
+    return out
+
+DIP_BLOCK = 64   # samples per envelope step (1.3 ms)
+
+def dip_filter(windows, db, t0, t1):
+    """(the room cue's gain envelope, the ids of the windows it meets), or ("", []) when the cue [t0, t1] meets no window:
+    1 outside the windows (exactly: 10^0), db at the bottom, smoothstep ramps; evaluated on 64-sample blocks (1.3 ms).
+    Its clock is the SAMPLE COUNT after the cue's adelay (block n starts at film time n * 64 / 48000 s), not the frame
+    timestamp t: a looped mp3 cue's timestamps drift about one mp3 frame (26 ms) per loop, and amix places samples by
+    count, so a t-clock put the dip up to 48 ms early on the quill and amb loops (first pass; measured 14 Nov)."""
+    hit = [w for w in windows if w[1] < t1 and w[4] > t0]
+    if not hit: return "", []
+    terms = []
+    for _, a0, a1, b0, b1 in hit:
+        terms.append(f"st(0,clip((ld(1)-{a0:.4f})/{a1 - a0:.4f},0,1)*clip(({b1:.4f}-ld(1))/{b1 - b0:.4f},0,1));ld(0)*ld(0)*(3-2*ld(0))")
+    expr = f"st(1,n*{DIP_BLOCK}/{SR});pow(10,{db / 20:.6f}*(" + "+".join(f"({x})" for x in terms) + "))"   # the windows never overlap: their sum <= 1
+    return f",asetnsamples=n={DIP_BLOCK}:p=0,volume='{expr}':eval=frame:precision=float", [w[0] for w in hit]
 
 def group_of(clip, cue=None):
     if cue and cue.get("group"): return cue["group"]
@@ -87,6 +134,12 @@ def main():
         return L[k]["start" if which == "start" else "end"] + off
     inputs, flt = [a.voice], ["[0:a]aresample=48000,aformat=channel_layouts=mono" + ("" if "voice" in keep else ",volume=0") + "[v]"]
     mix = ["[v]"]
+    windows = whisper_windows(spec, L, bounds)
+    dip_db = spec.get("whisper_dip", {}).get("db", 0)
+    dip_also = set(spec.get("whisper_dip", {}).get("also", []))     # room cues that are not amb_* (sfx_quill)
+    for c in dip_also:
+        if group_of(c) == "music" or c.startswith("voice"): raise SystemExit(f"build.py: whisper_dip also {c}: music and voice are never ducked")
+    dipped = []
     def add(clip, t0, t1, gain, loop, fade, fade_out=None, src=0.0, group="sfx", eq=""):
         if group not in keep: return
         path = os.path.join(a.clips, clip + ".mp3"); k = len(inputs)
@@ -99,7 +152,10 @@ def main():
         fo = fade if fade_out is None else fade_out                 # "fade_out" (s) overrides the fade at the end
         if fade: f += f",afade=t=in:d={fade}"
         if fo: f += f",afade=t=out:st={max(0, length - fo):.3f}:d={fo}"
-        ms = int(round(max(0, t0) * 1000)); f += f",adelay={ms}|{ms}[c{k}]"
+        ms = int(round(max(0, t0) * 1000)); f += f",adelay={ms}|{ms}"
+        env, hit = dip_filter(windows, dip_db, t0, t0 + length) if (group == "amb" or clip in dip_also) else ("", [])   # the whisper dip: the room only
+        if env: dipped.append(f"{clip}@{'+'.join(hit)}")
+        f += env + f"[c{k}]"
         flt.append(f); mix.append(f"[c{k}]")
     for b in spec["beds"]:
         add(b["clip"], at(b["at"]), at(b["until"]), b["gain"], b.get("loop", False), b.get("fade", 0.3), b.get("fade_out"), b.get("in", 0.0), group_of(b["clip"], b), static_eq(b))
@@ -120,6 +176,7 @@ def main():
     args += [a.out]
     subprocess.run(args, check=True)
     print("mix", a.out, f"{dur(a.out):.2f} s (film {total:.2f} s)", "scenes (picture cuts, s)", {s: [round(x, 3) for x in bounds[s]] for s in order})
+    if windows: print(f"whisper dip {dip_db} dB on the room ({', '.join(dipped) or 'no room cue in the stems kept'}):", "  ".join(f"{w[0]} {w[1]:.2f}>{w[2]:.2f}..{w[3]:.2f}>{w[4]:.2f}" for w in windows))
 
 if __name__ == "__main__":
     main()

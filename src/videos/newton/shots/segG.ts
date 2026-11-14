@@ -34,7 +34,7 @@
 // stays with her as one body: segG_parts heldBoard / toCamLocal); where the mic was aimed, the lens keeps the film's
 // light focus (segA / segC do the same); G has no aside to the lens.
 import * as THREE from "three";
-import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, H, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT, laugh } from "../people";
@@ -205,7 +205,7 @@ const CROUCH = frameOn(P_CROUCH, B_REST, 540, 980);
 const P_HOLD = V(ELX + 0.42, EYE, 0.18);
 const HOLD = frameOn(P_HOLD, N_HEAD, 540, 500);
 /** the held board: its middle on the frame, its depth */
-const BH = { px: 540, py: 960, depth: 0.86 };
+const BH = { px: 540, py: H / 2, depth: 0.86 };
 /** the door, after the whip: two steps further back and turned round; the doorway on the blue night with HUMPHREY
  *  outside on the threshold (left of the middle) and room for NEWTON stopping inside it (right); her eyes a little
  *  higher on the frame so his eyes, when he turns at the door, sit in the upper third */

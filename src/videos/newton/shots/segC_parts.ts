@@ -1,7 +1,7 @@
 // SEGMENT C's own helpers (WP5-C): framing, camera mixing, THE PITCH WHIP (up the stairs: the whip IS the cut: a lens
 // blur ramp, no overlay), and his quill on the page. Every function is pure (frame in, pose out); nothing keeps state.
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, type CamPose } from "../story";
+import { FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, W, H, lensTan, type CamPose } from "../story";
 import { FOV } from "../layout";
 import * as C from "../cam";
 import { QUILL } from "../props";
@@ -12,9 +12,9 @@ const v3 = (p: CamPose["pos"]) => (p instanceof THREE.Vector3 ? p.clone() : V(p[
 
 /** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (vertical fov, 9:16) */
 export const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: number, fov = FOV): CamPose => {
-  const tanV = Math.tan((fov * Math.PI) / 360), tanH = tanV * (1080 / 1920);
+  const tanV = lensTan(fov), tanH = tanV * (W / H);
   const d = p.clone().sub(pos), yawP = Math.atan2(d.x, -d.z), pitchP = Math.atan2(d.y, Math.hypot(d.x, d.z));
-  const yaw = yawP - Math.atan(((sx / 1080) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / 1920) * 2) * tanV);
+  const yaw = yawP - Math.atan(((sx / W) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / H) * 2) * tanV);
   const L = 3;
   return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
 };

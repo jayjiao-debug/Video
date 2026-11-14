@@ -6,7 +6,7 @@
 // English = a thinner ink line and a softer fill, since there is no lighter weight of the face.
 import { FONT_STACK } from "../../group/kit/overlay";
 import { textW, wrapRows } from "../../wanbi/hud/base";
-import { SCREEN } from "../layout";
+import { SCREEN, PHONE } from "../layout";
 
 export { FONT_STACK, textW, wrapRows };
 
@@ -25,10 +25,11 @@ export const HC = {
   black: "#140d09",
 };
 
-/** a screen box in film px (1080 x 1920) */
+/** a screen box in film px (1080 x 1800) */
 export type Rect = { x0: number; y0: number; x1: number; y1: number };
-/** the Douyin-safe area for anything that matters: x 50..925 below y 900 (the app's button rail is right of x 930) */
-export const SAFE = { left: 50, right: SCREEN.rail.x - 5, railY: SCREEN.rail.y, bottom: SCREEN.bottom, top: SCREEN.top };
+/** the phone-safe area for words (layout.ts PHONE / SCREEN): x 54..930 below y 950 (the app's buttons are right of
+ *  x 940), so a row CENTRED on x 540 is at most 780 px wide; nothing above y 60 or below y 1500 */
+export const SAFE = { left: PHONE.margin, right: SCREEN.rail.x, railY: SCREEN.rail.y, bottom: SCREEN.bottom, top: SCREEN.top };
 
 /** in / out of a span [a, b] (inclusive): 0 outside, 1 inside, eased linearly over `nin` frames at the start and `nout`
  *  at the end; a span that starts on frame 0 is already in */

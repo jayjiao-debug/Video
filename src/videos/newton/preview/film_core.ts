@@ -21,7 +21,7 @@ const blank = (id: string, from: number, to: number): Segment => ({
   pose(w) { const cam = { pos: [-100, 1.4, 5.6] as [number, number, number], look: [-100, 1.0, 0] as [number, number, number], fov: 45 }; w.setPlace("room"); w.setCamera(cam); return { camera: cam, slate: `segment ${id} is not in this preview` }; },
 });
 export function runFilm(given: Segment[]) {
-  preview({ w: 540, h: 960 }, (c) => {
+  preview({ w: 540, h: 900 }, (c) => {
     const w = new World(c.renderer, c.camera);
     c.scene.add(w.root);
     const bad = beatCheck();

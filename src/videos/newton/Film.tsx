@@ -1,4 +1,5 @@
-// 《跟着牛顿过一天》 the film composition "NewtonFilm" (1080 x 1920, 30 fps, TOTAL frames from the timing). A copy of
+// 《跟着牛顿过一天》 the film composition "NewtonFilm" (9:15, 1080 x 1800, 30 fps, TOTAL frames from the timing; the
+// lens keeps the 1920 frame's width of view: story.ts LENS_H, world.ts setCamera). A copy of
 // Qin's Film.tsx (WP1) on the shared kit (src/kit/fx/ink, src/kit/film/env).
 // Engine: story.ts (segment contract + how to build a segment), world.ts (places, props, cast).
 // Per page (a still, or one farm chunk): the font is loaded, then the World is built ONCE under the delayRender handle
@@ -10,9 +11,15 @@
 // scene's timestamp, the battery; REC and timestamp hidden by Pose.rec === false, the timestamp's big intro skipped by
 // Pose.cards === false), every registered HUD, then the title block (placed by Pose.title, else hud setTitlePlace) and
 // the fact card; hidden by Pose.hud === false, the title block and the card by Pose.cards === false), P.overlays, the
-// subtitle (hud/: Chinese large, English small under it), P.top (the end black covers the HUD too), the slate.
+// subtitle (hud/: Chinese large, English small under it), P.top (the end black covers the HUD too), the slate, and
+// last THE PHONE MASK (hud/phone.tsx) when the prop `mask` is true.
 // Input props: src/kit/film/env.ts (lang, nocap, nohud, noov, cover, zoom / sx / sy / ov, nopost, slate, kick, dbg,
-// ovonly, inksamples).
+// ovonly, inksamples), and this film's own:
+//   mask: true   THE PHONE MASK for review cuts (default off): the phone app's covered areas (the top-corner icons to
+//                y 60, the button column x > 940 from y 950, the post's text from y 1510 on the left, the 54 px
+//                margins) as translucent overlays over everything. A component prop or an input prop:
+//                bash scripts/kit/queue/remotion_still.sh NewtonFilm 582 /abs/out.png --props='{"mask":true}'
+//   cap: {zh, en?, who?}   a caption drawn instead of the frame's own (subtitle layout reviews only)
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from "remotion";
@@ -21,14 +28,17 @@ import { useThree, type RootState } from "@react-three/fiber";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import { BlendFunction, BloomEffect, ToneMappingEffect, ToneMappingMode } from "postprocessing";
 import { InkPass, noInkFallback } from "../../kit/fx/ink";
-import { ipFlag, ipNum } from "../../kit/film/env";
+import { IP, ipFlag, ipNum } from "../../kit/film/env";
 import { LensBlur } from "../vasa/lensblur";
 import { GradeEffect, type GradeParams } from "../vasa/grade";
 import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
 import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
 // the HUD's layers (hud/index.ts; importing the index also brings hud/index.ts and hud/end.tsx under tsc)
-import { Caption, FactCard, TitleCard, VlogHud } from "./hud";
+import { Caption, FactCard, PhoneMask, TitleCard, VlogHud } from "./hud";
+// THE WHISPER (hud/whisper.tsx, whisper.ts): her asides' bubble and darkened edges, under the HUD layer; the bubble
+// replaces the subtitle on a whisper line's frames
+import { Whisper, whisperCapAt } from "./hud/whisper";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -41,6 +51,14 @@ export const NEWTON_FRAMES = TOTAL;
 const COVER = ipFlag("cover"), NOCAP = COVER || ipFlag("nocap"), NOHUD = COVER || ipFlag("nohud"), NOOV = COVER || ipFlag("noov");
 const NOPOST = ipFlag("nopost"), DBG = ipFlag("dbg"), SLATE = ipFlag("slate"), KICK = ipNum("kick", 0);
 const OVONLY = ipFlag("ovonly"); // the cut's overlay pass: the world is posed every frame, nothing is drawn in 3D, the page is transparent
+/** the phone mask (input prop mask: true; default off): never part of the film, only of review stills and cuts */
+const MASK = ipFlag("mask");
+/** a caption drawn INSTEAD of the frame's own (a review of the subtitle layout only, e.g. a Chinese screen over 13
+ *  characters, which the lines file does not have today): --props='{"cap":{"zh":"……","en":"","who":"ji"}}' */
+const CAP_TEST = (() => {
+  const c = IP.cap as { zh?: unknown; en?: unknown; who?: unknown } | undefined;
+  return c && typeof c.zh === "string" ? { zh: c.zh, en: typeof c.en === "string" ? c.en : "", who: (c.who === "nt" || c.who === "hm" ? c.who : "ji") as "ji" | "nt" | "hm" } : null;
+})();
 
 // ---------------------------------------------------------------------------------------------------- segments
 const SEGS: Segment[] = [SEG_A, SEG_B, SEG_C, SEG_D, SEG_E, SEG_F, SEG_G];
@@ -180,8 +198,9 @@ const Slate: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
 );
 
 // ---------------------------------------------------------------------------------------------------- the composition
-export const NewtonFilm: React.FC = () => {
+export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
   const f = useCurrentFrame();
+  const showMask = mask === true || MASK;
   const [handle] = useState(() => { if (DBG) console.log(`[newton] composition mounted at page time ${Math.round(performance.now())} ms`); return delayRender("newton world build"); });
   const [ctx, setCtx] = useState<{ gl: THREE.WebGLRenderer; camera: THREE.PerspectiveCamera } | null>(null);
   // the font first: anything drawn into textures when the world is built uses it
@@ -199,11 +218,13 @@ export const NewtonFilm: React.FC = () => {
       <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
         {world && P && !OVONLY ? <Inner world={world} P={P} onReady={onReady} /> : null}
       </ThreeCanvas>
+      {P ? <Whisper f={f} words={P.captions !== false && !NOCAP && !CAP_TEST} edges={!NOOV} /> : null}
       {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
-      {P && P.captions !== false && !NOCAP ? <Caption f={f} /> : null}
+      {P && P.captions !== false && !NOCAP && (CAP_TEST || !whisperCapAt(f)) ? <Caption f={f} cap={CAP_TEST ?? undefined} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
       {P && SLATE ? <Slate f={f} P={P} /> : null}
+      {showMask ? <PhoneMask /> : null}
     </AbsoluteFill>
   );
 };

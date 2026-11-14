@@ -35,7 +35,7 @@
 // board on 41; the push carries 44-50). The lens keeps the light focus on his mouth that the mic used to give, now
 // steady from the cut in to the last poke (it no longer jumps with the mic going in and out: card 3, the board rise).
 import * as THREE from "three";
-import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, H, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT } from "../people";
@@ -293,7 +293,7 @@ const PUSH_CAM: CamPose = PUSH_END;
 /** THE TIME CUT opens on his candle, burned down to a stub on the furnace top (she is leaning in toward it, by the
  *  board; her head eases in a little over the hold), then her eyes drop to the board */
 const CANDLE_LOOK = CANDLE_AT.clone().add(V(0, candleTop(CANDLE_LEN) * 0.55, 0));
-const candleCam = (f: number): CamPose => frameOn(BOARD_POS.clone().lerp(CANDLE_LOOK, 0.3 + 0.04 * smooth(clamp01((f - T_TP) / (T_CANDLE1 - T_TP)))), CANDLE_LOOK, 560, 960, 44);
+const candleCam = (f: number): CamPose => frameOn(BOARD_POS.clone().lerp(CANDLE_LOOK, 0.3 + 0.04 * smooth(clamp01((f - T_TP) / (T_CANDLE1 - T_TP)))), CANDLE_LOOK, 560, H / 2, 44);
 /** she straightens up from the board to the stool framing for 41. Straight, his head went up through the top LEFT
  *  corner on the way and his forehead crossed under the small stamp 「夜 23:00 / NIGHT」 for 7 frames (3385-3391; faces
  *  checker, skin up to 3289 px2): her eyes lift a hair more on the way up (RISE_LIFT deg at most, frames ~3384-3395,

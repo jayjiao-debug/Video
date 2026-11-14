@@ -6,13 +6,17 @@
 // same way in their own file).
 //   BEAT.A .. BEAT.G   per scene, the frames the storyboard names (a span is [first, last], inclusive)
 //   TITLE_SPAN         the title block on the shut door after A02 (3 s; story.ts TITLE_BLOCK)
-//   ASIDES             the six asides (03 06 15 23 27 35): the mic swings round to the lens, Newton soft behind it
+//   ASIDES             RETIRED (the whisper replaced the old aside: README section 10 "THE WHISPER"): kept only for the
+//                      old shots' asideK until each scene is rebuilt; it reads whisper.ts WHISPER_LINES
+//   JOINS              THE 12 JOINS of the camera plans (5 clock, 5 whip, 2 match), each looked up; joinAfter(f);
+//                      joinClip(from, to) = the last frame a subtitle / fact card may show (camplan OVERVIEW item 4)
 //   PLATES             the day's clock: the five plate inserts with their hour
 //   placeAt(f)         the place every frame shows (the storyboard's cuts); SPANS the same as [place, from, to] runs
 //   shotAt(f)          { id } (the segment id, for the clearance checker)
 //   beatCheck()        [] when every beat lies inside its segment and the spans are in order (the previews print it)
 // Script line numbers (PLAN 7 says "44-50") are the lines file's n: line(44) = F09; the ids are A01 .. G04.
 import { lineId, capWord, card, seg, SEGMENTS, TOTAL, FPS, TITLE_BLOCK, type Place, type SceneId } from "./story";
+import { WHISPER_LINES } from "./whisper";
 
 const from = (id: string) => lineId(id).from;
 const to = (id: string) => lineId(id).to;
@@ -70,6 +74,9 @@ const B = {
 const cGarden = from("C01") - 6;
 const cStop = capWord("C04", "is").from + sec(0.2);
 const cWhip = to("C05") + sec(0.5);
+/** THE WHIP UP (camplan C.md, "the cut 1718"; segC T_WHIP / T_CUT): it leaves the garden on the whoosh (C05 end + 0.1 s),
+ *  6 frames out, and the cut to his room is inside the blur */
+const cWhipOut = to("C05") + sec(0.1), cWhipCut = cWhipOut + 6;
 const C = {
   /** THE PLATE (noon): hard light, lid off, no steam, the window bars' short sharp shadows on the cloth */ plate: [seg("C").from, cGarden - 1] as Span,
   /** the cut to the garden: NEWTON walks a turn, hands behind his back; the camera walks BACKWARDS in front of him */ garden: cGarden,
@@ -77,7 +84,10 @@ const C = {
   /** "Two laps is—": he stops dead mid-word, staring at nothing */ stop: cStop,
   /** he turns on his heel */ turn: cStop + sec(0.35),
   /** he RUNS for the staircase (C05 「诶？他想到什么了？」 as he goes) */ run: cStop + sec(0.7),
-  /** THE WHIP after him up the stairs (its middle frame IS the cut to the room: he is already writing, STANDING) */ whip: cWhip,
+  /** the whip after him up the stairs has SETTLED in the room (he is already writing, STANDING): C05 end + 0.5 s, the
+   *  storyboard's place change (SPANS / placeAt switch to the room here); the cut itself is `whipCut` */ whip: cWhip,
+  /** THE WHIP UP leaves the garden on the whoosh (C05 end + 0.1 s): its outgoing half runs to the cut */ whipOut: cWhipOut,
+  /** THE CUT inside the whip up the stairs, 6 frames after the whoosh (camplan C.md; segC T_CUT): a whip join */ whipCut: cWhipCut,
   /** her hand drags the chair to the backs of his knees (C06 「坐下写嘛。」) */ chair: from("C06") - 10,
   /** "No time.": he waves it away without looking */ wave: from("C07"),
   /** the chair stays empty (C07's hold) */ emptyChair: to("C07") + 1,
@@ -138,6 +148,12 @@ const gDark = gOutside + sec(0.4);
  *  last pluck (his window goes dark: G to - 1.77 s = segG's T_DARK), in the crickets, after the pluck has decayed. Tied
  *  to the scene's end like the pluck, so it follows if G's tail is extended (WP4, director vlog round 1, note 4) */
 const gOff = seg("G").to + 1 - sec(1.4);
+/** THE ROOM -> GARDEN CLOCK JOIN inside G (camplan G.md "Joins", director note 2): the cut outside, the same formula as
+ *  segG's T_GARDEN (his lit window holds a second before it goes dark at G end - 1.77 s, the crickets at G end - 2.6 s,
+ *  never before the 2 a.m. bite is down: the fork's clink at G04 end + 1.2 s + 0.23 s, + 30 frames). hud/vlog.tsx races
+ *  the clock 02:00 -> 03:00 across it. Until G's camera rebuild imports this beat, segG keeps its own copy: the faces
+ *  checker (scripts/newton/qa/faces) reports it if the two ever differ (the place must change on this frame). */
+const gGarden = Math.max(Math.min(seg("G").to - sec(2.6), seg("G").to - sec(1.77) - sec(1.0)), to("G04") + sec(1.2) + sec(0.23) + 30);
 const G = {
   /** a clock strikes two (sound): the first stroke */ strike1: pre("G01") + 2,
   /** the second stroke: the board slides off his knee */ strike2: gStrike2,
@@ -153,6 +169,8 @@ const G = {
   /** the cut to his room by candle: he lifts the cold plate and eats a bite or two standing (plate framed right) */ room: gRoom,
   /** fact card 5 (G04) mid-left over the 2 a.m. bites */ card5: cardSpan("G04"),
   /** outside, from the elaboratory door: his lit window (the outbuilding still glows behind us) */ outside: gOutside,
+  /** THE CUT OUTSIDE as segG builds it (T_GARDEN): the room -> garden clock join, the REC clock races 02:00 -> 03:00
+   *  across it (hud/vlog.tsx) */ garden: gGarden,
   /** his window goes dark */ windowDark: gDark,
   /** her camera switches off: the REC lamp dies, the whole vlog UI goes grey and holds still (hud/vlog.tsx OFF_AT) */ cameraOff: gOff,
   /** then black: fading in to the film's darkest warm tone (not #000), to the last frame; never before the dead
@@ -162,8 +180,10 @@ const G = {
 /** THE BEATS, per scene */
 export const BEAT = { A, B, C, D, E, F, G };
 
-/** the six asides (PLAN 4): the mic swings round to face the lens, Newton out of focus behind it */
-export const ASIDES: { id: string; span: Span }[] = ["A03", "A06", "B09", "D01", "D05", "E07"].map((id) => ({ id, span: aside(id) }));
+/** RETIRED: the old asides (the mic swung round to the lens, Newton soft behind it). The asides are now THE WHISPER
+ *  (whisper.ts, README section 10): never build a new shot on this list. It stays only for the old shots' asideK
+ *  (shots/common.ts) until each scene's rebuild, and it reads the one list, whisper.ts WHISPER_LINES */
+export const ASIDES: { id: string; span: Span }[] = WHISPER_LINES.map((id) => ({ id, span: aside(id) }));
 /** the day's clock: the five plate inserts, each lit by its hour (room `hour`) */
 export const PLATES: { scene: SceneId; hour: "morning" | "noon" | "evening" | "night"; span: Span; what: string }[] = [
   { scene: "B", hour: "morning", span: B.plate, what: "steam, lid lifted" },
@@ -172,6 +192,53 @@ export const PLATES: { scene: SceneId; hour: "morning" | "noon" | "evening" | "n
   { scene: "E", hour: "evening", span: [E.twoBites, E.twoBites + sec(0.8)], what: "two bites gone" },
   { scene: "G", hour: "night", span: [G.room, G.outside - 1], what: "eaten by candle at 2 a.m." },
 ];
+
+// ---------------------------------------------------------------------------------------------------- the joins
+/** a join's kind (camplan OVERVIEW): `clock` = the REC clock races across the cut (hud/vlog.tsx RACES); `whip` = a whip
+ *  pan hides the cut (its outgoing half runs up to the cut); `match` = a match cut on a clock prop */
+export type JoinKind = "clock" | "whip" | "match";
+/** one join: its kind, THE CUT (the incoming view's first frame), the scene the cut is in, whether it is that scene's
+ *  first frame, and what it joins */
+export type Join = { kind: JoinKind; cut: number; scene: SceneId; first: boolean; what: string };
+const join = (kind: JoinKind, cut: number, what: string): Join => {
+  const s = SEGMENTS.find((x) => cut >= x.from && cut <= x.to);
+  if (!s) throw new Error(`JOINS: ${kind} at ${cut} is outside the film`);
+  return { kind, cut, scene: s.id as SceneId, first: s.from === cut, what };
+};
+/** THE JOINS of the camera plans, in film order (camplan OVERVIEW "the joins in film order": 12 = 5 clock, 5 whip and 2
+ *  match; no kind twice in a row; no cut inside a place). Every cut is LOOKED UP (SEGMENTS, BEAT): a re-timed voice moves
+ *  them. hud/vlog.tsx races the clock at the clock joins; hud/caption.tsx and hud/card.tsx keep words off the whips and
+ *  matches (joinClip); the faces checker reads it (scripts/newton/qa/faces: == JOINS, == WORDS vs JOINS). */
+export const JOINS: Join[] = [
+  join("clock", seg("B").from, "A -> B: the stairs 05:00 -> his room 11:00"),
+  join("whip", seg("C").from, "B -> C: whip pan left, his room 11:00 -> the noon plate 12:00 (out on B's last 6 frames)"),
+  join("match", C.garden, "C: the noon plate -> the sundial in the garden (match cut on the clock prop)"),
+  join("whip", C.whipCut, "C: the garden -> his room, the whip up the stairs (out from the whoosh, 6 frames)"),
+  join("clock", seg("D").from, "C -> D: his room 12:00 -> the street 15:00"),
+  join("whip", D.schools, "D: the street -> the Schools, whip pan left (out 4 frames; the door's creak on the cut)"),
+  join("clock", seg("E").from, "D -> E: the Schools 15:00 -> his room 18:00"),
+  join("whip", seg("F").from, "E -> F: his room at supper -> the night garden 23:00 (out on E's last 4 frames)"),
+  join("match", F.inside, "F: the garden -> the elaboratory (match cut on his candle)"),
+  join("clock", seg("G").from, "F -> G: the elaboratory 23:00 -> 02:00"),
+  join("whip", G.room, "G: the elaboratory -> his room, whip pan after him (out 4 frames)"),
+  join("clock", G.garden, "G: his room -> the garden, the clock races 02:00 -> 03:00"),
+];
+/** THE WORDS KEEP OFF A WHIP (camplan OVERVIEW item 4; owner row 86: nothing from the outgoing place may still show
+ *  once the move starts): no subtitle or fact card in the WHIP_CLEAR frames before a whip's cut (the plans' longest
+ *  outgoing half: B -> C and C's whip up the stairs, 6 frames; the others 4) */
+export const WHIP_CLEAR = 6;
+/** the first join after frame f (cut > f), or null */
+export const joinAfter = (f: number): Join | null => JOINS.find((j) => j.cut > f) ?? null;
+/** the last frame a subtitle screen or a fact card that the timing shows from `from` to `to` (inclusive) may stay on
+ *  screen, its fade or exit INCLUDED: `to`, or earlier when the first whip or match join after `from` comes first (a
+ *  whip: its cut - WHIP_CLEAR - 1; a match: its cut - 1). Clock joins clip nothing: the timing never runs a caption
+ *  across a scene's first frame, and card 5 across G's garden clock join is approved (camplan G.md). Less than `from`:
+ *  it never shows. hud/caption.tsx capEnd and hud/card.tsx cardEnd use it; the timing's own frames never move. */
+export const joinClip = (from: number, to: number): number => {
+  const j = JOINS.find((x) => x.cut > from && x.kind !== "clock");
+  if (!j) return to;
+  return Math.min(to, j.kind === "whip" ? j.cut - WHIP_CLEAR - 1 : j.cut - 1);
+};
 
 // ---------------------------------------------------------------------------------------------------- the places
 /** the place of every frame as [place, first, last] runs, in film order (the storyboard's cuts) */
@@ -198,8 +265,9 @@ export const placeAt = (f: number): Place => {
 /** the shot id at a frame (the clearance checker's report): the segment's id until the segment builders name shots */
 export const shotAt = (f: number): { id: string } => ({ id: SEGMENTS.find((s) => f >= s.from && f <= s.to)?.id ?? "?" });
 
-/** [] when every beat lies inside its own segment, every span runs forward, the title block sits in A (not on frame 0)
- *  and SPANS cover the film without a gap */
+/** [] when every beat lies inside its own segment, every span runs forward, the title block sits in A (not on frame 0),
+ *  SPANS cover the film without a gap, and the JOINS run forward, never the same kind twice in a row, with every scene's
+ *  first frame (but A's) among them */
 export const beatCheck = (): string[] => {
   const bad: string[] = [];
   for (const [id, beats] of Object.entries(BEAT) as [SceneId, Record<string, number | number[]>][]) {
@@ -215,5 +283,11 @@ export const beatCheck = (): string[] => {
   let next = 0;
   for (const [p, a, b] of SPANS) { if (a !== next || b < a) bad.push(`SPANS: ${p} ${a}-${b} (expected to start on ${next})`); next = b + 1; }
   if (next !== TOTAL) bad.push(`SPANS end on ${next - 1}, the film on ${TOTAL - 1}`);
+  JOINS.forEach((j, i) => {
+    const p = JOINS[i - 1];
+    if (p && j.cut <= p.cut) bad.push(`JOINS: ${j.kind} at ${j.cut} is not after ${p.kind} at ${p.cut}`);
+    if (p && j.kind === p.kind) bad.push(`JOINS: two ${j.kind} joins in a row (${p.cut}, ${j.cut})`);
+  });
+  for (const s of SEGMENTS.slice(1)) if (!JOINS.some((j) => j.cut === s.from)) bad.push(`JOINS: scene ${s.id}'s first frame ${s.from} is not a join`);
   return bad;
 };

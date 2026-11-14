@@ -1,7 +1,7 @@
 // THE PROPS of the Newton film (props/index.ts + props/things.ts, WP3) seen through the film's own World: labelled
 // sheets of every prop, and the props IN USE (the desk, the plate on the window table, held with holdPoints /
 // handWorld, the elaboratory at night). One "frame" = one view (frame i of the page = views[i]):
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/props_sheet.ts /home/user/newton_work/film/wp3/props/ --pick 0,1,2,3,4,5 --size 540x960 --opts '{"font":"/home/user/newton_film/public/bt/sans700.ttf"}'
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/props_sheet.ts /home/user/newton_work/film/wp3/props/ --pick 0,1,2,3,4,5 --size 540x900 --opts '{"font":"/home/user/newton_film/public/bt/sans700.ttf"}'
 // Views (VIEW_NAMES):
 //   small   the hand props floating in a sheet in the room (morning): quill, inkwell, ink bottle, fork, knife, the
 //           plate (lid off, one bite) and its lid, candles (new, lit; a stub), charcoal, handkerchief, flask,
@@ -162,14 +162,14 @@ export const VIEW_NAMES = Object.keys(VIEWS);
 
 /** a view's QA line: each figure's rig.qa and the props' screen points */
 export const qaLine = (w: World, figs: Rig[]) => {
-  const pct = (p: THREE.Vector3) => { const q = w.project(p); return `${((100 * q.x) / 1080).toFixed(1)}/${((100 * q.y) / 1920).toFixed(1)}`; };
+  const pct = (p: THREE.Vector3) => { const q = w.project(p); return `${((100 * q.x) / 1080).toFixed(1)}/${((100 * q.y) / 1800).toFixed(1)}`; };
   const f = figs.map((r) => `reach ${r.qa.reach.toFixed(4)} clear ${r.qa.clear.toFixed(4)} held ${r.qa.held.toFixed(3)}`).join("; ");
   const props: string[] = [];
   w.props.group.children.forEach((g) => { if (g.visible) props.push(`${g.name.slice(5)} ${pct(g.getWorldPosition(V()))}`); });
   return `${f} | ${props.join(", ")}`;
 };
 
-if (typeof window !== "undefined") preview({ w: 540, h: 960 }, (c) => {
+if (typeof window !== "undefined") preview({ w: 540, h: 900 }, (c) => {
   const w = new World(c.renderer, c.camera);
   c.scene.add(w.root);
   const o = c.opts, names: string[] = o.views ?? VIEW_NAMES;

@@ -2,7 +2,7 @@
 // the free hand's actions. The preview harness has no lens blur and no HUD: the aside's dof is PRINTED (the film draws
 // it), and with guides (default on) a translucent strip shows the subtitle band (layout.ts SCREEN.capTop..capBottom)
 // and a red line the mic's limit (y 1190). One "frame" = one test (TESTS[i]):
-//   bash scripts/kit/queue/still.sh src/videos/newton/preview/cam_test.ts /home/user/newton_work/film/wp3/cam/ --pick 0,1,2,3,4,5,6,7,8,9,10 --size 540x960
+//   bash scripts/kit/queue/still.sh src/videos/newton/preview/cam_test.ts /home/user/newton_work/film/wp3/cam/ --pick 0,1,2,3,4,5,6,7,8,9,10 --size 540x900
 //   0 rest          room (morning), NEWTON at the desk, the mic at rest (no aim)
 //   1 aim newton    the same, the mic held toward his mouth
 //   2 aside         the mic turned to the lens (dof printed: focus on the mic, he goes soft)
@@ -106,7 +106,7 @@ export const TESTS: Test[] = [
   } },
 ];
 
-if (typeof window !== "undefined") preview({ w: 540, h: 960 }, (c) => {
+if (typeof window !== "undefined") preview({ w: 540, h: 900 }, (c) => {
   const w = new World(c.renderer, c.camera);
   c.scene.add(w.root);
   const o = c.opts, want: (string | number)[] | undefined = o.tests;
@@ -130,7 +130,7 @@ if (typeof window !== "undefined") preview({ w: 540, h: 960 }, (c) => {
     const s = T.run(w, T.cam, f);
     w.endFrame({ camera: T.cam });
     guide.visible = o.guides !== false;
-    if (guide.visible) { place(band, T.cam, SCREEN.capTop, SCREEN.capBottom); place(line, T.cam, 1189, 1191); }
+    if (guide.visible) { place(band, T.cam, SCREEN.capTop, SCREEN.capBottom); place(line, T.cam, SCREEN.mic - 1, SCREEN.mic + 1); }
     const nt = [NEWTON, NEWTON_INK, NEWTON_GOWN_INK].map((p) => w.actor(p)).find((r) => r.state.visible !== false && r.group.visible);
     const hp = nt ? headPx(w, nt) : null;
     console.log(`QA: test ${i} ${T.name} f${f} | ${s}${hp ? ` | his head ${hp.x.toFixed(0)}/${hp.y.toFixed(0)} r ${hp.r.toFixed(0)}` : ""}`);

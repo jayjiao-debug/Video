@@ -15,7 +15,7 @@
 //   w.update()          solves every figure for the current camera and light (after setting them; before reading hands)
 //   w.prop(name, key?)  a prop (props/index.ts): .put(at, opts); hidden again next frame
 //   w.set               the NewtonSet (look, mats, param, getParam ...); setView is called by endFrame only
-//   w.project(p) -> { x, y, z, front, on }   world point -> 1080 x 1920 px (front = in front of the camera)
+//   w.project(p) -> { x, y, z, front, on }   world point -> 1080 x 1800 px (front = in front of the camera)
 //   w.f, w.t            the real frame and its time in seconds (shots take their time from their own f argument)
 //   w.place             the place set this frame (null before setPlace)
 //   w.M                 bt/pbr materials with the room's fill, for a segment's own meshes; w.root to add them to
@@ -34,7 +34,7 @@ import { ipNum } from "../../kit/film/env";
 import { buildSets, BAKED_LIGHT, type NewtonSet, type PlaceLook } from "./sets";
 import { buildProps, type Props, type Prop, type PropName } from "./props";
 import { addPerson, type Person } from "./people";
-import { FPS, W, H, type CamPose, type Pose, type Place, type V3Like } from "./story";
+import { FPS, W, H, lensFov, type CamPose, type Pose, type Place, type V3Like } from "./story";
 // Cover stills only (input props, all default to the film's own framing): zoom < 1 shows more around the same frame;
 // sx / sy move the picture right / down by that fraction of the frame (a lens shift, the perspective stays).
 const COVER_ZOOM = ipNum("zoom", 1, false), COVER_SX = ipNum("sx", 0), COVER_SY = ipNum("sy", 0);
@@ -118,8 +118,8 @@ export class World {
   look(): PlaceLook { return this.set.look(this.place ?? "room"); }
   /** a prop (props/index.ts): w.prop("plate").put(at, opts); key = another instance of it */
   prop(name: PropName, key?: string): Prop { return this.props.prop(name, key); }
-  /** the lens's aspect: the film's 9:16, or the drawing buffer's own shape when a preview renders another shape (the
-   *  4:3 / 3:4 covers): the same vertical field of view, nothing stretched. At 9:16 this is exactly W / H. */
+  /** the lens's aspect: the film's 9:15, or the drawing buffer's own shape when a preview renders another shape (the
+   *  4:3 / 3:4 covers): the same vertical field of view, nothing stretched. At 9:15 this is exactly W / H. */
   private aspect() {
     const b = this.gl.getDrawingBufferSize(this._buf), r = b.y > 0 ? b.x / b.y : W / H;
     return Math.abs(r - W / H) > 0.01 ? r : W / H;
@@ -131,7 +131,9 @@ export class World {
     cam.position.copy(toV(c.pos));
     this._look.copy(toV(c.look));
     cam.lookAt(this._look); cam.rotateZ(c.roll ?? 0);
-    cam.fov = c.fov; cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
+    // THE 9:15 LENS (story.ts LENS_H): a CamPose fov is the vertical angle of the 1920-tall frame; the 1800 frame keeps
+    // its width of view, so its real vertical angle is narrower: tan(half) x 1800 / 1920
+    cam.fov = lensFov(c.fov); cam.near = c.near ?? 0.03; cam.far = c.far ?? 600; cam.aspect = this.aspect();
     cam.zoom = COVER_ZOOM;
     cam.updateProjectionMatrix(); cam.updateMatrixWorld(true);
     if (COVER_SX || COVER_SY) {
