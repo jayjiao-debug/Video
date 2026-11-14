@@ -36,7 +36,7 @@ const A = {
 };
 /** the title block 「采访李白的一天」 / 「744年 · 长安」 (frames 0-90) */
 /** 高力士's banner (hud/intro.tsx GaoBanner): on the live shot when C opens, before and under her first words */
-export const GAO_BANNER: Span = [seg("C").from + 6, lineId("C19").from + 24];
+export const GAO_BANNER: Span = [seg("C").from + 6, lineId("C19").from + 64];   // about 3 s (Jay: the cards went by too fast)
 /** the themed title (hud/title.tsx): inside the cold open, from the REC beep to just before her first word */
 export const TITLE_SPAN: Span = [seg("A").from + 6, lineId("A01").from - 3];
 
