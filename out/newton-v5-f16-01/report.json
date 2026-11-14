@@ -1,0 +1,2332 @@
+{
+  "id": "newton-v5-f16-01",
+  "clips": [
+    {
+      "name": "v5_F16_s1686",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[steady, then cracking] In her last illness, I changed her dressings myself.",
+        "[moved, warm] 她丢下了您，您却守着她。"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "v5_F16_s1686.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "dUercWozs0yhe4xBCgZ0",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 4.36,
+          "character_start_index": 0,
+          "character_end_index": 76,
+          "dialogue_input_index": 0
+        },
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 4.36,
+          "end_time_seconds": 7.28,
+          "character_start_index": 76,
+          "character_end_index": 102,
+          "dialogue_input_index": 1
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "s",
+          "t",
+          "e",
+          "a",
+          "d",
+          "y",
+          ",",
+          " ",
+          "t",
+          "h",
+          "e",
+          "n",
+          " ",
+          "c",
+          "r",
+          "a",
+          "c",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "I",
+          "n",
+          " ",
+          "h",
+          "e",
+          "r",
+          " ",
+          "l",
+          "a",
+          "s",
+          "t",
+          " ",
+          "i",
+          "l",
+          "l",
+          "n",
+          "e",
+          "s",
+          "s",
+          ",",
+          " ",
+          "I",
+          " ",
+          "c",
+          "h",
+          "a",
+          "n",
+          "g",
+          "e",
+          "d",
+          " ",
+          "h",
+          "e",
+          "r",
+          " ",
+          "d",
+          "r",
+          "e",
+          "s",
+          "s",
+          "i",
+          "n",
+          "g",
+          "s",
+          " ",
+          "m",
+          "y",
+          "s",
+          "e",
+          "l",
+          "f",
+          ".",
+          "[",
+          "m",
+          "o",
+          "v",
+          "e",
+          "d",
+          ",",
+          " ",
+          "w",
+          "a",
+          "r",
+          "m",
+          "]",
+          " ",
+          "她",
+          "丢",
+          "下",
+          "了",
+          "您",
+          "，",
+          "您",
+          "却",
+          "守",
+          "着",
+          "她",
+          "。"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.015,
+          0.016,
+          0.017,
+          0.018,
+          0.019,
+          0.021,
+          0.022,
+          0.029,
+          0.036,
+          0.038,
+          0.04,
+          0.042,
+          0.044,
+          0.051,
+          0.055,
+          0.058,
+          0.059,
+          0.061,
+          0.062,
+          0.063,
+          0.064,
+          0.065,
+          0.073,
+          0.08,
+          0.16,
+          0.24,
+          0.36,
+          0.4,
+          0.44,
+          0.48,
+          0.64,
+          0.68,
+          0.72,
+          0.76,
+          0.8,
+          0.88,
+          0.96,
+          1.04,
+          1.12,
+          1.2,
+          1.28,
+          1.36,
+          1.44,
+          1.76,
+          2.08,
+          2.24,
+          2.44,
+          2.469,
+          2.497,
+          2.526,
+          2.554,
+          2.583,
+          2.611,
+          2.64,
+          2.72,
+          2.773,
+          2.827,
+          2.88,
+          3.0,
+          3.024,
+          3.048,
+          3.072,
+          3.096,
+          3.12,
+          3.18,
+          3.24,
+          3.3,
+          3.36,
+          3.44,
+          3.56,
+          3.68,
+          3.8,
+          3.92,
+          4.04,
+          4.16,
+          4.36,
+          4.46,
+          4.56,
+          4.563,
+          4.567,
+          4.57,
+          4.573,
+          4.587,
+          4.6,
+          4.603,
+          4.607,
+          4.61,
+          4.613,
+          4.627,
+          4.64,
+          4.8,
+          5.04,
+          5.24,
+          5.44,
+          5.72,
+          6.0,
+          6.32,
+          6.56,
+          6.72,
+          6.96,
+          7.04
+        ],
+        "character_end_times_seconds": [
+          0.015,
+          0.016,
+          0.017,
+          0.018,
+          0.019,
+          0.021,
+          0.022,
+          0.029,
+          0.036,
+          0.038,
+          0.04,
+          0.042,
+          0.044,
+          0.051,
+          0.055,
+          0.058,
+          0.059,
+          0.061,
+          0.062,
+          0.063,
+          0.064,
+          0.065,
+          0.073,
+          0.08,
+          0.16,
+          0.24,
+          0.36,
+          0.4,
+          0.44,
+          0.48,
+          0.64,
+          0.68,
+          0.72,
+          0.76,
+          0.8,
+          0.88,
+          0.96,
+          1.04,
+          1.12,
+          1.2,
+          1.28,
+          1.36,
+          1.44,
+          1.76,
+          2.08,
+          2.24,
+          2.44,
+          2.469,
+          2.497,
+          2.526,
+          2.554,
+          2.583,
+          2.611,
+          2.64,
+          2.72,
+          2.773,
+          2.827,
+          2.88,
+          3.0,
+          3.024,
+          3.048,
+          3.072,
+          3.096,
+          3.12,
+          3.18,
+          3.24,
+          3.3,
+          3.36,
+          3.44,
+          3.56,
+          3.68,
+          3.8,
+          3.92,
+          4.04,
+          4.16,
+          4.36,
+          4.46,
+          4.56,
+          4.563,
+          4.567,
+          4.57,
+          4.573,
+          4.587,
+          4.6,
+          4.603,
+          4.607,
+          4.61,
+          4.613,
+          4.627,
+          4.64,
+          4.8,
+          5.04,
+          5.24,
+          5.44,
+          5.72,
+          6.0,
+          6.32,
+          6.56,
+          6.72,
+          6.96,
+          7.04,
+          7.28
+        ]
+      },
+      "words": [
+        [
+          "她",
+          4.14,
+          4.58
+        ],
+        [
+          "丢",
+          4.58,
+          4.82
+        ],
+        [
+          "下",
+          4.82,
+          5.04
+        ],
+        [
+          "了",
+          5.04,
+          5.2
+        ],
+        [
+          "您,",
+          5.2,
+          5.36
+        ],
+        [
+          "您",
+          5.92,
+          6.1
+        ],
+        [
+          "却",
+          6.1,
+          6.32
+        ],
+        [
+          "守",
+          6.32,
+          6.52
+        ],
+        [
+          "着",
+          6.52,
+          6.72
+        ],
+        [
+          "她",
+          6.72,
+          6.96
+        ]
+      ],
+      "heard": "她丢下了您,您却守着她",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.768,
+      "seconds": 7.2
+    },
+    {
+      "name": "v5_F16_s1642",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[steady, then cracking] In her last illness, I changed her dressings myself.",
+        "[moved, warm] 她丢下了您，您却守着她。"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "v5_F16_s1642.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "dUercWozs0yhe4xBCgZ0",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 4.59,
+          "character_start_index": 0,
+          "character_end_index": 76,
+          "dialogue_input_index": 0
+        },
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 4.59,
+          "end_time_seconds": 7.68,
+          "character_start_index": 76,
+          "character_end_index": 102,
+          "dialogue_input_index": 1
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "s",
+          "t",
+          "e",
+          "a",
+          "d",
+          "y",
+          ",",
+          " ",
+          "t",
+          "h",
+          "e",
+          "n",
+          " ",
+          "c",
+          "r",
+          "a",
+          "c",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "I",
+          "n",
+          " ",
+          "h",
+          "e",
+          "r",
+          " ",
+          "l",
+          "a",
+          "s",
+          "t",
+          " ",
+          "i",
+          "l",
+          "l",
+          "n",
+          "e",
+          "s",
+          "s",
+          ",",
+          " ",
+          "I",
+          " ",
+          "c",
+          "h",
+          "a",
+          "n",
+          "g",
+          "e",
+          "d",
+          " ",
+          "h",
+          "e",
+          "r",
+          " ",
+          "d",
+          "r",
+          "e",
+          "s",
+          "s",
+          "i",
+          "n",
+          "g",
+          "s",
+          " ",
+          "m",
+          "y",
+          "s",
+          "e",
+          "l",
+          "f",
+          ".",
+          "[",
+          "m",
+          "o",
+          "v",
+          "e",
+          "d",
+          ",",
+          " ",
+          "w",
+          "a",
+          "r",
+          "m",
+          "]",
+          " ",
+          "她",
+          "丢",
+          "下",
+          "了",
+          "您",
+          "，",
+          "您",
+          "却",
+          "守",
+          "着",
+          "她",
+          "。"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.015,
+          0.016,
+          0.017,
+          0.018,
+          0.019,
+          0.021,
+          0.022,
+          0.029,
+          0.036,
+          0.038,
+          0.04,
+          0.042,
+          0.044,
+          0.051,
+          0.055,
+          0.058,
+          0.059,
+          0.061,
+          0.062,
+          0.063,
+          0.064,
+          0.065,
+          0.073,
+          0.08,
+          0.16,
+          0.24,
+          0.36,
+          0.4,
+          0.44,
+          0.48,
+          0.56,
+          0.64,
+          0.72,
+          0.8,
+          0.88,
+          0.96,
+          1.04,
+          1.12,
+          1.2,
+          1.28,
+          1.36,
+          1.44,
+          1.52,
+          1.84,
+          2.16,
+          2.32,
+          2.52,
+          2.549,
+          2.577,
+          2.606,
+          2.634,
+          2.663,
+          2.691,
+          2.72,
+          2.8,
+          2.853,
+          2.907,
+          2.96,
+          3.08,
+          3.104,
+          3.128,
+          3.152,
+          3.176,
+          3.2,
+          3.26,
+          3.32,
+          3.38,
+          3.44,
+          3.52,
+          3.64,
+          3.76,
+          3.96,
+          4.16,
+          4.36,
+          4.56,
+          4.59,
+          4.605,
+          4.62,
+          4.628,
+          4.635,
+          4.642,
+          4.65,
+          4.68,
+          4.71,
+          4.718,
+          4.725,
+          4.732,
+          4.74,
+          4.77,
+          4.8,
+          5.04,
+          5.28,
+          5.48,
+          5.68,
+          5.96,
+          6.24,
+          6.56,
+          6.88,
+          7.04,
+          7.2,
+          7.28
+        ],
+        "character_end_times_seconds": [
+          0.015,
+          0.016,
+          0.017,
+          0.018,
+          0.019,
+          0.021,
+          0.022,
+          0.029,
+          0.036,
+          0.038,
+          0.04,
+          0.042,
+          0.044,
+          0.051,
+          0.055,
+          0.058,
+          0.059,
+          0.061,
+          0.062,
+          0.063,
+          0.064,
+          0.065,
+          0.073,
+          0.08,
+          0.16,
+          0.24,
+          0.36,
+          0.4,
+          0.44,
+          0.48,
+          0.56,
+          0.64,
+          0.72,
+          0.8,
+          0.88,
+          0.96,
+          1.04,
+          1.12,
+          1.2,
+          1.28,
+          1.36,
+          1.44,
+          1.52,
+          1.84,
+          2.16,
+          2.32,
+          2.52,
+          2.549,
+          2.577,
+          2.606,
+          2.634,
+          2.663,
+          2.691,
+          2.72,
+          2.8,
+          2.853,
+          2.907,
+          2.96,
+          3.08,
+          3.104,
+          3.128,
+          3.152,
+          3.176,
+          3.2,
+          3.26,
+          3.32,
+          3.38,
+          3.44,
+          3.52,
+          3.64,
+          3.76,
+          3.96,
+          4.16,
+          4.36,
+          4.56,
+          4.59,
+          4.605,
+          4.62,
+          4.628,
+          4.635,
+          4.642,
+          4.65,
+          4.68,
+          4.71,
+          4.718,
+          4.725,
+          4.732,
+          4.74,
+          4.77,
+          4.8,
+          5.04,
+          5.28,
+          5.48,
+          5.68,
+          5.96,
+          6.24,
+          6.56,
+          6.88,
+          7.04,
+          7.2,
+          7.28,
+          7.68
+        ]
+      },
+      "words": [
+        [
+          "她",
+          4.3,
+          4.78
+        ],
+        [
+          "丟",
+          4.78,
+          5.02
+        ],
+        [
+          "下",
+          5.02,
+          5.28
+        ],
+        [
+          "了",
+          5.28,
+          5.44
+        ],
+        [
+          "您,",
+          5.44,
+          5.62
+        ],
+        [
+          "您",
+          6.08,
+          6.32
+        ],
+        [
+          "却",
+          6.32,
+          6.56
+        ],
+        [
+          "守",
+          6.56,
+          6.76
+        ],
+        [
+          "着",
+          6.76,
+          7.0
+        ],
+        [
+          "她",
+          7.0,
+          7.24
+        ]
+      ],
+      "heard": "她丟下了您,您却守着她",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.835,
+      "seconds": 7.68
+    },
+    {
+      "name": "v5_F16_s2026",
+      "type": "dialogue",
+      "lang": "",
+      "lines": [
+        "[steady, then cracking] In her last illness, I changed her dressings myself.",
+        "[moved, warm] 她丢下了您，您却守着她。"
+      ],
+      "status": 200,
+      "model": "eleven_v4",
+      "file": "v5_F16_s2026.mp3",
+      "voice_segments": [
+        {
+          "voice_id": "dUercWozs0yhe4xBCgZ0",
+          "start_time_seconds": 0.0,
+          "end_time_seconds": 4.48,
+          "character_start_index": 0,
+          "character_end_index": 76,
+          "dialogue_input_index": 0
+        },
+        {
+          "voice_id": "I23uc91tu5zY2PA1tKEN",
+          "start_time_seconds": 4.48,
+          "end_time_seconds": 7.6,
+          "character_start_index": 76,
+          "character_end_index": 102,
+          "dialogue_input_index": 1
+        }
+      ],
+      "alignment": {
+        "characters": [
+          "[",
+          "s",
+          "t",
+          "e",
+          "a",
+          "d",
+          "y",
+          ",",
+          " ",
+          "t",
+          "h",
+          "e",
+          "n",
+          " ",
+          "c",
+          "r",
+          "a",
+          "c",
+          "k",
+          "i",
+          "n",
+          "g",
+          "]",
+          " ",
+          "I",
+          "n",
+          " ",
+          "h",
+          "e",
+          "r",
+          " ",
+          "l",
+          "a",
+          "s",
+          "t",
+          " ",
+          "i",
+          "l",
+          "l",
+          "n",
+          "e",
+          "s",
+          "s",
+          ",",
+          " ",
+          "I",
+          " ",
+          "c",
+          "h",
+          "a",
+          "n",
+          "g",
+          "e",
+          "d",
+          " ",
+          "h",
+          "e",
+          "r",
+          " ",
+          "d",
+          "r",
+          "e",
+          "s",
+          "s",
+          "i",
+          "n",
+          "g",
+          "s",
+          " ",
+          "m",
+          "y",
+          "s",
+          "e",
+          "l",
+          "f",
+          ".",
+          "[",
+          "m",
+          "o",
+          "v",
+          "e",
+          "d",
+          ",",
+          " ",
+          "w",
+          "a",
+          "r",
+          "m",
+          "]",
+          " ",
+          "她",
+          "丢",
+          "下",
+          "了",
+          "您",
+          "，",
+          "您",
+          "却",
+          "守",
+          "着",
+          "她",
+          "。"
+        ],
+        "character_start_times_seconds": [
+          0.0,
+          0.015,
+          0.016,
+          0.017,
+          0.018,
+          0.019,
+          0.021,
+          0.022,
+          0.029,
+          0.036,
+          0.038,
+          0.04,
+          0.042,
+          0.044,
+          0.051,
+          0.055,
+          0.058,
+          0.059,
+          0.061,
+          0.062,
+          0.063,
+          0.064,
+          0.065,
+          0.073,
+          0.08,
+          0.16,
+          0.24,
+          0.32,
+          0.373,
+          0.427,
+          0.48,
+          0.68,
+          0.73,
+          0.78,
+          0.83,
+          0.88,
+          0.96,
+          1.013,
+          1.067,
+          1.12,
+          1.2,
+          1.28,
+          1.36,
+          1.44,
+          1.8,
+          2.16,
+          2.32,
+          2.4,
+          2.446,
+          2.491,
+          2.537,
+          2.583,
+          2.629,
+          2.674,
+          2.72,
+          2.8,
+          2.853,
+          2.907,
+          2.96,
+          3.12,
+          3.152,
+          3.184,
+          3.216,
+          3.248,
+          3.28,
+          3.34,
+          3.4,
+          3.46,
+          3.52,
+          3.68,
+          3.76,
+          3.84,
+          3.96,
+          4.08,
+          4.2,
+          4.32,
+          4.48,
+          4.56,
+          4.64,
+          4.647,
+          4.653,
+          4.66,
+          4.667,
+          4.693,
+          4.72,
+          4.727,
+          4.733,
+          4.74,
+          4.747,
+          4.773,
+          4.8,
+          5.04,
+          5.2,
+          5.4,
+          5.6,
+          5.68,
+          6.24,
+          6.48,
+          6.8,
+          6.96,
+          7.2,
+          7.28
+        ],
+        "character_end_times_seconds": [
+          0.015,
+          0.016,
+          0.017,
+          0.018,
+          0.019,
+          0.021,
+          0.022,
+          0.029,
+          0.036,
+          0.038,
+          0.04,
+          0.042,
+          0.044,
+          0.051,
+          0.055,
+          0.058,
+          0.059,
+          0.061,
+          0.062,
+          0.063,
+          0.064,
+          0.065,
+          0.073,
+          0.08,
+          0.16,
+          0.24,
+          0.32,
+          0.373,
+          0.427,
+          0.48,
+          0.68,
+          0.73,
+          0.78,
+          0.83,
+          0.88,
+          0.96,
+          1.013,
+          1.067,
+          1.12,
+          1.2,
+          1.28,
+          1.36,
+          1.44,
+          1.8,
+          2.16,
+          2.32,
+          2.4,
+          2.446,
+          2.491,
+          2.537,
+          2.583,
+          2.629,
+          2.674,
+          2.72,
+          2.8,
+          2.853,
+          2.907,
+          2.96,
+          3.12,
+          3.152,
+          3.184,
+          3.216,
+          3.248,
+          3.28,
+          3.34,
+          3.4,
+          3.46,
+          3.52,
+          3.68,
+          3.76,
+          3.84,
+          3.96,
+          4.08,
+          4.2,
+          4.32,
+          4.48,
+          4.56,
+          4.64,
+          4.647,
+          4.653,
+          4.66,
+          4.667,
+          4.693,
+          4.72,
+          4.727,
+          4.733,
+          4.74,
+          4.747,
+          4.773,
+          4.8,
+          5.04,
+          5.2,
+          5.4,
+          5.6,
+          5.68,
+          6.24,
+          6.48,
+          6.8,
+          6.96,
+          7.2,
+          7.28,
+          7.6
+        ]
+      },
+      "words": [
+        [
+          "她",
+          4.26,
+          4.74
+        ],
+        [
+          "丟",
+          4.74,
+          4.98
+        ],
+        [
+          "下",
+          4.98,
+          5.22
+        ],
+        [
+          "了",
+          5.22,
+          5.38
+        ],
+        [
+          "您,",
+          5.38,
+          5.54
+        ],
+        [
+          "您",
+          6.06,
+          6.28
+        ],
+        [
+          "却",
+          6.28,
+          6.52
+        ],
+        [
+          "守",
+          6.52,
+          6.72
+        ],
+        [
+          "着",
+          6.72,
+          6.96
+        ],
+        [
+          "她",
+          6.96,
+          7.2
+        ]
+      ],
+      "heard": "她丟下了您,您却守着她",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.903,
+      "seconds": 7.52
+    }
+  ],
+  "plan": {
+    "tier": "creator",
+    "character_count": 58781,
+    "character_limit": 123898,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "accent": "standard",
+        "gender": "female",
+        "age": "young",
+        "language": "zh",
+        "descriptive": "confident",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "gender": "female",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "chill",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "accent": "standard",
+        "gender": "male",
+        "age": "young",
+        "language": "zh",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "young",
+        "gender": "male",
+        "descriptive": "casual",
+        "use_case": "entertainment_tv"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "language": "en",
+        "gender": "female",
+        "age": "young",
+        "accent": "american",
+        "descriptive": "sassy",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "calm",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "gender": "female",
+        "language": "ru",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "excited",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "gender": "male",
+        "accent": "british",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "serious",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "accent": "standard",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "hi",
+        "descriptive": "professional",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "accent": "modern standard",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "ar",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "gender": "female",
+        "language": "it",
+        "age": "young",
+        "accent": "milanese",
+        "descriptive": "confident",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "language": "pt",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "accent": "latin american",
+        "language": "es",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "accent": "mexican",
+        "gender": "female",
+        "age": "young",
+        "language": "es",
+        "descriptive": "cute",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "gender": "female",
+        "language": "es",
+        "age": "young",
+        "accent": "latin american",
+        "descriptive": "casual",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "gender": "female",
+        "language": "es",
+        "age": "middle_aged",
+        "accent": "latin american",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "gender": "female",
+        "language": "hi",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "pleasant",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "accent": "standard",
+        "gender": "female",
+        "age": "young",
+        "language": "hi",
+        "descriptive": "classy",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "gender": "female",
+        "accent": "modern standard",
+        "age": "young",
+        "language": "ar",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "gender": "female",
+        "language": "it",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "professional",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "language": "pt",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian",
+        "descriptive": "excited",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "language": "es",
+        "gender": "female",
+        "age": "young",
+        "accent": "peruvian",
+        "descriptive": "casual",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "language": "es",
+        "accent": "mexican",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "accent": "american",
+        "gender": "female",
+        "age": "young",
+        "language": "en",
+        "descriptive": "upbeat",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "accent": "standard",
+        "language": "zh",
+        "age": "middle-aged",
+        "gender": "male",
+        "descriptive": "professional",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "gender": "male",
+        "language": "zh",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "professional",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "gender": "male",
+        "language": "zh",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "casual",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "el",
+        "descriptive": "confident",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "gender": "male",
+        "language": "el",
+        "age": "old",
+        "accent": "standard",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "accent": "standard",
+        "language": "el",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "professional",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "accent": "standard",
+        "language": "de",
+        "age": "old",
+        "gender": "male",
+        "descriptive": "professional",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "language": "zh",
+        "gender": "female",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "language": "zh",
+        "accent": "standard",
+        "age": "young",
+        "gender": "male",
+        "descriptive": "pleasant",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "accent": "standard",
+        "language": "zh",
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "formal",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "gender": "male",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard",
+        "descriptive": "neutral",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "accent": "standard",
+        "gender": "female",
+        "age": "young",
+        "language": "zh",
+        "descriptive": "pleasant",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "descriptive": "calm",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "gender": "female",
+        "accent": "american",
+        "age": "young",
+        "language": "en",
+        "descriptive": "crisp",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "gender": "male",
+        "language": "en",
+        "age": "old",
+        "accent": "scottish",
+        "descriptive": "crisp",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "accent": "scottish",
+        "descriptive": "professional",
+        "use_case": "advertisement"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "language": "en",
+        "accent": "american",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "gender": "male",
+        "accent": "chinese",
+        "age": "young",
+        "language": "en",
+        "descriptive": "gentle",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "accent": "american",
+        "language": "en",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "confident",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "accent": "standard",
+        "language": "it",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "intense",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "gender": "male",
+        "accent": "scottish",
+        "age": "young",
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "language": "en",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "american",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "language": "zh",
+        "gender": "male",
+        "age": "young",
+        "accent": "beijing mandarin",
+        "descriptive": "gentle",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "accent": "singapore mandarin",
+        "language": "zh",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "deep",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "language": "zh",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "language": "en",
+        "accent": "chinese",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "chill",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "american",
+        "descriptive": "chill",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "accent": "italian",
+        "gender": "male",
+        "age": "young",
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "accent": "scottish",
+        "gender": "male",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "casual",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "gender": "male",
+        "language": "en",
+        "age": "old",
+        "accent": "american",
+        "descriptive": "gentle",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "gender": "female",
+        "language": "fr",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "casual",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "gender": "male",
+        "language": "fr",
+        "age": "middle_aged",
+        "accent": "parisian",
+        "descriptive": "professional",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "accent": "standard",
+        "gender": "female",
+        "age": "middle_aged",
+        "language": "de",
+        "descriptive": "calm",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "accent": "standard",
+        "language": "de",
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "language": "ru",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "ru",
+        "descriptive": "confident",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "descriptive": "serious",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "gender": "male",
+        "accent": "american",
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "gender": "male",
+        "accent": "american",
+        "age": "young",
+        "language": "en",
+        "descriptive": "casual",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "language": "hi",
+        "accent": "standard",
+        "age": "young",
+        "gender": "female",
+        "descriptive": "upbeat",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "classy",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "language": "en",
+        "age": "young",
+        "accent": "american",
+        "use_case": "entertainment_tv",
+        "descriptive": "professional",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "language": "en",
+        "age": "young",
+        "accent": "american",
+        "use_case": "social_media",
+        "descriptive": "sassy",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "language": "en",
+        "age": "young",
+        "accent": "australian",
+        "use_case": "conversational",
+        "descriptive": "hyped",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "narrative_story",
+        "descriptive": "mature",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "characters_animation",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "gender": "neutral"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "language": "en",
+        "age": "young",
+        "accent": "american",
+        "use_case": "characters_animation",
+        "descriptive": "rough",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "language": "en",
+        "age": "young",
+        "accent": "american",
+        "use_case": "social_media",
+        "descriptive": "confident",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "informative_educational",
+        "descriptive": "upbeat",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "language": "en",
+        "age": "young",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "chill",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "language": "en",
+        "age": "young",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "cute",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "classy",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "social_media",
+        "descriptive": "classy",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "informative_educational",
+        "descriptive": "formal",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british",
+        "use_case": "informative_educational",
+        "descriptive": "confident",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "social_media",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "language": "en",
+        "age": "old",
+        "accent": "american",
+        "use_case": "advertisement",
+        "descriptive": "crisp",
+        "gender": "male"
+      },
+      "category": "premade"
+    }
+  ],
+  "removed": {
+    "dUercWozs0yhe4xBCgZ0": 200,
+    "I23uc91tu5zY2PA1tKEN": 200
+  }
+}
