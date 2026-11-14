@@ -1,65 +1,518 @@
 {
- "id": "sudongpo-sound-02",
+ "id": "libai-va-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "type": "music",
-   "name": "mus_morning2",
-   "text": "Funny, bouncy Chinese folk comedy theme for a cheeky cooking vlog starring a jolly, greedy old poet: staccato plucked pipa and guzheng play a mischievous tiptoeing melody, a plucked zhongruan bass bounces on the off-beats, comic woodblock and temple-block hits, playful pitch bends and little slides like a wink, now and then a short squeaky suona note as a punchline, G major pentatonic, 120 bpm, witty, sunny and light, it starts at once with the plucked melody. Instrumental, no vocals.",
-   "ms": 62000
+   "name": "HanBaba_a02",
+   "lang": "zh",
+   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+   "add": {
+    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+    "voice_id": "mZc8T5doZrU7OCI71i3M",
+    "name": "HanBaba"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "music",
-   "name": "mus_huangzhou2",
-   "text": "A mock-grand, tongue-in-cheek flashback: a pompous, overly serious bamboo flute (dizi) melody over a slow gong roll, answered by a cheeky plucked pipa phrase, nostalgic and funny, an old man bragging about the pork he invented, D major pentatonic, 76 bpm. Instrumental, no vocals.",
-   "ms": 14000
+   "name": "HanBaba_a08",
+   "lang": "zh",
+   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+   "add": {
+    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+    "voice_id": "mZc8T5doZrU7OCI71i3M",
+    "name": "HanBaba"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "music",
-   "name": "mus_noon2",
-   "text": "Lazy comic nap music: a sleepy, sliding erhu yawns over tiptoeing pizzicato guzheng plucks, a sly little melody that keeps nearly dozing off, woodblock ticks like a clock, cheeky and drowsy, a funny old man stuffing himself with lychees in the shade, G major pentatonic, 84 bpm. Instrumental, no vocals.",
-   "ms": 34000
+   "name": "HanBaba_a13",
+   "lang": "zh",
+   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+   "add": {
+    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+    "voice_id": "mZc8T5doZrU7OCI71i3M",
+    "name": "HanBaba"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "music",
-   "name": "mus_evening2",
-   "text": "Warm and gently funny evening music: guzheng and a light-hearted erhu over a soft plucked rhythm, a cheerful old man packing for exile and cracking jokes so his family will smile, tender with a playful wink, F major pentatonic, 78 bpm. Instrumental, no vocals.",
-   "ms": 34000
+   "name": "HanBaba_a25",
+   "lang": "zh",
+   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+   "add": {
+    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+    "voice_id": "mZc8T5doZrU7OCI71i3M",
+    "name": "HanBaba"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "music",
-   "name": "mus_river2",
-   "text": "The cheeky plucked guzheng theme returns, bright and jaunty: dawn on a wide river, a small boat setting off, a happy bounce with pipa and woodblock, hopeful and fun, G major pentatonic, 100 bpm, it starts at once. Instrumental, no vocals.",
-   "ms": 10000
+   "name": "HanBaba_a41",
+   "lang": "zh",
+   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+   "add": {
+    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+    "voice_id": "mZc8T5doZrU7OCI71i3M",
+    "name": "HanBaba"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "music",
-   "name": "mus_beach2",
-   "text": "A silly, cheeky island tune: plucked pipa and guzheng with marimba, a bouncy hand drum and comic woodblock hits, a happy old man secretly grilling oysters on a beach and very pleased with himself, G major pentatonic, 112 bpm, it starts at once. Instrumental, no vocals.",
-   "ms": 17000
+   "name": "HanBaba_a44",
+   "lang": "zh",
+   "text": "[surprised, then a warm smile] 好。四个人。",
+   "add": {
+    "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
+    "voice_id": "mZc8T5doZrU7OCI71i3M",
+    "name": "HanBaba"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "sfx",
-   "name": "sting_luo",
-   "text": "A Peking opera percussion punchline: one bright clash of small gong and cymbals, a single comic hit, short.",
-   "duration": 1.2,
-   "influence": 0.6
+   "name": "PlatonWang_a02",
+   "lang": "zh",
+   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "sfx",
-   "name": "sting_tai",
-   "text": "A single small Chinese opera gong hit with a rising comic pitch bend, short.",
-   "duration": 1.0,
-   "influence": 0.6
+   "name": "PlatonWang_a08",
+   "lang": "zh",
+   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   },
   {
-   "type": "sfx",
-   "name": "sting_oops",
-   "text": "A playful descending plucked pipa glissando, a comic oops sound, short.",
-   "duration": 1.2,
-   "influence": 0.6
+   "name": "PlatonWang_a13",
+   "lang": "zh",
+   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_a25",
+   "lang": "zh",
+   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_a41",
+   "lang": "zh",
+   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "PlatonWang_a44",
+   "lang": "zh",
+   "text": "[surprised, then a warm smile] 好。四个人。",
+   "add": {
+    "owner": "a28bb7e030814ae19fedd881ad152af962d074e8325be58951424da0c06584bc",
+    "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+    "name": "Platon Wang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "EthanZhang_a02",
+   "lang": "zh",
+   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+   "add": {
+    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
+    "voice_id": "brChkoggsUHF1stW6omH",
+    "name": "Ethan Zhang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "EthanZhang_a08",
+   "lang": "zh",
+   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+   "add": {
+    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
+    "voice_id": "brChkoggsUHF1stW6omH",
+    "name": "Ethan Zhang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "EthanZhang_a13",
+   "lang": "zh",
+   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+   "add": {
+    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
+    "voice_id": "brChkoggsUHF1stW6omH",
+    "name": "Ethan Zhang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "EthanZhang_a25",
+   "lang": "zh",
+   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+   "add": {
+    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
+    "voice_id": "brChkoggsUHF1stW6omH",
+    "name": "Ethan Zhang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "EthanZhang_a41",
+   "lang": "zh",
+   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+   "add": {
+    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
+    "voice_id": "brChkoggsUHF1stW6omH",
+    "name": "Ethan Zhang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "EthanZhang_a44",
+   "lang": "zh",
+   "text": "[surprised, then a warm smile] 好。四个人。",
+   "add": {
+    "owner": "1f8090e7b6ab3a9d53a4cf0acd183d1ab6d74e79bac9901d959137f168defef2",
+    "voice_id": "brChkoggsUHF1stW6omH",
+    "name": "Ethan Zhang"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Jing_a02",
+   "lang": "zh",
+   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+   "add": {
+    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
+    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+    "name": "Jing"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Jing_a08",
+   "lang": "zh",
+   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+   "add": {
+    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
+    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+    "name": "Jing"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Jing_a13",
+   "lang": "zh",
+   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+   "add": {
+    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
+    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+    "name": "Jing"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Jing_a25",
+   "lang": "zh",
+   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+   "add": {
+    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
+    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+    "name": "Jing"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Jing_a41",
+   "lang": "zh",
+   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+   "add": {
+    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
+    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+    "name": "Jing"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Jing_a44",
+   "lang": "zh",
+   "text": "[surprised, then a warm smile] 好。四个人。",
+   "add": {
+    "owner": "ff9688ff08428cf94a3f61662e55a9724d35eb340c00f4c79f42fa02816c67ff",
+    "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+    "name": "Jing"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Adrian_a02",
+   "lang": "zh",
+   "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+   "add": {
+    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
+    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+    "name": "Adrian"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Adrian_a08",
+   "lang": "zh",
+   "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+   "add": {
+    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
+    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+    "name": "Adrian"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Adrian_a13",
+   "lang": "zh",
+   "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+   "add": {
+    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
+    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+    "name": "Adrian"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Adrian_a25",
+   "lang": "zh",
+   "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+   "add": {
+    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
+    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+    "name": "Adrian"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Adrian_a41",
+   "lang": "zh",
+   "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+   "add": {
+    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
+    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+    "name": "Adrian"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  {
+   "name": "Adrian_a44",
+   "lang": "zh",
+   "text": "[surprised, then a warm smile] 好。四个人。",
+   "add": {
+    "owner": "14242edcc087ff15806a84df8dc2a191b6843243e3e6c9337ae4df244152d365",
+    "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+    "name": "Adrian"
+   },
+   "keep": true,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
   }
  ]
 }
