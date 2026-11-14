@@ -1,0 +1,2184 @@
+{
+  "id": "libai-check-01",
+  "clips": [
+    {
+      "name": "A01_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 0.01,
+      "end": 3.59,
+      "lang": "zh",
+      "heard_auto": "请问您是李白、李泰白先生吗?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "请问您是李白、李泰白先生吗?"
+    },
+    {
+      "name": "A02_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 3.73,
+      "end": 6.96,
+      "lang": "zh",
+      "heard_auto": "呦 月亮你怎么白天就出来了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "呦 月亮你怎么白天就出来了"
+    },
+    {
+      "name": "A03_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 7.06,
+      "end": 9.935,
+      "lang": "zh",
+      "heard_auto": "我不是月亮,我是來拍您一天的",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "我不是月亮,我是來拍您一天的"
+    },
+    {
+      "name": "A04_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 9.97,
+      "end": 11.715,
+      "lang": "zh",
+      "heard_auto": "好 先喝一杯",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "heard": "好 先喝一杯"
+    },
+    {
+      "name": "A05_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 11.72,
+      "end": 13.33,
+      "lang": "zh",
+      "heard_auto": "现在才早上",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.993,
+      "heard": "现在才早上"
+    },
+    {
+      "name": "A06_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 13.35,
+      "end": 15.565,
+      "lang": "zh",
+      "heard_auto": "早上喝的叫早酒",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "早上喝的叫早酒"
+    },
+    {
+      "name": "A07_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 15.64,
+      "end": 17.4,
+      "lang": "zh",
+      "heard_auto": "您昨晚喝了多少啊",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "您昨晚喝了多少啊"
+    },
+    {
+      "name": "A08_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 17.46,
+      "end": 20.455,
+      "lang": "zh",
+      "heard_auto": "不多一日虚清三百杯嘛",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "不多一日虚清三百杯嘛"
+    },
+    {
+      "name": "A09_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s744.mp3",
+      "start": 20.56,
+      "end": 23.19,
+      "lang": "zh",
+      "heard_auto": "他把自己的詩當說明書用",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "他把自己的詩當說明書用"
+    },
+    {
+      "name": "B10_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 0.05,
+      "end": 2.39,
+      "lang": "zh",
+      "heard_auto": "聽說您在朝廷當官",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "聽說您在朝廷當官"
+    },
+    {
+      "name": "B11_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 2.54,
+      "end": 3.795,
+      "lang": "zh",
+      "heard_auto": "汉林代证",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "汉林代证"
+    },
+    {
+      "name": "B12_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 4.05,
+      "end": 6.2,
+      "lang": "zh",
+      "heard_auto": "戴罩是管什么的",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "戴罩是管什么的"
+    },
+    {
+      "name": "B13_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 6.31,
+      "end": 8.56,
+      "lang": "zh",
+      "heard_auto": "就是等皇上教",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "heard": "就是等皇上教"
+    },
+    {
+      "name": "B14_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 8.75,
+      "end": 10.43,
+      "lang": "zh",
+      "heard_auto": "皇上多久叫您一次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "皇上多久叫您一次"
+    },
+    {
+      "name": "B15_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 10.49,
+      "end": 12.93,
+      "lang": "zh",
+      "heard_auto": "不知道所以我在这等",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "不知道所以我在这等"
+    },
+    {
+      "name": "B16_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 12.95,
+      "end": 16.61,
+      "lang": "zh",
+      "heard_auto": "李漢林 陛下在陈乡廷叫你马上去写新词",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "heard": "李漢林 陛下在陈乡廷叫你马上去写新词"
+    },
+    {
+      "name": "B17_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 16.67,
+      "end": 17.605,
+      "lang": "zh",
+      "heard_auto": "好 走",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.993,
+      "heard": "好 走"
+    },
+    {
+      "name": "B18_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s744.mp3",
+      "start": 17.68,
+      "end": 18.96,
+      "lang": "zh",
+      "heard_auto": "他站不起来了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.98,
+      "heard": "他站不起来了"
+    },
+    {
+      "name": "C19_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s744.mp3",
+      "start": 0.12,
+      "end": 3.11,
+      "lang": "zh",
+      "heard_auto": "李先生 您脸还湿着呢",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "李先生 您脸还湿着呢"
+    },
+    {
+      "name": "C20_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s744.mp3",
+      "start": 3.15,
+      "end": 8.705,
+      "lang": "zh",
+      "heard_auto": "云响衣上花响容春风拂砍鹿华农",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.983,
+      "heard": "云响衣上花响容春风拂砍鹿华农"
+    },
+    {
+      "name": "C21_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s744.mp3",
+      "start": 8.81,
+      "end": 11.8,
+      "lang": "zh",
+      "heard_auto": "高公公 靴子太緊 幫我脫一下",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "高公公 靴子太緊 幫我脫一下"
+    },
+    {
+      "name": "C22_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s744.mp3",
+      "start": 11.9,
+      "end": 15.13,
+      "lang": "zh",
+      "heard_auto": "完了 她可是皇上身邊最紅的人",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "完了 她可是皇上身邊最紅的人"
+    },
+    {
+      "name": "D23_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s744.mp3",
+      "start": 0.01,
+      "end": 3.25,
+      "lang": "zh",
+      "heard_auto": "陛下准您回山了这是赏的金子",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "陛下准您回山了这是赏的金子"
+    },
+    {
+      "name": "D24_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s744.mp3",
+      "start": 3.48,
+      "end": 7.36,
+      "lang": "zh",
+      "heard_auto": "李先生 您这是被请出来了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "李先生 您这是被请出来了"
+    },
+    {
+      "name": "D25_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s744.mp3",
+      "start": 7.42,
+      "end": 13.635,
+      "lang": "zh",
+      "heard_auto": "哈哈哈有钱了天生我才必有用千金散尽还复来",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "哈哈哈有钱了天生我才必有用千金散尽还复来"
+    },
+    {
+      "name": "D26_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s744.mp3",
+      "start": 13.78,
+      "end": 16.135,
+      "lang": "zh",
+      "heard_auto": "那這些錢您打算幹嘛",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "那這些錢您打算幹嘛"
+    },
+    {
+      "name": "D27_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s744.mp3",
+      "start": 16.23,
+      "end": 17.18,
+      "lang": "zh",
+      "heard_auto": "喝酒",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.989,
+      "heard": "喝酒"
+    },
+    {
+      "name": "E28_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s744.mp3",
+      "start": 0.0,
+      "end": 2.62,
+      "lang": "zh",
+      "heard_auto": "今天我请谁都别跟我抢",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "heard": "今天我请谁都别跟我抢"
+    },
+    {
+      "name": "E29_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s744.mp3",
+      "start": 2.69,
+      "end": 5.28,
+      "lang": "zh",
+      "heard_auto": "一个下午,花的差不多了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.99,
+      "heard": "一个下午,花的差不多了"
+    },
+    {
+      "name": "E30_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s744.mp3",
+      "start": 5.74,
+      "end": 8.17,
+      "lang": "zh",
+      "heard_auto": "您天天这么喝夫人知道吗",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "heard": "您天天这么喝夫人知道吗"
+    },
+    {
+      "name": "E31_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s744.mp3",
+      "start": 8.24,
+      "end": 14.055,
+      "lang": "zh",
+      "heard_auto": "知道啊 我写诗告诉他了三百六十日 日日最如泥",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "知道啊 我写诗告诉他了三百六十日 日日最如泥"
+    },
+    {
+      "name": "E32_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s744.mp3",
+      "start": 14.14,
+      "end": 16.84,
+      "lang": "zh",
+      "heard_auto": "只是在认错还是在炫耀",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "只是在认错还是在炫耀"
+    },
+    {
+      "name": "E33_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s744.mp3",
+      "start": 17.02,
+      "end": 18.8,
+      "lang": "zh",
+      "heard_auto": "太白兄,我先回了啊",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "太白兄,我先回了啊"
+    },
+    {
+      "name": "F34_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 0.09,
+      "end": 1.19,
+      "lang": "zh",
+      "heard_auto": "人都走了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.984,
+      "heard": "人都走了"
+    },
+    {
+      "name": "F35_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 1.19,
+      "end": 3.215,
+      "lang": "zh",
+      "heard_auto": "走了好 清靜",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "走了好 清靜"
+    },
+    {
+      "name": "F36_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 3.41,
+      "end": 5.525,
+      "lang": "zh",
+      "heard_auto": "以前都是誰陪您喝",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "以前都是誰陪您喝"
+    },
+    {
+      "name": "F37_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 5.58,
+      "end": 12.985,
+      "lang": "zh",
+      "heard_auto": "赫老,第一次见我就叫我哲仙人,没带钱,把腰上的金规解下来,换酒。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "赫老,第一次见我就叫我哲仙人,没带钱,把腰上的金规解下来,换酒。"
+    },
+    {
+      "name": "F38_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 12.985,
+      "end": 15.51,
+      "lang": "zh",
+      "heard_auto": "过年那会儿他回老家了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.99,
+      "heard": "过年那会儿他回老家了"
+    },
+    {
+      "name": "F39_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 15.66,
+      "end": 17.59,
+      "lang": "zh",
+      "heard_auto": "您一個人的孤單嗎?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.99,
+      "heard": "您一個人的孤單嗎?"
+    },
+    {
+      "name": "F40_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 17.68,
+      "end": 19.01,
+      "lang": "zh",
+      "heard_auto": "谁说一个人",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "谁说一个人"
+    },
+    {
+      "name": "F41_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 19.24,
+      "end": 26.665,
+      "lang": "zh",
+      "heard_auto": "花間一壺酒,獨著無相親,舉杯邀明月,對影成三人。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "花間一壺酒,獨著無相親,舉杯邀明月,對影成三人。"
+    },
+    {
+      "name": "F42_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 26.665,
+      "end": 31.26,
+      "lang": "zh",
+      "heard_auto": "可惜,月亮不会喝,影子只会跟着我",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "可惜,月亮不会喝,影子只会跟着我"
+    },
+    {
+      "name": "F43_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 31.51,
+      "end": 33.595,
+      "lang": "zh",
+      "heard_auto": "李先生 我陪您喝一杯",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "李先生 我陪您喝一杯"
+    },
+    {
+      "name": "F44_s744",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s744.mp3",
+      "start": 33.68,
+      "end": 35.4,
+      "lang": "zh",
+      "heard_auto": "好 四個人",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "好 四個人"
+    },
+    {
+      "name": "A01_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 0.02,
+      "end": 3.16,
+      "lang": "zh",
+      "heard_auto": "请问您是李白、李泰白先生吗?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "heard": "请问您是李白、李泰白先生吗?"
+    },
+    {
+      "name": "A02_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 3.25,
+      "end": 6.54,
+      "lang": "zh",
+      "heard_auto": "呦月亮你怎么白天就出来了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "呦月亮你怎么白天就出来了"
+    },
+    {
+      "name": "A03_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 6.58,
+      "end": 9.515,
+      "lang": "zh",
+      "heard_auto": "我不是月亮,我是來拍您一天的",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "我不是月亮,我是來拍您一天的"
+    },
+    {
+      "name": "A04_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 9.55,
+      "end": 11.225,
+      "lang": "zh",
+      "heard_auto": "好 先喝一杯",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "好 先喝一杯"
+    },
+    {
+      "name": "A05_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 11.24,
+      "end": 12.875,
+      "lang": "zh",
+      "heard_auto": "现在才早上",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.99,
+      "heard": "现在才早上"
+    },
+    {
+      "name": "A06_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 12.91,
+      "end": 15.215,
+      "lang": "zh",
+      "heard_auto": "早上喝的 叫早酒",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "早上喝的 叫早酒"
+    },
+    {
+      "name": "A07_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 15.28,
+      "end": 17.01,
+      "lang": "zh",
+      "heard_auto": "您昨晚喝了多少啊",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "您昨晚喝了多少啊"
+    },
+    {
+      "name": "A08_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 17.06,
+      "end": 19.775,
+      "lang": "zh",
+      "heard_auto": "不多一日虚清300杯嘛",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "heard": "不多一日虚清300杯嘛"
+    },
+    {
+      "name": "A09_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_A_s762.mp3",
+      "start": 19.86,
+      "end": 22.5,
+      "lang": "zh",
+      "heard_auto": "他把自己的詩當說明書用",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "他把自己的詩當說明書用"
+    },
+    {
+      "name": "B10_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 0.06,
+      "end": 2.34,
+      "lang": "zh",
+      "heard_auto": "聽說您在朝廷當官",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "聽說您在朝廷當官"
+    },
+    {
+      "name": "B11_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 2.43,
+      "end": 3.73,
+      "lang": "zh",
+      "heard_auto": "漢林戴照",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "漢林戴照"
+    },
+    {
+      "name": "B12_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 3.91,
+      "end": 6.05,
+      "lang": "zh",
+      "heard_auto": "带照是管什么的",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "带照是管什么的"
+    },
+    {
+      "name": "B13_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 6.13,
+      "end": 8.34,
+      "lang": "zh",
+      "heard_auto": "就是等皇上教",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "heard": "就是等皇上教"
+    },
+    {
+      "name": "B14_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 8.46,
+      "end": 10.17,
+      "lang": "zh",
+      "heard_auto": "皇上多久叫你一次",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "皇上多久叫你一次"
+    },
+    {
+      "name": "B15_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 10.23,
+      "end": 12.88,
+      "lang": "zh",
+      "heard_auto": "不知道所以我在这等",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "heard": "不知道所以我在这等"
+    },
+    {
+      "name": "B16_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 12.93,
+      "end": 16.575,
+      "lang": "zh",
+      "heard_auto": "李翰林 陛下在陈乡廷叫你马上去写新词",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "李翰林 陛下在陈乡廷叫你马上去写新词"
+    },
+    {
+      "name": "B17_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 16.64,
+      "end": 17.6,
+      "lang": "zh",
+      "heard_auto": "好 走",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.973,
+      "heard": "好 走"
+    },
+    {
+      "name": "B18_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_B_s762.mp3",
+      "start": 17.68,
+      "end": 18.91,
+      "lang": "zh",
+      "heard_auto": "他站不起來了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.977,
+      "heard": "他站不起來了"
+    },
+    {
+      "name": "C19_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s762.mp3",
+      "start": 0.12,
+      "end": 3.075,
+      "lang": "zh",
+      "heard_auto": "李先生 您脸还湿着呢",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "heard": "李先生 您脸还湿着呢"
+    },
+    {
+      "name": "C20_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s762.mp3",
+      "start": 3.15,
+      "end": 8.83,
+      "lang": "zh",
+      "heard_auto": "云响衣上花响容春风俯砍鹿华农",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.974,
+      "heard": "云响衣上花响容春风俯砍鹿华农"
+    },
+    {
+      "name": "C21_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s762.mp3",
+      "start": 8.83,
+      "end": 11.905,
+      "lang": "zh",
+      "heard_auto": "高公公 靴子太緊 幫我脫一下",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "高公公 靴子太緊 幫我脫一下"
+    },
+    {
+      "name": "C22_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_C_s762.mp3",
+      "start": 12.06,
+      "end": 15.33,
+      "lang": "zh",
+      "heard_auto": "完了 她可是皇上身邊最紅的人",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "完了 她可是皇上身邊最紅的人"
+    },
+    {
+      "name": "D23_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s762.mp3",
+      "start": 0.06,
+      "end": 3.34,
+      "lang": "zh",
+      "heard_auto": "陛下准您回山了这是赏的金子",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "heard": "陛下准您回山了这是赏的金子"
+    },
+    {
+      "name": "D24_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s762.mp3",
+      "start": 3.56,
+      "end": 7.515,
+      "lang": "zh",
+      "heard_auto": "李先生 您这是被请出来了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "李先生 您这是被请出来了"
+    },
+    {
+      "name": "D25_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s762.mp3",
+      "start": 7.58,
+      "end": 14.155,
+      "lang": "zh",
+      "heard_auto": "哈哈哈有钱啦天生我才必有用千金散尽还复来",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.988,
+      "heard": "哈哈哈有钱啦天生我才必有用千金散尽还复来"
+    },
+    {
+      "name": "D26_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s762.mp3",
+      "start": 14.36,
+      "end": 16.85,
+      "lang": "zh",
+      "heard_auto": "那這些錢您打算幹嘛",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "那這些錢您打算幹嘛"
+    },
+    {
+      "name": "D27_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_D_s762.mp3",
+      "start": 16.93,
+      "end": 18.04,
+      "lang": "zh",
+      "heard_auto": "喝酒",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.974,
+      "heard": "喝酒"
+    },
+    {
+      "name": "E28_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s762.mp3",
+      "start": 0.0,
+      "end": 2.63,
+      "lang": "zh",
+      "heard_auto": "今天我请谁都别跟我抢",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "heard": "今天我请谁都别跟我抢"
+    },
+    {
+      "name": "E29_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s762.mp3",
+      "start": 2.74,
+      "end": 4.93,
+      "lang": "zh",
+      "heard_auto": "一個下午 花的差不多了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "一個下午 花的差不多了"
+    },
+    {
+      "name": "E30_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s762.mp3",
+      "start": 5.41,
+      "end": 7.85,
+      "lang": "zh",
+      "heard_auto": "您天天這麼喝,夫人知道嗎?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "您天天這麼喝,夫人知道嗎?"
+    },
+    {
+      "name": "E31_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s762.mp3",
+      "start": 7.98,
+      "end": 13.9,
+      "lang": "zh",
+      "heard_auto": "知道啊,我写诗告诉他了,三百六十日,日日罪如泥。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "知道啊,我写诗告诉他了,三百六十日,日日罪如泥。"
+    },
+    {
+      "name": "E32_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s762.mp3",
+      "start": 14.01,
+      "end": 16.46,
+      "lang": "zh",
+      "heard_auto": "这是在认错还是在炫耀",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "这是在认错还是在炫耀"
+    },
+    {
+      "name": "E33_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_E_s762.mp3",
+      "start": 16.61,
+      "end": 18.29,
+      "lang": "zh",
+      "heard_auto": "太白兄 我先回了啊",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "太白兄 我先回了啊"
+    },
+    {
+      "name": "F34_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 0.18,
+      "end": 1.29,
+      "lang": "zh",
+      "heard_auto": "人都走了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.986,
+      "heard": "人都走了"
+    },
+    {
+      "name": "F35_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 1.56,
+      "end": 3.36,
+      "lang": "zh",
+      "heard_auto": "走了好 清靜",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.993,
+      "heard": "走了好 清靜"
+    },
+    {
+      "name": "F36_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 3.63,
+      "end": 5.885,
+      "lang": "zh",
+      "heard_auto": "以前都是誰陪你喝",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.992,
+      "heard": "以前都是誰陪你喝"
+    },
+    {
+      "name": "F37_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 5.97,
+      "end": 13.325,
+      "lang": "zh",
+      "heard_auto": "賀老,第一次見我就叫我哲仙人,沒帶錢把腰上的金規解下來,換酒。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "賀老,第一次見我就叫我哲仙人,沒帶錢把腰上的金規解下來,換酒。"
+    },
+    {
+      "name": "F38_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 13.325,
+      "end": 16.02,
+      "lang": "zh",
+      "heard_auto": "過年那會兒他回老家了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.993,
+      "heard": "過年那會兒他回老家了"
+    },
+    {
+      "name": "F39_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 16.22,
+      "end": 18.34,
+      "lang": "zh",
+      "heard_auto": "您一個人的孤單嗎?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.987,
+      "heard": "您一個人的孤單嗎?"
+    },
+    {
+      "name": "F40_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 18.44,
+      "end": 20.06,
+      "lang": "zh",
+      "heard_auto": "谁说一个人",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "谁说一个人"
+    },
+    {
+      "name": "F41_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 20.06,
+      "end": 27.6,
+      "lang": "zh",
+      "heard_auto": "花間一壺酒,獨著無鄉親,舉杯邀明月,對影成三人。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.99,
+      "heard": "花間一壺酒,獨著無鄉親,舉杯邀明月,對影成三人。"
+    },
+    {
+      "name": "F42_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 27.93,
+      "end": 32.17,
+      "lang": "zh",
+      "heard_auto": "可惜,月亮不会喝,影子只会跟着我",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "heard": "可惜,月亮不会喝,影子只会跟着我"
+    },
+    {
+      "name": "F43_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 32.37,
+      "end": 34.505,
+      "lang": "zh",
+      "heard_auto": "李先生,我陪您喝一杯",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "李先生,我陪您喝一杯"
+    },
+    {
+      "name": "F44_s762",
+      "type": "transcribe",
+      "src": "out/libai-vo-01/lb_F_s762.mp3",
+      "start": 34.59,
+      "end": 36.15,
+      "lang": "zh",
+      "heard_auto": "好 四個人",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "heard": "好 四個人"
+    }
+  ],
+  "plan": {
+    "tier": "creator",
+    "character_count": 58663,
+    "character_limit": 123898,
+    "status": "active"
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "tOuLUAIdXShmWH7PEUrU",
+      "name": "zh-Julia - Young, Smooth and Neutral",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "confident",
+        "gender": "female",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Ca5bKgudqKJzq8YRFoAz",
+      "name": "zh-Coco Li - Calm, Young and Trustworthy",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "chill",
+        "gender": "female",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "M0TrFmFeBJS9H4xzdk8Z",
+      "name": "zh-Steven Gor - Low, Calm and Soothing",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "gender": "male",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZJsn5HnrE3eUbep2ia8D",
+      "name": "zh-Qiao Feng - Warm, Clear & Friendly",
+      "labels": {
+        "use_case": "entertainment_tv",
+        "descriptive": "casual",
+        "language": "zh",
+        "gender": "male",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "54Cze5LrTSyLgbO6Fhlc",
+      "name": "zh-Caty - Droll, Wry and Dry",
+      "labels": {
+        "use_case": "characters_animation",
+        "language": "en",
+        "gender": "female",
+        "descriptive": "sassy",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lt7GBaCoAHWbT7JSZ5Xs",
+      "name": "zh-Xinghe Jiang - Magnetic Conversationa",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "language": "zh",
+        "gender": "male",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "TPIitICAZ8CqlGZ81AKm",
+      "name": "zh-Elen Kuragina – Golden & Dangerous",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "excited",
+        "gender": "female",
+        "language": "ru",
+        "use_case": "characters_animation",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "goT3UYdM9bhm0n2lmKQx",
+      "name": "zh-Edward - British, Dark, Seductive, Lo",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "descriptive": "serious",
+        "language": "en",
+        "use_case": "characters_animation",
+        "accent": "british"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "1qEiC6qsybMkmnNdVMbK",
+      "name": "hi-Monika Sogam - Calm and Natural",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "gender": "female",
+        "language": "hi",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "u0TsaWvt0v8migutHM3M",
+      "name": "ar-Ghizlane - Smooth, Distinctive and Ca",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "female",
+        "language": "ar",
+        "age": "middle_aged",
+        "accent": "modern standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ko0CPqOV7GGUcPkJMPej",
+      "name": "it-Vera - Calm, Influential and Balanced",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "confident",
+        "language": "it",
+        "use_case": "narrative_story",
+        "accent": "milanese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "name": "pt-Alcione - Soft, Energetic and Tender",
+      "labels": {
+        "age": "young",
+        "language": "pt",
+        "descriptive": "calm",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "brazilian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "qHkrJuifPpn95wK3rm2A",
+      "name": "es-Andrea - Polite, Cheerful and Calm",
+      "labels": {
+        "age": "young",
+        "descriptive": "casual",
+        "language": "es",
+        "gender": "female",
+        "use_case": "conversational",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "JYyJjNPfmNJdaby8LdZs",
+      "name": "es-Marlene - Melodic, Pleasant and Brigh",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "language": "es",
+        "descriptive": "cute",
+        "use_case": "narrative_story",
+        "accent": "mexican"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "CaJslL1xziwefCeTNzHv",
+      "name": "es-Cristina Campos - Friendly and Soft",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "descriptive": "casual",
+        "language": "es",
+        "use_case": "conversational",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2rigMbVWLdqtBSCahJFX",
+      "name": "es-Tatiana Martin - Wise-speaking, calm",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "female",
+        "descriptive": "calm",
+        "language": "es",
+        "use_case": "narrative_story",
+        "accent": "latin american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "KYiVPerWcenyBTIvWbfY",
+      "name": "hi-Sia - Friendly, Helpful and Reassurin",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "pleasant",
+        "gender": "female",
+        "language": "hi",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OtEfb2LVzIE45wdYe54M",
+      "name": "hi-Zara - Soft, Professional and Gentle",
+      "labels": {
+        "age": "young",
+        "gender": "female",
+        "language": "hi",
+        "descriptive": "classy",
+        "use_case": "conversational",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "XTa3iQyMA6f1qrI4F6kZ",
+      "name": "ar-Sara - Soft, Expressive, and Warm",
+      "labels": {
+        "age": "young",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "ar",
+        "use_case": "narrative_story",
+        "accent": "modern standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gfKKsLN1k0oYYN9n2dXX",
+      "name": "it-Violetta - Ringing, Bright and Joyful",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "professional",
+        "language": "it",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "33B4UnXyTNbgLmdEDh5P",
+      "name": "pt-Keren - Sweet, Vibrant and Rhythmic",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "excited",
+        "language": "pt",
+        "gender": "female",
+        "age": "young",
+        "accent": "brazilian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5vkxOzoz40FrElmLP4P7",
+      "name": "es-Gaby - Friendly, Expressive and Vibra",
+      "labels": {
+        "age": "young",
+        "language": "es",
+        "gender": "female",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "accent": "peruvian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9Godp7dNohUvXk6qp0gS",
+      "name": "es-Regina - Contact Center",
+      "labels": {
+        "use_case": "conversational",
+        "language": "es",
+        "descriptive": "casual",
+        "gender": "female",
+        "age": "young",
+        "accent": "mexican"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "age": "young",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "language": "en",
+        "use_case": "social_media",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "age": "middle-aged",
+        "descriptive": "professional",
+        "language": "zh",
+        "gender": "male",
+        "use_case": "characters_animation",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "professional",
+        "gender": "male",
+        "language": "zh",
+        "use_case": "informative_educational",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "gender": "male",
+        "language": "zh",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "confident",
+        "gender": "male",
+        "language": "el",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "el",
+        "descriptive": "calm",
+        "age": "old",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "age": "middle_aged",
+        "language": "el",
+        "descriptive": "professional",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "age": "old",
+        "descriptive": "professional",
+        "language": "de",
+        "gender": "male",
+        "use_case": "characters_animation",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "zh",
+        "descriptive": "calm",
+        "gender": "female",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "age": "young",
+        "descriptive": "pleasant",
+        "language": "zh",
+        "gender": "male",
+        "use_case": "social_media",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "use_case": "informative_educational",
+        "language": "zh",
+        "descriptive": "formal",
+        "gender": "female",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "language": "zh",
+        "descriptive": "neutral",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "female",
+        "descriptive": "pleasant",
+        "language": "zh",
+        "age": "young",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "use_case": "conversational",
+        "gender": "female",
+        "language": "en",
+        "descriptive": "crisp",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "crisp",
+        "gender": "male",
+        "language": "en",
+        "age": "old",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "language": "en",
+        "descriptive": "professional",
+        "gender": "male",
+        "use_case": "advertisement",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "age": "young",
+        "language": "en",
+        "descriptive": "casual",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "gentle",
+        "language": "en",
+        "use_case": "narrative_story",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "age": "middle_aged",
+        "language": "en",
+        "gender": "male",
+        "descriptive": "confident",
+        "use_case": "narrative_story",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "age": "middle_aged",
+        "descriptive": "intense",
+        "language": "it",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "language": "en",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "zh",
+        "gender": "male",
+        "descriptive": "gentle",
+        "age": "young",
+        "accent": "beijing mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "deep",
+        "language": "zh",
+        "gender": "male",
+        "age": "middle_aged",
+        "accent": "singapore mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "age": "middle_aged",
+        "language": "zh",
+        "descriptive": "calm",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "age": "middle_aged",
+        "language": "en",
+        "descriptive": "chill",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "age": "young",
+        "gender": "male",
+        "descriptive": "chill",
+        "language": "en",
+        "use_case": "social_media",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "use_case": "conversational",
+        "gender": "male",
+        "descriptive": "calm",
+        "language": "en",
+        "age": "young",
+        "accent": "italian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "male",
+        "descriptive": "casual",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "gentle",
+        "gender": "male",
+        "language": "en",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "gender": "female",
+        "language": "fr",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "fr",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "accent": "parisian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "use_case": "conversational",
+        "descriptive": "calm",
+        "gender": "female",
+        "language": "de",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "age": "middle_aged",
+        "language": "de",
+        "descriptive": "calm",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "ru",
+        "gender": "female",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "use_case": "social_media",
+        "gender": "male",
+        "descriptive": "confident",
+        "language": "ru",
+        "age": "middle_aged",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "en",
+        "descriptive": "serious",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "descriptive": "casual",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "age": "young",
+        "language": "hi",
+        "descriptive": "upbeat",
+        "gender": "female",
+        "use_case": "social_media",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "descriptive": "classy",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "entertainment_tv",
+        "gender": "female",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "descriptive": "sassy",
+        "use_case": "social_media",
+        "gender": "female",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "australian"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "descriptive": "mature",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "use_case": "characters_animation",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "gender": "neutral",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "descriptive": "rough",
+        "use_case": "characters_animation",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "descriptive": "confident",
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "descriptive": "professional",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "descriptive": "upbeat",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "descriptive": "chill",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "descriptive": "cute",
+        "use_case": "conversational",
+        "gender": "female",
+        "language": "en",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "descriptive": "classy",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "descriptive": "classy",
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "descriptive": "formal",
+        "use_case": "informative_educational",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "descriptive": "confident",
+        "use_case": "informative_educational",
+        "gender": "female",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "descriptive": "crisp",
+        "use_case": "advertisement",
+        "gender": "male",
+        "language": "en",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "premade"
+    }
+  ]
+}
