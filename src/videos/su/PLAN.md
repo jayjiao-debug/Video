@@ -365,3 +365,20 @@ The bible's camera section is copied to /home/user/su_work/me/bible_camera.md: r
    the REC row now starts at x 110, the battery ends at x 970, subtitle rows are at most 780 px (x 150-930) and end
    above y 1490, the fact cards sit inside x 110-890, the end names inside x 110-890. The film ships as 9:16 and as a
    9:15 crop (rows 110-1909: the REC row lands at y 120, as the skill's 9:15 layout asks).
+
+## 13. v3: themed title, intro cards, 综艺 effects (Jay 2026-11-14: standard in every film)
+Jay: "The intro title can be more similar to 秦始皇 with thematic rather than plain and boring"; intro cards and 综艺
+effects are standard (bible section "Themed title, intro cards and screen effects (后期)"). Chosen on the card:
+"Both, by the rules". All film-local (nothing in the shared kit).
+- SKIN (hud/skin.ts, hud/fonts.ts): 东坡肉. Colours: robe ochre (his), braised-pork glaze, lychee red, rice cream, on
+  a warm dark-brown ink line. Faces: 志莽行书 Zhi Mang Xing (names) and 站酷快乐体 ZCOOL KuaiLe (words), as small OFL
+  subsets in public/su/fonts (scripts/su/fonts.py refreshes them from the STRINGS list). Motion: plop and jiggle,
+  then shrink away.
+- TITLE (hud/title.tsx): three glossy cubes of 东坡肉 tied with straw, one character each, 采访 / 的一天 / 1097年 ·
+  惠州. TITLE_SPAN = card 1's end + 2 .. B06 - 3 (about 1.1 s, over the whip into the yard; card 1 shortened to 2.6 s).
+- LEAD CARD (hud/intro.tsx): beats.ts FREEZE { at: to(A01) + 3 = 72, n: 39 }: the picture holds story frame 72 for 39
+  extra frames (Film.tsx maps the composition frame to the story frame: storyFrame); SU_FRAMES = TOTAL + 39. Every
+  beat, line, segment and overlay stays in story frames. Sound: scripts/su/sound/freeze.py inserts the same 1.3 s
+  into the voice and the timing (voice_timing_v3.json, voice_v3_48k.wav); build.py lays the mix out from those.
+- BANNERS and EFFECTS (hud/fx.tsx FX, FX_RECT; hudRectsAt includes them): B dog label + 记者OS, C lychee counter, D
+  差役 banner, E 海南待办 checklist (icons), H 苏过 banner + 绝密 stamp. None in D after the order, F, G, I.

@@ -26,8 +26,12 @@ import { LensBlur } from "../vasa/lensblur";
 import { GradeEffect, type GradeParams } from "../vasa/grade";
 import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
-import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
+import { W, H, TOTAL, SEGMENTS, huds, lineNo, lineId, type Pose, type Segment } from "./story";
 import { TitleBlock, FactCard, EndNames, EndDim, Caption, VlogHud, SwitchOff } from "./hud";
+import { LeadCard } from "./hud/intro";
+import { Fx } from "./hud/fx";
+import { useSkinFonts } from "./hud/fonts";
+import { FREEZE, storyFrame, freezeT } from "./beats";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -38,7 +42,10 @@ import { SEG as SEG_G } from "./shots/segG";
 import { SEG as SEG_H } from "./shots/segH";
 import { SEG as SEG_I } from "./shots/segI";
 
-export const SU_FRAMES = TOTAL;
+/** the composition is FREEZE.n frames longer than the story (the lead's intro card freezes the picture: beats.ts FREEZE) */
+export const SU_FRAMES = TOTAL + FREEZE.n;
+/** A01's caption does not come back after the freeze: the picture resumes on his answer (A02) */
+const A02_FROM = lineId("A02").from;
 const COVER = ipFlag("cover"), NOCAP = COVER || ipFlag("nocap"), NOHUD = COVER || ipFlag("nohud"), NOOV = COVER || ipFlag("noov");
 const NOPOST = ipFlag("nopost"), DBG = ipFlag("dbg"), SLATE = ipFlag("slate"), KICK = ipNum("kick", 0);
 const OVONLY = ipFlag("ovonly"); // the cut's overlay pass: the world is posed every frame, nothing is drawn in 3D, the page is transparent
@@ -167,7 +174,7 @@ const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <>
     <EndDim f={f} />
     <VlogHud f={f} rec={P.rec} />
-    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /></> : null}
+    {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /><Fx f={f} /></> : null}
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
     <EndNames f={f} />
   </>
@@ -184,11 +191,12 @@ const Slate: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
 
 // ---------------------------------------------------------------------------------------------------- the composition
 export const SuFilm: React.FC = () => {
-  const f = useCurrentFrame();
+  const g = useCurrentFrame(), f = storyFrame(g), ft = freezeT(g);   // composition frame -> story frame (the freeze)
   const [handle] = useState(() => { if (DBG) console.log(`[su] composition mounted at page time ${Math.round(performance.now())} ms`); return delayRender("su world build"); });
   const [ctx, setCtx] = useState<{ gl: THREE.WebGLRenderer; camera: THREE.PerspectiveCamera } | null>(null);
   // the font first: anything drawn into textures when the world is built uses it
   const fontReady = useOverlayFont();
+  useSkinFonts();                                                     // the skin's two display faces (hud/fonts.ts)
   const world = useMemo(() => (ctx && fontReady ? new World(ctx.gl, ctx.camera) : null), [ctx, fontReady]);
   const director = useMemo(() => (world ? new Director(world) : null), [world]);
   const t0 = DBG ? performance.now() : 0;
@@ -204,7 +212,8 @@ export const SuFilm: React.FC = () => {
       </ThreeCanvas>
       {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
-      {P && P.captions !== false && !NOCAP ? <Caption f={f} /> : null}
+      {P && P.captions !== false && !NOCAP && ft < 0 && !(f >= FREEZE.at && f < A02_FROM) ? <Caption f={f} /> : null}
+      {ft >= 0 && !NOHUD ? <LeadCard t={ft} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
       {!COVER ? <SwitchOff f={f} /> : null}
       {P && SLATE ? <Slate f={f} P={P} /> : null}

@@ -755,6 +755,136 @@
    ],
    "gain": -17,
    "note": "千万别让北方人知道"
+  },
+  {
+   "clip": "sfx_whoosh",
+   "at": [
+    "A01",
+    "end",
+    0.05
+   ],
+   "gain": -15,
+   "note": "v3: the freeze for his intro card (beats.ts FREEZE, freeze.py)"
+  },
+  {
+   "clip": "sfx_stamp",
+   "at": [
+    "A01",
+    "end",
+    0.457
+   ],
+   "gain": -13,
+   "note": "v3: the card's seal 东坡居士 slaps down (freeze t 11)"
+  },
+  {
+   "clip": "card_ding",
+   "at": [
+    "A01",
+    "end",
+    0.723
+   ],
+   "gain": -19,
+   "note": "v3: 今日目标 bar (freeze t 19)"
+  },
+  {
+   "clip": "sfx_catch",
+   "at": [
+    "A05",
+    "end",
+    3.083
+   ],
+   "gain": -15,
+   "note": "v3: title cube 苏 lands"
+  },
+  {
+   "clip": "sfx_catch",
+   "at": [
+    "A05",
+    "end",
+    3.217
+   ],
+   "gain": -16,
+   "note": "v3: title cube 东 lands"
+  },
+  {
+   "clip": "sfx_catch",
+   "at": [
+    "A05",
+    "end",
+    3.35
+   ],
+   "gain": -15,
+   "note": "v3: title cube 坡 lands"
+  },
+  {
+   "clip": "sfx_catch",
+   "at": [
+    "B09",
+    "end",
+    0.31
+   ],
+   "gain": -16,
+   "note": "v3: fx 当事狗 label"
+  },
+  {
+   "clip": "sfx_card",
+   "at": [
+    "B11",
+    "end",
+    0.23
+   ],
+   "gain": -16,
+   "note": "v3: fx 记者OS bubble"
+  },
+  {
+   "clip": "sfx_coins",
+   "at": [
+    "C20",
+    "end",
+    1.06
+   ],
+   "gain": -17,
+   "note": "v3: fx lychee counter rolls up"
+  },
+  {
+   "clip": "sfx_card",
+   "at": [
+    "D27",
+    "start",
+    -0.76
+   ],
+   "gain": -15,
+   "note": "v3: 差役 banner"
+  },
+  {
+   "clip": "sfx_catch",
+   "at": [
+    "E37",
+    "end",
+    0.07
+   ],
+   "gain": -18,
+   "note": "v3: fx 海南待办 row 2"
+  },
+  {
+   "clip": "sfx_card",
+   "at": [
+    "H53",
+    "start",
+    -0.917
+   ],
+   "gain": -16,
+   "note": "v3: 苏过 banner"
+  },
+  {
+   "clip": "sfx_stamp",
+   "at": [
+    "H53",
+    "end",
+    0.1
+   ],
+   "gain": -11,
+   "note": "v3: fx 绝密 stamp"
   }
  ],
  "cards": {

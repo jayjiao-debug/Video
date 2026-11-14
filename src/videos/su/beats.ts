@@ -4,7 +4,7 @@
 // and names it. WP1; segment builders read it and ask for additions in /home/user/su_work/requests.md (or derive a
 // beat the same way in their own file).
 //   BEAT.A .. BEAT.I   per scene, the frames the storyboard names (a span is [first, last], inclusive)
-//   TITLE_SPAN         the title block (frames 0-90, it fades out over its last 12)
+//   TITLE_SPAN         the themed title (v3: about 1.1 s between card 1 and B06, over the whip into the yard)
 //   placeAt(f)         the place every frame shows (the storyboard's cuts: B's 黄州 flashback from flashIn to flashOut - 1)
 //   vignetteAt(f)      the huangzhou vignette of a flashback frame ("slope" until BEAT.B.pot, then "pot")
 //   SPANS              the same as [place, from, to] runs;  shotAt(f) -> { id } (the segment id, for the checker)
@@ -46,8 +46,19 @@ const A = {
   /** THE WHIP RIGHT into B: its first frame (4 frames out in A, 4 in arriving in B: cam.ts whip(cam, f, BEAT.A.whip,
    *  { dir: 1, to }); the cut is B's first frame, BEAT.B.land = whip + 4) */ whip: seg("A").to - 3,
 };
-/** the title block 「采访苏东坡的一天」 / 「1097年 · 惠州」 (PLAN 6: frames 0-90, it fades out over the last 12) */
-export const TITLE_SPAN: Span = [seg("A").from, seg("A").from + sec(3.0)];
+/** THE THEMED TITLE (v3, Jay 2026-11-14: like 秦始皇's, at the end of the cold open, about a second, never under a
+ *  subtitle): from just after card 1 (shortened to 2.6 s for it) to just before B06's first word, over the whip */
+export const TITLE_SPAN: Span = [card("A05").to + 2, from("B06") - 3];
+/** THE LEAD'S INTRO CARD (v3, Jay 2026-11-14): the picture FREEZES on story frame FREEZE.at (just after A01, his grin
+ *  to the lens with the spine bone, before A02) for FREEZE.n extra frames while hud/intro.tsx LeadCard plays. Every
+ *  beat, line and segment stays in story frames; only Film.tsx maps the composition's frame g to the story frame
+ *  (storyFrame) and the film is FREEZE.n frames longer. The sound gets the same gap at FREEZE.at / 30 s
+ *  (scripts/su/sound/freeze.py: keep the two in step). */
+export const FREEZE = { at: to("A01") + 3, n: 39 };
+/** the composition frame g -> the story frame it shows */
+export const storyFrame = (g: number) => (g < FREEZE.at ? g : g <= FREEZE.at + FREEZE.n ? FREEZE.at : g - FREEZE.n);
+/** frames since the freeze began on composition frame g (-1 outside it) */
+export const freezeT = (g: number) => (g >= FREEZE.at && g <= FREEZE.at + FREEZE.n ? g - FREEZE.at : -1);
 
 // ---------------------------------------------------------------------------------------------------- B 上午 yard + 黄州
 const B = {
@@ -214,7 +225,7 @@ export const beatCheck = (): string[] => {
       for (let i = 1; i < vs.length; i++) if (vs[i] < vs[i - 1]) bad.push(`BEAT.${id}.${k} = [${vs.join(", ")}] runs backwards`);
     }
   }
-  if (TITLE_SPAN[1] > seg("A").to) bad.push(`TITLE_SPAN ${TITLE_SPAN} runs past segment A (${seg("A").to})`);
+  if (TITLE_SPAN[0] <= card("A05").to || TITLE_SPAN[1] >= from("B06")) bad.push(`TITLE_SPAN ${TITLE_SPAN} must sit between card 1 (${card("A05").to}) and B06 (${from("B06")})`);
   let next = 0;
   for (const [p, a, b] of SPANS) { if (a !== next || b < a) bad.push(`SPANS: ${p} ${a}-${b} (expected to start on ${next})`); next = b + 1; }
   if (next !== TOTAL) bad.push(`SPANS end on ${next - 1}, the film on ${TOTAL - 1}`);

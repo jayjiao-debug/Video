@@ -205,7 +205,7 @@ export const SEGMENT_RAW: [string, number, number, number, number][] = [
 /** the fact cards: [line, line id, first frame, last frame (inclusive), zh, en]: from the end of the line (+ CARD_DELAY) for
  *  the line's "after" seconds, else 2.4 s */
 export const CARD_RAW: [number, string, number, number, string, string][] = [
-  [5, "A05", 426, 515, "他写信告诉弟弟：惠州一天杀一羊，他只买脊骨。", "He wrote to his brother: Huizhou kills one sheep a day, and he buys only the spine."],
+  [5, "A05", 426, 503, "他写信告诉弟弟：惠州一天杀一羊，他只买脊骨。", "He wrote to his brother: Huizhou kills one sheep a day, and he buys only the spine."],
   [26, "C26", 2622, 2711, "宋人笔记：诗传到京城，宰相笑：他还这么快活？", "A Song-era note: the poem reached the capital. The chief minister laughed: \"Still this happy?\""],
   [39, "E39", 3788, 3877, "他真的在信里写：到了海南，先做棺材，再做坟。", "His real letter: in Hainan, first make a coffin, then a grave."],
   [55, "H55", 5512, 5601, "这是真的。他一再叮嘱儿子别说，怕北方人来分。", "True. He kept telling his son to keep quiet, for fear northerners would come to share."],

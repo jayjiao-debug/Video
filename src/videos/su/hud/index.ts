@@ -24,10 +24,14 @@ import { TITLE_RECT } from "./title";
 import { vlogRectsAt } from "./vlog";
 import { NAMES_RECT } from "./endnames";
 import { captionRect } from "./caption";
+import { fxRectsAt } from "./fx";
+import { LEAD_RECT } from "./intro";
 import { TITLE_SPAN, BEAT } from "../beats";
 import type { Rect } from "./style";
 
 export { TitleBlock, TITLE_RECT } from "./title";
+export { LeadCard, LEAD_RECT } from "./intro";
+export { Fx, FX, FX_RECT, fxRectsAt } from "./fx";
 export { FactCard, factCardAt, factRows, factRect, FACT_RECT, FACT_END_RECT } from "./card";
 export { Stamp, stampAt, STAMP_RECT } from "./stamp";
 export { VlogHud, SwitchOff, OFF, SCENE_TIME, FLASH_TIME, batteryAt, recAlpha, timeStampAt, VLOG_RECT, vlogRectsAt } from "./vlog";
@@ -45,6 +49,7 @@ export const hudRectsAt = (f: number): { what: string; r: Rect }[] => {
   if (card) out.push({ what: "card", r: card });
   out.push(...vlogRectsAt(f));
   if (f >= BEAT.I.names[0]) out.push({ what: "names", r: NAMES_RECT });
+  out.push(...fxRectsAt(f));
   const cap = captionRect(f);
   if (cap) out.push({ what: "caption", r: cap });
   return out;
