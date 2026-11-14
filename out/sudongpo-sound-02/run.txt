@@ -1,0 +1,114 @@
+plan: {'tier': 'creator', 'character_count': 54222, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "mus_morning2", "type": "music", "text": "Funny, bouncy Chinese folk comedy theme for a cheeky cooking vlog starring a jolly, greedy old poet: staccato plucked pipa and guzheng play a mischievous tiptoeing melody, a plucked zhongruan bass bounces on the off-beats, comic woodblock and temple-block hits, playful pitch bends and little slides like a wink, now and then a short squeaky suona note as a punchline, G major pentatonic, 120 bpm, witty, sunny and light, it starts at once with the plucked melody. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_morning2.mp3", "bytes": 1490277}
+{"name": "mus_huangzhou2", "type": "music", "text": "A mock-grand, tongue-in-cheek flashback: a pompous, overly serious bamboo flute (dizi) melody over a slow gong roll, answered by a cheeky plucked pipa phrase, nostalgic and funny, an old man bragging about the pork he invented, D major pentatonic, 76 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_huangzhou2.mp3", "bytes": 337337}
+{"name": "mus_noon2", "type": "music", "text": "Lazy comic nap music: a sleepy, sliding erhu yawns over tiptoeing pizzicato guzheng plucks, a sly little melody that keeps nearly dozing off, woodblock ticks like a clock, cheeky and drowsy, a funny old man stuffing himself with lychees in the shade, G major pentatonic, 84 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_noon2.mp3", "bytes": 816945}
+{"name": "mus_evening2", "type": "music", "text": "Warm and gently funny evening music: guzheng and a light-hearted erhu over a soft plucked rhythm, a cheerful old man packing for exile and cracking jokes so his family will smile, tender with a playful wink, F major pentatonic, 78 bpm. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_evening2.mp3", "bytes": 818199}
+{"name": "mus_river2", "type": "music", "text": "The cheeky plucked guzheng theme returns, bright and jaunty: dawn on a wide river, a small boat setting off, a happy bounce with pipa and woodblock, hopeful and fun, G major pentatonic, 100 bpm, it starts at once. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_river2.mp3", "bytes": 240788}
+{"name": "mus_beach2", "type": "music", "text": "A silly, cheeky island tune: plucked pipa and guzheng with marimba, a bouncy hand drum and comic woodblock hits, a happy old man secretly grilling oysters on a beach and very pleased with himself, G major pentatonic, 112 bpm, it starts at once. Instrumental, no vocals.", "model": null, "status": 200, "sfx": true, "file": "mus_beach2.mp3", "bytes": 408808}
+{"name": "sting_luo", "type": "sfx", "text": "A Peking opera percussion punchline: one bright clash of small gong and cymbals, a single comic hit, short.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sting_luo.mp3", "bytes": 20105}
+{"name": "sting_tai", "type": "sfx", "text": "A single small Chinese opera gong hit with a rising comic pitch bend, short.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sting_tai.mp3", "bytes": 17179}
+{"name": "sting_oops", "type": "sfx", "text": "A playful descending plucked pipa glissando, a comic oops sound, short.", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sting_oops.mp3", "bytes": 20105}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "mus_morning2",
+  "type": "music",
+  "text": "Funny, bouncy Chinese folk comedy theme for a cheeky cooking vlog starring a jolly, greedy old poet: staccato plucked pipa and guzheng play a mischievous tiptoeing melody, a plucked zhongruan bass bounces on the off-beats, comic woodblock and temple-block hits, playful pitch bends and little slides like a wink, now and then a short squeaky suona note as a punchline, G major pentatonic, 120 bpm, witty, sunny and light, it starts at once with the plucked melody. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_morning2.mp3",
+  "bytes": 1490277,
+  "seconds": 62.19
+ },
+ {
+  "name": "mus_huangzhou2",
+  "type": "music",
+  "text": "A mock-grand, tongue-in-cheek flashback: a pompous, overly serious bamboo flute (dizi) melody over a slow gong roll, answered by a cheeky plucked pipa phrase, nostalgic and funny, an old man bragging about the pork he invented, D major pentatonic, 76 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_huangzhou2.mp3",
+  "bytes": 337337,
+  "seconds": 14.08
+ },
+ {
+  "name": "mus_noon2",
+  "type": "music",
+  "text": "Lazy comic nap music: a sleepy, sliding erhu yawns over tiptoeing pizzicato guzheng plucks, a sly little melody that keeps nearly dozing off, woodblock ticks like a clock, cheeky and drowsy, a funny old man stuffing himself with lychees in the shade, G major pentatonic, 84 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_noon2.mp3",
+  "bytes": 816945,
+  "seconds": 34.09
+ },
+ {
+  "name": "mus_evening2",
+  "type": "music",
+  "text": "Warm and gently funny evening music: guzheng and a light-hearted erhu over a soft plucked rhythm, a cheerful old man packing for exile and cracking jokes so his family will smile, tender with a playful wink, F major pentatonic, 78 bpm. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_evening2.mp3",
+  "bytes": 818199,
+  "seconds": 34.14
+ },
+ {
+  "name": "mus_river2",
+  "type": "music",
+  "text": "The cheeky plucked guzheng theme returns, bright and jaunty: dawn on a wide river, a small boat setting off, a happy bounce with pipa and woodblock, hopeful and fun, G major pentatonic, 100 bpm, it starts at once. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_river2.mp3",
+  "bytes": 240788,
+  "seconds": 10.05
+ },
+ {
+  "name": "mus_beach2",
+  "type": "music",
+  "text": "A silly, cheeky island tune: plucked pipa and guzheng with marimba, a bouncy hand drum and comic woodblock hits, a happy old man secretly grilling oysters on a beach and very pleased with himself, G major pentatonic, 112 bpm, it starts at once. Instrumental, no vocals.",
+  "model": null,
+  "status": 200,
+  "sfx": true,
+  "file": "mus_beach2.mp3",
+  "bytes": 408808,
+  "seconds": 17.06
+ },
+ {
+  "name": "sting_luo",
+  "type": "sfx",
+  "text": "A Peking opera percussion punchline: one bright clash of small gong and cymbals, a single comic hit, short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sting_luo.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ },
+ {
+  "name": "sting_tai",
+  "type": "sfx",
+  "text": "A single small Chinese opera gong hit with a rising comic pitch bend, short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sting_tai.mp3",
+  "bytes": 17179,
+  "seconds": 1.0
+ },
+ {
+  "name": "sting_oops",
+  "type": "sfx",
+  "text": "A playful descending plucked pipa glissando, a comic oops sound, short.",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sting_oops.mp3",
+  "bytes": 20105,
+  "seconds": 1.2
+ }
+]
