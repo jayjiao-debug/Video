@@ -144,6 +144,25 @@ const carcassTex = () => paint(256, 512, (g, W, H) => {
   g.fillStyle = COL.fat; g.fillRect(0, H * 0.88, W, H * 0.12);
   g.fillStyle = "rgba(255,255,255,0.4)"; g.fillRect(0, H * 0.06, W, H * 0.05);
 });
+/** the ground's close-up grain: one tile of DETAIL.tile metres, repeated (alpha: only the specks, pebbles and cracks) */
+const DETAIL = { cx: MX, cz: 0, size: 28, tile: 2.4 };
+const grainTex = () => paint(512, 512, (g, W) => {
+  const r = rng(91), wrap = (x: number, y: number, rr: number, fn: (x: number, y: number) => void) => {
+    for (const dx of [-W, 0, W]) for (const dy of [-W, 0, W]) if (x + dx > -rr && x + dx < W + rr && y + dy > -rr && y + dy < W + rr) fn(x + dx, y + dy);
+  };
+  for (let i = 0; i < 2600; i++) { const x = r() * W, y = r() * W, a = 0.10 + 0.12 * r(), dark = r() < 0.6, sz = 1 + 1.6 * r();
+    g.fillStyle = dark ? `rgba(92,74,50,${a})` : `rgba(240,226,196,${a})`; wrap(x, y, 3, (X, Y) => g.fillRect(X, Y, sz, sz)); }
+  for (let i = 0; i < 70; i++) { const x = r() * W, y = r() * W, rr = 2 + 3.5 * r(), rot = r() * 3;
+    wrap(x, y, rr * 2, (X, Y) => {
+      g.fillStyle = "rgba(118,100,78,0.30)"; g.beginPath(); g.ellipse(X, Y, rr * 1.3, rr, rot, 0, 7); g.fill();
+      g.fillStyle = "rgba(236,222,192,0.26)"; g.beginPath(); g.ellipse(X - rr * 0.3, Y - rr * 0.35, rr * 0.6, rr * 0.4, rot, 0, 7); g.fill();
+    }); }
+  g.lineWidth = 1.2;
+  for (let i = 0; i < 9; i++) { const pts: [number, number][] = [[r() * W, r() * W]];
+    for (let j = 0; j < 6; j++) { const [x, y] = pts[pts.length - 1]; pts.push([x + (r() - 0.5) * 40, y + (r() - 0.5) * 40]); }
+    g.strokeStyle = "rgba(96,78,56,0.12)";
+    for (const dx of [-W, 0, W]) for (const dy of [-W, 0, W]) { g.beginPath(); pts.forEach(([x, y], j) => (j ? g.lineTo(x + dx, y + dy) : g.moveTo(x + dx, y + dy))); g.stroke(); } }
+}, true);
 /** THE GROUND (one painted square): packed earth, the lanes worn lighter, stone gutters along every shop front, straw */
 const GROUND = { cx: MX - 4, cz: -2, size: 64 };
 const paintGround = () => groundTex(GROUND.cx, GROUND.cz, GROUND.size, 2048, COL.earth, (g, k) => {
@@ -193,6 +212,14 @@ export function buildMarket(K: Kit) {
 
   // =================================================================================================== the ground
   { const t = paintGround(); const m = Mk.mesh("market.ground", groundG(GROUND.cx, GROUND.cz, GROUND.size), Mk.tex(t, 0.95), { cast: false }); m.receiveShadow = true; }
+  // the earth's own grain up close (Jay, 14 Nov: "add some texture but not attention grabbing"): the painted ground has
+  // 3 cm texels, a flat colour in B's close shots, so a tiled detail layer lies 3 mm over it round the tavern's front:
+  // fine specks, small pebbles with a lit top, hairline cracks, all faint. Transparent, depth not written, pulled
+  // forward by polygon offset (no z-fight), no ink.
+  { const m = Mk.own("#ffffff", { map: grainTex(), rough: 0.95 }); m.transparent = true; m.depthWrite = false; m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -2;
+    const G = new THREE.PlaneGeometry(DETAIL.size, DETAIL.size, 1, 1).rotateX(-Math.PI / 2).translate(DETAIL.cx, 0.003, DETAIL.cz);
+    const uv = G.attributes.uv as THREE.BufferAttribute; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * DETAIL.size / DETAIL.tile, uv.getY(i) * DETAIL.size / DETAIL.tile);
+    const d = Mk.mesh("market.groundDetail", G, m, { cast: false, noink: true }); d.receiveShadow = true; d.renderOrder = 1; }
 
   // =================================================================================================== the goods (local, on a counter top at y = top, z middle zc, x across +-w/2)
   const goods = (kind: Kind, M: THREE.Matrix4, w: number, top: number, zc: number, seed: number) => {

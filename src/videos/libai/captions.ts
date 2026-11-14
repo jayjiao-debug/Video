@@ -88,6 +88,8 @@ const RAW: Raw[] = [
   ["F", 4999, 5057, "好。四个人", 44, 0, 5045, [4999, 5022, 5027, 5031], "li"],
 ];
 export const CAPTIONS: CaptionGroup[] = RAW.map(([shot, from, to, text, line, k, end, , who]) => ({ shot, from, to, text, line, k, end, who }));
+/** each group's character timings (the frame each spoken character starts; punctuation has none), CAPTIONS' order */
+export const CAPTION_AT: number[][] = RAW.map((r) => r[7]);
 /** the caption group shown on frame f, or null */
 export const captionAt = (f: number): CaptionGroup | null => {
   let lo = 0, hi = CAPTIONS.length - 1;

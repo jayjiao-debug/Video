@@ -10,6 +10,7 @@ import { fxShown } from "./hud/fx";
 import { factRect } from "./hud/card";
 import { captionRect } from "./hud/caption";
 import { whisperRectAt, whisperCapAt } from "./hud/whisper";
+import { poemAt, poemRect } from "./hud/poem";
 
 export const runCheck = () => {
   const items: Shown[] = [
@@ -23,7 +24,8 @@ export const runCheck = () => {
     protect: (f) => {
       const z = [];
       const w = whisperRectAt(f); if (w) z.push({ what: "her whisper", r: w });
-      const c = whisperCapAt(f) ? null : captionRect(f); if (c) z.push({ what: "the subtitle", r: c });
+      const c = whisperCapAt(f) || poemAt(f) ? null : captionRect(f); if (c) z.push({ what: "the subtitle", r: c });
+      const p = poemRect(f); if (p) z.push({ what: "his poem (in place of the subtitle)", r: p });
       return z;
     },
     // the night scene takes no intro card and no effect (its two closing fact cards are the sources' voice, the ending)

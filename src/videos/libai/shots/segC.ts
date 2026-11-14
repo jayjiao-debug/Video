@@ -7,6 +7,7 @@
 import * as THREE from "three";
 import { SEGMENTS, FPS, lineId, type Segment, type CamPose } from "../story";
 import { BEAT } from "../beats";
+import { TRACK } from "../track";
 import * as C from "../cam";
 import { LI, GAO, EMPEROR } from "../people";
 import { TX } from "../layout";
@@ -93,6 +94,8 @@ export const SEG: Segment = {
     w.actor(GAO).set(gao(f));
     w.actor(EMPEROR).set({ at: EMP_AT, facing: Math.PI + 0.3, pose: { kind: "idle", t: f / FPS }, turn: 1, visible: true });
     w.update();
+    // where 高力士's head is on screen: his banner follows him (hud/intro.tsx GaoBanner)
+    { const hd = w.actor(GAO).headWorld(), c = w.project(hd), tp = w.project(hd.clone().add(new THREE.Vector3(0, 0.34, 0))); TRACK.gao = { f, x: c.x, y: c.y, top: tp.y }; }
     const r = w.actor(LI), writing = f < L21.from - 6;
     if (writing) w.prop("brush").put(r.handWorld(0), { grip: "hilt", rot: [0.3, 0, 0.2] });
     else w.prop("brush").put(T.on(0.32, -0.02), { rot: [Math.PI / 2, 0.4, 0] });

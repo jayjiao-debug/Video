@@ -5,6 +5,7 @@ import { FPS, FREEZE_AT_WORLD, FREEZE_N, seg } from "./story";
 import { TITLE_SPAN, GAO_BANNER, TRANSITIONS } from "./beats";
 import { WHISPERS } from "./whisper";
 import { FX_SOUNDS } from "./hud/fx";
+import { POEM_SOUNDS } from "./hud/poem";
 
 export const soundEvents = () => ({
   fps: FPS,
@@ -21,7 +22,8 @@ export const soundEvents = () => ({
     ...TRANSITIONS.filter((t) => t.kind === "clock").map((t) => [t.from, "clock_race", -14, `clock race ${t.scenes!.join("->")}`]),
     [seg("C").to - 3, "whoosh", -14, "the whip C -> D"],
     ...FX_SOUNDS,
+    ...POEM_SOUNDS,
   ],
   /** the freeze card's sounds, in frames from the freeze's first frame */
-  freezeHits: [[0, "sfx_card", -14, "the picture stops, the card swings in"], [6, "sfx_stamp", -15, "the seal 谪仙人"], [17, "pop_hat", -15, "今日目标"]],
+  freezeHits: [[0, "sfx_whoosh", -19, "she pulls back, he is cut out"], [0, "sfx_card", -14, "the picture stops, the card swings in"], [6, "sfx_stamp", -15, "the seal 谪仙人"], [17, "pop_hat", -15, "今日目标"], [FREEZE_N - 10, "sfx_whoosh", -20, "her zoom back in carries the card off"]],
 });

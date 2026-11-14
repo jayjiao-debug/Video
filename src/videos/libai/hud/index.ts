@@ -27,6 +27,7 @@ import type { Rect } from "./style";
 import { whisperRectAt, whisperCapAt } from "./whisper";
 import { gaoBannerRect } from "./intro";
 import { FX_RECTS } from "./fx";
+import { poemAt, poemRect } from "./poem";
 
 export { TitleBlock, TITLE_RECT } from "./title";
 export { FactCard, factCardAt, factRows, factRect, FACT_RECT, FACT_END_RECT } from "./card";
@@ -47,8 +48,10 @@ export const hudRectsAt = (f: number): { what: string; r: Rect }[] => {
   out.push({ what: "battery", r: VLOG_RECT.battery });
   const wr = whisperRectAt(f);
   if (wr) out.push({ what: "whisper", r: wr });
-  const cap = whisperCapAt(f) ? null : captionRect(f);
+  const cap = whisperCapAt(f) || poemAt(f) ? null : captionRect(f);
   if (cap) out.push({ what: "caption", r: cap });
+  const pr = poemRect(f);
+  if (pr) out.push({ what: "poem", r: pr });
   out.push(...FX_RECTS(f));
   const gb = gaoBannerRect(f);
   if (gb) out.push({ what: "banner", r: gb });

@@ -26,12 +26,13 @@ import { FONT_STACK, useOverlayFont } from "../group/kit/overlay";
 import { World } from "./world";
 import { W, H, FILM_TOTAL, CLOCK, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./story";
 import { TitleBlock, FactCard, VlogHud, Caption } from "./hud";
-import { LeadCard, GaoBanner, leadIsolation } from "./hud/intro";
+import { LeadCard, GaoBanner, leadIsolation, leadHold } from "./hud/intro";
 import { Isolation } from "./isolate";
 import { LI } from "./people";
 import { aim, mixCam } from "./shots/lb";
 import { Whisper, whisperCapAt } from "./hud/whisper";
 import { Fx } from "./hud/fx";
+import { PoemFx, poemAt } from "./hud/poem";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -58,10 +59,11 @@ const segAt = (f: number) => SEGS.find((s) => f >= s.from && f <= s.to) ?? (f < 
  *  close shot with his head in the top half (the card takes the lower half), then back as the card leaves. The figures
  *  are solved again for this camera. k 0..1 (hud/intro.tsx leadIsolation). */
 const CARD_BACK = 1.9, CARD_HEAD_SY = 620;   // metres from his head; his head's height on the 1920 reference (film y 560)
-const cardCam = (live: Pose["camera"], head: THREE.Vector3): Pose["camera"] => {
+const cardCam = (live: Pose["camera"], head: THREE.Vector3, hold: number): Pose["camera"] => {
   const lp = Array.isArray(live.pos) ? new THREE.Vector3(...(live.pos as [number, number, number])) : (live.pos as THREE.Vector3).clone();
   const u = lp.sub(head); u.y *= 0.5; u.normalize();
-  return aim(head.clone().addScaledVector(u, CARD_BACK), head, CARD_HEAD_SY, 540, live.fov);
+  // a slow push through the frozen moment (about 8 percent over the hold)
+  return aim(head.clone().addScaledVector(u, CARD_BACK * (1 - 0.08 * hold)), head, CARD_HEAD_SY, 540, live.fov);
 };
 class Director {
   cur: Segment | null = null;
@@ -79,7 +81,7 @@ class Director {
     if (k > 0) {
       const e = k * k * (3 - 2 * k);
       const li = this.w.actor(LI);
-      P = { ...P, camera: mixCam(P.camera, cardCam(P.camera, li.headWorld()), e) };
+      P = { ...P, camera: mixCam(P.camera, cardCam(P.camera, li.headWorld(), leadHold(fz)), e) };
       if (k > 0.5) this.w.only(li);    // nobody else in his card's frame (once the backdrop is mostly in)
       this.w.setCamera(P.camera); this.w.update();
     }
@@ -185,6 +187,7 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
 const Hud: React.FC<{ f: number; P: Pose }> = ({ f, P }) => (
   <>
     {P.cards !== false ? <><TitleBlock f={f} /><FactCard f={f} /><GaoBanner f={f} /><Fx f={f} /></> : null}
+    {P.captions !== false && !NOCAP ? <PoemFx f={f} /> : null}
     <VlogHud f={f} cards={P.cards} />
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(f, P)}</React.Fragment>)}
   </>
@@ -213,8 +216,8 @@ export const LibaiFilm: React.FC = () => {
   const t0 = DBG ? performance.now() : 0;
   const P = director ? director.frame(f, fz) : null;
   // 李白's intro card: he is isolated in the frozen picture (isolate.ts), the backdrop set up after the pose's camera
-  const iso = useMemo(() => (world ? new Isolation(world.root) : null), [world]);
-  if (world && iso && P) { const k = leadIsolation(fz); iso.set(k, world.camera, k > 0 ? world.actor(LI).headWorld() : world.camera.position); }
+  const iso = useMemo(() => (world ? new Isolation(world.root, world.gl) : null), [world]);
+  if (world && iso && P) { const k = leadIsolation(fz); iso.set(k, world.camera, k > 0 ? world.actor(LI).headWorld() : world.camera.position, k > 0 ? world.actor(LI).group : undefined); }
   if (DBG && P) console.log(`[su] f${f} pose (segment ${director!.cur?.id}, place ${world!.place}) in ${Math.round(performance.now() - t0)} ms`);
   const onCreated = useCallback((s: RootState) => setCtx({ gl: s.gl, camera: s.camera as THREE.PerspectiveCamera }), []);
   const onReady = useCallback(() => continueRender(handle), [handle]);
@@ -228,7 +231,7 @@ export const LibaiFilm: React.FC = () => {
       {P && P.hud !== false && !NOHUD ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud f={f} P={P} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
       {P && P.hud !== false && !NOHUD && frozen ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><LeadCard f={fz} /></AbsoluteFill> : null}
-      {P && P.captions !== false && !NOCAP && !frozen && !whisperCapAt(f) ? <Caption f={f} /> : null}
+      {P && P.captions !== false && !NOCAP && !frozen && !whisperCapAt(f) && !poemAt(f) ? <Caption f={f} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
       {P && SLATE ? <Slate f={f} fz={fz} P={P} /> : null}
     </AbsoluteFill>

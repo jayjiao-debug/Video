@@ -235,7 +235,7 @@ export const LEAD = VOICE_LEAD_F, TAIL = VOICE_TAIL_F;
  *  on his first close-up, just after A02 (他眯眼凑近镜头: 哟，月亮？你怎么白天就出来了？) and before her answer. Film.tsx
  *  poses the picture at CLOCK.world(f) and hides the subtitle while CLOCK.at(f); the sound mix (scripts/libai/sound/
  *  build.py) moves everything after the freeze later by FREEZE_N. No voice is re-recorded: the gap is silence. */
-export const FREEZE_N = 42;
+export const FREEZE_N = 60;   // 2 s: his card holds (Jay, 14 Nov: "hold a bit longer")
 export const FREEZE = { lead: 0 } as const;
 /** the picture stops on the frame before her answer starts, so the subtitle after the freeze is hers, never A02 again */
 export const FREEZE_AT_WORLD = line("A03").from - 1;
