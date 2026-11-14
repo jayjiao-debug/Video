@@ -5,17 +5,21 @@
 //       50), the lid off and set down beside it (where Humphrey left it in B), no steam, the window bars' short sharp
 //       shadows across the cloth; a slow push in.
 //   C2  THE GARDEN WALK (one take): NEWTON in his gown comes down the east walk toward her, hands behind his back; she
-//       walks BACKWARDS in front of him, the mic in (16 「您从来不出去玩吗？」 17 "I am out." 18 「绕两圈就算玩？」). On
+//       walks BACKWARDS in front of him, the lens on him (16 「您从来不出去玩吗？」 17 "I am out." 18 「绕两圈就算玩？」). On
 //       19 "Two laps is—" his right hand comes out to lecture, and on the cut-off he STOPS DEAD at the crossing (eyes
 //       wide, mouth still open on the word, staring at nothing; the gravel stops with him).
 //   C3  he turns on his heel and RUNS west along the cross walk for his staircase door (the gravel run, on the mix's
 //       anchor C04 end + 0.25 s); her eyes follow him (20 「诶？他想到什么了？」), she sets off after him and the camera
 //       WHIPS UP the range front toward his window: the whip IS the cut (the whoosh: C05 end + 0.1 s).
 //   C4  HIS ROOM (one take): the whip arrives from below on him already writing, bent over the desk, STANDING (still in
-//       his gown: no time); her right hand on the chair's top rail (it stands out from the wall on his left) shoves
-//       it (the scrape: C06 start - 0.7 s), lets go, and it slides on against the backs of his knees; she steps back:
-//       21 「坐下写嘛。」 He waves it away over his shoulder without looking; 22 "No time." He writes on; her eyes go
-//       to the empty chair.
+//       his gown: no time); the chair (it stands out from the wall on his left) is SHOVED BY AN INVISIBLE HAND (the
+//       scrape: C06 start - 0.7 s): it lurches, tips onto its leading legs (the near ones lift 3 cm, as a chair does
+//       when you push it by the top rail), judders along on the scrape's grain (stick-slip), and drops back onto
+//       four legs against the backs of his knees with a little rock; the camera leans after it as she pushes, then
+//       steps back: 21 「坐下写嘛。」 He waves it away over his shoulder without looking; 22 "No time." He writes on;
+//       her eyes go to the empty chair.
+// SHE IS INVISIBLE (Jay, 14 Nov): nothing of her is put; the chair moves by itself (the invisible hand) and the lens
+// keeps a light focus on his mouth.
 import * as THREE from "three";
 import { SEGMENTS, line, capWord, FPS, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
@@ -48,15 +52,17 @@ const T_CHASE = L5.to - sec(0.55);
 const T_WHIP = L5.to + sec(0.1);
 const WHIP_OUT = 6, WHIP_IN = 6;
 const T_CUT = T_WHIP + WHIP_OUT;
-/** the chair (the scrape, C06 start - 0.7 s, loud for 0.65 s): her hand shoves it for a few frames (speeding it up)
- *  and lets go; it slides on by itself, slowing, and stops against the backs of his knees */
-const T_DRAG0 = L6.from - sec(0.7), T_DRAG1 = T_DRAG0 + sec(0.68);
-const SHOVE = 0.35, T_LET = Math.round(lerp(T_DRAG0, T_DRAG1, SHOVE)), T_GONE = T_LET + 10;
+/** the chair (sfx_chair from C06 start - 0.7 s: its scrape runs from +1 to +20 frames, grain peaks at +2, +5 and
+ *  +13..15): the invisible push lurches it on +1, it judders along, and its lifted legs drop back on +17 (the rock to
+ *  +23); her body's push ends on +12 (the camera stops leaning after it) */
+const T_DRAG0 = L6.from - sec(0.7);
+const T_PUSH0 = T_DRAG0 + 1, T_LAND = T_DRAG0 + 17, T_ROCK = T_LAND + 6;
+const T_LET = T_DRAG0 + 12;
 /** she straightens and steps back while she coaxes (21) */
 const T_BACK0 = T_LET + 2, T_BACK1 = L6.from + sec(0.8);
 /** he waves the chair away without looking (into 22 "No time.") */
 const T_WAVE0 = L7.from - 8, T_WAVE1 = L7.from + sec(0.6);
-/** her mic arm relaxes after 22 and her eyes go to the empty chair */
+/** after 22 her eyes drift off him onto the empty chair */
 const T_DROOP = L7.to + 8;
 
 // ---------------------------------------------------------------------------------------------------- C1 the plate
@@ -145,11 +151,11 @@ const gardenLook = (f: number) => {
 // She is on his LEFT, in the corner past the bookcase, looking along the back wall: he stands turned a little toward
 // her (his left), so his face is a 3/4 and THE PAGE he writes on lies on her side of him (the loose sheet on the set's
 // open book, in front of his left shoulder), the white quill standing up off it at the frame's left; the window and its
-// table far behind him; the chair at the lower right, out from the wall where he pushed it when he got up; her RIGHT
-// hand (in from the lower right) shoves it back in behind his knees; her mic is DOWN while nobody speaks (from the
-// whip until just before 21), up on him for 21 and 22, then down again. A WIDER LENS here (C4_FOV): from the only
-// corner where her hand reaches the chair she cannot stand further back, so the lens keeps his big toon head inside
-// the frame and the chair's top rail in shot at the end.
+// table far behind him; the chair at the lower right, out from the wall where he pushed it when he got up; an
+// invisible hand shoves it back in behind his knees (chairPut: the lurch, the tip onto its leading legs, the
+// stick-slip, the drop and the rock). A WIDER LENS here (C4_FOV): it was chosen when her hand had to reach the chair
+// from this corner; that reason is gone, but the wide lens stays as it is (it keeps his big toon head inside the
+// frame and the chair's top rail in shot at the end, and the framing is signed off).
 const C4_FOV = 70;
 /** he stands 10 cm nearer the desk than his morning mark and 8 cm to his right (his gown's hem clear of the chair's
  *  front legs at the backs of his knees, his belly clear of the open book's corner), turned N_TURN toward his left
@@ -171,25 +177,59 @@ const PAGE = SHEET_AT.clone().add(V(-0.04, 0.004, -0.012));
 /** the chair: on the cut out from the wall on his left, a little askew; it ends square behind him, its back a few
  *  millimetres off the skirting */
 const CH0 = ROOM.chair.clone().add(V(0.6, 0, 0.32)), CH1 = ROOM.chair.clone().add(V(-0.08, 0, -0.006)), ROT0 = -0.2;
-/** 0..1 along its way: speeding up under her hand (to SHOVE), then sliding on, slowed by the floor */
+/** THE STICK-SLIP: the push's speed over its way (a swell from the lurch to the landing) times a judder at the
+ *  scrape's grain (3.6 frames a stutter); integrated in quarter frames once (a table: pure), 0..1 along the way */
+const JUD_P = 3.6, JUD_K = 0.65;
+const DRAG_TAB = (() => {
+  const n = (T_LAND - T_PUSH0) * 4, v: number[] = [0];
+  for (let i = 1; i <= n; i++) {
+    const g = i / 4, u = g / (T_LAND - T_PUSH0), base = Math.pow(Math.sin(Math.PI * Math.min(1, u * 0.92 + 0.04)), 0.7);
+    v.push(v[i - 1] + base * Math.max(0, 1 + JUD_K * Math.sin((2 * Math.PI * g) / JUD_P - 0.6)));
+  }
+  return v.map((x) => x / v[n]);
+})();
 const dragK = (f: number) => {
-  const t = clamp01((f - T_DRAG0) / (T_DRAG1 - T_DRAG0)), r = SHOVE;
-  return t < r ? (t * t) / r : r + 2 * (t - r) - ((t - r) * (t - r)) / (1 - r);
+  if (f <= T_PUSH0) return 0;
+  if (f >= T_LAND) return 1;
+  const x = (f - T_PUSH0) * 4, i = Math.floor(x);
+  return lerp(DRAG_TAB[i], DRAG_TAB[Math.min(i + 1, DRAG_TAB.length - 1)], x - i);
 };
-/** it heads back toward the wall faster than along it (its front legs never sweep through his gown) */
-const chairAt = (f: number) => {
-  const k = dragK(f), kz = 1 - (1 - k) ** 2.5, jud = 0.005 * Math.sin(Math.PI * k) * Math.sin((f - T_DRAG0) * 2.1);
-  return V(lerp(CH0.x, CH1.x, k) + jud, 0, lerp(CH0.z, CH1.z, kz));
+/** its floor point: it heads back toward the wall faster than along it (its front legs never sweep through his gown) */
+const pathAt = (k: number) => V(lerp(CH0.x, CH1.x, k), 0, lerp(CH0.z, CH1.z, 1 - (1 - k) ** 2.5));
+/** its yaw: squared up as it goes, with a small wobble on the judder */
+const chairRot = (f: number) => {
+  const k = dragK(f), wob = f > T_PUSH0 && f < T_LAND ? 0.025 * Math.sin((2 * Math.PI * (f - T_PUSH0)) / JUD_P) * Math.sin(Math.PI * k) : 0;
+  return ROT0 * (1 - k) ** 2 + wob;
 };
-const chairRot = (f: number) => ROT0 * (1 - dragK(f)) ** 2;
-/** her grip on the top rail: a hand's width off its middle toward her */
-const GRIP_ALONG = 0.07;
-const railGrip = (p: THREE.Vector3, yaw: number) => {
-  const cy = Math.cos(yaw), sy = Math.sin(yaw), r = CHAIR.rail, s = r[0] + GRIP_ALONG;
-  return { at: V(p.x + s * cy + r[2] * sy, r[1] + 0.06, p.z - s * sy + r[2] * cy), along: V(cy, 0, -sy) };
+/** THE TIP (deg): onto the leading legs as the push lurches it (in 3 frames to 5.5), rocking +-1.2 against the judder
+ *  (when it sticks the top runs on), easing off before it lands, the drop on T_LAND; then the rock: it tips back
+ *  onto the trailing legs (-1.3) and settles */
+const tipAt = (f: number) => {
+  if (f <= T_PUSH0) return 0;
+  if (f < T_LAND) {
+    const up = easeOutCubic(clamp01((f - T_PUSH0) / 3)), off = 1 - easeInCubic(clamp01((f - (T_LAND - 4)) / 4));
+    return (5.5 * up - 1.2 * Math.sin((2 * Math.PI * (f - T_PUSH0)) / JUD_P - 0.6) * up) * off;
+  }
+  if (f < T_ROCK) return -1.3 * Math.sin((Math.PI * (f - T_LAND)) / (T_ROCK - T_LAND));
+  return 0;
+};
+/** where the chair is and how it stands on frame f: the tip turns it about the floor line under its leading legs
+ *  (tip > 0: the way it travels) or its trailing legs (tip < 0, the rock), so two feet always stay on the boards */
+const LEGS = [[-1, -1], [-1, 1], [1, -1], [1, 1]].map(([sx, sz]) => V(sx * (CHAIR.w / 2 - 0.025 + 0.017), 0, sz * (CHAIR.d / 2 - 0.025 + 0.017)));
+const chairPut = (f: number) => {
+  const k = dragK(f), yaw = chairRot(f), base = pathAt(k);
+  const qYaw = new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), yaw);
+  const tip = tipAt(f);
+  if (Math.abs(tip) < 1e-4) return { at: base, rot: qYaw as THREE.Quaternion | number };
+  // the way it travels here (the path's tangent; at the landing the last stretch's)
+  const kk = Math.min(Math.max(k, 0.02), 0.98), dir = pathAt(kk + 0.02).sub(pathAt(kk - 0.02)).setY(0).normalize();
+  const side = tip > 0 ? 1 : -1, ext = Math.max(...LEGS.map((l) => side * l.clone().applyQuaternion(qYaw).dot(dir)));
+  const pivot = base.clone().addScaledVector(dir, side * ext);
+  const q = new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0).cross(dir).normalize(), (tip * Math.PI) / 180);
+  return { at: pivot.clone().add(base.clone().sub(pivot).applyQuaternion(q)), rot: q.multiply(qYaw) as THREE.Quaternion | number };
 };
 /** her eyes in the room (lens C4_FOV): A = on the cut, bent toward the chair (his face left of the middle, the quill
- *  at the left, the chair and her hand at the lower right); B = leaning after the chair as she shoves it; M =
+ *  at the left, the chair at the lower right); B = leaning after the chair as it is shoved; M =
  *  straightened, back in the corner (his face, the quill, the chair at his knees) for 21 and 22; E = her eyes drifting
  *  right onto the empty chair */
 const CAM_A = frameOn(V(RMX + 1.95, 1.42, -2.45), N_HEAD, 430, 560, C4_FOV);
@@ -228,12 +268,11 @@ const leftHand = (f: number) => {
 /** absorbed on the page all through (his eyes never leave it); flat and dismissive for 22 "No time." (deadpan: level
  *  brows, not the frown of "focus" over a talking mouth, which read angry), the swaps under blinks */
 const R_EXPR: [number, "focus" | "deadpan"][] = [[S.from, "focus"], [L7.from - 3, "deadpan"], [L7.to + 6, "focus"]];
-/** her mic in the room: DOWN from the whip (nobody speaks while she shoves the chair), up on him for 21 and 22, down
- *  again once he has said "No time." (it sinks out at the lower left) */
-const micIn = (f: number) => ky(f, [[L6.from - 8, 0], [L6.from + 2, 1], [T_DROOP, 1], [T_DROOP + 22, 0]]);
 
 // ---------------------------------------------------------------------------------------------------- the shot
 const mouthOf = (r: Rig) => r.headWorld().add(V(0, -0.1, 0));
+/** the film's light focus (amount 3) on a world point (his mouth) */
+const lightFocus = (cam: CamPose, p: THREE.Vector3) => ({ focus: Math.max(0.2, posOf(cam).distanceTo(p)), amount: 3 });
 
 const posePlate = (w: World, f: number): Pose => {
   w.setPlace("room");
@@ -274,9 +313,8 @@ const poseGarden = (w: World, f: number): Pose => {
     hands: gardenHands(f, s), hide: NEWTON_HIDE, visible: true,
   });
   w.update();
-  // HER MIC: in from the cut, held toward his mouth all the way (it follows him as he runs off)
-  const M = C.putMic(w, cam, f, { aim: mouthOf(n) });
-  const post = Wh.post ?? (M.dof ? { dof: M.dof } : undefined);
+  // the light focus stays on his mouth as he runs off
+  const post = Wh.post ?? { dof: lightFocus(cam, mouthOf(n)) };
   return { camera: cam, post, slate: f < T_STOP ? "C2 walk" : "C3 run" };
 };
 
@@ -305,27 +343,13 @@ const poseRoom = (w: World, f: number): Pose => {
   w.prop("drafts").put(ROOM.drafts, { rot: -0.15 });
   w.prop("inkwell").put(ROOM.inkwell);
   w.prop("sheets").put(SHEET_AT, { n: 1, rot: SHEET_ROT });
-  const ch = chairAt(f), rot = chairRot(f);
-  w.prop("chair").put(ch, { rot });
+  const ch = chairPut(f);
+  w.prop("chair").put(ch.at, { rot: ch.rot });
   w.update();
   w.prop("quill").put(n.handWorld(0), { grip: "hilt", rot: QROT_C4 });
 
-  // HER RIGHT HAND on the chair's top rail from the cut: it drags, shoves, lets go and goes out at the lower right
-  if (f < T_GONE) {
-    const g = railGrip(ch, rot);
-    let H = C.freeHand(cam, g.at, { bar: g.along });
-    if (f > T_LET) {
-      // let go where it shoved (still carried a little by its swing), then off the frame's lower right corner
-      // (its follow-through: a few centimetres on after the chair, which runs away from it)
-      const F = C.camFrame(cam), k = smooth((f - T_LET) / (T_GONE - T_LET)), g0 = railGrip(chairAt(T_LET), chairRot(T_LET));
-      const q0 = C.fromScreen(F, 1320, 1900, 0.42), out = C.camToWorld(F, q0.x, q0.y, q0.z), fol = smooth(Math.min(1, k * 3));
-      H = C.freeHand(cam, g0.at.clone().add(V(-0.03 * fol, 0.06 * smooth(Math.min(1, k * 10)), 0)).lerp(out, easeInCubic(k)), { bar: g0.along });
-    }
-    w.prop("handR").put(H.at, { rot: H.rot, pose: H.pose });
-  }
-  // HER MIC toward his mouth while it is up (micIn)
-  const M = C.putMic(w, cam, f, { aim: mouthOf(n), enter: micIn(f) });
-  const post = Wh.post ?? (M.dof ? { dof: M.dof } : undefined);
+  // the light focus on his mouth
+  const post = Wh.post ?? { dof: lightFocus(cam, mouthOf(n)) };
   return { camera: cam, post, slate: "C4 room" };
 };
 

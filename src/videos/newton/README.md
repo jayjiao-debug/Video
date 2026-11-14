@@ -322,15 +322,27 @@ is `React.createElement`.
 
 ## 10. The HUD (`hud/`, WP4; Film.tsx draws it, shots only switch it)
 
-Film.tsx draws, in order: the HUD layer (every `registerHud`, then `<TitleCard f at={P.title} />` and `<FactCard f />`),
-then `P.overlays`, then `<Caption f />`, then `P.top`. There is NO vlog UI (no REC, no timestamp, no battery, no time
-cards). `import { ... } from "../hud"` (hud/index.ts re-exports everything).
+Film.tsx draws, in order: the HUD layer (`<VlogHud f rec={P.rec} cards={P.cards} />`, every `registerHud`, then
+`<TitleCard f at={P.title} />` and `<FactCard f />`), then `P.overlays`, then `<Caption f />`, then `P.top`.
+`import { ... } from "../hud"` (hud/index.ts re-exports everything).
+HER CAMERA'S RECORDING UI (`hud/vlog.tsx`, Jay 14 Nov; PLAN 5): the REC lamp (1 Hz, soft) and "REC" top left (row
+y 204, x 50..183, y 184..224), the scene's timestamp under it (「清晨 05:00」 / EARLY MORNING: on every scene's FIRST
+FRAME it slides in 1.5x big over x 50..394, y 242..353 at most while the clock runs on from the last scene's time, holds
+to 1.6 s, then shrinks to x 50..281, y 234..309 at most for the rest of the scene; each scene's own box:
+`stampRect(id, big)`, e.g. F at rest x 50..200, G big x 50..348), the battery top right (x 845..1038, y 182..226; drains
+with the clock, red at 2 a.m.). Her camera switches off on `OFF_AT` (`BEAT.G.cameraOff`, frame 5211 = G to - 1.4 s, 12
+frames after the last pluck): the lamp dies, the whole UI goes grey (battery emptied) and holds still for 24 frames
+until the end black (`BEAT.G.black[0]` = OFF_AT + 24). KEEP FACES (skin; hair is fine) OUT OF THE TWO TOP CORNERS
+(`VLOG_RECT.rec`, `.stamp`, `.battery`, and the big intro box `.stampBig` during a scene's first 2 s) for the WHOLE
+scene, push-ins included; reframe rather than switch the UI off (the owner wants one fixed layout; a lamp that
+vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big intro) only as a last resort.
 
 | Pose field | effect |
 |---|---|
 | `title` | where the title block sits on this frame: `{ x, y, scale, rot }` (centre px, deg); fields left out come from `setTitlePlace` / the frame's centre. segA's stub lines it up with the shut door |
-| `cards: false` | hides the fact card and the title block on this frame |
-| `hud: false` | hides the whole HUD layer (also registered HUDs) |
+| `cards: false` | hides the fact card and the title block on this frame, and skips the timestamp's big intro |
+| `rec: false` | hides her camera's REC lamp and the timestamp on this frame (the battery stays, still) |
+| `hud: false` | hides the whole HUD layer (the vlog UI and registered HUDs too) |
 | `captions: false` | hides the subtitle on this frame |
 | `overlays` / `top` | your own 2D nodes below / above the subtitle (1080 x 1920 px); the end black goes in `top` |
 | `post` | `{ dof, bloom, grade, gradeAmount, ink, ao, bg }` over the place's look (the asides: `dof` from putMic) |
@@ -370,7 +382,8 @@ cards). `import { ... } from "../hud"` (hud/index.ts re-exports everything).
 - Figures keep moving: never a frozen figure for long (`alive`, `standing`, idle poses with `t`); never a frozen hand.
 - A face never turns to profile (FACE_MAX 12 deg): turning away = a body turn or back view (`turn: 1`), the gaze, a
   head tilt.
-- Not this film: no vlog UI, no time cards, no breathing camera, no "keep it / cut it" gag. Impacts move objects,
+- Her camera's recording UI is in (Jay, 14 Nov); she is never seen (no mic, no hands: an invisible hand). Not this
+  film: no separate time cards, no breathing camera, no "keep it / cut it" gag. Impacts move objects,
   never the whole frame; DEAD STILL on the laugh.
 
 ## 12. Checks

@@ -134,6 +134,10 @@ const gStrike2 = pre("G01") + Math.round((from("G01") - pre("G01")) * 0.4);   //
 const gRoom = to("G04") + 1;
 const gOutside = card("G04").to + 1;
 const gDark = gOutside + sec(0.4);
+/** HER CAMERA SWITCHES OFF (hud/vlog.tsx OFF_AT; cues.json sfx_poweroff on ["G", "to", -1.4]): 12 frames after the mix's
+ *  last pluck (his window goes dark: G to - 1.77 s = segG's T_DARK), in the crickets, after the pluck has decayed. Tied
+ *  to the scene's end like the pluck, so it follows if G's tail is extended (WP4, director vlog round 1, note 4) */
+const gOff = seg("G").to + 1 - sec(1.4);
 const G = {
   /** a clock strikes two (sound): the first stroke */ strike1: pre("G01") + 2,
   /** the second stroke: the board slides off his knee */ strike2: gStrike2,
@@ -150,7 +154,9 @@ const G = {
   /** fact card 5 (G04) mid-left over the 2 a.m. bites */ card5: cardSpan("G04"),
   /** outside, from the elaboratory door: his lit window (the outbuilding still glows behind us) */ outside: gOutside,
   /** his window goes dark */ windowDark: gDark,
-  /** then black: fading in over the first 6 frames to the film's darkest warm tone (not #000), to the last frame */ black: [gDark + sec(0.5), TOTAL - 1] as Span,
+  /** her camera switches off: the REC lamp dies, the whole vlog UI goes grey and holds still (hud/vlog.tsx OFF_AT) */ cameraOff: gOff,
+  /** then black: fading in to the film's darkest warm tone (not #000), to the last frame; never before the dead
+   *  camera UI has held 24 frames (0.8 s: it must read on a phone; sfx_poweroff's power-down sweep lands here) */ black: [Math.max(gDark + sec(0.5), gOff + 24), TOTAL - 1] as Span,
 };
 
 /** THE BEATS, per scene */

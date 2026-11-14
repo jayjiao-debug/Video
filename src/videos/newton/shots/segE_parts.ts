@@ -1,4 +1,4 @@
-// SEGMENT E's own helpers (WP5-E): framing, camera mixing, her walking ease, a lagged eye, the mic's aim through keys,
+// SEGMENT E's own helpers (WP5-E): framing, camera mixing, her walking ease, a lagged eye, the light focus's aim through keys,
 // his quill on the page, the page held in his hand, the fork and the morsel on its tines. Copies of the generic camera helpers of segC_parts
 // (kept here so segment E never moves when another segment's file changes). Every function is pure: nothing keeps
 // state between frames (the morsel's mesh is made once per World, like a prop, and placed or hidden every frame).
@@ -33,6 +33,21 @@ export const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
   const look = pos.clone().addScaledVector(dir, dist);
   return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e) };
 };
+/** two cameras mixed with the turn split in two: position, look distance and fov on `k`, the heading (yaw, the short
+ *  way round) on `kYaw` and the tilt (pitch) on `kPitch` (all 0..1, eased like mixCam). Equal to `a` when all three
+ *  are 0 and to `b` when all three are 1 (no roll). Lets a swing tilt up first and turn after (or the other way). */
+export const mixCamYP = (a: CamPose, b: CamPose, k: number, kYaw: number, kPitch: number): CamPose => {
+  if (k <= 0 && kYaw <= 0 && kPitch <= 0) return a;
+  if (k >= 1 && kYaw >= 1 && kPitch >= 1) return b;
+  const A = C.camAxes(a), B = C.camAxes(b), e = smooth(clamp01(k));
+  const yawOf = (d: THREE.Vector3) => Math.atan2(d.x, -d.z), pitchOf = (d: THREE.Vector3) => Math.atan2(d.y, Math.hypot(d.x, d.z));
+  const ya = yawOf(A.fwd), yb = yawOf(B.fwd), dy = Math.atan2(Math.sin(yb - ya), Math.cos(yb - ya));
+  const yaw = ya + dy * smooth(clamp01(kYaw)), pitch = lerp(pitchOf(A.fwd), pitchOf(B.fwd), smooth(clamp01(kPitch)));
+  const pos = A.p.clone().lerp(B.p, e), dist = lerp(A.dist, B.dist, e);
+  const dir = V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch));
+  const look = pos.clone().addScaledVector(dir, dist);
+  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e) };
+};
 /** a walker's ease: speeding up over the first quarter, steady, slowing over the last (peak 1.33 x the average) */
 export const stride = (x: number, r = 0.25) => {
   const v = 1 / (1 - r), u = clamp01(x);
@@ -44,7 +59,7 @@ export const lagged = (f: number, at: (g: number) => THREE.Vector3, win = 6) => 
   for (let i = 0; i < win; i++) { const wg = win - i; p.addScaledVector(at(f - i), wg); ws += wg; }
   return p.divideScalar(ws);
 };
-/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames */
+/** the light focus's aim through step keys [frame, aim(f)], each change eased over `len` frames */
 export const aimThrough = (f: number, keys: [number, (g: number) => THREE.Vector3][], len = 9) => {
   let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= f) i++;
   const cur = keys[i][1](f);

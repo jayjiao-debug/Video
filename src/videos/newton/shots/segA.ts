@@ -4,26 +4,39 @@
 //                        by the handrail (four footfalls on the mix's stair steps); frame 0 looks up the flight: the
 //                        landing's edge across the bottom of the frame, his door centre right in its slab of sun with
 //                        its ring handle and the candle line under it, the stair window a sliver at the left edge;
-//                        the mic swings in from the lower left and raps the door twice (sfx_knock: the first rap
-//                        lands, the second chases the door: it is ALREADY OPENING)
+//                        two raps on the door (sfx_knock), nothing seen knocking: the camera pushes in a little on
+//                        each, the leaf shivers, dust puffs off the panel; it swings open on the second
 //   doorway  A01 .. A02  she steps back as it swings: NEWTON fills the doorway (NEWTON_INK: ink on the nose, the quill
 //                        behind his ear, the bird's nest), a candle stub held under his chin, deadpan with heavy lids;
 //                        a slow sleepy blink on her 一天; "Good night." (flat), already backing off on "night"
-//   slam     A02 hold    the door swings shut in the mic's face (the thud on the mix's sfx_door_shut; the mic jerks
+//   slam     A02 hold    the door swings shut in her face (the thud on the mix's sfx_door_shut; the camera flinches
 //                        back); the TITLE BLOCK lands on the shut door (Pose.title follows the door's upper panel);
 //                        the candle glow under the door goes out (he has blown it out)
-//   aside    A03         the mic swings round to the lens, the shut door soft behind it
-//   card 1   A03 hold    the mic lowered; the door opens (sfx_door_crack's latch) and HUMPHREY scurries out yawning
+//   aside    A03         she stays on the shut door (the title is on it): the camera's puzzled head tilt
+//   card 1   A03 hold    the tilt straightened; the door opens (sfx_door_crack's latch) and HUMPHREY scurries out yawning
 //                        with his empty ink bottle and, walking off along the wall, draws the door to behind him with
 //                        his left hand (the latch's click); she steps back by the window from the latch and the
 //                        camera tracks him beside the card (face above its top); he heads for the stairs, still half
 //                        asleep
-//   ask      A04 .. A05  she calls him: he stops at the stair head and turns to her, the mic on him; "Laugh?" (shock,
+//   ask      A04 .. A05  she calls him: he stops at the stair head and turns to her lens; "Laugh?" (shock,
 //                        a head pop), a glance at the door on "Mr Newton?", back at her, a slow head shake
 //   down     A05 hold    he goes down the stairs on the mix's footsteps: he BACKS down the first steps still facing
 //                        her (the bottle clutched to his chest, a wary eye on her: never the bare back of his head),
 //                        and turns to go on down only once she has swung back to the door
-//   aside    A06         she swings back to his door, the mic round to the lens: 「好，今天我要让他笑一次。」
+//   aside    A06         she swings back to his door: a nod, a push toward it, a punch-in: 「好，今天我要让他笑一次。」
+// SHE IS INVISIBLE (Jay, 14 Nov: "get rid of the microphone and arms", "pretend there is an invisible hand"): nothing
+// of her is put. The knock, the slam and the asides are the camera's and the door's:
+//   the raps    each rap is the camera's own small push (her weight behind the knock), the leaf shivers in its
+//               frame and a little dust puffs off the panel into the sun (sets/stairs.ts puff / puff2); the first rap
+//               finds the door unlatched (a 1.5 % crack, hidden behind the latch stile at this framing), the
+//               second knocks it open
+//   the slam    she leans in after him as he backs off on "night"; on the thud the camera FLINCHES back (a quick
+//               jerk of 13 cm and a 3 deg tip up, settling); the title block is painted on the door: it follows the door's
+//               place and size on screen, and its tilt held to +-1.5 deg (segA_parts doorTitle)
+//   A03 aside   the camera's puzzled head tilt: she leans in toward the shut door and cocks her head (roll), a
+//               little more on 睡？, and straightens before Humphrey's latch
+//   A06 aside   back on his door: a firm nod on 好, a determined push toward the door over 今天我要让他笑, a small
+//               punch-in on 一次
 // Every frame is looked up (lineId / capWord / card / BEAT / SEGMENTS and the sound anchors from the lines' voice
 // times + the clips' own measured offsets); every mark comes from layout/stairs.ts (STAIRS, STAIRS_SET).
 import * as THREE from "three";
@@ -33,8 +46,8 @@ import * as C from "../cam";
 import { NEWTON_INK, HUMPHREY } from "../people";
 import { STAIRS, STAIRS_SET, EYE, FOV } from "../layout";
 import type { World } from "../world";
-import { V, rel, hang, lid, speak, accent, heads, headPop, walkAlong, yawTo, lerpA, wrapA, asideK, cardLower, rigWalk, type RigState, type RigPose } from "./common";
-import { micA } from "./segA_parts";
+import { V, rel, hang, lid, speak, accent, heads, headPop, walkAlong, yawTo, lerpA, wrapA, ky, rigWalk, type RigState, type RigPose } from "./common";
+import { rapPush, shiver, lightFocus, doorTitle } from "./segA_parts";
 
 type St = Partial<RigState>;
 const S = SEGMENTS[0];
@@ -78,6 +91,11 @@ const H_TURN3 = H_DOWN + sec(1.05);               // .. and turns to go on down 
 const H_BACKV = 0.75, H_DOWNV = 1.35;             // m/s along his way: backing down, then going on down
 const SWING0 = BEAT.A.aside06[0] - 4;             // she swings back to the door for the aside
 const STEP2_0 = SND.latch + 2, STEP2_1 = SND.latch + sec(1.7);   // she steps back by the window to give him room
+/** the invisible reporter's beats: the raps; the A03 tilt (in on 他, a little more on 睡, out before the latch); the
+ *  A06 nod (好), push (今 .. 次) and punch-in (一) */
+const RAPS = [SND.rap1, SND.rap2];
+const A03_IN = word("A03", "他") - 6, A03_SHUI = word("A03", "睡"), A03_OUT = Math.min(BEAT.A.aside03[1] + 4, SND.latch - 6);
+const A06_NOD = word("A06", "好") - 2, A06_PUSH0 = word("A06", "今"), A06_PUSH1 = word("A06", "次") + 6, A06_PUNCH = word("A06", "一");
 
 // ------------------------------------------------------------------------------------------------------- the marks
 const D = STAIRS_SET.door, ST = STAIRS_SET.steps;
@@ -117,9 +135,9 @@ const H_STEPS = [H_TOP, V(H_TOP.x - 0.03, 0, STAIRS.step(1).z), V(H_TOP.x - 0.05
 const stairY = (z: number) => -ST.rise * Math.max(0, Math.min(ST.n, (z - STAIRS.stairHead.z - 0.05) / ST.go + 0.35));
 
 // ------------------------------------------------------------------------------------------------------ her camera
-/** HER EYES (1.6 m over the floor she stands on): at the door to knock (about 0.7 m from the knock point: the mic
- *  reaches it), back where she holds on him (square on to the door, 0.25 m off the left wall), then a step back by
- *  the window when Humphrey comes out */
+/** HER EYES (1.6 m over the floor she stands on): at the door to knock (about 0.7 m from the knock point: an arm's
+ *  reach, though nothing of her is seen), back where she holds on him (square on to the door, 0.25 m off the left
+ *  wall), then a step back by the window when Humphrey comes out */
 const P_KNOCK = V(STAIRS.knock.x - 0.6, EYE, STAIRS.knock.z + 0.04);
 const P_HOLD = V(STAIRS.landing.x - 0.53, EYE, STAIRS.door.z + 0.06);
 const P_STEP = V(STAIRS.landing.x - 0.6, EYE, STAIRS.door.z - 0.36);
@@ -175,8 +193,9 @@ const camPos = (f: number) => {
   return p;
 };
 /** framings: the run looks up the flight at the sunlit door (its ring handle right of centre, the landing's edge low
- *  across the frame, the window a sliver at the left edge); at the door the knock point sits right of centre
- *  (the mic's jab reads across the frame); on him his eyes in the upper third; the shut door for the aside */
+ *  across the frame, the window a sliver at the left edge); at the door the knock point sits right of centre and
+ *  low (the leaf's shiver and the dust puff read across the frame); on him his eyes in the upper third; the shut
+ *  door for the aside */
 const DIR_RUN0 = aimDir(camPos(S.from), V(STAIRS.door.x, 1.0, D.z1 - 0.12), 740, 680);
 const DIR_KNOCK = aimDir(P_KNOCK, STAIRS.knock, 690, 990);
 const DIR_NEWTON = aimDir(P_HOLD, N_AT.clone().setY(N_EYE), 540, 620);
@@ -194,8 +213,8 @@ const camAt = (f: number): CamPose => {
   let d = f <= ARRIVE ? nl(DIR_RUN0, DIR_KNOCK, smooth(f / Math.max(1, ARRIVE))) : DIR_KNOCK.clone();
   d = nl(d, DIR_NEWTON, easeInOutCubic(clamp01((f - BACK0) / (BACK1 - BACK0 + 4))));
   if (f >= H_OUT0) {
-    // she follows Humphrey: right of the card while it shows, a little left of centre for the questions (the mic
-    // comes in from the left); his head sinking away as he goes down
+    // she follows Humphrey: well right of the card while it shows (px 680), nearer the middle for the questions
+    // (px 600); his head sinking away as he goes down
     const k = smooth((f - BEAT.A.card1[1] + 10) / 20), px = lerp(680, 600, k), py = lerp(520, 630, k);
     const tgt = hmEyeAvg(f, f > H_DOWN ? 8 : 5);
     if (f > H_DOWN) tgt.y = lerp(tgt.y, H_TOP.y + H_EYE - 0.25, 0.6);
@@ -203,15 +222,49 @@ const camAt = (f: number): CamPose => {
   }
   if (f >= SWING0) d = nl(d, DIR_DOOR, easeInOutCubic((f - SWING0) / 18));
   const roll = f <= ARRIVE + 6 ? stepBob(f).roll : 0;
-  return C.nudge({ pos: [pos.x, pos.y, pos.z], look: [pos.x + 2 * d.x, pos.y + 2 * d.y, pos.z + 2 * d.z], fov: FOV }, { roll });
+  const M = moves(f);
+  const cam = C.nudge({ pos: [pos.x, pos.y, pos.z], look: [pos.x + 2 * d.x, pos.y + 2 * d.y, pos.z + 2 * d.z], fov: FOV }, { roll: roll + M.roll, fwd: M.fwd, pitch: M.pitch, yaw: M.yaw });
+  return M.fov === 1 ? cam : { ...cam, fov: cam.fov * M.fov };
+};
+/** THE INVISIBLE REPORTER'S MOVES (see the head of the file), on top of her eyes: fwd (m), pitch / roll / yaw (deg), fov
+ *  factor. Pure. */
+const moves = (f: number) => {
+  // the raps: a small push with each (the second a little more: the door gives under it)
+  const rp = rapPush(f, RAPS, [0.022, 0.034]);
+  let fwd = rp, pitch = -18 * rp, roll = 0, yaw = 0, fov = 1;
+  // the slam: leaning in after him as he backs off, then THE FLINCH on the thud (back to -6 cm in 3 frames, a tip up and a
+  // little roll, settling over 14), the last 2 cm given back as she leans in for the aside (13 cm in all, 3 deg)
+  const d = f - SND.thud;
+  if (f >= N_GO && d < 0) fwd += 0.07 * smooth((f - N_GO) / (SHUT0 - N_GO));
+  else if (d >= 0) {
+    const jerk = easeOutCubic(clamp01(d / 3)), settle = smooth(clamp01((d - 3) / 14));
+    fwd += d < 3 ? lerp(0.07, -0.06, jerk) : lerp(-0.06, -0.02, settle) * (1 - smooth(clamp01((f - A03_IN) / 14)));
+    const fl = d < 3 ? jerk : 1 - settle;
+    pitch += 3 * fl; roll += -1.4 * fl;
+  }
+  // A03: the puzzled head tilt (lean in 9 cm, roll 4.5 deg, a touch more on 睡)
+  const tilt = ky(f, [[A03_IN, 0], [A03_IN + 14, 1], [A03_OUT - 14, 1], [A03_OUT, 0]]);
+  const more = ky(f, [[A03_SHUI - 2, 0], [A03_SHUI + 6, 1], [A03_OUT - 14, 1], [A03_OUT, 0]]);
+  fwd += 0.09 * tilt; roll += -4.5 * tilt - 2 * more; pitch += -1.2 * tilt; yaw += -1.5 * more;
+  // A06: the nod on 好 (down 3 deg and back in 10 frames), the push toward his door, the punch-in on 一次
+  if (f >= A06_NOD && f < A06_NOD + 10) pitch += -3 * Math.sin((Math.PI * (f - A06_NOD)) / 10);
+  fwd += 0.28 * smooth(clamp01((f - A06_PUSH0) / (A06_PUSH1 - A06_PUSH0)));
+  if (f >= A06_PUNCH) fov = lerp(1, 0.9, easeOutCubic(clamp01((f - A06_PUNCH) / 5)));
+  return { fwd, pitch, roll, yaw, fov };
 };
 
 // ------------------------------------------------------------------------------------------------------- the door
-/** the door: opens as she raps (already opening by the second rap), held while he stands in it, swung shut on the
- *  thud; opened for Humphrey on the latch and drawn shut on the click */
+/** the door: the first rap finds it unlatched (it shivers and gives a crack of candlelight), the second knocks it open
+ *  (it swings in, he catches it at 0.8 as he steps up), held while he stands in it, swung shut on the thud; opened for
+ *  Humphrey on the latch and drawn shut on the click. Each rap's shiver rides on top (segA_parts shiver). */
+const DOOR_CRACK = 0.015;
 const doorAt = (f: number) => {
-  if (f < OPEN0) return 0;
-  if (f < SHUT0) return 0.8 * easeOutCubic(clamp01((f - OPEN0) / (OPEN1 - OPEN0)));
+  if (f < SND.rap1) return 0;
+  if (f < SHUT0) {
+    const crack = DOOR_CRACK * smooth((f - SND.rap1) / 3);
+    const swing = f < SND.rap2 ? 0 : (0.8 - DOOR_CRACK) * easeOutCubic(clamp01((f - SND.rap2) / (OPEN1 - SND.rap2)));
+    return crack + swing + shiver(f, RAPS);
+  }
   if (f < SND.thud) return 0.8 * (1 - easeInCubic((f - SHUT0) / (SND.thud - SHUT0)));
   if (f < SND.latch) return 0;
   if (f < H_PULL0) return 0.62 * smooth((f - SND.latch) / 7);
@@ -271,6 +324,9 @@ export const SEG: Segment = {
     // shut tight (their day seams hung as white strings over the heads in the doorway)
     w.set.param("gapLine", 1);
     w.set.param("leak", 0);
+    // the dust each rap shakes off the panel (sets/stairs.ts)
+    if (f >= SND.rap1 && f < SND.rap1 + 24) w.set.param("puff", (f - SND.rap1) / FPS);
+    if (f >= SND.rap2 && f < SND.rap2 + 24) w.set.param("puff2", (f - SND.rap2) / FPS);
     const cam = camAt(f);
     w.setCamera(cam);
 
@@ -307,7 +363,7 @@ export const SEG: Segment = {
         if (hd.distanceTo(sh) < 0.46) hL = hd;
       }
       // the empty bottle in his right hand; from her question on BOTH hands clutch it to his chest, a little to his
-      // left (screen right: clear of her mic's head, which comes in from the left)
+      // left (screen right)
       const up = smooth((f - H_TURN2) / 10), both = smooth((f - H_TURN2 - 3) / 8);
       const hR = rel(H.at, H.facing, -0.23, 0.62, 0.15).lerp(rel(H.at, H.facing, CLUTCH.x - CLUTCH.w / 2, CLUTCH.y, CLUTCH.z), up);
       if (f >= H_TURN2) hL = hang(H.at, H.facing, 1).lerp(rel(H.at, H.facing, CLUTCH.x + CLUTCH.w / 2, CLUTCH.y, CLUTCH.z), both);
@@ -332,8 +388,8 @@ export const SEG: Segment = {
       w.prop("inkBottle").put(g, { grip: "grip", rot: H.facing });
     }
 
-    // HER MIC: in from the lower left on the run, the raps, on him; the slam in its face; round to the lens on the
-    // asides; lowered under the card; on Humphrey
+    // (nothing of her is seen: Jay, 14 Nov) the lens keeps its light focus on what she is looking at: the knock point,
+    // his mouth, the shut door, Humphrey
     const knock = leafPt(door, KNOCK_ALONG, STAIRS.knock.y, KNOCK_FACE);
     const nMouth = nOn ? nt.headWorld().add(V(0, -0.1, 0)) : V(STAIRS.door.x, 1.0, STAIRS.door.z);
     const shutPt = V(STAIRS.door.x - 0.03, 1.05, STAIRS.door.z + 0.1);
@@ -341,22 +397,22 @@ export const SEG: Segment = {
     aim = aim.clone().lerp(nMouth, smooth((f - BACK0) / 14));
     aim.lerp(shutPt, smooth((f - SHUT0) / (SND.thud - SHUT0)));
     if (f >= SND.latch) aim = hOn ? hm.headWorld().add(V(0, -0.11, 0)) : shutPt;
-    const flinch = f >= SND.thud && f < SND.thud + 7 ? Math.sin((Math.PI * (f - SND.thud + 1)) / 8) : 0;
-    const enter = Math.min(smooth((f - SND.steps[0] + 1) / 11), 1 - cardLower(f)) * (1 - 0.35 * flinch);
-    // (segA_parts micA = putMic with segA's own aside pose: the handle leaning to the lower left, the fist's curls to
-    // the lens)
-    const M = micA(w, cam, f, { aim, lens: asideK(f), rap: C.rapK(f, [SND.rap1, SND.rap2]), enter });
+    const dof = lightFocus(cam, aim);
 
-    // the title block on the shut door's upper panel; it lands ON the thud (TITLE_SPAN starts a few frames before it:
-    // held back until the door is shut, requests.md WP5-A -> WP1)
-    const tp = C.toScreen(cam, V(STAIRS.door.x - 0.03, 1.36, STAIRS.door.z + 0.02));
+    // the title block on the shut door's upper panel, painted on it: its place and size follow the door on screen
+    // (the jolt of the flinch), its tilt only up to +-1.5 deg (the A03 head tilt barely rolls it); it lands ON the
+    // thud (TITLE_SPAN starts a few frames before it: held back until the door is shut, requests.md WP5-A -> WP1)
+    // (on the panel at 1.28 m: clear under her camera's timestamp, top left, since the REC HUD came in on 14 Nov; 2 cm
+    // left of the door's middle (z - 0.02: the door's face looks -x, so screen left is -z), so the end of the English
+    // line, "Cambridge", stays clear of the black latch plate at the leaf's free edge)
+    const tp = doorTitle(cam, V(STAIRS.door.x - 0.03, 1.28, STAIRS.door.z - 0.02), P_HOLD, 0.9);
     const titleOn = f >= TITLE_SPAN[0] - 2 && f <= TITLE_SPAN[1] + 2;
     const titleHeld = f >= TITLE_SPAN[0] && f < SND.thud;
     return {
       camera: cam,
-      ...(M.dof ? { post: { dof: M.dof } } : {}),
+      post: { dof },
       ...(titleHeld ? { cards: false } : {}),
-      ...(titleOn ? { title: { x: Math.round(tp.x), y: Math.round(tp.y), scale: 0.9 } } : {}),
+      ...(titleOn ? { title: tp } : {}),
       slate: f <= ARRIVE ? "A1 run" : f < SND.thud ? "A1 doorway" : f < BEAT.A.card1[0] ? "A2 title / aside" : f < BEAT.A.micHumphrey ? "A2 card 1" : f < H_DOWN ? "A3 Humphrey" : "A3 aside 06",
     };
   },

@@ -64,9 +64,13 @@ export const islandOf = (x: number): Place | null => {
  *  capTop..capBottom (hud CAP_BAND: Chinese large centred on y 1318, English small under it, text inside y 1277-1455),
  *  below `bottom`, or right of `rail.x` below `rail.y` (the app's buttons); faces in the upper third (eyes y < `eyes`);
  *  the fact card's slot MID-LEFT (`card` = hud FACT_SLOT, the tallest slip with its tilt and shadow, while a card
- *  shows: keep faces and the mic out of it); the title block at its default place (`title` = hud TITLE_RECT, over
- *  TITLE_SPAN; segA moves it onto the door); her mic's red head never comes below `mic` (its bottom edge: cam.ts
- *  MIC_FRAME.band) and rests with its centre near `micRest` (r 94 px), so it reaches up to about y 950 */
+ *  shows: keep faces out of it); the title block at its default place (`title` = hud TITLE_RECT, over TITLE_SPAN; segA
+ *  moves it onto the door); HER CAMERA'S RECORDING UI (hud/vlog.tsx, PLAN 5) owns the two top corners below `top`:
+ *  `rec` = the REC lamp's row (centre y 204) and the scene's timestamp at rest under it (hud VLOG_RECT.rec + .stamp;
+ *  for the first 2 s of every scene the timestamp holds 1.5x bigger: VLOG_RECT.stampBig, x 50..394, y 242..353 at
+ *  most; each scene's own box: hud stampRect(id, big)),
+ *  `battery` = the battery and its % top right. The mic and her hands are never drawn (props INVISIBLE); `mic` /
+ *  `micRest` / `micTop` are where the invisible mic still rests (cam.ts MIC_FRAME.band) */
 export const SCREEN = {
   top: 150, capTop: 1250, capBottom: 1500, bottom: 1640, eyes: 640, mic: 1190, micRest: { x: 335, y: 1048 },
   /** LEGACY name (= the top of the mic's resting head): the mic's head lives in micTop..mic */
@@ -74,6 +78,9 @@ export const SCREEN = {
   rail: { x: 930, y: 900 },
   card: { x0: 35, y0: 811, x1: 677, y1: 1216 },
   title: { x0: 125, y0: 796, x1: 955, y1: 1086 },
+  /** the vlog UI's corners (hud VLOG_RECT): REC + the small timestamp top left, the battery + its % top right */
+  rec: { x0: 50, y0: 184, x1: 284, y1: 310 },
+  battery: { x0: 845, y0: 182, x1: 1040, y1: 226 },
 };
 /** a camera given as a story.ts CamPose with Vec3s (for a mark's camera in a layout file) */
 export const camOf = (pos: Vec3, look: Vec3, fov = FOV): Cam => c(pos, look, fov);

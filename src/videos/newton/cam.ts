@@ -14,6 +14,9 @@
 //                front of him (the garden)
 //     dip / duck / aside / creep / lean / handCover / lower / nudge   (Qin's; creep = the slow PUSH-IN of 44-50)
 //   overlays     whipSmear(k, dir), palm(cover): React nodes for Pose.overlays (1080 x 1920)
+// SHE IS INVISIBLE (Jay, 14 Nov): the mic and her hands below are NEVER DRAWN (props/index.ts INVISIBLE). Their poses
+// still place what they hold (the handkerchief, the chair, the board) and time the raps and claps, as an invisible hand.
+// An aside (aim "lens") no longer focuses on the mic head: there is nothing there; the aside is the camera's (aside()).
 // HER MIC AND HANDS (first-person things IN the 3D scene, so they take the place's light and the lens blur):
 //   micPose(cam, f, o)    where the mic (props "mic") and her left hand ("hand", pose grip) go for this camera:
 //                         o.aim = a world point it is held toward (the speaker's mouth; the door's knock point) or
@@ -424,7 +427,8 @@ export const micPose = (c: CamPose, f: number, o: MicO = {}): MicPose => {
   }
   const hp = handOn(F, grip, D, "L");
   const sp = camToScreen(F, head), r = (MIC.r / Math.max(0.05, head.z)) * FH / (2 * F.tanV);
-  const dof = k > 0.5 ? { focus: head.length(), amount: (o.blur ?? 14) * smooth((k - 0.5) / 0.5) } : aimC ? { focus: aimC.length(), amount: 3 } : undefined;
+  // invisible mic: no focus pull onto its head in an aside (nothing there); a light focus on the aim as before
+  const dof = aimC ? { focus: aimC.length(), amount: 3 } : undefined;
   return {
     mic: { at: hp.at.clone(), rot: hp.rot.clone() }, hand: { ...hp, pose: "grip" },
     head: camToWorld(F, head.x, head.y, head.z), headPx: { x: sp.x, y: sp.y, r }, dof, visible: e > 0.001,

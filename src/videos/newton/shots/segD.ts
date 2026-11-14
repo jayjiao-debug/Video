@@ -1,32 +1,37 @@
 // SEGMENT D · 下午 · the street to the Schools, the empty benches, the lone clap (PLAN 7 D; script scene 4, lines 23-28
 // = D01-D06). WP5-D. Her eyes at 1.6 m; the camera moves because HE moves (or she does: the trot, her steps in).
 //   D1  THE STREET (trot): out of the college gate (its turreted arch behind him), his gown on, the lecture notes under
-//       his arm, ink on his nose; she trots beside him, close, a little ahead on his left; her free hand darts in with
-//       a handkerchief and wipes the ink off his nose in TWO strokes (on the mix's two swishes); the ink figure swaps
-//       under the cloth on each stroke (ink -> smudge -> clean). He walks on, eyes ahead: he has not noticed.
+//       his arm, ink on his nose; she trots beside him, close, a little ahead on his left; a handkerchief, crumpled in
+//       an INVISIBLE hand (Jay, 14 Nov: no hands, no mic, "like the Qin film"), darts in from the lower right and wipes
+//       the ink off his nose in TWO strokes (on the mix's two swishes), lifting off between them, his head dragged a
+//       little with each; the ink figure swaps under the cloth on each stroke (ink -> smudge -> clean). He walks on,
+//       eyes ahead: he has not noticed.
 //   D2  THE TALL DOOR / THE WIDE (the cut on the hall's room tone and the door's creak): she steps in from the door
 //       (two steps, the echo) and HOLDS one wide on the empty benches, the sunbeam with its dust, one man walking up the
 //       aisle to the lectern (his back to us), nobody else.
-//   D3  ASIDE 23 「一个学生都没有。」: the mic swings in and round to the lens, the hall soft behind it; he goes round the
-//       lectern, turns to the empty benches and sets his notes down (the paper).
-//   D4  THE WHIP back to him (the cut hides in it): close at the lectern. 24 he spreads the sheets as if the hall were
-//       full and looks out over the empty rows; 25 (her) he looks at her; 26 deadpan, a small nod; ASIDE 27 the mic to
-//       the lens, behind it his face unchanged; on 我笑了 he turns back to the benches and lectures on (his mouth moves
-//       only once her line is over: no words, the music is the muffled lecture); she lowers the mic to listen.
+//   D3  ASIDE 23 「一个学生都没有。」 (the camera's own move): with her line she turns aside to the empty benches beside
+//       her, a step toward them, her head tilted, and whispers over them; behind her back he goes round the lectern.
+//   D4  THE WHIP back to him (to the left: the swing back from the aside; the cut hides in it): close at the lectern.
+//       24 he spreads the sheets as if the hall were full and looks out over the empty rows; 25 (her) he looks at her;
+//       26 deadpan, a small nod; ASIDE 27: in the silence after his line she leans in on his unchanged face (他没笑),
+//       her eyes shake with a stifled laugh on 笑了; on 我笑了 he turns back to the benches and lectures on (his mouth
+//       moves only once her line is over: no words, the music is the muffled lecture); she eases back to listen.
 //   D5  THE TIME CUT (on the gathering paper): she has sat down on the front bench; he sweeps the sheets together, taps
-//       the sheaf square and tucks it under his arm; she claps alone, twice, her open hand on her own mic hand (the
-//       mix's two claps); at the second he looks up at her; 28 "Don't." flat; the mic held toward him.
+//       the sheaf square and tucks it under his arm; she claps alone, twice (the mix's two claps; no hands: her eyes
+//       jolt with each clap); at the first his eyes flick up at her and back to his notes, at the second he looks up
+//       at her; 28 "Don't." flat.
 // Every frame is a pure function of f; every time comes from line() / capWord() / BEAT / the mix's anchors
 // (/home/user/newton_work/film/sound/SYNC_POINTS.md). Where BEAT.D (lecture, timeCut, clap) and the mix disagree, the
 // mix wins (it is built): the gathering paper at D05 end + 0.05 s, the claps at D06 - 1.3 s and - 0.75 s.
 import * as THREE from "three";
-import { SEGMENTS, line, capWord, capsOf, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, capWord, capsOf, FPS, clamp01, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON_GOWN, NEWTON_HIDE, newtonAt, type NewtonState } from "../people";
 import { STREET, STREET_SET, SCX, SCHOOLS, SCHOOLS_SET, SCHOOLS_CAMS, EYE, FOV } from "../layout";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, lerpA, rel, hang, path, rigSpeak, type Rig, type PathKey } from "./common";
-import { frameOn, deskPoint, deskRot, underArm, clapOnFist, wipePut, NOTES } from "./segD_parts";
+import { frameOn, deskPoint, deskRot, underArm, clapJolt, padPut, padSpeed, NOTES, type PadTimes } from "./segD_parts";
+import type { HankyOpts } from "../props/things";
 import type { World } from "../world";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
@@ -43,22 +48,19 @@ const SND_LAY = L1.to - sec(0.3);
 const SND_GATHER = L5.to + sec(0.05);
 /** her two lone claps */
 const CLAP1 = L6.from - sec(1.3), CLAP2 = L6.from - sec(0.75);
-/** where her mic fist goes for the claps (px): lower middle, so her clapping right arm stays short in the frame */
-const CLAP_FIST: [number, number] = [430, 1560];
 
 // ---------------------------------------------------------------------------------------------------- the beats
 /** the cut through the tall door (the hall's room tone starts here in the mix) */
 const T_HALL = BEAT.D.schools;
-/** ASIDE 23: the mic swings in and round to the lens (8 frames before her line) */
-const T_A23 = L1.from - 8;
+/** ASIDE 23: she turns aside to the benches with her line (A23_LEN frames from just before it) */
+const T_A23 = L1.from - 2, A23_LEN = 10;
 /** THE WHIP back to him: 4 frames out, 4 in, settled one frame before "The walls..." */
 const T_WHIP = L2.from - 9;
-/** ASIDE 27: the swing to the lens as his "students." ends */
-const T_A27 = L4.to - 2;
+/** ASIDE 27: she leans in on his face in the silence after his "students." (landing on her first word 他), the laugh
+ *  on 笑了, eased back by her line's end */
+const T_A27 = L4.to + 3, T_A27_IN = capWord("D05", "他").from, T_LAUGH = capWord("D05", "笑了").from, T_A27_BACK = L5.to + 2;
 /** 我笑了: he turns back to the benches and lectures on */
 const T_ME = capWord("D05", "我").from;
-/** she lowers the mic to listen to the lecture */
-const T_LOWER = L5.to - 3;
 /** THE TIME CUT, just ahead of the gathering paper's first rustle */
 const T_TC = SND_GATHER + 6;
 
@@ -72,39 +74,39 @@ const ST_SPEED = 1.45, ST_T0 = 0.1;
 const ST_X0 = STREET.lineX - 0.9, ST_X1 = STREET.lineX - 0.4, ST_Z0 = STREET.turn.z - 0.4;
 const ST_PATH = [V(ST_X0, 0, ST_Z0), V(ST_X1, 0, ST_Z0 + 3.0), V(ST_X1, 0, STREET.walkTo.z)];
 const streetLeg = (f: number) => walkAlong(ST_PATH, ST_SPEED, (f - S.from) / FPS + ST_T0);
-/** THE WIPE, timed to the mix: her hand comes in over W_IN frames (the cloth touches his nose on the first swish),
- *  two strokes of W_ST frames, out over W_OUT (gone before the cut). cam.ts wipe() is driven on a warped frame so its
- *  7-frame strokes take W_ST. */
-const W_IN = 6, W_ST = 8, W_OUT = 5;
-const WIPE_ON = SND_WIPE - W_IN;
-const STROKE1 = WIPE_ON + W_IN + W_ST / 2, STROKE2 = STROKE1 + W_ST;
-const wipeFrame = (f: number): number | null => {
-  const d = f - WIPE_ON, Wp = C.WIPE;
-  if (d < 0) return null;
-  if (d < W_IN) return WIPE_ON + (d * Wp.inF) / W_IN;
-  const e = d - W_IN;
-  if (e < 2 * W_ST) return WIPE_ON + Wp.inF + (e * Wp.stroke) / W_ST;
-  const o = e - 2 * W_ST;
-  // (out: wipe()'s ease-in turned into an ease-out, so the hand leaves at once and his clean nose shows before the cut)
-  return o <= W_OUT ? WIPE_ON + Wp.inF + 2 * Wp.stroke + Math.cbrt(easeOutCubic(o / W_OUT)) * Wp.outF : null;
-};
+/** THE WIPE, timed to the mix's two swishes (sfx_wipe: clip frames 0-6 and, louder, 13-19): the pad comes in over 6
+ *  frames and lands on the first swish, stroke 1 (7 frames) on it, a lift and a press between, stroke 2 (8 frames) on
+ *  the second, out over 5 (gone before the cut; his clean nose shows from about 1890). segD_parts padPut / padTrack. */
+const PAD_T: PadTimes = { in: SND_WIPE - 6, s1: [SND_WIPE, SND_WIPE + 7], s2: [SND_WIPE + 12, SND_WIPE + 20], out: SND_WIPE + 25 };
+const WIPE_ON = PAD_T.in;
+/** the frames the pad crosses the middle of his nose (it covers it): the ink swaps there */
+const STROKE1 = Math.round((PAD_T.s1[0] + PAD_T.s1[1]) / 2), STROKE2 = Math.round((PAD_T.s2[0] + PAD_T.s2[1]) / 2);
+/** his head dragged a little with the stroke (deg of tilt at full speed) */
+const WIPE_TILT = 3.5;
 /** the ink: on until her first stroke, the ghost after it, clean after the second (each swap under the cloth) */
-const KEYS: [number, NewtonState][] = [[S.from, "gownInk"], [Math.round(STROKE1), "gownSmudge"], [Math.round(STROKE2), "gown"]];
+const KEYS: [number, NewtonState][] = [[S.from, "gownInk"], [STROKE1, "gownSmudge"], [STROKE2, "gown"]];
 /** her eyes: trotting beside him on his LEFT (east), a little ahead (ST_ANG off his line), looking across at him and the
  *  college front close behind him; she closes in for the wipe. Framed on his SOLVED head (pass `head` after w.update():
  *  the walk's own bob does not move his eyes on the frame, the trot's handheld does, lightly): his eyes at
- *  (ST_EYE_PX) in the upper third for the whole trot. */
-const ST_ANG = 1.25, ST_EYE_PX: [number, number] = [480, 585];
+ *  (ST_EYE_PX) in the upper third for the whole trot.
+ *  THE TIMESTAMP (hud/vlog.tsx): the whole street shot lies inside the scene's first 2 s, so the stamp's BIG intro box
+ *  (stampRect("D", true): x 50..325, y 242..353) is up the whole time, top left. He sits right of the middle (x 615, was
+ *  480: the room on the left is the way he walks, screen left) and she closes in to 1.3 m (was 1.1: his head 0.6 of the
+ *  width, was 0.7), so his head, wig included, stays 24 px or more clear of that box on every frame (it lay on the
+ *  front of his wig and the top of his forehead), and 65 px or more clear of the battery (top right). */
+const ST_ANG = 1.25, ST_EYE_PX: [number, number] = [615, 585];
 /** the drawn eye line under the solved head's middle (m) at her distance k: nearer, she looks down on him more steeply
  *  and his face (drawn toward her) sits lower on the ball */
 const stEyeDy = (k: number) => 0.074 - 0.093 * (k - 1.05);
+/** her distance from him (m, level): from the gate, closing in for the wipe (by WIPE_ON) */
+const ST_K: [number, number] = [1.5, 1.3];
 const camStreet = (f: number, head?: THREE.Vector3): CamPose => {
-  const g = streetLeg(f), k = ky(f, [[S.from, 1.5], [WIPE_ON - 1, 1.1]]);
+  const g = streetLeg(f), k = ky(f, [[S.from, ST_K[0]], [WIPE_ON - 1, ST_K[1]]]);
   const pos = g.at.clone().add(V(Math.sin(ST_ANG) * k, EYE, Math.cos(ST_ANG) * k));
   const eyes = head ? head.clone().add(V(0, -stEyeDy(k), 0)) : g.at.clone().add(V(0, N_EYE, 0));
-  // (stEyeDy is measured at the wipe's distance; further off, before she closes in, the drawn eyes landed about 50 px
-  // low (fix1 f1855 / f1862: 0.33 of the height): aim them that much higher there)
-  return C.handheld(frameOn(pos, eyes, ST_EYE_PX[0], ST_EYE_PX[1] - 50 * clamp01((k - 1.1) / 0.15)), f, { walk: 1.5 });
+  // (stEyeDy lands his drawn eyes on their mark at the wipe's distance; further off, before she closes in, they landed
+  // about 50 px low (fix1 f1855 / f1862: 0.33 of the height): aim them that much higher there)
+  return C.handheld(frameOn(pos, eyes, ST_EYE_PX[0], ST_EYE_PX[1] - 50 * clamp01((k - ST_K[1]) / 0.15)), f, { walk: 1.5 });
 };
 
 // ---------------------------------------------------------------------------------------------------- D2-D3 the hall
@@ -122,10 +124,34 @@ const CAM_WIDE: CamPose = { pos: SCHOOLS_CAMS.wide.pos, look: SCHOOLS_CAMS.wide.
 const CAM_DOOR: CamPose = { pos: [SCX + 0.75, EYE, WZ1 - 0.35], look: SCHOOLS_CAMS.wide.look, fov: FOV };
 const camHall = (f: number): CamPose =>
   C.handheld(C.keyCam(f, [{ f: T_HALL, ...CAM_DOOR }, { f: T_HALL + 22, ...CAM_WIDE, ease: easeOutCubic }]), f, { walk: [[T_HALL, 0.6], [T_HALL + 16, 0.6], [T_HALL + 24, 0]] });
+/** ASIDE 23 (the camera's own move, like E's turn to the bookcase): where she turns her eyes, the empty benches beside
+ *  her on the right (rows 6-7, a metre or two off: their seats and backs fill the frame, the rows going off to the
+ *  far wall); a step (0.3 m) toward them, a tilt of the head held (1.5 deg), and a slow drift on toward them (8 cm)
+ *  while she whispers; the whip (to the left) takes her back to him */
+const A23_AT = V(SCX + 2.6, 1.0, 3.6);
+const a23K = (f: number) => smooth(clamp01((f - T_A23) / A23_LEN));
+const camAside23 = (f: number): CamPose => {
+  const k = a23K(f);
+  if (!k) return camHall(f);
+  const c = C.aside(camHall(f), f, T_A23, undefined, A23_AT, { len: A23_LEN, push: 0.3, roll: 2 });
+  return C.creep(C.nudge(c, { roll: -1.5 * k }), f, T_A23 + A23_LEN, T_WHIP + 4, 0.08);
+};
 /** D4: close at the lectern (about 2.4 m), his eyes in the upper third */
 const N_EYES = N_AT.clone().add(V(0, N_EYE, 0));
 const LECT_POS = V(SCX + 0.45, EYE, LZ + 1.5);
 const CAM_LECT = frameOn(LECT_POS, N_EYES, 520, 600);
+/** ASIDE 27 (the camera's own move; his deadpan IS the joke, so he stays in frame and sharp): she leans in on his
+ *  unchanged face, 0.4 m nearer along her line to him (his eyes kept on their mark), her head tilted 2.5 deg, from the
+ *  silence after his line to her first word; on 笑了 her eyes shake with a stifled laugh (three small bobs, dying
+ *  away); she eases back as he lectures on, settled by her line's end (before the time cut) */
+const LEAN_POS = LECT_POS.clone().add(V(N_EYES.x - LECT_POS.x, 0, N_EYES.z - LECT_POS.z).setLength(0.4));
+const camLectern = (f: number): CamPose => {
+  const k = ky(f, [[T_A27, 0], [T_A27_IN, 1], [T_LAUGH + 10, 1], [T_A27_BACK, 0]]);
+  if (!k) return CAM_LECT;
+  const c = C.nudge(frameOn(LECT_POS.clone().lerp(LEAN_POS, k), N_EYES, 520, 600), { roll: -2.5 * k });
+  const d = f - T_LAUGH, b = d >= 0 && d < 18 ? Math.sin((2 * Math.PI * d) / 6) * (1 - d / 18) : 0;
+  return b ? C.nudge(c, { up: 0.006 * b, pitch: 0.7 * b, roll: 0.35 * b }) : c;
+};
 /** D5: she sits on the front bench (row 0, half a metre along it from the aisle end), her eyes at about 1.22 m: about
  *  28 deg off his axis, so the gather, the lifted sheaf and the tuck rise beside his face, not under it */
 const SEAT = V(SCX + 1.45, 1.22, SCHOOLS.rows[0] + 0.08);
@@ -134,7 +160,11 @@ const SEAT = V(SCX + 1.45, 1.22, SCHOOLS.rows[0] + 0.08);
  *  desk's middle is 0.1-0.2 m beyond his arms (hidden behind the desk from the lectern camera, but from her low seat
  *  the lifted, tapped sheaf floated beside his face with no hands on it) */
 const N_B = N_AT.clone().add(V(0, 0, 0.1));
-const CAM_SEAT = frameOn(SEAT, N_B.clone().add(V(0, N_EYE, 0)), 560, 640);
+/** (fov 48, not 62: with no mic and no clapping hands in the lower frame any more, the claps live on his face, so it
+ *  is a third bigger, the lectern filling the lower frame instead of the empty boards) */
+const CAM_SEAT = frameOn(SEAT, N_B.clone().add(V(0, N_EYE, 0)), 560, 640, 48);
+/** her eyes on the bench: still, but for the jolt of each of her two claps (no hands: segD_parts clapJolt) */
+const camBench = (f: number): CamPose => clapJolt(CAM_SEAT, f, [CLAP1, CLAP2]);
 const FACE_LECT = Math.atan2(LECT_POS.x - N_AT.x, LECT_POS.z - N_AT.z);
 const FACE_SEAT = Math.atan2(SEAT.x - N_B.x, SEAT.z - N_B.z);
 
@@ -268,7 +298,8 @@ const newtonState = (f: number): NState => {
     }
   } else {
     facing = lerpA(0.05, FACE_SEAT, smooth((f - T_LOOK) / 8));
-    lookDown = ky(f, [[T_TC, 28], [T_LOOK, 28], [T_LOOK + 6, 0]]);
+    // her first clap: his eyes flick up at her (head half up) and back down to his notes, tapping on; the second: up
+    lookDown = ky(f, [[T_TC, 28], [CLAP1, 28], [CLAP1 + 3, 11], [CLAP1 + 8, 11], [CLAP1 + 12, 28], [T_LOOK, 28], [T_LOOK + 6, 0]]);
   }
   return { who: NEWTON_GOWN, at: (f < T_TC ? N_AT : N_B).clone(), facing, pose: { kind: "idle", t: t + 2.3 }, desk: deskAt(f, facing), expr, gaze, lookDown };
 };
@@ -290,10 +321,11 @@ const pose = (w: World, f: number): Pose => {
   let cam: CamPose, post: Pose["post"] | undefined, overlays: Pose["overlays"] | undefined;
   if (shot === "street") cam = camStreet(f);
   else if (f < T_WHIP + 8) {
-    const W = C.whip(camHall(f), f, T_WHIP, { dir: 1, to: CAM_LECT });
+    // (from the aside's turn to the benches, the whip swings back LEFT to him: the cut hides in it)
+    const W = C.whip(camAside23(f), f, T_WHIP, { dir: -1, to: CAM_LECT });
     cam = W.cam;
-    if (W.smear > 0) { post = W.post; overlays = C.whipSmear(W.smear, 1); }
-  } else cam = shot === "lectern" ? CAM_LECT : CAM_SEAT;
+    if (W.smear > 0) { post = W.post; overlays = C.whipSmear(W.smear, -1); }
+  } else cam = shot === "lectern" ? camLectern(f) : camBench(f);
   w.setCamera(cam);
 
   // NEWTON
@@ -302,9 +334,12 @@ const pose = (w: World, f: number): Pose => {
   // "Don't." [flat]: the rounded o through its middle (the teeth-together strip reads as a grimace at phone size)
   if (q && q.id === "D06" && (sp.mouth === "strip" || (sp.mouth === "small" && f >= q.from + 2 && f <= q.to - 6))) sp.mouth = "round";
   const nodOn = capWord("D04", "students").from;
+  // the wipe drags his head a little with each stroke (the invisible hand's pressure); the claps: a start (a blink and
+  // a small jolt of the head on the first, a jolt on the second as he looks up)
+  const drag: { tilt: number } | undefined = shot === "street" ? { tilt: WIPE_TILT * Math.max(-1, Math.min(1, padSpeed(f, PAD_T) / 0.4)) } : undefined;
   n.set({
-    at: ns.at, facing: ns.facing, pose: ns.pose, expr: ns.expr, blink: lid(t, 1, swaps(EXPR)), ...sp,
-    head: heads(sp.head, accent("nod", f, nodOn, { amp: 0.5 }), accent("nod", f, L6.from, { amp: 0.35 })),
+    at: ns.at, facing: ns.facing, pose: ns.pose, expr: ns.expr, blink: lid(t, 1, [...swaps(EXPR), (CLAP1 + 3) / FPS]), ...sp,
+    head: heads(sp.head, drag, accent("nod", f, nodOn, { amp: 0.5 }), accent("jolt", f, CLAP1, { amp: 0.3 }), accent("jolt", f, CLAP2, { amp: 0.4 }), accent("nod", f, L6.from, { amp: 0.35 })),
     turn: ns.turn, gaze: ns.gaze, lookDown: ns.lookDown, hands: ns.desk ? ns.desk.hands : [null, null], hide: NEWTON_HIDE, visible: true,
   });
 
@@ -322,63 +357,18 @@ const pose = (w: World, f: number): Pose => {
   // the notes in his hand / under his arm (at the rig's real hand)
   if (d && d.notes.mode !== "desk") w.prop("notes").put(n.handWorld(1), { grip: "grip", rot: d.notes.mode === "arm" ? underArm(ns.at, ns.facing).rot : d.notes.q });
 
-  // HER HAND: the wipe (the street)
+  // THE WIPE (the street): the handkerchief pad in an invisible hand (no hand drawn: segD_parts padPut)
   if (shot === "street") {
-    const fw = wipeFrame(f);
-    const Wp = fw === null ? null : C.wipe(cam, fw, C.noseOf(n), WIPE_ON);
-    if (Wp) {
-      // (re-placed on wipe()'s path so the white cloth reads: the wad on his nose, her fist beside it, the tail hanging
-      // over the front of her knuckles: two instances of the cloth, each group squashed along its y after put:
-      // segD_parts wipePut)
-      const P = wipePut(cam, Wp.cloth.at, { sun: STREET_SET.sun });
-      w.prop("handR").put(P.hand.at, { rot: P.hand.rot, pose: "grip", scale: P.hand.scale });
-      for (const [key, c] of [["", P.wad], ["tail", P.tail]] as const) {
-        const hk = w.prop("handkerchief", key).put(c.at, { rot: c.rot, scale: c.s });
-        hk.group.scale.set(c.s, c.s * c.sy, c.s); hk.group.updateMatrixWorld(true);
-      }
-    }
+    const P = padPut(cam, f, PAD_T, n.headWorld(), C.noseOf(n), { sun: STREET_SET.sun });
+    if (P) { const o: HankyOpts = { rot: P.rot, scale: P.scale, pad: true, flap: P.flap }; w.prop("handkerchief").put(P.at, o); }
     return { camera: cam, slate: "D1 street" };
   }
 
-  // HER MIC (and the clapping hand)
-  const mouth = n.headWorld().add(V(0, -0.1, 0));
-  let lens = 0, enter = 1;
-  if (shot === "hall") {
-    // out for the wide; in and round to the lens for aside 23; back toward him through the whip
-    enter = ky(f, [[T_A23, 0], [T_A23 + 8, 1]]);
-    lens = ky(f, [[T_A23, 0], [T_A23 + 8, 1], [T_WHIP, 1], [T_WHIP + 6, 0]]);
-  } else if (shot === "lectern") {
-    lens = ky(f, [[T_WHIP, 1], [T_WHIP + 6, 0], [T_A27, 0], [T_A27 + 8, 1]]);
-    enter = ky(f, [[T_LOWER, 1], [T_LOWER + 9, 0]]);
-  } else {
-    enter = ky(f, [[T_TC + 1, 0], [T_TC + 10, 1]]);
-  }
-  let dof: { focus: number; amount: number } | undefined;
-  if (enter > 0.001) {
-    const M = C.micPose(cam, f, { aim: mouth, lens, enter });
-    dof = M.dof;
-    let micAt = M.mic.at, handAt = M.hand.at;
-    if (shot === "bench") {
-      // THE CLAPS: she brings the mic hand down to the lower middle (no subtitle until "Don't.") and claps her open
-      // right hand onto it, twice; then the right hand goes and the mic comes back up toward him
-      const low = ky(f, [[T_TC + 3, 0], [CLAP1 - 7, 1], [CLAP2 + 7, 1], [CLAP2 + 17, 0]]);
-      if (low > 0) {
-        const F = C.camFrame(cam), g = C.worldToCam(F, M.hand.at), to = C.fromScreen(F, CLAP_FIST[0], CLAP_FIST[1], g.z);
-        const dW = C.camToWorld(F, to.x, to.y, to.z).sub(M.hand.at).multiplyScalar(low);
-        micAt = micAt.clone().add(dW); handAt = handAt.clone().add(dW);
-      }
-      const kIn = ky(f, [[T_TC + 4, 0], [CLAP1 - 5, 1], [CLAP2 + 6, 1], [CLAP2 + 15, 0]]);
-      if (kIn > 0.001) { const H = clapOnFist(cam, f, handAt, [CLAP1, CLAP2], kIn); w.prop("handR").put(H.at, { rot: H.rot, pose: "open" }); }
-    }
-    if (M.visible) { w.prop("mic").put(micAt, { rot: M.mic.rot }); w.prop("hand").put(handAt, { rot: M.hand.rot, pose: "grip" }); }
-  }
-  // (the mic drops away after aside 27: the focus racks back onto him for the lecture glimpse)
-  if (dof && shot === "lectern" && f > T_LOWER) {
-    const r = smooth(clamp01((f - T_LOWER) / 6)), dN = C.camAxes(cam).p.distanceTo(mouth);
-    dof = { focus: lerp(dof.focus, dN, r), amount: lerp(dof.amount, 0, r) };
-  }
-  // (on the bench her hands are near the lens: a lighter focus pull than the mic's default, so the claps read)
-  if (dof && shot === "bench") dof = { focus: dof.focus, amount: Math.min(dof.amount, 1.2) };
+  // THE LENS (no mic any more, so no focus pull onto one): on the lectern and the bench a light focus on him; in aside
+  // 23 on the benches she turns to (the far hall a little soft)
+  const lens = C.camAxes(cam).p, mouth = n.headWorld().add(V(0, -0.1, 0));
+  const dof = shot === "hall" ? (a23K(f) > 0 ? { focus: lens.distanceTo(A23_AT), amount: 2.5 * a23K(f) } : undefined)
+    : { focus: lens.distanceTo(mouth), amount: shot === "lectern" ? 3 : 1.2 };
   // her line 27's caption goes as his silent lecture mouth starts (it would sit under his moving mouth and cross the
   // time cut: the captions owner is asked to end it there, requests.md)
   const captions = f > L5.to && f <= CAP27_END ? false : undefined;

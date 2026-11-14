@@ -14,19 +14,26 @@
 //       scoops, swings round and throws two loads into the fire door (sparks) on the mix's shovel hits, then leans the
 //       shovel on the furnace's side and dozes standing. 38 "Go to bed." (he turns his eyes to her); 39 「不走…」 (she steps in, stubborn); 40 "Nobody stays a
 //       whole day." (dry, puzzled: a tilt of the head); HUMPHREY takes the folded empty sack off the stool in his left
-//       hand and goes out past the heap, upstage of her mic (out of frame left); Newton's eyes follow him, then go back
-//       to the fire.
+//       hand and goes out upstage, round the heap (out of frame left); Newton's eyes follow him, then go back to the
+//       fire.
 //   F4  TIME PASSES (the cut on BEAT.F.timePass): it opens on his candle burned down to a stub on the furnace top (0.7 s),
 //       her eyes drop to the board on his knees, his charcoal scratching circles and triangles, his head bowed over it;
 //       the fire has settled to a low bed of red embers (fire 0.13 + the set's embers), the room sunk round him (a
 //       grade). She straightens up and steps back as she asks 41: NEWTON on the stool by the fire door, the board on his
 //       knee, the poker hung by the door, his candle on the furnace's corner (G finds it there).
-//   F5  42-43. THE SLOW PUSH-IN from 44 (BEAT.F.push[0]) to the end of 50 (ELAB_CAMS.stool -> ELAB_CAMS.push): 44 at
+//   F5  42-43. THE SLOW PUSH-IN from 44 (BEAT.F.push[0]) to the end of 50 (ELAB_CAMS.stool -> PUSH_END, segF_parts:
+//       ELAB_CAMS.push eased back 5 cm and turned 6 deg left and up, his face clear of her camera's UI): 44 at
 //       the fire; 46 "Close?" at her (a 0.6 s flash of stern, then deadpan, eyes on the fire); he takes the poker off its
 //       hook and POKES the fire (sparks, the flames stirred up); 47-49 bitter, then ashamed, his eyes down; THE FIRE SPITS
 //       (a hard burst of sparks up out of the door, never over his face; the flames leap; a warm flash on his near
 //       cheek) and he does not look up; 50 sad, cracking; 51 her 「她走了，您却没走。」. Silence: the push has stopped; he
-//       pokes the fire again, eyes open on it, and it comes back up to G's fire; she lowers the mic; then "sigh".
+//       pokes the fire again, eyes open on it, and it comes back up to G's fire (the lens's light focus eases off with
+//       it: G opens with none); then "sigh".
+// SHE IS INVISIBLE (Jay, 14 Nov: "get rid of the microphone and arms"): no mic and no hand are put. F never had an
+// aside (to the lens) and her hand never did anything here: the mic only pointed at him while she asked, and every
+// question already lands on a move of her own (she turns back to him on 炼金, steps in on 不走, straightens up from the
+// board on 41; the push carries 44-50). The lens keeps the light focus on his mouth that the mic used to give, now
+// steady from the cut in to the last poke (it no longer jumps with the mic going in and out: card 3, the board rise).
 import * as THREE from "three";
 import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
@@ -34,8 +41,8 @@ import * as C from "../cam";
 import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT } from "../people";
 import { GDX, GARDEN, GARDEN_SET, ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, type TaSeat } from "../layout";
 import { BOARD, POKER, STOOL, candleTop } from "../props";
-import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, yawTo, lerpA, rel, seated, kneel, cardLower, type Rig } from "./common";
-import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, aimThrough, quatYZ, shovelPut, stroke, sparks, flash, cheekGlow, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, type SparkMask } from "./segF_parts";
+import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, yawTo, lerpA, rel, seated, kneel, type Rig } from "./common";
+import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, quatYZ, shovelPut, stroke, sparks, flash, cheekGlow, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, PUSH_END, putStoolUnder, type SparkMask } from "./segF_parts";
 import type { World } from "../world";
 import type React from "react";
 
@@ -63,8 +70,8 @@ const T_STOP = L07.from + 4;
 const [P0, P1] = BEAT.F.push;
 /** the pokes and the spit (the mix) */
 const T_POKE = L11.to + sec(0.15), T_SPIT = L14.to + sec(0.15), T_POKE2 = L16.to + sec(0.6);
-/** she lowers the mic in the silence after 51 */
-const T_MICDOWN = L16.to + 16;
+/** the fire comes back up after the last poke over this many frames (the grade lifts and the light focus eases off) */
+const REVIVE = 26;
 
 // ---------------------------------------------------------------------------------------------------- F1 the garden
 const GW = GARDEN_SET.walks, GE = GARDEN_SET.elab;
@@ -98,12 +105,14 @@ const nAt = (f: number) => (f < T_TP ? nLeg(f).at : ELAB.stool.clone());
 const E0 = ELAB_CAMS.enter;
 const BOOK_LOOK = V(ELX + 1.55, 0.95, -0.25);
 const herIn = (f: number) => V(E0.pos[0], EYE, E0.pos[2] + 0.12).lerp(P_WIDE, stride(clamp01((f - T_IN) / (T_GOLD + 8 - T_IN))));
+/** how far her eyes are on the bench (in as she comes in, out as she turns back to him on her question) */
+const benchK = (f: number) => smooth(clamp01((f - (T_IN + 4)) / 20)) * (1 - smooth(clamp01((f - (T_ASK + 4)) / 26)));
 const insideCam = (f: number): CamPose => {
   const pos = f < T_GOLD + 8 ? herIn(f) : f < L04.from ? P_WIDE.clone() : P_WIDE.clone().lerp(P_STEP, stride(clamp01((f - L04.from - 2) / (L04.to - L04.from - 8))));
   const follow = frameOn(pos, lagged(f, (g) => nLeg(g).at.clone().add(V(0, 1.2, 0)), 6), 360, 820);
   const bench = frameOn(pos, BOOK_LOOK, 560, 1000);
   const onHim = wideCam(pos, f);
-  const kB = smooth(clamp01((f - (T_IN + 4)) / 20)) * (1 - smooth(clamp01((f - (T_ASK + 4)) / 26)));
+  const kB = benchK(f);
   const kH = smooth(clamp01((f - (T_ASK + 4)) / 26));
   let cam = mixCam(follow, bench, kB);
   if (kH > 0) cam = mixCam(mixCam(follow, bench, kB), onHim, kH);
@@ -163,9 +172,8 @@ const shovelAt = (f: number): { sh: Sh; face: number } => {
   return { sh: { blade: bl.applyAxisAngle(Y, face).add(H_AT), handle: hd.applyAxisAngle(Y, face) }, face };
 };
 const loaded = (f: number) => (f > TH1 - 18 && f < TH1) || (f > TH2 - 18 && f < TH2);
-/** his way out: to the stool for the sack; then back past the heap, UPSTAGE of her mic (on her screen the sack at his
- *  side passes above her hand and left of the mic's head instead of behind them: director round 1), and round the heap
- *  to the door, the night */
+/** his way out: to the stool for the sack; then back past the heap, upstage (the sack at his side clear of the near
+ *  stool; director round 1), and round the heap to the door, the night */
 const H_TAKE = ST1.clone().add(V(-0.415, 0, -0.174)), H_PAST = V(ELX - 0.75, 0, -0.25);
 const HPATH_OUT = [H_AT, H_TAKE], HPATH_DOOR = [H_TAKE, H_PAST, V(ELX - 0.95, 0, 0.4), V(ELX - 0.6, 0, 1.3), ELAB.doorOut];
 const OUT_YAW = yawTo(H_TAKE, H_PAST);
@@ -184,7 +192,7 @@ const putLimpSack = (w: World, neck: THREE.Vector3, rot: THREE.Quaternion, s: [n
  *  with); he takes it by the neck and it unfolds as it swings down from his fist to hang at his left side */
 const H_TAKE_FACE = yawTo(H_TAKE, ST1);
 const SACK_D = rel(H_TAKE, H_TAKE_FACE, 0.16, 0, 0.2).sub(ST1).setY(0).normalize();
-const LIMP_LYING: Limp = { up: SACK_D, thin: V(0, 1, 0), s: [0.85, 0.62, 0.16] };
+const LIMP_LYING: Limp = { up: SACK_D, thin: V(0, 1, 0), s: [0.7, 0.62, 0.16] };
 const SACK_GRAB = SACK_ON_STOOL.clone().add(V(0, 0.226 * LIMP_LYING.s[2] + 0.006, 0)).addScaledVector(SACK_D, (NECK_Y - 0.275) * LIMP_LYING.s[1]);
 /** hanging from his fist: wider and longer than folded, flat in the plane of his side, its foot swung out */
 const limpHanging = (right: THREE.Vector3): Limp => ({ up: V(0, 1, 0).addScaledVector(right, SACK_OUT), thin: right.clone(), s: [1.05, 0.95, 0.2] });
@@ -256,22 +264,33 @@ const PK_ROT_REST = quatYZ(PK_DIR_REST, V(1, 0, 0));
 const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07 + 0.002, -0.42), CANDLE_LEN = 0.12;
 /** her eyes: close over the board (she leans in over his knees: the drawing big in the lower half, his bowed head
  *  above it; his 0.5 m head is too near the board for an insert without it), then back to the stool framing
- *  (ELAB_CAMS.stool's place, his eyes high in the middle); the push ends on ELAB_CAMS.push (G carries on from it) */
+ *  (ELAB_CAMS.stool's place, his eyes high in the middle); the push ends on PUSH_END (ELAB_CAMS.push eased back a
+ *  little and turned so that his face stays clear of her camera's UI in the top corners; G opens on it) */
 const BOARD_POS = B_C.clone().add(rel(V(), FACE, 0.1, 1.0, 1.1));
 const BOARD_CAM: CamPose = frameOn(BOARD_POS, B_C, 540, 1300, 48);
 const SEAT_EYES = SEAT.top.clone().add(V(0.005, 0.64, 0));
 const STOOL_POS = V(...ELAB_CAMS.stool.pos);
 const STOOL_CAM: CamPose = frameOn(STOOL_POS, SEAT_EYES, 545, 480);
-const PUSH_CAM: CamPose = { pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov };
+const PUSH_CAM: CamPose = PUSH_END;
 /** THE TIME CUT opens on his candle, burned down to a stub on the furnace top (she is leaning in toward it, by the
  *  board; her head eases in a little over the hold), then her eyes drop to the board */
 const CANDLE_LOOK = CANDLE_AT.clone().add(V(0, candleTop(CANDLE_LEN) * 0.55, 0));
 const candleCam = (f: number): CamPose => frameOn(BOARD_POS.clone().lerp(CANDLE_LOOK, 0.3 + 0.04 * smooth(clamp01((f - T_TP) / (T_CANDLE1 - T_TP)))), CANDLE_LOOK, 560, 960, 44);
+/** she straightens up from the board to the stool framing for 41. Straight, his head went up through the top LEFT
+ *  corner on the way and his forehead crossed under the small stamp 「夜 23:00 / NIGHT」 for 7 frames (3385-3391; faces
+ *  checker, skin up to 3289 px2): her eyes lift a hair more on the way up (RISE_LIFT deg at most, frames ~3384-3395,
+ *  nothing at either end), which keeps his skin at least 13 px under the stamp's box; the rise's frames and ends unchanged */
+const RISE_LIFT = 1.5;
+const riseCam = (f: number): CamPose => {
+  const u = clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)), c = mixCam(BOARD_CAM, STOOL_CAM, stride(u));
+  const b = clamp01((u - 0.35) / 0.42);
+  return b > 0 && b < 1 ? C.nudge(c, { pitch: RISE_LIFT * Math.sin(Math.PI * b) }) : c;
+};
 const laterCam = (f: number): CamPose => {
   if (f < T_CANDLE1) return candleCam(f);
   if (f < T_BOARD_ON) return mixCam(candleCam(T_CANDLE1), BOARD_CAM, stride(clamp01((f - T_CANDLE1) / (T_BOARD_ON - T_CANDLE1))));
   if (f < T_RISE0) return BOARD_CAM;
-  if (f < T_RISE1) return mixCam(BOARD_CAM, STOOL_CAM, stride(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0))));
+  if (f < T_RISE1) return riseCam(f);
   return lerpCam(STOOL_CAM, PUSH_CAM, creepU(f, P0, P1, 10));
 };
 
@@ -281,7 +300,7 @@ const laterCam = (f: number): CamPose => {
  *  film's own grade), so the cut to G matches. `late` = how much of the hours-later grade, `spit` = the spit's flare. */
 const FIRE_LOW = 0.13, FIRE_G = 0.3;
 const fireLate = (f: number) => {
-  const rv = smooth(clamp01((f - T_POKE2) / 26));
+  const rv = smooth(clamp01((f - T_POKE2) / REVIVE));
   const sp = holdK(f, T_SPIT, 4, 6), p1 = flareK(f, T_POKE, 12), p2 = flareK(f, T_POKE2, 10);
   const fire = Math.min(1, lerp(FIRE_LOW, FIRE_G, rv) + 0.75 * sp + 0.3 * p1 + 0.15 * p2);
   const embers = clamp01((1 - rv) * (1 - 0.85 * sp) * (1 - 0.55 * p1) - 0.3 * p2);
@@ -391,7 +410,7 @@ const pose = (w: World, f: number): Pose => {
       // he straightens up with it turning from the stool to his way out (round through her side), then walks
       const face = out ? s.facing : f >= T_TAKE ? lerpA(H_TAKE_FACE, OUT_YAW, smooth(clamp01((f - T_TAKE - 6) / (T_GO - T_TAKE - 6)))) : s.facing;
       const dip = Math.sin(Math.PI * clamp01((f - (T_TAKE - 10)) / 20));
-      const handL = f < T_TAKE ? (f >= T_TAKE - 5 ? SACK_GRAB.clone() : null) : f < T_TAKE + 9 ? SACK_GRAB.clone().lerp(SACK_CARRY(s.at, face), smooth((f - T_TAKE) / 9)) : SACK_CARRY(s.at, face);
+      const handL = f < T_TAKE ? (f >= T_TAKE - 5 ? SACK_GRAB.clone() : null) : f < T_TAKE + 9 ? SACK_GRAB.clone().lerp(SACK_CARRY(s.at, face), easeOutCubic((f - T_TAKE) / 9)) : SACK_CARRY(s.at, face);
       hm.set({ at: s.at, facing: face, pose: s.pose, expr: hExpr, gaze: 0, blink: lid(t, 2), visible: true, ...kneel(0.45 * dip, s.at, 20),
         hands: [null, handL], turn: f >= T_TAKE ? undefined : 0 });
     }
@@ -404,7 +423,7 @@ const pose = (w: World, f: number): Pose => {
     if (f < T_TAKE) putLimpSack(w, SACK_GRAB, quatYZ(LIMP_LYING.up, LIMP_LYING.thin), LIMP_LYING.s);
     if (f >= T_FREE) { const P = shovelPut(SH_LEAN.blade, SH_LEAN.handle, V(0, 0, 1)); w.prop("shovel").put(P.at, { rot: P.rot }); }
   } else {
-    w.prop("stool").put(ELAB.stool, { rot: FACE });
+    putStoolUnder(w, ELAB.stool, FACE);   // a little shorter, its seat hidden inside his coat (segF_parts STOOL_SY)
     w.prop("board").put(B_C, { rot: B_ROT });
     w.prop("candle").put(CANDLE_AT, { len: CANDLE_LEN, lit: true, t });
   }
@@ -416,10 +435,11 @@ const pose = (w: World, f: number): Pose => {
     w.prop("candle").put(n.handWorld(1), { grip: "grip", len: 0.75, lit: true, t });
     if (hm && f < T_FREE) { const P = shovelPut(sh.sh.blade, sh.sh.handle); w.prop("shovel").put(P.at, { rot: P.rot, load: loaded(f) }); }
     if (hm && f >= T_TAKE) {
-      // lifted off the stool by its neck, it unfolds as it swings down from his fist to hang flat at his left side
-      const hand = hm.handWorld(1), right = V(-Math.cos(hm.bodyYaw), 0, Math.sin(hm.bodyYaw)), k = smooth(clamp01((f - T_TAKE) / 9));
-      const L = mixLimp(LIMP_LYING, limpHanging(right), k);
-      putLimpSack(w, hand, L.rot, L.s);
+      // lifted off the stool by its neck (his fist rises fast), it swings down from his fist only once it is clear of the
+      // seat (kR), and unfolds to its full length once it hangs (kL), as he turns away
+      const hand = hm.handWorld(1), right = V(-Math.cos(hm.bodyYaw), 0, Math.sin(hm.bodyYaw));
+      const kR = smooth(clamp01((f - T_TAKE - 3) / 7)), kL = smooth(clamp01((f - T_TAKE - 9) / 8)), L = mixLimp(LIMP_LYING, limpHanging(right), kR);
+      putLimpSack(w, hand, L.rot, [L.s[0], lerp(LIMP_LYING.s[1], limpHanging(right).s[1], kL), L.s[2]]);
     }
   } else {
     // held: put on its keyed line (his fist is on the grip within 3.5 cm), so the rod's end keeps to the door's opening
@@ -430,12 +450,8 @@ const pose = (w: World, f: number): Pose => {
     } else w.prop("charcoal").put(CH_REST, { rot: CH_REST_ROT });
   }
 
-  // ---- HER MIC: in toward him as she turns back to him on 炼金; lowered under card 3; out over the board; in for 41;
-  // lowered again in the silence after 51
-  const head = n.headWorld(), mouth = () => head.clone().add(V(0, -0.1, 0));
-  const enter = !later ? ky(f, [[T_ASK + 6, 0], [T_ASK + 20, 1]]) * (1 - cardLower(f))
-    : ky(f, [[T_RISE0 + 4, 0], [T_RISE0 + 16, 1], [T_MICDOWN, 1], [T_MICDOWN + 26, 0]]);
-  const M = enter > 0.001 ? C.putMic(w, cam, f, { aim: aimThrough(f, [[S.from, mouth]]), enter }) : null;
+  // ---- HER MIC: none (she is invisible, Jay 14 Nov); it only ever pointed at his mouth, which the lens still focuses on
+  const mouth = n.headWorld().add(V(0, -0.1, 0));
 
   // ---- the sparks: the shovel's charcoal, the poker, THE SPIT: out of the fire door's top edge on screen, up and away
   // from his face; the heads in front of the fire are masked out (a spark never crosses a face)
@@ -458,25 +474,33 @@ const pose = (w: World, f: number): Pose => {
       overlays.push(sparks(f, T_SPIT, top(0.4), { n: 140, len: 26, speed: 40, size: 24, dir: -100, spread: 46, seed: 5, stagger: 4, streak: 1.4, glow: 1.5, jitter: wTop * 0.9 }, mask),
         sparks(f, T_SPIT, { x: lerp(eL.x, bL.x, 0.35), y: lerp(eL.y, bL.y, 0.35) }, { n: 40, len: 18, speed: 34, size: 20, dir: -150, spread: 40, seed: 6, stagger: 3, streak: 1.3, glow: 1.4, jitter: 50 }, mask));
     }
-    // the flare's warm flash out of the door onto the near side of his face (the spit; a little on a poke); on THE SPIT
-    // the cheek nearest the fire also takes a warm glow (a screen blend alone does not show on his pale face)
+    // the flare's warm flash out of the door (the spit; a little on a poke); the cheek nearest the fire takes a warm glow
     if (fs) {
       const hd = mask[0], side = Math.sign((eL.x + eR.x) / 2 - hd.x) || -1;
-      overlays.push(flash("flash", { x: lerp(eR.x, hd.x, 0.25), y: lerp(eR.y, hd.y, 0.35) }, hd.r * 1.5, 0.9 * fs.spit + 0.25 * fs.poke),
+      // the screen-blended flash stays round the door's mouth (spread over his face it lifted his drawn lines to a haze)
+      overlays.push(flash("flash", { x: (eL.x + eR.x) / 2, y: lerp(eL.y, bL.y, 0.45) }, wTop * 0.8, 0.9 * fs.spit + 0.25 * fs.poke),
         cheekGlow("cheek", { x: hd.x + side * 0.5 * hd.r, y: hd.y + 0.3 * hd.r }, hd.r * 0.6, fs.spit + 0.3 * fs.poke));
     }
   }
 
-  // ---- the lens: a light focus on him; close on the board, on the board
-  // (her mic hand near the lens: a lighter blur in the wide 3-shot, so it reads as a hand, not a grey mitten)
-  let dof: { focus: number; amount: number } | undefined = M?.dof && !later ? { focus: M.dof.focus, amount: Math.min(M.dof.amount, 1.1) } : M?.dof;
+  // ---- the lens: the film's light focus on his mouth (cInf 3, what the mic's aim gave; with no hand near the lens the
+  // wide 3-shot no longer needs its lighter cap), steady from the cut in; over the time cut on the candle, then on the
+  // board, racked back onto him as she straightens up for 41; eased off as the fire comes back up after the last poke,
+  // so F ends with no lens blur, as G opens
+  // (while her eyes go along the bench on the way in, the focus goes with them: the book and the candle crisp)
+  const dHim = posOf(cam).distanceTo(mouth), kBench = later ? 0 : benchK(f);
+  const onHim = { focus: Math.max(0.2, kBench > 0 ? lerp(dHim, posOf(cam).distanceTo(BOOK_LOOK), kBench) : dHim), amount: 3 };
+  let dof: { focus: number; amount: number } = onHim;
   if (later && f < T_RISE1) {
     const kb = f < T_CANDLE1 ? 0 : clamp01((f - T_CANDLE1) / (T_BOARD_ON - T_CANDLE1));
-    dof = { focus: posOf(cam).distanceTo(CANDLE_LOOK.clone().lerp(B_C, smooth(kb))), amount: lerp(2.2, 3, kb) * (1 - smooth(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)))) };
+    const close = { focus: posOf(cam).distanceTo(CANDLE_LOOK.clone().lerp(B_C, smooth(kb))), amount: lerp(2.2, 3, kb) };
+    const kr = smooth(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)));
+    dof = { focus: lerp(close.focus, onHim.focus, kr), amount: lerp(close.amount, onHim.amount, kr) };
   }
+  if (later) dof = { ...dof, amount: dof.amount * (1 - smooth(clamp01((f - T_POKE2) / REVIVE))) };
   // the grade: hours later the room sinks round him (until the poke after 51 brings the fire back up)
   const post: Pose["post"] = {};
-  if (dof && dof.amount > 0.05) post.dof = dof;
+  if (dof.amount > 0.05) post.dof = dof;
   if (fs && fs.late > 0.001) post.grade = mixGrade(GRADE_BASE, GRADE_LATE, fs.late);
   const ov = overlays.filter(Boolean);
   return { camera: cam, post: post.dof || post.grade ? post : undefined, overlays: ov.length ? ov : undefined, slate: later ? "F4-5 stool" : "F2-3 inside" };

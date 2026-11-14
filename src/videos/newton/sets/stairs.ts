@@ -20,6 +20,9 @@
 //   shutters; 0: the shutters shut tight, no bright seams: segA, so no white line hangs over a head in the doorway);
 //   `gapLine` 0..1 (0: off; 1: the candle light as a bright warm line IN the gap under the shut door, landing side, and
 //   a short spill on the boards in front of it: the strip behind the leaf is hidden from eye height).
+//   `puff` / `puff2` (seconds since a rap; < 0 = none, the default): THE INVISIBLE KNOCK (Jay, 14 Nov: no hand, no mic):
+//   each rap shakes a little dust out of the panel's mouldings at STAIRS.knock; it puffs out toward the landing, slows,
+//   sinks and fades in about 0.6 s, catching the sun (WP5-A).
 import * as THREE from "three";
 import type { EnvSpec } from "../../bt/pbr";
 import type { Kit } from "../../../kit/props/kit";
@@ -51,7 +54,9 @@ export const STAIRS_LOOK: PlaceLook = {
 /** the per-frame dressing: door 0..1 (0 shut, 1 open inward ~100 deg), glow 0..1 (his candle's light under the door);
  *  leak 0..1 (the day round his room's shutters: 1 bright seams, 0 shut tight), gapLine 0..1 (the glow as a bright line
  *  in the gap under the shut door, seen from the landing: 0 off) */
-export const STAIRS_PARAMS: Record<string, ParamValue> = { door: 0, glow: 0, leak: 1, gapLine: 0 };
+export const STAIRS_PARAMS: Record<string, ParamValue> = { door: 0, glow: 0, leak: 1, gapLine: 0, puff: -1, puff2: -1 };
+/** THE KNOCK'S DUST PUFF (params puff / puff2): motes, their life (s) */
+const PUFF = { n: 21, life: 0.62, size: 0.0085 };
 
 const W = S.well, L = S.landing, ST = S.steps, D = S.door, WI = S.window, R = S.room;
 const X0 = STX + W.x0, X1 = STX + W.x1;
@@ -222,6 +227,51 @@ export function buildStairs(K: Kit) {
   const shaft = sunShaft(corners, travel, 1.75, "#ffd9a0", 0.05); group.add(shaft);
   const dust = dustMotes(26, corners, travel, 1.6, { size: 0.011, seed: 57 }); group.add(dust.points);
 
+  // =================================================================================================== the knock's dust
+  // two puffs (one per rap): a soft warm haze blooming off the panel at the knock point, and fine motes of two sizes
+  // out toward the landing (-x) in a loose cone, slowed by the air (tau 0.12 s), sinking a little, fading; additive and
+  // unlit like the shaft's dust (NOINK); the haze card turns to the lens (view)
+  const moteT = paint(32, 32, (g, Sz) => { const gr = g.createRadialGradient(Sz / 2, Sz / 2, 0, Sz / 2, Sz / 2, Sz / 2); gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(0.45, "rgba(255,255,255,0.4)"); gr.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = gr; g.fillRect(0, 0, Sz, Sz); });
+  const puffFrom = new THREE.Vector3(STX + D.x + 0.012, STAIRS.knock.y, STAIRS.knock.z);
+  const puffs = [0, 1].map((k) => {
+    const r = rng(81 + k), seeds = Array.from({ length: PUFF.n }, () => {
+      const a = (r() - 0.5) * 2.2, b = (r() - 0.35) * 1.4;
+      return { d: new THREE.Vector3(-1, b * 0.6, a * 0.6).normalize(), v: 0.08 + 0.3 * r(), ph: r() * 6.28, sink: 0.04 + 0.1 * r(), o: new THREE.Vector3(0, (r() - 0.5) * 0.06, (r() - 0.5) * 0.07) };
+    });
+    const groups = [0, 1].map((big) => {
+      const idx = seeds.map((_, i) => i).filter((i) => i % 3 === 0 ? big === 1 : big === 0);
+      const pos = new Float32Array(idx.length * 3), geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({ size: big ? PUFF.size : PUFF.size * 0.55, map: moteT, color: "#ffe9c8", transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true, fog: false });
+      const pts = new THREE.Points(geo, mat); pts.layers.set(NOINK); pts.frustumCulled = false; pts.renderOrder = 7; pts.name = "stairs.knockDust"; pts.visible = false;
+      group.add(pts);
+      return { idx, pos, geo, mat, pts, big };
+    });
+    const haze = glowSprite(1, "#ffdcaa", 0); haze.name = "stairs.knockHaze"; haze.position.copy(puffFrom); haze.visible = false; group.add(haze);
+    const mHaze = haze.material as THREE.MeshBasicMaterial;
+    const update = (age: number) => {
+      const on = age >= 0 && age < PUFF.life;
+      haze.visible = on && age < PUFF.life * 0.8;
+      for (const G of groups) G.pts.visible = on;
+      if (!on) return;
+      const tau = 0.12, run = tau * (1 - Math.exp(-age / tau)), fade = Math.min(1, age / 0.035) * Math.pow(1 - age / PUFF.life, 1.4);
+      const hk = age / (PUFF.life * 0.8);
+      haze.scale.setScalar(0.03 + 0.07 * Math.sqrt(Math.min(1, hk))); haze.position.copy(puffFrom).add(new THREE.Vector3(-0.025 * Math.sqrt(Math.min(1, hk)), -0.01 * hk, 0));
+      mHaze.opacity = 0.2 * Math.min(1, age / 0.035) * Math.pow(Math.max(0, 1 - hk), 1.6);
+      for (const G of groups) {
+        G.mat.opacity = (G.big ? 0.42 : 0.6) * fade;
+        G.idx.forEach((i, j) => {
+          const m = seeds[i];
+          G.pos[3 * j] = puffFrom.x + m.o.x + m.d.x * m.v * run;
+          G.pos[3 * j + 1] = puffFrom.y + m.o.y + m.d.y * m.v * run - m.sink * age * age + 0.004 * Math.sin(age * 9 + m.ph);
+          G.pos[3 * j + 2] = puffFrom.z + m.o.z + m.d.z * m.v * run;
+        });
+        (G.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+      }
+    };
+    return { update, haze };
+  });
+  const puffAge = [-1, -1];
+
   // =================================================================================================== his room behind the door
   let shutOpen: THREE.Object3D | null = null, shutShut: THREE.Object3D | null = null, mShut: THREE.MeshBasicMaterial | null = null;
   {
@@ -264,9 +314,10 @@ export function buildStairs(K: Kit) {
   const showLine = () => { const on = glow > 0.01 && line > 0.01 && door < 0.02; gapLine.visible = on; spill.visible = on; };
   return {
     group,
-    view(cam: THREE.Vector3) { for (const [o, behind] of hideable) o.visible = !behind(cam); },
+    view(cam: THREE.Vector3) { for (const [o, behind] of hideable) o.visible = !behind(cam); for (const P of puffs) P.haze.lookAt(cam); },
     animate(t: number) {
       dust.update(t, 1);
+      puffs[0].update(puffAge[0]); puffs[1].update(puffAge[1]);
       // the candle behind the door breathes a little (its light under the door)
       const k = glow * (1 + 0.06 * Math.sin(t * 7.3) + 0.04 * Math.sin(t * 12.9 + 1.1));
       Lr.point.intensity = 1.6 * k; mFan.opacity = 0.5 * k;
@@ -277,6 +328,8 @@ export function buildStairs(K: Kit) {
       if (name === "door") { door = Math.max(0, Math.min(1, Number(v))); leaf.rotation.y = -Math.PI / 2 + door * D.swing; showLine(); }
       if (name === "glow") { glow = Math.max(0, Math.min(1, Number(v))); gapStrip.visible = glow > 0.01; fan.visible = glow > 0.01; showLine(); }
       if (name === "gapLine") { line = Math.max(0, Math.min(1, Number(v))); showLine(); }
+      if (name === "puff") puffAge[0] = Number(v);
+      if (name === "puff2") puffAge[1] = Number(v);
       if (name === "leak" && shutOpen && shutShut && mShut) {
         const lk = Math.max(0, Math.min(1, Number(v)));
         shutOpen.visible = lk > 0.001; shutShut.visible = lk < 0.999; mShut.opacity = 1 - lk;
@@ -285,4 +338,4 @@ export function buildStairs(K: Kit) {
     cast(): Partial<CastLight> { return {}; },
   };
 }
-void NOINK; void glowSprite;
+void NOINK;

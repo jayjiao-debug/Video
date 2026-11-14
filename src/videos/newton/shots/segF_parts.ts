@@ -2,13 +2,15 @@
 // (copies of the generic camera helpers of segE_parts, kept here so segment F never moves when another segment's file
 // changes), the constant-speed push, axes -> quaternion, THE SHOVEL by its blade, the charcoal's strokes on the board
 // and THE SPARKS (a 2D burst out of the fire door, kept off the faces: the fire spits, the shovel's charcoal goes in, the
-// poker stirs), the flare's warm flash, the grades (the night garden; the room hours later).
+// poker stirs), the flare's warm flash, the grades (the night garden; the room hours later), the stool under the seated
+// Newton (a little shorter: its seat stays hidden inside his coat).
 // Every function is pure: nothing keeps state between frames; all noise from hash().
 import * as THREE from "three";
 import { FPS, clamp01, lerp, smooth, easeOutCubic, hash, h, type CamPose } from "../story";
-import { FOV } from "../layout";
+import { FOV, ELAB_CAMS } from "../layout";
 import * as C from "../cam";
 import type { GradeParams } from "../../vasa/grade";
+import type { World } from "../world";
 
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const sec = (s: number) => Math.round(s * FPS);
@@ -52,13 +54,45 @@ export const creepU = (f: number, from: number, to: number, ramp = 8) => {
   const n = Math.max(1, to - from), r = Math.min(ramp, n / 3), x = clamp01((f - from) / n) * n, v = 1 / (n - r);
   return clamp01(x < r ? (v * x * x) / (2 * r) : x > n - r ? 1 - (v * (n - x) * (n - x)) / (2 * r) : v * (x - r / 2));
 };
+/** a camera moved `d` m straight back along its view's horizontal direction, LEVEL (her eyes stay at their height; a
+ *  nudge's fwd on a steep look-down would lift them) */
+export const levelBack = (c: CamPose, d: number): CamPose => {
+  const A = C.camAxes(c), b = V(A.fwd.x, 0, A.fwd.z).normalize().multiplyScalar(-d), p = A.p.add(b), l = A.l.add(b);
+  return { ...c, pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z] };
+};
+/** THE PUSH'S LAST FRAMING (where the slow push-in stops at the end of 50 and holds to F's last frame). SEGMENT G OPENS
+ *  ON IT (segG.ts imports it: the F -> G cut must stay invisible, so the two never drift apart). ELAB_CAMS.push
+ *  (WP2's "where the push stops") eased 5 cm back, level, and turned 6 deg left and 6 deg up: his eyes come down from
+ *  about y 385 to about y 530 (still the upper third) and his face moves a little right (eyes x ~600-640), so only his
+ *  hair is near her camera's UI in the top corners (hud/vlog.tsx: REC, the timestamp, the battery; and G's big
+ *  「凌晨 02:00」 intro on the first frames after the cut: skin stays right of x ~375 above y 360, the box ends at 348,
+ *  even while he leans to the fire for the last poke). Director vlog note 1 (14 Nov): his face sat under REC and
+ *  「夜 23:00」 for the last 11 s of the push. The push still ends a good deal closer than the stool framing (his face
+ *  about 510 px wide against about 340; it was about 550 on ELAB_CAMS.push itself). */
+export const PUSH_END: CamPose = C.nudge(levelBack({ pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov }, 0.05), { yaw: -6, pitch: 6 });
+/** THE STOOL UNDER THE SEATED NEWTON (F4-F5; G may put it the same way: the F -> G cut is one picture). His coat's
+ *  skirt does not know the stool (the kit's cloth makes a bell round a sitter; acc/garb.ts setSeat would cut it at the
+ *  seat and show the seat under him: a new silhouette, WP3's call), and the bell's lap lies within a few mm of the
+ *  seat's top: the seat's front edge (r 0.16 at 0.42 m) came 4-5 mm out through the cloth beside the board's corner, a
+ *  small orange wedge on his lap (clearance stool x coat 15.4 cm, listed off screen by its deepest point; the whole-film
+ *  check's stills f3387 / f4434). Shortened to STOOL_SY of its height about its feet (its seat top 5 cm under his
+ *  thighs, the feet where they were; the rig's seat, his body and the board do not move), the seat stays at least
+ *  6 mm behind the coat along every line of sight on every seated frame and is never seen; what does show of the
+ *  stool (its legs under the hem) moves by a few mm. Pure: the props reset their scale every frame (props begin()). */
+export const STOOL_SY = 0.88;
+export const putStoolUnder = (w: World, at: THREE.Vector3, facing: number) => {
+  const P = w.prop("stool").put(at, { rot: facing });
+  P.group.scale.y *= STOOL_SY; P.group.updateMatrixWorld(true);
+  return P;
+};
 /** a point averaged over the `win` frames up to f (weights falling off: her eyes follow a little late). Pure. */
 export const lagged = (f: number, at: (g: number) => THREE.Vector3, win = 6) => {
   const p = V(); let ws = 0;
   for (let i = 0; i < win; i++) { const wg = win - i; p.addScaledVector(at(f - i), wg); ws += wg; }
   return p.divideScalar(ws);
 };
-/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames */
+/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames (unused since the mic went
+ *  invisible, 14 Nov: kept for a held thing's aim) */
 export const aimThrough = (f: number, keys: [number, (g: number) => THREE.Vector3][], len = 9) => {
   let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= f) i++;
   const cur = keys[i][1](f);
@@ -142,12 +176,12 @@ export const flash = (key: string, p: { x: number; y: number }, r: number, k: nu
   h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
     background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,170,90,0.62) 0%, rgba(255,130,60,0.34) 42%, rgba(255,110,40,0) 100%)` } });
 
-/** THE FLARE ON HIS CHEEK: a warm glow laid over the cheek nearest the fire, soft-light blended (a screen blend does
- *  not show on a pale face, a normal one washes his drawn eyes and brows out; soft light warms the pale skin and keeps
- *  the dark lines dark), centred on `p` px, radius r px, `k` 0..1 */
+/** THE FLARE ON HIS CHEEK: a warm glow laid over the cheek nearest the fire, overlay-blended (a screen or normal blend
+ *  lifts his drawn eyes and brows to brown, a haze; overlay warms the pale skin toward orange and keeps the dark lines
+ *  dark), centred on `p` px, radius r px, `k` 0..1 */
 export const cheekGlow = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
-  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "soft-light", opacity: Math.min(1, k),
-    background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,120,30,0.95) 0%, rgba(255,120,30,0.6) 45%, rgba(255,110,30,0) 100%)` } });
+  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: 1080, height: 1920, pointerEvents: "none", mixBlendMode: "overlay", opacity: Math.min(1, k),
+    background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,120,30,0.8) 0%, rgba(255,120,30,0.5) 45%, rgba(255,110,30,0) 100%)` } });
 
 // ------------------------------------------------------------------------------------------------- the grades
 /** a COPY of Film.tsx GRADE_FILM (the default every place uses; kept here so F never imports the composition) */

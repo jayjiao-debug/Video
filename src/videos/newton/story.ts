@@ -2,7 +2,8 @@
 // src/videos/qin/story.ts. The design: PLAN.md in this folder (the bible, the storyboard of section 7, file owners).
 // Data files (WP1; segment builders treat them as read-only and ask for changes in /home/user/newton_work/film/requests.md):
 //   story.ts     this file: FPS / frames, the dialogue lines (zh + en), quotes, the Segment / Pose / Place types,
-//                SEGMENTS, CARDS, SCENE, the title block, the HUD hook; easing + RNG helpers (re-exported from
+//                SEGMENTS, CARDS, SCENE, SCENE_CLOCK / SCENE_STAMP / SCENE_TIME (the vlog's timestamps), the title block,
+//                the HUD hook; easing + RNG helpers (re-exported from
 //                group/story.ts); cap / capWord / capsOf (captions.ts)
 //   beats.ts     the film's named beats per scene (BEAT.A.knock ...), the place of every frame (placeAt), TITLE_SPAN,
 //                all looked up from the timing data
@@ -19,8 +20,8 @@
 //    file). The engine, for every rendered frame f:
 //      if the segment changed (or this is the first frame of the page):  old.exit(w); SEG.enter(w)
 //      w.beginFrame(f);  const P = SEG.pose(w, f);  w.endFrame(P)
-//    then draws the HUD layer (the fact card, the title block, registered HUDs), P.overlays over it, the subtitle of
-//    frame f over that, and P.top over everything. There is NO vlog UI in this film (no REC, no timestamp, no battery).
+//    then draws the HUD layer (the vlog UI: REC, the scene's timestamp, the battery (hud/vlog.tsx); registered HUDs; the
+//    title block and the fact card), P.overlays over it, the subtitle of frame f over that, and P.top over everything.
 //
 // 2. Any frame can be the first one (the farm renders chunks on fresh pages; a still is a fresh page). pose(w, f) is
 //    a PURE function of f: it sets EVERY property it relies on, EVERY frame. Take time from f, never from w.t.
@@ -46,11 +47,13 @@
 //    (capWord("A01", "好").from for a ji line, capWord("F14", "burn").from for an nt / hm line: the word in the language
 //    the line is SPOKEN in).
 //    Screen zones (px on 1080 x 1920, layout.ts SCREEN): nothing that matters above y 150 or in the subtitle band
-//    (SCREEN.capTop..capBottom: Chinese large, English small under it) or below SCREEN.bottom; faces in the upper third;
+//    (SCREEN.capTop..capBottom: Chinese large, English small under it) or below SCREEN.bottom; faces in the upper third
+//    but out of the vlog UI's corners (SCREEN.rec top left, SCREEN.battery top right; for the first 2 s of every scene the
+//    timestamp holds BIG in the top-left corner: hud VLOG_RECT.stampBig, about x 50..400, y 240..345);
 //    the fact card's slot is MID-LEFT (hud/ hudRectsAt(f) gives its box while it shows); the title block sits on the
-//    shut door (TITLE_SPAN). Her mic enters from the lower left, its red head stops ABOVE the subtitle band. Mouths
-//    move ONLY inside a character's own line: ...speak(quote("nt", "A02"), f, id). ji (the reporter) is the camera:
-//    never a figure.
+//    shut door (TITLE_SPAN). Her mic and her hands are NEVER DRAWN (props/index.ts INVISIBLE; Jay, 14 Nov): what she
+//    holds or does moves as if by an invisible hand. Mouths move ONLY inside a character's own line:
+//    ...speak(quote("nt", "A02"), f, id). ji (the reporter) is the camera: never a figure.
 // =====================================================================================================================
 import type React from "react";
 import type * as THREE from "three";
@@ -96,8 +99,27 @@ export type SceneId = "A" | "B" | "C" | "D" | "E" | "F" | "G";
 export const SCENES: SceneId[] = ["A", "B", "C", "D", "E", "F", "G"];
 /** each scene's time of day and its main place (the lines file): SCENE.F = { time: "夜", en: "Night", place: "elaboratory" } */
 export const SCENE = Object.fromEntries(SCENE_RAW.map(([id, zh, en, place]) => [id, { id: id as SceneId, time: zh, en, place: place as Place }])) as Record<SceneId, { id: SceneId; time: string; en: string; place: Place }>;
-/** each scene's time of day as one string, L(zh, en) (not drawn by the film: there is no time card) */
-export const SCENE_TIME = Object.fromEntries(SCENE_RAW.map(([id, zh, en]) => [id, L(zh, en)])) as Record<SceneId, string>;
+/** THE VLOG'S CLOCK (PLAN 5, hud/vlog.tsx): each scene's time on her camera's timestamp, in minutes after the midnight
+ *  that starts the film's day (G = 26:00 = 02:00 the next morning). Why these hours: PLAN.md section 5. */
+export const SCENE_CLOCK: Record<SceneId, number> = { A: 5 * 60, B: 11 * 60, C: 12 * 60, D: 15 * 60, E: 18 * 60, F: 23 * 60, G: 26 * 60 };
+/** "HH:MM" (24-hour) of a clock in minutes (26:00 -> "02:00") */
+export const clockText = (min: number) => {
+  const m = Math.floor(min), h = Math.floor(m / 60) % 24;
+  return `${String(h).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+};
+/** the timestamp's words: the lines file's time of day (zh) and its English, except where the hour is in the digits */
+const STAMP_WORD: Partial<Record<SceneId, [string, string]>> = { G: ["凌晨", "Small hours"] };
+/** each scene's timestamp: zh word (清晨), en word (Early morning), clock ("05:00"), min (300) */
+export const SCENE_STAMP = Object.fromEntries(SCENES.map((id) => {
+  const [zh, en] = STAMP_WORD[id] ?? [SCENE[id].time, SCENE[id].en];
+  return [id, { zh, en, clock: clockText(SCENE_CLOCK[id]), min: SCENE_CLOCK[id] }];
+})) as Record<SceneId, { zh: string; en: string; clock: string; min: number }>;
+/** each scene's timestamp as one string, L(zh, en): SCENE_TIME.A = "清晨 05:00" / "05:00 · Early morning" (the vlog UI
+ *  draws it in two rows: hud/vlog.tsx) */
+export const SCENE_TIME = Object.fromEntries(SCENES.map((id) => {
+  const s = SCENE_STAMP[id];
+  return [id, L(`${s.zh} ${s.clock}`, `${s.clock} · ${s.en}`)];
+})) as Record<SceneId, string>;
 
 // ---------------------------------------------------------------------------------------------------- the contract
 export type Vec3 = [number, number, number];
@@ -132,10 +154,13 @@ export type Pose = {
   post?: PostPose;
   /** false hides the subtitle on this frame */
   captions?: boolean;
-  /** false hides the whole HUD layer on this frame (the cards, the title block, the registered HUDs) */
+  /** false hides the whole HUD layer on this frame (the vlog UI, the cards, the title block, the registered HUDs) */
   hud?: boolean;
-  /** false hides the fact card and the title block on this frame */
+  /** false hides the fact card and the title block on this frame, and skips the timestamp's big intro (the small
+   *  timestamp stays) */
   cards?: boolean;
+  /** false hides her camera's REC lamp and the timestamp on this frame (the battery stays, still) */
+  rec?: boolean;
   /** where the title block sits on this frame (hud/title.tsx TitlePlace: centre px, scale, rot deg; fields left out
    *  come from hud setTitlePlace / the frame's centre): segA lines it up with the shut door */
   title?: Partial<TitlePlace>;

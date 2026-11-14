@@ -11,10 +11,16 @@
 //       out and aside on the landing and pulls the door shut (shut by B02's end + 4: B03 follows 0.6 s later).
 //   B4  she turns back as it shuts (16+ frames, the mic with her head onto Newton by 09's first word): the steaming plate
 //       three steps from his elbow on the left, Newton writing on, whole, on the right; she walks up to the desk
-//       asking 09; 10 (he answers without looking up); 11 the mic tilts to the drafts stack; 12; 13; 14 he stops the
-//       quill and lifts his eyes to her, cold ("Not on me."), then back to the page.
-//   B5  ASIDE 15 「没笑。」: the mic swings round to the lens, Newton soft behind it, writing; CARD 2 over the scratching
-//       quill (the mic lowered out of the card's slot; she leans in a little toward the page).
+//       asking 09; 10 (he answers without looking up); 11 she LEANS OVER THE DRAFTS STACK on 「写这么厚」 (her eyes
+//       dip to it as she steps to the desk's corner, the lens narrowing a little: the stack big in the frame's
+//       middle, him writing behind it, whole) and straightens back onto him for 12; 13; 14 he stops the quill and
+//       lifts his eyes to her, cold ("Not on me."), then back to the page.
+//   B5  ASIDE 15 「没笑。」: SHE TURNS AWAY to the bookcase on the right wall (the Qin film's aside: a swing to a near
+//       wall, a step toward it, a slight tilt held, swing back; the same quiet spot and move as scene E's aside 35)
+//       as his line ends, says it to us, and turns back onto him under CARD 2: he writes on, the quill scratching
+//       (she leans in a little toward the page).
+// SHE IS INVISIBLE (Jay, 14 Nov): her mic and hands are never drawn (props INVISIBLE); the mic below is still put (dead
+// but harmless: its aim keys still steer the light focus); everything it did is now her eyes' own move.
 // Every frame is a pure function of f; every time comes from line() / card() / BEAT / the mix's anchors.
 import * as THREE from "three";
 import { SEGMENTS, line, card, capWord, FPS, clamp01, lerp, smooth, easeOutCubic, type Segment, type CamPose, type Pose } from "../story";
@@ -37,12 +43,16 @@ const CARD2 = card("B09");
 const T_SET = S.from + sec(0.27);
 /** THE LID comes up (steam): the mix's anchor, B01 start - 1.1 s (SYNC_POINTS) */
 const T_LID = L1.from - sec(1.1);
-/** the cover tilts up on its far edge (steam), comes off and is set down beside the plate; his hand lets go */
-const T_TILT = T_LID + 7, T_DOWN = T_TILT + 11, T_FREE = T_DOWN + 7;
+/** the cover tilts up on its far edge (steam), comes off and is set down beside the plate; his hand lets go as soon as
+ *  it is down (he is already turning to go: see T_TURN0) */
+const T_TILT = T_LID + 7, T_DOWN = T_TILT + 11, T_FREE = T_DOWN + 2;
 /** the pull back (she straightens and steps back) */
 const T_PULL0 = BEAT.B.pullBack[0];
 const T_PULL1 = L1.to + 4;
-/** HUMPHREY turns from the table toward NEWTON and takes two steps into the room (he has set the cover down) */
+/** HUMPHREY turns from the table toward NEWTON and takes two steps into the room, setting off as the cover touches the
+ *  table: he steps off to her right as she starts to back away, so his head (0.6 m beside her lens in the insert) goes
+ *  out past the frame's right edge and comes back in only with her turn onto him (was T_DOWN + 5: standing there while
+ *  she backed off, the edge of his head crept into the insert from 615) */
 const T_TURN0 = T_FREE - 2, T_TURN1 = L1.from + 8;
 /** Newton does not look up: he sighs and goes, turning away as his line ends (B02 follows 1.1 s after it on the real
  *  voice: he must be through the door and it shut by the end of her call, line("B02").to + 4) */
@@ -50,13 +60,22 @@ const T_SIGH = L1.to + 2;
 const T_GO = L1.to;
 /** her mic comes in from the lower left toward Humphrey, mid-"Sir, your dinner" */
 const T_MIC = L1.from + sec(0.5);
-/** the mic (and her eyes, a little) tilt to the drafts stack (11) and come back for his answer */
-const T_DR0 = BEAT.B.micDrafts, T_DR1 = L5.to + 2;
+/** 11 「一个问题，写这么厚？」: on 「一个问题」 she is still on him; in the comma's pause her eyes dip to the drafts stack
+ *  and she leans over it (DR_LEN frames, on it by 「这」), holds it through 「厚」, and straightens back onto him as her
+ *  line ends, on him by his "lost" (12). (Was BEAT.B.micDrafts, the invisible mic's tilt, 3 frames inside his 10.) */
+const DR_LEN = 16;
+const T_DR0 = capWord("B05", "这").from - DR_LEN, T_DR1 = L5.to - 2;
+const T_DR2 = Math.max(T_DR1 + 10, capWord("B06", "lost").from);
 /** 14: he stops the quill and lifts his eyes to her; back to the page as her aside starts */
 const T_UP0 = L8.from + 3, T_UP1 = Math.min(L8.to, L9.from - 4);
 const T_NOT = capWord("B08", "Not").from;
 /** card 2: she leans in toward the page */
 const T_LEAN0 = CARD2.from + 4, T_LEAN1 = CARD2.to;
+/** ASIDE 15 「没笑。」 (beats.ts ASIDES B09; the same move as scene E's aside 35 in this room): she turns away from him to
+ *  the bookcase as his "Not on me." ends (out over 9 frames from 2 frames after it, landing on 「笑」), holds it over the
+ *  line, and turns back onto him as the card comes in (over 13 frames from the line's end; nobody speaks under the
+ *  card). Never across his line. */
+const T_AS0 = Math.max(L8.to + 2, L9.from - 9), T_AS1 = T_AS0 + 9, T_AS2 = L9.to + 1, T_AS3 = T_AS2 + 13;
 
 // ---------------------------------------------------------------------------------------------------- the marks
 const T = ROOM_SET.table, D = ROOM_SET.desk;
@@ -118,15 +137,42 @@ const camDoor = (p: THREE.Vector3) => frameOn(POS_WIDE, eyesOf(p, H_EYE), 600, 6
 /** B4: at the desk, Newton left of the middle, the drafts stack right of it; his eyes in the upper third */
 const POS_INT = P(1.2, 0.1, EYE);
 const CAM_INT = frameOn(POS_INT, eyesOf(N_AT, N_EYE), 380, 600);
-/** the drafts: her eyes dip toward the stack with the mic (11) */
-const CAM_DRAFTS = C.nudge(CAM_INT, { yaw: 3, pitch: -3 });
+/** the drafts (11): she steps to the desk's front-right corner and leans over the stack (0.4 m right, a little in and
+ *  down, the lens narrowing to DR_FOV): the stack's middle right of the frame's middle and above the subtitle band,
+ *  its page edges showing how thick it is; Newton writing behind it, his head whole in the upper middle (from the side
+ *  he stands more in line behind the stack: from POS_INT a closer framing cut his face at the top-left corner, and a
+ *  0.3 m step left his hair under the vlog's REC / timestamp box, SCREEN.rec) */
+const DR_FOV = 58;
+const POS_DRAFTS = POS_INT.clone().add(V(0.4, -0.1, -0.12));
+const CAM_DRAFTS = frameOn(POS_DRAFTS, ROOM.drafts.clone().add(V(0, 0.045, 0)), 680, 1070, DR_FOV);
+/** the aside (15): the room's quiet spot, as in scene E: the bookcase on the right wall (its shelves' faces, mid
+ *  height, the middle of its run), turned to from where she stands with a step (0.3 m) toward it, the shelves filling
+ *  the frame */
+const ASIDE_WALL = V(RMX + ROOM_SET.walls.x1 - ROOM_SET.books.d - 0.02, 1.3, (ROOM_SET.books.z0 + ROOM_SET.books.z1) / 2);
+const asideCam = (c: CamPose): CamPose => {
+  const p = V(...(c.pos as [number, number, number])), to = ASIDE_WALL.clone().sub(p).setY(0).normalize();
+  return frameOn(p.clone().addScaledVector(to, 0.3), ASIDE_WALL, 560, 880, c.fov);
+};
+/** 0..1 how far she is turned away for the aside (linear: mixCam eases it once) */
+const asideW = (f: number) => kLin(f, [[T_AS0, 0], [T_AS1, 1], [T_AS2, 1], [T_AS3, 0]]);
 /** B1: the insert: WP2's plate camera (fov 50, her eyes bent low over the table) moved in to the table's front-left
  *  corner, level with Humphrey, who stands close at the front-right (the rig's short arms reach the near rim): his head
  *  stays beside her, out of the close-up; the plate a little below the middle, room above it for the lid and the steam */
 const CAM_PLATE: CamPose = frameOn(P(T.x - 0.32, T.z + 0.68, 1.22), ROOM.plate.clone().add(V(0, 0.05, 0)), 540, 1040, ROOM_CAMS.plate.fov);
 
 // ---------------------------------------------------------------------------------------------------- HUMPHREY
-type HState = { at: THREE.Vector3; facing: number; pose: RigPose; walking: boolean };
+/** HIS STEP FROM THE TABLE (T_TURN0 .. T_TURN1). The rig's walk pose leans the body 4 deg forward and sinks the hip for
+ *  the stride, so it puts the head about 5 cm ahead of (and 2 cm under) where the idle pose has it, in ONE frame. In the
+ *  insert his head is 0.6 m beside her lens, just past the frame's right edge: that jump threw a blank white disc a
+ *  fifth of the frame wide into the insert (618-621, out again by 622: his step outran her turn, back in from 625), and
+ *  where the walk ended (635) it was a 150 px jump of his head in the two-shot. So his feet set off STEP_LEAN behind the
+ *  head's path and catch up over STEP_IN frames, and drop back over the last STEP_OUT frames, the head staying on the
+ *  path whenever one pose hands over to the other; the bob and the stride open from nothing and close again (a short
+ *  first and last step); and her eyes frame the head's path (HState.aim), not his feet. With the earlier start
+ *  (T_TURN0) his head stays clear of the insert's edge to 625 and comes in once, with her turn, from 626. */
+const STEP_LEAN = 0.048, STEP_IN = 10, STEP_OUT = 8, STEP_S0 = 0.06;
+/** at: his feet; aim: where his head is over (for her framing; at when left out) */
+type HState = { at: THREE.Vector3; aim?: THREE.Vector3; facing: number; pose: RigPose; walking: boolean };
 /** where Humphrey is on frame f (null once the door has shut behind him) */
 const humphreyAt = (f: number): HState | null => {
   const t = f / FPS;
@@ -135,9 +181,13 @@ const humphreyAt = (f: number): HState | null => {
   if (f < T_GO) {
     // he turns from the table and takes a step toward the desk (two short steps), then stands
     const k = smooth(clamp01((f - T_TURN0) / Math.max(1, T_TURN1 - T_TURN0)));
-    const p = H0.clone().lerp(H1, k), mv = k > 0 && k < 1;
+    const path = H0.clone().lerp(H1, k), mv = k > 0 && k < 1;
     const facing = lerpA(H0_FACING, H1_FACING, smooth(clamp01((f - T_TURN0) / 9)));
-    return { at: p, facing, pose: mv ? { kind: "walk", phase: (k * H0.distanceTo(H1)) / 0.8, stride: 0.16, amount: 0.6 } : { kind: "idle", t: t + 0.8 }, walking: mv };
+    if (!mv) return { at: path, facing, pose: { kind: "idle", t: t + 0.8 }, walking: false };
+    // (see STEP_LEAN: 0 on his first and last walking frames, 1 between)
+    const open = smooth(clamp01((f - T_TURN0 - 1) / STEP_IN)) * (1 - smooth(clamp01((f - (T_TURN1 - 1 - STEP_OUT)) / STEP_OUT)));
+    const at = path.clone().addScaledVector(V(Math.sin(facing), 0, Math.cos(facing)), -STEP_LEAN * (1 - open));
+    return { at, aim: path, facing, pose: { kind: "walk", phase: (k * H0.distanceTo(H1)) / 0.8, stride: lerp(STEP_S0, 0.16, open), amount: 0.6 * open }, walking: true };
   }
   if (f < T_GOB) {
     const g = walkAlong(LEG_A, SPEED_A, (f - T_GO) / FPS, { startFacing: H1_FACING, endFacing: -Math.PI / 2 });
@@ -224,11 +274,15 @@ const camAt = (f: number): CamPose => {
   const kDoor = kLin(f, [[T_GO + 2, 0], [T_GO + sec(0.6), 1], [T_BACK0, 1], [T_BACK1, 0]]);
   const base = f < T_PULL0 ? CAM_PLATE : f < T_PULL1 ? pullCam(f) : C.keyCam(f, [
     { f: T_WALK0, ...CAM_WIDE }, { f: T_WALK1, ...CAM_INT, ease: stride },
-    { f: T_DR0, ...CAM_INT }, { f: T_DR0 + 14, ...CAM_DRAFTS }, { f: T_DR1, ...CAM_DRAFTS }, { f: T_DR1 + 14, ...CAM_INT }]);
+    { f: T_DR0, ...CAM_INT }, { f: T_DR0 + DR_LEN, ...CAM_DRAFTS }, { f: T_DR1, ...CAM_DRAFTS }, { f: T_DR2, ...CAM_INT }]);
   let cam = kDoor > 0 ? mixCam(base, doorCam, kDoor) : base;
   if (f >= T_LEAN0) cam = C.creep(cam, f, T_LEAN0, T_LEAN1, 0.32);
-  // her walking: a light step only while she walks (the pull back, the walk to the desk)
-  return C.handheld(cam, f, { walk: [[T_PULL0, 0], [T_PULL0 + 8, 0.55], [T_PULL1 - 10, 0.55], [T_PULL1, 0], [T_WALK0, 0], [T_WALK0 + 6, 0.7], [T_WALK1 - 6, 0.7], [T_WALK1, 0]] });
+  // ASIDE 15: she turns away to the bookcase (a step toward it, a slight tilt held), and turns back onto him
+  const ka = asideW(f);
+  if (ka > 0) { const e = smooth(ka); cam = C.nudge(mixCam(cam, asideCam(cam), ka), { roll: -1.5 * Math.sin(Math.PI * e) - 1.5 * e }); }
+  // her walking: a light step only while she walks (the pull back, the walk to the desk, the step to the drafts and back)
+  return C.handheld(cam, f, { walk: [[T_PULL0, 0], [T_PULL0 + 8, 0.55], [T_PULL1 - 10, 0.55], [T_PULL1, 0], [T_WALK0, 0], [T_WALK0 + 6, 0.7], [T_WALK1 - 6, 0.7], [T_WALK1, 0],
+    [T_DR0, 0], [T_DR0 + 5, 0.35], [T_DR0 + DR_LEN - 5, 0.35], [T_DR0 + DR_LEN, 0], [T_DR1, 0], [T_DR1 + 4, 0.35], [T_DR2 - 4, 0.35], [T_DR2, 0]] });
 };
 /** THE PULL BACK: she straightens and steps back from the plate to the front of the room in one steady move; her eyes
  *  go from the plate to Humphrey as he turns to speak, then open out to the wide (the plate, Humphrey, Newton) */
@@ -253,7 +307,7 @@ const pullCam = (f: number): CamPose => {
   const u = stride((f - T_PULL0) / (T_PULL1 - T_PULL0)), fov = lerp(CAM_PLATE.fov, FOV, smooth(u));
   const pos = PULL_FROM.clone().multiplyScalar((1 - u) * (1 - u)).addScaledVector(PULL_VIA, 2 * u * (1 - u)).addScaledVector(POS_WIDE, u * u);
   const h = humphreyAt(f), onPlate = frameOn(pos, ROOM.plate.clone().add(V(0, 0.05, 0)), 540, 1040, fov);
-  const onHim = h ? onPair(pos, eyesOf(h.at, H_EYE), fov) : onPlate, onWide = frameOn(pos, MID_WIDE, WIDE_SX, 600, fov);
+  const onHim = h ? onPair(pos, eyesOf(h.aim ?? h.at, H_EYE), fov) : onPlate, onWide = frameOn(pos, MID_WIDE, WIDE_SX, 600, fov);
   // her eyes go to him over 18 frames as he steps up to speak (one ease: mixCam's), hold him (head and chest) while
   // Newton is behind him, then open out to the wide as Newton comes out from behind him
   const k1 = kLin(f, [[T_PULL0 + 10, 0], [L1.from + 10, 1]]), k2 = kLin(f, [[L1.from + 20, 0], [T_PULL1, 1]]);
@@ -365,8 +419,8 @@ const pose = (w: World, f: number): Pose => {
     cover.put(o, { rot: L.q });
   }
 
-  // HER MIC: in from the lower left toward Humphrey, after him to the door, back to the plate, to Newton, to the
-  // drafts, round to the lens on the aside, lowered out of the card's slot under card 2
+  // HER MIC (INVISIBLE: never drawn; still put, its aim steering the light focus): in from the lower left toward
+  // Humphrey, after him to the door, back to Newton, to the drafts, round to the lens on the aside, lowered under card 2
   const mouth = (r: Rig) => r.headWorld().add(V(0, -0.1, 0));
   const nMouth: Aim = () => mouth(n);
   const hMouth: Aim = (g) => (hm && humphreyAt(g) ? mouth(hm) : eyesOf(LEG_B[1], 1.0));
@@ -379,7 +433,10 @@ const pose = (w: World, f: number): Pose => {
 
   // the insert: a soft window behind the plate, easing out as she pulls back (her mic's own focus once it is in)
   const soft = 1 - smooth(clamp01((f - T_PULL0) / 14));
-  const dof = M.visible && M.dof ? M.dof : soft > 0.02 ? { focus: V(...(cam0.pos as [number, number, number])).distanceTo(ROOM.plate), amount: 5 * soft } : undefined;
+  // (the aside: the light focus on the bookcase she turns to, not on him behind her shoulder)
+  const lens = V(...(cam0.pos as [number, number, number]));
+  const onWall = asideW(f) > 0.5;
+  const dof = onWall ? { focus: lens.distanceTo(ASIDE_WALL), amount: 3 } : M.visible && M.dof ? M.dof : soft > 0.02 ? { focus: lens.distanceTo(ROOM.plate), amount: 5 * soft } : undefined;
   return { camera: cam0, post: dof ? { dof } : undefined, slate: "B" };
 };
 

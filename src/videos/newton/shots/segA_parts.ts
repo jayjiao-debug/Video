@@ -1,62 +1,46 @@
-// SEGMENT A's helpers (WP5-A): her mic with segA's own ASIDE pose, until cam.ts takes it (requests.md: WP5-A -> WP3).
-//   micA(w, cam, f, o)   = C.putMic(w, cam, f, o) with two differences:
-//     - the ASIDE (o.lens 0..1): the red head big in the middle near the lens, but the handle LEANS to the lower left
-//       and her fist turns so the lens sees its finger curls and the thumb side (as in the rap grip and the grip on
-//       Humphrey), the sleeve leaving at the left; cam.ts's aside points the handle straight back from the lens, so the
-//       lens sees the fist end-on (the wrist's facets and the thumb wrapped over the handle: "a pale lump");
-//     - o.nudge [dx, dy]: the head moved that many px (1080 x 1920) on screen at its own depth (her hand with it).
-//   Pure: the frame and the camera in, the props put; returns { dof, visible, headPx }.
+// SEGMENT A's helpers (WP5-A): THE INVISIBLE REPORTER (Jay, 14 Nov: no mic, no hand; "pretend there is an invisible
+// hand like 秦始皇"). Every function is pure (the frame in, a number or a pose out).
+//   rapPush(f, ons, amp)   the camera's small push on each rap (her weight behind the knock): in over 2 frames,
+//                          back over 5; amp[i] metres for rap i
+//   shiver(f, ons)         the leaf's answer to each rap: a damped rattle in its frame (door param units, inward only:
+//                          it rattles against its stop), every other frame, over 7 frames
+//   lightFocus(cam, p)     the film's light focus (amount 3) on a world point (the knock point, his mouth, the door)
+//   doorTitle(cam, p, ref, scale)  the title block PAINTED on the door: its centre at world point p on screen, its
+//                          tilt from the door's vertical on screen (the camera's roll) held to +-1.5 deg, its size
+//                          from the distance (scale at the distance from `ref`)
 import * as THREE from "three";
 import * as C from "../cam";
-import { MIC } from "../props/things";
-import { clamp01, smooth, easeInOutCubic, type CamPose } from "../story";
-import type { World } from "../world";
+import { clamp01, easeInCubic, easeOutCubic, type CamPose } from "../story";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+const posOf = (c: CamPose) => (c.pos instanceof THREE.Vector3 ? c.pos.clone() : V(c.pos[0], c.pos[1], c.pos[2]));
 
-/** segA's ASIDE: the head's centre on the 1080 x 1920 frame and its depth (m); `bar` = the handle's way from the fist
- *  to the head (camera space: x right, y up, z forward: up and to the right, a little away, so the handle leans to the
- *  lower left); `sleeve` = which way her forearm leaves the fist (made square to the bar: to the left, a little down) */
-export const ASIDE_A = { px: 560, py: 980, depth: 0.46, bar: [0.55, 0.65, 0.5] as const, sleeve: [-1, -0.5, 0.2] as const };
-
-/** a world rotation from a hand's local +y (the bar) and +z (from the wrist to the fingers' front), both camera-space */
-const quatCam = (F: C.CamFrame, yc: THREE.Vector3, zc: THREE.Vector3) => {
-  const toW = (c: THREE.Vector3) => V().addScaledVector(F.right, c.x).addScaledVector(F.up, c.y).addScaledVector(F.fwd, c.z);
-  const y = toW(yc).normalize(), z = toW(zc);
-  z.addScaledVector(y, -z.dot(y)).normalize();
-  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(V().crossVectors(y, z), y, z));
+/** the camera's push on each rap (m): in over 2 frames (ease-in), back over 5 (ease-out) */
+export const rapPush = (f: number, ons: number[], amp: number[]) => {
+  let k = 0;
+  ons.forEach((on, i) => {
+    const d = f - on, a = amp[i] ?? amp[amp.length - 1];
+    if (d >= -2 && d <= 0) k = Math.max(k, a * easeInCubic((d + 2) / 2));
+    else if (d > 0 && d <= 5) k = Math.max(k, a * (1 - easeOutCubic(d / 5)));
+  });
+  return k;
 };
-/** the slight life of a held hand (mm, slow), as cam.ts's */
-const life = (f: number) => V(0.0025 * Math.sin(f * 0.07), 0.002 * Math.sin(f * 0.053 + 1.3), 0.0015 * Math.sin(f * 0.041 + 2.1));
-
-export type MicA = C.MicO & { nudge?: [number, number] };
-/** HER MIC for segA (see the head of this file). Pure. */
-export const micA = (w: World, cam: CamPose, f: number, o: MicA): { dof?: { focus: number; amount: number }; visible: boolean; headPx: { x: number; y: number } } => {
-  const k = easeInOutCubic(clamp01(o.lens ?? 0));
-  const P = C.micPose(cam, f, { ...o, lens: 0 });
-  if (!P.visible) return { visible: false, headPx: P.headPx };
-  const F = C.camFrame(cam);
-  const head = C.worldToCam(F, P.head);
-  let rot = P.hand.rot.clone();
-  if (o.nudge) {
-    const s = C.camToScreen(F, head), d = C.fromScreen(F, s.x + o.nudge[0], s.y + o.nudge[1], head.z).sub(C.fromScreen(F, s.x, s.y, head.z));
-    head.add(d);
-  }
-  if (k > 0) {
-    const A = ASIDE_A, hL = C.fromScreen(F, A.px, A.py, A.depth).add(life(f));
-    const bar = V(...A.bar).normalize(), sl = V(...A.sleeve).normalize();
-    sl.addScaledVector(bar, -sl.dot(bar)).normalize();
-    head.lerp(hL, k);
-    rot = rot.slerp(quatCam(F, bar, sl.clone().negate()), k);
-  }
-  // the fist on the handle, within her reach of the left shoulder
-  const barC = V(0, 1, 0).applyQuaternion(rot), barCam = V(barC.dot(F.right), barC.dot(F.up), barC.dot(F.fwd));
-  const grip = head.clone().addScaledVector(barCam, -MIC.head), sh = V(...C.BODY.shoulderL);
-  if (grip.distanceTo(sh) > C.BODY.reach) { const back = grip.clone().sub(sh).setLength(C.BODY.reach).add(sh).sub(grip); grip.add(back); head.add(back); }
-  const at = C.camToWorld(F, grip.x, grip.y, grip.z);
-  w.prop("mic").put(at, { rot });
-  w.prop("hand").put(at, { rot, pose: "grip" });
-  const sp = C.camToScreen(F, head);
-  const dof = k > 0.5 ? { focus: head.length(), amount: (o.blur ?? 14) * smooth((k - 0.5) / 0.5) } : P.dof;
-  return { ...(dof ? { dof } : {}), visible: true, headPx: { x: sp.x, y: sp.y } };
+/** the leaf's rattle after each rap (door param units: 0.006 = 0.6 deg, about 9 mm at its free edge) */
+export const SHIVER = 0.006;
+export const shiver = (f: number, ons: number[]) => {
+  let s = 0;
+  for (const on of ons) { const d = f - on; if (d >= 0 && d <= 7) s += SHIVER * Math.exp(-d / 2.2) * (d % 2 === 0 ? 1 : 0.25); }
+  return s;
+};
+/** the light focus on a world point (the film's dof at amount 3: the subject crisp, the far wall a touch soft) */
+export const lightFocus = (cam: CamPose, p: THREE.Vector3) => ({ focus: Math.max(0.2, posOf(cam).distanceTo(p)), amount: 3 });
+/** the title block painted on the door (see the head of the file); its tilt at most TITLE_ROT deg either way */
+export const TITLE_ROT = 1.5;
+export const doorTitle = (cam: CamPose, p: THREE.Vector3, ref: THREE.Vector3, scale: number) => {
+  const c = C.toScreen(cam, p), top = C.toScreen(cam, p.clone().add(V(0, 0.3, 0))), bot = C.toScreen(cam, p.clone().add(V(0, -0.3, 0)));
+  // the tilt is held to +-1.5 deg: the block is a flat graphic (HUD font, gold rule, shadow) that takes neither the door's
+  // perspective nor its light, so a bigger roll reads as crooked, not painted on (director, 14 Nov)
+  const rot = Math.max(-TITLE_ROT, Math.min(TITLE_ROT, (Math.atan2(top.x - bot.x, bot.y - top.y) * 180) / Math.PI));
+  const k = ref.distanceTo(p) / Math.max(0.3, posOf(cam).distanceTo(p));
+  return { x: Math.round(c.x), y: Math.round(c.y), scale: +(scale * clamp01(k / 1.5) * 1.5).toFixed(4), rot: +rot.toFixed(2) };
 };

@@ -1,5 +1,5 @@
 {
- "note": "跟着牛顿过一天 sound plan. at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. gain in dB. loop = repeat the clip to fill [at, until]. Clips: /home/user/newton_work/film/sound/clips (voice farm run newton-v4-sound-01). Music is never ducked (owner's rule); it sits low under the voice. The script's sound notes: a pizzicato-and-harpsichord bed from frame 0 with a pluck on the knock; room tone changes with each place; one cello note at line 49 (F14); everything but the fire drops out after 51 (F16); the bed comes back warm with the laugh (G02) at the sack drop. Review pass 1: gains set from each clip's measured loudness (music cues about 17 dB under the dialogue, beds 25-30 dB under), hits moved onto the music's accents or out from under words, the night nocturne played twice so it carries to 49; a bed entry with fade 0 is a trimmed one-shot (only its tail is cut).",
+ "note": "跟着牛顿过一天 sound plan. at = [line id, 'start'|'end', offset s] or [scene, 'from'|'to', offset]. gain in dB. loop = repeat the clip to fill [at, until]. Clips: /home/user/newton_work/film/sound/clips (voice farm run newton-v4-sound-01). Music is never ducked (owner's rule); it sits low under the voice. The script's sound notes: a pizzicato-and-harpsichord bed from frame 0 with a pluck on the knock; room tone changes with each place; one cello note at line 49 (F14); everything but the fire drops out after 51 (F16); the bed comes back warm with the laugh (G02) at the sack drop. Review pass 1: gains set from each clip's measured loudness (music cues about 17 dB under the dialogue, beds 25-30 dB under), hits moved onto the music's accents or out from under words, the night nocturne played twice so it carries to 49; a bed entry with fade 0 is a trimmed one-shot (only its tail is cut). Her camera (Jay 14 Nov, 'recording visuals and sound effects like 秦始皇'; hud/vlog.tsx): rec_beep (the Qin film's clip, voice farm run qin-sfx-01) as she starts recording on frame 0, sfx_poweroff (make_poweroff.py 0.40 0.67: the button click on the off frame, the power-down over segG's end-black fade) when the camera switches off at G to - 1.2 s. No beep at the other scene starts: every cut already carries a voice line's last syllable or a hit within 0.1-0.4 s (B the bell, C mus_noon's first note, D the big door, E D06's 'Don't.' and mus_supper, F E07 and mus_night, G the clock's first stroke), so the timestamp slides in silently, as in the Qin film.",
  "beds": [
   {
    "clip": "amb_stairs_birds",
@@ -804,6 +804,26 @@
    ],
    "gain": 0,
    "note": "the knock's pluck once more, on the beat the fading bed would have played"
+  },
+  {
+   "clip": "rec_beep",
+   "at": [
+    "A",
+    "from",
+    0.05
+   ],
+   "gain": -17,
+   "note": "her camera starts recording (frame 0, the REC lamp lit): 1 kHz, audible about 60 ms (0.05-0.11 s), ends 80 ms before her first word (voice onset about 0.19 s) and well before the knock (0.64 s)"
+  },
+  {
+   "clip": "sfx_poweroff",
+   "at": [
+    "G",
+    "to",
+    -1.4
+   ],
+   "gain": -18,
+   "note": "her camera switches off (beats.ts BEAT.G.cameraOff = hud/vlog.tsx OFF_AT = TOTAL - 42 = frame 5211): the click 0.4 s (12 frames) after the last pluck, once it has decayed, in the crickets; the dead UI holds 24 frames; synthesised: python3 scripts/newton/sound/make_poweroff.py 0.80 1.07 <clips>/sfx_poweroff.mp3 (the power-down sweep starts 0.8 s after the click, on segG's end black BEAT.G.black = OFF_AT + 24, and is gone as the black's fade completes)"
   }
  ],
  "cards": {
