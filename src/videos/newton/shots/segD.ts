@@ -88,18 +88,25 @@ const KEYS: [number, NewtonState][] = [[S.from, "gownInk"], [STROKE1, "gownSmudg
 /** her eyes: trotting beside him on his LEFT (east), a little ahead (ST_ANG off his line), looking across at him and the
  *  college front close behind him; she closes in for the wipe. Framed on his SOLVED head (pass `head` after w.update():
  *  the walk's own bob does not move his eyes on the frame, the trot's handheld does, lightly): his eyes at
- *  (ST_EYE_PX) in the upper third for the whole trot. */
-const ST_ANG = 1.25, ST_EYE_PX: [number, number] = [480, 585];
+ *  (ST_EYE_PX) in the upper third for the whole trot.
+ *  THE TIMESTAMP (hud/vlog.tsx): the whole street shot lies inside the scene's first 2 s, so the stamp's BIG intro box
+ *  (stampRect("D", true): x 50..325, y 242..353) is up the whole time, top left. He sits right of the middle (x 615, was
+ *  480: the room on the left is the way he walks, screen left) and she closes in to 1.3 m (was 1.1: his head 0.6 of the
+ *  width, was 0.7), so his head, wig included, stays 24 px or more clear of that box on every frame (it lay on the
+ *  front of his wig and the top of his forehead), and 65 px or more clear of the battery (top right). */
+const ST_ANG = 1.25, ST_EYE_PX: [number, number] = [615, 585];
 /** the drawn eye line under the solved head's middle (m) at her distance k: nearer, she looks down on him more steeply
  *  and his face (drawn toward her) sits lower on the ball */
 const stEyeDy = (k: number) => 0.074 - 0.093 * (k - 1.05);
+/** her distance from him (m, level): from the gate, closing in for the wipe (by WIPE_ON) */
+const ST_K: [number, number] = [1.5, 1.3];
 const camStreet = (f: number, head?: THREE.Vector3): CamPose => {
-  const g = streetLeg(f), k = ky(f, [[S.from, 1.5], [WIPE_ON - 1, 1.1]]);
+  const g = streetLeg(f), k = ky(f, [[S.from, ST_K[0]], [WIPE_ON - 1, ST_K[1]]]);
   const pos = g.at.clone().add(V(Math.sin(ST_ANG) * k, EYE, Math.cos(ST_ANG) * k));
   const eyes = head ? head.clone().add(V(0, -stEyeDy(k), 0)) : g.at.clone().add(V(0, N_EYE, 0));
-  // (stEyeDy is measured at the wipe's distance; further off, before she closes in, the drawn eyes landed about 50 px
-  // low (fix1 f1855 / f1862: 0.33 of the height): aim them that much higher there)
-  return C.handheld(frameOn(pos, eyes, ST_EYE_PX[0], ST_EYE_PX[1] - 50 * clamp01((k - 1.1) / 0.15)), f, { walk: 1.5 });
+  // (stEyeDy lands his drawn eyes on their mark at the wipe's distance; further off, before she closes in, they landed
+  // about 50 px low (fix1 f1855 / f1862: 0.33 of the height): aim them that much higher there)
+  return C.handheld(frameOn(pos, eyes, ST_EYE_PX[0], ST_EYE_PX[1] - 50 * clamp01((k - ST_K[1]) / 0.15)), f, { walk: 1.5 });
 };
 
 // ---------------------------------------------------------------------------------------------------- D2-D3 the hall

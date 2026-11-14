@@ -32,6 +32,16 @@ export const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
   const look = pos.clone().addScaledVector(dir, dist);
   return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e) };
 };
+/** two cameras blended at `e` as given (NOT eased here: the caller's ease, which may run a hair past 1 for an
+ *  overshoot): position, view direction, fov and ROLL (mixCam drops roll; this keeps it) */
+export const blendCam = (a: CamPose, b: CamPose, e: number): CamPose => {
+  const A = C.camAxes(a), B = C.camAxes(b);
+  const pos = A.p.clone().lerp(B.p, e), dir = A.fwd.clone().lerp(B.fwd, e).normalize(), dist = lerp(A.dist, B.dist, e);
+  const look = pos.clone().addScaledVector(dir, dist);
+  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e), roll: lerp(a.roll ?? 0, b.roll ?? 0, e) };
+};
+/** a startle's ease: fast off the mark, a hair past the end (s = how far: 0.6 = about 2 %), settled at 1 */
+export const startle = (x: number, s = 0.6) => { const u = clamp01(x) - 1; return 1 + (s + 1) * u * u * u + s * u * u; };
 /** a walker's ease: speeding up over the first quarter, steady, slowing over the last (peak 1.33 x the average) */
 export const stride = (x: number, r = 0.25) => {
   const v = 1 / (1 - r), u = clamp01(x);

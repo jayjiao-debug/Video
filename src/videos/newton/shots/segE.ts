@@ -29,7 +29,7 @@ import { NEWTON, NEWTON_HIDE } from "../people";
 import { RMX, ROOM, ROOM_SET, EYE } from "../layout";
 import { flyAt } from "../props";
 import { lid, speak, saying, accent, heads, headPop, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, rel, CHAIR_ASIDE, type Rig, type RigPose } from "./common";
-import { V, sec, frameOn, mixCam, stride, lagged, aimThrough, nibAt, quillFist, QROT, pagePut, forkRot, FORK_TIP, posOf, putMorsel, morselOff } from "./segE_parts";
+import { V, sec, frameOn, mixCam, mixCamYP, stride, lagged, aimThrough, nibAt, quillFist, QROT, pagePut, forkRot, FORK_TIP, posOf, putMorsel, morselOff } from "./segE_parts";
 import type { World } from "../world";
 
 const S = SEGMENTS[4];
@@ -40,6 +40,11 @@ const L1 = line("E01"), L2 = line("E02"), L3 = line("E03"), L4 = line("E04"), L5
 const T_PUSH1 = L1.from + sec(0.3);
 /** on 「没吃！」 she straightens up and turns to him */
 const T_SWING0 = capWord("E01", "没").from - sec(0.25), T_SWING1 = L1.to;
+/** the swing's shape: she straightens up first and turns after (the tilt is done by SWING_TILT of the swing, the turn
+ *  runs over all of it). Tilt and turn together brought his head in diagonally through the top RIGHT corner, his brows
+ *  under the battery for 3 frames (2436-2438); straightened first, the turn brings him in from the right edge at his
+ *  own height (the skin's top at y >= 306 wherever it is under the battery's columns, the battery's bottom 226) */
+const SWING_TILT = 0.7;
 /** he looks up from his page (on 吃) */
 const T_LOOKUP = capWord("E01", "吃").from;
 /** the fly leaves the plate (its buzz fades out at E01's end) */
@@ -160,8 +165,8 @@ const camAt = (f: number): CamPose => {
   let cam: CamPose;
   if (f < T_SWING0) cam = insertCam(f);
   else if (f < T_PLATE0) {
-    const swing = smooth(clamp01((f - T_SWING0) / (T_SWING1 - T_SWING0)));
-    cam = swing < 1 ? mixCam(insertCam(T_SWING0), e2Cam(f), swing) : e2Cam(f);
+    const u = clamp01((f - T_SWING0) / (T_SWING1 - T_SWING0)), swing = smooth(u);
+    cam = swing < 1 ? mixCamYP(insertCam(T_SWING0), e2Cam(f), swing, swing, smooth(clamp01(u / SWING_TILT))) : e2Cam(f);
   } else if (f < T_TURN0) {
     const k = stride(clamp01((f - T_PLATE0) / (T_PLATE1 - T_PLATE0)), 0.35);
     const pos = C_EAT.clone().lerp(P4, k), fov = lerp(62, PLATE_FOV, k);

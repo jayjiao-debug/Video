@@ -5,9 +5,11 @@
 // first knock 0.17 s into sfx_board at G01 start - 2.35 s, its second 0.57 s in; the sack's thump at G02 end + 1.0 s;
 // the fork's clink 0.23 s into sfx_fork at G04 end + 1.2 s; the crickets outside from G end - 2.6 s; the last pluck
 // = his window goes dark at G end - 1.77 s).
-//   G1  THE BOARD (F's last framing, ELAB_CAMS.push, carries on): the clock strikes; at the first stroke his eyes lift
-//       (and hers: she draws back half a step, his whole head comes into the frame, clear of the vlog's timestamp) and
-//       his hands slip off the board; it slides off his left knee and knocks on the floor on the second stroke,
+//   G1  THE BOARD (the time cut from F's 23:00: three hours on, both have nodded off; G opens on her dozing view, the
+//       board on his knees, his head bowed, eyes shut): the clock strikes; at the first stroke both wake: his eyes lift
+//       (and hers: she straightens up and draws back half a step, his whole head comes into the frame, clear of the
+//       vlog's timestamp) and his hands slip off the board; it slides off his left knee and knocks on the floor on the
+//       second stroke,
 //       slaps down flat and skids to her feet. He startles and looks down at it. She crouches to it; her invisible
 //       hands take it (its near edge tips up on its far one) and she rises (stepping back) with it held up close to
 //       the lens: circles and triangles, his face above it, his eyes on it, not on her. She sniffs; 52 over it. On
@@ -40,7 +42,7 @@ import { ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, RMX, ROOM, ROOM_SET, GDX, GARDEN, 
 import { BOARD, STOOL, SACK } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, walkTime, yawTo, lerpA, rel, seated, type Rig, type RigPose } from "./common";
 import { endBlack } from "../hud";
-import { V, sec, posOf, frameOn, mixCam, stride, quatYZ, eulYZX, rigidAt, fall, forkRot, FORK_TIP, pathAt, GRADE_NIGHT_G5, spill, toCamLocal, fromCamLocal, heldBoard, boxBottom, lightFocus, type RigidKey, type PtKey } from "./segG_parts";
+import { V, sec, posOf, frameOn, mixCam, blendCam, startle, stride, quatYZ, eulYZX, rigidAt, fall, forkRot, FORK_TIP, pathAt, GRADE_NIGHT_G5, spill, toCamLocal, fromCamLocal, heldBoard, boxBottom, lightFocus, type RigidKey, type PtKey } from "./segG_parts";
 import type { World } from "../world";
 
 const S = SEGMENTS[6];
@@ -125,9 +127,11 @@ const PK_ROT_REST = quatYZ(PK_DIR_REST, V(1, 0, 0));
  *  requests.md WP5-F: 2 mm up off the top, length 0.12; the same stub goes up to his room) */
 const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07 + 0.002, -0.42);
 const CANDLE_LEN = 0.12;
-/** where she stands: F's push (the start), crouched by the board, and back a step with the board held up */
-const PUSH: CamPose = { pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov };
-const P_PUSH = posOf(PUSH).setY(0);
+/** where she stands: by F's push (PUSH0 = WP2's named camera where F's push stops; F itself ends a little off it, on
+ *  segF_parts PUSH_END), crouched by the board, and back a step with the board held up. The board's fall toward her
+ *  (TO_HER), her draw-back (PUSH_BACK) and her dozing view at the time cut (DOZE) keep their marks from PUSH0 */
+const PUSH0: CamPose = { pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov };
+const P_PUSH = posOf(PUSH0).setY(0);
 /** his head's middle seated (measured: 0.72 over the stool's seat; R 0.244): the eyes sit a little under it */
 const N_HEAD = rel(SEAT.top, FACE, 0, 0.72, 0.01);
 
@@ -205,21 +209,62 @@ const BH = { px: 540, py: 960, depth: 0.86 };
 const P_DOOR = V(ELX + 0.85, EYE, -0.22);
 const DOOR_LOOK = V(ELX + DR.x + 0.04, 1.12, WL.z1 + 0.1);
 const DOOR: CamPose = frameOn(P_DOOR, DOOR_LOOK, 500, 510);
-/** THE CLOCK'S FIRST STROKE: she draws back half a step (35 cm, level: her eyes stay at 1.6 m) and her eyes lift with
- *  his (12 deg up, 4 to the left), off F's push, over T_S1 .. T_S1 + 9 (eased in from the still push, so the cut from F
- *  is seamless). It brings his whole head into the frame, his face right of and below the vlog's corner (the big
- *  timestamp intro, 4435-4495: hud/vlog.tsx VLOG_RECT.stampBig; requests.md WP4 vlog UI), his eyes in the upper third
- *  (about y 520), the battery clear, and keeps the board's slide, knock and skid in the frame. */
+/** WHERE SHE WAKES TO on the clock's first stroke (PUSH_BACK): the named push camera (PUSH0) 35 cm back (level: her
+ *  eyes at 1.6 m), 12 deg up and 4 to the left: his whole head in the frame, his eyes about x 585, y 520 (upper
+ *  third), his face right of and below the vlog's corner (the big timestamp intro, 4435-4495: hud/vlog.tsx
+ *  stampRect("G", true); requests.md WP4 vlog UI), the battery clear, and the board's slide, knock and skid in the
+ *  frame. */
 const levelBack = (c: CamPose, d: number): CamPose => {
   const A = C.camAxes(c), h = V(A.fwd.x, 0, A.fwd.z).normalize().multiplyScalar(-d), p = A.p.add(h), l = A.l.add(h);
   return { ...c, pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z] };
 };
-const PUSH_BACK = C.nudge(levelBack(PUSH, 0.35), { yaw: -4, pitch: 12 });
-const T_BACK1 = T_S1 + 9;
+const PUSH_BACK = C.nudge(levelBack(PUSH0, 0.35), { yaw: -4, pitch: 12 });
+/** THE TIME CUT (F's 23:00 -> G's 02:00, on the scene's first frame = the clock's first stroke). Three hours on, both of
+ *  them have nodded off where F left them: G does NOT open on F's last picture (that played the three-hour jump inside
+ *  one shot) but on HER DOZING VIEW: her head sunk and lolled to one side (the lens 8 cm lower than PUSH_BACK, tipped
+ *  10 deg further down, turned 2 deg right, the horizon rolled 4 deg), sinking a hair: the board on his knees and his
+ *  slack hands in the middle of the frame, his bowed head at the top with its eyes shut (his own doze: N_EXPR "sleep",
+ *  DOZE_BOW, DOZE_TILT). On the stroke
+ *  both wake (T_LIFT, 3 frames to react): she straightens up and back to PUSH_BACK in T_WAKE frames, a startle (fast
+ *  off the mark, a hair past, settled), which is her draw-back and "her eyes lift with his"; from T_S1 + 3 + T_WAKE on
+ *  every frame is as before. His face stays clear of the big 「凌晨 02:00」 (hud stampRect("G", true)) and the battery
+ *  all through (scripts/newton/qa/faces) */
+const DOZE_IN = 0.0, DOZE_DOWN = 0.08, DOZE_PITCH = -10, DOZE_ROLL = -4, DOZE_YAW = 2, T_WAKE = 9;
+const DOZE: CamPose = (() => {
+  const A = C.camAxes(PUSH_BACK), h = V(A.fwd.x, 0, A.fwd.z).normalize().multiplyScalar(DOZE_IN).add(V(0, -DOZE_DOWN, 0));
+  return C.nudge({ ...PUSH_BACK, pos: [A.p.x + h.x, A.p.y + h.y, A.p.z + h.z], look: [A.l.x + h.x, A.l.y + h.y, A.l.z + h.z] }, { pitch: DOZE_PITCH, roll: DOZE_ROLL, yaw: DOZE_YAW });
+})();
+const T_WAKE0 = T_S1 + 3, T_BACK1 = T_WAKE0 + T_WAKE;
+/** as she comes up his head comes down into the frame from the top; straight, his cheek's edge crossed under the
+ *  battery for a frame or two (4440): a small extra turn to the right while it passes (WAKE_YAW deg at most, a sine
+ *  bump with nothing at either end, over the wake's first half) brings it in through the top middle */
+const WAKE_YAW = 1.1;
+const CROUCH_YAW = 5.5, CROUCH_PITCH = 3, CROUCH_BUMP = [0.2, 0.4], RISE_YAW = 4;
 const g1Cam = (f: number): CamPose => {
-  if (f < T_BEND0) return mixCam(PUSH, PUSH_BACK, clamp01((f - T_S1) / (T_BACK1 - T_S1)));
-  if (f < T_RISE0) return mixCam(PUSH_BACK, CROUCH, stride(clamp01((f - T_BEND0) / (T_BEND1 - T_BEND0))));
-  return C.creep(mixCam(CROUCH, HOLD, stride(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)))), f, T_LEAN0, T_LEAN1, LEAN);
+  if (f < T_WAKE0) return C.nudge(DOZE, { up: -0.002 * (f - T_S1), pitch: -0.15 * (f - T_S1) });
+  if (f < T_BEND0) {
+    if (f >= T_BACK1) return PUSH_BACK;
+    const u = (f - T_WAKE0) / T_WAKE, wy = WAKE_YAW * Math.sin(Math.PI * clamp01((u - 0.05) / 0.45));
+    const c = blendCam(C.nudge(DOZE, { up: -0.006, pitch: -0.45 }), PUSH_BACK, startle(u));
+    return wy ? C.nudge(c, { yaw: wy }) : c;
+  }
+  if (f < T_RISE0) {
+    // she crouches to the board: his head goes out at the top of the frame. Turned straight, it went out through the
+    // top RIGHT corner and his cheek crossed under the battery for a frame (4479); a little extra turn to the right
+    // with a dip of the view (5.5 deg right and 3 down at most, over frames ~4477-4482, a sine bump with nothing at
+    // either end: the dip sends the head out faster, so its widest part is past the corners' rows) sends it out
+    // through the top middle instead, clear of the battery and of the big 「凌晨 02:00」 on the left (faces check: 0 px2)
+    const u = clamp01((f - T_BEND0) / (T_BEND1 - T_BEND0));
+    const cb = Math.sin(Math.PI * clamp01((u - CROUCH_BUMP[0]) / CROUCH_BUMP[1]));
+    return C.nudge(mixCam(PUSH_BACK, CROUCH, stride(u)), { yaw: CROUCH_YAW * cb, pitch: -CROUCH_PITCH * cb });
+  }
+  // up she comes with the board: his head comes back in at the top of the frame. Straight, it came in through the top
+  // right and his cheek crossed under the battery for a frame (4503); the same small turn to the right (4 deg at most,
+  // frames ~4500-4504, nothing at either end, the board held in her frame goes with it) brings it in through the top
+  // middle, clear of the battery and of the timestamp
+  const r = clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)), ry = RISE_YAW * Math.sin(Math.PI * clamp01((r - 0.45) / 0.25));
+  const rise = mixCam(CROUCH, HOLD, stride(r));
+  return C.creep(ry ? C.nudge(rise, { yaw: ry }) : rise, f, T_LEAN0, T_LEAN1, LEAN);
 };
 /** the door, with her bow on 55 */
 const bowK = (f: number) => { const d = f - T_BOW; return d < 0 || d >= 15 ? 0 : d < 5 ? easeOutCubic(d / 5) : 1 - smooth((d - 5) / 10); };
@@ -252,8 +297,18 @@ const T_NARR = T_NB + Math.round(walkTime(LEG_B, SPEED_B) * FPS);
 const N_TURNED = yawTo(N_DOOR, P_DOOR);
 /** at the end of 55 he turns for the door and takes a step (the cut takes him) */
 const LEG_OUT = [N_DOOR, N_DOOR.clone().add(V(-0.03, 0, 0.13))];
-/** he wipes an eye at the door (his left hand: the candle is in his right) */
-const T_NWIPE0 = T_NARR + 12, T_NWIPE1 = T_NWIPE0 + 18;
+/** he wipes an eye at the door (his left hand: the candle is in his right): the knuckle up to the eye in 6 frames, two
+ *  small rubs, down in 6 (T_NWIPE0 .. T_NWIPE1, all under card 4, well before 54) */
+const T_NWIPE0 = T_NARR + 12, T_NWIPE1 = T_NWIPE0 + 22;
+/** THE WIPE'S HAND (whole-film check: the old target sat low and on the head's surface, so the knuckle rested at the
+ *  corner of his mouth and the arm ran 3 cm into his head: a dark arm and ball at the mouth read as a headset mic).
+ *  Now the knuckle is laid on the camera's ray through his left eye's outer half (face drawing q = (0.33, 0.03): the
+ *  eyes are at +-0.28 on the eye line), WIPE_OFF metres off the eye toward the lens: on screen it is AT the eye, in
+ *  depth it is clear of the head, so the forearm comes up in front of his cheek, not through it. His eyes close in
+ *  the smile while it rubs (smile_closed), his head leans a hair into it. */
+const WIPE_OFF = 0.08, WIPE_QX = 0.55, WIPE_QY = 0.03, HEAD_UP = 1.219, WIPE_ARC = [0.1, 0.06];
+/** how far his hand is up at his eye (0..1): up in 6 frames, down in 6 */
+const wipeK = (f: number) => smooth(clamp01((f - T_NWIPE0) / 6)) * (1 - smooth(clamp01((f - (T_NWIPE1 - 6)) / 6)));
 
 /** HUMPHREY MAKES WAY as NEWTON comes to the door: two steps back out onto the path and to his own left (screen right,
  *  into the open middle of the doorway), still facing in, so the jamb and NEWTON's head both leave his face clear */
@@ -283,13 +338,17 @@ const newtonDoor = (f: number): NSt => {
 };
 
 // ---------------------------------------------------------------------------------------------------- faces
-type Ex = "sigh" | "deadpan" | "sad" | "laugh" | "smile" | "smile_closed";
+type Ex = "sleep" | "sigh" | "deadpan" | "sad" | "laugh" | "smile" | "smile_closed";
+/** dozing on his stool at the time cut (eyes shut, mouth a little open), woken by the first stroke (T_LIFT) */
 const N_EXPR: [number, Ex][] = [
-  [S.from, "sigh"], [T_CLAT, "deadpan"], [L1.from + 6, "sad"], [T_EYESUP, "deadpan"], [T_LAUGH, "laugh"], [T_WIPE1, "smile_closed"], [T_NUP, "smile"],
+  [S.from, "sleep"], [T_LIFT, "sigh"], [T_CLAT, "deadpan"], [L1.from + 6, "sad"], [T_EYESUP, "deadpan"], [T_LAUGH, "laugh"], [T_WIPE1, "smile_closed"], [T_NUP, "smile"],
+  [T_NWIPE0 + 4, "smile_closed"], [T_NWIPE1 - 4, "smile"],
 ];
-/** his eyes: on the fire (F's), lifting at the clock, down at the board as it falls, at the board she holds, up at her */
+/** his eyes: shut (dozing), opening at the clock, down at the board as it falls, at the board she holds, up at her */
 const N_GAZE: [number, number][] = [[S.from, -0.5], [T_LIFT, 0], [T_CLAT + 2, 0.5], [T_RISE0 + 6, 0], [T_EYESUP, 0]];
-const nLookDown = (f: number) => ky(f, [[S.from, 8], [T_LIFT + 6, 2], [T_CLAT, 2], [T_CLAT + 6, 30], [T_RISE0, 30], [T_RISE1, 10], [T_EYESUP, 10], [T_EYESUP + 8, 0], [T_LAUGH, 0], [T_LAUGH + 6, -4], [T_WIPE1, -4], [T_WIPE1 + 10, 2]]);
+/** his head: bowed, dozing (DOZE_BOW), coming up with a start at the first stroke, ... */
+const DOZE_BOW = 24, DOZE_TILT = 6;
+const nLookDown = (f: number) => ky(f, [[S.from, DOZE_BOW], [T_LIFT, DOZE_BOW], [T_LIFT + 6, 2], [T_CLAT, 2], [T_CLAT + 6, 30], [T_RISE0, 30], [T_RISE1, 10], [T_EYESUP, 10], [T_EYESUP + 8, 0], [T_LAUGH, 0], [T_LAUGH + 6, -4], [T_WIPE1, -4], [T_WIPE1 + 10, 2]]);
 /** HUMPHREY: aghast at the drop, dazed (spiral eyes) through card 4, then the second beat of his reaction, his eyes
  *  on NEWTON: on "Good night." his eyes go wide (the rig's ring eyes, brows up) over a small open mouth (amazed: the
  *  man said good night), and under her 55 a small smile comes up (the rig has no face with ring eyes AND a smile, so
@@ -338,8 +397,11 @@ const elab = (w: World, f: number): Pose => {
       right = right.lerp(slap, on);
     }
   }
-  const head = heads(ns.head, laughS?.head, accent("jolt", f, T_CLAT, { amp: 0.6 }), accent("jolt", f, T_LAUGH - 1, { amp: 0.5 }),
-    accent("nod", f, T_NOD, { amp: 0.7 }), f >= L1.from + 6 && f < T_EYESUP ? { tilt: 3 * smooth(clamp01((f - L1.from - 6) / 20)) } : undefined);
+  // dozing, his head has lolled a little to one side; it comes up straight with a start on the first stroke
+  const doze = f < T_LIFT + 7 ? { tilt: DOZE_TILT * (1 - smooth(clamp01((f - T_LIFT) / 7))) } : undefined;
+  const head = heads(ns.head, laughS?.head, doze, accent("jolt", f, T_LIFT, { amp: 0.45 }), accent("jolt", f, T_CLAT, { amp: 0.6 }), accent("jolt", f, T_LAUGH - 1, { amp: 0.5 }),
+    accent("nod", f, T_NOD, { amp: 0.7 }), f >= L1.from + 6 && f < T_EYESUP ? { tilt: 3 * smooth(clamp01((f - L1.from - 6) / 20)) } : undefined,
+    f > T_NWIPE0 && f < T_NWIPE1 ? { tilt: 2 * wipeK(f) } : undefined);
   const stare = f >= T_EYESUP + 10 && f < T_LAUGH;
   const nState = {
     expr: laughS ? laughS.expr : expr, ...(laughS?.mouth ? { mouth: laughS.mouth } : {}), ...(ns.mouth ? { mouth: ns.mouth } : {}),
@@ -351,10 +413,25 @@ const elab = (w: World, f: number): Pose => {
   } else {
     // the candle in his right hand, held out in front; at the door his left knuckle wipes an eye
     const cHand = f >= T_CANDLE - 4 ? rel(ns2.at, ns2.facing, -0.2, 0.76 + (ns2.pose.kind === "walk" ? 0.008 * Math.sin(t * 9) : 0.003 * Math.sin(t * 1.2)), 0.25) : null;
-    const wk = smooth(clamp01((f - T_NWIPE0) / 6)) * (1 - smooth(clamp01((f - (T_NWIPE1 - 6)) / 6)));
-    const toCam = posOf(cam).sub(ns2.at).setY(0).normalize(), lft = V(Math.cos(ns2.facing), 0, -Math.sin(ns2.facing));
-    const eyeL = ns2.at.clone().add(V(0, 1.19 + 0.012 * Math.sin((f - T_NWIPE0) * 0.9), 0)).addScaledVector(toCam, 0.25).addScaledVector(lft, 0.09);
-    const lHand = wk > 0.001 ? rel(ns2.at, ns2.facing, 0.17, 0.6, 0.05).lerp(eyeL, wk) : null;
+    const wk = wipeK(f);
+    let lHand: THREE.Vector3 | null = null;
+    if (wk > 0.001) {
+      // his left eye's outer half on the face drawing (the face turns to the lens, and lifts toward it by about 0.4
+      // of the lens's height angle: measured on the rig's face drawing here, 5 deg), the knuckle WIPE_OFF toward the
+      // lens from it on the camera's ray, two small rubs across the eye while it is there
+      const A = C.camAxes(cam), hc = ns2.at.clone().add(V(0, HEAD_UP, 0)), R = 0.244;
+      const toC3 = posOf(cam).sub(hc).normalize(), lift = 0.4 * Math.asin(toC3.y);
+      const fd = toC3.clone().setY(0).normalize().multiplyScalar(Math.cos(lift)).add(V(0, Math.sin(lift), 0));
+      const eye = hc.clone().addScaledVector(fd, Math.sqrt(1 - WIPE_QX * WIPE_QX - WIPE_QY * WIPE_QY) * R).addScaledVector(A.right, WIPE_QX * R).add(V(0, WIPE_QY * R, 0));
+      const rub = smooth(clamp01((f - T_NWIPE0 - 4) / 3)) * (1 - smooth(clamp01((f - (T_NWIPE1 - 7)) / 3)));
+      const ph = ((f - T_NWIPE0 - 5) / 10) * 2 * Math.PI;
+      eye.addScaledVector(A.right, 0.005 * rub * (1 - Math.cos(ph))).addScaledVector(A.up, 0.008 * rub * Math.sin(ph));
+      const knuckle = eye.addScaledVector(posOf(cam).sub(eye).normalize(), WIPE_OFF);
+      // on the way up and down the hand swings out in front of him and to his side (WIPE_ARC): straight, the arm
+      // brushed through his cheek
+      const arc = Math.sin(Math.PI * wk), toLens = posOf(cam).sub(knuckle).setY(0).normalize();
+      lHand = rel(ns2.at, ns2.facing, 0.17, 0.6, 0.05).lerp(knuckle, wk).addScaledVector(toLens, WIPE_ARC[0] * arc).addScaledVector(A.right, WIPE_ARC[1] * arc);
+    }
     n.set({ at: ns2.at, facing: ns2.facing, pose: ns2.pose, seat: undefined, twist: 0, ...nState, turn: ns2.turn, hands: [cHand, lHand], armFront: [false, wk > 0.001] });
   }
 

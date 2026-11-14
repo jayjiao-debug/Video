@@ -33,6 +33,21 @@ export const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
   const look = pos.clone().addScaledVector(dir, dist);
   return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e) };
 };
+/** two cameras mixed with the turn split in two: position, look distance and fov on `k`, the heading (yaw, the short
+ *  way round) on `kYaw` and the tilt (pitch) on `kPitch` (all 0..1, eased like mixCam). Equal to `a` when all three
+ *  are 0 and to `b` when all three are 1 (no roll). Lets a swing tilt up first and turn after (or the other way). */
+export const mixCamYP = (a: CamPose, b: CamPose, k: number, kYaw: number, kPitch: number): CamPose => {
+  if (k <= 0 && kYaw <= 0 && kPitch <= 0) return a;
+  if (k >= 1 && kYaw >= 1 && kPitch >= 1) return b;
+  const A = C.camAxes(a), B = C.camAxes(b), e = smooth(clamp01(k));
+  const yawOf = (d: THREE.Vector3) => Math.atan2(d.x, -d.z), pitchOf = (d: THREE.Vector3) => Math.atan2(d.y, Math.hypot(d.x, d.z));
+  const ya = yawOf(A.fwd), yb = yawOf(B.fwd), dy = Math.atan2(Math.sin(yb - ya), Math.cos(yb - ya));
+  const yaw = ya + dy * smooth(clamp01(kYaw)), pitch = lerp(pitchOf(A.fwd), pitchOf(B.fwd), smooth(clamp01(kPitch)));
+  const pos = A.p.clone().lerp(B.p, e), dist = lerp(A.dist, B.dist, e);
+  const dir = V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch));
+  const look = pos.clone().addScaledVector(dir, dist);
+  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e) };
+};
 /** a walker's ease: speeding up over the first quarter, steady, slowing over the last (peak 1.33 x the average) */
 export const stride = (x: number, r = 0.25) => {
   const v = 1 / (1 - r), u = clamp01(x);

@@ -21,7 +21,8 @@
 //       the fire has settled to a low bed of red embers (fire 0.13 + the set's embers), the room sunk round him (a
 //       grade). She straightens up and steps back as she asks 41: NEWTON on the stool by the fire door, the board on his
 //       knee, the poker hung by the door, his candle on the furnace's corner (G finds it there).
-//   F5  42-43. THE SLOW PUSH-IN from 44 (BEAT.F.push[0]) to the end of 50 (ELAB_CAMS.stool -> ELAB_CAMS.push): 44 at
+//   F5  42-43. THE SLOW PUSH-IN from 44 (BEAT.F.push[0]) to the end of 50 (ELAB_CAMS.stool -> PUSH_END, segF_parts:
+//       ELAB_CAMS.push eased back 5 cm and turned 6 deg left and up, his face clear of her camera's UI): 44 at
 //       the fire; 46 "Close?" at her (a 0.6 s flash of stern, then deadpan, eyes on the fire); he takes the poker off its
 //       hook and POKES the fire (sparks, the flames stirred up); 47-49 bitter, then ashamed, his eyes down; THE FIRE SPITS
 //       (a hard burst of sparks up out of the door, never over his face; the flames leap; a warm flash on his near
@@ -41,7 +42,7 @@ import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT } from "../people";
 import { GDX, GARDEN, GARDEN_SET, ELX, ELAB, ELAB_SET, ELAB_CAMS, EYE, type TaSeat } from "../layout";
 import { BOARD, POKER, STOOL, candleTop } from "../props";
 import { lid, speak, saying, accent, heads, at, ky, swaps, walkAlong, yawTo, lerpA, rel, seated, kneel, type Rig } from "./common";
-import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, quatYZ, shovelPut, stroke, sparks, flash, cheekGlow, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, type SparkMask } from "./segF_parts";
+import { V, sec, posOf, frameOn, mixCam, lerpCam, stride, creepU, lagged, quatYZ, shovelPut, stroke, sparks, flash, cheekGlow, GRADE_BASE, GRADE_NIGHT, GRADE_LATE, mixGrade, PUSH_END, putStoolUnder, type SparkMask } from "./segF_parts";
 import type { World } from "../world";
 import type React from "react";
 
@@ -263,22 +264,33 @@ const PK_ROT_REST = quatYZ(PK_DIR_REST, V(1, 0, 0));
 const CANDLE_AT = V(ELX - 1.3, ELAB_SET.furnace.h + 0.07 + 0.002, -0.42), CANDLE_LEN = 0.12;
 /** her eyes: close over the board (she leans in over his knees: the drawing big in the lower half, his bowed head
  *  above it; his 0.5 m head is too near the board for an insert without it), then back to the stool framing
- *  (ELAB_CAMS.stool's place, his eyes high in the middle); the push ends on ELAB_CAMS.push (G carries on from it) */
+ *  (ELAB_CAMS.stool's place, his eyes high in the middle); the push ends on PUSH_END (ELAB_CAMS.push eased back a
+ *  little and turned so that his face stays clear of her camera's UI in the top corners; G opens on it) */
 const BOARD_POS = B_C.clone().add(rel(V(), FACE, 0.1, 1.0, 1.1));
 const BOARD_CAM: CamPose = frameOn(BOARD_POS, B_C, 540, 1300, 48);
 const SEAT_EYES = SEAT.top.clone().add(V(0.005, 0.64, 0));
 const STOOL_POS = V(...ELAB_CAMS.stool.pos);
 const STOOL_CAM: CamPose = frameOn(STOOL_POS, SEAT_EYES, 545, 480);
-const PUSH_CAM: CamPose = { pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov };
+const PUSH_CAM: CamPose = PUSH_END;
 /** THE TIME CUT opens on his candle, burned down to a stub on the furnace top (she is leaning in toward it, by the
  *  board; her head eases in a little over the hold), then her eyes drop to the board */
 const CANDLE_LOOK = CANDLE_AT.clone().add(V(0, candleTop(CANDLE_LEN) * 0.55, 0));
 const candleCam = (f: number): CamPose => frameOn(BOARD_POS.clone().lerp(CANDLE_LOOK, 0.3 + 0.04 * smooth(clamp01((f - T_TP) / (T_CANDLE1 - T_TP)))), CANDLE_LOOK, 560, 960, 44);
+/** she straightens up from the board to the stool framing for 41. Straight, his head went up through the top LEFT
+ *  corner on the way and his forehead crossed under the small stamp 「夜 23:00 / NIGHT」 for 7 frames (3385-3391; faces
+ *  checker, skin up to 3289 px2): her eyes lift a hair more on the way up (RISE_LIFT deg at most, frames ~3384-3395,
+ *  nothing at either end), which keeps his skin at least 13 px under the stamp's box; the rise's frames and ends unchanged */
+const RISE_LIFT = 1.5;
+const riseCam = (f: number): CamPose => {
+  const u = clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0)), c = mixCam(BOARD_CAM, STOOL_CAM, stride(u));
+  const b = clamp01((u - 0.35) / 0.42);
+  return b > 0 && b < 1 ? C.nudge(c, { pitch: RISE_LIFT * Math.sin(Math.PI * b) }) : c;
+};
 const laterCam = (f: number): CamPose => {
   if (f < T_CANDLE1) return candleCam(f);
   if (f < T_BOARD_ON) return mixCam(candleCam(T_CANDLE1), BOARD_CAM, stride(clamp01((f - T_CANDLE1) / (T_BOARD_ON - T_CANDLE1))));
   if (f < T_RISE0) return BOARD_CAM;
-  if (f < T_RISE1) return mixCam(BOARD_CAM, STOOL_CAM, stride(clamp01((f - T_RISE0) / (T_RISE1 - T_RISE0))));
+  if (f < T_RISE1) return riseCam(f);
   return lerpCam(STOOL_CAM, PUSH_CAM, creepU(f, P0, P1, 10));
 };
 
@@ -411,7 +423,7 @@ const pose = (w: World, f: number): Pose => {
     if (f < T_TAKE) putLimpSack(w, SACK_GRAB, quatYZ(LIMP_LYING.up, LIMP_LYING.thin), LIMP_LYING.s);
     if (f >= T_FREE) { const P = shovelPut(SH_LEAN.blade, SH_LEAN.handle, V(0, 0, 1)); w.prop("shovel").put(P.at, { rot: P.rot }); }
   } else {
-    w.prop("stool").put(ELAB.stool, { rot: FACE });
+    putStoolUnder(w, ELAB.stool, FACE);   // a little shorter, its seat hidden inside his coat (segF_parts STOOL_SY)
     w.prop("board").put(B_C, { rot: B_ROT });
     w.prop("candle").put(CANDLE_AT, { len: CANDLE_LEN, lit: true, t });
   }

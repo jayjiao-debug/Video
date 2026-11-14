@@ -43,12 +43,16 @@ const CARD2 = card("B09");
 const T_SET = S.from + sec(0.27);
 /** THE LID comes up (steam): the mix's anchor, B01 start - 1.1 s (SYNC_POINTS) */
 const T_LID = L1.from - sec(1.1);
-/** the cover tilts up on its far edge (steam), comes off and is set down beside the plate; his hand lets go */
-const T_TILT = T_LID + 7, T_DOWN = T_TILT + 11, T_FREE = T_DOWN + 7;
+/** the cover tilts up on its far edge (steam), comes off and is set down beside the plate; his hand lets go as soon as
+ *  it is down (he is already turning to go: see T_TURN0) */
+const T_TILT = T_LID + 7, T_DOWN = T_TILT + 11, T_FREE = T_DOWN + 2;
 /** the pull back (she straightens and steps back) */
 const T_PULL0 = BEAT.B.pullBack[0];
 const T_PULL1 = L1.to + 4;
-/** HUMPHREY turns from the table toward NEWTON and takes two steps into the room (he has set the cover down) */
+/** HUMPHREY turns from the table toward NEWTON and takes two steps into the room, setting off as the cover touches the
+ *  table: he steps off to her right as she starts to back away, so his head (0.6 m beside her lens in the insert) goes
+ *  out past the frame's right edge and comes back in only with her turn onto him (was T_DOWN + 5: standing there while
+ *  she backed off, the edge of his head crept into the insert from 615) */
 const T_TURN0 = T_FREE - 2, T_TURN1 = L1.from + 8;
 /** Newton does not look up: he sighs and goes, turning away as his line ends (B02 follows 1.1 s after it on the real
  *  voice: he must be through the door and it shut by the end of her call, line("B02").to + 4) */
@@ -157,7 +161,18 @@ const asideW = (f: number) => kLin(f, [[T_AS0, 0], [T_AS1, 1], [T_AS2, 1], [T_AS
 const CAM_PLATE: CamPose = frameOn(P(T.x - 0.32, T.z + 0.68, 1.22), ROOM.plate.clone().add(V(0, 0.05, 0)), 540, 1040, ROOM_CAMS.plate.fov);
 
 // ---------------------------------------------------------------------------------------------------- HUMPHREY
-type HState = { at: THREE.Vector3; facing: number; pose: RigPose; walking: boolean };
+/** HIS STEP FROM THE TABLE (T_TURN0 .. T_TURN1). The rig's walk pose leans the body 4 deg forward and sinks the hip for
+ *  the stride, so it puts the head about 5 cm ahead of (and 2 cm under) where the idle pose has it, in ONE frame. In the
+ *  insert his head is 0.6 m beside her lens, just past the frame's right edge: that jump threw a blank white disc a
+ *  fifth of the frame wide into the insert (618-621, out again by 622: his step outran her turn, back in from 625), and
+ *  where the walk ended (635) it was a 150 px jump of his head in the two-shot. So his feet set off STEP_LEAN behind the
+ *  head's path and catch up over STEP_IN frames, and drop back over the last STEP_OUT frames, the head staying on the
+ *  path whenever one pose hands over to the other; the bob and the stride open from nothing and close again (a short
+ *  first and last step); and her eyes frame the head's path (HState.aim), not his feet. With the earlier start
+ *  (T_TURN0) his head stays clear of the insert's edge to 625 and comes in once, with her turn, from 626. */
+const STEP_LEAN = 0.048, STEP_IN = 10, STEP_OUT = 8, STEP_S0 = 0.06;
+/** at: his feet; aim: where his head is over (for her framing; at when left out) */
+type HState = { at: THREE.Vector3; aim?: THREE.Vector3; facing: number; pose: RigPose; walking: boolean };
 /** where Humphrey is on frame f (null once the door has shut behind him) */
 const humphreyAt = (f: number): HState | null => {
   const t = f / FPS;
@@ -166,9 +181,13 @@ const humphreyAt = (f: number): HState | null => {
   if (f < T_GO) {
     // he turns from the table and takes a step toward the desk (two short steps), then stands
     const k = smooth(clamp01((f - T_TURN0) / Math.max(1, T_TURN1 - T_TURN0)));
-    const p = H0.clone().lerp(H1, k), mv = k > 0 && k < 1;
+    const path = H0.clone().lerp(H1, k), mv = k > 0 && k < 1;
     const facing = lerpA(H0_FACING, H1_FACING, smooth(clamp01((f - T_TURN0) / 9)));
-    return { at: p, facing, pose: mv ? { kind: "walk", phase: (k * H0.distanceTo(H1)) / 0.8, stride: 0.16, amount: 0.6 } : { kind: "idle", t: t + 0.8 }, walking: mv };
+    if (!mv) return { at: path, facing, pose: { kind: "idle", t: t + 0.8 }, walking: false };
+    // (see STEP_LEAN: 0 on his first and last walking frames, 1 between)
+    const open = smooth(clamp01((f - T_TURN0 - 1) / STEP_IN)) * (1 - smooth(clamp01((f - (T_TURN1 - 1 - STEP_OUT)) / STEP_OUT)));
+    const at = path.clone().addScaledVector(V(Math.sin(facing), 0, Math.cos(facing)), -STEP_LEAN * (1 - open));
+    return { at, aim: path, facing, pose: { kind: "walk", phase: (k * H0.distanceTo(H1)) / 0.8, stride: lerp(STEP_S0, 0.16, open), amount: 0.6 * open }, walking: true };
   }
   if (f < T_GOB) {
     const g = walkAlong(LEG_A, SPEED_A, (f - T_GO) / FPS, { startFacing: H1_FACING, endFacing: -Math.PI / 2 });
@@ -288,7 +307,7 @@ const pullCam = (f: number): CamPose => {
   const u = stride((f - T_PULL0) / (T_PULL1 - T_PULL0)), fov = lerp(CAM_PLATE.fov, FOV, smooth(u));
   const pos = PULL_FROM.clone().multiplyScalar((1 - u) * (1 - u)).addScaledVector(PULL_VIA, 2 * u * (1 - u)).addScaledVector(POS_WIDE, u * u);
   const h = humphreyAt(f), onPlate = frameOn(pos, ROOM.plate.clone().add(V(0, 0.05, 0)), 540, 1040, fov);
-  const onHim = h ? onPair(pos, eyesOf(h.at, H_EYE), fov) : onPlate, onWide = frameOn(pos, MID_WIDE, WIDE_SX, 600, fov);
+  const onHim = h ? onPair(pos, eyesOf(h.aim ?? h.at, H_EYE), fov) : onPlate, onWide = frameOn(pos, MID_WIDE, WIDE_SX, 600, fov);
   // her eyes go to him over 18 frames as he steps up to speak (one ease: mixCam's), hold him (head and chest) while
   // Newton is behind him, then open out to the wide as Newton comes out from behind him
   const k1 = kLin(f, [[T_PULL0 + 10, 0], [L1.from + 10, 1]]), k2 = kLin(f, [[L1.from + 20, 0], [T_PULL1, 1]]);
