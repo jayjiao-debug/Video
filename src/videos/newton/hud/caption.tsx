@@ -2,7 +2,7 @@
 //   <Caption f />            the caption group of captions.ts on frame f (one SCREEN of the lines file at a time)
 //   <Caption f cap={...} />  draw a given { zh, en, who } instead (previews, tests; full opacity)
 // The look: the bottom band, NOTHING behind the words (no box, no plate, no scrim). CHINESE LARGE (66 px, bold) on one
-// row, centred on y 1318; ENGLISH SMALL (36 px) under it, one row, or two balanced rows when it is wider than the safe
+// row, centred on y 1318; ENGLISH SMALL (36 px) under it ONLY for lines spoken in English (enShown), one row, or two balanced rows when it is wider than the safe
 // area. Both in the SPEAKER'S TINT (记者 ji warm white, Newton nt pale gold, Humphrey hm white) over a dark warm ink
 // line drawn as its own layer UNDER the fills (Chinese 5.5 px, English a thinner 3.5 px so it reads lighter), a hard
 // little drop and a soft shadow. The block stays inside y 1270-1460 (CAP_BAND 1250-1500): the mic's head stops above
@@ -154,13 +154,18 @@ const rowRuns = (zh: string, rows: string[]): { text: string; gold: boolean }[][
   return out;
 };
 
+/** the English row is shown ONLY when the line is spoken in a language other than Chinese (Jay, 14 Nov: a foreign-language
+ *  subtitle only when the character speaks a different language): Newton and Humphrey (English) get Chinese large +
+ *  English small; the reporter's Chinese lines get the Chinese row alone. A given cap (previews) keeps its English. */
+export const enShown = (c: { en: string; spoken?: "zh" | "en" }): string => (c.spoken === "zh" ? "" : c.en);
+
 export const Caption: React.FC<{ f: number; cap?: { zh: string; en: string; who: Speaker } }> = ({ f, cap }) => {
   useOverlayFont();
   const c = cap ?? capOn(f);
   if (!c) return null;
   const o = cap ? 1 : capAlpha(f);
   if (o <= 0) return null;
-  const L = capLayout(c.zh, c.en);
+  const L = capLayout(c.zh, enShown(c));
   const zRows = L.rows.filter((r) => r.zh);
   const runs = rowRuns(c.zh.trim(), zRows.map((r) => r.text));
   const color = SPEAKER_COL[c.who] ?? HC.white;

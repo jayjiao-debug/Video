@@ -229,7 +229,8 @@
    "gain": -35.5,
    "fade": 0.05,
    "fade_out": 0.8,
-   "note": "the clip's own 1 s rest falls under 'never miss a lecture' and it comes back on D03"
+   "note": "first note on the cut (the clip's 0.25 s of lead silence skipped); the clip's own 1 s rest (clip 6.4-7.6 s) falls under D02 'never miss a lecture' and it comes back at 69.20 s, on D03 (starts 69.15)",
+   "in": 0.25
   },
   {
    "clip": "amb_room",
@@ -391,21 +392,21 @@
     0.2
    ],
    "until": [
-    "F05",
-    "end",
-    0.55
+    "F",
+    "from",
+    16.2
    ],
    "gain": -28.5,
    "fade": 0.8,
    "fade_out": 1.4,
-   "note": "nocturne, pass 1: out before its section C"
+   "note": "nocturne, pass 1, on the F cut (+0.2 s, the clip's soft pickup under its 0.8 s fade): out before its section C (the clip's section C chord at 15.07 s sounds 3.6 dB down in the fade); ends at clip 16.0 s. Pass 1 and 2 are both anchored on F's start so the loop stays on the beat"
   },
   {
    "clip": "mus_night",
    "at": [
-    "F05",
-    "end",
-    0.48
+    "F",
+    "from",
+    16.13
    ],
    "until": [
     "F14",
@@ -415,7 +416,7 @@
    "gain": -29.5,
    "fade": 0.3,
    "fade_out": 0.6,
-   "note": "nocturne, pass 2: exactly 16 beats after pass 1 (the pulse carries through 'time passes'); its last phrase starts on F14 and dies away before the spit"
+   "note": "nocturne, pass 2: exactly 17 beats (15.93 s at 64 bpm, beat 0.937 s; the clip's triplet onsets 0.3125 s apart) after pass 1, so its first notes land on pass 1's grid and the pulse carries through 'time passes' (v2 had it 0.21 s off the beat). With the current voice: F05 end + 0.505 s; its last phrase (clip 22.5 s) starts on F14 (133.03 s) and dies away before the spit"
   },
   {
    "clip": "mus_cello",
@@ -637,12 +638,12 @@
   {
    "clip": "sfx_big_door",
    "at": [
-    "D01",
-    "start",
-    -3.1
+    "D",
+    "from",
+    0.0
    ],
    "gain": -26,
-   "note": "its loud creaks end 0.7 s before D01"
+   "note": "the tall door, on the cut into D (the street): its loud creaks (clip 0-2.31 s) end 0.68 s before D01 (SYNC_POINTS); v2 had it on D01 start - 3.1, 0.11 s before the picture's cut"
   },
   {
    "clip": "sfx_steps_echo",

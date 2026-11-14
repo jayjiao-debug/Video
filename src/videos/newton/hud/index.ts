@@ -20,13 +20,13 @@
 //   end.tsx      endBlack(f, from, fade?), dipAlpha(f, a, b, fade?), black(a): the warm black, never #000
 //   style.ts     the palette HC, SAFE, text metrics, spanK, Rect helpers
 //   hudRectsAt(f)    the boxes the HUD takes on frame f (keep faces out of them);  hudHits(f, r)  the ones r overlaps
-import { capOn, capLayout, CAP_BAND } from "./caption";
+import { capOn, capLayout, enShown, CAP_BAND } from "./caption";
 import { factRectAt } from "./card";
 import { titleRectAt } from "./title";
 import { vlogRectsAt } from "./vlog";
 import { overlaps, type Rect } from "./style";
 
-export { Caption, SPEAKER_COL, capOn, capAlpha, capLayout, capRows, CAP_BAND, CAP_ROW, ZH_PX, EN_PX, ZH_Y, EN_Y0, EN_STEP, type CapLayout, type CapRowLayout } from "./caption";
+export { Caption, enShown, SPEAKER_COL, capOn, capAlpha, capLayout, capRows, CAP_BAND, CAP_ROW, ZH_PX, EN_PX, ZH_Y, EN_Y0, EN_STEP, type CapLayout, type CapRowLayout } from "./caption";
 export { FactCard, factCardAt, factRows, factLayout, factRectAt, FACT_SLOT, CARD_X, CARD_BOTTOM, cardTop, CARD_MAXW, CARD_ROW, type FactLayout } from "./card";
 export { TitleCard, setTitlePlace, titleRect, titleRectAt, TITLE_HOME, TITLE_RECT, type TitlePlace } from "./title";
 export { EndBlack, endBlack, endBlackAlpha, dipAlpha, Black, black, FADE_MIN } from "./end";
@@ -40,7 +40,7 @@ export type HudItem = "caption" | "card" | "title" | "rec" | "stamp" | "battery"
 export const hudRectsAt = (f: number): { what: HudItem; r: Rect }[] => {
   const out: { what: HudItem; r: Rect }[] = [...vlogRectsAt(f)];
   const c = capOn(f);
-  if (c) out.push({ what: "caption", r: capLayout(c.zh, c.en).box });
+  if (c) out.push({ what: "caption", r: capLayout(c.zh, enShown(c)).box });
   const card = factRectAt(f);
   if (card) out.push({ what: "card", r: card });
   const title = titleRectAt(f);

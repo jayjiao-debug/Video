@@ -275,15 +275,31 @@ const doorAt = (f: number) => {
 // ------------------------------------------------------------------------------------------------------ the people
 /** a walk backwards (the steps run the other way) */
 const backWalk = (d: number, speed: number): RigPose => { const p = rigWalk(d, speed); return { ...p, phase: 1 - (p.phase ?? 0) }; };
+/** HIS TWO STEPS, close to her lens (his head 350-500 px wide): up into the doorway (N_COME0 .. N_COME1) and back off
+ *  from it on "night" (N_GO .. N_IN). The rig's walk pose leans the body 4 deg forward whatever its amount and, at full
+ *  amount with these long steps, bounces the hip ~11 cm, so the walk's first and last frames threw his head 50-110 px in
+ *  ONE frame (f30 -> 31 as he came out from behind the leaf, f47 -> 48 as he stood: review v2 row 5; f112 -> 113 as he
+ *  stopped behind the shutting door) and each footfall another 50-110 px. As in segB (Humphrey's step from the table):
+ *  his feet set off N_LEAN behind the head's path and catch up over N_STEP_IN frames, and drop back over the last
+ *  N_STEP_OUT, so the head stays on its path whenever the idle and walk poses hand over; the bounce is all but gone
+ *  (N_BOB: a shuffle, not a stride) and opens / closes with the step; short steps (N_S1 a half step: at the walk's
+ *  0.27 m stride the legs spread so wide that the hip sank 5 cm mid-step once the bounce's lift was gone), the phase
+ *  following the distance at that step length. Same start and end frames, marks and easing (smooth) as before. */
+const N_LEAN = 0.05, N_STEP_IN = 8, N_STEP_OUT = 8, N_BOB = 0.06, N_S0 = 0.06, N_S1 = 0.16;
+/** his step from a to b over f0 .. f1, facing her (back: walking backwards); idle before and after */
+const nStep = (f: number, f0: number, f1: number, a: THREE.Vector3, b: THREE.Vector3, back: boolean, idle: RigPose) => {
+  const u = clamp01((f - f0) / (f1 - f0)), k = smooth(u), path = a.clone().lerp(b, k);
+  if (u <= 0 || u >= 1) return { at: path, facing: N_FACE, pose: idle };
+  const open = smooth(clamp01((f - f0 - 1) / N_STEP_IN)) * (1 - smooth(clamp01((f - (f1 - 1 - N_STEP_OUT)) / N_STEP_OUT)));
+  const at = path.clone().addScaledVector(V(Math.sin(N_FACE), 0, Math.cos(N_FACE)), -N_LEAN * (1 - open));
+  const ph = ((a.distanceTo(b) * k) / ((2 * N_S1) / 0.6)) % 1;
+  const pose: RigPose = { kind: "walk", phase: back ? (1 - ph) % 1 : ph, stride: lerp(N_S0, N_S1, open), amount: N_BOB * open };
+  return { at, facing: N_FACE, pose };
+};
 /** NEWTON on frame f: in the doorway with his candle, backing off from "night" */
 const newtonStage = (f: number) => {
   const idle: RigPose = { kind: "idle", t: f / FPS + 0.4 };
-  if (f < N_GO) {
-    const u = clamp01((f - N_COME0) / (N_COME1 - N_COME0)), k = easeInOutCubic(u), at = N_IN0.clone().lerp(N_AT, k);
-    return { at, facing: N_FACE, pose: u > 0 && u < 1 ? rigWalk(N_IN0.distanceTo(N_AT) * k, 1.3) : idle };
-  }
-  const u = clamp01((f - N_GO) / (N_IN - N_GO)), k = smooth(u), at = N_AT.clone().lerp(N_BACK, k);
-  return { at, facing: N_FACE, pose: u > 0 && u < 1 ? backWalk(N_AT.distanceTo(N_BACK) * k, 1.0) : idle };
+  return f < N_GO ? nStep(f, N_COME0, N_COME1, N_IN0, N_AT, false, idle) : nStep(f, N_GO, N_IN, N_AT, N_BACK, true, idle);
 };
 /** HUMPHREY on frame f: out of the door, the pull, the stair head, down the stairs */
 const humphreyStage = (f: number): { at: THREE.Vector3; facing: number; pose: RigPose; turn?: number } => {
