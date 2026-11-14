@@ -1,0 +1,487 @@
+plan: {'tier': 'creator', 'character_count': 56612, 'character_limit': 123898, 'status': 'active'}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "HanBaba_a02", "lang": "zh", "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？", "voice": "shared:HanBaba", "voice_id": "mZc8T5doZrU7OCI71i3M", "model": "eleven_v4", "status": 200, "file": "HanBaba_a02.mp3", "bytes": 75275}
+{"name": "HanBaba_a08", "lang": "zh", "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。", "voice": "shared:HanBaba", "voice_id": "mZc8T5doZrU7OCI71i3M", "model": "eleven_v4", "status": 200, "file": "HanBaba_a08.mp3", "bytes": 56049}
+{"name": "HanBaba_a13", "lang": "zh", "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。", "voice": "shared:HanBaba", "voice_id": "mZc8T5doZrU7OCI71i3M", "model": "eleven_v4", "status": 200, "file": "HanBaba_a13.mp3", "bytes": 67752}
+{"name": "HanBaba_a25", "lang": "zh", "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！", "voice": "shared:HanBaba", "voice_id": "mZc8T5doZrU7OCI71i3M", "model": "eleven_v4", "status": 200, "file": "HanBaba_a25.mp3", "bytes": 131700}
+{"name": "HanBaba_a41", "lang": "zh", "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。", "voice": "shared:HanBaba", "voice_id": "mZc8T5doZrU7OCI71i3M", "model": "eleven_v4", "status": 200, "file": "HanBaba_a41.mp3", "bytes": 132954}
+{"name": "HanBaba_a44", "lang": "zh", "text": "[surprised, then a warm smile] 好。四个人。", "voice": "shared:HanBaba", "voice_id": "mZc8T5doZrU7OCI71i3M", "model": "eleven_v4", "status": 200, "file": "HanBaba_a44.mp3", "bytes": 59811}
+{"name": "PlatonWang_a02", "lang": "zh", "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_a02.mp3", "bytes": 66498}
+{"name": "PlatonWang_a08", "lang": "zh", "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_a08.mp3", "bytes": 53541}
+{"name": "PlatonWang_a13", "lang": "zh", "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_a13.mp3", "bytes": 67752}
+{"name": "PlatonWang_a25", "lang": "zh", "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_a25.mp3", "bytes": 103278}
+{"name": "PlatonWang_a41", "lang": "zh", "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_a41.mp3", "bytes": 126684}
+{"name": "PlatonWang_a44", "lang": "zh", "text": "[surprised, then a warm smile] 好。四个人。", "voice": "shared:Platon Wang", "voice_id": "AQbPC7Yz1mwtsONnKsJn", "model": "eleven_v4", "status": 200, "file": "PlatonWang_a44.mp3", "bytes": 49780}
+{"name": "EthanZhang_a02", "lang": "zh", "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？", "voice": "shared:Ethan Zhang", "voice_id": "brChkoggsUHF1stW6omH", "model": "eleven_v4", "status": 200, "file": "EthanZhang_a02.mp3", "bytes": 74021}
+{"name": "EthanZhang_a08", "lang": "zh", "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。", "voice": "shared:Ethan Zhang", "voice_id": "brChkoggsUHF1stW6omH", "model": "eleven_v4", "status": 200, "file": "EthanZhang_a08.mp3", "bytes": 54795}
+{"name": "EthanZhang_a13", "lang": "zh", "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。", "voice": "shared:Ethan Zhang", "voice_id": "brChkoggsUHF1stW6omH", "model": "eleven_v4", "status": 200, "file": "EthanZhang_a13.mp3", "bytes": 70260}
+{"name": "EthanZhang_a25", "lang": "zh", "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！", "voice": "shared:Ethan Zhang", "voice_id": "brChkoggsUHF1stW6omH", "model": "eleven_v4", "status": 200, "file": "EthanZhang_a25.mp3", "bytes": 104950}
+{"name": "EthanZhang_a41", "lang": "zh", "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。", "voice": "shared:Ethan Zhang", "voice_id": "brChkoggsUHF1stW6omH", "model": "eleven_v4", "status": 200, "file": "EthanZhang_a41.mp3", "bytes": 131700}
+{"name": "EthanZhang_a44", "lang": "zh", "text": "[surprised, then a warm smile] 好。四个人。", "voice": "shared:Ethan Zhang", "voice_id": "brChkoggsUHF1stW6omH", "model": "eleven_v4", "status": 200, "file": "EthanZhang_a44.mp3", "bytes": 63990}
+{"name": "Jing_a02", "lang": "zh", "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？", "voice": "shared:Jing", "voice_id": "zYD0xJl1ponKr8TwFBmJ", "model": "eleven_v4", "status": 200, "file": "Jing_a02.mp3", "bytes": 67752}
+{"name": "Jing_a08", "lang": "zh", "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。", "voice": "shared:Jing", "voice_id": "zYD0xJl1ponKr8TwFBmJ", "model": "eleven_v4", "status": 200, "file": "Jing_a08.mp3", "bytes": 53541}
+{"name": "Jing_a13", "lang": "zh", "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。", "voice": "shared:Jing", "voice_id": "zYD0xJl1ponKr8TwFBmJ", "model": "eleven_v4", "status": 200, "file": "Jing_a13.mp3", "bytes": 67752}
+{"name": "Jing_a25", "lang": "zh", "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！", "voice": "shared:Jing", "voice_id": "zYD0xJl1ponKr8TwFBmJ", "model": "eleven_v4", "status": 200, "file": "Jing_a25.mp3", "bytes": 116235}
+{"name": "Jing_a41", "lang": "zh", "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。", "voice": "shared:Jing", "voice_id": "zYD0xJl1ponKr8TwFBmJ", "model": "eleven_v4", "status": 200, "file": "Jing_a41.mp3", "bytes": 132954}
+{"name": "Jing_a44", "lang": "zh", "text": "[surprised, then a warm smile] 好。四个人。", "voice": "shared:Jing", "voice_id": "zYD0xJl1ponKr8TwFBmJ", "model": "eleven_v4", "status": 200, "file": "Jing_a44.mp3", "bytes": 70260}
+{"name": "Adrian_a02", "lang": "zh", "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？", "voice": "shared:Adrian", "voice_id": "i2gDhHnLj4CvKBpf3gPR", "model": "eleven_v4", "status": 200, "file": "Adrian_a02.mp3", "bytes": 74021}
+{"name": "Adrian_a08", "lang": "zh", "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。", "voice": "shared:Adrian", "voice_id": "i2gDhHnLj4CvKBpf3gPR", "model": "eleven_v4", "status": 200, "file": "Adrian_a08.mp3", "bytes": 57303}
+{"name": "Adrian_a13", "lang": "zh", "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。", "voice": "shared:Adrian", "voice_id": "i2gDhHnLj4CvKBpf3gPR", "model": "eleven_v4", "status": 200, "file": "Adrian_a13.mp3", "bytes": 69006}
+{"name": "Adrian_a25", "lang": "zh", "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！", "voice": "shared:Adrian", "voice_id": "i2gDhHnLj4CvKBpf3gPR", "model": "eleven_v4", "status": 200, "file": "Adrian_a25.mp3", "bytes": 123758}
+{"name": "Adrian_a41", "lang": "zh", "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。", "voice": "shared:Adrian", "voice_id": "i2gDhHnLj4CvKBpf3gPR", "model": "eleven_v4", "status": 200, "file": "Adrian_a41.mp3", "bytes": 123758}
+{"name": "Adrian_a44", "lang": "zh", "text": "[surprised, then a warm smile] 好。四个人。", "voice": "shared:Adrian", "voice_id": "i2gDhHnLj4CvKBpf3gPR", "model": "eleven_v4", "status": 200, "file": "Adrian_a44.mp3", "bytes": 46018}
+removed kept voices: {'mZc8T5doZrU7OCI71i3M': 200, 'AQbPC7Yz1mwtsONnKsJn': 200, 'brChkoggsUHF1stW6omH': 200, 'zYD0xJl1ponKr8TwFBmJ': 200, 'i2gDhHnLj4CvKBpf3gPR': 200}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "HanBaba_a02",
+  "lang": "zh",
+  "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+  "voice": "shared:HanBaba",
+  "voice_id": "mZc8T5doZrU7OCI71i3M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "HanBaba_a02.mp3",
+  "bytes": 75275,
+  "heard": "呦 月亮呦 月亮你怎么白天就出来了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 4.64
+ },
+ {
+  "name": "HanBaba_a08",
+  "lang": "zh",
+  "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+  "voice": "shared:HanBaba",
+  "voice_id": "mZc8T5doZrU7OCI71i3M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "HanBaba_a08.mp3",
+  "bytes": 56049,
+  "heard": "不多 不多一日虚清300杯",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "HanBaba_a13",
+  "lang": "zh",
+  "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+  "voice": "shared:HanBaba",
+  "voice_id": "mZc8T5doZrU7OCI71i3M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "HanBaba_a13.mp3",
+  "bytes": 67752,
+  "heard": "汉陵代诏就是等皇上教",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.16
+ },
+ {
+  "name": "HanBaba_a25",
+  "lang": "zh",
+  "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+  "voice": "shared:HanBaba",
+  "voice_id": "mZc8T5doZrU7OCI71i3M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "HanBaba_a25.mp3",
+  "bytes": 131700,
+  "heard": "哈哈哈有錢了天生我才必有用千金散盡還復來",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 8.16
+ },
+ {
+  "name": "HanBaba_a41",
+  "lang": "zh",
+  "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+  "voice": "shared:HanBaba",
+  "voice_id": "mZc8T5doZrU7OCI71i3M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "HanBaba_a41.mp3",
+  "bytes": 132954,
+  "heard": "花间一壶酒 独卓无相亲举杯邀明月 对影成三人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.991,
+  "seconds": 8.24
+ },
+ {
+  "name": "HanBaba_a44",
+  "lang": "zh",
+  "text": "[surprised, then a warm smile] 好。四个人。",
+  "voice": "shared:HanBaba",
+  "voice_id": "mZc8T5doZrU7OCI71i3M",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "HanBaba_a44.mp3",
+  "bytes": 59811,
+  "heard": "好 好 四 四個人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.984,
+  "seconds": 3.68
+ },
+ {
+  "name": "PlatonWang_a02",
+  "lang": "zh",
+  "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_a02.mp3",
+  "bytes": 66498,
+  "heard": "又 又 月亮你怎么白天就出来了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.08
+ },
+ {
+  "name": "PlatonWang_a08",
+  "lang": "zh",
+  "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_a08.mp3",
+  "bytes": 53541,
+  "heard": "不多,不多,一日需清三百杯嘛",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.28
+ },
+ {
+  "name": "PlatonWang_a13",
+  "lang": "zh",
+  "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_a13.mp3",
+  "bytes": 67752,
+  "heard": "汉陵代诏就是等皇上教",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.16
+ },
+ {
+  "name": "PlatonWang_a25",
+  "lang": "zh",
+  "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_a25.mp3",
+  "bytes": 103278,
+  "heard": "哈哈哈哈有錢了天生我才必有用千金散盡還復來",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 6.4
+ },
+ {
+  "name": "PlatonWang_a41",
+  "lang": "zh",
+  "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_a41.mp3",
+  "bytes": 126684,
+  "heard": "花間一壺酒獨著無相親舉杯邀明月對影成三人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 7.84
+ },
+ {
+  "name": "PlatonWang_a44",
+  "lang": "zh",
+  "text": "[surprised, then a warm smile] 好。四个人。",
+  "voice": "shared:Platon Wang",
+  "voice_id": "AQbPC7Yz1mwtsONnKsJn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "PlatonWang_a44.mp3",
+  "bytes": 49780,
+  "heard": "好 四 四個人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.984,
+  "seconds": 3.04
+ },
+ {
+  "name": "EthanZhang_a02",
+  "lang": "zh",
+  "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+  "voice": "shared:Ethan Zhang",
+  "voice_id": "brChkoggsUHF1stW6omH",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "EthanZhang_a02.mp3",
+  "bytes": 74021,
+  "heard": "呦 月亮 呦 月亮你怎么白天就出来了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "EthanZhang_a08",
+  "lang": "zh",
+  "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+  "voice": "shared:Ethan Zhang",
+  "voice_id": "brChkoggsUHF1stW6omH",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "EthanZhang_a08.mp3",
+  "bytes": 54795,
+  "heard": "不躲 不躲一日虚清三百倍嘛",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.36
+ },
+ {
+  "name": "EthanZhang_a13",
+  "lang": "zh",
+  "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+  "voice": "shared:Ethan Zhang",
+  "voice_id": "brChkoggsUHF1stW6omH",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "EthanZhang_a13.mp3",
+  "bytes": 70260,
+  "heard": "漢林帶照 就是等皇上叫",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.32
+ },
+ {
+  "name": "EthanZhang_a25",
+  "lang": "zh",
+  "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+  "voice": "shared:Ethan Zhang",
+  "voice_id": "brChkoggsUHF1stW6omH",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "EthanZhang_a25.mp3",
+  "bytes": 104950,
+  "heard": "哈哈哈有钱了天生我才必有用千金散敬还复来",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 6.48
+ },
+ {
+  "name": "EthanZhang_a41",
+  "lang": "zh",
+  "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+  "voice": "shared:Ethan Zhang",
+  "voice_id": "brChkoggsUHF1stW6omH",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "EthanZhang_a41.mp3",
+  "bytes": 131700,
+  "heard": "花针一壶酒 独卓无相亲举杯妖明月 对影成三人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 8.16
+ },
+ {
+  "name": "EthanZhang_a44",
+  "lang": "zh",
+  "text": "[surprised, then a warm smile] 好。四个人。",
+  "voice": "shared:Ethan Zhang",
+  "voice_id": "brChkoggsUHF1stW6omH",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "EthanZhang_a44.mp3",
+  "bytes": 63990,
+  "heard": "好 好 四个 四个人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 3.92
+ },
+ {
+  "name": "Jing_a02",
+  "lang": "zh",
+  "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+  "voice": "shared:Jing",
+  "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Jing_a02.mp3",
+  "bytes": 67752,
+  "heard": "呦 月 月亮你怎么白天就出来了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.16
+ },
+ {
+  "name": "Jing_a08",
+  "lang": "zh",
+  "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+  "voice": "shared:Jing",
+  "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Jing_a08.mp3",
+  "bytes": 53541,
+  "heard": "不多,一日需清300碑碗",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 3.28
+ },
+ {
+  "name": "Jing_a13",
+  "lang": "zh",
+  "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+  "voice": "shared:Jing",
+  "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Jing_a13.mp3",
+  "bytes": 67752,
+  "heard": "汉陵待兆就是等皇上教",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.16
+ },
+ {
+  "name": "Jing_a25",
+  "lang": "zh",
+  "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+  "voice": "shared:Jing",
+  "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Jing_a25.mp3",
+  "bytes": 116235,
+  "heard": "哈哈哈哈有钱了天生我才必有用千金散尽还复来",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 7.2
+ },
+ {
+  "name": "Jing_a41",
+  "lang": "zh",
+  "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+  "voice": "shared:Jing",
+  "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Jing_a41.mp3",
+  "bytes": 132954,
+  "heard": "花間一壺酒,獨著無相親舉杯邀明月,對影成三人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.989,
+  "seconds": 8.24
+ },
+ {
+  "name": "Jing_a44",
+  "lang": "zh",
+  "text": "[surprised, then a warm smile] 好。四个人。",
+  "voice": "shared:Jing",
+  "voice_id": "zYD0xJl1ponKr8TwFBmJ",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Jing_a44.mp3",
+  "bytes": 70260,
+  "heard": "好 四個人好 四個人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 4.32
+ },
+ {
+  "name": "Adrian_a02",
+  "lang": "zh",
+  "text": "[waking up, squinting, delighted, a bit drunk] 哟，月亮？你怎么白天就出来了？",
+  "voice": "shared:Adrian",
+  "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Adrian_a02.mp3",
+  "bytes": 74021,
+  "heard": "呦 月亮 呦 月亮你怎么白天就出来了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.56
+ },
+ {
+  "name": "Adrian_a08",
+  "lang": "zh",
+  "text": "[counting on fingers, then shrugging, pleased with himself] 不多。一日须倾三百杯嘛。",
+  "voice": "shared:Adrian",
+  "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Adrian_a08.mp3",
+  "bytes": 57303,
+  "heard": "不多不多一日需清300倍嘛",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.991,
+  "seconds": 3.52
+ },
+ {
+  "name": "Adrian_a13",
+  "lang": "zh",
+  "text": "[proud, then deflating a little] 翰林待诏！……就是，等皇上叫。",
+  "voice": "shared:Adrian",
+  "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Adrian_a13.mp3",
+  "bytes": 69006,
+  "heard": "汉陵代诏就是等皇上教",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 4.24
+ },
+ {
+  "name": "Adrian_a25",
+  "lang": "zh",
+  "text": "[a beat, then a huge laugh] 有钱了！天生我材必有用，千金散尽还复来！",
+  "voice": "shared:Adrian",
+  "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Adrian_a25.mp3",
+  "bytes": 123758,
+  "heard": "哈哈哈哈哈哈哈 有钱了天生我才必有用千金散尽还复来",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 7.68
+ },
+ {
+  "name": "Adrian_a41",
+  "lang": "zh",
+  "text": "[reciting, slow and warm] 花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。",
+  "voice": "shared:Adrian",
+  "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Adrian_a41.mp3",
+  "bytes": 123758,
+  "heard": "花间一壶酒,独卓无相亲举杯邀明月,对影成三人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 7.68
+ },
+ {
+  "name": "Adrian_a44",
+  "lang": "zh",
+  "text": "[surprised, then a warm smile] 好。四个人。",
+  "voice": "shared:Adrian",
+  "voice_id": "i2gDhHnLj4CvKBpf3gPR",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Adrian_a44.mp3",
+  "bytes": 46018,
+  "heard": "好 好 四個人",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 2.8
+ }
+]
