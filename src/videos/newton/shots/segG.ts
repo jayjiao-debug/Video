@@ -91,7 +91,10 @@ const T_DR0 = capWord("G04", "先").from, T_DR1 = T_DR0 + 18, DROP_YAW = 6; // 9
 const T_MATCH = G.room;
 /** the 2 a.m. bite: the fork's clink on the plate (G04 end + 1.2 s: SYNC row 88) */
 const T_CLINK = L4.to + sec(1.2);
-/** THE CANDLE GOES OUT on the knock's pluck (SYNC row 89); the end black on the power-down sweep (OFF_AT + 24) */
+/** THE CANDLE GOES OUT on the knock's pluck (SYNC row 89); the end black on the power-down sweep (OFF_AT + 24).
+ *  Since 15 Nov THE SWITCH-OFF (hud/poweroff.tsx, round the whole composition in Film.tsx) closes the frame to a line,
+ *  a dot and black from OFF_AT itself, and shows nothing of the composition from OFF_AT + 5: this end black is still
+ *  set (a pass without the switch-off keeps its black) but in the film it is under the switch-off's black */
 const T_OUT = G.candleOut, T_BLACK = G.black[0];
 /** the last frame of her G04 subtitle (its screen runs 3 frames past the match: hidden in the room) */
 const CAP_G04_END = cap("G04", -1).to;

@@ -200,11 +200,13 @@ const freezeBlink = (f: number) => {
   return [0.5, 1, 0.5, 0, 1, 0.5][d] ?? 0;
 };
 
-/** 大哥 (owner pick 15 Nov, the film's one cameo: "garden statue"): on his stone plinth against the east wall (set param
- *  plinth, layout GARDEN.dage), to the right of Newton's walk in the dial wide; Newton walks past him and the push (M1)
- *  leaves him behind (on screen about f1626-1690). A statue: dead still (pose time frozen), finger to his lips, one brow
- *  cocked, eyes on her lens; ONE BLINK late in the hold, after her question and before the push: the only sign he is not
- *  stone. Seen from in front and a little from his left, so the finger is in his left hand (dage() default). */
+/** 大哥 (owner pick 15 Nov, the film's one cameo: "garden statue"; owner note 15 Nov: "more proper statue like"): CUT IN
+ *  STONE (people.ts DAGE_STATUE, acc/statue.ts) on his moulded pedestal against the east wall (set param plinth, layout
+ *  GARDEN.dage), to the right of Newton's walk in the dial wide; Newton walks past him and the push (M1) leaves him
+ *  behind (on screen from the garden's first frame for about two seconds). A statue: dead still (pose time frozen: no
+ *  sway, no breathing), finger to his lips, one brow cocked, eyes on her lens; ONE BLINK of his stone lids (the carved
+ *  face re-inks the closed lids too) late in the hold, after her question and before the push: the hidden joke. Seen
+ *  from in front and a little from his left, so the finger is in his left hand (stoneDage() default, as dage()). */
 const DAGE_FACING = -0.9, T_DAGE_BLINK = T_M1_0 - 10;
 const dageBlink = (f: number) => [0.5, 1, 1, 0.5][f - T_DAGE_BLINK] ?? 0;
 

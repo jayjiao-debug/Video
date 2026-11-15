@@ -4,7 +4,15 @@
 // Every frame is a lookup (BEAT.A, line(), capWord(), whisperSpan(), TITLE_SPAN), every mark from layout/stairs.ts.
 //
 // THE TAKE (moves are numbered; everything else is a HOLD)
-//   cold open  0 .. GOOD     THROUGH THE DOOR GAP (v5 row 1): his door ajar, its leaf and the near jamb the foreground on
+//   M0 WALK UP 0 .. ARRIVE   THE INTRO (the owner, 15 Nov: "motion of interviewer walking and just making it to the door,
+//                            saying finally arrived, then proceeds to knock"). Frame 0: she is already hurrying up the
+//                            last two steps of the flight, his door ahead in the right wall, ajar, the candlelight in its
+//                            gap the thing she walks at (walkCam: her way W_PATH, a foot down on each of BEAT.A.walkSteps,
+//                            the walking bob, slowing); she rounds onto the landing, the gap opens on him writing, and
+//                            she stops in the cold open's place with a small overshoot (BEAT.A.arrive), a little out of
+//                            breath (hurryBreath). No cut: the walk lands on the gap framing below
+//   cold open  ARRIVE .. GOOD   THROUGH THE DOOR GAP (v5 row 1): she says 「终于到了！」 (A01a, BEAT.A.finally) as she
+//                            settles; his door ajar, its leaf and the near jamb the foreground on
 //                            both sides; through the gap NEWTON writes STANDING at the table end of his room, bent over
 //                            the page, three-quarter side-on, about the middle, the candle stub at his elbow, Humphrey
 //                            by the front wall behind his master's back with the empty ink bottle (v5 has him in the far
@@ -13,7 +21,9 @@
 //                            door on the first rap, out of his master's way. HOLD. His STOP 1/5 (BEAT.A.stop): he and
 //                            the quill freeze, the eyes slide to the side, chin up, no blink, no sway; a double blink and
 //                            a fast burst. The invisible hand raps twice (BEAT.A.knock, knock2): the frame nods forward a
-//                            hair on each (rapPush), the leaf shivers; on the hinge's creak (doorOpen) it swings wider.
+//                            hair on each (rapPush), the leaf shivers, and THE KNOCK MARK pops on the leaf where the hand
+//                            lands (skin A's item "knock", hud/ms/knock.tsx: knockAt below gives it the point on the
+//                            leaf, frame by frame); on the hinge's creak (doorOpen) it swings wider. 「早上好！」 (A01b).
 //                            He finishes the stroke (14 f: a person), puts the quill behind his ear as he turns and walks
 //                            to his door in THREE STRIDES, a foot landing on each of the mix's steps (BEAT.A.steps;
 //                            gate 5 r2, A2: the walk's phase keyed, nPhase), in it by doorOpen[1]: he walks into a
@@ -43,7 +53,7 @@
 //   hold       card 1 .. end  card 1 mid-left over the shut door; the frame DEAD STILL from the lean's return to the cut
 //                            (the REC clock races 663-701 over it: clock join ①)
 import * as THREE from "three";
-import { SEGMENTS, FPS, capWord, quote, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, type Segment, type CamPose } from "../story";
+import { SEGMENTS, FPS, capWord, quote, clamp01, lerp, smooth, easeInCubic, easeOutCubic, easeInOutCubic, easeInOutQuad, type Segment, type CamPose } from "../story";
 import { BEAT, TITLE_SPAN } from "../beats";
 import * as C from "../cam";
 import { NEWTON_INK, NEWTON_HIDE, NEWTON_HIDE_WRITING, NEWTON_LEAN, HUMPHREY, N_EYE, H_EYE } from "../people";
@@ -52,7 +62,7 @@ import { QUILL } from "../props";
 import { whisperLean, whisperSpan } from "../whisper";
 import type { World } from "../world";
 import { V, rel, hang, lid, speak, accent, heads, headPop, walkAlong, yawTo, lerpA, wrapA, rigWalk, type RigState, type RigPose } from "./common";
-import { EYE_A, rapPush, shiver, jolt, breath, stepDip, nibAt, lightFocus, keyed } from "./segA_parts";
+import { EYE_A, rapPush, shiver, jolt, breath, stepDip, nibAt, lightFocus, keyed, bendPath, walkBob, hurryBreath } from "./segA_parts";
 
 type St = Partial<RigState>;
 const S = SEGMENTS[0], BA = BEAT.A;
@@ -60,6 +70,8 @@ const sec = (s: number) => Math.round(s * FPS);
 const word = (id: string, w: string) => capWord(id, w).from;
 
 // ------------------------------------------------------------------------------------------------------- the beats
+const WSTEPS = BA.walkSteps;                            // THE INTRO: her four footfalls up to his door (the last = her stop)
+const ARRIVE = BA.arrive;                               // she stands still in the cold open's place from here
 const STOP0 = BA.stop[0], STOP1 = BA.stop[1];          // his STOP 1/5: frozen STOP0..STOP1
 const BURST1 = BA.burst[1];                             // the fast burst after it, to here
 const RAPS = [BA.knock, BA.knock2];                     // the invisible hand's two raps
@@ -122,6 +134,17 @@ const PAGE = V(STX + 3.64, TABLE_TOP + 0.004, 0.06);
 const P_GAP = V(STX + 0.1, EYE_A, -0.62);
 const P_DOOR = V(STX - 0.68, EYE_A, STAIRS.door.z + 0.06);
 const P_STEP = V(STX - 0.75, EYE_A, STAIRS.door.z - 0.36);
+/** THE INTRO, HER WAY UP (floor points): from the flight's second step down, on its left by the rail (W_FROM: where she
+ *  is two strides before the film's first frame; on frame 0 she is on the last step under the landing; from that side
+ *  his door, in the right wall, shows nearly whole and the gap's candlelight comes into sight past the near jamb within
+ *  her first stride), up over the stair head and across the landing, bending right
+ *  round W_BEND into the cold open's place P_GAP in front of his door's gap (0.3 m and more off every wall) */
+const W_FROM = V(STX - 0.62, 0, STAIRS.stairHead.z + 0.57), W_BEND = V(STX - 0.3, 0, -0.1);
+const W_PATH = bendPath(W_FROM, W_BEND, P_GAP);
+/** the floor under her on the flight (her eye rides the flight's slope up to the landing, the kink at the stair head
+ *  eased over about 6 cm): metres under the landing at floor point z */
+const W_HEAD_Z = STAIRS.stairHead.z - 0.05;
+const flightY = (z: number) => -(ST.rise / ST.go) * 0.5 * (Math.hypot(z - W_HEAD_Z, 0.06) + (z - W_HEAD_Z));
 /** NEWTON at the table: three-quarter to her lens (about 55 deg off it), the page 0.34 m in front of him; at his door
  *  (1.6 m from her lens, just inside his room, clear of the leaf's sweep, its inner ring in his right hand's reach),
  *  facing her; his way there goes round the table's corner.
@@ -214,10 +237,15 @@ const nStride = (f: number) => keyed(f, STRIDE_KEYS);
  *  the walk pose leans the body 4 deg, so the feet are set N_LEAN behind the head's path while it is closed) */
 const N_LEAN = 0.05;
 const walkOpen = (f: number) => smooth(clamp01((f - N_WALK0) / 6)) * (1 - smooth(clamp01((f - (N_WALK1 - 10)) / 10)));
+/** his idle's own time (s) on "Good night." (cut v5: frame 138, less the stop's 15 frames, at 30 fps, + 0.4) */
+const N_IDLE_GOOD = 4.5;
 /** NEWTON on frame f: at the table, turning, walking, in his door */
 const newtonStage = (f: number): { at: THREE.Vector3; facing: number; pose: RigPose } => {
-  // the idle's own time stands still through the STOP (sway 0)
-  const it = (f < STOP0 ? f : f <= STOP1 ? STOP0 : f - (STOP1 - STOP0 + 1)) / FPS + 0.4;
+  // the idle's own time stands still through the STOP (sway 0). 15 Nov (the intro): it is counted from "Good night."
+  // (N_IDLE_GOOD s there, as in the approved cut v5), not from the film's first frame, so a longer or shorter intro does
+  // not shift his sway: standing in his door he sways exactly as approved (his jaw clear of the app's button column,
+  // the 9:16 fit above; with the sway 42 frames out of step it brushed the column's corner on f165-186: faces, low)
+  const it = ((f < STOP0 ? f : f <= STOP1 ? STOP0 : f - (STOP1 - STOP0 + 1)) - (GOOD - (STOP1 - STOP0 + 1))) / FPS + N_IDLE_GOOD;
   const idle: RigPose = { kind: "idle", t: it };
   // his heading along the two legs (round the table's corner), the corner taken over half a metre
   const y1 = yawTo(N_DESK, N_MID), y2 = yawTo(N_MID, N_DOOR), L1 = N_DESK.distanceTo(N_MID);
@@ -328,7 +356,8 @@ const FACE0 = C.toScreen(GAP_CAM, N_FACE_DOOR);
  *  him at the stair head (FOL1), the aim settles on his resting head over the next 6 frames (FOL2) */
 const FOL0 = LATCH, FOL1 = H_ARRIVE, FOL2 = FOL1 + 6;
 const LENS: C.LensKey[] = [
-  // the cold open is ONE held frame (the gap framing, written as where his door mark sits in it, so the snap starts from it)
+  // the cold open is ONE held frame (the gap framing, written as where his door mark sits in it, so the snap starts from
+  // it); her walk up (walkCam, f < ARRIVE) lands on exactly this key
   { f: S.from, pos: P_GAP, at: N_FACE_DOOR, sx: FACE0.x, sy: FACE0.y, fov: FOV_GAP },
   { f: SNAP0, pos: P_GAP, at: N_FACE_DOOR, sx: FACE0.x, sy: FACE0.y, fov: FOV_GAP },
   { f: GOOD, pos: P_GAP, at: N_FACE_DOOR, sx: 520, sy: 760, fov: C.zoomBy(FOV_GAP, XC_K), ease: easeOutCubic },
@@ -365,6 +394,42 @@ const followCam = (f: number): CamPose => {
   const tx = lerp(720, 700, v) + folLead(f), ty = lerp(700, 620, v);
   return C.aimCam(pos, him, lerp(s0.x, tx, k), lerp(s0.y, ty, k), fov);
 };
+/** M0, THE INTRO: HER WALK UP TO HIS DOOR (f < ARRIVE).
+ *  HER WAY: metres still to go along W_PATH at each footfall (W_KEYS: a monotone curve through them, so she is at walking
+ *  pace on frame 0, two strides already behind her: 0.83, 0.93, 0.70 m/s between the four footfalls as measured, the
+ *  long stride the one off the top step onto the landing, the last one her slowing to the stop). Her last foot lands
+ *  5 cm short (WSTEPS[3], her stop), her weight carries her 2.2 cm past the place (W_OVER) and she is back on it,
+ *  still, on ARRIVE.
+ *  HER EYE: EYE_A over the floor under her (the flight's slope up to the stair head: flightY), plus the walking bob
+ *  (segA_parts walkBob: down on each footfall, the sway, the nod), dying out from her stop to ARRIVE.
+ *  HER LOOK: at his door from the first frame: the leaf's free edge (W_GOAL, the bright line of the gap) held right of
+ *  the middle (W_SX, W_SY) while she climbs; from her second footfall (she is on the landing) the look goes over, eased,
+ *  to the cold open's own aim (his door mark at FACE0), so the gap opens on him writing as she rounds to it and the
+ *  walk lands on LENS[0] without a step. THE LENS: the film's own angle (FOV) while she climbs (the whole door, the
+ *  stair window's light beside it), closing to the gap framing's (FOV_GAP) with the same ease as her look: she closes in
+ *  on the gap to peek, lens and feet arriving together. */
+const W_STEP = WSTEPS[1] - WSTEPS[0];
+const W_OVER = WSTEPS[3] + Math.round((ARRIVE - WSTEPS[3]) * 0.45);
+const W_KEYS: [number, number][] = [[WSTEPS[0] - 2 * W_STEP, 1.88], [WSTEPS[0] - W_STEP, 1.52], [WSTEPS[0], 1.16], [WSTEPS[1], 0.8], [WSTEPS[2], 0.4], [WSTEPS[3], 0.05], [W_OVER, -0.022], [ARRIVE, 0]];
+/** her eye on frame f of the walk (no bob) */
+const walkEye = (f: number) => {
+  const p = W_PATH.at(W_PATH.len - keyed(f, W_KEYS));
+  return p.setY(EYE_A + flightY(p.z) - flightY(P_GAP.z));
+};
+const W_GOAL = leafPt(AJAR, D.z1 - D.z0 - 0.02, 1.3, 0);
+const W_SX = 790, W_SY = 860, W_LOOK0 = WSTEPS[1];
+const walkCam = (f: number): CamPose => {
+  const k = smooth((f - W_LOOK0) / (ARRIVE - W_LOOK0));
+  const cam = C.aimCam(walkEye(f), W_GOAL.clone().lerp(N_FACE_DOOR, k), lerp(W_SX, FACE0.x, k), lerp(W_SY, FACE0.y, k), C.zoomFov(FOV, FOV_GAP, k));
+  // the stop: her weight tips the lens down a hair as her last foot lands and it comes back up as she settles
+  const tip = -0.5 * Math.pow(Math.sin(Math.PI * clamp01((f - WSTEPS[3]) / (ARRIVE - WSTEPS[3]))), 2);
+  const b = walkBob(f, WSTEPS, ARRIVE);
+  return C.nudge(cam, { up: b.up, right: b.right, roll: b.roll, pitch: b.pitch + tip });
+};
+/** HER BREATH through the cold open: she hurried up the stairs (segA_parts hurryBreath: quicker and deeper, calming
+ *  until the snap), coming in over the 8 frames after she stops; the resting breath (breath) from the title on */
+const HURRY_T = (SNAP0 - 6 - ARRIVE) / FPS, BREATH_GOOD = 4.6;
+const hurry = (f: number) => hurryBreath((f - ARRIVE) / FPS, HURRY_T, smooth((f - ARRIVE) / 8) * breathK(f));
 /** the breathing's strength: none from the snap to the title's end (the extreme close, the pull back, the jolt, the
  *  title read on a still door), none from the A06 lean on (the clock join's outgoing view is dead still) */
 const breathK = (f: number) => {
@@ -380,10 +445,15 @@ const PAN_TIP = 0.7;
 const panTip = (f: number) => -PAN_TIP * Math.pow(Math.sin(Math.PI * clamp01((f - PAN0) / 12)), 2);
 /** THE CAMERA of frame f: pure */
 const camAt = (f: number): CamPose => {
+  // M0: her walk up to his door lands on the cold open's held frame (LENS[0]) on ARRIVE
+  if (f < ARRIVE) return walkCam(f);
   let cam = f > FOL0 && f < FOL2 ? followCam(f) : C.lensCam(f, LENS);
   // the knock: the frame nods forward a hair on each rap (the second a little more: the door gives under it)
   const rp = rapPush(f, RAPS, [0.022, 0.034]);
-  const j = jolt(f, THUD), b = breath(f, breathK(f));
+  // her breath: out of breath from the stairs until the snap (hurry), her resting breath from the title on (counted
+  // from "Good night." as in the approved cut v5, BREATH_GOOD s there, so the intro's length does not shift it: the
+  // frame of every later hold is the approved one)
+  const j = jolt(f, THUD), b = f < SNAP0 ? hurry(f) : breath(f - GOOD + Math.round(BREATH_GOOD * FPS), breathK(f));
   cam = C.nudge(cam, { fwd: rp + j.fwd, pitch: -18 * rp + j.pitch + b.pitch + panTip(f), roll: j.roll, up: b.up - stepDip(f, SIDESTEPS) });
   // the asides: the whisper lean on the door he is behind (A03; A06 lands with the pan back)
   if (f >= A03.from && f <= A03.to) cam = whisperLean(f, cam, { at: DOOR_AT });
@@ -393,9 +463,14 @@ const camAt = (f: number): CamPose => {
 
 // ------------------------------------------------------------------------------------------------------- the door
 /** the door: ajar (a forearm's width) at the cold open; each rap's shiver; swung wider on the creak; held while he
- *  stands in it; swung shut by him ON the thud; opened by Humphrey on the latch and drawn to on the click */
+ *  stands in it; swung shut by him ON the thud; opened by Humphrey on the latch and drawn to on the click.
+ *  15 Nov (the knock mark): the swing on the creak starts from rest and gathers (easeInOutQuad; it was easeOutCubic,
+ *  fastest on its first frame): the leaf gives slowly as the hinge starts to creak, one frame after rap 2, so rap 2's
+ *  mark, which rides the leaf, stays inside the frame's words zone while it shows (the knock point moves 6 px by the
+ *  mark's 5th frame and 30 px by its last, fading one; with the old curve it was 90 px out by then). Same first frame
+ *  (the creak, OPEN0), same last (OPEN1), same angles */
 const doorAt = (f: number) => {
-  if (f < SHUT0) return AJAR + (OPEN - AJAR) * easeOutCubic(clamp01((f - OPEN0) / (OPEN1 - OPEN0))) + shiver(f, RAPS);
+  if (f < SHUT0) return AJAR + (OPEN - AJAR) * easeInOutQuad(clamp01((f - OPEN0) / (OPEN1 - OPEN0))) + shiver(f, RAPS);
   if (f < THUD) return OPEN * (1 - easeInCubic((f - SHUT0) / (THUD - SHUT0)));
   if (f < LATCH) return 0;
   if (f < H_PULL0) return H_DOOR * smooth((f - LATCH) / 7);
@@ -404,6 +479,19 @@ const doorAt = (f: number) => {
 };
 /** the leaf's ring handles: inside (his side, where he swings it shut) and outside (where Humphrey draws it to) */
 const HANDLE_ALONG = D.z1 - D.z0 - 0.12, HANDLE_Y = 1.0;
+/** THE KNOCK POINT, where the invisible hand raps: on the leaf's landing face (KNOCK_FACE off the pivot's plane), from
+ *  layout/stairs.ts STAIRS.knock (on the shut door: 0.67 m from the hinge, 1.22 m up), a hand's width nearer the free
+ *  edge and above the lock plate (0.77 m from the hinge, 1.34 m up: on the bare panel, on the part of the leaf the gap
+ *  framing shows inside the frame's words zone), riding the leaf */
+const KNOCK_ALONG = STAIRS.knock.z - PIVOT.z + 0.1, KNOCK_Y = STAIRS.knock.y + 0.12, KNOCK_FACE = 0.03;
+/** THE KNOCK ON SCREEN on frame f (film px), for skin A's knock mark (hud/ms/knock.tsx; pure, so the mark and the
+ *  checkers' boxes come from the same numbers: hud/ms/when.ts): c = the knock point; u, v = where the points 10 cm
+ *  further along the leaf (toward its free edge) and 10 cm up land, so the mark can lie IN the leaf's plane; it follows
+ *  the frame's nod on each rap, the leaf's shiver and its swing on the creak */
+export const knockAt = (f: number) => {
+  const cam = camAt(f), door = doorAt(f), px = (p: THREE.Vector3) => { const q = C.toScreen(cam, p); return { x: q.x, y: q.y }; };
+  return { c: px(leafPt(door, KNOCK_ALONG, KNOCK_Y, KNOCK_FACE)), u: px(leafPt(door, KNOCK_ALONG + 0.1, KNOCK_Y, KNOCK_FACE)), v: px(leafPt(door, KNOCK_ALONG, KNOCK_Y + 0.1, KNOCK_FACE)) };
+};
 
 // --------------------------------------------------------------------------------------------------------- the shot
 /** the yawn: Humphrey's head back, the mouth round, the eyes shut (from the latch, about 1 s) */
@@ -527,12 +615,14 @@ export const SEG: Segment = {
     // the lens's light focus on what she looks at: him at the table, his face at the door, the shut door, Humphrey
     const shutPt = V(STAIRS.door.x - 0.03, 1.05, STAIRS.door.z + 0.1);
     let aim = nOn ? nt.headWorld() : shutPt;
+    // (the walk up: on his door's edge, going over to him as the gap opens on him)
+    if (f < ARRIVE) aim = W_GOAL.clone().lerp(aim, smooth((f - W_LOOK0) / (ARRIVE - W_LOOK0)));
     if (f >= LATCH && hOn && f < PAN0 + 10) aim = hm.headWorld();
     const dof = lightFocus(cam, aim);
     return {
       camera: cam,
       post: { dof },
-      slate: f < OPEN0 ? "A cold open (the gap)" : f < SNAP0 ? "A his door" : f < PULL0 ? "A M1 extreme close" : f < THUD ? "A M2 pull back" : f < A03.from ? "A title" : f < FOL0 ? "A M3 A03 whisper" : f < LAUGH - 5 ? "A M4 Humphrey" : f < PAN0 ? "A M5 Laugh" : f < BEAT.A.card1[0] ? "A M6 A06 whisper" : "A card 1",
+      slate: f < ARRIVE ? "A M0 her walk up" : f < OPEN0 ? "A cold open (the gap)" : f < SNAP0 ? "A his door" : f < PULL0 ? "A M1 extreme close" : f < THUD ? "A M2 pull back" : f < A03.from ? "A title" : f < FOL0 ? "A M3 A03 whisper" : f < LAUGH - 5 ? "A M4 Humphrey" : f < PAN0 ? "A M5 Laugh" : f < BEAT.A.card1[0] ? "A M6 A06 whisper" : "A card 1",
     };
   },
 };

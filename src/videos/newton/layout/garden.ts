@@ -40,11 +40,14 @@ export const GARDEN_SET = {
    *  head), the chimney (x, z, width, top) */
   elab: { x0: 0.6, x1: 4.6, z0: -14.25, z1: -11.0, eaveBack: 3.5, eaveFront: 2.45, door: { x: 2.2, w: 0.9, h: 1.95 }, win: { x: 3.75, w: 0.5, y0: 1.0, y1: 1.55 }, chimney: { x: 1.15, z: -13.4, w: 0.62, top: 5.4 } },
   /** the garden walls: height, coping */ wall: { h: 2.8, cope: 0.16 },
-  /** 大哥's PLINTH (owner pick 15 Nov, the film's one cameo: "garden statue"): a stone pedestal against the east wall's
-   *  face, 7.5 m up the east walk (z), so in C's dial wide he stands to the right of Newton's walk and Newton passes him
-   *  as he comes down it; the dial view's push leaves him behind. Its middle (x from GDX), width along the wall (w),
-   *  depth out from it (d), top (h). Shown only by the set param plinth (C) */
-  plinth: { x: 5.6 - 0.3, z: -7.5, w: 0.62, d: 0.56, h: 0.55 },
+  /** 大哥's PEDESTAL (owner pick 15 Nov, the film's one cameo: "garden statue"; owner note 15 Nov: "more proper statue
+   *  like": taller, moulded, with a plaque): a square stone pedestal against the east wall's face, 7.5 m up the east
+   *  walk (z), so in C's dial wide he stands to the right of Newton's walk and Newton passes him as he comes down it;
+   *  the dial view's push leaves him behind. Its middle (x from GDX: the cornice, `over` beyond the die, touches the
+   *  wall), the die's width along the wall (w) and depth out from it (d; square), the widest moulding's overhang (over),
+   *  the cornice's top (cap) and the top of the statue's own footing slab on it (h: where he stands), the slab's side
+   *  (slab). Shown only by the set param plinth (C) */
+  plinth: { x: 5.6 - 0.25 - 0.09, z: -7.5, w: 0.5, d: 0.5, over: 0.09, cap: 0.86, h: 0.9, slab: 0.46 },
   /** the sun at noon and the moon at night (directions TOWARD them) */ sun: [-0.45, 0.78, 0.45] as [number, number, number], moon: [0.42, 0.62, 0.66] as [number, number, number],
 };
 const G = GARDEN_SET, E = G.elab;

@@ -11,6 +11,29 @@ The long rules are the header of `story.ts` ("HOW TO BUILD A SEGMENT"); the Worl
 (skeleton WP1, sets WP2, cast / props / camera WP3, HUD WP4) leave for the segment builders (WP5), as checked by the
 integration check on 2026-11-13. Open issues are in the last section: read them before you start.
 
+**15 Nov, the owner's nine notes on cut v5 (what is true NOW where the sections below still describe the older film;
+the timing contract and the per-note record are `/home/user/newton_work/film/notes6/timing/TIMELINE.md` and
+`/home/user/newton_work/film/notes6/INTEGRATE.md`):**
+- Length: 5462 frames = 182.067 s, 57 lines (A01a 终于到了！ is new, in front of A01b 早上好！; every later line's number n is one higher).
+- THE INTRO (scene A, `story.ts COLD_OPEN_S`, `BEAT.A.walk / walkSteps / arrive / finally / morning`): her camera WALKS
+  up the last step to his door (4 footfalls), stops, she says 终于到了！, the invisible hand raps twice with THE KNOCK
+  MARK on the leaf (skin A item `knock`: `hud/ms/knockplace.ts`, `hud/ms/knock.tsx`, mounted beside `<MsFx>`; its
+  place is projected from the world by segA `knockAt`), then 早上好！ and the scene as built.
+- B01 is 先生，早饭来了。 / "Sir, your breakfast." (`capWord("B01", "breakfast")`; the beat keeps the name `BEAT.B.dinner`).
+- THE FACE WIPE IS BACK (scene D's street, one take, close): `BEAT.D.wipeIn / wipe / wipe1 / smudge / wipe2 / clean /
+  wipeOut / go`; segD builds it with its own pad (`segD_parts.ts padTrack / padPut`), not with `C.wipe`; the figure
+  swaps NEWTON_GOWN_INK -> NEWTON_GOWN_SMUDGE -> NEWTON_GOWN under the cloth. The street's old block stands on
+  `BEAT.D.go` (D01 start - 2.5 s).
+- FACT CARDS DO NOT MOVE AT REST (`hud/card.tsx`: no float, no sway; `cardStill(c)` = the frames a card is dead
+  still). Cards 1 and 3 hold 2.6 s.
+- THE SWITCH-OFF (`hud/poweroff.tsx <PowerOff>`, wrapped round the whole composition in Film.tsx): from
+  `BEAT.G.cameraOff` the frame squeezes to a bright line (5 f), a dot (5 f), fades (6 f), then black to the end.
+  segG's `endBlack` is still set but lies under it.
+- 大哥 in the garden is a stone statue on a moulded pedestal (`people.ts DAGE_STATUE` with `acc/statue.ts`; `NPerson`
+  has an optional `finish(rig)` hook that `addPerson` calls once; the pedestal is `sets/garden.ts`'s plinth group).
+- A gesture or sway that must not move when the film in front of it grows is counted from a BEAT, not from frame 0
+  (segA: Newton's idle and her resting breath from `BEAT.A.goodNight`; segD: the lecture hand from `BEAT.D.release`).
+
 Contents: 1 owners · 2 a segment · 3 the World · 4 places · 5 people · 6 props · 7 her camera, mic and hands ·
 8 beats and lookups · 9 the shared verbs (`shots/common.ts`) · 10 the HUD · 11 picture rules · 12 checks ·
 13 open issues.
@@ -413,8 +436,9 @@ JOINS (`CLOCK_JOINS`: A->B, C->D, D->E, F->G, keyed on `SEGMENTS`, and G's room 
 03:00): from 10 frames before the cut to 8 after (`RACES`, `raceAt(f)`, `clockAt(f)`); at a whip or match join (B->C,
 E->F) the stamp slides in with its time set. So hold the picture still over the outgoing 10 frames of a clock join.
 Her camera switches off on `OFF_AT` (`BEAT.G.cameraOff`, frame 5211 = G to - 1.4 s, 12
-frames after the last pluck): the lamp dies, the whole UI goes grey (battery emptied) and holds still for 24 frames
-until the end black (`BEAT.G.black[0]` = OFF_AT + 24). KEEP FACES (skin; hair is fine) OUT OF THE TWO TOP CORNERS
+frames after the last pluck): the lamp dies, the whole UI goes grey (battery emptied) and, since 15 Nov, THE SWITCH-OFF
+(`hud/poweroff.tsx`) squeezes the whole frame to a line, a dot and black from that same frame (the old end black,
+`BEAT.G.black[0]` = OFF_AT + 24, is under it). KEEP FACES (skin; hair is fine) OUT OF THE TWO TOP CORNERS
 (`VLOG_RECT.rec`, `.stamp`, `.battery`, and the big intro box `.stampBig` during a scene's first 2 s) for the WHOLE
 scene, push-ins included; reframe rather than switch the UI off (the owner wants one fixed layout; a lamp that
 vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big intro) only as a last resort.
@@ -444,8 +468,8 @@ vanishes mid-scene reads as the camera stopping). `cards: false` (skips the big 
   CAP_BOTTOM`.
 - FACT CARDS (`hud/card.tsx`): a cream paper slip (deckled, torn bottom, grain, shadow, tilted -2.2 deg), Chinese ink
   46 px (2-3 rows, at most 12 characters), English sepia 28 px under a rule; the slip from x 131, at most 580 px wide,
-  its bottom edge on y 1200 (the tallest starts at about y 846); flutters in from the left over 8 frames, floats,
-  slides out over 8. Its end, the exit included, is CLIPPED before the next whip or match join (`cardEnd(c)`; the exit
+  its bottom edge on y 1200 (the tallest starts at about y 846); flutters in from the left over 8 frames, RESTS DEAD STILL
+  (15 Nov: the old 1.5 px float and 0.22 deg sway made the ink crawl; `cardStill(c)`), slides out over 8. Its end, the exit included, is CLIPPED before the next whip or match join (`cardEnd(c)`; the exit
   runs over the clipped end; `factCardAt(f)` returns the card with its shown `to`). Exports `FactCard, factCardAt,
   cardEnd, SHOWN_CARDS, factRows, factLayout, factRectAt, FACT_SLOT {110, 817, 732, 1221}, CARD_X, CARD_BOTTOM, cardTop,
   CARD_MAXW, CARD_ROW`.

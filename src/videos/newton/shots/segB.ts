@@ -49,7 +49,7 @@ const B = BEAT.B;
 const T_LID = B.lid;
 const T_TILT = T_LID + 7, T_DOWN = T_TILT + 11, T_FREE = T_DOWN + 2;
 /** M1 THE STEP BACK: from just after 先生 ("Sir," and its comma) to "dinner" (script v5 row 06) */
-const T_DIN = capWord("B01", "dinner").from;
+const T_DIN = capWord("B01", "breakfast").from;   // 15 Nov (timing lane): B01 says "breakfast" now (the owner's note); the same frame until the retake
 const T_SB0 = capWord("B01", "Sir").from + 9, T_SB1 = T_DIN;
 /** Humphrey turns from the table toward Newton and takes his step as she steps back */
 const T_TURN0 = T_SB0 - 2, T_TURN1 = T_SB1 - 1;

@@ -111,9 +111,18 @@ export const TITLE_BLOCK = { from: TITLE_RAW[0], to: TITLE_RAW[1], zh: TITLE_RAW
  *  title_en_on_screen). The English version of the film (lang en) is not affected. */
 export const CARD_EN_ON_SCREEN = false;
 export const TITLE_EN_ON_SCREEN = false;
-/** THE COLD OPEN's beats (script v5's A rows, seconds on the film clock; "Good night." (A02) comes at 4.6 s, after its
- *  4.5 s silent beat): his STOP 1/5 at 1.5 s (15 frames), her two raps on the door at 2.2 s. beats.ts BEAT.A reads them */
-export const COLD_OPEN_S = { stop: 1.5, knock: 2.2 };
+/** THE COLD OPEN's beats, seconds on the film clock (the owner's intro, 15 Nov: SHE WALKS UP TO HIS DOOR, arrives, says
+ *  「终于到了！」 (A01a, 2.0 s), the invisible hand raps twice, 「早上好！」 (A01b, 4.02 s), "Good night." (A02, 6.0 s)):
+ *    steps    her four footsteps up to the door, slowing (0.42 / 0.45 / 0.50 s apart); the last one is the stop
+ *    arrive   she has stopped and settled at the door: the frame is still from here (A01a starts 0.1 s later)
+ *    stop     his STOP 1/5 (15 frames, to `burst`): he and the quill freeze, 0.7 s before the first rap (her voice
+ *             outside his door); then the fast burst of scratching, to 0.45 s after the first rap (`burstEnd`)
+ *    knock    RAP 1; knock2 RAP 2, 0.29 s later (one eighth of the morning bed); creak: the hinge, the leaf swings wider
+ *  The raps are on the film clock, not on A01a: the take's length only changes A01b's silent beat (the lines file).
+ *  (Cut v5, until 15 Nov: stop 1.5, burst 2.0-2.65, knock 2.2, knock2 2.49, creak 2.52, A01b 2.62, A02 4.6: the old
+ *  block of stop / burst / raps is 1.2 s later, A01b and everything after it 1.4 s later.) beats.ts BEAT.A reads them;
+ *  scripts/newton/sound/cues.json carries the same seconds ("A", "from", s). */
+export const COLD_OPEN_S = { steps: [0.3, 0.72, 1.17, 1.67], arrive: 1.9, stop: 2.7, burst: 3.2, knock: 3.4, knock2: 3.69, creak: 3.72, burstEnd: 3.85 };
 /** subtitle band centre: the Chinese row's middle (the HUD's own numbers rule: hud/caption.tsx, layout.ts SCREEN) */
 export const CAPTION_Y = 1414;
 

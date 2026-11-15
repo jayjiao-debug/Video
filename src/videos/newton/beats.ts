@@ -11,6 +11,13 @@
 // Nobody types a frame number, so a re-timed voice (or a re-anchored cue that keeps its anchor) moves every beat by
 // itself. If a lookup no longer exists after a change of the lines, the import throws and names it.
 // Rebuilt 14 Nov (the prep for the v5 scene rebuild: /home/user/newton_work/film/rebuild/PREP.md has every frame).
+// 15 Nov, the owner's notes (/home/user/newton_work/film/notes6/timing/TIMELINE.md is the contract, with every frame):
+//   A  THE INTRO: she WALKS UP to his door (walkSteps, arrive), says 「终于到了！」 (finally = A01a), raps twice (knock,
+//      knock2), 「早上好！」 (morning = A01b); story.ts COLD_OPEN_S holds the seconds; A01b and all after it + 1.4 s
+//   D  THE WIPE is back: the street is 1.6 s longer IN FRONT of its old block (go = D01 start - 2.5 s: the wrong way, the
+//      stop, the step back and whip ⑥ keep their times before D01); wipeIn / wipe / wipe1 / wipe2 / smudge / clean /
+//      wipeOut sit on sfx_wipe (cues.json: D from + 0.6 s)
+//   cards 1 and 3 are 2.6 s (the lines file); F.shovel's two throws re-anchored inside card 3's shorter gap
 //   BEAT.A .. BEAT.G   per scene, the frames the v5 script and the sound name (a span is [first, last], inclusive;
 //                      a list of three or more is a list of hits, e.g. the three footsteps)
 //   TITLE_SPAN         the title block (skin A's 「手稿」 title on the shut door: story.ts TITLE_BLOCK, hud/ms/when.ts)
@@ -58,14 +65,23 @@ export const TITLE_SPAN: Span = [TITLE_BLOCK.from, TITLE_BLOCK.to];
 // ---------------------------------------------------------------------------------------------------- A 清晨 05:00 his door
 const aKnock = segAt("A", COLD_OPEN_S.knock);
 const coldOpen: Span = [0, aKnock - 1];
+/** her four footsteps up to his door (story.ts COLD_OPEN_S.steps: slowing, the last one the stop) and the frame she has
+ *  settled on (the owner's intro, 15 Nov) */
+const aSteps: number[] = COLD_OPEN_S.steps.map((s) => segAt("A", s));
+const aArrive = segAt("A", COLD_OPEN_S.arrive);
 const doorClick: number = endAt("B02", 0.15);
 const A = {
-  /** THE COLD OPEN through his door gap: he writes standing by a candle stub, the title on the door leaf; HOLD */ coldOpen,
-  /** his STOP 1/5: he and the quill freeze, the scratching cut dead (sound f45-59), the birds go on */ stop: [segAt("A", COLD_OPEN_S.stop), segAt("A", 2.0) - 1] as Span,
-  /** the fast burst of scratching after the stop */ burst: [segAt("A", 2.0), segAt("A", 2.65) - 1] as Span,
+  /** THE COLD OPEN: the film's first frame .. the frame before RAP 1 (her walk up, 「终于到了！」, his stop and burst) */ coldOpen,
+  /** THE INTRO (15 Nov): HER WALK UP TO HIS DOOR, the film's first frame .. the frame before she has settled */ walk: [0, aArrive - 1] as Span,
+  /** her four footsteps (the camera's walking bob dips on each; slowing: 0.42 / 0.45 / 0.50 s apart; the last is the stop) */ walkSteps: aSteps,
+  /** she has arrived: stopped and settled at his door; the frame is still from here (her eyes' breathing only) */ arrive: aArrive,
+  /** 「终于到了！」 (A01a, a little winded): its first and last frame (the take's length moves only its end; the raps stay) */ finally: [from("A01a"), to("A01a")] as Span,
+  /** his STOP 1/5: he and the quill freeze, the scratching cut dead (0.7 s before RAP 1), the birds go on */ stop: [segAt("A", COLD_OPEN_S.stop), segAt("A", COLD_OPEN_S.burst) - 1] as Span,
+  /** the fast burst of scratching after the stop (to 0.45 s after RAP 1: he finishes the stroke) */ burst: [segAt("A", COLD_OPEN_S.burst), segAt("A", COLD_OPEN_S.burstEnd) - 1] as Span,
   /** RAP 1 on the door (the invisible hand; the frame nods forward a hair and the leaf shivers), pluck D4 */ knock: aKnock,
-  /** RAP 2 (the same nod and shiver), pluck A4 */ knock2: segAt("A", 2.49),
-  /** the hinge creaks and the leaf swings wider (f76) .. he is in the doorway (his last step f118, there by A02 - 0.5 s) */ doorOpen: [segAt("A", 2.52), from("A02") - sec(0.5)] as Span,
+  /** RAP 2 (the same nod and shiver), pluck A4 */ knock2: segAt("A", COLD_OPEN_S.knock2),
+  /** 「早上好！」 (A01b): its first and last frame (0.33 s after RAP 2) */ morning: [from("A01b"), to("A01b")] as Span,
+  /** the hinge creaks and the leaf swings wider .. he is in the doorway (his last step A02 - 0.65 s, there by A02 - 0.5 s) */ doorOpen: [segAt("A", COLD_OPEN_S.creak), from("A02") - sec(0.5)] as Span,
   /** his three steps on bare boards to the door (14 f after the knock: he finishes the stroke first) */ steps: [startAt("A02", -1.55), startAt("A02", -1.10), startAt("A02", -0.65)],
   /** the hinge's last creak, under "Good night." */ hingeLast: startAt("A02", -0.30),
   /** "Good night." (LOOK 1/4): the 5-frame SNAP ZOOM to the scene's extreme close lands on "Good" (= A02's first frame) */ goodNight: from("A02"),
@@ -100,9 +116,9 @@ const bStepBack = word("B01", "Sir") + 9;
 const B = {
   /** THE PLATE (the day's clock, morning): the insert, Humphrey's sleeve and face beside it; HOLD until the step back */ plate: [seg("B").from, bStepBack - 1] as Span,
   /** the cover's clink: Humphrey lifts the lid, steam */ lid: segAt("B", 0.15),
-  /** "Sir, your dinner." */ dinner: from("B01"),
+  /** "Sir, your breakfast." (15 Nov: it was "dinner"; the beat keeps its name) */ dinner: from("B01"),
   /** THE STEP BACK from the insert to the two-thing in depth, starting just after "Sir," (its first frame + 9: script v5
-   *  row 06, segB M1, gate-5 note F4), landing on "dinner" */ pullBack: [bStepBack, word("B01", "dinner")] as Span,
+   *  row 06, segB M1, gate-5 note F4), landing on "breakfast" (15 Nov: the line's last word, "dinner" until the retake) */ pullBack: [bStepBack, word("B01", "breakfast")] as Span,
   /** FLICK 1/4: the small dry swish (two fingers low, without looking) */ flick: endAt("B01", 0.08),
   /** Humphrey sighs */ sigh: endAt("B01", 0.32),
   /** his steps to the door: the FOLLOW to the doorway starts (only after the flick has read) */ humphreyGoes: endAt("B01", 0.60),
@@ -150,14 +166,31 @@ const C = {
 };
 
 // ---------------------------------------------------------------------------------------------------- D 下午 street, Schools
-const dWhip = segAt("D", 2.10);
+/** THE STREET'S OLD BLOCK (his two steps the wrong way, the stop, the step back, whip ⑥) starts D_BLOCK_S before D01's
+ *  first word. Until 15 Nov that was the scene's first frame; the owner's wipe is in front of it now (the scene starts
+ *  D01's "pre" before D01: 4.1 s, the lines file), so the block is anchored on D01 and a longer or shorter wipe moves
+ *  only the scene's start. cues.json writes the same moments as ["D01", "start", s - 2.5]. */
+const D_BLOCK_S = 2.5;
+const dGo = startAt("D01", -D_BLOCK_S);
+const dWhip = dGo + sec(2.10);
+/** THE WIPE (the owner, 15 Nov: back): sfx_wipe's first frame (cues.json: D from + 0.6 s). The clip's two swishes are
+ *  its frames 0-6 and, louder, 13-19; it is 25 frames long */
+const dWipe = segAt("D", 0.60);
 const dClap1 = startAt("D06", -1.45), dClap2 = startAt("D06", -0.70);
 const dPaper = endAt("D01", -0.05);
 const D = {
-  /** the street: a medium-wide HOLD from across it, the gate and both directions; he walks into it */ street: [seg("D").from, dWhip - 1] as Span,
-  /** his two steps the wrong way */ wrong: [segOn("D", 0.15), segOn("D", 0.55)] as Span,
-  /** STOP 3/5: the footsteps stop dead (no step); the 12 f stop, a double blink, he turns on his heel */ stop: [segAt("D", 0.80), segAt("D", 1.85) - 1] as Span,
-  /** his first hurried stride back: whip ⑥ goes after him */ stepBack: segAt("D", 1.85),
+  /** the street, one take: the wipe, then he walks on the wrong way, stops, turns back; up to the whip's cut */ street: [seg("D").from, dWhip - 1] as Span,
+  /** THE WIPE: the handkerchief (an invisible hand) darts in from the lower right, 6 frames before stroke 1 */ wipeIn: dWipe - 6,
+  /** sfx_wipe's first frame = stroke 1's first frame (the cue's anchor) */ wipe: dWipe,
+  /** STROKE 1 across his nose, on the clip's first swish (its frames 0-6) */ wipe1: [dWipe, dWipe + 6] as Span,
+  /** the ink becomes a SMUDGE from this frame (the cloth is over his nose: the middle of stroke 1) */ smudge: dWipe + 3,
+  /** STROKE 2, on the clip's second, louder swish (its frames 13-19); a lift and a press between the two */ wipe2: [dWipe + 13, dWipe + 19] as Span,
+  /** his nose is CLEAN from this frame (the cloth is over it: the middle of stroke 2) */ clean: dWipe + 16,
+  /** the cloth is gone from the frame (the clip's end); he has opened his eyes on her lens in a flat look (segD) and holds it to here */ wipeOut: dWipe + 25,
+  /** he walks on, THE WRONG WAY: the street's old block starts (D01 start - 2.5 s; the scene's first frame until 15 Nov) */ go: dGo,
+  /** his two steps the wrong way */ wrong: [dGo + Math.floor(0.15 * FPS + 1e-6), dGo + Math.floor(0.55 * FPS + 1e-6)] as Span,
+  /** STOP 3/5: the footsteps stop dead (no step); the 12 f stop, a double blink, he turns on his heel */ stop: [dGo + sec(0.80), dGo + sec(1.85) - 1] as Span,
+  /** his first hurried stride back: whip ⑥ goes after him */ stepBack: dGo + sec(1.85),
   /** WHIP ⑥: its outgoing half (4 frames) .. */ whipOut: dWhip - 4,
   /** .. and THE CUT inside it (whoosh peak; the tall door's creak) into the Schools */ schools: dWhip,
   /** ONE WIDE: rows of empty benches, the sunbeam, one small man walking up the aisle (his steps echo from f2102) */ wide: [dWhip, from("D01") - 1] as Span,
@@ -200,7 +233,8 @@ const F = {
   /** MATCH ⑨ on his candle (the flame at the same place and size): the furnace, the first shovel, the nocturne's note */ inside: fInside,
   /** the FOLLOW IN lands on 炼 of 炼金 (F01) in the three-thing */ gold: word("F01", "炼"),
   /** fact card 3 (F02): the SNAP TO THE THING (his own pages); its ding f3191 */ card3: cardSpan("F02"),
-  /** the shovel under card 3, twice */ shovel: [endAt("F02", 0.70), startAt("F03", -1.40)] as Span,
+  /** the shovel under card 3, twice (15 Nov: card 3's gap is 1.1 s shorter: the throws at F02 end + 0.40 s and F03 start
+   *  - 1.20 s, 33 frames apart: segF's throw needs 32) */ shovel: [endAt("F02", 0.40), startAt("F03", -1.20)] as Span,
   /** the SLOW PUSH over her promise lands on 一天 (F04) */ promise: [from("F04"), word("F04", "一天")] as Span,
   /** Humphrey takes the empty sack (his steps out f3490) */ sackOut: endAt("F05", 0.12),
   /** Newton sets his candlestick on the iron of the furnace top (in shot; it stands there through the night) */ candle: endAt("F05", 0.55),
@@ -244,8 +278,8 @@ const G = {
   /** fact card 5 (G04) mid-left; its ding f5285 */ card5: cardSpan("G04"),
   /** the 2 a.m. bite: fork clink */ clink: endAt("G04", 1.20),
   /** THE CANDLE GOES OUT: he pinches it out (the knock's pluck, once; the snuff) */ candleOut: gCandleOut,
-  /** HER CAMERA SWITCHES OFF: the REC lamp dies, the whole vlog UI goes grey and holds (hud/vlog.tsx OFF_AT) */ cameraOff: gOff,
-  /** the end black, on the power-down sweep: never before the dead UI has held 24 frames */ black: [Math.max(gCandleOut + sec(0.5), gOff + 24), TOTAL - 1] as Span,
+  /** HER CAMERA SWITCHES OFF: the REC lamp dies, the whole vlog UI goes grey (hud/vlog.tsx OFF_AT), and from this frame THE SWITCH-OFF (hud/poweroff.tsx, 15 Nov) squeezes the whole frame to a line, a dot, black; the sound's click and collapse (sfx_poweroff_crt) start here */ cameraOff: gOff,
+  /** segG's own end black (Pose.top). Since 15 Nov it is UNDER the switch-off (hud/poweroff.tsx shows black from cameraOff + 16), so it is never seen; kept as the fallback */ black: [Math.max(gCandleOut + sec(0.5), gOff + 24), TOTAL - 1] as Span,
   /** KEPT NAME (the sound lane's sync table) = candleOut (v5: no garden window) */ windowDark: gCandleOut,
 };
 
@@ -357,6 +391,12 @@ export const beatCheck = (): string[] => {
     }
   }
   if (TITLE_SPAN[0] <= 0 || TITLE_SPAN[1] > seg("A").to) bad.push(`TITLE_SPAN ${TITLE_SPAN} must lie in segment A (1-${seg("A").to})`);
+  // the intro's order (15 Nov): her last step, the settle, 「终于到了！」, the two raps, 「早上好！」
+  const io: [string, number][] = [["walkSteps[3]", A.walkSteps[3]], ["arrive", A.arrive], ["finally[0]", A.finally[0]], ["finally[1]", A.finally[1]], ["knock", A.knock], ["knock2", A.knock2], ["morning[0]", A.morning[0]]];
+  for (let i = 1; i < io.length; i++) if (io[i][1] <= io[i - 1][1]) bad.push(`BEAT.A.${io[i][0]} = ${io[i][1]} is not after BEAT.A.${io[i - 1][0]} = ${io[i - 1][1]} (the intro's order)`);
+  // the wipe ends before he walks on (15 Nov)
+  if (D.wipeOut >= D.go) bad.push(`BEAT.D.wipeOut = ${D.wipeOut} is not before BEAT.D.go = ${D.go} (the wipe needs D01's pre)`);
+  if (F.shovel[1] - F.shovel[0] < 32) bad.push(`BEAT.F.shovel = [${F.shovel}]: the two throws are less than 32 frames apart (segF's throw)`);
   for (const a of ASIDES) if (a.span[1] < a.span[0]) bad.push(`ASIDE ${a.id} runs backwards`);
   let next = 0;
   for (const [p, a, b] of SPANS) { if (a !== next || b < a) bad.push(`SPANS: ${p} ${a}-${b} (expected to start on ${next})`); next = b + 1; }

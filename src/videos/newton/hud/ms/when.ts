@@ -49,6 +49,7 @@ import { CARD_LEN, CUT, DRAIN, FREEZE, FREEZE_ON, G2_READY, WIPE } from "../../f
 import type { Rect, Shown } from "../../../../kit/overlay/frame";
 import { bannerPlace, bannerRects, type Head } from "./bannerplace";
 import { HUMPHREY_TRACK } from "./track";
+import { KNOCK_SPAN, KNOCK_RAPS, KNOCK_ENVELOPE, knockRects } from "./knockplace";
 import { SCENE_OF, afterEnd, afterStart, type MsFit, type MsFitItem, type MsId } from "./fit";
 import { FIT_A } from "./fit_A";
 import { FIT_B } from "./fit_B";
@@ -283,6 +284,17 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     // 0.8: x 110-344, y 1100-1320) draws only while his head is in the slot: if the rebuilt hold uses it, put it here
     box: [{ x0: 664, y0: 340, x1: 970, y1: 610 }], provisional: true,
     words: ["笑", "1/1", "✗", "✗", "证毕"],
+  },
+  {
+    id: "knock", row: 11, what: "the knock mark on his door: two raps, 咚 咚", kind: "effect", layer: "fx",
+    // the owner's note 1 (15 Nov): on each rap of the invisible hand (BEAT.A.knock, knock2) an impact mark pops ON THE
+    // LEAF with one 咚 by it; gone the frame before 「早上好！」 (A01b). Frames, place and boxes: hud/ms/knockplace.ts
+    // (the knock point projected from the world on every frame: shots/segA.ts knockAt); drawn by hud/ms/knock.tsx
+    from: KNOCK_SPAN[0], to: KNOCK_SPAN[1],
+    beats: { in: 2, rap1: 0, leave: 4 }, absBeats: { rap2: KNOCK_RAPS[1] },
+    gap: null, whilePending: "show",
+    box: [KNOCK_ENVELOPE], provisional: false, boxAt: knockRects,
+    words: ["咚", "咚"],
   },
 ];
 

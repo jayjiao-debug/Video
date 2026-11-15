@@ -14,7 +14,10 @@
 // clear of faces in the upper third (chins included), of the subtitle band (from y 1280) and of the app's buttons
 // (x >= 890 below y 1000); the slip hugs its words (420-580 px wide). The invisible mic keeps out of the slot while a card shows (cards come when nobody speaks).
 // Motion: flutters in from the left over 8 frames (slides 90 px, swings from -11 deg with a damped wobble, the shadow
-// tightens as it lands), floats 1.5 px while it rests, and over its last 8 frames lifts and slides out left.
+// tightens as it lands), then RESTS DEAD STILL (the owner, 15 Nov: "the note at the end is jiggling": the old 1.5 px
+// float and 0.22 deg sway at rest moved the slip a fraction of a pixel a frame, so its ink and torn edge crawled; from
+// its 8th frame to 8 frames before its end the transform is now one constant, cardStill), and over its last 8 frames
+// lifts and slides out left.
 // THE JOINS (camplan OVERVIEW item 4): a card's end, its exit included, is CLIPPED before the next whip or match join
 // (beats.ts joinClip: none in the 6 frames before a whip's cut, none across a whip or a match cut); its exit flutter
 // runs over the clipped end. Card 2 (B09) is gone by 1398, before the B -> C whip (cut 1405). Card 5 crosses G's garden
@@ -216,6 +219,9 @@ const Slip: React.FC<{ L: FactLayout; seed: number; lift: number }> = ({ L, seed
 };
 
 // ---------------------------------------------------------------------------------------------------- the card
+/** the frames on which a card is DEAD STILL (its settled hold: after the NIN-frame flutter in, before the NOUT-frame
+ *  leave), inclusive; null for a card too short to settle. Checks and proofs read it (never a typed frame) */
+export const cardStill = (c: Pick<Card, "from" | "to">): [number, number] | null => (c.to - NOUT >= c.from + NIN - 1 ? [c.from + NIN - 1, c.to - NOUT] : null);
 export const FactCard: React.FC<{ f: number; card?: Pick<Card, "zh" | "en">; from?: number; to?: number }> = ({ f, card, from, to }) => {
   useOverlayFont();
   const c = card ? { zh: card.zh, en: card.en, from: from ?? 0, to: to ?? 1e9, n: 0 } : factCardAt(f);
@@ -224,10 +230,9 @@ export const FactCard: React.FC<{ f: number; card?: Pick<Card, "zh" | "en">; fro
   const kin = easeOutCubic(clamp01((t + 1) / NIN)), inv = 1 - kin;
   const u = easeInCubic(clamp01((NOUT - left) / NOUT));             // the leave: 0 .. ~1 on the last frame
   const wob = 3.2 * Math.sin(t * 1.7) * inv * inv;                   // the damped flutter
-  const float = t >= NIN ? 1.5 * Math.sin((2 * Math.PI * (t - NIN)) / 100) : 0;
-  const sway = t >= NIN ? 0.22 * Math.sin((2 * Math.PI * (t - NIN)) / 150) : 0;
-  const dx = -90 * inv - 120 * u, dy = -28 * inv + 6 * wob - 16 * u + float;
-  const rot = TILT - 9 * inv + wob + sway - 7 * u;
+  // AT REST NOTHING MOVES (no float, no sway: see the header): inv, wob and u are all 0 there, so dx = dy = 0, rot = TILT
+  const dx = -90 * inv - 120 * u, dy = -28 * inv + 6 * wob - 16 * u;
+  const rot = TILT - 9 * inv + wob - 7 * u;
   const op = clamp01((t + 1) / 4) * clamp01((left + 1) / 6);
   const lift = Math.max(inv, u);
   const L = factLayout(c);

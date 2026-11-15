@@ -15,7 +15,8 @@
 //               frames later): in one frame the whole UI goes DEAD, the way nothing in a blink does: the lamp goes out
 //               to a dead GREY glass (no red, no glow), "REC", the timestamp and the battery's outline and % all turn
 //               the same warm grey, and the battery's fill is emptied. From that frame it holds still (nothing breathes)
-//               until the end black (Pose.top) covers it.
+//               until the end black (Pose.top) covers it. 15 Nov: THE SWITCH-OFF (hud/poweroff.tsx) squeezes the whole
+//               frame, this dead UI with it, to a line from the same frame, so the grey UI is seen collapsing (5 frames).
 //     时间戳    the scene's timestamp: the time of day (story.ts SCENE_STAMP: 清晨 in pale gold) and the clock (05:00,
 //               warm white) in ONE CHINESE ROW, like the cards (the owner's default, 14 Nov night: no English row under
 //               it in the Chinese film; STAMP_EN_ROW); lang en: the clock alone over the English word (EARLY MORNING,

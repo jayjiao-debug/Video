@@ -2,7 +2,8 @@
 // voice and has a box the effects build laid on TODAY's shots; a rebuilt scene refits its own items in its own file,
 // hud/ms/fit_A.ts .. fit_G.ts (one per scene, so seven builders never edit one file), and when.ts lays each fit over its
 // item at import. A fit file may only name the items of its own scene (SCENE_OF; when.ts throws on another scene's).
-//   fit_A  title (approved, fitted to today's door: refit only if the rebuilt door moves), banner (A04: provisional)
+//   fit_A  title (approved, fitted to today's door: refit only if the rebuilt door moves), banner (A04: provisional);
+//          knock (15 Nov, the knock mark on his door: placed by hud/ms/knockplace.ts from the world, nothing to fit)
 //   fit_B  flick (B01: provisional, held off until B keeps his flicking hand in frame), card / meter0 (approved, the
 //          freeze), tick1 (B09: the slot; keep his face clear of it)
 //   fit_C  stamp (C07: provisional, rides the chair's seat)
@@ -31,9 +32,9 @@ import type { Rect } from "../../../../kit/overlay/frame";
 import { FPS, line, type SceneId } from "../../story";
 
 /** the skin's items (EFFECTS_PLAN rows 1-10) */
-export type MsId = "title" | "banner" | "flick" | "card" | "meter0" | "tick1" | "stamp" | "tick2" | "lunch" | "meter1";
+export type MsId = "title" | "banner" | "flick" | "card" | "meter0" | "tick1" | "stamp" | "tick2" | "lunch" | "meter1" | "knock";
 /** the scene each item belongs to (its fit file) */
-export const SCENE_OF: Record<MsId, SceneId> = { title: "A", banner: "A", flick: "B", card: "B", meter0: "B", tick1: "B", stamp: "C", tick2: "D", lunch: "E", meter1: "G" };
+export const SCENE_OF: Record<MsId, SceneId> = { title: "A", banner: "A", flick: "B", card: "B", meter0: "B", tick1: "B", stamp: "C", tick2: "D", lunch: "E", meter1: "G", knock: "A" };
 /** one item's fit (see the header) */
 export type MsFitItem = { box?: Rect[]; provisional?: boolean; from?: number; to?: number; beats?: Record<string, number>; heldOff?: string | null; slip?: Rect };
 /** a scene's fits: item id -> its fit */

@@ -13,6 +13,12 @@ Sources of truth (read them):
 - Lines file (ids, speakers, subtitles zh+en per screen, silent beats, cards): `scripts/newton/voice/newton_lines.json`
 - Facts: `/mnt/project-files/next-video/newton/facts_checked.md` (sections A and E). Myths to keep out: section C
   (no apple hitting his head, no "standing on shoulders" scene, no wig at home).
+- **15 Nov, the owner's nine notes on cut v5** change this plan in six places (the as-built facts are the dated block at
+  the top of `README.md`): the film OPENS on her walk up to his door, 「终于到了！」, then the two raps with a knock
+  mark on the leaf; the morning meal is BREAKFAST (B01); the handkerchief FACE WIPE is back in D's street; fact cards 1
+  and 3 hold 2.6 s and no card moves at rest; there IS music under the mother talk (F09-F16: the one exception to "no
+  music in the quiet stretch"; still no screen effects and no camera tricks there); the film ends on an old-TV
+  SWITCH-OFF (a line, a dot, black) on the power-off sound; 大哥 in the garden is a stone statue on a pedestal.
 
 The engine is a COPY of the Qin film (`src/videos/qin/`, same branch), which is a copy of Wanbi's. Read
 `src/videos/qin/README.md` (the segment builder's contract: World, places, people, props, camera, HUD, checks),

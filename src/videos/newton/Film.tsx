@@ -26,7 +26,9 @@
 // HELD frame msHold(f); the whole layer hidden by Pose.hud === false), P.overlays, SKIN A's title and effects (hud/ms
 // <MsTitle>, <MsFx>; the skin's three layers hidden with the HUD layer), her whisper bubble, the subtitle (hud/:
 // Chinese large, English small under it; the bubble and the subtitle hidden on the card's frozen frames), P.top (the end
-// black covers the HUD too), the slate, and last THE PHONE MASK (hud/phone.tsx) when the prop `mask` is true. The old
+// black covers the HUD too), the slate, and last THE PHONE MASK (hud/phone.tsx) when the prop `mask` is true. ROUND ALL
+// OF IT: THE SWITCH-OFF (hud/poweroff.tsx <PowerOff>, the owner 15 Nov): from BEAT.G.cameraOff (the power-off click) the
+// whole frame squeezes to a bright line, a dot, then black to the end (the end black of segG is under it). The old
 // title block (hud/title.tsx TitleCard) is no longer mounted: skin A's <MsTitle> replaces it.
 // Input props: src/kit/film/env.ts (lang, nocap, nohud, noov, cover, zoom / sx / sy / ov, nopost, slate, kick, dbg,
 // ovonly, inksamples), and this film's own:
@@ -63,6 +65,7 @@ import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./
 import { Caption, FactCard, PhoneMask, VlogHud } from "./hud";
 // SKIN A 「手稿」 (hud/ms/): the title, the two intro cards, the 综艺 effects; the freeze (freeze.ts) and the wash (wash.ts)
 import { MS_FX, MsCard, MsFx, MsProof, MsTitle, msAny, msScreen, msStillFrame, type MsCtx } from "./hud/ms";
+import { MsKnock } from "./hud/ms/knock";   // the knock mark on his door (scene A; hud/ms/knockplace.ts)
 import { FREEZE, msFrozen, msHold, washAt } from "./freeze";
 import { msWash, msWashBg } from "./wash";
 // THE CUT-OUT (cutout.ts: the IsolatePass state of the card's frames; the props he holds stay out of the wash too)
@@ -70,6 +73,8 @@ import { cutHeld, cutLead, cutState } from "./cutout";
 // THE WHISPER (hud/whisper.tsx, whisper.ts): her asides' bubble and darkened edges, under the HUD layer; the bubble
 // replaces the subtitle on a whisper line's frames
 import { Whisper, whisperCapAt } from "./hud/whisper";
+// THE SWITCH-OFF (hud/poweroff.tsx): the film's last 1.4 s, the whole frame squeezed to a line, a dot, black
+import { PowerOff } from "./hud/poweroff";
 import { SEG as SEG_A } from "./shots/segA";
 import { SEG as SEG_B } from "./shots/segB";
 import { SEG as SEG_C } from "./shots/segC";
@@ -261,6 +266,7 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
   const onReady = useCallback(() => continueRender(handle), [handle]);
   React.useEffect(() => { if (OVONLY && world) continueRender(handle); }, [world, handle]); // ovonly has no <Inner> to release the world handle
   return (
+    <PowerOff f={f}>{/* THE SWITCH-OFF wraps everything (the same elements on every frame; hud/poweroff.tsx) */}
     <AbsoluteFill style={{ background: OVONLY ? "transparent" : "#0d0e16" }}>
       <ThreeCanvas width={W} height={H} shadows="percentage" gl={GL_OPTS} camera={CAM_OPTS} onCreated={onCreated} style={OVONLY ? { visibility: "hidden" } : undefined}>
         {world && P && !OVONLY ? <Inner world={world} P={P} iso={iso} onReady={onReady} /> : null}
@@ -269,7 +275,7 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
       {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsCard f={f} ctx={ms} /></AbsoluteFill> : null}
       {P && showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud h={msHold(f)} P={P} lit={frozen ? Math.min(1, (f - FREEZE.at) / 4) : 0} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
-      {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsTitle f={f} ctx={ms} /><MsFx f={f} ctx={ms} /></AbsoluteFill> : null}
+      {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsTitle f={f} ctx={ms} /><MsFx f={f} ctx={ms} /><MsKnock f={f} /></AbsoluteFill> : null}
       {P && !frozen ? <Whisper f={f} words={P.captions !== false && !NOCAP && !CAP_TEST} edges={false} /> : null}
       {P && !frozen && P.captions !== false && !NOCAP && (CAP_TEST || !whisperCapAt(f)) ? <Caption f={f} cap={CAP_TEST ?? undefined} /> : null}
       {P?.top && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none" }}>{P.top}</AbsoluteFill> : null}
@@ -277,5 +283,6 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
       {MS_FX.proof !== null ? <MsProof t={MS_FX.proof} /> : null}
       {showMask ? <PhoneMask /> : null}
     </AbsoluteFill>
+    </PowerOff>
   );
 };

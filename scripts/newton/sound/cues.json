@@ -43,12 +43,12 @@
    "until": [
     "A",
     "from",
-    1.5
+    2.7
    ],
-   "gain": 7,
-   "fade": 0,
+   "gain": 4,
+   "fade": 1.9,
    "fade_out": 0.012,
-   "note": "STOP 1/5: only he and the quill freeze, 1.5-2.0 s (frames 45-59, story.ts COLD_OPEN_S.stop); the scratching ends in 12 ms on frame 45 while the birdsong and the music go on | r2: -9 -> +7 dB (MAJOR 1; director note 4): the quill at the music's level, so its dead stop at 1.5 s is heard (the mix drops 4.9 dB, 7.5 dB in the phone band, measured)"
+   "note": "STOP 1/5: only he and the quill freeze, 1.5-2.0 s (frames 45-59, story.ts COLD_OPEN_S.stop); the scratching ends in 12 ms on frame 45 while the birdsong and the music go on | r2: -9 -> +7 dB (MAJOR 1; director note 4): the quill at the music's level, so its dead stop at 1.5 s is heard (the mix drops 4.9 dB, 7.5 dB in the phone band, measured) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"A\", \"from\", 1.5] -> [\"A\", \"from\", 2.7]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S); the quill is heard through his door while she walks up | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): gain +7 -> +4 dB and a 1.9 s fade in (to story.ts COLD_OPEN_S.arrive): she walks up to his door, so the quill comes nearer with her, and A01a 终于到了！ (2.0-3.3 s at most) stands 10 LU over the bed (at +7 the bed under her line was -27.1 LUFS, 9 LU under a line of hers); the burst after the stop keeps +7"
   },
   {
    "label": "A cold open: the fast burst after the stop",
@@ -56,27 +56,27 @@
    "at": [
     "A",
     "from",
-    2.0
+    3.2
    ],
    "until": [
     "A",
     "from",
-    2.65
+    3.85
    ],
    "gain": 7,
    "rate": 1.35,
    "in": 2.55,
    "fade": 0.008,
    "fade_out": 0.06,
-   "note": "frame 60 on: he scribbles on, 1.35x fast (sampler speed); he lifts the quill 14 frames (his reaction delay to a person) after the first rap: 2.65 s | r2: -9 -> +7 dB (MAJOR 1; director note 4): the quill at the music's level, so its dead stop at 1.5 s is heard (the mix drops 4.9 dB, 7.5 dB in the phone band, measured)"
+   "note": "frame 60 on: he scribbles on, 1.35x fast (sampler speed); he lifts the quill 14 frames (his reaction delay to a person) after the first rap: 2.65 s | r2: -9 -> +7 dB (MAJOR 1; director note 4): the quill at the music's level, so its dead stop at 1.5 s is heard (the mix drops 4.9 dB, 7.5 dB in the phone band, measured) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.0] -> [\"A\", \"from\", 3.2]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"A\", \"from\", 2.65] -> [\"A\", \"from\", 3.85]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
   },
   {
    "label": "A the morning bed (pizzicato + harpsichord)",
-   "clip": "mus_morning_v5",
+   "clip": "mus_morning_v6",
    "at": [
     "A",
     "from",
-    2.2
+    3.4
    ],
    "until": [
     "B",
@@ -87,7 +87,7 @@
    "sync": 2.06,
    "fade": 0,
    "fade_out": 0.6,
-   "note": "sync: the clip's eighth-note onset at 2.06 s lands on the first rap (2.2 s), so the clip starts at 0.14 s (its first plucked note at 0.17 s, after the REC beep) and the second rap (2.49 s) falls on its bar-2 downbeat (clip 2.35 s); through card 2, fading 0.6 s into the B->C whip; v3 static gain kept | 14 Nov late evening (the full gaps, G1 + G2 + G3 = +4.2 s under it): mus_morning_v5.mp3 = mus_morning.mp3 with one loop-back of 6 beats with a 40 ms crossfade, kept by the owner on 14 Nov (6 beats = 3.46154 s; 104 bpm in 4/4, a bar 2.3077 s), all in the intro (tools/make_mm_v5.py): the stream plays the original to bar 4 beat 3 (clip 8.083 s) and jumps back 6 beats to bar 3's downbeat (4.621 s), so the plucked intro reads X Y X Y' X Y (Y' = bar 4's first half, a 2/4 bar; bar 4's second half and bar 3's first half are the same tonic arpeggio); no bar is played twice in a row; no stretch, no pitch shift. ONE join: 40 ms equal power at clip 8.070-8.110 s, 10 ms before bar 4 beat 3's pluck = film 8.21-8.25 s (under A03, after the title hold). Everything before it is the old file sample for sample (the D-major chord on rap 1, rap 2 on its eighth, the cold open, the title hold 5.90-7.80); the theme enters at film 12.84 s (r2 9.38); the written ending's last chord (clip 48.69 s, now 52.15) sounds at film 52.29 s (f1569), 0.91 s before the B -> C cut (f1596), its natural tail taking the rest into the cut under the same 0.6 s fade. Two whole bars (+4.615 s) would put the last chord 0.28 s after the cut; one bar alone would end it 2.0 s early, under card 2."
+   "note": "sync: the clip's eighth-note onset at 2.06 s lands on the first rap (2.2 s), so the clip starts at 0.14 s (its first plucked note at 0.17 s, after the REC beep) and the second rap (2.49 s) falls on its bar-2 downbeat (clip 2.35 s); through card 2, fading 0.6 s into the B->C whip; v3 static gain kept | 14 Nov late evening (the full gaps, G1 + G2 + G3 = +4.2 s under it): mus_morning_v5.mp3 = mus_morning.mp3 with one loop-back of 6 beats with a 40 ms crossfade, kept by the owner on 14 Nov (6 beats = 3.46154 s; 104 bpm in 4/4, a bar 2.3077 s), all in the intro (tools/make_mm_v5.py): the stream plays the original to bar 4 beat 3 (clip 8.083 s) and jumps back 6 beats to bar 3's downbeat (4.621 s), so the plucked intro reads X Y X Y' X Y (Y' = bar 4's first half, a 2/4 bar; bar 4's second half and bar 3's first half are the same tonic arpeggio); no bar is played twice in a row; no stretch, no pitch shift. ONE join: 40 ms equal power at clip 8.070-8.110 s, 10 ms before bar 4 beat 3's pluck = film 8.21-8.25 s (under A03, after the title hold). Everything before it is the old file sample for sample (the D-major chord on rap 1, rap 2 on its eighth, the cold open, the title hold 5.90-7.80); the theme enters at film 12.84 s (r2 9.38); the written ending's last chord (clip 48.69 s, now 52.15) sounds at film 52.29 s (f1569), 0.91 s before the B -> C cut (f1596), its natural tail taking the rest into the cut under the same 0.6 s fade. Two whole bars (+4.615 s) would put the last chord 0.28 s after the cut; one bar alone would end it 2.0 s early, under card 2. | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.2] -> [\"A\", \"from\", 3.4]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S): the clip's onset stays ON RAP 1 (rap 2 on its bar-2 downbeat); the lines from A01b on are 0.2 s later against it than in cut v5, B (card 1 is 1.1 s shorter) 0.9 s earlier: the bed's written ending now falls ON the B -> C cut, the sound lane re-fits it | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip mus_morning_v5 -> mus_morning_v6 (the same edit with 4 beats added instead of 6: remix_v5/tools/make_mm_v5.py --beats 4, the same join at clip 8.070-8.110 s, now film 9.41-9.45 s under A03). The intro moved the cue 1.2 s later and the B -> C cut only 0.3 s, so v5's last chord fell ON the cut (53.495 s) under the fade; v6's falls at 52.34 s, 1.16 s before the cut (cut v5: 0.91 s)"
   },
   {
    "label": "B room tone (to the freeze)",
@@ -366,42 +366,44 @@
     0
    ],
    "until": [
-    "D",
-    "from",
-    2.1
+    "D01",
+    "start",
+    -0.4
    ],
    "gain": -21,
    "loop": true,
    "fade": 0.3,
-   "fade_out": 0.1
+   "fade_out": 0.1,
+   "note": " | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): in 10.41 (the clip is a 12.0 s loop): the clip's start falls on BEAT.D.go again (D from + 1.59 s = D01 start - 2.5 s), where it was in the owner's cut, so the street's three loud clops (clip 0.73 / 1.04 / 1.40 s, 20 dB over the street's own level) are heard where they were, after his two steps the wrong way (70.43 / 70.70 / 71.04 s). With the loop starting on the cut they fell on f2066, f2074 and f2085, inside the wipe and 16-20 dB over it. The 1.6 s in front (the wipe) play the clip's quiet end (10.41-12.0 s): the street is 7-17 dB under the wipe's two swishes",
+   "in": 10.41
   },
   {
    "label": "D the Schools: the door's creak",
    "clip": "sfx_big_door",
    "at": [
-    "D",
-    "from",
-    2.1
+    "D01",
+    "start",
+    -0.4
    ],
    "until": [
-    "D",
-    "from",
-    2.6
+    "D01",
+    "start",
+    0.1
    ],
    "gain": -28,
    "in": 1.55,
    "sync": 1.62,
    "fade": 0.01,
    "fade_out": 0.08,
-   "note": "the tall door's last creaks (the ratchet, clip 1.62 s) ON the cut into the hall, ending 66.20 s as D01 begins (voice from 66.15 s)"
+   "note": "the tall door's last creaks (the ratchet, clip 1.62 s) ON the cut into the hall, ending 66.20 s as D01 begins (voice from 66.15 s) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): until [\"D\", \"from\", 2.6] -> [\"D01\", \"start\", 0.1]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
   },
   {
    "label": "D the hall's room tone",
    "clip": "amb_hall",
    "at": [
-    "D",
-    "from",
-    2.1
+    "D01",
+    "start",
+    -0.4
    ],
    "until": [
     "D",
@@ -411,15 +413,15 @@
    "gain": -10,
    "loop": true,
    "fade": 0.15,
-   "note": "dips 6 dB under D01 and D05 (the whisper)"
+   "note": "dips 6 dB under D01 and D05 (the whisper) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
   },
   {
    "label": "D mus_lecture (its composed rest under 'miss a lecture')",
    "clip": "mus_lecture",
    "at": [
-    "D",
-    "from",
-    0
+    "D01",
+    "start",
+    -2.5
    ],
    "until": [
     "D",
@@ -431,7 +433,7 @@
    "sync": 0.715,
    "fade": 0.03,
    "fade_out": 0.8,
-   "note": "a note onset (clip 0.715 s) ON the C->D cut; the clip's own rest (6.35-7.60 s) falls 69.24-70.49 s: from 'miss' (69.24 s) to D03's first sound (70.47 s), where it comes back. Written into the cue's alignment, not a level dip"
+   "note": "a note onset (clip 0.715 s) ON the C->D cut; the clip's own rest (6.35-7.60 s) falls 69.24-70.49 s: from 'miss' (69.24 s) to D03's first sound (70.47 s), where it comes back. Written into the cue's alignment, not a level dip | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 0] -> [\"D01\", \"start\", -2.5]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go): the clip's rest stays under 'miss a lecture'; the wipe's 1.6 s play on the street alone until the sound lane decides"
   },
   {
    "label": "E room tone",
@@ -724,80 +726,22 @@
    "note": "as v4"
   },
   {
-   "label": "F the cello note (D3), first bow",
-   "clip": "mus_cello",
+   "label": "F the mother music (theorbo and bass viol, D minor; the two cello bows are inside it)",
+   "clip": "mus_mother",
    "at": [
-    "F14",
+    "F08",
     "end",
-    0.05
-   ],
-   "until": [
-    "F15",
-    "end",
-    -0.2
-   ],
-   "gain": -21,
-   "pitch": 2,
-   "fade": 0.3,
-   "fade_out": 0.6,
-   "note": "the clip is a C3: retuned +2 semitones to D3, length kept (rubberband), so it sits in the scene's D minor (REMIX_v3 open issue 3)"
-  },
-  {
-   "label": "F the cello note (D3), second bow; ends with F16",
-   "clip": "mus_cello",
-   "at": [
-    "F15",
-    "end",
-    -0.3
+    0
    ],
    "until": [
     "F16",
     "end",
     0.3
    ],
-   "gain": -25,
-   "pitch": 2,
-   "fade": 0.3,
-   "fade_out": 1.0,
-   "note": "'The cello ends; only the fire': gone by the race's start (F16 end + 0.3 s)"
-  },
-  {
-   "label": "F the cello's double two octaves up (D5), first bow",
-   "clip": "mus_cello",
-   "at": [
-    "F14",
-    "end",
-    0.05
-   ],
-   "until": [
-    "F15",
-    "end",
-    -0.2
-   ],
-   "gain": -24,
-   "pitch": 26,
-   "fade": 0.3,
-   "fade_out": 0.6,
-   "note": "r2 (MAJOR 4): +14 -> +26 semitones (D5, 587 Hz, inside a phone's 450 Hz-9 kHz band; the D4 layer's fundamental was under it and its in-band partials 24 dB down, so a phone heard the cello 7-12 dB under the fire). -27/-31 -> -24/-28 dB. Interim: a farm-rendered real D cello note with bow noise in the D4-A4 register (open issue)"
-  },
-  {
-   "label": "F the cello's double two octaves up (D5), second bow",
-   "clip": "mus_cello",
-   "at": [
-    "F15",
-    "end",
-    -0.3
-   ],
-   "until": [
-    "F16",
-    "end",
-    0.3
-   ],
-   "gain": -28,
-   "pitch": 26,
-   "fade": 0.3,
-   "fade_out": 1.0,
-   "note": "r2 (MAJOR 4): +14 -> +26 semitones (D5, 587 Hz, inside a phone's 450 Hz-9 kHz band; the D4 layer's fundamental was under it and its in-band partials 24 dB down, so a phone heard the cello 7-12 dB under the fire). -27/-31 -> -24/-28 dB. Interim: a farm-rendered real D cello note with bow noise in the D4-A4 register (open issue)"
+   "gain": -18,
+   "fade": 2.0,
+   "fade_out": 2.6,
+   "note": "owner's note 7 (15 Nov): soft music under Newton talking about his mother, F09-F16. ONE clip, ONE static gain (music is never ducked): scripts/newton/sound/make_mother.py composes it on the voice timing (every plucked note and every bow anchored on a line, each note checked to fall in a pause of the voice) and synthesises it; it starts in the silence after F08 守谁？ (2.0 s fade in), ends with the old cello's end (F16 end + 0.3, 2.6 s fade out: F16 ends on the fire, the clock's stroke 0.7 s later). It REPLACES the four mus_cello cues (D3 and D5, two bows: F14 end + 0.05 .. F15 end - 0.2 at -21 / -24 dB and F15 end - 0.3 .. F16 end + 0.3 at -25 / -28 dB): the same two bows, same anchors, same levels, are inside the clip (the clip is 3 dB under them, hence -18). The sparser alternative is clips/mus_mother_alt.mp3 (same anchors, same gain; not in the mix). After any change of F08-F16's timing: make_mother.py again (make_mother.py --check says whether the clip is stale)"
   },
   {
    "label": "G the fire (embers' crackle)",
@@ -909,13 +853,13 @@
    "until": [
     "G",
     "to",
-    -0.3
+    -1.1
    ],
    "gain": -28,
    "loop": true,
    "fade": 0.06,
-   "fade_out": 0.5,
-   "note": "r2: +6 dB (MINOR 10)"
+   "fade_out": 0.3,
+   "note": "r2: +6 dB (MINOR 10) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): until [\"G\", \"to\", -0.3] -> [\"G\", \"to\", -1.1], fade_out 0.5 -> 0.3: the camera's own sound goes with its picture. The room and the crickets ran on under the black to the film's last frame (a chirp at -25 dBFS on f5443, 7 frames after the dot had gone, more on f5449 and f5455, louder there than the switch-off's own tail); now they fade over the squeeze and the line (f5420-5428, from the click on [\"G\", \"to\", -1.4]) and what is heard on the black is the tube"
   },
   {
    "label": "G crickets, faint, through his open door",
@@ -928,13 +872,13 @@
    "until": [
     "G",
     "to",
-    0
+    -1.1
    ],
    "gain": 22,
    "loop": true,
    "fade": 0.06,
-   "fade_out": 1.0,
-   "note": "r2: +6 dB (MINOR 10): the ending was 23.5 dB under the body, a dropout on a phone"
+   "fade_out": 0.3,
+   "note": "r2: +6 dB (MINOR 10): the ending was 23.5 dB under the body, a dropout on a phone | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): until [\"G\", \"to\", 0] -> [\"G\", \"to\", -1.1], fade_out 1.0 -> 0.3: the camera's own sound goes with its picture. The room and the crickets ran on under the black to the film's last frame (a chirp at -25 dBFS on f5443, 7 frames after the dot had gone, more on f5449 and f5455, louder there than the switch-off's own tail); now they fade over the squeeze and the line (f5420-5428, from the click on [\"G\", \"to\", -1.4]) and what is heard on the black is the tube"
   }
  ],
  "hits": [
@@ -950,20 +894,106 @@
    "note": "her camera starts recording on frame 1 (the REC lamp lit): 1 kHz, audible about 50 ms"
   },
   {
+   "label": "A her step 1 of 4 up to his door (the last stair tread)",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    0.3
+   ],
+   "gain": -5.5,
+   "in": 0.512,
+   "sync": 0.5302,
+   "len": 0.16,
+   "rate": 0.88,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's): the darkest of the clip's seven steps, a little slower (rate 0.88): the tread is hollow"
+  },
+  {
+   "label": "A her step 2 of 4 (the landing's boards)",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    0.72
+   ],
+   "gain": -7.5,
+   "in": 0.795,
+   "sync": 0.8116,
+   "len": 0.17,
+   "rate": 0.96,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's)"
+  },
+  {
+   "label": "A her step 3 of 4",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    1.17
+   ],
+   "gain": -10.0,
+   "in": 0.975,
+   "sync": 0.9928,
+   "len": 0.17,
+   "rate": 1.0,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's)"
+  },
+  {
+   "label": "A her step 4 of 4: the stop",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "A",
+    "from",
+    1.67
+   ],
+   "gain": -12.5,
+   "in": 0.212,
+   "sync": 0.2282,
+   "len": 0.16,
+   "rate": 0.92,
+   "fade": 0.004,
+   "fade_out": 0.05,
+   "note": "the intro (owner's note 1): her footsteps on the old boards, on story.ts COLD_OPEN_S.steps (BEAT.A.walkSteps f9 / 22 / 35 / 50), slowing with the beats (0.42, 0.45, 0.50 s apart). Four different steps of sfx_stairs_up (not the three Newton's walk to the door uses 3 s later; his are at -20 dB, hers are the camera's own feet). No low-pass: on a phone speaker the step is its tap (the first try, under a 2.6 kHz low-pass at -15 dB, sat 5-10 dB under the quill in the phone band). The levels fall step by step into the stop (the loudest 100 ms -27.9, -29.1, -30.3, -32.3 LUFS; the raps are -20.5 and -19.7) and in the phone band (450 Hz-9 kHz) each step stands 7-14 dB over the bed at its own moment; the loudest scratch or chirp within 120 ms is as loud as steps 1 and 4 and 4-12 dB under steps 2 and 3 (at 3 dB less every step was one tap among the quill's): her last foot lands short and takes her weight (segA: f50-57); the board creaks under it"
+  },
+  {
+   "label": "A the board creaks under her as she stops",
+   "clip": "sfx_board_creak",
+   "at": [
+    "A",
+    "from",
+    1.745
+   ],
+   "gain": -22,
+   "note": "the intro (owner's note 1): one small creak as her weight settles (f52-57, between her last step and BEAT.A.arrive); synthesised (scripts/newton/sound/make_creak.py: stick-slip, 0.19 s, 390 / 870 Hz), not the hinge's creak (sfx_big_door, 3.72 s). Ends 1.93 s, before A01a (2.0 s). -22 dB: small, 4 dB over the bed at its moment in the phone band, 3 dB under it full band"
+  },
+  {
    "label": "A rap 1 (the invisible hand)",
    "clip": "sfx_knock",
    "at": [
     "A",
     "from",
-    2.2
+    3.4
    ],
-   "gain": -8,
-   "len": 0.095,
-   "fade_out": 0.01,
-   "note": "the clip's first rap only (0-0.095 s); story.ts COLD_OPEN_S.knock = 2.2 s = frame 66: the frame nods forward a hair, the leaf swings wider | r2: (director note 4): -13 -> -8 dB and an 80 Hz 4-pole high-pass (the clip's subsonic swing): at least 3 dB over the quill burst it cuts into",
+   "gain": -7,
+   "len": 0.24,
+   "fade_out": 0.1,
+   "note": "the clip's first rap only (0-0.095 s); story.ts COLD_OPEN_S.knock = 2.2 s = frame 66: the frame nods forward a hair, the leaf swings wider | r2: (director note 4): -13 -> -8 dB and an 80 Hz 4-pole high-pass (the clip's subsonic swing): at least 3 dB over the quill burst it cuts into | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.2] -> [\"A\", \"from\", 3.4]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): KNUCKLES ON OAK. The clip is 'a hard object on an old oak door': 48 % of the rap's energy was over 1.6 kHz (centroid 2.0 kHz) and its tail was cut 13 dB down at 95 ms. Now a low shelf (+7 dB under 450 Hz) and a 2.8 kHz low-pass (centroid 0.94 kHz, a third of the energy at 200-400 Hz: the door's body) and the rap rings out (len 0.095 -> 0.24 s, fade 0.10: the 80 Hz high-pass already takes the clip's subsonic swing); gain -8 -> -7 dB (the same loudness, 1 dB more for the phone band)",
    "hp": [
     80,
     4
+   ],
+   "lowshelf": [
+    450,
+    7
+   ],
+   "lp": [
+    2800
    ]
   },
   {
@@ -972,16 +1002,24 @@
    "at": [
     "A",
     "from",
-    2.49
+    3.69
    ],
-   "gain": -8,
-   "len": 0.095,
-   "fade_out": 0.01,
-   "note": "the clip's second rap (its attack at 0.105 s) 0.29 s after the first (one eighth of the morning bed): frame 75 | r2: the knock itself (clip 0-0.095 s, as rap 1); it played the clip from 0.095 s, which is rap 1's tail and a swing under 40 Hz, 16 dB under rap 1 in loudness. -13 -> -8 dB, 80 Hz high-pass, as rap 1",
+   "gain": -6.5,
+   "len": 0.24,
+   "fade_out": 0.1,
+   "note": "the clip's second rap (its attack at 0.105 s) 0.29 s after the first (one eighth of the morning bed): frame 75 | r2: the knock itself (clip 0-0.095 s, as rap 1); it played the clip from 0.095 s, which is rap 1's tail and a swing under 40 Hz, 16 dB under rap 1 in loudness. -13 -> -8 dB, 80 Hz high-pass, as rap 1 | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.49] -> [\"A\", \"from\", 3.69]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S) | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): KNUCKLES ON OAK. The clip is 'a hard object on an old oak door': 48 % of the rap's energy was over 1.6 kHz (centroid 2.0 kHz) and its tail was cut 13 dB down at 95 ms. Now a low shelf (+7 dB under 450 Hz) and a 2.8 kHz low-pass (centroid 0.94 kHz, a third of the energy at 200-400 Hz: the door's body) and the rap rings out (len 0.095 -> 0.24 s, fade 0.10: the 80 Hz high-pass already takes the clip's subsonic swing); gain -8 -> -6.5 dB (the same loudness, 1 dB more for the phone band); rap 2 at rate 0.94 and 0.5 dB more: the second knock a little firmer and lower (its mark on the door is the bigger one), not the same sample twice",
    "hp": [
     80,
     4
-   ]
+   ],
+   "lowshelf": [
+    450,
+    7
+   ],
+   "lp": [
+    2800
+   ],
+   "rate": 0.94
   },
   {
    "label": "A pluck on rap 1 (D4)",
@@ -989,10 +1027,10 @@
    "at": [
     "A",
     "from",
-    2.2
+    3.4
    ],
    "gain": 0,
-   "note": "D4 over the bed's D-major chord (clip 2.06 s)"
+   "note": "D4 over the bed's D-major chord (clip 2.06 s) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.2] -> [\"A\", \"from\", 3.4]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
   },
   {
    "label": "A pluck on rap 2 (A4)",
@@ -1000,11 +1038,11 @@
    "at": [
     "A",
     "from",
-    2.49
+    3.69
    ],
    "gain": -2,
    "rate": 1.4983,
-   "note": "the same pluck a fifth up (sampler speed 1.498 = +7 semitones): A4, in the bed's chord at clip 2.35 s (G4 A4 F#4)"
+   "note": "the same pluck a fifth up (sampler speed 1.498 = +7 semitones): A4, in the bed's chord at clip 2.35 s (G4 A4 F#4) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.49] -> [\"A\", \"from\", 3.69]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
   },
   {
    "label": "A hinge creak: the leaf swings wider",
@@ -1012,7 +1050,7 @@
    "at": [
     "A",
     "from",
-    2.52
+    3.72
    ],
    "gain": -32,
    "in": 0.1,
@@ -1020,7 +1058,7 @@
    "rate": 1.25,
    "fade": 0.06,
    "fade_out": 0.12,
-   "note": "the big door's slow creak, 1.25x (a smaller door), 0.52 s from the second rap"
+   "note": "the big door's slow creak, 1.25x (a smaller door), 0.52 s from the second rap | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"A\", \"from\", 2.52] -> [\"A\", \"from\", 3.72]: the intro (she walks up, 终于到了！, then the raps): the cold open's block of stop / burst / raps is 1.2 s later (story.ts COLD_OPEN_S)"
   },
   {
    "label": "A step 1 of 3 on bare boards (he comes to the door)",
@@ -1592,76 +1630,119 @@
    "note": "the door thud 1.4x under the knock, for the jolt's weight | r2: (POLISH 15): C07 end + 0.65 = 63.04 s (f1891), on mus_noon's beat 25; the picture's jolt follows (SYNC_POINTS)"
   },
   {
-   "label": "D his step 1 of 2 the wrong way",
+   "label": "D his footfall out of the gate, on the cut",
    "clip": "sfx_steps_echo",
    "at": [
     "D",
     "from",
-    0.15
+    0.0
+   ],
+   "gain": -27,
+   "in": 0.62,
+   "sync": 0.65,
+   "len": 0.3,
+   "fade_out": 0.15,
+   "note": "the wipe's staging (D lane, 15 Nov): he strides out of the arch up to her lens, two footfalls, f2043 (the cut) and f2055 (BEAT.D.wipeIn); the same step as his two the wrong way (f2095, f2107), this one 5 dB under them (it lands with the cut)"
+  },
+  {
+   "label": "D his second footfall: he stops at her lens (the cloth darts in)",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D",
+    "from",
+    0.4
+   ],
+   "gain": -24,
+   "in": 0.62,
+   "sync": 0.65,
+   "len": 0.3,
+   "fade_out": 0.15,
+   "note": "f2055 = BEAT.D.wipeIn, 6 frames before stroke 1"
+  },
+  {
+   "label": "D the handkerchief wipe: two strokes (the invisible hand)",
+   "clip": "sfx_wipe",
+   "at": [
+    "D",
+    "from",
+    0.6
+   ],
+   "gain": -16,
+   "note": "the owner, 15 Nov: the face wipe is back. The whole clip (0.836 s = 25 frames): its two swishes are its frames 0-6 and, louder, 13-19 = beats.ts BEAT.D.wipe1 / wipe2 (the ink a smudge from wipe + 3, clean from wipe + 16); level as cut 2ecee1c had it (-20 dB), the sound lane polishes | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): new cue | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): gain -20 -> -16 dB and a 15 ms fade in (the clip starts inside its first swish). Swish 1 on f2061-2063 (its peak f2063.5, BEAT.D.smudge 2064), swish 2 on f2074-2080 (peak f2077.7, BEAT.D.clean 2077), gone on f2082: the strokes are BEAT.D.wipe1 [2061, 2067] and wipe2 [2074, 2080]",
+   "fade": 0.015
+  },
+  {
+   "label": "D his step 1 of 2 the wrong way",
+   "clip": "sfx_steps_echo",
+   "at": [
+    "D01",
+    "start",
+    -2.35
    ],
    "gain": -22,
    "in": 0.62,
    "sync": 0.65,
    "len": 0.3,
    "fade_out": 0.15,
-   "note": "two strides out of the gate the wrong way: 63.75 / 64.15 s; then the footsteps STOP DEAD (D from + 0.8 s = 64.40 s) for his stop, 15 frames"
+   "note": "two strides out of the gate the wrong way: 63.75 / 64.15 s; then the footsteps STOP DEAD (D from + 0.8 s = 64.40 s) for his stop, 15 frames | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 0.15] -> [\"D01\", \"start\", -2.35]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
   },
   {
    "label": "D his step 2 of 2 the wrong way",
    "clip": "sfx_steps_echo",
    "at": [
-    "D",
-    "from",
-    0.55
+    "D01",
+    "start",
+    -1.95
    ],
    "gain": -22,
    "in": 0.62,
    "sync": 0.65,
    "len": 0.3,
    "fade_out": 0.15,
-   "note": "two strides out of the gate the wrong way: 63.75 / 64.15 s; then the footsteps STOP DEAD (D from + 0.8 s = 64.40 s) for his stop, 15 frames"
+   "note": "two strides out of the gate the wrong way: 63.75 / 64.15 s; then the footsteps STOP DEAD (D from + 0.8 s = 64.40 s) for his stop, 15 frames | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 0.55] -> [\"D01\", \"start\", -1.95]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
   },
   {
    "label": "D one hurried step back into the whip",
    "clip": "sfx_steps_echo",
    "at": [
-    "D",
-    "from",
-    1.85
+    "D01",
+    "start",
+    -0.65
    ],
    "gain": -20,
    "in": 0.62,
    "sync": 0.65,
    "len": 0.25,
    "fade_out": 0.12,
-   "note": "turned on his heel (eyes to his notes), the first stride back: 65.45 s; whip 6 starts on it"
+   "note": "turned on his heel (eyes to his notes), the first stride back: 65.45 s; whip 6 starts on it | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 1.85] -> [\"D01\", \"start\", -0.65]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
   },
   {
    "label": "D whip 6: whoosh",
    "clip": "sfx_whoosh",
    "at": [
-    "D",
-    "from",
-    2.1
+    "D01",
+    "start",
+    -0.4
    ],
    "gain": -25,
    "in": 0.15,
    "sync": 0.24,
-   "note": "its main burst ON the cut into the Schools: D from + 2.1 s = 65.70 s (frame 1971)"
+   "note": "its main burst ON the cut into the Schools: D from + 2.1 s = 65.70 s (frame 1971) | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.1] -> [\"D01\", \"start\", -0.4]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
   },
   {
    "label": "D footsteps echo in the hall",
    "clip": "sfx_steps_echo",
    "at": [
-    "D",
-    "from",
-    2.25
+    "D01",
+    "start",
+    -0.25
    ],
    "gain": -30,
    "in": 1.25,
    "sync": 1.3,
    "len": 0.6,
-   "fade_out": 0.35
+   "fade_out": 0.35,
+   "note": " | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"D\", \"from\", 2.25] -> [\"D01\", \"start\", -0.25]: the wipe is back: the street is 1.6 s longer in front of its old block, which is anchored on D01 now (D01 start - 2.5 s = the old scene start; beats.ts BEAT.D.go)"
   },
   {
    "label": "D paper rustle (he lays out his notes)",
@@ -1689,25 +1770,27 @@
   },
   {
    "label": "D clap 1",
-   "clip": "sfx_clap",
+   "clip": "sfx_clap_a",
    "at": [
     "D06",
     "start",
     -1.45
    ],
-   "gain": -4,
-   "note": "sound only; her body jolts on each: 77.04 s"
+   "gain": -10.2,
+   "note": "sound only; her body jolts on each: 77.04 s | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip sfx_clap -> sfx_clap_a (scripts/newton/sound/make_clap.py): a synthesised cupped-palm clap in the empty hall. The farm's clip was 60 ms of steady band noise with a 13 ms rise and a reverb wash (it fell 10 dB in 190 ms): no impact. The new one: three micro-impacts inside 25 ms, 0.5-1 ms rise, -10 dB in 17-24 ms, energy peak 1.6-2.5 kHz with the palms' body at 680-790 Hz, the hall's slap at 140 ms and its 1.3 s tail 30 dB down. sync 0.010 = the clip's 10 ms of silence, so the first contact is on the anchor (the anchor is unchanged)",
+   "sync": 0.01
   },
   {
    "label": "D clap 2",
-   "clip": "sfx_clap",
+   "clip": "sfx_clap_b",
    "at": [
     "D06",
     "start",
     -0.7
    ],
-   "gain": -4,
-   "note": "77.79 s"
+   "gain": -9.7,
+   "note": "77.79 s | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip sfx_clap -> sfx_clap_b (scripts/newton/sound/make_clap.py): a synthesised cupped-palm clap in the empty hall. The farm's clip was 60 ms of steady band noise with a 13 ms rise and a reverb wash (it fell 10 dB in 190 ms): no impact. The new one: three micro-impacts inside 25 ms, 0.5-1 ms rise, -10 dB in 17-24 ms, energy peak 1.6-2.5 kHz with the palms' body at 680-790 Hz, the hall's slap at 140 ms and its 1.3 s tail 30 dB down. sync 0.010 = the clip's 10 ms of silence, so the first contact is on the anchor (the anchor is unchanged)",
+   "sync": 0.01
   },
   {
    "label": "E fork clink 1",
@@ -1887,10 +1970,10 @@
    "at": [
     "F02",
     "end",
-    0.7
+    0.4
    ],
    "gain": -24,
-   "note": "as v4"
+   "note": "as v4 | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"F02\", \"end\", 0.7] -> [\"F02\", \"end\", 0.4]: card 3 is 2.6 s and its gap 1.1 s shorter: the two throws 33 frames apart inside it (beats.ts BEAT.F.shovel; segF's throw needs 32)"
   },
   {
    "label": "F the second shovelful under card 3",
@@ -1898,10 +1981,10 @@
    "at": [
     "F03",
     "start",
-    -1.4
+    -1.2
    ],
    "gain": -27,
-   "note": "as v4"
+   "note": "as v4 | 15 Nov (timing lane, the owner's notes; notes6/timing/TIMELINE.md): at [\"F03\", \"start\", -1.4] -> [\"F03\", \"start\", -1.2]: card 3 is 2.6 s and its gap 1.1 s shorter: the two throws 33 frames apart inside it (beats.ts BEAT.F.shovel; segF's throw needs 32)"
   },
   {
    "label": "F the empty sack",
@@ -2052,14 +2135,14 @@
   },
   {
    "label": "G her camera switches off",
-   "clip": "sfx_poweroff",
+   "clip": "sfx_poweroff_crt",
    "at": [
     "G",
     "to",
     -1.4
    ],
-   "gain": -12,
-   "note": "hud/vlog.tsx OFF_AT = TOTAL - 42 = frame 5211: the click 0.375 s after the pluck; the power-down sweep 0.8 s later on the end black | r2: -18 -> -12 dB (MINOR 10): the film's last sound, the REC beep's mirror"
+   "gain": -16,
+   "note": "hud/vlog.tsx OFF_AT = TOTAL - 42 = frame 5211: the click 0.375 s after the pluck; the power-down sweep 0.8 s later on the end black | r2: -18 -> -12 dB (MINOR 10): the film's last sound, the REC beep's mirror | 15 Nov (S lane, the owner's notes; notes6/S/NOTES.md): clip sfx_poweroff -> sfx_poweroff_crt (make_poweroff.py 0.033 0.533: the same sound, its tube collapse moved up to the click). The G lane's switch-off (hud/poweroff.tsx) squeezes the picture ON the click's frame (f5420-5424), line to dot f5425-5429, the dot fades f5430-5435, black from f5436; the old clip's collapse (thump, falling whine, static) started 0.80 s after its click (f5444, on black) and the film's end cut it 30 dB down. Now: click f5420, thump and whine from f5421, the whine ends and the dot's tick falls on f5436, the static is gone (under -60 dBFS in the clip) by f5449, the clip ends on f5454, 8 frames before the film's last frame. gain -12 -> -16 dB: click and collapse now sound together (the loudest 100 ms was -20.0 LUFS at -12 dB, the old collapse's -25.9; now -24.0)"
   },
   {
    "label": "A skin A: the title's nib, on 牛's first stroke",

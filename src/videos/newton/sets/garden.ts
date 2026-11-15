@@ -52,8 +52,8 @@ export const GARDEN_LOOK: PlaceLook = {
 };
 /** the per-frame dressing: time "noon" | "night", glow 0..1 (the elaboratory's door, window and chimney), window 0..1
  *  (his window lit), gravel "raked" (the default: gravelTex's straight rake lines) | "rough" (roughGravelTex: coarser
- *  grain, faint broken wavy rake grooves; C sets it; added by WP5-C), plinth 0 | 1 (大哥's stone pedestal against the
- *  east wall, layout GARDEN_SET.plinth: C sets it for the film's one cameo; owner pick 15 Nov) */
+ *  grain, faint broken wavy rake grooves; C sets it; added by WP5-C), plinth 0 | 1 (大哥's moulded stone pedestal with
+ *  its plaque against the east wall, layout GARDEN_SET.plinth: C sets it for the film's one cameo; owner pick 15 Nov) */
 export const GARDEN_PARAMS: Record<string, ParamValue> = { time: "noon", glow: 0, window: 0, gravel: "raked", plinth: 0 };
 
 const B = S.bounds, WK = S.walks, R = S.range, C = S.chapel, E = S.elab;
@@ -94,6 +94,58 @@ const dialTex = () => paint(256, 256, (g, W, H) => {
   g.lineWidth = 2; g.beginPath(); g.arc(c, c, c * 0.12, 0, Math.PI * 2); g.stroke();
   g.fillStyle = "rgba(70,110,90,0.18)";                                   // a little verdigris round the rim
   for (let i = 0; i < 9; i++) { const a = i * 0.71, r = c * (0.8 + 0.08 * Math.sin(i * 3.1)); g.beginPath(); g.arc(c + Math.cos(a) * r, c + Math.sin(a) * r, 9, 0, Math.PI * 2); g.fill(); }
+});
+/** the stone of the slab the statue stands on (大哥's pedestal): the figure's own limestone (acc/statue.ts STONE), a
+ *  tone down, so he and his footing read as one block set on the cream pedestal */
+const STATUE_SLAB = "#c3bcab";
+/** the back pillar behind the statue's legs: width, depth, height above the footing, how far its face is behind his
+ *  feet's middle, its stone (a tone under his limbs) */
+const BACK_PILLAR = { w: 0.24, d: 0.07, h: 0.6, off: 0.1, col: "#b7af9c" };
+/** THE PEDESTAL's die, six faces side by side (cell k = BoxGeometry's face k): the sundial's stone with soft mottling,
+ *  a sunk panel (a dark cut along its top and left, a lit lip along its bottom and right), one or two rain streaks
+ *  running down from under the cornice, and a breath of green where the damp stands at its foot */
+const pedestalTex = () => paint(6 * 128, 256, (g, W, H) => {
+  const r = rng(131), cw = W / 6;
+  g.fillStyle = NC.stone; g.fillRect(0, 0, W, H);
+  for (let k = 0; k < 6; k++) {
+    const x0 = k * cw;
+    g.save(); g.beginPath(); g.rect(x0, 0, cw, H); g.clip();
+    for (let i = 0; i < 9; i++) blotch(g, x0 + cw * r(), H * r(), cw * (0.2 + 0.3 * r()), r() < 0.5 ? NC.stoneLo : NC.stoneHi, 0.3);
+    // the rain streaks: from the top edge down, wider and fainter as they run
+    for (let i = 0, n = 1 + Math.floor(r() * 2); i < n; i++) {
+      // (down the face's two sides, clear of the plaque over its middle: one on each side when there are two)
+      const sx = x0 + cw * ((i + k) % 2 ? 0.83 + 0.07 * r() : 0.09 + 0.08 * r()), len = H * (0.55 + 0.4 * r()), w0 = cw * (0.035 + 0.03 * r());
+      const gr = g.createLinearGradient(0, 0, 0, len); gr.addColorStop(0, css("#7d7462", 0.62)); gr.addColorStop(0.6, css("#7d7462", 0.3)); gr.addColorStop(1, css("#7d7462", 0));
+      g.fillStyle = gr; g.beginPath(); g.moveTo(sx - w0, 0); g.lineTo(sx + w0, 0); g.lineTo(sx + w0 * 1.8, len); g.lineTo(sx - w0 * 1.5, len); g.closePath(); g.fill();
+    }
+    const gm = g.createLinearGradient(0, H * 0.72, 0, H); gm.addColorStop(0, css("#7c8a55", 0)); gm.addColorStop(1, css("#7c8a55", 0.34));
+    g.fillStyle = gm; g.fillRect(x0, H * 0.72, cw, H * 0.28);
+    // the sunk panel
+    const m = cw * 0.13, px0 = x0 + m, px1 = x0 + cw - m, py0 = H * 0.09, py1 = H * 0.91;
+    g.lineWidth = 3.2; g.lineCap = "square";
+    g.strokeStyle = css("#857b66", 0.85); g.beginPath(); g.moveTo(px0, py1); g.lineTo(px0, py0); g.lineTo(px1, py0); g.stroke();
+    g.strokeStyle = css("#f3ead6", 0.9); g.beginPath(); g.moveTo(px1, py0); g.lineTo(px1, py1); g.lineTo(px0, py1); g.stroke();
+    g.restore();
+  }
+});
+/** THE PLAQUE: a tablet of the darker stone with a cut border and 大哥 engraved on it. The two characters are drawn
+ *  stroke by stroke (no font: the render page may have none for them), each cut dark with a lit lip under it */
+const plaqueTex = () => paint(256, 160, (g, W, H) => {
+  const r = rng(137);
+  g.fillStyle = "#bfb294"; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 7; i++) blotch(g, W * r(), H * r(), W * (0.12 + 0.2 * r()), r() < 0.5 ? NC.stoneDark : NC.stone, 0.22);
+  const cut = (pts: [number, number][], lw: number) => {
+    g.lineWidth = lw; g.lineCap = "round"; g.lineJoin = "round";
+    for (const [dx, dy, col] of [[1.6, 2.4, css("#f1e8d2", 0.9)], [0, 0, "#5c5444"]] as [number, number, string][]) {
+      g.strokeStyle = col; g.beginPath(); pts.forEach(([px, py], i) => (i ? g.lineTo(px + dx, py + dy) : g.moveTo(px + dx, py + dy))); g.stroke();
+    }
+  };
+  cut([[10, 10], [W - 10, 10], [W - 10, H - 10], [10, H - 10], [10, 10]], 4);
+  // each character in a 100 x 100 box, laid at (ox, oy) with side s
+  const s = 96, oy = (H - s) / 2, glyph = (ox: number, strokes: [number, number][][]) => { for (const st of strokes) cut(st.map(([px, py]) => [ox + (px * s) / 100, oy + (py * s) / 100]), 9); };
+  glyph(26, [[[10, 38], [90, 38]], [[50, 8], [50, 40], [44, 62], [30, 80], [10, 93]], [[50, 40], [58, 62], [72, 80], [92, 93]]]);                              // 大
+  glyph(134, [[[8, 10], [92, 10]], [[24, 20], [58, 20], [58, 36], [24, 36], [24, 20]], [[76, 10], [76, 42]],                                                  // 哥
+    [[4, 52], [96, 52]], [[22, 62], [56, 62], [56, 80], [22, 80], [22, 62]], [[76, 52], [76, 93], [64, 88]]]);
 });
 const roughGravelTex = (seed: number, lines = 11, px = 512) => paint(px, px, (g, W, H) => {
   const r = rng(seed), wrap = (fn: (dx: number, dy: number) => void) => { for (const dx of [-W, 0, W]) for (const dy of [-H, 0, H]) fn(dx, dy); };
@@ -205,15 +257,43 @@ export function buildGarden(K: Kit) {
     P.into(group, "garden.sundial", { cast: true });
   }
 
-  // 大哥's PLINTH (param plinth; owner pick 15 Nov): a stone pedestal against the east wall, a base, a die and a cap, in
-  // the sundial's stone, with its own hull like the sundial; hidden unless C asks for it
+  // 大哥's PEDESTAL (param plinth; owner pick 15 Nov, owner note 15 Nov "more proper statue like"): a square stone
+  // pedestal against the east wall, in the sundial's stone: a MOULDED BASE (a plinth block, a fillet, a cyma up to the
+  // die), the DIE (each face a sunk panel, rain streaks from under the cornice, green at its foot: pedestalTex), a
+  // MOULDED CAP (a cavetto, a fillet, the cornice), the statue's own footing slab on it (the figure's stone, a tone
+  // down), an ENGRAVED PLAQUE on the face toward her (plaqueTex: 大哥, cut by hand: no font) and a little moss at the
+  // foot. Each moulding is one four-sided lathe with its own hull, so the steps are drawn lines. Hidden unless C asks
   const plinthG = new THREE.Group(); plinthG.name = "garden.plinth"; plinthG.visible = false; group.add(plinthG);
   {
-    const L = S.plinth, P = new Part(K), x = GDX + L.x, z = L.z, hw = L.w / 2, hd = L.d / 2, x1 = GDX + S.bounds.x1;
-    const blk = (o: number, y0: number, y1: number) => boxG(x - hd - o, Math.min(x + hd + o, x1 - 0.002), y0, y1, z - hw - o, z + hw + o);
-    P.add(mStoneLo, blk(0.05, 0, 0.09), 0.004);              // the base
-    P.add(mStonePlain, blk(0, 0.09, L.h - 0.08), 0.004);     // the die
-    P.add(mStonePlain, blk(0.04, L.h - 0.08, L.h), 0.004);   // the cap
+    const L = S.plinth, P = new Part(K), x = GDX + L.x, z = L.z, hs = L.w / 2, ov = L.over, cap = L.cap, dieY0 = 0.25, dieY1 = cap - 0.15;
+    /** a square moulding round the pedestal's axis: its profile [how far beyond the die's face, y] from the bottom up,
+     *  closed on the axis at both ends, faces square to the wall and flat (Part.add works the normals out) */
+    const sq = (prof: [number, number][]) => {
+      const pts = [[-hs, prof[0][1]], ...prof, [-hs, prof[prof.length - 1][1]]].map(([o, y]) => new THREE.Vector2((hs + o) * Math.SQRT2, y));
+      const g = new THREE.LatheGeometry(pts, 4).rotateY(Math.PI / 4); g.deleteAttribute("normal");
+      return g.translate(x, 0, z);
+    };
+    P.add(mStoneLo, sq([[ov, 0], [ov, 0.13], [0.062, 0.152], [0.062, 0.186], [0.03, 0.214], [0.012, 0.248], [0, 0.262]]), 0.004);                                  // the base
+    // the die: a box whose six faces read six cells of one painting (BoxGeometry: +x -x +y -y +z -z, four corners each)
+    const die = boxG(x - hs, x + hs, dieY0, dieY1, z - hs, z + hs), duv = die.attributes.uv as THREE.BufferAttribute;
+    for (let i = 0; i < duv.count; i++) duv.setX(i, (Math.floor(i / 4) + duv.getX(i)) / 6);
+    P.add(Mk.tex(pedestalTex(), 0.9), die, 0.004);
+    P.add(mStonePlain, sq([[0, cap - 0.162], [0.012, cap - 0.15], [0.03, cap - 0.116], [0.058, cap - 0.094], [0.058, cap - 0.074], [ov, cap - 0.058], [ov, cap - 0.014], [ov - 0.016, cap]]), 0.004);   // the cap
+    const sl = L.slab / 2;
+    P.add(Mk.flat(STATUE_SLAB, 0.9), boxG(x - sl, x + sl, cap, L.h, z - sl, z + sl), 0.003);                                                                   // the statue's footing
+    // the BACK PILLAR behind his legs (a standing figure in stone has one: thin legs alone would not carry him): a flat
+    // upright block, a tone under the figure so his legs read in relief on it, wholly behind him (its face
+    // BACK_PILLAR.off behind his feet) from the footing up into the back of his body. It is square to the line from him
+    // to the sundial, where she stands for the one view that shows him (the figure turns its body to her lens anyway)
+    const bp = BACK_PILLAR, yaw = Math.atan2(GDX + S.sundial.x - x, S.sundial.z - z);
+    P.add(Mk.flat(bp.col, 0.9), new THREE.BoxGeometry(bp.w, bp.h, bp.d).translate(0, L.h + bp.h / 2 - 0.004, -bp.off - bp.d / 2).rotateY(yaw).translate(x, 0, z), 0.003);
+    // the plaque: a thin tablet on the face toward her (south, +z), in the upper half of the die
+    const pw = 0.3, ph = 0.19, py = dieY0 + (dieY1 - dieY0) * 0.56;
+    P.add(Mk.tex(plaqueTex(), 0.85), boxG(x - pw / 2, x + pw / 2, py - ph / 2, py + ph / 2, z + hs - 0.004, z + hs + 0.014), 0.003);
+    // moss: a few low cushions where the base meets the gravel, on the shaded north-west corner and under the plaque's face
+    const mMoss = Mk.flat("#7c8a55", 0.95), b = hs + ov;
+    for (const [mx, my, mz, r] of [[-b - 0.01, 0, 0.12, 0.075], [-b, 0, -0.16, 0.055], [-0.14, 0, b + 0.01, 0.07], [0.1, 0, b, 0.045], [-b + 0.03, 0.13, b - 0.05, 0.05]])
+      P.add(mMoss, new THREE.SphereGeometry(r, 10, 6).scale(1.25, 0.42, 1).translate(x + mx, my + r * 0.12, z + mz), 0);
     P.into(plinthG, "garden.plinth", { cast: true });
   }
 

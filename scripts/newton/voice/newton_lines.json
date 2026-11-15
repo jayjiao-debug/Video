@@ -7,8 +7,8 @@
   "en": "A Day Interviewing Newton"
  },
  "title_span_s": [
-  6.1333,
-  7.8
+  7.5333,
+  9.2
  ],
  "title_en_on_screen": false,
  "card_en_on_screen": false,
@@ -299,6 +299,34 @@
  ],
  "lines": [
   {
+   "id": "A01a",
+   "script_id": "00a",
+   "scene": "A",
+   "who": "ji",
+   "tts": "[just arrived, a little winded, relieved] 终于到了！",
+   "zh": "终于到了！",
+   "en": "Finally here!",
+   "screens": [
+    {
+     "zh": "终于到了！",
+     "en": "Finally here!"
+    }
+   ],
+   "pre": 1.9,
+   "after": 0.0,
+   "en_on_screen": false,
+   "take": {
+    "status": "recorded",
+    "len_s": 1.14,
+    "from_id": "newton-v5-notes-01 v5_A01_s1686, cut 3.48-4.62 s (the second, aligned 终于到了)",
+    "pick": "1686"
+   },
+   "gain_db": -3.6,
+   "owner_note": "owner notes 15 Nov 12:33 (Jay), notes6/OWNER_NOTES.md: she walks up to the door, arrives, says this, then knocks",
+   "pre_note": "lead 0.1 + pre = 2.0 s: her four steps (0.30 / 0.72 / 1.17 / 1.67 s) and the settle (1.9 s) come first (story.ts COLD_OPEN_S)",
+   "n": 1
+  },
+  {
    "id": "A01b",
    "script_id": "00b",
    "scene": "A",
@@ -312,7 +340,7 @@
      "en": "Good morning!"
     }
    ],
-   "pre": 2.52,
+   "pre": 0.78,
    "after": 0.0,
    "en_on_screen": false,
    "take": {
@@ -322,10 +350,11 @@
    },
    "gain_db": -5.72,
    "owner_note": "owner note 15 Nov (Jay): \"the interviewer doesnt have lines at beginning ... Oh we are finally here, then knock knock Good morning!\"",
-   "n": 1
+   "n": 2,
+   "pre_note": "THE GAP THAT ABSORBS A01a's LENGTH: A01b starts at 4.02 s = 2.0 + A01a's clip (1.000 s) + gap 0.1 + this pre; it was 2.62 s in cut v5: S = +1.4 s (42 frames) for A01b and every line after it; the two raps sit before it at 3.40 / 3.69 s (COLD_OPEN_S)"
   },
   {
-   "n": 2,
+   "n": 3,
    "id": "A02",
    "script_id": "01",
    "v4_id": "A02",
@@ -364,7 +393,7 @@
    "pre_note": "was 4.5: the new opening lines A01a / A01b take the rest, A02 still starts at 4.600 s"
   },
   {
-   "n": 3,
+   "n": 4,
    "id": "A03",
    "script_id": "02",
    "v4_id": "A03",
@@ -394,7 +423,7 @@
    ]
   },
   {
-   "n": 4,
+   "n": 5,
    "id": "A04",
    "script_id": "03",
    "v4_id": "A04",
@@ -423,7 +452,7 @@
    ]
   },
   {
-   "n": 5,
+   "n": 6,
    "id": "A05",
    "script_id": "04",
    "v4_id": "A05",
@@ -452,7 +481,7 @@
    ]
   },
   {
-   "n": 6,
+   "n": 7,
    "id": "A06",
    "script_id": "05",
    "v4_id": "A06",
@@ -467,8 +496,8 @@
      "en": "Right. Today, I'm going to make him laugh. Once."
     }
    ],
-   "after": 4.1,
-   "card_hold": 3.6,
+   "after": 3.0,
+   "card_hold": 2.6,
    "card_delay": 0.3,
    "card": {
     "zh": "助手回忆：他常到两三点才睡，有时五六点。",
@@ -486,40 +515,61 @@
    "est": [
     15.28,
     17.96
-   ]
+   ],
+   "owner_fix": {
+    "after": {
+     "before": 4.1,
+     "built": 3.0
+    },
+    "card_hold": {
+     "before": 3.6,
+     "built": 2.6
+    },
+    "why": "owner notes 15 Nov 12:33 (Jay), notes6/OWNER_NOTES.md: the assistant's note at 0:20 stays a bit too long: the card 2.6 s (78 frames), the gap 1.1 s shorter"
+   }
   },
   {
-   "n": 7,
+   "n": 8,
    "id": "B01",
    "script_id": "06",
    "v4_id": "B01",
    "scene": "B",
    "who": "hm",
-   "tts": "[polite, hopeful] Sir, your dinner.",
-   "zh": "先生，饭来了。",
-   "en": "Sir, your dinner.",
+   "tts": "[polite, hopeful] Sir, your breakfast.",
+   "zh": "先生，早饭来了。",
+   "en": "Sir, your breakfast.",
    "screens": [
     {
-     "zh": "先生，饭来了。",
-     "en": "Sir, your dinner."
+     "zh": "先生，早饭来了。",
+     "en": "Sir, your breakfast."
     }
    ],
    "pre": 0.6,
-   "after": 1.0,
+   "after": 0.9,
    "en_on_screen": true,
    "take": {
     "status": "recorded",
-    "from_id": "B01",
+    "len_s": 1.66,
+    "from_id": "newton-v5-notes-01 v5_B01_s1686, cut 0.00-1.66 s",
     "pick": "1686"
    },
-   "gain_db": -2.88,
+   "gain_db": -1.9,
    "est": [
     22.76,
     24.32
-   ]
+   ],
+   "owner_fix": {
+    "zh": {
+     "before": "先生，饭来了。"
+    },
+    "en": {
+     "before": "Sir, your dinner."
+    },
+    "why": "owner notes 15 Nov 12:33 (Jay), notes6/OWNER_NOTES.md: \"Sir your dinner, isnt it breakfast?\" (it is the morning)"
+   }
   },
   {
-   "n": 8,
+   "n": 9,
    "id": "B02",
    "script_id": "07",
    "v4_id": "B02",
@@ -548,7 +598,7 @@
    ]
   },
   {
-   "n": 9,
+   "n": 10,
    "id": "B03",
    "script_id": "08",
    "v4_id": "B03",
@@ -586,7 +636,7 @@
    }
   },
   {
-   "n": 10,
+   "n": 11,
    "id": "B04",
    "script_id": "09",
    "v4_id": "B04",
@@ -618,7 +668,7 @@
    ]
   },
   {
-   "n": 11,
+   "n": 12,
    "id": "B05",
    "script_id": "10",
    "v4_id": "B05",
@@ -647,7 +697,7 @@
    ]
   },
   {
-   "n": 12,
+   "n": 13,
    "id": "B06",
    "script_id": "11",
    "v4_id": "B06",
@@ -675,7 +725,7 @@
    ]
   },
   {
-   "n": 13,
+   "n": 14,
    "id": "B07",
    "script_id": "12",
    "v4_id": "B07",
@@ -704,7 +754,7 @@
    ]
   },
   {
-   "n": 14,
+   "n": 15,
    "id": "B08",
    "script_id": "13",
    "v4_id": "B08",
@@ -732,7 +782,7 @@
    ]
   },
   {
-   "n": 15,
+   "n": 16,
    "id": "B09",
    "script_id": "14",
    "v4_id": "B09",
@@ -781,7 +831,7 @@
    }
   },
   {
-   "n": 16,
+   "n": 17,
    "id": "C01",
    "script_id": "15",
    "v4_id": "C01",
@@ -811,7 +861,7 @@
    ]
   },
   {
-   "n": 17,
+   "n": 18,
    "id": "C02",
    "script_id": "16",
    "v4_id": "C02",
@@ -839,7 +889,7 @@
    ]
   },
   {
-   "n": 18,
+   "n": 19,
    "id": "C03",
    "script_id": "17",
    "v4_id": "C03",
@@ -868,7 +918,7 @@
    ]
   },
   {
-   "n": 19,
+   "n": 20,
    "id": "C04",
    "script_id": "18",
    "v4_id": "C04",
@@ -897,7 +947,7 @@
    ]
   },
   {
-   "n": 20,
+   "n": 21,
    "id": "C05",
    "script_id": "19",
    "v4_id": "C05",
@@ -927,7 +977,7 @@
    ]
   },
   {
-   "n": 21,
+   "n": 22,
    "id": "C06",
    "script_id": "20",
    "v4_id": "C06",
@@ -955,7 +1005,7 @@
    ]
   },
   {
-   "n": 22,
+   "n": 23,
    "id": "C07",
    "script_id": "21",
    "v4_id": "C07",
@@ -984,7 +1034,7 @@
    ]
   },
   {
-   "n": 23,
+   "n": 24,
    "id": "D01",
    "script_id": "22",
    "v4_id": "D01",
@@ -999,7 +1049,7 @@
      "en": "Not one student."
     }
    ],
-   "pre": 2.5,
+   "pre": 4.1,
    "en_on_screen": false,
    "aside": "悄悄说",
    "take": {
@@ -1011,10 +1061,17 @@
    "est": [
     66.09,
     67.91
-   ]
+   ],
+   "owner_fix": {
+    "pre": {
+     "before": 2.5,
+     "built": 4.1
+    },
+    "why": "owner notes 15 Nov 12:33 (Jay), notes6/OWNER_NOTES.md: the handkerchief wipe is back: +1.6 s (48 frames) of street IN FRONT of its old block (the wrong way, the stop, the step back, whip 6 keep their times before D01: beats.ts dGo = D01 start - 2.5 s); sfx_wipe at D from + 0.6 s"
+   }
   },
   {
-   "n": 24,
+   "n": 25,
    "id": "D02",
    "script_id": "23",
    "v4_id": "D02",
@@ -1042,7 +1099,7 @@
    ]
   },
   {
-   "n": 25,
+   "n": 26,
    "id": "D03",
    "script_id": "24",
    "v4_id": "D03",
@@ -1071,7 +1128,7 @@
    ]
   },
   {
-   "n": 26,
+   "n": 27,
    "id": "D04",
    "script_id": "25",
    "v4_id": "D04",
@@ -1099,7 +1156,7 @@
    ]
   },
   {
-   "n": 27,
+   "n": 28,
    "id": "D05",
    "script_id": "26",
    "v4_id": "D05",
@@ -1129,7 +1186,7 @@
    ]
   },
   {
-   "n": 28,
+   "n": 29,
    "id": "D06",
    "script_id": "27",
    "v4_id": "D06",
@@ -1157,7 +1214,7 @@
    ]
   },
   {
-   "n": 29,
+   "n": 30,
    "id": "E01",
    "script_id": "28",
    "v4_id": "E01",
@@ -1186,7 +1243,7 @@
    ]
   },
   {
-   "n": 30,
+   "n": 31,
    "id": "E02",
    "script_id": "29",
    "v4_id": "E02",
@@ -1215,7 +1272,7 @@
    ]
   },
   {
-   "n": 31,
+   "n": 32,
    "id": "E03",
    "script_id": "30",
    "v4_id": "E03",
@@ -1244,7 +1301,7 @@
    ]
   },
   {
-   "n": 32,
+   "n": 33,
    "id": "E04",
    "script_id": "31",
    "v4_id": "E04",
@@ -1272,7 +1329,7 @@
    ]
   },
   {
-   "n": 33,
+   "n": 34,
    "id": "E05",
    "script_id": "32",
    "v4_id": "E05",
@@ -1301,7 +1358,7 @@
    ]
   },
   {
-   "n": 34,
+   "n": 35,
    "id": "E06",
    "script_id": "33",
    "v4_id": "E06",
@@ -1329,7 +1386,7 @@
    ]
   },
   {
-   "n": 35,
+   "n": 36,
    "id": "E07",
    "script_id": "34",
    "v4_id": "E07",
@@ -1363,7 +1420,7 @@
    ]
   },
   {
-   "n": 36,
+   "n": 37,
    "id": "F01",
    "script_id": "35",
    "v4_id": "F01",
@@ -1393,7 +1450,7 @@
    ]
   },
   {
-   "n": 37,
+   "n": 38,
    "id": "F02",
    "script_id": "36",
    "v4_id": "F02",
@@ -1408,8 +1465,8 @@
      "en": "I'm watching a fire."
     }
    ],
-   "after": 3.7,
-   "card_hold": 3.7,
+   "after": 2.6,
+   "card_hold": 2.6,
    "card": {
     "zh": "看火？他留下的炼金手稿，大约一百万个单词。",
     "en": "Watching a fire? His alchemy papers run to about a million words.",
@@ -1425,10 +1482,21 @@
    "est": [
     99.885,
     102.055
-   ]
+   ],
+   "owner_fix": {
+    "after": {
+     "before": 3.7,
+     "built": 2.6
+    },
+    "card_hold": {
+     "before": 3.7,
+     "built": 2.6
+    },
+    "why": "owner notes 15 Nov 12:33 (Jay), notes6/OWNER_NOTES.md: the note by 1:47 stays a bit too long: the card 2.6 s (78 frames), the gap 1.1 s shorter; the two shovel throws under it re-anchored (cues.json, beats.ts F.shovel)"
+   }
   },
   {
-   "n": 38,
+   "n": 39,
    "id": "F03",
    "script_id": "37",
    "v4_id": "F03",
@@ -1456,7 +1524,7 @@
    ]
   },
   {
-   "n": 39,
+   "n": 40,
    "id": "F04",
    "script_id": "38",
    "v4_id": "F04",
@@ -1484,7 +1552,7 @@
    ]
   },
   {
-   "n": 40,
+   "n": 41,
    "id": "F05",
    "script_id": "39",
    "v4_id": "F05",
@@ -1521,7 +1589,7 @@
    ]
   },
   {
-   "n": 41,
+   "n": 42,
    "id": "F06",
    "script_id": "40",
    "v4_id": "F06",
@@ -1550,7 +1618,7 @@
    ]
   },
   {
-   "n": 42,
+   "n": 43,
    "id": "F07",
    "script_id": "41",
    "v4_id": "F07",
@@ -1578,7 +1646,7 @@
    ]
   },
   {
-   "n": 43,
+   "n": 44,
    "id": "F08",
    "script_id": "42",
    "v4_id": "F08",
@@ -1607,7 +1675,7 @@
    ]
   },
   {
-   "n": 44,
+   "n": 45,
    "id": "F09",
    "script_id": "43",
    "v4_id": "F09",
@@ -1647,7 +1715,7 @@
    ]
   },
   {
-   "n": 45,
+   "n": 46,
    "id": "F10",
    "script_id": "44",
    "v4_id": "F10",
@@ -1675,7 +1743,7 @@
    ]
   },
   {
-   "n": 46,
+   "n": 47,
    "id": "F11",
    "script_id": "45",
    "v4_id": "F11",
@@ -1704,7 +1772,7 @@
    ]
   },
   {
-   "n": 47,
+   "n": 48,
    "id": "F12",
    "script_id": "46",
    "v4_id": "F12",
@@ -1736,7 +1804,7 @@
    ]
   },
   {
-   "n": 48,
+   "n": 49,
    "id": "F13",
    "script_id": "47",
    "v4_id": "F13",
@@ -1765,7 +1833,7 @@
    ]
   },
   {
-   "n": 49,
+   "n": 50,
    "id": "F14",
    "script_id": "48",
    "v4_id": "F14",
@@ -1798,7 +1866,7 @@
    ]
   },
   {
-   "n": 50,
+   "n": 51,
    "id": "F15",
    "script_id": "49",
    "v4_id": "F15",
@@ -1830,7 +1898,7 @@
    ]
   },
   {
-   "n": 51,
+   "n": 52,
    "id": "F16",
    "script_id": "50",
    "v4_id": "F16",
@@ -1858,7 +1926,7 @@
    ]
   },
   {
-   "n": 52,
+   "n": 53,
    "id": "G01a",
    "script_id": "51",
    "v4_id": "G01",
@@ -1892,7 +1960,7 @@
    ]
   },
   {
-   "n": 53,
+   "n": 54,
    "id": "G01b",
    "script_id": "52",
    "v4_id": "G01",
@@ -1925,7 +1993,7 @@
    ]
   },
   {
-   "n": 54,
+   "n": 55,
    "id": "G02",
    "script_id": "53",
    "v4_id": "G02",
@@ -1962,7 +2030,7 @@
    ]
   },
   {
-   "n": 55,
+   "n": 56,
    "id": "G03",
    "script_id": "54",
    "v4_id": "G03",
@@ -1990,7 +2058,7 @@
    ]
   },
   {
-   "n": 56,
+   "n": 57,
    "id": "G04",
    "script_id": "55",
    "v4_id": "G04",
@@ -2109,5 +2177,27 @@
     7.77
    ]
   }
+ },
+ "intro_note": {
+  "date": "2026-11-15 (afternoon)",
+  "why": "owner notes 15 Nov 12:33 (Jay), notes6/OWNER_NOTES.md note 1",
+  "timeline_s": {
+   "steps": [
+    0.3,
+    0.72,
+    1.17,
+    1.67
+   ],
+   "arrive": 1.9,
+   "A01a": 2.0,
+   "stop": 2.7,
+   "burst": 3.2,
+   "knock": 3.4,
+   "knock2": 3.69,
+   "creak": 3.72,
+   "A01b": 4.02
+  },
+  "S": 1.4,
+  "what": "her walk to the door, 终于到了！, the two raps, 早上好！; A01b and everything after it S later than cut v5; the cold open's old block (stop, burst, raps) 1.2 s later (story.ts COLD_OPEN_S, beats.ts BEAT.A)"
  }
 }

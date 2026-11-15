@@ -59,7 +59,8 @@ import { rigHeadAccent, rigHeadAdd } from "../group/kit/rig3d";
 import { addPerson as addKitPerson, personalise, type Person } from "../wanbi/people";
 import { blush, BLUSH } from "./acc/blush";
 import { coat, gown, locks, nest, earQuill, inkSmear, soot, band } from "./acc/newton";
-import { DAGE, dage } from "../group/kit/rigacc/dage";
+import { DAGE } from "../group/kit/rigacc/dage";
+import { stoneLook, stoneDage, stoneRig } from "./acc/statue";
 import type { Speaker } from "./voice";
 
 export { personalise, blush, BLUSH, type Person };
@@ -75,12 +76,13 @@ export function addPerson(rc: RigCast, p: Person): Rig {
   if (s < MINI_BELOW) miniInk(r, s);
   const lean = (p as NPerson).lean;
   if (lean) restLean(r, lean);
+  (p as NPerson).finish?.(r);
   return r;
 }
 /** a lean (RigState.lean): degrees added to the pose's own lean, pitch + = forward, roll + = to the person's left */
 export type Lean = NonNullable<RigState["lean"]>;
 /** a Person of this film: Wanbi's Person + its RESTING POSTURE (lean, applied whenever the shot sets none) */
-export type NPerson = Person & { lean?: Lean };
+export type NPerson = Person & { lean?: Lean; /** run once on the built figure (the statue's stone limbs) */ finish?: (r: Rig) => void };
 /** THE RESTING POSTURE, the way personalise gives the resting face: on every solve in which the shot's state has no
  *  `lean`, the Person's lean stands in, and is taken out of the state again afterwards (the state the shot set is left
  *  as it was). World.beginFrame clears every state, so a shot's own `lean` lasts one frame, like everything it sets. */
@@ -269,11 +271,13 @@ export const HUMPHREY_SOOT: NPerson = humphrey("humphreySoot", 1);
 export const HUMPHREY_BY: Record<"plain" | "soot", Person> = { plain: HUMPHREY, soot: HUMPHREY_SOOT };
 
 // ---------------------------------------------------------------------------------------------------- 大哥 (the cameo)
-/** 大哥, the account's cameo figure, hidden ONCE in the film (owner pick 15 Nov: "garden statue"): the rig's DAGE look
- *  as it is (all greys, as if cut out of a black-and-white photo) standing on a stone plinth against the garden's east
- *  wall in C's dial wide, finger to his lips. ALWAYS expr "hush", pose { kind: "shh" } (group/kit/rigacc/dage.ts); a
- *  statue: no sway, one blink. Not in PEOPLE / the line-ups (he is not in the cast). */
-export const DAGE_STATUE: Person = { name: "dage", expr: "hush", look: DAGE, acc: () => dage() };
+/** 大哥, the account's cameo figure, hidden ONCE in the film (owner pick 15 Nov: "garden statue"; owner note 15 Nov:
+ *  "more proper statue like"): the kit's DAGE figure CUT IN STONE (acc/statue.ts: the look in three tones of one pale
+ *  limestone, the face's lines as carved cuts, the limbs' paints re-coloured on the built figure; the kit file is not
+ *  touched and the ink outline stays), standing on a moulded pedestal against the garden's east wall in C's dial wide,
+ *  finger to his lips. ALWAYS expr "hush", pose { kind: "shh" } (group/kit/rigacc/dage.ts); a statue: no sway, no
+ *  breathing, one blink of his stone lids. Not in PEOPLE / the line-ups (he is not in the cast). */
+export const DAGE_STATUE: NPerson = { name: "dage", expr: "hush", look: stoneLook(DAGE), acc: () => stoneDage(), finish: stoneRig };
 
 // ---------------------------------------------------------------------------------------------------- THE LAUGH
 /** THE LAUGH (G53), t = seconds since it burst out: expr "laugh" (eyes squeezed shut), the mouth opening wide on every
