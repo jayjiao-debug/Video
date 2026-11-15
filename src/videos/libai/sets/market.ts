@@ -25,7 +25,7 @@ import type { EnvSpec } from "../../bt/pbr";
 import type { Kit } from "../../../kit/props/kit";
 import { Part } from "../../../kit/props/kit";
 import type { CastLight } from "../../group/kit/cast";
-import { lightRig, paint, rng, css, blotch, soft, skyDome, groundG, groundTex, farCard, Batch, NOINK, type SkyStops, type G2 } from "../../../kit/sets/okit";
+import { lightRig, paint, rng, css, blotch, soft, skyDome, groundTex, farCard, Batch, NOINK, type SkyStops, type G2 } from "../../../kit/sets/okit";
 import { MARKET_SET as S, MARKET, MX } from "../layout/market";
 import type { PlaceLook, ParamValue } from "./index";
 import { maker, lathe, bar, shade, addLantern, type LanternMats } from "./parts/common";
@@ -163,6 +163,23 @@ const grainTex = () => paint(512, 512, (g, W) => {
     g.strokeStyle = "rgba(96,78,56,0.12)";
     for (const dx of [-W, 0, W]) for (const dy of [-W, 0, W]) { g.beginPath(); pts.forEach(([x, y], j) => (j ? g.lineTo(x + dx, y + dy) : g.moveTo(x + dx, y + dy))); g.stroke(); } }
 }, true);
+/** THE GROUND'S MESH: the kit's groundG mapping (the painted square at cx, cz, size; reaching 420 m to the horizon) on
+ *  a grid, fine round the island (1.5 m cells) and coarse toward the horizon. Jay, 15 Nov: "the ground underneath the
+ *  bench is jiggling". Measured in B (picture 1088-1103): with groundG's ONE 840 m quad the painted gutter under the
+ *  bench jumped up to 6 px between frames while the camera only breathed, and in the same frames the grain layer over
+ *  it vanished (its depth lost to the ground's): the rasteriser's precision across a triangle that size. A still camera
+ *  showed nothing; shadows, AO and ink were not the cause. Small cells keep every triangle near the camera small. */
+const groundGrid = (cx: number, cz: number, size: number, reach = 420, n = 96, cell = 1.5) => {
+  const g = new THREE.PlaneGeometry(2, 2, n, n).rotateX(-Math.PI / 2);
+  const a = (cell * n) / (2 * reach), s = (t: number) => reach * (a * t + (1 - a) * t * t * t);
+  const p = g.attributes.position as THREE.BufferAttribute, uv = g.attributes.uv as THREE.BufferAttribute;
+  for (let i = 0; i < p.count; i++) {
+    const x = cx + s(p.getX(i)), z = cz + s(p.getZ(i));
+    p.setXYZ(i, x, 0, z); uv.setXY(i, (x - cx) / size + 0.5, 0.5 - (z - cz) / size);
+  }
+  g.computeBoundingBox(); g.computeBoundingSphere();
+  return g;
+};
 /** THE GROUND (one painted square): packed earth, the lanes worn lighter, stone gutters along every shop front, straw */
 const GROUND = { cx: MX - 4, cz: -2, size: 64 };
 const paintGround = () => groundTex(GROUND.cx, GROUND.cz, GROUND.size, 2048, COL.earth, (g, k) => {
@@ -211,13 +228,13 @@ export function buildMarket(K: Kit) {
   };
 
   // =================================================================================================== the ground
-  { const t = paintGround(); const m = Mk.mesh("market.ground", groundG(GROUND.cx, GROUND.cz, GROUND.size), Mk.tex(t, 0.95), { cast: false }); m.receiveShadow = true; }
+  { const t = paintGround(); const m = Mk.mesh("market.ground", groundGrid(GROUND.cx, GROUND.cz, GROUND.size), Mk.tex(t, 0.95), { cast: false }); m.receiveShadow = true; }
   // the earth's own grain up close (Jay, 14 Nov: "add some texture but not attention grabbing"): the painted ground has
   // 3 cm texels, a flat colour in B's close shots, so a tiled detail layer lies 3 mm over it round the tavern's front:
   // fine specks, small pebbles with a lit top, hairline cracks, all faint. Transparent, depth not written, pulled
   // forward by polygon offset (no z-fight), no ink.
   { const m = Mk.own("#ffffff", { map: grainTex(), rough: 0.95 }); m.transparent = true; m.depthWrite = false; m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -2;
-    const G = new THREE.PlaneGeometry(DETAIL.size, DETAIL.size, 1, 1).rotateX(-Math.PI / 2).translate(DETAIL.cx, 0.003, DETAIL.cz);
+    const G = new THREE.PlaneGeometry(DETAIL.size, DETAIL.size, DETAIL.size, DETAIL.size).rotateX(-Math.PI / 2).translate(DETAIL.cx, 0.003, DETAIL.cz);   // 1 m cells (see groundGrid)
     const uv = G.attributes.uv as THREE.BufferAttribute; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * DETAIL.size / DETAIL.tile, uv.getY(i) * DETAIL.size / DETAIL.tile);
     const d = Mk.mesh("market.groundDetail", G, m, { cast: false, noink: true }); d.receiveShadow = true; d.renderOrder = 1; }
 

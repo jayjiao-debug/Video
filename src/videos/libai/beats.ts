@@ -116,7 +116,7 @@ export const BEAT = { A, B, C, D, E, F };
 /** THE SIDE CHARACTERS' BANNERS (hud/intro.tsx SideBanner; Jay, 15 Nov: "give a short title to those side characters"):
  *  each on the live shot when the person matters, about 2.5-3 s, over their head and moving with them (track.ts) */
 export const SIDE_BANNERS: { who: "gao" | "huan" | "you" | "he"; span: Span; scene: SceneId }[] = [
-  { who: "huan", span: [lineId("B16").from - 4, lineId("B16").from + 78], scene: "B" },
+  { who: "huan", span: [lineId("B16").from + 44, lineId("B16").from + 124], scene: "B" },   // he shouts 李翰林 off screen: the title waits until he is in the picture
   { who: "gao", span: GAO_BANNER, scene: "C" },
   { who: "you", span: [seg("E").from + 10, lineId("E28").from + 50], scene: "E" },
   { who: "he", span: [F.memory[0] + 8, F.memory[0] + 86], scene: "F" },
