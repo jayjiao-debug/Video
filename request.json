@@ -1,25 +1,17 @@
 {
- "id": "libai-a0203-01",
+ "id": "libai-c22-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
    "type": "dialogue",
-   "name": "lb_A0203_s744",
+   "name": "lb_C22_s744",
    "lang": "zh",
    "seed": 744,
    "lines": [
     {
-     "text": "[just woken, squinting, tipsy, slow] 是我……你哪位？",
-     "voice": {
-      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-      "voice_id": "mZc8T5doZrU7OCI71i3M",
-      "name": "HanBaba"
-     }
-    },
-    {
-     "text": "[bright, eager] 我今天跟拍您！",
+     "text": "[to camera, scared] 完了。高公公可是皇上身边最红的人。",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -30,20 +22,12 @@
   },
   {
    "type": "dialogue",
-   "name": "lb_A0203_s762",
+   "name": "lb_C22_s762",
    "lang": "zh",
    "seed": 762,
    "lines": [
     {
-     "text": "[just woken, squinting, tipsy, slow] 是我……你哪位？",
-     "voice": {
-      "owner": "58791ad7bc6d818a68e8981ab4ccea600a45458a5e4c8c1d032528f2b8c3e6a1",
-      "voice_id": "mZc8T5doZrU7OCI71i3M",
-      "name": "HanBaba"
-     }
-    },
-    {
-     "text": "[bright, eager] 我今天跟拍您！",
+     "text": "[to camera, scared] 完了。高公公可是皇上身边最红的人。",
      "voice": {
       "owner": "8ef98e23c1198e4a1eddd0480344160e4f2dce44147dfc18c034756c42071e4a",
       "voice_id": "I23uc91tu5zY2PA1tKEN",
@@ -51,13 +35,6 @@
      }
     }
    ]
-  },
-  {
-   "type": "sfx",
-   "name": "sfx_hiccup",
-   "text": "A single short comic drunk man's hiccup, hic, close and dry, no music.",
-   "duration": 0.6,
-   "influence": 0.6
   }
  ]
 }
