@@ -8,13 +8,15 @@
 //                            both sides; through the gap NEWTON writes STANDING at the table end of his room, bent over
 //                            the page, three-quarter side-on, about the middle, the candle stub at his elbow, Humphrey
 //                            by the front wall behind his master's back with the empty ink bottle (v5 has him in the far
-//                            corner: that corner is on her line past Newton's head); he darts off toward the door on the
-//                            first rap, out of his master's way. HOLD. His STOP 1/5 (BEAT.A.stop): he and
+//                            corner: that corner is on her line past Newton's head), TURNED AWAY from her and busy with
+//                            the bottle, his face never toward the lens (gate 5 r2, A1: H_BUSY); he darts off toward the
+//                            door on the first rap, out of his master's way. HOLD. His STOP 1/5 (BEAT.A.stop): he and
 //                            the quill freeze, the eyes slide to the side, chin up, no blink, no sway; a double blink and
 //                            a fast burst. The invisible hand raps twice (BEAT.A.knock, knock2): the frame nods forward a
 //                            hair on each (rapPush), the leaf shivers; on the hinge's creak (doorOpen) it swings wider.
 //                            He finishes the stroke (14 f: a person), puts the quill behind his ear as he turns and walks
-//                            to his door (three steps on the sound, BEAT.A.steps), in it by doorOpen[1]: he walks into a
+//                            to his door in THREE STRIDES, a foot landing on each of the mix's steps (BEAT.A.steps;
+//                            gate 5 r2, A2: the walk's phase keyed, nPhase), in it by doorOpen[1]: he walks into a
 //                            still frame toward the lens (the door does the reveal, not the lens)
 //   M1 SNAP    SNAP0 .. GOOD  "Good night." (LOOK 1/4: eyes open, on the lens): the lens angle drops 26 % (52 to 38.7 deg) in 5 f to
 //                            the scene's one EXTREME CLOSE, landing on A02's first sound (BEAT.A.goodNight); held through
@@ -49,8 +51,8 @@ import { STAIRS, STAIRS_SET, FOV } from "../layout";
 import { QUILL } from "../props";
 import { whisperLean, whisperSpan } from "../whisper";
 import type { World } from "../world";
-import { V, rel, hang, lid, speak, accent, heads, headPop, walkAlong, yawTo, lerpA, rigWalk, type RigState, type RigPose } from "./common";
-import { EYE_A, rapPush, shiver, jolt, breath, stepDip, nibAt, lightFocus } from "./segA_parts";
+import { V, rel, hang, lid, speak, accent, heads, headPop, walkAlong, yawTo, lerpA, wrapA, rigWalk, type RigState, type RigPose } from "./common";
+import { EYE_A, rapPush, shiver, jolt, breath, stepDip, nibAt, lightFocus, keyed } from "./segA_parts";
 
 type St = Partial<RigState>;
 const S = SEGMENTS[0], BA = BEAT.A;
@@ -135,10 +137,29 @@ const CANDLE_AT = V(STX + 3.4, TABLE_TOP, 0.12);
  *  his door (out of the leaf's sweep) at the latch; round the leaf, through the doorway, along the wall to the stair
  *  head; fast out of the door, dawdling on */
 const H_CORNER = V(STX + 3.36, 0, 0.74);
+/** GATE 5 r2 (director A1): through the cold open he must not steal the frame. No place in the room makes his head 65 %
+ *  of Newton's (measured: the deepest corner the gap shows is 4.1 m from her lens against Newton's head at 3.6 m, 0.82 at
+ *  best, and every deep spot puts him behind Newton's head), so he keeps this spot and turns AWAY: his true facing 52 deg
+ *  off her lens toward the jamb side (away from his master), busy with the empty bottle at his chest, lids lowered on
+ *  it: his face is a profile at the edge of his head, never toward the lens (his one look at her stays A05 "Laugh?").
+ *  A true three-quarter back (135 deg) was tried: this rig fades the face out past about 72 deg off the camera, so his
+ *  back reads as a blank white face looking at us (r2/try/A1_try135deg_backview_f0_52_68_71.png). The rig is told to
+ *  keep his true facing (RigState.turn 1) until the knock, so it does not turn him to the camera */
+const H_BUSY = yawTo(H_CORNER, P_GAP) + (52 * Math.PI) / 180;
+/** his hands on the bottle in the corner (his frame: x his left, z ahead): at his chest in front of him (his front is
+ *  half toward her, so the bottle shows against his coat), turning it slowly in his fingers (1 cm, about 0.6 Hz) */
+const busyHand = (at: THREE.Vector3, facing: number, arm: 0 | 1, f: number) => {
+  const w = (2 * Math.PI * 0.6 * f) / FPS, x = -0.02 + (arm ? 0.05 : -0.05);
+  return rel(at, facing, x + 0.01 * Math.sin(w + arm * 1.4), 0.82 + 0.008 * Math.sin(w * 0.5 + 0.7), 0.21 + 0.01 * Math.cos(w + arm * 1.4));
+};
 /** .. and on the knock he scurries off along the front wall toward the door, out of his master's way, behind the near
  *  jamb (out of her view) by the time Newton sets off: so he is by the door, inside, when he slips out at the latch */
 const H_HIDE = V(STX + 2.0, 0, 0.7);
 const H_SCURRY = 13;
+/** the dart's turn from the bottle to the door: a startle, fast at first (37 deg in 5 frames, half of it in the first:
+ *  his face comes round before his head reaches the frame's edge; the build's turn was 52 deg in the same 5 frames) */
+const H_WHIRL = 5;
+const whirl = (f: number) => easeOutCubic(clamp01((f - H_BACK0) / H_WHIRL));
 //   (the leaf opens inward on its far hinge: he waits on the open side of it, 1.17 m from the pivot so the opening leaf
 //   clears him, comes round the leaf through the middle of the doorway, 0.33 m off the near jamb and the leaf, steps out
 //   onto the landing 0.25 m off the wall and goes along it to the stair head)
@@ -161,12 +182,29 @@ const stairY = (z: number) => -ST.rise * Math.max(0, Math.min(ST.n, (z - STAIRS.
 const H_BACKV = 0.55, H_DOWNV = 1.35;
 
 // ------------------------------------------------------------------------------------------------------ the people
-/** NEWTON's way to his door: metres along N_PATH on frame f (a hurried walk: in over 8 f, out over the last 12) */
-const nDist = (f: number) => {
-  const u = clamp01((f - N_WALK0) / (N_WALK1 - N_WALK0)), a = 0.2, b = 0.3, vmax = 1 / (1 - a / 2 - b / 2);
-  const s = u < a ? (vmax * u * u) / (2 * a) : u < 1 - b ? vmax * (a / 2 + (u - a)) : 1 - (vmax * (1 - u) * (1 - u)) / (2 * b);
-  return N_LEN * clamp01(s);
-};
+/** NEWTON's WALK TO HIS DOOR (gate 5 r2, director A2): THREE STRIDES ON THE MIX'S THREE STEPS (BEAT.A.steps: f92,
+ *  f105, f118, bare boards). The rig's walk phase is KEYED, not taken from the distance: his right foot lands at phase 0
+ *  (f92) and 1 (f118), his left at 0.5 (f105); his first foot lifts as he sets off (N_WALK0, phase -0.4: the start of its
+ *  swing) and the trailing foot closes beside the last by CLOSE (phase 1.5), so he is in his door, both feet down, by
+ *  N_WALK1 (f123: never stopped mid-stride). The stride (half a step, rig3d's longest is 0.3 m) opens from 6 cm as he
+ *  turns from the page and closes to 5 cm for the closing step. His body's way along the path is a monotone curve
+ *  through keys at the three plants (from rest at N_WALK0 to rest at N_WALK1). Three planted steps of the rig cover
+ *  0.5 m each, his way round the table is 2.17 m, so the feet must slide somewhat: the keys put that slide in the turn
+ *  away from the page (a pivot) and in the last stride, where his feet have left the bottom of the frame (measured in
+ *  rebuild/A/NOTES.md, gate 5 r2) */
+const WALK_STEPS = BA.steps;
+const CLOSE = N_WALK1 - 1;
+const PH_KEYS: [number, number][] = [[N_WALK0, -0.4], [WALK_STEPS[0], 0], [WALK_STEPS[1], 0.5], [WALK_STEPS[2], 1], [CLOSE, 1.5]];
+const STRIDE_KEYS: [number, number][] = [[N_WALK0, 0.06], [N_WALK0 + 7, 0.3], [WALK_STEPS[2] - 8, 0.3], [WALK_STEPS[2], 0.14], [CLOSE, 0.05]];
+/** his way along the path at the plants (m): 0.38 by the first (the turn from the page: his standing foot pivots), 1.02
+ *  by the second (the first stride nearly planted), 2.03 by the third (the long stride, its slide below the frame's
+ *  text strip), the last 0.14 m slowing into his door (head speed 4, 3, 2.7, 2.5, 1.8 cm a frame over f118-122) */
+const D_KEYS: [number, number][] = [[N_WALK0, 0], [WALK_STEPS[0], 0.38], [WALK_STEPS[1], 1.02], [WALK_STEPS[2], 2.03], [N_WALK1, N_LEN]];
+/** metres along N_PATH on frame f */
+const nDist = (f: number) => keyed(f, D_KEYS);
+/** the walk's phase and stride on frame f */
+const nPhase = (f: number) => keyed(f, PH_KEYS, true);
+const nStride = (f: number) => keyed(f, STRIDE_KEYS);
 /** the walk opens over 6 frames and closes over the last 10 (the head stays on its path when walk and idle hand over:
  *  the walk pose leans the body 4 deg, so the feet are set N_LEAN behind the head's path while it is closed) */
 const N_LEAN = 0.05;
@@ -185,8 +223,8 @@ const newtonStage = (f: number): { at: THREE.Vector3; facing: number; pose: RigP
   const d = nDist(f), L = walkAlong(N_PATH, 1, d), open = walkOpen(f);
   const facing = lerpA(lerpA(F_DESK, heading(d), turn), F_DOOR, arrive);
   const at = L.at.clone().addScaledVector(V(Math.sin(facing), 0, Math.cos(facing)), -N_LEAN * (1 - open));
-  const w = rigWalk(d, 1.5);
-  return { at, facing, pose: { ...w, stride: lerp(0.1, w.stride ?? 0.27, open), amount: 0.75 * open } };
+  const ph = nPhase(f);
+  return { at, facing, pose: { kind: "walk", phase: ((ph % 1) + 1) % 1, stride: nStride(f), amount: 0.75 * open } };
 };
 /** the quill's direction from the nib up the feather, in his frame (x his left, z away from him): toward his right
  *  shoulder, a little back (segB's QDIR), turned to the world by his facing */
@@ -227,8 +265,10 @@ const humphreyStage = (f: number): { at: THREE.Vector3; facing: number; pose: Ri
   const doorYaw = yawTo(H_TOP, V(STAIRS.door.x, 0, STAIRS.door.z));
   if (f < LATCH) {
     const k = swing(clamp01((f - H_BACK0) / H_SCURRY)), dd = k * H_CORNER.distanceTo(H_HIDE), at = H_CORNER.clone().lerp(H_HIDE, k);
-    const fc = lerpA(yawTo(H_CORNER, P_GAP) - 0.55, yawTo(H_CORNER, H_HIDE), smooth((f - H_BACK0) / 5));
-    return { at, facing: fc, pose: k > 0 && k < 1 ? rigWalk(dd, 1.5) : idle(f / FPS) };
+    const fc = lerpA(H_BUSY, yawTo(H_CORNER, H_HIDE), whirl(f));
+    // (gate 5 r2: from the busy stance turned away from her, the rap's first frame is the whirl alone; the scurry's walk
+    // starts on the next, its bounce coming in over 3 frames)
+    return { at, facing: fc, pose: f > H_BACK0 + 1 && k < 1 ? rigWalk(dd, 1.5, smooth((f - H_BACK0 - 1) / 3)) : idle(f / FPS) };
   }
   if (f < H_DOWN) {
     const t = Math.max(0, (f - H_OUT0) / FPS), t1 = H_L1 / H_FAST;
@@ -427,12 +467,24 @@ export const SEG: Segment = {
       const both = out ? smooth((f - H_TURN2 - 3) / 8) : 1;
       const up = out ? smooth((f - H_TURN2) / 10) : 1;
       const low = { y: out ? CLUTCH.y : 0.72, z: out ? CLUTCH.z : 0.2 };
-      const hR = (out ? rel(H.at, H.facing, -0.23, 0.62, 0.15) : rel(H.at, H.facing, CLUTCH.x - CLUTCH.w / 2, low.y, low.z)).lerp(rel(H.at, H.facing, CLUTCH.x - CLUTCH.w / 2, low.y, low.z), up);
+      let hR = (out ? rel(H.at, H.facing, -0.23, 0.62, 0.15) : rel(H.at, H.facing, CLUTCH.x - CLUTCH.w / 2, low.y, low.z)).lerp(rel(H.at, H.facing, CLUTCH.x - CLUTCH.w / 2, low.y, low.z), up);
       if (!out || f >= H_TURN2) hL = hang(H.at, H.facing, 1).lerp(rel(H.at, H.facing, CLUTCH.x + CLUTCH.w / 2, low.y, low.z), both);
+      // the cold open (gate 5 r2, A1): turned away from her, busy with the bottle at his chest, lids on it; on the
+      // knock the whirl to the door brings the bottle down to his scurrying clutch and hands his body back to the rig's
+      // own turn toward the camera (exactly the build's from the whirl's end)
+      const busy = !out ? 1 - whirl(f) : 0;
+      if (busy > 0) { hR = hR.lerp(busyHand(H.at, H.facing, 0, f), busy); hL = (hL ?? hR).clone().lerp(busyHand(H.at, H.facing, 1, f), busy); }
+      let turn: number | undefined;
+      if (busy > 0) {
+        const cp = cam.pos instanceof THREE.Vector3 ? cam.pos : V(cam.pos[0], cam.pos[1], cam.pos[2]);
+        const off = Math.abs(wrapA(H.facing - Math.atan2(cp.x - H.at.x, cp.z - H.at.z)));
+        turn = lerp(smooth((off - (115 * Math.PI) / 180) / ((55 * Math.PI) / 180)), 1, busy);   // the rig's own value at busy 0
+      }
       const st: St = {
         at: H.at, facing: H.facing, pose: H.pose, visible: true, expr,
-        blink: yk > 0.4 ? 0 : f >= LAUGH - 3 && f < LAUGH + 12 ? 0 : lid(t, 12),
-        gaze, hands: [hR, hL], lookDown: !out ? 25 : 0,
+        // (busy: the lids lowered on the bottle, his own blinks on top)
+        blink: yk > 0.4 ? 0 : f >= LAUGH - 3 && f < LAUGH + 12 ? 0 : Math.max(lid(t, 12), 0.4 * busy),
+        gaze, hands: [hR, hL], lookDown: !out ? lerp(25, 34, busy) : 0, turn,
         head: heads(sp.head, yk > 0 ? { dy: 0.08 * yk, squash: -0.06 * yk, tilt: -4 * yk } : undefined,
           out && f >= H_YAWN1 && f < LAUGH - 3 ? { tilt: 4 * smooth((f - H_YAWN1) / 8) } : undefined,
           headPop(f, LAUGH), accent("nod", f, H_REACT, { amp: 0.35 }), accent("shake", f, H_SHAKE, { amp: 0.8 })),

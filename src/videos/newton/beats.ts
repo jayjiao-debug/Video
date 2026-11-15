@@ -95,12 +95,14 @@ const A = {
 
 // ---------------------------------------------------------------------------------------------------- B 上午 his room
 const bWalk: Span = [startAt("B03", -0.35), word("B03", "写")];
+/** the step back starts just after 先生 ("Sir," and its comma: the word's first frame + 9, as segB's M1 builds it) */
+const bStepBack = word("B01", "Sir") + 9;
 const B = {
-  /** THE PLATE (the day's clock, morning): the insert, Humphrey's sleeve and face beside it; HOLD until the step back */ plate: [seg("B").from, word("B01", "your") - 1] as Span,
+  /** THE PLATE (the day's clock, morning): the insert, Humphrey's sleeve and face beside it; HOLD until the step back */ plate: [seg("B").from, bStepBack - 1] as Span,
   /** the cover's clink: Humphrey lifts the lid, steam */ lid: segAt("B", 0.15),
   /** "Sir, your dinner." */ dinner: from("B01"),
-  /** THE STEP BACK from the insert to the two-thing in depth, starting after "Sir", landing on "dinner" (name kept: the
-   *  old segB reads pullBack) */ pullBack: [word("B01", "your"), word("B01", "dinner")] as Span,
+  /** THE STEP BACK from the insert to the two-thing in depth, starting just after "Sir," (its first frame + 9: script v5
+   *  row 06, segB M1, gate-5 note F4), landing on "dinner" */ pullBack: [bStepBack, word("B01", "dinner")] as Span,
   /** FLICK 1/4: the small dry swish (two fingers low, without looking) */ flick: endAt("B01", 0.08),
   /** Humphrey sighs */ sigh: endAt("B01", 0.32),
   /** his steps to the door: the FOLLOW to the doorway starts (only after the flick has read) */ humphreyGoes: endAt("B01", 0.60),

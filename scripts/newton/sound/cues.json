@@ -1,5 +1,5 @@
 {
- "note": "采访牛顿的一天 (formerly 跟着牛顿过一天) sound plan, v5 (script v5 revision 3, gate 2; the v5 voice: A01 cut, G01 split into G01a / G01b; /home/user/newton_work/film/sound/REMIX_v5.md). at = [line id, 'start'|'end', offset s], [scene, 'from'|'to', offset] (the PICTURE's own scene bounds, voice.ts SEGMENT_RAW, so scene-anchored cues land on the cut) or ['card:<line id>', 'from'|'to', offset] (the picture's CARD_RAW). 'sync' = the moment of the ORIGINAL clip (s) that lands on 'at' (the rap, the stroke, the thud), default its 'in'. gain in dB, ONE static gain per cue (music is never ducked: no automation, no sidechain; fades only at a cue's own start / end). loop = repeat the clip to fill [at, until]; in = seconds skipped at the clip's start; len = seconds of the clip a hit plays; rate = sampler-style speed (pitch and length together); pitch = semitones, length kept (rubberband); hp / lowshelf / lp = ONE fixed filter for the whole cue. Clips: /home/user/newton_work/film/sound/clips (voice farm run newton-v4-sound-01; rec_beep from qin-sfx-01; sfx_poweroff and sfx_card_A5 made by make_poweroff.py / retune_clip.py; ph_* = PLACEHOLDERS made by make_placeholders.py, each cue naming its sound-farm request under 'placeholder'). Every cue's 'label' names the script cell it lands; SYNC_POINTS.md lists the picture frames. Levels: every line at least 10 LU over the bed (voice track vs the bed rebuilt with a silent voice) in the full band AND in the phone band (450 Hz-9 kHz); mono mix about -19 LUFS, true peak -1.8 dBTP (build.py --gain, --ceiling -1.8), under -1 dBTP after the AAC mux. Her camera: rec_beep on frame 1, sfx_poweroff when it switches off (G to - 1.4 s = hud/vlog.tsx OFF_AT). | r2 (14 Nov, the sound review's notes): build.py's limiter is on the VOICE branch only and the sum passes a safety limiter that never engages (the build refuses a mix over -1.8 dBTP); 'fade_curve' (qsin) for mus_supper's two-bar splice; remix_v5/tools/fix_r2.py lists every change and its note. | 14 Nov late evening (the effects plan's FULL gaps: G1 1.2 s after the thud, G2 2.5 s after B03 = Newton's card and its 75-frame freeze, G3 0.5 s after B09; 5438 frames): mus_morning -> mus_morning_v5 (one loop-back of 6 beats with a 40 ms crossfade, kept by the owner on 14 Nov, in the intro); the freeze stops B's room tone and the quill for 75 frames; skin A's sounds (labels 'skin A'); tools: remix_v5/tools/fix_gaps.py, make_mm_v5.py. | r3 (14 Nov night): tick 1's nib on a music onset (B09 end + 0.223 s), Humphrey's banner slip -15 dB; Newton's card's seal presses on f939, the morning music's A -> G major turn inside the freeze (the picture only).",
+ "note": "采访牛顿的一天 (formerly 跟着牛顿过一天) sound plan, v5 (script v5 revision 3, gate 2; the v5 voice: A01 cut, G01 split into G01a / G01b; /home/user/newton_work/film/sound/REMIX_v5.md). at = [line id, 'start'|'end', offset s], [scene, 'from'|'to', offset] (the PICTURE's own scene bounds, voice.ts SEGMENT_RAW, so scene-anchored cues land on the cut) or ['card:<line id>', 'from'|'to', offset] (the picture's CARD_RAW). 'sync' = the moment of the ORIGINAL clip (s) that lands on 'at' (the rap, the stroke, the thud), default its 'in'. gain in dB, ONE static gain per cue (music is never ducked: no automation, no sidechain; fades only at a cue's own start / end). loop = repeat the clip to fill [at, until]; in = seconds skipped at the clip's start; len = seconds of the clip a hit plays; rate = sampler-style speed (pitch and length together); pitch = semitones, length kept (rubberband); hp / lowshelf / lp = ONE fixed filter for the whole cue. Clips: /home/user/newton_work/film/sound/clips (voice farm run newton-v4-sound-01; rec_beep from qin-sfx-01; sfx_poweroff and sfx_card_A5 made by make_poweroff.py / retune_clip.py; ph_* = PLACEHOLDERS made by make_placeholders.py, each cue naming its sound-farm request under 'placeholder'). Every cue's 'label' names the script cell it lands; SYNC_POINTS.md lists the picture frames. Levels: every line at least 10 LU over the bed (voice track vs the bed rebuilt with a silent voice) in the full band AND in the phone band (450 Hz-9 kHz); mono mix about -19 LUFS, true peak -1.8 dBTP (build.py --gain, --ceiling -1.8), under -1 dBTP after the AAC mux. Her camera: rec_beep on frame 1, sfx_poweroff when it switches off (G to - 1.4 s = hud/vlog.tsx OFF_AT). | r2 (14 Nov, the sound review's notes): build.py's limiter is on the VOICE branch only and the sum passes a safety limiter that never engages (the build refuses a mix over -1.8 dBTP); 'fade_curve' (qsin) for mus_supper's two-bar splice; remix_v5/tools/fix_r2.py lists every change and its note. | 14 Nov late evening (the effects plan's FULL gaps: G1 1.2 s after the thud, G2 2.5 s after B03 = Newton's card and its 75-frame freeze, G3 0.5 s after B09; 5438 frames): mus_morning -> mus_morning_v5 (one loop-back of 6 beats with a 40 ms crossfade, kept by the owner on 14 Nov, in the intro); the freeze stops B's room tone and the quill for 75 frames; skin A's sounds (labels 'skin A'); tools: remix_v5/tools/fix_gaps.py, make_mm_v5.py. | r3 (14 Nov night): tick 1's nib on a music onset (B09 end + 0.223 s), Humphrey's banner slip -15 dB; Newton's card's seal presses on f939, the morning music's A -> G major turn inside the freeze (the picture only). | r4 (15 Nov, gate-5 note F1): the title's nib on 牛's first stroke (f187); the banner slip on the slip's landing (f310); Humphrey's descent on the picture's foot plants (one backward step f473, six steps down f481-f531); her E steps on the walk's footfalls (f2742, f2754, f2767).",
  "whisper_dip": {
   "db": -6,
   "ramp": 0.2,
@@ -1154,15 +1154,116 @@
    "note": "two shuffles from sfx_stairs_down through a 1.2 kHz low-pass (slippers, not shoes): 9.32 / 9.66 s"
   },
   {
-   "label": "A Humphrey's steps going down",
+   "label": "A Humphrey's step back down onto the stair head (on his foot plant)",
    "clip": "sfx_stairs_down",
    "at": [
     "A05",
     "end",
-    0.1
+    0.388
+   ],
+   "gain": -29,
+   "in": 1.331,
+   "sync": 1.338,
+   "len": 0.14,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: the backward step, f473 (clip 1.331-1.471 s, the step's attack at 1.338 s), softer than the descent: he backs down carefully, facing her"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 1 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    0.655
    ],
    "gain": -26,
-   "note": "as v4: under the pan back to the door and A06"
+   "in": 0.44,
+   "sync": 0.446,
+   "len": 0.145,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 1 of 6 down, f481 (clip 0.44-0.585 s, the step's attack at 0.446 s, gain -26: the steps fade about 2.5 dB each as he goes down the flight, he is out of the frame from f480)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 2 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    0.988
+   ],
+   "gain": -25.5,
+   "in": 0.982,
+   "sync": 0.986,
+   "len": 0.11,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 2 of 6 down, f491 (clip 0.982-1.092 s, the step's attack at 0.986 s, gain -25.5: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 3 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    1.322
+   ],
+   "gain": -30,
+   "in": 1.243,
+   "sync": 1.25,
+   "len": 0.085,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 3 of 6 down, f501 (clip 1.243-1.328 s, the step's attack at 1.25 s, gain -30: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 4 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    1.655
+   ],
+   "gain": -30,
+   "in": 0.762,
+   "sync": 0.768,
+   "len": 0.11,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 4 of 6 down, f511 (clip 0.762-0.872 s, the step's attack at 0.768 s, gain -30: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 5 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    1.988
+   ],
+   "gain": -26.5,
+   "in": 1.795,
+   "sync": 1.801,
+   "len": 0.08,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 5 of 6 down, f521 (clip 1.795-1.875 s, the step's attack at 1.801 s, gain -26.5: the steps fade about 2.5 dB each as he goes down the flight)"
+  },
+  {
+   "label": "A Humphrey goes down the stairs: step 6 of 6 (on his foot plant)",
+   "clip": "sfx_stairs_down",
+   "at": [
+    "A05",
+    "end",
+    2.322
+   ],
+   "gain": -30.5,
+   "in": 1.559,
+   "sync": 1.565,
+   "len": 0.07,
+   "fade": 0.003,
+   "fade_out": 0.03,
+   "note": "HUMPHREY'S DESCENT (r4, 15 Nov, gate-5 note F1): the picture backs him one step down from BEAT.A.humphreyDown (A05 end + 0.10 s = f464), the foot landing behind him on f473, and turns him on f476 to go on down at 1.35 m/s, a foot plant every 10 frames from f481 (segA humphreyStage: backWalk 0.55 m/s, then rigWalk 1.35 m/s; checked on picture-only stills f455-520). One footfall from sfx_stairs_down on each plant. Until r3 the whole 3 s clip played from f464, its loudest step on f478 while he still stood at the top | this one: step 6 of 6 down, f531 (clip 1.559-1.629 s, the step's attack at 1.565 s, gain -30.5: the steps fade about 2.5 dB each as he goes down the flight)"
   },
   {
    "label": "A his bed creaks behind the door (after 次)",
@@ -1639,7 +1740,7 @@
    "gain": -23
   },
   {
-   "label": "E her step 1 of 3 to the desk",
+   "label": "E her step 1 of 2 in to the plate",
    "clip": "sfx_stairs_up",
    "at": [
     "E03",
@@ -1650,10 +1751,11 @@
    "in": 0.2,
    "len": 0.14,
    "sync": 0.22,
-   "fade_out": 0.03
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold"
   },
   {
-   "label": "E her step 2 of 3 to the desk",
+   "label": "E her step 2 of 2 in to the plate",
    "clip": "sfx_stairs_up",
    "at": [
     "E03",
@@ -1664,21 +1766,53 @@
    "in": 0.2,
    "len": 0.14,
    "sync": 0.22,
-   "fade_out": 0.03
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold"
   },
   {
-   "label": "E her step 3 of 3 to the desk",
+   "label": "E her step 1 of 3 to his desk",
    "clip": "sfx_stairs_up",
    "at": [
     "E03",
     "start",
-    0.55
+    1.017
    ],
    "gain": -36,
    "in": 0.2,
    "len": 0.14,
    "sync": 0.22,
-   "fade_out": 0.03
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold | this one: f2742"
+  },
+  {
+   "label": "E her step 2 of 3 to his desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E03",
+    "start",
+    1.417
+   ],
+   "gain": -36,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold | this one: f2754"
+  },
+  {
+   "label": "E her step 3 of 3 to his desk",
+   "clip": "sfx_stairs_up",
+   "at": [
+    "E03",
+    "start",
+    1.85
+   ],
+   "gain": -36,
+   "in": 0.2,
+   "len": 0.14,
+   "sync": 0.22,
+   "fade_out": 0.03,
+   "note": " | HER STEPS IN E (r4, 15 Nov, gate-5 note F1): her footfalls are the picture's lens dips (segE footBob): the step in to the plate (M4) on f2701 and f2715, the turn and walk to his desk (M5, f2734-2768, landing on 朋) on f2742, f2754 and f2767. Until r3 the third step was E03 start + 0.55 s (f2728), inside the still plate hold | this one: f2767"
   },
   {
    "label": "E the quill set down",
@@ -1928,16 +2062,16 @@
    "note": "hud/vlog.tsx OFF_AT = TOTAL - 42 = frame 5211: the click 0.375 s after the pluck; the power-down sweep 0.8 s later on the end black | r2: -18 -> -12 dB (MINOR 10): the film's last sound, the REC beep's mirror"
   },
   {
-   "label": "A skin A: the title's nib, inside the thud",
+   "label": "A skin A: the title's nib, on 牛's first stroke",
    "clip": "sfx_quill",
    "at": [
     "A02",
     "end",
-    0.47
+    0.735
    ],
-   "gain": -6,
-   "in": 6.765,
-   "sync": 6.775,
+   "gain": -1,
+   "in": 2.993,
+   "sync": 3.0,
    "len": 0.11,
    "fade": 0.004,
    "fade_out": 0.025,
@@ -1945,23 +2079,23 @@
     1200,
     2
    ],
-   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 1, Sound column: 'the skin's one title sound, inside the thud. Not over the pigeon (6.10)'): one dry nib stroke from the quill clip (its nib touching down at clip 6.775 s, then a bright 5-8 kHz scratch), 110 ms: on f179 (A02 end + 0.47 s = 5.97 s) as the title starts writing (hud/ms/when.ts: the title from the thud, BEAT.A.doorShut f177; the orbit from t2, 牛 from t3), inside the thud's body (5.90-6.04 s) and gone by 6.08 s, before the pigeon's flap on 6.10 s; a 1.2 kHz high-pass keeps it dry (the thud carries the low end). G1 opens after it: A02 and the thud do not move."
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 1, Sound column: 'the skin's one title sound, inside the thud. Not over the pigeon (6.10)'): one dry nib stroke from the quill clip (r4: the stroke at clip 3.000 s: the nib touches down crisply, its 2-10 kHz peak 12-18 ms in, a short drag, quiet again after 90 ms), 110 ms, on f187 (A02 end + 0.735 s = 6.235 s): the frame 牛 starts writing (hud/ms/when.ts title: from the thud f184 = A02 end + 0.64 s, the leaf slapped on at t0, the orbit from t2, 牛 from t3), after the thud's attack (5.90 s) and the pigeon's flap (6.10 s); a 1.2 kHz high-pass keeps it dry. G1 opens after it: A02 and the thud do not move | r4 (15 Nov; skin r3 note 3, gate-5 note F1): A02 end + 0.47 s (f179, inside the thud's body, 5 frames before the leaf is on screen) -> + 0.735 s (f187): the nib is heard when there is a nib. On f187 the r3 piece (clip 6.765 s, -6 dB) did not read: its scratch rises over 70 ms (heard from f188-189) and the pigeon's flaps cover f187 (2-10 kHz +0.0 dB over the rest, skin_check); the crisper stroke at -1 dB reads about +6 dB and stays more than 20 dB under A02"
   },
   {
    "label": "A skin A: Humphrey's banner, one paper slip",
    "clip": "sfx_paper",
    "at": [
-    "A04",
-    "start",
-    -0.2
+    "A03",
+    "end",
+    0.205
    ],
    "gain": -15,
    "in": 0.2,
-   "sync": 0.21,
+   "sync": 0.28,
    "len": 0.17,
    "fade": 0.01,
    "fade_out": 0.05,
-   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 2, Sound column: 'one short palette sound, under A04'): a 0.17 s paper slip from sfx_paper (clip 0.20-0.37 s, its crisp crack at 0.28 s) as the banner slips in (hud/ms/when.ts: from A04 start - 0.25 s = f329, the door's click, in over 10 frames): 11.02-11.19 s, after the click and ended before A04's voice (11.23 s), so it is never on the line | r3 (14 Nov night, the owner): -10 -> -15 dB"
+   "note": "SKIN A 「手稿」 (EFFECTS_PLAN row 2, Sound column: 'one short palette sound, under A04'): a 0.17 s paper slip from sfx_paper (clip 0.20-0.37 s, its crisp crack at 0.28 s = the sync) as the banner is laid in (hud/ms/when.ts + fit_A: from BEAT.A.humphreyOut + 4 = A03 end + 4 frames = f308, the slip laid down over MOTION.slap = 3 frames, flat on t2 = f310): the rustle from 10.255 s (f308, as the slip shows), the crack on f310 (10.335 s) as it lands, gone by 10.43 s: after A03's voice (10.13 s) and long before A04's (11.23 s), under the latch and creak of his door (its click is f329) | r3 (14 Nov night, the owner): -10 -> -15 dB | r4 (15 Nov, gate-5 note F1 and skin r3 note 4): A04 start - 0.20 s with the sync on the rustle (f331, 23 frames after the banner was in) -> A03 end + 0.205 s with the sync on the crack (f310)"
   },
   {
    "label": "B skin A: Newton's card, a page turn on its first frame",

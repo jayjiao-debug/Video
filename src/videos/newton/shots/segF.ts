@@ -574,7 +574,7 @@ const pose = (w: World, f: number): Pose => {
   if (!poke || !poke.held) w.prop("poker").put(F_POKER_REST.grip, { rot: F_POKER_REST.rot, hot: 0 });
   w.prop("stool", "sack").put(ST1, { rot: 0.4 });
   if (f < T_TAKE) putLimpSack(w, SACK_GRAB, quatYZ(LIMP_LYING.up, LIMP_LYING.thin), LIMP_LYING.s);
-  if (f >= T_FREE) { const P = shovelPut(SH_LEAN.blade, SH_LEAN.handle, V(0, 0, 1)); w.prop("shovel").put(P.at, { rot: P.rot }); }
+  if (f >= T_FREE) { const P = shovelPut(SH_LEAN.blade, SH_LEAN.handle, V(0, 0, -1)); w.prop("shovel").put(P.at, { rot: P.rot }); }
   putStoolUnder(w, ELAB.stool, FACE);
   w.prop("drafts").put(DRAFTS_AT, { rot: DRAFTS_ROT });
   if (!bp) w.prop("board").put(B_WALL.at, { rot: B_WALL.rot });

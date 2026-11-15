@@ -11,7 +11,13 @@
 //   band     (hud CAPTION_BAND, y 1325..1490, x 54..930, while a subtitle shows and the face misses the rows' box)
 //   phone    (the phone app's own things: the icons over the top corners to y 60, the buttons x > 940 from y 950, the
 //            post's text from y 1510 left of x 900; layout.ts PHONE; every frame)
-//   margin   (the outer 54 px of each side: picture only, another screen shape may trim it; every frame)
+//   margin   (the outer 54 px of each side: picture only, another screen shape may trim it; every frame). A margin hit
+//            counts only on a HELD frame (gate-5 note F7): where the camera moves (her move shifts the face's own point
+//            on screen by CAM_PX or more per frame, at its centre or its sides) or the face itself is moving across the
+//            frame (its head box's centre or size changes by FACE_PX, and by FACE_REL of its radius, or more per frame,
+//            or it is not in frame on a neighbouring frame: entering or exiting), the face crossing the edge is part of
+//            the move, and its range is reported as `info` (never HIGH or med); on a held frame the usual severity
+//            stands. README.md next to this file.
 // It also checks THE JOINS against the picture: every join of beats.ts JOINS (script v5's 11: clock, whip, match)
 // inside a scene must sit on a frame where the place changes (the cut), so a re-timed scene that moves a cut without
 // its beat is reported; the no-cut race ⑩ must keep one place; every change of place in the picture must be a join
@@ -183,7 +189,7 @@ const SKIN: [number, number][] = [];
 for (let a = 0; a < 24; a++) { const t = (a / 24) * Math.PI * 2, x = 0.92 * Math.cos(t), y = 0.92 * Math.sin(t); if (y <= 0.45) SKIN.push([x, y]); }
 for (const x of [-0.82, -0.4, 0, 0.4, 0.82]) SKIN.push([x, 0.45]);
 const KEY: [number, number][] = [[-0.28, 0.03], [0.28, 0.03], [0, -0.15], [0, -0.35], [0, -0.7]];
-type Face = { fig: string; box: Box; poly: Poly; featPoly: Poly; feat: Box; full: Box; eyeY: number; faceOn: number; key: THREE.Vector3[]; group: THREE.Object3D };
+type Face = { fig: string; box: Box; poly: Poly; featPoly: Poly; feat: Box; full: Box; eyeY: number; faceOn: number; key: THREE.Vector3[]; group: THREE.Object3D; C: THREE.Vector3[] };
 const visibleUp = (o: THREE.Object3D | null) => { for (let p = o; p; p = p.parent) if (!p.visible) return false; return true; };
 
 function facesOf(): Face[] {
@@ -218,7 +224,7 @@ function facesOf(): Face[] {
     const polyOf = (ps: THREE.Vector3[]): Poly => hull(ps.map((p) => proj(p)).filter((q) => q.front).map((q) => [q.x - 0, q.y - 0] as [number, number]));
     if (!face || !full || !skin) continue;
     const eye = proj(onBall(0, 0.03));
-    out.push({ fig: names.get(r) ?? "figure", box: ZONE === "head" ? full : ZONE === "face" ? face : skin, poly: polyOf(ZONE === "head" ? ring : ZONE === "face" ? fp : skinP), featPoly: polyOf(fp), feat: face, full, eyeY: eye.y, faceOn: U.uFaceOn.value as number, key: KEY.map(([x, y]) => onBall(x, y)), group: r.group });
+    out.push({ fig: names.get(r) ?? "figure", box: ZONE === "head" ? full : ZONE === "face" ? face : skin, poly: polyOf(ZONE === "head" ? ring : ZONE === "face" ? fp : skinP), featPoly: polyOf(fp), feat: face, full, eyeY: eye.y, faceOn: U.uFaceOn.value as number, key: KEY.map(([x, y]) => onBall(x, y)), group: r.group, C: [C.clone(), C.clone().addScaledVector(camR, R * hs.x), C.clone().addScaledVector(camR, -R * hs.x)] });
   }
   return out;
 }
@@ -378,12 +384,48 @@ function cutCheck(f: number, h: number, lead: any, l: Lift, items: Item[]) {
 }
 
 // ---------------------------------------------------------------------------------------------------- run
-type Hit = { f: number; seg: string; shot: string; slate: string; fig: string; what: string; area: number; pct: number; face: Box; rect: Box; hidden: boolean; feat: number };
+type Hit = { f: number; seg: string; shot: string; slate: string; fig: string; what: string; area: number; pct: number; face: Box; rect: Box; hidden: boolean; feat: number; moving?: string; mv?: { cam: number; face: number; gone: boolean } };
 const hits: Hit[] = [], eyesLow: { f: number; seg: string; fig: string; y: number }[] = [];
+// ---------------------------------------------------------------------------------------------------- held or moving (margin)
+/** gate-5 note F7: a margin hit is a HELD frame's only when neither the camera nor the face moves. The camera moves when
+ *  the face's own world points (the head ball's centre and its two sides) shift CAM_PX or more on screen per frame from
+ *  the camera's change alone (to the frame before or after: an eased move's first and last frames count); the face
+ *  moves when its head box's centre shifts, or its radius changes, by FACE_PX and by FACE_REL of its radius or more per
+ *  frame (a talking head's bob in an extreme close, about 1 % of its radius, stays held), or when it is out of frame on
+ *  a neighbouring frame of the same place (entering or exiting) */
+const CAM_PX = 1.5, FACE_PX = 2.5, FACE_REL = 0.02;
+/** every posed frame's camera (its view and projection matrices) and every visible face's head box (centre, radius) */
+const camOf = new Map<number, { view: THREE.Matrix4; proj: THREE.Matrix4 }>();
+const faceTrack = new Map<string, Map<number, { x: number; y: number; r: number }>>();
+const projWith = (p: THREE.Vector3, c: { view: THREE.Matrix4; proj: THREE.Matrix4 }) => {
+  const v = p.clone().applyMatrix4(c.view).applyMatrix4(c.proj);
+  return { x: ((v.x + 1) / 2) * W, y: ((1 - v.y) / 2) * H };
+};
+/** a face on frame f (its world points: the head ball's centre and sides): how fast the camera alone moves it (px per
+ *  frame), how fast it moves on screen (px per frame), whether it leaves or enters the frame next to f, and why it counts
+ *  as moving ("camera", "face", "face entering / exiting"), or "" when held */
+function movingAt(f: number, fig: string, pts: THREE.Vector3[]): { why: string; cam: number; face: number; gone: boolean } {
+  const c0 = camOf.get(f), tr = faceTrack.get(fig), me = tr?.get(f);
+  if (!c0 || !me) return { why: "", cam: 0, face: 0, gone: false };
+  const p0 = pts.map((p) => projWith(p, c0));
+  let cam = 0, face = 0, gone = false;
+  for (const g of [f - STEP, f + STEP]) {
+    const c1 = camOf.get(g);
+    if (!c1 || placeOf.get(g) !== placeOf.get(f)) continue;           // not posed, or across a cut: no neighbour
+    pts.forEach((p, i) => { const q = projWith(p, c1); cam = Math.max(cam, Math.hypot(q.x - p0[i].x, q.y - p0[i].y) / STEP); });
+    const o = tr!.get(g);
+    if (!o) { gone = true; continue; }
+    face = Math.max(face, Math.hypot(o.x - me.x, o.y - me.y) / STEP, Math.abs(o.r - me.r) / STEP);
+  }
+  const why = cam >= CAM_PX ? "camera" : face >= Math.max(FACE_PX, FACE_REL * me.r) ? "face" : gone ? "face entering / exiting" : "";
+  return { why, cam: Math.round(cam * 10) / 10, face: Math.round(face * 10) / 10, gone };
+}
 /** the place of every posed frame (the joins check) */
 const placeOf = new Map<number, string>();
 const perSeg = new Map<string, { n: number; hitFrames: Set<number>; faces: number; errs: number }>();
 let cur: any = null;
+/** the margin hits, classified held / moving once every frame is posed (their neighbours' cameras and faces) */
+const pendingMargin: { i: number; fig: string; C: THREE.Vector3[] }[] = [];
 const t0 = Date.now();
 for (const f of frames) {
   const h = msHold(f);                                         // THE FREEZE: the held frame on the lead card's frames
@@ -393,6 +435,7 @@ for (const f of frames) {
     if (s !== cur) { cur?.exit?.(w); s.enter?.(w); cur = s; }
     w.beginFrame(h); const P = s.pose(w, h); w.endFrame(P); w.root.updateMatrixWorld(true); camera.updateMatrixWorld();
     ps.n++; placeOf.set(f, String(w.place));
+    camOf.set(f, { view: camera.matrixWorldInverse.clone(), proj: camera.projectionMatrix.clone() });
     const hud = hudOf(f, P);
     const faces = hud.black >= 0.97 ? [] : facesOf();
     // THE CUT-OUT: the lead's face goes up with the lifted sticker; the sticker itself against the card (cutCheck)
@@ -403,6 +446,11 @@ for (const f of frames) {
       if (!maskCover) maskCover = coverOf(msScreen(w, P, f, h).cut ?? null);
     }
     const shot = hooks.shotAt ? hooks.shotAt(f) : s.id;
+    for (const fc of faces) {
+      // the head box on screen (lifted with the cut-out where it is): the held / moving test of the margin hits
+      if (area(inter(fc.full, SCR)) > 0) { let t = faceTrack.get(fc.fig); if (!t) faceTrack.set(fc.fig, (t = new Map())); t.set(f, { x: (fc.full.x0 + fc.full.x1) / 2, y: (fc.full.y0 + fc.full.y1) / 2, r: (fc.full.x1 - fc.full.x0 + fc.full.y1 - fc.full.y0) / 4 }); }
+    }
+    const marginC = new Map<number, { fig: string; C: THREE.Vector3[] }>();
     for (const fc of faces) {
       const vis = inter(fc.box, SCR);
       if (area(vis) <= 0 || fc.faceOn < 0.3) continue;
@@ -418,9 +466,11 @@ for (const f of frames) {
         if (hidden === null) hidden = hiddenKeys(fc) >= fc.key.length;
         const feat = Math.round(under(fc.featPoly, inter(rp, SCR)));
         hits.push({ f, seg: s.id, shot, slate: String(P.slate ?? ""), fig: fc.fig, what: it.what, area: Math.round(a), pct: Math.round((100 * a) / Math.max(1, polyArea(clipPoly(fc.poly, SCR)))), face: vis, rect: it.r, hidden, feat });
+        if (it.what === "margin") marginC.set(hits.length - 1, { fig: fc.fig, C: fc.C });
         if (!hidden) ps.hitFrames.add(f);
       }
     }
+    for (const [i, m] of marginC) pendingMargin.push({ i, ...m });
     if (DUMP.has(f)) {
       console.log(`--- f${f} seg ${s.id} [${shot}] place ${w.place} cam ${camera.position.toArray().map((x: number) => x.toFixed(2))} black ${hud.black.toFixed(2)} pose{hud:${P.hud},rec:${P.rec},cards:${P.cards},captions:${P.captions}}`);
       for (const it of hud.items) console.log(`    hud ${it.what.padEnd(8)} ${fmtB(it.r)}`);
@@ -428,26 +478,27 @@ for (const f of frames) {
     }
   } catch (e) { ps.errs++; console.log(`EXC f${f}: ${(e as Error).stack?.split("\n").slice(0, 3).join(" | ")}`); }
 }
+for (const m of pendingMargin) { const x = hits[m.i], { why, ...mv } = movingAt(x.f, m.fig, m.C); x.mv = mv; if (why) x.moving = why; }
 const secs = (Date.now() - t0) / 1000;
 
 // ---------------------------------------------------------------------------------------------------- the report
-type Range = { seg: string; fig: string; what: string; f0: number; f1: number; n: number; nHidden: number; max: number; maxPct: number; fMax: number; maxFeat: number; face: Box; rect: Box; shots: Set<string>; slates: Set<string> };
+type Range = { seg: string; fig: string; what: string; f0: number; f1: number; n: number; nHidden: number; max: number; maxPct: number; fMax: number; maxFeat: number; face: Box; rect: Box; shots: Set<string>; slates: Set<string>; moving: boolean; why: Set<string>; cam: number; spd: number };
 const ranges: Range[] = [];
 const byKey = new Map<string, Hit[]>();
-for (const x of hits) { const k = `${x.fig}|${x.what}`; let a = byKey.get(k); if (!a) byKey.set(k, (a = [])); a.push(x); }
+for (const x of hits) { const k = `${x.fig}|${x.what}|${x.moving ? "moving" : "held"}`; let a = byKey.get(k); if (!a) byKey.set(k, (a = [])); a.push(x); }
 for (const xs of byKey.values()) {
   xs.sort((a, b) => a.f - b.f);
   let r: Range | null = null;
   for (const x of xs) {
-    if (!r || x.f > r.f1 + GAP || x.seg !== r.seg) { r = { seg: x.seg, fig: x.fig, what: x.what, f0: x.f, f1: x.f, n: 0, nHidden: 0, max: -1, maxPct: 0, fMax: x.f, maxFeat: 0, face: x.face, rect: x.rect, shots: new Set(), slates: new Set() }; ranges.push(r); }
-    r.f1 = x.f; r.n++; r.shots.add(x.shot); if (x.slate) r.slates.add(x.slate); if (x.hidden) r.nHidden++; else r.maxFeat = Math.max(r.maxFeat, x.feat);
+    if (!r || x.f > r.f1 + GAP || x.seg !== r.seg) { r = { seg: x.seg, fig: x.fig, what: x.what, f0: x.f, f1: x.f, n: 0, nHidden: 0, max: -1, maxPct: 0, fMax: x.f, maxFeat: 0, face: x.face, rect: x.rect, shots: new Set(), slates: new Set(), moving: !!x.moving, why: new Set(), cam: 0, spd: 0 }; ranges.push(r); }
+    r.f1 = x.f; r.n++; r.shots.add(x.shot); if (x.slate) r.slates.add(x.slate); if (x.moving) r.why.add(x.moving); if (x.mv) { r.cam = Math.max(r.cam, x.mv.cam); r.spd = Math.max(r.spd, x.mv.face); } if (x.hidden) r.nHidden++; else r.maxFeat = Math.max(r.maxFeat, x.feat);
     if (!x.hidden && x.area > r.max) { r.max = x.area; r.maxPct = x.pct; r.fMax = x.f; r.face = x.face; r.rect = x.rect; }
   }
 }
 for (const r of ranges) if (r.max < 0) { r.max = 0; }
 ranges.sort((a, b) => a.f0 - b.f0 || a.what.localeCompare(b.what));
 const shown = ranges.filter((r) => r.n > r.nHidden), hiddenOnly = ranges.filter((r) => r.n === r.nHidden);
-const sev = (r: Range) => (r.what === "band" ? "low" : r.maxFeat >= 400 || r.max >= 6000 ? "HIGH" : r.max >= 800 ? "med" : "low");
+const sev = (r: Range) => (r.what === "margin" && r.moving ? "info" : r.what === "band" ? "low" : r.maxFeat >= 400 || r.max >= 6000 ? "HIGH" : r.max >= 800 ? "med" : "low");
 // THE JOINS (beats.ts JOINS): each join inside a scene must sit on a cut (the place changes from the frame before to
 // its cut frame); the scene starts are cuts by construction, except ⑩ (noCut: the race over the held frame, one place);
 // a clock join names its race (hud/vlog.tsx RACES, its own frames); every change of place in the frames checked must
@@ -474,7 +525,7 @@ for (const [f, b] of placeOf) {
   const a = placeOf.get(f - 1);
   if (a !== undefined && a !== b && !JOINS.some((j) => j.cut === f)) joins.push(`CUT WITH NO JOIN at f${f}: ${a} -> ${b} (every change of place is one of the 11 joins)`);
 }
-const fmtR = (r: Range) => `${sev(r).padEnd(4)} ${r.seg}  f${r.f0}-${r.f1} (${r.n - r.nHidden}/${r.f1 - r.f0 + 1} frames${r.nHidden ? `, ${r.nHidden} hidden` : ""})  ${r.fig.padEnd(12)} x ${r.what.padEnd(8)} max ${String(r.max).padStart(6)} px2 (${String(r.maxPct).padStart(3)} % of the face; features ${r.maxFeat} px2) at f${r.fMax}  face ${fmtB(r.face)}  ${r.what} ${fmtB(r.rect)}  [${[...r.slates].join(" | ") || [...r.shots].join(",")}]`;
+const fmtR = (r: Range) => `${sev(r).padEnd(4)} ${r.seg}  f${r.f0}-${r.f1} (${r.n - r.nHidden}/${r.f1 - r.f0 + 1} frames${r.nHidden ? `, ${r.nHidden} hidden` : ""}${r.what === "margin" ? `; ${r.moving ? `moving: ${[...r.why].join(", ")}` : "held"}, camera <= ${r.cam} px/f, face <= ${r.spd} px/f` : ""})  ${r.fig.padEnd(12)} x ${r.what.padEnd(8)} max ${String(r.max).padStart(6)} px2 (${String(r.maxPct).padStart(3)} % of the face; features ${r.maxFeat} px2) at f${r.fMax}  face ${fmtB(r.face)}  ${r.what} ${fmtB(r.rect)}  [${[...r.slates].join(" | ") || [...r.shots].join(",")}]`;
 const eyeR: { seg: string; fig: string; f0: number; f1: number; maxY: number }[] = [];
 for (const e of eyesLow) { const l = eyeR[eyeR.length - 1]; if (l && l.fig === e.fig && l.seg === e.seg && e.f <= l.f1 + GAP) { l.f1 = e.f; l.maxY = Math.max(l.maxY, e.y); } else eyeR.push({ seg: e.seg, fig: e.fig, f0: e.f, f1: e.f, maxY: e.y }); }
 /** THE CUT-OUT vs THE CARD: the lifted sticker's footprint (matte + paper margin + ink edge) against each box, per
@@ -503,7 +554,8 @@ function cutReport(): string[] {
 const lines = [
   `face vs HUD (NewtonFilm): ${frames.length} frames (${frames[0]}-${frames[frames.length - 1]}, step ${STEP}) in ${secs.toFixed(1)} s; zone ${ZONE}, pad ${PAD} px, min ${MIN} px2, ranges join across ${GAP} frames`,
   `per scene: ${[...perSeg].map(([k, v]) => `${k} ${v.hitFrames.size}/${v.n} frames hit${v.errs ? ` (${v.errs} threw)` : ""}`).join(", ")}`,
-  `severity: HIGH = the drawn features (brows, eyes, mouth) 400 px2 or more, or 6000 px2 of skin, under the item; med = 800 px2 of skin; low = less, or only the empty subtitle band (outside the rows' box)`,
+  `severity: HIGH = the drawn features (brows, eyes, mouth) 400 px2 or more, or 6000 px2 of skin, under the item; med = 800 px2 of skin; low = less, or only the empty subtitle band (outside the rows' box); info = a margin crossing on frames where the camera moves (>= ${CAM_PX} px/f at the face) or the face moves, enters or exits (>= ${FACE_PX} px/f and >= ${FACE_REL * 100} % of its radius per frame): part of the move, never HIGH (gate-5 note F7)`,
+  `HIGH: ${shown.filter((r) => sev(r) === "HIGH").length} ranges (${shown.filter((r) => sev(r) === "HIGH" && r.what === "margin").length} margin on held frames); med ${shown.filter((r) => sev(r) === "med").length}; low ${shown.filter((r) => sev(r) === "low").length}; info ${shown.filter((r) => sev(r) === "info").length} (margin while moving)`,
   `columns: severity, scene, frames (frames with a visible hit / span), figure x HUD item, worst overlap, worst frame, the face box and the HUD box there (x0,y0..x1,y1 px), shots`,
   "",
   `== FACE UNDER THE HUD (${shown.length} ranges, in film order)`,
@@ -523,6 +575,6 @@ const lines = [
   ...eyeR.map((e) => `${e.seg}  f${e.f0}-${e.f1}  ${e.fig}  eyes down to y ${e.maxY}`),
 ];
 fs.writeFileSync(`${OUT}/faces.txt`, lines.join("\n") + "\n");
-fs.writeFileSync(`${OUT}/faces.json`, JSON.stringify({ frames: [frames[0], frames[frames.length - 1]], step: STEP, zone: ZONE, pad: PAD, joins, eyesLow: eyeR, cutout: { rows: cutRows, matte: sticker?.box ?? null }, ranges: ranges.map((r) => ({ ...r, shots: [...r.shots], slates: [...r.slates], severity: sev(r) })), hits }, null, 0));
+fs.writeFileSync(`${OUT}/faces.json`, JSON.stringify({ frames: [frames[0], frames[frames.length - 1]], step: STEP, zone: ZONE, pad: PAD, joins, eyesLow: eyeR, cutout: { rows: cutRows, matte: sticker?.box ?? null }, ranges: ranges.map((r) => ({ ...r, shots: [...r.shots], slates: [...r.slates], why: [...r.why], severity: sev(r) })), hits }, null, 0));
 if (!QUIET) console.log(lines.slice(0, 80).join("\n"));
 console.log(`wrote ${OUT}/faces.txt / faces.json (${secs.toFixed(1)} s)`);

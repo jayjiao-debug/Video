@@ -71,7 +71,7 @@ export {
   clamp01, clamp, lerp, lin, smooth, smootherstep, easeInQuad, easeOutQuad, easeInOutQuad, easeInCubic, easeOutCubic, easeInOutCubic,
   easeOutBack, between, spring, pop, spl, mix3, add3, camMix, rng, hash, since, h,
 } from "../group/story";
-import { cap as capV5, capWord as capWordV5, capsOf, type CaptionGroup } from "./captions";
+import { cap as capV5, capWord as capWordV5, type CaptionGroup } from "./captions";
 export { capsOf, captionAt, lineNum, enWords, CAPTIONS, LINE_IDS, CAP_MAXW, type CaptionGroup } from "./captions";
 export { VOICE_SOURCE, SPOKEN };
 export type { Speaker };
@@ -241,66 +241,22 @@ export const LINES: VoiceLine[] = VOICE_RAW.map(([n, s, e]) => {
   return { n, id: m.id, scene: m.scene, who: m.who, text: m.zh, zh: m.zh, en: m.en, spoken: SPOKEN[m.who], start: s, end: e, from, to: Math.round(e * FPS), pre, after: Math.round(m.after * FPS), preFrom: from - pre };
 });
 export const SPEECH_END = Math.round(VOICE_END_S * FPS);
-/** the line with number n (1-based) or id ("A03"). Throws when there is no such line. (Until the A and G rebuild it also
- *  answers v5's retired ids "A01" and "G01": RETIRED below.) */
+/** the line with number n (1-based) or id ("A03"). Throws when there is no such line. (v4's greeting is cut and v4's
+ *  2 a.m. line is split at its pause in v5: those old ids are not lines; the A and G rebuilds name A02 / the cold open's
+ *  scene time and G01a / G01b.) */
 export const line = (n: number | string): VoiceLine => {
-  if (typeof n === "string" && n in RETIRED) return RETIRED[n]();
   const k = lineNum(n), l = LINES[k - 1];
   if (!l || l.n !== k) throw new Error(`line(${JSON.stringify(n)}): the dialogue has ${LINES.length} lines`);
   return l;
 };
 /** the line with this id: lineId("A03") -> { from, to, who, ... } (the same as line("A03")) */
 export const lineId = (id: string): VoiceLine => line(id);
-// ---------------------------------------------------------------------------------------------------- retired ids
-/** THE v4 IDS THAT v5 RETIRED (voice v5): A01 (her greeting) is cut, and G01 is split at its recorded pause into G01a
- *  and G01b. segA and segG, built on v4, still name them; until their rebuild (next) line() / lineId() / cap() /
- *  capWord() answer for them, so the film keeps computing on the v5 timing. Every other lookup (LINES, CAPTIONS,
- *  capsOf(), quote(), card()) knows only the v5 ids. NEW CODE NEVER NAMES THEM; the A and G rebuilds delete this block.
- *    "G01" = G01a's start .. G01b's end as one line; its screens are G01a's (k 0) and G01b's (k 1);
- *    "A01" = NOT A LINE (no voice, no subtitle): a stand-in span from A01_RAP s before the cold open's knock (so segA's v4
- *            rap, its "A01 start + 0.54 s", lands on COLD_OPEN_S.knock) to 0.1 s before A02, its ten characters
- *            早上好今天陪您过一天 spread evenly over it (segA's sleepy blink on 一 needs one). */
-const A01_RAP = 0.54;
-const A01_TEXT = "早上好！今天陪您过一天！";
-const a01Line = (): VoiceLine => {
-  const a2 = line("A02"), start = COLD_OPEN_S.knock - A01_RAP, end = a2.start - 0.1;
-  const from = Math.round(start * FPS);
-  return { n: 0, id: "A01", scene: "A", who: "ji", text: A01_TEXT, zh: A01_TEXT, en: "(cut in v5)", spoken: "zh", start, end, from, to: Math.round(end * FPS), pre: 0, after: 0, preFrom: from };
-};
-const g01Line = (): VoiceLine => {
-  const a = line("G01a"), b = line("G01b");
-  return { ...a, id: "G01", text: a.zh + b.zh, zh: a.zh + b.zh, en: `${a.en} ${b.en}`, to: b.to, end: b.end, after: b.after };
-};
-const RETIRED: Record<string, () => VoiceLine> = { A01: a01Line, G01: g01Line };
-/** the retired ids' screens: G01's are G01a's and G01b's; A01's one stand-in screen (its `at` = its tokens' frames) */
-const retiredCaps = (id: string): { c: CaptionGroup; at: number[] }[] => {
-  if (id === "G01") return [...capsOf("G01a"), ...capsOf("G01b")].map((c) => ({ c, at: [] }));
-  const l = a01Line(), han = [...A01_TEXT.replace(/[^一-鿿]/g, "")];
-  const at = han.map((_, i) => Math.round((l.start + ((l.end - l.start) * i) / han.length) * FPS));
-  return [{ c: { from: l.from, to: l.to, text: l.zh, zh: l.zh, en: l.en, shot: "A", line: 0, k: 0, end: l.to, who: "ji", spoken: "zh" }, at }];
-};
 /** screen k of line `line` (number or id): k counts from 0, a negative k from the end (cap("F09", -1)).
  *  .from = the frame the screen is shown from = the frame its first spoken token starts on. Throws when there is none.
- *  (captions.ts cap(), plus the retired ids above) */
-export const cap = (ln: number | string, k: number): CaptionGroup => {
-  if (typeof ln !== "string" || !(ln in RETIRED)) return capV5(ln, k);
-  const g = retiredCaps(ln), c = g[k < 0 ? g.length + k : k];
-  if (!c) throw new Error(`cap(${JSON.stringify(ln)}, ${k}): the line has ${g.length} screens`);
-  return c.c;
-};
-/** THE FRAME OF A WORD (captions.ts capWord(), plus the retired ids above: G01 looks in G01a and G01b; A01 in its
- *  stand-in) */
-export const capWord = (ln: number | string, word: string): CaptionGroup => {
-  if (typeof ln !== "string" || !(ln in RETIRED)) return capWordV5(ln, word);
-  if (ln === "G01") {
-    const hits = (["G01a", "G01b"] as const).flatMap((id) => { try { return [capWordV5(id, word)]; } catch { return []; } });
-    if (hits.length !== 1) throw new Error(`capWord("G01", "${word}"): ${hits.length} of G01a / G01b say it`);
-    return hits[0];
-  }
-  const [{ c, at }] = retiredCaps(ln), han = c.zh.replace(/[^一-鿿]/g, ""), w = word.replace(/[^一-鿿]/g, ""), i = han.indexOf(w);
-  if (!w || i < 0 || han.indexOf(w, i + 1) >= 0) throw new Error(`capWord("A01", "${word}"): not once in 「${han}」`);
-  return { ...c, from: at[i] };
-};
+ *  (captions.ts cap()) */
+export const cap = (ln: number | string, k: number): CaptionGroup => capV5(ln, k);
+/** THE FRAME OF A WORD (captions.ts capWord()) */
+export const capWord = (ln: number | string, word: string): CaptionGroup => capWordV5(ln, word);
 
 /** the line spoken at frame f (or null in a pause) */
 export const lineAt = (f: number) => LINES.find((l) => f >= l.from && f <= l.to) ?? null;

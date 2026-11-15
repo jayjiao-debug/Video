@@ -53,15 +53,16 @@ const T_DIN = capWord("B01", "dinner").from;
 const T_SB0 = capWord("B01", "Sir").from + 9, T_SB1 = T_DIN;
 /** Humphrey turns from the table toward Newton and takes his step as she steps back */
 const T_TURN0 = T_SB0 - 2, T_TURN1 = T_SB1 - 1;
-/** THE FLICK (FLICK 1/4): his left hand comes up off the page (two fingers low, without looking), flicks on the swish
- *  (BEAT flick), holds there steady while Humphrey sighs and goes (the effect's detail zoom), back to the page */
-const T_FL = B.flick;
-const T_FL_UP0 = T_FL - 9, T_FL_UP1 = T_FL - 2, T_FL_BACK0 = L2.from - 2, T_FL_BACK1 = L2.from + 8;
 /** Humphrey sighs, then goes (BEAT) */
 const T_SIGH = B.sigh, T_GO = B.humphreyGoes;
 /** M2 THE FOLLOW: her head goes after him from his first step, the lens narrowing; on the doorway by the time he turns
  *  in it */
 const T_F0 = T_GO + 2;
+/** THE FLICK (FLICK 1/4, gate 5 note B1: it must read at phone size): his left hand comes up off the page to just below
+ *  his chest (759-766), flicks out toward Humphrey and the door (screen left) ON the swish (BEAT flick, 768), holds
+ *  there 4 frames, and is back down on the page by the time her head starts after Humphrey (T_F0, 786) */
+const T_FL = B.flick;
+const T_FL_UP0 = T_FL - 9, T_FL_UP1 = T_FL - 2, T_FL_HOLD = T_FL + 4, T_FL_BACK1 = T_F0;
 /** M3 THE TURN AND WALK: from the door's click to 写 (her three steps on BEAT steps) */
 const T_CLICK = B.doorClick;
 const T_W0 = T_CLICK, T_TURNED = B.steps[2] + 2, T_W1 = B.walk[1];
@@ -90,8 +91,10 @@ const N_EYES = newtonEyes(N_AT, N_FACING);
 /** HUMPHREY at the window table for the insert: front-right of the plate (his face beside it in the insert) */
 const H0 = P(T.x + 0.35, T.z + 0.44);
 const H0_FACING = yawTo(H0, ROOM.plate);
-/** where he says "Sir, your dinner.": a step toward the desk, turned to Newton and a little toward her */
-const H1 = P(T.x + 0.7, T.z + 0.89);
+/** where he says "Sir, your dinner.": two steps toward the desk, at its left end, turned to Newton and a little toward
+ *  her (gate 5 note B1: 0.3 m nearer the desk than the first build, so that W1 can be a closer two-thing in which the
+ *  flick reads: both heads fit the 9:15 frame with Newton's head over 330 px) */
+const H1 = P(T.x + 1.0, T.z + 0.89);
 const H1_FACING = yawTo(H1, N_AT) - 0.35;
 /** his way out round the open leaf's free edge (the door stands 0.9 open: he came in with the dinner) ... */
 const DOOR_Z = (ROOM_SET.door.z0 + ROOM_SET.door.z1) / 2;
@@ -99,8 +102,10 @@ const D1 = P(-2.12, DOOR_Z + 0.13);
 const LEG_A = [H1, P(-1.2, -0.02), D1];
 /** ... and from the doorway out onto the landing, half a step aside behind the wall beside the latch jamb */
 const LEG_B = [D1, P(-2.7, DOOR_Z + 0.1), P(-2.86, DOOR_Z + 0.55)];
-const SPEED_A = 2.2, SPEED_B = 2.0;
-const T_DZ = T_GO + Math.round(walkTime(LEG_A, SPEED_A) * FPS);
+/** he reaches the doorway when he did from the first build's mark (P(T.x + 0.7, ..) at 2.2 m/s), so the doorway hold, his
+ *  glance back and the door shut on the click keep their frames: the walk from the new mark is 6 % quicker */
+const T_DZ = T_GO + Math.round(walkTime([P(T.x + 0.7, T.z + 0.89), P(-1.2, -0.02), D1], 2.2) * FPS);
+const SPEED_A = walkTime(LEG_A, 1) / ((T_DZ - T_GO) / FPS), SPEED_B = 2.0;
 /** his glance back at NEWTON in the doorway (script v5 row 07), then out */
 const T_GOB = T_DZ + 11;
 /** the door: open (0.9) until he is through, pulled shut from the landing ON the click */
@@ -111,15 +116,22 @@ const T_GONE = T_CLICK;
 // ---------------------------------------------------------------------------------------------------- framing
 /** her lens positions (room offsets, her eye) and lenses (CamPose fov, 1920-reference vertical) */
 const W1 = P(-0.45, 0.8, EYE_B + 0.02);
-const P0 = P(-0.95, -0.05, EYE_B);
-const INS_FOV = 48, W1_FOV = 76, DOOR_FOV = 62;
-/** the insert: the plate (+5 cm, the dome) low left */
+/** P0 (gate 5 note B3): the insert, 10 cm forward and 5 cm right of the first build's, on a longer lens (48 -> 40):
+ *  the plate 1.3x bigger (its rim 315 px; with the lifted cover and the steam over 400), still left of his body and
+ *  clear of it, his face beside it at the right with his eyes down on it. From her eye height the plate is 2 m off, so
+ *  the look down stays about 16 deg: a steeper one needs the lens over the table, where his face, 1.8 plates wide,
+ *  covers the plate or leaves the frame. */
+const P0 = P(-0.9, -0.15, EYE_B);
+/** W1 is a closer two-thing than the first build's (76; note B1's fallback): Newton's head 330+ px, Humphrey's 400 px with
+ *  its left edge clear of x 70; the follow then opens a little (54 -> 62) to keep his whole figure as he comes nearer */
+const INS_FOV = 38, W1_FOV = 54, DOOR_FOV = 62;
+/** the insert: the plate (+5 cm, the dome) low left, above the subtitle row; his face upper right, eyes down on it */
 const PLATE_AIM = ROOM.plate.clone().add(V(0, 0.05, 0));
-const INS_SX = 300, INS_SY = 1060;
+const INS_SX = 226, INS_SY = 1100;
 /** the two-thing: the middle between their eyes (Humphrey at H1, Newton) */
 const hEyesAt = (p: THREE.Vector3) => p.clone().add(V(0, H_EYE, 0));
 const PAIR = hEyesAt(H1).lerp(N_EYES, 0.5);
-const PAIR_SX = 525, PAIR_SY = 880;
+const PAIR_SX = 590, PAIR_SY = 620;
 /** the doorway: Humphrey's eyes standing in it */
 const DOOR_PT = hEyesAt(D1);
 const DOOR_SX = 560, DOOR_SY = 640;
@@ -130,13 +142,22 @@ const FOLLOW_SX = 640, FOLLOW_SY = 760;
  *  left edge stays out of the 54 px margin. */
 const I2 = P(1.62, -0.1, EYE_B + 0.02);
 const I2_FOV = 58, I2_SX = 345, I2_SY = 518;
-/** DRAFTS: a lean toward the stack and a little down; the stack's top above the subtitle band */
-const DR = I2.clone().add(ROOM.drafts.clone().sub(I2).setY(0).normalize().multiplyScalar(0.12)).add(V(0, -0.03, 0));
-const DR_FOV = 51.6;
-const STACK_TOP = ROOM.drafts.clone().add(V(0, 0.09, 0));
-const DR_SX = 680, DR_SY = 1270;
-/** C1: same place and lens, back up on his face */
-const C1_SX = 470, C1_SY = 600;
+/** THE EVIDENCE (gate 5 note B2): the paper tower at the desk's right end (sets/room.ts, the 0.27 m pile behind the drafts
+ *  corner), three hands thick. From the corner it stands right behind the hand's-breadth drafts stack, so no frame of
+ *  the drafts can leave it out (or whole) without a step of half a metre; the snap therefore lands on the tower itself:
+ *  whole, the biggest paper in the frame, above the subtitle band and inside x 120-900, with the drafts stack low left
+ *  in front of it (cut by the frame: it is thinner) and Newton's head gone out at the top left (he writes on, unseen).
+ *  PILE_MID: the middle of its height over its spot (sets/room.ts spots [0.6, -0.25, 0.27]) */
+const PILE_MID = V(RMX + ROOM_SET.desk.x + 0.6, ROOM.deskTop + 0.135, ROOM_SET.desk.z - 0.25);
+/** DR: she leans 27 cm to her left (and 5 cm in) and turns to the tower; the lens tightens (58 -> 38). The lean is what
+ *  takes Newton's head and wig locks out by the left edge (from the corner they stand 120 px left of the tower at
+ *  most); on the way out his head stays below y 300, never under REC or the stamp */
+const DR = P(1.35, -0.05, EYE_B + 0.02);
+const DR_FOV = 38, DR_SX = 384, DR_SY = 980;
+/** C1: the first build's DRAFTS lean (0.12 m toward the stack, 3 cm down, lens 51.6): the medium of his face over the
+ *  page that the tilt back up lands on (unchanged) */
+const C1P = I2.clone().add(ROOM.drafts.clone().sub(I2).setY(0).normalize().multiplyScalar(0.12)).add(V(0, -0.03, 0));
+const C1_FOV = 51.6, C1_SX = 470, C1_SY = 600;
 /** CLOSE: the end of the slow push */
 const CL = P(1.3, -0.62, EYE_B - 0.02);
 const CL_FOV = 52, CL_SX = 492, CL_SY = 835;
@@ -169,7 +190,10 @@ const humphreyAt = (f: number): HState | null => {
     const facing0 = lerpA(H1_FACING, g.facing, smooth(clamp01((f - T_GO) / 7)));
     // in the doorway: a glance back at NEWTON over his shoulder (script v5 row 07: not at her), then he turns to go
     const back = ky(f, [[T_DZ - 3, 0], [T_DZ + 3, 0.85], [T_GOB - 4, 0.85], [T_GOB, 0]]);
-    return { at: g.at, facing: lerpA(facing0, yawTo(g.at, N_AT), back), pose: g.pose, walking: g.moving };
+    // he sets off from the passing pose (the walk's phase 0 is its widest stride: from the new W1 his first frame dropped
+    // 6 cm with both feet thrown apart)
+    const pose: RigPose = g.pose.kind === "walk" ? { ...g.pose, phase: ((g.pose.phase ?? 0) + 0.3) % 1 } : g.pose;
+    return { at: g.at, facing: lerpA(facing0, yawTo(g.at, N_AT), back), pose, walking: g.moving };
   }
   const g = walkAlong(LEG_B, SPEED_B, (f - T_GOB) / FPS, { startFacing: -Math.PI / 2, endFacing: -Math.PI / 2 });
   return { at: g.at, facing: g.facing, pose: g.pose, walking: g.moving };
@@ -220,17 +244,32 @@ const nibAt = (g: number) => {
 const QDIR = V(-0.36, 0.84, -0.4).normalize();
 const QROT = new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), QDIR);
 const quillHand = (g: number) => nibAt(g).addScaledVector(QDIR, -QUILL.nib);
-/** his left hand: flat on the page beside the quill; THE FLICK lifts it out to his left, low (below the chest), a
- *  quick backhand flick on the swish, held there steady (the detail zoom), and back to the page */
+/** his left hand: flat on the page beside the quill. THE FLICK (gate 5 note B1): up off the page to just under his
+ *  chin, a hand's width to his left of the middle (HAND_COCK, (899, 734) in W1); on the swish the back of the fingers
+ *  flicks out across the white of his jabot to his right, toward Humphrey and the door (HAND_OUT, screen left: 188 px
+ *  in W1, the torso turning with it, see flickTwist: the arms are short), the wrist snapping up 2 cm and back, held
+ *  still, then back down to the page by f784. HAND_OUT is in reach and clear of his chest (rig qa: reach 0, clear 0) */
 const HAND_REST = (g: number) => ROOM.deskWrite.clone().add(V(0.15 + 0.004 * Math.sin(g * 0.031), 0.06, 0.01 + 0.003 * Math.sin(g * 0.023 + 1)));
-const HAND_FLICK = rel(N_AT, N_FACING, 0.3, 1.0, 0.26);
+const HAND_COCK = rel(N_AT, N_FACING, 0.04, 0.95, 0.3);
+const HAND_OUT = rel(N_AT, N_FACING, -0.26, 0.98, 0.32);
 const leftHand = (f: number, g: number) => {
-  const up = smooth(clamp01((f - T_FL_UP0) / (T_FL_UP1 - T_FL_UP0))) * (1 - smooth(clamp01((f - T_FL_BACK0) / (T_FL_BACK1 - T_FL_BACK0))));
-  if (up <= 0) return HAND_REST(g);
-  // the flick itself: out and back over 6 frames from the swish (the back of the fingers toward the door)
-  const fl = f >= T_FL - 1 && f < T_FL + 6 ? Math.sin((Math.PI * (f - T_FL + 1)) / 7) : 0;
-  const p = HAND_FLICK.clone().add(V(0.12 * fl, 0.05 * fl, -0.03 * fl));
-  return HAND_REST(g).lerp(p, up);
+  if (f < T_FL_UP0 || f >= T_FL_BACK1) return HAND_REST(g);
+  if (f < T_FL_UP1) return HAND_REST(g).lerp(HAND_COCK, smooth((f - T_FL_UP0) / (T_FL_UP1 - T_FL_UP0)));
+  if (f <= T_FL_UP1) return HAND_COCK.clone();
+  // the flick: out in 2 frames (it lands on the swish), the wrist snaps up 2 cm on the next frame, back onto the mark, held
+  if (f <= T_FL) return HAND_COCK.clone().lerp(HAND_OUT, easeOutCubic((f - T_FL_UP1) / (T_FL - T_FL_UP1)));
+  if (f <= T_FL_HOLD) return f === T_FL + 1 ? HAND_OUT.clone().add(V(0, 0.018, 0)) : HAND_OUT.clone();
+  return HAND_OUT.clone().lerp(HAND_REST(g), easeInOutCubic((f - T_FL_HOLD) / (T_FL_BACK1 - T_FL_HOLD)));
+};
+/** the flick's shoulder: the torso winds a little to his left as the hand comes up, then turns to his right with the
+ *  flick (toward the door), which carries the left hand across in reach and clear of his chest; his head stays down */
+const TW_COCK = 0.08, TW_OUT = -0.3;
+const flickTwist = (f: number) => {
+  if (f < T_FL_UP0 || f >= T_FL_BACK1) return 0;
+  if (f <= T_FL_UP1) return TW_COCK * smooth((f - T_FL_UP0) / (T_FL_UP1 - T_FL_UP0));
+  if (f <= T_FL) return TW_COCK + (TW_OUT - TW_COCK) * easeOutCubic((f - T_FL_UP1) / (T_FL - T_FL_UP1));
+  if (f <= T_FL_HOLD) return TW_OUT;
+  return TW_OUT * (1 - easeInOutCubic((f - T_FL_HOLD) / (T_FL_BACK1 - T_FL_HOLD)));
 };
 
 // ---------------------------------------------------------------------------------------------------- the camera
@@ -245,6 +284,9 @@ const hHead = (f: number) => {
   return p.divideScalar(ws);
 };
 const CAM_W1 = C.aimCam(W1, PAIR, PAIR_SX, PAIR_SY, W1_FOV);
+/** where the hold before each one-point move already has its point (M4: the tower on I2; M5: his eyes on DR) */
+const PILE_ON_I2 = C.toScreen(C.aimCam(I2, N_EYES, I2_SX, I2_SY, I2_FOV), PILE_MID);
+const EYES_ON_DR = C.toScreen(C.aimCam(DR, PILE_MID, DR_SX, DR_SY, DR_FOV), N_EYES);
 const CAM_DOOR = C.aimCam(W1, DOOR_PT, DOOR_SX, DOOR_SY, DOOR_FOV);
 /** M2: from the pair to Humphrey (kept where he is in the two-shot, then led into the middle with room ahead of him),
  *  and onto the doorway as he arrives in it; the lens narrows to his whole figure (log tan) */
@@ -280,10 +322,16 @@ const baseCam = (f: number): CamPose => {
   return C.lensCam(f, [
     { f: T_W1, pos: I2, at: N_EYES, sx: I2_SX, sy: I2_SY, fov: I2_FOV },
     { f: T_DR0, pos: I2, at: N_EYES, sx: I2_SX, sy: I2_SY, fov: I2_FOV },
-    { f: T_DR1, pos: DR, at: STACK_TOP, sx: DR_SX, sy: DR_SY, fov: DR_FOV, ease: easeOutCubic },
-    { f: T_UP0, pos: DR, at: STACK_TOP, sx: DR_SX, sy: DR_SY, fov: DR_FOV },
-    { f: T_UP1, pos: DR, at: N_EYES, sx: C1_SX, sy: C1_SY, fov: DR_FOV, ease: easeOutCubic },
-    { f: T_PU0, pos: DR, at: N_EYES, sx: C1_SX, sy: C1_SY, fov: DR_FOV },
+    // M4 and M5 each aim at ONE world point for the whole move (note B2: no aim swap inside a move, so nothing bounces):
+    // the snap carries the tower from where I2 has it straight to its landing; the tilt carries his eyes from where
+    // DR has them (out of the frame, top left) straight to C1. Each move's first key is the same picture as the hold
+    // before it (the same lens, the same place, the point where that lens already has it).
+    { f: T_DR0, pos: I2, at: PILE_MID, sx: PILE_ON_I2.x, sy: PILE_ON_I2.y, fov: I2_FOV },
+    { f: T_DR1, pos: DR, at: PILE_MID, sx: DR_SX, sy: DR_SY, fov: DR_FOV, ease: easeOutCubic },
+    { f: T_UP0, pos: DR, at: PILE_MID, sx: DR_SX, sy: DR_SY, fov: DR_FOV },
+    { f: T_UP0, pos: DR, at: N_EYES, sx: EYES_ON_DR.x, sy: EYES_ON_DR.y, fov: DR_FOV },
+    { f: T_UP1, pos: C1P, at: N_EYES, sx: C1_SX, sy: C1_SY, fov: C1_FOV, ease: easeOutCubic },
+    { f: T_PU0, pos: C1P, at: N_EYES, sx: C1_SX, sy: C1_SY, fov: C1_FOV },
     { f: T_PU1, pos: CL, at: N_EYES, sx: CL_SX, sy: CL_SY, fov: CL_FOV },
     { f: T_EB0, pos: CL, at: N_EYES, sx: CL_SX, sy: CL_SY, fov: CL_FOV },
     { f: T_EB1, pos: C2, at: N_EYES, sx: C2_SX, sy: C2_SY, fov: C2_FOV }]);
@@ -330,7 +378,7 @@ const pose = (w: World, f: number): Pose => {
     // (his own blinks only, on the scene clock: the talking blink of speak() would land on 没, the whisper's XC)
     blink: lid(t + N_BLINK_T, 1, swaps(NEWTON_EXPR).map((s) => s + N_BLINK_T)),
     head: scaleHead(ns.head, 0.3),
-    lookDown: 40, gaze: 0, hands: [quillHand(g), leftHand(f, g)], hide: NEWTON_HIDE_WRITING, visible: true,
+    lookDown: 40, gaze: 0, hands: [quillHand(g), leftHand(f, g)], twist: flickTwist(f), hide: NEWTON_HIDE_WRITING, visible: true,
   });
 
   // HUMPHREY: the lid, "Sir, your dinner.", the sigh, out of the door
@@ -351,7 +399,8 @@ const pose = (w: World, f: number): Pose => {
     hm.set({
       at: hs.at, facing: hs.facing, pose: hs.pose, expr: at(f, HUMPHREY_EXPR), blink: lid(t, 2, swaps(HUMPHREY_EXPR)), ...hsp,
       head: heads(hsp.head, f >= T_SIGH && f < T_SIGH + sec(0.6) ? { dy: -0.06 * Math.sin(Math.PI * (f - T_SIGH) / sec(0.6)) } : undefined),
-      lookDown: f < T_TURN0 ? 18 : 0, gaze: 0, hands: [right, null], visible: true,
+      // in the insert his eyes are on the plate (down and to screen left), then on Newton as he turns (note B3)
+      lookDown: f < T_TURN0 ? 24 : 0, gaze: f < T_TURN0 - 1 ? -1 : f < T_TURN0 + 1 ? -0.5 : 0, hands: [right, null], visible: true,
     });
   }
 

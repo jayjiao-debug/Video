@@ -319,7 +319,7 @@ return { camera: cam, post: { dof: M.dof } };   // a light focus on the aim; nev
 - `cap(id, k)` (screen k of a line, negative k from the end; `.from` = the frame its first spoken token starts on;
   `.zh`, `.en`), `capsOf(id)`, `captionAt(f)`.
 - `capWord(id, word).from` = the frame the word starts on, in the language the line is SPOKEN in: Chinese characters for
-  a ji line (`capWord("A01", "好")`), English words for an nt / hm line (`capWord("F14", "burn")`,
+  a ji line (`capWord("A03", "睡")`), English words for an nt / hm line (`capWord("F14", "burn")`,
   `capWord("C04", "is")`, `capWord("G02", "use")`). A Chinese word on an English line throws.
 - `CARDS`, `card("A03")` `{ from, to, zh, en }`, `cardAt(f)`; `TITLE_BLOCK` `{ from, to, zh, en, subZh, subEn }`;
   `SCENE.F` `{ time: "夜", en: "Night", place }`; `TITLE`, `SUBTITLE`.

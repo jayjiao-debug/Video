@@ -31,7 +31,10 @@
 //               follows the running digits (WORD_FROM: the outgoing scene's word until they enter the incoming scene's
 //               hours).
 //               Frame 0 starts big and settled (the first frame is complete). cards: false skips the big intro (only
-//               the small stamp).
+//               the small stamp). AT A NO-CUT CLOCK JOIN (⑩ F->G, beats.ts Join.noCut: G's first frame is the same held
+//               picture) the big intro is SKIPPED too while BIG_STAMP_AT_NOCUT is false (the default, gate-5 note F3,
+//               the owner's choice pending: there is no new place to announce, and it sits in the quiet span): only the
+//               small stamp, racing to 02:00 in its place. Flip BIG_STAMP_AT_NOCUT to true for the big slide-in there.
 //               DECISION 2 (script v5's default, story.ts SCENE_DIGITS): the digits show at rest only where a source
 //               gives the hour, A 05:00 and G 02:00; B-F show the time word alone (上午 / 中午 / 下午 / 傍晚 / 夜). Their
 //               digits come in (3 frames) as a race into or out of them starts, run, and fade out over DIGITS_FADE
@@ -40,10 +43,13 @@
 //               its level follows the CLOCK, not the frame:
 //               100 % at 05:00 down to 12 % at
 //               02:00 (scene starts: A 100, B 75, C 71, D 58, E 46, F 25, G 12), each scene draining 3 points more
-//               while it runs (G: 12 -> 7), so it steps down at every cut (a later recording). Green over 35 %, amber
+//               while it runs (G: 12 -> 7), so it steps down at every cut (a later recording); at a NO-CUT clock join
+//               (⑩) there is no cut to step on, so it EASES from the outgoing scene's level to the incoming one's over
+//               the race's frames with the clock's own easing (gate-5 note F2: f4581-4602, 22 % -> 12 %, turning red on
+//               the way, as v5's "the battery turns red"). Green over 35 %, amber
 //               over 15 %, RED from the 2 a.m. scene, where its fill breathes softly at 1 Hz. Still from the off frame
 //               and where rec: false; emptied and grey from the off frame.
-//   recAlpha(f), stampAt(f), clockAt(f), raceAt(f), RACES, CLOCK_JOINS, batteryAt(f), OFF_AT, VLOG_RECT (the corners'
+//   recAlpha(f), stampAt(f), stampIntro(id), BIG_STAMP_AT_NOCUT, clockAt(f), raceAt(f), RACES, CLOCK_JOINS, batteryAt(f), OFF_AT, VLOG_RECT (the corners'
 //   reserve: the widest scene), stampRect(id, big) (one scene's timestamp box), vlogRectsAt(f): the numbers behind it.
 import React from "react";
 import { AbsoluteFill } from "remotion";
@@ -68,10 +74,20 @@ const blinkCos = (f: number) => Math.cos((2 * Math.PI * (f - LIT0)) / BLINK);
 export const recAlpha = (f: number) => 0.24 + 0.76 * clamp01(0.5 + 1.25 * blinkCos(f));
 /** the timestamp's intro: slide in, hold big, shrink (frames from the scene's first frame) */
 const IN = 8, HOLD = 48, SHRINK = 12;
-/** the timestamp on frame f: its scene, t = frames since that scene's first frame (frame 0: already slid in) */
+/** THE OWNER'S CHOICE (gate-5 note F3): does the big stamp slide in at a NO-CUT clock join (⑩ F->G, beats.ts
+ *  Join.noCut, f4584, the same held picture on both sides)? false (the default, the director's lean): no big intro there,
+ *  only the small stamp racing to 02:00 in its place. true: the big slide-in as at every other scene's first frame. */
+export const BIG_STAMP_AT_NOCUT = false;
+/** the scenes whose first frame is a no-cut join (⑩: G) */
+const NO_CUT_SCENES: SceneId[] = JOINS.filter((j) => j.noCut && j.first).map((j) => j.scene);
+/** whether a scene's timestamp slides in big on its first frame (every scene's, except at a no-cut join while
+ *  BIG_STAMP_AT_NOCUT is false) */
+export const stampIntro = (id: SceneId): boolean => BIG_STAMP_AT_NOCUT || !NO_CUT_SCENES.includes(id);
+/** the timestamp on frame f: its scene, t = frames since that scene's first frame (frame 0: already slid in; a scene
+ *  with no intro, stampIntro: t starts at rest, HOLD + SHRINK, so it is small from its first frame) */
 export const stampAt = (f: number): { id: SceneId; at: number; t: number } => {
   const s = segmentAt(f);
-  return { id: s.id, at: s.from, t: s.from === 0 ? Math.max(f, 0) + IN : f - s.from };
+  return { id: s.id, at: s.from, t: s.from === 0 ? Math.max(f, 0) + IN : !stampIntro(s.id) ? f - s.from + HOLD + SHRINK : f - s.from };
 };
 /** THE CLOCK JOINS (script v5: 4 clock, 4 whip and 3 match joins; beats.ts JOINS is the one list): the scenes whose
  *  first frame is a clock join (① A->B, ⑤ C->D, ⑦ D->E, ⑩ F->G). B->C and E->F are whips: their stamp slides in already set. */
@@ -122,12 +138,25 @@ export const digitsAlpha = (f: number): number => {
   const landed = RACES.find((x) => f > x.f1 && f <= x.f1 + DIGITS_FADE);
   return landed ? 1 - clamp01((f - landed.f1) / DIGITS_FADE) : 0;
 };
-/** the battery (%) on frame f: each scene starts at its clock's level (100 % at 05:00 .. 12 % at 02:00) and drains 3
- *  points more while it runs (the last one 5) */
-export const batteryAt = (f: number): number => {
+/** the battery's level on frame f before rounding: its scene's start level (100 % at 05:00 .. 12 % at 02:00) less the
+ *  scene's drain so far (3 points, the last scene 5) */
+const batteryRaw = (f: number): number => {
   const s = segmentAt(f), h = SCENE_STAMP[s.id].min / 60;
   const start = 100 - (88 * (h - 5)) / 21, drain = s.id === "G" ? 5 : 3;
-  return Math.round(start - drain * clamp01((f - s.from) / Math.max(1, s.to - s.from)));
+  return start - drain * clamp01((f - s.from) / Math.max(1, s.to - s.from));
+};
+/** the races over a NO-CUT join (⑩): there the battery eases with the clock instead of stepping on the scene's first frame */
+const NO_CUT_RACES: Race[] = RACES.filter((r) => JOINS.some((j) => j.noCut && j.cut === r.cut));
+/** the battery (%) on frame f: each scene starts at its clock's level (100 % at 05:00 .. 12 % at 02:00) and drains 3
+ *  points more while it runs (the last one 5), so it steps down at a cut; across a no-cut join's race (⑩, gate-5 note F2)
+ *  it eases from the outgoing level on the race's first frame to the incoming level on its last, with the clock's easing */
+export const batteryAt = (f: number): number => {
+  const r = NO_CUT_RACES.find((x) => f >= x.f0 && f <= x.f1);
+  if (r) {
+    const a = batteryRaw(r.f0), b = batteryRaw(r.f1);
+    return Math.round(a + (b - a) * easeInOutCubic(clamp01((f - r.f0) / Math.max(1, r.f1 - r.f0))));
+  }
+  return Math.round(batteryRaw(f));
 };
 
 // ---------------------------------------------------------------------------------------------------- geometry

@@ -19,18 +19,22 @@
 //      G02   THE LAUGH in the same frame, DEAD STILL, to G02 end + 1.33 s (the skin's 1/1 + 证毕 plays in the hold;
 //                 hud/ms/fit_G.ts). His eyes go past her to the doorway (Humphrey is there).
 //   M2  the thump  THE PAN TO THE DOORWAY (20 f, from the sack's thump): she stands and turns to her left (about 100 deg,
-//                 angles the short way, the lens in log(tan)); the smear on its fastest 6 frames only; no cut.
+//                 angles the short way, the lens in log(tan)); the smear on its first 6 frames only (5058-5063, gone
+//                 before card 4 at 5064: gate 5 r2 G3); no cut.
 //      card 4 HOLD on the door: Humphrey's shock, the sack at his feet; Newton walks into the frame from the right
 //                 with his candle, stops inside the door, turns to her. G03 "Good night." HOLD (the lead speaks to the
 //                 lens). He goes out through the doorway, straight away from us with his candle, and off to the left;
 //                 her G04 to the open door (her bow: 1.5 deg).
-//   M3  先 .. T_DR1  THE LENS DROPS TO THE BOARD in her hands (it comes up as she looks down at it): the drawn circle.
-//   ⑪   BEAT.G.room  MATCH CUT: the circle becomes his plate, by candle in his room; HOLD to the end: card 5; the bite on
-//                 the fork's clink; he sets the plate down and pinches the candle out (the pluck); her camera switches
-//                 off (hud/vlog.tsx OFF_AT); the end black.
+//   M3  先 .. T_DR1  THE LENS DROPS TO THE BOARD in her hands (it comes up as she looks down at it): the drawn circle,
+//                 composed on the frame where the plate will be (gate 5 r2 G1), the glow and the light focus on it.
+//   ⑪   BEAT.G.room  MATCH CUT: the circle becomes the plate IN HER HANDS (the same place, size and tilt), by candle in
+//                 his room; HOLD to the end: card 5; she holds it out, he takes it in his left hand; the bite on the
+//                 fork's clink; he lays the fork on it, turns to the candle at his right hand and pinches it out (the
+//                 pluck); her camera switches off (hud/vlog.tsx OFF_AT); the end black. His eyes never on the lens
+//                 (lids at rest, a closed smile; facing 35 deg off: G2).
 // SHE IS INVISIBLE: no mic, no hand. The board's pose is kept in her frame (segG_parts heldBoard / toCamLocal).
 import * as THREE from "three";
-import { SEGMENTS, line, cap, capWord, card, FPS, clamp01, lerp, smooth, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
+import { SEGMENTS, line, cap, capWord, card, FPS, W, clamp01, lerp, smooth, easeOutCubic, easeInOutCubic, type Segment, type CamPose, type Pose } from "../story";
 import { BEAT } from "../beats";
 import * as C from "../cam";
 import { NEWTON, NEWTON_HIDE, HUMPHREY_SOOT, laugh, newtonEyes, facePoint } from "../people";
@@ -43,7 +47,7 @@ import {
 } from "./segF_parts";
 import {
   V, sec, posOf, quatYZ, eulYZX, rigidAt, fall, toCamLocal, fromCamLocal, heldBoard, boxBottom, lightFocus, matchCircle, panCam, panSpeed, forkRot, FORK_TIP, pathAt,
-  GRADE_OUT, mixGradeG, type RigidKey, type PtKey,
+  GRADE_OUT, mixGradeG, spill, type RigidKey, type PtKey,
 } from "./segG_parts";
 import type { World } from "../world";
 
@@ -76,6 +80,10 @@ const T_EASE0 = capWord("G02", "use").from + 10, T_WIPE0 = L2.to - sec(1.05), T_
 /** THE THUMP (Humphrey drops the full sack: G02 end + 1.33 s, the end of the dead hold); the pan rides on it */
 const T_SACK = L2.to + sec(1.33), T_DROP = T_SACK - 9;
 const T_PAN0 = T_SACK, T_PAN1 = T_SACK + 20;
+/** the pan's smeared frames: its first SMEAR_N (5058-5063), all before card 4 (in at 5064) */
+const SMEAR_N = 6;
+/** the light focus on the round thing on both sides of match ⑪ */
+const MATCH_DOF = 2.4;
 /** "Good night." (his) and her 「晚安，牛顿先生。」 (her bow, 1.5 deg); on 先 the lens drops to the board */
 const T_BOW = L4.from - 1;
 const T_DR0 = capWord("G04", "先").from, T_DR1 = T_DR0 + 18, DROP_YAW = 4.5;
@@ -229,26 +237,70 @@ const elabCam = (f: number): CamPose => {
 };
 
 // ==================================================================================================== HIS ROOM by candle
+// GATE 5 r2 (director notes G1 + G2): MATCH ⑪ IS COMPOSED ON THE ROUND THING. The circle on the board in her invisible
+// hands becomes his plate IN HER INVISIBLE HANDS: the same hands, the same place on the frame, the same size and the
+// same tilt (segG_parts matchCircle), the brightest round shape on both sides of the cut. Why her hands and not his (the
+// note's "workable target" had him holding it out): the rig's head ball is 0.518 m across, twice the plate (0.26 m), and
+// his arm brings the plate at most about 0.4 m nearer the lens than his head, so a plate of 350 px or more in HIS hand
+// always stands beside a head of 640 px or more, crossing card 5's box or the frame's edge (probe of every reachable
+// hold, 15 Nov). Held out by her at arm's length the plate is about 420 px and he, a step beyond it at the window table,
+// is about 400 px: the frame the note asks for. She kneels (her eye 1.15 m), so his look at the plate goes DOWN (G2) and
+// the plate and his head sit close together on the frame. He leans in and eats a bite from it on the fork's clink, then
+// turns to the candle and pinches it out.
 const T = ROOM_SET.table, TT = ROOM.tableTop;
-/** he stands in front of the window table, turned toward her, the plate in his left hand (framed right) */
-const N_ROOM = V(RMX + T.x + 0.1, 0, T.z + 0.51), F_ROOM = 0.5;
-const ROOM_FOV = 52;
-const ROOM_CAM: CamPose = C.aimCam(V(RMX - 0.1, 1.6, -0.3), newtonEyes(N_ROOM, F_ROOM), 560, 520, ROOM_FOV);
-/** the plate on his left palm at chest height, out to his left (a hair of life); its rim's middle */
-const PLATE_HAND = rel(N_ROOM, F_ROOM, 0.25, 0.9, 0.26);
-const plateAt = (f: number) => PLATE_HAND.clone().add(V(0, 0.024 + 0.003 * Math.sin((f / FPS) * 1.3), 0));
-const PLATE_YAW = F_ROOM + 0.5;
-/** the candle he brought up from the elaboratory, on the table's front right, by the room's night light */
-const CANDLE_R = V(RMX + T.x + 0.33, TT, T.z + 0.19);
-/** THE MATCH: the plate's rim on the match frame -> the board's drawn circle (board-local middle, radius) */
-const RIM_C = plateAt(T_MATCH).add(V(0, PLATE.h, 0));
+/** NEWTON just right of the window table's right end (where he stands to eat, layout ROOM.tableStand, a little further
+ *  back: the table and its candle at his right hand); HER EYE kneeling in front of him (1.15 m), a little to his left */
+const N_ROOM = V(RMX + T.x + 0.72, 0, T.z + 0.28);
+const P_ROOM = V(N_ROOM.x + 0.12, 1.15, N_ROOM.z + 1.9);
+/** his facing: N_OFF off the lens, turned to her right (screen right, toward the plate): never front-on (G2) */
+const N_OFF = 35 * Math.PI / 180;
+const F_ROOM = Math.atan2(P_ROOM.x - N_ROOM.x, P_ROOM.z - N_ROOM.z) + N_OFF;
+const ROOM_FOV = 74;
+/** his eyes on (400, 580): the head three-quarter in the frame's left half, about a third down. GATE 5 r2 note G4 (his
+ *  ear-quill in the REC row): at y 520 the quill's tip rose to (128, 141) and touched the 凌晨 02:00 glyphs. He now sits
+ *  60 px lower: the tip's y is 214 or more on every frame 5279-5396 (36 px or more under the glyphs; 232 or more on the
+ *  hold from 5294), his head's bottom at y 737 at most (card 5's paper from 5283: the note's line is y 740), the candle's
+ *  flame on 5385 at y 767. Clearing the whole REC box (y 240) needs y 604, which puts his head's bottom at y 761 (probe,
+ *  15 Nov). The plate stays where it is: PLATE_SP is in this camera's screen and MATCH_L is solved from it, so match ⑪
+ *  stays exact */
+const ROOM_CAM: CamPose = C.aimCam(P_ROOM, newtonEyes(N_ROOM, F_ROOM), 400, 580, ROOM_FOV);
+/** THE PLATE IN HER HANDS: its rim's middle on (sx, sy), w px across, its face tilted `tilt` deg toward her (so the
+ *  food and the round of the plate read, and the board's face on the other side of the cut is not edge-on) */
+const PLATE_SP = { sx: 790, sy: 625, w: 410, tilt: 30 };
+const RF = C.camFrame(ROOM_CAM);
+const PLATE_DEPTH = (2 * PLATE.r * W) / (2 * RF.tanH * PLATE_SP.w);
+const RIM_C = (() => { const q = C.fromScreen(RF, PLATE_SP.sx, PLATE_SP.sy, PLATE_DEPTH); return C.camToWorld(RF, q.x, q.y, q.z); })();
+const PLATE_TO_HER = V(P_ROOM.x - RIM_C.x, 0, P_ROOM.z - RIM_C.z).normalize();
+const PLATE_N = V(0, Math.cos(PLATE_SP.tilt * Math.PI / 180), 0).addScaledVector(PLATE_TO_HER, Math.sin(PLATE_SP.tilt * Math.PI / 180));
+/** its food toward her (+z), the bitten chop on his side */
+const PLATE_Q = quatYZ(PLATE_N, PLATE_TO_HER);
+const PLATE_AT = RIM_C.clone().addScaledVector(PLATE_N, -PLATE.h);
+/** her hands' life (millimetres in her frame, zero on the match frame so the match is exact) */
+const handsLife = (f: number) => { const g = (x: number) => V(0.0016 * Math.sin(x * 0.061 + 2), 0.0013 * Math.sin(x * 0.047 + 3.3), 0.0009 * Math.sin(x * 0.037 + 4.1)); const d = g(f).sub(g(T_MATCH)); return RF.right.clone().multiplyScalar(d.x).addScaledVector(RF.up, d.y).addScaledVector(RF.fwd, d.z); };
+/** SHE HOLDS IT OUT TO HIM (her arms reach a little: OFFER_D toward him) and he takes it in his left hand */
+const OFFER_D = 0.38;
+const PLATE_TO_HIM = V(N_ROOM.x - RIM_C.x, 0, N_ROOM.z - RIM_C.z).normalize();
+/** the candle he brought up from the elaboratory, on the table's right end at his right hand (screen left of him, its
+ *  flame above card 5's box), where the room's night light stands */
+const CANDLE_R = V(RMX + T.x + 0.33, TT, T.z + 0.13);
+/** THE MATCH: the plate's rim on the match frame -> the board's drawn circle (board-local middle, radius), upright for
+ *  her (spin 0): the circle near the board's top left corner, the orbit and its triangles off to the right and below,
+ *  out of the frame or at its edge, so the circle is the drawing on the match frame */
 const B_CIRC = { x: (0.14 - 0.5) * (BOARD.w - 0.006), y: (0.5 - 0.2) * (BOARD.h - 0.006), r: 0.1 * (BOARD.h - 0.006) };
-const MATCH_SPIN = Math.PI;
-const MATCH_L = matchCircle(ROOM_CAM, RIM_C, V(0, 1, 0), PLATE.r, B_CIRC, B_CIRC.r, BOARD.t / 2 + 0.0008, MATCH_SPIN);
+const MATCH_SPIN = 0;
+const MATCH_L = matchCircle(ROOM_CAM, RIM_C, PLATE_N, PLATE.r, B_CIRC, B_CIRC.r, BOARD.t / 2 + 0.0008, MATCH_SPIN);
+/** THE MATCH GLOW: a warm spill on the round thing, on the same place on both sides of the cut (the board's circle as
+ *  the lens comes down onto it, the plate on the room's first frames), so the eye is on it as it changes */
+const MATCH_GLOW = { x: PLATE_SP.sx, y: PLATE_SP.sy, r: 330 };
+const matchK = (f: number) => (f < T_MATCH ? smooth(clamp01((f - (T_DR1 - 8)) / 8)) : 1 - smooth(clamp01((f - (T_MATCH + 4)) / 18)));
+/** the glow (a warm screen spill on it; an overlay darkening the rest was tried and dims the REC row: not used) */
+const matchLight = (f: number) => { const k = matchK(f); return k > 0.01 ? [spill("matchGlow", MATCH_GLOW, MATCH_GLOW.r, 0.42 * k)] : null; };
 /** the elaboratory's last camera: TWO's spot looking down into her hands, with the room's lens (the match needs the same
- *  fov and roll) */
+ *  fov and roll). DROP_PITCH (gate 5 r2): steep enough that the frame's top is the floor at her feet, not the doorway
+ *  (Humphrey has gone out of it at the top by then), so the board and its circle are all the match frame holds */
+const DROP_PITCH = -75;
 const DROP_END: CamPose = (() => {
-  const yp = C.camAxes(TWO), yaw = Math.atan2(yp.fwd.x, -yp.fwd.z), pitch = -52 * Math.PI / 180;
+  const yp = C.camAxes(TWO), yaw = Math.atan2(yp.fwd.x, -yp.fwd.z), pitch = DROP_PITCH * Math.PI / 180;
   const p = P_TWO, l = p.clone().add(V(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(2));
   return { pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z], fov: ROOM_FOV, roll: ROOM_CAM.roll ?? 0 };
 })();
@@ -463,7 +515,7 @@ const elab = (w: World, f: number): Pose => {
   // ---- props before the solve (F's room as it leaves it)
   w.prop("poker").put(F_POKER_REST.grip, { rot: F_POKER_REST.rot, hot: 0 });
   w.prop("stool", "sack").put(ST1, { rot: 0.4 });
-  { const P = shovelPut(SH_LEAN.blade, SH_LEAN.handle, V(0, 0, 1)); w.prop("shovel").put(P.at, { rot: P.rot }); }
+  { const P = shovelPut(SH_LEAN.blade, SH_LEAN.handle, V(0, 0, -1)); w.prop("shovel").put(P.at, { rot: P.rot }); }
   putStoolUnder(w, ELAB.stool, FACE);
   w.prop("drafts").put(DRAFTS_AT, { rot: DRAFTS_ROT });
   if (f < T_CANDLE) { w.prop("candle").put(F_CANDLE.at, { len: CANDLE_LEN, lit: true, t }); putCandleLight(w, FLAME_SET, CANDLE_LIGHT, candleGlow(t)); }
@@ -496,37 +548,85 @@ const elab = (w: World, f: number): Pose => {
     const r = smooth(clamp01((f - T_LOWER0) / (T_LOWER1 + 2 - T_LOWER0)));
     dof = { focus: Math.max(0.2, lerp(B && f <= T_LOWER1 + 2 ? posOf(cam).distanceTo(B.at) : posOf(cam).distanceTo(face), posOf(cam).distanceTo(face), r)), amount: lerp(1.6, 2.5, r) };
   } else if (f < T_DR0) dof = lightFocus(cam, f >= T_NB ? face : H_EYE, 2);
-  else dof = lightFocus(cam, B ? B.at : H_EYE, 1.5);
-  // THE PAN's smear and a touch of lens blur on its fastest 6 frames only (the middle of an in-out cubic)
-  let overlays: Pose["overlays"];
-  if (f >= T_PAN0 && f < T_PAN1) {
-    const u = (f - T_PAN0 + 0.5) / (T_PAN1 - T_PAN0), mid = (T_PAN0 + T_PAN1) / 2;
-    const k = Math.abs(f + 0.5 - mid) <= 3 ? panSpeed(u) : 0;
-    if (k > 0.05) { overlays = C.whipSmear(0.55 * k, -1); dof = { focus: 0.05, amount: 9 * k }; }
+  else {
+    // the drop: on the board, then (as it settles) on its drawn circle, a little stronger, so the circle is the frame's
+    // one sharp thing on the match frame (the room's first frames focus on the plate the same way)
+    const cw = B ? B.at.clone().add(V(B_CIRC.x, B_CIRC.y, BOARD.t / 2).applyQuaternion(B.rot)) : H_EYE;
+    const k = smooth(clamp01((f - (T_DR1 - 8)) / 8));
+    dof = { focus: Math.max(0.2, lerp(posOf(cam).distanceTo(B ? B.at : H_EYE), posOf(cam).distanceTo(cw), k)), amount: lerp(1.5, MATCH_DOF, k) };
   }
+  // THE PAN's smear and a touch of lens blur (gate 5 r2, note G3): only on the pan's first 6 frames, T_PAN0 .. +5
+  // (5058-5063), riding the pan's speed and gone two frames before card 4 comes in (5064): nothing streaks behind the
+  // card. The 20-frame sine pan and its start on the thump are as they were.
+  let overlays: Pose["overlays"];
+  if (f >= T_PAN0 && f < T_PAN0 + SMEAR_N) {
+    const u = (f - T_PAN0 + 0.5) / (T_PAN1 - T_PAN0), tail = 1 - smooth(clamp01((f - (T_PAN0 + SMEAR_N - 2.5)) / 2.5));
+    const k = panSpeed(u) * tail * 1.6;
+    if (k > 0.05) { overlays = C.whipSmear(0.55 * Math.min(1, k), -1); dof = { focus: 0.05, amount: 9 * Math.min(1, k) }; }
+  }
+  const glow = matchLight(f);
+  if (glow) overlays = overlays ? [overlays, ...glow] : glow;
   const post: Pose["post"] = { dof: dof && dof.amount > 0.05 ? dof : undefined, grade: mixGrade(GRADE_BASE, GRADE_LATE, fs.late) };
   const slate = f < T_DIP0 ? "G extreme close (F's)" : f < T_HELD ? "G M1 down and up" : f < T_LAUGH ? "G held board" : f < T_PAN0 ? "G laugh" : f < T_PAN1 ? "G M2 pan" : f < T_DR0 ? "G door" : "G M3 drop";
   return { camera: cam, post, overlays, slate };
 };
 
 // ==================================================================================================== HIS ROOM
-/** the bite, unhurried: the stab on the clink, the lift to his mouth (the tine tip on his real lips), the chew, the fork
- *  back down; then he turns to the table, sets the plate down and pinches the candle out on the pluck */
-const T_AT_MOUTH = T_CLINK + 12, T_CHEW = T_CLINK + 18, T_FORK_DOWN = T_CLINK + 30;
-const T_NTURN0 = T_FORK_DOWN + 8, T_NTURN1 = T_NTURN0 + 16, T_PLATE_DOWN = T_NTURN1 + 6, T_REACH0 = T_PLATE_DOWN + 4;
-const F_TABLE = F_ROOM + 1.05;
-/** the plate set down on the table's front, by the candle */
-const PLATE_TABLE = V(RMX + T.x - 0.12, TT, T.z + 0.12);
-const PLATE_ROT_T = PLATE_YAW + (F_TABLE - F_ROOM);
-/** where the chop sits on the plate, the fork's stab direction */
-const rotY = (p: THREE.Vector3, a: number) => V(p.x * Math.cos(a) + p.z * Math.sin(a), p.y, -p.x * Math.sin(a) + p.z * Math.cos(a));
-const chopOn = (f: number) => plateAt(f).add(rotY(V(-0.02, 0.036, -0.02), PLATE_YAW));
-const FORK_DIR_STAB = V(0.1, -0.85, -0.25).normalize();
-const FORK_REST = rel(N_ROOM, F_ROOM, -0.13, 0.84, 0.25);
+/** THE ROOM, one hold (gate 5 r2, notes G1 + G2). The match frame is the plate in her hands where the circle was, the
+ *  glow and the light focus on it. Then something changes hands again (as the board did in M1): she holds the plate out
+ *  a little, he takes a half step in and takes it in his LEFT hand, and draws it in to his chest on his left (screen
+ *  right). The fork in his right stabs the chop on the clink, the bite to his lips (the tine tip on his real mouth), he
+ *  chews; he lays the fork on the plate, turns to the candle at his right hand on the table and pinches it out on the
+ *  pluck. EYES (G2): never the lens. On the plate (lookDown 14-18 deg, the pupils toward it), on the bite, then on the
+ *  candle; the lids at rest all through (expr smile with the half lid: never the full dots), the smile's closed mouth;
+ *  his facing 35 deg off the lens until he turns to the candle */
+const T_OFFER0 = T_MATCH + 4, T_TAKE = T_MATCH + 15, T_IN1 = T_CLINK - 6;
+const T_STEP0 = T_MATCH + 6, T_STEP1 = T_TAKE;
+const T_AT_MOUTH = T_CLINK + 12, T_CHEW = T_CLINK + 18, T_FORK_DOWN = T_CLINK + 28, T_FORK_LET = T_FORK_DOWN + 3;
+const T_RTURN0 = T_FORK_LET + 4, T_RTURN1 = T_RTURN0 + 20, T_REACH0 = T_OUT - 16;
+/** HIS HALF STEP IN toward her as she holds the plate out */
+const N_STEP = N_ROOM.clone().addScaledVector(V(RIM_C.x - N_ROOM.x, 0, RIM_C.z - N_ROOM.z).normalize(), 0.2);
+const STEP_V = N_ROOM.distanceTo(N_STEP) / ((T_STEP1 - T_STEP0) / FPS);
+/** facing the candle at his right hand (a little short of square to it, so the body stays three-quarter to her) */
+const F_PINCH = yawTo(N_STEP, CANDLE_R) + 0.3;
 const roomN = (f: number) => {
-  const turn = smooth(clamp01((f - T_NTURN0) / (T_NTURN1 - T_NTURN0)));
-  return { at: N_ROOM, facing: lerpA(F_ROOM, F_TABLE, turn), turn };
+  const g = walkAlong([N_ROOM, N_STEP], STEP_V, (f - T_STEP0) / FPS, { startFacing: F_ROOM, endFacing: F_ROOM, bounce: 0.4 });
+  const turn = smooth(clamp01((f - T_RTURN0) / (T_RTURN1 - T_RTURN0)));
+  return { at: g.at, facing: lerpA(F_ROOM, F_PINCH, turn), pose: g.moving ? g.pose : ({ kind: "idle", t: f / FPS + 0.4 } as RigPose), turn };
 };
+/** the plate in her hands: the match, then held out to him */
+const offerK = (f: number) => smooth(clamp01((f - T_OFFER0) / (T_TAKE - T_OFFER0)));
+const herPlate = (f: number) => PLATE_AT.clone().add(handsLife(f)).addScaledVector(PLATE_TO_HIM, OFFER_D * offerK(f)).add(V(0, -0.09 * offerK(f), 0));
+/** HIS GRIP: his left thumb on the plate's near rim (toward him at the take); in his hand the plate keeps that grip and
+ *  turns with him, and turns its face up to her (25 deg) as he draws it in */
+const GRIP_DIR0 = V(N_STEP.x - herPlate(T_TAKE).x, 0, N_STEP.z - herPlate(T_TAKE).z).normalize();
+const GRIP_R = PLATE.r - 0.012;
+const gripOf = (centre: THREE.Vector3, dir: THREE.Vector3) => centre.clone().addScaledVector(dir, GRIP_R).add(V(0, PLATE.h - 0.004, 0));
+const HELD_Q = quatYZ(V(0, Math.cos(0.44), 0).addScaledVector(PLATE_TO_HER, Math.sin(0.44)), PLATE_TO_HER);
+const levelK = (f: number) => smooth(clamp01((f - T_TAKE) / (T_IN1 - T_TAKE)));
+const turnQ = (f: number) => new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), roomN(f).facing - F_ROOM);
+const plateQ = (f: number) => (f < T_TAKE ? PLATE_Q.clone() : turnQ(f).multiply(PLATE_Q.clone().slerp(HELD_Q, levelK(f))));
+const gripDir = (f: number) => GRIP_DIR0.clone().applyQuaternion(turnQ(f));
+/** the plate held in to his chest on his left (its middle), from where he stands; as he turns to the candle it goes
+ *  down to his left side (it turns with him) */
+const heldAt = (f: number) => { const r = roomN(f); return rel(r.at, r.facing, 0.05, 0.93, 0.44).lerp(rel(r.at, r.facing, 0.26, 0.8, 0.14), r.turn); };
+/** the plate's middle, planned (the take, then drawn in): the left hand's target is its grip; the plate itself is put
+ *  on his real hand (it rides the fist) */
+const plannedPlate = (f: number) => (f < T_TAKE ? herPlate(f) : herPlate(T_TAKE).lerp(heldAt(f), levelK(f)));
+/** where the chop sits on the plate (plate-local, as props/things.ts lays it), the fork's stab (down into it, a little
+ *  away from him) */
+const chopOf = (centre: THREE.Vector3, q: THREE.Quaternion) => centre.clone().add(V(-0.02, 0.036, -0.02).applyQuaternion(q));
+const FORK_DIR_STAB = V(0, -0.72, 0).addScaledVector(V(Math.sin(F_ROOM), 0, Math.cos(F_ROOM)), 0.7).normalize();
+/** the fork laid on the plate (plate-local: across its rim, tines in) */
+const FORK_ON_L = V(0.04, 0.05, 0.05), FORK_ON_DIR_L = V(-0.75, 0.0, -0.66).normalize();
+/** his hands at rest: the fork in his right by his side, the left by his side */
+const forkRest = (a: THREE.Vector3, facing: number) => rel(a, facing, -0.17, 0.8, 0.18);
+const leftRest = (a: THREE.Vector3, facing: number) => rel(a, facing, 0.2, 0.7, 0.08);
+const WICK = CANDLE_R.clone().add(V(0, candleTop(CANDLE_LEN) + 0.012, 0));
+/** his eyes: on the plate (screen right of him) as it comes and in his hand, on the bite, then on the candle (screen
+ *  left) */
+const R_GAZE: [number, number][] = [[T_MATCH, 0.5], [T_CLINK + 4, 0], [T_FORK_DOWN - 6, 0.5], [T_RTURN0, -0.5], [T_OUT + 10, -0.5]];
+const rLookDown = (f: number) => ky(f, [[T_MATCH, 16], [T_TAKE, 18], [T_CLINK + 4, 16], [T_AT_MOUTH, 12], [T_CHEW, 13], [T_FORK_DOWN, 18], [T_RTURN1, 16], [T_OUT, 18]]);
 const room = (w: World, f: number): Pose => {
   const t = f / FPS;
   candleLightOff(w);
@@ -538,37 +638,49 @@ const room = (w: World, f: number): Pose => {
   const n: Rig = w.actor(NEWTON);
   const hmA = w.actor(HUMPHREY_SOOT); hmA.set({ visible: false });
   const r = roomN(f);
-  const chew = f >= T_CHEW && f < T_NTURN0 + 10 ? { dy: -0.03 * (0.5 + 0.5 * Math.sin((f - T_CHEW) / FPS * 2 * Math.PI * 2.3 - Math.PI / 2)), squash: 0.012 * Math.sin((f - T_CHEW) / FPS * 2 * Math.PI * 2.3) } : undefined;
+  const chew = f >= T_CHEW && f < T_RTURN1 ? { dy: -0.03 * (0.5 + 0.5 * Math.sin((f - T_CHEW) / FPS * 2 * Math.PI * 2.3 - Math.PI / 2)), squash: 0.012 * Math.sin((f - T_CHEW) / FPS * 2 * Math.PI * 2.3) } : undefined;
   const out = f > T_OUT;
-  // first solve with a guess for the fork; THE FORK AT HIS LIPS then uses his real mouth (people facePoint) and solves again
-  // the plate rides on his palm round the turn to the table (turned about his feet with him), then is set down
-  const dA = r.facing - F_ROOM, carried = (p: THREE.Vector3) => N_ROOM.clone().add(rotY(p.clone().sub(N_ROOM), dA));
-  const plateHand = f < T_PLATE_DOWN - 6 ? carried(plateAt(f)) : carried(plateAt(T_PLATE_DOWN - 6)).lerp(PLATE_TABLE.clone().add(V(0, 0.03, 0)), smooth(clamp01((f - (T_PLATE_DOWN - 6)) / 6)));
-  // after the plate is down his left hand goes to the candle's wick and pinches it out on the pluck, and stays a moment
-  const WICK = CANDLE_R.clone().add(V(0, candleTop(CANDLE_LEN) + 0.01, 0));
-  const leftHand = f < T_PLATE_DOWN + 2 ? plateHand : PLATE_TABLE.clone().add(V(0, 0.05, 0)).lerp(WICK, smooth(clamp01((f - T_REACH0) / (T_OUT - T_REACH0))));
+  // HIS LEFT HAND: by his side, out to the plate's near rim for the take, then holding it in to his chest
+  const leftHand = f < T_TAKE
+    ? leftRest(r.at, r.facing).lerp(gripOf(herPlate(T_TAKE), GRIP_DIR0), easeInOutCubic(clamp01((f - (T_OFFER0 + 2)) / (T_TAKE - T_OFFER0 - 2))))
+    : gripOf(plannedPlate(f), gripDir(f));
+  // the chop where it will be at the clink (planned plate; the real plate rides his fist, within a centimetre)
+  const chopAt = chopOf(plannedPlate(T_CLINK), plateQ(T_CLINK));
+  // THE FORK in his right: first solve with a guess; at his lips it uses his real mouth (people facePoint), solve again
   const forkKeysAt = (mouth: THREE.Vector3): PtKey[] => {
-    const chop = chopOn(T_CLINK), toCam = posOf(cam).sub(mouth).setY(0).normalize();
+    const toCam = posOf(cam).sub(mouth).setY(0).normalize();
     const atLips = mouth.clone().addScaledVector(toCam.clone().multiplyScalar(0.6).add(V(0, -0.6, 0)).normalize(), FORK_TIP);
+    const stab = chopAt.clone().addScaledVector(FORK_DIR_STAB, -FORK_TIP);
+    const onPlate = plannedPlate(T_FORK_LET).add(FORK_ON_L.clone().applyQuaternion(plateQ(T_FORK_LET))).addScaledVector(FORK_ON_DIR_L.clone().applyQuaternion(plateQ(T_FORK_LET)), -0.1).add(V(0, 0.025, 0));
     return [
-      [T_MATCH, FORK_REST],
-      [T_CLINK - 5, chop.clone().addScaledVector(FORK_DIR_STAB, -FORK_TIP).add(V(0, 0.06, 0))],
-      [T_CLINK, chop.clone().addScaledVector(FORK_DIR_STAB, -FORK_TIP), easeOutCubic],
-      [T_CLINK + 3, chop.clone().addScaledVector(FORK_DIR_STAB, -FORK_TIP).add(V(0, 0.035, 0))],
+      [T_MATCH, forkRest(N_ROOM, F_ROOM)],
+      [T_IN1 - 6, forkRest(N_STEP, F_ROOM)],
+      [T_CLINK - 5, stab.clone().add(V(0, 0.07, 0))],
+      [T_CLINK, stab.clone(), easeOutCubic],
+      [T_CLINK + 3, stab.clone().add(V(0, 0.035, 0))],
       [T_AT_MOUTH - 3, atLips.clone().addScaledVector(toCam, 0.08).add(V(0, -0.05, 0))],
       [T_AT_MOUTH, atLips.clone(), easeOutCubic],
       [T_CHEW, atLips.clone()],
-      [T_FORK_DOWN, FORK_REST],
-      [T_NTURN1, rel(N_ROOM, F_TABLE, -0.17, 0.62, 0.08)],
+      [T_FORK_DOWN, onPlate.clone().add(V(0, 0.05, 0))],
+      [T_FORK_LET, onPlate.clone()],
+      [T_FORK_LET + 8, forkRest(N_STEP, F_ROOM)],
     ];
   };
+  // his right hand after the fork: by his side, then to the candle's wick: the pinch on the pluck, then down
+  const rightAt = (mouth: THREE.Vector3 | null) => {
+    const k = (mouth ? pathAt(f, forkKeysAt(mouth)) : forkRest(r.at, r.facing));
+    if (f < T_FORK_LET + 8) return k;
+    const rest = forkRest(r.at, r.facing), pinch = WICK.clone().add(V(0.004, 0.006, 0));
+    const reach = smooth(clamp01((f - T_REACH0) / (T_OUT - 2 - T_REACH0))) * (1 - smooth(clamp01((f - (T_OUT + 6)) / 14)));
+    return rest.lerp(pinch, reach);
+  };
   const set = (mouth: THREE.Vector3 | null) => n.set({
-    at: r.at, facing: r.facing, pose: { kind: "idle", t: t + 0.4 }, expr: "smile", gaze: f >= T_CLINK + 8 && f < T_CHEW ? 0 : 0.4, blink: lid(t, 1),
-    lookDown: ky(f, [[T_MATCH, 20], [T_CLINK + 4, 22], [T_AT_MOUTH, 8], [T_CHEW, 8], [T_FORK_DOWN, 16], [T_NTURN1, 22], [T_OUT, 22]]), head: chew, hide: NEWTON_HIDE, visible: true,
-    hands: [mouth ? pathAt(f, forkKeysAt(mouth)) : FORK_REST, leftHand], armFront: [true, false], seat: undefined, twist: 0,
+    at: r.at, facing: r.facing, pose: r.pose, expr: "smile", gaze: at(f, R_GAZE), blink: Math.max(0.5, lid(t, 1)),
+    lookDown: rLookDown(f), head: chew, hide: NEWTON_HIDE, visible: true, lean: { pitch: 5 },
+    hands: [rightAt(mouth), leftHand], armFront: [true, true], seat: undefined, twist: 0,
   });
   set(null);
-  w.prop("lid").put(V(RMX + T.x + 0.22, TT + 0.002, T.z - 0.01));
+  w.prop("lid").put(V(RMX + T.x - 0.05, TT + 0.002, T.z - 0.08));
   w.prop("drafts").put(ROOM.drafts, { rot: -0.15 });
   w.prop("inkwell").put(ROOM.inkwell);
   w.prop("sheets").put(ROOM.deskWrite, { n: 3 });
@@ -577,19 +689,29 @@ const room = (w: World, f: number): Pose => {
   const mouth = facePoint(n, 0, -0.35, 0.012);
   set(mouth);
   w.update();
-  // the plate on his palm (at the hand's own place on the match frame: the match is exact), the fork in his right fist
-  const onTable = f >= T_PLATE_DOWN;
-  w.prop("plate").put(onTable ? PLATE_TABLE : plateHand, { rot: onTable ? PLATE_ROT_T : PLATE_YAW + dA, lid: 0, steam: 0, bites: f >= T_CLINK + 4 ? 3 : 2, t });
-  const fh = n.handWorld(0);
-  const REST_DIR = V(0.15, -0.6, 0.5).normalize(), toMouth = mouth.clone().sub(fh).normalize();
-  const up = smooth(clamp01((f - T_CLINK - 2) / 6)) * (1 - smooth(clamp01((f - T_CHEW) / (T_FORK_DOWN - T_CHEW))));
-  const base = f < T_CLINK ? REST_DIR.clone().lerp(FORK_DIR_STAB, smooth(clamp01((f - (T_CLINK - 8)) / 4))).normalize() : f < T_CHEW ? FORK_DIR_STAB : REST_DIR;
-  w.prop("fork").put(fh, { grip: "hilt", rot: forkRot(base.clone().lerp(toMouth, up).normalize()) });
+  // THE PLATE: in her invisible hands (exactly where the board's circle was on the match frame), then on his left fist
+  const pq = plateQ(f);
+  const plateC = f < T_TAKE ? herPlate(f) : n.handWorld(1).addScaledVector(gripDir(f), -GRIP_R).sub(V(0, PLATE.h - 0.004, 0));
+  w.prop("plate").put(plateC, { rot: pq, lid: 0, steam: 0, bites: f >= T_CLINK + 4 ? 3 : 2, t });
+  // THE FORK: in his right fist; laid on the plate from T_FORK_LET (it rides the plate)
+  if (f < T_FORK_LET) {
+    const fh = n.handWorld(0);
+    const REST_DIR = V(0.15, -0.6, 0.5).normalize(), toMouth = mouth.clone().sub(fh).normalize();
+    const up = smooth(clamp01((f - T_CLINK - 2) / 6)) * (1 - smooth(clamp01((f - T_CHEW) / (T_FORK_DOWN - T_CHEW))));
+    const toPlate = smooth(clamp01((f - (T_FORK_DOWN - 6)) / 6));
+    const base = f < T_CLINK ? REST_DIR.clone().lerp(FORK_DIR_STAB, smooth(clamp01((f - (T_CLINK - 8)) / 4))).normalize() : f < T_CHEW ? FORK_DIR_STAB : REST_DIR.clone().lerp(FORK_ON_DIR_L.clone().applyQuaternion(pq), toPlate).normalize();
+    w.prop("fork").put(fh, { grip: "hilt", rot: forkRot(base.clone().lerp(toMouth, up).normalize()) });
+  } else {
+    w.prop("fork").put(plateC.clone().add(FORK_ON_L.clone().applyQuaternion(pq)), { grip: "hilt", rot: forkRot(FORK_ON_DIR_L.clone().applyQuaternion(pq)) });
+  }
   // THE CANDLE OUT: the dark comes in over 3 frames from the snuff (the room's own candle light has no switch: a grade,
   // from the film's grade, GRADE_BASE = Film.tsx GRADE_FILM, which the room uses)
   const k = smooth(clamp01((f - T_OUT) / 3));
-  const post: Pose["post"] = { dof: lightFocus(cam, f < T_NTURN0 ? plateAt(f) : n.headWorld(), 1.2), ...(k > 0 ? { grade: mixGradeG(GRADE_BASE, GRADE_OUT, k) } : {}) };
-  return { camera: cam, post, ...(f <= CAP_G04_END ? { captions: false } : {}), top: f >= T_BLACK ? endBlack(f, T_BLACK) : undefined, slate: out ? "G room, candle out" : "G room" };
+  // the light focus: on the plate (the match's subject, as the board's circle was) until she holds it out, then on him
+  const fk = smooth(clamp01((f - T_OFFER0) / 12)), dPlate = posOf(cam).distanceTo(plateC), dHead = posOf(cam).distanceTo(n.headWorld());
+  const post: Pose["post"] = { dof: { focus: Math.max(0.2, lerp(dPlate, dHead, fk)), amount: lerp(MATCH_DOF, 1.2, fk) }, ...(k > 0 ? { grade: mixGradeG(GRADE_BASE, GRADE_OUT, k) } : {}) };
+  const glow = matchLight(f);
+  return { camera: cam, post, ...(glow ? { overlays: glow } : {}), ...(f <= CAP_G04_END ? { captions: false } : {}), top: f >= T_BLACK ? endBlack(f, T_BLACK) : undefined, slate: out ? "G room, candle out" : "G room" };
 };
 
 const pose = (w: World, f: number): Pose => (f >= T_MATCH ? room(w, f) : elab(w, f));

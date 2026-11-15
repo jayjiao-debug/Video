@@ -1,17 +1,16 @@
 // hud/ms/fit_B.ts: SCENE B's FITS of skin A's items (hud/ms/fit.ts says what a fit may set). Owned by the scene B
 // builder (with shots/segB.ts and shots/segB_parts.ts); hud/ms/when.ts lays it over the items at import.
-// Scene B's items: flick (B01, provisional and held off: heldOff: null releases it once his flicking hand stays in frame), card / meter0 (approved: the freeze), tick1 (B09: the meter's slot top right).
+// Scene B's items: flick (B01, provisional and held off: heldOff: null releases it once his flicking hand reaches 70 px), card / meter0 (approved: the freeze), tick1 (B09: the meter's slot top right).
 // THE v5 REBUILD (15 Nov), refitted to the one take (shots/segB.ts):
-//   flick   REFITTED, STILL HELD OFF. The take holds the two-thing W1 (Humphrey left, Newton right behind his desk,
-//           2.9 m from her lens) from "dinner" to his first step (f749-786): his left hand comes up off the page and
-//           out to his left (about 1 m up, against the panel), flicks on the swish (f768) and stays put, steady, at about
-//           (892, 922) from f774 until her head starts after Humphrey (f786); it leaves the picture's right edge about f791
-//           (B02 starts f799). It is in frame, steady and clear of both faces (Newton's head (737, 800) r110; Humphrey's (220, 913) r135), but
-//           only about 20 px across (his head is 220 px), far under the director's 70 px, and a two-thing in depth
-//           cannot hold it bigger. So heldOff stays (the editor's fallback: drop row 3). The boxes follow the hand:
-//           the ring in the free desk front under his face and left of the button column (fx.tsx puts the ring
-//           up-left of a hand right of x 820: clamped here to centre about (740, 1040), its leader to the hand), the
-//           label under it, both clear of the faces and above the subtitle band.
+//   flick   GATE 5 r2 (note B1), REFITTED, STILL HELD OFF. W1 is now the closer two-thing of v5's fallback (lens 76 -> 54:
+//           Newton's head (813, 497) r168, 337 px; Humphrey's (277, 654) r201, its left edge at x 72-79). His left hand
+//           comes up off the page to just below his chin (f759-766, to (899, 734)), flicks across his white jabot toward
+//           Humphrey and the door on the swish (f767-768, to (711, 727): 188 px, his torso turning with it), holds
+//           (f768-773), and is back on the page by f784. The flick reads in a 270 px thumbnail of f766-772 (the dark
+//           sleeve across the white shirt), but the hand itself is about 34 px across, under the director's 70 px, so
+//           heldOff stays (the editor drops row 3). The boxes follow the new hand: the ring between the two men under
+//           Newton's chin (clear of both faces: Newton's head box y <= 666, Humphrey's x <= 483), the label under it,
+//           left of the button column and above the subtitle band.
 //   card    approved, unchanged: B03's last frame (FREEZE.at, f915) holds his head at (330, 455) r240 (x 91-570)
 //           with both hands at y 922-927 (above the slip's top, y 936). The lifted cut-out (matte 58..662, footprint
 //           19..680 with the paper margin) stays left of the seal box x 690-926 (10 px; his right wig locks are its
@@ -25,8 +24,8 @@ import type { MsFit } from "./fit";
 
 export const FIT_B: MsFit = {
   flick: {
-    box: [{ x0: 560, y0: 920, x1: 930, y1: 1300 }, { x0: 400, y0: 1140, x1: 930, y1: 1300 }],
+    box: [{ x0: 490, y0: 690, x1: 930, y1: 1010 }, { x0: 490, y0: 1010, x1: 930, y1: 1300 }],
     provisional: true,
-    heldOff: "B rebuild (v5, 15 Nov): his flicking hand stays in frame, steady and clear of both faces (f774-786 at about (892, 922)), but it is about 20 px across in the two-thing (director wants 70+); held off, the editor's fallback drops row 3",
+    heldOff: "B gate 5 r2 (15 Nov): W1 is the closer two-thing (Newton's head 337 px) and the flick travels 188 px across his chest toward the door (f766-768), readable in a 270 px thumbnail, but the hand is about 34 px across (director wants 70+); held off, the editor's fallback drops row 3",
   },
 };

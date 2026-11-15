@@ -267,7 +267,9 @@ export function buildElaboratory(K: Kit) {
     P.add(Mk.flat("#d8c8a0", 0.9), boxG(bxm - B.d / 2, bxm + B.d / 2, by + 0.015, by + 0.06, bzm - B.w / 2, bzm + B.w / 2), 0.004);
     P.into(group, "elab.bench", { cast: true });
     const spread = new THREE.PlaneGeometry(B.w, B.d, 16, 1), sp = spread.attributes.position as THREE.BufferAttribute;
-    for (let i = 0; i < sp.count; i++) { const u = sp.getX(i) / (B.w / 2); sp.setZ(i, 0.018 * (1 - Math.abs(u)) ** 0.5 * Math.min(1, Math.abs(u) * 6)); }
+    // u is clamped to -1..1: the float32 x of the edge vertices (0.28000000119) gives |u| a hair over 1, and (1 - |u|) ** 0.5
+    // was NaN on the 4 edge vertices (12 NaN coordinates after the turns: computeBoundingSphere's dump, gate-5 note F5)
+    for (let i = 0; i < sp.count; i++) { const u = Math.max(-1, Math.min(1, sp.getX(i) / (B.w / 2))); sp.setZ(i, 0.018 * (1 - Math.abs(u)) ** 0.5 * Math.min(1, Math.abs(u) * 6)); }
     spread.computeVertexNormals();
     Mk.mesh("elab.book.pages", spread.rotateX(-Math.PI / 2).rotateY(Math.PI / 2).translate(bxm, by + 0.061, bzm), Mk.tex(bookTex(), 0.9), { cast: false });
     // loose papers by the book

@@ -74,3 +74,23 @@ export const nibAt = (t: number, k = 1) => {
 };
 /** the light focus on a world point (the film's dof at amount 3: the subject crisp, the far wall a touch soft) */
 export const lightFocus = (cam: CamPose, p: THREE.Vector3) => ({ focus: Math.max(0.2, posOf(cam).distanceTo(p)), amount: 3 });
+/** A KEYED CURVE through (frame, value) keys: piecewise linear (`linear`), or a monotone cubic (Fritsch-Carlson: the
+ *  inner tangents are the harmonic mean of the two secants, so it never overshoots a key; flat at both ends: a move
+ *  from rest to rest). Held before the first key and after the last. */
+export const keyed = (f: number, keys: [number, number][], linear = false) => {
+  const n = keys.length;
+  if (f <= keys[0][0]) return keys[0][1];
+  if (f >= keys[n - 1][0]) return keys[n - 1][1];
+  let i = 0;
+  while (f > keys[i + 1][0]) i++;
+  const [x0, y0] = keys[i], [x1, y1] = keys[i + 1], h = x1 - x0, u = (f - x0) / h;
+  if (linear) return y0 + (y1 - y0) * u;
+  const sec = (k: number) => (keys[k + 1][1] - keys[k][1]) / (keys[k + 1][0] - keys[k][0]);
+  const tan = (k: number) => {
+    if (k === 0 || k === n - 1) return 0;
+    const a = sec(k - 1), b = sec(k);
+    return a * b <= 0 ? 0 : (2 * a * b) / (a + b);
+  };
+  const m0 = tan(i) * h, m1 = tan(i + 1) * h, u2 = u * u, u3 = u2 * u;
+  return (2 * u3 - 3 * u2 + 1) * y0 + (u3 - 2 * u2 + u) * m0 + (-2 * u3 + 3 * u2) * y1 + (u3 - u2) * m1;
+};
