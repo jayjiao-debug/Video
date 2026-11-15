@@ -2,7 +2,7 @@
 // writes /home/user/libai_work/sound/events.json; build.py reads it). Every frame is on the PICTURE's clock: the mix
 // moves everything after the freeze later by its length, as Film.tsx does.
 import { FPS, FREEZE_AT_WORLD, FREEZE_N, seg } from "./story";
-import { TITLE_SPAN, SIDE_BANNERS, TRANSITIONS } from "./beats";
+import { BEAT, TITLE_SPAN, SIDE_BANNERS, TRANSITIONS } from "./beats";
 import { HICCUP_FRAMES } from "./drunk";
 import { WHISPERS } from "./whisper";
 import { FX_SOUNDS } from "./hud/fx";
@@ -25,6 +25,8 @@ export const soundEvents = () => ({
     [seg("C").to - 3, "whoosh", -14, "the whip C -> D"],
     ...FX_SOUNDS,
     ...POEM_SOUNDS,
+    // he writes before the verse (C19): a soft stroke now and then, under her line
+    ...[12, 31, 47, 68, 84, 103].map((d, i): [number, string, number, string] => [BEAT.C.write[0] + d, `sfx_stroke${(i % 3) + 1}`, -19, "he writes (before the verse)"]),
   ],
   /** the freeze card's sounds, in frames from the freeze's first frame */
   freezeHits: [[0, "sfx_whoosh", -19, "she pulls back, he is cut out"], [0, "sfx_card", -14, "the picture stops, the card swings in"], [6, "sfx_stamp", -15, "the seal 谪仙人"], [17, "pop_hat", -15, "今日目标"], [FREEZE_N - 10, "sfx_whoosh", -20, "her zoom back in carries the card off"]],

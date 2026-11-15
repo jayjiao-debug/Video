@@ -391,15 +391,6 @@
    "gain": -16
   },
   {
-   "clip": "sfx_brush",
-   "at": [
-    "C20",
-    "start",
-    0
-   ],
-   "gain": -18
-  },
-  {
    "clip": "sfx_boot",
    "at": [
     "C21",
