@@ -51,6 +51,19 @@ export const STAIRS_LOOK: PlaceLook = {
   fill: FILL,
   bloom: 0.4,
 };
+/** the door's number board: off-white paint on a thin board, a painted border and "E4" in dark brush strokes (drawn
+ *  stroke by stroke: no font, the render page may have none); 256 x 128 for a 0.30 x 0.15 m board, cap height 80 px */
+const boardTex = () => paint(256, 128, (g, W, H) => {
+  const r = rng(41);
+  g.fillStyle = "#e6dcc2"; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 46; i++) { g.fillStyle = css("#a8987a", 0.06 + 0.12 * r()); g.fillRect(W * r(), H * r(), 3 + 14 * r(), 1 + 2 * r()); }   // worn paint
+  g.strokeStyle = "#2a2018"; g.lineJoin = "miter"; g.lineCap = "butt";
+  g.lineWidth = 5; g.strokeRect(10, 10, W - 20, H - 20);
+  const s = (pts: [number, number][], lw = 14) => { g.lineWidth = lw; g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); };
+  s([[116, 25], [74, 25], [74, 103], [116, 103]]); s([[74, 64], [108, 64]]);                                     // E
+  s([[176, 22], [138, 82], [198, 82]]); s([[178, 40], [178, 106]], 15);                                          // 4
+});
+
 /** the per-frame dressing: door 0..1 (0 shut, 1 open inward ~100 deg), glow 0..1 (his candle's light under the door);
  *  leak 0..1 (the day round his room's shutters: 1 bright seams, 0 shut tight), gapLine 0..1 (the glow as a bright line
  *  in the gap under the shut door, seen from the landing: 0 off) */
@@ -197,6 +210,14 @@ export function buildStairs(K: Kit) {
   leaf.position.copy(STAIRS.hinge).setX(STAIRS.hinge.x + 0.02);
   leaf.rotation.y = -Math.PI / 2;
   group.add(leaf);
+  // HIS DOOR'S NUMBER BOARD (owner note 15 Nov: "a board for his apartment or dorm door number, just for some extra
+  // detail"): a small painted board screwed to the leaf at 1.3 m (low enough to sit whole under the REC row in the close shot of the shut door), so it swings with the door. "E4": his rooms were
+  // on staircase E of Great Court (the room number is ours)
+  {
+    const t = D.t, bw = 0.3, bh = 0.15, cx = (D.z1 - D.z0) / 2, cy = 1.3, P = new Part(K);
+    P.add(Mk.tex(boardTex(), 0.85), boxG(cx - bw / 2, cx + bw / 2, cy - bh / 2, cy + bh / 2, t / 2, t / 2 + 0.014), 0.003);
+    P.into(leaf, "stairs.door.board", { cast: true });
+  }
   // the architrave on the landing side (chunky, 5 cm proud) and the oak threshold
   {
     const aw = S.arch.w, ad = 0.05;
