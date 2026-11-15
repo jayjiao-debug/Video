@@ -1,0 +1,29 @@
+name: deliver-su
+on:
+  push:
+    branches: [deliver-su]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Join parts and check
+        run: |
+          mkdir -p out915 out916
+          cat parts/a915.mp4.part* > "out915/采访苏东坡的一天_v4_9x15_高清原片.mp4"
+          cat parts/b916.mp4.part* > "out916/采访苏东坡的一天_v4_9x16_高清原片.mp4"
+          echo "$(cat parts/md5_915.txt)  out915/采访苏东坡的一天_v4_9x15_高清原片.mp4" | md5sum -c -
+          echo "$(cat parts/md5_916.txt)  out916/采访苏东坡的一天_v4_9x16_高清原片.mp4" | md5sum -c -
+          ls -la out915 out916
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 采访苏东坡的一天_v4_9x15_高清原片
+          path: out915/采访苏东坡的一天_v4_9x15_高清原片.mp4
+          compression-level: 0
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 采访苏东坡的一天_v4_9x16_高清原片
+          path: out916/采访苏东坡的一天_v4_9x16_高清原片.mp4
+          compression-level: 0
+          retention-days: 30
