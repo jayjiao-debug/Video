@@ -7,6 +7,7 @@ import { HICCUP_FRAMES } from "./drunk";
 import { WHISPERS } from "./whisper";
 import { FX_SOUNDS } from "./hud/fx";
 import { POEM_SOUNDS } from "./hud/poem";
+import { CURTAIN_SOUNDS } from "./hud/curtain";
 
 export const soundEvents = () => ({
   fps: FPS,
@@ -25,6 +26,7 @@ export const soundEvents = () => ({
     [seg("C").to - 3, "whoosh", -14, "the whip C -> D"],
     ...FX_SOUNDS,
     ...POEM_SOUNDS,
+    ...CURTAIN_SOUNDS,
     // he writes before the verse (C19): a soft stroke now and then, under her line
     ...[12, 31, 47, 68, 84, 103].map((d, i): [number, string, number, string] => [BEAT.C.write[0] + d, `sfx_stroke${(i % 3) + 1}`, -19, "he writes (before the verse)"]),
   ],

@@ -3,7 +3,7 @@
 //   proud   B11       翰林待诏！ he sits up, proud.            deflate B13: 就是……等皇上叫 (a sigh, the head drops)
 //   cup     B15       所以我在这儿等: the cup goes up.
 //   run     B15-B16   the messenger eunuch runs in down the street, stops beside him: 李翰林！陛下在沉香亭……
-//   rise    B17       好，走！ he rises halfway ... wobbles ... sits back down (B18: 他站不起来了！)
+//   rise    B17       好，走！ he gets to his feet ... teeters ... drops back onto the bench (B18: 他站不起来了！)
 //   splash  B18 after a second eunuch with a basin: water in his face; he blinks, dripping, and grins. Card 2.
 //   fade    the last frames fade through warm cream (the HUD's TRANSITIONS).
 import * as THREE from "three";
@@ -79,27 +79,29 @@ const cam = (f: number): CamPose => {
  *  emphasised"): 好 he rocks forward to get going, 走 he shoves himself up, nearly standing, arms flung out for balance,
  *  teeters forward and back and side to side ... and drops back onto the bench with a bump (her 他站不起来了！ after it). */
 const UP = { gather: B.rise - 2, push: B.rise + 9, top: B.rise + 19, fall: B.sitBack, land: B.sitBack + 5 };
-/** how far up he gets, 0..1: half way (a held partial rise reads as one; higher, the sitting legs hang in the air) */
-const TOP = 0.5;
-const riseAt = (f: number) => {
-  if (f < UP.push || f >= UP.land + 1) return 0;
-  if (f < UP.top) return TOP * (1 - (1 - (f - UP.push) / (UP.top - UP.push)) ** 2);
-  if (f < UP.fall) return TOP - 0.06 * Math.abs(Math.sin((f - UP.top) * 0.42));
-  return (TOP - 0.02) * (1 - ((f - UP.fall) / (UP.land - UP.fall)) ** 2);
-};
-/** the teeter: big at the top and dying away; 0 outside the attempt */
-const teeter = (f: number) => (f >= UP.top - 3 && f < UP.fall + 2 ? 1 - 0.5 * clamp01((f - UP.top) / (UP.fall - UP.top)) : 0);
+/** HE GETS TO HIS FEET (Jay, 15 Nov: "his clothing clipping"): the old half rise lifted the SITTING figure off the
+ *  bench: its feet left the ground and its shins came through the robe. Now he really stands: two frames of the lift,
+ *  then a standing figure on its own feet in front of the bench (STAND_AT), teetering, and back onto the bench. */
+const STAND = { on: UP.push + 2, off: UP.fall + 3 };
+const STAND_AT = rel(SEAT.at, SEAT.facing, 0, 0, 0.38).setY(0);
+const isUp = (f: number) => f >= STAND.on && f < STAND.off;
+/** the seat's lift on the frames into and out of standing (0..1 of the way to standing hip height) */
+const riseAt = (f: number) => (f >= UP.push && f < STAND.on ? 0.22 * (f - UP.push + 1) : f >= STAND.off && f < UP.land ? 0.3 * (1 - (f - STAND.off + 1) / (UP.land - STAND.off + 1)) : 0);
+/** how far he is up, 0..1, for the hands (they go out for balance) */
+const upK = (f: number) => ramp(f, UP.push, STAND.on + 2) * (1 - ramp(f, STAND.off - 1, UP.land));
+/** the teeter: big as he gets up and dying away a little; 0 outside the attempt */
+const teeter = (f: number) => (isUp(f) ? 1 - 0.4 * clamp01((f - STAND.on) / (STAND.off - STAND.on)) : 0);
 export const LI_LANDS = UP.land;
 const cupAt = (f: number) => {
   const up = ramp(f, B.cup, B.cup + 8) * (1 - ramp(f, lineId("B15").to + 10, lineId("B15").to + 22));
   const rest = rel(SEAT.at, SEAT.facing, -0.17, 0.82 + 0.25 * up, 0.24 + 0.05 * up);
   // the attempt: the cup hand flies out to his right for balance (and comes back as he lands)
   const out = ramp(f, UP.push - 2, UP.top - 2) * (1 - ramp(f, UP.fall + 1, UP.land + 6));
-  return out ? rest.lerp(rel(SEAT.at, SEAT.facing, -0.5, 1.0 + 0.5 * riseAt(f) + 0.06 * Math.sin(f * 0.9) * teeter(f), 0.2), out) : rest;
+  return out ? rest.lerp(rel(SEAT.at, SEAT.facing, -0.52, 1.0 + 0.2 * upK(f) + 0.07 * Math.sin(f * 0.9) * teeter(f), 0.2 + 0.36 * upK(f)), out) : rest;
 };
 const freeHand = (f: number) => {
   const out = ramp(f, UP.push - 2, UP.top - 2) * (1 - ramp(f, UP.fall + 1, UP.land + 6));
-  if (out) return rel(SEAT.at, SEAT.facing, 0.5, 1.0 + 0.5 * riseAt(f) - 0.06 * Math.sin(f * 0.9) * teeter(f), 0.2);
+  if (out) return rel(SEAT.at, SEAT.facing, 0.52, 1.0 + 0.2 * upK(f) - 0.07 * Math.sin(f * 0.9) * teeter(f), 0.2 + 0.36 * upK(f));
   // 翰林待诏！ he taps his own chest with it, proud (and lets it drop as the title sinks in)
   const proud = ramp(f, B.proud - 3, B.proud + 5) * (1 - ramp(f, lineId("B11").to + 6, lineId("B11").to + 16));
   if (proud) return rel(SEAT.at, SEAT.facing, 0.06, 0.78 + 0.012 * Math.sin(f * 1.1), 0.17);
@@ -109,19 +111,21 @@ const freeHand = (f: number) => {
 const li = (f: number): St => {
   const t = f / FPS;
   const rise = riseAt(f), tt = teeter(f);
-  const wob = tt ? Math.sin((f - UP.top) * 0.55) * 0.16 * tt : 0;
+  const wob = tt ? Math.sin((f - STAND.on) * 0.5) * 0.2 * tt : 0, up = isUp(f);
   const expr = at<NonNullable<St["expr"]>>(f, [[0, "happy"], [B.proud, "smug"], [B.deflate, "sigh"], [lineId("B14").from + 10, "deadpan"], [B.cup, "grin"], [L16.from, "shock"], [L16.from + 30, "happy"], [B.rise, "grin"], [B.sitBack, "dazed"], [B.splash, "wince"], [B.drip, "laugh"], [B.drip + 30, "happy"]]);
   const mouth = says("li", ["B11", "B13", "B15", "B17"], f, 3);
   const head = heads(mouth.head, headPop(f, B.proud), f >= B.deflate && f < lineId("B14").from ? { dy: -0.1 } : undefined,
     accent("jolt", f, L16.from, { amp: 0.8 }), wob ? { tilt: -wob * 40 } : undefined, accent("squash", f, UP.land, { amp: 1.6 }), accent("shake", f, B.splash + 2, { amp: 1.2 }), accent("laugh", f, B.drip, { dur: 1.0 }));
   const lookAtHuan = f >= L16.from - 10 && f < B.splash;
   return {
-    ...seated(TA, t, { rise, hipY: 0.62 }), facing: SEAT.facing + (lookAtHuan ? -0.45 : 0) + wob,
+    ...(up ? { at: STAND_AT.clone(), pose: { kind: "idle" as const, t } } : seated(TA, t, { rise, hipY: 0.62 })), facing: SEAT.facing + (lookAtHuan ? -0.45 : 0) + wob,
     hands: [cupAt(f), freeHand(f)], expr, mouth: mouth.mouth, head, visible: true,
     // 好: rocks forward to get going; up: teeters forward and back, side to side; the bump: thrown back as he lands
     lean: f >= UP.gather && f < UP.land + 14 ? {
-      pitch: -5 + 22 * ramp(f, UP.gather, UP.push) * (1 - 0.6 * ramp(f, UP.push, UP.top)) + 9 * tt * Math.sin((f - UP.top) * 0.33) - 9 * ramp(f, UP.land - 1, UP.land + 1) * (1 - ramp(f, UP.land + 2, UP.land + 14)),
-      roll: 3 + 11 * tt * Math.sin((f - UP.top) * 0.47 + 0.6),
+      // seated: he rocks forward; up: he lurches up bent forward, straightens, teeters, tips back; the bump: thrown back
+      pitch: up ? 16 * (1 - ramp(f, STAND.on, STAND.on + 5)) + 11 * tt * Math.sin((f - STAND.on) * 0.36) - 24 * ramp(f, STAND.off - 4, STAND.off)
+        : -5 + 22 * ramp(f, UP.gather, UP.push) * (f < STAND.on ? 1 : 0) - 12 * ramp(f, STAND.off - 1, UP.land) * (1 - ramp(f, UP.land + 2, UP.land + 14)),
+      roll: 3 + 13 * tt * Math.sin((f - STAND.on) * 0.47 + 0.6),
     } : undefined,
     blink: f >= B.splash && f < B.drip ? 1 : mouth.blink ?? lid(t, 2), gaze: lookAtHuan ? -1 : 0,
   };

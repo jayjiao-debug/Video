@@ -39,7 +39,8 @@ const A = {
 export const GAO_BANNER: Span = [seg("C").from + 6, lineId("C19").from + 64];   // about 3 s (Jay: the cards went by too fast)
 
 /** the themed title (hud/title.tsx): inside the cold open, from the REC beep to just before her first word */
-export const TITLE_SPAN: Span = [seg("A").from + 6, lineId("A01").from - 3];
+/** (it drops as she comes through the door curtain (hud/curtain.tsx), shows over the walk in and is gone as she knocks) */
+export const TITLE_SPAN: Span = [seg("A").from + 22, A.knock[0] - 2];
 
 // ---------------------------------------------------------------------------------------------------- B 辰时 the door
 const B = {
