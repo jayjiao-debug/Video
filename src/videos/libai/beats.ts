@@ -26,7 +26,7 @@ const A = {
   /** he snores face down on the table, hugging the jar, until A01's end */ sleep: [seg("A").from, to("A01")] as Span,
   /** the invisible hand knocks twice on the table (sound + the table jumps) */ knock: [pre("A01") + sec(0.9), pre("A01") + sec(1.2)] as Span,
   /** he lifts his head (A01's end) and squints at the lens */ wake: to("A01") - 4,
-  /** A02: he leans right up to the lens (你哪位？) */ lean: word("A02", "哪位"),
+  /** A02: he leans right up to the lens (月亮) */ lean: word("A02", "月亮"),
   /** A04: the jar comes up to the lens */ jar: from("A04"),
   /** A06: very pleased with himself (早酒) */ proud: word("A06", "早酒"),
   /** A08: counting on his fingers, then the shrug */ count: from("A08"), shrug: word("A08", "一日"),

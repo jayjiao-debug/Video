@@ -9,11 +9,12 @@
 //   WaitBar     等皇上叫…… a loading bar after 「所以我在这儿等」 (B15), crawling; the eunuch's 李翰林！ fills it
 //   SoberStamp  the bucket of water lands: 醒酒 ✓ (his card's 今日目标, paid off)
 //   GrudgeMeter 高力士 glares into the lens: 记仇 +1, a little meter over him
+//   MoonOS      记者OS after 「哟，月亮？」: he takes her lens for the moon
 //   <Fx f />    all of them;  fxShown()  the list for the overlay check (src/kit/overlay checkOverlays)
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { EN } from "../lang";
-import { lineId, cap, seg } from "../story";
+import { lineId, cap, capWord, seg, FREEZE_AT_WORLD } from "../story";
 import { BEAT } from "../beats";
 import { life, glyph, roughFilter, gradient, seal, pop, slap, part, easeOut, easeIn, clamp01, burst, ring, barBoxes, odometer, type Shown, type Rect } from "../../../kit/overlay";
 import { SKIN, C, TONE, sway, hiccup } from "./skin";
@@ -100,6 +101,46 @@ const CupCounter: React.FC<{ f: number }> = ({ f }) => {
   );
 };
 
+// ---------------------------------------------------------------------------------------------------- 记者OS: the moon
+/** 记者OS after 「哟，月亮？」 (A02): her thought, what the viewer needs to get the joke: he takes her round lens for the
+ *  moon (Jay, 15 Nov: "why you are out in the morning doesn't give me context"). A thought cloud in her own warm paper,
+ *  top left, out before the picture freezes for his card. */
+const MOON_OS = [capWord("A02", "月亮").from + 8, FREEZE_AT_WORLD - 3] as const;
+const MO = { x0: 110, y0: 345, x1: 654, y1: 437 };
+const MoonOS: React.FC<{ f: number }> = ({ f }) => {
+  const L = life(f, MOON_OS[0], MOON_OS[1], 5, 5);
+  if (!L) return null;
+  const p = pop(L.t, 0, 7), op = p.o * (1 - L.leave), cy = (MO.y0 + MO.y1) / 2;
+  return (
+    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0, opacity: op }}>
+      <g transform={`translate(${MO.x0 + 40},${cy}) scale(${p.s.toFixed(3)}) translate(${-MO.x0 - 40},${-cy})`}>
+        {/* the cloud: a rounded body with three bumps, and two little puffs trailing down toward the lens */}
+        <rect x={MO.x0 + 4} y={MO.y0 + 8} width={MO.x1 - MO.x0} height={MO.y1 - MO.y0} rx={44} fill={TONE.shadow} />
+        <rect x={MO.x0} y={MO.y0} width={MO.x1 - MO.x0} height={MO.y1 - MO.y0} rx={44} fill="#fff6e8" stroke={C.ink} strokeWidth={5} />
+        <circle cx={MO.x0 + 60} cy={MO.y1 + 22} r={12} fill="#fff6e8" stroke={C.ink} strokeWidth={4} />
+        <circle cx={MO.x0 + 40} cy={MO.y1 + 48} r={7} fill="#fff6e8" stroke={C.ink} strokeWidth={4} />
+        {/* her tag, in the REC lamp's red */}
+        <g transform={`translate(${MO.x0 + 26},${MO.y0 - 2}) rotate(-4)`}>
+          <rect x={0} y={-18} width={108} height={36} rx={8} fill="#e2463c" stroke={C.ink} strokeWidth={4} />
+          {glyph("os-tag", EN ? "HER" : "记者OS", 54, 0, 22, "#ffffff", { ls: 1 })}
+        </g>
+        {/* a lens = a moon: the little drawing, then her words */}
+        <g transform={`translate(${MO.x0 + 62},${cy + 6})`}>
+          <circle r={24} fill="#2a2f45" stroke={C.ink} strokeWidth={4} />
+          <circle r={13} fill="#5d6a9c" />
+          <circle cx={-6} cy={-7} r={5} fill="#ffffff" opacity={0.85} />
+        </g>
+        {glyph("os-eq", "=", MO.x0 + 112, cy + 6, 40, C.ink)}
+        <g transform={`translate(${MO.x0 + 160},${cy + 6})`}>
+          <circle r={24} fill={C.paper} stroke={C.ink} strokeWidth={4} />
+          <circle cx={7} cy={6} r={5} fill="rgba(214,189,138,0.8)" /><circle cx={-8} cy={-4} r={3.5} fill="rgba(214,189,138,0.8)" />
+        </g>
+        {glyph("os-t", EN ? "my lens = his moon?!" : "他把镜头当月亮了", MO.x0 + 204, cy + 6, EN ? 34 : 40, "#3a2a1c", { anchor: "start", ls: 2 })}
+      </g>
+    </svg>
+  );
+};
+
 // ---------------------------------------------------------------------------------------------------- the wait bar
 const WB = { x: 120, y: 1170, w: 560, h: 30 };
 const WaitBar: React.FC<{ f: number }> = ({ f }) => {
@@ -167,7 +208,7 @@ const GrudgeMeter: React.FC<{ f: number }> = ({ f }) => {
 /** every effect on frame f (the picture's clock) */
 export const Fx: React.FC<{ f: number }> = ({ f }) => (
   <AbsoluteFill style={{ pointerEvents: "none" }}>
-    <CupCounter f={f} /><WaitBar f={f} /><SoberStamp f={f} /><GrudgeMeter f={f} />
+    <CupCounter f={f} /><MoonOS f={f} /><WaitBar f={f} /><SoberStamp f={f} /><GrudgeMeter f={f} />
   </AbsoluteFill>
 );
 
@@ -175,6 +216,7 @@ export const Fx: React.FC<{ f: number }> = ({ f }) => (
 export const fxShown = (): Shown[] => [
   { what: "cup counter", kind: "effect", from: CUPS_IN, to: CUPS_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }) },
   { what: "cup counter (the last cup)", kind: "effect", from: SIP_IN, to: SIP_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }), scene: "F" },
+  { what: "记者OS (the moon)", kind: "effect", from: MOON_OS[0], to: MOON_OS[1], rect: () => ({ x0: MO.x0 - 6, y0: MO.y0 - 24, x1: MO.x1 + 10, y1: MO.y1 + 60 }), scene: "A" },
   { what: "wait bar", kind: "effect", from: WAIT[0], to: WAIT[1], rect: () => ({ x0: WB.x - 6, y0: WB.y - 64, x1: WB.x + WB.w + 6, y1: WB.y + 22 }), scene: "B" },
   { what: "醒酒 stamp", kind: "effect", from: SOBER[0], to: SOBER[1], rect: () => ({ x0: 110, y0: 360, x1: 530, y1: 560 }), scene: "B" },
   { what: "记仇 meter", kind: "effect", from: GRUDGE[0], to: GRUDGE[1], rect: () => ({ x0: GM.cx - GM.w / 2 - 110, y0: GM.y - 40, x1: GM.cx + GM.w / 2 + 100, y1: GM.y + 40 }), scene: "C" },
@@ -189,6 +231,7 @@ export const FX_SOUNDS: [number, string, number, string][] = [
   [SIP_IN, "pop_hat", -20, "the cup counter swings back in (the last cup)"],
   [SPIN[0], "sfx_coins", -20, "the counter rolls up to 300 (the whole evening)"],
   [GOAL_AT, "sfx_stamp", -16, "301: 达标"],
+  [MOON_OS[0], "sfx_bubble", -21, "记者OS: the lens is his moon"],
   [WAIT[0], "sfx_bubble", -19, "the wait bar"],
   [WAIT_FULL, "card_ding", -15, "the wait bar fills"],
   [SOBER[0], "sfx_stamp", -12, "醒酒 ✓"],

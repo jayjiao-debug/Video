@@ -233,7 +233,7 @@ export const LEAD = VOICE_LEAD_F, TAIL = VOICE_TAIL_F;
 // ---------------------------------------------------------------------------------------------------- the freeze
 /** THE FREEZE of 李白's intro card (src/kit/overlay/freeze.ts, the SHIFT way; hud/intro.tsx LeadCard): every number in
  *  story / beats / captions / the shots is on the PICTURE's clock (TOTAL frames); the film inserts FREEZE_N held frames
- *  on his first close-up, just after A02 (他眯眼凑近镜头: 是我……你哪位？) and before her answer. Film.tsx
+ *  on his first close-up, just after A02 (他眯眼凑近镜头: 哟，月亮？你怎么白天就出来了？) and before her answer. Film.tsx
  *  poses the picture at CLOCK.world(f) and hides the subtitle while CLOCK.at(f); the sound mix (scripts/libai/sound/
  *  build.py) moves everything after the freeze later by FREEZE_N. No voice is re-recorded: the gap is silence. */
 export const FREEZE_N = 60;   // 2 s: his card holds (Jay, 14 Nov: "hold a bit longer")
@@ -246,7 +246,7 @@ export const FILM_TOTAL = CLOCK.total(TOTAL);
 
 // ---------------------------------------------------------------------------------------------------- segments
 const WHAT: Record<string, string> = {
-  A: "清晨 tavern: REC on, he sleeps on the table hugging a jar, the knock, 你哪位, 早酒, 三百杯; title; card 1",
+  A: "清晨 tavern: REC on, he sleeps on the table hugging a jar, the knock, 月亮, 早酒, 三百杯; title; card 1",
   B: "上午 the tavern door (street): 翰林待诏 = waiting, the eunuch runs in, he can't stand, the water splash; card 2",
   C: "中午 沉香亭 (Qin's terrace with peonies): he writes dripping wet, 云想衣裳花想容, the boot, 高力士 glares; card 3",
   D: "下午 the palace corridor gate: gold, the gate shuts, 千金散尽还复来, 喝酒",

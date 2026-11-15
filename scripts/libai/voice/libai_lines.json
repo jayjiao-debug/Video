@@ -52,24 +52,26 @@
    "id": "A02",
    "scene": "A",
    "who": "li",
-   "tts": "[just woken, squinting, tipsy, slow] 是我……你哪位？",
-   "zh": "是我……你哪位？",
+   "tts": "[waking up, squinting, delighted, tipsy] 哟，月亮？你怎么白天就出来了？",
+   "zh": "哟，月亮？你怎么白天就出来了？",
    "screens": [
-    "是我……你哪位？"
+    "哟，月亮？",
+    "你怎么白天就出来了？"
    ],
-   "en": "That's me... and who are you?"
+   "en": "Oh, the moon? What are you doing out in the daytime?"
   },
   {
    "n": 3,
    "id": "A03",
    "scene": "A",
    "who": "ji",
-   "tts": "[bright, eager] 我今天跟拍您！",
-   "zh": "我今天跟拍您！",
+   "tts": "[flustered] 我不是月亮！我是来拍您一天的！",
+   "zh": "我不是月亮！我是来拍您一天的！",
    "screens": [
-    "我今天跟拍您！"
+    "我不是月亮！",
+    "我是来拍您一天的！"
    ],
-   "en": "I'm following you around today!"
+   "en": "I'm not the moon! I'm here to film your day!"
   },
   {
    "n": 4,
