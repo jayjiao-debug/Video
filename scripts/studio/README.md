@@ -7,7 +7,7 @@ hand-over. The cloud threads write code and push commits; the Mac makes the film
 ## Setup (once)
 
 ```bash
-mkdir -p ~/Claude/studio && git clone -b claude/pipeline-tools https://github.com/jayjiao-debug/video ~/Claude/studio/tools
+mkdir -p ~/Claude/studio && git clone --depth 1 -b claude/pipeline-tools https://github.com/jayjiao-debug/video ~/Claude/studio/tools
 bash ~/Claude/studio/tools/scripts/studio/studio setup
 ```
 

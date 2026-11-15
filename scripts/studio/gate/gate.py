@@ -58,6 +58,14 @@ class Gate:
         self.offset = int(a.frames.split("-")[0]) if a.frames else 0   # a range: film frame of the video's frame 0
 
     def add(self, check, level, text, ev=None):
+        """a finding; the film config's "gate.accept" list ([{"check", "match" (regex on the text), "why"}]) turns a
+        known, intended one (a rider sitting into the horse, a thrown cup in the air) into INFO with its reason"""
+        import re
+        if level in ("FAIL", "LOOK"):
+            for acc in self.cfg.get("gate", {}).get("accept", []):
+                if acc.get("check", check) == check and re.search(acc["match"], text):
+                    level, text = "INFO", f"accepted ({acc.get('why', 'intended')}): {text}"
+                    break
         self.findings.append((check, level, text, ev))
 
     def t(self, f):
@@ -97,7 +105,7 @@ class Gate:
         if rc != 0 and not files:
             self.add("clipping", "FAIL", f"the clearance checker did not run (rc {rc}); see the log")
             return
-        n_fail = n_look = 0
+        n_fail = n_look = n_acc = 0
         for fn in sorted(files):
             j = slib.load_json(os.path.join(out, fn), {}) or {}
             for r in j.get("ranges", []):
@@ -105,11 +113,12 @@ class Gate:
                 d = r.get("maxOn", 0)
                 lvl = "FAIL" if d >= self.rules["clip_fail_cm"] else "LOOK" if d >= self.rules["clip_look_cm"] else None
                 if not lvl: continue
-                n_fail += lvl == "FAIL"; n_look += lvl == "LOOK"
                 f = int(r.get("fMax", 0)) - self.offset
                 ev = self.crop_evidence(f, r.get("s"), f"clip_{fn[:-5]}_{r.get('fMax')}.jpg") if 0 <= f else None
                 self.add("clipping", lvl, f"{self.t(f)} f{r.get('fMax')}: {r.get('a')} into {r.get('b')} by {d:.1f} cm on screen ({r.get('cat', '')}, {r.get('nOn')} frames)", ev)
-        self.summary["clipping"] = f"{n_fail} fail, {n_look} to look at"
+                got = self.findings[-1][1]
+                n_fail += got == "FAIL"; n_look += got == "LOOK"; n_acc += got == "INFO"
+        self.summary["clipping"] = f"{n_fail} fail, {n_look} to look at, {n_acc} accepted as intended"
 
     def check_overlays(self):
         ovs, signs = self.tl["overlays"], self.tl["signs"]
@@ -192,7 +201,7 @@ class Gate:
         notes = [f"{L:.1f} LUFS", f"true peak {tp:.1f} dBTP"]
         if stems.get("voice") and lines:
             v = av.audio(stems["voice"])
-            for lid, side, db in av.line_edges(v, lines, edge_db := r["edge_db"])[:20] if False else av.line_edges(v, lines, rel_db=r["edge_db"])[:20]:
+            for lid, side, db in av.line_edges(v, lines, rel_db=r["edge_db"])[:20]:
                 self.add("sound", "LOOK", f"line {lid}: the voice is still loud at its {side} ({db} dB): cut mid-sound?")
             rest = sum(av.audio(stems[g]) for g in stems if g != "voice")
             if not isinstance(rest, int):

@@ -52,7 +52,8 @@ def cmd_setup(a):
         log(f"{tool}: {slib.which(tool) or 'MISSING'}")
     ff = subprocess.run([slib.which("ffmpeg") or "ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True).stdout
     for flt in ("ebur128", "rubberband", "loudnorm", "drawbox", "drawtext"):
-        log(f"ffmpeg filter {flt}: {'yes' if re.search(r'\s' + flt + r'\s', ff) else 'NO'}")
+        pat = r"\s" + flt + r"\s"
+        log(f"ffmpeg filter {flt}: " + ("yes" if re.search(pat, ff) else "NO"))
     # python venv with what the sound scripts, the gate and the voice check need
     py = os.path.join(STUDIO, "py", "bin", "python3")
     if not os.path.exists(py):
@@ -76,7 +77,8 @@ def cmd_setup(a):
 
 
 def cmd_update(a):
-    run(["git", "-C", slib.TOOLS, "pull", "--ff-only"])
+    run(["git", "-C", slib.TOOLS, "fetch", "--depth", "1", "origin"])
+    run(["git", "-C", slib.TOOLS, "reset", "--hard", "@{u}"])
 
 
 # ------------------------------------------------------------------------------------------------ film config

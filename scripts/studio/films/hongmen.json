@@ -3,8 +3,39 @@
  "title": "鸿门宴",
  "composition": "HongmenFilm",
  "branch": "claude/film-kit",
- "render": {"crf": 16, "gl": "angle", "concurrency": "50%"},
- "langs": {"zh": {}, "en": {"props": {"lang": "en"}}},
- "sound": {"build": "NAME=mix WORK={VER}/soundwork CLIPS={CLIPS} bash scripts/hongmen/sound/build.sh && cp {VER}/soundwork/mix_48k.wav {MIX}"},
- "gate": {}
+ "render": {
+  "crf": 16,
+  "gl": "angle",
+  "concurrency": "50%"
+ },
+ "langs": {
+  "zh": {},
+  "en": {
+   "props": {
+    "lang": "en"
+   }
+  }
+ },
+ "sound": {
+  "build": "NAME=mix WORK={VER}/soundwork CLIPS={CLIPS} bash scripts/hongmen/sound/build.sh && cp {VER}/soundwork/mix_48k.wav {MIX}"
+ },
+ "gate": {
+  "accept": [
+   {
+    "check": "clipping",
+    "match": "into liuBang:rider",
+    "why": "Liu Bang sits on the horse: the rider's legs and robe are meant to overlap its back"
+   },
+   {
+    "check": "clipping",
+    "match": "\\(float,",
+    "why": "thrown props (the pig leg, the cup) are in the air on purpose"
+   },
+   {
+    "check": "clipping",
+    "match": "fanZeng.armL into fanZeng.head",
+    "why": "Fan Zeng's hand to his head is the stroking-beard gesture (checked in the delivered film)"
+   }
+  ]
+ }
 }
