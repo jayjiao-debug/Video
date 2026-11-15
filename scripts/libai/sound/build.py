@@ -52,7 +52,7 @@ def main():
     tfms = int(round((TF + FZ) * 1000))
     inputs, flt = [a.voice], ["[0:a]aresample=48000,aformat=channel_layouts=mono,asplit=2[v0][v1]", f"[v0]atrim=0:{TF:.4f}[va]", f"[v1]atrim=start={TF:.4f},asetpts=PTS-STARTPTS,adelay={tfms}|{tfms}[vb]"]
     mix = ["[va]", "[vb]"]
-    def add(clip, t0, t1, gain, loop, fade, fade_out=None, seek=0.0, dip=False):
+    def add(clip, t0, t1, gain, loop, fade, fade_out=None, seek=0.0, dip=False, filt=None):
         path = os.path.join(a.clips, clip + ".mp3"); k = len(inputs)
         if not os.path.exists(path): print("missing", path); return
         args = []
@@ -61,6 +61,7 @@ def main():
         inputs.append((args, path))
         length = max(0.05, (t1 - t0) if t1 is not None else dur(path))
         f = f"[{k}:a]aresample=48000,aformat=channel_layouts=mono,atrim=0:{length:.3f},asetpts=PTS-STARTPTS,volume={gain}dB"
+        if filt: f += "," + filt                                    # "filter": an ffmpeg filter chain on this cue alone
         fo = fade if fade_out is None else fade_out                 # "fade_out" (s) overrides the fade at the end
         if fade: f += f",afade=t=in:d={fade}"
         if fo: f += f",afade=t=out:st={max(0, length - fo):.3f}:d={fo}"
@@ -72,7 +73,9 @@ def main():
         ms = int(round(max(0, t0) * 1000)); f += f",adelay={ms}|{ms}[c{k}]"
         flt.append(f); mix.append(f"[c{k}]")
     for b in spec["beds"]:
-        add(b["clip"], at(b["at"]), at(b["until"]), b["gain"], b.get("loop", False), b.get("fade", 0.3), b.get("fade_out"), b.get("seek", 0.0), dip=b["clip"].startswith("amb_"))
+        # "sync": [anchor]: this cue is a second layer of a cue that started at that anchor; it seeks in to stay in step with it
+        seek = b.get("seek", 0.0) + (at(b["at"]) - at(b["sync"]) if "sync" in b else 0.0)
+        add(b["clip"], at(b["at"]), at(b["until"]), b["gain"], b.get("loop", False), b.get("fade", 0.3), b.get("fade_out"), seek, dip=b["clip"].startswith("amb_"), filt=b.get("filter"))
     for h in spec["hits"]:
         add(h["clip"], at(h["at"]), at(h["until"]) if "until" in h else (at(h["at"]) + h["len"] if "len" in h else None), h["gain"], False, h.get("fade", 0), h.get("fade_out"), h.get("seek", 0.0))
     for l in T["lines"]:

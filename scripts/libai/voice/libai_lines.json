@@ -320,13 +320,13 @@
    "id": "C22",
    "scene": "C",
    "who": "ji",
-   "tts": "[to camera, scared] 完了。他可是皇上身边最红的人。",
-   "zh": "完了。他可是皇上身边最红的人。",
+   "tts": "[to camera, scared] 完了。高公公可是皇上身边最红的人。",
+   "zh": "完了。高公公可是皇上身边最红的人。",
    "screens": [
     "完了。",
-    "他可是皇上身边最红的人。"
+    "高公公可是皇上身边最红的人。"
    ],
-   "en": "Uh-oh. He's the emperor's favourite.",
+   "en": "Uh-oh. Lord Gao is the emperor's favourite.",
    "after": 3.4,
    "card": {
     "zh": "新唐书：高力士记仇，皇上想封他官，杨妃总拦。",

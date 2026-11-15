@@ -11,7 +11,7 @@ import { C, TONE } from "./skin";
 /** picture frames: closed from the film's first frame, the panels part from `open` over `len` frames */
 export const CURTAIN = { open: seg("A").from + 12, len: 15 };
 /** its sound: the cloth as the hand pushes through (sound_events.ts) */
-export const CURTAIN_SOUNDS: [number, string, number, string][] = [[CURTAIN.open, "cloth", -11, "the door curtain is pushed apart"]];
+export const CURTAIN_SOUNDS: [number, string, number, string][] = [[CURTAIN.open, "sfx_rustle", -15, "the door curtain is pushed apart"]];
 export const curtainOn = (f: number) => f >= seg("A").from && f < CURTAIN.open + CURTAIN.len;
 
 const FOLDS = [70, 190, 330, 455];

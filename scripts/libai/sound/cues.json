@@ -279,12 +279,35 @@
    "until": [
     "F",
     "to",
-    -1.5666666666666629
+    -4.1666666666666625
    ],
    "gain": -22,
    "fade": 0.8,
-   "fade_out": 0.05,
-   "note": "bittersweet under the two last cards, cut by the power-off"
+   "fade_out": 2.0,
+   "note": "bittersweet under the two last cards; it thins and dims out before the camera switches off (Jay 15 Nov)"
+  },
+  {
+   "clip": "mus_museum",
+   "at": [
+    "F",
+    "to",
+    -6.1666666666666625
+   ],
+   "until": [
+    "F",
+    "to",
+    -1.5666666666666629
+   ],
+   "gain": -22,
+   "fade": 2.0,
+   "fade_out": 2.6,
+   "note": "the same music, thinned (no lows), fading to nothing as the REC lamp goes out",
+   "filter": "highpass=f=700,highpass=f=700",
+   "sync": [
+    "F44",
+    "end",
+    0.4
+   ]
   }
  ],
  "hits": [
@@ -333,7 +356,8 @@
     "start",
     -0.95
    ],
-   "gain": -10
+   "gain": -14,
+   "note": "three soft knocks (Jay 15 Nov: a tad softer; the picture shows them: hud/fx.tsx KnockFx)"
   },
   {
    "clip": "sfx_gulp",
@@ -422,9 +446,10 @@
    "at": [
     "D23",
     "end",
-    0.1
+    0.6
    ],
-   "gain": -11
+   "gain": -11,
+   "note": "the gate starts to shut once the messenger is through (beats.ts D.shut)"
   },
   {
    "clip": "mus_hero_sting",
@@ -480,15 +505,6 @@
    ],
    "gain": -18,
    "note": "the end card"
-  },
-  {
-   "clip": "sfx_poweroff",
-   "at": [
-    "F",
-    "to",
-    -1.5666666666666629
-   ],
-   "gain": -12
   }
  ],
  "cards": {

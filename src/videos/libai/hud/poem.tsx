@@ -48,11 +48,13 @@ const BUILT: Built[] = POEMS.map((p) => {
   return { ...p, R, from: R[0].from - 2, to: Math.min(last + HOLD + OUT, nextSpoken(last) - 2) };
 });
 const poemOn = (f: number) => BUILT.find((p) => f >= p.from && f <= p.to) ?? null;
-/** the brush's sound: one SOFT stroke as each character of a (not soft) poem lands, three strokes in turn
- *  (sfx_stroke1-3: low, breathy, no scratch; Jay, 15 Nov: "the scribbling is off since its softbrush?": the old
- *  sfx_brush was a pen scribbling). [picture frame, clip, gain dB, what] (sound_events.ts) */
-export const POEM_SOUNDS: [number, string, number, string][] = BUILT.filter((p) => !p.soft).flatMap((p) => p.R.flatMap((r, ri) =>
-  r.chars.flatMap((c, i): [number, string, number, string][] => (c === GAP ? [] : [[r.at[i], `sfx_stroke${((i + ri) % 3) + 1}`, -15, `${p.title} row ${ri + 1} ${c}`]]))));
+/** the brush's sound: one very soft stroke as each character lands, ONLY for the poem he writes with a brush (the
+ *  palace couplet C20). The poems he only recites (D25, E31) have none (Jay, 15 Nov: "Since the other poems he reads
+ *  out we dont need to do the brush stroke sounds", and "the brush stroke sounds is too loud": -15 dB then, -24 now).
+ *  [picture frame, clip, gain dB, what] (sound_events.ts) */
+const WRITTEN = new Set([20]);
+export const POEM_SOUNDS: [number, string, number, string][] = BUILT.filter((p) => !p.soft && WRITTEN.has(p.rows[0][0])).flatMap((p) => p.R.flatMap((r, ri) =>
+  r.chars.flatMap((c, i): [number, string, number, string][] => (c === GAP ? [] : [[r.at[i], `sfx_stroke${((i + ri) % 3) + 1}`, -24, `${p.title} row ${ri + 1} ${c}`]]))));
 /** a poem shows on picture frame f (the subtitle is hidden) */
 export const poemAt = (f: number) => poemOn(f) !== null;
 

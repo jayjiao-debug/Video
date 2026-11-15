@@ -3,13 +3,13 @@
 // 0.28 Hz, the head carried tipped, a hiccup now and then) was never put into the film; this puts it on every frame of
 // his, whatever the segment does, as a layer over the segment's own lean and head (world.ts installs it on his rigs):
 //   the body   rolls side to side (a slow sway with a quicker wobble on it) and rocks a little forward and back
-//   the head   tipped to one side, lagging the body's sway (it flops), and a hiccup's jolt every few seconds
+//   the head   tipped to one side, lagging the body's sway (it flops), and a hiccup's jolt at a few chosen moments
 // How drunk, scene by scene (K): asleep at dawn only a little (breathing); awake in the morning and at the tavern door
 // fully; on the terrace, soaked from the bucket, less; at the gate less until the gold makes him giddy; at the evening
-// tavern fully; under the night tree softer and slower (the quiet scene). A hiccup never falls inside his own line.
+// tavern fully; under the night tree softer and slower (the quiet scene).
 // The layer is added for the solve only and taken off again (the state the segment set is left as it was), so it is
 // the same however many times a frame is solved.
-import { SEGMENTS, FPS, lineId, quotesOf } from "./story";
+import { SEGMENTS, FPS, lineId } from "./story";
 import { BEAT } from "./beats";
 import { rigHeadAdd, rigHeadAccent, type Rig, type RigState } from "../group/kit/rig3d";
 
@@ -25,21 +25,14 @@ export const drunkK = (f: number): { k: number; tempo: number } => {
     default: return { k: 0.6, tempo: 0.75 };
   }
 };
-const LI_LINES = quotesOf("li").map((q) => [q.from - 4, q.to + 6] as const);
-const speaking = (f: number) => LI_LINES.some(([a, b]) => f >= a && f <= b);
-/** his hiccups: about every 6-9 s of picture, never inside his own line (then it waits for the line to end) */
-const HICCUPS: number[] = (() => {
-  const out: number[] = [];
-  let f = 70;
-  const end = SEGMENTS[SEGMENTS.length - 1].to;
-  for (let i = 0; f < end; i++) {
-    while (speaking(f) && f < end) f++;
-    out.push(f);
-    const r = (((Math.sin(i * 12.9898) * 43758.5453) % 1) + 1) % 1;
-    f += Math.round((6 + 3 * r) * FPS);
-  }
-  return out;
-})();
+/** HIS HICCUPS, placed by hand, each one the full stop of a joke (Jay, 15 Nov: "it should be correctly timed for
+ *  humorous effect instead of doing on a loop"; before, one fell every 6-9 s). None in the night scene. */
+const HICCUPS: number[] = [
+  lineId("A06").to + 5,    // 早上喝的，叫早酒。 hic
+  lineId("B17").to + 7,    // 好，走！ on his feet at last, swaying: hic, and down he goes
+  lineId("C21").to + 17,   // 帮我脱一下。 the terrace has gone dead silent: hic
+  lineId("E31").to + 1,    // 日日醉如泥。 hic
+];
 const TAU = Math.PI * 2;
 /** the layer on picture frame f: degrees to add to his lean, and a head layer */
 export const drunkLayer = (f: number): { pitch: number; roll: number; head: ReturnType<typeof rigHeadAdd> } | null => {

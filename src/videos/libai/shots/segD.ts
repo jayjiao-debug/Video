@@ -1,5 +1,5 @@
 // SEGMENT D, lines D23-D27: 未时, outside the palace gate (Qin's colonnade with a gate across it). beats.ts BEAT.D.
-//   give    D23     the messenger eunuch hands him the little red chest of gold (这是赏的金子).
+//   give    D23     the messenger eunuch hands him the little red chest of gold (这是赏的金子), facing him to the line's end.
 //   shut    D23 end the eunuch goes back in; the great gate shuts behind 李白.
 //   look    D24     he looks down at the chest ...      laugh D25: 有钱了！ he bursts out laughing; 天生我材: the chest up high.
 //   stride  D27     喝酒！ he strides off past the lens (screen right). Fade through amber.
@@ -20,7 +20,9 @@ const L23 = lineId("D23");
 const GATE = V(CX, 0, -4.3);
 const LI_AT = V(CX - 0.1, 0, -2.4);
 const HUAN_AT = V(CX + 0.65, 0, -2.75), HUAN_F = yawTo(HUAN_AT, LI_AT) + 0.4;
-const HUAN_BACK = [HUAN_AT, V(CX + 0.35, 0, -4.0), V(CX + 0.2, 0, -6.0)];
+const HUAN_BACK = [HUAN_AT, V(CX + 0.08, 0, -3.7), V(CX, 0, -6.0)];
+/** the messenger leaves when his line's last syllable is out */
+const HUAN_GO = L23.to - 5;
 /** THE CAMERA PLAN (one take):
  *    open     the gate behind him, the eunuch handing over the little chest; held
  *    shut     the great gate slams behind him: a jolt
@@ -81,10 +83,12 @@ export const SEG: Segment = {
       lookDown: f >= D.look && f < D.laugh ? 22 : 0, hands: ch.mine ? hc.hands : [null, null],
     });
     // the messenger
-    const back = walkAlong(HUAN_BACK, 2.0, (f - D.give - 6) / FPS);
+    // he says his whole line to 李白's face, THEN turns and scurries back in (Jay, 15 Nov: "doesnt finish talking
+    // completely and starts walking away": he used to turn on 这是, 1.2 s before the line's end); the gate shuts behind him
+    const back = walkAlong(HUAN_BACK, 2.6, (f - HUAN_GO) / FPS);
     const hm = says("huan", ["D23"], f, 5);
     const hh = held("chest", ch.p, { rot: HUAN_F });
-    w.actor(HUAN).set({ ...standing(back.at, f < D.give + 6 ? HUAN_F : back.facing, f, 5), pose: back.pose, expr: "smile", mouth: hm.mouth, head: hm.head, blink: hm.blink ?? lid(t, 5), hands: ch.mine ? [null, null] : hh.hands, visible: f < D.shut[1] });
+    w.actor(HUAN).set({ ...standing(back.at, f < HUAN_GO ? HUAN_F : back.facing, f, 5), pose: back.pose, expr: "smile", mouth: hm.mouth, head: hm.head, blink: hm.blink ?? lid(t, 5), hands: ch.mine ? [null, null] : hh.hands, visible: f < D.shut[1] });
     w.update();
     hc.put(w);
     return { camera, post: W.post, overlays: C.whipSmear(W.smear, 1) ?? transitionAt(f)?.node, slate: "D palace gate" };

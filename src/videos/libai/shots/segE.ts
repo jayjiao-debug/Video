@@ -11,7 +11,7 @@ import * as C from "../cam";
 import { LI_RED, YOU } from "../people";
 import { RX, ROOM } from "../layout";
 import { transitionAt } from "../hud";
-import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, standing } from "./common";
+import { V, rel, yawTo, lid, says, accent, heads, headPop, at, walkAlong, standing, kneel } from "./common";
 import { aim, ramp, held, mixCam, tavern, LI_TABLE, DRINKER_PEOPLE, atTable, type St } from "./lb";
 import { whisperLean } from "../whisper";
 import { KEEPER } from "../people";
@@ -31,8 +31,9 @@ const CAM0 = V(T.at.x - 0.6, 1.38, T.at.z + 2.3);
 /** the friend sits at his left, on a cushion of his own */
 const YOU_SEAT = { ...T, at: rel(T.at, T.facing, 0.8, 0, -0.05), seat: { ...T.seat, top: rel(T.seat.top, T.facing, 0.8, 0, -0.05) }, facing: T.facing - 0.7 } as typeof T;
 const DOOR = ROOM.door;
-const YOU_OUT = [YOU_SEAT.at.clone().add(V(0.25, 0, 0.45)), V(RX + 2.2, 0, 0.6), DOOR, DOOR.clone().add(V(1.0, 0, 0))];
-const youGo = L33.to + 6;
+const YOU_UP = YOU_SEAT.at.clone().add(V(0.25, 0, 0.45)).setY(0);
+const YOU_OUT = [YOU_UP, V(RX + 2.2, 0, 0.6), DOOR, DOOR.clone().add(V(1.0, 0, 0))];
+const youGo = L33.to + 6, YOU_RISE = 9;
 /** his own moves (Jay, 15 Nov): 谁都别跟我抢！ both arms flung out to the room; 我写诗告诉她了 a hand on his heart */
 const WIDE = [capWord("E28", "谁都").from - 3, lineId("E28").to + 14] as const, HEART = [capWord("E31", "我写诗").from - 3, capWord("E31", "三百").from + 4] as const;
 const liHands = (f: number): [THREE.Vector3 | null, THREE.Vector3 | null] => {
@@ -43,7 +44,37 @@ const liHands = (f: number): [THREE.Vector3 | null, THREE.Vector3 | null] => {
   if (h) return [null, rel(HEAD, T.facing, 0.06, -0.36, 0.15)];
   return [null, null];
 };
-const crowdGone = E.aside2 + 20;
+/** THE ROOM EMPTIES, ON FOOT (Jay, 15 Nov: "By 2:02, the character just poof goes into thin air": the four drinkers
+ *  and the keeper were switched off under her second whisper). Now the drinkers leave when the gold is spent (her E29:
+ *  一个下午，花得差不多了): one after another they get up from their tables, go round behind him and out of the door,
+ *  the last one through it before his poem. The keeper stays in his tavern. */
+const DOOR_PRE = V(RX + 2.6, 0, 0.45), DOOR_OUT = DOOR.clone().add(V(1.0, 0, 0)), SIDE = V(RX + 2.6, 0, -0.5);
+/** the way round behind him: between the cushion of the table behind him and the lamp stand by the screen (the set's
+ *  dressing at RX + 2.15, -2.05: a head needs 0.45 m from it), then along the right wall to the door */
+const GAP = V(RX + 1.76, 0, -1.82), RIGHT = V(RX + 2.45, 0, -1.15);
+/** per drinker (lb.ts DRINKERS' order: 0 and 2 at the far left table, 1 and 3 at the table behind him): the frame he
+ *  gets up, where he comes to his feet (`up`: a point, or metres [left, forward] from his seat) and the way to the door */
+const GO0 = lineId("E29").from + 5;
+const LEAVERS: { go: number; up: THREE.Vector3 | [number, number]; via: THREE.Vector3[] }[] = [
+  { go: GO0 + 64, up: [0, -0.42], via: [V(RX - 0.3, 0, -2.98), V(RX + 0.2, 0, -2.88), V(RX + 0.75, 0, -2.5), V(RX + 1.35, 0, -2.45), GAP, RIGHT, SIDE] },
+  { go: GO0 + 18, up: [0, -0.42], via: [GAP, RIGHT, SIDE] },
+  { go: GO0 + 40, up: V(RX + 0.2, 0, -2.9), via: [V(RX + 0.75, 0, -2.5), V(RX + 1.35, 0, -2.45), GAP, RIGHT, SIDE] },
+  { go: GO0, up: [0.3, -0.15], via: [RIGHT, SIDE] },
+];
+/** getting up from a floor cushion: he shuffles back off it on his knees (SHIFT frames), comes to his feet (RISE), walks */
+const SHIFT = 6, RISE = 8, WALK = 1.5;
+const getUp = (seatAt: THREE.Vector3, seatF: number, L: { go: number; up: THREE.Vector3 | [number, number]; via: THREE.Vector3[] }, f: number, id: number): St | null => {
+  if (f < L.go) return null;
+  const up = Array.isArray(L.up) ? rel(seatAt, seatF, L.up[0], 0, L.up[1]).setY(0) : L.up;
+  const path = [up, ...L.via, DOOR_PRE, DOOR, DOOR_OUT], d = f - L.go;
+  if (d < SHIFT + RISE) {
+    // (already a fifth of the way on the first frame: on his knees his head would meet his neighbour's)
+    const p = seatAt.clone().setY(0).lerp(up, ramp(d, -1.5, SHIFT)), k = 1 - ramp(d, SHIFT, SHIFT + RISE);
+    return { ...standing(p, seatF, f, id), ...kneel(k, p, 12), seat: undefined, expr: "happy" };
+  }
+  const leg = walkAlong(path, WALK, (d - SHIFT - RISE) / FPS, { startFacing: seatF });
+  return { ...standing(leg.at, leg.facing, f, id), seat: undefined, pose: leg.pose, expr: "happy", visible: !leg.arrived };
+};
 /** the first lamp goes out after the friend has gone; the last one burns low to the cut (it becomes F's moon) */
 const lampsOut = [youGo + 30, S.to + 1];
 
@@ -77,8 +108,9 @@ export const SEG: Segment = {
     const lit = f < lampsOut[0] ? 1 : f < lampsOut[1] ? 0.6 : 0;
     const cheer = f >= E.cheer - 4 && f < E.cheer + 40;
     tavern(w, f, {
-      drinkers: f < crowdGone ? 4 : 0, keeper: f < crowdGone, lamps: lit,
-      drinker: (k, s) => (cheer ? { ...s, pose: { kind: "cheer", t: t + k * 0.2 }, expr: "laugh" } : { ...s, expr: k % 2 ? "laugh" : "happy" }),
+      drinkers: 4, keeper: true, lamps: lit,
+      drinker: (k, s) => getUp(s.at as THREE.Vector3, s.facing as number, LEAVERS[k], f, 10 + k)
+        ?? (cheer ? { ...s, pose: { kind: "cheer", t: t + k * 0.2 }, expr: "laugh" } : { ...s, expr: k % 2 ? "laugh" : "happy" }),
     });
     // 李白, red-cheeked
     const expr = at<NonNullable<St["expr"]>>(f, [[0, "grin"], [L28.from, "laugh"], [E.aside, "happy"], [lineId("E30").from, "smile"], [lineId("E31").from, "happy"], [E.poem, "smug"], [E.aside2, "smile_closed"], [L33.from, "smile"], [youGo + 20, "sigh"], [lampsOut[1], "smile_closed"]]);
@@ -94,9 +126,12 @@ export const SEG: Segment = {
     });
     // the friend
     const ym = says("you", ["E33"], f, 6);
-    const yl = walkAlong(YOU_OUT, 1.3, (f - youGo) / FPS);
+    // he comes to his feet beside his cushion, then walks
+    const yd = f - youGo, yl = walkAlong(YOU_OUT, 1.3, (yd - YOU_RISE) / FPS, { startFacing: YOU_SEAT.facing });
+    const yp = YOU_UP;
     const y = w.actor(YOU);
     if (f < youGo) y.set({ ...atTable(YOU_SEAT, f, 6, {}), expr: f < L33.from ? "laugh" : "grin", mouth: ym.mouth, head: ym.head, blink: ym.blink ?? lid(t, 6), pose: cheer ? { kind: "cheer", t } : { kind: "sit", t } });
+    else if (yd < YOU_RISE) y.set({ ...standing(yp, YOU_SEAT.facing, f, 6), ...kneel(1 - ramp(yd, 2, YOU_RISE), yp, 12), seat: undefined, expr: "happy", visible: true });
     else y.set({ ...standing(yl.at, yl.facing, f, 6), seat: undefined, pose: yl.pose, expr: "happy", visible: !yl.arrived, turn: yl.moving ? undefined : 0 });
     w.update();
     trackHead(w, "you", y, f);

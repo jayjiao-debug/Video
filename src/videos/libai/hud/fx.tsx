@@ -10,6 +10,8 @@
 //   SoberStamp  the bucket of water lands: 醒酒 ✓ (his card's 今日目标, paid off)
 //   GrudgeMeter 高力士 glares into the lens: 记仇 +1, a little meter over him
 //   MoonOS      记者OS after 「哟，月亮？」: he takes her lens for the moon
+//   KnockFx     her knocks on his table: 咚 咚 咚 hopping up off the table top where the invisible hand raps it, a ring
+//               on the wood under each (Jay, 15 Nov: "add sound knocking visual effects on the table")
 //   <Fx f />    all of them;  fxShown()  the list for the overlay check (src/kit/overlay checkOverlays)
 import React from "react";
 import { AbsoluteFill } from "remotion";
@@ -44,6 +46,35 @@ const WAIT_FULL = cap("B16", 0).to + 1, WAIT = [lineId("B15").to + 2, WAIT_FULL 
 const SOBER = [B.splash + 3, B.splash + 48] as const;
 /** the grudge meter: on 高力士's glare, out as her whisper starts */
 const GRUDGE = [Cb.glare + 4, lineId("C22").from + 10] as const;
+
+// ---------------------------------------------------------------------------------------------------- the knocks
+/** her three knocks (beats.ts A.knock): each 咚 pops up off the table's near left, where the invisible hand raps the
+ *  wood (the still of frame 80: the table top fills x 240..1080, y 1290..1650 there), tipped a little, a flat ring
+ *  spreading on the wood under it. Each lives 11 frames; the last is gone before A01's subtitle. */
+const KNOCK_AT: [number, number, number][] = [[340, 1392, -10], [480, 1348, 6], [620, 1396, -4]];
+const KNOCK_LIFE = 11;
+const KnockFx: React.FC<{ f: number }> = ({ f }) => {
+  if (f < A.knock[0] || f > A.knock[A.knock.length - 1] + KNOCK_LIFE) return null;
+  return (
+    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{ position: "absolute", left: 0, top: 0 }}>
+      {A.knock.map((k, i) => {
+        const t = f - k;
+        if (t < 0 || t > KNOCK_LIFE || i >= KNOCK_AT.length) return null;
+        const [x, y, rot] = KNOCK_AT[i], p = pop(t, 0, 4, 2.4, 0.5), out = clamp01((t - KNOCK_LIFE + 4) / 4), rise = 26 * easeOut(clamp01(t / 6));
+        return (
+          <g key={i} opacity={(p.o * (1 - out)).toFixed(3)}>
+            {/* the ring on the wood, flat (the table is seen from above) */}
+            <g transform={`translate(${x},${y + 50}) scale(1,0.38)`}>{ring(`kr${i}`, 0, 0, 16, 80, clamp01((t + 1) / 8), C.paper, 13)}</g>
+            <g transform={`translate(${x},${y + 50}) scale(1,0.45)`}>{burst(`kb${i}`, 0, 0, 7, 40, 96, clamp01((t + 1) / 8), { color: C.paper, width: 9, seed: 3 + i })}</g>
+            <g transform={`translate(${x},${y - rise}) rotate(${rot}) scale(${p.s.toFixed(3)})`}>
+              {glyph(`k${i}`, EN ? "knock" : "咚", 0, 0, EN ? 60 : 100, C.paper, { ink: 12, inkColor: C.ink, drop: 5 })}
+            </g>
+          </g>
+        );
+      })}
+    </svg>
+  );
+};
 
 // ---------------------------------------------------------------------------------------------------- the cup counter
 const CC = { x0: 746, y0: 345, x1: 970, y1: 447 };   // 9:16: under the REC block, inside x 970
@@ -208,12 +239,13 @@ const GrudgeMeter: React.FC<{ f: number }> = ({ f }) => {
 /** every effect on frame f (the picture's clock) */
 export const Fx: React.FC<{ f: number }> = ({ f }) => (
   <AbsoluteFill style={{ pointerEvents: "none" }}>
-    <CupCounter f={f} /><MoonOS f={f} /><WaitBar f={f} /><SoberStamp f={f} /><GrudgeMeter f={f} />
+    <KnockFx f={f} /><CupCounter f={f} /><MoonOS f={f} /><WaitBar f={f} /><SoberStamp f={f} /><GrudgeMeter f={f} />
   </AbsoluteFill>
 );
 
 /** the effects for the overlay check (checkOverlays): their spans and boxes */
 export const fxShown = (): Shown[] => [
+  { what: "knocks 咚", kind: "effect", from: A.knock[0], to: A.knock[A.knock.length - 1] + KNOCK_LIFE, rect: () => ({ x0: 250, y0: 1262, x1: 712, y1: 1486 }), scene: "A" },
   { what: "cup counter", kind: "effect", from: CUPS_IN, to: CUPS_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }) },
   { what: "cup counter (the last cup)", kind: "effect", from: SIP_IN, to: SIP_OUT, rect: () => ({ x0: CC.x0 - 20, y0: CC.y0 - 10, x1: CC.x1 + 4, y1: CC.y1 + 60 }), scene: "F" },
   { what: "记者OS (the moon)", kind: "effect", from: MOON_OS[0], to: MOON_OS[1], rect: () => ({ x0: MO.x0 - 6, y0: MO.y0 - 24, x1: MO.x1 + 10, y1: MO.y1 + 60 }), scene: "A" },

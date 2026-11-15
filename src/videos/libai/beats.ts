@@ -24,7 +24,8 @@ export const FADE_N = 10;
 const A = {
   /** REC on: the beep (sound) on frame 6 */ rec: seg("A").from + 6,
   /** he snores face down on the table, hugging the jar, until A01's end */ sleep: [seg("A").from, to("A01")] as Span,
-  /** the invisible hand knocks twice on the table (sound + the table jumps) */ knock: [pre("A01") + sec(0.9), pre("A01") + sec(1.2)] as Span,
+  /** the invisible hand knocks three times on the table, as the knock clip does (sound, the table jumps, 咚 on the
+   *  table: hud/fx.tsx KnockFx) */ knock: [pre("A01") + sec(0.9), pre("A01") + sec(0.9) + 6, pre("A01") + sec(0.9) + 13] as number[],
   /** he lifts his head (A01's end) and squints at the lens */ wake: to("A01") - 4,
   /** A02: he leans right up to the lens (月亮) */ lean: word("A02", "月亮"),
   /** A04: the jar comes up to the lens */ jar: from("A04"),
@@ -73,7 +74,7 @@ const C = {
 const D = {
   /** the fade in */ fadeIn: [seg("D").from, seg("D").from + FADE_N - 1] as Span,
   /** the eunuch hands him the little chest of gold (D23) */ give: word("D23", "这是"),
-  /** the great gate behind him swings shut (D23's end) */ shut: [to("D23") + sec(0.1), to("D23") + sec(0.9)] as Span,
+  /** the great gate behind him swings shut (D23's end) */ shut: [to("D23") + sec(0.6), to("D23") + sec(1.2)] as Span,
   /** he looks at the chest (D24's after) ... then bursts out laughing (D25) */ look: to("D24"), laugh: from("D25"),
   /** he holds the gold up (天生我材) */ hold: word("D25", "天生"),
   /** D27: he strides off past the lens */ stride: from("D27"),
