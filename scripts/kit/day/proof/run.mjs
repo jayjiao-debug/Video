@@ -1,4 +1,5 @@
-// bundles newton_equiv.tsx (esbuild, node) into a temp file and runs it: node scripts/kit/day/proof/run.mjs
+// bundles a TS entry (default newton_equiv.tsx) with esbuild for node into a temp file and runs it:
+//   node scripts/kit/day/proof/run.mjs [entry.tsx]
 import { build } from "esbuild";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync } from "node:fs";
@@ -13,5 +14,5 @@ const STUB = `(() => { const absorb = () => new Proxy(function () {}, { get: (t,
   globalThis.OffscreenCanvas = function () { return canvas(); }; })();`;
 const here = dirname(fileURLToPath(import.meta.url));
 const out = join(mkdtempSync(join(tmpdir(), "dayproof-")), "proof.cjs");
-await build({ entryPoints: [join(here, "newton_equiv.tsx")], bundle: true, platform: "node", format: "cjs", outfile: out, jsx: "automatic", logLevel: "warning", banner: { js: STUB }, loader: { ".png": "empty", ".jpg": "empty", ".woff2": "empty", ".mp3": "empty", ".wav": "empty" } });
+await build({ entryPoints: [process.argv[2] ?? join(here, "newton_equiv.tsx")], bundle: true, platform: "node", format: "cjs", outfile: out, jsx: "automatic", logLevel: "warning", banner: { js: STUB }, loader: { ".png": "empty", ".jpg": "empty", ".woff2": "empty", ".mp3": "empty", ".wav": "empty" } });
 execFileSync(process.execPath, [out], { stdio: "inherit" });

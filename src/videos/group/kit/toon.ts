@@ -282,7 +282,8 @@ const DEF_LIGHT = rad(-120);
 
 // ---------------- faces ----------------
 export type Expr = "neutral" | "stern" | "grin" | "laugh" | "whistle" | "nervous" | "shock" | "relief" | "relief_open" | "dazed"
-  | "pained" | "smile" | "smile_closed" | "lick" | "sigh" | "wince" | "smug" | "sad" | "deadpan" | "sleep" | "huff" | "happy" | "focus" | "cool" | "hush";
+  | "pained" | "smile" | "smile_closed" | "lick" | "sigh" | "wince" | "smug" | "sad" | "deadpan" | "sleep" | "huff" | "happy" | "focus" | "cool" | "hush"
+  | "speechless" | "gloom" | "rage" | "aghast" | "doze" | "scheming" | "laughcry";      // the seven emotes (Jay, 2026-11-11; RIG3D.md)
 type EyeK = "dot" | "small" | "lid" | "slit" | "happy" | "dash" | "squeeze" | "shock" | "shockHalf" | "spiral" | "closed" | "down";
 type MouthK = "dash" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
 /** eyes [back, front], brows [inner, outer] offsets in u (+ = down), mouth kind */
@@ -307,6 +308,14 @@ const FACE: Record<Expr, { eye: [EyeK, EyeK]; brow: [number, number]; mouth: Mou
   // friends film
   sad: { eye: ["down", "down"], brow: [-5, 4], mouth: "frown" },
   deadpan: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
+  // (the try-out faces of rig3d: the cards draw one plain face for all of them)
+  speechless: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
+  gloom: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
+  rage: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
+  aghast: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
+  doze: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
+  scheming: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
+  laughcry: { eye: ["slit", "slit"], brow: [1, 1], mouth: "dash" },
   sleep: { eye: ["closed", "closed"], brow: [0, 1], mouth: "o" },
   huff: { eye: ["lid", "lid"], brow: [4, -4], mouth: "o" },
   happy: { eye: ["happy", "happy"], brow: [-2, -2], mouth: "smile" },

@@ -14,7 +14,7 @@ import { N8AOPostPass } from "n8ao";
 import { makeEnv, mats, LIGHTS } from "../../bt/pbr";
 import { NOINK } from "../../vasa/ink";
 import { buildLab, LAB_FILL, LAB_AO, LAB_CAST_LIGHT } from "../sets/lab";
-import { RigCast, rigJawline, type Rig, type Hat, type Acc, type RigPoseKind, type RigSeat, type RigHead } from "../kit/rig3d";
+import { RigCast, rigJawline, rigMood, type Rig, type Hat, type Acc, type RigPoseKind, type RigSeat, type RigHead, type RigFace, type RigMoodHow } from "../kit/rig3d";
 import { DAGE, dage } from "../kit/rigacc/dage";
 import { accessories } from "../kit/rigacc/catalog";
 import { phone } from "../kit/rigacc/phone";
@@ -44,6 +44,10 @@ export type PoseWho = {
   /** frames mode: the whole gesture in time (rigJawline) from frame `start` on, with the pose's arm; pose, expr,
    *  gaze, head and twist are then the gesture's */
   jawline?: { start: number; turn?: number };
+  /** frames mode: the expressions over time, [second, expression, how?] (rigMood: every change acted out; cut =
+   *  the same list with the faces simply exchanged on their frames, for comparison). idle = [first frame, every n
+   *  frames]: an ordinary blink now and then */
+  mood?: { keys: [number, Expr, RigMoodHow?][]; cut?: boolean; idle?: [number, number] };
   /** a hand pinned in space: metres from the person's floor point in their own frame (x = their left, y = up, z =
    *  forward); null = the pose's own place */
   hands?: ([number, number, number] | null)[];
@@ -198,14 +202,16 @@ export function poseLab(o0: PoseLabOpts) {
     people.forEach((P, k) => {
       const wh = P.wh, kind = wh.pose ?? "idle", am = amountAt(i, wh);
       const jl = wh.jawline ? rigJawline((i - wh.jawline.start) / 30, { arm: wh.arm, amount: am ?? 1, ...(wh.jawline.turn !== undefined ? { turn: wh.jawline.turn } : {}) }) : null;
+      const md = wh.mood ? (wh.mood.cut ? { expr: wh.mood.keys.reduce((e, q) => (i >= Math.round(q[0] * 30) ? q[1] : e), wh.mood.keys[0][1]) as Expr } : rigMood(i / 30, wh.mood.keys.map(([at, expr, how]) => ({ at, expr, ...(how ? { how } : {}) })))) as { expr: Expr | RigFace; blink?: number; head?: RigHead } : null;
+      const idle = wh.mood?.idle ? ((i - wh.mood.idle[0]) % wh.mood.idle[1] + wh.mood.idle[1]) % wh.mood.idle[1] : 99, own = idle === 1 ? 1 : idle === 0 || idle === 2 ? 0.5 : 0;
       P.rig.set({
         at: P.at, facing: P.facing, ...(P.seat ? { seat: P.seat } : {}),
         pose: jl ? { ...jl.pose, t: T + k * 0.31 } : { kind, t: T + k * 0.31, ...(wh.arm !== undefined ? { arm: wh.arm } : {}), ...(am !== undefined ? { amount: am } : {}), ...(wh.jaw !== undefined ? { jaw: wh.jaw } : {}), ...(kind === "walk" ? { phase: (T * 0.9) % 1 } : {}) },
-        expr: jl ? jl.expr : wh.expr ?? "smile", blink: 0,
+        expr: md ? md.expr : jl ? jl.expr : wh.expr ?? "smile", blink: md ? md.blink ?? own : 0,
         ...(jl ? { gaze: jl.gaze, twist: jl.twist } : { ...(wh.twist !== undefined ? { twist: rad(wh.twist) } : {}), ...(wh.gaze !== undefined ? { gaze: wh.gaze } : {}) }),
         ...(wh.armFront ? { armFront: [wh.armFront[0] ?? undefined, wh.armFront[1] ?? undefined] as [boolean | undefined, boolean | undefined] } : {}),
         ...(wh.hide ? { hide: wh.hide } : {}), ...(wh.lookDown !== undefined ? { lookDown: wh.lookDown } : {}), ...(wh.headFront !== undefined ? { headFront: wh.headFront } : {}),
-        ...(wh.clipboard !== undefined ? { clipboard: wh.clipboard } : {}), ...(jl ? { head: jl.head } : wh.head ? { head: wh.head } : {}),
+        ...(wh.clipboard !== undefined ? { clipboard: wh.clipboard } : {}), ...(md?.head ? { head: md.head } : jl ? { head: jl.head } : wh.head ? { head: wh.head } : {}),
         ...(wh.hands ? { hands: [0, 1].map((j) => { const q = wh.hands![j]; return q ? V(P.at.x + q[0] * Math.cos(P.facing) + q[2] * Math.sin(P.facing), q[1], P.at.z - q[0] * Math.sin(P.facing) + q[2] * Math.cos(P.facing)) : null; }) as [THREE.Vector3 | null, THREE.Vector3 | null] } : {}),
       });
     });
