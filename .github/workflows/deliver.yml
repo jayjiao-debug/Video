@@ -29,6 +29,6 @@ jobs:
           retention-days: 1
   drive:
     needs: package
-    uses: jayjiao-debug/Video/.github/workflows/drive-upload.yml@claude/drive-delivery
+    uses: jayjiao-debug/Video/.github/workflows/drive-upload.yml@claude/original-short-film-nhwy85
     with: { artifacts: "测试_v1_*", folder: "drivetest", delete_branch: true }
     secrets: inherit
