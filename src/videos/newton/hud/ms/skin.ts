@@ -82,20 +82,22 @@ export const PAPER = { chain: 104, laidStep: 5, chainOp: 0.12, laidOp: 0.035, gr
 export const MOTION = { char: 5, pool: 2, rowChar: 1.2, sink: 8, slap: 3, dry: 30 } as const;
 
 /** THE LAUGH METER'S SLIP, the HAND-OFF between the lead card and the meter (EFFECTS_PLAN rows 4-6, 8, 10; the slot
- *  x 740-1026, y 155-300, top right under the battery; A_fx.png; skin_a.py meter_slip(742, 154, 270, 138)). card.tsx
+ *  x 752-1026, y 155-300, top right under the battery; A_fx.png; skin_a.py meter_slip(742, 154, 270, 138), moved 12 px
+ *  right toward the battery on 14 Nov night (the owner: METER_DX)). card.tsx
  *  flies its target line (今日目标 … the empty circle, 0/1) onto `circle` and `count` over its leave (t 67-74); fx.tsx
  *  (hud/ms/meter.tsx) draws the slip there from the very next frame (meter0 t 0) and every later showing in the same
  *  place, so the meter never moves. Film px; the slip is turned `rot` degrees about its centre and everything on it
  *  turns with it (the points below are in the slip's own, unturned frame). Stage 2b. */
+const METER_DX = 12;
 export const METER = {
-  slip: { x: 742, y: 154, w: 270, h: 138, rot: 1.2 },
+  slip: { x: 742 + METER_DX, y: 154, w: 270, h: 138, rot: 1.2 },
   /** the circle the compass must close, 笑 inside it (46 px), its tick dot (r 5) at the top */
-  circle: { cx: 806, cy: 224, r: 42, px: 46 },
+  circle: { cx: 806 + METER_DX, cy: 224, r: 42, px: 46 },
   /** the count 0/1: its baseline-left. The approved frames set it upright in FrSans bold (A_fx.png: the generator's
    *  italic face did not load), so meter.tsx draws it in the body hand (inkText, -inkA), not glyphs.ts SERIF */
-  count: { x: 870, y: 246, px: 70 },
+  count: { x: 870 + METER_DX, y: 246, px: 70 },
   /** the tries row: a crimson cross per failed try, a sepia dot per try left (3 before the laugh, 2 after) */
-  tries: { x: 882, y: 270, step: 40, s: 9 },
+  tries: { x: 882 + METER_DX, y: 270, step: 40, s: 9 },
   /** tick 2's note slip under the meter (我笑的不算, crimson): its top tucks under the slip's torn bottom edge */
-  note: { x: 798, y: 284, w: 180, h: 60, px: 31 },
+  note: { x: 798 + METER_DX, y: 284, w: 180, h: 60, px: 31 },
 } as const;

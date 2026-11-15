@@ -5,7 +5,8 @@
 //
 // WHAT THERE IS (the camera mostly looks north, -z)
 //   - RAKED GRAVEL walks (the rake lines run along each walk) round two lawn beds edged with low box hedges, clipped
-//     box cones at the corners, a sundial on a stone pillar in the south bed;
+//     box cones at the corners; THE SUNDIAL on a stone pillar on a square of flags at the end of his walk (the east walk,
+//     1.4 m south of the crossing: C's match ③ from the plate), a bronze dial r 0.26 with hour lines and a gnomon;
 //   - WEST: the college range: red brick in English bond, a stone plinth and string course, stone-framed leaded
 //     windows with hood moulds, a parapet and a tiled roof with chimneys; his STAIRCASE DOOR (a four-centred stone
 //     arch, the door open on a dim stair foot) and HIS WINDOW on the first floor (param window 0..1: lit warm);
@@ -64,7 +65,7 @@ const lawnTex = () => paint(512, 512, (g, W, H) => {
   const r = rng(91);
   g.fillStyle = NC.grass; g.fillRect(0, 0, W, H);
   for (let i = 0; i < 4; i++) { g.fillStyle = css(i % 2 ? NC.grassLo : "#93ae5e", 0.18); g.fillRect((W * i) / 4, 0, W / 4, H); }   // mowing stripes
-  for (let i = 0; i < 900; i++) { g.fillStyle = css(r() < 0.5 ? NC.grassLo : "#9cba66", 0.35); g.fillRect(W * r(), H * r(), 2, 4 + 4 * r()); }
+  for (let i = 0; i < 700; i++) { g.fillStyle = css(r() < 0.5 ? NC.grassLo : "#9cba66", 0.16); g.fillRect(W * r(), H * r(), 3.5, 6 + 5 * r()); }   // QUIET: soft tufts, no hairline blades
 }, true);
 const leafTex = (base: string, lo: string, hi: string, seed: number) => paint(256, 256, (g, W, H) => {
   const r = rng(seed);
@@ -74,6 +75,25 @@ const leafTex = (base: string, lo: string, hi: string, seed: number) => paint(25
 /** ROUGH RAKED GRAVEL (param gravel "rough", WP5-C for the director's note "the path reads as planks"): a coarse
  *  grain of mixed pebbles (light, mid, grey-brown, a few dark, each with a little shadow), soft patches of tone, and
  *  FEWER, FAINT, WOBBLING, BROKEN rake grooves (never straight boards); tiles both ways like gravelTex */
+/** THE DIAL's face: weathered bronze, a chapter ring, 24 radial lines (every hour on the half the sun crosses is a long
+ *  one) and a small ring at the gnomon's root; the cylinder's cap maps the canvas's square onto the disc */
+const dialTex = () => paint(256, 256, (g, W, H) => {
+  const c = W / 2;
+  g.fillStyle = "#9a7a3e"; g.fillRect(0, 0, W, H);
+  const gr = g.createRadialGradient(c * 0.9, c * 0.85, 0, c, c, c); gr.addColorStop(0, "rgba(255,236,190,0.18)"); gr.addColorStop(1, "rgba(60,40,16,0.25)");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.strokeStyle = "rgba(52,34,14,0.85)"; g.lineCap = "round";
+  g.lineWidth = 4; g.beginPath(); g.arc(c, c, c * 0.9, 0, Math.PI * 2); g.stroke();
+  g.lineWidth = 2; g.beginPath(); g.arc(c, c, c * 0.78, 0, Math.PI * 2); g.stroke();
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2, long = i % 2 === 0, r0 = long ? c * 0.2 : c * 0.62;
+    g.lineWidth = long ? 2.4 : 1.6;
+    g.beginPath(); g.moveTo(c + Math.cos(a) * r0, c + Math.sin(a) * r0); g.lineTo(c + Math.cos(a) * c * 0.9, c + Math.sin(a) * c * 0.9); g.stroke();
+  }
+  g.lineWidth = 2; g.beginPath(); g.arc(c, c, c * 0.12, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "rgba(70,110,90,0.18)";                                   // a little verdigris round the rim
+  for (let i = 0; i < 9; i++) { const a = i * 0.71, r = c * (0.8 + 0.08 * Math.sin(i * 3.1)); g.beginPath(); g.arc(c + Math.cos(a) * r, c + Math.sin(a) * r, 9, 0, Math.PI * 2); g.fill(); }
+});
 const roughGravelTex = (seed: number, lines = 11, px = 512) => paint(px, px, (g, W, H) => {
   const r = rng(seed), wrap = (fn: (dx: number, dy: number) => void) => { for (const dx of [-W, 0, W]) for (const dy of [-H, 0, H]) fn(dx, dy); };
   g.fillStyle = css(mix(NC.gravel, NC.gravelLo, 0.25)); g.fillRect(0, 0, W, H);
@@ -84,7 +104,7 @@ const roughGravelTex = (seed: number, lines = 11, px = 512) => paint(px, px, (g,
     const xAt = (y: number) => x0 + a1 * Math.sin((2 * Math.PI * k1 * y) / H + p1) + a2 * Math.sin((2 * Math.PI * k2 * y) / H + p2);
     for (let y = 0; y < H; ) {
       const len = H * (0.04 + 0.1 * r()), on = r() < 0.78, w = (W / lines) * (0.08 + 0.1 * r());
-      if (on) for (const [dx, col, a] of [[w * 0.55, "#8f8062", 0.16 + 0.12 * r()], [-w * 0.5, "#f6efdc", 0.18 + 0.14 * r()]] as [number, string, number][]) {
+      if (on) for (const [dx, col, a] of [[w * 0.55, "#8f8062", 0.1 + 0.08 * r()], [-w * 0.5, "#f6efdc", 0.12 + 0.1 * r()]] as [number, string, number][]) {
         g.strokeStyle = css(col, a); g.lineWidth = w; g.lineCap = "round";
         for (const ddy of [-H, 0, H]) { g.beginPath(); for (let t = 0; t <= 6; t++) { const yy = y + (len * t) / 6; g[t ? "lineTo" : "moveTo"](xAt(yy) + dx, yy + ddy); } g.stroke(); }
       }
@@ -93,11 +113,12 @@ const roughGravelTex = (seed: number, lines = 11, px = 512) => paint(px, px, (g,
   }
   // the stones: many, mixed, small to coarse; the bigger ones with a shadow under them
   const cols = [NC.gravelHi, NC.gravelHi, "#f1e9d6", NC.gravelLo, NC.gravelLo, "#b3a481", "#9d9076", "#8a7f6c", "#cfc3a4"];
-  for (let i = 0; i < 9000; i++) {
-    const x = W * r(), y = H * r(), rr = 0.7 + 2.6 * r() * r(), c = cols[Math.floor(r() * cols.length)], a = 0.55 + 0.4 * r(), ang = r() * 3;
+  // QUIET (rebuild prep): fewer stones, none smaller than ~3 px across, at low opacity, so a moving walk never sparkles
+  for (let i = 0; i < 4200; i++) {
+    const x = W * r(), y = H * r(), rr = 1.5 + 2.4 * r() * r(), c = cols[Math.floor(r() * cols.length)], a = 0.2 + 0.2 * r(), ang = r() * 3;
     wrap((dx, dy) => {
       if (x + dx < -4 || x + dx > W + 4 || y + dy < -4 || y + dy > H + 4) return;
-      if (rr > 1.6) { g.fillStyle = css("#6e6452", 0.25); g.beginPath(); g.ellipse(x + dx + 0.6, y + dy + 0.8, rr, rr * 0.75, ang, 0, 7); g.fill(); }
+      if (rr > 2.4) { g.fillStyle = css("#6e6452", 0.1); g.beginPath(); g.ellipse(x + dx + 0.6, y + dy + 0.8, rr, rr * 0.75, ang, 0, 7); g.fill(); }
       g.fillStyle = css(c, a); g.beginPath(); g.ellipse(x + dx, y + dy, rr, rr * 0.75, ang, 0, 7); g.fill();
     });
   }
@@ -166,12 +187,20 @@ export function buildGarden(K: Kit) {
     for (const [cx, cz] of [[x0 + t / 2, bz0 + t / 2], [x1 - t / 2, bz0 + t / 2], [x0 + t / 2, bz1 - t / 2], [x1 - t / 2, bz1 - t / 2]]) BT.add(mCone, cone.clone().translate(cx, h - 0.06, cz));
   }
   BT.flush(group, "garden.box");
-  // the sundial
+  // THE SUNDIAL at the end of his walk (layout GARDEN_SET.sundial; C.md staging change 1): a square of four stone flags
+  // on the east walk, the stone pillar (its capital wide enough to carry the bigger dial), the bronze dial with its hour
+  // lines (dialTex on the top cap), and the gnomon: a triangle plate whose edge rises toward the north (-z)
   {
-    const P = new Part(K), x = GDX + S.sundial.x, z = S.sundial.z;
-    P.add(mStonePlain, lathe([[0.22, 0], [0.22, 0.08], [0.14, 0.12], [0.1, 0.3], [0.13, 0.6], [0.09, 0.85], [0.16, 0.92], [0.18, 1.0], [0, 1.0]], 20).translate(x, 0, z), 0.006);
-    P.add(mBronze, new THREE.CylinderGeometry(0.17, 0.17, 0.015, 24).translate(x, 1.008, z), 0.004);
-    P.add(mBronze, new THREE.BufferGeometry().copy(new THREE.BoxGeometry(0.012, 0.1, 0.14)).translate(x, 1.06, z - 0.02), 0.003);
+    const D = S.sundial, P = new Part(K), x = GDX + D.x, z = D.z, top = D.top, th = 0.02, fl = D.flags / 2, gap = 0.015;
+    for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      const ax = x + (sx < 0 ? -fl : gap), bx = x + (sx < 0 ? -gap : fl), az = z + (sz < 0 ? -fl : gap), bz = z + (sz < 0 ? -gap : fl);
+      P.add(mStoneLo, boxG(ax, bx, 0, 0.018, az, bz), 0.004);
+    }
+    P.add(mStonePlain, lathe([[0.26, 0.018], [0.26, 0.1], [0.17, 0.14], [0.12, 0.32], [0.15, 0.62], [0.11, 0.86], [0.19, 0.93], [0.22, top - th], [0, top - th]], 24).translate(x, 0, z), 0.006);
+    P.add(Mk.tex(dialTex(), 0.5), new THREE.CylinderGeometry(D.dialR, D.dialR, th, 48).translate(x, top - th / 2, z), 0.004);
+    const sh = new THREE.Shape([new THREE.Vector2(-D.gnomon.len / 3, 0), new THREE.Vector2((2 * D.gnomon.len) / 3, 0), new THREE.Vector2((2 * D.gnomon.len) / 3, D.gnomon.h)]);
+    const gn = new THREE.ExtrudeGeometry(sh, { depth: 0.018, bevelEnabled: false }).translate(0, 0, -0.009).rotateY(Math.PI / 2);   // local x -> world -z
+    P.add(mBronze, gn.translate(x, top, z), 0.003);
     P.into(group, "garden.sundial", { cast: true });
   }
 

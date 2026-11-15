@@ -68,7 +68,8 @@ const ZEND = ZE + 1.3;                                                          
 const treadTex = () => paint(512, 128, (g, Wd, H) => {
   const r = rng(51);
   g.fillStyle = NC.oakDark; g.fillRect(0, 0, Wd, H);
-  for (let i = 0; i < 26; i++) { const y = H * r(); g.strokeStyle = css(NC.oakDarkLo, 0.5); g.lineWidth = 1.5; g.beginPath(); g.moveTo(0, y); g.bezierCurveTo(Wd * 0.3, y + 4 * (r() - 0.5), Wd * 0.7, y + 4 * (r() - 0.5), Wd, y); g.stroke(); }
+  // QUIET (rebuild prep): a few broad faint grain streaks, no hairlines
+  for (let i = 0; i < 14; i++) { const y = H * r(); g.strokeStyle = css(NC.oakDarkLo, 0.18); g.lineWidth = 3.5; g.beginPath(); g.moveTo(0, y); g.bezierCurveTo(Wd * 0.3, y + 4 * (r() - 0.5), Wd * 0.7, y + 4 * (r() - 0.5), Wd, y); g.stroke(); }
   const gr = g.createRadialGradient(Wd * 0.48, H * 0.55, 0, Wd * 0.48, H * 0.55, Wd * 0.32); gr.addColorStop(0, "rgba(160,118,80,0.55)"); gr.addColorStop(1, "rgba(160,118,80,0)");
   g.fillStyle = gr; g.fillRect(0, 0, Wd, H);
   g.fillStyle = "rgba(255,226,180,0.18)"; g.fillRect(0, H - 8, Wd, 4);            // the worn nosing catches the light

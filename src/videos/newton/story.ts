@@ -128,9 +128,6 @@ export const SCENE = Object.fromEntries(SCENE_RAW.map(([id, zh, en, place]) => [
 /** THE VLOG'S CLOCK (PLAN 5, hud/vlog.tsx): each scene's time on her camera's timestamp, in minutes after the midnight
  *  that starts the film's day (G = 26:00 = 02:00 the next morning). Why these hours: PLAN.md section 5. */
 export const SCENE_CLOCK: Record<SceneId, number> = { A: 5 * 60, B: 11 * 60, C: 12 * 60, D: 15 * 60, E: 18 * 60, F: 23 * 60, G: 26 * 60 };
-/** G's clock after its room -> garden clock join (beats.ts BEAT.G.garden): 03:00 (27:00 on the film day's scale), from
- *  Humphrey's "2 or 3 of the clock" (camplan G.md director note 2; the researcher logs it) */
-export const G_GARDEN_CLOCK = 27 * 60;
 /** DECISION 2 (script v5, the default built while Jay decides): THE CLOCK'S DIGITS SHOW ONLY WHERE A SOURCE GIVES THE
  *  HOUR: 05:00 (A) and 02:00 (G). B-F show the time word alone (上午 / 中午 / 下午 / 傍晚 / 夜); their digits appear only
  *  while the clock races across a clock join and land on the word (hud/vlog.tsx). SCENE_CLOCK still orders the day (the

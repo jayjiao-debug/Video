@@ -1,7 +1,9 @@
-// SEGMENT E's own helpers (WP5-E): framing, camera mixing, her walking ease, a lagged eye, the light focus's aim through keys,
-// his quill on the page, the page held in his hand, the fork and the morsel on its tines. Copies of the generic camera helpers of segC_parts
-// (kept here so segment E never moves when another segment's file changes). Every function is pure: nothing keeps
-// state between frames (the morsel's mesh is made once per World, like a prop, and placed or hidden every frame).
+// SEGMENT E's own helpers (the v5 rebuild, 15 Nov): the lens aimed by a subject's screen point between two subjects
+// (aimMix), her footfalls as dips of the lens on the frames her steps land (footBob), camera mixing, her walking ease, a
+// lagged eye, the light focus's aim through keys, his quill on the page and laid down, the page held in his hand, the
+// fork and the morsel on its tines. Copies of the generic camera helpers of segC_parts (kept here so segment E never
+// moves when another segment's file changes). Every function is pure: nothing keeps state between frames (the morsel's
+// mesh is made once per World, like a prop, and placed or hidden every frame).
 import * as THREE from "three";
 import { FPS, clamp01, lerp, smooth, W, H, lensTan, type CamPose } from "../story";
 import { FOV } from "../layout";
@@ -23,6 +25,26 @@ export const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: nu
   const yaw = yawP - Math.atan(((sx / W) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / H) * 2) * tanV);
   const L = 3;
   return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
+};
+/** THE LENS BETWEEN TWO SUBJECTS (cam.ts aimCam: aim by the subject's screen point; the zoom in log(tan(fov/2))): the
+ *  lens at `pos`, aimed at the point `kAt` of the way from subject a to subject b, that point put on the screen point
+ *  `kAt` of the way from sa to sb (px), the fov `kFov` of the way from fa to fb. At kAt 0 it is exactly a on sa, at 1
+ *  exactly b on sb: a pan from one thing to another that keeps each on its own screen point at its end. */
+export const aimMix = (pos: THREE.Vector3, a: THREE.Vector3, b: THREE.Vector3, kAt: number, sa: [number, number], sb: [number, number], fa: number, fb: number, kFov: number, roll = 0): CamPose =>
+  C.aimCam(pos, a.clone().lerp(b, kAt), lerp(sa[0], sb[0], kAt), lerp(sa[1], sb[1], kAt), C.zoomFov(fa, fb, kFov), roll);
+/** HER FOOTFALLS: the lens dips on each frame of `falls` (a soft dip of `amp` m over the 4 frames round it, the head
+ *  coming down onto the foot) and rolls a little toward the stepping side, alternately; nothing between the walks
+ *  (the format: still is the default, the bob only while she walks). Returns a nudge for cam.ts nudge. */
+export const footBob = (f: number, falls: number[], amp = 0.014): { up: number; roll: number; pitch: number } => {
+  let up = 0, roll = 0, pitch = 0;
+  falls.forEach((g, i) => {
+    const d = f - g;
+    if (d < -4 || d > 6) return;
+    // down onto the foot over 4 frames, back up over 6
+    const k = d <= 0 ? smooth((d + 4) / 4) : 1 - smooth(d / 6);
+    up -= amp * k; pitch -= 0.35 * k; roll += (i % 2 ? 0.45 : -0.45) * k;
+  });
+  return { up, roll, pitch };
 };
 /** two cameras mixed: position, view direction and fov (k 0..1, eased) */
 export const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
@@ -93,6 +115,10 @@ export const QDIR = V(-0.36, 0.84, -0.4).normalize();
 export const QROT = new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), QDIR);
 /** his writing fist for a nib point */
 export const quillFist = (nib: THREE.Vector3) => nib.clone().addScaledVector(QDIR, -QUILL.nib);
+
+/** the quill LAID DOWN on the desk (E07's tail: he puts it down before he takes his candle): lying along `dir` (world,
+ *  level: the feather's way), its shaft resting on the desk top at `at` (the grip point, the origin) */
+export const quillLying = (dir: THREE.Vector3) => new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), dir.clone().setY(0.06).normalize());
 
 // ------------------------------------------------------------------------------------------------- the page in his hand
 /** the first sheet of the `sheets` prop sits a little off the prop's origin and turned (props/things.ts: the kit's hash

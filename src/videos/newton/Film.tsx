@@ -61,7 +61,7 @@ import { W, H, TOTAL, SEGMENTS, huds, lineNo, type Pose, type Segment } from "./
 import { Caption, FactCard, PhoneMask, VlogHud } from "./hud";
 // SKIN A 「手稿」 (hud/ms/): the title, the two intro cards, the 综艺 effects; the freeze (freeze.ts) and the wash (wash.ts)
 import { MS_FX, MsCard, MsFx, MsProof, MsTitle, msAny, msScreen, msStillFrame, type MsCtx } from "./hud/ms";
-import { msFrozen, msHold, washAt } from "./freeze";
+import { FREEZE, msFrozen, msHold, washAt } from "./freeze";
 import { msWash, msWashBg } from "./wash";
 // THE CUT-OUT (cutout.ts: the IsolatePass state of the card's frames; the props he holds stay out of the wash too)
 import { cutHeld, cutLead, cutState } from "./cutout";
@@ -216,11 +216,12 @@ const FirstKick: React.FC<{ onReady: () => void }> = ({ onReady }) => {
 
 // ---------------------------------------------------------------------------------------------------- the HUD layer
 /** her camera's recording UI, every registered HUD (story.ts registerHud, in registration order) and the fact card
- *  (hud/), drawn at the frame the picture shows (h = msHold(f): held with the picture on the lead card's frames). The
+ *  (hud/), drawn at the frame the picture shows (h = msHold(f): held with the picture on the lead card's frames, except
+ *  the REC lamp: `lit` holds it lit over the freeze, ramping up over its first 4 frames). The
  *  old title block (hud/title.tsx TitleCard) is not mounted any more: skin A's <MsTitle> replaces it. */
-const Hud: React.FC<{ h: number; P: Pose }> = ({ h, P }) => (
+const Hud: React.FC<{ h: number; P: Pose; lit: number }> = ({ h, P, lit }) => (
   <>
-    <VlogHud f={h} rec={P.rec} cards={P.cards} />
+    <VlogHud f={h} rec={P.rec} cards={P.cards} lit={lit} />
     {huds().map((x) => <React.Fragment key={x.name}>{x.draw(h, P)}</React.Fragment>)}
     {P.cards !== false ? <FactCard f={h} /> : null}
   </>
@@ -264,7 +265,7 @@ export const NewtonFilm: React.FC<{ mask?: boolean }> = ({ mask }) => {
       </ThreeCanvas>
       {P ? <Whisper f={f} words={false} edges={!NOOV} /> : null}
       {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsCard f={f} ctx={ms} /></AbsoluteFill> : null}
-      {P && showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud h={msHold(f)} P={P} /></AbsoluteFill> : null}
+      {P && showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><Hud h={msHold(f)} P={P} lit={frozen ? Math.min(1, (f - FREEZE.at) / 4) : 0} /></AbsoluteFill> : null}
       {P?.overlays && !NOOV ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>{P.overlays}</AbsoluteFill> : null}
       {showHud ? <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}><MsTitle f={f} ctx={ms} /><MsFx f={f} ctx={ms} /></AbsoluteFill> : null}
       {P && !frozen ? <Whisper f={f} words={P.captions !== false && !NOCAP && !CAP_TEST} edges={false} /> : null}

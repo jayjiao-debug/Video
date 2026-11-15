@@ -1,50 +1,37 @@
-// SEGMENT F's own helpers (WP5-F): framing, camera mixing, her walking ease, a lagged eye, the mic's aim through keys
-// (copies of the generic camera helpers of segE_parts, kept here so segment F never moves when another segment's file
-// changes), the constant-speed push, axes -> quaternion, THE SHOVEL by its blade, the charcoal's strokes on the board
-// and THE SPARKS (a 2D burst out of the fire door, kept off the faces: the fire spits, the shovel's charcoal goes in, the
-// poker stirs), the flare's warm flash, the grades (the night garden; the room hours later), the stool under the seated
-// Newton (a little shorter: its seat stays hidden inside his coat).
-// Every function is pure: nothing keeps state between frames; all noise from hash().
+// SEGMENT F's own helpers (the v5 one take): the marks scene F and scene G share (G opens on F's last frame with NO CUT:
+// clock join ⑩ races over F's held extreme close, so G reads F's end from here, never the other way), her eyes (the
+// crouch at his seated eye height, the extreme close), the constant-speed push, a lagged point, axes -> quaternion, THE
+// SHOVEL by its blade, the charcoal's strokes on the board, THE FIRE's own 3D sparks and flare (in the world, depth
+// tested, behind his face: the v5 table's "light on the fire and his face only", no screen effect anywhere in F), the
+// candle's light on the furnace top, the grades (the night garden; the room sunk round him as the fire dies), the
+// stool under the seated Newton (a little shorter: its seat stays hidden inside his coat).
+// Every function is pure: nothing keeps state between frames (the meshes built once per World are only shown, moved
+// and dimmed per frame); all noise from hash().
+//
+// FOR SCENE G (read only; segG imports these so the F -> G join stays one picture):
+//   F_EYE_CROUCH, F_S       her crouched eye height and her floor point by him (she stays there to F's last frame)
+//   F_SEAT_EYES             the point her lens is aimed at on the stool (his eyes' place while he sits)
+//   F_END_CAM (= PUSH_END)  F's last camera: the extreme close, held from "dressings" to F's last frame
+//   F_SEAT, F_BOARD, F_CANDLE, F_POKER_REST   where F leaves him, his board, his candle (still tall: no lapse) and the poker
+//   fireF(f)                the fire F leaves burning (fire, embers, the grade's "late" share) on any frame from F07 on,
+//                           through the race ⑩ (the firelight on his face sinks to ember red from BEAT.F.race to
+//                           BEAT.G.strike1, the race's landing: G carries it on)
+//   putStoolUnder           the stool, a little shorter (STOOL_SY)
 import * as THREE from "three";
-import { FPS, clamp01, lerp, smooth, easeOutCubic, hash, h, W, H, lensTan, type CamPose } from "../story";
-import { FOV, ELAB_CAMS } from "../layout";
+import { FPS, clamp01, lerp, smooth, easeOutCubic, hash, type CamPose } from "../story";
+import { ELX, ELAB, ELAB_SET, type TaSeat } from "../layout";
+import { BOARD, POKER, STOOL } from "../props";
+import { BEAT } from "../beats";
 import * as C from "../cam";
 import type { GradeParams } from "../../vasa/grade";
 import type { World } from "../world";
 import { NOINK } from "../../../kit/fx/ink";
+import { glowCard } from "../../../kit/sets/okit";
 
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const sec = (s: number) => Math.round(s * FPS);
-const v3 = (p: CamPose["pos"]) => (p instanceof THREE.Vector3 ? p.clone() : V(p[0], p[1], p[2]));
 /** a camera's position as a Vector3 */
-export const posOf = (c: CamPose) => v3(c.pos);
-
-/** a camera at `pos` turned so that the world point `p` lands on screen (sx, sy) px (vertical fov, 9:16) */
-export const frameOn = (pos: THREE.Vector3, p: THREE.Vector3, sx: number, sy: number, fov = FOV): CamPose => {
-  const tanV = lensTan(fov), tanH = tanV * (W / H);
-  const d = p.clone().sub(pos), yawP = Math.atan2(d.x, -d.z), pitchP = Math.atan2(d.y, Math.hypot(d.x, d.z));
-  const yaw = yawP - Math.atan(((sx / W) * 2 - 1) * tanH), pitch = pitchP - Math.atan((1 - (sy / H) * 2) * tanV);
-  const L = 3;
-  return { pos: [pos.x, pos.y, pos.z], look: [pos.x + Math.sin(yaw) * Math.cos(pitch) * L, pos.y + Math.sin(pitch) * L, pos.z - Math.cos(yaw) * Math.cos(pitch) * L], fov };
-};
-/** two cameras mixed: position, view direction and fov (k 0..1, eased) */
-export const mixCam = (a: CamPose, b: CamPose, k: number): CamPose => {
-  if (k <= 0) return a;
-  if (k >= 1) return b;
-  const A = C.camAxes(a), B = C.camAxes(b), e = smooth(k);
-  const pos = A.p.clone().lerp(B.p, e), dir = A.fwd.clone().lerp(B.fwd, e).normalize(), dist = lerp(A.dist, B.dist, e);
-  const look = pos.clone().addScaledVector(dir, dist);
-  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, e) };
-};
-/** two cameras mixed LINEARLY (k as given, no ease): for a push that runs at its own speed */
-export const lerpCam = (a: CamPose, b: CamPose, k: number): CamPose => {
-  if (k <= 0) return a;
-  if (k >= 1) return b;
-  const A = C.camAxes(a), B = C.camAxes(b);
-  const pos = A.p.clone().lerp(B.p, k), dir = A.fwd.clone().lerp(B.fwd, k).normalize(), dist = lerp(A.dist, B.dist, k);
-  const look = pos.clone().addScaledVector(dir, dist);
-  return { pos: [pos.x, pos.y, pos.z], look: [look.x, look.y, look.z], fov: lerp(a.fov, b.fov, k) };
-};
+export const posOf = (c: CamPose) => (c.pos instanceof THREE.Vector3 ? c.pos.clone() : V(c.pos[0], c.pos[1], c.pos[2]));
 /** a walker's ease: speeding up over the first quarter, steady, slowing over the last (peak 1.33 x the average) */
 export const stride = (x: number, r = 0.25) => {
   const v = 1 / (1 - r), u = clamp01(x);
@@ -55,51 +42,16 @@ export const creepU = (f: number, from: number, to: number, ramp = 8) => {
   const n = Math.max(1, to - from), r = Math.min(ramp, n / 3), x = clamp01((f - from) / n) * n, v = 1 / (n - r);
   return clamp01(x < r ? (v * x * x) / (2 * r) : x > n - r ? 1 - (v * (n - x) * (n - x)) / (2 * r) : v * (x - r / 2));
 };
-/** a camera moved `d` m straight back along its view's horizontal direction, LEVEL (her eyes stay at their height; a
- *  nudge's fwd on a steep look-down would lift them) */
-export const levelBack = (c: CamPose, d: number): CamPose => {
-  const A = C.camAxes(c), b = V(A.fwd.x, 0, A.fwd.z).normalize().multiplyScalar(-d), p = A.p.add(b), l = A.l.add(b);
-  return { ...c, pos: [p.x, p.y, p.z], look: [l.x, l.y, l.z] };
-};
-/** THE PUSH'S LAST FRAMING (where the slow push-in stops at the end of 50 and holds to F's last frame). SEGMENT G OPENS
- *  ON IT (segG.ts imports it: the F -> G cut must stay invisible, so the two never drift apart). ELAB_CAMS.push
- *  (WP2's "where the push stops") eased 5 cm back, level, and turned 6 deg left and 6 deg up: his eyes come down from
- *  about y 385 to about y 530 (still the upper third) and his face moves a little right (eyes x ~600-640), so only his
- *  hair is near her camera's UI in the top corners (hud/vlog.tsx: REC, the timestamp, the battery; and G's big
- *  「凌晨 02:00」 intro on the first frames after the cut: skin stays right of x ~375 above y 360, the box ends at 348,
- *  even while he leans to the fire for the last poke). Director vlog note 1 (14 Nov): his face sat under REC and
- *  「夜 23:00」 for the last 11 s of the push. The push still ends a good deal closer than the stool framing (his face
- *  about 510 px wide against about 340; it was about 550 on ELAB_CAMS.push itself). */
-export const PUSH_END: CamPose = C.nudge(levelBack({ pos: ELAB_CAMS.push.pos, look: ELAB_CAMS.push.look, fov: ELAB_CAMS.push.fov }, 0.05), { yaw: -6, pitch: 6 });
-/** THE STOOL UNDER THE SEATED NEWTON (F4-F5; G may put it the same way: the F -> G cut is one picture). His coat's
- *  skirt does not know the stool (the kit's cloth makes a bell round a sitter; acc/garb.ts setSeat would cut it at the
- *  seat and show the seat under him: a new silhouette, WP3's call), and the bell's lap lies within a few mm of the
- *  seat's top: the seat's front edge (r 0.16 at 0.42 m) came 4-5 mm out through the cloth beside the board's corner, a
- *  small orange wedge on his lap (clearance stool x coat 15.4 cm, listed off screen by its deepest point; the whole-film
- *  check's stills f3387 / f4434). Shortened to STOOL_SY of its height about its feet (its seat top 5 cm under his
- *  thighs, the feet where they were; the rig's seat, his body and the board do not move), the seat stays at least
- *  6 mm behind the coat along every line of sight on every seated frame and is never seen; what does show of the
- *  stool (its legs under the hem) moves by a few mm. Pure: the props reset their scale every frame (props begin()). */
-export const STOOL_SY = 0.88;
-export const putStoolUnder = (w: World, at: THREE.Vector3, facing: number) => {
-  const P = w.prop("stool").put(at, { rot: facing });
-  P.group.scale.y *= STOOL_SY; P.group.updateMatrixWorld(true);
-  return P;
-};
+/** an ease that LEAVES at speed `v0` (a multiple of the average speed: she is already walking when it starts) and lands
+ *  at rest (a cubic with u(0) 0, u'(0) v0, u(1) 1, u'(1) 0) */
+export const fromWalk = (v0: number) => (x: number) => { const u = clamp01(x), c = v0 - 2, b = 3 - 2 * v0; return v0 * u + b * u * u + c * u * u * u; };
+/** a sine in-out (the director's "sine in-out" for the slow push over her promise) */
+export const sineIO = (x: number) => 0.5 - 0.5 * Math.cos(Math.PI * clamp01(x));
 /** a point averaged over the `win` frames up to f (weights falling off: her eyes follow a little late). Pure. */
 export const lagged = (f: number, at: (g: number) => THREE.Vector3, win = 6) => {
   const p = V(); let ws = 0;
   for (let i = 0; i < win; i++) { const wg = win - i; p.addScaledVector(at(f - i), wg); ws += wg; }
   return p.divideScalar(ws);
-};
-/** the mic's aim through step keys [frame, aim(f)], each change eased over `len` frames (unused since the mic went
- *  invisible, 14 Nov: kept for a held thing's aim) */
-export const aimThrough = (f: number, keys: [number, (g: number) => THREE.Vector3][], len = 9) => {
-  let i = 0; while (i + 1 < keys.length && keys[i + 1][0] <= f) i++;
-  const cur = keys[i][1](f);
-  if (i === 0) return cur;
-  const k = smooth(clamp01((f - keys[i][0]) / len));
-  return k >= 1 ? cur : keys[i - 1][1](f).lerp(cur, k);
 };
 /** a world rotation from a thing's local +y and +z given as world directions (z made perpendicular to y) */
 export const quatYZ = (y: THREE.Vector3, z: THREE.Vector3) => {
@@ -107,6 +59,72 @@ export const quatYZ = (y: THREE.Vector3, z: THREE.Vector3) => {
   if (zz.lengthSq() < 1e-8) zz = Math.abs(yy.y) < 0.9 ? V(0, 1, 0).addScaledVector(yy, -yy.y) : V(0, 0, 1);
   zz.normalize();
   return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(V().crossVectors(yy, zz), yy, zz));
+};
+const rel = (p: THREE.Vector3, facing: number, x: number, y: number, z: number) => p.clone().add(V(Math.cos(facing) * x + Math.sin(facing) * z, y, -Math.sin(facing) * x + Math.cos(facing) * z));
+
+// ------------------------------------------------------------------------------------------------- the marks F leaves
+/** THE STOOL by the fire door (ELAB.stool: it stands there from the start of F; he sits on it once, on BEAT.F.sit) */
+export const F_SEAT: TaSeat = { top: ELAB.stool.clone().add(V(0, STOOL.seat, 0)), floor: 0, back: 0.03, facing: ELAB.stoolFacing };
+const FACE = ELAB.stoolFacing;
+/** THE BOARD on his knees, its drawn face up and tilted 0.3 rad toward him, its +x edge at his RIGHT (he carries it
+ *  there by that edge from its nail on the furnace face: segF), its middle; local +y runs away from him */
+const BOARD_TILT = 0.3;
+export const F_BOARD = (() => {
+  const fwd = V(Math.sin(FACE), 0, Math.cos(FACE)), right = V(-Math.cos(FACE), 0, Math.sin(FACE));
+  const z = V(0, Math.cos(BOARD_TILT), 0).addScaledVector(fwd, -Math.sin(BOARD_TILT)), y = V().crossVectors(z, right);
+  return { at: rel(F_SEAT.top, FACE, 0.0, 0.17, 0.24), rot: quatYZ(y, z) };
+})();
+/** HIS CANDLE on the furnace top by the front corner (he sets it there in shot on BEAT.F.candle, still TALL: script v5
+ *  has no lapse, the director's fallback A; the length E hands him, 0.8; lifted 2 mm off the iron plate) */
+export const F_CANDLE = { at: V(ELX - 1.25, ELAB_SET.furnace.h + 0.07 + 0.002, -0.38), len: 0.8 };   // 1 cm in from the plate's edge, so he sets it from a step back (his head clear of the iron)
+/** THE POKER at rest: hung by its ring on the end of the fire door's iron lintel bar (origin = the grip, +y down the
+ *  rod), where his right hand reaches it from the stool */
+const PK_DIR_REST = V(0, -1, 0.05).normalize();
+export const F_POKER_REST = { grip: V(ELX + ELAB_SET.furnace.x1 + 0.0078, 0.83 + 0.0325, -0.713).addScaledVector(PK_DIR_REST, 0.066), dir: PK_DIR_REST, rot: quatYZ(PK_DIR_REST, V(1, 0, 0)) };
+/** his head seated on the stool (measured on the solved rig: its ball's middle, which is his eye line; the 5 deg lean
+ *  carries it forward of the seat) */
+export const F_SEAT_EYES = V(ELX - 0.68, 1.175, -0.785);
+/** HER CROUCH: as he sits she comes down to his seated eye height, level (script v5 "STEP DOWN": "level is a friend"),
+ *  and stays there to the end of F (G goes on from it: on the second stroke she reaches down for the board) */
+export const F_EYE_CROUCH = F_SEAT_EYES.y;
+/** where she crouches: S' of camplan F (about 2.1 m from his eyes, the fire door behind him on screen left, the board
+ *  on his knees below his face) */
+export const F_S = V(ELX + 0.85, 0, 0.65);
+/** the TWO (the step down lands on it on 火 of F06) and THE EXTREME CLOSE (the one slow push lands on it on
+ *  "dressings" of F15, lens only, and holds to F's last frame): his eyes' screen point and the lens.
+ *  The extreme close keeps his whole head ball inside x 160-1000 (its radius about 400 px), its hair below the REC
+ *  row and the battery, his chin above y 1100 */
+export const F_TWO = { sx: 620, sy: 610, fov: 60 };
+export const F_XC = { sx: 585, sy: 665, fov: 33 };
+const CROUCH_POS = V(F_S.x, F_EYE_CROUCH, F_S.z);
+/** F's LAST CAMERA (held from "dressings" to F's last frame; G opens on it: no cut) */
+export const F_END_CAM: CamPose = C.aimCam(CROUCH_POS, F_SEAT_EYES, F_XC.sx, F_XC.sy, F_XC.fov);
+/** the old name (segG's comments read it): F's last camera */
+export const PUSH_END: CamPose = F_END_CAM;
+
+/** THE STOOL UNDER THE SEATED NEWTON (F, then G: one picture). His coat's skirt does not know the stool (the kit's cloth
+ *  makes a bell round a sitter), and the bell's lap lies within a few mm of the seat's top: shortened to STOOL_SY of its
+ *  height about its feet (its seat top 5 cm under his thighs, the feet where they were; the rig's seat, his body and the
+ *  board do not move), the seat stays behind the coat on every seated frame; what shows (its legs under the hem) moves by
+ *  a few mm. Pure: the props reset their scale every frame (props begin()). */
+export const STOOL_SY = 0.88;
+export const putStoolUnder = (w: World, at: THREE.Vector3, facing: number) => {
+  const P = w.prop("stool").put(at, { rot: facing });
+  P.group.scale.y *= STOOL_SY; P.group.updateMatrixWorld(true);
+  return P;
+};
+
+// ------------------------------------------------------------------------------------------------- the fire F leaves
+/** the fire's level (the set's `fire` param: the room's key and the figures' light), its ember bed and the grade's
+ *  "late" share: roaring while Humphrey feeds it; it SINKS once he goes out for charcoal (F05 .. F07: the hours pass in
+ *  the take, the director's fallback A; done before the turn, so nothing changes in the quiet stretch); low and red
+ *  through the mother story; from the race ⑩ (BEAT.F.race) to its landing (BEAT.G.strike1) the firelight on his face
+ *  sinks to ember red (script v5's last F row); after that it stays there (G may take over) */
+export const FIRE_HIGH = 1, FIRE_LOW = 0.16, FIRE_RACE = 0.05;
+export const DIE0 = BEAT.F.sackOut - 30, DIE1 = BEAT.F.quiet - 6;
+export const fireF = (f: number) => {
+  const d = smooth(clamp01((f - DIE0) / (DIE1 - DIE0))), r = smooth(clamp01((f - BEAT.F.race) / (BEAT.G.strike1 - BEAT.F.race)));
+  return { fire: lerp(lerp(FIRE_HIGH, FIRE_LOW, d), FIRE_RACE, r), embers: d, late: d };
 };
 
 // ------------------------------------------------------------------------------------------------- the shovel
@@ -121,78 +139,102 @@ export const shovelPut = (blade: THREE.Vector3, handle: THREE.Vector3, up = V(0,
 
 // ------------------------------------------------------------------------------------------------- the board
 /** his charcoal's place on the board's face at time t (board units: x across, y up the drawing, metres): circles and
- *  triangles, one stroke at a time; `k` 1 = drawing, 0 = the hand held still just off the board */
+ *  triangles, one stroke at a time; `lift` 1 = the charcoal off the board between strokes */
 export const stroke = (t: number) => {
   const T = 1.6, n = Math.floor(t / T), u = t / T - n, kind = n % 3, cx = -0.07 + 0.05 * (hash(n, 3) - 0.5), cy = 0.01 + 0.06 * (hash(n, 5) - 0.5);
   let x: number, y: number;
   if (kind === 0) { const a = u * Math.PI * 2 * 1.05; x = cx + 0.035 * Math.cos(a); y = cy + 0.03 * Math.sin(a); }
   else { const P = [[0, 0.04], [-0.04, -0.025], [0.04, -0.025], [0, 0.04]], s = Math.min(2.999, u * 3), i = Math.floor(s), e = s - i; x = cx + lerp(P[i][0], P[i + 1][0], e); y = cy + lerp(P[i][1], P[i + 1][1], e); }
-  // a lift between strokes (the last 12 % of each)
   const lift = u > 0.88 ? Math.sin(Math.PI * (u - 0.88) / 0.12) : 0;
   return { x, y, lift };
 };
+export { BOARD, POKER };
 
-// ------------------------------------------------------------------------------------------------- the sparks
-/** screen circles (px, 1080 x 1800) a spark never crosses: the heads in front of the fire (its sparks fly out of the
- *  fire door BEHIND them, so a 2D spark over a face is wrong; director round 1) */
-export type SparkMask = { x: number; y: number; r: number }[];
-const masked = (m: SparkMask, x: number, y: number, pad: number) => m.some((c) => (x - c.x) * (x - c.x) + (y - c.y) * (y - c.y) < (c.r + pad) * (c.r + pad));
-/** THE SPARKS: a burst of glowing sparks flying up and out from screen point `p` (px) on frame f, `on` = the burst's
- *  first frame; `dir` = the screen direction they mostly fly (deg, 0 = right, -90 = up); `n` sparks, `len` frames,
- *  `speed` px a frame, `size` px, `stagger` = over how many frames they are born, `streak` > 0 = drawn as streaks
- *  along their flight (that many frames of travel long), `glow` = the halo's strength. A spark whose head or tail is in
- *  a `mask` circle is not drawn. Nothing before `on` or after the last spark dies. */
-export const sparks = (f: number, on: number, p: { x: number; y: number }, o: { n?: number; len?: number; speed?: number; size?: number; dir?: number; spread?: number; seed?: number; stagger?: number; streak?: number; glow?: number; jitter?: number } = {}, mask: SparkMask = []) => {
-  const d = f - on, len = o.len ?? 16, stag = o.stagger ?? 2;
-  if (d < 0 || d > len + stag + 2) return null;
-  const n = o.n ?? 14, sd = o.seed ?? 0, dots: ReturnType<typeof h>[] = [];
-  for (let i = 0; i < n; i++) {
-    const a = ((o.dir ?? -70) + (hash(i, 11 + sd) - 0.5) * (o.spread ?? 90)) * (Math.PI / 180);
-    const life = len * (0.5 + 0.5 * hash(i, 13 + sd)), age = d - stag * hash(i, 17 + sd);
-    if (age < 0 || age > life) continue;
-    const v = (o.speed ?? 14) * (0.55 + 0.6 * hash(i, 19 + sd)), u = age / life;
-    const j = (o.jitter ?? 0) * (hash(i, 29 + sd) - 0.5);
-    const x0 = p.x + j * Math.sin(a), y0 = p.y - j * Math.cos(a);
-    const x = x0 + Math.cos(a) * v * age, y = y0 + Math.sin(a) * v * age + 0.35 * age * age;
-    const vx = Math.cos(a) * v, vy = Math.sin(a) * v + 0.7 * age, sp = Math.hypot(vx, vy) || 1;
-    const s = (o.size ?? 9) * (0.6 + 0.6 * hash(i, 23 + sd)) * (1 - 0.5 * u), al = (1 - easeOutCubic(u)) * 0.97;
-    const L = o.streak ? Math.max(s, sp * o.streak * (1 - 0.4 * u)) : s;
-    const tx = x - (vx / sp) * L, ty = y - (vy / sp) * L;
-    if (masked(mask, x, y, s * 0.6) || masked(mask, tx, ty, s * 0.4)) continue;
-    const gl = o.glow ?? 1;
-    if (!o.streak) {
-      dots.push(h("div", { key: i, style: { position: "absolute", left: x - s / 2, top: y - s / 2, width: s, height: s, borderRadius: "50%", opacity: al,
-        background: "radial-gradient(circle, #ffffff 0%, #fff0a0 30%, #ffb040 58%, rgba(255,110,30,0) 100%)", boxShadow: `0 0 ${Math.round(s * 1.4 * gl)}px ${Math.round(s * 0.45 * gl)}px rgba(255,130,40,0.7)` } }));
-    } else {
-      const th = Math.max(2, s * 0.42), ang = (Math.atan2(vy, vx) * 180) / Math.PI;
-      dots.push(h("div", { key: i, style: { position: "absolute", left: x - L, top: y - th / 2, width: L, height: th, borderRadius: th, opacity: al, transformOrigin: `${L}px ${th / 2}px`, transform: `rotate(${ang.toFixed(1)}deg)`,
-        background: "linear-gradient(to right, rgba(255,90,20,0) 0%, rgba(255,150,50,0.85) 45%, #fff3b8 88%, #ffffff 100%)", boxShadow: `0 0 ${Math.round(s * 1.1 * gl)}px ${Math.round(s * 0.3 * gl)}px rgba(255,140,50,0.65)` } }));
-    }
+// ------------------------------------------------------------------------------------------------- THE FIRE's own 3D sparks
+/** a soft round spark (a radial falloff as a DataTexture: no canvas, so it builds headless too) */
+let SPARK_TEX: THREE.DataTexture | null = null;
+const sparkTex = () => {
+  if (SPARK_TEX) return SPARK_TEX;
+  const n = 32, d = new Uint8Array(n * n * 4);
+  for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+    const r = Math.hypot(i + 0.5 - n / 2, j + 0.5 - n / 2) / (n / 2), a = Math.max(0, 1 - r), k = (j * n + i) * 4;
+    d[k] = 255; d[k + 1] = Math.round(255 * (0.55 + 0.45 * a)); d[k + 2] = Math.round(255 * 0.35 * a * a); d[k + 3] = Math.round(255 * a * a);
   }
-  return dots.length ? h("div", { key: `sparks${on}`, style: { position: "absolute", left: 0, top: 0, width: W, height: H, overflow: "hidden", pointerEvents: "none" } }, ...dots) : null;
+  SPARK_TEX = new THREE.DataTexture(d, n, n); SPARK_TEX.needsUpdate = true;
+  return SPARK_TEX;
 };
-/** THE FLASH of a flare: warm firelight thrown out of the fire door for a few frames (a soft radial glow, screen-blended,
- *  centred on the door's mouth on screen, radius r px), `k` 0..1 */
-export const flash = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
-  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: W, height: H, pointerEvents: "none", mixBlendMode: "screen", opacity: Math.min(1, k),
-    background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,170,90,0.62) 0%, rgba(255,130,60,0.34) 42%, rgba(255,110,40,0) 100%)` } });
+const SPARKS = new WeakMap<World, Map<string, THREE.Points>>();
+/** THE SPARKS of a stir or a spit: `n` glowing points thrown out of the fire door's mouth `mouth` (world) on `on`, out
+ *  along `out` (unit, world: the door's normal) and up, slowing, falling, dying over `len` frames; IN THE WORLD
+ *  (depth-tested, additive, no ink line): they fly in front of the bricks and behind his face, never over it.
+ *  `size` = a spark's world size (m), `speed` m/s, `spread` 0..1. Pure: positions from (f - on) and hash. */
+export const putSparks = (w: World, key: string, f: number, on: number, mouth: THREE.Vector3, out: THREE.Vector3, o: { n?: number; len?: number; speed?: number; size?: number; spread?: number; seed?: number; stagger?: number; up?: number } = {}) => {
+  const N = o.n ?? 20, len = o.len ?? 18, stag = o.stagger ?? 3, d = f - on;
+  let m = SPARKS.get(w); if (!m) { m = new Map(); SPARKS.set(w, m); }
+  let P = m.get(key);
+  if (!P) {
+    if (d < 0 || d > len + stag + 2) return;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(new Float32Array(N * 3), 3));
+    g.setAttribute("color", new THREE.Float32BufferAttribute(new Float32Array(N * 3), 3));
+    const mat = new THREE.PointsMaterial({ map: sparkTex(), size: o.size ?? 0.035, sizeAttenuation: true, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true, fog: false });
+    P = new THREE.Points(g, mat); P.name = `segF.sparks.${key}`; P.layers.set(NOINK); P.frustumCulled = false; P.renderOrder = 6;
+    w.root.add(P); m.set(key, P);
+  }
+  const live = d >= 0 && d <= len + stag + 2;
+  P.visible = live;
+  if (!live) return;
+  const pos = P.geometry.getAttribute("position") as THREE.BufferAttribute, col = P.geometry.getAttribute("color") as THREE.BufferAttribute;
+  const side = V().crossVectors(out, V(0, 1, 0)).normalize(), sd = o.seed ?? 0, sp = o.spread ?? 0.5;
+  for (let i = 0; i < N; i++) {
+    const life = len * (0.5 + 0.5 * hash(i, 13 + sd)), age = (d - stag * hash(i, 17 + sd)) / FPS, u = (age * FPS) / life;
+    if (age < 0 || u > 1) { pos.setXYZ(i, mouth.x, mouth.y, mouth.z); col.setXYZ(i, 0, 0, 0); continue; }
+    const v = (o.speed ?? 1.6) * (0.5 + 0.7 * hash(i, 19 + sd));
+    const dir = out.clone().multiplyScalar(0.55 + 0.3 * hash(i, 23 + sd)).addScaledVector(side, (hash(i, 29 + sd) - 0.5) * 2 * sp).add(V(0, (o.up ?? 0.9) * (0.6 + 0.6 * hash(i, 31 + sd)), 0)).normalize();
+    const drag = (1 - Math.exp(-2.2 * age)) / 2.2;                         // the air slows them
+    const p = mouth.clone().addScaledVector(side, (hash(i, 37 + sd) - 0.5) * 0.2).add(V(0, (hash(i, 41 + sd) - 0.5) * 0.12, 0)).addScaledVector(dir, v * drag);
+    p.y -= 0.9 * age * age;                                                   // and they fall a little
+    pos.setXYZ(i, p.x, p.y, p.z);
+    const b = (1 - easeOutCubic(u)) * (0.75 + 0.25 * Math.sin(age * 40 + i));
+    col.setXYZ(i, b, b, b);
+  }
+  pos.needsUpdate = true; col.needsUpdate = true;
+};
+/** hides every spark burst (segment F's exit) */
+export const sparksOff = (w: World) => { const m = SPARKS.get(w); if (m) for (const P of m.values()) P.visible = false; };
 
-/** THE FLARE ON HIS CHEEK: a warm glow laid over the cheek nearest the fire, overlay-blended (a screen or normal blend
- *  lifts his drawn eyes and brows to brown, a haze; overlay warms the pale skin toward orange and keeps the dark lines
- *  dark), centred on `p` px, radius r px, `k` 0..1 */
-export const cheekGlow = (key: string, p: { x: number; y: number }, r: number, k: number) => k <= 0.01 ? null :
-  h("div", { key, style: { position: "absolute", left: 0, top: 0, width: W, height: H, pointerEvents: "none", mixBlendMode: "overlay", opacity: Math.min(1, k),
-    background: `radial-gradient(circle ${Math.round(r)}px at ${Math.round(p.x)}px ${Math.round(p.y)}px, rgba(255,120,30,0.8) 0%, rgba(255,120,30,0.5) 45%, rgba(255,110,30,0) 100%)` } });
+// ------------------------------------------------------------------------------------------------- THE FIRE's own flare
+const FLARE = new WeakMap<World, { door: THREE.Mesh; floor: THREE.Mesh }>();
+/** THE FLARE of a spit (or a stir): warm light swelling IN the fire door's mouth and on the bricks round it and the floor
+ *  before it, as the flames leap: two additive glow cards in the world (depth-tested: his head in front of the door
+ *  hides them; no ink line), `k` 0..1. Built once per World on first use. The room's light rises a little too, through
+ *  the set's fire param (SPIT_ROOM in segF): the light on his face is the set's own figure light. */
+export const putFlare = (w: World, mouth: THREE.Vector3, k: number) => {
+  let c = FLARE.get(w);
+  if (!c) {
+    if (k <= 0.005) return;
+    const door = glowCard(0.42, "#ff9a3c", 0), floor = glowCard(0.6, "#ff8a30", 0);
+    door.name = "segF.flare.door"; floor.name = "segF.flare.floor";
+    door.rotation.y = Math.PI / 2; floor.rotation.x = -Math.PI / 2;
+    w.root.add(door); w.root.add(floor); c = { door, floor }; FLARE.set(w, c);
+  }
+  const on = k > 0.005;
+  c.door.visible = on; c.floor.visible = on;
+  if (!on) return;
+  c.door.position.copy(mouth).add(V(0.012, 0, 0));
+  c.floor.position.set(mouth.x + 0.38, 0.004, mouth.z);
+  (c.door.material as THREE.MeshBasicMaterial).opacity = Math.min(1, 0.9 * k);
+  (c.floor.material as THREE.MeshBasicMaterial).opacity = Math.min(1, 0.45 * k);
+};
+export const flareOff = (w: World) => { const c = FLARE.get(w); if (c) { c.door.visible = false; c.floor.visible = false; } };
 
 // ------------------------------------------------------------------------------------------------- the candle's light
 /** a flat rectangle lit by the candle: corner `a`, edges `u` and `v` (world vectors), `nu` x `nv` segments; `n` = its
  *  normal for a Lambert term (omit: none), `fade` = the light falls off linearly along v (full at the a + v edge, 0 at
- *  the `a` edge: a band that fades down a face from a lit edge), `gain` = its strength */
+ *  the `a` edge), `gain` = its strength */
 export type LitQuad = { a: THREE.Vector3; u: THREE.Vector3; v: THREE.Vector3; nu: number; nv: number; gain: number; n?: THREE.Vector3; fade?: boolean };
-/** the candle's light: soft (a toon pool, not the real inverse square: 1 / (1 + (d / CL_R0)^2)), gone by CL_REACH m */
 const CL_R0 = 0.07, CL_KNEE = 0.22, CL_REACH = 0.45;
 const clFall = (d: number) => (1 / (1 + (d / CL_R0) * (d / CL_R0))) * (1 - smooth(clamp01((d - CL_KNEE) / (CL_REACH - CL_KNEE))));
-/** the warm candle colour the pool adds (linear, before `gain`) */
 const CL_COL = new THREE.Color(1.0, 0.56, 0.24);
 const litQuadGeo = (q: LitQuad, L: THREE.Vector3) => {
   const pos: number[] = [], col: number[] = [], idx: number[] = [];
@@ -214,14 +256,10 @@ const litQuadGeo = (q: LitQuad, L: THREE.Vector3) => {
   return g;
 };
 const CLIGHT = new WeakMap<World, { g: THREE.Group; m: THREE.MeshBasicMaterial }>();
-/** THE CANDLE'S LIGHT ON WHAT IT STANDS ON (review v2 row 11, 14 Nov): over the time cut his stub stands on the
- *  furnace's iron top plate, which the room's light alone leaves a featureless near-black slab (it read as an unlit
- *  block). F's own meshes on w.root (not a set light: the elaboratory set is WP2's and its look elsewhere is unchanged):
- *  warm light ADDED on the quads `quads` (built by the caller from the set's layout: the pool on the top round the
- *  candlestick, the rim where the plate's edges catch it, the faces that look at the flame), each vertex lit from
- *  `flame` with the candle's soft falloff. Additive, unlit, no ink line, no shadow, never written to depth (what stands
- *  in front of it hides it). Built once per World on first use (the candle never moves while it shows); `k` = its
- *  strength now (the flame's flicker rides on it), 0 hides it. Segment F's exit() hides it (candleLightOff). */
+/** THE CANDLE'S LIGHT ON WHAT IT STANDS ON (review v2 row 11): the furnace's iron top plate, which the room's light
+ *  alone leaves a featureless near-black slab once the fire has sunk. Warm light ADDED on the quads (the pool round the
+ *  candlestick, the plate's edges, the faces that look at the flame), each vertex lit from `flame` with the candle's soft
+ *  falloff. Additive, unlit, no ink line, never written to depth. Built once per World; `k` = its strength (0 hides). */
 export const putCandleLight = (w: World, flame: THREE.Vector3, quads: LitQuad[], k: number) => {
   let c = CLIGHT.get(w);
   if (!c) {
@@ -240,10 +278,10 @@ export const candleLightOff = (w: World) => { const c = CLIGHT.get(w); if (c) c.
 // ------------------------------------------------------------------------------------------------- the grades
 /** a COPY of Film.tsx GRADE_FILM (the default every place uses; kept here so F never imports the composition) */
 export const GRADE_BASE: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.97, 0.98, 0.96], tintS: [0.006, 0.006], tintM: [-0.01, 0.008], tintH: [-0.016, 0.01], vig: [0.16, 0.42] };
-/** F1, the night garden: the moonlit day colours pulled toward a desaturated blue (shadows and mids cooled and greyed),
- *  the highlights (his candle, the lit window, the door's glow) left warm; the same curve, so the same mid-tone */
+/** the night garden: the moonlit day colours pulled toward a desaturated blue, the highlights (his candle, the lit
+ *  window, the door's glow) left warm; the same curve, so the same mid-tone */
 export const GRADE_NIGHT: GradeParams = { ky: [0, 0.1, 0.27, 0.58, 0.82, 0.935, 1], sat: [0.46, 0.55, 1.0], tintS: [0.04, -0.022], tintM: [0.03, -0.018], tintH: [-0.018, 0.022], vig: [0.22, 0.4] };
-/** F4-F5, hours later: the room sunk round him (the low end pressed, a heavier vignette), the face's highlights kept */
+/** the fire sunk, hours on: the room sunk round him (the low end pressed, a heavier vignette), the face's highlights kept */
 export const GRADE_LATE: GradeParams = { ky: [0, 0.075, 0.215, 0.52, 0.79, 0.93, 1], sat: [0.94, 0.98, 0.98], tintS: [0.004, 0.012], tintM: [-0.012, 0.01], tintH: [-0.016, 0.01], vig: [0.38, 0.28] };
 /** two grades mixed (k 0..1) */
 export const mixGrade = (a: GradeParams, b: GradeParams, k: number): GradeParams => {

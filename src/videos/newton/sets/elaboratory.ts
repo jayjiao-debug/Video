@@ -58,15 +58,15 @@ const ceilAt = (z: number) => CB + ((CF - CB) * (z - Z0)) / (Z1 - Z0);
 /** the brick floor in basket weave: pairs of bricks turning by squares, sooty and ashy toward the furnace (left) */
 const floorTex = () => paint(512, 512, (g, Wd, H) => {
   const r = rng(601), n = 4, s = Wd / n;
-  g.fillStyle = "#4e3c34"; g.fillRect(0, 0, Wd, H);
+  g.fillStyle = "#6c5446"; g.fillRect(0, 0, Wd, H);                                    // QUIET: soft joints, close tones
   for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
     const across = (i + j) % 2 === 0;
     for (let k = 0; k < 2; k++) {
-      g.fillStyle = css(mix("#8e6450", r() < 0.5 ? "#6a4a3c" : "#a8826a", 0.25 + 0.5 * r()));
+      g.fillStyle = css(mix("#8e6450", r() < 0.5 ? "#76564a" : "#9e7862", 0.2 + 0.35 * r()));
       if (across) g.fillRect(i * s + 3, j * s + k * (s / 2) + 3, s - 6, s / 2 - 6); else g.fillRect(i * s + k * (s / 2) + 3, j * s + 3, s / 2 - 6, s - 6);
     }
   }
-  for (let i = 0; i < 30; i++) blotch(g, Wd * r(), H * r(), Wd * (0.04 + 0.08 * r()), r() < 0.6 ? "#3a2a24" : "#8a7a6a", 0.22);
+  for (let i = 0; i < 30; i++) blotch(g, Wd * r(), H * r(), Wd * (0.04 + 0.08 * r()), r() < 0.6 ? "#3a2a24" : "#8a7a6a", 0.14);
 }, true);
 /** the mouldy old book's open pages: close old type, a woodcut figure, green-grey mould creeping in from the edges */
 const bookTex = () => paint(512, 340, (g, Wd, H) => {

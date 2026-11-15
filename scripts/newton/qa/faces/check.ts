@@ -12,9 +12,11 @@
 //   phone    (the phone app's own things: the icons over the top corners to y 60, the buttons x > 940 from y 950, the
 //            post's text from y 1510 left of x 900; layout.ts PHONE; every frame)
 //   margin   (the outer 54 px of each side: picture only, another screen shape may trim it; every frame)
-// It also checks THE JOINS against the picture: every join of beats.ts JOINS (the camera plans' 12: clock, whip, match)
+// It also checks THE JOINS against the picture: every join of beats.ts JOINS (script v5's 11: clock, whip, match)
 // inside a scene must sit on a frame where the place changes (the cut), so a re-timed scene that moves a cut without
-// its beat is reported; the clock joins are hud/vlog.tsx RACES (== JOINS). And THE WORDS against the joins (camplan
+// its beat is reported; the no-cut race ⑩ must keep one place; every change of place in the picture must be a join
+// (a cut with no join is reported); the clock joins are hud/vlog.tsx RACES with their own frames (== JOINS). And THE
+// WORDS against the joins (camplan
 // OVERVIEW item 4): every subtitle screen, fact card and whisper bubble, its last frame as timed and as shown
 // (hud/caption.tsx capEnd, hud/card.tsx cardEnd: clipped before the next whip / match join, beats.ts joinClip) against
 // the next join after its first frame (== WORDS vs JOINS; --words prints only that table, without posing a frame).
@@ -104,7 +106,7 @@ const wordsTable = (): string[] => {
     if (j && clear !== null) {
       if (j.kind === "whip" && clear < WHIP_CLEAR) st = r.kind === "whisper" ? `SHORT: ${clear} clear before the whip (whisper.ts bubble: its own JOIN_GUARD)` : `FAIL: ${clear} clear before the whip (needs ${WHIP_CLEAR})`;
       if (j.kind === "match" && clear < 0) st = "FAIL: across the match cut";
-      if (j.kind === "clock" && clear < 0) st = r.kind === "card" && r.what.includes("(G04)") && j.scene === "G" && !j.first ? "ok (approved: card 5 across G's garden clock join)" : "FAIL: across a clock join";
+      if (j.kind === "clock" && clear < 0 && !j.noCut) st = "FAIL: across a clock join";
     }
     if (st.startsWith("FAIL")) bad++;
     const clip = r.end < r.to ? (r.kind === "whisper" ? `its subtitle would have run to ${r.to}` : `clipped from ${r.to}`) : "";
@@ -447,15 +449,18 @@ ranges.sort((a, b) => a.f0 - b.f0 || a.what.localeCompare(b.what));
 const shown = ranges.filter((r) => r.n > r.nHidden), hiddenOnly = ranges.filter((r) => r.n === r.nHidden);
 const sev = (r: Range) => (r.what === "band" ? "low" : r.maxFeat >= 400 || r.max >= 6000 ? "HIGH" : r.max >= 800 ? "med" : "low");
 // THE JOINS (beats.ts JOINS): each join inside a scene must sit on a cut (the place changes from the frame before to
-// its cut frame); the scene starts are cuts by construction; a clock join names its race (hud/vlog.tsx RACES)
+// its cut frame); the scene starts are cuts by construction, except ⑩ (noCut: the race over the held frame, one place);
+// a clock join names its race (hud/vlog.tsx RACES, its own frames); every change of place in the frames checked must
+// be a join
 const joins: string[] = [];
 for (const j of JOINS) {
   const r = RACES.find((x) => x.cut === j.cut);
-  const tag = `${j.kind} ${j.scene}${j.first ? " (first frame)" : ""}${r ? ` race ${r.fromId}->${r.toId} f${r.cut - 10}-${r.cut + 8}` : ""} (cut f${j.cut})`;
+  const tag = `${"①②③④⑤⑥⑦⑧⑨⑩⑪"[j.n - 1] ?? j.n} ${j.kind} ${j.scene}${j.first ? " (first frame)" : ""}${j.noCut ? " (no cut)" : ""}${r ? ` race ${r.fromId}->${r.toId} f${r.f0}-${r.f1}` : ""}${j.out ? ` out ${j.out} f` : ""} (cut f${j.cut})`;
   if (j.kind === "clock" && !r) { joins.push(`${tag}: NO RACE in hud/vlog.tsx RACES`); continue; }
   const a = placeOf.get(j.cut - 1), b = placeOf.get(j.cut);
   if (a === undefined || b === undefined) { joins.push(`${tag}: not in the frames checked`); continue; }
-  let note = j.first ? `ok (scene ${j.scene}'s first frame${a === b ? `, the same place: ${b}` : ""})` : a !== b ? "ok (the place changes on the cut)" : `NOT ON A CUT: the place is ${b} on both sides`;
+  let note = j.noCut ? (a === b ? `ok (no cut: the same place, ${b})` : `FAIL: a no-cut join, but the place changes ${a} -> ${b}`)
+    : j.first ? `ok (scene ${j.scene}'s first frame${a === b ? `, the same place: ${b}` : ""})` : a !== b ? "ok (the place changes on the cut)" : `NOT ON A CUT: the place is ${b} on both sides`;
   if (a === b && !j.first) {
     // where does the place change near it?
     const near = [...placeOf.keys()].filter((f) => Math.abs(f - j.cut) <= 90 && placeOf.get(f - 1) !== undefined && placeOf.get(f - 1) !== placeOf.get(f));
@@ -464,6 +469,11 @@ for (const j of JOINS) {
   joins.push(`${tag}: ${a} -> ${b}: ${note}`);
 }
 for (const r of RACES) if (!JOINS.some((j) => j.kind === "clock" && j.cut === r.cut)) joins.push(`race ${r.fromId}->${r.toId} at f${r.cut}: NOT A CLOCK JOIN of beats.ts JOINS`);
+// a change of place in the picture with no join there (no cut inside a scene: the owner's rule)
+for (const [f, b] of placeOf) {
+  const a = placeOf.get(f - 1);
+  if (a !== undefined && a !== b && !JOINS.some((j) => j.cut === f)) joins.push(`CUT WITH NO JOIN at f${f}: ${a} -> ${b} (every change of place is one of the 11 joins)`);
+}
 const fmtR = (r: Range) => `${sev(r).padEnd(4)} ${r.seg}  f${r.f0}-${r.f1} (${r.n - r.nHidden}/${r.f1 - r.f0 + 1} frames${r.nHidden ? `, ${r.nHidden} hidden` : ""})  ${r.fig.padEnd(12)} x ${r.what.padEnd(8)} max ${String(r.max).padStart(6)} px2 (${String(r.maxPct).padStart(3)} % of the face; features ${r.maxFeat} px2) at f${r.fMax}  face ${fmtB(r.face)}  ${r.what} ${fmtB(r.rect)}  [${[...r.slates].join(" | ") || [...r.shots].join(",")}]`;
 const eyeR: { seg: string; fig: string; f0: number; f1: number; maxY: number }[] = [];
 for (const e of eyesLow) { const l = eyeR[eyeR.length - 1]; if (l && l.fig === e.fig && l.seg === e.seg && e.f <= l.f1 + GAP) { l.f1 = e.f; l.maxY = Math.max(l.maxY, e.y); } else eyeR.push({ seg: e.seg, fig: e.fig, f0: e.f, f1: e.f, maxY: e.y }); }

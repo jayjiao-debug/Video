@@ -28,7 +28,9 @@
 // never draws in the film (a review note holds it back until its scene is rebuilt); a still may still force it.
 //
 // THE BOXES: `box` is where an item may draw (film px, 1080 x 1800); the builders keep every pixel that matters inside
-// it and change it HERE when they place the piece (the faces checker and check.ts read it). `provisional: true` = the
+// it (the faces checker and check.ts read it). THE SCENE FITS (v5 rebuild): a scene builder refits its own items in
+// hud/ms/fit_<scene>.ts (fit.ts says what a fit may set: box, provisional, from / to, beats, heldOff, the banner's
+// slip), never here; MS_ITEMS below lays every fit over its item (FIT, SCENE_OF: a fit names only its own scene's items). `provisional: true` = the
 // plan's region or the approved frame's place, not yet fitted to the rebuilt scene (the builder fits it to the face /
 // hand / chair / plate it belongs to and sets provisional false). The frame's rules (every box): inside x 54-1026;
 // nothing right of x 930 below y 950; nothing that matters below y 1490; never over a face, the subtitles, the REC
@@ -41,15 +43,31 @@ import { CARD_LEN, CUT, DRAIN, FREEZE, FREEZE_ON, G2_READY, WIPE } from "../../f
 import type { Rect, Shown } from "../../../../kit/overlay/frame";
 import { bannerPlace, bannerRects, type Head } from "./bannerplace";
 import { HUMPHREY_TRACK } from "./track";
+import { SCENE_OF, afterEnd, afterStart, type MsFit, type MsFitItem, type MsId } from "./fit";
+import { FIT_A } from "./fit_A";
+import { FIT_B } from "./fit_B";
+import { FIT_C } from "./fit_C";
+import { FIT_D } from "./fit_D";
+import { FIT_E } from "./fit_E";
+import { FIT_F } from "./fit_F";
+import { FIT_G } from "./fit_G";
 
 // ---------------------------------------------------------------------------------------------------- anchors
-/** a moment `s` seconds after line id's voice ENDS (a sound cue's own anchor: cues.json [id, "end", s]) */
-export const afterEnd = (id: string, s: number) => Math.round((line(id).end + s) * FPS);
-/** a moment `s` seconds after line id's voice STARTS (cues.json [id, "start", s]) */
-export const afterStart = (id: string, s: number) => Math.round((line(id).start + s) * FPS);
+// afterEnd(id, s) / afterStart(id, s): a moment s seconds after line id's voice ends / starts (cues.json anchors): fit.ts
+export { afterEnd, afterStart, SCENE_OF };
+export type { MsId, MsFit, MsFitItem };
+
+// ---------------------------------------------------------------------------------------------------- the scene fits
+/** THE SCENE FITS (hud/ms/fit_A.ts .. fit_G.ts), one map; each file names only its own scene's items */
+const FITS: Record<SceneId, MsFit> = { A: FIT_A, B: FIT_B, C: FIT_C, D: FIT_D, E: FIT_E, F: FIT_F, G: FIT_G };
+for (const [sc, fit] of Object.entries(FITS)) for (const id of Object.keys(fit) as MsId[]) {
+  if (!(id in SCENE_OF)) throw new Error(`hud/ms/fit_${sc}.ts: "${id}" is not a skin item (${Object.keys(SCENE_OF).join(" ")})`);
+  if (SCENE_OF[id] !== sc) throw new Error(`hud/ms/fit_${sc}.ts: "${id}" is scene ${SCENE_OF[id]}'s item: fit it in fit_${SCENE_OF[id]}.ts`);
+}
+/** every item's fit (empty when its scene has not fitted it) */
+export const FIT: Partial<Record<MsId, MsFitItem>> = Object.assign({}, ...Object.values(FITS));
 
 // ---------------------------------------------------------------------------------------------------- the items
-export type MsId = "title" | "banner" | "flick" | "card" | "meter0" | "tick1" | "stamp" | "tick2" | "lunch" | "meter1";
 export type MsGap = "G1" | "G2" | "G3";
 export type MsItem = {
   id: MsId;
@@ -61,6 +79,8 @@ export type MsItem = {
   /** inclusive film frames */ from: number; to: number;
   /** its moments in LOCAL frames (t = 0 on `from`): in = frames to arrive, leave = frames to leave, out = the first
    *  frame of leaving (len - leave, filled in), the rest named per item */ beats: Record<string, number>;
+  /** moments that land ON A SOUND, as absolute film frames: each becomes a local beat (frame - from) after the scene
+   *  fit, so a refitted `from` never moves them off their sound (the stamp's jolt, the lunch bar's tick) */ absBeats?: Record<string, number>;
   /** the gap in the voice track it needs, whether that gap is there, and what happens until it is */
   gap: MsGap | null; ready: boolean; whilePending: "show" | "off";
   /** where it may draw (film px); provisional = not yet fitted to the rebuilt scene */ box: Rect[]; provisional: boolean;
@@ -89,15 +109,15 @@ const TITLE_LEN = TITLE_FROM + 56 - 1 < A03_BUBBLE ? 56 : 50;
  *  CARD_LEN = 75) */
 const FREEZE_AT = FREEZE.at;
 
-const SLOT: Rect = { x0: 740, y0: 146, x1: 1026, y1: 300 };
+const SLOT: Rect = { x0: 752, y0: 146, x1: 1026, y1: 300 };   // skin.ts METER (moved 12 px right, 14 Nov night)
 /** row 2, HUMPHREY'S BANNER: in as he comes out of his door (segA H_OUT0: the latch, A03's end + 0.6 s, + 4 frames;
- *  his face is behind the door before it), gone the frame before A05's voice (her snap zoom) */
-const BAN_FROM = afterEnd("A03", 0.6) + 4, BAN_TO = A05.from - 1;
+ *  his face is behind the door before it), gone the frame before A05's voice (her snap zoom); fit_A may move both */
+const BAN_FROM = FIT.banner?.from ?? afterEnd("A03", 0.6) + 4, BAN_TO = FIT.banner?.to ?? A05.from - 1;
 /** the banner's slip box: today's A04 has no room beside his head for the approved size (his face reaches x 336-433 on
  *  f340-378), so the slip rides BELOW the lowest point his head reaches (his face to y 851, his outline to y 856 on
  *  f350), on the door left of him (bannerplace.ts "below"); the A rebuild's clear 360 x 270 beside his head moves this
  *  box there and the banner goes beside him (the approved place) by itself */
-const BAN_SLIP: Rect = { x0: 66, y0: 862, x1: 600, y1: 1170 };
+const BAN_SLIP: Rect = FIT.banner?.slip ?? { x0: 66, y0: 862, x1: 600, y1: 1170 };
 /** his head on frame f from the probed track (track.ts; the last probed frame past its end) */
 const humAt = (fr: number): Head => {
   const T = HUMPHREY_TRACK, i = Math.min(T.n - 1, Math.max(0, fr - T.first)) * 3;
@@ -210,7 +230,7 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     // SYNC_POINTS row 42 since r2, POLISH 15: mus_noon's beat 25, where cues.json puts the knock and the stamp's thump;
     // stage 2b moved it from r1's + 0.56), out 3 frames before the clock join's cut into D
     from: C07.to + Math.round(0.1 * 30), to: seg("D").from - 3,
-    beats: { in: 4, slam: 0, jolt: afterEnd("C07", 0.65) - (C07.to + Math.round(0.1 * 30)), leave: 6 },
+    beats: { in: 4, slam: 0, leave: 6 }, absBeats: { jolt: afterEnd("C07", 0.65) },
     gap: null, whilePending: "show",
     // stage 2b: the word rides the chair's seat (ctx.props.chair) clamped so the piece, jolt included, stays in here
     // (fx.tsx stampAnchor); today's seat moves x 893-767, y 1192-1105 over the hold. Refit after the rebuild
@@ -223,7 +243,7 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     from: D05.to + 1, to: D05.to + 30,
     beats: { in: 4, slip: 0, cross: 2, crossLen: 6, note: 8, leave: 6 },
     gap: null, whilePending: "show",
-    box: [{ x0: 740, y0: 146, x1: 1026, y1: 350 }], provisional: false,
+    box: [{ x0: 752, y0: 146, x1: 1026, y1: 350 }], provisional: false,
     words: ["笑", "0/1", "✗", "✗", "我笑的不算"],
   },
   {
@@ -231,7 +251,7 @@ const raw: Omit<MsItem, "scene" | "ready">[] = [
     // in 0.45 s after E02 at 1 %; it ticks to 2 % ON the second fork clink (E02 end + 1.25 s, cues.json); out 2 frames
     // before E03
     from: afterEnd("E02", 0.45), to: E03.from - 2,
-    beats: { in: 6, tick: afterEnd("E02", 1.25) - afterEnd("E02", 0.45), leave: 6 },
+    beats: { in: 6, leave: 6 }, absBeats: { tick: afterEnd("E02", 1.25) },
     gap: null, whilePending: "show",
     // stage 2b: the bar rides the plate's far rim (ctx.props.plate) clamped into here (fx.tsx lunchAnchor); today's
     // plate sits at his chin's height (far rim y 790, his face down to y 723), so the bar sits under it on the cloth.
@@ -298,9 +318,19 @@ export const MS_FX: { force: Set<MsId>; at: number | null; item: MsId | null; pr
 })();
 
 // ---------------------------------------------------------------------------------------------------- the table
-export const MS_ITEMS: MsItem[] = raw.map((r) => ({
-  ...r, beats: { ...r.beats, out: r.to - r.from + 1 - (r.beats.leave ?? 0) }, scene: segmentAt(r.from).id, ready: r.gap ? READY[r.gap] : true,
-}));
+/** an item with its scene's fit laid over it (fit.ts; the banner's from / to / slip are already in its raw line) */
+const fitted = (r: Omit<MsItem, "scene" | "ready">): Omit<MsItem, "scene" | "ready"> => {
+  const z = FIT[r.id];
+  if (!z) return r;
+  const { heldOff, ...rest } = r;
+  const held = z.heldOff === null ? undefined : z.heldOff ?? heldOff;
+  return { ...rest, from: z.from ?? r.from, to: z.to ?? r.to, beats: { ...r.beats, ...z.beats }, box: z.box ?? r.box, provisional: z.provisional ?? r.provisional, ...(held ? { heldOff: held } : {}) };
+};
+export const MS_ITEMS: MsItem[] = raw.map(fitted).map((r) => {
+  const abs = Object.fromEntries(Object.entries(r.absBeats ?? {}).map(([k, v]) => [k, v - r.from]));
+  return { ...r, beats: { ...r.beats, ...abs, out: r.to - r.from + 1 - (r.beats.leave ?? 0) }, scene: segmentAt(r.from).id, ready: r.gap ? READY[r.gap] : true };
+});
+for (const i of MS_ITEMS) if (i.scene !== SCENE_OF[i.id]) throw new Error(`hud/ms/when.ts: ${i.id} starts on f${i.from}, in scene ${i.scene}, not its own scene ${SCENE_OF[i.id]}`);
 const BY = new Map(MS_ITEMS.map((i) => [i.id, i]));
 export const msItem = (id: MsId): MsItem => { const i = BY.get(id); if (!i) throw new Error(`msItem("${id}"): no such item`); return i; };
 /** whether item id is switched on in this render (its gap is in, or it shows anyway, and it is not held off; or a still

@@ -7,7 +7,8 @@
 //     REC       a red lamp + "REC" top left (layout.ts SCREEN.rec, the row centred on y 116, under the phone app's icons
 //               that cover the top corners to y 60; the lamp's ink ring starts on x 32, kit FRAME_9x15.rec). The lamp BREATHES at
 //               1 Hz: about 11 frames lit, 11 dim, 4-frame soft ramps, never below 24 % (never a hard flash). Gone
-//               (with the timestamp) where a Pose says rec: false. The blink's period is 1 s stretched by a hair
+//               (with the timestamp) where a Pose says rec: false. On the lead card's freeze (f916-990) the lamp is
+//               held LIT (prop `lit`, Film.tsx from msFrozen: she is still recording) while the rest of the UI holds. The blink's period is 1 s stretched by a hair
 //               (about 30.07 frames) so that the lamp is lit on frame 0 AND has been lit for 10 frames when it dies.
 //     OFF       HER CAMERA SWITCHES OFF on OFF_AT (beats.ts BEAT.G.cameraOff = the sound's sfx_poweroff click: scene G
 //               to - 1.4 s, 12 frames after the last pluck, when his window has gone dark; segG's end black comes 24
@@ -15,18 +16,18 @@
 //               to a dead GREY glass (no red, no glow), "REC", the timestamp and the battery's outline and % all turn
 //               the same warm grey, and the battery's fill is emptied. From that frame it holds still (nothing breathes)
 //               until the end black (Pose.top) covers it.
-//     时间戳    the scene's timestamp, two rows: the time of day (story.ts SCENE_STAMP: 清晨 in pale gold) and the clock
-//               (05:00, warm white), the English word small under it (EARLY MORNING, 22 px, ivory, spaced capitals);
-//               lang en: the clock alone over the same English row (one corner size in both languages). The label rows
-//               sit under REC at about y 161 / 189 (the box x 28..~241, y 140..204: SCREEN.rec).
+//     时间戳    the scene's timestamp: the time of day (story.ts SCENE_STAMP: 清晨 in pale gold) and the clock (05:00,
+//               warm white) in ONE CHINESE ROW, like the cards (the owner's default, 14 Nov night: no English row under
+//               it in the Chinese film; STAMP_EN_ROW); lang en: the clock alone over the English word (EARLY MORNING,
+//               22 px, ivory, spaced capitals). The row sits under REC at about y 161 (SCREEN.rec).
 //               On every scene's first frame it SLIDES IN BIG (x1.5, to about x 400, y 234) under REC, holds, then
 //               shrinks into its small place (2 s in all) and stays.
-//               THE CLOCK RUNS FAST ONLY AT THE CLOCK JOINS (camplan OVERVIEW 3, B.md 6): A->B, C->D, D->E and F->G
-//               (the first frames of B, D, E, G, read from SEGMENTS: never a frame number, the voice will move them)
-//               it races from 10 frames BEFORE the cut (on the outgoing scene's small stamp) to 8 frames after it (under
-//               the big stamp sliding in), 18 frames eased in-out; and once inside G at its room -> garden join
-//               (beats.ts BEAT.G.garden: 02:00 -> 03:00, story.ts G_GARDEN_CLOCK; G.md note 2) on the small stamp. At a
-//               WHIP or MATCH join (B->C, E->F) the stamp slides in with its time already set: nothing runs. The word
+//               THE CLOCK RUNS FAST ONLY AT THE CLOCK JOINS (script v5: ① A->B, ⑤ C->D, ⑦ D->E and ⑩ F->G, the first
+//               frames of B, D, E, G; beats.ts JOINS, never a frame number), over each join's own race frames
+//               (Join.race, eased in-out): ① under card 1's last second, landing on the cut; ⑤ and ⑦ from 10 frames
+//               BEFORE the cut (the outgoing scene's small stamp) to 8 after it (under the big stamp sliding in); ⑩ (no
+//               picture cut) from F16 end + 0.3 s to the town clock's first stroke. At a WHIP or MATCH join (B->C, E->F
+//               and the joins inside a scene) the stamp slides in with its time already set: nothing runs. The word
 //               follows the running digits (WORD_FROM: the outgoing scene's word until they enter the incoming scene's
 //               hours).
 //               Frame 0 starts big and settled (the first frame is complete). cards: false skips the big intro (only
@@ -47,10 +48,10 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { useOverlayFont } from "../../group/kit/overlay";
-import { FPS, SCENES, SCENE_STAMP, SEGMENTS, G_GARDEN_CLOCK, clamp01, clockText, easeInOutCubic, easeOutCubic, seg, segmentAt, type SceneId } from "../story";
+import { FPS, SCENES, SCENE_STAMP, SEGMENTS, clamp01, clockText, easeInOutCubic, easeOutCubic, segmentAt, type SceneId } from "../story";
 import { FRAME_9x15 } from "../../../kit/overlay/frame";
 import { EN } from "../lang";
-import { BEAT, JOINS } from "../beats";
+import { BEAT, JOINS, RACE_PRE, RACE_POST } from "../beats";
 import { FONT_STACK, HC, textW, type Rect } from "./style";
 
 // ---------------------------------------------------------------------------------------------------- the clock
@@ -72,32 +73,30 @@ export const stampAt = (f: number): { id: SceneId; at: number; t: number } => {
   const s = segmentAt(f);
   return { id: s.id, at: s.from, t: s.from === 0 ? Math.max(f, 0) + IN : f - s.from };
 };
-/** THE CLOCK JOINS (camplan OVERVIEW: 5 clock, 5 whip, 2 match joins; beats.ts JOINS is the one list): the scenes whose
- *  first frame is a clock join (A->B, C->D, D->E, F->G). B->C and E->F are whips: their stamp slides in already set. */
+/** THE CLOCK JOINS (script v5: 4 clock, 4 whip and 3 match joins; beats.ts JOINS is the one list): the scenes whose
+ *  first frame is a clock join (① A->B, ⑤ C->D, ⑦ D->E, ⑩ F->G). B->C and E->F are whips: their stamp slides in already set. */
 export const CLOCK_JOINS: SceneId[] = JOINS.filter((j) => j.kind === "clock" && j.first).map((j) => j.scene);
-/** a race of the clock: from `cut - RACE_PRE` to `cut + RACE_POST` it runs from `from` to `to` (minutes on the film
- *  day's scale), eased in-out; the word goes from `fromId`'s to `toId`'s when the digits enter toId's hours */
-export type Race = { cut: number; from: number; to: number; fromId: SceneId; toId: SceneId; inScene: boolean };
-export const RACE_PRE = 10, RACE_POST = 8;
-/** every race of the film: one per clock join of beats.ts JOINS: the four at scene starts (keyed on SEGMENTS) and G's
- *  room -> garden join (BEAT.G.garden, 02:00 -> 03:00: G_GARDEN_CLOCK, the only clock join inside a scene) */
+/** a race of the clock: from frame `f0` to `f1` (inclusive; beats.ts Join.race) it runs from `from` to `to` (minutes on
+ *  the film day's scale), eased in-out; `cut` = its join's cut (⑩: G's first frame, no picture cut); the word goes from
+ *  `fromId`'s to `toId`'s when the digits enter toId's hours */
+export type Race = { cut: number; f0: number; f1: number; from: number; to: number; fromId: SceneId; toId: SceneId };
+/** the default race's frames either side of the cut (camplan OVERVIEW item 3; beats.ts: ⑤ and ⑦ use it, ① and ⑩ have the
+ *  script's own: ① under card 1's last second landing on the cut, ⑩ from F16 end + 0.3 s to the first stroke) */
+export { RACE_PRE, RACE_POST };
+/** every race of the film: one per clock join of beats.ts JOINS (each at a scene's first frame: SEGMENTS) */
 export const RACES: Race[] = JOINS.filter((j) => j.kind === "clock").map((j): Race => {
-  if (j.first) {
-    const prev = SCENES[SCENES.indexOf(j.scene) - 1];
-    return { cut: seg(j.scene).from, from: SCENE_STAMP[prev].min, to: SCENE_STAMP[j.scene].min, fromId: prev, toId: j.scene, inScene: false };
-  }
-  if (j.scene !== "G") throw new Error(`hud/vlog.tsx RACES: a clock join inside scene ${j.scene} (${j.cut}) has no clock to run to (only G's garden join does)`);
-  return { cut: j.cut, from: SCENE_STAMP.G.min, to: G_GARDEN_CLOCK, fromId: "G", toId: "G", inScene: true };
+  if (!j.first || !j.race) throw new Error(`hud/vlog.tsx RACES: clock join ${j.n} (${j.cut}) is not a scene's first frame with a race`);
+  const prev = SCENES[SCENES.indexOf(j.scene) - 1];
+  return { cut: j.cut, f0: j.race[0], f1: j.race[1], from: SCENE_STAMP[prev].min, to: SCENE_STAMP[j.scene].min, fromId: prev, toId: j.scene };
 });
 /** the race running on frame f, or null */
-export const raceAt = (f: number): Race | null => RACES.find((r) => f >= r.cut - RACE_PRE && f <= r.cut + RACE_POST) ?? null;
+export const raceAt = (f: number): Race | null => RACES.find((r) => f >= r.f0 && f <= r.f1) ?? null;
 /** the clock the timestamp shows on frame f (minutes, story.ts SCENE_CLOCK): the scene's own time, racing only across
- *  a clock join (raceAt); G shows 03:00 after its garden join */
+ *  a clock join (raceAt) */
 export const clockAt = (f: number): number => {
   const r = raceAt(f);
-  if (r) return r.from + (r.to - r.from) * easeInOutCubic(clamp01((f - (r.cut - RACE_PRE)) / (RACE_PRE + RACE_POST)));
-  const s = segmentAt(f);
-  return s.id === "G" && f > BEAT.G.garden ? G_GARDEN_CLOCK : SCENE_STAMP[s.id].min;
+  if (r) return r.from + (r.to - r.from) * easeInOutCubic(clamp01((f - r.f0) / Math.max(1, r.f1 - r.f0)));
+  return SCENE_STAMP[segmentAt(f).id].min;
 };
 /** WHERE EACH SCENE'S TIME WORD STARTS on the clock (minutes after the film day's midnight, story.ts SCENE_CLOCK's
  *  scale): 清晨 until 08:00, 上午 from 08:00, 中午 from 11:30, 下午 from 13:00, 傍晚 from 17:00, 夜 from 19:00, 凌晨 from
@@ -109,7 +108,7 @@ export const WORD_FROM: Record<SceneId, number> = { A: 0, B: 8 * 60, C: 11 * 60 
  *  or across a race the outgoing / incoming scene's by the digits */
 export const wordOf = (f: number, id: SceneId, min: number): SceneId => {
   const r = raceAt(f);
-  if (!r || r.fromId === r.toId) return id;
+  if (!r) return id;
   return Math.floor(min) >= WORD_FROM[r.toId] ? r.toId : r.fromId;
 };
 /** DECISION 2: how much of the clock's digits shows on frame f (0..1): 1 in a scene whose hour a source gives (story.ts
@@ -118,10 +117,10 @@ export const wordOf = (f: number, id: SceneId, min: number): SceneId => {
 export const DIGITS_FADE = 6;
 export const digitsAlpha = (f: number): number => {
   const r = raceAt(f);
-  if (r) return SCENE_STAMP[r.fromId].digits ? 1 : clamp01((f - (r.cut - RACE_PRE) + 1) / 3);
+  if (r) return SCENE_STAMP[r.fromId].digits ? 1 : clamp01((f - r.f0 + 1) / 3);
   if (SCENE_STAMP[segmentAt(f).id].digits) return 1;
-  const landed = RACES.find((x) => f > x.cut + RACE_POST && f <= x.cut + RACE_POST + DIGITS_FADE);
-  return landed ? 1 - clamp01((f - (landed.cut + RACE_POST)) / DIGITS_FADE) : 0;
+  const landed = RACES.find((x) => f > x.f1 && f <= x.f1 + DIGITS_FADE);
+  return landed ? 1 - clamp01((f - landed.f1) / DIGITS_FADE) : 0;
 };
 /** the battery (%) on frame f: each scene starts at its clock's level (100 % at 05:00 .. 12 % at 02:00) and drains 3
  *  points more while it runs (the last one 5) */
@@ -146,13 +145,15 @@ const X1 = FRAME_9x15.rec.x1;                             // 1048: the battery's
 const DOT = { x: X0 + 5 + 13, r: 13 };                    // the lamp's centre x and radius (its ink ring 5 px more: x 32)
 const REC_X = DOT.x + 24, REC_PX = 36, REC = "REC";       // the label (the same in both languages)
 const ST = { x: X0, y: 144, zh: 30, en: 22, gap: 4, big: 1.5, bigY: 144, lsEn: 2.0 };
+/** the stamp's small English row under the Chinese one: only in the English film (lang en, where it is the word); the
+ *  Chinese film shows Chinese only, like the cards (the owner's default, 14 Nov night) */
+const STAMP_EN_ROW = EN;
 const BAT = { x1: X1 - 10, w: 66, h: 30, px: 32 };        // the body's right edge; the nub reaches x1 + 8 and its ink 3 more
 const inkW = (px: number) => Math.max(5, Math.round(px * 0.17));
-/** the two rows' strings for a scene (lang zh: 清晨 05:00 / EARLY MORNING; lang en: 05:00 / EARLY MORNING, the
- *  word only once, so the corner keeps the same size in both languages and the shots' face-clear framing holds) */
+/** the rows' strings for a scene (lang zh: 清晨 05:00, one row; lang en: 05:00 over EARLY MORNING, the word only once) */
 const rows = (id: SceneId, clock: string) => {
   const s = SCENE_STAMP[id];
-  return { word: EN ? "" : s.zh, clock, small: s.en.toUpperCase(), smallLs: ST.lsEn };
+  return { word: EN ? "" : s.zh, clock, small: STAMP_EN_ROW ? s.en.toUpperCase() : "", smallLs: ST.lsEn };
 };
 /** the big row's text: the time word (if any) and the clock (if any) */
 const bigRow = (r: { word: string; clock: string }) => [r.word, r.clock].filter(Boolean).join(" ");
@@ -160,11 +161,11 @@ const bigRow = (r: { word: string; clock: string }) => [r.word, r.clock].filter(
  *  clock (default: as the scene shows it at rest, story.ts SCENE_DIGITS) */
 const stampW = (id: SceneId, digits = SCENE_STAMP[id].digits) => {
   const r = rows(id, digits ? SCENE_STAMP[id].clock : "");
-  return Math.max(textW(bigRow(r), ST.zh, 1), textW(r.small, ST.en, r.smallLs)) + inkW(ST.zh);
+  return Math.max(textW(bigRow(r), ST.zh, 1), r.small ? textW(r.small, ST.en, r.smallLs) : 0) + inkW(ST.zh);
 };
 /** the widest timestamp: the widest of any scene WITH its digits (a race shows them; A's EARLY MORNING) */
 const STAMP_W = Math.max(...SCENES.map((id) => stampW(id, true)));
-const STAMP_H = ST.zh + ST.gap + ST.en + 4;
+const STAMP_H = ST.zh + (STAMP_EN_ROW ? ST.gap + ST.en : 0) + 4;
 /** the boxes the vlog UI takes (px): the REC row, the small timestamp, its big intro, the battery with its % */
 export const VLOG_RECT: Record<"rec" | "stamp" | "stampBig" | "battery", Rect> = {
   rec: { x0: DOT.x - DOT.r - 5, y0: ROW - DOT.r - 6, x1: Math.ceil(REC_X + textW(REC, REC_PX, 2) + inkW(REC_PX)), y1: ROW + DOT.r + 6 },
@@ -210,9 +211,10 @@ const Inked: React.FC<{ px: number; ls?: number; runs: { text: string; color: st
   );
 };
 
-/** the REC lamp and its label; `out`: the camera is off (the lamp a dead grey glass, the label warm grey) */
-const RecMark: React.FC<{ f: number; out: boolean }> = ({ f, out }) => {
-  const a = out ? 0 : recAlpha(f), d = DOT.r * 2, box = { position: "absolute" as const, left: DOT.x - DOT.r, top: ROW - DOT.r, width: d, height: d, borderRadius: DOT.r };
+/** the REC lamp and its label; `out`: the camera is off (the lamp a dead grey glass, the label warm grey); `lit` 0..1:
+ *  how far the lamp is held fully lit over its breathing (the lead card's freeze: she is still recording) */
+const RecMark: React.FC<{ f: number; out: boolean; lit: number }> = ({ f, out, lit }) => {
+  const b = recAlpha(f), a = out ? 0 : b + (1 - b) * clamp01(lit), d = DOT.r * 2, box = { position: "absolute" as const, left: DOT.x - DOT.r, top: ROW - DOT.r, width: d, height: d, borderRadius: DOT.r };
   return (
     <>
       {/* the lamp's housing: an ink ring with a soft drop, and the unlit glass under the light */}
@@ -250,9 +252,11 @@ const TimeStamp: React.FC<{ f: number; intro: boolean; out: boolean }> = ({ f, i
           ) : null}
         </>
       )}
-      <div style={{ opacity: opSmall }}>
-        <Inked px={ST.en} ls={r.smallLs} runs={[{ text: r.small, color: out ? OFF.small : HC.ivory }]} style={{ left: 1, top: ST.zh + ST.gap }} />
-      </div>
+      {r.small ? (
+        <div style={{ opacity: opSmall }}>
+          <Inked px={ST.en} ls={r.smallLs} runs={[{ text: r.small, color: out ? OFF.small : HC.ivory }]} style={{ left: 1, top: ST.zh + ST.gap }} />
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -278,12 +282,14 @@ const Battery: React.FC<{ f: number; still: boolean; out: boolean }> = ({ f, sti
 };
 
 // ---------------------------------------------------------------------------------------------------- the vlog UI
-export const VlogHud: React.FC<{ f: number; rec?: boolean; cards?: boolean }> = ({ f, rec, cards }) => {
+/** `lit` 0..1 (default 0): the REC lamp held LIT over its breathing while the rest of the UI shows frame f (Film.tsx: on
+ *  the lead card's freeze, where f is the held frame, the lamp stays lit: her camera is still recording) */
+export const VlogHud: React.FC<{ f: number; rec?: boolean; cards?: boolean; lit?: number }> = ({ f, rec, cards, lit = 0 }) => {
   useOverlayFont();
   const showRec = rec !== false, out = f >= OFF_AT, fz = Math.min(f, OFF_AT);   // from the off frame the UI holds OFF_AT
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      {showRec ? <RecMark f={fz} out={out} /> : null}
+      {showRec ? <RecMark f={fz} out={out} lit={lit} /> : null}
       {showRec ? <TimeStamp f={fz} intro={cards !== false} out={out} /> : null}
       <Battery f={fz} still={rec === false || out} out={out} />
     </AbsoluteFill>
