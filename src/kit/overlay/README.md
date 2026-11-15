@@ -21,7 +21,7 @@ red seal slapped on. Rebuilt from these blocks it matches the original (see "Pro
 |---|---|
 | `time.ts` | the clock of an overlay: `life` (arrive, hold, leave), `part`, `stagger`, `pop`, `slap`, `shake`, `drift`, the eases, `hash01` |
 | `freeze.ts` | the picture stops while a card speaks: `clock` / `worldClock` (`at`, `hold`, `world`, `film`, `total`) |
-| `frame.ts` | where things may sit: `FRAME_9x15`, `FRAME_9x16`, `free`, `slots`, `fit`, `pointer`, and the check `checkOverlays` |
+| `frame.ts` | where things may sit: `FRAME_9x16`, `FRAME_9x15`, `free`, `slots`, `fit`, `pointer`, and the check `checkOverlays` |
 | `skin.ts` | a film's skin written down once: `defineSkin` (no defaults), `sameLook` |
 | `text.tsx` | words and numbers: `textW`, `fitPx`, `wrapRows`, `glyph`, `setRow`, `typeOn`, `countAt`, `odometer` |
 | `marks.tsx` | marks made by hand: `roughFilter`, `grainFilter`, `gradient`, `clipBox`, `clipPathOf`, `cutMask`, `sweep`, `slash`, `bandPath`, `streaks`, `spatter`, `tornBox`, `seal`, `ring`, `burst`, `leader`, `barBoxes` |
@@ -110,13 +110,13 @@ holds for that gap. `clock([{ at, frames }])` is the arithmetic, and a film uses
 
 ## Where things may sit
 
-`FRAME_9x15` (1080 x 1800, new films) and `FRAME_9x16` (1080 x 1920, the films before 14 Nov 2026) hold what the
-phone app does to the frame, measured on one phone: the cut sides, the icons, the button column, the post's own text,
+`FRAME_9x16` (1080 x 1920, every film: the owner's choice on 15 Nov 2026) and `FRAME_9x15` (1080 x 1800, tried on
+14 Nov and not kept) hold what the phone app does to the frame, measured on one phone: the cut sides, the icons, the button column, the post's own text,
 the REC display, the caption band. Measure again when a screenshot shows a different crop, and change the numbers
 there so every film gets them.
 
 ```ts
-const S = slots(FRAME_9x15, face, { keep: [body] });          // the free slots round a face, largest clear one first
+const S = slots(FRAME_9x16, face, { keep: [body] });          // the free slots round a face, largest clear one first
 const B = fit({ w: 300, h: 372 }, S[0].r, { ay: 0.8 });       // the film's card placed in it (shrunk if it must, never grown)
 const P = pointer(B.r, face);                                 // the two ends of a pointer from the card to the face
 ```
@@ -126,15 +126,18 @@ person. Take the slot BY NAME (`S.find((s) => s.name === "right")`, not `S[0]`, 
 frame) from the person's box on every frame (`screenBox`), and align the card to the person's side of it (`ax: 0` in
 the slot on his right). Its place then follows him frame by frame with nothing remembered.
 
-**The REC display in 9:15** starts 32 px from the left edge and the battery ends 32 px from the right (`FRAME_9x15.rec`;
-it was 54). The owner asked for them nearer the sides in 9:15, where the app cuts nothing off the sides; 32 is this
-file's number until it has been seen on a phone.
+**The REC display in 9:16** starts at x 110 and the battery ends at x 970 (`FRAME_9x16.rec`). The owner, 15 Nov 2026:
+"i want to continue in 9x16, but the rec and batter need to go in a tad bit". The app cuts 57 px off each side of a
+9:16 film, so the films before this, with REC at about x 62, showed it half cut. 110 and 970 are the lines the words
+already keep, about 50 px inside what the phone shows. Moved in, the row would sit under the app's back and search
+icons (they end at y 222), so the REC row is centred at y 250, its label row at y 308, and words, cards and effects
+start at y 340 (`recY`, `labelY`, `top`).
 
 The check, in the film's smoke test (plain Node; import `../../kit/overlay/frame` alone):
 
 ```ts
 const faults = checkOverlays(items, {
-  spec: FRAME_9x15,
+  spec: FRAME_9x16,
   protect: (f) => [...facesOn(f), ...captionOn(f)],            // the film knows these
   quiet: [EMOTIONAL_SCENE],                                    // spans that take no cards and no effects
   budget: { perScene: 2, gap: 45 },
